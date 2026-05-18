@@ -1,6 +1,6 @@
 site_title: "プレ値速報 — 公式価格 vs 買取価格の差額情報"
 site_description: "iPhone・Apple製品・カメラ・ゲーム機のプレ値候補を毎日更新"
-site_url: ""  # 公開URL（GitHub Pages等、設定後にsitemap.xmlに反映）
+site_url: "https://estkey0001.github.io/premium-monitor"  # 公開URL（GitHub Pages）
 
 # note販売ページURL（設定後に有効化）
 note_url: ""
@@ -28,7 +28,7 @@ analytics:
 # LP出力設定
 output:
   daily_dir: "exports/lp/daily"
-  public_dir: "public"
+  public_dir: "docs"
   timezone: "Asia/Tokyo"
 
 # A/Bテスト（見出しバリエーション）

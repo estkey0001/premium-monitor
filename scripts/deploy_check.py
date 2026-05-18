@@ -184,11 +184,18 @@ def check() -> list[dict]:
     else:
         results.append({"level": "warning", "check": "beginner_easy_in_tab", "message": "beginner_easy 案件なし（データ未生成の可能性）"})
 
-    # 17. advanced 案件の存在（optional: データなし時はwarning）
-    if 'data-user-level="advanced_high_profit"' in html or 'data-user-level="expert_only"' in html:
-        results.append({"level": "ok", "check": "advanced_in_tab", "message": "上級者向け案件が存在する"})
+    # 17. 上級者タブにコンテンツが存在するか（確定候補 or 監視候補のいずれか）
+    has_advanced_confirmed = (
+        'data-user-level="advanced_high_profit"' in html
+        or 'data-user-level="expert_only"' in html
+    )
+    has_watch_candidates = 'watch-candidate-card' in html
+    if has_advanced_confirmed:
+        results.append({"level": "ok", "check": "advanced_in_tab", "message": "上級者向け確定案件が存在する"})
+    elif has_watch_candidates:
+        results.append({"level": "ok", "check": "advanced_in_tab", "message": "上級者向けタブに監視候補が表示されている（フォールバック正常）"})
     else:
-        results.append({"level": "warning", "check": "advanced_in_tab", "message": "上級者向け案件なし（条件を満たす候補がない可能性）"})
+        results.append({"level": "warning", "check": "advanced_in_tab", "message": "上級者向けタブにコンテンツなし（watch_candidates も空）"})
 
     return results
 

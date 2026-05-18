@@ -654,6 +654,183 @@ td.profit-td { color: var(--green); font-weight: 700; font-variant-numeric: tabu
   .price-grid { grid-template-columns: 1fr; }
   .price-cell.profit-cell { grid-column: span 1; }
 }
+/* ────────── デザイン改善 ────────── */
+/* カード hover effect */
+.card {
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+}
+/* 初心者向けカード: 左ボーダーをグリーン */
+.card[data-user-level="beginner_easy"] {
+  border-left: 3px solid var(--green);
+}
+.card[data-user-level="beginner_watch"] {
+  border-left: 3px solid var(--cyan);
+}
+/* 上級者向けカード: 左ボーダーをオレンジ */
+.card[data-user-level="advanced_high_profit"],
+.card[data-user-level="expert_only"],
+.adv-snap-card {
+  border-left: 3px solid var(--orange);
+}
+/* 監視候補カード */
+.watch-candidate-card {
+  border-left: 3px solid var(--yellow);
+}
+/* .badge 改善 */
+.badge-easy {
+  background: rgba(0,170,101,0.15);
+  color: var(--green);
+  border: 1px solid rgba(0,170,101,0.4);
+}
+.badge-watch {
+  background: rgba(34,211,238,0.12);
+  color: var(--cyan);
+  border: 1px solid rgba(34,211,238,0.3);
+}
+.badge-adv {
+  background: rgba(251,146,60,0.12);
+  color: var(--orange);
+  border: 1px solid rgba(251,146,60,0.3);
+}
+.badge-exp {
+  background: rgba(239,68,68,0.12);
+  color: var(--red);
+  border: 1px solid rgba(239,68,68,0.3);
+}
+/* 販売方法バッジ */
+.sale-method-badge {
+  font-size: 0.72rem;
+  padding: 2px 8px;
+  border-radius: 20px;
+  background: rgba(251,191,36,0.15);
+  color: var(--yellow);
+  border: 1px solid rgba(251,191,36,0.3);
+  margin-left: 6px;
+}
+/* no-data 表示 */
+.no-data {
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  font-style: italic;
+}
+/* 上級者タブのメタ情報行 */
+.adv-meta-row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin: 8px 0 4px;
+}
+.adv-meta-item {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+.adv-meta-item strong {
+  color: var(--text);
+}
+/* フォールバック通知 */
+.adv-fallback-notice {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  background: rgba(34,211,238,0.06);
+  border: 1px solid rgba(34,211,238,0.2);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+.adv-fallback-icon { font-size: 1.1rem; margin-top: 1px; }
+.adv-fallback-notice strong { color: var(--cyan); }
+/* 監視候補 price row */
+.watch-price-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: 8px 0 6px;
+}
+.watch-price-item {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+.watch-gap {
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+.watch-links-row {
+  font-size: 0.82rem;
+  margin-bottom: 8px;
+}
+.watch-footer-note {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  margin-top: 12px;
+  padding: 6px 8px;
+  border-left: 2px solid var(--border-light);
+  font-style: italic;
+}
+/* link-type badge */
+.link-type-badge {
+  display: inline-block;
+  font-size: 0.68rem;
+  background: var(--surface);
+  border: 1px solid var(--border-light);
+  color: var(--text-muted);
+  padding: 1px 6px;
+  border-radius: 10px;
+  margin-left: 4px;
+  vertical-align: middle;
+}
+/* 海外相場リンクセクション */
+.overseas-links-section {
+  margin-top: 12px;
+  padding: 12px;
+  background: rgba(15,23,42,0.6);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.overseas-links-header {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+.overseas-links-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--cyan);
+}
+.overseas-links-note {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+.overseas-btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.overseas-btn {
+  display: inline-block;
+  font-size: 0.76rem;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: var(--surface);
+  border: 1px solid var(--border-light);
+  color: var(--cyan);
+  text-decoration: none;
+  transition: background 0.12s, border-color 0.12s;
+  white-space: nowrap;
+}
+.overseas-btn:hover {
+  background: rgba(34,211,238,0.1);
+  border-color: var(--cyan);
+}
 /* 買取店比較テーブル */
 .buyback-shop-table {
   margin-top: 12px;
@@ -859,7 +1036,7 @@ td.profit-td { color: var(--green); font-weight: 700; font-variant-numeric: tabu
   <div class="topbar-brand"><span class="dot"></span>プレ値速報</div>
   <div class="topbar-meta">
     <span>買取更新: 2026-05-18 12:00 JST</span>
-    <span>生成: 05/18 23:25</span>
+    <span>生成: 05/18 23:42</span>
   </div>
 </header>
 <div class="container">
@@ -872,7 +1049,7 @@ td.profit-td { color: var(--green); font-weight: 700; font-variant-numeric: tabu
       <span class="ts-dot"></span>買取価格更新：2026-05-18 12:00 JST
     </span>
     <span class="ts-chip" data-lp-generated>
-      <span class="ts-dot" style="background:var(--accent)"></span>LP生成：2026-05-18 23:25 JST
+      <span class="ts-dot" style="background:var(--accent)"></span>LP生成：2026-05-18 23:42 JST
     </span>
   </div>
 </div>
@@ -907,7 +1084,7 @@ td.profit-td { color: var(--green); font-weight: 700; font-variant-numeric: tabu
   <div class="price-summary-row">
     <span class="price-summary-item">参考差額（最高値）: <strong>+¥145,500</strong></span>
     <span class="price-summary-item"><span class="shop-count-badge">参照 3 店舗</span></span>
-    <span class="price-summary-item">更新: 2026-05-18 23:14 JST</span>
+    <span class="price-summary-item">更新: 2026-05-18 23:42 JST</span>
   </div>
   <div class="condition-bar">
     <span class="cond-icon">⚠</span>
@@ -924,7 +1101,7 @@ td.profit-td { color: var(--green); font-weight: 700; font-variant-numeric: tabu
   <div class="buyback-table-wrap">
     <table class="buyback-table">
       <thead><tr><th>#</th><th>買取店</th><th>買取価格</th><th>参考差額</th><th>リンク</th></tr></thead>
-      <tbody><tr class="buyback-shop-row rank-1"><td class="shop-rank-cell">1</td><td class="shop-name-cell">マップカメラ</td><td class="shop-price-cell">¥415,000</td><td class="shop-diff-cell positive">+¥145,500</td><td class="shop-link-cell"><span class="unverified-link">公式買取ページで確認してください</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">2</td><td class="shop-name-cell">カメラのキタムラ</td><td class="shop-price-cell">¥410,000</td><td class="shop-diff-cell positive">+¥140,500</td><td class="shop-link-cell"><span class="unverified-link">公式買取ページで確認してください</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">3</td><td class="shop-name-cell">フジヤカメラ</td><td class="shop-price-cell">¥405,000</td><td class="shop-diff-cell positive">+¥135,500</td><td class="shop-link-cell"><a href="https://www.fujiyacamera.com/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_x100vi" data-shop="フジヤカメラ">買取ページを確認 →</a></td></tr></tbody>
+      <tbody><tr class="buyback-shop-row rank-1"><td class="shop-rank-cell">1</td><td class="shop-name-cell">マップカメラ</td><td class="shop-price-cell">¥415,000</td><td class="shop-diff-cell positive">+¥145,500</td><td class="shop-link-cell"><a href="https://www.mapcamera.com/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_x100vi" data-shop="マップカメラ" title="カテゴリ">買取価格を確認 →</a><span class="link-type-badge">カテゴリ</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">2</td><td class="shop-name-cell">カメラのキタムラ</td><td class="shop-price-cell">¥410,000</td><td class="shop-diff-cell positive">+¥140,500</td><td class="shop-link-cell"><a href="https://www.kitamura.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_x100vi" data-shop="カメラのキタムラ" title="カテゴリ">買取価格を確認 →</a><span class="link-type-badge">カテゴリ</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">3</td><td class="shop-name-cell">フジヤカメラ</td><td class="shop-price-cell">¥405,000</td><td class="shop-diff-cell positive">+¥135,500</td><td class="shop-link-cell"><a href="https://www.fujiyacamera.com/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_x100vi" data-shop="フジヤカメラ" title="商品ページ">買取価格を確認 →</a><span class="link-type-badge">商品ページ</span></td></tr></tbody>
     </table>
   </div>
 </div>
@@ -953,7 +1130,7 @@ td.profit-td { color: var(--green); font-weight: 700; font-variant-numeric: tabu
   <div class="price-summary-row">
     <span class="price-summary-item">参考差額（最高値）: <strong>+¥13,200</strong></span>
     <span class="price-summary-item"><span class="shop-count-badge">参照 5 店舗</span></span>
-    <span class="price-summary-item">更新: 2026-05-18 23:14 JST</span>
+    <span class="price-summary-item">更新: 2026-05-18 23:42 JST</span>
   </div>
   <div class="condition-bar">
     <span class="cond-icon">⚠</span>
@@ -970,7 +1147,7 @@ td.profit-td { color: var(--green); font-weight: 700; font-variant-numeric: tabu
   <div class="buyback-table-wrap">
     <table class="buyback-table">
       <thead><tr><th>#</th><th>買取店</th><th>買取価格</th><th>参考差額</th><th>リンク</th></tr></thead>
-      <tbody><tr class="buyback-shop-row rank-1"><td class="shop-rank-cell">1</td><td class="shop-name-cell">モバイル一番</td><td class="shop-price-cell">¥268,000</td><td class="shop-diff-cell positive">+¥13,200</td><td class="shop-link-cell"><span class="unverified-link">公式買取ページで確認してください</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">2</td><td class="shop-name-cell">買取商店</td><td class="shop-price-cell">¥265,000</td><td class="shop-diff-cell positive">+¥10,200</td><td class="shop-link-cell"><span class="unverified-link">公式買取ページで確認してください</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">3</td><td class="shop-name-cell">買取一丁目</td><td class="shop-price-cell">¥262,000</td><td class="shop-diff-cell positive">+¥7,200</td><td class="shop-link-cell"><span class="unverified-link">公式買取ページで確認してください</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">4</td><td class="shop-name-cell">じゃんぱら</td><td class="shop-price-cell">¥260,000</td><td class="shop-diff-cell positive">+¥5,200</td><td class="shop-link-cell"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_iphone17pm_512" data-shop="じゃんぱら">買取ページを確認 →</a></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">5</td><td class="shop-name-cell">イオシス</td><td class="shop-price-cell">¥257,000</td><td class="shop-diff-cell positive">+¥2,200</td><td class="shop-link-cell"><a href="https://iosys.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_iphone17pm_512" data-shop="イオシス">買取ページを確認 →</a></td></tr></tbody>
+      <tbody><tr class="buyback-shop-row rank-1"><td class="shop-rank-cell">1</td><td class="shop-name-cell">モバイル一番</td><td class="shop-price-cell">¥268,000</td><td class="shop-diff-cell positive">+¥13,200</td><td class="shop-link-cell"><span class="unverified-link">公式買取ページで確認してください</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">2</td><td class="shop-name-cell">買取商店</td><td class="shop-price-cell">¥265,000</td><td class="shop-diff-cell positive">+¥10,200</td><td class="shop-link-cell"><span class="unverified-link">公式買取ページで確認してください</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">3</td><td class="shop-name-cell">買取一丁目</td><td class="shop-price-cell">¥262,000</td><td class="shop-diff-cell positive">+¥7,200</td><td class="shop-link-cell"><span class="unverified-link">公式買取ページで確認してください</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">4</td><td class="shop-name-cell">じゃんぱら</td><td class="shop-price-cell">¥260,000</td><td class="shop-diff-cell positive">+¥5,200</td><td class="shop-link-cell"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_iphone17pm_512" data-shop="じゃんぱら" title="商品ページ">買取価格を確認 →</a><span class="link-type-badge">商品ページ</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">5</td><td class="shop-name-cell">イオシス</td><td class="shop-price-cell">¥257,000</td><td class="shop-diff-cell positive">+¥2,200</td><td class="shop-link-cell"><a href="https://iosys.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_iphone17pm_512" data-shop="イオシス" title="商品ページ">買取価格を確認 →</a><span class="link-type-badge">商品ページ</span></td></tr></tbody>
     </table>
   </div>
 </div>
@@ -999,7 +1176,7 @@ td.profit-td { color: var(--green); font-weight: 700; font-variant-numeric: tabu
   <div class="price-summary-row">
     <span class="price-summary-item">参考差額（最高値）: <strong>+¥12,200</strong></span>
     <span class="price-summary-item"><span class="shop-count-badge">参照 5 店舗</span></span>
-    <span class="price-summary-item">更新: 2026-05-18 23:14 JST</span>
+    <span class="price-summary-item">更新: 2026-05-18 23:42 JST</span>
   </div>
   <div class="condition-bar">
     <span class="cond-icon">⚠</span>
@@ -1016,7 +1193,7 @@ td.profit-td { color: var(--green); font-weight: 700; font-variant-numeric: tabu
   <div class="buyback-table-wrap">
     <table class="buyback-table">
       <thead><tr><th>#</th><th>買取店</th><th>買取価格</th><th>参考差額</th><th>リンク</th></tr></thead>
-      <tbody><tr class="buyback-shop-row rank-1"><td class="shop-rank-cell">1</td><td class="shop-name-cell">モバイル一番</td><td class="shop-price-cell">¥232,000</td><td class="shop-diff-cell positive">+¥12,200</td><td class="shop-link-cell"><span class="unverified-link">公式買取ページで確認してください</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">2</td><td class="shop-name-cell">買取商店</td><td class="shop-price-cell">¥230,000</td><td class="shop-diff-cell positive">+¥10,200</td><td class="shop-link-cell"><span class="unverified-link">公式買取ページで確認してください</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">3</td><td class="shop-name-cell">買取一丁目</td><td class="shop-price-cell">¥228,000</td><td class="shop-diff-cell positive">+¥8,200</td><td class="shop-link-cell"><span class="unverified-link">公式買取ページで確認してください</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">4</td><td class="shop-name-cell">じゃんぱら</td><td class="shop-price-cell">¥225,000</td><td class="shop-diff-cell positive">+¥5,200</td><td class="shop-link-cell"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_iphone17pm_256" data-shop="じゃんぱら">買取ページを確認 →</a></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">5</td><td class="shop-name-cell">イオシス</td><td class="shop-price-cell">¥222,000</td><td class="shop-diff-cell positive">+¥2,200</td><td class="shop-link-cell"><a href="https://iosys.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_iphone17pm_256" data-shop="イオシス">買取ページを確認 →</a></td></tr></tbody>
+      <tbody><tr class="buyback-shop-row rank-1"><td class="shop-rank-cell">1</td><td class="shop-name-cell">モバイル一番</td><td class="shop-price-cell">¥232,000</td><td class="shop-diff-cell positive">+¥12,200</td><td class="shop-link-cell"><span class="unverified-link">公式買取ページで確認してください</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">2</td><td class="shop-name-cell">買取商店</td><td class="shop-price-cell">¥230,000</td><td class="shop-diff-cell positive">+¥10,200</td><td class="shop-link-cell"><span class="unverified-link">公式買取ページで確認してください</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">3</td><td class="shop-name-cell">買取一丁目</td><td class="shop-price-cell">¥228,000</td><td class="shop-diff-cell positive">+¥8,200</td><td class="shop-link-cell"><span class="unverified-link">公式買取ページで確認してください</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">4</td><td class="shop-name-cell">じゃんぱら</td><td class="shop-price-cell">¥225,000</td><td class="shop-diff-cell positive">+¥5,200</td><td class="shop-link-cell"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_iphone17pm_256" data-shop="じゃんぱら" title="商品ページ">買取価格を確認 →</a><span class="link-type-badge">商品ページ</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">5</td><td class="shop-name-cell">イオシス</td><td class="shop-price-cell">¥222,000</td><td class="shop-diff-cell positive">+¥2,200</td><td class="shop-link-cell"><a href="https://iosys.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_iphone17pm_256" data-shop="イオシス" title="商品ページ">買取価格を確認 →</a><span class="link-type-badge">商品ページ</span></td></tr></tbody>
     </table>
   </div>
 </div>
@@ -1045,7 +1222,7 @@ td.profit-td { color: var(--green); font-weight: 700; font-variant-numeric: tabu
   <div class="price-summary-row">
     <span class="price-summary-item">参考差額（最高値）: <strong>+¥8,400</strong></span>
     <span class="price-summary-item"><span class="shop-count-badge">参照 5 店舗</span></span>
-    <span class="price-summary-item">更新: 2026-05-18 23:14 JST</span>
+    <span class="price-summary-item">更新: 2026-05-18 23:42 JST</span>
   </div>
   <div class="condition-bar">
     <span class="cond-icon">⚠</span>
@@ -1062,7 +1239,7 @@ td.profit-td { color: var(--green); font-weight: 700; font-variant-numeric: tabu
   <div class="buyback-table-wrap">
     <table class="buyback-table">
       <thead><tr><th>#</th><th>買取店</th><th>買取価格</th><th>参考差額</th><th>リンク</th></tr></thead>
-      <tbody><tr class="buyback-shop-row rank-1"><td class="shop-rank-cell">1</td><td class="shop-name-cell">モバイル一番</td><td class="shop-price-cell">¥188,200</td><td class="shop-diff-cell positive">+¥8,400</td><td class="shop-link-cell"><span class="unverified-link">公式買取ページで確認してください</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">2</td><td class="shop-name-cell">買取商店</td><td class="shop-price-cell">¥187,500</td><td class="shop-diff-cell positive">+¥7,700</td><td class="shop-link-cell"><span class="unverified-link">公式買取ページで確認してください</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">3</td><td class="shop-name-cell">買取一丁目</td><td class="shop-price-cell">¥186,000</td><td class="shop-diff-cell positive">+¥6,200</td><td class="shop-link-cell"><span class="unverified-link">公式買取ページで確認してください</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">4</td><td class="shop-name-cell">じゃんぱら</td><td class="shop-price-cell">¥184,000</td><td class="shop-diff-cell positive">+¥4,200</td><td class="shop-link-cell"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_iphone17pro_256" data-shop="じゃんぱら">買取ページを確認 →</a></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">5</td><td class="shop-name-cell">イオシス</td><td class="shop-price-cell">¥182,000</td><td class="shop-diff-cell positive">+¥2,200</td><td class="shop-link-cell"><a href="https://iosys.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_iphone17pro_256" data-shop="イオシス">買取ページを確認 →</a></td></tr></tbody>
+      <tbody><tr class="buyback-shop-row rank-1"><td class="shop-rank-cell">1</td><td class="shop-name-cell">モバイル一番</td><td class="shop-price-cell">¥188,200</td><td class="shop-diff-cell positive">+¥8,400</td><td class="shop-link-cell"><span class="unverified-link">公式買取ページで確認してください</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">2</td><td class="shop-name-cell">買取商店</td><td class="shop-price-cell">¥187,500</td><td class="shop-diff-cell positive">+¥7,700</td><td class="shop-link-cell"><span class="unverified-link">公式買取ページで確認してください</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">3</td><td class="shop-name-cell">買取一丁目</td><td class="shop-price-cell">¥186,000</td><td class="shop-diff-cell positive">+¥6,200</td><td class="shop-link-cell"><span class="unverified-link">公式買取ページで確認してください</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">4</td><td class="shop-name-cell">じゃんぱら</td><td class="shop-price-cell">¥184,000</td><td class="shop-diff-cell positive">+¥4,200</td><td class="shop-link-cell"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_iphone17pro_256" data-shop="じゃんぱら" title="商品ページ">買取価格を確認 →</a><span class="link-type-badge">商品ページ</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">5</td><td class="shop-name-cell">イオシス</td><td class="shop-price-cell">¥182,000</td><td class="shop-diff-cell positive">+¥2,200</td><td class="shop-link-cell"><a href="https://iosys.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_iphone17pro_256" data-shop="イオシス" title="商品ページ">買取価格を確認 →</a><span class="link-type-badge">商品ページ</span></td></tr></tbody>
     </table>
   </div>
 </div>
@@ -1091,7 +1268,7 @@ td.profit-td { color: var(--green); font-weight: 700; font-variant-numeric: tabu
   <div class="price-summary-row">
     <span class="price-summary-item">参考差額（最高値）: <strong>+¥8,200</strong></span>
     <span class="price-summary-item"><span class="shop-count-badge">参照 5 店舗</span></span>
-    <span class="price-summary-item">更新: 2026-05-18 23:14 JST</span>
+    <span class="price-summary-item">更新: 2026-05-18 23:42 JST</span>
   </div>
   <div class="condition-bar">
     <span class="cond-icon">⚠</span>
@@ -1108,7 +1285,7 @@ td.profit-td { color: var(--green); font-weight: 700; font-variant-numeric: tabu
   <div class="buyback-table-wrap">
     <table class="buyback-table">
       <thead><tr><th>#</th><th>買取店</th><th>買取価格</th><th>参考差額</th><th>リンク</th></tr></thead>
-      <tbody><tr class="buyback-shop-row rank-1"><td class="shop-rank-cell">1</td><td class="shop-name-cell">モバイル一番</td><td class="shop-price-cell">¥223,000</td><td class="shop-diff-cell positive">+¥8,200</td><td class="shop-link-cell"><span class="unverified-link">公式買取ページで確認してください</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">2</td><td class="shop-name-cell">買取商店</td><td class="shop-price-cell">¥221,000</td><td class="shop-diff-cell positive">+¥6,200</td><td class="shop-link-cell"><span class="unverified-link">公式買取ページで確認してください</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">3</td><td class="shop-name-cell">買取一丁目</td><td class="shop-price-cell">¥219,000</td><td class="shop-diff-cell positive">+¥4,200</td><td class="shop-link-cell"><span class="unverified-link">公式買取ページで確認してください</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">4</td><td class="shop-name-cell">じゃんぱら</td><td class="shop-price-cell">¥217,000</td><td class="shop-diff-cell positive">+¥2,200</td><td class="shop-link-cell"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_iphone17pro_512" data-shop="じゃんぱら">買取ページを確認 →</a></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">5</td><td class="shop-name-cell">イオシス</td><td class="shop-price-cell">¥215,000</td><td class="shop-diff-cell positive">+¥200</td><td class="shop-link-cell"><a href="https://iosys.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_iphone17pro_512" data-shop="イオシス">買取ページを確認 →</a></td></tr></tbody>
+      <tbody><tr class="buyback-shop-row rank-1"><td class="shop-rank-cell">1</td><td class="shop-name-cell">モバイル一番</td><td class="shop-price-cell">¥223,000</td><td class="shop-diff-cell positive">+¥8,200</td><td class="shop-link-cell"><span class="unverified-link">公式買取ページで確認してください</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">2</td><td class="shop-name-cell">買取商店</td><td class="shop-price-cell">¥221,000</td><td class="shop-diff-cell positive">+¥6,200</td><td class="shop-link-cell"><span class="unverified-link">公式買取ページで確認してください</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">3</td><td class="shop-name-cell">買取一丁目</td><td class="shop-price-cell">¥219,000</td><td class="shop-diff-cell positive">+¥4,200</td><td class="shop-link-cell"><span class="unverified-link">公式買取ページで確認してください</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">4</td><td class="shop-name-cell">じゃんぱら</td><td class="shop-price-cell">¥217,000</td><td class="shop-diff-cell positive">+¥2,200</td><td class="shop-link-cell"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_iphone17pro_512" data-shop="じゃんぱら" title="商品ページ">買取価格を確認 →</a><span class="link-type-badge">商品ページ</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">5</td><td class="shop-name-cell">イオシス</td><td class="shop-price-cell">¥215,000</td><td class="shop-diff-cell positive">+¥200</td><td class="shop-link-cell"><a href="https://iosys.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_iphone17pro_512" data-shop="イオシス" title="商品ページ">買取価格を確認 →</a><span class="link-type-badge">商品ページ</span></td></tr></tbody>
     </table>
   </div>
 </div>
@@ -1137,7 +1314,7 @@ td.profit-td { color: var(--green); font-weight: 700; font-variant-numeric: tabu
   <div class="price-summary-row">
     <span class="price-summary-item">参考差額（最高値）: <strong>+¥7,020</strong></span>
     <span class="price-summary-item"><span class="shop-count-badge">参照 4 店舗</span></span>
-    <span class="price-summary-item">更新: 2026-05-18 23:14 JST</span>
+    <span class="price-summary-item">更新: 2026-05-18 23:42 JST</span>
   </div>
   <div class="condition-bar">
     <span class="cond-icon">⚠</span>
@@ -1154,7 +1331,7 @@ td.profit-td { color: var(--green); font-weight: 700; font-variant-numeric: tabu
   <div class="buyback-table-wrap">
     <table class="buyback-table">
       <thead><tr><th>#</th><th>買取店</th><th>買取価格</th><th>参考差額</th><th>リンク</th></tr></thead>
-      <tbody><tr class="buyback-shop-row rank-1"><td class="shop-rank-cell">1</td><td class="shop-name-cell">買取商店</td><td class="shop-price-cell">¥57,000</td><td class="shop-diff-cell positive">+¥7,020</td><td class="shop-link-cell"><span class="unverified-link">公式買取ページで確認してください</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">2</td><td class="shop-name-cell">じゃんぱら</td><td class="shop-price-cell">¥55,500</td><td class="shop-diff-cell positive">+¥5,520</td><td class="shop-link-cell"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_switch2" data-shop="じゃんぱら">買取ページを確認 →</a></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">3</td><td class="shop-name-cell">イオシス</td><td class="shop-price-cell">¥54,500</td><td class="shop-diff-cell positive">+¥4,520</td><td class="shop-link-cell"><a href="https://iosys.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_switch2" data-shop="イオシス">買取ページを確認 →</a></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">4</td><td class="shop-name-cell">ゲオ</td><td class="shop-price-cell">¥53,500</td><td class="shop-diff-cell positive">+¥3,520</td><td class="shop-link-cell"><a href="https://www.geo-online.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_switch2" data-shop="ゲオ">買取ページを確認 →</a></td></tr></tbody>
+      <tbody><tr class="buyback-shop-row rank-1"><td class="shop-rank-cell">1</td><td class="shop-name-cell">買取商店</td><td class="shop-price-cell">¥57,000</td><td class="shop-diff-cell positive">+¥7,020</td><td class="shop-link-cell"><span class="unverified-link">公式買取ページで確認してください</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">2</td><td class="shop-name-cell">じゃんぱら</td><td class="shop-price-cell">¥55,500</td><td class="shop-diff-cell positive">+¥5,520</td><td class="shop-link-cell"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_switch2" data-shop="じゃんぱら" title="商品ページ">買取価格を確認 →</a><span class="link-type-badge">商品ページ</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">3</td><td class="shop-name-cell">イオシス</td><td class="shop-price-cell">¥54,500</td><td class="shop-diff-cell positive">+¥4,520</td><td class="shop-link-cell"><a href="https://iosys.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_switch2" data-shop="イオシス" title="商品ページ">買取価格を確認 →</a><span class="link-type-badge">商品ページ</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">4</td><td class="shop-name-cell">ゲオ</td><td class="shop-price-cell">¥53,500</td><td class="shop-diff-cell positive">+¥3,520</td><td class="shop-link-cell"><a href="https://www.geo-online.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_switch2" data-shop="ゲオ" title="商品ページ">買取価格を確認 →</a><span class="link-type-badge">商品ページ</span></td></tr></tbody>
     </table>
   </div>
 </div>
@@ -1183,7 +1360,7 @@ td.profit-td { color: var(--green); font-weight: 700; font-variant-numeric: tabu
   <div class="price-summary-row">
     <span class="price-summary-item">参考差額（最高値）: <strong>+¥7,020</strong></span>
     <span class="price-summary-item"><span class="shop-count-badge">参照 3 店舗</span></span>
-    <span class="price-summary-item">更新: 2026-05-18 23:14 JST</span>
+    <span class="price-summary-item">更新: 2026-05-18 23:42 JST</span>
   </div>
   <div class="condition-bar">
     <span class="cond-icon">⚠</span>
@@ -1200,7 +1377,7 @@ td.profit-td { color: var(--green); font-weight: 700; font-variant-numeric: tabu
   <div class="buyback-table-wrap">
     <table class="buyback-table">
       <thead><tr><th>#</th><th>買取店</th><th>買取価格</th><th>参考差額</th><th>リンク</th></tr></thead>
-      <tbody><tr class="buyback-shop-row rank-1"><td class="shop-rank-cell">1</td><td class="shop-name-cell">買取商店</td><td class="shop-price-cell">¥67,000</td><td class="shop-diff-cell positive">+¥7,020</td><td class="shop-link-cell"><span class="unverified-link">公式買取ページで確認してください</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">2</td><td class="shop-name-cell">じゃんぱら</td><td class="shop-price-cell">¥65,000</td><td class="shop-diff-cell positive">+¥5,020</td><td class="shop-link-cell"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_switch2_mk" data-shop="じゃんぱら">買取ページを確認 →</a></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">3</td><td class="shop-name-cell">イオシス</td><td class="shop-price-cell">¥63,500</td><td class="shop-diff-cell positive">+¥3,520</td><td class="shop-link-cell"><a href="https://iosys.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_switch2_mk" data-shop="イオシス">買取ページを確認 →</a></td></tr></tbody>
+      <tbody><tr class="buyback-shop-row rank-1"><td class="shop-rank-cell">1</td><td class="shop-name-cell">買取商店</td><td class="shop-price-cell">¥67,000</td><td class="shop-diff-cell positive">+¥7,020</td><td class="shop-link-cell"><span class="unverified-link">公式買取ページで確認してください</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">2</td><td class="shop-name-cell">じゃんぱら</td><td class="shop-price-cell">¥65,000</td><td class="shop-diff-cell positive">+¥5,020</td><td class="shop-link-cell"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_switch2_mk" data-shop="じゃんぱら" title="商品ページ">買取価格を確認 →</a><span class="link-type-badge">商品ページ</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">3</td><td class="shop-name-cell">イオシス</td><td class="shop-price-cell">¥63,500</td><td class="shop-diff-cell positive">+¥3,520</td><td class="shop-link-cell"><a href="https://iosys.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_switch2_mk" data-shop="イオシス" title="商品ページ">買取価格を確認 →</a><span class="link-type-badge">商品ページ</span></td></tr></tbody>
     </table>
   </div>
 </div>
@@ -1230,7 +1407,7 @@ td.profit-td { color: var(--green); font-weight: 700; font-variant-numeric: tabu
   <div class="price-summary-row">
     <span class="price-summary-item">参考差額（最高値）: <strong>+¥2,020</strong></span>
     <span class="price-summary-item"><span class="shop-count-badge">参照 4 店舗</span></span>
-    <span class="price-summary-item">更新: 2026-05-18 23:14 JST</span>
+    <span class="price-summary-item">更新: 2026-05-18 23:42 JST</span>
   </div>
   <div class="condition-bar">
     <span class="cond-icon">⚠</span>
@@ -1247,7 +1424,7 @@ td.profit-td { color: var(--green); font-weight: 700; font-variant-numeric: tabu
   <div class="buyback-table-wrap">
     <table class="buyback-table">
       <thead><tr><th>#</th><th>買取店</th><th>買取価格</th><th>参考差額</th><th>リンク</th></tr></thead>
-      <tbody><tr class="buyback-shop-row rank-1"><td class="shop-rank-cell">1</td><td class="shop-name-cell">イオシス</td><td class="shop-price-cell">¥122,000</td><td class="shop-diff-cell positive">+¥2,020</td><td class="shop-link-cell"><a href="https://iosys.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_ps5_pro" data-shop="イオシス">買取ページを確認 →</a></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">2</td><td class="shop-name-cell">じゃんぱら</td><td class="shop-price-cell">¥120,000</td><td class="shop-diff-cell positive">+¥20</td><td class="shop-link-cell"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_ps5_pro" data-shop="じゃんぱら">買取ページを確認 →</a></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">3</td><td class="shop-name-cell">買取商店</td><td class="shop-price-cell">¥118,000</td><td class="shop-diff-cell negative">−¥1,980</td><td class="shop-link-cell"><span class="unverified-link">公式買取ページで確認してください</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">4</td><td class="shop-name-cell">ゲオ</td><td class="shop-price-cell">¥116,000</td><td class="shop-diff-cell negative">−¥3,980</td><td class="shop-link-cell"><a href="https://www.geo-online.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_ps5_pro" data-shop="ゲオ">買取ページを確認 →</a></td></tr></tbody>
+      <tbody><tr class="buyback-shop-row rank-1"><td class="shop-rank-cell">1</td><td class="shop-name-cell">イオシス</td><td class="shop-price-cell">¥122,000</td><td class="shop-diff-cell positive">+¥2,020</td><td class="shop-link-cell"><a href="https://iosys.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_ps5_pro" data-shop="イオシス" title="商品ページ">買取価格を確認 →</a><span class="link-type-badge">商品ページ</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">2</td><td class="shop-name-cell">じゃんぱら</td><td class="shop-price-cell">¥120,000</td><td class="shop-diff-cell positive">+¥20</td><td class="shop-link-cell"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_ps5_pro" data-shop="じゃんぱら" title="商品ページ">買取価格を確認 →</a><span class="link-type-badge">商品ページ</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">3</td><td class="shop-name-cell">買取商店</td><td class="shop-price-cell">¥118,000</td><td class="shop-diff-cell negative">−¥1,980</td><td class="shop-link-cell"><span class="unverified-link">公式買取ページで確認してください</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">4</td><td class="shop-name-cell">ゲオ</td><td class="shop-price-cell">¥116,000</td><td class="shop-diff-cell negative">−¥3,980</td><td class="shop-link-cell"><a href="https://www.geo-online.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_ps5_pro" data-shop="ゲオ" title="商品ページ">買取価格を確認 →</a><span class="link-type-badge">商品ページ</span></td></tr></tbody>
     </table>
   </div>
 </div>
@@ -1256,21 +1433,240 @@ td.profit-td { color: var(--green); font-weight: 700; font-variant-numeric: tabu
 </div>
 </div>
 <div id="tab-advanced" class="tab-panel" role="tabpanel">
-<div class="caution" style="margin:16px 0 20px;">
-ℹ️ <strong>現在、上級者向けの確定候補は少ないため、価格差・希少性・海外相場差が大きい監視候補を表示しています。</strong><br>
-中古市場や海外相場のデータが入り次第、確定候補として昇格します。
+<div class="adv-fallback-notice">
+<span class="adv-fallback-icon">ℹ️</span>
+<div><strong>現在、上級者向けの確定候補は少ないため、価格差・希少性・海外相場差が大きい監視候補を表示しています。</strong><br>
+<span>中古市場や海外相場のデータが入り次第、確定候補として昇格します。</span></div>
 </div>
 <div class="section-header"><h2>上級者向け監視候補</h2><span class="section-count">価格差・希少性スコア上位</span></div>
-<div class="card"><div class="data-table-wrap">
-<table>
-<thead><tr><th>商品</th><th>公式価格</th><th>最新買取店</th><th>注目ポイント</th><th>リンク</th></tr></thead>
-<tbody><tr class='watch-candidate-card'><td><strong>FUJIFILM X100VI</strong><br><span style="color:var(--green);font-size:0.82rem">買取 ¥415,000 (差 +145,500円)</span></td><td>¥269,500</td><td>マップカメラ</td><td><span style='color:var(--yellow);font-size:0.82rem'>中古プレ値あり</span></td><td></td></tr><tr class='watch-candidate-card'><td><strong>RICOH GR IV Monochrome</strong></td><td>¥283,800</td><td>—</td><td><span style='color:var(--yellow);font-size:0.82rem'>中古プレ値あり</span></td><td></td></tr><tr class='watch-candidate-card'><td><strong>RICOH GR IV</strong><br><span style="color:var(--green);font-size:0.82rem">買取 ¥175,000 (差 -19,800円)</span></td><td>¥194,800</td><td>マップカメラ</td><td><span style='color:var(--yellow);font-size:0.82rem'>中古プレ値あり</span></td><td></td></tr><tr class='watch-candidate-card'><td><strong>RICOH GR III HDF</strong></td><td>¥147,400</td><td>—</td><td><span style='color:var(--yellow);font-size:0.82rem'>中古プレ値あり</span></td><td></td></tr><tr class='watch-candidate-card'><td><strong>RICOH GR IIIx</strong><br><span style="color:var(--green);font-size:0.82rem">買取 ¥125,000 (差 -14,800円)</span></td><td>¥139,800</td><td>マップカメラ</td><td><span style='color:var(--yellow);font-size:0.82rem'>中古プレ値あり</span></td><td></td></tr><tr class='watch-candidate-card'><td><strong>RICOH GR III</strong></td><td>¥129,800</td><td>—</td><td><span style='color:var(--yellow);font-size:0.82rem'>中古プレ値あり</span></td><td></td></tr><tr class='watch-candidate-card'><td><strong>RICOH GR IV HDF</strong></td><td>—</td><td>—</td><td><span style='color:var(--yellow);font-size:0.82rem'>中古プレ値あり</span></td><td></td></tr><tr class='watch-candidate-card'><td><strong>Nintendo Switch 2 マリオカートセット</strong><br><span style="color:var(--green);font-size:0.82rem">買取 ¥67,000 (差 +7,020円)</span></td><td>¥59,980</td><td>買取商店</td><td><span style='color:var(--yellow);font-size:0.82rem'>監視中</span></td><td></td></tr><tr class='watch-candidate-card'><td><strong>Nintendo Switch 2</strong><br><span style="color:var(--green);font-size:0.82rem">買取 ¥57,000 (差 +7,020円)</span></td><td>¥49,980</td><td>買取商店</td><td><span style='color:var(--yellow);font-size:0.82rem'>監視中</span></td><td></td></tr><tr class='watch-candidate-card'><td><strong>PlayStation 5 Pro</strong><br><span style="color:var(--green);font-size:0.82rem">買取 ¥122,000 (差 +2,020円)</span></td><td>¥119,980</td><td>イオシス</td><td><span style='color:var(--yellow);font-size:0.82rem'>監視中</span></td><td><a href="https://iosys.co.jp/" target="_blank" rel="noopener" style="font-size:0.78rem;color:var(--accent)">買取ページ</a></td></tr><tr class='watch-candidate-card'><td><strong>PlayStation 5 Digital Edition</strong><br><span style="color:var(--green);font-size:0.82rem">買取 ¥65,000 (差 -7,980円)</span></td><td>¥72,980</td><td>イオシス</td><td><span style='color:var(--yellow);font-size:0.82rem'>監視中</span></td><td><a href="https://iosys.co.jp/" target="_blank" rel="noopener" style="font-size:0.78rem;color:var(--accent)">買取ページ</a></td></tr><tr class='watch-candidate-card'><td><strong>Xbox Series X</strong><br><span style="color:var(--green);font-size:0.82rem">買取 ¥50,000 (差 -9,978円)</span></td><td>¥59,978</td><td>イオシス</td><td><span style='color:var(--yellow);font-size:0.82rem'>監視中</span></td><td><a href="https://iosys.co.jp/" target="_blank" rel="noopener" style="font-size:0.78rem;color:var(--accent)">買取ページ</a></td></tr></tbody>
-</table>
+<div class="card watch-candidate-card">
+  <div class="card-header">
+    <div class="card-title">FUJIFILM X100VI</div>
+    <span class="badge badge-watch">中古プレ値あり</span>
+  </div>
+  <div class="watch-price-row">
+    <span class="watch-price-item">公式価格: <strong>¥269,500</strong></span>
+    <span class="watch-gap" style="color:var(--green)">買取 ¥415,000（差 +145,500円）</span>
+    <span class="watch-price-item">最新買取店: <strong>マップカメラ</strong></span>
+  </div>
+  <div class="watch-links-row"><span class="unverified-link">公式買取ページで確認</span></div>
+<div class="overseas-links-section">
+  <div class="overseas-links-header">
+    <span class="overseas-links-title">🌍 海外相場を確認する</span>
+    <span class="overseas-links-note">価格未取得でもリンク先で相場確認できます</span>
+  </div>
+  <div class="overseas-btn-row"><a href="https://www.ebay.com/sch/i.html?_nkw=FUJIFILM+X100VI&amp;LH_Sold=1&amp;LH_Complete=1&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="ebay_sold" title="実際の落札価格（過去の取引実績）を確認できます">🌐 eBay sold</a><a href="https://www.ebay.com/sch/i.html?_nkw=FUJIFILM+X100VI&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="ebay_buy" title="現在出品中の価格を確認できます">🌐 eBay (新着)</a><a href="https://www.bhphotovideo.com/c/search?q=FUJIFILM+X100VI&amp;sts=ma" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="bhphoto" title="米国大手カメラ・電子機器専門店（新品・中古）">📷 B&amp;H Photo</a><a href="https://www.adorama.com/l/?searchinfo=FUJIFILM+X100VI" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="adorama" title="米国カメラ専門店（新品・認定中古）">📷 Adorama</a><a href="https://www.mpb.com/en-us/search?q=FUJIFILM+X100VI" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="mpb" title="欧米最大手の中古カメラマーケットプレイス">🔄 MPB (中古)</a><a href="https://www.keh.com/shop/search?q=FUJIFILM+X100VI" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="keh" title="米国中古カメラ専門店（買取・販売）">🔄 KEH Camera</a></div>
 </div>
-<p style="color:var(--text-muted);font-size:0.78rem;margin-top:10px;padding:0 4px;">
-※ 監視候補は価格差・希少性スコアが高い商品です。中古市場データ入手後に確定候補へ昇格します。
-</p>
 </div>
+<div class="card watch-candidate-card">
+  <div class="card-header">
+    <div class="card-title">RICOH GR IV Monochrome</div>
+    <span class="badge badge-watch">中古プレ値あり</span>
+  </div>
+  <div class="watch-price-row">
+    <span class="watch-price-item">公式価格: <strong>¥283,800</strong></span>
+    
+    <span class="watch-price-item">最新買取店: <strong>—</strong></span>
+  </div>
+  <div class="watch-links-row"><span class="unverified-link">公式買取ページで確認</span></div>
+<div class="overseas-links-section">
+  <div class="overseas-links-header">
+    <span class="overseas-links-title">🌍 海外相場を確認する</span>
+    <span class="overseas-links-note">価格未取得でもリンク先で相場確認できます</span>
+  </div>
+  <div class="overseas-btn-row"><a href="https://www.ebay.com/sch/i.html?_nkw=RICOH+GR+IV+Monochrome&amp;LH_Sold=1&amp;LH_Complete=1&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="ebay_sold" title="実際の落札価格（過去の取引実績）を確認できます">🌐 eBay sold</a><a href="https://www.ebay.com/sch/i.html?_nkw=RICOH+GR+IV+Monochrome&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="ebay_buy" title="現在出品中の価格を確認できます">🌐 eBay (新着)</a><a href="https://www.bhphotovideo.com/c/search?q=RICOH+GR+IV+Monochrome&amp;sts=ma" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="bhphoto" title="米国大手カメラ・電子機器専門店（新品・中古）">📷 B&amp;H Photo</a><a href="https://www.adorama.com/l/?searchinfo=RICOH+GR+IV+Monochrome" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="adorama" title="米国カメラ専門店（新品・認定中古）">📷 Adorama</a><a href="https://www.mpb.com/en-us/search?q=RICOH+GR+IV+Monochrome" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="mpb" title="欧米最大手の中古カメラマーケットプレイス">🔄 MPB (中古)</a><a href="https://www.keh.com/shop/search?q=RICOH+GR+IV+Monochrome" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="keh" title="米国中古カメラ専門店（買取・販売）">🔄 KEH Camera</a></div>
+</div>
+</div>
+<div class="card watch-candidate-card">
+  <div class="card-header">
+    <div class="card-title">RICOH GR IV</div>
+    <span class="badge badge-watch">中古プレ値あり</span>
+  </div>
+  <div class="watch-price-row">
+    <span class="watch-price-item">公式価格: <strong>¥194,800</strong></span>
+    <span class="watch-gap" style="color:var(--text-muted)">買取 ¥175,000（差 -19,800円）</span>
+    <span class="watch-price-item">最新買取店: <strong>マップカメラ</strong></span>
+  </div>
+  <div class="watch-links-row"><span class="unverified-link">公式買取ページで確認</span></div>
+<div class="overseas-links-section">
+  <div class="overseas-links-header">
+    <span class="overseas-links-title">🌍 海外相場を確認する</span>
+    <span class="overseas-links-note">価格未取得でもリンク先で相場確認できます</span>
+  </div>
+  <div class="overseas-btn-row"><a href="https://www.ebay.com/sch/i.html?_nkw=RICOH+GR+IV&amp;LH_Sold=1&amp;LH_Complete=1&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="ebay_sold" title="実際の落札価格（過去の取引実績）を確認できます">🌐 eBay sold</a><a href="https://www.ebay.com/sch/i.html?_nkw=RICOH+GR+IV&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="ebay_buy" title="現在出品中の価格を確認できます">🌐 eBay (新着)</a><a href="https://www.bhphotovideo.com/c/search?q=RICOH+GR+IV&amp;sts=ma" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="bhphoto" title="米国大手カメラ・電子機器専門店（新品・中古）">📷 B&amp;H Photo</a><a href="https://www.adorama.com/l/?searchinfo=RICOH+GR+IV" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="adorama" title="米国カメラ専門店（新品・認定中古）">📷 Adorama</a><a href="https://www.mpb.com/en-us/search?q=RICOH+GR+IV" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="mpb" title="欧米最大手の中古カメラマーケットプレイス">🔄 MPB (中古)</a><a href="https://www.keh.com/shop/search?q=RICOH+GR+IV" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="keh" title="米国中古カメラ専門店（買取・販売）">🔄 KEH Camera</a></div>
+</div>
+</div>
+<div class="card watch-candidate-card">
+  <div class="card-header">
+    <div class="card-title">RICOH GR III HDF</div>
+    <span class="badge badge-watch">中古プレ値あり</span>
+  </div>
+  <div class="watch-price-row">
+    <span class="watch-price-item">公式価格: <strong>¥147,400</strong></span>
+    
+    <span class="watch-price-item">最新買取店: <strong>—</strong></span>
+  </div>
+  <div class="watch-links-row"><span class="unverified-link">公式買取ページで確認</span></div>
+<div class="overseas-links-section">
+  <div class="overseas-links-header">
+    <span class="overseas-links-title">🌍 海外相場を確認する</span>
+    <span class="overseas-links-note">価格未取得でもリンク先で相場確認できます</span>
+  </div>
+  <div class="overseas-btn-row"><a href="https://www.ebay.com/sch/i.html?_nkw=RICOH+GR+III+HDF&amp;LH_Sold=1&amp;LH_Complete=1&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="ebay_sold" title="実際の落札価格（過去の取引実績）を確認できます">🌐 eBay sold</a><a href="https://www.ebay.com/sch/i.html?_nkw=RICOH+GR+III+HDF&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="ebay_buy" title="現在出品中の価格を確認できます">🌐 eBay (新着)</a><a href="https://www.bhphotovideo.com/c/search?q=RICOH+GR+III+HDF&amp;sts=ma" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="bhphoto" title="米国大手カメラ・電子機器専門店（新品・中古）">📷 B&amp;H Photo</a><a href="https://www.adorama.com/l/?searchinfo=RICOH+GR+III+HDF" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="adorama" title="米国カメラ専門店（新品・認定中古）">📷 Adorama</a><a href="https://www.mpb.com/en-us/search?q=RICOH+GR+III+HDF" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="mpb" title="欧米最大手の中古カメラマーケットプレイス">🔄 MPB (中古)</a><a href="https://www.keh.com/shop/search?q=RICOH+GR+III+HDF" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="keh" title="米国中古カメラ専門店（買取・販売）">🔄 KEH Camera</a></div>
+</div>
+</div>
+<div class="card watch-candidate-card">
+  <div class="card-header">
+    <div class="card-title">RICOH GR IIIx</div>
+    <span class="badge badge-watch">中古プレ値あり</span>
+  </div>
+  <div class="watch-price-row">
+    <span class="watch-price-item">公式価格: <strong>¥139,800</strong></span>
+    <span class="watch-gap" style="color:var(--text-muted)">買取 ¥125,000（差 -14,800円）</span>
+    <span class="watch-price-item">最新買取店: <strong>マップカメラ</strong></span>
+  </div>
+  <div class="watch-links-row"><span class="unverified-link">公式買取ページで確認</span></div>
+<div class="overseas-links-section">
+  <div class="overseas-links-header">
+    <span class="overseas-links-title">🌍 海外相場を確認する</span>
+    <span class="overseas-links-note">価格未取得でもリンク先で相場確認できます</span>
+  </div>
+  <div class="overseas-btn-row"><a href="https://www.ebay.com/sch/i.html?_nkw=RICOH+GR+IIIx&amp;LH_Sold=1&amp;LH_Complete=1&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="ebay_sold" title="実際の落札価格（過去の取引実績）を確認できます">🌐 eBay sold</a><a href="https://www.ebay.com/sch/i.html?_nkw=RICOH+GR+IIIx&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="ebay_buy" title="現在出品中の価格を確認できます">🌐 eBay (新着)</a><a href="https://www.bhphotovideo.com/c/search?q=RICOH+GR+IIIx&amp;sts=ma" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="bhphoto" title="米国大手カメラ・電子機器専門店（新品・中古）">📷 B&amp;H Photo</a><a href="https://www.adorama.com/l/?searchinfo=RICOH+GR+IIIx" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="adorama" title="米国カメラ専門店（新品・認定中古）">📷 Adorama</a><a href="https://www.mpb.com/en-us/search?q=RICOH+GR+IIIx" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="mpb" title="欧米最大手の中古カメラマーケットプレイス">🔄 MPB (中古)</a><a href="https://www.keh.com/shop/search?q=RICOH+GR+IIIx" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="keh" title="米国中古カメラ専門店（買取・販売）">🔄 KEH Camera</a></div>
+</div>
+</div>
+<div class="card watch-candidate-card">
+  <div class="card-header">
+    <div class="card-title">RICOH GR III</div>
+    <span class="badge badge-watch">中古プレ値あり</span>
+  </div>
+  <div class="watch-price-row">
+    <span class="watch-price-item">公式価格: <strong>¥129,800</strong></span>
+    
+    <span class="watch-price-item">最新買取店: <strong>—</strong></span>
+  </div>
+  <div class="watch-links-row"><span class="unverified-link">公式買取ページで確認</span></div>
+<div class="overseas-links-section">
+  <div class="overseas-links-header">
+    <span class="overseas-links-title">🌍 海外相場を確認する</span>
+    <span class="overseas-links-note">価格未取得でもリンク先で相場確認できます</span>
+  </div>
+  <div class="overseas-btn-row"><a href="https://www.ebay.com/sch/i.html?_nkw=RICOH+GR+III&amp;LH_Sold=1&amp;LH_Complete=1&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="ebay_sold" title="実際の落札価格（過去の取引実績）を確認できます">🌐 eBay sold</a><a href="https://www.ebay.com/sch/i.html?_nkw=RICOH+GR+III&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="ebay_buy" title="現在出品中の価格を確認できます">🌐 eBay (新着)</a><a href="https://www.bhphotovideo.com/c/search?q=RICOH+GR+III&amp;sts=ma" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="bhphoto" title="米国大手カメラ・電子機器専門店（新品・中古）">📷 B&amp;H Photo</a><a href="https://www.adorama.com/l/?searchinfo=RICOH+GR+III" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="adorama" title="米国カメラ専門店（新品・認定中古）">📷 Adorama</a><a href="https://www.mpb.com/en-us/search?q=RICOH+GR+III" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="mpb" title="欧米最大手の中古カメラマーケットプレイス">🔄 MPB (中古)</a><a href="https://www.keh.com/shop/search?q=RICOH+GR+III" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="keh" title="米国中古カメラ専門店（買取・販売）">🔄 KEH Camera</a></div>
+</div>
+</div>
+<div class="card watch-candidate-card">
+  <div class="card-header">
+    <div class="card-title">RICOH GR IV HDF</div>
+    <span class="badge badge-watch">中古プレ値あり</span>
+  </div>
+  <div class="watch-price-row">
+    <span class="watch-price-item">公式価格: <strong>—</strong></span>
+    
+    <span class="watch-price-item">最新買取店: <strong>—</strong></span>
+  </div>
+  <div class="watch-links-row"><span class="unverified-link">公式買取ページで確認</span></div>
+<div class="overseas-links-section">
+  <div class="overseas-links-header">
+    <span class="overseas-links-title">🌍 海外相場を確認する</span>
+    <span class="overseas-links-note">価格未取得でもリンク先で相場確認できます</span>
+  </div>
+  <div class="overseas-btn-row"><a href="https://www.ebay.com/sch/i.html?_nkw=RICOH+GR+IV+HDF&amp;LH_Sold=1&amp;LH_Complete=1&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="ebay_sold" title="実際の落札価格（過去の取引実績）を確認できます">🌐 eBay sold</a><a href="https://www.ebay.com/sch/i.html?_nkw=RICOH+GR+IV+HDF&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="ebay_buy" title="現在出品中の価格を確認できます">🌐 eBay (新着)</a><a href="https://www.bhphotovideo.com/c/search?q=RICOH+GR+IV+HDF&amp;sts=ma" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="bhphoto" title="米国大手カメラ・電子機器専門店（新品・中古）">📷 B&amp;H Photo</a><a href="https://www.adorama.com/l/?searchinfo=RICOH+GR+IV+HDF" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="adorama" title="米国カメラ専門店（新品・認定中古）">📷 Adorama</a><a href="https://www.mpb.com/en-us/search?q=RICOH+GR+IV+HDF" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="mpb" title="欧米最大手の中古カメラマーケットプレイス">🔄 MPB (中古)</a><a href="https://www.keh.com/shop/search?q=RICOH+GR+IV+HDF" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="keh" title="米国中古カメラ専門店（買取・販売）">🔄 KEH Camera</a></div>
+</div>
+</div>
+<div class="card watch-candidate-card">
+  <div class="card-header">
+    <div class="card-title">Nintendo Switch 2 マリオカートセット</div>
+    <span class="badge badge-watch">監視中</span>
+  </div>
+  <div class="watch-price-row">
+    <span class="watch-price-item">公式価格: <strong>¥59,980</strong></span>
+    <span class="watch-gap" style="color:var(--green)">買取 ¥67,000（差 +7,020円）</span>
+    <span class="watch-price-item">最新買取店: <strong>買取商店</strong></span>
+  </div>
+  <div class="watch-links-row"><span class="unverified-link">公式買取ページで確認</span></div>
+<div class="overseas-links-section">
+  <div class="overseas-links-header">
+    <span class="overseas-links-title">🌍 海外相場を確認する</span>
+    <span class="overseas-links-note">価格未取得でもリンク先で相場確認できます</span>
+  </div>
+  <div class="overseas-btn-row"><a href="https://www.ebay.com/sch/i.html?_nkw=Nintendo+Switch+2+%E3%83%9E%E3%83%AA%E3%82%AA%E3%82%AB%E3%83%BC%E3%83%88%E3%82%BB%E3%83%83%E3%83%88&amp;LH_Sold=1&amp;LH_Complete=1&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="ebay_sold" title="実際の落札価格（過去の取引実績）を確認できます">🌐 eBay sold</a><a href="https://www.ebay.com/sch/i.html?_nkw=Nintendo+Switch+2+%E3%83%9E%E3%83%AA%E3%82%AA%E3%82%AB%E3%83%BC%E3%83%88%E3%82%BB%E3%83%83%E3%83%88&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="ebay_buy" title="現在出品中の価格を確認できます">🌐 eBay (新着)</a><a href="https://stockx.com/search?s=Nintendo+Switch+2+%E3%83%9E%E3%83%AA%E3%82%AA%E3%82%AB%E3%83%BC%E3%83%88%E3%82%BB%E3%83%83%E3%83%88" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="stockx" title="スニーカー・ゲーム機・限定品の相場（ライブ価格）">📈 StockX</a><a href="https://www.amazon.com/s?k=Nintendo+Switch+2+%E3%83%9E%E3%83%AA%E3%82%AA%E3%82%AB%E3%83%BC%E3%83%88%E3%82%BB%E3%83%83%E3%83%88" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="amazon_us" title="米国Amazonの現在価格">🛒 Amazon US</a></div>
+</div>
+</div>
+<div class="card watch-candidate-card">
+  <div class="card-header">
+    <div class="card-title">Nintendo Switch 2</div>
+    <span class="badge badge-watch">監視中</span>
+  </div>
+  <div class="watch-price-row">
+    <span class="watch-price-item">公式価格: <strong>¥49,980</strong></span>
+    <span class="watch-gap" style="color:var(--green)">買取 ¥57,000（差 +7,020円）</span>
+    <span class="watch-price-item">最新買取店: <strong>買取商店</strong></span>
+  </div>
+  <div class="watch-links-row"><span class="unverified-link">公式買取ページで確認</span></div>
+<div class="overseas-links-section">
+  <div class="overseas-links-header">
+    <span class="overseas-links-title">🌍 海外相場を確認する</span>
+    <span class="overseas-links-note">価格未取得でもリンク先で相場確認できます</span>
+  </div>
+  <div class="overseas-btn-row"><a href="https://www.ebay.com/sch/i.html?_nkw=Nintendo+Switch+2&amp;LH_Sold=1&amp;LH_Complete=1&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="ebay_sold" title="実際の落札価格（過去の取引実績）を確認できます">🌐 eBay sold</a><a href="https://www.ebay.com/sch/i.html?_nkw=Nintendo+Switch+2&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="ebay_buy" title="現在出品中の価格を確認できます">🌐 eBay (新着)</a><a href="https://stockx.com/search?s=Nintendo+Switch+2" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="stockx" title="スニーカー・ゲーム機・限定品の相場（ライブ価格）">📈 StockX</a><a href="https://www.amazon.com/s?k=Nintendo+Switch+2" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="amazon_us" title="米国Amazonの現在価格">🛒 Amazon US</a></div>
+</div>
+</div>
+<div class="card watch-candidate-card">
+  <div class="card-header">
+    <div class="card-title">PlayStation 5 Pro</div>
+    <span class="badge badge-watch">監視中</span>
+  </div>
+  <div class="watch-price-row">
+    <span class="watch-price-item">公式価格: <strong>¥119,980</strong></span>
+    <span class="watch-gap" style="color:var(--green)">買取 ¥122,000（差 +2,020円）</span>
+    <span class="watch-price-item">最新買取店: <strong>イオシス</strong></span>
+  </div>
+  <div class="watch-links-row"><a href="https://iosys.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-shop="イオシス" title="商品ページ">買取価格を確認 →</a><span class="link-type-badge">商品ページ</span></div>
+<div class="overseas-links-section">
+  <div class="overseas-links-header">
+    <span class="overseas-links-title">🌍 海外相場を確認する</span>
+    <span class="overseas-links-note">価格未取得でもリンク先で相場確認できます</span>
+  </div>
+  <div class="overseas-btn-row"><a href="https://www.ebay.com/sch/i.html?_nkw=PlayStation+5+Pro&amp;LH_Sold=1&amp;LH_Complete=1&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="ebay_sold" title="実際の落札価格（過去の取引実績）を確認できます">🌐 eBay sold</a><a href="https://www.ebay.com/sch/i.html?_nkw=PlayStation+5+Pro&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="ebay_buy" title="現在出品中の価格を確認できます">🌐 eBay (新着)</a><a href="https://stockx.com/search?s=PlayStation+5+Pro" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="stockx" title="スニーカー・ゲーム機・限定品の相場（ライブ価格）">📈 StockX</a><a href="https://www.amazon.com/s?k=PlayStation+5+Pro" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="amazon_us" title="米国Amazonの現在価格">🛒 Amazon US</a></div>
+</div>
+</div>
+<div class="card watch-candidate-card">
+  <div class="card-header">
+    <div class="card-title">PlayStation 5 Digital Edition</div>
+    <span class="badge badge-watch">監視中</span>
+  </div>
+  <div class="watch-price-row">
+    <span class="watch-price-item">公式価格: <strong>¥72,980</strong></span>
+    <span class="watch-gap" style="color:var(--text-muted)">買取 ¥65,000（差 -7,980円）</span>
+    <span class="watch-price-item">最新買取店: <strong>イオシス</strong></span>
+  </div>
+  <div class="watch-links-row"><a href="https://iosys.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-shop="イオシス" title="商品ページ">買取価格を確認 →</a><span class="link-type-badge">商品ページ</span></div>
+<div class="overseas-links-section">
+  <div class="overseas-links-header">
+    <span class="overseas-links-title">🌍 海外相場を確認する</span>
+    <span class="overseas-links-note">価格未取得でもリンク先で相場確認できます</span>
+  </div>
+  <div class="overseas-btn-row"><a href="https://www.ebay.com/sch/i.html?_nkw=PlayStation+5+Digital+Edition&amp;LH_Sold=1&amp;LH_Complete=1&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="ebay_sold" title="実際の落札価格（過去の取引実績）を確認できます">🌐 eBay sold</a><a href="https://www.ebay.com/sch/i.html?_nkw=PlayStation+5+Digital+Edition&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="ebay_buy" title="現在出品中の価格を確認できます">🌐 eBay (新着)</a><a href="https://stockx.com/search?s=PlayStation+5+Digital+Edition" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="stockx" title="スニーカー・ゲーム機・限定品の相場（ライブ価格）">📈 StockX</a><a href="https://www.amazon.com/s?k=PlayStation+5+Digital+Edition" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="amazon_us" title="米国Amazonの現在価格">🛒 Amazon US</a></div>
+</div>
+</div>
+<div class="card watch-candidate-card">
+  <div class="card-header">
+    <div class="card-title">Xbox Series X</div>
+    <span class="badge badge-watch">監視中</span>
+  </div>
+  <div class="watch-price-row">
+    <span class="watch-price-item">公式価格: <strong>¥59,978</strong></span>
+    <span class="watch-gap" style="color:var(--text-muted)">買取 ¥50,000（差 -9,978円）</span>
+    <span class="watch-price-item">最新買取店: <strong>イオシス</strong></span>
+  </div>
+  <div class="watch-links-row"><a href="https://iosys.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-shop="イオシス" title="商品ページ">買取価格を確認 →</a><span class="link-type-badge">商品ページ</span></div>
+<div class="overseas-links-section">
+  <div class="overseas-links-header">
+    <span class="overseas-links-title">🌍 海外相場を確認する</span>
+    <span class="overseas-links-note">価格未取得でもリンク先で相場確認できます</span>
+  </div>
+  <div class="overseas-btn-row"><a href="https://www.ebay.com/sch/i.html?_nkw=Xbox+Series+X&amp;LH_Sold=1&amp;LH_Complete=1&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="ebay_sold" title="実際の落札価格（過去の取引実績）を確認できます">🌐 eBay sold</a><a href="https://www.ebay.com/sch/i.html?_nkw=Xbox+Series+X&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="ebay_buy" title="現在出品中の価格を確認できます">🌐 eBay (新着)</a><a href="https://stockx.com/search?s=Xbox+Series+X" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="stockx" title="スニーカー・ゲーム機・限定品の相場（ライブ価格）">📈 StockX</a><a href="https://www.amazon.com/s?k=Xbox+Series+X" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="amazon_us" title="米国Amazonの現在価格">🛒 Amazon US</a></div>
+</div>
+</div><p class="watch-footer-note">※ 監視候補は価格差・希少性スコアが高い商品です。中古市場データ入手後に確定候補へ昇格します。</p>
 </div>
 <div id="tab-surge" class="tab-panel" role="tabpanel">
 <div class="section-header"><h2>本日の急騰</h2></div><p class="empty-msg">急騰は検出されていません（閾値: ¥5,000+）</p>

@@ -1,0 +1,80 @@
+# 海外相場リンクマスタ
+# {query} はURLエンコードされた商品名に置換される
+# priority: 小さいほど優先表示
+#
+# 用途:
+#   - 上級者向けタブの海外相場セクション
+#   - 価格未取得でも「確認リンク」として必ず表示
+#   - advance_cards の海外差額計算補助
+
+ebay_sold:
+  name: "eBay 落札済み"
+  label: "eBay sold"
+  icon: "🌐"
+  search_url_template: "https://www.ebay.com/sch/i.html?_nkw={query}&LH_Sold=1&LH_Complete=1&_sacat=0"
+  note: "実際の落札価格（過去の取引実績）を確認できます"
+  priority: 1
+  categories: ["iphone", "camera", "game_console", "mac", "apple_watch", "airpods"]
+
+ebay_buy:
+  name: "eBay 購入可能"
+  label: "eBay (新着)"
+  icon: "🌐"
+  search_url_template: "https://www.ebay.com/sch/i.html?_nkw={query}&_sacat=0"
+  note: "現在出品中の価格を確認できます"
+  priority: 2
+  categories: ["iphone", "camera", "game_console", "mac"]
+
+bhphoto:
+  name: "B&H Photo"
+  label: "B&H Photo"
+  icon: "📷"
+  search_url_template: "https://www.bhphotovideo.com/c/search?q={query}&sts=ma"
+  note: "米国大手カメラ・電子機器専門店（新品・中古）"
+  priority: 3
+  categories: ["camera", "mac", "iphone", "apple_watch"]
+
+adorama:
+  name: "Adorama"
+  label: "Adorama"
+  icon: "📷"
+  search_url_template: "https://www.adorama.com/l/?searchinfo={query}"
+  note: "米国カメラ専門店（新品・認定中古）"
+  priority: 4
+  categories: ["camera", "mac", "iphone"]
+
+mpb:
+  name: "MPB"
+  label: "MPB (中古)"
+  icon: "🔄"
+  search_url_template: "https://www.mpb.com/en-us/search?q={query}"
+  note: "欧米最大手の中古カメラマーケットプレイス"
+  priority: 5
+  categories: ["camera"]
+
+keh:
+  name: "KEH Camera"
+  label: "KEH Camera"
+  icon: "🔄"
+  search_url_template: "https://www.keh.com/shop/search?q={query}"
+  note: "米国中古カメラ専門店（買取・販売）"
+  priority: 6
+  categories: ["camera"]
+
+stockx:
+  name: "StockX"
+  label: "StockX"
+  icon: "📈"
+  search_url_template: "https://stockx.com/search?s={query}"
+  note: "スニーカー・ゲーム機・限定品の相場（ライブ価格）"
+  priority: 7
+  categories: ["game_console", "iphone"]
+
+amazon_us:
+  name: "Amazon US"
+  label: "Amazon US"
+  icon: "🛒"
+  search_url_template: "https://www.amazon.com/s?k={query}"
+  note: "米国Amazonの現在価格"
+  priority: 8
+  categories: ["iphone", "camera", "game_console", "mac", "apple_watch", "airpods"]

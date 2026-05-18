@@ -232,6 +232,10 @@ class DailyLPGenerator:
         cta_html     = self._section_cta()
         footer_html  = self._section_footer()
 
+        # topbar用の日時文字列（_render_page スコープで利用）
+        _buyback_str_top = _jst_str(latest_buyback_at) if latest_buyback_at else "—"
+        _lp_str_top = lp_generated_at.strftime("%m/%d %H:%M") if lp_generated_at else "—"
+
         return f"""<!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -241,86 +245,663 @@ class DailyLPGenerator:
 <meta name="description" content="{_esc(self.settings.get('site_description', ''))}">
 {analytics_head}
 <style>
+/* ============================================================
+   プレ値速報 — Bloomberg/TradingView風 リデザイン
+   ============================================================ */
 :root {{
-  --bg:#0f1117; --card:#1a1d27; --border:#2a2d37;
-  --text:#e4e4e7; --muted:#9ca3af; --accent:#3b82f6;
-  --green:#22c55e; --yellow:#eab308; --orange:#f97316; --red:#ef4444;
+  /* カラーパレット */
+  --bg: #0b0e17;
+  --surface: #111827;
+  --card: #161d2e;
+  --card-hover: #1c2540;
+  --border: #1e2a3a;
+  --border-light: #253044;
+  --text: #e2e8f0;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --accent: #3b82f6;
+  --accent-dim: rgba(59,130,246,0.12);
+  --green: #10b981;
+  --green-dim: rgba(16,185,129,0.12);
+  --yellow: #f59e0b;
+  --yellow-dim: rgba(245,158,11,0.12);
+  --orange: #f97316;
+  --orange-dim: rgba(249,115,22,0.12);
+  --red: #ef4444;
+  --red-dim: rgba(239,68,68,0.12);
+  /* タイポグラフィ */
+  --font-sans: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
+  --font-mono: "SF Mono", "Fira Code", "Cascadia Code", monospace;
+  /* スペーシング */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
 }}
-*{{margin:0;padding:0;box-sizing:border-box;}}
-body{{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.7;}}
-.container{{max-width:820px;margin:0 auto;padding:20px 16px;}}
-h1{{font-size:1.6rem;margin-bottom:8px;}}
-h2{{font-size:1.2rem;margin:24px 0 14px;padding-bottom:6px;border-bottom:1px solid var(--border);}}
-h3{{font-size:1rem;margin:14px 0 8px;}}
-/* Hero */
-.hero{{text-align:center;padding:36px 0 20px;}}
-.hero .timestamps{{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:10px;}}
-.hero .ts-item{{color:var(--muted);font-size:0.8rem;background:var(--card);padding:4px 12px;border-radius:99px;border:1px solid var(--border);}}
-/* Stale Warning */
-.stale-warning-block{{background:#2d1a00;border-left:4px solid var(--orange);padding:12px 16px;border-radius:0 8px 8px 0;margin:12px 0;font-size:0.88rem;color:#fbbf24;}}
-/* Tabs */
-.tab-nav{{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 0;border-bottom:2px solid var(--border);padding-bottom:0;}}
-.tab-btn{{background:transparent;border:none;border-bottom:3px solid transparent;padding:10px 18px;font-size:0.9rem;color:var(--muted);cursor:pointer;transition:all .2s;margin-bottom:-2px;border-radius:8px 8px 0 0;white-space:nowrap;}}
-.tab-btn:hover{{color:var(--text);background:var(--card);}}
-.tab-btn.active{{color:var(--accent);border-bottom-color:var(--accent);background:var(--card);font-weight:600;}}
-.tab-panel{{display:none;padding:8px 0;}}
-.tab-panel.active{{display:block;}}
-/* noscript fallback: show all panels */
-.noscript-all .tab-panel{{display:block!important;}}
-.noscript-all .tab-btn{{display:none;}}
-.noscript-all .tab-nav::before{{content:"※ JavaScript が無効です。全タブを表示しています。";display:block;color:var(--muted);font-size:0.8rem;padding:8px 0;width:100%;}}
-/* Cards */
-.card{{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;margin:10px 0;}}
-.badge{{display:inline-block;padding:2px 10px;border-radius:99px;font-size:0.72rem;font-weight:600;}}
-.badge-easy{{background:#22c55e22;color:var(--green);}}
-.badge-watch{{background:#eab30822;color:var(--yellow);}}
-.badge-adv{{background:#f9731622;color:var(--orange);}}
-.badge-exp{{background:#ef444422;color:var(--red);}}
-.badge-surge{{background:#22c55e22;color:var(--green);}}
-.badge-drop{{background:#ef444422;color:var(--red);}}
-/* Price rows */
-.price-row{{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:0.92rem;}}
-.price-row:last-child{{border:none;}}
-.price-label{{color:var(--muted);}}
-.price-value{{font-weight:600;}}
-.profit{{color:var(--green);font-size:1.15rem;font-weight:700;}}
-/* Links */
-.links{{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;}}
-.links a{{color:var(--accent);text-decoration:none;font-size:0.85rem;padding:4px 12px;border:1px solid var(--accent);border-radius:6px;}}
-.links a:hover{{background:var(--accent);color:#fff;}}
-/* Table */
-table{{width:100%;border-collapse:collapse;margin:6px 0;font-size:0.88rem;}}
-th,td{{padding:7px 10px;text-align:left;border-bottom:1px solid var(--border);}}
-th{{color:var(--muted);font-weight:500;white-space:nowrap;}}
-td{{word-break:break-word;}}
-/* Misc */
-.empty-msg{{color:var(--muted);padding:16px 0;font-size:0.9rem;}}
-.cta{{text-align:center;padding:28px 0;}}
-.cta a{{display:inline-block;background:var(--accent);color:#fff;padding:13px 36px;border-radius:8px;text-decoration:none;font-weight:600;font-size:0.95rem;}}
-.caution{{background:#1c1c22;border-left:4px solid var(--yellow);padding:14px 18px;margin:24px 0;border-radius:0 8px 8px 0;font-size:0.88rem;color:var(--muted);line-height:1.8;}}
-.footer{{text-align:center;color:var(--muted);font-size:0.78rem;padding:36px 0 20px;line-height:2;}}
-/* 買取店比較テーブル */
-.buyback-compare{{margin:12px 0 0;}}
-.buyback-compare h4{{font-size:0.88rem;color:var(--muted);margin-bottom:6px;}}
-.shop-compare-row{{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid var(--border);font-size:0.85rem;}}
-.shop-compare-row:last-child{{border:none;}}
-.shop-rank{{color:var(--muted);min-width:22px;}}
-.shop-name{{flex:1;padding:0 8px;}}
-.shop-price{{font-weight:600;color:var(--green);}}
-.shop-profit{{font-size:0.78rem;color:var(--muted);}}
-/* データ鮮度 */
-.freshness-live{{color:var(--green);font-size:0.75rem;}}
-.freshness-recent{{color:var(--yellow);font-size:0.75rem;}}
-.freshness-stale{{color:var(--red);font-size:0.75rem;}}
-.freshness-unknown{{color:var(--muted);font-size:0.75rem;}}
-@media(max-width:600px){{
-  .tab-btn{{padding:8px 12px;font-size:0.82rem;}}
-  table{{font-size:0.8rem;}}
-  th,td{{padding:5px 7px;}}
+*, *::before, *::after {{ margin: 0; padding: 0; box-sizing: border-box; }}
+html {{ scroll-behavior: smooth; }}
+body {{
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.65;
+  font-size: 15px;
+  -webkit-font-smoothing: antialiased;
+}}
+/* ---- Layout ---- */
+.container {{
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 16px 48px;
+}}
+/* ---- Topbar ---- */
+.topbar {{
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(12px);
+}}
+.topbar-brand {{
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}}
+.topbar-brand .dot {{
+  width: 8px; height: 8px;
+  background: var(--green);
+  border-radius: 50%;
+  animation: pulse-dot 2s infinite;
+}}
+@keyframes pulse-dot {{
+  0%, 100% {{ opacity: 1; transform: scale(1); }}
+  50% {{ opacity: 0.5; transform: scale(0.8); }}
+}}
+.topbar-meta {{
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}}
+/* ---- Hero ---- */
+.hero {{
+  padding: 56px 0 36px;
+  text-align: center;
+  position: relative;
+}}
+.hero::before {{
+  content: "";
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 600px; height: 300px;
+  background: radial-gradient(ellipse at center, rgba(59,130,246,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}}
+.hero-eyebrow {{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--accent-dim);
+  border: 1px solid rgba(59,130,246,0.25);
+  color: var(--accent);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 99px;
+  margin-bottom: 20px;
+}}
+.hero h1 {{
+  font-size: clamp(1.6rem, 4vw, 2.2rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: var(--text);
+  margin-bottom: 12px;
+}}
+.hero-sub {{
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  margin-bottom: 28px;
+  max-width: 480px;
+  margin-left: auto;
+  margin-right: auto;
+}}
+.hero-timestamps {{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}}
+.ts-chip {{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--card);
+  border: 1px solid var(--border-light);
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  padding: 6px 14px;
+  border-radius: 99px;
+  font-variant-numeric: tabular-nums;
+}}
+.ts-chip .ts-dot {{
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  flex-shrink: 0;
+}}
+.ts-chip.stale .ts-dot {{ background: var(--orange); }}
+/* ---- Stale Warning ---- */
+.stale-warning-block {{
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: rgba(249,115,22,0.08);
+  border: 1px solid rgba(249,115,22,0.3);
+  border-left: 4px solid var(--orange);
+  padding: 14px 18px;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  margin: 16px 0;
+  font-size: 0.875rem;
+  color: #fed7aa;
+  line-height: 1.6;
+}}
+.stale-warning-block .warn-icon {{ font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }}
+/* ---- Tab Navigation ---- */
+.tab-nav {{
+  display: flex;
+  gap: 4px;
+  margin: 32px 0 0;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}}
+.tab-nav::-webkit-scrollbar {{ display: none; }}
+.tab-btn {{
+  flex-shrink: 0;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 12px 20px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+  margin-bottom: -1px;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+}}
+.tab-btn:hover {{ color: var(--text-secondary); }}
+.tab-btn.active {{
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+  font-weight: 600;
+}}
+.tab-panel {{ display: none; padding: 20px 0 0; }}
+.tab-panel.active {{ display: block; }}
+/* noscript fallback */
+.noscript-all .tab-panel {{ display: block !important; }}
+.noscript-all .tab-btn {{ display: none; }}
+.noscript-all .tab-nav::before {{
+  content: "※ JavaScript が無効です。全タブを表示しています。";
+  display: block; color: var(--text-muted); font-size: 0.8rem; padding: 8px 0; width: 100%;
+}}
+/* ---- Section Headers ---- */
+.section-header {{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 28px 0 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}}
+.section-header h2 {{
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+}}
+.section-header .section-count {{
+  font-size: 0.72rem;
+  background: var(--border);
+  color: var(--text-muted);
+  padding: 2px 8px;
+  border-radius: 99px;
+}}
+/* ---- Cards ---- */
+.card {{
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px 22px;
+  margin: 10px 0;
+  transition: border-color 0.15s, background 0.15s;
+}}
+.card:hover {{
+  border-color: var(--border-light);
+  background: var(--card-hover);
+}}
+.card-header {{
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}}
+.card-title {{
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.3;
+  flex: 1;
+}}
+/* ---- Badges ---- */
+.badge {{
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 99px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}}
+.badge-easy {{ background: var(--green-dim); color: var(--green); border: 1px solid rgba(16,185,129,0.25); }}
+.badge-watch {{ background: var(--yellow-dim); color: var(--yellow); border: 1px solid rgba(245,158,11,0.25); }}
+.badge-adv {{ background: var(--orange-dim); color: var(--orange); border: 1px solid rgba(249,115,22,0.25); }}
+.badge-exp {{ background: var(--red-dim); color: var(--red); border: 1px solid rgba(239,68,68,0.25); }}
+.badge-surge {{ background: var(--green-dim); color: var(--green); border: 1px solid rgba(16,185,129,0.25); }}
+.badge-drop {{ background: var(--red-dim); color: var(--red); border: 1px solid rgba(239,68,68,0.25); }}
+/* ---- Price Grid ---- */
+.price-grid {{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 14px;
+}}
+.price-cell {{
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+}}
+.price-cell-label {{
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}}
+.price-cell-value {{
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}}
+.price-cell.profit-cell {{
+  background: var(--green-dim);
+  border-color: rgba(16,185,129,0.25);
+  grid-column: span 2;
+}}
+.price-cell.profit-cell .price-cell-value {{
+  font-size: 1.35rem;
+  color: var(--green);
+  letter-spacing: -0.02em;
+}}
+.profit-rate-badge {{
+  display: inline-flex;
+  align-items: center;
+  background: rgba(16,185,129,0.2);
+  color: var(--green);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-left: 8px;
+  vertical-align: middle;
+}}
+/* ---- Price Rows (legacy support) ---- */
+.price-row {{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.9rem;
+}}
+.price-row:last-child {{ border: none; }}
+.price-label {{ color: var(--text-muted); font-size: 0.85rem; }}
+.price-value {{ font-weight: 600; color: var(--text); font-variant-numeric: tabular-nums; }}
+.profit {{ color: var(--green); font-size: 1.2rem; font-weight: 800; }}
+/* ---- Condition Bar ---- */
+.condition-bar {{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--surface);
+  border-radius: var(--radius-sm);
+  margin: 12px 0;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}}
+.condition-bar .cond-icon {{ color: var(--yellow); }}
+/* ---- Buyback Compare ---- */
+.buyback-compare {{
+  margin: 14px 0 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}}
+.buyback-compare-header {{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 14px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}}
+.shop-compare-row {{
+  display: flex;
+  align-items: center;
+  padding: 9px 14px;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.875rem;
+  transition: background 0.1s;
+}}
+.shop-compare-row:last-child {{ border: none; }}
+.shop-compare-row:hover {{ background: var(--surface); }}
+.shop-rank {{
+  color: var(--text-muted);
+  min-width: 24px;
+  font-size: 0.78rem;
+  font-weight: 700;
+}}
+.shop-rank.rank-1 {{ color: var(--yellow); }}
+.shop-name {{ flex: 1; padding: 0 10px; color: var(--text-secondary); }}
+.shop-name a {{ color: var(--accent); text-decoration: none; }}
+.shop-name a:hover {{ text-decoration: underline; }}
+.shop-price {{ font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; min-width: 80px; text-align: right; }}
+.shop-profit {{ font-size: 0.78rem; color: var(--green); min-width: 70px; text-align: right; font-weight: 600; }}
+.shop-profit.negative {{ color: var(--red); }}
+/* ---- Links ---- */
+.links {{
+  margin-top: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}}
+.links a {{
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 0.82rem;
+  font-weight: 500;
+  padding: 6px 14px;
+  border: 1px solid rgba(59,130,246,0.3);
+  border-radius: var(--radius-sm);
+  background: var(--accent-dim);
+  transition: background 0.15s, border-color 0.15s;
+}}
+.links a:hover {{
+  background: rgba(59,130,246,0.2);
+  border-color: rgba(59,130,246,0.5);
+}}
+/* ---- Table ---- */
+.data-table-wrap {{
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+}}
+table {{
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}}
+thead tr {{
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}}
+th {{
+  padding: 10px 12px;
+  text-align: left;
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}}
+td {{
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+  word-break: break-word;
+}}
+tbody tr:last-child td {{ border: none; }}
+tbody tr:hover td {{ background: var(--surface); }}
+td.profit-td {{ color: var(--green); font-weight: 700; font-variant-numeric: tabular-nums; }}
+/* ---- Freshness Labels ---- */
+.freshness-live {{ color: var(--green); font-size: 0.72rem; font-weight: 600; }}
+.freshness-recent {{ color: var(--yellow); font-size: 0.72rem; font-weight: 600; }}
+.freshness-stale {{ color: var(--red); font-size: 0.72rem; font-weight: 600; }}
+.freshness-unknown {{ color: var(--text-muted); font-size: 0.72rem; }}
+/* ---- Updated Timestamp ---- */
+.updated-ts {{
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+}}
+/* ---- Empty State ---- */
+.empty-msg {{
+  text-align: center;
+  color: var(--text-muted);
+  padding: 32px 16px;
+  font-size: 0.9rem;
+}}
+/* ---- Caution Block ---- */
+.caution {{
+  background: rgba(245,158,11,0.06);
+  border: 1px solid rgba(245,158,11,0.2);
+  border-left: 3px solid var(--yellow);
+  padding: 18px 20px;
+  margin: 32px 0;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.8;
+}}
+.caution strong {{ color: var(--yellow); display: block; margin-bottom: 8px; font-size: 0.9rem; }}
+.caution ul {{ list-style: none; padding: 0; }}
+.caution ul li {{ padding: 2px 0; }}
+.caution ul li::before {{ content: "·  "; color: var(--text-muted); }}
+/* ---- CTA Section ---- */
+.cta-section {{
+  margin: 40px 0;
+  padding: 32px 24px;
+  background: linear-gradient(135deg, rgba(59,130,246,0.06) 0%, rgba(16,185,129,0.04) 100%);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-xl);
+  text-align: center;
+}}
+.cta-section h3 {{
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 8px;
+}}
+.cta-section p {{
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}}
+.cta-buttons {{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}}
+.cta-btn {{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 24px;
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.15s;
+}}
+.cta-btn-primary {{
+  background: var(--accent);
+  color: #fff;
+  border: 1px solid transparent;
+}}
+.cta-btn-primary:hover {{ background: #2563eb; }}
+.cta-btn-secondary {{
+  background: var(--card);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-light);
+}}
+.cta-btn-secondary:hover {{ background: var(--card-hover); color: var(--text); }}
+/* ---- Footer ---- */
+.footer {{
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  padding: 40px 0 24px;
+  line-height: 2;
+  border-top: 1px solid var(--border);
+  margin-top: 40px;
+}}
+/* ---- Watch Candidate Card ---- */
+.watch-candidate-card {{
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+  margin: 10px 0;
+}}
+.watch-candidate-card .wc-header {{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}}
+.watch-candidate-card .wc-title {{
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text);
+}}
+.watch-candidate-card .wc-meta {{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}}
+.wc-tag {{
+  font-size: 0.72rem;
+  padding: 3px 9px;
+  border-radius: 4px;
+  font-weight: 600;
+}}
+.wc-tag-soldout {{ background: var(--red-dim); color: var(--red); }}
+.wc-tag-lottery {{ background: var(--yellow-dim); color: var(--yellow); }}
+.wc-tag-overseas {{ background: var(--accent-dim); color: var(--accent); }}
+.wc-tag-camera {{ background: rgba(139,92,246,0.12); color: #a78bfa; }}
+.wc-tag-game {{ background: rgba(20,184,166,0.12); color: #2dd4bf; }}
+/* ---- Alert Card ---- */
+.alert-card {{
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+  margin: 10px 0;
+}}
+.alert-card.surge {{ border-left: 3px solid var(--green); }}
+.alert-card.drop {{ border-left: 3px solid var(--red); }}
+/* ---- Ranking Table ---- */
+.ranking-card {{
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin: 10px 0;
+}}
+.ranking-card table {{ font-size: 0.85rem; }}
+.ranking-card th {{ background: var(--surface); }}
+.rank-num {{ color: var(--text-muted); font-weight: 700; font-size: 0.85rem; }}
+.rank-num.top3 {{ color: var(--yellow); }}
+/* ---- Divider ---- */
+.section-divider {{
+  height: 1px;
+  background: var(--border);
+  margin: 24px 0;
+}}
+/* ---- Responsive ---- */
+@media (max-width: 600px) {{
+  .hero {{ padding: 40px 0 28px; }}
+  .hero h1 {{ font-size: 1.5rem; }}
+  .price-grid {{ grid-template-columns: 1fr 1fr; gap: 8px; }}
+  .price-cell.profit-cell .price-cell-value {{ font-size: 1.15rem; }}
+  .tab-btn {{ padding: 10px 14px; font-size: 0.82rem; }}
+  table {{ font-size: 0.8rem; }}
+  th, td {{ padding: 8px 8px; }}
+  .card {{ padding: 16px; }}
+  .cta-section {{ padding: 24px 16px; }}
+  .topbar-meta {{ display: none; }}
+  .shop-profit {{ display: none; }}
+}}
+@media (max-width: 400px) {{
+  .price-grid {{ grid-template-columns: 1fr; }}
+  .price-cell.profit-cell {{ grid-column: span 1; }}
 }}
 </style>
 </head>
 <body>
+<header class="topbar">
+  <div class="topbar-brand"><span class="dot"></span>プレ値速報</div>
+  <div class="topbar-meta">
+    <span>買取更新: {_esc(_buyback_str_top)}</span>
+    <span>生成: {_esc(_lp_str_top)}</span>
+  </div>
+</header>
 <div class="container">
 {hero_html}
 {stale_html}
@@ -366,45 +947,41 @@ document.addEventListener("click",function(e){{
         variants    = self.settings.get("variants", {})
         variant     = variants.get(variant_key, {})
         headline    = _esc(variant.get("headline", self.settings.get("site_title", "プレ値速報")))
-
         buyback_str = _jst_str(latest_buyback_at)
         lp_str      = _jst_str(lp_generated_at)
-
+        stale_cls   = "stale" if _hours_ago(latest_buyback_at) > 24 else ""
         return f"""<div class="hero">
-<h1>{headline}</h1>
-<p style="color:var(--muted);font-size:0.9rem;margin-top:6px;">公式価格と買取価格の差額を毎日監視・更新しています</p>
-<div class="timestamps">
-  <span class="ts-item" data-buyback-updated>📦 買取価格更新：{_esc(buyback_str)}</span>
-  <span class="ts-item" data-lp-generated>🕐 LP生成：{_esc(lp_str)}</span>
-</div>
+  <div class="hero-eyebrow"><span>毎日更新</span></div>
+  <h1>{headline}</h1>
+  <p class="hero-sub">公式価格と買取価格の差額を毎日監視。初心者でも分かりやすく整理しています。</p>
+  <div class="hero-timestamps">
+    <span class="ts-chip {_esc(stale_cls)}" data-buyback-updated>
+      <span class="ts-dot"></span>買取価格更新：{_esc(buyback_str)}
+    </span>
+    <span class="ts-chip" data-lp-generated>
+      <span class="ts-dot" style="background:var(--accent)"></span>LP生成：{_esc(lp_str)}
+    </span>
+  </div>
 </div>"""
-
     # ----- Stale Warning -----
-
     def _section_stale_warning(self, latest_buyback_at, latest_deals_at, lp_generated_at) -> str:
         msgs = []
         buyback_h = _hours_ago(latest_buyback_at)
         deals_h   = _hours_ago(latest_deals_at)
         lp_h      = _hours_ago(lp_generated_at)
-
         if buyback_h >= 24:
             msgs.append(f"買取価格（{buyback_h:.0f}時間前のデータ）")
         if deals_h >= 24:
             msgs.append(f"案件情報（{deals_h:.0f}時間前のデータ）")
         if lp_h >= 24:
             msgs.append(f"LP（{lp_h:.0f}時間前に生成）")
-
         if not msgs:
             return ""
-
         detail = "・".join(msgs)
         return f"""<div class="stale-warning-block">
-⚠️ <strong>注意：{detail}が24時間以上前のデータです。</strong><br>
-購入前に必ず買取店公式ページで最新価格をご確認ください。
+  <span class="warn-icon">⚠️</span>
+  <div><strong>データが古い可能性があります：</strong>{_esc(detail)}が24時間以上前のデータです。購入前に必ず買取店公式ページで最新価格をご確認ください。</div>
 </div>"""
-
-    # ----- Tabs -----
-
     def _section_tabs(self, beginner_easy, beginner_watch,
                       advanced_deals, advanced_snaps, watch_candidates,
                       buyback_alerts, all_deals, iphone_deals, game_deals,
@@ -421,10 +998,10 @@ document.addEventListener("click",function(e){{
         adv_total   = len(advanced_deals) + len(advanced_snaps) + len(watch_candidates)
 
         return f"""<nav class="tab-nav" role="tablist">
-  <button class="tab-btn active" data-tab="beginner" role="tab" aria-selected="true" aria-controls="tab-beginner">🟢 初級者向け（{len(beginner_easy)+len(beginner_watch)}件）</button>
-  <button class="tab-btn" data-tab="advanced" role="tab" aria-selected="false" aria-controls="tab-advanced">🟠 上級者向け・監視（{adv_total}件）</button>
-  <button class="tab-btn" data-tab="surge" role="tab" aria-selected="false" aria-controls="tab-surge">📊 {_esc(surge_label)}</button>
-  <button class="tab-btn" data-tab="ranking" role="tab" aria-selected="false" aria-controls="tab-ranking">💰 買取ランキング</button>
+  <button class="tab-btn active" data-tab="beginner" role="tab" aria-selected="true" aria-controls="tab-beginner">初級者向け <span style="font-size:0.72rem;opacity:0.7">({len(beginner_easy)+len(beginner_watch)}件)</span></button>
+  <button class="tab-btn" data-tab="advanced" role="tab" aria-selected="false" aria-controls="tab-advanced">上級者向け <span style="font-size:0.72rem;opacity:0.7">({adv_total}件)</span></button>
+  <button class="tab-btn" data-tab="surge" role="tab" aria-selected="false" aria-controls="tab-surge">急騰 / 急落</button>
+  <button class="tab-btn" data-tab="ranking" role="tab" aria-selected="false" aria-controls="tab-ranking">買取ランキング</button>
 </nav>
 <div id="tab-beginner" class="tab-panel active" role="tabpanel">
 {beginner_html}
@@ -479,20 +1056,20 @@ document.addEventListener("click",function(e){{
         parts = []
 
         if easy_deals:
-            parts.append('<h2>🟢 低難度・すぐ動ける案件（beginner_easy）</h2>')
+            parts.append('<div class="section-header"><h2>低難度 — すぐ動ける案件</h2><span class="section-count">' + str(len(easy_deals)) + '件</span></div>')
             for d in easy_deals:
                 rows = bybp.get(d.product_id, [])
                 parts.append(self._deal_card(d, "badge-easy", "低難度", buyback_rows=rows))
         else:
-            parts.append('<h2>🟢 低難度案件</h2><p class="empty-msg">現在、条件を満たす案件はありません。</p>')
+            parts.append('<div class="section-header"><h2>低難度 — すぐ動ける案件</h2></div><p class="empty-msg">現在、条件を満たす案件はありません。</p>')
 
         if watch_deals:
-            parts.append('<h2>🟡 要確認・様子見案件（beginner_watch）</h2>')
+            parts.append('<div class="section-header"><h2>要確認 — 様子見案件</h2><span class="section-count">' + str(len(watch_deals)) + '件</span></div>')
             for d in watch_deals:
                 rows = bybp.get(d.product_id, [])
                 parts.append(self._deal_card(d, "badge-watch", "要確認", buyback_rows=rows))
         else:
-            parts.append('<h2>🟡 要確認案件</h2><p class="empty-msg">現在、条件を満たす案件はありません。</p>')
+            parts.append('<div class="section-header"><h2>要確認 — 様子見案件</h2></div><p class="empty-msg">現在、条件を満たす案件はありません。</p>')
 
         return "\n".join(parts)
 
@@ -522,7 +1099,7 @@ document.addEventListener("click",function(e){{
 
         updated_str = ""
         if hasattr(d, "scanned_at") and d.scanned_at:
-            updated_str = f'<div class="price-row"><span class="price-label">最終更新</span><span class="price-value" style="font-size:0.82rem;color:var(--muted)">{_esc(_jst_str(d.scanned_at))}</span></div>'
+            updated_str = f'<div class="updated-ts"><span>🕐 最終更新：{_esc(_jst_str(d.scanned_at))}</span></div>'
 
         # 複数店舗比較セクション
         compare_html = ""
@@ -545,12 +1122,14 @@ document.addEventListener("click",function(e){{
                 freshness = self._freshness_label(
                     r.get("observed_at", ""), r.get("data_source", "manual_today")
                 )
+                rank_cls = " rank-1" if i == 1 else ""
+                profit_cls = " negative" if profit < 0 else ""
                 rows_html.append(
                     f'<div class="shop-compare-row">'
-                    f'<span class="shop-rank">{i}.</span>'
+                    f'<span class="shop-rank{rank_cls}">{i}</span>'
                     f'<span class="shop-name">{shop_display}</span>'
                     f'<span class="shop-price">¥{bp:,}</span>'
-                    f'<span class="shop-profit">{_esc(profit_str)}</span>'
+                    f'<span class="shop-profit{profit_cls}">{_esc(profit_str)}</span>'
                     f'</div>'
                 )
             # 最新データ鮮度（最初の行から）
@@ -559,22 +1138,38 @@ document.addEventListener("click",function(e){{
             )
             compare_html = (
                 f'<div class="buyback-compare">'
-                f'<h4>買取店比較（最大5店舗）{first_freshness}</h4>'
+                f'<div class="buyback-compare-header"><span>買取店比較（最大5店舗）</span>{first_freshness}</div>'
                 + "".join(rows_html)
                 + "</div>"
             )
 
+        profit_rate_str = _esc(fmt_rate(d.net_profit_rate))
         return f"""<div class="card" data-user-level="{_esc(d.user_level)}">
-<h3>{_esc(d.product_name)} <span class="badge {badge_cls}">{label}</span></h3>
-<div class="price-row"><span class="price-label">公式価格</span><span class="price-value">{_esc(fmt_price(d.official_price_jpy))}</span></div>
-<div class="price-row"><span class="price-label">最新買取価格（{shop}）</span><span class="price-value">{_esc(fmt_price(d.best_buyback_price))}</span></div>
-<div class="price-row"><span class="price-label">推定コスト</span><span class="price-value">-{_esc(fmt_price(d.estimated_costs_jpy))}</span></div>
-<div class="price-row"><span class="price-label">実質利益</span><span class="profit">{_esc(fmt_profit(d.net_profit_jpy))}</span></div>
-<div class="price-row"><span class="price-label">利益率</span><span class="price-value">{_esc(fmt_rate(d.net_profit_rate))}</span></div>
-<div class="price-row"><span class="price-label">買取条件</span><span class="price-value">{_esc(d.buyback_condition or '新品未開封')}</span></div>
-{updated_str}
-{compare_html}
-<div class="links">{links}</div>
+  <div class="card-header">
+    <div class="card-title">{_esc(d.product_name)}</div>
+    <span class="badge {badge_cls}">{label}</span>
+  </div>
+  <div class="price-grid">
+    <div class="price-cell">
+      <div class="price-cell-label">公式価格</div>
+      <div class="price-cell-value">{_esc(fmt_price(d.official_price_jpy))}</div>
+    </div>
+    <div class="price-cell">
+      <div class="price-cell-label">最高買取価格</div>
+      <div class="price-cell-value">{_esc(fmt_price(d.best_buyback_price))}</div>
+    </div>
+    <div class="price-cell profit-cell">
+      <div class="price-cell-label">実質利益（推定コスト差引後）</div>
+      <div class="price-cell-value">{_esc(fmt_profit(d.net_profit_jpy))} <span class="profit-rate-badge">{profit_rate_str}</span></div>
+    </div>
+  </div>
+  <div class="condition-bar">
+    <span class="cond-icon">⚠</span>
+    <span>買取条件：{_esc(d.buyback_condition or '新品未開封')}　推定コスト：-{_esc(fmt_price(d.estimated_costs_jpy))}</span>
+  </div>
+  {updated_str}
+  {compare_html}
+  <div class="links">{links}</div>
 </div>"""
 
     # ----- Tab: 上級者向け -----
@@ -583,14 +1178,14 @@ document.addEventListener("click",function(e){{
         parts = []
 
         if advanced_deals:
-            parts.append('<h2>🟠 高利益案件（advanced_high_profit / expert_only）</h2>')
+            parts.append('<div class="section-header"><h2>高利益案件</h2><span class="section-count">' + str(len(advanced_deals)) + '件</span></div>')
             for d in advanced_deals:
                 badge_cls = "badge-exp" if d.user_level == "expert_only" else "badge-adv"
                 label = "上級者限定" if d.user_level == "expert_only" else "高利益"
                 parts.append(self._deal_card(d, badge_cls, label))
 
         if advanced_snaps:
-            parts.append('<h2>📈 プレ値・価格差候補（スナップショット分析）</h2>')
+            parts.append('<div class="section-header"><h2>プレ値・価格差候補</h2><span class="section-count">スナップショット分析</span></div>')
             rows = []
             for s in advanced_snaps:
                 method = {"lottery": "抽選", "soldout": "SOLD OUT", "discontinued": "終了"}.get(
@@ -606,12 +1201,13 @@ document.addEventListener("click",function(e){{
                     f"<td>{getattr(s,'difficulty_score',0):.2f}</td>"
                     f"</tr>"
                 )
-            parts.append(f"""<div class="card">
+            parts.append(f"""<div class="card"><div class="data-table-wrap">
 <table>
-<tr><th>商品</th><th>定価</th><th>国内中古</th><th>海外</th><th>価格差</th><th>方式</th><th>難易度</th></tr>
-{"".join(rows)}
+<thead><tr><th>商品</th><th>定価</th><th>国内中古</th><th>海外</th><th>価格差</th><th>方式</th><th>難易度</th></tr></thead>
+<tbody>{"".join(rows)}</tbody>
 </table>
-<p style="color:var(--muted);font-size:0.8rem;margin-top:10px;">※ 難易度0.0〜1.0（低いほど入手しやすい）</p>
+</div>
+<p style="color:var(--text-muted);font-size:0.78rem;margin-top:10px;padding:0 4px;">※ 難易度0.0〜1.0（低いほど入手しやすい）</p>
 </div>""")
 
         # ----- フォールバック: 上級者向け監視候補 -----
@@ -622,11 +1218,11 @@ document.addEventListener("click",function(e){{
 ℹ️ <strong>現在、上級者向けの確定候補は少ないため、価格差・希少性・海外相場差が大きい監視候補を表示しています。</strong><br>
 中古市場や海外相場のデータが入り次第、確定候補として昇格します。
 </div>""")
-            parts.append('<h2>🔍 上級者向け監視候補</h2>')
+            parts.append('<div class="section-header"><h2>上級者向け監視候補</h2><span class="section-count">価格差・希少性スコア上位</span></div>')
             parts.append(self._watch_candidates_table(watch_candidates))
 
         if not advanced_deals and not advanced_snaps and not watch_candidates:
-            parts.append('<h2>🟠 上級者向け候補</h2><p class="empty-msg">現在、条件を満たす候補はありません。</p>')
+            parts.append('<div class="section-header"><h2>上級者向け候補</h2></div><p class="empty-msg">現在、条件を満たす候補はありません。</p>')
 
         return "\n".join(parts)
 
@@ -663,12 +1259,13 @@ document.addEventListener("click",function(e){{
                 f"</tr>"
             )
 
-        return f"""<div class="card">
+        return f"""<div class="card"><div class="data-table-wrap">
 <table>
-<tr><th>商品</th><th>公式価格</th><th>最新買取店</th><th>注目ポイント</th><th>リンク</th></tr>
-{"".join(rows)}
+<thead><tr><th>商品</th><th>公式価格</th><th>最新買取店</th><th>注目ポイント</th><th>リンク</th></tr></thead>
+<tbody>{"".join(rows)}</tbody>
 </table>
-<p style="color:var(--muted);font-size:0.78rem;margin-top:10px;">
+</div>
+<p style="color:var(--text-muted);font-size:0.78rem;margin-top:10px;padding:0 4px;">
 ※ 監視候補は価格差・希少性スコアが高い商品です。中古市場データ入手後に確定候補へ昇格します。
 </p>
 </div>"""
@@ -682,18 +1279,18 @@ document.addEventListener("click",function(e){{
         parts = []
 
         if surge:
-            parts.append('<h2>📈 本日の急騰</h2>')
+            parts.append('<div class="section-header"><h2>本日の急騰</h2></div>')
             for a in surge:
                 parts.append(self._alert_card(a, "surge"))
         else:
-            parts.append('<h2>📈 本日の急騰</h2><p class="empty-msg">急騰は検出されていません（閾値: ¥5,000+）</p>')
+            parts.append('<div class="section-header"><h2>本日の急騰</h2></div><p class="empty-msg">急騰は検出されていません（閾値: ¥5,000+）</p>')
 
         if drop:
-            parts.append('<h2>📉 本日の急落</h2>')
+            parts.append('<div class="section-header"><h2>本日の急落</h2></div>')
             for a in drop:
                 parts.append(self._alert_card(a, "drop"))
         else:
-            parts.append('<h2>📉 本日の急落</h2><p class="empty-msg">急落は検出されていません（閾値: ¥5,000−）</p>')
+            parts.append('<div class="section-header"><h2>本日の急落</h2></div><p class="empty-msg">急落は検出されていません（閾値: ¥5,000−）</p>')
 
         return "\n".join(parts)
 
@@ -736,23 +1333,23 @@ document.addEventListener("click",function(e){{
         profitable = sorted([d for d in all_deals if d.net_profit_jpy > 0],
                             key=lambda d: d.net_profit_jpy, reverse=True)
         if profitable:
-            parts.append('<h2>💰 実質利益ランキング（全カテゴリ）</h2>')
+            parts.append('<div class="section-header"><h2>実質利益ランキング</h2><span class="section-count">全カテゴリ</span></div>')
             parts.append(self._ranking_table(profitable[:10], show_category=True))
         else:
-            parts.append('<h2>💰 実質利益ランキング</h2><p class="empty-msg">データなし</p>')
+            parts.append('<div class="section-header"><h2>実質利益ランキング</h2></div><p class="empty-msg">データなし</p>')
 
         # iPhoneランキング
         iphone_profitable = sorted([d for d in iphone_deals if d.net_profit_jpy > 0],
                                     key=lambda d: d.net_profit_jpy, reverse=True)
         if iphone_profitable:
-            parts.append('<h2>📱 iPhoneランキング</h2>')
+            parts.append('<div class="section-header"><h2>iPhone ランキング</h2></div>')
             parts.append(self._ranking_table(iphone_profitable[:5]))
 
         # ゲーム機ランキング
         game_profitable = sorted([d for d in game_deals if d.net_profit_jpy > 0],
                                   key=lambda d: d.net_profit_jpy, reverse=True)
         if game_profitable:
-            parts.append('<h2>🎮 ゲーム機ランキング</h2>')
+            parts.append('<div class="section-header"><h2>ゲーム機 ランキング</h2></div>')
             parts.append(self._ranking_table(game_profitable[:5]))
 
         # 買取店別ランキング
@@ -761,14 +1358,16 @@ document.addEventListener("click",function(e){{
             if d.best_buyback_shop and d.net_profit_jpy > 0:
                 shop_totals[d.best_buyback_shop] = shop_totals.get(d.best_buyback_shop, 0) + 1
         if shop_totals:
-            parts.append('<h2>🏪 買取店別 案件数ランキング</h2>')
+            parts.append('<div class="section-header"><h2>買取店別 案件数ランキング</h2></div>')
             rows = []
             for i, (shop, cnt) in enumerate(
                 sorted(shop_totals.items(), key=lambda x: x[1], reverse=True)[:8], 1
             ):
                 rows.append(f"<tr><td>{i}</td><td>{_esc(shop)}</td><td>{cnt}件</td></tr>")
-            parts.append(f"""<div class="card"><table>
-<tr><th>#</th><th>買取店</th><th>案件数</th></tr>{"".join(rows)}</table></div>""")
+            parts.append(f"""<div class="ranking-card"><div class="data-table-wrap"><table>
+<thead><tr><th>#</th><th>買取店</th><th>案件数</th></tr></thead>
+<tbody>{"".join(rows)}</tbody>
+</table></div></div>""")
 
         return "\n".join(parts)
 
@@ -788,26 +1387,28 @@ document.addEventListener("click",function(e){{
                 + (f"<td>{_esc(d.category)}</td>" if show_category else "")
                 + f"<td>{_esc(fmt_price(d.official_price_jpy))}</td>"
                 f"<td>{_esc(fmt_price(d.best_buyback_price))}</td>"
-                f"<td style='color:var(--green);font-weight:600'>{_esc(fmt_profit(d.net_profit_jpy))}</td>"
+                f"<td class='profit-td'>{_esc(fmt_profit(d.net_profit_jpy))}</td>"
                 f"<td>{_esc(fmt_rate(d.net_profit_rate))}</td>"
                 f"<td>{_esc(d.best_buyback_shop)}</td></tr>"
             )
         cat_th = "<th>カテゴリ</th>" if show_category else ""
-        return f"""<div class="card"><table>
-<tr><th>#</th><th>商品</th>{cat_th}<th>定価</th><th>買取</th><th>実質利益</th><th>率</th><th>買取店</th></tr>
-{"".join(rows)}
-</table></div>"""
+        return f"""<div class="ranking-card"><div class="data-table-wrap"><table>
+<thead><tr><th>#</th><th>商品</th>{cat_th}<th>定価</th><th>買取</th><th>実質利益</th><th>率</th><th>買取店</th></tr></thead>
+<tbody>{"".join(rows)}</tbody>
+</table></div></div>"""
 
     # ----- Caution / CTA / Footer -----
 
     def _section_caution(self) -> str:
         return """<div class="caution">
-<strong>⚠️ 注意事項</strong><br>
-・本ページは価格差の監視結果であり、購入を推奨するものではありません。<br>
-・価格・在庫・買取条件は常に変動します。<br>
-・購入前に必ず公式サイトと買取店で最新の条件を確認してください。<br>
-・買取条件（新品未開封・SIMフリー等）を満たさない場合、買取価格が下がります。<br>
-・利益を保証するものではありません。条件が合えば利益が出る可能性がある情報です。
+<strong>⚠️ ご確認ください</strong>
+<ul>
+<li>本ページは価格差の監視結果であり、購入を推奨するものではありません。</li>
+<li>価格・在庫・買取条件は常に変動します。</li>
+<li>購入前に必ず公式サイトと買取店で最新の条件を確認してください。</li>
+<li>買取条件（新品未開封・SIMフリー等）を満たさない場合、買取価格が下がります。</li>
+<li>利益を保証するものではありません。条件が合えば利益が出る可能性がある情報です。</li>
+</ul>
 </div>"""
 
     def _section_cta(self) -> str:
@@ -815,29 +1416,33 @@ document.addEventListener("click",function(e){{
         if self.settings.get("enable_note_cta"):
             note_url = (self.settings.get("note_url") or "").strip()
             if note_url and note_url != "#":
-                parts.append(f"""<div class="cta">
-<p style="margin-bottom:12px;">詳しい仕入れ条件・買取店比較・全案件一覧はnoteで公開中</p>
-<a href="{_esc(note_url)}" data-track="note_click">noteで詳細レポートを読む →</a>
+                parts.append(f"""<div class="cta-section">
+<h3>詳細レポートを読む</h3>
+<p>仕入れ条件・複数買取店の比較・全案件一覧はnoteで公開しています。</p>
+<div class="cta-buttons">
+  <a href="{_esc(note_url)}" class="cta-btn cta-btn-primary" data-track="note_click">詳細レポートを見る →</a>
+  <a href="{_esc(note_url)}" class="cta-btn cta-btn-secondary" data-track="note_click">今日の全案件を見る</a>
+</div>
 </div>""")
             else:
-                parts.append("""<div class="cta">
-<p style="margin-bottom:12px;">詳しい仕入れ条件・買取店比較はnoteで公開予定</p>
-<p style="color:var(--muted);font-size:0.88rem;">詳細レポート準備中です。公開時にこのページでお知らせします。</p>
+                parts.append("""<div class="cta-section">
+<h3>詳細レポート — 準備中</h3>
+<p>仕入れ条件・買取店比較・全案件一覧をnoteで公開予定です。公開時にこのページでお知らせします。</p>
 </div>""")
         if self.settings.get("enable_line_cta"):
             line_url = (self.settings.get("line_url") or "").strip()
             if line_url and line_url != "#":
-                parts.append(f'<div class="cta"><a href="{_esc(line_url)}" style="background:var(--green)" data-track="line_click">LINE登録で速報を受け取る</a></div>')
+                parts.append(f'<div class="cta-section"><h3>LINE速報</h3><p>プレ値候補をLINEで受け取れます。</p><div class="cta-buttons"><a href="{_esc(line_url)}" class="cta-btn" style="background:#06c755;color:#fff;" data-track="line_click">LINE登録で速報を受け取る</a></div></div>')
         if self.settings.get("enable_telegram_cta"):
             tg_url = (self.settings.get("telegram_url") or "").strip()
             if tg_url and tg_url != "#":
-                parts.append(f'<div class="cta"><a href="{_esc(tg_url)}" style="background:var(--accent)" data-track="telegram_click">Telegramチャンネルに参加する</a></div>')
+                parts.append(f'<div class="cta-section"><h3>Telegram速報</h3><p>Telegramチャンネルで最新情報を受け取れます。</p><div class="cta-buttons"><a href="{_esc(tg_url)}" class="cta-btn cta-btn-primary" data-track="telegram_click">Telegramチャンネルに参加する</a></div></div>')
         return "\n".join(parts)
 
     def _section_footer(self) -> str:
         now = datetime.now()
         return f"""<div class="footer">
-<p>今後、LINE / Telegram での速報配信も予定しています。</p>
+<p>価格情報は参考値です。購入前に必ず公式サイト・買取店でご確認ください。</p>
 <p>© {now.year} プレ値速報 — 情報は自動取得・分析されたものです</p>
 </div>"""
 

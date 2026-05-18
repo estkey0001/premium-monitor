@@ -65,6 +65,20 @@ td{word-break:break-word;}
 .cta a{display:inline-block;background:var(--accent);color:#fff;padding:13px 36px;border-radius:8px;text-decoration:none;font-weight:600;font-size:0.95rem;}
 .caution{background:#1c1c22;border-left:4px solid var(--yellow);padding:14px 18px;margin:24px 0;border-radius:0 8px 8px 0;font-size:0.88rem;color:var(--muted);line-height:1.8;}
 .footer{text-align:center;color:var(--muted);font-size:0.78rem;padding:36px 0 20px;line-height:2;}
+/* 買取店比較テーブル */
+.buyback-compare{margin:12px 0 0;}
+.buyback-compare h4{font-size:0.88rem;color:var(--muted);margin-bottom:6px;}
+.shop-compare-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid var(--border);font-size:0.85rem;}
+.shop-compare-row:last-child{border:none;}
+.shop-rank{color:var(--muted);min-width:22px;}
+.shop-name{flex:1;padding:0 8px;}
+.shop-price{font-weight:600;color:var(--green);}
+.shop-profit{font-size:0.78rem;color:var(--muted);}
+/* データ鮮度 */
+.freshness-live{color:var(--green);font-size:0.75rem;}
+.freshness-recent{color:var(--yellow);font-size:0.75rem;}
+.freshness-stale{color:var(--red);font-size:0.75rem;}
+.freshness-unknown{color:var(--muted);font-size:0.75rem;}
 @media(max-width:600px){
   .tab-btn{padding:8px 12px;font-size:0.82rem;}
   table{font-size:0.8rem;}
@@ -79,28 +93,29 @@ td{word-break:break-word;}
 <p style="color:var(--muted);font-size:0.9rem;margin-top:6px;">公式価格と買取価格の差額を毎日監視・更新しています</p>
 <div class="timestamps">
   <span class="ts-item" data-buyback-updated>📦 買取価格更新：2026-05-18 12:00 JST</span>
-  <span class="ts-item" data-lp-generated>🕐 LP生成：2026-05-18 22:05 JST</span>
+  <span class="ts-item" data-lp-generated>🕐 LP生成：2026-05-18 13:46 JST</span>
 </div>
 </div>
 
 <nav class="tab-nav" role="tablist">
-  <button class="tab-btn active" data-tab="beginner" role="tab" aria-selected="true" aria-controls="tab-beginner">🟢 初級者向け（19件）</button>
-  <button class="tab-btn" data-tab="advanced" role="tab" aria-selected="false" aria-controls="tab-advanced">🟠 上級者向け（0件）</button>
+  <button class="tab-btn active" data-tab="beginner" role="tab" aria-selected="true" aria-controls="tab-beginner">🟢 初級者向け（11件）</button>
+  <button class="tab-btn" data-tab="advanced" role="tab" aria-selected="false" aria-controls="tab-advanced">🟠 上級者向け・監視（14件）</button>
   <button class="tab-btn" data-tab="surge" role="tab" aria-selected="false" aria-controls="tab-surge">📊 急騰/急落</button>
   <button class="tab-btn" data-tab="ranking" role="tab" aria-selected="false" aria-controls="tab-ranking">💰 買取ランキング</button>
 </nav>
 <div id="tab-beginner" class="tab-panel active" role="tabpanel">
 <h2>🟢 低難度・すぐ動ける案件（beginner_easy）</h2>
 <div class="card" data-user-level="beginner_easy">
-<h3>iPhone 17 Pro Max 512GB SIMフリー <span class="badge badge-easy">低難度</span></h3>
-<div class="price-row"><span class="price-label">公式価格</span><span class="price-value">¥254,800</span></div>
-<div class="price-row"><span class="price-label">最新買取価格（モバイル一番）</span><span class="price-value">¥288,000</span></div>
+<h3>FUJIFILM X100VI <span class="badge badge-easy">低難度</span></h3>
+<div class="price-row"><span class="price-label">公式価格</span><span class="price-value">¥269,500</span></div>
+<div class="price-row"><span class="price-label">最新買取価格（カメラのキタムラ）</span><span class="price-value">¥420,000</span></div>
 <div class="price-row"><span class="price-label">推定コスト</span><span class="price-value">-¥1,800</span></div>
-<div class="price-row"><span class="price-label">実質利益</span><span class="profit">+¥31,400</span></div>
-<div class="price-row"><span class="price-label">利益率</span><span class="price-value">12.3%</span></div>
-<div class="price-row"><span class="price-label">買取条件</span><span class="price-value">新品未開封 SIMフリー</span></div>
-<div class="price-row"><span class="price-label">最終更新</span><span class="price-value" style="font-size:0.82rem;color:var(--muted)">2026-05-18 13:51 JST</span></div>
-<div class="links"><a href="https://www.apple.com/jp/shop/" target="_blank" rel="noopener" data-track="product_click" data-product-id="prod_iphone17pm_512">公式購入ページ →</a><a href="https://mobileno1.com/kaitori/iphone17promax/" target="_blank" rel="noopener" data-track="product_click" data-product-id="prod_iphone17pm_512" data-shop="モバイル一番">買取ページ →</a></div>
+<div class="price-row"><span class="price-label">実質利益</span><span class="profit">+¥148,700</span></div>
+<div class="price-row"><span class="price-label">利益率</span><span class="price-value">55.2%</span></div>
+<div class="price-row"><span class="price-label">買取条件</span><span class="price-value">中古A（美品）</span></div>
+<div class="price-row"><span class="price-label">最終更新</span><span class="price-value" style="font-size:0.82rem;color:var(--muted)">2026-05-18 13:46 JST</span></div>
+<div class="buyback-compare"><h4>買取店比較（最大5店舗）<span class="freshness-recent">📋当日手動 / 10時間前</span></h4><div class="shop-compare-row"><span class="shop-rank">1.</span><span class="shop-name">カメラのキタムラ</span><span class="shop-price">¥420,000</span><span class="shop-profit">+¥150,500</span></div><div class="shop-compare-row"><span class="shop-rank">2.</span><span class="shop-name">マップカメラ</span><span class="shop-price">¥415,000</span><span class="shop-profit">+¥145,500</span></div></div>
+<div class="links"><a href="https://www.kitamura.co.jp/" target="_blank" rel="noopener" data-track="product_click" data-product-id="prod_x100vi" data-shop="カメラのキタムラ">買取ページ →</a></div>
 </div>
 <div class="card" data-user-level="beginner_easy">
 <h3>iPhone 17 Pro Max 512GB SIMフリー <span class="badge badge-easy">低難度</span></h3>
@@ -110,8 +125,9 @@ td{word-break:break-word;}
 <div class="price-row"><span class="price-label">実質利益</span><span class="profit">+¥31,400</span></div>
 <div class="price-row"><span class="price-label">利益率</span><span class="price-value">12.3%</span></div>
 <div class="price-row"><span class="price-label">買取条件</span><span class="price-value">新品未開封 SIMフリー</span></div>
-<div class="price-row"><span class="price-label">最終更新</span><span class="price-value" style="font-size:0.82rem;color:var(--muted)">2026-05-18 22:05 JST</span></div>
-<div class="links"><a href="https://www.apple.com/jp/shop/" target="_blank" rel="noopener" data-track="product_click" data-product-id="prod_iphone17pm_512">公式購入ページ →</a><a href="https://mobileno1.com/kaitori/iphone17promax/" target="_blank" rel="noopener" data-track="product_click" data-product-id="prod_iphone17pm_512" data-shop="モバイル一番">買取ページ →</a></div>
+<div class="price-row"><span class="price-label">最終更新</span><span class="price-value" style="font-size:0.82rem;color:var(--muted)">2026-05-18 13:46 JST</span></div>
+<div class="buyback-compare"><h4>買取店比較（最大5店舗）<span class="freshness-recent">📋当日手動 / 10時間前</span></h4><div class="shop-compare-row"><span class="shop-rank">1.</span><span class="shop-name">モバイル一番</span><span class="shop-price">¥288,000</span><span class="shop-profit">+¥33,200</span></div><div class="shop-compare-row"><span class="shop-rank">2.</span><span class="shop-name">買取商店</span><span class="shop-price">¥285,000</span><span class="shop-profit">+¥30,200</span></div></div>
+<div class="links"><a href="https://www.apple.com/jp/shop/" target="_blank" rel="noopener" data-track="product_click" data-product-id="prod_iphone17pm_512">公式購入ページ →</a></div>
 </div>
 <div class="card" data-user-level="beginner_easy">
 <h3>iPhone 17 Pro Max 256GB SIMフリー <span class="badge badge-easy">低難度</span></h3>
@@ -121,19 +137,9 @@ td{word-break:break-word;}
 <div class="price-row"><span class="price-label">実質利益</span><span class="profit">+¥30,400</span></div>
 <div class="price-row"><span class="price-label">利益率</span><span class="price-value">13.8%</span></div>
 <div class="price-row"><span class="price-label">買取条件</span><span class="price-value">新品未開封 SIMフリー</span></div>
-<div class="price-row"><span class="price-label">最終更新</span><span class="price-value" style="font-size:0.82rem;color:var(--muted)">2026-05-18 13:51 JST</span></div>
-<div class="links"><a href="https://www.apple.com/jp/shop/" target="_blank" rel="noopener" data-track="product_click" data-product-id="prod_iphone17pm_256">公式購入ページ →</a><a href="https://mobileno1.com/kaitori/iphone17promax/" target="_blank" rel="noopener" data-track="product_click" data-product-id="prod_iphone17pm_256" data-shop="モバイル一番">買取ページ →</a></div>
-</div>
-<div class="card" data-user-level="beginner_easy">
-<h3>iPhone 17 Pro Max 256GB SIMフリー <span class="badge badge-easy">低難度</span></h3>
-<div class="price-row"><span class="price-label">公式価格</span><span class="price-value">¥219,800</span></div>
-<div class="price-row"><span class="price-label">最新買取価格（モバイル一番）</span><span class="price-value">¥252,000</span></div>
-<div class="price-row"><span class="price-label">推定コスト</span><span class="price-value">-¥1,800</span></div>
-<div class="price-row"><span class="price-label">実質利益</span><span class="profit">+¥30,400</span></div>
-<div class="price-row"><span class="price-label">利益率</span><span class="price-value">13.8%</span></div>
-<div class="price-row"><span class="price-label">買取条件</span><span class="price-value">新品未開封 SIMフリー</span></div>
-<div class="price-row"><span class="price-label">最終更新</span><span class="price-value" style="font-size:0.82rem;color:var(--muted)">2026-05-18 22:05 JST</span></div>
-<div class="links"><a href="https://www.apple.com/jp/shop/" target="_blank" rel="noopener" data-track="product_click" data-product-id="prod_iphone17pm_256">公式購入ページ →</a><a href="https://mobileno1.com/kaitori/iphone17promax/" target="_blank" rel="noopener" data-track="product_click" data-product-id="prod_iphone17pm_256" data-shop="モバイル一番">買取ページ →</a></div>
+<div class="price-row"><span class="price-label">最終更新</span><span class="price-value" style="font-size:0.82rem;color:var(--muted)">2026-05-18 13:46 JST</span></div>
+<div class="buyback-compare"><h4>買取店比較（最大5店舗）<span class="freshness-recent">📋当日手動 / 10時間前</span></h4><div class="shop-compare-row"><span class="shop-rank">1.</span><span class="shop-name">モバイル一番</span><span class="shop-price">¥252,000</span><span class="shop-profit">+¥32,200</span></div><div class="shop-compare-row"><span class="shop-rank">2.</span><span class="shop-name">買取商店</span><span class="shop-price">¥248,000</span><span class="shop-profit">+¥28,200</span></div><div class="shop-compare-row"><span class="shop-rank">3.</span><span class="shop-name"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_iphone17pm_256" data-shop="じゃんぱら">じゃんぱら</a></span><span class="shop-price">¥245,000</span><span class="shop-profit">+¥25,200</span></div><div class="shop-compare-row"><span class="shop-rank">4.</span><span class="shop-name"><a href="https://iosys.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_iphone17pm_256" data-shop="イオシス">イオシス</a></span><span class="shop-price">¥242,000</span><span class="shop-profit">+¥22,200</span></div></div>
+<div class="links"><a href="https://www.apple.com/jp/shop/" target="_blank" rel="noopener" data-track="product_click" data-product-id="prod_iphone17pm_256">公式購入ページ →</a><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener" data-track="product_click" data-product-id="prod_iphone17pm_256" data-shop="モバイル一番">買取ページ →</a></div>
 </div>
 <div class="card" data-user-level="beginner_easy">
 <h3>iPhone 17 Pro 256GB SIMフリー <span class="badge badge-easy">低難度</span></h3>
@@ -143,8 +149,9 @@ td{word-break:break-word;}
 <div class="price-row"><span class="price-label">実質利益</span><span class="profit">+¥26,400</span></div>
 <div class="price-row"><span class="price-label">利益率</span><span class="price-value">14.7%</span></div>
 <div class="price-row"><span class="price-label">買取条件</span><span class="price-value">新品未開封 SIMフリー</span></div>
-<div class="price-row"><span class="price-label">最終更新</span><span class="price-value" style="font-size:0.82rem;color:var(--muted)">2026-05-18 13:51 JST</span></div>
-<div class="links"><a href="https://www.apple.com/jp/shop/" target="_blank" rel="noopener" data-track="product_click" data-product-id="prod_iphone17pro_256">公式購入ページ →</a><a href="https://mobileno1.com/kaitori/iphone17pro/" target="_blank" rel="noopener" data-track="product_click" data-product-id="prod_iphone17pro_256" data-shop="モバイル一番">買取ページ →</a></div>
+<div class="price-row"><span class="price-label">最終更新</span><span class="price-value" style="font-size:0.82rem;color:var(--muted)">2026-05-18 13:46 JST</span></div>
+<div class="buyback-compare"><h4>買取店比較（最大5店舗）<span class="freshness-recent">📋当日手動 / 10時間前</span></h4><div class="shop-compare-row"><span class="shop-rank">1.</span><span class="shop-name">モバイル一番</span><span class="shop-price">¥208,000</span><span class="shop-profit">+¥28,200</span></div><div class="shop-compare-row"><span class="shop-rank">2.</span><span class="shop-name">買取商店</span><span class="shop-price">¥205,000</span><span class="shop-profit">+¥25,200</span></div><div class="shop-compare-row"><span class="shop-rank">3.</span><span class="shop-name">買取一丁目</span><span class="shop-price">¥202,000</span><span class="shop-profit">+¥22,200</span></div><div class="shop-compare-row"><span class="shop-rank">4.</span><span class="shop-name"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_iphone17pro_256" data-shop="じゃんぱら">じゃんぱら</a></span><span class="shop-price">¥200,000</span><span class="shop-profit">+¥20,200</span></div><div class="shop-compare-row"><span class="shop-rank">5.</span><span class="shop-name"><a href="https://iosys.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_iphone17pro_256" data-shop="イオシス">イオシス</a></span><span class="shop-price">¥198,000</span><span class="shop-profit">+¥18,200</span></div></div>
+<div class="links"><a href="https://www.apple.com/jp/shop/" target="_blank" rel="noopener" data-track="product_click" data-product-id="prod_iphone17pro_256">公式購入ページ →</a><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener" data-track="product_click" data-product-id="prod_iphone17pro_256" data-shop="モバイル一番">買取ページ →</a></div>
 </div>
 <div class="card" data-user-level="beginner_easy">
 <h3>iPhone 17 Pro 512GB SIMフリー <span class="badge badge-easy">低難度</span></h3>
@@ -154,30 +161,9 @@ td{word-break:break-word;}
 <div class="price-row"><span class="price-label">実質利益</span><span class="profit">+¥26,400</span></div>
 <div class="price-row"><span class="price-label">利益率</span><span class="price-value">12.3%</span></div>
 <div class="price-row"><span class="price-label">買取条件</span><span class="price-value">新品未開封 SIMフリー</span></div>
-<div class="price-row"><span class="price-label">最終更新</span><span class="price-value" style="font-size:0.82rem;color:var(--muted)">2026-05-18 13:51 JST</span></div>
-<div class="links"><a href="https://www.apple.com/jp/shop/" target="_blank" rel="noopener" data-track="product_click" data-product-id="prod_iphone17pro_512">公式購入ページ →</a><a href="https://mobileno1.com/kaitori/iphone17pro/" target="_blank" rel="noopener" data-track="product_click" data-product-id="prod_iphone17pro_512" data-shop="モバイル一番">買取ページ →</a></div>
-</div>
-<div class="card" data-user-level="beginner_easy">
-<h3>iPhone 17 Pro 256GB SIMフリー <span class="badge badge-easy">低難度</span></h3>
-<div class="price-row"><span class="price-label">公式価格</span><span class="price-value">¥179,800</span></div>
-<div class="price-row"><span class="price-label">最新買取価格（モバイル一番）</span><span class="price-value">¥208,000</span></div>
-<div class="price-row"><span class="price-label">推定コスト</span><span class="price-value">-¥1,800</span></div>
-<div class="price-row"><span class="price-label">実質利益</span><span class="profit">+¥26,400</span></div>
-<div class="price-row"><span class="price-label">利益率</span><span class="price-value">14.7%</span></div>
-<div class="price-row"><span class="price-label">買取条件</span><span class="price-value">新品未開封 SIMフリー</span></div>
-<div class="price-row"><span class="price-label">最終更新</span><span class="price-value" style="font-size:0.82rem;color:var(--muted)">2026-05-18 22:05 JST</span></div>
-<div class="links"><a href="https://www.apple.com/jp/shop/" target="_blank" rel="noopener" data-track="product_click" data-product-id="prod_iphone17pro_256">公式購入ページ →</a><a href="https://mobileno1.com/kaitori/iphone17pro/" target="_blank" rel="noopener" data-track="product_click" data-product-id="prod_iphone17pro_256" data-shop="モバイル一番">買取ページ →</a></div>
-</div>
-<div class="card" data-user-level="beginner_easy">
-<h3>iPhone 17 Pro 512GB SIMフリー <span class="badge badge-easy">低難度</span></h3>
-<div class="price-row"><span class="price-label">公式価格</span><span class="price-value">¥214,800</span></div>
-<div class="price-row"><span class="price-label">最新買取価格（モバイル一番）</span><span class="price-value">¥243,000</span></div>
-<div class="price-row"><span class="price-label">推定コスト</span><span class="price-value">-¥1,800</span></div>
-<div class="price-row"><span class="price-label">実質利益</span><span class="profit">+¥26,400</span></div>
-<div class="price-row"><span class="price-label">利益率</span><span class="price-value">12.3%</span></div>
-<div class="price-row"><span class="price-label">買取条件</span><span class="price-value">新品未開封 SIMフリー</span></div>
-<div class="price-row"><span class="price-label">最終更新</span><span class="price-value" style="font-size:0.82rem;color:var(--muted)">2026-05-18 22:05 JST</span></div>
-<div class="links"><a href="https://www.apple.com/jp/shop/" target="_blank" rel="noopener" data-track="product_click" data-product-id="prod_iphone17pro_512">公式購入ページ →</a><a href="https://mobileno1.com/kaitori/iphone17pro/" target="_blank" rel="noopener" data-track="product_click" data-product-id="prod_iphone17pro_512" data-shop="モバイル一番">買取ページ →</a></div>
+<div class="price-row"><span class="price-label">最終更新</span><span class="price-value" style="font-size:0.82rem;color:var(--muted)">2026-05-18 13:46 JST</span></div>
+<div class="buyback-compare"><h4>買取店比較（最大5店舗）<span class="freshness-recent">📋当日手動 / 10時間前</span></h4><div class="shop-compare-row"><span class="shop-rank">1.</span><span class="shop-name">モバイル一番</span><span class="shop-price">¥243,000</span><span class="shop-profit">+¥28,200</span></div><div class="shop-compare-row"><span class="shop-rank">2.</span><span class="shop-name">買取商店</span><span class="shop-price">¥240,000</span><span class="shop-profit">+¥25,200</span></div><div class="shop-compare-row"><span class="shop-rank">3.</span><span class="shop-name"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_iphone17pro_512" data-shop="じゃんぱら">じゃんぱら</a></span><span class="shop-price">¥237,000</span><span class="shop-profit">+¥22,200</span></div></div>
+<div class="links"><a href="https://www.apple.com/jp/shop/" target="_blank" rel="noopener" data-track="product_click" data-product-id="prod_iphone17pro_512">公式購入ページ →</a><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener" data-track="product_click" data-product-id="prod_iphone17pro_512" data-shop="モバイル一番">買取ページ →</a></div>
 </div>
 <div class="card" data-user-level="beginner_easy">
 <h3>iPhone 17 256GB SIMフリー <span class="badge badge-easy">低難度</span></h3>
@@ -187,19 +173,9 @@ td{word-break:break-word;}
 <div class="price-row"><span class="price-label">実質利益</span><span class="profit">+¥13,400</span></div>
 <div class="price-row"><span class="price-label">利益率</span><span class="price-value">9.6%</span></div>
 <div class="price-row"><span class="price-label">買取条件</span><span class="price-value">新品未開封 SIMフリー</span></div>
-<div class="price-row"><span class="price-label">最終更新</span><span class="price-value" style="font-size:0.82rem;color:var(--muted)">2026-05-18 13:51 JST</span></div>
-<div class="links"><a href="https://www.apple.com/jp/shop/" target="_blank" rel="noopener" data-track="product_click" data-product-id="prod_iphone17_256">公式購入ページ →</a><a href="https://mobileno1.com/kaitori/iphone17/" target="_blank" rel="noopener" data-track="product_click" data-product-id="prod_iphone17_256" data-shop="モバイル一番">買取ページ →</a></div>
-</div>
-<div class="card" data-user-level="beginner_easy">
-<h3>iPhone 17 256GB SIMフリー <span class="badge badge-easy">低難度</span></h3>
-<div class="price-row"><span class="price-label">公式価格</span><span class="price-value">¥139,800</span></div>
-<div class="price-row"><span class="price-label">最新買取価格（モバイル一番）</span><span class="price-value">¥155,000</span></div>
-<div class="price-row"><span class="price-label">推定コスト</span><span class="price-value">-¥1,800</span></div>
-<div class="price-row"><span class="price-label">実質利益</span><span class="profit">+¥13,400</span></div>
-<div class="price-row"><span class="price-label">利益率</span><span class="price-value">9.6%</span></div>
-<div class="price-row"><span class="price-label">買取条件</span><span class="price-value">新品未開封 SIMフリー</span></div>
-<div class="price-row"><span class="price-label">最終更新</span><span class="price-value" style="font-size:0.82rem;color:var(--muted)">2026-05-18 22:05 JST</span></div>
-<div class="links"><a href="https://www.apple.com/jp/shop/" target="_blank" rel="noopener" data-track="product_click" data-product-id="prod_iphone17_256">公式購入ページ →</a><a href="https://mobileno1.com/kaitori/iphone17/" target="_blank" rel="noopener" data-track="product_click" data-product-id="prod_iphone17_256" data-shop="モバイル一番">買取ページ →</a></div>
+<div class="price-row"><span class="price-label">最終更新</span><span class="price-value" style="font-size:0.82rem;color:var(--muted)">2026-05-18 13:46 JST</span></div>
+<div class="buyback-compare"><h4>買取店比較（最大5店舗）<span class="freshness-recent">📋当日手動 / 10時間前</span></h4><div class="shop-compare-row"><span class="shop-rank">1.</span><span class="shop-name">モバイル一番</span><span class="shop-price">¥155,000</span><span class="shop-profit">+¥15,200</span></div><div class="shop-compare-row"><span class="shop-rank">2.</span><span class="shop-name">買取商店</span><span class="shop-price">¥152,000</span><span class="shop-profit">+¥12,200</span></div></div>
+<div class="links"><a href="https://www.apple.com/jp/shop/" target="_blank" rel="noopener" data-track="product_click" data-product-id="prod_iphone17_256">公式購入ページ →</a></div>
 </div>
 <div class="card" data-user-level="beginner_easy">
 <h3>iPhone 16 Pro 256GB SIMフリー <span class="badge badge-easy">低難度</span></h3>
@@ -209,19 +185,9 @@ td{word-break:break-word;}
 <div class="price-row"><span class="price-label">実質利益</span><span class="profit">+¥8,400</span></div>
 <div class="price-row"><span class="price-label">利益率</span><span class="price-value">5.3%</span></div>
 <div class="price-row"><span class="price-label">買取条件</span><span class="price-value">新品未開封 SIMフリー</span></div>
-<div class="price-row"><span class="price-label">最終更新</span><span class="price-value" style="font-size:0.82rem;color:var(--muted)">2026-05-18 13:51 JST</span></div>
-<div class="links"><a href="https://www.apple.com/jp/shop/" target="_blank" rel="noopener" data-track="product_click" data-product-id="prod_iphone16pro_256">公式購入ページ →</a><a href="https://mobileno1.com/kaitori/iphone16pro/" target="_blank" rel="noopener" data-track="product_click" data-product-id="prod_iphone16pro_256" data-shop="モバイル一番">買取ページ →</a></div>
-</div>
-<div class="card" data-user-level="beginner_easy">
-<h3>iPhone 16 Pro 256GB SIMフリー <span class="badge badge-easy">低難度</span></h3>
-<div class="price-row"><span class="price-label">公式価格</span><span class="price-value">¥159,800</span></div>
-<div class="price-row"><span class="price-label">最新買取価格（モバイル一番）</span><span class="price-value">¥170,000</span></div>
-<div class="price-row"><span class="price-label">推定コスト</span><span class="price-value">-¥1,800</span></div>
-<div class="price-row"><span class="price-label">実質利益</span><span class="profit">+¥8,400</span></div>
-<div class="price-row"><span class="price-label">利益率</span><span class="price-value">5.3%</span></div>
-<div class="price-row"><span class="price-label">買取条件</span><span class="price-value">新品未開封 SIMフリー</span></div>
-<div class="price-row"><span class="price-label">最終更新</span><span class="price-value" style="font-size:0.82rem;color:var(--muted)">2026-05-18 22:05 JST</span></div>
-<div class="links"><a href="https://www.apple.com/jp/shop/" target="_blank" rel="noopener" data-track="product_click" data-product-id="prod_iphone16pro_256">公式購入ページ →</a><a href="https://mobileno1.com/kaitori/iphone16pro/" target="_blank" rel="noopener" data-track="product_click" data-product-id="prod_iphone16pro_256" data-shop="モバイル一番">買取ページ →</a></div>
+<div class="price-row"><span class="price-label">最終更新</span><span class="price-value" style="font-size:0.82rem;color:var(--muted)">2026-05-18 13:46 JST</span></div>
+<div class="buyback-compare"><h4>買取店比較（最大5店舗）<span class="freshness-recent">📋当日手動 / 10時間前</span></h4><div class="shop-compare-row"><span class="shop-rank">1.</span><span class="shop-name">モバイル一番</span><span class="shop-price">¥170,000</span><span class="shop-profit">+¥10,200</span></div><div class="shop-compare-row"><span class="shop-rank">2.</span><span class="shop-name">買取商店</span><span class="shop-price">¥167,000</span><span class="shop-profit">+¥7,200</span></div></div>
+<div class="links"><a href="https://www.apple.com/jp/shop/" target="_blank" rel="noopener" data-track="product_click" data-product-id="prod_iphone16pro_256">公式購入ページ →</a></div>
 </div>
 <div class="card" data-user-level="beginner_easy">
 <h3>Nintendo Switch 2 <span class="badge badge-easy">低難度</span></h3>
@@ -231,8 +197,9 @@ td{word-break:break-word;}
 <div class="price-row"><span class="price-label">実質利益</span><span class="profit">+¥6,220</span></div>
 <div class="price-row"><span class="price-label">利益率</span><span class="price-value">12.4%</span></div>
 <div class="price-row"><span class="price-label">買取条件</span><span class="price-value">新品未開封</span></div>
-<div class="price-row"><span class="price-label">最終更新</span><span class="price-value" style="font-size:0.82rem;color:var(--muted)">2026-05-18 13:51 JST</span></div>
-<div class="links"><a href="https://kaitori-shouten.com/game/switch2/" target="_blank" rel="noopener" data-track="product_click" data-product-id="prod_switch2" data-shop="買取商店">買取ページ →</a></div>
+<div class="price-row"><span class="price-label">最終更新</span><span class="price-value" style="font-size:0.82rem;color:var(--muted)">2026-05-18 13:46 JST</span></div>
+<div class="buyback-compare"><h4>買取店比較（最大5店舗）<span class="freshness-recent">📋当日手動 / 10時間前</span></h4><div class="shop-compare-row"><span class="shop-rank">1.</span><span class="shop-name">買取商店</span><span class="shop-price">¥58,000</span><span class="shop-profit">+¥8,020</span></div><div class="shop-compare-row"><span class="shop-rank">2.</span><span class="shop-name"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_switch2" data-shop="じゃんぱら">じゃんぱら</a></span><span class="shop-price">¥56,000</span><span class="shop-profit">+¥6,020</span></div><div class="shop-compare-row"><span class="shop-rank">3.</span><span class="shop-name"><a href="https://iosys.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_switch2" data-shop="イオシス">イオシス</a></span><span class="shop-price">¥55,000</span><span class="shop-profit">+¥5,020</span></div><div class="shop-compare-row"><span class="shop-rank">4.</span><span class="shop-name"><a href="https://www.geo-online.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_switch2" data-shop="ゲオ">ゲオ</a></span><span class="shop-price">¥54,000</span><span class="shop-profit">+¥4,020</span></div></div>
+<div class="links"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener" data-track="product_click" data-product-id="prod_switch2" data-shop="買取商店">買取ページ →</a></div>
 </div>
 <div class="card" data-user-level="beginner_easy">
 <h3>Nintendo Switch 2 マリオカートセット <span class="badge badge-easy">低難度</span></h3>
@@ -242,19 +209,9 @@ td{word-break:break-word;}
 <div class="price-row"><span class="price-label">実質利益</span><span class="profit">+¥6,220</span></div>
 <div class="price-row"><span class="price-label">利益率</span><span class="price-value">10.4%</span></div>
 <div class="price-row"><span class="price-label">買取条件</span><span class="price-value">新品未開封</span></div>
-<div class="price-row"><span class="price-label">最終更新</span><span class="price-value" style="font-size:0.82rem;color:var(--muted)">2026-05-18 13:51 JST</span></div>
-<div class="links"><a href="https://kaitori-shouten.com/" target="_blank" rel="noopener" data-track="product_click" data-product-id="prod_switch2_mk" data-shop="買取商店">買取ページ →</a></div>
-</div>
-<div class="card" data-user-level="beginner_easy">
-<h3>Nintendo Switch 2 <span class="badge badge-easy">低難度</span></h3>
-<div class="price-row"><span class="price-label">公式価格</span><span class="price-value">¥49,980</span></div>
-<div class="price-row"><span class="price-label">最新買取価格（買取商店）</span><span class="price-value">¥58,000</span></div>
-<div class="price-row"><span class="price-label">推定コスト</span><span class="price-value">-¥1,800</span></div>
-<div class="price-row"><span class="price-label">実質利益</span><span class="profit">+¥6,220</span></div>
-<div class="price-row"><span class="price-label">利益率</span><span class="price-value">12.4%</span></div>
-<div class="price-row"><span class="price-label">買取条件</span><span class="price-value">新品未開封</span></div>
-<div class="price-row"><span class="price-label">最終更新</span><span class="price-value" style="font-size:0.82rem;color:var(--muted)">2026-05-18 22:05 JST</span></div>
-<div class="links"><a href="https://kaitori-shouten.com/game/switch2/" target="_blank" rel="noopener" data-track="product_click" data-product-id="prod_switch2" data-shop="買取商店">買取ページ →</a></div>
+<div class="price-row"><span class="price-label">最終更新</span><span class="price-value" style="font-size:0.82rem;color:var(--muted)">2026-05-18 13:46 JST</span></div>
+<div class="buyback-compare"><h4>買取店比較（最大5店舗）<span class="freshness-recent">📋当日手動 / 10時間前</span></h4><div class="shop-compare-row"><span class="shop-rank">1.</span><span class="shop-name">買取商店</span><span class="shop-price">¥68,000</span><span class="shop-profit">+¥8,020</span></div><div class="shop-compare-row"><span class="shop-rank">2.</span><span class="shop-name"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_switch2_mk" data-shop="じゃんぱら">じゃんぱら</a></span><span class="shop-price">¥66,000</span><span class="shop-profit">+¥6,020</span></div></div>
+<div class="links"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener" data-track="product_click" data-product-id="prod_switch2_mk" data-shop="買取商店">買取ページ →</a></div>
 </div>
 <h2>🟡 要確認・様子見案件（beginner_watch）</h2>
 <div class="card" data-user-level="beginner_watch">
@@ -265,19 +222,9 @@ td{word-break:break-word;}
 <div class="price-row"><span class="price-label">実質利益</span><span class="profit">+¥3,400</span></div>
 <div class="price-row"><span class="price-label">利益率</span><span class="price-value">1.8%</span></div>
 <div class="price-row"><span class="price-label">買取条件</span><span class="price-value">新品未開封 SIMフリー</span></div>
-<div class="price-row"><span class="price-label">最終更新</span><span class="price-value" style="font-size:0.82rem;color:var(--muted)">2026-05-18 13:51 JST</span></div>
-<div class="links"><a href="https://www.apple.com/jp/shop/" target="_blank" rel="noopener" data-track="product_click" data-product-id="prod_iphone16pm_256">公式購入ページ →</a><a href="https://mobileno1.com/kaitori/iphone16promax/" target="_blank" rel="noopener" data-track="product_click" data-product-id="prod_iphone16pm_256" data-shop="モバイル一番">買取ページ →</a></div>
-</div>
-<div class="card" data-user-level="beginner_watch">
-<h3>iPhone 16 Pro Max 256GB <span class="badge badge-watch">要確認</span></h3>
-<div class="price-row"><span class="price-label">公式価格</span><span class="price-value">¥189,800</span></div>
-<div class="price-row"><span class="price-label">最新買取価格（モバイル一番）</span><span class="price-value">¥195,000</span></div>
-<div class="price-row"><span class="price-label">推定コスト</span><span class="price-value">-¥1,800</span></div>
-<div class="price-row"><span class="price-label">実質利益</span><span class="profit">+¥3,400</span></div>
-<div class="price-row"><span class="price-label">利益率</span><span class="price-value">1.8%</span></div>
-<div class="price-row"><span class="price-label">買取条件</span><span class="price-value">新品未開封 SIMフリー</span></div>
-<div class="price-row"><span class="price-label">最終更新</span><span class="price-value" style="font-size:0.82rem;color:var(--muted)">2026-05-18 22:05 JST</span></div>
-<div class="links"><a href="https://www.apple.com/jp/shop/" target="_blank" rel="noopener" data-track="product_click" data-product-id="prod_iphone16pm_256">公式購入ページ →</a><a href="https://mobileno1.com/kaitori/iphone16promax/" target="_blank" rel="noopener" data-track="product_click" data-product-id="prod_iphone16pm_256" data-shop="モバイル一番">買取ページ →</a></div>
+<div class="price-row"><span class="price-label">最終更新</span><span class="price-value" style="font-size:0.82rem;color:var(--muted)">2026-05-18 13:46 JST</span></div>
+<div class="buyback-compare"><h4>買取店比較（最大5店舗）<span class="freshness-recent">📋当日手動 / 10時間前</span></h4><div class="shop-compare-row"><span class="shop-rank">1.</span><span class="shop-name">モバイル一番</span><span class="shop-price">¥195,000</span><span class="shop-profit">+¥5,200</span></div><div class="shop-compare-row"><span class="shop-rank">2.</span><span class="shop-name">買取商店</span><span class="shop-price">¥192,000</span><span class="shop-profit">+¥2,200</span></div></div>
+<div class="links"><a href="https://www.apple.com/jp/shop/" target="_blank" rel="noopener" data-track="product_click" data-product-id="prod_iphone16pm_256">公式購入ページ →</a></div>
 </div>
 <div class="card" data-user-level="beginner_watch">
 <h3>PlayStation 5 Pro <span class="badge badge-watch">要確認</span></h3>
@@ -287,24 +234,30 @@ td{word-break:break-word;}
 <div class="price-row"><span class="price-label">実質利益</span><span class="profit">+¥3,220</span></div>
 <div class="price-row"><span class="price-label">利益率</span><span class="price-value">2.7%</span></div>
 <div class="price-row"><span class="price-label">買取条件</span><span class="price-value">新品未開封</span></div>
-<div class="price-row"><span class="price-label">最終更新</span><span class="price-value" style="font-size:0.82rem;color:var(--muted)">2026-05-18 13:51 JST</span></div>
-<div class="links"><a href="https://iosys.co.jp/" target="_blank" rel="noopener" data-track="product_click" data-product-id="prod_ps5_pro" data-shop="イオシス">買取ページ →</a></div>
-</div>
-<div class="card" data-user-level="beginner_watch">
-<h3>PlayStation 5 Pro <span class="badge badge-watch">要確認</span></h3>
-<div class="price-row"><span class="price-label">公式価格</span><span class="price-value">¥119,980</span></div>
-<div class="price-row"><span class="price-label">最新買取価格（イオシス）</span><span class="price-value">¥125,000</span></div>
-<div class="price-row"><span class="price-label">推定コスト</span><span class="price-value">-¥1,800</span></div>
-<div class="price-row"><span class="price-label">実質利益</span><span class="profit">+¥3,220</span></div>
-<div class="price-row"><span class="price-label">利益率</span><span class="price-value">2.7%</span></div>
-<div class="price-row"><span class="price-label">買取条件</span><span class="price-value">新品未開封</span></div>
-<div class="price-row"><span class="price-label">最終更新</span><span class="price-value" style="font-size:0.82rem;color:var(--muted)">2026-05-18 22:05 JST</span></div>
+<div class="price-row"><span class="price-label">最終更新</span><span class="price-value" style="font-size:0.82rem;color:var(--muted)">2026-05-18 13:46 JST</span></div>
+<div class="buyback-compare"><h4>買取店比較（最大5店舗）<span class="freshness-recent">📋当日手動 / 10時間前</span></h4><div class="shop-compare-row"><span class="shop-rank">1.</span><span class="shop-name"><a href="https://iosys.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_ps5_pro" data-shop="イオシス">イオシス</a></span><span class="shop-price">¥125,000</span><span class="shop-profit">+¥5,020</span></div><div class="shop-compare-row"><span class="shop-rank">2.</span><span class="shop-name"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_ps5_pro" data-shop="じゃんぱら">じゃんぱら</a></span><span class="shop-price">¥122,000</span><span class="shop-profit">+¥2,020</span></div><div class="shop-compare-row"><span class="shop-rank">3.</span><span class="shop-name">買取商店</span><span class="shop-price">¥120,000</span><span class="shop-profit">+¥20</span></div><div class="shop-compare-row"><span class="shop-rank">4.</span><span class="shop-name"><a href="https://www.geo-online.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_ps5_pro" data-shop="ゲオ">ゲオ</a></span><span class="shop-price">¥118,000</span><span class="shop-profit">-¥1,980</span></div></div>
 <div class="links"><a href="https://iosys.co.jp/" target="_blank" rel="noopener" data-track="product_click" data-product-id="prod_ps5_pro" data-shop="イオシス">買取ページ →</a></div>
 </div>
 </div>
 <div id="tab-advanced" class="tab-panel" role="tabpanel">
-<h2>🟠 高利益案件</h2><p class="empty-msg">現在、条件を満たす候補はありません。</p>
-<h2>📈 プレ値候補</h2><p class="empty-msg">現在、該当する候補はありません。</p>
+<h2>📈 プレ値・価格差候補（スナップショット分析）</h2>
+<div class="card">
+<table>
+<tr><th>商品</th><th>定価</th><th>国内中古</th><th>海外</th><th>価格差</th><th>方式</th><th>難易度</th></tr>
+<tr><td data-user-level='advanced_high_profit'>RICOH GR IV</td><td>¥194,800</td><td>¥280,000</td><td>¥318,725</td><td style='color:var(--orange);font-weight:600'>+¥85,200</td><td>normal</td><td>0.00</td></tr><tr><td data-user-level='advanced_high_profit'>RICOH GR IIIx</td><td>¥139,800</td><td>¥178,000</td><td>¥242,000</td><td style='color:var(--orange);font-weight:600'>+¥38,200</td><td>normal</td><td>0.00</td></tr>
+</table>
+<p style="color:var(--muted);font-size:0.8rem;margin-top:10px;">※ 難易度0.0〜1.0（低いほど入手しやすい）</p>
+</div>
+<h2>🔍 上級者向け監視候補</h2>
+<div class="card">
+<table>
+<tr><th>商品</th><th>公式価格</th><th>最新買取店</th><th>注目ポイント</th><th>リンク</th></tr>
+<tr class='watch-candidate-card'><td><strong>FUJIFILM X100VI</strong><br><span style="color:var(--green);font-size:0.82rem">買取 ¥420,000 (差 +150,500円)</span></td><td>¥269,500</td><td>カメラのキタムラ</td><td><span style='color:var(--yellow);font-size:0.82rem'>中古プレ値あり</span></td><td><a href="https://www.kitamura.co.jp/" target="_blank" rel="noopener" style="font-size:0.78rem;color:var(--accent)">買取ページ</a></td></tr><tr class='watch-candidate-card'><td><strong>RICOH GR IV</strong><br><span style="color:var(--green);font-size:0.82rem">買取 ¥180,000 (差 -14,800円)</span></td><td>¥194,800</td><td>カメラのキタムラ</td><td><span style='color:var(--yellow);font-size:0.82rem'>中古プレ値あり</span></td><td><a href="https://www.kitamura.co.jp/" target="_blank" rel="noopener" style="font-size:0.78rem;color:var(--accent)">買取ページ</a></td></tr><tr class='watch-candidate-card'><td><strong>RICOH GR IIIx</strong><br><span style="color:var(--green);font-size:0.82rem">買取 ¥128,000 (差 -11,800円)</span></td><td>¥139,800</td><td>カメラのキタムラ</td><td><span style='color:var(--yellow);font-size:0.82rem'>中古プレ値あり</span></td><td><a href="https://www.kitamura.co.jp/" target="_blank" rel="noopener" style="font-size:0.78rem;color:var(--accent)">買取ページ</a></td></tr><tr class='watch-candidate-card'><td><strong>RICOH GR IV Monochrome</strong></td><td>¥283,800</td><td>—</td><td><span style='color:var(--yellow);font-size:0.82rem'>中古プレ値あり</span></td><td></td></tr><tr class='watch-candidate-card'><td><strong>RICOH GR III HDF</strong></td><td>¥147,400</td><td>—</td><td><span style='color:var(--yellow);font-size:0.82rem'>中古プレ値あり</span></td><td></td></tr><tr class='watch-candidate-card'><td><strong>RICOH GR III</strong></td><td>¥129,800</td><td>—</td><td><span style='color:var(--yellow);font-size:0.82rem'>中古プレ値あり</span></td><td></td></tr><tr class='watch-candidate-card'><td><strong>RICOH GR IV HDF</strong></td><td>—</td><td>—</td><td><span style='color:var(--yellow);font-size:0.82rem'>中古プレ値あり</span></td><td></td></tr><tr class='watch-candidate-card'><td><strong>Nintendo Switch 2</strong><br><span style="color:var(--green);font-size:0.82rem">買取 ¥58,000 (差 +8,020円)</span></td><td>¥49,980</td><td>買取商店</td><td><span style='color:var(--yellow);font-size:0.82rem'>監視中</span></td><td><a href="https://kaitori-shouten.com/" target="_blank" rel="noopener" style="font-size:0.78rem;color:var(--accent)">買取ページ</a></td></tr><tr class='watch-candidate-card'><td><strong>Nintendo Switch 2 マリオカートセット</strong><br><span style="color:var(--green);font-size:0.82rem">買取 ¥68,000 (差 +8,020円)</span></td><td>¥59,980</td><td>買取商店</td><td><span style='color:var(--yellow);font-size:0.82rem'>監視中</span></td><td><a href="https://kaitori-shouten.com/" target="_blank" rel="noopener" style="font-size:0.78rem;color:var(--accent)">買取ページ</a></td></tr><tr class='watch-candidate-card'><td><strong>PlayStation 5 Pro</strong><br><span style="color:var(--green);font-size:0.82rem">買取 ¥125,000 (差 +5,020円)</span></td><td>¥119,980</td><td>イオシス</td><td><span style='color:var(--yellow);font-size:0.82rem'>監視中</span></td><td><a href="https://iosys.co.jp/" target="_blank" rel="noopener" style="font-size:0.78rem;color:var(--accent)">買取ページ</a></td></tr><tr class='watch-candidate-card'><td><strong>PlayStation 5 Digital Edition</strong><br><span style="color:var(--green);font-size:0.82rem">買取 ¥68,000 (差 -4,980円)</span></td><td>¥72,980</td><td>イオシス</td><td><span style='color:var(--yellow);font-size:0.82rem'>監視中</span></td><td><a href="https://iosys.co.jp/" target="_blank" rel="noopener" style="font-size:0.78rem;color:var(--accent)">買取ページ</a></td></tr><tr class='watch-candidate-card'><td><strong>Xbox Series X</strong><br><span style="color:var(--green);font-size:0.82rem">買取 ¥52,000 (差 -7,978円)</span></td><td>¥59,978</td><td>イオシス</td><td><span style='color:var(--yellow);font-size:0.82rem'>監視中</span></td><td><a href="https://iosys.co.jp/" target="_blank" rel="noopener" style="font-size:0.78rem;color:var(--accent)">買取ページ</a></td></tr>
+</table>
+<p style="color:var(--muted);font-size:0.78rem;margin-top:10px;">
+※ 監視候補は価格差・希少性スコアが高い商品です。中古市場データ入手後に確定候補へ昇格します。
+</p>
+</div>
 </div>
 <div id="tab-surge" class="tab-panel" role="tabpanel">
 <h2>📈 本日の急騰</h2><p class="empty-msg">急騰は検出されていません（閾値: ¥5,000+）</p>
@@ -314,21 +267,21 @@ td{word-break:break-word;}
 <h2>💰 実質利益ランキング（全カテゴリ）</h2>
 <div class="card"><table>
 <tr><th>#</th><th>商品</th><th>カテゴリ</th><th>定価</th><th>買取</th><th>実質利益</th><th>率</th><th>買取店</th></tr>
-<tr><td>1</td><td>iPhone 17 Pro Max 512GB SIMフリー</td><td>iphone</td><td>¥254,800</td><td>¥288,000</td><td style='color:var(--green);font-weight:600'>+¥31,400</td><td>12.3%</td><td>モバイル一番</td></tr><tr><td>2</td><td>iPhone 17 Pro Max 512GB SIMフリー</td><td>iphone</td><td>¥254,800</td><td>¥288,000</td><td style='color:var(--green);font-weight:600'>+¥31,400</td><td>12.3%</td><td>モバイル一番</td></tr><tr><td>3</td><td>iPhone 17 Pro Max 256GB SIMフリー</td><td>iphone</td><td>¥219,800</td><td>¥252,000</td><td style='color:var(--green);font-weight:600'>+¥30,400</td><td>13.8%</td><td>モバイル一番</td></tr><tr><td>4</td><td>iPhone 17 Pro Max 256GB SIMフリー</td><td>iphone</td><td>¥219,800</td><td>¥252,000</td><td style='color:var(--green);font-weight:600'>+¥30,400</td><td>13.8%</td><td>モバイル一番</td></tr><tr><td>5</td><td>iPhone 17 Pro 256GB SIMフリー</td><td>iphone</td><td>¥179,800</td><td>¥208,000</td><td style='color:var(--green);font-weight:600'>+¥26,400</td><td>14.7%</td><td>モバイル一番</td></tr><tr><td>6</td><td>iPhone 17 Pro 512GB SIMフリー</td><td>iphone</td><td>¥214,800</td><td>¥243,000</td><td style='color:var(--green);font-weight:600'>+¥26,400</td><td>12.3%</td><td>モバイル一番</td></tr><tr><td>7</td><td>iPhone 17 Pro 256GB SIMフリー</td><td>iphone</td><td>¥179,800</td><td>¥208,000</td><td style='color:var(--green);font-weight:600'>+¥26,400</td><td>14.7%</td><td>モバイル一番</td></tr><tr><td>8</td><td>iPhone 17 Pro 512GB SIMフリー</td><td>iphone</td><td>¥214,800</td><td>¥243,000</td><td style='color:var(--green);font-weight:600'>+¥26,400</td><td>12.3%</td><td>モバイル一番</td></tr><tr><td>9</td><td>iPhone 17 256GB SIMフリー</td><td>iphone</td><td>¥139,800</td><td>¥155,000</td><td style='color:var(--green);font-weight:600'>+¥13,400</td><td>9.6%</td><td>モバイル一番</td></tr><tr><td>10</td><td>iPhone 17 256GB SIMフリー</td><td>iphone</td><td>¥139,800</td><td>¥155,000</td><td style='color:var(--green);font-weight:600'>+¥13,400</td><td>9.6%</td><td>モバイル一番</td></tr>
+<tr><td>1</td><td>FUJIFILM X100VI</td><td>camera</td><td>¥269,500</td><td>¥420,000</td><td style='color:var(--green);font-weight:600'>+¥148,700</td><td>55.2%</td><td>カメラのキタムラ</td></tr><tr><td>2</td><td>iPhone 17 Pro Max 512GB SIMフリー</td><td>iphone</td><td>¥254,800</td><td>¥288,000</td><td style='color:var(--green);font-weight:600'>+¥31,400</td><td>12.3%</td><td>モバイル一番</td></tr><tr><td>3</td><td>iPhone 17 Pro Max 256GB SIMフリー</td><td>iphone</td><td>¥219,800</td><td>¥252,000</td><td style='color:var(--green);font-weight:600'>+¥30,400</td><td>13.8%</td><td>モバイル一番</td></tr><tr><td>4</td><td>iPhone 17 Pro 256GB SIMフリー</td><td>iphone</td><td>¥179,800</td><td>¥208,000</td><td style='color:var(--green);font-weight:600'>+¥26,400</td><td>14.7%</td><td>モバイル一番</td></tr><tr><td>5</td><td>iPhone 17 Pro 512GB SIMフリー</td><td>iphone</td><td>¥214,800</td><td>¥243,000</td><td style='color:var(--green);font-weight:600'>+¥26,400</td><td>12.3%</td><td>モバイル一番</td></tr><tr><td>6</td><td>iPhone 17 256GB SIMフリー</td><td>iphone</td><td>¥139,800</td><td>¥155,000</td><td style='color:var(--green);font-weight:600'>+¥13,400</td><td>9.6%</td><td>モバイル一番</td></tr><tr><td>7</td><td>iPhone 16 Pro 256GB SIMフリー</td><td>iphone</td><td>¥159,800</td><td>¥170,000</td><td style='color:var(--green);font-weight:600'>+¥8,400</td><td>5.3%</td><td>モバイル一番</td></tr><tr><td>8</td><td>Nintendo Switch 2</td><td>game_console</td><td>¥49,980</td><td>¥58,000</td><td style='color:var(--green);font-weight:600'>+¥6,220</td><td>12.4%</td><td>買取商店</td></tr><tr><td>9</td><td>Nintendo Switch 2 マリオカートセット</td><td>game_console</td><td>¥59,980</td><td>¥68,000</td><td style='color:var(--green);font-weight:600'>+¥6,220</td><td>10.4%</td><td>買取商店</td></tr><tr><td>10</td><td>iPhone 16 Pro Max 256GB</td><td>iphone</td><td>¥189,800</td><td>¥195,000</td><td style='color:var(--green);font-weight:600'>+¥3,400</td><td>1.8%</td><td>モバイル一番</td></tr>
 </table></div>
 <h2>📱 iPhoneランキング</h2>
 <div class="card"><table>
 <tr><th>#</th><th>商品</th><th>定価</th><th>買取</th><th>実質利益</th><th>率</th><th>買取店</th></tr>
-<tr><td>1</td><td>iPhone 17 Pro Max 512GB SIMフリー</td><td>¥254,800</td><td>¥288,000</td><td style='color:var(--green);font-weight:600'>+¥31,400</td><td>12.3%</td><td>モバイル一番</td></tr><tr><td>2</td><td>iPhone 17 Pro Max 512GB SIMフリー</td><td>¥254,800</td><td>¥288,000</td><td style='color:var(--green);font-weight:600'>+¥31,400</td><td>12.3%</td><td>モバイル一番</td></tr><tr><td>3</td><td>iPhone 17 Pro Max 256GB SIMフリー</td><td>¥219,800</td><td>¥252,000</td><td style='color:var(--green);font-weight:600'>+¥30,400</td><td>13.8%</td><td>モバイル一番</td></tr><tr><td>4</td><td>iPhone 17 Pro Max 256GB SIMフリー</td><td>¥219,800</td><td>¥252,000</td><td style='color:var(--green);font-weight:600'>+¥30,400</td><td>13.8%</td><td>モバイル一番</td></tr><tr><td>5</td><td>iPhone 17 Pro 256GB SIMフリー</td><td>¥179,800</td><td>¥208,000</td><td style='color:var(--green);font-weight:600'>+¥26,400</td><td>14.7%</td><td>モバイル一番</td></tr>
+<tr><td>1</td><td>iPhone 17 Pro Max 512GB SIMフリー</td><td>¥254,800</td><td>¥288,000</td><td style='color:var(--green);font-weight:600'>+¥31,400</td><td>12.3%</td><td>モバイル一番</td></tr><tr><td>2</td><td>iPhone 17 Pro Max 256GB SIMフリー</td><td>¥219,800</td><td>¥252,000</td><td style='color:var(--green);font-weight:600'>+¥30,400</td><td>13.8%</td><td>モバイル一番</td></tr><tr><td>3</td><td>iPhone 17 Pro 256GB SIMフリー</td><td>¥179,800</td><td>¥208,000</td><td style='color:var(--green);font-weight:600'>+¥26,400</td><td>14.7%</td><td>モバイル一番</td></tr><tr><td>4</td><td>iPhone 17 Pro 512GB SIMフリー</td><td>¥214,800</td><td>¥243,000</td><td style='color:var(--green);font-weight:600'>+¥26,400</td><td>12.3%</td><td>モバイル一番</td></tr><tr><td>5</td><td>iPhone 17 256GB SIMフリー</td><td>¥139,800</td><td>¥155,000</td><td style='color:var(--green);font-weight:600'>+¥13,400</td><td>9.6%</td><td>モバイル一番</td></tr>
 </table></div>
 <h2>🎮 ゲーム機ランキング</h2>
 <div class="card"><table>
 <tr><th>#</th><th>商品</th><th>定価</th><th>買取</th><th>実質利益</th><th>率</th><th>買取店</th></tr>
-<tr><td>1</td><td>Nintendo Switch 2</td><td>¥49,980</td><td>¥58,000</td><td style='color:var(--green);font-weight:600'>+¥6,220</td><td>12.4%</td><td>買取商店</td></tr><tr><td>2</td><td>Nintendo Switch 2 マリオカートセット</td><td>¥59,980</td><td>¥68,000</td><td style='color:var(--green);font-weight:600'>+¥6,220</td><td>10.4%</td><td>買取商店</td></tr><tr><td>3</td><td>Nintendo Switch 2</td><td>¥49,980</td><td>¥58,000</td><td style='color:var(--green);font-weight:600'>+¥6,220</td><td>12.4%</td><td>買取商店</td></tr><tr><td>4</td><td>Nintendo Switch 2 マリオカートセット</td><td>¥59,980</td><td>¥68,000</td><td style='color:var(--green);font-weight:600'>+¥6,220</td><td>10.4%</td><td>買取商店</td></tr><tr><td>5</td><td>PlayStation 5 Pro</td><td>¥119,980</td><td>¥125,000</td><td style='color:var(--green);font-weight:600'>+¥3,220</td><td>2.7%</td><td>イオシス</td></tr>
+<tr><td>1</td><td>Nintendo Switch 2</td><td>¥49,980</td><td>¥58,000</td><td style='color:var(--green);font-weight:600'>+¥6,220</td><td>12.4%</td><td>買取商店</td></tr><tr><td>2</td><td>Nintendo Switch 2 マリオカートセット</td><td>¥59,980</td><td>¥68,000</td><td style='color:var(--green);font-weight:600'>+¥6,220</td><td>10.4%</td><td>買取商店</td></tr><tr><td>3</td><td>PlayStation 5 Pro</td><td>¥119,980</td><td>¥125,000</td><td style='color:var(--green);font-weight:600'>+¥3,220</td><td>2.7%</td><td>イオシス</td></tr>
 </table></div>
 <h2>🏪 買取店別 案件数ランキング</h2>
 <div class="card"><table>
-<tr><th>#</th><th>買取店</th><th>案件数</th></tr><tr><td>1</td><td>モバイル一番</td><td>14件</td></tr><tr><td>2</td><td>買取商店</td><td>4件</td></tr><tr><td>3</td><td>イオシス</td><td>2件</td></tr></table></div>
+<tr><th>#</th><th>買取店</th><th>案件数</th></tr><tr><td>1</td><td>モバイル一番</td><td>7件</td></tr><tr><td>2</td><td>買取商店</td><td>2件</td></tr><tr><td>3</td><td>カメラのキタムラ</td><td>1件</td></tr><tr><td>4</td><td>イオシス</td><td>1件</td></tr></table></div>
 </div>
 <div class="caution">
 <strong>⚠️ 注意事項</strong><br>

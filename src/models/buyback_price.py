@@ -18,6 +18,8 @@ class BuybackPriceModel(BaseModel):
     observed_at: datetime = Field(default_factory=datetime.now)
     is_active: bool = Field(default=True)
     notes: str = Field(default="")
+    data_source: str = Field(default="manual_today", description="live/manual_today/manual_recent/stale")
+    link_verified: bool = Field(default=False, description="URLが検証済みか")
 
 
 # 買取店マスタ
@@ -25,27 +27,62 @@ BUYBACK_SHOPS = {
     "src_mobile_ichiban": {
         "name": "モバイル一番",
         "url": "https://mobileno1.com/",
+        "kaitori_url": "https://mobileno1.com/",
         "supports": ["iphone", "ipad", "apple_watch", "macbook"],
     },
     "src_kaitori_shouten": {
         "name": "買取商店",
         "url": "https://kaitori-shouten.com/",
+        "kaitori_url": "https://kaitori-shouten.com/",
         "supports": ["iphone", "ipad", "game_console", "camera"],
     },
     "src_kaitori_itchome": {
         "name": "買取一丁目",
         "url": "https://kaitori-1chome.com/",
+        "kaitori_url": "https://kaitori-1chome.com/",
         "supports": ["iphone", "ipad", "macbook"],
     },
     "src_janpara": {
         "name": "じゃんぱら",
         "url": "https://www.janpara.co.jp/",
+        "kaitori_url": "https://www.janpara.co.jp/sell/",
         "supports": ["iphone", "ipad", "macbook", "camera", "pc", "game_console"],
     },
     "src_iosys": {
         "name": "イオシス",
         "url": "https://iosys.co.jp/",
+        "kaitori_url": "https://iosys.co.jp/",
         "supports": ["iphone", "ipad", "macbook", "camera", "pc", "game_console"],
+    },
+    "src_geo": {
+        "name": "ゲオ",
+        "url": "https://www.geo-online.co.jp/",
+        "kaitori_url": "https://www.geo-online.co.jp/",
+        "supports": ["iphone", "ipad", "game_console", "camera"],
+    },
+    "src_sofmap": {
+        "name": "ソフマップ",
+        "url": "https://www.sofmap.com/",
+        "kaitori_url": "https://www.sofmap.com/buy_list.aspx",
+        "supports": ["iphone", "ipad", "macbook", "camera", "pc", "game_console"],
+    },
+    "src_kitamura": {
+        "name": "カメラのキタムラ",
+        "url": "https://www.kitamura.co.jp/",
+        "kaitori_url": "https://www.kitamura.co.jp/service/kaitori/",
+        "supports": ["camera"],
+    },
+    "src_mapcamera": {
+        "name": "マップカメラ",
+        "url": "https://www.mapcamera.com/",
+        "kaitori_url": "https://www.mapcamera.com/",
+        "supports": ["camera"],
+    },
+    "src_fujiya": {
+        "name": "フジヤカメラ",
+        "url": "https://www.fujiyacamera.com/",
+        "kaitori_url": "https://www.fujiyacamera.com/",
+        "supports": ["camera"],
     },
 }
 

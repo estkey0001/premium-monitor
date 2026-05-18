@@ -2278,6 +2278,88 @@ def test_note_cta():
 
 # ---- Phase 13: 本番前チェック ----
 
+@cli.command("validate-price-links")
+@click.option("--fix-csv", is_flag=True, help="検証結果をCSVのlink_verifiedに反映")
+@click.option("--timeout", default=10, help="タイムアウト秒数 (default: 10)")
+def validate_price_links(fix_csv: bool, timeout: int):
+    """買取・公式・海外URLのリンク検証を実行する。"""
+    import csv
+    import re
+    from pathlib import Path
+    try:
+        import requests
+    except ImportError:
+        click.echo("ERROR: requests未インストール。pip install requests")
+        sys.exit(1)
+
+    results = {"ok": [], "ng": [], "skip": []}
+
+    def check_url(url: str, label: str) -> str:
+        if not url or url in ("#", ""):
+            results["skip"].append({"url": url, "label": label, "reason": "空URL"})
+            return "skip"
+        try:
+            resp = requests.head(url, timeout=timeout, allow_redirects=True,
+                                 headers={"User-Agent": "Mozilla/5.0"})
+            if resp.status_code in (200, 301, 302, 403):  # 403もサイトは存在する
+                results["ok"].append({"url": url, "label": label, "status": resp.status_code})
+                return "ok"
+            else:
+                results["ng"].append({"url": url, "label": label, "status": resp.status_code})
+                return "ng"
+        except Exception as e:
+            results["ng"].append({"url": url, "label": label, "error": str(e)})
+            return "ng"
+
+    click.echo("\n買取URLを検証中...\n")
+
+    # manual_buyback_prices.csv のURL検証
+    buyback_csv = PROJECT_ROOT / "data" / "manual_buyback_prices.csv"
+    if buyback_csv.exists():
+        with open(buyback_csv, encoding="utf-8") as f:
+            reader = csv.DictReader(f)
+            rows = list(reader)
+            fieldnames = reader.fieldnames or []
+        seen_urls = set()
+        for row in rows:
+            url = row.get("url", "").strip()
+            if url and url not in seen_urls:
+                seen_urls.add(url)
+                shop = row.get("buyback_shop", "")
+                product = row.get("product_alias", "")
+                status = check_url(url, f"buyback:{shop}:{product}")
+                icon = "OK" if status == "ok" else ("SKIP" if status == "skip" else "NG")
+                click.echo(f"  [{icon}] {shop}: {url}")
+
+        if fix_csv:
+            # link_verifiedを更新
+            ng_urls = {r["url"] for r in results["ng"]}
+            ok_urls = {r["url"] for r in results["ok"]}
+            if "link_verified" not in fieldnames:
+                fieldnames = list(fieldnames) + ["link_verified"]
+            updated = []
+            for row in rows:
+                url = row.get("url", "").strip()
+                if url in ok_urls:
+                    row["link_verified"] = "true"
+                elif url in ng_urls:
+                    row["link_verified"] = "false"
+                updated.append(row)
+            with open(buyback_csv, "w", encoding="utf-8", newline="") as f:
+                writer = csv.DictWriter(f, fieldnames=fieldnames)
+                writer.writeheader()
+                writer.writerows(updated)
+            click.echo(f"\n  link_verified を更新しました")
+
+    click.echo(f"\n{'='*50}")
+    click.echo(f"  OK: {len(results['ok'])} / NG: {len(results['ng'])} / Skip: {len(results['skip'])}")
+    if results["ng"]:
+        click.echo(f"\n  NGリンク一覧:")
+        for r in results["ng"]:
+            click.echo(f"     {r['label']}: {r['url']} ({r.get('status', r.get('error', ''))})")
+    click.echo(f"{'='*50}\n")
+
+
 @cli.command("prelaunch-check")
 def prelaunch_check():
     """本番公開前の最終チェックリストを実行する。"""

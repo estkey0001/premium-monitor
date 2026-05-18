@@ -879,11 +879,14 @@ class Repository:
         self.db.connection.execute(
             """INSERT OR REPLACE INTO buyback_prices
                (id, product_id, shop_id, shop_name, buyback_price,
-                condition, buyback_url, observed_at, is_active, notes)
-               VALUES (?,?,?,?,?,?,?,?,?,?)""",
+                condition, buyback_url, observed_at, is_active, notes,
+                data_source, link_verified)
+               VALUES (?,?,?,?,?,?,?,?,?,?,?,?)""",
             (bp.id, bp.product_id, bp.shop_id, bp.shop_name, bp.buyback_price,
              bp.condition, bp.buyback_url, bp.observed_at.isoformat(),
-             int(bp.is_active), bp.notes),
+             int(bp.is_active), bp.notes,
+             getattr(bp, "data_source", "manual_today"),
+             int(getattr(bp, "link_verified", False))),
         )
         self.db.connection.commit()
 
@@ -919,6 +922,8 @@ class Repository:
                 observed_at=datetime.fromisoformat(d["observed_at"]),
                 is_active=bool(d.get("is_active", 1)),
                 notes=d.get("notes", ""),
+                data_source=d.get("data_source", "manual_today"),
+                link_verified=bool(d.get("link_verified", 0)),
             ))
         return result
 
@@ -928,6 +933,11 @@ class Repository:
 
     def upsert_beginner_deal(self, deal) -> None:
         from src.models.beginner_deal import BeginnerDealModel
+        # 同一product_idの古いレコードを非アクティブ化（重複防止）
+        self.db.connection.execute(
+            "UPDATE beginner_deals SET is_active = 0 WHERE product_id = ? AND id != ?",
+            (deal.product_id, deal.id),
+        )
         self.db.connection.execute(
             """INSERT OR REPLACE INTO beginner_deals
                (id, product_id, product_name, category, brand,
@@ -1188,3 +1198,49 @@ class Repository:
                 "flags":            flags,
             })
         return result
+
+    def list_buyback_prices_by_product(self, product_id: str, limit: int = 10) -> list[dict]:
+        """商品の全買取店価格を降順で返す（複数店舗比較用、1店舗1エントリに重複排除）。"""
+        try:
+            rows = self.db.connection.execute(
+                """SELECT bp.shop_id, bp.shop_name, bp.buyback_price, bp.condition,
+                          bp.buyback_url, bp.observed_at, bp.data_source, bp.link_verified
+                   FROM buyback_prices bp
+                   INNER JOIN (
+                       SELECT shop_id, MAX(buyback_price) AS max_price
+                       FROM buyback_prices
+                       WHERE product_id = ? AND is_active = 1
+                       GROUP BY shop_id
+                   ) best ON bp.shop_id = best.shop_id
+                          AND bp.buyback_price = best.max_price
+                          AND bp.product_id = ?
+                          AND bp.is_active = 1
+                   GROUP BY bp.shop_id
+                   ORDER BY bp.buyback_price DESC
+                   LIMIT ?""",
+                (product_id, product_id, limit)
+            ).fetchall()
+        except Exception:
+            return []
+        result = []
+        for row in rows:
+            d = dict(row)
+            d["link_verified"] = bool(d.get("link_verified", 0))
+            result.append(d)
+        return result
+
+    def list_overseas_prices_by_product(self, product_id: str, limit: int = 5) -> list[dict]:
+        """商品の海外相場価格一覧を返す（market_snapshotsのoverseas情報）。"""
+        try:
+            rows = self.db.connection.execute(
+                """SELECT overseas_source, overseas_price_jpy, overseas_gap_jpy, overseas_gap_percent,
+                          scanned_at
+                   FROM market_snapshots
+                   WHERE product_id = ? AND overseas_price_jpy > 0
+                   ORDER BY scanned_at DESC
+                   LIMIT ?""",
+                (product_id, limit)
+            ).fetchall()
+        except Exception:
+            return []
+        return [dict(row) for row in rows]

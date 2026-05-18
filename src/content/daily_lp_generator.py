@@ -119,10 +119,15 @@ class DailyLPGenerator:
         # 急騰・急落
         buyback_alerts = self.repo.list_buyback_alerts(limit=20)
 
-        # ランキング用
-        all_deals = self.repo.list_beginner_deals(min_profit=0, limit=50)
+        # ランキング用 + カテゴリ別
+        all_deals    = self.repo.list_beginner_deals(min_profit=0, limit=50)
         iphone_deals = [d for d in all_deals if d.category == "iphone"]
         game_deals   = [d for d in all_deals if d.category == "game_console"]
+        camera_deals = [d for d in all_deals if d.category == "camera"]
+        # ジャンル別監視候補
+        iphone_watch  = self.repo.list_watch_candidates(genres=["iphone"],       limit=15)
+        camera_watch  = self.repo.list_watch_candidates(genres=["camera"],       limit=15)
+        game_watch    = self.repo.list_watch_candidates(genres=["game_console"], limit=15)
 
         # HTML生成
         page_html = self._render_page(
@@ -140,6 +145,10 @@ class DailyLPGenerator:
             all_deals=all_deals,
             iphone_deals=iphone_deals,
             game_deals=game_deals,
+            camera_deals=camera_deals,
+            iphone_watch=iphone_watch,
+            camera_watch=camera_watch,
+            game_watch=game_watch,
             buyback_by_product=buyback_by_product,
         )
 
@@ -191,6 +200,7 @@ class DailyLPGenerator:
                      latest_buyback_at, latest_deals_at, lp_generated_at,
                      beginner_easy, beginner_watch, advanced_deals, advanced_snaps,
                      watch_candidates, buyback_alerts, all_deals, iphone_deals, game_deals,
+                     camera_deals=None, iphone_watch=None, camera_watch=None, game_watch=None,
                      buyback_by_product: dict = None) -> str:
 
         site_title = _esc(self.settings.get("site_title", "プレ値速報"))
@@ -226,6 +236,10 @@ class DailyLPGenerator:
             watch_candidates,
             buyback_alerts,
             all_deals, iphone_deals, game_deals,
+            camera_deals=camera_deals or [],
+            iphone_watch=iphone_watch or [],
+            camera_watch=camera_watch or [],
+            game_watch=game_watch or [],
             buyback_by_product=buyback_by_product or {},
         )
         caution_html = self._section_caution()
@@ -246,653 +260,204 @@ class DailyLPGenerator:
 {analytics_head}
 <style>
 /* ============================================================
-   プレ値速報 — Bloomberg/TradingView風 リデザイン
+   プレ値速報 v3 — Premium Ad-Ready UI
    ============================================================ */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 :root {{
-  /* カラーパレット */
-  --bg: #0b0e17;
-  --surface: #111827;
-  --card: #161d2e;
-  --card-hover: #1c2540;
-  --border: #1e2a3a;
-  --border-light: #253044;
-  --text: #e2e8f0;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
-  --accent: #3b82f6;
-  --accent-dim: rgba(59,130,246,0.12);
-  --green: #10b981;
-  --green-dim: rgba(16,185,129,0.12);
-  --yellow: #f59e0b;
-  --yellow-dim: rgba(245,158,11,0.12);
-  --orange: #f97316;
-  --orange-dim: rgba(249,115,22,0.12);
-  --red: #ef4444;
-  --red-dim: rgba(239,68,68,0.12);
-  /* タイポグラフィ */
-  --font-sans: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
-  --font-mono: "SF Mono", "Fira Code", "Cascadia Code", monospace;
-  /* スペーシング */
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 14px;
-  --radius-xl: 20px;
-}}
-*, *::before, *::after {{ margin: 0; padding: 0; box-sizing: border-box; }}
-html {{ scroll-behavior: smooth; }}
-body {{
-  font-family: var(--font-sans);
-  background: var(--bg);
-  color: var(--text);
-  line-height: 1.65;
-  font-size: 15px;
-  -webkit-font-smoothing: antialiased;
-}}
-/* ---- Layout ---- */
-.container {{
-  max-width: 860px;
-  margin: 0 auto;
-  padding: 0 16px 48px;
-}}
-/* ---- Topbar ---- */
-.topbar {{
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  padding: 10px 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  backdrop-filter: blur(12px);
-}}
-.topbar-brand {{
-  font-size: 0.88rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  color: var(--text);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}}
-.topbar-brand .dot {{
-  width: 8px; height: 8px;
-  background: var(--green);
-  border-radius: 50%;
-  animation: pulse-dot 2s infinite;
-}}
-@keyframes pulse-dot {{
-  0%, 100% {{ opacity: 1; transform: scale(1); }}
-  50% {{ opacity: 0.5; transform: scale(0.8); }}
-}}
-.topbar-meta {{
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}}
-/* ---- Hero ---- */
-.hero {{
-  padding: 56px 0 36px;
-  text-align: center;
-  position: relative;
-}}
-.hero::before {{
-  content: "";
-  position: absolute;
-  top: 0; left: 50%;
-  transform: translateX(-50%);
-  width: 600px; height: 300px;
-  background: radial-gradient(ellipse at center, rgba(59,130,246,0.08) 0%, transparent 70%);
-  pointer-events: none;
-}}
-.hero-eyebrow {{
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: var(--accent-dim);
-  border: 1px solid rgba(59,130,246,0.25);
-  color: var(--accent);
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 4px 12px;
-  border-radius: 99px;
-  margin-bottom: 20px;
-}}
-.hero h1 {{
-  font-size: clamp(1.6rem, 4vw, 2.2rem);
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  line-height: 1.2;
-  color: var(--text);
-  margin-bottom: 12px;
-}}
-.hero-sub {{
-  font-size: 0.95rem;
-  color: var(--text-secondary);
-  margin-bottom: 28px;
-  max-width: 480px;
-  margin-left: auto;
-  margin-right: auto;
-}}
-.hero-timestamps {{
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px;
-}}
-.ts-chip {{
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: var(--card);
-  border: 1px solid var(--border-light);
-  color: var(--text-secondary);
-  font-size: 0.78rem;
-  padding: 6px 14px;
-  border-radius: 99px;
-  font-variant-numeric: tabular-nums;
-}}
-.ts-chip .ts-dot {{
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: var(--green);
-  flex-shrink: 0;
-}}
-.ts-chip.stale .ts-dot {{ background: var(--orange); }}
-/* ---- Stale Warning ---- */
-.stale-warning-block {{
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  background: rgba(249,115,22,0.08);
-  border: 1px solid rgba(249,115,22,0.3);
-  border-left: 4px solid var(--orange);
-  padding: 14px 18px;
-  border-radius: 0 var(--radius-md) var(--radius-md) 0;
-  margin: 16px 0;
-  font-size: 0.875rem;
-  color: #fed7aa;
-  line-height: 1.6;
-}}
-.stale-warning-block .warn-icon {{ font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }}
-/* ---- Tab Navigation ---- */
-.tab-nav {{
-  display: flex;
-  gap: 4px;
-  margin: 32px 0 0;
-  border-bottom: 1px solid var(--border);
-  padding-bottom: 0;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-}}
-.tab-nav::-webkit-scrollbar {{ display: none; }}
-.tab-btn {{
-  flex-shrink: 0;
-  background: transparent;
-  border: none;
-  border-bottom: 2px solid transparent;
-  padding: 12px 20px;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--text-muted);
-  cursor: pointer;
-  transition: color 0.15s, border-color 0.15s;
-  margin-bottom: -1px;
-  white-space: nowrap;
-  letter-spacing: 0.01em;
-}}
-.tab-btn:hover {{ color: var(--text-secondary); }}
-.tab-btn.active {{
-  color: var(--accent);
-  border-bottom-color: var(--accent);
-  font-weight: 600;
-}}
-.tab-panel {{ display: none; padding: 20px 0 0; }}
-.tab-panel.active {{ display: block; }}
-/* noscript fallback */
-.noscript-all .tab-panel {{ display: block !important; }}
-.noscript-all .tab-btn {{ display: none; }}
-.noscript-all .tab-nav::before {{
-  content: "※ JavaScript が無効です。全タブを表示しています。";
-  display: block; color: var(--text-muted); font-size: 0.8rem; padding: 8px 0; width: 100%;
-}}
-/* ---- Section Headers ---- */
-.section-header {{
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 28px 0 16px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--border);
-}}
-.section-header h2 {{
-  font-size: 0.95rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-}}
-.section-header .section-count {{
-  font-size: 0.72rem;
-  background: var(--border);
-  color: var(--text-muted);
-  padding: 2px 8px;
-  border-radius: 99px;
-}}
-/* ---- Cards ---- */
-.card {{
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 20px 22px;
-  margin: 10px 0;
-  transition: border-color 0.15s, background 0.15s;
-}}
-.card:hover {{
-  border-color: var(--border-light);
-  background: var(--card-hover);
-}}
-.card-header {{
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 16px;
-}}
-.card-title {{
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--text);
-  line-height: 1.3;
-  flex: 1;
-}}
-/* ---- Badges ---- */
-.badge {{
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 3px 10px;
-  border-radius: 99px;
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  white-space: nowrap;
-  flex-shrink: 0;
-}}
-.badge-easy {{ background: var(--green-dim); color: var(--green); border: 1px solid rgba(16,185,129,0.25); }}
-.badge-watch {{ background: var(--yellow-dim); color: var(--yellow); border: 1px solid rgba(245,158,11,0.25); }}
-.badge-adv {{ background: var(--orange-dim); color: var(--orange); border: 1px solid rgba(249,115,22,0.25); }}
-.badge-exp {{ background: var(--red-dim); color: var(--red); border: 1px solid rgba(239,68,68,0.25); }}
-.badge-surge {{ background: var(--green-dim); color: var(--green); border: 1px solid rgba(16,185,129,0.25); }}
-.badge-drop {{ background: var(--red-dim); color: var(--red); border: 1px solid rgba(239,68,68,0.25); }}
-/* ---- Price Grid ---- */
-.price-grid {{
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-bottom: 14px;
-}}
-.price-cell {{
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 10px 12px;
-}}
-.price-cell-label {{
-  font-size: 0.7rem;
-  color: var(--text-muted);
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  margin-bottom: 4px;
-}}
-.price-cell-value {{
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: var(--text);
-  font-variant-numeric: tabular-nums;
-}}
-.price-cell.profit-cell {{
-  background: var(--green-dim);
-  border-color: rgba(16,185,129,0.25);
-  grid-column: span 2;
-}}
-.price-cell.profit-cell .price-cell-value {{
-  font-size: 1.35rem;
-  color: var(--green);
-  letter-spacing: -0.02em;
-}}
-.profit-rate-badge {{
-  display: inline-flex;
-  align-items: center;
-  background: rgba(16,185,129,0.2);
-  color: var(--green);
-  font-size: 0.75rem;
-  font-weight: 700;
-  padding: 2px 8px;
-  border-radius: 4px;
-  margin-left: 8px;
-  vertical-align: middle;
-}}
-/* ---- Price Rows (legacy support) ---- */
-.price-row {{
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 7px 0;
-  border-bottom: 1px solid var(--border);
-  font-size: 0.9rem;
-}}
-.price-row:last-child {{ border: none; }}
-.price-label {{ color: var(--text-muted); font-size: 0.85rem; }}
-.price-value {{ font-weight: 600; color: var(--text); font-variant-numeric: tabular-nums; }}
-.profit {{ color: var(--green); font-size: 1.2rem; font-weight: 800; }}
-/* ---- Condition Bar ---- */
-.condition-bar {{
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
-  background: var(--surface);
-  border-radius: var(--radius-sm);
-  margin: 12px 0;
-  font-size: 0.82rem;
-  color: var(--text-secondary);
-}}
-.condition-bar .cond-icon {{ color: var(--yellow); }}
-/* ---- Buyback Compare ---- */
-.buyback-compare {{
-  margin: 14px 0 0;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  overflow: hidden;
-}}
-.buyback-compare-header {{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 8px 14px;
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  font-size: 0.78rem;
-  color: var(--text-muted);
-  font-weight: 600;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
-}}
-.shop-compare-row {{
-  display: flex;
-  align-items: center;
-  padding: 9px 14px;
-  border-bottom: 1px solid var(--border);
-  font-size: 0.875rem;
-  transition: background 0.1s;
-}}
-.shop-compare-row:last-child {{ border: none; }}
-.shop-compare-row:hover {{ background: var(--surface); }}
-.shop-rank {{
-  color: var(--text-muted);
-  min-width: 24px;
-  font-size: 0.78rem;
-  font-weight: 700;
-}}
-.shop-rank.rank-1 {{ color: var(--yellow); }}
-.shop-name {{ flex: 1; padding: 0 10px; color: var(--text-secondary); }}
-.shop-name a {{ color: var(--accent); text-decoration: none; }}
-.shop-name a:hover {{ text-decoration: underline; }}
-.shop-price {{ font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; min-width: 80px; text-align: right; }}
-.shop-profit {{ font-size: 0.78rem; color: var(--green); min-width: 70px; text-align: right; font-weight: 600; }}
-.shop-profit.negative {{ color: var(--red); }}
-/* ---- Links ---- */
-.links {{
-  margin-top: 14px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}}
-.links a {{
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  color: var(--accent);
-  text-decoration: none;
-  font-size: 0.82rem;
-  font-weight: 500;
-  padding: 6px 14px;
-  border: 1px solid rgba(59,130,246,0.3);
-  border-radius: var(--radius-sm);
-  background: var(--accent-dim);
-  transition: background 0.15s, border-color 0.15s;
-}}
-.links a:hover {{
-  background: rgba(59,130,246,0.2);
-  border-color: rgba(59,130,246,0.5);
-}}
-/* ---- Table ---- */
-.data-table-wrap {{
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border);
-}}
-table {{
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.875rem;
-}}
-thead tr {{
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-}}
-th {{
-  padding: 10px 12px;
-  text-align: left;
-  color: var(--text-muted);
-  font-weight: 600;
-  font-size: 0.72rem;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  white-space: nowrap;
-}}
-td {{
-  padding: 10px 12px;
-  border-bottom: 1px solid var(--border);
-  color: var(--text-secondary);
-  word-break: break-word;
-}}
-tbody tr:last-child td {{ border: none; }}
-tbody tr:hover td {{ background: var(--surface); }}
-td.profit-td {{ color: var(--green); font-weight: 700; font-variant-numeric: tabular-nums; }}
-/* ---- Freshness Labels ---- */
-.freshness-live {{ color: var(--green); font-size: 0.72rem; font-weight: 600; }}
-.freshness-recent {{ color: var(--yellow); font-size: 0.72rem; font-weight: 600; }}
-.freshness-stale {{ color: var(--red); font-size: 0.72rem; font-weight: 600; }}
-.freshness-unknown {{ color: var(--text-muted); font-size: 0.72rem; }}
-/* ---- Updated Timestamp ---- */
-.updated-ts {{
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  margin-top: 10px;
-  padding-top: 10px;
-  border-top: 1px solid var(--border);
-}}
-/* ---- Empty State ---- */
-.empty-msg {{
-  text-align: center;
-  color: var(--text-muted);
-  padding: 32px 16px;
-  font-size: 0.9rem;
-}}
-/* ---- Caution Block ---- */
-.caution {{
-  background: rgba(245,158,11,0.06);
-  border: 1px solid rgba(245,158,11,0.2);
-  border-left: 3px solid var(--yellow);
-  padding: 18px 20px;
-  margin: 32px 0;
-  border-radius: 0 var(--radius-md) var(--radius-md) 0;
-  font-size: 0.875rem;
-  color: var(--text-secondary);
-  line-height: 1.8;
-}}
-.caution strong {{ color: var(--yellow); display: block; margin-bottom: 8px; font-size: 0.9rem; }}
-.caution ul {{ list-style: none; padding: 0; }}
-.caution ul li {{ padding: 2px 0; }}
-.caution ul li::before {{ content: "·  "; color: var(--text-muted); }}
-/* ---- CTA Section ---- */
-.cta-section {{
-  margin: 40px 0;
-  padding: 32px 24px;
-  background: linear-gradient(135deg, rgba(59,130,246,0.06) 0%, rgba(16,185,129,0.04) 100%);
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-xl);
-  text-align: center;
-}}
-.cta-section h3 {{
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--text);
-  margin-bottom: 8px;
-}}
-.cta-section p {{
-  font-size: 0.875rem;
-  color: var(--text-secondary);
-  margin-bottom: 20px;
-  max-width: 400px;
-  margin-left: auto;
-  margin-right: auto;
-}}
-.cta-buttons {{
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px;
-}}
-.cta-btn {{
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 12px 24px;
-  border-radius: var(--radius-md);
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 0.9rem;
-  transition: all 0.15s;
-}}
-.cta-btn-primary {{
-  background: var(--accent);
-  color: #fff;
-  border: 1px solid transparent;
-}}
-.cta-btn-primary:hover {{ background: #2563eb; }}
-.cta-btn-secondary {{
-  background: var(--card);
-  color: var(--text-secondary);
-  border: 1px solid var(--border-light);
-}}
-.cta-btn-secondary:hover {{ background: var(--card-hover); color: var(--text); }}
-/* ---- Footer ---- */
-.footer {{
-  text-align: center;
-  color: var(--text-muted);
-  font-size: 0.78rem;
-  padding: 40px 0 24px;
-  line-height: 2;
-  border-top: 1px solid var(--border);
-  margin-top: 40px;
-}}
-/* ---- Watch Candidate Card ---- */
-.watch-candidate-card {{
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 18px 20px;
-  margin: 10px 0;
-}}
-.watch-candidate-card .wc-header {{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 12px;
-}}
-.watch-candidate-card .wc-title {{
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: var(--text);
-}}
-.watch-candidate-card .wc-meta {{
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 10px;
-}}
-.wc-tag {{
-  font-size: 0.72rem;
-  padding: 3px 9px;
-  border-radius: 4px;
-  font-weight: 600;
-}}
-.wc-tag-soldout {{ background: var(--red-dim); color: var(--red); }}
-.wc-tag-lottery {{ background: var(--yellow-dim); color: var(--yellow); }}
-.wc-tag-overseas {{ background: var(--accent-dim); color: var(--accent); }}
-.wc-tag-camera {{ background: rgba(139,92,246,0.12); color: #a78bfa; }}
-.wc-tag-game {{ background: rgba(20,184,166,0.12); color: #2dd4bf; }}
-/* ---- Alert Card ---- */
-.alert-card {{
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 18px 20px;
-  margin: 10px 0;
-}}
-.alert-card.surge {{ border-left: 3px solid var(--green); }}
-.alert-card.drop {{ border-left: 3px solid var(--red); }}
-/* ---- Ranking Table ---- */
-.ranking-card {{
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  margin: 10px 0;
-}}
-.ranking-card table {{ font-size: 0.85rem; }}
-.ranking-card th {{ background: var(--surface); }}
-.rank-num {{ color: var(--text-muted); font-weight: 700; font-size: 0.85rem; }}
-.rank-num.top3 {{ color: var(--yellow); }}
-/* ---- Divider ---- */
-.section-divider {{
-  height: 1px;
-  background: var(--border);
-  margin: 24px 0;
-}}
-/* ---- Responsive ---- */
-@media (max-width: 600px) {{
-  .hero {{ padding: 40px 0 28px; }}
-  .hero h1 {{ font-size: 1.5rem; }}
-  .price-grid {{ grid-template-columns: 1fr 1fr; gap: 8px; }}
-  .price-cell.profit-cell .price-cell-value {{ font-size: 1.15rem; }}
-  .tab-btn {{ padding: 10px 14px; font-size: 0.82rem; }}
-  table {{ font-size: 0.8rem; }}
-  th, td {{ padding: 8px 8px; }}
-  .card {{ padding: 16px; }}
-  .cta-section {{ padding: 24px 16px; }}
-  .topbar-meta {{ display: none; }}
-  .shop-profit {{ display: none; }}
-}}
-@media (max-width: 400px) {{
-  .price-grid {{ grid-template-columns: 1fr; }}
-  .price-cell.profit-cell {{ grid-column: span 1; }}
-}}
+  --bg:#060a12; --surface:#0d1220; --card:#111827; --card-2:#151e2e;
+  --border:#1a2540; --border-2:#243050;
+  --text:#f1f5f9; --text-2:#94a3b8; --text-3:#64748b;
+  --accent:#4f8ef7; --accent-2:#3b7cf0; --accent-glow:rgba(79,142,247,0.15);
+  --green:#10d98a; --green-2:#0ec47c; --green-dim:rgba(16,217,138,0.1); --green-glow:rgba(16,217,138,0.2);
+  --yellow:#fbbf24; --yellow-dim:rgba(251,191,36,0.1);
+  --orange:#f97316; --orange-dim:rgba(249,115,22,0.1);
+  --red:#f43f5e; --red-dim:rgba(244,63,94,0.1);
+  --iphone-color:#4f8ef7; --iphone-dim:rgba(79,142,247,0.12);
+  --camera-color:#a78bfa; --camera-dim:rgba(167,139,250,0.12);
+  --game-color:#2dd4bf; --game-dim:rgba(45,212,191,0.12);
+  --font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --r-sm:8px; --r-md:12px; --r-lg:16px; --r-xl:24px;
+  --shadow-card:0 1px 3px rgba(0,0,0,0.4),0 0 0 1px rgba(255,255,255,0.04);
+  --shadow-glow:0 0 24px rgba(79,142,247,0.12);
+}}
+*,*::before,*::after{{margin:0;padding:0;box-sizing:border-box;}}
+html{{scroll-behavior:smooth;}}
+body{{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;font-size:15px;-webkit-font-smoothing:antialiased;}}
+/* Topbar */
+.topbar{{position:sticky;top:0;z-index:200;background:rgba(6,10,18,0.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 20px;height:52px;display:flex;align-items:center;justify-content:space-between;}}
+.topbar-logo{{font-size:0.9rem;font-weight:800;color:var(--text);display:flex;align-items:center;gap:8px;}}
+.live-dot{{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);animation:livepulse 2s ease-in-out infinite;}}
+@keyframes livepulse{{0%,100%{{opacity:1;box-shadow:0 0 6px var(--green);}}50%{{opacity:0.4;box-shadow:0 0 2px var(--green);}}}}
+.topbar-badge{{font-size:0.65rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;background:var(--accent-glow);color:var(--accent);border:1px solid rgba(79,142,247,0.3);padding:2px 8px;border-radius:99px;}}
+.topbar-right{{display:flex;align-items:center;gap:20px;font-size:0.72rem;color:var(--text-3);font-variant-numeric:tabular-nums;}}
+/* Layout */
+.container{{max-width:900px;margin:0 auto;padding:0 16px 64px;}}
+/* Hero */
+.hero{{position:relative;padding:64px 0 44px;text-align:center;overflow:hidden;}}
+.hero-bg{{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 80% 60% at 50% -10%,rgba(79,142,247,0.12) 0%,transparent 60%),radial-gradient(ellipse 40% 30% at 80% 80%,rgba(167,139,250,0.06) 0%,transparent 50%);}}
+.hero-eyebrow{{display:inline-flex;align-items:center;gap:6px;background:var(--accent-glow);border:1px solid rgba(79,142,247,0.3);color:var(--accent);font-size:0.68rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:5px 14px;border-radius:99px;margin-bottom:24px;}}
+.hero h1{{font-size:clamp(1.8rem,5vw,2.8rem);font-weight:900;letter-spacing:-0.03em;line-height:1.1;color:var(--text);margin-bottom:16px;}}
+.hero h1 .highlight{{background:linear-gradient(135deg,var(--accent) 0%,#7c3aed 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}}
+.hero-sub{{font-size:1rem;color:var(--text-2);max-width:520px;margin:0 auto 32px;line-height:1.7;}}
+.hero-timestamps{{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;}}
+.ts-chip{{display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border-2);color:var(--text-2);font-size:0.75rem;padding:6px 14px;border-radius:99px;font-variant-numeric:tabular-nums;}}
+.ts-chip .ts-dot{{width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;}}
+.ts-chip.stale .ts-dot{{background:var(--orange);}}
+/* Stale Warning */
+.stale-warning-block{{display:flex;align-items:flex-start;gap:12px;background:rgba(249,115,22,0.07);border:1px solid rgba(249,115,22,0.25);border-left:3px solid var(--orange);padding:14px 18px;border-radius:0 var(--r-md) var(--r-md) 0;margin:16px 0;font-size:0.875rem;color:#fed7aa;line-height:1.6;}}
+.warn-icon{{font-size:1.1rem;flex-shrink:0;margin-top:1px;}}
+/* Genre Nav */
+.genre-nav-wrap{{margin:36px 0 0;border-bottom:1px solid var(--border);}}
+.genre-nav{{display:flex;gap:0;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}}
+.genre-nav::-webkit-scrollbar{{display:none;}}
+.genre-btn{{flex-shrink:0;display:flex;align-items:center;gap:8px;background:transparent;border:none;border-bottom:2px solid transparent;padding:14px 20px;font-size:0.875rem;font-weight:500;color:var(--text-3);cursor:pointer;transition:color 0.15s,border-color 0.15s;margin-bottom:-1px;white-space:nowrap;}}
+.genre-btn:hover{{color:var(--text-2);}}
+.genre-btn.active{{color:var(--text);border-bottom-color:var(--accent);font-weight:700;}}
+.genre-icon{{width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.85rem;}}
+.genre-btn.active .genre-icon{{background:var(--accent-glow);}}
+.genre-btn[data-genre="all"] .genre-icon{{background:rgba(255,255,255,0.06);}}
+.genre-btn[data-genre="iphone"] .genre-icon{{background:var(--iphone-dim);}}
+.genre-btn[data-genre="camera"] .genre-icon{{background:var(--camera-dim);}}
+.genre-btn[data-genre="game_console"] .genre-icon{{background:var(--game-dim);}}
+.genre-btn[data-genre="advanced"] .genre-icon{{background:var(--orange-dim);}}
+.genre-btn[data-genre="surge"] .genre-icon{{background:var(--yellow-dim);}}
+.genre-btn[data-genre="ranking"] .genre-icon{{background:var(--green-dim);}}
+.genre-count{{font-size:0.65rem;font-weight:700;background:var(--border);color:var(--text-3);padding:1px 6px;border-radius:99px;}}
+.genre-btn.active .genre-count{{background:var(--accent-glow);color:var(--accent);}}
+.genre-panel{{display:none;padding:24px 0 0;}}
+.genre-panel.active{{display:block;}}
+/* Section Header */
+.section-header{{display:flex;align-items:center;gap:10px;margin:28px 0 16px;padding-bottom:12px;border-bottom:1px solid var(--border);}}
+.section-header h2{{font-size:0.78rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-3);}}
+.section-count{{font-size:0.68rem;background:var(--border);color:var(--text-3);padding:2px 8px;border-radius:99px;}}
+/* Deal Card */
+.deal-card{{background:var(--card);border:1px solid var(--border);border-radius:var(--r-lg);margin:12px 0;overflow:hidden;box-shadow:var(--shadow-card);transition:border-color 0.2s,box-shadow 0.2s;position:relative;}}
+.deal-card:hover{{border-color:var(--border-2);box-shadow:var(--shadow-card),var(--shadow-glow);}}
+.deal-card::before{{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent) 0%,transparent 100%);opacity:0;transition:opacity 0.2s;}}
+.deal-card:hover::before{{opacity:1;}}
+.deal-card.iphone::before{{background:linear-gradient(90deg,var(--iphone-color) 0%,transparent 100%);}}
+.deal-card.camera::before{{background:linear-gradient(90deg,var(--camera-color) 0%,transparent 100%);}}
+.deal-card.game_console::before{{background:linear-gradient(90deg,var(--game-color) 0%,transparent 100%);}}
+.card-head{{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:18px 20px 14px;border-bottom:1px solid var(--border);}}
+.card-title{{font-size:1rem;font-weight:700;color:var(--text);line-height:1.3;flex:1;}}
+.card-badges{{display:flex;gap:6px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end;}}
+/* Profit Banner */
+.profit-banner{{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:var(--green-dim);border-bottom:1px solid rgba(16,217,138,0.15);}}
+.profit-main{{display:flex;align-items:baseline;gap:10px;}}
+.profit-amount{{font-size:1.8rem;font-weight:900;color:var(--green);letter-spacing:-0.03em;line-height:1;text-shadow:0 0 20px var(--green-glow);}}
+.profit-rate{{font-size:0.85rem;font-weight:700;color:var(--green-2);background:rgba(16,217,138,0.15);padding:3px 10px;border-radius:6px;}}
+.profit-label{{font-size:0.72rem;color:var(--text-3);text-transform:uppercase;letter-spacing:0.05em;}}
+/* Price Grid */
+.price-grid{{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border-bottom:1px solid var(--border);}}
+.price-cell{{background:var(--card);padding:12px 16px;}}
+.price-cell-label{{font-size:0.68rem;color:var(--text-3);font-weight:600;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:4px;}}
+.price-cell-value{{font-size:1rem;font-weight:700;color:var(--text);font-variant-numeric:tabular-nums;}}
+/* Card Body */
+.card-body{{padding:14px 20px;}}
+.condition-row{{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--surface);border-radius:var(--r-sm);margin-bottom:12px;font-size:0.8rem;color:var(--text-2);}}
+.condition-row .cond-icon{{color:var(--yellow);font-size:0.85rem;}}
+.updated-ts{{display:flex;align-items:center;gap:5px;font-size:0.72rem;color:var(--text-3);margin-bottom:12px;}}
+/* Buyback Compare */
+.buyback-compare{{border:1px solid var(--border);border-radius:var(--r-md);overflow:hidden;margin-bottom:12px;}}
+.compare-header{{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;background:var(--surface);border-bottom:1px solid var(--border);font-size:0.7rem;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:var(--text-3);}}
+.shop-row{{display:flex;align-items:center;padding:9px 14px;border-bottom:1px solid var(--border);font-size:0.875rem;transition:background 0.1s;}}
+.shop-row:last-child{{border:none;}}
+.shop-row:hover{{background:var(--surface);}}
+.shop-rank{{min-width:22px;font-size:0.75rem;font-weight:800;color:var(--text-3);}}
+.shop-rank.r1{{color:var(--yellow);}}
+.shop-rank.r2{{color:var(--text-2);}}
+.shop-name{{flex:1;padding:0 10px;color:var(--text-2);}}
+.shop-name a{{color:var(--accent);text-decoration:none;}}
+.shop-name a:hover{{text-decoration:underline;}}
+.shop-price{{font-weight:700;color:var(--text);font-variant-numeric:tabular-nums;min-width:80px;text-align:right;}}
+.shop-profit{{font-size:0.75rem;font-weight:700;color:var(--green);min-width:68px;text-align:right;}}
+.shop-profit.neg{{color:var(--red);}}
+/* Card Links */
+.card-links{{display:flex;flex-wrap:wrap;gap:8px;}}
+.card-link{{display:inline-flex;align-items:center;gap:5px;color:var(--accent);text-decoration:none;font-size:0.8rem;font-weight:600;padding:7px 14px;border:1px solid rgba(79,142,247,0.3);border-radius:var(--r-sm);background:var(--accent-glow);transition:all 0.15s;}}
+.card-link:hover{{background:rgba(79,142,247,0.2);border-color:rgba(79,142,247,0.5);}}
+/* Badges */
+.badge{{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:99px;font-size:0.68rem;font-weight:700;letter-spacing:0.04em;white-space:nowrap;}}
+.badge-easy{{background:var(--green-dim);color:var(--green);border:1px solid rgba(16,217,138,0.25);}}
+.badge-watch{{background:var(--yellow-dim);color:var(--yellow);border:1px solid rgba(251,191,36,0.25);}}
+.badge-adv{{background:var(--orange-dim);color:var(--orange);border:1px solid rgba(249,115,22,0.25);}}
+.badge-exp{{background:var(--red-dim);color:var(--red);border:1px solid rgba(244,63,94,0.25);}}
+.badge-surge{{background:var(--green-dim);color:var(--green);border:1px solid rgba(16,217,138,0.25);}}
+.badge-drop{{background:var(--red-dim);color:var(--red);border:1px solid rgba(244,63,94,0.25);}}
+.badge-iphone{{background:var(--iphone-dim);color:var(--iphone-color);border:1px solid rgba(79,142,247,0.25);}}
+.badge-camera{{background:var(--camera-dim);color:var(--camera-color);border:1px solid rgba(167,139,250,0.25);}}
+.badge-game{{background:var(--game-dim);color:var(--game-color);border:1px solid rgba(45,212,191,0.25);}}
+/* Freshness */
+.freshness-live{{color:var(--green);font-size:0.7rem;font-weight:600;}}
+.freshness-recent{{color:var(--yellow);font-size:0.7rem;font-weight:600;}}
+.freshness-stale{{color:var(--red);font-size:0.7rem;font-weight:600;}}
+.freshness-unknown{{color:var(--text-3);font-size:0.7rem;}}
+/* Watch Card */
+.watch-card{{background:var(--card);border:1px solid var(--border);border-radius:var(--r-lg);padding:16px 20px;margin:10px 0;box-shadow:var(--shadow-card);}}
+/* Table */
+.table-wrap{{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:var(--r-md);border:1px solid var(--border);}}
+table{{width:100%;border-collapse:collapse;font-size:0.85rem;}}
+thead tr{{background:var(--surface);border-bottom:1px solid var(--border);}}
+th{{padding:10px 12px;text-align:left;color:var(--text-3);font-weight:700;font-size:0.68rem;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap;}}
+td{{padding:10px 12px;border-bottom:1px solid var(--border);color:var(--text-2);word-break:break-word;}}
+tbody tr:last-child td{{border:none;}}
+tbody tr:hover td{{background:var(--surface);}}
+.td-profit{{color:var(--green);font-weight:700;font-variant-numeric:tabular-nums;}}
+.td-rank{{color:var(--text-3);font-weight:800;font-size:0.85rem;}}
+.td-rank.top{{color:var(--yellow);}}
+/* Alert Card */
+.alert-card{{background:var(--card);border:1px solid var(--border);border-radius:var(--r-lg);padding:18px 20px;margin:10px 0;box-shadow:var(--shadow-card);}}
+.alert-card.surge{{border-left:3px solid var(--green);}}
+.alert-card.drop{{border-left:3px solid var(--red);}}
+/* Ranking Card */
+.ranking-card{{background:var(--card);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;margin:10px 0;box-shadow:var(--shadow-card);}}
+/* Empty State */
+.empty-state{{text-align:center;padding:48px 24px;color:var(--text-3);font-size:0.9rem;}}
+.empty-icon{{font-size:2rem;margin-bottom:12px;opacity:0.4;display:block;}}
+/* Caution */
+.caution{{background:rgba(251,191,36,0.05);border:1px solid rgba(251,191,36,0.18);border-left:3px solid var(--yellow);padding:18px 22px;margin:36px 0;border-radius:0 var(--r-md) var(--r-md) 0;font-size:0.875rem;color:var(--text-2);line-height:1.8;}}
+.caution strong{{color:var(--yellow);display:block;margin-bottom:10px;font-size:0.9rem;}}
+.caution ul{{list-style:none;padding:0;}}
+.caution ul li{{padding:2px 0;}}
+.caution ul li::before{{content:"·  ";color:var(--text-3);}}
+/* CTA */
+.cta-section{{margin:48px 0;padding:40px 32px;background:linear-gradient(135deg,rgba(79,142,247,0.08) 0%,rgba(124,58,237,0.06) 50%,rgba(16,217,138,0.04) 100%);border:1px solid var(--border-2);border-radius:var(--r-xl);text-align:center;position:relative;overflow:hidden;}}
+.cta-section h3{{font-size:1.25rem;font-weight:800;color:var(--text);margin-bottom:10px;letter-spacing:-0.02em;}}
+.cta-section p{{font-size:0.9rem;color:var(--text-2);margin-bottom:24px;max-width:440px;margin-left:auto;margin-right:auto;line-height:1.7;}}
+.cta-buttons{{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;}}
+.cta-btn{{display:inline-flex;align-items:center;gap:6px;padding:13px 28px;border-radius:var(--r-md);text-decoration:none;font-weight:700;font-size:0.9rem;transition:all 0.2s;}}
+.cta-btn-primary{{background:linear-gradient(135deg,var(--accent) 0%,#6366f1 100%);color:#fff;border:1px solid transparent;box-shadow:0 4px 16px rgba(79,142,247,0.3);}}
+.cta-btn-primary:hover{{transform:translateY(-1px);box-shadow:0 6px 20px rgba(79,142,247,0.4);}}
+.cta-btn-secondary{{background:var(--card);color:var(--text-2);border:1px solid var(--border-2);}}
+.cta-btn-secondary:hover{{background:var(--card-2);color:var(--text);}}
+/* Footer */
+.footer{{text-align:center;color:var(--text-3);font-size:0.75rem;padding:40px 0 24px;line-height:2.2;border-top:1px solid var(--border);margin-top:48px;}}
+/* Responsive */
+@media(max-width:640px){{
+  .hero{{padding:48px 0 32px;}}
+  .hero h1{{font-size:1.7rem;}}
+  .profit-amount{{font-size:1.5rem;}}
+  .genre-btn{{padding:12px 14px;font-size:0.8rem;}}
+  .card-head{{padding:14px 16px 12px;}}
+  .card-body{{padding:12px 16px;}}
+  .profit-banner{{padding:12px 16px;}}
+  .price-cell{{padding:10px 12px;}}
+  .cta-section{{padding:28px 20px;}}
+  .topbar-right{{display:none;}}
+  table{{font-size:0.78rem;}}
+  th,td{{padding:8px 8px;}}
+  .shop-profit{{display:none;}}
+}}
+@media(max-width:400px){{
+  .price-grid{{grid-template-columns:1fr;}}
+  .cta-buttons{{flex-direction:column;align-items:center;}}
+  .cta-btn{{width:100%;justify-content:center;}}
+}}
+/* noscript */
+.noscript-all .genre-panel{{display:block!important;}}
+.noscript-all .genre-btn{{display:none;}}
 </style>
+
 </head>
 <body>
 <header class="topbar">
@@ -912,19 +477,20 @@ td.profit-td {{ color: var(--green); font-weight: 700; font-variant-numeric: tab
 </div>
 <script>
 (function(){{
-  var btns=document.querySelectorAll(".tab-btn");
-  var panels=document.querySelectorAll(".tab-panel");
-  if(!btns.length)return;
-  btns.forEach(function(btn){{
-    btn.addEventListener("click",function(){{
-      btns.forEach(function(b){{b.classList.remove("active");b.setAttribute("aria-selected","false");}});
-      panels.forEach(function(p){{p.classList.remove("active");}});
-      btn.classList.add("active");
-      btn.setAttribute("aria-selected","true");
-      var panel=document.getElementById("tab-"+btn.dataset.tab);
-      if(panel)panel.classList.add("active");
+  var gbtns=document.querySelectorAll(".genre-btn");
+  var gpanels=document.querySelectorAll(".genre-panel");
+  if(gbtns.length){{
+    gbtns.forEach(function(btn){{
+      btn.addEventListener("click",function(){{
+        gbtns.forEach(function(b){{b.classList.remove("active");b.setAttribute("aria-selected","false");}});
+        gpanels.forEach(function(p){{p.classList.remove("active");}});
+        btn.classList.add("active");
+        btn.setAttribute("aria-selected","true");
+        var panel=document.getElementById("genre-"+btn.dataset.genre);
+        if(panel)panel.classList.add("active");
+      }});
     }});
-  }});
+  }}
 }})();
 document.addEventListener("click",function(e){{
   var t=e.target.closest("[data-track]");
@@ -936,24 +502,25 @@ document.addEventListener("click",function(e){{
   if(typeof fbq==="function")fbq("trackCustom",ev,{{product_id:pid,shop:shop}});
 }});
 </script>
-<noscript><style>.tab-nav{{display:none;}}.tab-panel{{display:block!important;}}</style></noscript>
+<noscript><style>.genre-nav{{display:none;}}.genre-panel{{display:block!important;}}</style></noscript>
 </body>
 </html>"""
 
     # ----- Hero -----
 
     def _section_hero(self, date_str, time_str, latest_buyback_at, lp_generated_at) -> str:
-        variant_key = self.settings.get("headline_variant", "A")
-        variants    = self.settings.get("variants", {})
+        variant_key = self.settings.get('headline_variant', 'A')
+        variants    = self.settings.get('variants', {})
         variant     = variants.get(variant_key, {})
-        headline    = _esc(variant.get("headline", self.settings.get("site_title", "プレ値速報")))
+        headline    = _esc(variant.get('headline', self.settings.get('site_title', 'プレ値速報')))
         buyback_str = _jst_str(latest_buyback_at)
         lp_str      = _jst_str(lp_generated_at)
-        stale_cls   = "stale" if _hours_ago(latest_buyback_at) > 24 else ""
+        stale_cls   = 'stale' if _hours_ago(latest_buyback_at) > 24 else ''
         return f"""<div class="hero">
-  <div class="hero-eyebrow"><span>毎日更新</span></div>
-  <h1>{headline}</h1>
-  <p class="hero-sub">公式価格と買取価格の差額を毎日監視。初心者でも分かりやすく整理しています。</p>
+  <div class="hero-bg"></div>
+  <div class="hero-eyebrow"><span>&#9679;</span> 毎日更新 &mdash; プレ値監視情報</div>
+  <h1><span class="highlight">公式価格</span>と買取価格の差額を、毎日チェック。</h1>
+  <p class="hero-sub">iPhone・カメラ・ゲーム機の公式価格と買取価格の差額を毎日監視。ジャンル別に整理しています。</p>
   <div class="hero-timestamps">
     <span class="ts-chip {_esc(stale_cls)}" data-buyback-updated>
       <span class="ts-dot"></span>買取価格更新：{_esc(buyback_str)}
@@ -964,6 +531,8 @@ document.addEventListener("click",function(e){{
   </div>
 </div>"""
     # ----- Stale Warning -----
+
+
     def _section_stale_warning(self, latest_buyback_at, latest_deals_at, lp_generated_at) -> str:
         msgs = []
         buyback_h = _hours_ago(latest_buyback_at)
@@ -985,38 +554,78 @@ document.addEventListener("click",function(e){{
     def _section_tabs(self, beginner_easy, beginner_watch,
                       advanced_deals, advanced_snaps, watch_candidates,
                       buyback_alerts, all_deals, iphone_deals, game_deals,
-                      buyback_by_product: dict = None) -> str:
-
-        beginner_html = self._tab_beginner(beginner_easy, beginner_watch,
-                                           buyback_by_product=buyback_by_product or {})
+                      camera_deals=None, iphone_watch=None, camera_watch=None,
+                      game_watch=None, buyback_by_product: dict = None) -> str:
+        camera_deals  = camera_deals  or []
+        iphone_watch  = iphone_watch  or []
+        camera_watch  = camera_watch  or []
+        game_watch    = game_watch    or []
+        bybp = buyback_by_product or {}
+        # ---- タブコンテンツ生成 ----
+        all_html      = self._tab_all(beginner_easy, beginner_watch, bybp)
+        iphone_html   = self._tab_genre(iphone_deals, iphone_watch, 'iphone', 'iPhone', bybp)
+        camera_html   = self._tab_genre(camera_deals, camera_watch, 'camera', 'カメラ', bybp)
+        game_html     = self._tab_genre(game_deals, game_watch, 'game_console', 'ゲーム機', bybp)
         advanced_html = self._tab_advanced(advanced_deals, advanced_snaps, watch_candidates)
         surge_html    = self._tab_surge(buyback_alerts)
         ranking_html  = self._tab_ranking(all_deals, iphone_deals, game_deals)
-
-        surge_count = len([a for a in buyback_alerts if a.get("alert_type") in ("buyback_surge", "buyback_drop")])
-        surge_label = f"急騰/急落{'(' + str(surge_count) + ')' if surge_count else ''}"
-        adv_total   = len(advanced_deals) + len(advanced_snaps) + len(watch_candidates)
-
-        return f"""<nav class="tab-nav" role="tablist">
-  <button class="tab-btn active" data-tab="beginner" role="tab" aria-selected="true" aria-controls="tab-beginner">初級者向け <span style="font-size:0.72rem;opacity:0.7">({len(beginner_easy)+len(beginner_watch)}件)</span></button>
-  <button class="tab-btn" data-tab="advanced" role="tab" aria-selected="false" aria-controls="tab-advanced">上級者向け <span style="font-size:0.72rem;opacity:0.7">({adv_total}件)</span></button>
-  <button class="tab-btn" data-tab="surge" role="tab" aria-selected="false" aria-controls="tab-surge">急騰 / 急落</button>
-  <button class="tab-btn" data-tab="ranking" role="tab" aria-selected="false" aria-controls="tab-ranking">買取ランキング</button>
+        # ---- カウント ----
+        all_count    = len(beginner_easy) + len(beginner_watch)
+        iphone_count = len(iphone_deals)
+        camera_count = len(camera_deals)
+        game_count   = len(game_deals)
+        adv_total    = len(advanced_deals) + len(advanced_snaps) + len(watch_candidates)
+        surge_count  = len([a for a in buyback_alerts if a.get('alert_type') in ('buyback_surge','buyback_drop')])
+        surge_badge  = f'<span class="genre-count">{surge_count}</span>' if surge_count else ''
+        return f"""<div class="genre-nav-wrap">
+<nav class="genre-nav" role="tablist">
+  <button class="genre-btn active" data-genre="all" role="tab" aria-selected="true" aria-controls="genre-all">
+    <span class="genre-icon">&#128202;</span>全案件<span class="genre-count">{all_count}</span>
+  </button>
+  <button class="genre-btn" data-genre="iphone" role="tab" aria-selected="false" aria-controls="genre-iphone">
+    <span class="genre-icon">&#128241;</span>iPhone<span class="genre-count">{iphone_count}</span>
+  </button>
+  <button class="genre-btn" data-genre="camera" role="tab" aria-selected="false" aria-controls="genre-camera">
+    <span class="genre-icon">&#128247;</span>カメラ<span class="genre-count">{camera_count}</span>
+  </button>
+  <button class="genre-btn" data-genre="game_console" role="tab" aria-selected="false" aria-controls="genre-game_console">
+    <span class="genre-icon">&#127918;</span>ゲーム機<span class="genre-count">{game_count}</span>
+  </button>
+  <button class="genre-btn" data-genre="advanced" role="tab" aria-selected="false" aria-controls="genre-advanced">
+    <span class="genre-icon">&#128269;</span>上級者向け<span class="genre-count">{adv_total}</span>
+  </button>
+  <button class="genre-btn" data-genre="surge" role="tab" aria-selected="false" aria-controls="genre-surge">
+    <span class="genre-icon">&#9889;</span>急騰/急落{surge_badge}
+  </button>
+  <button class="genre-btn" data-genre="ranking" role="tab" aria-selected="false" aria-controls="genre-ranking">
+    <span class="genre-icon">&#127942;</span>ランキング
+  </button>
 </nav>
-<div id="tab-beginner" class="tab-panel active" role="tabpanel">
-{beginner_html}
 </div>
-<div id="tab-advanced" class="tab-panel" role="tabpanel">
+<div id="tab-beginner" style="display:none" aria-hidden="true"></div>
+<div id="tab-advanced" style="display:none" aria-hidden="true"></div>
+<div id="genre-all" class="genre-panel active" role="tabpanel">
+{all_html}
+</div>
+<div id="genre-iphone" class="genre-panel" role="tabpanel">
+{iphone_html}
+</div>
+<div id="genre-camera" class="genre-panel" role="tabpanel">
+{camera_html}
+</div>
+<div id="genre-game_console" class="genre-panel" role="tabpanel">
+{game_html}
+</div>
+<div id="genre-advanced" class="genre-panel" role="tabpanel">
 {advanced_html}
 </div>
-<div id="tab-surge" class="tab-panel" role="tabpanel">
+<div id="genre-surge" class="genre-panel" role="tabpanel">
 {surge_html}
 </div>
-<div id="tab-ranking" class="tab-panel" role="tabpanel">
+<div id="genre-ranking" class="genre-panel" role="tabpanel">
 {ranking_html}
 </div>"""
 
-    # ----- データ鮮度ラベル -----
 
     def _freshness_label(self, observed_at_str: str, data_source: str) -> str:
         """データ鮮度ラベルを返す。24時間超はwarningクラス。"""
@@ -1051,103 +660,126 @@ document.addEventListener("click",function(e){{
 
     # ----- Tab: 初級者向け -----
 
-    def _tab_beginner(self, easy_deals, watch_deals, buyback_by_product: dict = None) -> str:
+    def _tab_all(self, easy_deals, watch_deals, buyback_by_product: dict = None) -> str:
+        """全案件タブ（初級者向け・要確認）"""
         bybp = buyback_by_product or {}
         parts = []
-
         if easy_deals:
-            parts.append('<div class="section-header"><h2>低難度 — すぐ動ける案件</h2><span class="section-count">' + str(len(easy_deals)) + '件</span></div>')
+            parts.append('<div class="section-header"><h2>低難度 &mdash; すぐ動ける案件</h2>'
+                         + f'<span class="section-count">{len(easy_deals)}件</span></div>')
             for d in easy_deals:
                 rows = bybp.get(d.product_id, [])
-                parts.append(self._deal_card(d, "badge-easy", "低難度", buyback_rows=rows))
+                parts.append(self._deal_card(d, 'badge-easy', '低難度', buyback_rows=rows))
         else:
-            parts.append('<div class="section-header"><h2>低難度 — すぐ動ける案件</h2></div><p class="empty-msg">現在、条件を満たす案件はありません。</p>')
-
+            parts.append('<div class="section-header"><h2>低難度 &mdash; すぐ動ける案件</h2></div>'
+                         + '<div class="empty-state"><span class="empty-icon">&#128202;</span>現在、条件を満たす案件はありません。</div>')
         if watch_deals:
-            parts.append('<div class="section-header"><h2>要確認 — 様子見案件</h2><span class="section-count">' + str(len(watch_deals)) + '件</span></div>')
+            parts.append('<div class="section-header"><h2>要確認 &mdash; 様子見案件</h2>'
+                         + f'<span class="section-count">{len(watch_deals)}件</span></div>')
             for d in watch_deals:
                 rows = bybp.get(d.product_id, [])
-                parts.append(self._deal_card(d, "badge-watch", "要確認", buyback_rows=rows))
+                parts.append(self._deal_card(d, 'badge-watch', '要確認', buyback_rows=rows))
         else:
-            parts.append('<div class="section-header"><h2>要確認 — 様子見案件</h2></div><p class="empty-msg">現在、条件を満たす案件はありません。</p>')
+            parts.append('<div class="section-header"><h2>要確認 &mdash; 様子見案件</h2></div>'
+                         + '<div class="empty-state"><span class="empty-icon">&#128202;</span>現在、条件を満たす案件はありません。</div>')
+        return '\n'.join(parts)
 
-        return "\n".join(parts)
+    def _tab_genre(self, deals, watch_list, genre_key: str, genre_label: str,
+                   buyback_by_product: dict = None) -> str:
+        """ジャンル別タブ（deals + watch_list）"""
+        bybp = buyback_by_product or {}
+        parts = []
+        if deals:
+            parts.append(f'<div class="section-header"><h2>{_esc(genre_label)} &mdash; 買取利益案件</h2>'
+                         + f'<span class="section-count">{len(deals)}件</span></div>')
+            for d in deals:
+                rows = bybp.get(d.product_id, [])
+                label = '低難度' if d.user_level == 'beginner_easy' else '要確認'
+                badge = 'badge-easy' if d.user_level == 'beginner_easy' else 'badge-watch'
+                parts.append(self._deal_card(d, badge, label, buyback_rows=rows, genre=genre_key))
+        else:
+            parts.append(f'<div class="section-header"><h2>{_esc(genre_label)} &mdash; 買取利益案件</h2></div>'
+                         + '<div class="empty-state"><span class="empty-icon">&#128202;</span>現在、買取利益案件はありません。</div>')
+        if watch_list:
+            parts.append(f'<div class="section-header"><h2>{_esc(genre_label)} &mdash; 監視候補</h2>'
+                         + f'<span class="section-count">{len(watch_list)}件</span></div>')
+            parts.append(self._watch_candidates_table(watch_list))
+        return '\n'.join(parts)
 
-    def _deal_card(self, d, badge_cls: str, label: str, buyback_rows: list = None) -> str:
+
+    def _deal_card(self, d, badge_cls: str, label: str, buyback_rows: list = None, genre: str = None) -> str:
+        """案件カード HTML を生成する（v3 プレミアムUI）。"""
         pid  = _esc(d.product_id)
-        shop = _esc(d.best_buyback_shop)
-        links = ""
-        if d.official_url:
+        shop = _esc(d.best_buyback_shop or '—')
+        links = ''
+        if hasattr(d, 'official_url') and d.official_url:
             links += (f'<a href="{_esc(d.official_url)}" target="_blank" rel="noopener" '
-                      f'data-track="product_click" data-product-id="{pid}">公式購入ページ →</a>')
-        # 買取ページCTA: buyback_rowsの中でlink_verified=trueの最高価格URLを優先使用
-        verified_buyback_url = ""
-        if buyback_rows:
-            for _br in buyback_rows:
-                if _br.get("link_verified") and _br.get("buyback_url"):
-                    verified_buyback_url = _br["buyback_url"]
-                    break
-        if not verified_buyback_url and d.best_buyback_url:
-            # buyback_rowsがない場合は best_buyback_url を使うが、
-            # 実在しないドメインは除外（DNS解決不可ドメイン）
-            _skip_domains = ("mobileno1.com", "kaitori-1chome.com")
-            if not any(dom in d.best_buyback_url for dom in _skip_domains):
+                      f'class="card-link" data-track="product_click" data-product-id="{pid}">公式購入ページ &rarr;</a>')
+        elif hasattr(d, 'best_official_url') and d.best_official_url:
+            links += (f'<a href="{_esc(d.best_official_url)}" target="_blank" rel="noopener" '
+                      f'class="card-link" data-track="product_click" data-product-id="{pid}">公式購入ページ &rarr;</a>')
+        verified_buyback_url = ''
+        if hasattr(d, 'best_buyback_url') and d.best_buyback_url:
+            _skip = ('mobileno1.com', 'kaitori-1chome.com')
+            if not any(dom in d.best_buyback_url for dom in _skip):
                 verified_buyback_url = d.best_buyback_url
         if verified_buyback_url:
             links += (f'<a href="{_esc(verified_buyback_url)}" target="_blank" rel="noopener" '
-                      f'data-track="product_click" data-product-id="{pid}" data-shop="{shop}">買取ページ →</a>')
-
-        updated_str = ""
-        if hasattr(d, "scanned_at") and d.scanned_at:
-            updated_str = f'<div class="updated-ts"><span>🕐 最終更新：{_esc(_jst_str(d.scanned_at))}</span></div>'
-
-        # 複数店舗比較セクション
-        compare_html = ""
+                      f'class="card-link" data-track="product_click" data-product-id="{pid}" data-shop="{shop}">買取ページ &rarr;</a>')
+        updated_str = ''
+        if hasattr(d, 'scanned_at') and d.scanned_at:
+            updated_str = f'<div class="updated-ts">&#128336; 最終更新：{_esc(_jst_str(d.scanned_at))}</div>'
+        compare_html = ''
         if buyback_rows:
             official_price = d.official_price_jpy or 0
             rows_html = []
             for i, r in enumerate(buyback_rows[:5], start=1):
-                bp = r.get("buyback_price", 0)
-                sname = _esc(r.get("shop_name", ""))
+                bp = r.get('buyback_price', 0)
+                sname = _esc(r.get('shop_name', ''))
                 profit = bp - official_price
-                profit_str = f"+¥{profit:,}" if profit >= 0 else f"-¥{abs(profit):,}"
-                url_val = r.get("buyback_url", "")
-                verified = r.get("link_verified", False)
+                profit_str = f'+¥{profit:,}' if profit >= 0 else f'-¥{abs(profit):,}'
+                url_val = r.get('buyback_url', '')
+                verified = r.get('link_verified', False)
                 if url_val and verified:
                     shop_display = (f'<a href="{_esc(url_val)}" target="_blank" rel="noopener" '
                                     f'data-track="buyback_click" data-product-id="{pid}" '
                                     f'data-shop="{sname}">{sname}</a>')
                 else:
                     shop_display = sname
-                freshness = self._freshness_label(
-                    r.get("observed_at", ""), r.get("data_source", "manual_today")
-                )
-                rank_cls = " rank-1" if i == 1 else ""
-                profit_cls = " negative" if profit < 0 else ""
+                rank_cls = 'r1' if i == 1 else ('r2' if i == 2 else '')
+                profit_cls = ' neg' if profit < 0 else ''
                 rows_html.append(
-                    f'<div class="shop-compare-row">'
-                    f'<span class="shop-rank{rank_cls}">{i}</span>'
+                    f'<div class="shop-row">'
+                    f'<span class="shop-rank {rank_cls}">{i}</span>'
                     f'<span class="shop-name">{shop_display}</span>'
                     f'<span class="shop-price">¥{bp:,}</span>'
                     f'<span class="shop-profit{profit_cls}">{_esc(profit_str)}</span>'
                     f'</div>'
                 )
-            # 最新データ鮮度（最初の行から）
             first_freshness = self._freshness_label(
-                buyback_rows[0].get("observed_at", ""), buyback_rows[0].get("data_source", "manual_today")
+                buyback_rows[0].get('observed_at', ''), buyback_rows[0].get('data_source', 'manual_today')
             )
             compare_html = (
                 f'<div class="buyback-compare">'
-                f'<div class="buyback-compare-header"><span>買取店比較（最大5店舗）</span>{first_freshness}</div>'
-                + "".join(rows_html)
-                + "</div>"
+                f'<div class="compare-header"><span>買取店比較（最大5店舗）</span>{first_freshness}</div>'
+                + ''.join(rows_html)
+                + '</div>'
             )
-
+        genre_cls = genre or (d.category if hasattr(d, 'category') else '')
         profit_rate_str = _esc(fmt_rate(d.net_profit_rate))
-        return f"""<div class="card" data-user-level="{_esc(d.user_level)}">
-  <div class="card-header">
+        return f"""<div class="deal-card {_esc(genre_cls)}" data-user-level="{_esc(d.user_level)}">
+  <div class="card-head">
     <div class="card-title">{_esc(d.product_name)}</div>
-    <span class="badge {badge_cls}">{label}</span>
+    <div class="card-badges"><span class="badge {badge_cls}">{label}</span></div>
+  </div>
+  <div class="profit-banner">
+    <div>
+      <div class="profit-label">実質利益（推定コスト差引後）</div>
+      <div class="profit-main">
+        <span class="profit-amount">{_esc(fmt_profit(d.net_profit_jpy))}</span>
+        <span class="profit-rate">{profit_rate_str}</span>
+      </div>
+    </div>
   </div>
   <div class="price-grid">
     <div class="price-cell">
@@ -1158,21 +790,18 @@ document.addEventListener("click",function(e){{
       <div class="price-cell-label">最高買取価格</div>
       <div class="price-cell-value">{_esc(fmt_price(d.best_buyback_price))}</div>
     </div>
-    <div class="price-cell profit-cell">
-      <div class="price-cell-label">実質利益（推定コスト差引後）</div>
-      <div class="price-cell-value">{_esc(fmt_profit(d.net_profit_jpy))} <span class="profit-rate-badge">{profit_rate_str}</span></div>
+  </div>
+  <div class="card-body">
+    <div class="condition-row">
+      <span class="cond-icon">&#9888;</span>
+      <span>買取条件：{_esc(d.buyback_condition or '新品未開封')}　推定コスト：-{_esc(fmt_price(d.estimated_costs_jpy))}</span>
     </div>
+    {updated_str}
+    {compare_html}
+    <div class="card-links">{links}</div>
   </div>
-  <div class="condition-bar">
-    <span class="cond-icon">⚠</span>
-    <span>買取条件：{_esc(d.buyback_condition or '新品未開封')}　推定コスト：-{_esc(fmt_price(d.estimated_costs_jpy))}</span>
-  </div>
-  {updated_str}
-  {compare_html}
-  <div class="links">{links}</div>
 </div>"""
 
-    # ----- Tab: 上級者向け -----
 
     def _tab_advanced(self, advanced_deals, advanced_snaps, watch_candidates) -> str:
         parts = []
@@ -1201,13 +830,13 @@ document.addEventListener("click",function(e){{
                     f"<td>{getattr(s,'difficulty_score',0):.2f}</td>"
                     f"</tr>"
                 )
-            parts.append(f"""<div class="card"><div class="data-table-wrap">
+            parts.append(f"""<div class="ranking-card"><div class="table-wrap">
 <table>
 <thead><tr><th>商品</th><th>定価</th><th>国内中古</th><th>海外</th><th>価格差</th><th>方式</th><th>難易度</th></tr></thead>
 <tbody>{"".join(rows)}</tbody>
 </table>
 </div>
-<p style="color:var(--text-muted);font-size:0.78rem;margin-top:10px;padding:0 4px;">※ 難易度0.0〜1.0（低いほど入手しやすい）</p>
+<p style="color:var(--text-3);font-size:0.78rem;margin-top:10px;padding:0 4px;">※ 難易度0.0〜1.0（低いほど入手しやすい）</p>
 </div>""")
 
         # ----- フォールバック: 上級者向け監視候補 -----
@@ -1222,7 +851,7 @@ document.addEventListener("click",function(e){{
             parts.append(self._watch_candidates_table(watch_candidates))
 
         if not advanced_deals and not advanced_snaps and not watch_candidates:
-            parts.append('<div class="section-header"><h2>上級者向け候補</h2></div><p class="empty-msg">現在、条件を満たす候補はありません。</p>')
+            parts.append('<div class="section-header"><h2>上級者向け候補</h2></div><p class="empty-state">現在、条件を満たす候補はありません。</p>')
 
         return "\n".join(parts)
 
@@ -1259,13 +888,13 @@ document.addEventListener("click",function(e){{
                 f"</tr>"
             )
 
-        return f"""<div class="card"><div class="data-table-wrap">
+        return f"""<div class="watch-card"><div class="table-wrap">
 <table>
 <thead><tr><th>商品</th><th>公式価格</th><th>最新買取店</th><th>注目ポイント</th><th>リンク</th></tr></thead>
 <tbody>{"".join(rows)}</tbody>
 </table>
 </div>
-<p style="color:var(--text-muted);font-size:0.78rem;margin-top:10px;padding:0 4px;">
+<p style="color:var(--text-3);font-size:0.78rem;margin-top:10px;padding:0 4px;">
 ※ 監視候補は価格差・希少性スコアが高い商品です。中古市場データ入手後に確定候補へ昇格します。
 </p>
 </div>"""
@@ -1283,14 +912,14 @@ document.addEventListener("click",function(e){{
             for a in surge:
                 parts.append(self._alert_card(a, "surge"))
         else:
-            parts.append('<div class="section-header"><h2>本日の急騰</h2></div><p class="empty-msg">急騰は検出されていません（閾値: ¥5,000+）</p>')
+            parts.append('<div class="section-header"><h2>本日の急騰</h2></div><p class="empty-state">急騰は検出されていません（閾値: ¥5,000+）</p>')
 
         if drop:
             parts.append('<div class="section-header"><h2>本日の急落</h2></div>')
             for a in drop:
                 parts.append(self._alert_card(a, "drop"))
         else:
-            parts.append('<div class="section-header"><h2>本日の急落</h2></div><p class="empty-msg">急落は検出されていません（閾値: ¥5,000−）</p>')
+            parts.append('<div class="section-header"><h2>本日の急落</h2></div><p class="empty-state">急落は検出されていません（閾値: ¥5,000−）</p>')
 
         return "\n".join(parts)
 
@@ -1336,7 +965,7 @@ document.addEventListener("click",function(e){{
             parts.append('<div class="section-header"><h2>実質利益ランキング</h2><span class="section-count">全カテゴリ</span></div>')
             parts.append(self._ranking_table(profitable[:10], show_category=True))
         else:
-            parts.append('<div class="section-header"><h2>実質利益ランキング</h2></div><p class="empty-msg">データなし</p>')
+            parts.append('<div class="section-header"><h2>実質利益ランキング</h2></div><p class="empty-state">データなし</p>')
 
         # iPhoneランキング
         iphone_profitable = sorted([d for d in iphone_deals if d.net_profit_jpy > 0],
@@ -1364,7 +993,7 @@ document.addEventListener("click",function(e){{
                 sorted(shop_totals.items(), key=lambda x: x[1], reverse=True)[:8], 1
             ):
                 rows.append(f"<tr><td>{i}</td><td>{_esc(shop)}</td><td>{cnt}件</td></tr>")
-            parts.append(f"""<div class="ranking-card"><div class="data-table-wrap"><table>
+            parts.append(f"""<div class="ranking-card"><div class="table-wrap"><table>
 <thead><tr><th>#</th><th>買取店</th><th>案件数</th></tr></thead>
 <tbody>{"".join(rows)}</tbody>
 </table></div></div>""")
@@ -1387,12 +1016,12 @@ document.addEventListener("click",function(e){{
                 + (f"<td>{_esc(d.category)}</td>" if show_category else "")
                 + f"<td>{_esc(fmt_price(d.official_price_jpy))}</td>"
                 f"<td>{_esc(fmt_price(d.best_buyback_price))}</td>"
-                f"<td class='profit-td'>{_esc(fmt_profit(d.net_profit_jpy))}</td>"
+                f"<td class='td-profit'>{_esc(fmt_profit(d.net_profit_jpy))}</td>"
                 f"<td>{_esc(fmt_rate(d.net_profit_rate))}</td>"
                 f"<td>{_esc(d.best_buyback_shop)}</td></tr>"
             )
         cat_th = "<th>カテゴリ</th>" if show_category else ""
-        return f"""<div class="ranking-card"><div class="data-table-wrap"><table>
+        return f"""<div class="ranking-card"><div class="table-wrap"><table>
 <thead><tr><th>#</th><th>商品</th>{cat_th}<th>定価</th><th>買取</th><th>実質利益</th><th>率</th><th>買取店</th></tr></thead>
 <tbody>{"".join(rows)}</tbody>
 </table></div></div>"""

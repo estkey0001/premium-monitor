@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""public/ ディレクトリにLP公開用ファイルをビルドする。
+"""docs/ ディレクトリにLP公開用ファイルをビルドする。
 
-exports/lp/daily/ → public/ へコピーし、
+exports/lp/daily/ → docs/ へコピーし、
 sitemap.xml・robots.txt を生成する。
 """
 
@@ -14,7 +14,7 @@ import yaml
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 EXPORTS_DIR = PROJECT_ROOT / "exports" / "lp" / "daily"
-PUBLIC_DIR = PROJECT_ROOT / "public"
+PUBLIC_DIR = PROJECT_ROOT / "docs"
 ARCHIVE_DIR = PUBLIC_DIR / "archive"
 
 
@@ -85,7 +85,7 @@ def build():
 
     # ファイル数カウント
     total = sum(1 for _ in PUBLIC_DIR.rglob("*") if _.is_file())
-    print(f"\n  Build complete: {total} files in public/")
+    print(f"\n  Build complete: {total} files in docs/")
 
 
 if __name__ == "__main__":

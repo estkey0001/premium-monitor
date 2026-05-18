@@ -28,7 +28,7 @@ src/
 dashboard/        Streamlit (01-19ページ)
 scripts/          build_public_lp.py, deploy_check.py
 exports/          note_reports/, lp/daily/, line_messages/, community_messages/, simulations/
-public/           GitHub Pages公開用 (index.html, archive/, sitemap.xml, robots.txt)
+docs/             GitHub Pages公開用 (index.html, archive/, sitemap.xml, robots.txt)
 .github/workflows/daily_lp.yml
 ```
 

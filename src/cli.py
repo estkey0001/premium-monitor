@@ -2157,7 +2157,7 @@ def preview_daily_lp():
 
 @cli.command("build-public-lp")
 def build_public_lp():
-    """public/ にLP公開ファイルをビルドする。"""
+    """docs/ にLP公開ファイルをビルドする。"""
     sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
     from build_public_lp import build
     click.echo("\n  Building public LP...")

@@ -2,7 +2,7 @@
 """LP公開前のデプロイチェック。
 
 確認項目:
-1. public/index.html が存在する
+1. docs/index.html が存在する
 2. 禁止表現が含まれていない
 3. noteリンクが設定されている（enable_note_cta=true時）
 4. LINE/Telegram CTAがOFFなら表示されていない
@@ -19,7 +19,7 @@ from pathlib import Path
 import yaml
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
-PUBLIC_DIR = PROJECT_ROOT / "public"
+PUBLIC_DIR = PROJECT_ROOT / "docs"
 
 # 禁止表現リスト
 FORBIDDEN = [
@@ -41,10 +41,10 @@ def check() -> list[dict]:
 
     # 1. index.html存在
     if index_path.exists():
-        results.append({"level": "ok", "check": "index_exists", "message": "public/index.html 存在"})
+        results.append({"level": "ok", "check": "index_exists", "message": "docs/index.html 存在"})
         html = index_path.read_text(encoding="utf-8")
     else:
-        results.append({"level": "error", "check": "index_exists", "message": "public/index.html が存在しない"})
+        results.append({"level": "error", "check": "index_exists", "message": "docs/index.html が存在しない"})
         return results
 
     # 2. 禁止表現

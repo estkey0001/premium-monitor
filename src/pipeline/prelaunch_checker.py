@@ -37,17 +37,17 @@ def run_prelaunch_check(repo=None) -> list[dict]:
     """
     results = []
     settings = _load_lp_settings()
-    public_dir = PROJECT_ROOT / "public"
+    public_dir = PROJECT_ROOT / "docs"
     exports_dir = PROJECT_ROOT / "exports" / "lp" / "daily"
     index_path = public_dir / "index.html"
 
-    # ===== 1. public/index.html 存在 =====
+    # ===== 1. docs/index.html 存在 =====
     if index_path.exists():
-        results.append({"level": "ok", "check": "public_index", "message": "public/index.html 存在"})
+        results.append({"level": "ok", "check": "public_index", "message": "docs/index.html 存在"})
         html = index_path.read_text(encoding="utf-8")
     else:
         results.append({"level": "error", "check": "public_index",
-                        "message": "public/index.html なし → build-public-lp を実行"})
+                        "message": "docs/index.html なし → build-public-lp を実行"})
         html = ""
 
     # ===== 2. deploy-check PASS（簡易版） =====

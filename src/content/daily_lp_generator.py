@@ -105,6 +105,9 @@ class DailyLPGenerator:
         # 上級者向けスナップショット
         advanced_snaps = self.repo.list_premium_candidates_with_snapshots(limit=15, user_level="advanced")
 
+        # 上級者向けフォールバック：監視候補（camera + game_console）
+        watch_candidates = self.repo.list_watch_candidates(genres=["camera", "game_console"], limit=20)
+
         # 急騰・急落
         buyback_alerts = self.repo.list_buyback_alerts(limit=20)
 
@@ -124,6 +127,7 @@ class DailyLPGenerator:
             beginner_watch=beginner_watch,
             advanced_deals=advanced_deals,
             advanced_snaps=advanced_snaps,
+            watch_candidates=watch_candidates,
             buyback_alerts=buyback_alerts,
             all_deals=all_deals,
             iphone_deals=iphone_deals,
@@ -145,8 +149,9 @@ class DailyLPGenerator:
         index_path.write_text(page_html, encoding="utf-8")
         dated_path.write_text(page_html, encoding="utf-8")
 
+        # variant指定有無に関わらず index.html を常に更新（build-public-lp が参照するファイル）
+        (out_dir / "index.html").write_text(page_html, encoding="utf-8")
         if not variant:
-            (out_dir / "index.html").write_text(page_html, encoding="utf-8")
             md_content = self._render_markdown(
                 date_str, time_str,
                 beginner_easy + beginner_watch, advanced_snaps, buyback_alerts,
@@ -176,7 +181,7 @@ class DailyLPGenerator:
     def _render_page(self, date_str, time_str,
                      latest_buyback_at, latest_deals_at, lp_generated_at,
                      beginner_easy, beginner_watch, advanced_deals, advanced_snaps,
-                     buyback_alerts, all_deals, iphone_deals, game_deals) -> str:
+                     watch_candidates, buyback_alerts, all_deals, iphone_deals, game_deals) -> str:
 
         site_title = _esc(self.settings.get("site_title", "プレ値速報"))
         ga_id      = self.settings.get("analytics", {}).get("google_analytics_id", "")
@@ -208,6 +213,7 @@ class DailyLPGenerator:
         tab_html     = self._section_tabs(
             beginner_easy, beginner_watch,
             advanced_deals, advanced_snaps,
+            watch_candidates,
             buyback_alerts,
             all_deals, iphone_deals, game_deals,
         )
@@ -375,23 +381,21 @@ document.addEventListener("click",function(e){{
     # ----- Tabs -----
 
     def _section_tabs(self, beginner_easy, beginner_watch,
-                      advanced_deals, advanced_snaps,
+                      advanced_deals, advanced_snaps, watch_candidates,
                       buyback_alerts, all_deals, iphone_deals, game_deals) -> str:
-        # カメラ・ゲーム機カテゴリ抽出
-        camera_snaps = [s for s in advanced_snaps if getattr(s, "category", "") == "camera"]
-        game_snaps   = [s for s in advanced_snaps if getattr(s, "category", "") == "game_console"]
 
         beginner_html = self._tab_beginner(beginner_easy, beginner_watch)
-        advanced_html = self._tab_advanced(advanced_deals, advanced_snaps)
+        advanced_html = self._tab_advanced(advanced_deals, advanced_snaps, watch_candidates)
         surge_html    = self._tab_surge(buyback_alerts)
         ranking_html  = self._tab_ranking(all_deals, iphone_deals, game_deals)
 
         surge_count = len([a for a in buyback_alerts if a.get("alert_type") in ("buyback_surge", "buyback_drop")])
         surge_label = f"急騰/急落{'(' + str(surge_count) + ')' if surge_count else ''}"
+        adv_total   = len(advanced_deals) + len(advanced_snaps) + len(watch_candidates)
 
         return f"""<nav class="tab-nav" role="tablist">
   <button class="tab-btn active" data-tab="beginner" role="tab" aria-selected="true" aria-controls="tab-beginner">🟢 初級者向け（{len(beginner_easy)+len(beginner_watch)}件）</button>
-  <button class="tab-btn" data-tab="advanced" role="tab" aria-selected="false" aria-controls="tab-advanced">🟠 上級者向け（{len(advanced_deals)+len(advanced_snaps)}件）</button>
+  <button class="tab-btn" data-tab="advanced" role="tab" aria-selected="false" aria-controls="tab-advanced">🟠 上級者向け・監視（{adv_total}件）</button>
   <button class="tab-btn" data-tab="surge" role="tab" aria-selected="false" aria-controls="tab-surge">📊 {_esc(surge_label)}</button>
   <button class="tab-btn" data-tab="ranking" role="tab" aria-selected="false" aria-controls="tab-ranking">💰 買取ランキング</button>
 </nav>
@@ -458,7 +462,7 @@ document.addEventListener("click",function(e){{
 
     # ----- Tab: 上級者向け -----
 
-    def _tab_advanced(self, advanced_deals, advanced_snaps) -> str:
+    def _tab_advanced(self, advanced_deals, advanced_snaps, watch_candidates) -> str:
         parts = []
 
         if advanced_deals:
@@ -467,8 +471,6 @@ document.addEventListener("click",function(e){{
                 badge_cls = "badge-exp" if d.user_level == "expert_only" else "badge-adv"
                 label = "上級者限定" if d.user_level == "expert_only" else "高利益"
                 parts.append(self._deal_card(d, badge_cls, label))
-        else:
-            parts.append('<h2>🟠 高利益案件</h2><p class="empty-msg">現在、条件を満たす候補はありません。</p>')
 
         if advanced_snaps:
             parts.append('<h2>📈 プレ値・価格差候補（スナップショット分析）</h2>')
@@ -494,10 +496,65 @@ document.addEventListener("click",function(e){{
 </table>
 <p style="color:var(--muted);font-size:0.8rem;margin-top:10px;">※ 難易度0.0〜1.0（低いほど入手しやすい）</p>
 </div>""")
-        else:
-            parts.append('<h2>📈 プレ値候補</h2><p class="empty-msg">現在、該当する候補はありません。</p>')
+
+        # ----- フォールバック: 上級者向け監視候補 -----
+        if watch_candidates:
+            has_confirmed = bool(advanced_deals or advanced_snaps)
+            if not has_confirmed:
+                parts.append("""<div class="caution" style="margin:16px 0 20px;">
+ℹ️ <strong>現在、上級者向けの確定候補は少ないため、価格差・希少性・海外相場差が大きい監視候補を表示しています。</strong><br>
+中古市場や海外相場のデータが入り次第、確定候補として昇格します。
+</div>""")
+            parts.append('<h2>🔍 上級者向け監視候補</h2>')
+            parts.append(self._watch_candidates_table(watch_candidates))
+
+        if not advanced_deals and not advanced_snaps and not watch_candidates:
+            parts.append('<h2>🟠 上級者向け候補</h2><p class="empty-msg">現在、条件を満たす候補はありません。</p>')
 
         return "\n".join(parts)
+
+    def _watch_candidates_table(self, candidates: list) -> str:
+        """監視候補テーブルを生成する（products テーブル由来）。"""
+        # カメラ優先、次にゲーム機
+        camera = [c for c in candidates if c["genre"] == "camera"]
+        others = [c for c in candidates if c["genre"] != "camera"]
+        ordered = camera + others
+
+        rows = []
+        for c in ordered:
+            price  = c["official_price"]
+            bp     = c["buyback_price"]
+            shop   = c["shop_name"] or "—"
+            flags  = "・".join(c["flags"]) if c["flags"] else "監視中"
+            # 買取価格がある場合は差額も表示
+            gap_str = ""
+            if bp and price:
+                gap = bp - price
+                gap_str = f'<br><span style="color:var(--green);font-size:0.82rem">'
+                gap_str += f'買取 ¥{bp:,} (差 {gap:+,}円)</span>'
+            buy_link = ""
+            if c.get("buyback_url"):
+                buy_link = f'<a href="{_esc(c["buyback_url"])}" target="_blank" rel="noopener" style="font-size:0.78rem;color:var(--accent)">買取ページ</a>'
+
+            rows.append(
+                f"<tr class='watch-candidate-card'>"
+                f"<td><strong>{_esc(c['product_name'])}</strong>{gap_str}</td>"
+                f"<td>{_esc(fmt_price(price) if price else '—')}</td>"
+                f"<td>{_esc(shop)}</td>"
+                f"<td><span style='color:var(--yellow);font-size:0.82rem'>{_esc(flags)}</span></td>"
+                f"<td>{buy_link}</td>"
+                f"</tr>"
+            )
+
+        return f"""<div class="card">
+<table>
+<tr><th>商品</th><th>公式価格</th><th>最新買取店</th><th>注目ポイント</th><th>リンク</th></tr>
+{"".join(rows)}
+</table>
+<p style="color:var(--muted);font-size:0.78rem;margin-top:10px;">
+※ 監視候補は価格差・希少性スコアが高い商品です。中古市場データ入手後に確定候補へ昇格します。
+</p>
+</div>"""
 
     # ----- Tab: 急騰/急落 -----
 

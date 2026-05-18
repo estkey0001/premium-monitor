@@ -1112,3 +1112,79 @@ class Repository:
             return datetime.fromisoformat(val) if val else None
         except Exception:
             return None
+
+    def list_watch_candidates(self, genres: "list[str] | None" = None, limit: int = 20) -> list:
+        """上級者向け監視候補をproductsテーブルから取得する。
+
+        camera / game_console など希少性・価格差が注目される商品を返す。
+        buyback_prices の最新価格も LEFT JOIN で付加する。
+        """
+        if genres is None:
+            genres = ["camera", "game_console"]
+
+        placeholders = ",".join("?" * len(genres))
+        query = f"""
+            SELECT
+                p.id, p.genre, p.name, p.brand,
+                COALESCE(p.official_price, p.retail_price) AS price,
+                p.is_lottery, p.is_discontinued, p.is_production_ended,
+                bp.buyback_price, bp.shop_name, bp.buyback_url,
+                bp.observed_at AS buyback_observed_at,
+                ms.overall_score, ms.premium_score,
+                ms.scarcity_score, ms.overseas_gap_score
+            FROM products p
+            LEFT JOIN (
+                SELECT product_id, MAX(buyback_price) AS buyback_price,
+                       shop_name, buyback_url, observed_at
+                FROM buyback_prices
+                WHERE is_active = 1
+                GROUP BY product_id
+            ) bp ON bp.product_id = p.id
+            LEFT JOIN (
+                SELECT product_id,
+                       overall_score, premium_score,
+                       scarcity_score, overseas_gap_score
+                FROM market_snapshots
+                WHERE id IN (
+                    SELECT id FROM market_snapshots ms2
+                    WHERE ms2.product_id = market_snapshots.product_id
+                    ORDER BY captured_at DESC LIMIT 1
+                )
+            ) ms ON ms.product_id = p.id
+            WHERE p.genre IN ({placeholders})
+              AND p.is_active = 1
+            ORDER BY COALESCE(ms.overall_score, 0) DESC, p.retail_price DESC
+            LIMIT ?
+        """
+        try:
+            rows = self.db.connection.execute(query, genres + [limit]).fetchall()
+        except Exception:
+            return []
+
+        result = []
+        for r in rows:
+            d = dict(r)
+            flags = []
+            if d.get("is_lottery"):       flags.append("抽選販売")
+            if d.get("is_discontinued"):  flags.append("SOLD OUT")
+            if d.get("is_production_ended"): flags.append("生産終了")
+            # カメラは希少性コメントを追加
+            if d["genre"] == "camera":
+                flags.append("中古プレ値あり")
+            result.append({
+                "product_id":       d["id"],
+                "genre":            d["genre"],
+                "product_name":     d["name"],
+                "brand":            d.get("brand", ""),
+                "official_price":   d.get("price") or 0,
+                "buyback_price":    d.get("buyback_price"),
+                "shop_name":        d.get("shop_name", ""),
+                "buyback_url":      d.get("buyback_url", ""),
+                "buyback_at":       d.get("buyback_observed_at"),
+                "overall_score":    d.get("overall_score") or 0.0,
+                "premium_score":    d.get("premium_score") or 0.0,
+                "scarcity_score":   d.get("scarcity_score") or 0.0,
+                "overseas_gap_score": d.get("overseas_gap_score") or 0.0,
+                "flags":            flags,
+            })
+        return result

@@ -894,13 +894,19 @@ document.addEventListener("click",function(e){{
 
     def _tab_advanced(self, advanced_deals, advanced_snaps, watch_candidates) -> str:
         parts = []
+        _link_res = get_resolver()
 
         if advanced_deals:
             parts.append('<div class="section-head"><div class="section-title">高利益案件</div><div class="section-badge">' + str(len(advanced_deals)) + '件</div></div>')
             for d in advanced_deals:
                 badge_cls = "badge-exp" if d.user_level == "expert_only" else "badge-adv"
                 label = "上級者限定" if d.user_level == "expert_only" else "高利益"
-                parts.append(self._deal_card(d, badge_cls, label))
+                card_html = self._deal_card(d, badge_cls, label)
+                # 海外相場リンクセクションを追加
+                overseas_html = self._overseas_links_section(
+                    d.product_name, getattr(d, "category", "") or ""
+                )
+                parts.append(card_html + overseas_html)
 
         if advanced_snaps:
             parts.append('<div class="section-head"><div class="section-title">プレ値・価格差候補</div><div class="section-badge">スナップショット分析</div></div>')
@@ -932,9 +938,10 @@ document.addEventListener("click",function(e){{
         if watch_candidates:
             has_confirmed = bool(advanced_deals or advanced_snaps)
             if not has_confirmed:
-                parts.append("""<div class="caution" style="margin:16px 0 20px;">
-ℹ️ <strong>現在、上級者向けの確定候補は少ないため、価格差・希少性・海外相場差が大きい監視候補を表示しています。</strong><br>
-中古市場や海外相場のデータが入り次第、確定候補として昇格します。
+                parts.append("""<div class="adv-fallback-notice">
+<span class="adv-fallback-icon">ℹ️</span>
+<div><strong>現在、上級者向けの確定候補は少ないため、価格差・希少性・海外相場差が大きい監視候補を表示しています。</strong><br>
+<span>中古市場や海外相場のデータが入り次第、確定候補として昇格します。</span></div>
 </div>""")
             parts.append('<div class="section-head"><div class="section-title">上級者向け監視候補</div><div class="section-badge">価格差・希少性スコア上位</div></div>')
             parts.append(self._watch_candidates_table(watch_candidates))
@@ -945,37 +952,46 @@ document.addEventListener("click",function(e){{
         return "\n".join(parts)
 
     def _watch_candidates_table(self, candidates: list) -> str:
-        """監視候補テーブルを生成する（products テーブル由来）。"""
+        """監視候補カードを生成する（products テーブル由来）。海外相場リンク込み。"""
+        _link_res = get_resolver()
         # カメラ優先、次にゲーム機
         camera = [c for c in candidates if c["genre"] == "camera"]
         others = [c for c in candidates if c["genre"] != "camera"]
         ordered = camera + others
 
-        rows = []
+        cards = []
         for c in ordered:
             price  = c["official_price"]
             bp     = c["buyback_price"]
-            shop   = c["shop_name"] or "—"
+            shop   = _esc(c["shop_name"] or "—")
             flags  = "・".join(c["flags"]) if c["flags"] else "監視中"
-            # 買取価格がある場合は差額も表示
-            gap_str = ""
+            genre  = c.get("genre", "")
+
+            # 買取リンク解決
+            db_url = c.get("buyback_url") or ""
+            shop_id = c.get("shop_id") or ""
+            resolved_url, link_type = _link_res.resolve_buyback_url(
+                shop_id=shop_id, genre=genre, db_url=db_url, link_verified=bool(db_url)
+            )
+            link_type_lbl = _esc(_link_res.link_type_label(link_type))
+
+            if resolved_url:
+                buy_link = (f'<a href="{_esc(resolved_url)}" target="_blank" rel="noopener" '
+                            f'data-track="buyback_click" data-shop="{shop}" '
+                            f'title="{link_type_lbl}">買取価格を確認 →</a>'
+                            f'<span class="link-type-badge">{link_type_lbl}</span>')
+            else:
+                buy_link = '<span class="unverified-link">公式買取ページで確認</span>'
+
+            # 価格差
+            gap_html = ""
             if bp and price:
                 gap = bp - price
-                gap_str = f'<br><span style="color:var(--green);font-size:0.82rem">'
-                gap_str += f'買取 ¥{bp:,} (差 {gap:+,}円)</span>'
-            buy_link = ""
-            if c.get("buyback_url"):
-                buy_link = f'<a href="{_esc(c["buyback_url"])}" target="_blank" rel="noopener" style="font-size:0.78rem;color:var(--accent)">買取ページ</a>'
+                gap_color = "var(--green)" if gap > 0 else "var(--text-muted)"
+                gap_html = f'<span class="watch-gap" style="color:{gap_color}">買取 ¥{bp:,}（差 {gap:+,}円）</span>'
 
-            rows.append(
-                f"<tr class='watch-candidate-card'>"
-                f"<td><strong>{_esc(c['product_name'])}</strong>{gap_str}</td>"
-                f"<td>{_esc(fmt_price(price) if price else '—')}</td>"
-                f"<td>{_esc(shop)}</td>"
-                f"<td><span style='color:var(--yellow);font-size:0.82rem'>{_esc(flags)}</span></td>"
-                f"<td>{buy_link}</td>"
-                f"</tr>"
-            )
+            # 海外相場リンク
+            overseas_html = self._overseas_links_section(c["product_name"], genre)
 
         return f"""<div class="watch-table-wrap">
 <table>

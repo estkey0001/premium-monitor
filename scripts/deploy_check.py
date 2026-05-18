@@ -263,6 +263,49 @@ def check() -> list[dict]:
     else:
         results.append({"level": "error", "check": "buyback_notice", "message": "買取価格注意文が見つからない"})
 
+    # 27. 上級者向けタブに海外相場リンクセクションがある
+    if "overseas-links-section" in html:
+        results.append({"level": "ok", "check": "overseas_links_section", "message": "海外相場リンクセクションが存在する"})
+    else:
+        results.append({"level": "warning", "check": "overseas_links_section", "message": "海外相場リンクセクションが見つからない（上級者向けデータ要確認）"})
+
+    # 28. eBay soldリンクが存在するか
+    if "ebay.com" in html and ("LH_Sold=1" in html or "sold" in html.lower()):
+        results.append({"level": "ok", "check": "ebay_sold_link", "message": "eBay 落札済み検索リンクが存在する"})
+    else:
+        results.append({"level": "warning", "check": "ebay_sold_link", "message": "eBay soldリンクが見つからない"})
+
+    # 29. B&H / Adorama / MPB / KEH などの海外専門店リンクが存在するか
+    has_overseas_specialist = (
+        "bhphotovideo.com" in html
+        or "adorama.com" in html
+        or "mpb.com" in html
+        or "keh.com" in html
+    )
+    if has_overseas_specialist:
+        results.append({"level": "ok", "check": "overseas_specialist_links", "message": "海外専門店リンク（B&H/Adorama/MPB/KEH）が存在する"})
+    else:
+        results.append({"level": "warning", "check": "overseas_specialist_links", "message": "海外専門店リンクが見つからない（カメラ案件が対象）"})
+
+    # 30. 海外相場ボタン（overseas-btn）が存在するか
+    if "overseas-btn" in html:
+        results.append({"level": "ok", "check": "overseas_btn_exists", "message": "海外相場ボタンが存在する"})
+    else:
+        results.append({"level": "warning", "check": "overseas_btn_exists", "message": "海外相場ボタンが見つからない"})
+
+    # 31. 価格未取得時の確認導線（adv-fallback-notice または海外リンク）がある
+    has_fallback_notice = "adv-fallback-notice" in html or "overseas-links-section" in html
+    if has_fallback_notice:
+        results.append({"level": "ok", "check": "price_no_data_fallback", "message": "価格未取得時の確認導線がある"})
+    else:
+        results.append({"level": "warning", "check": "price_no_data_fallback", "message": "価格未取得時の確認導線が見つからない"})
+
+    # 32. 公式買取ページ誘導テキストが存在する（未検証URLの代替表示）
+    if "公式買取ページで確認" in html or "unverified-link" in html:
+        results.append({"level": "ok", "check": "buyback_page_guidance", "message": "公式買取ページ誘導テキストが存在する"})
+    else:
+        results.append({"level": "warning", "check": "buyback_page_guidance", "message": "公式買取ページ誘導テキストが見つからない"})
+
     return results
 
 

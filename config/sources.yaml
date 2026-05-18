@@ -196,6 +196,14 @@ sources:
     rate_limit_sec: 90
     requires_js: false
 
+  - id: "src_mapcamera"
+    name: "マップカメラ"
+    source_type: "buyback_shop"
+    base_url: "https://www.mapcamera.com/"
+    collector_module: ""
+    rate_limit_sec: 60
+    requires_js: false
+
   - id: "src_janpara"
     name: "じゃんぱら"
     source_type: "buyback_shop"

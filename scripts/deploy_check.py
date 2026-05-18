@@ -197,6 +197,26 @@ def check() -> list[dict]:
     else:
         results.append({"level": "warning", "check": "advanced_in_tab", "message": "上級者向けタブにコンテンツなし（watch_candidates も空）"})
 
+    # 18. 買取リンクが1つ以上存在するか
+    has_buyback_link = bool(re.search(
+        r'href=["\']https?://(?:www\.)?(?:janpara|iosys|sofmap|geo-online|kitamura|mapcamera|fujiyacamera|mobileno1|kaitori)[^"\']*["\']',
+        html
+    ))
+    if has_buyback_link:
+        results.append({"level": "ok", "check": "buyback_links_exist", "message": "買取リンクが存在する"})
+    else:
+        results.append({"level": "warning", "check": "buyback_links_exist", "message": "買取リンクが見つからない（リンク表示を確認してください）"})
+
+    # 19. 複数店舗比較が表示されているか
+    has_multi_shop = "買取店比較" in html or "shop-compare" in html or "buyback-compare" in html
+    if has_multi_shop:
+        results.append({"level": "ok", "check": "multi_shop_compare", "message": "複数店舗比較が表示されている"})
+    else:
+        results.append({"level": "warning", "check": "multi_shop_compare", "message": "複数店舗比較が見つからない"})
+
+    # 20. 買取価格更新日時が表示されているか（既存チェックで対応済みのため確認のみ）
+    # → buyback_updated_ts (check 11) で既に確認済み
+
     return results
 
 

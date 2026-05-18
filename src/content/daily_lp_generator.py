@@ -108,6 +108,14 @@ class DailyLPGenerator:
         # 上級者向けフォールバック：監視候補（camera + game_console）
         watch_candidates = self.repo.list_watch_candidates(genres=["camera", "game_console"], limit=20)
 
+        # 商品別買取店一覧（複数店舗比較用）- product_id → [buyback_rows]
+        buyback_by_product: dict = {}
+        _all_products = self.repo.list_products()
+        for _p in _all_products:
+            _rows = self.repo.list_buyback_prices_by_product(_p.id, limit=5)
+            if _rows:
+                buyback_by_product[_p.id] = _rows
+
         # 急騰・急落
         buyback_alerts = self.repo.list_buyback_alerts(limit=20)
 
@@ -132,6 +140,7 @@ class DailyLPGenerator:
             all_deals=all_deals,
             iphone_deals=iphone_deals,
             game_deals=game_deals,
+            buyback_by_product=buyback_by_product,
         )
 
         # 安全チェック
@@ -181,7 +190,8 @@ class DailyLPGenerator:
     def _render_page(self, date_str, time_str,
                      latest_buyback_at, latest_deals_at, lp_generated_at,
                      beginner_easy, beginner_watch, advanced_deals, advanced_snaps,
-                     watch_candidates, buyback_alerts, all_deals, iphone_deals, game_deals) -> str:
+                     watch_candidates, buyback_alerts, all_deals, iphone_deals, game_deals,
+                     buyback_by_product: dict = None) -> str:
 
         site_title = _esc(self.settings.get("site_title", "プレ値速報"))
         ga_id      = self.settings.get("analytics", {}).get("google_analytics_id", "")
@@ -216,6 +226,7 @@ class DailyLPGenerator:
             watch_candidates,
             buyback_alerts,
             all_deals, iphone_deals, game_deals,
+            buyback_by_product=buyback_by_product or {},
         )
         caution_html = self._section_caution()
         cta_html     = self._section_cta()
@@ -288,6 +299,20 @@ td{{word-break:break-word;}}
 .cta a{{display:inline-block;background:var(--accent);color:#fff;padding:13px 36px;border-radius:8px;text-decoration:none;font-weight:600;font-size:0.95rem;}}
 .caution{{background:#1c1c22;border-left:4px solid var(--yellow);padding:14px 18px;margin:24px 0;border-radius:0 8px 8px 0;font-size:0.88rem;color:var(--muted);line-height:1.8;}}
 .footer{{text-align:center;color:var(--muted);font-size:0.78rem;padding:36px 0 20px;line-height:2;}}
+/* 買取店比較テーブル */
+.buyback-compare{{margin:12px 0 0;}}
+.buyback-compare h4{{font-size:0.88rem;color:var(--muted);margin-bottom:6px;}}
+.shop-compare-row{{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid var(--border);font-size:0.85rem;}}
+.shop-compare-row:last-child{{border:none;}}
+.shop-rank{{color:var(--muted);min-width:22px;}}
+.shop-name{{flex:1;padding:0 8px;}}
+.shop-price{{font-weight:600;color:var(--green);}}
+.shop-profit{{font-size:0.78rem;color:var(--muted);}}
+/* データ鮮度 */
+.freshness-live{{color:var(--green);font-size:0.75rem;}}
+.freshness-recent{{color:var(--yellow);font-size:0.75rem;}}
+.freshness-stale{{color:var(--red);font-size:0.75rem;}}
+.freshness-unknown{{color:var(--muted);font-size:0.75rem;}}
 @media(max-width:600px){{
   .tab-btn{{padding:8px 12px;font-size:0.82rem;}}
   table{{font-size:0.8rem;}}
@@ -382,9 +407,11 @@ document.addEventListener("click",function(e){{
 
     def _section_tabs(self, beginner_easy, beginner_watch,
                       advanced_deals, advanced_snaps, watch_candidates,
-                      buyback_alerts, all_deals, iphone_deals, game_deals) -> str:
+                      buyback_alerts, all_deals, iphone_deals, game_deals,
+                      buyback_by_product: dict = None) -> str:
 
-        beginner_html = self._tab_beginner(beginner_easy, beginner_watch)
+        beginner_html = self._tab_beginner(beginner_easy, beginner_watch,
+                                           buyback_by_product=buyback_by_product or {})
         advanced_html = self._tab_advanced(advanced_deals, advanced_snaps, watch_candidates)
         surge_html    = self._tab_surge(buyback_alerts)
         ranking_html  = self._tab_ranking(all_deals, iphone_deals, game_deals)
@@ -412,41 +439,130 @@ document.addEventListener("click",function(e){{
 {ranking_html}
 </div>"""
 
+    # ----- データ鮮度ラベル -----
+
+    def _freshness_label(self, observed_at_str: str, data_source: str) -> str:
+        """データ鮮度ラベルを返す。24時間超はwarningクラス。"""
+        try:
+            if observed_at_str:
+                dt = datetime.fromisoformat(observed_at_str)
+                if dt.tzinfo is None:
+                    dt = dt.replace(tzinfo=JST)
+                hours = (datetime.now(tz=JST) - dt.astimezone(JST)).total_seconds() / 3600
+                if hours < 6:
+                    freshness = "最新"
+                    css = "freshness-live"
+                elif hours < 24:
+                    freshness = f"{int(hours)}時間前"
+                    css = "freshness-recent"
+                else:
+                    freshness = f"{int(hours)}時間以上前（参考値）"
+                    css = "freshness-stale"
+            else:
+                freshness = "不明"
+                css = "freshness-unknown"
+        except Exception:
+            freshness = "不明"
+            css = "freshness-unknown"
+        source_label = {
+            "live": "🟢live",
+            "manual_today": "📋当日手動",
+            "manual_recent": "📋手動(24h)",
+            "stale": "⚠️参考値",
+        }.get(data_source, data_source)
+        return f'<span class="{css}">{_esc(source_label)} / {_esc(freshness)}</span>'
+
     # ----- Tab: 初級者向け -----
 
-    def _tab_beginner(self, easy_deals, watch_deals) -> str:
+    def _tab_beginner(self, easy_deals, watch_deals, buyback_by_product: dict = None) -> str:
+        bybp = buyback_by_product or {}
         parts = []
 
         if easy_deals:
             parts.append('<h2>🟢 低難度・すぐ動ける案件（beginner_easy）</h2>')
             for d in easy_deals:
-                parts.append(self._deal_card(d, "badge-easy", "低難度"))
+                rows = bybp.get(d.product_id, [])
+                parts.append(self._deal_card(d, "badge-easy", "低難度", buyback_rows=rows))
         else:
             parts.append('<h2>🟢 低難度案件</h2><p class="empty-msg">現在、条件を満たす案件はありません。</p>')
 
         if watch_deals:
             parts.append('<h2>🟡 要確認・様子見案件（beginner_watch）</h2>')
             for d in watch_deals:
-                parts.append(self._deal_card(d, "badge-watch", "要確認"))
+                rows = bybp.get(d.product_id, [])
+                parts.append(self._deal_card(d, "badge-watch", "要確認", buyback_rows=rows))
         else:
             parts.append('<h2>🟡 要確認案件</h2><p class="empty-msg">現在、条件を満たす案件はありません。</p>')
 
         return "\n".join(parts)
 
-    def _deal_card(self, d, badge_cls: str, label: str) -> str:
+    def _deal_card(self, d, badge_cls: str, label: str, buyback_rows: list = None) -> str:
         pid  = _esc(d.product_id)
         shop = _esc(d.best_buyback_shop)
         links = ""
         if d.official_url:
             links += (f'<a href="{_esc(d.official_url)}" target="_blank" rel="noopener" '
                       f'data-track="product_click" data-product-id="{pid}">公式購入ページ →</a>')
-        if d.best_buyback_url:
-            links += (f'<a href="{_esc(d.best_buyback_url)}" target="_blank" rel="noopener" '
+        # 買取ページCTA: buyback_rowsの中でlink_verified=trueの最高価格URLを優先使用
+        verified_buyback_url = ""
+        if buyback_rows:
+            for _br in buyback_rows:
+                if _br.get("link_verified") and _br.get("buyback_url"):
+                    verified_buyback_url = _br["buyback_url"]
+                    break
+        if not verified_buyback_url and d.best_buyback_url:
+            # buyback_rowsがない場合は best_buyback_url を使うが、
+            # 実在しないドメインは除外（DNS解決不可ドメイン）
+            _skip_domains = ("mobileno1.com", "kaitori-1chome.com")
+            if not any(dom in d.best_buyback_url for dom in _skip_domains):
+                verified_buyback_url = d.best_buyback_url
+        if verified_buyback_url:
+            links += (f'<a href="{_esc(verified_buyback_url)}" target="_blank" rel="noopener" '
                       f'data-track="product_click" data-product-id="{pid}" data-shop="{shop}">買取ページ →</a>')
 
         updated_str = ""
         if hasattr(d, "scanned_at") and d.scanned_at:
             updated_str = f'<div class="price-row"><span class="price-label">最終更新</span><span class="price-value" style="font-size:0.82rem;color:var(--muted)">{_esc(_jst_str(d.scanned_at))}</span></div>'
+
+        # 複数店舗比較セクション
+        compare_html = ""
+        if buyback_rows:
+            official_price = d.official_price_jpy or 0
+            rows_html = []
+            for i, r in enumerate(buyback_rows[:5], start=1):
+                bp = r.get("buyback_price", 0)
+                sname = _esc(r.get("shop_name", ""))
+                profit = bp - official_price
+                profit_str = f"+¥{profit:,}" if profit >= 0 else f"-¥{abs(profit):,}"
+                url_val = r.get("buyback_url", "")
+                verified = r.get("link_verified", False)
+                if url_val and verified:
+                    shop_display = (f'<a href="{_esc(url_val)}" target="_blank" rel="noopener" '
+                                    f'data-track="buyback_click" data-product-id="{pid}" '
+                                    f'data-shop="{sname}">{sname}</a>')
+                else:
+                    shop_display = sname
+                freshness = self._freshness_label(
+                    r.get("observed_at", ""), r.get("data_source", "manual_today")
+                )
+                rows_html.append(
+                    f'<div class="shop-compare-row">'
+                    f'<span class="shop-rank">{i}.</span>'
+                    f'<span class="shop-name">{shop_display}</span>'
+                    f'<span class="shop-price">¥{bp:,}</span>'
+                    f'<span class="shop-profit">{_esc(profit_str)}</span>'
+                    f'</div>'
+                )
+            # 最新データ鮮度（最初の行から）
+            first_freshness = self._freshness_label(
+                buyback_rows[0].get("observed_at", ""), buyback_rows[0].get("data_source", "manual_today")
+            )
+            compare_html = (
+                f'<div class="buyback-compare">'
+                f'<h4>買取店比較（最大5店舗）{first_freshness}</h4>'
+                + "".join(rows_html)
+                + "</div>"
+            )
 
         return f"""<div class="card" data-user-level="{_esc(d.user_level)}">
 <h3>{_esc(d.product_name)} <span class="badge {badge_cls}">{label}</span></h3>
@@ -457,6 +573,7 @@ document.addEventListener("click",function(e){{
 <div class="price-row"><span class="price-label">利益率</span><span class="price-value">{_esc(fmt_rate(d.net_profit_rate))}</span></div>
 <div class="price-row"><span class="price-label">買取条件</span><span class="price-value">{_esc(d.buyback_condition or '新品未開封')}</span></div>
 {updated_str}
+{compare_html}
 <div class="links">{links}</div>
 </div>"""
 

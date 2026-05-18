@@ -59,6 +59,9 @@ SHOP_MAP = {
     "iosys": "src_iosys",
     "sofmap": "src_sofmap",
     "geo": "src_geo",
+    "kitamura": "src_kitamura",
+    "mapcamera": "src_mapcamera",
+    "fujiya": "src_fujiya",
 }
 
 
@@ -93,6 +96,8 @@ class BuybackCSVImporter:
         condition = row.get("condition", "new_unopened").strip()
         url = row.get("url", "").strip()
         observed_str = row.get("observed_at", "").strip()
+        data_source = row.get("data_source", "manual_today").strip() or "manual_today"
+        link_verified = row.get("link_verified", "false").strip().lower() == "true"
 
         product_id = ALIAS_MAP.get(alias, f"prod_{alias}")
         shop_id = SHOP_MAP.get(shop, f"src_{shop}")
@@ -112,6 +117,8 @@ class BuybackCSVImporter:
             condition=condition,
             buyback_url=url,
             observed_at=observed_at,
+            data_source=data_source,
+            link_verified=link_verified,
         )
         self.repo.insert_buyback_price(bp)
 

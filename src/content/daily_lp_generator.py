@@ -28,6 +28,7 @@ from src.content.safety import (
     DISCLAIMER_SHORT, DISCLAIMER_FULL,
 )
 from src.db.repository import Repository
+from src.market.new_product_scanner import NewProductScanner
 
 logger = logging.getLogger(__name__)
 
@@ -119,6 +120,14 @@ class DailyLPGenerator:
         # 急騰・急落
         buyback_alerts = self.repo.list_buyback_alerts(limit=20)
 
+        # 新商品候補（watchingステータスのみ）
+        try:
+            _scanner = NewProductScanner(self.repo)
+            new_product_candidates = _scanner.list_watching_candidates(limit=6)
+        except Exception as _e:
+            logger.warning("新商品候補取得エラー: %s", _e)
+            new_product_candidates = []
+
         # ランキング用
         all_deals = self.repo.list_beginner_deals(min_profit=0, limit=50)
         iphone_deals = [d for d in all_deals if d.category == "iphone"]
@@ -141,6 +150,7 @@ class DailyLPGenerator:
             iphone_deals=iphone_deals,
             game_deals=game_deals,
             buyback_by_product=buyback_by_product,
+            new_product_candidates=new_product_candidates,
         )
 
         # 安全チェック
@@ -179,6 +189,7 @@ class DailyLPGenerator:
             "beginner_count": len(beginner_easy) + len(beginner_watch),
             "advanced_count": len(advanced_deals) + len(advanced_snaps),
             "alerts_count": len(buyback_alerts),
+            "new_products_count": len(new_product_candidates),
             "char_count": len(page_html),
             "forbidden_found": forbidden,
             "latest_buyback_at": _jst_str(latest_buyback_at),
@@ -191,7 +202,8 @@ class DailyLPGenerator:
                      latest_buyback_at, latest_deals_at, lp_generated_at,
                      beginner_easy, beginner_watch, advanced_deals, advanced_snaps,
                      watch_candidates, buyback_alerts, all_deals, iphone_deals, game_deals,
-                     buyback_by_product: dict = None) -> str:
+                     buyback_by_product: dict = None,
+                     new_product_candidates: list = None) -> str:
 
         site_title = _esc(self.settings.get("site_title", "プレ値速報"))
         ga_id      = self.settings.get("analytics", {}).get("google_analytics_id", "")
@@ -228,6 +240,7 @@ class DailyLPGenerator:
             all_deals, iphone_deals, game_deals,
             buyback_by_product=buyback_by_product or {},
         )
+        new_products_html = self._section_new_products(new_product_candidates or [])
         caution_html = self._section_caution()
         cta_html     = self._section_cta()
         footer_html  = self._section_footer()
@@ -892,6 +905,93 @@ td.profit-td {{ color: var(--green); font-weight: 700; font-variant-numeric: tab
   .price-grid {{ grid-template-columns: 1fr; }}
   .price-cell.profit-cell {{ grid-column: span 1; }}
 }}
+/* 新商品候補セクション */
+.section-new-products {{
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+}}
+.section-new-products .section-title {{
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--cyan);
+  margin-bottom: 6px;
+}}
+.section-new-products .section-desc {{
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}}
+.new-product-grid {{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 14px;
+}}
+.new-product-card {{
+  background: var(--card);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  padding: 14px;
+}}
+.npc-header {{
+  display: flex;
+  gap: 6px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}}
+.npc-category {{
+  font-size: 0.72rem;
+  background: var(--blue);
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: 20px;
+}}
+.npc-sale-method {{
+  font-size: 0.72rem;
+  background: var(--yellow);
+  color: #000;
+  padding: 2px 8px;
+  border-radius: 20px;
+}}
+.npc-name {{
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 4px;
+}}
+.npc-meta, .npc-price {{
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-bottom: 3px;
+}}
+.npc-score {{
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 6px;
+}}
+.score-bar {{
+  color: var(--green);
+  font-family: monospace;
+  letter-spacing: -1px;
+}}
+.score-val {{
+  color: var(--text);
+  font-weight: 700;
+  margin-left: 4px;
+}}
+.npc-reason {{
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+  font-style: italic;
+}}
+.section-note {{
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  margin-top: 12px;
+}}
 </style>
 </head>
 <body>
@@ -906,6 +1006,7 @@ td.profit-td {{ color: var(--green); font-weight: 700; font-variant-numeric: tab
 {hero_html}
 {stale_html}
 {tab_html}
+{new_products_html}
 {caution_html}
 {cta_html}
 {footer_html}
@@ -1396,6 +1497,66 @@ document.addEventListener("click",function(e){{
 <thead><tr><th>#</th><th>商品</th>{cat_th}<th>定価</th><th>買取</th><th>実質利益</th><th>率</th><th>買取店</th></tr></thead>
 <tbody>{"".join(rows)}</tbody>
 </table></div></div>"""
+
+    # ----- 新商品候補セクション -----
+
+    def _section_new_products(self, candidates: list) -> str:
+        """watchingステータスの新商品候補を表示するセクション。"""
+        if not candidates:
+            return ""
+
+        _SALE_LABEL = {
+            "lottery": "🎰 抽選",
+            "limited": "⚡ 限定",
+            "preorder": "📋 予約",
+            "normal": "🛒 通常",
+            "sold_out": "❌ 品切",
+        }
+        _CAT_LABEL = {
+            "iphone": "iPhone",
+            "game_console": "ゲーム機",
+            "mac": "Mac",
+            "ipad": "iPad",
+            "apple_watch": "Apple Watch",
+            "camera": "カメラ",
+            "airpods": "AirPods",
+        }
+
+        cards = []
+        for c in candidates:
+            sale_label = _SALE_LABEL.get(getattr(c, "sale_method", ""), "")
+            cat_label  = _CAT_LABEL.get(getattr(c, "category", ""), getattr(c, "category", ""))
+            official_price_str = (
+                f"公式予想価格: {fmt_price(c.official_price)}" if getattr(c, "official_price", None) else ""
+            )
+            release_str = (
+                f"発売予定: {_esc(c.release_date)}" if getattr(c, "release_date", None) else "発売日未定"
+            )
+            resale_score = getattr(c, "resale_potential_score", 0.0) or 0.0
+            resale_bar = int(min(resale_score * 10, 10))
+            cards.append(f"""<div class="new-product-card">
+  <div class="npc-header">
+    <span class="npc-category">{_esc(cat_label)}</span>
+    {f'<span class="npc-sale-method">{_esc(sale_label)}</span>' if sale_label else ""}
+  </div>
+  <div class="npc-name">{_esc(c.product_name)}</div>
+  <div class="npc-meta">{_esc(release_str)}</div>
+  {f'<div class="npc-price">{_esc(official_price_str)}</div>' if official_price_str else ""}
+  <div class="npc-score">
+    転売期待度: <span class="score-bar">{"█" * resale_bar}{"░" * (10 - resale_bar)}</span>
+    <span class="score-val">{resale_score:.1f}</span>
+  </div>
+  {f'<div class="npc-reason">{_esc(c.reason)}</div>' if getattr(c, "reason", None) else ""}
+</div>""")
+
+        return f"""<section class="section-new-products" id="new-products">
+<h2 class="section-title">🆕 注目の新商品・新モデル候補</h2>
+<p class="section-desc">発売が噂・発表されている注目商品です。入手難易度・転売期待度を事前にチェックしてください。</p>
+<div class="new-product-grid">
+{"".join(cards)}
+</div>
+<p class="section-note">※ 情報は公式発表前の段階です。変更・中止の可能性があります。自動購入・自動応募は一切行いません。</p>
+</section>"""
 
     # ----- Caution / CTA / Footer -----
 

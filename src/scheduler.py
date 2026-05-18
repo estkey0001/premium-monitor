@@ -118,17 +118,20 @@ def _job_dispatch():
 
 
 def _job_product_scan():
-    """新製品候補スキャン（180分間隔）。"""
-    logger.info("[scheduler] product_scan START")
+    """新製品候補スキャン（09:00 / 12:30 / 18:30 JST）。NewProductScannerを使用。"""
+    logger.info("[scheduler] new_product_scan START")
     try:
-        from src.orchestrator import Orchestrator
-        orch = Orchestrator()
-        n = orch.run_product_scan()
-        orch.close()
-        _save_status("product_scan", "success", f"candidates={n}")
+        db, repo = _get_db_and_repo()
+        from src.market.new_product_scanner import NewProductScanner
+        scanner = NewProductScanner(repository=repo)
+        result = scanner.scan()
+        db.close()
+        _save_status("new_product_scan", "success",
+                     f"new={result['new']} updated={result['updated']} errors={len(result['errors'])}")
+        logger.info("[scheduler] new_product_scan DONE: %s", result)
     except Exception as e:
-        logger.error("[scheduler] product_scan ERROR: %s", e)
-        _save_status("product_scan", "error", str(e))
+        logger.error("[scheduler] new_product_scan ERROR: %s", e)
+        _save_status("new_product_scan", "error", str(e))
 
 
 # ===== スケジューラ本体 =====
@@ -174,14 +177,16 @@ def start_scheduler():
         max_instances=1, replace_existing=True,
     )
 
-    # === 新製品スキャン (180分間隔) ===
-    scan_interval = config.get("product_scan_interval_minutes", 180)
-    scheduler.add_job(
-        _job_product_scan,
-        IntervalTrigger(minutes=scan_interval, timezone=tz),
-        id="product_scan", name=f"新製品スキャン ({scan_interval}分)",
-        max_instances=1, replace_existing=True,
-    )
+    # === 新商品スキャン (09:00 / 12:30 / 18:30 JST) ===
+    for scan_time in ["9:0", "12:30", "18:30"]:
+        hour, minute = scan_time.split(":")
+        scheduler.add_job(
+            _job_product_scan,
+            CronTrigger(hour=int(hour), minute=int(minute), timezone=tz),
+            id=f"new_product_scan_{hour}_{minute}",
+            name=f"新商品スキャン ({scan_time} JST)",
+            max_instances=1, replace_existing=True,
+        )
 
     _save_status("_scheduler", "started", f"jobs={len(scheduler.get_jobs())}")
 

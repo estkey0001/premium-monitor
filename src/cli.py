@@ -2795,5 +2795,134 @@ def daily_lp_update(variant: str, skip_link_check: bool):
 
 
 # =========================================
+# 買取価格比較コマンド
+# =========================================
+
+@cli.command("list-buyback-comparison")
+@click.option("--product", default=None, help="商品エイリアス（例: iphone17pro256）")
+@click.option("--category", default=None, help="カテゴリ（例: iphone, apple, game_console）")
+@click.option("--limit", default=10, help="表示件数（デフォルト: 10）")
+def list_buyback_comparison(product: str, category: str, limit: int):
+    """商品別の買取価格複数店舗比較を表示する。
+
+    例:
+      python3 -m src.cli list-buyback-comparison --product iphone17pro256
+      python3 -m src.cli list-buyback-comparison --category apple
+    """
+    from src.db.database import Database
+    from src.db.repository import Repository
+
+    db = Database(); db.init_schema()
+    repo = Repository(db)
+
+    # 商品絞り込み
+    all_products = repo.list_products()
+    if product:
+        # エイリアス or product_id で検索
+        # product_id は "prod_iphone17pro_256" 形式。"iphone17pro256" 等のエイリアスにも対応
+        _alias_norm = product.lower().replace("_", "").replace("-", "")
+        targets = [p for p in all_products
+                   if p.id == product
+                   or p.id.replace("prod_", "").replace("_", "") == _alias_norm
+                   or _alias_norm in p.name.lower().replace(" ", "").replace("_", "")]
+    elif category:
+        # カテゴリ絞り込み（genre / category / brand）
+        cat_map = {
+            "apple": ["iphone", "mac", "ipad", "apple_watch", "airpods"],
+            "iphone": ["iphone"],
+            "game": ["game_console"],
+            "game_console": ["game_console"],
+            "camera": ["camera"],
+        }
+        genres = cat_map.get(category, [category])
+        targets = [p for p in all_products if p.genre in genres]
+    else:
+        targets = all_products
+
+    if not targets:
+        click.echo(f"対象商品が見つかりません。")
+        return
+
+    W = 60
+    for p in targets[:limit]:
+        rows = repo.list_buyback_prices_by_product(p.id, limit=10)
+        if not rows:
+            continue
+        official = p.official_price or p.retail_price or 0
+        click.echo(f"\n{'─' * W}")
+        click.echo(f"  {p.name}")
+        click.echo(f"  公式価格：¥{official:,}" if official else "  公式価格：不明")
+        click.echo(f"  {'─' * (W - 2)}")
+        click.echo(f"  {'順位':<4} {'買取店':<20} {'買取価格':>10} {'参考差額':>10} {'検証':<6}")
+        click.echo(f"  {'─' * (W - 2)}")
+        prices = []
+        for i, r in enumerate(rows, start=1):
+            bp = r.get("buyback_price", 0)
+            sname = r.get("shop_name", "")
+            diff = bp - official if official else 0
+            diff_str = f"+¥{diff:,}" if diff >= 0 else f"−¥{abs(diff):,}"
+            verified = "✅" if r.get("link_verified") else "未検証"
+            prices.append(bp)
+            click.echo(f"  {i:<4} {sname:<20} ¥{bp:,}  {diff_str:>10}  {verified}")
+        if prices:
+            import statistics
+            click.echo(f"  {'─' * (W - 2)}")
+            click.echo(f"  最高値:   ¥{max(prices):,}")
+            if len(prices) >= 2:
+                click.echo(f"  中央値:   ¥{int(statistics.median(prices)):,}")
+            click.echo(f"  参照店舗: {len(prices)} 店舗")
+    click.echo(f"{'─' * W}\n")
+
+
+@cli.command("refresh-beginner-buyback-ranking")
+def refresh_beginner_buyback_ranking():
+    """beginner_deals の買取ランキングを再計算して更新する。
+
+    import-buyback-csv 後に実行することで、複数店舗の価格順・中央値・
+    buyback_prices_json を最新状態に更新します。
+    """
+    from src.db.database import Database
+    from src.db.repository import Repository
+    from src.market.beginner_deal_scanner import BeginnerDealScanner
+
+    click.echo("買取ランキング再計算中...")
+    db = Database(); db.init_schema()
+    repo = Repository(db)
+    scanner = BeginnerDealScanner(repo)
+
+    results = scanner.scan_all()
+    active = [r for r in results if r is not None]
+
+    if not active:
+        click.echo("  更新対象の案件が見つかりませんでした。")
+        return
+
+    updated = 0
+    for deal in active:
+        try:
+            repo.upsert_beginner_deal(deal)
+            updated += 1
+        except Exception as e:
+            click.echo(f"  ⚠️  {deal.product_name}: {e}")
+
+    click.echo(f"\n  ✅ {updated} 件の買取ランキングを更新しました。")
+
+    # iphone17pro256 の結果をサマリ表示
+    sample = [d for d in active if "iphone17pro256" in d.product_id or "iPhone 17 Pro 256" in d.product_name]
+    if sample:
+        d = sample[0]
+        click.echo(f"\n  📱 iPhone 17 Pro 256GB サマリ:")
+        click.echo(f"     最高買取:   ¥{d.best_buyback_price:,}（{d.best_buyback_shop}）")
+        if d.median_buyback_price:
+            click.echo(f"     中央値:     ¥{d.median_buyback_price:,}")
+        click.echo(f"     参照店舗:   {d.buyback_shop_count} 店舗")
+        click.echo(f"     実質利益:   ¥{d.net_profit_jpy:,}")
+        if d.best_link_verified:
+            click.echo(f"     買取リンク: ✅ 検証済み → {d.best_buyback_url}")
+        else:
+            click.echo(f"     買取リンク: 未検証（LP非表示）")
+
+
+# =========================================
 if __name__ == "__main__":
     cli()

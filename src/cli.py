@@ -2234,8 +2234,14 @@ def test_analytics_tag():
     note_ev = settings.get("analytics", {}).get("note_click_event_name", "note_click")
     prod_ev = settings.get("analytics", {}).get("product_click_event_name", "product_click")
     click.echo(f"\n  イベント名:")
-    click.echo(f"    note_click → '{note_ev}' ({'検出' if f'data-track=\"{note_ev}\"' in html or 'note_click' in html else '未検出'})")
-    click.echo(f"    product_click → '{prod_ev}' ({'検出' if 'data-track=\"product_click\"' in html else '未検出'})")
+    _note_ev_key = 'data-track="' + note_ev + '"'
+    _note_ev_detected = _note_ev_key in html or 'note_click' in html
+    _note_ev_label = '検出' if _note_ev_detected else '未検出'
+    click.echo(f"    note_click → '{note_ev}' ({_note_ev_label})")
+    _prod_ev_key = 'data-track="product_click"'
+    _prod_ev_detected = _prod_ev_key in html
+    _prod_ev_label = '検出' if _prod_ev_detected else '未検出'
+    click.echo(f"    product_click → '{prod_ev}' ({_prod_ev_label})")
     click.echo(f"{'='*50}\n")
 
 

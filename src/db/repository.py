@@ -1075,3 +1075,40 @@ class Repository:
             ).fetchall()]
         except Exception:
             return []
+
+    # =========================================
+    # データ鮮度ヘルパー (Phase 13+)
+    # =========================================
+
+    def get_latest_buyback_observed_at(self) -> "Optional[datetime]":
+        """buyback_prices の最新 observed_at を返す。"""
+        try:
+            row = self.db.connection.execute(
+                "SELECT MAX(observed_at) AS ts FROM buyback_prices WHERE is_active = 1"
+            ).fetchone()
+            val = row["ts"] if row else None
+            return datetime.fromisoformat(val) if val else None
+        except Exception:
+            return None
+
+    def get_latest_beginner_deals_at(self) -> "Optional[datetime]":
+        """beginner_deals の最新 scanned_at を返す。"""
+        try:
+            row = self.db.connection.execute(
+                "SELECT MAX(scanned_at) AS ts FROM beginner_deals WHERE is_active = 1"
+            ).fetchone()
+            val = row["ts"] if row else None
+            return datetime.fromisoformat(val) if val else None
+        except Exception:
+            return None
+
+    def get_latest_buyback_history_at(self) -> "Optional[datetime]":
+        """buyback_history の最新 observed_at を返す。"""
+        try:
+            row = self.db.connection.execute(
+                "SELECT MAX(observed_at) AS ts FROM buyback_history"
+            ).fetchone()
+            val = row["ts"] if row else None
+            return datetime.fromisoformat(val) if val else None
+        except Exception:
+            return None

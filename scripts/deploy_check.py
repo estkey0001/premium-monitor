@@ -148,6 +148,48 @@ def check() -> list[dict]:
     else:
         results.append({"level": "warning", "check": "robots", "message": "robots.txt なし"})
 
+    # 11. 買取価格更新日時の表示
+    if "買取価格更新：" in html:
+        results.append({"level": "ok", "check": "buyback_updated_ts", "message": "買取価格更新日時が表示されている"})
+    else:
+        results.append({"level": "error", "check": "buyback_updated_ts", "message": "買取価格更新日時が見つからない（data-buyback-updated が未出力）"})
+
+    # 12. LP生成日時の表示
+    if "LP生成：" in html:
+        results.append({"level": "ok", "check": "lp_generated_ts", "message": "LP生成日時が表示されている"})
+    else:
+        results.append({"level": "error", "check": "lp_generated_ts", "message": "LP生成日時が見つからない"})
+
+    # 13. 初級者向けタブの存在
+    if 'id="tab-beginner"' in html:
+        results.append({"level": "ok", "check": "tab_beginner", "message": "初級者向けタブが存在する"})
+    else:
+        results.append({"level": "error", "check": "tab_beginner", "message": "初級者向けタブ（id=tab-beginner）が見つからない"})
+
+    # 14. 上級者向けタブの存在
+    if 'id="tab-advanced"' in html:
+        results.append({"level": "ok", "check": "tab_advanced", "message": "上級者向けタブが存在する"})
+    else:
+        results.append({"level": "error", "check": "tab_advanced", "message": "上級者向けタブ（id=tab-advanced）が見つからない"})
+
+    # 15. 古いデータ警告ロジックの存在
+    if "stale-warning-block" in html:
+        results.append({"level": "ok", "check": "stale_warning", "message": "古いデータ警告ロジックが存在する"})
+    else:
+        results.append({"level": "error", "check": "stale_warning", "message": "古いデータ警告ロジック（stale-warning-block）が見つからない"})
+
+    # 16. beginner_easy が初級者タブ内に存在するか
+    if 'data-user-level="beginner_easy"' in html:
+        results.append({"level": "ok", "check": "beginner_easy_in_tab", "message": "beginner_easy の案件が初級者タブ内にある"})
+    else:
+        results.append({"level": "warning", "check": "beginner_easy_in_tab", "message": "beginner_easy 案件なし（データ未生成の可能性）"})
+
+    # 17. advanced 案件の存在（optional: データなし時はwarning）
+    if 'data-user-level="advanced_high_profit"' in html or 'data-user-level="expert_only"' in html:
+        results.append({"level": "ok", "check": "advanced_in_tab", "message": "上級者向け案件が存在する"})
+    else:
+        results.append({"level": "warning", "check": "advanced_in_tab", "message": "上級者向け案件なし（条件を満たす候補がない可能性）"})
+
     return results
 
 

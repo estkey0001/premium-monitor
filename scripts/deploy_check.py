@@ -220,6 +220,49 @@ def check() -> list[dict]:
     else:
         results.append({"level": "warning", "check": "new_products_section", "message": "新商品候補セクションなし（候補データがない可能性）"})
 
+    # 21. 初心者向けカードに複数買取店テーブルがある
+    if "buyback-shop-table" in html or "buyback-table" in html:
+        results.append({"level": "ok", "check": "buyback_shop_table", "message": "初心者カードに複数買取店テーブルが存在する"})
+    else:
+        results.append({"level": "error", "check": "buyback_shop_table", "message": "複数買取店テーブルが見つからない（beginner deals 要確認）"})
+
+    # 22. 最高買取価格が表示されている
+    if "最高買取価格" in html or "buyback-best-price" in html:
+        results.append({"level": "ok", "check": "buyback_best_price_label", "message": "最高買取価格ラベルが存在する"})
+    else:
+        results.append({"level": "error", "check": "buyback_best_price_label", "message": "最高買取価格ラベルが見つからない"})
+
+    # 23. 参照店舗数が表示されている
+    if "参照" in html and "店舗" in html:
+        results.append({"level": "ok", "check": "shop_count_shown", "message": "参照店舗数が表示されている"})
+    else:
+        results.append({"level": "warning", "check": "shop_count_shown", "message": "参照店舗数の表示が見つからない"})
+
+    # 24. 未検証URLがリンクになっていない（unverified-link クラスがリンクなしで表示）
+    # link_verified=false の場合は <span class="unverified-link"> として出力される
+    if "unverified-link" in html:
+        # unverified-linkがhrefを持っていないことを確認（href="..."の直前にunverified-linkがない）
+        import re as _re
+        bad_pattern = _re.findall(r'<a[^>]+class="[^"]*unverified-link[^"]*"[^>]+href', html)
+        if bad_pattern:
+            results.append({"level": "error", "check": "unverified_url_not_linked", "message": f"未検証URLがリンクになっている箇所あり: {len(bad_pattern)}件"})
+        else:
+            results.append({"level": "ok", "check": "unverified_url_not_linked", "message": "未検証URLはテキスト表示のみ（リンクなし）"})
+    else:
+        results.append({"level": "ok", "check": "unverified_url_not_linked", "message": "unverified-linkなし（全URL検証済みか買取データなし）"})
+
+    # 25. 価格取得日時が表示されている（freshness系クラス）
+    if "freshness-live" in html or "freshness-recent" in html or "freshness-stale" in html:
+        results.append({"level": "ok", "check": "price_freshness_shown", "message": "価格取得日時・鮮度ラベルが表示されている"})
+    else:
+        results.append({"level": "warning", "check": "price_freshness_shown", "message": "価格鮮度ラベルが見つからない"})
+
+    # 26. 掲載価格注意文が表示されている
+    if "掲載価格は取得・入力時点の参考値" in html or "buyback-notice" in html:
+        results.append({"level": "ok", "check": "buyback_notice", "message": "買取価格注意文が表示されている"})
+    else:
+        results.append({"level": "error", "check": "buyback_notice", "message": "買取価格注意文が見つからない"})
+
     return results
 
 

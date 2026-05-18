@@ -112,83 +112,280 @@ except Exception as e:
 
 st.markdown("---")
 
-# ===== 12時更新ボタン（メイン操作） =====
-st.subheader("🕐 12時更新（本番LP更新）")
+# ===== daily-lp-update（ワンコマンド更新） =====
+st.subheader("🚀 daily-lp-update（ワンコマンド更新）")
 
 st.info(
-    "このボタンは毎日12:00 JST の本番更新用です。"
-    "run-buyback-premium-check → generate-daily-lp → build-public-lp → deploy-check を一括実行します。"
+    "**毎日12時更新用ワンコマンド。** "
+    "validate-price-links → import-buyback-csv → import-market-csv → "
+    "run-buyback-premium-check → generate-daily-lp → build-public-lp → "
+    "deploy-check → prelaunch-check を順番に実行します。\n\n"
+    "⚠️ git push は自動では行いません。結果確認後に手動で push してください。"
 )
 
-if st.button("🚀 12時更新を実行（本番LP更新）", type="primary", use_container_width=True):
-    progress = st.progress(0, text="処理中...")
-    log_area = st.empty()
-    logs = []
+col_var, col_btn = st.columns([2, 3])
+with col_var:
+    dl_variant = st.selectbox("バリアント", ["A", "B", "C"], index=0, key="dl_variant")
+    skip_link = st.checkbox("リンク検証スキップ（高速化）", key="dl_skip_link")
 
-    def _log(msg: str):
+with col_btn:
+    st.write("")
+    st.write("")
+    run_daily = st.button("▶ daily-lp-update 実行", type="primary", use_container_width=True)
+
+if run_daily:
+    progress = st.progress(0, text="初期化中...")
+    log_area = st.empty()
+    logs: list[str] = []
+    result_summary: dict = {}
+
+    def _dlog(msg: str):
         logs.append(msg)
-        log_area.code("\n".join(logs))
+        log_area.code("\n".join(logs[-60:]))  # 最新60行を表示
 
     try:
-        _log("Step 1/4: run-buyback-premium-check 実行中...")
-        progress.progress(10, text="Step 1: 買取価格更新 & プレ値チェック...")
+        # ---- Step 1: validate-price-links ----
+        progress.progress(5, text="Step 1/8: リンク検証...")
+        if skip_link:
+            _dlog("Step 1/8: リンク検証 → スキップ（--skip-link-check）")
+        else:
+            _dlog("Step 1/8: リンク検証中...")
+            try:
+                import requests as _req, csv as _csv
+                _seen: set = set()
+                _ok_c = _ng_c = 0
+                _buyback_csv = PROJECT_ROOT / "data" / "manual_buyback_prices.csv"
+                if _buyback_csv.exists():
+                    with open(_buyback_csv, encoding="utf-8") as _f:
+                        for _row in _csv.DictReader(_f):
+                            _u = _row.get("url", "").strip()
+                            if not _u or _u in _seen:
+                                continue
+                            _seen.add(_u)
+                            try:
+                                _r = _req.head(_u, timeout=6, allow_redirects=True,
+                                               headers={"User-Agent": "Mozilla/5.0"})
+                                if _r.status_code in (200, 301, 302, 403):
+                                    _ok_c += 1
+                                else:
+                                    _ng_c += 1
+                            except Exception:
+                                _ng_c += 1
+                _dlog(f"  ✅ リンク OK:{_ok_c} / NG:{_ng_c}")
+                result_summary["link_ok"] = _ok_c
+                result_summary["link_ng"] = _ng_c
+            except ImportError:
+                _dlog("  ⚠️ requests未インストール → スキップ")
+
+        # ---- Step 2: import-buyback-csv ----
+        progress.progress(15, text="Step 2/8: 買取CSVインポート...")
+        _dlog("Step 2/8: 買取CSVインポート...")
         from src.db.database import Database
         from src.db.repository import Repository
-        from src.jobs.buyback_premium_job import BuybackPremiumJob
         _db = Database.__new__(Database)
         _db.db_path = get_db_path()
         _db._connection = None
         _db.init_schema()
         _repo = Repository(_db)
-        job = BuybackPremiumJob(repository=_repo)
-        job_result = job.run()
-        _log(f"  ✅ snapshots={job_result['snapshots_updated']} deals={job_result['beginner_deals']} errors={len(job_result['errors'])}")
+        _buyback_file = PROJECT_ROOT / "data" / "manual_buyback_prices.csv"
+        if _buyback_file.exists():
+            from src.market.buyback_csv_importer import BuybackCSVImporter
+            _br = BuybackCSVImporter(_repo).import_file(str(_buyback_file))
+            result_summary["buyback_imported"] = _br["imported"]
+            _dlog(f"  ✅ 買取CSV: {_br['imported']}件 (skip={_br['skipped']})")
+            for _e in _br.get("errors", [])[:3]:
+                _dlog(f"  ⚠️  {_e}")
+        else:
+            _dlog("  ⚠️ manual_buyback_prices.csv なし → スキップ")
 
-        progress.progress(40, text="Step 2: LP生成中...")
-        _log("Step 2/4: generate-daily-lp --variant A 実行中...")
-        from src.content.daily_lp_generator import DailyLPGenerator
-        lp_gen = DailyLPGenerator(repository=_repo)
-        lp_result = lp_gen.generate(variant="A")
-        _log(f"  ✅ beginner={lp_result['beginner_count']} advanced={lp_result['advanced_count']}")
-        _log(f"     買取価格更新: {lp_result['latest_buyback_at']}")
-        _log(f"     LP生成: {lp_result['time']}")
+        # ---- Step 3: import-market-csv ----
+        progress.progress(25, text="Step 3/8: 市場CSVインポート...")
+        _dlog("Step 3/8: 市場CSVインポート...")
+        _market_file = PROJECT_ROOT / "data" / "manual_market_prices.csv"
+        if _market_file.exists():
+            try:
+                from src.market.market_csv_importer import MarketCSVImporter
+                _mr = MarketCSVImporter(_repo).import_file(str(_market_file))
+                result_summary["market_imported"] = _mr.get("imported", 0)
+                _dlog(f"  ✅ 市場CSV: {_mr.get('imported', 0)}件")
+            except Exception as _e2:
+                _dlog(f"  ⚠️ 市場CSVスキップ: {_e2}")
+        else:
+            _dlog("  ⚠️ manual_market_prices.csv なし → スキップ")
+
+        # ---- Step 4: run-buyback-premium-check ----
+        progress.progress(38, text="Step 4/8: 買取+プレ値統合ジョブ...")
+        _dlog("Step 4/8: run-buyback-premium-check 実行中...")
+        from src.jobs.buyback_premium_job import BuybackPremiumJob
+        _job = BuybackPremiumJob(repository=_repo)
+        _jr = _job.run()
+        _dlog(f"  ✅ snapshots={_jr['snapshots_updated']} deals={_jr['beginner_deals']} errors={len(_jr['errors'])}")
         _db.close()
 
-        progress.progress(65, text="Step 3: docs/ ビルド中...")
-        _log("Step 3/4: build-public-lp 実行中...")
+        # ---- Step 5: generate-daily-lp ----
+        progress.progress(52, text="Step 5/8: LP生成中...")
+        _dlog(f"Step 5/8: generate-daily-lp --variant {dl_variant}...")
+        _db5 = Database.__new__(Database)
+        _db5.db_path = get_db_path()
+        _db5._connection = None
+        _db5.init_schema()
+        _repo5 = Repository(_db5)
+        from src.content.daily_lp_generator import DailyLPGenerator
+        _lp = DailyLPGenerator(repository=_repo5)
+        _lr = _lp.generate(variant=dl_variant)
+        result_summary["beginner_count"] = _lr["beginner_count"]
+        result_summary["advanced_count"] = _lr["advanced_count"]
+        _dlog(f"  ✅ beginner={_lr['beginner_count']} advanced={_lr['advanced_count']}")
+        _db5.close()
+
+        # ---- Step 6: build-public-lp ----
+        progress.progress(65, text="Step 6/8: docs/ ビルド中...")
+        _dlog("Step 6/8: build-public-lp...")
         if str(PROJECT_ROOT / "scripts") not in sys.path:
             sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
         import importlib
         import build_public_lp as _bpl
         importlib.reload(_bpl)
         _bpl.build()
-        _log("  ✅ docs/ にビルド完了")
+        _dlog("  ✅ docs/ ビルド完了")
 
-        progress.progress(85, text="Step 4: deploy-check 実行中...")
-        _log("Step 4/4: deploy-check 実行中...")
+        # ---- Step 7: deploy-check ----
+        progress.progress(80, text="Step 7/8: デプロイチェック...")
+        _dlog("Step 7/8: deploy-check-lp...")
         import deploy_check as _dc
         importlib.reload(_dc)
-        check_results = _dc.check()
-        errors   = [r for r in check_results if r["level"] == "error"]
-        warnings = [r for r in check_results if r["level"] == "warning"]
-        _log(f"  結果: errors={len(errors)} warnings={len(warnings)} ok={len([r for r in check_results if r['level']=='ok'])}")
-        for r in errors:
-            _log(f"  ❌ {r['check']}: {r['message']}")
-        for r in warnings:
-            _log(f"  ⚠️ {r['check']}: {r['message']}")
+        _cr = _dc.check()
+        _errs = [r for r in _cr if r["level"] == "error"]
+        _warns = [r for r in _cr if r["level"] == "warning"]
+        result_summary["deploy_errors"] = len(_errs)
+        result_summary["deploy_warnings"] = len(_warns)
+        _dlog(f"  {'✅' if not _errs else '❌'} deploy-check: errors={len(_errs)} warnings={len(_warns)} ok={len(_cr)-len(_errs)-len(_warns)}")
+        for r in _errs:
+            _dlog(f"    ❌ [{r['check']}] {r['message']}")
+        for r in _warns:
+            _dlog(f"    ⚠️  [{r['check']}] {r['message']}")
+
+        # ---- Step 8: prelaunch-check ----
+        progress.progress(92, text="Step 8/8: 本番前チェック...")
+        _dlog("Step 8/8: prelaunch-check...")
+        _db8 = Database.__new__(Database)
+        _db8.db_path = get_db_path()
+        _db8._connection = None
+        _db8.init_schema()
+        _repo8 = Repository(_db8)
+        from src.pipeline.prelaunch_checker import run_prelaunch_check, summarize as _summ
+        _ps = _summ(run_prelaunch_check(repo=_repo8))
+        _db8.close()
+        result_summary["prelaunch_errors"] = _ps["errors"]
+        _dlog(f"  {'✅' if _ps['errors']==0 else '❌'} prelaunch: errors={_ps['errors']} warnings={_ps['warnings']}")
 
         progress.progress(100, text="完了！")
 
-        if errors:
-            st.error(f"❌ deploy-check に {len(errors)} errors があります。修正してください。")
+        # ---- サマリ表示 ----
+        has_error = len(_errs) > 0 or _ps["errors"] > 0
+        if has_error:
+            st.error("❌ エラーあり — ログを確認してください")
         else:
-            st.success(f"✅ 12時更新完了！ docs/index.html を git push してください。")
+            st.success("✅ daily-lp-update 完了！")
+            st.info(
+                f"**結果サマリ**\n"
+                f"- 買取CSV: {result_summary.get('buyback_imported', '-')}件\n"
+                f"- beginner_easy案件: {result_summary.get('beginner_count', '-')}件\n"
+                f"- advanced候補: {result_summary.get('advanced_count', '-')}件\n"
+                f"- deploy-check: ✅ {len(_cr)-len(_errs)-len(_warns)}/22 OK\n"
+                f"- NGリンク: {result_summary.get('link_ng', '-')}件\n\n"
+                f"📌 **次のステップ（手動でpush）:**\n"
+                f"```\n"
+                f"git add docs/ exports/lp/daily/\n"
+                f"git commit -m \"Update daily LP\"\n"
+                f"git push\n"
+                f"```"
+            )
         st.rerun()
 
     except Exception as e:
-        import traceback
-        _log(f"ERROR: {e}\n{traceback.format_exc()}")
+        import traceback as _tb
+        _dlog(f"ERROR: {e}\n{_tb.format_exc()}")
         st.error(f"実行エラー: {e}")
+
+st.markdown("---")
+
+# ===== 12時更新ボタン（旧UI・詳細ステップ） =====
+with st.expander("🔧 個別ステップ実行（旧UI）"):
+    st.info(
+        "個別ステップを手動実行したい場合はこちら。"
+        "run-buyback-premium-check → generate-daily-lp → build-public-lp → deploy-check を一括実行します。"
+    )
+
+    if st.button("▶ 個別ステップ実行（旧12時更新）", use_container_width=True):
+        progress = st.progress(0, text="処理中...")
+        log_area = st.empty()
+        logs = []
+
+        def _log(msg: str):
+            logs.append(msg)
+            log_area.code("\n".join(logs))
+
+        try:
+            _log("Step 1/4: run-buyback-premium-check 実行中...")
+            progress.progress(10, text="Step 1: 買取価格更新 & プレ値チェック...")
+            from src.db.database import Database
+            from src.db.repository import Repository
+            from src.jobs.buyback_premium_job import BuybackPremiumJob
+            _db = Database.__new__(Database)
+            _db.db_path = get_db_path()
+            _db._connection = None
+            _db.init_schema()
+            _repo = Repository(_db)
+            job = BuybackPremiumJob(repository=_repo)
+            job_result = job.run()
+            _log(f"  ✅ snapshots={job_result['snapshots_updated']} deals={job_result['beginner_deals']} errors={len(job_result['errors'])}")
+
+            progress.progress(40, text="Step 2: LP生成中...")
+            _log("Step 2/4: generate-daily-lp --variant A 実行中...")
+            from src.content.daily_lp_generator import DailyLPGenerator
+            lp_gen = DailyLPGenerator(repository=_repo)
+            lp_result = lp_gen.generate(variant="A")
+            _log(f"  ✅ beginner={lp_result['beginner_count']} advanced={lp_result['advanced_count']}")
+            _log(f"     買取価格更新: {lp_result['latest_buyback_at']}")
+            _log(f"     LP生成: {lp_result['time']}")
+            _db.close()
+
+            progress.progress(65, text="Step 3: docs/ ビルド中...")
+            _log("Step 3/4: build-public-lp 実行中...")
+            if str(PROJECT_ROOT / "scripts") not in sys.path:
+                sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
+            import importlib
+            import build_public_lp as _bpl
+            importlib.reload(_bpl)
+            _bpl.build()
+            _log("  ✅ docs/ にビルド完了")
+
+            progress.progress(85, text="Step 4: deploy-check 実行中...")
+            _log("Step 4/4: deploy-check 実行中...")
+            import deploy_check as _dc
+            importlib.reload(_dc)
+            check_results = _dc.check()
+            errors   = [r for r in check_results if r["level"] == "error"]
+            warnings = [r for r in check_results if r["level"] == "warning"]
+            _log(f"  結果: errors={len(errors)} warnings={len(warnings)} ok={len([r for r in check_results if r['level']=='ok'])}")
+            for r in errors:
+                _log(f"  ❌ {r['check']}: {r['message']}")
+            for r in warnings:
+                _log(f"  ⚠️ {r['check']}: {r['message']}")
+
+            progress.progress(100, text="完了！")
+
+            if errors:
+                st.error(f"❌ deploy-check に {len(errors)} errors があります。修正してください。")
+            else:
+                st.success(f"✅ 完了！ docs/index.html を git push してください。")
+            st.rerun()
+
+        except Exception as e:
+            import traceback
+            _log(f"ERROR: {e}\n{traceback.format_exc()}")
+            st.error(f"実行エラー: {e}")
 
 st.markdown("---")
 

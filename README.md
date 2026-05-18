@@ -52,6 +52,55 @@ cd premium-monitor
 streamlit run dashboard/app.py
 ```
 
+## 毎日12時更新（LP公開運用）
+
+### ワンコマンド更新
+
+```bash
+python3 -m src.cli daily-lp-update
+```
+
+以下を自動で順番に実行します:
+
+1. リンク検証（validate-price-links）
+2. 買取価格CSVインポート
+3. 市場価格CSVインポート
+4. 買取+プレ値統合ジョブ
+5. LP生成（バリアントA）
+6. docs/ ビルド
+7. デプロイチェック（22項目）
+8. 本番前チェック
+
+### 更新後の公開手順
+
+実行結果を確認してから手動でpushしてください:
+
+```bash
+# 内容確認
+python3 -m src.cli daily-lp-update
+
+# 問題なければ手動でgit push
+git add docs/ exports/lp/daily/
+git commit -m "Update daily LP $(date +%Y-%m-%d)"
+git push
+```
+
+> **注意**: `daily-lp-update` は自動で git push しません。結果サマリを確認してから手動で push してください。
+
+### リンク検証スキップ（高速化）
+
+```bash
+python3 -m src.cli daily-lp-update --skip-link-check
+```
+
+### バリアント変更
+
+```bash
+python3 -m src.cli daily-lp-update --variant B
+```
+
+---
+
 ## 日常運用
 
 ### 全体を1回実行

@@ -2409,6 +2409,90 @@ def prelaunch_check():
 
 
 # =========================================
+# Phase 14: 新商品スキャナー コマンド
+# =========================================
+
+@cli.command("scan-new-product-opportunities")
+def scan_new_product_opportunities():
+    """新商品・新モデルの転売候補をスキャンしてproduct_candidatesに保存する。"""
+    db = _get_db()
+    try:
+        db.init_schema()
+        repo = Repository(db)
+        from src.market.new_product_scanner import NewProductScanner
+        scanner = NewProductScanner(repository=repo)
+        result = scanner.scan()
+        click.echo(f"\n新商品スキャン完了:")
+        click.echo(f"  新規追加:     {result['new']} 件")
+        click.echo(f"  スキップ:     {result['skipped']} 件（既存候補）")
+        click.echo(f"  更新:         {result['updated']} 件")
+        click.echo(f"  エラー:       {len(result['errors'])} 件")
+        if result["errors"]:
+            for err in result["errors"][:5]:
+                click.echo(f"    - {err}")
+    finally:
+        db.close()
+
+
+@cli.command("list-new-product-candidates")
+@click.option("--status", default=None, help="pending/watching/approved/rejected")
+@click.option("--category", default=None, help="iphone/camera/game_console等")
+@click.option("--limit", default=20, type=int)
+def list_new_product_candidates(status, category, limit):
+    """新商品候補一覧を表示する。"""
+    db = _get_db()
+    try:
+        db.init_schema()
+        repo = Repository(db)
+        candidates = repo.list_product_candidates(status=status, limit=200)
+
+        # カテゴリフィルタ
+        if category:
+            candidates = [c for c in candidates if getattr(c, "category", c.genre) == category]
+
+        # 転売期待スコア降順
+        candidates.sort(key=lambda c: c.resale_potential_score, reverse=True)
+        candidates = candidates[:limit]
+
+        click.echo(f"\n{'='*100}")
+        click.echo(f" 新商品候補一覧 ({len(candidates)}件)")
+        click.echo(f"{'='*100}")
+        click.echo(f"  {'STATUS':<10} {'CATEGORY':<14} {'BRAND':<10} {'PRODUCT_NAME':<38} {'RESALE':>7} {'DIFF':>6} {'SALE_METHOD':<12}")
+        click.echo(f"  {'-'*10} {'-'*14} {'-'*10} {'-'*38} {'-'*7} {'-'*6} {'-'*12}")
+
+        for c in candidates:
+            cat = getattr(c, "category", c.genre) or c.genre
+            resale = c.resale_potential_score
+            diff = c.difficulty_score
+            sale = getattr(c, "sale_method", "normal")
+            price = getattr(c, "official_price", None) or c.estimated_price
+            price_str = f"¥{price:,}" if price else "---"
+            click.echo(
+                f"  {c.status:<10} {cat:<14} {c.brand:<10} {c.product_name[:37]:<38} "
+                f"{resale:>6.0%} {diff:>5.0%} {sale:<12}"
+            )
+            click.echo(f"    ID: {c.id} | 価格: {price_str} | {getattr(c, 'release_date', '') or '発売日未定'}")
+
+        click.echo(f"\n{'='*100}\n")
+    finally:
+        db.close()
+
+
+@cli.command("watch-product-candidate")
+@click.option("--candidate-id", required=True, help="候補ID")
+def watch_product_candidate(candidate_id):
+    """新商品候補をwatching状態に変更する。"""
+    db = _get_db()
+    try:
+        db.init_schema()
+        repo = Repository(db)
+        repo.update_product_candidate_status(candidate_id, "watching")
+        click.echo(f"Watching: {candidate_id}")
+    finally:
+        db.close()
+
+
+# =========================================
 @cli.command("daily-lp-update")
 @click.option("--variant", default="A", help="LPバリアント (A/B/C)")
 @click.option("--skip-link-check", is_flag=True, help="リンク検証をスキップ（高速化）")

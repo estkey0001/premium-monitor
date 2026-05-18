@@ -2403,5 +2403,307 @@ def prelaunch_check():
 
 
 # =========================================
+@cli.command("daily-lp-update")
+@click.option("--variant", default="A", help="LPバリアント (A/B/C)")
+@click.option("--skip-link-check", is_flag=True, help="リンク検証をスキップ（高速化）")
+def daily_lp_update(variant: str, skip_link_check: bool):
+    """毎日12時更新用ワンコマンド。
+
+    以下を順番に実行する:
+    1. validate-price-links（--skip-link-checkでスキップ可）
+    2. import-buyback-csv
+    3. import-market-csv
+    4. run-buyback-premium-check
+    5. generate-daily-lp
+    6. build-public-lp
+    7. deploy-check-lp
+    8. prelaunch-check
+
+    git commit / push は手動で行うこと。
+    """
+    from datetime import datetime, timezone, timedelta
+    from pathlib import Path
+    import traceback
+
+    JST = timezone(timedelta(hours=9))
+    PROJECT_ROOT = Path(__file__).resolve().parent.parent
+    started_at = datetime.now(tz=JST)
+
+    W = 60  # 区切り線幅
+    click.echo(f"\n{'='*W}")
+    click.echo(f" 📅 Daily LP Update — {started_at.strftime('%Y-%m-%d %H:%M JST')}")
+    click.echo(f"{'='*W}")
+
+    summary = {
+        "link_ok": 0, "link_ng": 0,
+        "buyback_imported": 0, "market_imported": 0,
+        "beginner_easy": 0, "advanced": 0,
+        "deploy_errors": 0, "deploy_warnings": 0,
+        "failed_step": None,
+        "steps": [],
+    }
+
+    def step(n: int, label: str):
+        click.echo(f"\n  [Step {n}/8] {label}...")
+
+    def ok(msg: str):
+        summary["steps"].append(("ok", msg))
+        click.echo(f"    ✅ {msg}")
+
+    def warn(msg: str):
+        summary["steps"].append(("warn", msg))
+        click.echo(f"    ⚠️  {msg}")
+
+    def fail(step_label: str, msg: str):
+        summary["steps"].append(("error", msg))
+        summary["failed_step"] = step_label
+        click.echo(f"    ❌ {msg}")
+
+    try:
+        # ------------------------------------------------------------------
+        # Step 1: validate-price-links
+        # ------------------------------------------------------------------
+        step(1, "リンク検証 (validate-price-links)")
+        if skip_link_check:
+            warn("--skip-link-check 指定のためスキップ")
+        else:
+            try:
+                import requests  # noqa
+                from pathlib import Path as _P
+                import csv as _csv
+
+                _buyback_csv = PROJECT_ROOT / "data" / "manual_buyback_prices.csv"
+                _seen: set = set()
+                _ok_count = 0
+                _ng_urls: list = []
+                if _buyback_csv.exists():
+                    with open(_buyback_csv, encoding="utf-8") as _f:
+                        _reader = _csv.DictReader(_f)
+                        for _row in _reader:
+                            _url = _row.get("url", "").strip()
+                            if not _url or _url in _seen:
+                                continue
+                            _seen.add(_url)
+                            try:
+                                _r = requests.head(
+                                    _url, timeout=8, allow_redirects=True,
+                                    headers={"User-Agent": "Mozilla/5.0"},
+                                )
+                                if _r.status_code in (200, 301, 302, 403):
+                                    _ok_count += 1
+                                else:
+                                    _ng_urls.append((_url, str(_r.status_code)))
+                            except Exception as _e:
+                                _ng_urls.append((_url, "DNS/timeout"))
+                summary["link_ok"] = _ok_count
+                summary["link_ng"] = len(_ng_urls)
+                if _ng_urls:
+                    warn(f"リンク OK:{_ok_count} / NG:{len(_ng_urls)}")
+                    for _u, _s in _ng_urls[:5]:
+                        click.echo(f"       NG: {_u} ({_s})")
+                else:
+                    ok(f"全リンクOK ({_ok_count}件)")
+            except ImportError:
+                warn("requestsがインストールされていないためスキップ")
+
+        # ------------------------------------------------------------------
+        # Step 2: import-buyback-csv
+        # ------------------------------------------------------------------
+        step(2, "買取CSV インポート")
+        try:
+            _buyback_file = PROJECT_ROOT / "data" / "manual_buyback_prices.csv"
+            if not _buyback_file.exists():
+                warn("data/manual_buyback_prices.csv が見つからない — スキップ")
+            else:
+                _db2 = _get_db()
+                _db2.init_schema()
+                _repo2 = Repository(_db2)
+                from src.market.buyback_csv_importer import BuybackCSVImporter
+                _result = BuybackCSVImporter(_repo2).import_file(str(_buyback_file))
+                _db2.close()
+                summary["buyback_imported"] = _result["imported"]
+                if _result["errors"]:
+                    warn(f"インポート: {_result['imported']}件成功 / {_result['skipped']}件スキップ")
+                    for _e in _result["errors"][:3]:
+                        click.echo(f"       {_e}")
+                else:
+                    ok(f"買取CSV: {_result['imported']}件インポート")
+        except Exception as _e:
+            fail("import-buyback-csv", f"{_e}")
+            raise
+
+        # ------------------------------------------------------------------
+        # Step 3: import-market-csv
+        # ------------------------------------------------------------------
+        step(3, "市場価格CSV インポート")
+        try:
+            _market_file = PROJECT_ROOT / "data" / "manual_market_prices.csv"
+            if not _market_file.exists():
+                warn("data/manual_market_prices.csv が見つからない — スキップ")
+            else:
+                _db3 = _get_db()
+                _db3.init_schema()
+                _repo3 = Repository(_db3)
+                from src.market.market_csv_importer import MarketCSVImporter
+                _result3 = MarketCSVImporter(_repo3).import_file(str(_market_file))
+                _db3.close()
+                summary["market_imported"] = _result3.get("imported", 0)
+                _skip3 = _result3.get("skipped", 0)
+                if _result3.get("errors"):
+                    warn(f"市場CSV: {_result3['imported']}件成功 / {_skip3}件スキップ")
+                else:
+                    ok(f"市場CSV: {_result3['imported']}件インポート")
+        except ImportError:
+            warn("MarketCSVImporter が見つからない — スキップ")
+        except Exception as _e:
+            warn(f"市場CSVインポートエラー（続行）: {_e}")
+
+        # ------------------------------------------------------------------
+        # Step 4: run-buyback-premium-check
+        # ------------------------------------------------------------------
+        step(4, "買取+プレ値統合ジョブ")
+        try:
+            _db4 = _get_db()
+            _db4.init_schema()
+            _repo4 = Repository(_db4)
+            from src.jobs.buyback_premium_job import BuybackPremiumJob
+            _job = BuybackPremiumJob(repository=_repo4)
+            _jr = _job.run()
+            _db4.close()
+            ok(f"snapshots={_jr['snapshots_updated']} deals={_jr['beginner_deals']} errors={len(_jr['errors'])}")
+            if _jr["errors"]:
+                for _e in _jr["errors"][:2]:
+                    warn(f"  job error: {_e}")
+        except Exception as _e:
+            fail("run-buyback-premium-check", f"{_e}")
+            raise
+
+        # ------------------------------------------------------------------
+        # Step 5: generate-daily-lp
+        # ------------------------------------------------------------------
+        step(5, f"LP生成 (variant={variant})")
+        try:
+            _db5 = _get_db()
+            _db5.init_schema()
+            _repo5 = Repository(_db5)
+            from src.content.daily_lp_generator import DailyLPGenerator
+            _lp = DailyLPGenerator(repository=_repo5)
+            _lr = _lp.generate(variant=variant)
+            _db5.close()
+            summary["beginner_easy"] = _lr.get("beginner_count", 0)
+            summary["advanced"] = _lr.get("advanced_count", 0)
+            ok(f"LP生成完了: beginner={_lr['beginner_count']} advanced={_lr['advanced_count']}")
+            if _lr.get("forbidden_found"):
+                warn(f"禁止表現を自動置換: {_lr['forbidden_found']}")
+        except Exception as _e:
+            fail("generate-daily-lp", f"{_e}")
+            raise
+
+        # ------------------------------------------------------------------
+        # Step 6: build-public-lp
+        # ------------------------------------------------------------------
+        step(6, "docs/ ビルド")
+        try:
+            import sys as _sys
+            _scripts = str(PROJECT_ROOT / "scripts")
+            if _scripts not in _sys.path:
+                _sys.path.insert(0, _scripts)
+            import importlib
+            import build_public_lp as _bpl
+            importlib.reload(_bpl)
+            _bpl.build()
+            ok("docs/ ビルド完了")
+        except Exception as _e:
+            fail("build-public-lp", f"{_e}")
+            raise
+
+        # ------------------------------------------------------------------
+        # Step 7: deploy-check-lp
+        # ------------------------------------------------------------------
+        step(7, "デプロイチェック")
+        try:
+            import importlib
+            import deploy_check as _dc
+            importlib.reload(_dc)
+            _cr = _dc.check()
+            _errs = [r for r in _cr if r["level"] == "error"]
+            _warns = [r for r in _cr if r["level"] == "warning"]
+            summary["deploy_errors"] = len(_errs)
+            summary["deploy_warnings"] = len(_warns)
+            if _errs:
+                fail("deploy-check-lp",
+                     f"deploy-check FAILED: errors={len(_errs)} warnings={len(_warns)}")
+                for r in _errs:
+                    click.echo(f"       ❌ [{r['check']}] {r['message']}")
+                raise RuntimeError("deploy-check failed")
+            else:
+                ok(f"deploy-check PASSED ({len(_cr)}項目 / warnings={len(_warns)})")
+                for r in _warns:
+                    click.echo(f"       ⚠️  [{r['check']}] {r['message']}")
+        except RuntimeError:
+            raise
+        except Exception as _e:
+            fail("deploy-check-lp", f"{_e}")
+            raise
+
+        # ------------------------------------------------------------------
+        # Step 8: prelaunch-check
+        # ------------------------------------------------------------------
+        step(8, "本番前チェック")
+        try:
+            _db8 = _get_db()
+            _db8.init_schema()
+            _repo8 = Repository(_db8)
+            from src.pipeline.prelaunch_checker import run_prelaunch_check, summarize as _summ
+            _pr = run_prelaunch_check(repo=_repo8)
+            _db8.close()
+            _ps = _summ(_pr)
+            if _ps["errors"] > 0:
+                fail("prelaunch-check",
+                     f"prelaunch FAILED: errors={_ps['errors']} warnings={_ps['warnings']}")
+                raise RuntimeError("prelaunch-check failed")
+            else:
+                ok(f"prelaunch PASSED (errors={_ps['errors']} warnings={_ps['warnings']})")
+        except RuntimeError:
+            raise
+        except Exception as _e:
+            fail("prelaunch-check", f"{_e}")
+            raise
+
+    except Exception:
+        pass  # 各ステップで fail() を呼び済み
+
+    # ------------------------------------------------------------------
+    # 結果サマリ
+    # ------------------------------------------------------------------
+    elapsed = (datetime.now(tz=JST) - started_at).total_seconds()
+    click.echo(f"\n{'='*W}")
+    click.echo(f" 📊 Daily LP Update — 結果サマリ")
+    click.echo(f"{'='*W}")
+    click.echo(f"  実行時間:          {elapsed:.1f}秒")
+    click.echo(f"  買取CSVインポート: {summary['buyback_imported']}件")
+    click.echo(f"  市場CSVインポート: {summary['market_imported']}件")
+    click.echo(f"  リンクNG件数:      {summary['link_ng']}件")
+    click.echo(f"  beginner_easy案件: {summary['beginner_easy']}件")
+    click.echo(f"  advanced候補:      {summary['advanced']}件")
+    click.echo(f"  deploy-check:      errors={summary['deploy_errors']} / warnings={summary['deploy_warnings']}")
+
+    if summary["failed_step"]:
+        click.echo(f"\n  ❌ 失敗ステップ: {summary['failed_step']}")
+        click.echo(f"  上のエラーメッセージを確認して修正してください。")
+        click.echo(f"{'='*W}\n")
+        sys.exit(1)
+    else:
+        click.echo(f"\n  ✅ 全ステップ完了！")
+        click.echo(f"\n  📌 次のステップ（git push は手動で）:")
+        click.echo(f"     git add docs/ exports/lp/daily/")
+        click.echo(f"     git commit -m \"Update daily LP {started_at.strftime('%Y-%m-%d')}\"")
+        click.echo(f"     git push")
+        if summary["link_ng"] > 0:
+            click.echo(f"\n  ℹ️  NGリンク {summary['link_ng']}件 あり → link_verified=false として処理済み（LP非表示）")
+        click.echo(f"{'='*W}\n")
+
+
+# =========================================
 if __name__ == "__main__":
     cli()

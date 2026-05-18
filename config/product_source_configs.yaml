@@ -1,0 +1,117 @@
+product_source_configs:
+  # =========================================
+  # RICOH GR IV系（最新・優先）
+  # =========================================
+
+  # GR IV - 公式ストア
+  - product_id: "prod_gr4"
+    source_id: "src_ricoh_imaging"
+    target_url: "https://ricohimagingstore.com/Form/Product/ProductList.aspx?shop=0&cat=002010"
+
+  # GR IV HDF - 公式ストア
+  - product_id: "prod_gr4_hdf"
+    source_id: "src_ricoh_imaging"
+    target_url: "https://ricohimagingstore.com/Form/Product/ProductList.aspx?shop=0&cat=002010"
+
+  # GR IV Monochrome - 公式ストア
+  - product_id: "prod_gr4_mono"
+    source_id: "src_ricoh_imaging"
+    target_url: "https://ricohimagingstore.com/Form/Product/ProductList.aspx?shop=0&cat=002010"
+
+  # GR IV - 二次流通
+  - product_id: "prod_gr4"
+    source_id: "src_kakaku"
+    target_url: ""
+
+  - product_id: "prod_gr4"
+    source_id: "src_map_camera"
+    target_url: "https://www.mapcamera.com/search?keyword=GR+IV&category=all&sell=used"
+
+  # =========================================
+  # RICOH GR IIIx（旧モデル）
+  # =========================================
+  - product_id: "prod_gr3x"
+    source_id: "src_ricoh_imaging"
+    target_url: "https://ricohimagingstore.com/Form/Product/ProductList.aspx?shop=0&cat=002002"
+
+  - product_id: "prod_gr3x"
+    source_id: "src_kakaku"
+    target_url: "https://kakaku.com/item/K0001382380/"
+
+  - product_id: "prod_gr3x"
+    source_id: "src_yodobashi"
+    target_url: "https://www.yodobashi.com/product/100000001006498782/"
+
+  - product_id: "prod_gr3x"
+    source_id: "src_map_camera"
+    target_url: "https://www.mapcamera.com/search?keyword=GR+IIIx&category=all&sell=used"
+
+  # =========================================
+  # FUJIFILM X100VI
+  # =========================================
+  - product_id: "prod_x100vi"
+    source_id: "src_fujifilm_official"
+    target_url: "https://fujifilm-x.com/ja-jp/products/cameras/x100vi/"
+
+  - product_id: "prod_x100vi"
+    source_id: "src_kakaku"
+    target_url: "https://kakaku.com/item/J0000044026/"
+
+  - product_id: "prod_x100vi"
+    source_id: "src_yodobashi"
+    target_url: "https://www.yodobashi.com/product/100000001008364231/"
+
+  - product_id: "prod_x100vi"
+    source_id: "src_map_camera"
+    target_url: "https://www.mapcamera.com/search?keyword=X100VI&category=all&sell=used"
+
+  # =========================================
+  # Apple
+  # =========================================
+  - product_id: "prod_iphone16pm_256"
+    source_id: "src_apple_jp"
+    target_url: "https://www.apple.com/jp/shop/buy-iphone/iphone-16-pro-max"
+
+  - product_id: "prod_iphone16pm_512"
+    source_id: "src_apple_jp"
+    target_url: "https://www.apple.com/jp/shop/buy-iphone/iphone-16-pro-max"
+
+  # =========================================
+  # 買取・中古 (Phase 7)
+  # =========================================
+
+  # イオシス (iPhone)
+  - product_id: "prod_iphone16pm_256"
+    source_id: "src_iosys"
+    target_url: "https://iosys.co.jp/items?keyword=iPhone+16+Pro+Max+256GB"
+
+  # ソフマップ
+  - product_id: "prod_gr4"
+    source_id: "src_sofmap"
+    target_url: "https://www.sofmap.com/search_result.aspx?keyword=RICOH+GR+IV&gid=001080"
+
+  - product_id: "prod_gr3x"
+    source_id: "src_sofmap"
+    target_url: "https://www.sofmap.com/search_result.aspx?keyword=GR+IIIx&gid=001080"
+
+  - product_id: "prod_iphone16pm_256"
+    source_id: "src_sofmap"
+    target_url: "https://www.sofmap.com/search_result.aspx?keyword=iPhone+16+Pro+Max+256GB"
+
+  # ビックカメラ
+  - product_id: "prod_gr4"
+    source_id: "src_biccamera"
+    target_url: "https://www.biccamera.com/bc/category/?q=RICOH+GR+IV"
+
+  - product_id: "prod_iphone16pm_256"
+    source_id: "src_biccamera"
+    target_url: "https://www.biccamera.com/bc/category/?q=iPhone+16+Pro+Max"
+
+  # じゃんぱら（Playwright検索）
+  - product_id: "prod_gr3x"
+    source_id: "src_janpara"
+    target_url: "https://www.janpara.co.jp/"
+
+  - product_id: "prod_iphone16pm_256"
+    source_id: "src_janpara"
+    target_url: "https://www.janpara.co.jp/"

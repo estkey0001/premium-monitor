@@ -1,0 +1,43 @@
+scoring:
+  profit_thresholds:
+    s_rank_min_profit: 30000
+    a_rank_min_profit: 10000
+
+  confidence_thresholds:
+    s_rank_min_confidence: 0.80
+    a_rank_min_confidence: 0.70
+
+  weights:
+    profit: 0.40
+    change: 0.30
+    confidence: 0.30
+
+  fee_defaults:
+    platform_fee_rate: 0.10
+    shipping_fee: 1500
+
+  source_weights:
+    official_store: 1.00
+    electronics_retailer: 0.95
+    price_comparison: 0.90
+    used_marketplace: 0.85
+    buyback_shop: 0.85
+    auction_market: 0.75
+    flea_market: 0.70
+    overseas_market: 0.70
+    news_blog: 0.60
+    sns: 0.50
+
+  freshness_weights:
+    within_5min: 1.00
+    within_30min: 0.90
+    within_60min: 0.70
+    within_6h: 0.50
+    over_6h: 0.30
+
+  dedup_ttl_hours:
+    stock_available: 6
+    lottery_open: 24
+    buyback_surge: 12
+    price_drop: 24
+    sns_mention: 12

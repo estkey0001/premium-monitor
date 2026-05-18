@@ -1,0 +1,50 @@
+genres:
+  iphone:
+    display_name: "iPhone"
+    default_sources:
+      - src_apple_store
+      - src_yodobashi
+      - src_biccamera
+      - src_mercari
+      - src_kakaku
+
+  pc:
+    display_name: "PC"
+    default_sources:
+      - src_yodobashi
+      - src_biccamera
+      - src_kakaku
+      - src_mercari
+
+  game_console:
+    display_name: "ゲーム機"
+    default_sources:
+      - src_sony_store
+      - src_nintendo_store
+      - src_yodobashi
+      - src_biccamera
+      - src_mercari
+
+  camera:
+    display_name: "カメラ"
+    default_sources:
+      - src_ricoh_store
+      - src_sony_store
+      - src_map_camera
+      - src_kitamura
+      - src_fujiya
+      - src_kakaku
+
+  # --- 将来追加用テンプレート ---
+  # watch:
+  #   display_name: "時計"
+  #   default_sources: []
+  # trading_card:
+  #   display_name: "トレカ"
+  #   default_sources: []
+  # sneaker:
+  #   display_name: "スニーカー"
+  #   default_sources: []
+  # gpu:
+  #   display_name: "GPU"
+  #   default_sources: []

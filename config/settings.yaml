@@ -1,0 +1,31 @@
+system:
+  db_path: "data/premium_monitor.db"
+  log_dir: "data/logs"
+  log_level: "INFO"
+  timezone: "Asia/Tokyo"
+
+scheduler:
+  enabled: true
+  timezone: "Asia/Tokyo"
+  # 買取更新+プレ値計算: 朝10時が最重要（買取店の朝価格更新に合わせる）
+  buyback_and_premium_times:
+    - "10:00"
+    - "12:00"
+    - "18:00"
+  # 在庫監視: 過剰アクセス防止のため60分間隔
+  stock_interval_minutes: 60
+  # 新製品候補スキャン: 3時間間隔
+  product_scan_interval_minutes: 180
+  # 通知再送チェック: 10分間隔
+  dispatch_interval_minutes: 10
+  max_workers: 3
+  run_on_startup: false
+  max_retries: 2
+  consecutive_error_threshold: 5
+
+http:
+  default_timeout_sec: 30
+  max_retries: 3
+  user_agent: "PremiumMonitor/1.0 (Information Gathering)"
+  respect_robots_txt: true
+  global_min_interval_sec: 60

@@ -1,0 +1,309 @@
+sources:
+  # =========================================
+  # 公式ストア (official_store)
+  # =========================================
+
+  # --- カメラメーカー ---
+  - id: "src_ricoh_imaging"
+    name: "リコーイメージングストア"
+    source_type: "official_store"
+    base_url: "https://ricohimagingstore.com/"
+    collector_module: "src.collectors.official.ricoh"
+    rate_limit_sec: 120
+    requires_js: false
+    monitor_targets: [official_price, stock, lottery, discontinued]
+
+  - id: "src_fujifilm_official"
+    name: "FUJIFILM公式"
+    source_type: "official_store"
+    base_url: "https://fujifilm-x.com/ja-jp/"
+    collector_module: "src.collectors.official.fujifilm"
+    rate_limit_sec: 120
+    requires_js: false
+    monitor_targets: [official_price, lottery, release]
+
+  - id: "src_canon_official"
+    name: "Canon公式ストア"
+    source_type: "official_store"
+    base_url: "https://store.canon.jp/"
+    collector_module: "src.collectors.official.canon"
+    rate_limit_sec: 120
+    requires_js: true
+    monitor_targets: [official_price, stock, reservation]
+
+  - id: "src_nikon_direct"
+    name: "Nikon Direct"
+    source_type: "official_store"
+    base_url: "https://shop.nikon-image.com/"
+    collector_module: "src.collectors.official.nikon"
+    rate_limit_sec: 120
+    requires_js: true
+    monitor_targets: [official_price, stock, reservation]
+
+  # --- IT/ゲーム ---
+  - id: "src_apple_jp"
+    name: "Apple Japan"
+    source_type: "official_store"
+    base_url: "https://www.apple.com/jp/"
+    collector_module: "src.collectors.official.apple"
+    rate_limit_sec: 120
+    requires_js: false
+    monitor_targets: [official_price, stock, release]
+
+  - id: "src_sony_store"
+    name: "Sony Store"
+    source_type: "official_store"
+    base_url: "https://store.sony.jp/"
+    collector_module: "src.collectors.official.sony"
+    rate_limit_sec: 120
+    requires_js: true
+    monitor_targets: [official_price, stock, reservation, lottery]
+
+  - id: "src_playstation_official"
+    name: "PlayStation公式"
+    source_type: "official_store"
+    base_url: "https://www.playstation.com/ja-jp/"
+    collector_module: "src.collectors.official.playstation"
+    rate_limit_sec: 120
+    requires_js: true
+    monitor_targets: [official_price, stock, lottery, reservation]
+
+  - id: "src_nintendo_store"
+    name: "My Nintendo Store"
+    source_type: "official_store"
+    base_url: "https://store-jp.nintendo.com/"
+    collector_module: "src.collectors.official.nintendo"
+    rate_limit_sec: 120
+    requires_js: true
+    monitor_targets: [official_price, stock, lottery, reservation]
+
+  # --- PCメーカー ---
+  - id: "src_microsoft_store_jp"
+    name: "Microsoft Store Japan"
+    source_type: "official_store"
+    base_url: "https://www.microsoft.com/ja-jp/store/"
+    collector_module: "src.collectors.official.microsoft"
+    rate_limit_sec: 120
+    requires_js: true
+    monitor_targets: [official_price, stock]
+
+  - id: "src_dell_jp"
+    name: "Dell Japan"
+    source_type: "official_store"
+    base_url: "https://www.dell.com/ja-jp"
+    collector_module: "src.collectors.official.dell"
+    rate_limit_sec: 120
+    requires_js: true
+    monitor_targets: [official_price, stock]
+
+  - id: "src_lenovo_jp"
+    name: "Lenovo Japan"
+    source_type: "official_store"
+    base_url: "https://www.lenovo.com/jp/ja/"
+    collector_module: "src.collectors.official.lenovo"
+    rate_limit_sec: 120
+    requires_js: true
+    monitor_targets: [official_price, stock]
+
+  - id: "src_asus_jp"
+    name: "ASUS Japan"
+    source_type: "official_store"
+    base_url: "https://www.asus.com/jp/"
+    collector_module: "src.collectors.official.asus"
+    rate_limit_sec: 120
+    requires_js: true
+    monitor_targets: [official_price, stock]
+
+  # --- 家電量販店 ---
+  - id: "src_yodobashi"
+    name: "ヨドバシカメラ"
+    source_type: "electronics_retailer"
+    base_url: "https://www.yodobashi.com/"
+    collector_module: "src.collectors.stock.yodobashi"
+    rate_limit_sec: 90
+    requires_js: false
+
+  - id: "src_biccamera"
+    name: "ビックカメラ"
+    source_type: "electronics_retailer"
+    base_url: "https://www.biccamera.com/"
+    collector_module: "src.collectors.stock.biccamera"
+    rate_limit_sec: 90
+    requires_js: false
+
+  - id: "src_yamada"
+    name: "ヤマダ電機"
+    source_type: "electronics_retailer"
+    base_url: "https://www.yamada-denkiweb.com/"
+    collector_module: "src.collectors.stock.yamada"
+    rate_limit_sec: 90
+    requires_js: false
+
+  - id: "src_edion"
+    name: "エディオン"
+    source_type: "electronics_retailer"
+    base_url: "https://www.edion.com/"
+    collector_module: "src.collectors.stock.edion"
+    rate_limit_sec: 90
+    requires_js: false
+
+  - id: "src_nojima"
+    name: "ノジマ"
+    source_type: "electronics_retailer"
+    base_url: "https://online.nojima.co.jp/"
+    collector_module: "src.collectors.stock.nojima"
+    rate_limit_sec: 90
+    requires_js: false
+
+  - id: "src_joshin"
+    name: "Joshin"
+    source_type: "electronics_retailer"
+    base_url: "https://joshinweb.jp/"
+    collector_module: "src.collectors.stock.joshin"
+    rate_limit_sec: 90
+    requires_js: false
+
+  # --- 中古・買取 ---
+  - id: "src_sofmap"
+    name: "ソフマップ"
+    source_type: "buyback_shop"
+    base_url: "https://www.sofmap.com/"
+    collector_module: "src.collectors.buyback.sofmap"
+    rate_limit_sec: 90
+    requires_js: false
+
+  - id: "src_map_camera"
+    name: "マップカメラ"
+    source_type: "used_marketplace"
+    base_url: "https://www.mapcamera.com/"
+    collector_module: "src.collectors.price.map_camera"
+    rate_limit_sec: 90
+    requires_js: false
+
+  - id: "src_kitamura"
+    name: "カメラのキタムラ"
+    source_type: "used_marketplace"
+    base_url: "https://shop.kitamura.jp/"
+    collector_module: "src.collectors.price.kitamura"
+    rate_limit_sec: 90
+    requires_js: false
+
+  - id: "src_fujiya"
+    name: "フジヤカメラ"
+    source_type: "used_marketplace"
+    base_url: "https://www.fujiya-camera.co.jp/"
+    collector_module: "src.collectors.price.fujiya"
+    rate_limit_sec: 90
+    requires_js: false
+
+  - id: "src_janpara"
+    name: "じゃんぱら"
+    source_type: "buyback_shop"
+    base_url: "https://www.janpara.co.jp/"
+    collector_module: "src.collectors.buyback.janpara"
+    rate_limit_sec: 90
+    requires_js: false
+
+  - id: "src_iosys"
+    name: "イオシス"
+    source_type: "buyback_shop"
+    base_url: "https://iosys.co.jp/"
+    collector_module: "src.collectors.buyback.iosys"
+    rate_limit_sec: 90
+    requires_js: false
+
+  - id: "src_mobile1ban"
+    name: "Mobile一番"
+    source_type: "buyback_shop"
+    base_url: "https://www.mobile-1ban.com/"
+    collector_module: "src.collectors.buyback.mobile1ban"
+    rate_limit_sec: 90
+
+  - id: "src_mobile_ichiban"
+    name: "モバイル市場一番"
+    source_type: "buyback_shop"
+    base_url: "https://mobileno1.com/"
+    collector_module: "src.collectors.buyback.mobile_ichiban"
+    rate_limit_sec: 90
+
+  - id: "src_kaitori_shouten"
+    name: "買取商店"
+    source_type: "buyback_shop"
+    base_url: "https://kaitori-shouten.com/"
+    collector_module: "src.collectors.buyback.kaitori_shouten"
+    rate_limit_sec: 90
+
+  - id: "src_kaitori_itchome"
+    name: "買取一丁目"
+    source_type: "buyback_shop"
+    base_url: "https://kaitori-1chome.com/"
+    collector_module: "src.collectors.buyback.kaitori_itchome"
+    rate_limit_sec: 90
+
+  - id: "src_geo"
+    name: "ゲオ"
+    source_type: "buyback_shop"
+    base_url: "https://geo-online.co.jp/"
+    collector_module: "src.collectors.buyback.geo"
+    rate_limit_sec: 90
+    requires_js: false
+
+  # --- フリマ・オークション ---
+  - id: "src_mercari"
+    name: "メルカリ"
+    source_type: "flea_market"
+    base_url: "https://jp.mercari.com/"
+    collector_module: "src.collectors.price.mercari"
+    rate_limit_sec: 120
+    requires_js: true
+
+  - id: "src_yahoo_auction"
+    name: "ヤフオク"
+    source_type: "auction_market"
+    base_url: "https://auctions.yahoo.co.jp/"
+    collector_module: "src.collectors.price.yahoo_auction"
+    rate_limit_sec: 120
+    requires_js: false
+
+  - id: "src_rakuma"
+    name: "ラクマ"
+    source_type: "flea_market"
+    base_url: "https://fril.jp/"
+    collector_module: "src.collectors.price.rakuma"
+    rate_limit_sec: 120
+    requires_js: true
+
+  # --- 価格比較 ---
+  - id: "src_kakaku"
+    name: "価格.com"
+    source_type: "price_comparison"
+    base_url: "https://kakaku.com/"
+    collector_module: "src.collectors.price.kakaku_com"
+    rate_limit_sec: 120
+    requires_js: false
+
+  # --- 海外 ---
+  - id: "src_ebay"
+    name: "eBay"
+    source_type: "overseas_market"
+    base_url: "https://www.ebay.com/"
+    collector_module: "src.collectors.price.ebay"
+    rate_limit_sec: 180
+    requires_js: false
+
+  - id: "src_stockx"
+    name: "StockX"
+    source_type: "overseas_market"
+    base_url: "https://stockx.com/"
+    collector_module: "src.collectors.price.stockx"
+    rate_limit_sec: 180
+    requires_js: true
+
+  # --- SNS ---
+  - id: "src_twitter"
+    name: "X (Twitter)"
+    source_type: "sns"
+    base_url: "https://x.com/"
+    collector_module: "src.collectors.sns.twitter"
+    rate_limit_sec: 60
+    requires_js: false

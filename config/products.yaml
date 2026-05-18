@@ -1,0 +1,261 @@
+products:
+  # =========================================
+  # iPhone 17 シリーズ
+  # =========================================
+  - id: "prod_iphone17pro_256"
+    genre: "iphone"
+    name: "iPhone 17 Pro 256GB SIMフリー"
+    brand: "Apple"
+    model_number: ""
+    retail_price: 179800
+    keywords: ["iPhone 17 Pro", "iPhone17Pro", "iPhone 17 Pro 256"]
+    memo: "初心者向け低難度案件。公式で通常購入可。"
+
+  - id: "prod_iphone17pro_512"
+    genre: "iphone"
+    name: "iPhone 17 Pro 512GB SIMフリー"
+    brand: "Apple"
+    retail_price: 214800
+    keywords: ["iPhone 17 Pro 512", "iPhone17Pro512"]
+
+  - id: "prod_iphone17pm_256"
+    genre: "iphone"
+    name: "iPhone 17 Pro Max 256GB SIMフリー"
+    brand: "Apple"
+    retail_price: 219800
+    keywords: ["iPhone 17 Pro Max", "iPhone17ProMax", "iPhone 17 Pro Max 256"]
+
+  - id: "prod_iphone17pm_512"
+    genre: "iphone"
+    name: "iPhone 17 Pro Max 512GB SIMフリー"
+    brand: "Apple"
+    retail_price: 254800
+    keywords: ["iPhone 17 Pro Max 512", "iPhone17ProMax512"]
+
+  - id: "prod_iphone17_256"
+    genre: "iphone"
+    name: "iPhone 17 256GB SIMフリー"
+    brand: "Apple"
+    retail_price: 139800
+    keywords: ["iPhone 17", "iPhone17", "iPhone 17 256"]
+
+  # =========================================
+  # iPhone 16 シリーズ
+  # =========================================
+  - id: "prod_iphone16pro_256"
+    genre: "iphone"
+    name: "iPhone 16 Pro 256GB SIMフリー"
+    brand: "Apple"
+    retail_price: 159800
+    keywords: ["iPhone 16 Pro", "iPhone16Pro", "iPhone 16 Pro 256"]
+
+  - id: "prod_iphone16pm_256"
+    genre: "iphone"
+    name: "iPhone 16 Pro Max 256GB"
+    brand: "Apple"
+    model_number: "MYW23J/A"
+    retail_price: 189800
+    keywords: ["iPhone 16 Pro Max", "iPhone16ProMax", "MYW23J"]
+
+  - id: "prod_iphone16pm_512"
+    genre: "iphone"
+    name: "iPhone 16 Pro Max 512GB"
+    brand: "Apple"
+    model_number: "MYW53J/A"
+    retail_price: 224800
+    keywords: ["iPhone 16 Pro Max 512", "MYW53J"]
+
+  # =========================================
+  # Mac
+  # =========================================
+  - id: "prod_macbook_air_m4_13"
+    genre: "mac"
+    name: "MacBook Air M4 13インチ"
+    brand: "Apple"
+    retail_price: 164800
+    keywords: ["MacBook Air M4", "MacBook Air 13", "MBA M4"]
+
+  - id: "prod_macbook_air_m4_15"
+    genre: "mac"
+    name: "MacBook Air M4 15インチ"
+    brand: "Apple"
+    retail_price: 198800
+    keywords: ["MacBook Air M4 15", "MBA M4 15"]
+
+  - id: "prod_macbook_pro_m4_14"
+    genre: "mac"
+    name: "MacBook Pro M4 14インチ"
+    brand: "Apple"
+    retail_price: 248800
+    keywords: ["MacBook Pro M4", "MacBook Pro 14", "MBP M4"]
+
+  - id: "prod_mac_mini_m4"
+    genre: "mac"
+    name: "Mac mini M4"
+    brand: "Apple"
+    retail_price: 94800
+    keywords: ["Mac mini M4", "Mac mini"]
+
+  # =========================================
+  # iPad
+  # =========================================
+  - id: "prod_ipad_pro_m4_11"
+    genre: "ipad"
+    name: "iPad Pro M4 11インチ"
+    brand: "Apple"
+    retail_price: 168800
+    keywords: ["iPad Pro M4 11", "iPad Pro 11"]
+
+  - id: "prod_ipad_pro_m4_13"
+    genre: "ipad"
+    name: "iPad Pro M4 13インチ"
+    brand: "Apple"
+    retail_price: 218800
+    keywords: ["iPad Pro M4 13", "iPad Pro 13"]
+
+  - id: "prod_ipad_air_m3"
+    genre: "ipad"
+    name: "iPad Air M3"
+    brand: "Apple"
+    retail_price: 98800
+    keywords: ["iPad Air M3", "iPad Air"]
+
+  # =========================================
+  # Apple Watch
+  # =========================================
+  - id: "prod_apple_watch_s11"
+    genre: "apple_watch"
+    name: "Apple Watch Series 11"
+    brand: "Apple"
+    retail_price: 59800
+    keywords: ["Apple Watch Series 11", "Apple Watch S11"]
+
+  - id: "prod_apple_watch_ultra3"
+    genre: "apple_watch"
+    name: "Apple Watch Ultra 3"
+    brand: "Apple"
+    retail_price: 128800
+    keywords: ["Apple Watch Ultra 3", "Ultra 3"]
+
+  # =========================================
+  # AirPods
+  # =========================================
+  - id: "prod_airpods_pro3"
+    genre: "airpods"
+    name: "AirPods Pro 3"
+    brand: "Apple"
+    retail_price: 39800
+    keywords: ["AirPods Pro 3", "AirPods Pro"]
+
+  - id: "prod_airpods_max"
+    genre: "airpods"
+    name: "AirPods Max"
+    brand: "Apple"
+    retail_price: 84800
+    keywords: ["AirPods Max"]
+
+  # =========================================
+  # ゲーム機
+  # =========================================
+  - id: "prod_switch2"
+    genre: "game_console"
+    name: "Nintendo Switch 2"
+    brand: "Nintendo"
+    retail_price: 49980
+    keywords: ["Switch 2", "Switch2", "ニンテンドースイッチ2"]
+
+  - id: "prod_switch2_mk"
+    genre: "game_console"
+    name: "Nintendo Switch 2 マリオカートセット"
+    brand: "Nintendo"
+    retail_price: 59980
+    keywords: ["Switch 2 Mario Kart", "Switch2マリオカート"]
+
+  - id: "prod_ps5_pro"
+    genre: "game_console"
+    name: "PlayStation 5 Pro"
+    brand: "Sony"
+    model_number: "CFI-7000A01"
+    retail_price: 119980
+    keywords: ["PS5 Pro", "PlayStation5Pro", "CFI-7000"]
+
+  - id: "prod_ps5_de"
+    genre: "game_console"
+    name: "PlayStation 5 Digital Edition"
+    brand: "Sony"
+    retail_price: 72980
+    keywords: ["PS5 Digital", "PlayStation5 Digital", "PS5 DE"]
+
+  - id: "prod_xbox_sx"
+    genre: "game_console"
+    name: "Xbox Series X"
+    brand: "Microsoft"
+    retail_price: 59978
+    keywords: ["Xbox Series X", "XSX"]
+
+  # =========================================
+  # カメラ - RICOH GR IV系（最新・優先）
+  # =========================================
+  - id: "prod_gr4"
+    genre: "camera"
+    name: "RICOH GR IV"
+    brand: "RICOH"
+    retail_price: 194800
+    keywords: ["GR IV", "GR4", "GRIV", "GR 4"]
+    memo: "最新GRシリーズ。抽選販売中。"
+
+  - id: "prod_gr4_hdf"
+    genre: "camera"
+    name: "RICOH GR IV HDF"
+    brand: "RICOH"
+    model_number: "S0001566"
+    retail_price: 0
+    keywords: ["GR IV HDF", "GR4 HDF", "GRIV HDF", "S0001566"]
+    memo: "HDF搭載モデル。抽選販売中。定価未確認。"
+
+  - id: "prod_gr4_mono"
+    genre: "camera"
+    name: "RICOH GR IV Monochrome"
+    brand: "RICOH"
+    model_number: "S0001580"
+    retail_price: 283800
+    keywords: ["GR IV Monochrome", "GR4 Monochrome", "GRIV Mono", "S0001580"]
+    memo: "モノクロ専用センサー搭載。抽選販売中。"
+
+  # =========================================
+  # カメラ - RICOH GR III系（旧モデル）
+  # =========================================
+  - id: "prod_gr3x"
+    genre: "camera"
+    name: "RICOH GR IIIx"
+    brand: "RICOH"
+    model_number: "15286"
+    retail_price: 139800
+    keywords: ["GR IIIx", "GR3x", "GRIIIx", "15286"]
+    memo: "旧モデル。抽選販売中。"
+
+  - id: "prod_gr3_hdf"
+    genre: "camera"
+    name: "RICOH GR III HDF"
+    brand: "RICOH"
+    model_number: "15297"
+    retail_price: 147400
+    keywords: ["GR III HDF", "GR3 HDF", "15297"]
+
+  - id: "prod_gr3"
+    genre: "camera"
+    name: "RICOH GR III"
+    brand: "RICOH"
+    retail_price: 129800
+    keywords: ["GR III", "GR3", "GRIII"]
+
+  # =========================================
+  # カメラ - FUJIFILM
+  # =========================================
+  - id: "prod_x100vi"
+    genre: "camera"
+    name: "FUJIFILM X100VI"
+    brand: "FUJIFILM"
+    model_number: "X100VI"
+    retail_price: 269500
+    keywords: ["X100VI", "X100 VI", "富士フイルム X100VI"]

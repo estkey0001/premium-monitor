@@ -1,0 +1,42 @@
+site_title: "プレ値速報 — 公式価格 vs 買取価格の差額情報"
+site_description: "iPhone・Apple製品・カメラ・ゲーム機のプレ値候補を毎日更新"
+site_url: ""  # 公開URL（GitHub Pages等、設定後にsitemap.xmlに反映）
+
+# note販売ページURL（設定後に有効化）
+note_url: ""
+# 公式LINE URL（将来用）
+line_url: ""
+# Telegram URL（将来用）
+telegram_url: ""
+# Discord URL（将来用）
+discord_url: ""
+
+# CTA表示制御（初期運用: noteのみON）
+enable_note_cta: true
+enable_line_cta: false
+enable_telegram_cta: false
+enable_discord_cta: false
+
+# アクセス解析（空欄=無効。IDを設定するとLP内にタグが出力される）
+analytics:
+  google_analytics_id: ""
+  x_pixel_id: ""
+  meta_pixel_id: ""
+  note_click_event_name: "note_click"
+  product_click_event_name: "product_click"
+
+# LP出力設定
+output:
+  daily_dir: "exports/lp/daily"
+  public_dir: "public"
+  timezone: "Asia/Tokyo"
+
+# A/Bテスト（見出しバリエーション）
+headline_variant: "A"
+variants:
+  A:
+    headline: "公式価格と買取価格の差額を、毎日チェック。"
+  B:
+    headline: "今日のプレ値候補を、初心者向けに整理。"
+  C:
+    headline: "買う前に確認したい、価格差と買取相場。"

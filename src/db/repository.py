@@ -648,18 +648,25 @@ class Repository:
     def insert_product_candidate(self, c) -> None:
         from src.models.product_candidate import ProductCandidateModel
         self.db.connection.execute(
-            """
-            INSERT OR IGNORE INTO product_candidates
-            (id, source_id, product_name, detected_keyword, detected_url,
-             detected_at, confidence, status, genre, brand, estimated_price, notes,
-             user_level, beginner_score, difficulty_score, reason_for_beginner, caution_note)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """,
-            (c.id, c.source_id, c.product_name, c.detected_keyword,
-             c.detected_url, c.detected_at.isoformat(), c.confidence,
-             c.status, c.genre, c.brand, c.estimated_price, c.notes,
-             c.user_level, c.beginner_score, c.difficulty_score,
-             c.reason_for_beginner, c.caution_note),
+            """INSERT OR IGNORE INTO product_candidates
+               (id, source_id, product_name, detected_keyword, detected_url,
+                detected_at, confidence, status, genre, category, brand,
+                estimated_price, official_price, release_date, reservation_start_at,
+                lottery_start_at, lottery_end_at, sale_method,
+                detected_source, resale_potential_score,
+                beginner_score, difficulty_score,
+                reason_for_beginner, caution_note, notes)
+               VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+            (c.id, c.source_id, c.product_name, c.detected_keyword, c.detected_url,
+             c.detected_at.isoformat(), c.confidence, c.status,
+             c.genre, getattr(c, "category", c.genre), c.brand,
+             c.estimated_price, getattr(c, "official_price", c.estimated_price),
+             getattr(c, "release_date", ""), getattr(c, "reservation_start_at", ""),
+             getattr(c, "lottery_start_at", ""), getattr(c, "lottery_end_at", ""),
+             getattr(c, "sale_method", "normal"), getattr(c, "detected_source", ""),
+             getattr(c, "resale_potential_score", 0.0),
+             c.beginner_score, c.difficulty_score,
+             c.reason_for_beginner, c.caution_note, c.notes),
         )
         self.db.connection.commit()
 
@@ -691,6 +698,16 @@ class Repository:
                 difficulty_score=d.get("difficulty_score", 0),
                 reason_for_beginner=d.get("reason_for_beginner", ""),
                 caution_note=d.get("caution_note", ""),
+                # Phase 14: 新商品スキャナー用フィールド
+                detected_source=d.get("detected_source", ""),
+                official_price=d.get("official_price"),
+                release_date=d.get("release_date", ""),
+                reservation_start_at=d.get("reservation_start_at", ""),
+                lottery_start_at=d.get("lottery_start_at", ""),
+                lottery_end_at=d.get("lottery_end_at", ""),
+                sale_method=d.get("sale_method", "normal"),
+                resale_potential_score=d.get("resale_potential_score", 0.0),
+                category=d.get("category", d.get("genre", "")),
             ))
         return result
 

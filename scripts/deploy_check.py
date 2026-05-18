@@ -214,8 +214,11 @@ def check() -> list[dict]:
     else:
         results.append({"level": "warning", "check": "multi_shop_compare", "message": "複数店舗比較が見つからない"})
 
-    # 20. 買取価格更新日時が表示されているか（既存チェックで対応済みのため確認のみ）
-    # → buyback_updated_ts (check 11) で既に確認済み
+    # 20. 新商品候補セクション（存在すれば OK / なくてもwarningだけ）
+    if "section-new-products" in html or "new-product-card" in html:
+        results.append({"level": "ok", "check": "new_products_section", "message": "新商品候補セクションが存在する"})
+    else:
+        results.append({"level": "warning", "check": "new_products_section", "message": "新商品候補セクションなし（候補データがない可能性）"})
 
     return results
 

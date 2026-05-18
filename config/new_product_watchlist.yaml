@@ -1,0 +1,124 @@
+# 新商品ウォッチリスト
+# 実際の発売情報・噂情報を手動で管理するファイル
+
+# ウォッチするブランドとキーワード
+watch_keywords:
+  - "新発売"
+  - "発売予定"
+  - "予約開始"
+  - "抽選販売"
+  - "先行販売"
+  - "正式発表"
+  - "後継機"
+  - "Limited"
+  - "Pro Max"
+  - "Ultra"
+  - "HDF"
+  - "Monochrome"
+  - "Mark II"
+  - "Mark III"
+
+# 既知の候補商品リスト（手動管理）
+candidates:
+  - product_name: "iPhone 18 Pro 256GB SIMフリー"
+    category: "iphone"
+    brand: "Apple"
+    detected_source: "watchlist"
+    detected_keyword: "次世代iPhone"
+    detected_url: "https://www.apple.com/jp/iphone/"
+    official_price: 189800
+    release_date: "2026-09"
+    sale_method: "preorder"
+    confidence: 0.85
+    notes: "例年9月発売。予約集中・転売実績あり。"
+
+  - product_name: "iPhone 18 Pro Max 256GB SIMフリー"
+    category: "iphone"
+    brand: "Apple"
+    detected_source: "watchlist"
+    detected_keyword: "次世代iPhone Pro Max"
+    detected_url: "https://www.apple.com/jp/iphone/"
+    official_price: 229800
+    release_date: "2026-09"
+    sale_method: "preorder"
+    confidence: 0.85
+    notes: "例年9月発売。最上位モデルは買取差益が大きい。"
+
+  - product_name: "Nintendo Switch 2 限定モデル"
+    category: "game_console"
+    brand: "Nintendo"
+    detected_source: "watchlist"
+    detected_keyword: "限定モデル"
+    detected_url: "https://www.nintendo.com/jp/"
+    official_price: 59980
+    sale_method: "lottery"
+    confidence: 0.70
+    notes: "限定モデルは抽選販売になることが多い。転売期待高。"
+
+  - product_name: "RICOH GR IV HDF Special Edition"
+    category: "camera"
+    brand: "RICOH"
+    detected_source: "watchlist"
+    detected_keyword: "HDF Special Edition"
+    detected_url: "https://www.ricoh-imaging.co.jp/"
+    official_price: 149800
+    sale_method: "limited"
+    confidence: 0.65
+    notes: "GR IVのHDFはプレミア価格がつきやすい限定モデル。"
+
+  - product_name: "FUJIFILM X100VII"
+    category: "camera"
+    brand: "FUJIFILM"
+    detected_source: "watchlist"
+    detected_keyword: "X100 後継機"
+    detected_url: "https://fujifilm-x.com/ja-jp/"
+    official_price: 289500
+    sale_method: "preorder"
+    confidence: 0.60
+    notes: "X100VIは発売直後に品薄。後継機も同様の動向が予想される。"
+
+  - product_name: "MacBook Air M5 13インチ"
+    category: "mac"
+    brand: "Apple"
+    detected_source: "watchlist"
+    detected_keyword: "MacBook Air M5"
+    detected_url: "https://www.apple.com/jp/macbook-air/"
+    official_price: 174800
+    release_date: "2026-Q4"
+    sale_method: "preorder"
+    confidence: 0.55
+    notes: "M5チップ搭載モデル。発売直後は買取差益が発生しやすい。"
+
+  - product_name: "PlayStation 5 Pro 限定モデル"
+    category: "game_console"
+    brand: "Sony"
+    detected_source: "watchlist"
+    detected_keyword: "PS5 Pro 限定"
+    detected_url: "https://www.playstation.com/ja-jp/"
+    official_price: 149980
+    sale_method: "limited"
+    confidence: 0.60
+    notes: "限定モデルはプレ値がつきやすい。"
+
+  - product_name: "Canon EOS R5 Mark III"
+    category: "camera"
+    brand: "Canon"
+    detected_source: "watchlist"
+    detected_keyword: "EOS R5 後継機"
+    detected_url: "https://www.canon.jp/"
+    official_price: 680000
+    sale_method: "preorder"
+    confidence: 0.50
+    notes: "ハイエンドカメラ。海外転売・上級者向け。"
+
+  - product_name: "Apple Watch Ultra 4"
+    category: "apple_watch"
+    brand: "Apple"
+    detected_source: "watchlist"
+    detected_keyword: "Apple Watch Ultra 後継"
+    detected_url: "https://www.apple.com/jp/apple-watch-ultra-2/"
+    official_price: 148800
+    release_date: "2026-09"
+    sale_method: "preorder"
+    confidence: 0.70
+    notes: "例年9月発表。Ultraは人気で品薄になりやすい。"

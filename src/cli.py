@@ -2287,27 +2287,37 @@ def test_note_cta():
 @cli.command("validate-price-links")
 @click.option("--fix-csv", is_flag=True, help="検証結果をCSVのlink_verifiedに反映")
 @click.option("--timeout", default=10, help="タイムアウト秒数 (default: 10)")
-def validate_price_links(fix_csv: bool, timeout: int):
-    """買取・公式・海外URLのリンク検証を実行する。"""
-    import csv
-    import re
-    from pathlib import Path
+@click.option("--show-complement", is_flag=True, default=True,
+              help="補完可能URLを表示 (default: True)")
+def validate_price_links(fix_csv: bool, timeout: int, show_complement: bool):
+    """買取URLのリンク検証を実行する（強化版）。
+
+    チェック項目:
+      1. 価格ありでURLが空の行を検出
+      2. link_resolverで補完可能か確認
+      3. URLが実際に開けるか（HTTP HEAD）
+      4. 403/404/DNS/timeout → link_verified=false
+      5. LP表示可否を報告
+    """
+    import csv as _csv
+    from src.market.link_resolver import get_resolver
+
     try:
         import requests
     except ImportError:
         click.echo("ERROR: requests未インストール。pip install requests")
         sys.exit(1)
 
-    results = {"ok": [], "ng": [], "skip": []}
+    _resolver = get_resolver()
+    results = {"ok": [], "ng": [], "skip": [], "empty_with_price": [], "complemented": []}
 
     def check_url(url: str, label: str) -> str:
         if not url or url in ("#", ""):
-            results["skip"].append({"url": url, "label": label, "reason": "空URL"})
             return "skip"
         try:
             resp = requests.head(url, timeout=timeout, allow_redirects=True,
                                  headers={"User-Agent": "Mozilla/5.0"})
-            if resp.status_code in (200, 301, 302, 403):  # 403もサイトは存在する
+            if resp.status_code in (200, 301, 302, 403):
                 results["ok"].append({"url": url, "label": label, "status": resp.status_code})
                 return "ok"
             else:
@@ -2317,53 +2327,124 @@ def validate_price_links(fix_csv: bool, timeout: int):
             results["ng"].append({"url": url, "label": label, "error": str(e)})
             return "ng"
 
-    click.echo("\n買取URLを検証中...\n")
+    W = 62
+    click.echo(f"\n{'='*W}")
+    click.echo(f"  買取価格リンク検証（強化版）")
+    click.echo(f"{'='*W}")
 
-    # manual_buyback_prices.csv のURL検証
+    # ── 1. CSV 読み込み ──────────────────────────────────
     buyback_csv = PROJECT_ROOT / "data" / "manual_buyback_prices.csv"
-    if buyback_csv.exists():
-        with open(buyback_csv, encoding="utf-8") as f:
-            reader = csv.DictReader(f)
-            rows = list(reader)
-            fieldnames = reader.fieldnames or []
-        seen_urls = set()
+    if not buyback_csv.exists():
+        click.echo("  ⚠️  manual_buyback_prices.csv が見つかりません")
+        return
+
+    with open(buyback_csv, encoding="utf-8") as f:
+        reader = _csv.DictReader(f)
+        rows = list(reader)
+        fieldnames = list(reader.fieldnames or [])
+
+    click.echo(f"\n  📋 CSVチェック: {len(rows)} 行")
+    click.echo(f"  {'─'*58}")
+
+    seen_urls: set[str] = set()
+    url_check_cache: dict[str, str] = {}
+
+    for row in rows:
+        url     = (row.get("url") or "").strip()
+        shop    = row.get("buyback_shop", "")
+        product = row.get("product_alias", "")
+        price   = int(row.get("buyback_price", 0) or 0)
+        verified = (row.get("link_verified") or "false").lower() == "true"
+
+        # 2. 価格ありでURLが空 → link_resolverで補完できるか確認
+        if price > 0 and not url:
+            from src.market.buyback_csv_importer import SHOP_MAP
+            shop_id = SHOP_MAP.get(shop, f"src_{shop}")
+            comp_url, comp_type = _resolver.resolve_buyback_url(
+                shop_id=shop_id, genre="iphone", db_url="", link_verified=False
+            )
+            if comp_url:
+                results["complemented"].append({
+                    "product": product, "shop": shop,
+                    "price": price, "comp_url": comp_url, "comp_type": comp_type
+                })
+                status_icon = "🔗"
+                status_note = f"補完可({comp_type}): {comp_url}"
+            else:
+                results["empty_with_price"].append({
+                    "product": product, "shop": shop, "price": price
+                })
+                status_icon = "⚠️ "
+                status_note = "補完不可・確認導線なし"
+            if show_complement:
+                click.echo(f"  {status_icon} {shop:<20} {product:<18} ¥{price:,}")
+                click.echo(f"       → {status_note}")
+            continue
+
+        # URL未設定行をスキップ
+        if not url:
+            continue
+
+        # 3. 同一URLは1回だけ検証
+        if url in url_check_cache:
+            http_status = url_check_cache[url]
+        else:
+            http_status = check_url(url, f"{shop}:{product}")
+            url_check_cache[url] = http_status
+            seen_urls.add(url)
+
+        icon = {"ok": "✅", "ng": "❌", "skip": "⏭️"}.get(http_status, "?")
+        lp_shown = "LP表示: リンクあり" if (http_status == "ok" and verified) else \
+                   "LP表示: リンクなし（未検証）" if http_status == "ok" else \
+                   "LP表示: テキストのみ"
+        click.echo(f"  {icon} [{http_status.upper():<4}] {shop:<18} {url[:40]}")
+        click.echo(f"       → {lp_shown}")
+
+    # ── 4. fix-csv モード ───────────────────────────────
+    if fix_csv:
+        ng_urls = {r["url"] for r in results["ng"]}
+        ok_urls = {r["url"] for r in results["ok"]}
+        if "link_verified" not in fieldnames:
+            fieldnames.append("link_verified")
+        updated = []
         for row in rows:
-            url = row.get("url", "").strip()
-            if url and url not in seen_urls:
-                seen_urls.add(url)
-                shop = row.get("buyback_shop", "")
-                product = row.get("product_alias", "")
-                status = check_url(url, f"buyback:{shop}:{product}")
-                icon = "OK" if status == "ok" else ("SKIP" if status == "skip" else "NG")
-                click.echo(f"  [{icon}] {shop}: {url}")
+            url = (row.get("url") or "").strip()
+            if url in ok_urls:
+                row["link_verified"] = "true"
+            elif url in ng_urls:
+                row["link_verified"] = "false"
+            updated.append(row)
+        with open(buyback_csv, "w", encoding="utf-8", newline="") as f:
+            writer = _csv.DictWriter(f, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerows(updated)
+        click.echo(f"\n  ✅ link_verified を更新しました")
 
-        if fix_csv:
-            # link_verifiedを更新
-            ng_urls = {r["url"] for r in results["ng"]}
-            ok_urls = {r["url"] for r in results["ok"]}
-            if "link_verified" not in fieldnames:
-                fieldnames = list(fieldnames) + ["link_verified"]
-            updated = []
-            for row in rows:
-                url = row.get("url", "").strip()
-                if url in ok_urls:
-                    row["link_verified"] = "true"
-                elif url in ng_urls:
-                    row["link_verified"] = "false"
-                updated.append(row)
-            with open(buyback_csv, "w", encoding="utf-8", newline="") as f:
-                writer = csv.DictWriter(f, fieldnames=fieldnames)
-                writer.writeheader()
-                writer.writerows(updated)
-            click.echo(f"\n  link_verified を更新しました")
+    # ── 5. サマリ ──────────────────────────────────────
+    click.echo(f"\n  {'─'*58}")
+    click.echo(f"  【結果サマリ】")
+    click.echo(f"  OK（開通）:               {len(results['ok'])} 件")
+    click.echo(f"  NG（404/DNS/timeout）:     {len(results['ng'])} 件")
+    click.echo(f"  空URL（価格あり）:         {len(results['empty_with_price'])} 件")
+    click.echo(f"  空URL→補完可:             {len(results['complemented'])} 件")
 
-    click.echo(f"\n{'='*50}")
-    click.echo(f"  OK: {len(results['ok'])} / NG: {len(results['ng'])} / Skip: {len(results['skip'])}")
     if results["ng"]:
-        click.echo(f"\n  NGリンク一覧:")
+        click.echo(f"\n  ❌ NGリンク一覧:")
         for r in results["ng"]:
-            click.echo(f"     {r['label']}: {r['url']} ({r.get('status', r.get('error', ''))})")
-    click.echo(f"{'='*50}\n")
+            click.echo(f"     {r['label']}: {r['url']}")
+            click.echo(f"       ({r.get('status', r.get('error', ''))})")
+
+    if results["empty_with_price"]:
+        click.echo(f"\n  ⚠️  URL未設定（補完不可）一覧:")
+        for r in results["empty_with_price"]:
+            click.echo(f"     {r['shop']}: {r['product']} ¥{r['price']:,} → 確認導線なし")
+
+    if results["complemented"]:
+        click.echo(f"\n  🔗 URL未設定→補完可（link_resolverで表示される）:")
+        for r in results["complemented"]:
+            click.echo(f"     {r['shop']}: {r['product']} → {r['comp_url']} ({r['comp_type']})")
+
+    click.echo(f"\n{'='*W}\n")
 
 
 @cli.command("prelaunch-check")

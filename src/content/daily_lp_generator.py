@@ -28,6 +28,7 @@ from src.content.safety import (
     DISCLAIMER_SHORT, DISCLAIMER_FULL,
 )
 from src.db.repository import Repository
+from src.market.link_resolver import get_resolver
 from src.market.new_product_scanner import NewProductScanner
 
 logger = logging.getLogger(__name__)
@@ -905,6 +906,183 @@ td.profit-td {{ color: var(--green); font-weight: 700; font-variant-numeric: tab
   .price-grid {{ grid-template-columns: 1fr; }}
   .price-cell.profit-cell {{ grid-column: span 1; }}
 }}
+/* ────────── デザイン改善 ────────── */
+/* カード hover effect */
+.card {{
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}}
+.card:hover {{
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+}}
+/* 初心者向けカード: 左ボーダーをグリーン */
+.card[data-user-level="beginner_easy"] {{
+  border-left: 3px solid var(--green);
+}}
+.card[data-user-level="beginner_watch"] {{
+  border-left: 3px solid var(--cyan);
+}}
+/* 上級者向けカード: 左ボーダーをオレンジ */
+.card[data-user-level="advanced_high_profit"],
+.card[data-user-level="expert_only"],
+.adv-snap-card {{
+  border-left: 3px solid var(--orange);
+}}
+/* 監視候補カード */
+.watch-candidate-card {{
+  border-left: 3px solid var(--yellow);
+}}
+/* .badge 改善 */
+.badge-easy {{
+  background: rgba(0,170,101,0.15);
+  color: var(--green);
+  border: 1px solid rgba(0,170,101,0.4);
+}}
+.badge-watch {{
+  background: rgba(34,211,238,0.12);
+  color: var(--cyan);
+  border: 1px solid rgba(34,211,238,0.3);
+}}
+.badge-adv {{
+  background: rgba(251,146,60,0.12);
+  color: var(--orange);
+  border: 1px solid rgba(251,146,60,0.3);
+}}
+.badge-exp {{
+  background: rgba(239,68,68,0.12);
+  color: var(--red);
+  border: 1px solid rgba(239,68,68,0.3);
+}}
+/* 販売方法バッジ */
+.sale-method-badge {{
+  font-size: 0.72rem;
+  padding: 2px 8px;
+  border-radius: 20px;
+  background: rgba(251,191,36,0.15);
+  color: var(--yellow);
+  border: 1px solid rgba(251,191,36,0.3);
+  margin-left: 6px;
+}}
+/* no-data 表示 */
+.no-data {{
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  font-style: italic;
+}}
+/* 上級者タブのメタ情報行 */
+.adv-meta-row {{
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin: 8px 0 4px;
+}}
+.adv-meta-item {{
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}}
+.adv-meta-item strong {{
+  color: var(--text);
+}}
+/* フォールバック通知 */
+.adv-fallback-notice {{
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  background: rgba(34,211,238,0.06);
+  border: 1px solid rgba(34,211,238,0.2);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}}
+.adv-fallback-icon {{ font-size: 1.1rem; margin-top: 1px; }}
+.adv-fallback-notice strong {{ color: var(--cyan); }}
+/* 監視候補 price row */
+.watch-price-row {{
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: 8px 0 6px;
+}}
+.watch-price-item {{
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}}
+.watch-gap {{
+  font-size: 0.82rem;
+  font-weight: 600;
+}}
+.watch-links-row {{
+  font-size: 0.82rem;
+  margin-bottom: 8px;
+}}
+.watch-footer-note {{
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  margin-top: 12px;
+  padding: 6px 8px;
+  border-left: 2px solid var(--border-light);
+  font-style: italic;
+}}
+/* link-type badge */
+.link-type-badge {{
+  display: inline-block;
+  font-size: 0.68rem;
+  background: var(--surface);
+  border: 1px solid var(--border-light);
+  color: var(--text-muted);
+  padding: 1px 6px;
+  border-radius: 10px;
+  margin-left: 4px;
+  vertical-align: middle;
+}}
+/* 海外相場リンクセクション */
+.overseas-links-section {{
+  margin-top: 12px;
+  padding: 12px;
+  background: rgba(15,23,42,0.6);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}}
+.overseas-links-header {{
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}}
+.overseas-links-title {{
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--cyan);
+}}
+.overseas-links-note {{
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}}
+.overseas-btn-row {{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}}
+.overseas-btn {{
+  display: inline-block;
+  font-size: 0.76rem;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: var(--surface);
+  border: 1px solid var(--border-light);
+  color: var(--cyan);
+  text-decoration: none;
+  transition: background 0.12s, border-color 0.12s;
+  white-space: nowrap;
+}}
+.overseas-btn:hover {{
+  background: rgba(34,211,238,0.1);
+  border-color: var(--cyan);
+}}
 /* 買取店比較テーブル */
 .buyback-shop-table {{
   margin-top: 12px;
@@ -1334,21 +1512,32 @@ document.addEventListener("click",function(e){{
         shop_count = getattr(d, "buyback_shop_count", len(shop_entries)) or len(shop_entries) or 1
         median_price = getattr(d, "median_buyback_price", None)
 
+        _link_res = get_resolver()
+        genre = getattr(d, "category", "") or ""
         rows_html = []
         for i, s in enumerate(shop_entries, start=1):
             bp = s.get("price", 0)
-            sname = _esc(s.get("shop_name", "") or s.get("shop_id", ""))
-            url_val = (s.get("url") or "").strip()
+            shop_id_val = s.get("shop_id", "")
+            sname = _esc(s.get("shop_name", "") or shop_id_val)
+            db_url = (s.get("url") or "").strip()
             verified = bool(s.get("link_verified", False))
             diff = bp - official_price
             diff_str = f"+¥{diff:,}" if diff >= 0 else f"−¥{abs(diff):,}"
             rank_cls = " rank-1" if i == 1 else ""
             diff_cls = " positive" if diff > 0 else " negative" if diff < 0 else ""
 
-            if url_val and verified:
-                link_cell = (f'<a href="{_esc(url_val)}" target="_blank" rel="noopener" '
+            # link_resolver でURL補完
+            resolved_url, link_type = _link_res.resolve_buyback_url(
+                shop_id=shop_id_val, genre=genre, db_url=db_url, link_verified=verified
+            )
+            link_type_lbl = _esc(_link_res.link_type_label(link_type))
+
+            if resolved_url:
+                link_cell = (f'<a href="{_esc(resolved_url)}" target="_blank" rel="noopener" '
                              f'data-track="buyback_click" data-product-id="{pid}" '
-                             f'data-shop="{sname}">買取ページを確認 →</a>')
+                             f'data-shop="{sname}" title="{link_type_lbl}">'
+                             f'買取価格を確認 →</a>'
+                             f'<span class="link-type-badge">{link_type_lbl}</span>')
             else:
                 link_cell = '<span class="unverified-link">公式買取ページで確認してください</span>'
 
@@ -1432,47 +1621,63 @@ document.addEventListener("click",function(e){{
 
     def _tab_advanced(self, advanced_deals, advanced_snaps, watch_candidates) -> str:
         parts = []
+        _link_res = get_resolver()
 
         if advanced_deals:
             parts.append('<div class="section-header"><h2>高利益案件</h2><span class="section-count">' + str(len(advanced_deals)) + '件</span></div>')
             for d in advanced_deals:
                 badge_cls = "badge-exp" if d.user_level == "expert_only" else "badge-adv"
                 label = "上級者限定" if d.user_level == "expert_only" else "高利益"
-                parts.append(self._deal_card(d, badge_cls, label))
+                card_html = self._deal_card(d, badge_cls, label)
+                # 海外相場リンクセクションを追加
+                overseas_html = self._overseas_links_section(
+                    d.product_name, getattr(d, "category", "") or ""
+                )
+                parts.append(card_html + overseas_html)
 
         if advanced_snaps:
             parts.append('<div class="section-header"><h2>プレ値・価格差候補</h2><span class="section-count">スナップショット分析</span></div>')
-            rows = []
             for s in advanced_snaps:
-                method = {"lottery": "抽選", "soldout": "SOLD OUT", "discontinued": "終了"}.get(
-                    getattr(s, "sale_method", ""), getattr(s, "sale_method", "通常"))
-                rows.append(
-                    f"<tr>"
-                    f"<td data-user-level='{_esc(getattr(s,'user_level',''))}'>{_esc(s.product_name)}</td>"
-                    f"<td>{_esc(fmt_price(s.official_price_jpy))}</td>"
-                    f"<td>{_esc(fmt_price(s.domestic_used_price_jpy))}</td>"
-                    f"<td>{_esc(fmt_price(getattr(s,'overseas_price_jpy',None)))}</td>"
-                    f"<td style='color:var(--orange);font-weight:600'>{_esc(fmt_profit(s.premium_gap_jpy))}</td>"
-                    f"<td>{_esc(method)}</td>"
-                    f"<td>{getattr(s,'difficulty_score',0):.2f}</td>"
-                    f"</tr>"
-                )
-            parts.append(f"""<div class="card"><div class="data-table-wrap">
-<table>
-<thead><tr><th>商品</th><th>定価</th><th>国内中古</th><th>海外</th><th>価格差</th><th>方式</th><th>難易度</th></tr></thead>
-<tbody>{"".join(rows)}</tbody>
-</table>
-</div>
-<p style="color:var(--text-muted);font-size:0.78rem;margin-top:10px;padding:0 4px;">※ 難易度0.0〜1.0（低いほど入手しやすい）</p>
+                method_key = getattr(s, "sale_method", "")
+                method_label = {"lottery": "🎰 抽選", "soldout": "❌ SOLD OUT",
+                                "discontinued": "🚫 終了", "limited": "⚡ 限定"}.get(
+                    method_key, method_key or "通常")
+                difficulty = getattr(s, "difficulty_score", 0) or 0
+                genre = getattr(s, "genre", "") or getattr(s, "category", "") or ""
+                overseas_html = self._overseas_links_section(s.product_name, genre)
+
+                parts.append(f"""<div class="card adv-snap-card">
+  <div class="card-header">
+    <div class="card-title">{_esc(s.product_name)}</div>
+    <span class="badge badge-adv">上級者向け</span>
+    {f'<span class="sale-method-badge">{_esc(method_label)}</span>' if method_label else ""}
+  </div>
+  <div class="price-grid">
+    <div class="price-cell"><div class="price-cell-label">定価</div>
+      <div class="price-cell-value">{_esc(fmt_price(s.official_price_jpy))}</div></div>
+    <div class="price-cell"><div class="price-cell-label">国内中古</div>
+      <div class="price-cell-value">{_esc(fmt_price(s.domestic_used_price_jpy)) if s.domestic_used_price_jpy else '<span class="no-data">未取得</span>'}</div></div>
+    <div class="price-cell"><div class="price-cell-label">海外相場</div>
+      <div class="price-cell-value">{_esc(fmt_price(getattr(s,"overseas_price_jpy",None))) if getattr(s,"overseas_price_jpy",None) else '<span class="no-data">未取得</span>'}</div></div>
+    <div class="price-cell profit-cell"><div class="price-cell-label">価格差</div>
+      <div class="price-cell-value" style="color:var(--orange)">{_esc(fmt_profit(s.premium_gap_jpy))}</div></div>
+  </div>
+  <div class="adv-meta-row">
+    <span class="adv-meta-item">難易度: <strong>{difficulty:.1f}</strong>/1.0</span>
+    <span class="adv-meta-item">販売方式: <strong>{_esc(method_label)}</strong></span>
+  </div>
+  <div class="buyback-notice">※ 難易度0.0〜1.0（高いほど入手が難しい）。価格差は参考値です。</div>
+{overseas_html}
 </div>""")
 
         # ----- フォールバック: 上級者向け監視候補 -----
         if watch_candidates:
             has_confirmed = bool(advanced_deals or advanced_snaps)
             if not has_confirmed:
-                parts.append("""<div class="caution" style="margin:16px 0 20px;">
-ℹ️ <strong>現在、上級者向けの確定候補は少ないため、価格差・希少性・海外相場差が大きい監視候補を表示しています。</strong><br>
-中古市場や海外相場のデータが入り次第、確定候補として昇格します。
+                parts.append("""<div class="adv-fallback-notice">
+<span class="adv-fallback-icon">ℹ️</span>
+<div><strong>現在、上級者向けの確定候補は少ないため、価格差・希少性・海外相場差が大きい監視候補を表示しています。</strong><br>
+<span>中古市場や海外相場のデータが入り次第、確定候補として昇格します。</span></div>
 </div>""")
             parts.append('<div class="section-header"><h2>上級者向け監視候補</h2><span class="section-count">価格差・希少性スコア上位</span></div>')
             parts.append(self._watch_candidates_table(watch_candidates))
@@ -1483,48 +1688,63 @@ document.addEventListener("click",function(e){{
         return "\n".join(parts)
 
     def _watch_candidates_table(self, candidates: list) -> str:
-        """監視候補テーブルを生成する（products テーブル由来）。"""
+        """監視候補カードを生成する（products テーブル由来）。海外相場リンク込み。"""
+        _link_res = get_resolver()
         # カメラ優先、次にゲーム機
         camera = [c for c in candidates if c["genre"] == "camera"]
         others = [c for c in candidates if c["genre"] != "camera"]
         ordered = camera + others
 
-        rows = []
+        cards = []
         for c in ordered:
             price  = c["official_price"]
             bp     = c["buyback_price"]
-            shop   = c["shop_name"] or "—"
+            shop   = _esc(c["shop_name"] or "—")
             flags  = "・".join(c["flags"]) if c["flags"] else "監視中"
-            # 買取価格がある場合は差額も表示
-            gap_str = ""
+            genre  = c.get("genre", "")
+
+            # 買取リンク解決
+            db_url = c.get("buyback_url") or ""
+            shop_id = c.get("shop_id") or ""
+            resolved_url, link_type = _link_res.resolve_buyback_url(
+                shop_id=shop_id, genre=genre, db_url=db_url, link_verified=bool(db_url)
+            )
+            link_type_lbl = _esc(_link_res.link_type_label(link_type))
+
+            if resolved_url:
+                buy_link = (f'<a href="{_esc(resolved_url)}" target="_blank" rel="noopener" '
+                            f'data-track="buyback_click" data-shop="{shop}" '
+                            f'title="{link_type_lbl}">買取価格を確認 →</a>'
+                            f'<span class="link-type-badge">{link_type_lbl}</span>')
+            else:
+                buy_link = '<span class="unverified-link">公式買取ページで確認</span>'
+
+            # 価格差
+            gap_html = ""
             if bp and price:
                 gap = bp - price
-                gap_str = f'<br><span style="color:var(--green);font-size:0.82rem">'
-                gap_str += f'買取 ¥{bp:,} (差 {gap:+,}円)</span>'
-            buy_link = ""
-            if c.get("buyback_url"):
-                buy_link = f'<a href="{_esc(c["buyback_url"])}" target="_blank" rel="noopener" style="font-size:0.78rem;color:var(--accent)">買取ページ</a>'
+                gap_color = "var(--green)" if gap > 0 else "var(--text-muted)"
+                gap_html = f'<span class="watch-gap" style="color:{gap_color}">買取 ¥{bp:,}（差 {gap:+,}円）</span>'
 
-            rows.append(
-                f"<tr class='watch-candidate-card'>"
-                f"<td><strong>{_esc(c['product_name'])}</strong>{gap_str}</td>"
-                f"<td>{_esc(fmt_price(price) if price else '—')}</td>"
-                f"<td>{_esc(shop)}</td>"
-                f"<td><span style='color:var(--yellow);font-size:0.82rem'>{_esc(flags)}</span></td>"
-                f"<td>{buy_link}</td>"
-                f"</tr>"
-            )
+            # 海外相場リンク
+            overseas_html = self._overseas_links_section(c["product_name"], genre)
 
-        return f"""<div class="card"><div class="data-table-wrap">
-<table>
-<thead><tr><th>商品</th><th>公式価格</th><th>最新買取店</th><th>注目ポイント</th><th>リンク</th></tr></thead>
-<tbody>{"".join(rows)}</tbody>
-</table>
-</div>
-<p style="color:var(--text-muted);font-size:0.78rem;margin-top:10px;padding:0 4px;">
-※ 監視候補は価格差・希少性スコアが高い商品です。中古市場データ入手後に確定候補へ昇格します。
-</p>
-</div>"""
+            cards.append(f"""<div class="card watch-candidate-card">
+  <div class="card-header">
+    <div class="card-title">{_esc(c["product_name"])}</div>
+    <span class="badge badge-watch">{_esc(flags)}</span>
+  </div>
+  <div class="watch-price-row">
+    <span class="watch-price-item">公式価格: <strong>{_esc(fmt_price(price)) if price else "—"}</strong></span>
+    {gap_html}
+    <span class="watch-price-item">最新買取店: <strong>{shop}</strong></span>
+  </div>
+  <div class="watch-links-row">{buy_link}</div>
+{overseas_html}
+</div>""")
+
+        footer = '<p class="watch-footer-note">※ 監視候補は価格差・希少性スコアが高い商品です。中古市場データ入手後に確定候補へ昇格します。</p>'
+        return "\n".join(cards) + footer
 
     # ----- Tab: 急騰/急落 -----
 
@@ -1652,6 +1872,35 @@ document.addEventListener("click",function(e){{
 <thead><tr><th>#</th><th>商品</th>{cat_th}<th>定価</th><th>買取</th><th>実質利益</th><th>率</th><th>買取店</th></tr></thead>
 <tbody>{"".join(rows)}</tbody>
 </table></div></div>"""
+
+    # ----- 海外相場リンクセクション -----
+
+    def _overseas_links_section(self, product_name: str, genre: str) -> str:
+        """海外相場確認リンクのHTMLブロックを生成する。
+        価格データがなくても常にリンクを表示する。
+        """
+        _link_res = get_resolver()
+        links = _link_res.get_overseas_links(product_name, genre, max_links=6)
+        if not links:
+            return ""
+
+        btns = []
+        for lk in links:
+            btns.append(
+                f'<a href="{_esc(lk["url"])}" target="_blank" rel="noopener" '
+                f'class="overseas-btn" data-track="overseas_click" '
+                f'data-market="{_esc(lk["market_id"])}" '
+                f'title="{_esc(lk["note"])}">'
+                f'{_esc(lk["icon"])} {_esc(lk["label"])}</a>'
+            )
+
+        return f"""<div class="overseas-links-section">
+  <div class="overseas-links-header">
+    <span class="overseas-links-title">🌍 海外相場を確認する</span>
+    <span class="overseas-links-note">価格未取得でもリンク先で相場確認できます</span>
+  </div>
+  <div class="overseas-btn-row">{"".join(btns)}</div>
+</div>"""
 
     # ----- 新商品候補セクション -----
 

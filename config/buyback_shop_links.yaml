@@ -1,0 +1,104 @@
+# 買取店リンクマスタ
+# shop_id は src/market/buyback_csv_importer.py の SHOP_MAP キーに対応
+# 実在するURLのみ記載。不明・架空ドメインは top_url を空欄のまま。
+#
+# フォールバック優先順位:
+#   1. buyback_prices.buyback_url (DB登録値)
+#   2. category_urls[genre]
+#   3. top_url
+#   4. 空欄 → LP上は「公式買取ページで確認してください」表示
+
+# ── 実在する買取店 ────────────────────────────────────
+
+janpara:
+  name: "じゃんぱら"
+  top_url: "https://www.janpara.co.jp/sell/"
+  search_url_template: ""        # 商品検索URL（{query}で置換）
+  category_urls:
+    iphone:   "https://www.janpara.co.jp/sell/iphone/"
+    apple:    "https://www.janpara.co.jp/sell/"
+    mac:      "https://www.janpara.co.jp/sell/"
+    game:     "https://www.janpara.co.jp/sell/"
+    camera:   "https://www.janpara.co.jp/sell/"
+    game_console: "https://www.janpara.co.jp/sell/"
+  note: "じゃんぱら公式売却受付ページ（SIMフリー対応）"
+
+iosys:
+  name: "イオシス"
+  top_url: "https://iosys.co.jp/"
+  search_url_template: ""
+  category_urls:
+    iphone:   "https://iosys.co.jp/"
+    apple:    "https://iosys.co.jp/"
+    game:     "https://iosys.co.jp/"
+    game_console: "https://iosys.co.jp/"
+  note: "イオシス公式（買取・中古販売）"
+
+geo:
+  name: "ゲオ"
+  top_url: "https://buy.geo-mobile.jp/"
+  search_url_template: ""
+  category_urls:
+    iphone:   "https://buy.geo-mobile.jp/"
+    apple:    "https://buy.geo-mobile.jp/"
+    game:     "https://www.geo-online.co.jp/"
+    game_console: "https://www.geo-online.co.jp/"
+  note: "ゲオモバイル買取（スマホ）/ ゲオオンライン（ゲーム機）"
+
+sofmap:
+  name: "ソフマップ"
+  top_url: "https://www.sofmap.com/"
+  search_url_template: ""
+  category_urls:
+    iphone:   "https://www.sofmap.com/buy_list.aspx"
+    apple:    "https://www.sofmap.com/buy_list.aspx"
+    mac:      "https://www.sofmap.com/buy_list.aspx"
+    game:     "https://www.sofmap.com/buy_list.aspx"
+    camera:   "https://www.sofmap.com/buy_list.aspx"
+    game_console: "https://www.sofmap.com/buy_list.aspx"
+  note: "ソフマップ買取申込（ビックカメラグループ）"
+
+mapcamera:
+  name: "マップカメラ"
+  top_url: "https://www.mapcamera.com/"
+  search_url_template: ""
+  category_urls:
+    camera:   "https://www.mapcamera.com/"
+  note: "マップカメラ（カメラ専門・中古買取）"
+
+fujiya:
+  name: "フジヤカメラ"
+  top_url: "https://www.fujiya-camera.co.jp/"
+  search_url_template: ""
+  category_urls:
+    camera:   "https://www.fujiya-camera.co.jp/"
+  note: "フジヤカメラ（カメラ専門買取）"
+
+kitamura:
+  name: "カメラのキタムラ"
+  top_url: "https://www.kitamura.co.jp/"
+  search_url_template: ""
+  category_urls:
+    camera:   "https://www.kitamura.co.jp/"
+    iphone:   "https://www.kitamura.co.jp/"
+  note: "カメラのキタムラ（全国店舗・オンライン査定）"
+
+# ── 架空ドメイン・実在不明の買取店（URLなし） ─────────────
+
+mobile_ichiban:
+  name: "モバイル一番"
+  top_url: ""            # mobileno1.com は実在しないため空欄
+  category_urls: {}
+  note: "URL未確認。LP上は価格のみ表示、リンクなし"
+
+kaitori_shouten:
+  name: "買取商店"
+  top_url: ""            # kaitori-shouten.com は実在しないため空欄
+  category_urls: {}
+  note: "URL未確認。LP上は価格のみ表示、リンクなし"
+
+kaitori_itchome:
+  name: "買取一丁目"
+  top_url: ""            # kaitori-1chome.com は実在しないため空欄
+  category_urls: {}
+  note: "URL未確認。LP上は価格のみ表示、リンクなし"

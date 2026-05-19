@@ -1477,14 +1477,14 @@ a[href], button, [role="tab"], [role="button"],
 
 .badge-easy    {{ background: #F0FDF8; color: var(--profit-dark); border: 1px solid #B2F0DC; }}
 .badge-watch   {{ background: #FFF9F0; color: #CC7A00; border: 1px solid #FFD9A0; }}
-.badge-adv     {{ background: #F5F3FF; color: var(--violet); border: 1px solid #DDD6FE; }}
-.badge-exp     {{ background: #F5F3FF; color: var(--violet-dark); border: 1px solid #DDD6FE; }}
-.badge-iphone  {{ background: #EFF6FF; color: #1E6FFF; border: 1px solid #BFDBFE; }}
-.badge-camera  {{ background: #F5F3FF; color: var(--violet); border: 1px solid #DDD6FE; }}
-.badge-game    {{ background: #F0FDF8; color: #0d9488; border: 1px solid #99F0E0; }}
-.badge-lottery {{ background: #FFF9F0; color: #CC7A00; border: 1px solid #FFD9A0; }}
-.badge-soldout {{ background: #FFF1F3; color: #CC2244; border: 1px solid #FFB3C0; }}
-.badge-overseas{{ background: #f0f9ff; color: #0369a1; border: 1px solid #bae6fd; }}
+.badge-adv     {{ background: #EDE9FF; color: #6D28D9; border: 1px solid #C4B5FD; font-weight: 800; }}
+.badge-exp     {{ background: #F0ECFF; color: #5B21B6; border: 1px solid #A78BFA; font-weight: 800; }}
+.badge-iphone  {{ background: #EFF6FF; color: #1D4ED8; border: 1px solid #BFDBFE; font-weight: 800; }}
+.badge-camera  {{ background: #F3EEFF; color: #7C3AED; border: 1px solid #C4B5FD; font-weight: 800; }}
+.badge-game    {{ background: #F0FDF8; color: #047857; border: 1px solid #6EE7B7; font-weight: 800; }}
+.badge-lottery {{ background: #FFF5E8; color: #B45309; border: 1px solid #FBB040; font-weight: 800; }}
+.badge-soldout {{ background: #FEF2F2; color: #DC2626; border: 1px solid #FECACA; font-weight: 800; }}
+.badge-overseas{{ background: #EFF6FF; color: #1D4ED8; border: 1px solid #93C5FD; font-weight: 800; }}
 .badge-used    {{ background: var(--surface2); color: var(--ink2); border: 1px solid var(--card-border); }}
 
 /* タグシステム（上級者向け） */
@@ -1494,33 +1494,38 @@ a[href], button, [role="tab"], [role="button"],
   padding: 2px 8px; border-radius: 99px;
 }}
 
-.deal-tag.pre    {{ background: #FFF9F0; color: #CC7A00; border: 1px solid #FFD9A0; }}
-.deal-tag.hard   {{ background: #FFF1F3; color: #CC2244; border: 1px solid #FFB3C0; }}
-.deal-tag.intl   {{ background: #f0f9ff; color: #0369a1; border: 1px solid #bae6fd; }}
-.deal-tag.limit  {{ background: #F5F3FF; color: var(--violet); border: 1px solid #DDD6FE; }}
-.deal-tag.lottery {{ background: #FFF9F0; color: #CC7A00; border: 1px solid #FFD9A0; }}
+.deal-tag.pre    {{ background: #FFFBEB; color: #D97706; border: 1px solid #FDE68A; font-weight: 800; }}
+.deal-tag.hard   {{ background: #FEF2F2; color: #DC2626; border: 1px solid #FECACA; font-weight: 800; }}
+.deal-tag.intl   {{ background: #EFF6FF; color: #2563EB; border: 1px solid #BFDBFE; font-weight: 800; }}
+.deal-tag.limit  {{ background: #F5F3FF; color: #7C3AED; border: 1px solid #C4B5FD; font-weight: 800; }}
+.deal-tag.lottery {{ background: #F5F3FF; color: #7C3AED; border: 1px solid #C4B5FD; font-weight: 800; }}
 
 /* ============================================================
    WATCH CARD (上級者向け) — バイオレットアクセント
    ============================================================ */
 .watch-card {{
-  background: var(--card-bg);
+  background: #FDFCFF;
   border: 1px solid #DDD6FE;
-  border-radius: 16px;
-  padding: 20px 22px;
+  border-radius: 20px;
+  padding: 22px 24px;
   margin-bottom: 14px;
-  background: #F5F3FF;
-  box-shadow: var(--shadow-sm);
-  transition: box-shadow 0.2s, transform 0.2s;
+  box-shadow: 0 1px 4px rgba(124,92,252,0.07), 0 2px 8px rgba(124,92,252,0.04);
+  transition: transform 0.2s cubic-bezier(0.23,1,0.32,1),
+              box-shadow 0.2s cubic-bezier(0.23,1,0.32,1),
+              border-color 0.2s cubic-bezier(0.23,1,0.32,1);
+  position: relative; overflow: hidden;
+}}
+
+.watch-card::before {{
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--violet), #B39DFF, #7C5CFC);
 }}
 
 .watch-card:hover {{
-  box-shadow: 0 12px 40px rgba(13,15,28,0.1), 0 4px 12px rgba(13,15,28,0.06);
-  transform: translateY(-2px);
+  transform: translateY(-3px);
+  box-shadow: 0 16px 48px rgba(124,92,252,0.13), 0 4px 16px rgba(124,92,252,0.08);
   border-color: #C4B5FD;
-  transition: transform 0.18s cubic-bezier(0.23,1,0.32,1),
-              box-shadow 0.18s cubic-bezier(0.23,1,0.32,1),
-              border-color 0.18s cubic-bezier(0.23,1,0.32,1);
 }}
 
 .watch-card-hd {{
@@ -1548,8 +1553,10 @@ a[href], button, [role="tab"], [role="button"],
 }}
 
 .watch-price-val {{
-  font-size: 1rem; font-weight: 800;
+  font-size: 1.05rem; font-weight: 800;
   color: var(--ink); font-variant-numeric: tabular-nums;
+  font-family: 'JetBrains Mono', 'Menlo', ui-monospace, monospace;
+  letter-spacing: -0.02em;
 }}
 
 .watch-price-val.green  {{ color: var(--profit-dark); }}
@@ -1598,14 +1605,21 @@ a[href], button, [role="tab"], [role="button"],
 .step-text {{ flex: 1; }}
 
 /* ============================================================
-   RANKING — ランキング
+   RANKING — ランキング / プレ値・スナップショット
    ============================================================ */
 .ranking-card {{
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
-  border-radius: 16px;
+  background: #FDFCFF;
+  border: 1px solid #DDD6FE;
+  border-radius: 20px;
   overflow: hidden; margin-bottom: 20px;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 1px 4px rgba(124,92,252,0.07), 0 2px 8px rgba(124,92,252,0.04);
+  transition: transform 0.2s cubic-bezier(0.23,1,0.32,1),
+              box-shadow 0.2s cubic-bezier(0.23,1,0.32,1);
+}}
+
+.ranking-card:hover {{
+  transform: translateY(-2px);
+  box-shadow: 0 12px 36px rgba(124,92,252,0.1), 0 4px 12px rgba(124,92,252,0.06);
 }}
 
 .ranking-hd {{
@@ -2021,6 +2035,95 @@ a[href], button, [role="tab"], [role="button"],
   .hero-inner {{ grid-template-columns: 1fr 400px; gap: 40px; }}
 }}
 
+/* ============================================================
+   SECTION HEADER (上級者向けタブ — h2 + 件数バッジ)
+   ============================================================ */
+.section-header {{
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 22px; padding-bottom: 14px;
+  border-bottom: 2px solid #EEE8FF;
+}}
+
+.section-header h2 {{
+  font-size: 1.05rem; font-weight: 800;
+  color: var(--ink); letter-spacing: -0.01em;
+  margin: 0;
+  display: flex; align-items: center; gap: 8px;
+}}
+
+.section-header h2::before {{
+  content: '';
+  width: 3px; height: 18px; border-radius: 2px;
+  background: linear-gradient(180deg, var(--violet), #B39DFF);
+  flex-shrink: 0;
+  display: inline-block;
+}}
+
+.section-count {{
+  font-size: 0.68rem; font-weight: 700;
+  background: #F5F3FF; color: var(--violet);
+  border: 1px solid #DDD6FE;
+  padding: 3px 10px; border-radius: 99px;
+  white-space: nowrap;
+}}
+
+/* ============================================================
+   TABLE WRAP — advanced snapshot / watch tables
+   ============================================================ */
+.table-wrap {{
+  overflow-x: auto; -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  border-radius: 14px;
+  border: 1px solid #DDD6FE;
+  margin-bottom: 4px;
+}}
+
+.table-wrap table {{
+  width: 100%; border-collapse: collapse;
+  font-size: 0.875rem;
+}}
+
+.table-wrap th {{
+  text-align: left;
+  padding: 10px 14px;
+  font-size: 0.67rem; font-weight: 800;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: #6D28D9; white-space: nowrap;
+  background: #F5F3FF;
+  border-bottom: 1px solid #DDD6FE;
+}}
+
+.table-wrap td {{
+  padding: 12px 14px;
+  border-bottom: 1px solid #F0EDFF;
+  color: var(--ink2); vertical-align: middle;
+  font-variant-numeric: tabular-nums;
+}}
+
+.table-wrap tr:last-child td {{ border-bottom: none; }}
+.table-wrap tr:hover td {{ background: #FDFCFF; }}
+
+/* ============================================================
+   .caution — advanced fallback notice
+   ============================================================ */
+.caution {{
+  background: #FFFBEB;
+  border: 1px solid #FDE68A;
+  border-left: 3px solid #F59E0B;
+  border-radius: 0 12px 12px 0;
+  padding: 14px 18px;
+  font-size: 0.875rem; color: #92400E; line-height: 1.7;
+  margin: 16px 0 20px;
+}}
+
+/* ============================================================
+   advanced deal-cardは deal-card CSSを継承 + 紫stripe
+   ============================================================ */
+.deal-card[data-user-level="advanced"] .card-stripe,
+.deal-card[data-user-level="expert_only"] .card-stripe {{
+  background: linear-gradient(90deg, var(--violet), #B39DFF);
+}}
+
 @media (max-width: 900px) {{
   .hero-inner {{ grid-template-columns: 1fr; }}
   .hero-right {{ display: none; }}
@@ -2055,6 +2158,11 @@ a[href], button, [role="tab"], [role="button"],
   .price-row-wrap {{ grid-template-columns: 1fr 1fr; }}
   .shop-diff-col {{ display: none; }}
   .shop-check-btn {{ display: none; }}
+  /* 上級者カード: スマホ対応 */
+  .watch-card {{ border-radius: 16px; padding: 18px 16px; }}
+  .watch-price-grid {{ grid-template-columns: 1fr 1fr; gap: 8px; }}
+  .ranking-card {{ border-radius: 16px; }}
+  .table-wrap th, .table-wrap td {{ padding: 9px 10px; font-size: 0.8rem; }}
 }}
 
 @media (max-width: 480px) {{

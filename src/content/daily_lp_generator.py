@@ -2796,41 +2796,49 @@ tr.sc-route-review {{ background: #FFFBEB; }}
     }});
   }}
 
-  // ── カテゴリナビ ──
+  // ── activateCategory: タブ切り替え + セクションアンカーへスクロール ──
+  function activateCategory(tabName,targetId){{
+    activateTab(tabName);
+    var panel=document.getElementById("tab-"+tabName);
+    if(panel){{
+      setTimeout(function(){{
+        if(targetId){{
+          var el=document.getElementById(targetId);
+          if(el){{
+            el.scrollIntoView({{behavior:"smooth",block:"start"}});
+            return;
+          }}
+        }}
+        panel.scrollIntoView({{behavior:"smooth",block:"start"}});
+      }},100);
+    }}
+  }}
+
+  // ── カテゴリナビ（ジャンルボタン）──
   var genreBtns=document.querySelectorAll(".cat-genre-btn");
   var makerGroups=document.querySelectorAll(".cat-maker-group");
   genreBtns.forEach(function(btn){{
     btn.addEventListener("click",function(){{
       var genre=btn.getAttribute("data-genre");
+      var targetTab=btn.getAttribute("data-target-tab");
+      var targetId=btn.getAttribute("data-target-id");
       genreBtns.forEach(function(b){{b.classList.remove("active");}});
       btn.classList.add("active");
       makerGroups.forEach(function(g){{
         g.classList.toggle("active",g.getAttribute("data-genre-panel")===genre);
       }});
+      if(targetTab)activateCategory(targetTab,targetId||"");
     }});
   }});
 
-  // ── メーカーチップクリック → タブ切り替え + ブランドスクロール ──
+  // ── メーカーチップクリック → activateCategory ──
   document.querySelectorAll(".cat-maker-chip").forEach(function(chip){{
     chip.addEventListener("click",function(e){{
-      var tabId=chip.getAttribute("data-tab");
-      var brand=chip.getAttribute("data-brand");
-      if(tabId){{
+      var targetTab=chip.getAttribute("data-target-tab");
+      var targetId=chip.getAttribute("data-target-id");
+      if(targetTab){{
         e.preventDefault();
-        activateTab(tabId);
-        var panel=document.getElementById("tab-"+tabId);
-        if(panel){{
-          setTimeout(function(){{
-            if(brand){{
-              var cards=panel.querySelectorAll("[data-brand='"+brand+"']");
-              if(cards.length>0){{
-                cards[0].scrollIntoView({{behavior:"smooth",block:"start"}});
-                return;
-              }}
-            }}
-            panel.scrollIntoView({{behavior:"smooth",block:"start"}});
-          }},100);
-        }}
+        activateCategory(targetTab,targetId||"");
       }}
     }});
   }});
@@ -2838,21 +2846,9 @@ tr.sc-route-review {{ background: #FFFBEB; }}
   // ── ランキング行クリックナビ ──
   document.querySelectorAll(".rank-row-clickable").forEach(function(row){{
     row.addEventListener("click",function(){{
-      var tabId=row.getAttribute("data-nav-tab");
-      var productId=row.getAttribute("data-nav-product");
-      if(tabId){{
-        activateTab(tabId);
-        var panel=document.getElementById("tab-"+tabId);
-        if(panel){{
-          panel.scrollIntoView({{behavior:"smooth",block:"start"}});
-          if(productId){{
-            setTimeout(function(){{
-              var el=document.getElementById(productId);
-              if(el)el.scrollIntoView({{behavior:"smooth",block:"start"}});
-            }},300);
-          }}
-        }}
-      }}
+      var tabId=row.getAttribute("data-target-tab");
+      var targetId=row.getAttribute("data-target-id");
+      if(tabId)activateCategory(tabId,targetId||"");
     }});
   }});
 }})();
@@ -2895,7 +2891,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
   <div class="hero-inner">
     <div class="hero-left">
       <div class="hero-eyebrow"><span class="live-dot"></span> 毎日更新 &mdash; {_esc(date_str)}</div>
-      <h1 class="hero-title">今日の<span class="accent">価格差</span>で稼ぐ。<br>公式 &times; 買取 &times; 海外相場。</h1>
+      <h1 class="hero-title">今日の<span class="accent">価格差</span>を把握する。</h1>
       <p class="hero-subtitle">公式購入→国内買取比較（初心者向け）から、二次流通→海外相場比較（Pro向け）まで、毎日更新。iPhone・カメラ・ゲーム機の価格差を一枚で確認できます。</p>
       <div class="hero-cta-row">
         <a href="#tab-beginner" class="hero-btn primary" data-track="hero_beginner_click">&#128100; 初心者向け案件を見る ({all_count}件)</a>
@@ -2957,44 +2953,44 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         return f"""<section class="cat-nav-wrap">
   <div class="cat-nav-inner">
     <div class="cat-genre-bar" role="tablist">
-      <button class="cat-genre-btn active" data-genre="smartphone">&#128241; スマホ</button>
-      <button class="cat-genre-btn" data-genre="tablet">&#128196; タブレット</button>
-      <button class="cat-genre-btn" data-genre="pc">&#128187; PC</button>
-      <button class="cat-genre-btn" data-genre="camera">&#128247; カメラ</button>
-      <button class="cat-genre-btn" data-genre="game">&#127918; ゲーム機</button>
-      <button class="cat-genre-btn" data-genre="lottery">&#127915; 抽選情報{lottery_badge}</button>
+      <button class="cat-genre-btn active" data-genre="smartphone" data-target-tab="beginner" data-target-id="category-beginner-iphone">&#128241; スマホ</button>
+      <button class="cat-genre-btn" data-genre="tablet" data-target-tab="beginner" data-target-id="category-beginner-iphone">&#128196; タブレット</button>
+      <button class="cat-genre-btn" data-genre="pc" data-target-tab="advanced" data-target-id="category-pro-pc">&#128187; PC</button>
+      <button class="cat-genre-btn" data-genre="camera" data-target-tab="advanced" data-target-id="category-pro-camera">&#128247; カメラ</button>
+      <button class="cat-genre-btn" data-genre="game" data-target-tab="beginner" data-target-id="category-beginner-iphone">&#127918; ゲーム機</button>
+      <button class="cat-genre-btn" data-genre="lottery" data-target-tab="lottery" data-target-id="">&#127915; 抽選情報{lottery_badge}</button>
     </div>
     <div class="cat-maker-bar">
       <div class="cat-maker-group active" data-genre-panel="smartphone">
-        <a class="cat-maker-chip" data-tab="beginner" href="#tab-beginner">Apple</a>
-        <a class="cat-maker-chip" data-tab="beginner" href="#tab-beginner">Samsung</a>
-        <a class="cat-maker-chip" data-tab="beginner" href="#tab-beginner">Google</a>
+        <a class="cat-maker-chip" data-target-tab="beginner" data-target-id="category-beginner-iphone" href="#tab-beginner">Apple</a>
+        <a class="cat-maker-chip" data-target-tab="beginner" data-target-id="category-beginner-iphone" href="#tab-beginner">Samsung</a>
+        <a class="cat-maker-chip" data-target-tab="beginner" data-target-id="category-beginner-iphone" href="#tab-beginner">Google</a>
       </div>
       <div class="cat-maker-group" data-genre-panel="tablet">
-        <a class="cat-maker-chip" data-tab="beginner" href="#tab-beginner">Apple</a>
-        <a class="cat-maker-chip" data-tab="beginner" href="#tab-beginner">Samsung</a>
+        <a class="cat-maker-chip" data-target-tab="beginner" data-target-id="category-beginner-iphone" href="#tab-beginner">Apple</a>
+        <a class="cat-maker-chip" data-target-tab="beginner" data-target-id="category-beginner-iphone" href="#tab-beginner">Samsung</a>
       </div>
       <div class="cat-maker-group" data-genre-panel="pc">
-        <a class="cat-maker-chip" data-tab="advanced" href="#tab-advanced">Apple</a>
-        <a class="cat-maker-chip" data-tab="advanced" href="#tab-advanced">Dell</a>
-        <a class="cat-maker-chip" data-tab="advanced" href="#tab-advanced">Lenovo</a>
-        <a class="cat-maker-chip" data-tab="advanced" href="#tab-advanced">HP</a>
+        <a class="cat-maker-chip" data-target-tab="advanced" data-target-id="category-pro-pc" href="#tab-advanced">Apple</a>
+        <a class="cat-maker-chip" data-target-tab="advanced" data-target-id="category-pro-pc" href="#tab-advanced">Dell</a>
+        <a class="cat-maker-chip" data-target-tab="advanced" data-target-id="category-pro-pc" href="#tab-advanced">Lenovo</a>
+        <a class="cat-maker-chip" data-target-tab="advanced" data-target-id="category-pro-pc" href="#tab-advanced">HP</a>
       </div>
       <div class="cat-maker-group" data-genre-panel="camera">
-        <a class="cat-maker-chip" data-tab="advanced" data-brand="RICOH" href="#tab-advanced">RICOH</a>
-        <a class="cat-maker-chip" data-tab="advanced" data-brand="FUJIFILM" href="#tab-advanced">FUJIFILM</a>
-        <a class="cat-maker-chip" data-tab="advanced" data-brand="Canon" href="#tab-advanced">Canon</a>
-        <a class="cat-maker-chip" data-tab="advanced" data-brand="Nikon" href="#tab-advanced">Nikon</a>
-        <a class="cat-maker-chip" data-tab="advanced" data-brand="Sony" href="#tab-advanced">Sony</a>
-        <a class="cat-maker-chip" data-tab="advanced" data-brand="Leica" href="#tab-advanced">Leica</a>
+        <a class="cat-maker-chip" data-target-tab="advanced" data-target-id="category-pro-camera" href="#tab-advanced">RICOH</a>
+        <a class="cat-maker-chip" data-target-tab="advanced" data-target-id="category-pro-camera" href="#tab-advanced">FUJIFILM</a>
+        <a class="cat-maker-chip" data-target-tab="advanced" data-target-id="category-pro-camera" href="#tab-advanced">Canon</a>
+        <a class="cat-maker-chip" data-target-tab="advanced" data-target-id="category-pro-camera" href="#tab-advanced">Nikon</a>
+        <a class="cat-maker-chip" data-target-tab="advanced" data-target-id="category-pro-camera" href="#tab-advanced">Sony</a>
+        <a class="cat-maker-chip" data-target-tab="advanced" data-target-id="category-pro-camera" href="#tab-advanced">Leica</a>
       </div>
       <div class="cat-maker-group" data-genre-panel="game">
-        <a class="cat-maker-chip" data-tab="beginner" data-brand="Nintendo" href="#tab-beginner">Nintendo</a>
-        <a class="cat-maker-chip" data-tab="beginner" data-brand="PlayStation" href="#tab-beginner">PlayStation</a>
-        <a class="cat-maker-chip" data-tab="advanced" data-brand="Xbox" href="#tab-advanced">Xbox</a>
+        <a class="cat-maker-chip" data-target-tab="beginner" data-target-id="category-beginner-iphone" href="#tab-beginner">Nintendo</a>
+        <a class="cat-maker-chip" data-target-tab="beginner" data-target-id="category-beginner-iphone" href="#tab-beginner">PlayStation</a>
+        <a class="cat-maker-chip" data-target-tab="advanced" data-target-id="category-pro-pc" href="#tab-advanced">Xbox</a>
       </div>
       <div class="cat-maker-group" data-genre-panel="lottery">
-        <a class="cat-maker-chip" data-tab="lottery" href="#tab-lottery">抽選一覧へ</a>
+        <a class="cat-maker-chip" data-target-tab="lottery" data-target-id="" href="#tab-lottery">抽選一覧へ</a>
       </div>
     </div>
   </div>
@@ -3417,7 +3413,7 @@ python3 -m src.cli calculate-sedori-routes</pre>
         """初心者向けタブ（v5 design）"""
         bybp = buyback_by_product or {}
         parts = []
-        parts.append('<div class="info-banner blue">\n'
+        parts.append('<div id="category-beginner-iphone" class="info-banner blue">\n'
                      '<div class="ib-title">&#128100; 初心者向け：公式購入 &rarr; 国内買取比較</div>\n'
                      'Apple Store・任天堂公式などの<strong>公式サイトで定価購入できる商品</strong>を、'
                      '国内の複数買取サイトで売却した場合の価格差を比較します。'
@@ -3677,7 +3673,7 @@ python3 -m src.cli calculate-sedori-routes</pre>
         parts = []
 
         # ── Pro向けタブ説明バナー ──
-        parts.append("""<div class="info-banner violet">
+        parts.append("""<div id="category-pro-pc" class="info-banner violet">
 <div class="ib-title">&#9997; Pro向け：二次流通 &rarr; 海外相場比較</div>
 公式では入手しづらいカメラ・限定モデルを、国内二次流通価格と海外相場で比較します。
 抽選・SOLD OUT・海外価格差のある商品を監視対象として整理しています。
@@ -3731,7 +3727,7 @@ python3 -m src.cli calculate-sedori-routes</pre>
 
         # カメラBeginnerDealを追加表示
         if camera_beginner_deals:
-            parts.append('<div class="section-header"><h2>&#128247; カメラ案件</h2><span class="section-count">' + str(len(camera_beginner_deals)) + '件</span></div>')
+            parts.append('<div class="section-header" id="category-pro-camera"><h2>&#128247; カメラ案件</h2><span class="section-count">' + str(len(camera_beginner_deals)) + '件</span></div>')
             parts.append('<div class="cards-grid">')
             for d in camera_beginner_deals:
                 parts.append(self._deal_card(d, 'badge-adv', 'Pro向け', pro_mode=True))
@@ -3940,7 +3936,7 @@ python3 -m src.cli calculate-sedori-routes</pre>
                 _pid_alias = _raw_pid[len('prod_'):] if _raw_pid.startswith('prod_') else _raw_pid
                 rows.append(
                     f'<div class="rank-row{row_cls} rank-row-clickable" '
-                    f'data-nav-tab="{_target_tab}" data-nav-product="product-{_esc(_pid_alias)}" style="cursor:pointer">'
+                    f'data-target-tab="{_target_tab}" data-target-id="product-{_esc(_pid_alias)}" style="cursor:pointer">'
                     f'<div class="rank-num {rank_cls}">{crown}</div>'
                     f'<div class="rank-info"><div class="rank-name rank-name-link">{_esc(d.product_name)}</div>'
                     f'<div class="rank-meta">{_esc(d.best_buyback_shop or "—")}'

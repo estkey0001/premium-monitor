@@ -444,7 +444,13 @@ def check() -> list[dict]:
     else:
         results.append({"level": "warning", "check": "quality_score_css_classes", "message": "品質スコアCSS（sc-qs-high/mid/low）が見つからない"})
 
-    # 49. 旧機能チップ（features-bar）が削除されている
+    # 49. ヒーロー旧コピー「公式 × 買取 × 海外相場。」が削除されている
+    if '公式 × 買取 × 海外相場' not in html and '公式 &times; 買取 &times; 海外相場' not in html:
+        results.append({"level": "ok", "check": "hero_old_copy_removed", "message": "ヒーロー旧コピー（公式×買取×海外相場）が削除されている"})
+    else:
+        results.append({"level": "error", "check": "hero_old_copy_removed", "message": "ヒーロー旧コピー（公式×買取×海外相場）が残存している（削除必要）"})
+
+    # 50（旧49）. 旧機能チップ（features-bar）が削除されている
     if '<div class="features-bar">' not in html:
         results.append({"level": "ok", "check": "feature_chips_removed", "message": "旧機能チップ（features-bar）が削除されている"})
     else:
@@ -474,9 +480,9 @@ def check() -> list[dict]:
     else:
         results.append({"level": "warning", "check": "live_deals_link", "message": "LIVE DEALSのリンクが未設定"})
 
-    # 54. ランキング行にクリックナビゲーションがある
-    if "rank-row-clickable" in html and "data-nav-tab" in html:
-        results.append({"level": "ok", "check": "ranking_nav_links", "message": "ランキング行にクリックナビゲーションがある"})
+    # 54. ランキング行にクリックナビゲーションがある（data-target-tab）
+    if "rank-row-clickable" in html and "data-target-tab" in html:
+        results.append({"level": "ok", "check": "ranking_nav_links", "message": "ランキング行にクリックナビゲーション（data-target-tab）がある"})
     else:
         results.append({"level": "warning", "check": "ranking_nav_links", "message": "ランキング行のクリックナビゲーションが未設定"})
 
@@ -485,6 +491,43 @@ def check() -> list[dict]:
         results.append({"level": "ok", "check": "product_card_ids", "message": "商品カードにid属性（product-*）がある"})
     else:
         results.append({"level": "warning", "check": "product_card_ids", "message": "商品カードのid属性が見つからない"})
+
+    # 56. カテゴリチップに data-target-tab が設定されている
+    if 'data-target-tab="beginner"' in html and 'data-target-tab="advanced"' in html:
+        results.append({"level": "ok", "check": "category_chip_target_tab", "message": "カテゴリチップに data-target-tab が設定されている"})
+    else:
+        results.append({"level": "error", "check": "category_chip_target_tab", "message": "カテゴリチップに data-target-tab が見つからない（ナビ修正必要）"})
+
+    # 57. カテゴリチップに data-target-id が設定されている
+    if 'data-target-id="category-pro-camera"' in html and 'data-target-id="category-beginner-iphone"' in html:
+        results.append({"level": "ok", "check": "category_chip_target_id", "message": "カテゴリチップに data-target-id（category-pro-camera/category-beginner-iphone）が設定されている"})
+    else:
+        results.append({"level": "error", "check": "category_chip_target_id", "message": "カテゴリチップの data-target-id が不足している（ナビ修正必要）"})
+
+    # 58. カテゴリアンカーID（category-pro-camera / category-beginner-iphone）が存在する
+    has_pro_camera = 'id="category-pro-camera"' in html
+    has_beg_iphone = 'id="category-beginner-iphone"' in html
+    if has_pro_camera and has_beg_iphone:
+        results.append({"level": "ok", "check": "category_anchor_ids", "message": "カテゴリアンカーID（category-pro-camera / category-beginner-iphone）が存在する"})
+    else:
+        missing = []
+        if not has_pro_camera:
+            missing.append("category-pro-camera")
+        if not has_beg_iphone:
+            missing.append("category-beginner-iphone")
+        results.append({"level": "error", "check": "category_anchor_ids", "message": f"カテゴリアンカーIDが不足: {', '.join(missing)}"})
+
+    # 59. activateCategory JS 関数が存在する
+    if "activateCategory" in html:
+        results.append({"level": "ok", "check": "activate_category_fn", "message": "activateCategory JS関数が存在する"})
+    else:
+        results.append({"level": "error", "check": "activate_category_fn", "message": "activateCategory JS関数が見つからない（カテゴリナビ未実装）"})
+
+    # 60. ランキング行に data-target-id が設定されている
+    if "rank-row-clickable" in html and 'data-target-id="product-' in html:
+        results.append({"level": "ok", "check": "ranking_target_id", "message": "ランキング行に data-target-id（product-*）が設定されている"})
+    else:
+        results.append({"level": "warning", "check": "ranking_target_id", "message": "ランキング行の data-target-id が未設定"})
 
     return results
 

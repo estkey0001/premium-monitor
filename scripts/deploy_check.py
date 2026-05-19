@@ -565,6 +565,51 @@ def check() -> list[dict]:
     else:
         results.append({"level": "error", "check": "lottery_chip_target", "message": "抽選チップの data-target-id=category-lottery が見つからない"})
 
+    # 66. ランキングカードが存在する
+    if "ranking-card" in html and "ranking-tab-btn" in html:
+        results.append({"level": "ok", "check": "ranking_card_exists", "message": "ランキングカードとタブが存在する"})
+    else:
+        results.append({"level": "error", "check": "ranking_card_exists", "message": "ランキングカードが見つからない"})
+
+    # 67. せどりランキングタブが存在する
+    if 'data-rtab="sedori"' in html:
+        results.append({"level": "ok", "check": "sedori_ranking_tab", "message": "せどりランキングタブが存在する"})
+    else:
+        results.append({"level": "warning", "check": "sedori_ranking_tab", "message": "せどりランキングタブが見つからない"})
+
+    # 68. モバイル一番の確認導線が存在する（リンクまたは「公式で要確認」表示）
+    has_mobile_ichiban_link = bool(re.search(r'mobile-ichiban\.com|モバイル一番', html))
+    if has_mobile_ichiban_link:
+        results.append({"level": "ok", "check": "mobile_ichiban_link", "message": "モバイル一番の確認導線が存在する"})
+    else:
+        results.append({"level": "warning", "check": "mobile_ichiban_link", "message": "モバイル一番の確認導線が見つからない（buyback CSV の URL を確認）"})
+
+    # 69. 価格に鮮度ラベル（freshness-*）が表示されている
+    if any(cls in html for cls in ("freshness-live", "freshness-recent", "freshness-stale", "freshness-warn")):
+        results.append({"level": "ok", "check": "price_freshness_label", "message": "価格鮮度ラベル（freshness-*）が表示されている"})
+    else:
+        results.append({"level": "warning", "check": "price_freshness_label", "message": "価格鮮度ラベルが見つからない"})
+
+    # 70. 古い価格（参考値/要確認）バッジが表示されている
+    if "freshness-stale" in html or "freshness-warn" in html:
+        results.append({"level": "ok", "check": "stale_price_badge", "message": "古い価格に参考値/要確認バッジが表示されている"})
+    else:
+        results.append({"level": "warning", "check": "stale_price_badge", "message": "古い価格バッジが見つからない（全データが新鮮か、鮮度チェックが機能していない可能性）"})
+
+    # 71. 抽選情報に公式リンクがある
+    has_lottery_link = bool(re.search(r'lottery_click', html))
+    if has_lottery_link:
+        results.append({"level": "ok", "check": "lottery_official_link", "message": "抽選情報タブに公式リンク（data-track=lottery_click）がある"})
+    else:
+        results.append({"level": "warning", "check": "lottery_official_link", "message": "抽選情報の公式リンクが見つからない"})
+
+    # 72. 買取店比較に「要確認」表示または確認リンクがある
+    has_verify_guidance = "要確認" in html or "公式で要確認" in html or "公式サイトで確認" in html
+    if has_verify_guidance:
+        results.append({"level": "ok", "check": "buyback_verify_guidance", "message": "買取店比較に確認導線（要確認/公式で要確認）が存在する"})
+    else:
+        results.append({"level": "warning", "check": "buyback_verify_guidance", "message": "買取店比較の確認導線が見つからない"})
+
     return results
 
 

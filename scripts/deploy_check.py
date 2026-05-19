@@ -166,11 +166,20 @@ def check() -> list[dict]:
     else:
         results.append({"level": "error", "check": "tab_beginner", "message": "初級者向けタブ（id=tab-beginner）が見つからない"})
 
-    # 14. 上級者向けタブの存在
+    # 14. Pro向けタブの存在
     if 'id="tab-advanced"' in html:
-        results.append({"level": "ok", "check": "tab_advanced", "message": "上級者向けタブが存在する"})
+        results.append({"level": "ok", "check": "tab_advanced", "message": "Pro向けタブが存在する（id=tab-advanced）"})
     else:
-        results.append({"level": "error", "check": "tab_advanced", "message": "上級者向けタブ（id=tab-advanced）が見つからない"})
+        results.append({"level": "error", "check": "tab_advanced", "message": "Pro向けタブ（id=tab-advanced）が見つからない"})
+
+    # 14b. LP上に「上級者向け」という表記がないこと（ユーザー向けUIには使わない）
+    # コメント・CSS内は無視、li/p/h2/span等のテキストのみ検査
+    import re as _re
+    adv_in_ui = _re.findall(r'>([^<>]*上級者向け[^<>]*)<', html)
+    if adv_in_ui:
+        results.append({"level": "warning", "check": "no_kyusha_text", "message": f"LP上に「上級者向け」表記が{len(adv_in_ui)}件残っている（Pro向けに統一推奨）: {adv_in_ui[:2]}"})
+    else:
+        results.append({"level": "ok", "check": "no_kyusha_text", "message": "LP上に「上級者向け」表記なし（Pro向けに統一済み）"})
 
     # 15. 古いデータ警告ロジックの存在
     if "stale-warning-block" in html:
@@ -346,6 +355,62 @@ def check() -> list[dict]:
         results.append({"level": "error", "check": "tab_buttons_valid", "message": f"data-track付きhref='#'が{len(bad_tracked)}件（クリックが機能しない可能性）"})
     else:
         results.append({"level": "ok", "check": "tab_buttons_valid", "message": "タブ・CTAボタンに無効なhref='#'なし"})
+
+    # 39. 初心者向けに公式購入リンクがある（Apple Store / 任天堂公式 / 公式 等）
+    has_official_link = (
+        "apple.com" in html
+        or "store.nintendo.co.jp" in html
+        or "nintendo.co.jp" in html
+        or "apple-store" in html
+        or "official-price-btn" in html
+        or "公式で購入" in html
+    )
+    if has_official_link:
+        results.append({"level": "ok", "check": "beginner_official_link", "message": "初心者向けに公式購入リンクがある"})
+    else:
+        results.append({"level": "warning", "check": "beginner_official_link", "message": "公式購入リンクが見つからない（初心者向けデータ要確認）"})
+
+    # 40. Pro向けに国内二次流通リンクがある
+    has_domestic_secondary = (
+        "jp.mercari.com" in html
+        or "auctions.yahoo.co.jp" in html
+        or "fril.jp" in html
+        or "pro-chip-domestic" in html
+    )
+    if has_domestic_secondary:
+        results.append({"level": "ok", "check": "pro_domestic_links", "message": "Pro向けに国内二次流通リンクがある"})
+    else:
+        results.append({"level": "warning", "check": "pro_domestic_links", "message": "Pro向け国内二次流通リンクが見つからない"})
+
+    # 41. Pro向けに海外相場リンクがある（eBay sold / StockX / B&H / Adorama / MPB / KEH / Amazon US）
+    has_overseas_pro = (
+        ("LH_Sold=1" in html or "ebay.com" in html)
+        and "stockx.com" in html
+        and "bhphotovideo.com" in html
+    )
+    if has_overseas_pro:
+        results.append({"level": "ok", "check": "pro_overseas_links", "message": "Pro向けに海外相場リンク（eBay/StockX/B&H）がある"})
+    else:
+        results.append({"level": "warning", "check": "pro_overseas_links", "message": "Pro向け海外相場リンクが不足している（watch_candidatesが必要）"})
+
+    # 42. StockX リンクがある
+    if "stockx.com" in html:
+        results.append({"level": "ok", "check": "stockx_link", "message": "StockXリンクが存在する"})
+    else:
+        results.append({"level": "warning", "check": "stockx_link", "message": "StockXリンクが見つからない"})
+
+    # 43. Amazon US リンクがある
+    if "amazon.com/s" in html:
+        results.append({"level": "ok", "check": "amazon_us_link", "message": "Amazon USリンクが存在する"})
+    else:
+        results.append({"level": "warning", "check": "amazon_us_link", "message": "Amazon USリンクが見つからない"})
+
+    # 44. 空のhref（href="" または href="javascript:"）がない
+    empty_href = re.findall(r'href=["\'](javascript:[^"\']*|)["\']', html)
+    if empty_href:
+        results.append({"level": "error", "check": "no_empty_href", "message": f"空または無効なhrefが{len(empty_href)}件"})
+    else:
+        results.append({"level": "ok", "check": "no_empty_href", "message": "空・無効なhrefなし"})
 
     return results
 

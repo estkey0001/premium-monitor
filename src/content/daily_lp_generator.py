@@ -1496,7 +1496,7 @@ a[href], button, [role="tab"], [role="button"],
 .badge-overseas{{ background: #EFF6FF; color: #1D4ED8; border: 1px solid #93C5FD; font-weight: 800; }}
 .badge-used    {{ background: var(--surface2); color: var(--ink2); border: 1px solid var(--card-border); }}
 
-/* タグシステム（上級者向け） */
+/* タグシステム（Pro向け） */
 .deal-tag {{
   display: inline-flex; align-items: center; gap: 4px;
   font-size: 0.65rem; font-weight: 700;
@@ -1510,7 +1510,7 @@ a[href], button, [role="tab"], [role="button"],
 .deal-tag.lottery {{ background: #F5F3FF; color: #7C3AED; border: 1px solid #C4B5FD; font-weight: 800; }}
 
 /* ============================================================
-   WATCH CARD (上級者向け) — バイオレットアクセント
+   WATCH CARD (Pro向け) — バイオレットアクセント
    ============================================================ */
 .watch-card {{
   background: #FDFCFF;
@@ -2349,7 +2349,83 @@ a[href], button, [role="tab"], [role="button"],
 }}
 
 /* ============================================================
-   SECTION HEADER (上級者向けタブ — h2 + 件数バッジ)
+   INFO BANNER — 初心者向け・Pro向けタブ説明バナー
+   ============================================================ */
+.info-banner {{
+  border-radius: 14px; padding: 16px 18px; margin-bottom: 24px;
+  font-size: 0.86rem; line-height: 1.7;
+}}
+.info-banner.blue {{
+  background: #EFF6FF; border: 1px solid #BFDBFE; color: #1E40AF;
+}}
+.info-banner.violet {{
+  background: #F5F3FF; border: 1px solid #DDD6FE; color: #4C1D95;
+}}
+.ib-title {{
+  font-size: 0.9rem; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.01em;
+}}
+
+/* ============================================================
+   PRO 向けカード — 二次流通・海外相場リンクチップ付き
+   ============================================================ */
+.pro-watch-card {{
+  background: var(--card-bg); border: 1px solid #DDD6FE;
+  border-radius: 20px; overflow: hidden;
+}}
+.pro-candidate-card {{
+  padding: 18px 18px 14px;
+  border-bottom: 1px solid #EEE8FF;
+}}
+.pro-candidate-card:last-child {{ border-bottom: none; }}
+.pcc-header {{
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 10px; margin-bottom: 10px; flex-wrap: wrap;
+}}
+.pcc-name {{
+  font-size: 1rem; font-weight: 800; color: var(--text-1);
+  letter-spacing: -0.01em;
+}}
+.pcc-badges {{ display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }}
+.pcc-price-row {{
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  margin-bottom: 12px; font-size: 0.84rem;
+}}
+.pcc-price-lbl {{ color: var(--text-3); font-weight: 600; }}
+.pcc-price-val {{ font-weight: 800; color: var(--text-1); font-family: 'JetBrains Mono', monospace; }}
+.wc-gap {{ font-size: 0.8rem; }}
+.pcc-shop {{ color: var(--text-3); font-size: 0.8rem; }}
+.pcc-flags {{ color: var(--yellow); font-size: 0.78rem; font-weight: 600; }}
+.pcc-links-section {{ margin-bottom: 4px; }}
+.pcc-links-label {{
+  font-size: 0.7rem; font-weight: 700; color: var(--text-3);
+  text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px;
+}}
+.pcc-chips {{ display: flex; flex-wrap: wrap; gap: 5px; }}
+
+/* リンクチップ */
+.pro-chip {{
+  display: inline-flex; align-items: center; padding: 4px 10px;
+  border-radius: 99px; font-size: 0.75rem; font-weight: 700;
+  text-decoration: none; cursor: pointer; white-space: nowrap;
+  transition: all 0.15s cubic-bezier(0.23,1,0.32,1);
+}}
+.pro-chip-domestic {{
+  background: #F0FDF4; color: #15803D; border: 1px solid #BBF7D0;
+}}
+.pro-chip-domestic:hover {{ background: #DCFCE7; }}
+.pro-chip-overseas {{
+  background: #EFF6FF; color: #1E40AF; border: 1px solid #BFDBFE;
+}}
+.pro-chip-overseas:hover {{ background: #DBEAFE; }}
+
+@media (max-width: 640px) {{
+  .pro-candidate-card {{ padding: 14px 12px 10px; }}
+  .pcc-header {{ flex-direction: column; }}
+  .pro-chip {{ padding: 3px 8px; font-size: 0.7rem; }}
+}}
+
+/* ============================================================
+   SECTION HEADER (Proタブ — h2 + 件数バッジ)
    ============================================================ */
 .section-header {{
   display: flex; align-items: center; justify-content: space-between;
@@ -2627,11 +2703,11 @@ a[href], button, [role="tab"], [role="button"],
     <div class="hero-left">
       <div class="hero-eyebrow"><span class="live-dot"></span> 毎日更新 &mdash; {_esc(date_str)}</div>
       <h1 class="hero-title">今日の<span class="accent">価格差</span>で稼ぐ。<br>公式 &times; 買取 &times; 海外相場。</h1>
-      <p class="hero-subtitle">iPhone・カメラ・ゲーム機の公式価格と買取価格の差額を毎日更新。初心者向けの低難度案件から、上級者向けの中古市場差額・海外相場まで、このページ一枚で行動できます。</p>
+      <p class="hero-subtitle">公式購入→国内買取比較（初心者向け）から、二次流通→海外相場比較（Pro向け）まで、毎日更新。iPhone・カメラ・ゲーム機の価格差を一枚で確認できます。</p>
       <div class="hero-cta-row">
-        <a href="#tab-beginner" class="hero-btn primary">&#128100; 初心者向け案件 {all_count}件</a>
-        <a href="#tab-advanced" class="hero-btn violet">&#128269; 上級者向け</a>
-        <a href="#tab-ranking" class="hero-btn secondary">&#127942; ランキング</a>
+        <a href="#tab-beginner" class="hero-btn primary" data-track="hero_beginner_click">&#128100; 初心者向け案件を見る ({all_count}件)</a>
+        <a href="#tab-advanced" class="hero-btn violet" data-track="hero_pro_click">&#9997; Pro向け相場を見る</a>
+        <a href="#tab-sedori" class="hero-btn secondary" data-track="hero_sedori_click">&#9636; せどりルートを見る</a>
       </div>
       <div class="hero-social-proof">
         <div class="social-avatars">
@@ -2716,7 +2792,7 @@ a[href], button, [role="tab"], [role="button"],
 <nav class="tab-nav" role="tablist">
   <button class="tab-btn" data-tab="ranking" role="tab" aria-selected="false">&#127942; ランキング</button>
   <button class="tab-btn active" data-tab="beginner" role="tab" aria-selected="true">&#128100; 初心者向け <span class="tab-count">{all_count}</span></button>
-  <button class="tab-btn" data-tab="advanced" role="tab" aria-selected="false">&#128269; 上級者向け <span class="tab-count">{adv_total}</span></button>
+  <button class="tab-btn" data-tab="advanced" role="tab" aria-selected="false">&#9997; Pro向け <span class="tab-count">{adv_total}</span></button>
   <button class="tab-btn" data-tab="sedori" role="tab" aria-selected="false">&#9636; せどりルート</button>
   <button class="tab-btn" data-tab="surge" role="tab" aria-selected="false">&#9889; 急騰/急落{surge_badge}</button>
   <button class="tab-btn" data-tab="new-products" role="tab" aria-selected="false">&#127381; 新商品候補</button>
@@ -2942,11 +3018,11 @@ python3 -m src.cli calculate-sedori-routes</pre>
         bybp = buyback_by_product or {}
         parts = []
         parts.append('<div class="info-banner blue">\n'
-                     '<strong>&#128100; 初心者向けとは？</strong><br>\n'
-                     'Apple Store・任天堂公式など<strong>正規店で定価購入</strong>し、買取店に持ち込むことで利益が出る案件です。\n'
-                     '新品未開封・SIMフリー等の条件を満たす必要があります。\n'
-                     '購入前に必ず最新の買取価格をご確認ください。\n'
-                     '<strong>利益は参考値です。条件・在庫・買取価格は常に変動します。</strong>\n'
+                     '<div class="ib-title">&#128100; 初心者向け：公式購入 &rarr; 国内買取比較</div>\n'
+                     'Apple Store・任天堂公式などの<strong>公式サイトで定価購入できる商品</strong>を、'
+                     '国内の複数買取サイトで売却した場合の価格差を比較します。'
+                     'iPhone・ゲーム機など比較的入手しやすい商品を中心に掲載しています。\n'
+                     '<strong>掲載価格は更新時点の参考値です。参考利益は保証されません。購入前に必ず各店舗の最新価格をご確認ください。</strong>\n'
                      '</div>')
         if easy_deals:
             parts.append(f'<div class="sec-head"><div class="sec-title">低難度 &mdash; すぐ動ける案件</div><div class="sec-badge">{len(easy_deals)}件</div></div>')
@@ -3163,22 +3239,31 @@ python3 -m src.cli calculate-sedori-routes</pre>
         camera_watch = camera_watch or []
         parts = []
 
+        # ── Pro向けタブ説明バナー ──
+        parts.append("""<div class="info-banner violet">
+<div class="ib-title">&#9997; Pro向け：二次流通 &rarr; 海外相場比較</div>
+公式では入手しづらいカメラ・限定モデルを、国内二次流通価格と海外相場で比較します。
+抽選・SOLD OUT・海外価格差のある商品を監視対象として整理しています。
+<strong>入手難易度が高い商品が対象です。出品・売却の参考情報としてご利用ください。価格は参考値です。</strong>
+</div>""")
+
         if advanced_deals:
-            parts.append('<div class="section-header"><h2>高利益案件</h2><span class="section-count">' + str(len(advanced_deals)) + '件</span></div>')
+            parts.append('<div class="section-header"><h2>&#128269; Pro向け確定案件</h2><span class="section-count">' + str(len(advanced_deals)) + '件</span></div>')
             for d in advanced_deals:
                 badge_cls = "badge-exp" if d.user_level == "expert_only" else "badge-adv"
-                label = "上級者限定" if d.user_level == "expert_only" else "高利益"
+                label = "Proのみ" if d.user_level == "expert_only" else "Pro向け"
                 parts.append(self._deal_card(d, badge_cls, label))
 
         if advanced_snaps:
-            parts.append('<div class="section-header"><h2>プレ値・価格差候補</h2><span class="section-count">スナップショット分析</span></div>')
+            parts.append('<div class="section-header"><h2>&#128202; 価格差・プレ値候補</h2><span class="section-count">スナップショット分析</span></div>')
             rows = []
             for s in advanced_snaps:
                 method = {"lottery": "抽選", "soldout": "SOLD OUT", "discontinued": "終了"}.get(
                     getattr(s, "sale_method", ""), getattr(s, "sale_method", "通常"))
+                pname = _esc(s.product_name)
                 rows.append(
                     f"<tr>"
-                    f"<td data-user-level='{_esc(getattr(s,'user_level',''))}'>{_esc(s.product_name)}</td>"
+                    f"<td data-user-level='{_esc(getattr(s,'user_level',''))}'><strong>{pname}</strong></td>"
                     f"<td>{_esc(fmt_price(s.official_price_jpy))}</td>"
                     f"<td>{_esc(fmt_price(s.domestic_used_price_jpy))}</td>"
                     f"<td>{_esc(fmt_price(getattr(s,'overseas_price_jpy',None)))}</td>"
@@ -3196,63 +3281,119 @@ python3 -m src.cli calculate-sedori-routes</pre>
 <p style="color:var(--text-3);font-size:0.78rem;margin-top:10px;padding:0 4px;">※ 難易度0.0〜1.0（低いほど入手しやすい）</p>
 </div>""")
 
-        # ----- フォールバック: 上級者向け監視候補 -----
+        # ----- Pro向け監視候補（フォールバック含む） -----
         if watch_candidates:
             has_confirmed = bool(advanced_deals or advanced_snaps)
             if not has_confirmed:
-                parts.append("""<div class="caution" style="margin:16px 0 20px;">
-ℹ️ <strong>現在、上級者向けの確定候補は少ないため、価格差・希少性・海外相場差が大きい監視候補を表示しています。</strong><br>
+                parts.append("""<div class="caution adv-fallback-notice" style="margin:16px 0 20px;">
+&#8505;&#65039; <strong>現在、Pro向けの確定候補は少ないため、価格差・希少性・海外相場差が大きい監視候補を表示しています。</strong><br>
 中古市場や海外相場のデータが入り次第、確定候補として昇格します。
 </div>""")
-            parts.append('<div class="section-header"><h2>上級者向け監視候補</h2><span class="section-count">価格差・希少性スコア上位</span></div>')
+            parts.append('<div class="section-header"><h2>&#128204; Pro向け監視候補</h2><span class="section-count">価格差・希少性スコア上位</span></div>')
             parts.append(self._watch_candidates_table(watch_candidates))
 
         if not advanced_deals and not advanced_snaps and not watch_candidates:
-            parts.append('<div class="section-header"><h2>上級者向け候補</h2></div><p class="empty-state">現在、条件を満たす候補はありません。</p>')
+            parts.append("""<div class="section-header"><h2>Pro向け候補</h2></div>
+<div class="empty-state"><span class="empty-icon">&#128202;</span>現在、条件を満たす候補はありません。</div>""")
 
         return "\n".join(parts)
 
     def _watch_candidates_table(self, candidates: list) -> str:
-        """監視候補テーブルを生成する（products テーブル由来）。"""
+        """監視候補テーブルを生成する（products テーブル由来）。Pro向け二次流通・海外相場リンクチップ付き。"""
         # カメラ優先、次にゲーム機
         camera = [c for c in candidates if c["genre"] == "camera"]
         others = [c for c in candidates if c["genre"] != "camera"]
         ordered = camera + others
 
-        rows = []
+        cards = []
         for c in ordered:
             price  = c["official_price"]
             bp     = c["buyback_price"]
             shop   = c["shop_name"] or "—"
             flags  = "・".join(c["flags"]) if c["flags"] else "監視中"
-            # 買取価格がある場合は差額も表示
-            gap_str = ""
+            pname_raw = c["product_name"]
+            pname_esc  = _esc(pname_raw)
+            pname_enc  = _urllib_parse.quote(pname_raw)
+
+            # 価格差表示
+            gap_html = ""
             if bp and price:
                 gap = bp - price
-                gap_str = f'<br><span style="color:var(--green);font-size:0.82rem">'
-                gap_str += f'買取 ¥{bp:,} (差 {gap:+,}円)</span>'
-            buy_link = ""
-            if c.get("buyback_url"):
-                buy_link = f'<a href="{_esc(c["buyback_url"])}" target="_blank" rel="noopener" style="font-size:0.78rem;color:var(--accent)">買取ページ</a>'
+                gap_html = (
+                    f'<span class="wc-gap">'
+                    f'買取¥{bp:,} <span style="color:var(--green)">({gap:+,}円)</span>'
+                    f'</span>'
+                )
 
-            rows.append(
-                f"<tr class='watch-candidate-card'>"
-                f"<td><strong>{_esc(c['product_name'])}</strong>{gap_str}</td>"
-                f"<td>{_esc(fmt_price(price) if price else '—')}</td>"
-                f"<td>{_esc(shop)}</td>"
-                f"<td><span style='color:var(--yellow);font-size:0.82rem'>{_esc(flags)}</span></td>"
-                f"<td>{buy_link}</td>"
-                f"</tr>"
+            # 販売方式バッジ
+            sale_method = c.get("sale_method", "")
+            sale_badge_map = {
+                "lottery": '<span class="badge badge-lottery">抽選</span>',
+                "soldout": '<span class="badge badge-soldout">SOLD OUT</span>',
+                "waiting": '<span class="badge badge-soldout">入荷待ち</span>',
+                "reservation": '<span class="badge badge-adv">予約受付</span>',
+            }
+            sale_badge = sale_badge_map.get(sale_method, '<span class="badge badge-adv">公式購入困難</span>')
+
+            # ── 国内二次流通リンクチップ ──
+            domestic_links = [
+                ("メルカリ",     f"https://jp.mercari.com/search?keyword={pname_enc}"),
+                ("ヤフオク",     f"https://auctions.yahoo.co.jp/search/search?p={pname_enc}"),
+                ("ラクマ",       f"https://fril.jp/search?query={pname_enc}"),
+                ("マップカメラ", f"https://www.mapcamera.com/ec/search?q={pname_enc}"),
+                ("キタムラ中古", f"https://www.kitamura.co.jp/ec/special/camera/used/?q={pname_enc}"),
+                ("フジヤカメラ", f"https://www.fujiyacamera.com/shopbrand/ct10/?q={pname_enc}"),
+                ("価格.com",    f"https://kakaku.com/search_results/{pname_enc}/"),
+                ("ソフマップ中古", f"https://www.sofmap.com/product_list.aspx?q={pname_enc}&st=1"),
+            ]
+            domestic_chips = "".join(
+                f'<a href="{_esc(url)}" target="_blank" rel="noopener noreferrer" '
+                f'class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">{_esc(label)}</a>'
+                for label, url in domestic_links
             )
 
-        return f"""<div class="watch-card"><div class="table-wrap">
-<table>
-<thead><tr><th>商品</th><th>公式価格</th><th>最新買取店</th><th>注目ポイント</th><th>リンク</th></tr></thead>
-<tbody>{"".join(rows)}</tbody>
-</table>
-</div>
-<p style="color:var(--text-3);font-size:0.78rem;margin-top:10px;padding:0 4px;">
-※ 監視候補は価格差・希少性スコアが高い商品です。中古市場データ入手後に確定候補へ昇格します。
+            # ── 海外相場リンクチップ ──
+            overseas_links = [
+                ("eBay sold",  f"https://www.ebay.com/sch/i.html?_nkw={pname_enc}&LH_Sold=1&LH_Complete=1"),
+                ("StockX",     f"https://stockx.com/search?s={pname_enc}"),
+                ("B&H",        f"https://www.bhphotovideo.com/c/search?Ntt={pname_enc}"),
+                ("Adorama",    f"https://www.adorama.com/l/?searchinfo={pname_enc}"),
+                ("MPB",        f"https://www.mpb.com/en-us/cameras/?q={pname_enc}"),
+                ("KEH",        f"https://www.keh.com/search#{pname_enc}"),
+                ("Amazon US",  f"https://www.amazon.com/s?k={pname_enc}"),
+            ]
+            overseas_chips = "".join(
+                f'<a href="{_esc(url)}" target="_blank" rel="noopener noreferrer" '
+                f'class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">{_esc(label)}</a>'
+                for label, url in overseas_links
+            )
+
+            cards.append(f"""<div class="watch-candidate-card pro-candidate-card">
+  <div class="pcc-header">
+    <div class="pcc-name">{pname_esc}</div>
+    <div class="pcc-badges">{sale_badge}</div>
+  </div>
+  <div class="pcc-price-row">
+    <span class="pcc-price-lbl">公式価格</span>
+    <span class="pcc-price-val">{_esc(fmt_price(price) if price else '未定')}</span>
+    {gap_html}
+    <span class="pcc-shop">{_esc(shop)}</span>
+    <span class="pcc-flags">{_esc(flags)}</span>
+  </div>
+  <div class="pcc-links-section">
+    <div class="pcc-links-label">&#127968; 国内二次流通</div>
+    <div class="pcc-chips domestic-chips">{domestic_chips}</div>
+  </div>
+  <div class="pcc-links-section" style="margin-top:8px">
+    <div class="pcc-links-label">&#127758; 海外相場</div>
+    <div class="pcc-chips overseas-chips overseas-links-section">{overseas_chips}</div>
+  </div>
+</div>""")
+
+        return f"""<div class="watch-card pro-watch-card">
+{"".join(cards) if cards else '<p class="empty-state">候補商品がありません。</p>'}
+<p style="color:var(--text-3);font-size:0.78rem;margin-top:12px;padding:0 4px;">
+&#9888; リンク先は外部サービスです。相場確認のみを目的としています。売買判断はご自身でご確認ください。
 </p>
 </div>"""
 
@@ -3502,7 +3643,7 @@ python3 -m src.cli calculate-sedori-routes</pre>
   </div>
   <div class="footer-links">
     <a href="#tab-beginner" class="footer-link">初心者向け案件</a>
-    <a href="#tab-advanced" class="footer-link">上級者向け案件</a>
+    <a href="#tab-advanced" class="footer-link">Pro向け相場</a>
     <a href="#tab-ranking" class="footer-link">買取ランキング</a>
     <a href="#tab-surge" class="footer-link">急騰/急落アラート</a>
     <a href="#tab-new-products" class="footer-link">新商品候補</a>
@@ -3536,7 +3677,7 @@ python3 -m src.cli calculate-sedori-routes</pre>
                 f'<span class="deal-tag {("lottery" if t in ("抽選","限定") else ("hard" if t=="高難度" else ("intl" if t=="海外差益" else "pre")))}">{_esc(t)}</span>'
                 for t in item["tags"]
             )
-            level_badge = '<span class="badge badge-easy" style="font-size:0.6rem">初心者向け</span>' if 'beginner' in item["level"] else '<span class="badge badge-adv" style="font-size:0.6rem">上級者向け</span>'
+            level_badge = '<span class="badge badge-easy" style="font-size:0.6rem">初心者向け</span>' if 'beginner' in item["level"] else '<span class="badge badge-adv" style="font-size:0.6rem">Pro向け</span>'
             cards.append(
                 f'<div class="new-product-card" data-user-level="{_esc(item["level"])}">'
                 f'<div class="np-top-bar"></div>'
@@ -3569,7 +3710,7 @@ python3 -m src.cli calculate-sedori-routes</pre>
         if not beginner_deals:
             lines.append("条件を満たす案件なし")
 
-        lines.extend(["", "## 上級者向け候補", ""])
+        lines.extend(["", "## Pro向け候補", ""])
         for s in advanced_snaps:
             lines.append(
                 f"- **{s.product_name}**: 定価{fmt_price(s.official_price_jpy)} "

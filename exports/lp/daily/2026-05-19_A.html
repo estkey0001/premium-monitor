@@ -1218,7 +1218,7 @@ a[href], button, [role="tab"], [role="button"],
 .badge-overseas{ background: #EFF6FF; color: #1D4ED8; border: 1px solid #93C5FD; font-weight: 800; }
 .badge-used    { background: var(--surface2); color: var(--ink2); border: 1px solid var(--card-border); }
 
-/* タグシステム（上級者向け） */
+/* タグシステム（Pro向け） */
 .deal-tag {
   display: inline-flex; align-items: center; gap: 4px;
   font-size: 0.65rem; font-weight: 700;
@@ -1232,7 +1232,7 @@ a[href], button, [role="tab"], [role="button"],
 .deal-tag.lottery { background: #F5F3FF; color: #7C3AED; border: 1px solid #C4B5FD; font-weight: 800; }
 
 /* ============================================================
-   WATCH CARD (上級者向け) — バイオレットアクセント
+   WATCH CARD (Pro向け) — バイオレットアクセント
    ============================================================ */
 .watch-card {
   background: #FDFCFF;
@@ -2071,7 +2071,83 @@ a[href], button, [role="tab"], [role="button"],
 }
 
 /* ============================================================
-   SECTION HEADER (上級者向けタブ — h2 + 件数バッジ)
+   INFO BANNER — 初心者向け・Pro向けタブ説明バナー
+   ============================================================ */
+.info-banner {
+  border-radius: 14px; padding: 16px 18px; margin-bottom: 24px;
+  font-size: 0.86rem; line-height: 1.7;
+}
+.info-banner.blue {
+  background: #EFF6FF; border: 1px solid #BFDBFE; color: #1E40AF;
+}
+.info-banner.violet {
+  background: #F5F3FF; border: 1px solid #DDD6FE; color: #4C1D95;
+}
+.ib-title {
+  font-size: 0.9rem; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.01em;
+}
+
+/* ============================================================
+   PRO 向けカード — 二次流通・海外相場リンクチップ付き
+   ============================================================ */
+.pro-watch-card {
+  background: var(--card-bg); border: 1px solid #DDD6FE;
+  border-radius: 20px; overflow: hidden;
+}
+.pro-candidate-card {
+  padding: 18px 18px 14px;
+  border-bottom: 1px solid #EEE8FF;
+}
+.pro-candidate-card:last-child { border-bottom: none; }
+.pcc-header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 10px; margin-bottom: 10px; flex-wrap: wrap;
+}
+.pcc-name {
+  font-size: 1rem; font-weight: 800; color: var(--text-1);
+  letter-spacing: -0.01em;
+}
+.pcc-badges { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.pcc-price-row {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  margin-bottom: 12px; font-size: 0.84rem;
+}
+.pcc-price-lbl { color: var(--text-3); font-weight: 600; }
+.pcc-price-val { font-weight: 800; color: var(--text-1); font-family: 'JetBrains Mono', monospace; }
+.wc-gap { font-size: 0.8rem; }
+.pcc-shop { color: var(--text-3); font-size: 0.8rem; }
+.pcc-flags { color: var(--yellow); font-size: 0.78rem; font-weight: 600; }
+.pcc-links-section { margin-bottom: 4px; }
+.pcc-links-label {
+  font-size: 0.7rem; font-weight: 700; color: var(--text-3);
+  text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px;
+}
+.pcc-chips { display: flex; flex-wrap: wrap; gap: 5px; }
+
+/* リンクチップ */
+.pro-chip {
+  display: inline-flex; align-items: center; padding: 4px 10px;
+  border-radius: 99px; font-size: 0.75rem; font-weight: 700;
+  text-decoration: none; cursor: pointer; white-space: nowrap;
+  transition: all 0.15s cubic-bezier(0.23,1,0.32,1);
+}
+.pro-chip-domestic {
+  background: #F0FDF4; color: #15803D; border: 1px solid #BBF7D0;
+}
+.pro-chip-domestic:hover { background: #DCFCE7; }
+.pro-chip-overseas {
+  background: #EFF6FF; color: #1E40AF; border: 1px solid #BFDBFE;
+}
+.pro-chip-overseas:hover { background: #DBEAFE; }
+
+@media (max-width: 640px) {
+  .pro-candidate-card { padding: 14px 12px 10px; }
+  .pcc-header { flex-direction: column; }
+  .pro-chip { padding: 3px 8px; font-size: 0.7rem; }
+}
+
+/* ============================================================
+   SECTION HEADER (Proタブ — h2 + 件数バッジ)
    ============================================================ */
 .section-header {
   display: flex; align-items: center; justify-content: space-between;
@@ -2243,11 +2319,11 @@ a[href], button, [role="tab"], [role="button"],
     <div class="hero-left">
       <div class="hero-eyebrow"><span class="live-dot"></span> 毎日更新 &mdash; 2026-05-19</div>
       <h1 class="hero-title">今日の<span class="accent">価格差</span>で稼ぐ。<br>公式 &times; 買取 &times; 海外相場。</h1>
-      <p class="hero-subtitle">iPhone・カメラ・ゲーム機の公式価格と買取価格の差額を毎日更新。初心者向けの低難度案件から、上級者向けの中古市場差額・海外相場まで、このページ一枚で行動できます。</p>
+      <p class="hero-subtitle">公式購入→国内買取比較（初心者向け）から、二次流通→海外相場比較（Pro向け）まで、毎日更新。iPhone・カメラ・ゲーム機の価格差を一枚で確認できます。</p>
       <div class="hero-cta-row">
-        <a href="#tab-beginner" class="hero-btn primary">&#128100; 初心者向け案件 8件</a>
-        <a href="#tab-advanced" class="hero-btn violet">&#128269; 上級者向け</a>
-        <a href="#tab-ranking" class="hero-btn secondary">&#127942; ランキング</a>
+        <a href="#tab-beginner" class="hero-btn primary" data-track="hero_beginner_click">&#128100; 初心者向け案件を見る (8件)</a>
+        <a href="#tab-advanced" class="hero-btn violet" data-track="hero_pro_click">&#9997; Pro向け相場を見る</a>
+        <a href="#tab-sedori" class="hero-btn secondary" data-track="hero_sedori_click">&#9636; せどりルートを見る</a>
       </div>
       <div class="hero-social-proof">
         <div class="social-avatars">
@@ -2259,7 +2335,7 @@ a[href], button, [role="tab"], [role="button"],
       </div>
       <div class="hero-timestamps">
         <span class="ts-pill stale" data-buyback-updated><span class="ts-dot"></span>買取価格更新：2026-05-18 12:00 JST</span>
-        <span class="ts-pill" data-lp-generated><span class="ts-dot blue"></span>LP生成：2026-05-19 15:02 JST</span>
+        <span class="ts-pill" data-lp-generated><span class="ts-dot blue"></span>LP生成：2026-05-19 15:10 JST</span>
       </div>
     </div>
     <div class="hero-right">
@@ -2285,7 +2361,7 @@ a[href], button, [role="tab"], [role="button"],
 <nav class="tab-nav" role="tablist">
   <button class="tab-btn" data-tab="ranking" role="tab" aria-selected="false">&#127942; ランキング</button>
   <button class="tab-btn active" data-tab="beginner" role="tab" aria-selected="true">&#128100; 初心者向け <span class="tab-count">8</span></button>
-  <button class="tab-btn" data-tab="advanced" role="tab" aria-selected="false">&#128269; 上級者向け <span class="tab-count">12</span></button>
+  <button class="tab-btn" data-tab="advanced" role="tab" aria-selected="false">&#9997; Pro向け <span class="tab-count">12</span></button>
   <button class="tab-btn" data-tab="sedori" role="tab" aria-selected="false">&#9636; せどりルート</button>
   <button class="tab-btn" data-tab="surge" role="tab" aria-selected="false">&#9889; 急騰/急落</button>
   <button class="tab-btn" data-tab="new-products" role="tab" aria-selected="false">&#127381; 新商品候補</button>
@@ -2310,11 +2386,9 @@ a[href], button, [role="tab"], [role="button"],
 
 <div id="tab-beginner" class="tab-panel active" role="tabpanel">
 <div class="info-banner blue">
-<strong>&#128100; 初心者向けとは？</strong><br>
-Apple Store・任天堂公式など<strong>正規店で定価購入</strong>し、買取店に持ち込むことで利益が出る案件です。
-新品未開封・SIMフリー等の条件を満たす必要があります。
-購入前に必ず最新の買取価格をご確認ください。
-<strong>利益は参考値です。条件・在庫・買取価格は常に変動します。</strong>
+<div class="ib-title">&#128100; 初心者向け：公式購入 &rarr; 国内買取比較</div>
+Apple Store・任天堂公式などの<strong>公式サイトで定価購入できる商品</strong>を、国内の複数買取サイトで売却した場合の価格差を比較します。iPhone・ゲーム機など比較的入手しやすい商品を中心に掲載しています。
+<strong>掲載価格は更新時点の参考値です。参考利益は保証されません。購入前に必ず各店舗の最新価格をご確認ください。</strong>
 </div>
 <div class="sec-head"><div class="sec-title">低難度 &mdash; すぐ動ける案件</div><div class="sec-badge">7件</div></div>
 <div class="cards-grid">
@@ -2669,19 +2743,261 @@ Apple Store・任天堂公式など<strong>正規店で定価購入</strong>し�
 </div>
 
 <div id="tab-advanced" class="tab-panel" role="tabpanel">
-<div class="caution" style="margin:16px 0 20px;">
-ℹ️ <strong>現在、上級者向けの確定候補は少ないため、価格差・希少性・海外相場差が大きい監視候補を表示しています。</strong><br>
+<div class="info-banner violet">
+<div class="ib-title">&#9997; Pro向け：二次流通 &rarr; 海外相場比較</div>
+公式では入手しづらいカメラ・限定モデルを、国内二次流通価格と海外相場で比較します。
+抽選・SOLD OUT・海外価格差のある商品を監視対象として整理しています。
+<strong>入手難易度が高い商品が対象です。出品・売却の参考情報としてご利用ください。価格は参考値です。</strong>
+</div>
+<div class="caution adv-fallback-notice" style="margin:16px 0 20px;">
+&#8505;&#65039; <strong>現在、Pro向けの確定候補は少ないため、価格差・希少性・海外相場差が大きい監視候補を表示しています。</strong><br>
 中古市場や海外相場のデータが入り次第、確定候補として昇格します。
 </div>
-<div class="section-header"><h2>上級者向け監視候補</h2><span class="section-count">価格差・希少性スコア上位</span></div>
-<div class="watch-card"><div class="table-wrap">
-<table>
-<thead><tr><th>商品</th><th>公式価格</th><th>最新買取店</th><th>注目ポイント</th><th>リンク</th></tr></thead>
-<tbody><tr class='watch-candidate-card'><td><strong>FUJIFILM X100VI</strong><br><span style="color:var(--green);font-size:0.82rem">買取 ¥415,000 (差 +145,500円)</span></td><td>¥269,500</td><td>マップカメラ</td><td><span style='color:var(--yellow);font-size:0.82rem'>中古プレ値あり</span></td><td></td></tr><tr class='watch-candidate-card'><td><strong>RICOH GR IV Monochrome</strong></td><td>¥283,800</td><td>—</td><td><span style='color:var(--yellow);font-size:0.82rem'>中古プレ値あり</span></td><td></td></tr><tr class='watch-candidate-card'><td><strong>RICOH GR IV</strong><br><span style="color:var(--green);font-size:0.82rem">買取 ¥175,000 (差 -19,800円)</span></td><td>¥194,800</td><td>マップカメラ</td><td><span style='color:var(--yellow);font-size:0.82rem'>中古プレ値あり</span></td><td></td></tr><tr class='watch-candidate-card'><td><strong>RICOH GR III HDF</strong></td><td>¥147,400</td><td>—</td><td><span style='color:var(--yellow);font-size:0.82rem'>中古プレ値あり</span></td><td></td></tr><tr class='watch-candidate-card'><td><strong>RICOH GR IIIx</strong><br><span style="color:var(--green);font-size:0.82rem">買取 ¥125,000 (差 -14,800円)</span></td><td>¥139,800</td><td>マップカメラ</td><td><span style='color:var(--yellow);font-size:0.82rem'>中古プレ値あり</span></td><td></td></tr><tr class='watch-candidate-card'><td><strong>RICOH GR III</strong></td><td>¥129,800</td><td>—</td><td><span style='color:var(--yellow);font-size:0.82rem'>中古プレ値あり</span></td><td></td></tr><tr class='watch-candidate-card'><td><strong>RICOH GR IV HDF</strong></td><td>—</td><td>—</td><td><span style='color:var(--yellow);font-size:0.82rem'>中古プレ値あり</span></td><td></td></tr><tr class='watch-candidate-card'><td><strong>Nintendo Switch 2 マリオカートセット</strong><br><span style="color:var(--green);font-size:0.82rem">買取 ¥67,000 (差 +7,020円)</span></td><td>¥59,980</td><td>買取商店</td><td><span style='color:var(--yellow);font-size:0.82rem'>監視中</span></td><td></td></tr><tr class='watch-candidate-card'><td><strong>Nintendo Switch 2</strong><br><span style="color:var(--green);font-size:0.82rem">買取 ¥57,000 (差 +7,020円)</span></td><td>¥49,980</td><td>買取商店</td><td><span style='color:var(--yellow);font-size:0.82rem'>監視中</span></td><td></td></tr><tr class='watch-candidate-card'><td><strong>PlayStation 5 Pro</strong><br><span style="color:var(--green);font-size:0.82rem">買取 ¥122,000 (差 +2,020円)</span></td><td>¥119,980</td><td>イオシス</td><td><span style='color:var(--yellow);font-size:0.82rem'>監視中</span></td><td><a href="https://iosys.co.jp/" target="_blank" rel="noopener" style="font-size:0.78rem;color:var(--accent)">買取ページ</a></td></tr><tr class='watch-candidate-card'><td><strong>PlayStation 5 Digital Edition</strong><br><span style="color:var(--green);font-size:0.82rem">買取 ¥65,000 (差 -7,980円)</span></td><td>¥72,980</td><td>イオシス</td><td><span style='color:var(--yellow);font-size:0.82rem'>監視中</span></td><td><a href="https://iosys.co.jp/" target="_blank" rel="noopener" style="font-size:0.78rem;color:var(--accent)">買取ページ</a></td></tr><tr class='watch-candidate-card'><td><strong>Xbox Series X</strong><br><span style="color:var(--green);font-size:0.82rem">買取 ¥50,000 (差 -9,978円)</span></td><td>¥59,978</td><td>イオシス</td><td><span style='color:var(--yellow);font-size:0.82rem'>監視中</span></td><td><a href="https://iosys.co.jp/" target="_blank" rel="noopener" style="font-size:0.78rem;color:var(--accent)">買取ページ</a></td></tr></tbody>
-</table>
+<div class="section-header"><h2>&#128204; Pro向け監視候補</h2><span class="section-count">価格差・希少性スコア上位</span></div>
+<div class="watch-card pro-watch-card">
+<div class="watch-candidate-card pro-candidate-card">
+  <div class="pcc-header">
+    <div class="pcc-name">FUJIFILM X100VI</div>
+    <div class="pcc-badges"><span class="badge badge-adv">公式購入困難</span></div>
+  </div>
+  <div class="pcc-price-row">
+    <span class="pcc-price-lbl">公式価格</span>
+    <span class="pcc-price-val">¥269,500</span>
+    <span class="wc-gap">買取¥415,000 <span style="color:var(--green)">(+145,500円)</span></span>
+    <span class="pcc-shop">マップカメラ</span>
+    <span class="pcc-flags">中古プレ値あり</span>
+  </div>
+  <div class="pcc-links-section">
+    <div class="pcc-links-label">&#127968; 国内二次流通</div>
+    <div class="pcc-chips domestic-chips"><a href="https://jp.mercari.com/search?keyword=FUJIFILM%20X100VI" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">メルカリ</a><a href="https://auctions.yahoo.co.jp/search/search?p=FUJIFILM%20X100VI" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">ヤフオク</a><a href="https://fril.jp/search?query=FUJIFILM%20X100VI" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">ラクマ</a><a href="https://www.mapcamera.com/ec/search?q=FUJIFILM%20X100VI" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">マップカメラ</a><a href="https://www.kitamura.co.jp/ec/special/camera/used/?q=FUJIFILM%20X100VI" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">キタムラ中古</a><a href="https://www.fujiyacamera.com/shopbrand/ct10/?q=FUJIFILM%20X100VI" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">フジヤカメラ</a><a href="https://kakaku.com/search_results/FUJIFILM%20X100VI/" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">価格.com</a><a href="https://www.sofmap.com/product_list.aspx?q=FUJIFILM%20X100VI&amp;st=1" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">ソフマップ中古</a></div>
+  </div>
+  <div class="pcc-links-section" style="margin-top:8px">
+    <div class="pcc-links-label">&#127758; 海外相場</div>
+    <div class="pcc-chips overseas-chips overseas-links-section"><a href="https://www.ebay.com/sch/i.html?_nkw=FUJIFILM%20X100VI&amp;LH_Sold=1&amp;LH_Complete=1" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">eBay sold</a><a href="https://stockx.com/search?s=FUJIFILM%20X100VI" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">StockX</a><a href="https://www.bhphotovideo.com/c/search?Ntt=FUJIFILM%20X100VI" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">B&amp;H</a><a href="https://www.adorama.com/l/?searchinfo=FUJIFILM%20X100VI" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">Adorama</a><a href="https://www.mpb.com/en-us/cameras/?q=FUJIFILM%20X100VI" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">MPB</a><a href="https://www.keh.com/search#FUJIFILM%20X100VI" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">KEH</a><a href="https://www.amazon.com/s?k=FUJIFILM%20X100VI" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">Amazon US</a></div>
+  </div>
+</div><div class="watch-candidate-card pro-candidate-card">
+  <div class="pcc-header">
+    <div class="pcc-name">RICOH GR IV Monochrome</div>
+    <div class="pcc-badges"><span class="badge badge-adv">公式購入困難</span></div>
+  </div>
+  <div class="pcc-price-row">
+    <span class="pcc-price-lbl">公式価格</span>
+    <span class="pcc-price-val">¥283,800</span>
+    
+    <span class="pcc-shop">—</span>
+    <span class="pcc-flags">中古プレ値あり</span>
+  </div>
+  <div class="pcc-links-section">
+    <div class="pcc-links-label">&#127968; 国内二次流通</div>
+    <div class="pcc-chips domestic-chips"><a href="https://jp.mercari.com/search?keyword=RICOH%20GR%20IV%20Monochrome" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">メルカリ</a><a href="https://auctions.yahoo.co.jp/search/search?p=RICOH%20GR%20IV%20Monochrome" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">ヤフオク</a><a href="https://fril.jp/search?query=RICOH%20GR%20IV%20Monochrome" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">ラクマ</a><a href="https://www.mapcamera.com/ec/search?q=RICOH%20GR%20IV%20Monochrome" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">マップカメラ</a><a href="https://www.kitamura.co.jp/ec/special/camera/used/?q=RICOH%20GR%20IV%20Monochrome" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">キタムラ中古</a><a href="https://www.fujiyacamera.com/shopbrand/ct10/?q=RICOH%20GR%20IV%20Monochrome" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">フジヤカメラ</a><a href="https://kakaku.com/search_results/RICOH%20GR%20IV%20Monochrome/" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">価格.com</a><a href="https://www.sofmap.com/product_list.aspx?q=RICOH%20GR%20IV%20Monochrome&amp;st=1" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">ソフマップ中古</a></div>
+  </div>
+  <div class="pcc-links-section" style="margin-top:8px">
+    <div class="pcc-links-label">&#127758; 海外相場</div>
+    <div class="pcc-chips overseas-chips overseas-links-section"><a href="https://www.ebay.com/sch/i.html?_nkw=RICOH%20GR%20IV%20Monochrome&amp;LH_Sold=1&amp;LH_Complete=1" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">eBay sold</a><a href="https://stockx.com/search?s=RICOH%20GR%20IV%20Monochrome" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">StockX</a><a href="https://www.bhphotovideo.com/c/search?Ntt=RICOH%20GR%20IV%20Monochrome" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">B&amp;H</a><a href="https://www.adorama.com/l/?searchinfo=RICOH%20GR%20IV%20Monochrome" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">Adorama</a><a href="https://www.mpb.com/en-us/cameras/?q=RICOH%20GR%20IV%20Monochrome" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">MPB</a><a href="https://www.keh.com/search#RICOH%20GR%20IV%20Monochrome" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">KEH</a><a href="https://www.amazon.com/s?k=RICOH%20GR%20IV%20Monochrome" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">Amazon US</a></div>
+  </div>
+</div><div class="watch-candidate-card pro-candidate-card">
+  <div class="pcc-header">
+    <div class="pcc-name">RICOH GR IV</div>
+    <div class="pcc-badges"><span class="badge badge-adv">公式購入困難</span></div>
+  </div>
+  <div class="pcc-price-row">
+    <span class="pcc-price-lbl">公式価格</span>
+    <span class="pcc-price-val">¥194,800</span>
+    <span class="wc-gap">買取¥175,000 <span style="color:var(--green)">(-19,800円)</span></span>
+    <span class="pcc-shop">マップカメラ</span>
+    <span class="pcc-flags">中古プレ値あり</span>
+  </div>
+  <div class="pcc-links-section">
+    <div class="pcc-links-label">&#127968; 国内二次流通</div>
+    <div class="pcc-chips domestic-chips"><a href="https://jp.mercari.com/search?keyword=RICOH%20GR%20IV" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">メルカリ</a><a href="https://auctions.yahoo.co.jp/search/search?p=RICOH%20GR%20IV" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">ヤフオク</a><a href="https://fril.jp/search?query=RICOH%20GR%20IV" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">ラクマ</a><a href="https://www.mapcamera.com/ec/search?q=RICOH%20GR%20IV" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">マップカメラ</a><a href="https://www.kitamura.co.jp/ec/special/camera/used/?q=RICOH%20GR%20IV" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">キタムラ中古</a><a href="https://www.fujiyacamera.com/shopbrand/ct10/?q=RICOH%20GR%20IV" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">フジヤカメラ</a><a href="https://kakaku.com/search_results/RICOH%20GR%20IV/" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">価格.com</a><a href="https://www.sofmap.com/product_list.aspx?q=RICOH%20GR%20IV&amp;st=1" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">ソフマップ中古</a></div>
+  </div>
+  <div class="pcc-links-section" style="margin-top:8px">
+    <div class="pcc-links-label">&#127758; 海外相場</div>
+    <div class="pcc-chips overseas-chips overseas-links-section"><a href="https://www.ebay.com/sch/i.html?_nkw=RICOH%20GR%20IV&amp;LH_Sold=1&amp;LH_Complete=1" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">eBay sold</a><a href="https://stockx.com/search?s=RICOH%20GR%20IV" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">StockX</a><a href="https://www.bhphotovideo.com/c/search?Ntt=RICOH%20GR%20IV" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">B&amp;H</a><a href="https://www.adorama.com/l/?searchinfo=RICOH%20GR%20IV" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">Adorama</a><a href="https://www.mpb.com/en-us/cameras/?q=RICOH%20GR%20IV" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">MPB</a><a href="https://www.keh.com/search#RICOH%20GR%20IV" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">KEH</a><a href="https://www.amazon.com/s?k=RICOH%20GR%20IV" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">Amazon US</a></div>
+  </div>
+</div><div class="watch-candidate-card pro-candidate-card">
+  <div class="pcc-header">
+    <div class="pcc-name">RICOH GR III HDF</div>
+    <div class="pcc-badges"><span class="badge badge-adv">公式購入困難</span></div>
+  </div>
+  <div class="pcc-price-row">
+    <span class="pcc-price-lbl">公式価格</span>
+    <span class="pcc-price-val">¥147,400</span>
+    
+    <span class="pcc-shop">—</span>
+    <span class="pcc-flags">中古プレ値あり</span>
+  </div>
+  <div class="pcc-links-section">
+    <div class="pcc-links-label">&#127968; 国内二次流通</div>
+    <div class="pcc-chips domestic-chips"><a href="https://jp.mercari.com/search?keyword=RICOH%20GR%20III%20HDF" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">メルカリ</a><a href="https://auctions.yahoo.co.jp/search/search?p=RICOH%20GR%20III%20HDF" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">ヤフオク</a><a href="https://fril.jp/search?query=RICOH%20GR%20III%20HDF" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">ラクマ</a><a href="https://www.mapcamera.com/ec/search?q=RICOH%20GR%20III%20HDF" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">マップカメラ</a><a href="https://www.kitamura.co.jp/ec/special/camera/used/?q=RICOH%20GR%20III%20HDF" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">キタムラ中古</a><a href="https://www.fujiyacamera.com/shopbrand/ct10/?q=RICOH%20GR%20III%20HDF" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">フジヤカメラ</a><a href="https://kakaku.com/search_results/RICOH%20GR%20III%20HDF/" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">価格.com</a><a href="https://www.sofmap.com/product_list.aspx?q=RICOH%20GR%20III%20HDF&amp;st=1" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">ソフマップ中古</a></div>
+  </div>
+  <div class="pcc-links-section" style="margin-top:8px">
+    <div class="pcc-links-label">&#127758; 海外相場</div>
+    <div class="pcc-chips overseas-chips overseas-links-section"><a href="https://www.ebay.com/sch/i.html?_nkw=RICOH%20GR%20III%20HDF&amp;LH_Sold=1&amp;LH_Complete=1" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">eBay sold</a><a href="https://stockx.com/search?s=RICOH%20GR%20III%20HDF" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">StockX</a><a href="https://www.bhphotovideo.com/c/search?Ntt=RICOH%20GR%20III%20HDF" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">B&amp;H</a><a href="https://www.adorama.com/l/?searchinfo=RICOH%20GR%20III%20HDF" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">Adorama</a><a href="https://www.mpb.com/en-us/cameras/?q=RICOH%20GR%20III%20HDF" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">MPB</a><a href="https://www.keh.com/search#RICOH%20GR%20III%20HDF" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">KEH</a><a href="https://www.amazon.com/s?k=RICOH%20GR%20III%20HDF" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">Amazon US</a></div>
+  </div>
+</div><div class="watch-candidate-card pro-candidate-card">
+  <div class="pcc-header">
+    <div class="pcc-name">RICOH GR IIIx</div>
+    <div class="pcc-badges"><span class="badge badge-adv">公式購入困難</span></div>
+  </div>
+  <div class="pcc-price-row">
+    <span class="pcc-price-lbl">公式価格</span>
+    <span class="pcc-price-val">¥139,800</span>
+    <span class="wc-gap">買取¥125,000 <span style="color:var(--green)">(-14,800円)</span></span>
+    <span class="pcc-shop">マップカメラ</span>
+    <span class="pcc-flags">中古プレ値あり</span>
+  </div>
+  <div class="pcc-links-section">
+    <div class="pcc-links-label">&#127968; 国内二次流通</div>
+    <div class="pcc-chips domestic-chips"><a href="https://jp.mercari.com/search?keyword=RICOH%20GR%20IIIx" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">メルカリ</a><a href="https://auctions.yahoo.co.jp/search/search?p=RICOH%20GR%20IIIx" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">ヤフオク</a><a href="https://fril.jp/search?query=RICOH%20GR%20IIIx" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">ラクマ</a><a href="https://www.mapcamera.com/ec/search?q=RICOH%20GR%20IIIx" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">マップカメラ</a><a href="https://www.kitamura.co.jp/ec/special/camera/used/?q=RICOH%20GR%20IIIx" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">キタムラ中古</a><a href="https://www.fujiyacamera.com/shopbrand/ct10/?q=RICOH%20GR%20IIIx" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">フジヤカメラ</a><a href="https://kakaku.com/search_results/RICOH%20GR%20IIIx/" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">価格.com</a><a href="https://www.sofmap.com/product_list.aspx?q=RICOH%20GR%20IIIx&amp;st=1" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">ソフマップ中古</a></div>
+  </div>
+  <div class="pcc-links-section" style="margin-top:8px">
+    <div class="pcc-links-label">&#127758; 海外相場</div>
+    <div class="pcc-chips overseas-chips overseas-links-section"><a href="https://www.ebay.com/sch/i.html?_nkw=RICOH%20GR%20IIIx&amp;LH_Sold=1&amp;LH_Complete=1" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">eBay sold</a><a href="https://stockx.com/search?s=RICOH%20GR%20IIIx" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">StockX</a><a href="https://www.bhphotovideo.com/c/search?Ntt=RICOH%20GR%20IIIx" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">B&amp;H</a><a href="https://www.adorama.com/l/?searchinfo=RICOH%20GR%20IIIx" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">Adorama</a><a href="https://www.mpb.com/en-us/cameras/?q=RICOH%20GR%20IIIx" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">MPB</a><a href="https://www.keh.com/search#RICOH%20GR%20IIIx" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">KEH</a><a href="https://www.amazon.com/s?k=RICOH%20GR%20IIIx" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">Amazon US</a></div>
+  </div>
+</div><div class="watch-candidate-card pro-candidate-card">
+  <div class="pcc-header">
+    <div class="pcc-name">RICOH GR III</div>
+    <div class="pcc-badges"><span class="badge badge-adv">公式購入困難</span></div>
+  </div>
+  <div class="pcc-price-row">
+    <span class="pcc-price-lbl">公式価格</span>
+    <span class="pcc-price-val">¥129,800</span>
+    
+    <span class="pcc-shop">—</span>
+    <span class="pcc-flags">中古プレ値あり</span>
+  </div>
+  <div class="pcc-links-section">
+    <div class="pcc-links-label">&#127968; 国内二次流通</div>
+    <div class="pcc-chips domestic-chips"><a href="https://jp.mercari.com/search?keyword=RICOH%20GR%20III" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">メルカリ</a><a href="https://auctions.yahoo.co.jp/search/search?p=RICOH%20GR%20III" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">ヤフオク</a><a href="https://fril.jp/search?query=RICOH%20GR%20III" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">ラクマ</a><a href="https://www.mapcamera.com/ec/search?q=RICOH%20GR%20III" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">マップカメラ</a><a href="https://www.kitamura.co.jp/ec/special/camera/used/?q=RICOH%20GR%20III" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">キタムラ中古</a><a href="https://www.fujiyacamera.com/shopbrand/ct10/?q=RICOH%20GR%20III" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">フジヤカメラ</a><a href="https://kakaku.com/search_results/RICOH%20GR%20III/" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">価格.com</a><a href="https://www.sofmap.com/product_list.aspx?q=RICOH%20GR%20III&amp;st=1" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">ソフマップ中古</a></div>
+  </div>
+  <div class="pcc-links-section" style="margin-top:8px">
+    <div class="pcc-links-label">&#127758; 海外相場</div>
+    <div class="pcc-chips overseas-chips overseas-links-section"><a href="https://www.ebay.com/sch/i.html?_nkw=RICOH%20GR%20III&amp;LH_Sold=1&amp;LH_Complete=1" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">eBay sold</a><a href="https://stockx.com/search?s=RICOH%20GR%20III" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">StockX</a><a href="https://www.bhphotovideo.com/c/search?Ntt=RICOH%20GR%20III" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">B&amp;H</a><a href="https://www.adorama.com/l/?searchinfo=RICOH%20GR%20III" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">Adorama</a><a href="https://www.mpb.com/en-us/cameras/?q=RICOH%20GR%20III" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">MPB</a><a href="https://www.keh.com/search#RICOH%20GR%20III" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">KEH</a><a href="https://www.amazon.com/s?k=RICOH%20GR%20III" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">Amazon US</a></div>
+  </div>
+</div><div class="watch-candidate-card pro-candidate-card">
+  <div class="pcc-header">
+    <div class="pcc-name">RICOH GR IV HDF</div>
+    <div class="pcc-badges"><span class="badge badge-adv">公式購入困難</span></div>
+  </div>
+  <div class="pcc-price-row">
+    <span class="pcc-price-lbl">公式価格</span>
+    <span class="pcc-price-val">未定</span>
+    
+    <span class="pcc-shop">—</span>
+    <span class="pcc-flags">中古プレ値あり</span>
+  </div>
+  <div class="pcc-links-section">
+    <div class="pcc-links-label">&#127968; 国内二次流通</div>
+    <div class="pcc-chips domestic-chips"><a href="https://jp.mercari.com/search?keyword=RICOH%20GR%20IV%20HDF" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">メルカリ</a><a href="https://auctions.yahoo.co.jp/search/search?p=RICOH%20GR%20IV%20HDF" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">ヤフオク</a><a href="https://fril.jp/search?query=RICOH%20GR%20IV%20HDF" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">ラクマ</a><a href="https://www.mapcamera.com/ec/search?q=RICOH%20GR%20IV%20HDF" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">マップカメラ</a><a href="https://www.kitamura.co.jp/ec/special/camera/used/?q=RICOH%20GR%20IV%20HDF" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">キタムラ中古</a><a href="https://www.fujiyacamera.com/shopbrand/ct10/?q=RICOH%20GR%20IV%20HDF" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">フジヤカメラ</a><a href="https://kakaku.com/search_results/RICOH%20GR%20IV%20HDF/" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">価格.com</a><a href="https://www.sofmap.com/product_list.aspx?q=RICOH%20GR%20IV%20HDF&amp;st=1" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">ソフマップ中古</a></div>
+  </div>
+  <div class="pcc-links-section" style="margin-top:8px">
+    <div class="pcc-links-label">&#127758; 海外相場</div>
+    <div class="pcc-chips overseas-chips overseas-links-section"><a href="https://www.ebay.com/sch/i.html?_nkw=RICOH%20GR%20IV%20HDF&amp;LH_Sold=1&amp;LH_Complete=1" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">eBay sold</a><a href="https://stockx.com/search?s=RICOH%20GR%20IV%20HDF" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">StockX</a><a href="https://www.bhphotovideo.com/c/search?Ntt=RICOH%20GR%20IV%20HDF" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">B&amp;H</a><a href="https://www.adorama.com/l/?searchinfo=RICOH%20GR%20IV%20HDF" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">Adorama</a><a href="https://www.mpb.com/en-us/cameras/?q=RICOH%20GR%20IV%20HDF" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">MPB</a><a href="https://www.keh.com/search#RICOH%20GR%20IV%20HDF" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">KEH</a><a href="https://www.amazon.com/s?k=RICOH%20GR%20IV%20HDF" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">Amazon US</a></div>
+  </div>
+</div><div class="watch-candidate-card pro-candidate-card">
+  <div class="pcc-header">
+    <div class="pcc-name">Nintendo Switch 2 マリオカートセット</div>
+    <div class="pcc-badges"><span class="badge badge-adv">公式購入困難</span></div>
+  </div>
+  <div class="pcc-price-row">
+    <span class="pcc-price-lbl">公式価格</span>
+    <span class="pcc-price-val">¥59,980</span>
+    <span class="wc-gap">買取¥67,000 <span style="color:var(--green)">(+7,020円)</span></span>
+    <span class="pcc-shop">買取商店</span>
+    <span class="pcc-flags">監視中</span>
+  </div>
+  <div class="pcc-links-section">
+    <div class="pcc-links-label">&#127968; 国内二次流通</div>
+    <div class="pcc-chips domestic-chips"><a href="https://jp.mercari.com/search?keyword=Nintendo%20Switch%202%20%E3%83%9E%E3%83%AA%E3%82%AA%E3%82%AB%E3%83%BC%E3%83%88%E3%82%BB%E3%83%83%E3%83%88" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">メルカリ</a><a href="https://auctions.yahoo.co.jp/search/search?p=Nintendo%20Switch%202%20%E3%83%9E%E3%83%AA%E3%82%AA%E3%82%AB%E3%83%BC%E3%83%88%E3%82%BB%E3%83%83%E3%83%88" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">ヤフオク</a><a href="https://fril.jp/search?query=Nintendo%20Switch%202%20%E3%83%9E%E3%83%AA%E3%82%AA%E3%82%AB%E3%83%BC%E3%83%88%E3%82%BB%E3%83%83%E3%83%88" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">ラクマ</a><a href="https://www.mapcamera.com/ec/search?q=Nintendo%20Switch%202%20%E3%83%9E%E3%83%AA%E3%82%AA%E3%82%AB%E3%83%BC%E3%83%88%E3%82%BB%E3%83%83%E3%83%88" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">マップカメラ</a><a href="https://www.kitamura.co.jp/ec/special/camera/used/?q=Nintendo%20Switch%202%20%E3%83%9E%E3%83%AA%E3%82%AA%E3%82%AB%E3%83%BC%E3%83%88%E3%82%BB%E3%83%83%E3%83%88" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">キタムラ中古</a><a href="https://www.fujiyacamera.com/shopbrand/ct10/?q=Nintendo%20Switch%202%20%E3%83%9E%E3%83%AA%E3%82%AA%E3%82%AB%E3%83%BC%E3%83%88%E3%82%BB%E3%83%83%E3%83%88" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">フジヤカメラ</a><a href="https://kakaku.com/search_results/Nintendo%20Switch%202%20%E3%83%9E%E3%83%AA%E3%82%AA%E3%82%AB%E3%83%BC%E3%83%88%E3%82%BB%E3%83%83%E3%83%88/" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">価格.com</a><a href="https://www.sofmap.com/product_list.aspx?q=Nintendo%20Switch%202%20%E3%83%9E%E3%83%AA%E3%82%AA%E3%82%AB%E3%83%BC%E3%83%88%E3%82%BB%E3%83%83%E3%83%88&amp;st=1" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">ソフマップ中古</a></div>
+  </div>
+  <div class="pcc-links-section" style="margin-top:8px">
+    <div class="pcc-links-label">&#127758; 海外相場</div>
+    <div class="pcc-chips overseas-chips overseas-links-section"><a href="https://www.ebay.com/sch/i.html?_nkw=Nintendo%20Switch%202%20%E3%83%9E%E3%83%AA%E3%82%AA%E3%82%AB%E3%83%BC%E3%83%88%E3%82%BB%E3%83%83%E3%83%88&amp;LH_Sold=1&amp;LH_Complete=1" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">eBay sold</a><a href="https://stockx.com/search?s=Nintendo%20Switch%202%20%E3%83%9E%E3%83%AA%E3%82%AA%E3%82%AB%E3%83%BC%E3%83%88%E3%82%BB%E3%83%83%E3%83%88" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">StockX</a><a href="https://www.bhphotovideo.com/c/search?Ntt=Nintendo%20Switch%202%20%E3%83%9E%E3%83%AA%E3%82%AA%E3%82%AB%E3%83%BC%E3%83%88%E3%82%BB%E3%83%83%E3%83%88" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">B&amp;H</a><a href="https://www.adorama.com/l/?searchinfo=Nintendo%20Switch%202%20%E3%83%9E%E3%83%AA%E3%82%AA%E3%82%AB%E3%83%BC%E3%83%88%E3%82%BB%E3%83%83%E3%83%88" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">Adorama</a><a href="https://www.mpb.com/en-us/cameras/?q=Nintendo%20Switch%202%20%E3%83%9E%E3%83%AA%E3%82%AA%E3%82%AB%E3%83%BC%E3%83%88%E3%82%BB%E3%83%83%E3%83%88" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">MPB</a><a href="https://www.keh.com/search#Nintendo%20Switch%202%20%E3%83%9E%E3%83%AA%E3%82%AA%E3%82%AB%E3%83%BC%E3%83%88%E3%82%BB%E3%83%83%E3%83%88" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">KEH</a><a href="https://www.amazon.com/s?k=Nintendo%20Switch%202%20%E3%83%9E%E3%83%AA%E3%82%AA%E3%82%AB%E3%83%BC%E3%83%88%E3%82%BB%E3%83%83%E3%83%88" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">Amazon US</a></div>
+  </div>
+</div><div class="watch-candidate-card pro-candidate-card">
+  <div class="pcc-header">
+    <div class="pcc-name">Nintendo Switch 2</div>
+    <div class="pcc-badges"><span class="badge badge-adv">公式購入困難</span></div>
+  </div>
+  <div class="pcc-price-row">
+    <span class="pcc-price-lbl">公式価格</span>
+    <span class="pcc-price-val">¥49,980</span>
+    <span class="wc-gap">買取¥57,000 <span style="color:var(--green)">(+7,020円)</span></span>
+    <span class="pcc-shop">買取商店</span>
+    <span class="pcc-flags">監視中</span>
+  </div>
+  <div class="pcc-links-section">
+    <div class="pcc-links-label">&#127968; 国内二次流通</div>
+    <div class="pcc-chips domestic-chips"><a href="https://jp.mercari.com/search?keyword=Nintendo%20Switch%202" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">メルカリ</a><a href="https://auctions.yahoo.co.jp/search/search?p=Nintendo%20Switch%202" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">ヤフオク</a><a href="https://fril.jp/search?query=Nintendo%20Switch%202" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">ラクマ</a><a href="https://www.mapcamera.com/ec/search?q=Nintendo%20Switch%202" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">マップカメラ</a><a href="https://www.kitamura.co.jp/ec/special/camera/used/?q=Nintendo%20Switch%202" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">キタムラ中古</a><a href="https://www.fujiyacamera.com/shopbrand/ct10/?q=Nintendo%20Switch%202" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">フジヤカメラ</a><a href="https://kakaku.com/search_results/Nintendo%20Switch%202/" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">価格.com</a><a href="https://www.sofmap.com/product_list.aspx?q=Nintendo%20Switch%202&amp;st=1" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">ソフマップ中古</a></div>
+  </div>
+  <div class="pcc-links-section" style="margin-top:8px">
+    <div class="pcc-links-label">&#127758; 海外相場</div>
+    <div class="pcc-chips overseas-chips overseas-links-section"><a href="https://www.ebay.com/sch/i.html?_nkw=Nintendo%20Switch%202&amp;LH_Sold=1&amp;LH_Complete=1" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">eBay sold</a><a href="https://stockx.com/search?s=Nintendo%20Switch%202" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">StockX</a><a href="https://www.bhphotovideo.com/c/search?Ntt=Nintendo%20Switch%202" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">B&amp;H</a><a href="https://www.adorama.com/l/?searchinfo=Nintendo%20Switch%202" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">Adorama</a><a href="https://www.mpb.com/en-us/cameras/?q=Nintendo%20Switch%202" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">MPB</a><a href="https://www.keh.com/search#Nintendo%20Switch%202" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">KEH</a><a href="https://www.amazon.com/s?k=Nintendo%20Switch%202" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">Amazon US</a></div>
+  </div>
+</div><div class="watch-candidate-card pro-candidate-card">
+  <div class="pcc-header">
+    <div class="pcc-name">PlayStation 5 Pro</div>
+    <div class="pcc-badges"><span class="badge badge-adv">公式購入困難</span></div>
+  </div>
+  <div class="pcc-price-row">
+    <span class="pcc-price-lbl">公式価格</span>
+    <span class="pcc-price-val">¥119,980</span>
+    <span class="wc-gap">買取¥122,000 <span style="color:var(--green)">(+2,020円)</span></span>
+    <span class="pcc-shop">イオシス</span>
+    <span class="pcc-flags">監視中</span>
+  </div>
+  <div class="pcc-links-section">
+    <div class="pcc-links-label">&#127968; 国内二次流通</div>
+    <div class="pcc-chips domestic-chips"><a href="https://jp.mercari.com/search?keyword=PlayStation%205%20Pro" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">メルカリ</a><a href="https://auctions.yahoo.co.jp/search/search?p=PlayStation%205%20Pro" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">ヤフオク</a><a href="https://fril.jp/search?query=PlayStation%205%20Pro" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">ラクマ</a><a href="https://www.mapcamera.com/ec/search?q=PlayStation%205%20Pro" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">マップカメラ</a><a href="https://www.kitamura.co.jp/ec/special/camera/used/?q=PlayStation%205%20Pro" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">キタムラ中古</a><a href="https://www.fujiyacamera.com/shopbrand/ct10/?q=PlayStation%205%20Pro" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">フジヤカメラ</a><a href="https://kakaku.com/search_results/PlayStation%205%20Pro/" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">価格.com</a><a href="https://www.sofmap.com/product_list.aspx?q=PlayStation%205%20Pro&amp;st=1" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">ソフマップ中古</a></div>
+  </div>
+  <div class="pcc-links-section" style="margin-top:8px">
+    <div class="pcc-links-label">&#127758; 海外相場</div>
+    <div class="pcc-chips overseas-chips overseas-links-section"><a href="https://www.ebay.com/sch/i.html?_nkw=PlayStation%205%20Pro&amp;LH_Sold=1&amp;LH_Complete=1" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">eBay sold</a><a href="https://stockx.com/search?s=PlayStation%205%20Pro" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">StockX</a><a href="https://www.bhphotovideo.com/c/search?Ntt=PlayStation%205%20Pro" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">B&amp;H</a><a href="https://www.adorama.com/l/?searchinfo=PlayStation%205%20Pro" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">Adorama</a><a href="https://www.mpb.com/en-us/cameras/?q=PlayStation%205%20Pro" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">MPB</a><a href="https://www.keh.com/search#PlayStation%205%20Pro" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">KEH</a><a href="https://www.amazon.com/s?k=PlayStation%205%20Pro" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">Amazon US</a></div>
+  </div>
+</div><div class="watch-candidate-card pro-candidate-card">
+  <div class="pcc-header">
+    <div class="pcc-name">PlayStation 5 Digital Edition</div>
+    <div class="pcc-badges"><span class="badge badge-adv">公式購入困難</span></div>
+  </div>
+  <div class="pcc-price-row">
+    <span class="pcc-price-lbl">公式価格</span>
+    <span class="pcc-price-val">¥72,980</span>
+    <span class="wc-gap">買取¥65,000 <span style="color:var(--green)">(-7,980円)</span></span>
+    <span class="pcc-shop">イオシス</span>
+    <span class="pcc-flags">監視中</span>
+  </div>
+  <div class="pcc-links-section">
+    <div class="pcc-links-label">&#127968; 国内二次流通</div>
+    <div class="pcc-chips domestic-chips"><a href="https://jp.mercari.com/search?keyword=PlayStation%205%20Digital%20Edition" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">メルカリ</a><a href="https://auctions.yahoo.co.jp/search/search?p=PlayStation%205%20Digital%20Edition" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">ヤフオク</a><a href="https://fril.jp/search?query=PlayStation%205%20Digital%20Edition" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">ラクマ</a><a href="https://www.mapcamera.com/ec/search?q=PlayStation%205%20Digital%20Edition" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">マップカメラ</a><a href="https://www.kitamura.co.jp/ec/special/camera/used/?q=PlayStation%205%20Digital%20Edition" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">キタムラ中古</a><a href="https://www.fujiyacamera.com/shopbrand/ct10/?q=PlayStation%205%20Digital%20Edition" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">フジヤカメラ</a><a href="https://kakaku.com/search_results/PlayStation%205%20Digital%20Edition/" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">価格.com</a><a href="https://www.sofmap.com/product_list.aspx?q=PlayStation%205%20Digital%20Edition&amp;st=1" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">ソフマップ中古</a></div>
+  </div>
+  <div class="pcc-links-section" style="margin-top:8px">
+    <div class="pcc-links-label">&#127758; 海外相場</div>
+    <div class="pcc-chips overseas-chips overseas-links-section"><a href="https://www.ebay.com/sch/i.html?_nkw=PlayStation%205%20Digital%20Edition&amp;LH_Sold=1&amp;LH_Complete=1" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">eBay sold</a><a href="https://stockx.com/search?s=PlayStation%205%20Digital%20Edition" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">StockX</a><a href="https://www.bhphotovideo.com/c/search?Ntt=PlayStation%205%20Digital%20Edition" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">B&amp;H</a><a href="https://www.adorama.com/l/?searchinfo=PlayStation%205%20Digital%20Edition" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">Adorama</a><a href="https://www.mpb.com/en-us/cameras/?q=PlayStation%205%20Digital%20Edition" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">MPB</a><a href="https://www.keh.com/search#PlayStation%205%20Digital%20Edition" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">KEH</a><a href="https://www.amazon.com/s?k=PlayStation%205%20Digital%20Edition" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">Amazon US</a></div>
+  </div>
+</div><div class="watch-candidate-card pro-candidate-card">
+  <div class="pcc-header">
+    <div class="pcc-name">Xbox Series X</div>
+    <div class="pcc-badges"><span class="badge badge-adv">公式購入困難</span></div>
+  </div>
+  <div class="pcc-price-row">
+    <span class="pcc-price-lbl">公式価格</span>
+    <span class="pcc-price-val">¥59,978</span>
+    <span class="wc-gap">買取¥50,000 <span style="color:var(--green)">(-9,978円)</span></span>
+    <span class="pcc-shop">イオシス</span>
+    <span class="pcc-flags">監視中</span>
+  </div>
+  <div class="pcc-links-section">
+    <div class="pcc-links-label">&#127968; 国内二次流通</div>
+    <div class="pcc-chips domestic-chips"><a href="https://jp.mercari.com/search?keyword=Xbox%20Series%20X" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">メルカリ</a><a href="https://auctions.yahoo.co.jp/search/search?p=Xbox%20Series%20X" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">ヤフオク</a><a href="https://fril.jp/search?query=Xbox%20Series%20X" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">ラクマ</a><a href="https://www.mapcamera.com/ec/search?q=Xbox%20Series%20X" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">マップカメラ</a><a href="https://www.kitamura.co.jp/ec/special/camera/used/?q=Xbox%20Series%20X" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">キタムラ中古</a><a href="https://www.fujiyacamera.com/shopbrand/ct10/?q=Xbox%20Series%20X" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">フジヤカメラ</a><a href="https://kakaku.com/search_results/Xbox%20Series%20X/" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">価格.com</a><a href="https://www.sofmap.com/product_list.aspx?q=Xbox%20Series%20X&amp;st=1" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">ソフマップ中古</a></div>
+  </div>
+  <div class="pcc-links-section" style="margin-top:8px">
+    <div class="pcc-links-label">&#127758; 海外相場</div>
+    <div class="pcc-chips overseas-chips overseas-links-section"><a href="https://www.ebay.com/sch/i.html?_nkw=Xbox%20Series%20X&amp;LH_Sold=1&amp;LH_Complete=1" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">eBay sold</a><a href="https://stockx.com/search?s=Xbox%20Series%20X" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">StockX</a><a href="https://www.bhphotovideo.com/c/search?Ntt=Xbox%20Series%20X" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">B&amp;H</a><a href="https://www.adorama.com/l/?searchinfo=Xbox%20Series%20X" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">Adorama</a><a href="https://www.mpb.com/en-us/cameras/?q=Xbox%20Series%20X" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">MPB</a><a href="https://www.keh.com/search#Xbox%20Series%20X" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">KEH</a><a href="https://www.amazon.com/s?k=Xbox%20Series%20X" target="_blank" rel="noopener noreferrer" class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">Amazon US</a></div>
+  </div>
 </div>
-<p style="color:var(--text-3);font-size:0.78rem;margin-top:10px;padding:0 4px;">
-※ 監視候補は価格差・希少性スコアが高い商品です。中古市場データ入手後に確定候補へ昇格します。
+<p style="color:var(--text-3);font-size:0.78rem;margin-top:12px;padding:0 4px;">
+&#9888; リンク先は外部サービスです。相場確認のみを目的としています。売買判断はご自身でご確認ください。
 </p>
 </div>
 </div>
@@ -2773,7 +3089,7 @@ Apple Store・任天堂公式など<strong>正規店で定価購入</strong>し�
 </div>
 
 <div id="tab-new-products" class="tab-panel section-new-products" role="tabpanel">
-<div class="sec-head"><div class="sec-title">&#127381; 新商品候補 &mdash; 監視リスト</div><div class="sec-badge">3件</div></div><div class="cards-grid"><div class="new-product-card" data-user-level="beginner_easy"><div class="np-top-bar"></div><div class="np-body"><div class="np-hd"><div class="np-name">iPhone 17 Pro</div><span class="np-status-badge upcoming">発売予定</span></div><div class="np-price-row"><span class="np-price-lbl">想定価格</span>&nbsp;<span class="np-price-val">未定</span></div><div class="np-tags"><span class="deal-tag lottery">抽選</span><span class="deal-tag lottery">限定</span><span class="badge badge-easy" style="font-size:0.6rem">初心者向け</span></div></div></div><div class="new-product-card" data-user-level="beginner_easy"><div class="np-top-bar"></div><div class="np-body"><div class="np-hd"><div class="np-name">Nintendo Switch 2</div><span class="np-status-badge preorder">予約受付中</span></div><div class="np-price-row"><span class="np-price-lbl">想定価格</span>&nbsp;<span class="np-price-val">¥49,980</span></div><div class="np-tags"><span class="deal-tag lottery">抽選</span><span class="badge badge-easy" style="font-size:0.6rem">初心者向け</span></div></div></div><div class="new-product-card" data-user-level="advanced"><div class="np-top-bar"></div><div class="np-body"><div class="np-hd"><div class="np-name">SONY α1 II</div><span class="np-status-badge upcoming">発売予定</span></div><div class="np-price-row"><span class="np-price-lbl">想定価格</span>&nbsp;<span class="np-price-val">¥900,000予定</span></div><div class="np-tags"><span class="deal-tag hard">高難度</span><span class="deal-tag intl">海外差益</span><span class="badge badge-adv" style="font-size:0.6rem">上級者向け</span></div></div></div></div>
+<div class="sec-head"><div class="sec-title">&#127381; 新商品候補 &mdash; 監視リスト</div><div class="sec-badge">3件</div></div><div class="cards-grid"><div class="new-product-card" data-user-level="beginner_easy"><div class="np-top-bar"></div><div class="np-body"><div class="np-hd"><div class="np-name">iPhone 17 Pro</div><span class="np-status-badge upcoming">発売予定</span></div><div class="np-price-row"><span class="np-price-lbl">想定価格</span>&nbsp;<span class="np-price-val">未定</span></div><div class="np-tags"><span class="deal-tag lottery">抽選</span><span class="deal-tag lottery">限定</span><span class="badge badge-easy" style="font-size:0.6rem">初心者向け</span></div></div></div><div class="new-product-card" data-user-level="beginner_easy"><div class="np-top-bar"></div><div class="np-body"><div class="np-hd"><div class="np-name">Nintendo Switch 2</div><span class="np-status-badge preorder">予約受付中</span></div><div class="np-price-row"><span class="np-price-lbl">想定価格</span>&nbsp;<span class="np-price-val">¥49,980</span></div><div class="np-tags"><span class="deal-tag lottery">抽選</span><span class="badge badge-easy" style="font-size:0.6rem">初心者向け</span></div></div></div><div class="new-product-card" data-user-level="advanced"><div class="np-top-bar"></div><div class="np-body"><div class="np-hd"><div class="np-name">SONY α1 II</div><span class="np-status-badge upcoming">発売予定</span></div><div class="np-price-row"><span class="np-price-lbl">想定価格</span>&nbsp;<span class="np-price-val">¥900,000予定</span></div><div class="np-tags"><span class="deal-tag hard">高難度</span><span class="deal-tag intl">海外差益</span><span class="badge badge-adv" style="font-size:0.6rem">Pro向け</span></div></div></div></div>
 </div>
 <div class="caution-block">
 
@@ -2814,7 +3130,7 @@ Apple Store・任天堂公式など<strong>正規店で定価購入</strong>し�
   </div>
   <div class="footer-links">
     <a href="#tab-beginner" class="footer-link">初心者向け案件</a>
-    <a href="#tab-advanced" class="footer-link">上級者向け案件</a>
+    <a href="#tab-advanced" class="footer-link">Pro向け相場</a>
     <a href="#tab-ranking" class="footer-link">買取ランキング</a>
     <a href="#tab-surge" class="footer-link">急騰/急落アラート</a>
     <a href="#tab-new-products" class="footer-link">新商品候補</a>

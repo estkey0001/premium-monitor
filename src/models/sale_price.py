@@ -62,3 +62,8 @@ class SedoriRouteModel(BaseModel):
     profit_rate: float = Field(default=0.0, description="利益率（仕入れ価格対比）")
     rank: int = Field(default=0, description="利益順ランク（1が最高）")
     calculated_at: datetime = Field(default_factory=datetime.now)
+    # Phase 15: 品質チェックフィールド
+    route_quality_score: float = Field(default=1.0, description="品質スコア (0.0-1.0) 高いほど信頼性が高い")
+    route_warning_flags: list = Field(default_factory=list, description="警告フラグリスト (JSON配列)")
+    needs_review: bool = Field(default=False, description="要確認フラグ (異常値・条件ズレ等)")
+    sort_score: float = Field(default=0.0, description="ソートスコア = net_profit × route_quality_score")

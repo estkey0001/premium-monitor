@@ -1450,8 +1450,9 @@ class Repository:
                 buy_shop_name, buy_shop_id, buy_price, buy_url, buy_condition,
                 sell_shop_name, sell_shop_id, sell_price, sell_url,
                 gross_profit, shipping_fee, transfer_fee, travel_fee, other_costs,
-                estimated_costs, net_profit, profit_rate, rank, calculated_at)
-               VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+                estimated_costs, net_profit, profit_rate, rank, calculated_at,
+                route_quality_score, route_warning_flags, needs_review, sort_score)
+               VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
             (route.id, route.product_id, route.product_name, route.product_alias,
              route.buy_shop_name, route.buy_shop_id, route.buy_price,
              route.buy_url, route.buy_condition,
@@ -1459,7 +1460,11 @@ class Repository:
              route.gross_profit, route.shipping_fee, route.transfer_fee,
              route.travel_fee, route.other_costs, route.estimated_costs,
              route.net_profit, route.profit_rate, route.rank,
-             route.calculated_at.isoformat()),
+             route.calculated_at.isoformat(),
+             getattr(route, "route_quality_score", 1.0),
+             json.dumps(getattr(route, "route_warning_flags", []), ensure_ascii=False),
+             int(getattr(route, "needs_review", False)),
+             getattr(route, "sort_score", float(route.net_profit))),
         )
         self.db.connection.commit()
 
@@ -1479,14 +1484,14 @@ class Repository:
         min_net_profit: int = 0,
         limit: int = 50,
     ) -> list:
-        """せどりルート一覧を返す（net_profit降順）。"""
+        """せどりルート一覧を返す（sort_score降順）。"""
         from src.models.sale_price import SedoriRouteModel
         query = "SELECT * FROM sedori_routes WHERE net_profit > ?"
         params: list = [min_net_profit]
         if product_alias:
             query += " AND product_alias = ?"
             params.append(product_alias)
-        query += " ORDER BY net_profit DESC LIMIT ?"
+        query += " ORDER BY sort_score DESC, net_profit DESC LIMIT ?"
         params.append(limit)
         try:
             rows = self.db.connection.execute(query, params).fetchall()
@@ -1496,6 +1501,15 @@ class Repository:
         for r in rows:
             d = dict(r)
             try:
+                # route_warning_flags は JSON文字列→list に変換
+                raw_flags = d.get("route_warning_flags", "[]")
+                if isinstance(raw_flags, str):
+                    try:
+                        warning_flags = json.loads(raw_flags)
+                    except Exception:
+                        warning_flags = []
+                else:
+                    warning_flags = raw_flags or []
                 result.append(SedoriRouteModel(
                     id=d["id"],
                     product_id=d.get("product_id", ""),
@@ -1520,6 +1534,10 @@ class Repository:
                     profit_rate=d.get("profit_rate", 0.0),
                     rank=d.get("rank", 0),
                     calculated_at=datetime.fromisoformat(d["calculated_at"]),
+                    route_quality_score=d.get("route_quality_score", 1.0),
+                    route_warning_flags=warning_flags,
+                    needs_review=bool(d.get("needs_review", 0)),
+                    sort_score=d.get("sort_score", 0.0),
                 ))
             except Exception:
                 continue

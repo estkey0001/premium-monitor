@@ -1,4 +1,4 @@
-"""せどりルート計算エンジン (Phase 14)。
+"""せどりルート計算エンジン (Phase 14/15)。
 
 sale_prices（仕入れ候補）と buyback_prices（売却先）を組み合わせて
 全ルートを計算し、sedori_routesテーブルに保存する。
@@ -10,8 +10,9 @@ sale_prices（仕入れ候補）と buyback_prices（売却先）を組み合わ
   profit_rate = net_profit / buy_price
 """
 
+import json
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Optional
 
 import ulid
@@ -126,6 +127,11 @@ class SedoriRouteCalculator:
                 buyback_price=r.get("buyback_price", 0),
                 buyback_url=r.get("buyback_url", ""),
                 condition=r.get("condition", ""),
+                link_verified=bool(r.get("link_verified", False)),
+                observed_at=(
+                    datetime.fromisoformat(r["observed_at"])
+                    if r.get("observed_at") else datetime.now()
+                ),
             )
             for r in _bp_rows
             if r.get("buyback_price", 0) > 0
@@ -181,14 +187,139 @@ class SedoriRouteCalculator:
                     rank=0,  # 後でランク付け
                     calculated_at=datetime.now(),
                 )
+                # 品質チェック用メタデータを一時属性として付与（DBには保存しない）
+                route._buy_observed_at = getattr(sp, "observed_at", None)
+                route._buy_link_verified = getattr(sp, "link_verified", False)
+                route._sell_observed_at = getattr(bp, "observed_at", None)
+                route._sell_link_verified = getattr(bp, "link_verified", False)
+                route._sell_condition = getattr(bp, "condition", "")
                 routes.append(route)
 
-        # net_profit降順でソートしてランク付け
-        routes.sort(key=lambda r: r.net_profit, reverse=True)
+        # 品質スコア計算
+        for route in routes:
+            quality_score, warning_flags, needs_review = self._calculate_quality(route)
+            route.route_quality_score = quality_score
+            route.route_warning_flags = warning_flags
+            route.needs_review = needs_review
+            route.sort_score = route.net_profit * quality_score
+
+        # sort_score降順でソートしてランク付け（品質調整済み）
+        routes.sort(key=lambda r: r.sort_score, reverse=True)
         for i, r in enumerate(routes, start=1):
             r.rank = i
 
         return routes
+
+    def _calculate_quality(
+        self,
+        route: "SedoriRouteModel",
+    ) -> tuple[float, list[str], bool]:
+        """ルートの品質スコア・警告フラグ・要確認フラグを計算する。
+
+        Returns:
+            (quality_score, warning_flags, needs_review)
+            quality_score: 0.0〜1.0 (高いほど信頼性が高い)
+        """
+        flags: list[str] = []
+        score = 1.0
+
+        # --- 条件ズレチェック (weight: 0.25) ---
+        # 仕入れ条件と売却先の条件が明らかに不整合（中古を新品として売れない）
+        buy_cond = (route.buy_condition or "").lower()
+        sell_cond = getattr(route, "_sell_condition", "").lower()
+        condition_mismatch = False
+        # 仕入れが中古なのに売却先が新品価格（buy=used_*, sell=new_unopened）の場合
+        if buy_cond.startswith("used") and sell_cond in ("new_unopened", "new_unopened_simfree", "new_opened"):
+            condition_mismatch = True
+            flags.append("condition_mismatch")
+            score -= 0.25
+        elif buy_cond.startswith("used") and sell_cond == "":
+            # 売却先の条件が未定義の場合は警告（明確なズレとはしない）
+            flags.append("sell_condition_unknown")
+            score -= 0.05
+
+        # --- 仕入れ価格の鮮度チェック (weight: 0.20) ---
+        def _age_days(dt) -> int:
+            """datetime の経過日数を返す（タイムゾーン対応）。"""
+            if dt is None:
+                return 0
+            now = datetime.now()
+            # tzinfo がある場合はstrip（naive同士で比較）
+            if hasattr(dt, "tzinfo") and dt.tzinfo is not None:
+                dt = dt.replace(tzinfo=None)
+            try:
+                return (now - dt).days
+            except Exception:
+                return 0
+
+        stale_sale_price = False
+        if hasattr(route, "_buy_observed_at") and route._buy_observed_at:
+            if _age_days(route._buy_observed_at) > 7:
+                stale_sale_price = True
+                flags.append("stale_sale_price")
+                score -= 0.20
+
+        # --- 買取価格の鮮度チェック (weight: 0.20) ---
+        stale_buyback_price = False
+        if hasattr(route, "_sell_observed_at") and route._sell_observed_at:
+            if _age_days(route._sell_observed_at) > 7:
+                stale_buyback_price = True
+                flags.append("stale_buyback_price")
+                score -= 0.20
+
+        # --- 仕入れURLの検証チェック (weight: 0.10) ---
+        unverified_buy_url = False
+        if hasattr(route, "_buy_link_verified") and not route._buy_link_verified:
+            unverified_buy_url = True
+            flags.append("unverified_buy_url")
+            score -= 0.10
+
+        # --- 売却URLの検証チェック (weight: 0.10) ---
+        unverified_sell_url = False
+        if hasattr(route, "_sell_link_verified") and not route._sell_link_verified:
+            unverified_sell_url = True
+            flags.append("unverified_sell_url")
+            score -= 0.10
+
+        # --- 利益率の異常チェック (weight: 0.15) ---
+        abnormal_profit_rate = False
+        if route.profit_rate >= 0.50:
+            # 50%以上は異常値の可能性が高い
+            abnormal_profit_rate = True
+            flags.append("abnormal_profit_rate")
+            score -= 0.15
+        elif route.profit_rate >= 0.20:
+            # 20-50%は要注意（ペナルティ小）
+            score -= 0.06
+
+        # --- 買取上限チェック (weight: 0.10) ---
+        # 仕入れ価格の2倍以上の買取価格は上限設定ミスの可能性
+        upper_limit_buyback = False
+        if route.buy_price > 0 and route.sell_price >= route.buy_price * 2.0:
+            upper_limit_buyback = True
+            flags.append("upper_limit_buyback")
+            score -= 0.10
+
+        # --- モデルミスマッチ疑惑チェック ---
+        # 同一カテゴリでも大幅に異なる価格帯（net_profit > 200,000円）
+        if route.net_profit >= 200_000:
+            flags.append("possible_model_mismatch")
+            score -= 0.10
+
+        # スコアを0.0〜1.0にクランプ
+        score = max(0.0, min(1.0, score))
+
+        # --- 要確認フラグの判定 ---
+        needs_review = (
+            route.profit_rate >= 0.50
+            or route.net_profit >= 100_000
+            or condition_mismatch
+            or (stale_sale_price and stale_buyback_price)
+            or (unverified_buy_url and unverified_sell_url)
+            or upper_limit_buyback
+        )
+
+        return score, flags, needs_review
 
     def _save_routes(self, product_alias: str, routes: list[SedoriRouteModel]) -> int:
         """計算済みルートを保存する（既存分を削除してから保存）。"""

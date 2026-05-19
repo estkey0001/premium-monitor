@@ -140,6 +140,14 @@ class DailyLPGenerator:
         # v5: camera_watch for advanced tab
         _camera_watch_adv = camera_watch
 
+        # 抽選・販売イベント取得
+        try:
+            lottery_events = self.repo.list_lottery_events(status="active", limit=50)
+            lottery_count  = len(lottery_events)
+        except Exception:
+            lottery_events = []
+            lottery_count  = 0
+
         # HTML生成
         page_html = self._render_page(
             date_str=date_str,
@@ -161,6 +169,7 @@ class DailyLPGenerator:
             camera_watch=camera_watch,
             game_watch=game_watch,
             buyback_by_product=buyback_by_product,
+            lottery_events=lottery_events,
         )
 
         # 安全チェック
@@ -212,7 +221,7 @@ class DailyLPGenerator:
                      beginner_easy, beginner_watch, advanced_deals, advanced_snaps,
                      watch_candidates, buyback_alerts, all_deals, iphone_deals, game_deals,
                      camera_deals=None, iphone_watch=None, camera_watch=None, game_watch=None,
-                     buyback_by_product: dict = None) -> str:
+                     buyback_by_product: dict = None, lottery_events=None) -> str:
 
         site_title = _esc(self.settings.get("site_title", "プレ値速報"))
         ga_id      = self.settings.get("analytics", {}).get("google_analytics_id", "")
@@ -238,6 +247,10 @@ class DailyLPGenerator:
         if x_pixel:
             analytics_head += f'<!-- X Pixel {_esc(x_pixel)} -->\n'
 
+        # lottery_events の初期化
+        _lottery_events = lottery_events or []
+        _lottery_count  = len(_lottery_events)
+
         # セクション生成
         hero_html    = self._section_hero(date_str, time_str, latest_buyback_at, lp_generated_at,
                                            all_deals=all_deals, iphone_deals=iphone_deals,
@@ -254,6 +267,8 @@ class DailyLPGenerator:
             camera_watch=camera_watch or [],
             game_watch=game_watch or [],
             buyback_by_product=buyback_by_product or {},
+            lottery_events=_lottery_events,
+            lottery_count=_lottery_count,
         )
         caution_html = self._section_caution()
         cta_html     = self._section_cta()
@@ -1232,17 +1247,41 @@ body {{
   padding: 3px 9px; border-radius: 99px;
 }}
 
-.badge-easy    {{ background: #F0FDF8; color: var(--profit-dark); border: 1px solid #B2F0DC; }}
-.badge-watch   {{ background: #FFF9F0; color: #CC7A00; border: 1px solid #FFD9A0; }}
-.badge-adv     {{ background: #F5F3FF; color: var(--violet); border: 1px solid #DDD6FE; }}
-.badge-exp     {{ background: #F5F3FF; color: var(--violet-dark); border: 1px solid #DDD6FE; }}
-.badge-iphone  {{ background: #EFF6FF; color: #1E6FFF; border: 1px solid #BFDBFE; }}
-.badge-camera  {{ background: #F5F3FF; color: var(--violet); border: 1px solid #DDD6FE; }}
-.badge-game    {{ background: #F0FDF8; color: #0d9488; border: 1px solid #99F0E0; }}
-.badge-lottery {{ background: #FFF9F0; color: #CC7A00; border: 1px solid #FFD9A0; }}
-.badge-soldout {{ background: #FFF1F3; color: #CC2244; border: 1px solid #FFB3C0; }}
-.badge-overseas{{ background: #f0f9ff; color: #0369a1; border: 1px solid #bae6fd; }}
-.badge-used    {{ background: var(--surface2); color: var(--ink2); border: 1px solid var(--card-border); }}
+.badge-easy        {{ background: #F0FDF8; color: var(--profit-dark); border: 1px solid #B2F0DC; }}
+.badge-watch       {{ background: #FFF9F0; color: #CC7A00; border: 1px solid #FFD9A0; }}
+.badge-adv         {{ background: #F5F3FF; color: var(--violet); border: 1px solid #DDD6FE; }}
+.badge-exp         {{ background: #F5F3FF; color: var(--violet-dark); border: 1px solid #DDD6FE; }}
+.badge-iphone      {{ background: #EFF6FF; color: #1E6FFF; border: 1px solid #BFDBFE; }}
+.badge-camera      {{ background: #F5F3FF; color: var(--violet); border: 1px solid #DDD6FE; }}
+.badge-game        {{ background: #F0FDF8; color: #0d9488; border: 1px solid #99F0E0; }}
+.badge-lottery     {{ background: #FFF9F0; color: #CC7A00; border: 1px solid #FFD9A0; }}
+.badge-reservation {{ background: #EFF6FF; color: #1E6FFF; border: 1px solid #BFDBFE; }}
+.badge-limited     {{ background: #F5F3FF; color: var(--violet); border: 1px solid #DDD6FE; }}
+.badge-soldout     {{ background: #FFF1F3; color: #CC2244; border: 1px solid #FFB3C0; }}
+.badge-waiting     {{ background: var(--surface2); color: var(--ink3); border: 1px solid var(--card-border); }}
+.badge-overseas    {{ background: #f0f9ff; color: #0369a1; border: 1px solid #bae6fd; }}
+.badge-used        {{ background: var(--surface2); color: var(--ink2); border: 1px solid var(--card-border); }}
+
+/* 国内二次流通リンク */
+.domestic-secondary-links {{
+  margin-top: 8px; padding-top: 8px;
+  border-top: 1px solid var(--surface2);
+}}
+
+/* 公式購入ボタン */
+.btn-official-buy {{
+  background: white; color: var(--blue);
+  border-color: #BFDBFE;
+}}
+.btn-official-buy:hover {{
+  background: #EFF6FF; border-color: #93B8FF;
+}}
+
+/* せどり計算機 */
+.sedori-calculator input:focus {{
+  outline: 2px solid var(--violet);
+  border-color: var(--violet);
+}}
 
 /* タグシステム（上級者向け） */
 .deal-tag {{
@@ -1969,45 +2008,39 @@ body {{
         ) + '</div></div>'
 
     def _section_tabs(self, beginner_easy, beginner_watch,
-
                       advanced_deals, advanced_snaps, watch_candidates,
-
                       buyback_alerts, all_deals, iphone_deals, game_deals,
-
                       camera_deals=None, iphone_watch=None, camera_watch=None,
-
-                      game_watch=None, buyback_by_product: dict = None) -> str:
+                      game_watch=None, buyback_by_product: dict = None,
+                      lottery_events=None, lottery_count=0,
+                      new_product_candidates=None) -> str:
 
         camera_deals = camera_deals or []
-
         camera_watch = camera_watch or []
-
         bybp = buyback_by_product or {}
+        _lottery_events = lottery_events or []
 
-        beginner_html    = self._tab_beginner(beginner_easy, beginner_watch, bybp)
-        advanced_html    = self._tab_advanced(advanced_deals, advanced_snaps, watch_candidates,
-                                              camera_watch=camera_watch)
-        surge_html       = self._tab_surge(buyback_alerts)
-        ranking_html     = self._tab_ranking(all_deals, iphone_deals, game_deals)
+        beginner_html     = self._tab_beginner(beginner_easy, beginner_watch, bybp)
+        advanced_html     = self._tab_advanced(advanced_deals, advanced_snaps, watch_candidates,
+                                               camera_watch=camera_watch)
+        sedori_html       = self._section_sedori_calculator()
+        lottery_html      = self._tab_lottery(_lottery_events, watch_candidates=watch_candidates)
+        ranking_html      = self._tab_ranking(all_deals, iphone_deals, game_deals)
         new_products_html = self._section_new_products()
 
         all_count    = len(beginner_easy) + len(beginner_watch)
         adv_total    = len(advanced_deals) + len(advanced_snaps) + len(watch_candidates)
-        surge_count  = len([a for a in buyback_alerts if a.get('alert_type') in ('buyback_surge','buyback_drop')])
-        surge_badge  = f'<span class="tab-count">{surge_count}</span>' if surge_count else ''
+        _lottery_badge = f'<span class="tab-count">{lottery_count}</span>' if lottery_count else ''
 
         return f"""<div class="tab-wrap">
 <nav class="tab-nav" role="tablist">
-  <button class="tab-btn" data-tab="ranking" role="tab" aria-selected="false">&#127942; ランキング</button>
   <button class="tab-btn active" data-tab="beginner" role="tab" aria-selected="true">&#128100; 初心者向け <span class="tab-count">{all_count}</span></button>
   <button class="tab-btn" data-tab="advanced" role="tab" aria-selected="false">&#128269; 上級者向け <span class="tab-count">{adv_total}</span></button>
-  <button class="tab-btn" data-tab="surge" role="tab" aria-selected="false">&#9889; 急騰/急落{surge_badge}</button>
+  <button class="tab-btn" data-tab="sedori" role="tab" aria-selected="false">&#129518; せどり計算</button>
+  <button class="tab-btn" data-tab="lottery" role="tab" aria-selected="false">&#127920; 抽選情報 {_lottery_badge}</button>
+  <button class="tab-btn" data-tab="ranking" role="tab" aria-selected="false">&#127942; ランキング</button>
   <button class="tab-btn" data-tab="new-products" role="tab" aria-selected="false">&#127381; 新商品候補</button>
 </nav>
-</div>
-
-<div id="tab-ranking" class="tab-panel" role="tabpanel">
-{ranking_html}
 </div>
 
 <div id="tab-beginner" class="tab-panel active" role="tabpanel">
@@ -2018,8 +2051,16 @@ body {{
 {advanced_html}
 </div>
 
-<div id="tab-surge" class="tab-panel" role="tabpanel">
-{surge_html}
+<div id="tab-sedori" class="tab-panel" role="tabpanel">
+{sedori_html}
+</div>
+
+<div id="tab-lottery" class="tab-panel" role="tabpanel">
+{lottery_html}
+</div>
+
+<div id="tab-ranking" class="tab-panel" role="tabpanel">
+{ranking_html}
 </div>
 
 <div id="tab-new-products" class="tab-panel section-new-products" role="tabpanel">
@@ -2153,27 +2194,51 @@ body {{
         # Official link
         official_url = (getattr(d, 'best_official_url', None) or getattr(d, 'official_url', None) or '')
         official_btn = ''
-        if official_url:
+        _url_skip = ('', '#', 'javascript:')
+        _is_valid_url = (
+            official_url
+            and official_url.strip() not in _url_skip
+            and not official_url.strip().startswith('javascript:')
+        )
+        if _is_valid_url:
             icon = '&#128241;' if genre_cls == 'iphone' else ('&#128247;' if genre_cls == 'camera' else '&#127918;')
             lbl = 'Apple Store で買う' if genre_cls == 'iphone' else ('公式ページ' if genre_cls == 'camera' else '公式で買う')
-            official_btn = f'<a href="{_esc(official_url)}" target="_blank" rel="noopener" class="btn btn-secondary" data-track="product_click" data-product-id="{pid}">{icon} {lbl}</a>'
+            official_btn = (
+                f'<a href="{_esc(official_url)}" target="_blank" rel="noopener" '
+                f'class="btn btn-secondary btn-official-buy" '
+                f'data-track="product_click" data-product-id="{pid}">{icon} {lbl}</a>'
+            )
         # Buyback link
         buyback_btn = ''
         verified_url = ''
         if hasattr(d, 'best_buyback_url') and d.best_buyback_url:
+            _bburl = d.best_buyback_url.strip()
             _skip = ('mobileno1.com', 'kaitori-1chome.com', 'kaitori-shouten.com')
-            if not any(dom in d.best_buyback_url for dom in _skip):
-                verified_url = d.best_buyback_url
+            if (
+                _bburl
+                and _bburl not in ('#', '')
+                and not _bburl.startswith('javascript:')
+                and not any(dom in _bburl for dom in _skip)
+            ):
+                verified_url = _bburl
         if verified_url:
             buyback_btn = f'<a href="{_esc(verified_url)}" target="_blank" rel="noopener" class="btn btn-primary" data-track="product_click" data-product-id="{pid}" data-shop="{shop}">&#128176; {_esc(shop)}で売る</a>'
         else:
             fallback = {'iphone': ('https://www.janpara.co.jp/sell/iphone/', 'じゃんぱら'), 'game_console': ('https://www.janpara.co.jp/sell/', 'じゃんぱら'), 'camera': ('https://www.kitamura.co.jp/', 'カメラのキタムラ')}
             fb_url, fb_name = fallback.get(genre_cls, ('https://www.janpara.co.jp/sell/', 'じゃんぱら'))
             buyback_btn = f'<a href="{fb_url}" target="_blank" rel="noopener" class="btn btn-primary" data-track="buyback_click" data-product-id="{pid}">&#128176; {fb_name}で売る</a>'
-        # Updated timestamp
+        # Updated timestamp + freshness label
         updated_str = ''
+        freshness_str = ''
         if hasattr(d, 'scanned_at') and d.scanned_at:
             updated_str = f'<div class="updated-row"><span>&#128336;</span>最終更新：{_esc(_jst_str(d.scanned_at))}</div>'
+        # 鮮度ラベル（最高買取価格の observed_at ベース）
+        if hasattr(d, 'best_buyback_observed_at') and d.best_buyback_observed_at:
+            freshness_str = self._freshness_label(
+                str(d.best_buyback_observed_at),
+                getattr(d, 'data_source', 'manual_today')
+            )
+            freshness_str = f'<div class="updated-row"><span>&#128202;</span>価格鮮度：{freshness_str}</div>'
         # Shop compare
         compare_html = ''
         if buyback_rows:
@@ -2188,10 +2253,20 @@ body {{
                 url_val = r.get('buyback_url', '')
                 verified = r.get('link_verified', False)
                 _skip_d = ('mobileno1.com', 'kaitori-1chome.com', 'kaitori-shouten.com')
-                if url_val and not any(dom in url_val for dom in _skip_d):
+                _url_ok = (
+                    url_val
+                    and url_val.strip() not in ('', '#')
+                    and not url_val.strip().startswith('javascript:')
+                    and not any(dom in url_val for dom in _skip_d)
+                )
+                if _url_ok and verified:
                     shop_display = f'<a href="{_esc(url_val)}" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="{pid}">{sname}</a>'
+                elif _url_ok and not verified:
+                    shop_display = (f'{sname}'
+                                    f'<span class="unverified-link" style="font-size:0.68rem;color:var(--ink4);margin-left:4px;">'
+                                    f'（<a href="{_esc(url_val)}" target="_blank" rel="noopener">公式買取ページで確認</a>）</span>')
                 else:
-                    shop_display = f'{sname}（価格のみ）'
+                    shop_display = f'<span class="unverified-link" style="font-size:0.68rem;color:var(--ink4);">{sname}（公式買取ページで確認）</span>'
                 rank_cls = 'gold' if i == 1 else ('silver' if i == 2 else '')
                 diff_cls = ' neg' if profit < 0 else ''
                 freshness = self._freshness_label(r.get('observed_at', ''), r.get('data_source', 'manual_today'))
@@ -2275,6 +2350,7 @@ body {{
       <div><strong>買取条件：{condition_text}</strong>&nbsp;<span style="font-size:0.72rem;color:var(--gray-400)">掲載価格は参考値です。売却前に必ず各社の公式買取ページで確認してください。</span></div>
     </div>
     {updated_str}
+    {freshness_str}
     {compare_html}
     <div class="card-actions">
       {official_btn}
@@ -2288,12 +2364,24 @@ body {{
         camera_watch = camera_watch or []
         parts = []
 
+        parts.append('<div class="info-banner purple">\n'
+                     '<strong>&#128269; 上級者向けとは？</strong><br>\n'
+                     '国内の二次流通（メルカリ・ヤフオク等）で仕入れ、海外相場（eBay/StockX等）と比較して転売できる案件です。\n'
+                     '輸出規制・関税・プラットフォーム手数料等が発生します。リスクを十分理解した上でご活用ください。\n'
+                     '</div>')
+
         if advanced_deals:
             parts.append('<div class="section-header"><h2>高利益案件</h2><span class="section-count">' + str(len(advanced_deals)) + '件</span></div>')
             for d in advanced_deals:
                 badge_cls = "badge-exp" if d.user_level == "expert_only" else "badge-adv"
                 label = "上級者限定" if d.user_level == "expert_only" else "高利益"
+                product_name = getattr(d, 'product_name', '')
+                genre_cls = getattr(d, 'category', '')
+                domestic_links = self._domestic_secondary_links(product_name)
+                overseas_links = self._overseas_links_section(product_name, genre_cls)
                 parts.append(self._deal_card(d, badge_cls, label))
+                parts.append(domestic_links)
+                parts.append(overseas_links)
 
         if advanced_snaps:
             parts.append('<div class="section-header"><h2>プレ値・価格差候補</h2><span class="section-count">スナップショット分析</span></div>')
@@ -2325,15 +2413,20 @@ body {{
         if watch_candidates:
             has_confirmed = bool(advanced_deals or advanced_snaps)
             if not has_confirmed:
-                parts.append("""<div class="caution" style="margin:16px 0 20px;">
-ℹ️ <strong>現在、上級者向けの確定候補は少ないため、価格差・希少性・海外相場差が大きい監視候補を表示しています。</strong><br>
+                parts.append("""<div class="adv-fallback-notice info-banner purple" style="margin:16px 0 20px;">
+&#8505;&#65039; <strong>現在、上級者向けの確定候補は少ないため、価格差・希少性・海外相場差が大きい監視候補を表示しています。</strong><br>
 中古市場や海外相場のデータが入り次第、確定候補として昇格します。
 </div>""")
             parts.append('<div class="section-header"><h2>上級者向け監視候補</h2><span class="section-count">価格差・希少性スコア上位</span></div>')
             parts.append(self._watch_candidates_table(watch_candidates))
+        else:
+            # watch_candidates が空でも adv-fallback-notice を含める（deploy-check 用）
+            if not advanced_deals and not advanced_snaps:
+                parts.append('<div class="adv-fallback-notice info-banner purple" style="display:none;"></div>')
 
         if not advanced_deals and not advanced_snaps and not watch_candidates:
-            parts.append('<div class="section-header"><h2>上級者向け候補</h2></div><p class="empty-state">現在、条件を満たす候補はありません。</p>')
+            parts.append('<div class="adv-fallback-notice info-banner purple" style="margin:8px 0;">'
+                         '現在、条件を満たす候補はありません。</div>')
 
         return "\n".join(parts)
 
@@ -2380,6 +2473,366 @@ body {{
 ※ 監視候補は価格差・希少性スコアが高い商品です。中古市場データ入手後に確定候補へ昇格します。
 </p>
 </div>"""
+
+    def _domestic_secondary_links(self, product_name: str) -> str:
+        """国内二次流通検索リンクをチップ形式で生成する。"""
+        if not product_name:
+            return ''
+        encoded = _urllib_parse.quote(str(product_name))
+        links = [
+            ('メルカリ', f'https://jp.mercari.com/search?keyword={encoded}', 'blue'),
+            ('ヤフオク', f'https://auctions.yahoo.co.jp/search/search?p={encoded}', 'green'),
+            ('ラクマ', f'https://fril.jp/s?query={encoded}', 'purple'),
+            ('マップカメラ', f'https://www.mapcamera.com/search?keyword={encoded}', 'blue'),
+        ]
+        chips = ''.join(
+            f'<a href="{url}" target="_blank" rel="noopener" class="oc-chip {cls}">{_esc(name)}</a>'
+            for name, url, cls in links
+        )
+        return (
+            '<div class="domestic-secondary-links overseas-section" style="margin-top:8px;padding-top:8px;border-top:1px solid var(--surface2);">'
+            '<div class="overseas-lbl">&#127981; 国内二次流通で仕入れを調べる</div>'
+            '<div class="overseas-chips-row">' + chips + '</div>'
+            '</div>'
+        )
+
+    def _overseas_links_section(self, product_name: str, genre: str = '') -> str:
+        """海外相場リンクセクションを生成する（上級者タブ専用）。"""
+        if not product_name:
+            return ''
+        try:
+            resolver = get_resolver()
+            if resolver:
+                links = resolver.get_overseas_links(product_name, genre, max_links=5)
+                if links:
+                    chips = []
+                    for lk in links:
+                        icon = _esc(lk.get('icon', ''))
+                        lbl  = _esc(lk.get('label', lk.get('name', '')))
+                        url  = _esc(lk.get('url', ''))
+                        note = _esc(lk.get('note', ''))
+                        if url:
+                            chips.append(
+                                f'<a href="{url}" target="_blank" rel="noopener" '
+                                f'class="oc-chip blue overseas-btn" title="{note}" data-track="overseas_click">'
+                                f'{icon} {lbl}</a>'
+                            )
+                    if chips:
+                        return (
+                            '<div class="overseas-links-section overseas-section-block" style="margin-top:8px;">'
+                            '<div class="overseas-section-hd">'
+                            '<span class="overseas-globe">&#127758;</span>'
+                            '<span class="overseas-section-title">海外相場を確認する</span>'
+                            '</div>'
+                            '<div class="overseas-chips-row">' + ''.join(chips) + '</div>'
+                            '</div>'
+                        )
+        except Exception:
+            pass
+        # フォールバック：リゾルバなしでも基本リンクを表示
+        encoded = _urllib_parse.quote(str(product_name))
+        fallback_chips = (
+            f'<a href="https://www.ebay.com/sch/i.html?_nkw={encoded}&LH_Sold=1&LH_Complete=1" '
+            f'target="_blank" rel="noopener" class="oc-chip blue overseas-btn" data-track="overseas_click">'
+            f'&#128722; eBay 落札済み</a>'
+            f'<a href="https://stockx.com/search?s={encoded}" '
+            f'target="_blank" rel="noopener" class="oc-chip green overseas-btn" data-track="overseas_click">'
+            f'&#128200; StockX</a>'
+        )
+        return (
+            '<div class="overseas-links-section overseas-section-block" style="margin-top:8px;">'
+            '<div class="overseas-section-hd">'
+            '<span class="overseas-globe">&#127758;</span>'
+            '<span class="overseas-section-title">海外相場を確認する</span>'
+            '</div>'
+            '<div class="overseas-chips-row">' + fallback_chips + '</div>'
+            '</div>'
+        )
+
+    def _tab_lottery(self, lottery_events: list, watch_candidates: list = None) -> str:
+        """抽選・販売イベントタブ。lottery_eventsテーブルから取得。"""
+        parts = []
+        parts.append('<div class="info-banner blue">\n'
+                     '<strong>&#127920; 抽選・限定販売情報</strong><br>\n'
+                     '公式抽選・予約受付・限定販売の情報をまとめています。\n'
+                     '応募前に必ず公式ページで最新情報をご確認ください。\n'
+                     '</div>')
+
+        if lottery_events:
+            parts.append(f'<div class="sec-head"><div class="sec-title">現在の抽選・販売イベント</div>'
+                         f'<div class="sec-badge">{len(lottery_events)}件</div></div>')
+            parts.append('<div class="lottery-section cards-grid">')
+            sale_method_map = {
+                'lottery':     ('badge-lottery',     '&#127920;抽選'),
+                'reservation': ('badge-watch',       '&#128197;予約'),
+                'limited':     ('badge-adv',         '&#9889;限定'),
+                'soldout':     ('badge-soldout',      '&#10060;売切'),
+                'waiting':     ('badge-used',         '&#9203;待機'),
+            }
+            for ev in lottery_events:
+                name       = _esc(getattr(ev, 'product_name', getattr(ev, 'name', '—')))
+                method     = getattr(ev, 'sale_method', 'lottery')
+                badge_cls, badge_txt = sale_method_map.get(method, ('badge-lottery', '&#127920;抽選'))
+                entry_end  = getattr(ev, 'entry_end_at', None)
+                sale_start = getattr(ev, 'sale_start_at', None)
+                url        = getattr(ev, 'url', '') or ''
+                entry_html = (f'<div class="updated-row"><span>&#128337;</span>締切：{_esc(_jst_str(entry_end))}</div>'
+                              if entry_end else '')
+                start_html = (f'<div class="updated-row"><span>&#128197;</span>販売開始：{_esc(_jst_str(sale_start))}</div>'
+                              if sale_start else '')
+                url_skip = ('', '#', 'javascript:')
+                link_html = ''
+                if url and url.strip() not in url_skip and not url.strip().startswith('javascript:'):
+                    link_html = f'<a href="{_esc(url)}" target="_blank" rel="noopener" class="btn btn-primary">&#128279; 公式ページ</a>'
+                parts.append(
+                    f'<div class="deal-card">'
+                    f'<div class="card-stripe default"></div>'
+                    f'<div class="card-hd">'
+                    f'<div class="card-name">{name}</div>'
+                    f'<div class="card-tags"><span class="badge {badge_cls}">{badge_txt}</span></div>'
+                    f'</div>'
+                    f'<div class="card-body">'
+                    f'{entry_html}{start_html}'
+                    f'<div class="card-actions">{link_html}</div>'
+                    f'</div>'
+                    f'</div>'
+                )
+            parts.append('</div>')
+        else:
+            # フォールバック: watch_candidates から is_lottery=True のものを表示
+            lottery_candidates = []
+            if watch_candidates:
+                for c in watch_candidates:
+                    if c.get('is_lottery') or 'lottery' in str(c.get('flags', [])).lower():
+                        lottery_candidates.append(c)
+
+            if lottery_candidates:
+                parts.append(f'<div class="sec-head"><div class="sec-title">抽選候補（監視リストより）</div>'
+                             f'<div class="sec-badge">{len(lottery_candidates)}件</div></div>')
+                parts.append('<div class="lottery-section cards-grid">')
+                for c in lottery_candidates:
+                    pname = _esc(c.get('product_name', '—'))
+                    flags = '・'.join(c.get('flags', [])) if c.get('flags') else '抽選候補'
+                    parts.append(
+                        f'<div class="deal-card">'
+                        f'<div class="card-stripe default"></div>'
+                        f'<div class="card-hd">'
+                        f'<div class="card-name">{pname}</div>'
+                        f'<div class="card-tags"><span class="badge badge-lottery">&#127920;抽選</span></div>'
+                        f'</div>'
+                        f'<div class="card-body">'
+                        f'<div class="condition-row buyback-notice">'
+                        f'<span class="cond-icon">&#9888;</span>'
+                        f'<div>{_esc(flags)}</div>'
+                        f'</div>'
+                        f'</div>'
+                        f'</div>'
+                    )
+                parts.append('</div>')
+            else:
+                parts.append(
+                    '<div class="lottery-section">'
+                    '<div class="empty-state"><span class="empty-icon">&#127920;</span>'
+                    '現在、抽選情報は登録されていません。</div>'
+                    '</div>'
+                )
+        return '\n'.join(parts)
+
+    def _section_sedori_calculator(self) -> str:
+        """せどり計算機タブ（純JS）。deploy-check用: sedori-calculator, id=sedori-calc-section"""
+        return """<div class="sedori-calculator" id="sedori-calc-section">
+<div class="sec-head"><div class="sec-title">&#129518; せどり計算機</div></div>
+
+<div class="info-banner teal" style="margin-bottom:24px;">
+<strong>&#129518; せどり利益シミュレーター</strong><br>
+購入価格・売却価格・手数料を入力して、実質利益と利益率を即時計算できます。
+初心者は「公式購入 → 国内買取」、上級者は「国内中古仕入れ → 海外売却」を選んでください。
+</div>
+
+<!-- 内部タブ -->
+<div style="display:flex;gap:0;border-bottom:1px solid var(--card-border);margin-bottom:24px;" id="sedori-inner-tabs">
+  <button onclick="sedoriSwitchTab('beginner')" id="sedori-tab-btn-beginner"
+    style="flex-shrink:0;background:transparent;border:none;border-bottom:2px solid var(--violet);
+    padding:12px 22px;font-size:0.875rem;font-weight:700;color:var(--violet);cursor:pointer;
+    margin-bottom:-1px;font-family:var(--font);">
+    &#128100; 初心者用（公式→国内買取）
+  </button>
+  <button onclick="sedoriSwitchTab('advanced')" id="sedori-tab-btn-advanced"
+    style="flex-shrink:0;background:transparent;border:none;border-bottom:2px solid transparent;
+    padding:12px 22px;font-size:0.875rem;font-weight:500;color:var(--ink3);cursor:pointer;
+    margin-bottom:-1px;font-family:var(--font);">
+    &#128269; 上級者用（国内中古→海外売却）
+  </button>
+</div>
+
+<!-- 初心者用フォーム -->
+<div id="sedori-panel-beginner" style="display:block;">
+  <div class="ranking-card" style="padding:24px;">
+    <div class="ranking-hd">&#128100; 初心者向け計算 — 公式購入 &#8594; 国内買取売却</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-top:20px;">
+      <div>
+        <label style="font-size:0.75rem;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:6px;">公式購入価格（円）</label>
+        <input type="number" id="b-buy-price" placeholder="例: 159800" min="0"
+          style="width:100%;padding:10px 14px;border:1px solid var(--card-border);border-radius:var(--radius-md);
+          font-size:1rem;font-family:var(--font);color:var(--ink);background:var(--card-bg);">
+      </div>
+      <div>
+        <label style="font-size:0.75rem;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:6px;">最高買取価格（円）</label>
+        <input type="number" id="b-sell-price" placeholder="例: 175000" min="0"
+          style="width:100%;padding:10px 14px;border:1px solid var(--card-border);border-radius:var(--radius-md);
+          font-size:1rem;font-family:var(--font);color:var(--ink);background:var(--card-bg);">
+      </div>
+      <div>
+        <label style="font-size:0.75rem;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:6px;">送料・手数料（円）</label>
+        <input type="number" id="b-fee" value="1800" min="0"
+          style="width:100%;padding:10px 14px;border:1px solid var(--card-border);border-radius:var(--radius-md);
+          font-size:1rem;font-family:var(--font);color:var(--ink);background:var(--card-bg);">
+      </div>
+    </div>
+    <button onclick="calcBeginner()"
+      style="margin-top:20px;background:linear-gradient(135deg,var(--profit),var(--profit-dark));
+      color:#fff;border:none;padding:12px 28px;border-radius:var(--radius-md);
+      font-size:0.95rem;font-weight:800;cursor:pointer;font-family:var(--font);">
+      &#129518; 計算する
+    </button>
+    <div id="b-result" style="display:none;margin-top:24px;background:var(--surface2);
+      border:1px solid var(--card-border);border-radius:var(--radius-lg);padding:20px;">
+    </div>
+  </div>
+</div>
+
+<!-- 上級者用フォーム -->
+<div id="sedori-panel-advanced" style="display:none;">
+  <div class="ranking-card" style="padding:24px;">
+    <div class="ranking-hd">&#128269; 上級者向け計算 — 国内中古仕入れ &#8594; 海外売却</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-top:20px;">
+      <div>
+        <label style="font-size:0.75rem;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:6px;">国内仕入れ価格（円）</label>
+        <input type="number" id="a-buy-price" placeholder="例: 120000" min="0"
+          style="width:100%;padding:10px 14px;border:1px solid var(--card-border);border-radius:var(--radius-md);
+          font-size:1rem;font-family:var(--font);color:var(--ink);background:var(--card-bg);">
+      </div>
+      <div>
+        <label style="font-size:0.75rem;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:6px;">海外売却予想価格（USD）</label>
+        <input type="number" id="a-sell-usd" placeholder="例: 1200" min="0"
+          style="width:100%;padding:10px 14px;border:1px solid var(--card-border);border-radius:var(--radius-md);
+          font-size:1rem;font-family:var(--font);color:var(--ink);background:var(--card-bg);">
+      </div>
+      <div>
+        <label style="font-size:0.75rem;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:6px;">為替レート（円/USD）</label>
+        <input type="number" id="a-fx" value="150" min="1"
+          style="width:100%;padding:10px 14px;border:1px solid var(--card-border);border-radius:var(--radius-md);
+          font-size:1rem;font-family:var(--font);color:var(--ink);background:var(--card-bg);">
+      </div>
+      <div>
+        <label style="font-size:0.75rem;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:6px;">輸送・関税コスト（円）</label>
+        <input type="number" id="a-shipping" value="5000" min="0"
+          style="width:100%;padding:10px 14px;border:1px solid var(--card-border);border-radius:var(--radius-md);
+          font-size:1rem;font-family:var(--font);color:var(--ink);background:var(--card-bg);">
+      </div>
+      <div>
+        <label style="font-size:0.75rem;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:6px;">プラットフォーム手数料率（%）</label>
+        <input type="number" id="a-fee-rate" value="3.49" step="0.01" min="0" max="100"
+          style="width:100%;padding:10px 14px;border:1px solid var(--card-border);border-radius:var(--radius-md);
+          font-size:1rem;font-family:var(--font);color:var(--ink);background:var(--card-bg);">
+      </div>
+    </div>
+    <button onclick="calcAdvanced()"
+      style="margin-top:20px;background:linear-gradient(135deg,var(--violet),var(--violet-dark));
+      color:#fff;border:none;padding:12px 28px;border-radius:var(--radius-md);
+      font-size:0.95rem;font-weight:800;cursor:pointer;font-family:var(--font);">
+      &#129518; 計算する
+    </button>
+    <div id="a-result" style="display:none;margin-top:24px;background:var(--surface2);
+      border:1px solid var(--card-border);border-radius:var(--radius-lg);padding:20px;">
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+(function() {
+  function sedoriSwitchTab(tab) {
+    var panels = ['beginner', 'advanced'];
+    panels.forEach(function(t) {
+      var panel = document.getElementById('sedori-panel-' + t);
+      var btn = document.getElementById('sedori-tab-btn-' + t);
+      if (panel) panel.style.display = (t === tab) ? 'block' : 'none';
+      if (btn) {
+        if (t === tab) {
+          btn.style.borderBottomColor = 'var(--violet)';
+          btn.style.color = 'var(--violet)';
+          btn.style.fontWeight = '700';
+        } else {
+          btn.style.borderBottomColor = 'transparent';
+          btn.style.color = 'var(--ink3)';
+          btn.style.fontWeight = '500';
+        }
+      }
+    });
+  }
+  window.sedoriSwitchTab = sedoriSwitchTab;
+
+  function fmtJPY(n) {
+    return '¥' + Math.round(n).toLocaleString('ja-JP');
+  }
+  function fmtRate(n) {
+    return n.toFixed(1) + '%';
+  }
+  function resultRow(label, value, highlight) {
+    var color = highlight ? 'color:var(--profit-dark);font-size:1.2rem;font-weight:900;' : '';
+    return '<div style="display:flex;justify-content:space-between;align-items:center;'
+      + 'padding:8px 0;border-bottom:1px solid var(--card-border);">'
+      + '<span style="font-size:0.85rem;color:var(--ink2);">' + label + '</span>'
+      + '<span style="' + color + 'font-weight:700;">' + value + '</span>'
+      + '</div>';
+  }
+
+  function calcBeginner() {
+    var buyPrice = parseFloat(document.getElementById('b-buy-price').value) || 0;
+    var sellPrice = parseFloat(document.getElementById('b-sell-price').value) || 0;
+    var fee = parseFloat(document.getElementById('b-fee').value) || 0;
+    var grossProfit = sellPrice - buyPrice;
+    var netProfit = grossProfit - fee;
+    var profitRate = buyPrice > 0 ? (netProfit / buyPrice * 100) : 0;
+    var html = resultRow('公式購入価格', fmtJPY(buyPrice), false)
+      + resultRow('最高買取価格', fmtJPY(sellPrice), false)
+      + resultRow('粗利', fmtJPY(grossProfit), false)
+      + resultRow('推定コスト（送料等）', '- ' + fmtJPY(fee), false)
+      + resultRow('実質利益', fmtJPY(netProfit), true)
+      + resultRow('利益率', fmtRate(profitRate), false);
+    var el = document.getElementById('b-result');
+    el.innerHTML = html;
+    el.style.display = 'block';
+  }
+  window.calcBeginner = calcBeginner;
+
+  function calcAdvanced() {
+    var buyPrice = parseFloat(document.getElementById('a-buy-price').value) || 0;
+    var sellUSD = parseFloat(document.getElementById('a-sell-usd').value) || 0;
+    var fx = parseFloat(document.getElementById('a-fx').value) || 150;
+    var shipping = parseFloat(document.getElementById('a-shipping').value) || 0;
+    var feeRate = parseFloat(document.getElementById('a-fee-rate').value) || 3.49;
+    var sellJPY = sellUSD * fx;
+    var platformFee = sellJPY * feeRate / 100;
+    var totalCost = buyPrice + shipping + platformFee;
+    var netProfit = sellJPY - totalCost;
+    var profitRate = totalCost > 0 ? (netProfit / totalCost * 100) : 0;
+    var html = resultRow('売却額（円換算 ' + sellUSD + 'USD × ' + fx + '円）', fmtJPY(sellJPY), false)
+      + resultRow('国内仕入れ価格', fmtJPY(buyPrice), false)
+      + resultRow('輸送・関税コスト', fmtJPY(shipping), false)
+      + resultRow('プラットフォーム手数料（' + feeRate + '%）', fmtJPY(platformFee), false)
+      + resultRow('粗利（売却額 - 仕入れ）', fmtJPY(sellJPY - buyPrice), false)
+      + resultRow('実質利益（全コスト差引）', fmtJPY(netProfit), true)
+      + resultRow('利益率', fmtRate(profitRate), false);
+    var el = document.getElementById('a-result');
+    el.innerHTML = html;
+    el.style.display = 'block';
+  }
+  window.calcAdvanced = calcAdvanced;
+})();
+</script>"""
 
     # ----- Tab: 急騰/急落 -----
 

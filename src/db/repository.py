@@ -2,7 +2,7 @@
 
 import json
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Optional
 
 from src.db.database import Database
@@ -1271,3 +1271,105 @@ class Repository:
         except Exception:
             return []
         return [dict(row) for row in rows]
+
+    # =========================================
+    # 抽選・販売イベント (lottery_events)
+    # =========================================
+
+    def upsert_lottery_event(self, event: dict) -> None:
+        """抽選・販売イベントをupsertする。"""
+        self.db.connection.execute(
+            """INSERT INTO lottery_events
+               (id, product_id, source_id, product_name, brand, title, sale_method,
+                entry_start_at, entry_end_at, result_announcement_at, sale_start_at,
+                url, status, detected_at, raw_text)
+               VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+               ON CONFLICT(id) DO UPDATE SET
+                 product_name=excluded.product_name,
+                 brand=excluded.brand,
+                 title=excluded.title,
+                 sale_method=excluded.sale_method,
+                 entry_start_at=excluded.entry_start_at,
+                 entry_end_at=excluded.entry_end_at,
+                 result_announcement_at=excluded.result_announcement_at,
+                 sale_start_at=excluded.sale_start_at,
+                 url=excluded.url,
+                 status=excluded.status,
+                 raw_text=excluded.raw_text""",
+            (
+                event["id"],
+                event.get("product_id"),
+                event.get("source_id"),
+                event.get("product_name", ""),
+                event.get("brand", ""),
+                event.get("title", ""),
+                event.get("sale_method", "lottery"),
+                event.get("entry_start_at"),
+                event.get("entry_end_at"),
+                event.get("result_announcement_at"),
+                event.get("sale_start_at"),
+                event.get("url", ""),
+                event.get("status", "active"),
+                event.get("detected_at", datetime.now().isoformat()),
+                event.get("raw_text", ""),
+            )
+        )
+        self.db.connection.commit()
+
+    def list_lottery_events(
+        self,
+        status: "Optional[str]" = None,
+        sale_method: "Optional[str]" = None,
+        limit: int = 50,
+    ) -> list[dict]:
+        """抽選・販売イベント一覧を返す。"""
+        conditions = []
+        params: list = []
+        if status:
+            conditions.append("status = ?")
+            params.append(status)
+        if sale_method:
+            conditions.append("sale_method = ?")
+            params.append(sale_method)
+        where = ("WHERE " + " AND ".join(conditions)) if conditions else ""
+        params.append(limit)
+        try:
+            rows = self.db.connection.execute(
+                f"""SELECT * FROM lottery_events
+                    {where}
+                    ORDER BY COALESCE(entry_end_at, sale_start_at, detected_at) ASC
+                    LIMIT ?""",
+                params
+            ).fetchall()
+        except Exception:
+            return []
+        return [dict(row) for row in rows]
+
+    def count_lottery_events(self, status: "Optional[str]" = "active") -> int:
+        """アクティブな抽選イベント数を返す。"""
+        try:
+            params: list = []
+            where = ""
+            if status:
+                where = "WHERE status = ?"
+                params.append(status)
+            row = self.db.connection.execute(
+                f"SELECT COUNT(*) as cnt FROM lottery_events {where}", params
+            ).fetchone()
+            return row["cnt"] if row else 0
+        except Exception:
+            return 0
+
+    def expire_old_lottery_events(self, days: int = 30) -> int:
+        """days日以上前のactiveイベントをexpiredに更新する。"""
+        cutoff = (datetime.now() - timedelta(days=days)).isoformat()
+        try:
+            cur = self.db.connection.execute(
+                """UPDATE lottery_events SET status='expired'
+                   WHERE status='active' AND detected_at < ?""",
+                (cutoff,)
+            )
+            self.db.connection.commit()
+            return cur.rowcount
+        except Exception:
+            return 0

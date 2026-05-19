@@ -1,0 +1,288 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ============================================================
+   SOUBA — Premium Ad-Ready Design System v3
+   
+   Design Philosophy: "Luxury SaaS meets Financial Terminal"
+   Inspired by: Linear, Vercel, Stripe, Lemon Squeezy
+   
+   Color System:
+   - Page BG:    #FAFBFF (near-white with blue tint)
+   - Surface:    #FFFFFF (cards)
+   - Surface 2:  #F4F6FD (subtle sections)
+   - Ink:        #0D0F1C (primary text)
+   - Ink 2:      #5B6278 (secondary text)
+   - Ink 3:      #9CA3B8 (muted)
+   - Border:     #E8EAF2 (subtle)
+   - Profit:     #00C896 → #00A876 (emerald)
+   - Advanced:   #7C5CFC → #6040E8 (electric violet)
+   - Warning:    #FF9500 (amber)
+   - Danger:     #FF3B5C (red)
+   - Accent:     #3B7BFF (blue)
+   - Gold:       #F5A623 (rank #1)
+   ============================================================ */
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+}
+
+:root {
+  --radius: 0.875rem;
+  --background: oklch(0.985 0.006 265);
+  --foreground: oklch(0.1 0.02 265);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.1 0.02 265);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.1 0.02 265);
+  --primary: oklch(0.58 0.22 160);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.96 0.008 265);
+  --secondary-foreground: oklch(0.35 0.02 265);
+  --muted: oklch(0.96 0.008 265);
+  --muted-foreground: oklch(0.52 0.015 265);
+  --accent: oklch(0.96 0.008 265);
+  --accent-foreground: oklch(0.1 0.02 265);
+  --destructive: oklch(0.62 0.25 15);
+  --destructive-foreground: oklch(1 0 0);
+  --border: oklch(0.91 0.01 265);
+  --input: oklch(0.91 0.01 265);
+  --ring: oklch(0.58 0.22 160);
+}
+
+@layer base {
+  * { @apply border-border outline-ring/50; }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-feature-settings: "cv02","cv03","cv04","cv11","tnum";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background: #FAFBFF;
+  }
+  button:not(:disabled),[role="button"]:not([aria-disabled="true"]),
+  [type="button"]:not(:disabled),[type="submit"]:not(:disabled),
+  a[href],select:not(:disabled) { @apply cursor-pointer; }
+  .font-mono {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-feature-settings: "tnum","zero";
+  }
+}
+
+@layer components {
+  .container {
+    width: 100%; margin: 0 auto;
+    padding-left: 1rem; padding-right: 1rem;
+  }
+  .flex { min-height: 0; min-width: 0; }
+  @media (min-width: 640px) { .container { padding-left: 1.5rem; padding-right: 1.5rem; } }
+  @media (min-width: 1024px) { .container { padding-left: 2rem; padding-right: 2rem; max-width: 1280px; } }
+
+  /* ── Premium Card ── */
+  .souba-card {
+    background: #FFFFFF;
+    border: 1px solid #E8EAF2;
+    border-radius: 16px;
+    box-shadow: 0 1px 3px rgba(13,15,28,0.05), 0 1px 2px rgba(13,15,28,0.04);
+    transition: transform 0.18s cubic-bezier(0.23,1,0.32,1),
+                box-shadow 0.18s cubic-bezier(0.23,1,0.32,1),
+                border-color 0.18s cubic-bezier(0.23,1,0.32,1);
+  }
+  .souba-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(13,15,28,0.1), 0 4px 12px rgba(13,15,28,0.06);
+    border-color: #D0D4E8;
+  }
+
+  /* ── Glassmorphism Card ── */
+  .glass-card {
+    background: rgba(255,255,255,0.72);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.9);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(13,15,28,0.08), inset 0 1px 0 rgba(255,255,255,0.9);
+  }
+
+  /* ── Profit Pill ── */
+  .profit-pill {
+    background: linear-gradient(135deg, #E8FFF6, #D0FAE8);
+    border: 1px solid #A7F3D0;
+    color: #047857;
+    border-radius: 100px;
+    padding: 2px 10px;
+    font-size: 12px;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* ── Gradient Buttons ── */
+  .btn-primary {
+    background: linear-gradient(135deg, #00C896 0%, #00A876 100%);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    box-shadow: 0 4px 16px rgba(0,200,150,0.35), inset 0 1px 0 rgba(255,255,255,0.2);
+    transition: all 0.18s cubic-bezier(0.23,1,0.32,1);
+  }
+  .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px rgba(0,200,150,0.45), inset 0 1px 0 rgba(255,255,255,0.2);
+  }
+  .btn-primary:active { transform: scale(0.97); }
+
+  .btn-violet {
+    background: linear-gradient(135deg, #7C5CFC 0%, #6040E8 100%);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    box-shadow: 0 4px 16px rgba(124,92,252,0.35), inset 0 1px 0 rgba(255,255,255,0.2);
+    transition: all 0.18s cubic-bezier(0.23,1,0.32,1);
+  }
+  .btn-violet:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(124,92,252,0.45); }
+
+  .btn-ghost {
+    background: rgba(255,255,255,0.8);
+    color: #5B6278;
+    border: 1px solid #E8EAF2;
+    border-radius: 12px;
+    font-weight: 600;
+    backdrop-filter: blur(8px);
+    transition: all 0.15s cubic-bezier(0.23,1,0.32,1);
+  }
+  .btn-ghost:hover { background: #FFFFFF; border-color: #D0D4E8; color: #0D0F1C; box-shadow: 0 2px 8px rgba(13,15,28,0.08); }
+
+  /* ── Section Headers ── */
+  .section-label {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 12px; border-radius: 100px;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .section-label-green { background: #E8FFF6; color: #047857; border: 1px solid #A7F3D0; }
+  .section-label-violet { background: #F0EEFF; color: #6040E8; border: 1px solid #C4B5FD; }
+  .section-label-amber { background: #FFF8E8; color: #B45309; border: 1px solid #FCD34D; }
+  .section-label-blue { background: #EEF4FF; color: #1D4ED8; border: 1px solid #BFDBFE; }
+  .section-label-red { background: #FFF1F3; color: #BE123C; border: 1px solid #FECDD3; }
+
+  /* ── Profit Number ── */
+  .profit-number {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 800;
+    color: #00A876;
+    letter-spacing: -0.02em;
+  }
+  .profit-number-lg { font-size: 2rem; line-height: 1; }
+  .profit-number-xl { font-size: 2.5rem; line-height: 1; }
+
+  /* ── Table ── */
+  .souba-table { width: 100%; border-collapse: collapse; }
+  .souba-table th {
+    padding: 10px 16px;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+    color: #9CA3B8; background: #F7F8FD; border-bottom: 1px solid #E8EAF2;
+    text-align: left;
+  }
+  .souba-table td { padding: 14px 16px; border-bottom: 1px solid #F4F5FA; }
+  .souba-table tr:last-child td { border-bottom: none; }
+  .souba-table tr:hover td { background: #FAFBFF; }
+  .souba-table tr.row-best td { background: #F0FDF8; }
+  .souba-table tr.row-best:hover td { background: #E8FFF4; }
+
+  /* ── Ticker / Live Bar ── */
+  @keyframes tickerScroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  .ticker-track { animation: tickerScroll 30s linear infinite; }
+  .ticker-track:hover { animation-play-state: paused; }
+
+  /* ── Animations ── */
+  .fade-in-up {
+    animation: fadeInUp 0.45s cubic-bezier(0.23,1,0.32,1) forwards;
+    opacity: 0;
+  }
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .delay-100 { animation-delay: 100ms; }
+  .delay-200 { animation-delay: 200ms; }
+  .delay-300 { animation-delay: 300ms; }
+  .delay-400 { animation-delay: 400ms; }
+  .delay-500 { animation-delay: 500ms; }
+  .delay-600 { animation-delay: 600ms; }
+
+  @keyframes livePulse { 0%,100% { opacity:1; } 50% { opacity:0.3; } }
+  .live-pulse { animation: livePulse 2s ease-in-out infinite; }
+
+  @keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+  .skeleton {
+    background: linear-gradient(90deg, #F4F5FA 25%, #EAECF5 50%, #F4F5FA 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+
+  .press-effect:active { transform: scale(0.97); transition: transform 0.1s; }
+
+  /* ── Tab scroll ── */
+  .tab-scroll { scrollbar-width: none; -ms-overflow-style: none; }
+  .tab-scroll::-webkit-scrollbar { display: none; }
+  .tab-indicator { transition: left 0.22s cubic-bezier(0.23,1,0.32,1), width 0.22s cubic-bezier(0.23,1,0.32,1); }
+
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #D0D4E8; border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: #B0B6CC; }
+
+  /* ── Score Badge ── */
+  .score-badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 36px; height: 36px; border-radius: 10px;
+    font-size: 14px; font-weight: 800; font-family: 'JetBrains Mono', monospace;
+  }
+  .score-s { background: linear-gradient(135deg, #FFD700, #FFA500); color: #7A4000; }
+  .score-a { background: linear-gradient(135deg, #00C896, #00A876); color: #fff; }
+  .score-b { background: linear-gradient(135deg, #3B7BFF, #1D4ED8); color: #fff; }
+  .score-c { background: #F4F5FA; color: #5B6278; border: 1px solid #E8EAF2; }
+
+  /* ── Watchlist heart ── */
+  .watchlist-btn { transition: transform 0.15s, color 0.15s; }
+  .watchlist-btn:hover { transform: scale(1.2); }
+  .watchlist-btn.active { color: #FF3B5C; }
+
+  /* ── Section bar ── */
+  .section-bar-green { background: linear-gradient(180deg, #00C896, #00A876); }
+  .section-bar-purple { background: linear-gradient(180deg, #7C5CFC, #6040E8); }
+  .section-bar-amber { background: linear-gradient(180deg, #FF9500, #E07800); }
+  .section-bar-blue { background: linear-gradient(180deg, #3B7BFF, #1D4ED8); }
+}

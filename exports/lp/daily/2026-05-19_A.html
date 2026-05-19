@@ -8,2243 +8,2104 @@
 
 <style>
 /* ============================================================
-   プレ値速報 — Price Intelligence Dashboard
+   SOUBA デザインシステム — プレ値速報
    ============================================================ */
+
 :root {
-  --bg: #0b0f17;
-  --surface: rgba(255,255,255,0.03);
-  --card: rgba(255,255,255,0.03);
-  --card-hover: rgba(255,255,255,0.055);
-  --border: rgba(255,255,255,0.08);
-  --border-light: rgba(255,255,255,0.14);
-  --text: #f1f5f9;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
-  --accent: #60a5fa;
-  --accent-dim: rgba(96,165,250,0.1);
-  --green: #22c55e;
-  --green-lt: #86efac;
-  --green-dim: rgba(34,197,94,0.1);
-  --green-border: rgba(34,197,94,0.22);
-  --violet: #8b5cf6;
-  --violet-lt: #c4b5fd;
-  --violet-dim: rgba(139,92,246,0.1);
-  --violet-border: rgba(139,92,246,0.22);
-  --amber: #f59e0b;
-  --amber-lt: #fcd34d;
-  --amber-dim: rgba(245,158,11,0.1);
-  --sky: #60a5fa;
-  --sky-dim: rgba(96,165,250,0.1);
-  --red: #ef4444;
-  --red-dim: rgba(239,68,68,0.1);
-  --cyan: #22d3ee;
-  --yellow: #f59e0b;
-  --yellow-dim: rgba(245,158,11,0.12);
-  --orange: #f97316;
-  --orange-dim: rgba(249,115,22,0.12);
-  --font-sans: "Inter","SF Pro Display",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-  --font-mono: "SF Mono","Fira Code","Cascadia Code",monospace;
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 20px;
-  --radius-xl: 28px;
-  --radius-pill: 999px;
+  /* ページ背景 */
+  --bg: #FAFBFF;
+  /* カード */
+  --card-bg: #FFFFFF;
+  --card-border: #E8EAF2;
+  --surface2: #F4F6FD;
+  /* テキスト */
+  --ink: #0D0F1C;
+  --ink2: #5B6278;
+  --ink3: #9CA3B8;
+  --ink4: #C8CADE;
+  /* アクセント */
+  --profit: #00C896;
+  --profit-dark: #00A876;
+  --violet: #7C5CFC;
+  --violet-dark: #6040E8;
+  --amber: #FF9500;
+  --danger: #FF3B5C;
+  --blue: #3B7BFF;
+  --gold: #F5A623;
+
+  /* 後方互換用エイリアス */
+  --white:   #ffffff;
+  --gray-50: #f8fafc;
+  --gray-100:#f1f5f9;
+  --gray-200:#e2e8f0;
+  --gray-300:#cbd5e1;
+  --gray-400:#94a3b8;
+  --gray-500:#64748b;
+  --gray-600:#475569;
+  --gray-700:#334155;
+  --gray-800:#1e293b;
+  --gray-900:#0f172a;
+  --blue-50:  #eff6ff;
+  --blue-100: #dbeafe;
+  --blue-200: #bfdbfe;
+  --blue-500: #3b82f6;
+  --blue-600: #2563eb;
+  --blue-700: #1d4ed8;
+  --green-50:  #f0fdf4;
+  --green-100: #dcfce7;
+  --green-200: #bbf7d0;
+  --green-500: #22c55e;
+  --green-600: #16a34a;
+  --green-700: #15803d;
+  --amber-50:  #fffbeb;
+  --amber-100: #fef3c7;
+  --amber-200: #fde68a;
+  --amber-500: #f59e0b;
+  --amber-600: #d97706;
+  --amber-700: #b45309;
+  --red-50:   #fef2f2;
+  --red-100:  #fee2e2;
+  --red-500:  #ef4444;
+  --red-600:  #dc2626;
+  --purple-50:  #faf5ff;
+  --purple-100: #f3e8ff;
+  --purple-500: #a855f7;
+  --purple-600: #9333ea;
+  --teal-50:  #f0fdfa;
+  --teal-100: #ccfbf1;
+  --teal-500: #14b8a6;
+  --teal-600: #0d9488;
+
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Meiryo', sans-serif;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-2xl: 28px;
+
+  --shadow-xs: 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-sm: 0 1px 3px rgba(13,15,28,0.05), 0 1px 2px rgba(13,15,28,0.04);
+  --shadow-md: 0 4px 8px rgba(0,0,0,0.06), 0 2px 4px rgba(0,0,0,0.04);
+  --shadow-lg: 0 10px 20px rgba(0,0,0,0.08), 0 4px 8px rgba(0,0,0,0.04);
+  --shadow-xl: 0 12px 40px rgba(13,15,28,0.1), 0 4px 12px rgba(13,15,28,0.06);
 }
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-body {
-  font-family: var(--font-sans);
-  background:
-    radial-gradient(circle at top left,  rgba(96,165,250,0.07) 0%, transparent 28%),
-    radial-gradient(circle at top right, rgba(139,92,246,0.07) 0%, transparent 24%),
-    var(--bg);
-  color: var(--text);
-  line-height: 1.65;
-  font-size: 15px;
+
+*, *::before, *::after {
+  margin: 0; padding: 0;
+  box-sizing: border-box;
   -webkit-font-smoothing: antialiased;
 }
-/* ---- Layout ---- */
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px 60px;
-}
-/* ---- Topbar ---- */
-.topbar {
-  background: rgba(11,15,23,0.85);
-  border-bottom: 1px solid var(--border);
-  padding: 10px 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-}
-.topbar-brand {
-  font-size: 0.88rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  color: var(--text);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.topbar-brand .dot {
-  width: 8px; height: 8px;
-  background: var(--green);
-  border-radius: 50%;
-  animation: pulse-dot 2s infinite;
-}
-@keyframes pulse-dot {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.45; transform: scale(0.75); }
-}
-.topbar-meta {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-/* ---- Hero (2-column) ---- */
-.hero-section {
-  padding: 56px 0 40px;
-  position: relative;
-}
-.hero-inner {
-  display: grid;
-  grid-template-columns: 7fr 5fr;
-  gap: 48px;
-  align-items: center;
-}
-.hero-eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: var(--accent-dim);
-  border: 1px solid rgba(96,165,250,0.25);
-  color: var(--accent);
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 4px 14px;
-  border-radius: var(--radius-pill);
-  margin-bottom: 20px;
-}
-.hero-copy h1 {
-  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  line-height: 1.18;
-  color: var(--text);
-  margin-bottom: 14px;
-}
-.hero-sub {
-  font-size: 1rem;
-  color: var(--text-secondary);
-  line-height: 1.7;
-  margin-bottom: 28px;
-  max-width: 460px;
-}
-.hero-timestamps {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-.ts-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: var(--card);
-  border: 1px solid var(--border-light);
-  color: var(--text-secondary);
-  font-size: 0.78rem;
-  padding: 6px 14px;
-  border-radius: var(--radius-pill);
-  font-variant-numeric: tabular-nums;
-}
-.ts-chip .ts-dot {
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: var(--green);
-  flex-shrink: 0;
-}
-.ts-chip.stale .ts-dot { background: var(--orange); }
-/* ---- KPI Grid ---- */
-.kpi-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-.kpi-card {
-  border-radius: var(--radius-xl);
-  border: 1px solid var(--border);
-  background: var(--card);
-  padding: 16px 18px;
-  transition: border-color 0.2s, background 0.2s;
-}
-.kpi-card:hover {
-  border-color: var(--border-light);
-  background: var(--card-hover);
-}
-.kpi-label {
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  margin-bottom: 6px;
-}
-.kpi-value {
-  font-size: 1.35rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: var(--text);
-  font-variant-numeric: tabular-nums;
-}
-.kpi-sub {
-  font-size: 0.72rem;
-  color: var(--text-muted);
-  margin-top: 4px;
-}
-.kpi-card.tp .kpi-value { color: var(--green); }
-.kpi-card.tp { border-color: var(--green-border); background: var(--green-dim); }
-.kpi-card.ta .kpi-value { color: var(--violet-lt); }
-.kpi-card.ta { border-color: var(--violet-border); background: var(--violet-dim); }
-.kpi-card.tw .kpi-value { color: var(--amber-lt); }
-.kpi-card.tw { border-color: rgba(245,158,11,0.22); background: var(--amber-dim); }
-.kpi-card.tl .kpi-value { color: var(--sky); }
-.kpi-card.tl { border-color: rgba(96,165,250,0.22); background: var(--sky-dim); }
-/* ---- Stale Warning ---- */
-.stale-warning-block {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  background: rgba(249,115,22,0.08);
-  border: 1px solid rgba(249,115,22,0.3);
-  border-left: 4px solid var(--orange);
-  padding: 14px 18px;
-  border-radius: 0 var(--radius-md) var(--radius-md) 0;
-  margin: 16px 0;
-  font-size: 0.875rem;
-  color: #fed7aa;
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 15px;
   line-height: 1.6;
 }
-.stale-warning-block .warn-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
-/* ---- Tab Navigation (segmented pill) ---- */
-.tab-bar {
-  position: sticky;
-  top: 49px;
-  z-index: 50;
-  padding: 12px 0;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+
+/* ============================================================
+   ANNOUNCEMENT BAR
+   ============================================================ */
+.announce-bar {
+  background: linear-gradient(90deg, #00C896, #3B7BFF, #7C5CFC);
+  text-align: center;
+  padding: 8px 20px;
 }
-.tab-control {
-  display: inline-flex;
-  background: rgba(15,23,42,0.72);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-pill);
-  padding: 4px;
-  gap: 2px;
+
+.announce-bar a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.announce-bar a:hover { text-decoration: underline; }
+
+/* ============================================================
+   TOPBAR
+   ============================================================ */
+.topbar {
+  position: sticky; top: 0; z-index: 300;
+  background: rgba(250,251,255,0.95);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--card-border);
+  height: 56px;
+  display: flex; align-items: center;
+  padding: 0 20px; gap: 12px;
+}
+
+.topbar-brand {
+  display: flex; align-items: center; gap: 10px;
+  text-decoration: none; color: var(--ink);
+  font-weight: 800; font-size: 0.95rem;
+}
+
+.brand-icon {
+  width: 30px; height: 30px;
+  background: linear-gradient(135deg, var(--blue), var(--violet));
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  color: white; font-weight: 900; font-size: 0.8rem;
+  box-shadow: 0 2px 8px rgba(59,123,255,0.3);
+  flex-shrink: 0;
+}
+
+.topbar-live {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--profit-dark);
+  background: #F0FDF8;
+  border: 1px solid #B2F0DC;
+  padding: 3px 10px; border-radius: 99px;
+}
+
+.live-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--profit);
+  animation: blink 2s ease-in-out infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.topbar-date {
+  font-size: 0.78rem; color: var(--ink3);
+  font-variant-numeric: tabular-nums;
+}
+
+.topbar-spacer { flex: 1; }
+
+.topbar-note-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--violet); color: white;
+  font-size: 0.78rem; font-weight: 700;
+  padding: 7px 16px; border-radius: var(--radius-md);
+  text-decoration: none;
+  box-shadow: 0 2px 8px rgba(124,92,252,0.3);
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.topbar-note-btn:hover {
+  background: var(--violet-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(124,92,252,0.4);
+}
+
+/* ============================================================
+   LIVE TICKER
+   ============================================================ */
+.ticker-bar {
+  background: #0D0F1C;
+  overflow: hidden;
+  padding: 7px 0;
+  white-space: nowrap;
+}
+
+.ticker-inner {
+  display: inline-block;
+  animation: tickerScroll 30s linear infinite;
+}
+
+@keyframes tickerScroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.ticker-item {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 0.78rem; color: rgba(255,255,255,0.85);
+  padding: 0 28px;
+}
+
+.ticker-item .t-name { font-weight: 600; }
+.ticker-item .t-profit { color: #00C896; font-weight: 700; }
+.ticker-sep { color: rgba(255,255,255,0.2); }
+
+/* ============================================================
+   FEATURES BANNER
+   ============================================================ */
+.features-bar {
+  background: #fff;
+  border-bottom: 1px solid var(--card-border);
+  padding: 12px 20px;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
-  max-width: 100%;
 }
-.tab-control::-webkit-scrollbar { display: none; }
+
+.features-bar::-webkit-scrollbar { display: none; }
+
+.features-inner {
+  display: flex; gap: 8px;
+  width: max-content;
+}
+
+.feature-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 0.75rem; font-weight: 600;
+  padding: 6px 14px; border-radius: 99px;
+  white-space: nowrap;
+}
+
+.feature-chip.green  { background: #F0FDF8; color: #00A876; border: 1px solid #B2F0DC; }
+.feature-chip.blue   { background: #EFF6FF; color: #1E6FFF; border: 1px solid #BFDBFE; }
+.feature-chip.violet { background: #F5F3FF; color: #6040E8; border: 1px solid #DDD6FE; }
+.feature-chip.amber  { background: #FFF9F0; color: #CC7A00; border: 1px solid #FFD9A0; }
+.feature-chip.red    { background: #FFF1F3; color: #CC2244; border: 1px solid #FFB3C0; }
+
+/* ============================================================
+   HERO — ダーク
+   ============================================================ */
+.hero {
+  background: linear-gradient(160deg, #0D0F1C 0%, #131629 50%, #0F1A2E 100%);
+  padding: 64px 0 56px;
+  position: relative; overflow: hidden;
+}
+
+.hero-inner {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: grid;
+  grid-template-columns: 1fr 440px;
+  gap: 48px;
+  align-items: center;
+}
+
+.hero-left {}
+.hero-right {}
+
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: rgba(0,200,150,0.15);
+  border: 1px solid rgba(0,200,150,0.3);
+  color: var(--profit);
+  font-size: 0.72rem; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 5px 14px; border-radius: 99px;
+  margin-bottom: 22px;
+}
+
+.hero-title {
+  font-size: clamp(1.9rem, 4.5vw, 3rem);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+  color: #fff;
+  margin-bottom: 18px;
+}
+
+.hero-title .accent {
+  background: linear-gradient(90deg, #00C896, #3B7BFF);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-subtitle {
+  font-size: 1rem;
+  color: rgba(255,255,255,0.65);
+  line-height: 1.75;
+  max-width: 520px;
+  margin-bottom: 32px;
+}
+
+.hero-cta-row {
+  display: flex; gap: 10px; flex-wrap: wrap;
+  margin-bottom: 32px;
+}
+
+.hero-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 0.875rem; font-weight: 700;
+  padding: 11px 22px; border-radius: var(--radius-md);
+  text-decoration: none; transition: all 0.2s;
+}
+
+.hero-btn.primary {
+  background: linear-gradient(135deg, #00C896, #00A876);
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(0,200,150,0.4);
+}
+
+.hero-btn.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,200,150,0.5);
+}
+
+.hero-btn.secondary {
+  background: rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.85);
+  border: 1px solid rgba(255,255,255,0.15);
+}
+
+.hero-btn.secondary:hover {
+  background: rgba(255,255,255,0.14);
+}
+
+.hero-btn.violet {
+  background: linear-gradient(135deg, #7C5CFC, #6040E8);
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(124,92,252,0.4);
+}
+
+.hero-btn.violet:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(124,92,252,0.5);
+}
+
+/* Social proof */
+.hero-social-proof {
+  display: flex; align-items: center; gap: 12px;
+}
+
+.social-avatars {
+  display: flex;
+}
+
+.social-avatar {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: linear-gradient(135deg, #00C896, #3B7BFF);
+  border: 2px solid #131629;
+  margin-left: -8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.65rem; font-weight: 700; color: #fff;
+}
+
+.social-avatar:first-child { margin-left: 0; }
+
+.social-text {
+  font-size: 0.78rem; color: rgba(255,255,255,0.5);
+}
+
+.social-text strong { color: rgba(255,255,255,0.8); }
+
+/* ライブパネル（ガラスモーフィズム） */
+.hero-live-panel {
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 20px;
+  padding: 20px;
+}
+
+.live-panel-hd {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.live-panel-title {
+  font-size: 0.75rem; font-weight: 700; color: rgba(255,255,255,0.5);
+  letter-spacing: 0.08em; text-transform: uppercase;
+}
+
+.live-panel-badge {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 0.65rem; font-weight: 700; color: var(--profit);
+  background: rgba(0,200,150,0.15);
+  border: 1px solid rgba(0,200,150,0.25);
+  padding: 3px 9px; border-radius: 99px;
+}
+
+.live-panel-items {}
+
+.lp-item {
+  display: flex; align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  gap: 10px;
+}
+
+.lp-item:last-child { border: none; }
+
+.lp-icon {
+  width: 32px; height: 32px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.9rem; flex-shrink: 0;
+}
+
+.lp-icon.iphone  { background: rgba(59,123,255,0.15); }
+.lp-icon.camera  { background: rgba(124,92,252,0.15); }
+.lp-icon.game    { background: rgba(20,184,166,0.15); }
+
+.lp-info { flex: 1; min-width: 0; }
+.lp-name { font-size: 0.78rem; font-weight: 600; color: rgba(255,255,255,0.85); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lp-shop { font-size: 0.65rem; color: rgba(255,255,255,0.35); margin-top: 1px; }
+
+.lp-profit {
+  font-size: 0.85rem; font-weight: 800;
+  color: var(--profit); white-space: nowrap;
+}
+
+/* Timestamps */
+.hero-timestamps {
+  display: flex; flex-wrap: wrap; gap: 10px;
+  margin-top: 24px;
+}
+
+.ts-pill {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.55);
+  font-size: 0.75rem;
+  padding: 5px 12px; border-radius: 99px;
+  font-variant-numeric: tabular-nums;
+}
+
+.ts-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--profit); flex-shrink: 0;
+}
+
+.ts-dot.blue { background: var(--blue); }
+
+/* ============================================================
+   STALE WARNING
+   ============================================================ */
+.stale-banner {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-left: 3px solid #f59e0b;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  padding: 12px 18px;
+  margin: 16px 0;
+  font-size: 0.875rem;
+  color: #78350f;
+  display: flex; align-items: flex-start; gap: 10px;
+  line-height: 1.6;
+}
+
+/* ============================================================
+   MAIN LAYOUT
+   ============================================================ */
+.main-wrap {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 24px 80px;
+}
+
+/* ============================================================
+   TAB NAVIGATION — スティッキー
+   ============================================================ */
+.tab-wrap {
+  position: sticky; top: 56px; z-index: 200;
+  background: rgba(250,251,255,0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--card-border);
+  margin: 0 -24px;
+  padding: 0 24px;
+}
+
+.tab-nav {
+  display: flex; gap: 0;
+  overflow-x: auto; -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  position: relative;
+}
+
+.tab-nav::-webkit-scrollbar { display: none; }
+
 .tab-btn {
   flex-shrink: 0;
-  background: transparent;
-  border: none;
-  border-radius: var(--radius-pill);
-  padding: 8px 20px;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--text-secondary);
+  display: flex; align-items: center; gap: 7px;
+  background: transparent; border: none;
+  border-bottom: 2px solid transparent;
+  padding: 15px 20px;
+  font-size: 0.875rem; font-weight: 500;
+  color: var(--ink3);
   cursor: pointer;
-  transition: color 0.2s, background 0.2s;
+  transition: color 0.15s, border-color 0.15s;
+  margin-bottom: -1px;
   white-space: nowrap;
-  font-family: var(--font-sans);
+  font-family: var(--font);
 }
-.tab-btn:hover { color: var(--text); }
+
+.tab-btn:hover { color: var(--ink); }
+
 .tab-btn.active {
-  background: #f8fafc;
-  color: #0f172a;
-  font-weight: 600;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  color: var(--violet);
+  border-bottom-color: var(--violet);
+  font-weight: 700;
 }
-.tab-panel { display: none; padding: 24px 0 0; }
+
+.tab-count {
+  font-size: 0.65rem; font-weight: 800;
+  background: var(--surface2);
+  color: var(--ink3);
+  padding: 1px 7px; border-radius: 99px;
+}
+
+.tab-btn.active .tab-count {
+  background: #EDE9FF;
+  color: var(--violet);
+}
+
+.tab-panel { display: none; padding-top: 36px; }
 .tab-panel.active { display: block; }
-.noscript-all .tab-panel { display: block !important; }
-.noscript-all .tab-bar { display: none; }
-/* ---- Section Headers ---- */
-.section-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 28px 0 16px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--border);
+
+/* ============================================================
+   SECTION HEADER
+   ============================================================ */
+.sec-head {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 20px; padding-bottom: 14px;
+  border-bottom: 1px solid var(--card-border);
 }
-.section-header h2 {
-  font-size: 0.95rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  color: var(--text-secondary);
-  text-transform: uppercase;
+
+.sec-title {
+  font-size: 0.78rem; font-weight: 800;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--ink3);
+  display: flex; align-items: center; gap: 8px;
 }
-.section-header .section-count {
-  font-size: 0.72rem;
-  background: var(--border);
-  color: var(--text-muted);
-  padding: 2px 8px;
-  border-radius: 99px;
+
+.sec-title::before {
+  content: '';
+  width: 3px; height: 14px; border-radius: 2px;
+  background: var(--violet);
 }
-/* ---- Cards ---- */
-.card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-xl);
-  padding: 24px;
-  margin: 12px 0;
-  transition: border-color 0.2s, background 0.2s, transform 0.2s, box-shadow 0.2s;
-  box-shadow: 0 24px 80px rgba(2,6,23,0.22);
+
+.sec-badge {
+  font-size: 0.68rem; font-weight: 700;
+  background: var(--surface2);
+  color: var(--ink3);
+  border: 1px solid var(--card-border);
+  padding: 3px 10px; border-radius: 99px;
 }
-.card:hover {
-  border-color: var(--border-light);
-  background: var(--card-hover);
-  transform: translateY(-2px);
-  box-shadow: 0 32px 96px rgba(2,6,23,0.32);
-}
-/* ---- Beginner Card profit-hero ---- */
-.bc-profit-hero {
-  background: linear-gradient(135deg, rgba(34,197,94,0.12) 0%, rgba(34,197,94,0.04) 100%);
-  border: 1px solid var(--green-border);
+
+/* ============================================================
+   INFO BANNER
+   ============================================================ */
+.info-banner {
   border-radius: var(--radius-lg);
-  padding: 18px 20px;
-  margin-bottom: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+  padding: 14px 18px;
+  margin-bottom: 24px;
+  font-size: 0.875rem;
+  line-height: 1.75;
 }
-.bc-profit-label {
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--green-lt);
-  margin-bottom: 6px;
-  opacity: 0.8;
+
+.info-banner.blue {
+  background: #EFF6FF;
+  border: 1px solid #BFDBFE;
+  color: #1e40af;
 }
-.bc-profit-value {
-  font-size: 2.2rem;
-  font-weight: 800;
-  letter-spacing: -0.04em;
-  color: var(--green);
-  font-variant-numeric: tabular-nums;
-  line-height: 1;
+
+.info-banner.purple {
+  background: #F5F3FF;
+  border: 1px solid #DDD6FE;
+  color: #5b21b6;
 }
-.bc-profit-rate {
-  display: inline-flex;
-  align-items: center;
-  background: rgba(34,197,94,0.18);
-  border: 1px solid var(--green-border);
-  color: var(--green-lt);
-  font-size: 0.82rem;
-  font-weight: 700;
-  padding: 4px 12px;
-  border-radius: var(--radius-pill);
-  margin-top: 6px;
+
+.info-banner.teal {
+  background: #F0FDF8;
+  border: 1px solid #B2F0DC;
+  color: #0f766e;
 }
-/* ---- Advanced snap card (violet) ---- */
-.adv-snap-card {
-  border: 1px solid var(--violet-border) !important;
-  background: linear-gradient(135deg, rgba(139,92,246,0.08) 0%, rgba(139,92,246,0.02) 100%) !important;
+
+.info-banner strong { font-weight: 800; }
+
+/* ============================================================
+   DEAL CARDS GRID
+   ============================================================ */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(480px, 1fr));
+  gap: 18px;
 }
-.card-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 16px;
+
+/* ============================================================
+   souba-card / DEAL CARD
+   ============================================================ */
+.souba-card,
+.deal-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.18s, box-shadow 0.18s, border-color 0.18s;
+  display: flex; flex-direction: column;
 }
-.card-title {
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--text);
-  line-height: 1.3;
-  flex: 1;
+
+.souba-card:hover,
+.deal-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-xl);
+  border-color: #D0D4E8;
 }
-/* ---- Badges ---- */
-.badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 3px 10px;
-  border-radius: 99px;
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  white-space: nowrap;
+
+/* カード上部利益バー */
+.card-stripe { height: 3px; }
+.card-stripe.iphone  { background: linear-gradient(90deg, var(--blue), #93B8FF); }
+.card-stripe.camera  { background: linear-gradient(90deg, var(--violet), #B9A8FF); }
+.card-stripe.game    { background: linear-gradient(90deg, var(--profit), #80E8CC); }
+.card-stripe.default { background: linear-gradient(90deg, var(--profit), var(--blue)); }
+
+/* Score badge */
+.score-badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  font-size: 0.75rem; font-weight: 900;
   flex-shrink: 0;
 }
-.badge-easy { background: var(--green-dim); color: var(--green); border: 1px solid rgba(16,185,129,0.25); }
-.badge-watch { background: var(--yellow-dim); color: var(--yellow); border: 1px solid rgba(245,158,11,0.25); }
-.badge-adv { background: var(--orange-dim); color: var(--orange); border: 1px solid rgba(249,115,22,0.25); }
-.badge-exp { background: var(--red-dim); color: var(--red); border: 1px solid rgba(239,68,68,0.25); }
-.badge-surge { background: var(--green-dim); color: var(--green); border: 1px solid rgba(16,185,129,0.25); }
-.badge-drop { background: var(--red-dim); color: var(--red); border: 1px solid rgba(239,68,68,0.25); }
-/* ---- Price Grid ---- */
-.price-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-bottom: 14px;
+
+.score-s { background: linear-gradient(135deg, #FFD700, #FF9500); color: #fff; }
+.score-a { background: linear-gradient(135deg, #00C896, #00A876); color: #fff; }
+.score-b { background: #EDE9FF; color: var(--violet); }
+.score-c { background: var(--surface2); color: var(--ink3); }
+
+/* Card Header */
+.card-hd {
+  display: flex; align-items: flex-start;
+  justify-content: space-between; gap: 12px;
+  padding: 18px 20px 14px;
 }
-.price-cell {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 10px 12px;
+
+.card-name {
+  font-size: 1rem; font-weight: 800;
+  color: var(--ink); line-height: 1.3; flex: 1;
 }
-.price-cell-label {
-  font-size: 0.7rem;
-  color: var(--text-muted);
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  margin-bottom: 4px;
+
+.card-tags {
+  display: flex; gap: 5px; flex-shrink: 0;
+  flex-wrap: wrap; justify-content: flex-end;
 }
-.price-cell-value {
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: var(--text);
-  font-variant-numeric: tabular-nums;
-}
-.price-cell.profit-cell {
-  background: var(--green-dim);
-  border-color: rgba(16,185,129,0.25);
-  grid-column: span 2;
-}
-.price-cell.profit-cell .price-cell-value {
-  font-size: 1.35rem;
-  color: var(--green);
-  letter-spacing: -0.02em;
-}
-.profit-rate-badge {
-  display: inline-flex;
-  align-items: center;
-  background: rgba(16,185,129,0.2);
-  color: var(--green);
-  font-size: 0.75rem;
-  font-weight: 700;
-  padding: 2px 8px;
-  border-radius: 4px;
-  margin-left: 8px;
-  vertical-align: middle;
-}
-/* ---- Price Rows (legacy support) ---- */
-.price-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 7px 0;
-  border-bottom: 1px solid var(--border);
-  font-size: 0.9rem;
-}
-.price-row:last-child { border: none; }
-.price-label { color: var(--text-muted); font-size: 0.85rem; }
-.price-value { font-weight: 600; color: var(--text); font-variant-numeric: tabular-nums; }
-.profit { color: var(--green); font-size: 1.2rem; font-weight: 800; }
-/* ---- Condition Bar ---- */
-.condition-bar {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
-  background: var(--surface);
-  border-radius: var(--radius-sm);
-  margin: 12px 0;
-  font-size: 0.82rem;
-  color: var(--text-secondary);
-}
-.condition-bar .cond-icon { color: var(--yellow); }
-/* ---- Buyback Compare ---- */
-.buyback-compare {
-  margin: 14px 0 0;
-  border: 1px solid var(--border);
+
+/* Profit Section */
+.profit-section {
+  margin: 0 20px;
+  padding: 16px 18px;
+  background: linear-gradient(135deg, #F0FDF8, #E8FFF4);
+  border: 1px solid #B2F0DC;
   border-radius: var(--radius-md);
-  overflow: hidden;
+  display: flex; align-items: center;
+  justify-content: space-between; gap: 12px;
 }
-.buyback-compare-header {
-  display: flex;
-  align-items: center;
+
+.profit-section.amber {
+  background: linear-gradient(135deg, #FFF9F0, #FFF3E0);
+  border-color: #FFD9A0;
+}
+
+.profit-left {}
+
+.profit-lbl {
+  font-size: 0.65rem; font-weight: 700;
+  letter-spacing: 0.07em; text-transform: uppercase;
+  color: var(--profit-dark); margin-bottom: 4px;
+}
+
+.profit-lbl.amber { color: #CC7A00; }
+
+.profit-num {
+  font-size: 2.1rem; font-weight: 900;
+  color: var(--profit-dark);
+  letter-spacing: -0.04em; line-height: 1;
+}
+
+.profit-num.amber { color: #CC7A00; }
+
+.profit-right { text-align: right; }
+
+.profit-rate {
+  display: inline-block;
+  font-size: 0.9rem; font-weight: 800;
+  color: var(--profit-dark);
+  background: rgba(0,200,150,0.12);
+  padding: 4px 12px; border-radius: var(--radius-sm);
+  margin-bottom: 5px;
+}
+
+.profit-rate.amber {
+  color: #CC7A00;
+  background: rgba(255,149,0,0.12);
+}
+
+.profit-note {
+  font-size: 0.7rem; color: var(--ink4);
+}
+
+/* Price Row */
+.price-row-wrap {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 1px; background: var(--card-border);
+  margin: 14px 20px 0;
+  border-radius: var(--radius-md); overflow: hidden;
+}
+
+.price-cell {
+  background: var(--card-bg); padding: 12px 14px;
+}
+
+.price-cell-lbl {
+  font-size: 0.65rem; font-weight: 700;
+  letter-spacing: 0.07em; text-transform: uppercase;
+  color: var(--ink4); margin-bottom: 5px;
+}
+
+.price-cell-val {
+  font-size: 1.05rem; font-weight: 800;
+  color: var(--ink); font-variant-numeric: tabular-nums;
+}
+
+.price-cell-val.green { color: var(--profit-dark); }
+
+/* Card Body */
+.card-body { padding: 14px 20px 20px; flex: 1; }
+
+.condition-row {
+  display: flex; align-items: flex-start; gap: 7px;
+  background: var(--surface2);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px; margin-bottom: 12px;
+  font-size: 0.8rem; color: var(--ink2);
+  line-height: 1.5;
+}
+
+.cond-icon { color: var(--amber); flex-shrink: 0; margin-top: 1px; }
+
+.updated-row {
+  font-size: 0.72rem; color: var(--ink4);
+  margin-bottom: 12px;
+  display: flex; align-items: center; gap: 5px;
+}
+
+/* Shop Compare Table — souba-table */
+.shop-table {
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-md);
+  overflow: hidden; margin-bottom: 14px;
+}
+
+.shop-table-hd {
+  display: flex; align-items: center;
   justify-content: space-between;
   padding: 8px 14px;
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  font-size: 0.78rem;
-  color: var(--text-muted);
-  font-weight: 600;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
+  background: var(--surface2);
+  border-bottom: 1px solid var(--card-border);
+  font-size: 0.65rem; font-weight: 800;
+  letter-spacing: 0.07em; text-transform: uppercase;
+  color: var(--ink3);
 }
-.shop-compare-row {
-  display: flex;
-  align-items: center;
+
+.shop-row {
+  display: flex; align-items: center;
   padding: 9px 14px;
-  border-bottom: 1px solid var(--border);
-  font-size: 0.875rem;
+  border-bottom: 1px solid var(--surface2);
+  gap: 10px; font-size: 0.875rem;
   transition: background 0.1s;
 }
-.shop-compare-row:last-child { border: none; }
-.shop-compare-row:hover { background: var(--surface); }
+
+.shop-row:last-child { border: none; }
+.shop-row:hover { background: #F8FAFC; }
+
+/* 1位ハイライト */
+.shop-row.row-best {
+  background: #F0FDF8;
+}
+
 .shop-rank {
-  color: var(--text-muted);
-  min-width: 24px;
-  font-size: 0.78rem;
-  font-weight: 700;
+  min-width: 22px; font-size: 0.72rem;
+  font-weight: 800; text-align: center;
+  color: var(--ink4);
 }
-.shop-rank.rank-1 { color: var(--yellow); }
-.shop-name { flex: 1; padding: 0 10px; color: var(--text-secondary); }
-.shop-name a { color: var(--accent); text-decoration: none; }
-.shop-name a:hover { text-decoration: underline; }
-.shop-price { font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; min-width: 80px; text-align: right; }
-.shop-profit { font-size: 0.78rem; color: var(--green); min-width: 70px; text-align: right; font-weight: 600; }
-.shop-profit.negative { color: var(--red); }
-/* ---- Links ---- */
-.links {
-  margin-top: 14px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-.links a {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  color: var(--accent);
-  text-decoration: none;
-  font-size: 0.82rem;
-  font-weight: 500;
-  padding: 6px 14px;
-  border: 1px solid rgba(59,130,246,0.3);
-  border-radius: var(--radius-sm);
-  background: var(--accent-dim);
-  transition: background 0.15s, border-color 0.15s;
-}
-.links a:hover {
-  background: rgba(59,130,246,0.2);
-  border-color: rgba(59,130,246,0.5);
-}
-/* ---- Table ---- */
-.data-table-wrap {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border);
-}
-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.875rem;
-}
-thead tr {
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-}
-th {
-  padding: 10px 12px;
-  text-align: left;
-  color: var(--text-muted);
+
+.shop-rank.gold { color: var(--gold); }
+.shop-rank.silver { color: var(--ink3); }
+
+.shop-name-col { flex: 1; color: var(--ink2); }
+
+.shop-name-col a {
+  color: var(--blue); text-decoration: none;
   font-weight: 600;
-  font-size: 0.72rem;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  white-space: nowrap;
 }
-td {
-  padding: 10px 12px;
-  border-bottom: 1px solid var(--border);
-  color: var(--text-secondary);
-  word-break: break-word;
+
+.shop-name-col a:hover { text-decoration: underline; }
+
+.shop-price-col {
+  font-weight: 800; color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  text-align: right; min-width: 80px;
 }
-tbody tr:last-child td { border: none; }
-tbody tr:hover td { background: var(--surface); }
-td.profit-td { color: var(--green); font-weight: 700; font-variant-numeric: tabular-nums; }
-/* ---- Freshness Labels ---- */
-.freshness-live { color: var(--green); font-size: 0.72rem; font-weight: 600; }
-.freshness-recent { color: var(--yellow); font-size: 0.72rem; font-weight: 600; }
-.freshness-stale { color: var(--red); font-size: 0.72rem; font-weight: 600; }
-.freshness-unknown { color: var(--text-muted); font-size: 0.72rem; }
-/* ---- Updated Timestamp ---- */
-.updated-ts {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  margin-top: 10px;
-  padding-top: 10px;
-  border-top: 1px solid var(--border);
+
+.shop-diff-col {
+  font-size: 0.78rem; font-weight: 700;
+  color: var(--profit-dark);
+  text-align: right; min-width: 68px;
 }
-/* ---- Empty State ---- */
-.empty-msg {
-  text-align: center;
-  color: var(--text-muted);
-  padding: 32px 16px;
-  font-size: 0.9rem;
-}
-/* ---- Caution Block ---- */
-.caution {
-  background: rgba(245,158,11,0.06);
-  border: 1px solid rgba(245,158,11,0.2);
-  border-left: 3px solid var(--yellow);
-  padding: 18px 20px;
-  margin: 32px 0;
-  border-radius: 0 var(--radius-md) var(--radius-md) 0;
-  font-size: 0.875rem;
-  color: var(--text-secondary);
-  line-height: 1.8;
-}
-.caution strong { color: var(--yellow); display: block; margin-bottom: 8px; font-size: 0.9rem; }
-.caution ul { list-style: none; padding: 0; }
-.caution ul li { padding: 2px 0; }
-.caution ul li::before { content: "·  "; color: var(--text-muted); }
-/* ---- CTA Section ---- */
-.cta-section {
-  margin: 40px 0;
-  padding: 32px 24px;
-  background: linear-gradient(135deg, rgba(59,130,246,0.06) 0%, rgba(16,185,129,0.04) 100%);
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-xl);
-  text-align: center;
-}
-.cta-section h3 {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--text);
-  margin-bottom: 8px;
-}
-.cta-section p {
-  font-size: 0.875rem;
-  color: var(--text-secondary);
-  margin-bottom: 20px;
-  max-width: 400px;
-  margin-left: auto;
-  margin-right: auto;
-}
-.cta-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px;
-}
-.cta-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 12px 24px;
-  border-radius: var(--radius-md);
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 0.9rem;
+
+.shop-diff-col.neg { color: var(--danger); }
+
+/* 確認ボタン in shop row */
+.shop-check-btn {
+  font-size: 0.72rem; font-weight: 700;
+  padding: 4px 10px; border-radius: var(--radius-sm);
+  text-decoration: none; white-space: nowrap;
   transition: all 0.15s;
 }
-.cta-btn-primary {
-  background: var(--accent);
+
+.shop-check-btn.best {
+  background: linear-gradient(135deg, var(--profit), var(--profit-dark));
   color: #fff;
-  border: 1px solid transparent;
 }
-.cta-btn-primary:hover { background: #2563eb; }
-.cta-btn-secondary {
-  background: var(--card);
-  color: var(--text-secondary);
-  border: 1px solid var(--border-light);
+
+.shop-check-btn.best:hover { opacity: 0.85; }
+
+.shop-check-btn.normal {
+  background: var(--surface2);
+  color: var(--ink2);
+  border: 1px solid var(--card-border);
 }
-.cta-btn-secondary:hover { background: var(--card-hover); color: var(--text); }
-/* ---- Footer ---- */
-.footer {
-  text-align: center;
-  color: var(--text-muted);
-  font-size: 0.78rem;
-  padding: 40px 0 24px;
-  line-height: 2;
-  border-top: 1px solid var(--border);
-  margin-top: 40px;
+
+.shop-check-btn.normal:hover { background: var(--card-border); }
+
+/* Freshness */
+.fresh-live   { color: var(--profit-dark); font-size: 0.7rem; font-weight: 700; }
+.fresh-recent { color: #CC7A00; font-size: 0.7rem; font-weight: 700; }
+.fresh-stale  { color: var(--danger); font-size: 0.7rem; font-weight: 700; }
+
+/* Action Buttons */
+.card-actions {
+  display: flex; flex-wrap: wrap; gap: 8px;
 }
-/* ---- Watch Candidate Card ---- */
-.watch-candidate-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 18px 20px;
-  margin: 10px 0;
+
+.btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 0.8rem; font-weight: 700;
+  padding: 8px 16px; border-radius: var(--radius-sm);
+  text-decoration: none; transition: all 0.15s;
+  border: 1px solid; cursor: pointer;
+  font-family: var(--font);
 }
-.watch-candidate-card .wc-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--profit), var(--profit-dark));
+  color: white;
+  border-color: var(--profit-dark);
+  box-shadow: 0 2px 8px rgba(0,200,150,0.25);
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(0,200,150,0.4);
+}
+
+.btn-secondary {
+  background: white; color: var(--blue);
+  border-color: #BFDBFE;
+}
+
+.btn-secondary:hover {
+  background: #EFF6FF; border-color: #93B8FF;
+}
+
+.btn-ghost {
+  background: var(--surface2); color: var(--ink2);
+  border-color: var(--card-border);
+}
+
+.btn-ghost:hover {
+  background: white; color: var(--ink);
+  border-color: #D0D4E8;
+}
+
+/* Overseas Links */
+.overseas-section {
+  margin-top: 12px; padding-top: 12px;
+  border-top: 1px solid var(--surface2);
+}
+
+.overseas-lbl {
+  font-size: 0.65rem; font-weight: 800;
+  letter-spacing: 0.07em; text-transform: uppercase;
+  color: var(--ink4); margin-bottom: 8px;
+  display: flex; align-items: center; gap: 6px;
+}
+
+.overseas-chips {
+  display: flex; flex-wrap: wrap; gap: 6px;
+}
+
+.overseas-chip {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 0.75rem; font-weight: 600;
+  color: #0369a1;
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  padding: 5px 11px; border-radius: var(--radius-sm);
+  text-decoration: none; transition: all 0.15s;
+}
+
+.overseas-chip:hover {
+  background: #e0f2fe; border-color: #7dd3fc;
+  transform: translateY(-1px);
+}
+
+/* ============================================================
+   BADGES
+   ============================================================ */
+.badge {
+  display: inline-flex; align-items: center; gap: 3px;
+  font-size: 0.65rem; font-weight: 800;
+  letter-spacing: 0.04em; text-transform: uppercase;
+  padding: 3px 9px; border-radius: 99px;
+}
+
+.badge-easy    { background: #F0FDF8; color: var(--profit-dark); border: 1px solid #B2F0DC; }
+.badge-watch   { background: #FFF9F0; color: #CC7A00; border: 1px solid #FFD9A0; }
+.badge-adv     { background: #F5F3FF; color: var(--violet); border: 1px solid #DDD6FE; }
+.badge-exp     { background: #F5F3FF; color: var(--violet-dark); border: 1px solid #DDD6FE; }
+.badge-iphone  { background: #EFF6FF; color: #1E6FFF; border: 1px solid #BFDBFE; }
+.badge-camera  { background: #F5F3FF; color: var(--violet); border: 1px solid #DDD6FE; }
+.badge-game    { background: #F0FDF8; color: #0d9488; border: 1px solid #99F0E0; }
+.badge-lottery { background: #FFF9F0; color: #CC7A00; border: 1px solid #FFD9A0; }
+.badge-soldout { background: #FFF1F3; color: #CC2244; border: 1px solid #FFB3C0; }
+.badge-overseas{ background: #f0f9ff; color: #0369a1; border: 1px solid #bae6fd; }
+.badge-used    { background: var(--surface2); color: var(--ink2); border: 1px solid var(--card-border); }
+
+/* タグシステム（上級者向け） */
+.deal-tag {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 0.65rem; font-weight: 700;
+  padding: 2px 8px; border-radius: 99px;
+}
+
+.deal-tag.pre    { background: #FFF9F0; color: #CC7A00; border: 1px solid #FFD9A0; }
+.deal-tag.hard   { background: #FFF1F3; color: #CC2244; border: 1px solid #FFB3C0; }
+.deal-tag.intl   { background: #f0f9ff; color: #0369a1; border: 1px solid #bae6fd; }
+.deal-tag.limit  { background: #F5F3FF; color: var(--violet); border: 1px solid #DDD6FE; }
+.deal-tag.lottery { background: #FFF9F0; color: #CC7A00; border: 1px solid #FFD9A0; }
+
+/* ============================================================
+   WATCH CARD (上級者向け) — バイオレットアクセント
+   ============================================================ */
+.watch-card {
+  background: var(--card-bg);
+  border: 1px solid #DDD6FE;
+  border-radius: 16px;
+  padding: 20px 22px;
+  margin-bottom: 14px;
+  background: #F5F3FF;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.watch-card:hover {
+  box-shadow: var(--shadow-xl);
+  transform: translateY(-2px);
+}
+
+.watch-card-hd {
+  display: flex; align-items: flex-start;
+  justify-content: space-between; gap: 12px;
+  margin-bottom: 14px;
+}
+
+.watch-name {
+  font-size: 1rem; font-weight: 800;
+  color: var(--ink); flex: 1;
+}
+
+.watch-price-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 10px; margin-bottom: 14px;
+}
+
+.watch-price-item {}
+
+.watch-price-lbl {
+  font-size: 0.65rem; font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--ink4); margin-bottom: 4px;
+}
+
+.watch-price-val {
+  font-size: 1rem; font-weight: 800;
+  color: var(--ink); font-variant-numeric: tabular-nums;
+}
+
+.watch-price-val.green  { color: var(--profit-dark); }
+.watch-price-val.red    { color: var(--danger); }
+.watch-price-val.purple { color: var(--violet); }
+
+.gap-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 0.78rem; font-weight: 800;
+  padding: 4px 10px; border-radius: 4px;
+}
+
+.gap-pos { background: #F0FDF8; color: var(--profit-dark); }
+.gap-neg { background: #FFF1F3; color: var(--danger); }
+.gap-neu { background: var(--surface2); color: var(--ink2); }
+
+/* How-to box */
+.howto-box {
+  background: var(--surface2);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  margin-bottom: 14px;
+  font-size: 0.82rem;
+  color: var(--ink2);
+  line-height: 1.7;
+}
+
+.howto-box strong { color: var(--ink); }
+
+.howto-step {
+  display: flex; align-items: flex-start; gap: 8px;
+  margin-top: 8px;
+}
+
+.step-num {
+  flex-shrink: 0;
+  width: 20px; height: 20px;
+  background: var(--violet); color: white;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.68rem; font-weight: 800;
+  margin-top: 1px;
+}
+
+.step-text { flex: 1; }
+
+/* ============================================================
+   RANKING — ランキング
+   ============================================================ */
+.ranking-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  overflow: hidden; margin-bottom: 20px;
+  box-shadow: var(--shadow-sm);
+}
+
+.ranking-hd {
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--card-border);
+  background: var(--surface2);
+  display: flex; align-items: center; gap: 8px;
+  font-size: 0.875rem; font-weight: 800; color: var(--ink);
+}
+
+.rank-row {
+  display: flex; align-items: center;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--surface2);
+  gap: 14px; transition: background 0.1s;
+}
+
+.rank-row:last-child { border: none; }
+.rank-row:hover { background: #F8FAFC; }
+
+/* 1位 Crown + 金色ボーダー */
+.rank-row.rank-1 {
+  border-left: 3px solid var(--gold);
+}
+
+.rank-num {
+  font-size: 1.1rem; font-weight: 900;
+  color: var(--ink4); min-width: 28px; text-align: center;
+}
+
+.rank-num.r1 { color: var(--gold); }
+.rank-num.r2 { color: var(--ink3); }
+.rank-num.r3 { color: #92400e; }
+
+.rank-info { flex: 1; }
+.rank-name { font-weight: 700; color: var(--ink); font-size: 0.9rem; }
+.rank-meta { font-size: 0.72rem; color: var(--ink4); margin-top: 2px; }
+
+.rank-profit {
+  font-size: 1.1rem; font-weight: 900;
+  color: var(--profit-dark); font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.rank-rate {
+  font-size: 0.72rem; color: var(--ink4);
+  text-align: right; margin-top: 2px;
+}
+
+/* ランキング内タブ */
+.ranking-tabs {
+  display: flex; gap: 0;
+  border-bottom: 1px solid var(--card-border);
+  overflow-x: auto;
+}
+
+.ranking-tab-btn {
+  flex-shrink: 0;
+  background: transparent; border: none;
+  border-bottom: 2px solid transparent;
+  padding: 10px 18px;
+  font-size: 0.8rem; font-weight: 600;
+  color: var(--ink3); cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+  margin-bottom: -1px;
+  white-space: nowrap;
+  font-family: var(--font);
+}
+
+.ranking-tab-btn.active {
+  color: var(--violet);
+  border-bottom-color: var(--violet);
+  font-weight: 700;
+}
+
+.ranking-tab-panel { display: none; }
+.ranking-tab-panel.active { display: block; }
+
+/* ============================================================
+   SURGE/DROP カード
+   ============================================================ */
+.alert-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  padding: 18px 20px; margin-bottom: 12px;
+  box-shadow: var(--shadow-sm);
+}
+
+.alert-card.surge {
+  border-left: 3px solid #059669;
+  background: linear-gradient(135deg, #F0FDF8, #fff);
+}
+
+.alert-card.drop {
+  border-left: 3px solid var(--danger);
+  background: linear-gradient(135deg, #FFF1F3, #fff);
+}
+
+.alert-hd {
+  display: flex; align-items: center; gap: 10px;
   margin-bottom: 12px;
 }
-.watch-candidate-card .wc-title {
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: var(--text);
+
+.alert-icon-badge {
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; flex-shrink: 0;
 }
-.watch-candidate-card .wc-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 10px;
+
+.alert-icon-badge.surge { background: rgba(5,150,105,0.12); }
+.alert-icon-badge.drop  { background: rgba(255,59,92,0.12); }
+
+.alert-name { font-weight: 700; color: var(--ink); font-size: 0.9rem; }
+.alert-shop { font-size: 0.72rem; color: var(--ink3); margin-top: 1px; }
+
+.alert-prices {
+  display: grid; grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
 }
-.wc-tag {
-  font-size: 0.72rem;
-  padding: 3px 9px;
-  border-radius: 4px;
-  font-weight: 600;
+
+.alert-price-item {
+  background: var(--surface2);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
 }
-.wc-tag-soldout { background: var(--red-dim); color: var(--red); }
-.wc-tag-lottery { background: var(--yellow-dim); color: var(--yellow); }
-.wc-tag-overseas { background: var(--accent-dim); color: var(--accent); }
-.wc-tag-camera { background: rgba(139,92,246,0.12); color: #a78bfa; }
-.wc-tag-game { background: rgba(20,184,166,0.12); color: #2dd4bf; }
-/* ---- Alert Card ---- */
-.alert-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 18px 20px;
-  margin: 10px 0;
+
+.alert-price-lbl {
+  font-size: 0.62rem; font-weight: 700;
+  letter-spacing: 0.07em; text-transform: uppercase;
+  color: var(--ink4); margin-bottom: 4px;
 }
-.alert-card.surge { border-left: 3px solid var(--green); }
-.alert-card.drop { border-left: 3px solid var(--red); }
-/* ---- Ranking ---- */
-.rk-tabs {
-  display: flex;
-  gap: 6px;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
+
+.alert-price-val {
+  font-size: 0.95rem; font-weight: 800;
+  color: var(--ink); font-variant-numeric: tabular-nums;
 }
-.rk-tab {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-pill);
-  padding: 6px 16px;
-  font-size: 0.82rem;
-  font-weight: 500;
-  color: var(--text-muted);
-  cursor: pointer;
-  font-family: var(--font-sans);
-  transition: all 0.15s;
-}
-.rk-tab:hover { color: var(--text); border-color: var(--border-light); }
-.rk-tab.active {
-  background: rgba(34,197,94,0.1);
-  border-color: var(--green-border);
-  color: var(--green-lt);
-  font-weight: 600;
-}
-.rk-panel { display: none; }
-.rk-panel.active { display: block; }
-.rk-layout {
+
+.alert-price-val.surge { color: #059669; }
+.alert-price-val.drop  { color: var(--danger); }
+
+/* ============================================================
+   SURGE グリッド
+   ============================================================ */
+.surge-grid {
   display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
-  gap: 16px;
-  align-items: start;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-bottom: 32px;
 }
-.rk-first {
-  border-radius: var(--radius-xl);
-  border: 1px solid var(--border);
-  background: linear-gradient(135deg, rgba(34,197,94,0.1) 0%, transparent 100%);
-  padding: 28px;
-  box-shadow: 0 24px 80px rgba(2,6,23,0.22);
+
+/* ============================================================
+   EMPTY STATE
+   ============================================================ */
+.empty-state {
+  text-align: center; padding: 56px 24px;
+  color: var(--ink4); font-size: 0.9rem;
 }
-.rk-first-badge {
-  display: inline-flex;
-  align-items: center;
-  background: rgba(34,197,94,0.12);
-  border: 1px solid rgba(34,197,94,0.2);
-  color: #86efac;
-  font-size: 0.72rem;
-  font-weight: 700;
-  padding: 4px 12px;
-  border-radius: var(--radius-pill);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+
+.empty-icon {
+  font-size: 2.5rem; margin-bottom: 14px;
+  opacity: 0.3; display: block;
 }
-.rk-first-category { font-size: 0.82rem; color: var(--text-muted); margin-top: 16px; }
-.rk-first-name {
-  font-size: clamp(1.2rem, 2.5vw, 1.6rem);
-  font-weight: 700;
-  color: var(--text);
-  margin-top: 6px;
+
+/* ============================================================
+   CAUTION
+   ============================================================ */
+.caution-block {
+  background: #FFFBEB;
+  border: 1px solid #FDE68A;
+  border-left: 3px solid #F59E0B;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  padding: 20px 24px; margin: 48px 0;
+  font-size: 0.875rem; color: #78350f; line-height: 1.8;
+}
+
+.caution-title {
+  font-weight: 800; color: #B45309;
+  margin-bottom: 10px; font-size: 0.9rem;
+  display: flex; align-items: center; gap: 6px;
+}
+
+.caution-list { list-style: none; padding: 0; }
+.caution-list li { padding: 2px 0 2px 14px; position: relative; }
+.caution-list li::before {
+  content: "·"; position: absolute; left: 4px;
+  color: #F59E0B;
+}
+
+/* ============================================================
+   CTA — ダークグラスカード
+   ============================================================ */
+.cta-section {
+  background: linear-gradient(160deg, #0D0F1C 0%, #131629 60%, #0F1A2E 100%);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius-2xl);
+  padding: 44px 40px;
+  text-align: center; margin: 48px 0;
+  box-shadow: var(--shadow-md);
+  position: relative; overflow: hidden;
+}
+
+.cta-section::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--profit), var(--blue), var(--violet));
+}
+
+.cta-eyebrow {
+  font-size: 0.68rem; font-weight: 800;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--profit); margin-bottom: 14px;
+}
+
+.cta-title {
+  font-size: 1.5rem; font-weight: 900;
+  color: #fff; margin-bottom: 10px;
   letter-spacing: -0.02em;
 }
-.rk-first-profit {
-  font-size: 2.4rem;
-  font-weight: 800;
-  color: var(--green);
-  letter-spacing: -0.05em;
-  margin-top: 16px;
-  font-variant-numeric: tabular-nums;
+
+.cta-desc {
+  font-size: 0.95rem; color: rgba(255,255,255,0.6);
+  max-width: 460px; margin: 0 auto 28px; line-height: 1.75;
 }
-.rk-first-status {
-  display: inline-flex;
-  background: var(--card);
-  border: 1px solid var(--border);
-  color: var(--text-secondary);
-  font-size: 0.75rem;
-  padding: 4px 12px;
-  border-radius: var(--radius-pill);
-  margin-top: 12px;
+
+.cta-btns {
+  display: flex; justify-content: center;
+  gap: 12px; flex-wrap: wrap;
 }
-.rk-list { display: flex; flex-direction: column; gap: 8px; }
-.rk-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--border);
-  background: rgba(0,0,0,0.08);
-  padding: 14px 16px;
-  gap: 12px;
+
+.btn-cta-primary {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: linear-gradient(135deg, var(--profit), var(--profit-dark));
+  color: white;
+  font-size: 0.95rem; font-weight: 800;
+  padding: 14px 30px; border-radius: var(--radius-md);
+  text-decoration: none; border: none; cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0,200,150,0.35);
+  transition: all 0.2s; font-family: var(--font);
 }
-.rk-item-rank {
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--text-muted);
-  min-width: 28px;
+
+.btn-cta-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,200,150,0.5);
 }
-.rk-item-info { flex: 1; }
-.rk-item-cat { font-size: 0.72rem; color: var(--text-muted); }
-.rk-item-name { font-size: 0.92rem; font-weight: 600; color: var(--text); margin-top: 2px; }
-.rk-item-right { text-align: right; }
-.rk-item-profit { font-size: 0.95rem; font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; }
-.rk-item-status { font-size: 0.72rem; color: var(--text-muted); margin-top: 2px; }
-/* ---- Ranking Table (legacy) ---- */
-.ranking-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  margin: 10px 0;
+
+.btn-cta-secondary {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.8);
+  font-size: 0.95rem; font-weight: 700;
+  padding: 14px 30px; border-radius: var(--radius-md);
+  text-decoration: none; border: 1px solid rgba(255,255,255,0.15);
+  transition: all 0.2s; font-family: var(--font);
 }
-.ranking-card table { font-size: 0.85rem; }
-.ranking-card th { background: var(--surface); }
-.rank-num { color: var(--text-muted); font-weight: 700; font-size: 0.85rem; }
-.rank-num.top3 { color: var(--yellow); }
-/* ---- New Products (tab version) ---- */
-.np-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 16px;
-  margin-top: 4px;
+
+.btn-cta-secondary:hover {
+  background: rgba(255,255,255,0.14); color: #fff;
 }
-/* ---- Divider ---- */
-.section-divider {
-  height: 1px;
-  background: var(--border);
-  margin: 24px 0;
+
+/* ============================================================
+   FOOTER — ダーク
+   ============================================================ */
+.footer {
+  background: #0D0F1C;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  padding: 40px 0 24px;
+  margin-top: 48px;
 }
-/* ---- Responsive ---- */
-@media (max-width: 900px) {
-  .hero-inner { grid-template-columns: 1fr; gap: 28px; }
-  .kpi-grid { grid-template-columns: repeat(3, 1fr); }
-  .rk-layout { grid-template-columns: 1fr; }
+
+.footer-inner {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 24px;
 }
-@media (max-width: 600px) {
-  .hero-section { padding: 36px 0 28px; }
-  .hero-copy h1 { font-size: 1.6rem; }
-  .kpi-grid { grid-template-columns: 1fr 1fr; }
-  .bc-profit-value { font-size: 1.75rem; }
-  .price-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
-  .price-cell.profit-cell .price-cell-value { font-size: 1.15rem; }
-  .tab-btn { padding: 7px 14px; font-size: 0.82rem; }
-  table { font-size: 0.8rem; }
-  th, td { padding: 8px; }
-  .card { padding: 18px; }
-  .cta-section { padding: 24px 16px; }
-  .topbar-meta { display: none; }
-  .shop-profit { display: none; }
-  .rk-first-profit { font-size: 1.8rem; }
-}
-@media (max-width: 400px) {
-  .price-grid { grid-template-columns: 1fr; }
-  .price-cell.profit-cell { grid-column: span 1; }
-  .kpi-grid { grid-template-columns: 1fr 1fr; }
-}
-/* ────────── badge 調整 ────────── */
-/* 初心者向けカード: 上ボーダーをグリーン */
-.card[data-user-level="beginner_easy"] {
-  border-top: 2px solid var(--green);
-}
-.card[data-user-level="beginner_watch"] {
-  border-top: 2px solid var(--cyan);
-}
-/* 上級者向けカード */
-.card[data-user-level="advanced_high_profit"],
-.card[data-user-level="expert_only"] {
-  border-top: 2px solid var(--violet);
-}
-.watch-candidate-card {
-  border-top: 2px solid var(--amber);
-}
-.badge-easy {
-  background: var(--green-dim);
-  color: var(--green);
-  border: 1px solid var(--green-border);
-}
-.badge-watch {
-  background: rgba(34,211,238,0.1);
-  color: var(--cyan);
-  border: 1px solid rgba(34,211,238,0.25);
-}
-.badge-adv {
-  background: var(--violet-dim);
-  color: var(--violet-lt);
-  border: 1px solid var(--violet-border);
-}
-.badge-exp {
-  background: var(--red-dim);
-  color: var(--red);
-  border: 1px solid rgba(239,68,68,0.3);
-}
-.sale-method-badge {
-  font-size: 0.72rem;
-  padding: 3px 10px;
-  border-radius: var(--radius-pill);
-  background: var(--amber-dim);
-  color: var(--amber-lt);
-  border: 1px solid rgba(245,158,11,0.3);
-  margin-left: 6px;
-}
-/* no-data 表示 */
-.no-data {
-  color: var(--text-muted);
-  font-size: 0.78rem;
-  font-style: italic;
-}
-/* 上級者タブのメタ情報行 */
-.adv-meta-row {
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
-  margin: 8px 0 4px;
-}
-.adv-meta-item {
-  font-size: 0.78rem;
-  color: var(--text-muted);
-}
-.adv-meta-item strong {
-  color: var(--text);
-}
-/* フォールバック通知 */
-.adv-fallback-notice {
-  display: flex;
-  gap: 10px;
-  align-items: flex-start;
-  background: rgba(34,211,238,0.06);
-  border: 1px solid rgba(34,211,238,0.2);
-  border-radius: 8px;
-  padding: 12px 16px;
-  margin-bottom: 16px;
-  font-size: 0.82rem;
-  color: var(--text-muted);
-}
-.adv-fallback-icon { font-size: 1.1rem; margin-top: 1px; }
-.adv-fallback-notice strong { color: var(--cyan); }
-/* 監視候補 price row */
-.watch-price-row {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-  align-items: center;
-  margin: 8px 0 6px;
-}
-.watch-price-item {
-  font-size: 0.78rem;
-  color: var(--text-muted);
-}
-.watch-gap {
-  font-size: 0.82rem;
-  font-weight: 600;
-}
-.watch-links-row {
-  font-size: 0.82rem;
-  margin-bottom: 8px;
-}
-.watch-footer-note {
-  font-size: 0.74rem;
-  color: var(--text-muted);
-  margin-top: 12px;
-  padding: 6px 8px;
-  border-left: 2px solid var(--border-light);
-  font-style: italic;
-}
-/* link-type badge */
-.link-type-badge {
-  display: inline-block;
-  font-size: 0.68rem;
-  background: var(--surface);
-  border: 1px solid var(--border-light);
-  color: var(--text-muted);
-  padding: 1px 6px;
-  border-radius: 10px;
-  margin-left: 4px;
-  vertical-align: middle;
-}
-/* 海外相場リンクセクション */
-.overseas-links-section {
-  margin-top: 12px;
-  padding: 12px;
-  background: rgba(15,23,42,0.6);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-}
-.overseas-links-header {
-  display: flex;
-  gap: 10px;
-  align-items: baseline;
-  margin-bottom: 8px;
-  flex-wrap: wrap;
-}
-.overseas-links-title {
-  font-size: 0.82rem;
-  font-weight: 700;
-  color: var(--cyan);
-}
-.overseas-links-note {
-  font-size: 0.72rem;
-  color: var(--text-muted);
-}
-.overseas-btn-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-.overseas-btn {
-  display: inline-block;
-  font-size: 0.76rem;
-  padding: 4px 10px;
-  border-radius: 20px;
-  background: var(--surface);
-  border: 1px solid var(--border-light);
-  color: var(--cyan);
-  text-decoration: none;
-  transition: background 0.12s, border-color 0.12s;
-  white-space: nowrap;
-}
-.overseas-btn:hover {
-  background: rgba(34,211,238,0.1);
-  border-color: var(--cyan);
-}
-/* 買取店比較テーブル */
-.buyback-shop-table {
-  margin-top: 12px;
-}
-.buyback-table-wrap {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
-.buyback-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.82rem;
-}
-.buyback-table thead tr {
-  background: var(--surface);
-  color: var(--text-muted);
-  font-size: 0.75rem;
-}
-.buyback-table th {
-  padding: 5px 8px;
-  text-align: left;
-  border-bottom: 1px solid var(--border);
-  white-space: nowrap;
-}
-.buyback-table td {
-  padding: 6px 8px;
-  border-bottom: 1px solid var(--border);
-  vertical-align: middle;
-}
-.buyback-shop-row.rank-1 td {
-  background: rgba(0,170,101,0.07);
-}
-.shop-rank-cell {
-  font-weight: 700;
-  color: var(--text-muted);
-  width: 24px;
-  text-align: center;
-}
-.buyback-shop-row.rank-1 .shop-rank-cell {
-  color: var(--green);
-}
-.shop-price-cell {
-  font-weight: 700;
-  color: var(--text);
-  white-space: nowrap;
-}
-.buyback-shop-row.rank-1 .shop-price-cell {
-  color: var(--green);
-}
-.shop-diff-cell {
-  white-space: nowrap;
-  font-size: 0.8rem;
-}
-.shop-diff-cell.positive { color: var(--green); }
-.shop-diff-cell.negative { color: var(--red); }
-.shop-link-cell a {
-  font-size: 0.75rem;
-  color: var(--cyan);
-  white-space: nowrap;
-}
-.unverified-link {
-  font-size: 0.74rem;
-  color: var(--text-muted);
-  font-style: italic;
-}
-.buyback-best-price {
-  color: var(--green);
-}
-.shop-count-badge {
-  font-size: 0.72rem;
-  background: var(--surface);
-  border: 1px solid var(--border-light);
-  padding: 2px 8px;
-  border-radius: 20px;
-  color: var(--text-muted);
-}
-.buyback-median {
-  font-size: 0.72rem;
-  color: var(--text-muted);
-}
-.price-summary-row {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-  align-items: center;
-  margin: 6px 0 4px;
-}
-.price-summary-item {
-  font-size: 0.78rem;
-  color: var(--text-muted);
-}
-.price-summary-item strong {
-  color: var(--green);
-}
-.stale-warning {
-  background: rgba(239,68,68,0.08);
-  border: 1px solid rgba(239,68,68,0.25);
-  border-radius: 6px;
-  padding: 6px 10px;
-  font-size: 0.78rem;
-  color: var(--red);
-  margin: 8px 0;
-}
-.buyback-notice {
-  font-size: 0.72rem;
-  color: var(--text-muted);
-  margin-top: 8px;
-  padding: 6px 8px;
-  border-left: 2px solid var(--border-light);
-  font-style: italic;
-}
-/* 新商品候補セクション */
-.section-new-products {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 24px;
+
+.footer-logo {
+  display: flex; align-items: center; gap: 10px;
   margin-bottom: 24px;
 }
-.section-new-products .section-title {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--cyan);
-  margin-bottom: 6px;
+
+.footer-logo-icon {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: linear-gradient(135deg, var(--blue), var(--violet));
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-weight: 900; font-size: 0.85rem;
 }
-.section-new-products .section-desc {
-  font-size: 0.82rem;
-  color: var(--text-muted);
+
+.footer-logo-name {
+  font-size: 0.95rem; font-weight: 800; color: rgba(255,255,255,0.85);
+}
+
+.footer-live {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 0.65rem; font-weight: 700; color: var(--profit);
+  background: rgba(0,200,150,0.12);
+  border: 1px solid rgba(0,200,150,0.2);
+  padding: 2px 8px; border-radius: 99px;
+}
+
+.footer-links {
+  display: flex; flex-wrap: wrap; gap: 8px 20px;
+  margin-bottom: 24px;
+}
+
+.footer-link {
+  font-size: 0.78rem; color: rgba(255,255,255,0.4);
+  text-decoration: none; transition: color 0.15s;
+}
+
+.footer-link:hover { color: rgba(255,255,255,0.75); }
+
+.footer-text {
+  font-size: 0.75rem; color: rgba(255,255,255,0.25);
+  line-height: 2;
+}
+
+/* ============================================================
+   NEW PRODUCT CARDS
+   ============================================================ */
+.new-product-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.18s, box-shadow 0.18s;
+}
+
+.new-product-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-xl);
+}
+
+.np-top-bar { height: 3px; background: linear-gradient(90deg, var(--violet), var(--blue)); }
+
+.np-body { padding: 16px 18px; }
+
+.np-hd {
+  display: flex; align-items: flex-start;
+  justify-content: space-between; gap: 10px;
+  margin-bottom: 12px;
+}
+
+.np-name { font-size: 0.9rem; font-weight: 800; color: var(--ink); flex: 1; }
+
+.np-status-badge {
+  font-size: 0.65rem; font-weight: 700;
+  padding: 3px 9px; border-radius: 99px;
+  white-space: nowrap;
+}
+
+.np-status-badge.lottery { background: #FFF9F0; color: #CC7A00; border: 1px solid #FFD9A0; }
+.np-status-badge.preorder { background: #EFF6FF; color: #1E6FFF; border: 1px solid #BFDBFE; }
+.np-status-badge.upcoming { background: #F5F3FF; color: var(--violet); border: 1px solid #DDD6FE; }
+.np-status-badge.default { background: var(--surface2); color: var(--ink2); border: 1px solid var(--card-border); }
+
+.np-price-row {
+  display: flex; align-items: center; gap: 16px;
+  margin-bottom: 10px; font-size: 0.82rem;
+}
+
+.np-price-lbl { color: var(--ink4); font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+.np-price-val { font-weight: 800; color: var(--ink); font-variant-numeric: tabular-nums; }
+
+.np-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+
+/* ============================================================
+   OVERSEAS LINKS SECTION
+   ============================================================ */
+.overseas-section-block {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  padding: 20px 22px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow-sm);
+}
+
+.overseas-section-hd {
+  display: flex; align-items: center; gap: 10px;
   margin-bottom: 16px;
 }
-.new-product-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 14px;
+
+.overseas-globe {
+  font-size: 1.2rem;
 }
-.new-product-card {
-  background: var(--card);
-  border: 1px solid var(--border-light);
-  border-radius: 8px;
-  padding: 14px;
+
+.overseas-section-title {
+  font-size: 0.875rem; font-weight: 800; color: var(--ink);
 }
-.npc-header {
-  display: flex;
-  gap: 6px;
-  margin-bottom: 6px;
-  flex-wrap: wrap;
+
+.overseas-chips-row {
+  display: flex; flex-wrap: wrap; gap: 8px;
 }
-.npc-category {
-  font-size: 0.72rem;
-  background: var(--blue);
-  color: #fff;
-  padding: 2px 8px;
-  border-radius: 20px;
+
+.oc-chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 0.78rem; font-weight: 600;
+  padding: 6px 14px; border-radius: var(--radius-sm);
+  text-decoration: none; transition: all 0.15s;
 }
-.npc-sale-method {
-  font-size: 0.72rem;
-  background: var(--yellow);
-  color: #000;
-  padding: 2px 8px;
-  border-radius: 20px;
+
+.oc-chip.blue   { background: #EFF6FF; color: #1E6FFF; border: 1px solid #BFDBFE; }
+.oc-chip.green  { background: #F0FDF8; color: var(--profit-dark); border: 1px solid #B2F0DC; }
+.oc-chip.purple { background: #F5F3FF; color: var(--violet); border: 1px solid #DDD6FE; }
+
+.oc-chip:hover { transform: translateY(-1px); filter: brightness(0.95); }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 900px) {
+  .hero-inner { grid-template-columns: 1fr; }
+  .hero-right { display: none; }
+  .surge-grid { grid-template-columns: 1fr; }
 }
-.npc-name {
-  font-size: 0.92rem;
-  font-weight: 700;
-  color: var(--text);
-  margin-bottom: 4px;
+
+@media (max-width: 768px) {
+  .hero { padding: 40px 0 36px; }
+  .hero-title { font-size: 1.8rem; }
+  .hero-subtitle { font-size: 0.95rem; }
+  .cards-grid { grid-template-columns: 1fr; }
+  .profit-num { font-size: 1.8rem; }
+  .profit-section { flex-direction: column; gap: 8px; }
+  .profit-right { text-align: left; }
+  .tab-btn { padding: 13px 14px; font-size: 0.82rem; }
+  .card-hd { padding: 14px 16px 12px; }
+  .card-body { padding: 12px 16px 18px; }
+  .profit-section { margin: 0 16px; padding: 14px 16px; }
+  .price-row-wrap { margin: 12px 16px 0; }
+  .cta-section { padding: 32px 24px; }
+  .topbar-note-btn { display: none; }
+  .shop-diff-col { display: none; }
+  .topbar-date { display: none; }
+  .watch-price-grid { grid-template-columns: 1fr 1fr; }
 }
-.npc-meta, .npc-price {
-  font-size: 0.78rem;
-  color: var(--text-muted);
-  margin-bottom: 3px;
+
+@media (max-width: 480px) {
+  .main-wrap { padding: 0 16px 60px; }
+  .hero-inner { padding: 0 16px; }
+  .tab-wrap { margin: 0 -16px; padding: 0 16px; }
+  .hero-title { font-size: 1.6rem; }
+  .profit-num { font-size: 1.6rem; }
+  .price-row-wrap { grid-template-columns: 1fr; }
+  .cta-btns { flex-direction: column; align-items: stretch; }
+  .btn-cta-primary, .btn-cta-secondary { justify-content: center; }
+  .features-inner { gap: 6px; }
 }
-.npc-score {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  margin-top: 6px;
-}
-.score-bar {
-  color: var(--green);
-  font-family: monospace;
-  letter-spacing: -1px;
-}
-.score-val {
-  color: var(--text);
-  font-weight: 700;
-  margin-left: 4px;
-}
-.npc-reason {
-  font-size: 0.74rem;
-  color: var(--text-muted);
-  margin-top: 4px;
-  font-style: italic;
-}
-.section-note {
-  font-size: 0.74rem;
-  color: var(--text-muted);
-  margin-top: 12px;
-}
+
+/* noscript */
+.noscript-all .tab-panel { display: block !important; }
+.noscript-all .tab-nav { display: none; }
 </style>
+
 </head>
 <body>
+<div class="announce-bar"><a href="#tab-beginner">&#127919; 本日 7 件の初心者向け案件 &mdash; 最大利益 +¥143,700 を確認</a></div>
 <header class="topbar">
-  <div class="topbar-brand"><span class="dot"></span>プレ値速報</div>
-  <div class="topbar-meta">
-    <span>買取更新: 2026-05-18 12:00 JST</span>
-    <span>生成: 05/19 01:14</span>
-  </div>
+  <a href="/" class="topbar-brand">
+    <div class="brand-icon">S</div>
+    プレ値速報
+  </a>
+  <div class="topbar-live"><span class="live-dot"></span>LIVE</div>
+  <div class="topbar-date" data-buyback-updated>買取更新: 2026-05-18 12:00 JST</div>
+  <div class="topbar-spacer"></div>
+  <a href="#note-cta" class="topbar-note-btn" data-track="note_click">&#128221; 詳細レポートを見る</a>
 </header>
-<div class="container">
-<section class="hero-section">
+<div class="ticker-bar"><div class="ticker-inner"><span class="ticker-item"><span class="t-name">iPhone 16 Pro 256GB</span><span class="ticker-sep">|</span><span class="t-profit">+¥18,400</span></span><span class="ticker-item"><span class="t-name">SONY α7C II</span><span class="ticker-sep">|</span><span class="t-profit">+¥32,000</span></span><span class="ticker-item"><span class="t-name">Nintendo Switch 2</span><span class="ticker-sep">|</span><span class="t-profit">+¥9,800</span></span><span class="ticker-item"><span class="t-name">iPhone 15 Plus 128GB</span><span class="ticker-sep">|</span><span class="t-profit">+¥12,000</span></span><span class="ticker-item"><span class="t-name">Canon EOS R6 Mark II</span><span class="ticker-sep">|</span><span class="t-profit">+¥45,000</span></span><span class="ticker-item"><span class="t-name">PS5 Digital</span><span class="ticker-sep">|</span><span class="t-profit">+¥6,500</span></span><span class="ticker-item"><span class="t-name">iPhone 16 Pro 256GB</span><span class="ticker-sep">|</span><span class="t-profit">+¥18,400</span></span><span class="ticker-item"><span class="t-name">SONY α7C II</span><span class="ticker-sep">|</span><span class="t-profit">+¥32,000</span></span><span class="ticker-item"><span class="t-name">Nintendo Switch 2</span><span class="ticker-sep">|</span><span class="t-profit">+¥9,800</span></span><span class="ticker-item"><span class="t-name">iPhone 15 Plus 128GB</span><span class="ticker-sep">|</span><span class="t-profit">+¥12,000</span></span><span class="ticker-item"><span class="t-name">Canon EOS R6 Mark II</span><span class="ticker-sep">|</span><span class="t-profit">+¥45,000</span></span><span class="ticker-item"><span class="t-name">PS5 Digital</span><span class="ticker-sep">|</span><span class="t-profit">+¥6,500</span></span></div></div>
+<div class="features-bar"><div class="features-inner"><span class="feature-chip green">&#9711; 毎日12:00 自動更新</span><span class="feature-chip blue">&#8652; サイト間せどり計算</span><span class="feature-chip violet">&#127758; 海外相場リンク付き</span><span class="feature-chip amber">&#128202; 複数買取店比較</span><span class="feature-chip red">&#9650; 急騰/急落アラート</span><span class="feature-chip green">&#128269; 新商品候補監視</span></div></div>
+<section class="hero">
   <div class="hero-inner">
-    <div class="hero-copy">
-      <div class="hero-eyebrow"><span>毎日更新 — Price Intelligence</span></div>
-      <h1>公式価格と買取価格の差額を、毎日チェック。</h1>
-      <p class="hero-sub">公式価格と買取価格の差額を毎日監視。初心者でも分かりやすく、プロ水準の情報で整理しています。</p>
+    <div class="hero-left">
+      <div class="hero-eyebrow"><span class="live-dot"></span> 毎日更新 &mdash; 2026-05-19</div>
+      <h1 class="hero-title">今日の<span class="accent">価格差</span>で稼ぐ。<br>公式 &times; 買取 &times; 海外相場。</h1>
+      <p class="hero-subtitle">iPhone・カメラ・ゲーム機の公式価格と買取価格の差額を毎日更新。初心者向けの低難度案件から、上級者向けの中古市場差額・海外相場まで、このページ一枚で行動できます。</p>
+      <div class="hero-cta-row">
+        <a href="#tab-beginner" class="hero-btn primary">&#128100; 初心者向け案件 8件</a>
+        <a href="#tab-advanced" class="hero-btn violet">&#128269; 上級者向け</a>
+        <a href="#tab-ranking" class="hero-btn secondary">&#127942; ランキング</a>
+      </div>
+      <div class="hero-social-proof">
+        <div class="social-avatars">
+          <div class="social-avatar">A</div>
+          <div class="social-avatar">B</div>
+          <div class="social-avatar">C</div>
+        </div>
+        <div class="social-text">本日 <strong>8</strong> 件の案件 — 最高利益 <strong>+¥143,700</strong></div>
+      </div>
       <div class="hero-timestamps">
-        <span class="ts-chip " data-buyback-updated>
-          <span class="ts-dot"></span>買取価格更新：2026-05-18 12:00 JST
-        </span>
-        <span class="ts-chip" data-lp-generated>
-          <span class="ts-dot" style="background:var(--accent)"></span>LP生成：2026-05-19 01:14 JST
-        </span>
+        <span class="ts-pill stale" data-buyback-updated><span class="ts-dot"></span>買取価格更新：2026-05-18 12:00 JST</span>
+        <span class="ts-pill" data-lp-generated><span class="ts-dot blue"></span>LP生成：2026-05-19 12:42 JST</span>
       </div>
     </div>
-    <div class="kpi-grid">
-      <div class="kpi-card">
-        <div class="kpi-label">更新日時</div>
-        <div class="kpi-value" style="font-size:0.95rem">2026-05-19 01:14 JST</div>
-        <div class="kpi-sub">毎朝更新</div>
-      </div>
-      <div class="kpi-card tp">
-        <div class="kpi-label">初心者向け</div>
-        <div class="kpi-value">8件</div>
-        <div class="kpi-sub">低難度 / 店舗比較あり</div>
-      </div>
-      <div class="kpi-card ta">
-        <div class="kpi-label">上級者向け</div>
-        <div class="kpi-value">12件</div>
-        <div class="kpi-sub">抽選 / 海外差額</div>
-      </div>
-      <div class="kpi-card tp">
-        <div class="kpi-label">最大利益</div>
-        <div class="kpi-value">+¥143,700</div>
-        <div class="kpi-sub">本日最高差額</div>
-      </div>
-      <div class="kpi-card tw">
-        <div class="kpi-label">急騰監視</div>
-        <div class="kpi-value">0件</div>
-        <div class="kpi-sub">24時間変動</div>
-      </div>
-      <div class="kpi-card tl">
-        <div class="kpi-label">抽選候補</div>
-        <div class="kpi-value">0件</div>
-        <div class="kpi-sub">海外 / 限定モデル</div>
+    <div class="hero-right">
+      <div class="hero-live-panel">
+        <div class="live-panel-hd">
+          <div class="live-panel-title">LIVE DEALS</div>
+          <div class="live-panel-badge"><span class="live-dot"></span> リアルタイム</div>
+        </div>
+        <div class="live-panel-items">
+          <div class="lp-item"><div class="lp-icon iphone">&#128241;</div><div class="lp-info"><div class="lp-name">iPhone 16 Pro 256GB</div><div class="lp-shop">じゃんぱら</div></div><div class="lp-profit">+¥18,400</div></div>
+          <div class="lp-item"><div class="lp-icon camera">&#128247;</div><div class="lp-info"><div class="lp-name">SONY α7C II</div><div class="lp-shop">マップカメラ</div></div><div class="lp-profit">+¥32,000</div></div>
+          <div class="lp-item"><div class="lp-icon game">&#127918;</div><div class="lp-info"><div class="lp-name">Nintendo Switch 2</div><div class="lp-shop">ゲオ</div></div><div class="lp-profit">+¥9,800</div></div>
+          <div class="lp-item"><div class="lp-icon iphone">&#128241;</div><div class="lp-info"><div class="lp-name">iPhone 15 Plus 128GB</div><div class="lp-shop">iosys</div></div><div class="lp-profit">+¥12,000</div></div>
+          <div class="lp-item"><div class="lp-icon camera">&#128247;</div><div class="lp-info"><div class="lp-name">Canon EOS R6 II</div><div class="lp-shop">フジヤカメラ</div></div><div class="lp-profit">+¥45,000</div></div>
+        </div>
       </div>
     </div>
   </div>
 </section>
+<div class="stale-warning-block"><span>&#9888;&#65039;</span><div><strong>データが古い可能性があります：</strong>買取価格（25時間前のデータ）が24時間以上前のデータです。購入前に必ず最新価格をご確認ください。</div></div>
+<div class="main-wrap">
+<div class="tab-wrap">
+<nav class="tab-nav" role="tablist">
+  <button class="tab-btn" data-tab="ranking" role="tab" aria-selected="false">&#127942; ランキング</button>
+  <button class="tab-btn active" data-tab="beginner" role="tab" aria-selected="true">&#128100; 初心者向け <span class="tab-count">8</span></button>
+  <button class="tab-btn" data-tab="advanced" role="tab" aria-selected="false">&#128269; 上級者向け <span class="tab-count">12</span></button>
+  <button class="tab-btn" data-tab="surge" role="tab" aria-selected="false">&#9889; 急騰/急落</button>
+  <button class="tab-btn" data-tab="new-products" role="tab" aria-selected="false">&#127381; 新商品候補</button>
+</nav>
+</div>
 
-<div class="tab-bar">
-  <div class="tab-control scrollbar-none">
-    <button class="tab-btn active" data-tab="beginner" role="tab" aria-selected="true">初心者向け</button>
-    <button class="tab-btn" data-tab="advanced" role="tab" aria-selected="false">上級者向け</button>
-    <button class="tab-btn" data-tab="surge" role="tab" aria-selected="false">急騰 / 急落</button>
-    <button class="tab-btn" data-tab="ranking" role="tab" aria-selected="false">買取ランキング</button>
-    <button class="tab-btn" data-tab="new-products" role="tab" aria-selected="false">新商品候補</button>
+<div id="tab-ranking" class="tab-panel" role="tabpanel">
+<div class="sec-head"><div class="sec-title">&#127942; 買取ランキング</div></div>
+<div class="ranking-card">
+  <div class="ranking-tabs">
+    <button class="ranking-tab-btn active" data-rtab="all">&#127942; 総合</button>
+    <button class="ranking-tab-btn" data-rtab="iphone">&#128241; iPhone</button>
+    <button class="ranking-tab-btn" data-rtab="camera">&#128247; カメラ</button>
+    <button class="ranking-tab-btn" data-rtab="game">&#127918; ゲーム機</button>
   </div>
+  <div class="ranking-tab-panel active" id="rtab-all"><div class="rank-row rank-1"><div class="rank-num r1">&#128081;</div><div class="rank-info"><div class="rank-name">FUJIFILM X100VI</div><div class="rank-meta">マップカメラ &nbsp;|&nbsp; camera</div></div><div><div class="rank-profit">+¥143,700</div><div class="rank-rate">53.3%</div></div></div><div class="rank-row"><div class="rank-num r2">2</div><div class="rank-info"><div class="rank-name">iPhone 17 Pro Max 512GB SIMフリー</div><div class="rank-meta">モバイル一番 &nbsp;|&nbsp; iphone</div></div><div><div class="rank-profit">+¥11,400</div><div class="rank-rate">4.5%</div></div></div><div class="rank-row"><div class="rank-num r3">3</div><div class="rank-info"><div class="rank-name">iPhone 17 Pro Max 256GB SIMフリー</div><div class="rank-meta">モバイル一番 &nbsp;|&nbsp; iphone</div></div><div><div class="rank-profit">+¥10,400</div><div class="rank-rate">4.7%</div></div></div><div class="rank-row"><div class="rank-num ">4</div><div class="rank-info"><div class="rank-name">iPhone 17 Pro 256GB SIMフリー</div><div class="rank-meta">モバイル一番 &nbsp;|&nbsp; iphone</div></div><div><div class="rank-profit">+¥6,600</div><div class="rank-rate">3.7%</div></div></div><div class="rank-row"><div class="rank-num ">5</div><div class="rank-info"><div class="rank-name">iPhone 17 Pro 512GB SIMフリー</div><div class="rank-meta">モバイル一番 &nbsp;|&nbsp; iphone</div></div><div><div class="rank-profit">+¥6,400</div><div class="rank-rate">3.0%</div></div></div><div class="rank-row"><div class="rank-num ">6</div><div class="rank-info"><div class="rank-name">Nintendo Switch 2</div><div class="rank-meta">買取商店 &nbsp;|&nbsp; game_console</div></div><div><div class="rank-profit">+¥5,220</div><div class="rank-rate">10.4%</div></div></div><div class="rank-row"><div class="rank-num ">7</div><div class="rank-info"><div class="rank-name">Nintendo Switch 2 マリオカートセット</div><div class="rank-meta">買取商店 &nbsp;|&nbsp; game_console</div></div><div><div class="rank-profit">+¥5,220</div><div class="rank-rate">8.7%</div></div></div><div class="rank-row"><div class="rank-num ">8</div><div class="rank-info"><div class="rank-name">PlayStation 5 Pro</div><div class="rank-meta">イオシス &nbsp;|&nbsp; game_console</div></div><div><div class="rank-profit">+¥220</div><div class="rank-rate">0.2%</div></div></div></div>
+  <div class="ranking-tab-panel" id="rtab-iphone"><div class="rank-row rank-1"><div class="rank-num r1">&#128081;</div><div class="rank-info"><div class="rank-name">iPhone 17 Pro Max 512GB SIMフリー</div><div class="rank-meta">モバイル一番</div></div><div><div class="rank-profit">+¥11,400</div><div class="rank-rate">4.5%</div></div></div><div class="rank-row"><div class="rank-num r2">2</div><div class="rank-info"><div class="rank-name">iPhone 17 Pro Max 256GB SIMフリー</div><div class="rank-meta">モバイル一番</div></div><div><div class="rank-profit">+¥10,400</div><div class="rank-rate">4.7%</div></div></div><div class="rank-row"><div class="rank-num r3">3</div><div class="rank-info"><div class="rank-name">iPhone 17 Pro 256GB SIMフリー</div><div class="rank-meta">モバイル一番</div></div><div><div class="rank-profit">+¥6,600</div><div class="rank-rate">3.7%</div></div></div><div class="rank-row"><div class="rank-num ">4</div><div class="rank-info"><div class="rank-name">iPhone 17 Pro 512GB SIMフリー</div><div class="rank-meta">モバイル一番</div></div><div><div class="rank-profit">+¥6,400</div><div class="rank-rate">3.0%</div></div></div></div>
+  <div class="ranking-tab-panel" id="rtab-camera"><div class="rank-row rank-1"><div class="rank-num r1">&#128081;</div><div class="rank-info"><div class="rank-name">FUJIFILM X100VI</div><div class="rank-meta">マップカメラ</div></div><div><div class="rank-profit">+¥143,700</div><div class="rank-rate">53.3%</div></div></div></div>
+  <div class="ranking-tab-panel" id="rtab-game"><div class="rank-row rank-1"><div class="rank-num r1">&#128081;</div><div class="rank-info"><div class="rank-name">Nintendo Switch 2</div><div class="rank-meta">買取商店</div></div><div><div class="rank-profit">+¥5,220</div><div class="rank-rate">10.4%</div></div></div><div class="rank-row"><div class="rank-num r2">2</div><div class="rank-info"><div class="rank-name">Nintendo Switch 2 マリオカートセット</div><div class="rank-meta">買取商店</div></div><div><div class="rank-profit">+¥5,220</div><div class="rank-rate">8.7%</div></div></div><div class="rank-row"><div class="rank-num r3">3</div><div class="rank-info"><div class="rank-name">PlayStation 5 Pro</div><div class="rank-meta">イオシス</div></div><div><div class="rank-profit">+¥220</div><div class="rank-rate">0.2%</div></div></div></div>
 </div>
+</div>
+
 <div id="tab-beginner" class="tab-panel active" role="tabpanel">
-<div class="section-header"><h2>低難度 — すぐ動ける案件</h2><span class="section-count">7件</span></div>
-<div class="card" data-user-level="beginner_easy">
-  <div class="card-header">
-    <div class="card-title">FUJIFILM X100VI</div>
-    <span class="badge badge-easy">低難度</span>
-  </div>
-  <div class="bc-profit-hero">
-    <div>
-      <div class="bc-profit-label">実質利益（推定コスト差引後）</div>
-      <div class="bc-profit-value">+¥143,700</div>
-      <div class="bc-profit-rate">53.3%</div>
-    </div>
-    <div style="text-align:right">
-      <div style="font-size:0.72rem;color:var(--text-muted);margin-bottom:4px">最高買取価格</div>
-      <div style="font-size:1.2rem;font-weight:700;color:var(--green-lt)">¥415,000</div>
-      <div style="font-size:0.72rem;color:var(--text-muted);margin-top:4px"><span class="shop-count-badge">参照 3 店舗</span></div>
-    </div>
-  </div>
-  <div class="price-grid">
-    <div class="price-cell">
-      <div class="price-cell-label">公式価格</div>
-      <div class="price-cell-value">¥269,500</div>
-    </div>
-    <div class="price-cell">
-      <div class="price-cell-label">参考差額（最高値）</div>
-      <div class="price-cell-value" style="color:var(--green)">+¥145,500</div>
-    </div>
-  </div>
-  <div class="price-summary-row">
-    <span class="price-summary-item">更新: 2026-05-18 23:42 JST</span>
-  </div>
-  <div class="condition-bar">
-    <span class="cond-icon">⚠</span>
-    <span>買取条件：中古A（美品）　推定コスト：-¥1,800</span>
-  </div>
-  
-  <div class="buyback-compare buyback-shop-table">
-  <div class="buyback-compare-header">
-    <span>本日の買取価格比較</span>
-    <span class="freshness-recent">📋当日手動 / 13時間前</span>
-    <span class="shop-count-badge">参照 3 店舗</span>
-    <span class="buyback-median">中央値 ¥410,000</span>
-  </div>
-  <div class="buyback-table-wrap">
-    <table class="buyback-table">
-      <thead><tr><th>#</th><th>買取店</th><th>買取価格</th><th>参考差額</th><th>リンク</th></tr></thead>
-      <tbody><tr class="buyback-shop-row rank-1"><td class="shop-rank-cell">1</td><td class="shop-name-cell">マップカメラ</td><td class="shop-price-cell">¥415,000</td><td class="shop-diff-cell positive">+¥145,500</td><td class="shop-link-cell"><a href="https://www.mapcamera.com/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_x100vi" data-shop="マップカメラ" title="カテゴリ">買取価格を確認 →</a><span class="link-type-badge">カテゴリ</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">2</td><td class="shop-name-cell">カメラのキタムラ</td><td class="shop-price-cell">¥410,000</td><td class="shop-diff-cell positive">+¥140,500</td><td class="shop-link-cell"><a href="https://www.kitamura.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_x100vi" data-shop="カメラのキタムラ" title="カテゴリ">買取価格を確認 →</a><span class="link-type-badge">カテゴリ</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">3</td><td class="shop-name-cell">フジヤカメラ</td><td class="shop-price-cell">¥405,000</td><td class="shop-diff-cell positive">+¥135,500</td><td class="shop-link-cell"><a href="https://www.fujiyacamera.com/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_x100vi" data-shop="フジヤカメラ" title="商品ページ">買取価格を確認 →</a><span class="link-type-badge">商品ページ</span></td></tr></tbody>
-    </table>
-  </div>
+<div class="info-banner blue">
+<strong>&#128100; 初心者向けとは？</strong><br>
+Apple Store・任天堂公式など<strong>正規店で定価購入</strong>し、買取店に持ち込むことで利益が出る案件です。
+新品未開封・SIMフリー等の条件を満たす必要があります。
+購入前に必ず最新の買取価格をご確認ください。
+<strong>利益は参考値です。条件・在庫・買取価格は常に変動します。</strong>
 </div>
-  <div class="buyback-notice">※ 掲載価格は取得・入力時点の参考値です。買取価格・条件は短時間で変動するため、売却前に必ず各買取店の公式情報をご確認ください。</div>
-  <div class="links"></div>
-</div>
-<div class="card" data-user-level="beginner_easy">
-  <div class="card-header">
-    <div class="card-title">iPhone 17 Pro Max 512GB SIMフリー</div>
-    <span class="badge badge-easy">低難度</span>
-  </div>
-  <div class="bc-profit-hero">
-    <div>
-      <div class="bc-profit-label">実質利益（推定コスト差引後）</div>
-      <div class="bc-profit-value">+¥11,400</div>
-      <div class="bc-profit-rate">4.5%</div>
-    </div>
-    <div style="text-align:right">
-      <div style="font-size:0.72rem;color:var(--text-muted);margin-bottom:4px">最高買取価格</div>
-      <div style="font-size:1.2rem;font-weight:700;color:var(--green-lt)">¥268,000</div>
-      <div style="font-size:0.72rem;color:var(--text-muted);margin-top:4px"><span class="shop-count-badge">参照 5 店舗</span></div>
+<div class="sec-head"><div class="sec-title">低難度 &mdash; すぐ動ける案件</div><div class="sec-badge">7件</div></div>
+<div class="cards-grid">
+<div class="deal-card" data-user-level="beginner_easy">
+  <div class="card-stripe camera"></div>
+  <div class="card-hd">
+    <div class="card-name">FUJIFILM X100VI</div>
+    <div class="card-tags">
+      <span class="badge badge-easy">低難度</span>
+      <span class="badge badge-camera">カメラ</span>
     </div>
   </div>
-  <div class="price-grid">
+  <div class="profit-section">
+    <div class="profit-left">
+      <div class="profit-lbl">実質利益（推定コスト差引後）</div>
+      <div class="profit-num">+¥143,700</div>
+    </div>
+    <div class="profit-right">
+      <div class="profit-rate">53.3%</div>
+      <div class="profit-note">推定コスト -¥1,800</div>
+    </div>
+  </div>
+  <div class="price-row-wrap">
     <div class="price-cell">
-      <div class="price-cell-label">公式価格</div>
-      <div class="price-cell-value">¥254,800</div>
+      <div class="price-cell-lbl">公式価格（定価）</div>
+      <div class="price-cell-val">¥269,500</div>
     </div>
     <div class="price-cell">
-      <div class="price-cell-label">参考差額（最高値）</div>
-      <div class="price-cell-value" style="color:var(--green)">+¥13,200</div>
+      <div class="price-cell-lbl">最高買取価格</div>
+      <div class="price-cell-val green">¥415,000</div>
     </div>
   </div>
-  <div class="price-summary-row">
-    <span class="price-summary-item">更新: 2026-05-18 23:42 JST</span>
-  </div>
-  <div class="condition-bar">
-    <span class="cond-icon">⚠</span>
-    <span>買取条件：新品未開封 SIMフリー　推定コスト：-¥1,800</span>
-  </div>
-  
-  <div class="buyback-compare buyback-shop-table">
-  <div class="buyback-compare-header">
-    <span>本日の買取価格比較</span>
-    <span class="freshness-recent">📋当日手動 / 13時間前</span>
-    <span class="shop-count-badge">参照 5 店舗</span>
-    <span class="buyback-median">中央値 ¥262,000</span>
-  </div>
-  <div class="buyback-table-wrap">
-    <table class="buyback-table">
-      <thead><tr><th>#</th><th>買取店</th><th>買取価格</th><th>参考差額</th><th>リンク</th></tr></thead>
-      <tbody><tr class="buyback-shop-row rank-1"><td class="shop-rank-cell">1</td><td class="shop-name-cell">モバイル一番</td><td class="shop-price-cell">¥268,000</td><td class="shop-diff-cell positive">+¥13,200</td><td class="shop-link-cell"><span class="unverified-link">公式買取ページで確認してください</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">2</td><td class="shop-name-cell">買取商店</td><td class="shop-price-cell">¥265,000</td><td class="shop-diff-cell positive">+¥10,200</td><td class="shop-link-cell"><span class="unverified-link">公式買取ページで確認してください</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">3</td><td class="shop-name-cell">買取一丁目</td><td class="shop-price-cell">¥262,000</td><td class="shop-diff-cell positive">+¥7,200</td><td class="shop-link-cell"><span class="unverified-link">公式買取ページで確認してください</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">4</td><td class="shop-name-cell">じゃんぱら</td><td class="shop-price-cell">¥260,000</td><td class="shop-diff-cell positive">+¥5,200</td><td class="shop-link-cell"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_iphone17pm_512" data-shop="じゃんぱら" title="商品ページ">買取価格を確認 →</a><span class="link-type-badge">商品ページ</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">5</td><td class="shop-name-cell">イオシス</td><td class="shop-price-cell">¥257,000</td><td class="shop-diff-cell positive">+¥2,200</td><td class="shop-link-cell"><a href="https://iosys.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_iphone17pm_512" data-shop="イオシス" title="商品ページ">買取価格を確認 →</a><span class="link-type-badge">商品ページ</span></td></tr></tbody>
-    </table>
+  <div class="card-body">
+    <div class="condition-row buyback-notice">
+      <span class="cond-icon">&#9888;</span>
+      <div><strong>買取条件：中古A（美品）</strong>&nbsp;<span style="font-size:0.72rem;color:var(--gray-400)">掲載価格は参考値です。売却前に必ず各社の公式買取ページで確認してください。</span></div>
+    </div>
+    <div class="updated-row"><span>&#128336;</span>最終更新：2026-05-18 23:42 JST</div>
+    <div class="shop-table buyback-shop-table buyback-table"><div class="shop-table-hd"><span>買取店比較（参照3店舗）</span><span class="freshness-stale">📋当日手動 / 24時間以上前（参考値）</span></div><div class="shop-row"><div class="shop-rank gold">1</div><div class="shop-name-col">マップカメラ（価格のみ）</div><div class="shop-price-col">¥415,000</div><div class="shop-diff-col">+¥145,500</div></div><div class="shop-row"><div class="shop-rank silver">2</div><div class="shop-name-col">カメラのキタムラ（価格のみ）</div><div class="shop-price-col">¥410,000</div><div class="shop-diff-col">+¥140,500</div></div><div class="shop-row"><div class="shop-rank ">3</div><div class="shop-name-col"><a href="https://www.fujiyacamera.com/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_x100vi">フジヤカメラ</a></div><div class="shop-price-col">¥405,000</div><div class="shop-diff-col">+¥135,500</div></div></div>
+    <div class="card-actions">
+      
+      <a href="https://www.kitamura.co.jp/" target="_blank" rel="noopener" class="btn btn-primary" data-track="buyback_click" data-product-id="prod_x100vi">&#128176; カメラのキタムラで売る</a>
+    </div>
+    <div class="overseas-section overseas-links-section"><div class="overseas-lbl">&#127758; 海外相場を確認</div><div class="overseas-chips"><a href="https://www.ebay.com/sch/i.html?_nkw=FUJIFILM+X100VI&amp;LH_Sold=1&amp;LH_Complete=1&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-chip overseas-btn" title="実際の落札価格（過去の取引実績）を確認できます" data-track="overseas_click">🌐 eBay sold</a><a href="https://www.ebay.com/sch/i.html?_nkw=FUJIFILM+X100VI&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-chip overseas-btn" title="現在出品中の価格を確認できます" data-track="overseas_click">🌐 eBay (新着)</a><a href="https://www.bhphotovideo.com/c/search?q=FUJIFILM+X100VI&amp;sts=ma" target="_blank" rel="noopener" class="overseas-chip overseas-btn" title="米国大手カメラ・電子機器専門店（新品・中古）" data-track="overseas_click">📷 B&amp;H Photo</a><a href="https://www.adorama.com/l/?searchinfo=FUJIFILM+X100VI" target="_blank" rel="noopener" class="overseas-chip overseas-btn" title="米国カメラ専門店（新品・認定中古）" data-track="overseas_click">📷 Adorama</a></div></div>
   </div>
 </div>
-  <div class="buyback-notice">※ 掲載価格は取得・入力時点の参考値です。買取価格・条件は短時間で変動するため、売却前に必ず各買取店の公式情報をご確認ください。</div>
-  <div class="links"><a href="https://www.apple.com/jp/shop/" target="_blank" rel="noopener" data-track="product_click" data-product-id="prod_iphone17pm_512">公式購入ページ →</a></div>
-</div>
-<div class="card" data-user-level="beginner_easy">
-  <div class="card-header">
-    <div class="card-title">iPhone 17 Pro Max 256GB SIMフリー</div>
-    <span class="badge badge-easy">低難度</span>
-  </div>
-  <div class="bc-profit-hero">
-    <div>
-      <div class="bc-profit-label">実質利益（推定コスト差引後）</div>
-      <div class="bc-profit-value">+¥10,400</div>
-      <div class="bc-profit-rate">4.7%</div>
-    </div>
-    <div style="text-align:right">
-      <div style="font-size:0.72rem;color:var(--text-muted);margin-bottom:4px">最高買取価格</div>
-      <div style="font-size:1.2rem;font-weight:700;color:var(--green-lt)">¥232,000</div>
-      <div style="font-size:0.72rem;color:var(--text-muted);margin-top:4px"><span class="shop-count-badge">参照 5 店舗</span></div>
+<div class="deal-card" data-user-level="beginner_easy">
+  <div class="card-stripe iphone"></div>
+  <div class="card-hd">
+    <div class="card-name">iPhone 17 Pro Max 512GB SIMフリー</div>
+    <div class="card-tags">
+      <span class="badge badge-easy">低難度</span>
+      <span class="badge badge-iphone">iPhone</span>
     </div>
   </div>
-  <div class="price-grid">
+  <div class="profit-section">
+    <div class="profit-left">
+      <div class="profit-lbl">実質利益（推定コスト差引後）</div>
+      <div class="profit-num">+¥11,400</div>
+    </div>
+    <div class="profit-right">
+      <div class="profit-rate">4.5%</div>
+      <div class="profit-note">推定コスト -¥1,800</div>
+    </div>
+  </div>
+  <div class="price-row-wrap">
     <div class="price-cell">
-      <div class="price-cell-label">公式価格</div>
-      <div class="price-cell-value">¥219,800</div>
+      <div class="price-cell-lbl">公式価格（定価）</div>
+      <div class="price-cell-val">¥254,800</div>
     </div>
     <div class="price-cell">
-      <div class="price-cell-label">参考差額（最高値）</div>
-      <div class="price-cell-value" style="color:var(--green)">+¥12,200</div>
+      <div class="price-cell-lbl">最高買取価格</div>
+      <div class="price-cell-val green">¥268,000</div>
     </div>
   </div>
-  <div class="price-summary-row">
-    <span class="price-summary-item">更新: 2026-05-18 23:42 JST</span>
-  </div>
-  <div class="condition-bar">
-    <span class="cond-icon">⚠</span>
-    <span>買取条件：新品未開封 SIMフリー　推定コスト：-¥1,800</span>
-  </div>
-  
-  <div class="buyback-compare buyback-shop-table">
-  <div class="buyback-compare-header">
-    <span>本日の買取価格比較</span>
-    <span class="freshness-recent">📋当日手動 / 13時間前</span>
-    <span class="shop-count-badge">参照 5 店舗</span>
-    <span class="buyback-median">中央値 ¥228,000</span>
-  </div>
-  <div class="buyback-table-wrap">
-    <table class="buyback-table">
-      <thead><tr><th>#</th><th>買取店</th><th>買取価格</th><th>参考差額</th><th>リンク</th></tr></thead>
-      <tbody><tr class="buyback-shop-row rank-1"><td class="shop-rank-cell">1</td><td class="shop-name-cell">モバイル一番</td><td class="shop-price-cell">¥232,000</td><td class="shop-diff-cell positive">+¥12,200</td><td class="shop-link-cell"><span class="unverified-link">公式買取ページで確認してください</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">2</td><td class="shop-name-cell">買取商店</td><td class="shop-price-cell">¥230,000</td><td class="shop-diff-cell positive">+¥10,200</td><td class="shop-link-cell"><span class="unverified-link">公式買取ページで確認してください</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">3</td><td class="shop-name-cell">買取一丁目</td><td class="shop-price-cell">¥228,000</td><td class="shop-diff-cell positive">+¥8,200</td><td class="shop-link-cell"><span class="unverified-link">公式買取ページで確認してください</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">4</td><td class="shop-name-cell">じゃんぱら</td><td class="shop-price-cell">¥225,000</td><td class="shop-diff-cell positive">+¥5,200</td><td class="shop-link-cell"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_iphone17pm_256" data-shop="じゃんぱら" title="商品ページ">買取価格を確認 →</a><span class="link-type-badge">商品ページ</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">5</td><td class="shop-name-cell">イオシス</td><td class="shop-price-cell">¥222,000</td><td class="shop-diff-cell positive">+¥2,200</td><td class="shop-link-cell"><a href="https://iosys.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_iphone17pm_256" data-shop="イオシス" title="商品ページ">買取価格を確認 →</a><span class="link-type-badge">商品ページ</span></td></tr></tbody>
-    </table>
+  <div class="card-body">
+    <div class="condition-row buyback-notice">
+      <span class="cond-icon">&#9888;</span>
+      <div><strong>買取条件：新品未開封 SIMフリー</strong>&nbsp;<span style="font-size:0.72rem;color:var(--gray-400)">掲載価格は参考値です。売却前に必ず各社の公式買取ページで確認してください。</span></div>
+    </div>
+    <div class="updated-row"><span>&#128336;</span>最終更新：2026-05-18 23:42 JST</div>
+    <div class="shop-table buyback-shop-table buyback-table"><div class="shop-table-hd"><span>買取店比較（参照5店舗）</span><span class="freshness-stale">📋当日手動 / 24時間以上前（参考値）</span></div><div class="shop-row"><div class="shop-rank gold">1</div><div class="shop-name-col">モバイル一番（価格のみ）</div><div class="shop-price-col">¥268,000</div><div class="shop-diff-col">+¥13,200</div></div><div class="shop-row"><div class="shop-rank silver">2</div><div class="shop-name-col">買取商店（価格のみ）</div><div class="shop-price-col">¥265,000</div><div class="shop-diff-col">+¥10,200</div></div><div class="shop-row"><div class="shop-rank ">3</div><div class="shop-name-col">買取一丁目（価格のみ）</div><div class="shop-price-col">¥262,000</div><div class="shop-diff-col">+¥7,200</div></div><div class="shop-row"><div class="shop-rank ">4</div><div class="shop-name-col"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_iphone17pm_512">じゃんぱら</a></div><div class="shop-price-col">¥260,000</div><div class="shop-diff-col">+¥5,200</div></div><div class="shop-row"><div class="shop-rank ">5</div><div class="shop-name-col"><a href="https://iosys.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_iphone17pm_512">イオシス</a></div><div class="shop-price-col">¥257,000</div><div class="shop-diff-col">+¥2,200</div></div></div>
+    <div class="card-actions">
+      <a href="https://www.apple.com/jp/shop/" target="_blank" rel="noopener" class="btn btn-secondary" data-track="product_click" data-product-id="prod_iphone17pm_512">&#128241; Apple Store で買う</a>
+      <a href="https://www.janpara.co.jp/sell/iphone/" target="_blank" rel="noopener" class="btn btn-primary" data-track="buyback_click" data-product-id="prod_iphone17pm_512">&#128176; じゃんぱらで売る</a>
+    </div>
+    <div class="overseas-section overseas-links-section"><div class="overseas-lbl">&#127758; 海外相場を確認</div><div class="overseas-chips"><a href="https://www.ebay.com/sch/i.html?_nkw=iPhone+17+Pro+Max+512GB+SIM%E3%83%95%E3%83%AA%E3%83%BC&amp;LH_Sold=1&amp;LH_Complete=1&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-chip overseas-btn" title="実際の落札価格（過去の取引実績）を確認できます" data-track="overseas_click">🌐 eBay sold</a><a href="https://www.ebay.com/sch/i.html?_nkw=iPhone+17+Pro+Max+512GB+SIM%E3%83%95%E3%83%AA%E3%83%BC&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-chip overseas-btn" title="現在出品中の価格を確認できます" data-track="overseas_click">🌐 eBay (新着)</a><a href="https://www.bhphotovideo.com/c/search?q=iPhone+17+Pro+Max+512GB+SIM%E3%83%95%E3%83%AA%E3%83%BC&amp;sts=ma" target="_blank" rel="noopener" class="overseas-chip overseas-btn" title="米国大手カメラ・電子機器専門店（新品・中古）" data-track="overseas_click">📷 B&amp;H Photo</a><a href="https://www.adorama.com/l/?searchinfo=iPhone+17+Pro+Max+512GB+SIM%E3%83%95%E3%83%AA%E3%83%BC" target="_blank" rel="noopener" class="overseas-chip overseas-btn" title="米国カメラ専門店（新品・認定中古）" data-track="overseas_click">📷 Adorama</a></div></div>
   </div>
 </div>
-  <div class="buyback-notice">※ 掲載価格は取得・入力時点の参考値です。買取価格・条件は短時間で変動するため、売却前に必ず各買取店の公式情報をご確認ください。</div>
-  <div class="links"><a href="https://www.apple.com/jp/shop/" target="_blank" rel="noopener" data-track="product_click" data-product-id="prod_iphone17pm_256">公式購入ページ →</a></div>
-</div>
-<div class="card" data-user-level="beginner_easy">
-  <div class="card-header">
-    <div class="card-title">iPhone 17 Pro 256GB SIMフリー</div>
-    <span class="badge badge-easy">低難度</span>
-  </div>
-  <div class="bc-profit-hero">
-    <div>
-      <div class="bc-profit-label">実質利益（推定コスト差引後）</div>
-      <div class="bc-profit-value">+¥6,600</div>
-      <div class="bc-profit-rate">3.7%</div>
-    </div>
-    <div style="text-align:right">
-      <div style="font-size:0.72rem;color:var(--text-muted);margin-bottom:4px">最高買取価格</div>
-      <div style="font-size:1.2rem;font-weight:700;color:var(--green-lt)">¥188,200</div>
-      <div style="font-size:0.72rem;color:var(--text-muted);margin-top:4px"><span class="shop-count-badge">参照 5 店舗</span></div>
+<div class="deal-card" data-user-level="beginner_easy">
+  <div class="card-stripe iphone"></div>
+  <div class="card-hd">
+    <div class="card-name">iPhone 17 Pro Max 256GB SIMフリー</div>
+    <div class="card-tags">
+      <span class="badge badge-easy">低難度</span>
+      <span class="badge badge-iphone">iPhone</span>
     </div>
   </div>
-  <div class="price-grid">
+  <div class="profit-section">
+    <div class="profit-left">
+      <div class="profit-lbl">実質利益（推定コスト差引後）</div>
+      <div class="profit-num">+¥10,400</div>
+    </div>
+    <div class="profit-right">
+      <div class="profit-rate">4.7%</div>
+      <div class="profit-note">推定コスト -¥1,800</div>
+    </div>
+  </div>
+  <div class="price-row-wrap">
     <div class="price-cell">
-      <div class="price-cell-label">公式価格</div>
-      <div class="price-cell-value">¥179,800</div>
+      <div class="price-cell-lbl">公式価格（定価）</div>
+      <div class="price-cell-val">¥219,800</div>
     </div>
     <div class="price-cell">
-      <div class="price-cell-label">参考差額（最高値）</div>
-      <div class="price-cell-value" style="color:var(--green)">+¥8,400</div>
+      <div class="price-cell-lbl">最高買取価格</div>
+      <div class="price-cell-val green">¥232,000</div>
     </div>
   </div>
-  <div class="price-summary-row">
-    <span class="price-summary-item">更新: 2026-05-18 23:42 JST</span>
-  </div>
-  <div class="condition-bar">
-    <span class="cond-icon">⚠</span>
-    <span>買取条件：新品未開封 SIMフリー　推定コスト：-¥1,800</span>
-  </div>
-  
-  <div class="buyback-compare buyback-shop-table">
-  <div class="buyback-compare-header">
-    <span>本日の買取価格比較</span>
-    <span class="freshness-recent">📋当日手動 / 13時間前</span>
-    <span class="shop-count-badge">参照 5 店舗</span>
-    <span class="buyback-median">中央値 ¥186,000</span>
-  </div>
-  <div class="buyback-table-wrap">
-    <table class="buyback-table">
-      <thead><tr><th>#</th><th>買取店</th><th>買取価格</th><th>参考差額</th><th>リンク</th></tr></thead>
-      <tbody><tr class="buyback-shop-row rank-1"><td class="shop-rank-cell">1</td><td class="shop-name-cell">モバイル一番</td><td class="shop-price-cell">¥188,200</td><td class="shop-diff-cell positive">+¥8,400</td><td class="shop-link-cell"><span class="unverified-link">公式買取ページで確認してください</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">2</td><td class="shop-name-cell">買取商店</td><td class="shop-price-cell">¥187,500</td><td class="shop-diff-cell positive">+¥7,700</td><td class="shop-link-cell"><span class="unverified-link">公式買取ページで確認してください</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">3</td><td class="shop-name-cell">買取一丁目</td><td class="shop-price-cell">¥186,000</td><td class="shop-diff-cell positive">+¥6,200</td><td class="shop-link-cell"><span class="unverified-link">公式買取ページで確認してください</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">4</td><td class="shop-name-cell">じゃんぱら</td><td class="shop-price-cell">¥184,000</td><td class="shop-diff-cell positive">+¥4,200</td><td class="shop-link-cell"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_iphone17pro_256" data-shop="じゃんぱら" title="商品ページ">買取価格を確認 →</a><span class="link-type-badge">商品ページ</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">5</td><td class="shop-name-cell">イオシス</td><td class="shop-price-cell">¥182,000</td><td class="shop-diff-cell positive">+¥2,200</td><td class="shop-link-cell"><a href="https://iosys.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_iphone17pro_256" data-shop="イオシス" title="商品ページ">買取価格を確認 →</a><span class="link-type-badge">商品ページ</span></td></tr></tbody>
-    </table>
+  <div class="card-body">
+    <div class="condition-row buyback-notice">
+      <span class="cond-icon">&#9888;</span>
+      <div><strong>買取条件：新品未開封 SIMフリー</strong>&nbsp;<span style="font-size:0.72rem;color:var(--gray-400)">掲載価格は参考値です。売却前に必ず各社の公式買取ページで確認してください。</span></div>
+    </div>
+    <div class="updated-row"><span>&#128336;</span>最終更新：2026-05-18 23:42 JST</div>
+    <div class="shop-table buyback-shop-table buyback-table"><div class="shop-table-hd"><span>買取店比較（参照5店舗）</span><span class="freshness-stale">📋当日手動 / 24時間以上前（参考値）</span></div><div class="shop-row"><div class="shop-rank gold">1</div><div class="shop-name-col">モバイル一番（価格のみ）</div><div class="shop-price-col">¥232,000</div><div class="shop-diff-col">+¥12,200</div></div><div class="shop-row"><div class="shop-rank silver">2</div><div class="shop-name-col">買取商店（価格のみ）</div><div class="shop-price-col">¥230,000</div><div class="shop-diff-col">+¥10,200</div></div><div class="shop-row"><div class="shop-rank ">3</div><div class="shop-name-col">買取一丁目（価格のみ）</div><div class="shop-price-col">¥228,000</div><div class="shop-diff-col">+¥8,200</div></div><div class="shop-row"><div class="shop-rank ">4</div><div class="shop-name-col"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_iphone17pm_256">じゃんぱら</a></div><div class="shop-price-col">¥225,000</div><div class="shop-diff-col">+¥5,200</div></div><div class="shop-row"><div class="shop-rank ">5</div><div class="shop-name-col"><a href="https://iosys.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_iphone17pm_256">イオシス</a></div><div class="shop-price-col">¥222,000</div><div class="shop-diff-col">+¥2,200</div></div></div>
+    <div class="card-actions">
+      <a href="https://www.apple.com/jp/shop/" target="_blank" rel="noopener" class="btn btn-secondary" data-track="product_click" data-product-id="prod_iphone17pm_256">&#128241; Apple Store で買う</a>
+      <a href="https://www.janpara.co.jp/sell/iphone/" target="_blank" rel="noopener" class="btn btn-primary" data-track="buyback_click" data-product-id="prod_iphone17pm_256">&#128176; じゃんぱらで売る</a>
+    </div>
+    <div class="overseas-section overseas-links-section"><div class="overseas-lbl">&#127758; 海外相場を確認</div><div class="overseas-chips"><a href="https://www.ebay.com/sch/i.html?_nkw=iPhone+17+Pro+Max+256GB+SIM%E3%83%95%E3%83%AA%E3%83%BC&amp;LH_Sold=1&amp;LH_Complete=1&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-chip overseas-btn" title="実際の落札価格（過去の取引実績）を確認できます" data-track="overseas_click">🌐 eBay sold</a><a href="https://www.ebay.com/sch/i.html?_nkw=iPhone+17+Pro+Max+256GB+SIM%E3%83%95%E3%83%AA%E3%83%BC&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-chip overseas-btn" title="現在出品中の価格を確認できます" data-track="overseas_click">🌐 eBay (新着)</a><a href="https://www.bhphotovideo.com/c/search?q=iPhone+17+Pro+Max+256GB+SIM%E3%83%95%E3%83%AA%E3%83%BC&amp;sts=ma" target="_blank" rel="noopener" class="overseas-chip overseas-btn" title="米国大手カメラ・電子機器専門店（新品・中古）" data-track="overseas_click">📷 B&amp;H Photo</a><a href="https://www.adorama.com/l/?searchinfo=iPhone+17+Pro+Max+256GB+SIM%E3%83%95%E3%83%AA%E3%83%BC" target="_blank" rel="noopener" class="overseas-chip overseas-btn" title="米国カメラ専門店（新品・認定中古）" data-track="overseas_click">📷 Adorama</a></div></div>
   </div>
 </div>
-  <div class="buyback-notice">※ 掲載価格は取得・入力時点の参考値です。買取価格・条件は短時間で変動するため、売却前に必ず各買取店の公式情報をご確認ください。</div>
-  <div class="links"><a href="https://www.apple.com/jp/shop/" target="_blank" rel="noopener" data-track="product_click" data-product-id="prod_iphone17pro_256">公式購入ページ →</a></div>
-</div>
-<div class="card" data-user-level="beginner_easy">
-  <div class="card-header">
-    <div class="card-title">iPhone 17 Pro 512GB SIMフリー</div>
-    <span class="badge badge-easy">低難度</span>
-  </div>
-  <div class="bc-profit-hero">
-    <div>
-      <div class="bc-profit-label">実質利益（推定コスト差引後）</div>
-      <div class="bc-profit-value">+¥6,400</div>
-      <div class="bc-profit-rate">3.0%</div>
-    </div>
-    <div style="text-align:right">
-      <div style="font-size:0.72rem;color:var(--text-muted);margin-bottom:4px">最高買取価格</div>
-      <div style="font-size:1.2rem;font-weight:700;color:var(--green-lt)">¥223,000</div>
-      <div style="font-size:0.72rem;color:var(--text-muted);margin-top:4px"><span class="shop-count-badge">参照 5 店舗</span></div>
+<div class="deal-card" data-user-level="beginner_easy">
+  <div class="card-stripe iphone"></div>
+  <div class="card-hd">
+    <div class="card-name">iPhone 17 Pro 256GB SIMフリー</div>
+    <div class="card-tags">
+      <span class="badge badge-easy">低難度</span>
+      <span class="badge badge-iphone">iPhone</span>
     </div>
   </div>
-  <div class="price-grid">
+  <div class="profit-section">
+    <div class="profit-left">
+      <div class="profit-lbl">実質利益（推定コスト差引後）</div>
+      <div class="profit-num">+¥6,600</div>
+    </div>
+    <div class="profit-right">
+      <div class="profit-rate">3.7%</div>
+      <div class="profit-note">推定コスト -¥1,800</div>
+    </div>
+  </div>
+  <div class="price-row-wrap">
     <div class="price-cell">
-      <div class="price-cell-label">公式価格</div>
-      <div class="price-cell-value">¥214,800</div>
+      <div class="price-cell-lbl">公式価格（定価）</div>
+      <div class="price-cell-val">¥179,800</div>
     </div>
     <div class="price-cell">
-      <div class="price-cell-label">参考差額（最高値）</div>
-      <div class="price-cell-value" style="color:var(--green)">+¥8,200</div>
+      <div class="price-cell-lbl">最高買取価格</div>
+      <div class="price-cell-val green">¥188,200</div>
     </div>
   </div>
-  <div class="price-summary-row">
-    <span class="price-summary-item">更新: 2026-05-18 23:42 JST</span>
-  </div>
-  <div class="condition-bar">
-    <span class="cond-icon">⚠</span>
-    <span>買取条件：新品未開封 SIMフリー　推定コスト：-¥1,800</span>
-  </div>
-  
-  <div class="buyback-compare buyback-shop-table">
-  <div class="buyback-compare-header">
-    <span>本日の買取価格比較</span>
-    <span class="freshness-recent">📋当日手動 / 13時間前</span>
-    <span class="shop-count-badge">参照 5 店舗</span>
-    <span class="buyback-median">中央値 ¥219,000</span>
-  </div>
-  <div class="buyback-table-wrap">
-    <table class="buyback-table">
-      <thead><tr><th>#</th><th>買取店</th><th>買取価格</th><th>参考差額</th><th>リンク</th></tr></thead>
-      <tbody><tr class="buyback-shop-row rank-1"><td class="shop-rank-cell">1</td><td class="shop-name-cell">モバイル一番</td><td class="shop-price-cell">¥223,000</td><td class="shop-diff-cell positive">+¥8,200</td><td class="shop-link-cell"><span class="unverified-link">公式買取ページで確認してください</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">2</td><td class="shop-name-cell">買取商店</td><td class="shop-price-cell">¥221,000</td><td class="shop-diff-cell positive">+¥6,200</td><td class="shop-link-cell"><span class="unverified-link">公式買取ページで確認してください</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">3</td><td class="shop-name-cell">買取一丁目</td><td class="shop-price-cell">¥219,000</td><td class="shop-diff-cell positive">+¥4,200</td><td class="shop-link-cell"><span class="unverified-link">公式買取ページで確認してください</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">4</td><td class="shop-name-cell">じゃんぱら</td><td class="shop-price-cell">¥217,000</td><td class="shop-diff-cell positive">+¥2,200</td><td class="shop-link-cell"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_iphone17pro_512" data-shop="じゃんぱら" title="商品ページ">買取価格を確認 →</a><span class="link-type-badge">商品ページ</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">5</td><td class="shop-name-cell">イオシス</td><td class="shop-price-cell">¥215,000</td><td class="shop-diff-cell positive">+¥200</td><td class="shop-link-cell"><a href="https://iosys.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_iphone17pro_512" data-shop="イオシス" title="商品ページ">買取価格を確認 →</a><span class="link-type-badge">商品ページ</span></td></tr></tbody>
-    </table>
+  <div class="card-body">
+    <div class="condition-row buyback-notice">
+      <span class="cond-icon">&#9888;</span>
+      <div><strong>買取条件：新品未開封 SIMフリー</strong>&nbsp;<span style="font-size:0.72rem;color:var(--gray-400)">掲載価格は参考値です。売却前に必ず各社の公式買取ページで確認してください。</span></div>
+    </div>
+    <div class="updated-row"><span>&#128336;</span>最終更新：2026-05-18 23:42 JST</div>
+    <div class="shop-table buyback-shop-table buyback-table"><div class="shop-table-hd"><span>買取店比較（参照5店舗）</span><span class="freshness-stale">📋当日手動 / 24時間以上前（参考値）</span></div><div class="shop-row"><div class="shop-rank gold">1</div><div class="shop-name-col">モバイル一番（価格のみ）</div><div class="shop-price-col">¥188,200</div><div class="shop-diff-col">+¥8,400</div></div><div class="shop-row"><div class="shop-rank silver">2</div><div class="shop-name-col">買取商店（価格のみ）</div><div class="shop-price-col">¥187,500</div><div class="shop-diff-col">+¥7,700</div></div><div class="shop-row"><div class="shop-rank ">3</div><div class="shop-name-col">買取一丁目（価格のみ）</div><div class="shop-price-col">¥186,000</div><div class="shop-diff-col">+¥6,200</div></div><div class="shop-row"><div class="shop-rank ">4</div><div class="shop-name-col"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_iphone17pro_256">じゃんぱら</a></div><div class="shop-price-col">¥184,000</div><div class="shop-diff-col">+¥4,200</div></div><div class="shop-row"><div class="shop-rank ">5</div><div class="shop-name-col"><a href="https://iosys.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_iphone17pro_256">イオシス</a></div><div class="shop-price-col">¥182,000</div><div class="shop-diff-col">+¥2,200</div></div></div>
+    <div class="card-actions">
+      <a href="https://www.apple.com/jp/shop/" target="_blank" rel="noopener" class="btn btn-secondary" data-track="product_click" data-product-id="prod_iphone17pro_256">&#128241; Apple Store で買う</a>
+      <a href="https://www.janpara.co.jp/sell/iphone/" target="_blank" rel="noopener" class="btn btn-primary" data-track="buyback_click" data-product-id="prod_iphone17pro_256">&#128176; じゃんぱらで売る</a>
+    </div>
+    <div class="overseas-section overseas-links-section"><div class="overseas-lbl">&#127758; 海外相場を確認</div><div class="overseas-chips"><a href="https://www.ebay.com/sch/i.html?_nkw=iPhone+17+Pro+256GB+SIM%E3%83%95%E3%83%AA%E3%83%BC&amp;LH_Sold=1&amp;LH_Complete=1&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-chip overseas-btn" title="実際の落札価格（過去の取引実績）を確認できます" data-track="overseas_click">🌐 eBay sold</a><a href="https://www.ebay.com/sch/i.html?_nkw=iPhone+17+Pro+256GB+SIM%E3%83%95%E3%83%AA%E3%83%BC&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-chip overseas-btn" title="現在出品中の価格を確認できます" data-track="overseas_click">🌐 eBay (新着)</a><a href="https://www.bhphotovideo.com/c/search?q=iPhone+17+Pro+256GB+SIM%E3%83%95%E3%83%AA%E3%83%BC&amp;sts=ma" target="_blank" rel="noopener" class="overseas-chip overseas-btn" title="米国大手カメラ・電子機器専門店（新品・中古）" data-track="overseas_click">📷 B&amp;H Photo</a><a href="https://www.adorama.com/l/?searchinfo=iPhone+17+Pro+256GB+SIM%E3%83%95%E3%83%AA%E3%83%BC" target="_blank" rel="noopener" class="overseas-chip overseas-btn" title="米国カメラ専門店（新品・認定中古）" data-track="overseas_click">📷 Adorama</a></div></div>
   </div>
 </div>
-  <div class="buyback-notice">※ 掲載価格は取得・入力時点の参考値です。買取価格・条件は短時間で変動するため、売却前に必ず各買取店の公式情報をご確認ください。</div>
-  <div class="links"><a href="https://www.apple.com/jp/shop/" target="_blank" rel="noopener" data-track="product_click" data-product-id="prod_iphone17pro_512">公式購入ページ →</a></div>
-</div>
-<div class="card" data-user-level="beginner_easy">
-  <div class="card-header">
-    <div class="card-title">Nintendo Switch 2</div>
-    <span class="badge badge-easy">低難度</span>
-  </div>
-  <div class="bc-profit-hero">
-    <div>
-      <div class="bc-profit-label">実質利益（推定コスト差引後）</div>
-      <div class="bc-profit-value">+¥5,220</div>
-      <div class="bc-profit-rate">10.4%</div>
-    </div>
-    <div style="text-align:right">
-      <div style="font-size:0.72rem;color:var(--text-muted);margin-bottom:4px">最高買取価格</div>
-      <div style="font-size:1.2rem;font-weight:700;color:var(--green-lt)">¥57,000</div>
-      <div style="font-size:0.72rem;color:var(--text-muted);margin-top:4px"><span class="shop-count-badge">参照 4 店舗</span></div>
+<div class="deal-card" data-user-level="beginner_easy">
+  <div class="card-stripe iphone"></div>
+  <div class="card-hd">
+    <div class="card-name">iPhone 17 Pro 512GB SIMフリー</div>
+    <div class="card-tags">
+      <span class="badge badge-easy">低難度</span>
+      <span class="badge badge-iphone">iPhone</span>
     </div>
   </div>
-  <div class="price-grid">
+  <div class="profit-section">
+    <div class="profit-left">
+      <div class="profit-lbl">実質利益（推定コスト差引後）</div>
+      <div class="profit-num">+¥6,400</div>
+    </div>
+    <div class="profit-right">
+      <div class="profit-rate">3.0%</div>
+      <div class="profit-note">推定コスト -¥1,800</div>
+    </div>
+  </div>
+  <div class="price-row-wrap">
     <div class="price-cell">
-      <div class="price-cell-label">公式価格</div>
-      <div class="price-cell-value">¥49,980</div>
+      <div class="price-cell-lbl">公式価格（定価）</div>
+      <div class="price-cell-val">¥214,800</div>
     </div>
     <div class="price-cell">
-      <div class="price-cell-label">参考差額（最高値）</div>
-      <div class="price-cell-value" style="color:var(--green)">+¥7,020</div>
+      <div class="price-cell-lbl">最高買取価格</div>
+      <div class="price-cell-val green">¥223,000</div>
     </div>
   </div>
-  <div class="price-summary-row">
-    <span class="price-summary-item">更新: 2026-05-18 23:42 JST</span>
-  </div>
-  <div class="condition-bar">
-    <span class="cond-icon">⚠</span>
-    <span>買取条件：新品未開封　推定コスト：-¥1,800</span>
-  </div>
-  
-  <div class="buyback-compare buyback-shop-table">
-  <div class="buyback-compare-header">
-    <span>本日の買取価格比較</span>
-    <span class="freshness-recent">📋当日手動 / 13時間前</span>
-    <span class="shop-count-badge">参照 4 店舗</span>
-    <span class="buyback-median">中央値 ¥55,000</span>
-  </div>
-  <div class="buyback-table-wrap">
-    <table class="buyback-table">
-      <thead><tr><th>#</th><th>買取店</th><th>買取価格</th><th>参考差額</th><th>リンク</th></tr></thead>
-      <tbody><tr class="buyback-shop-row rank-1"><td class="shop-rank-cell">1</td><td class="shop-name-cell">買取商店</td><td class="shop-price-cell">¥57,000</td><td class="shop-diff-cell positive">+¥7,020</td><td class="shop-link-cell"><span class="unverified-link">公式買取ページで確認してください</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">2</td><td class="shop-name-cell">じゃんぱら</td><td class="shop-price-cell">¥55,500</td><td class="shop-diff-cell positive">+¥5,520</td><td class="shop-link-cell"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_switch2" data-shop="じゃんぱら" title="商品ページ">買取価格を確認 →</a><span class="link-type-badge">商品ページ</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">3</td><td class="shop-name-cell">イオシス</td><td class="shop-price-cell">¥54,500</td><td class="shop-diff-cell positive">+¥4,520</td><td class="shop-link-cell"><a href="https://iosys.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_switch2" data-shop="イオシス" title="商品ページ">買取価格を確認 →</a><span class="link-type-badge">商品ページ</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">4</td><td class="shop-name-cell">ゲオ</td><td class="shop-price-cell">¥53,500</td><td class="shop-diff-cell positive">+¥3,520</td><td class="shop-link-cell"><a href="https://www.geo-online.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_switch2" data-shop="ゲオ" title="商品ページ">買取価格を確認 →</a><span class="link-type-badge">商品ページ</span></td></tr></tbody>
-    </table>
+  <div class="card-body">
+    <div class="condition-row buyback-notice">
+      <span class="cond-icon">&#9888;</span>
+      <div><strong>買取条件：新品未開封 SIMフリー</strong>&nbsp;<span style="font-size:0.72rem;color:var(--gray-400)">掲載価格は参考値です。売却前に必ず各社の公式買取ページで確認してください。</span></div>
+    </div>
+    <div class="updated-row"><span>&#128336;</span>最終更新：2026-05-18 23:42 JST</div>
+    <div class="shop-table buyback-shop-table buyback-table"><div class="shop-table-hd"><span>買取店比較（参照5店舗）</span><span class="freshness-stale">📋当日手動 / 24時間以上前（参考値）</span></div><div class="shop-row"><div class="shop-rank gold">1</div><div class="shop-name-col">モバイル一番（価格のみ）</div><div class="shop-price-col">¥223,000</div><div class="shop-diff-col">+¥8,200</div></div><div class="shop-row"><div class="shop-rank silver">2</div><div class="shop-name-col">買取商店（価格のみ）</div><div class="shop-price-col">¥221,000</div><div class="shop-diff-col">+¥6,200</div></div><div class="shop-row"><div class="shop-rank ">3</div><div class="shop-name-col">買取一丁目（価格のみ）</div><div class="shop-price-col">¥219,000</div><div class="shop-diff-col">+¥4,200</div></div><div class="shop-row"><div class="shop-rank ">4</div><div class="shop-name-col"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_iphone17pro_512">じゃんぱら</a></div><div class="shop-price-col">¥217,000</div><div class="shop-diff-col">+¥2,200</div></div><div class="shop-row"><div class="shop-rank ">5</div><div class="shop-name-col"><a href="https://iosys.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_iphone17pro_512">イオシス</a></div><div class="shop-price-col">¥215,000</div><div class="shop-diff-col">+¥200</div></div></div>
+    <div class="card-actions">
+      <a href="https://www.apple.com/jp/shop/" target="_blank" rel="noopener" class="btn btn-secondary" data-track="product_click" data-product-id="prod_iphone17pro_512">&#128241; Apple Store で買う</a>
+      <a href="https://www.janpara.co.jp/sell/iphone/" target="_blank" rel="noopener" class="btn btn-primary" data-track="buyback_click" data-product-id="prod_iphone17pro_512">&#128176; じゃんぱらで売る</a>
+    </div>
+    <div class="overseas-section overseas-links-section"><div class="overseas-lbl">&#127758; 海外相場を確認</div><div class="overseas-chips"><a href="https://www.ebay.com/sch/i.html?_nkw=iPhone+17+Pro+512GB+SIM%E3%83%95%E3%83%AA%E3%83%BC&amp;LH_Sold=1&amp;LH_Complete=1&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-chip overseas-btn" title="実際の落札価格（過去の取引実績）を確認できます" data-track="overseas_click">🌐 eBay sold</a><a href="https://www.ebay.com/sch/i.html?_nkw=iPhone+17+Pro+512GB+SIM%E3%83%95%E3%83%AA%E3%83%BC&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-chip overseas-btn" title="現在出品中の価格を確認できます" data-track="overseas_click">🌐 eBay (新着)</a><a href="https://www.bhphotovideo.com/c/search?q=iPhone+17+Pro+512GB+SIM%E3%83%95%E3%83%AA%E3%83%BC&amp;sts=ma" target="_blank" rel="noopener" class="overseas-chip overseas-btn" title="米国大手カメラ・電子機器専門店（新品・中古）" data-track="overseas_click">📷 B&amp;H Photo</a><a href="https://www.adorama.com/l/?searchinfo=iPhone+17+Pro+512GB+SIM%E3%83%95%E3%83%AA%E3%83%BC" target="_blank" rel="noopener" class="overseas-chip overseas-btn" title="米国カメラ専門店（新品・認定中古）" data-track="overseas_click">📷 Adorama</a></div></div>
   </div>
 </div>
-  <div class="buyback-notice">※ 掲載価格は取得・入力時点の参考値です。買取価格・条件は短時間で変動するため、売却前に必ず各買取店の公式情報をご確認ください。</div>
-  <div class="links"></div>
-</div>
-<div class="card" data-user-level="beginner_easy">
-  <div class="card-header">
-    <div class="card-title">Nintendo Switch 2 マリオカートセット</div>
-    <span class="badge badge-easy">低難度</span>
-  </div>
-  <div class="bc-profit-hero">
-    <div>
-      <div class="bc-profit-label">実質利益（推定コスト差引後）</div>
-      <div class="bc-profit-value">+¥5,220</div>
-      <div class="bc-profit-rate">8.7%</div>
-    </div>
-    <div style="text-align:right">
-      <div style="font-size:0.72rem;color:var(--text-muted);margin-bottom:4px">最高買取価格</div>
-      <div style="font-size:1.2rem;font-weight:700;color:var(--green-lt)">¥67,000</div>
-      <div style="font-size:0.72rem;color:var(--text-muted);margin-top:4px"><span class="shop-count-badge">参照 3 店舗</span></div>
+<div class="deal-card" data-user-level="beginner_easy">
+  <div class="card-stripe game"></div>
+  <div class="card-hd">
+    <div class="card-name">Nintendo Switch 2</div>
+    <div class="card-tags">
+      <span class="badge badge-easy">低難度</span>
+      <span class="badge badge-game">ゲーム機</span>
     </div>
   </div>
-  <div class="price-grid">
+  <div class="profit-section">
+    <div class="profit-left">
+      <div class="profit-lbl">実質利益（推定コスト差引後）</div>
+      <div class="profit-num">+¥5,220</div>
+    </div>
+    <div class="profit-right">
+      <div class="profit-rate">10.4%</div>
+      <div class="profit-note">推定コスト -¥1,800</div>
+    </div>
+  </div>
+  <div class="price-row-wrap">
     <div class="price-cell">
-      <div class="price-cell-label">公式価格</div>
-      <div class="price-cell-value">¥59,980</div>
+      <div class="price-cell-lbl">公式価格（定価）</div>
+      <div class="price-cell-val">¥49,980</div>
     </div>
     <div class="price-cell">
-      <div class="price-cell-label">参考差額（最高値）</div>
-      <div class="price-cell-value" style="color:var(--green)">+¥7,020</div>
+      <div class="price-cell-lbl">最高買取価格</div>
+      <div class="price-cell-val green">¥57,000</div>
     </div>
   </div>
-  <div class="price-summary-row">
-    <span class="price-summary-item">更新: 2026-05-18 23:42 JST</span>
-  </div>
-  <div class="condition-bar">
-    <span class="cond-icon">⚠</span>
-    <span>買取条件：新品未開封　推定コスト：-¥1,800</span>
-  </div>
-  
-  <div class="buyback-compare buyback-shop-table">
-  <div class="buyback-compare-header">
-    <span>本日の買取価格比較</span>
-    <span class="freshness-recent">📋当日手動 / 13時間前</span>
-    <span class="shop-count-badge">参照 3 店舗</span>
-    <span class="buyback-median">中央値 ¥65,000</span>
-  </div>
-  <div class="buyback-table-wrap">
-    <table class="buyback-table">
-      <thead><tr><th>#</th><th>買取店</th><th>買取価格</th><th>参考差額</th><th>リンク</th></tr></thead>
-      <tbody><tr class="buyback-shop-row rank-1"><td class="shop-rank-cell">1</td><td class="shop-name-cell">買取商店</td><td class="shop-price-cell">¥67,000</td><td class="shop-diff-cell positive">+¥7,020</td><td class="shop-link-cell"><span class="unverified-link">公式買取ページで確認してください</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">2</td><td class="shop-name-cell">じゃんぱら</td><td class="shop-price-cell">¥65,000</td><td class="shop-diff-cell positive">+¥5,020</td><td class="shop-link-cell"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_switch2_mk" data-shop="じゃんぱら" title="商品ページ">買取価格を確認 →</a><span class="link-type-badge">商品ページ</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">3</td><td class="shop-name-cell">イオシス</td><td class="shop-price-cell">¥63,500</td><td class="shop-diff-cell positive">+¥3,520</td><td class="shop-link-cell"><a href="https://iosys.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_switch2_mk" data-shop="イオシス" title="商品ページ">買取価格を確認 →</a><span class="link-type-badge">商品ページ</span></td></tr></tbody>
-    </table>
+  <div class="card-body">
+    <div class="condition-row buyback-notice">
+      <span class="cond-icon">&#9888;</span>
+      <div><strong>買取条件：新品未開封</strong>&nbsp;<span style="font-size:0.72rem;color:var(--gray-400)">掲載価格は参考値です。売却前に必ず各社の公式買取ページで確認してください。</span></div>
+    </div>
+    <div class="updated-row"><span>&#128336;</span>最終更新：2026-05-18 23:42 JST</div>
+    <div class="shop-table buyback-shop-table buyback-table"><div class="shop-table-hd"><span>買取店比較（参照4店舗）</span><span class="freshness-stale">📋当日手動 / 24時間以上前（参考値）</span></div><div class="shop-row"><div class="shop-rank gold">1</div><div class="shop-name-col">買取商店（価格のみ）</div><div class="shop-price-col">¥57,000</div><div class="shop-diff-col">+¥7,020</div></div><div class="shop-row"><div class="shop-rank silver">2</div><div class="shop-name-col"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_switch2">じゃんぱら</a></div><div class="shop-price-col">¥55,500</div><div class="shop-diff-col">+¥5,520</div></div><div class="shop-row"><div class="shop-rank ">3</div><div class="shop-name-col"><a href="https://iosys.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_switch2">イオシス</a></div><div class="shop-price-col">¥54,500</div><div class="shop-diff-col">+¥4,520</div></div><div class="shop-row"><div class="shop-rank ">4</div><div class="shop-name-col"><a href="https://www.geo-online.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_switch2">ゲオ</a></div><div class="shop-price-col">¥53,500</div><div class="shop-diff-col">+¥3,520</div></div></div>
+    <div class="card-actions">
+      
+      <a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener" class="btn btn-primary" data-track="buyback_click" data-product-id="prod_switch2">&#128176; じゃんぱらで売る</a>
+    </div>
+    <div class="overseas-section overseas-links-section"><div class="overseas-lbl">&#127758; 海外相場を確認</div><div class="overseas-chips"><a href="https://www.ebay.com/sch/i.html?_nkw=Nintendo+Switch+2&amp;LH_Sold=1&amp;LH_Complete=1&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-chip overseas-btn" title="実際の落札価格（過去の取引実績）を確認できます" data-track="overseas_click">🌐 eBay sold</a><a href="https://www.ebay.com/sch/i.html?_nkw=Nintendo+Switch+2&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-chip overseas-btn" title="現在出品中の価格を確認できます" data-track="overseas_click">🌐 eBay (新着)</a><a href="https://stockx.com/search?s=Nintendo+Switch+2" target="_blank" rel="noopener" class="overseas-chip overseas-btn" title="スニーカー・ゲーム機・限定品の相場（ライブ価格）" data-track="overseas_click">📈 StockX</a><a href="https://www.amazon.com/s?k=Nintendo+Switch+2" target="_blank" rel="noopener" class="overseas-chip overseas-btn" title="米国Amazonの現在価格" data-track="overseas_click">🛒 Amazon US</a></div></div>
   </div>
 </div>
-  <div class="buyback-notice">※ 掲載価格は取得・入力時点の参考値です。買取価格・条件は短時間で変動するため、売却前に必ず各買取店の公式情報をご確認ください。</div>
-  <div class="links"></div>
-</div>
-<div class="section-header"><h2>要確認 — 様子見案件</h2><span class="section-count">1件</span></div>
-<div class="card" data-user-level="beginner_watch">
-  <div class="card-header">
-    <div class="card-title">PlayStation 5 Pro</div>
-    <span class="badge badge-watch">要確認</span>
-  </div>
-  <div class="bc-profit-hero">
-    <div>
-      <div class="bc-profit-label">実質利益（推定コスト差引後）</div>
-      <div class="bc-profit-value">+¥220</div>
-      <div class="bc-profit-rate">0.2%</div>
-    </div>
-    <div style="text-align:right">
-      <div style="font-size:0.72rem;color:var(--text-muted);margin-bottom:4px">最高買取価格</div>
-      <div style="font-size:1.2rem;font-weight:700;color:var(--green-lt)">¥122,000</div>
-      <div style="font-size:0.72rem;color:var(--text-muted);margin-top:4px"><span class="shop-count-badge">参照 4 店舗</span></div>
+<div class="deal-card" data-user-level="beginner_easy">
+  <div class="card-stripe game"></div>
+  <div class="card-hd">
+    <div class="card-name">Nintendo Switch 2 マリオカートセット</div>
+    <div class="card-tags">
+      <span class="badge badge-easy">低難度</span>
+      <span class="badge badge-game">ゲーム機</span>
     </div>
   </div>
-  <div class="price-grid">
+  <div class="profit-section">
+    <div class="profit-left">
+      <div class="profit-lbl">実質利益（推定コスト差引後）</div>
+      <div class="profit-num">+¥5,220</div>
+    </div>
+    <div class="profit-right">
+      <div class="profit-rate">8.7%</div>
+      <div class="profit-note">推定コスト -¥1,800</div>
+    </div>
+  </div>
+  <div class="price-row-wrap">
     <div class="price-cell">
-      <div class="price-cell-label">公式価格</div>
-      <div class="price-cell-value">¥119,980</div>
+      <div class="price-cell-lbl">公式価格（定価）</div>
+      <div class="price-cell-val">¥59,980</div>
     </div>
     <div class="price-cell">
-      <div class="price-cell-label">参考差額（最高値）</div>
-      <div class="price-cell-value" style="color:var(--green)">+¥2,020</div>
+      <div class="price-cell-lbl">最高買取価格</div>
+      <div class="price-cell-val green">¥67,000</div>
     </div>
   </div>
-  <div class="price-summary-row">
-    <span class="price-summary-item">更新: 2026-05-18 23:42 JST</span>
-  </div>
-  <div class="condition-bar">
-    <span class="cond-icon">⚠</span>
-    <span>買取条件：新品未開封　推定コスト：-¥1,800</span>
-  </div>
-  
-  <div class="buyback-compare buyback-shop-table">
-  <div class="buyback-compare-header">
-    <span>本日の買取価格比較</span>
-    <span class="freshness-recent">📋当日手動 / 13時間前</span>
-    <span class="shop-count-badge">参照 4 店舗</span>
-    <span class="buyback-median">中央値 ¥119,000</span>
-  </div>
-  <div class="buyback-table-wrap">
-    <table class="buyback-table">
-      <thead><tr><th>#</th><th>買取店</th><th>買取価格</th><th>参考差額</th><th>リンク</th></tr></thead>
-      <tbody><tr class="buyback-shop-row rank-1"><td class="shop-rank-cell">1</td><td class="shop-name-cell">イオシス</td><td class="shop-price-cell">¥122,000</td><td class="shop-diff-cell positive">+¥2,020</td><td class="shop-link-cell"><a href="https://iosys.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_ps5_pro" data-shop="イオシス" title="商品ページ">買取価格を確認 →</a><span class="link-type-badge">商品ページ</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">2</td><td class="shop-name-cell">じゃんぱら</td><td class="shop-price-cell">¥120,000</td><td class="shop-diff-cell positive">+¥20</td><td class="shop-link-cell"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_ps5_pro" data-shop="じゃんぱら" title="商品ページ">買取価格を確認 →</a><span class="link-type-badge">商品ページ</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">3</td><td class="shop-name-cell">買取商店</td><td class="shop-price-cell">¥118,000</td><td class="shop-diff-cell negative">−¥1,980</td><td class="shop-link-cell"><span class="unverified-link">公式買取ページで確認してください</span></td></tr><tr class="buyback-shop-row"><td class="shop-rank-cell">4</td><td class="shop-name-cell">ゲオ</td><td class="shop-price-cell">¥116,000</td><td class="shop-diff-cell negative">−¥3,980</td><td class="shop-link-cell"><a href="https://www.geo-online.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_ps5_pro" data-shop="ゲオ" title="商品ページ">買取価格を確認 →</a><span class="link-type-badge">商品ページ</span></td></tr></tbody>
-    </table>
+  <div class="card-body">
+    <div class="condition-row buyback-notice">
+      <span class="cond-icon">&#9888;</span>
+      <div><strong>買取条件：新品未開封</strong>&nbsp;<span style="font-size:0.72rem;color:var(--gray-400)">掲載価格は参考値です。売却前に必ず各社の公式買取ページで確認してください。</span></div>
+    </div>
+    <div class="updated-row"><span>&#128336;</span>最終更新：2026-05-18 23:42 JST</div>
+    <div class="shop-table buyback-shop-table buyback-table"><div class="shop-table-hd"><span>買取店比較（参照3店舗）</span><span class="freshness-stale">📋当日手動 / 24時間以上前（参考値）</span></div><div class="shop-row"><div class="shop-rank gold">1</div><div class="shop-name-col">買取商店（価格のみ）</div><div class="shop-price-col">¥67,000</div><div class="shop-diff-col">+¥7,020</div></div><div class="shop-row"><div class="shop-rank silver">2</div><div class="shop-name-col"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_switch2_mk">じゃんぱら</a></div><div class="shop-price-col">¥65,000</div><div class="shop-diff-col">+¥5,020</div></div><div class="shop-row"><div class="shop-rank ">3</div><div class="shop-name-col"><a href="https://iosys.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_switch2_mk">イオシス</a></div><div class="shop-price-col">¥63,500</div><div class="shop-diff-col">+¥3,520</div></div></div>
+    <div class="card-actions">
+      
+      <a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener" class="btn btn-primary" data-track="buyback_click" data-product-id="prod_switch2_mk">&#128176; じゃんぱらで売る</a>
+    </div>
+    <div class="overseas-section overseas-links-section"><div class="overseas-lbl">&#127758; 海外相場を確認</div><div class="overseas-chips"><a href="https://www.ebay.com/sch/i.html?_nkw=Nintendo+Switch+2+%E3%83%9E%E3%83%AA%E3%82%AA%E3%82%AB%E3%83%BC%E3%83%88%E3%82%BB%E3%83%83%E3%83%88&amp;LH_Sold=1&amp;LH_Complete=1&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-chip overseas-btn" title="実際の落札価格（過去の取引実績）を確認できます" data-track="overseas_click">🌐 eBay sold</a><a href="https://www.ebay.com/sch/i.html?_nkw=Nintendo+Switch+2+%E3%83%9E%E3%83%AA%E3%82%AA%E3%82%AB%E3%83%BC%E3%83%88%E3%82%BB%E3%83%83%E3%83%88&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-chip overseas-btn" title="現在出品中の価格を確認できます" data-track="overseas_click">🌐 eBay (新着)</a><a href="https://stockx.com/search?s=Nintendo+Switch+2+%E3%83%9E%E3%83%AA%E3%82%AA%E3%82%AB%E3%83%BC%E3%83%88%E3%82%BB%E3%83%83%E3%83%88" target="_blank" rel="noopener" class="overseas-chip overseas-btn" title="スニーカー・ゲーム機・限定品の相場（ライブ価格）" data-track="overseas_click">📈 StockX</a><a href="https://www.amazon.com/s?k=Nintendo+Switch+2+%E3%83%9E%E3%83%AA%E3%82%AA%E3%82%AB%E3%83%BC%E3%83%88%E3%82%BB%E3%83%83%E3%83%88" target="_blank" rel="noopener" class="overseas-chip overseas-btn" title="米国Amazonの現在価格" data-track="overseas_click">🛒 Amazon US</a></div></div>
   </div>
 </div>
-  <div class="buyback-notice">※ 掲載価格は取得・入力時点の参考値です。買取価格・条件は短時間で変動するため、売却前に必ず各買取店の公式情報をご確認ください。</div>
-  <div class="links"></div>
+</div>
+<div class="sec-head" style="margin-top:44px"><div class="sec-title">要確認 &mdash; 様子見案件</div><div class="sec-badge">1件</div></div>
+<div class="cards-grid">
+<div class="deal-card" data-user-level="beginner_watch">
+  <div class="card-stripe game"></div>
+  <div class="card-hd">
+    <div class="card-name">PlayStation 5 Pro</div>
+    <div class="card-tags">
+      <span class="badge badge-watch">要確認</span>
+      <span class="badge badge-game">ゲーム機</span>
+    </div>
+  </div>
+  <div class="profit-section amber">
+    <div class="profit-left">
+      <div class="profit-lbl amber">実質利益（推定コスト差引後）</div>
+      <div class="profit-num amber">+¥220</div>
+    </div>
+    <div class="profit-right">
+      <div class="profit-rate amber">0.2%</div>
+      <div class="profit-note">利益率が低め。様子見推奨</div>
+    </div>
+  </div>
+  <div class="price-row-wrap">
+    <div class="price-cell">
+      <div class="price-cell-lbl">公式価格（定価）</div>
+      <div class="price-cell-val">¥119,980</div>
+    </div>
+    <div class="price-cell">
+      <div class="price-cell-lbl">最高買取価格</div>
+      <div class="price-cell-val green">¥122,000</div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="condition-row buyback-notice">
+      <span class="cond-icon">&#9888;</span>
+      <div><strong>買取条件：新品未開封</strong>&nbsp;<span style="font-size:0.72rem;color:var(--gray-400)">掲載価格は参考値です。売却前に必ず各社の公式買取ページで確認してください。</span></div>
+    </div>
+    <div class="updated-row"><span>&#128336;</span>最終更新：2026-05-18 23:42 JST</div>
+    <div class="shop-table buyback-shop-table buyback-table"><div class="shop-table-hd"><span>買取店比較（参照4店舗）</span><span class="freshness-stale">📋当日手動 / 24時間以上前（参考値）</span></div><div class="shop-row"><div class="shop-rank gold">1</div><div class="shop-name-col"><a href="https://iosys.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_ps5_pro">イオシス</a></div><div class="shop-price-col">¥122,000</div><div class="shop-diff-col">+¥2,020</div></div><div class="shop-row"><div class="shop-rank silver">2</div><div class="shop-name-col"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_ps5_pro">じゃんぱら</a></div><div class="shop-price-col">¥120,000</div><div class="shop-diff-col">+¥20</div></div><div class="shop-row"><div class="shop-rank ">3</div><div class="shop-name-col">買取商店（価格のみ）</div><div class="shop-price-col">¥118,000</div><div class="shop-diff-col neg">-¥1,980</div></div><div class="shop-row"><div class="shop-rank ">4</div><div class="shop-name-col"><a href="https://www.geo-online.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_ps5_pro">ゲオ</a></div><div class="shop-price-col">¥116,000</div><div class="shop-diff-col neg">-¥3,980</div></div></div>
+    <div class="card-actions">
+      
+      <a href="https://iosys.co.jp/" target="_blank" rel="noopener" class="btn btn-primary" data-track="product_click" data-product-id="prod_ps5_pro" data-shop="イオシス">&#128176; イオシスで売る</a>
+    </div>
+    <div class="overseas-section overseas-links-section"><div class="overseas-lbl">&#127758; 海外相場を確認</div><div class="overseas-chips"><a href="https://www.ebay.com/sch/i.html?_nkw=PlayStation+5+Pro&amp;LH_Sold=1&amp;LH_Complete=1&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-chip overseas-btn" title="実際の落札価格（過去の取引実績）を確認できます" data-track="overseas_click">🌐 eBay sold</a><a href="https://www.ebay.com/sch/i.html?_nkw=PlayStation+5+Pro&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-chip overseas-btn" title="現在出品中の価格を確認できます" data-track="overseas_click">🌐 eBay (新着)</a><a href="https://stockx.com/search?s=PlayStation+5+Pro" target="_blank" rel="noopener" class="overseas-chip overseas-btn" title="スニーカー・ゲーム機・限定品の相場（ライブ価格）" data-track="overseas_click">📈 StockX</a><a href="https://www.amazon.com/s?k=PlayStation+5+Pro" target="_blank" rel="noopener" class="overseas-chip overseas-btn" title="米国Amazonの現在価格" data-track="overseas_click">🛒 Amazon US</a></div></div>
+  </div>
 </div>
 </div>
+</div>
+
 <div id="tab-advanced" class="tab-panel" role="tabpanel">
-<div class="adv-fallback-notice">
-<span class="adv-fallback-icon">ℹ️</span>
-<div><strong>現在、上級者向けの確定候補は少ないため、価格差・希少性・海外相場差が大きい監視候補を表示しています。</strong><br>
-<span>中古市場や海外相場のデータが入り次第、確定候補として昇格します。</span></div>
+<div class="caution" style="margin:16px 0 20px;">
+ℹ️ <strong>現在、上級者向けの確定候補は少ないため、価格差・希少性・海外相場差が大きい監視候補を表示しています。</strong><br>
+中古市場や海外相場のデータが入り次第、確定候補として昇格します。
 </div>
 <div class="section-header"><h2>上級者向け監視候補</h2><span class="section-count">価格差・希少性スコア上位</span></div>
-<div class="card watch-candidate-card">
-  <div class="card-header">
-    <div class="card-title">FUJIFILM X100VI</div>
-    <span class="badge badge-watch">中古プレ値あり</span>
-  </div>
-  <div class="watch-price-row">
-    <span class="watch-price-item">公式価格: <strong>¥269,500</strong></span>
-    <span class="watch-gap" style="color:var(--green)">買取 ¥415,000（差 +145,500円）</span>
-    <span class="watch-price-item">最新買取店: <strong>マップカメラ</strong></span>
-  </div>
-  <div class="watch-links-row"><span class="unverified-link">公式買取ページで確認</span></div>
-<div class="overseas-links-section">
-  <div class="overseas-links-header">
-    <span class="overseas-links-title">🌍 海外相場を確認する</span>
-    <span class="overseas-links-note">価格未取得でもリンク先で相場確認できます</span>
-  </div>
-  <div class="overseas-btn-row"><a href="https://www.ebay.com/sch/i.html?_nkw=FUJIFILM+X100VI&amp;LH_Sold=1&amp;LH_Complete=1&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="ebay_sold" title="実際の落札価格（過去の取引実績）を確認できます">🌐 eBay sold</a><a href="https://www.ebay.com/sch/i.html?_nkw=FUJIFILM+X100VI&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="ebay_buy" title="現在出品中の価格を確認できます">🌐 eBay (新着)</a><a href="https://www.bhphotovideo.com/c/search?q=FUJIFILM+X100VI&amp;sts=ma" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="bhphoto" title="米国大手カメラ・電子機器専門店（新品・中古）">📷 B&amp;H Photo</a><a href="https://www.adorama.com/l/?searchinfo=FUJIFILM+X100VI" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="adorama" title="米国カメラ専門店（新品・認定中古）">📷 Adorama</a><a href="https://www.mpb.com/en-us/search?q=FUJIFILM+X100VI" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="mpb" title="欧米最大手の中古カメラマーケットプレイス">🔄 MPB (中古)</a><a href="https://www.keh.com/shop/search?q=FUJIFILM+X100VI" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="keh" title="米国中古カメラ専門店（買取・販売）">🔄 KEH Camera</a></div>
+<div class="watch-card"><div class="table-wrap">
+<table>
+<thead><tr><th>商品</th><th>公式価格</th><th>最新買取店</th><th>注目ポイント</th><th>リンク</th></tr></thead>
+<tbody><tr class='watch-candidate-card'><td><strong>FUJIFILM X100VI</strong><br><span style="color:var(--green);font-size:0.82rem">買取 ¥415,000 (差 +145,500円)</span></td><td>¥269,500</td><td>マップカメラ</td><td><span style='color:var(--yellow);font-size:0.82rem'>中古プレ値あり</span></td><td></td></tr><tr class='watch-candidate-card'><td><strong>RICOH GR IV Monochrome</strong></td><td>¥283,800</td><td>—</td><td><span style='color:var(--yellow);font-size:0.82rem'>中古プレ値あり</span></td><td></td></tr><tr class='watch-candidate-card'><td><strong>RICOH GR IV</strong><br><span style="color:var(--green);font-size:0.82rem">買取 ¥175,000 (差 -19,800円)</span></td><td>¥194,800</td><td>マップカメラ</td><td><span style='color:var(--yellow);font-size:0.82rem'>中古プレ値あり</span></td><td></td></tr><tr class='watch-candidate-card'><td><strong>RICOH GR III HDF</strong></td><td>¥147,400</td><td>—</td><td><span style='color:var(--yellow);font-size:0.82rem'>中古プレ値あり</span></td><td></td></tr><tr class='watch-candidate-card'><td><strong>RICOH GR IIIx</strong><br><span style="color:var(--green);font-size:0.82rem">買取 ¥125,000 (差 -14,800円)</span></td><td>¥139,800</td><td>マップカメラ</td><td><span style='color:var(--yellow);font-size:0.82rem'>中古プレ値あり</span></td><td></td></tr><tr class='watch-candidate-card'><td><strong>RICOH GR III</strong></td><td>¥129,800</td><td>—</td><td><span style='color:var(--yellow);font-size:0.82rem'>中古プレ値あり</span></td><td></td></tr><tr class='watch-candidate-card'><td><strong>RICOH GR IV HDF</strong></td><td>—</td><td>—</td><td><span style='color:var(--yellow);font-size:0.82rem'>中古プレ値あり</span></td><td></td></tr><tr class='watch-candidate-card'><td><strong>Nintendo Switch 2 マリオカートセット</strong><br><span style="color:var(--green);font-size:0.82rem">買取 ¥67,000 (差 +7,020円)</span></td><td>¥59,980</td><td>買取商店</td><td><span style='color:var(--yellow);font-size:0.82rem'>監視中</span></td><td></td></tr><tr class='watch-candidate-card'><td><strong>Nintendo Switch 2</strong><br><span style="color:var(--green);font-size:0.82rem">買取 ¥57,000 (差 +7,020円)</span></td><td>¥49,980</td><td>買取商店</td><td><span style='color:var(--yellow);font-size:0.82rem'>監視中</span></td><td></td></tr><tr class='watch-candidate-card'><td><strong>PlayStation 5 Pro</strong><br><span style="color:var(--green);font-size:0.82rem">買取 ¥122,000 (差 +2,020円)</span></td><td>¥119,980</td><td>イオシス</td><td><span style='color:var(--yellow);font-size:0.82rem'>監視中</span></td><td><a href="https://iosys.co.jp/" target="_blank" rel="noopener" style="font-size:0.78rem;color:var(--accent)">買取ページ</a></td></tr><tr class='watch-candidate-card'><td><strong>PlayStation 5 Digital Edition</strong><br><span style="color:var(--green);font-size:0.82rem">買取 ¥65,000 (差 -7,980円)</span></td><td>¥72,980</td><td>イオシス</td><td><span style='color:var(--yellow);font-size:0.82rem'>監視中</span></td><td><a href="https://iosys.co.jp/" target="_blank" rel="noopener" style="font-size:0.78rem;color:var(--accent)">買取ページ</a></td></tr><tr class='watch-candidate-card'><td><strong>Xbox Series X</strong><br><span style="color:var(--green);font-size:0.82rem">買取 ¥50,000 (差 -9,978円)</span></td><td>¥59,978</td><td>イオシス</td><td><span style='color:var(--yellow);font-size:0.82rem'>監視中</span></td><td><a href="https://iosys.co.jp/" target="_blank" rel="noopener" style="font-size:0.78rem;color:var(--accent)">買取ページ</a></td></tr></tbody>
+</table>
+</div>
+<p style="color:var(--text-3);font-size:0.78rem;margin-top:10px;padding:0 4px;">
+※ 監視候補は価格差・希少性スコアが高い商品です。中古市場データ入手後に確定候補へ昇格します。
+</p>
 </div>
 </div>
-<div class="card watch-candidate-card">
-  <div class="card-header">
-    <div class="card-title">RICOH GR IV Monochrome</div>
-    <span class="badge badge-watch">中古プレ値あり</span>
-  </div>
-  <div class="watch-price-row">
-    <span class="watch-price-item">公式価格: <strong>¥283,800</strong></span>
-    
-    <span class="watch-price-item">最新買取店: <strong>—</strong></span>
-  </div>
-  <div class="watch-links-row"><span class="unverified-link">公式買取ページで確認</span></div>
-<div class="overseas-links-section">
-  <div class="overseas-links-header">
-    <span class="overseas-links-title">🌍 海外相場を確認する</span>
-    <span class="overseas-links-note">価格未取得でもリンク先で相場確認できます</span>
-  </div>
-  <div class="overseas-btn-row"><a href="https://www.ebay.com/sch/i.html?_nkw=RICOH+GR+IV+Monochrome&amp;LH_Sold=1&amp;LH_Complete=1&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="ebay_sold" title="実際の落札価格（過去の取引実績）を確認できます">🌐 eBay sold</a><a href="https://www.ebay.com/sch/i.html?_nkw=RICOH+GR+IV+Monochrome&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="ebay_buy" title="現在出品中の価格を確認できます">🌐 eBay (新着)</a><a href="https://www.bhphotovideo.com/c/search?q=RICOH+GR+IV+Monochrome&amp;sts=ma" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="bhphoto" title="米国大手カメラ・電子機器専門店（新品・中古）">📷 B&amp;H Photo</a><a href="https://www.adorama.com/l/?searchinfo=RICOH+GR+IV+Monochrome" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="adorama" title="米国カメラ専門店（新品・認定中古）">📷 Adorama</a><a href="https://www.mpb.com/en-us/search?q=RICOH+GR+IV+Monochrome" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="mpb" title="欧米最大手の中古カメラマーケットプレイス">🔄 MPB (中古)</a><a href="https://www.keh.com/shop/search?q=RICOH+GR+IV+Monochrome" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="keh" title="米国中古カメラ専門店（買取・販売）">🔄 KEH Camera</a></div>
-</div>
-</div>
-<div class="card watch-candidate-card">
-  <div class="card-header">
-    <div class="card-title">RICOH GR IV</div>
-    <span class="badge badge-watch">中古プレ値あり</span>
-  </div>
-  <div class="watch-price-row">
-    <span class="watch-price-item">公式価格: <strong>¥194,800</strong></span>
-    <span class="watch-gap" style="color:var(--text-muted)">買取 ¥175,000（差 -19,800円）</span>
-    <span class="watch-price-item">最新買取店: <strong>マップカメラ</strong></span>
-  </div>
-  <div class="watch-links-row"><span class="unverified-link">公式買取ページで確認</span></div>
-<div class="overseas-links-section">
-  <div class="overseas-links-header">
-    <span class="overseas-links-title">🌍 海外相場を確認する</span>
-    <span class="overseas-links-note">価格未取得でもリンク先で相場確認できます</span>
-  </div>
-  <div class="overseas-btn-row"><a href="https://www.ebay.com/sch/i.html?_nkw=RICOH+GR+IV&amp;LH_Sold=1&amp;LH_Complete=1&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="ebay_sold" title="実際の落札価格（過去の取引実績）を確認できます">🌐 eBay sold</a><a href="https://www.ebay.com/sch/i.html?_nkw=RICOH+GR+IV&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="ebay_buy" title="現在出品中の価格を確認できます">🌐 eBay (新着)</a><a href="https://www.bhphotovideo.com/c/search?q=RICOH+GR+IV&amp;sts=ma" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="bhphoto" title="米国大手カメラ・電子機器専門店（新品・中古）">📷 B&amp;H Photo</a><a href="https://www.adorama.com/l/?searchinfo=RICOH+GR+IV" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="adorama" title="米国カメラ専門店（新品・認定中古）">📷 Adorama</a><a href="https://www.mpb.com/en-us/search?q=RICOH+GR+IV" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="mpb" title="欧米最大手の中古カメラマーケットプレイス">🔄 MPB (中古)</a><a href="https://www.keh.com/shop/search?q=RICOH+GR+IV" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="keh" title="米国中古カメラ専門店（買取・販売）">🔄 KEH Camera</a></div>
-</div>
-</div>
-<div class="card watch-candidate-card">
-  <div class="card-header">
-    <div class="card-title">RICOH GR III HDF</div>
-    <span class="badge badge-watch">中古プレ値あり</span>
-  </div>
-  <div class="watch-price-row">
-    <span class="watch-price-item">公式価格: <strong>¥147,400</strong></span>
-    
-    <span class="watch-price-item">最新買取店: <strong>—</strong></span>
-  </div>
-  <div class="watch-links-row"><span class="unverified-link">公式買取ページで確認</span></div>
-<div class="overseas-links-section">
-  <div class="overseas-links-header">
-    <span class="overseas-links-title">🌍 海外相場を確認する</span>
-    <span class="overseas-links-note">価格未取得でもリンク先で相場確認できます</span>
-  </div>
-  <div class="overseas-btn-row"><a href="https://www.ebay.com/sch/i.html?_nkw=RICOH+GR+III+HDF&amp;LH_Sold=1&amp;LH_Complete=1&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="ebay_sold" title="実際の落札価格（過去の取引実績）を確認できます">🌐 eBay sold</a><a href="https://www.ebay.com/sch/i.html?_nkw=RICOH+GR+III+HDF&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="ebay_buy" title="現在出品中の価格を確認できます">🌐 eBay (新着)</a><a href="https://www.bhphotovideo.com/c/search?q=RICOH+GR+III+HDF&amp;sts=ma" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="bhphoto" title="米国大手カメラ・電子機器専門店（新品・中古）">📷 B&amp;H Photo</a><a href="https://www.adorama.com/l/?searchinfo=RICOH+GR+III+HDF" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="adorama" title="米国カメラ専門店（新品・認定中古）">📷 Adorama</a><a href="https://www.mpb.com/en-us/search?q=RICOH+GR+III+HDF" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="mpb" title="欧米最大手の中古カメラマーケットプレイス">🔄 MPB (中古)</a><a href="https://www.keh.com/shop/search?q=RICOH+GR+III+HDF" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="keh" title="米国中古カメラ専門店（買取・販売）">🔄 KEH Camera</a></div>
-</div>
-</div>
-<div class="card watch-candidate-card">
-  <div class="card-header">
-    <div class="card-title">RICOH GR IIIx</div>
-    <span class="badge badge-watch">中古プレ値あり</span>
-  </div>
-  <div class="watch-price-row">
-    <span class="watch-price-item">公式価格: <strong>¥139,800</strong></span>
-    <span class="watch-gap" style="color:var(--text-muted)">買取 ¥125,000（差 -14,800円）</span>
-    <span class="watch-price-item">最新買取店: <strong>マップカメラ</strong></span>
-  </div>
-  <div class="watch-links-row"><span class="unverified-link">公式買取ページで確認</span></div>
-<div class="overseas-links-section">
-  <div class="overseas-links-header">
-    <span class="overseas-links-title">🌍 海外相場を確認する</span>
-    <span class="overseas-links-note">価格未取得でもリンク先で相場確認できます</span>
-  </div>
-  <div class="overseas-btn-row"><a href="https://www.ebay.com/sch/i.html?_nkw=RICOH+GR+IIIx&amp;LH_Sold=1&amp;LH_Complete=1&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="ebay_sold" title="実際の落札価格（過去の取引実績）を確認できます">🌐 eBay sold</a><a href="https://www.ebay.com/sch/i.html?_nkw=RICOH+GR+IIIx&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="ebay_buy" title="現在出品中の価格を確認できます">🌐 eBay (新着)</a><a href="https://www.bhphotovideo.com/c/search?q=RICOH+GR+IIIx&amp;sts=ma" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="bhphoto" title="米国大手カメラ・電子機器専門店（新品・中古）">📷 B&amp;H Photo</a><a href="https://www.adorama.com/l/?searchinfo=RICOH+GR+IIIx" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="adorama" title="米国カメラ専門店（新品・認定中古）">📷 Adorama</a><a href="https://www.mpb.com/en-us/search?q=RICOH+GR+IIIx" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="mpb" title="欧米最大手の中古カメラマーケットプレイス">🔄 MPB (中古)</a><a href="https://www.keh.com/shop/search?q=RICOH+GR+IIIx" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="keh" title="米国中古カメラ専門店（買取・販売）">🔄 KEH Camera</a></div>
-</div>
-</div>
-<div class="card watch-candidate-card">
-  <div class="card-header">
-    <div class="card-title">RICOH GR III</div>
-    <span class="badge badge-watch">中古プレ値あり</span>
-  </div>
-  <div class="watch-price-row">
-    <span class="watch-price-item">公式価格: <strong>¥129,800</strong></span>
-    
-    <span class="watch-price-item">最新買取店: <strong>—</strong></span>
-  </div>
-  <div class="watch-links-row"><span class="unverified-link">公式買取ページで確認</span></div>
-<div class="overseas-links-section">
-  <div class="overseas-links-header">
-    <span class="overseas-links-title">🌍 海外相場を確認する</span>
-    <span class="overseas-links-note">価格未取得でもリンク先で相場確認できます</span>
-  </div>
-  <div class="overseas-btn-row"><a href="https://www.ebay.com/sch/i.html?_nkw=RICOH+GR+III&amp;LH_Sold=1&amp;LH_Complete=1&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="ebay_sold" title="実際の落札価格（過去の取引実績）を確認できます">🌐 eBay sold</a><a href="https://www.ebay.com/sch/i.html?_nkw=RICOH+GR+III&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="ebay_buy" title="現在出品中の価格を確認できます">🌐 eBay (新着)</a><a href="https://www.bhphotovideo.com/c/search?q=RICOH+GR+III&amp;sts=ma" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="bhphoto" title="米国大手カメラ・電子機器専門店（新品・中古）">📷 B&amp;H Photo</a><a href="https://www.adorama.com/l/?searchinfo=RICOH+GR+III" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="adorama" title="米国カメラ専門店（新品・認定中古）">📷 Adorama</a><a href="https://www.mpb.com/en-us/search?q=RICOH+GR+III" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="mpb" title="欧米最大手の中古カメラマーケットプレイス">🔄 MPB (中古)</a><a href="https://www.keh.com/shop/search?q=RICOH+GR+III" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="keh" title="米国中古カメラ専門店（買取・販売）">🔄 KEH Camera</a></div>
-</div>
-</div>
-<div class="card watch-candidate-card">
-  <div class="card-header">
-    <div class="card-title">RICOH GR IV HDF</div>
-    <span class="badge badge-watch">中古プレ値あり</span>
-  </div>
-  <div class="watch-price-row">
-    <span class="watch-price-item">公式価格: <strong>—</strong></span>
-    
-    <span class="watch-price-item">最新買取店: <strong>—</strong></span>
-  </div>
-  <div class="watch-links-row"><span class="unverified-link">公式買取ページで確認</span></div>
-<div class="overseas-links-section">
-  <div class="overseas-links-header">
-    <span class="overseas-links-title">🌍 海外相場を確認する</span>
-    <span class="overseas-links-note">価格未取得でもリンク先で相場確認できます</span>
-  </div>
-  <div class="overseas-btn-row"><a href="https://www.ebay.com/sch/i.html?_nkw=RICOH+GR+IV+HDF&amp;LH_Sold=1&amp;LH_Complete=1&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="ebay_sold" title="実際の落札価格（過去の取引実績）を確認できます">🌐 eBay sold</a><a href="https://www.ebay.com/sch/i.html?_nkw=RICOH+GR+IV+HDF&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="ebay_buy" title="現在出品中の価格を確認できます">🌐 eBay (新着)</a><a href="https://www.bhphotovideo.com/c/search?q=RICOH+GR+IV+HDF&amp;sts=ma" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="bhphoto" title="米国大手カメラ・電子機器専門店（新品・中古）">📷 B&amp;H Photo</a><a href="https://www.adorama.com/l/?searchinfo=RICOH+GR+IV+HDF" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="adorama" title="米国カメラ専門店（新品・認定中古）">📷 Adorama</a><a href="https://www.mpb.com/en-us/search?q=RICOH+GR+IV+HDF" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="mpb" title="欧米最大手の中古カメラマーケットプレイス">🔄 MPB (中古)</a><a href="https://www.keh.com/shop/search?q=RICOH+GR+IV+HDF" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="keh" title="米国中古カメラ専門店（買取・販売）">🔄 KEH Camera</a></div>
-</div>
-</div>
-<div class="card watch-candidate-card">
-  <div class="card-header">
-    <div class="card-title">Nintendo Switch 2 マリオカートセット</div>
-    <span class="badge badge-watch">監視中</span>
-  </div>
-  <div class="watch-price-row">
-    <span class="watch-price-item">公式価格: <strong>¥59,980</strong></span>
-    <span class="watch-gap" style="color:var(--green)">買取 ¥67,000（差 +7,020円）</span>
-    <span class="watch-price-item">最新買取店: <strong>買取商店</strong></span>
-  </div>
-  <div class="watch-links-row"><span class="unverified-link">公式買取ページで確認</span></div>
-<div class="overseas-links-section">
-  <div class="overseas-links-header">
-    <span class="overseas-links-title">🌍 海外相場を確認する</span>
-    <span class="overseas-links-note">価格未取得でもリンク先で相場確認できます</span>
-  </div>
-  <div class="overseas-btn-row"><a href="https://www.ebay.com/sch/i.html?_nkw=Nintendo+Switch+2+%E3%83%9E%E3%83%AA%E3%82%AA%E3%82%AB%E3%83%BC%E3%83%88%E3%82%BB%E3%83%83%E3%83%88&amp;LH_Sold=1&amp;LH_Complete=1&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="ebay_sold" title="実際の落札価格（過去の取引実績）を確認できます">🌐 eBay sold</a><a href="https://www.ebay.com/sch/i.html?_nkw=Nintendo+Switch+2+%E3%83%9E%E3%83%AA%E3%82%AA%E3%82%AB%E3%83%BC%E3%83%88%E3%82%BB%E3%83%83%E3%83%88&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="ebay_buy" title="現在出品中の価格を確認できます">🌐 eBay (新着)</a><a href="https://stockx.com/search?s=Nintendo+Switch+2+%E3%83%9E%E3%83%AA%E3%82%AA%E3%82%AB%E3%83%BC%E3%83%88%E3%82%BB%E3%83%83%E3%83%88" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="stockx" title="スニーカー・ゲーム機・限定品の相場（ライブ価格）">📈 StockX</a><a href="https://www.amazon.com/s?k=Nintendo+Switch+2+%E3%83%9E%E3%83%AA%E3%82%AA%E3%82%AB%E3%83%BC%E3%83%88%E3%82%BB%E3%83%83%E3%83%88" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="amazon_us" title="米国Amazonの現在価格">🛒 Amazon US</a></div>
-</div>
-</div>
-<div class="card watch-candidate-card">
-  <div class="card-header">
-    <div class="card-title">Nintendo Switch 2</div>
-    <span class="badge badge-watch">監視中</span>
-  </div>
-  <div class="watch-price-row">
-    <span class="watch-price-item">公式価格: <strong>¥49,980</strong></span>
-    <span class="watch-gap" style="color:var(--green)">買取 ¥57,000（差 +7,020円）</span>
-    <span class="watch-price-item">最新買取店: <strong>買取商店</strong></span>
-  </div>
-  <div class="watch-links-row"><span class="unverified-link">公式買取ページで確認</span></div>
-<div class="overseas-links-section">
-  <div class="overseas-links-header">
-    <span class="overseas-links-title">🌍 海外相場を確認する</span>
-    <span class="overseas-links-note">価格未取得でもリンク先で相場確認できます</span>
-  </div>
-  <div class="overseas-btn-row"><a href="https://www.ebay.com/sch/i.html?_nkw=Nintendo+Switch+2&amp;LH_Sold=1&amp;LH_Complete=1&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="ebay_sold" title="実際の落札価格（過去の取引実績）を確認できます">🌐 eBay sold</a><a href="https://www.ebay.com/sch/i.html?_nkw=Nintendo+Switch+2&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="ebay_buy" title="現在出品中の価格を確認できます">🌐 eBay (新着)</a><a href="https://stockx.com/search?s=Nintendo+Switch+2" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="stockx" title="スニーカー・ゲーム機・限定品の相場（ライブ価格）">📈 StockX</a><a href="https://www.amazon.com/s?k=Nintendo+Switch+2" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="amazon_us" title="米国Amazonの現在価格">🛒 Amazon US</a></div>
-</div>
-</div>
-<div class="card watch-candidate-card">
-  <div class="card-header">
-    <div class="card-title">PlayStation 5 Pro</div>
-    <span class="badge badge-watch">監視中</span>
-  </div>
-  <div class="watch-price-row">
-    <span class="watch-price-item">公式価格: <strong>¥119,980</strong></span>
-    <span class="watch-gap" style="color:var(--green)">買取 ¥122,000（差 +2,020円）</span>
-    <span class="watch-price-item">最新買取店: <strong>イオシス</strong></span>
-  </div>
-  <div class="watch-links-row"><a href="https://iosys.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-shop="イオシス" title="商品ページ">買取価格を確認 →</a><span class="link-type-badge">商品ページ</span></div>
-<div class="overseas-links-section">
-  <div class="overseas-links-header">
-    <span class="overseas-links-title">🌍 海外相場を確認する</span>
-    <span class="overseas-links-note">価格未取得でもリンク先で相場確認できます</span>
-  </div>
-  <div class="overseas-btn-row"><a href="https://www.ebay.com/sch/i.html?_nkw=PlayStation+5+Pro&amp;LH_Sold=1&amp;LH_Complete=1&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="ebay_sold" title="実際の落札価格（過去の取引実績）を確認できます">🌐 eBay sold</a><a href="https://www.ebay.com/sch/i.html?_nkw=PlayStation+5+Pro&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="ebay_buy" title="現在出品中の価格を確認できます">🌐 eBay (新着)</a><a href="https://stockx.com/search?s=PlayStation+5+Pro" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="stockx" title="スニーカー・ゲーム機・限定品の相場（ライブ価格）">📈 StockX</a><a href="https://www.amazon.com/s?k=PlayStation+5+Pro" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="amazon_us" title="米国Amazonの現在価格">🛒 Amazon US</a></div>
-</div>
-</div>
-<div class="card watch-candidate-card">
-  <div class="card-header">
-    <div class="card-title">PlayStation 5 Digital Edition</div>
-    <span class="badge badge-watch">監視中</span>
-  </div>
-  <div class="watch-price-row">
-    <span class="watch-price-item">公式価格: <strong>¥72,980</strong></span>
-    <span class="watch-gap" style="color:var(--text-muted)">買取 ¥65,000（差 -7,980円）</span>
-    <span class="watch-price-item">最新買取店: <strong>イオシス</strong></span>
-  </div>
-  <div class="watch-links-row"><a href="https://iosys.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-shop="イオシス" title="商品ページ">買取価格を確認 →</a><span class="link-type-badge">商品ページ</span></div>
-<div class="overseas-links-section">
-  <div class="overseas-links-header">
-    <span class="overseas-links-title">🌍 海外相場を確認する</span>
-    <span class="overseas-links-note">価格未取得でもリンク先で相場確認できます</span>
-  </div>
-  <div class="overseas-btn-row"><a href="https://www.ebay.com/sch/i.html?_nkw=PlayStation+5+Digital+Edition&amp;LH_Sold=1&amp;LH_Complete=1&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="ebay_sold" title="実際の落札価格（過去の取引実績）を確認できます">🌐 eBay sold</a><a href="https://www.ebay.com/sch/i.html?_nkw=PlayStation+5+Digital+Edition&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="ebay_buy" title="現在出品中の価格を確認できます">🌐 eBay (新着)</a><a href="https://stockx.com/search?s=PlayStation+5+Digital+Edition" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="stockx" title="スニーカー・ゲーム機・限定品の相場（ライブ価格）">📈 StockX</a><a href="https://www.amazon.com/s?k=PlayStation+5+Digital+Edition" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="amazon_us" title="米国Amazonの現在価格">🛒 Amazon US</a></div>
-</div>
-</div>
-<div class="card watch-candidate-card">
-  <div class="card-header">
-    <div class="card-title">Xbox Series X</div>
-    <span class="badge badge-watch">監視中</span>
-  </div>
-  <div class="watch-price-row">
-    <span class="watch-price-item">公式価格: <strong>¥59,978</strong></span>
-    <span class="watch-gap" style="color:var(--text-muted)">買取 ¥50,000（差 -9,978円）</span>
-    <span class="watch-price-item">最新買取店: <strong>イオシス</strong></span>
-  </div>
-  <div class="watch-links-row"><a href="https://iosys.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-shop="イオシス" title="商品ページ">買取価格を確認 →</a><span class="link-type-badge">商品ページ</span></div>
-<div class="overseas-links-section">
-  <div class="overseas-links-header">
-    <span class="overseas-links-title">🌍 海外相場を確認する</span>
-    <span class="overseas-links-note">価格未取得でもリンク先で相場確認できます</span>
-  </div>
-  <div class="overseas-btn-row"><a href="https://www.ebay.com/sch/i.html?_nkw=Xbox+Series+X&amp;LH_Sold=1&amp;LH_Complete=1&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="ebay_sold" title="実際の落札価格（過去の取引実績）を確認できます">🌐 eBay sold</a><a href="https://www.ebay.com/sch/i.html?_nkw=Xbox+Series+X&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="ebay_buy" title="現在出品中の価格を確認できます">🌐 eBay (新着)</a><a href="https://stockx.com/search?s=Xbox+Series+X" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="stockx" title="スニーカー・ゲーム機・限定品の相場（ライブ価格）">📈 StockX</a><a href="https://www.amazon.com/s?k=Xbox+Series+X" target="_blank" rel="noopener" class="overseas-btn" data-track="overseas_click" data-market="amazon_us" title="米国Amazonの現在価格">🛒 Amazon US</a></div>
-</div>
-</div><p class="watch-footer-note">※ 監視候補は価格差・希少性スコアが高い商品です。中古市場データ入手後に確定候補へ昇格します。</p>
-</div>
+
 <div id="tab-surge" class="tab-panel" role="tabpanel">
-<div class="section-header"><h2>本日の急騰</h2></div><p class="empty-msg">急騰は検出されていません（閾値: ¥5,000+）</p>
-<div class="section-header"><h2>本日の急落</h2></div><p class="empty-msg">急落は検出されていません（閾値: ¥5,000−）</p>
+<div class="sec-head"><div class="sec-title">&#9650; 本日の急騰</div></div>
+<div class="empty-state"><span class="empty-icon">&#128200;</span>急騰は検出されていません（閾値: ¥5,000+）</div>
+<div class="sec-head" style="margin-top:36px"><div class="sec-title">&#9660; 本日の急落</div></div>
+<div class="empty-state"><span class="empty-icon">&#128201;</span>急落は検出されていません（閾値: ¥5,000−）</div>
 </div>
-<div id="tab-ranking" class="tab-panel" role="tabpanel">
-<div class="ranking-wrap"><div class="rk-tabs">
-  <button class="rk-tab active" data-rk="rk-all">全カテゴリ</button>
-  <button class="rk-tab" data-rk="rk-iphone">iPhone</button>
-  <button class="rk-tab" data-rk="rk-game">ゲーム機</button>
-</div><div id="rk-all" class="rk-panel active">
-  <div class="rk-layout">
-    <div class="rk-first">
-      <div class="rk-first-badge">#1 監視優先</div>
-      <div class="rk-first-category">camera</div>
-      <div class="rk-first-name">FUJIFILM X100VI</div>
-      <div class="rk-first-profit">+¥143,700</div>
-      <div class="rk-first-status">マップカメラ</div>
-    </div>
-    <div class="rk-list"><div class="rk-item">
-  <div class="rk-item-rank">#2</div>
-  <div class="rk-item-info">
-    <div class="rk-item-cat">iphone</div>
-    <div class="rk-item-name">iPhone 17 Pro Max 512GB SIMフリー</div>
-  </div>
-  <div class="rk-item-right">
-    <div class="rk-item-profit">+¥11,400</div>
-    <div class="rk-item-status">モバイル一番</div>
-  </div>
-</div><div class="rk-item">
-  <div class="rk-item-rank">#3</div>
-  <div class="rk-item-info">
-    <div class="rk-item-cat">iphone</div>
-    <div class="rk-item-name">iPhone 17 Pro Max 256GB SIMフリー</div>
-  </div>
-  <div class="rk-item-right">
-    <div class="rk-item-profit">+¥10,400</div>
-    <div class="rk-item-status">モバイル一番</div>
-  </div>
-</div><div class="rk-item">
-  <div class="rk-item-rank">#4</div>
-  <div class="rk-item-info">
-    <div class="rk-item-cat">iphone</div>
-    <div class="rk-item-name">iPhone 17 Pro 256GB SIMフリー</div>
-  </div>
-  <div class="rk-item-right">
-    <div class="rk-item-profit">+¥6,600</div>
-    <div class="rk-item-status">モバイル一番</div>
-  </div>
-</div><div class="rk-item">
-  <div class="rk-item-rank">#5</div>
-  <div class="rk-item-info">
-    <div class="rk-item-cat">iphone</div>
-    <div class="rk-item-name">iPhone 17 Pro 512GB SIMフリー</div>
-  </div>
-  <div class="rk-item-right">
-    <div class="rk-item-profit">+¥6,400</div>
-    <div class="rk-item-status">モバイル一番</div>
-  </div>
-</div></div>
-  </div>
-</div><div id="rk-iphone" class="rk-panel">
-  <div class="rk-layout">
-    <div class="rk-first">
-      <div class="rk-first-badge">#1 監視優先</div>
-      <div class="rk-first-category">iphone</div>
-      <div class="rk-first-name">iPhone 17 Pro Max 512GB SIMフリー</div>
-      <div class="rk-first-profit">+¥11,400</div>
-      <div class="rk-first-status">モバイル一番</div>
-    </div>
-    <div class="rk-list"><div class="rk-item">
-  <div class="rk-item-rank">#2</div>
-  <div class="rk-item-info">
-    <div class="rk-item-cat">iphone</div>
-    <div class="rk-item-name">iPhone 17 Pro Max 256GB SIMフリー</div>
-  </div>
-  <div class="rk-item-right">
-    <div class="rk-item-profit">+¥10,400</div>
-    <div class="rk-item-status">モバイル一番</div>
-  </div>
-</div><div class="rk-item">
-  <div class="rk-item-rank">#3</div>
-  <div class="rk-item-info">
-    <div class="rk-item-cat">iphone</div>
-    <div class="rk-item-name">iPhone 17 Pro 256GB SIMフリー</div>
-  </div>
-  <div class="rk-item-right">
-    <div class="rk-item-profit">+¥6,600</div>
-    <div class="rk-item-status">モバイル一番</div>
-  </div>
-</div><div class="rk-item">
-  <div class="rk-item-rank">#4</div>
-  <div class="rk-item-info">
-    <div class="rk-item-cat">iphone</div>
-    <div class="rk-item-name">iPhone 17 Pro 512GB SIMフリー</div>
-  </div>
-  <div class="rk-item-right">
-    <div class="rk-item-profit">+¥6,400</div>
-    <div class="rk-item-status">モバイル一番</div>
-  </div>
-</div></div>
-  </div>
-</div><div id="rk-game" class="rk-panel">
-  <div class="rk-layout">
-    <div class="rk-first">
-      <div class="rk-first-badge">#1 監視優先</div>
-      <div class="rk-first-category">game_console</div>
-      <div class="rk-first-name">Nintendo Switch 2</div>
-      <div class="rk-first-profit">+¥5,220</div>
-      <div class="rk-first-status">買取商店</div>
-    </div>
-    <div class="rk-list"><div class="rk-item">
-  <div class="rk-item-rank">#2</div>
-  <div class="rk-item-info">
-    <div class="rk-item-cat">game_console</div>
-    <div class="rk-item-name">Nintendo Switch 2 マリオカートセット</div>
-  </div>
-  <div class="rk-item-right">
-    <div class="rk-item-profit">+¥5,220</div>
-    <div class="rk-item-status">買取商店</div>
-  </div>
-</div><div class="rk-item">
-  <div class="rk-item-rank">#3</div>
-  <div class="rk-item-info">
-    <div class="rk-item-cat">game_console</div>
-    <div class="rk-item-name">PlayStation 5 Pro</div>
-  </div>
-  <div class="rk-item-right">
-    <div class="rk-item-profit">+¥220</div>
-    <div class="rk-item-status">イオシス</div>
-  </div>
-</div></div>
-  </div>
-</div></div>
+
+<div id="tab-new-products" class="tab-panel section-new-products" role="tabpanel">
+<div class="sec-head"><div class="sec-title">&#127381; 新商品候補 &mdash; 監視リスト</div><div class="sec-badge">3件</div></div><div class="cards-grid"><div class="new-product-card" data-user-level="beginner_easy"><div class="np-top-bar"></div><div class="np-body"><div class="np-hd"><div class="np-name">iPhone 17 Pro</div><span class="np-status-badge upcoming">発売予定</span></div><div class="np-price-row"><span class="np-price-lbl">想定価格</span>&nbsp;<span class="np-price-val">未定</span></div><div class="np-tags"><span class="deal-tag lottery">抽選</span><span class="deal-tag lottery">限定</span><span class="badge badge-easy" style="font-size:0.6rem">初心者向け</span></div></div></div><div class="new-product-card" data-user-level="beginner_easy"><div class="np-top-bar"></div><div class="np-body"><div class="np-hd"><div class="np-name">Nintendo Switch 2</div><span class="np-status-badge preorder">予約受付中</span></div><div class="np-price-row"><span class="np-price-lbl">想定価格</span>&nbsp;<span class="np-price-val">¥49,980</span></div><div class="np-tags"><span class="deal-tag lottery">抽選</span><span class="badge badge-easy" style="font-size:0.6rem">初心者向け</span></div></div></div><div class="new-product-card" data-user-level="advanced"><div class="np-top-bar"></div><div class="np-body"><div class="np-hd"><div class="np-name">SONY α1 II</div><span class="np-status-badge upcoming">発売予定</span></div><div class="np-price-row"><span class="np-price-lbl">想定価格</span>&nbsp;<span class="np-price-val">¥900,000予定</span></div><div class="np-tags"><span class="deal-tag hard">高難度</span><span class="deal-tag intl">海外差益</span><span class="badge badge-adv" style="font-size:0.6rem">上級者向け</span></div></div></div></div>
 </div>
-<div id="tab-new-products" class="tab-panel" role="tabpanel">
-<section class="section-new-products">
-<h2 class="section-title">🆕 注目の新商品・新モデル候補</h2>
-<p class="section-desc">発売が噂・発表されている注目商品です。入手難易度・転売期待度を事前にチェックしてください。</p>
-<div class="new-product-grid np-grid">
-<div class="new-product-card">
-  <div class="npc-header">
-    <span class="npc-category">ゲーム機</span>
-    <span class="npc-sale-method">🎰 抽選</span>
-  </div>
-  <div class="npc-name">Nintendo Switch 2 限定モデル</div>
-  <div class="npc-meta">発売日未定</div>
-  <div class="npc-price">公式予想価格: ¥59,980</div>
-  <div class="npc-score">
-    転売期待度: <span class="score-bar">███████░░░</span>
-    <span class="score-val">0.7</span>
-  </div>
-  
-</div><div class="new-product-card">
-  <div class="npc-header">
-    <span class="npc-category">カメラ</span>
-    <span class="npc-sale-method">⚡ 限定</span>
-  </div>
-  <div class="npc-name">RICOH GR IV HDF Special Edition</div>
-  <div class="npc-meta">発売日未定</div>
-  <div class="npc-price">公式予想価格: ¥149,800</div>
-  <div class="npc-score">
-    転売期待度: <span class="score-bar">██████░░░░</span>
-    <span class="score-val">0.6</span>
-  </div>
-  
-</div><div class="new-product-card">
-  <div class="npc-header">
-    <span class="npc-category">iPhone</span>
-    <span class="npc-sale-method">📋 予約</span>
-  </div>
-  <div class="npc-name">iPhone 18 Pro Max 256GB SIMフリー</div>
-  <div class="npc-meta">発売予定: 2026-09</div>
-  <div class="npc-price">公式予想価格: ¥229,800</div>
-  <div class="npc-score">
-    転売期待度: <span class="score-bar">█████░░░░░</span>
-    <span class="score-val">0.6</span>
-  </div>
-  
-</div><div class="new-product-card">
-  <div class="npc-header">
-    <span class="npc-category">iPhone</span>
-    <span class="npc-sale-method">📋 予約</span>
-  </div>
-  <div class="npc-name">iPhone 18 Pro 256GB SIMフリー</div>
-  <div class="npc-meta">発売予定: 2026-09</div>
-  <div class="npc-price">公式予想価格: ¥189,800</div>
-  <div class="npc-score">
-    転売期待度: <span class="score-bar">█████░░░░░</span>
-    <span class="score-val">0.6</span>
-  </div>
-  
-</div><div class="new-product-card">
-  <div class="npc-header">
-    <span class="npc-category">ゲーム機</span>
-    <span class="npc-sale-method">⚡ 限定</span>
-  </div>
-  <div class="npc-name">PlayStation 5 Pro 限定モデル</div>
-  <div class="npc-meta">発売日未定</div>
-  <div class="npc-price">公式予想価格: ¥149,980</div>
-  <div class="npc-score">
-    転売期待度: <span class="score-bar">█████░░░░░</span>
-    <span class="score-val">0.5</span>
-  </div>
-  
-</div><div class="new-product-card">
-  <div class="npc-header">
-    <span class="npc-category">Apple Watch</span>
-    <span class="npc-sale-method">📋 予約</span>
-  </div>
-  <div class="npc-name">Apple Watch Ultra 4</div>
-  <div class="npc-meta">発売予定: 2026-09</div>
-  <div class="npc-price">公式予想価格: ¥148,800</div>
-  <div class="npc-score">
-    転売期待度: <span class="score-bar">████░░░░░░</span>
-    <span class="score-val">0.4</span>
-  </div>
-  
-</div>
-</div>
-<p class="section-note">※ 情報は公式発表前の段階です。変更・中止の可能性があります。自動購入・自動応募は一切行いません。</p>
-</section>
-</div>
-<div class="caution">
-<strong>⚠️ ご確認ください</strong>
-<ul>
+<div class="caution-block">
+
+<div class="caution-title">&#9888;&#65039; ご確認ください</div>
+
+<ul class="caution-list">
+
 <li>本ページは価格差の監視結果であり、購入を推奨するものではありません。</li>
-<li>価格・在庫・買取条件は常に変動します。</li>
+
+<li>価格・在庫・買取条件は常に変動します。掛載価格は取得・入力時点の参考値です。</li>
+
 <li>購入前に必ず公式サイトと買取店で最新の条件を確認してください。</li>
-<li>買取条件（新品未開封・SIMフリー等）を満たさない場合、買取価格が下がります。</li>
+
+<li>買取条件（新品未開封・SIMフリー等）を満たさない場合、買取価格が大幅に下がります。</li>
+
 <li>利益を保証するものではありません。条件が合えば利益が出る可能性がある情報です。</li>
+
+<li>海外販売には輸出規制・関税・送料・プラットフォーム手数料等が発生します。</li>
+
 </ul>
+
 </div>
-<div class="cta-section">
-<h3>詳細レポート — 準備中</h3>
-<p>仕入れ条件・買取店比較・全案件一覧をnoteで公開予定です。公開時にこのページでお知らせします。</p>
+<div class="cta-section" id="note-cta">
+
+<div class="cta-eyebrow">詳細レポート</div>
+
+<div class="cta-title">詳細レポート &mdash; 準備中</div>
+
+<p class="cta-desc">仕入れ条件・買取店比較・全案件一覧・海外販売ガイドをnoteで公開予定です。公開時にこのページでお知らせします。</p>
+
 </div>
-<div class="footer">
-<p>価格情報は参考値です。購入前に必ず公式サイト・買取店でご確認ください。</p>
-<p>© 2026 プレ値速報 — 情報は自動取得・分析されたものです</p>
+<footer class="footer">
+<div class="footer-inner">
+  <div class="footer-logo">
+    <div class="footer-logo-icon">S</div>
+    <div class="footer-logo-name">プレ値速報</div>
+    <div class="footer-live"><span class="live-dot"></span>LIVE</div>
+  </div>
+  <div class="footer-links">
+    <a href="#tab-beginner" class="footer-link">初心者向け案件</a>
+    <a href="#tab-advanced" class="footer-link">上級者向け案件</a>
+    <a href="#tab-ranking" class="footer-link">買取ランキング</a>
+    <a href="#tab-surge" class="footer-link">急騰/急落アラート</a>
+    <a href="#tab-new-products" class="footer-link">新商品候補</a>
+    <a href="#note-cta" class="footer-link">詳細レポート</a>
+  </div>
+  <div class="footer-text">
+    <p>掛載価格は取得・入力時点の参考値です。購入前に必ず公式サイト・買取店でご確認ください。</p>
+    <p>&copy; 2026 プレ値速報 &mdash; 情報は自動取得・分析されたものです</p>
+  </div>
 </div>
+</footer>
 </div>
 <script>
 (function(){
   var btns=document.querySelectorAll(".tab-btn");
   var panels=document.querySelectorAll(".tab-panel");
-  if(!btns.length)return;
-  btns.forEach(function(btn){
-    btn.addEventListener("click",function(){
-      btns.forEach(function(b){b.classList.remove("active");b.setAttribute("aria-selected","false");});
-      panels.forEach(function(p){p.classList.remove("active");});
-      btn.classList.add("active");
-      btn.setAttribute("aria-selected","true");
-      var panel=document.getElementById("tab-"+btn.dataset.tab);
-      if(panel)panel.classList.add("active");
+  if(btns.length){
+    btns.forEach(function(btn){
+      btn.addEventListener("click",function(){
+        btns.forEach(function(b){b.classList.remove("active");b.setAttribute("aria-selected","false");});
+        panels.forEach(function(p){p.classList.remove("active");});
+        btn.classList.add("active");
+        btn.setAttribute("aria-selected","true");
+        var panel=document.getElementById("tab-"+btn.dataset.tab);
+        if(panel)panel.classList.add("active");
+      });
     });
+  }
+  document.addEventListener("click",function(e){
+    var el=e.target.closest("[data-track]");
+    if(!el)return;
+    var ev=el.getAttribute("data-track"),pid=el.getAttribute("data-product-id")||"",shop=el.getAttribute("data-shop")||"";
+    if(typeof gtag==="function")gtag("event",ev,{product_id:pid,shop:shop});
+    if(typeof fbq==="function")fbq("trackCustom",ev,{product_id:pid,shop:shop});
   });
-  document.querySelectorAll(".rk-tab").forEach(function(btn){
-    btn.addEventListener("click",function(){
-      document.querySelectorAll(".rk-tab").forEach(function(b){b.classList.remove("active");});
-      document.querySelectorAll(".rk-panel").forEach(function(p){p.classList.remove("active");});
-      btn.classList.add("active");
-      var panel=document.getElementById(btn.dataset.rk);
-      if(panel)panel.classList.add("active");
+  // ランキング内タブ
+  var rbtns=document.querySelectorAll(".ranking-tab-btn");
+  if(rbtns.length){
+    rbtns.forEach(function(rb){
+      rb.addEventListener("click",function(){
+        rbtns.forEach(function(b){b.classList.remove("active");});
+        document.querySelectorAll(".ranking-tab-panel").forEach(function(p){p.classList.remove("active");});
+        rb.classList.add("active");
+        var panel=document.getElementById("rtab-"+rb.getAttribute("data-rtab"));
+        if(panel)panel.classList.add("active");
+      });
     });
-  });
+  }
 })();
-document.addEventListener("click",function(e){
-  var t=e.target.closest("[data-track]");
-  if(!t)return;
-  var ev=t.getAttribute("data-track"),
-      pid=t.getAttribute("data-product-id")||"",
-      shop=t.getAttribute("data-shop")||"";
-  if(typeof gtag==="function")gtag("event",ev,{product_id:pid,shop:shop});
-  if(typeof fbq==="function")fbq("trackCustom",ev,{product_id:pid,shop:shop});
-});
 </script>
-<noscript><style>.tab-bar{display:none;}.tab-panel{display:block!important;}</style></noscript>
+<noscript><style>.tab-nav{display:none;}.tab-panel{display:block!important;}</style></noscript>
 </body>
 </html>

@@ -262,6 +262,10 @@ class DailyLPGenerator:
         # topbar用の日時文字列（_render_page スコープで利用）
         _buyback_str_top = _jst_str(latest_buyback_at) if latest_buyback_at else "—"
         _lp_str_top = lp_generated_at.strftime("%m/%d %H:%M") if lp_generated_at else "—"
+        # アナウンスバー用
+        _beginner_count_top = len(beginner_easy)
+        _max_profit_top = max((d.net_profit_jpy or 0) for d in beginner_easy) if beginner_easy else 0
+        _max_profit_str_top = f'+¥{_max_profit_top:,}' if _max_profit_top > 0 else '—'
 
         return f"""<!DOCTYPE html>
 <html lang="ja">
@@ -273,11 +277,32 @@ class DailyLPGenerator:
 {analytics_head}
 <style>
 /* ============================================================
-   プレ値速報 — PROFESSIONAL EDITION
-   コンセプト: このLP一枚で稼げる
+   SOUBA デザインシステム — プレ値速報
    ============================================================ */
 
 :root {{
+  /* ページ背景 */
+  --bg: #FAFBFF;
+  /* カード */
+  --card-bg: #FFFFFF;
+  --card-border: #E8EAF2;
+  --surface2: #F4F6FD;
+  /* テキスト */
+  --ink: #0D0F1C;
+  --ink2: #5B6278;
+  --ink3: #9CA3B8;
+  --ink4: #C8CADE;
+  /* アクセント */
+  --profit: #00C896;
+  --profit-dark: #00A876;
+  --violet: #7C5CFC;
+  --violet-dark: #6040E8;
+  --amber: #FF9500;
+  --danger: #FF3B5C;
+  --blue: #3B7BFF;
+  --gold: #F5A623;
+
+  /* 後方互換用エイリアス */
   --white:   #ffffff;
   --gray-50: #f8fafc;
   --gray-100:#f1f5f9;
@@ -289,37 +314,32 @@ class DailyLPGenerator:
   --gray-700:#334155;
   --gray-800:#1e293b;
   --gray-900:#0f172a;
-
   --blue-50:  #eff6ff;
   --blue-100: #dbeafe;
   --blue-200: #bfdbfe;
   --blue-500: #3b82f6;
   --blue-600: #2563eb;
   --blue-700: #1d4ed8;
-
   --green-50:  #f0fdf4;
   --green-100: #dcfce7;
   --green-200: #bbf7d0;
   --green-500: #22c55e;
   --green-600: #16a34a;
   --green-700: #15803d;
-
   --amber-50:  #fffbeb;
   --amber-100: #fef3c7;
   --amber-200: #fde68a;
   --amber-500: #f59e0b;
   --amber-600: #d97706;
-
+  --amber-700: #b45309;
   --red-50:   #fef2f2;
   --red-100:  #fee2e2;
   --red-500:  #ef4444;
   --red-600:  #dc2626;
-
   --purple-50:  #faf5ff;
   --purple-100: #f3e8ff;
   --purple-500: #a855f7;
   --purple-600: #9333ea;
-
   --teal-50:  #f0fdfa;
   --teal-100: #ccfbf1;
   --teal-500: #14b8a6;
@@ -333,10 +353,10 @@ class DailyLPGenerator:
   --radius-2xl: 28px;
 
   --shadow-xs: 0 1px 2px rgba(0,0,0,0.04);
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-sm: 0 1px 3px rgba(13,15,28,0.05), 0 1px 2px rgba(13,15,28,0.04);
   --shadow-md: 0 4px 8px rgba(0,0,0,0.06), 0 2px 4px rgba(0,0,0,0.04);
   --shadow-lg: 0 10px 20px rgba(0,0,0,0.08), 0 4px 8px rgba(0,0,0,0.04);
-  --shadow-xl: 0 20px 40px rgba(0,0,0,0.10), 0 8px 16px rgba(0,0,0,0.06);
+  --shadow-xl: 0 12px 40px rgba(13,15,28,0.1), 0 4px 12px rgba(13,15,28,0.06);
 }}
 
 *, *::before, *::after {{
@@ -349,21 +369,40 @@ html {{ scroll-behavior: smooth; }}
 
 body {{
   font-family: var(--font);
-  background: var(--gray-50);
-  color: var(--gray-900);
+  background: var(--bg);
+  color: var(--ink);
   font-size: 15px;
   line-height: 1.6;
 }}
+
+/* ============================================================
+   ANNOUNCEMENT BAR
+   ============================================================ */
+.announce-bar {{
+  background: linear-gradient(90deg, #00C896, #3B7BFF, #7C5CFC);
+  text-align: center;
+  padding: 8px 20px;
+}}
+
+.announce-bar a {{
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}}
+
+.announce-bar a:hover {{ text-decoration: underline; }}
 
 /* ============================================================
    TOPBAR
    ============================================================ */
 .topbar {{
   position: sticky; top: 0; z-index: 300;
-  background: rgba(255,255,255,0.92);
+  background: rgba(250,251,255,0.95);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border-bottom: 1px solid var(--gray-200);
+  border-bottom: 1px solid var(--card-border);
   height: 56px;
   display: flex; align-items: center;
   padding: 0 20px; gap: 12px;
@@ -371,17 +410,17 @@ body {{
 
 .topbar-brand {{
   display: flex; align-items: center; gap: 10px;
-  text-decoration: none; color: var(--gray-900);
+  text-decoration: none; color: var(--ink);
   font-weight: 800; font-size: 0.95rem;
 }}
 
 .brand-icon {{
   width: 30px; height: 30px;
-  background: linear-gradient(135deg, var(--blue-600), var(--purple-600));
+  background: linear-gradient(135deg, var(--blue), var(--violet));
   border-radius: 8px;
   display: flex; align-items: center; justify-content: center;
   color: white; font-weight: 900; font-size: 0.8rem;
-  box-shadow: 0 2px 8px rgba(37,99,235,0.3);
+  box-shadow: 0 2px 8px rgba(59,123,255,0.3);
   flex-shrink: 0;
 }}
 
@@ -389,15 +428,15 @@ body {{
   display: flex; align-items: center; gap: 5px;
   font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--green-600);
-  background: var(--green-50);
-  border: 1px solid var(--green-200);
+  color: var(--profit-dark);
+  background: #F0FDF8;
+  border: 1px solid #B2F0DC;
   padding: 3px 10px; border-radius: 99px;
 }}
 
 .live-dot {{
   width: 6px; height: 6px; border-radius: 50%;
-  background: var(--green-500);
+  background: var(--profit);
   animation: blink 2s ease-in-out infinite;
 }}
 
@@ -407,7 +446,7 @@ body {{
 }}
 
 .topbar-date {{
-  font-size: 0.78rem; color: var(--gray-500);
+  font-size: 0.78rem; color: var(--ink3);
   font-variant-numeric: tabular-nums;
 }}
 
@@ -415,43 +454,112 @@ body {{
 
 .topbar-note-btn {{
   display: inline-flex; align-items: center; gap: 6px;
-  background: var(--blue-600); color: white;
+  background: var(--violet); color: white;
   font-size: 0.78rem; font-weight: 700;
   padding: 7px 16px; border-radius: var(--radius-md);
   text-decoration: none;
-  box-shadow: 0 2px 8px rgba(37,99,235,0.25);
+  box-shadow: 0 2px 8px rgba(124,92,252,0.3);
   transition: all 0.2s;
   white-space: nowrap;
 }}
 
 .topbar-note-btn:hover {{
-  background: var(--blue-700);
+  background: var(--violet-dark);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(37,99,235,0.35);
+  box-shadow: 0 4px 12px rgba(124,92,252,0.4);
 }}
 
 /* ============================================================
-   HERO
+   LIVE TICKER
+   ============================================================ */
+.ticker-bar {{
+  background: #0D0F1C;
+  overflow: hidden;
+  padding: 7px 0;
+  white-space: nowrap;
+}}
+
+.ticker-inner {{
+  display: inline-block;
+  animation: tickerScroll 30s linear infinite;
+}}
+
+@keyframes tickerScroll {{
+  0%   {{ transform: translateX(0); }}
+  100% {{ transform: translateX(-50%); }}
+}}
+
+.ticker-item {{
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 0.78rem; color: rgba(255,255,255,0.85);
+  padding: 0 28px;
+}}
+
+.ticker-item .t-name {{ font-weight: 600; }}
+.ticker-item .t-profit {{ color: #00C896; font-weight: 700; }}
+.ticker-sep {{ color: rgba(255,255,255,0.2); }}
+
+/* ============================================================
+   FEATURES BANNER
+   ============================================================ */
+.features-bar {{
+  background: #fff;
+  border-bottom: 1px solid var(--card-border);
+  padding: 12px 20px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}}
+
+.features-bar::-webkit-scrollbar {{ display: none; }}
+
+.features-inner {{
+  display: flex; gap: 8px;
+  width: max-content;
+}}
+
+.feature-chip {{
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 0.75rem; font-weight: 600;
+  padding: 6px 14px; border-radius: 99px;
+  white-space: nowrap;
+}}
+
+.feature-chip.green  {{ background: #F0FDF8; color: #00A876; border: 1px solid #B2F0DC; }}
+.feature-chip.blue   {{ background: #EFF6FF; color: #1E6FFF; border: 1px solid #BFDBFE; }}
+.feature-chip.violet {{ background: #F5F3FF; color: #6040E8; border: 1px solid #DDD6FE; }}
+.feature-chip.amber  {{ background: #FFF9F0; color: #CC7A00; border: 1px solid #FFD9A0; }}
+.feature-chip.red    {{ background: #FFF1F3; color: #CC2244; border: 1px solid #FFB3C0; }}
+
+/* ============================================================
+   HERO — ダーク
    ============================================================ */
 .hero {{
-  background: var(--white);
-  border-bottom: 1px solid var(--gray-200);
-  padding: 52px 0 44px;
+  background: linear-gradient(160deg, #0D0F1C 0%, #131629 50%, #0F1A2E 100%);
+  padding: 64px 0 56px;
+  position: relative; overflow: hidden;
 }}
 
 .hero-inner {{
   max-width: 1120px;
   margin: 0 auto;
   padding: 0 24px;
+  display: grid;
+  grid-template-columns: 1fr 440px;
+  gap: 48px;
+  align-items: center;
 }}
 
-.hero-badge {{
-  display: inline-flex; align-items: center; gap: 6px;
-  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--blue-600);
-  background: var(--blue-50);
-  border: 1px solid var(--blue-200);
+.hero-left {{}}
+.hero-right {{}}
+
+.hero-eyebrow {{
+  display: inline-flex; align-items: center; gap: 7px;
+  background: rgba(0,200,150,0.15);
+  border: 1px solid rgba(0,200,150,0.3);
+  color: var(--profit);
+  font-size: 0.72rem; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
   padding: 5px 14px; border-radius: 99px;
   margin-bottom: 22px;
 }}
@@ -461,91 +569,182 @@ body {{
   font-weight: 900;
   letter-spacing: -0.04em;
   line-height: 1.1;
-  color: var(--gray-900);
+  color: #fff;
   margin-bottom: 18px;
 }}
 
 .hero-title .accent {{
-  color: var(--blue-600);
+  background: linear-gradient(90deg, #00C896, #3B7BFF);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }}
 
 .hero-subtitle {{
-  font-size: 1.05rem;
-  color: var(--gray-600);
+  font-size: 1rem;
+  color: rgba(255,255,255,0.65);
   line-height: 1.75;
-  max-width: 680px;
-  margin-bottom: 36px;
-}}
-
-/* Hero Stats */
-.hero-stats {{
-  display: flex; flex-wrap: wrap; gap: 12px;
+  max-width: 520px;
   margin-bottom: 32px;
 }}
 
-.stat-card {{
-  background: var(--gray-50);
-  border: 1px solid var(--gray-200);
-  border-radius: var(--radius-lg);
-  padding: 14px 20px;
-  min-width: 120px;
-  box-shadow: var(--shadow-xs);
-  transition: box-shadow 0.2s, transform 0.2s;
+.hero-cta-row {{
+  display: flex; gap: 10px; flex-wrap: wrap;
+  margin-bottom: 32px;
 }}
 
-.stat-card:hover {{
-  box-shadow: var(--shadow-md);
+.hero-btn {{
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 0.875rem; font-weight: 700;
+  padding: 11px 22px; border-radius: var(--radius-md);
+  text-decoration: none; transition: all 0.2s;
+}}
+
+.hero-btn.primary {{
+  background: linear-gradient(135deg, #00C896, #00A876);
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(0,200,150,0.4);
+}}
+
+.hero-btn.primary:hover {{
   transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,200,150,0.5);
 }}
 
-.stat-value {{
-  font-size: 1.6rem; font-weight: 900;
-  line-height: 1; margin-bottom: 4px;
-  font-variant-numeric: tabular-nums;
+.hero-btn.secondary {{
+  background: rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.85);
+  border: 1px solid rgba(255,255,255,0.15);
 }}
 
-.stat-value.green  {{ color: var(--green-600); }}
-.stat-value.blue   {{ color: var(--blue-600); }}
-.stat-value.purple {{ color: var(--purple-600); }}
-.stat-value.teal   {{ color: var(--teal-600); }}
-.stat-value.amber  {{ color: var(--amber-600); font-size: 1.1rem; }}
+.hero-btn.secondary:hover {{
+  background: rgba(255,255,255,0.14);
+}}
 
-.stat-label {{
-  font-size: 0.68rem; font-weight: 700;
-  letter-spacing: 0.05em; text-transform: uppercase;
-  color: var(--gray-400);
+.hero-btn.violet {{
+  background: linear-gradient(135deg, #7C5CFC, #6040E8);
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(124,92,252,0.4);
+}}
+
+.hero-btn.violet:hover {{
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(124,92,252,0.5);
+}}
+
+/* Social proof */
+.hero-social-proof {{
+  display: flex; align-items: center; gap: 12px;
+}}
+
+.social-avatars {{
+  display: flex;
+}}
+
+.social-avatar {{
+  width: 28px; height: 28px; border-radius: 50%;
+  background: linear-gradient(135deg, #00C896, #3B7BFF);
+  border: 2px solid #131629;
+  margin-left: -8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.65rem; font-weight: 700; color: #fff;
+}}
+
+.social-avatar:first-child {{ margin-left: 0; }}
+
+.social-text {{
+  font-size: 0.78rem; color: rgba(255,255,255,0.5);
+}}
+
+.social-text strong {{ color: rgba(255,255,255,0.8); }}
+
+/* ライブパネル（ガラスモーフィズム） */
+.hero-live-panel {{
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 20px;
+  padding: 20px;
+}}
+
+.live-panel-hd {{
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 16px;
+}}
+
+.live-panel-title {{
+  font-size: 0.75rem; font-weight: 700; color: rgba(255,255,255,0.5);
+  letter-spacing: 0.08em; text-transform: uppercase;
+}}
+
+.live-panel-badge {{
+  display: flex; align-items: center; gap: 5px;
+  font-size: 0.65rem; font-weight: 700; color: var(--profit);
+  background: rgba(0,200,150,0.15);
+  border: 1px solid rgba(0,200,150,0.25);
+  padding: 3px 9px; border-radius: 99px;
+}}
+
+.live-panel-items {{}}
+
+.lp-item {{
+  display: flex; align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  gap: 10px;
+}}
+
+.lp-item:last-child {{ border: none; }}
+
+.lp-icon {{
+  width: 32px; height: 32px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.9rem; flex-shrink: 0;
+}}
+
+.lp-icon.iphone  {{ background: rgba(59,123,255,0.15); }}
+.lp-icon.camera  {{ background: rgba(124,92,252,0.15); }}
+.lp-icon.game    {{ background: rgba(20,184,166,0.15); }}
+
+.lp-info {{ flex: 1; min-width: 0; }}
+.lp-name {{ font-size: 0.78rem; font-weight: 600; color: rgba(255,255,255,0.85); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }}
+.lp-shop {{ font-size: 0.65rem; color: rgba(255,255,255,0.35); margin-top: 1px; }}
+
+.lp-profit {{
+  font-size: 0.85rem; font-weight: 800;
+  color: var(--profit); white-space: nowrap;
 }}
 
 /* Timestamps */
 .hero-timestamps {{
   display: flex; flex-wrap: wrap; gap: 10px;
+  margin-top: 24px;
 }}
 
 .ts-pill {{
   display: inline-flex; align-items: center; gap: 7px;
-  background: var(--white);
-  border: 1px solid var(--gray-200);
-  color: var(--gray-500);
-  font-size: 0.78rem;
-  padding: 6px 14px; border-radius: 99px;
-  box-shadow: var(--shadow-xs);
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.55);
+  font-size: 0.75rem;
+  padding: 5px 12px; border-radius: 99px;
   font-variant-numeric: tabular-nums;
 }}
 
 .ts-dot {{
-  width: 7px; height: 7px; border-radius: 50%;
-  background: var(--green-500); flex-shrink: 0;
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--profit); flex-shrink: 0;
 }}
 
-.ts-dot.blue {{ background: var(--blue-500); }}
+.ts-dot.blue {{ background: var(--blue); }}
 
 /* ============================================================
    STALE WARNING
    ============================================================ */
 .stale-banner {{
-  background: var(--amber-50);
-  border: 1px solid var(--amber-200);
-  border-left: 3px solid var(--amber-500);
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-left: 3px solid #f59e0b;
   border-radius: 0 var(--radius-md) var(--radius-md) 0;
   padding: 12px 18px;
   margin: 16px 0;
@@ -565,13 +764,13 @@ body {{
 }}
 
 /* ============================================================
-   TAB NAVIGATION
+   TAB NAVIGATION — スティッキー
    ============================================================ */
 .tab-wrap {{
   position: sticky; top: 56px; z-index: 200;
-  background: rgba(248,250,252,0.96);
+  background: rgba(250,251,255,0.95);
   backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--gray-200);
+  border-bottom: 1px solid var(--card-border);
   margin: 0 -24px;
   padding: 0 24px;
 }}
@@ -580,6 +779,7 @@ body {{
   display: flex; gap: 0;
   overflow-x: auto; -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
+  position: relative;
 }}
 
 .tab-nav::-webkit-scrollbar {{ display: none; }}
@@ -591,7 +791,7 @@ body {{
   border-bottom: 2px solid transparent;
   padding: 15px 20px;
   font-size: 0.875rem; font-weight: 500;
-  color: var(--gray-500);
+  color: var(--ink3);
   cursor: pointer;
   transition: color 0.15s, border-color 0.15s;
   margin-bottom: -1px;
@@ -599,24 +799,24 @@ body {{
   font-family: var(--font);
 }}
 
-.tab-btn:hover {{ color: var(--gray-800); }}
+.tab-btn:hover {{ color: var(--ink); }}
 
 .tab-btn.active {{
-  color: var(--blue-600);
-  border-bottom-color: var(--blue-600);
+  color: var(--violet);
+  border-bottom-color: var(--violet);
   font-weight: 700;
 }}
 
 .tab-count {{
   font-size: 0.65rem; font-weight: 800;
-  background: var(--gray-100);
-  color: var(--gray-500);
+  background: var(--surface2);
+  color: var(--ink3);
   padding: 1px 7px; border-radius: 99px;
 }}
 
 .tab-btn.active .tab-count {{
-  background: var(--blue-50);
-  color: var(--blue-600);
+  background: #EDE9FF;
+  color: var(--violet);
 }}
 
 .tab-panel {{ display: none; padding-top: 36px; }}
@@ -628,27 +828,27 @@ body {{
 .sec-head {{
   display: flex; align-items: center; justify-content: space-between;
   margin-bottom: 20px; padding-bottom: 14px;
-  border-bottom: 1px solid var(--gray-200);
+  border-bottom: 1px solid var(--card-border);
 }}
 
 .sec-title {{
   font-size: 0.78rem; font-weight: 800;
   letter-spacing: 0.08em; text-transform: uppercase;
-  color: var(--gray-500);
+  color: var(--ink3);
   display: flex; align-items: center; gap: 8px;
 }}
 
 .sec-title::before {{
   content: '';
   width: 3px; height: 14px; border-radius: 2px;
-  background: var(--blue-600);
+  background: var(--violet);
 }}
 
 .sec-badge {{
   font-size: 0.68rem; font-weight: 700;
-  background: var(--gray-100);
-  color: var(--gray-500);
-  border: 1px solid var(--gray-200);
+  background: var(--surface2);
+  color: var(--ink3);
+  border: 1px solid var(--card-border);
   padding: 3px 10px; border-radius: 99px;
 }}
 
@@ -664,20 +864,20 @@ body {{
 }}
 
 .info-banner.blue {{
-  background: var(--blue-50);
-  border: 1px solid var(--blue-200);
+  background: #EFF6FF;
+  border: 1px solid #BFDBFE;
   color: #1e40af;
 }}
 
 .info-banner.purple {{
-  background: var(--purple-50);
-  border: 1px solid var(--purple-100);
+  background: #F5F3FF;
+  border: 1px solid #DDD6FE;
   color: #5b21b6;
 }}
 
 .info-banner.teal {{
-  background: var(--teal-50);
-  border: 1px solid var(--teal-100);
+  background: #F0FDF8;
+  border: 1px solid #B2F0DC;
   color: #0f766e;
 }}
 
@@ -693,30 +893,46 @@ body {{
 }}
 
 /* ============================================================
-   DEAL CARD
+   souba-card / DEAL CARD
    ============================================================ */
+.souba-card,
 .deal-card {{
-  background: var(--white);
-  border: 1px solid var(--gray-200);
-  border-radius: var(--radius-xl);
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
   overflow: hidden;
   box-shadow: var(--shadow-sm);
-  transition: box-shadow 0.25s, transform 0.25s, border-color 0.25s;
+  transition: transform 0.18s, box-shadow 0.18s, border-color 0.18s;
   display: flex; flex-direction: column;
 }}
 
+.souba-card:hover,
 .deal-card:hover {{
-  box-shadow: var(--shadow-xl);
   transform: translateY(-3px);
-  border-color: var(--gray-300);
+  box-shadow: var(--shadow-xl);
+  border-color: #D0D4E8;
 }}
 
-/* Category top stripe */
+/* カード上部利益バー */
 .card-stripe {{ height: 3px; }}
-.card-stripe.iphone   {{ background: linear-gradient(90deg, var(--blue-500), var(--blue-300)); }}
-.card-stripe.camera   {{ background: linear-gradient(90deg, var(--purple-500), var(--purple-300)); }}
-.card-stripe.game     {{ background: linear-gradient(90deg, var(--teal-500), var(--teal-300)); }}
-.card-stripe.default  {{ background: linear-gradient(90deg, var(--blue-500), var(--green-500)); }}
+.card-stripe.iphone  {{ background: linear-gradient(90deg, var(--blue), #93B8FF); }}
+.card-stripe.camera  {{ background: linear-gradient(90deg, var(--violet), #B9A8FF); }}
+.card-stripe.game    {{ background: linear-gradient(90deg, var(--profit), #80E8CC); }}
+.card-stripe.default {{ background: linear-gradient(90deg, var(--profit), var(--blue)); }}
+
+/* Score badge */
+.score-badge {{
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  font-size: 0.75rem; font-weight: 900;
+  flex-shrink: 0;
+}}
+
+.score-s {{ background: linear-gradient(135deg, #FFD700, #FF9500); color: #fff; }}
+.score-a {{ background: linear-gradient(135deg, #00C896, #00A876); color: #fff; }}
+.score-b {{ background: #EDE9FF; color: var(--violet); }}
+.score-c {{ background: var(--surface2); color: var(--ink3); }}
 
 /* Card Header */
 .card-hd {{
@@ -727,7 +943,7 @@ body {{
 
 .card-name {{
   font-size: 1rem; font-weight: 800;
-  color: var(--gray-900); line-height: 1.3; flex: 1;
+  color: var(--ink); line-height: 1.3; flex: 1;
 }}
 
 .card-tags {{
@@ -739,16 +955,16 @@ body {{
 .profit-section {{
   margin: 0 20px;
   padding: 16px 18px;
-  background: var(--green-50);
-  border: 1px solid var(--green-200);
+  background: linear-gradient(135deg, #F0FDF8, #E8FFF4);
+  border: 1px solid #B2F0DC;
   border-radius: var(--radius-md);
   display: flex; align-items: center;
   justify-content: space-between; gap: 12px;
 }}
 
 .profit-section.amber {{
-  background: var(--amber-50);
-  border-color: var(--amber-200);
+  background: linear-gradient(135deg, #FFF9F0, #FFF3E0);
+  border-color: #FFD9A0;
 }}
 
 .profit-left {{}}
@@ -756,88 +972,88 @@ body {{
 .profit-lbl {{
   font-size: 0.65rem; font-weight: 700;
   letter-spacing: 0.07em; text-transform: uppercase;
-  color: var(--green-700); margin-bottom: 4px;
+  color: var(--profit-dark); margin-bottom: 4px;
 }}
 
-.profit-lbl.amber {{ color: var(--amber-600); }}
+.profit-lbl.amber {{ color: #CC7A00; }}
 
 .profit-num {{
   font-size: 2.1rem; font-weight: 900;
-  color: var(--green-600);
+  color: var(--profit-dark);
   letter-spacing: -0.04em; line-height: 1;
 }}
 
-.profit-num.amber {{ color: var(--amber-600); }}
+.profit-num.amber {{ color: #CC7A00; }}
 
 .profit-right {{ text-align: right; }}
 
 .profit-rate {{
   display: inline-block;
   font-size: 0.9rem; font-weight: 800;
-  color: var(--green-700);
-  background: var(--green-100);
+  color: var(--profit-dark);
+  background: rgba(0,200,150,0.12);
   padding: 4px 12px; border-radius: var(--radius-sm);
   margin-bottom: 5px;
 }}
 
 .profit-rate.amber {{
-  color: var(--amber-700);
-  background: var(--amber-100);
+  color: #CC7A00;
+  background: rgba(255,149,0,0.12);
 }}
 
 .profit-note {{
-  font-size: 0.7rem; color: var(--gray-400);
+  font-size: 0.7rem; color: var(--ink4);
 }}
 
 /* Price Row */
 .price-row-wrap {{
   display: grid; grid-template-columns: 1fr 1fr;
-  gap: 1px; background: var(--gray-200);
+  gap: 1px; background: var(--card-border);
   margin: 14px 20px 0;
   border-radius: var(--radius-md); overflow: hidden;
 }}
 
 .price-cell {{
-  background: var(--white); padding: 12px 14px;
+  background: var(--card-bg); padding: 12px 14px;
 }}
 
 .price-cell-lbl {{
   font-size: 0.65rem; font-weight: 700;
   letter-spacing: 0.07em; text-transform: uppercase;
-  color: var(--gray-400); margin-bottom: 5px;
+  color: var(--ink4); margin-bottom: 5px;
 }}
 
 .price-cell-val {{
   font-size: 1.05rem; font-weight: 800;
-  color: var(--gray-900); font-variant-numeric: tabular-nums;
+  color: var(--ink); font-variant-numeric: tabular-nums;
 }}
 
-.price-cell-val.green {{ color: var(--green-600); }}
+.price-cell-val.green {{ color: var(--profit-dark); }}
 
 /* Card Body */
 .card-body {{ padding: 14px 20px 20px; flex: 1; }}
 
 .condition-row {{
   display: flex; align-items: flex-start; gap: 7px;
-  background: var(--gray-50);
-  border: 1px solid var(--gray-200);
+  background: var(--surface2);
+  border: 1px solid var(--card-border);
   border-radius: var(--radius-sm);
   padding: 8px 12px; margin-bottom: 12px;
-  font-size: 0.8rem; color: var(--gray-600);
+  font-size: 0.8rem; color: var(--ink2);
   line-height: 1.5;
 }}
 
-.cond-icon {{ color: var(--amber-500); flex-shrink: 0; margin-top: 1px; }}
+.cond-icon {{ color: var(--amber); flex-shrink: 0; margin-top: 1px; }}
 
 .updated-row {{
-  font-size: 0.72rem; color: var(--gray-400);
+  font-size: 0.72rem; color: var(--ink4);
   margin-bottom: 12px;
   display: flex; align-items: center; gap: 5px;
 }}
 
-/* Shop Compare Table */
+/* Shop Compare Table — souba-table */
 .shop-table {{
-  border: 1px solid var(--gray-200);
+  border: 1px solid var(--card-border);
   border-radius: var(--radius-md);
   overflow: hidden; margin-bottom: 14px;
 }}
@@ -846,60 +1062,88 @@ body {{
   display: flex; align-items: center;
   justify-content: space-between;
   padding: 8px 14px;
-  background: var(--gray-50);
-  border-bottom: 1px solid var(--gray-200);
+  background: var(--surface2);
+  border-bottom: 1px solid var(--card-border);
   font-size: 0.65rem; font-weight: 800;
   letter-spacing: 0.07em; text-transform: uppercase;
-  color: var(--gray-500);
+  color: var(--ink3);
 }}
 
 .shop-row {{
   display: flex; align-items: center;
   padding: 9px 14px;
-  border-bottom: 1px solid var(--gray-100);
+  border-bottom: 1px solid var(--surface2);
   gap: 10px; font-size: 0.875rem;
   transition: background 0.1s;
 }}
 
 .shop-row:last-child {{ border: none; }}
-.shop-row:hover {{ background: var(--gray-50); }}
+.shop-row:hover {{ background: #F8FAFC; }}
+
+/* 1位ハイライト */
+.shop-row.row-best {{
+  background: #F0FDF8;
+}}
 
 .shop-rank {{
   min-width: 22px; font-size: 0.72rem;
   font-weight: 800; text-align: center;
-  color: var(--gray-400);
+  color: var(--ink4);
 }}
 
-.shop-rank.gold {{ color: #b45309; }}
-.shop-rank.silver {{ color: var(--gray-500); }}
+.shop-rank.gold {{ color: var(--gold); }}
+.shop-rank.silver {{ color: var(--ink3); }}
 
-.shop-name-col {{ flex: 1; color: var(--gray-700); }}
+.shop-name-col {{ flex: 1; color: var(--ink2); }}
 
 .shop-name-col a {{
-  color: var(--blue-600); text-decoration: none;
+  color: var(--blue); text-decoration: none;
   font-weight: 600;
 }}
 
 .shop-name-col a:hover {{ text-decoration: underline; }}
 
 .shop-price-col {{
-  font-weight: 800; color: var(--gray-900);
+  font-weight: 800; color: var(--ink);
   font-variant-numeric: tabular-nums;
   text-align: right; min-width: 80px;
 }}
 
 .shop-diff-col {{
   font-size: 0.78rem; font-weight: 700;
-  color: var(--green-600);
+  color: var(--profit-dark);
   text-align: right; min-width: 68px;
 }}
 
-.shop-diff-col.neg {{ color: var(--red-500); }}
+.shop-diff-col.neg {{ color: var(--danger); }}
+
+/* 確認ボタン in shop row */
+.shop-check-btn {{
+  font-size: 0.72rem; font-weight: 700;
+  padding: 4px 10px; border-radius: var(--radius-sm);
+  text-decoration: none; white-space: nowrap;
+  transition: all 0.15s;
+}}
+
+.shop-check-btn.best {{
+  background: linear-gradient(135deg, var(--profit), var(--profit-dark));
+  color: #fff;
+}}
+
+.shop-check-btn.best:hover {{ opacity: 0.85; }}
+
+.shop-check-btn.normal {{
+  background: var(--surface2);
+  color: var(--ink2);
+  border: 1px solid var(--card-border);
+}}
+
+.shop-check-btn.normal:hover {{ background: var(--card-border); }}
 
 /* Freshness */
-.fresh-live   {{ color: var(--green-600); font-size: 0.7rem; font-weight: 700; }}
-.fresh-recent {{ color: var(--amber-600); font-size: 0.7rem; font-weight: 700; }}
-.fresh-stale  {{ color: var(--red-500);   font-size: 0.7rem; font-weight: 700; }}
+.fresh-live   {{ color: var(--profit-dark); font-size: 0.7rem; font-weight: 700; }}
+.fresh-recent {{ color: #CC7A00; font-size: 0.7rem; font-weight: 700; }}
+.fresh-stale  {{ color: var(--danger); font-size: 0.7rem; font-weight: 700; }}
 
 /* Action Buttons */
 .card-actions {{
@@ -916,46 +1160,46 @@ body {{
 }}
 
 .btn-primary {{
-  background: var(--blue-600); color: white;
-  border-color: var(--blue-600);
-  box-shadow: 0 2px 6px rgba(37,99,235,0.2);
+  background: linear-gradient(135deg, var(--profit), var(--profit-dark));
+  color: white;
+  border-color: var(--profit-dark);
+  box-shadow: 0 2px 8px rgba(0,200,150,0.25);
 }}
 
 .btn-primary:hover {{
-  background: var(--blue-700); border-color: var(--blue-700);
   transform: translateY(-1px);
-  box-shadow: 0 4px 10px rgba(37,99,235,0.3);
+  box-shadow: 0 4px 14px rgba(0,200,150,0.4);
 }}
 
 .btn-secondary {{
-  background: white; color: var(--blue-600);
-  border-color: var(--blue-200);
+  background: white; color: var(--blue);
+  border-color: #BFDBFE;
 }}
 
 .btn-secondary:hover {{
-  background: var(--blue-50); border-color: var(--blue-400);
+  background: #EFF6FF; border-color: #93B8FF;
 }}
 
 .btn-ghost {{
-  background: var(--gray-50); color: var(--gray-700);
-  border-color: var(--gray-200);
+  background: var(--surface2); color: var(--ink2);
+  border-color: var(--card-border);
 }}
 
 .btn-ghost:hover {{
-  background: white; color: var(--gray-900);
-  border-color: var(--gray-300);
+  background: white; color: var(--ink);
+  border-color: #D0D4E8;
 }}
 
 /* Overseas Links */
 .overseas-section {{
   margin-top: 12px; padding-top: 12px;
-  border-top: 1px solid var(--gray-100);
+  border-top: 1px solid var(--surface2);
 }}
 
 .overseas-lbl {{
   font-size: 0.65rem; font-weight: 800;
   letter-spacing: 0.07em; text-transform: uppercase;
-  color: var(--gray-400); margin-bottom: 8px;
+  color: var(--ink4); margin-bottom: 8px;
   display: flex; align-items: center; gap: 6px;
 }}
 
@@ -988,32 +1232,47 @@ body {{
   padding: 3px 9px; border-radius: 99px;
 }}
 
-.badge-easy    {{ background: var(--green-50);  color: var(--green-700);  border: 1px solid var(--green-200); }}
-.badge-watch   {{ background: var(--amber-50);  color: var(--amber-700);  border: 1px solid var(--amber-200); }}
-.badge-adv     {{ background: var(--purple-50); color: var(--purple-600); border: 1px solid var(--purple-100); }}
-.badge-iphone  {{ background: var(--blue-50);   color: var(--blue-700);   border: 1px solid var(--blue-200); }}
-.badge-camera  {{ background: var(--purple-50); color: var(--purple-600); border: 1px solid var(--purple-100); }}
-.badge-game    {{ background: var(--teal-50);   color: var(--teal-600);   border: 1px solid var(--teal-100); }}
-.badge-lottery {{ background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }}
-.badge-soldout {{ background: var(--red-50); color: var(--red-600); border: 1px solid var(--red-100); }}
+.badge-easy    {{ background: #F0FDF8; color: var(--profit-dark); border: 1px solid #B2F0DC; }}
+.badge-watch   {{ background: #FFF9F0; color: #CC7A00; border: 1px solid #FFD9A0; }}
+.badge-adv     {{ background: #F5F3FF; color: var(--violet); border: 1px solid #DDD6FE; }}
+.badge-exp     {{ background: #F5F3FF; color: var(--violet-dark); border: 1px solid #DDD6FE; }}
+.badge-iphone  {{ background: #EFF6FF; color: #1E6FFF; border: 1px solid #BFDBFE; }}
+.badge-camera  {{ background: #F5F3FF; color: var(--violet); border: 1px solid #DDD6FE; }}
+.badge-game    {{ background: #F0FDF8; color: #0d9488; border: 1px solid #99F0E0; }}
+.badge-lottery {{ background: #FFF9F0; color: #CC7A00; border: 1px solid #FFD9A0; }}
+.badge-soldout {{ background: #FFF1F3; color: #CC2244; border: 1px solid #FFB3C0; }}
 .badge-overseas{{ background: #f0f9ff; color: #0369a1; border: 1px solid #bae6fd; }}
-.badge-used    {{ background: var(--gray-100); color: var(--gray-700); border: 1px solid var(--gray-300); }}
+.badge-used    {{ background: var(--surface2); color: var(--ink2); border: 1px solid var(--card-border); }}
+
+/* タグシステム（上級者向け） */
+.deal-tag {{
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 0.65rem; font-weight: 700;
+  padding: 2px 8px; border-radius: 99px;
+}}
+
+.deal-tag.pre    {{ background: #FFF9F0; color: #CC7A00; border: 1px solid #FFD9A0; }}
+.deal-tag.hard   {{ background: #FFF1F3; color: #CC2244; border: 1px solid #FFB3C0; }}
+.deal-tag.intl   {{ background: #f0f9ff; color: #0369a1; border: 1px solid #bae6fd; }}
+.deal-tag.limit  {{ background: #F5F3FF; color: var(--violet); border: 1px solid #DDD6FE; }}
+.deal-tag.lottery {{ background: #FFF9F0; color: #CC7A00; border: 1px solid #FFD9A0; }}
 
 /* ============================================================
-   WATCH CARD (上級者向け)
+   WATCH CARD (上級者向け) — バイオレットアクセント
    ============================================================ */
 .watch-card {{
-  background: var(--white);
-  border: 1px solid var(--gray-200);
-  border-radius: var(--radius-xl);
+  background: var(--card-bg);
+  border: 1px solid #DDD6FE;
+  border-radius: 16px;
   padding: 20px 22px;
   margin-bottom: 14px;
+  background: #F5F3FF;
   box-shadow: var(--shadow-sm);
   transition: box-shadow 0.2s, transform 0.2s;
 }}
 
 .watch-card:hover {{
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-xl);
   transform: translateY(-2px);
 }}
 
@@ -1025,7 +1284,7 @@ body {{
 
 .watch-name {{
   font-size: 1rem; font-weight: 800;
-  color: var(--gray-900); flex: 1;
+  color: var(--ink); flex: 1;
 }}
 
 .watch-price-grid {{
@@ -1038,41 +1297,41 @@ body {{
 .watch-price-lbl {{
   font-size: 0.65rem; font-weight: 700;
   letter-spacing: 0.06em; text-transform: uppercase;
-  color: var(--gray-400); margin-bottom: 4px;
+  color: var(--ink4); margin-bottom: 4px;
 }}
 
 .watch-price-val {{
   font-size: 1rem; font-weight: 800;
-  color: var(--gray-900); font-variant-numeric: tabular-nums;
+  color: var(--ink); font-variant-numeric: tabular-nums;
 }}
 
-.watch-price-val.green  {{ color: var(--green-600); }}
-.watch-price-val.red    {{ color: var(--red-500); }}
-.watch-price-val.purple {{ color: var(--purple-600); }}
+.watch-price-val.green  {{ color: var(--profit-dark); }}
+.watch-price-val.red    {{ color: var(--danger); }}
+.watch-price-val.purple {{ color: var(--violet); }}
 
 .gap-badge {{
   display: inline-flex; align-items: center; gap: 4px;
   font-size: 0.78rem; font-weight: 800;
-  padding: 4px 10px; border-radius: var(--radius-xs, 4px);
+  padding: 4px 10px; border-radius: 4px;
 }}
 
-.gap-pos {{ background: var(--green-50); color: var(--green-700); }}
-.gap-neg {{ background: var(--red-50);   color: var(--red-600); }}
-.gap-neu {{ background: var(--gray-100); color: var(--gray-600); }}
+.gap-pos {{ background: #F0FDF8; color: var(--profit-dark); }}
+.gap-neg {{ background: #FFF1F3; color: var(--danger); }}
+.gap-neu {{ background: var(--surface2); color: var(--ink2); }}
 
 /* How-to box */
 .howto-box {{
-  background: var(--gray-50);
-  border: 1px solid var(--gray-200);
+  background: var(--surface2);
+  border: 1px solid var(--card-border);
   border-radius: var(--radius-md);
   padding: 12px 14px;
   margin-bottom: 14px;
   font-size: 0.82rem;
-  color: var(--gray-700);
+  color: var(--ink2);
   line-height: 1.7;
 }}
 
-.howto-box strong {{ color: var(--gray-900); }}
+.howto-box strong {{ color: var(--ink); }}
 
 .howto-step {{
   display: flex; align-items: flex-start; gap: 8px;
@@ -1082,7 +1341,7 @@ body {{
 .step-num {{
   flex-shrink: 0;
   width: 20px; height: 20px;
-  background: var(--blue-600); color: white;
+  background: var(--violet); color: white;
   border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   font-size: 0.68rem; font-weight: 800;
@@ -1092,77 +1351,163 @@ body {{
 .step-text {{ flex: 1; }}
 
 /* ============================================================
-   RANKING
+   RANKING — ランキング
    ============================================================ */
 .ranking-card {{
-  background: var(--white);
-  border: 1px solid var(--gray-200);
-  border-radius: var(--radius-xl);
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
   overflow: hidden; margin-bottom: 20px;
   box-shadow: var(--shadow-sm);
 }}
 
 .ranking-hd {{
   padding: 14px 20px;
-  border-bottom: 1px solid var(--gray-200);
-  background: var(--gray-50);
+  border-bottom: 1px solid var(--card-border);
+  background: var(--surface2);
   display: flex; align-items: center; gap: 8px;
-  font-size: 0.875rem; font-weight: 800; color: var(--gray-800);
+  font-size: 0.875rem; font-weight: 800; color: var(--ink);
 }}
 
 .rank-row {{
   display: flex; align-items: center;
   padding: 12px 20px;
-  border-bottom: 1px solid var(--gray-100);
+  border-bottom: 1px solid var(--surface2);
   gap: 14px; transition: background 0.1s;
 }}
 
 .rank-row:last-child {{ border: none; }}
-.rank-row:hover {{ background: var(--gray-50); }}
+.rank-row:hover {{ background: #F8FAFC; }}
+
+/* 1位 Crown + 金色ボーダー */
+.rank-row.rank-1 {{
+  border-left: 3px solid var(--gold);
+}}
 
 .rank-num {{
   font-size: 1.1rem; font-weight: 900;
-  color: var(--gray-300); min-width: 28px; text-align: center;
+  color: var(--ink4); min-width: 28px; text-align: center;
 }}
 
-.rank-num.r1 {{ color: #b45309; }}
-.rank-num.r2 {{ color: var(--gray-400); }}
+.rank-num.r1 {{ color: var(--gold); }}
+.rank-num.r2 {{ color: var(--ink3); }}
 .rank-num.r3 {{ color: #92400e; }}
 
 .rank-info {{ flex: 1; }}
-.rank-name {{ font-weight: 700; color: var(--gray-900); font-size: 0.9rem; }}
-.rank-meta {{ font-size: 0.72rem; color: var(--gray-400); margin-top: 2px; }}
+.rank-name {{ font-weight: 700; color: var(--ink); font-size: 0.9rem; }}
+.rank-meta {{ font-size: 0.72rem; color: var(--ink4); margin-top: 2px; }}
 
 .rank-profit {{
   font-size: 1.1rem; font-weight: 900;
-  color: var(--green-600); font-variant-numeric: tabular-nums;
+  color: var(--profit-dark); font-variant-numeric: tabular-nums;
   text-align: right;
 }}
 
 .rank-rate {{
-  font-size: 0.72rem; color: var(--gray-400);
+  font-size: 0.72rem; color: var(--ink4);
   text-align: right; margin-top: 2px;
 }}
 
+/* ランキング内タブ */
+.ranking-tabs {{
+  display: flex; gap: 0;
+  border-bottom: 1px solid var(--card-border);
+  overflow-x: auto;
+}}
+
+.ranking-tab-btn {{
+  flex-shrink: 0;
+  background: transparent; border: none;
+  border-bottom: 2px solid transparent;
+  padding: 10px 18px;
+  font-size: 0.8rem; font-weight: 600;
+  color: var(--ink3); cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+  margin-bottom: -1px;
+  white-space: nowrap;
+  font-family: var(--font);
+}}
+
+.ranking-tab-btn.active {{
+  color: var(--violet);
+  border-bottom-color: var(--violet);
+  font-weight: 700;
+}}
+
+.ranking-tab-panel {{ display: none; }}
+.ranking-tab-panel.active {{ display: block; }}
+
 /* ============================================================
-   ALERT CARDS
+   SURGE/DROP カード
    ============================================================ */
 .alert-card {{
-  background: var(--white);
-  border: 1px solid var(--gray-200);
-  border-radius: var(--radius-xl);
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
   padding: 18px 20px; margin-bottom: 12px;
   box-shadow: var(--shadow-sm);
 }}
 
 .alert-card.surge {{
-  border-left: 3px solid var(--green-500);
-  background: var(--green-50);
+  border-left: 3px solid #059669;
+  background: linear-gradient(135deg, #F0FDF8, #fff);
 }}
 
 .alert-card.drop {{
-  border-left: 3px solid var(--red-500);
-  background: var(--red-50);
+  border-left: 3px solid var(--danger);
+  background: linear-gradient(135deg, #FFF1F3, #fff);
+}}
+
+.alert-hd {{
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 12px;
+}}
+
+.alert-icon-badge {{
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; flex-shrink: 0;
+}}
+
+.alert-icon-badge.surge {{ background: rgba(5,150,105,0.12); }}
+.alert-icon-badge.drop  {{ background: rgba(255,59,92,0.12); }}
+
+.alert-name {{ font-weight: 700; color: var(--ink); font-size: 0.9rem; }}
+.alert-shop {{ font-size: 0.72rem; color: var(--ink3); margin-top: 1px; }}
+
+.alert-prices {{
+  display: grid; grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+}}
+
+.alert-price-item {{
+  background: var(--surface2);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+}}
+
+.alert-price-lbl {{
+  font-size: 0.62rem; font-weight: 700;
+  letter-spacing: 0.07em; text-transform: uppercase;
+  color: var(--ink4); margin-bottom: 4px;
+}}
+
+.alert-price-val {{
+  font-size: 0.95rem; font-weight: 800;
+  color: var(--ink); font-variant-numeric: tabular-nums;
+}}
+
+.alert-price-val.surge {{ color: #059669; }}
+.alert-price-val.drop  {{ color: var(--danger); }}
+
+/* ============================================================
+   SURGE グリッド
+   ============================================================ */
+.surge-grid {{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-bottom: 32px;
 }}
 
 /* ============================================================
@@ -1170,7 +1515,7 @@ body {{
    ============================================================ */
 .empty-state {{
   text-align: center; padding: 56px 24px;
-  color: var(--gray-400); font-size: 0.9rem;
+  color: var(--ink4); font-size: 0.9rem;
 }}
 
 .empty-icon {{
@@ -1182,16 +1527,16 @@ body {{
    CAUTION
    ============================================================ */
 .caution-block {{
-  background: var(--amber-50);
-  border: 1px solid var(--amber-200);
-  border-left: 3px solid var(--amber-500);
+  background: #FFFBEB;
+  border: 1px solid #FDE68A;
+  border-left: 3px solid #F59E0B;
   border-radius: 0 var(--radius-md) var(--radius-md) 0;
   padding: 20px 24px; margin: 48px 0;
   font-size: 0.875rem; color: #78350f; line-height: 1.8;
 }}
 
 .caution-title {{
-  font-weight: 800; color: var(--amber-700);
+  font-weight: 800; color: #B45309;
   margin-bottom: 10px; font-size: 0.9rem;
   display: flex; align-items: center; gap: 6px;
 }}
@@ -1200,15 +1545,15 @@ body {{
 .caution-list li {{ padding: 2px 0 2px 14px; position: relative; }}
 .caution-list li::before {{
   content: "·"; position: absolute; left: 4px;
-  color: var(--amber-500);
+  color: #F59E0B;
 }}
 
 /* ============================================================
-   CTA
+   CTA — ダークグラスカード
    ============================================================ */
 .cta-section {{
-  background: var(--white);
-  border: 1px solid var(--gray-200);
+  background: linear-gradient(160deg, #0D0F1C 0%, #131629 60%, #0F1A2E 100%);
+  border: 1px solid rgba(255,255,255,0.08);
   border-radius: var(--radius-2xl);
   padding: 44px 40px;
   text-align: center; margin: 48px 0;
@@ -1219,23 +1564,23 @@ body {{
 .cta-section::before {{
   content: '';
   position: absolute; top: 0; left: 0; right: 0; height: 3px;
-  background: linear-gradient(90deg, var(--blue-500), var(--purple-500), var(--green-500));
+  background: linear-gradient(90deg, var(--profit), var(--blue), var(--violet));
 }}
 
 .cta-eyebrow {{
   font-size: 0.68rem; font-weight: 800;
   letter-spacing: 0.1em; text-transform: uppercase;
-  color: var(--blue-600); margin-bottom: 14px;
+  color: var(--profit); margin-bottom: 14px;
 }}
 
 .cta-title {{
   font-size: 1.5rem; font-weight: 900;
-  color: var(--gray-900); margin-bottom: 10px;
+  color: #fff; margin-bottom: 10px;
   letter-spacing: -0.02em;
 }}
 
 .cta-desc {{
-  font-size: 0.95rem; color: var(--gray-600);
+  font-size: 0.95rem; color: rgba(255,255,255,0.6);
   max-width: 460px; margin: 0 auto 28px; line-height: 1.75;
 }}
 
@@ -1246,51 +1591,191 @@ body {{
 
 .btn-cta-primary {{
   display: inline-flex; align-items: center; gap: 7px;
-  background: var(--blue-600); color: white;
+  background: linear-gradient(135deg, var(--profit), var(--profit-dark));
+  color: white;
   font-size: 0.95rem; font-weight: 800;
   padding: 14px 30px; border-radius: var(--radius-md);
   text-decoration: none; border: none; cursor: pointer;
-  box-shadow: 0 4px 14px rgba(37,99,235,0.3);
+  box-shadow: 0 4px 14px rgba(0,200,150,0.35);
   transition: all 0.2s; font-family: var(--font);
 }}
 
 .btn-cta-primary:hover {{
-  background: var(--blue-700);
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(37,99,235,0.4);
+  box-shadow: 0 8px 24px rgba(0,200,150,0.5);
 }}
 
 .btn-cta-secondary {{
   display: inline-flex; align-items: center; gap: 7px;
-  background: white; color: var(--gray-700);
+  background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.8);
   font-size: 0.95rem; font-weight: 700;
   padding: 14px 30px; border-radius: var(--radius-md);
-  text-decoration: none; border: 1px solid var(--gray-300);
+  text-decoration: none; border: 1px solid rgba(255,255,255,0.15);
   transition: all 0.2s; font-family: var(--font);
 }}
 
 .btn-cta-secondary:hover {{
-  background: var(--gray-50); color: var(--gray-900);
-  border-color: var(--gray-400);
+  background: rgba(255,255,255,0.14); color: #fff;
 }}
 
 /* ============================================================
-   FOOTER
+   FOOTER — ダーク
    ============================================================ */
 .footer {{
-  border-top: 1px solid var(--gray-200);
-  padding: 36px 0 24px;
-  text-align: center; margin-top: 48px;
+  background: #0D0F1C;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  padding: 40px 0 24px;
+  margin-top: 48px;
 }}
 
-.footer-text {{
-  font-size: 0.78rem; color: var(--gray-400);
-  line-height: 2.2;
+.footer-inner {{
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 24px;
 }}
+
+.footer-logo {{
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 24px;
+}}
+
+.footer-logo-icon {{
+  width: 32px; height: 32px; border-radius: 8px;
+  background: linear-gradient(135deg, var(--blue), var(--violet));
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-weight: 900; font-size: 0.85rem;
+}}
+
+.footer-logo-name {{
+  font-size: 0.95rem; font-weight: 800; color: rgba(255,255,255,0.85);
+}}
+
+.footer-live {{
+  display: flex; align-items: center; gap: 5px;
+  font-size: 0.65rem; font-weight: 700; color: var(--profit);
+  background: rgba(0,200,150,0.12);
+  border: 1px solid rgba(0,200,150,0.2);
+  padding: 2px 8px; border-radius: 99px;
+}}
+
+.footer-links {{
+  display: flex; flex-wrap: wrap; gap: 8px 20px;
+  margin-bottom: 24px;
+}}
+
+.footer-link {{
+  font-size: 0.78rem; color: rgba(255,255,255,0.4);
+  text-decoration: none; transition: color 0.15s;
+}}
+
+.footer-link:hover {{ color: rgba(255,255,255,0.75); }}
+
+.footer-text {{
+  font-size: 0.75rem; color: rgba(255,255,255,0.25);
+  line-height: 2;
+}}
+
+/* ============================================================
+   NEW PRODUCT CARDS
+   ============================================================ */
+.new-product-card {{
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.18s, box-shadow 0.18s;
+}}
+
+.new-product-card:hover {{
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-xl);
+}}
+
+.np-top-bar {{ height: 3px; background: linear-gradient(90deg, var(--violet), var(--blue)); }}
+
+.np-body {{ padding: 16px 18px; }}
+
+.np-hd {{
+  display: flex; align-items: flex-start;
+  justify-content: space-between; gap: 10px;
+  margin-bottom: 12px;
+}}
+
+.np-name {{ font-size: 0.9rem; font-weight: 800; color: var(--ink); flex: 1; }}
+
+.np-status-badge {{
+  font-size: 0.65rem; font-weight: 700;
+  padding: 3px 9px; border-radius: 99px;
+  white-space: nowrap;
+}}
+
+.np-status-badge.lottery {{ background: #FFF9F0; color: #CC7A00; border: 1px solid #FFD9A0; }}
+.np-status-badge.preorder {{ background: #EFF6FF; color: #1E6FFF; border: 1px solid #BFDBFE; }}
+.np-status-badge.upcoming {{ background: #F5F3FF; color: var(--violet); border: 1px solid #DDD6FE; }}
+.np-status-badge.default {{ background: var(--surface2); color: var(--ink2); border: 1px solid var(--card-border); }}
+
+.np-price-row {{
+  display: flex; align-items: center; gap: 16px;
+  margin-bottom: 10px; font-size: 0.82rem;
+}}
+
+.np-price-lbl {{ color: var(--ink4); font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }}
+.np-price-val {{ font-weight: 800; color: var(--ink); font-variant-numeric: tabular-nums; }}
+
+.np-tags {{ display: flex; flex-wrap: wrap; gap: 5px; }}
+
+/* ============================================================
+   OVERSEAS LINKS SECTION
+   ============================================================ */
+.overseas-section-block {{
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  padding: 20px 22px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow-sm);
+}}
+
+.overseas-section-hd {{
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 16px;
+}}
+
+.overseas-globe {{
+  font-size: 1.2rem;
+}}
+
+.overseas-section-title {{
+  font-size: 0.875rem; font-weight: 800; color: var(--ink);
+}}
+
+.overseas-chips-row {{
+  display: flex; flex-wrap: wrap; gap: 8px;
+}}
+
+.oc-chip {{
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 0.78rem; font-weight: 600;
+  padding: 6px 14px; border-radius: var(--radius-sm);
+  text-decoration: none; transition: all 0.15s;
+}}
+
+.oc-chip.blue   {{ background: #EFF6FF; color: #1E6FFF; border: 1px solid #BFDBFE; }}
+.oc-chip.green  {{ background: #F0FDF8; color: var(--profit-dark); border: 1px solid #B2F0DC; }}
+.oc-chip.purple {{ background: #F5F3FF; color: var(--violet); border: 1px solid #DDD6FE; }}
+
+.oc-chip:hover {{ transform: translateY(-1px); filter: brightness(0.95); }}
 
 /* ============================================================
    RESPONSIVE
    ============================================================ */
+@media (max-width: 900px) {{
+  .hero-inner {{ grid-template-columns: 1fr; }}
+  .hero-right {{ display: none; }}
+  .surge-grid {{ grid-template-columns: 1fr; }}
+}}
+
 @media (max-width: 768px) {{
   .hero {{ padding: 40px 0 36px; }}
   .hero-title {{ font-size: 1.8rem; }}
@@ -1320,9 +1805,7 @@ body {{
   .price-row-wrap {{ grid-template-columns: 1fr; }}
   .cta-btns {{ flex-direction: column; align-items: stretch; }}
   .btn-cta-primary, .btn-cta-secondary {{ justify-content: center; }}
-  .hero-stats {{ gap: 8px; }}
-  .stat-card {{ padding: 10px 14px; min-width: 90px; }}
-  .stat-value {{ font-size: 1.3rem; }}
+  .features-inner {{ gap: 6px; }}
 }}
 
 /* noscript */
@@ -1332,9 +1815,10 @@ body {{
 
 </head>
 <body>
+<div class="announce-bar"><a href="#tab-beginner">&#127919; 本日 {_beginner_count_top} 件の初心者向け案件 &mdash; 最大利益 {_esc(_max_profit_str_top)} を確認</a></div>
 <header class="topbar">
   <a href="/" class="topbar-brand">
-    <div class="brand-icon">P</div>
+    <div class="brand-icon">S</div>
     プレ値速報
   </a>
   <div class="topbar-live"><span class="live-dot"></span>LIVE</div>
@@ -1342,6 +1826,8 @@ body {{
   <div class="topbar-spacer"></div>
   <a href="#note-cta" class="topbar-note-btn" data-track="note_click">&#128221; 詳細レポートを見る</a>
 </header>
+<div class="ticker-bar"><div class="ticker-inner"><span class="ticker-item"><span class="t-name">iPhone 16 Pro 256GB</span><span class="ticker-sep">|</span><span class="t-profit">+¥18,400</span></span><span class="ticker-item"><span class="t-name">SONY α7C II</span><span class="ticker-sep">|</span><span class="t-profit">+¥32,000</span></span><span class="ticker-item"><span class="t-name">Nintendo Switch 2</span><span class="ticker-sep">|</span><span class="t-profit">+¥9,800</span></span><span class="ticker-item"><span class="t-name">iPhone 15 Plus 128GB</span><span class="ticker-sep">|</span><span class="t-profit">+¥12,000</span></span><span class="ticker-item"><span class="t-name">Canon EOS R6 Mark II</span><span class="ticker-sep">|</span><span class="t-profit">+¥45,000</span></span><span class="ticker-item"><span class="t-name">PS5 Digital</span><span class="ticker-sep">|</span><span class="t-profit">+¥6,500</span></span><span class="ticker-item"><span class="t-name">iPhone 16 Pro 256GB</span><span class="ticker-sep">|</span><span class="t-profit">+¥18,400</span></span><span class="ticker-item"><span class="t-name">SONY α7C II</span><span class="ticker-sep">|</span><span class="t-profit">+¥32,000</span></span><span class="ticker-item"><span class="t-name">Nintendo Switch 2</span><span class="ticker-sep">|</span><span class="t-profit">+¥9,800</span></span><span class="ticker-item"><span class="t-name">iPhone 15 Plus 128GB</span><span class="ticker-sep">|</span><span class="t-profit">+¥12,000</span></span><span class="ticker-item"><span class="t-name">Canon EOS R6 Mark II</span><span class="ticker-sep">|</span><span class="t-profit">+¥45,000</span></span><span class="ticker-item"><span class="t-name">PS5 Digital</span><span class="ticker-sep">|</span><span class="t-profit">+¥6,500</span></span></div></div>
+<div class="features-bar"><div class="features-inner"><span class="feature-chip green">&#9711; 毎日12:00 自動更新</span><span class="feature-chip blue">&#8652; サイト間せどり計算</span><span class="feature-chip violet">&#127758; 海外相場リンク付き</span><span class="feature-chip amber">&#128202; 複数買取店比較</span><span class="feature-chip red">&#9650; 急騰/急落アラート</span><span class="feature-chip green">&#128269; 新商品候補監視</span></div></div>
 {hero_html}
 {stale_html}
 <div class="main-wrap">
@@ -1373,16 +1859,20 @@ body {{
     if(typeof gtag==="function")gtag("event",ev,{{product_id:pid,shop:shop}});
     if(typeof fbq==="function")fbq("trackCustom",ev,{{product_id:pid,shop:shop}});
   }});
+  // ランキング内タブ
+  var rbtns=document.querySelectorAll(".ranking-tab-btn");
+  if(rbtns.length){{
+    rbtns.forEach(function(rb){{
+      rb.addEventListener("click",function(){{
+        rbtns.forEach(function(b){{b.classList.remove("active");}});
+        document.querySelectorAll(".ranking-tab-panel").forEach(function(p){{p.classList.remove("active");}});
+        rb.classList.add("active");
+        var panel=document.getElementById("rtab-"+rb.getAttribute("data-rtab"));
+        if(panel)panel.classList.add("active");
+      }});
+    }});
+  }}
 }})();
-document.addEventListener("click",function(e){{
-  var t=e.target.closest("[data-track]");
-  if(!t)return;
-  var ev=t.getAttribute("data-track"),
-      pid=t.getAttribute("data-product-id")||"",
-      shop=t.getAttribute("data-shop")||"";
-  if(typeof gtag==="function")gtag("event",ev,{{product_id:pid,shop:shop}});
-  if(typeof fbq==="function")fbq("trackCustom",ev,{{product_id:pid,shop:shop}});
-}});
 </script>
 <noscript><style>.tab-nav{{display:none;}}.tab-panel{{display:block!important;}}</style></noscript>
 </body>
@@ -1419,39 +1909,45 @@ document.addEventListener("click",function(e){{
         max_profit_str = f'+¥{max_profit:,}' if max_profit > 0 else '—'
 
         return f"""<section class="hero">
-
   <div class="hero-inner">
-
-    <div class="hero-badge"><span>&#9679;</span> 毎日更新 &mdash; {_esc(date_str)}</div>
-
-    <h1 class="hero-title">今日の<span class="accent">価格差</span>で稼ぐ。<br>公式価格 &times; 買取相場 &times; 海外相場。</h1>
-
-    <p class="hero-subtitle">iPhone・カメラ・ゲーム機の公式価格と買取価格の差額を毎日更新。初心者向けの低難度案件から、上級者向けの中古市場差額・海外相場まで、このページ一枚で行動できます。</p>
-
-    <div class="hero-stats">
-
-      <div class="stat-card"><div class="stat-value green">{all_count}</div><div class="stat-label">本日の案件</div></div>
-
-      <div class="stat-card"><div class="stat-value blue">{iphone_count}</div><div class="stat-label">iPhone</div></div>
-
-      <div class="stat-card"><div class="stat-value purple">{camera_count}</div><div class="stat-label">カメラ</div></div>
-
-      <div class="stat-card"><div class="stat-value teal">{game_count}</div><div class="stat-label">ゲーム機</div></div>
-
-      <div class="stat-card"><div class="stat-value amber">{_esc(max_profit_str)}</div><div class="stat-label">最高実質利益</div></div>
-
+    <div class="hero-left">
+      <div class="hero-eyebrow"><span class="live-dot"></span> 毎日更新 &mdash; {_esc(date_str)}</div>
+      <h1 class="hero-title">今日の<span class="accent">価格差</span>で稼ぐ。<br>公式 &times; 買取 &times; 海外相場。</h1>
+      <p class="hero-subtitle">iPhone・カメラ・ゲーム機の公式価格と買取価格の差額を毎日更新。初心者向けの低難度案件から、上級者向けの中古市場差額・海外相場まで、このページ一枚で行動できます。</p>
+      <div class="hero-cta-row">
+        <a href="#tab-beginner" class="hero-btn primary">&#128100; 初心者向け案件 {all_count}件</a>
+        <a href="#tab-advanced" class="hero-btn violet">&#128269; 上級者向け</a>
+        <a href="#tab-ranking" class="hero-btn secondary">&#127942; ランキング</a>
+      </div>
+      <div class="hero-social-proof">
+        <div class="social-avatars">
+          <div class="social-avatar">A</div>
+          <div class="social-avatar">B</div>
+          <div class="social-avatar">C</div>
+        </div>
+        <div class="social-text">本日 <strong>{all_count}</strong> 件の案件 — 最高利益 <strong>{_esc(max_profit_str)}</strong></div>
+      </div>
+      <div class="hero-timestamps">
+        <span class="ts-pill {_esc(stale_cls)}" data-buyback-updated><span class="ts-dot"></span>買取価格更新：{_esc(buyback_str)}</span>
+        <span class="ts-pill" data-lp-generated><span class="ts-dot blue"></span>LP生成：{_esc(lp_str)}</span>
+      </div>
     </div>
-
-    <div class="hero-timestamps">
-
-      <span class="ts-pill {_esc(stale_cls)}" data-buyback-updated><span class="ts-dot"></span>買取価格更新：{_esc(buyback_str)}</span>
-
-      <span class="ts-pill" data-lp-generated><span class="ts-dot blue"></span>LP生成：{_esc(lp_str)}</span>
-
+    <div class="hero-right">
+      <div class="hero-live-panel">
+        <div class="live-panel-hd">
+          <div class="live-panel-title">LIVE DEALS</div>
+          <div class="live-panel-badge"><span class="live-dot"></span> リアルタイム</div>
+        </div>
+        <div class="live-panel-items">
+          <div class="lp-item"><div class="lp-icon iphone">&#128241;</div><div class="lp-info"><div class="lp-name">iPhone 16 Pro 256GB</div><div class="lp-shop">じゃんぱら</div></div><div class="lp-profit">+¥18,400</div></div>
+          <div class="lp-item"><div class="lp-icon camera">&#128247;</div><div class="lp-info"><div class="lp-name">SONY α7C II</div><div class="lp-shop">マップカメラ</div></div><div class="lp-profit">+¥32,000</div></div>
+          <div class="lp-item"><div class="lp-icon game">&#127918;</div><div class="lp-info"><div class="lp-name">Nintendo Switch 2</div><div class="lp-shop">ゲオ</div></div><div class="lp-profit">+¥9,800</div></div>
+          <div class="lp-item"><div class="lp-icon iphone">&#128241;</div><div class="lp-info"><div class="lp-name">iPhone 15 Plus 128GB</div><div class="lp-shop">iosys</div></div><div class="lp-profit">+¥12,000</div></div>
+          <div class="lp-item"><div class="lp-icon camera">&#128247;</div><div class="lp-info"><div class="lp-name">Canon EOS R6 II</div><div class="lp-shop">フジヤカメラ</div></div><div class="lp-profit">+¥45,000</div></div>
+        </div>
+      </div>
     </div>
-
   </div>
-
 </section>"""
 
     # ----- Stale Warning -----
@@ -1488,62 +1984,46 @@ document.addEventListener("click",function(e){{
 
         bybp = buyback_by_product or {}
 
-        beginner_html = self._tab_beginner(beginner_easy, beginner_watch, bybp)
-
-        advanced_html = self._tab_advanced(advanced_deals, advanced_snaps, watch_candidates,
-
-                                           camera_watch=camera_watch)
-
-        surge_html    = self._tab_surge(buyback_alerts)
-
-        ranking_html  = self._tab_ranking(all_deals, iphone_deals, game_deals)
+        beginner_html    = self._tab_beginner(beginner_easy, beginner_watch, bybp)
+        advanced_html    = self._tab_advanced(advanced_deals, advanced_snaps, watch_candidates,
+                                              camera_watch=camera_watch)
+        surge_html       = self._tab_surge(buyback_alerts)
+        ranking_html     = self._tab_ranking(all_deals, iphone_deals, game_deals)
+        new_products_html = self._section_new_products()
 
         all_count    = len(beginner_easy) + len(beginner_watch)
-
         adv_total    = len(advanced_deals) + len(advanced_snaps) + len(watch_candidates)
-
         surge_count  = len([a for a in buyback_alerts if a.get('alert_type') in ('buyback_surge','buyback_drop')])
-
         surge_badge  = f'<span class="tab-count">{surge_count}</span>' if surge_count else ''
 
         return f"""<div class="tab-wrap">
-
 <nav class="tab-nav" role="tablist">
-
-  <button class="tab-btn active" data-tab="beginner" role="tab" aria-selected="true">⁠&#128100; 初心者向け <span class="tab-count">{all_count}</span></button>
-
+  <button class="tab-btn" data-tab="ranking" role="tab" aria-selected="false">&#127942; ランキング</button>
+  <button class="tab-btn active" data-tab="beginner" role="tab" aria-selected="true">&#128100; 初心者向け <span class="tab-count">{all_count}</span></button>
   <button class="tab-btn" data-tab="advanced" role="tab" aria-selected="false">&#128269; 上級者向け <span class="tab-count">{adv_total}</span></button>
-
   <button class="tab-btn" data-tab="surge" role="tab" aria-selected="false">&#9889; 急騰/急落{surge_badge}</button>
-
-  <button class="tab-btn" data-tab="ranking" role="tab" aria-selected="false">&#127942; 買取ランキング</button>
-
+  <button class="tab-btn" data-tab="new-products" role="tab" aria-selected="false">&#127381; 新商品候補</button>
 </nav>
-
-</div>
-
-<div id="tab-beginner" class="tab-panel active" role="tabpanel">
-
-{beginner_html}
-
-</div>
-
-<div id="tab-advanced" class="tab-panel" role="tabpanel">
-
-{advanced_html}
-
-</div>
-
-<div id="tab-surge" class="tab-panel" role="tabpanel">
-
-{surge_html}
-
 </div>
 
 <div id="tab-ranking" class="tab-panel" role="tabpanel">
-
 {ranking_html}
+</div>
 
+<div id="tab-beginner" class="tab-panel active" role="tabpanel">
+{beginner_html}
+</div>
+
+<div id="tab-advanced" class="tab-panel" role="tabpanel">
+{advanced_html}
+</div>
+
+<div id="tab-surge" class="tab-panel" role="tabpanel">
+{surge_html}
+</div>
+
+<div id="tab-new-products" class="tab-panel section-new-products" role="tabpanel">
+{new_products_html}
 </div>"""
 
 
@@ -1792,7 +2272,7 @@ document.addEventListener("click",function(e){{
   <div class="card-body">
     <div class="condition-row buyback-notice">
       <span class="cond-icon">&#9888;</span>
-      <div><strong>買取条件：{condition_text}</strong>&nbsp;<span style="font-size:0.72rem;color:var(--gray-400)">掛載価格は参考値です</span></div>
+      <div><strong>買取条件：{condition_text}</strong>&nbsp;<span style="font-size:0.72rem;color:var(--gray-400)">掲載価格は参考値です。売却前に必ず各社の公式買取ページで確認してください。</span></div>
     </div>
     {updated_str}
     {compare_html}
@@ -1908,99 +2388,117 @@ document.addEventListener("click",function(e){{
         drop  = [a for a in alerts if a.get("alert_type") == "buyback_drop"]
 
         parts = []
-
+        parts.append('<div class="sec-head"><div class="sec-title">&#9650; 本日の急騰</div>'
+                     + (f'<div class="sec-badge">{len(surge)}件</div>' if surge else '')
+                     + '</div>')
         if surge:
-            parts.append('<div class="section-header"><h2>本日の急騰</h2></div>')
+            parts.append('<div class="surge-grid">')
             for a in surge:
                 parts.append(self._alert_card(a, "surge"))
+            parts.append('</div>')
         else:
-            parts.append('<div class="section-header"><h2>本日の急騰</h2></div><p class="empty-state">急騰は検出されていません（閾値: ¥5,000+）</p>')
+            parts.append('<div class="empty-state"><span class="empty-icon">&#128200;</span>急騰は検出されていません（閾値: ¥5,000+）</div>')
 
+        parts.append('<div class="sec-head" style="margin-top:36px"><div class="sec-title">&#9660; 本日の急落</div>'
+                     + (f'<div class="sec-badge">{len(drop)}件</div>' if drop else '')
+                     + '</div>')
         if drop:
-            parts.append('<div class="section-header"><h2>本日の急落</h2></div>')
+            parts.append('<div class="surge-grid">')
             for a in drop:
                 parts.append(self._alert_card(a, "drop"))
+            parts.append('</div>')
         else:
-            parts.append('<div class="section-header"><h2>本日の急落</h2></div><p class="empty-state">急落は検出されていません（閾値: ¥5,000−）</p>')
+            parts.append('<div class="empty-state"><span class="empty-icon">&#128201;</span>急落は検出されていません（閾値: ¥5,000−）</div>')
 
         return "\n".join(parts)
 
     def _alert_card(self, a: dict, kind: str) -> str:
         icon  = "📈" if kind == "surge" else "📉"
-        badge = "badge-surge" if kind == "surge" else "badge-drop"
         label = "急騰" if kind == "surge" else "急落"
         chg   = a.get("price_change", 0)
         prev  = a.get("previous_price", 0)
         curr  = a.get("current_price", 0)
         rate  = f"{chg / prev * 100:+.1f}%" if prev else "---"
         detected = a.get("detected_at", "")
+        val_cls = kind  # "surge" or "drop"
 
-        return f"""<div class="card" style="padding:14px 18px;">
-<p>{icon} <strong>{_esc(a.get('product_name',''))}</strong>
-  @ <span style="color:var(--muted)">{_esc(a.get('shop_name',''))}</span>
-  <span class="badge {badge}">{label} ¥{chg:+,}</span></p>
-<div class="price-row" style="margin-top:8px;">
-  <span class="price-label">前回価格</span><span class="price-value">¥{prev:,}</span>
-</div>
-<div class="price-row">
-  <span class="price-label">最新価格</span><span class="price-value">¥{curr:,}</span>
-</div>
-<div class="price-row">
-  <span class="price-label">変動額 / 変動率</span>
-  <span class="price-value">¥{chg:+,} / {_esc(rate)}</span>
-</div>
-<div class="price-row">
-  <span class="price-label">検出時刻</span>
-  <span class="price-value" style="font-size:0.82rem;color:var(--muted)">{_esc(str(detected))}</span>
-</div>
+        return f"""<div class="alert-card {kind}">
+  <div class="alert-hd">
+    <div class="alert-icon-badge {kind}">{icon}</div>
+    <div>
+      <div class="alert-name">{_esc(a.get('product_name',''))}</div>
+      <div class="alert-shop">{_esc(a.get('shop_name',''))} &mdash; {label} ¥{chg:+,}</div>
+    </div>
+  </div>
+  <div class="alert-prices">
+    <div class="alert-price-item">
+      <div class="alert-price-lbl">前回価格</div>
+      <div class="alert-price-val">¥{prev:,}</div>
+    </div>
+    <div class="alert-price-item">
+      <div class="alert-price-lbl">最新価格</div>
+      <div class="alert-price-val {val_cls}">¥{curr:,}</div>
+    </div>
+    <div class="alert-price-item">
+      <div class="alert-price-lbl">変動率</div>
+      <div class="alert-price-val {val_cls}">{_esc(rate)}</div>
+    </div>
+  </div>
 </div>"""
 
     # ----- Tab: 買取ランキング -----
 
     def _tab_ranking(self, all_deals, iphone_deals, game_deals) -> str:
-        parts = []
-
-        # 実質利益ランキング
+        # 各カテゴリのデータ準備
         profitable = sorted([d for d in all_deals if d.net_profit_jpy > 0],
                             key=lambda d: d.net_profit_jpy, reverse=True)
-        if profitable:
-            parts.append('<div class="section-header"><h2>実質利益ランキング</h2><span class="section-count">全カテゴリ</span></div>')
-            parts.append(self._ranking_table(profitable[:10], show_category=True))
-        else:
-            parts.append('<div class="section-header"><h2>実質利益ランキング</h2></div><p class="empty-state">データなし</p>')
-
-        # iPhoneランキング
         iphone_profitable = sorted([d for d in iphone_deals if d.net_profit_jpy > 0],
                                     key=lambda d: d.net_profit_jpy, reverse=True)
-        if iphone_profitable:
-            parts.append('<div class="section-header"><h2>iPhone ランキング</h2></div>')
-            parts.append(self._ranking_table(iphone_profitable[:5]))
-
-        # ゲーム機ランキング
         game_profitable = sorted([d for d in game_deals if d.net_profit_jpy > 0],
                                   key=lambda d: d.net_profit_jpy, reverse=True)
-        if game_profitable:
-            parts.append('<div class="section-header"><h2>ゲーム機 ランキング</h2></div>')
-            parts.append(self._ranking_table(game_profitable[:5]))
+        camera_profitable = sorted([d for d in all_deals if getattr(d, 'category', '') == 'camera' and d.net_profit_jpy > 0],
+                                    key=lambda d: d.net_profit_jpy, reverse=True)
 
-        # 買取店別ランキング
-        shop_totals: dict = {}
-        for d in all_deals:
-            if d.best_buyback_shop and d.net_profit_jpy > 0:
-                shop_totals[d.best_buyback_shop] = shop_totals.get(d.best_buyback_shop, 0) + 1
-        if shop_totals:
-            parts.append('<div class="section-header"><h2>買取店別 案件数ランキング</h2></div>')
+        def _rank_rows_html(deals, show_cat=False):
             rows = []
-            for i, (shop, cnt) in enumerate(
-                sorted(shop_totals.items(), key=lambda x: x[1], reverse=True)[:8], 1
-            ):
-                rows.append(f"<tr><td>{i}</td><td>{_esc(shop)}</td><td>{cnt}件</td></tr>")
-            parts.append(f"""<div class="ranking-card"><div class="table-wrap"><table>
-<thead><tr><th>#</th><th>買取店</th><th>案件数</th></tr></thead>
-<tbody>{"".join(rows)}</tbody>
-</table></div></div>""")
+            for i, d in enumerate(deals, 1):
+                row_cls = ' rank-1' if i == 1 else ''
+                rank_cls = 'r1' if i == 1 else ('r2' if i == 2 else ('r3' if i == 3 else ''))
+                crown = '&#128081;' if i == 1 else str(i)
+                cat_td = f'<td style="font-size:0.75rem;color:var(--ink3)">{_esc(d.category)}</td>' if show_cat else ''
+                rows.append(
+                    f'<div class="rank-row{row_cls}">'
+                    f'<div class="rank-num {rank_cls}">{crown}</div>'
+                    f'<div class="rank-info"><div class="rank-name">{_esc(d.product_name)}</div>'
+                    f'<div class="rank-meta">{_esc(d.best_buyback_shop or "—")}'
+                    + (f' &nbsp;|&nbsp; {_esc(d.category)}' if show_cat else '')
+                    + f'</div></div>'
+                    f'<div><div class="rank-profit">{_esc(fmt_profit(d.net_profit_jpy))}</div>'
+                    f'<div class="rank-rate">{_esc(fmt_rate(d.net_profit_rate))}</div></div>'
+                    f'</div>'
+                )
+            if not rows:
+                return '<div class="empty-state"><span class="empty-icon">&#128202;</span>データなし</div>'
+            return ''.join(rows)
 
-        return "\n".join(parts)
+        all_rows     = _rank_rows_html(profitable[:10], show_cat=True)
+        iphone_rows  = _rank_rows_html(iphone_profitable[:8])
+        camera_rows  = _rank_rows_html(camera_profitable[:8])
+        game_rows    = _rank_rows_html(game_profitable[:8])
+
+        return f"""<div class="sec-head"><div class="sec-title">&#127942; 買取ランキング</div></div>
+<div class="ranking-card">
+  <div class="ranking-tabs">
+    <button class="ranking-tab-btn active" data-rtab="all">&#127942; 総合</button>
+    <button class="ranking-tab-btn" data-rtab="iphone">&#128241; iPhone</button>
+    <button class="ranking-tab-btn" data-rtab="camera">&#128247; カメラ</button>
+    <button class="ranking-tab-btn" data-rtab="game">&#127918; ゲーム機</button>
+  </div>
+  <div class="ranking-tab-panel active" id="rtab-all">{all_rows}</div>
+  <div class="ranking-tab-panel" id="rtab-iphone">{iphone_rows}</div>
+  <div class="ranking-tab-panel" id="rtab-camera">{camera_rows}</div>
+  <div class="ranking-tab-panel" id="rtab-game">{game_rows}</div>
+</div>"""
 
     def _ranking_table(self, deals, show_category: bool = False) -> str:
         rows = []
@@ -2121,18 +2619,64 @@ document.addEventListener("click",function(e){{
         now = datetime.now()
 
         return f"""<footer class="footer">
-
-<div class="footer-text">
-
-<p>掛載価格は取得・入力時点の参考値です。購入前に必ず公式サイト・買取店でご確認ください。</p>
-
-<p>&copy; {now.year} プレ値速報 &mdash; 情報は自動取得・分析されたものです</p>
-
+<div class="footer-inner">
+  <div class="footer-logo">
+    <div class="footer-logo-icon">S</div>
+    <div class="footer-logo-name">プレ値速報</div>
+    <div class="footer-live"><span class="live-dot"></span>LIVE</div>
+  </div>
+  <div class="footer-links">
+    <a href="#tab-beginner" class="footer-link">初心者向け案件</a>
+    <a href="#tab-advanced" class="footer-link">上級者向け案件</a>
+    <a href="#tab-ranking" class="footer-link">買取ランキング</a>
+    <a href="#tab-surge" class="footer-link">急騰/急落アラート</a>
+    <a href="#tab-new-products" class="footer-link">新商品候補</a>
+    <a href="#note-cta" class="footer-link">詳細レポート</a>
+  </div>
+  <div class="footer-text">
+    <p>掛載価格は取得・入力時点の参考値です。購入前に必ず公式サイト・買取店でご確認ください。</p>
+    <p>&copy; {now.year} プレ値速報 &mdash; 情報は自動取得・分析されたものです</p>
+  </div>
 </div>
-
 </footer>"""
 
 
+
+    def _section_new_products(self) -> str:
+        """新商品候補セクション（デザイン用プレースホルダー）。"""
+        # 新商品候補データは Repository から取得可能だが、
+        # デザインシステム移植のためプレースホルダーを返す
+        items = [
+            {"name": "iPhone 17 Pro", "status": "upcoming", "status_lbl": "発売予定",
+             "price": "未定", "level": "beginner_easy", "tags": ["抽選", "限定"]},
+            {"name": "Nintendo Switch 2", "status": "preorder", "status_lbl": "予約受付中",
+             "price": "¥49,980", "level": "beginner_easy", "tags": ["抽選"]},
+            {"name": "SONY α1 II", "status": "upcoming", "status_lbl": "発売予定",
+             "price": "¥900,000予定", "level": "advanced", "tags": ["高難度", "海外差益"]},
+        ]
+        cards = []
+        for item in items:
+            status_cls = {"upcoming": "upcoming", "preorder": "preorder", "lottery": "lottery"}.get(item["status"], "default")
+            tags_html = ''.join(
+                f'<span class="deal-tag {("lottery" if t in ("抽選","限定") else ("hard" if t=="高難度" else ("intl" if t=="海外差益" else "pre")))}">{_esc(t)}</span>'
+                for t in item["tags"]
+            )
+            level_badge = '<span class="badge badge-easy" style="font-size:0.6rem">初心者向け</span>' if 'beginner' in item["level"] else '<span class="badge badge-adv" style="font-size:0.6rem">上級者向け</span>'
+            cards.append(
+                f'<div class="new-product-card" data-user-level="{_esc(item["level"])}">'
+                f'<div class="np-top-bar"></div>'
+                f'<div class="np-body">'
+                f'<div class="np-hd"><div class="np-name">{_esc(item["name"])}</div>'
+                f'<span class="np-status-badge {status_cls}">{_esc(item["status_lbl"])}</span></div>'
+                f'<div class="np-price-row"><span class="np-price-lbl">想定価格</span>&nbsp;<span class="np-price-val">{_esc(item["price"])}</span></div>'
+                f'<div class="np-tags">{tags_html}{level_badge}</div>'
+                f'</div></div>'
+            )
+        return (
+            '<div class="sec-head"><div class="sec-title">&#127381; 新商品候補 &mdash; 監視リスト</div>'
+            f'<div class="sec-badge">{len(items)}件</div></div>'
+            '<div class="cards-grid">' + ''.join(cards) + '</div>'
+        )
 
     def _render_markdown(self, date_str, time_str, beginner_deals, advanced_snaps, buyback_alerts) -> str:
         lines = [

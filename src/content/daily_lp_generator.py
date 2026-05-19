@@ -140,14 +140,6 @@ class DailyLPGenerator:
         # v5: camera_watch for advanced tab
         _camera_watch_adv = camera_watch
 
-        # 抽選・販売イベント取得
-        try:
-            lottery_events = self.repo.list_lottery_events(status="active", limit=50)
-            lottery_count  = len(lottery_events)
-        except Exception:
-            lottery_events = []
-            lottery_count  = 0
-
         # HTML生成
         page_html = self._render_page(
             date_str=date_str,
@@ -169,7 +161,6 @@ class DailyLPGenerator:
             camera_watch=camera_watch,
             game_watch=game_watch,
             buyback_by_product=buyback_by_product,
-            lottery_events=lottery_events,
         )
 
         # 安全チェック
@@ -221,7 +212,7 @@ class DailyLPGenerator:
                      beginner_easy, beginner_watch, advanced_deals, advanced_snaps,
                      watch_candidates, buyback_alerts, all_deals, iphone_deals, game_deals,
                      camera_deals=None, iphone_watch=None, camera_watch=None, game_watch=None,
-                     buyback_by_product: dict = None, lottery_events=None) -> str:
+                     buyback_by_product: dict = None) -> str:
 
         site_title = _esc(self.settings.get("site_title", "プレ値速報"))
         ga_id      = self.settings.get("analytics", {}).get("google_analytics_id", "")
@@ -247,16 +238,11 @@ class DailyLPGenerator:
         if x_pixel:
             analytics_head += f'<!-- X Pixel {_esc(x_pixel)} -->\n'
 
-        # lottery_events の初期化
-        _lottery_events = lottery_events or []
-        _lottery_count  = len(_lottery_events)
-
         # セクション生成
         hero_html    = self._section_hero(date_str, time_str, latest_buyback_at, lp_generated_at,
                                            all_deals=all_deals, iphone_deals=iphone_deals,
                                            camera_deals=camera_deals or [], game_deals=game_deals)
         stale_html   = self._section_stale_warning(latest_buyback_at, latest_deals_at, lp_generated_at)
-        genre_nav_html = self._section_genre_nav(all_deals=all_deals)
         tab_html     = self._section_tabs(
             beginner_easy, beginner_watch,
             advanced_deals, advanced_snaps,
@@ -268,8 +254,6 @@ class DailyLPGenerator:
             camera_watch=camera_watch or [],
             game_watch=game_watch or [],
             buyback_by_product=buyback_by_product or {},
-            lottery_events=_lottery_events,
-            lottery_count=_lottery_count,
         )
         caution_html = self._section_caution()
         cta_html     = self._section_cta()
@@ -288,31 +272,27 @@ class DailyLPGenerator:
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>{site_title} | {_esc(date_str)}</title>
+<title>{site_title}</title>
 <meta name="description" content="{_esc(self.settings.get('site_description', ''))}">
 {analytics_head}
 <style>
 /* ============================================================
-   SOUBA デザインシステム v6 — Manus Premium Light
-   Based on: SiteHeader.tsx, HeroSection.tsx, StickyTabs.tsx,
-             BeginnerSection.tsx, AdvancedSection.tsx, RankingSection.tsx,
-             LotterySection.tsx, SedoriCalculator.tsx, SiteFooter.tsx
+   SOUBA デザインシステム — プレ値速報
    ============================================================ */
 
 :root {{
-  /* ページ背景 (Light Premium) */
+  /* ページ背景 */
   --bg: #FAFBFF;
   /* カード */
   --card-bg: #FFFFFF;
   --card-border: #E8EAF2;
   --surface2: #F4F6FD;
-  --surface3: #F8FAFC;
   /* テキスト */
   --ink: #0D0F1C;
   --ink2: #5B6278;
   --ink3: #9CA3B8;
   --ink4: #C8CADE;
-  /* アクセント (index.css / Manus) */
+  /* アクセント */
   --profit: #00C896;
   --profit-dark: #00A876;
   --violet: #7C5CFC;
@@ -321,7 +301,6 @@ class DailyLPGenerator:
   --danger: #FF3B5C;
   --blue: #3B7BFF;
   --gold: #F5A623;
-  --gold-dark: #D97706;
 
   /* 後方互換用エイリアス */
   --white:   #ffffff;
@@ -366,12 +345,12 @@ class DailyLPGenerator:
   --teal-500: #14b8a6;
   --teal-600: #0d9488;
 
-  --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Noto Sans JP', sans-serif;
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Meiryo', sans-serif;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
   --radius-xl: 20px;
-  --radius-2xl: 24px;
+  --radius-2xl: 28px;
 
   --shadow-xs: 0 1px 2px rgba(0,0,0,0.04);
   --shadow-sm: 0 1px 3px rgba(13,15,28,0.05), 0 1px 2px rgba(13,15,28,0.04);
@@ -397,157 +376,107 @@ body {{
 }}
 
 /* ============================================================
-   ANNOUNCEMENT BAR (SiteHeader.tsx — announcementBar)
+   ANNOUNCEMENT BAR
    ============================================================ */
 .announce-bar {{
   background: linear-gradient(90deg, #00C896, #3B7BFF, #7C5CFC);
   text-align: center;
-  padding: 8px 16px;
+  padding: 8px 20px;
 }}
 
 .announce-bar a {{
   color: #fff;
   text-decoration: none;
   font-size: 0.82rem;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.01em;
 }}
 
 .announce-bar a:hover {{ text-decoration: underline; }}
 
 /* ============================================================
-   SITE HEADER — スティッキー (SiteHeader.tsx)
+   TOPBAR
    ============================================================ */
-.site-header {{
-  position: sticky; top: 0; z-index: 1000;
-  background: rgba(250,251,255,0.92);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
+.topbar {{
+  position: sticky; top: 0; z-index: 300;
+  background: rgba(250,251,255,0.95);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
   border-bottom: 1px solid var(--card-border);
-  box-shadow: 0 1px 0 rgba(13,15,28,0.04);
-}}
-
-.header-inner {{
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 16px;
   height: 56px;
   display: flex; align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+  padding: 0 20px; gap: 12px;
 }}
 
-.header-brand {{
+.topbar-brand {{
   display: flex; align-items: center; gap: 10px;
   text-decoration: none; color: var(--ink);
-  cursor: pointer;
-  flex-shrink: 0;
+  font-weight: 800; font-size: 0.95rem;
 }}
 
 .brand-icon {{
-  width: 32px; height: 32px;
-  background: linear-gradient(135deg, #00C896, #00A876);
-  border-radius: 10px;
+  width: 30px; height: 30px;
+  background: linear-gradient(135deg, var(--blue), var(--violet));
+  border-radius: 8px;
   display: flex; align-items: center; justify-content: center;
-  color: white; font-size: 1rem;
-  box-shadow: 0 2px 8px rgba(0,200,150,0.35);
+  color: white; font-weight: 900; font-size: 0.8rem;
+  box-shadow: 0 2px 8px rgba(59,123,255,0.3);
   flex-shrink: 0;
 }}
 
-.brand-text {{
-  display: flex; align-items: baseline; gap: 6px;
-}}
-
-.brand-name {{
-  font-size: 1rem; font-weight: 900;
-  letter-spacing: -0.03em; color: var(--ink);
-}}
-
-.brand-sub {{
-  font-size: 0.72rem; color: var(--ink3); font-weight: 500;
-  display: none;
-}}
-
-@media (min-width: 640px) {{ .brand-sub {{ display: block; }} }}
-
-.header-nav {{
-  display: none;
-  align-items: center;
-  gap: 2px;
-}}
-
-@media (min-width: 1024px) {{ .header-nav {{ display: flex; }} }}
-
-.header-nav-link {{
-  padding: 6px 10px;
-  border-radius: 10px;
-  font-size: 0.875rem; font-weight: 500;
-  color: var(--ink2);
-  text-decoration: none;
-  transition: all 0.15s;
-  white-space: nowrap;
-  cursor: pointer;
-}}
-
-.header-nav-link:hover {{
-  color: var(--ink); background: #F4F5FD;
-}}
-
-.header-right {{
-  display: flex; align-items: center; gap: 8px;
-  flex-shrink: 0;
-}}
-
-.live-badge {{
+.topbar-live {{
   display: flex; align-items: center; gap: 5px;
   font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--profit-dark);
-  background: #E8FFF6;
-  border: 1px solid #A7F3D0;
+  background: #F0FDF8;
+  border: 1px solid #B2F0DC;
   padding: 3px 10px; border-radius: 99px;
 }}
 
 .live-dot {{
   width: 6px; height: 6px; border-radius: 50%;
   background: var(--profit);
-  animation: livePulse 2s ease-in-out infinite;
+  animation: blink 2s ease-in-out infinite;
 }}
 
-@keyframes livePulse {{
+@keyframes blink {{
   0%, 100% {{ opacity: 1; }}
   50% {{ opacity: 0.3; }}
 }}
 
-.header-note-btn {{
-  display: none;
-  align-items: center; gap: 6px;
-  background: linear-gradient(135deg, #00C896, #00A876);
-  color: white;
-  font-size: 0.82rem; font-weight: 700;
-  padding: 8px 16px; border-radius: var(--radius-md);
+.topbar-date {{
+  font-size: 0.78rem; color: var(--ink3);
+  font-variant-numeric: tabular-nums;
+}}
+
+.topbar-spacer {{ flex: 1; }}
+
+.topbar-note-btn {{
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--violet); color: white;
+  font-size: 0.78rem; font-weight: 700;
+  padding: 7px 16px; border-radius: var(--radius-md);
   text-decoration: none;
-  box-shadow: 0 4px 16px rgba(0,200,150,0.35);
-  transition: all 0.18s;
+  box-shadow: 0 2px 8px rgba(124,92,252,0.3);
+  transition: all 0.2s;
   white-space: nowrap;
 }}
 
-@media (min-width: 640px) {{ .header-note-btn {{ display: inline-flex; }} }}
-
-.header-note-btn:hover {{
+.topbar-note-btn:hover {{
+  background: var(--violet-dark);
   transform: translateY(-1px);
-  box-shadow: 0 8px 24px rgba(0,200,150,0.45);
+  box-shadow: 0 4px 12px rgba(124,92,252,0.4);
 }}
 
 /* ============================================================
-   LIVE TICKER (LiveTicker.tsx)
+   LIVE TICKER
    ============================================================ */
 .ticker-bar {{
   background: #0D0F1C;
   overflow: hidden;
   padding: 7px 0;
   white-space: nowrap;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
 }}
 
 .ticker-inner {{
@@ -555,301 +484,236 @@ body {{
   animation: tickerScroll 30s linear infinite;
 }}
 
-.ticker-inner:hover {{ animation-play-state: paused; }}
-
 @keyframes tickerScroll {{
   0%   {{ transform: translateX(0); }}
   100% {{ transform: translateX(-50%); }}
 }}
 
 .ticker-item {{
-  display: inline-flex; align-items: center; gap: 8px;
-  font-size: 0.78rem; color: rgba(255,255,255,0.7);
-  padding: 0 24px;
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 0.78rem; color: rgba(255,255,255,0.85);
+  padding: 0 28px;
 }}
 
-.ticker-item .t-name {{ font-weight: 600; color: rgba(255,255,255,0.9); }}
-.ticker-item .t-profit {{ color: #00C896; font-weight: 700; font-variant-numeric: tabular-nums; }}
-.ticker-item .ticker-rate {{ color: rgba(0,200,150,0.7); font-size: 0.72rem; }}
-.ticker-sep {{ color: rgba(255,255,255,0.15); }}
+.ticker-item .t-name {{ font-weight: 600; }}
+.ticker-item .t-profit {{ color: #00C896; font-weight: 700; }}
+.ticker-sep {{ color: rgba(255,255,255,0.2); }}
 
 /* ============================================================
-   HERO SECTION — ダーク (HeroSection.tsx)
+   FEATURES BANNER
+   ============================================================ */
+.features-bar {{
+  background: #fff;
+  border-bottom: 1px solid var(--card-border);
+  padding: 12px 20px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}}
+
+.features-bar::-webkit-scrollbar {{ display: none; }}
+
+.features-inner {{
+  display: flex; gap: 8px;
+  width: max-content;
+}}
+
+.feature-chip {{
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 0.75rem; font-weight: 600;
+  padding: 6px 14px; border-radius: 99px;
+  white-space: nowrap;
+}}
+
+.feature-chip.green  {{ background: #F0FDF8; color: #00A876; border: 1px solid #B2F0DC; }}
+.feature-chip.blue   {{ background: #EFF6FF; color: #1E6FFF; border: 1px solid #BFDBFE; }}
+.feature-chip.violet {{ background: #F5F3FF; color: #6040E8; border: 1px solid #DDD6FE; }}
+.feature-chip.amber  {{ background: #FFF9F0; color: #CC7A00; border: 1px solid #FFD9A0; }}
+.feature-chip.red    {{ background: #FFF1F3; color: #CC2244; border: 1px solid #FFB3C0; }}
+
+/* ============================================================
+   HERO — ダーク
    ============================================================ */
 .hero {{
   background: linear-gradient(160deg, #0D0F1C 0%, #131629 50%, #0F1A2E 100%);
-  padding: 80px 0 56px;
+  padding: 64px 0 56px;
   position: relative; overflow: hidden;
-  min-height: 85vh;
-  display: flex; align-items: center;
-}}
-
-.hero::before {{
-  content: '';
-  position: absolute; inset: 0;
-  background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0,200,150,0.08) 0%, transparent 70%);
-  pointer-events: none;
-}}
-
-.hero::after {{
-  content: '';
-  position: absolute; inset: 0;
-  background: radial-gradient(ellipse 60% 50% at 80% 50%, rgba(124,92,252,0.06) 0%, transparent 70%);
-  pointer-events: none;
 }}
 
 .hero-inner {{
-  max-width: 1200px;
+  max-width: 1120px;
   margin: 0 auto;
   padding: 0 24px;
   display: grid;
-  grid-template-columns: 1fr 480px;
-  gap: 64px;
+  grid-template-columns: 1fr 440px;
+  gap: 48px;
   align-items: center;
-  position: relative; z-index: 1;
-  width: 100%;
 }}
 
-.hero-left {{ min-width: 0; }}
-.hero-right {{ min-width: 0; }}
+.hero-left {{}}
+.hero-right {{}}
 
 .hero-eyebrow {{
-  display: inline-flex; align-items: center; gap: 8px;
-  background: rgba(0,200,150,0.12);
+  display: inline-flex; align-items: center; gap: 7px;
+  background: rgba(0,200,150,0.15);
   border: 1px solid rgba(0,200,150,0.3);
   color: var(--profit);
-  font-size: 0.7rem; font-weight: 700;
+  font-size: 0.72rem; font-weight: 700;
   letter-spacing: 0.08em; text-transform: uppercase;
-  padding: 6px 14px; border-radius: 99px;
-  margin-bottom: 24px;
+  padding: 5px 14px; border-radius: 99px;
+  margin-bottom: 22px;
 }}
 
 .hero-title {{
-  font-size: clamp(2.2rem, 5.5vw, 4rem);
+  font-size: clamp(1.9rem, 4.5vw, 3rem);
   font-weight: 900;
   letter-spacing: -0.04em;
-  line-height: 1.05;
-  color: #ffffff;
-  margin-bottom: 24px;
+  line-height: 1.1;
+  color: #fff;
+  margin-bottom: 18px;
 }}
 
 .hero-title .accent {{
-  background: linear-gradient(135deg, #00C896 0%, #3B7BFF 60%, #7C5CFC 100%);
+  background: linear-gradient(90deg, #00C896, #3B7BFF);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }}
 
 .hero-subtitle {{
-  font-size: 1.05rem;
+  font-size: 1rem;
   color: rgba(255,255,255,0.65);
   line-height: 1.75;
   max-width: 520px;
-  margin-bottom: 36px;
+  margin-bottom: 32px;
 }}
 
-.hero-subtitle strong {{ color: rgba(255,255,255,0.9); }}
-
 .hero-cta-row {{
-  display: flex; gap: 12px; flex-wrap: wrap;
-  margin-bottom: 36px;
+  display: flex; gap: 10px; flex-wrap: wrap;
+  margin-bottom: 32px;
 }}
 
 .hero-btn {{
-  display: inline-flex; align-items: center; gap: 8px;
-  font-size: 0.9rem; font-weight: 700;
-  padding: 12px 24px; border-radius: 16px;
-  text-decoration: none; transition: all 0.18s;
-  cursor: pointer;
-  pointer-events: auto;
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 0.875rem; font-weight: 700;
+  padding: 11px 22px; border-radius: var(--radius-md);
+  text-decoration: none; transition: all 0.2s;
 }}
 
 .hero-btn.primary {{
   background: linear-gradient(135deg, #00C896, #00A876);
   color: #fff;
-  box-shadow: 0 4px 16px rgba(0,200,150,0.4), inset 0 1px 0 rgba(255,255,255,0.2);
+  box-shadow: 0 4px 16px rgba(0,200,150,0.4);
 }}
 
 .hero-btn.primary:hover {{
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0,200,150,0.5), inset 0 1px 0 rgba(255,255,255,0.2);
+  box-shadow: 0 8px 24px rgba(0,200,150,0.5);
 }}
 
 .hero-btn.secondary {{
   background: rgba(255,255,255,0.08);
-  color: rgba(255,255,255,0.8);
+  color: rgba(255,255,255,0.85);
   border: 1px solid rgba(255,255,255,0.15);
 }}
 
 .hero-btn.secondary:hover {{
   background: rgba(255,255,255,0.14);
-  color: #fff;
 }}
 
 .hero-btn.violet {{
-  background: rgba(124,92,252,0.15);
-  border: 1px solid rgba(124,92,252,0.4);
-  color: #A78BFA;
+  background: linear-gradient(135deg, #7C5CFC, #6040E8);
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(124,92,252,0.4);
 }}
 
 .hero-btn.violet:hover {{
-  background: rgba(124,92,252,0.25);
-  color: #C4B5FD;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(124,92,252,0.5);
 }}
 
-/* Social proof / stats */
+/* Social proof */
 .hero-social-proof {{
-  display: flex; align-items: center; gap: 20px;
-  flex-wrap: wrap;
-  margin-bottom: 24px;
+  display: flex; align-items: center; gap: 12px;
 }}
 
-.social-stat {{
-  display: flex; align-items: center; gap: 8px;
+.social-avatars {{
+  display: flex;
 }}
 
-.social-stat-icon {{ color: var(--profit); font-size: 0.9rem; }}
-
-.social-stat-value {{
-  font-size: 1rem; font-weight: 900;
-  color: #ffffff; font-variant-numeric: tabular-nums;
-  letter-spacing: -0.02em;
+.social-avatar {{
+  width: 28px; height: 28px; border-radius: 50%;
+  background: linear-gradient(135deg, #00C896, #3B7BFF);
+  border: 2px solid #131629;
+  margin-left: -8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.65rem; font-weight: 700; color: #fff;
 }}
 
-.social-stat-label {{
-  font-size: 0.72rem; color: rgba(255,255,255,0.4);
+.social-avatar:first-child {{ margin-left: 0; }}
+
+.social-text {{
+  font-size: 0.78rem; color: rgba(255,255,255,0.5);
 }}
 
-/* Trust badges */
-.hero-trust-badges {{
-  display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
-}}
+.social-text strong {{ color: rgba(255,255,255,0.8); }}
 
-.trust-badge {{
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 4px 12px; border-radius: 99px;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.1);
-  font-size: 0.72rem; color: rgba(255,255,255,0.5);
-}}
-
-/* ライブパネル (HeroSection.tsx — right column) */
+/* ライブパネル（ガラスモーフィズム） */
 .hero-live-panel {{
-  background: rgba(255,255,255,0.04);
+  background: rgba(255,255,255,0.06);
   backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 24px;
-  overflow: hidden;
-  position: relative;
-}}
-
-.hero-live-panel::before {{
-  content: '';
-  position: absolute;
-  inset: -16px;
-  border-radius: 40px;
-  background: radial-gradient(ellipse, rgba(0,200,150,0.4), transparent 70%);
-  filter: blur(20px);
-  opacity: 0.3;
-  z-index: -1;
-  pointer-events: none;
+  border-radius: 20px;
+  padding: 20px;
 }}
 
 .live-panel-hd {{
   display: flex; align-items: center; justify-content: space-between;
-  padding: 20px 20px 16px;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-}}
-
-.live-panel-title-wrap {{
-  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 16px;
 }}
 
 .live-panel-title {{
-  font-size: 0.72rem; font-weight: 700; color: var(--profit);
+  font-size: 0.75rem; font-weight: 700; color: rgba(255,255,255,0.5);
   letter-spacing: 0.08em; text-transform: uppercase;
 }}
 
-.live-panel-date {{
-  font-size: 0.65rem; color: rgba(255,255,255,0.3);
+.live-panel-badge {{
+  display: flex; align-items: center; gap: 5px;
+  font-size: 0.65rem; font-weight: 700; color: var(--profit);
+  background: rgba(0,200,150,0.15);
+  border: 1px solid rgba(0,200,150,0.25);
+  padding: 3px 9px; border-radius: 99px;
 }}
 
-.live-panel-items {{ padding: 16px; display: flex; flex-direction: column; gap: 8px; }}
+.live-panel-items {{}}
 
 .lp-item {{
   display: flex; align-items: center;
-  padding: 12px 16px;
-  border-radius: 12px;
-  gap: 12px;
-  cursor: pointer;
-  transition: background 0.15s;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  gap: 10px;
 }}
 
-.lp-item.highlight {{
-  background: rgba(0,200,150,0.08);
-  border: 1px solid rgba(0,200,150,0.2);
+.lp-item:last-child {{ border: none; }}
+
+.lp-icon {{
+  width: 32px; height: 32px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.9rem; flex-shrink: 0;
 }}
 
-.lp-item.normal {{
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.06);
-}}
-
-.lp-item.normal:hover {{ background: rgba(255,255,255,0.07); }}
+.lp-icon.iphone  {{ background: rgba(59,123,255,0.15); }}
+.lp-icon.camera  {{ background: rgba(124,92,252,0.15); }}
+.lp-icon.game    {{ background: rgba(20,184,166,0.15); }}
 
 .lp-info {{ flex: 1; min-width: 0; }}
-.lp-name {{ font-size: 0.82rem; font-weight: 500; color: rgba(255,255,255,0.7); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }}
-.lp-name.bright {{ color: rgba(255,255,255,0.95); }}
-
-.lp-profit-wrap {{
-  display: flex; align-items: center; gap: 8px;
-  flex-shrink: 0;
-}}
+.lp-name {{ font-size: 0.78rem; font-weight: 600; color: rgba(255,255,255,0.85); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }}
+.lp-shop {{ font-size: 0.65rem; color: rgba(255,255,255,0.35); margin-top: 1px; }}
 
 .lp-profit {{
-  font-size: 0.88rem; font-weight: 800;
+  font-size: 0.85rem; font-weight: 800;
   color: var(--profit); white-space: nowrap;
-  font-variant-numeric: tabular-nums;
 }}
-
-.lp-rate {{
-  font-size: 0.72rem; font-weight: 700;
-  background: rgba(0,200,150,0.15); color: var(--profit);
-  padding: 2px 8px; border-radius: 99px;
-  white-space: nowrap;
-}}
-
-/* KPI bar (bottom of live panel) */
-.live-kpi-bar {{
-  display: grid; grid-template-columns: 1fr 1fr 1fr;
-  border-top: 1px solid rgba(255,255,255,0.08);
-  background: rgba(13,15,28,0.3);
-}}
-
-.kpi-cell {{
-  padding: 12px 16px; text-align: center;
-  cursor: pointer; transition: background 0.15s;
-  border-right: 1px solid rgba(255,255,255,0.06);
-}}
-
-.kpi-cell:last-child {{ border-right: none; }}
-.kpi-cell:hover {{ background: rgba(255,255,255,0.06); }}
-
-.kpi-label {{
-  font-size: 0.65rem; color: rgba(255,255,255,0.35);
-  margin-bottom: 4px;
-}}
-
-.kpi-value {{
-  font-size: 1rem; font-weight: 900;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: -0.02em;
-}}
-
-.kpi-value.green {{ color: var(--profit); }}
-.kpi-value.white {{ color: #ffffff; }}
-.kpi-value.violet {{ color: #A78BFA; }}
 
 /* Timestamps */
 .hero-timestamps {{
@@ -877,13 +741,13 @@ body {{
 /* ============================================================
    STALE WARNING
    ============================================================ */
-.stale-warning-block {{
+.stale-banner {{
   background: #fffbeb;
   border: 1px solid #fde68a;
   border-left: 3px solid #f59e0b;
   border-radius: 0 var(--radius-md) var(--radius-md) 0;
   padding: 12px 18px;
-  margin: 16px 24px;
+  margin: 16px 0;
   font-size: 0.875rem;
   color: #78350f;
   display: flex; align-items: flex-start; gap: 10px;
@@ -894,107 +758,68 @@ body {{
    MAIN LAYOUT
    ============================================================ */
 .main-wrap {{
-  max-width: 1200px;
+  max-width: 1120px;
   margin: 0 auto;
   padding: 0 24px 80px;
 }}
 
 /* ============================================================
-   STICKY TABS (StickyTabs.tsx)
+   TAB NAVIGATION — スティッキー
    ============================================================ */
 .tab-wrap {{
-  position: sticky; top: 56px; z-index: 900;
+  position: sticky; top: 56px; z-index: 200;
   background: rgba(250,251,255,0.95);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--card-border);
-  box-shadow: 0 1px 0 rgba(13,15,28,0.04);
-}}
-
-.tab-nav-inner {{
-  max-width: 1200px;
-  margin: 0 auto;
+  margin: 0 -24px;
   padding: 0 24px;
-  position: relative;
 }}
 
 .tab-nav {{
-  display: flex; gap: 2px;
+  display: flex; gap: 0;
   overflow-x: auto; -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   position: relative;
-  padding: 8px 0;
 }}
 
 .tab-nav::-webkit-scrollbar {{ display: none; }}
 
-/* スライドインジケーター (StickyTabs.tsx — tab-indicator) */
-.tab-indicator-bar {{
-  position: absolute;
-  bottom: 0; height: 2px;
-  border-radius: 99px;
-  background: var(--profit);
-  transition: left 0.22s cubic-bezier(0.23,1,0.32,1), width 0.22s cubic-bezier(0.23,1,0.32,1);
-  pointer-events: none;
-}}
-
 .tab-btn {{
   flex-shrink: 0;
-  display: inline-flex; align-items: center; gap: 6px;
+  display: flex; align-items: center; gap: 7px;
   background: transparent; border: none;
-  padding: 8px 12px;
-  font-size: 0.875rem; font-weight: 600;
+  border-bottom: 2px solid transparent;
+  padding: 15px 20px;
+  font-size: 0.875rem; font-weight: 500;
   color: var(--ink3);
   cursor: pointer;
-  transition: color 0.15s, background 0.15s;
+  transition: color 0.15s, border-color 0.15s;
+  margin-bottom: -1px;
   white-space: nowrap;
   font-family: var(--font);
-  border-radius: 12px;
-  pointer-events: auto;
 }}
 
-.tab-btn:hover {{
-  color: var(--ink); background: #F4F5FD;
-}}
+.tab-btn:hover {{ color: var(--ink); }}
 
 .tab-btn.active {{
-  color: #047857;
-  background: #F0FDF8;
+  color: var(--violet);
+  border-bottom-color: var(--violet);
   font-weight: 700;
 }}
 
-.tab-btn.active[data-tab="advanced"] {{ color: #6040E8; background: #F0EEFF; }}
-.tab-btn.active[data-tab="ranking"] {{ color: #1D4ED8; background: #EEF4FF; }}
-.tab-btn.active[data-tab="sedori"] {{ color: #1D4ED8; background: #EEF4FF; }}
-.tab-btn.active[data-tab="surge"] {{ color: #B45309; background: #FFF8E8; }}
-.tab-btn.active[data-tab="lottery"] {{ color: #6040E8; background: #F5F3FF; }}
-.tab-btn.active[data-tab="new-products"] {{ color: #1D4ED8; background: #EEF4FF; }}
-
-.tab-sep {{
-  width: 1px; height: 16px;
-  background: var(--card-border);
-  flex-shrink: 0;
-  margin: 0 8px;
-  align-self: center;
-}}
-
-.tab-sep-label {{
-  font-size: 0.65rem; font-weight: 900;
-  text-transform: uppercase; letter-spacing: 0.08em;
-  color: var(--ink4);
-  white-space: nowrap;
-  flex-shrink: 0;
-  align-self: center;
-  padding: 0 4px;
-}}
-
 .tab-count {{
-  font-size: 0.68rem; font-weight: 700;
-  padding: 2px 7px; border-radius: 99px;
+  font-size: 0.65rem; font-weight: 800;
+  background: var(--surface2);
+  color: var(--ink3);
+  padding: 1px 7px; border-radius: 99px;
 }}
 
-/* タブパネル */
-.tab-panel {{ display: none; padding-top: 32px; position: relative; z-index: 1; pointer-events: auto; }}
+.tab-btn.active .tab-count {{
+  background: #EDE9FF;
+  color: var(--violet);
+}}
+
+.tab-panel {{ display: none; padding-top: 36px; }}
 .tab-panel.active {{ display: block; }}
 
 /* ============================================================
@@ -1068,137 +893,93 @@ body {{
 }}
 
 /* ============================================================
-   SOUBA CARD / DEAL CARD (BeginnerSection.tsx)
+   souba-card / DEAL CARD
    ============================================================ */
 .souba-card,
 .deal-card {{
   background: var(--card-bg);
   border: 1px solid var(--card-border);
-  border-radius: var(--radius-lg);
+  border-radius: 16px;
   overflow: hidden;
   box-shadow: var(--shadow-sm);
-  transition: transform 0.18s cubic-bezier(0.23,1,0.32,1),
-              box-shadow 0.18s cubic-bezier(0.23,1,0.32,1),
-              border-color 0.18s cubic-bezier(0.23,1,0.32,1);
+  transition: transform 0.18s, box-shadow 0.18s, border-color 0.18s;
   display: flex; flex-direction: column;
 }}
 
 .souba-card:hover,
 .deal-card:hover {{
   transform: translateY(-3px);
-  box-shadow: 0 12px 40px rgba(13,15,28,0.1), 0 4px 12px rgba(13,15,28,0.06);
+  box-shadow: var(--shadow-xl);
   border-color: #D0D4E8;
 }}
 
-/* カード上部利益バー (BeginnerSection.tsx — profit bar) */
+/* カード上部利益バー */
 .card-stripe {{ height: 3px; }}
-.card-stripe.iphone  {{ background: linear-gradient(90deg, #00C896 0%, #E8EAF2 100%); }}
-.card-stripe.camera  {{ background: linear-gradient(90deg, #00C896 0%, #E8EAF2 100%); }}
-.card-stripe.game    {{ background: linear-gradient(90deg, #00C896 0%, #E8EAF2 100%); }}
-.card-stripe.default {{ background: linear-gradient(90deg, #00C896 0%, #E8EAF2 100%); }}
+.card-stripe.iphone  {{ background: linear-gradient(90deg, var(--blue), #93B8FF); }}
+.card-stripe.camera  {{ background: linear-gradient(90deg, var(--violet), #B9A8FF); }}
+.card-stripe.game    {{ background: linear-gradient(90deg, var(--profit), #80E8CC); }}
+.card-stripe.default {{ background: linear-gradient(90deg, var(--profit), var(--blue)); }}
 
-/* Score badge (BeginnerSection.tsx) */
+/* Score badge */
 .score-badge {{
   display: inline-flex; align-items: center; justify-content: center;
-  width: 36px; height: 36px;
-  border-radius: 10px;
-  font-size: 0.85rem; font-weight: 800;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  font-size: 0.75rem; font-weight: 900;
   flex-shrink: 0;
 }}
 
-.score-s {{ background: linear-gradient(135deg, #FFD700, #FFA500); color: #7A4000; }}
+.score-s {{ background: linear-gradient(135deg, #FFD700, #FF9500); color: #fff; }}
 .score-a {{ background: linear-gradient(135deg, #00C896, #00A876); color: #fff; }}
-.score-b {{ background: linear-gradient(135deg, #3B7BFF, #1D4ED8); color: #fff; }}
-.score-c {{ background: var(--surface2); color: var(--ink3); border: 1px solid var(--card-border); }}
+.score-b {{ background: #EDE9FF; color: var(--violet); }}
+.score-c {{ background: var(--surface2); color: var(--ink3); }}
 
 /* Card Header */
 .card-hd {{
   display: flex; align-items: flex-start;
   justify-content: space-between; gap: 12px;
-  padding: 20px 20px 16px;
-}}
-
-.card-meta {{
-  display: flex; align-items: center; gap: 6px;
-  margin-bottom: 6px;
-}}
-
-.card-category {{
-  font-size: 0.68rem; font-weight: 700;
-  text-transform: uppercase; letter-spacing: 0.06em;
-  color: var(--ink3);
+  padding: 18px 20px 14px;
 }}
 
 .card-name {{
-  font-size: 0.9rem; font-weight: 700;
-  color: var(--ink); line-height: 1.4; flex: 1;
-}}
-
-.card-update-info {{
-  display: flex; align-items: center; gap: 6px;
-  margin-top: 4px;
-  font-size: 0.7rem; color: var(--ink3);
+  font-size: 1rem; font-weight: 800;
+  color: var(--ink); line-height: 1.3; flex: 1;
 }}
 
 .card-tags {{
   display: flex; gap: 5px; flex-shrink: 0;
   flex-wrap: wrap; justify-content: flex-end;
-  flex-direction: column; align-items: flex-end;
 }}
 
-/* Price block (BeginnerSection.tsx — price block) */
-.price-block {{
-  margin: 0 20px 16px;
-  padding: 16px;
-  background: #F7F8FD;
-  border: 1px solid var(--card-border);
-  border-radius: 16px;
-}}
-
-.price-grid {{
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 12px; margin-bottom: 12px;
-}}
-
-.price-cell-v2 {{}}
-
-.price-cell-lbl-v2 {{
-  font-size: 0.68rem; font-weight: 600;
-  text-transform: uppercase; letter-spacing: 0.06em;
-  color: var(--ink3); margin-bottom: 4px;
-}}
-
-.price-cell-val-v2 {{
-  font-size: 1rem; font-weight: 700;
-  color: var(--ink2); font-variant-numeric: tabular-nums;
-}}
-
-/* Profit box (BeginnerSection.tsx — profit box) */
-.profit-box {{
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 12px 16px; border-radius: 12px;
+/* Profit Section */
+.profit-section {{
+  margin: 0 20px;
+  padding: 16px 18px;
   background: linear-gradient(135deg, #F0FDF8, #E8FFF4);
-  border: 1px solid #A7F3D0;
+  border: 1px solid #B2F0DC;
+  border-radius: var(--radius-md);
+  display: flex; align-items: center;
+  justify-content: space-between; gap: 12px;
 }}
 
-.profit-box.amber {{
+.profit-section.amber {{
   background: linear-gradient(135deg, #FFF9F0, #FFF3E0);
   border-color: #FFD9A0;
 }}
 
-.profit-box-left {{}}
+.profit-left {{}}
 
 .profit-lbl {{
   font-size: 0.65rem; font-weight: 700;
   letter-spacing: 0.07em; text-transform: uppercase;
-  color: #047857; margin-bottom: 4px;
+  color: var(--profit-dark); margin-bottom: 4px;
 }}
 
-.profit-lbl.amber {{ color: #B45309; }}
+.profit-lbl.amber {{ color: #CC7A00; }}
 
 .profit-num {{
-  font-size: 1.8rem; font-weight: 900;
-  color: #00A876;
+  font-size: 2.1rem; font-weight: 900;
+  color: var(--profit-dark);
   letter-spacing: -0.04em; line-height: 1;
 }}
 
@@ -1451,41 +1232,17 @@ body {{
   padding: 3px 9px; border-radius: 99px;
 }}
 
-.badge-easy        {{ background: #F0FDF8; color: var(--profit-dark); border: 1px solid #B2F0DC; }}
-.badge-watch       {{ background: #FFF9F0; color: #CC7A00; border: 1px solid #FFD9A0; }}
-.badge-adv         {{ background: #F5F3FF; color: var(--violet); border: 1px solid #DDD6FE; }}
-.badge-exp         {{ background: #F5F3FF; color: var(--violet-dark); border: 1px solid #DDD6FE; }}
-.badge-iphone      {{ background: #EFF6FF; color: #1E6FFF; border: 1px solid #BFDBFE; }}
-.badge-camera      {{ background: #F5F3FF; color: var(--violet); border: 1px solid #DDD6FE; }}
-.badge-game        {{ background: #F0FDF8; color: #0d9488; border: 1px solid #99F0E0; }}
-.badge-lottery     {{ background: #FFF9F0; color: #CC7A00; border: 1px solid #FFD9A0; }}
-.badge-reservation {{ background: #EFF6FF; color: #1E6FFF; border: 1px solid #BFDBFE; }}
-.badge-limited     {{ background: #F5F3FF; color: var(--violet); border: 1px solid #DDD6FE; }}
-.badge-soldout     {{ background: #FFF1F3; color: #CC2244; border: 1px solid #FFB3C0; }}
-.badge-waiting     {{ background: var(--surface2); color: var(--ink3); border: 1px solid var(--card-border); }}
-.badge-overseas    {{ background: #f0f9ff; color: #0369a1; border: 1px solid #bae6fd; }}
-.badge-used        {{ background: var(--surface2); color: var(--ink2); border: 1px solid var(--card-border); }}
-
-/* 国内二次流通リンク */
-.domestic-secondary-links {{
-  margin-top: 8px; padding-top: 8px;
-  border-top: 1px solid var(--surface2);
-}}
-
-/* 公式購入ボタン */
-.btn-official-buy {{
-  background: white; color: var(--blue);
-  border-color: #BFDBFE;
-}}
-.btn-official-buy:hover {{
-  background: #EFF6FF; border-color: #93B8FF;
-}}
-
-/* せどり計算機 */
-.sedori-calculator input:focus {{
-  outline: 2px solid var(--violet);
-  border-color: var(--violet);
-}}
+.badge-easy    {{ background: #F0FDF8; color: var(--profit-dark); border: 1px solid #B2F0DC; }}
+.badge-watch   {{ background: #FFF9F0; color: #CC7A00; border: 1px solid #FFD9A0; }}
+.badge-adv     {{ background: #F5F3FF; color: var(--violet); border: 1px solid #DDD6FE; }}
+.badge-exp     {{ background: #F5F3FF; color: var(--violet-dark); border: 1px solid #DDD6FE; }}
+.badge-iphone  {{ background: #EFF6FF; color: #1E6FFF; border: 1px solid #BFDBFE; }}
+.badge-camera  {{ background: #F5F3FF; color: var(--violet); border: 1px solid #DDD6FE; }}
+.badge-game    {{ background: #F0FDF8; color: #0d9488; border: 1px solid #99F0E0; }}
+.badge-lottery {{ background: #FFF9F0; color: #CC7A00; border: 1px solid #FFD9A0; }}
+.badge-soldout {{ background: #FFF1F3; color: #CC2244; border: 1px solid #FFB3C0; }}
+.badge-overseas{{ background: #f0f9ff; color: #0369a1; border: 1px solid #bae6fd; }}
+.badge-used    {{ background: var(--surface2); color: var(--ink2); border: 1px solid var(--card-border); }}
 
 /* タグシステム（上級者向け） */
 .deal-tag {{
@@ -2054,360 +1811,68 @@ body {{
 /* noscript */
 .noscript-all .tab-panel {{ display: block !important; }}
 .noscript-all .tab-nav {{ display: none; }}
-
-/* クリック阻害防止 */
-.tab-panel {{ pointer-events: auto; }}
-.tab-btn {{ pointer-events: auto; cursor: pointer; }}
-.genre-chip, .maker-chip {{ pointer-events: auto; cursor: pointer; }}
-.adv-btn, .oc-chip, .overseas-btn {{ pointer-events: auto; cursor: pointer; }}
-/* オーバーレイ要素がクリックを阻害しないように */
-.hero::after {{ pointer-events: none; }}
-.section-overlay {{ pointer-events: none; }}
-
-/* ジャンルナビ・メーカーナビ */
-.genre-nav-wrap {{ padding: 12px 0 0; }}
-.genre-nav {{ display: flex; gap: 8px; flex-wrap: wrap; padding: 0 0 12px; }}
-.genre-chip {{
-  padding: 8px 18px; border-radius: 24px; border: 1.5px solid var(--card-border);
-  background: var(--surface2); color: var(--ink2); font-size: 0.85rem; font-weight: 600;
-  cursor: pointer; font-family: var(--font); transition: all 0.15s;
-}}
-.genre-chip.active, .genre-chip:hover {{
-  background: var(--violet); color: #fff; border-color: var(--violet);
-}}
-.maker-nav {{ display: flex; gap: 8px; flex-wrap: wrap; padding: 0 0 16px; }}
-.maker-chip {{
-  padding: 6px 14px; border-radius: 20px; border: 1.5px solid var(--card-border);
-  background: var(--surface2); color: var(--ink2); font-size: 0.8rem; font-weight: 600;
-  cursor: pointer; font-family: var(--font); transition: all 0.15s;
-}}
-.maker-chip.active, .maker-chip:hover {{
-  background: var(--teal, #00C896); color: #fff; border-color: var(--teal, #00C896);
-}}
-
-/* 上級者カード */
-.adv-card {{
-  background: var(--card-bg);
-  border: 1.5px solid var(--card-border);
-  border-radius: var(--radius-xl, 16px);
-  padding: 0;
-  overflow: hidden;
-  position: relative;
-  margin-bottom: 16px;
-}}
-.adv-card-stripe {{
-  height: 4px;
-  background: linear-gradient(90deg, var(--violet), #7c3aed);
-}}
-.adv-card-hd {{
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  padding: 20px 20px 12px;
-  gap: 12px;
-}}
-.adv-genre-badge {{
-  font-size: 0.7rem; font-weight: 700; color: var(--violet);
-  text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px;
-}}
-.adv-brand {{
-  font-size: 0.8rem; color: var(--ink3); margin-bottom: 2px;
-}}
-.adv-name {{
-  font-size: 1.05rem; font-weight: 800; color: var(--ink);
-}}
-.adv-card-badges {{ display: flex; flex-direction: column; gap: 4px; align-items: flex-end; }}
-.adv-price-grid {{
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1px;
-  background: var(--card-border);
-  border-top: 1px solid var(--card-border);
-  border-bottom: 1px solid var(--card-border);
-}}
-@media (max-width: 640px) {{
-  .adv-price-grid {{ grid-template-columns: repeat(2, 1fr); }}
-}}
-.adv-price-item {{
-  background: var(--card-bg);
-  padding: 12px 16px;
-}}
-.adv-price-lbl {{
-  font-size: 0.7rem; color: var(--ink3); font-weight: 600; margin-bottom: 4px;
-}}
-.adv-price-val {{
-  font-size: 0.95rem; font-weight: 800; color: var(--ink);
-}}
-.adv-price-val.highlight {{ color: var(--violet); }}
-.adv-price-val.profit {{ color: var(--profit, #00C896); }}
-.adv-links-row {{
-  display: flex; gap: 8px; flex-wrap: wrap; padding: 12px 20px;
-  border-bottom: 1px solid var(--card-border);
-}}
-.adv-btn {{
-  padding: 8px 16px; border-radius: var(--radius-md, 8px); font-size: 0.82rem;
-  font-weight: 700; text-decoration: none; display: inline-flex; align-items: center;
-  gap: 4px; transition: opacity 0.15s; cursor: pointer;
-}}
-.adv-btn-primary {{
-  background: var(--violet); color: #fff;
-}}
-.adv-btn-mercari {{ background: #FF3163; color: #fff; }}
-.adv-btn-yahoo {{ background: #FF0033; color: #fff; }}
-.adv-caution {{
-  padding: 8px 20px 12px; font-size: 0.75rem; color: var(--ink3);
-  display: flex; gap: 4px; align-items: flex-start;
-}}
-/* カード2列グリッド（PC） */
-.adv-cards-grid {{
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
-}}
-@media (max-width: 768px) {{
-  .adv-cards-grid {{ grid-template-columns: 1fr; }}
-}}
-
-/* せどり計算機（TradingView風） */
-.sedori-tab-nav {{
-  display: flex; gap: 8px; margin-bottom: 24px;
-}}
-.sedori-tab-btn {{
-  flex: 1; padding: 14px 20px; border: 1.5px solid var(--card-border);
-  background: var(--surface2); border-radius: var(--radius-lg, 12px);
-  font-size: 0.88rem; font-weight: 700; color: var(--ink2);
-  cursor: pointer; text-align: center; font-family: var(--font);
-  transition: all 0.18s; line-height: 1.4;
-}}
-.sedori-tab-btn.active {{
-  background: var(--violet); color: #fff; border-color: var(--violet);
-}}
-.sedori-tab-btn small {{ font-weight: 500; opacity: 0.85; font-size: 0.75rem; }}
-.sedori-layout {{
-  display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
-}}
-@media (max-width: 640px) {{ .sedori-layout {{ grid-template-columns: 1fr; }} }}
-.sedori-card {{
-  background: var(--surface2); border: 1px solid var(--card-border);
-  border-radius: var(--radius-lg); padding: 24px;
-}}
-.sedori-card-title {{
-  font-size: 0.9rem; font-weight: 800; color: var(--ink); margin-bottom: 20px;
-  padding-bottom: 12px; border-bottom: 1px solid var(--card-border);
-}}
-.sedori-field {{ margin-bottom: 14px; }}
-.sedori-lbl {{
-  display: block; font-size: 0.72rem; font-weight: 700; color: var(--ink3);
-  text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px;
-}}
-.sedori-input {{
-  width: 100%; padding: 14px 16px; border: 1.5px solid var(--card-border);
-  border-radius: var(--radius-md); font-size: 1.05rem; font-family: var(--font);
-  color: var(--ink); background: var(--card-bg); box-sizing: border-box;
-  transition: border-color 0.15s;
-}}
-.sedori-input:focus {{ outline: none; border-color: var(--violet); }}
-.sedori-result-card {{
-  background: var(--card-bg); border: 1.5px solid var(--violet);
-  border-radius: var(--radius-lg); padding: 28px;
-  position: sticky; top: 80px;
-}}
-.sedori-result-title {{
-  font-size: 0.85rem; font-weight: 700; color: var(--ink3); margin-bottom: 16px;
-}}
-.sedori-result-main {{
-  font-size: 2.6rem; font-weight: 900; color: var(--profit, #00C896);
-  line-height: 1; margin-bottom: 4px; transition: color 0.2s;
-}}
-.sedori-result-main.negative {{ color: var(--orange, #FF9500); }}
-.sedori-result-label {{
-  font-size: 0.78rem; color: var(--ink3); font-weight: 600; margin-bottom: 20px;
-}}
-.sedori-result-rows {{ margin-bottom: 20px; }}
-.sedori-result-row {{
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 8px 0; border-bottom: 1px solid var(--surface2);
-  font-size: 0.84rem;
-}}
-.sedori-result-row-lbl {{ color: var(--ink3); }}
-.sedori-result-row-val {{ font-weight: 700; color: var(--ink); }}
-.sedori-breakeven-wrap {{
-  background: var(--surface2); border-radius: var(--radius-md);
-  padding: 12px 16px; margin-top: 8px;
-}}
-.sedori-breakeven-lbl {{ font-size: 0.72rem; color: var(--ink3); font-weight: 600; margin-bottom: 4px; }}
-.sedori-breakeven-val {{ font-size: 1.1rem; font-weight: 800; color: var(--violet); }}
 </style>
 
 </head>
 <body>
-<!-- SiteHeader: Announcement Bar (SiteHeader.tsx) -->
-<div class="announce-bar">
-  <a href="#tab-beginner">&#127919; 本日 <strong>{_beginner_count_top}</strong> 件の初心者向け案件を更新 &mdash; 最大利益 <strong>{_esc(_max_profit_str_top)}</strong> を確認 &rarr;</a>
-</div>
-<!-- SiteHeader: Sticky Header (SiteHeader.tsx) -->
-<header class="site-header">
-  <div class="header-inner">
-    <a href="#tab-ranking" class="header-brand" onclick="switchTab('ranking');return false;">
-      <div class="brand-icon">&#128200;</div>
-      <div class="brand-text">
-        <span class="brand-name">SOUBA</span>
-        <span class="brand-sub">相場ダッシュボード</span>
-      </div>
-    </a>
-    <nav class="header-nav">
-      <a href="#tab-ranking" class="header-nav-link" onclick="switchTab('ranking');return false;">ランキング</a>
-      <a href="#tab-beginner" class="header-nav-link" onclick="switchTab('beginner');return false;">初心者向け</a>
-      <a href="#tab-advanced" class="header-nav-link" onclick="switchTab('advanced');return false;">上級者向け</a>
-      <a href="#tab-lottery" class="header-nav-link" onclick="switchTab('lottery');return false;">抽選情報</a>
-      <a href="#sedori-calc-section" class="header-nav-link" onclick="switchTab('sedori');return false;">計算機</a>
-    </nav>
-    <div class="header-right">
-      <div class="live-badge"><span class="live-dot"></span>LIVE</div>
-      <a href="#note-cta" class="header-note-btn" data-track="note_click">&#128221; note で読む</a>
-    </div>
-  </div>
+<div class="announce-bar"><a href="#tab-beginner">&#127919; 本日 {_beginner_count_top} 件の初心者向け案件 &mdash; 最大利益 {_esc(_max_profit_str_top)} を確認</a></div>
+<header class="topbar">
+  <a href="/" class="topbar-brand">
+    <div class="brand-icon">S</div>
+    プレ値速報
+  </a>
+  <div class="topbar-live"><span class="live-dot"></span>LIVE</div>
+  <div class="topbar-date" data-buyback-updated>買取更新: {_esc(_buyback_str_top)}</div>
+  <div class="topbar-spacer"></div>
+  <a href="#note-cta" class="topbar-note-btn" data-track="note_click">&#128221; 詳細レポートを見る</a>
 </header>
-<!-- LiveTicker (LiveTicker.tsx) -->
-<div class="ticker-bar">
-  <div class="ticker-inner">
-    <span class="ticker-item"><span class="t-name">iPhone 16 Pro 256GB</span><span class="ticker-sep">&#124;</span><span class="t-profit">+¥18,400</span><span class="ticker-rate">+16.5%</span></span>
-    <span class="ticker-item"><span class="t-name">SONY α7C II</span><span class="ticker-sep">&#124;</span><span class="t-profit">+¥32,000</span><span class="ticker-rate">+12.8%</span></span>
-    <span class="ticker-item"><span class="t-name">Nintendo Switch 2</span><span class="ticker-sep">&#124;</span><span class="t-profit">+¥9,800</span><span class="ticker-rate">+19.6%</span></span>
-    <span class="ticker-item"><span class="t-name">FUJIFILM X100VI</span><span class="ticker-sep">&#124;</span><span class="t-profit">+¥131,000</span><span class="ticker-rate">+78.4%</span></span>
-    <span class="ticker-item"><span class="t-name">MacBook Air M3</span><span class="ticker-sep">&#124;</span><span class="t-profit">+¥20,200</span><span class="ticker-rate">+12.3%</span></span>
-    <span class="ticker-item"><span class="t-name">Canon EOS R6 II</span><span class="ticker-sep">&#124;</span><span class="t-profit">+¥45,000</span><span class="ticker-rate">+18.2%</span></span>
-    <span class="ticker-item"><span class="t-name">iPhone 16 Pro 256GB</span><span class="ticker-sep">&#124;</span><span class="t-profit">+¥18,400</span><span class="ticker-rate">+16.5%</span></span>
-    <span class="ticker-item"><span class="t-name">SONY α7C II</span><span class="ticker-sep">&#124;</span><span class="t-profit">+¥32,000</span><span class="ticker-rate">+12.8%</span></span>
-    <span class="ticker-item"><span class="t-name">Nintendo Switch 2</span><span class="ticker-sep">&#124;</span><span class="t-profit">+¥9,800</span><span class="ticker-rate">+19.6%</span></span>
-    <span class="ticker-item"><span class="t-name">FUJIFILM X100VI</span><span class="ticker-sep">&#124;</span><span class="t-profit">+¥131,000</span><span class="ticker-rate">+78.4%</span></span>
-    <span class="ticker-item"><span class="t-name">MacBook Air M3</span><span class="ticker-sep">&#124;</span><span class="t-profit">+¥20,200</span><span class="ticker-rate">+12.3%</span></span>
-    <span class="ticker-item"><span class="t-name">Canon EOS R6 II</span><span class="ticker-sep">&#124;</span><span class="t-profit">+¥45,000</span><span class="ticker-rate">+18.2%</span></span>
-  </div>
-</div>
+<div class="ticker-bar"><div class="ticker-inner"><span class="ticker-item"><span class="t-name">iPhone 16 Pro 256GB</span><span class="ticker-sep">|</span><span class="t-profit">+¥18,400</span></span><span class="ticker-item"><span class="t-name">SONY α7C II</span><span class="ticker-sep">|</span><span class="t-profit">+¥32,000</span></span><span class="ticker-item"><span class="t-name">Nintendo Switch 2</span><span class="ticker-sep">|</span><span class="t-profit">+¥9,800</span></span><span class="ticker-item"><span class="t-name">iPhone 15 Plus 128GB</span><span class="ticker-sep">|</span><span class="t-profit">+¥12,000</span></span><span class="ticker-item"><span class="t-name">Canon EOS R6 Mark II</span><span class="ticker-sep">|</span><span class="t-profit">+¥45,000</span></span><span class="ticker-item"><span class="t-name">PS5 Digital</span><span class="ticker-sep">|</span><span class="t-profit">+¥6,500</span></span><span class="ticker-item"><span class="t-name">iPhone 16 Pro 256GB</span><span class="ticker-sep">|</span><span class="t-profit">+¥18,400</span></span><span class="ticker-item"><span class="t-name">SONY α7C II</span><span class="ticker-sep">|</span><span class="t-profit">+¥32,000</span></span><span class="ticker-item"><span class="t-name">Nintendo Switch 2</span><span class="ticker-sep">|</span><span class="t-profit">+¥9,800</span></span><span class="ticker-item"><span class="t-name">iPhone 15 Plus 128GB</span><span class="ticker-sep">|</span><span class="t-profit">+¥12,000</span></span><span class="ticker-item"><span class="t-name">Canon EOS R6 Mark II</span><span class="ticker-sep">|</span><span class="t-profit">+¥45,000</span></span><span class="ticker-item"><span class="t-name">PS5 Digital</span><span class="ticker-sep">|</span><span class="t-profit">+¥6,500</span></span></div></div>
+<div class="features-bar"><div class="features-inner"><span class="feature-chip green">&#9711; 毎日12:00 自動更新</span><span class="feature-chip blue">&#8652; サイト間せどり計算</span><span class="feature-chip violet">&#127758; 海外相場リンク付き</span><span class="feature-chip amber">&#128202; 複数買取店比較</span><span class="feature-chip red">&#9650; 急騰/急落アラート</span><span class="feature-chip green">&#128269; 新商品候補監視</span></div></div>
 {hero_html}
 {stale_html}
 <div class="main-wrap">
-{genre_nav_html}
 {tab_html}
 {caution_html}
 {cta_html}
 {footer_html}
 </div>
 <script>
-document.addEventListener('DOMContentLoaded', function() {{
-  // ============================================================
-  // メインタブ切替 (StickyTabs.tsx)
-  // ============================================================
-  var btns = document.querySelectorAll('.tab-btn');
-  var panels = document.querySelectorAll('.tab-panel');
-
-  function switchTab(tabId) {{
-    btns.forEach(function(b) {{
-      b.classList.remove('active');
-      b.setAttribute('aria-selected', 'false');
-    }});
-    panels.forEach(function(p) {{ p.classList.remove('active'); }});
-    var activeBtn = document.querySelector('.tab-btn[data-tab="' + tabId + '"]');
-    if (activeBtn) {{
-      activeBtn.classList.add('active');
-      activeBtn.setAttribute('aria-selected', 'true');
-      // インジケーター更新
-      updateTabIndicator(activeBtn);
-    }}
-    var panel = document.getElementById('tab-' + tabId);
-    if (panel) panel.classList.add('active');
-  }}
-
-  function updateTabIndicator(activeBtn) {{
-    var indicator = document.querySelector('.tab-indicator-bar');
-    if (!indicator || !activeBtn) return;
-    var nav = document.querySelector('.tab-nav');
-    if (!nav) return;
-    var nr = nav.getBoundingClientRect();
-    var er = activeBtn.getBoundingClientRect();
-    var scrollLeft = nav.scrollLeft || 0;
-    indicator.style.left = (er.left - nr.left + scrollLeft) + 'px';
-    indicator.style.width = er.width + 'px';
-    // アクティブタブの色に合わせてインジケーター色を変更
-    var tabColors = {{
-      'ranking': '#3B7BFF',
-      'sedori': '#3B7BFF',
-      'beginner': '#00C896',
-      'advanced': '#7C5CFC',
-      'surge': '#FF9500',
-      'lottery': '#7C5CFC',
-      'new-products': '#2563EB'
-    }};
-    var tabId = activeBtn.dataset.tab;
-    indicator.style.background = tabColors[tabId] || '#00C896';
-    // スクロール
-    activeBtn.scrollIntoView({{ behavior: 'smooth', block: 'nearest', inline: 'center' }});
-  }}
-
-  window.switchTab = switchTab;
-
-  if (btns.length) {{
-    btns.forEach(function(btn) {{
-      btn.addEventListener('click', function() {{
-        switchTab(btn.dataset.tab);
-      }});
-    }});
-    // 初期インジケーター
-    var firstActive = document.querySelector('.tab-btn.active');
-    if (firstActive) setTimeout(function() {{ updateTabIndicator(firstActive); }}, 50);
-  }}
-
-  // ============================================================
-  // ランキング内タブ
-  // ============================================================
-  var rbtns = document.querySelectorAll('.ranking-tab-btn');
-  if (rbtns.length) {{
-    rbtns.forEach(function(rb) {{
-      rb.addEventListener('click', function() {{
-        rbtns.forEach(function(b) {{ b.classList.remove('active'); }});
-        document.querySelectorAll('.ranking-tab-panel').forEach(function(p) {{ p.classList.remove('active'); }});
-        rb.classList.add('active');
-        var panel = document.getElementById('rtab-' + rb.getAttribute('data-rtab'));
-        if (panel) panel.classList.add('active');
+(function(){{
+  var btns=document.querySelectorAll(".tab-btn");
+  var panels=document.querySelectorAll(".tab-panel");
+  if(btns.length){{
+    btns.forEach(function(btn){{
+      btn.addEventListener("click",function(){{
+        btns.forEach(function(b){{b.classList.remove("active");b.setAttribute("aria-selected","false");}});
+        panels.forEach(function(p){{p.classList.remove("active");}});
+        btn.classList.add("active");
+        btn.setAttribute("aria-selected","true");
+        var panel=document.getElementById("tab-"+btn.dataset.tab);
+        if(panel)panel.classList.add("active");
       }});
     }});
   }}
-
-  // ============================================================
-  // 抽選フィルター
-  // ============================================================
-  var lotFilterBtns = document.querySelectorAll('.lot-filter-btn');
-  if (lotFilterBtns.length) {{
-    lotFilterBtns.forEach(function(fb) {{
-      fb.addEventListener('click', function() {{
-        lotFilterBtns.forEach(function(b) {{ b.classList.remove('active'); }});
-        fb.classList.add('active');
-        var filter = fb.dataset.filter;
-        document.querySelectorAll('.lottery-card').forEach(function(card) {{
-          if (filter === 'all' || card.dataset.status === filter) {{
-            card.style.display = '';
-          }} else {{
-            card.style.display = 'none';
-          }}
-        }});
-      }});
-    }});
-  }}
-
-  // ============================================================
-  // アナリティクス
-  // ============================================================
-  document.addEventListener('click', function(e) {{
-    var el = e.target.closest('[data-track]');
-    if (!el) return;
-    var ev = el.getAttribute('data-track');
-    var pid = el.getAttribute('data-product-id') || '';
-    var shop = el.getAttribute('data-shop') || '';
-    if (typeof gtag === 'function') gtag('event', ev, {{product_id: pid, shop: shop}});
-    if (typeof fbq === 'function') fbq('trackCustom', ev, {{product_id: pid, shop: shop}});
+  document.addEventListener("click",function(e){{
+    var el=e.target.closest("[data-track]");
+    if(!el)return;
+    var ev=el.getAttribute("data-track"),pid=el.getAttribute("data-product-id")||"",shop=el.getAttribute("data-shop")||"";
+    if(typeof gtag==="function")gtag("event",ev,{{product_id:pid,shop:shop}});
+    if(typeof fbq==="function")fbq("trackCustom",ev,{{product_id:pid,shop:shop}});
   }});
-}});
+  // ランキング内タブ
+  var rbtns=document.querySelectorAll(".ranking-tab-btn");
+  if(rbtns.length){{
+    rbtns.forEach(function(rb){{
+      rb.addEventListener("click",function(){{
+        rbtns.forEach(function(b){{b.classList.remove("active");}});
+        document.querySelectorAll(".ranking-tab-panel").forEach(function(p){{p.classList.remove("active");}});
+        rb.classList.add("active");
+        var panel=document.getElementById("rtab-"+rb.getAttribute("data-rtab"));
+        if(panel)panel.classList.add("active");
+      }});
+    }});
+  }}
+}})();
 </script>
 <noscript><style>.tab-nav{{display:none;}}.tab-panel{{display:block!important;}}</style></noscript>
 </body>
@@ -2416,137 +1881,69 @@ document.addEventListener('DOMContentLoaded', function() {{
     # ----- Hero -----
 
     def _section_hero(self, date_str, time_str, latest_buyback_at, lp_generated_at,
+
                        all_deals=None, iphone_deals=None, camera_deals=None, game_deals=None) -> str:
-        """HeroSection.tsx を忠実再現"""
+
+        variant_key = self.settings.get('headline_variant', 'A')
+
+        variants    = self.settings.get('variants', {})
+
+        variant     = variants.get(variant_key, {})
+
         buyback_str = _jst_str(latest_buyback_at)
+
         lp_str      = _jst_str(lp_generated_at)
 
-        all_count      = len(all_deals)    if all_deals    else 0
-        beginner_count = len([d for d in (all_deals or []) if getattr(d, 'user_level', '') in ('beginner_easy', 'beginner_watch')])
-        advanced_count = len([d for d in (all_deals or []) if getattr(d, 'user_level', '') == 'advanced'])
-        max_profit     = max((d.net_profit_jpy or 0) for d in all_deals) if all_deals else 0
-        max_profit_str = f'+¥{max_profit:,}' if max_profit > 0 else '—'
+        stale_cls   = 'stale' if _hours_ago(latest_buyback_at) > 24 else ''
 
-        # ライブパネル実データ（easy_deals 上位5件）
-        live_items_html = ''
-        top_deals = sorted([d for d in (all_deals or []) if (d.net_profit_jpy or 0) > 0],
-                           key=lambda d: d.net_profit_jpy or 0, reverse=True)[:5]
-        if top_deals:
-            for i, d in enumerate(top_deals):
-                is_first = i == 0
-                item_cls = 'highlight' if is_first else 'normal'
-                name_cls = 'bright' if is_first else ''
-                profit_fmt = f'+¥{d.net_profit_jpy:,}'
-                rate_val = getattr(d, 'net_profit_rate', 0) or 0
-                rate_fmt = f'+{rate_val:.1f}%' if rate_val else ''
-                live_items_html += f'''<div class="lp-item {item_cls}" onclick="switchTab('beginner')">
-  <div class="lp-info"><div class="lp-name {name_cls}">{_esc(d.product_name)}</div></div>
-  <div class="lp-profit-wrap">
-    <span class="lp-profit">{_esc(profit_fmt)}</span>
-    {'<span class="lp-rate">' + _esc(rate_fmt) + '</span>' if rate_fmt else ''}
-  </div>
-</div>'''
-        else:
-            for item in [
-                ('iPhone 16 Pro 256GB', '+¥18,400', '+16.5%', True),
-                ('SONY α7C II', '+¥32,000', '+12.8%', False),
-                ('Nintendo Switch 2', '+¥9,800', '+19.6%', False),
-                ('FUJIFILM X100VI', '+¥131,000', '+78.4%', False),
-                ('Canon EOS R6 II', '+¥45,000', '+18.2%', False),
-            ]:
-                name, profit, rate, is_first = item
-                item_cls = 'highlight' if is_first else 'normal'
-                name_cls = 'bright' if is_first else ''
-                live_items_html += f'''<div class="lp-item {item_cls}">
-  <div class="lp-info"><div class="lp-name {name_cls}">{name}</div></div>
-  <div class="lp-profit-wrap">
-    <span class="lp-profit">{profit}</span>
-    <span class="lp-rate">{rate}</span>
-  </div>
-</div>'''
+        all_count    = len(all_deals)    if all_deals    else 0
+
+        iphone_count = len(iphone_deals) if iphone_deals else 0
+
+        camera_count = len(camera_deals) if camera_deals else 0
+
+        game_count   = len(game_deals)   if game_deals   else 0
+
+        max_profit   = max((d.net_profit_jpy or 0) for d in all_deals) if all_deals else 0
+
+        max_profit_str = f'+¥{max_profit:,}' if max_profit > 0 else '—'
 
         return f"""<section class="hero">
   <div class="hero-inner">
-    <!-- 左カラム -->
     <div class="hero-left">
-      <div class="hero-eyebrow">
-        <span class="live-dot"></span>
-        毎日12:00 更新中
-        <span style="color:rgba(255,255,255,0.4);font-size:0.7rem;font-weight:400;">{_esc(date_str)}</span>
-      </div>
-      <h1 class="hero-title">
-        転売で稼ぐための<br>
-        <span class="accent">相場情報、全部ここに。</span>
-      </h1>
-      <p class="hero-subtitle">
-        スマホ・カメラ・ゲーム機の<strong>定価・買取・海外相場</strong>を毎日整理。
-        初心者の低難度案件から、上級者のサイト間せどりまで。
-      </p>
+      <div class="hero-eyebrow"><span class="live-dot"></span> 毎日更新 &mdash; {_esc(date_str)}</div>
+      <h1 class="hero-title">今日の<span class="accent">価格差</span>で稼ぐ。<br>公式 &times; 買取 &times; 海外相場。</h1>
+      <p class="hero-subtitle">iPhone・カメラ・ゲーム機の公式価格と買取価格の差額を毎日更新。初心者向けの低難度案件から、上級者向けの中古市場差額・海外相場まで、このページ一枚で行動できます。</p>
       <div class="hero-cta-row">
-        <a href="#tab-ranking" class="hero-btn primary" onclick="switchTab('ranking');return false;">今日の案件を見る &rarr;</a>
-        <a href="#sedori-calc-section" class="hero-btn violet" onclick="switchTab('sedori');return false;">&#9889; せどり計算を試す</a>
-        <a href="#tab-lottery" class="hero-btn secondary" onclick="switchTab('lottery');return false;">抽選情報を見る</a>
+        <a href="#tab-beginner" class="hero-btn primary">&#128100; 初心者向け案件 {all_count}件</a>
+        <a href="#tab-advanced" class="hero-btn violet">&#128269; 上級者向け</a>
+        <a href="#tab-ranking" class="hero-btn secondary">&#127942; ランキング</a>
       </div>
       <div class="hero-social-proof">
-        <div class="social-stat">
-          <span class="social-stat-icon">&#128101;</span>
-          <div>
-            <div class="social-stat-value">12,400+</div>
-            <div class="social-stat-label">月間利用者</div>
-          </div>
+        <div class="social-avatars">
+          <div class="social-avatar">A</div>
+          <div class="social-avatar">B</div>
+          <div class="social-avatar">C</div>
         </div>
-        <div class="social-stat">
-          <span class="social-stat-icon">&#128200;</span>
-          <div>
-            <div class="social-stat-value">{_esc(max_profit_str)}</div>
-            <div class="social-stat-label">本日最高利益</div>
-          </div>
-        </div>
-        <div class="social-stat">
-          <span class="social-stat-icon">&#11088;</span>
-          <div>
-            <div class="social-stat-value">4.9/5.0</div>
-            <div class="social-stat-label">ユーザー評価</div>
-          </div>
-        </div>
-      </div>
-      <div class="hero-trust-badges" style="margin-top:20px;">
-        <span class="trust-badge">&#128737; 参考価格のみ・安全</span>
-        <span class="trust-badge">&#128336; 毎日正午更新</span>
-        <span class="trust-badge">&#127981; 8店舗以上比較</span>
+        <div class="social-text">本日 <strong>{all_count}</strong> 件の案件 — 最高利益 <strong>{_esc(max_profit_str)}</strong></div>
       </div>
       <div class="hero-timestamps">
-        <span class="ts-pill" data-buyback-updated><span class="ts-dot"></span>買取価格更新：{_esc(buyback_str)}</span>
+        <span class="ts-pill {_esc(stale_cls)}" data-buyback-updated><span class="ts-dot"></span>買取価格更新：{_esc(buyback_str)}</span>
         <span class="ts-pill" data-lp-generated><span class="ts-dot blue"></span>LP生成：{_esc(lp_str)}</span>
       </div>
     </div>
-
-    <!-- 右カラム: Live Panel -->
     <div class="hero-right">
       <div class="hero-live-panel">
         <div class="live-panel-hd">
-          <div class="live-panel-title-wrap">
-            <span class="live-dot"></span>
-            <span class="live-panel-title">今日の利益レポート</span>
-          </div>
-          <span class="live-panel-date">{_esc(date_str)}</span>
+          <div class="live-panel-title">LIVE DEALS</div>
+          <div class="live-panel-badge"><span class="live-dot"></span> リアルタイム</div>
         </div>
         <div class="live-panel-items">
-{live_items_html}
-        </div>
-        <div class="live-kpi-bar">
-          <div class="kpi-cell" onclick="switchTab('ranking')">
-            <div class="kpi-label">最大利益</div>
-            <div class="kpi-value green">{_esc(max_profit_str)}</div>
-          </div>
-          <div class="kpi-cell" onclick="switchTab('beginner')">
-            <div class="kpi-label">初心者向け</div>
-            <div class="kpi-value white">{beginner_count}件</div>
-          </div>
-          <div class="kpi-cell" onclick="switchTab('advanced')">
-            <div class="kpi-label">上級者向け</div>
-            <div class="kpi-value violet">{advanced_count}件</div>
-          </div>
+          <div class="lp-item"><div class="lp-icon iphone">&#128241;</div><div class="lp-info"><div class="lp-name">iPhone 16 Pro 256GB</div><div class="lp-shop">じゃんぱら</div></div><div class="lp-profit">+¥18,400</div></div>
+          <div class="lp-item"><div class="lp-icon camera">&#128247;</div><div class="lp-info"><div class="lp-name">SONY α7C II</div><div class="lp-shop">マップカメラ</div></div><div class="lp-profit">+¥32,000</div></div>
+          <div class="lp-item"><div class="lp-icon game">&#127918;</div><div class="lp-info"><div class="lp-name">Nintendo Switch 2</div><div class="lp-shop">ゲオ</div></div><div class="lp-profit">+¥9,800</div></div>
+          <div class="lp-item"><div class="lp-icon iphone">&#128241;</div><div class="lp-info"><div class="lp-name">iPhone 15 Plus 128GB</div><div class="lp-shop">iosys</div></div><div class="lp-profit">+¥12,000</div></div>
+          <div class="lp-item"><div class="lp-icon camera">&#128247;</div><div class="lp-info"><div class="lp-name">Canon EOS R6 II</div><div class="lp-shop">フジヤカメラ</div></div><div class="lp-profit">+¥45,000</div></div>
         </div>
       </div>
     </div>
@@ -2571,106 +1968,46 @@ document.addEventListener('DOMContentLoaded', function() {{
             if msgs else 'データは最新です。'
         ) + '</div></div>'
 
-    def _section_genre_nav(self, all_deals=None) -> str:
-        """ジャンルナビ + メーカーナビを生成する（横スクロール対応チップ）。"""
-        return """<div class="genre-nav-wrap">
-  <div class="genre-nav">
-    <button class="genre-chip active" data-genre="iphone" onclick="genreSelect('iphone')">&#128241; スマホ</button>
-    <button class="genre-chip" data-genre="tablet" onclick="genreSelect('tablet')">&#128063; タブレット</button>
-    <button class="genre-chip" data-genre="pc" onclick="genreSelect('pc')">&#128187; PC</button>
-    <button class="genre-chip" data-genre="camera" onclick="genreSelect('camera')">&#128247; カメラ</button>
-    <button class="genre-chip" data-genre="game_console" onclick="genreSelect('game_console')">&#127918; ゲーム機</button>
-  </div>
-  <div class="maker-nav" id="maker-nav-iphone" style="display:flex;">
-    <button class="maker-chip" data-maker="apple" onclick="makerSelect('iphone','apple')">&#127822; Apple</button>
-  </div>
-  <div class="maker-nav" id="maker-nav-tablet" style="display:none;">
-    <button class="maker-chip" data-maker="apple" onclick="makerSelect('tablet','apple')">&#127822; Apple</button>
-    <button class="maker-chip" data-maker="samsung" onclick="makerSelect('tablet','samsung')">Samsung</button>
-  </div>
-  <div class="maker-nav" id="maker-nav-pc" style="display:none;">
-    <button class="maker-chip" data-maker="apple" onclick="makerSelect('pc','apple')">&#127822; Apple</button>
-    <button class="maker-chip" data-maker="dell" onclick="makerSelect('pc','dell')">Dell</button>
-    <button class="maker-chip" data-maker="lenovo" onclick="makerSelect('pc','lenovo')">Lenovo</button>
-    <button class="maker-chip" data-maker="asus" onclick="makerSelect('pc','asus')">ASUS</button>
-    <button class="maker-chip" data-maker="msi" onclick="makerSelect('pc','msi')">MSI</button>
-    <button class="maker-chip" data-maker="hp" onclick="makerSelect('pc','hp')">HP</button>
-  </div>
-  <div class="maker-nav" id="maker-nav-camera" style="display:none;">
-    <button class="maker-chip" data-maker="ricoh" onclick="makerSelect('camera','ricoh')">RICOH</button>
-    <button class="maker-chip" data-maker="fujifilm" onclick="makerSelect('camera','fujifilm')">FUJIFILM</button>
-    <button class="maker-chip" data-maker="canon" onclick="makerSelect('camera','canon')">Canon</button>
-    <button class="maker-chip" data-maker="nikon" onclick="makerSelect('camera','nikon')">Nikon</button>
-    <button class="maker-chip" data-maker="sony" onclick="makerSelect('camera','sony')">Sony</button>
-    <button class="maker-chip" data-maker="leica" onclick="makerSelect('camera','leica')">Leica</button>
-  </div>
-  <div class="maker-nav" id="maker-nav-game_console" style="display:none;">
-    <button class="maker-chip" data-maker="nintendo" onclick="makerSelect('game_console','nintendo')">Nintendo</button>
-    <button class="maker-chip" data-maker="playstation" onclick="makerSelect('game_console','playstation')">PlayStation</button>
-    <button class="maker-chip" data-maker="xbox" onclick="makerSelect('game_console','xbox')">Xbox</button>
-  </div>
-</div>
-
-<script>
-(function() {
-  function genreSelect(genre) {
-    document.querySelectorAll('.genre-chip').forEach(function(c) {
-      c.classList.toggle('active', c.dataset.genre === genre);
-    });
-    document.querySelectorAll('.maker-nav').forEach(function(n) {
-      n.style.display = 'none';
-    });
-    var mn = document.getElementById('maker-nav-' + genre);
-    if (mn) mn.style.display = 'flex';
-    var section = document.getElementById('genre-section-' + genre);
-    if (section) section.scrollIntoView({behavior:'smooth', block:'start'});
-  }
-  function makerSelect(genre, maker) {
-    document.querySelectorAll('.maker-chip').forEach(function(c) {
-      c.classList.toggle('active', c.dataset.maker === maker);
-    });
-    var el = document.getElementById('maker-section-' + genre + '-' + maker);
-    if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
-  }
-  window.genreSelect = genreSelect;
-  window.makerSelect = makerSelect;
-})();
-</script>"""
-
     def _section_tabs(self, beginner_easy, beginner_watch,
+
                       advanced_deals, advanced_snaps, watch_candidates,
+
                       buyback_alerts, all_deals, iphone_deals, game_deals,
+
                       camera_deals=None, iphone_watch=None, camera_watch=None,
-                      game_watch=None, buyback_by_product: dict = None,
-                      lottery_events=None, lottery_count=0,
-                      new_product_candidates=None) -> str:
+
+                      game_watch=None, buyback_by_product: dict = None) -> str:
 
         camera_deals = camera_deals or []
-        camera_watch = camera_watch or []
-        bybp = buyback_by_product or {}
-        _lottery_events = lottery_events or []
 
-        beginner_html     = self._tab_beginner(beginner_easy, beginner_watch, bybp)
-        advanced_html     = self._tab_advanced(advanced_deals, advanced_snaps, watch_candidates,
-                                               camera_watch=camera_watch)
-        sedori_html       = self._section_sedori_calculator()
-        lottery_html      = self._tab_lottery(_lottery_events, watch_candidates=watch_candidates)
-        ranking_html      = self._tab_ranking(all_deals, iphone_deals, game_deals)
+        camera_watch = camera_watch or []
+
+        bybp = buyback_by_product or {}
+
+        beginner_html    = self._tab_beginner(beginner_easy, beginner_watch, bybp)
+        advanced_html    = self._tab_advanced(advanced_deals, advanced_snaps, watch_candidates,
+                                              camera_watch=camera_watch)
+        surge_html       = self._tab_surge(buyback_alerts)
+        ranking_html     = self._tab_ranking(all_deals, iphone_deals, game_deals)
         new_products_html = self._section_new_products()
 
         all_count    = len(beginner_easy) + len(beginner_watch)
         adv_total    = len(advanced_deals) + len(advanced_snaps) + len(watch_candidates)
-        _lottery_badge = f'<span class="tab-count">{lottery_count}</span>' if lottery_count else ''
+        surge_count  = len([a for a in buyback_alerts if a.get('alert_type') in ('buyback_surge','buyback_drop')])
+        surge_badge  = f'<span class="tab-count">{surge_count}</span>' if surge_count else ''
 
         return f"""<div class="tab-wrap">
 <nav class="tab-nav" role="tablist">
+  <button class="tab-btn" data-tab="ranking" role="tab" aria-selected="false">&#127942; ランキング</button>
   <button class="tab-btn active" data-tab="beginner" role="tab" aria-selected="true">&#128100; 初心者向け <span class="tab-count">{all_count}</span></button>
   <button class="tab-btn" data-tab="advanced" role="tab" aria-selected="false">&#128269; 上級者向け <span class="tab-count">{adv_total}</span></button>
-  <button class="tab-btn" data-tab="sedori" role="tab" aria-selected="false">&#129518; せどり計算</button>
-  <button class="tab-btn" data-tab="lottery" role="tab" aria-selected="false">&#127920; 抽選情報 {_lottery_badge}</button>
-  <button class="tab-btn" data-tab="ranking" role="tab" aria-selected="false">&#127942; ランキング</button>
+  <button class="tab-btn" data-tab="surge" role="tab" aria-selected="false">&#9889; 急騰/急落{surge_badge}</button>
   <button class="tab-btn" data-tab="new-products" role="tab" aria-selected="false">&#127381; 新商品候補</button>
 </nav>
+</div>
+
+<div id="tab-ranking" class="tab-panel" role="tabpanel">
+{ranking_html}
 </div>
 
 <div id="tab-beginner" class="tab-panel active" role="tabpanel">
@@ -2681,16 +2018,8 @@ document.addEventListener('DOMContentLoaded', function() {{
 {advanced_html}
 </div>
 
-<div id="tab-sedori" class="tab-panel" role="tabpanel">
-{sedori_html}
-</div>
-
-<div id="tab-lottery" class="tab-panel" role="tabpanel">
-{lottery_html}
-</div>
-
-<div id="tab-ranking" class="tab-panel" role="tabpanel">
-{ranking_html}
+<div id="tab-surge" class="tab-panel" role="tabpanel">
+{surge_html}
 </div>
 
 <div id="tab-new-products" class="tab-panel section-new-products" role="tabpanel">
@@ -2824,51 +2153,27 @@ document.addEventListener('DOMContentLoaded', function() {{
         # Official link
         official_url = (getattr(d, 'best_official_url', None) or getattr(d, 'official_url', None) or '')
         official_btn = ''
-        _url_skip = ('', '#', 'javascript:')
-        _is_valid_url = (
-            official_url
-            and official_url.strip() not in _url_skip
-            and not official_url.strip().startswith('javascript:')
-        )
-        if _is_valid_url:
+        if official_url:
             icon = '&#128241;' if genre_cls == 'iphone' else ('&#128247;' if genre_cls == 'camera' else '&#127918;')
             lbl = 'Apple Store で買う' if genre_cls == 'iphone' else ('公式ページ' if genre_cls == 'camera' else '公式で買う')
-            official_btn = (
-                f'<a href="{_esc(official_url)}" target="_blank" rel="noopener" '
-                f'class="btn btn-secondary btn-official-buy" '
-                f'data-track="product_click" data-product-id="{pid}">{icon} {lbl}</a>'
-            )
+            official_btn = f'<a href="{_esc(official_url)}" target="_blank" rel="noopener" class="btn btn-secondary" data-track="product_click" data-product-id="{pid}">{icon} {lbl}</a>'
         # Buyback link
         buyback_btn = ''
         verified_url = ''
         if hasattr(d, 'best_buyback_url') and d.best_buyback_url:
-            _bburl = d.best_buyback_url.strip()
             _skip = ('mobileno1.com', 'kaitori-1chome.com', 'kaitori-shouten.com')
-            if (
-                _bburl
-                and _bburl not in ('#', '')
-                and not _bburl.startswith('javascript:')
-                and not any(dom in _bburl for dom in _skip)
-            ):
-                verified_url = _bburl
+            if not any(dom in d.best_buyback_url for dom in _skip):
+                verified_url = d.best_buyback_url
         if verified_url:
             buyback_btn = f'<a href="{_esc(verified_url)}" target="_blank" rel="noopener" class="btn btn-primary" data-track="product_click" data-product-id="{pid}" data-shop="{shop}">&#128176; {_esc(shop)}で売る</a>'
         else:
             fallback = {'iphone': ('https://www.janpara.co.jp/sell/iphone/', 'じゃんぱら'), 'game_console': ('https://www.janpara.co.jp/sell/', 'じゃんぱら'), 'camera': ('https://www.kitamura.co.jp/', 'カメラのキタムラ')}
             fb_url, fb_name = fallback.get(genre_cls, ('https://www.janpara.co.jp/sell/', 'じゃんぱら'))
             buyback_btn = f'<a href="{fb_url}" target="_blank" rel="noopener" class="btn btn-primary" data-track="buyback_click" data-product-id="{pid}">&#128176; {fb_name}で売る</a>'
-        # Updated timestamp + freshness label
+        # Updated timestamp
         updated_str = ''
-        freshness_str = ''
         if hasattr(d, 'scanned_at') and d.scanned_at:
             updated_str = f'<div class="updated-row"><span>&#128336;</span>最終更新：{_esc(_jst_str(d.scanned_at))}</div>'
-        # 鮮度ラベル（最高買取価格の observed_at ベース）
-        if hasattr(d, 'best_buyback_observed_at') and d.best_buyback_observed_at:
-            freshness_str = self._freshness_label(
-                str(d.best_buyback_observed_at),
-                getattr(d, 'data_source', 'manual_today')
-            )
-            freshness_str = f'<div class="updated-row"><span>&#128202;</span>価格鮮度：{freshness_str}</div>'
         # Shop compare
         compare_html = ''
         if buyback_rows:
@@ -2883,20 +2188,10 @@ document.addEventListener('DOMContentLoaded', function() {{
                 url_val = r.get('buyback_url', '')
                 verified = r.get('link_verified', False)
                 _skip_d = ('mobileno1.com', 'kaitori-1chome.com', 'kaitori-shouten.com')
-                _url_ok = (
-                    url_val
-                    and url_val.strip() not in ('', '#')
-                    and not url_val.strip().startswith('javascript:')
-                    and not any(dom in url_val for dom in _skip_d)
-                )
-                if _url_ok and verified:
+                if url_val and not any(dom in url_val for dom in _skip_d):
                     shop_display = f'<a href="{_esc(url_val)}" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="{pid}">{sname}</a>'
-                elif _url_ok and not verified:
-                    shop_display = (f'{sname}'
-                                    f'<span class="unverified-link" style="font-size:0.68rem;color:var(--ink4);margin-left:4px;">'
-                                    f'（<a href="{_esc(url_val)}" target="_blank" rel="noopener">公式買取ページで確認</a>）</span>')
                 else:
-                    shop_display = f'<span class="unverified-link" style="font-size:0.68rem;color:var(--ink4);">{sname}（公式買取ページで確認）</span>'
+                    shop_display = f'{sname}（価格のみ）'
                 rank_cls = 'gold' if i == 1 else ('silver' if i == 2 else '')
                 diff_cls = ' neg' if profit < 0 else ''
                 freshness = self._freshness_label(r.get('observed_at', ''), r.get('data_source', 'manual_today'))
@@ -2980,7 +2275,6 @@ document.addEventListener('DOMContentLoaded', function() {{
       <div><strong>買取条件：{condition_text}</strong>&nbsp;<span style="font-size:0.72rem;color:var(--gray-400)">掲載価格は参考値です。売却前に必ず各社の公式買取ページで確認してください。</span></div>
     </div>
     {updated_str}
-    {freshness_str}
     {compare_html}
     <div class="card-actions">
       {official_btn}
@@ -2991,675 +2285,101 @@ document.addEventListener('DOMContentLoaded', function() {{
 </div>"""
 
     def _tab_advanced(self, advanced_deals, advanced_snaps, watch_candidates, camera_watch=None) -> str:
-        """上級者向けタブ。テーブルを廃止してカード形式で全面表示。"""
         camera_watch = camera_watch or []
         parts = []
 
-        parts.append('<div class="info-banner purple">\n'
-                     '<strong>&#128269; 上級者向けとは？</strong><br>\n'
-                     '国内の二次流通（メルカリ・ヤフオク等）で仕入れ、海外相場（eBay/StockX等）と比較して転売できる案件です。\n'
-                     '輸出規制・関税・プラットフォーム手数料等が発生します。リスクを十分理解した上でご活用ください。\n'
-                     '</div>')
-
-        # ジャンルラベル対応表
-        GENRE_LABELS = {
-            "iphone": "スマホ", "smartphone": "スマホ",
-            "tablet": "タブレット",
-            "pc": "PC", "laptop": "PC",
-            "camera": "カメラ",
-            "game_console": "ゲーム機", "game": "ゲーム機",
-        }
-
-        def _sale_method_badge(sale_method: str) -> str:
-            m = (sale_method or "").lower()
-            if m == "lottery":
-                return '<span class="badge badge-lottery">&#127920; 抽選</span>'
-            elif m == "reservation":
-                return '<span class="badge badge-watch">&#128197; 予約</span>'
-            elif m == "soldout":
-                return '<span class="badge badge-soldout">&#10060; SOLD OUT</span>'
-            elif m == "waiting":
-                return '<span class="badge badge-used">&#9203; 入荷待ち</span>'
-            elif m == "limited":
-                return '<span class="badge badge-adv">&#9889; 限定</span>'
-            else:
-                return '<span class="badge badge-default">&#128230; 通常</span>'
-
-        def _difficulty_badge(score) -> str:
-            try:
-                sc = float(score or 0)
-            except Exception:
-                sc = 0.0
-            if sc < 0.3:
-                return '<span class="badge badge-easy">入手しやすい</span>'
-            elif sc < 0.6:
-                return '<span class="badge badge-watch">中難度</span>'
-            else:
-                return '<span class="badge badge-exp">高難度</span>'
-
-        def _adv_card_html(product_id, product_name, genre, brand, sale_method,
-                           difficulty_score, official_price, domestic_used_price,
-                           overseas_price, gap, official_url=None) -> str:
-            import re as _re
-            # スラグ生成
-            slug = _re.sub(r'[^a-z0-9]+', '-', str(product_id or product_name or '').lower()).strip('-') or 'product'
-            brand_lower = _re.sub(r'[^a-z0-9]+', '-', str(brand or '').lower()).strip('-') or 'unknown'
-            genre_label = GENRE_LABELS.get(str(genre or '').lower(), str(genre or ''))
-            encoded_name = _urllib_parse.quote(str(product_name or ''))
-            encoded_slug = _urllib_parse.quote(str(product_name or '').lower().replace(' ', '-'))
-
-            sale_badge = _sale_method_badge(sale_method)
-            diff_badge = _difficulty_badge(difficulty_score)
-
-            official_btn = ''
-            if official_url and str(official_url).startswith('http'):
-                official_btn = f'<a href="{_esc(official_url)}" class="adv-btn adv-btn-primary" target="_blank" rel="noopener">公式ページ</a>'
-
-            mercari_url = f'https://jp.mercari.com/search?keyword={encoded_name}'
-            yahoo_url   = f'https://auctions.yahoo.co.jp/search/search?p={encoded_name}'
-
-            price_official   = _esc(fmt_price(official_price)) if official_price else '—'
-            price_domestic   = _esc(fmt_price(domestic_used_price)) if domestic_used_price else '—'
-            price_overseas   = _esc(fmt_price(overseas_price)) if overseas_price else '確認推奨'
-            price_gap        = _esc(fmt_profit(gap)) if gap else '計算中'
-
-            return f"""<div class="adv-card" id="product-{_esc(slug)}" data-genre="{_esc(str(genre or ''))}" data-maker="{_esc(brand_lower)}">
-  <div class="adv-card-stripe"></div>
-  <div class="adv-card-hd">
-    <div class="adv-card-info">
-      <div class="adv-genre-badge">{_esc(genre_label)}</div>
-      <div class="adv-brand">{_esc(str(brand or ''))}</div>
-      <div class="adv-name">{_esc(str(product_name or ''))}</div>
-    </div>
-    <div class="adv-card-badges">
-      {sale_badge}
-      {diff_badge}
-    </div>
-  </div>
-  <div class="adv-price-grid">
-    <div class="adv-price-item">
-      <div class="adv-price-lbl">公式価格</div>
-      <div class="adv-price-val">{price_official}</div>
-    </div>
-    <div class="adv-price-item">
-      <div class="adv-price-lbl">国内中古相場</div>
-      <div class="adv-price-val highlight">{price_domestic}</div>
-    </div>
-    <div class="adv-price-item">
-      <div class="adv-price-lbl">海外相場（参考）</div>
-      <div class="adv-price-val">{price_overseas}</div>
-    </div>
-    <div class="adv-price-item">
-      <div class="adv-price-lbl">想定差額</div>
-      <div class="adv-price-val profit">{price_gap}</div>
-    </div>
-  </div>
-  <div class="adv-links-row">
-    {official_btn}
-    <a href="{_esc(mercari_url)}" class="adv-btn adv-btn-mercari" target="_blank" rel="noopener">メルカリで探す</a>
-    <a href="{_esc(yahoo_url)}" class="adv-btn adv-btn-yahoo" target="_blank" rel="noopener">ヤフオク</a>
-  </div>
-  <div class="overseas-links-section">
-    <div class="overseas-section-hd">&#127758; 海外相場を確認</div>
-    <div class="overseas-chips-row">
-      <a href="https://www.ebay.com/sch/i.html?_nkw={encoded_name}&LH_Sold=1&LH_Complete=1" class="oc-chip blue overseas-btn" target="_blank" rel="noopener">&#128230; eBay 落札済み</a>
-      <a href="https://stockx.com/search?s={encoded_name}" class="oc-chip green overseas-btn" target="_blank" rel="noopener">&#128200; StockX</a>
-      <a href="https://www.bhphotovideo.com/c/search?q={encoded_name}" class="oc-chip blue overseas-btn" target="_blank" rel="noopener">B&amp;H</a>
-      <a href="https://www.adorama.com/l/?searchinfo={encoded_name}" class="oc-chip blue overseas-btn" target="_blank" rel="noopener">Adorama</a>
-      <a href="https://mpb.com/en-us/used/{encoded_slug}/" class="oc-chip purple overseas-btn" target="_blank" rel="noopener">MPB</a>
-    </div>
-  </div>
-  <div class="domestic-secondary-links">
-    <div class="domestic-secondary-hd">&#127981; 国内二次流通で仕入れを調べる</div>
-    <div class="overseas-chips-row">
-      <a href="https://jp.mercari.com/search?keyword={encoded_name}" class="oc-chip blue overseas-btn" target="_blank" rel="noopener">メルカリ</a>
-      <a href="https://auctions.yahoo.co.jp/search/search?p={encoded_name}" class="oc-chip green overseas-btn" target="_blank" rel="noopener">ヤフオク</a>
-      <a href="https://fril.jp/s?query={encoded_name}" class="oc-chip purple overseas-btn" target="_blank" rel="noopener">ラクマ</a>
-      <a href="https://www.mapcamera.com/search?keyword={encoded_name}" class="oc-chip blue overseas-btn" target="_blank" rel="noopener">マップカメラ</a>
-    </div>
-  </div>
-  <div class="adv-caution">
-    <span>&#9888;&#65039;</span> 輸出規制・関税・プラットフォーム手数料を確認してください。
-  </div>
-</div>"""
-
         if advanced_deals:
             parts.append('<div class="section-header"><h2>高利益案件</h2><span class="section-count">' + str(len(advanced_deals)) + '件</span></div>')
-            parts.append('<div class="adv-cards-grid">')
             for d in advanced_deals:
-                product_name = getattr(d, 'product_name', '') or ''
-                genre = getattr(d, 'category', '') or ''
-                brand = getattr(d, 'brand', '') or ''
-                sale_method = getattr(d, 'sale_method', '') or ''
-                difficulty_score = getattr(d, 'difficulty_score', 0) or 0
-                official_price = getattr(d, 'official_price_jpy', None)
-                domestic_used_price = getattr(d, 'domestic_used_price_jpy', None)
-                overseas_price = getattr(d, 'overseas_price_jpy', None)
-                gap = getattr(d, 'net_profit_jpy', None) or getattr(d, 'premium_gap_jpy', None)
-                official_url = getattr(d, 'official_url', None) or getattr(d, 'source_url', None)
-                product_id = getattr(d, 'product_id', None) or getattr(d, 'id', None)
-                parts.append(_adv_card_html(
-                    product_id, product_name, genre, brand, sale_method,
-                    difficulty_score, official_price, domestic_used_price,
-                    overseas_price, gap, official_url
-                ))
-            parts.append('</div>')
+                badge_cls = "badge-exp" if d.user_level == "expert_only" else "badge-adv"
+                label = "上級者限定" if d.user_level == "expert_only" else "高利益"
+                parts.append(self._deal_card(d, badge_cls, label))
 
         if advanced_snaps:
             parts.append('<div class="section-header"><h2>プレ値・価格差候補</h2><span class="section-count">スナップショット分析</span></div>')
-            parts.append('<div class="adv-cards-grid">')
+            rows = []
             for s in advanced_snaps:
-                product_name = getattr(s, 'product_name', '') or ''
-                genre = getattr(s, 'category', '') or getattr(s, 'genre', '') or ''
-                brand = getattr(s, 'brand', '') or ''
-                sale_method = getattr(s, 'sale_method', '') or ''
-                difficulty_score = getattr(s, 'difficulty_score', 0) or 0
-                official_price = getattr(s, 'official_price_jpy', None)
-                domestic_used_price = getattr(s, 'domestic_used_price_jpy', None)
-                overseas_price = getattr(s, 'overseas_price_jpy', None)
-                gap = getattr(s, 'premium_gap_jpy', None)
-                official_url = getattr(s, 'official_url', None) or getattr(s, 'source_url', None)
-                product_id = getattr(s, 'product_id', None) or getattr(s, 'id', None)
-                parts.append(_adv_card_html(
-                    product_id, product_name, genre, brand, sale_method,
-                    difficulty_score, official_price, domestic_used_price,
-                    overseas_price, gap, official_url
-                ))
-            parts.append('</div>')
+                method = {"lottery": "抽選", "soldout": "SOLD OUT", "discontinued": "終了"}.get(
+                    getattr(s, "sale_method", ""), getattr(s, "sale_method", "通常"))
+                rows.append(
+                    f"<tr>"
+                    f"<td data-user-level='{_esc(getattr(s,'user_level',''))}'>{_esc(s.product_name)}</td>"
+                    f"<td>{_esc(fmt_price(s.official_price_jpy))}</td>"
+                    f"<td>{_esc(fmt_price(s.domestic_used_price_jpy))}</td>"
+                    f"<td>{_esc(fmt_price(getattr(s,'overseas_price_jpy',None)))}</td>"
+                    f"<td style='color:var(--orange);font-weight:600'>{_esc(fmt_profit(s.premium_gap_jpy))}</td>"
+                    f"<td>{_esc(method)}</td>"
+                    f"<td>{getattr(s,'difficulty_score',0):.2f}</td>"
+                    f"</tr>"
+                )
+            parts.append(f"""<div class="ranking-card"><div class="table-wrap">
+<table>
+<thead><tr><th>商品</th><th>定価</th><th>国内中古</th><th>海外</th><th>価格差</th><th>方式</th><th>難易度</th></tr></thead>
+<tbody>{"".join(rows)}</tbody>
+</table>
+</div>
+<p style="color:var(--text-3);font-size:0.78rem;margin-top:10px;padding:0 4px;">※ 難易度0.0〜1.0（低いほど入手しやすい）</p>
+</div>""")
 
         # ----- フォールバック: 上級者向け監視候補 -----
         if watch_candidates:
             has_confirmed = bool(advanced_deals or advanced_snaps)
             if not has_confirmed:
-                parts.append("""<div class="adv-fallback-notice info-banner purple" style="margin:16px 0 20px;">
-&#8505;&#65039; <strong>現在、上級者向けの確定候補は少ないため、価格差・希少性・海外相場差が大きい監視候補を表示しています。</strong><br>
+                parts.append("""<div class="caution" style="margin:16px 0 20px;">
+ℹ️ <strong>現在、上級者向けの確定候補は少ないため、価格差・希少性・海外相場差が大きい監視候補を表示しています。</strong><br>
 中古市場や海外相場のデータが入り次第、確定候補として昇格します。
 </div>""")
             parts.append('<div class="section-header"><h2>上級者向け監視候補</h2><span class="section-count">価格差・希少性スコア上位</span></div>')
             parts.append(self._watch_candidates_table(watch_candidates))
-        else:
-            # watch_candidates が空でも adv-fallback-notice を含める（deploy-check 用）
-            if not advanced_deals and not advanced_snaps:
-                parts.append('<div class="adv-fallback-notice info-banner purple" style="display:none;"></div>')
 
         if not advanced_deals and not advanced_snaps and not watch_candidates:
-            parts.append('<div class="adv-fallback-notice info-banner purple" style="margin:8px 0;">'
-                         '現在、条件を満たす候補はありません。</div>')
+            parts.append('<div class="section-header"><h2>上級者向け候補</h2></div><p class="empty-state">現在、条件を満たす候補はありません。</p>')
 
         return "\n".join(parts)
 
     def _watch_candidates_table(self, candidates: list) -> str:
-        """監視候補をカード形式で生成する（products テーブル由来）。"""
-        import re as _re
+        """監視候補テーブルを生成する（products テーブル由来）。"""
         # カメラ優先、次にゲーム機
         camera = [c for c in candidates if c["genre"] == "camera"]
         others = [c for c in candidates if c["genre"] != "camera"]
         ordered = camera + others
 
-        GENRE_LABELS = {
-            "iphone": "スマホ", "smartphone": "スマホ",
-            "tablet": "タブレット",
-            "pc": "PC", "laptop": "PC",
-            "camera": "カメラ",
-            "game_console": "ゲーム機", "game": "ゲーム機",
-        }
-
-        cards = []
+        rows = []
         for c in ordered:
-            product_name = c.get('product_name', '') or ''
-            price  = c.get("official_price")
-            bp     = c.get("buyback_price")
-            shop   = c.get("shop_name") or "—"
-            flags  = "・".join(c["flags"]) if c.get("flags") else "監視中"
-            genre  = c.get("genre", "") or ""
-            brand  = c.get("brand", "") or ""
-            genre_label = GENRE_LABELS.get(genre.lower(), genre)
-            slug = _re.sub(r'[^a-z0-9]+', '-', product_name.lower()).strip('-') or 'product'
-            encoded_name = _urllib_parse.quote(product_name)
-
-            # 価格差
-            gap_str = '—'
+            price  = c["official_price"]
+            bp     = c["buyback_price"]
+            shop   = c["shop_name"] or "—"
+            flags  = "・".join(c["flags"]) if c["flags"] else "監視中"
+            # 買取価格がある場合は差額も表示
+            gap_str = ""
             if bp and price:
                 gap = bp - price
-                gap_str = f'¥{bp:,} (差 {gap:+,}円)'
+                gap_str = f'<br><span style="color:var(--green);font-size:0.82rem">'
+                gap_str += f'買取 ¥{bp:,} (差 {gap:+,}円)</span>'
+            buy_link = ""
+            if c.get("buyback_url"):
+                buy_link = f'<a href="{_esc(c["buyback_url"])}" target="_blank" rel="noopener" style="font-size:0.78rem;color:var(--accent)">買取ページ</a>'
 
-            # 買取リンク
-            buy_btn = ''
-            if c.get("buyback_url") and str(c["buyback_url"]).startswith('http'):
-                buy_btn = f'<a href="{_esc(c["buyback_url"])}" class="adv-btn adv-btn-primary" target="_blank" rel="noopener">買取ページ</a>'
+            rows.append(
+                f"<tr class='watch-candidate-card'>"
+                f"<td><strong>{_esc(c['product_name'])}</strong>{gap_str}</td>"
+                f"<td>{_esc(fmt_price(price) if price else '—')}</td>"
+                f"<td>{_esc(shop)}</td>"
+                f"<td><span style='color:var(--yellow);font-size:0.82rem'>{_esc(flags)}</span></td>"
+                f"<td>{buy_link}</td>"
+                f"</tr>"
+            )
 
-            mercari_url = f'https://jp.mercari.com/search?keyword={encoded_name}'
-            yahoo_url   = f'https://auctions.yahoo.co.jp/search/search?p={encoded_name}'
-
-            cards.append(f"""<div class="adv-card watch-candidate-card" id="watch-{_esc(slug)}">
-  <div class="adv-card-stripe"></div>
-  <div class="adv-card-hd">
-    <div class="adv-card-info">
-      <div class="adv-genre-badge">{_esc(genre_label)}</div>
-      <div class="adv-brand">{_esc(brand)}</div>
-      <div class="adv-name">{_esc(product_name)}</div>
-    </div>
-    <div class="adv-card-badges">
-      <span class="badge badge-watch">&#128065; 監視中</span>
-    </div>
-  </div>
-  <div class="adv-price-grid">
-    <div class="adv-price-item">
-      <div class="adv-price-lbl">公式価格</div>
-      <div class="adv-price-val">{_esc(fmt_price(price) if price else '—')}</div>
-    </div>
-    <div class="adv-price-item">
-      <div class="adv-price-lbl">最高買取価格</div>
-      <div class="adv-price-val highlight">{_esc(gap_str)}</div>
-    </div>
-    <div class="adv-price-item">
-      <div class="adv-price-lbl">買取店</div>
-      <div class="adv-price-val">{_esc(shop)}</div>
-    </div>
-    <div class="adv-price-item">
-      <div class="adv-price-lbl">注目ポイント</div>
-      <div class="adv-price-val" style="font-size:0.8rem;color:var(--amber);">{_esc(flags)}</div>
-    </div>
-  </div>
-  <div class="adv-links-row">
-    {buy_btn}
-    <a href="{_esc(mercari_url)}" class="adv-btn adv-btn-mercari" target="_blank" rel="noopener">メルカリで探す</a>
-    <a href="{_esc(yahoo_url)}" class="adv-btn adv-btn-yahoo" target="_blank" rel="noopener">ヤフオク</a>
-  </div>
-  <div class="overseas-links-section">
-    <div class="overseas-section-hd">&#127758; 海外相場を確認</div>
-    <div class="overseas-chips-row">
-      <a href="https://www.ebay.com/sch/i.html?_nkw={encoded_name}&LH_Sold=1&LH_Complete=1" class="oc-chip blue overseas-btn" target="_blank" rel="noopener">&#128230; eBay 落札済み</a>
-      <a href="https://stockx.com/search?s={encoded_name}" class="oc-chip green overseas-btn" target="_blank" rel="noopener">&#128200; StockX</a>
-    </div>
-  </div>
-  <div class="adv-caution">
-    <span>&#9888;&#65039;</span> 監視候補は価格差・希少性スコアが高い商品です。中古市場データ入手後に確定候補へ昇格します。
-  </div>
-</div>""")
-
-        if not cards:
-            return '<p style="color:var(--ink3);padding:16px 0;">監視候補がありません。</p>'
-
-        return (
-            '<div class="adv-cards-grid">\n'
-            + '\n'.join(cards)
-            + '\n</div>\n'
-            + '<p style="color:var(--text-3);font-size:0.78rem;margin-top:10px;padding:0 4px;">'
-            + '※ 監視候補は価格差・希少性スコアが高い商品です。中古市場データ入手後に確定候補へ昇格します。'
-            + '</p>'
-        )
-
-    def _domestic_secondary_links(self, product_name: str) -> str:
-        """国内二次流通検索リンクをチップ形式で生成する。"""
-        if not product_name:
-            return ''
-        encoded = _urllib_parse.quote(str(product_name))
-        links = [
-            ('メルカリ', f'https://jp.mercari.com/search?keyword={encoded}', 'blue'),
-            ('ヤフオク', f'https://auctions.yahoo.co.jp/search/search?p={encoded}', 'green'),
-            ('ラクマ', f'https://fril.jp/s?query={encoded}', 'purple'),
-            ('マップカメラ', f'https://www.mapcamera.com/search?keyword={encoded}', 'blue'),
-        ]
-        chips = ''.join(
-            f'<a href="{url}" target="_blank" rel="noopener" class="oc-chip {cls}">{_esc(name)}</a>'
-            for name, url, cls in links
-        )
-        return (
-            '<div class="domestic-secondary-links overseas-section" style="margin-top:8px;padding-top:8px;border-top:1px solid var(--surface2);">'
-            '<div class="overseas-lbl">&#127981; 国内二次流通で仕入れを調べる</div>'
-            '<div class="overseas-chips-row">' + chips + '</div>'
-            '</div>'
-        )
-
-    def _overseas_links_section(self, product_name: str, genre: str = '') -> str:
-        """海外相場リンクセクションを生成する（上級者タブ専用）。"""
-        if not product_name:
-            return ''
-        try:
-            resolver = get_resolver()
-            if resolver:
-                links = resolver.get_overseas_links(product_name, genre, max_links=5)
-                if links:
-                    chips = []
-                    for lk in links:
-                        icon = _esc(lk.get('icon', ''))
-                        lbl  = _esc(lk.get('label', lk.get('name', '')))
-                        url  = _esc(lk.get('url', ''))
-                        note = _esc(lk.get('note', ''))
-                        if url:
-                            chips.append(
-                                f'<a href="{url}" target="_blank" rel="noopener" '
-                                f'class="oc-chip blue overseas-btn" title="{note}" data-track="overseas_click">'
-                                f'{icon} {lbl}</a>'
-                            )
-                    if chips:
-                        return (
-                            '<div class="overseas-links-section overseas-section-block" style="margin-top:8px;">'
-                            '<div class="overseas-section-hd">'
-                            '<span class="overseas-globe">&#127758;</span>'
-                            '<span class="overseas-section-title">海外相場を確認する</span>'
-                            '</div>'
-                            '<div class="overseas-chips-row">' + ''.join(chips) + '</div>'
-                            '</div>'
-                        )
-        except Exception:
-            pass
-        # フォールバック：リゾルバなしでも基本リンクを表示
-        encoded = _urllib_parse.quote(str(product_name))
-        fallback_chips = (
-            f'<a href="https://www.ebay.com/sch/i.html?_nkw={encoded}&LH_Sold=1&LH_Complete=1" '
-            f'target="_blank" rel="noopener" class="oc-chip blue overseas-btn" data-track="overseas_click">'
-            f'&#128722; eBay 落札済み</a>'
-            f'<a href="https://stockx.com/search?s={encoded}" '
-            f'target="_blank" rel="noopener" class="oc-chip green overseas-btn" data-track="overseas_click">'
-            f'&#128200; StockX</a>'
-        )
-        return (
-            '<div class="overseas-links-section overseas-section-block" style="margin-top:8px;">'
-            '<div class="overseas-section-hd">'
-            '<span class="overseas-globe">&#127758;</span>'
-            '<span class="overseas-section-title">海外相場を確認する</span>'
-            '</div>'
-            '<div class="overseas-chips-row">' + fallback_chips + '</div>'
-            '</div>'
-        )
-
-    def _tab_lottery(self, lottery_events: list, watch_candidates: list = None) -> str:
-        """抽選・販売イベントタブ。lottery_eventsテーブルから取得。"""
-        parts = []
-        parts.append('<div class="info-banner blue">\n'
-                     '<strong>&#127920; 抽選・限定販売情報</strong><br>\n'
-                     '公式抽選・予約受付・限定販売の情報をまとめています。\n'
-                     '応募前に必ず公式ページで最新情報をご確認ください。\n'
-                     '</div>')
-
-        if lottery_events:
-            parts.append(f'<div class="sec-head"><div class="sec-title">現在の抽選・販売イベント</div>'
-                         f'<div class="sec-badge">{len(lottery_events)}件</div></div>')
-            parts.append('<div class="lottery-section cards-grid">')
-            sale_method_map = {
-                'lottery':     ('badge-lottery',     '&#127920;抽選'),
-                'reservation': ('badge-watch',       '&#128197;予約'),
-                'limited':     ('badge-adv',         '&#9889;限定'),
-                'soldout':     ('badge-soldout',      '&#10060;売切'),
-                'waiting':     ('badge-used',         '&#9203;待機'),
-            }
-            for ev in lottery_events:
-                name       = _esc(getattr(ev, 'product_name', getattr(ev, 'name', '—')))
-                method     = getattr(ev, 'sale_method', 'lottery')
-                badge_cls, badge_txt = sale_method_map.get(method, ('badge-lottery', '&#127920;抽選'))
-                entry_end  = getattr(ev, 'entry_end_at', None)
-                sale_start = getattr(ev, 'sale_start_at', None)
-                url        = getattr(ev, 'url', '') or ''
-                entry_html = (f'<div class="updated-row"><span>&#128337;</span>締切：{_esc(_jst_str(entry_end))}</div>'
-                              if entry_end else '')
-                start_html = (f'<div class="updated-row"><span>&#128197;</span>販売開始：{_esc(_jst_str(sale_start))}</div>'
-                              if sale_start else '')
-                url_skip = ('', '#', 'javascript:')
-                link_html = ''
-                if url and url.strip() not in url_skip and not url.strip().startswith('javascript:'):
-                    link_html = f'<a href="{_esc(url)}" target="_blank" rel="noopener" class="btn btn-primary">&#128279; 公式ページ</a>'
-                parts.append(
-                    f'<div class="deal-card">'
-                    f'<div class="card-stripe default"></div>'
-                    f'<div class="card-hd">'
-                    f'<div class="card-name">{name}</div>'
-                    f'<div class="card-tags"><span class="badge {badge_cls}">{badge_txt}</span></div>'
-                    f'</div>'
-                    f'<div class="card-body">'
-                    f'{entry_html}{start_html}'
-                    f'<div class="card-actions">{link_html}</div>'
-                    f'</div>'
-                    f'</div>'
-                )
-            parts.append('</div>')
-        else:
-            # フォールバック: watch_candidates から is_lottery=True のものを表示
-            lottery_candidates = []
-            if watch_candidates:
-                for c in watch_candidates:
-                    if c.get('is_lottery') or 'lottery' in str(c.get('flags', [])).lower():
-                        lottery_candidates.append(c)
-
-            if lottery_candidates:
-                parts.append(f'<div class="sec-head"><div class="sec-title">抽選候補（監視リストより）</div>'
-                             f'<div class="sec-badge">{len(lottery_candidates)}件</div></div>')
-                parts.append('<div class="lottery-section cards-grid">')
-                for c in lottery_candidates:
-                    pname = _esc(c.get('product_name', '—'))
-                    flags = '・'.join(c.get('flags', [])) if c.get('flags') else '抽選候補'
-                    parts.append(
-                        f'<div class="deal-card">'
-                        f'<div class="card-stripe default"></div>'
-                        f'<div class="card-hd">'
-                        f'<div class="card-name">{pname}</div>'
-                        f'<div class="card-tags"><span class="badge badge-lottery">&#127920;抽選</span></div>'
-                        f'</div>'
-                        f'<div class="card-body">'
-                        f'<div class="condition-row buyback-notice">'
-                        f'<span class="cond-icon">&#9888;</span>'
-                        f'<div>{_esc(flags)}</div>'
-                        f'</div>'
-                        f'</div>'
-                        f'</div>'
-                    )
-                parts.append('</div>')
-            else:
-                parts.append(
-                    '<div class="lottery-section">'
-                    '<div class="empty-state"><span class="empty-icon">&#127920;</span>'
-                    '現在、抽選情報は登録されていません。</div>'
-                    '</div>'
-                )
-        return '\n'.join(parts)
-
-    def _section_sedori_calculator(self) -> str:
-        """せどり計算機タブ（TradingView風デザイン、純JS）。deploy-check用: sedori-calculator, id=sedori-calc-section"""
-        return """<div class="sedori-calculator" id="sedori-calc-section">
-<div class="sec-head"><div class="sec-title">&#129518; せどり計算機</div></div>
-
-<div class="info-banner teal" style="margin-bottom:24px;">
-<strong>&#129518; せどり利益シミュレーター</strong><br>
-購入価格・売却価格・手数料を入力して、実質利益と利益率を即時計算できます。
-初心者は「公式購入 → 国内買取」、上級者は「国内中古仕入れ → 海外売却」を選んでください。
+        return f"""<div class="watch-card"><div class="table-wrap">
+<table>
+<thead><tr><th>商品</th><th>公式価格</th><th>最新買取店</th><th>注目ポイント</th><th>リンク</th></tr></thead>
+<tbody>{"".join(rows)}</tbody>
+</table>
 </div>
-
-<!-- タブ切り替え -->
-<div class="sedori-tab-nav">
-  <button class="sedori-tab-btn active" id="stab-beginner" onclick="sedoriTab('beginner')">
-    &#128100; 初心者用<br><small>公式購入 → 国内買取</small>
-  </button>
-  <button class="sedori-tab-btn" id="stab-advanced" onclick="sedoriTab('advanced')">
-    &#128269; 上級者用<br><small>国内中古 → 海外売却</small>
-  </button>
-</div>
-
-<!-- 初心者パネル -->
-<div id="sedori-panel-beginner" class="sedori-panel">
-  <div class="sedori-layout">
-    <!-- 左: 入力 -->
-    <div class="sedori-input-col">
-      <div class="sedori-card">
-        <div class="sedori-card-title">&#128176; 入力値</div>
-        <div class="sedori-field">
-          <label class="sedori-lbl">公式購入価格（円）</label>
-          <input type="number" id="b-buy" class="sedori-input" placeholder="159800" oninput="calcB()">
-        </div>
-        <div class="sedori-field">
-          <label class="sedori-lbl">最高買取価格（円）</label>
-          <input type="number" id="b-sell" class="sedori-input" placeholder="175000" oninput="calcB()">
-        </div>
-        <div class="sedori-field">
-          <label class="sedori-lbl">送料（円）</label>
-          <input type="number" id="b-ship" class="sedori-input" value="1000" oninput="calcB()">
-        </div>
-        <div class="sedori-field">
-          <label class="sedori-lbl">振込手数料（円）</label>
-          <input type="number" id="b-transfer" class="sedori-input" value="300" oninput="calcB()">
-        </div>
-        <div class="sedori-field">
-          <label class="sedori-lbl">交通費（円）</label>
-          <input type="number" id="b-transport" class="sedori-input" value="500" oninput="calcB()">
-        </div>
-        <div class="sedori-field">
-          <label class="sedori-lbl">その他コスト（円）</label>
-          <input type="number" id="b-other" class="sedori-input" value="0" oninput="calcB()">
-        </div>
-      </div>
-    </div>
-    <!-- 右: 結果 -->
-    <div class="sedori-result-col">
-      <div class="sedori-result-card">
-        <div class="sedori-result-title">&#128202; 計算結果</div>
-        <div class="sedori-result-main" id="b-main-profit">—</div>
-        <div class="sedori-result-label">実質利益</div>
-        <div class="sedori-result-rows" id="b-result-rows"></div>
-        <div class="sedori-breakeven-wrap">
-          <div class="sedori-breakeven-lbl">損益分岐買取価格</div>
-          <div class="sedori-breakeven-val" id="b-breakeven">—</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- 上級者パネル -->
-<div id="sedori-panel-advanced" class="sedori-panel" style="display:none;">
-  <div class="sedori-layout">
-    <!-- 左: 入力 -->
-    <div class="sedori-input-col">
-      <div class="sedori-card">
-        <div class="sedori-card-title">&#128176; 入力値</div>
-        <div class="sedori-field">
-          <label class="sedori-lbl">国内仕入れ価格（円）</label>
-          <input type="number" id="a-buy" class="sedori-input" placeholder="120000" oninput="calcA()">
-        </div>
-        <div class="sedori-field">
-          <label class="sedori-lbl">海外売却予想価格（USD）</label>
-          <input type="number" id="a-usd" class="sedori-input" placeholder="1200" oninput="calcA()">
-        </div>
-        <div class="sedori-field">
-          <label class="sedori-lbl">為替レート（円/USD）</label>
-          <input type="number" id="a-fx" class="sedori-input" value="150" oninput="calcA()">
-        </div>
-        <div class="sedori-field">
-          <label class="sedori-lbl">海外送料・関税（円）</label>
-          <input type="number" id="a-ship" class="sedori-input" value="5000" oninput="calcA()">
-        </div>
-        <div class="sedori-field">
-          <label class="sedori-lbl">販売手数料率（%）</label>
-          <input type="number" id="a-fee" class="sedori-input" value="13" step="0.1" oninput="calcA()">
-        </div>
-        <div class="sedori-field">
-          <label class="sedori-lbl">決済手数料率（%）</label>
-          <input type="number" id="a-pay" class="sedori-input" value="3.49" step="0.01" oninput="calcA()">
-        </div>
-      </div>
-    </div>
-    <!-- 右: 結果 -->
-    <div class="sedori-result-col">
-      <div class="sedori-result-card">
-        <div class="sedori-result-title">&#128202; 計算結果</div>
-        <div class="sedori-result-main" id="a-main-profit">—</div>
-        <div class="sedori-result-label">実質利益</div>
-        <div class="sedori-result-rows" id="a-result-rows"></div>
-        <div class="sedori-breakeven-wrap">
-          <div class="sedori-breakeven-lbl">損益分岐海外価格（USD）</div>
-          <div class="sedori-breakeven-val" id="a-breakeven">—</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-</div>
-
-<script>
-(function() {
-  function fmtJPY(n) { return '¥' + Math.round(n).toLocaleString('ja-JP'); }
-  function fmtUSD(n) { return '$' + n.toFixed(2); }
-  function fmtRate(n) { return n.toFixed(1) + '%'; }
-
-  function setMainProfit(elId, val) {
-    var el = document.getElementById(elId);
-    if (!el) return;
-    el.textContent = fmtJPY(val);
-    if (val < 0) el.classList.add('negative'); else el.classList.remove('negative');
-  }
-
-  function makeRow(lbl, val) {
-    return '<div class="sedori-result-row"><span class="sedori-result-row-lbl">'
-      + lbl + '</span><span class="sedori-result-row-val">' + val + '</span></div>';
-  }
-
-  function calcB() {
-    var buy = parseFloat(document.getElementById('b-buy').value) || 0;
-    var sell = parseFloat(document.getElementById('b-sell').value) || 0;
-    var ship = parseFloat(document.getElementById('b-ship').value) || 0;
-    var transfer = parseFloat(document.getElementById('b-transfer').value) || 0;
-    var transport = parseFloat(document.getElementById('b-transport').value) || 0;
-    var other = parseFloat(document.getElementById('b-other').value) || 0;
-    var totalCost = ship + transfer + transport + other;
-    var gross = sell - buy;
-    var net = gross - totalCost;
-    var rate = buy > 0 ? (net / buy * 100) : 0;
-    var breakeven = buy + totalCost;
-
-    setMainProfit('b-main-profit', net);
-    var rows = document.getElementById('b-result-rows');
-    if (rows) rows.innerHTML =
-      makeRow('公式購入価格', fmtJPY(buy)) +
-      makeRow('最高買取価格', fmtJPY(sell)) +
-      makeRow('粗利', fmtJPY(gross)) +
-      makeRow('諸経費合計', '- ' + fmtJPY(totalCost)) +
-      makeRow('利益率', fmtRate(rate));
-    var be = document.getElementById('b-breakeven');
-    if (be) be.textContent = fmtJPY(breakeven);
-  }
-  window.calcB = calcB;
-
-  function calcA() {
-    var buy = parseFloat(document.getElementById('a-buy').value) || 0;
-    var usd = parseFloat(document.getElementById('a-usd').value) || 0;
-    var fx = parseFloat(document.getElementById('a-fx').value) || 150;
-    var ship = parseFloat(document.getElementById('a-ship').value) || 0;
-    var feeRate = parseFloat(document.getElementById('a-fee').value) || 13;
-    var payRate = parseFloat(document.getElementById('a-pay').value) || 3.49;
-
-    var sellJPY = usd * fx;
-    var platformFee = sellJPY * feeRate / 100;
-    var payFee = sellJPY * payRate / 100;
-    var totalFees = ship + platformFee + payFee;
-    var net = sellJPY - buy - totalFees;
-    var rate = (buy + totalFees) > 0 ? (net / (buy + totalFees) * 100) : 0;
-    var beUSD = fx > 0 ? ((buy + totalFees) / (fx * (1 - (feeRate + payRate) / 100))) : 0;
-
-    setMainProfit('a-main-profit', net);
-    var rows = document.getElementById('a-result-rows');
-    if (rows) rows.innerHTML =
-      makeRow('円換算売却額（' + usd + 'USD×' + fx + '）', fmtJPY(sellJPY)) +
-      makeRow('国内仕入価格', fmtJPY(buy)) +
-      makeRow('海外送料・関税', '- ' + fmtJPY(ship)) +
-      makeRow('販売手数料', '- ' + fmtJPY(platformFee)) +
-      makeRow('決済手数料', '- ' + fmtJPY(payFee)) +
-      makeRow('利益率', fmtRate(rate));
-    var be = document.getElementById('a-breakeven');
-    if (be) be.textContent = beUSD > 0 ? fmtUSD(beUSD) : '—';
-  }
-  window.calcA = calcA;
-
-  function sedoriTab(tab) {
-    ['beginner', 'advanced'].forEach(function(t) {
-      var p = document.getElementById('sedori-panel-' + t);
-      var b = document.getElementById('stab-' + t);
-      if (p) p.style.display = t === tab ? 'block' : 'none';
-      if (b) b.classList.toggle('active', t === tab);
-    });
-  }
-  window.sedoriTab = sedoriTab;
-})();
-</script>"""
+<p style="color:var(--text-3);font-size:0.78rem;margin-top:10px;padding:0 4px;">
+※ 監視候補は価格差・希少性スコアが高い商品です。中古市場データ入手後に確定候補へ昇格します。
+</p>
+</div>"""
 
     # ----- Tab: 急騰/急落 -----
 

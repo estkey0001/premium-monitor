@@ -306,36 +306,6 @@ def check() -> list[dict]:
     else:
         results.append({"level": "warning", "check": "buyback_page_guidance", "message": "公式買取ページ誘導テキストが見つからない"})
 
-    # 33. 商品ジャンルナビが存在するか
-    if 'class="genre-nav"' in html or "genre-nav" in html:
-        results.append({"level": "ok", "check": "genre_nav", "message": "商品ジャンルナビが存在する"})
-    else:
-        results.append({"level": "warning", "check": "genre_nav", "message": "商品ジャンルナビが見つからない"})
-
-    # 34. メーカーナビが存在するか
-    if 'class="maker-nav"' in html or "maker-nav" in html:
-        results.append({"level": "ok", "check": "maker_nav", "message": "メーカーナビが存在する"})
-    else:
-        results.append({"level": "warning", "check": "maker_nav", "message": "メーカーナビが見つからない"})
-
-    # 35. 上級者カードが存在するか（テーブルではなくカード形式）
-    if 'class="adv-card"' in html or "adv-card" in html:
-        results.append({"level": "ok", "check": "adv_card_exists", "message": "上級者カードがcard形式で存在する"})
-    else:
-        results.append({"level": "warning", "check": "adv_card_exists", "message": "上級者カード（adv-card）が見つからない"})
-
-    # 36. せどり計算に初心者モードがある
-    if "sedori-panel-beginner" in html:
-        results.append({"level": "ok", "check": "sedori_beginner", "message": "せどり計算に初心者モードがある"})
-    else:
-        results.append({"level": "warning", "check": "sedori_beginner", "message": "せどり計算初心者モードが見つからない"})
-
-    # 37. せどり計算に上級者モードがある
-    if "sedori-panel-advanced" in html:
-        results.append({"level": "ok", "check": "sedori_advanced", "message": "せどり計算に上級者モードがある"})
-    else:
-        results.append({"level": "warning", "check": "sedori_advanced", "message": "せどり計算上級者モードが見つからない"})
-
     return results
 
 

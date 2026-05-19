@@ -2345,7 +2345,63 @@ a[href], button, [role="tab"], [role="button"],
   border: 1px solid #FDE68A; border-radius: 10px; margin-top: 4px;
 }}
 
+/* Pro向け価格ラベル (Clarify) */
+.pro-price-note {{
+  background: #FFF7ED; border: 1px solid #FDBA74; border-radius: 8px;
+  padding: 8px 12px; font-size: 0.78rem; color: #92400E;
+  margin-bottom: 8px; line-height: 1.5;
+}}
+.pro-profit-section {{ opacity: 0.85; }}
+.price-cell-val.pro-secondary {{
+  color: var(--text-2); font-size: 0.9rem; font-weight: 500;
+}}
+.pcc-buyback-ref {{
+  display: flex; flex-wrap: wrap; align-items: center; gap: 6px;
+  background: #F8F9FA; border-radius: 8px; padding: 6px 10px;
+  font-size: 0.82rem;
+}}
+.pcc-buyback-lbl {{ color: var(--text-3); font-weight: 600; }}
+.pcc-buyback-note {{ font-size: 0.70rem; color: var(--text-3); font-weight: 400; }}
+.pcc-buyback-val {{ font-weight: 700; color: var(--text-1); }}
+.pcc-buyback-diff {{ color: var(--text-3); font-size: 0.75rem; }}
+.pcc-price-item {{ display: flex; flex-direction: column; gap: 2px; }}
+.pcc-meta-row {{ display: flex; flex-wrap: wrap; gap: 8px; font-size: 0.78rem; color: var(--text-3); margin-top: 4px; }}
+
+/* せどりルート要確認セクション */
+.sc-review-section {{
+  background: #FFF7ED; border: 2px solid #FDBA74; border-radius: 14px;
+  padding: 14px 16px; margin: 20px 0 6px;
+}}
+.sc-review-hd {{ display: flex; gap: 12px; align-items: flex-start; }}
+.sc-review-icon {{ font-size: 1.4rem; flex-shrink: 0; }}
+.sc-review-title {{ font-weight: 700; font-size: 0.95rem; color: #92400E; }}
+.sc-review-sub {{ font-size: 0.78rem; color: #B45309; margin-top: 3px; line-height: 1.5; }}
+/* 警告フラグ詳細 */
+.sc-flag-detail {{
+  display: flex; flex-wrap: wrap; gap: 4px; margin: 6px 0 8px;
+}}
+.sc-flag-item {{
+  display: inline-block; padding: 2px 8px; border-radius: 99px;
+  font-size: 0.70rem; font-weight: 600;
+  background: #FFF7ED; color: #C2410C; border: 1px solid #FED7AA;
+}}
+.sc-flag-item.sc-flag-strong {{
+  background: #FEF2F2; color: #DC2626; border-color: #FECACA; font-weight: 700;
+}}
+
 /* 品質チェックバッジ (Phase 15) */
+.sc-badge-review-strong {{
+  display: inline-flex; align-items: center; gap: 3px;
+  padding: 2px 9px; border-radius: 99px;
+  font-size: 0.72rem; font-weight: 800;
+  background: #FEF2F2; color: #DC2626;
+  border: 1.5px solid #FECACA; margin-left: 6px;
+  cursor: help; vertical-align: middle;
+  animation: sc-pulse 2s infinite;
+}}
+@keyframes sc-pulse {{
+  0%, 100% {{ opacity: 1; }} 50% {{ opacity: 0.7; }}
+}}
 .sc-badge-review {{
   display: inline-flex; align-items: center; gap: 3px;
   padding: 2px 8px; border-radius: 99px;
@@ -3077,8 +3133,60 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 
 
 
+    # ---- せどりルート共通ヘルパー ----
+
+    _SC_FLAG_LABELS = {
+        "condition_mismatch":      "状態ズレ（中古仕入→新品買取価格）",
+        "stale_sale_price":        "仕入れ価格が古い（7日超）",
+        "stale_buyback_price":     "買取価格が古い（7日超）",
+        "unverified_buy_url":      "仕入れURL未確認",
+        "unverified_sell_url":     "売却URL未確認",
+        "abnormal_profit_rate":    "利益率が高すぎる（50%超）",
+        "possible_model_mismatch": "型番・モデル不一致の可能性",
+        "upper_limit_buyback":     "買取上限価格の可能性（定価の2倍超）",
+        "sell_condition_unknown":  "売却側の状態条件が不明",
+    }
+
+    # 強警告フラグ（赤バッジ）
+    _SC_STRONG_FLAGS = {"condition_mismatch", "abnormal_profit_rate", "upper_limit_buyback"}
+
+    def _route_quality_badge_html(self, route) -> str:
+        """せどりルートの品質バッジHTML（needs_review / quality_score）を生成する。"""
+        badges = []
+        needs_review = getattr(route, "needs_review", False)
+        flags = getattr(route, "route_warning_flags", []) or []
+        qs = getattr(route, "route_quality_score", 1.0)
+
+        if needs_review:
+            flag_strs = [self._SC_FLAG_LABELS.get(f, f) for f in flags]
+            tooltip = " / ".join(flag_strs) if flag_strs else "要確認"
+            # 強警告フラグがあれば赤バッジ
+            has_strong = any(f in self._SC_STRONG_FLAGS for f in flags)
+            badge_cls = "sc-badge-review-strong" if has_strong else "sc-badge-review"
+            badges.append(
+                f'<span class="{badge_cls}" title="{_esc(tooltip)}">&#9888; 要確認</span>'
+            )
+
+        if qs < 1.0:
+            qs_pct = int(qs * 100)
+            css = "sc-qs-high" if qs >= 0.75 else ("sc-qs-mid" if qs >= 0.50 else "sc-qs-low")
+            badges.append(f'<span class="sc-qs-badge {css}">品質{qs_pct}%</span>')
+        return "".join(badges)
+
+    def _route_flag_detail_html(self, route) -> str:
+        """せどりルートの警告フラグ詳細HTML（インライン表示用）を生成する。"""
+        flags = getattr(route, "route_warning_flags", []) or []
+        if not flags:
+            return ""
+        items = []
+        for f in flags:
+            lbl = self._SC_FLAG_LABELS.get(f, f)
+            strong_cls = " sc-flag-strong" if f in self._SC_STRONG_FLAGS else ""
+            items.append(f'<span class="sc-flag-item{strong_cls}">{_esc(lbl)}</span>')
+        return '<div class="sc-flag-detail">' + "".join(items) + '</div>'
+
     def _tab_sedori(self, sedori_routes: list = None) -> str:
-        """せどりルート比較タブ — DBから自動算出済みルートを表示する（Phase 14）。"""
+        """せどりルート比較タブ — DBから自動算出済みルートを表示する（Phase 14/15）。"""
         routes = sedori_routes or []
 
         # コスト情報（最初のルートから取得）
@@ -3116,103 +3224,89 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 python3 -m src.cli calculate-sedori-routes</pre>
 </div>''')
         else:
-            # ── 1位ルート大型カード ──
-            best = routes[0]
-            buy_link_html = (
-                f'<a href="{_esc(best.buy_url)}" target="_blank" rel="noopener noreferrer" '
-                f'class="sc-link-btn sc-link-buy" data-track="sedori_buy_click">'
-                f'&#128722; {_esc(best.buy_shop_name)}で仕入れる</a>'
-            ) if best.buy_url else (
-                f'<span class="sc-link-unverified">&#128722; {_esc(best.buy_shop_name)}（URL未登録）</span>'
-            )
-            sell_link_html = (
-                f'<a href="{_esc(best.sell_url)}" target="_blank" rel="noopener noreferrer" '
-                f'class="sc-link-btn sc-link-sell" data-track="sedori_sell_click">'
-                f'&#128181; {_esc(best.sell_shop_name)}へ売却する</a>'
-            ) if best.sell_url else (
-                f'<span class="sc-link-unverified">&#128181; {_esc(best.sell_shop_name)}（URL未登録）</span>'
-            )
             from src.models.sale_price import CONDITION_LABELS
-            buy_cond = CONDITION_LABELS.get(best.buy_condition, best.buy_condition)
 
-            # 品質バッジHTML生成
-            def _quality_badge_html(route) -> str:
-                """routes の needs_review / quality_score に基づくバッジHTMLを返す。"""
-                badges = []
-                if getattr(route, "needs_review", False):
-                    flags = getattr(route, "route_warning_flags", [])
-                    flag_labels = {
-                        "condition_mismatch": "条件ズレ",
-                        "stale_sale_price": "仕入れ価格が古い",
-                        "stale_buyback_price": "買取価格が古い",
-                        "unverified_buy_url": "仕入れURL未確認",
-                        "unverified_sell_url": "売却URL未確認",
-                        "abnormal_profit_rate": "利益率が高すぎる",
-                        "possible_model_mismatch": "モデル不一致の可能性",
-                        "upper_limit_buyback": "買取上限価格の可能性",
-                        "sell_condition_unknown": "売却条件不明",
-                    }
-                    flag_strs = [flag_labels.get(f, f) for f in flags]
-                    tooltip = " / ".join(flag_strs) if flag_strs else "要確認"
-                    badges.append(
-                        f'<span class="sc-badge-review" title="{_esc(tooltip)}">&#9888; 要確認</span>'
-                    )
-                qs = getattr(route, "route_quality_score", 1.0)
-                if qs < 1.0:
-                    qs_pct = int(qs * 100)
-                    css = "sc-qs-high" if qs >= 0.75 else ("sc-qs-mid" if qs >= 0.50 else "sc-qs-low")
-                    badges.append(f'<span class="sc-qs-badge {css}">品質{qs_pct}%</span>')
-                return "".join(badges)
+            # ── ルートを「通常」と「Pro向け要確認（品質<0.6）」に分割 ──
+            ok_routes = [r for r in routes
+                         if not getattr(r, "needs_review", False)
+                         or getattr(r, "route_quality_score", 1.0) >= 0.6]
+            review_routes = [r for r in routes
+                             if getattr(r, "needs_review", False)
+                             and getattr(r, "route_quality_score", 1.0) < 0.6]
 
-            best_badge_html = _quality_badge_html(best)
+            # 表示対象：通常ルートがなければ要確認ルートを通常扱い
+            display_routes = ok_routes if ok_routes else routes
+            display_label = "通常ルート" if ok_routes else "全ルート"
 
-            parts.append(f'''<div class="sc-best-card{" sc-best-card-review" if getattr(best, "needs_review", False) else ""}">
-  <div class="sc-best-crown">&#127881; 最大利益ルート <span class="sc-best-rank-badge">#1</span>{best_badge_html}</div>
-  <div class="sc-best-product">{_esc(best.product_name)}</div>
+            def _make_best_card(best_r) -> str:
+                """1位ルート大型カードHTML生成。"""
+                b_link = (
+                    f'<a href="{_esc(best_r.buy_url)}" target="_blank" rel="noopener noreferrer" '
+                    f'class="sc-link-btn sc-link-buy" data-track="sedori_buy_click">'
+                    f'&#128722; {_esc(best_r.buy_shop_name)}で仕入れる</a>'
+                ) if best_r.buy_url else (
+                    f'<span class="sc-link-unverified">&#128722; {_esc(best_r.buy_shop_name)}（URL未登録）</span>'
+                )
+                s_link = (
+                    f'<a href="{_esc(best_r.sell_url)}" target="_blank" rel="noopener noreferrer" '
+                    f'class="sc-link-btn sc-link-sell" data-track="sedori_sell_click">'
+                    f'&#128181; {_esc(best_r.sell_shop_name)}へ売却する</a>'
+                ) if best_r.sell_url else (
+                    f'<span class="sc-link-unverified">&#128181; {_esc(best_r.sell_shop_name)}（URL未登録）</span>'
+                )
+                b_cond = CONDITION_LABELS.get(best_r.buy_condition, best_r.buy_condition)
+                badge_html = self._route_quality_badge_html(best_r)
+                flag_html = self._route_flag_detail_html(best_r)
+                review_cls = " sc-best-card-review" if getattr(best_r, "needs_review", False) else ""
+                return f'''<div class="sc-best-card{review_cls}">
+  <div class="sc-best-crown">&#127881; 最大利益ルート <span class="sc-best-rank-badge">#1</span>{badge_html}</div>
+  <div class="sc-best-product">{_esc(best_r.product_name)}</div>
+  {flag_html}
   <div class="sc-best-route-row">
     <div class="sc-best-box sc-best-box-buy">
       <div class="sc-best-box-lbl">&#128722; 仕入れ先</div>
-      <div class="sc-best-box-shop">{_esc(best.buy_shop_name)}</div>
-      <div class="sc-best-box-price sc-price-buy">¥{best.buy_price:,}</div>
-      <div class="sc-best-box-cond">{_esc(buy_cond)}</div>
+      <div class="sc-best-box-shop">{_esc(best_r.buy_shop_name)}</div>
+      <div class="sc-best-box-price sc-price-buy">¥{best_r.buy_price:,}</div>
+      <div class="sc-best-box-cond">{_esc(b_cond)}</div>
     </div>
     <div class="sc-best-arrow">&#8594;</div>
     <div class="sc-best-box sc-best-box-sell">
       <div class="sc-best-box-lbl">&#128181; 売却先</div>
-      <div class="sc-best-box-shop">{_esc(best.sell_shop_name)}</div>
-      <div class="sc-best-box-price sc-price-sell">¥{best.sell_price:,}</div>
-      <div class="sc-best-box-cond">買取価格</div>
+      <div class="sc-best-box-shop">{_esc(best_r.sell_shop_name)}</div>
+      <div class="sc-best-box-price sc-price-sell">¥{best_r.sell_price:,}</div>
+      <div class="sc-best-box-cond">買取価格（参照）</div>
     </div>
   </div>
   <div class="sc-best-profit-row">
     <div class="sc-profit-block">
       <div class="sc-profit-lbl">粗利</div>
-      <div class="sc-profit-val sc-col-amber">+¥{best.gross_profit:,}</div>
+      <div class="sc-profit-val sc-col-amber">+¥{best_r.gross_profit:,}</div>
     </div>
     <div class="sc-profit-block">
       <div class="sc-profit-lbl">推定コスト</div>
-      <div class="sc-profit-val sc-col-gray">-¥{best.estimated_costs:,}</div>
+      <div class="sc-profit-val sc-col-gray">-¥{best_r.estimated_costs:,}</div>
     </div>
     <div class="sc-profit-block sc-profit-main">
       <div class="sc-profit-lbl">実質利益</div>
-      <div class="sc-profit-val sc-col-green">+¥{best.net_profit:,}</div>
+      <div class="sc-profit-val sc-col-green">+¥{best_r.net_profit:,}</div>
     </div>
     <div class="sc-profit-block">
       <div class="sc-profit-lbl">利益率</div>
-      <div class="sc-profit-val sc-rate-val">+{best.profit_rate:.1%}</div>
+      <div class="sc-profit-val sc-rate-val">+{best_r.profit_rate:.1%}</div>
     </div>
   </div>
   <div class="sc-best-links">
-    {buy_link_html}
-    {sell_link_html}
+    {b_link}
+    {s_link}
   </div>
-</div>''')
+</div>'''
 
-            # ── 2位〜10位リスト ──
-            top_routes = routes[1:10]
-            if top_routes:
+            def _make_route_table(route_list, title_label="ルート一覧", show_from=1) -> str:
+                """ルートリストをテーブルHTMLに変換する。"""
+                if not route_list:
+                    return ""
                 rows_html = []
-                for r in top_routes:
+                for r in route_list:
                     buy_a = (
                         f'<a href="{_esc(r.buy_url)}" target="_blank" rel="noopener noreferrer" '
                         f'class="sc-mini-link" data-track="sedori_buy_click">'
@@ -3223,7 +3317,7 @@ python3 -m src.cli calculate-sedori-routes</pre>
                         f'class="sc-mini-link" data-track="sedori_sell_click">'
                         f'{_esc(r.sell_shop_name)}</a>'
                     ) if r.sell_url else _esc(r.sell_shop_name)
-                    row_badge = _quality_badge_html(r)
+                    row_badge = self._route_quality_badge_html(r)
                     row_cls = ' class="sc-route-row sc-route-review"' if getattr(r, "needs_review", False) else ' class="sc-route-row"'
                     rows_html.append(
                         f'<tr{row_cls}>'
@@ -3237,23 +3331,44 @@ python3 -m src.cli calculate-sedori-routes</pre>
                         f'<td class="sc-rate-cell"><span class="sc-rate-badge sc-rate-pos">+{r.profit_rate:.1%}</span></td>'
                         f'</tr>'
                     )
-                parts.append(f'''<div class="sc-list-section">
+                return f'''<div class="sc-list-section">
   <div class="sc-list-header">
-    <span class="sc-list-title">&#128202; 2位〜10位ルート一覧</span>
-    <span class="sc-list-count">{len(top_routes)}件</span>
+    <span class="sc-list-title">&#128202; {_esc(title_label)}</span>
+    <span class="sc-list-count">{len(route_list)}件</span>
   </div>
   <div class="sc-table-scroll">
     <table class="sc-table">
       <thead>
         <tr>
           <th>#</th><th>商品</th><th>仕入れ店</th><th>仕入れ価格</th>
-          <th>売却店</th><th>買取価格</th><th>実質利益</th><th>利益率</th>
+          <th>売却店</th><th>買取価格（参照）</th><th>実質利益</th><th>利益率</th>
         </tr>
       </thead>
       <tbody>{"".join(rows_html)}</tbody>
     </table>
   </div>
+</div>'''
+
+            # ── 通常ルート：1位大型カード + 2位〜10位リスト ──
+            best = display_routes[0]
+            parts.append(_make_best_card(best))
+
+            rest = display_routes[1:10]
+            if rest:
+                parts.append(_make_route_table(rest, title_label=f"2位〜10位 {display_label}"))
+
+            # ── Pro向け要確認セクション ──
+            if review_routes:
+                parts.append(f'''<div class="sc-review-section">
+  <div class="sc-review-hd">
+    <span class="sc-review-icon">&#9888;</span>
+    <div>
+      <div class="sc-review-title">Pro向け要確認ルート（{len(review_routes)}件）</div>
+      <div class="sc-review-sub">このルートは価格差が大きい一方、状態・型番・買取上限価格の条件確認が必要です。経験者向けの参考情報としてご確認ください。</div>
+    </div>
+  </div>
 </div>''')
+                parts.append(_make_route_table(review_routes, title_label="Pro向け要確認ルート（品質スコア低）"))
 
         # ── 免責 ──
         parts.append('''<div class="sc-disclaimer">
@@ -3375,7 +3490,7 @@ python3 -m src.cli calculate-sedori-routes</pre>
         return '\n'.join(parts)
 
 
-    def _deal_card(self, d, badge_cls: str, label: str, buyback_rows: list = None, genre: str = None) -> str:
+    def _deal_card(self, d, badge_cls: str, label: str, buyback_rows: list = None, genre: str = None, pro_mode: bool = False) -> str:
         """案件カード HTML を生成する（v5 Professional Design）。"""
         pid  = _esc(d.product_id)
         shop = _esc(d.best_buyback_shop or '—')
@@ -3482,6 +3597,35 @@ python3 -m src.cli calculate-sedori-routes</pre>
         profit_note_text = '利益率が低め。様子見推奨' if is_watch else f'推定コスト -{_esc(fmt_price(d.estimated_costs_jpy))}'
         condition_text = _esc(d.buyback_condition or '新品未開封')
         profit_rate_str = _esc(fmt_rate(d.net_profit_rate))
+
+        # Pro向けモードでの価格ラベル切り替え
+        if pro_mode:
+            official_price_lbl = '公式参考価格'
+            buyback_price_lbl = '参考買取価格（補助）'
+            buyback_price_val_cls = 'price-cell-val pro-secondary'
+            profit_main_lbl = '価格差（参考値）'
+            profit_section_cls += ' pro-profit-section'
+            pro_mode_note = ('<div class="pro-price-note">'
+                             '&#9888; Pro向け：二次流通での入手が前提です。'
+                             '公式定価での購入が困難な場合があります。'
+                             '価格差は参考値であり、利益を保証しません。'
+                             '</div>')
+            buyback_compare_hd = '参考買取価格（補助情報）'
+        else:
+            official_price_lbl = '公式価格（定価）'
+            buyback_price_lbl = '最高買取価格'
+            buyback_price_val_cls = 'price-cell-val green'
+            profit_main_lbl = '実質利益（推定コスト差引後）'
+            pro_mode_note = ''
+            buyback_compare_hd = '買取店比較'
+
+        # 買取店テーブルのヘッダーラベルを再構築（Pro向けは「参考」表記）
+        if compare_html and pro_mode:
+            compare_html = compare_html.replace(
+                '<div class="shop-table-hd"><span>買取店比較',
+                f'<div class="shop-table-hd"><span>{buyback_compare_hd}',
+            )
+
         return f"""<div class="deal-card stripe-{stripe_cls}"{card_id_attr}{brand_attr} data-user-level="{_esc(d.user_level)}">
   <div class="card-stripe {stripe_cls}"></div>
   <div class="card-hd">
@@ -3491,9 +3635,10 @@ python3 -m src.cli calculate-sedori-routes</pre>
       {genre_badge}
     </div>
   </div>
+  {pro_mode_note}
   <div class="{profit_section_cls}">
     <div class="profit-left">
-      <div class="{profit_lbl_cls}">実質利益（推定コスト差引後）</div>
+      <div class="{profit_lbl_cls}">{profit_main_lbl}</div>
       <div class="{profit_num_cls}">{_esc(fmt_profit(d.net_profit_jpy))}</div>
     </div>
     <div class="profit-right">
@@ -3503,12 +3648,12 @@ python3 -m src.cli calculate-sedori-routes</pre>
   </div>
   <div class="price-row-wrap">
     <div class="price-cell">
-      <div class="price-cell-lbl">公式価格（定価）</div>
+      <div class="price-cell-lbl">{official_price_lbl}</div>
       <div class="price-cell-val">{_esc(fmt_price(d.official_price_jpy))}</div>
     </div>
     <div class="price-cell">
-      <div class="price-cell-lbl">最高買取価格</div>
-      <div class="price-cell-val green">{_esc(fmt_price(d.best_buyback_price))}</div>
+      <div class="price-cell-lbl">{buyback_price_lbl}</div>
+      <div class="{buyback_price_val_cls}">{_esc(fmt_price(d.best_buyback_price))}</div>
     </div>
   </div>
   <div class="card-body">
@@ -3544,7 +3689,7 @@ python3 -m src.cli calculate-sedori-routes</pre>
             for d in advanced_deals:
                 badge_cls = "badge-exp" if d.user_level == "expert_only" else "badge-adv"
                 label = "Proのみ" if d.user_level == "expert_only" else "Pro向け"
-                parts.append(self._deal_card(d, badge_cls, label))
+                parts.append(self._deal_card(d, badge_cls, label, pro_mode=True))
 
         if advanced_snaps:
             parts.append('<div class="section-header"><h2>&#128202; 価格差・プレ値候補</h2><span class="section-count">スナップショット分析</span></div>')
@@ -3589,7 +3734,7 @@ python3 -m src.cli calculate-sedori-routes</pre>
             parts.append('<div class="section-header"><h2>&#128247; カメラ案件</h2><span class="section-count">' + str(len(camera_beginner_deals)) + '件</span></div>')
             parts.append('<div class="cards-grid">')
             for d in camera_beginner_deals:
-                parts.append(self._deal_card(d, 'badge-adv', 'Pro向け'))
+                parts.append(self._deal_card(d, 'badge-adv', 'Pro向け', pro_mode=True))
             parts.append('</div>')
 
         if not advanced_deals and not advanced_snaps and not watch_candidates and not camera_beginner_deals:
@@ -3615,14 +3760,17 @@ python3 -m src.cli calculate-sedori-routes</pre>
             pname_esc  = _esc(pname_raw)
             pname_enc  = _urllib_parse.quote(pname_raw)
 
-            # 価格差表示
+            # 価格差表示（Pro向け：買取価格を主役にせず補助情報として表示）
             gap_html = ""
             if bp and price:
                 gap = bp - price
                 gap_html = (
-                    f'<span class="wc-gap">'
-                    f'買取¥{bp:,} <span style="color:var(--green)">({gap:+,}円)</span>'
-                    f'</span>'
+                    f'<div class="pcc-buyback-ref">'
+                    f'<span class="pcc-buyback-lbl">参考買取価格'
+                    f'<small class="pcc-buyback-note">（補助情報）</small></span>'
+                    f'<span class="pcc-buyback-val">¥{bp:,}</span>'
+                    f'<span class="pcc-buyback-diff">定価比 {gap:+,}円</span>'
+                    f'</div>'
                 )
 
             # 販売方式バッジ
@@ -3674,11 +3822,15 @@ python3 -m src.cli calculate-sedori-routes</pre>
     <div class="pcc-badges">{sale_badge}</div>
   </div>
   <div class="pcc-price-row">
-    <span class="pcc-price-lbl">公式価格</span>
-    <span class="pcc-price-val">{_esc(fmt_price(price) if price else '未定')}</span>
+    <div class="pcc-price-item">
+      <span class="pcc-price-lbl">公式参考価格</span>
+      <span class="pcc-price-val">{_esc(fmt_price(price) if price else '未定')}</span>
+    </div>
     {gap_html}
-    <span class="pcc-shop">{_esc(shop)}</span>
-    <span class="pcc-flags">{_esc(flags)}</span>
+    <div class="pcc-meta-row">
+      <span class="pcc-shop">&#128204; {_esc(shop)}</span>
+      <span class="pcc-flags">{_esc(flags)}</span>
+    </div>
   </div>
   <div class="pcc-links-section">
     <div class="pcc-links-label">&#127968; 国内二次流通</div>

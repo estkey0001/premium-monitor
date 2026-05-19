@@ -1074,8 +1074,8 @@ a[href], button, [role="tab"], [role="button"],
    ============================================================ */
 .cards-grid {{
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(480px, 1fr));
-  gap: 18px;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 20px;
 }}
 
 /* ============================================================
@@ -1085,20 +1085,20 @@ a[href], button, [role="tab"], [role="button"],
 .deal-card {{
   background: var(--card-bg);
   border: 1px solid var(--card-border);
-  border-radius: 16px;
+  border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 1px 3px rgba(13,15,28,0.05), 0 1px 2px rgba(13,15,28,0.04);
-  transition: transform 0.18s cubic-bezier(0.23,1,0.32,1),
-              box-shadow 0.18s cubic-bezier(0.23,1,0.32,1),
-              border-color 0.18s cubic-bezier(0.23,1,0.32,1);
+  box-shadow: 0 1px 3px rgba(13,15,28,0.06), 0 2px 6px rgba(13,15,28,0.04);
+  transition: transform 0.2s cubic-bezier(0.23,1,0.32,1),
+              box-shadow 0.2s cubic-bezier(0.23,1,0.32,1),
+              border-color 0.2s cubic-bezier(0.23,1,0.32,1);
   display: flex; flex-direction: column;
 }}
 
 .souba-card:hover,
 .deal-card:hover {{
-  transform: translateY(-3px);
-  box-shadow: 0 12px 40px rgba(13,15,28,0.1), 0 4px 12px rgba(13,15,28,0.06);
-  border-color: #D0D4E8;
+  transform: translateY(-4px);
+  box-shadow: 0 16px 48px rgba(13,15,28,0.11), 0 4px 16px rgba(13,15,28,0.07);
+  border-color: #A7F3D0;
 }}
 
 /* カード上部利益バー */
@@ -1127,7 +1127,7 @@ a[href], button, [role="tab"], [role="button"],
 .card-hd {{
   display: flex; align-items: flex-start;
   justify-content: space-between; gap: 12px;
-  padding: 18px 20px 14px;
+  padding: 20px 20px 16px;
 }}
 
 .card-name {{
@@ -1200,38 +1200,58 @@ a[href], button, [role="tab"], [role="button"],
 .price-row-wrap {{
   display: grid; grid-template-columns: 1fr 1fr;
   gap: 1px; background: var(--card-border);
-  margin: 14px 20px 0;
+  margin: 16px 20px 0;
   border-radius: var(--radius-md); overflow: hidden;
 }}
 
 .price-cell {{
-  background: var(--card-bg); padding: 12px 14px;
+  background: #F7F8FD; padding: 14px 16px;
 }}
 
 .price-cell-lbl {{
   font-size: 0.65rem; font-weight: 700;
   letter-spacing: 0.07em; text-transform: uppercase;
-  color: var(--ink4); margin-bottom: 5px;
+  color: var(--ink4); margin-bottom: 6px;
+  display: flex; align-items: center; gap: 4px;
 }}
 
 .price-cell-val {{
-  font-size: 1.05rem; font-weight: 800;
+  font-size: 1.1rem; font-weight: 800;
   color: var(--ink); font-variant-numeric: tabular-nums;
+  font-family: 'JetBrains Mono', 'Menlo', ui-monospace, monospace;
+  letter-spacing: -0.02em;
 }}
 
-.price-cell-val.green {{ color: var(--profit-dark); }}
+.price-cell-val.green {{
+  color: var(--profit-dark);
+  font-size: 1.15rem;
+}}
 
 /* Card Body */
-.card-body {{ padding: 14px 20px 20px; flex: 1; }}
+.card-body {{ padding: 18px 20px 22px; flex: 1; }}
 
 .condition-row {{
   display: flex; align-items: flex-start; gap: 7px;
   background: var(--surface2);
   border: 1px solid var(--card-border);
   border-radius: var(--radius-sm);
-  padding: 8px 12px; margin-bottom: 12px;
+  padding: 10px 12px; margin-bottom: 12px;
   font-size: 0.8rem; color: var(--ink2);
   line-height: 1.5;
+}}
+
+/* buyback-notice: Manusスタイルのアンバー注意文 */
+.condition-row.buyback-notice {{
+  background: #FFFBEB;
+  border: 1px solid #FCD34D;
+  color: #92400E;
+  border-radius: 10px;
+  padding: 10px 14px;
+}}
+
+.condition-row.buyback-notice .cond-icon {{
+  color: #F59E0B;
+  font-size: 0.95rem;
 }}
 
 .cond-icon {{ color: var(--amber); flex-shrink: 0; margin-top: 1px; }}
@@ -1240,41 +1260,51 @@ a[href], button, [role="tab"], [role="button"],
   font-size: 0.72rem; color: var(--ink4);
   margin-bottom: 12px;
   display: flex; align-items: center; gap: 5px;
+  background: var(--surface2);
+  border-radius: var(--radius-sm);
+  padding: 6px 10px;
 }}
 
 /* Shop Compare Table — souba-table */
 .shop-table {{
   border: 1px solid var(--card-border);
-  border-radius: var(--radius-md);
+  border-radius: 12px;
   overflow: hidden; margin-bottom: 14px;
+  box-shadow: 0 1px 3px rgba(13,15,28,0.04);
 }}
 
 .shop-table-hd {{
   display: flex; align-items: center;
   justify-content: space-between;
-  padding: 8px 14px;
-  background: var(--surface2);
+  padding: 9px 14px;
+  background: #F4F5FD;
   border-bottom: 1px solid var(--card-border);
-  font-size: 0.65rem; font-weight: 800;
+  font-size: 0.67rem; font-weight: 800;
   letter-spacing: 0.07em; text-transform: uppercase;
   color: var(--ink3);
+  gap: 8px;
+}}
+
+.shop-table-hd span:first-child {{
+  display: flex; align-items: center; gap: 6px;
 }}
 
 .shop-row {{
   display: flex; align-items: center;
-  padding: 10px 14px;
-  border-bottom: 1px solid var(--surface2);
+  padding: 11px 14px;
+  border-bottom: 1px solid #F4F5FA;
   gap: 10px; font-size: 0.875rem;
   transition: background 0.15s cubic-bezier(0.23,1,0.32,1);
   font-variant-numeric: tabular-nums;
 }}
 
 .shop-row:last-child {{ border: none; }}
-.shop-row:hover {{ background: #FAFBFF; }}
+.shop-row:hover {{ background: #F7F8FD; }}
 
-/* 1位ハイライト — Manus row-best */
+/* 1位ハイライト — Manus row-best (左ボーダー + teal背景) */
 .shop-row.row-best {{
-  background: linear-gradient(90deg, #F0FDF8, #F5FFFB);
+  background: linear-gradient(90deg, #F0FDF8 0%, #F7FFFE 100%);
+  border-left: 3px solid #00C896;
 }}
 
 .shop-row.row-best:hover {{
@@ -1336,10 +1366,23 @@ a[href], button, [role="tab"], [role="button"],
 
 .shop-check-btn.normal:hover {{ background: var(--card-border); }}
 
-/* Freshness */
-.fresh-live   {{ color: var(--profit-dark); font-size: 0.7rem; font-weight: 700; }}
-.fresh-recent {{ color: #CC7A00; font-size: 0.7rem; font-weight: 700; }}
-.fresh-stale  {{ color: var(--danger); font-size: 0.7rem; font-weight: 700; }}
+/* Freshness — .fresh-* (旧) と .freshness-* (新) の両方をサポート */
+.fresh-live, .freshness-live {{
+  color: var(--profit-dark); font-size: 0.7rem; font-weight: 700;
+  background: rgba(0,200,150,0.09); padding: 2px 7px; border-radius: 99px;
+}}
+.fresh-recent, .freshness-recent {{
+  color: #CC7A00; font-size: 0.7rem; font-weight: 700;
+  background: rgba(255,149,0,0.09); padding: 2px 7px; border-radius: 99px;
+}}
+.fresh-stale, .freshness-stale {{
+  color: var(--danger); font-size: 0.7rem; font-weight: 700;
+  background: rgba(255,59,92,0.09); padding: 2px 7px; border-radius: 99px;
+}}
+.freshness-unknown {{
+  color: var(--ink4); font-size: 0.7rem; font-weight: 600;
+  background: var(--surface2); padding: 2px 7px; border-radius: 99px;
+}}
 
 /* Action Buttons */
 .card-actions {{
@@ -1994,15 +2037,24 @@ a[href], button, [role="tab"], [role="button"],
   .profit-section {{ flex-direction: column; gap: 8px; }}
   .profit-right {{ text-align: left; }}
   .tab-btn {{ padding: 13px 14px; font-size: 0.82rem; }}
-  .card-hd {{ padding: 14px 16px 12px; }}
-  .card-body {{ padding: 12px 16px 18px; }}
+  .card-hd {{ padding: 16px 16px 14px; }}
+  .card-body {{ padding: 14px 16px 20px; }}
   .profit-section {{ margin: 0 16px; padding: 14px 16px; }}
-  .price-row-wrap {{ margin: 12px 16px 0; }}
+  .price-row-wrap {{ margin: 14px 16px 0; }}
   .cta-section {{ padding: 32px 24px; }}
   .topbar-note-btn {{ display: none; }}
   .shop-diff-col {{ display: none; }}
   .topbar-date {{ display: none; }}
   .watch-price-grid {{ grid-template-columns: 1fr 1fr; }}
+}}
+
+@media (max-width: 640px) {{
+  /* 初心者カード: スマホ確実1カラム */
+  .cards-grid {{ grid-template-columns: 1fr !important; gap: 16px; }}
+  .deal-card {{ border-radius: 16px; }}
+  .price-row-wrap {{ grid-template-columns: 1fr 1fr; }}
+  .shop-diff-col {{ display: none; }}
+  .shop-check-btn {{ display: none; }}
 }}
 
 @media (max-width: 480px) {{

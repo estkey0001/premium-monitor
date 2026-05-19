@@ -246,11 +246,19 @@ class DailyLPGenerator:
         if x_pixel:
             analytics_head += f'<!-- X Pixel {_esc(x_pixel)} -->\n'
 
+        # 抽選情報
+        lottery_events = []
+        try:
+            lottery_events = self.repo.list_lottery_events(status="active", limit=20)
+        except Exception:
+            lottery_events = []
+
         # セクション生成
         hero_html    = self._section_hero(date_str, time_str, latest_buyback_at, lp_generated_at,
                                            all_deals=all_deals, iphone_deals=iphone_deals,
                                            camera_deals=camera_deals or [], game_deals=game_deals)
         stale_html   = self._section_stale_warning(latest_buyback_at, latest_deals_at, lp_generated_at)
+        category_nav_html = self._section_category_nav(lottery_count=len(lottery_events))
         tab_html     = self._section_tabs(
             beginner_easy, beginner_watch,
             advanced_deals, advanced_snaps,
@@ -263,6 +271,7 @@ class DailyLPGenerator:
             game_watch=game_watch or [],
             buyback_by_product=buyback_by_product or {},
             sedori_routes=sedori_routes or [],
+            lottery_events=lottery_events,
         )
         caution_html = self._section_caution()
         cta_html     = self._section_cta()
@@ -2601,6 +2610,48 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 /* noscript */
 .noscript-all .tab-panel {{ display: block !important; }}
 .noscript-all .tab-nav {{ display: none; }}
+
+/* Category Nav */
+.cat-nav-wrap {{ background: #fff; border-bottom: 1px solid var(--card-border); padding: 12px 0; margin-bottom: 8px; }}
+.cat-nav-inner {{ max-width: 960px; margin: 0 auto; padding: 0 16px; }}
+.cat-genre-bar {{ display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; padding-bottom: 8px; }}
+.cat-genre-bar::-webkit-scrollbar {{ display: none; }}
+.cat-genre-btn {{
+  flex-shrink: 0; padding: 6px 16px; border-radius: 99px; border: 1.5px solid var(--card-border);
+  background: var(--surface2); color: var(--text-2); font-size: 0.85rem; font-weight: 600;
+  cursor: pointer; transition: all 0.15s;
+}}
+.cat-genre-btn.active, .cat-genre-btn:hover {{ background: var(--violet); color: #fff; border-color: var(--violet); }}
+.cat-maker-bar {{ margin-top: 8px; min-height: 36px; }}
+.cat-maker-group {{ display: none; flex-wrap: wrap; gap: 6px; }}
+.cat-maker-group.active {{ display: flex; }}
+.cat-maker-chip {{
+  display: inline-block; padding: 4px 14px; border-radius: 99px;
+  border: 1.5px solid var(--violet); color: var(--violet);
+  background: #F5F3FF; font-size: 0.82rem; font-weight: 600;
+  text-decoration: none; transition: all 0.15s;
+}}
+.cat-maker-chip:hover {{ background: var(--violet); color: #fff; }}
+
+/* Lottery */
+.lottery-card {{ background: var(--card-bg); border: 1.5px solid var(--card-border); border-radius: 14px; padding: 16px; margin: 8px 0; }}
+.lottery-card-header {{ display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }}
+.lottery-name {{ font-weight: 700; font-size: 1rem; }}
+.lottery-status-badge {{ display: inline-block; padding: 3px 10px; border-radius: 99px; font-size: 0.75rem; font-weight: 700; }}
+.lottery-status-open {{ background: #DCFCE7; color: #15803D; }}
+.lottery-status-upcoming {{ background: #FEF9C3; color: #854D0E; }}
+.lottery-status-closed {{ background: #F1F5F9; color: #64748B; }}
+.lottery-status-unknown {{ background: #F1F5F9; color: #64748B; }}
+.lottery-meta {{ display: flex; flex-wrap: wrap; gap: 12px; font-size: 0.82rem; color: var(--text-2); margin-bottom: 10px; }}
+.lottery-official-links {{ display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }}
+
+/* Ranking nav */
+.rank-row-clickable:hover {{ background: var(--surface2); }}
+.rank-name-link {{ color: var(--violet); }}
+
+/* Live panel link */
+.live-panel-link {{ color: inherit; text-decoration: none; }}
+.live-panel-link:hover {{ text-decoration: underline; }}
 </style>
 
 </head>
@@ -2617,9 +2668,9 @@ tr.sc-route-review {{ background: #FFFBEB; }}
   <a href="#note-cta" class="topbar-note-btn" data-track="note_click">&#128221; 詳細レポートを見る</a>
 </header>
 <div class="ticker-bar"><div class="ticker-inner"><span class="ticker-item"><span class="t-name">iPhone 16 Pro 256GB</span><span class="ticker-sep">|</span><span class="t-profit">+¥18,400</span></span><span class="ticker-item"><span class="t-name">SONY α7C II</span><span class="ticker-sep">|</span><span class="t-profit">+¥32,000</span></span><span class="ticker-item"><span class="t-name">Nintendo Switch 2</span><span class="ticker-sep">|</span><span class="t-profit">+¥9,800</span></span><span class="ticker-item"><span class="t-name">iPhone 15 Plus 128GB</span><span class="ticker-sep">|</span><span class="t-profit">+¥12,000</span></span><span class="ticker-item"><span class="t-name">Canon EOS R6 Mark II</span><span class="ticker-sep">|</span><span class="t-profit">+¥45,000</span></span><span class="ticker-item"><span class="t-name">PS5 Digital</span><span class="ticker-sep">|</span><span class="t-profit">+¥6,500</span></span><span class="ticker-item"><span class="t-name">iPhone 16 Pro 256GB</span><span class="ticker-sep">|</span><span class="t-profit">+¥18,400</span></span><span class="ticker-item"><span class="t-name">SONY α7C II</span><span class="ticker-sep">|</span><span class="t-profit">+¥32,000</span></span><span class="ticker-item"><span class="t-name">Nintendo Switch 2</span><span class="ticker-sep">|</span><span class="t-profit">+¥9,800</span></span><span class="ticker-item"><span class="t-name">iPhone 15 Plus 128GB</span><span class="ticker-sep">|</span><span class="t-profit">+¥12,000</span></span><span class="ticker-item"><span class="t-name">Canon EOS R6 Mark II</span><span class="ticker-sep">|</span><span class="t-profit">+¥45,000</span></span><span class="ticker-item"><span class="t-name">PS5 Digital</span><span class="ticker-sep">|</span><span class="t-profit">+¥6,500</span></span></div></div>
-<div class="features-bar"><div class="features-inner"><span class="feature-chip green">&#9711; 毎日12:00 自動更新</span><span class="feature-chip blue">&#8652; サイト間せどり計算</span><span class="feature-chip violet">&#127758; 海外相場リンク付き</span><span class="feature-chip amber">&#128202; 複数買取店比較</span><span class="feature-chip red">&#9650; 急騰/急落アラート</span><span class="feature-chip green">&#128269; 新商品候補監視</span></div></div>
 {hero_html}
 {stale_html}
+{category_nav_html}
 <div class="main-wrap">
 {tab_html}
 {caution_html}
@@ -2688,6 +2739,66 @@ tr.sc-route-review {{ background: #FFFBEB; }}
       }});
     }});
   }}
+
+  // ── カテゴリナビ ──
+  var genreBtns=document.querySelectorAll(".cat-genre-btn");
+  var makerGroups=document.querySelectorAll(".cat-maker-group");
+  genreBtns.forEach(function(btn){{
+    btn.addEventListener("click",function(){{
+      var genre=btn.getAttribute("data-genre");
+      genreBtns.forEach(function(b){{b.classList.remove("active");}});
+      btn.classList.add("active");
+      makerGroups.forEach(function(g){{
+        g.classList.toggle("active",g.getAttribute("data-genre-panel")===genre);
+      }});
+    }});
+  }});
+
+  // ── メーカーチップクリック → タブ切り替え + ブランドスクロール ──
+  document.querySelectorAll(".cat-maker-chip").forEach(function(chip){{
+    chip.addEventListener("click",function(e){{
+      var tabId=chip.getAttribute("data-tab");
+      var brand=chip.getAttribute("data-brand");
+      if(tabId){{
+        e.preventDefault();
+        activateTab(tabId);
+        var panel=document.getElementById("tab-"+tabId);
+        if(panel){{
+          setTimeout(function(){{
+            if(brand){{
+              var cards=panel.querySelectorAll("[data-brand='"+brand+"']");
+              if(cards.length>0){{
+                cards[0].scrollIntoView({{behavior:"smooth",block:"start"}});
+                return;
+              }}
+            }}
+            panel.scrollIntoView({{behavior:"smooth",block:"start"}});
+          }},100);
+        }}
+      }}
+    }});
+  }});
+
+  // ── ランキング行クリックナビ ──
+  document.querySelectorAll(".rank-row-clickable").forEach(function(row){{
+    row.addEventListener("click",function(){{
+      var tabId=row.getAttribute("data-nav-tab");
+      var productId=row.getAttribute("data-nav-product");
+      if(tabId){{
+        activateTab(tabId);
+        var panel=document.getElementById("tab-"+tabId);
+        if(panel){{
+          panel.scrollIntoView({{behavior:"smooth",block:"start"}});
+          if(productId){{
+            setTimeout(function(){{
+              var el=document.getElementById(productId);
+              if(el)el.scrollIntoView({{behavior:"smooth",block:"start"}});
+            }},300);
+          }}
+        }}
+      }}
+    }});
+  }});
 }})();
 </script>
 <noscript><style>.tab-nav{{display:none;}}.tab-panel{{display:block!important;}}</style></noscript>
@@ -2751,7 +2862,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
     <div class="hero-right">
       <div class="hero-live-panel">
         <div class="live-panel-hd">
-          <div class="live-panel-title">LIVE DEALS</div>
+          <a href="#tab-beginner" class="live-panel-title live-panel-link" data-track="hero_live_deals_click">LIVE DEALS &#8594;</a>
           <div class="live-panel-badge"><span class="live-dot"></span> リアルタイム</div>
         </div>
         <div class="live-panel-items">
@@ -2784,6 +2895,106 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             if msgs else 'データは最新です。'
         ) + '</div></div>'
 
+    def _section_category_nav(self, lottery_count: int = 0) -> str:
+        """カテゴリナビセクション（ジャンルタブ＋メーカーチップ）"""
+        lottery_badge = f'<span class="tab-count">{lottery_count}</span>' if lottery_count else ''
+        return f"""<section class="cat-nav-wrap">
+  <div class="cat-nav-inner">
+    <div class="cat-genre-bar" role="tablist">
+      <button class="cat-genre-btn active" data-genre="smartphone">&#128241; スマホ</button>
+      <button class="cat-genre-btn" data-genre="tablet">&#128196; タブレット</button>
+      <button class="cat-genre-btn" data-genre="pc">&#128187; PC</button>
+      <button class="cat-genre-btn" data-genre="camera">&#128247; カメラ</button>
+      <button class="cat-genre-btn" data-genre="game">&#127918; ゲーム機</button>
+      <button class="cat-genre-btn" data-genre="lottery">&#127915; 抽選情報{lottery_badge}</button>
+    </div>
+    <div class="cat-maker-bar">
+      <div class="cat-maker-group active" data-genre-panel="smartphone">
+        <a class="cat-maker-chip" data-tab="beginner" href="#tab-beginner">Apple</a>
+        <a class="cat-maker-chip" data-tab="beginner" href="#tab-beginner">Samsung</a>
+        <a class="cat-maker-chip" data-tab="beginner" href="#tab-beginner">Google</a>
+      </div>
+      <div class="cat-maker-group" data-genre-panel="tablet">
+        <a class="cat-maker-chip" data-tab="beginner" href="#tab-beginner">Apple</a>
+        <a class="cat-maker-chip" data-tab="beginner" href="#tab-beginner">Samsung</a>
+      </div>
+      <div class="cat-maker-group" data-genre-panel="pc">
+        <a class="cat-maker-chip" data-tab="advanced" href="#tab-advanced">Apple</a>
+        <a class="cat-maker-chip" data-tab="advanced" href="#tab-advanced">Dell</a>
+        <a class="cat-maker-chip" data-tab="advanced" href="#tab-advanced">Lenovo</a>
+        <a class="cat-maker-chip" data-tab="advanced" href="#tab-advanced">HP</a>
+      </div>
+      <div class="cat-maker-group" data-genre-panel="camera">
+        <a class="cat-maker-chip" data-tab="advanced" data-brand="RICOH" href="#tab-advanced">RICOH</a>
+        <a class="cat-maker-chip" data-tab="advanced" data-brand="FUJIFILM" href="#tab-advanced">FUJIFILM</a>
+        <a class="cat-maker-chip" data-tab="advanced" data-brand="Canon" href="#tab-advanced">Canon</a>
+        <a class="cat-maker-chip" data-tab="advanced" data-brand="Nikon" href="#tab-advanced">Nikon</a>
+        <a class="cat-maker-chip" data-tab="advanced" data-brand="Sony" href="#tab-advanced">Sony</a>
+        <a class="cat-maker-chip" data-tab="advanced" data-brand="Leica" href="#tab-advanced">Leica</a>
+      </div>
+      <div class="cat-maker-group" data-genre-panel="game">
+        <a class="cat-maker-chip" data-tab="beginner" data-brand="Nintendo" href="#tab-beginner">Nintendo</a>
+        <a class="cat-maker-chip" data-tab="beginner" data-brand="PlayStation" href="#tab-beginner">PlayStation</a>
+        <a class="cat-maker-chip" data-tab="advanced" data-brand="Xbox" href="#tab-advanced">Xbox</a>
+      </div>
+      <div class="cat-maker-group" data-genre-panel="lottery">
+        <a class="cat-maker-chip" data-tab="lottery" href="#tab-lottery">抽選一覧へ</a>
+      </div>
+    </div>
+  </div>
+</section>"""
+
+    def _section_lottery(self, lottery_events: list) -> str:
+        """抽選情報セクション"""
+        parts = []
+        parts.append('<div class="info-banner violet"><div class="ib-title">&#127915; 抽選情報</div>各メーカーの抽選・予約情報です。公式ページで最新情報をご確認ください。</div>')
+
+        if not lottery_events:
+            parts.append('<div class="empty-state"><span class="empty-icon">&#127915;</span>現在の抽選情報は未確認です。各公式ページでご確認ください。</div>')
+            parts.append('''<div class="lottery-official-links">
+<a href="https://www.jp.playstation.com/products/playstation5/" target="_blank" rel="noopener" class="cat-maker-chip">PS5 公式</a>
+<a href="https://www.nintendo.co.jp/hardware/nintendo-switch2/" target="_blank" rel="noopener" class="cat-maker-chip">Switch 2 公式</a>
+<a href="https://www.apple.com/jp/" target="_blank" rel="noopener" class="cat-maker-chip">Apple 公式</a>
+<a href="https://fujifilm-x.com/ja-jp/" target="_blank" rel="noopener" class="cat-maker-chip">FUJIFILM 公式</a>
+<a href="https://www.ricoh-imaging.co.jp/japan/" target="_blank" rel="noopener" class="cat-maker-chip">RICOH Imaging 公式</a>
+</div>''')
+            return '\n'.join(parts)
+
+        for ev in lottery_events:
+            if not isinstance(ev, dict):
+                try:
+                    ev = dict(ev)
+                except Exception:
+                    continue
+            status = ev.get("status", "unknown")
+            status_label = {"active": "受付中", "upcoming": "近日開始", "closed": "終了", "unknown": "未確認"}.get(status, status)
+            status_cls = {"active": "lottery-status-open", "upcoming": "lottery-status-upcoming", "closed": "lottery-status-closed"}.get(status, "lottery-status-unknown")
+
+            url = ev.get("url", "")
+            link_btn = (f'<a href="{_esc(url)}" target="_blank" rel="noopener" class="btn btn-secondary" data-track="lottery_click">&#127915; 公式ページへ</a>'
+                        if url else '')
+
+            entry_start = ev.get("entry_start_at", "") or ""
+            entry_end = ev.get("entry_end_at", "") or ""
+            result_at = ev.get("result_announcement_at", "") or ""
+
+            result_html = f'<span>&#128220; 当選発表: {_esc(str(result_at))}</span>' if result_at else ''
+
+            parts.append(f'''<div class="lottery-card">
+  <div class="lottery-card-header">
+    <div class="lottery-name">{_esc(ev.get("product_name", ""))}</div>
+    <span class="lottery-status-badge {status_cls}">{_esc(status_label)}</span>
+  </div>
+  <div class="lottery-meta">
+    <span>&#127468; {_esc(ev.get("brand", ""))}</span>
+    <span>&#128197; 受付: {_esc(str(entry_start))} 〜 {_esc(str(entry_end))}</span>
+    {result_html}
+  </div>
+  {link_btn}
+</div>''')
+
+        return '\n'.join(parts)
+
     def _section_tabs(self, beginner_easy, beginner_watch,
 
                       advanced_deals, advanced_snaps, watch_candidates,
@@ -2793,26 +3004,36 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                       camera_deals=None, iphone_watch=None, camera_watch=None,
 
                       game_watch=None, buyback_by_product: dict = None,
-                      sedori_routes: list = None) -> str:
+                      sedori_routes: list = None, lottery_events: list = None) -> str:
 
         camera_deals = camera_deals or []
 
         camera_watch = camera_watch or []
 
         bybp = buyback_by_product or {}
+        lottery_events = lottery_events or []
 
-        beginner_html    = self._tab_beginner(beginner_easy, beginner_watch, bybp)
+        # カメラを初心者タブから除外してPro向けへ移動
+        _beginner_easy_filtered = [d for d in beginner_easy if getattr(d, 'category', '') != 'camera']
+        _beginner_watch_filtered = [d for d in beginner_watch if getattr(d, 'category', '') != 'camera']
+        _camera_from_beginner = [d for d in beginner_easy + beginner_watch if getattr(d, 'category', '') == 'camera']
+
+        beginner_html    = self._tab_beginner(_beginner_easy_filtered, _beginner_watch_filtered, bybp)
         advanced_html    = self._tab_advanced(advanced_deals, advanced_snaps, watch_candidates,
-                                              camera_watch=camera_watch)
+                                              camera_watch=camera_watch,
+                                              camera_beginner_deals=_camera_from_beginner)
         surge_html       = self._tab_surge(buyback_alerts)
         ranking_html     = self._tab_ranking(all_deals, iphone_deals, game_deals)
         new_products_html = self._section_new_products()
         sedori_html      = self._tab_sedori(sedori_routes or [])
+        lottery_html     = self._section_lottery(lottery_events)
 
         all_count    = len(beginner_easy) + len(beginner_watch)
         adv_total    = len(advanced_deals) + len(advanced_snaps) + len(watch_candidates)
         surge_count  = len([a for a in buyback_alerts if a.get('alert_type') in ('buyback_surge','buyback_drop')])
         surge_badge  = f'<span class="tab-count">{surge_count}</span>' if surge_count else ''
+        lottery_count = len(lottery_events)
+        lottery_badge = f'<span class="tab-count">{lottery_count}</span>' if lottery_count else ''
 
         return f"""<div class="tab-wrap">
 <nav class="tab-nav" role="tablist">
@@ -2822,6 +3043,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
   <button class="tab-btn" data-tab="sedori" role="tab" aria-selected="false">&#9636; せどりルート</button>
   <button class="tab-btn" data-tab="surge" role="tab" aria-selected="false">&#9889; 急騰/急落{surge_badge}</button>
   <button class="tab-btn" data-tab="new-products" role="tab" aria-selected="false">&#127381; 新商品候補</button>
+  <button class="tab-btn" data-tab="lottery" role="tab" aria-selected="false">&#127915; 抽選情報{lottery_badge}</button>
 </nav>
 </div>
 
@@ -2847,6 +3069,10 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 
 <div id="tab-new-products" class="tab-panel section-new-products" role="tabpanel">
 {new_products_html}
+</div>
+
+<div id="tab-lottery" class="tab-panel" role="tabpanel">
+{lottery_html}
 </div>"""
 
 
@@ -3155,6 +3381,12 @@ python3 -m src.cli calculate-sedori-routes</pre>
         shop = _esc(d.best_buyback_shop or '—')
         genre_cls = genre or (d.category if hasattr(d, 'category') else '')
         stripe_cls = {'iphone': 'iphone', 'camera': 'camera', 'game_console': 'game'}.get(genre_cls, 'default')
+        # product alias (IDアンカー用)
+        _raw_pid = getattr(d, 'product_id', '') or ''
+        pid_alias = _raw_pid[len('prod_'):] if _raw_pid.startswith('prod_') else _raw_pid
+        card_id_attr = f' id="product-{_esc(pid_alias)}"' if pid_alias else ''
+        brand_val = _esc(getattr(d, 'brand', '') or '')
+        brand_attr = f' data-brand="{brand_val}"' if brand_val else ''
         genre_badge = {
             'iphone':       '<span class="badge badge-iphone">iPhone</span>',
             'camera':       '<span class="badge badge-camera">カメラ</span>',
@@ -3250,7 +3482,7 @@ python3 -m src.cli calculate-sedori-routes</pre>
         profit_note_text = '利益率が低め。様子見推奨' if is_watch else f'推定コスト -{_esc(fmt_price(d.estimated_costs_jpy))}'
         condition_text = _esc(d.buyback_condition or '新品未開封')
         profit_rate_str = _esc(fmt_rate(d.net_profit_rate))
-        return f"""<div class="deal-card" data-user-level="{_esc(d.user_level)}">
+        return f"""<div class="deal-card stripe-{stripe_cls}"{card_id_attr}{brand_attr} data-user-level="{_esc(d.user_level)}">
   <div class="card-stripe {stripe_cls}"></div>
   <div class="card-hd">
     <div class="card-name">{_esc(d.product_name)}</div>
@@ -3294,8 +3526,9 @@ python3 -m src.cli calculate-sedori-routes</pre>
   </div>
 </div>"""
 
-    def _tab_advanced(self, advanced_deals, advanced_snaps, watch_candidates, camera_watch=None) -> str:
+    def _tab_advanced(self, advanced_deals, advanced_snaps, watch_candidates, camera_watch=None, camera_beginner_deals=None) -> str:
         camera_watch = camera_watch or []
+        camera_beginner_deals = camera_beginner_deals or []
         parts = []
 
         # ── Pro向けタブ説明バナー ──
@@ -3351,7 +3584,15 @@ python3 -m src.cli calculate-sedori-routes</pre>
             parts.append('<div class="section-header"><h2>&#128204; Pro向け監視候補</h2><span class="section-count">価格差・希少性スコア上位</span></div>')
             parts.append(self._watch_candidates_table(watch_candidates))
 
-        if not advanced_deals and not advanced_snaps and not watch_candidates:
+        # カメラBeginnerDealを追加表示
+        if camera_beginner_deals:
+            parts.append('<div class="section-header"><h2>&#128247; カメラ案件</h2><span class="section-count">' + str(len(camera_beginner_deals)) + '件</span></div>')
+            parts.append('<div class="cards-grid">')
+            for d in camera_beginner_deals:
+                parts.append(self._deal_card(d, 'badge-adv', 'Pro向け'))
+            parts.append('</div>')
+
+        if not advanced_deals and not advanced_snaps and not watch_candidates and not camera_beginner_deals:
             parts.append("""<div class="section-header"><h2>Pro向け候補</h2></div>
 <div class="empty-state"><span class="empty-icon">&#128202;</span>現在、条件を満たす候補はありません。</div>""")
 
@@ -3541,10 +3782,15 @@ python3 -m src.cli calculate-sedori-routes</pre>
                 rank_cls = 'r1' if i == 1 else ('r2' if i == 2 else ('r3' if i == 3 else ''))
                 crown = '&#128081;' if i == 1 else str(i)
                 cat_td = f'<td style="font-size:0.75rem;color:var(--ink3)">{_esc(d.category)}</td>' if show_cat else ''
+                # カメラはadvancedタブ、それ以外はbeginnerタブへ
+                _target_tab = "advanced" if getattr(d, 'category', '') == 'camera' else "beginner"
+                _raw_pid = getattr(d, 'product_id', '') or ''
+                _pid_alias = _raw_pid[len('prod_'):] if _raw_pid.startswith('prod_') else _raw_pid
                 rows.append(
-                    f'<div class="rank-row{row_cls}">'
+                    f'<div class="rank-row{row_cls} rank-row-clickable" '
+                    f'data-nav-tab="{_target_tab}" data-nav-product="product-{_esc(_pid_alias)}" style="cursor:pointer">'
                     f'<div class="rank-num {rank_cls}">{crown}</div>'
-                    f'<div class="rank-info"><div class="rank-name">{_esc(d.product_name)}</div>'
+                    f'<div class="rank-info"><div class="rank-name rank-name-link">{_esc(d.product_name)}</div>'
                     f'<div class="rank-meta">{_esc(d.best_buyback_shop or "—")}'
                     + (f' &nbsp;|&nbsp; {_esc(d.category)}' if show_cat else '')
                     + f'</div></div>'

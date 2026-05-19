@@ -618,63 +618,126 @@ a[href], button, [role="tab"], [role="button"],
 }
 
 /* ============================================================
-   TAB NAVIGATION — スティッキー
+   TAB NAVIGATION — スティッキー / Manus pill style
    ============================================================ */
 .tab-wrap {
   position: sticky; top: 56px; z-index: 200;
-  background: rgba(250,251,255,0.95);
-  backdrop-filter: blur(12px);
+  background: rgba(250,251,255,0.96);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
   border-bottom: 1px solid var(--card-border);
+  box-shadow: 0 1px 0 rgba(13,15,28,0.04), 0 2px 8px rgba(13,15,28,0.03);
   margin: 0 -24px;
   padding: 0 24px;
 }
 
 .tab-nav {
-  display: flex; gap: 0;
+  display: flex; gap: 2px;
   overflow-x: auto; -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   position: relative;
+  padding: 8px 0;
+  align-items: center;
 }
 
 .tab-nav::-webkit-scrollbar { display: none; }
 
+/* ── ベース: pill スタイル ── */
 .tab-btn {
   flex-shrink: 0;
-  display: flex; align-items: center; gap: 7px;
+  display: flex; align-items: center; gap: 6px;
   background: transparent; border: none;
-  border-bottom: 2px solid transparent;
-  padding: 15px 20px;
-  font-size: 0.875rem; font-weight: 500;
+  border-radius: 10px;
+  padding: 8px 14px;
+  font-size: 0.84rem; font-weight: 600;
   color: var(--ink3);
   cursor: pointer;
-  transition: color 0.15s, border-color 0.15s;
-  margin-bottom: -1px;
+  transition: background 0.15s cubic-bezier(0.23,1,0.32,1),
+              color 0.15s cubic-bezier(0.23,1,0.32,1),
+              transform 0.1s;
   white-space: nowrap;
   font-family: var(--font);
+  min-height: 36px;
+  line-height: 1;
 }
 
-.tab-btn:hover { color: var(--ink); }
+/* ── hover: Manus #F4F5FD ── */
+.tab-btn:hover {
+  background: #F4F5FD;
+  color: var(--ink);
+}
 
+.tab-btn:active { transform: scale(0.96); }
+
+/* ── active: per-tab colored pill ── */
 .tab-btn.active {
-  color: var(--violet);
-  border-bottom-color: var(--violet);
   font-weight: 700;
+  /* デフォルト: beginner = teal (最初に開く) */
+  background: #F0FDF8;
+  color: #047857;
 }
 
+/* data-tab別のアクティブカラー — Manus activeColors */
+.tab-btn.active[data-tab="beginner"] {
+  background: #F0FDF8;
+  color: #047857;
+}
+.tab-btn.active[data-tab="advanced"] {
+  background: #F0EEFF;
+  color: #6040E8;
+}
+.tab-btn.active[data-tab="sedori"] {
+  background: #EEF4FF;
+  color: #1D4ED8;
+}
+.tab-btn.active[data-tab="lottery"] {
+  background: #F5F3FF;
+  color: #7C5CFC;
+}
+.tab-btn.active[data-tab="ranking"] {
+  background: #EEF4FF;
+  color: #1D4ED8;
+}
+.tab-btn.active[data-tab="surge"] {
+  background: #FFF8E8;
+  color: #B45309;
+}
+.tab-btn.active[data-tab="new-products"] {
+  background: #F0EEFF;
+  color: #6040E8;
+}
+
+/* ── カウントバッジ ── */
 .tab-count {
-  font-size: 0.65rem; font-weight: 800;
-  background: var(--surface2);
+  font-size: 0.62rem; font-weight: 800;
+  background: rgba(13,15,28,0.06);
   color: var(--ink3);
-  padding: 1px 7px; border-radius: 99px;
+  padding: 2px 7px; border-radius: 99px;
+  line-height: 1.4;
+  transition: background 0.15s, color 0.15s;
 }
 
+/* active時はタブカラーに合わせる */
 .tab-btn.active .tab-count {
-  background: #EDE9FF;
-  color: var(--violet);
+  background: rgba(255,255,255,0.65);
+  color: inherit;
 }
 
-.tab-panel { display: none; padding-top: 36px; }
+/* ── タブパネル ── */
+.tab-panel {
+  display: none;
+  padding-top: 36px;
+  pointer-events: auto;
+  position: relative;
+  z-index: 1;
+}
 .tab-panel.active { display: block; }
+
+/* ── モバイル: タップターゲット確保 ── */
+@media (max-width: 640px) {
+  .tab-btn { padding: 9px 12px; font-size: 0.8rem; min-height: 40px; }
+  .tab-wrap { padding: 0 16px; }
+}
 
 /* ============================================================
    SECTION HEADER
@@ -1726,7 +1789,7 @@ a[href], button, [role="tab"], [role="button"],
       </div>
       <div class="hero-timestamps">
         <span class="ts-pill stale" data-buyback-updated><span class="ts-dot"></span>買取価格更新：2026-05-18 12:00 JST</span>
-        <span class="ts-pill" data-lp-generated><span class="ts-dot blue"></span>LP生成：2026-05-19 14:08 JST</span>
+        <span class="ts-pill" data-lp-generated><span class="ts-dot blue"></span>LP生成：2026-05-19 14:12 JST</span>
       </div>
     </div>
     <div class="hero-right">

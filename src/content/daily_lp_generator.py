@@ -256,6 +256,7 @@ class DailyLPGenerator:
                                            all_deals=all_deals, iphone_deals=iphone_deals,
                                            camera_deals=camera_deals or [], game_deals=game_deals)
         stale_html   = self._section_stale_warning(latest_buyback_at, latest_deals_at, lp_generated_at)
+        genre_nav_html = self._section_genre_nav(all_deals=all_deals)
         tab_html     = self._section_tabs(
             beginner_easy, beginner_watch,
             advanced_deals, advanced_snaps,
@@ -1850,6 +1851,189 @@ body {{
 /* noscript */
 .noscript-all .tab-panel {{ display: block !important; }}
 .noscript-all .tab-nav {{ display: none; }}
+
+/* クリック阻害防止 */
+.tab-panel {{ pointer-events: auto; }}
+.tab-btn {{ pointer-events: auto; cursor: pointer; }}
+.genre-chip, .maker-chip {{ pointer-events: auto; cursor: pointer; }}
+.adv-btn, .oc-chip, .overseas-btn {{ pointer-events: auto; cursor: pointer; }}
+/* オーバーレイ要素がクリックを阻害しないように */
+.hero::after {{ pointer-events: none; }}
+.section-overlay {{ pointer-events: none; }}
+
+/* ジャンルナビ・メーカーナビ */
+.genre-nav-wrap {{ padding: 12px 0 0; }}
+.genre-nav {{ display: flex; gap: 8px; flex-wrap: wrap; padding: 0 0 12px; }}
+.genre-chip {{
+  padding: 8px 18px; border-radius: 24px; border: 1.5px solid var(--card-border);
+  background: var(--surface2); color: var(--ink2); font-size: 0.85rem; font-weight: 600;
+  cursor: pointer; font-family: var(--font); transition: all 0.15s;
+}}
+.genre-chip.active, .genre-chip:hover {{
+  background: var(--violet); color: #fff; border-color: var(--violet);
+}}
+.maker-nav {{ display: flex; gap: 8px; flex-wrap: wrap; padding: 0 0 16px; }}
+.maker-chip {{
+  padding: 6px 14px; border-radius: 20px; border: 1.5px solid var(--card-border);
+  background: var(--surface2); color: var(--ink2); font-size: 0.8rem; font-weight: 600;
+  cursor: pointer; font-family: var(--font); transition: all 0.15s;
+}}
+.maker-chip.active, .maker-chip:hover {{
+  background: var(--teal, #00C896); color: #fff; border-color: var(--teal, #00C896);
+}}
+
+/* 上級者カード */
+.adv-card {{
+  background: var(--card-bg);
+  border: 1.5px solid var(--card-border);
+  border-radius: var(--radius-xl, 16px);
+  padding: 0;
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 16px;
+}}
+.adv-card-stripe {{
+  height: 4px;
+  background: linear-gradient(90deg, var(--violet), #7c3aed);
+}}
+.adv-card-hd {{
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 20px 20px 12px;
+  gap: 12px;
+}}
+.adv-genre-badge {{
+  font-size: 0.7rem; font-weight: 700; color: var(--violet);
+  text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px;
+}}
+.adv-brand {{
+  font-size: 0.8rem; color: var(--ink3); margin-bottom: 2px;
+}}
+.adv-name {{
+  font-size: 1.05rem; font-weight: 800; color: var(--ink);
+}}
+.adv-card-badges {{ display: flex; flex-direction: column; gap: 4px; align-items: flex-end; }}
+.adv-price-grid {{
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--card-border);
+  border-top: 1px solid var(--card-border);
+  border-bottom: 1px solid var(--card-border);
+}}
+@media (max-width: 640px) {{
+  .adv-price-grid {{ grid-template-columns: repeat(2, 1fr); }}
+}}
+.adv-price-item {{
+  background: var(--card-bg);
+  padding: 12px 16px;
+}}
+.adv-price-lbl {{
+  font-size: 0.7rem; color: var(--ink3); font-weight: 600; margin-bottom: 4px;
+}}
+.adv-price-val {{
+  font-size: 0.95rem; font-weight: 800; color: var(--ink);
+}}
+.adv-price-val.highlight {{ color: var(--violet); }}
+.adv-price-val.profit {{ color: var(--profit, #00C896); }}
+.adv-links-row {{
+  display: flex; gap: 8px; flex-wrap: wrap; padding: 12px 20px;
+  border-bottom: 1px solid var(--card-border);
+}}
+.adv-btn {{
+  padding: 8px 16px; border-radius: var(--radius-md, 8px); font-size: 0.82rem;
+  font-weight: 700; text-decoration: none; display: inline-flex; align-items: center;
+  gap: 4px; transition: opacity 0.15s; cursor: pointer;
+}}
+.adv-btn-primary {{
+  background: var(--violet); color: #fff;
+}}
+.adv-btn-mercari {{ background: #FF3163; color: #fff; }}
+.adv-btn-yahoo {{ background: #FF0033; color: #fff; }}
+.adv-caution {{
+  padding: 8px 20px 12px; font-size: 0.75rem; color: var(--ink3);
+  display: flex; gap: 4px; align-items: flex-start;
+}}
+/* カード2列グリッド（PC） */
+.adv-cards-grid {{
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}}
+@media (max-width: 768px) {{
+  .adv-cards-grid {{ grid-template-columns: 1fr; }}
+}}
+
+/* せどり計算機（TradingView風） */
+.sedori-tab-nav {{
+  display: flex; gap: 8px; margin-bottom: 24px;
+}}
+.sedori-tab-btn {{
+  flex: 1; padding: 14px 20px; border: 1.5px solid var(--card-border);
+  background: var(--surface2); border-radius: var(--radius-lg, 12px);
+  font-size: 0.88rem; font-weight: 700; color: var(--ink2);
+  cursor: pointer; text-align: center; font-family: var(--font);
+  transition: all 0.18s; line-height: 1.4;
+}}
+.sedori-tab-btn.active {{
+  background: var(--violet); color: #fff; border-color: var(--violet);
+}}
+.sedori-tab-btn small {{ font-weight: 500; opacity: 0.85; font-size: 0.75rem; }}
+.sedori-layout {{
+  display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+}}
+@media (max-width: 640px) {{ .sedori-layout {{ grid-template-columns: 1fr; }} }}
+.sedori-card {{
+  background: var(--surface2); border: 1px solid var(--card-border);
+  border-radius: var(--radius-lg); padding: 24px;
+}}
+.sedori-card-title {{
+  font-size: 0.9rem; font-weight: 800; color: var(--ink); margin-bottom: 20px;
+  padding-bottom: 12px; border-bottom: 1px solid var(--card-border);
+}}
+.sedori-field {{ margin-bottom: 14px; }}
+.sedori-lbl {{
+  display: block; font-size: 0.72rem; font-weight: 700; color: var(--ink3);
+  text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px;
+}}
+.sedori-input {{
+  width: 100%; padding: 14px 16px; border: 1.5px solid var(--card-border);
+  border-radius: var(--radius-md); font-size: 1.05rem; font-family: var(--font);
+  color: var(--ink); background: var(--card-bg); box-sizing: border-box;
+  transition: border-color 0.15s;
+}}
+.sedori-input:focus {{ outline: none; border-color: var(--violet); }}
+.sedori-result-card {{
+  background: var(--card-bg); border: 1.5px solid var(--violet);
+  border-radius: var(--radius-lg); padding: 28px;
+  position: sticky; top: 80px;
+}}
+.sedori-result-title {{
+  font-size: 0.85rem; font-weight: 700; color: var(--ink3); margin-bottom: 16px;
+}}
+.sedori-result-main {{
+  font-size: 2.6rem; font-weight: 900; color: var(--profit, #00C896);
+  line-height: 1; margin-bottom: 4px; transition: color 0.2s;
+}}
+.sedori-result-main.negative {{ color: var(--orange, #FF9500); }}
+.sedori-result-label {{
+  font-size: 0.78rem; color: var(--ink3); font-weight: 600; margin-bottom: 20px;
+}}
+.sedori-result-rows {{ margin-bottom: 20px; }}
+.sedori-result-row {{
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 8px 0; border-bottom: 1px solid var(--surface2);
+  font-size: 0.84rem;
+}}
+.sedori-result-row-lbl {{ color: var(--ink3); }}
+.sedori-result-row-val {{ font-weight: 700; color: var(--ink); }}
+.sedori-breakeven-wrap {{
+  background: var(--surface2); border-radius: var(--radius-md);
+  padding: 12px 16px; margin-top: 8px;
+}}
+.sedori-breakeven-lbl {{ font-size: 0.72rem; color: var(--ink3); font-weight: 600; margin-bottom: 4px; }}
+.sedori-breakeven-val {{ font-size: 1.1rem; font-weight: 800; color: var(--violet); }}
 </style>
 
 </head>
@@ -1870,6 +2054,7 @@ body {{
 {hero_html}
 {stale_html}
 <div class="main-wrap">
+{genre_nav_html}
 {tab_html}
 {caution_html}
 {cta_html}
@@ -2006,6 +2191,72 @@ body {{
             f'<strong>データが古い可能性があります：</strong>{_esc(detail)}が24時間以上前のデータです。購入前に必ず最新価格をご確認ください。'
             if msgs else 'データは最新です。'
         ) + '</div></div>'
+
+    def _section_genre_nav(self, all_deals=None) -> str:
+        """ジャンルナビ + メーカーナビを生成する（横スクロール対応チップ）。"""
+        return """<div class="genre-nav-wrap">
+  <div class="genre-nav">
+    <button class="genre-chip active" data-genre="iphone" onclick="genreSelect('iphone')">&#128241; スマホ</button>
+    <button class="genre-chip" data-genre="tablet" onclick="genreSelect('tablet')">&#128063; タブレット</button>
+    <button class="genre-chip" data-genre="pc" onclick="genreSelect('pc')">&#128187; PC</button>
+    <button class="genre-chip" data-genre="camera" onclick="genreSelect('camera')">&#128247; カメラ</button>
+    <button class="genre-chip" data-genre="game_console" onclick="genreSelect('game_console')">&#127918; ゲーム機</button>
+  </div>
+  <div class="maker-nav" id="maker-nav-iphone" style="display:flex;">
+    <button class="maker-chip" data-maker="apple" onclick="makerSelect('iphone','apple')">&#127822; Apple</button>
+  </div>
+  <div class="maker-nav" id="maker-nav-tablet" style="display:none;">
+    <button class="maker-chip" data-maker="apple" onclick="makerSelect('tablet','apple')">&#127822; Apple</button>
+    <button class="maker-chip" data-maker="samsung" onclick="makerSelect('tablet','samsung')">Samsung</button>
+  </div>
+  <div class="maker-nav" id="maker-nav-pc" style="display:none;">
+    <button class="maker-chip" data-maker="apple" onclick="makerSelect('pc','apple')">&#127822; Apple</button>
+    <button class="maker-chip" data-maker="dell" onclick="makerSelect('pc','dell')">Dell</button>
+    <button class="maker-chip" data-maker="lenovo" onclick="makerSelect('pc','lenovo')">Lenovo</button>
+    <button class="maker-chip" data-maker="asus" onclick="makerSelect('pc','asus')">ASUS</button>
+    <button class="maker-chip" data-maker="msi" onclick="makerSelect('pc','msi')">MSI</button>
+    <button class="maker-chip" data-maker="hp" onclick="makerSelect('pc','hp')">HP</button>
+  </div>
+  <div class="maker-nav" id="maker-nav-camera" style="display:none;">
+    <button class="maker-chip" data-maker="ricoh" onclick="makerSelect('camera','ricoh')">RICOH</button>
+    <button class="maker-chip" data-maker="fujifilm" onclick="makerSelect('camera','fujifilm')">FUJIFILM</button>
+    <button class="maker-chip" data-maker="canon" onclick="makerSelect('camera','canon')">Canon</button>
+    <button class="maker-chip" data-maker="nikon" onclick="makerSelect('camera','nikon')">Nikon</button>
+    <button class="maker-chip" data-maker="sony" onclick="makerSelect('camera','sony')">Sony</button>
+    <button class="maker-chip" data-maker="leica" onclick="makerSelect('camera','leica')">Leica</button>
+  </div>
+  <div class="maker-nav" id="maker-nav-game_console" style="display:none;">
+    <button class="maker-chip" data-maker="nintendo" onclick="makerSelect('game_console','nintendo')">Nintendo</button>
+    <button class="maker-chip" data-maker="playstation" onclick="makerSelect('game_console','playstation')">PlayStation</button>
+    <button class="maker-chip" data-maker="xbox" onclick="makerSelect('game_console','xbox')">Xbox</button>
+  </div>
+</div>
+
+<script>
+(function() {
+  function genreSelect(genre) {
+    document.querySelectorAll('.genre-chip').forEach(function(c) {
+      c.classList.toggle('active', c.dataset.genre === genre);
+    });
+    document.querySelectorAll('.maker-nav').forEach(function(n) {
+      n.style.display = 'none';
+    });
+    var mn = document.getElementById('maker-nav-' + genre);
+    if (mn) mn.style.display = 'flex';
+    var section = document.getElementById('genre-section-' + genre);
+    if (section) section.scrollIntoView({behavior:'smooth', block:'start'});
+  }
+  function makerSelect(genre, maker) {
+    document.querySelectorAll('.maker-chip').forEach(function(c) {
+      c.classList.toggle('active', c.dataset.maker === maker);
+    });
+    var el = document.getElementById('maker-section-' + genre + '-' + maker);
+    if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
+  }
+  window.genreSelect = genreSelect;
+  window.makerSelect = makerSelect;
+})();
+</script>"""
 
     def _section_tabs(self, beginner_easy, beginner_watch,
                       advanced_deals, advanced_snaps, watch_candidates,
@@ -2361,6 +2612,7 @@ body {{
 </div>"""
 
     def _tab_advanced(self, advanced_deals, advanced_snaps, watch_candidates, camera_watch=None) -> str:
+        """上級者向けタブ。テーブルを廃止してカード形式で全面表示。"""
         camera_watch = camera_watch or []
         parts = []
 
@@ -2370,44 +2622,171 @@ body {{
                      '輸出規制・関税・プラットフォーム手数料等が発生します。リスクを十分理解した上でご活用ください。\n'
                      '</div>')
 
+        # ジャンルラベル対応表
+        GENRE_LABELS = {
+            "iphone": "スマホ", "smartphone": "スマホ",
+            "tablet": "タブレット",
+            "pc": "PC", "laptop": "PC",
+            "camera": "カメラ",
+            "game_console": "ゲーム機", "game": "ゲーム機",
+        }
+
+        def _sale_method_badge(sale_method: str) -> str:
+            m = (sale_method or "").lower()
+            if m == "lottery":
+                return '<span class="badge badge-lottery">&#127920; 抽選</span>'
+            elif m == "reservation":
+                return '<span class="badge badge-watch">&#128197; 予約</span>'
+            elif m == "soldout":
+                return '<span class="badge badge-soldout">&#10060; SOLD OUT</span>'
+            elif m == "waiting":
+                return '<span class="badge badge-used">&#9203; 入荷待ち</span>'
+            elif m == "limited":
+                return '<span class="badge badge-adv">&#9889; 限定</span>'
+            else:
+                return '<span class="badge badge-default">&#128230; 通常</span>'
+
+        def _difficulty_badge(score) -> str:
+            try:
+                sc = float(score or 0)
+            except Exception:
+                sc = 0.0
+            if sc < 0.3:
+                return '<span class="badge badge-easy">入手しやすい</span>'
+            elif sc < 0.6:
+                return '<span class="badge badge-watch">中難度</span>'
+            else:
+                return '<span class="badge badge-exp">高難度</span>'
+
+        def _adv_card_html(product_id, product_name, genre, brand, sale_method,
+                           difficulty_score, official_price, domestic_used_price,
+                           overseas_price, gap, official_url=None) -> str:
+            import re as _re
+            # スラグ生成
+            slug = _re.sub(r'[^a-z0-9]+', '-', str(product_id or product_name or '').lower()).strip('-') or 'product'
+            brand_lower = _re.sub(r'[^a-z0-9]+', '-', str(brand or '').lower()).strip('-') or 'unknown'
+            genre_label = GENRE_LABELS.get(str(genre or '').lower(), str(genre or ''))
+            encoded_name = _urllib_parse.quote(str(product_name or ''))
+            encoded_slug = _urllib_parse.quote(str(product_name or '').lower().replace(' ', '-'))
+
+            sale_badge = _sale_method_badge(sale_method)
+            diff_badge = _difficulty_badge(difficulty_score)
+
+            official_btn = ''
+            if official_url and str(official_url).startswith('http'):
+                official_btn = f'<a href="{_esc(official_url)}" class="adv-btn adv-btn-primary" target="_blank" rel="noopener">公式ページ</a>'
+
+            mercari_url = f'https://jp.mercari.com/search?keyword={encoded_name}'
+            yahoo_url   = f'https://auctions.yahoo.co.jp/search/search?p={encoded_name}'
+
+            price_official   = _esc(fmt_price(official_price)) if official_price else '—'
+            price_domestic   = _esc(fmt_price(domestic_used_price)) if domestic_used_price else '—'
+            price_overseas   = _esc(fmt_price(overseas_price)) if overseas_price else '確認推奨'
+            price_gap        = _esc(fmt_profit(gap)) if gap else '計算中'
+
+            return f"""<div class="adv-card" id="product-{_esc(slug)}" data-genre="{_esc(str(genre or ''))}" data-maker="{_esc(brand_lower)}">
+  <div class="adv-card-stripe"></div>
+  <div class="adv-card-hd">
+    <div class="adv-card-info">
+      <div class="adv-genre-badge">{_esc(genre_label)}</div>
+      <div class="adv-brand">{_esc(str(brand or ''))}</div>
+      <div class="adv-name">{_esc(str(product_name or ''))}</div>
+    </div>
+    <div class="adv-card-badges">
+      {sale_badge}
+      {diff_badge}
+    </div>
+  </div>
+  <div class="adv-price-grid">
+    <div class="adv-price-item">
+      <div class="adv-price-lbl">公式価格</div>
+      <div class="adv-price-val">{price_official}</div>
+    </div>
+    <div class="adv-price-item">
+      <div class="adv-price-lbl">国内中古相場</div>
+      <div class="adv-price-val highlight">{price_domestic}</div>
+    </div>
+    <div class="adv-price-item">
+      <div class="adv-price-lbl">海外相場（参考）</div>
+      <div class="adv-price-val">{price_overseas}</div>
+    </div>
+    <div class="adv-price-item">
+      <div class="adv-price-lbl">想定差額</div>
+      <div class="adv-price-val profit">{price_gap}</div>
+    </div>
+  </div>
+  <div class="adv-links-row">
+    {official_btn}
+    <a href="{_esc(mercari_url)}" class="adv-btn adv-btn-mercari" target="_blank" rel="noopener">メルカリで探す</a>
+    <a href="{_esc(yahoo_url)}" class="adv-btn adv-btn-yahoo" target="_blank" rel="noopener">ヤフオク</a>
+  </div>
+  <div class="overseas-links-section">
+    <div class="overseas-section-hd">&#127758; 海外相場を確認</div>
+    <div class="overseas-chips-row">
+      <a href="https://www.ebay.com/sch/i.html?_nkw={encoded_name}&LH_Sold=1&LH_Complete=1" class="oc-chip blue overseas-btn" target="_blank" rel="noopener">&#128230; eBay 落札済み</a>
+      <a href="https://stockx.com/search?s={encoded_name}" class="oc-chip green overseas-btn" target="_blank" rel="noopener">&#128200; StockX</a>
+      <a href="https://www.bhphotovideo.com/c/search?q={encoded_name}" class="oc-chip blue overseas-btn" target="_blank" rel="noopener">B&amp;H</a>
+      <a href="https://www.adorama.com/l/?searchinfo={encoded_name}" class="oc-chip blue overseas-btn" target="_blank" rel="noopener">Adorama</a>
+      <a href="https://mpb.com/en-us/used/{encoded_slug}/" class="oc-chip purple overseas-btn" target="_blank" rel="noopener">MPB</a>
+    </div>
+  </div>
+  <div class="domestic-secondary-links">
+    <div class="domestic-secondary-hd">&#127981; 国内二次流通で仕入れを調べる</div>
+    <div class="overseas-chips-row">
+      <a href="https://jp.mercari.com/search?keyword={encoded_name}" class="oc-chip blue overseas-btn" target="_blank" rel="noopener">メルカリ</a>
+      <a href="https://auctions.yahoo.co.jp/search/search?p={encoded_name}" class="oc-chip green overseas-btn" target="_blank" rel="noopener">ヤフオク</a>
+      <a href="https://fril.jp/s?query={encoded_name}" class="oc-chip purple overseas-btn" target="_blank" rel="noopener">ラクマ</a>
+      <a href="https://www.mapcamera.com/search?keyword={encoded_name}" class="oc-chip blue overseas-btn" target="_blank" rel="noopener">マップカメラ</a>
+    </div>
+  </div>
+  <div class="adv-caution">
+    <span>&#9888;&#65039;</span> 輸出規制・関税・プラットフォーム手数料を確認してください。
+  </div>
+</div>"""
+
         if advanced_deals:
             parts.append('<div class="section-header"><h2>高利益案件</h2><span class="section-count">' + str(len(advanced_deals)) + '件</span></div>')
+            parts.append('<div class="adv-cards-grid">')
             for d in advanced_deals:
-                badge_cls = "badge-exp" if d.user_level == "expert_only" else "badge-adv"
-                label = "上級者限定" if d.user_level == "expert_only" else "高利益"
-                product_name = getattr(d, 'product_name', '')
-                genre_cls = getattr(d, 'category', '')
-                domestic_links = self._domestic_secondary_links(product_name)
-                overseas_links = self._overseas_links_section(product_name, genre_cls)
-                parts.append(self._deal_card(d, badge_cls, label))
-                parts.append(domestic_links)
-                parts.append(overseas_links)
+                product_name = getattr(d, 'product_name', '') or ''
+                genre = getattr(d, 'category', '') or ''
+                brand = getattr(d, 'brand', '') or ''
+                sale_method = getattr(d, 'sale_method', '') or ''
+                difficulty_score = getattr(d, 'difficulty_score', 0) or 0
+                official_price = getattr(d, 'official_price_jpy', None)
+                domestic_used_price = getattr(d, 'domestic_used_price_jpy', None)
+                overseas_price = getattr(d, 'overseas_price_jpy', None)
+                gap = getattr(d, 'net_profit_jpy', None) or getattr(d, 'premium_gap_jpy', None)
+                official_url = getattr(d, 'official_url', None) or getattr(d, 'source_url', None)
+                product_id = getattr(d, 'product_id', None) or getattr(d, 'id', None)
+                parts.append(_adv_card_html(
+                    product_id, product_name, genre, brand, sale_method,
+                    difficulty_score, official_price, domestic_used_price,
+                    overseas_price, gap, official_url
+                ))
+            parts.append('</div>')
 
         if advanced_snaps:
             parts.append('<div class="section-header"><h2>プレ値・価格差候補</h2><span class="section-count">スナップショット分析</span></div>')
-            rows = []
+            parts.append('<div class="adv-cards-grid">')
             for s in advanced_snaps:
-                method = {"lottery": "抽選", "soldout": "SOLD OUT", "discontinued": "終了"}.get(
-                    getattr(s, "sale_method", ""), getattr(s, "sale_method", "通常"))
-                rows.append(
-                    f"<tr>"
-                    f"<td data-user-level='{_esc(getattr(s,'user_level',''))}'>{_esc(s.product_name)}</td>"
-                    f"<td>{_esc(fmt_price(s.official_price_jpy))}</td>"
-                    f"<td>{_esc(fmt_price(s.domestic_used_price_jpy))}</td>"
-                    f"<td>{_esc(fmt_price(getattr(s,'overseas_price_jpy',None)))}</td>"
-                    f"<td style='color:var(--orange);font-weight:600'>{_esc(fmt_profit(s.premium_gap_jpy))}</td>"
-                    f"<td>{_esc(method)}</td>"
-                    f"<td>{getattr(s,'difficulty_score',0):.2f}</td>"
-                    f"</tr>"
-                )
-            parts.append(f"""<div class="ranking-card"><div class="table-wrap">
-<table>
-<thead><tr><th>商品</th><th>定価</th><th>国内中古</th><th>海外</th><th>価格差</th><th>方式</th><th>難易度</th></tr></thead>
-<tbody>{"".join(rows)}</tbody>
-</table>
-</div>
-<p style="color:var(--text-3);font-size:0.78rem;margin-top:10px;padding:0 4px;">※ 難易度0.0〜1.0（低いほど入手しやすい）</p>
-</div>""")
+                product_name = getattr(s, 'product_name', '') or ''
+                genre = getattr(s, 'category', '') or getattr(s, 'genre', '') or ''
+                brand = getattr(s, 'brand', '') or ''
+                sale_method = getattr(s, 'sale_method', '') or ''
+                difficulty_score = getattr(s, 'difficulty_score', 0) or 0
+                official_price = getattr(s, 'official_price_jpy', None)
+                domestic_used_price = getattr(s, 'domestic_used_price_jpy', None)
+                overseas_price = getattr(s, 'overseas_price_jpy', None)
+                gap = getattr(s, 'premium_gap_jpy', None)
+                official_url = getattr(s, 'official_url', None) or getattr(s, 'source_url', None)
+                product_id = getattr(s, 'product_id', None) or getattr(s, 'id', None)
+                parts.append(_adv_card_html(
+                    product_id, product_name, genre, brand, sale_method,
+                    difficulty_score, official_price, domestic_used_price,
+                    overseas_price, gap, official_url
+                ))
+            parts.append('</div>')
 
         # ----- フォールバック: 上級者向け監視候補 -----
         if watch_candidates:
@@ -2431,48 +2810,106 @@ body {{
         return "\n".join(parts)
 
     def _watch_candidates_table(self, candidates: list) -> str:
-        """監視候補テーブルを生成する（products テーブル由来）。"""
+        """監視候補をカード形式で生成する（products テーブル由来）。"""
+        import re as _re
         # カメラ優先、次にゲーム機
         camera = [c for c in candidates if c["genre"] == "camera"]
         others = [c for c in candidates if c["genre"] != "camera"]
         ordered = camera + others
 
-        rows = []
+        GENRE_LABELS = {
+            "iphone": "スマホ", "smartphone": "スマホ",
+            "tablet": "タブレット",
+            "pc": "PC", "laptop": "PC",
+            "camera": "カメラ",
+            "game_console": "ゲーム機", "game": "ゲーム機",
+        }
+
+        cards = []
         for c in ordered:
-            price  = c["official_price"]
-            bp     = c["buyback_price"]
-            shop   = c["shop_name"] or "—"
-            flags  = "・".join(c["flags"]) if c["flags"] else "監視中"
-            # 買取価格がある場合は差額も表示
-            gap_str = ""
+            product_name = c.get('product_name', '') or ''
+            price  = c.get("official_price")
+            bp     = c.get("buyback_price")
+            shop   = c.get("shop_name") or "—"
+            flags  = "・".join(c["flags"]) if c.get("flags") else "監視中"
+            genre  = c.get("genre", "") or ""
+            brand  = c.get("brand", "") or ""
+            genre_label = GENRE_LABELS.get(genre.lower(), genre)
+            slug = _re.sub(r'[^a-z0-9]+', '-', product_name.lower()).strip('-') or 'product'
+            encoded_name = _urllib_parse.quote(product_name)
+
+            # 価格差
+            gap_str = '—'
             if bp and price:
                 gap = bp - price
-                gap_str = f'<br><span style="color:var(--green);font-size:0.82rem">'
-                gap_str += f'買取 ¥{bp:,} (差 {gap:+,}円)</span>'
-            buy_link = ""
-            if c.get("buyback_url"):
-                buy_link = f'<a href="{_esc(c["buyback_url"])}" target="_blank" rel="noopener" style="font-size:0.78rem;color:var(--accent)">買取ページ</a>'
+                gap_str = f'¥{bp:,} (差 {gap:+,}円)'
 
-            rows.append(
-                f"<tr class='watch-candidate-card'>"
-                f"<td><strong>{_esc(c['product_name'])}</strong>{gap_str}</td>"
-                f"<td>{_esc(fmt_price(price) if price else '—')}</td>"
-                f"<td>{_esc(shop)}</td>"
-                f"<td><span style='color:var(--yellow);font-size:0.82rem'>{_esc(flags)}</span></td>"
-                f"<td>{buy_link}</td>"
-                f"</tr>"
-            )
+            # 買取リンク
+            buy_btn = ''
+            if c.get("buyback_url") and str(c["buyback_url"]).startswith('http'):
+                buy_btn = f'<a href="{_esc(c["buyback_url"])}" class="adv-btn adv-btn-primary" target="_blank" rel="noopener">買取ページ</a>'
 
-        return f"""<div class="watch-card"><div class="table-wrap">
-<table>
-<thead><tr><th>商品</th><th>公式価格</th><th>最新買取店</th><th>注目ポイント</th><th>リンク</th></tr></thead>
-<tbody>{"".join(rows)}</tbody>
-</table>
-</div>
-<p style="color:var(--text-3);font-size:0.78rem;margin-top:10px;padding:0 4px;">
-※ 監視候補は価格差・希少性スコアが高い商品です。中古市場データ入手後に確定候補へ昇格します。
-</p>
-</div>"""
+            mercari_url = f'https://jp.mercari.com/search?keyword={encoded_name}'
+            yahoo_url   = f'https://auctions.yahoo.co.jp/search/search?p={encoded_name}'
+
+            cards.append(f"""<div class="adv-card watch-candidate-card" id="watch-{_esc(slug)}">
+  <div class="adv-card-stripe"></div>
+  <div class="adv-card-hd">
+    <div class="adv-card-info">
+      <div class="adv-genre-badge">{_esc(genre_label)}</div>
+      <div class="adv-brand">{_esc(brand)}</div>
+      <div class="adv-name">{_esc(product_name)}</div>
+    </div>
+    <div class="adv-card-badges">
+      <span class="badge badge-watch">&#128065; 監視中</span>
+    </div>
+  </div>
+  <div class="adv-price-grid">
+    <div class="adv-price-item">
+      <div class="adv-price-lbl">公式価格</div>
+      <div class="adv-price-val">{_esc(fmt_price(price) if price else '—')}</div>
+    </div>
+    <div class="adv-price-item">
+      <div class="adv-price-lbl">最高買取価格</div>
+      <div class="adv-price-val highlight">{_esc(gap_str)}</div>
+    </div>
+    <div class="adv-price-item">
+      <div class="adv-price-lbl">買取店</div>
+      <div class="adv-price-val">{_esc(shop)}</div>
+    </div>
+    <div class="adv-price-item">
+      <div class="adv-price-lbl">注目ポイント</div>
+      <div class="adv-price-val" style="font-size:0.8rem;color:var(--amber);">{_esc(flags)}</div>
+    </div>
+  </div>
+  <div class="adv-links-row">
+    {buy_btn}
+    <a href="{_esc(mercari_url)}" class="adv-btn adv-btn-mercari" target="_blank" rel="noopener">メルカリで探す</a>
+    <a href="{_esc(yahoo_url)}" class="adv-btn adv-btn-yahoo" target="_blank" rel="noopener">ヤフオク</a>
+  </div>
+  <div class="overseas-links-section">
+    <div class="overseas-section-hd">&#127758; 海外相場を確認</div>
+    <div class="overseas-chips-row">
+      <a href="https://www.ebay.com/sch/i.html?_nkw={encoded_name}&LH_Sold=1&LH_Complete=1" class="oc-chip blue overseas-btn" target="_blank" rel="noopener">&#128230; eBay 落札済み</a>
+      <a href="https://stockx.com/search?s={encoded_name}" class="oc-chip green overseas-btn" target="_blank" rel="noopener">&#128200; StockX</a>
+    </div>
+  </div>
+  <div class="adv-caution">
+    <span>&#9888;&#65039;</span> 監視候補は価格差・希少性スコアが高い商品です。中古市場データ入手後に確定候補へ昇格します。
+  </div>
+</div>""")
+
+        if not cards:
+            return '<p style="color:var(--ink3);padding:16px 0;">監視候補がありません。</p>'
+
+        return (
+            '<div class="adv-cards-grid">\n'
+            + '\n'.join(cards)
+            + '\n</div>\n'
+            + '<p style="color:var(--text-3);font-size:0.78rem;margin-top:10px;padding:0 4px;">'
+            + '※ 監視候補は価格差・希少性スコアが高い商品です。中古市場データ入手後に確定候補へ昇格します。'
+            + '</p>'
+        )
 
     def _domestic_secondary_links(self, product_name: str) -> str:
         """国内二次流通検索リンクをチップ形式で生成する。"""
@@ -2639,7 +3076,7 @@ body {{
         return '\n'.join(parts)
 
     def _section_sedori_calculator(self) -> str:
-        """せどり計算機タブ（純JS）。deploy-check用: sedori-calculator, id=sedori-calc-section"""
+        """せどり計算機タブ（TradingView風デザイン、純JS）。deploy-check用: sedori-calculator, id=sedori-calc-section"""
         return """<div class="sedori-calculator" id="sedori-calc-section">
 <div class="sec-head"><div class="sec-title">&#129518; せどり計算機</div></div>
 
@@ -2649,102 +3086,110 @@ body {{
 初心者は「公式購入 → 国内買取」、上級者は「国内中古仕入れ → 海外売却」を選んでください。
 </div>
 
-<!-- 内部タブ -->
-<div style="display:flex;gap:0;border-bottom:1px solid var(--card-border);margin-bottom:24px;" id="sedori-inner-tabs">
-  <button onclick="sedoriSwitchTab('beginner')" id="sedori-tab-btn-beginner"
-    style="flex-shrink:0;background:transparent;border:none;border-bottom:2px solid var(--violet);
-    padding:12px 22px;font-size:0.875rem;font-weight:700;color:var(--violet);cursor:pointer;
-    margin-bottom:-1px;font-family:var(--font);">
-    &#128100; 初心者用（公式→国内買取）
+<!-- タブ切り替え -->
+<div class="sedori-tab-nav">
+  <button class="sedori-tab-btn active" id="stab-beginner" onclick="sedoriTab('beginner')">
+    &#128100; 初心者用<br><small>公式購入 → 国内買取</small>
   </button>
-  <button onclick="sedoriSwitchTab('advanced')" id="sedori-tab-btn-advanced"
-    style="flex-shrink:0;background:transparent;border:none;border-bottom:2px solid transparent;
-    padding:12px 22px;font-size:0.875rem;font-weight:500;color:var(--ink3);cursor:pointer;
-    margin-bottom:-1px;font-family:var(--font);">
-    &#128269; 上級者用（国内中古→海外売却）
+  <button class="sedori-tab-btn" id="stab-advanced" onclick="sedoriTab('advanced')">
+    &#128269; 上級者用<br><small>国内中古 → 海外売却</small>
   </button>
 </div>
 
-<!-- 初心者用フォーム -->
-<div id="sedori-panel-beginner" style="display:block;">
-  <div class="ranking-card" style="padding:24px;">
-    <div class="ranking-hd">&#128100; 初心者向け計算 — 公式購入 &#8594; 国内買取売却</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-top:20px;">
-      <div>
-        <label style="font-size:0.75rem;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:6px;">公式購入価格（円）</label>
-        <input type="number" id="b-buy-price" placeholder="例: 159800" min="0"
-          style="width:100%;padding:10px 14px;border:1px solid var(--card-border);border-radius:var(--radius-md);
-          font-size:1rem;font-family:var(--font);color:var(--ink);background:var(--card-bg);">
-      </div>
-      <div>
-        <label style="font-size:0.75rem;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:6px;">最高買取価格（円）</label>
-        <input type="number" id="b-sell-price" placeholder="例: 175000" min="0"
-          style="width:100%;padding:10px 14px;border:1px solid var(--card-border);border-radius:var(--radius-md);
-          font-size:1rem;font-family:var(--font);color:var(--ink);background:var(--card-bg);">
-      </div>
-      <div>
-        <label style="font-size:0.75rem;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:6px;">送料・手数料（円）</label>
-        <input type="number" id="b-fee" value="1800" min="0"
-          style="width:100%;padding:10px 14px;border:1px solid var(--card-border);border-radius:var(--radius-md);
-          font-size:1rem;font-family:var(--font);color:var(--ink);background:var(--card-bg);">
+<!-- 初心者パネル -->
+<div id="sedori-panel-beginner" class="sedori-panel">
+  <div class="sedori-layout">
+    <!-- 左: 入力 -->
+    <div class="sedori-input-col">
+      <div class="sedori-card">
+        <div class="sedori-card-title">&#128176; 入力値</div>
+        <div class="sedori-field">
+          <label class="sedori-lbl">公式購入価格（円）</label>
+          <input type="number" id="b-buy" class="sedori-input" placeholder="159800" oninput="calcB()">
+        </div>
+        <div class="sedori-field">
+          <label class="sedori-lbl">最高買取価格（円）</label>
+          <input type="number" id="b-sell" class="sedori-input" placeholder="175000" oninput="calcB()">
+        </div>
+        <div class="sedori-field">
+          <label class="sedori-lbl">送料（円）</label>
+          <input type="number" id="b-ship" class="sedori-input" value="1000" oninput="calcB()">
+        </div>
+        <div class="sedori-field">
+          <label class="sedori-lbl">振込手数料（円）</label>
+          <input type="number" id="b-transfer" class="sedori-input" value="300" oninput="calcB()">
+        </div>
+        <div class="sedori-field">
+          <label class="sedori-lbl">交通費（円）</label>
+          <input type="number" id="b-transport" class="sedori-input" value="500" oninput="calcB()">
+        </div>
+        <div class="sedori-field">
+          <label class="sedori-lbl">その他コスト（円）</label>
+          <input type="number" id="b-other" class="sedori-input" value="0" oninput="calcB()">
+        </div>
       </div>
     </div>
-    <button onclick="calcBeginner()"
-      style="margin-top:20px;background:linear-gradient(135deg,var(--profit),var(--profit-dark));
-      color:#fff;border:none;padding:12px 28px;border-radius:var(--radius-md);
-      font-size:0.95rem;font-weight:800;cursor:pointer;font-family:var(--font);">
-      &#129518; 計算する
-    </button>
-    <div id="b-result" style="display:none;margin-top:24px;background:var(--surface2);
-      border:1px solid var(--card-border);border-radius:var(--radius-lg);padding:20px;">
+    <!-- 右: 結果 -->
+    <div class="sedori-result-col">
+      <div class="sedori-result-card">
+        <div class="sedori-result-title">&#128202; 計算結果</div>
+        <div class="sedori-result-main" id="b-main-profit">—</div>
+        <div class="sedori-result-label">実質利益</div>
+        <div class="sedori-result-rows" id="b-result-rows"></div>
+        <div class="sedori-breakeven-wrap">
+          <div class="sedori-breakeven-lbl">損益分岐買取価格</div>
+          <div class="sedori-breakeven-val" id="b-breakeven">—</div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- 上級者用フォーム -->
-<div id="sedori-panel-advanced" style="display:none;">
-  <div class="ranking-card" style="padding:24px;">
-    <div class="ranking-hd">&#128269; 上級者向け計算 — 国内中古仕入れ &#8594; 海外売却</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-top:20px;">
-      <div>
-        <label style="font-size:0.75rem;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:6px;">国内仕入れ価格（円）</label>
-        <input type="number" id="a-buy-price" placeholder="例: 120000" min="0"
-          style="width:100%;padding:10px 14px;border:1px solid var(--card-border);border-radius:var(--radius-md);
-          font-size:1rem;font-family:var(--font);color:var(--ink);background:var(--card-bg);">
-      </div>
-      <div>
-        <label style="font-size:0.75rem;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:6px;">海外売却予想価格（USD）</label>
-        <input type="number" id="a-sell-usd" placeholder="例: 1200" min="0"
-          style="width:100%;padding:10px 14px;border:1px solid var(--card-border);border-radius:var(--radius-md);
-          font-size:1rem;font-family:var(--font);color:var(--ink);background:var(--card-bg);">
-      </div>
-      <div>
-        <label style="font-size:0.75rem;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:6px;">為替レート（円/USD）</label>
-        <input type="number" id="a-fx" value="150" min="1"
-          style="width:100%;padding:10px 14px;border:1px solid var(--card-border);border-radius:var(--radius-md);
-          font-size:1rem;font-family:var(--font);color:var(--ink);background:var(--card-bg);">
-      </div>
-      <div>
-        <label style="font-size:0.75rem;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:6px;">輸送・関税コスト（円）</label>
-        <input type="number" id="a-shipping" value="5000" min="0"
-          style="width:100%;padding:10px 14px;border:1px solid var(--card-border);border-radius:var(--radius-md);
-          font-size:1rem;font-family:var(--font);color:var(--ink);background:var(--card-bg);">
-      </div>
-      <div>
-        <label style="font-size:0.75rem;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:6px;">プラットフォーム手数料率（%）</label>
-        <input type="number" id="a-fee-rate" value="3.49" step="0.01" min="0" max="100"
-          style="width:100%;padding:10px 14px;border:1px solid var(--card-border);border-radius:var(--radius-md);
-          font-size:1rem;font-family:var(--font);color:var(--ink);background:var(--card-bg);">
+<!-- 上級者パネル -->
+<div id="sedori-panel-advanced" class="sedori-panel" style="display:none;">
+  <div class="sedori-layout">
+    <!-- 左: 入力 -->
+    <div class="sedori-input-col">
+      <div class="sedori-card">
+        <div class="sedori-card-title">&#128176; 入力値</div>
+        <div class="sedori-field">
+          <label class="sedori-lbl">国内仕入れ価格（円）</label>
+          <input type="number" id="a-buy" class="sedori-input" placeholder="120000" oninput="calcA()">
+        </div>
+        <div class="sedori-field">
+          <label class="sedori-lbl">海外売却予想価格（USD）</label>
+          <input type="number" id="a-usd" class="sedori-input" placeholder="1200" oninput="calcA()">
+        </div>
+        <div class="sedori-field">
+          <label class="sedori-lbl">為替レート（円/USD）</label>
+          <input type="number" id="a-fx" class="sedori-input" value="150" oninput="calcA()">
+        </div>
+        <div class="sedori-field">
+          <label class="sedori-lbl">海外送料・関税（円）</label>
+          <input type="number" id="a-ship" class="sedori-input" value="5000" oninput="calcA()">
+        </div>
+        <div class="sedori-field">
+          <label class="sedori-lbl">販売手数料率（%）</label>
+          <input type="number" id="a-fee" class="sedori-input" value="13" step="0.1" oninput="calcA()">
+        </div>
+        <div class="sedori-field">
+          <label class="sedori-lbl">決済手数料率（%）</label>
+          <input type="number" id="a-pay" class="sedori-input" value="3.49" step="0.01" oninput="calcA()">
+        </div>
       </div>
     </div>
-    <button onclick="calcAdvanced()"
-      style="margin-top:20px;background:linear-gradient(135deg,var(--violet),var(--violet-dark));
-      color:#fff;border:none;padding:12px 28px;border-radius:var(--radius-md);
-      font-size:0.95rem;font-weight:800;cursor:pointer;font-family:var(--font);">
-      &#129518; 計算する
-    </button>
-    <div id="a-result" style="display:none;margin-top:24px;background:var(--surface2);
-      border:1px solid var(--card-border);border-radius:var(--radius-lg);padding:20px;">
+    <!-- 右: 結果 -->
+    <div class="sedori-result-col">
+      <div class="sedori-result-card">
+        <div class="sedori-result-title">&#128202; 計算結果</div>
+        <div class="sedori-result-main" id="a-main-profit">—</div>
+        <div class="sedori-result-label">実質利益</div>
+        <div class="sedori-result-rows" id="a-result-rows"></div>
+        <div class="sedori-breakeven-wrap">
+          <div class="sedori-breakeven-lbl">損益分岐海外価格（USD）</div>
+          <div class="sedori-breakeven-val" id="a-breakeven">—</div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -2753,84 +3198,87 @@ body {{
 
 <script>
 (function() {
-  function sedoriSwitchTab(tab) {
-    var panels = ['beginner', 'advanced'];
-    panels.forEach(function(t) {
-      var panel = document.getElementById('sedori-panel-' + t);
-      var btn = document.getElementById('sedori-tab-btn-' + t);
-      if (panel) panel.style.display = (t === tab) ? 'block' : 'none';
-      if (btn) {
-        if (t === tab) {
-          btn.style.borderBottomColor = 'var(--violet)';
-          btn.style.color = 'var(--violet)';
-          btn.style.fontWeight = '700';
-        } else {
-          btn.style.borderBottomColor = 'transparent';
-          btn.style.color = 'var(--ink3)';
-          btn.style.fontWeight = '500';
-        }
-      }
+  function fmtJPY(n) { return '¥' + Math.round(n).toLocaleString('ja-JP'); }
+  function fmtUSD(n) { return '$' + n.toFixed(2); }
+  function fmtRate(n) { return n.toFixed(1) + '%'; }
+
+  function setMainProfit(elId, val) {
+    var el = document.getElementById(elId);
+    if (!el) return;
+    el.textContent = fmtJPY(val);
+    if (val < 0) el.classList.add('negative'); else el.classList.remove('negative');
+  }
+
+  function makeRow(lbl, val) {
+    return '<div class="sedori-result-row"><span class="sedori-result-row-lbl">'
+      + lbl + '</span><span class="sedori-result-row-val">' + val + '</span></div>';
+  }
+
+  function calcB() {
+    var buy = parseFloat(document.getElementById('b-buy').value) || 0;
+    var sell = parseFloat(document.getElementById('b-sell').value) || 0;
+    var ship = parseFloat(document.getElementById('b-ship').value) || 0;
+    var transfer = parseFloat(document.getElementById('b-transfer').value) || 0;
+    var transport = parseFloat(document.getElementById('b-transport').value) || 0;
+    var other = parseFloat(document.getElementById('b-other').value) || 0;
+    var totalCost = ship + transfer + transport + other;
+    var gross = sell - buy;
+    var net = gross - totalCost;
+    var rate = buy > 0 ? (net / buy * 100) : 0;
+    var breakeven = buy + totalCost;
+
+    setMainProfit('b-main-profit', net);
+    var rows = document.getElementById('b-result-rows');
+    if (rows) rows.innerHTML =
+      makeRow('公式購入価格', fmtJPY(buy)) +
+      makeRow('最高買取価格', fmtJPY(sell)) +
+      makeRow('粗利', fmtJPY(gross)) +
+      makeRow('諸経費合計', '- ' + fmtJPY(totalCost)) +
+      makeRow('利益率', fmtRate(rate));
+    var be = document.getElementById('b-breakeven');
+    if (be) be.textContent = fmtJPY(breakeven);
+  }
+  window.calcB = calcB;
+
+  function calcA() {
+    var buy = parseFloat(document.getElementById('a-buy').value) || 0;
+    var usd = parseFloat(document.getElementById('a-usd').value) || 0;
+    var fx = parseFloat(document.getElementById('a-fx').value) || 150;
+    var ship = parseFloat(document.getElementById('a-ship').value) || 0;
+    var feeRate = parseFloat(document.getElementById('a-fee').value) || 13;
+    var payRate = parseFloat(document.getElementById('a-pay').value) || 3.49;
+
+    var sellJPY = usd * fx;
+    var platformFee = sellJPY * feeRate / 100;
+    var payFee = sellJPY * payRate / 100;
+    var totalFees = ship + platformFee + payFee;
+    var net = sellJPY - buy - totalFees;
+    var rate = (buy + totalFees) > 0 ? (net / (buy + totalFees) * 100) : 0;
+    var beUSD = fx > 0 ? ((buy + totalFees) / (fx * (1 - (feeRate + payRate) / 100))) : 0;
+
+    setMainProfit('a-main-profit', net);
+    var rows = document.getElementById('a-result-rows');
+    if (rows) rows.innerHTML =
+      makeRow('円換算売却額（' + usd + 'USD×' + fx + '）', fmtJPY(sellJPY)) +
+      makeRow('国内仕入価格', fmtJPY(buy)) +
+      makeRow('海外送料・関税', '- ' + fmtJPY(ship)) +
+      makeRow('販売手数料', '- ' + fmtJPY(platformFee)) +
+      makeRow('決済手数料', '- ' + fmtJPY(payFee)) +
+      makeRow('利益率', fmtRate(rate));
+    var be = document.getElementById('a-breakeven');
+    if (be) be.textContent = beUSD > 0 ? fmtUSD(beUSD) : '—';
+  }
+  window.calcA = calcA;
+
+  function sedoriTab(tab) {
+    ['beginner', 'advanced'].forEach(function(t) {
+      var p = document.getElementById('sedori-panel-' + t);
+      var b = document.getElementById('stab-' + t);
+      if (p) p.style.display = t === tab ? 'block' : 'none';
+      if (b) b.classList.toggle('active', t === tab);
     });
   }
-  window.sedoriSwitchTab = sedoriSwitchTab;
-
-  function fmtJPY(n) {
-    return '¥' + Math.round(n).toLocaleString('ja-JP');
-  }
-  function fmtRate(n) {
-    return n.toFixed(1) + '%';
-  }
-  function resultRow(label, value, highlight) {
-    var color = highlight ? 'color:var(--profit-dark);font-size:1.2rem;font-weight:900;' : '';
-    return '<div style="display:flex;justify-content:space-between;align-items:center;'
-      + 'padding:8px 0;border-bottom:1px solid var(--card-border);">'
-      + '<span style="font-size:0.85rem;color:var(--ink2);">' + label + '</span>'
-      + '<span style="' + color + 'font-weight:700;">' + value + '</span>'
-      + '</div>';
-  }
-
-  function calcBeginner() {
-    var buyPrice = parseFloat(document.getElementById('b-buy-price').value) || 0;
-    var sellPrice = parseFloat(document.getElementById('b-sell-price').value) || 0;
-    var fee = parseFloat(document.getElementById('b-fee').value) || 0;
-    var grossProfit = sellPrice - buyPrice;
-    var netProfit = grossProfit - fee;
-    var profitRate = buyPrice > 0 ? (netProfit / buyPrice * 100) : 0;
-    var html = resultRow('公式購入価格', fmtJPY(buyPrice), false)
-      + resultRow('最高買取価格', fmtJPY(sellPrice), false)
-      + resultRow('粗利', fmtJPY(grossProfit), false)
-      + resultRow('推定コスト（送料等）', '- ' + fmtJPY(fee), false)
-      + resultRow('実質利益', fmtJPY(netProfit), true)
-      + resultRow('利益率', fmtRate(profitRate), false);
-    var el = document.getElementById('b-result');
-    el.innerHTML = html;
-    el.style.display = 'block';
-  }
-  window.calcBeginner = calcBeginner;
-
-  function calcAdvanced() {
-    var buyPrice = parseFloat(document.getElementById('a-buy-price').value) || 0;
-    var sellUSD = parseFloat(document.getElementById('a-sell-usd').value) || 0;
-    var fx = parseFloat(document.getElementById('a-fx').value) || 150;
-    var shipping = parseFloat(document.getElementById('a-shipping').value) || 0;
-    var feeRate = parseFloat(document.getElementById('a-fee-rate').value) || 3.49;
-    var sellJPY = sellUSD * fx;
-    var platformFee = sellJPY * feeRate / 100;
-    var totalCost = buyPrice + shipping + platformFee;
-    var netProfit = sellJPY - totalCost;
-    var profitRate = totalCost > 0 ? (netProfit / totalCost * 100) : 0;
-    var html = resultRow('売却額（円換算 ' + sellUSD + 'USD × ' + fx + '円）', fmtJPY(sellJPY), false)
-      + resultRow('国内仕入れ価格', fmtJPY(buyPrice), false)
-      + resultRow('輸送・関税コスト', fmtJPY(shipping), false)
-      + resultRow('プラットフォーム手数料（' + feeRate + '%）', fmtJPY(platformFee), false)
-      + resultRow('粗利（売却額 - 仕入れ）', fmtJPY(sellJPY - buyPrice), false)
-      + resultRow('実質利益（全コスト差引）', fmtJPY(netProfit), true)
-      + resultRow('利益率', fmtRate(profitRate), false);
-    var el = document.getElementById('a-result');
-    el.innerHTML = html;
-    el.style.display = 'block';
-  }
-  window.calcAdvanced = calcAdvanced;
+  window.sedoriTab = sedoriTab;
 })();
 </script>"""
 

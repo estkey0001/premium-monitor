@@ -1401,6 +1401,11 @@ a[href], button, [role="tab"], [role="button"],
   color: var(--ink4); font-size: 0.7rem; font-weight: 600;
   background: var(--surface2); padding: 2px 7px; border-radius: 99px;
 }}
+.freshness-warn {{
+  color: #B45309; font-size: 0.7rem; font-weight: 700;
+  background: rgba(180,83,9,0.10); padding: 2px 7px; border-radius: 99px;
+  border: 1px solid rgba(180,83,9,0.20);
+}}
 
 /* Action Buttons */
 .card-actions {{
@@ -2997,21 +3002,124 @@ tr.sc-route-review {{ background: #FFFBEB; }}
   </div>
 </section>"""
 
-    def _section_lottery(self, lottery_events: list) -> str:
-        """抽選情報セクション"""
-        parts = []
-        parts.append('<div id="category-lottery" class="info-banner violet"><div class="ib-title">&#127915; 抽選情報</div>各メーカーの抽選・予約情報です。公式ページで最新情報をご確認ください。</div>')
+    # 抽選情報リファレンスカード（DBデータがない場合に表示する静的カード）
+    _LOTTERY_REFERENCE_ITEMS = [
+        {
+            "product_name": "RICOH GR IV",
+            "brand": "RICOH",
+            "status": "upcoming",
+            "note": "発売未定。公式ページで最新情報をご確認ください。",
+            "url": "https://www.ricoh-imaging.co.jp/japan/products/",
+            "sale_method": "未定",
+        },
+        {
+            "product_name": "RICOH GR IV HDF",
+            "brand": "RICOH",
+            "status": "upcoming",
+            "note": "発売未定。公式ページで最新情報をご確認ください。",
+            "url": "https://www.ricoh-imaging.co.jp/japan/products/",
+            "sale_method": "未定",
+        },
+        {
+            "product_name": "FUJIFILM X100VI",
+            "brand": "FUJIFILM",
+            "status": "active",
+            "note": "抽選・予約受付情報は公式ページでご確認ください。",
+            "url": "https://fujifilm-x.com/ja-jp/products/cameras/x100vi/",
+            "sale_method": "抽選 / 通常販売（在庫次第）",
+        },
+        {
+            "product_name": "Nintendo Switch 2 限定モデル",
+            "brand": "Nintendo",
+            "status": "upcoming",
+            "note": "限定モデルの抽選情報は任天堂公式でご確認ください。",
+            "url": "https://www.nintendo.co.jp/hardware/nintendo-switch2/",
+            "sale_method": "抽選",
+        },
+        {
+            "product_name": "PlayStation 5 Pro / 限定エディション",
+            "brand": "Sony Interactive Entertainment",
+            "status": "active",
+            "note": "抽選・在庫状況はPlayStation公式でご確認ください。",
+            "url": "https://www.jp.playstation.com/products/playstation5/",
+            "sale_method": "抽選 / 通常販売（在庫次第）",
+        },
+    ]
 
-        if not lottery_events:
-            parts.append('<div class="empty-state"><span class="empty-icon">&#127915;</span>現在の抽選情報は未確認です。各公式ページでご確認ください。</div>')
-            parts.append('''<div class="lottery-official-links">
-<a href="https://www.jp.playstation.com/products/playstation5/" target="_blank" rel="noopener" class="cat-maker-chip">PS5 公式</a>
-<a href="https://www.nintendo.co.jp/hardware/nintendo-switch2/" target="_blank" rel="noopener" class="cat-maker-chip">Switch 2 公式</a>
-<a href="https://www.apple.com/jp/" target="_blank" rel="noopener" class="cat-maker-chip">Apple 公式</a>
-<a href="https://fujifilm-x.com/ja-jp/" target="_blank" rel="noopener" class="cat-maker-chip">FUJIFILM 公式</a>
-<a href="https://www.ricoh-imaging.co.jp/japan/" target="_blank" rel="noopener" class="cat-maker-chip">RICOH Imaging 公式</a>
+    def _section_lottery(self, lottery_events: list) -> str:
+        """抽選情報セクション（DBデータ＋リファレンスカード）"""
+        parts = []
+        parts.append('<div id="category-lottery" class="info-banner violet"><div class="ib-title">&#127915; 抽選情報</div>'
+                     '各メーカーの抽選・予約情報です。公式ページで最新情報をご確認ください。'
+                     '&#9888; 価格・状態は変動します。必ず公式サイトでご確認ください。</div>')
+
+        # ── DBデータがある場合 ──
+        if lottery_events:
+            for ev in lottery_events:
+                if not isinstance(ev, dict):
+                    try:
+                        ev = dict(ev)
+                    except Exception:
+                        continue
+                parts.append(self._lottery_card_html(ev))
+
+        # ── リファレンスカード（常時表示） ──
+        parts.append('<div class="sec-head" style="margin-top:32px"><div class="sec-title">&#128204; 注目商品の抽選・販売情報（公式リンク）</div></div>')
+        parts.append('<div class="lottery-ref-grid">')
+        for item in self._LOTTERY_REFERENCE_ITEMS:
+            parts.append(self._lottery_card_html(item, is_reference=True))
+        parts.append('</div>')
+
+        # ── 公式ページリンク集 ──
+        parts.append('''<div class="lottery-official-links" style="margin-top:20px">
+<a href="https://www.jp.playstation.com/products/playstation5/" target="_blank" rel="noopener" class="cat-maker-chip" data-track="lottery_click">PS5 公式</a>
+<a href="https://www.nintendo.co.jp/hardware/nintendo-switch2/" target="_blank" rel="noopener" class="cat-maker-chip" data-track="lottery_click">Switch 2 公式</a>
+<a href="https://www.apple.com/jp/" target="_blank" rel="noopener" class="cat-maker-chip" data-track="lottery_click">Apple 公式</a>
+<a href="https://fujifilm-x.com/ja-jp/" target="_blank" rel="noopener" class="cat-maker-chip" data-track="lottery_click">FUJIFILM 公式</a>
+<a href="https://www.ricoh-imaging.co.jp/japan/" target="_blank" rel="noopener" class="cat-maker-chip" data-track="lottery_click">RICOH 公式</a>
 </div>''')
-            return '\n'.join(parts)
+
+        return '\n'.join(parts)
+
+    def _lottery_card_html(self, ev: dict, is_reference: bool = False) -> str:
+        """抽選情報カード HTML を生成する。"""
+        status = ev.get("status", "unknown")
+        status_label = {"active": "受付中 / 販売中", "upcoming": "近日開始", "closed": "終了", "unknown": "未確認"}.get(status, status)
+        status_cls = {"active": "lottery-status-open", "upcoming": "lottery-status-upcoming", "closed": "lottery-status-closed"}.get(status, "lottery-status-unknown")
+        url = ev.get("url", "")
+        link_btn = (f'<a href="{_esc(url)}" target="_blank" rel="noopener" class="btn btn-secondary" data-track="lottery_click">&#127915; 公式ページへ</a>'
+                    if url else '<span class="no-link-shop" style="font-size:0.78rem;color:var(--ink3)">公式ページで確認してください</span>')
+        entry_start = ev.get("entry_start_at", "") or ""
+        entry_end   = ev.get("entry_end_at", "") or ""
+        result_at   = ev.get("result_announcement_at", "") or ""
+        official_price = ev.get("official_price", "") or ev.get("price", "") or ""
+        sale_method = ev.get("sale_method", "") or ""
+        note = ev.get("note", "") or ""
+        ref_badge = '<span style="font-size:0.65rem;background:#7C5CFC22;color:#7C5CFC;padding:1px 7px;border-radius:99px;font-weight:700">公式リンク</span>' if is_reference else ''
+
+        date_row = ""
+        if entry_start or entry_end:
+            date_row = f'<span>&#128197; 受付: {_esc(str(entry_start))} 〜 {_esc(str(entry_end))}</span>'
+        result_row = f'<span>&#128220; 当選発表: {_esc(str(result_at))}</span>' if result_at else ''
+        price_row  = f'<span>&#128176; 公式価格: {_esc(str(official_price))}</span>' if official_price else ''
+        method_row = f'<span>&#127919; 販売方式: {_esc(str(sale_method))}</span>' if sale_method else ''
+        note_row   = f'<div class="lottery-note">{_esc(str(note))}</div>' if note else ''
+
+        return f'''<div class="lottery-card{'  lottery-ref-card' if is_reference else ''}">
+  <div class="lottery-card-header">
+    <div class="lottery-name">{_esc(ev.get("product_name", ""))} {ref_badge}</div>
+    <span class="lottery-status-badge {status_cls}">{_esc(status_label)}</span>
+  </div>
+  <div class="lottery-meta">
+    <span>&#127468; {_esc(ev.get("brand", ""))}</span>
+    {price_row}
+    {method_row}
+    {date_row}
+    {result_row}
+  </div>
+  {note_row}
+  {link_btn}
+</div>'''
 
         for ev in lottery_events:
             if not isinstance(ev, dict):
@@ -3076,7 +3184,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                                               camera_watch=camera_watch,
                                               camera_beginner_deals=_camera_from_beginner)
         surge_html       = self._tab_surge(buyback_alerts)
-        ranking_html     = self._tab_ranking(all_deals, iphone_deals, game_deals)
+        ranking_html     = self._tab_ranking(all_deals, iphone_deals, game_deals, sedori_routes=sedori_routes)
         new_products_html = self._section_new_products()
         sedori_html      = self._tab_sedori(sedori_routes or [])
         lottery_html     = self._section_lottery(lottery_events)
@@ -3377,7 +3485,7 @@ python3 -m src.cli calculate-sedori-routes</pre>
         return "\n".join(parts)
 
     def _freshness_label(self, observed_at_str: str, data_source: str) -> str:
-        """データ鮮度ラベルを返す。24時間超はwarningクラス。"""
+        """データ鮮度ラベルを返す。24h→参考値、48h+→要確認バッジ。"""
         try:
             if observed_at_str:
                 dt = datetime.fromisoformat(observed_at_str)
@@ -3390,22 +3498,27 @@ python3 -m src.cli calculate-sedori-routes</pre>
                 elif hours < 24:
                     freshness = f"{int(hours)}時間前"
                     css = "freshness-recent"
-                else:
-                    freshness = f"{int(hours)}時間以上前（参考値）"
+                elif hours < 48:
+                    freshness = f"{int(hours)}時間前（参考値）"
                     css = "freshness-stale"
+                else:
+                    days = int(hours // 24)
+                    freshness = f"{days}日前（要確認）"
+                    css = "freshness-warn"
             else:
                 freshness = "不明"
                 css = "freshness-unknown"
         except Exception:
             freshness = "不明"
             css = "freshness-unknown"
+        # 手動データは出所ラベルを付ける
         source_label = {
-            "live": "🟢live",
-            "manual_today": "📋当日手動",
-            "manual_recent": "📋手動(24h)",
-            "stale": "⚠️参考値",
-        }.get(data_source, data_source)
-        return f'<span class="{css}">{_esc(source_label)} / {_esc(freshness)}</span>'
+            "live":           "🟢live",
+            "manual_today":   "📋手動更新データ",
+            "manual_recent":  "📋手動(24h)",
+            "stale":          "⚠️参考値",
+        }.get(data_source, f"📋{data_source}" if data_source else "")
+        return f'<span class="{css}" title="observed_at: {_esc(str(observed_at_str))}">{_esc(source_label)} / {_esc(freshness)}</span>'
 
     # ----- Tab: 初級者向け -----
 
@@ -3594,9 +3707,7 @@ python3 -m src.cli calculate-sedori-routes</pre>
         buyback_btn = ''
         verified_url = ''
         if hasattr(d, 'best_buyback_url') and d.best_buyback_url:
-            _skip = ('mobileno1.com', 'kaitori-1chome.com', 'kaitori-shouten.com')
-            if not any(dom in d.best_buyback_url for dom in _skip):
-                verified_url = d.best_buyback_url
+            verified_url = d.best_buyback_url
         if verified_url:
             buyback_btn = f'<a href="{_esc(verified_url)}" target="_blank" rel="noopener" class="btn btn-primary" data-track="product_click" data-product-id="{pid}" data-shop="{shop}">&#128176; {_esc(shop)}で売る</a>'
         else:
@@ -3620,11 +3731,15 @@ python3 -m src.cli calculate-sedori-routes</pre>
                 profit_str = f'+¥{profit:,}' if profit >= 0 else f'-¥{abs(profit):,}'
                 url_val = r.get('buyback_url', '')
                 verified = r.get('link_verified', False)
-                _skip_d = ('mobileno1.com', 'kaitori-1chome.com', 'kaitori-shouten.com')
-                if url_val and not any(dom in url_val for dom in _skip_d):
-                    shop_display = f'<a href="{_esc(url_val)}" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="{pid}">{sname}</a>'
+                if url_val:
+                    link_label = sname if verified else f'{sname}（要確認）'
+                    shop_display = (
+                        f'<a href="{_esc(url_val)}" target="_blank" rel="noopener" '
+                        f'data-track="buyback_click" data-product-id="{pid}" '
+                        f'title="公式サイトで最新価格をご確認ください">{link_label}</a>'
+                    )
                 else:
-                    shop_display = f'{sname}（価格のみ）'
+                    shop_display = f'<span title="公式サイトで要確認">{sname}<small style="color:var(--ink3);font-size:0.7em"> 公式で要確認</small></span>'
                 rank_cls = 'gold' if i == 1 else ('silver' if i == 2 else '')
                 diff_cls = ' neg' if profit < 0 else ''
                 freshness = self._freshness_label(r.get('observed_at', ''), r.get('data_source', 'manual_today'))
@@ -4010,7 +4125,7 @@ python3 -m src.cli calculate-sedori-routes</pre>
 
     # ----- Tab: 買取ランキング -----
 
-    def _tab_ranking(self, all_deals, iphone_deals, game_deals) -> str:
+    def _tab_ranking(self, all_deals, iphone_deals, game_deals, sedori_routes=None) -> str:
         # 各カテゴリのデータ準備
         profitable = sorted([d for d in all_deals if d.net_profit_jpy > 0],
                             key=lambda d: d.net_profit_jpy, reverse=True)
@@ -4053,6 +4168,40 @@ python3 -m src.cli calculate-sedori-routes</pre>
         camera_rows  = _rank_rows_html(camera_profitable[:8])
         game_rows    = _rank_rows_html(game_profitable[:8])
 
+        # ── せどりルートランキング ──
+        sedori_rows_html = ''
+        _routes = sedori_routes or []
+        if _routes:
+            srows = []
+            for i, r in enumerate(_routes[:8], 1):
+                rank_cls = 'r1' if i == 1 else ('r2' if i == 2 else ('r3' if i == 3 else ''))
+                crown = '&#128081;' if i == 1 else str(i)
+                row_cls = ' rank-1' if i == 1 else ''
+                _raw = getattr(r, 'product_alias', '') or getattr(r, 'product_id', '')
+                _alias = _raw[len('prod_'):] if _raw.startswith('prod_') else _raw
+                pname = _esc(getattr(r, 'product_name', _alias))
+                buy_s = _esc(getattr(r, 'buy_shop_name', ''))
+                sell_s = _esc(getattr(r, 'sell_shop_name', ''))
+                net = getattr(r, 'net_profit', 0)
+                rate = getattr(r, 'profit_rate', 0.0)
+                needs_review = getattr(r, 'needs_review', False)
+                review_badge = '<span class="badge" style="background:#FF9500;color:#fff;font-size:0.65rem;padding:1px 6px;border-radius:99px;margin-left:4px">要確認</span>' if needs_review else ''
+                srows.append(
+                    f'<div class="rank-row{row_cls} rank-row-clickable" '
+                    f'data-target-tab="sedori" data-target-id="" style="cursor:pointer">'
+                    f'<div class="rank-num {rank_cls}">{crown}</div>'
+                    f'<div class="rank-info">'
+                    f'<div class="rank-name rank-name-link">{pname}{review_badge}</div>'
+                    f'<div class="rank-meta">{buy_s} &rarr; {sell_s}</div>'
+                    f'</div>'
+                    f'<div><div class="rank-profit">{_esc(fmt_profit(net))}</div>'
+                    f'<div class="rank-rate">{rate*100:.1f}%</div></div>'
+                    f'</div>'
+                )
+            sedori_rows_html = ''.join(srows)
+        else:
+            sedori_rows_html = '<div class="empty-state"><span class="empty-icon">&#9636;</span>せどりルートデータなし</div>'
+
         return f"""<div class="sec-head"><div class="sec-title">&#127942; 買取ランキング</div></div>
 <div class="ranking-card">
   <div class="ranking-tabs">
@@ -4060,11 +4209,13 @@ python3 -m src.cli calculate-sedori-routes</pre>
     <button class="ranking-tab-btn" data-rtab="iphone">&#128241; iPhone</button>
     <button class="ranking-tab-btn" data-rtab="camera">&#128247; カメラ</button>
     <button class="ranking-tab-btn" data-rtab="game">&#127918; ゲーム機</button>
+    <button class="ranking-tab-btn" data-rtab="sedori">&#9636; せどり</button>
   </div>
   <div class="ranking-tab-panel active" id="rtab-all">{all_rows}</div>
   <div class="ranking-tab-panel" id="rtab-iphone">{iphone_rows}</div>
   <div class="ranking-tab-panel" id="rtab-camera">{camera_rows}</div>
   <div class="ranking-tab-panel" id="rtab-game">{game_rows}</div>
+  <div class="ranking-tab-panel" id="rtab-sedori">{sedori_rows_html}</div>
 </div>"""
 
     def _ranking_table(self, deals, show_category: bool = False) -> str:

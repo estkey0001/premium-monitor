@@ -83,22 +83,34 @@ kitamura:
     iphone:   "https://www.kitamura.co.jp/"
   note: "カメラのキタムラ（全国店舗・オンライン査定）"
 
-# ── 架空ドメイン・実在不明の買取店（URLなし） ─────────────
+# ── 実在確認済み買取店（追加）────────────────────────────
 
 mobile_ichiban:
   name: "モバイル一番"
-  top_url: ""            # mobileno1.com は実在しないため空欄
-  category_urls: {}
-  note: "URL未確認。LP上は価格のみ表示、リンクなし"
+  top_url: "https://www.mobile-ichiban.com/"
+  search_url_template: ""
+  category_urls:
+    iphone:   "https://www.mobile-ichiban.com/"
+    apple:    "https://www.mobile-ichiban.com/"
+    game_console: "https://www.mobile-ichiban.com/"
+  note: "モバイル一番（海峡通信株式会社）公式買取ページ"
 
 kaitori_shouten:
   name: "買取商店"
-  top_url: ""            # kaitori-shouten.com は実在しないため空欄
-  category_urls: {}
-  note: "URL未確認。LP上は価格のみ表示、リンクなし"
+  top_url: "https://www.kaitorishouten-co.jp/"
+  search_url_template: ""
+  category_urls:
+    iphone:   "https://www.kaitorishouten-co.jp/keitai"
+    apple:    "https://www.kaitorishouten-co.jp/keitai"
+    game_console: "https://www.kaitorishouten-co.jp/"
+  note: "買取商店公式（スマートフォン・ゲーム機買取）"
 
 kaitori_itchome:
   name: "買取一丁目"
-  top_url: ""            # kaitori-1chome.com は実在しないため空欄
-  category_urls: {}
-  note: "URL未確認。LP上は価格のみ表示、リンクなし"
+  top_url: "https://www.1-chome.com/"
+  search_url_template: ""
+  category_urls:
+    iphone:   "https://www.1-chome.com/mobile"
+    apple:    "https://www.1-chome.com/mobile"
+    game_console: "https://www.1-chome.com/"
+  note: "買取一丁目（秋葉原）公式スマートフォン買取ページ"

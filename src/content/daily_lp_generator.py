@@ -579,18 +579,40 @@ a[href], button, [role="tab"], [role="button"],
    ============================================================ */
 .hero {{
   background: linear-gradient(160deg, #0D0F1C 0%, #131629 50%, #0F1A2E 100%);
-  padding: 64px 0 56px;
+  padding: 88px 0 72px;
   position: relative; overflow: hidden;
+  min-height: min(92vh, 860px);
+  display: flex; align-items: center;
+}}
+
+/* ラジアルグロー — Manus 3層 */
+.hero::before {{
+  content: '';
+  position: absolute; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%,   rgba(0,200,150,0.08)   0%, transparent 70%),
+    radial-gradient(ellipse 60% 50% at 80% 50%,   rgba(124,92,252,0.06)  0%, transparent 70%),
+    radial-gradient(ellipse 50% 40% at 15% 80%,   rgba(59,123,255,0.05)  0%, transparent 70%);
+}}
+
+/* 下部フェード — ページ背景色へ溶け込む */
+.hero::after {{
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 120px; pointer-events: none;
+  background: linear-gradient(to bottom, transparent, #FAFBFF);
 }}
 
 .hero-inner {{
-  max-width: 1120px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 0 24px;
   display: grid;
-  grid-template-columns: 1fr 440px;
-  gap: 48px;
+  grid-template-columns: 1fr 480px;
+  gap: 64px;
   align-items: center;
+  position: relative; z-index: 1;
+  width: 100%;
 }}
 
 .hero-left {{}}
@@ -598,38 +620,54 @@ a[href], button, [role="tab"], [role="button"],
 
 .hero-eyebrow {{
   display: inline-flex; align-items: center; gap: 7px;
-  background: rgba(0,200,150,0.15);
+  background: rgba(0,200,150,0.12);
   border: 1px solid rgba(0,200,150,0.3);
   color: var(--profit);
   font-size: 0.72rem; font-weight: 700;
-  letter-spacing: 0.08em; text-transform: uppercase;
-  padding: 5px 14px; border-radius: 99px;
-  margin-bottom: 22px;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 6px 16px; border-radius: 99px;
+  margin-bottom: 24px;
+  animation: fadeInUp 0.45s cubic-bezier(0.23,1,0.32,1) forwards;
+}}
+
+/* Social proof: 数値を大きく JetBrains Mono で */
+.social-text {{
+  font-size: 0.8rem; color: rgba(255,255,255,0.5);
+}}
+
+.social-text strong {{
+  color: #fff;
+  font-family: 'JetBrains Mono', 'Menlo', ui-monospace, var(--font);
+  font-size: 0.85rem;
+  letter-spacing: -0.02em;
 }}
 
 .hero-title {{
-  font-size: clamp(1.9rem, 4.5vw, 3rem);
+  font-size: clamp(2.2rem, 5vw, 3.8rem);
   font-weight: 900;
   letter-spacing: -0.04em;
-  line-height: 1.1;
+  line-height: 1.05;
   color: #fff;
-  margin-bottom: 18px;
+  margin-bottom: 22px;
 }}
 
+/* Manus 3色グラデーション accent */
 .hero-title .accent {{
-  background: linear-gradient(90deg, #00C896, #3B7BFF);
+  background: linear-gradient(135deg, #00C896 0%, #3B7BFF 55%, #7C5CFC 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }}
 
 .hero-subtitle {{
-  font-size: 1rem;
+  font-size: 1.05rem;
   color: rgba(255,255,255,0.65);
-  line-height: 1.75;
+  line-height: 1.8;
   max-width: 520px;
-  margin-bottom: 32px;
+  margin-bottom: 36px;
 }}
+
+.hero-subtitle strong {{ color: rgba(255,255,255,0.9); font-weight: 700; }}
 
 .hero-cta-row {{
   display: flex; gap: 10px; flex-wrap: wrap;
@@ -637,42 +675,51 @@ a[href], button, [role="tab"], [role="button"],
 }}
 
 .hero-btn {{
-  display: inline-flex; align-items: center; gap: 6px;
-  font-size: 0.875rem; font-weight: 700;
-  padding: 11px 22px; border-radius: var(--radius-md);
-  text-decoration: none; transition: all 0.2s;
+  display: inline-flex; align-items: center; gap: 7px;
+  font-size: 0.95rem; font-weight: 700;
+  padding: 13px 26px; border-radius: 18px;
+  text-decoration: none;
+  transition: transform 0.18s cubic-bezier(0.23,1,0.32,1),
+              box-shadow 0.18s cubic-bezier(0.23,1,0.32,1),
+              background 0.18s;
 }}
+
+.hero-btn:active {{ transform: scale(0.97); }}
 
 .hero-btn.primary {{
   background: linear-gradient(135deg, #00C896, #00A876);
   color: #fff;
-  box-shadow: 0 4px 16px rgba(0,200,150,0.4);
+  box-shadow: 0 4px 16px rgba(0,200,150,0.4), inset 0 1px 0 rgba(255,255,255,0.2);
 }}
 
 .hero-btn.primary:hover {{
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0,200,150,0.5);
+  box-shadow: 0 10px 28px rgba(0,200,150,0.5), inset 0 1px 0 rgba(255,255,255,0.2);
+}}
+
+/* violetは Manus の rgba() 版に */
+.hero-btn.violet {{
+  background: rgba(124,92,252,0.18);
+  color: #A78BFA;
+  border: 1px solid rgba(124,92,252,0.4);
+  box-shadow: none;
+}}
+
+.hero-btn.violet:hover {{
+  background: rgba(124,92,252,0.26);
+  transform: translateY(-1px);
+  border-color: rgba(124,92,252,0.6);
 }}
 
 .hero-btn.secondary {{
   background: rgba(255,255,255,0.08);
-  color: rgba(255,255,255,0.85);
+  color: rgba(255,255,255,0.7);
   border: 1px solid rgba(255,255,255,0.15);
 }}
 
 .hero-btn.secondary:hover {{
   background: rgba(255,255,255,0.14);
-}}
-
-.hero-btn.violet {{
-  background: linear-gradient(135deg, #7C5CFC, #6040E8);
-  color: #fff;
-  box-shadow: 0 4px 16px rgba(124,92,252,0.4);
-}}
-
-.hero-btn.violet:hover {{
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(124,92,252,0.5);
+  color: rgba(255,255,255,0.9);
 }}
 
 /* Social proof */
@@ -701,18 +748,31 @@ a[href], button, [role="tab"], [role="button"],
 
 .social-text strong {{ color: rgba(255,255,255,0.8); }}
 
-/* ライブパネル（ガラスモーフィズム） */
+/* ライブパネル — Manus glassmorphism */
 .hero-live-panel {{
-  background: rgba(255,255,255,0.06);
-  backdrop-filter: blur(20px);
+  background: rgba(255,255,255,0.04);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
   border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 20px;
-  padding: 20px;
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.08);
+  position: relative;
+  padding: 0;
+}}
+
+.hero-live-panel::before {{
+  content: '';
+  position: absolute; inset: -40px;
+  background: radial-gradient(ellipse at 50% 50%, rgba(0,200,150,0.35), transparent 70%);
+  filter: blur(20px); pointer-events: none; z-index: -1;
 }}
 
 .live-panel-hd {{
   display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 16px;
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  margin-bottom: 0;
 }}
 
 .live-panel-title {{
@@ -728,16 +788,34 @@ a[href], button, [role="tab"], [role="button"],
   padding: 3px 9px; border-radius: 99px;
 }}
 
-.live-panel-items {{}}
+.live-panel-items {{
+  padding: 12px 20px 4px;
+}}
 
 .lp-item {{
   display: flex; align-items: center;
-  padding: 10px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.06);
+  padding: 10px 16px;
+  margin: 0 -16px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
   gap: 10px;
+  border-radius: 10px;
+  transition: background 0.15s;
 }}
 
-.lp-item:last-child {{ border: none; }}
+.lp-item:first-child {{
+  background: rgba(0,200,150,0.08);
+  border: 1px solid rgba(0,200,150,0.18);
+  margin: 4px -16px;
+}}
+
+.lp-item:hover {{
+  background: rgba(255,255,255,0.07);
+  cursor: pointer;
+}}
+
+.lp-item:first-child:hover {{ background: rgba(0,200,150,0.14); }}
+
+.lp-item:last-child {{ border-bottom: none; }}
 
 .lp-icon {{
   width: 32px; height: 32px; border-radius: 8px;
@@ -754,8 +832,10 @@ a[href], button, [role="tab"], [role="button"],
 .lp-shop {{ font-size: 0.65rem; color: rgba(255,255,255,0.35); margin-top: 1px; }}
 
 .lp-profit {{
-  font-size: 0.85rem; font-weight: 800;
+  font-size: 0.88rem; font-weight: 800;
   color: var(--profit); white-space: nowrap;
+  font-family: 'JetBrains Mono', 'Menlo', ui-monospace, var(--font);
+  font-variant-numeric: tabular-nums;
 }}
 
 /* Timestamps */
@@ -1831,15 +1911,20 @@ a[href], button, [role="tab"], [role="button"],
 /* ============================================================
    RESPONSIVE
    ============================================================ */
+@media (max-width: 1024px) {{
+  .hero-inner {{ grid-template-columns: 1fr 400px; gap: 40px; }}
+}}
+
 @media (max-width: 900px) {{
   .hero-inner {{ grid-template-columns: 1fr; }}
   .hero-right {{ display: none; }}
+  .hero {{ min-height: auto; padding: 72px 0 60px; }}
   .surge-grid {{ grid-template-columns: 1fr; }}
 }}
 
 @media (max-width: 768px) {{
-  .hero {{ padding: 40px 0 36px; }}
-  .hero-title {{ font-size: 1.8rem; }}
+  .hero {{ padding: 48px 0 44px; }}
+  .hero-title {{ font-size: 1.9rem; line-height: 1.1; }}
   .hero-subtitle {{ font-size: 0.95rem; }}
   .cards-grid {{ grid-template-columns: 1fr; }}
   .profit-num {{ font-size: 1.8rem; }}

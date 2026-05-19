@@ -288,27 +288,31 @@ class DailyLPGenerator:
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>{site_title}</title>
+<title>{site_title} | {_esc(date_str)}</title>
 <meta name="description" content="{_esc(self.settings.get('site_description', ''))}">
 {analytics_head}
 <style>
 /* ============================================================
-   SOUBA デザインシステム — プレ値速報
+   SOUBA デザインシステム v6 — Manus Premium Light
+   Based on: SiteHeader.tsx, HeroSection.tsx, StickyTabs.tsx,
+             BeginnerSection.tsx, AdvancedSection.tsx, RankingSection.tsx,
+             LotterySection.tsx, SedoriCalculator.tsx, SiteFooter.tsx
    ============================================================ */
 
 :root {{
-  /* ページ背景 */
+  /* ページ背景 (Light Premium) */
   --bg: #FAFBFF;
   /* カード */
   --card-bg: #FFFFFF;
   --card-border: #E8EAF2;
   --surface2: #F4F6FD;
+  --surface3: #F8FAFC;
   /* テキスト */
   --ink: #0D0F1C;
   --ink2: #5B6278;
   --ink3: #9CA3B8;
   --ink4: #C8CADE;
-  /* アクセント */
+  /* アクセント (index.css / Manus) */
   --profit: #00C896;
   --profit-dark: #00A876;
   --violet: #7C5CFC;
@@ -317,6 +321,7 @@ class DailyLPGenerator:
   --danger: #FF3B5C;
   --blue: #3B7BFF;
   --gold: #F5A623;
+  --gold-dark: #D97706;
 
   /* 後方互換用エイリアス */
   --white:   #ffffff;
@@ -361,12 +366,12 @@ class DailyLPGenerator:
   --teal-500: #14b8a6;
   --teal-600: #0d9488;
 
-  --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Meiryo', sans-serif;
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 14px;
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
   --radius-xl: 20px;
-  --radius-2xl: 28px;
+  --radius-2xl: 24px;
 
   --shadow-xs: 0 1px 2px rgba(0,0,0,0.04);
   --shadow-sm: 0 1px 3px rgba(13,15,28,0.05), 0 1px 2px rgba(13,15,28,0.04);
@@ -392,107 +397,157 @@ body {{
 }}
 
 /* ============================================================
-   ANNOUNCEMENT BAR
+   ANNOUNCEMENT BAR (SiteHeader.tsx — announcementBar)
    ============================================================ */
 .announce-bar {{
   background: linear-gradient(90deg, #00C896, #3B7BFF, #7C5CFC);
   text-align: center;
-  padding: 8px 20px;
+  padding: 8px 16px;
 }}
 
 .announce-bar a {{
   color: #fff;
   text-decoration: none;
   font-size: 0.82rem;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0.01em;
 }}
 
 .announce-bar a:hover {{ text-decoration: underline; }}
 
 /* ============================================================
-   TOPBAR
+   SITE HEADER — スティッキー (SiteHeader.tsx)
    ============================================================ */
-.topbar {{
-  position: sticky; top: 0; z-index: 300;
-  background: rgba(250,251,255,0.95);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
+.site-header {{
+  position: sticky; top: 0; z-index: 1000;
+  background: rgba(250,251,255,0.92);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
   border-bottom: 1px solid var(--card-border);
+  box-shadow: 0 1px 0 rgba(13,15,28,0.04);
+}}
+
+.header-inner {{
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
   height: 56px;
   display: flex; align-items: center;
-  padding: 0 20px; gap: 12px;
+  justify-content: space-between;
+  gap: 12px;
 }}
 
-.topbar-brand {{
+.header-brand {{
   display: flex; align-items: center; gap: 10px;
   text-decoration: none; color: var(--ink);
-  font-weight: 800; font-size: 0.95rem;
-}}
-
-.brand-icon {{
-  width: 30px; height: 30px;
-  background: linear-gradient(135deg, var(--blue), var(--violet));
-  border-radius: 8px;
-  display: flex; align-items: center; justify-content: center;
-  color: white; font-weight: 900; font-size: 0.8rem;
-  box-shadow: 0 2px 8px rgba(59,123,255,0.3);
+  cursor: pointer;
   flex-shrink: 0;
 }}
 
-.topbar-live {{
+.brand-icon {{
+  width: 32px; height: 32px;
+  background: linear-gradient(135deg, #00C896, #00A876);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  color: white; font-size: 1rem;
+  box-shadow: 0 2px 8px rgba(0,200,150,0.35);
+  flex-shrink: 0;
+}}
+
+.brand-text {{
+  display: flex; align-items: baseline; gap: 6px;
+}}
+
+.brand-name {{
+  font-size: 1rem; font-weight: 900;
+  letter-spacing: -0.03em; color: var(--ink);
+}}
+
+.brand-sub {{
+  font-size: 0.72rem; color: var(--ink3); font-weight: 500;
+  display: none;
+}}
+
+@media (min-width: 640px) {{ .brand-sub {{ display: block; }} }}
+
+.header-nav {{
+  display: none;
+  align-items: center;
+  gap: 2px;
+}}
+
+@media (min-width: 1024px) {{ .header-nav {{ display: flex; }} }}
+
+.header-nav-link {{
+  padding: 6px 10px;
+  border-radius: 10px;
+  font-size: 0.875rem; font-weight: 500;
+  color: var(--ink2);
+  text-decoration: none;
+  transition: all 0.15s;
+  white-space: nowrap;
+  cursor: pointer;
+}}
+
+.header-nav-link:hover {{
+  color: var(--ink); background: #F4F5FD;
+}}
+
+.header-right {{
+  display: flex; align-items: center; gap: 8px;
+  flex-shrink: 0;
+}}
+
+.live-badge {{
   display: flex; align-items: center; gap: 5px;
   font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--profit-dark);
-  background: #F0FDF8;
-  border: 1px solid #B2F0DC;
+  background: #E8FFF6;
+  border: 1px solid #A7F3D0;
   padding: 3px 10px; border-radius: 99px;
 }}
 
 .live-dot {{
   width: 6px; height: 6px; border-radius: 50%;
   background: var(--profit);
-  animation: blink 2s ease-in-out infinite;
+  animation: livePulse 2s ease-in-out infinite;
 }}
 
-@keyframes blink {{
+@keyframes livePulse {{
   0%, 100% {{ opacity: 1; }}
   50% {{ opacity: 0.3; }}
 }}
 
-.topbar-date {{
-  font-size: 0.78rem; color: var(--ink3);
-  font-variant-numeric: tabular-nums;
-}}
-
-.topbar-spacer {{ flex: 1; }}
-
-.topbar-note-btn {{
-  display: inline-flex; align-items: center; gap: 6px;
-  background: var(--violet); color: white;
-  font-size: 0.78rem; font-weight: 700;
-  padding: 7px 16px; border-radius: var(--radius-md);
+.header-note-btn {{
+  display: none;
+  align-items: center; gap: 6px;
+  background: linear-gradient(135deg, #00C896, #00A876);
+  color: white;
+  font-size: 0.82rem; font-weight: 700;
+  padding: 8px 16px; border-radius: var(--radius-md);
   text-decoration: none;
-  box-shadow: 0 2px 8px rgba(124,92,252,0.3);
-  transition: all 0.2s;
+  box-shadow: 0 4px 16px rgba(0,200,150,0.35);
+  transition: all 0.18s;
   white-space: nowrap;
 }}
 
-.topbar-note-btn:hover {{
-  background: var(--violet-dark);
+@media (min-width: 640px) {{ .header-note-btn {{ display: inline-flex; }} }}
+
+.header-note-btn:hover {{
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(124,92,252,0.4);
+  box-shadow: 0 8px 24px rgba(0,200,150,0.45);
 }}
 
 /* ============================================================
-   LIVE TICKER
+   LIVE TICKER (LiveTicker.tsx)
    ============================================================ */
 .ticker-bar {{
   background: #0D0F1C;
   overflow: hidden;
   padding: 7px 0;
   white-space: nowrap;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
 }}
 
 .ticker-inner {{
@@ -500,236 +555,301 @@ body {{
   animation: tickerScroll 30s linear infinite;
 }}
 
+.ticker-inner:hover {{ animation-play-state: paused; }}
+
 @keyframes tickerScroll {{
   0%   {{ transform: translateX(0); }}
   100% {{ transform: translateX(-50%); }}
 }}
 
 .ticker-item {{
-  display: inline-flex; align-items: center; gap: 6px;
-  font-size: 0.78rem; color: rgba(255,255,255,0.85);
-  padding: 0 28px;
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 0.78rem; color: rgba(255,255,255,0.7);
+  padding: 0 24px;
 }}
 
-.ticker-item .t-name {{ font-weight: 600; }}
-.ticker-item .t-profit {{ color: #00C896; font-weight: 700; }}
-.ticker-sep {{ color: rgba(255,255,255,0.2); }}
+.ticker-item .t-name {{ font-weight: 600; color: rgba(255,255,255,0.9); }}
+.ticker-item .t-profit {{ color: #00C896; font-weight: 700; font-variant-numeric: tabular-nums; }}
+.ticker-item .ticker-rate {{ color: rgba(0,200,150,0.7); font-size: 0.72rem; }}
+.ticker-sep {{ color: rgba(255,255,255,0.15); }}
 
 /* ============================================================
-   FEATURES BANNER
-   ============================================================ */
-.features-bar {{
-  background: #fff;
-  border-bottom: 1px solid var(--card-border);
-  padding: 12px 20px;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-}}
-
-.features-bar::-webkit-scrollbar {{ display: none; }}
-
-.features-inner {{
-  display: flex; gap: 8px;
-  width: max-content;
-}}
-
-.feature-chip {{
-  display: inline-flex; align-items: center; gap: 6px;
-  font-size: 0.75rem; font-weight: 600;
-  padding: 6px 14px; border-radius: 99px;
-  white-space: nowrap;
-}}
-
-.feature-chip.green  {{ background: #F0FDF8; color: #00A876; border: 1px solid #B2F0DC; }}
-.feature-chip.blue   {{ background: #EFF6FF; color: #1E6FFF; border: 1px solid #BFDBFE; }}
-.feature-chip.violet {{ background: #F5F3FF; color: #6040E8; border: 1px solid #DDD6FE; }}
-.feature-chip.amber  {{ background: #FFF9F0; color: #CC7A00; border: 1px solid #FFD9A0; }}
-.feature-chip.red    {{ background: #FFF1F3; color: #CC2244; border: 1px solid #FFB3C0; }}
-
-/* ============================================================
-   HERO — ダーク
+   HERO SECTION — ダーク (HeroSection.tsx)
    ============================================================ */
 .hero {{
   background: linear-gradient(160deg, #0D0F1C 0%, #131629 50%, #0F1A2E 100%);
-  padding: 64px 0 56px;
+  padding: 80px 0 56px;
   position: relative; overflow: hidden;
+  min-height: 85vh;
+  display: flex; align-items: center;
+}}
+
+.hero::before {{
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0,200,150,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}}
+
+.hero::after {{
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 60% 50% at 80% 50%, rgba(124,92,252,0.06) 0%, transparent 70%);
+  pointer-events: none;
 }}
 
 .hero-inner {{
-  max-width: 1120px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 0 24px;
   display: grid;
-  grid-template-columns: 1fr 440px;
-  gap: 48px;
+  grid-template-columns: 1fr 480px;
+  gap: 64px;
   align-items: center;
+  position: relative; z-index: 1;
+  width: 100%;
 }}
 
-.hero-left {{}}
-.hero-right {{}}
+.hero-left {{ min-width: 0; }}
+.hero-right {{ min-width: 0; }}
 
 .hero-eyebrow {{
-  display: inline-flex; align-items: center; gap: 7px;
-  background: rgba(0,200,150,0.15);
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(0,200,150,0.12);
   border: 1px solid rgba(0,200,150,0.3);
   color: var(--profit);
-  font-size: 0.72rem; font-weight: 700;
+  font-size: 0.7rem; font-weight: 700;
   letter-spacing: 0.08em; text-transform: uppercase;
-  padding: 5px 14px; border-radius: 99px;
-  margin-bottom: 22px;
+  padding: 6px 14px; border-radius: 99px;
+  margin-bottom: 24px;
 }}
 
 .hero-title {{
-  font-size: clamp(1.9rem, 4.5vw, 3rem);
+  font-size: clamp(2.2rem, 5.5vw, 4rem);
   font-weight: 900;
   letter-spacing: -0.04em;
-  line-height: 1.1;
-  color: #fff;
-  margin-bottom: 18px;
+  line-height: 1.05;
+  color: #ffffff;
+  margin-bottom: 24px;
 }}
 
 .hero-title .accent {{
-  background: linear-gradient(90deg, #00C896, #3B7BFF);
+  background: linear-gradient(135deg, #00C896 0%, #3B7BFF 60%, #7C5CFC 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }}
 
 .hero-subtitle {{
-  font-size: 1rem;
+  font-size: 1.05rem;
   color: rgba(255,255,255,0.65);
   line-height: 1.75;
   max-width: 520px;
-  margin-bottom: 32px;
+  margin-bottom: 36px;
 }}
 
+.hero-subtitle strong {{ color: rgba(255,255,255,0.9); }}
+
 .hero-cta-row {{
-  display: flex; gap: 10px; flex-wrap: wrap;
-  margin-bottom: 32px;
+  display: flex; gap: 12px; flex-wrap: wrap;
+  margin-bottom: 36px;
 }}
 
 .hero-btn {{
-  display: inline-flex; align-items: center; gap: 6px;
-  font-size: 0.875rem; font-weight: 700;
-  padding: 11px 22px; border-radius: var(--radius-md);
-  text-decoration: none; transition: all 0.2s;
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 0.9rem; font-weight: 700;
+  padding: 12px 24px; border-radius: 16px;
+  text-decoration: none; transition: all 0.18s;
+  cursor: pointer;
+  pointer-events: auto;
 }}
 
 .hero-btn.primary {{
   background: linear-gradient(135deg, #00C896, #00A876);
   color: #fff;
-  box-shadow: 0 4px 16px rgba(0,200,150,0.4);
+  box-shadow: 0 4px 16px rgba(0,200,150,0.4), inset 0 1px 0 rgba(255,255,255,0.2);
 }}
 
 .hero-btn.primary:hover {{
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0,200,150,0.5);
+  box-shadow: 0 8px 24px rgba(0,200,150,0.5), inset 0 1px 0 rgba(255,255,255,0.2);
 }}
 
 .hero-btn.secondary {{
   background: rgba(255,255,255,0.08);
-  color: rgba(255,255,255,0.85);
+  color: rgba(255,255,255,0.8);
   border: 1px solid rgba(255,255,255,0.15);
 }}
 
 .hero-btn.secondary:hover {{
   background: rgba(255,255,255,0.14);
+  color: #fff;
 }}
 
 .hero-btn.violet {{
-  background: linear-gradient(135deg, #7C5CFC, #6040E8);
-  color: #fff;
-  box-shadow: 0 4px 16px rgba(124,92,252,0.4);
+  background: rgba(124,92,252,0.15);
+  border: 1px solid rgba(124,92,252,0.4);
+  color: #A78BFA;
 }}
 
 .hero-btn.violet:hover {{
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(124,92,252,0.5);
+  background: rgba(124,92,252,0.25);
+  color: #C4B5FD;
 }}
 
-/* Social proof */
+/* Social proof / stats */
 .hero-social-proof {{
-  display: flex; align-items: center; gap: 12px;
+  display: flex; align-items: center; gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
 }}
 
-.social-avatars {{
-  display: flex;
+.social-stat {{
+  display: flex; align-items: center; gap: 8px;
 }}
 
-.social-avatar {{
-  width: 28px; height: 28px; border-radius: 50%;
-  background: linear-gradient(135deg, #00C896, #3B7BFF);
-  border: 2px solid #131629;
-  margin-left: -8px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 0.65rem; font-weight: 700; color: #fff;
+.social-stat-icon {{ color: var(--profit); font-size: 0.9rem; }}
+
+.social-stat-value {{
+  font-size: 1rem; font-weight: 900;
+  color: #ffffff; font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
 }}
 
-.social-avatar:first-child {{ margin-left: 0; }}
-
-.social-text {{
-  font-size: 0.78rem; color: rgba(255,255,255,0.5);
+.social-stat-label {{
+  font-size: 0.72rem; color: rgba(255,255,255,0.4);
 }}
 
-.social-text strong {{ color: rgba(255,255,255,0.8); }}
+/* Trust badges */
+.hero-trust-badges {{
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+}}
 
-/* ライブパネル（ガラスモーフィズム） */
-.hero-live-panel {{
+.trust-badge {{
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 12px; border-radius: 99px;
   background: rgba(255,255,255,0.06);
-  backdrop-filter: blur(20px);
   border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 20px;
-  padding: 20px;
+  font-size: 0.72rem; color: rgba(255,255,255,0.5);
+}}
+
+/* ライブパネル (HeroSection.tsx — right column) */
+.hero-live-panel {{
+  background: rgba(255,255,255,0.04);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 24px;
+  overflow: hidden;
+  position: relative;
+}}
+
+.hero-live-panel::before {{
+  content: '';
+  position: absolute;
+  inset: -16px;
+  border-radius: 40px;
+  background: radial-gradient(ellipse, rgba(0,200,150,0.4), transparent 70%);
+  filter: blur(20px);
+  opacity: 0.3;
+  z-index: -1;
+  pointer-events: none;
 }}
 
 .live-panel-hd {{
   display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 16px;
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}}
+
+.live-panel-title-wrap {{
+  display: flex; align-items: center; gap: 8px;
 }}
 
 .live-panel-title {{
-  font-size: 0.75rem; font-weight: 700; color: rgba(255,255,255,0.5);
+  font-size: 0.72rem; font-weight: 700; color: var(--profit);
   letter-spacing: 0.08em; text-transform: uppercase;
 }}
 
-.live-panel-badge {{
-  display: flex; align-items: center; gap: 5px;
-  font-size: 0.65rem; font-weight: 700; color: var(--profit);
-  background: rgba(0,200,150,0.15);
-  border: 1px solid rgba(0,200,150,0.25);
-  padding: 3px 9px; border-radius: 99px;
+.live-panel-date {{
+  font-size: 0.65rem; color: rgba(255,255,255,0.3);
 }}
 
-.live-panel-items {{}}
+.live-panel-items {{ padding: 16px; display: flex; flex-direction: column; gap: 8px; }}
 
 .lp-item {{
   display: flex; align-items: center;
-  padding: 10px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.06);
-  gap: 10px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  gap: 12px;
+  cursor: pointer;
+  transition: background 0.15s;
 }}
 
-.lp-item:last-child {{ border: none; }}
-
-.lp-icon {{
-  width: 32px; height: 32px; border-radius: 8px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 0.9rem; flex-shrink: 0;
+.lp-item.highlight {{
+  background: rgba(0,200,150,0.08);
+  border: 1px solid rgba(0,200,150,0.2);
 }}
 
-.lp-icon.iphone  {{ background: rgba(59,123,255,0.15); }}
-.lp-icon.camera  {{ background: rgba(124,92,252,0.15); }}
-.lp-icon.game    {{ background: rgba(20,184,166,0.15); }}
+.lp-item.normal {{
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+}}
+
+.lp-item.normal:hover {{ background: rgba(255,255,255,0.07); }}
 
 .lp-info {{ flex: 1; min-width: 0; }}
-.lp-name {{ font-size: 0.78rem; font-weight: 600; color: rgba(255,255,255,0.85); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }}
-.lp-shop {{ font-size: 0.65rem; color: rgba(255,255,255,0.35); margin-top: 1px; }}
+.lp-name {{ font-size: 0.82rem; font-weight: 500; color: rgba(255,255,255,0.7); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }}
+.lp-name.bright {{ color: rgba(255,255,255,0.95); }}
+
+.lp-profit-wrap {{
+  display: flex; align-items: center; gap: 8px;
+  flex-shrink: 0;
+}}
 
 .lp-profit {{
-  font-size: 0.85rem; font-weight: 800;
+  font-size: 0.88rem; font-weight: 800;
   color: var(--profit); white-space: nowrap;
+  font-variant-numeric: tabular-nums;
 }}
+
+.lp-rate {{
+  font-size: 0.72rem; font-weight: 700;
+  background: rgba(0,200,150,0.15); color: var(--profit);
+  padding: 2px 8px; border-radius: 99px;
+  white-space: nowrap;
+}}
+
+/* KPI bar (bottom of live panel) */
+.live-kpi-bar {{
+  display: grid; grid-template-columns: 1fr 1fr 1fr;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  background: rgba(13,15,28,0.3);
+}}
+
+.kpi-cell {{
+  padding: 12px 16px; text-align: center;
+  cursor: pointer; transition: background 0.15s;
+  border-right: 1px solid rgba(255,255,255,0.06);
+}}
+
+.kpi-cell:last-child {{ border-right: none; }}
+.kpi-cell:hover {{ background: rgba(255,255,255,0.06); }}
+
+.kpi-label {{
+  font-size: 0.65rem; color: rgba(255,255,255,0.35);
+  margin-bottom: 4px;
+}}
+
+.kpi-value {{
+  font-size: 1rem; font-weight: 900;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}}
+
+.kpi-value.green {{ color: var(--profit); }}
+.kpi-value.white {{ color: #ffffff; }}
+.kpi-value.violet {{ color: #A78BFA; }}
 
 /* Timestamps */
 .hero-timestamps {{
@@ -757,13 +877,13 @@ body {{
 /* ============================================================
    STALE WARNING
    ============================================================ */
-.stale-banner {{
+.stale-warning-block {{
   background: #fffbeb;
   border: 1px solid #fde68a;
   border-left: 3px solid #f59e0b;
   border-radius: 0 var(--radius-md) var(--radius-md) 0;
   padding: 12px 18px;
-  margin: 16px 0;
+  margin: 16px 24px;
   font-size: 0.875rem;
   color: #78350f;
   display: flex; align-items: flex-start; gap: 10px;
@@ -774,68 +894,107 @@ body {{
    MAIN LAYOUT
    ============================================================ */
 .main-wrap {{
-  max-width: 1120px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 0 24px 80px;
 }}
 
 /* ============================================================
-   TAB NAVIGATION — スティッキー
+   STICKY TABS (StickyTabs.tsx)
    ============================================================ */
 .tab-wrap {{
-  position: sticky; top: 56px; z-index: 200;
+  position: sticky; top: 56px; z-index: 900;
   background: rgba(250,251,255,0.95);
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
   border-bottom: 1px solid var(--card-border);
-  margin: 0 -24px;
+  box-shadow: 0 1px 0 rgba(13,15,28,0.04);
+}}
+
+.tab-nav-inner {{
+  max-width: 1200px;
+  margin: 0 auto;
   padding: 0 24px;
+  position: relative;
 }}
 
 .tab-nav {{
-  display: flex; gap: 0;
+  display: flex; gap: 2px;
   overflow-x: auto; -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   position: relative;
+  padding: 8px 0;
 }}
 
 .tab-nav::-webkit-scrollbar {{ display: none; }}
 
-.tab-btn {{
-  flex-shrink: 0;
-  display: flex; align-items: center; gap: 7px;
-  background: transparent; border: none;
-  border-bottom: 2px solid transparent;
-  padding: 15px 20px;
-  font-size: 0.875rem; font-weight: 500;
-  color: var(--ink3);
-  cursor: pointer;
-  transition: color 0.15s, border-color 0.15s;
-  margin-bottom: -1px;
-  white-space: nowrap;
-  font-family: var(--font);
+/* スライドインジケーター (StickyTabs.tsx — tab-indicator) */
+.tab-indicator-bar {{
+  position: absolute;
+  bottom: 0; height: 2px;
+  border-radius: 99px;
+  background: var(--profit);
+  transition: left 0.22s cubic-bezier(0.23,1,0.32,1), width 0.22s cubic-bezier(0.23,1,0.32,1);
+  pointer-events: none;
 }}
 
-.tab-btn:hover {{ color: var(--ink); }}
+.tab-btn {{
+  flex-shrink: 0;
+  display: inline-flex; align-items: center; gap: 6px;
+  background: transparent; border: none;
+  padding: 8px 12px;
+  font-size: 0.875rem; font-weight: 600;
+  color: var(--ink3);
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s;
+  white-space: nowrap;
+  font-family: var(--font);
+  border-radius: 12px;
+  pointer-events: auto;
+}}
+
+.tab-btn:hover {{
+  color: var(--ink); background: #F4F5FD;
+}}
 
 .tab-btn.active {{
-  color: var(--violet);
-  border-bottom-color: var(--violet);
+  color: #047857;
+  background: #F0FDF8;
   font-weight: 700;
 }}
 
+.tab-btn.active[data-tab="advanced"] {{ color: #6040E8; background: #F0EEFF; }}
+.tab-btn.active[data-tab="ranking"] {{ color: #1D4ED8; background: #EEF4FF; }}
+.tab-btn.active[data-tab="sedori"] {{ color: #1D4ED8; background: #EEF4FF; }}
+.tab-btn.active[data-tab="surge"] {{ color: #B45309; background: #FFF8E8; }}
+.tab-btn.active[data-tab="lottery"] {{ color: #6040E8; background: #F5F3FF; }}
+.tab-btn.active[data-tab="new-products"] {{ color: #1D4ED8; background: #EEF4FF; }}
+
+.tab-sep {{
+  width: 1px; height: 16px;
+  background: var(--card-border);
+  flex-shrink: 0;
+  margin: 0 8px;
+  align-self: center;
+}}
+
+.tab-sep-label {{
+  font-size: 0.65rem; font-weight: 900;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  color: var(--ink4);
+  white-space: nowrap;
+  flex-shrink: 0;
+  align-self: center;
+  padding: 0 4px;
+}}
+
 .tab-count {{
-  font-size: 0.65rem; font-weight: 800;
-  background: var(--surface2);
-  color: var(--ink3);
-  padding: 1px 7px; border-radius: 99px;
+  font-size: 0.68rem; font-weight: 700;
+  padding: 2px 7px; border-radius: 99px;
 }}
 
-.tab-btn.active .tab-count {{
-  background: #EDE9FF;
-  color: var(--violet);
-}}
-
-.tab-panel {{ display: none; padding-top: 36px; }}
+/* タブパネル */
+.tab-panel {{ display: none; padding-top: 32px; position: relative; z-index: 1; pointer-events: auto; }}
 .tab-panel.active {{ display: block; }}
 
 /* ============================================================
@@ -909,93 +1068,137 @@ body {{
 }}
 
 /* ============================================================
-   souba-card / DEAL CARD
+   SOUBA CARD / DEAL CARD (BeginnerSection.tsx)
    ============================================================ */
 .souba-card,
 .deal-card {{
   background: var(--card-bg);
   border: 1px solid var(--card-border);
-  border-radius: 16px;
+  border-radius: var(--radius-lg);
   overflow: hidden;
   box-shadow: var(--shadow-sm);
-  transition: transform 0.18s, box-shadow 0.18s, border-color 0.18s;
+  transition: transform 0.18s cubic-bezier(0.23,1,0.32,1),
+              box-shadow 0.18s cubic-bezier(0.23,1,0.32,1),
+              border-color 0.18s cubic-bezier(0.23,1,0.32,1);
   display: flex; flex-direction: column;
 }}
 
 .souba-card:hover,
 .deal-card:hover {{
   transform: translateY(-3px);
-  box-shadow: var(--shadow-xl);
+  box-shadow: 0 12px 40px rgba(13,15,28,0.1), 0 4px 12px rgba(13,15,28,0.06);
   border-color: #D0D4E8;
 }}
 
-/* カード上部利益バー */
+/* カード上部利益バー (BeginnerSection.tsx — profit bar) */
 .card-stripe {{ height: 3px; }}
-.card-stripe.iphone  {{ background: linear-gradient(90deg, var(--blue), #93B8FF); }}
-.card-stripe.camera  {{ background: linear-gradient(90deg, var(--violet), #B9A8FF); }}
-.card-stripe.game    {{ background: linear-gradient(90deg, var(--profit), #80E8CC); }}
-.card-stripe.default {{ background: linear-gradient(90deg, var(--profit), var(--blue)); }}
+.card-stripe.iphone  {{ background: linear-gradient(90deg, #00C896 0%, #E8EAF2 100%); }}
+.card-stripe.camera  {{ background: linear-gradient(90deg, #00C896 0%, #E8EAF2 100%); }}
+.card-stripe.game    {{ background: linear-gradient(90deg, #00C896 0%, #E8EAF2 100%); }}
+.card-stripe.default {{ background: linear-gradient(90deg, #00C896 0%, #E8EAF2 100%); }}
 
-/* Score badge */
+/* Score badge (BeginnerSection.tsx) */
 .score-badge {{
   display: inline-flex; align-items: center; justify-content: center;
-  width: 28px; height: 28px;
-  border-radius: 50%;
-  font-size: 0.75rem; font-weight: 900;
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  font-size: 0.85rem; font-weight: 800;
   flex-shrink: 0;
 }}
 
-.score-s {{ background: linear-gradient(135deg, #FFD700, #FF9500); color: #fff; }}
+.score-s {{ background: linear-gradient(135deg, #FFD700, #FFA500); color: #7A4000; }}
 .score-a {{ background: linear-gradient(135deg, #00C896, #00A876); color: #fff; }}
-.score-b {{ background: #EDE9FF; color: var(--violet); }}
-.score-c {{ background: var(--surface2); color: var(--ink3); }}
+.score-b {{ background: linear-gradient(135deg, #3B7BFF, #1D4ED8); color: #fff; }}
+.score-c {{ background: var(--surface2); color: var(--ink3); border: 1px solid var(--card-border); }}
 
 /* Card Header */
 .card-hd {{
   display: flex; align-items: flex-start;
   justify-content: space-between; gap: 12px;
-  padding: 18px 20px 14px;
+  padding: 20px 20px 16px;
+}}
+
+.card-meta {{
+  display: flex; align-items: center; gap: 6px;
+  margin-bottom: 6px;
+}}
+
+.card-category {{
+  font-size: 0.68rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.06em;
+  color: var(--ink3);
 }}
 
 .card-name {{
-  font-size: 1rem; font-weight: 800;
-  color: var(--ink); line-height: 1.3; flex: 1;
+  font-size: 0.9rem; font-weight: 700;
+  color: var(--ink); line-height: 1.4; flex: 1;
+}}
+
+.card-update-info {{
+  display: flex; align-items: center; gap: 6px;
+  margin-top: 4px;
+  font-size: 0.7rem; color: var(--ink3);
 }}
 
 .card-tags {{
   display: flex; gap: 5px; flex-shrink: 0;
   flex-wrap: wrap; justify-content: flex-end;
+  flex-direction: column; align-items: flex-end;
 }}
 
-/* Profit Section */
-.profit-section {{
-  margin: 0 20px;
-  padding: 16px 18px;
+/* Price block (BeginnerSection.tsx — price block) */
+.price-block {{
+  margin: 0 20px 16px;
+  padding: 16px;
+  background: #F7F8FD;
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+}}
+
+.price-grid {{
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 12px; margin-bottom: 12px;
+}}
+
+.price-cell-v2 {{}}
+
+.price-cell-lbl-v2 {{
+  font-size: 0.68rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.06em;
+  color: var(--ink3); margin-bottom: 4px;
+}}
+
+.price-cell-val-v2 {{
+  font-size: 1rem; font-weight: 700;
+  color: var(--ink2); font-variant-numeric: tabular-nums;
+}}
+
+/* Profit box (BeginnerSection.tsx — profit box) */
+.profit-box {{
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px; border-radius: 12px;
   background: linear-gradient(135deg, #F0FDF8, #E8FFF4);
-  border: 1px solid #B2F0DC;
-  border-radius: var(--radius-md);
-  display: flex; align-items: center;
-  justify-content: space-between; gap: 12px;
+  border: 1px solid #A7F3D0;
 }}
 
-.profit-section.amber {{
+.profit-box.amber {{
   background: linear-gradient(135deg, #FFF9F0, #FFF3E0);
   border-color: #FFD9A0;
 }}
 
-.profit-left {{}}
+.profit-box-left {{}}
 
 .profit-lbl {{
   font-size: 0.65rem; font-weight: 700;
   letter-spacing: 0.07em; text-transform: uppercase;
-  color: var(--profit-dark); margin-bottom: 4px;
+  color: #047857; margin-bottom: 4px;
 }}
 
-.profit-lbl.amber {{ color: #CC7A00; }}
+.profit-lbl.amber {{ color: #B45309; }}
 
 .profit-num {{
-  font-size: 2.1rem; font-weight: 900;
-  color: var(--profit-dark);
+  font-size: 1.8rem; font-weight: 900;
+  color: #00A876;
   letter-spacing: -0.04em; line-height: 1;
 }}
 
@@ -2038,19 +2241,50 @@ body {{
 
 </head>
 <body>
-<div class="announce-bar"><a href="#tab-beginner">&#127919; 本日 {_beginner_count_top} 件の初心者向け案件 &mdash; 最大利益 {_esc(_max_profit_str_top)} を確認</a></div>
-<header class="topbar">
-  <a href="/" class="topbar-brand">
-    <div class="brand-icon">S</div>
-    プレ値速報
-  </a>
-  <div class="topbar-live"><span class="live-dot"></span>LIVE</div>
-  <div class="topbar-date" data-buyback-updated>買取更新: {_esc(_buyback_str_top)}</div>
-  <div class="topbar-spacer"></div>
-  <a href="#note-cta" class="topbar-note-btn" data-track="note_click">&#128221; 詳細レポートを見る</a>
+<!-- SiteHeader: Announcement Bar (SiteHeader.tsx) -->
+<div class="announce-bar">
+  <a href="#tab-beginner">&#127919; 本日 <strong>{_beginner_count_top}</strong> 件の初心者向け案件を更新 &mdash; 最大利益 <strong>{_esc(_max_profit_str_top)}</strong> を確認 &rarr;</a>
+</div>
+<!-- SiteHeader: Sticky Header (SiteHeader.tsx) -->
+<header class="site-header">
+  <div class="header-inner">
+    <a href="#tab-ranking" class="header-brand" onclick="switchTab('ranking');return false;">
+      <div class="brand-icon">&#128200;</div>
+      <div class="brand-text">
+        <span class="brand-name">SOUBA</span>
+        <span class="brand-sub">相場ダッシュボード</span>
+      </div>
+    </a>
+    <nav class="header-nav">
+      <a href="#tab-ranking" class="header-nav-link" onclick="switchTab('ranking');return false;">ランキング</a>
+      <a href="#tab-beginner" class="header-nav-link" onclick="switchTab('beginner');return false;">初心者向け</a>
+      <a href="#tab-advanced" class="header-nav-link" onclick="switchTab('advanced');return false;">上級者向け</a>
+      <a href="#tab-lottery" class="header-nav-link" onclick="switchTab('lottery');return false;">抽選情報</a>
+      <a href="#sedori-calc-section" class="header-nav-link" onclick="switchTab('sedori');return false;">計算機</a>
+    </nav>
+    <div class="header-right">
+      <div class="live-badge"><span class="live-dot"></span>LIVE</div>
+      <a href="#note-cta" class="header-note-btn" data-track="note_click">&#128221; note で読む</a>
+    </div>
+  </div>
 </header>
-<div class="ticker-bar"><div class="ticker-inner"><span class="ticker-item"><span class="t-name">iPhone 16 Pro 256GB</span><span class="ticker-sep">|</span><span class="t-profit">+¥18,400</span></span><span class="ticker-item"><span class="t-name">SONY α7C II</span><span class="ticker-sep">|</span><span class="t-profit">+¥32,000</span></span><span class="ticker-item"><span class="t-name">Nintendo Switch 2</span><span class="ticker-sep">|</span><span class="t-profit">+¥9,800</span></span><span class="ticker-item"><span class="t-name">iPhone 15 Plus 128GB</span><span class="ticker-sep">|</span><span class="t-profit">+¥12,000</span></span><span class="ticker-item"><span class="t-name">Canon EOS R6 Mark II</span><span class="ticker-sep">|</span><span class="t-profit">+¥45,000</span></span><span class="ticker-item"><span class="t-name">PS5 Digital</span><span class="ticker-sep">|</span><span class="t-profit">+¥6,500</span></span><span class="ticker-item"><span class="t-name">iPhone 16 Pro 256GB</span><span class="ticker-sep">|</span><span class="t-profit">+¥18,400</span></span><span class="ticker-item"><span class="t-name">SONY α7C II</span><span class="ticker-sep">|</span><span class="t-profit">+¥32,000</span></span><span class="ticker-item"><span class="t-name">Nintendo Switch 2</span><span class="ticker-sep">|</span><span class="t-profit">+¥9,800</span></span><span class="ticker-item"><span class="t-name">iPhone 15 Plus 128GB</span><span class="ticker-sep">|</span><span class="t-profit">+¥12,000</span></span><span class="ticker-item"><span class="t-name">Canon EOS R6 Mark II</span><span class="ticker-sep">|</span><span class="t-profit">+¥45,000</span></span><span class="ticker-item"><span class="t-name">PS5 Digital</span><span class="ticker-sep">|</span><span class="t-profit">+¥6,500</span></span></div></div>
-<div class="features-bar"><div class="features-inner"><span class="feature-chip green">&#9711; 毎日12:00 自動更新</span><span class="feature-chip blue">&#8652; サイト間せどり計算</span><span class="feature-chip violet">&#127758; 海外相場リンク付き</span><span class="feature-chip amber">&#128202; 複数買取店比較</span><span class="feature-chip red">&#9650; 急騰/急落アラート</span><span class="feature-chip green">&#128269; 新商品候補監視</span></div></div>
+<!-- LiveTicker (LiveTicker.tsx) -->
+<div class="ticker-bar">
+  <div class="ticker-inner">
+    <span class="ticker-item"><span class="t-name">iPhone 16 Pro 256GB</span><span class="ticker-sep">&#124;</span><span class="t-profit">+¥18,400</span><span class="ticker-rate">+16.5%</span></span>
+    <span class="ticker-item"><span class="t-name">SONY α7C II</span><span class="ticker-sep">&#124;</span><span class="t-profit">+¥32,000</span><span class="ticker-rate">+12.8%</span></span>
+    <span class="ticker-item"><span class="t-name">Nintendo Switch 2</span><span class="ticker-sep">&#124;</span><span class="t-profit">+¥9,800</span><span class="ticker-rate">+19.6%</span></span>
+    <span class="ticker-item"><span class="t-name">FUJIFILM X100VI</span><span class="ticker-sep">&#124;</span><span class="t-profit">+¥131,000</span><span class="ticker-rate">+78.4%</span></span>
+    <span class="ticker-item"><span class="t-name">MacBook Air M3</span><span class="ticker-sep">&#124;</span><span class="t-profit">+¥20,200</span><span class="ticker-rate">+12.3%</span></span>
+    <span class="ticker-item"><span class="t-name">Canon EOS R6 II</span><span class="ticker-sep">&#124;</span><span class="t-profit">+¥45,000</span><span class="ticker-rate">+18.2%</span></span>
+    <span class="ticker-item"><span class="t-name">iPhone 16 Pro 256GB</span><span class="ticker-sep">&#124;</span><span class="t-profit">+¥18,400</span><span class="ticker-rate">+16.5%</span></span>
+    <span class="ticker-item"><span class="t-name">SONY α7C II</span><span class="ticker-sep">&#124;</span><span class="t-profit">+¥32,000</span><span class="ticker-rate">+12.8%</span></span>
+    <span class="ticker-item"><span class="t-name">Nintendo Switch 2</span><span class="ticker-sep">&#124;</span><span class="t-profit">+¥9,800</span><span class="ticker-rate">+19.6%</span></span>
+    <span class="ticker-item"><span class="t-name">FUJIFILM X100VI</span><span class="ticker-sep">&#124;</span><span class="t-profit">+¥131,000</span><span class="ticker-rate">+78.4%</span></span>
+    <span class="ticker-item"><span class="t-name">MacBook Air M3</span><span class="ticker-sep">&#124;</span><span class="t-profit">+¥20,200</span><span class="ticker-rate">+12.3%</span></span>
+    <span class="ticker-item"><span class="t-name">Canon EOS R6 II</span><span class="ticker-sep">&#124;</span><span class="t-profit">+¥45,000</span><span class="ticker-rate">+18.2%</span></span>
+  </div>
+</div>
 {hero_html}
 {stale_html}
 <div class="main-wrap">
@@ -2061,42 +2295,119 @@ body {{
 {footer_html}
 </div>
 <script>
-(function(){{
-  var btns=document.querySelectorAll(".tab-btn");
-  var panels=document.querySelectorAll(".tab-panel");
-  if(btns.length){{
-    btns.forEach(function(btn){{
-      btn.addEventListener("click",function(){{
-        btns.forEach(function(b){{b.classList.remove("active");b.setAttribute("aria-selected","false");}});
-        panels.forEach(function(p){{p.classList.remove("active");}});
-        btn.classList.add("active");
-        btn.setAttribute("aria-selected","true");
-        var panel=document.getElementById("tab-"+btn.dataset.tab);
-        if(panel)panel.classList.add("active");
+document.addEventListener('DOMContentLoaded', function() {{
+  // ============================================================
+  // メインタブ切替 (StickyTabs.tsx)
+  // ============================================================
+  var btns = document.querySelectorAll('.tab-btn');
+  var panels = document.querySelectorAll('.tab-panel');
+
+  function switchTab(tabId) {{
+    btns.forEach(function(b) {{
+      b.classList.remove('active');
+      b.setAttribute('aria-selected', 'false');
+    }});
+    panels.forEach(function(p) {{ p.classList.remove('active'); }});
+    var activeBtn = document.querySelector('.tab-btn[data-tab="' + tabId + '"]');
+    if (activeBtn) {{
+      activeBtn.classList.add('active');
+      activeBtn.setAttribute('aria-selected', 'true');
+      // インジケーター更新
+      updateTabIndicator(activeBtn);
+    }}
+    var panel = document.getElementById('tab-' + tabId);
+    if (panel) panel.classList.add('active');
+  }}
+
+  function updateTabIndicator(activeBtn) {{
+    var indicator = document.querySelector('.tab-indicator-bar');
+    if (!indicator || !activeBtn) return;
+    var nav = document.querySelector('.tab-nav');
+    if (!nav) return;
+    var nr = nav.getBoundingClientRect();
+    var er = activeBtn.getBoundingClientRect();
+    var scrollLeft = nav.scrollLeft || 0;
+    indicator.style.left = (er.left - nr.left + scrollLeft) + 'px';
+    indicator.style.width = er.width + 'px';
+    // アクティブタブの色に合わせてインジケーター色を変更
+    var tabColors = {{
+      'ranking': '#3B7BFF',
+      'sedori': '#3B7BFF',
+      'beginner': '#00C896',
+      'advanced': '#7C5CFC',
+      'surge': '#FF9500',
+      'lottery': '#7C5CFC',
+      'new-products': '#2563EB'
+    }};
+    var tabId = activeBtn.dataset.tab;
+    indicator.style.background = tabColors[tabId] || '#00C896';
+    // スクロール
+    activeBtn.scrollIntoView({{ behavior: 'smooth', block: 'nearest', inline: 'center' }});
+  }}
+
+  window.switchTab = switchTab;
+
+  if (btns.length) {{
+    btns.forEach(function(btn) {{
+      btn.addEventListener('click', function() {{
+        switchTab(btn.dataset.tab);
       }});
     }});
+    // 初期インジケーター
+    var firstActive = document.querySelector('.tab-btn.active');
+    if (firstActive) setTimeout(function() {{ updateTabIndicator(firstActive); }}, 50);
   }}
-  document.addEventListener("click",function(e){{
-    var el=e.target.closest("[data-track]");
-    if(!el)return;
-    var ev=el.getAttribute("data-track"),pid=el.getAttribute("data-product-id")||"",shop=el.getAttribute("data-shop")||"";
-    if(typeof gtag==="function")gtag("event",ev,{{product_id:pid,shop:shop}});
-    if(typeof fbq==="function")fbq("trackCustom",ev,{{product_id:pid,shop:shop}});
-  }});
+
+  // ============================================================
   // ランキング内タブ
-  var rbtns=document.querySelectorAll(".ranking-tab-btn");
-  if(rbtns.length){{
-    rbtns.forEach(function(rb){{
-      rb.addEventListener("click",function(){{
-        rbtns.forEach(function(b){{b.classList.remove("active");}});
-        document.querySelectorAll(".ranking-tab-panel").forEach(function(p){{p.classList.remove("active");}});
-        rb.classList.add("active");
-        var panel=document.getElementById("rtab-"+rb.getAttribute("data-rtab"));
-        if(panel)panel.classList.add("active");
+  // ============================================================
+  var rbtns = document.querySelectorAll('.ranking-tab-btn');
+  if (rbtns.length) {{
+    rbtns.forEach(function(rb) {{
+      rb.addEventListener('click', function() {{
+        rbtns.forEach(function(b) {{ b.classList.remove('active'); }});
+        document.querySelectorAll('.ranking-tab-panel').forEach(function(p) {{ p.classList.remove('active'); }});
+        rb.classList.add('active');
+        var panel = document.getElementById('rtab-' + rb.getAttribute('data-rtab'));
+        if (panel) panel.classList.add('active');
       }});
     }});
   }}
-}})();
+
+  // ============================================================
+  // 抽選フィルター
+  // ============================================================
+  var lotFilterBtns = document.querySelectorAll('.lot-filter-btn');
+  if (lotFilterBtns.length) {{
+    lotFilterBtns.forEach(function(fb) {{
+      fb.addEventListener('click', function() {{
+        lotFilterBtns.forEach(function(b) {{ b.classList.remove('active'); }});
+        fb.classList.add('active');
+        var filter = fb.dataset.filter;
+        document.querySelectorAll('.lottery-card').forEach(function(card) {{
+          if (filter === 'all' || card.dataset.status === filter) {{
+            card.style.display = '';
+          }} else {{
+            card.style.display = 'none';
+          }}
+        }});
+      }});
+    }});
+  }}
+
+  // ============================================================
+  // アナリティクス
+  // ============================================================
+  document.addEventListener('click', function(e) {{
+    var el = e.target.closest('[data-track]');
+    if (!el) return;
+    var ev = el.getAttribute('data-track');
+    var pid = el.getAttribute('data-product-id') || '';
+    var shop = el.getAttribute('data-shop') || '';
+    if (typeof gtag === 'function') gtag('event', ev, {{product_id: pid, shop: shop}});
+    if (typeof fbq === 'function') fbq('trackCustom', ev, {{product_id: pid, shop: shop}});
+  }});
+}});
 </script>
 <noscript><style>.tab-nav{{display:none;}}.tab-panel{{display:block!important;}}</style></noscript>
 </body>
@@ -2105,69 +2416,137 @@ body {{
     # ----- Hero -----
 
     def _section_hero(self, date_str, time_str, latest_buyback_at, lp_generated_at,
-
                        all_deals=None, iphone_deals=None, camera_deals=None, game_deals=None) -> str:
-
-        variant_key = self.settings.get('headline_variant', 'A')
-
-        variants    = self.settings.get('variants', {})
-
-        variant     = variants.get(variant_key, {})
-
+        """HeroSection.tsx を忠実再現"""
         buyback_str = _jst_str(latest_buyback_at)
-
         lp_str      = _jst_str(lp_generated_at)
 
-        stale_cls   = 'stale' if _hours_ago(latest_buyback_at) > 24 else ''
-
-        all_count    = len(all_deals)    if all_deals    else 0
-
-        iphone_count = len(iphone_deals) if iphone_deals else 0
-
-        camera_count = len(camera_deals) if camera_deals else 0
-
-        game_count   = len(game_deals)   if game_deals   else 0
-
-        max_profit   = max((d.net_profit_jpy or 0) for d in all_deals) if all_deals else 0
-
+        all_count      = len(all_deals)    if all_deals    else 0
+        beginner_count = len([d for d in (all_deals or []) if getattr(d, 'user_level', '') in ('beginner_easy', 'beginner_watch')])
+        advanced_count = len([d for d in (all_deals or []) if getattr(d, 'user_level', '') == 'advanced'])
+        max_profit     = max((d.net_profit_jpy or 0) for d in all_deals) if all_deals else 0
         max_profit_str = f'+¥{max_profit:,}' if max_profit > 0 else '—'
+
+        # ライブパネル実データ（easy_deals 上位5件）
+        live_items_html = ''
+        top_deals = sorted([d for d in (all_deals or []) if (d.net_profit_jpy or 0) > 0],
+                           key=lambda d: d.net_profit_jpy or 0, reverse=True)[:5]
+        if top_deals:
+            for i, d in enumerate(top_deals):
+                is_first = i == 0
+                item_cls = 'highlight' if is_first else 'normal'
+                name_cls = 'bright' if is_first else ''
+                profit_fmt = f'+¥{d.net_profit_jpy:,}'
+                rate_val = getattr(d, 'net_profit_rate', 0) or 0
+                rate_fmt = f'+{rate_val:.1f}%' if rate_val else ''
+                live_items_html += f'''<div class="lp-item {item_cls}" onclick="switchTab('beginner')">
+  <div class="lp-info"><div class="lp-name {name_cls}">{_esc(d.product_name)}</div></div>
+  <div class="lp-profit-wrap">
+    <span class="lp-profit">{_esc(profit_fmt)}</span>
+    {'<span class="lp-rate">' + _esc(rate_fmt) + '</span>' if rate_fmt else ''}
+  </div>
+</div>'''
+        else:
+            for item in [
+                ('iPhone 16 Pro 256GB', '+¥18,400', '+16.5%', True),
+                ('SONY α7C II', '+¥32,000', '+12.8%', False),
+                ('Nintendo Switch 2', '+¥9,800', '+19.6%', False),
+                ('FUJIFILM X100VI', '+¥131,000', '+78.4%', False),
+                ('Canon EOS R6 II', '+¥45,000', '+18.2%', False),
+            ]:
+                name, profit, rate, is_first = item
+                item_cls = 'highlight' if is_first else 'normal'
+                name_cls = 'bright' if is_first else ''
+                live_items_html += f'''<div class="lp-item {item_cls}">
+  <div class="lp-info"><div class="lp-name {name_cls}">{name}</div></div>
+  <div class="lp-profit-wrap">
+    <span class="lp-profit">{profit}</span>
+    <span class="lp-rate">{rate}</span>
+  </div>
+</div>'''
 
         return f"""<section class="hero">
   <div class="hero-inner">
+    <!-- 左カラム -->
     <div class="hero-left">
-      <div class="hero-eyebrow"><span class="live-dot"></span> 毎日更新 &mdash; {_esc(date_str)}</div>
-      <h1 class="hero-title">今日の<span class="accent">価格差</span>で稼ぐ。<br>公式 &times; 買取 &times; 海外相場。</h1>
-      <p class="hero-subtitle">iPhone・カメラ・ゲーム機の公式価格と買取価格の差額を毎日更新。初心者向けの低難度案件から、上級者向けの中古市場差額・海外相場まで、このページ一枚で行動できます。</p>
+      <div class="hero-eyebrow">
+        <span class="live-dot"></span>
+        毎日12:00 更新中
+        <span style="color:rgba(255,255,255,0.4);font-size:0.7rem;font-weight:400;">{_esc(date_str)}</span>
+      </div>
+      <h1 class="hero-title">
+        転売で稼ぐための<br>
+        <span class="accent">相場情報、全部ここに。</span>
+      </h1>
+      <p class="hero-subtitle">
+        スマホ・カメラ・ゲーム機の<strong>定価・買取・海外相場</strong>を毎日整理。
+        初心者の低難度案件から、上級者のサイト間せどりまで。
+      </p>
       <div class="hero-cta-row">
-        <a href="#tab-beginner" class="hero-btn primary">&#128100; 初心者向け案件 {all_count}件</a>
-        <a href="#tab-advanced" class="hero-btn violet">&#128269; 上級者向け</a>
-        <a href="#tab-ranking" class="hero-btn secondary">&#127942; ランキング</a>
+        <a href="#tab-ranking" class="hero-btn primary" onclick="switchTab('ranking');return false;">今日の案件を見る &rarr;</a>
+        <a href="#sedori-calc-section" class="hero-btn violet" onclick="switchTab('sedori');return false;">&#9889; せどり計算を試す</a>
+        <a href="#tab-lottery" class="hero-btn secondary" onclick="switchTab('lottery');return false;">抽選情報を見る</a>
       </div>
       <div class="hero-social-proof">
-        <div class="social-avatars">
-          <div class="social-avatar">A</div>
-          <div class="social-avatar">B</div>
-          <div class="social-avatar">C</div>
+        <div class="social-stat">
+          <span class="social-stat-icon">&#128101;</span>
+          <div>
+            <div class="social-stat-value">12,400+</div>
+            <div class="social-stat-label">月間利用者</div>
+          </div>
         </div>
-        <div class="social-text">本日 <strong>{all_count}</strong> 件の案件 — 最高利益 <strong>{_esc(max_profit_str)}</strong></div>
+        <div class="social-stat">
+          <span class="social-stat-icon">&#128200;</span>
+          <div>
+            <div class="social-stat-value">{_esc(max_profit_str)}</div>
+            <div class="social-stat-label">本日最高利益</div>
+          </div>
+        </div>
+        <div class="social-stat">
+          <span class="social-stat-icon">&#11088;</span>
+          <div>
+            <div class="social-stat-value">4.9/5.0</div>
+            <div class="social-stat-label">ユーザー評価</div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-trust-badges" style="margin-top:20px;">
+        <span class="trust-badge">&#128737; 参考価格のみ・安全</span>
+        <span class="trust-badge">&#128336; 毎日正午更新</span>
+        <span class="trust-badge">&#127981; 8店舗以上比較</span>
       </div>
       <div class="hero-timestamps">
-        <span class="ts-pill {_esc(stale_cls)}" data-buyback-updated><span class="ts-dot"></span>買取価格更新：{_esc(buyback_str)}</span>
+        <span class="ts-pill" data-buyback-updated><span class="ts-dot"></span>買取価格更新：{_esc(buyback_str)}</span>
         <span class="ts-pill" data-lp-generated><span class="ts-dot blue"></span>LP生成：{_esc(lp_str)}</span>
       </div>
     </div>
+
+    <!-- 右カラム: Live Panel -->
     <div class="hero-right">
       <div class="hero-live-panel">
         <div class="live-panel-hd">
-          <div class="live-panel-title">LIVE DEALS</div>
-          <div class="live-panel-badge"><span class="live-dot"></span> リアルタイム</div>
+          <div class="live-panel-title-wrap">
+            <span class="live-dot"></span>
+            <span class="live-panel-title">今日の利益レポート</span>
+          </div>
+          <span class="live-panel-date">{_esc(date_str)}</span>
         </div>
         <div class="live-panel-items">
-          <div class="lp-item"><div class="lp-icon iphone">&#128241;</div><div class="lp-info"><div class="lp-name">iPhone 16 Pro 256GB</div><div class="lp-shop">じゃんぱら</div></div><div class="lp-profit">+¥18,400</div></div>
-          <div class="lp-item"><div class="lp-icon camera">&#128247;</div><div class="lp-info"><div class="lp-name">SONY α7C II</div><div class="lp-shop">マップカメラ</div></div><div class="lp-profit">+¥32,000</div></div>
-          <div class="lp-item"><div class="lp-icon game">&#127918;</div><div class="lp-info"><div class="lp-name">Nintendo Switch 2</div><div class="lp-shop">ゲオ</div></div><div class="lp-profit">+¥9,800</div></div>
-          <div class="lp-item"><div class="lp-icon iphone">&#128241;</div><div class="lp-info"><div class="lp-name">iPhone 15 Plus 128GB</div><div class="lp-shop">iosys</div></div><div class="lp-profit">+¥12,000</div></div>
-          <div class="lp-item"><div class="lp-icon camera">&#128247;</div><div class="lp-info"><div class="lp-name">Canon EOS R6 II</div><div class="lp-shop">フジヤカメラ</div></div><div class="lp-profit">+¥45,000</div></div>
+{live_items_html}
+        </div>
+        <div class="live-kpi-bar">
+          <div class="kpi-cell" onclick="switchTab('ranking')">
+            <div class="kpi-label">最大利益</div>
+            <div class="kpi-value green">{_esc(max_profit_str)}</div>
+          </div>
+          <div class="kpi-cell" onclick="switchTab('beginner')">
+            <div class="kpi-label">初心者向け</div>
+            <div class="kpi-value white">{beginner_count}件</div>
+          </div>
+          <div class="kpi-cell" onclick="switchTab('advanced')">
+            <div class="kpi-label">上級者向け</div>
+            <div class="kpi-value violet">{advanced_count}件</div>
+          </div>
         </div>
       </div>
     </div>

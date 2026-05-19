@@ -140,6 +140,13 @@ class DailyLPGenerator:
         # v5: camera_watch for advanced tab
         _camera_watch_adv = camera_watch
 
+        # せどりルート取得（Phase 14）
+        sedori_routes = []
+        try:
+            sedori_routes = self.repo.list_sedori_routes(min_net_profit=0, limit=20)
+        except Exception:
+            sedori_routes = []
+
         # HTML生成
         page_html = self._render_page(
             date_str=date_str,
@@ -161,6 +168,7 @@ class DailyLPGenerator:
             camera_watch=camera_watch,
             game_watch=game_watch,
             buyback_by_product=buyback_by_product,
+            sedori_routes=sedori_routes,
         )
 
         # 安全チェック
@@ -212,7 +220,7 @@ class DailyLPGenerator:
                      beginner_easy, beginner_watch, advanced_deals, advanced_snaps,
                      watch_candidates, buyback_alerts, all_deals, iphone_deals, game_deals,
                      camera_deals=None, iphone_watch=None, camera_watch=None, game_watch=None,
-                     buyback_by_product: dict = None) -> str:
+                     buyback_by_product: dict = None, sedori_routes: list = None) -> str:
 
         site_title = _esc(self.settings.get("site_title", "プレ値速報"))
         ga_id      = self.settings.get("analytics", {}).get("google_analytics_id", "")
@@ -254,6 +262,7 @@ class DailyLPGenerator:
             camera_watch=camera_watch or [],
             game_watch=game_watch or [],
             buyback_by_product=buyback_by_product or {},
+            sedori_routes=sedori_routes or [],
         )
         caution_html = self._section_caution()
         cta_html     = self._section_cta()
@@ -2099,14 +2108,14 @@ a[href], button, [role="tab"], [role="button"],
 }}
 
 /* ============================================================
-   SEDORI CALCULATOR — せどり計算ツール
+   SEDORI ROUTE — 店舗間せどりルート比較タブ (Phase 14)
    ============================================================ */
 .sc-wrap {{
   padding: 0 0 32px;
 }}
 
 .sc-header {{
-  margin-bottom: 28px; padding-top: 8px;
+  margin-bottom: 20px; padding-top: 8px;
 }}
 
 .sc-eyebrow {{
@@ -2116,219 +2125,227 @@ a[href], button, [role="tab"], [role="button"],
 }}
 
 .sc-title {{
-  font-size: 1.5rem; font-weight: 900;
-  color: var(--ink); letter-spacing: -0.03em;
-  margin: 0 0 6px;
+  font-size: 1.35rem; font-weight: 800; color: var(--text-1);
+  letter-spacing: -0.02em; margin: 0 0 6px;
 }}
 
 .sc-desc {{
-  font-size: 0.875rem; color: var(--ink3); margin: 0;
+  font-size: 0.85rem; color: var(--text-3); line-height: 1.6; margin: 0;
 }}
 
-.sc-controls {{
-  display: flex; gap: 14px; margin-bottom: 20px; flex-wrap: wrap;
+/* メタ行 */
+.sc-meta-row {{
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px; background: #F8FAFC; border-radius: 10px;
+  border: 1px solid #E2E8F0; margin-bottom: 20px;
+  flex-wrap: wrap; font-size: 0.82rem;
+}}
+.sc-meta-label {{ color: var(--text-3); }}
+.sc-meta-val {{ font-weight: 700; color: var(--text-1); font-family: 'JetBrains Mono', monospace; }}
+.sc-meta-sep {{ color: #CBD5E1; }}
+.sc-routes-count-badge {{
+  background: #DCFCE7; color: #15803D; border: 1px solid #BBF7D0;
+  border-radius: 99px; padding: 1px 10px; font-size: 0.78rem;
 }}
 
-.sc-ctrl-main {{ flex: 1; min-width: 200px; }}
-.sc-ctrl-ship {{ width: 200px; flex-shrink: 0; }}
-
-.sc-label {{
-  display: block; font-size: 0.68rem; font-weight: 700;
-  letter-spacing: 0.06em; text-transform: uppercase;
-  color: var(--ink4); margin-bottom: 6px;
+/* データなし */
+.sc-no-data {{
+  text-align: center; padding: 40px 20px;
+  background: #F8FAFC; border-radius: 16px;
+  border: 1px dashed #CBD5E1; margin: 16px 0;
+}}
+.sc-no-data-icon {{ font-size: 2.5rem; margin-bottom: 12px; }}
+.sc-no-data-title {{ font-size: 1rem; font-weight: 700; color: var(--text-1); margin-bottom: 8px; }}
+.sc-no-data-desc {{ font-size: 0.85rem; color: var(--text-3); margin-bottom: 12px; }}
+.sc-no-data-cmd {{
+  display: inline-block; background: #1E293B; color: #94A3B8;
+  border-radius: 10px; padding: 12px 16px; font-size: 0.78rem;
+  font-family: 'JetBrains Mono', monospace; text-align: left;
+  white-space: pre-wrap; word-break: break-all;
 }}
 
-.sc-select, .sc-input {{
-  width: 100%; padding: 10px 14px;
-  border-radius: 12px; border: 1px solid var(--card-border);
-  background: var(--card-bg); font-size: 0.875rem; font-weight: 500;
-  color: var(--ink); box-shadow: 0 1px 3px rgba(13,15,28,0.06);
-  outline: none; font-family: var(--font);
-  transition: border-color 0.15s, box-shadow 0.15s;
-  appearance: none; -webkit-appearance: none; box-sizing: border-box;
+/* 1位ルート大型カード */
+.sc-best-card {{
+  background: linear-gradient(135deg, #F0FDF4 0%, #ECFDF5 50%, #F0FDF4 100%);
+  border: 1px solid #A7F3D0; border-radius: 20px;
+  padding: 24px; margin-bottom: 24px;
+  position: relative; overflow: hidden;
 }}
-
-.sc-select:focus, .sc-input:focus {{
-  border-color: var(--blue); box-shadow: 0 0 0 3px rgba(59,123,255,0.12);
+.sc-best-card::before {{
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, #00C896, #34D399, #059669);
 }}
-
-.sc-best-inner {{
-  background: linear-gradient(135deg, #F0FDF8, #ECFDF5);
-  border: 2px solid #86EFAC; border-radius: 18px;
-  padding: 20px 22px; margin-bottom: 18px;
-  box-shadow: 0 4px 20px rgba(5,150,105,0.1);
+.sc-best-crown {{
+  font-size: 0.9rem; font-weight: 800; color: #059669;
+  letter-spacing: 0.02em; margin-bottom: 8px;
 }}
-
-.sc-best-label {{
-  font-size: 0.85rem; font-weight: 800;
-  color: #059669; margin-bottom: 14px;
-  display: flex; align-items: center; gap: 8px;
+.sc-best-rank-badge {{
+  background: #DCFCE7; color: #15803D; border: 1px solid #BBF7D0;
+  border-radius: 99px; padding: 1px 8px; font-size: 0.72rem;
+  font-family: 'JetBrains Mono', monospace; vertical-align: middle;
 }}
-
-.sc-best-tag {{
-  font-size: 0.65rem; font-weight: 800;
-  background: #DCFCE7; color: #16A34A;
-  padding: 2px 8px; border-radius: 99px;
+.sc-best-product {{
+  font-size: 1.05rem; font-weight: 700; color: var(--text-1);
+  margin-bottom: 16px;
 }}
-
-.sc-best-row {{
-  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+.sc-best-route-row {{
+  display: flex; align-items: center; gap: 12px; margin-bottom: 20px;
+  flex-wrap: wrap;
 }}
-
 .sc-best-box {{
-  flex: 1; min-width: 120px;
-  background: var(--card-bg); border: 1px solid #BBF7D0;
-  border-radius: 12px; padding: 12px 14px;
+  flex: 1; min-width: 130px; padding: 14px 16px;
+  background: rgba(255,255,255,0.85); border-radius: 14px;
+  border: 1px solid #D1FAE5;
 }}
-
+.sc-best-box-buy {{ border-color: #FECACA; background: rgba(255,255,255,0.9); }}
+.sc-best-box-sell {{ border-color: #A7F3D0; background: rgba(255,255,255,0.9); }}
 .sc-best-box-lbl {{
-  font-size: 0.62rem; font-weight: 700;
-  letter-spacing: 0.08em; text-transform: uppercase;
-  color: var(--ink4); margin-bottom: 5px;
+  font-size: 0.72rem; font-weight: 700; color: var(--text-3);
+  text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px;
 }}
-
-.sc-best-box-name {{
-  font-size: 0.95rem; font-weight: 800; color: var(--ink); margin-bottom: 4px;
+.sc-best-box-shop {{
+  font-size: 0.95rem; font-weight: 700; color: var(--text-1); margin-bottom: 4px;
 }}
-
 .sc-best-box-price {{
-  font-size: 1.1rem; font-weight: 900;
-  font-family: 'JetBrains Mono', ui-monospace, monospace;
-  letter-spacing: -0.02em; font-variant-numeric: tabular-nums;
+  font-size: 1.2rem; font-weight: 800; font-family: 'JetBrains Mono', monospace;
+  margin-bottom: 2px;
+}}
+.sc-price-buy {{ color: #DC2626; }}
+.sc-price-sell {{ color: #059669; }}
+.sc-best-box-cond {{ font-size: 0.72rem; color: var(--text-3); }}
+.sc-best-arrow {{
+  font-size: 1.5rem; color: #059669; font-weight: 900; flex-shrink: 0;
 }}
 
-.sc-best-box-note {{ font-size: 0.7rem; color: var(--ink4); margin-top: 2px; }}
-.sc-best-arrow {{ font-size: 1.4rem; color: #059669; flex-shrink: 0; align-self: center; }}
-
-.sc-best-profit {{
-  background: var(--card-bg); border: 1px solid #BBF7D0;
-  border-radius: 12px; padding: 12px 18px;
-  text-align: center; min-width: 130px; flex-shrink: 0;
+/* 利益ブロック */
+.sc-best-profit-row {{
+  display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px;
 }}
-
-.sc-profit-num {{
-  font-size: 1.8rem; font-weight: 900; color: #059669;
-  font-family: 'JetBrains Mono', ui-monospace, monospace;
-  letter-spacing: -0.03em; line-height: 1.1;
+.sc-profit-block {{
+  flex: 1; min-width: 80px; padding: 12px 14px;
+  background: rgba(255,255,255,0.7); border-radius: 12px;
+  border: 1px solid #E2E8F0; text-align: center;
 }}
-
-.sc-profit-rate {{
-  font-size: 0.875rem; font-weight: 800; color: #16A34A; margin-top: 3px;
+.sc-profit-main {{
+  background: #F0FDF4; border-color: #A7F3D0;
 }}
-
-.sc-no-profit {{
-  background: var(--surface2); border: 1px solid var(--card-border);
-  border-radius: 14px; padding: 16px 20px;
-  font-size: 0.875rem; color: var(--ink3);
-  margin-bottom: 18px; text-align: center;
+.sc-profit-lbl {{
+  font-size: 0.7rem; color: var(--text-3); font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 4px;
 }}
-
-.sc-card {{
-  background: var(--card-bg); border: 1px solid var(--card-border);
-  border-radius: 16px; overflow: hidden; margin-bottom: 16px;
-  box-shadow: 0 1px 3px rgba(13,15,28,0.05);
+.sc-profit-val {{
+  font-size: 1rem; font-weight: 800; font-family: 'JetBrains Mono', monospace;
 }}
-
-.sc-card-hd {{
-  display: flex; align-items: center; gap: 8px;
-  padding: 11px 16px; background: #F8FAFC;
-  border-bottom: 1px solid var(--card-border); flex-wrap: wrap;
-}}
-
-.sc-card-icon {{ font-size: 0.9rem; }}
-.sc-card-title {{ font-size: 0.85rem; font-weight: 700; color: var(--ink); }}
-
-.sc-cat-badge {{
-  font-size: 0.65rem; font-weight: 700;
-  background: #EFF6FF; color: var(--blue);
-  border: 1px solid #BFDBFE; padding: 2px 8px; border-radius: 99px;
-}}
-
-.sc-card-note {{ font-size: 0.7rem; color: var(--ink4); margin-left: auto; }}
-.sc-routes-count {{ font-size: 0.72rem; color: var(--ink4); margin-left: auto; }}
-
-.sc-table-scroll {{
-  overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: thin;
-}}
-
-.sc-table {{
-  width: 100%; border-collapse: collapse; font-size: 0.875rem;
-}}
-
-.sc-table th {{
-  text-align: left; padding: 9px 14px;
-  font-size: 0.65rem; font-weight: 800;
-  letter-spacing: 0.06em; text-transform: uppercase;
-  color: var(--ink3); white-space: nowrap;
-  background: #F8FAFC; border-bottom: 1px solid var(--card-border);
-}}
-
-.sc-table td {{
-  padding: 11px 14px; border-bottom: 1px solid var(--surface2);
-  color: var(--ink2); vertical-align: middle; white-space: nowrap;
-}}
-
-.sc-table tr:last-child td {{ border-bottom: none; }}
-.sc-table tr:hover td {{ background: #FAFBFF; }}
-.sc-tr-best td {{ background: #F0FDF8 !important; }}
-
 .sc-col-green {{ color: #059669; }}
-.sc-col-red   {{ color: #DC2626; }}
-.sc-col-blue  {{ color: #2563EB; }}
-.sc-col-gray  {{ color: var(--ink4); }}
-.sc-bold      {{ font-weight: 800; }}
+.sc-col-red {{ color: #DC2626; }}
+.sc-col-amber {{ color: #D97706; }}
+.sc-col-gray {{ color: var(--text-3); }}
+.sc-rate-val {{ color: #059669; }}
 
-.sc-mono {{
-  font-family: 'JetBrains Mono', 'Menlo', ui-monospace, monospace;
-  font-variant-numeric: tabular-nums; font-weight: 700; letter-spacing: -0.01em;
+/* リンクボタン */
+.sc-best-links {{
+  display: flex; gap: 10px; flex-wrap: wrap;
 }}
-
-.sc-store-name {{ font-weight: 600; color: var(--ink); }}
-.sc-fee {{ font-size: 0.68rem; color: var(--ink4); margin-left: 6px; }}
-.sc-hint {{ font-size: 0.65rem; font-weight: 700; display: block; margin-top: 2px; }}
-.sc-na {{ font-size: 0.75rem; color: #CBD5E1; }}
-.sc-rank-num {{ font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.8rem; color: #CBD5E1; }}
-
-.sc-badge-green {{
-  font-size: 0.6rem; font-weight: 800;
-  background: #F0FDF4; color: #059669;
-  padding: 2px 5px; border-radius: 4px; margin-right: 4px; vertical-align: middle;
-}}
-
-.sc-badge-blue {{
-  font-size: 0.6rem; font-weight: 800;
-  background: #EFF6FF; color: #2563EB;
-  padding: 2px 5px; border-radius: 4px; margin-right: 4px; vertical-align: middle;
-}}
-
 .sc-link-btn {{
-  display: inline-flex; align-items: center;
-  padding: 4px 10px; border-radius: 8px;
-  font-size: 0.72rem; font-weight: 600;
-  background: var(--surface2); border: 1px solid var(--card-border);
-  color: var(--ink2); text-decoration: none; transition: all 0.15s;
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 9px 18px; border-radius: 10px; font-size: 0.88rem;
+  font-weight: 700; text-decoration: none; cursor: pointer;
+  transition: all 0.15s cubic-bezier(0.23,1,0.32,1);
+}}
+.sc-link-buy {{
+  background: #FFF1F2; color: #DC2626; border: 1px solid #FECACA;
+}}
+.sc-link-buy:hover {{ background: #FFE4E6; }}
+.sc-link-sell {{
+  background: #F0FDF4; color: #059669; border: 1px solid #A7F3D0;
+}}
+.sc-link-sell:hover {{ background: #DCFCE7; }}
+.sc-link-unverified {{
+  font-size: 0.85rem; color: var(--text-3);
+  padding: 9px 0; display: inline-flex; align-items: center; gap: 4px;
 }}
 
-.sc-link-btn:hover {{ background: var(--card-bg); border-color: #D0D4E8; color: var(--blue); }}
+/* 2〜10位リスト */
+.sc-list-section {{
+  background: var(--card-bg); border: 1px solid var(--card-border);
+  border-radius: 16px; overflow: hidden; margin-bottom: 20px;
+}}
+.sc-list-header {{
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 16px; border-bottom: 1px solid var(--card-border);
+  background: #F8FAFC;
+}}
+.sc-list-title {{
+  font-size: 0.9rem; font-weight: 700; color: var(--text-1);
+}}
+.sc-list-count {{
+  font-size: 0.78rem; font-weight: 700;
+  background: #F1F5F9; color: var(--text-3);
+  border: 1px solid #E2E8F0; border-radius: 99px; padding: 1px 10px;
+}}
+.sc-table-scroll {{ overflow-x: auto; }}
+.sc-table {{
+  width: 100%; border-collapse: collapse; font-size: 0.84rem;
+}}
+.sc-table thead th {{
+  background: #F8FAFC; color: var(--text-3); font-weight: 700;
+  font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em;
+  padding: 10px 12px; white-space: nowrap;
+  border-bottom: 1px solid #E2E8F0; text-align: left;
+}}
+.sc-table tbody td {{
+  padding: 11px 12px; border-bottom: 1px solid #F1F5F9;
+  vertical-align: middle;
+}}
+.sc-table tbody tr:last-child td {{ border-bottom: none; }}
+.sc-table tbody tr:hover {{ background: #F8FAFC; }}
+.sc-rank-cell {{
+  font-weight: 800; color: var(--text-3); font-size: 0.78rem;
+  font-family: 'JetBrains Mono', monospace; white-space: nowrap;
+}}
+.sc-prod-cell {{
+  font-weight: 600; color: var(--text-1); max-width: 160px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}}
+.sc-shop-cell {{ color: var(--text-2); font-weight: 600; }}
+.sc-price-cell {{
+  font-family: 'JetBrains Mono', monospace; font-weight: 700;
+  white-space: nowrap;
+}}
+.sc-profit-cell {{
+  font-family: 'JetBrains Mono', monospace; font-weight: 800;
+  white-space: nowrap;
+}}
+.sc-rate-cell {{ white-space: nowrap; }}
+.sc-rate-badge {{
+  display: inline-block; padding: 2px 8px; border-radius: 99px;
+  font-size: 0.75rem; font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+}}
+.sc-rate-pos {{ background: #DCFCE7; color: #15803D; border: 1px solid #BBF7D0; }}
+.sc-rate-neg {{ background: #FEF2F2; color: #DC2626; border: 1px solid #FECACA; }}
+.sc-mini-link {{
+  color: var(--blue); text-decoration: none; font-weight: 600;
+}}
+.sc-mini-link:hover {{ text-decoration: underline; }}
 
-.sc-rate-badge {{ font-size: 0.72rem; font-weight: 700; padding: 2px 8px; border-radius: 99px; white-space: nowrap; }}
-.sc-rate-pos {{ background: #F0FDF4; color: #059669; }}
-.sc-rate-neg {{ background: #FEF2F2; color: #DC2626; }}
-
+/* 免責 */
 .sc-disclaimer {{
-  background: #FFFBEB; border: 1px solid #FDE68A;
-  border-radius: 12px; padding: 12px 16px;
-  font-size: 0.8rem; color: #92400E; line-height: 1.65; margin-top: 6px;
+  font-size: 0.78rem; color: var(--text-3); line-height: 1.65;
+  padding: 12px 14px; background: #FFFBEB;
+  border: 1px solid #FDE68A; border-radius: 10px; margin-top: 4px;
 }}
 
 @media (max-width: 640px) {{
-  .sc-controls {{ flex-direction: column; gap: 10px; }}
-  .sc-ctrl-ship {{ width: 100%; }}
-  .sc-best-row {{ flex-direction: column; }}
-  .sc-best-profit {{ width: 100%; text-align: center; min-width: auto; }}
-  .sc-best-box {{ min-width: auto; }}
-  .sc-table th, .sc-table td {{ padding: 9px 10px; font-size: 0.8rem; }}
-  .sc-profit-num {{ font-size: 1.5rem; }}
+  .sc-best-card {{ padding: 16px; }}
+  .sc-best-route-row {{ flex-direction: column; }}
+  .sc-best-arrow {{ transform: rotate(90deg); }}
+  .sc-best-profit-row {{ gap: 8px; }}
+  .sc-profit-block {{ min-width: 60px; padding: 10px; }}
+  .sc-profit-val {{ font-size: 0.9rem; }}
+  .sc-meta-row {{ gap: 6px; }}
+  .sc-table {{ font-size: 0.78rem; }}
+  .sc-prod-cell {{ max-width: 100px; }}
 }}
 
 /* ============================================================
@@ -2509,20 +2526,45 @@ a[href], button, [role="tab"], [role="button"],
 </div>
 <script>
 (function(){{
+  // ── メインタブ切り替え ──
   var btns=document.querySelectorAll(".tab-btn");
   var panels=document.querySelectorAll(".tab-panel");
+
+  function activateTab(tabId){{
+    btns.forEach(function(b){{
+      var active=(b.getAttribute("data-tab")===tabId);
+      b.classList.toggle("active",active);
+      b.setAttribute("aria-selected",active?"true":"false");
+    }});
+    panels.forEach(function(p){{
+      p.classList.toggle("active",p.id==="tab-"+tabId);
+    }});
+  }}
+
   if(btns.length){{
     btns.forEach(function(btn){{
       btn.addEventListener("click",function(){{
-        btns.forEach(function(b){{b.classList.remove("active");b.setAttribute("aria-selected","false");}});
-        panels.forEach(function(p){{p.classList.remove("active");}});
-        btn.classList.add("active");
-        btn.setAttribute("aria-selected","true");
-        var panel=document.getElementById("tab-"+btn.dataset.tab);
-        if(panel)panel.classList.add("active");
+        activateTab(btn.getAttribute("data-tab"));
       }});
     }});
   }}
+
+  // ── アンカーリンク（href="#tab-xxx"）からのタブ切り替え ──
+  document.addEventListener("click",function(e){{
+    var el=e.target.closest("a[href^='#tab-']");
+    if(el){{
+      var hash=el.getAttribute("href");
+      var tabId=hash.replace("#tab-","");
+      var panel=document.getElementById("tab-"+tabId);
+      if(panel){{
+        e.preventDefault();
+        activateTab(tabId);
+        panel.scrollIntoView({{behavior:"smooth",block:"start"}});
+      }}
+    }}
+  }});
+
+  // ── トラッキング ──
   document.addEventListener("click",function(e){{
     var el=e.target.closest("[data-track]");
     if(!el)return;
@@ -2530,7 +2572,8 @@ a[href], button, [role="tab"], [role="button"],
     if(typeof gtag==="function")gtag("event",ev,{{product_id:pid,shop:shop}});
     if(typeof fbq==="function")fbq("trackCustom",ev,{{product_id:pid,shop:shop}});
   }});
-  // ランキング内タブ
+
+  // ── ランキング内サブタブ ──
   var rbtns=document.querySelectorAll(".ranking-tab-btn");
   if(rbtns.length){{
     rbtns.forEach(function(rb){{
@@ -2647,7 +2690,8 @@ a[href], button, [role="tab"], [role="button"],
 
                       camera_deals=None, iphone_watch=None, camera_watch=None,
 
-                      game_watch=None, buyback_by_product: dict = None) -> str:
+                      game_watch=None, buyback_by_product: dict = None,
+                      sedori_routes: list = None) -> str:
 
         camera_deals = camera_deals or []
 
@@ -2661,7 +2705,7 @@ a[href], button, [role="tab"], [role="button"],
         surge_html       = self._tab_surge(buyback_alerts)
         ranking_html     = self._tab_ranking(all_deals, iphone_deals, game_deals)
         new_products_html = self._section_new_products()
-        sedori_html      = self._tab_sedori()
+        sedori_html      = self._tab_sedori(sedori_routes or [])
 
         all_count    = len(beginner_easy) + len(beginner_watch)
         adv_total    = len(advanced_deals) + len(advanced_snaps) + len(watch_candidates)
@@ -2673,7 +2717,7 @@ a[href], button, [role="tab"], [role="button"],
   <button class="tab-btn" data-tab="ranking" role="tab" aria-selected="false">&#127942; ランキング</button>
   <button class="tab-btn active" data-tab="beginner" role="tab" aria-selected="true">&#128100; 初心者向け <span class="tab-count">{all_count}</span></button>
   <button class="tab-btn" data-tab="advanced" role="tab" aria-selected="false">&#128269; 上級者向け <span class="tab-count">{adv_total}</span></button>
-  <button class="tab-btn" data-tab="sedori" role="tab" aria-selected="false">&#9636; せどり計算</button>
+  <button class="tab-btn" data-tab="sedori" role="tab" aria-selected="false">&#9636; せどりルート</button>
   <button class="tab-btn" data-tab="surge" role="tab" aria-selected="false">&#9889; 急騰/急落{surge_badge}</button>
   <button class="tab-btn" data-tab="new-products" role="tab" aria-selected="false">&#127381; 新商品候補</button>
 </nav>
@@ -2705,213 +2749,159 @@ a[href], button, [role="tab"], [role="button"],
 
 
 
-    def _tab_sedori(self) -> str:
-        """せどり計算タブ — サイト間せどり計算ツール（Manusデザイン準拠）"""
-        # NOTE: 通常のstr（f-string不使用）なのでJS内の{}/[]はそのまま使用可
-        return (
-            '<div class="sc-wrap">'
-            '<div class="sc-header">'
-            '<div class="sc-eyebrow">&#9736; Advanced Tool</div>'
-            '<h2 class="sc-title">サイト間せどり計算</h2>'
-            '<p class="sc-desc">複数店舗の買取・販売価格を比較し、最大利益ルートを自動計算します。価格は参考値です。</p>'
-            '</div>'
-            '<div class="sc-controls">'
-            '<div class="sc-ctrl-main">'
-            '<label class="sc-label" for="sc-product-select">&#128241; 商品を選択</label>'
-            '<select id="sc-product-select" class="sc-select" onchange="renderSedori()">'
-            '<option value="0">iPhone 16 Pro 256GB ナチュラルチタニウム</option>'
-            '<option value="1">iPhone 16 128GB ブラック</option>'
-            '<option value="2">MacBook Air M3 13インチ 8GB/256GB</option>'
-            '<option value="3">FUJIFILM X100VI（中古・美品）</option>'
-            '<option value="4">Nintendo Switch 有機ELモデル</option>'
-            '</select>'
-            '</div>'
-            '<div class="sc-ctrl-ship">'
-            '<label class="sc-label" for="sc-shipping">&#128230; 送料・手数料（円）</label>'
-            '<input id="sc-shipping" type="number" value="0" min="0" step="100" '
-            'class="sc-input" oninput="renderSedori()" placeholder="0">'
-            '</div>'
-            '</div>'
-            '<div id="sc-best-route"></div>'
-            '<div class="sc-card">'
-            '<div class="sc-card-hd">'
-            '<span class="sc-card-icon">&#128203;</span>'
-            '<span class="sc-card-title">店舗別 買取・販売価格一覧</span>'
-            '<span id="sc-product-category" class="sc-cat-badge"></span>'
-            '<span class="sc-card-note">買取価格 = この店が買い取る価格</span>'
-            '</div>'
-            '<div class="sc-table-scroll" id="sc-store-table"></div>'
-            '</div>'
-            '<div class="sc-card">'
-            '<div class="sc-card-hd">'
-            '<span class="sc-card-icon">&#128200;</span>'
-            '<span class="sc-card-title">全ルート利益計算</span>'
-            '<span id="sc-routes-count" class="sc-routes-count"></span>'
-            '</div>'
-            '<div class="sc-table-scroll" id="sc-routes-table"></div>'
-            '</div>'
-            '<div class="sc-disclaimer">'
-            '&#9888;&#65039; 掲載価格は参考値です。実際の買取査定額は商品の状態・付属品・在庫状況により大幅に異なります。必ず各店舗の最新情報を確認してから取引を行ってください。'
-            '</div>'
-            '</div>'
-            '<script>'
-            '(function(){'
-            'var PRODUCTS=['
-            '{name:"iPhone 16 Pro 256GB",cat:"Apple",stores:['
-            '{id:"geo",name:"ゲオ",buy:186200,sell:195000,url:"https://geo-online.co.jp",fee:0},'
-            '{id:"bookoff",name:"ブックオフ",buy:182000,sell:192000,url:"https://bookoff.co.jp",fee:0},'
-            '{id:"hardoff",name:"ハードオフ",buy:178000,sell:188000,url:"https://hardoff.co.jp",fee:0},'
-            '{id:"iosys",name:"イオシス",buy:175000,sell:185000,url:"https://iosys.co.jp",fee:0},'
-            '{id:"janpara",name:"じゃんぱら",buy:172000,sell:183000,url:"https://janpara.co.jp",fee:0}'
-            ']},'
-            '{name:"iPhone 16 128GB",cat:"Apple",stores:['
-            '{id:"geo",name:"ゲオ",buy:143000,sell:152000,url:"https://geo-online.co.jp",fee:0},'
-            '{id:"bookoff",name:"ブックオフ",buy:138000,sell:148000,url:"https://bookoff.co.jp",fee:0},'
-            '{id:"hardoff",name:"ハードオフ",buy:135000,sell:145000,url:"https://hardoff.co.jp",fee:0},'
-            '{id:"iosys",name:"イオシス",buy:132000,sell:142000,url:"https://iosys.co.jp",fee:0},'
-            '{id:"janpara",name:"じゃんぱら",buy:130000,sell:140000,url:"https://janpara.co.jp",fee:0}'
-            ']},'
-            '{name:"MacBook Air M3 13インチ",cat:"Apple",stores:['
-            '{id:"geo",name:"ゲオ",buy:185000,sell:198000,url:"https://geo-online.co.jp",fee:0},'
-            '{id:"bookoff",name:"ブックオフ",buy:180000,sell:193000,url:"https://bookoff.co.jp",fee:0},'
-            '{id:"pckoubou",name:"パソコン工房",buy:175000,sell:188000,url:"https://pc-koubou.jp",fee:0},'
-            '{id:"sofmap",name:"ソフマップ",buy:172000,sell:185000,url:"https://sofmap.com",fee:0},'
-            '{id:"hardoff",name:"ハードオフ",buy:168000,sell:182000,url:"https://hardoff.co.jp",fee:0}'
-            ']},'
-            '{name:"FUJIFILM X100VI（中古・美品）",cat:"カメラ",stores:['
-            '{id:"mapcam",name:"マップカメラ",buy:298000,sell:318000,url:"https://mapcamera.com",fee:0},'
-            '{id:"kitamura",name:"キタムラ",buy:285000,sell:305000,url:"https://kitamura.jp",fee:0},'
-            '{id:"hardoff",name:"ハードオフ",buy:265000,sell:285000,url:"https://hardoff.co.jp",fee:0},'
-            '{id:"2ndst",name:"2nd STREET",buy:258000,sell:278000,url:"https://2ndstreet.jp",fee:0},'
-            '{id:"mercari",name:"メルカリ（参考）",buy:0,sell:310000,url:"https://mercari.com",fee:10}'
-            ']},'
-            '{name:"Nintendo Switch 有機ELモデル",cat:"ゲーム機",stores:['
-            '{id:"geo",name:"ゲオ",buy:44000,sell:48000,url:"https://geo-online.co.jp",fee:0},'
-            '{id:"bookoff",name:"ブックオフ",buy:42000,sell:46000,url:"https://bookoff.co.jp",fee:0},'
-            '{id:"hardoff",name:"ハードオフ",buy:40000,sell:44500,url:"https://hardoff.co.jp",fee:0},'
-            '{id:"surugaya",name:"ゲーム駿河屋",buy:38500,sell:43000,url:"https://suruga-ya.jp",fee:0},'
-            '{id:"mercari",name:"メルカリ（参考）",buy:0,sell:47000,url:"https://mercari.com",fee:10}'
-            ']}'
-            '];'
-            'function fmt(n){return "\xA5"+n.toLocaleString("ja-JP");}'
-            'function calcRoutes(p,ship){'
-            'var res=[];'
-            'var bs=p.stores.filter(function(s){return s.sell>0;});'
-            'var ss=p.stores.filter(function(s){return s.buy>0;});'
-            'for(var i=0;i<bs.length;i++){'
-            'for(var j=0;j<ss.length;j++){'
-            'if(bs[i].id===ss[j].id)continue;'
-            'var buyAt=bs[i].sell,sellAt=ss[j].buy;'
-            'var gross=sellAt-buyAt;'
-            'var fees=Math.round(sellAt*(ss[j].fee/100))+ship;'
-            'var net=gross-fees;'
-            'var rate=buyAt>0?Math.round((net/buyAt)*1000)/10:0;'
-            'res.push({bs:bs[i],ss:ss[j],gross:gross,fees:fees,net:net,rate:rate});'
-            '}}'
-            'res.sort(function(a,b){return b.net-a.net;});'
-            'return res;'
-            '}'
-            'window.renderSedori=function(){'
-            'var sel=document.getElementById("sc-product-select");'
-            'var shipEl=document.getElementById("sc-shipping");'
-            'if(!sel||!shipEl)return;'
-            'var pidx=parseInt(sel.value,10);'
-            'var ship=parseInt(shipEl.value,10)||0;'
-            'var p=PRODUCTS[pidx];if(!p)return;'
-            'var catEl=document.getElementById("sc-product-category");'
-            'if(catEl)catEl.textContent=p.cat;'
-            'var routes=calcRoutes(p,ship);'
-            'var best=routes[0];'
-            'var bestDiv=document.getElementById("sc-best-route");'
-            'if(bestDiv){'
-            'if(best&&best.net>0){'
-            'bestDiv.innerHTML='
-            '"<div class=\\"sc-best-inner\\">"'
-            '+"<div class=\\"sc-best-label\\">&#128081; 最大利益ルート <span class=\\"sc-best-tag\\">推奨</span></div>"'
-            '+"<div class=\\"sc-best-row\\">"'
-            '+"<div class=\\"sc-best-box\\">"'
-            '+"<div class=\\"sc-best-box-lbl\\">仕入れ先</div>"'
-            '+"<div class=\\"sc-best-box-name\\">"+best.bs.name+"</div>"'
-            '+"<div class=\\"sc-best-box-price sc-col-red\\">"+fmt(best.bs.sell)+"</div>"'
-            '+"<div class=\\"sc-best-box-note\\">で購入</div>"'
-            '+"</div>"'
-            '+"<div class=\\"sc-best-arrow\\">&#10132;</div>"'
-            '+"<div class=\\"sc-best-box\\">"'
-            '+"<div class=\\"sc-best-box-lbl\\">売却先</div>"'
-            '+"<div class=\\"sc-best-box-name\\">"+best.ss.name+"</div>"'
-            '+"<div class=\\"sc-best-box-price sc-col-green\\">"+fmt(best.ss.buy)+"</div>"'
-            '+"<div class=\\"sc-best-box-note\\">で売却</div>"'
-            '+"</div>"'
-            '+"<div class=\\"sc-best-profit\\">"'
-            '+"<div class=\\"sc-best-box-lbl\\">実質利益</div>"'
-            '+"<div class=\\"sc-profit-num\\">+"+fmt(best.net)+"</div>"'
-            '+"<div class=\\"sc-profit-rate\\">+"+best.rate+"%</div>"'
-            '+"</div>"'
-            '+"</div></div>";'
-            '}else{'
-            'bestDiv.innerHTML="<div class=\\"sc-no-profit\\">&#128202; 現在この商品では利益が出るルートはありません。</div>";'
-            '}'
-            '}'
-            'var storeDiv=document.getElementById("sc-store-table");'
-            'if(storeDiv){'
-            'var maxBuy=Math.max.apply(null,p.stores.map(function(s){return s.buy;}));'
-            'var sellArr=p.stores.filter(function(s){return s.sell>0;}).map(function(s){return s.sell;});'
-            'var minSell=sellArr.length?Math.min.apply(null,sellArr):0;'
-            'var th="<table class=\\"sc-table\\"><thead><tr><th>店舗名</th><th>販売価格（購入可）</th><th>買取価格（売却可）</th><th>スプレッド</th><th></th></tr></thead><tbody>";'
-            'for(var i=0;i<p.stores.length;i++){'
-            'var s=p.stores[i];'
-            'var isHi=s.buy>0&&s.buy===maxBuy;'
-            'var isLo=s.sell>0&&s.sell===minSell;'
-            'var sp=(s.buy>0&&s.sell>0)?s.buy-s.sell:null;'
-            'th+="<tr class=\\"sc-tr"+(isHi?" sc-tr-best":"")+"\\">"'
-            '+"<td><span class=\\"sc-store-name\\">"+(isHi?"<span class=\\"sc-badge-green\\">買取最高値</span> ":"")'
-            '+(isLo?"<span class=\\"sc-badge-blue\\">最安仕入れ</span> ":"")+s.name+"</span>"'
-            '+(s.fee>0?"<span class=\\"sc-fee\\">手数料"+s.fee+"%</span>":"")'
-            '+"</td>"'
-            '+"<td>"+(s.sell>0?"<span class=\\"sc-mono"+(isLo?" sc-col-blue":"")+"\\">"'
-            '+fmt(s.sell)+(isLo?"<br><span class=\\"sc-hint sc-col-blue\\">← ここで買う</span>":"")+"</span>":"<span class=\\"sc-na\\">取扱なし</span>")'
-            '+"</td>"'
-            '+"<td>"+(s.buy>0?"<span class=\\"sc-mono"+(isHi?" sc-col-green":"")+"\\">"'
-            '+fmt(s.buy)+(isHi?"<br><span class=\\"sc-hint sc-col-green\\">← ここで売る</span>":"")+"</span>":"<span class=\\"sc-na\\">買取不可</span>")'
-            '+"</td>"'
-            '+"<td>"+(sp!==null?"<span class=\\"sc-mono"+(sp>0?" sc-col-green":" sc-col-red")+"\\">"+((sp>0)?"+":"")+fmt(sp)+"</span>":"<span class=\\"sc-na\\">—</span>")'
-            '+"</td>"'
-            '+"<td><a href=\\""+s.url+"\\" target=\\"_blank\\" rel=\\"noopener\\" class=\\"sc-link-btn\\">確認</a></td>"'
-            '+"</tr>";'
-            '}'
-            'th+="</tbody></table>";'
-            'storeDiv.innerHTML=th;'
-            '}'
-            'var cntEl=document.getElementById("sc-routes-count");'
-            'if(cntEl)cntEl.textContent=routes.length+"通りのルート";'
-            'var routesDiv=document.getElementById("sc-routes-table");'
-            'if(routesDiv){'
-            'var rh="<table class=\\"sc-table\\"><thead><tr><th>#</th><th>仕入れ先</th><th>売却先</th><th>仕入れ価格</th><th>売却価格</th><th>粗利</th><th>手数料等</th><th>実質利益</th><th>利益率</th></tr></thead><tbody>";'
-            'for(var k=0;k<routes.length;k++){'
-            'var r=routes[k];'
-            'var isBest=k===0&&r.net>0;'
-            'rh+="<tr class=\\"sc-tr"+(isBest?" sc-tr-best":"")+"\\">"'
-            '+"<td>"+(isBest?"&#128081;":"<span class=\\"sc-rank-num\\">"+(k+1)+"</span>")+"</td>"'
-            '+"<td><span class=\\"sc-store-name\\">"+r.bs.name+"</span></td>"'
-            '+"<td><span class=\\"sc-store-name\\">"+r.ss.name+"</span></td>"'
-            '+"<td><span class=\\"sc-mono sc-col-red\\">"+fmt(r.bs.sell)+"</span></td>"'
-            '+"<td><span class=\\"sc-mono sc-col-green\\">"+fmt(r.ss.buy)+"</span></td>"'
-            '+"<td><span class=\\"sc-mono"+(r.gross<0?" sc-col-red":"")+"\\">"+((r.gross>=0)?"+":"")+fmt(r.gross)+"</span></td>"'
-            '+"<td><span class=\\"sc-mono sc-col-gray\\">"+(r.fees>0?"-"+fmt(r.fees):"—")+"</span></td>"'
-            '+"<td><span class=\\"sc-mono sc-bold"+(r.net>0?" sc-col-green":" sc-col-red")+"\\">"+((r.net>=0)?"+":"")+fmt(r.net)+"</span></td>"'
-            '+"<td><span class=\\"sc-rate-badge"+(r.net>0?" sc-rate-pos":" sc-rate-neg")+"\\">"+((r.net>=0)?"+":"")+r.rate+"%</span></td>"'
-            '+"</tr>";'
-            '}'
-            'rh+="</tbody></table>";'
-            'routesDiv.innerHTML=rh;'
-            '}'
-            '};'
-            'if(document.readyState==="loading"){'
-            'document.addEventListener("DOMContentLoaded",renderSedori);'
-            '}else{renderSedori();}'
-            '})();'
-            '</script>'
-        )
+    def _tab_sedori(self, sedori_routes: list = None) -> str:
+        """せどりルート比較タブ — DBから自動算出済みルートを表示する（Phase 14）。"""
+        routes = sedori_routes or []
+
+        # コスト情報（最初のルートから取得）
+        if routes:
+            r0 = routes[0]
+            cost_info = f"送料¥{r0.shipping_fee:,} + 振込¥{r0.transfer_fee:,} + 交通費¥{r0.travel_fee:,}"
+        else:
+            cost_info = "送料¥1,000 + 振込¥300 + 交通費¥500"
+
+        parts = []
+
+        # ── ヘッダー ──
+        route_count = len(routes)
+        parts.append(f'''<div class="sc-wrap">
+<div class="sc-header">
+  <div class="sc-eyebrow">&#9736; Auto Calculated</div>
+  <h2 class="sc-title">店舗間せどりルート比較</h2>
+  <p class="sc-desc">システムが取得済みの販売価格・買取価格をもとに、利益が出るルートを自動算出します。価格は参考値です。実際の購入前に必ず各店舗の最新価格をご確認ください。</p>
+</div>
+<div class="sc-meta-row">
+  <span class="sc-meta-label">&#128203; 算出ルート数</span>
+  <span class="sc-meta-val sc-routes-count-badge">{route_count}ルート</span>
+  <span class="sc-meta-sep">|</span>
+  <span class="sc-meta-label">&#128179; 推定コスト</span>
+  <span class="sc-meta-val">{cost_info}</span>
+</div>''')
+
+        if not routes:
+            # データなしフォールバック
+            parts.append('''<div class="sc-no-data">
+  <div class="sc-no-data-icon">&#128202;</div>
+  <div class="sc-no-data-title">現在、利益が出るルートはありません</div>
+  <div class="sc-no-data-desc">以下を実行するとルートが表示されます：</div>
+  <pre class="sc-no-data-cmd">python3 -m src.cli import-sale-csv --file data/manual_sale_prices.csv
+python3 -m src.cli calculate-sedori-routes</pre>
+</div>''')
+        else:
+            # ── 1位ルート大型カード ──
+            best = routes[0]
+            buy_link_html = (
+                f'<a href="{_esc(best.buy_url)}" target="_blank" rel="noopener noreferrer" '
+                f'class="sc-link-btn sc-link-buy" data-track="sedori_buy_click">'
+                f'&#128722; {_esc(best.buy_shop_name)}で仕入れる</a>'
+            ) if best.buy_url else (
+                f'<span class="sc-link-unverified">&#128722; {_esc(best.buy_shop_name)}（URL未登録）</span>'
+            )
+            sell_link_html = (
+                f'<a href="{_esc(best.sell_url)}" target="_blank" rel="noopener noreferrer" '
+                f'class="sc-link-btn sc-link-sell" data-track="sedori_sell_click">'
+                f'&#128181; {_esc(best.sell_shop_name)}へ売却する</a>'
+            ) if best.sell_url else (
+                f'<span class="sc-link-unverified">&#128181; {_esc(best.sell_shop_name)}（URL未登録）</span>'
+            )
+            from src.models.sale_price import CONDITION_LABELS
+            buy_cond = CONDITION_LABELS.get(best.buy_condition, best.buy_condition)
+
+            parts.append(f'''<div class="sc-best-card">
+  <div class="sc-best-crown">&#127881; 最大利益ルート <span class="sc-best-rank-badge">#1</span></div>
+  <div class="sc-best-product">{_esc(best.product_name)}</div>
+  <div class="sc-best-route-row">
+    <div class="sc-best-box sc-best-box-buy">
+      <div class="sc-best-box-lbl">&#128722; 仕入れ先</div>
+      <div class="sc-best-box-shop">{_esc(best.buy_shop_name)}</div>
+      <div class="sc-best-box-price sc-price-buy">¥{best.buy_price:,}</div>
+      <div class="sc-best-box-cond">{_esc(buy_cond)}</div>
+    </div>
+    <div class="sc-best-arrow">&#8594;</div>
+    <div class="sc-best-box sc-best-box-sell">
+      <div class="sc-best-box-lbl">&#128181; 売却先</div>
+      <div class="sc-best-box-shop">{_esc(best.sell_shop_name)}</div>
+      <div class="sc-best-box-price sc-price-sell">¥{best.sell_price:,}</div>
+      <div class="sc-best-box-cond">買取価格</div>
+    </div>
+  </div>
+  <div class="sc-best-profit-row">
+    <div class="sc-profit-block">
+      <div class="sc-profit-lbl">粗利</div>
+      <div class="sc-profit-val sc-col-amber">+¥{best.gross_profit:,}</div>
+    </div>
+    <div class="sc-profit-block">
+      <div class="sc-profit-lbl">推定コスト</div>
+      <div class="sc-profit-val sc-col-gray">-¥{best.estimated_costs:,}</div>
+    </div>
+    <div class="sc-profit-block sc-profit-main">
+      <div class="sc-profit-lbl">実質利益</div>
+      <div class="sc-profit-val sc-col-green">+¥{best.net_profit:,}</div>
+    </div>
+    <div class="sc-profit-block">
+      <div class="sc-profit-lbl">利益率</div>
+      <div class="sc-profit-val sc-rate-val">+{best.profit_rate:.1%}</div>
+    </div>
+  </div>
+  <div class="sc-best-links">
+    {buy_link_html}
+    {sell_link_html}
+  </div>
+</div>''')
+
+            # ── 2位〜10位リスト ──
+            top_routes = routes[1:10]
+            if top_routes:
+                rows_html = []
+                for r in top_routes:
+                    buy_a = (
+                        f'<a href="{_esc(r.buy_url)}" target="_blank" rel="noopener noreferrer" '
+                        f'class="sc-mini-link" data-track="sedori_buy_click">'
+                        f'{_esc(r.buy_shop_name)}</a>'
+                    ) if r.buy_url else _esc(r.buy_shop_name)
+                    sell_a = (
+                        f'<a href="{_esc(r.sell_url)}" target="_blank" rel="noopener noreferrer" '
+                        f'class="sc-mini-link" data-track="sedori_sell_click">'
+                        f'{_esc(r.sell_shop_name)}</a>'
+                    ) if r.sell_url else _esc(r.sell_shop_name)
+                    rows_html.append(
+                        f'<tr class="sc-route-row">'
+                        f'<td class="sc-rank-cell">#{r.rank}</td>'
+                        f'<td class="sc-prod-cell">{_esc(r.product_name)}</td>'
+                        f'<td class="sc-shop-cell">{buy_a}</td>'
+                        f'<td class="sc-price-cell sc-col-red">¥{r.buy_price:,}</td>'
+                        f'<td class="sc-shop-cell">{sell_a}</td>'
+                        f'<td class="sc-price-cell sc-col-green">¥{r.sell_price:,}</td>'
+                        f'<td class="sc-profit-cell sc-col-green">+¥{r.net_profit:,}</td>'
+                        f'<td class="sc-rate-cell"><span class="sc-rate-badge sc-rate-pos">+{r.profit_rate:.1%}</span></td>'
+                        f'</tr>'
+                    )
+                parts.append(f'''<div class="sc-list-section">
+  <div class="sc-list-header">
+    <span class="sc-list-title">&#128202; 2位〜10位ルート一覧</span>
+    <span class="sc-list-count">{len(top_routes)}件</span>
+  </div>
+  <div class="sc-table-scroll">
+    <table class="sc-table">
+      <thead>
+        <tr>
+          <th>#</th><th>商品</th><th>仕入れ店</th><th>仕入れ価格</th>
+          <th>売却店</th><th>買取価格</th><th>実質利益</th><th>利益率</th>
+        </tr>
+      </thead>
+      <tbody>{"".join(rows_html)}</tbody>
+    </table>
+  </div>
+</div>''')
+
+        # ── 免責 ──
+        parts.append('''<div class="sc-disclaimer">
+&#9888; 価格は参考値です。実際の購入・売却前に各店舗の公式サイトで最新価格をご確認ください。
+利益を保証するものではありません。転売・せどり行為に関するリスクはご自身でご判断ください。
+</div>
+</div>''')
+
+        return "\n".join(parts)
 
     def _freshness_label(self, observed_at_str: str, data_source: str) -> str:
         """データ鮮度ラベルを返す。24時間超はwarningクラス。"""

@@ -1585,6 +1585,158 @@ def import_buyback_csv(filepath):
         db.close()
 
 
+@cli.command("import-sale-csv")
+@click.option("--file", "-f", "filepath", required=True, help="販売価格CSVファイルパス")
+def import_sale_csv(filepath):
+    """販売価格CSVをインポートする（仕入れ候補店の価格）。"""
+    db = _get_db()
+    try:
+        db.init_schema()
+        repo = Repository(db)
+        from src.market.sale_price_csv_importer import SalePriceCSVImporter
+        imp = SalePriceCSVImporter(repository=repo)
+        path = str(PROJECT_ROOT / filepath) if not filepath.startswith("/") else filepath
+        result = imp.import_file(path)
+        click.echo(f"\nSale Price CSV Import:")
+        click.echo(f"  Imported: {result['imported']}")
+        click.echo(f"  Skipped:  {result['skipped']}")
+        if result["errors"]:
+            for e in result["errors"][:5]:
+                click.echo(f"  ⚠️  {e}")
+    finally:
+        db.close()
+
+
+@cli.command("calculate-sedori-routes")
+@click.option("--shipping", default=1000, help="送料（円、デフォルト:1000）")
+@click.option("--transfer", default=300, help="振込手数料（円、デフォルト:300）")
+@click.option("--travel", default=500, help="交通費（円、デフォルト:500）")
+@click.option("--other", default=0, help="その他コスト（円、デフォルト:0）")
+def calculate_sedori_routes(shipping, transfer, travel, other):
+    """せどりルートを計算してDBに保存する。
+
+    sale_prices（仕入れ候補）とbuyback_prices（売却先）の全組み合わせを
+    計算し、net_profit > 0 のルートをsedori_routesに保存する。
+    """
+    db = _get_db()
+    try:
+        db.init_schema()
+        repo = Repository(db)
+        from src.market.sedori_route_calculator import SedoriRouteCalculator
+        calc = SedoriRouteCalculator(
+            repository=repo,
+            shipping_fee=shipping,
+            transfer_fee=transfer,
+            travel_fee=travel,
+            other_costs=other,
+        )
+        result = calc.calculate_all()
+
+        click.echo(f"\n{'='*70}")
+        click.echo(f" せどりルート計算完了")
+        click.echo(f"{'='*70}")
+        click.echo(f"  スキャン商品数:   {result['products_scanned']} 件")
+        click.echo(f"  計算ルート数:     {result['total_routes']} 件")
+        click.echo(f"  保存ルート数:     {result['routes_saved']} 件")
+        click.echo(f"  推定コスト:       ¥{shipping+transfer+travel+other:,}")
+        if result["by_product"]:
+            click.echo(f"\n  --- 商品別サマリ ---")
+            for alias, info in sorted(
+                result["by_product"].items(),
+                key=lambda x: x[1]["best_net_profit"],
+                reverse=True
+            ):
+                click.echo(
+                    f"  {info['product_name'][:30]:<32} "
+                    f"{info['route_count']:>3}ルート  "
+                    f"最大実質利益: +¥{info['best_net_profit']:,}"
+                )
+        click.echo(f"{'='*70}\n")
+    finally:
+        db.close()
+
+
+@cli.command("list-sedori-routes")
+@click.option("--product", "-p", default=None, help="商品エイリアス (例: iphone17pro256)")
+@click.option("--min-profit", default=0, help="最低実質利益（円）")
+@click.option("--limit", "-n", default=20, help="表示件数")
+def list_sedori_routes(product, min_profit, limit):
+    """計算済みせどりルート一覧を表示する。"""
+    db = _get_db()
+    try:
+        db.init_schema()
+        repo = Repository(db)
+        routes = repo.list_sedori_routes(
+            product_alias=product,
+            min_net_profit=min_profit,
+            limit=limit,
+        )
+
+        click.echo(f"\n{'='*110}")
+        click.echo(f" せどりルート一覧 ({len(routes)} 件)")
+        click.echo(f"{'='*110}")
+
+        if not routes:
+            click.echo("  ルートなし。以下を実行してください:")
+            click.echo("  python -m src.cli import-sale-csv --file data/manual_sale_prices.csv")
+            click.echo("  python -m src.cli import-buyback-csv --file data/manual_buyback_prices.csv")
+            click.echo("  python -m src.cli calculate-sedori-routes")
+        else:
+            click.echo(
+                f"  {'#':>3} {'商品':<24} {'仕入れ店':<14} {'仕入れ価格':>10} "
+                f"{'売却店':<14} {'買取価格':>10} {'粗利':>8} {'推定C':>7} {'実質利益':>9} {'利益率':>6}"
+            )
+            click.echo(f"  {'─'*108}")
+            for r in routes:
+                rate = f"{r.profit_rate:.1%}"
+                click.echo(
+                    f"  {r.rank:>3} {r.product_name[:22]:<24} "
+                    f"{r.buy_shop_name[:12]:<14} ¥{r.buy_price:>8,} "
+                    f"{r.sell_shop_name[:12]:<14} ¥{r.sell_price:>8,} "
+                    f"+¥{r.gross_profit:>5,} -¥{r.estimated_costs:>4,} "
+                    f"+¥{r.net_profit:>6,} {rate:>6}"
+                )
+        click.echo(f"{'='*110}\n")
+    finally:
+        db.close()
+
+
+@cli.command("compare-sedori-routes")
+@click.option("--product", "-p", required=True, help="商品エイリアス (例: iphone17pro256)")
+def compare_sedori_routes(product):
+    """指定商品のせどりルートを再計算して比較する。"""
+    db = _get_db()
+    try:
+        db.init_schema()
+        repo = Repository(db)
+        from src.market.sedori_route_calculator import SedoriRouteCalculator
+        calc = SedoriRouteCalculator(repository=repo)
+        routes = calc.calculate_for_alias(product)
+
+        click.echo(f"\n{'='*80}")
+        click.echo(f" せどりルート比較: {product} ({len(routes)} ルート)")
+        click.echo(f"{'='*80}")
+
+        if not routes:
+            click.echo(f"  利益が出るルートがありません。")
+            click.echo(f"  販売価格・買取価格データを確認してください。")
+        else:
+            for r in routes[:10]:
+                click.echo(f"\n  ── ルート #{r.rank} ──────────────────────────────")
+                click.echo(f"  仕入れ: {r.buy_shop_name}  ¥{r.buy_price:,}  ({r.buy_condition})")
+                click.echo(f"  売却:   {r.sell_shop_name}  ¥{r.sell_price:,}")
+                click.echo(f"  粗利:   +¥{r.gross_profit:,}")
+                click.echo(f"  コスト: -¥{r.estimated_costs:,}  (送料¥{r.shipping_fee:,} / 振込¥{r.transfer_fee:,} / 交通費¥{r.travel_fee:,})")
+                click.echo(f"  実質:   +¥{r.net_profit:,}  ({r.profit_rate:.1%})")
+                if r.buy_url:
+                    click.echo(f"  仕入れURL: {r.buy_url}")
+                if r.sell_url:
+                    click.echo(f"  売却URL:   {r.sell_url}")
+        click.echo(f"\n{'='*80}\n")
+    finally:
+        db.close()
+
+
 @cli.command("scan-beginner-deals")
 @click.option("--category", "-c", default=None, help="カテゴリ (iphone/game_console/camera/all)")
 def scan_beginner_deals(category):

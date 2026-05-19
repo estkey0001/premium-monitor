@@ -373,6 +373,49 @@ body {{
   color: var(--ink);
   font-size: 15px;
   line-height: 1.6;
+  font-feature-settings: "cv02","cv03","cv04","cv11","tnum";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}}
+
+/* ============================================================
+   SCROLLBAR — Manus style
+   ============================================================ */
+::-webkit-scrollbar {{ width: 5px; height: 5px; }}
+::-webkit-scrollbar-track {{ background: transparent; }}
+::-webkit-scrollbar-thumb {{ background: #D0D4E8; border-radius: 4px; }}
+::-webkit-scrollbar-thumb:hover {{ background: #B0B6CC; }}
+
+/* ============================================================
+   ANIMATIONS — fade-in-up
+   ============================================================ */
+@keyframes fadeInUp {{
+  from {{ opacity: 0; transform: translateY(16px); }}
+  to   {{ opacity: 1; transform: translateY(0); }}
+}}
+
+.fade-in-up {{
+  animation: fadeInUp 0.45s cubic-bezier(0.23,1,0.32,1) forwards;
+  opacity: 0;
+}}
+
+.delay-100 {{ animation-delay: 100ms; }}
+.delay-200 {{ animation-delay: 200ms; }}
+.delay-300 {{ animation-delay: 300ms; }}
+
+/* ============================================================
+   CURSOR — クリック可能要素
+   ============================================================ */
+a[href], button, [role="tab"], [role="button"],
+.tab-btn, .genre-chip, .maker-chip, .oc-chip,
+.overseas-btn, .overseas-chip, .shop-check-btn {{
+  cursor: pointer;
+}}
+
+/* オーバーレイがクリックを阻害しないように */
+.hero::before, .hero::after,
+.section-overlay, .bg-overlay {{
+  pointer-events: none;
 }}
 
 /* ============================================================
@@ -901,38 +944,41 @@ body {{
   border: 1px solid var(--card-border);
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: var(--shadow-sm);
-  transition: transform 0.18s, box-shadow 0.18s, border-color 0.18s;
+  box-shadow: 0 1px 3px rgba(13,15,28,0.05), 0 1px 2px rgba(13,15,28,0.04);
+  transition: transform 0.18s cubic-bezier(0.23,1,0.32,1),
+              box-shadow 0.18s cubic-bezier(0.23,1,0.32,1),
+              border-color 0.18s cubic-bezier(0.23,1,0.32,1);
   display: flex; flex-direction: column;
 }}
 
 .souba-card:hover,
 .deal-card:hover {{
   transform: translateY(-3px);
-  box-shadow: var(--shadow-xl);
+  box-shadow: 0 12px 40px rgba(13,15,28,0.1), 0 4px 12px rgba(13,15,28,0.06);
   border-color: #D0D4E8;
 }}
 
 /* カード上部利益バー */
-.card-stripe {{ height: 3px; }}
+.card-stripe {{ height: 4px; }}
 .card-stripe.iphone  {{ background: linear-gradient(90deg, var(--blue), #93B8FF); }}
 .card-stripe.camera  {{ background: linear-gradient(90deg, var(--violet), #B9A8FF); }}
 .card-stripe.game    {{ background: linear-gradient(90deg, var(--profit), #80E8CC); }}
 .card-stripe.default {{ background: linear-gradient(90deg, var(--profit), var(--blue)); }}
 
-/* Score badge */
+/* Score badge — Manus style: 正方形・グラデーション */
 .score-badge {{
   display: inline-flex; align-items: center; justify-content: center;
-  width: 28px; height: 28px;
-  border-radius: 50%;
-  font-size: 0.75rem; font-weight: 900;
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  font-size: 14px; font-weight: 800;
+  font-family: 'JetBrains Mono', 'Menlo', ui-monospace, monospace;
   flex-shrink: 0;
 }}
 
-.score-s {{ background: linear-gradient(135deg, #FFD700, #FF9500); color: #fff; }}
+.score-s {{ background: linear-gradient(135deg, #FFD700, #FFA500); color: #7A4000; }}
 .score-a {{ background: linear-gradient(135deg, #00C896, #00A876); color: #fff; }}
-.score-b {{ background: #EDE9FF; color: var(--violet); }}
-.score-c {{ background: var(--surface2); color: var(--ink3); }}
+.score-b {{ background: linear-gradient(135deg, #3B7BFF, #1D4ED8); color: #fff; }}
+.score-c {{ background: #F4F5FA; color: #5B6278; border: 1px solid #E8EAF2; }}
 
 /* Card Header */
 .card-hd {{
@@ -981,6 +1027,8 @@ body {{
   font-size: 2.1rem; font-weight: 900;
   color: var(--profit-dark);
   letter-spacing: -0.04em; line-height: 1;
+  font-variant-numeric: tabular-nums;
+  font-family: 'JetBrains Mono', 'Menlo', ui-monospace, var(--font);
 }}
 
 .profit-num.amber {{ color: #CC7A00; }}
@@ -1071,18 +1119,23 @@ body {{
 
 .shop-row {{
   display: flex; align-items: center;
-  padding: 9px 14px;
+  padding: 10px 14px;
   border-bottom: 1px solid var(--surface2);
   gap: 10px; font-size: 0.875rem;
-  transition: background 0.1s;
+  transition: background 0.15s cubic-bezier(0.23,1,0.32,1);
+  font-variant-numeric: tabular-nums;
 }}
 
 .shop-row:last-child {{ border: none; }}
-.shop-row:hover {{ background: #F8FAFC; }}
+.shop-row:hover {{ background: #FAFBFF; }}
 
-/* 1位ハイライト */
+/* 1位ハイライト — Manus row-best */
 .shop-row.row-best {{
-  background: #F0FDF8;
+  background: linear-gradient(90deg, #F0FDF8, #F5FFFB);
+}}
+
+.shop-row.row-best:hover {{
+  background: #E8FFF4;
 }}
 
 .shop-rank {{
@@ -1163,13 +1216,16 @@ body {{
   background: linear-gradient(135deg, var(--profit), var(--profit-dark));
   color: white;
   border-color: var(--profit-dark);
-  box-shadow: 0 2px 8px rgba(0,200,150,0.25);
+  box-shadow: 0 4px 16px rgba(0,200,150,0.35), inset 0 1px 0 rgba(255,255,255,0.2);
+  transition: all 0.18s cubic-bezier(0.23,1,0.32,1);
 }}
 
 .btn-primary:hover {{
   transform: translateY(-1px);
-  box-shadow: 0 4px 14px rgba(0,200,150,0.4);
+  box-shadow: 0 8px 24px rgba(0,200,150,0.45), inset 0 1px 0 rgba(255,255,255,0.2);
 }}
+
+.btn-primary:active {{ transform: scale(0.97); }}
 
 .btn-secondary {{
   background: white; color: var(--blue);
@@ -1220,6 +1276,7 @@ body {{
 .overseas-chip:hover {{
   background: #e0f2fe; border-color: #7dd3fc;
   transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(3,105,161,0.15);
 }}
 
 /* ============================================================
@@ -1272,8 +1329,12 @@ body {{
 }}
 
 .watch-card:hover {{
-  box-shadow: var(--shadow-xl);
+  box-shadow: 0 12px 40px rgba(13,15,28,0.1), 0 4px 12px rgba(13,15,28,0.06);
   transform: translateY(-2px);
+  border-color: #C4B5FD;
+  transition: transform 0.18s cubic-bezier(0.23,1,0.32,1),
+              box-shadow 0.18s cubic-bezier(0.23,1,0.32,1),
+              border-color 0.18s cubic-bezier(0.23,1,0.32,1);
 }}
 
 .watch-card-hd {{

@@ -529,6 +529,42 @@ def check() -> list[dict]:
     else:
         results.append({"level": "warning", "check": "ranking_target_id", "message": "ランキング行の data-target-id が未設定"})
 
+    # 61. category-beginner-tablet アンカーが存在する
+    if 'id="category-beginner-tablet"' in html:
+        results.append({"level": "ok", "check": "category_anchor_tablet", "message": "category-beginner-tablet アンカーが存在する"})
+    else:
+        results.append({"level": "error", "check": "category_anchor_tablet", "message": "category-beginner-tablet アンカーが見つからない"})
+
+    # 62. category-beginner-game アンカーが存在する
+    if 'id="category-beginner-game"' in html:
+        results.append({"level": "ok", "check": "category_anchor_game", "message": "category-beginner-game アンカーが存在する"})
+    else:
+        results.append({"level": "error", "check": "category_anchor_game", "message": "category-beginner-game アンカーが見つからない"})
+
+    # 63. category-lottery アンカーが存在する（抽選タブ内）
+    if 'id="category-lottery"' in html:
+        results.append({"level": "ok", "check": "category_anchor_lottery", "message": "category-lottery アンカーが存在する"})
+    else:
+        results.append({"level": "error", "check": "category_anchor_lottery", "message": "category-lottery アンカーが見つからない"})
+
+    # 64. ゲーム機チップが category-beginner-game に正しく設定されている
+    #     （ゲームジャンルボタン自体が category-beginner-iphone を指していないか確認）
+    game_chip_ok = 'data-target-id="category-beginner-game"' in html
+    # ゲームジャンルボタンタグ内に category-beginner-iphone が混在していないか（同一タグ属性）
+    game_chip_wrong = bool(re.search(
+        r'data-genre="game"[^>]*data-target-id="category-beginner-iphone"', html
+    ))
+    if game_chip_ok and not game_chip_wrong:
+        results.append({"level": "ok", "check": "game_chip_target", "message": "ゲーム機チップが category-beginner-game に正しく設定されている"})
+    else:
+        results.append({"level": "error", "check": "game_chip_target", "message": "ゲーム機チップのターゲットが誤っている（category-beginner-game が必要）"})
+
+    # 65. 抽選チップが category-lottery に設定されている
+    if 'data-target-id="category-lottery"' in html and 'data-target-tab="lottery"' in html:
+        results.append({"level": "ok", "check": "lottery_chip_target", "message": "抽選チップが category-lottery に正しく設定されている"})
+    else:
+        results.append({"level": "error", "check": "lottery_chip_target", "message": "抽選チップの data-target-id=category-lottery が見つからない"})
+
     return results
 
 

@@ -2954,11 +2954,11 @@ tr.sc-route-review {{ background: #FFFBEB; }}
   <div class="cat-nav-inner">
     <div class="cat-genre-bar" role="tablist">
       <button class="cat-genre-btn active" data-genre="smartphone" data-target-tab="beginner" data-target-id="category-beginner-iphone">&#128241; スマホ</button>
-      <button class="cat-genre-btn" data-genre="tablet" data-target-tab="beginner" data-target-id="category-beginner-iphone">&#128196; タブレット</button>
+      <button class="cat-genre-btn" data-genre="tablet" data-target-tab="beginner" data-target-id="category-beginner-tablet">&#128196; タブレット</button>
       <button class="cat-genre-btn" data-genre="pc" data-target-tab="advanced" data-target-id="category-pro-pc">&#128187; PC</button>
       <button class="cat-genre-btn" data-genre="camera" data-target-tab="advanced" data-target-id="category-pro-camera">&#128247; カメラ</button>
-      <button class="cat-genre-btn" data-genre="game" data-target-tab="beginner" data-target-id="category-beginner-iphone">&#127918; ゲーム機</button>
-      <button class="cat-genre-btn" data-genre="lottery" data-target-tab="lottery" data-target-id="">&#127915; 抽選情報{lottery_badge}</button>
+      <button class="cat-genre-btn" data-genre="game" data-target-tab="beginner" data-target-id="category-beginner-game">&#127918; ゲーム機</button>
+      <button class="cat-genre-btn" data-genre="lottery" data-target-tab="lottery" data-target-id="category-lottery">&#127915; 抽選情報{lottery_badge}</button>
     </div>
     <div class="cat-maker-bar">
       <div class="cat-maker-group active" data-genre-panel="smartphone">
@@ -2967,8 +2967,8 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         <a class="cat-maker-chip" data-target-tab="beginner" data-target-id="category-beginner-iphone" href="#tab-beginner">Google</a>
       </div>
       <div class="cat-maker-group" data-genre-panel="tablet">
-        <a class="cat-maker-chip" data-target-tab="beginner" data-target-id="category-beginner-iphone" href="#tab-beginner">Apple</a>
-        <a class="cat-maker-chip" data-target-tab="beginner" data-target-id="category-beginner-iphone" href="#tab-beginner">Samsung</a>
+        <a class="cat-maker-chip" data-target-tab="beginner" data-target-id="category-beginner-tablet" href="#tab-beginner">Apple</a>
+        <a class="cat-maker-chip" data-target-tab="beginner" data-target-id="category-beginner-tablet" href="#tab-beginner">Samsung</a>
       </div>
       <div class="cat-maker-group" data-genre-panel="pc">
         <a class="cat-maker-chip" data-target-tab="advanced" data-target-id="category-pro-pc" href="#tab-advanced">Apple</a>
@@ -2985,12 +2985,13 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         <a class="cat-maker-chip" data-target-tab="advanced" data-target-id="category-pro-camera" href="#tab-advanced">Leica</a>
       </div>
       <div class="cat-maker-group" data-genre-panel="game">
-        <a class="cat-maker-chip" data-target-tab="beginner" data-target-id="category-beginner-iphone" href="#tab-beginner">Nintendo</a>
-        <a class="cat-maker-chip" data-target-tab="beginner" data-target-id="category-beginner-iphone" href="#tab-beginner">PlayStation</a>
+        <a class="cat-maker-chip" data-target-tab="beginner" data-target-id="category-beginner-game" href="#tab-beginner">Nintendo</a>
+        <a class="cat-maker-chip" data-target-tab="beginner" data-target-id="category-beginner-game" href="#tab-beginner">PlayStation</a>
         <a class="cat-maker-chip" data-target-tab="advanced" data-target-id="category-pro-pc" href="#tab-advanced">Xbox</a>
+        <a class="cat-maker-chip" data-target-tab="lottery" data-target-id="category-lottery" href="#tab-lottery">限定・抽選</a>
       </div>
       <div class="cat-maker-group" data-genre-panel="lottery">
-        <a class="cat-maker-chip" data-target-tab="lottery" data-target-id="" href="#tab-lottery">抽選一覧へ</a>
+        <a class="cat-maker-chip" data-target-tab="lottery" data-target-id="category-lottery" href="#tab-lottery">抽選一覧へ</a>
       </div>
     </div>
   </div>
@@ -2999,7 +3000,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
     def _section_lottery(self, lottery_events: list) -> str:
         """抽選情報セクション"""
         parts = []
-        parts.append('<div class="info-banner violet"><div class="ib-title">&#127915; 抽選情報</div>各メーカーの抽選・予約情報です。公式ページで最新情報をご確認ください。</div>')
+        parts.append('<div id="category-lottery" class="info-banner violet"><div class="ib-title">&#127915; 抽選情報</div>各メーカーの抽選・予約情報です。公式ページで最新情報をご確認ください。</div>')
 
         if not lottery_events:
             parts.append('<div class="empty-state"><span class="empty-icon">&#127915;</span>現在の抽選情報は未確認です。各公式ページでご確認ください。</div>')
@@ -3410,9 +3411,11 @@ python3 -m src.cli calculate-sedori-routes</pre>
 
 
     def _tab_beginner(self, easy_deals, watch_deals, buyback_by_product: dict = None) -> str:
-        """初心者向けタブ（v5 design）"""
+        """初心者向けタブ（v6: カテゴリ別セクション）"""
         bybp = buyback_by_product or {}
         parts = []
+
+        # ── Info banner (anchor: category-beginner-iphone) ──
         parts.append('<div id="category-beginner-iphone" class="info-banner blue">\n'
                      '<div class="ib-title">&#128100; 初心者向け：公式購入 &rarr; 国内買取比較</div>\n'
                      'Apple Store・任天堂公式などの<strong>公式サイトで定価購入できる商品</strong>を、'
@@ -3420,23 +3423,100 @@ python3 -m src.cli calculate-sedori-routes</pre>
                      'iPhone・ゲーム機など比較的入手しやすい商品を中心に掲載しています。\n'
                      '<strong>掲載価格は更新時点の参考値です。参考利益は保証されません。購入前に必ず各店舗の最新価格をご確認ください。</strong>\n'
                      '</div>')
-        if easy_deals:
-            parts.append(f'<div class="sec-head"><div class="sec-title">低難度 &mdash; すぐ動ける案件</div><div class="sec-badge">{len(easy_deals)}件</div></div>')
-            parts.append('<div class="cards-grid">')
-            for d in easy_deals:
-                rows = bybp.get(d.product_id, [])
-                parts.append(self._deal_card(d, 'badge-easy', '低難度', buyback_rows=rows))
-            parts.append('</div>')
+
+        # カテゴリ別に分類
+        iphone_easy  = [d for d in easy_deals  if getattr(d, 'category', '') == 'iphone']
+        iphone_watch = [d for d in watch_deals if getattr(d, 'category', '') == 'iphone']
+        tablet_easy  = [d for d in easy_deals  if getattr(d, 'category', '') == 'tablet']
+        tablet_watch = [d for d in watch_deals if getattr(d, 'category', '') == 'tablet']
+        game_easy    = [d for d in easy_deals  if getattr(d, 'category', '') == 'game_console']
+        game_watch   = [d for d in watch_deals if getattr(d, 'category', '') == 'game_console']
+        other_easy   = [d for d in easy_deals  if getattr(d, 'category', '') not in ('iphone', 'tablet', 'game_console')]
+        other_watch  = [d for d in watch_deals if getattr(d, 'category', '') not in ('iphone', 'tablet', 'game_console')]
+
+        # ── iPhone / スマホ ──
+        if iphone_easy or iphone_watch:
+            if iphone_easy:
+                parts.append(f'<div class="sec-head"><div class="sec-title">&#128241; iPhone / スマホ &mdash; 低難度</div><div class="sec-badge">{len(iphone_easy)}件</div></div>')
+                parts.append('<div class="cards-grid">')
+                for d in iphone_easy:
+                    rows = bybp.get(d.product_id, [])
+                    parts.append(self._deal_card(d, 'badge-easy', '低難度', buyback_rows=rows))
+                parts.append('</div>')
+            if iphone_watch:
+                parts.append(f'<div class="sec-head" style="margin-top:32px"><div class="sec-title">&#128241; iPhone / スマホ &mdash; 様子見</div><div class="sec-badge">{len(iphone_watch)}件</div></div>')
+                parts.append('<div class="cards-grid">')
+                for d in iphone_watch:
+                    rows = bybp.get(d.product_id, [])
+                    parts.append(self._deal_card(d, 'badge-watch', '要確認', buyback_rows=rows))
+                parts.append('</div>')
         else:
-            parts.append('<div class="sec-head"><div class="sec-title">低難度 &mdash; すぐ動ける案件</div></div>')
-            parts.append('<div class="empty-state"><span class="empty-icon">&#128202;</span>現在、条件を満たす案件はありません。</div>')
-        if watch_deals:
-            parts.append(f'<div class="sec-head" style="margin-top:44px"><div class="sec-title">要確認 &mdash; 様子見案件</div><div class="sec-badge">{len(watch_deals)}件</div></div>')
-            parts.append('<div class="cards-grid">')
-            for d in watch_deals:
-                rows = bybp.get(d.product_id, [])
-                parts.append(self._deal_card(d, 'badge-watch', '要確認', buyback_rows=rows))
-            parts.append('</div>')
+            parts.append('<div class="sec-head"><div class="sec-title">&#128241; iPhone / スマホ</div></div>')
+            parts.append('<div class="empty-state"><span class="empty-icon">&#128241;</span>現在、スマホの案件はありません。データ取得次第更新します。</div>')
+
+        # ── タブレット（anchor: category-beginner-tablet）──
+        parts.append('<div id="category-beginner-tablet" style="margin-top:44px;scroll-margin-top:80px"></div>')
+        if tablet_easy or tablet_watch:
+            if tablet_easy:
+                parts.append(f'<div class="sec-head"><div class="sec-title">&#128196; タブレット &mdash; 低難度</div><div class="sec-badge">{len(tablet_easy)}件</div></div>')
+                parts.append('<div class="cards-grid">')
+                for d in tablet_easy:
+                    rows = bybp.get(d.product_id, [])
+                    parts.append(self._deal_card(d, 'badge-easy', '低難度', buyback_rows=rows))
+                parts.append('</div>')
+            if tablet_watch:
+                parts.append(f'<div class="sec-head" style="margin-top:32px"><div class="sec-title">&#128196; タブレット &mdash; 様子見</div><div class="sec-badge">{len(tablet_watch)}件</div></div>')
+                parts.append('<div class="cards-grid">')
+                for d in tablet_watch:
+                    rows = bybp.get(d.product_id, [])
+                    parts.append(self._deal_card(d, 'badge-watch', '要確認', buyback_rows=rows))
+                parts.append('</div>')
+        else:
+            parts.append('<div class="sec-head"><div class="sec-title">&#128196; タブレット</div></div>')
+            parts.append('<div class="empty-state"><span class="empty-icon">&#128196;</span>現在、タブレットの案件はありません。データ取得次第更新します。</div>')
+
+        # ── ゲーム機 通常販売モデル（anchor: category-beginner-game）──
+        parts.append('<div id="category-beginner-game" style="margin-top:44px;scroll-margin-top:80px"></div>')
+        if game_easy or game_watch:
+            if game_easy:
+                parts.append(f'<div class="sec-head"><div class="sec-title">&#127918; ゲーム機 &mdash; 低難度</div><div class="sec-badge">{len(game_easy)}件</div></div>')
+                parts.append('<div class="cards-grid">')
+                for d in game_easy:
+                    rows = bybp.get(d.product_id, [])
+                    parts.append(self._deal_card(d, 'badge-easy', '低難度', buyback_rows=rows))
+                parts.append('</div>')
+            if game_watch:
+                parts.append(f'<div class="sec-head" style="margin-top:32px"><div class="sec-title">&#127918; ゲーム機 &mdash; 様子見</div><div class="sec-badge">{len(game_watch)}件</div></div>')
+                parts.append('<div class="cards-grid">')
+                for d in game_watch:
+                    rows = bybp.get(d.product_id, [])
+                    parts.append(self._deal_card(d, 'badge-watch', '要確認', buyback_rows=rows))
+                parts.append('</div>')
+            parts.append('<div class="caution" style="margin-top:16px;font-size:0.82rem;">'
+                         '&#128204; <strong>限定・抽選モデル</strong>（Nintendo Switch 2 抽選など）は '
+                         '<a href="#tab-lottery" class="inline-link">抽選情報タブ</a> または '
+                         '<a href="#tab-advanced" class="inline-link">Pro向けタブ</a> をご確認ください。</div>')
+        else:
+            parts.append('<div class="sec-head"><div class="sec-title">&#127918; ゲーム機</div></div>')
+            parts.append('<div class="empty-state"><span class="empty-icon">&#127918;</span>現在、ゲーム機の案件はありません。データ取得次第更新します。</div>')
+
+        # ── その他（カテゴリ未分類）──
+        if other_easy or other_watch:
+            parts.append('<div class="sec-head" style="margin-top:44px"><div class="sec-title">その他</div></div>')
+            if other_easy:
+                parts.append('<div class="cards-grid">')
+                for d in other_easy:
+                    rows = bybp.get(d.product_id, [])
+                    parts.append(self._deal_card(d, 'badge-easy', '低難度', buyback_rows=rows))
+                parts.append('</div>')
+            if other_watch:
+                parts.append('<div class="sec-head" style="margin-top:32px"><div class="sec-title">その他 &mdash; 様子見</div></div>')
+                parts.append('<div class="cards-grid">')
+                for d in other_watch:
+                    rows = bybp.get(d.product_id, [])
+                    parts.append(self._deal_card(d, 'badge-watch', '要確認', buyback_rows=rows))
+                parts.append('</div>')
+
         return '\n'.join(parts)
 
     def _tab_all(self, easy_deals, watch_deals, buyback_by_product: dict = None) -> str:
@@ -3673,12 +3753,30 @@ python3 -m src.cli calculate-sedori-routes</pre>
         parts = []
 
         # ── Pro向けタブ説明バナー ──
-        parts.append("""<div id="category-pro-pc" class="info-banner violet">
+        parts.append("""<div class="info-banner violet">
 <div class="ib-title">&#9997; Pro向け：二次流通 &rarr; 海外相場比較</div>
 公式では入手しづらいカメラ・限定モデルを、国内二次流通価格と海外相場で比較します。
 抽選・SOLD OUT・海外価格差のある商品を監視対象として整理しています。
 <strong>入手難易度が高い商品が対象です。出品・売却の参考情報としてご利用ください。価格は参考値です。</strong>
 </div>""")
+
+        # ── PC セクション（anchor: category-pro-pc）──
+        pc_deals = [d for d in (advanced_deals or []) if getattr(d, 'category', '') == 'pc']
+        parts.append('<div class="section-header" id="category-pro-pc"><h2>&#128187; PC &mdash; 二次流通・海外相場</h2></div>')
+        if pc_deals:
+            parts.append('<div class="cards-grid">')
+            for d in pc_deals:
+                parts.append(self._deal_card(d, 'badge-adv', 'Pro向け', pro_mode=True))
+            parts.append('</div>')
+        else:
+            parts.append(
+                '<div class="empty-state" style="background:var(--surface-1);border:1.5px dashed var(--border-1);border-radius:12px;padding:28px 20px;text-align:center;margin-bottom:8px">'
+                '<span class="empty-icon">&#128187;</span>'
+                '<div style="font-weight:700;color:var(--ink1);margin:8px 0 4px">PC（Mac / Windows）— 現在監視中</div>'
+                '<div style="font-size:0.82rem;color:var(--ink3)">中古PC・Mac・Windowsノートの海外相場・国内価格差を監視しています。<br>'
+                'データが取得でき次第、案件として掲載します。</div>'
+                '</div>'
+            )
 
         if advanced_deals:
             parts.append('<div class="section-header"><h2>&#128269; Pro向け確定案件</h2><span class="section-count">' + str(len(advanced_deals)) + '件</span></div>')

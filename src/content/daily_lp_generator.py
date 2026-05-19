@@ -2336,6 +2336,32 @@ a[href], button, [role="tab"], [role="button"],
   border: 1px solid #FDE68A; border-radius: 10px; margin-top: 4px;
 }}
 
+/* 品質チェックバッジ (Phase 15) */
+.sc-badge-review {{
+  display: inline-flex; align-items: center; gap: 3px;
+  padding: 2px 8px; border-radius: 99px;
+  font-size: 0.72rem; font-weight: 700;
+  background: #FFF7ED; color: #C2410C;
+  border: 1px solid #FDBA74; margin-left: 6px;
+  cursor: help;
+  vertical-align: middle;
+}}
+.sc-qs-badge {{
+  display: inline-flex; align-items: center;
+  padding: 2px 7px; border-radius: 99px;
+  font-size: 0.70rem; font-weight: 600;
+  margin-left: 5px; vertical-align: middle;
+}}
+.sc-qs-high {{ background: #DCFCE7; color: #15803D; border: 1px solid #BBF7D0; }}
+.sc-qs-mid  {{ background: #FEF9C3; color: #854D0E; border: 1px solid #FDE047; }}
+.sc-qs-low  {{ background: #FEF2F2; color: #DC2626; border: 1px solid #FECACA; }}
+/* 要確認ルートの行・カード強調 */
+.sc-best-card-review {{
+  border: 2px solid #FDBA74 !important;
+  background: linear-gradient(135deg, #FFFBEB 0%, #FFF7ED 100%) !important;
+}}
+tr.sc-route-review {{ background: #FFFBEB; }}
+
 @media (max-width: 640px) {{
   .sc-best-card {{ padding: 16px; }}
   .sc-best-route-row {{ flex-direction: column; }}
@@ -2883,8 +2909,39 @@ python3 -m src.cli calculate-sedori-routes</pre>
             from src.models.sale_price import CONDITION_LABELS
             buy_cond = CONDITION_LABELS.get(best.buy_condition, best.buy_condition)
 
-            parts.append(f'''<div class="sc-best-card">
-  <div class="sc-best-crown">&#127881; 最大利益ルート <span class="sc-best-rank-badge">#1</span></div>
+            # 品質バッジHTML生成
+            def _quality_badge_html(route) -> str:
+                """routes の needs_review / quality_score に基づくバッジHTMLを返す。"""
+                badges = []
+                if getattr(route, "needs_review", False):
+                    flags = getattr(route, "route_warning_flags", [])
+                    flag_labels = {
+                        "condition_mismatch": "条件ズレ",
+                        "stale_sale_price": "仕入れ価格が古い",
+                        "stale_buyback_price": "買取価格が古い",
+                        "unverified_buy_url": "仕入れURL未確認",
+                        "unverified_sell_url": "売却URL未確認",
+                        "abnormal_profit_rate": "利益率が高すぎる",
+                        "possible_model_mismatch": "モデル不一致の可能性",
+                        "upper_limit_buyback": "買取上限価格の可能性",
+                        "sell_condition_unknown": "売却条件不明",
+                    }
+                    flag_strs = [flag_labels.get(f, f) for f in flags]
+                    tooltip = " / ".join(flag_strs) if flag_strs else "要確認"
+                    badges.append(
+                        f'<span class="sc-badge-review" title="{_esc(tooltip)}">&#9888; 要確認</span>'
+                    )
+                qs = getattr(route, "route_quality_score", 1.0)
+                if qs < 1.0:
+                    qs_pct = int(qs * 100)
+                    css = "sc-qs-high" if qs >= 0.75 else ("sc-qs-mid" if qs >= 0.50 else "sc-qs-low")
+                    badges.append(f'<span class="sc-qs-badge {css}">品質{qs_pct}%</span>')
+                return "".join(badges)
+
+            best_badge_html = _quality_badge_html(best)
+
+            parts.append(f'''<div class="sc-best-card{" sc-best-card-review" if getattr(best, "needs_review", False) else ""}">
+  <div class="sc-best-crown">&#127881; 最大利益ルート <span class="sc-best-rank-badge">#1</span>{best_badge_html}</div>
   <div class="sc-best-product">{_esc(best.product_name)}</div>
   <div class="sc-best-route-row">
     <div class="sc-best-box sc-best-box-buy">
@@ -2940,10 +2997,12 @@ python3 -m src.cli calculate-sedori-routes</pre>
                         f'class="sc-mini-link" data-track="sedori_sell_click">'
                         f'{_esc(r.sell_shop_name)}</a>'
                     ) if r.sell_url else _esc(r.sell_shop_name)
+                    row_badge = _quality_badge_html(r)
+                    row_cls = ' class="sc-route-row sc-route-review"' if getattr(r, "needs_review", False) else ' class="sc-route-row"'
                     rows_html.append(
-                        f'<tr class="sc-route-row">'
+                        f'<tr{row_cls}>'
                         f'<td class="sc-rank-cell">#{r.rank}</td>'
-                        f'<td class="sc-prod-cell">{_esc(r.product_name)}</td>'
+                        f'<td class="sc-prod-cell">{_esc(r.product_name)}{row_badge}</td>'
                         f'<td class="sc-shop-cell">{buy_a}</td>'
                         f'<td class="sc-price-cell sc-col-red">¥{r.buy_price:,}</td>'
                         f'<td class="sc-shop-cell">{sell_a}</td>'

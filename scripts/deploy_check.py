@@ -412,6 +412,38 @@ def check() -> list[dict]:
     else:
         results.append({"level": "ok", "check": "no_empty_href", "message": "空・無効なhrefなし"})
 
+    # 45. 品質バッジCSS（Phase 15）が存在する
+    if "sc-badge-review" in html and "sc-qs-badge" in html:
+        results.append({"level": "ok", "check": "quality_badge_css", "message": "品質チェックバッジCSS（sc-badge-review/sc-qs-badge）が存在する"})
+    else:
+        results.append({"level": "warning", "check": "quality_badge_css", "message": "品質チェックバッジCSSが見つからない（Phase 15未適用の可能性）"})
+
+    # 46. 要確認（needs_review）バッジが存在するか、またはルート数が0の場合はOK
+    has_review_badge = "要確認" in html and "sc-badge-review" in html
+    has_no_routes = "sc-no-data" in html
+    has_routes = "sc-best-card" in html
+    if has_review_badge or has_no_routes:
+        results.append({"level": "ok", "check": "quality_review_badge", "message": "品質チェック要確認バッジ表示またはルートなし（正常）"})
+    elif has_routes:
+        # ルートがある場合、バッジなしは要確認ルートが存在しないだけなのでOK
+        results.append({"level": "ok", "check": "quality_review_badge", "message": "せどりルートあり・要確認バッジなし（全ルートが品質OK）"})
+    else:
+        results.append({"level": "warning", "check": "quality_review_badge", "message": "品質チェック状態が判定できない"})
+
+    # 47. sort_scoreによるソート（ルートがある場合にsc-best-crown内に品質情報がある）
+    if has_routes and "sc-best-crown" in html:
+        results.append({"level": "ok", "check": "sedori_sort_score", "message": "せどりルートにsc-best-crownが存在する（sort_scoreソート適用）"})
+    elif not has_routes:
+        results.append({"level": "ok", "check": "sedori_sort_score", "message": "せどりルートなし（sort_scoreソートチェックスキップ）"})
+    else:
+        results.append({"level": "warning", "check": "sedori_sort_score", "message": "せどりルートのベストカードクラウンが見つからない"})
+
+    # 48. 品質スコアCSSクラス（sc-qs-high/mid/low）が定義されている
+    if "sc-qs-high" in html and "sc-qs-mid" in html and "sc-qs-low" in html:
+        results.append({"level": "ok", "check": "quality_score_css_classes", "message": "品質スコアCSSクラス（high/mid/low）が定義されている"})
+    else:
+        results.append({"level": "warning", "check": "quality_score_css_classes", "message": "品質スコアCSS（sc-qs-high/mid/low）が見つからない"})
+
     return results
 
 

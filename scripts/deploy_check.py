@@ -444,6 +444,48 @@ def check() -> list[dict]:
     else:
         results.append({"level": "warning", "check": "quality_score_css_classes", "message": "品質スコアCSS（sc-qs-high/mid/low）が見つからない"})
 
+    # 49. 旧機能チップ（features-bar）が削除されている
+    if '<div class="features-bar">' not in html:
+        results.append({"level": "ok", "check": "feature_chips_removed", "message": "旧機能チップ（features-bar）が削除されている"})
+    else:
+        results.append({"level": "error", "check": "feature_chips_removed", "message": "旧機能チップ（features-bar）が残存している（削除必要）"})
+
+    # 50. 商品ジャンルタブ（cat-genre-bar）がある
+    if "cat-genre-bar" in html and "cat-genre-btn" in html:
+        results.append({"level": "ok", "check": "category_genre_bar", "message": "商品ジャンルタブ（cat-genre-bar）が存在する"})
+    else:
+        results.append({"level": "error", "check": "category_genre_bar", "message": "商品ジャンルタブが見つからない"})
+
+    # 51. メーカーチップが存在する
+    if "cat-maker-chip" in html:
+        results.append({"level": "ok", "check": "category_maker_chips", "message": "メーカーチップ（cat-maker-chip）が存在する"})
+    else:
+        results.append({"level": "error", "check": "category_maker_chips", "message": "メーカーチップが見つからない"})
+
+    # 52. 抽選情報タブが存在する
+    if 'data-tab="lottery"' in html or 'id="tab-lottery"' in html:
+        results.append({"level": "ok", "check": "lottery_tab_exists", "message": "抽選情報タブが存在する"})
+    else:
+        results.append({"level": "warning", "check": "lottery_tab_exists", "message": "抽選情報タブが見つからない"})
+
+    # 53. LIVE DEALSが有効なリンク
+    if "live-panel-link" in html or ('LIVE DEALS' in html and 'href="#tab-beginner"' in html):
+        results.append({"level": "ok", "check": "live_deals_link", "message": "LIVE DEALSが有効なリンクになっている"})
+    else:
+        results.append({"level": "warning", "check": "live_deals_link", "message": "LIVE DEALSのリンクが未設定"})
+
+    # 54. ランキング行にクリックナビゲーションがある
+    if "rank-row-clickable" in html and "data-nav-tab" in html:
+        results.append({"level": "ok", "check": "ranking_nav_links", "message": "ランキング行にクリックナビゲーションがある"})
+    else:
+        results.append({"level": "warning", "check": "ranking_nav_links", "message": "ランキング行のクリックナビゲーションが未設定"})
+
+    # 55. 商品カードにIDがある（product-）
+    if 'id="product-' in html:
+        results.append({"level": "ok", "check": "product_card_ids", "message": "商品カードにid属性（product-*）がある"})
+    else:
+        results.append({"level": "warning", "check": "product_card_ids", "message": "商品カードのid属性が見つからない"})
+
     return results
 
 

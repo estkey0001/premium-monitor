@@ -1373,3 +1373,165 @@ class Repository:
             return cur.rowcount
         except Exception:
             return 0
+
+    # =========================================
+    # 販売価格 (sale_prices / Phase 14)
+    # =========================================
+
+    def insert_sale_price(self, sp) -> None:
+        """販売価格をINSERT OR REPLACEする。"""
+        self.db.connection.execute(
+            """INSERT OR REPLACE INTO sale_prices
+               (id, product_id, product_alias, shop_name, shop_id, sale_price,
+                condition, url, link_verified, observed_at, data_source, is_active)
+               VALUES (?,?,?,?,?,?,?,?,?,?,?,?)""",
+            (sp.id, sp.product_id, sp.product_alias, sp.shop_name, sp.shop_id,
+             sp.sale_price, sp.condition, sp.url, int(sp.link_verified),
+             sp.observed_at.isoformat(), sp.data_source, int(sp.is_active)),
+        )
+        self.db.connection.commit()
+
+    def list_sale_prices(
+        self,
+        product_id: "Optional[str]" = None,
+        product_alias: "Optional[str]" = None,
+        active_only: bool = True,
+        limit: int = 50,
+    ) -> list:
+        """販売価格一覧を返す（仕入れ候補）。"""
+        from src.models.sale_price import SalePriceModel
+        query = "SELECT * FROM sale_prices WHERE 1=1"
+        params: list = []
+        if active_only:
+            query += " AND is_active = 1"
+        if product_id:
+            query += " AND product_id = ?"
+            params.append(product_id)
+        if product_alias:
+            query += " AND product_alias = ?"
+            params.append(product_alias)
+        query += " ORDER BY sale_price ASC LIMIT ?"
+        params.append(limit)
+        try:
+            rows = self.db.connection.execute(query, params).fetchall()
+        except Exception:
+            return []
+        result = []
+        for r in rows:
+            d = dict(r)
+            try:
+                result.append(SalePriceModel(
+                    id=d["id"],
+                    product_id=d.get("product_id", ""),
+                    product_alias=d.get("product_alias", ""),
+                    shop_name=d.get("shop_name", ""),
+                    shop_id=d.get("shop_id", ""),
+                    sale_price=d["sale_price"],
+                    condition=d.get("condition", "new_unopened"),
+                    url=d.get("url", ""),
+                    link_verified=bool(d.get("link_verified", 0)),
+                    observed_at=datetime.fromisoformat(d["observed_at"]),
+                    data_source=d.get("data_source", "manual"),
+                    is_active=bool(d.get("is_active", 1)),
+                ))
+            except Exception:
+                continue
+        return result
+
+    # =========================================
+    # せどりルート (sedori_routes / Phase 14)
+    # =========================================
+
+    def upsert_sedori_route(self, route) -> None:
+        """せどりルートをupsertする。"""
+        self.db.connection.execute(
+            """INSERT OR REPLACE INTO sedori_routes
+               (id, product_id, product_name, product_alias,
+                buy_shop_name, buy_shop_id, buy_price, buy_url, buy_condition,
+                sell_shop_name, sell_shop_id, sell_price, sell_url,
+                gross_profit, shipping_fee, transfer_fee, travel_fee, other_costs,
+                estimated_costs, net_profit, profit_rate, rank, calculated_at)
+               VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+            (route.id, route.product_id, route.product_name, route.product_alias,
+             route.buy_shop_name, route.buy_shop_id, route.buy_price,
+             route.buy_url, route.buy_condition,
+             route.sell_shop_name, route.sell_shop_id, route.sell_price, route.sell_url,
+             route.gross_profit, route.shipping_fee, route.transfer_fee,
+             route.travel_fee, route.other_costs, route.estimated_costs,
+             route.net_profit, route.profit_rate, route.rank,
+             route.calculated_at.isoformat()),
+        )
+        self.db.connection.commit()
+
+    def delete_sedori_routes_by_product(self, product_alias: str) -> None:
+        """指定商品の既存ルートを削除する（再計算前に呼ぶ）。"""
+        try:
+            self.db.connection.execute(
+                "DELETE FROM sedori_routes WHERE product_alias = ?", (product_alias,)
+            )
+            self.db.connection.commit()
+        except Exception:
+            pass
+
+    def list_sedori_routes(
+        self,
+        product_alias: "Optional[str]" = None,
+        min_net_profit: int = 0,
+        limit: int = 50,
+    ) -> list:
+        """せどりルート一覧を返す（net_profit降順）。"""
+        from src.models.sale_price import SedoriRouteModel
+        query = "SELECT * FROM sedori_routes WHERE net_profit > ?"
+        params: list = [min_net_profit]
+        if product_alias:
+            query += " AND product_alias = ?"
+            params.append(product_alias)
+        query += " ORDER BY net_profit DESC LIMIT ?"
+        params.append(limit)
+        try:
+            rows = self.db.connection.execute(query, params).fetchall()
+        except Exception:
+            return []
+        result = []
+        for r in rows:
+            d = dict(r)
+            try:
+                result.append(SedoriRouteModel(
+                    id=d["id"],
+                    product_id=d.get("product_id", ""),
+                    product_name=d.get("product_name", ""),
+                    product_alias=d.get("product_alias", ""),
+                    buy_shop_name=d.get("buy_shop_name", ""),
+                    buy_shop_id=d.get("buy_shop_id", ""),
+                    buy_price=d["buy_price"],
+                    buy_url=d.get("buy_url", ""),
+                    buy_condition=d.get("buy_condition", ""),
+                    sell_shop_name=d.get("sell_shop_name", ""),
+                    sell_shop_id=d.get("sell_shop_id", ""),
+                    sell_price=d["sell_price"],
+                    sell_url=d.get("sell_url", ""),
+                    gross_profit=d.get("gross_profit", 0),
+                    shipping_fee=d.get("shipping_fee", 1000),
+                    transfer_fee=d.get("transfer_fee", 300),
+                    travel_fee=d.get("travel_fee", 500),
+                    other_costs=d.get("other_costs", 0),
+                    estimated_costs=d.get("estimated_costs", 0),
+                    net_profit=d.get("net_profit", 0),
+                    profit_rate=d.get("profit_rate", 0.0),
+                    rank=d.get("rank", 0),
+                    calculated_at=datetime.fromisoformat(d["calculated_at"]),
+                ))
+            except Exception:
+                continue
+        return result
+
+    def count_sedori_routes(self, min_net_profit: int = 0) -> int:
+        """利益あるせどりルート数を返す。"""
+        try:
+            row = self.db.connection.execute(
+                "SELECT COUNT(*) as cnt FROM sedori_routes WHERE net_profit > ?",
+                (min_net_profit,)
+            ).fetchone()
+            return row["cnt"] if row else 0
+        except Exception:
+            return 0

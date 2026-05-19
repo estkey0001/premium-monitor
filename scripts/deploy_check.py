@@ -306,6 +306,47 @@ def check() -> list[dict]:
     else:
         results.append({"level": "warning", "check": "buyback_page_guidance", "message": "公式買取ページ誘導テキストが見つからない"})
 
+    # 33. せどりタブが存在する
+    if 'id="tab-sedori"' in html:
+        results.append({"level": "ok", "check": "sedori_tab_exists", "message": "せどりルートタブが存在する"})
+    else:
+        results.append({"level": "error", "check": "sedori_tab_exists", "message": "せどりルートタブ（id=tab-sedori）が見つからない"})
+
+    # 34. せどりタブに仕入れ価格・売却価格が表示されているか（ルートがある場合）
+    has_best_card = "sc-best-card" in html
+    has_no_data = "sc-no-data" in html
+    if has_best_card:
+        results.append({"level": "ok", "check": "sedori_best_route", "message": "せどりタブに最大利益ルートカードがある"})
+    elif has_no_data:
+        results.append({"level": "ok", "check": "sedori_best_route", "message": "せどりタブにデータなし表示（ルート未計算、正常）"})
+    else:
+        results.append({"level": "warning", "check": "sedori_best_route", "message": "せどりタブに最大ルートカードもデータなし表示も見つからない"})
+
+    # 35. せどりタブに仕入れ価格表示がある
+    if "sc-price-buy" in html or "仕入れ先" in html:
+        results.append({"level": "ok", "check": "sedori_buy_price", "message": "せどりタブに仕入れ価格表示がある"})
+    else:
+        results.append({"level": "warning", "check": "sedori_buy_price", "message": "せどりタブに仕入れ価格表示が見つからない"})
+
+    # 36. せどりタブに売却価格表示がある
+    if "sc-price-sell" in html or "売却先" in html:
+        results.append({"level": "ok", "check": "sedori_sell_price", "message": "せどりタブに売却価格表示がある"})
+    else:
+        results.append({"level": "warning", "check": "sedori_sell_price", "message": "せどりタブに売却価格表示が見つからない"})
+
+    # 37. せどりタブに実質利益表示がある
+    if "実質利益" in html and "sc-wrap" in html:
+        results.append({"level": "ok", "check": "sedori_net_profit", "message": "せどりタブに実質利益表示がある"})
+    else:
+        results.append({"level": "warning", "check": "sedori_net_profit", "message": "せどりタブに実質利益表示が見つからない"})
+
+    # 38. タブボタンが全て有効（data-track付きhref="#"がない）
+    bad_tracked = re.findall(r'href=["\']#["\'][^>]*data-track', html)
+    if bad_tracked:
+        results.append({"level": "error", "check": "tab_buttons_valid", "message": f"data-track付きhref='#'が{len(bad_tracked)}件（クリックが機能しない可能性）"})
+    else:
+        results.append({"level": "ok", "check": "tab_buttons_valid", "message": "タブ・CTAボタンに無効なhref='#'なし"})
+
     return results
 
 

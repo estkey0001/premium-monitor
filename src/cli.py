@@ -25,8 +25,10 @@ import json
 import logging
 import os
 import sys
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
+
+JST = timezone(timedelta(hours=9))
 
 import click
 import yaml
@@ -3002,6 +3004,276 @@ def refresh_beginner_buyback_ranking():
             click.echo(f"     買取リンク: ✅ 検証済み → {d.best_buyback_url}")
         else:
             click.echo(f"     買取リンク: 未検証（LP非表示）")
+
+
+# =========================================
+# 抽選・販売イベント管理
+# =========================================
+
+@cli.command("scan-lottery-events")
+@click.option("--expire-days", default=30, help="N日以上前のアクティブイベントをexpiredに変更")
+def scan_lottery_events(expire_days: int):
+    """抽選・販売イベントを商品候補DBから検出してlottery_eventsへ登録する。
+
+    product_candidates + products テーブルの is_lottery / sale_method / lottery_start_at /
+    lottery_end_at を参照して lottery_events テーブルへ同期します。
+    """
+    import uuid
+    from src.db.database import Database
+    from src.db.repository import Repository
+
+    db = Database()
+    db.init_schema()
+    repo = Repository(db)
+
+    W = 55
+    click.echo(f"\n{'─'*W}")
+    click.echo(" 🎰 抽選・販売イベントスキャン")
+    click.echo(f"{'─'*W}")
+
+    inserted = 0
+    updated  = 0
+
+    # 1) product_candidates から抽選・限定販売を検出
+    try:
+        candidates = repo.list_product_candidates(status=None, limit=200)
+    except Exception as e:
+        candidates = []
+        click.echo(f"  ⚠️ candidates取得エラー: {e}")
+
+    for c in candidates:
+        sm = getattr(c, "sale_method", "") or ""
+        is_lottery = getattr(c, "is_lottery", False)
+        lott_start = getattr(c, "lottery_start_at", "") or ""
+        lott_end   = getattr(c, "lottery_end_at",   "") or ""
+
+        if not (is_lottery or sm in ("lottery", "reservation", "limited")):
+            continue
+
+        eid = f"cand_{c.id}"
+        existing = [e for e in (repo.list_lottery_events(limit=300) or []) if e.get("id") == eid]
+
+        event = {
+            "id": eid,
+            "product_id": getattr(c, "product_id", None),
+            "source_id": None,
+            "product_name": getattr(c, "product_name", "不明"),
+            "brand": getattr(c, "brand", ""),
+            "title": getattr(c, "product_name", "不明"),
+            "sale_method": sm if sm in ("lottery","reservation","limited","soldout","waiting") else "lottery",
+            "entry_start_at": lott_start or None,
+            "entry_end_at": lott_end or None,
+            "result_announcement_at": None,
+            "sale_start_at": lott_start or None,
+            "url": getattr(c, "official_url", "") or "",
+            "status": "active",
+            "detected_at": datetime.now(JST).isoformat(),
+            "raw_text": getattr(c, "notes", "") or "",
+        }
+        repo.upsert_lottery_event(event)
+        if existing:
+            updated += 1
+        else:
+            inserted += 1
+
+    # 2) products テーブルから is_lottery=1 の商品を検出
+    try:
+        products = repo.list_products(active_only=True)
+    except Exception as e:
+        products = []
+        click.echo(f"  ⚠️ products取得エラー: {e}")
+
+    for p in products:
+        if not getattr(p, "is_lottery", False):
+            continue
+        eid = f"prod_{p.id}"
+        existing = [e for e in (repo.list_lottery_events(limit=300) or []) if e.get("id") == eid]
+        event = {
+            "id": eid,
+            "product_id": p.id,
+            "source_id": None,
+            "product_name": p.name,
+            "brand": getattr(p, "brand", ""),
+            "title": p.name,
+            "sale_method": "lottery",
+            "entry_start_at": None,
+            "entry_end_at": None,
+            "result_announcement_at": None,
+            "sale_start_at": None,
+            "url": getattr(p, "official_url", "") or "",
+            "status": "active",
+            "detected_at": datetime.now(JST).isoformat(),
+            "raw_text": "",
+        }
+        repo.upsert_lottery_event(event)
+        if existing:
+            updated += 1
+        else:
+            inserted += 1
+
+    # 3) 古いイベントをexpire
+    expired = repo.expire_old_lottery_events(days=expire_days)
+
+    db.close()
+
+    click.echo(f"  ✅ 新規登録: {inserted} 件")
+    click.echo(f"  🔄 更新:     {updated} 件")
+    click.echo(f"  ⌛ 期限切れ: {expired} 件（{expire_days}日超）")
+    total = repo.count_lottery_events(status="active") if False else (inserted + updated - expired)
+    click.echo(f"\n  完了。lottery_events テーブルにイベントが登録されました。\n")
+
+
+@cli.command("list-lottery-events")
+@click.option("--status",      default=None,  help="フィルタ: active / closed / announced / expired")
+@click.option("--sale-method", default=None,  help="フィルタ: lottery / reservation / limited / soldout / waiting")
+@click.option("--limit",       default=30,    help="最大表示件数")
+def list_lottery_events(status: str, sale_method: str, limit: int):
+    """登録済みの抽選・販売イベントを一覧表示する。"""
+    from src.db.database import Database
+    from src.db.repository import Repository
+
+    db = Database()
+    db.init_schema()
+    repo = Repository(db)
+
+    events = repo.list_lottery_events(status=status, sale_method=sale_method, limit=limit)
+    db.close()
+
+    if not events:
+        click.echo("  （該当するイベントはありません）")
+        return
+
+    METHOD_MAP = {
+        "lottery":     "🎰抽選",
+        "reservation": "📅予約",
+        "limited":     "⚡限定",
+        "soldout":     "❌売切",
+        "waiting":     "⏳待機",
+    }
+    STATUS_MAP = {
+        "active":    "✅受付中",
+        "closed":    "🔒締切",
+        "announced": "📢発表済",
+        "expired":   "⌛期限切",
+    }
+
+    W = 70
+    click.echo(f"\n{'─'*W}")
+    click.echo(f" 🎰 抽選・販売イベント一覧 ({len(events)}件)")
+    click.echo(f"{'─'*W}")
+    click.echo(f"  {'商品名':<28} {'方式':<8} {'状態':<10} {'締切/開始日':<16} URL")
+    click.echo(f"  {'─'*26} {'─'*6} {'─'*8} {'─'*14} {'─'*20}")
+
+    for e in events:
+        name    = (e.get("product_name") or "")[:27]
+        method  = METHOD_MAP.get(e.get("sale_method",""), e.get("sale_method",""))
+        st      = STATUS_MAP.get(e.get("status",""), e.get("status",""))
+        date_   = (e.get("entry_end_at") or e.get("sale_start_at") or "")[:10]
+        url     = (e.get("url") or "")[:30]
+        click.echo(f"  {name:<28} {method:<8} {st:<10} {date_:<16} {url}")
+
+    click.echo(f"{'─'*W}\n")
+
+
+@cli.command("compare-advanced-market")
+@click.option("--product", "product_id", default=None, help="商品ID (例: sonyalpha7c2)")
+@click.option("--limit", default=10, help="表示件数")
+def compare_advanced_market(product_id: str, limit: int):
+    """上級者向け：国内中古市場と海外相場の比較を表示する。
+
+    market_snapshots テーブルの overseas 情報と domestic_used_price を並べて表示する。
+    """
+    from src.db.database import Database
+    from src.db.repository import Repository
+
+    db = Database()
+    db.init_schema()
+    repo = Repository(db)
+
+    if product_id:
+        snaps = repo.list_premium_candidates_with_snapshots(limit=limit, user_level=None)
+        snaps = [s for s in snaps if getattr(s, "product_id", "") == product_id]
+    else:
+        snaps = repo.list_premium_candidates_with_snapshots(limit=limit, user_level="advanced")
+
+    db.close()
+
+    if not snaps:
+        click.echo("  （該当する上級者向け案件はありません）")
+        return
+
+    W = 80
+    click.echo(f"\n{'─'*W}")
+    click.echo(f" 📊 上級者向け国内/海外相場比較 ({len(snaps)}件)")
+    click.echo(f"{'─'*W}")
+    click.echo(f"  {'商品名':<28} {'国内定価':>10} {'国内中古':>10} {'海外相場':>10} {'差額':>10} {'方式':<8}")
+    click.echo(f"  {'─'*26} {'─'*8} {'─'*8} {'─'*8} {'─'*8} {'─'*6}")
+
+    for s in snaps:
+        name     = getattr(s, "product_name", "")[:27]
+        official = getattr(s, "official_price_jpy", None)
+        domestic = getattr(s, "domestic_used_price_jpy", None)
+        overseas = getattr(s, "overseas_price_jpy", None)
+        gap      = getattr(s, "premium_gap_jpy", None)
+        sm       = getattr(s, "sale_method", "")
+        method   = {"lottery":"抽選","soldout":"売切","discontinued":"終了","limited":"限定"}.get(sm, sm or "通常")
+
+        off_str = f"¥{official:,}" if official else "—"
+        dom_str = f"¥{domestic:,}" if domestic else "—"
+        ovr_str = f"¥{overseas:,}" if overseas else "—"
+        gap_str = f"{gap:+,}" if gap else "—"
+
+        click.echo(f"  {name:<28} {off_str:>10} {dom_str:>10} {ovr_str:>10} {gap_str:>10} {method:<8}")
+
+    click.echo(f"{'─'*W}\n")
+
+
+@cli.command("list-advanced-opportunities")
+@click.option("--min-gap", default=5000, help="最低価格差 (円)")
+@click.option("--limit",   default=20,   help="表示件数")
+def list_advanced_opportunities(min_gap: int, limit: int):
+    """上級者向け案件（国内中古仕入れ→海外売却差益）の候補を一覧表示する。
+
+    premium_gap_jpy が min-gap 以上の案件を表示します。
+    """
+    from src.db.database import Database
+    from src.db.repository import Repository
+
+    db = Database()
+    db.init_schema()
+    repo = Repository(db)
+
+    all_snaps = repo.list_premium_candidates_with_snapshots(limit=200, user_level=None)
+    snaps = [s for s in all_snaps if (getattr(s, "premium_gap_jpy", 0) or 0) >= min_gap]
+    snaps = sorted(snaps, key=lambda s: getattr(s, "premium_gap_jpy", 0) or 0, reverse=True)[:limit]
+
+    db.close()
+
+    if not snaps:
+        click.echo(f"  （価格差¥{min_gap:,}以上の案件はありません）")
+        return
+
+    W = 75
+    click.echo(f"\n{'─'*W}")
+    click.echo(f" 🔍 上級者向け案件一覧 (差額¥{min_gap:,}以上、{len(snaps)}件)")
+    click.echo(f"{'─'*W}")
+
+    for i, s in enumerate(snaps, 1):
+        name    = getattr(s, "product_name", "")
+        gap     = getattr(s, "premium_gap_jpy", 0) or 0
+        dom     = getattr(s, "domestic_used_price_jpy", None)
+        ovr     = getattr(s, "overseas_price_jpy", None)
+        diff    = getattr(s, "difficulty_score", 0) or 0
+        sm      = getattr(s, "sale_method", "") or ""
+        method  = {"lottery":"🎰抽選","soldout":"❌売切","discontinued":"🚫終了","limited":"⚡限定"}.get(sm, "📦通常")
+
+        click.echo(f"\n  [{i}] {name}  {method}")
+        click.echo(f"       国内中古: {'¥'+str(f'{dom:,}') if dom else '不明':>12}  "
+                   f"海外相場: {'¥'+str(f'{ovr:,}') if ovr else '不明':>12}  "
+                   f"差額: {gap:+,}円")
+        click.echo(f"       難易度スコア: {diff:.2f}")
+
+    click.echo(f"\n{'─'*W}\n")
 
 
 # =========================================

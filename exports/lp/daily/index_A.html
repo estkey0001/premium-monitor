@@ -963,17 +963,41 @@ body {
   padding: 3px 9px; border-radius: 99px;
 }
 
-.badge-easy    { background: #F0FDF8; color: var(--profit-dark); border: 1px solid #B2F0DC; }
-.badge-watch   { background: #FFF9F0; color: #CC7A00; border: 1px solid #FFD9A0; }
-.badge-adv     { background: #F5F3FF; color: var(--violet); border: 1px solid #DDD6FE; }
-.badge-exp     { background: #F5F3FF; color: var(--violet-dark); border: 1px solid #DDD6FE; }
-.badge-iphone  { background: #EFF6FF; color: #1E6FFF; border: 1px solid #BFDBFE; }
-.badge-camera  { background: #F5F3FF; color: var(--violet); border: 1px solid #DDD6FE; }
-.badge-game    { background: #F0FDF8; color: #0d9488; border: 1px solid #99F0E0; }
-.badge-lottery { background: #FFF9F0; color: #CC7A00; border: 1px solid #FFD9A0; }
-.badge-soldout { background: #FFF1F3; color: #CC2244; border: 1px solid #FFB3C0; }
-.badge-overseas{ background: #f0f9ff; color: #0369a1; border: 1px solid #bae6fd; }
-.badge-used    { background: var(--surface2); color: var(--ink2); border: 1px solid var(--card-border); }
+.badge-easy        { background: #F0FDF8; color: var(--profit-dark); border: 1px solid #B2F0DC; }
+.badge-watch       { background: #FFF9F0; color: #CC7A00; border: 1px solid #FFD9A0; }
+.badge-adv         { background: #F5F3FF; color: var(--violet); border: 1px solid #DDD6FE; }
+.badge-exp         { background: #F5F3FF; color: var(--violet-dark); border: 1px solid #DDD6FE; }
+.badge-iphone      { background: #EFF6FF; color: #1E6FFF; border: 1px solid #BFDBFE; }
+.badge-camera      { background: #F5F3FF; color: var(--violet); border: 1px solid #DDD6FE; }
+.badge-game        { background: #F0FDF8; color: #0d9488; border: 1px solid #99F0E0; }
+.badge-lottery     { background: #FFF9F0; color: #CC7A00; border: 1px solid #FFD9A0; }
+.badge-reservation { background: #EFF6FF; color: #1E6FFF; border: 1px solid #BFDBFE; }
+.badge-limited     { background: #F5F3FF; color: var(--violet); border: 1px solid #DDD6FE; }
+.badge-soldout     { background: #FFF1F3; color: #CC2244; border: 1px solid #FFB3C0; }
+.badge-waiting     { background: var(--surface2); color: var(--ink3); border: 1px solid var(--card-border); }
+.badge-overseas    { background: #f0f9ff; color: #0369a1; border: 1px solid #bae6fd; }
+.badge-used        { background: var(--surface2); color: var(--ink2); border: 1px solid var(--card-border); }
+
+/* 国内二次流通リンク */
+.domestic-secondary-links {
+  margin-top: 8px; padding-top: 8px;
+  border-top: 1px solid var(--surface2);
+}
+
+/* 公式購入ボタン */
+.btn-official-buy {
+  background: white; color: var(--blue);
+  border-color: #BFDBFE;
+}
+.btn-official-buy:hover {
+  background: #EFF6FF; border-color: #93B8FF;
+}
+
+/* せどり計算機 */
+.sedori-calculator input:focus {
+  outline: 2px solid var(--violet);
+  border-color: var(--violet);
+}
 
 /* タグシステム（上級者向け） */
 .deal-tag {
@@ -1580,7 +1604,7 @@ body {
       </div>
       <div class="hero-timestamps">
         <span class="ts-pill stale" data-buyback-updated><span class="ts-dot"></span>買取価格更新：2026-05-18 12:00 JST</span>
-        <span class="ts-pill" data-lp-generated><span class="ts-dot blue"></span>LP生成：2026-05-19 12:42 JST</span>
+        <span class="ts-pill" data-lp-generated><span class="ts-dot blue"></span>LP生成：2026-05-19 13:09 JST</span>
       </div>
     </div>
     <div class="hero-right">
@@ -1604,28 +1628,13 @@ body {
 <div class="main-wrap">
 <div class="tab-wrap">
 <nav class="tab-nav" role="tablist">
-  <button class="tab-btn" data-tab="ranking" role="tab" aria-selected="false">&#127942; ランキング</button>
   <button class="tab-btn active" data-tab="beginner" role="tab" aria-selected="true">&#128100; 初心者向け <span class="tab-count">8</span></button>
   <button class="tab-btn" data-tab="advanced" role="tab" aria-selected="false">&#128269; 上級者向け <span class="tab-count">12</span></button>
-  <button class="tab-btn" data-tab="surge" role="tab" aria-selected="false">&#9889; 急騰/急落</button>
+  <button class="tab-btn" data-tab="sedori" role="tab" aria-selected="false">&#129518; せどり計算</button>
+  <button class="tab-btn" data-tab="lottery" role="tab" aria-selected="false">&#127920; 抽選情報 <span class="tab-count">3</span></button>
+  <button class="tab-btn" data-tab="ranking" role="tab" aria-selected="false">&#127942; ランキング</button>
   <button class="tab-btn" data-tab="new-products" role="tab" aria-selected="false">&#127381; 新商品候補</button>
 </nav>
-</div>
-
-<div id="tab-ranking" class="tab-panel" role="tabpanel">
-<div class="sec-head"><div class="sec-title">&#127942; 買取ランキング</div></div>
-<div class="ranking-card">
-  <div class="ranking-tabs">
-    <button class="ranking-tab-btn active" data-rtab="all">&#127942; 総合</button>
-    <button class="ranking-tab-btn" data-rtab="iphone">&#128241; iPhone</button>
-    <button class="ranking-tab-btn" data-rtab="camera">&#128247; カメラ</button>
-    <button class="ranking-tab-btn" data-rtab="game">&#127918; ゲーム機</button>
-  </div>
-  <div class="ranking-tab-panel active" id="rtab-all"><div class="rank-row rank-1"><div class="rank-num r1">&#128081;</div><div class="rank-info"><div class="rank-name">FUJIFILM X100VI</div><div class="rank-meta">マップカメラ &nbsp;|&nbsp; camera</div></div><div><div class="rank-profit">+¥143,700</div><div class="rank-rate">53.3%</div></div></div><div class="rank-row"><div class="rank-num r2">2</div><div class="rank-info"><div class="rank-name">iPhone 17 Pro Max 512GB SIMフリー</div><div class="rank-meta">モバイル一番 &nbsp;|&nbsp; iphone</div></div><div><div class="rank-profit">+¥11,400</div><div class="rank-rate">4.5%</div></div></div><div class="rank-row"><div class="rank-num r3">3</div><div class="rank-info"><div class="rank-name">iPhone 17 Pro Max 256GB SIMフリー</div><div class="rank-meta">モバイル一番 &nbsp;|&nbsp; iphone</div></div><div><div class="rank-profit">+¥10,400</div><div class="rank-rate">4.7%</div></div></div><div class="rank-row"><div class="rank-num ">4</div><div class="rank-info"><div class="rank-name">iPhone 17 Pro 256GB SIMフリー</div><div class="rank-meta">モバイル一番 &nbsp;|&nbsp; iphone</div></div><div><div class="rank-profit">+¥6,600</div><div class="rank-rate">3.7%</div></div></div><div class="rank-row"><div class="rank-num ">5</div><div class="rank-info"><div class="rank-name">iPhone 17 Pro 512GB SIMフリー</div><div class="rank-meta">モバイル一番 &nbsp;|&nbsp; iphone</div></div><div><div class="rank-profit">+¥6,400</div><div class="rank-rate">3.0%</div></div></div><div class="rank-row"><div class="rank-num ">6</div><div class="rank-info"><div class="rank-name">Nintendo Switch 2</div><div class="rank-meta">買取商店 &nbsp;|&nbsp; game_console</div></div><div><div class="rank-profit">+¥5,220</div><div class="rank-rate">10.4%</div></div></div><div class="rank-row"><div class="rank-num ">7</div><div class="rank-info"><div class="rank-name">Nintendo Switch 2 マリオカートセット</div><div class="rank-meta">買取商店 &nbsp;|&nbsp; game_console</div></div><div><div class="rank-profit">+¥5,220</div><div class="rank-rate">8.7%</div></div></div><div class="rank-row"><div class="rank-num ">8</div><div class="rank-info"><div class="rank-name">PlayStation 5 Pro</div><div class="rank-meta">イオシス &nbsp;|&nbsp; game_console</div></div><div><div class="rank-profit">+¥220</div><div class="rank-rate">0.2%</div></div></div></div>
-  <div class="ranking-tab-panel" id="rtab-iphone"><div class="rank-row rank-1"><div class="rank-num r1">&#128081;</div><div class="rank-info"><div class="rank-name">iPhone 17 Pro Max 512GB SIMフリー</div><div class="rank-meta">モバイル一番</div></div><div><div class="rank-profit">+¥11,400</div><div class="rank-rate">4.5%</div></div></div><div class="rank-row"><div class="rank-num r2">2</div><div class="rank-info"><div class="rank-name">iPhone 17 Pro Max 256GB SIMフリー</div><div class="rank-meta">モバイル一番</div></div><div><div class="rank-profit">+¥10,400</div><div class="rank-rate">4.7%</div></div></div><div class="rank-row"><div class="rank-num r3">3</div><div class="rank-info"><div class="rank-name">iPhone 17 Pro 256GB SIMフリー</div><div class="rank-meta">モバイル一番</div></div><div><div class="rank-profit">+¥6,600</div><div class="rank-rate">3.7%</div></div></div><div class="rank-row"><div class="rank-num ">4</div><div class="rank-info"><div class="rank-name">iPhone 17 Pro 512GB SIMフリー</div><div class="rank-meta">モバイル一番</div></div><div><div class="rank-profit">+¥6,400</div><div class="rank-rate">3.0%</div></div></div></div>
-  <div class="ranking-tab-panel" id="rtab-camera"><div class="rank-row rank-1"><div class="rank-num r1">&#128081;</div><div class="rank-info"><div class="rank-name">FUJIFILM X100VI</div><div class="rank-meta">マップカメラ</div></div><div><div class="rank-profit">+¥143,700</div><div class="rank-rate">53.3%</div></div></div></div>
-  <div class="ranking-tab-panel" id="rtab-game"><div class="rank-row rank-1"><div class="rank-num r1">&#128081;</div><div class="rank-info"><div class="rank-name">Nintendo Switch 2</div><div class="rank-meta">買取商店</div></div><div><div class="rank-profit">+¥5,220</div><div class="rank-rate">10.4%</div></div></div><div class="rank-row"><div class="rank-num r2">2</div><div class="rank-info"><div class="rank-name">Nintendo Switch 2 マリオカートセット</div><div class="rank-meta">買取商店</div></div><div><div class="rank-profit">+¥5,220</div><div class="rank-rate">8.7%</div></div></div><div class="rank-row"><div class="rank-num r3">3</div><div class="rank-info"><div class="rank-name">PlayStation 5 Pro</div><div class="rank-meta">イオシス</div></div><div><div class="rank-profit">+¥220</div><div class="rank-rate">0.2%</div></div></div></div>
-</div>
 </div>
 
 <div id="tab-beginner" class="tab-panel active" role="tabpanel">
@@ -1673,7 +1682,8 @@ Apple Store・任天堂公式など<strong>正規店で定価購入</strong>し�
       <div><strong>買取条件：中古A（美品）</strong>&nbsp;<span style="font-size:0.72rem;color:var(--gray-400)">掲載価格は参考値です。売却前に必ず各社の公式買取ページで確認してください。</span></div>
     </div>
     <div class="updated-row"><span>&#128336;</span>最終更新：2026-05-18 23:42 JST</div>
-    <div class="shop-table buyback-shop-table buyback-table"><div class="shop-table-hd"><span>買取店比較（参照3店舗）</span><span class="freshness-stale">📋当日手動 / 24時間以上前（参考値）</span></div><div class="shop-row"><div class="shop-rank gold">1</div><div class="shop-name-col">マップカメラ（価格のみ）</div><div class="shop-price-col">¥415,000</div><div class="shop-diff-col">+¥145,500</div></div><div class="shop-row"><div class="shop-rank silver">2</div><div class="shop-name-col">カメラのキタムラ（価格のみ）</div><div class="shop-price-col">¥410,000</div><div class="shop-diff-col">+¥140,500</div></div><div class="shop-row"><div class="shop-rank ">3</div><div class="shop-name-col"><a href="https://www.fujiyacamera.com/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_x100vi">フジヤカメラ</a></div><div class="shop-price-col">¥405,000</div><div class="shop-diff-col">+¥135,500</div></div></div>
+    
+    <div class="shop-table buyback-shop-table buyback-table"><div class="shop-table-hd"><span>買取店比較（参照3店舗）</span><span class="freshness-stale">📋当日手動 / 25時間以上前（参考値）</span></div><div class="shop-row"><div class="shop-rank gold">1</div><div class="shop-name-col"><span class="unverified-link" style="font-size:0.68rem;color:var(--ink4);">マップカメラ（公式買取ページで確認）</span></div><div class="shop-price-col">¥415,000</div><div class="shop-diff-col">+¥145,500</div></div><div class="shop-row"><div class="shop-rank silver">2</div><div class="shop-name-col"><span class="unverified-link" style="font-size:0.68rem;color:var(--ink4);">カメラのキタムラ（公式買取ページで確認）</span></div><div class="shop-price-col">¥410,000</div><div class="shop-diff-col">+¥140,500</div></div><div class="shop-row"><div class="shop-rank ">3</div><div class="shop-name-col"><a href="https://www.fujiyacamera.com/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_x100vi">フジヤカメラ</a></div><div class="shop-price-col">¥405,000</div><div class="shop-diff-col">+¥135,500</div></div></div>
     <div class="card-actions">
       
       <a href="https://www.kitamura.co.jp/" target="_blank" rel="noopener" class="btn btn-primary" data-track="buyback_click" data-product-id="prod_x100vi">&#128176; カメラのキタムラで売る</a>
@@ -1716,9 +1726,10 @@ Apple Store・任天堂公式など<strong>正規店で定価購入</strong>し�
       <div><strong>買取条件：新品未開封 SIMフリー</strong>&nbsp;<span style="font-size:0.72rem;color:var(--gray-400)">掲載価格は参考値です。売却前に必ず各社の公式買取ページで確認してください。</span></div>
     </div>
     <div class="updated-row"><span>&#128336;</span>最終更新：2026-05-18 23:42 JST</div>
-    <div class="shop-table buyback-shop-table buyback-table"><div class="shop-table-hd"><span>買取店比較（参照5店舗）</span><span class="freshness-stale">📋当日手動 / 24時間以上前（参考値）</span></div><div class="shop-row"><div class="shop-rank gold">1</div><div class="shop-name-col">モバイル一番（価格のみ）</div><div class="shop-price-col">¥268,000</div><div class="shop-diff-col">+¥13,200</div></div><div class="shop-row"><div class="shop-rank silver">2</div><div class="shop-name-col">買取商店（価格のみ）</div><div class="shop-price-col">¥265,000</div><div class="shop-diff-col">+¥10,200</div></div><div class="shop-row"><div class="shop-rank ">3</div><div class="shop-name-col">買取一丁目（価格のみ）</div><div class="shop-price-col">¥262,000</div><div class="shop-diff-col">+¥7,200</div></div><div class="shop-row"><div class="shop-rank ">4</div><div class="shop-name-col"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_iphone17pm_512">じゃんぱら</a></div><div class="shop-price-col">¥260,000</div><div class="shop-diff-col">+¥5,200</div></div><div class="shop-row"><div class="shop-rank ">5</div><div class="shop-name-col"><a href="https://iosys.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_iphone17pm_512">イオシス</a></div><div class="shop-price-col">¥257,000</div><div class="shop-diff-col">+¥2,200</div></div></div>
+    
+    <div class="shop-table buyback-shop-table buyback-table"><div class="shop-table-hd"><span>買取店比較（参照5店舗）</span><span class="freshness-stale">📋当日手動 / 25時間以上前（参考値）</span></div><div class="shop-row"><div class="shop-rank gold">1</div><div class="shop-name-col"><span class="unverified-link" style="font-size:0.68rem;color:var(--ink4);">モバイル一番（公式買取ページで確認）</span></div><div class="shop-price-col">¥268,000</div><div class="shop-diff-col">+¥13,200</div></div><div class="shop-row"><div class="shop-rank silver">2</div><div class="shop-name-col"><span class="unverified-link" style="font-size:0.68rem;color:var(--ink4);">買取商店（公式買取ページで確認）</span></div><div class="shop-price-col">¥265,000</div><div class="shop-diff-col">+¥10,200</div></div><div class="shop-row"><div class="shop-rank ">3</div><div class="shop-name-col"><span class="unverified-link" style="font-size:0.68rem;color:var(--ink4);">買取一丁目（公式買取ページで確認）</span></div><div class="shop-price-col">¥262,000</div><div class="shop-diff-col">+¥7,200</div></div><div class="shop-row"><div class="shop-rank ">4</div><div class="shop-name-col"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_iphone17pm_512">じゃんぱら</a></div><div class="shop-price-col">¥260,000</div><div class="shop-diff-col">+¥5,200</div></div><div class="shop-row"><div class="shop-rank ">5</div><div class="shop-name-col"><a href="https://iosys.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_iphone17pm_512">イオシス</a></div><div class="shop-price-col">¥257,000</div><div class="shop-diff-col">+¥2,200</div></div></div>
     <div class="card-actions">
-      <a href="https://www.apple.com/jp/shop/" target="_blank" rel="noopener" class="btn btn-secondary" data-track="product_click" data-product-id="prod_iphone17pm_512">&#128241; Apple Store で買う</a>
+      <a href="https://www.apple.com/jp/shop/" target="_blank" rel="noopener" class="btn btn-secondary btn-official-buy" data-track="product_click" data-product-id="prod_iphone17pm_512">&#128241; Apple Store で買う</a>
       <a href="https://www.janpara.co.jp/sell/iphone/" target="_blank" rel="noopener" class="btn btn-primary" data-track="buyback_click" data-product-id="prod_iphone17pm_512">&#128176; じゃんぱらで売る</a>
     </div>
     <div class="overseas-section overseas-links-section"><div class="overseas-lbl">&#127758; 海外相場を確認</div><div class="overseas-chips"><a href="https://www.ebay.com/sch/i.html?_nkw=iPhone+17+Pro+Max+512GB+SIM%E3%83%95%E3%83%AA%E3%83%BC&amp;LH_Sold=1&amp;LH_Complete=1&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-chip overseas-btn" title="実際の落札価格（過去の取引実績）を確認できます" data-track="overseas_click">🌐 eBay sold</a><a href="https://www.ebay.com/sch/i.html?_nkw=iPhone+17+Pro+Max+512GB+SIM%E3%83%95%E3%83%AA%E3%83%BC&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-chip overseas-btn" title="現在出品中の価格を確認できます" data-track="overseas_click">🌐 eBay (新着)</a><a href="https://www.bhphotovideo.com/c/search?q=iPhone+17+Pro+Max+512GB+SIM%E3%83%95%E3%83%AA%E3%83%BC&amp;sts=ma" target="_blank" rel="noopener" class="overseas-chip overseas-btn" title="米国大手カメラ・電子機器専門店（新品・中古）" data-track="overseas_click">📷 B&amp;H Photo</a><a href="https://www.adorama.com/l/?searchinfo=iPhone+17+Pro+Max+512GB+SIM%E3%83%95%E3%83%AA%E3%83%BC" target="_blank" rel="noopener" class="overseas-chip overseas-btn" title="米国カメラ専門店（新品・認定中古）" data-track="overseas_click">📷 Adorama</a></div></div>
@@ -1759,9 +1770,10 @@ Apple Store・任天堂公式など<strong>正規店で定価購入</strong>し�
       <div><strong>買取条件：新品未開封 SIMフリー</strong>&nbsp;<span style="font-size:0.72rem;color:var(--gray-400)">掲載価格は参考値です。売却前に必ず各社の公式買取ページで確認してください。</span></div>
     </div>
     <div class="updated-row"><span>&#128336;</span>最終更新：2026-05-18 23:42 JST</div>
-    <div class="shop-table buyback-shop-table buyback-table"><div class="shop-table-hd"><span>買取店比較（参照5店舗）</span><span class="freshness-stale">📋当日手動 / 24時間以上前（参考値）</span></div><div class="shop-row"><div class="shop-rank gold">1</div><div class="shop-name-col">モバイル一番（価格のみ）</div><div class="shop-price-col">¥232,000</div><div class="shop-diff-col">+¥12,200</div></div><div class="shop-row"><div class="shop-rank silver">2</div><div class="shop-name-col">買取商店（価格のみ）</div><div class="shop-price-col">¥230,000</div><div class="shop-diff-col">+¥10,200</div></div><div class="shop-row"><div class="shop-rank ">3</div><div class="shop-name-col">買取一丁目（価格のみ）</div><div class="shop-price-col">¥228,000</div><div class="shop-diff-col">+¥8,200</div></div><div class="shop-row"><div class="shop-rank ">4</div><div class="shop-name-col"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_iphone17pm_256">じゃんぱら</a></div><div class="shop-price-col">¥225,000</div><div class="shop-diff-col">+¥5,200</div></div><div class="shop-row"><div class="shop-rank ">5</div><div class="shop-name-col"><a href="https://iosys.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_iphone17pm_256">イオシス</a></div><div class="shop-price-col">¥222,000</div><div class="shop-diff-col">+¥2,200</div></div></div>
+    
+    <div class="shop-table buyback-shop-table buyback-table"><div class="shop-table-hd"><span>買取店比較（参照5店舗）</span><span class="freshness-stale">📋当日手動 / 25時間以上前（参考値）</span></div><div class="shop-row"><div class="shop-rank gold">1</div><div class="shop-name-col"><span class="unverified-link" style="font-size:0.68rem;color:var(--ink4);">モバイル一番（公式買取ページで確認）</span></div><div class="shop-price-col">¥232,000</div><div class="shop-diff-col">+¥12,200</div></div><div class="shop-row"><div class="shop-rank silver">2</div><div class="shop-name-col"><span class="unverified-link" style="font-size:0.68rem;color:var(--ink4);">買取商店（公式買取ページで確認）</span></div><div class="shop-price-col">¥230,000</div><div class="shop-diff-col">+¥10,200</div></div><div class="shop-row"><div class="shop-rank ">3</div><div class="shop-name-col"><span class="unverified-link" style="font-size:0.68rem;color:var(--ink4);">買取一丁目（公式買取ページで確認）</span></div><div class="shop-price-col">¥228,000</div><div class="shop-diff-col">+¥8,200</div></div><div class="shop-row"><div class="shop-rank ">4</div><div class="shop-name-col"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_iphone17pm_256">じゃんぱら</a></div><div class="shop-price-col">¥225,000</div><div class="shop-diff-col">+¥5,200</div></div><div class="shop-row"><div class="shop-rank ">5</div><div class="shop-name-col"><a href="https://iosys.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_iphone17pm_256">イオシス</a></div><div class="shop-price-col">¥222,000</div><div class="shop-diff-col">+¥2,200</div></div></div>
     <div class="card-actions">
-      <a href="https://www.apple.com/jp/shop/" target="_blank" rel="noopener" class="btn btn-secondary" data-track="product_click" data-product-id="prod_iphone17pm_256">&#128241; Apple Store で買う</a>
+      <a href="https://www.apple.com/jp/shop/" target="_blank" rel="noopener" class="btn btn-secondary btn-official-buy" data-track="product_click" data-product-id="prod_iphone17pm_256">&#128241; Apple Store で買う</a>
       <a href="https://www.janpara.co.jp/sell/iphone/" target="_blank" rel="noopener" class="btn btn-primary" data-track="buyback_click" data-product-id="prod_iphone17pm_256">&#128176; じゃんぱらで売る</a>
     </div>
     <div class="overseas-section overseas-links-section"><div class="overseas-lbl">&#127758; 海外相場を確認</div><div class="overseas-chips"><a href="https://www.ebay.com/sch/i.html?_nkw=iPhone+17+Pro+Max+256GB+SIM%E3%83%95%E3%83%AA%E3%83%BC&amp;LH_Sold=1&amp;LH_Complete=1&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-chip overseas-btn" title="実際の落札価格（過去の取引実績）を確認できます" data-track="overseas_click">🌐 eBay sold</a><a href="https://www.ebay.com/sch/i.html?_nkw=iPhone+17+Pro+Max+256GB+SIM%E3%83%95%E3%83%AA%E3%83%BC&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-chip overseas-btn" title="現在出品中の価格を確認できます" data-track="overseas_click">🌐 eBay (新着)</a><a href="https://www.bhphotovideo.com/c/search?q=iPhone+17+Pro+Max+256GB+SIM%E3%83%95%E3%83%AA%E3%83%BC&amp;sts=ma" target="_blank" rel="noopener" class="overseas-chip overseas-btn" title="米国大手カメラ・電子機器専門店（新品・中古）" data-track="overseas_click">📷 B&amp;H Photo</a><a href="https://www.adorama.com/l/?searchinfo=iPhone+17+Pro+Max+256GB+SIM%E3%83%95%E3%83%AA%E3%83%BC" target="_blank" rel="noopener" class="overseas-chip overseas-btn" title="米国カメラ専門店（新品・認定中古）" data-track="overseas_click">📷 Adorama</a></div></div>
@@ -1802,9 +1814,10 @@ Apple Store・任天堂公式など<strong>正規店で定価購入</strong>し�
       <div><strong>買取条件：新品未開封 SIMフリー</strong>&nbsp;<span style="font-size:0.72rem;color:var(--gray-400)">掲載価格は参考値です。売却前に必ず各社の公式買取ページで確認してください。</span></div>
     </div>
     <div class="updated-row"><span>&#128336;</span>最終更新：2026-05-18 23:42 JST</div>
-    <div class="shop-table buyback-shop-table buyback-table"><div class="shop-table-hd"><span>買取店比較（参照5店舗）</span><span class="freshness-stale">📋当日手動 / 24時間以上前（参考値）</span></div><div class="shop-row"><div class="shop-rank gold">1</div><div class="shop-name-col">モバイル一番（価格のみ）</div><div class="shop-price-col">¥188,200</div><div class="shop-diff-col">+¥8,400</div></div><div class="shop-row"><div class="shop-rank silver">2</div><div class="shop-name-col">買取商店（価格のみ）</div><div class="shop-price-col">¥187,500</div><div class="shop-diff-col">+¥7,700</div></div><div class="shop-row"><div class="shop-rank ">3</div><div class="shop-name-col">買取一丁目（価格のみ）</div><div class="shop-price-col">¥186,000</div><div class="shop-diff-col">+¥6,200</div></div><div class="shop-row"><div class="shop-rank ">4</div><div class="shop-name-col"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_iphone17pro_256">じゃんぱら</a></div><div class="shop-price-col">¥184,000</div><div class="shop-diff-col">+¥4,200</div></div><div class="shop-row"><div class="shop-rank ">5</div><div class="shop-name-col"><a href="https://iosys.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_iphone17pro_256">イオシス</a></div><div class="shop-price-col">¥182,000</div><div class="shop-diff-col">+¥2,200</div></div></div>
+    
+    <div class="shop-table buyback-shop-table buyback-table"><div class="shop-table-hd"><span>買取店比較（参照5店舗）</span><span class="freshness-stale">📋当日手動 / 25時間以上前（参考値）</span></div><div class="shop-row"><div class="shop-rank gold">1</div><div class="shop-name-col"><span class="unverified-link" style="font-size:0.68rem;color:var(--ink4);">モバイル一番（公式買取ページで確認）</span></div><div class="shop-price-col">¥188,200</div><div class="shop-diff-col">+¥8,400</div></div><div class="shop-row"><div class="shop-rank silver">2</div><div class="shop-name-col"><span class="unverified-link" style="font-size:0.68rem;color:var(--ink4);">買取商店（公式買取ページで確認）</span></div><div class="shop-price-col">¥187,500</div><div class="shop-diff-col">+¥7,700</div></div><div class="shop-row"><div class="shop-rank ">3</div><div class="shop-name-col"><span class="unverified-link" style="font-size:0.68rem;color:var(--ink4);">買取一丁目（公式買取ページで確認）</span></div><div class="shop-price-col">¥186,000</div><div class="shop-diff-col">+¥6,200</div></div><div class="shop-row"><div class="shop-rank ">4</div><div class="shop-name-col"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_iphone17pro_256">じゃんぱら</a></div><div class="shop-price-col">¥184,000</div><div class="shop-diff-col">+¥4,200</div></div><div class="shop-row"><div class="shop-rank ">5</div><div class="shop-name-col"><a href="https://iosys.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_iphone17pro_256">イオシス</a></div><div class="shop-price-col">¥182,000</div><div class="shop-diff-col">+¥2,200</div></div></div>
     <div class="card-actions">
-      <a href="https://www.apple.com/jp/shop/" target="_blank" rel="noopener" class="btn btn-secondary" data-track="product_click" data-product-id="prod_iphone17pro_256">&#128241; Apple Store で買う</a>
+      <a href="https://www.apple.com/jp/shop/" target="_blank" rel="noopener" class="btn btn-secondary btn-official-buy" data-track="product_click" data-product-id="prod_iphone17pro_256">&#128241; Apple Store で買う</a>
       <a href="https://www.janpara.co.jp/sell/iphone/" target="_blank" rel="noopener" class="btn btn-primary" data-track="buyback_click" data-product-id="prod_iphone17pro_256">&#128176; じゃんぱらで売る</a>
     </div>
     <div class="overseas-section overseas-links-section"><div class="overseas-lbl">&#127758; 海外相場を確認</div><div class="overseas-chips"><a href="https://www.ebay.com/sch/i.html?_nkw=iPhone+17+Pro+256GB+SIM%E3%83%95%E3%83%AA%E3%83%BC&amp;LH_Sold=1&amp;LH_Complete=1&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-chip overseas-btn" title="実際の落札価格（過去の取引実績）を確認できます" data-track="overseas_click">🌐 eBay sold</a><a href="https://www.ebay.com/sch/i.html?_nkw=iPhone+17+Pro+256GB+SIM%E3%83%95%E3%83%AA%E3%83%BC&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-chip overseas-btn" title="現在出品中の価格を確認できます" data-track="overseas_click">🌐 eBay (新着)</a><a href="https://www.bhphotovideo.com/c/search?q=iPhone+17+Pro+256GB+SIM%E3%83%95%E3%83%AA%E3%83%BC&amp;sts=ma" target="_blank" rel="noopener" class="overseas-chip overseas-btn" title="米国大手カメラ・電子機器専門店（新品・中古）" data-track="overseas_click">📷 B&amp;H Photo</a><a href="https://www.adorama.com/l/?searchinfo=iPhone+17+Pro+256GB+SIM%E3%83%95%E3%83%AA%E3%83%BC" target="_blank" rel="noopener" class="overseas-chip overseas-btn" title="米国カメラ専門店（新品・認定中古）" data-track="overseas_click">📷 Adorama</a></div></div>
@@ -1845,9 +1858,10 @@ Apple Store・任天堂公式など<strong>正規店で定価購入</strong>し�
       <div><strong>買取条件：新品未開封 SIMフリー</strong>&nbsp;<span style="font-size:0.72rem;color:var(--gray-400)">掲載価格は参考値です。売却前に必ず各社の公式買取ページで確認してください。</span></div>
     </div>
     <div class="updated-row"><span>&#128336;</span>最終更新：2026-05-18 23:42 JST</div>
-    <div class="shop-table buyback-shop-table buyback-table"><div class="shop-table-hd"><span>買取店比較（参照5店舗）</span><span class="freshness-stale">📋当日手動 / 24時間以上前（参考値）</span></div><div class="shop-row"><div class="shop-rank gold">1</div><div class="shop-name-col">モバイル一番（価格のみ）</div><div class="shop-price-col">¥223,000</div><div class="shop-diff-col">+¥8,200</div></div><div class="shop-row"><div class="shop-rank silver">2</div><div class="shop-name-col">買取商店（価格のみ）</div><div class="shop-price-col">¥221,000</div><div class="shop-diff-col">+¥6,200</div></div><div class="shop-row"><div class="shop-rank ">3</div><div class="shop-name-col">買取一丁目（価格のみ）</div><div class="shop-price-col">¥219,000</div><div class="shop-diff-col">+¥4,200</div></div><div class="shop-row"><div class="shop-rank ">4</div><div class="shop-name-col"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_iphone17pro_512">じゃんぱら</a></div><div class="shop-price-col">¥217,000</div><div class="shop-diff-col">+¥2,200</div></div><div class="shop-row"><div class="shop-rank ">5</div><div class="shop-name-col"><a href="https://iosys.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_iphone17pro_512">イオシス</a></div><div class="shop-price-col">¥215,000</div><div class="shop-diff-col">+¥200</div></div></div>
+    
+    <div class="shop-table buyback-shop-table buyback-table"><div class="shop-table-hd"><span>買取店比較（参照5店舗）</span><span class="freshness-stale">📋当日手動 / 25時間以上前（参考値）</span></div><div class="shop-row"><div class="shop-rank gold">1</div><div class="shop-name-col"><span class="unverified-link" style="font-size:0.68rem;color:var(--ink4);">モバイル一番（公式買取ページで確認）</span></div><div class="shop-price-col">¥223,000</div><div class="shop-diff-col">+¥8,200</div></div><div class="shop-row"><div class="shop-rank silver">2</div><div class="shop-name-col"><span class="unverified-link" style="font-size:0.68rem;color:var(--ink4);">買取商店（公式買取ページで確認）</span></div><div class="shop-price-col">¥221,000</div><div class="shop-diff-col">+¥6,200</div></div><div class="shop-row"><div class="shop-rank ">3</div><div class="shop-name-col"><span class="unverified-link" style="font-size:0.68rem;color:var(--ink4);">買取一丁目（公式買取ページで確認）</span></div><div class="shop-price-col">¥219,000</div><div class="shop-diff-col">+¥4,200</div></div><div class="shop-row"><div class="shop-rank ">4</div><div class="shop-name-col"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_iphone17pro_512">じゃんぱら</a></div><div class="shop-price-col">¥217,000</div><div class="shop-diff-col">+¥2,200</div></div><div class="shop-row"><div class="shop-rank ">5</div><div class="shop-name-col"><a href="https://iosys.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_iphone17pro_512">イオシス</a></div><div class="shop-price-col">¥215,000</div><div class="shop-diff-col">+¥200</div></div></div>
     <div class="card-actions">
-      <a href="https://www.apple.com/jp/shop/" target="_blank" rel="noopener" class="btn btn-secondary" data-track="product_click" data-product-id="prod_iphone17pro_512">&#128241; Apple Store で買う</a>
+      <a href="https://www.apple.com/jp/shop/" target="_blank" rel="noopener" class="btn btn-secondary btn-official-buy" data-track="product_click" data-product-id="prod_iphone17pro_512">&#128241; Apple Store で買う</a>
       <a href="https://www.janpara.co.jp/sell/iphone/" target="_blank" rel="noopener" class="btn btn-primary" data-track="buyback_click" data-product-id="prod_iphone17pro_512">&#128176; じゃんぱらで売る</a>
     </div>
     <div class="overseas-section overseas-links-section"><div class="overseas-lbl">&#127758; 海外相場を確認</div><div class="overseas-chips"><a href="https://www.ebay.com/sch/i.html?_nkw=iPhone+17+Pro+512GB+SIM%E3%83%95%E3%83%AA%E3%83%BC&amp;LH_Sold=1&amp;LH_Complete=1&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-chip overseas-btn" title="実際の落札価格（過去の取引実績）を確認できます" data-track="overseas_click">🌐 eBay sold</a><a href="https://www.ebay.com/sch/i.html?_nkw=iPhone+17+Pro+512GB+SIM%E3%83%95%E3%83%AA%E3%83%BC&amp;_sacat=0" target="_blank" rel="noopener" class="overseas-chip overseas-btn" title="現在出品中の価格を確認できます" data-track="overseas_click">🌐 eBay (新着)</a><a href="https://www.bhphotovideo.com/c/search?q=iPhone+17+Pro+512GB+SIM%E3%83%95%E3%83%AA%E3%83%BC&amp;sts=ma" target="_blank" rel="noopener" class="overseas-chip overseas-btn" title="米国大手カメラ・電子機器専門店（新品・中古）" data-track="overseas_click">📷 B&amp;H Photo</a><a href="https://www.adorama.com/l/?searchinfo=iPhone+17+Pro+512GB+SIM%E3%83%95%E3%83%AA%E3%83%BC" target="_blank" rel="noopener" class="overseas-chip overseas-btn" title="米国カメラ専門店（新品・認定中古）" data-track="overseas_click">📷 Adorama</a></div></div>
@@ -1888,7 +1902,8 @@ Apple Store・任天堂公式など<strong>正規店で定価購入</strong>し�
       <div><strong>買取条件：新品未開封</strong>&nbsp;<span style="font-size:0.72rem;color:var(--gray-400)">掲載価格は参考値です。売却前に必ず各社の公式買取ページで確認してください。</span></div>
     </div>
     <div class="updated-row"><span>&#128336;</span>最終更新：2026-05-18 23:42 JST</div>
-    <div class="shop-table buyback-shop-table buyback-table"><div class="shop-table-hd"><span>買取店比較（参照4店舗）</span><span class="freshness-stale">📋当日手動 / 24時間以上前（参考値）</span></div><div class="shop-row"><div class="shop-rank gold">1</div><div class="shop-name-col">買取商店（価格のみ）</div><div class="shop-price-col">¥57,000</div><div class="shop-diff-col">+¥7,020</div></div><div class="shop-row"><div class="shop-rank silver">2</div><div class="shop-name-col"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_switch2">じゃんぱら</a></div><div class="shop-price-col">¥55,500</div><div class="shop-diff-col">+¥5,520</div></div><div class="shop-row"><div class="shop-rank ">3</div><div class="shop-name-col"><a href="https://iosys.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_switch2">イオシス</a></div><div class="shop-price-col">¥54,500</div><div class="shop-diff-col">+¥4,520</div></div><div class="shop-row"><div class="shop-rank ">4</div><div class="shop-name-col"><a href="https://www.geo-online.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_switch2">ゲオ</a></div><div class="shop-price-col">¥53,500</div><div class="shop-diff-col">+¥3,520</div></div></div>
+    
+    <div class="shop-table buyback-shop-table buyback-table"><div class="shop-table-hd"><span>買取店比較（参照4店舗）</span><span class="freshness-stale">📋当日手動 / 25時間以上前（参考値）</span></div><div class="shop-row"><div class="shop-rank gold">1</div><div class="shop-name-col"><span class="unverified-link" style="font-size:0.68rem;color:var(--ink4);">買取商店（公式買取ページで確認）</span></div><div class="shop-price-col">¥57,000</div><div class="shop-diff-col">+¥7,020</div></div><div class="shop-row"><div class="shop-rank silver">2</div><div class="shop-name-col"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_switch2">じゃんぱら</a></div><div class="shop-price-col">¥55,500</div><div class="shop-diff-col">+¥5,520</div></div><div class="shop-row"><div class="shop-rank ">3</div><div class="shop-name-col"><a href="https://iosys.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_switch2">イオシス</a></div><div class="shop-price-col">¥54,500</div><div class="shop-diff-col">+¥4,520</div></div><div class="shop-row"><div class="shop-rank ">4</div><div class="shop-name-col"><a href="https://www.geo-online.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_switch2">ゲオ</a></div><div class="shop-price-col">¥53,500</div><div class="shop-diff-col">+¥3,520</div></div></div>
     <div class="card-actions">
       
       <a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener" class="btn btn-primary" data-track="buyback_click" data-product-id="prod_switch2">&#128176; じゃんぱらで売る</a>
@@ -1931,7 +1946,8 @@ Apple Store・任天堂公式など<strong>正規店で定価購入</strong>し�
       <div><strong>買取条件：新品未開封</strong>&nbsp;<span style="font-size:0.72rem;color:var(--gray-400)">掲載価格は参考値です。売却前に必ず各社の公式買取ページで確認してください。</span></div>
     </div>
     <div class="updated-row"><span>&#128336;</span>最終更新：2026-05-18 23:42 JST</div>
-    <div class="shop-table buyback-shop-table buyback-table"><div class="shop-table-hd"><span>買取店比較（参照3店舗）</span><span class="freshness-stale">📋当日手動 / 24時間以上前（参考値）</span></div><div class="shop-row"><div class="shop-rank gold">1</div><div class="shop-name-col">買取商店（価格のみ）</div><div class="shop-price-col">¥67,000</div><div class="shop-diff-col">+¥7,020</div></div><div class="shop-row"><div class="shop-rank silver">2</div><div class="shop-name-col"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_switch2_mk">じゃんぱら</a></div><div class="shop-price-col">¥65,000</div><div class="shop-diff-col">+¥5,020</div></div><div class="shop-row"><div class="shop-rank ">3</div><div class="shop-name-col"><a href="https://iosys.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_switch2_mk">イオシス</a></div><div class="shop-price-col">¥63,500</div><div class="shop-diff-col">+¥3,520</div></div></div>
+    
+    <div class="shop-table buyback-shop-table buyback-table"><div class="shop-table-hd"><span>買取店比較（参照3店舗）</span><span class="freshness-stale">📋当日手動 / 25時間以上前（参考値）</span></div><div class="shop-row"><div class="shop-rank gold">1</div><div class="shop-name-col"><span class="unverified-link" style="font-size:0.68rem;color:var(--ink4);">買取商店（公式買取ページで確認）</span></div><div class="shop-price-col">¥67,000</div><div class="shop-diff-col">+¥7,020</div></div><div class="shop-row"><div class="shop-rank silver">2</div><div class="shop-name-col"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_switch2_mk">じゃんぱら</a></div><div class="shop-price-col">¥65,000</div><div class="shop-diff-col">+¥5,020</div></div><div class="shop-row"><div class="shop-rank ">3</div><div class="shop-name-col"><a href="https://iosys.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_switch2_mk">イオシス</a></div><div class="shop-price-col">¥63,500</div><div class="shop-diff-col">+¥3,520</div></div></div>
     <div class="card-actions">
       
       <a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener" class="btn btn-primary" data-track="buyback_click" data-product-id="prod_switch2_mk">&#128176; じゃんぱらで売る</a>
@@ -1977,7 +1993,8 @@ Apple Store・任天堂公式など<strong>正規店で定価購入</strong>し�
       <div><strong>買取条件：新品未開封</strong>&nbsp;<span style="font-size:0.72rem;color:var(--gray-400)">掲載価格は参考値です。売却前に必ず各社の公式買取ページで確認してください。</span></div>
     </div>
     <div class="updated-row"><span>&#128336;</span>最終更新：2026-05-18 23:42 JST</div>
-    <div class="shop-table buyback-shop-table buyback-table"><div class="shop-table-hd"><span>買取店比較（参照4店舗）</span><span class="freshness-stale">📋当日手動 / 24時間以上前（参考値）</span></div><div class="shop-row"><div class="shop-rank gold">1</div><div class="shop-name-col"><a href="https://iosys.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_ps5_pro">イオシス</a></div><div class="shop-price-col">¥122,000</div><div class="shop-diff-col">+¥2,020</div></div><div class="shop-row"><div class="shop-rank silver">2</div><div class="shop-name-col"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_ps5_pro">じゃんぱら</a></div><div class="shop-price-col">¥120,000</div><div class="shop-diff-col">+¥20</div></div><div class="shop-row"><div class="shop-rank ">3</div><div class="shop-name-col">買取商店（価格のみ）</div><div class="shop-price-col">¥118,000</div><div class="shop-diff-col neg">-¥1,980</div></div><div class="shop-row"><div class="shop-rank ">4</div><div class="shop-name-col"><a href="https://www.geo-online.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_ps5_pro">ゲオ</a></div><div class="shop-price-col">¥116,000</div><div class="shop-diff-col neg">-¥3,980</div></div></div>
+    
+    <div class="shop-table buyback-shop-table buyback-table"><div class="shop-table-hd"><span>買取店比較（参照4店舗）</span><span class="freshness-stale">📋当日手動 / 25時間以上前（参考値）</span></div><div class="shop-row"><div class="shop-rank gold">1</div><div class="shop-name-col"><a href="https://iosys.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_ps5_pro">イオシス</a></div><div class="shop-price-col">¥122,000</div><div class="shop-diff-col">+¥2,020</div></div><div class="shop-row"><div class="shop-rank silver">2</div><div class="shop-name-col"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_ps5_pro">じゃんぱら</a></div><div class="shop-price-col">¥120,000</div><div class="shop-diff-col">+¥20</div></div><div class="shop-row"><div class="shop-rank ">3</div><div class="shop-name-col"><span class="unverified-link" style="font-size:0.68rem;color:var(--ink4);">買取商店（公式買取ページで確認）</span></div><div class="shop-price-col">¥118,000</div><div class="shop-diff-col neg">-¥1,980</div></div><div class="shop-row"><div class="shop-rank ">4</div><div class="shop-name-col"><a href="https://www.geo-online.co.jp/" target="_blank" rel="noopener" data-track="buyback_click" data-product-id="prod_ps5_pro">ゲオ</a></div><div class="shop-price-col">¥116,000</div><div class="shop-diff-col neg">-¥3,980</div></div></div>
     <div class="card-actions">
       
       <a href="https://iosys.co.jp/" target="_blank" rel="noopener" class="btn btn-primary" data-track="product_click" data-product-id="prod_ps5_pro" data-shop="イオシス">&#128176; イオシスで売る</a>
@@ -1989,8 +2006,13 @@ Apple Store・任天堂公式など<strong>正規店で定価購入</strong>し�
 </div>
 
 <div id="tab-advanced" class="tab-panel" role="tabpanel">
-<div class="caution" style="margin:16px 0 20px;">
-ℹ️ <strong>現在、上級者向けの確定候補は少ないため、価格差・希少性・海外相場差が大きい監視候補を表示しています。</strong><br>
+<div class="info-banner purple">
+<strong>&#128269; 上級者向けとは？</strong><br>
+国内の二次流通（メルカリ・ヤフオク等）で仕入れ、海外相場（eBay/StockX等）と比較して転売できる案件です。
+輸出規制・関税・プラットフォーム手数料等が発生します。リスクを十分理解した上でご活用ください。
+</div>
+<div class="adv-fallback-notice info-banner purple" style="margin:16px 0 20px;">
+&#8505;&#65039; <strong>現在、上級者向けの確定候補は少ないため、価格差・希少性・海外相場差が大きい監視候補を表示しています。</strong><br>
 中古市場や海外相場のデータが入り次第、確定候補として昇格します。
 </div>
 <div class="section-header"><h2>上級者向け監視候補</h2><span class="section-count">価格差・希少性スコア上位</span></div>
@@ -2006,11 +2028,230 @@ Apple Store・任天堂公式など<strong>正規店で定価購入</strong>し�
 </div>
 </div>
 
-<div id="tab-surge" class="tab-panel" role="tabpanel">
-<div class="sec-head"><div class="sec-title">&#9650; 本日の急騰</div></div>
-<div class="empty-state"><span class="empty-icon">&#128200;</span>急騰は検出されていません（閾値: ¥5,000+）</div>
-<div class="sec-head" style="margin-top:36px"><div class="sec-title">&#9660; 本日の急落</div></div>
-<div class="empty-state"><span class="empty-icon">&#128201;</span>急落は検出されていません（閾値: ¥5,000−）</div>
+<div id="tab-sedori" class="tab-panel" role="tabpanel">
+<div class="sedori-calculator" id="sedori-calc-section">
+<div class="sec-head"><div class="sec-title">&#129518; せどり計算機</div></div>
+
+<div class="info-banner teal" style="margin-bottom:24px;">
+<strong>&#129518; せどり利益シミュレーター</strong><br>
+購入価格・売却価格・手数料を入力して、実質利益と利益率を即時計算できます。
+初心者は「公式購入 → 国内買取」、上級者は「国内中古仕入れ → 海外売却」を選んでください。
+</div>
+
+<!-- 内部タブ -->
+<div style="display:flex;gap:0;border-bottom:1px solid var(--card-border);margin-bottom:24px;" id="sedori-inner-tabs">
+  <button onclick="sedoriSwitchTab('beginner')" id="sedori-tab-btn-beginner"
+    style="flex-shrink:0;background:transparent;border:none;border-bottom:2px solid var(--violet);
+    padding:12px 22px;font-size:0.875rem;font-weight:700;color:var(--violet);cursor:pointer;
+    margin-bottom:-1px;font-family:var(--font);">
+    &#128100; 初心者用（公式→国内買取）
+  </button>
+  <button onclick="sedoriSwitchTab('advanced')" id="sedori-tab-btn-advanced"
+    style="flex-shrink:0;background:transparent;border:none;border-bottom:2px solid transparent;
+    padding:12px 22px;font-size:0.875rem;font-weight:500;color:var(--ink3);cursor:pointer;
+    margin-bottom:-1px;font-family:var(--font);">
+    &#128269; 上級者用（国内中古→海外売却）
+  </button>
+</div>
+
+<!-- 初心者用フォーム -->
+<div id="sedori-panel-beginner" style="display:block;">
+  <div class="ranking-card" style="padding:24px;">
+    <div class="ranking-hd">&#128100; 初心者向け計算 — 公式購入 &#8594; 国内買取売却</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-top:20px;">
+      <div>
+        <label style="font-size:0.75rem;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:6px;">公式購入価格（円）</label>
+        <input type="number" id="b-buy-price" placeholder="例: 159800" min="0"
+          style="width:100%;padding:10px 14px;border:1px solid var(--card-border);border-radius:var(--radius-md);
+          font-size:1rem;font-family:var(--font);color:var(--ink);background:var(--card-bg);">
+      </div>
+      <div>
+        <label style="font-size:0.75rem;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:6px;">最高買取価格（円）</label>
+        <input type="number" id="b-sell-price" placeholder="例: 175000" min="0"
+          style="width:100%;padding:10px 14px;border:1px solid var(--card-border);border-radius:var(--radius-md);
+          font-size:1rem;font-family:var(--font);color:var(--ink);background:var(--card-bg);">
+      </div>
+      <div>
+        <label style="font-size:0.75rem;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:6px;">送料・手数料（円）</label>
+        <input type="number" id="b-fee" value="1800" min="0"
+          style="width:100%;padding:10px 14px;border:1px solid var(--card-border);border-radius:var(--radius-md);
+          font-size:1rem;font-family:var(--font);color:var(--ink);background:var(--card-bg);">
+      </div>
+    </div>
+    <button onclick="calcBeginner()"
+      style="margin-top:20px;background:linear-gradient(135deg,var(--profit),var(--profit-dark));
+      color:#fff;border:none;padding:12px 28px;border-radius:var(--radius-md);
+      font-size:0.95rem;font-weight:800;cursor:pointer;font-family:var(--font);">
+      &#129518; 計算する
+    </button>
+    <div id="b-result" style="display:none;margin-top:24px;background:var(--surface2);
+      border:1px solid var(--card-border);border-radius:var(--radius-lg);padding:20px;">
+    </div>
+  </div>
+</div>
+
+<!-- 上級者用フォーム -->
+<div id="sedori-panel-advanced" style="display:none;">
+  <div class="ranking-card" style="padding:24px;">
+    <div class="ranking-hd">&#128269; 上級者向け計算 — 国内中古仕入れ &#8594; 海外売却</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-top:20px;">
+      <div>
+        <label style="font-size:0.75rem;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:6px;">国内仕入れ価格（円）</label>
+        <input type="number" id="a-buy-price" placeholder="例: 120000" min="0"
+          style="width:100%;padding:10px 14px;border:1px solid var(--card-border);border-radius:var(--radius-md);
+          font-size:1rem;font-family:var(--font);color:var(--ink);background:var(--card-bg);">
+      </div>
+      <div>
+        <label style="font-size:0.75rem;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:6px;">海外売却予想価格（USD）</label>
+        <input type="number" id="a-sell-usd" placeholder="例: 1200" min="0"
+          style="width:100%;padding:10px 14px;border:1px solid var(--card-border);border-radius:var(--radius-md);
+          font-size:1rem;font-family:var(--font);color:var(--ink);background:var(--card-bg);">
+      </div>
+      <div>
+        <label style="font-size:0.75rem;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:6px;">為替レート（円/USD）</label>
+        <input type="number" id="a-fx" value="150" min="1"
+          style="width:100%;padding:10px 14px;border:1px solid var(--card-border);border-radius:var(--radius-md);
+          font-size:1rem;font-family:var(--font);color:var(--ink);background:var(--card-bg);">
+      </div>
+      <div>
+        <label style="font-size:0.75rem;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:6px;">輸送・関税コスト（円）</label>
+        <input type="number" id="a-shipping" value="5000" min="0"
+          style="width:100%;padding:10px 14px;border:1px solid var(--card-border);border-radius:var(--radius-md);
+          font-size:1rem;font-family:var(--font);color:var(--ink);background:var(--card-bg);">
+      </div>
+      <div>
+        <label style="font-size:0.75rem;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:6px;">プラットフォーム手数料率（%）</label>
+        <input type="number" id="a-fee-rate" value="3.49" step="0.01" min="0" max="100"
+          style="width:100%;padding:10px 14px;border:1px solid var(--card-border);border-radius:var(--radius-md);
+          font-size:1rem;font-family:var(--font);color:var(--ink);background:var(--card-bg);">
+      </div>
+    </div>
+    <button onclick="calcAdvanced()"
+      style="margin-top:20px;background:linear-gradient(135deg,var(--violet),var(--violet-dark));
+      color:#fff;border:none;padding:12px 28px;border-radius:var(--radius-md);
+      font-size:0.95rem;font-weight:800;cursor:pointer;font-family:var(--font);">
+      &#129518; 計算する
+    </button>
+    <div id="a-result" style="display:none;margin-top:24px;background:var(--surface2);
+      border:1px solid var(--card-border);border-radius:var(--radius-lg);padding:20px;">
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+(function() {
+  function sedoriSwitchTab(tab) {
+    var panels = ['beginner', 'advanced'];
+    panels.forEach(function(t) {
+      var panel = document.getElementById('sedori-panel-' + t);
+      var btn = document.getElementById('sedori-tab-btn-' + t);
+      if (panel) panel.style.display = (t === tab) ? 'block' : 'none';
+      if (btn) {
+        if (t === tab) {
+          btn.style.borderBottomColor = 'var(--violet)';
+          btn.style.color = 'var(--violet)';
+          btn.style.fontWeight = '700';
+        } else {
+          btn.style.borderBottomColor = 'transparent';
+          btn.style.color = 'var(--ink3)';
+          btn.style.fontWeight = '500';
+        }
+      }
+    });
+  }
+  window.sedoriSwitchTab = sedoriSwitchTab;
+
+  function fmtJPY(n) {
+    return '¥' + Math.round(n).toLocaleString('ja-JP');
+  }
+  function fmtRate(n) {
+    return n.toFixed(1) + '%';
+  }
+  function resultRow(label, value, highlight) {
+    var color = highlight ? 'color:var(--profit-dark);font-size:1.2rem;font-weight:900;' : '';
+    return '<div style="display:flex;justify-content:space-between;align-items:center;'
+      + 'padding:8px 0;border-bottom:1px solid var(--card-border);">'
+      + '<span style="font-size:0.85rem;color:var(--ink2);">' + label + '</span>'
+      + '<span style="' + color + 'font-weight:700;">' + value + '</span>'
+      + '</div>';
+  }
+
+  function calcBeginner() {
+    var buyPrice = parseFloat(document.getElementById('b-buy-price').value) || 0;
+    var sellPrice = parseFloat(document.getElementById('b-sell-price').value) || 0;
+    var fee = parseFloat(document.getElementById('b-fee').value) || 0;
+    var grossProfit = sellPrice - buyPrice;
+    var netProfit = grossProfit - fee;
+    var profitRate = buyPrice > 0 ? (netProfit / buyPrice * 100) : 0;
+    var html = resultRow('公式購入価格', fmtJPY(buyPrice), false)
+      + resultRow('最高買取価格', fmtJPY(sellPrice), false)
+      + resultRow('粗利', fmtJPY(grossProfit), false)
+      + resultRow('推定コスト（送料等）', '- ' + fmtJPY(fee), false)
+      + resultRow('実質利益', fmtJPY(netProfit), true)
+      + resultRow('利益率', fmtRate(profitRate), false);
+    var el = document.getElementById('b-result');
+    el.innerHTML = html;
+    el.style.display = 'block';
+  }
+  window.calcBeginner = calcBeginner;
+
+  function calcAdvanced() {
+    var buyPrice = parseFloat(document.getElementById('a-buy-price').value) || 0;
+    var sellUSD = parseFloat(document.getElementById('a-sell-usd').value) || 0;
+    var fx = parseFloat(document.getElementById('a-fx').value) || 150;
+    var shipping = parseFloat(document.getElementById('a-shipping').value) || 0;
+    var feeRate = parseFloat(document.getElementById('a-fee-rate').value) || 3.49;
+    var sellJPY = sellUSD * fx;
+    var platformFee = sellJPY * feeRate / 100;
+    var totalCost = buyPrice + shipping + platformFee;
+    var netProfit = sellJPY - totalCost;
+    var profitRate = totalCost > 0 ? (netProfit / totalCost * 100) : 0;
+    var html = resultRow('売却額（円換算 ' + sellUSD + 'USD × ' + fx + '円）', fmtJPY(sellJPY), false)
+      + resultRow('国内仕入れ価格', fmtJPY(buyPrice), false)
+      + resultRow('輸送・関税コスト', fmtJPY(shipping), false)
+      + resultRow('プラットフォーム手数料（' + feeRate + '%）', fmtJPY(platformFee), false)
+      + resultRow('粗利（売却額 - 仕入れ）', fmtJPY(sellJPY - buyPrice), false)
+      + resultRow('実質利益（全コスト差引）', fmtJPY(netProfit), true)
+      + resultRow('利益率', fmtRate(profitRate), false);
+    var el = document.getElementById('a-result');
+    el.innerHTML = html;
+    el.style.display = 'block';
+  }
+  window.calcAdvanced = calcAdvanced;
+})();
+</script>
+</div>
+
+<div id="tab-lottery" class="tab-panel" role="tabpanel">
+<div class="info-banner blue">
+<strong>&#127920; 抽選・限定販売情報</strong><br>
+公式抽選・予約受付・限定販売の情報をまとめています。
+応募前に必ず公式ページで最新情報をご確認ください。
+</div>
+<div class="sec-head"><div class="sec-title">現在の抽選・販売イベント</div><div class="sec-badge">3件</div></div>
+<div class="lottery-section cards-grid">
+<div class="deal-card"><div class="card-stripe default"></div><div class="card-hd"><div class="card-name">—</div><div class="card-tags"><span class="badge badge-lottery">&#127920;抽選</span></div></div><div class="card-body"><div class="card-actions"></div></div></div>
+<div class="deal-card"><div class="card-stripe default"></div><div class="card-hd"><div class="card-name">—</div><div class="card-tags"><span class="badge badge-lottery">&#127920;抽選</span></div></div><div class="card-body"><div class="card-actions"></div></div></div>
+<div class="deal-card"><div class="card-stripe default"></div><div class="card-hd"><div class="card-name">—</div><div class="card-tags"><span class="badge badge-lottery">&#127920;抽選</span></div></div><div class="card-body"><div class="card-actions"></div></div></div>
+</div>
+</div>
+
+<div id="tab-ranking" class="tab-panel" role="tabpanel">
+<div class="sec-head"><div class="sec-title">&#127942; 買取ランキング</div></div>
+<div class="ranking-card">
+  <div class="ranking-tabs">
+    <button class="ranking-tab-btn active" data-rtab="all">&#127942; 総合</button>
+    <button class="ranking-tab-btn" data-rtab="iphone">&#128241; iPhone</button>
+    <button class="ranking-tab-btn" data-rtab="camera">&#128247; カメラ</button>
+    <button class="ranking-tab-btn" data-rtab="game">&#127918; ゲーム機</button>
+  </div>
+  <div class="ranking-tab-panel active" id="rtab-all"><div class="rank-row rank-1"><div class="rank-num r1">&#128081;</div><div class="rank-info"><div class="rank-name">FUJIFILM X100VI</div><div class="rank-meta">マップカメラ &nbsp;|&nbsp; camera</div></div><div><div class="rank-profit">+¥143,700</div><div class="rank-rate">53.3%</div></div></div><div class="rank-row"><div class="rank-num r2">2</div><div class="rank-info"><div class="rank-name">iPhone 17 Pro Max 512GB SIMフリー</div><div class="rank-meta">モバイル一番 &nbsp;|&nbsp; iphone</div></div><div><div class="rank-profit">+¥11,400</div><div class="rank-rate">4.5%</div></div></div><div class="rank-row"><div class="rank-num r3">3</div><div class="rank-info"><div class="rank-name">iPhone 17 Pro Max 256GB SIMフリー</div><div class="rank-meta">モバイル一番 &nbsp;|&nbsp; iphone</div></div><div><div class="rank-profit">+¥10,400</div><div class="rank-rate">4.7%</div></div></div><div class="rank-row"><div class="rank-num ">4</div><div class="rank-info"><div class="rank-name">iPhone 17 Pro 256GB SIMフリー</div><div class="rank-meta">モバイル一番 &nbsp;|&nbsp; iphone</div></div><div><div class="rank-profit">+¥6,600</div><div class="rank-rate">3.7%</div></div></div><div class="rank-row"><div class="rank-num ">5</div><div class="rank-info"><div class="rank-name">iPhone 17 Pro 512GB SIMフリー</div><div class="rank-meta">モバイル一番 &nbsp;|&nbsp; iphone</div></div><div><div class="rank-profit">+¥6,400</div><div class="rank-rate">3.0%</div></div></div><div class="rank-row"><div class="rank-num ">6</div><div class="rank-info"><div class="rank-name">Nintendo Switch 2</div><div class="rank-meta">買取商店 &nbsp;|&nbsp; game_console</div></div><div><div class="rank-profit">+¥5,220</div><div class="rank-rate">10.4%</div></div></div><div class="rank-row"><div class="rank-num ">7</div><div class="rank-info"><div class="rank-name">Nintendo Switch 2 マリオカートセット</div><div class="rank-meta">買取商店 &nbsp;|&nbsp; game_console</div></div><div><div class="rank-profit">+¥5,220</div><div class="rank-rate">8.7%</div></div></div><div class="rank-row"><div class="rank-num ">8</div><div class="rank-info"><div class="rank-name">PlayStation 5 Pro</div><div class="rank-meta">イオシス &nbsp;|&nbsp; game_console</div></div><div><div class="rank-profit">+¥220</div><div class="rank-rate">0.2%</div></div></div></div>
+  <div class="ranking-tab-panel" id="rtab-iphone"><div class="rank-row rank-1"><div class="rank-num r1">&#128081;</div><div class="rank-info"><div class="rank-name">iPhone 17 Pro Max 512GB SIMフリー</div><div class="rank-meta">モバイル一番</div></div><div><div class="rank-profit">+¥11,400</div><div class="rank-rate">4.5%</div></div></div><div class="rank-row"><div class="rank-num r2">2</div><div class="rank-info"><div class="rank-name">iPhone 17 Pro Max 256GB SIMフリー</div><div class="rank-meta">モバイル一番</div></div><div><div class="rank-profit">+¥10,400</div><div class="rank-rate">4.7%</div></div></div><div class="rank-row"><div class="rank-num r3">3</div><div class="rank-info"><div class="rank-name">iPhone 17 Pro 256GB SIMフリー</div><div class="rank-meta">モバイル一番</div></div><div><div class="rank-profit">+¥6,600</div><div class="rank-rate">3.7%</div></div></div><div class="rank-row"><div class="rank-num ">4</div><div class="rank-info"><div class="rank-name">iPhone 17 Pro 512GB SIMフリー</div><div class="rank-meta">モバイル一番</div></div><div><div class="rank-profit">+¥6,400</div><div class="rank-rate">3.0%</div></div></div></div>
+  <div class="ranking-tab-panel" id="rtab-camera"><div class="rank-row rank-1"><div class="rank-num r1">&#128081;</div><div class="rank-info"><div class="rank-name">FUJIFILM X100VI</div><div class="rank-meta">マップカメラ</div></div><div><div class="rank-profit">+¥143,700</div><div class="rank-rate">53.3%</div></div></div></div>
+  <div class="ranking-tab-panel" id="rtab-game"><div class="rank-row rank-1"><div class="rank-num r1">&#128081;</div><div class="rank-info"><div class="rank-name">Nintendo Switch 2</div><div class="rank-meta">買取商店</div></div><div><div class="rank-profit">+¥5,220</div><div class="rank-rate">10.4%</div></div></div><div class="rank-row"><div class="rank-num r2">2</div><div class="rank-info"><div class="rank-name">Nintendo Switch 2 マリオカートセット</div><div class="rank-meta">買取商店</div></div><div><div class="rank-profit">+¥5,220</div><div class="rank-rate">8.7%</div></div></div><div class="rank-row"><div class="rank-num r3">3</div><div class="rank-info"><div class="rank-name">PlayStation 5 Pro</div><div class="rank-meta">イオシス</div></div><div><div class="rank-profit">+¥220</div><div class="rank-rate">0.2%</div></div></div></div>
+</div>
 </div>
 
 <div id="tab-new-products" class="tab-panel section-new-products" role="tabpanel">

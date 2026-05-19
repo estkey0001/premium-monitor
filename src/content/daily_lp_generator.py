@@ -1605,98 +1605,161 @@ a[href], button, [role="tab"], [role="button"],
 .step-text {{ flex: 1; }}
 
 /* ============================================================
-   RANKING — ランキング / プレ値・スナップショット
+   RANKING — ランキングセクション (Manus card-per-row style)
    ============================================================ */
 .ranking-card {{
-  background: #FDFCFF;
-  border: 1px solid #DDD6FE;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
   border-radius: 20px;
   overflow: hidden; margin-bottom: 20px;
-  box-shadow: 0 1px 4px rgba(124,92,252,0.07), 0 2px 8px rgba(124,92,252,0.04);
-  transition: transform 0.2s cubic-bezier(0.23,1,0.32,1),
-              box-shadow 0.2s cubic-bezier(0.23,1,0.32,1);
-}}
-
-.ranking-card:hover {{
-  transform: translateY(-2px);
-  box-shadow: 0 12px 36px rgba(124,92,252,0.1), 0 4px 12px rgba(124,92,252,0.06);
+  box-shadow: 0 1px 3px rgba(13,15,28,0.05), 0 2px 6px rgba(13,15,28,0.04);
+  transition: box-shadow 0.2s cubic-bezier(0.23,1,0.32,1);
 }}
 
 .ranking-hd {{
-  padding: 14px 20px;
+  padding: 16px 20px;
   border-bottom: 1px solid var(--card-border);
-  background: var(--surface2);
-  display: flex; align-items: center; gap: 8px;
-  font-size: 0.875rem; font-weight: 800; color: var(--ink);
+  background: linear-gradient(90deg, #FFFBEB, #FFF8F0);
+  display: flex; align-items: center; gap: 10px;
+  font-size: 0.9rem; font-weight: 800; color: var(--ink);
 }}
 
-.rank-row {{
-  display: flex; align-items: center;
-  padding: 12px 20px;
-  border-bottom: 1px solid var(--surface2);
-  gap: 14px; transition: background 0.1s;
+.ranking-hd::before {{
+  content: '';
+  width: 3px; height: 16px; border-radius: 2px;
+  background: linear-gradient(180deg, #D97706, #FBBF24);
 }}
 
-.rank-row:last-child {{ border: none; }}
-.rank-row:hover {{ background: #F8FAFC; }}
-
-/* 1位 Crown + 金色ボーダー */
-.rank-row.rank-1 {{
-  border-left: 3px solid var(--gold);
-}}
-
-.rank-num {{
-  font-size: 1.1rem; font-weight: 900;
-  color: var(--ink4); min-width: 28px; text-align: center;
-}}
-
-.rank-num.r1 {{ color: var(--gold); }}
-.rank-num.r2 {{ color: var(--ink3); }}
-.rank-num.r3 {{ color: #92400e; }}
-
-.rank-info {{ flex: 1; }}
-.rank-name {{ font-weight: 700; color: var(--ink); font-size: 0.9rem; }}
-.rank-meta {{ font-size: 0.72rem; color: var(--ink4); margin-top: 2px; }}
-
-.rank-profit {{
-  font-size: 1.1rem; font-weight: 900;
-  color: var(--profit-dark); font-variant-numeric: tabular-nums;
-  text-align: right;
-}}
-
-.rank-rate {{
-  font-size: 0.72rem; color: var(--ink4);
-  text-align: right; margin-top: 2px;
-}}
-
-/* ランキング内タブ */
+/* ランキング内タブ — Manus segmented control */
 .ranking-tabs {{
-  display: flex; gap: 0;
-  border-bottom: 1px solid var(--card-border);
-  overflow-x: auto;
+  display: flex; gap: 4px;
+  padding: 12px 12px 0;
+  overflow-x: auto; -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  background: var(--card-bg);
+}}
+
+.ranking-tabs::before {{
+  content: '';
+  display: none;
+}}
+
+.ranking-tabs-wrap {{
+  display: inline-flex; gap: 3px;
+  background: #F4F5FA;
+  border: 1px solid #E8EAF2;
+  border-radius: 12px;
+  padding: 4px;
+  flex-shrink: 0;
 }}
 
 .ranking-tab-btn {{
   flex-shrink: 0;
-  background: transparent; border: none;
-  border-bottom: 2px solid transparent;
-  padding: 10px 18px;
+  background: transparent; border: 1px solid transparent;
+  border-radius: 9px;
+  padding: 6px 14px;
   font-size: 0.8rem; font-weight: 600;
   color: var(--ink3); cursor: pointer;
-  transition: color 0.15s, border-color 0.15s;
-  margin-bottom: -1px;
+  transition: all 0.15s cubic-bezier(0.23,1,0.32,1);
   white-space: nowrap;
   font-family: var(--font);
+  line-height: 1.4;
 }}
 
+.ranking-tab-btn:hover {{
+  color: var(--ink); background: rgba(255,255,255,0.7);
+}}
+
+/* active: Manus per-tab color — JS側で .active を付与 */
 .ranking-tab-btn.active {{
-  color: var(--violet);
-  border-bottom-color: var(--violet);
+  background: #FFFFFF;
+  border-color: #E8EAF2;
+  box-shadow: 0 1px 4px rgba(13,15,28,0.08);
   font-weight: 700;
+  color: var(--ink);
 }}
 
-.ranking-tab-panel {{ display: none; }}
+/* 総合=teal, iPhone=ink, camera=amber, game=violet */
+.ranking-tab-btn.active[data-rtab="all"]    {{ color: #059669; }}
+.ranking-tab-btn.active[data-rtab="iphone"] {{ color: #0F172A; }}
+.ranking-tab-btn.active[data-rtab="camera"] {{ color: #D97706; }}
+.ranking-tab-btn.active[data-rtab="game"]   {{ color: #7C3AED; }}
+
+/* タブパネル */
+.ranking-tab-panel {{ display: none; padding: 10px 12px 12px; }}
 .ranking-tab-panel.active {{ display: block; }}
+
+/* 各ランク行 — Manus card-per-row */
+.rank-row {{
+  display: flex; align-items: center;
+  padding: 12px 14px;
+  margin-bottom: 6px;
+  border-radius: 12px;
+  border: 1px solid #E8EAF2;
+  background: #FFFFFF;
+  gap: 14px;
+  transition: background 0.15s cubic-bezier(0.23,1,0.32,1),
+              border-color 0.15s cubic-bezier(0.23,1,0.32,1),
+              box-shadow 0.15s cubic-bezier(0.23,1,0.32,1);
+}}
+
+.rank-row:last-child {{ margin-bottom: 0; }}
+
+.rank-row:hover {{
+  background: #F8FAFC;
+  border-color: #D0D4E8;
+  box-shadow: 0 2px 8px rgba(13,15,28,0.06);
+}}
+
+/* 1位 — Manus amber card */
+.rank-row.rank-1 {{
+  background: #FFFBEB;
+  border: 1px solid #FDE68A;
+  box-shadow: 0 2px 8px rgba(217,119,6,0.1);
+}}
+
+.rank-row.rank-1:hover {{
+  background: #FFF7DC;
+  border-color: #FBBF24;
+  box-shadow: 0 4px 14px rgba(217,119,6,0.15);
+}}
+
+/* 順位数字 */
+.rank-num {{
+  font-size: 1rem; font-weight: 900;
+  color: #CBD5E1; min-width: 26px; text-align: center;
+  font-family: 'JetBrains Mono', 'Menlo', ui-monospace, monospace;
+}}
+
+.rank-num.r1 {{ color: #D97706; font-size: 1.15rem; }}
+.rank-num.r2 {{ color: #94A3B8; }}
+.rank-num.r3 {{ color: #92400E; }}
+
+.rank-info {{ flex: 1; min-width: 0; }}
+.rank-name {{
+  font-weight: 700; color: var(--ink); font-size: 0.9rem;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}}
+.rank-meta {{ font-size: 0.72rem; color: var(--ink4); margin-top: 2px; }}
+
+/* 利益表示 */
+.rank-profit {{
+  font-size: 1.15rem; font-weight: 900;
+  color: #059669; font-variant-numeric: tabular-nums;
+  text-align: right; flex-shrink: 0;
+  font-family: 'JetBrains Mono', 'Menlo', ui-monospace, monospace;
+  letter-spacing: -0.02em;
+}}
+
+.rank-row.rank-1 .rank-profit {{ color: #D97706; }}
+
+.rank-rate {{
+  font-size: 0.7rem; font-weight: 700;
+  color: #16A34A;
+  text-align: right; margin-top: 3px;
+}}
+
+.rank-row.rank-1 .rank-rate {{ color: #B45309; }}
 
 /* ============================================================
    SURGE/DROP カード
@@ -2163,6 +2226,12 @@ a[href], button, [role="tab"], [role="button"],
   .watch-price-grid {{ grid-template-columns: 1fr 1fr; gap: 8px; }}
   .ranking-card {{ border-radius: 16px; }}
   .table-wrap th, .table-wrap td {{ padding: 9px 10px; font-size: 0.8rem; }}
+  /* ランキング: スマホ対応 */
+  .ranking-tabs {{ padding: 10px 10px 0; }}
+  .ranking-tab-panel {{ padding: 8px 10px 10px; }}
+  .rank-row {{ padding: 10px 12px; gap: 10px; }}
+  .rank-profit {{ font-size: 1rem; }}
+  .rank-name {{ font-size: 0.85rem; }}
 }}
 
 @media (max-width: 480px) {{

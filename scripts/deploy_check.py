@@ -223,11 +223,29 @@ def check() -> list[dict]:
     else:
         results.append({"level": "warning", "check": "multi_shop_compare", "message": "複数店舗比較が見つからない"})
 
-    # 20. 新商品候補セクション（存在すれば OK / なくてもwarningだけ）
-    if "section-new-products" in html or "new-product-card" in html:
-        results.append({"level": "ok", "check": "new_products_section", "message": "新商品候補セクションが存在する"})
+    # 20. 速報タブが存在する
+    if 'id="tab-sokuhoh"' in html or 'data-tab="sokuhoh"' in html:
+        results.append({"level": "ok", "check": "sokuhoh_tab_exists", "message": "速報タブ（tab-sokuhoh）が存在する"})
     else:
-        results.append({"level": "warning", "check": "new_products_section", "message": "新商品候補セクションなし（候補データがない可能性）"})
+        results.append({"level": "error", "check": "sokuhoh_tab_exists", "message": "速報タブ（id=tab-sokuhoh）が見つからない"})
+
+    # 20b. 「新商品候補」がLP上に存在しない
+    if '新商品候補' not in html:
+        results.append({"level": "ok", "check": "new_products_removed", "message": "「新商品候補」テキストは存在しない（速報タブに移行済み）"})
+    else:
+        results.append({"level": "warning", "check": "new_products_removed", "message": "「新商品候補」テキストがまだ残っている"})
+
+    # 20c. 速報カードまたはデータなし表示が存在する
+    if 'sokuhoh-card' in html or '速報がありません' in html:
+        results.append({"level": "ok", "check": "sokuhoh_content", "message": "速報タブにコンテンツ（카드またはデータなし表示）がある"})
+    else:
+        results.append({"level": "warning", "check": "sokuhoh_content", "message": "速報タブにコンテンツが見つからない"})
+
+    # 20d. 抽選リンク種別ラベルがある
+    if any(lbl in html for lbl in ['抽選ページを確認', '予約ページを確認', '販売ページを確認', '商品ページを確認', '公式サイトを確認']):
+        results.append({"level": "ok", "check": "lottery_link_type_label", "message": "抽選カードにリンク種別ラベルがある"})
+    else:
+        results.append({"level": "warning", "check": "lottery_link_type_label", "message": "抽選カードのリンク種別ラベルが見つからない"})
 
     # 21. 初心者向けカードに複数買取店テーブルがある
     if "buyback-shop-table" in html or "buyback-table" in html:

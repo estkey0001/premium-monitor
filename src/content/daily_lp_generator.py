@@ -1004,7 +1004,7 @@ a[href], button, [role="tab"], [role="button"],
   background: #FFF8E8;
   color: #B45309;
 }}
-.tab-btn.active[data-tab="new-products"] {{
+.tab-btn.active[data-tab="sokuhoh"] {{
   background: #F0EEFF;
   color: #6040E8;
 }}
@@ -2124,6 +2124,37 @@ a[href], button, [role="tab"], [role="button"],
 .np-tags {{ display: flex; flex-wrap: wrap; gap: 5px; }}
 
 /* ============================================================
+   SOKUHOH (速報) TAB
+   ============================================================ */
+.sokuhoh-feed {{ display: flex; flex-direction: column; gap: 12px; padding: 8px 0; }}
+.sokuhoh-card {{
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+  padding: 14px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}}
+.sokuhoh-surge {{ border-left: 4px solid #22C55E; }}
+.sokuhoh-drop  {{ border-left: 4px solid #EF4444; }}
+.sokuhoh-change {{ border-left: 4px solid #F59E0B; }}
+.sokuhoh-top {{ display: flex; gap: 6px; align-items: center; }}
+.sokuhoh-badge {{ font-size: 0.68rem; font-weight: 700; padding: 2px 10px; border-radius: 99px; }}
+.badge-surge {{ background: #DCFCE7; color: #16A34A; }}
+.badge-drop  {{ background: #FEE2E2; color: #DC2626; }}
+.sokuhoh-body {{ display: flex; flex-direction: column; gap: 4px; }}
+.sokuhoh-name {{ font-weight: 800; font-size: 0.92rem; color: var(--ink); }}
+.sokuhoh-brand {{ font-size: 0.75rem; color: var(--ink3); }}
+.sokuhoh-price-row {{ display: flex; align-items: center; gap: 8px; font-variant-numeric: tabular-nums; }}
+.sokuhoh-prev {{ color: var(--ink3); font-size: 0.85rem; text-decoration: line-through; }}
+.sokuhoh-arrow {{ color: var(--ink4); font-size: 0.8rem; }}
+.sokuhoh-cur {{ font-weight: 800; font-size: 0.95rem; color: var(--ink); }}
+.sokuhoh-diff {{ font-size: 0.8rem; color: #22C55E; font-weight: 700; }}
+.sokuhoh-drop .sokuhoh-diff {{ color: #EF4444; }}
+.sokuhoh-time {{ font-size: 0.72rem; color: var(--ink4); }}
+
+/* ============================================================
    OVERSEAS LINKS SECTION
    ============================================================ */
 .overseas-section-block {{
@@ -3060,8 +3091,9 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             "brand": "RICOH",
             "status": "upcoming",
             "note": "発売未定。GR IIIx後継機として注目。公式商品ページで最新情報をご確認ください。",
-            "url": "https://www.ricoh-imaging.co.jp/japan/products/cameras/gr/gr-iv/",
+            "url": "https://www.ricoh-imaging.co.jp/japan/products/cameras/gr/",
             "sale_method": "未定（発売時は抽選の可能性大）",
+            "link_type": "product",
         },
         {
             "product_name": "RICOH GR IV HDF",
@@ -3070,6 +3102,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             "note": "GR IV ハイブリッドディフュージョンフィルター搭載モデル。限定販売の可能性。",
             "url": "https://www.ricoh-imaging.co.jp/japan/products/cameras/gr/",
             "sale_method": "未定（限定抽選の可能性）",
+            "link_type": "product",
         },
         {
             "product_name": "FUJIFILM X100VI",
@@ -3079,6 +3112,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             "url": "https://fujifilm-x.com/ja-jp/products/cameras/x100vi/",
             "sale_method": "抽選 / 通常販売（在庫次第）",
             "official_price": "¥230,230（税込）",
+            "link_type": "product",
         },
         {
             "product_name": "Nintendo Switch 2 限定モデル",
@@ -3087,6 +3121,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             "note": "通常モデル発売済み。限定エディションは抽選販売見込み。マイニンテンドーストアで要確認。",
             "url": "https://store.nintendo.co.jp/category/NINTENDO_SWITCH_2",
             "sale_method": "抽選（マイニンテンドーストア）",
+            "link_type": "sale",
         },
         {
             "product_name": "PlayStation 5 Pro / 限定エディション",
@@ -3096,6 +3131,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             "url": "https://direct.playstation.com/ja-jp/buy-consoles/playstation5-console",
             "sale_method": "抽選 / 通常販売（在庫次第）",
             "official_price": "¥119,980（税込）",
+            "link_type": "sale",
         },
         {
             "product_name": "Apple iPhone 17 Pro Max",
@@ -3104,6 +3140,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             "note": "2025年秋発売見込み。発売直後は在庫不足でプレ値化の傾向あり。Apple Store予約を推奨。",
             "url": "https://www.apple.com/jp/shop/buy-iphone",
             "sale_method": "Apple Store（先着・予約）",
+            "link_type": "sale",
         },
     ]
 
@@ -3149,8 +3186,17 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         status_label = {"active": "受付中 / 販売中", "upcoming": "近日開始", "closed": "終了", "unknown": "未確認"}.get(status, status)
         status_cls = {"active": "lottery-status-open", "upcoming": "lottery-status-upcoming", "closed": "lottery-status-closed"}.get(status, "lottery-status-unknown")
         url = ev.get("url", "")
-        link_btn = (f'<a href="{_esc(url)}" target="_blank" rel="noopener" class="btn btn-secondary" data-track="lottery_click">&#127915; 公式ページへ</a>'
-                    if url else '<span class="no-link-shop" style="font-size:0.78rem;color:var(--ink3)">公式ページで確認してください</span>')
+        _link_type = ev.get("link_type", "official")
+        _link_label_map = {
+            "lottery":     "抽選ページを確認",
+            "reservation": "予約ページを確認",
+            "sale":        "販売ページを確認",
+            "product":     "商品ページを確認",
+            "official":    "公式サイトを確認",
+        }
+        _link_label = _link_label_map.get(_link_type, "公式サイトを確認")
+        link_btn = (f'<a href="{_esc(url)}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" data-track="lottery_click">&#127915; {_link_label}</a>'
+                    if url else '<span class="no-link-shop" style="font-size:0.78rem;color:var(--ink3)">リンク未登録 / 公式サイトで要確認</span>')
         entry_start = ev.get("entry_start_at", "") or ""
         entry_end   = ev.get("entry_end_at", "") or ""
         result_at   = ev.get("result_announcement_at", "") or ""
@@ -3249,7 +3295,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                                               market_prices_by_product=market_prices_by_product or {})
         surge_html       = self._tab_surge(buyback_alerts)
         ranking_html     = self._tab_ranking(all_deals, iphone_deals, game_deals, sedori_routes=sedori_routes)
-        new_products_html = self._section_new_products()
+        new_products_html = self._section_sokuhoh(buyback_alerts)
         sedori_html      = self._tab_sedori(sedori_routes or [])
         lottery_html     = self._section_lottery(lottery_events)
 
@@ -3267,7 +3313,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
   <button class="tab-btn" data-tab="advanced" role="tab" aria-selected="false">&#9997; Pro向け <span class="tab-count">{adv_total}</span></button>
   <button class="tab-btn" data-tab="sedori" role="tab" aria-selected="false">&#9636; せどりルート</button>
   <button class="tab-btn" data-tab="surge" role="tab" aria-selected="false">&#9889; 急騰/急落{surge_badge}</button>
-  <button class="tab-btn" data-tab="new-products" role="tab" aria-selected="false">&#127381; 新商品候補</button>
+  <button class="tab-btn" data-tab="sokuhoh" role="tab" aria-selected="false">&#9889; 速報</button>
   <button class="tab-btn" data-tab="lottery" role="tab" aria-selected="false">&#127915; 抽選情報{lottery_badge}</button>
 </nav>
 </div>
@@ -3292,7 +3338,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 {surge_html}
 </div>
 
-<div id="tab-new-products" class="tab-panel section-new-products" role="tabpanel">
+<div id="tab-sokuhoh" class="tab-panel section-sokuhoh" role="tabpanel">
 {new_products_html}
 </div>
 
@@ -3770,14 +3816,20 @@ python3 -m src.cli calculate-sedori-routes</pre>
         # Buyback link
         buyback_btn = ''
         verified_url = ''
+        _best_buyback_verified = False
         if hasattr(d, 'best_buyback_url') and d.best_buyback_url:
             verified_url = d.best_buyback_url
+            _best_buyback_verified = bool(getattr(d, 'best_buyback_link_verified', False))
         if verified_url:
-            buyback_btn = f'<a href="{_esc(verified_url)}" target="_blank" rel="noopener" class="btn btn-primary" data-track="product_click" data-product-id="{pid}" data-shop="{shop}">&#128176; {_esc(shop)}で売る</a>'
+            if _best_buyback_verified:
+                _bb_label = '買取価格を確認'
+            else:
+                _bb_label = '公式サイトで確認'
+            buyback_btn = f'<a href="{_esc(verified_url)}" target="_blank" rel="noopener noreferrer" class="btn btn-primary" data-track="product_click" data-product-id="{pid}" data-shop="{shop}">&#128176; {_bb_label}</a>'
         else:
             fallback = {'iphone': ('https://www.janpara.co.jp/sell/iphone/', 'じゃんぱら'), 'game_console': ('https://www.janpara.co.jp/sell/', 'じゃんぱら'), 'camera': ('https://www.kitamura.co.jp/', 'カメラのキタムラ')}
             fb_url, fb_name = fallback.get(genre_cls, ('https://www.janpara.co.jp/sell/', 'じゃんぱら'))
-            buyback_btn = f'<a href="{fb_url}" target="_blank" rel="noopener" class="btn btn-primary" data-track="buyback_click" data-product-id="{pid}">&#128176; {fb_name}で売る</a>'
+            buyback_btn = f'<a href="{fb_url}" target="_blank" rel="noopener noreferrer" class="btn btn-primary" data-track="buyback_click" data-product-id="{pid}">&#128176; {fb_name}で売る</a>'
         # Updated timestamp
         updated_str = ''
         if hasattr(d, 'scanned_at') and d.scanned_at:
@@ -3795,15 +3847,20 @@ python3 -m src.cli calculate-sedori-routes</pre>
                 profit_str = f'+¥{profit:,}' if profit >= 0 else f'-¥{abs(profit):,}'
                 url_val = r.get('buyback_url', '')
                 verified = r.get('link_verified', False)
-                if url_val:
-                    link_label = sname if verified else f'{sname}（要確認）'
+                if url_val and verified:
                     shop_display = (
-                        f'<a href="{_esc(url_val)}" target="_blank" rel="noopener" '
+                        f'<a href="{_esc(url_val)}" target="_blank" rel="noopener noreferrer" '
                         f'data-track="buyback_click" data-product-id="{pid}" '
-                        f'title="公式サイトで最新価格をご確認ください">{link_label}</a>'
+                        f'title="買取価格を確認">買取価格を確認</a>'
+                    )
+                elif url_val:
+                    shop_display = (
+                        f'<a href="{_esc(url_val)}" target="_blank" rel="noopener noreferrer" '
+                        f'data-track="buyback_click" data-product-id="{pid}" '
+                        f'title="公式サイトで確認">公式サイトで確認</a>'
                     )
                 else:
-                    shop_display = f'<span title="公式サイトで要確認">{sname}<small style="color:var(--ink3);font-size:0.7em"> 公式で要確認</small></span>'
+                    shop_display = f'<span class="no-link-shop" title="リンク未登録">リンク未登録 / 公式サイトで要確認</span>'
                 rank_cls = 'gold' if i == 1 else ('silver' if i == 2 else '')
                 diff_cls = ' neg' if profit < 0 else ''
                 freshness = self._freshness_label(r.get('observed_at', ''), r.get('data_source', 'manual_today'))
@@ -4537,7 +4594,7 @@ python3 -m src.cli calculate-sedori-routes</pre>
     <a href="#tab-advanced" class="footer-link">Pro向け相場</a>
     <a href="#tab-ranking" class="footer-link">買取ランキング</a>
     <a href="#tab-surge" class="footer-link">急騰/急落アラート</a>
-    <a href="#tab-new-products" class="footer-link">新商品候補</a>
+    <a href="#tab-sokuhoh" class="footer-link">速報</a>
     <a href="#note-cta" class="footer-link">詳細レポート</a>
   </div>
   <div class="footer-text">
@@ -4550,39 +4607,79 @@ python3 -m src.cli calculate-sedori-routes</pre>
 
 
     def _section_new_products(self) -> str:
-        """新商品候補セクション（デザイン用プレースホルダー）。"""
-        # 新商品候補データは Repository から取得可能だが、
-        # デザインシステム移植のためプレースホルダーを返す
-        items = [
-            {"name": "iPhone 17 Pro", "status": "upcoming", "status_lbl": "発売予定",
-             "price": "未定", "level": "beginner_easy", "tags": ["抽選", "限定"]},
-            {"name": "Nintendo Switch 2", "status": "preorder", "status_lbl": "予約受付中",
-             "price": "¥49,980", "level": "beginner_easy", "tags": ["抽選"]},
-            {"name": "SONY α1 II", "status": "upcoming", "status_lbl": "発売予定",
-             "price": "¥900,000予定", "level": "advanced", "tags": ["高難度", "海外差益"]},
-        ]
+        """後方互換のため残す（_section_sokuhohに委譲）。"""
+        return self._section_sokuhoh([])
+
+    def _section_sokuhoh(self, buyback_alerts: list = None) -> str:
+        """速報タブ：買取急騰/急落アラート・価格変化フィードを表示する。"""
+        alerts = buyback_alerts or []
+        # alert_type が buyback_surge / buyback_drop のものを抽出
+        feed_items = [a for a in alerts if a.get('alert_type') in ('buyback_surge', 'buyback_drop')]
+
+        # バッジの種別マップ
+        _type_badge = {
+            'buyback_surge': ('<span class="sokuhoh-badge badge-surge">買取急騰</span>', 'sokuhoh-surge'),
+            'buyback_drop':  ('<span class="sokuhoh-badge badge-drop">買取急落</span>', 'sokuhoh-drop'),
+        }
+
         cards = []
-        for item in items:
-            status_cls = {"upcoming": "upcoming", "preorder": "preorder", "lottery": "lottery"}.get(item["status"], "default")
-            tags_html = ''.join(
-                f'<span class="deal-tag {("lottery" if t in ("抽選","限定") else ("hard" if t=="高難度" else ("intl" if t=="海外差益" else "pre")))}">{_esc(t)}</span>'
-                for t in item["tags"]
-            )
-            level_badge = '<span class="badge badge-easy" style="font-size:0.6rem">初心者向け</span>' if 'beginner' in item["level"] else '<span class="badge badge-adv" style="font-size:0.6rem">Pro向け</span>'
+        for a in feed_items[:20]:
+            atype = a.get('alert_type', '')
+            badge_html, card_cls = _type_badge.get(atype, ('<span class="sokuhoh-badge">価格急変</span>', 'sokuhoh-change'))
+            prod_name = _esc(a.get('product_name') or a.get('product_id', ''))
+            brand = _esc(a.get('brand', ''))
+            price_before = a.get('price_before') or a.get('prev_price')
+            price_after  = a.get('price_after') or a.get('new_price') or a.get('buyback_price')
+            diff = (price_after - price_before) if (price_before and price_after) else None
+            diff_str = ''
+            if diff is not None:
+                sign = '+' if diff >= 0 else ''
+                diff_str = f'{sign}¥{diff:,}'
+            price_row = ''
+            if price_before and price_after:
+                price_row = (f'<div class="sokuhoh-price-row">'
+                             f'<span class="sokuhoh-prev">¥{price_before:,}</span>'
+                             f'<span class="sokuhoh-arrow">→</span>'
+                             f'<span class="sokuhoh-cur">¥{price_after:,}</span>'
+                             f'<span class="sokuhoh-diff">({diff_str})</span>'
+                             f'</div>')
+            elif price_after:
+                price_row = f'<div class="sokuhoh-price-row"><span class="sokuhoh-cur">¥{price_after:,}</span></div>'
+            occurred_at = _esc(str(a.get('occurred_at') or a.get('created_at') or ''))
+            time_row = f'<div class="sokuhoh-time">&#128336; {occurred_at}</div>' if occurred_at else ''
+            url = a.get('url') or a.get('buyback_url') or ''
+            link_html = ''
+            if url:
+                link_html = (f'<a href="{_esc(url)}" target="_blank" rel="noopener noreferrer" '
+                             f'class="btn btn-secondary" style="font-size:0.75rem;padding:4px 12px" '
+                             f'data-track="sokuhoh_click">詳細を確認</a>')
             cards.append(
-                f'<div class="new-product-card" data-user-level="{_esc(item["level"])}">'
-                f'<div class="np-top-bar"></div>'
-                f'<div class="np-body">'
-                f'<div class="np-hd"><div class="np-name">{_esc(item["name"])}</div>'
-                f'<span class="np-status-badge {status_cls}">{_esc(item["status_lbl"])}</span></div>'
-                f'<div class="np-price-row"><span class="np-price-lbl">想定価格</span>&nbsp;<span class="np-price-val">{_esc(item["price"])}</span></div>'
-                f'<div class="np-tags">{tags_html}{level_badge}</div>'
-                f'</div></div>'
+                f'<div class="sokuhoh-card {card_cls}">'
+                f'<div class="sokuhoh-top">{badge_html}</div>'
+                f'<div class="sokuhoh-body">'
+                f'<div class="sokuhoh-name">{prod_name}</div>'
+                + (f'<div class="sokuhoh-brand">{brand}</div>' if brand else '')
+                + price_row
+                + time_row
+                + link_html
+                + '</div></div>'
             )
+
+        if not cards:
+            # データなし表示
+            return (
+                '<div class="sec-head"><div class="sec-title">&#9889; 速報</div></div>'
+                '<div class="info-banner" style="margin:24px 0;text-align:center;padding:40px 16px">'
+                '&#9889; 速報がありません。次の更新をお待ちください。'
+                '</div>'
+            )
+
         return (
-            '<div class="sec-head"><div class="sec-title">&#127381; 新商品候補 &mdash; 監視リスト</div>'
-            f'<div class="sec-badge">{len(items)}件</div></div>'
-            '<div class="cards-grid">' + ''.join(cards) + '</div>'
+            '<div class="sec-head">'
+            f'<div class="sec-title">&#9889; 速報</div>'
+            f'<div class="sec-badge">{len(cards)}件</div>'
+            '</div>'
+            '<div class="sokuhoh-feed">' + ''.join(cards) + '</div>'
         )
 
     def _render_markdown(self, date_str, time_str, beginner_deals, advanced_snaps, buyback_alerts) -> str:

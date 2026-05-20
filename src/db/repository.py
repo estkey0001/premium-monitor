@@ -1234,12 +1234,12 @@ class Repository:
                           bp.buyback_url, bp.observed_at, bp.data_source, bp.link_verified
                    FROM buyback_prices bp
                    INNER JOIN (
-                       SELECT shop_id, MAX(buyback_price) AS max_price
+                       SELECT shop_id, MAX(observed_at) AS max_at
                        FROM buyback_prices
                        WHERE product_id = ? AND is_active = 1
                        GROUP BY shop_id
                    ) best ON bp.shop_id = best.shop_id
-                          AND bp.buyback_price = best.max_price
+                          AND bp.observed_at = best.max_at
                           AND bp.product_id = ?
                           AND bp.is_active = 1
                    GROUP BY bp.shop_id

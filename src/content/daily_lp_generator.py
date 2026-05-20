@@ -2823,7 +2823,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
     プレ値速報
   </a>
   <div class="topbar-live"><span class="live-dot"></span>LIVE</div>
-  <div class="topbar-date" data-buyback-updated>買取更新: {_esc(_buyback_str_top)}</div>
+  <div class="topbar-date" data-buyback-updated title="DBに記録された最新の買取価格データ取得日時">最終データ取得: {_esc(_buyback_str_top)}</div>
   <div class="topbar-spacer"></div>
   <a href="#note-cta" class="topbar-note-btn" data-track="note_click">&#128221; 詳細レポートを見る</a>
 </header>
@@ -3011,8 +3011,8 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         <div class="social-text">本日 <strong>{all_count}</strong> 件の案件 — 最高利益 <strong>{_esc(max_profit_str)}</strong></div>
       </div>
       <div class="hero-timestamps">
-        <span class="ts-pill {_esc(stale_cls)}" data-buyback-updated><span class="ts-dot"></span>買取価格更新：{_esc(buyback_str)}</span>
-        <span class="ts-pill" data-lp-generated><span class="ts-dot blue"></span>LP生成：{_esc(lp_str)}</span>
+        <span class="ts-pill {_esc(stale_cls)}" data-buyback-updated title="DBに記録された最新の買取価格データ取得日時。各カードの価格には個別の取得日時を表示しています。"><span class="ts-dot"></span>最終買取データ取得：{_esc(buyback_str)}</span>
+        <span class="ts-pill" data-lp-generated title="このページを生成した日時"><span class="ts-dot blue"></span>LP生成：{_esc(lp_str)}</span>
       </div>
     </div>
     <div class="hero-right">
@@ -3680,40 +3680,55 @@ python3 -m src.cli calculate-sedori-routes</pre>
         return "\n".join(parts)
 
     def _freshness_label(self, observed_at_str: str, data_source: str) -> str:
-        """データ鮮度ラベルを返す。24h→参考値、48h+→要確認バッジ。"""
+        """データ鮮度ラベルを返す。
+        - 24h超 → 「参考値」
+        - 48h超 → 「要確認」
+        - 手動CSV由来 → 「手動確認データ」表示・「最新」は使わない
+        - 実際に取得した価格ではない場合は「最新」と表示しない
+        """
+        is_manual = bool(data_source and str(data_source).startswith("manual"))
         try:
             if observed_at_str:
-                dt = datetime.fromisoformat(observed_at_str)
+                dt = datetime.fromisoformat(str(observed_at_str))
                 if dt.tzinfo is None:
                     dt = dt.replace(tzinfo=JST)
-                hours = (datetime.now(tz=JST) - dt.astimezone(JST)).total_seconds() / 3600
-                if hours < 6:
-                    freshness = "最新"
-                    css = "freshness-live"
-                elif hours < 24:
-                    freshness = f"{int(hours)}時間前"
-                    css = "freshness-recent"
+                dt_jst = dt.astimezone(JST)
+                hours = (datetime.now(tz=JST) - dt_jst).total_seconds() / 3600
+                date_label = dt_jst.strftime("%m/%d %H:%M")
+                if hours < 24:
+                    if is_manual:
+                        # 手動データは「最新」と表示しない。実際の確認日時を表示
+                        freshness = f"{date_label}確認"
+                        css = "freshness-recent"
+                    else:
+                        if hours < 6:
+                            freshness = "最新"
+                            css = "freshness-live"
+                        else:
+                            freshness = f"{int(hours)}時間前"
+                            css = "freshness-recent"
                 elif hours < 48:
-                    freshness = f"{int(hours)}時間前（参考値）"
+                    freshness = f"{date_label}（参考値）"
                     css = "freshness-stale"
                 else:
                     days = int(hours // 24)
-                    freshness = f"{days}日前（要確認）"
+                    freshness = f"{date_label}（要確認 / {days}日前）"
                     css = "freshness-warn"
             else:
-                freshness = "不明"
+                freshness = "取得日時不明"
                 css = "freshness-unknown"
         except Exception:
-            freshness = "不明"
+            freshness = "取得日時不明"
             css = "freshness-unknown"
-        # 手動データは出所ラベルを付ける
-        source_label = {
-            "live":           "🟢live",
-            "manual_today":   "📋手動更新データ",
-            "manual_recent":  "📋手動(24h)",
-            "stale":          "⚠️参考値",
-        }.get(data_source, f"📋{data_source}" if data_source else "")
-        return f'<span class="{css}" title="observed_at: {_esc(str(observed_at_str))}">{_esc(source_label)} / {_esc(freshness)}</span>'
+        # 出所ラベル
+        if is_manual:
+            source_label = "手動確認データ"
+        elif data_source == "live":
+            source_label = "🟢live"
+        else:
+            source_label = ""
+        inner = f"{_esc(source_label)} / {_esc(freshness)}" if source_label else _esc(freshness)
+        return f'<span class="{css}" title="observed_at: {_esc(str(observed_at_str))}">{inner}</span>'
 
     # ----- Tab: 初級者向け -----
 

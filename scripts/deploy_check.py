@@ -610,6 +610,48 @@ def check() -> list[dict]:
     else:
         results.append({"level": "warning", "check": "buyback_verify_guidance", "message": "買取店比較の確認導線が見つからない"})
 
+    # 73. 買取商店のリンクまたは確認表示が存在する
+    has_kaitori_shouten = bool(re.search(r'kaitorishouten-co\.jp|買取商店', html))
+    if has_kaitori_shouten:
+        results.append({"level": "ok", "check": "kaitori_shouten_link", "message": "買取商店の確認導線が存在する"})
+    else:
+        results.append({"level": "warning", "check": "kaitori_shouten_link", "message": "買取商店の確認導線が見つからない（buyback CSV の URL を確認）"})
+
+    # 74. 買取一丁目のリンクまたは確認表示が存在する
+    has_kaitori_itchome = bool(re.search(r'1-chome\.com|買取一丁目', html))
+    if has_kaitori_itchome:
+        results.append({"level": "ok", "check": "kaitori_itchome_link", "message": "買取一丁目の確認導線が存在する"})
+    else:
+        results.append({"level": "warning", "check": "kaitori_itchome_link", "message": "買取一丁目の確認導線が見つからない（buyback CSV の URL を確認）"})
+
+    # 75. Pro向け国内価格テーブルが存在する
+    has_pro_domestic_table = 'pro-domestic-price-table' in html or 'pro_domestic_click' in html
+    if has_pro_domestic_table:
+        results.append({"level": "ok", "check": "pro_domestic_price_table", "message": "Pro向け国内二次流通価格の確認導線が存在する"})
+    else:
+        results.append({"level": "warning", "check": "pro_domestic_price_table", "message": "Pro向け国内価格テーブルが見つからない（watch_candidates データまたは CSS クラスを確認）"})
+
+    # 76. Pro向け海外相場の確認導線が存在する
+    has_pro_overseas = 'pro-overseas-price-table' in html or 'pro_overseas_click' in html
+    if has_pro_overseas:
+        results.append({"level": "ok", "check": "pro_overseas_price_link", "message": "Pro向け海外相場の確認導線が存在する"})
+    else:
+        results.append({"level": "warning", "check": "pro_overseas_price_link", "message": "Pro向け海外相場の確認導線が見つからない"})
+
+    # 77. 抽選カードに製品直リンクが含まれる（トップページのみではなく製品ページ URL）
+    has_lottery_product_link = bool(re.search(
+        r'fujifilm-x\.com/ja-jp/products/cameras/x100vi/'
+        r'|nintendo\.co\.jp/hardware/nintendo-switch2/'
+        r'|store\.nintendo\.co\.jp'
+        r'|direct\.playstation\.com'
+        r'|ricoh-imaging\.co\.jp/japan/products/cameras/gr',
+        html
+    ))
+    if has_lottery_product_link:
+        results.append({"level": "ok", "check": "lottery_product_link", "message": "抽選カードに製品/販売直リンクが含まれている"})
+    else:
+        results.append({"level": "warning", "check": "lottery_product_link", "message": "抽選カードの製品直リンクが見つからない"})
+
     return results
 
 

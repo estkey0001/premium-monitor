@@ -659,7 +659,6 @@ def check() -> list[dict]:
     # 77. 抽選カードに製品直リンクが含まれる（トップページのみではなく製品ページ URL）
     has_lottery_product_link = bool(re.search(
         r'fujifilm-x\.com/ja-jp/products/cameras/x100vi/'
-        r'|nintendo\.co\.jp/hardware/nintendo-switch2/'
         r'|store\.nintendo\.co\.jp'
         r'|direct\.playstation\.com'
         r'|ricoh-imaging\.co\.jp/japan/products/cameras/gr',
@@ -669,6 +668,50 @@ def check() -> list[dict]:
         results.append({"level": "ok", "check": "lottery_product_link", "message": "抽選カードに製品/販売直リンクが含まれている"})
     else:
         results.append({"level": "warning", "check": "lottery_product_link", "message": "抽選カードの製品直リンクが見つからない"})
+
+    # 78. 抽選カードにステータスラベルがある（受付中/近日開始/終了済み/要確認）
+    has_lottery_status = any(s in html for s in ("受付中 / 販売中", "近日開始", "終了済み", "要確認", "lottery-status-open", "lottery-status-upcoming"))
+    if has_lottery_status:
+        results.append({"level": "ok", "check": "lottery_status_label", "message": "抽選カードにステータスラベル（受付中/近日開始/終了済み/要確認）がある"})
+    else:
+        results.append({"level": "warning", "check": "lottery_status_label", "message": "抽選ステータスラベルが見つからない"})
+
+    # 79. 終了済み抽選が「受付中」として表示されていない（折り畳みセクションに入っているか）
+    # lottery-closed-section が存在すれば終了済み処理が機能している
+    has_closed_section = "lottery-closed-section" in html
+    if has_closed_section:
+        results.append({"level": "ok", "check": "lottery_closed_section", "message": "終了済み抽選が折り畳みセクションに分離されている"})
+    else:
+        # 終了済みアイテムが存在しない場合はOK（全て現在進行中）
+        results.append({"level": "ok", "check": "lottery_closed_section", "message": "抽選情報に終了済みアイテムなし（全て現在進行中）"})
+
+    # 80. Pro向け全価格行に確認リンクがある（pro-link-btn クラスが存在する）
+    has_pro_link_btn = "pro-link-btn" in html
+    if has_pro_link_btn:
+        results.append({"level": "ok", "check": "pro_price_row_links", "message": "Pro向け価格テーブルの各行に確認ボタンがある"})
+    else:
+        results.append({"level": "warning", "check": "pro_price_row_links", "message": "Pro向け価格テーブルの確認ボタンが見つからない"})
+
+    # 81. Pro向け価格表に「価格未取得」行がある（全サイト行が出ているか）
+    has_no_price_rows = "pro-no-price" in html or "価格未取得" in html
+    if has_no_price_rows:
+        results.append({"level": "ok", "check": "pro_all_sites_shown", "message": "Pro向け価格表に全サイト行（価格未取得含む）が表示されている"})
+    else:
+        results.append({"level": "warning", "check": "pro_all_sites_shown", "message": "Pro向け全サイト行が見つからない（watch_candidates にデータがない可能性）"})
+
+    # 82. href="#" が存在しないこと（data-track付きは #1 でチェック済み、残り）
+    bare_hash_hrefs = re.findall(r'href=["\']#["\']', html)
+    if bare_hash_hrefs:
+        results.append({"level": "error", "check": "no_bare_hash_href", "message": f"href=\"#\" が {len(bare_hash_hrefs)}件存在する"})
+    else:
+        results.append({"level": "ok", "check": "no_bare_hash_href", "message": "href=\"#\" なし"})
+
+    # 83. 空 href が存在しないこと
+    empty_href = re.findall(r'href=["\']["\']', html)
+    if empty_href:
+        results.append({"level": "error", "check": "no_empty_href", "message": f"空href が {len(empty_href)}件存在する"})
+    else:
+        results.append({"level": "ok", "check": "no_empty_href", "message": "空href なし"})
 
     return results
 

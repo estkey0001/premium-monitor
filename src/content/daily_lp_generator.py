@@ -1457,6 +1457,27 @@ a[href], button, [role="tab"], [role="button"],
 .pcc-chips-label {{
   font-size: 0.72rem; color: var(--ink3); margin: 6px 0 3px; padding: 0 2px;
 }}
+/* Pro価格テーブル：確認ボタン列 */
+.pro-link-btn {{
+  display: inline-block; font-size: 0.73rem; font-weight: 700;
+  padding: 3px 10px; border-radius: 6px;
+  background: var(--profit); color: #fff;
+  text-decoration: none; white-space: nowrap;
+  transition: opacity 0.15s;
+}}
+.pro-link-btn:hover {{ opacity: 0.82; text-decoration: none; }}
+.pro-link-btn-dim {{
+  background: var(--surface-2); color: var(--ink2);
+  border: 1px solid var(--border-1);
+}}
+.pro-link-btn-dim:hover {{ background: var(--surface-1); }}
+.pro-no-price {{
+  font-size: 0.75rem; color: var(--ink3);
+}}
+.pro-src-name {{ font-weight: 600; font-size: 0.82rem; }}
+.pro-row-has-price {{ background: rgba(0,200,150,0.04); }}
+.pro-action-cell {{ text-align: right; white-space: nowrap; }}
+.pro-meta-cell {{ font-size: 0.73rem; color: var(--ink3); white-space: nowrap; }}
 
 /* Action Buttons */
 .card-actions {{
@@ -3086,11 +3107,13 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 
     # 抽選情報リファレンスカード（DBデータがない場合に表示する静的カード）
     _LOTTERY_REFERENCE_ITEMS = [
+        # ── 現在進行中・近日開始 ──────────────────────────────────────
         {
             "product_name": "RICOH GR IV",
             "brand": "RICOH",
             "status": "upcoming",
-            "note": "発売未定。GR IIIx後継機として注目。公式商品ページで最新情報をご確認ください。",
+            # entry_end_at 未定のため unknown 扱い（期限切れ自動判定はスキップ）
+            "note": "発売未定。GR IIIx後継機として注目。発表があり次第、抽選販売の可能性が高い。",
             "url": "https://www.ricoh-imaging.co.jp/japan/products/cameras/gr/",
             "sale_method": "未定（発売時は抽選の可能性大）",
             "link_type": "product",
@@ -3099,74 +3122,129 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             "product_name": "RICOH GR IV HDF",
             "brand": "RICOH",
             "status": "upcoming",
-            "note": "GR IV ハイブリッドディフュージョンフィルター搭載モデル。限定販売の可能性。",
+            "note": "ハイブリッドディフュージョンフィルター搭載モデル。GR IVと同時または後続発売の可能性。",
             "url": "https://www.ricoh-imaging.co.jp/japan/products/cameras/gr/",
             "sale_method": "未定（限定抽選の可能性）",
-            "link_type": "product",
-        },
-        {
-            "product_name": "FUJIFILM X100VI",
-            "brand": "FUJIFILM",
-            "status": "active",
-            "note": "発売中。人気機種のため在庫不安定。抽選・予約情報は公式製品ページを定期確認推奨。",
-            "url": "https://fujifilm-x.com/ja-jp/products/cameras/x100vi/",
-            "sale_method": "抽選 / 通常販売（在庫次第）",
-            "official_price": "¥230,230（税込）",
             "link_type": "product",
         },
         {
             "product_name": "Nintendo Switch 2 限定モデル",
             "brand": "Nintendo",
             "status": "upcoming",
-            "note": "通常モデル発売済み。限定エディションは抽選販売見込み。マイニンテンドーストアで要確認。",
+            "note": "通常モデルは2025年6月発売済み。限定エディションは抽選販売見込み。マイニンテンドーストアで要確認。",
             "url": "https://store.nintendo.co.jp/category/NINTENDO_SWITCH_2",
             "sale_method": "抽選（マイニンテンドーストア）",
-            "link_type": "sale",
-        },
-        {
-            "product_name": "PlayStation 5 Pro / 限定エディション",
-            "brand": "Sony Interactive Entertainment",
-            "status": "active",
-            "note": "PS5 Proは通常販売中。限定エディションは抽選または先着順。PlayStation Directで要確認。",
-            "url": "https://direct.playstation.com/ja-jp/buy-consoles/playstation5-console",
-            "sale_method": "抽選 / 通常販売（在庫次第）",
-            "official_price": "¥119,980（税込）",
             "link_type": "sale",
         },
         {
             "product_name": "Apple iPhone 17 Pro Max",
             "brand": "Apple",
             "status": "upcoming",
-            "note": "2025年秋発売見込み。発売直後は在庫不足でプレ値化の傾向あり。Apple Store予約を推奨。",
+            "note": "2025年9月発売見込み。発売直後は在庫不足でプレ値化の傾向あり。Apple Storeで予約を推奨。",
             "url": "https://www.apple.com/jp/shop/buy-iphone",
             "sale_method": "Apple Store（先着・予約）",
             "link_type": "sale",
         },
+        # ── 発売中・販売継続中（参考） ────────────────────────────────
+        {
+            "product_name": "FUJIFILM X100VI",
+            "brand": "FUJIFILM",
+            "status": "active",
+            "note": "2024年2月発売。抽選受付は終了。中古市場でプレ値継続中。公式での入手は在庫次第。",
+            "url": "https://fujifilm-x.com/ja-jp/products/cameras/x100vi/",
+            "sale_method": "通常販売（在庫次第）",
+            "official_price": "¥230,230（税込）",
+            "link_type": "product",
+            # 抽選は終了済みだが商品自体は販売継続 → active 維持
+        },
+        {
+            "product_name": "PlayStation 5 Pro",
+            "brand": "Sony Interactive Entertainment",
+            "status": "active",
+            "note": "2024年11月発売。現在は通常販売中。限定エディションは抽選または先着順。",
+            "url": "https://direct.playstation.com/ja-jp/buy-consoles/playstation5-console",
+            "sale_method": "通常販売 / 限定版は抽選",
+            "official_price": "¥119,980（税込）",
+            "link_type": "sale",
+        },
     ]
 
+    @staticmethod
+    def _lottery_status_from_dates(ev: dict) -> str:
+        """entry_end_at / status から現在の有効ステータスを自動判定する。
+        優先: DB status → entry_end_at による期限切れ判定 → unknown
+        """
+        now = datetime.now()
+        end_str = (ev.get("entry_end_at") or ev.get("entry_end") or "")
+        if end_str:
+            try:
+                end_dt_str = str(end_str)[:19]
+                end_dt = datetime.fromisoformat(end_dt_str)
+                if end_dt.tzinfo is not None:
+                    end_dt = end_dt.replace(tzinfo=None)
+                if end_dt < now:
+                    return "closed"
+            except Exception:
+                pass
+        return ev.get("status", "unknown") or "unknown"
+
     def _section_lottery(self, lottery_events: list) -> str:
-        """抽選情報セクション（DBデータ＋リファレンスカード）"""
+        """抽選情報セクション（DBデータ＋リファレンスカード、期限切れ自動分離）"""
         parts = []
-        parts.append('<div id="category-lottery" class="info-banner violet"><div class="ib-title">&#127915; 抽選情報</div>'
-                     '各メーカーの抽選・予約情報です。公式ページで最新情報をご確認ください。'
-                     '&#9888; 価格・状態は変動します。必ず公式サイトでご確認ください。</div>')
+        parts.append(
+            '<div id="category-lottery" class="info-banner violet">'
+            '<div class="ib-title">&#127915; 抽選情報</div>'
+            '各メーカーの抽選・予約情報です。'
+            '&#9888; 価格・状態は変動します。必ず公式サイトで最新情報をご確認ください。</div>'
+        )
 
-        # ── DBデータがある場合 ──
-        if lottery_events:
-            for ev in lottery_events:
-                if not isinstance(ev, dict):
-                    try:
-                        ev = dict(ev)
-                    except Exception:
-                        continue
-                parts.append(self._lottery_card_html(ev))
+        # すべての表示対象（DB + リファレンス）を集約してステータス自動判定
+        all_items: list[dict] = []
 
-        # ── リファレンスカード（常時表示） ──
-        parts.append('<div class="sec-head" style="margin-top:32px"><div class="sec-title">&#128204; 注目商品の抽選・販売情報（公式リンク）</div></div>')
-        parts.append('<div class="lottery-ref-grid">')
+        # DBデータ
+        for ev in (lottery_events or []):
+            if not isinstance(ev, dict):
+                try:
+                    ev = dict(ev)
+                except Exception:
+                    continue
+            ev = dict(ev)
+            ev["_auto_status"] = self._lottery_status_from_dates(ev)
+            ev["_is_reference"] = False
+            all_items.append(ev)
+
+        # リファレンスカード
         for item in self._LOTTERY_REFERENCE_ITEMS:
-            parts.append(self._lottery_card_html(item, is_reference=True))
-        parts.append('</div>')
+            item = dict(item)
+            item["_auto_status"] = self._lottery_status_from_dates(item)
+            item["_is_reference"] = True
+            all_items.append(item)
+
+        # active / upcoming を上部表示
+        active_items = [it for it in all_items if it["_auto_status"] in ("active", "upcoming", "unknown")]
+        closed_items = [it for it in all_items if it["_auto_status"] == "closed"]
+
+        if active_items:
+            parts.append('<div class="sec-head" style="margin-top:20px"><div class="sec-title">&#128204; 受付中・近日開始・要確認</div></div>')
+            parts.append('<div class="lottery-ref-grid">')
+            for it in active_items:
+                parts.append(self._lottery_card_html(it, is_reference=it["_is_reference"]))
+            parts.append('</div>')
+        else:
+            parts.append('<p class="empty-state">現在受付中の抽選情報はありません。</p>')
+
+        # 終了済みを下部に折り畳み表示
+        if closed_items:
+            parts.append(
+                '<details class="lottery-closed-section" style="margin-top:24px">'
+                '<summary style="cursor:pointer;font-size:0.82rem;color:var(--ink3);padding:8px 4px;">'
+                f'&#128197; 終了済み / 過去の情報（{len(closed_items)}件）'
+                '</summary>'
+                '<div class="lottery-ref-grid" style="margin-top:8px;opacity:0.65">'
+            )
+            for it in closed_items:
+                parts.append(self._lottery_card_html(it, is_reference=it["_is_reference"]))
+            parts.append('</div></details>')
 
         # ── 公式ページリンク集 ──
         parts.append('''<div class="lottery-official-links" style="margin-top:20px">
@@ -3181,10 +3259,21 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         return '\n'.join(parts)
 
     def _lottery_card_html(self, ev: dict, is_reference: bool = False) -> str:
-        """抽選情報カード HTML を生成する。"""
-        status = ev.get("status", "unknown")
-        status_label = {"active": "受付中 / 販売中", "upcoming": "近日開始", "closed": "終了", "unknown": "未確認"}.get(status, status)
-        status_cls = {"active": "lottery-status-open", "upcoming": "lottery-status-upcoming", "closed": "lottery-status-closed"}.get(status, "lottery-status-unknown")
+        """抽選情報カード HTML を生成する。_auto_status があればそちらを優先。"""
+        # _auto_status は _section_lottery で自動判定済みの値
+        status = ev.get("_auto_status") or ev.get("status", "unknown") or "unknown"
+        status_label = {
+            "active":   "受付中 / 販売中",
+            "upcoming": "近日開始",
+            "closed":   "終了済み",
+            "unknown":  "要確認",
+        }.get(status, status)
+        status_cls = {
+            "active":   "lottery-status-open",
+            "upcoming": "lottery-status-upcoming",
+            "closed":   "lottery-status-closed",
+            "unknown":  "lottery-status-unknown",
+        }.get(status, "lottery-status-unknown")
         url = ev.get("url", "")
         _link_type = ev.get("link_type", "official")
         _link_label_map = {
@@ -4173,99 +4262,101 @@ python3 -m src.cli calculate-sedori-routes</pre>
             domestic_rows = [r for r in price_rows if r.get("price_type") in ("used", "market", "flea_market")]
             overseas_rows = [r for r in price_rows if r.get("price_type") == "overseas"]
 
-            # ── 国内二次流通 ──
-            domestic_table_html = ""
-            if domestic_rows:
-                trows = []
-                for r in domestic_rows:
-                    sid    = r.get("source_id", "")
-                    slabel = self._SRC_LABEL.get(sid, sid.replace("src_", ""))
-                    surl   = self._SRC_URL_DOMESTIC.get(sid, "").format(enc=pname_enc)
-                    pprice = r.get("price", 0)
-                    rec_at = str(r.get("recorded_at", ""))[:10]
-                    sname_cell = (
-                        f'<a href="{_esc(surl)}" target="_blank" rel="noopener" '
-                        f'data-track="pro_domestic_click" class="pro-price-link">{_esc(slabel)}</a>'
-                        if surl else _esc(slabel)
-                    )
-                    trows.append(
-                        f'<tr class="pro-domestic-row">'
-                        f'<td class="pro-src-cell">{sname_cell}</td>'
-                        f'<td class="pro-price-cell price-value">¥{pprice:,}</td>'
-                        f'<td class="pro-date-cell">{_esc(rec_at)}</td>'
-                        f'</tr>'
-                    )
-                domestic_table_html = (
-                    f'<table class="pro-price-table pro-domestic-price-table">'
-                    f'<thead><tr><th>サイト</th><th>参考価格</th><th>更新日</th></tr></thead>'
-                    f'<tbody>{"".join(trows)}</tbody>'
-                    f'</table>'
-                )
+            # ── 国内二次流通 ── 価格取得済みサイト（DB データ）
+            # source_id → DB価格行 マップ（重複排除済み）
+            dom_by_src: dict = {r.get("source_id", ""): r for r in domestic_rows}
 
-            # 国内検索チップ（常時表示）
-            domestic_search_links = [
-                ("メルカリ",      f"https://jp.mercari.com/search?keyword={pname_enc}"),
-                ("ヤフオク",      f"https://auctions.yahoo.co.jp/search/search?p={pname_enc}"),
-                ("ラクマ",        f"https://fril.jp/search?query={pname_enc}"),
-                ("マップカメラ",  f"https://www.mapcamera.com/ec/search?q={pname_enc}"),
-                ("キタムラ中古",  f"https://www.kitamura.co.jp/ec/special/camera/used/?q={pname_enc}"),
-                ("フジヤカメラ",  f"https://www.fujiyacamera.com/shopbrand/ct10/?q={pname_enc}"),
-                ("価格.com",     f"https://kakaku.com/search_results/{pname_enc}/"),
-                ("ソフマップ中古", f"https://www.sofmap.com/product_list.aspx?q={pname_enc}&st=1"),
+            # 全対象サイト定義（price未取得でも行を出す）
+            all_domestic_sites = [
+                ("src_mercari",       "メルカリ",      f"https://jp.mercari.com/search?keyword={pname_enc}"),
+                ("src_yahoo_auction", "ヤフオク",      f"https://auctions.yahoo.co.jp/search/search?p={pname_enc}"),
+                ("src_rakuten",       "ラクマ",        f"https://fril.jp/search?query={pname_enc}"),
+                ("src_map_camera",    "マップカメラ",  f"https://www.mapcamera.com/ec/search?q={pname_enc}"),
+                ("src_kitamura",      "カメラのキタムラ", f"https://www.kitamura.co.jp/ec/special/camera/used/?q={pname_enc}"),
+                ("src_fujiya",        "フジヤカメラ",  f"https://www.fujiyacamera.com/shopbrand/ct10/?q={pname_enc}"),
+                ("src_kakaku",        "価格.com",     f"https://kakaku.com/search_results/{pname_enc}/"),
+                ("src_sofmap",        "ソフマップ中古", f"https://www.sofmap.com/product_list.aspx?q={pname_enc}&st=1"),
             ]
-            domestic_chips = "".join(
-                f'<a href="{_esc(url)}" target="_blank" rel="noopener noreferrer" '
-                f'class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">{_esc(label)}</a>'
-                for label, url in domestic_search_links
-            )
-            domestic_chips_label = "最新相場を検索" if domestic_rows else "国内相場を検索"
-
-            # ── 海外相場 ──
-            overseas_table_html = ""
-            if overseas_rows:
-                trows = []
-                for r in overseas_rows:
-                    sid    = r.get("source_id", "")
-                    slabel = self._SRC_LABEL.get(sid, sid.replace("src_", ""))
-                    surl   = self._SRC_URL_OVERSEAS.get(sid, "").format(enc=pname_enc)
-                    pprice = r.get("price", 0)
-                    rec_at = str(r.get("recorded_at", ""))[:10]
-                    sname_cell = (
-                        f'<a href="{_esc(surl)}" target="_blank" rel="noopener" '
-                        f'data-track="pro_overseas_click" class="pro-price-link">{_esc(slabel)}</a>'
-                        if surl else _esc(slabel)
+            dtrows = []
+            for sid, slabel, surl in all_domestic_sites:
+                db_row = dom_by_src.get(sid)
+                if db_row:
+                    pprice = db_row.get("price", 0)
+                    rec_at = str(db_row.get("recorded_at", ""))[:10]
+                    price_cell = f'<strong>¥{pprice:,}</strong>'
+                    date_cell  = f'<span class="pro-date-cell">{_esc(rec_at)}</span>'
+                    link_cell  = (
+                        f'<a href="{_esc(surl)}" target="_blank" rel="noopener noreferrer" '
+                        f'class="pro-link-btn" data-track="pro_domestic_click">相場確認</a>'
                     )
-                    trows.append(
-                        f'<tr class="pro-overseas-row">'
-                        f'<td class="pro-src-cell">{sname_cell}</td>'
-                        f'<td class="pro-price-cell price-value">¥{pprice:,}<small class="pro-jpy-note">（円換算）</small></td>'
-                        f'<td class="pro-date-cell">{_esc(rec_at)}</td>'
-                        f'</tr>'
+                else:
+                    price_cell = '<span class="pro-no-price">価格未取得</span>'
+                    date_cell  = ''
+                    link_cell  = (
+                        f'<a href="{_esc(surl)}" target="_blank" rel="noopener noreferrer" '
+                        f'class="pro-link-btn pro-link-btn-dim" data-track="pro_domestic_click">相場確認</a>'
                     )
-                overseas_table_html = (
-                    f'<table class="pro-price-table pro-overseas-price-table">'
-                    f'<thead><tr><th>サイト</th><th>参考価格（円換算）</th><th>更新日</th></tr></thead>'
-                    f'<tbody>{"".join(trows)}</tbody>'
-                    f'</table>'
-                    f'<p class="pro-overseas-note">※ 送料・関税概算込み。為替変動あり。参考値として活用してください。</p>'
+                dtrows.append(
+                    f'<tr class="pro-domestic-row{" pro-row-has-price" if db_row else ""}">'
+                    f'<td class="pro-src-cell"><strong class="pro-src-name">{_esc(slabel)}</strong></td>'
+                    f'<td class="pro-price-cell">{price_cell}</td>'
+                    f'<td class="pro-meta-cell">{date_cell}</td>'
+                    f'<td class="pro-action-cell">{link_cell}</td>'
+                    f'</tr>'
                 )
-
-            # 海外検索チップ（常時表示）
-            overseas_search_links = [
-                ("eBay sold",  f"https://www.ebay.com/sch/i.html?_nkw={pname_enc}&LH_Sold=1&LH_Complete=1"),
-                ("StockX",     f"https://stockx.com/search?s={pname_enc}"),
-                ("B&H",        f"https://www.bhphotovideo.com/c/search?Ntt={pname_enc}"),
-                ("Adorama",    f"https://www.adorama.com/l/?searchinfo={pname_enc}"),
-                ("MPB",        f"https://www.mpb.com/en-us/cameras/?q={pname_enc}"),
-                ("KEH",        f"https://www.keh.com/search#{pname_enc}"),
-                ("Amazon US",  f"https://www.amazon.com/s?k={pname_enc}"),
-            ]
-            overseas_chips = "".join(
-                f'<a href="{_esc(url)}" target="_blank" rel="noopener noreferrer" '
-                f'class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">{_esc(label)}</a>'
-                for label, url in overseas_search_links
+            domestic_table_html = (
+                f'<table class="pro-price-table pro-domestic-price-table">'
+                f'<thead><tr><th>サイト</th><th>参考価格</th><th>更新日</th><th></th></tr></thead>'
+                f'<tbody>{"".join(dtrows)}</tbody>'
+                f'</table>'
             )
-            overseas_chips_label = "最新相場を検索" if overseas_rows else "海外相場を検索"
+
+            # ── 海外相場 ── 価格取得済みサイト + 未取得サイト全行表示
+            ovs_by_src: dict = {r.get("source_id", ""): r for r in overseas_rows}
+
+            all_overseas_sites = [
+                ("src_ebay",      "eBay",       f"https://www.ebay.com/sch/i.html?_nkw={pname_enc}&LH_Sold=1&LH_Complete=1"),
+                ("src_stockx",    "StockX",     f"https://stockx.com/search?s={pname_enc}"),
+                ("src_bhphoto",   "B&H Photo",  f"https://www.bhphotovideo.com/c/search?Ntt={pname_enc}"),
+                ("src_adorama",   "Adorama",    f"https://www.adorama.com/l/?searchinfo={pname_enc}"),
+                ("src_mpb",       "MPB",        f"https://www.mpb.com/en-us/cameras/?q={pname_enc}"),
+                ("src_keh",       "KEH",        f"https://www.keh.com/search#{pname_enc}"),
+                ("src_amazon_us", "Amazon US",  f"https://www.amazon.com/s?k={pname_enc}"),
+            ]
+            otrows = []
+            for sid, slabel, surl in all_overseas_sites:
+                db_row = ovs_by_src.get(sid)
+                if db_row:
+                    pprice = db_row.get("price", 0)
+                    rec_at = str(db_row.get("recorded_at", ""))[:10]
+                    price_cell = f'<strong>¥{pprice:,}</strong><small class="pro-jpy-note">（円換算）</small>'
+                    date_cell  = f'<span class="pro-date-cell">{_esc(rec_at)}</span>'
+                    link_cell  = (
+                        f'<a href="{_esc(surl)}" target="_blank" rel="noopener noreferrer" '
+                        f'class="pro-link-btn" data-track="pro_overseas_click">相場確認</a>'
+                    )
+                else:
+                    price_cell = '<span class="pro-no-price">価格未取得</span>'
+                    date_cell  = ''
+                    link_cell  = (
+                        f'<a href="{_esc(surl)}" target="_blank" rel="noopener noreferrer" '
+                        f'class="pro-link-btn pro-link-btn-dim" data-track="pro_overseas_click">相場確認</a>'
+                    )
+                otrows.append(
+                    f'<tr class="pro-overseas-row{" pro-row-has-price" if db_row else ""}">'
+                    f'<td class="pro-src-cell"><strong class="pro-src-name">{_esc(slabel)}</strong></td>'
+                    f'<td class="pro-price-cell">{price_cell}</td>'
+                    f'<td class="pro-meta-cell">{date_cell}</td>'
+                    f'<td class="pro-action-cell">{link_cell}</td>'
+                    f'</tr>'
+                )
+            overseas_table_html = (
+                f'<table class="pro-price-table pro-overseas-price-table">'
+                f'<thead><tr><th>サイト</th><th>参考価格（円換算）</th><th>更新日</th><th></th></tr></thead>'
+                f'<tbody>{"".join(otrows)}</tbody>'
+                f'</table>'
+                f'<p class="pro-overseas-note">※ 送料・関税概算込み。為替変動あり。参考値として活用してください。</p>'
+            )
 
             cards.append(f"""<div class="watch-candidate-card pro-candidate-card">
   <div class="pcc-header">
@@ -4286,14 +4377,10 @@ python3 -m src.cli calculate-sedori-routes</pre>
   <div class="pcc-links-section">
     <div class="pcc-links-label">&#127968; 国内二次流通</div>
     {domestic_table_html}
-    <div class="pcc-chips-label">{_esc(domestic_chips_label)}</div>
-    <div class="pcc-chips domestic-chips">{domestic_chips}</div>
   </div>
-  <div class="pcc-links-section" style="margin-top:8px">
+  <div class="pcc-links-section" style="margin-top:12px">
     <div class="pcc-links-label">&#127758; 海外相場</div>
     {overseas_table_html}
-    <div class="pcc-chips-label">{_esc(overseas_chips_label)}</div>
-    <div class="pcc-chips overseas-chips overseas-links-section">{overseas_chips}</div>
   </div>
 </div>""")
 

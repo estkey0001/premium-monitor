@@ -148,8 +148,9 @@ def check() -> list[dict]:
     else:
         results.append({"level": "warning", "check": "robots", "message": "robots.txt なし"})
 
-    # 11. 買取価格更新日時の表示
-    if "買取価格更新：" in html:
+    # 11. 買取価格更新日時の表示（ラベル名変更に対応: 旧「買取価格更新：」→新「最終買取データ取得：」）
+    has_buyback_ts = "最終買取データ取得：" in html or "最終データ取得:" in html or "買取価格更新：" in html
+    if has_buyback_ts:
         results.append({"level": "ok", "check": "buyback_updated_ts", "message": "買取価格更新日時が表示されている"})
     else:
         results.append({"level": "error", "check": "buyback_updated_ts", "message": "買取価格更新日時が見つからない（data-buyback-updated が未出力）"})
@@ -762,6 +763,37 @@ def check() -> list[dict]:
         results.append({"level": "ok", "check": "shop_link_col_exists", "message": "買取比較テーブルに確認ボタン列（shop-link-col）が存在する"})
     else:
         results.append({"level": "error", "check": "shop_link_col_exists", "message": "買取比較テーブルの確認ボタン列（shop-link-col）が見つからない"})
+
+    # 91. ページ上部のタイムスタンプラベルが明確（「最終」「取得」を含む）
+    has_clear_ts_label = "最終買取データ取得" in html or "最終データ取得" in html
+    if has_clear_ts_label:
+        results.append({"level": "ok", "check": "hero_ts_label_clear", "message": "ヒーローのデータ取得タイムスタンプラベルが明確（「最終〜取得」）"})
+    else:
+        results.append({"level": "warning", "check": "hero_ts_label_clear", "message": "ヒーローの更新日時ラベルが不明確 — 「最終買取データ取得」等に変更することを推奨"})
+
+    # 92. 手動確認データラベルが表示されている（manual CSV由来価格を明示）
+    has_manual_label = "手動確認データ" in html
+    if has_manual_label:
+        results.append({"level": "ok", "check": "manual_data_label", "message": "手動確認データのラベルが表示されている"})
+    else:
+        results.append({"level": "warning", "check": "manual_data_label", "message": "手動確認データラベルが見つからない（manual CSV インポート後は表示されるはず）"})
+
+    # 93. 鮮度ラベルの「shop-name-col」内に「最新」が含まれていない（手動データを「最新」と誤表示しない）
+    # freshness-live + manual_today の組み合わせで「最新」が shop テーブルに出ていないかチェック
+    bad_freshness_live_in_shop = re.findall(
+        r'class="shop-table[^"]*".*?freshness-live[^>]*>[^<]*最新', html, re.DOTALL
+    )
+    if bad_freshness_live_in_shop:
+        results.append({"level": "warning", "check": "no_live_label_for_manual", "message": f"買取テーブル内に「最新」（freshness-live）が {len(bad_freshness_live_in_shop)}件。手動データに使われていないか確認推奨"})
+    else:
+        results.append({"level": "ok", "check": "no_live_label_for_manual", "message": "買取テーブル内に「最新」ラベルなし（手動データは日付表示）"})
+
+    # 94. 鮮度ラベルに日付（MM/DD形式）が含まれる（observed_at由来の日付表示）
+    has_date_in_freshness = bool(re.search(r'freshness-[a-z]+[^>]*>\s*手動確認データ / \d{2}/\d{2}', html))
+    if has_date_in_freshness:
+        results.append({"level": "ok", "check": "freshness_shows_date", "message": "鮮度ラベルに MM/DD 形式の確認日付が表示されている"})
+    else:
+        results.append({"level": "warning", "check": "freshness_shows_date", "message": "鮮度ラベルに日付（MM/DD）が見つからない（manual データなし、またはフォーマット変更の可能性）"})
 
     return results
 

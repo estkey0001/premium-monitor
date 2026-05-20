@@ -1272,6 +1272,39 @@ class Repository:
             return []
         return [dict(row) for row in rows]
 
+    def list_price_history_by_product(
+        self,
+        product_id: str,
+        price_types: list = None,
+        limit: int = 20,
+    ) -> list[dict]:
+        """商品の価格履歴を返す（source_id別最新1件、CSV importデータ含む）。
+        price_types: 対象とする price_type のリスト。デフォルトは used/overseas/market/flea_market。
+        Returns: [{source_id, price_type, price, currency, recorded_at}, ...]
+        """
+        try:
+            types = price_types or ["used", "overseas", "market", "flea_market"]
+            placeholders = ",".join("?" * len(types))
+            rows = self.db.connection.execute(
+                f"""SELECT ph.source_id, ph.price_type, ph.price, ph.currency, ph.recorded_at
+                   FROM price_history ph
+                   INNER JOIN (
+                       SELECT source_id, price_type, MAX(recorded_at) AS max_at
+                       FROM price_history
+                       WHERE product_id = ? AND price_type IN ({placeholders})
+                       GROUP BY source_id, price_type
+                   ) latest ON ph.source_id = latest.source_id
+                           AND ph.price_type = latest.price_type
+                           AND ph.recorded_at = latest.max_at
+                   WHERE ph.product_id = ?
+                   ORDER BY ph.price_type, ph.recorded_at DESC
+                   LIMIT ?""",
+                [product_id] + types + [product_id, limit],
+            ).fetchall()
+            return [dict(r) for r in rows]
+        except Exception:
+            return []
+
     # =========================================
     # 抽選・販売イベント (lottery_events)
     # =========================================

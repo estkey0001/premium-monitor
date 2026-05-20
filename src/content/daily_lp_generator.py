@@ -147,6 +147,18 @@ class DailyLPGenerator:
         except Exception:
             sedori_routes = []
 
+        # 商品別市場価格（国内中古＋海外相場）— Pro向けカード用
+        market_prices_by_product: dict = {}
+        try:
+            for _p in _all_products:
+                _mrows = self.repo.list_price_history_by_product(
+                    _p.id, price_types=["used", "overseas", "market", "flea_market"], limit=20
+                )
+                if _mrows:
+                    market_prices_by_product[_p.id] = _mrows
+        except Exception:
+            market_prices_by_product = {}
+
         # HTML生成
         page_html = self._render_page(
             date_str=date_str,
@@ -169,6 +181,7 @@ class DailyLPGenerator:
             game_watch=game_watch,
             buyback_by_product=buyback_by_product,
             sedori_routes=sedori_routes,
+            market_prices_by_product=market_prices_by_product,
         )
 
         # 安全チェック
@@ -220,7 +233,8 @@ class DailyLPGenerator:
                      beginner_easy, beginner_watch, advanced_deals, advanced_snaps,
                      watch_candidates, buyback_alerts, all_deals, iphone_deals, game_deals,
                      camera_deals=None, iphone_watch=None, camera_watch=None, game_watch=None,
-                     buyback_by_product: dict = None, sedori_routes: list = None) -> str:
+                     buyback_by_product: dict = None, sedori_routes: list = None,
+                     market_prices_by_product: dict = None) -> str:
 
         site_title = _esc(self.settings.get("site_title", "プレ値速報"))
         ga_id      = self.settings.get("analytics", {}).get("google_analytics_id", "")
@@ -272,6 +286,7 @@ class DailyLPGenerator:
             buyback_by_product=buyback_by_product or {},
             sedori_routes=sedori_routes or [],
             lottery_events=lottery_events,
+            market_prices_by_product=market_prices_by_product or {},
         )
         caution_html = self._section_caution()
         cta_html     = self._section_cta()
@@ -1405,6 +1420,42 @@ a[href], button, [role="tab"], [role="button"],
   color: #B45309; font-size: 0.7rem; font-weight: 700;
   background: rgba(180,83,9,0.10); padding: 2px 7px; border-radius: 99px;
   border: 1px solid rgba(180,83,9,0.20);
+}}
+
+/* Pro向け価格テーブル */
+.pro-price-table {{
+  width: 100%; border-collapse: collapse;
+  font-size: 0.82rem; margin: 6px 0 4px;
+  border-radius: 8px; overflow: hidden;
+}}
+.pro-price-table thead tr {{
+  background: var(--surface-2); color: var(--ink2);
+}}
+.pro-price-table th, .pro-price-table td {{
+  padding: 6px 10px; text-align: left;
+  border-bottom: 1px solid var(--border-1);
+}}
+.pro-price-table tbody tr:hover {{
+  background: var(--surface-1);
+}}
+.pro-domestic-price-table .price-value {{
+  font-weight: 700; color: var(--ink1);
+}}
+.pro-overseas-price-table .price-value {{
+  font-weight: 700; color: #0369A1;
+}}
+.pro-jpy-note {{
+  font-size: 0.68rem; color: var(--ink3); font-weight: 400; margin-left: 2px;
+}}
+.pro-overseas-note {{
+  font-size: 0.72rem; color: var(--ink3); margin: 2px 0 6px; padding: 0 2px;
+}}
+.pro-price-link {{
+  color: var(--link); text-decoration: none; font-weight: 600;
+}}
+.pro-price-link:hover {{ text-decoration: underline; }}
+.pcc-chips-label {{
+  font-size: 0.72rem; color: var(--ink3); margin: 6px 0 3px; padding: 0 2px;
 }}
 
 /* Action Buttons */
@@ -3008,41 +3059,51 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             "product_name": "RICOH GR IV",
             "brand": "RICOH",
             "status": "upcoming",
-            "note": "発売未定。公式ページで最新情報をご確認ください。",
-            "url": "https://www.ricoh-imaging.co.jp/japan/products/",
-            "sale_method": "未定",
+            "note": "発売未定。GR IIIx後継機として注目。公式商品ページで最新情報をご確認ください。",
+            "url": "https://www.ricoh-imaging.co.jp/japan/products/cameras/gr/gr-iv/",
+            "sale_method": "未定（発売時は抽選の可能性大）",
         },
         {
             "product_name": "RICOH GR IV HDF",
             "brand": "RICOH",
             "status": "upcoming",
-            "note": "発売未定。公式ページで最新情報をご確認ください。",
-            "url": "https://www.ricoh-imaging.co.jp/japan/products/",
-            "sale_method": "未定",
+            "note": "GR IV ハイブリッドディフュージョンフィルター搭載モデル。限定販売の可能性。",
+            "url": "https://www.ricoh-imaging.co.jp/japan/products/cameras/gr/",
+            "sale_method": "未定（限定抽選の可能性）",
         },
         {
             "product_name": "FUJIFILM X100VI",
             "brand": "FUJIFILM",
             "status": "active",
-            "note": "抽選・予約受付情報は公式ページでご確認ください。",
+            "note": "発売中。人気機種のため在庫不安定。抽選・予約情報は公式製品ページを定期確認推奨。",
             "url": "https://fujifilm-x.com/ja-jp/products/cameras/x100vi/",
             "sale_method": "抽選 / 通常販売（在庫次第）",
+            "official_price": "¥230,230（税込）",
         },
         {
             "product_name": "Nintendo Switch 2 限定モデル",
             "brand": "Nintendo",
             "status": "upcoming",
-            "note": "限定モデルの抽選情報は任天堂公式でご確認ください。",
-            "url": "https://www.nintendo.co.jp/hardware/nintendo-switch2/",
-            "sale_method": "抽選",
+            "note": "通常モデル発売済み。限定エディションは抽選販売見込み。マイニンテンドーストアで要確認。",
+            "url": "https://store.nintendo.co.jp/category/NINTENDO_SWITCH_2",
+            "sale_method": "抽選（マイニンテンドーストア）",
         },
         {
             "product_name": "PlayStation 5 Pro / 限定エディション",
             "brand": "Sony Interactive Entertainment",
             "status": "active",
-            "note": "抽選・在庫状況はPlayStation公式でご確認ください。",
-            "url": "https://www.jp.playstation.com/products/playstation5/",
+            "note": "PS5 Proは通常販売中。限定エディションは抽選または先着順。PlayStation Directで要確認。",
+            "url": "https://direct.playstation.com/ja-jp/buy-consoles/playstation5-console",
             "sale_method": "抽選 / 通常販売（在庫次第）",
+            "official_price": "¥119,980（税込）",
+        },
+        {
+            "product_name": "Apple iPhone 17 Pro Max",
+            "brand": "Apple",
+            "status": "upcoming",
+            "note": "2025年秋発売見込み。発売直後は在庫不足でプレ値化の傾向あり。Apple Store予約を推奨。",
+            "url": "https://www.apple.com/jp/shop/buy-iphone",
+            "sale_method": "Apple Store（先着・予約）",
         },
     ]
 
@@ -3072,11 +3133,12 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 
         # ── 公式ページリンク集 ──
         parts.append('''<div class="lottery-official-links" style="margin-top:20px">
-<a href="https://www.jp.playstation.com/products/playstation5/" target="_blank" rel="noopener" class="cat-maker-chip" data-track="lottery_click">PS5 公式</a>
-<a href="https://www.nintendo.co.jp/hardware/nintendo-switch2/" target="_blank" rel="noopener" class="cat-maker-chip" data-track="lottery_click">Switch 2 公式</a>
-<a href="https://www.apple.com/jp/" target="_blank" rel="noopener" class="cat-maker-chip" data-track="lottery_click">Apple 公式</a>
-<a href="https://fujifilm-x.com/ja-jp/" target="_blank" rel="noopener" class="cat-maker-chip" data-track="lottery_click">FUJIFILM 公式</a>
-<a href="https://www.ricoh-imaging.co.jp/japan/" target="_blank" rel="noopener" class="cat-maker-chip" data-track="lottery_click">RICOH 公式</a>
+<a href="https://direct.playstation.com/ja-jp/buy-consoles/playstation5-console" target="_blank" rel="noopener" class="cat-maker-chip" data-track="lottery_click">PS5 Direct購入</a>
+<a href="https://store.nintendo.co.jp/category/NINTENDO_SWITCH_2" target="_blank" rel="noopener" class="cat-maker-chip" data-track="lottery_click">Switch 2 ストア</a>
+<a href="https://www.apple.com/jp/shop/buy-iphone" target="_blank" rel="noopener" class="cat-maker-chip" data-track="lottery_click">Apple iPhone購入</a>
+<a href="https://fujifilm-x.com/ja-jp/products/cameras/x100vi/" target="_blank" rel="noopener" class="cat-maker-chip" data-track="lottery_click">X100VI 製品ページ</a>
+<a href="https://www.ricoh-imaging.co.jp/japan/products/cameras/gr/" target="_blank" rel="noopener" class="cat-maker-chip" data-track="lottery_click">RICOH GR シリーズ</a>
+<a href="https://store.nintendo.co.jp/" target="_blank" rel="noopener" class="cat-maker-chip" data-track="lottery_click">マイニンテンドーストア</a>
 </div>''')
 
         return '\n'.join(parts)
@@ -3165,7 +3227,8 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                       camera_deals=None, iphone_watch=None, camera_watch=None,
 
                       game_watch=None, buyback_by_product: dict = None,
-                      sedori_routes: list = None, lottery_events: list = None) -> str:
+                      sedori_routes: list = None, lottery_events: list = None,
+                      market_prices_by_product: dict = None) -> str:
 
         camera_deals = camera_deals or []
 
@@ -3182,7 +3245,8 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         beginner_html    = self._tab_beginner(_beginner_easy_filtered, _beginner_watch_filtered, bybp)
         advanced_html    = self._tab_advanced(advanced_deals, advanced_snaps, watch_candidates,
                                               camera_watch=camera_watch,
-                                              camera_beginner_deals=_camera_from_beginner)
+                                              camera_beginner_deals=_camera_from_beginner,
+                                              market_prices_by_product=market_prices_by_product or {})
         surge_html       = self._tab_surge(buyback_alerts)
         ranking_html     = self._tab_ranking(all_deals, iphone_deals, game_deals, sedori_routes=sedori_routes)
         new_products_html = self._section_new_products()
@@ -3862,7 +3926,7 @@ python3 -m src.cli calculate-sedori-routes</pre>
   </div>
 </div>"""
 
-    def _tab_advanced(self, advanced_deals, advanced_snaps, watch_candidates, camera_watch=None, camera_beginner_deals=None) -> str:
+    def _tab_advanced(self, advanced_deals, advanced_snaps, watch_candidates, camera_watch=None, camera_beginner_deals=None, market_prices_by_product: dict = None) -> str:
         camera_watch = camera_watch or []
         camera_beginner_deals = camera_beginner_deals or []
         parts = []
@@ -3936,7 +4000,7 @@ python3 -m src.cli calculate-sedori-routes</pre>
 中古市場や海外相場のデータが入り次第、確定候補として昇格します。
 </div>""")
             parts.append('<div class="section-header"><h2>&#128204; Pro向け監視候補</h2><span class="section-count">価格差・希少性スコア上位</span></div>')
-            parts.append(self._watch_candidates_table(watch_candidates))
+            parts.append(self._watch_candidates_table(watch_candidates, market_prices_by_product=market_prices_by_product or {}))
 
         # カメラBeginnerDealを追加表示
         if camera_beginner_deals:
@@ -3952,8 +4016,62 @@ python3 -m src.cli calculate-sedori-routes</pre>
 
         return "\n".join(parts)
 
-    def _watch_candidates_table(self, candidates: list) -> str:
-        """監視候補テーブルを生成する（products テーブル由来）。Pro向け二次流通・海外相場リンクチップ付き。"""
+    # source_id → 表示名（Pro向け価格テーブル用）
+    _SRC_LABEL: dict = {
+        "src_mercari":       "メルカリ",
+        "src_yahoo_auction": "ヤフオク",
+        "src_rakuten":       "ラクマ",
+        "src_kitamura":      "カメラのキタムラ",
+        "src_fujiya":        "フジヤカメラ",
+        "src_map_camera":    "マップカメラ",
+        "src_sofmap":        "ソフマップ",
+        "src_janpara":       "じゃんぱら",
+        "src_iosys":         "イオシス",
+        "src_kakaku":        "価格.com",
+        "src_ebay":          "eBay",
+        "src_stockx":        "StockX",
+        "src_bhphoto":       "B&H Photo",
+        "src_adorama":       "Adorama",
+        "src_mpb":           "MPB",
+        "src_keh":           "KEH",
+        "src_amazon_us":     "Amazon US",
+        "src_mobile_ichiban":   "モバイル一番",
+        "src_kaitori_shouten":  "買取商店",
+        "src_kaitori_ichome":   "買取一丁目",
+    }
+
+    # source_id → URL テンプレート（{enc} = URL-encoded 商品名）— 国内二次流通
+    _SRC_URL_DOMESTIC: dict = {
+        "src_mercari":       "https://jp.mercari.com/search?keyword={enc}",
+        "src_yahoo_auction": "https://auctions.yahoo.co.jp/search/search?p={enc}",
+        "src_rakuten":       "https://fril.jp/search?query={enc}",
+        "src_kitamura":      "https://www.kitamura.co.jp/ec/special/camera/used/?q={enc}",
+        "src_fujiya":        "https://www.fujiyacamera.com/shopbrand/ct10/?q={enc}",
+        "src_map_camera":    "https://www.mapcamera.com/ec/search?q={enc}",
+        "src_sofmap":        "https://www.sofmap.com/product_list.aspx?q={enc}",
+        "src_janpara":       "https://www.janpara.co.jp/sale/search/?keyword={enc}",
+        "src_iosys":         "https://iosys.co.jp/search/?keyword={enc}",
+        "src_kakaku":        "https://kakaku.com/search_results/{enc}/",
+    }
+
+    # source_id → URL テンプレート — 海外相場
+    _SRC_URL_OVERSEAS: dict = {
+        "src_ebay":      "https://www.ebay.com/sch/i.html?_nkw={enc}&LH_Sold=1&LH_Complete=1",
+        "src_stockx":    "https://stockx.com/search?s={enc}",
+        "src_bhphoto":   "https://www.bhphotovideo.com/c/search?Ntt={enc}",
+        "src_adorama":   "https://www.adorama.com/l/?searchinfo={enc}",
+        "src_mpb":       "https://www.mpb.com/en-us/cameras/?q={enc}",
+        "src_keh":       "https://www.keh.com/search#{enc}",
+        "src_amazon_us": "https://www.amazon.com/s?k={enc}",
+    }
+
+    def _watch_candidates_table(self, candidates: list, market_prices_by_product: dict = None) -> str:
+        """監視候補テーブルを生成する（products テーブル由来）。
+        market_prices_by_product: {product_id: [{source_id, price_type, price, currency, recorded_at}]}
+        実際の価格データがある場合は価格テーブルを表示し、ない場合は検索チップのみ表示。
+        """
+        mdata = market_prices_by_product or {}
+
         # カメラ優先、次にゲーム機
         camera = [c for c in candidates if c["genre"] == "camera"]
         others = [c for c in candidates if c["genre"] != "camera"]
@@ -3961,13 +4079,14 @@ python3 -m src.cli calculate-sedori-routes</pre>
 
         cards = []
         for c in ordered:
-            price  = c["official_price"]
-            bp     = c["buyback_price"]
-            shop   = c["shop_name"] or "—"
-            flags  = "・".join(c["flags"]) if c["flags"] else "監視中"
+            price     = c["official_price"]
+            bp        = c["buyback_price"]
+            shop      = c["shop_name"] or "—"
+            flags     = "・".join(c["flags"]) if c["flags"] else "監視中"
             pname_raw = c["product_name"]
-            pname_esc  = _esc(pname_raw)
-            pname_enc  = _urllib_parse.quote(pname_raw)
+            pname_esc = _esc(pname_raw)
+            pname_enc = _urllib_parse.quote(pname_raw)
+            prod_id   = c.get("product_id", "")
 
             # 価格差表示（Pro向け：買取価格を主役にせず補助情報として表示）
             gap_html = ""
@@ -3985,32 +4104,97 @@ python3 -m src.cli calculate-sedori-routes</pre>
             # 販売方式バッジ
             sale_method = c.get("sale_method", "")
             sale_badge_map = {
-                "lottery": '<span class="badge badge-lottery">抽選</span>',
-                "soldout": '<span class="badge badge-soldout">SOLD OUT</span>',
-                "waiting": '<span class="badge badge-soldout">入荷待ち</span>',
+                "lottery":     '<span class="badge badge-lottery">抽選</span>',
+                "soldout":     '<span class="badge badge-soldout">SOLD OUT</span>',
+                "waiting":     '<span class="badge badge-soldout">入荷待ち</span>',
                 "reservation": '<span class="badge badge-adv">予約受付</span>',
             }
             sale_badge = sale_badge_map.get(sale_method, '<span class="badge badge-adv">公式購入困難</span>')
 
-            # ── 国内二次流通リンクチップ ──
-            domestic_links = [
-                ("メルカリ",     f"https://jp.mercari.com/search?keyword={pname_enc}"),
-                ("ヤフオク",     f"https://auctions.yahoo.co.jp/search/search?p={pname_enc}"),
-                ("ラクマ",       f"https://fril.jp/search?query={pname_enc}"),
-                ("マップカメラ", f"https://www.mapcamera.com/ec/search?q={pname_enc}"),
-                ("キタムラ中古", f"https://www.kitamura.co.jp/ec/special/camera/used/?q={pname_enc}"),
-                ("フジヤカメラ", f"https://www.fujiyacamera.com/shopbrand/ct10/?q={pname_enc}"),
-                ("価格.com",    f"https://kakaku.com/search_results/{pname_enc}/"),
+            # ── 実際の価格データ（DB から取得） ──
+            price_rows = mdata.get(prod_id, [])
+            domestic_rows = [r for r in price_rows if r.get("price_type") in ("used", "market", "flea_market")]
+            overseas_rows = [r for r in price_rows if r.get("price_type") == "overseas"]
+
+            # ── 国内二次流通 ──
+            domestic_table_html = ""
+            if domestic_rows:
+                trows = []
+                for r in domestic_rows:
+                    sid    = r.get("source_id", "")
+                    slabel = self._SRC_LABEL.get(sid, sid.replace("src_", ""))
+                    surl   = self._SRC_URL_DOMESTIC.get(sid, "").format(enc=pname_enc)
+                    pprice = r.get("price", 0)
+                    rec_at = str(r.get("recorded_at", ""))[:10]
+                    sname_cell = (
+                        f'<a href="{_esc(surl)}" target="_blank" rel="noopener" '
+                        f'data-track="pro_domestic_click" class="pro-price-link">{_esc(slabel)}</a>'
+                        if surl else _esc(slabel)
+                    )
+                    trows.append(
+                        f'<tr class="pro-domestic-row">'
+                        f'<td class="pro-src-cell">{sname_cell}</td>'
+                        f'<td class="pro-price-cell price-value">¥{pprice:,}</td>'
+                        f'<td class="pro-date-cell">{_esc(rec_at)}</td>'
+                        f'</tr>'
+                    )
+                domestic_table_html = (
+                    f'<table class="pro-price-table pro-domestic-price-table">'
+                    f'<thead><tr><th>サイト</th><th>参考価格</th><th>更新日</th></tr></thead>'
+                    f'<tbody>{"".join(trows)}</tbody>'
+                    f'</table>'
+                )
+
+            # 国内検索チップ（常時表示）
+            domestic_search_links = [
+                ("メルカリ",      f"https://jp.mercari.com/search?keyword={pname_enc}"),
+                ("ヤフオク",      f"https://auctions.yahoo.co.jp/search/search?p={pname_enc}"),
+                ("ラクマ",        f"https://fril.jp/search?query={pname_enc}"),
+                ("マップカメラ",  f"https://www.mapcamera.com/ec/search?q={pname_enc}"),
+                ("キタムラ中古",  f"https://www.kitamura.co.jp/ec/special/camera/used/?q={pname_enc}"),
+                ("フジヤカメラ",  f"https://www.fujiyacamera.com/shopbrand/ct10/?q={pname_enc}"),
+                ("価格.com",     f"https://kakaku.com/search_results/{pname_enc}/"),
                 ("ソフマップ中古", f"https://www.sofmap.com/product_list.aspx?q={pname_enc}&st=1"),
             ]
             domestic_chips = "".join(
                 f'<a href="{_esc(url)}" target="_blank" rel="noopener noreferrer" '
                 f'class="pro-chip pro-chip-domestic" data-track="pro_domestic_click">{_esc(label)}</a>'
-                for label, url in domestic_links
+                for label, url in domestic_search_links
             )
+            domestic_chips_label = "最新相場を検索" if domestic_rows else "国内相場を検索"
 
-            # ── 海外相場リンクチップ ──
-            overseas_links = [
+            # ── 海外相場 ──
+            overseas_table_html = ""
+            if overseas_rows:
+                trows = []
+                for r in overseas_rows:
+                    sid    = r.get("source_id", "")
+                    slabel = self._SRC_LABEL.get(sid, sid.replace("src_", ""))
+                    surl   = self._SRC_URL_OVERSEAS.get(sid, "").format(enc=pname_enc)
+                    pprice = r.get("price", 0)
+                    rec_at = str(r.get("recorded_at", ""))[:10]
+                    sname_cell = (
+                        f'<a href="{_esc(surl)}" target="_blank" rel="noopener" '
+                        f'data-track="pro_overseas_click" class="pro-price-link">{_esc(slabel)}</a>'
+                        if surl else _esc(slabel)
+                    )
+                    trows.append(
+                        f'<tr class="pro-overseas-row">'
+                        f'<td class="pro-src-cell">{sname_cell}</td>'
+                        f'<td class="pro-price-cell price-value">¥{pprice:,}<small class="pro-jpy-note">（円換算）</small></td>'
+                        f'<td class="pro-date-cell">{_esc(rec_at)}</td>'
+                        f'</tr>'
+                    )
+                overseas_table_html = (
+                    f'<table class="pro-price-table pro-overseas-price-table">'
+                    f'<thead><tr><th>サイト</th><th>参考価格（円換算）</th><th>更新日</th></tr></thead>'
+                    f'<tbody>{"".join(trows)}</tbody>'
+                    f'</table>'
+                    f'<p class="pro-overseas-note">※ 送料・関税概算込み。為替変動あり。参考値として活用してください。</p>'
+                )
+
+            # 海外検索チップ（常時表示）
+            overseas_search_links = [
                 ("eBay sold",  f"https://www.ebay.com/sch/i.html?_nkw={pname_enc}&LH_Sold=1&LH_Complete=1"),
                 ("StockX",     f"https://stockx.com/search?s={pname_enc}"),
                 ("B&H",        f"https://www.bhphotovideo.com/c/search?Ntt={pname_enc}"),
@@ -4022,8 +4206,9 @@ python3 -m src.cli calculate-sedori-routes</pre>
             overseas_chips = "".join(
                 f'<a href="{_esc(url)}" target="_blank" rel="noopener noreferrer" '
                 f'class="pro-chip pro-chip-overseas overseas-btn" data-track="pro_overseas_click">{_esc(label)}</a>'
-                for label, url in overseas_links
+                for label, url in overseas_search_links
             )
+            overseas_chips_label = "最新相場を検索" if overseas_rows else "海外相場を検索"
 
             cards.append(f"""<div class="watch-candidate-card pro-candidate-card">
   <div class="pcc-header">
@@ -4043,10 +4228,14 @@ python3 -m src.cli calculate-sedori-routes</pre>
   </div>
   <div class="pcc-links-section">
     <div class="pcc-links-label">&#127968; 国内二次流通</div>
+    {domestic_table_html}
+    <div class="pcc-chips-label">{_esc(domestic_chips_label)}</div>
     <div class="pcc-chips domestic-chips">{domestic_chips}</div>
   </div>
   <div class="pcc-links-section" style="margin-top:8px">
     <div class="pcc-links-label">&#127758; 海外相場</div>
+    {overseas_table_html}
+    <div class="pcc-chips-label">{_esc(overseas_chips_label)}</div>
     <div class="pcc-chips overseas-chips overseas-links-section">{overseas_chips}</div>
   </div>
 </div>""")

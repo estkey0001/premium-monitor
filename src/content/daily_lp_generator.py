@@ -1353,14 +1353,11 @@ a[href], button, [role="tab"], [role="button"],
 .shop-rank.gold {{ color: var(--gold); }}
 .shop-rank.silver {{ color: var(--ink3); }}
 
-.shop-name-col {{ flex: 1; color: var(--ink2); }}
+.shop-name-col {{ flex: 1; color: var(--ink2); font-weight: 600; }}
 
-.shop-name-col a {{
-  color: var(--blue); text-decoration: none;
-  font-weight: 600;
+.shop-link-col {{
+  min-width: 52px; text-align: right; flex-shrink: 0;
 }}
-
-.shop-name-col a:hover {{ text-decoration: underline; }}
 
 .shop-price-col {{
   font-weight: 800; color: var(--ink);
@@ -2745,7 +2742,6 @@ tr.sc-route-review {{ background: #FFFBEB; }}
   .deal-card {{ border-radius: 16px; }}
   .price-row-wrap {{ grid-template-columns: 1fr 1fr; }}
   .shop-diff-col {{ display: none; }}
-  .shop-check-btn {{ display: none; }}
   /* 上級者カード: スマホ対応 */
   .watch-card {{ border-radius: 16px; padding: 18px 16px; }}
   .watch-price-grid {{ grid-template-columns: 1fr 1fr; gap: 8px; }}
@@ -3936,29 +3932,26 @@ python3 -m src.cli calculate-sedori-routes</pre>
                 profit_str = f'+¥{profit:,}' if profit >= 0 else f'-¥{abs(profit):,}'
                 url_val = r.get('buyback_url', '')
                 verified = r.get('link_verified', False)
-                if url_val and verified:
-                    shop_display = (
+                # 確認リンクボタン（店舗名とは分離）
+                btn_cls = 'best' if i == 1 else 'normal'
+                if url_val:
+                    link_col = (
                         f'<a href="{_esc(url_val)}" target="_blank" rel="noopener noreferrer" '
-                        f'data-track="buyback_click" data-product-id="{pid}" '
-                        f'title="買取価格を確認">買取価格を確認</a>'
-                    )
-                elif url_val:
-                    shop_display = (
-                        f'<a href="{_esc(url_val)}" target="_blank" rel="noopener noreferrer" '
-                        f'data-track="buyback_click" data-product-id="{pid}" '
-                        f'title="公式サイトで確認">公式サイトで確認</a>'
+                        f'class="shop-check-btn {btn_cls}" data-track="buyback_click" '
+                        f'data-product-id="{pid}">確認</a>'
                     )
                 else:
-                    shop_display = f'<span class="no-link-shop" title="リンク未登録">リンク未登録 / 公式サイトで要確認</span>'
+                    link_col = '<span class="shop-check-btn normal" style="opacity:0.4;cursor:default;">確認不可</span>'
                 rank_cls = 'gold' if i == 1 else ('silver' if i == 2 else '')
                 diff_cls = ' neg' if profit < 0 else ''
                 freshness = self._freshness_label(r.get('observed_at', ''), r.get('data_source', 'manual_today'))
                 rows_html.append(
                     f'<div class="shop-row">'
                     f'<div class="shop-rank {rank_cls}">{i}</div>'
-                    f'<div class="shop-name-col">{shop_display}</div>'
+                    f'<div class="shop-name-col">{sname}</div>'
                     f'<div class="shop-price-col">¥{bp:,}</div>'
                     f'<div class="shop-diff-col{diff_cls}">{_esc(profit_str)}</div>'
+                    f'<div class="shop-link-col">{link_col}</div>'
                     f'</div>'
                 )
             first_freshness = self._freshness_label(buyback_rows[0].get('observed_at', ''), buyback_rows[0].get('data_source', 'manual_today'))

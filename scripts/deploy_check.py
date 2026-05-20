@@ -713,6 +713,56 @@ def check() -> list[dict]:
     else:
         results.append({"level": "ok", "check": "no_empty_href", "message": "空href なし"})
 
+    # 84. 買取比較テーブルに「モバイル一番」テキストがある
+    has_mobile_ichiban_name = "モバイル一番" in html
+    if has_mobile_ichiban_name:
+        results.append({"level": "ok", "check": "shop_name_mobile_ichiban", "message": "買取比較テーブルに「モバイル一番」の店舗名が表示されている"})
+    else:
+        results.append({"level": "error", "check": "shop_name_mobile_ichiban", "message": "「モバイル一番」の店舗名がLP上に見つからない — shop_display に店舗名が入っていない可能性"})
+
+    # 85. 買取比較テーブルに「買取商店」テキストがある
+    has_kaitori_shouten_name = "買取商店" in html
+    if has_kaitori_shouten_name:
+        results.append({"level": "ok", "check": "shop_name_kaitori_shouten", "message": "買取比較テーブルに「買取商店」の店舗名が表示されている"})
+    else:
+        results.append({"level": "error", "check": "shop_name_kaitori_shouten", "message": "「買取商店」の店舗名がLP上に見つからない"})
+
+    # 86. 買取比較テーブルに「買取一丁目」テキストがある
+    has_kaitori_itchome_name = "買取一丁目" in html
+    if has_kaitori_itchome_name:
+        results.append({"level": "ok", "check": "shop_name_kaitori_itchome", "message": "買取比較テーブルに「買取一丁目」の店舗名が表示されている"})
+    else:
+        results.append({"level": "error", "check": "shop_name_kaitori_itchome", "message": "「買取一丁目」の店舗名がLP上に見つからない"})
+
+    # 87. 買取比較テーブルに「じゃんぱら」テキストがある
+    has_janpara_name = "じゃんぱら" in html
+    if has_janpara_name:
+        results.append({"level": "ok", "check": "shop_name_janpara", "message": "買取比較テーブルに「じゃんぱら」の店舗名が表示されている"})
+    else:
+        results.append({"level": "error", "check": "shop_name_janpara", "message": "「じゃんぱら」の店舗名がLP上に見つからない"})
+
+    # 88. 買取比較テーブルに「イオシス」テキストがある
+    has_iosys_name = "イオシス" in html
+    if has_iosys_name:
+        results.append({"level": "ok", "check": "shop_name_iosys", "message": "買取比較テーブルに「イオシス」の店舗名が表示されている"})
+    else:
+        results.append({"level": "error", "check": "shop_name_iosys", "message": "「イオシス」の店舗名がLP上に見つからない"})
+
+    # 89. 「買取価格を確認」が shop-name-col に入っていないこと
+    # shop-name-col の中に「買取価格を確認」テキストがあれば店舗名と誤って置き換わっている
+    shop_name_col_bad = re.findall(r'class="shop-name-col">[^<]*買取価格を確認', html)
+    if shop_name_col_bad:
+        results.append({"level": "error", "check": "shop_name_col_no_label", "message": f"shop-name-col に「買取価格を確認」テキストが {len(shop_name_col_bad)}件入っている — 店舗名と混在"})
+    else:
+        results.append({"level": "ok", "check": "shop_name_col_no_label", "message": "shop-name-col に「買取価格を確認」ラベルなし（店舗名が正しく表示されている）"})
+
+    # 90. 買取比較テーブルに「確認」ボタン列がある（shop-link-col）
+    has_shop_link_col = "shop-link-col" in html
+    if has_shop_link_col:
+        results.append({"level": "ok", "check": "shop_link_col_exists", "message": "買取比較テーブルに確認ボタン列（shop-link-col）が存在する"})
+    else:
+        results.append({"level": "error", "check": "shop_link_col_exists", "message": "買取比較テーブルの確認ボタン列（shop-link-col）が見つからない"})
+
     return results
 
 

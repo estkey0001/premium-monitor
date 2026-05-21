@@ -858,6 +858,34 @@ def check() -> list[dict]:
     else:
         results.append({"level": "ok", "check": "lottery_no_empty_link", "message": "抽選カードに空リンクなし"})
 
+    # 104. Pro価格表に price_basis（種別ラベル）が表示されている
+    has_price_basis = "pro-price-basis" in html
+    if has_price_basis:
+        results.append({"level": "ok", "check": "price_basis_shown", "message": "Pro価格表に価格種別ラベル（pro-price-basis）が表示されている"})
+    else:
+        results.append({"level": "warning", "check": "price_basis_shown", "message": "Pro価格表の価格種別ラベル（pro-price-basis）が見つからない（データ未取得の可能性）"})
+
+    # 105. Pro価格表の下に価格種別注意文がある
+    has_price_basis_disclaimer = "pro-price-basis-disclaimer" in html and "出品価格・成約価格・販売価格は意味が異なります" in html
+    if has_price_basis_disclaimer:
+        results.append({"level": "ok", "check": "price_basis_disclaimer", "message": "Pro価格表に価格種別注意文が表示されている"})
+    else:
+        results.append({"level": "warning", "check": "price_basis_disclaimer", "message": "Pro価格表の価格種別注意文が見つからない"})
+
+    # 106. eBay sold が「海外sold」として表示されている
+    has_ebay_sold_label = "海外sold" in html
+    if has_ebay_sold_label:
+        results.append({"level": "ok", "check": "ebay_sold_basis_label", "message": "eBay soldが「海外sold」種別として表示されている"})
+    else:
+        results.append({"level": "warning", "check": "ebay_sold_basis_label", "message": "「海外sold」ラベルが見つからない（eBayデータなしの可能性）"})
+
+    # 107. メルカリが「出品価格」として表示されている
+    has_mercari_basis_label = "出品価格" in html
+    if has_mercari_basis_label:
+        results.append({"level": "ok", "check": "mercari_basis_label", "message": "メルカリが「出品価格」種別として表示されている"})
+    else:
+        results.append({"level": "warning", "check": "mercari_basis_label", "message": "「出品価格」ラベルが見つからない（メルカリデータなしの可能性）"})
+
     # 101. Hero と announce bar で同一の件数（「本日確認」）が表示されている
     # 両方から件数を抽出して一致するか検証
     hero_counts = re.findall(r'本日確認.*?<strong>(\d+)</strong>', html)

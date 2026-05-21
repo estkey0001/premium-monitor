@@ -77,7 +77,8 @@ CREATE TABLE IF NOT EXISTS price_history (
     price_type  TEXT NOT NULL,
     price       INTEGER NOT NULL,
     currency    TEXT DEFAULT 'JPY',
-    recorded_at TEXT NOT NULL
+    recorded_at TEXT NOT NULL,
+    price_basis TEXT DEFAULT ''
 );
 
 -- 通知ログ

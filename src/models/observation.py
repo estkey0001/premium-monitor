@@ -41,6 +41,7 @@ class PriceHistoryModel(BaseModel):
     price: int = Field(...)
     currency: str = Field(default="JPY")
     recorded_at: datetime = Field(default_factory=datetime.now)
+    price_basis: str = Field(default="", description="出品価格 / 成約価格 / 中古販売価格 / 海外sold / 海外販売価格 等")
 
 
 class CollectorLogModel(BaseModel):

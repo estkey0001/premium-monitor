@@ -1062,6 +1062,54 @@ a[href], button, [role="tab"], [role="button"],
   background: #FFF8E8;
   color: #B45309;
 }}
+/* ジャンルトグルボタン */
+.tab-btn.genre-toggle-btn.active {{
+  background: #F0F4FF; color: #4338CA;
+}}
+/* ジャンルドロップダウン */
+.genre-dropdown {{
+  display: none;
+  border-top: 1px solid var(--card-border);
+  padding: 10px 0 8px;
+  background: rgba(250,251,255,0.98);
+}}
+.genre-panel-row {{
+  display: flex; gap: 6px; overflow-x: auto;
+  padding: 0 0 8px; scrollbar-width: none;
+}}
+.genre-panel-row::-webkit-scrollbar {{ display: none; }}
+.genre-btn {{
+  flex-shrink: 0; padding: 6px 14px; border-radius: 99px;
+  font-size: 0.8rem; font-weight: 700;
+  background: var(--surface-2); color: var(--text-2);
+  border: 1px solid #E5E7EB; cursor: pointer;
+  transition: all 0.15s; white-space: nowrap;
+}}
+.genre-btn:hover {{ background: #EEF2FF; color: #4338CA; }}
+.genre-btn.active {{ background: #4338CA; color: #fff; border-color: #4338CA; }}
+.maker-group-wrap {{
+  padding: 2px 0 0; overflow-x: auto; scrollbar-width: none;
+  min-height: 28px;
+}}
+.maker-group-wrap::-webkit-scrollbar {{ display: none; }}
+.maker-group {{
+  display: none; flex-wrap: wrap; gap: 5px; padding: 4px 0;
+}}
+.maker-group.active {{ display: flex; }}
+.maker-chip {{
+  display: inline-flex; align-items: center;
+  padding: 4px 12px; border-radius: 99px;
+  font-size: 0.76rem; font-weight: 700;
+  background: #EEF2FF; color: #4338CA;
+  border: 1px solid #C7D2FE; cursor: pointer;
+  white-space: nowrap; text-decoration: none;
+  transition: all 0.15s;
+}}
+.maker-chip:hover {{ background: #E0E7FF; border-color: #A5B4FC; }}
+@media (max-width: 640px) {{
+  .genre-btn {{ font-size: 0.74rem; padding: 5px 11px; }}
+  .maker-chip {{ font-size: 0.72rem; padding: 3px 10px; }}
+}}
 .tab-btn.active[data-tab="sokuhoh"] {{
   background: #F0EEFF;
   color: #6040E8;
@@ -3009,7 +3057,6 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 {hero_html}
 {stale_html}
 {tab_nav_html}
-{category_nav_html}
 <div class="main-wrap">
 {tab_html}
 {caution_html}
@@ -3019,36 +3066,102 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 <script>
 (function(){{
   // ── メインタブ切り替え ──
-  var btns=document.querySelectorAll(".tab-btn");
-  var panels=document.querySelectorAll(".tab-panel");
+  var btns   = document.querySelectorAll(".tab-btn:not(.genre-toggle-btn)");
+  var panels = document.querySelectorAll(".tab-panel");
 
   function activateTab(tabId){{
     btns.forEach(function(b){{
-      var active=(b.getAttribute("data-tab")===tabId);
-      b.classList.toggle("active",active);
-      b.setAttribute("aria-selected",active?"true":"false");
+      var active = (b.getAttribute("data-tab") === tabId);
+      b.classList.toggle("active", active);
+      b.setAttribute("aria-selected", active ? "true" : "false");
     }});
     panels.forEach(function(p){{
-      p.classList.toggle("active",p.id==="tab-"+tabId);
+      p.classList.toggle("active", p.id === "tab-" + tabId);
     }});
+    // ジャンルドロップダウンを閉じる
+    var dd = document.getElementById("genre-dropdown");
+    if (dd) dd.style.display = "none";
+    var gBtn = document.getElementById("genre-toggle-btn");
+    if (gBtn) {{ gBtn.classList.remove("active"); gBtn.setAttribute("aria-expanded","false"); }}
   }}
 
-  if(btns.length){{
+  if (btns.length) {{
     btns.forEach(function(btn){{
-      btn.addEventListener("click",function(){{
+      btn.addEventListener("click", function(){{
         activateTab(btn.getAttribute("data-tab"));
       }});
     }});
   }}
 
+  // ── ジャンルドロップダウン開閉 ──
+  function toggleGenreMenu(){{
+    var dd   = document.getElementById("genre-dropdown");
+    var gBtn = document.getElementById("genre-toggle-btn");
+    if (!dd) return;
+    var isOpen = (dd.style.display !== "none" && dd.style.display !== "");
+    dd.style.display = isOpen ? "none" : "block";
+    if (gBtn) {{ gBtn.classList.toggle("active", !isOpen); gBtn.setAttribute("aria-expanded", !isOpen ? "true" : "false"); }}
+  }}
+
+  var gToggle = document.getElementById("genre-toggle-btn");
+  if (gToggle) {{
+    gToggle.addEventListener("click", function(){{ toggleGenreMenu(); }});
+  }}
+
+  // ── ジャンルボタン（第1階層）──
+  function toggleMakerGroup(genre){{
+    document.querySelectorAll(".maker-group").forEach(function(g){{
+      g.classList.toggle("active", g.getAttribute("data-genre-panel") === genre);
+    }});
+    document.querySelectorAll(".genre-btn").forEach(function(b){{
+      b.classList.toggle("active", b.getAttribute("data-genre") === genre);
+    }});
+  }}
+
+  document.querySelectorAll(".genre-btn").forEach(function(btn){{
+    btn.addEventListener("click", function(){{
+      var genre    = btn.getAttribute("data-genre");
+      var targetTab = btn.getAttribute("data-target-tab");
+      var targetId  = btn.getAttribute("data-target-id");
+      toggleMakerGroup(genre);
+      // タブは切り替えず、メーカー一覧だけ表示（タブ切り替えはメーカーチップで行う）
+    }});
+  }});
+
+  // ── メーカーチップ → activateCategory ──
+  function activateCategory(tabName, targetId){{
+    activateTab(tabName);
+    var panel = document.getElementById("tab-" + tabName);
+    if (panel) {{
+      setTimeout(function(){{
+        if (targetId) {{
+          var el = document.getElementById(targetId);
+          if (el) {{ el.scrollIntoView({{behavior:"smooth",block:"start"}}); return; }}
+        }}
+        panel.scrollIntoView({{behavior:"smooth",block:"start"}});
+      }}, 100);
+    }}
+  }}
+
+  document.querySelectorAll(".maker-chip").forEach(function(chip){{
+    chip.addEventListener("click", function(e){{
+      var targetTab = chip.getAttribute("data-target-tab");
+      var targetId  = chip.getAttribute("data-target-id");
+      if (targetTab) {{
+        e.preventDefault();
+        activateCategory(targetTab, targetId || "");
+      }}
+    }});
+  }});
+
   // ── アンカーリンク（href="#tab-xxx"）からのタブ切り替え ──
-  document.addEventListener("click",function(e){{
-    var el=e.target.closest("a[href^='#tab-']");
-    if(el){{
-      var hash=el.getAttribute("href");
-      var tabId=hash.replace("#tab-","");
-      var panel=document.getElementById("tab-"+tabId);
-      if(panel){{
+  document.addEventListener("click", function(e){{
+    var el = e.target.closest("a[href^='#tab-']");
+    if (el) {{
+      var hash  = el.getAttribute("href");
+      var tabId = hash.replace("#tab-", "");
+      var panel = document.getElementById("tab-" + tabId);
+      if (panel) {{
         e.preventDefault();
         activateTab(tabId);
         panel.scrollIntoView({{behavior:"smooth",block:"start"}});
@@ -3057,81 +3170,34 @@ tr.sc-route-review {{ background: #FFFBEB; }}
   }});
 
   // ── トラッキング ──
-  document.addEventListener("click",function(e){{
-    var el=e.target.closest("[data-track]");
-    if(!el)return;
-    var ev=el.getAttribute("data-track"),pid=el.getAttribute("data-product-id")||"",shop=el.getAttribute("data-shop")||"";
-    if(typeof gtag==="function")gtag("event",ev,{{product_id:pid,shop:shop}});
-    if(typeof fbq==="function")fbq("trackCustom",ev,{{product_id:pid,shop:shop}});
+  document.addEventListener("click", function(e){{
+    var el = e.target.closest("[data-track]");
+    if (!el) return;
+    var ev = el.getAttribute("data-track"), pid = el.getAttribute("data-product-id")||"", shop = el.getAttribute("data-shop")||"";
+    if (typeof gtag === "function") gtag("event", ev, {{product_id:pid, shop:shop}});
+    if (typeof fbq  === "function") fbq("trackCustom", ev, {{product_id:pid, shop:shop}});
   }});
 
   // ── ランキング内サブタブ ──
-  var rbtns=document.querySelectorAll(".ranking-tab-btn");
-  if(rbtns.length){{
+  var rbtns = document.querySelectorAll(".ranking-tab-btn");
+  if (rbtns.length) {{
     rbtns.forEach(function(rb){{
-      rb.addEventListener("click",function(){{
-        rbtns.forEach(function(b){{b.classList.remove("active");}});
-        document.querySelectorAll(".ranking-tab-panel").forEach(function(p){{p.classList.remove("active");}});
+      rb.addEventListener("click", function(){{
+        rbtns.forEach(function(b){{ b.classList.remove("active"); }});
+        document.querySelectorAll(".ranking-tab-panel").forEach(function(p){{ p.classList.remove("active"); }});
         rb.classList.add("active");
-        var panel=document.getElementById("rtab-"+rb.getAttribute("data-rtab"));
-        if(panel)panel.classList.add("active");
+        var panel = document.getElementById("rtab-" + rb.getAttribute("data-rtab"));
+        if (panel) panel.classList.add("active");
       }});
     }});
   }}
-
-  // ── activateCategory: タブ切り替え + セクションアンカーへスクロール ──
-  function activateCategory(tabName,targetId){{
-    activateTab(tabName);
-    var panel=document.getElementById("tab-"+tabName);
-    if(panel){{
-      setTimeout(function(){{
-        if(targetId){{
-          var el=document.getElementById(targetId);
-          if(el){{
-            el.scrollIntoView({{behavior:"smooth",block:"start"}});
-            return;
-          }}
-        }}
-        panel.scrollIntoView({{behavior:"smooth",block:"start"}});
-      }},100);
-    }}
-  }}
-
-  // ── カテゴリナビ（ジャンルボタン）──
-  var genreBtns=document.querySelectorAll(".cat-genre-btn");
-  var makerGroups=document.querySelectorAll(".cat-maker-group");
-  genreBtns.forEach(function(btn){{
-    btn.addEventListener("click",function(){{
-      var genre=btn.getAttribute("data-genre");
-      var targetTab=btn.getAttribute("data-target-tab");
-      var targetId=btn.getAttribute("data-target-id");
-      genreBtns.forEach(function(b){{b.classList.remove("active");}});
-      btn.classList.add("active");
-      makerGroups.forEach(function(g){{
-        g.classList.toggle("active",g.getAttribute("data-genre-panel")===genre);
-      }});
-      if(targetTab)activateCategory(targetTab,targetId||"");
-    }});
-  }});
-
-  // ── メーカーチップクリック → activateCategory ──
-  document.querySelectorAll(".cat-maker-chip").forEach(function(chip){{
-    chip.addEventListener("click",function(e){{
-      var targetTab=chip.getAttribute("data-target-tab");
-      var targetId=chip.getAttribute("data-target-id");
-      if(targetTab){{
-        e.preventDefault();
-        activateCategory(targetTab,targetId||"");
-      }}
-    }});
-  }});
 
   // ── ランキング行クリックナビ ──
   document.querySelectorAll(".rank-row-clickable").forEach(function(row){{
-    row.addEventListener("click",function(){{
-      var tabId=row.getAttribute("data-target-tab");
-      var targetId=row.getAttribute("data-target-id");
-      if(tabId)activateCategory(tabId,targetId||"");
+    row.addEventListener("click", function(){{
+      var tabId    = row.getAttribute("data-target-tab");
+      var targetId = row.getAttribute("data-target-id");
+      if (tabId) activateCategory(tabId, targetId||"");
     }});
   }});
 }})();
@@ -3536,19 +3602,59 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 
     def _section_tab_nav(self, beginner_count: int = 0, adv_total: int = 0,
                          surge_count: int = 0, lottery_count: int = 0) -> str:
-        """タブナビゲーションを独立して返す（固定メニュー）。"""
-        surge_badge  = f'<span class="tab-count">{surge_count}</span>' if surge_count else ''
-        lottery_badge = f'<span class="tab-count">{lottery_count}</span>' if lottery_count else ''
+        """統合ナビゲーション（タブ + ジャンルドロップダウン）。"""
+        sokuhoh_badge  = f'<span class="tab-count">{surge_count}</span>' if surge_count else ''
+        lottery_badge  = f'<span class="tab-count">{lottery_count}</span>' if lottery_count else ''
         return f"""<div class="tab-wrap" id="main-tab-nav">
 <nav class="tab-nav" role="tablist">
+  <button class="tab-btn" data-tab="sokuhoh" role="tab" aria-selected="false">&#128248; 速報{sokuhoh_badge}</button>
+  <button class="tab-btn" data-tab="lottery" role="tab" aria-selected="false">&#127915; 抽選情報{lottery_badge}</button>
   <button class="tab-btn" data-tab="ranking" role="tab" aria-selected="false">&#127942; ランキング</button>
   <button class="tab-btn active" data-tab="beginner" role="tab" aria-selected="true">&#128100; 初心者向け <span class="tab-count">{beginner_count}</span></button>
-  <button class="tab-btn" data-tab="advanced" role="tab" aria-selected="false">&#9997; Pro向け <span class="tab-count">{adv_total}</span></button>
+  <button class="tab-btn" data-tab="advanced" role="tab" aria-selected="false">&#9997; Pro <span class="tab-count">{adv_total}</span></button>
   <button class="tab-btn" data-tab="sedori" role="tab" aria-selected="false">&#9636; せどりルート</button>
-  <button class="tab-btn" data-tab="surge" role="tab" aria-selected="false">&#9889; 急騰/急落{surge_badge}</button>
-  <button class="tab-btn" data-tab="sokuhoh" role="tab" aria-selected="false">&#128248; 速報</button>
-  <button class="tab-btn" data-tab="lottery" role="tab" aria-selected="false">&#127915; 抽選情報{lottery_badge}</button>
+  <button class="tab-btn genre-toggle-btn" id="genre-toggle-btn" data-action="toggle-genre" role="button" aria-expanded="false">&#128230; ジャンル &#9660;</button>
 </nav>
+<div class="genre-dropdown" id="genre-dropdown">
+  <div class="genre-panel-row">
+    <button class="genre-btn" data-genre="smartphone" data-target-tab="beginner" data-target-id="category-beginner-iphone">&#128241; スマホ</button>
+    <button class="genre-btn" data-genre="tablet" data-target-tab="beginner" data-target-id="category-beginner-tablet">&#128196; タブレット</button>
+    <button class="genre-btn" data-genre="pc" data-target-tab="advanced" data-target-id="category-pro-pc">&#128187; PC</button>
+    <button class="genre-btn" data-genre="camera" data-target-tab="advanced" data-target-id="category-pro-camera">&#128247; カメラ</button>
+    <button class="genre-btn" data-genre="game" data-target-tab="beginner" data-target-id="category-beginner-game">&#127918; ゲーム機</button>
+  </div>
+  <div class="maker-group-wrap">
+    <div class="maker-group" data-genre-panel="smartphone">
+      <a class="maker-chip" href="#category-beginner-iphone" data-target-tab="beginner" data-target-id="category-beginner-iphone">Apple</a>
+      <a class="maker-chip" href="#category-beginner-iphone" data-target-tab="beginner" data-target-id="category-beginner-iphone">Samsung</a>
+      <a class="maker-chip" href="#category-beginner-iphone" data-target-tab="beginner" data-target-id="category-beginner-iphone">Google</a>
+    </div>
+    <div class="maker-group" data-genre-panel="tablet">
+      <a class="maker-chip" href="#category-beginner-tablet" data-target-tab="beginner" data-target-id="category-beginner-tablet">Apple</a>
+    </div>
+    <div class="maker-group" data-genre-panel="pc">
+      <a class="maker-chip" href="#category-pro-pc" data-target-tab="advanced" data-target-id="category-pro-pc">Apple</a>
+      <a class="maker-chip" href="#category-pro-pc" data-target-tab="advanced" data-target-id="category-pro-pc">Dell</a>
+      <a class="maker-chip" href="#category-pro-pc" data-target-tab="advanced" data-target-id="category-pro-pc">Lenovo</a>
+      <a class="maker-chip" href="#category-pro-pc" data-target-tab="advanced" data-target-id="category-pro-pc">HP</a>
+      <a class="maker-chip" href="#category-pro-pc" data-target-tab="advanced" data-target-id="category-pro-pc">ASUS</a>
+      <a class="maker-chip" href="#category-pro-pc" data-target-tab="advanced" data-target-id="category-pro-pc">MSI</a>
+    </div>
+    <div class="maker-group" data-genre-panel="camera">
+      <a class="maker-chip" href="#category-pro-camera-ricoh" data-target-tab="advanced" data-target-id="category-pro-camera-ricoh">RICOH</a>
+      <a class="maker-chip" href="#category-pro-camera-fujifilm" data-target-tab="advanced" data-target-id="category-pro-camera-fujifilm">FUJIFILM</a>
+      <a class="maker-chip" href="#category-pro-camera" data-target-tab="advanced" data-target-id="category-pro-camera">Canon</a>
+      <a class="maker-chip" href="#category-pro-camera" data-target-tab="advanced" data-target-id="category-pro-camera">Nikon</a>
+      <a class="maker-chip" href="#category-pro-camera" data-target-tab="advanced" data-target-id="category-pro-camera">Sony</a>
+      <a class="maker-chip" href="#category-pro-camera" data-target-tab="advanced" data-target-id="category-pro-camera">Leica</a>
+    </div>
+    <div class="maker-group" data-genre-panel="game">
+      <a class="maker-chip" href="#category-pro-game" data-target-tab="beginner" data-target-id="category-beginner-game">Nintendo</a>
+      <a class="maker-chip" href="#category-pro-game" data-target-tab="beginner" data-target-id="category-beginner-game">PlayStation</a>
+      <a class="maker-chip" href="#category-pro-game" data-target-tab="advanced" data-target-id="category-pro-game">Xbox</a>
+    </div>
+  </div>
+</div>
 </div>"""
 
     def _section_tabs(self, beginner_easy, beginner_watch,
@@ -3603,7 +3709,15 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         lottery_count = lottery_display_count if lottery_display_count is not None else len(lottery_events)
         lottery_badge = f'<span class="tab-count">{lottery_count}</span>' if lottery_count else ''
 
-        return f"""<div id="tab-ranking" class="tab-panel" role="tabpanel">
+        return f"""<div id="tab-sokuhoh" class="tab-panel section-sokuhoh" role="tabpanel">
+{new_products_html}
+</div>
+
+<div id="tab-lottery" class="tab-panel" role="tabpanel">
+{lottery_html}
+</div>
+
+<div id="tab-ranking" class="tab-panel" role="tabpanel">
 {ranking_html}
 </div>
 
@@ -3617,18 +3731,6 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 
 <div id="tab-sedori" class="tab-panel" role="tabpanel">
 {sedori_html}
-</div>
-
-<div id="tab-surge" class="tab-panel" role="tabpanel">
-{surge_html}
-</div>
-
-<div id="tab-sokuhoh" class="tab-panel section-sokuhoh" role="tabpanel">
-{new_products_html}
-</div>
-
-<div id="tab-lottery" class="tab-panel" role="tabpanel">
-{lottery_html}
 </div>"""
 
 
@@ -4771,19 +4873,41 @@ python3 -m src.cli calculate-sedori-routes</pre>
     {overseas_table_html}
   </div>
 </div>"""
-            card_data.append((sort_key, card_html))
+            _brand = c.get("brand", "") or ""
+            card_data.append((sort_key, _brand, card_html))
 
         # ── Pass 2: ソート（価格差大 → 海外sold → 海外あり → 国内あり）──
         card_data.sort(key=lambda x: x[0], reverse=True)
 
-        # ── Pass 3: 初期6件以降に pro-card-collapsed 付与 ──
+        # ── Pass 3: ブランド別 ID 付与 + 初期6件以降に pro-card-collapsed 付与 ──
+        _BRAND_ID_MAP = {
+            "RICOH": "category-pro-camera-ricoh",
+            "FUJIFILM": "category-pro-camera-fujifilm",
+            "Canon": "category-pro-camera-canon",
+            "Nikon": "category-pro-camera-nikon",
+            "Sony": "category-pro-camera-sony",
+            "Leica": "category-pro-camera-leica",
+            "Nintendo": "category-pro-game",
+            "Sony Interactive Entertainment": "category-pro-game",
+            "Microsoft": "category-pro-game",
+        }
+        assigned_brand_ids = set()
         rendered_cards = []
         hidden_count = 0
-        for i, (_, ch) in enumerate(card_data):
-            if i >= INITIAL_VISIBLE:
+        for i, (_, brand, ch) in enumerate(card_data):
+            # ブランドIDを最初の出現時にカードに付与
+            _bid = _BRAND_ID_MAP.get(brand, "")
+            if _bid and _bid not in assigned_brand_ids:
                 ch = ch.replace(
                     'class="watch-candidate-card pro-candidate-card"',
-                    'class="watch-candidate-card pro-candidate-card pro-card-collapsed"',
+                    f'id="{_bid}" class="watch-candidate-card pro-candidate-card"',
+                    1,
+                )
+                assigned_brand_ids.add(_bid)
+            if i >= INITIAL_VISIBLE:
+                ch = ch.replace(
+                    ' class="watch-candidate-card pro-candidate-card"',
+                    ' class="watch-candidate-card pro-candidate-card pro-card-collapsed"',
                     1,
                 )
                 hidden_count += 1
@@ -4822,6 +4946,8 @@ python3 -m src.cli calculate-sedori-routes</pre>
         c.classList.remove('pro-card-collapsed');
       });
       mBtn.style.display = 'none';
+      var emptyEl = document.getElementById('pro-filter-empty-state');
+      if(emptyEl) emptyEl.style.display = 'none';
     });
   }
   /* フィルタ */
@@ -4853,6 +4979,13 @@ python3 -m src.cli calculate-sedori-routes</pre>
     });
     /* フィルタ適用中はさらに表示ボタンを隠す */
     if (mBtn) mBtn.style.display = (f === 'all') ? '' : 'none';
+    /* 空状態チェック */
+    var visCount = 0;
+    grid.querySelectorAll('.watch-candidate-card').forEach(function(c){
+      if(c.style.display !== 'none') visCount++;
+    });
+    var emptyEl = document.getElementById('pro-filter-empty-state');
+    if(emptyEl) emptyEl.style.display = (visCount === 0) ? '' : 'none';
   });
 })();
 </script>"""
@@ -4865,6 +4998,13 @@ python3 -m src.cli calculate-sedori-routes</pre>
 {cards_html}
 </div>
 {show_more_html}
+<div class="pro-filter-empty-state" id="pro-filter-empty-state" style="display:none">
+  <div class="empty-state" style="padding:32px 16px;text-align:center;">
+    <span class="empty-icon">&#128270;</span>
+    <p style="margin:8px 0 4px;font-weight:700;color:var(--text-1);">該当するPro案件は現在ありません。</p>
+    <p style="font-size:0.82rem;color:var(--text-3);">価格データ取得後にここへ表示されます。</p>
+  </div>
+</div>
 <p class="pro-price-basis-disclaimer">
 &#9888; 出品価格・成約価格・販売価格は意味が異なります。売買判断時は必ずリンク先で最新条件をご確認ください。
 </p>

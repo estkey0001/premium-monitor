@@ -579,11 +579,13 @@ def check() -> list[dict]:
     else:
         results.append({"level": "error", "check": "game_chip_target", "message": "ゲーム機チップのターゲットが誤っている（category-beginner-game が必要）"})
 
-    # 65. 抽選チップが category-lottery に設定されている
+    # 65. 抽選チップが category-lottery に設定されている（ジャンルドロップダウン統合後はタブボタンで対応）
     if 'data-target-id="category-lottery"' in html and 'data-target-tab="lottery"' in html:
         results.append({"level": "ok", "check": "lottery_chip_target", "message": "抽選チップが category-lottery に正しく設定されている"})
+    elif 'data-tab="lottery"' in html:
+        results.append({"level": "ok", "check": "lottery_chip_target", "message": "抽選情報タブボタンで抽選情報へのアクセスが可能（ジャンルドロップダウン統合後）"})
     else:
-        results.append({"level": "error", "check": "lottery_chip_target", "message": "抽選チップの data-target-id=category-lottery が見つからない"})
+        results.append({"level": "error", "check": "lottery_chip_target", "message": "抽選チップも抽選タブも見つからない"})
 
     # 66. ランキングカードが存在する
     if "ranking-card" in html and "ranking-tab-btn" in html:
@@ -940,23 +942,33 @@ def check() -> list[dict]:
         results.append({"level": "warning", "check": "price_basis_labels_shown", "message": "「出品価格」「中古販売価格」ラベルが見つからない（price_history データ未取得の可能性）"})
 
     # 旧チェック番号を振り直し（109→113以降）
-    # 113. 固定メニューが商品ジャンルより上にある（main-tab-nav が cat-genre-bar より前）
-    pos_tab_nav  = html.find('id="main-tab-nav"')
-    pos_cat_genre = html.find('class="cat-genre-bar"')
-    if pos_tab_nav != -1 and pos_cat_genre != -1:
+    # 113. 固定メニュー（main-tab-nav）にジャンルドロップダウンが統合されている
+    pos_tab_nav   = html.find('id="main-tab-nav"')
+    pos_genre_dd  = html.find('id="genre-dropdown"')
+    pos_cat_genre = html.find('class="cat-genre-bar"')  # 旧形式（統合後は不要）
+    if pos_tab_nav != -1 and pos_genre_dd != -1:
+        if pos_tab_nav < pos_genre_dd:
+            results.append({"level": "ok", "check": "fixed_nav_above_genre", "message": "固定メニュー（main-tab-nav）にジャンルドロップダウンが統合されている"})
+        else:
+            results.append({"level": "error", "check": "fixed_nav_above_genre", "message": "main-tab-nav が genre-dropdown より後にある（順序不正）"})
+    elif pos_tab_nav != -1 and pos_cat_genre != -1:
+        # 旧形式（統合前）でも OK
         if pos_tab_nav < pos_cat_genre:
             results.append({"level": "ok", "check": "fixed_nav_above_genre", "message": "固定メニュー（main-tab-nav）が商品ジャンルより上に配置されている"})
         else:
             results.append({"level": "error", "check": "fixed_nav_above_genre", "message": "固定メニューが商品ジャンルより下にある（順序不正）"})
     else:
-        results.append({"level": "error", "check": "fixed_nav_above_genre", "message": "main-tab-nav または cat-genre-bar が見つからない"})
+        results.append({"level": "error", "check": "fixed_nav_above_genre", "message": "main-tab-nav または cat-genre-bar/genre-dropdown が見つからない"})
 
-    # 113. 商品ジャンルメニューが固定メニューと分離されている（cat-nav-wrap が独立要素）
-    has_cat_nav_wrap = "cat-nav-wrap" in html
-    if has_cat_nav_wrap:
+    # 113. 商品ジャンルメニューが存在する（統合後は genre-dropdown、旧形式は cat-nav-wrap）
+    has_genre_dropdown = 'id="genre-dropdown"' in html
+    has_cat_nav_wrap   = "cat-nav-wrap" in html
+    if has_genre_dropdown:
+        results.append({"level": "ok", "check": "genre_nav_separated", "message": "ジャンルドロップダウン（genre-dropdown）が統合ナビ内に存在する"})
+    elif has_cat_nav_wrap:
         results.append({"level": "ok", "check": "genre_nav_separated", "message": "商品ジャンルメニューが固定メニューと分離されたブロック（cat-nav-wrap）にある"})
     else:
-        results.append({"level": "error", "check": "genre_nav_separated", "message": "cat-nav-wrap が見つからない（ジャンルナビが未分離の可能性）"})
+        results.append({"level": "error", "check": "genre_nav_separated", "message": "genre-dropdown も cat-nav-wrap も見つからない（ジャンルナビが未設定）"})
 
     # 114. スマホ用横スクロールUIがある（tab-nav が overflow-x: auto の CSS を持つ）
     has_scroll_ui = "overflow-x: auto" in html or "overflow-x:auto" in html
@@ -1061,6 +1073,64 @@ def check() -> list[dict]:
         results.append({"level": "ok", "check": "pro_cards_sorted_by_gap", "message": "価格差ありカードが存在し、ソート構造が正常"})
     else:
         results.append({"level": "warning", "check": "pro_cards_sorted_by_gap", "message": "価格差ありカード（data-has-price-gap=1）が存在しない — 相場データを確認"})
+
+    # ── #127: 急騰/急落タブが存在しない（CSS セレクタは除外）──
+    import re as _re
+    _surge_in_button = bool(_re.search(r'<button[^>]+data-tab="surge"', html))
+    _surge_panel     = 'id="tab-surge"' in html
+    if _surge_in_button or _surge_panel:
+        results.append({"level": "error", "check": "no_surge_tab", "message": "急騰/急落タブ（data-tab=surge）が残っている — 削除してください"})
+    else:
+        results.append({"level": "ok", "check": "no_surge_tab", "message": "急騰/急落タブは削除済み"})
+
+    # ── #128: 速報タブが存在する ──
+    if 'data-tab="sokuhoh"' in html:
+        results.append({"level": "ok", "check": "sokuhoh_tab_exists", "message": "速報タブが存在する"})
+    else:
+        results.append({"level": "error", "check": "sokuhoh_tab_exists", "message": "速報タブ（data-tab=sokuhoh）が存在しない"})
+
+    # ── #129: 抽選情報タブが1つだけ（CSS セレクタは除外）──
+    lottery_tab_count = len(_re.findall(r'<button[^>]+data-tab="lottery"', html))
+    if lottery_tab_count == 1:
+        results.append({"level": "ok", "check": "single_lottery_tab", "message": "抽選情報タブが1つだけ存在する"})
+    elif lottery_tab_count == 0:
+        results.append({"level": "error", "check": "single_lottery_tab", "message": "抽選情報タブが存在しない"})
+    else:
+        results.append({"level": "warning", "check": "single_lottery_tab", "message": f"抽選情報タブが{lottery_tab_count}つ存在する（重複）"})
+
+    # ── #130: メインナビが1つに統合されている ──
+    main_nav_count = html.count('id="main-tab-nav"')
+    cat_nav_count  = html.count('class="cat-nav-wrap"')
+    if main_nav_count == 1 and cat_nav_count == 0:
+        results.append({"level": "ok", "check": "unified_main_nav", "message": "メインナビが1つに統合されている（cat-nav-wrapなし）"})
+    elif main_nav_count == 1 and cat_nav_count > 0:
+        results.append({"level": "warning", "check": "unified_main_nav", "message": "main-tab-navはあるがcat-nav-wrapも残っている（削除推奨）"})
+    else:
+        results.append({"level": "error", "check": "unified_main_nav", "message": "main-tab-navが見つからない"})
+
+    # ── #131: ジャンルドロップダウンが存在する ──
+    if 'id="genre-dropdown"' in html:
+        results.append({"level": "ok", "check": "genre_dropdown_exists", "message": "ジャンルドロップダウンが存在する"})
+    else:
+        results.append({"level": "error", "check": "genre_dropdown_exists", "message": "ジャンルドロップダウン（id=genre-dropdown）が存在しない"})
+
+    # ── #132: ジャンルボタンに data-genre 属性がある ──
+    if 'class="genre-btn"' in html and 'data-genre=' in html:
+        results.append({"level": "ok", "check": "genre_data_attrs", "message": "ジャンルボタンに data-genre 属性がある"})
+    else:
+        results.append({"level": "error", "check": "genre_data_attrs", "message": "ジャンルボタン（.genre-btn）または data-genre 属性が存在しない"})
+
+    # ── #133: メーカーチップに data-target-tab 属性がある ──
+    if 'class="maker-chip"' in html and 'data-target-tab=' in html:
+        results.append({"level": "ok", "check": "maker_data_attrs", "message": "メーカーチップに data-target-tab 属性がある"})
+    else:
+        results.append({"level": "error", "check": "maker_data_attrs", "message": "メーカーチップ（.maker-chip）または data-target-tab 属性が存在しない"})
+
+    # ── #134: activateCategory 関数が JS に存在する ──
+    if 'activateCategory' in html:
+        results.append({"level": "ok", "check": "activate_category_js", "message": "activateCategory 関数が JS に存在する"})
+    else:
+        results.append({"level": "error", "check": "activate_category_js", "message": "activateCategory 関数が JS に存在しない"})
 
     return results
 

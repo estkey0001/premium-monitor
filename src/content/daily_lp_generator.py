@@ -267,12 +267,26 @@ class DailyLPGenerator:
         except Exception:
             lottery_events = []
 
+        # ── 件数の整合：全表示箇所で同一の定義を使う ──────────────────────────
+        # カメラ案件は初心者タブから除外してPro向けへ移動するため、beginner件数から除外
+        _beginner_easy_disp  = [d for d in beginner_easy  if getattr(d, 'category', '') != 'camera']
+        _beginner_watch_disp = [d for d in beginner_watch if getattr(d, 'category', '') != 'camera']
+        _beginner_disp_count = len(_beginner_easy_disp) + len(_beginner_watch_disp)
+
+        # 抽選情報: DBイベント + リファレンスアイテム の active/upcoming/unknown 件数
+        _all_lottery_for_count = list(lottery_events) + list(self._LOTTERY_REFERENCE_ITEMS)
+        _lottery_active_count = sum(
+            1 for it in _all_lottery_for_count
+            if self._lottery_status_from_dates(it) in ("active", "upcoming", "unknown")
+        )
+
         # セクション生成
         hero_html    = self._section_hero(date_str, time_str, latest_buyback_at, lp_generated_at,
                                            all_deals=all_deals, iphone_deals=iphone_deals,
-                                           camera_deals=camera_deals or [], game_deals=game_deals)
+                                           camera_deals=camera_deals or [], game_deals=game_deals,
+                                           beginner_display_count=_beginner_disp_count)
         stale_html   = self._section_stale_warning(latest_buyback_at, latest_deals_at, lp_generated_at)
-        category_nav_html = self._section_category_nav(lottery_count=len(lottery_events))
+        category_nav_html = self._section_category_nav(lottery_count=_lottery_active_count)
         tab_html     = self._section_tabs(
             beginner_easy, beginner_watch,
             advanced_deals, advanced_snaps,
@@ -287,6 +301,8 @@ class DailyLPGenerator:
             sedori_routes=sedori_routes or [],
             lottery_events=lottery_events,
             market_prices_by_product=market_prices_by_product or {},
+            beginner_display_count=_beginner_disp_count,
+            lottery_display_count=_lottery_active_count,
         )
         caution_html = self._section_caution()
         cta_html     = self._section_cta()
@@ -296,8 +312,9 @@ class DailyLPGenerator:
         _buyback_str_top = _jst_str(latest_buyback_at) if latest_buyback_at else "—"
         _lp_str_top = lp_generated_at.strftime("%m/%d %H:%M") if lp_generated_at else "—"
         # アナウンスバー用
-        _beginner_count_top = len(beginner_easy)
-        _max_profit_top = max((d.net_profit_jpy or 0) for d in beginner_easy) if beginner_easy else 0
+        # announce bar: 実際に初心者タブに表示するカード数（カメラ除外後）
+        _beginner_count_top = _beginner_disp_count
+        _max_profit_top = max((d.net_profit_jpy or 0) for d in _beginner_easy_disp) if _beginner_easy_disp else 0
         _max_profit_str_top = f'+¥{_max_profit_top:,}' if _max_profit_top > 0 else '—'
 
         return f"""<!DOCTYPE html>
@@ -2816,7 +2833,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 
 </head>
 <body>
-<div class="announce-bar"><a href="#tab-beginner">&#127919; 本日 {_beginner_count_top} 件の初心者向け案件 &mdash; 最大利益 {_esc(_max_profit_str_top)} を確認</a></div>
+<div class="announce-bar"><a href="#tab-beginner">&#127919; 本日確認 {_beginner_count_top} 件の初心者向け案件 &mdash; 最大利益 {_esc(_max_profit_str_top)} を確認</a></div>
 <header class="topbar">
   <a href="/" class="topbar-brand">
     <div class="brand-icon">S</div>
@@ -2964,8 +2981,8 @@ tr.sc-route-review {{ background: #FFFBEB; }}
     # ----- Hero -----
 
     def _section_hero(self, date_str, time_str, latest_buyback_at, lp_generated_at,
-
-                       all_deals=None, iphone_deals=None, camera_deals=None, game_deals=None) -> str:
+                       all_deals=None, iphone_deals=None, camera_deals=None, game_deals=None,
+                       beginner_display_count=None) -> str:
 
         variant_key = self.settings.get('headline_variant', 'A')
 
@@ -2979,7 +2996,11 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 
         stale_cls   = 'stale' if _hours_ago(latest_buyback_at) > 24 else ''
 
-        all_count    = len(all_deals)    if all_deals    else 0
+        # 件数: 実際に初心者タブに表示するカード数を使用（beginner_display_count 優先）
+        # all_deals は limit=50 で全レベル混在のため件数として不適切
+        all_count = beginner_display_count if beginner_display_count is not None else (
+            len(all_deals) if all_deals else 0
+        )
 
         iphone_count = len(iphone_deals) if iphone_deals else 0
 
@@ -3008,7 +3029,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
           <div class="social-avatar">B</div>
           <div class="social-avatar">C</div>
         </div>
-        <div class="social-text">本日 <strong>{all_count}</strong> 件の案件 — 最高利益 <strong>{_esc(max_profit_str)}</strong></div>
+        <div class="social-text">本日確認 <strong>{all_count}</strong> 件（初心者向け）— 最高利益 <strong>{_esc(max_profit_str)}</strong></div>
       </div>
       <div class="hero-timestamps">
         <span class="ts-pill {_esc(stale_cls)}" data-buyback-updated title="DBに記録された最新の買取価格データ取得日時。各カードの価格には個別の取得日時を表示しています。"><span class="ts-dot"></span>最終買取データ取得：{_esc(buyback_str)}</span>
@@ -3359,7 +3380,9 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 
                       game_watch=None, buyback_by_product: dict = None,
                       sedori_routes: list = None, lottery_events: list = None,
-                      market_prices_by_product: dict = None) -> str:
+                      market_prices_by_product: dict = None,
+                      beginner_display_count: int = None,
+                      lottery_display_count: int = None) -> str:
 
         camera_deals = camera_deals or []
 
@@ -3384,11 +3407,16 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         sedori_html      = self._tab_sedori(sedori_routes or [])
         lottery_html     = self._section_lottery(lottery_events)
 
-        all_count    = len(beginner_easy) + len(beginner_watch)
+        # 件数整合: 外部から渡された表示件数を優先（_render_page で整合済み）
+        # beginner: カメラ除外後の件数。未渡しの場合はフォールバックとして自前計算
+        all_count = beginner_display_count if beginner_display_count is not None else (
+            len(_beginner_easy_filtered) + len(_beginner_watch_filtered)
+        )
         adv_total    = len(advanced_deals) + len(advanced_snaps) + len(watch_candidates)
         surge_count  = len([a for a in buyback_alerts if a.get('alert_type') in ('buyback_surge','buyback_drop')])
         surge_badge  = f'<span class="tab-count">{surge_count}</span>' if surge_count else ''
-        lottery_count = len(lottery_events)
+        # 抽選: DBイベント + リファレンスアイテム の active/upcoming/unknown 件数
+        lottery_count = lottery_display_count if lottery_display_count is not None else len(lottery_events)
         lottery_badge = f'<span class="tab-count">{lottery_count}</span>' if lottery_count else ''
 
         return f"""<div class="tab-wrap">

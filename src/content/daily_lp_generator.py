@@ -1492,6 +1492,49 @@ a[href], button, [role="tab"], [role="button"],
 .pro-row-has-price {{ background: rgba(0,200,150,0.04); }}
 .pro-action-cell {{ text-align: right; white-space: nowrap; }}
 .pro-meta-cell {{ font-size: 0.73rem; color: var(--ink3); white-space: nowrap; }}
+/* Pro価格表: 未取得チップエリア */
+.pro-no-price-section {{
+  margin: 6px 0 0; padding: 6px 0 2px;
+  border-top: 1px dashed var(--border-1);
+}}
+.pro-no-price-label {{
+  display: block; font-size: 0.7rem; color: var(--ink3); margin-bottom: 4px; padding: 0 2px;
+}}
+.pro-no-price-chips {{
+  display: flex; flex-wrap: wrap; gap: 5px; padding: 0 2px;
+}}
+.pro-no-price-chip {{
+  display: inline-block; font-size: 0.72rem; padding: 2px 9px;
+  border-radius: 99px; border: 1px solid var(--border-1);
+  background: var(--surface-1); color: var(--link);
+  text-decoration: none; white-space: nowrap;
+}}
+.pro-no-price-chip:hover {{ background: var(--surface-2); text-decoration: none; }}
+.pro-no-data-note {{
+  font-size: 0.75rem; color: var(--ink3); padding: 6px 2px;
+}}
+/* Pro価格カード要約ボックス */
+.pro-card-summary {{
+  display: flex; flex-wrap: wrap; gap: 8px 16px;
+  background: var(--surface-1); border: 1px solid var(--border-1);
+  border-radius: 8px; padding: 10px 14px;
+  margin: 8px 0 12px;
+}}
+.pro-summary-item {{
+  display: flex; align-items: baseline; gap: 5px; flex-wrap: wrap;
+}}
+.pro-summary-lbl {{
+  font-size: 0.72rem; color: var(--ink3); white-space: nowrap;
+}}
+.pro-summary-val {{
+  font-size: 0.95rem; font-weight: 800; color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}}
+.pro-summary-gap-pos {{ color: var(--profit-dark); }}
+.pro-summary-gap-neg {{ color: var(--danger); }}
+.pro-summary-sub {{
+  font-size: 0.7rem; color: var(--ink3);
+}}
 
 /* Action Buttons */
 .card-actions {{
@@ -4298,100 +4341,179 @@ python3 -m src.cli calculate-sedori-routes</pre>
             domestic_rows = [r for r in price_rows if r.get("price_type") in ("used", "market", "flea_market")]
             overseas_rows = [r for r in price_rows if r.get("price_type") == "overseas"]
 
-            # ── 国内二次流通 ── 価格取得済みサイト（DB データ）
-            # source_id → DB価格行 マップ（重複排除済み）
+            # ── 国内二次流通 ── 価格あり/なし分離 → 安い順ソート
             dom_by_src: dict = {r.get("source_id", ""): r for r in domestic_rows}
-
-            # 全対象サイト定義（price未取得でも行を出す）
             all_domestic_sites = [
-                ("src_mercari",       "メルカリ",      f"https://jp.mercari.com/search?keyword={pname_enc}"),
-                ("src_yahoo_auction", "ヤフオク",      f"https://auctions.yahoo.co.jp/search/search?p={pname_enc}"),
-                ("src_rakuten",       "ラクマ",        f"https://fril.jp/search?query={pname_enc}"),
-                ("src_map_camera",    "マップカメラ",  f"https://www.mapcamera.com/ec/search?q={pname_enc}"),
+                ("src_mercari",       "メルカリ",       f"https://jp.mercari.com/search?keyword={pname_enc}"),
+                ("src_yahoo_auction", "ヤフオク",       f"https://auctions.yahoo.co.jp/search/search?p={pname_enc}"),
+                ("src_rakuten",       "ラクマ",         f"https://fril.jp/search?query={pname_enc}"),
+                ("src_map_camera",    "マップカメラ",   f"https://www.mapcamera.com/ec/search?q={pname_enc}"),
                 ("src_kitamura",      "カメラのキタムラ", f"https://www.kitamura.co.jp/ec/special/camera/used/?q={pname_enc}"),
-                ("src_fujiya",        "フジヤカメラ",  f"https://www.fujiyacamera.com/shopbrand/ct10/?q={pname_enc}"),
-                ("src_kakaku",        "価格.com",     f"https://kakaku.com/search_results/{pname_enc}/"),
-                ("src_sofmap",        "ソフマップ中古", f"https://www.sofmap.com/product_list.aspx?q={pname_enc}&st=1"),
+                ("src_fujiya",        "フジヤカメラ",   f"https://www.fujiyacamera.com/shopbrand/ct10/?q={pname_enc}"),
+                ("src_kakaku",        "価格.com",      f"https://kakaku.com/search_results/{pname_enc}/"),
+                ("src_sofmap",        "ソフマップ中古",  f"https://www.sofmap.com/product_list.aspx?q={pname_enc}&st=1"),
             ]
-            dtrows = []
+            dom_has = []  # (sid, slabel, surl, db_row) — 価格あり
+            dom_no  = []  # (sid, slabel, surl) — 価格未取得
             for sid, slabel, surl in all_domestic_sites:
                 db_row = dom_by_src.get(sid)
                 if db_row:
-                    pprice = db_row.get("price", 0)
-                    rec_at = str(db_row.get("recorded_at", ""))[:10]
-                    price_cell = f'<strong>¥{pprice:,}</strong>'
-                    date_cell  = f'<span class="pro-date-cell">{_esc(rec_at)}</span>'
-                    link_cell  = (
-                        f'<a href="{_esc(surl)}" target="_blank" rel="noopener noreferrer" '
-                        f'class="pro-link-btn" data-track="pro_domestic_click">相場確認</a>'
-                    )
+                    dom_has.append((sid, slabel, surl, db_row))
                 else:
-                    price_cell = '<span class="pro-no-price">価格未取得</span>'
-                    date_cell  = ''
-                    link_cell  = (
-                        f'<a href="{_esc(surl)}" target="_blank" rel="noopener noreferrer" '
-                        f'class="pro-link-btn pro-link-btn-dim" data-track="pro_domestic_click">相場確認</a>'
-                    )
+                    dom_no.append((sid, slabel, surl))
+            # 安い順（中古国内相場は低い＝買いやすい）
+            dom_has.sort(key=lambda x: x[3].get("price", 0))
+            dom_min_price = dom_has[0][3].get("price", 0) if dom_has else 0
+            dom_min_label = dom_has[0][1] if dom_has else ""
+
+            # 価格あり行のみテーブル生成
+            dtrows = []
+            for sid, slabel, surl, db_row in dom_has:
+                pprice = db_row.get("price", 0)
+                freshness = self._freshness_label(
+                    db_row.get("recorded_at") or db_row.get("observed_at", ""),
+                    db_row.get("data_source", "")
+                )
                 dtrows.append(
-                    f'<tr class="pro-domestic-row{" pro-row-has-price" if db_row else ""}">'
+                    f'<tr class="pro-domestic-row pro-row-has-price">'
                     f'<td class="pro-src-cell"><strong class="pro-src-name">{_esc(slabel)}</strong></td>'
-                    f'<td class="pro-price-cell">{price_cell}</td>'
-                    f'<td class="pro-meta-cell">{date_cell}</td>'
-                    f'<td class="pro-action-cell">{link_cell}</td>'
+                    f'<td class="pro-price-cell"><strong class="price-value">¥{pprice:,}</strong></td>'
+                    f'<td class="pro-meta-cell">{freshness}</td>'
+                    f'<td class="pro-action-cell"><a href="{_esc(surl)}" target="_blank" rel="noopener noreferrer" '
+                    f'class="pro-link-btn" data-track="pro_domestic_click">相場確認</a></td>'
                     f'</tr>'
                 )
-            domestic_table_html = (
-                f'<table class="pro-price-table pro-domestic-price-table">'
-                f'<thead><tr><th>サイト</th><th>参考価格</th><th>更新日</th><th></th></tr></thead>'
-                f'<tbody>{"".join(dtrows)}</tbody>'
-                f'</table>'
-            )
+            # 価格未取得 → チップ
+            dom_no_html = ""
+            if dom_no:
+                chips = "".join(
+                    f'<a href="{_esc(surl)}" class="pro-no-price-chip" target="_blank" rel="noopener noreferrer" '
+                    f'data-track="pro_domestic_click">{_esc(slabel)}</a>'
+                    for _, slabel, surl in dom_no
+                )
+                dom_no_html = (
+                    f'<div class="pro-no-price-section">'
+                    f'<span class="pro-no-price-label">相場確認リンク（価格未取得）</span>'
+                    f'<div class="pro-no-price-chips">{chips}</div>'
+                    f'</div>'
+                )
+            if dtrows:
+                domestic_table_html = (
+                    f'<table class="pro-price-table pro-domestic-price-table">'
+                    f'<thead><tr><th>サイト</th><th>参考価格</th><th>確認日</th><th></th></tr></thead>'
+                    f'<tbody>{"".join(dtrows)}</tbody>'
+                    f'</table>'
+                    + dom_no_html
+                )
+            else:
+                domestic_table_html = (
+                    f'<div class="pro-no-data-note">国内価格データ未取得</div>'
+                    + dom_no_html
+                )
 
-            # ── 海外相場 ── 価格取得済みサイト + 未取得サイト全行表示
+            # ── 海外相場 ── 価格あり/なし分離 → 高い順ソート
             ovs_by_src: dict = {r.get("source_id", ""): r for r in overseas_rows}
-
             all_overseas_sites = [
-                ("src_ebay",      "eBay",       f"https://www.ebay.com/sch/i.html?_nkw={pname_enc}&LH_Sold=1&LH_Complete=1"),
-                ("src_stockx",    "StockX",     f"https://stockx.com/search?s={pname_enc}"),
-                ("src_bhphoto",   "B&H Photo",  f"https://www.bhphotovideo.com/c/search?Ntt={pname_enc}"),
-                ("src_adorama",   "Adorama",    f"https://www.adorama.com/l/?searchinfo={pname_enc}"),
-                ("src_mpb",       "MPB",        f"https://www.mpb.com/en-us/cameras/?q={pname_enc}"),
-                ("src_keh",       "KEH",        f"https://www.keh.com/search#{pname_enc}"),
-                ("src_amazon_us", "Amazon US",  f"https://www.amazon.com/s?k={pname_enc}"),
+                ("src_ebay",      "eBay",      f"https://www.ebay.com/sch/i.html?_nkw={pname_enc}&LH_Sold=1&LH_Complete=1"),
+                ("src_stockx",    "StockX",    f"https://stockx.com/search?s={pname_enc}"),
+                ("src_bhphoto",   "B&H Photo", f"https://www.bhphotovideo.com/c/search?Ntt={pname_enc}"),
+                ("src_adorama",   "Adorama",   f"https://www.adorama.com/l/?searchinfo={pname_enc}"),
+                ("src_mpb",       "MPB",       f"https://www.mpb.com/en-us/cameras/?q={pname_enc}"),
+                ("src_keh",       "KEH",       f"https://www.keh.com/search#{pname_enc}"),
+                ("src_amazon_us", "Amazon US", f"https://www.amazon.com/s?k={pname_enc}"),
             ]
-            otrows = []
+            ovs_has = []  # (sid, slabel, surl, db_row) — 価格あり
+            ovs_no  = []  # (sid, slabel, surl) — 価格未取得
             for sid, slabel, surl in all_overseas_sites:
                 db_row = ovs_by_src.get(sid)
                 if db_row:
-                    pprice = db_row.get("price", 0)
-                    rec_at = str(db_row.get("recorded_at", ""))[:10]
-                    price_cell = f'<strong>¥{pprice:,}</strong><small class="pro-jpy-note">（円換算）</small>'
-                    date_cell  = f'<span class="pro-date-cell">{_esc(rec_at)}</span>'
-                    link_cell  = (
-                        f'<a href="{_esc(surl)}" target="_blank" rel="noopener noreferrer" '
-                        f'class="pro-link-btn" data-track="pro_overseas_click">相場確認</a>'
-                    )
+                    ovs_has.append((sid, slabel, surl, db_row))
                 else:
-                    price_cell = '<span class="pro-no-price">価格未取得</span>'
-                    date_cell  = ''
-                    link_cell  = (
-                        f'<a href="{_esc(surl)}" target="_blank" rel="noopener noreferrer" '
-                        f'class="pro-link-btn pro-link-btn-dim" data-track="pro_overseas_click">相場確認</a>'
-                    )
+                    ovs_no.append((sid, slabel, surl))
+            # 高い順（海外で高く売れる相場を上に）
+            ovs_has.sort(key=lambda x: x[3].get("price", 0), reverse=True)
+            ovs_max_price = ovs_has[0][3].get("price", 0) if ovs_has else 0
+            ovs_max_label = ovs_has[0][1] if ovs_has else ""
+
+            otrows = []
+            for sid, slabel, surl, db_row in ovs_has:
+                pprice = db_row.get("price", 0)
+                freshness = self._freshness_label(
+                    db_row.get("recorded_at") or db_row.get("observed_at", ""),
+                    db_row.get("data_source", "")
+                )
                 otrows.append(
-                    f'<tr class="pro-overseas-row{" pro-row-has-price" if db_row else ""}">'
+                    f'<tr class="pro-overseas-row pro-row-has-price">'
                     f'<td class="pro-src-cell"><strong class="pro-src-name">{_esc(slabel)}</strong></td>'
-                    f'<td class="pro-price-cell">{price_cell}</td>'
-                    f'<td class="pro-meta-cell">{date_cell}</td>'
-                    f'<td class="pro-action-cell">{link_cell}</td>'
+                    f'<td class="pro-price-cell"><strong class="price-value">¥{pprice:,}</strong>'
+                    f'<small class="pro-jpy-note">（円換算）</small></td>'
+                    f'<td class="pro-meta-cell">{freshness}</td>'
+                    f'<td class="pro-action-cell"><a href="{_esc(surl)}" target="_blank" rel="noopener noreferrer" '
+                    f'class="pro-link-btn" data-track="pro_overseas_click">相場確認</a></td>'
                     f'</tr>'
                 )
-            overseas_table_html = (
-                f'<table class="pro-price-table pro-overseas-price-table">'
-                f'<thead><tr><th>サイト</th><th>参考価格（円換算）</th><th>更新日</th><th></th></tr></thead>'
-                f'<tbody>{"".join(otrows)}</tbody>'
-                f'</table>'
-                f'<p class="pro-overseas-note">※ 送料・関税概算込み。為替変動あり。参考値として活用してください。</p>'
+            # 価格未取得 → チップ
+            ovs_no_html = ""
+            if ovs_no:
+                chips = "".join(
+                    f'<a href="{_esc(surl)}" class="pro-no-price-chip" target="_blank" rel="noopener noreferrer" '
+                    f'data-track="pro_overseas_click">{_esc(slabel)}</a>'
+                    for _, slabel, surl in ovs_no
+                )
+                ovs_no_html = (
+                    f'<div class="pro-no-price-section">'
+                    f'<span class="pro-no-price-label">海外相場確認リンク（価格未取得）</span>'
+                    f'<div class="pro-no-price-chips">{chips}</div>'
+                    f'</div>'
+                )
+            if otrows:
+                overseas_table_html = (
+                    f'<table class="pro-price-table pro-overseas-price-table">'
+                    f'<thead><tr><th>サイト</th><th>参考価格（円換算）</th><th>確認日</th><th></th></tr></thead>'
+                    f'<tbody>{"".join(otrows)}</tbody>'
+                    f'</table>'
+                    + ovs_no_html
+                    + f'<p class="pro-overseas-note">※ 送料・関税概算込み。為替変動あり。参考値として活用してください。</p>'
+                )
+            else:
+                overseas_table_html = (
+                    f'<div class="pro-no-data-note">海外相場データ未取得</div>'
+                    + ovs_no_html
+                    + f'<p class="pro-overseas-note">※ 送料・関税概算込み。為替変動あり。参考値として活用してください。</p>'
+                )
+
+            # ── カード上部：要約ボックス ──
+            summary_parts = []
+            if dom_min_price and dom_min_label:
+                summary_parts.append(
+                    f'<div class="pro-summary-item">'
+                    f'<span class="pro-summary-lbl">国内最安</span>'
+                    f'<span class="pro-summary-val">¥{dom_min_price:,}</span>'
+                    f'<span class="pro-summary-sub">({_esc(dom_min_label)} / {len(dom_has)}サイト確認)</span>'
+                    f'</div>'
+                )
+            if ovs_max_price and ovs_max_label:
+                summary_parts.append(
+                    f'<div class="pro-summary-item">'
+                    f'<span class="pro-summary-lbl">海外最高</span>'
+                    f'<span class="pro-summary-val">¥{ovs_max_price:,}</span>'
+                    f'<span class="pro-summary-sub">({_esc(ovs_max_label)} / {len(ovs_has)}サイト確認)</span>'
+                    f'</div>'
+                )
+            if dom_min_price and ovs_max_price:
+                price_gap = ovs_max_price - dom_min_price
+                gap_str = f'+¥{price_gap:,}' if price_gap >= 0 else f'-¥{abs(price_gap):,}'
+                gap_cls = "pro-summary-gap-pos" if price_gap > 0 else "pro-summary-gap-neg"
+                summary_parts.append(
+                    f'<div class="pro-summary-item">'
+                    f'<span class="pro-summary-lbl">国内外価格差</span>'
+                    f'<span class="pro-summary-val {gap_cls}">{gap_str}</span>'
+                    f'<span class="pro-summary-sub">(海外最高−国内最安)</span>'
+                    f'</div>'
+                )
+            summary_html = (
+                f'<div class="pro-card-summary">{"".join(summary_parts)}</div>'
+                if summary_parts else ""
             )
 
             cards.append(f"""<div class="watch-candidate-card pro-candidate-card">
@@ -4399,6 +4521,7 @@ python3 -m src.cli calculate-sedori-routes</pre>
     <div class="pcc-name">{pname_esc}</div>
     <div class="pcc-badges">{sale_badge}</div>
   </div>
+  {summary_html}
   <div class="pcc-price-row">
     <div class="pcc-price-item">
       <span class="pcc-price-lbl">公式参考価格</span>

@@ -810,7 +810,41 @@ def check() -> list[dict]:
     else:
         results.append({"level": "warning", "check": "beginner_tab_badge", "message": "初心者タブのバッジ数が見つからない"})
 
-    # 97. Hero と announce bar で同一の件数（「本日確認」）が表示されている
+    # 97. Pro価格表: 国内最安価格が表示されている
+    has_pro_dom_min = "国内最安" in html
+    if has_pro_dom_min:
+        results.append({"level": "ok", "check": "pro_dom_min_price", "message": "Pro向けカードに国内最安価格サマリーが表示されている"})
+    else:
+        results.append({"level": "warning", "check": "pro_dom_min_price", "message": "Pro向けカードの国内最安価格サマリーが見つからない（データ未取得の可能性）"})
+
+    # 98. Pro価格表: 海外最高価格が表示されている
+    has_pro_ovs_max = "海外最高" in html
+    if has_pro_ovs_max:
+        results.append({"level": "ok", "check": "pro_ovs_max_price", "message": "Pro向けカードに海外最高価格サマリーが表示されている"})
+    else:
+        results.append({"level": "warning", "check": "pro_ovs_max_price", "message": "Pro向けカードの海外最高価格サマリーが見つからない（データ未取得の可能性）"})
+
+    # 99. Pro価格表: 価格あり行が未取得行より上（pro-row-has-price が pro-no-price-chip より先に出現）
+    pos_has_price = html.find('pro-row-has-price')
+    pos_no_price_chip = html.find('pro-no-price-chip')
+    if pos_has_price != -1 and pos_no_price_chip != -1:
+        if pos_has_price < pos_no_price_chip:
+            results.append({"level": "ok", "check": "pro_price_order", "message": "Pro価格表: 価格あり行が未取得チップより上に表示されている"})
+        else:
+            results.append({"level": "error", "check": "pro_price_order", "message": "Pro価格表: 価格あり行が未取得チップより下に出現している（順序不正）"})
+    elif pos_has_price != -1:
+        results.append({"level": "ok", "check": "pro_price_order", "message": "Pro価格表: 価格あり行のみ（未取得なし）"})
+    else:
+        results.append({"level": "warning", "check": "pro_price_order", "message": "Pro価格表の価格あり行が見つからない（データ未取得の可能性）"})
+
+    # 100. Pro価格表: 未取得サイトがチップ形式にまとまっている（pro-no-price-chip）
+    has_pro_no_price_chips = "pro-no-price-chip" in html
+    if has_pro_no_price_chips:
+        results.append({"level": "ok", "check": "pro_no_price_chips", "message": "Pro価格表の未取得サイトがチップ形式で表示されている"})
+    else:
+        results.append({"level": "warning", "check": "pro_no_price_chips", "message": "Pro価格表の未取得チップが見つからない（全サイト価格取得済みか、データなしの可能性）"})
+
+    # 101. Hero と announce bar で同一の件数（「本日確認」）が表示されている
     # 両方から件数を抽出して一致するか検証
     hero_counts = re.findall(r'本日確認.*?<strong>(\d+)</strong>', html)
     announce_counts = re.findall(r'本日確認\s*(\d+)\s*件', html)

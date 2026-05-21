@@ -1293,7 +1293,8 @@ class Repository:
                 f"""SELECT source_id, price_type,
                           MAX(price) AS price,
                           currency,
-                          MAX(recorded_at) AS recorded_at
+                          MAX(recorded_at) AS recorded_at,
+                          MAX(COALESCE(price_basis, '')) AS price_basis
                    FROM price_history
                    WHERE product_id = ? AND price_type IN ({placeholders})
                    GROUP BY source_id, price_type

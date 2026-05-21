@@ -287,6 +287,17 @@ class DailyLPGenerator:
                                            beginner_display_count=_beginner_disp_count)
         stale_html   = self._section_stale_warning(latest_buyback_at, latest_deals_at, lp_generated_at)
         category_nav_html = self._section_category_nav(lottery_count=_lottery_active_count)
+
+        # タブバッジ計算（_section_tab_nav 用）
+        _adv_total_for_nav = len(advanced_deals) + len(advanced_snaps) + len(watch_candidates)
+        _surge_count_for_nav = len([a for a in buyback_alerts if a.get('alert_type') in ('buyback_surge', 'buyback_drop')])
+        tab_nav_html = self._section_tab_nav(
+            beginner_count=_beginner_disp_count,
+            adv_total=_adv_total_for_nav,
+            surge_count=_surge_count_for_nav,
+            lottery_count=_lottery_active_count,
+        )
+
         tab_html     = self._section_tabs(
             beginner_easy, beginner_watch,
             advanced_deals, advanced_snaps,
@@ -303,6 +314,7 @@ class DailyLPGenerator:
             market_prices_by_product=market_prices_by_product or {},
             beginner_display_count=_beginner_disp_count,
             lottery_display_count=_lottery_active_count,
+            latest_buyback_at=latest_buyback_at,
         )
         caution_html = self._section_caution()
         cta_html     = self._section_cta()
@@ -2234,6 +2246,12 @@ a[href], button, [role="tab"], [role="button"],
 .sokuhoh-badge {{ font-size: 0.68rem; font-weight: 700; padding: 2px 10px; border-radius: 99px; }}
 .badge-surge {{ background: #DCFCE7; color: #16A34A; }}
 .badge-drop  {{ background: #FEE2E2; color: #DC2626; }}
+.badge-restock     {{ background: #DCFCE7; color: #15803D; }}
+.badge-presale     {{ background: #EEF2FF; color: #4338CA; }}
+.badge-lottery-start {{ background: #FEF9C3; color: #854D0E; }}
+.badge-lottery-end   {{ background: #F1F5F9; color: #64748B; }}
+.badge-update      {{ background: #E0F2FE; color: #075985; }}
+.badge-soldout     {{ background: #FEE2E2; color: #991B1B; }}
 .sokuhoh-body {{ display: flex; flex-direction: column; gap: 4px; }}
 .sokuhoh-name {{ font-weight: 800; font-size: 0.92rem; color: var(--ink); }}
 .sokuhoh-brand {{ font-size: 0.75rem; color: var(--ink3); }}
@@ -2244,6 +2262,22 @@ a[href], button, [role="tab"], [role="button"],
 .sokuhoh-diff {{ font-size: 0.8rem; color: #22C55E; font-weight: 700; }}
 .sokuhoh-drop .sokuhoh-diff {{ color: #EF4444; }}
 .sokuhoh-time {{ font-size: 0.72rem; color: var(--ink4); }}
+
+/* ============================================================
+   DATA STALE BANNER
+   ============================================================ */
+.data-stale-banner {{
+  border-radius: 8px; padding: 10px 14px;
+  font-size: 0.82rem; font-weight: 600;
+  margin: 0 0 12px;
+  display: flex; align-items: flex-start; gap: 8px;
+}}
+.data-stale-warn {{
+  background: #FFFBEB; border: 1px solid #FDE68A; color: #92400E;
+}}
+.data-stale-critical {{
+  background: #FEF2F2; border: 1px solid #FECACA; color: #991B1B;
+}}
 
 /* ============================================================
    OVERSEAS LINKS SECTION
@@ -2845,7 +2879,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 .noscript-all .tab-nav {{ display: none; }}
 
 /* Category Nav */
-.cat-nav-wrap {{ background: #fff; border-bottom: 1px solid var(--card-border); padding: 12px 0; margin-bottom: 8px; }}
+.cat-nav-wrap {{ background: var(--bg); border-bottom: 1px solid var(--card-border); padding: 6px 0; }}
 .cat-nav-inner {{ max-width: 960px; margin: 0 auto; padding: 0 16px; }}
 .cat-genre-bar {{ display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; padding-bottom: 8px; }}
 .cat-genre-bar::-webkit-scrollbar {{ display: none; }}
@@ -2907,6 +2941,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 <div class="ticker-bar"><div class="ticker-inner"><span class="ticker-item"><span class="t-name">iPhone 16 Pro 256GB</span><span class="ticker-sep">|</span><span class="t-profit">+¥18,400</span></span><span class="ticker-item"><span class="t-name">SONY α7C II</span><span class="ticker-sep">|</span><span class="t-profit">+¥32,000</span></span><span class="ticker-item"><span class="t-name">Nintendo Switch 2</span><span class="ticker-sep">|</span><span class="t-profit">+¥9,800</span></span><span class="ticker-item"><span class="t-name">iPhone 15 Plus 128GB</span><span class="ticker-sep">|</span><span class="t-profit">+¥12,000</span></span><span class="ticker-item"><span class="t-name">Canon EOS R6 Mark II</span><span class="ticker-sep">|</span><span class="t-profit">+¥45,000</span></span><span class="ticker-item"><span class="t-name">PS5 Digital</span><span class="ticker-sep">|</span><span class="t-profit">+¥6,500</span></span><span class="ticker-item"><span class="t-name">iPhone 16 Pro 256GB</span><span class="ticker-sep">|</span><span class="t-profit">+¥18,400</span></span><span class="ticker-item"><span class="t-name">SONY α7C II</span><span class="ticker-sep">|</span><span class="t-profit">+¥32,000</span></span><span class="ticker-item"><span class="t-name">Nintendo Switch 2</span><span class="ticker-sep">|</span><span class="t-profit">+¥9,800</span></span><span class="ticker-item"><span class="t-name">iPhone 15 Plus 128GB</span><span class="ticker-sep">|</span><span class="t-profit">+¥12,000</span></span><span class="ticker-item"><span class="t-name">Canon EOS R6 Mark II</span><span class="ticker-sep">|</span><span class="t-profit">+¥45,000</span></span><span class="ticker-item"><span class="t-name">PS5 Digital</span><span class="ticker-sep">|</span><span class="t-profit">+¥6,500</span></span></div></div>
 {hero_html}
 {stale_html}
+{tab_nav_html}
 {category_nav_html}
 <div class="main-wrap">
 {tab_html}
@@ -3200,10 +3235,10 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         {
             "product_name": "RICOH GR IV",
             "brand": "RICOH",
-            "status": "upcoming",
-            "note": "発売時期未定。GR IIIx 後継として注目。発売時は抽選販売の可能性が高い。発表情報を要確認。",
-            "url": "https://www.ricoh-imaging.co.jp/japan/products/cameras/gr/",
-            "sale_method": "未定（発売時は抽選の可能性大）",
+            "status": "closed",
+            "note": "2026年5月一次抽選終了。次回販売未定。公式ストアで再販・次回抽選情報を確認してください。",
+            "url": "https://ricohimagingstore.com/Form/Product/ProductDetail.aspx?shop=0&pid=S0001551&cat=002010",
+            "sale_method": "一次抽選終了 / 次回未定",
             "official_price": "未定",
             "link_type": "product_page",
             "checked_at": "2026-05-21",
@@ -3217,17 +3252,6 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             "sale_method": "未定（限定抽選の可能性）",
             "official_price": "未定",
             "link_type": "product_page",
-            "checked_at": "2026-05-21",
-        },
-        {
-            "product_name": "Apple iPhone 17 Pro / Pro Max",
-            "brand": "Apple",
-            "status": "upcoming",
-            "note": "2025年9月発売見込み。発売直後は在庫不足でプレ値化の傾向。Apple Store で早期予約を推奨。",
-            "url": "https://www.apple.com/jp/shop/buy-iphone",
-            "sale_method": "Apple Store（先着・予約）",
-            "official_price": "未発表",
-            "link_type": "reservation_page",
             "checked_at": "2026-05-21",
         },
         # ── 要確認（販売中・抽選受付状況要確認） ─────────────────────
@@ -3443,6 +3467,23 @@ tr.sc-route-review {{ background: #FFFBEB; }}
   {link_btn}
 </div>'''
 
+    def _section_tab_nav(self, beginner_count: int = 0, adv_total: int = 0,
+                         surge_count: int = 0, lottery_count: int = 0) -> str:
+        """タブナビゲーションを独立して返す（固定メニュー）。"""
+        surge_badge  = f'<span class="tab-count">{surge_count}</span>' if surge_count else ''
+        lottery_badge = f'<span class="tab-count">{lottery_count}</span>' if lottery_count else ''
+        return f"""<div class="tab-wrap" id="main-tab-nav">
+<nav class="tab-nav" role="tablist">
+  <button class="tab-btn" data-tab="ranking" role="tab" aria-selected="false">&#127942; ランキング</button>
+  <button class="tab-btn active" data-tab="beginner" role="tab" aria-selected="true">&#128100; 初心者向け <span class="tab-count">{beginner_count}</span></button>
+  <button class="tab-btn" data-tab="advanced" role="tab" aria-selected="false">&#9997; Pro向け <span class="tab-count">{adv_total}</span></button>
+  <button class="tab-btn" data-tab="sedori" role="tab" aria-selected="false">&#9636; せどりルート</button>
+  <button class="tab-btn" data-tab="surge" role="tab" aria-selected="false">&#9889; 急騰/急落{surge_badge}</button>
+  <button class="tab-btn" data-tab="sokuhoh" role="tab" aria-selected="false">&#128248; 速報</button>
+  <button class="tab-btn" data-tab="lottery" role="tab" aria-selected="false">&#127915; 抽選情報{lottery_badge}</button>
+</nav>
+</div>"""
+
     def _section_tabs(self, beginner_easy, beginner_watch,
 
                       advanced_deals, advanced_snaps, watch_candidates,
@@ -3455,7 +3496,8 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                       sedori_routes: list = None, lottery_events: list = None,
                       market_prices_by_product: dict = None,
                       beginner_display_count: int = None,
-                      lottery_display_count: int = None) -> str:
+                      lottery_display_count: int = None,
+                      latest_buyback_at: Optional[datetime] = None) -> str:
 
         camera_deals = camera_deals or []
 
@@ -3469,11 +3511,13 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         _beginner_watch_filtered = [d for d in beginner_watch if getattr(d, 'category', '') != 'camera']
         _camera_from_beginner = [d for d in beginner_easy + beginner_watch if getattr(d, 'category', '') == 'camera']
 
-        beginner_html    = self._tab_beginner(_beginner_easy_filtered, _beginner_watch_filtered, bybp)
+        beginner_html    = self._tab_beginner(_beginner_easy_filtered, _beginner_watch_filtered, bybp,
+                                              latest_buyback_at=latest_buyback_at)
         advanced_html    = self._tab_advanced(advanced_deals, advanced_snaps, watch_candidates,
                                               camera_watch=camera_watch,
                                               camera_beginner_deals=_camera_from_beginner,
-                                              market_prices_by_product=market_prices_by_product or {})
+                                              market_prices_by_product=market_prices_by_product or {},
+                                              latest_buyback_at=latest_buyback_at)
         surge_html       = self._tab_surge(buyback_alerts)
         ranking_html     = self._tab_ranking(all_deals, iphone_deals, game_deals, sedori_routes=sedori_routes)
         new_products_html = self._section_sokuhoh(buyback_alerts)
@@ -3492,19 +3536,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         lottery_count = lottery_display_count if lottery_display_count is not None else len(lottery_events)
         lottery_badge = f'<span class="tab-count">{lottery_count}</span>' if lottery_count else ''
 
-        return f"""<div class="tab-wrap">
-<nav class="tab-nav" role="tablist">
-  <button class="tab-btn" data-tab="ranking" role="tab" aria-selected="false">&#127942; ランキング</button>
-  <button class="tab-btn active" data-tab="beginner" role="tab" aria-selected="true">&#128100; 初心者向け <span class="tab-count">{all_count}</span></button>
-  <button class="tab-btn" data-tab="advanced" role="tab" aria-selected="false">&#9997; Pro向け <span class="tab-count">{adv_total}</span></button>
-  <button class="tab-btn" data-tab="sedori" role="tab" aria-selected="false">&#9636; せどりルート</button>
-  <button class="tab-btn" data-tab="surge" role="tab" aria-selected="false">&#9889; 急騰/急落{surge_badge}</button>
-  <button class="tab-btn" data-tab="sokuhoh" role="tab" aria-selected="false">&#9889; 速報</button>
-  <button class="tab-btn" data-tab="lottery" role="tab" aria-selected="false">&#127915; 抽選情報{lottery_badge}</button>
-</nav>
-</div>
-
-<div id="tab-ranking" class="tab-panel" role="tabpanel">
+        return f"""<div id="tab-ranking" class="tab-panel" role="tabpanel">
 {ranking_html}
 </div>
 
@@ -3834,10 +3866,34 @@ python3 -m src.cli calculate-sedori-routes</pre>
     # ----- Tab: 初級者向け -----
 
 
-    def _tab_beginner(self, easy_deals, watch_deals, buyback_by_product: dict = None) -> str:
+    def _tab_beginner(self, easy_deals, watch_deals, buyback_by_product: dict = None,
+                       latest_buyback_at: Optional[datetime] = None) -> str:
         """初心者向けタブ（v6: カテゴリ別セクション）"""
         bybp = buyback_by_product or {}
         parts = []
+
+        # データ鮮度バナー
+        freshness_banner = ""
+        if latest_buyback_at is not None:
+            _now_jst = datetime.now(tz=JST)
+            _lba = latest_buyback_at
+            if _lba.tzinfo is None:
+                _lba = _lba.replace(tzinfo=JST)
+            age_h = (_now_jst - _lba.astimezone(JST)).total_seconds() / 3600
+            if age_h >= 48:
+                freshness_banner = (
+                    '<div class="data-stale-banner data-stale-critical">'
+                    '&#128721; 買取価格データが48時間以上更新されていません。'
+                    '表示価格は古い情報です。必ずリンク先で最新価格を確認してください。'
+                    '</div>'
+                )
+            elif age_h >= 24:
+                freshness_banner = (
+                    '<div class="data-stale-banner data-stale-warn">'
+                    '&#9888;&#65039; 買取価格が24時間以上更新されていません。'
+                    '「要更新」案件の価格はリンク先で要確認です。'
+                    '</div>'
+                )
 
         # ── Info banner (anchor: category-beginner-iphone) ──
         parts.append('<div id="category-beginner-iphone" class="info-banner blue">\n'
@@ -3941,7 +3997,7 @@ python3 -m src.cli calculate-sedori-routes</pre>
                     parts.append(self._deal_card(d, 'badge-watch', '要確認', buyback_rows=rows))
                 parts.append('</div>')
 
-        return '\n'.join(parts)
+        return freshness_banner + '\n'.join(parts)
 
     def _tab_all(self, easy_deals, watch_deals, buyback_by_product: dict = None) -> str:
         """全案件タブ（初級者向け・要確認）"""
@@ -4181,10 +4237,34 @@ python3 -m src.cli calculate-sedori-routes</pre>
   </div>
 </div>"""
 
-    def _tab_advanced(self, advanced_deals, advanced_snaps, watch_candidates, camera_watch=None, camera_beginner_deals=None, market_prices_by_product: dict = None) -> str:
+    def _tab_advanced(self, advanced_deals, advanced_snaps, watch_candidates, camera_watch=None, camera_beginner_deals=None, market_prices_by_product: dict = None,
+                       latest_buyback_at: Optional[datetime] = None) -> str:
         camera_watch = camera_watch or []
         camera_beginner_deals = camera_beginner_deals or []
         parts = []
+
+        # データ鮮度バナー
+        freshness_banner = ""
+        if latest_buyback_at is not None:
+            _now_jst = datetime.now(tz=JST)
+            _lba = latest_buyback_at
+            if _lba.tzinfo is None:
+                _lba = _lba.replace(tzinfo=JST)
+            age_h = (_now_jst - _lba.astimezone(JST)).total_seconds() / 3600
+            if age_h >= 48:
+                freshness_banner = (
+                    '<div class="data-stale-banner data-stale-critical">'
+                    '&#128721; 買取価格データが48時間以上更新されていません。価格は古い情報です。リンク先で最新価格を確認してください。'
+                    '</div>'
+                )
+            elif age_h >= 24:
+                freshness_banner = (
+                    '<div class="data-stale-banner data-stale-warn">'
+                    '&#9888;&#65039; 買取価格が24時間以上更新されていません。リンク先で最新価格を要確認です。'
+                    '</div>'
+                )
+        if freshness_banner:
+            parts.append(freshness_banner)
 
         # ── Pro向けタブ説明バナー ──
         parts.append("""<div class="info-banner violet">
@@ -4905,12 +4985,24 @@ python3 -m src.cli calculate-sedori-routes</pre>
         """速報タブ：買取急騰/急落アラート・価格変化フィードを表示する。"""
         alerts = buyback_alerts or []
         # alert_type が buyback_surge / buyback_drop のものを抽出
-        feed_items = [a for a in alerts if a.get('alert_type') in ('buyback_surge', 'buyback_drop')]
+        feed_items = [a for a in alerts if a.get('alert_type') in (
+            'buyback_surge', 'buyback_drop', 'restock', 'presale',
+            'lottery_start', 'lottery_end', 'buyback_update', 'soldout',
+            'stock_recover', 'price_diff',
+        )]
 
         # バッジの種別マップ
         _type_badge = {
-            'buyback_surge': ('<span class="sokuhoh-badge badge-surge">買取急騰</span>', 'sokuhoh-surge'),
-            'buyback_drop':  ('<span class="sokuhoh-badge badge-drop">買取急落</span>', 'sokuhoh-drop'),
+            'buyback_surge':   ('<span class="sokuhoh-badge badge-surge">買取急騰</span>', 'sokuhoh-surge'),
+            'buyback_drop':    ('<span class="sokuhoh-badge badge-drop">買取急落</span>', 'sokuhoh-drop'),
+            'restock':         ('<span class="sokuhoh-badge badge-restock">再入荷</span>', 'sokuhoh-change'),
+            'presale':         ('<span class="sokuhoh-badge badge-presale">予約開始</span>', 'sokuhoh-change'),
+            'lottery_start':   ('<span class="sokuhoh-badge badge-lottery-start">抽選開始</span>', 'sokuhoh-change'),
+            'lottery_end':     ('<span class="sokuhoh-badge badge-lottery-end">抽選終了</span>', 'sokuhoh-change'),
+            'buyback_update':  ('<span class="sokuhoh-badge badge-update">買取価格更新</span>', 'sokuhoh-change'),
+            'soldout':         ('<span class="sokuhoh-badge badge-soldout">SOLD OUT</span>', 'sokuhoh-drop'),
+            'stock_recover':   ('<span class="sokuhoh-badge badge-restock">在庫復活</span>', 'sokuhoh-surge'),
+            'price_diff':      ('<span class="sokuhoh-badge badge-surge">価格差速報</span>', 'sokuhoh-surge'),
         }
 
         cards = []
@@ -4959,9 +5051,9 @@ python3 -m src.cli calculate-sedori-routes</pre>
         if not cards:
             # データなし表示
             return (
-                '<div class="sec-head"><div class="sec-title">&#9889; 速報</div></div>'
+                '<div class="sec-head"><div class="sec-title">&#128248; 速報</div></div>'
                 '<div class="info-banner" style="margin:24px 0;text-align:center;padding:40px 16px">'
-                '&#9889; 速報がありません。次の更新をお待ちください。'
+                '&#128248; 本日の速報（再入荷・予約開始・買取急変等）はありません。'
                 '</div>'
             )
 

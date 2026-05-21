@@ -900,6 +900,74 @@ def check() -> list[dict]:
     else:
         results.append({"level": "warning", "check": "count_consistency", "message": "Hero または announce bar の件数を取得できなかった"})
 
+    # 108. 固定メニューが商品ジャンルより上にある（main-tab-nav が cat-genre-bar より前）
+    pos_tab_nav  = html.find('id="main-tab-nav"')
+    pos_cat_genre = html.find('class="cat-genre-bar"')
+    if pos_tab_nav != -1 and pos_cat_genre != -1:
+        if pos_tab_nav < pos_cat_genre:
+            results.append({"level": "ok", "check": "fixed_nav_above_genre", "message": "固定メニュー（main-tab-nav）が商品ジャンルより上に配置されている"})
+        else:
+            results.append({"level": "error", "check": "fixed_nav_above_genre", "message": "固定メニューが商品ジャンルより下にある（順序不正）"})
+    else:
+        results.append({"level": "error", "check": "fixed_nav_above_genre", "message": "main-tab-nav または cat-genre-bar が見つからない"})
+
+    # 109. 商品ジャンルメニューが固定メニューと分離されている（cat-nav-wrap が独立要素）
+    has_cat_nav_wrap = "cat-nav-wrap" in html
+    if has_cat_nav_wrap:
+        results.append({"level": "ok", "check": "genre_nav_separated", "message": "商品ジャンルメニューが固定メニューと分離されたブロック（cat-nav-wrap）にある"})
+    else:
+        results.append({"level": "error", "check": "genre_nav_separated", "message": "cat-nav-wrap が見つからない（ジャンルナビが未分離の可能性）"})
+
+    # 110. スマホ用横スクロールUIがある（tab-nav が overflow-x: auto の CSS を持つ）
+    has_scroll_ui = "overflow-x: auto" in html or "overflow-x:auto" in html
+    if has_scroll_ui:
+        results.append({"level": "ok", "check": "mobile_scroll_nav", "message": "スマホ横スクロールUI（overflow-x: auto）がCSSに定義されている"})
+    else:
+        results.append({"level": "warning", "check": "mobile_scroll_nav", "message": "スマホ横スクロールUIが見つからない"})
+
+    # 111. 24時間以上古い案件に対する鮮度バナー警告ロジックが存在する（CSS クラス定義）
+    has_stale_warn_css = "data-stale-warn" in html
+    if has_stale_warn_css:
+        results.append({"level": "ok", "check": "stale_24h_warning_css", "message": "24時間超古いデータの警告バナーCSS（data-stale-warn）が定義されている"})
+    else:
+        results.append({"level": "warning", "check": "stale_24h_warning_css", "message": "data-stale-warn CSS が見つからない"})
+
+    # 112. 48時間以上古い案件の強警告CSS が存在する
+    has_stale_critical_css = "data-stale-critical" in html
+    if has_stale_critical_css:
+        results.append({"level": "ok", "check": "stale_48h_critical_css", "message": "48時間超古いデータの強警告バナーCSS（data-stale-critical）が定義されている"})
+    else:
+        results.append({"level": "warning", "check": "stale_48h_critical_css", "message": "data-stale-critical CSS が見つからない"})
+
+    # 113. RICOH GR IV が「一次抽選終了 / 次回未定」になっている
+    has_gr4_closed = "一次抽選終了" in html
+    if has_gr4_closed:
+        results.append({"level": "ok", "check": "gr4_lottery_closed", "message": "RICOH GR IV が「一次抽選終了」として表示されている"})
+    else:
+        results.append({"level": "warning", "check": "gr4_lottery_closed", "message": "「一次抽選終了」表記が見つからない（RICOH GR IV 抽選状態要確認）"})
+
+    # 114. RICOH GR IV に指定の公式ストアURLが入っている
+    has_gr4_url = "S0001551" in html or "ricohimagingstore.com" in html
+    if has_gr4_url:
+        results.append({"level": "ok", "check": "gr4_official_url", "message": "RICOH GR IV に公式ストア直リンク（ricohimagingstore.com）が含まれている"})
+    else:
+        results.append({"level": "warning", "check": "gr4_official_url", "message": "RICOH GR IV の公式ストアURL（ricohimagingstore.com）が見つからない"})
+
+    # 115. iPhone 17 Pro / Pro Max が「近日開始」「候補」「新商品候補」扱いされていない
+    iphone17_upcoming = bool(re.search(r'iPhone\s+17\s+Pro[^<]{0,100}近日開始', html))
+    iphone17_candidate = bool(re.search(r'iPhone\s+17\s+Pro[^<]{0,100}(新商品候補|候補扱い)', html))
+    if iphone17_upcoming or iphone17_candidate:
+        results.append({"level": "error", "check": "iphone17_not_upcoming", "message": "iPhone 17 Pro / Pro Max が「近日開始」や「候補」扱いになっている"})
+    else:
+        results.append({"level": "ok", "check": "iphone17_not_upcoming", "message": "iPhone 17 Pro / Pro Max が「近日開始」「候補」扱いではない"})
+
+    # 116. 「新商品候補」という表記がない
+    has_new_product_candidate = "新商品候補" in html
+    if has_new_product_candidate:
+        results.append({"level": "error", "check": "no_new_product_candidate_label", "message": "「新商品候補」という表記が存在する（速報タブから削除してください）"})
+    else:
+        results.append({"level": "ok", "check": "no_new_product_candidate_label", "message": "「新商品候補」表記なし"})
+
     return results
 
 

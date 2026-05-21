@@ -2757,6 +2757,44 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 }}
 
 /* ============================================================
+   Pro カードフィルタバー / さらに表示ボタン
+   ============================================================ */
+.pro-filter-bar {{
+  display: flex; flex-wrap: wrap; gap: 6px;
+  padding: 12px 16px 10px; border-bottom: 1px solid #EEE8FF;
+  background: #FAFAFF;
+}}
+.pro-filter-btn {{
+  display: inline-flex; align-items: center; padding: 5px 13px;
+  border-radius: 99px; font-size: 0.76rem; font-weight: 700;
+  background: var(--surface-2); color: var(--text-2);
+  border: 1px solid #E5E7EB; cursor: pointer;
+  transition: all 0.15s cubic-bezier(0.23,1,0.32,1);
+  white-space: nowrap;
+}}
+.pro-filter-btn:hover {{ background: #EEF2FF; color: #4338CA; border-color: #C7D2FE; }}
+.pro-filter-btn.active {{
+  background: #4338CA; color: #fff; border-color: #4338CA;
+}}
+/* 折り畳みカード（初期非表示） */
+.pro-card-collapsed {{ display: none; }}
+/* さらに表示ボタン */
+.pro-show-more-btn {{
+  display: block; width: calc(100% - 36px); margin: 10px 18px 14px;
+  padding: 10px 16px; border-radius: 10px;
+  border: 1px dashed #DDD6FE; background: #F5F3FF;
+  color: #4338CA; font-weight: 700; font-size: 0.85rem;
+  cursor: pointer; text-align: center;
+  transition: background 0.15s, border-color 0.15s;
+}}
+.pro-show-more-btn:hover {{ background: #EEF2FF; border-color: #A5B4FC; }}
+@media (max-width: 640px) {{
+  .pro-filter-bar {{ padding: 8px 10px; gap: 4px; }}
+  .pro-filter-btn {{ font-size: 0.72rem; padding: 4px 10px; }}
+  .pro-show-more-btn {{ width: calc(100% - 20px); margin: 8px 10px 10px; }}
+}}
+
+/* ============================================================
    SECTION HEADER (Proタブ — h2 + 件数バッジ)
    ============================================================ */
 .section-header {{
@@ -4450,16 +4488,15 @@ python3 -m src.cli calculate-sedori-routes</pre>
         """監視候補テーブルを生成する（products テーブル由来）。
         market_prices_by_product: {product_id: [{source_id, price_type, price, currency, recorded_at}]}
         実際の価格データがある場合は価格テーブルを表示し、ない場合は検索チップのみ表示。
+        並び順: 国内外価格差大 → 海外sold → 海外価格あり → 国内価格あり
+        初期表示は上位6件、それ以降は「さらに表示」で展開。
         """
         mdata = market_prices_by_product or {}
+        INITIAL_VISIBLE = 6  # 初期表示件数
 
-        # カメラ優先、次にゲーム機
-        camera = [c for c in candidates if c["genre"] == "camera"]
-        others = [c for c in candidates if c["genre"] != "camera"]
-        ordered = camera + others
-
-        cards = []
-        for c in ordered:
+        # Pass 1: 全カードのデータ計算 → ソートキー付きリストに格納
+        card_data = []  # [(sort_key_tuple, card_html_str)]
+        for c in candidates:
             price     = c["official_price"]
             bp        = c["buyback_price"]
             shop      = c["shop_name"] or "—"
@@ -4467,7 +4504,8 @@ python3 -m src.cli calculate-sedori-routes</pre>
             pname_raw = c["product_name"]
             pname_esc = _esc(pname_raw)
             pname_enc = _urllib_parse.quote(pname_raw)
-            prod_id   = c.get("product_id", "")
+            prod_id    = c.get("product_id", "")
+            genre_attr = c.get("genre", "other")
 
             # 価格差表示（Pro向け：買取価格を主役にせず補助情報として表示）
             gap_html = ""
@@ -4684,7 +4722,30 @@ python3 -m src.cli calculate-sedori-routes</pre>
                 if summary_parts else ""
             )
 
-            cards.append(f"""<div class="watch-candidate-card pro-candidate-card">
+            # ── ソートキー・フィルタ属性の計算 ──
+            # price_gap は summary_parts 内で計算済みなので再計算
+            _price_gap = (ovs_max_price - dom_min_price) if (dom_min_price and ovs_max_price) else 0
+            _has_ovs_sold = any(
+                (r.get("price_basis") or "").strip() == "海外sold"
+                for r in overseas_rows
+            )
+            _needs_check = not domestic_rows or not overseas_rows
+            sort_key = (
+                _price_gap,                           # 1位: 国内外価格差 大きい順
+                1 if _has_ovs_sold else 0,            # 2位: eBay soldあり
+                1 if overseas_rows else 0,            # 3位: 海外価格あり
+                1 if domestic_rows else 0,            # 4位: 国内価格あり
+            )
+            _data_attrs = (
+                f'data-genre="{genre_attr}" '
+                f'data-has-overseas-sold="{1 if _has_ovs_sold else 0}" '
+                f'data-has-price-gap="{1 if _price_gap > 0 else 0}" '
+                f'data-has-overseas="{1 if overseas_rows else 0}" '
+                f'data-has-domestic="{1 if domestic_rows else 0}" '
+                f'data-needs-check="{1 if _needs_check else 0}"'
+            )
+
+            card_html = f"""<div class="watch-candidate-card pro-candidate-card" {_data_attrs}>
   <div class="pcc-header">
     <div class="pcc-name">{pname_esc}</div>
     <div class="pcc-badges">{sale_badge}</div>
@@ -4709,16 +4770,108 @@ python3 -m src.cli calculate-sedori-routes</pre>
     <div class="pcc-links-label">&#127758; 海外相場</div>
     {overseas_table_html}
   </div>
-</div>""")
+</div>"""
+            card_data.append((sort_key, card_html))
+
+        # ── Pass 2: ソート（価格差大 → 海外sold → 海外あり → 国内あり）──
+        card_data.sort(key=lambda x: x[0], reverse=True)
+
+        # ── Pass 3: 初期6件以降に pro-card-collapsed 付与 ──
+        rendered_cards = []
+        hidden_count = 0
+        for i, (_, ch) in enumerate(card_data):
+            if i >= INITIAL_VISIBLE:
+                ch = ch.replace(
+                    'class="watch-candidate-card pro-candidate-card"',
+                    'class="watch-candidate-card pro-candidate-card pro-card-collapsed"',
+                    1,
+                )
+                hidden_count += 1
+            rendered_cards.append(ch)
+
+        # ── フィルタバー ──
+        filter_bar_html = """<div class="pro-filter-bar">
+  <button class="pro-filter-btn active" data-filter="all">すべて</button>
+  <button class="pro-filter-btn" data-filter="camera">&#128247; カメラ</button>
+  <button class="pro-filter-btn" data-filter="game_console">&#127918; ゲーム機</button>
+  <button class="pro-filter-btn" data-filter="pc">&#128187; PC</button>
+  <button class="pro-filter-btn" data-filter="overseas-sold">&#127758; 海外soldあり</button>
+  <button class="pro-filter-btn" data-filter="price-gap">&#128200; 価格差あり</button>
+  <button class="pro-filter-btn" data-filter="needs-check">&#9888; 要確認</button>
+</div>"""
+
+        # ── さらに表示ボタン ──
+        show_more_html = ""
+        if hidden_count > 0:
+            show_more_html = (
+                f'<button class="pro-show-more-btn" id="pro-show-more-btn">'
+                f'&#9660; さらに{hidden_count}件を表示</button>'
+            )
+
+        # ── フィルタ + さらに表示 JS ──
+        js_block = """<script>
+(function(){
+  var bar  = document.querySelector('.pro-filter-bar');
+  var grid = document.getElementById('pro-cards-grid');
+  var mBtn = document.getElementById('pro-show-more-btn');
+  if (!bar || !grid) return;
+  /* さらに表示 */
+  if (mBtn) {
+    mBtn.addEventListener('click', function(){
+      grid.querySelectorAll('.pro-card-collapsed').forEach(function(c){
+        c.classList.remove('pro-card-collapsed');
+      });
+      mBtn.style.display = 'none';
+    });
+  }
+  /* フィルタ */
+  bar.addEventListener('click', function(e){
+    var btn = e.target.closest('.pro-filter-btn');
+    if (!btn) return;
+    bar.querySelectorAll('.pro-filter-btn').forEach(function(b){ b.classList.remove('active'); });
+    btn.classList.add('active');
+    var f = btn.getAttribute('data-filter');
+    var cards = grid.querySelectorAll('.watch-candidate-card');
+    cards.forEach(function(c){
+      var show = false;
+      if (f === 'all') {
+        show = !c.classList.contains('pro-card-collapsed');
+      } else if (f === 'camera') {
+        show = c.getAttribute('data-genre') === 'camera';
+      } else if (f === 'game_console') {
+        show = c.getAttribute('data-genre') === 'game_console';
+      } else if (f === 'pc') {
+        show = c.getAttribute('data-genre') === 'pc';
+      } else if (f === 'overseas-sold') {
+        show = c.getAttribute('data-has-overseas-sold') === '1';
+      } else if (f === 'price-gap') {
+        show = c.getAttribute('data-has-price-gap') === '1';
+      } else if (f === 'needs-check') {
+        show = c.getAttribute('data-needs-check') === '1';
+      }
+      c.style.display = show ? '' : 'none';
+    });
+    /* フィルタ適用中はさらに表示ボタンを隠す */
+    if (mBtn) mBtn.style.display = (f === 'all') ? '' : 'none';
+  });
+})();
+</script>"""
+
+        cards_html = "\n".join(rendered_cards) if rendered_cards else '<p class="empty-state">候補商品がありません。</p>'
 
         return f"""<div class="watch-card pro-watch-card">
-{"".join(cards) if cards else '<p class="empty-state">候補商品がありません。</p>'}
+{filter_bar_html}
+<div class="pro-cards-grid" id="pro-cards-grid">
+{cards_html}
+</div>
+{show_more_html}
 <p class="pro-price-basis-disclaimer">
 &#9888; 出品価格・成約価格・販売価格は意味が異なります。売買判断時は必ずリンク先で最新条件をご確認ください。
 </p>
 <p style="color:var(--text-3);font-size:0.78rem;margin-top:6px;padding:0 4px;">
 &#9888; リンク先は外部サービスです。相場確認のみを目的としています。売買判断はご自身でご確認ください。
 </p>
+{js_block}
 </div>"""
 
     # ----- Tab: 急騰/急落 -----

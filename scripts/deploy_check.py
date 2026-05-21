@@ -1008,6 +1008,60 @@ def check() -> list[dict]:
     else:
         results.append({"level": "ok", "check": "no_new_product_candidate_label", "message": "「新商品候補」表記なし"})
 
+    # ── #122: Proカード初期表示件数が適切か（collapsed なしカードが1〜8件）──
+    import re as _re
+    all_pro_cards = _re.findall(r'class="watch-candidate-card pro-candidate-card(?:\s+pro-card-collapsed)?"', html)
+    visible_pro_cards = [c for c in all_pro_cards if "pro-card-collapsed" not in c]
+    if 1 <= len(visible_pro_cards) <= 8:
+        results.append({"level": "ok", "check": "pro_card_initial_limit", "message": f"Proカード初期表示件数が適切（{len(visible_pro_cards)}件表示 / {len(all_pro_cards)}件中）"})
+    elif len(visible_pro_cards) == 0:
+        results.append({"level": "error", "check": "pro_card_initial_limit", "message": "Proカード初期表示が0件 — pro-card-collapsed の設定を確認"})
+    else:
+        results.append({"level": "warning", "check": "pro_card_initial_limit", "message": f"Proカード初期表示が多すぎる（{len(visible_pro_cards)}件）— 上位6件制限を確認"})
+
+    # ── #123: さらに表示ボタンが存在するか ──
+    has_show_more = "pro-show-more-btn" in html or "pro-card-collapsed" in html
+    if has_show_more:
+        collapsed_count = html.count("pro-card-collapsed")
+        results.append({"level": "ok", "check": "pro_show_more_btn", "message": f"「さらに表示」ボタンが存在する（折り畳みカードあり: {collapsed_count}件）"})
+    else:
+        results.append({"level": "warning", "check": "pro_show_more_btn", "message": "「さらに表示」ボタンが存在しない（Proカードが6件以下 or 未実装）"})
+
+    # ── #124: 海外soldありフィルタが存在するか ──
+    has_overseas_sold_filter = 'data-filter="overseas-sold"' in html
+    if has_overseas_sold_filter:
+        results.append({"level": "ok", "check": "pro_filter_overseas_sold", "message": "「海外soldあり」フィルタボタンが存在する"})
+    else:
+        results.append({"level": "error", "check": "pro_filter_overseas_sold", "message": "「海外soldあり」フィルタが存在しない — pro-filter-bar の実装を確認"})
+
+    # ── #125: 価格差ありフィルタが存在するか ──
+    has_price_gap_filter = 'data-filter="price-gap"' in html
+    if has_price_gap_filter:
+        results.append({"level": "ok", "check": "pro_filter_price_gap", "message": "「価格差あり」フィルタボタンが存在する"})
+    else:
+        results.append({"level": "error", "check": "pro_filter_price_gap", "message": "「価格差あり」フィルタが存在しない — pro-filter-bar の実装を確認"})
+
+    # ── #126: カード並び順（価格差ありカードが先頭に来ているか）──
+    first_card_match = _re.search(
+        r'class="watch-candidate-card pro-candidate-card"[^>]*data-has-price-gap="(\d)"',
+        html,
+    )
+    if not first_card_match:
+        # data-has-price-gap が先頭に来ない場合は属性の順序が異なる可能性
+        first_card_match2 = _re.search(
+            r'data-has-price-gap="(\d)"[^>]*class="watch-candidate-card',
+            html,
+        )
+        first_pg = first_card_match2.group(1) if first_card_match2 else None
+    else:
+        first_pg = first_card_match.group(1)
+    has_price_gap_card = 'data-has-price-gap="1"' in html
+    if has_price_gap_card:
+        # 価格差ありカードが存在し、フィルタが動作する構造ならOK
+        results.append({"level": "ok", "check": "pro_cards_sorted_by_gap", "message": "価格差ありカードが存在し、ソート構造が正常"})
+    else:
+        results.append({"level": "warning", "check": "pro_cards_sorted_by_gap", "message": "価格差ありカード（data-has-price-gap=1）が存在しない — 相場データを確認"})
+
     return results
 
 

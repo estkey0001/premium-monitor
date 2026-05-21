@@ -159,6 +159,35 @@ class DailyLPGenerator:
         except Exception:
             market_prices_by_product = {}
 
+        # Proカード fallback: watch_candidates=0件でも price_history データがある商品を表示
+        if not watch_candidates and market_prices_by_product:
+            _prod_meta = {_p.id: _p for _p in _all_products}
+            _fallback_candidates = []
+            for _prod_id, _rows in market_prices_by_product.items():
+                _p = _prod_meta.get(_prod_id)
+                if not _p:
+                    continue
+                _genre = getattr(_p, "genre", "")
+                # Pro向け対象ジャンルのみ（camera / game_console）
+                if _genre not in ("camera", "game_console"):
+                    continue
+                _has_used = any(r.get("price_type") in ("used", "market", "flea_market") for r in _rows)
+                _has_ovs  = any(r.get("price_type") == "overseas" for r in _rows)
+                if not (_has_used or _has_ovs):
+                    continue
+                _fallback_candidates.append({
+                    "product_id":    _prod_id,
+                    "product_name":  _p.name,
+                    "genre":         _genre,
+                    "official_price": getattr(_p, "official_price", None),
+                    "buyback_price": None,
+                    "shop_name":     None,
+                    "flags":         [],
+                    "sale_method":   "unknown",
+                })
+            if _fallback_candidates:
+                watch_candidates = _fallback_candidates
+
         # HTML生成
         page_html = self._render_page(
             date_str=date_str,
@@ -4329,12 +4358,29 @@ python3 -m src.cli calculate-sedori-routes</pre>
         # ----- Pro向け監視候補（フォールバック含む） -----
         if watch_candidates:
             has_confirmed = bool(advanced_deals or advanced_snaps)
-            if not has_confirmed:
+            # fallback candidate かどうかは flags が空で product_id のみ持つ辞書か確認
+            is_fallback = (
+                not has_confirmed
+                and all(
+                    isinstance(c, dict) and not c.get("flags")
+                    and c.get("product_id") and not c.get("buyback_price")
+                    for c in watch_candidates
+                )
+            )
+            if is_fallback:
+                parts.append(
+                    '<div class="caution adv-fallback-notice" style="margin:16px 0 20px;">'
+                    '&#128204; <strong>手動確認データによる市場価格表示</strong><br>'
+                    'price_history に価格データがある商品を表示しています。'
+                    '価格は手動確認データです。最新価格は各リンク先でご確認ください。'
+                    '</div>'
+                )
+            elif not has_confirmed:
                 parts.append("""<div class="caution adv-fallback-notice" style="margin:16px 0 20px;">
 &#8505;&#65039; <strong>現在、Pro向けの確定候補は少ないため、価格差・希少性・海外相場差が大きい監視候補を表示しています。</strong><br>
 中古市場や海外相場のデータが入り次第、確定候補として昇格します。
 </div>""")
-            parts.append('<div class="section-header"><h2>&#128204; Pro向け監視候補</h2><span class="section-count">価格差・希少性スコア上位</span></div>')
+            parts.append('<div class="section-header" id="category-pro-camera"><h2>&#128204; Pro向け市場価格</h2><span class="section-count">二次流通・海外相場</span></div>')
             parts.append(self._watch_candidates_table(watch_candidates, market_prices_by_product=market_prices_by_product or {}))
 
         # カメラBeginnerDealを追加表示

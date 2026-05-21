@@ -2864,6 +2864,10 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 .lottery-status-unknown {{ background: #F1F5F9; color: #64748B; }}
 .lottery-meta {{ display: flex; flex-wrap: wrap; gap: 12px; font-size: 0.82rem; color: var(--text-2); margin-bottom: 10px; }}
 .lottery-official-links {{ display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }}
+.lottery-ref-badge {{ display: inline-block; padding: 2px 8px; border-radius: 99px; font-size: 0.72rem; font-weight: 600; background: #EEF2FF; color: #4338CA; margin-left: 6px; vertical-align: middle; }}
+.lottery-no-link {{ display: inline-block; font-size: 0.82rem; color: var(--text-2); padding: 6px 10px; background: var(--surface2); border-radius: 8px; }}
+.lottery-checked-at {{ display: inline-block; font-size: 0.78rem; color: var(--text-3, #94A3B8); margin-top: 6px; }}
+.lottery-link-btn {{ font-size: 0.85rem; padding: 7px 14px; }}
 
 /* Ranking nav */
 .rank-row-clickable:hover {{ background: var(--surface2); }}
@@ -3167,65 +3171,74 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 
     # 抽選情報リファレンスカード（DBデータがない場合に表示する静的カード）
     _LOTTERY_REFERENCE_ITEMS = [
-        # ── 現在進行中・近日開始 ──────────────────────────────────────
+        # ── 受付中 ───────────────────────────────────────────────────
+        {
+            "product_name": "Nintendo Switch 2 限定モデル",
+            "brand": "Nintendo",
+            "status": "upcoming",
+            "note": "通常モデルは2025年6月発売済み。限定エディションの抽選は随時マイニンテンドーストアで告知予定。",
+            "url": "https://store.nintendo.co.jp/category/NINTENDO_SWITCH_2",
+            "sale_method": "抽選（マイニンテンドーストア予定）",
+            "official_price": "未定",
+            "link_type": "sale_page",
+            "checked_at": "2026-05-21",
+        },
+        # ── 近日開始 ─────────────────────────────────────────────────
         {
             "product_name": "RICOH GR IV",
             "brand": "RICOH",
             "status": "upcoming",
-            # entry_end_at 未定のため unknown 扱い（期限切れ自動判定はスキップ）
-            "note": "発売未定。GR IIIx後継機として注目。発表があり次第、抽選販売の可能性が高い。",
+            "note": "発売時期未定。GR IIIx 後継として注目。発売時は抽選販売の可能性が高い。発表情報を要確認。",
             "url": "https://www.ricoh-imaging.co.jp/japan/products/cameras/gr/",
             "sale_method": "未定（発売時は抽選の可能性大）",
-            "link_type": "product",
+            "official_price": "未定",
+            "link_type": "product_page",
+            "checked_at": "2026-05-21",
         },
         {
             "product_name": "RICOH GR IV HDF",
             "brand": "RICOH",
             "status": "upcoming",
-            "note": "ハイブリッドディフュージョンフィルター搭載モデル。GR IVと同時または後続発売の可能性。",
+            "note": "ハイブリッドディフュージョンフィルター搭載モデル。GR IV と同時または後続発売の可能性。限定抽選の可能性大。",
             "url": "https://www.ricoh-imaging.co.jp/japan/products/cameras/gr/",
             "sale_method": "未定（限定抽選の可能性）",
-            "link_type": "product",
+            "official_price": "未定",
+            "link_type": "product_page",
+            "checked_at": "2026-05-21",
         },
         {
-            "product_name": "Nintendo Switch 2 限定モデル",
-            "brand": "Nintendo",
-            "status": "upcoming",
-            "note": "通常モデルは2025年6月発売済み。限定エディションは抽選販売見込み。マイニンテンドーストアで要確認。",
-            "url": "https://store.nintendo.co.jp/category/NINTENDO_SWITCH_2",
-            "sale_method": "抽選（マイニンテンドーストア）",
-            "link_type": "sale",
-        },
-        {
-            "product_name": "Apple iPhone 17 Pro Max",
+            "product_name": "Apple iPhone 17 Pro / Pro Max",
             "brand": "Apple",
             "status": "upcoming",
-            "note": "2025年9月発売見込み。発売直後は在庫不足でプレ値化の傾向あり。Apple Storeで予約を推奨。",
+            "note": "2025年9月発売見込み。発売直後は在庫不足でプレ値化の傾向。Apple Store で早期予約を推奨。",
             "url": "https://www.apple.com/jp/shop/buy-iphone",
             "sale_method": "Apple Store（先着・予約）",
-            "link_type": "sale",
+            "official_price": "未発表",
+            "link_type": "reservation_page",
+            "checked_at": "2026-05-21",
         },
-        # ── 発売中・販売継続中（参考） ────────────────────────────────
+        # ── 要確認（販売中・抽選受付状況要確認） ─────────────────────
         {
             "product_name": "FUJIFILM X100VI",
             "brand": "FUJIFILM",
             "status": "active",
-            "note": "2024年2月発売。抽選受付は終了。中古市場でプレ値継続中。公式での入手は在庫次第。",
+            "note": "2024年2月発売。抽選受付は終了済み。中古市場でプレ値継続中。公式での入手は在庫次第。",
             "url": "https://fujifilm-x.com/ja-jp/products/cameras/x100vi/",
             "sale_method": "通常販売（在庫次第）",
             "official_price": "¥230,230（税込）",
-            "link_type": "product",
-            # 抽選は終了済みだが商品自体は販売継続 → active 維持
+            "link_type": "product_page",
+            "checked_at": "2026-05-21",
         },
         {
             "product_name": "PlayStation 5 Pro",
             "brand": "Sony Interactive Entertainment",
             "status": "active",
-            "note": "2024年11月発売。現在は通常販売中。限定エディションは抽選または先着順。",
+            "note": "2024年11月発売。通常販売中。限定エディションは抽選または先着順。PS Directでの購入を推奨。",
             "url": "https://direct.playstation.com/ja-jp/buy-consoles/playstation5-console",
             "sale_method": "通常販売 / 限定版は抽選",
             "official_price": "¥119,980（税込）",
-            "link_type": "sale",
+            "link_type": "sale_page",
+            "checked_at": "2026-05-21",
         },
     ]
 
@@ -3280,9 +3293,11 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             item["_is_reference"] = True
             all_items.append(item)
 
-        # active / upcoming を上部表示
+        # ステータス優先順: active(受付中) → upcoming(近日開始) → unknown(要確認) → closed(終了済み)
+        _priority = {"active": 0, "upcoming": 1, "unknown": 2, "closed": 3}
         active_items = [it for it in all_items if it["_auto_status"] in ("active", "upcoming", "unknown")]
         closed_items = [it for it in all_items if it["_auto_status"] == "closed"]
+        active_items.sort(key=lambda x: _priority.get(x["_auto_status"], 9))
 
         if active_items:
             parts.append('<div class="sec-head" style="margin-top:20px"><div class="sec-title">&#128204; 受付中・近日開始・要確認</div></div>')
@@ -3320,47 +3335,83 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 
     def _lottery_card_html(self, ev: dict, is_reference: bool = False) -> str:
         """抽選情報カード HTML を生成する。_auto_status があればそちらを優先。"""
-        # _auto_status は _section_lottery で自動判定済みの値
+        # ステータス
         status = ev.get("_auto_status") or ev.get("status", "unknown") or "unknown"
         status_label = {
             "active":   "受付中 / 販売中",
             "upcoming": "近日開始",
             "closed":   "終了済み",
             "unknown":  "要確認",
-        }.get(status, status)
+        }.get(status, "要確認")
         status_cls = {
             "active":   "lottery-status-open",
             "upcoming": "lottery-status-upcoming",
             "closed":   "lottery-status-closed",
             "unknown":  "lottery-status-unknown",
         }.get(status, "lottery-status-unknown")
-        url = ev.get("url", "")
-        _link_type = ev.get("link_type", "official")
+
+        # link_type → 表示ラベル（新仕様5種 + 旧仕様後方互換）
+        _link_type = ev.get("link_type", "official_top")
         _link_label_map = {
+            "lottery_page":     "抽選ページを確認",
+            "reservation_page": "予約ページを確認",
+            "sale_page":        "販売ページを確認",
+            "product_page":     "商品ページを確認",
+            "official_top":     "公式サイトで要確認",
+            # 旧仕様（後方互換）
             "lottery":     "抽選ページを確認",
             "reservation": "予約ページを確認",
             "sale":        "販売ページを確認",
             "product":     "商品ページを確認",
-            "official":    "公式サイトを確認",
+            "official":    "公式サイトで要確認",
         }
-        _link_label = _link_label_map.get(_link_type, "公式サイトを確認")
-        link_btn = (f'<a href="{_esc(url)}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" data-track="lottery_click">&#127915; {_link_label}</a>'
-                    if url else '<span class="no-link-shop" style="font-size:0.78rem;color:var(--ink3)">リンク未登録 / 公式サイトで要確認</span>')
-        entry_start = ev.get("entry_start_at", "") or ""
-        entry_end   = ev.get("entry_end_at", "") or ""
-        result_at   = ev.get("result_announcement_at", "") or ""
-        official_price = ev.get("official_price", "") or ev.get("price", "") or ""
-        sale_method = ev.get("sale_method", "") or ""
-        note = ev.get("note", "") or ""
-        ref_badge = '<span style="font-size:0.65rem;background:#7C5CFC22;color:#7C5CFC;padding:1px 7px;border-radius:99px;font-weight:700">公式リンク</span>' if is_reference else ''
+        _link_label = _link_label_map.get(_link_type, "公式サイトで要確認")
 
+        url = ev.get("url") or ""
+        if url:
+            link_btn = (
+                f'<a href="{_esc(url)}" target="_blank" rel="noopener noreferrer" '
+                f'class="btn btn-secondary lottery-link-btn" data-track="lottery_click" '
+                f'data-link-type="{_esc(_link_type)}">&#127915; {_link_label}</a>'
+            )
+        else:
+            # データなし: メッセージ表示
+            link_btn = '<span class="lottery-no-link">抽選情報未確認。公式商品ページで要確認。</span>'
+
+        # 各フィールド
+        entry_start    = str(ev.get("entry_start_at") or ev.get("entry_start") or "")
+        entry_end      = str(ev.get("entry_end_at")   or ev.get("entry_end")   or "")
+        result_at      = str(ev.get("result_announcement_at") or "")
+        official_price = str(ev.get("official_price") or ev.get("price") or "")
+        sale_method    = str(ev.get("sale_method") or "")
+        note           = str(ev.get("note") or "")
+        checked_at     = str(ev.get("checked_at") or ev.get("updated_at") or "")
+        brand          = str(ev.get("brand") or "")
+
+        # 参考情報バッジ
+        ref_badge = (
+            '<span class="lottery-ref-badge">参考情報</span>'
+            if is_reference else ''
+        )
+
+        # 受付日程
         date_row = ""
-        if entry_start or entry_end:
-            date_row = f'<span>&#128197; 受付: {_esc(str(entry_start))} 〜 {_esc(str(entry_end))}</span>'
-        result_row = f'<span>&#128220; 当選発表: {_esc(str(result_at))}</span>' if result_at else ''
-        price_row  = f'<span>&#128176; 公式価格: {_esc(str(official_price))}</span>' if official_price else ''
-        method_row = f'<span>&#127919; 販売方式: {_esc(str(sale_method))}</span>' if sale_method else ''
-        note_row   = f'<div class="lottery-note">{_esc(str(note))}</div>' if note else ''
+        if entry_start and entry_start not in ("", "None"):
+            date_row = f'<span>&#128197; 受付開始: {_esc(entry_start[:10])}</span>'
+        if entry_end and entry_end not in ("", "None"):
+            end_label = "受付終了: " if entry_start else "受付終了: "
+            date_row += f'<span>&#128197; 受付終了: {_esc(entry_end[:10])}</span>'
+
+        # 各行 HTML
+        result_row = f'<span>&#128220; 当選発表: {_esc(result_at[:10])}</span>' if result_at and result_at != "None" else ''
+        price_row  = f'<span>&#128176; 公式価格: {_esc(official_price)}</span>'  if official_price and official_price != "None" else ''
+        method_row = f'<span>&#127919; 販売方式: {_esc(sale_method)}</span>'     if sale_method and sale_method != "None" else ''
+        brand_row  = f'<span>&#127468; {_esc(brand)}</span>'                     if brand else ''
+        note_row   = f'<div class="lottery-note">{_esc(note)}</div>'             if note and note != "None" else ''
+        checked_row = (
+            f'<span class="lottery-checked-at">&#128204; 最終確認: {_esc(checked_at[:10])}</span>'
+            if checked_at and checked_at not in ("", "None") else ''
+        )
 
         return f'''<div class="lottery-card{'  lottery-ref-card' if is_reference else ''}">
   <div class="lottery-card-header">
@@ -3368,50 +3419,16 @@ tr.sc-route-review {{ background: #FFFBEB; }}
     <span class="lottery-status-badge {status_cls}">{_esc(status_label)}</span>
   </div>
   <div class="lottery-meta">
-    <span>&#127468; {_esc(ev.get("brand", ""))}</span>
+    {brand_row}
     {price_row}
     {method_row}
     {date_row}
     {result_row}
+    {checked_row}
   </div>
   {note_row}
   {link_btn}
 </div>'''
-
-        for ev in lottery_events:
-            if not isinstance(ev, dict):
-                try:
-                    ev = dict(ev)
-                except Exception:
-                    continue
-            status = ev.get("status", "unknown")
-            status_label = {"active": "受付中", "upcoming": "近日開始", "closed": "終了", "unknown": "未確認"}.get(status, status)
-            status_cls = {"active": "lottery-status-open", "upcoming": "lottery-status-upcoming", "closed": "lottery-status-closed"}.get(status, "lottery-status-unknown")
-
-            url = ev.get("url", "")
-            link_btn = (f'<a href="{_esc(url)}" target="_blank" rel="noopener" class="btn btn-secondary" data-track="lottery_click">&#127915; 公式ページへ</a>'
-                        if url else '')
-
-            entry_start = ev.get("entry_start_at", "") or ""
-            entry_end = ev.get("entry_end_at", "") or ""
-            result_at = ev.get("result_announcement_at", "") or ""
-
-            result_html = f'<span>&#128220; 当選発表: {_esc(str(result_at))}</span>' if result_at else ''
-
-            parts.append(f'''<div class="lottery-card">
-  <div class="lottery-card-header">
-    <div class="lottery-name">{_esc(ev.get("product_name", ""))}</div>
-    <span class="lottery-status-badge {status_cls}">{_esc(status_label)}</span>
-  </div>
-  <div class="lottery-meta">
-    <span>&#127468; {_esc(ev.get("brand", ""))}</span>
-    <span>&#128197; 受付: {_esc(str(entry_start))} 〜 {_esc(str(entry_end))}</span>
-    {result_html}
-  </div>
-  {link_btn}
-</div>''')
-
-        return '\n'.join(parts)
 
     def _section_tabs(self, beginner_easy, beginner_watch,
 

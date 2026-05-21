@@ -844,6 +844,20 @@ def check() -> list[dict]:
     else:
         results.append({"level": "warning", "check": "pro_no_price_chips", "message": "Pro価格表の未取得チップが見つからない（全サイト価格取得済みか、データなしの可能性）"})
 
+    # 102. 抽選カードに最終確認日（lottery-checked-at）が表示されている
+    has_lottery_checked_at = "lottery-checked-at" in html
+    if has_lottery_checked_at:
+        results.append({"level": "ok", "check": "lottery_checked_at", "message": "抽選カードに最終確認日（lottery-checked-at）が表示されている"})
+    else:
+        results.append({"level": "warning", "check": "lottery_checked_at", "message": "抽選カードの最終確認日（lottery-checked-at）が見つからない"})
+
+    # 103. 抽選カードに空の href が存在しない（lottery_click データ付きリンクに href="" がない）
+    lottery_empty_links = re.findall(r'data-track="lottery_click"[^>]*href=["\']["\']', html)
+    if lottery_empty_links:
+        results.append({"level": "error", "check": "lottery_no_empty_link", "message": f"抽選カードに空リンク（href=\"\"）が {len(lottery_empty_links)}件存在する"})
+    else:
+        results.append({"level": "ok", "check": "lottery_no_empty_link", "message": "抽選カードに空リンクなし"})
+
     # 101. Hero と announce bar で同一の件数（「本日確認」）が表示されている
     # 両方から件数を抽出して一致するか検証
     hero_counts = re.findall(r'本日確認.*?<strong>(\d+)</strong>', html)

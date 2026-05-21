@@ -200,12 +200,13 @@ def check() -> list[dict]:
         or 'data-user-level="expert_only"' in html
     )
     has_watch_candidates = 'watch-candidate-card' in html
+    has_pro_candidate_card = 'pro-candidate-card' in html
     if has_advanced_confirmed:
         results.append({"level": "ok", "check": "advanced_in_tab", "message": "上級者向け確定案件が存在する"})
-    elif has_watch_candidates:
-        results.append({"level": "ok", "check": "advanced_in_tab", "message": "上級者向けタブに監視候補が表示されている（フォールバック正常）"})
+    elif has_watch_candidates or has_pro_candidate_card:
+        results.append({"level": "ok", "check": "advanced_in_tab", "message": "Pro向けタブに市場価格カードが表示されている（price_history fallback 正常）"})
     else:
-        results.append({"level": "warning", "check": "advanced_in_tab", "message": "上級者向けタブにコンテンツなし（watch_candidates も空）"})
+        results.append({"level": "error", "check": "advanced_in_tab", "message": "Pro向けタブにコンテンツなし（price_history fallback が動作していない）"})
 
     # 18. 買取リンクが1つ以上存在するか
     has_buyback_link = bool(re.search(
@@ -900,7 +901,46 @@ def check() -> list[dict]:
     else:
         results.append({"level": "warning", "check": "count_consistency", "message": "Hero または announce bar の件数を取得できなかった"})
 
-    # 108. 固定メニューが商品ジャンルより上にある（main-tab-nav が cat-genre-bar より前）
+    # 108. Pro向けカードが0件にならない（price_history fallback が動作している）
+    has_pro_watch_card = 'pro-candidate-card' in html or 'watch-candidate-card' in html
+    if has_pro_watch_card:
+        results.append({"level": "ok", "check": "pro_card_not_empty", "message": "Pro向けカード（市場価格テーブル）が表示されている"})
+    else:
+        results.append({"level": "error", "check": "pro_card_not_empty", "message": "Pro向けカードが0件 — price_history fallback が動作していない可能性"})
+
+    # 109. price_history fallback の案内文が表示されている（fallback 時の注意バナー）
+    has_fallback_notice = "adv-fallback-notice" in html
+    if has_fallback_notice:
+        results.append({"level": "ok", "check": "pro_fallback_notice", "message": "Pro向けfallback表示の案内文が表示されている"})
+    else:
+        results.append({"level": "warning", "check": "pro_fallback_notice", "message": "Pro向けfallback案内文が見つからない（watch_candidatesあり or 表示なしの可能性）"})
+
+    # 110. price_basis ラベルが実際のLP上に表示されている（pro-price-basis クラスで包まれた種別テキスト）
+    has_basis_label_in_table = bool(re.search(r'class="pro-price-basis">[^<]+<', html))
+    if has_basis_label_in_table:
+        results.append({"level": "ok", "check": "price_basis_in_table", "message": "Pro価格表に price_basis テキスト（出品価格・中古販売価格等）が表示されている"})
+    else:
+        results.append({"level": "warning", "check": "price_basis_in_table", "message": "pro-price-basis クラスにテキストなし（価格データなしの可能性）"})
+
+    # 111. eBay sold ラベルが実際にLP上に表示されている
+    has_ebay_sold_in_table = "海外sold" in html
+    if has_ebay_sold_in_table:
+        results.append({"level": "ok", "check": "ebay_sold_in_table", "message": "「海外sold」ラベルがLP上に表示されている"})
+    else:
+        results.append({"level": "warning", "check": "ebay_sold_in_table", "message": "「海外sold」ラベルがない（eBay fallback データ未取得の可能性）"})
+
+    # 112. 出品価格 / 中古販売価格ラベルが表示されている
+    has_listing_price = "出品価格" in html
+    has_used_price_label = "中古販売価格" in html
+    if has_listing_price and has_used_price_label:
+        results.append({"level": "ok", "check": "price_basis_labels_shown", "message": "「出品価格」「中古販売価格」ラベルがLP上に表示されている"})
+    elif has_listing_price or has_used_price_label:
+        results.append({"level": "ok", "check": "price_basis_labels_shown", "message": "price_basis ラベルが少なくとも1種類表示されている"})
+    else:
+        results.append({"level": "warning", "check": "price_basis_labels_shown", "message": "「出品価格」「中古販売価格」ラベルが見つからない（price_history データ未取得の可能性）"})
+
+    # 旧チェック番号を振り直し（109→113以降）
+    # 113. 固定メニューが商品ジャンルより上にある（main-tab-nav が cat-genre-bar より前）
     pos_tab_nav  = html.find('id="main-tab-nav"')
     pos_cat_genre = html.find('class="cat-genre-bar"')
     if pos_tab_nav != -1 and pos_cat_genre != -1:
@@ -911,49 +951,49 @@ def check() -> list[dict]:
     else:
         results.append({"level": "error", "check": "fixed_nav_above_genre", "message": "main-tab-nav または cat-genre-bar が見つからない"})
 
-    # 109. 商品ジャンルメニューが固定メニューと分離されている（cat-nav-wrap が独立要素）
+    # 113. 商品ジャンルメニューが固定メニューと分離されている（cat-nav-wrap が独立要素）
     has_cat_nav_wrap = "cat-nav-wrap" in html
     if has_cat_nav_wrap:
         results.append({"level": "ok", "check": "genre_nav_separated", "message": "商品ジャンルメニューが固定メニューと分離されたブロック（cat-nav-wrap）にある"})
     else:
         results.append({"level": "error", "check": "genre_nav_separated", "message": "cat-nav-wrap が見つからない（ジャンルナビが未分離の可能性）"})
 
-    # 110. スマホ用横スクロールUIがある（tab-nav が overflow-x: auto の CSS を持つ）
+    # 114. スマホ用横スクロールUIがある（tab-nav が overflow-x: auto の CSS を持つ）
     has_scroll_ui = "overflow-x: auto" in html or "overflow-x:auto" in html
     if has_scroll_ui:
         results.append({"level": "ok", "check": "mobile_scroll_nav", "message": "スマホ横スクロールUI（overflow-x: auto）がCSSに定義されている"})
     else:
         results.append({"level": "warning", "check": "mobile_scroll_nav", "message": "スマホ横スクロールUIが見つからない"})
 
-    # 111. 24時間以上古い案件に対する鮮度バナー警告ロジックが存在する（CSS クラス定義）
+    # 115. 24時間以上古い案件に対する鮮度バナー警告ロジックが存在する（CSS クラス定義）
     has_stale_warn_css = "data-stale-warn" in html
     if has_stale_warn_css:
         results.append({"level": "ok", "check": "stale_24h_warning_css", "message": "24時間超古いデータの警告バナーCSS（data-stale-warn）が定義されている"})
     else:
         results.append({"level": "warning", "check": "stale_24h_warning_css", "message": "data-stale-warn CSS が見つからない"})
 
-    # 112. 48時間以上古い案件の強警告CSS が存在する
+    # 116. 48時間以上古い案件の強警告CSS が存在する
     has_stale_critical_css = "data-stale-critical" in html
     if has_stale_critical_css:
         results.append({"level": "ok", "check": "stale_48h_critical_css", "message": "48時間超古いデータの強警告バナーCSS（data-stale-critical）が定義されている"})
     else:
         results.append({"level": "warning", "check": "stale_48h_critical_css", "message": "data-stale-critical CSS が見つからない"})
 
-    # 113. RICOH GR IV が「一次抽選終了 / 次回未定」になっている
+    # 117. RICOH GR IV が「一次抽選終了 / 次回未定」になっている
     has_gr4_closed = "一次抽選終了" in html
     if has_gr4_closed:
         results.append({"level": "ok", "check": "gr4_lottery_closed", "message": "RICOH GR IV が「一次抽選終了」として表示されている"})
     else:
         results.append({"level": "warning", "check": "gr4_lottery_closed", "message": "「一次抽選終了」表記が見つからない（RICOH GR IV 抽選状態要確認）"})
 
-    # 114. RICOH GR IV に指定の公式ストアURLが入っている
+    # 118. RICOH GR IV に指定の公式ストアURLが入っている
     has_gr4_url = "S0001551" in html or "ricohimagingstore.com" in html
     if has_gr4_url:
         results.append({"level": "ok", "check": "gr4_official_url", "message": "RICOH GR IV に公式ストア直リンク（ricohimagingstore.com）が含まれている"})
     else:
         results.append({"level": "warning", "check": "gr4_official_url", "message": "RICOH GR IV の公式ストアURL（ricohimagingstore.com）が見つからない"})
 
-    # 115. iPhone 17 Pro / Pro Max が「近日開始」「候補」「新商品候補」扱いされていない
+    # 119. iPhone 17 Pro / Pro Max が「近日開始」「候補」「新商品候補」扱いされていない
     iphone17_upcoming = bool(re.search(r'iPhone\s+17\s+Pro[^<]{0,100}近日開始', html))
     iphone17_candidate = bool(re.search(r'iPhone\s+17\s+Pro[^<]{0,100}(新商品候補|候補扱い)', html))
     if iphone17_upcoming or iphone17_candidate:
@@ -961,7 +1001,7 @@ def check() -> list[dict]:
     else:
         results.append({"level": "ok", "check": "iphone17_not_upcoming", "message": "iPhone 17 Pro / Pro Max が「近日開始」「候補」扱いではない"})
 
-    # 116. 「新商品候補」という表記がない
+    # 120. 「新商品候補」という表記がない
     has_new_product_candidate = "新商品候補" in html
     if has_new_product_candidate:
         results.append({"level": "error", "check": "no_new_product_candidate_label", "message": "「新商品候補」という表記が存在する（速報タブから削除してください）"})

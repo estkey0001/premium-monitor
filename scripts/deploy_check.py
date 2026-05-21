@@ -795,6 +795,35 @@ def check() -> list[dict]:
     else:
         results.append({"level": "warning", "check": "freshness_shows_date", "message": "鮮度ラベルに日付（MM/DD）が見つからない（manual データなし、またはフォーマット変更の可能性）"})
 
+    # 95. 「本日確認」ラベルが使われている（曖昧な「本日○件」の代わり）
+    has_hontou_kakunin = "本日確認" in html
+    if has_hontou_kakunin:
+        results.append({"level": "ok", "check": "count_label_clarity", "message": "「本日確認」ラベルが使われている（件数定義が明確）"})
+    else:
+        results.append({"level": "warning", "check": "count_label_clarity", "message": "「本日確認」ラベルが見つからない — 曖昧な「本日○件」のまま"})
+
+    # 96. タブバッジ（tab-count）が初心者タブに存在する（ボタン内の直接の子 span のみ対象）
+    beginner_tab_badge = re.search(r'data-tab="beginner"[^>]*>[^<]*<span class="tab-count">(\d+)</span>', html)
+    if beginner_tab_badge:
+        badge_num = int(beginner_tab_badge.group(1))
+        results.append({"level": "ok", "check": "beginner_tab_badge", "message": f"初心者タブバッジが存在する（{badge_num}件）"})
+    else:
+        results.append({"level": "warning", "check": "beginner_tab_badge", "message": "初心者タブのバッジ数が見つからない"})
+
+    # 97. Hero と announce bar で同一の件数（「本日確認」）が表示されている
+    # 両方から件数を抽出して一致するか検証
+    hero_counts = re.findall(r'本日確認.*?<strong>(\d+)</strong>', html)
+    announce_counts = re.findall(r'本日確認\s*(\d+)\s*件', html)
+    if hero_counts and announce_counts:
+        hero_n = int(hero_counts[0])
+        announce_n = int(announce_counts[0])
+        if hero_n == announce_n:
+            results.append({"level": "ok", "check": "count_consistency", "message": f"Hero と announce bar の件数が一致（{hero_n}件）"})
+        else:
+            results.append({"level": "error", "check": "count_consistency", "message": f"Hero({hero_n}件) と announce bar({announce_n}件) の件数が不一致"})
+    else:
+        results.append({"level": "warning", "check": "count_consistency", "message": "Hero または announce bar の件数を取得できなかった"})
+
     return results
 
 

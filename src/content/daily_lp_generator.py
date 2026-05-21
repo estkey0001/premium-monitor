@@ -1492,6 +1492,19 @@ a[href], button, [role="tab"], [role="button"],
 .pro-row-has-price {{ background: rgba(0,200,150,0.04); }}
 .pro-action-cell {{ text-align: right; white-space: nowrap; }}
 .pro-meta-cell {{ font-size: 0.73rem; color: var(--ink3); white-space: nowrap; }}
+.pro-basis-cell {{ white-space: nowrap; }}
+.pro-price-basis {{
+  display: inline-block; font-size: 0.72rem; padding: 2px 7px;
+  border-radius: 99px; background: #EEF2FF; color: #4338CA;
+  font-weight: 600; white-space: nowrap;
+}}
+.pro-price-basis-unknown {{ background: var(--surface-2); color: var(--ink3); }}
+.pro-price-basis-disclaimer {{
+  font-size: 0.78rem; color: var(--ink2);
+  background: #FFFBEB; border: 1px solid #FDE68A;
+  border-radius: 6px; padding: 7px 12px;
+  margin: 10px 4px 4px; line-height: 1.5;
+}}
 /* Pro価格表: 未取得チップエリア */
 .pro-no-price-section {{
   margin: 6px 0 0; padding: 6px 0 2px;
@@ -4387,14 +4400,20 @@ python3 -m src.cli calculate-sedori-routes</pre>
             dtrows = []
             for sid, slabel, surl, db_row in dom_has:
                 pprice = db_row.get("price", 0)
+                pbasis = db_row.get("price_basis") or ""
                 freshness = self._freshness_label(
                     db_row.get("recorded_at") or db_row.get("observed_at", ""),
                     db_row.get("data_source", "")
+                )
+                basis_cell = (
+                    f'<span class="pro-price-basis">{_esc(pbasis)}</span>'
+                    if pbasis else '<span class="pro-price-basis pro-price-basis-unknown">—</span>'
                 )
                 dtrows.append(
                     f'<tr class="pro-domestic-row pro-row-has-price">'
                     f'<td class="pro-src-cell"><strong class="pro-src-name">{_esc(slabel)}</strong></td>'
                     f'<td class="pro-price-cell"><strong class="price-value">¥{pprice:,}</strong></td>'
+                    f'<td class="pro-basis-cell">{basis_cell}</td>'
                     f'<td class="pro-meta-cell">{freshness}</td>'
                     f'<td class="pro-action-cell"><a href="{_esc(surl)}" target="_blank" rel="noopener noreferrer" '
                     f'class="pro-link-btn" data-track="pro_domestic_click">相場確認</a></td>'
@@ -4417,7 +4436,7 @@ python3 -m src.cli calculate-sedori-routes</pre>
             if dtrows:
                 domestic_table_html = (
                     f'<table class="pro-price-table pro-domestic-price-table">'
-                    f'<thead><tr><th>サイト</th><th>参考価格</th><th>確認日</th><th></th></tr></thead>'
+                    f'<thead><tr><th>サイト</th><th>参考価格</th><th>種別</th><th>確認日</th><th></th></tr></thead>'
                     f'<tbody>{"".join(dtrows)}</tbody>'
                     f'</table>'
                     + dom_no_html
@@ -4455,15 +4474,21 @@ python3 -m src.cli calculate-sedori-routes</pre>
             otrows = []
             for sid, slabel, surl, db_row in ovs_has:
                 pprice = db_row.get("price", 0)
+                pbasis = db_row.get("price_basis") or ""
                 freshness = self._freshness_label(
                     db_row.get("recorded_at") or db_row.get("observed_at", ""),
                     db_row.get("data_source", "")
+                )
+                basis_cell = (
+                    f'<span class="pro-price-basis">{_esc(pbasis)}</span>'
+                    if pbasis else '<span class="pro-price-basis pro-price-basis-unknown">—</span>'
                 )
                 otrows.append(
                     f'<tr class="pro-overseas-row pro-row-has-price">'
                     f'<td class="pro-src-cell"><strong class="pro-src-name">{_esc(slabel)}</strong></td>'
                     f'<td class="pro-price-cell"><strong class="price-value">¥{pprice:,}</strong>'
                     f'<small class="pro-jpy-note">（円換算）</small></td>'
+                    f'<td class="pro-basis-cell">{basis_cell}</td>'
                     f'<td class="pro-meta-cell">{freshness}</td>'
                     f'<td class="pro-action-cell"><a href="{_esc(surl)}" target="_blank" rel="noopener noreferrer" '
                     f'class="pro-link-btn" data-track="pro_overseas_click">相場確認</a></td>'
@@ -4486,7 +4511,7 @@ python3 -m src.cli calculate-sedori-routes</pre>
             if otrows:
                 overseas_table_html = (
                     f'<table class="pro-price-table pro-overseas-price-table">'
-                    f'<thead><tr><th>サイト</th><th>参考価格（円換算）</th><th>確認日</th><th></th></tr></thead>'
+                    f'<thead><tr><th>サイト</th><th>参考価格（円換算）</th><th>種別</th><th>確認日</th><th></th></tr></thead>'
                     f'<tbody>{"".join(otrows)}</tbody>'
                     f'</table>'
                     + ovs_no_html
@@ -4562,7 +4587,10 @@ python3 -m src.cli calculate-sedori-routes</pre>
 
         return f"""<div class="watch-card pro-watch-card">
 {"".join(cards) if cards else '<p class="empty-state">候補商品がありません。</p>'}
-<p style="color:var(--text-3);font-size:0.78rem;margin-top:12px;padding:0 4px;">
+<p class="pro-price-basis-disclaimer">
+&#9888; 出品価格・成約価格・販売価格は意味が異なります。売買判断時は必ずリンク先で最新条件をご確認ください。
+</p>
+<p style="color:var(--text-3);font-size:0.78rem;margin-top:6px;padding:0 4px;">
 &#9888; リンク先は外部サービスです。相場確認のみを目的としています。売買判断はご自身でご確認ください。
 </p>
 </div>"""

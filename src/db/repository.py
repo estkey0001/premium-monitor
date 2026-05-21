@@ -351,8 +351,8 @@ class Repository:
         self.db.connection.execute(
             """
             INSERT INTO price_history (id, product_id, source_id, price_type,
-                                       price, currency, recorded_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
+                                       price, currency, recorded_at, price_basis)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 ph.id,
@@ -362,6 +362,7 @@ class Repository:
                 ph.price,
                 ph.currency,
                 ph.recorded_at.isoformat(),
+                getattr(ph, "price_basis", "") or "",
             ),
         )
         self.db.connection.commit()
@@ -399,6 +400,7 @@ class Repository:
             price=row["price"],
             currency=row["currency"],
             recorded_at=datetime.fromisoformat(row["recorded_at"]),
+            price_basis=row["price_basis"] if "price_basis" in row.keys() else "",
         )
 
     # =========================================

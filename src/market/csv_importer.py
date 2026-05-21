@@ -3,9 +3,11 @@
 スクレイピング不安定なサイトの価格を手入力でインポートする。
 
 CSV形式:
-product_alias,source,price_type,price,currency,condition,is_sold,url,observed_at
-gr4,mercari,used,250000,JPY,unused,false,https://example.com,2026-05-18T12:00:00
-x100vi,ebay,overseas,2800,USD,used,true,https://example.com,2026-05-18T12:00:00
+product_alias,source,price_type,price,currency,condition,is_sold,url,observed_at,data_source,link_verified,price_basis
+gr4,mercari,used,250000,JPY,unused,false,https://example.com,2026-05-18T12:00:00,manual_today,true,出品価格
+x100vi,ebay,overseas,2800,USD,used,true,https://example.com,2026-05-18T12:00:00,manual_today,true,海外sold
+
+price_basis が空の場合は SOURCE_DEFAULT_BASIS から自動補完する。
 """
 
 import csv
@@ -46,6 +48,34 @@ SOURCE_MAP = {
     # 買取専門店
     "mobile_ichiban": "src_mobile_ichiban", "kaitori_shouten": "src_kaitori_shouten",
     "kaitori_ichome": "src_kaitori_ichome",
+}
+
+# source短縮名 → price_basis デフォルト値
+# CSV に price_basis 列がない / 空欄の場合に使用する
+SOURCE_DEFAULT_BASIS: dict = {
+    "mercari":         "出品価格",
+    "yahoo_auction":   "成約価格",
+    "rakuten_flea":    "出品価格",
+    "map_camera":      "中古販売価格",
+    "kitamura":        "中古販売価格",
+    "fujiya":          "中古販売価格",
+    "sofmap":          "中古販売価格",
+    "janpara":         "中古販売価格",
+    "iosys":           "中古販売価格",
+    "kakaku":          "新品販売価格",
+    "yodobashi":       "新品販売価格",
+    "biccamera":       "新品販売価格",
+    "bhphoto":         "海外販売価格",
+    "adorama":         "海外販売価格",
+    "mpb":             "海外中古販売価格",
+    "keh":             "海外中古販売価格",
+    "amazon_us":       "海外販売価格",
+    "stockx":          "海外販売価格",
+    "ebay":            "海外sold",
+    "mobile_ichiban":  "買取価格",
+    "kaitori_shouten": "買取価格",
+    "kaitori_ichome":  "買取価格",
+    "manual":          "",
 }
 
 
@@ -96,6 +126,15 @@ class CSVImporter:
         is_sold = row.get("is_sold", "false").strip().lower() == "true"
         url = row.get("url", "").strip()
         observed_str = row.get("observed_at", "").strip()
+        # price_basis: CSV 明示値 → ソースデフォルト → is_sold フラグから推定
+        price_basis_raw = row.get("price_basis", "").strip()
+        if price_basis_raw:
+            price_basis = price_basis_raw
+        else:
+            price_basis = SOURCE_DEFAULT_BASIS.get(source, "")
+            # ebay の is_sold=false は「海外販売価格」に補正
+            if source == "ebay" and not is_sold:
+                price_basis = "海外販売価格"
 
         product_id = ALIAS_MAP.get(alias, f"prod_{alias}")
         source_id = SOURCE_MAP.get(source, f"src_{source}")
@@ -146,4 +185,5 @@ class CSVImporter:
             price_type=price_type,
             price=jpy_price,
             recorded_at=observed_at,
+            price_basis=price_basis,
         ))

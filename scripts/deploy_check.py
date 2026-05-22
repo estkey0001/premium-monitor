@@ -1132,6 +1132,55 @@ def check() -> list[dict]:
     else:
         results.append({"level": "error", "check": "activate_category_js", "message": "activateCategory 関数が JS に存在しない"})
 
+    # ─── 鮮度・誤表記チェック群 ───────────────────────────────────────
+
+    # ── #135: LIVE DEALS 表記が存在しない ──
+    # CSS クラス名（.live-panel-title 等）は除外し、テキストコンテンツのみ確認
+    import re as _re2
+    live_deals_in_text = bool(_re2.search(r'>LIVE DEALS', html))
+    if live_deals_in_text:
+        results.append({"level": "error", "check": "no_live_deals_text", "message": "「LIVE DEALS」テキストが表示されている（誤認を招く表記を削除してください）"})
+    else:
+        results.append({"level": "ok", "check": "no_live_deals_text", "message": "「LIVE DEALS」表記なし"})
+
+    # ── #136: リアルタイム表記が存在しない ──
+    realtime_in_text = bool(_re2.search(r'>リアルタイム', html))
+    if realtime_in_text:
+        results.append({"level": "error", "check": "no_realtime_text", "message": "「リアルタイム」テキストが表示されている（誤認を招く表記を削除してください）"})
+    else:
+        results.append({"level": "ok", "check": "no_realtime_text", "message": "「リアルタイム」表記なし"})
+
+    # ── #137: 手動確認データの表示 ──
+    has_manual_label = "手動確認" in html or "手動確認データ" in html
+    if has_manual_label:
+        results.append({"level": "ok", "check": "manual_data_label_present", "message": "「手動確認データ」ラベルが存在する"})
+    else:
+        results.append({"level": "warning", "check": "manual_data_label_present", "message": "「手動確認」ラベルが存在しない — 手動CSVデータであることをユーザーに明示してください"})
+
+    # ── #138: 48h超古いデータに強警告バナーがあるか（構造確認） ──
+    has_critical_css = "data-stale-critical" in html
+    if has_critical_css:
+        results.append({"level": "ok", "check": "stale_48h_banner_ready", "message": "48h超古いデータ用の強警告バナーCSS/属性が定義されている"})
+    else:
+        results.append({"level": "error", "check": "stale_48h_banner_ready", "message": "data-stale-critical が存在しない"})
+
+    # ── #139: 手動CSVデータに「最新」と表示されていないか ──
+    # CSS定義を除外: class="freshness-live" の実際の使用（HTML要素属性）を検出
+    import re as _re3
+    live_class_used = bool(_re3.search(r'class="[^"]*freshness-live[^"]*"', html))
+    live_text_used  = '>🟢live' in html
+    if live_class_used or live_text_used:
+        results.append({"level": "warning", "check": "no_live_label_on_manual", "message": "手動データにliveクラスまたは🟢liveラベルが付いている — 鮮度ラベルを確認"})
+    else:
+        results.append({"level": "ok", "check": "no_live_label_on_manual", "message": "手動データに「live」ラベルなし（CSS定義のみ）"})
+
+    # ── #140: 毎日更新表記が存在しない ──
+    mainichi_in_text = bool(_re2.search(r'>毎日更新', html))
+    if mainichi_in_text:
+        results.append({"level": "error", "check": "no_mainichi_koshin_text", "message": "「毎日更新」テキストがHTMLタグ直後に存在する（誤認を招く表記を削除してください）"})
+    else:
+        results.append({"level": "ok", "check": "no_mainichi_koshin_text", "message": "「毎日更新」表記なし（または属性内のみ）"})
+
     return results
 
 

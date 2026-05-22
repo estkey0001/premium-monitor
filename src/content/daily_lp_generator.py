@@ -3042,13 +3042,13 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 
 </head>
 <body>
-<div class="announce-bar"><a href="#tab-beginner">&#127919; 本日確認 {_beginner_count_top} 件の初心者向け案件 &mdash; 最大利益 {_esc(_max_profit_str_top)} を確認</a></div>
+<div class="announce-bar"><a href="#tab-beginner">&#127919; 最終確認 {_beginner_count_top} 件の初心者向け案件（手動確認データ）&mdash; 最大利益 {_esc(_max_profit_str_top)}</a></div>
 <header class="topbar">
   <a href="/" class="topbar-brand">
     <div class="brand-icon">S</div>
     プレ値速報
   </a>
-  <div class="topbar-live"><span class="live-dot"></span>LIVE</div>
+  <div class="topbar-live"><span class="live-dot"></span>手動確認</div>
   <div class="topbar-date" data-buyback-updated title="DBに記録された最新の買取価格データ取得日時">最終データ取得: {_esc(_buyback_str_top)}</div>
   <div class="topbar-spacer"></div>
   <a href="#note-cta" class="topbar-note-btn" data-track="note_click">&#128221; 詳細レポートを見る</a>
@@ -3243,9 +3243,9 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         return f"""<section class="hero">
   <div class="hero-inner">
     <div class="hero-left">
-      <div class="hero-eyebrow"><span class="live-dot"></span> 毎日更新 &mdash; {_esc(date_str)}</div>
-      <h1 class="hero-title">今日の<span class="accent">価格差</span>を把握する。</h1>
-      <p class="hero-subtitle">公式購入→国内買取比較（初心者向け）から、二次流通→海外相場比較（Pro向け）まで、毎日更新。iPhone・カメラ・ゲーム機の価格差を一枚で確認できます。</p>
+      <div class="hero-eyebrow"><span class="live-dot"></span> 手動確認データ &mdash; {_esc(date_str)}</div>
+      <h1 class="hero-title">最新<span class="accent">価格差</span>を把握する。</h1>
+      <p class="hero-subtitle">公式購入→国内買取比較（初心者向け）から、二次流通→海外相場比較（Pro向け）まで、手動確認データによる参考値を掲載。iPhone・カメラ・ゲーム機の価格差を一枚で確認できます。公式サイトで最新価格を必ずご確認ください。</p>
       <div class="hero-cta-row">
         <a href="#tab-beginner" class="hero-btn primary" data-track="hero_beginner_click">&#128100; 初心者向け案件を見る ({all_count}件)</a>
         <a href="#tab-advanced" class="hero-btn violet" data-track="hero_pro_click">&#9997; Pro向け相場を見る</a>
@@ -3257,7 +3257,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
           <div class="social-avatar">B</div>
           <div class="social-avatar">C</div>
         </div>
-        <div class="social-text">本日確認 <strong>{all_count}</strong> 件（初心者向け）— 最高利益 <strong>{_esc(max_profit_str)}</strong></div>
+        <div class="social-text">最終確認 <strong>{all_count}</strong> 件（初心者向け・手動確認）— 最高利益参考 <strong>{_esc(max_profit_str)}</strong></div>
       </div>
       <div class="hero-timestamps">
         <span class="ts-pill {_esc(stale_cls)}" data-buyback-updated title="DBに記録された最新の買取価格データ取得日時。各カードの価格には個別の取得日時を表示しています。"><span class="ts-dot"></span>最終買取データ取得：{_esc(buyback_str)}</span>
@@ -3267,8 +3267,8 @@ tr.sc-route-review {{ background: #FFFBEB; }}
     <div class="hero-right">
       <div class="hero-live-panel">
         <div class="live-panel-hd">
-          <a href="#tab-beginner" class="live-panel-title live-panel-link" data-track="hero_live_deals_click">LIVE DEALS &#8594;</a>
-          <div class="live-panel-badge"><span class="live-dot"></span> リアルタイム</div>
+          <a href="#tab-beginner" class="live-panel-title live-panel-link" data-track="hero_live_deals_click">参考DEALS &#8594;</a>
+          <div class="live-panel-badge"><span class="live-dot"></span> 手動確認データ</div>
         </div>
         <div class="live-panel-items">
           <div class="lp-item"><div class="lp-icon iphone">&#128241;</div><div class="lp-info"><div class="lp-name">iPhone 16 Pro 256GB</div><div class="lp-shop">じゃんぱら</div></div><div class="lp-profit">+¥18,400</div></div>
@@ -3287,18 +3287,38 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 
 
     def _section_stale_warning(self, latest_buyback_at, latest_deals_at, lp_generated_at) -> str:
-        msgs = []
-        if _hours_ago(latest_buyback_at) >= 24:
-            msgs.append(f"買取価格（{_hours_ago(latest_buyback_at):.0f}時間前のデータ）")
-        if _hours_ago(latest_deals_at) >= 24:
-            msgs.append(f"案件情報（{_hours_ago(latest_deals_at):.0f}時間前のデータ）")
-        # Always render stale-warning-block for deploy-check compatibility
-        detail = '・'.join(msgs) if msgs else ''
-        display_style = '' if msgs else ' style="display:none"'
-        return f'<div class="stale-warning-block"{display_style}><span>&#9888;&#65039;</span><div>' + (
-            f'<strong>データが古い可能性があります：</strong>{_esc(detail)}が24時間以上前のデータです。購入前に必ず最新価格をご確認ください。'
-            if msgs else 'データは最新です。'
-        ) + '</div></div>'
+        """データ鮮度警告バナーを生成する。
+        - 48h以上: 強警告（古い参考データ）
+        - 24h以上: 警告（要更新）
+        - 24h未満: 非表示（ブロックはコメント用に常時出力）
+        """
+        hours_buyback = _hours_ago(latest_buyback_at)
+        hours_deals   = _hours_ago(latest_deals_at)
+        max_hours = max(hours_buyback, hours_deals)
+
+        if max_hours >= 48:
+            # 強警告: 赤バナー
+            detail = f"最終確認から{max_hours:.0f}時間経過。"
+            return (
+                f'<div class="data-stale-critical" data-stale-critical style="border-radius:8px;padding:10px 14px;margin:8px 0;font-size:0.85rem;">'
+                f'&#10060; <strong>古い参考データ：</strong>{_esc(detail)}'
+                f'最新価格はリンク先でご確認ください。'
+                f'</div>'
+                f'<div class="stale-warning-block" style="display:none"></div>'
+            )
+        elif max_hours >= 24:
+            # 警告: 黄バナー
+            detail = f"最終確認から{max_hours:.0f}時間経過。"
+            return (
+                f'<div class="data-stale-warn" data-stale-warn style="border-radius:8px;padding:10px 14px;margin:8px 0;font-size:0.85rem;">'
+                f'&#9888; <strong>要更新：</strong>{_esc(detail)}'
+                f'24時間以上前のデータです。公式サイトで最新価格を必ずご確認ください。'
+                f'</div>'
+                f'<div class="stale-warning-block" style="display:none"></div>'
+            )
+        else:
+            # 新鮮: 非表示ブロックのみ（deploy-check 互換用）
+            return '<div class="stale-warning-block" style="display:none"></div>'
 
     def _section_category_nav(self, lottery_count: int = 0) -> str:
         """カテゴリナビセクション（ジャンルタブ＋メーカーチップ）"""
@@ -5297,7 +5317,7 @@ python3 -m src.cli calculate-sedori-routes</pre>
   <div class="footer-logo">
     <div class="footer-logo-icon">S</div>
     <div class="footer-logo-name">プレ値速報</div>
-    <div class="footer-live"><span class="live-dot"></span>LIVE</div>
+    <div class="footer-live"><span class="live-dot"></span>手動確認</div>
   </div>
   <div class="footer-links">
     <a href="#tab-beginner" class="footer-link">初心者向け案件</a>

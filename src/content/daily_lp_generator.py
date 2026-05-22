@@ -3288,20 +3288,38 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 
     def _section_stale_warning(self, latest_buyback_at, latest_deals_at, lp_generated_at) -> str:
         """データ鮮度警告バナーを生成する。
-        - 48h以上: 強警告（古い参考データ）
-        - 24h以上: 警告（要更新）
-        - 24h未満: 非表示（ブロックはコメント用に常時出力）
+        - 48h以上: 強警告（古い参考データ）+ 本日の価格データ未更新メッセージ
+        - 24h以上: 警告（要更新）+ 本日の価格データ未更新メッセージ
+        - 日付不一致のみ: 注意（24h未満でもLP生成日とデータ日が異なる場合）
+        - 24h未満かつ日付一致: 非表示（ブロックはコメント用に常時出力）
         """
         hours_buyback = _hours_ago(latest_buyback_at)
         hours_deals   = _hours_ago(latest_deals_at)
         max_hours = max(hours_buyback, hours_deals)
 
+        # LP生成日と価格データ日の不一致チェック
+        _lp_date = None
+        _bp_date = None
+        if lp_generated_at:
+            _lpdt = lp_generated_at if lp_generated_at.tzinfo else lp_generated_at.replace(tzinfo=JST)
+            _lp_date = _lpdt.astimezone(JST).date()
+        if latest_buyback_at:
+            _bpdt = latest_buyback_at if latest_buyback_at.tzinfo else latest_buyback_at.replace(tzinfo=JST)
+            _bp_date = _bpdt.astimezone(JST).date()
+        date_mismatch_msg = ""
+        if _lp_date and _bp_date and _lp_date != _bp_date:
+            date_mismatch_msg = (
+                f' &#128680; <strong>本日の価格データ未更新</strong>'
+                f'（LP生成日: {_lp_date} / 最終データ: {_bp_date}）'
+            )
+
+        _banner_style = "border-radius:8px;padding:10px 14px;margin:8px 0;font-size:0.85rem;"
         if max_hours >= 48:
             # 強警告: 赤バナー
             detail = f"最終確認から{max_hours:.0f}時間経過。"
             return (
-                f'<div class="data-stale-critical" data-stale-critical style="border-radius:8px;padding:10px 14px;margin:8px 0;font-size:0.85rem;">'
-                f'&#10060; <strong>古い参考データ：</strong>{_esc(detail)}'
+                f'<div class="data-stale-critical" data-stale-critical style="{_banner_style}">'
+                f'&#10060; <strong>古い参考データ：</strong>{_esc(detail)}{date_mismatch_msg} '
                 f'最新価格はリンク先でご確認ください。'
                 f'</div>'
                 f'<div class="stale-warning-block" style="display:none"></div>'
@@ -3310,14 +3328,23 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             # 警告: 黄バナー
             detail = f"最終確認から{max_hours:.0f}時間経過。"
             return (
-                f'<div class="data-stale-warn" data-stale-warn style="border-radius:8px;padding:10px 14px;margin:8px 0;font-size:0.85rem;">'
-                f'&#9888; <strong>要更新：</strong>{_esc(detail)}'
+                f'<div class="data-stale-warn" data-stale-warn style="{_banner_style}">'
+                f'&#9888; <strong>要更新：</strong>{_esc(detail)}{date_mismatch_msg} '
                 f'24時間以上前のデータです。公式サイトで最新価格を必ずご確認ください。'
                 f'</div>'
                 f'<div class="stale-warning-block" style="display:none"></div>'
             )
+        elif date_mismatch_msg:
+            # 24h未満でもLP生成日とデータ日が異なる場合（GitHub Actions 実行時に CSV が更新されていない）
+            return (
+                f'<div class="data-stale-warn" data-stale-warn style="{_banner_style}">'
+                f'&#9888;{date_mismatch_msg} '
+                f'公式サイトで最新価格をご確認ください。'
+                f'</div>'
+                f'<div class="stale-warning-block" style="display:none"></div>'
+            )
         else:
-            # 新鮮: 非表示ブロックのみ（deploy-check 互換用）
+            # 新鮮かつ日付一致: 非表示ブロックのみ（deploy-check 互換用）
             return '<div class="stale-warning-block" style="display:none"></div>'
 
     def _section_category_nav(self, lottery_count: int = 0) -> str:
@@ -4019,8 +4046,8 @@ python3 -m src.cli calculate-sedori-routes</pre>
                 date_label = dt_jst.strftime("%m/%d %H:%M")
                 if hours < 24:
                     if is_manual:
-                        # 手動データは「最新」と表示しない。実際の確認日時を表示
-                        freshness = f"{date_label}確認"
+                        # 手動データは「最新」と表示しない。「価格確認: MM/DD HH:mm」形式で統一
+                        freshness = f"価格確認: {date_label}"
                         css = "freshness-recent"
                     else:
                         if hours < 6:
@@ -4030,11 +4057,14 @@ python3 -m src.cli calculate-sedori-routes</pre>
                             freshness = f"{int(hours)}時間前"
                             css = "freshness-recent"
                 elif hours < 48:
-                    freshness = f"{date_label}（参考値）"
+                    # 24h以上古い → 「要更新 / N日前」で統一（参考値表記廃止）
+                    days = max(1, int(hours // 24))
+                    freshness = f"要更新 / {days}日前"
                     css = "freshness-stale"
                 else:
+                    # 48h以上古い → 同じ「要更新 / N日前」、cssのみ強調
                     days = int(hours // 24)
-                    freshness = f"{date_label}（要確認 / {days}日前）"
+                    freshness = f"要更新 / {days}日前"
                     css = "freshness-warn"
             else:
                 freshness = "取得日時不明"
@@ -4102,6 +4132,33 @@ python3 -m src.cli calculate-sedori-routes</pre>
         game_watch   = [d for d in watch_deals if getattr(d, 'category', '') == 'game_console']
         other_easy   = [d for d in easy_deals  if getattr(d, 'category', '') not in ('iphone', 'tablet', 'game_console')]
         other_watch  = [d for d in watch_deals if getattr(d, 'category', '') not in ('iphone', 'tablet', 'game_console')]
+
+        # 48h超古い買取価格を持つ案件を初心者向けセクションから除外（価格信頼性確保）
+        def _bybp_age_h(deal):
+            """deal の buyback_by_product 先頭行の observed_at からの経過時間（h）。データなし→0。"""
+            rows = bybp.get(deal.product_id, [])
+            if not rows:
+                return 0.0
+            obs = rows[0].get('observed_at', '')
+            if not obs:
+                return 0.0
+            try:
+                dt = datetime.fromisoformat(str(obs))
+                if dt.tzinfo is None:
+                    dt = dt.replace(tzinfo=JST)
+                return (datetime.now(tz=JST) - dt.astimezone(JST)).total_seconds() / 3600
+            except Exception:
+                return 0.0
+
+        _STALE_EXCLUDE_H = 48.0
+        iphone_easy  = [d for d in iphone_easy  if _bybp_age_h(d) < _STALE_EXCLUDE_H]
+        iphone_watch = [d for d in iphone_watch if _bybp_age_h(d) < _STALE_EXCLUDE_H]
+        tablet_easy  = [d for d in tablet_easy  if _bybp_age_h(d) < _STALE_EXCLUDE_H]
+        tablet_watch = [d for d in tablet_watch if _bybp_age_h(d) < _STALE_EXCLUDE_H]
+        game_easy    = [d for d in game_easy    if _bybp_age_h(d) < _STALE_EXCLUDE_H]
+        game_watch   = [d for d in game_watch   if _bybp_age_h(d) < _STALE_EXCLUDE_H]
+        other_easy   = [d for d in other_easy   if _bybp_age_h(d) < _STALE_EXCLUDE_H]
+        other_watch  = [d for d in other_watch  if _bybp_age_h(d) < _STALE_EXCLUDE_H]
 
         # ── iPhone / スマホ ──
         if iphone_easy or iphone_watch:
@@ -4185,6 +4242,17 @@ python3 -m src.cli calculate-sedori-routes</pre>
                     rows = bybp.get(d.product_id, [])
                     parts.append(self._deal_card(d, 'badge-watch', '要確認', buyback_rows=rows))
                 parts.append('</div>')
+
+        # 全案件が48h除外で表示不能な場合の空状態表示
+        if not parts:
+            parts.append(
+                '<div class="empty-state" style="padding:40px 16px;text-align:center;">'
+                '<span style="font-size:2rem;">&#128683;</span>'
+                '<p style="margin:12px 0 4px;font-weight:700;color:var(--ink)">表示できる案件がありません</p>'
+                '<p style="font-size:0.85rem;color:var(--ink2)">買取価格データが48時間以上更新されていないため、初心者向け案件を表示できません。</p>'
+                '<p style="font-size:0.85rem;color:var(--ink2)">CSVを最新日付で更新後、LP再生成を実行してください。</p>'
+                '</div>'
+            )
 
         return freshness_banner + '\n'.join(parts)
 
@@ -4276,10 +4344,23 @@ python3 -m src.cli calculate-sedori-routes</pre>
             fallback = {'iphone': ('https://www.janpara.co.jp/sell/iphone/', 'じゃんぱら'), 'game_console': ('https://www.janpara.co.jp/sell/', 'じゃんぱら'), 'camera': ('https://www.kitamura.co.jp/', 'カメラのキタムラ')}
             fb_url, fb_name = fallback.get(genre_cls, ('https://www.janpara.co.jp/sell/', 'じゃんぱら'))
             buyback_btn = f'<a href="{fb_url}" target="_blank" rel="noopener noreferrer" class="btn btn-primary" data-track="buyback_click" data-product-id="{pid}">&#128176; {fb_name}で売る</a>'
-        # Updated timestamp
+        # Updated timestamp — 買取価格の observed_at を優先表示（scanned_at より正確）
         updated_str = ''
-        if hasattr(d, 'scanned_at') and d.scanned_at:
-            updated_str = f'<div class="updated-row"><span>&#128336;</span>最終更新：{_esc(_jst_str(d.scanned_at))}</div>'
+        if buyback_rows:
+            _obs = buyback_rows[0].get('observed_at', '')
+            if _obs:
+                try:
+                    _dt = datetime.fromisoformat(str(_obs))
+                    if _dt.tzinfo is None:
+                        _dt = _dt.replace(tzinfo=JST)
+                    updated_str = (
+                        f'<div class="updated-row"><span>&#128336;</span>'
+                        f'価格確認：{_esc(_dt.astimezone(JST).strftime("%Y-%m-%d %H:%M JST"))}</div>'
+                    )
+                except Exception:
+                    pass
+        if not updated_str and hasattr(d, 'scanned_at') and d.scanned_at:
+            updated_str = f'<div class="updated-row"><span>&#128336;</span>スキャン：{_esc(_jst_str(d.scanned_at))}</div>'
         # Shop compare
         compare_html = ''
         if buyback_rows:

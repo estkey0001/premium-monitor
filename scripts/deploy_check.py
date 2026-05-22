@@ -250,14 +250,20 @@ def check() -> list[dict]:
         results.append({"level": "warning", "check": "lottery_link_type_label", "message": "抽選カードのリンク種別ラベルが見つからない"})
 
     # 21. 初心者向けカードに複数買取店テーブルがある
+    # 48h超古いデータで全カード除外された場合は警告止まり（正常な除外）
+    _data_stale_48h = "data-stale-critical" in html
     if "buyback-shop-table" in html or "buyback-table" in html:
         results.append({"level": "ok", "check": "buyback_shop_table", "message": "初心者カードに複数買取店テーブルが存在する"})
+    elif _data_stale_48h:
+        results.append({"level": "warning", "check": "buyback_shop_table", "message": "複数買取店テーブルなし（48h超古いデータのため初心者案件を除外中）"})
     else:
         results.append({"level": "error", "check": "buyback_shop_table", "message": "複数買取店テーブルが見つからない（beginner deals 要確認）"})
 
     # 22. 最高買取価格が表示されている
     if "最高買取価格" in html or "buyback-best-price" in html:
         results.append({"level": "ok", "check": "buyback_best_price_label", "message": "最高買取価格ラベルが存在する"})
+    elif _data_stale_48h:
+        results.append({"level": "warning", "check": "buyback_best_price_label", "message": "最高買取価格ラベルなし（48h超古いデータのため初心者案件を除外中）"})
     else:
         results.append({"level": "error", "check": "buyback_best_price_label", "message": "最高買取価格ラベルが見つからない"})
 
@@ -791,12 +797,16 @@ def check() -> list[dict]:
     else:
         results.append({"level": "ok", "check": "no_live_label_for_manual", "message": "買取テーブル内に「最新」ラベルなし（手動データは日付表示）"})
 
-    # 94. 鮮度ラベルに日付（MM/DD形式）が含まれる（observed_at由来の日付表示）
-    has_date_in_freshness = bool(re.search(r'freshness-[a-z]+[^>]*>\s*手動確認データ / \d{2}/\d{2}', html))
+    # 94. 鮮度ラベルに日付またはN日前表記が含まれる（observed_at由来の日付表示）
+    # 新フォーマット: 「価格確認: MM/DD HH:mm」または「要更新 / N日前」（手動確認データプレフィックスは省略可）
+    has_date_in_freshness = bool(re.search(
+        r'class="freshness-[a-z]+"[^>]*>[^<]*(?:価格確認: \d{2}/\d{2}|要更新 / \d+日前)',
+        html
+    ))
     if has_date_in_freshness:
-        results.append({"level": "ok", "check": "freshness_shows_date", "message": "鮮度ラベルに MM/DD 形式の確認日付が表示されている"})
+        results.append({"level": "ok", "check": "freshness_shows_date", "message": "鮮度ラベルに価格確認日時/要更新表記が表示されている（新フォーマット）"})
     else:
-        results.append({"level": "warning", "check": "freshness_shows_date", "message": "鮮度ラベルに日付（MM/DD）が見つからない（manual データなし、またはフォーマット変更の可能性）"})
+        results.append({"level": "warning", "check": "freshness_shows_date", "message": "鮮度ラベルに日付/要更新表記が見つからない（manual データなし、またはフォーマット未適用の可能性）"})
 
     # 95. 「本日確認」ラベルが使われている（曖昧な「本日○件」の代わり）
     has_hontou_kakunin = "本日確認" in html
@@ -1180,6 +1190,43 @@ def check() -> list[dict]:
         results.append({"level": "error", "check": "no_mainichi_koshin_text", "message": "「毎日更新」テキストがHTMLタグ直後に存在する（誤認を招く表記を削除してください）"})
     else:
         results.append({"level": "ok", "check": "no_mainichi_koshin_text", "message": "「毎日更新」表記なし（または属性内のみ）"})
+
+    # ── #141: freshness ラベルが「価格確認:」形式を使っている ──
+    # 注: 48h超古いデータ時は全て「要更新 / N日前」形式になるため、「価格確認:」は出現しない（正常）
+    import re as _re4
+    kakunin_in_freshness = bool(_re4.search(r'class="freshness-[a-z]+"[^>]*>[^<]*価格確認:', html))
+    stale_yoko_exists = bool(_re4.search(r'class="freshness-[a-z]+"[^>]*>[^<]*要更新 / \d+日前', html))
+    if kakunin_in_freshness:
+        results.append({"level": "ok", "check": "freshness_kakunin_format", "message": "鮮度ラベルに「価格確認: MM/DD」形式が使われている"})
+    elif stale_yoko_exists:
+        results.append({"level": "ok", "check": "freshness_kakunin_format", "message": "全データが48h+古いため「要更新 / N日前」形式で表示（「価格確認:」は新鮮データ時のみ）"})
+    else:
+        results.append({"level": "warning", "check": "freshness_kakunin_format", "message": "鮮度ラベルに「価格確認:」形式が見つからない（データなし or 旧フォーマット）"})
+
+    # ── #142: 古い価格ラベルが「要更新 / N日前」形式を使っている ──
+    yoko_in_freshness = bool(_re4.search(r'class="freshness-(?:stale|warn)"[^>]*>[^<]*要更新 /', html))
+    if yoko_in_freshness:
+        results.append({"level": "ok", "check": "freshness_yoko_format", "message": "古い価格に「要更新 / N日前」形式が使われている"})
+    else:
+        results.append({"level": "warning", "check": "freshness_yoko_format", "message": "「要更新 / N日前」形式が見つからない（全データが新鮮 or フォーマット未適用）"})
+
+    # ── #143: deal カードの更新行が「価格確認：」を使っている（旧「最終更新：」は禁止）──
+    old_saishin_in_updated = bool(_re4.search(r'class="updated-row"[^>]*>.*?最終更新：', html, _re4.DOTALL))
+    if old_saishin_in_updated:
+        results.append({"level": "warning", "check": "deal_card_no_saishin_label", "message": "updated-row に「最終更新：」が残っている（「価格確認：」に統一してください）"})
+    else:
+        results.append({"level": "ok", "check": "deal_card_no_saishin_label", "message": "updated-row に旧「最終更新：」表記なし（価格確認：に統一済み）"})
+
+    # ── #144: stale バナーが存在する場合、LP生成日とデータ日の不一致メッセージを含む ──
+    stale_banner_active = bool(_re4.search(r'data-stale-(?:critical|warn)', html))
+    if stale_banner_active:
+        has_date_mismatch_msg = "本日の価格データ未更新" in html or "LP生成日" in html
+        if has_date_mismatch_msg:
+            results.append({"level": "ok", "check": "stale_banner_date_mismatch", "message": "stale バナーに「本日の価格データ未更新」日付不一致メッセージが含まれている"})
+        else:
+            results.append({"level": "warning", "check": "stale_banner_date_mismatch", "message": "stale バナーが表示中だが「本日の価格データ未更新」メッセージが見つからない"})
+    else:
+        results.append({"level": "ok", "check": "stale_banner_date_mismatch", "message": "stale バナーなし（データが新鮮）— 日付不一致チェックはスキップ"})
 
     return results
 

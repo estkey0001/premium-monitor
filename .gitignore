@@ -34,8 +34,8 @@ build/
 *.swp
 *.swo
 
-# GitHub Actions（workflow スコープ取得後に追加）
-.github/
+# .github は追跡対象（GitHub Actions に必要）
+# .github/
 
 # Playwright
 playwright-report/

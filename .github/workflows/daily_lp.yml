@@ -28,6 +28,12 @@ jobs:
       - name: Init DB
         run: python -m src.cli init-db
 
+      - name: Update buyback prices (auto scraping)
+        run: python scripts/update_buyback_prices.py
+        continue-on-error: true
+        env:
+          PYTHONPATH: .
+
       - name: Import buyback CSV (手動確認データ)
         run: python -m src.cli import-buyback-csv --file data/manual_buyback_prices.csv
 

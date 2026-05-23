@@ -1,36 +1,40 @@
 """ゲオ 買取価格コレクター（CSV更新用）。
-URL: https://kaitori.geo-online.co.jp/ または https://www.geonet.co.jp/service/kaitori/
-スクレイピング困難なため、公式確認リンクをfallbackとして使用。
+URL: https://www.geo-online.co.jp/store_info/buy/
+価格形式: 参考買取価格 40,000円
+注: iPhoneページは /store_info/buy/iphone/ で静的HTML公開。
+    ゲーム機本体は /store_info/buy/ (トップ) に掲載。
+    buy.geo-online.co.jp は 403 Forbidden のためアクセス不可。
 """
 import re
 from typing import Optional
 from src.collectors.buyback_base_csv import BaseCsvBuybackCollector
 
-# ゲオ買取の検索URL
 PRODUCT_URLS = {
-    "iphone17pro256":  "https://kaitori.geo-online.co.jp/search?q=iPhone+17+Pro+256GB",
-    "iphone17pro512":  "https://kaitori.geo-online.co.jp/search?q=iPhone+17+Pro+512GB",
-    "iphone17pm256":   "https://kaitori.geo-online.co.jp/search?q=iPhone+17+Pro+Max+256GB",
-    "iphone17pm512":   "https://kaitori.geo-online.co.jp/search?q=iPhone+17+Pro+Max+512GB",
-    "switch2":         "https://kaitori.geo-online.co.jp/search?q=Switch+2",
-    "ps5_pro":         "https://kaitori.geo-online.co.jp/search?q=PS5+Pro",
+    "iphone17pro256":  "https://www.geo-online.co.jp/store_info/buy/iphone/",
+    "iphone17pro512":  "https://www.geo-online.co.jp/store_info/buy/iphone/",
+    "iphone17pm256":   "https://www.geo-online.co.jp/store_info/buy/iphone/",
+    "iphone17pm512":   "https://www.geo-online.co.jp/store_info/buy/iphone/",
+    "switch2":         "https://www.geo-online.co.jp/store_info/buy/",
+    "ps5_pro":         "https://www.geo-online.co.jp/store_info/buy/",
 }
 
-CONFIRM_URLS = {
-    "iphone17pro256":  "https://kaitori.geo-online.co.jp/search?q=iPhone+17+Pro+256GB",
-    "iphone17pro512":  "https://kaitori.geo-online.co.jp/search?q=iPhone+17+Pro+512GB",
-    "iphone17pm256":   "https://kaitori.geo-online.co.jp/search?q=iPhone+17+Pro+Max+256GB",
-    "iphone17pm512":   "https://kaitori.geo-online.co.jp/search?q=iPhone+17+Pro+Max+512GB",
-    "switch2":         "https://kaitori.geo-online.co.jp/search?q=Nintendo+Switch+2",
-    "ps5_pro":         "https://kaitori.geo-online.co.jp/search?q=PS5+Pro",
+# 直接正規表現パターン（ゲオのページは全角文字・全角スペース混在）
+# 実際のページテキスト例: "ＳＷ２　ニンテンドー　スイッチ　２　（日本語・国内専用） 参考買取価格 40,000円"
+DIRECT_PATTERNS = {
+    "iphone17pro256": r'iPhone 17 Pro 256.{0,150}?参考買取価格\s*([\d,]+)円',
+    "iphone17pro512": r'iPhone 17 Pro 512.{0,150}?参考買取価格\s*([\d,]+)円',
+    "iphone17pm256":  r'iPhone 17 Pro Max 256.{0,150}?参考買取価格\s*([\d,]+)円',
+    "iphone17pm512":  r'iPhone 17 Pro Max 512.{0,150}?参考買取価格\s*([\d,]+)円',
+    "switch2":        r'(?:ＳＷ２|スイッチ\s*２).{0,200}?参考買取価格\s*([\d,]+)円',
+    "ps5_pro":        r'(?:ＰＳ５.*?Pro|PS5 Pro|プレイステーション5 Pro).{0,200}?参考買取価格\s*([\d,]+)円',
 }
 
 
 class GeoCsvCollector(BaseCsvBuybackCollector):
     SHOP_ID   = "geo"
     SHOP_NAME = "ゲオ"
-    BASE_URL  = "https://kaitori.geo-online.co.jp/"
-    REQUIRES_JS = True
+    BASE_URL  = "https://www.geo-online.co.jp/"
+    REQUIRES_JS = False  # store_info/buy/ は静的HTML
 
     def _build_url(self, product_alias: str, product_name: str) -> str:
         return PRODUCT_URLS.get(product_alias, "")
@@ -40,12 +44,10 @@ class GeoCsvCollector(BaseCsvBuybackCollector):
         soup = BeautifulSoup(html, "html.parser")
         text = soup.get_text(" ", strip=True)
 
-        for pat in [
-            r'買取価格[^¥￥\d]{0,20}[¥￥]\s*([\d,]{4,})',
-            r'査定価格[^¥￥\d]{0,20}[¥￥]\s*([\d,]{4,})',
-            r'買取[^¥￥\d]{0,30}([\d,]{4,})\s*円',
-        ]:
-            m = re.search(pat, text)
+        # 直接正規表現マッチング（全角文字・全角スペース混在に対応）
+        pat = DIRECT_PATTERNS.get(product_alias)
+        if pat:
+            m = re.search(pat, text, re.DOTALL)
             if m:
                 try:
                     price = int(m.group(1).replace(",", ""))
@@ -53,6 +55,16 @@ class GeoCsvCollector(BaseCsvBuybackCollector):
                         return price
                 except ValueError:
                     pass
+
+        # フォールバック: 全文から「参考買取価格」付きの最初の価格
+        fallback_m = re.search(r'参考買取価格\s*([\d,]+)円', text)
+        if fallback_m:
+            try:
+                price = int(fallback_m.group(1).replace(",", ""))
+                if 10000 <= price <= 5_000_000:
+                    return price
+            except ValueError:
+                pass
 
         return self.extract_price(text, min_price=10000)
 

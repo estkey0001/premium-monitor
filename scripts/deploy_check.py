@@ -1218,7 +1218,9 @@ def check() -> list[dict]:
         results.append({"level": "ok", "check": "deal_card_no_saishin_label", "message": "updated-row に旧「最終更新：」表記なし（価格確認：に統一済み）"})
 
     # ── #144: stale バナーが存在する場合、LP生成日とデータ日の不一致メッセージを含む ──
-    stale_banner_active = bool(_re4.search(r'data-stale-(?:critical|warn)', html))
+    # CSS定義（.data-stale-critical { や [data-stale-critical] {）は除外し、
+    # 実際のHTML属性（<div ... data-stale-critical ...>）のみを検出する
+    stale_banner_active = bool(_re4.search(r'<[^>]+\s+data-stale-(?:critical|warn)[^>]*>', html))
     if stale_banner_active:
         has_date_mismatch_msg = "本日の価格データ未更新" in html or "LP生成日" in html
         if has_date_mismatch_msg:
@@ -1227,6 +1229,104 @@ def check() -> list[dict]:
             results.append({"level": "warning", "check": "stale_banner_date_mismatch", "message": "stale バナーが表示中だが「本日の価格データ未更新」メッセージが見つからない"})
     else:
         results.append({"level": "ok", "check": "stale_banner_date_mismatch", "message": "stale バナーなし（データが新鮮）— 日付不一致チェックはスキップ"})
+
+    # ── 買取価格自動取得チェック群 ──────────────────────────────────────
+
+    # csv_today_observed_at: manual_buyback_prices.csv に本日の observed_at がある
+    csv_path = PROJECT_ROOT / "data" / "manual_buyback_prices.csv"
+    today_str = datetime.now().strftime("%Y-%m-%d")
+    if csv_path.exists():
+        import csv as _csv
+        csv_has_today = False
+        try:
+            with open(csv_path, newline="", encoding="utf-8") as _f:
+                for row in _csv.DictReader(_f):
+                    obs = row.get("observed_at", "")
+                    if obs.startswith(today_str):
+                        csv_has_today = True
+                        break
+        except Exception:
+            pass
+        if csv_has_today:
+            results.append({"level": "ok", "check": "csv_today_observed_at", "message": f"manual_buyback_prices.csv に本日({today_str})の observed_at あり"})
+        else:
+            results.append({"level": "warning", "check": "csv_today_observed_at", "message": f"manual_buyback_prices.csv に本日({today_str})の observed_at なし（手動更新が必要な可能性）"})
+    else:
+        results.append({"level": "warning", "check": "csv_today_observed_at", "message": "manual_buyback_prices.csv が存在しない"})
+
+    # iphone17_price_fetched: iPhone 17 Pro 系の価格が1件以上取得されている（価格 > 0）
+    if csv_path.exists():
+        iphone17_fetched = False
+        try:
+            with open(csv_path, newline="", encoding="utf-8") as _f:
+                for row in _csv.DictReader(_f):
+                    alias = row.get("product_alias", "")
+                    price_str = row.get("buyback_price", "0")
+                    try:
+                        price = int(price_str)
+                    except ValueError:
+                        price = 0
+                    if alias.startswith("iphone17") and price > 0:
+                        iphone17_fetched = True
+                        break
+        except Exception:
+            pass
+        if iphone17_fetched:
+            results.append({"level": "ok", "check": "iphone17_price_fetched", "message": "iPhone 17 Pro 系の買取価格が1件以上取得されている"})
+        else:
+            results.append({"level": "warning", "check": "iphone17_price_fetched", "message": "iPhone 17 Pro 系の買取価格が0件（スクレイピング未実行 or 全失敗の可能性）"})
+
+    # mobile_ichiban_price: モバイル一番の買取価格が存在する
+    if csv_path.exists():
+        mobile_ichiban_ok = False
+        try:
+            with open(csv_path, newline="", encoding="utf-8") as _f:
+                for row in _csv.DictReader(_f):
+                    if row.get("buyback_shop", "") == "mobile_ichiban":
+                        try:
+                            price = int(row.get("buyback_price", "0"))
+                        except ValueError:
+                            price = 0
+                        if price > 0:
+                            mobile_ichiban_ok = True
+                            break
+        except Exception:
+            pass
+        if mobile_ichiban_ok:
+            results.append({"level": "ok", "check": "mobile_ichiban_price", "message": "モバイル一番の買取価格（price > 0）が存在する"})
+        else:
+            results.append({"level": "warning", "check": "mobile_ichiban_price", "message": "モバイル一番の買取価格が取得されていない（fetch_failed または未対応）"})
+
+    # fetch_failed_display: 「取得失敗 / 要確認」表示クラスがある（または全成功）
+    has_fetch_failed_css = "freshness-fetch-failed" in html
+    has_any_fetch_failed_text = "取得失敗 / 要確認" in html
+    # CSV上に fetch_failed 行があるか確認
+    csv_has_fetch_failed = False
+    if csv_path.exists():
+        try:
+            with open(csv_path, newline="", encoding="utf-8") as _f:
+                for row in _csv.DictReader(_f):
+                    if row.get("data_source", "") == "fetch_failed":
+                        csv_has_fetch_failed = True
+                        break
+        except Exception:
+            pass
+    if csv_has_fetch_failed:
+        if has_fetch_failed_css or has_any_fetch_failed_text:
+            results.append({"level": "ok", "check": "fetch_failed_display", "message": "fetch_failed 行があり、LP上に「取得失敗 / 要確認」表示がある"})
+        else:
+            results.append({"level": "warning", "check": "fetch_failed_display", "message": "CSV上に fetch_failed 行があるが、LP上に「取得失敗 / 要確認」表示が見つからない"})
+    else:
+        results.append({"level": "ok", "check": "fetch_failed_display", "message": "fetch_failed 行なし（全取得成功 or スクレイピング未実行）"})
+
+    # no_price_zero_shown: buyback_price=0 かつ data_source != fetch_failed の行がLPに表示されていない
+    # LP上で price=0 の行が「取得失敗」以外の形で表示されていないかをHTML検査
+    # （¥0 の直接表記がないか確認）
+    zero_price_pattern = re.findall(r'(?<![¥￥\d])[¥￥]0(?!\d)', html)
+    if zero_price_pattern:
+        results.append({"level": "warning", "check": "no_price_zero_shown", "message": f"LP上に¥0の価格表記が{len(zero_price_pattern)}件存在する（fetch_failed以外の0価格行が表示されている可能性）"})
+    else:
+        results.append({"level": "ok", "check": "no_price_zero_shown", "message": "LP上に¥0の価格表記なし（0価格行は非表示 or fetch_failed表示で正常）"})
 
     return results
 

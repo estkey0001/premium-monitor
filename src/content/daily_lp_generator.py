@@ -4035,7 +4035,11 @@ python3 -m src.cli calculate-sedori-routes</pre>
         - 手動CSV由来 → 「手動確認データ」表示・「最新」は使わない
         - 実際に取得した価格ではない場合は「最新」と表示しない
         """
-        is_manual = bool(data_source and str(data_source).startswith("manual"))
+        is_failed = (str(data_source) == "fetch_failed")
+        is_manual = bool(data_source and (str(data_source).startswith("manual") or str(data_source) == "auto_scraped"))
+        # fetch_failed は価格取得失敗を示す特殊値
+        if is_failed:
+            return '<span class="freshness-warn freshness-fetch-failed" title="価格取得失敗">取得失敗 / 要確認</span>'
         try:
             if observed_at_str:
                 dt = datetime.fromisoformat(str(observed_at_str))
@@ -4344,10 +4348,11 @@ python3 -m src.cli calculate-sedori-routes</pre>
             fallback = {'iphone': ('https://www.janpara.co.jp/sell/iphone/', 'じゃんぱら'), 'game_console': ('https://www.janpara.co.jp/sell/', 'じゃんぱら'), 'camera': ('https://www.kitamura.co.jp/', 'カメラのキタムラ')}
             fb_url, fb_name = fallback.get(genre_cls, ('https://www.janpara.co.jp/sell/', 'じゃんぱら'))
             buyback_btn = f'<a href="{fb_url}" target="_blank" rel="noopener noreferrer" class="btn btn-primary" data-track="buyback_click" data-product-id="{pid}">&#128176; {fb_name}で売る</a>'
-        # Updated timestamp — 買取価格の observed_at を優先表示（scanned_at より正確）
+        # Updated timestamp — fetch_failed以外の最新buyback行のobserved_atを優先表示
         updated_str = ''
-        if buyback_rows:
-            _obs = buyback_rows[0].get('observed_at', '')
+        _ts_rows = [r for r in (buyback_rows or []) if r.get('data_source') != 'fetch_failed' and r.get('buyback_price', 0) > 0]
+        if _ts_rows:
+            _obs = _ts_rows[0].get('observed_at', '')
             if _obs:
                 try:
                     _dt = datetime.fromisoformat(str(_obs))
@@ -4366,37 +4371,64 @@ python3 -m src.cli calculate-sedori-routes</pre>
         if buyback_rows:
             official_price = d.official_price_jpy or 0
             rows_html = []
-            n_shops = len(buyback_rows[:5])
-            for i, r in enumerate(buyback_rows[:5], start=1):
+            # fetch_failed行を末尾に、正常行を先に表示（ランク番号は正常行のみ）
+            _normal_rows  = [r for r in buyback_rows[:5] if r.get('buyback_price', 0) > 0]
+            _failed_rows  = [r for r in buyback_rows[:5] if r.get('data_source') == 'fetch_failed']
+            _all_disp = _normal_rows + _failed_rows
+            n_shops = len(_all_disp)
+            rank_counter = 0
+            for r in _all_disp:
                 bp = r.get('buyback_price', 0)
                 sname = _esc(r.get('shop_name', ''))
-                profit = bp - official_price
-                profit_str = f'+¥{profit:,}' if profit >= 0 else f'-¥{abs(profit):,}'
-                url_val = r.get('buyback_url', '')
-                verified = r.get('link_verified', False)
-                # 確認リンクボタン（店舗名とは分離）
-                btn_cls = 'best' if i == 1 else 'normal'
-                if url_val:
+                is_failed_row = (r.get('data_source') == 'fetch_failed')
+                url_val = r.get('buyback_url', '') or r.get('url', '')
+                freshness = self._freshness_label(r.get('observed_at', ''), r.get('data_source', 'manual_today'))
+
+                if is_failed_row:
+                    # 取得失敗行: ランクなし・価格「—」・リンクは確認用
+                    link_col = (
+                        f'<a href="{_esc(url_val)}" target="_blank" rel="noopener noreferrer" '
+                        f'class="shop-check-btn normal" data-track="buyback_click" '
+                        f'data-product-id="{pid}">確認</a>'
+                        if url_val else
+                        '<span class="shop-check-btn normal" style="opacity:0.4;cursor:default;">確認不可</span>'
+                    )
+                    rows_html.append(
+                        f'<div class="shop-row shop-row-failed">'
+                        f'<div class="shop-rank" style="color:var(--ink3)">—</div>'
+                        f'<div class="shop-name-col">{sname}</div>'
+                        f'<div class="shop-price-col" style="color:var(--ink3)">—</div>'
+                        f'<div class="shop-diff-col">{freshness}</div>'
+                        f'<div class="shop-link-col">{link_col}</div>'
+                        f'</div>'
+                    )
+                else:
+                    # 正常行
+                    rank_counter += 1
+                    profit = bp - official_price
+                    profit_str = f'+¥{profit:,}' if profit >= 0 else f'-¥{abs(profit):,}'
+                    btn_cls = 'best' if rank_counter == 1 else 'normal'
                     link_col = (
                         f'<a href="{_esc(url_val)}" target="_blank" rel="noopener noreferrer" '
                         f'class="shop-check-btn {btn_cls}" data-track="buyback_click" '
                         f'data-product-id="{pid}">確認</a>'
+                        if url_val else
+                        '<span class="shop-check-btn normal" style="opacity:0.4;cursor:default;">確認不可</span>'
                     )
-                else:
-                    link_col = '<span class="shop-check-btn normal" style="opacity:0.4;cursor:default;">確認不可</span>'
-                rank_cls = 'gold' if i == 1 else ('silver' if i == 2 else '')
-                diff_cls = ' neg' if profit < 0 else ''
-                freshness = self._freshness_label(r.get('observed_at', ''), r.get('data_source', 'manual_today'))
-                rows_html.append(
-                    f'<div class="shop-row">'
-                    f'<div class="shop-rank {rank_cls}">{i}</div>'
-                    f'<div class="shop-name-col">{sname}</div>'
-                    f'<div class="shop-price-col">¥{bp:,}</div>'
-                    f'<div class="shop-diff-col{diff_cls}">{_esc(profit_str)}</div>'
-                    f'<div class="shop-link-col">{link_col}</div>'
-                    f'</div>'
-                )
-            first_freshness = self._freshness_label(buyback_rows[0].get('observed_at', ''), buyback_rows[0].get('data_source', 'manual_today'))
+                    rank_cls = 'gold' if rank_counter == 1 else ('silver' if rank_counter == 2 else '')
+                    diff_cls = ' neg' if profit < 0 else ''
+                    rows_html.append(
+                        f'<div class="shop-row">'
+                        f'<div class="shop-rank {rank_cls}">{rank_counter}</div>'
+                        f'<div class="shop-name-col">{sname}</div>'
+                        f'<div class="shop-price-col">¥{bp:,}</div>'
+                        f'<div class="shop-diff-col{diff_cls}">{_esc(profit_str)}</div>'
+                        f'<div class="shop-link-col">{link_col}</div>'
+                        f'</div>'
+                    )
+            # ヘッダーには最初の正常行の鮮度を使う
+            _hd_row = _normal_rows[0] if _normal_rows else (_failed_rows[0] if _failed_rows else buyback_rows[0])
+            first_freshness = self._freshness_label(_hd_row.get('observed_at', ''), _hd_row.get('data_source', 'manual_today'))
             compare_html = (
                 f'<div class="shop-table buyback-shop-table buyback-table">'
                 f'<div class="shop-table-hd"><span>買取店比較（参照{n_shops}店舗）</span>' + first_freshness + '</div>'

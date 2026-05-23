@@ -103,8 +103,14 @@ class BuybackCSVImporter:
         shop_id = SHOP_MAP.get(shop, f"src_{shop}")
         shop_name = BUYBACK_SHOPS.get(shop_id, {}).get("name", shop)
 
-        if price <= 0:
+        if price < 0:
             raise ValueError(f"Invalid price: {price}")
+
+        # fetch_failed: price=0 かつ data_source="fetch_failed" は取得失敗として記録する
+        # DB には buyback_price=0 で入れ、LPで「取得失敗 / 要確認」と表示する
+        # 通常の price=0 はスキップ
+        if price == 0 and data_source != "fetch_failed":
+            raise ValueError(f"price=0 (non-fetch_failed, skip)")
 
         observed_at = datetime.fromisoformat(observed_str) if observed_str else datetime.now()
 

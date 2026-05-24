@@ -125,6 +125,14 @@ class DailyLPGenerator:
             if _rows:
                 buyback_by_product[_p.id] = _rows
 
+        # 取得種別統計（ページ上部表示用）
+        _all_buyback_rows_flat = [row for rows in buyback_by_product.values() for row in rows]
+        collection_stats = {
+            "auto":   sum(1 for r in _all_buyback_rows_flat if r.get("data_source") == "auto_scraped"),
+            "failed": sum(1 for r in _all_buyback_rows_flat if r.get("data_source") == "fetch_failed"),
+            "manual": sum(1 for r in _all_buyback_rows_flat if str(r.get("data_source", "")).startswith("manual")),
+        }
+
         # 急騰・急落
         buyback_alerts = self.repo.list_buyback_alerts(limit=20)
 
@@ -211,6 +219,7 @@ class DailyLPGenerator:
             buyback_by_product=buyback_by_product,
             sedori_routes=sedori_routes,
             market_prices_by_product=market_prices_by_product,
+            collection_stats=collection_stats,
         )
 
         # 安全チェック
@@ -263,7 +272,8 @@ class DailyLPGenerator:
                      watch_candidates, buyback_alerts, all_deals, iphone_deals, game_deals,
                      camera_deals=None, iphone_watch=None, camera_watch=None, game_watch=None,
                      buyback_by_product: dict = None, sedori_routes: list = None,
-                     market_prices_by_product: dict = None) -> str:
+                     market_prices_by_product: dict = None,
+                     collection_stats: dict = None) -> str:
 
         site_title = _esc(self.settings.get("site_title", "プレ値速報"))
         ga_id      = self.settings.get("analytics", {}).get("google_analytics_id", "")
@@ -352,6 +362,21 @@ class DailyLPGenerator:
         # topbar用の日時文字列（_render_page スコープで利用）
         _buyback_str_top = _jst_str(latest_buyback_at) if latest_buyback_at else "—"
         _lp_str_top = lp_generated_at.strftime("%m/%d %H:%M") if lp_generated_at else "—"
+
+        # 取得統計バー HTML
+        _cs = collection_stats or {}
+        _cs_auto   = _cs.get("auto",   0)
+        _cs_failed = _cs.get("failed", 0)
+        _cs_manual = _cs.get("manual", 0)
+        _cs_manual_html = f'<span class="cs-manual">手動 {_cs_manual}件</span>' if _cs_manual > 0 else ''
+        _collection_stats_html = (
+            f'<span class="collection-stats-bar" title="買取価格の取得種別内訳">'
+            f'<span class="cs-ok">自動取得 {_cs_auto}件</span>'
+            f'<span style="color:var(--ink4)">／</span>'
+            f'<span class="cs-fail">取得失敗 {_cs_failed}件</span>'
+            + (f'<span style="color:var(--ink4)">／</span>{_cs_manual_html}' if _cs_manual_html else '')
+            + f'</span>'
+        )
         # アナウンスバー用
         # announce bar: 実際に初心者タブに表示するカード数（カメラ除外後）
         _beginner_count_top = _beginner_disp_count
@@ -1524,6 +1549,44 @@ a[href], button, [role="tab"], [role="button"],
   background: rgba(180,83,9,0.10); padding: 2px 7px; border-radius: 99px;
   border: 1px solid rgba(180,83,9,0.20);
 }}
+
+/* 自動取得鮮度ラベル (緑) */
+.freshness-auto {{
+  color: #0A7C4F; font-size: 0.7rem; font-weight: 700;
+  background: rgba(0,200,150,0.12); padding: 2px 7px; border-radius: 99px;
+  border: 1px solid rgba(0,200,150,0.25);
+}}
+
+/* 取得種別バッジ */
+.badge-auto-scraped {{
+  font-size: 0.66rem; font-weight: 700; padding: 2px 6px; border-radius: 99px;
+  background: rgba(0,200,150,0.12); color: #0A7C4F;
+  border: 1px solid rgba(0,200,150,0.25); white-space: nowrap;
+}}
+.badge-fetch-failed {{
+  font-size: 0.66rem; font-weight: 700; padding: 2px 6px; border-radius: 99px;
+  background: rgba(255,59,92,0.10); color: #B91C1C;
+  border: 1px solid rgba(255,59,92,0.25); white-space: nowrap;
+}}
+.badge-manual {{
+  font-size: 0.66rem; font-weight: 700; padding: 2px 6px; border-radius: 99px;
+  background: var(--surface2); color: var(--ink3);
+  border: 1px solid var(--card-border); white-space: nowrap;
+}}
+
+/* 買取比較テーブル: 取得種別列 */
+.shop-source-col {{
+  min-width: 60px; text-align: center; flex-shrink: 0;
+}}
+
+/* 取得統計バー (ページ上部) */
+.collection-stats-bar {{
+  font-size: 0.72rem; color: var(--ink3);
+  display: inline-flex; gap: 6px; align-items: center; margin-left: 6px;
+}}
+.cs-ok   {{ color: #0A7C4F; font-weight: 700; }}
+.cs-fail {{ color: #B91C1C; font-weight: 700; }}
+.cs-manual {{ color: var(--ink3); font-weight: 600; }}
 
 /* Pro向け価格テーブル */
 .pro-price-table {{
@@ -3049,7 +3112,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
     プレ値速報
   </a>
   <div class="topbar-live"><span class="live-dot"></span>手動確認</div>
-  <div class="topbar-date" data-buyback-updated title="DBに記録された最新の買取価格データ取得日時">最終データ取得: {_esc(_buyback_str_top)}</div>
+  <div class="topbar-date" data-buyback-updated title="DBに記録された最新の買取価格データ取得日時">最終データ取得: {_esc(_buyback_str_top)}{_collection_stats_html}</div>
   <div class="topbar-spacer"></div>
   <a href="#note-cta" class="topbar-note-btn" data-track="note_click">&#128221; 詳細レポートを見る</a>
 </header>
@@ -4028,6 +4091,20 @@ python3 -m src.cli calculate-sedori-routes</pre>
 
         return "\n".join(parts)
 
+    def _source_badge(self, data_source: str) -> str:
+        """data_source に応じた取得種別バッジ HTML を返す。"""
+        ds = str(data_source) if data_source else ""
+        if ds == "auto_scraped":
+            return '<span class="badge-auto-scraped">自動取得</span>'
+        elif ds == "fetch_failed":
+            return '<span class="badge-fetch-failed">取得失敗</span>'
+        elif ds.startswith("manual"):
+            return '<span class="badge-manual">手動</span>'
+        elif ds == "live":
+            return '<span class="badge-auto-scraped">LIVE</span>'
+        else:
+            return '<span class="badge-manual">—</span>'
+
     def _freshness_label(self, observed_at_str: str, data_source: str) -> str:
         """データ鮮度ラベルを返す。
         - 24h超 → 「参考値」
@@ -4036,7 +4113,8 @@ python3 -m src.cli calculate-sedori-routes</pre>
         - 実際に取得した価格ではない場合は「最新」と表示しない
         """
         is_failed = (str(data_source) == "fetch_failed")
-        is_manual = bool(data_source and (str(data_source).startswith("manual") or str(data_source) == "auto_scraped"))
+        is_auto   = (str(data_source) == "auto_scraped")   # 自動スクレイピング成功
+        is_manual = bool(data_source and str(data_source).startswith("manual"))  # 手動CSV由来
         # fetch_failed は価格取得失敗を示す特殊値
         if is_failed:
             return '<span class="freshness-warn freshness-fetch-failed" title="価格取得失敗">取得失敗 / 要確認</span>'
@@ -4049,7 +4127,11 @@ python3 -m src.cli calculate-sedori-routes</pre>
                 hours = (datetime.now(tz=JST) - dt_jst).total_seconds() / 3600
                 date_label = dt_jst.strftime("%m/%d %H:%M")
                 if hours < 24:
-                    if is_manual:
+                    if is_auto:
+                        # 自動取得データ: 緑バッジ + 取得時刻
+                        freshness = f"価格確認: {date_label}"
+                        css = "freshness-auto"
+                    elif is_manual:
                         # 手動データは「最新」と表示しない。「価格確認: MM/DD HH:mm」形式で統一
                         freshness = f"価格確認: {date_label}"
                         css = "freshness-recent"
@@ -4077,7 +4159,9 @@ python3 -m src.cli calculate-sedori-routes</pre>
             freshness = "取得日時不明"
             css = "freshness-unknown"
         # 出所ラベル
-        if is_manual:
+        if is_auto:
+            source_label = "自動取得"
+        elif is_manual:
             source_label = "手動確認データ"
         elif data_source == "live":
             source_label = "🟢live"
@@ -4384,6 +4468,7 @@ python3 -m src.cli calculate-sedori-routes</pre>
                 url_val = r.get('buyback_url', '') or r.get('url', '')
                 freshness = self._freshness_label(r.get('observed_at', ''), r.get('data_source', 'manual_today'))
 
+                source_badge = self._source_badge(r.get('data_source', ''))
                 if is_failed_row:
                     # 取得失敗行: ランクなし・価格「—」・リンクは確認用
                     link_col = (
@@ -4399,6 +4484,7 @@ python3 -m src.cli calculate-sedori-routes</pre>
                         f'<div class="shop-name-col">{sname}</div>'
                         f'<div class="shop-price-col" style="color:var(--ink3)">—</div>'
                         f'<div class="shop-diff-col">{freshness}</div>'
+                        f'<div class="shop-source-col">{source_badge}</div>'
                         f'<div class="shop-link-col">{link_col}</div>'
                         f'</div>'
                     )
@@ -4423,6 +4509,7 @@ python3 -m src.cli calculate-sedori-routes</pre>
                         f'<div class="shop-name-col">{sname}</div>'
                         f'<div class="shop-price-col">¥{bp:,}</div>'
                         f'<div class="shop-diff-col{diff_cls}">{_esc(profit_str)}</div>'
+                        f'<div class="shop-source-col">{source_badge}</div>'
                         f'<div class="shop-link-col">{link_col}</div>'
                         f'</div>'
                     )

@@ -1328,6 +1328,56 @@ def check() -> list[dict]:
     else:
         results.append({"level": "ok", "check": "no_price_zero_shown", "message": "LP上に¥0の価格表記なし（0価格行は非表示 or fetch_failed表示で正常）"})
 
+    # ── #145: 自動取得バッジが表示されている ──
+    has_auto_scraped_badge = 'badge-auto-scraped' in html
+    if has_auto_scraped_badge:
+        results.append({"level": "ok", "check": "auto_scraped_badge", "message": "「自動取得」バッジ（badge-auto-scraped）が表示されている"})
+    else:
+        # CSV に auto_scraped 行がある場合のみエラー、なければ警告
+        csv_has_auto = False
+        if csv_path.exists():
+            try:
+                with open(csv_path, newline="", encoding="utf-8") as _f:
+                    for row in _csv.DictReader(_f):
+                        if row.get("data_source", "") == "auto_scraped":
+                            csv_has_auto = True
+                            break
+            except Exception:
+                pass
+        if csv_has_auto:
+            results.append({"level": "error", "check": "auto_scraped_badge", "message": "CSV に auto_scraped 行があるが LP 上に「自動取得」バッジが見つからない"})
+        else:
+            results.append({"level": "warning", "check": "auto_scraped_badge", "message": "「自動取得」バッジなし（CSV に auto_scraped データなし、または LP 未再生成）"})
+
+    # ── #146: 取得失敗バッジが表示されている ──
+    has_fetch_failed_badge = 'badge-fetch-failed' in html
+    if has_fetch_failed_badge:
+        results.append({"level": "ok", "check": "fetch_failed_badge", "message": "「取得失敗」バッジ（badge-fetch-failed）が表示されている"})
+    else:
+        if csv_has_fetch_failed:
+            results.append({"level": "warning", "check": "fetch_failed_badge", "message": "CSV に fetch_failed 行があるが LP 上に「取得失敗」バッジが見つからない（LP 再生成を推奨）"})
+        else:
+            results.append({"level": "ok", "check": "fetch_failed_badge", "message": "取得失敗バッジなし（fetch_failed データなし、正常）"})
+
+    # ── #147: 取得失敗行に確認リンクがある ──
+    import re as _re5
+    failed_rows_with_links = _re5.findall(r'shop-row-failed[^>]*>.*?<a\s+href=', html, _re5.DOTALL)
+    failed_rows_without_links = _re5.findall(r'shop-row-failed', html)
+    if not failed_rows_without_links:
+        results.append({"level": "ok", "check": "fetch_failed_has_link", "message": "取得失敗行なし（全取得成功）"})
+    elif failed_rows_with_links:
+        results.append({"level": "ok", "check": "fetch_failed_has_link", "message": f"取得失敗行（shop-row-failed）に確認リンクがある（{len(failed_rows_with_links)}行）"})
+    else:
+        results.append({"level": "error", "check": "fetch_failed_has_link", "message": "取得失敗行（shop-row-failed）に確認リンクがない — URL 設定を確認してください"})
+
+    # ── #148: ページ上部に取得統計（自動取得N件 / 取得失敗N件）が表示されている ──
+    has_collection_stats = 'collection-stats-bar' in html
+    has_stats_text = bool(re.search(r'自動取得\s*\d+件', html))
+    if has_collection_stats or has_stats_text:
+        results.append({"level": "ok", "check": "collection_stats_shown", "message": "ページ上部に取得統計（自動取得N件/取得失敗N件）が表示されている"})
+    else:
+        results.append({"level": "warning", "check": "collection_stats_shown", "message": "取得統計バーが見つからない（LP 再生成で反映されます）"})
+
     return results
 
 

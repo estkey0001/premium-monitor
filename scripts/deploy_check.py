@@ -1668,6 +1668,70 @@ def check() -> list[dict]:
         "message": "Apple Watch がウェアラブル欄に表示" if _applewatch_in_wearable else "Apple Watch がウェアラブル欄に見つからない（データなし or genre設定を確認）"
     })
 
+    # ── #179: exports/collector_report/latest.json が存在する ──
+    import json as _json179
+    _collector_report_path = PROJECT_ROOT / "exports" / "collector_report" / "latest.json"
+    if _collector_report_path.exists():
+        try:
+            with open(_collector_report_path, encoding="utf-8") as _f179:
+                _cr = _json179.load(_f179)
+            results.append({"level": "ok", "check": "collector_report_exists",
+                            "message": f"collector_report/latest.json 存在（生成: {_cr.get('generated_at', '?')}）"})
+        except Exception as _e179:
+            results.append({"level": "warning", "check": "collector_report_exists",
+                            "message": f"collector_report/latest.json 読み込みエラー: {_e179}"})
+    else:
+        results.append({"level": "warning", "check": "collector_report_exists",
+                        "message": "collector_report/latest.json が存在しない（update_buyback_prices.py を実行してください）"})
+
+    # ── #180: suspicious_price の形式チェック ──
+    if _collector_report_path.exists() and '_cr' in dir():
+        _sp_list = _cr.get("suspicious_prices", None)
+        if _sp_list is None:
+            results.append({"level": "warning", "check": "suspicious_price_format",
+                            "message": "collector_report に suspicious_prices フィールドがない"})
+        elif not isinstance(_sp_list, list):
+            results.append({"level": "warning", "check": "suspicious_price_format",
+                            "message": "suspicious_prices がリスト形式でない"})
+        else:
+            _sp_invalid = [
+                s for s in _sp_list
+                if not all(k in s for k in ("product_alias", "shop", "price", "reason", "details"))
+            ]
+            if _sp_invalid:
+                results.append({"level": "warning", "check": "suspicious_price_format",
+                                "message": f"suspicious_prices に必須フィールド不足のエントリ {len(_sp_invalid)}件"})
+            else:
+                _sp_count = len(_sp_list)
+                _sp_msg = f"suspicious_price {_sp_count}件あり — 確認推奨" if _sp_count > 0 else "suspicious_price なし"
+                _sp_level = "warning" if _sp_count > 0 else "ok"
+                results.append({"level": _sp_level, "check": "suspicious_price_format",
+                                "message": f"suspicious_prices 形式OK（{_sp_msg}）"})
+    else:
+        results.append({"level": "ok", "check": "suspicious_price_format",
+                        "message": "collector_report 未生成のためスキップ"})
+
+    # ── #181: fetch_failed 一覧に reason フィールドがある ──
+    if _collector_report_path.exists() and '_cr' in dir():
+        _ff_list = _cr.get("fetch_failed", [])
+        _ff_no_reason = [
+            f"{f.get('product_alias')}x{f.get('shop')}"
+            for f in _ff_list
+            if not f.get("reason")
+        ]
+        if _ff_no_reason:
+            results.append({"level": "warning", "check": "fetch_failed_has_reason",
+                            "message": f"fetch_failed に reason なし: {_ff_no_reason[:3]}"})
+        elif _ff_list:
+            results.append({"level": "ok", "check": "fetch_failed_has_reason",
+                            "message": f"fetch_failed {len(_ff_list)}件すべてに reason あり"})
+        else:
+            results.append({"level": "ok", "check": "fetch_failed_has_reason",
+                            "message": "fetch_failed 0件（全取得成功）"})
+    else:
+        results.append({"level": "ok", "check": "fetch_failed_has_reason",
+                        "message": "collector_report 未生成のためスキップ"})
+
     # ── #178: auto_scraped行のlink_verifiedがすべてtrue（URLスラッグ推測チェック） ──
     # URL推測（スラッグ生成）が禁止されているため、auto_scrapedはlink_verified=trueであるべき
     import csv as _csv178

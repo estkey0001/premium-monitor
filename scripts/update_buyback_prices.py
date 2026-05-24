@@ -36,25 +36,29 @@ TARGET_PRODUCTS = [
         "product_alias":  "iphone17pro256",
         "product_name":   "iPhone 17 Pro 256GB SIMフリー",
         "condition":      "new_unopened_simfree",
-        "shops":          ["mobile_ichiban", "kaitori_shouten", "kaitori_itchome", "janpara", "iosys"],
+        "shops":          ["mobile_ichiban", "kaitori_shouten", "kaitori_itchome", "janpara", "iosys",
+                           "geo_mobile", "2ndstreet", "netoff"],
     },
     {
         "product_alias":  "iphone17pro512",
         "product_name":   "iPhone 17 Pro 512GB SIMフリー",
         "condition":      "new_unopened_simfree",
-        "shops":          ["mobile_ichiban", "kaitori_shouten", "kaitori_itchome", "janpara", "iosys"],
+        "shops":          ["mobile_ichiban", "kaitori_shouten", "kaitori_itchome", "janpara", "iosys",
+                           "geo_mobile", "2ndstreet", "netoff"],
     },
     {
         "product_alias":  "iphone17pm256",
         "product_name":   "iPhone 17 Pro Max 256GB SIMフリー",
         "condition":      "new_unopened_simfree",
-        "shops":          ["mobile_ichiban", "kaitori_shouten", "kaitori_itchome", "janpara", "iosys"],
+        "shops":          ["mobile_ichiban", "kaitori_shouten", "kaitori_itchome", "janpara", "iosys",
+                           "geo_mobile", "2ndstreet", "netoff"],
     },
     {
         "product_alias":  "iphone17pm512",
         "product_name":   "iPhone 17 Pro Max 512GB SIMフリー",
         "condition":      "new_unopened_simfree",
-        "shops":          ["mobile_ichiban", "kaitori_shouten", "kaitori_itchome", "janpara", "iosys"],
+        "shops":          ["mobile_ichiban", "kaitori_shouten", "kaitori_itchome", "janpara", "iosys",
+                           "geo_mobile", "2ndstreet", "netoff"],
     },
     {
         "product_alias":  "switch2",
@@ -62,6 +66,7 @@ TARGET_PRODUCTS = [
         "condition":      "new_unopened",
         # ゲーム機向け店舗優先。bookoff/surugaya/sofmap/tsutaya はコレクター未実装 → fetch_failed + 確認リンク
         "shops":          ["geo", "iosys", "kaitori_shouten", "janpara",
+                           "hardoff", "dosupara", "pasoko",
                            "sofmap", "bookoff", "surugaya", "tsutaya"],
     },
     {
@@ -70,6 +75,7 @@ TARGET_PRODUCTS = [
         "condition":      "new_unopened",
         # ゲーム機向け店舗優先。bookoff/surugaya/sofmap/tsutaya はコレクター未実装 → fetch_failed + 確認リンク
         "shops":          ["geo", "iosys", "kaitori_shouten", "mobile_ichiban", "janpara",
+                           "hardoff", "dosupara", "pasoko",
                            "sofmap", "bookoff", "surugaya", "tsutaya"],
     },
 ]
@@ -128,6 +134,42 @@ def _load_collectors() -> dict:
         collectors["sofmap"] = SofmapCsvCollector()
     except ImportError as e:
         logger.warning("SofmapCsvCollector not available: %s", e)
+
+    try:
+        from src.collectors.buyback_hardoff import HardoffCsvCollector
+        collectors["hardoff"] = HardoffCsvCollector()
+    except ImportError as e:
+        logger.warning("HardoffCsvCollector not available: %s", e)
+
+    try:
+        from src.collectors.buyback_geo_mobile import GeoMobileCsvCollector
+        collectors["geo_mobile"] = GeoMobileCsvCollector()
+    except ImportError as e:
+        logger.warning("GeoMobileCsvCollector not available: %s", e)
+
+    try:
+        from src.collectors.buyback_dosupara import DosuparaCsvCollector
+        collectors["dosupara"] = DosuparaCsvCollector()
+    except ImportError as e:
+        logger.warning("DosuparaCsvCollector not available: %s", e)
+
+    try:
+        from src.collectors.buyback_pasoko import PasakoCsvCollector
+        collectors["pasoko"] = PasakoCsvCollector()
+    except ImportError as e:
+        logger.warning("PasakoCsvCollector not available: %s", e)
+
+    try:
+        from src.collectors.buyback_2ndstreet import SecondStreetCsvCollector
+        collectors["2ndstreet"] = SecondStreetCsvCollector()
+    except ImportError as e:
+        logger.warning("SecondStreetCsvCollector not available: %s", e)
+
+    try:
+        from src.collectors.buyback_netoff import NetoffCsvCollector
+        collectors["netoff"] = NetoffCsvCollector()
+    except ImportError as e:
+        logger.warning("NetoffCsvCollector not available: %s", e)
 
     return collectors
 
@@ -280,6 +322,13 @@ def _fallback_url(shop_id: str, product_alias: str) -> str:
         "bookoff":         "https://www.bookoffgroup.co.jp/sell/",
         "surugaya":        "https://www.suruga-ya.jp/kaitori/",
         "tsutaya":         "https://tsutaya.tsite.jp/feature/kaitori/",
+        # 新規追加店舗
+        "hardoff":         "https://www.hardoff.co.jp/search/",
+        "geo_mobile":      "https://geomobile.jp/purchase/",
+        "dosupara":        "https://www.dospara.co.jp/kaitori/",
+        "pasoko":          "https://www.pc-koubou.jp/pc/used/buy/",
+        "2ndstreet":       "https://www.2ndstreet.jp/sell/",
+        "netoff":          "https://www.netoff.co.jp/sell/",
     }
     return FALLBACKS.get(shop_id, "")
 

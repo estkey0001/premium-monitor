@@ -66,6 +66,13 @@ SHOP_MAP = {
     "bookoff": "src_bookoff",
     "surugaya": "src_surugaya",
     "tsutaya": "src_tsutaya",
+    # 新規追加店舗
+    "hardoff": "src_hardoff",
+    "geo_mobile": "src_geo_mobile",
+    "dosupara": "src_dosupara",
+    "pasoko": "src_pasoko",
+    "2ndstreet": "src_2ndstreet",
+    "netoff": "src_netoff",
 }
 
 

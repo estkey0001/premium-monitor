@@ -4601,6 +4601,13 @@ python3 -m src.cli calculate-sedori-routes</pre>
         'src_bookoff':         ('unknown',           'ブックオフ: 自動取得未対応'),
         'src_surugaya':        ('parsing_failed',    '駿河屋: 自動取得失敗'),
         'src_tsutaya':         ('unknown',           'TSUTAYA: 自動取得未対応'),
+        # 新規追加店舗
+        'src_hardoff':         ('parsing_failed',    'ハードオフ: 自動取得失敗'),
+        'src_geo_mobile':      ('requires_js',       'ゲオモバイル: JS必要 / 取得失敗'),
+        'src_dosupara':        ('parsing_failed',    'ドスパラ: 自動取得失敗'),
+        'src_pasoko':          ('parsing_failed',    'パソコン工房: 自動取得失敗'),
+        'src_2ndstreet':       ('parsing_failed',    'セカンドストリート: 自動取得失敗'),
+        'src_netoff':          ('parsing_failed',    'ネットオフ: 自動取得失敗'),
     }
 
     def _deal_card_fetch_failed(self, d, buyback_rows: list = None) -> str:

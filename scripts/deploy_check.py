@@ -1501,6 +1501,73 @@ def check() -> list[dict]:
     else:
         results.append({"level": "error", "check": "beginner_tab_not_empty", "message": "初心者向けタブが0件（商品が全く表示されていない）"})
 
+    # ── #166: iPhone 17 Pro がスマホ欄（iphone セクション）に表示されている ──
+    # コンテンツ内の <div id="category-beginner-iphone"> を探す（ナビメニューのボタンとは区別）
+    import re as _re166
+    _beg_tab_start = html.find('id="tab-beginner"')
+    _beg_tab_end   = html.find('id="tab-advanced"')
+    _beg_tab_html  = html[_beg_tab_start:_beg_tab_end] if _beg_tab_start >= 0 and _beg_tab_end > _beg_tab_start else ""
+    _iphone_section_in_beg = _re166.search(
+        r'<div id="category-beginner-iphone".*?(?=<div id="category-beginner-tablet"|<div id="category-beginner-game"|<div id="category-beginner-other"|$)',
+        _beg_tab_html, _re166.DOTALL
+    )
+    _iphone17pro_in_iphone_section = bool(_iphone_section_in_beg and 'iPhone 17 Pro' in _iphone_section_in_beg.group(0))
+    results.append({
+        "level": "ok" if _iphone17pro_in_iphone_section else "error",
+        "check": "iphone17_in_iphone_section",
+        "message": "iPhone 17 Pro がスマホ欄に表示" if _iphone17pro_in_iphone_section else "iPhone 17 Pro がスマホ欄に見つからない"
+    })
+
+    # ── #167: Switch 2 / PlayStation がゲーム機欄に表示されている ──
+    import re as _re167
+    _game_section_in_beg = _re167.search(
+        r'<div id="category-beginner-game".*?(?=<div id="category-beginner-other"|$)',
+        _beg_tab_html, _re167.DOTALL
+    )
+    _switch2_in_game = bool(_game_section_in_beg and ('Nintendo Switch 2' in _game_section_in_beg.group(0) or 'PlayStation' in _game_section_in_beg.group(0)))
+    results.append({
+        "level": "ok" if _switch2_in_game else "warning",
+        "check": "game_console_in_game_section",
+        "message": "ゲーム機がゲーム機欄に表示" if _switch2_in_game else "ゲーム機商品がゲーム機欄に見つからない"
+    })
+
+    # ── #168: 監視中セクションが最上位になっていない（ジャンル内にある）──
+    # beginner タブ内で、最初のジャンルブロック（category-beginner-iphone）より前に
+    # status-monitoring が出ていないことを確認する（旧構造の残骸チェック）
+    import re as _re168
+    _first_genre_pos = _beg_tab_html.find('<div id="category-beginner-')
+    _monitoring_pos_in_beg = _beg_tab_html.find('status-subhead status-monitoring')
+    # monitoring がジャンルブロック外（最初のジャンルより前）に存在する場合はエラー
+    _monitoring_before_genre = (
+        _monitoring_pos_in_beg >= 0
+        and _first_genre_pos >= 0
+        and _monitoring_pos_in_beg < _first_genre_pos
+    )
+    if _monitoring_before_genre:
+        results.append({"level": "error", "check": "monitoring_inside_genre", "message": "監視中セクションがジャンル外（最上位）に出ている"})
+    else:
+        results.append({"level": "ok", "check": "monitoring_inside_genre", "message": "監視中セクションはジャンル内に正しく配置されている"})
+
+    # ── #169: 各ジャンル内に状態別見出しがある ──
+    _has_status_subhead = 'status-subhead' in _beg_tab_html
+    results.append({
+        "level": "ok" if _has_status_subhead else "warning",
+        "check": "status_subhead_exists",
+        "message": "ジャンル内に状態別見出しが存在する" if _has_status_subhead else "状態別見出し(status-subhead)が見つからない"
+    })
+
+    # ── #170: カメラ商品が初心者向けに混ざっていない ──
+    # beginner タブ（tab-beginner）の範囲内で badge-camera を検索
+    import re as _re170
+    _camera_in_beginner = _re170.findall(
+        r'data-user-level="(?:beginner_easy|beginner_watch|monitoring|fetch_failed)"[^>]*>(?:(?!data-user-level).)*?badge-camera',
+        _beg_tab_html, _re170.DOTALL
+    )
+    if _camera_in_beginner:
+        results.append({"level": "error", "check": "no_camera_in_beginner", "message": f"カメラ商品が初心者タブに{len(_camera_in_beginner)}件混入している"})
+    else:
+        results.append({"level": "ok", "check": "no_camera_in_beginner", "message": "カメラ商品は初心者タブに含まれていない"})
+
     return results
 
 

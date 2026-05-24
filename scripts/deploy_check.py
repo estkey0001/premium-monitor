@@ -1402,25 +1402,6 @@ def check() -> list[dict]:
         else:
             results.append({"level": "warning", "check": "hero_deals_dynamic", "message": "参考DEALSの lp-item が見つからない（deals データなしの可能性）"})
 
-    # ── #150: カード上部の最高買取価格と比較テーブル1位価格の一致確認 ──
-    # buyback-best-price の価格と shop-row の1位（gold ランク）価格が一致するか
-    import re as _re6
-    # 最高買取価格ラベル後の価格
-    best_prices_in_card = _re6.findall(r'最高買取価格</div>\s*<div class="price-cell-val[^"]*">¥([\d,]+)', html)
-    # shop-row gold ランク（1位）の価格
-    gold_prices = _re6.findall(r'shop-rank gold[^<]*</div>\s*<div class="shop-name-col">[^<]*</div>\s*<div class="shop-price-col">¥([\d,]+)', html)
-    if best_prices_in_card and gold_prices:
-        mismatch = []
-        for bp, gp in zip(best_prices_in_card[:5], gold_prices[:5]):
-            if bp.replace(",", "") != gp.replace(",", ""):
-                mismatch.append(f"best={bp} vs gold={gp}")
-        if mismatch:
-            results.append({"level": "warning", "check": "best_price_matches_table", "message": f"カード最高価格と比較テーブル1位が不一致: {mismatch[:2]}"})
-        else:
-            results.append({"level": "ok", "check": "best_price_matches_table", "message": f"カード最高価格と比較テーブル1位が一致（{len(best_prices_in_card)}件確認）"})
-    else:
-        results.append({"level": "warning", "check": "best_price_matches_table", "message": "最高買取価格またはテーブル1位価格を取得できなかった（データなしの可能性）"})
-
     # ── #151: fetch_failed が最高買取価格計算に使われていない ──
     # shop-row-failed の価格欄は「—」になっているか（¥数字 でないか）
     import re as _re7
@@ -1507,6 +1488,35 @@ def check() -> list[dict]:
     _beg_tab_start = html.find('id="tab-beginner"')
     _beg_tab_end   = html.find('id="tab-advanced"')
     _beg_tab_html  = html[_beg_tab_start:_beg_tab_end] if _beg_tab_start >= 0 and _beg_tab_end > _beg_tab_start else ""
+
+    # ── #150: カード上部の最高買取価格と比較テーブル1位価格の一致確認 ──
+    # beginner_easy / beginner_watch カードのみ対象（monitoringカードは「最高買取価格」ラベルなし）
+    # ※ _beg_tab_html は上で定義済み
+    import re as _re6
+    card_sections_150 = _re6.split(r'(?=<div[^>]+data-user-level=")', _beg_tab_html)
+    mismatch_150 = []
+    checked_150 = 0
+    for _cs in card_sections_150:
+        _ul_m = _re6.match(r'<div[^>]+data-user-level="([^"]+)"', _cs)
+        if not _ul_m or _ul_m.group(1) not in ('beginner_easy', 'beginner_watch'):
+            continue
+        _best_m = _re6.search(
+            r'最高買取価格</div>\s*<div class="price-cell-val[^"]*">¥([\d,]+)', _cs)
+        _gold_m = _re6.search(
+            r'shop-rank gold[^<]*</div>\s*<div class="shop-name-col">[^<]*</div>\s*<div class="shop-price-col">¥([\d,]+)', _cs)
+        if _best_m and _gold_m:
+            checked_150 += 1
+            if _best_m.group(1).replace(',','') != _gold_m.group(1).replace(',',''):
+                mismatch_150.append(f"best=¥{_best_m.group(1)} vs gold=¥{_gold_m.group(1)}")
+    if checked_150 == 0:
+        results.append({"level": "ok", "check": "best_price_matches_table",
+                        "message": "利益ありカードなし（価格整合チェックスキップ）"})
+    elif mismatch_150:
+        results.append({"level": "warning", "check": "best_price_matches_table",
+                        "message": f"カード最高価格と比較テーブル1位が不一致（{len(mismatch_150)}件）: {mismatch_150[:2]}"})
+    else:
+        results.append({"level": "ok", "check": "best_price_matches_table",
+                        "message": f"カード最高価格と比較テーブル1位が一致（{checked_150}件確認）"})
     _iphone_section_in_beg = _re166.search(
         r'<div id="category-beginner-iphone".*?(?=<div id="category-beginner-tablet"|<div id="category-beginner-game"|<div id="category-beginner-other"|$)',
         _beg_tab_html, _re166.DOTALL
@@ -1630,6 +1640,53 @@ def check() -> list[dict]:
         results.append({"level": "error", "check": "ipad_not_in_other", "message": "iPad が「その他」欄に混入している（genre=tabletに修正が必要）"})
     else:
         results.append({"level": "ok", "check": "ipad_not_in_other", "message": "iPad は「その他」欄に混入していない"})
+
+    # ── #176: AirPods がスマートフォン欄に入っていない ──
+    import re as _re176
+    _sp_section = _re176.search(
+        r'<div id="category-beginner-smartphone".*?(?=<div id="category-beginner-tablet"|<div id="category-beginner-pc"|<div id="category-beginner-wearable"|<div id="category-beginner-audio"|<div id="category-beginner-game"|<div id="category-beginner-other"|$)',
+        _beg_tab_html, _re176.DOTALL
+    )
+    _airpods_in_sp = bool(_sp_section and 'AirPods' in _sp_section.group(0))
+    if _airpods_in_sp:
+        results.append({"level": "error", "check": "airpods_not_in_smartphone",
+                        "message": "AirPods がスマートフォン欄に混入している（genre=audioに修正が必要）"})
+    else:
+        results.append({"level": "ok", "check": "airpods_not_in_smartphone",
+                        "message": "AirPods はスマートフォン欄に混入していない"})
+
+    # ── #177: Apple Watch がウェアラブル欄（category-beginner-wearable）に表示されている ──
+    import re as _re177
+    _wearable_section = _re177.search(
+        r'<div id="category-beginner-wearable".*?(?=<div id="category-beginner-audio"|<div id="category-beginner-game"|<div id="category-beginner-other"|$)',
+        _beg_tab_html, _re177.DOTALL
+    )
+    _applewatch_in_wearable = bool(_wearable_section and 'Apple Watch' in _wearable_section.group(0))
+    results.append({
+        "level": "ok" if _applewatch_in_wearable else "warning",
+        "check": "applewatch_in_wearable_section",
+        "message": "Apple Watch がウェアラブル欄に表示" if _applewatch_in_wearable else "Apple Watch がウェアラブル欄に見つからない（データなし or genre設定を確認）"
+    })
+
+    # ── #178: auto_scraped行のlink_verifiedがすべてtrue（URLスラッグ推測チェック） ──
+    # URL推測（スラッグ生成）が禁止されているため、auto_scrapedはlink_verified=trueであるべき
+    import csv as _csv178
+    _auto_unverified = []
+    _csv178_path = PROJECT_ROOT / "data" / "manual_buyback_prices.csv"
+    if _csv178_path.exists():
+        with open(_csv178_path, newline="", encoding="utf-8") as _f178:
+            for _row178 in _csv178.DictReader(_f178):
+                if (_row178.get("data_source") == "auto_scraped"
+                        and _row178.get("link_verified", "").lower() != "true"):
+                    _auto_unverified.append(
+                        f"{_row178.get('product_alias')}x{_row178.get('buyback_shop')}"
+                    )
+    if _auto_unverified:
+        results.append({"level": "warning", "check": "auto_scraped_link_verified",
+                        "message": f"auto_scraped行にlink_verified=falseが{len(_auto_unverified)}件（URL推測の可能性）: {_auto_unverified[:3]}"})
+    else:
+        results.append({"level": "ok", "check": "auto_scraped_link_verified",
+                        "message": "auto_scraped行のlink_verifiedはすべてtrue（URL推測なし）"})
 
     return results
 

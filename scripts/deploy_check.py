@@ -1521,7 +1521,7 @@ def check() -> list[dict]:
     # ── #167: Switch 2 / PlayStation がゲーム機欄に表示されている ──
     import re as _re167
     _game_section_in_beg = _re167.search(
-        r'<div id="category-beginner-game".*?(?=<div id="category-beginner-other"|$)',
+        r'<div id="category-beginner-game".*?(?=<div id="category-beginner-other"|<div id="tab-"|$)',
         _beg_tab_html, _re167.DOTALL
     )
     _switch2_in_game = bool(_game_section_in_beg and ('Nintendo Switch 2' in _game_section_in_beg.group(0) or 'PlayStation' in _game_section_in_beg.group(0)))
@@ -1567,6 +1567,69 @@ def check() -> list[dict]:
         results.append({"level": "error", "check": "no_camera_in_beginner", "message": f"カメラ商品が初心者タブに{len(_camera_in_beginner)}件混入している"})
     else:
         results.append({"level": "ok", "check": "no_camera_in_beginner", "message": "カメラ商品は初心者タブに含まれていない"})
+
+    # ── #171: iPad がタブレット欄（category-beginner-tablet）に表示されている ──
+    import re as _re171
+    _tablet_section = _re171.search(
+        r'<div id="category-beginner-tablet".*?(?=<div id="category-beginner-pc"|<div id="category-beginner-game"|<div id="category-beginner-other"|$)',
+        _beg_tab_html, _re171.DOTALL
+    )
+    _ipad_in_tablet = bool(_tablet_section and 'iPad' in _tablet_section.group(0))
+    results.append({
+        "level": "ok" if _ipad_in_tablet else "warning",
+        "check": "ipad_in_tablet_section",
+        "message": "iPad がタブレット欄に表示" if _ipad_in_tablet else "iPad がタブレット欄に見つからない（データなし or genre設定を確認）"
+    })
+
+    # ── #172: MacBook が PC欄（category-beginner-pc）に表示されている ──
+    import re as _re172
+    _pc_section = _re172.search(
+        r'<div id="category-beginner-pc".*?(?=<div id="category-beginner-wearable"|<div id="category-beginner-game"|<div id="category-beginner-other"|$)',
+        _beg_tab_html, _re172.DOTALL
+    )
+    _macbook_in_pc = bool(_pc_section and ('MacBook' in _pc_section.group(0) or 'Mac mini' in _pc_section.group(0)))
+    results.append({
+        "level": "ok" if _macbook_in_pc else "warning",
+        "check": "macbook_in_pc_section",
+        "message": "MacBook/Mac mini がPC欄に表示" if _macbook_in_pc else "MacBook/Mac mini がPC欄に見つからない（データなし or genre設定を確認）"
+    })
+
+    # ── #173: 取得失敗カードに失敗理由バッジが存在する ──
+    # fetch_failedカードが存在する場合のみチェック（0件の場合はOK）
+    _has_ff_cards = 'data-user-level="fetch_failed"' in _beg_tab_html
+    if _has_ff_cards:
+        _has_failure_reason_badge = 'failure-reason-badge' in _beg_tab_html
+        results.append({
+            "level": "ok" if _has_failure_reason_badge else "warning",
+            "check": "failure_reason_badge_shown",
+            "message": "取得失敗カードに失敗理由バッジが表示されている" if _has_failure_reason_badge else "取得失敗カードがあるが失敗理由バッジが見つからない"
+        })
+    else:
+        results.append({"level": "ok", "check": "failure_reason_badge_shown", "message": "取得失敗カードなし（失敗理由バッジ不要）"})
+
+    # ── #174: 取得失敗カードに最終試行時刻が表示されている ──
+    if _has_ff_cards:
+        _has_failure_timestamp = 'fetch-failed-timestamp' in _beg_tab_html
+        results.append({
+            "level": "ok" if _has_failure_timestamp else "warning",
+            "check": "failure_timestamp_shown",
+            "message": "取得失敗カードに最終試行時刻が表示されている" if _has_failure_timestamp else "取得失敗カードがあるが最終試行時刻が見つからない"
+        })
+    else:
+        results.append({"level": "ok", "check": "failure_timestamp_shown", "message": "取得失敗カードなし（最終試行時刻不要）"})
+
+    # ── #175: iPad がその他欄（genre=ipad）で表示されていない ──
+    # ipad genre の商品が category-beginner-other に混入していないか確認
+    import re as _re175
+    _other_section = _re175.search(
+        r'<div id="category-beginner-other".*?$',
+        _beg_tab_html, _re175.DOTALL
+    )
+    _ipad_in_other = bool(_other_section and 'iPad' in _other_section.group(0))
+    if _ipad_in_other:
+        results.append({"level": "error", "check": "ipad_not_in_other", "message": "iPad が「その他」欄に混入している（genre=tabletに修正が必要）"})
+    else:
+        results.append({"level": "ok", "check": "ipad_not_in_other", "message": "iPad は「その他」欄に混入していない"})
 
     return results
 

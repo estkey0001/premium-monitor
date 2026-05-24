@@ -66,89 +66,89 @@ products:
     keywords: ["iPhone 16 Pro Max 512", "MYW53J"]
 
   # =========================================
-  # Mac
+  # Mac / PC (genre: pc)
   # =========================================
   - id: "prod_macbook_air_m4_13"
-    genre: "mac"
+    genre: "pc"
     name: "MacBook Air M4 13インチ"
     brand: "Apple"
     retail_price: 164800
-    keywords: ["MacBook Air M4", "MacBook Air 13", "MBA M4"]
+    keywords: ["MacBook Air M4", "MacBook Air 13", "MBA M4", "MacBook Air M4 13"]
 
   - id: "prod_macbook_air_m4_15"
-    genre: "mac"
+    genre: "pc"
     name: "MacBook Air M4 15インチ"
     brand: "Apple"
     retail_price: 198800
-    keywords: ["MacBook Air M4 15", "MBA M4 15"]
+    keywords: ["MacBook Air M4 15", "MBA M4 15", "MacBook Air 15"]
 
   - id: "prod_macbook_pro_m4_14"
-    genre: "mac"
+    genre: "pc"
     name: "MacBook Pro M4 14インチ"
     brand: "Apple"
     retail_price: 248800
-    keywords: ["MacBook Pro M4", "MacBook Pro 14", "MBP M4"]
+    keywords: ["MacBook Pro M4", "MacBook Pro 14", "MBP M4", "MacBook Pro M4 14"]
 
   - id: "prod_mac_mini_m4"
-    genre: "mac"
+    genre: "pc"
     name: "Mac mini M4"
     brand: "Apple"
     retail_price: 94800
     keywords: ["Mac mini M4", "Mac mini"]
 
   # =========================================
-  # iPad
+  # iPad / タブレット (genre: tablet)
   # =========================================
   - id: "prod_ipad_pro_m4_11"
-    genre: "ipad"
+    genre: "tablet"
     name: "iPad Pro M4 11インチ"
     brand: "Apple"
     retail_price: 168800
-    keywords: ["iPad Pro M4 11", "iPad Pro 11"]
+    keywords: ["iPad Pro M4 11", "iPad Pro 11", "iPad Pro M4"]
 
   - id: "prod_ipad_pro_m4_13"
-    genre: "ipad"
+    genre: "tablet"
     name: "iPad Pro M4 13インチ"
     brand: "Apple"
     retail_price: 218800
     keywords: ["iPad Pro M4 13", "iPad Pro 13"]
 
   - id: "prod_ipad_air_m3"
-    genre: "ipad"
+    genre: "tablet"
     name: "iPad Air M3"
     brand: "Apple"
     retail_price: 98800
     keywords: ["iPad Air M3", "iPad Air"]
 
   # =========================================
-  # Apple Watch
+  # Apple Watch / ウェアラブル (genre: wearable)
   # =========================================
   - id: "prod_apple_watch_s11"
-    genre: "apple_watch"
+    genre: "wearable"
     name: "Apple Watch Series 11"
     brand: "Apple"
     retail_price: 59800
-    keywords: ["Apple Watch Series 11", "Apple Watch S11"]
+    keywords: ["Apple Watch Series 11", "Apple Watch S11", "Apple Watch 11"]
 
   - id: "prod_apple_watch_ultra3"
-    genre: "apple_watch"
+    genre: "wearable"
     name: "Apple Watch Ultra 3"
     brand: "Apple"
     retail_price: 128800
-    keywords: ["Apple Watch Ultra 3", "Ultra 3"]
+    keywords: ["Apple Watch Ultra 3", "Ultra 3", "Apple Watch Ultra"]
 
   # =========================================
-  # AirPods
+  # AirPods / オーディオ (genre: audio)
   # =========================================
   - id: "prod_airpods_pro3"
-    genre: "airpods"
+    genre: "audio"
     name: "AirPods Pro 3"
     brand: "Apple"
     retail_price: 39800
     keywords: ["AirPods Pro 3", "AirPods Pro"]
 
   - id: "prod_airpods_max"
-    genre: "airpods"
+    genre: "audio"
     name: "AirPods Max"
     brand: "Apple"
     retail_price: 84800
@@ -162,14 +162,14 @@ products:
     name: "Nintendo Switch 2"
     brand: "Nintendo"
     retail_price: 49980
-    keywords: ["Switch 2", "Switch2", "ニンテンドースイッチ2"]
+    keywords: ["Switch 2", "Switch2", "ニンテンドースイッチ2", "SW2", "Nintendo Switch2", "スイッチ2", "NintendoSwitch2"]
 
   - id: "prod_switch2_mk"
     genre: "game_console"
     name: "Nintendo Switch 2 マリオカートセット"
     brand: "Nintendo"
     retail_price: 59980
-    keywords: ["Switch 2 Mario Kart", "Switch2マリオカート"]
+    keywords: ["Switch 2 Mario Kart", "Switch2マリオカート", "Switch 2 マリオカート", "switch2 mk"]
 
   - id: "prod_ps5_pro"
     genre: "game_console"
@@ -177,7 +177,7 @@ products:
     brand: "Sony"
     model_number: "CFI-7000A01"
     retail_price: 119980
-    keywords: ["PS5 Pro", "PlayStation5Pro", "CFI-7000"]
+    keywords: ["PS5 Pro", "PlayStation5Pro", "CFI-7000", "PlayStation 5 Pro", "CFI-7000A01", "PS5Pro"]
 
   - id: "prod_ps5_de"
     genre: "game_console"

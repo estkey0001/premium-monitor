@@ -1460,6 +1460,47 @@ def check() -> list[dict]:
     else:
         results.append({"level": "warning", "check": "switch2_game_shop_links", "message": "Switch 2 向けゲーム機専門店リンクが見つからない（CSV 更新 → import → LP 再生成が必要）"})
 
+    # ── #161: iPhone 17 Pro 256GB が初心者向け内に表示されている ──
+    _has_iphone17_in_beginner = "iPhone 17 Pro 256GB" in html
+    if _has_iphone17_in_beginner:
+        results.append({"level": "ok", "check": "iphone17pro_in_beginner", "message": "iPhone 17 Pro 256GB が初心者向けセクションに表示されている"})
+    else:
+        results.append({"level": "error", "check": "iphone17pro_in_beginner", "message": "iPhone 17 Pro 256GB が初心者向けセクションに見つからない"})
+
+    # ── #162: マイナス利益商品が「現在は赤字」として表示されている ──
+    _has_monitoring_badge = 'badge-monitoring' in html or '現在は赤字' in html
+    results.append({
+        "level": "ok" if _has_monitoring_badge else "warning",
+        "check": "monitoring_badge_shown",
+        "message": "「現在は赤字」バッジが表示されている" if _has_monitoring_badge else "「現在は赤字」バッジが見つからない（赤字商品がない可能性）"
+    })
+
+    # ── #163: マイナス利益商品が通常の緑カードに混ざっていない ──
+    import re as _re_monitoring
+    _monitoring_with_green = _re_monitoring.findall(
+        r'data-user-level="monitoring"[^>]*>(?:(?!data-user-level).)*?class="badge badge-easy"',
+        html, _re_monitoring.DOTALL
+    )
+    if _monitoring_with_green:
+        results.append({"level": "error", "check": "monitoring_not_in_green_card", "message": f"monitoring商品が緑(badge-easy)カードに混ざっている: {len(_monitoring_with_green)}件"})
+    else:
+        results.append({"level": "ok", "check": "monitoring_not_in_green_card", "message": "monitoring商品は緑カードに混ざっていない"})
+
+    # ── #164: 取得失敗商品が「取得失敗/要確認」として表示されている ──
+    _has_fetch_failed_card = 'badge-fetch-failed-card' in html or 'data-user-level="fetch_failed"' in html
+    results.append({
+        "level": "ok" if _has_fetch_failed_card else "warning",
+        "check": "fetch_failed_card_shown",
+        "message": "取得失敗カードが表示されている" if _has_fetch_failed_card else "取得失敗カードが見つからない（取得失敗商品がない可能性）"
+    })
+
+    # ── #165: 初心者タブが0件表示にならない ──
+    _has_any_beginner_card = any(x in html for x in ['badge-easy', 'badge-watch', 'badge-monitoring', 'badge-fetch-failed-card'])
+    if _has_any_beginner_card:
+        results.append({"level": "ok", "check": "beginner_tab_not_empty", "message": "初心者向けタブに1件以上の商品が表示されている"})
+    else:
+        results.append({"level": "error", "check": "beginner_tab_not_empty", "message": "初心者向けタブが0件（商品が全く表示されていない）"})
+
     return results
 
 

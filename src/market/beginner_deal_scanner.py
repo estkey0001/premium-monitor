@@ -36,10 +36,11 @@ class BeginnerDealScanner:
         for product in products:
             deal = self.scan_product(product)
             if deal:
+                # monitoring / fetch_failed / 利益あり → upsert して表示
                 self.repo.upsert_beginner_deal(deal)
                 deals.append(deal)
             else:
-                # 案件なし（利益マイナスなど）→ 古いエントリを非アクティブ化
+                # データなし（buyback_list が空 or official_price なし）→ 非アクティブ化
                 self.repo.deactivate_beginner_deal(product.id)
 
         deals.sort(key=lambda d: d.net_profit_jpy, reverse=True)
@@ -78,6 +79,40 @@ class BeginnerDealScanner:
         if not buyback_list:
             return None
 
+        # 全店舗が fetch_failed → user_level="fetch_failed" で返す（Noneにしない）
+        all_failed = all(
+            getattr(b, 'data_source', '') == 'fetch_failed' or b.buyback_price == 0
+            for b in buyback_list
+        )
+        if all_failed:
+            official_url = self._get_official_url(product)
+            return BeginnerDealModel(
+                id=str(ulid.new()),
+                product_id=product.id,
+                product_name=product.name,
+                category=product.genre or "",
+                brand=getattr(product, 'brand', '') or "",
+                official_price_jpy=official,
+                official_url=official_url,
+                stock_status="",
+                sale_method="normal",
+                best_buyback_price=0,
+                best_buyback_shop="",
+                best_buyback_url="",
+                buyback_condition="",
+                gross_profit_jpy=0,
+                estimated_costs_jpy=0,
+                net_profit_jpy=0,
+                net_profit_rate=0.0,
+                beginner_score=0.0,
+                difficulty_score=100.0,
+                user_level="fetch_failed",
+                recommended_action="取得失敗 / 要確認",
+                is_active=True,
+                scanned_at=datetime.now(),
+                notes="全店舗価格取得失敗",
+            )
+
         # fetch_failed (price=0) は価格計算から完全除外
         valid_buybacks = [
             b for b in buyback_list
@@ -109,9 +144,7 @@ class BeginnerDealScanner:
 
         # 最高買取を選択
         best = deduped[0]
-        if best.buyback_price <= official:
-            # 買取 <= 定価 ならbeginner案件にならない
-            return None
+        # ※ 買取 <= 定価（赤字）でも monitoring として表示するため None にしない
 
         # 複数店舗統計計算
         prices_sorted = [b.buyback_price for b in deduped]
@@ -159,6 +192,11 @@ class BeginnerDealScanner:
         user_level, action = self._classify(
             sale_method, stock_status, difficulty, net_profit, gross_profit
         )
+
+        # 赤字（net_profit <= 0）は monitoring として表示
+        if net_profit <= 0 and user_level == "":
+            user_level = "monitoring"
+            action = "取得失敗 / 要確認" if action == "" else action
 
         # 公式URL
         official_url = self._get_official_url(product)

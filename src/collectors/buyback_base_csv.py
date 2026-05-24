@@ -25,6 +25,7 @@ class BaseCsvBuybackCollector:
 
     def __init__(self, timeout: int = 20):
         self.timeout = timeout
+        self.last_failure_reason: Optional[str] = None  # 最後の失敗理由（report用）
         self.session = requests.Session()
         self.session.headers.update({
             "User-Agent": "Mozilla/5.0 (compatible; PremiumMonitor/1.0; +https://github.com/estkey0001/premium-monitor)",
@@ -33,21 +34,26 @@ class BaseCsvBuybackCollector:
         })
 
     def fetch(self, product_alias: str, product_name: str, condition: str = "new_unopened_simfree") -> Optional[dict]:
-        """価格取得。成功→dict, 失敗→None。"""
+        """価格取得。成功→dict, 失敗→None。失敗理由は last_failure_reason に保存。"""
+        self.last_failure_reason = None
         url = self._build_url(product_alias, product_name)
         if not url:
             logger.info("[%s] No URL defined for %s", self.SHOP_NAME, product_alias)
+            self.last_failure_reason = "no_url"
             return None
 
         try:
             html = self._fetch_html(url)
             if not html:
                 logger.warning("[%s] Empty HTML for %s", self.SHOP_NAME, product_alias)
+                if self.last_failure_reason is None:
+                    self.last_failure_reason = "empty_html"
                 return None
 
             price = self._parse_price(html, product_alias, product_name)
             if not price or price <= 0:
                 logger.info("[%s] Price not found for %s", self.SHOP_NAME, product_alias)
+                self.last_failure_reason = "price_not_found"
                 return None
 
             actual_url = self._parse_detail_url(html, url)
@@ -64,6 +70,8 @@ class BaseCsvBuybackCollector:
             }
         except Exception as e:
             logger.warning("[%s] Error fetching %s: %s", self.SHOP_NAME, product_alias, e)
+            if self.last_failure_reason is None:
+                self.last_failure_reason = f"exception_{type(e).__name__}"
             return None
 
     def _fetch_html(self, url: str) -> Optional[str]:
@@ -75,7 +83,21 @@ class BaseCsvBuybackCollector:
             if self.REQUIRES_JS and len(resp.text) < 3000:
                 return self._fetch_with_playwright(url)
             return resp.text
+        except requests.HTTPError as e:
+            status = e.response.status_code if (hasattr(e, 'response') and e.response is not None) else 0
+            self.last_failure_reason = f"http_{status}" if status else "http_error"
+            logger.warning("[%s] HTTP error %s: %s", self.SHOP_NAME, url, e)
+            if self.REQUIRES_JS:
+                return self._fetch_with_playwright(url)
+            return None
+        except requests.exceptions.SSLError as e:
+            self.last_failure_reason = "ssl_error"
+            logger.warning("[%s] SSL error %s: %s", self.SHOP_NAME, url, e)
+            if self.REQUIRES_JS:
+                return self._fetch_with_playwright(url)
+            return None
         except requests.RequestException as e:
+            self.last_failure_reason = "connection_error"
             logger.warning("[%s] HTTP error %s: %s", self.SHOP_NAME, url, e)
             if self.REQUIRES_JS:
                 return self._fetch_with_playwright(url)

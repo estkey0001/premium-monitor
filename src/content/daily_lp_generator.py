@@ -121,7 +121,7 @@ class DailyLPGenerator:
         buyback_by_product: dict = {}
         _all_products = self.repo.list_products()
         for _p in _all_products:
-            _rows = self.repo.list_buyback_prices_by_product(_p.id, limit=5)
+            _rows = self.repo.list_buyback_prices_by_product(_p.id, limit=10)
             if _rows:
                 buyback_by_product[_p.id] = _rows
 
@@ -3303,6 +3303,49 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 
         max_profit_str = f'+¥{max_profit:,}' if max_profit > 0 else '—'
 
+        # 参考DEALS パネル: all_deals の上位5件を動的生成（fetch_failed 除外済み）
+        _GENRE_ICON = {
+            "iphone": "&#128241;", "smartphone": "&#128241;",
+            "camera": "&#128247;",
+            "game_console": "&#127918;", "game": "&#127918;",
+        }
+        _hero_deal_items = []
+        _seen_products_hero = set()
+        _candidates = sorted(
+            [d for d in (all_deals or []) if (d.net_profit_jpy or 0) > 0],
+            key=lambda d: d.net_profit_jpy or 0, reverse=True
+        )
+        for _d in _candidates:
+            if _d.product_id in _seen_products_hero:
+                continue
+            _seen_products_hero.add(_d.product_id)
+            _cat = getattr(_d, "category", "") or ""
+            _icon = _GENRE_ICON.get(_cat, "&#128240;")
+            _icon_cls = "iphone" if "phone" in _cat or _cat == "iphone" else (
+                "camera" if _cat == "camera" else (
+                "game" if "game" in _cat else "default"
+            ))
+            _shop = _esc(getattr(_d, "best_buyback_shop", "") or "")
+            _pname = _esc(getattr(_d, "product_name", "") or "")
+            _profit = _d.net_profit_jpy or 0
+            _profit_str = f'+¥{_profit:,}' if _profit >= 0 else f'-¥{abs(_profit):,}'
+            _hero_deal_items.append(
+                f'<div class="lp-item">'
+                f'<div class="lp-icon {_icon_cls}">{_icon}</div>'
+                f'<div class="lp-info">'
+                f'<div class="lp-name">{_pname}</div>'
+                f'<div class="lp-shop">{_shop}</div>'
+                f'</div>'
+                f'<div class="lp-profit">{_esc(_profit_str)}</div>'
+                f'</div>'
+            )
+            if len(_hero_deal_items) >= 5:
+                break
+        # フォールバック: データ0件のとき空メッセージ
+        if not _hero_deal_items:
+            _hero_deal_items = ['<div class="lp-item" style="color:var(--ink3);font-size:0.8rem;padding:8px 0;">参考データ準備中</div>']
+        _hero_live_panel_items = "\n          ".join(_hero_deal_items)
+
         return f"""<section class="hero">
   <div class="hero-inner">
     <div class="hero-left">
@@ -3334,11 +3377,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
           <div class="live-panel-badge"><span class="live-dot"></span> 手動確認データ</div>
         </div>
         <div class="live-panel-items">
-          <div class="lp-item"><div class="lp-icon iphone">&#128241;</div><div class="lp-info"><div class="lp-name">iPhone 16 Pro 256GB</div><div class="lp-shop">じゃんぱら</div></div><div class="lp-profit">+¥18,400</div></div>
-          <div class="lp-item"><div class="lp-icon camera">&#128247;</div><div class="lp-info"><div class="lp-name">SONY α7C II</div><div class="lp-shop">マップカメラ</div></div><div class="lp-profit">+¥32,000</div></div>
-          <div class="lp-item"><div class="lp-icon game">&#127918;</div><div class="lp-info"><div class="lp-name">Nintendo Switch 2</div><div class="lp-shop">ゲオ</div></div><div class="lp-profit">+¥9,800</div></div>
-          <div class="lp-item"><div class="lp-icon iphone">&#128241;</div><div class="lp-info"><div class="lp-name">iPhone 15 Plus 128GB</div><div class="lp-shop">iosys</div></div><div class="lp-profit">+¥12,000</div></div>
-          <div class="lp-item"><div class="lp-icon camera">&#128247;</div><div class="lp-info"><div class="lp-name">Canon EOS R6 II</div><div class="lp-shop">フジヤカメラ</div></div><div class="lp-profit">+¥45,000</div></div>
+          {_hero_live_panel_items}
         </div>
       </div>
     </div>
@@ -4456,8 +4495,9 @@ python3 -m src.cli calculate-sedori-routes</pre>
             official_price = d.official_price_jpy or 0
             rows_html = []
             # fetch_failed行を末尾に、正常行を先に表示（ランク番号は正常行のみ）
-            _normal_rows  = [r for r in buyback_rows[:5] if r.get('buyback_price', 0) > 0]
-            _failed_rows  = [r for r in buyback_rows[:5] if r.get('data_source') == 'fetch_failed']
+            # 正常行は上位5件、失敗行は全件（確認リンク目的なので件数制限しない）
+            _normal_rows  = [r for r in buyback_rows if r.get('buyback_price', 0) > 0][:5]
+            _failed_rows  = [r for r in buyback_rows if r.get('data_source') == 'fetch_failed']
             _all_disp = _normal_rows + _failed_rows
             n_shops = len(_all_disp)
             rank_counter = 0

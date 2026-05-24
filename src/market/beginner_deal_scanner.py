@@ -38,6 +38,9 @@ class BeginnerDealScanner:
             if deal:
                 self.repo.upsert_beginner_deal(deal)
                 deals.append(deal)
+            else:
+                # 案件なし（利益マイナスなど）→ 古いエントリを非アクティブ化
+                self.repo.deactivate_beginner_deal(product.id)
 
         deals.sort(key=lambda d: d.net_profit_jpy, reverse=True)
         return deals
@@ -48,36 +51,60 @@ class BeginnerDealScanner:
         if official <= 0:
             return None
 
-        # 買取価格を収集（buyback_pricesテーブル + price_historyテーブル）
-        buyback_list = self.repo.list_buyback_prices(product_id=product.id)
-
-        # price_historyからもbuyback型を補完
-        ph_buybacks = self.repo.list_price_history(
-            product_id=product.id, price_type="buyback", limit=20
-        )
-        for ph in ph_buybacks:
-            # 既にbuyback_pricesにある店舗は除外
-            if not any(b.shop_id == ph.source_id for b in buyback_list):
-                buyback_list.append(BuybackPriceModel(
-                    id=ph.id,
-                    product_id=product.id,
-                    shop_id=ph.source_id,
-                    shop_name=BUYBACK_SHOPS.get(ph.source_id, {}).get("name", ph.source_id),
-                    buyback_price=ph.price,
-                    condition="new_unopened",
-                    buyback_url="",
-                    observed_at=ph.recorded_at,
-                ))
+        # 各ショップの最新1行のみ取得（fetch_failed も含む）
+        # list_buyback_prices（全行）ではなく list_buyback_prices_by_product（MAX observed_at）を使い
+        # 古い manual_today が fetch_failed を上書きしないようにする
+        _bp_dicts = self.repo.list_buyback_prices_by_product(product_id=product.id, limit=20)
+        buyback_list = []
+        for _d in _bp_dicts:
+            _obs_str = _d.get('observed_at', '')
+            try:
+                _obs_dt = datetime.fromisoformat(str(_obs_str)) if _obs_str else datetime.now()
+            except Exception:
+                _obs_dt = datetime.now()
+            buyback_list.append(BuybackPriceModel(
+                id=f"scan_{_d['shop_id']}",
+                product_id=product.id,
+                shop_id=_d.get('shop_id', ''),
+                shop_name=_d.get('shop_name', ''),
+                buyback_price=_d.get('buyback_price', 0),
+                condition=_d.get('condition', 'new_unopened'),
+                buyback_url=_d.get('buyback_url', ''),
+                observed_at=_obs_dt,
+                data_source=_d.get('data_source', 'manual_today'),
+                link_verified=bool(_d.get('link_verified', False)),
+            ))
 
         if not buyback_list:
             return None
 
-        # 店舗ごとに重複排除（最高値優先）して価格順ソート
+        # fetch_failed (price=0) は価格計算から完全除外
+        valid_buybacks = [
+            b for b in buyback_list
+            if b.buyback_price > 0 and getattr(b, "data_source", "") != "fetch_failed"
+        ]
+        if not valid_buybacks:
+            return None
+
+        # 店舗ごとに重複排除: 優先順位 = auto_scraped > 最新 observed_at
         shop_best: dict[str, BuybackPriceModel] = {}
-        for b in buyback_list:
+        for b in valid_buybacks:
             sid = b.shop_id or b.shop_name or "unknown"
-            if sid not in shop_best or b.buyback_price > shop_best[sid].buyback_price:
+            if sid not in shop_best:
                 shop_best[sid] = b
+            else:
+                existing = shop_best[sid]
+                b_is_auto = getattr(b, "data_source", "") == "auto_scraped"
+                e_is_auto = getattr(existing, "data_source", "") == "auto_scraped"
+                b_time = b.observed_at if b.observed_at else datetime.min
+                e_time = existing.observed_at if existing.observed_at else datetime.min
+                # auto_scraped が優先。同じ data_source ならより新しい observed_at を採用
+                if b_is_auto and not e_is_auto:
+                    shop_best[sid] = b
+                elif not b_is_auto and e_is_auto:
+                    pass  # 既存の auto_scraped を維持
+                elif b_time > e_time:
+                    shop_best[sid] = b
         deduped = sorted(shop_best.values(), key=lambda b: b.buyback_price, reverse=True)
 
         # 最高買取を選択

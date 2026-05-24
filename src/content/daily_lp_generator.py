@@ -1635,6 +1635,22 @@ a[href], button, [role="tab"], [role="button"],
   padding: 12px; margin: 8px 0; color: #888; font-size: 0.85rem;
 }}
 
+/* ジャンル内サブセクション（v7: 第一階層=ジャンル、第二階層=状態）*/
+.status-subsection {{ margin: 16px 0 24px; }}
+.status-subhead {{
+  font-size: 0.8rem; font-weight: 700; letter-spacing: 0.06em;
+  padding: 4px 10px; border-radius: 4px; margin-bottom: 10px;
+  display: inline-block;
+}}
+.status-subhead.status-profit   {{ background: #F0FDF8; color: var(--profit-dark); border: 1px solid #B2F0DC; }}
+.status-subhead.status-monitoring {{ background: #FFF0F0; color: #CC2200; border: 1px solid #FFBBBB; }}
+.status-subhead.status-fetch-failed {{ background: #F5F5F5; color: #888; border: 1px solid #DDD; }}
+
+/* ジャンル内利益サマリ */
+.genre-status-summary {{
+  font-size: 0.75rem; color: var(--ink3); margin: 2px 0 12px;
+}}
+
 /* Pro向け価格テーブル */
 .pro-price-table {{
   width: 100%; border-collapse: collapse;
@@ -4273,7 +4289,7 @@ python3 -m src.cli calculate-sedori-routes</pre>
                        latest_buyback_at: Optional[datetime] = None,
                        monitoring_deals: list = None,
                        fetch_failed_deals: list = None) -> str:
-        """初心者向けタブ（v6: カテゴリ別セクション + 監視中/取得失敗セクション）"""
+        """初心者向けタブ（v7: 第一階層=ジャンル、第二階層=状態 の2階層構造）"""
         bybp = buyback_by_product or {}
         monitoring_deals   = monitoring_deals   or []
         fetch_failed_deals = fetch_failed_deals or []
@@ -4302,36 +4318,14 @@ python3 -m src.cli calculate-sedori-routes</pre>
                     '</div>'
                 )
 
-        # ── サマリバー（利益あり件数 / 監視中件数 / 取得失敗件数）──
-        _profit_count  = len(easy_deals) + len(watch_deals)
-        _monitor_count = len(monitoring_deals)
-        _failed_count  = len(fetch_failed_deals)
-        parts.append(
-            f'<div class="beginner-summary-bar">'
-            f'利益あり: <strong>{_profit_count}</strong>件 ／ '
-            f'監視中: <strong>{_monitor_count}</strong>件 ／ '
-            f'取得失敗: <strong>{_failed_count}</strong>件'
-            f'</div>'
-        )
-
-        # ── Info banner (anchor: category-beginner-iphone) ──
-        parts.append('<div id="category-beginner-iphone" class="info-banner blue">\n'
+        # ── Info banner ──
+        parts.append('<div class="info-banner blue">\n'
                      '<div class="ib-title">&#128100; 初心者向け：公式購入 &rarr; 国内買取比較</div>\n'
                      'Apple Store・任天堂公式などの<strong>公式サイトで定価購入できる商品</strong>を、'
                      '国内の複数買取サイトで売却した場合の価格差を比較します。'
                      'iPhone・ゲーム機など比較的入手しやすい商品を中心に掲載しています。\n'
                      '<strong>掲載価格は更新時点の参考値です。参考利益は保証されません。購入前に必ず各店舗の最新価格をご確認ください。</strong>\n'
                      '</div>')
-
-        # カテゴリ別に分類
-        iphone_easy  = [d for d in easy_deals  if getattr(d, 'category', '') == 'iphone']
-        iphone_watch = [d for d in watch_deals if getattr(d, 'category', '') == 'iphone']
-        tablet_easy  = [d for d in easy_deals  if getattr(d, 'category', '') == 'tablet']
-        tablet_watch = [d for d in watch_deals if getattr(d, 'category', '') == 'tablet']
-        game_easy    = [d for d in easy_deals  if getattr(d, 'category', '') == 'game_console']
-        game_watch   = [d for d in watch_deals if getattr(d, 'category', '') == 'game_console']
-        other_easy   = [d for d in easy_deals  if getattr(d, 'category', '') not in ('iphone', 'tablet', 'game_console')]
-        other_watch  = [d for d in watch_deals if getattr(d, 'category', '') not in ('iphone', 'tablet', 'game_console')]
 
         # 48h超古い買取価格を持つ案件を初心者向けセクションから除外（価格信頼性確保）
         def _bybp_age_h(deal):
@@ -4351,128 +4345,121 @@ python3 -m src.cli calculate-sedori-routes</pre>
                 return 0.0
 
         _STALE_EXCLUDE_H = 48.0
-        iphone_easy  = [d for d in iphone_easy  if _bybp_age_h(d) < _STALE_EXCLUDE_H]
-        iphone_watch = [d for d in iphone_watch if _bybp_age_h(d) < _STALE_EXCLUDE_H]
-        tablet_easy  = [d for d in tablet_easy  if _bybp_age_h(d) < _STALE_EXCLUDE_H]
-        tablet_watch = [d for d in tablet_watch if _bybp_age_h(d) < _STALE_EXCLUDE_H]
-        game_easy    = [d for d in game_easy    if _bybp_age_h(d) < _STALE_EXCLUDE_H]
-        game_watch   = [d for d in game_watch   if _bybp_age_h(d) < _STALE_EXCLUDE_H]
-        other_easy   = [d for d in other_easy   if _bybp_age_h(d) < _STALE_EXCLUDE_H]
-        other_watch  = [d for d in other_watch  if _bybp_age_h(d) < _STALE_EXCLUDE_H]
 
-        # ── iPhone / スマホ ──
-        if iphone_easy or iphone_watch:
-            if iphone_easy:
-                parts.append(f'<div class="sec-head"><div class="sec-title">&#128241; iPhone / スマホ &mdash; 低難度</div><div class="sec-badge">{len(iphone_easy)}件</div></div>')
-                parts.append('<div class="cards-grid">')
-                for d in iphone_easy:
-                    rows = bybp.get(d.product_id, [])
-                    parts.append(self._deal_card(d, 'badge-easy', '低難度', buyback_rows=rows))
-                parts.append('</div>')
-            if iphone_watch:
-                parts.append(f'<div class="sec-head" style="margin-top:32px"><div class="sec-title">&#128241; iPhone / スマホ &mdash; 様子見</div><div class="sec-badge">{len(iphone_watch)}件</div></div>')
-                parts.append('<div class="cards-grid">')
-                for d in iphone_watch:
-                    rows = bybp.get(d.product_id, [])
-                    parts.append(self._deal_card(d, 'badge-watch', '要確認', buyback_rows=rows))
-                parts.append('</div>')
-        else:
-            parts.append('<div class="sec-head"><div class="sec-title">&#128241; iPhone / スマホ</div></div>')
-            parts.append('<div class="empty-state"><span class="empty-icon">&#128241;</span>現在、スマホの案件はありません。データ取得次第更新します。</div>')
+        # 全案件を統合（カメラ除外済みの easy/watch + monitoring/fetch_failed）
+        # 48h超古い案件はeasy/watchから除外（monitoring/fetch_failedは除外しない）
+        _easy_filtered  = [d for d in easy_deals  if _bybp_age_h(d) < _STALE_EXCLUDE_H]
+        _watch_filtered = [d for d in watch_deals if _bybp_age_h(d) < _STALE_EXCLUDE_H]
 
-        # ── タブレット（anchor: category-beginner-tablet）──
-        parts.append('<div id="category-beginner-tablet" style="margin-top:44px;scroll-margin-top:80px"></div>')
-        if tablet_easy or tablet_watch:
-            if tablet_easy:
-                parts.append(f'<div class="sec-head"><div class="sec-title">&#128196; タブレット &mdash; 低難度</div><div class="sec-badge">{len(tablet_easy)}件</div></div>')
-                parts.append('<div class="cards-grid">')
-                for d in tablet_easy:
-                    rows = bybp.get(d.product_id, [])
-                    parts.append(self._deal_card(d, 'badge-easy', '低難度', buyback_rows=rows))
-                parts.append('</div>')
-            if tablet_watch:
-                parts.append(f'<div class="sec-head" style="margin-top:32px"><div class="sec-title">&#128196; タブレット &mdash; 様子見</div><div class="sec-badge">{len(tablet_watch)}件</div></div>')
-                parts.append('<div class="cards-grid">')
-                for d in tablet_watch:
-                    rows = bybp.get(d.product_id, [])
-                    parts.append(self._deal_card(d, 'badge-watch', '要確認', buyback_rows=rows))
-                parts.append('</div>')
-        else:
-            parts.append('<div class="sec-head"><div class="sec-title">&#128196; タブレット</div></div>')
-            parts.append('<div class="empty-state"><span class="empty-icon">&#128196;</span>現在、タブレットの案件はありません。データ取得次第更新します。</div>')
+        # product_id で重複除去（同じ商品が複数レベルで来る場合の対策）
+        # 利益降順でソートして重複除去
+        _all_combined = (
+            list(_easy_filtered) +
+            list(_watch_filtered) +
+            list(monitoring_deals) +
+            list(fetch_failed_deals)
+        )
+        seen_pids = set()
+        deduped_all = []
+        for d in sorted(_all_combined, key=lambda x: x.net_profit_jpy or 0, reverse=True):
+            if d.product_id not in seen_pids:
+                seen_pids.add(d.product_id)
+                deduped_all.append(d)
 
-        # ── ゲーム機 通常販売モデル（anchor: category-beginner-game）──
-        parts.append('<div id="category-beginner-game" style="margin-top:44px;scroll-margin-top:80px"></div>')
-        if game_easy or game_watch:
-            if game_easy:
-                parts.append(f'<div class="sec-head"><div class="sec-title">&#127918; ゲーム機 &mdash; 低難度</div><div class="sec-badge">{len(game_easy)}件</div></div>')
-                parts.append('<div class="cards-grid">')
-                for d in game_easy:
-                    rows = bybp.get(d.product_id, [])
-                    parts.append(self._deal_card(d, 'badge-easy', '低難度', buyback_rows=rows))
-                parts.append('</div>')
-            if game_watch:
-                parts.append(f'<div class="sec-head" style="margin-top:32px"><div class="sec-title">&#127918; ゲーム機 &mdash; 様子見</div><div class="sec-badge">{len(game_watch)}件</div></div>')
-                parts.append('<div class="cards-grid">')
-                for d in game_watch:
-                    rows = bybp.get(d.product_id, [])
-                    parts.append(self._deal_card(d, 'badge-watch', '要確認', buyback_rows=rows))
-                parts.append('</div>')
-            parts.append('<div class="caution" style="margin-top:16px;font-size:0.82rem;">'
-                         '&#128204; <strong>限定・抽選モデル</strong>（Nintendo Switch 2 抽選など）は '
-                         '<a href="#tab-lottery" class="inline-link">抽選情報タブ</a> または '
-                         '<a href="#tab-advanced" class="inline-link">Pro向けタブ</a> をご確認ください。</div>')
-        else:
-            parts.append('<div class="sec-head"><div class="sec-title">&#127918; ゲーム機</div></div>')
-            parts.append('<div class="empty-state"><span class="empty-icon">&#127918;</span>現在、ゲーム機の案件はありません。データ取得次第更新します。</div>')
+        # ── サマリバー（利益あり件数 / 監視中件数 / 取得失敗件数）──
+        _profit_deals_all  = [d for d in deduped_all if (d.net_profit_jpy or 0) > 0]
+        _monitor_deals_all = [d for d in deduped_all if getattr(d, 'user_level', '') == 'monitoring']
+        _failed_deals_all  = [d for d in deduped_all if getattr(d, 'user_level', '') == 'fetch_failed']
+        parts.append(
+            f'<div class="beginner-summary-bar">'
+            f'利益あり: <strong>{len(_profit_deals_all)}</strong>件 ／ '
+            f'監視中: <strong>{len(_monitor_deals_all)}</strong>件 ／ '
+            f'取得失敗: <strong>{len(_failed_deals_all)}</strong>件'
+            f'</div>'
+        )
 
-        # ── その他（カテゴリ未分類）──
-        if other_easy or other_watch:
-            parts.append('<div class="sec-head" style="margin-top:44px"><div class="sec-title">その他</div></div>')
-            if other_easy:
-                parts.append('<div class="cards-grid">')
-                for d in other_easy:
-                    rows = bybp.get(d.product_id, [])
-                    parts.append(self._deal_card(d, 'badge-easy', '低難度', buyback_rows=rows))
-                parts.append('</div>')
-            if other_watch:
-                parts.append('<div class="sec-head" style="margin-top:32px"><div class="sec-title">その他 &mdash; 様子見</div></div>')
-                parts.append('<div class="cards-grid">')
-                for d in other_watch:
-                    rows = bybp.get(d.product_id, [])
-                    parts.append(self._deal_card(d, 'badge-watch', '要確認', buyback_rows=rows))
-                parts.append('</div>')
+        # ── ジャンル定義 ──
+        GENRE_GROUPS = [
+            ('iphone',       '&#128241; iPhone / スマホ',  'category-beginner-iphone'),
+            ('tablet',       '&#128196; タブレット',        'category-beginner-tablet'),
+            ('game_console', '&#127918; ゲーム機',          'category-beginner-game'),
+            ('other',        '&#128230; その他',            'category-beginner-other'),
+        ]
 
-        # ── Section B: 監視中 / 現在は赤字 ──
-        if monitoring_deals:
-            parts.append(
-                f'<div class="sec-head" style="margin-top:44px">'
-                f'<div class="sec-title">&#128308; 監視中 / 現在は赤字</div>'
-                f'<div class="sec-badge">{len(monitoring_deals)}件</div>'
-                f'</div>'
+        genre_rendered = False
+        for genre_key, genre_label, anchor_id in GENRE_GROUPS:
+            # このジャンルの全案件を抽出
+            if genre_key == 'other':
+                genre_deals = [d for d in deduped_all
+                               if getattr(d, 'category', '') not in ('iphone', 'tablet', 'game_console', 'camera')]
+            else:
+                genre_deals = [d for d in deduped_all if getattr(d, 'category', '') == genre_key]
+
+            if not genre_deals:
+                continue
+
+            genre_rendered = True
+
+            # 状態別分類
+            profit_deals    = [d for d in genre_deals if (d.net_profit_jpy or 0) > 0]
+            monitoring_genre = [d for d in genre_deals if getattr(d, 'user_level', '') == 'monitoring']
+            ff_genre        = [d for d in genre_deals if getattr(d, 'user_level', '') == 'fetch_failed']
+
+            # ジャンルヘッダー（件数・内訳付き）
+            total_in_genre = len(genre_deals)
+            summary_text = (
+                f'利益あり {len(profit_deals)} / '
+                f'監視中 {len(monitoring_genre)} / '
+                f'取得失敗 {len(ff_genre)}'
             )
-            parts.append('<div class="cards-grid">')
-            for d in monitoring_deals:
-                rows = bybp.get(d.product_id, [])
-                parts.append(self._deal_card_monitoring(d, buyback_rows=rows))
-            parts.append('</div>')
 
-        # ── Section C: 取得失敗 / 要確認 ──
-        if fetch_failed_deals:
+            margin_top = '' if anchor_id == 'category-beginner-iphone' else ' style="margin-top:44px;scroll-margin-top:80px"'
             parts.append(
-                f'<div class="sec-head" style="margin-top:44px">'
-                f'<div class="sec-title">&#128683; 取得失敗 / 要確認</div>'
-                f'<div class="sec-badge">{len(fetch_failed_deals)}件</div>'
+                f'<div id="{anchor_id}"{margin_top}>'
+                f'<div class="sec-head">'
+                f'<div class="sec-title">{genre_label}</div>'
+                f'<div class="sec-badge">{total_in_genre}件</div>'
                 f'</div>'
+                f'<div class="genre-status-summary">{summary_text}</div>'
             )
-            parts.append('<div class="cards-grid">')
-            for d in fetch_failed_deals:
-                rows = bybp.get(d.product_id, [])
-                parts.append(self._deal_card_fetch_failed(d, buyback_rows=rows))
-            parts.append('</div>')
 
-        # 全案件が48h除外で表示不能な場合の空状態表示
-        if not parts:
+            # 利益あり
+            if profit_deals:
+                parts.append('<div class="status-subsection"><div class="status-subhead status-profit">利益あり</div><div class="cards-grid">')
+                for d in profit_deals:
+                    rows = bybp.get(d.product_id, [])
+                    badge_cls = 'badge-easy' if getattr(d, 'user_level', '') == 'beginner_easy' else 'badge-watch'
+                    label = '低難度' if getattr(d, 'user_level', '') == 'beginner_easy' else '様子見'
+                    parts.append(self._deal_card(d, badge_cls, label, buyback_rows=rows))
+                parts.append('</div></div>')
+
+            # 監視中 / 赤字
+            if monitoring_genre:
+                parts.append('<div class="status-subsection"><div class="status-subhead status-monitoring">監視中 / 現在は赤字</div><div class="cards-grid">')
+                for d in monitoring_genre:
+                    rows = bybp.get(d.product_id, [])
+                    parts.append(self._deal_card_monitoring(d, buyback_rows=rows))
+                parts.append('</div></div>')
+
+            # 取得失敗
+            if ff_genre:
+                parts.append('<div class="status-subsection"><div class="status-subhead status-fetch-failed">取得失敗 / 要確認</div><div class="cards-grid">')
+                for d in ff_genre:
+                    rows = bybp.get(d.product_id, [])
+                    parts.append(self._deal_card_fetch_failed(d, buyback_rows=rows))
+                parts.append('</div></div>')
+
+            # ゲーム機への注釈
+            if genre_key == 'game_console':
+                parts.append('<div class="caution" style="margin-top:16px;font-size:0.82rem;">'
+                             '&#128204; <strong>限定・抽選モデル</strong>（Nintendo Switch 2 抽選など）は '
+                             '<a href="#tab-lottery" class="inline-link">抽選情報タブ</a> または '
+                             '<a href="#tab-advanced" class="inline-link">Pro向けタブ</a> をご確認ください。</div>')
+
+            parts.append('</div>')  # genre block end
+
+        # 全案件が表示不能な場合の空状態表示
+        if not genre_rendered:
             parts.append(
                 '<div class="empty-state" style="padding:40px 16px;text-align:center;">'
                 '<span style="font-size:2rem;">&#128683;</span>'

@@ -66,7 +66,7 @@ TARGET_PRODUCTS = [
         "product_alias":  "ps5_pro",
         "product_name":   "PlayStation 5 Pro",
         "condition":      "new_unopened",
-        "shops":          ["kaitori_shouten", "janpara", "iosys"],
+        "shops":          ["mobile_ichiban", "kaitori_shouten", "janpara", "iosys"],
     },
 ]
 
@@ -253,12 +253,12 @@ def run(dry_run: bool = False, no_scrape: bool = False) -> int:
 def _fallback_url(shop_id: str, product_alias: str) -> str:
     """取得失敗時の確認リンクURL（公式買取ページ）。"""
     FALLBACKS = {
-        "mobile_ichiban": "https://mobileno1.com/kaitori/",
-        "kaitori_shouten": "https://kaitori-shouten.com/",
-        "kaitori_itchome": "https://www.1-chome.com/mobile/",
-        "janpara": "https://www.janpara.co.jp/buy/",
-        "iosys": "https://iosys.co.jp/buy/",
-        "geo": "https://kaitori.geo-online.co.jp/",
+        "mobile_ichiban": "https://www.mobile-ichiban.com/",
+        "kaitori_shouten": "https://www.kaitorishouten-co.jp/keitai",
+        "kaitori_itchome": "https://www.1-chome.com/keitai/",
+        "janpara": "https://buy.janpara.co.jp/buy/",
+        "iosys": "https://k-tai-iosys.com/pricelist/",
+        "geo": "https://www.geo-online.co.jp/store_info/buy/",
     }
     return FALLBACKS.get(shop_id, "")
 

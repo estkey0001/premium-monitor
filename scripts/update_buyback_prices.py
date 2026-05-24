@@ -117,6 +117,18 @@ def _load_collectors() -> dict:
     except ImportError as e:
         logger.warning("GeoCsvCollector not available: %s", e)
 
+    try:
+        from src.collectors.buyback_surugaya import SurugayaCsvCollector
+        collectors["surugaya"] = SurugayaCsvCollector()
+    except ImportError as e:
+        logger.warning("SurugayaCsvCollector not available: %s", e)
+
+    try:
+        from src.collectors.buyback_sofmap import SofmapCsvCollector
+        collectors["sofmap"] = SofmapCsvCollector()
+    except ImportError as e:
+        logger.warning("SofmapCsvCollector not available: %s", e)
+
     return collectors
 
 

@@ -1634,6 +1634,21 @@ a[href], button, [role="tab"], [role="button"],
   background: #F8F8F8; border: 1px solid #E0E0E0; border-radius: 6px;
   padding: 12px; margin: 8px 0; color: #888; font-size: 0.85rem;
 }}
+.fetch-failed-timestamp {{ font-size: 0.78rem; color: #AAA; margin-top: 4px; }}
+
+/* 失敗理由バッジ (Task 8) */
+.shop-failure-detail {{ display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }}
+.failure-reason-badge {{
+  font-size: 0.68rem; padding: 2px 5px; border-radius: 3px;
+  font-weight: 600; white-space: nowrap;
+}}
+.failure-legend {{ font-size: 0.72rem; color: var(--ink3); font-weight: 400; }}
+.failure-reason-rate_limit_429   {{ background: #FFF3CD; color: #856404; border: 1px solid #FFE08A; }}
+.failure-reason-cloudflare_block {{ background: #FFE8E8; color: #B91C1C; border: 1px solid #FCA5A5; }}
+.failure-reason-parsing_failed   {{ background: #E8F0FF; color: #1D4ED8; border: 1px solid #93C5FD; }}
+.failure-reason-url_not_found    {{ background: #F3E8FF; color: #7C3AED; border: 1px solid #C4B5FD; }}
+.failure-reason-empty_result     {{ background: #F0FDF4; color: #15803D; border: 1px solid #86EFAC; }}
+.failure-reason-unknown          {{ background: #F3F4F6; color: #6B7280; border: 1px solid #D1D5DB; }}
 
 /* ジャンル内サブセクション（v7: 第一階層=ジャンル、第二階層=状態）*/
 .status-subsection {{ margin: 16px 0 24px; }}
@@ -3519,8 +3534,8 @@ tr.sc-route-review {{ background: #FFFBEB; }}
   <div class="cat-nav-inner">
     <div class="cat-genre-bar" role="tablist">
       <button class="cat-genre-btn active" data-genre="smartphone" data-target-tab="beginner" data-target-id="category-beginner-iphone">&#128241; スマホ</button>
-      <button class="cat-genre-btn" data-genre="tablet" data-target-tab="beginner" data-target-id="category-beginner-tablet">&#128196; タブレット</button>
-      <button class="cat-genre-btn" data-genre="pc" data-target-tab="advanced" data-target-id="category-pro-pc">&#128187; PC</button>
+      <button class="cat-genre-btn" data-genre="tablet" data-target-tab="beginner" data-target-id="category-beginner-tablet">&#128222; タブレット</button>
+      <button class="cat-genre-btn" data-genre="pc" data-target-tab="beginner" data-target-id="category-beginner-pc">&#128187; PC / Mac</button>
       <button class="cat-genre-btn" data-genre="camera" data-target-tab="advanced" data-target-id="category-pro-camera">&#128247; カメラ</button>
       <button class="cat-genre-btn" data-genre="game" data-target-tab="beginner" data-target-id="category-beginner-game">&#127918; ゲーム機</button>
       <button class="cat-genre-btn" data-genre="lottery" data-target-tab="lottery" data-target-id="category-lottery">&#127915; 抽選情報{lottery_badge}</button>
@@ -4379,11 +4394,16 @@ python3 -m src.cli calculate-sedori-routes</pre>
         )
 
         # ── ジャンル定義 ──
+        # genre値: iphone/tablet/pc/wearable/audio/game_console/camera
+        KNOWN_GENRES = {'iphone', 'tablet', 'pc', 'wearable', 'audio', 'game_console', 'camera'}
         GENRE_GROUPS = [
-            ('iphone',       '&#128241; iPhone / スマホ',  'category-beginner-iphone'),
-            ('tablet',       '&#128196; タブレット',        'category-beginner-tablet'),
-            ('game_console', '&#127918; ゲーム機',          'category-beginner-game'),
-            ('other',        '&#128230; その他',            'category-beginner-other'),
+            ('iphone',       '&#128241; iPhone / スマホ',    'category-beginner-iphone'),
+            ('tablet',       '&#128222; タブレット / iPad',   'category-beginner-tablet'),
+            ('pc',           '&#128187; PC / Mac',            'category-beginner-pc'),
+            ('wearable',     '&#8987; ウェアラブル',           'category-beginner-wearable'),
+            ('audio',        '&#127911; オーディオ',           'category-beginner-audio'),
+            ('game_console', '&#127918; ゲーム機',             'category-beginner-game'),
+            ('other',        '&#128230; その他',               'category-beginner-other'),
         ]
 
         genre_rendered = False
@@ -4391,7 +4411,7 @@ python3 -m src.cli calculate-sedori-routes</pre>
             # このジャンルの全案件を抽出
             if genre_key == 'other':
                 genre_deals = [d for d in deduped_all
-                               if getattr(d, 'category', '') not in ('iphone', 'tablet', 'game_console', 'camera')]
+                               if getattr(d, 'category', '') not in KNOWN_GENRES]
             else:
                 genre_deals = [d for d in deduped_all if getattr(d, 'category', '') == genre_key]
 
@@ -4413,7 +4433,7 @@ python3 -m src.cli calculate-sedori-routes</pre>
                 f'取得失敗 {len(ff_genre)}'
             )
 
-            margin_top = '' if anchor_id == 'category-beginner-iphone' else ' style="margin-top:44px;scroll-margin-top:80px"'
+            margin_top = '' if anchor_id == 'category-beginner-iphone' else ' style="margin-top:40px;scroll-margin-top:80px"'
             parts.append(
                 f'<div id="{anchor_id}"{margin_top}>'
                 f'<div class="sec-head">'
@@ -4482,6 +4502,10 @@ python3 -m src.cli calculate-sedori-routes</pre>
         genre_cls = getattr(d, 'category', '') or ''
         genre_badge = {
             'iphone':       '<span class="badge badge-iphone">iPhone</span>',
+            'tablet':       '<span class="badge badge-iphone">タブレット</span>',
+            'pc':           '<span class="badge badge-iphone">PC / Mac</span>',
+            'wearable':     '<span class="badge badge-iphone">ウェアラブル</span>',
+            'audio':        '<span class="badge badge-iphone">オーディオ</span>',
             'camera':       '<span class="badge badge-camera">カメラ</span>',
             'game_console': '<span class="badge badge-game">ゲーム機</span>',
         }.get(genre_cls, '')
@@ -4565,6 +4589,20 @@ python3 -m src.cli calculate-sedori-routes</pre>
             f'</div>'
         )
 
+    # 店舗別の既知の失敗理由（Task 8: 失敗理由表示用）
+    _SHOP_FAILURE_REASONS: dict = {
+        'src_janpara':         ('rate_limit_429',   'じゃんぱら: アクセス制限 / 429 多発'),
+        'src_kaitori_shouten': ('cloudflare_block',  '買取商店: 403 Forbidden'),
+        'src_kaitori_itchome': ('parsing_failed',    '買取一丁目: ページ構造変更によりパース失敗'),
+        'src_mobile_ichiban':  ('parsing_failed',    'モバイル一番: ページ構造変更によりパース失敗'),
+        'src_iosys':           ('url_not_found',     'イオシス: URLまたは掲載なし'),
+        'src_geo':             ('empty_result',      'ゲオ: 商品未掲載 / 検索結果なし'),
+        'src_sofmap':          ('parsing_failed',    'ソフマップ: 自動取得失敗'),
+        'src_bookoff':         ('unknown',           'ブックオフ: 自動取得未対応'),
+        'src_surugaya':        ('parsing_failed',    '駿河屋: 自動取得失敗'),
+        'src_tsutaya':         ('unknown',           'TSUTAYA: 自動取得未対応'),
+    }
+
     def _deal_card_fetch_failed(self, d, buyback_rows: list = None) -> str:
         """取得失敗案件カード HTML を生成する。"""
         pid       = _esc(d.product_id)
@@ -4576,42 +4614,72 @@ python3 -m src.cli calculate-sedori-routes</pre>
         genre_cls = getattr(d, 'category', '') or ''
         genre_badge = {
             'iphone':       '<span class="badge badge-iphone">iPhone</span>',
+            'tablet':       '<span class="badge badge-iphone">タブレット</span>',
+            'pc':           '<span class="badge badge-iphone">PC</span>',
             'camera':       '<span class="badge badge-camera">カメラ</span>',
             'game_console': '<span class="badge badge-game">ゲーム機</span>',
+            'wearable':     '<span class="badge">ウェアラブル</span>',
+            'audio':        '<span class="badge">オーディオ</span>',
         }.get(genre_cls, '')
         name    = _esc(d.product_name or '—')
         official = d.official_price_jpy or 0
 
-        # 取得失敗行のリンクリスト
+        # 最終試行時刻
+        last_attempt_str = ''
+        if hasattr(d, 'scanned_at') and d.scanned_at:
+            try:
+                from datetime import timezone, timedelta
+                _jst = timezone(timedelta(hours=9))
+                _sa = d.scanned_at
+                if hasattr(_sa, 'astimezone'):
+                    _sa = _sa.astimezone(_jst)
+                last_attempt_str = f'最終試行: {_sa.strftime("%m/%d %H:%M")}'
+            except Exception:
+                pass
+
+        # 取得失敗行のリンクリスト（失敗理由を付与）
         failed_rows_html = ''
         if buyback_rows:
             failed_links = []
             for r in buyback_rows:
+                r_shop_id = r.get('shop_id', '')
                 r_name = _esc(r.get('shop_name') or r.get('shop_id') or '—')
                 r_url  = r.get('buyback_url', '')
                 r_link_verified = bool(r.get('link_verified', False))
+                # 失敗理由ラベル
+                _reason_info = self._SHOP_FAILURE_REASONS.get(r_shop_id)
+                _reason_cls, _reason_label = _reason_info if _reason_info else ('unknown', '取得失敗')
+                reason_badge = f'<span class="failure-reason-badge failure-reason-{_esc(_reason_cls)}">{_esc(_reason_label)}</span>'
                 if r_url and r_link_verified:
                     failed_links.append(
                         f'<div class="shop-row shop-row-failed">'
                         f'<div class="shop-name-col">{r_name}</div>'
-                        f'<div class="shop-price-col">—</div>'
+                        f'<div class="shop-price-col shop-price-failed">—</div>'
+                        f'<div class="shop-failure-detail">'
+                        f'{reason_badge}'
                         f'<a href="{_esc(r_url)}" target="_blank" rel="noopener noreferrer" class="shop-link-col" data-track="buyback_click" data-product-id="{pid}">要確認</a>'
+                        f'</div>'
                         f'</div>'
                     )
                 else:
                     failed_links.append(
                         f'<div class="shop-row shop-row-failed">'
                         f'<div class="shop-name-col">{r_name}</div>'
-                        f'<div class="shop-price-col">—</div>'
-                        f'<span class="shop-link-col">—</span>'
+                        f'<div class="shop-price-col shop-price-failed">—</div>'
+                        f'<div class="shop-failure-detail">{reason_badge}</div>'
                         f'</div>'
                     )
             if failed_links:
                 failed_rows_html = (
                     '<div class="shop-compare buyback-shop-table" style="margin-top:8px">'
-                    '<div class="shop-table-hd">取得失敗店舗</div>'
+                    '<div class="shop-table-hd">取得失敗店舗 <span class="failure-legend">原因分類</span></div>'
                     + ''.join(failed_links) + '</div>'
                 )
+
+        last_attempt_html = (
+            f'<div class="fetch-failed-timestamp">&#128336; {_esc(last_attempt_str)}</div>'
+            if last_attempt_str else ''
+        )
 
         return (
             f'<div class="deal-card stripe-fetch-failed"{card_id_attr}{brand_attr}'
@@ -4627,6 +4695,7 @@ python3 -m src.cli calculate-sedori-routes</pre>
             f'<div>価格取得失敗 / 要確認</div>'
             f'<div>公式価格: ¥{official:,}</div>'
             f'<div>買取価格: —（全店舗取得失敗）</div>'
+            f'{last_attempt_html}'
             f'</div>'
             f'{failed_rows_html}'
             f'</div>'
@@ -4693,6 +4762,10 @@ python3 -m src.cli calculate-sedori-routes</pre>
         brand_attr = f' data-brand="{brand_val}"' if brand_val else ''
         genre_badge = {
             'iphone':       '<span class="badge badge-iphone">iPhone</span>',
+            'tablet':       '<span class="badge badge-iphone">タブレット</span>',
+            'pc':           '<span class="badge badge-iphone">PC / Mac</span>',
+            'wearable':     '<span class="badge badge-iphone">ウェアラブル</span>',
+            'audio':        '<span class="badge badge-iphone">オーディオ</span>',
             'camera':       '<span class="badge badge-camera">カメラ</span>',
             'game_console': '<span class="badge badge-game">ゲーム機</span>',
         }.get(genre_cls, '')

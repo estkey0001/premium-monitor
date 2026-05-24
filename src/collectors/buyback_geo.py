@@ -25,8 +25,9 @@ DIRECT_PATTERNS = {
     "iphone17pro512": r'iPhone 17 Pro 512.{0,150}?参考買取価格\s*([\d,]+)円',
     "iphone17pm256":  r'iPhone 17 Pro Max 256.{0,150}?参考買取価格\s*([\d,]+)円',
     "iphone17pm512":  r'iPhone 17 Pro Max 512.{0,150}?参考買取価格\s*([\d,]+)円',
-    "switch2":        r'(?:ＳＷ２|スイッチ\s*２).{0,200}?参考買取価格\s*([\d,]+)円',
-    "ps5_pro":        r'(?:ＰＳ５.*?Pro|PS5 Pro|プレイステーション5 Pro).{0,200}?参考買取価格\s*([\d,]+)円',
+    # Switch2の表記揺れに対応: "ＳＷ２", "スイッチ２", "Nintendo Switch 2", "Switch 2"
+    "switch2":        r'(?:ＳＷ２|スイッチ\s*[２2]|Nintendo Switch\s*2|Switch\s*2|ニンテンドースイッチ[２2]).{0,300}?参考買取価格\s*([\d,]+)円',
+    "ps5_pro":        r'(?:ＰＳ５.*?Pro|PS5\s*Pro|プレイステーション5\s*Pro|PlayStation\s*5\s*Pro).{0,300}?参考買取価格\s*([\d,]+)円',
 }
 
 

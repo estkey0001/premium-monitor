@@ -808,12 +808,14 @@ def check() -> list[dict]:
     else:
         results.append({"level": "warning", "check": "freshness_shows_date", "message": "鮮度ラベルに日付/要更新表記が見つからない（manual データなし、またはフォーマット未適用の可能性）"})
 
-    # 95. 「本日確認」ラベルが使われている（曖昧な「本日○件」の代わり）
-    has_hontou_kakunin = "本日確認" in html
-    if has_hontou_kakunin:
-        results.append({"level": "ok", "check": "count_label_clarity", "message": "「本日確認」ラベルが使われている（件数定義が明確）"})
+    # 95. 「最終確認」または「本日確認」ラベルが使われている（曖昧な「本日○件」の代わり）
+    # LP は現在「最終確認 N 件」を使用（手動確認データ表示に合わせた表記）
+    has_kakunin_label = "最終確認" in html or "本日確認" in html
+    kakunin_text = "最終確認" if "最終確認" in html else ("本日確認" if "本日確認" in html else "")
+    if has_kakunin_label:
+        results.append({"level": "ok", "check": "count_label_clarity", "message": f"「{kakunin_text}」ラベルが使われている（件数定義が明確）"})
     else:
-        results.append({"level": "warning", "check": "count_label_clarity", "message": "「本日確認」ラベルが見つからない — 曖昧な「本日○件」のまま"})
+        results.append({"level": "warning", "check": "count_label_clarity", "message": "「最終確認」「本日確認」ラベルが見つからない — 件数定義が不明確"})
 
     # 96. タブバッジ（tab-count）が初心者タブに存在する（ボタン内の直接の子 span のみ対象）
     beginner_tab_badge = re.search(r'data-tab="beginner"[^>]*>[^<]*<span class="tab-count">(\d+)</span>', html)
@@ -899,10 +901,11 @@ def check() -> list[dict]:
     else:
         results.append({"level": "warning", "check": "mercari_basis_label", "message": "「出品価格」ラベルが見つからない（メルカリデータなしの可能性）"})
 
-    # 101. Hero と announce bar で同一の件数（「本日確認」）が表示されている
-    # 両方から件数を抽出して一致するか検証
-    hero_counts = re.findall(r'本日確認.*?<strong>(\d+)</strong>', html)
-    announce_counts = re.findall(r'本日確認\s*(\d+)\s*件', html)
+    # 101. Hero と announce bar で同一の件数が表示されている
+    # LP は「最終確認 N 件」を使用。Hero は <strong>N</strong>、announce-bar は「N 件」のプレーンテキスト
+    _kakunin_pat = r'(?:最終確認|本日確認)'
+    hero_counts    = re.findall(_kakunin_pat + r'.*?<strong>(\d+)</strong>', html)
+    announce_counts = re.findall(_kakunin_pat + r'\s*(\d+)\s*件', html)
     if hero_counts and announce_counts:
         hero_n = int(hero_counts[0])
         announce_n = int(announce_counts[0])
@@ -911,7 +914,7 @@ def check() -> list[dict]:
         else:
             results.append({"level": "error", "check": "count_consistency", "message": f"Hero({hero_n}件) と announce bar({announce_n}件) の件数が不一致"})
     else:
-        results.append({"level": "warning", "check": "count_consistency", "message": "Hero または announce bar の件数を取得できなかった"})
+        results.append({"level": "warning", "check": "count_consistency", "message": "Hero または announce bar の件数を取得できなかった（LP再生成で解消する可能性あり）"})
 
     # 108. Pro向けカードが0件にならない（price_history fallback が動作している）
     has_pro_watch_card = 'pro-candidate-card' in html or 'watch-candidate-card' in html
@@ -921,11 +924,17 @@ def check() -> list[dict]:
         results.append({"level": "error", "check": "pro_card_not_empty", "message": "Pro向けカードが0件 — price_history fallback が動作していない可能性"})
 
     # 109. price_history fallback の案内文が表示されている（fallback 時の注意バナー）
+    # adv-fallback-notice は watch_candidates が空の場合にのみ表示される（fallback モード）
+    # watch_candidates がある場合（pro-candidate-card が存在する）はバナー不要 → OK
     has_fallback_notice = "adv-fallback-notice" in html
+    has_pro_candidates  = "pro-candidate-card" in html or "watch-candidate-card" in html
     if has_fallback_notice:
-        results.append({"level": "ok", "check": "pro_fallback_notice", "message": "Pro向けfallback表示の案内文が表示されている"})
+        results.append({"level": "ok", "check": "pro_fallback_notice", "message": "Pro向けfallback表示の案内文が表示されている（watch_candidates空のfallbackモード）"})
+    elif has_pro_candidates:
+        # watch_candidates データあり → fallback バナー不要（正常）
+        results.append({"level": "ok", "check": "pro_fallback_notice", "message": "Pro向けカードあり → fallback案内文は不要（正常）"})
     else:
-        results.append({"level": "warning", "check": "pro_fallback_notice", "message": "Pro向けfallback案内文が見つからない（watch_candidatesあり or 表示なしの可能性）"})
+        results.append({"level": "warning", "check": "pro_fallback_notice", "message": "Pro向けカードもfallback案内文も見つからない（price_history未取得の可能性）"})
 
     # 110. price_basis ラベルが実際のLP上に表示されている（pro-price-basis クラスで包まれた種別テキスト）
     has_basis_label_in_table = bool(re.search(r'class="pro-price-basis">[^<]+<', html))

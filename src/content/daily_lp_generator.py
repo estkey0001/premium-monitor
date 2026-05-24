@@ -107,9 +107,12 @@ class DailyLPGenerator:
         lp_generated_at   = now
 
         # beginner deals（レベル別）
-        beginner_easy  = self.repo.list_beginner_deals(user_level="beginner_easy",  min_profit=0, limit=15)
-        beginner_watch = self.repo.list_beginner_deals(user_level="beginner_watch", min_profit=0, limit=10)
-        advanced_deals = self.repo.list_beginner_deals(user_level="advanced",       min_profit=0, limit=15)
+        beginner_easy  = self.repo.list_beginner_deals(user_level="beginner_easy",  min_profit=0,       limit=15)
+        beginner_watch = self.repo.list_beginner_deals(user_level="beginner_watch", min_profit=0,       limit=10)
+        advanced_deals = self.repo.list_beginner_deals(user_level="advanced",       min_profit=0,       limit=15)
+        # 監視中（赤字）・取得失敗商品（min_profit=-9999999 で全件取得）
+        monitoring_deals    = self.repo.list_beginner_deals(user_level="monitoring",    min_profit=-9999999, limit=30)
+        fetch_failed_deals  = self.repo.list_beginner_deals(user_level="fetch_failed",  min_profit=-9999999, limit=30)
 
         # 上級者向けスナップショット
         advanced_snaps = self.repo.list_premium_candidates_with_snapshots(limit=15, user_level="advanced")
@@ -220,6 +223,8 @@ class DailyLPGenerator:
             sedori_routes=sedori_routes,
             market_prices_by_product=market_prices_by_product,
             collection_stats=collection_stats,
+            monitoring_deals=monitoring_deals,
+            fetch_failed_deals=fetch_failed_deals,
         )
 
         # 安全チェック
@@ -273,7 +278,9 @@ class DailyLPGenerator:
                      camera_deals=None, iphone_watch=None, camera_watch=None, game_watch=None,
                      buyback_by_product: dict = None, sedori_routes: list = None,
                      market_prices_by_product: dict = None,
-                     collection_stats: dict = None) -> str:
+                     collection_stats: dict = None,
+                     monitoring_deals: list = None,
+                     fetch_failed_deals: list = None) -> str:
 
         site_title = _esc(self.settings.get("site_title", "プレ値速報"))
         ga_id      = self.settings.get("analytics", {}).get("google_analytics_id", "")
@@ -310,7 +317,11 @@ class DailyLPGenerator:
         # カメラ案件は初心者タブから除外してPro向けへ移動するため、beginner件数から除外
         _beginner_easy_disp  = [d for d in beginner_easy  if getattr(d, 'category', '') != 'camera']
         _beginner_watch_disp = [d for d in beginner_watch if getattr(d, 'category', '') != 'camera']
-        _beginner_disp_count = len(_beginner_easy_disp) + len(_beginner_watch_disp)
+        # 監視中・取得失敗もカメラ除外して件数に加算
+        _monitoring_disp    = [d for d in (monitoring_deals   or []) if getattr(d, 'category', '') != 'camera']
+        _fetch_failed_disp  = [d for d in (fetch_failed_deals or []) if getattr(d, 'category', '') != 'camera']
+        _beginner_disp_count = (len(_beginner_easy_disp) + len(_beginner_watch_disp)
+                                + len(_monitoring_disp) + len(_fetch_failed_disp))
 
         # 抽選情報: DBイベント + リファレンスアイテム の active/upcoming/unknown 件数
         _all_lottery_for_count = list(lottery_events) + list(self._LOTTERY_REFERENCE_ITEMS)
@@ -354,6 +365,8 @@ class DailyLPGenerator:
             beginner_display_count=_beginner_disp_count,
             lottery_display_count=_lottery_active_count,
             latest_buyback_at=latest_buyback_at,
+            monitoring_deals=monitoring_deals or [],
+            fetch_failed_deals=fetch_failed_deals or [],
         )
         caution_html = self._section_caution()
         cta_html     = self._section_cta()
@@ -1587,6 +1600,40 @@ a[href], button, [role="tab"], [role="button"],
 .cs-ok   {{ color: #0A7C4F; font-weight: 700; }}
 .cs-fail {{ color: #B91C1C; font-weight: 700; }}
 .cs-manual {{ color: var(--ink3); font-weight: 600; }}
+
+/* 初心者タブ サマリバー */
+.beginner-summary-bar {{
+  font-size: 0.8rem; color: var(--ink2); padding: 8px 12px;
+  background: var(--surface2); border-radius: 8px; margin: 8px 0 16px;
+}}
+.beginner-summary-bar strong {{ color: var(--ink); }}
+
+/* 監視中カード */
+.badge-monitoring {{
+  font-size: 0.66rem; font-weight: 700; padding: 2px 6px; border-radius: 99px;
+  background: #FFF0F0; color: #CC2200; border: 1px solid #FFBBBB; white-space: nowrap;
+}}
+.deal-card.stripe-monitoring {{ border-left: 3px solid #CC3300; }}
+.deal-card.stripe-monitoring .card-stripe {{ background: linear-gradient(135deg, #CC3300, #FF6644); }}
+.monitoring-section {{
+  background: #FFF8F8; border: 1px solid #FFDDDD; border-radius: 6px;
+  padding: 12px; margin: 8px 0;
+}}
+.monitoring-label {{ font-weight: 700; color: #CC2200; font-size: 0.9rem; }}
+.monitoring-detail {{ color: var(--ink2); font-size: 0.85rem; margin-top: 4px; }}
+.monitoring-diff {{ color: #CC2200; font-size: 0.85rem; font-weight: 600; margin-top: 2px; }}
+
+/* 取得失敗カード */
+.badge-fetch-failed-card {{
+  font-size: 0.66rem; font-weight: 700; padding: 2px 6px; border-radius: 99px;
+  background: #F5F5F5; color: #888; border: 1px solid #DDD; white-space: nowrap;
+}}
+.deal-card.stripe-fetch-failed {{ opacity: 0.8; border-left: 3px solid #CCC; }}
+.deal-card.stripe-fetch-failed .card-stripe {{ background: #CCC; }}
+.fetch-failed-section {{
+  background: #F8F8F8; border: 1px solid #E0E0E0; border-radius: 6px;
+  padding: 12px; margin: 8px 0; color: #888; font-size: 0.85rem;
+}}
 
 /* Pro向け価格テーブル */
 .pro-price-table {{
@@ -3819,7 +3866,9 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                       market_prices_by_product: dict = None,
                       beginner_display_count: int = None,
                       lottery_display_count: int = None,
-                      latest_buyback_at: Optional[datetime] = None) -> str:
+                      latest_buyback_at: Optional[datetime] = None,
+                      monitoring_deals: list = None,
+                      fetch_failed_deals: list = None) -> str:
 
         camera_deals = camera_deals or []
 
@@ -3833,8 +3882,16 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         _beginner_watch_filtered = [d for d in beginner_watch if getattr(d, 'category', '') != 'camera']
         _camera_from_beginner = [d for d in beginner_easy + beginner_watch if getattr(d, 'category', '') == 'camera']
 
-        beginner_html    = self._tab_beginner(_beginner_easy_filtered, _beginner_watch_filtered, bybp,
-                                              latest_buyback_at=latest_buyback_at)
+        # 監視中・取得失敗もカメラ除外
+        _monitoring_filtered    = [d for d in (monitoring_deals   or []) if getattr(d, 'category', '') != 'camera']
+        _fetch_failed_filtered  = [d for d in (fetch_failed_deals or []) if getattr(d, 'category', '') != 'camera']
+
+        beginner_html    = self._tab_beginner(
+            _beginner_easy_filtered, _beginner_watch_filtered, bybp,
+            latest_buyback_at=latest_buyback_at,
+            monitoring_deals=_monitoring_filtered,
+            fetch_failed_deals=_fetch_failed_filtered,
+        )
         advanced_html    = self._tab_advanced(advanced_deals, advanced_snaps, watch_candidates,
                                               camera_watch=camera_watch,
                                               camera_beginner_deals=_camera_from_beginner,
@@ -4213,9 +4270,13 @@ python3 -m src.cli calculate-sedori-routes</pre>
 
 
     def _tab_beginner(self, easy_deals, watch_deals, buyback_by_product: dict = None,
-                       latest_buyback_at: Optional[datetime] = None) -> str:
-        """初心者向けタブ（v6: カテゴリ別セクション）"""
+                       latest_buyback_at: Optional[datetime] = None,
+                       monitoring_deals: list = None,
+                       fetch_failed_deals: list = None) -> str:
+        """初心者向けタブ（v6: カテゴリ別セクション + 監視中/取得失敗セクション）"""
         bybp = buyback_by_product or {}
+        monitoring_deals   = monitoring_deals   or []
+        fetch_failed_deals = fetch_failed_deals or []
         parts = []
 
         # データ鮮度バナー
@@ -4240,6 +4301,18 @@ python3 -m src.cli calculate-sedori-routes</pre>
                     '「要更新」案件の価格はリンク先で要確認です。'
                     '</div>'
                 )
+
+        # ── サマリバー（利益あり件数 / 監視中件数 / 取得失敗件数）──
+        _profit_count  = len(easy_deals) + len(watch_deals)
+        _monitor_count = len(monitoring_deals)
+        _failed_count  = len(fetch_failed_deals)
+        parts.append(
+            f'<div class="beginner-summary-bar">'
+            f'利益あり: <strong>{_profit_count}</strong>件 ／ '
+            f'監視中: <strong>{_monitor_count}</strong>件 ／ '
+            f'取得失敗: <strong>{_failed_count}</strong>件'
+            f'</div>'
+        )
 
         # ── Info banner (anchor: category-beginner-iphone) ──
         parts.append('<div id="category-beginner-iphone" class="info-banner blue">\n'
@@ -4370,6 +4443,34 @@ python3 -m src.cli calculate-sedori-routes</pre>
                     parts.append(self._deal_card(d, 'badge-watch', '要確認', buyback_rows=rows))
                 parts.append('</div>')
 
+        # ── Section B: 監視中 / 現在は赤字 ──
+        if monitoring_deals:
+            parts.append(
+                f'<div class="sec-head" style="margin-top:44px">'
+                f'<div class="sec-title">&#128308; 監視中 / 現在は赤字</div>'
+                f'<div class="sec-badge">{len(monitoring_deals)}件</div>'
+                f'</div>'
+            )
+            parts.append('<div class="cards-grid">')
+            for d in monitoring_deals:
+                rows = bybp.get(d.product_id, [])
+                parts.append(self._deal_card_monitoring(d, buyback_rows=rows))
+            parts.append('</div>')
+
+        # ── Section C: 取得失敗 / 要確認 ──
+        if fetch_failed_deals:
+            parts.append(
+                f'<div class="sec-head" style="margin-top:44px">'
+                f'<div class="sec-title">&#128683; 取得失敗 / 要確認</div>'
+                f'<div class="sec-badge">{len(fetch_failed_deals)}件</div>'
+                f'</div>'
+            )
+            parts.append('<div class="cards-grid">')
+            for d in fetch_failed_deals:
+                rows = bybp.get(d.product_id, [])
+                parts.append(self._deal_card_fetch_failed(d, buyback_rows=rows))
+            parts.append('</div>')
+
         # 全案件が48h除外で表示不能な場合の空状態表示
         if not parts:
             parts.append(
@@ -4382,6 +4483,167 @@ python3 -m src.cli calculate-sedori-routes</pre>
             )
 
         return freshness_banner + '\n'.join(parts)
+
+    def _deal_card_monitoring(self, d, buyback_rows: list = None) -> str:
+        """監視中（赤字）案件カード HTML を生成する。"""
+        pid       = _esc(d.product_id)
+        _raw_pid  = getattr(d, 'product_id', '') or ''
+        pid_alias = _raw_pid[len('prod_'):] if _raw_pid.startswith('prod_') else _raw_pid
+        card_id_attr = f' id="product-{_esc(pid_alias)}"' if pid_alias else ''
+        brand_val = _esc(getattr(d, 'brand', '') or '')
+        brand_attr = f' data-brand="{brand_val}"' if brand_val else ''
+        genre_cls = getattr(d, 'category', '') or ''
+        genre_badge = {
+            'iphone':       '<span class="badge badge-iphone">iPhone</span>',
+            'camera':       '<span class="badge badge-camera">カメラ</span>',
+            'game_console': '<span class="badge badge-game">ゲーム機</span>',
+        }.get(genre_cls, '')
+        name   = _esc(d.product_name or '—')
+        official = d.official_price_jpy or 0
+        best_bp  = d.best_buyback_price or 0
+        cost     = d.estimated_costs_jpy or 0
+        diff     = best_bp - official - cost  # 通常マイナス
+
+        # 差額表示
+        diff_str = f'−¥{abs(diff):,}' if diff < 0 else f'+¥{diff:,}'
+
+        # 公式リンク
+        official_url  = _esc(getattr(d, 'official_url', '') or '')
+        official_btn  = ''
+        if official_url:
+            official_btn = f'<a href="{official_url}" target="_blank" rel="noopener" class="btn btn-secondary" data-track="product_click" data-product-id="{pid}">&#128241; 公式で確認</a>'
+
+        # 買取テーブル（compare_html）
+        compare_html = ''
+        if buyback_rows:
+            rows_html = []
+            _normal_rows  = [r for r in buyback_rows if r.get('buyback_price', 0) > 0][:5]
+            _failed_rows_r = [r for r in buyback_rows if r.get('buyback_price', 0) == 0 or r.get('data_source') == 'fetch_failed']
+            rank = 1
+            for r in _normal_rows:
+                r_price = r.get('buyback_price', 0)
+                r_name  = _esc(r.get('shop_name') or r.get('shop_id') or '—')
+                rank_cls = {1:'gold',2:'silver',3:'bronze'}.get(rank,'other')
+                r_url   = r.get('buyback_url', '')
+                r_link_verified = bool(r.get('link_verified', False))
+                if r_url and r_link_verified:
+                    link_cell = f'<a href="{_esc(r_url)}" target="_blank" rel="noopener noreferrer" class="shop-link-col" data-track="buyback_click" data-product-id="{pid}">確認</a>'
+                else:
+                    link_cell = f'<span class="shop-link-col unverified-link">公式買取ページで確認</span>'
+                rows_html.append(
+                    f'<div class="shop-row"><div class="shop-rank {rank_cls}">#{rank}</div>'
+                    f'<div class="shop-name-col">{r_name}</div>'
+                    f'<div class="shop-price-col">¥{r_price:,}</div>'
+                    f'{link_cell}</div>'
+                )
+                rank += 1
+            for r in _failed_rows_r[:3]:
+                r_name = _esc(r.get('shop_name') or r.get('shop_id') or '—')
+                r_url  = r.get('buyback_url', '')
+                if r_url:
+                    link_cell = f'<a href="{_esc(r_url)}" target="_blank" rel="noopener noreferrer" class="shop-link-col" data-track="buyback_click" data-product-id="{pid}">要確認</a>'
+                else:
+                    link_cell = '<span class="shop-link-col">—</span>'
+                rows_html.append(
+                    f'<div class="shop-row shop-row-failed">'
+                    f'<div class="shop-rank other"><span class="badge-fetch-failed">取得失敗</span></div>'
+                    f'<div class="shop-name-col">{r_name}</div>'
+                    f'<div class="shop-price-col">—</div>'
+                    f'{link_cell}</div>'
+                )
+            if rows_html:
+                compare_html = (
+                    '<div class="shop-compare buyback-shop-table" style="margin-top:8px">'
+                    '<div class="shop-table-hd">買取店比較</div>'
+                    + ''.join(rows_html) + '</div>'
+                )
+
+        return (
+            f'<div class="deal-card stripe-monitoring"{card_id_attr}{brand_attr}'
+            f' data-user-level="monitoring" data-genre="{_esc(genre_cls)}">'
+            f'<div class="card-stripe monitoring"></div>'
+            f'<div class="card-hd">'
+            f'<div class="card-name">{name}</div>'
+            f'<div class="card-tags">'
+            f'<span class="badge badge-monitoring">現在は赤字</span>'
+            f'{genre_badge}'
+            f'</div></div>'
+            f'<div class="monitoring-section">'
+            f'<div class="monitoring-label">現在は赤字 / 監視中</div>'
+            f'<div class="monitoring-detail">公式価格: ¥{official:,} → 最高買取: ¥{best_bp:,}</div>'
+            f'<div class="monitoring-diff">差額: {diff_str}（推定コスト¥{cost:,}込み）</div>'
+            f'</div>'
+            f'{compare_html}'
+            f'<div class="card-actions">{official_btn}</div>'
+            f'</div>'
+        )
+
+    def _deal_card_fetch_failed(self, d, buyback_rows: list = None) -> str:
+        """取得失敗案件カード HTML を生成する。"""
+        pid       = _esc(d.product_id)
+        _raw_pid  = getattr(d, 'product_id', '') or ''
+        pid_alias = _raw_pid[len('prod_'):] if _raw_pid.startswith('prod_') else _raw_pid
+        card_id_attr = f' id="product-{_esc(pid_alias)}"' if pid_alias else ''
+        brand_val = _esc(getattr(d, 'brand', '') or '')
+        brand_attr = f' data-brand="{brand_val}"' if brand_val else ''
+        genre_cls = getattr(d, 'category', '') or ''
+        genre_badge = {
+            'iphone':       '<span class="badge badge-iphone">iPhone</span>',
+            'camera':       '<span class="badge badge-camera">カメラ</span>',
+            'game_console': '<span class="badge badge-game">ゲーム機</span>',
+        }.get(genre_cls, '')
+        name    = _esc(d.product_name or '—')
+        official = d.official_price_jpy or 0
+
+        # 取得失敗行のリンクリスト
+        failed_rows_html = ''
+        if buyback_rows:
+            failed_links = []
+            for r in buyback_rows:
+                r_name = _esc(r.get('shop_name') or r.get('shop_id') or '—')
+                r_url  = r.get('buyback_url', '')
+                r_link_verified = bool(r.get('link_verified', False))
+                if r_url and r_link_verified:
+                    failed_links.append(
+                        f'<div class="shop-row shop-row-failed">'
+                        f'<div class="shop-name-col">{r_name}</div>'
+                        f'<div class="shop-price-col">—</div>'
+                        f'<a href="{_esc(r_url)}" target="_blank" rel="noopener noreferrer" class="shop-link-col" data-track="buyback_click" data-product-id="{pid}">要確認</a>'
+                        f'</div>'
+                    )
+                else:
+                    failed_links.append(
+                        f'<div class="shop-row shop-row-failed">'
+                        f'<div class="shop-name-col">{r_name}</div>'
+                        f'<div class="shop-price-col">—</div>'
+                        f'<span class="shop-link-col">—</span>'
+                        f'</div>'
+                    )
+            if failed_links:
+                failed_rows_html = (
+                    '<div class="shop-compare buyback-shop-table" style="margin-top:8px">'
+                    '<div class="shop-table-hd">取得失敗店舗</div>'
+                    + ''.join(failed_links) + '</div>'
+                )
+
+        return (
+            f'<div class="deal-card stripe-fetch-failed"{card_id_attr}{brand_attr}'
+            f' data-user-level="fetch_failed" data-genre="{_esc(genre_cls)}">'
+            f'<div class="card-stripe fetch-failed-stripe"></div>'
+            f'<div class="card-hd">'
+            f'<div class="card-name">{name}</div>'
+            f'<div class="card-tags">'
+            f'<span class="badge badge-fetch-failed-card">取得失敗</span>'
+            f'{genre_badge}'
+            f'</div></div>'
+            f'<div class="fetch-failed-section">'
+            f'<div>価格取得失敗 / 要確認</div>'
+            f'<div>公式価格: ¥{official:,}</div>'
+            f'<div>買取価格: —（全店舗取得失敗）</div>'
+            f'</div>'
+            f'{failed_rows_html}'
+            f'</div>'
+        )
 
     def _tab_all(self, easy_deals, watch_deals, buyback_by_product: dict = None) -> str:
         """全案件タブ（初級者向け・要確認）"""

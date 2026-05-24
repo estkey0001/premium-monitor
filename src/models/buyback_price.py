@@ -102,6 +102,42 @@ BUYBACK_SHOPS = {
         "kaitori_url": "https://tsutaya.tsite.jp/feature/kaitori/",
         "supports": ["game_console"],
     },
+    "src_hardoff": {
+        "name": "ハードオフ",
+        "url": "https://www.hardoff.co.jp/",
+        "kaitori_url": "https://www.hardoff.co.jp/search/",
+        "supports": ["game_console", "iphone", "pc"],
+    },
+    "src_geo_mobile": {
+        "name": "ゲオモバイル",
+        "url": "https://geomobile.jp/",
+        "kaitori_url": "https://geomobile.jp/purchase/",
+        "supports": ["iphone", "ipad"],
+    },
+    "src_dosupara": {
+        "name": "ドスパラ",
+        "url": "https://www.dospara.co.jp/",
+        "kaitori_url": "https://www.dospara.co.jp/kaitori/",
+        "supports": ["game_console", "pc"],
+    },
+    "src_pasoko": {
+        "name": "パソコン工房",
+        "url": "https://www.pc-koubou.jp/",
+        "kaitori_url": "https://www.pc-koubou.jp/pc/used/buy/",
+        "supports": ["game_console", "pc"],
+    },
+    "src_2ndstreet": {
+        "name": "セカンドストリート",
+        "url": "https://www.2ndstreet.jp/",
+        "kaitori_url": "https://www.2ndstreet.jp/sell/",
+        "supports": ["iphone", "ipad"],
+    },
+    "src_netoff": {
+        "name": "ネットオフ",
+        "url": "https://www.netoff.co.jp/",
+        "kaitori_url": "https://www.netoff.co.jp/sell/",
+        "supports": ["iphone", "ipad"],
+    },
 }
 
 # 買取条件ラベル

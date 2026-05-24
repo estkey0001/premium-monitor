@@ -21,13 +21,13 @@ PRODUCT_URLS = {
 # 直接正規表現パターン（ゲオのページは全角文字・全角スペース混在）
 # 実際のページテキスト例: "ＳＷ２　ニンテンドー　スイッチ　２　（日本語・国内専用） 参考買取価格 40,000円"
 DIRECT_PATTERNS = {
-    "iphone17pro256": r'iPhone 17 Pro 256.{0,150}?参考買取価格\s*([\d,]+)円',
-    "iphone17pro512": r'iPhone 17 Pro 512.{0,150}?参考買取価格\s*([\d,]+)円',
-    "iphone17pm256":  r'iPhone 17 Pro Max 256.{0,150}?参考買取価格\s*([\d,]+)円',
-    "iphone17pm512":  r'iPhone 17 Pro Max 512.{0,150}?参考買取価格\s*([\d,]+)円',
+    "iphone17pro256": r'iPhone 17 Pro 256.{0,120}?参考買取価格\s*([\d,]+)円',
+    "iphone17pro512": r'iPhone 17 Pro 512.{0,120}?参考買取価格\s*([\d,]+)円',
+    "iphone17pm256":  r'iPhone 17 Pro Max 256.{0,120}?参考買取価格\s*([\d,]+)円',
+    "iphone17pm512":  r'iPhone 17 Pro Max 512.{0,120}?参考買取価格\s*([\d,]+)円',
     # Switch2の表記揺れに対応: "ＳＷ２", "スイッチ２", "Nintendo Switch 2", "Switch 2"
-    "switch2":        r'(?:ＳＷ２|スイッチ\s*[２2]|Nintendo Switch\s*2|Switch\s*2|ニンテンドースイッチ[２2]).{0,300}?参考買取価格\s*([\d,]+)円',
-    "ps5_pro":        r'(?:ＰＳ５.*?Pro|PS5\s*Pro|プレイステーション5\s*Pro|PlayStation\s*5\s*Pro).{0,300}?参考買取価格\s*([\d,]+)円',
+    "switch2":        r'(?:ＳＷ２|スイッチ\s*[２2]|Nintendo Switch\s*2|Switch\s*2|ニンテンドースイッチ[２2]).{0,80}?参考買取価格\s*([\d,]+)円',
+    "ps5_pro":        r'(?:ＰＳ５.*?Pro|PS5\s*Pro|プレイステーション5\s*Pro|PlayStation\s*5\s*Pro).{0,80}?参考買取価格\s*([\d,]+)円',
 }
 
 
@@ -57,17 +57,7 @@ class GeoCsvCollector(BaseCsvBuybackCollector):
                 except ValueError:
                     pass
 
-        # フォールバック: 全文から「参考買取価格」付きの最初の価格
-        fallback_m = re.search(r'参考買取価格\s*([\d,]+)円', text)
-        if fallback_m:
-            try:
-                price = int(fallback_m.group(1).replace(",", ""))
-                if 10000 <= price <= 5_000_000:
-                    return price
-            except ValueError:
-                pass
-
-        return self.extract_price(text, min_price=10000)
+        return None  # パターン不一致の場合は誤検出防止のため None を返す
 
     def _parse_detail_url(self, html: str, fallback_url: str) -> str:
         return fallback_url

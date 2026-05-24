@@ -62,6 +62,10 @@ SHOP_MAP = {
     "kitamura": "src_kitamura",
     "mapcamera": "src_mapcamera",
     "fujiya": "src_fujiya",
+    # ゲーム機向け追加店舗
+    "bookoff": "src_bookoff",
+    "surugaya": "src_surugaya",
+    "tsutaya": "src_tsutaya",
 }
 
 

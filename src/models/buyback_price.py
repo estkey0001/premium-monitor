@@ -84,6 +84,24 @@ BUYBACK_SHOPS = {
         "kaitori_url": "https://www.fujiyacamera.com/",
         "supports": ["camera"],
     },
+    "src_bookoff": {
+        "name": "ブックオフ",
+        "url": "https://www.bookoff.co.jp/",
+        "kaitori_url": "https://www.bookoffgroup.co.jp/sell/",
+        "supports": ["game_console", "iphone", "camera"],
+    },
+    "src_surugaya": {
+        "name": "駿河屋",
+        "url": "https://www.suruga-ya.jp/",
+        "kaitori_url": "https://www.suruga-ya.jp/kaitori/",
+        "supports": ["game_console", "camera"],
+    },
+    "src_tsutaya": {
+        "name": "TSUTAYA",
+        "url": "https://tsutaya.tsite.jp/",
+        "kaitori_url": "https://tsutaya.tsite.jp/feature/kaitori/",
+        "supports": ["game_console"],
+    },
 }
 
 # 買取条件ラベル

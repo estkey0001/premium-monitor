@@ -347,7 +347,14 @@ class Repository:
     # =========================================
 
     def insert_price_history(self, ph: PriceHistoryModel) -> None:
-        """価格履歴を保存。"""
+        """価格履歴を保存。同じ (product_id, source_id, price_type, recorded_at, price) は重複スキップ。"""
+        existing = self.db.connection.execute(
+            """SELECT COUNT(*) FROM price_history
+               WHERE product_id=? AND source_id=? AND price_type=? AND recorded_at=? AND price=?""",
+            (ph.product_id, ph.source_id, ph.price_type, ph.recorded_at.isoformat(), ph.price),
+        ).fetchone()[0]
+        if existing:
+            return
         self.db.connection.execute(
             """
             INSERT INTO price_history (id, product_id, source_id, price_type,
@@ -895,8 +902,16 @@ class Repository:
 
     def insert_buyback_price(self, bp) -> None:
         from src.models.buyback_price import BuybackPriceModel
+        # 同じ (product_id, shop_id, observed_at, buyback_price) が既存なら INSERT スキップ
+        existing = self.db.connection.execute(
+            """SELECT COUNT(*) FROM buyback_prices
+               WHERE product_id=? AND shop_id=? AND observed_at=? AND buyback_price=?""",
+            (bp.product_id, bp.shop_id, bp.observed_at.isoformat(), bp.buyback_price),
+        ).fetchone()[0]
+        if existing:
+            return
         self.db.connection.execute(
-            """INSERT OR REPLACE INTO buyback_prices
+            """INSERT INTO buyback_prices
                (id, product_id, shop_id, shop_name, buyback_price,
                 condition, buyback_url, observed_at, is_active, notes,
                 data_source, link_verified)
@@ -981,6 +996,14 @@ class Repository:
              deal.beginner_score, deal.difficulty_score, deal.user_level,
              deal.recommended_action,
              int(deal.is_active), deal.scanned_at.isoformat(), deal.notes),
+        )
+        self.db.connection.commit()
+
+    def deactivate_beginner_deal(self, product_id: str) -> None:
+        """指定商品の beginner_deals を全て非アクティブ化（案件消滅時）。"""
+        self.db.connection.execute(
+            "UPDATE beginner_deals SET is_active = 0 WHERE product_id = ?",
+            (product_id,),
         )
         self.db.connection.commit()
 
@@ -1229,7 +1252,10 @@ class Repository:
         return result
 
     def list_buyback_prices_by_product(self, product_id: str, limit: int = 10) -> list[dict]:
-        """商品の全買取店価格を降順で返す（複数店舗比較用、1店舗1エントリに重複排除）。"""
+        """商品の全買取店価格を降順で返す（複数店舗比較用、1店舗1エントリに重複排除）。
+        優先順位: 価格あり行 > fetch_failed行、同順位内は価格降順。
+        比較テーブル表示用なので fetch_failed も返す（確認リンク表示のため）。
+        """
         try:
             rows = self.db.connection.execute(
                 """SELECT bp.shop_id, bp.shop_name, bp.buyback_price, bp.condition,
@@ -1245,7 +1271,9 @@ class Repository:
                           AND bp.product_id = ?
                           AND bp.is_active = 1
                    GROUP BY bp.shop_id
-                   ORDER BY bp.buyback_price DESC
+                   ORDER BY
+                     CASE WHEN bp.data_source = 'fetch_failed' THEN 1 ELSE 0 END ASC,
+                     bp.buyback_price DESC
                    LIMIT ?""",
                 (product_id, product_id, limit)
             ).fetchall()

@@ -1387,6 +1387,79 @@ def check() -> list[dict]:
     else:
         results.append({"level": "warning", "check": "collection_stats_shown", "message": "取得統計バーが見つからない（LP 再生成で反映されます）"})
 
+    # ── #149: 参考DEALS が固定ハードコードでなく動的データを使っている ──
+    # 固定の古い商品名（iPhone 15/16 等）が hero パネルに残っていないか確認
+    old_fixed_deals = re.findall(
+        r'class="lp-name">[^<]*(iPhone 16 Pro 256GB|iPhone 15 Plus 128GB|Canon EOS R6 II|SONY α7C II)[^<]*',
+        html
+    )
+    if old_fixed_deals:
+        results.append({"level": "error", "check": "hero_deals_dynamic", "message": f"参考DEALSに固定ハードコード商品が残っている: {old_fixed_deals[:3]}"})
+    else:
+        has_lp_item = 'class="lp-item"' in html
+        if has_lp_item:
+            results.append({"level": "ok", "check": "hero_deals_dynamic", "message": "参考DEALSが動的データから生成されている"})
+        else:
+            results.append({"level": "warning", "check": "hero_deals_dynamic", "message": "参考DEALSの lp-item が見つからない（deals データなしの可能性）"})
+
+    # ── #150: カード上部の最高買取価格と比較テーブル1位価格の一致確認 ──
+    # buyback-best-price の価格と shop-row の1位（gold ランク）価格が一致するか
+    import re as _re6
+    # 最高買取価格ラベル後の価格
+    best_prices_in_card = _re6.findall(r'最高買取価格</div>\s*<div class="price-cell-val[^"]*">¥([\d,]+)', html)
+    # shop-row gold ランク（1位）の価格
+    gold_prices = _re6.findall(r'shop-rank gold[^<]*</div>\s*<div class="shop-name-col">[^<]*</div>\s*<div class="shop-price-col">¥([\d,]+)', html)
+    if best_prices_in_card and gold_prices:
+        mismatch = []
+        for bp, gp in zip(best_prices_in_card[:5], gold_prices[:5]):
+            if bp.replace(",", "") != gp.replace(",", ""):
+                mismatch.append(f"best={bp} vs gold={gp}")
+        if mismatch:
+            results.append({"level": "warning", "check": "best_price_matches_table", "message": f"カード最高価格と比較テーブル1位が不一致: {mismatch[:2]}"})
+        else:
+            results.append({"level": "ok", "check": "best_price_matches_table", "message": f"カード最高価格と比較テーブル1位が一致（{len(best_prices_in_card)}件確認）"})
+    else:
+        results.append({"level": "warning", "check": "best_price_matches_table", "message": "最高買取価格またはテーブル1位価格を取得できなかった（データなしの可能性）"})
+
+    # ── #151: fetch_failed が最高買取価格計算に使われていない ──
+    # shop-row-failed の価格欄は「—」になっているか（¥数字 でないか）
+    import re as _re7
+    # shop-row-failed の1行内（closing </div></div> まで）に ¥数字 があるか
+    # re.DOTALL で複数行に跨ぐと次の shop-row の価格にマッチしてしまうため、
+    # 1行ブロック（class="shop-row-failed"...から次の class="shop-row" or </div></div> まで）を抽出してチェック
+    _failed_rows = _re7.findall(
+        r'class="shop-row-failed">(.*?)</div>\s*</div>',
+        html, _re7.DOTALL
+    )
+    failed_with_price = [
+        row for row in _failed_rows
+        if _re7.search(r'class="shop-price-col">¥[\d,]+', row)
+    ]
+    if failed_with_price:
+        results.append({"level": "error", "check": "fetch_failed_no_price_calc", "message": f"fetch_failed 行に価格が表示されている（— になるべき）: {len(failed_with_price)}件"})
+    else:
+        results.append({"level": "ok", "check": "fetch_failed_no_price_calc", "message": "fetch_failed 行の価格欄が「—」（価格計算に使われていない）"})
+
+    # ── #152: ゲーム機カードにゲーム機向け店舗が表示されている ──
+    # Nintendo Switch 2 / PS5 Pro のカードにゲーム向け店舗名があるか
+    game_shop_names = ["ゲオ", "イオシス", "ブックオフ", "駿河屋", "ソフマップ", "TSUTAYA", "買取商店"]
+    has_game_shop = any(s in html for s in game_shop_names)
+    if has_game_shop:
+        found_game_shops = [s for s in game_shop_names if s in html]
+        results.append({"level": "ok", "check": "game_console_shops", "message": f"ゲーム機向け店舗が表示されている: {found_game_shops}"})
+    else:
+        results.append({"level": "warning", "check": "game_console_shops", "message": "ゲーム機向け店舗（ゲオ/イオシス/ブックオフ等）が見つからない（ゲーム機データ要確認）"})
+
+    # ── #153: Switch 2 カードにゲーム機向け確認リンクがある ──
+    has_switch2_game_link = bool(re.search(
+        r'geo-online\.co\.jp|bookoffgroup\.co\.jp|suruga-ya\.jp|sofmap\.com',
+        html
+    ))
+    if has_switch2_game_link:
+        results.append({"level": "ok", "check": "switch2_game_shop_links", "message": "Switch 2 / ゲーム機向け確認リンク（ゲオ/ブックオフ/駿河屋/ソフマップ）が存在する"})
+    else:
+        results.append({"level": "warning", "check": "switch2_game_shop_links", "message": "Switch 2 向けゲーム機専門店リンクが見つからない（CSV 更新 → import → LP 再生成が必要）"})
+
     return results
 
 

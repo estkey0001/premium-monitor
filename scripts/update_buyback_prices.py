@@ -60,13 +60,17 @@ TARGET_PRODUCTS = [
         "product_alias":  "switch2",
         "product_name":   "Nintendo Switch 2",
         "condition":      "new_unopened",
-        "shops":          ["kaitori_shouten", "janpara", "iosys", "geo"],
+        # ゲーム機向け店舗優先。bookoff/surugaya/sofmap/tsutaya はコレクター未実装 → fetch_failed + 確認リンク
+        "shops":          ["geo", "iosys", "kaitori_shouten", "janpara",
+                           "sofmap", "bookoff", "surugaya", "tsutaya"],
     },
     {
         "product_alias":  "ps5_pro",
         "product_name":   "PlayStation 5 Pro",
         "condition":      "new_unopened",
-        "shops":          ["mobile_ichiban", "kaitori_shouten", "janpara", "iosys"],
+        # ゲーム機向け店舗優先。bookoff/surugaya/sofmap/tsutaya はコレクター未実装 → fetch_failed + 確認リンク
+        "shops":          ["geo", "iosys", "kaitori_shouten", "mobile_ichiban", "janpara",
+                           "sofmap", "bookoff", "surugaya", "tsutaya"],
     },
 ]
 
@@ -253,12 +257,17 @@ def run(dry_run: bool = False, no_scrape: bool = False) -> int:
 def _fallback_url(shop_id: str, product_alias: str) -> str:
     """取得失敗時の確認リンクURL（公式買取ページ）。"""
     FALLBACKS = {
-        "mobile_ichiban": "https://www.mobile-ichiban.com/",
+        "mobile_ichiban":  "https://www.mobile-ichiban.com/",
         "kaitori_shouten": "https://www.kaitorishouten-co.jp/keitai",
         "kaitori_itchome": "https://www.1-chome.com/keitai/",
-        "janpara": "https://buy.janpara.co.jp/buy/",
-        "iosys": "https://k-tai-iosys.com/pricelist/",
-        "geo": "https://www.geo-online.co.jp/store_info/buy/",
+        "janpara":         "https://buy.janpara.co.jp/buy/",
+        "iosys":           "https://k-tai-iosys.com/pricelist/",
+        "geo":             "https://www.geo-online.co.jp/store_info/buy/",
+        # ゲーム機向け店舗（コレクター未実装 → fetch_failed 表示用リンク）
+        "sofmap":          "https://www.sofmap.com/buy_list.aspx",
+        "bookoff":         "https://www.bookoffgroup.co.jp/sell/",
+        "surugaya":        "https://www.suruga-ya.jp/kaitori/",
+        "tsutaya":         "https://tsutaya.tsite.jp/feature/kaitori/",
     }
     return FALLBACKS.get(shop_id, "")
 

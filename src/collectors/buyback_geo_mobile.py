@@ -3,8 +3,12 @@ URL: https://geomobile.jp/ (スマホ特化の買取)
 取得方式: Playwright（Cloudflare対策 — ブラウザ風UA + inner_text()）
 検索URL方式（URLスラッグ推測禁止）
 
-注意: geomobile.jp は Cloudflare 保護下にあり、requests では SSL/タイムアウトが発生する。
-     Playwright でブラウザ風UAを使用してアクセスする。
+注意: 2026-05-25 調査結果:
+     geomobile.jp は Cloudflare 保護下にあり、requests/Playwright ともに
+     ERR_CONNECTION_CLOSED が発生する（完全ブロック）。
+     現時点では自動取得不可。failure_reason = "site_blocked" として記録する。
+     URL の正当性確認: https://geomobile.jp/purchase/search/?q=... は正しい形式
+     → ユーザーが手動確認できるよう URL を保持する。
 """
 import logging
 import re
@@ -66,7 +70,9 @@ class GeoMobileCsvCollector(BaseCsvBuybackCollector):
 
     def _fetch_html(self, url: str) -> Optional[str]:
         """Playwright でブラウザ風UAを使用してアクセス (Cloudflare対策)。
-        inner_text() を返す（BS4 解析ではなく plain text で処理）。
+
+        2026-05-25 調査: ERR_CONNECTION_CLOSED が発生し完全ブロック。
+        取得不可の場合は failure_reason = "site_blocked" を設定して None を返す。
         """
         time.sleep(2)  # レートリミット遵守
         try:
@@ -85,11 +91,11 @@ class GeoMobileCsvCollector(BaseCsvBuybackCollector):
                     },
                 )
                 page = context.new_page()
-                page.goto(url, timeout=30000, wait_until="domcontentloaded")
-                page.wait_for_timeout(3000)  # JS描画待機
+                page.goto(url, timeout=25000, wait_until="domcontentloaded")
+                page.wait_for_timeout(3000)
                 text = page.inner_text("body")
                 browser.close()
-                self.last_failure_reason = None  # 成功時はリセット
+                self.last_failure_reason = None
                 return text
         except ImportError:
             logger.warning("[ゲオモバイル] Playwright not installed")
@@ -97,13 +103,15 @@ class GeoMobileCsvCollector(BaseCsvBuybackCollector):
             return None
         except Exception as e:
             err_str = str(e).lower()
-            if "timeout" in err_str:
-                self.last_failure_reason = "cloudflare_timeout"
+            if "err_connection_closed" in err_str or "connection" in err_str:
+                self.last_failure_reason = "site_blocked"
+            elif "timeout" in err_str:
+                self.last_failure_reason = "site_blocked"
             elif "ssl" in err_str:
                 self.last_failure_reason = "ssl_error"
             else:
-                self.last_failure_reason = f"playwright_error"
-            logger.warning("[ゲオモバイル] Playwright error: %s", e)
+                self.last_failure_reason = "site_blocked"
+            logger.warning("[ゲオモバイル] Cloudflare block / connection error: %s", e)
             return None
 
     def _parse_price(self, html: str, product_alias: str, product_name: str) -> Optional[int]:

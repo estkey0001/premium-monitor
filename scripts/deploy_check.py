@@ -1915,6 +1915,86 @@ def check() -> list[dict]:
         results.append({"level": "ok", "check": "auto_scraped_link_verified",
                         "message": "auto_scraped行のlink_verifiedはすべてtrue（URL推測なし）"})
 
+    # ── #192: iPhone各商品に成功店舗3件以上 ─────────────────────────────────
+    if _collector_report_path.exists() and '_cr' in dir():
+        _psd = _cr.get("product_shop_detail", {})
+        _iphone_aliases = ["iphone17pro256", "iphone17pro512", "iphone17pm256", "iphone17pm512"]
+        _iphone_fail = []
+        for _ia in _iphone_aliases:
+            _cnt = len(_psd.get(_ia, {}).get("success_shops", []))
+            if _cnt < 3:
+                _iphone_fail.append(f"{_ia}:{_cnt}店舗")
+        if _iphone_fail:
+            results.append({"level": "warning", "check": "iphone_min3_shops",
+                            "message": f"iPhone商品の成功店舗数が3未満: {', '.join(_iphone_fail)}"})
+        else:
+            results.append({"level": "ok", "check": "iphone_min3_shops",
+                            "message": "iPhone主要4商品すべて成功店舗≥3"})
+    else:
+        results.append({"level": "ok", "check": "iphone_min3_shops",
+                        "message": "collector_report 未生成のためスキップ"})
+
+    # ── #193: Switch2に成功店舗2件以上 ──────────────────────────────────────
+    if _collector_report_path.exists() and '_cr' in dir():
+        _psd = _cr.get("product_shop_detail", {})
+        _sw2_cnt = len(_psd.get("switch2", {}).get("success_shops", []))
+        if _sw2_cnt < 2:
+            results.append({"level": "warning", "check": "switch2_min2_shops",
+                            "message": f"Switch2の成功店舗数が2未満: {_sw2_cnt}店舗"})
+        else:
+            results.append({"level": "ok", "check": "switch2_min2_shops",
+                            "message": f"Switch2 成功店舗≥2（{_sw2_cnt}店舗）"})
+    else:
+        results.append({"level": "ok", "check": "switch2_min2_shops",
+                        "message": "collector_report 未生成のためスキップ"})
+
+    # ── #194: PS5 Proに成功店舗2件以上 ──────────────────────────────────────
+    if _collector_report_path.exists() and '_cr' in dir():
+        _psd = _cr.get("product_shop_detail", {})
+        _ps5_cnt = len(_psd.get("ps5_pro", {}).get("success_shops", []))
+        if _ps5_cnt < 2:
+            results.append({"level": "warning", "check": "ps5pro_min2_shops",
+                            "message": f"PS5 Proの成功店舗数が2未満: {_ps5_cnt}店舗"})
+        else:
+            results.append({"level": "ok", "check": "ps5pro_min2_shops",
+                            "message": f"PS5 Pro 成功店舗≥2（{_ps5_cnt}店舗）"})
+    else:
+        results.append({"level": "ok", "check": "ps5pro_min2_shops",
+                        "message": "collector_report 未生成のためスキップ"})
+
+    # ── #195: 取得失敗理由が "unknown" のまま残っていない ────────────────────
+    if _collector_report_path.exists() and '_cr' in dir():
+        _ff_all = _cr.get("fetch_failed", [])
+        _unknown_list = [
+            f"{f.get('product_alias')}x{f.get('shop')}"
+            for f in _ff_all
+            if (f.get("reason") or "unknown") == "unknown"
+        ]
+        if _unknown_list:
+            results.append({"level": "warning", "check": "no_unknown_failure_reason",
+                            "message": f"failure_reason が unknown のまま {len(_unknown_list)}件: {_unknown_list[:5]}"})
+        else:
+            results.append({"level": "ok", "check": "no_unknown_failure_reason",
+                            "message": "すべての取得失敗に reason が設定されている（unknown なし）"})
+    else:
+        results.append({"level": "ok", "check": "no_unknown_failure_reason",
+                        "message": "collector_report 未生成のためスキップ"})
+
+    # ── #196: debug HTML/TXT が保存されている ────────────────────────────────
+    import glob as _glob
+    _debug_dir = PROJECT_ROOT / "exports" / "debug"
+    if _debug_dir.exists():
+        _debug_files = list(_debug_dir.glob("*.html")) + list(_debug_dir.glob("*.txt"))
+        if len(_debug_files) >= 2:
+            results.append({"level": "ok", "check": "debug_files_saved",
+                            "message": f"exports/debug/ に診断ファイル {len(_debug_files)}件あり"})
+        else:
+            results.append({"level": "warning", "check": "debug_files_saved",
+                            "message": f"exports/debug/ のファイルが少ない: {len(_debug_files)}件（diagnose_collectors.py を実行してください）"})
+    else:
+        results.append({"level": "warning", "check": "debug_files_saved",
+                        "message": "exports/debug/ ディレクトリが存在しない（diagnose_collectors.py を実行してください）"})
+
     return results
 
 

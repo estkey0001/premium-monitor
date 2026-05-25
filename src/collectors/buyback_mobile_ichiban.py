@@ -31,12 +31,22 @@ PRODUCT_URLS = {
 # 商品特定用の直接正規表現パターン (Playwright inner_text に適用)
 # テキスト例: "iPhone 17 Pro 256GB\nsimfree未開封 \xa0\n\xa0\n新品\n178,000円"
 # 注意: "iPhone 17 Pro 256GB" は "iPhone 17 Pro Max 256GB" にはマッチしない (Max が間にある)
+# \s+ を使用して \n / スペース / \xa0 等の空白文字の表記揺れに対応
 PRICE_PATTERNS = {
-    "iphone17pro256": r'iPhone 17 Pro 256GB.*?新品\n([\d,]+)円',
-    "iphone17pro512": r'iPhone 17 Pro 512GB.*?新品\n([\d,]+)円',
-    "iphone17pm256":  r'iPhone 17 Pro Max 256GB.*?新品\n([\d,]+)円',
-    "iphone17pm512":  r'iPhone 17 Pro Max 512GB.*?新品\n([\d,]+)円',
-    "ps5_pro":        r'PlayStation 5 Pro.*?新品\n([\d,]+)円',
+    "iphone17pro256": r'iPhone 17 Pro 256GB.*?新品\s+([\d,]+)円',
+    "iphone17pro512": r'iPhone 17 Pro 512GB.*?新品\s+([\d,]+)円',
+    "iphone17pm256":  r'iPhone 17 Pro Max 256GB.*?新品\s+([\d,]+)円',
+    "iphone17pm512":  r'iPhone 17 Pro Max 512GB.*?新品\s+([\d,]+)円',
+    "ps5_pro":        r'PlayStation 5 Pro.*?新品\s+([\d,]+)円',
+}
+
+# 商品ブロックを特定するためのアンカーキーワード（商品名と容量の両方）
+PRODUCT_ANCHORS = {
+    "iphone17pro256": ("iPhone 17 Pro", "256"),
+    "iphone17pro512": ("iPhone 17 Pro", "512"),
+    "iphone17pm256":  ("iPhone 17 Pro Max", "256"),
+    "iphone17pm512":  ("iPhone 17 Pro Max", "512"),
+    "ps5_pro":        ("PlayStation 5 Pro", None),
 }
 
 
@@ -76,6 +86,7 @@ class MobileIchibanCsvCollector(BaseCsvBuybackCollector):
         """html は Playwright inner_text() の plain text (BS4 不使用)。"""
         text = html  # inner_text() はそのまま使用
 
+        # ── Step1: メインパターン（\s+ で空白表記揺れ吸収）──
         pat = PRICE_PATTERNS.get(product_alias)
         if pat:
             m = re.search(pat, text, re.DOTALL)
@@ -87,10 +98,38 @@ class MobileIchibanCsvCollector(BaseCsvBuybackCollector):
                 except ValueError:
                     pass
 
-        # フォールバック: simfree未開封 + 新品 の価格
+        # ── Step2: 商品ブロック検索 → 近傍の価格を抽出 ──
+        anchor_info = PRODUCT_ANCHORS.get(product_alias)
+        if anchor_info:
+            model_kw, cap_kw = anchor_info
+            # model_kw を含む行の前後600文字を対象に価格検索
+            m_anchor = re.search(re.escape(model_kw), text)
+            if m_anchor:
+                start = m_anchor.start()
+                block = text[start:start + 600]
+                # 容量フィルター（256/512 が正しいブロックか確認）
+                if cap_kw and cap_kw not in block:
+                    # 容量が一致しない → 別商品のブロック可能性あり。スキップ
+                    pass
+                else:
+                    for near_pat in [
+                        r'新品\s+([\d,]+)円',
+                        r'未開封\s+([\d,]+)円',
+                        r'([\d]{2,3},\d{3})円',
+                    ]:
+                        m2 = re.search(near_pat, block)
+                        if m2:
+                            try:
+                                price = int(m2.group(1).replace(",", ""))
+                                if 10000 <= price <= 5_000_000:
+                                    return price
+                            except ValueError:
+                                pass
+
+        # ── Step3: フォールバック（simfree未開封 または 新品 の近傍価格）──
         for fallback_pat in [
-            r'simfree未開封.*?新品\n([\d,]+)円',
-            r'新品\n([\d,]+)円',
+            r'simfree未開封.*?新品\s+([\d,]+)円',
+            r'新品\s+([\d,]+)円',
         ]:
             m = re.search(fallback_pat, text, re.DOTALL)
             if m:

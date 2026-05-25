@@ -1732,6 +1732,53 @@ def check() -> list[dict]:
         results.append({"level": "ok", "check": "fetch_failed_has_reason",
                         "message": "collector_report 未生成のためスキップ"})
 
+    # ── #182: docs/collector_report.html が存在する ──
+    _cr_html_path = PUBLIC_DIR / "collector_report.html"
+    if _cr_html_path.exists():
+        results.append({"level": "ok", "check": "collector_report_html_exists",
+                        "message": "docs/collector_report.html 存在"})
+    else:
+        results.append({"level": "warning", "check": "collector_report_html_exists",
+                        "message": "docs/collector_report.html が存在しない（build-public-lp を再実行してください）"})
+
+    # ── #183: LP内に collector_report.html へのリンクがある ──
+    _cr_link_in_lp = 'collector_report.html' in html
+    if _cr_link_in_lp:
+        results.append({"level": "ok", "check": "collector_report_link_in_lp",
+                        "message": "LP内に collector_report.html へのリンクがある"})
+    else:
+        results.append({"level": "warning", "check": "collector_report_link_in_lp",
+                        "message": "LP内に collector_report.html リンクが見つからない（LP 再生成が必要）"})
+
+    # ── #184: fetch_failed が存在する場合、取得失敗リンクが表示される ──
+    # collector_report/latest.json の failed 件数 >= threshold なら collector-warn-bar が表示されるべき
+    import json as _json184
+    _cr_json_path = PROJECT_ROOT / "exports" / "collector_report" / "latest.json"
+    _WARN_THRESHOLD = 5
+    if _cr_json_path.exists():
+        try:
+            _cr184 = _json184.loads(_cr_json_path.read_text(encoding="utf-8"))
+            _failed184 = _cr184.get("summary", {}).get("failed", 0)
+            _suspicious184 = len(_cr184.get("suspicious_prices", []))
+            _should_show_warn = (_failed184 >= _WARN_THRESHOLD) or (_suspicious184 > 0)
+            _has_warn_bar = 'collector-warn-bar' in html
+            if _should_show_warn:
+                if _has_warn_bar:
+                    results.append({"level": "ok", "check": "fetch_failed_report_link",
+                                    "message": f"取得失敗{_failed184}件 / suspicious{_suspicious184}件 → 警告バーが表示されている"})
+                else:
+                    results.append({"level": "warning", "check": "fetch_failed_report_link",
+                                    "message": f"取得失敗{_failed184}件 / suspicious{_suspicious184}件あるが collector-warn-bar が表示されていない（LP 再生成が必要）"})
+            else:
+                results.append({"level": "ok", "check": "fetch_failed_report_link",
+                                "message": f"取得失敗{_failed184}件（閾値{_WARN_THRESHOLD}未満）／suspicious 0件 → 警告バー表示不要"})
+        except Exception as _e184:
+            results.append({"level": "ok", "check": "fetch_failed_report_link",
+                            "message": f"collector_report JSON 読み込みエラー（スキップ）: {_e184}"})
+    else:
+        results.append({"level": "ok", "check": "fetch_failed_report_link",
+                        "message": "collector_report/latest.json 未生成のためスキップ"})
+
     # ── #178: auto_scraped行のlink_verifiedがすべてtrue（URLスラッグ推測チェック） ──
     # URL推測（スラッグ生成）が禁止されているため、auto_scrapedはlink_verified=trueであるべき
     import csv as _csv178

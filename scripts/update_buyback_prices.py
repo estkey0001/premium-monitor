@@ -216,7 +216,7 @@ def _load_existing_csv() -> list[dict]:
 def _write_csv(rows: list[dict]) -> None:
     """CSV書き込み。"""
     fieldnames = ["product_alias", "buyback_shop", "buyback_price", "condition",
-                  "url", "observed_at", "data_source", "link_verified"]
+                  "url", "observed_at", "data_source", "link_verified", "confidence"]
     with open(CSV_PATH, "w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
@@ -279,6 +279,7 @@ def run(dry_run: bool = False, no_scrape: bool = False) -> int:
                         "observed_at":   result.get("observed_at", now_jst.isoformat(timespec="seconds")),
                         "data_source":   result.get("data_source", "auto_scraped"),
                         "link_verified": result.get("link_verified", "true"),
+                        "confidence":    result.get("confidence", "high"),
                     }
                     new_rows.append(row)
                     results_summary.append((alias, shop_id, "OK", result["buyback_price"]))
@@ -436,16 +437,31 @@ def _generate_collector_report(
             })
 
     # ── suspicious_price 検出 ─────────────────────────────────────────────
+    # カテゴリ別 正常価格帯（Task 3-A）
+    GENRE_PRICE_RANGES: dict[str, tuple[int, int]] = {
+        "iphone":       (30_000,  400_000),
+        "smartphone":   (30_000,  400_000),
+        "tablet":       (20_000,  350_000),
+        "game_console": (10_000,  200_000),
+        "wearable":     (5_000,   150_000),
+        "audio":        (3_000,   120_000),
+        "camera":       (20_000, 1_000_000),
+    }
+
     # 同一商品の取得成功価格を集める（平均比較用）
     product_prices: dict[str, list[int]] = {}
+    # ショップ別・商品別価格マップ（Task 3-C: 同一ショップ内異常検出用）
+    shop_product_prices: dict[str, dict[str, int]] = {}  # shop_id -> {alias -> price}
     for row in new_rows:
         alias = row.get("product_alias", "")
+        shop  = row.get("buyback_shop", "")
         try:
             p = int(row.get("buyback_price", 0) or 0)
         except (ValueError, TypeError):
             p = 0
         if p > 0:
             product_prices.setdefault(alias, []).append(p)
+            shop_product_prices.setdefault(shop, {})[alias] = p
 
     suspicious_prices = []
 
@@ -463,14 +479,16 @@ def _generate_collector_report(
         genre    = PRODUCT_GENRES.get(alias, "")
         flags: list[dict] = []
 
-        # ① 前回比 ±30%以上
+        # ① 前回比 ±20%以上（Task 3-B: 旧 ±30% → ±20% に強化）
         prev = prev_price_map.get((alias, shop_id))
         if prev and prev > 0:
-            change_pct = abs(price - prev) / prev * 100
-            if change_pct >= 30:
+            change_pct = (price - prev) / prev * 100
+            abs_pct = abs(change_pct)
+            if abs_pct >= 20:
+                direction = "上昇" if change_pct > 0 else "下落"
                 flags.append({
-                    "reason": "price_change_over_30pct",
-                    "details": f"前回¥{prev:,} → 今回¥{price:,}（{change_pct:+.1f}%）",
+                    "reason": "price_change_over_20pct",
+                    "details": f"前回¥{prev:,} → 今回¥{price:,}（{change_pct:+.1f}% {direction}）",
                 })
 
         if official and official > 0:
@@ -501,7 +519,6 @@ def _generate_collector_report(
                     })
 
         # ⑤ ゲーム機なのにスマホ価格帯（公式価格の2.5倍 or 10万円のうち大きい方を超える）
-        # 例: Switch2(¥49,980) → 閾値¥124,950、PS5 Pro(¥119,980) → 閾値¥299,950
         if genre == "game_console":
             gc_threshold = max(
                 GAME_CONSOLE_SMARTPHONE_THRESHOLD,
@@ -512,6 +529,50 @@ def _generate_collector_report(
                     "reason": "game_console_smartphone_price",
                     "details": f"ゲーム機({alias})なのに¥{price:,}（閾値¥{gc_threshold:,}超 / スマホ価格帯の可能性）",
                 })
+
+        # ⑥ カテゴリ別正常価格帯チェック（Task 3-A）
+        genre_range = GENRE_PRICE_RANGES.get(genre)
+        if genre_range:
+            lo, hi = genre_range
+            if price < lo:
+                flags.append({
+                    "reason": "below_genre_min",
+                    "details": f"{genre}正常帯¥{lo:,}〜¥{hi:,}の下限未満（¥{price:,}）",
+                })
+            elif price > hi:
+                flags.append({
+                    "reason": "above_genre_max",
+                    "details": f"{genre}正常帯¥{lo:,}〜¥{hi:,}の上限超過（¥{price:,}）",
+                })
+
+        # ⑦ 同一ショップ内で容量差が逆転（Task 3-C）
+        # 例: iphone17pro256 > iphone17pro512 は不自然（256GBが512GBより高い）
+        CAPACITY_ORDER = [
+            ("iphone17pro256", "iphone17pro512"),
+            ("iphone17pm256",  "iphone17pm512"),
+        ]
+        shop_prices = shop_product_prices.get(shop_id, {})
+        for smaller_alias, larger_alias in CAPACITY_ORDER:
+            if alias == smaller_alias:
+                larger_price = shop_prices.get(larger_alias)
+                if larger_price and price > larger_price:
+                    flags.append({
+                        "reason": "capacity_price_reversal",
+                        "details": (
+                            f"{shop_id}: {smaller_alias}=¥{price:,} > {larger_alias}=¥{larger_price:,} "
+                            f"（容量小のほうが高い — パース誤りの可能性）"
+                        ),
+                    })
+            elif alias == larger_alias:
+                smaller_price = shop_prices.get(smaller_alias)
+                if smaller_price and price < smaller_price:
+                    flags.append({
+                        "reason": "capacity_price_reversal",
+                        "details": (
+                            f"{shop_id}: {smaller_alias}=¥{smaller_price:,} > {larger_alias}=¥{price:,} "
+                            f"（容量小のほうが高い — パース誤りの可能性）"
+                        ),
+                    })
 
         for flag in flags:
             suspicious_prices.append({
@@ -546,8 +607,57 @@ def _generate_collector_report(
         for r, c in reason_counter.most_common()
     ]
 
-    # ── 優先修正対象（成功店舗数が少ない商品）──────────────────────────────
-    # 主要商品について、成功店舗数が閾値を下回るものを優先修正リストに入れる
+    # ── 店舗別詳細統計（Task 4）────────────────────────────────────────────
+    shop_stats: dict[str, dict] = {}
+    for alias, shop_id, status, _price in results_summary:
+        if shop_id not in shop_stats:
+            shop_stats[shop_id] = {"ok": 0, "failed": 0, "skip": 0, "reasons": []}
+        key = "ok" if status == "OK" else ("skip" if status == "SKIP" else "failed")
+        shop_stats[shop_id][key] += 1
+        if status != "OK":
+            r = failure_reasons.get((alias, shop_id), "unknown")
+            shop_stats[shop_id]["reasons"].append(r)
+
+    shop_detail_list = []
+    for shop_id, st in sorted(shop_stats.items()):
+        total = st["ok"] + st["failed"] + st["skip"]
+        success_rate = round(st["ok"] / total * 100) if total > 0 else 0
+        shop_reasons = Counter(st["reasons"])
+        rate_429 = shop_reasons.get("rate_limited_429", 0)
+        blocked  = shop_reasons.get("site_blocked", 0) + shop_reasons.get("http_403", 0)
+        top_reason = shop_reasons.most_common(1)[0][0] if shop_reasons else "—"
+        shop_detail_list.append({
+            "shop_id": shop_id,
+            "total": total,
+            "ok": st["ok"],
+            "failed": st["failed"],
+            "success_rate_pct": success_rate,
+            "rate_429_count": rate_429,
+            "blocked_count": blocked,
+            "top_reason": top_reason,
+        })
+
+    # ── 商品別価格統計（Task 4）────────────────────────────────────────────
+    product_price_stats: dict[str, dict] = {}
+    for row in new_rows:
+        a = row.get("product_alias", "")
+        try:
+            p = int(row.get("buyback_price", 0) or 0)
+        except (ValueError, TypeError):
+            p = 0
+        if p > 0:
+            if a not in product_price_stats:
+                product_price_stats[a] = {"prices": []}
+            product_price_stats[a]["prices"].append(p)
+
+    for a, stat in product_price_stats.items():
+        prices = stat["prices"]
+        stat["avg"] = round(statistics.mean(prices)) if prices else 0
+        stat["min"] = min(prices) if prices else 0
+        stat["max"] = max(prices) if prices else 0
+        stat["suspicious"] = any(s["product_alias"] == a for s in suspicious_prices)
+
+    # ── 優先修正対象 TOP5（Task 4）────────────────────────────────────────
     TARGET_MIN_SHOPS = {
         "iphone17pro256": 3, "iphone17pro512": 3,
         "iphone17pm256": 3,  "iphone17pm512": 3,
@@ -563,6 +673,20 @@ def _generate_collector_report(
                 f"{alias}: 成功{success_count}店舗 (目標{min_shops}) — あと{missing}店舗必要"
             )
 
+    # 店舗別 TOP5 優先修正（成功率0%かつ取得試行のある店舗）
+    shop_priority_top5: list[str] = []
+    for s in shop_detail_list:
+        if s["ok"] == 0 and s["total"] > 0:
+            reason_disp = s["top_reason"] if s["top_reason"] != "—" else "取得失敗"
+            shop_priority_top5.append(f"{s['shop_id']} ({reason_disp} {s['total']}件)")
+    shop_priority_top5 = shop_priority_top5[:5]
+
+    # ── low_confidence カウント（Task 7: deploy-check #197 用）───────────────
+    low_confidence_count = sum(
+        1 for row in new_rows
+        if row.get("confidence", "high") == "low" and int(row.get("buyback_price", 0) or 0) > 0
+    )
+
     # ── JSON出力 ───────────────────────────────────────────────────────────
     report = {
         "generated_at":    now_jst.isoformat(timespec="seconds"),
@@ -571,12 +695,17 @@ def _generate_collector_report(
             "ok":      ok_count,
             "failed":  fail_count,
             "skip":    skip_count,
+            "low_confidence_count": low_confidence_count,
         },
+        "low_confidence_count": low_confidence_count,
         "by_shop":                by_shop,
         "by_product":             by_product,
         "product_shop_detail":    product_shop_detail,
+        "product_price_stats":    product_price_stats,
+        "shop_detail":            shop_detail_list,
         "failure_reason_ranking": failure_reason_ranking,
         "priority_fixes":         priority_fixes,
+        "shop_priority_top5":     shop_priority_top5,
         "fetch_failed":           fetch_failed_list,
         "price_changes":          price_changes,
         "suspicious_prices":      suspicious_prices,
@@ -616,13 +745,13 @@ def _generate_collector_report(
     for alias, cnt in sorted(by_product.items()):
         md_lines.append(f"| {alias} | {cnt['ok']} | {cnt['failed']} | {cnt['skip']} |")
 
-    # ── 商品別 成功店舗数 ────────────────────────────────────────────────────
+    # ── 商品別 成功店舗数＋価格統計 ──────────────────────────────────────────
     md_lines += [
         f"",
         f"## 商品別 成功店舗数（目標達成状況）",
         f"",
-        f"| 商品 | 成功店舗数 | 目標 | 達成 | 成功店舗 |",
-        f"|------|-----------|------|------|---------|",
+        f"| 商品 | 成功店舗数 | 目標 | 達成 | 平均価格 | 最低価格 | 最高価格 | suspicious |",
+        f"|------|-----------|------|------|---------|---------|---------|-----------|",
     ]
     _target_map = {
         "iphone17pro256": 3, "iphone17pro512": 3,
@@ -634,20 +763,59 @@ def _generate_collector_report(
         success_shops = detail.get("success_shops", [])
         cnt = len(success_shops)
         target = _target_map.get(alias, "-")
-        if isinstance(target, int):
-            achieved = "✅" if cnt >= target else "❌"
-        else:
-            achieved = "-"
+        achieved = ("✅" if cnt >= target else "❌") if isinstance(target, int) else "-"
+        pstat = product_price_stats.get(alias, {})
+        avg_s = f"¥{pstat.get('avg', 0):,}" if pstat.get("avg") else "—"
+        min_s = f"¥{pstat.get('min', 0):,}" if pstat.get("min") else "—"
+        max_s = f"¥{pstat.get('max', 0):,}" if pstat.get("max") else "—"
+        susp_s = "⚠️" if pstat.get("suspicious") else "—"
+        md_lines.append(
+            f"| {alias} | {cnt} | {target} | {achieved} | {avg_s} | {min_s} | {max_s} | {susp_s} |"
+        )
+
+    # 成功店舗リスト（別テーブル）
+    md_lines += [
+        f"",
+        f"| 商品 | 成功店舗 |",
+        f"|------|---------|",
+    ]
+    for alias in sorted(product_shop_detail.keys()):
+        success_shops = product_shop_detail[alias].get("success_shops", [])
         shops_str = ", ".join(success_shops) if success_shops else "（なし）"
-        md_lines.append(f"| {alias} | {cnt} | {target} | {achieved} | {shops_str} |")
+        md_lines.append(f"| {alias} | {shops_str} |")
+
+    # ── 店舗別詳細統計 ──────────────────────────────────────────────────────
+    md_lines += [
+        f"",
+        f"## 店舗別 詳細統計",
+        f"",
+        f"| 店舗 | 成功率 | OK | 失敗 | 429率 | ブロック率 | 主な失敗理由 |",
+        f"|------|-------|-----|------|------|-----------|------------|",
+    ]
+    for s in shop_detail_list:
+        total = s["total"]
+        rate_str = f"{s['success_rate_pct']}%"
+        r429_str = f"{s['rate_429_count']}/{total}" if s["rate_429_count"] else "—"
+        blk_str  = f"{s['blocked_count']}/{total}" if s["blocked_count"] else "—"
+        md_lines.append(
+            f"| {s['shop_id']} | {rate_str} | {s['ok']} | {s['failed']} | {r429_str} | {blk_str} | {s['top_reason']} |"
+        )
 
     # ── 優先修正対象 ──────────────────────────────────────────────────────────
     md_lines += [f"", f"## 優先修正対象", f""]
     if priority_fixes:
+        md_lines.append("### 商品別（目標店舗数未達）")
         for pf in priority_fixes:
             md_lines.append(f"- {pf}")
     else:
-        md_lines.append("（すべての商品が目標店舗数を達成しています）")
+        md_lines.append("**商品別**: すべての商品が目標店舗数を達成しています")
+    md_lines.append("")
+    if shop_priority_top5:
+        md_lines.append("### 店舗別 TOP5（成功率0%）")
+        for i, sp in enumerate(shop_priority_top5, 1):
+            md_lines.append(f"{i}. {sp}")
+    else:
+        md_lines.append("**店舗別TOP5**: すべての店舗で何らかの取得成功があります")
 
     # ── 取得不可理由ランキング ────────────────────────────────────────────────
     md_lines += [

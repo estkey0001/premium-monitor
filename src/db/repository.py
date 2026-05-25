@@ -914,13 +914,14 @@ class Repository:
             """INSERT INTO buyback_prices
                (id, product_id, shop_id, shop_name, buyback_price,
                 condition, buyback_url, observed_at, is_active, notes,
-                data_source, link_verified)
-               VALUES (?,?,?,?,?,?,?,?,?,?,?,?)""",
+                data_source, link_verified, confidence)
+               VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)""",
             (bp.id, bp.product_id, bp.shop_id, bp.shop_name, bp.buyback_price,
              bp.condition, bp.buyback_url, bp.observed_at.isoformat(),
              int(bp.is_active), bp.notes,
              getattr(bp, "data_source", "manual_today"),
-             int(getattr(bp, "link_verified", False))),
+             int(getattr(bp, "link_verified", False)),
+             getattr(bp, "confidence", "high")),
         )
         self.db.connection.commit()
 
@@ -1259,7 +1260,8 @@ class Repository:
         try:
             rows = self.db.connection.execute(
                 """SELECT bp.shop_id, bp.shop_name, bp.buyback_price, bp.condition,
-                          bp.buyback_url, bp.observed_at, bp.data_source, bp.link_verified
+                          bp.buyback_url, bp.observed_at, bp.data_source, bp.link_verified,
+                          COALESCE(bp.confidence, 'high') AS confidence
                    FROM buyback_prices bp
                    INNER JOIN (
                        SELECT shop_id, MAX(observed_at) AS max_at

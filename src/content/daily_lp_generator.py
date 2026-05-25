@@ -1670,12 +1670,47 @@ a[href], button, [role="tab"], [role="button"],
   font-weight: 600; white-space: nowrap;
 }}
 .failure-legend {{ font-size: 0.72rem; color: var(--ink3); font-weight: 400; }}
-.failure-reason-rate_limit_429   {{ background: #FFF3CD; color: #856404; border: 1px solid #FFE08A; }}
-.failure-reason-cloudflare_block {{ background: #FFE8E8; color: #B91C1C; border: 1px solid #FCA5A5; }}
-.failure-reason-parsing_failed   {{ background: #E8F0FF; color: #1D4ED8; border: 1px solid #93C5FD; }}
-.failure-reason-url_not_found    {{ background: #F3E8FF; color: #7C3AED; border: 1px solid #C4B5FD; }}
-.failure-reason-empty_result     {{ background: #F0FDF4; color: #15803D; border: 1px solid #86EFAC; }}
-.failure-reason-unknown          {{ background: #F3F4F6; color: #6B7280; border: 1px solid #D1D5DB; }}
+.failure-reason-rate_limit_429     {{ background: #FFF3CD; color: #856404; border: 1px solid #FFE08A; }}
+.failure-reason-cloudflare_block   {{ background: #FFE8E8; color: #B91C1C; border: 1px solid #FCA5A5; }}
+.failure-reason-site_blocked       {{ background: #FFE8E8; color: #B91C1C; border: 1px solid #FCA5A5; }}
+.failure-reason-parsing_failed     {{ background: #E8F0FF; color: #1D4ED8; border: 1px solid #93C5FD; }}
+.failure-reason-service_unavailable{{ background: #FFF7E6; color: #B45309; border: 1px solid #FDE68A; }}
+.failure-reason-url_not_found      {{ background: #F3E8FF; color: #7C3AED; border: 1px solid #C4B5FD; }}
+.failure-reason-empty_result       {{ background: #F0FDF4; color: #15803D; border: 1px solid #86EFAC; }}
+.failure-reason-product_not_listed {{ background: #F0FDF4; color: #15803D; border: 1px solid #86EFAC; }}
+.failure-reason-ssl_error          {{ background: #FFE8E8; color: #B91C1C; border: 1px solid #FCA5A5; }}
+.failure-reason-connection_error   {{ background: #FFE8E8; color: #B91C1C; border: 1px solid #FCA5A5; }}
+.failure-reason-empty_html         {{ background: #E8F0FF; color: #1D4ED8; border: 1px solid #93C5FD; }}
+.failure-reason-price_not_found    {{ background: #E8F0FF; color: #1D4ED8; border: 1px solid #93C5FD; }}
+.failure-reason-requires_js        {{ background: #E8F0FF; color: #1D4ED8; border: 1px solid #93C5FD; }}
+.failure-reason-no_url             {{ background: #F0FDF4; color: #15803D; border: 1px solid #86EFAC; }}
+.failure-reason-unknown            {{ background: #F3F4F6; color: #6B7280; border: 1px solid #D1D5DB; }}
+
+/* monitoring カード説明文 */
+.monitoring-note {{
+  font-size: 0.78rem; color: #7A4500; background: #FFF7E6;
+  border-left: 3px solid #F59E0B; padding: 5px 9px; border-radius: 0 4px 4px 0;
+  margin-top: 6px;
+}}
+
+/* fetch-failed カード説明文 */
+.fetch-failed-label {{ font-weight: 700; color: #888; margin-bottom: 2px; }}
+.fetch-failed-note {{
+  font-size: 0.77rem; color: #666; background: #F8F8F8;
+  border-left: 3px solid #CCC; padding: 5px 9px; border-radius: 0 4px 4px 0;
+  margin-bottom: 6px;
+}}
+
+/* 「さらに表示」ボタン (Task 2) */
+.ff-more-btn {{
+  display: block; width: 100%; margin-top: 4px; padding: 6px 0;
+  background: none; border: 1px dashed #CCC; border-radius: 4px;
+  font-size: 0.8rem; color: #666; cursor: pointer; text-align: center;
+  transition: background 0.15s;
+}}
+.ff-more-btn:hover {{ background: #F5F5F5; }}
+.ff-more-btn.ff-more-open {{ border-color: #AAA; color: #444; }}
+.ff-shop-table .shop-table-hd {{ display: flex; justify-content: space-between; align-items: center; }}
 
 /* ジャンル内サブセクション（v7: 第一階層=ジャンル、第二階層=状態）*/
 .status-subsection {{ margin: 16px 0 24px; }}
@@ -4586,7 +4621,8 @@ python3 -m src.cli calculate-sedori-routes</pre>
         compare_html = ''
         if buyback_rows:
             rows_html = []
-            _normal_rows  = [r for r in buyback_rows if r.get('buyback_price', 0) > 0][:5]
+            # confidence=low は誤価格防止のためLPから除外（Task 7）
+            _normal_rows  = [r for r in buyback_rows if r.get('buyback_price', 0) > 0 and r.get('confidence', 'high') != 'low'][:5]
             _failed_rows_r = [r for r in buyback_rows if r.get('buyback_price', 0) == 0 or r.get('data_source') == 'fetch_failed']
             rank = 1
             for r in _normal_rows:
@@ -4641,31 +4677,51 @@ python3 -m src.cli calculate-sedori-routes</pre>
             f'<div class="monitoring-label">現在は赤字 / 監視中</div>'
             f'<div class="monitoring-detail">公式価格: ¥{official:,} → 最高買取: ¥{best_bp:,}</div>'
             f'<div class="monitoring-diff">差額: {diff_str}（推定コスト¥{cost:,}込み）</div>'
+            f'<div class="monitoring-note">現在は赤字ですが、価格変動で利益化する可能性があります。</div>'
             f'</div>'
             f'{compare_html}'
             f'<div class="card-actions">{official_btn}</div>'
             f'</div>'
         )
 
-    # 店舗別の既知の失敗理由（Task 8: 失敗理由表示用）
+    # 内部失敗コード → ユーザー向け日本語表示ラベル（Task 1）
+    REASON_DISPLAY_LABELS: dict = {
+        'rate_limit_429':      'アクセス集中',
+        'cloudflare_block':    'サイト制限中',
+        'site_blocked':        'サイト制限中',
+        'parsing_failed':      '情報確認中',
+        'service_unavailable': '一時メンテ中',
+        'product_not_listed':  '現在未掲載',
+        'ssl_error':           '接続エラー',
+        'empty_html':          '情報取得待機',
+        'price_not_found':     '情報確認中',
+        'url_not_found':       '情報確認中',
+        'empty_result':        '現在未掲載',
+        'requires_js':         '情報取得待機',
+        'unknown':             '情報確認中',
+        'connection_error':    '接続エラー',
+        'no_url':              '現在未掲載',
+    }
+
+    # 店舗別の既知の失敗理由（Task 1: ユーザー向け表示ラベルに更新）
     _SHOP_FAILURE_REASONS: dict = {
-        'src_janpara':         ('rate_limit_429',   'じゃんぱら: アクセス制限 / 429 多発'),
-        'src_kaitori_shouten': ('cloudflare_block',  '買取商店: 403 Forbidden'),
-        'src_kaitori_itchome': ('parsing_failed',    '買取一丁目: ページ構造変更によりパース失敗'),
-        'src_mobile_ichiban':  ('parsing_failed',    'モバイル一番: ページ構造変更によりパース失敗'),
-        'src_iosys':           ('url_not_found',     'イオシス: URLまたは掲載なし'),
-        'src_geo':             ('empty_result',      'ゲオ: 商品未掲載 / 検索結果なし'),
-        'src_sofmap':          ('parsing_failed',    'ソフマップ: 自動取得失敗'),
-        'src_bookoff':         ('unknown',           'ブックオフ: 自動取得未対応'),
-        'src_surugaya':        ('parsing_failed',    '駿河屋: 自動取得失敗'),
-        'src_tsutaya':         ('unknown',           'TSUTAYA: 自動取得未対応'),
+        'src_janpara':         ('rate_limit_429',   'じゃんぱら'),
+        'src_kaitori_shouten': ('site_blocked',      '買取商店'),
+        'src_kaitori_itchome': ('parsing_failed',    '買取一丁目'),
+        'src_mobile_ichiban':  ('parsing_failed',    'モバイル一番'),
+        'src_iosys':           ('url_not_found',     'イオシス'),
+        'src_geo':             ('empty_result',      'ゲオ'),
+        'src_sofmap':          ('service_unavailable', 'ソフマップ'),
+        'src_bookoff':         ('unknown',           'ブックオフ'),
+        'src_surugaya':        ('site_blocked',      '駿河屋'),
+        'src_tsutaya':         ('unknown',           'TSUTAYA'),
         # 新規追加店舗
-        'src_hardoff':         ('parsing_failed',    'ハードオフ: 自動取得失敗'),
-        'src_geo_mobile':      ('requires_js',       'ゲオモバイル: JS必要 / 取得失敗'),
-        'src_dosupara':        ('parsing_failed',    'ドスパラ: 自動取得失敗'),
-        'src_pasoko':          ('parsing_failed',    'パソコン工房: 自動取得失敗'),
-        'src_2ndstreet':       ('parsing_failed',    'セカンドストリート: 自動取得失敗'),
-        'src_netoff':          ('parsing_failed',    'ネットオフ: 自動取得失敗'),
+        'src_hardoff':         ('parsing_failed',    'ハードオフ'),
+        'src_geo_mobile':      ('site_blocked',      'ゲオモバイル'),
+        'src_dosupara':        ('parsing_failed',    'ドスパラ'),
+        'src_pasoko':          ('parsing_failed',    'パソコン工房'),
+        'src_2ndstreet':       ('parsing_failed',    'セカンドストリート'),
+        'src_netoff':          ('parsing_failed',    'ネットオフ'),
     }
 
     def _deal_card_fetch_failed(self, d, buyback_rows: list = None) -> str:
@@ -4702,7 +4758,7 @@ python3 -m src.cli calculate-sedori-routes</pre>
             except Exception:
                 pass
 
-        # 取得失敗行のリンクリスト（失敗理由を付与）
+        # 取得失敗行のリンクリスト（失敗理由を付与）Task 1+2
         failed_rows_html = ''
         if buyback_rows:
             failed_links = []
@@ -4711,34 +4767,57 @@ python3 -m src.cli calculate-sedori-routes</pre>
                 r_name = _esc(r.get('shop_name') or r.get('shop_id') or '—')
                 r_url  = r.get('buyback_url', '')
                 r_link_verified = bool(r.get('link_verified', False))
-                # 失敗理由ラベル
+                # 失敗理由ラベル — ユーザー向け日本語に変換（Task 1）
                 _reason_info = self._SHOP_FAILURE_REASONS.get(r_shop_id)
-                _reason_cls, _reason_label = _reason_info if _reason_info else ('unknown', '取得失敗')
-                reason_badge = f'<span class="failure-reason-badge failure-reason-{_esc(_reason_cls)}">{_esc(_reason_label)}</span>'
+                _reason_cls, _shop_display = _reason_info if _reason_info else ('unknown', r_name)
+                _display_label = self.REASON_DISPLAY_LABELS.get(_reason_cls, '情報確認中')
+                reason_badge = (
+                    f'<span class="failure-reason-badge failure-reason-{_esc(_reason_cls)}">'
+                    f'{_esc(_display_label)}</span>'
+                )
                 if r_url and r_link_verified:
                     failed_links.append(
                         f'<div class="shop-row shop-row-failed">'
-                        f'<div class="shop-name-col">{r_name}</div>'
+                        f'<div class="shop-name-col">{_esc(_shop_display)}</div>'
                         f'<div class="shop-price-col shop-price-failed">—</div>'
                         f'<div class="shop-failure-detail">'
                         f'{reason_badge}'
-                        f'<a href="{_esc(r_url)}" target="_blank" rel="noopener noreferrer" class="shop-link-col" data-track="buyback_click" data-product-id="{pid}">要確認</a>'
+                        f'<a href="{_esc(r_url)}" target="_blank" rel="noopener noreferrer" class="shop-link-col" data-track="buyback_click" data-product-id="{pid}">公式で確認</a>'
                         f'</div>'
                         f'</div>'
                     )
                 else:
                     failed_links.append(
                         f'<div class="shop-row shop-row-failed">'
-                        f'<div class="shop-name-col">{r_name}</div>'
+                        f'<div class="shop-name-col">{_esc(_shop_display)}</div>'
                         f'<div class="shop-price-col shop-price-failed">—</div>'
                         f'<div class="shop-failure-detail">{reason_badge}</div>'
                         f'</div>'
                     )
             if failed_links:
+                # Task 2: 3件を初期表示、残りは「さらに表示」で展開
+                _ff_card_id = f'ff-shops-{_esc(pid_alias)}'
+                _visible   = ''.join(failed_links[:3])
+                _hidden    = ''.join(failed_links[3:])
+                _more_btn  = ''
+                if _hidden:
+                    _more_btn = (
+                        f'<div class="ff-more-wrap" id="ff-more-wrap-{_esc(pid_alias)}">'
+                        f'<div class="ff-hidden-rows" id="ff-hidden-{_esc(pid_alias)}" style="display:none">'
+                        f'{_hidden}'
+                        f'</div>'
+                        f'<button class="ff-more-btn" onclick="'
+                        f'var h=document.getElementById(\'ff-hidden-{_esc(pid_alias)}\');'
+                        f'var b=this;'
+                        f'if(h.style.display===\'none\'){{h.style.display=\'\';b.textContent=\'表示を減らす\';b.classList.add(\'ff-more-open\');}}'
+                        f'else{{h.style.display=\'none\';b.textContent=\'さらに{len(failed_links)-3}件を表示\';b.classList.remove(\'ff-more-open\');}}'
+                        f'" aria-expanded="false">さらに{len(failed_links)-3}件を表示</button>'
+                        f'</div>'
+                    )
                 failed_rows_html = (
-                    '<div class="shop-compare buyback-shop-table" style="margin-top:8px">'
-                    '<div class="shop-table-hd">取得失敗店舗 <span class="failure-legend">原因分類</span></div>'
-                    + ''.join(failed_links) + '</div>'
+                    '<div class="shop-compare buyback-shop-table ff-shop-table" style="margin-top:8px">'
+                    '<div class="shop-table-hd">取得待ち店舗 <span class="failure-legend">状態</span></div>'
+                    + _visible + _more_btn + '</div>'
                 )
 
         last_attempt_html = (
@@ -4757,7 +4836,8 @@ python3 -m src.cli calculate-sedori-routes</pre>
             f'{genre_badge}'
             f'</div></div>'
             f'<div class="fetch-failed-section">'
-            f'<div>価格取得失敗 / 要確認</div>'
+            f'<div class="fetch-failed-label">価格取得失敗 / 要確認</div>'
+            f'<div class="fetch-failed-note">一部ショップはアクセス制限等により価格取得できません。公式サイトで最新価格をご確認ください。</div>'
             f'<div>公式価格: ¥{official:,}</div>'
             f'<div>買取価格: —（全店舗取得失敗）</div>'
             f'{last_attempt_html}'
@@ -4883,7 +4963,8 @@ python3 -m src.cli calculate-sedori-routes</pre>
             rows_html = []
             # fetch_failed行を末尾に、正常行を先に表示（ランク番号は正常行のみ）
             # 正常行は上位5件、失敗行は全件（確認リンク目的なので件数制限しない）
-            _normal_rows  = [r for r in buyback_rows if r.get('buyback_price', 0) > 0][:5]
+            # confidence=low は誤価格防止のためLPから除外（Task 7）
+            _normal_rows  = [r for r in buyback_rows if r.get('buyback_price', 0) > 0 and r.get('confidence', 'high') != 'low'][:5]
             _failed_rows  = [r for r in buyback_rows if r.get('data_source') == 'fetch_failed']
             _all_disp = _normal_rows + _failed_rows
             n_shops = len(_all_disp)

@@ -1995,6 +1995,96 @@ def check() -> list[dict]:
         results.append({"level": "warning", "check": "debug_files_saved",
                         "message": "exports/debug/ ディレクトリが存在しない（diagnose_collectors.py を実行してください）"})
 
+    # ── #197: confidence=low の価格がLPに表示されていない ────────────────────
+    # docs/index.html（公開ビルド後）または exports/lp/daily/index_A.html を使用
+    _lp_html_197 = ""
+    _lp_file_197 = PUBLIC_DIR / "index.html"
+    if not _lp_file_197.exists():
+        # フォールバック: exports/lp/daily/index_A.html
+        _lp_file_197 = PROJECT_ROOT / "exports" / "lp" / "daily" / "index_A.html"
+    if _lp_file_197.exists():
+        _lp_html_197 = _lp_file_197.read_text(encoding="utf-8", errors="ignore")
+    if _lp_html_197:
+        # confidence=low 行には data-confidence="low" 属性が付与される想定
+        # または collector_report の low_confidence_count をチェック
+        _cr_ref = _cr if ('_cr' in dir() and _cr) else {}
+        _low_conf_in_cr = _cr_ref.get("low_confidence_count", 0)
+        if 'data-confidence="low"' in _lp_html_197:
+            results.append({"level": "error", "check": "low_confidence_not_in_lp",
+                            "message": "confidence=low の価格がLPに含まれている（誤価格リスク）"})
+        else:
+            results.append({"level": "ok", "check": "low_confidence_not_in_lp",
+                            "message": f"confidence=low 価格がLPに含まれていない（low={_low_conf_in_cr}件）"})
+    else:
+        results.append({"level": "warning", "check": "low_confidence_not_in_lp",
+                        "message": "LP HTMLが見つからないため confidence=low チェックをスキップ"})
+
+    # ── #198: suspicious_price がLPに表示されていない ────────────────────────
+    _lp_html_198 = _lp_html_197  # 同じLPファイルを使用
+    if _lp_html_198:
+        if 'data-suspicious="true"' in _lp_html_198 or 'suspicious-price' in _lp_html_198:
+            results.append({"level": "error", "check": "suspicious_price_not_in_lp",
+                            "message": "suspicious_price がLPに含まれている（誤価格リスク）"})
+        else:
+            _cr_ref198 = _cr if ('_cr' in dir() and _cr) else {}
+            _sp_count198 = len(_cr_ref198.get("suspicious_prices", []))
+            results.append({"level": "ok", "check": "suspicious_price_not_in_lp",
+                            "message": f"suspicious_price がLPに含まれていない（要疑い価格={_sp_count198}件）"})
+    else:
+        results.append({"level": "warning", "check": "suspicious_price_not_in_lp",
+                        "message": "LP HTMLが見つからないため suspicious_price チェックをスキップ"})
+
+    # ── #199: fetch_failed 3件超のときに「さらに表示」UIが存在する ──────────
+    _lp_html_199 = _lp_html_197
+    if _lp_html_199:
+        _ff_shop_count = _lp_html_199.count('shop-row-failed')
+        if _ff_shop_count > 3:
+            if 'ff-more-btn' in _lp_html_199:
+                results.append({"level": "ok", "check": "fetch_failed_collapse_ui_exists",
+                                "message": f"fetch_failed店舗 {_ff_shop_count}件で「さらに表示」UIが存在"})
+            else:
+                results.append({"level": "warning", "check": "fetch_failed_collapse_ui_exists",
+                                "message": f"fetch_failed店舗 {_ff_shop_count}件あるが「さらに表示」UIが見つからない"})
+        else:
+            results.append({"level": "ok", "check": "fetch_failed_collapse_ui_exists",
+                            "message": f"fetch_failed店舗 {_ff_shop_count}件（3件以下のため折りたたみUI不要）"})
+    else:
+        results.append({"level": "warning", "check": "fetch_failed_collapse_ui_exists",
+                        "message": "LP HTMLが見つからないため fetch_failed_collapse_ui チェックをスキップ"})
+
+    # ── #200: monitoring カードに説明文が存在する ─────────────────────────────
+    _lp_html_200 = _lp_html_197
+    if _lp_html_200:
+        if 'monitoring-note' in _lp_html_200 and '価格変動で利益化' in _lp_html_200:
+            results.append({"level": "ok", "check": "monitoring_description_exists",
+                            "message": "monitoring カードに説明文が存在"})
+        else:
+            results.append({"level": "warning", "check": "monitoring_description_exists",
+                            "message": "monitoring カードの説明文（monitoring-note）が見つからない"})
+    else:
+        results.append({"level": "warning", "check": "monitoring_description_exists",
+                        "message": "LP HTMLが見つからないため monitoring_description チェックをスキップ"})
+
+    # ── #201: fetch_failed セクションに説明文が存在する ──────────────────────
+    # fetch_failed カードが実際に表示されている場合のみ確認
+    _lp_html_201 = _lp_html_197
+    if _lp_html_201:
+        _has_ff_card = ('badge-fetch-failed-card' in _lp_html_201
+                        or 'data-user-level="fetch_failed"' in _lp_html_201)
+        if not _has_ff_card:
+            # fetch_failed カードが存在しない → 説明文チェック不要
+            results.append({"level": "ok", "check": "fetch_failed_description_exists",
+                            "message": "fetch_failed カードなし → 説明文チェックスキップ（正常）"})
+        elif 'fetch-failed-note' in _lp_html_201:
+            results.append({"level": "ok", "check": "fetch_failed_description_exists",
+                            "message": "fetch_failed セクションに説明文が存在"})
+        else:
+            results.append({"level": "warning", "check": "fetch_failed_description_exists",
+                            "message": "fetch_failed カードあるが説明文（fetch-failed-note）が見つからない"})
+    else:
+        results.append({"level": "warning", "check": "fetch_failed_description_exists",
+                        "message": "LP HTMLが見つからないため fetch_failed_description チェックをスキップ"})
+
     return results
 
 

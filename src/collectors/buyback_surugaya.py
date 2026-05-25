@@ -7,6 +7,11 @@ URL: https://www.suruga-ya.jp/kaitori/
 
 買取価格形式例:
   - "買取価格: 45,000円" または "¥45,000" の形式
+
+注意: 2026-05-25 調査結果:
+     requests/Playwright ともに 403 Forbidden（強力なボット検知）。
+     failure_reason = "site_blocked" として記録。
+     URL の正当性確認: /kaitori/kaitori_list.php?keyword=... は正しい形式。
 """
 import re
 import urllib.parse
@@ -46,12 +51,37 @@ class SurugayaCsvCollector(BaseCsvBuybackCollector):
     SHOP_NAME = "駿河屋"
     BASE_URL  = "https://www.suruga-ya.jp/"
     REQUIRES_JS = False
+    # 2026-05-25: 403 強制ブロック。_fetch_html でsite_blocked を設定する
 
     def _build_url(self, product_alias: str, product_name: str) -> str:
         kw = SEARCH_KEYWORDS.get(product_alias)
         if not kw:
             return ""
         return _search_url(kw)
+
+    def _fetch_html(self, url: str) -> Optional[str]:
+        """403 ブロックが確認済みのため、即座に site_blocked を設定して None を返す。"""
+        import requests as _req, time
+        time.sleep(0.5)
+        try:
+            sess = _req.Session()
+            sess.headers.update({
+                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+                "Accept-Language": "ja,en;q=0.9",
+            })
+            resp = sess.get(url, timeout=10, allow_redirects=True)
+            if resp.status_code == 403:
+                self.last_failure_reason = "site_blocked"
+                return None
+            resp.raise_for_status()
+            return resp.text
+        except _req.HTTPError as e:
+            status = e.response.status_code if (hasattr(e, 'response') and e.response) else 0
+            self.last_failure_reason = "site_blocked" if status == 403 else f"http_{status}"
+            return None
+        except Exception as e:
+            self.last_failure_reason = "site_blocked"
+            return None
 
     def _parse_price(self, html: str, product_alias: str, product_name: str) -> Optional[int]:
         from bs4 import BeautifulSoup

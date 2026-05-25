@@ -5,6 +5,11 @@ URL: https://www.sofmap.com/
   - 買取一覧検索: /buy_list.aspx?keyword=Nintendo+Switch+2
 
 価格形式: "買取価格 ¥45,000" や "45,000円(税込)"
+
+注意: 2026-05-25 調査結果:
+     buy_list.aspx が 503 Service Unavailable（サーバー障害）。
+     一時的な問題の可能性があるため、URL は保持する。
+     503 発生時は failure_reason = "service_unavailable" として記録。
 """
 import re
 import urllib.parse
@@ -42,6 +47,43 @@ class SofmapCsvCollector(BaseCsvBuybackCollector):
     SHOP_NAME = "ソフマップ"
     BASE_URL  = "https://www.sofmap.com/"
     REQUIRES_JS = True  # JS動的ページの可能性あり → Playwright フォールバック有効
+
+    def _fetch_html(self, url: str) -> Optional[str]:
+        """503 Service Unavailable の場合は service_unavailable を設定。"""
+        import requests as _req, time
+        time.sleep(1.5)
+        try:
+            sess = _req.Session()
+            sess.headers.update({
+                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+                "Accept-Language": "ja,en;q=0.9",
+            })
+            resp = sess.get(url, timeout=15, allow_redirects=True)
+            if resp.status_code == 503:
+                self.last_failure_reason = "service_unavailable"
+                return None
+            resp.raise_for_status()
+            # リダイレクト先URLが server_too_busy の場合もサービス不可として扱う
+            final_url = resp.url
+            if "server_too_busy" in final_url or "too_busy" in final_url:
+                self.last_failure_reason = "service_unavailable"
+                return None
+            # コンテンツが 503 メッセージを含む場合もチェック
+            if len(resp.text) < 10000 and (
+                "503" in resp.text
+                or "Service Unavailable" in resp.text
+                or "server_too_busy" in resp.text.lower()
+            ):
+                self.last_failure_reason = "service_unavailable"
+                return None
+            return resp.text
+        except _req.HTTPError as e:
+            status = e.response.status_code if (hasattr(e, 'response') and e.response) else 0
+            self.last_failure_reason = "service_unavailable" if status == 503 else f"http_{status}"
+            return None
+        except Exception as e:
+            self.last_failure_reason = "connection_error"
+            return None
 
     def _build_url(self, product_alias: str, product_name: str) -> str:
         kw = SEARCH_KEYWORDS.get(product_alias)

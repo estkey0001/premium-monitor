@@ -523,6 +523,46 @@ def _generate_collector_report(
                 "details":        flag["details"],
             })
 
+    # ── 商品別 成功/失敗店舗の内訳 ─────────────────────────────────────────
+    product_shop_detail: dict[str, dict] = {}
+    for alias, shop_id, status, _price in results_summary:
+        if alias not in product_shop_detail:
+            product_shop_detail[alias] = {"success_shops": [], "failed_shops": [], "skip_shops": []}
+        if status == "OK":
+            product_shop_detail[alias]["success_shops"].append(shop_id)
+        elif status == "SKIP":
+            product_shop_detail[alias]["skip_shops"].append(shop_id)
+        else:
+            product_shop_detail[alias]["failed_shops"].append(shop_id)
+
+    # ── 取得不可理由ランキング ─────────────────────────────────────────────
+    from collections import Counter
+    reason_counter: Counter = Counter()
+    for item in fetch_failed_list:
+        r = item.get("reason") or "unknown"
+        reason_counter[r] += 1
+    failure_reason_ranking = [
+        {"reason": r, "count": c}
+        for r, c in reason_counter.most_common()
+    ]
+
+    # ── 優先修正対象（成功店舗数が少ない商品）──────────────────────────────
+    # 主要商品について、成功店舗数が閾値を下回るものを優先修正リストに入れる
+    TARGET_MIN_SHOPS = {
+        "iphone17pro256": 3, "iphone17pro512": 3,
+        "iphone17pm256": 3,  "iphone17pm512": 3,
+        "switch2": 2, "ps5_pro": 2,
+    }
+    priority_fixes: list[str] = []
+    for alias, min_shops in TARGET_MIN_SHOPS.items():
+        detail = product_shop_detail.get(alias, {})
+        success_count = len(detail.get("success_shops", []))
+        if success_count < min_shops:
+            missing = min_shops - success_count
+            priority_fixes.append(
+                f"{alias}: 成功{success_count}店舗 (目標{min_shops}) — あと{missing}店舗必要"
+            )
+
     # ── JSON出力 ───────────────────────────────────────────────────────────
     report = {
         "generated_at":    now_jst.isoformat(timespec="seconds"),
@@ -532,11 +572,14 @@ def _generate_collector_report(
             "failed":  fail_count,
             "skip":    skip_count,
         },
-        "by_shop":          by_shop,
-        "by_product":       by_product,
-        "fetch_failed":     fetch_failed_list,
-        "price_changes":    price_changes,
-        "suspicious_prices": suspicious_prices,
+        "by_shop":                by_shop,
+        "by_product":             by_product,
+        "product_shop_detail":    product_shop_detail,
+        "failure_reason_ranking": failure_reason_ranking,
+        "priority_fixes":         priority_fixes,
+        "fetch_failed":           fetch_failed_list,
+        "price_changes":          price_changes,
+        "suspicious_prices":      suspicious_prices,
     }
 
     json_path = REPORT_DIR / "latest.json"
@@ -572,6 +615,53 @@ def _generate_collector_report(
     ]
     for alias, cnt in sorted(by_product.items()):
         md_lines.append(f"| {alias} | {cnt['ok']} | {cnt['failed']} | {cnt['skip']} |")
+
+    # ── 商品別 成功店舗数 ────────────────────────────────────────────────────
+    md_lines += [
+        f"",
+        f"## 商品別 成功店舗数（目標達成状況）",
+        f"",
+        f"| 商品 | 成功店舗数 | 目標 | 達成 | 成功店舗 |",
+        f"|------|-----------|------|------|---------|",
+    ]
+    _target_map = {
+        "iphone17pro256": 3, "iphone17pro512": 3,
+        "iphone17pm256": 3,  "iphone17pm512": 3,
+        "switch2": 2, "ps5_pro": 2,
+    }
+    for alias in sorted(product_shop_detail.keys()):
+        detail = product_shop_detail[alias]
+        success_shops = detail.get("success_shops", [])
+        cnt = len(success_shops)
+        target = _target_map.get(alias, "-")
+        if isinstance(target, int):
+            achieved = "✅" if cnt >= target else "❌"
+        else:
+            achieved = "-"
+        shops_str = ", ".join(success_shops) if success_shops else "（なし）"
+        md_lines.append(f"| {alias} | {cnt} | {target} | {achieved} | {shops_str} |")
+
+    # ── 優先修正対象 ──────────────────────────────────────────────────────────
+    md_lines += [f"", f"## 優先修正対象", f""]
+    if priority_fixes:
+        for pf in priority_fixes:
+            md_lines.append(f"- {pf}")
+    else:
+        md_lines.append("（すべての商品が目標店舗数を達成しています）")
+
+    # ── 取得不可理由ランキング ────────────────────────────────────────────────
+    md_lines += [
+        f"",
+        f"## 取得不可理由ランキング",
+        f"",
+        f"| 理由 | 件数 |",
+        f"|------|------|",
+    ]
+    if failure_reason_ranking:
+        for item in failure_reason_ranking:
+            md_lines.append(f"| {item['reason']} | {item['count']} |")
+    else:
+        md_lines.append("| （なし） | 0 |")
 
     md_lines += [f"", f"## 取得失敗一覧 ({len(fetch_failed_list)}件)", f""]
     if fetch_failed_list:
@@ -629,7 +719,7 @@ def _fallback_url(shop_id: str, product_alias: str) -> str:
         "kaitori_shouten": "https://www.kaitorishouten-co.jp/keitai",
         "kaitori_itchome": "https://www.1-chome.com/keitai/",
         "janpara":         "https://buy.janpara.co.jp/buy/",
-        "iosys":           "https://k-tai-iosys.com/pricelist/",
+        "iosys":           "https://k-tai-iosys.com/pricelist/smartphone/iphone/",
         "geo":             "https://www.geo-online.co.jp/store_info/buy/",
         # ゲーム機向け店舗（コレクター未実装 → fetch_failed 表示用リンク）
         "sofmap":          "https://www.sofmap.com/buy_list.aspx",

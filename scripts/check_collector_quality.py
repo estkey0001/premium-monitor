@@ -148,31 +148,37 @@ def evaluate(report: dict) -> dict:
     failures = []
     warnings = []
 
-    # ── FAILURE チェック ─────────────────────────────
+    # ── FAILURE チェック（誤価格リスクのみ — ワークフロー停止） ──────────────
+    # NOTE: GitHub Actions の IP がサイトにブロックされることが多く、
+    # 取得数がローカルより少なくなるのは想定内。
+    # 「成功店舗数不足」は WARNING に移し、誤価格データだけを FAILURE とする。
+
     if len(suspicious) > 0:
-        failures.append(f"suspicious_price {len(suspicious)}件（誤価格リスク）")
+        failures.append(f"suspicious_price {len(suspicious)}件（誤価格リスク — LP公開前に要確認）")
 
     if low_conf > 0:
-        failures.append(f"low_confidence_count {low_conf}件（LPに表示リスク）")
+        failures.append(f"low_confidence_count {low_conf}件（信頼度低価格がLPに表示される可能性）")
 
-    # iPhone 主要4商品
+    # ── WARNING チェック（通知のみ — ワークフロー継続） ──────────────────────
+
+    # iPhone 主要4商品の成功店舗数（自動取得分のみ、手動CSVは別途インポート）
     iphone_fail = []
     for alias in ["iphone17pro256", "iphone17pro512", "iphone17pm256", "iphone17pm512"]:
         n = len(psd.get(alias, {}).get("success_shops", []))
         if n < MIN_SHOPS.get(alias, 3):
             iphone_fail.append(f"{alias}:{n}店舗(目標{MIN_SHOPS[alias]})")
     if iphone_fail:
-        failures.append(f"iPhone主要商品 店舗不足: {', '.join(iphone_fail)}")
+        warnings.append(f"iPhone主要商品 自動取得店舗不足: {', '.join(iphone_fail)}")
 
     # Switch2
     sw2_n = len(psd.get("switch2", {}).get("success_shops", []))
     if sw2_n < MIN_SHOPS.get("switch2", 2):
-        failures.append(f"Switch2 成功店舗 {sw2_n}（目標2）")
+        warnings.append(f"Switch2 自動取得成功店舗 {sw2_n}（目標2）")
 
     # PS5 Pro
     ps5_n = len(psd.get("ps5_pro", {}).get("success_shops", []))
     if ps5_n < MIN_SHOPS.get("ps5_pro", 2):
-        failures.append(f"PS5 Pro 成功店舗 {ps5_n}（目標2）")
+        warnings.append(f"PS5 Pro 自動取得成功店舗 {ps5_n}（目標2）")
 
     # ── WARNING チェック ─────────────────────────────
     if total > 0:

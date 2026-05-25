@@ -372,6 +372,9 @@ class DailyLPGenerator:
         cta_html     = self._section_cta()
         footer_html  = self._section_footer()
 
+        # collector report: 取得失敗警告バナー（一定数以上の場合のみ表示）
+        _collector_warn_html = self._collector_warn_bar_html()
+
         # topbar用の日時文字列（_render_page スコープで利用）
         _buyback_str_top = _jst_str(latest_buyback_at) if latest_buyback_at else "—"
         _lp_str_top = lp_generated_at.strftime("%m/%d %H:%M") if lp_generated_at else "—"
@@ -546,6 +549,25 @@ a[href], button, [role="tab"], [role="button"],
 .section-overlay, .bg-overlay {{
   pointer-events: none;
 }}
+
+/* ============================================================
+   COLLECTOR WARN BAR（取得失敗件数が多い場合のみ表示）
+   ============================================================ */
+.collector-warn-bar {{
+  background: #3b1f08;
+  border-bottom: 1px solid #7c4a1a;
+  color: #fbbf24;
+  text-align: center;
+  padding: 6px 16px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}}
+.collector-warn-bar a {{
+  color: #fcd34d;
+  text-decoration: underline;
+  margin-left: 4px;
+}}
+.collector-warn-bar a:hover {{ color: #fff; }}
 
 /* ============================================================
    ANNOUNCEMENT BAR
@@ -2389,6 +2411,10 @@ a[href], button, [role="tab"], [role="button"],
 
 .footer-link:hover {{ color: rgba(255,255,255,0.75); }}
 
+/* 取得レポートリンク：管理者向け、控えめに表示 */
+.admin-report-link {{ color: rgba(255,255,255,0.2); font-size: 0.72rem; }}
+.admin-report-link:hover {{ color: rgba(255,255,255,0.5); }}
+
 .footer-text {{
   font-size: 0.75rem; color: rgba(255,255,255,0.25);
   line-height: 2;
@@ -3183,7 +3209,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 
 </head>
 <body>
-<div class="announce-bar"><a href="#tab-beginner">&#127919; 最終確認 {_beginner_count_top} 件の初心者向け案件（手動確認データ）&mdash; 最大利益 {_esc(_max_profit_str_top)}</a></div>
+{_collector_warn_html}<div class="announce-bar"><a href="#tab-beginner">&#127919; 最終確認 {_beginner_count_top} 件の初心者向け案件（手動確認データ）&mdash; 最大利益 {_esc(_max_profit_str_top)}</a></div>
 <header class="topbar">
   <a href="/" class="topbar-brand">
     <div class="brand-icon">S</div>
@@ -5877,6 +5903,40 @@ python3 -m src.cli calculate-sedori-routes</pre>
 
 
 
+    # 取得失敗が一定件数以上のとき表示する上部バー
+    _COLLECTOR_WARN_THRESHOLD: int = 5  # failed >= この件数で表示
+
+    def _collector_warn_bar_html(self) -> str:
+        """collector_report/latest.json を読み、失敗件数に応じた警告バー HTMLを返す。
+        失敗 < threshold の場合は空文字を返す。"""
+        import json as _json
+        from pathlib import Path as _Path
+        _report_path = _Path(__file__).resolve().parent.parent.parent / "exports" / "collector_report" / "latest.json"
+        if not _report_path.exists():
+            return ""
+        try:
+            _data   = _json.loads(_report_path.read_text(encoding="utf-8"))
+            _failed = _data.get("summary", {}).get("failed", 0)
+            _suspicious = len(_data.get("suspicious_prices", []))
+        except Exception:
+            return ""
+
+        if _failed < self._COLLECTOR_WARN_THRESHOLD and _suspicious == 0:
+            return ""
+
+        _parts = []
+        if _failed >= self._COLLECTOR_WARN_THRESHOLD:
+            _parts.append(f'取得失敗 {_failed}件あり')
+        if _suspicious > 0:
+            _parts.append(f'疑わしい価格 {_suspicious}件')
+        _msg = " / ".join(_parts)
+        return (
+            f'<div class="collector-warn-bar" id="collector-warn-bar">'
+            f'⚠️ {_esc(_msg)} —'
+            f' <a href="collector_report.html" data-track="collector_warn_click">取得レポートを確認</a>'
+            f'</div>\n'
+        )
+
     def _section_footer(self) -> str:
 
         now = datetime.now()
@@ -5895,6 +5955,7 @@ python3 -m src.cli calculate-sedori-routes</pre>
     <a href="#tab-surge" class="footer-link">急騰/急落アラート</a>
     <a href="#tab-sokuhoh" class="footer-link">速報</a>
     <a href="#note-cta" class="footer-link">詳細レポート</a>
+    <a href="collector_report.html" class="footer-link admin-report-link" data-track="collector_report_click">取得レポート</a>
   </div>
   <div class="footer-text">
     <p>掛載価格は取得・入力時点の参考値です。購入前に必ず公式サイト・買取店でご確認ください。</p>

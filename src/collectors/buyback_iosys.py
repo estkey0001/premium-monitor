@@ -68,18 +68,17 @@ class IosysCsvCollector(BaseCsvBuybackCollector):
         from bs4 import BeautifulSoup
         soup = BeautifulSoup(html, "html.parser")
         cap = CAPACITY_KEYWORDS.get(product_alias, "")
-
-        # --- スマートフォン系: <tr> の s-price クラスから取得 ---
-        # キーワードリストで商品行を特定
         keywords = SEARCH_KEYWORDS.get(product_alias, [])
+
+        # ── Step1: <tr> ベース検索 — s-price クラスまたは行内最大価格 ──
         for tr in soup.find_all("tr"):
             row_text = tr.get_text(" ", strip=True)
-            # いずれかのキーワードが行に含まれるか確認
             if not any(kw.lower() in row_text.lower() for kw in keywords):
                 continue
             if cap and cap not in row_text:
                 continue
-            # 未使用品価格クラス s-price を優先取得
+
+            # s-price クラス (既知クラス名)
             s_price = tr.find("span", class_="s-price")
             if s_price:
                 m = re.search(r'([\d,]+)円', s_price.get_text(strip=True))
@@ -90,16 +89,32 @@ class IosysCsvCollector(BaseCsvBuybackCollector):
                             return price
                     except ValueError:
                         pass
-            # s-price が見つからない場合はその行の最大価格
+
+            # s-price が見つからない場合: spanタグ内の価格を全探索
+            for span in tr.find_all("span"):
+                span_text = span.get_text(strip=True)
+                m = re.search(r'([\d,]+)円', span_text)
+                if m:
+                    try:
+                        price = int(m.group(1).replace(",", ""))
+                        if 10000 <= price <= 5_000_000:
+                            return price
+                    except ValueError:
+                        pass
+
+            # さらにフォールバック: テキスト全体から最大価格
+            row_prices = []
             for price_m in re.finditer(r'([\d,]+)円', row_text):
                 try:
                     p = int(price_m.group(1).replace(",", ""))
                     if 10000 <= p <= 5_000_000:
-                        return p
+                        row_prices.append(p)
                 except ValueError:
                     pass
+            if row_prices:
+                return max(row_prices)
 
-        # --- ゲーム機系: テキスト全体に直接正規表現を適用 ---
+        # ── Step2: ゲーム機系 — テキスト全体に直接正規表現 ──
         game_patterns = GAME_DIRECT_PATTERNS.get(product_alias, [])
         if game_patterns:
             text_full = soup.get_text(" ", strip=True)
@@ -113,7 +128,30 @@ class IosysCsvCollector(BaseCsvBuybackCollector):
                     except ValueError:
                         pass
 
-        # フォールバック: ページ全体から未使用品価格を探す
+        # ── Step3: キーワードアンカー法 — テキスト全体でキーワード近傍の価格 ──
+        text_full = soup.get_text(" ", strip=True)
+        for kw in keywords:
+            idx = text_full.lower().find(kw.lower())
+            if idx < 0:
+                continue
+            block = text_full[idx:idx + 500]
+            if cap and cap not in block:
+                continue
+            for near_pat in [
+                r'未使用品買取価格\s*([\d,]+)円',
+                r'買取価格\s*([\d,]+)円',
+                r'([\d,]+)円',
+            ]:
+                m = re.search(near_pat, block)
+                if m:
+                    try:
+                        price = int(m.group(1).replace(",", ""))
+                        if 10000 <= price <= 5_000_000:
+                            return price
+                    except ValueError:
+                        pass
+
+        # ── Step4: 全文フォールバック ──
         text = soup.get_text(" ", strip=True)
         for pat in [
             r'未使用品買取価格\s*([\d,]+)円',

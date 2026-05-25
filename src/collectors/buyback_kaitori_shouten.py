@@ -30,12 +30,23 @@ SEARCH_KEYWORDS = {
 # 商品を直接特定する正規表現パターン（テキスト全体に適用）
 # 買取商店のページは改行なしの一続きテキストのため、直接regexで抽出
 DIRECT_PATTERNS = {
-    "iphone17pro256": r'iPhone 17 Pro 256.{0,120}?(\d{2,3},\d{3})円',
-    "iphone17pro512": r'iPhone 17 Pro 512.{0,120}?(\d{2,3},\d{3})円',
-    "iphone17pm256":  r'iPhone 17 Pro Max 256.{0,120}?(\d{2,3},\d{3})円',
-    "iphone17pm512":  r'iPhone 17 Pro Max 512.{0,120}?(\d{2,3},\d{3})円',
-    "switch2":        r'(?:Nintendo Switch 2|Switch 2|スイッチ\s*２).{0,150}?(\d{2},\d{3})円',
-    "ps5_pro":        r'(?:PS5 Pro|プレイステーション5 Pro|CFI-7[01]).{0,150}?(\d{2,3},\d{3})円',
+    # {0,400} に拡大: 商品名から価格までのHTMLが長い場合に対応
+    "iphone17pro256": r'iPhone 17 Pro 256.{0,400}?(\d{2,3},\d{3})円',
+    "iphone17pro512": r'iPhone 17 Pro 512.{0,400}?(\d{2,3},\d{3})円',
+    "iphone17pm256":  r'iPhone 17 Pro Max 256.{0,400}?(\d{2,3},\d{3})円',
+    "iphone17pm512":  r'iPhone 17 Pro Max 512.{0,400}?(\d{2,3},\d{3})円',
+    "switch2":        r'(?:Nintendo Switch 2|Switch 2|スイッチ\s*２).{0,400}?(\d{2},\d{3})円',
+    "ps5_pro":        r'(?:PS5 Pro|プレイステーション5 Pro|CFI-7[01]).{0,400}?(\d{2,3},\d{3})円',
+}
+
+# 二段階検索: 商品セクション(anchor)を特定してからその近傍で価格を探す
+ANCHOR_KEYWORDS = {
+    "iphone17pro256": ["iPhone 17 Pro", "256"],
+    "iphone17pro512": ["iPhone 17 Pro", "512"],
+    "iphone17pm256":  ["iPhone 17 Pro Max", "256"],
+    "iphone17pm512":  ["iPhone 17 Pro Max", "512"],
+    "switch2":        ["Switch 2", None],
+    "ps5_pro":        ["PS5 Pro", None],
 }
 
 
@@ -53,10 +64,10 @@ class KaitoriShoutenCsvCollector(BaseCsvBuybackCollector):
         soup = BeautifulSoup(html, "html.parser")
         text = soup.get_text(" ", strip=True)
 
-        # 直接正規表現マッチング（ページ内の一続きテキストに対応）
+        # ── Step1: 直接正規表現マッチング（拡張コンテキスト {0,400}）──
         pat = DIRECT_PATTERNS.get(product_alias)
         if pat:
-            m = re.search(pat, text)
+            m = re.search(pat, text, re.DOTALL)
             if m:
                 try:
                     price = int(m.group(1).replace(",", ""))
@@ -65,7 +76,29 @@ class KaitoriShoutenCsvCollector(BaseCsvBuybackCollector):
                 except ValueError:
                     pass
 
-        # フォールバック: 汎用パターン
+        # ── Step2: アンカーキーワードで商品ブロックを特定してから価格抽出 ──
+        anchor_info = ANCHOR_KEYWORDS.get(product_alias)
+        if anchor_info:
+            model_kw, cap_kw = anchor_info
+            idx = text.find(model_kw)
+            if idx >= 0:
+                block = text[idx:idx + 600]
+                if cap_kw is None or cap_kw in block:
+                    for near_pat in [
+                        r'買取価格\s*([\d,]{5,})円',
+                        r'買取上限\s*([\d,]{5,})円',
+                        r'(\d{2,3},\d{3})円',
+                    ]:
+                        m2 = re.search(near_pat, block)
+                        if m2:
+                            try:
+                                price = int(m2.group(1).replace(",", ""))
+                                if 10000 <= price <= 5_000_000:
+                                    return price
+                            except ValueError:
+                                pass
+
+        # ── Step3: 汎用フォールバック ──
         for fallback_pat in [
             r'買取価格[^¥￥\d]{0,20}[¥￥]([\d,]{5,})',
             r'買取上限[^¥￥\d]{0,20}[¥￥]([\d,]{5,})',

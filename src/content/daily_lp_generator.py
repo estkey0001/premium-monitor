@@ -1519,7 +1519,12 @@ a[href], button, [role="tab"], [role="button"],
 .shop-rank.gold {{ color: var(--gold); }}
 .shop-rank.silver {{ color: var(--ink3); }}
 
-.shop-name-col {{ flex: 1; color: var(--ink2); font-weight: 600; }}
+.shop-name-col {{
+  flex: 1; color: var(--ink2); font-weight: 600;
+  word-break: keep-all; overflow: hidden;
+  text-overflow: ellipsis; white-space: nowrap;
+  min-width: 0;
+}}
 
 .shop-link-col {{
   min-width: 52px; text-align: right; flex-shrink: 0;
@@ -1682,6 +1687,25 @@ a[href], button, [role="tab"], [role="button"],
 .status-subhead.status-profit   {{ background: #F0FDF8; color: var(--profit-dark); border: 1px solid #B2F0DC; }}
 .status-subhead.status-monitoring {{ background: #FFF0F0; color: #CC2200; border: 1px solid #FFBBBB; }}
 .status-subhead.status-fetch-failed {{ background: #F5F5F5; color: #888; border: 1px solid #DDD; }}
+
+/* 取得失敗セクション — <details> 折りたたみスタイル */
+.fetch-failed-details {{ margin: 16px 0 24px; }}
+.fetch-failed-details > .cards-grid {{ margin-top: 10px; }}
+.fetch-failed-summary {{
+  cursor: pointer; list-style: none; display: flex;
+  align-items: center; gap: 8px; user-select: none;
+}}
+.fetch-failed-summary::-webkit-details-marker {{ display: none; }}
+.fetch-failed-summary::before {{
+  content: "▶"; font-size: 0.7rem; color: #AAA;
+  transition: transform 0.15s;
+}}
+details[open] > .fetch-failed-summary::before {{ transform: rotate(90deg); }}
+.ff-count-badge {{
+  font-size: 0.72rem; font-weight: 700; padding: 1px 6px;
+  border-radius: 99px; background: #F0F0F0; color: #999; border: 1px solid #DDD;
+}}
+.ff-expand-hint {{ font-size: 0.72rem; color: #BBB; font-weight: 400; }}
 
 /* ジャンル内利益サマリ */
 .genre-status-summary {{
@@ -4487,13 +4511,21 @@ python3 -m src.cli calculate-sedori-routes</pre>
                     parts.append(self._deal_card_monitoring(d, buyback_rows=rows))
                 parts.append('</div></div>')
 
-            # 取得失敗
+            # 取得失敗（デフォルト折りたたみ）
             if ff_genre:
-                parts.append('<div class="status-subsection"><div class="status-subhead status-fetch-failed">取得失敗 / 要確認</div><div class="cards-grid">')
+                parts.append(
+                    f'<details class="status-subsection fetch-failed-details">'
+                    f'<summary class="status-subhead status-fetch-failed fetch-failed-summary">'
+                    f'取得失敗 / 要確認 '
+                    f'<span class="ff-count-badge">{len(ff_genre)}件</span>'
+                    f'<span class="ff-expand-hint">（クリックで展開）</span>'
+                    f'</summary>'
+                    f'<div class="cards-grid">'
+                )
                 for d in ff_genre:
                     rows = bybp.get(d.product_id, [])
                     parts.append(self._deal_card_fetch_failed(d, buyback_rows=rows))
-                parts.append('</div></div>')
+                parts.append('</div></details>')
 
             # ゲーム機への注釈
             if genre_key == 'game_console':

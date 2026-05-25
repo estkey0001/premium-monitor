@@ -78,7 +78,14 @@ class Database:
             for statement in clean_sql.split(";"):
                 statement = statement.strip()
                 if statement:
-                    conn.execute(statement)
+                    try:
+                        conn.execute(statement)
+                    except sqlite3.OperationalError as e:
+                        # "duplicate column name" は既にカラムが存在するケース（冪等性）
+                        if "duplicate column name" in str(e).lower():
+                            logger.debug("Migration %s: column already exists, skipping: %s", version, e)
+                        else:
+                            raise
 
             # 適用済みとして記録
             conn.execute(

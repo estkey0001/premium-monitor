@@ -2085,6 +2085,42 @@ def check() -> list[dict]:
         results.append({"level": "warning", "check": "fetch_failed_description_exists",
                         "message": "LP HTMLが見つからないため fetch_failed_description チェックをスキップ"})
 
+    # ── #202: check_collector_quality.py が存在する ───────────────────────────
+    _quality_script = PROJECT_ROOT / "scripts" / "check_collector_quality.py"
+    if _quality_script.exists():
+        results.append({"level": "ok", "check": "quality_gate_script_exists",
+                        "message": "scripts/check_collector_quality.py が存在"})
+    else:
+        results.append({"level": "error", "check": "quality_gate_script_exists",
+                        "message": "scripts/check_collector_quality.py が見つからない"})
+
+    # ── #203: GitHub Actions に quality gate step が存在する ──────────────────
+    _workflow_path = PROJECT_ROOT / ".github" / "workflows" / "daily_lp.yml"
+    if _workflow_path.exists():
+        _workflow_text = _workflow_path.read_text(encoding="utf-8")
+        if "check_collector_quality.py" in _workflow_text:
+            results.append({"level": "ok", "check": "quality_gate_in_workflow",
+                            "message": "GitHub Actions に quality gate step がある"})
+        else:
+            results.append({"level": "warning", "check": "quality_gate_in_workflow",
+                            "message": "GitHub Actions に check_collector_quality.py が含まれていない"})
+    else:
+        results.append({"level": "warning", "check": "quality_gate_in_workflow",
+                        "message": ".github/workflows/daily_lp.yml が見つからない"})
+
+    # ── #204: collector_report の summary が latest.json に存在する ─────────────
+    _cr_check = _cr if ('_cr' in dir() and _cr) else {}
+    _cr_summary = _cr_check.get("summary", {})
+    if _cr_summary and _cr_summary.get("total", 0) > 0:
+        _ok204 = _cr_summary.get("ok", 0)
+        _total204 = _cr_summary.get("total", 0)
+        _pct204 = round(_ok204 / _total204 * 100)
+        results.append({"level": "ok", "check": "collector_summary_in_report",
+                        "message": f"latest.json summary OK: {_ok204}/{_total204} ({_pct204}%)"})
+    else:
+        results.append({"level": "warning", "check": "collector_summary_in_report",
+                        "message": "latest.json に summary フィールドがないか total=0"})
+
     return results
 
 

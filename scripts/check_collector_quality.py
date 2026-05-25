@@ -1,0 +1,370 @@
+#!/usr/bin/env python3
+"""買取コレクター品質ゲートスクリプト。
+
+GitHub Actions の daily_lp.yml から呼ばれ、
+exports/collector_report/latest.json を読み込んで品質を評価する。
+
+Exit codes:
+  0: 正常 — failure/warning 条件なし
+  1: FAILURE — 誤価格リスクあり（suspicious_price, low_confidence, 主要商品店舗不足）
+  2: WARNING — 取得率低下（50%超失敗, 3日連続失敗, レポートなし）
+
+GitHub Actions Summary ($GITHUB_STEP_SUMMARY) にマークダウン表を出力する。
+"""
+from __future__ import annotations
+
+import json
+import os
+import sys
+from datetime import datetime, timezone, timedelta
+from pathlib import Path
+
+# ──────────────────────────────────────────────
+# パス設定
+# ──────────────────────────────────────────────
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+REPORT_PATH  = PROJECT_ROOT / "exports" / "collector_report" / "latest.json"
+HISTORY_PATH = PROJECT_ROOT / "exports" / "collector_report" / "failure_history.json"
+
+JST = timezone(timedelta(hours=9))
+
+# ──────────────────────────────────────────────
+# FAILURE 条件閾値
+# ──────────────────────────────────────────────
+FAILURE_CONDITIONS = {
+    "suspicious_price_gt0":   "suspicious_price > 0（誤価格リスク）",
+    "low_confidence_gt0":     "low_confidence_count > 0（信頼度低価格がLPに表示される可能性）",
+    "iphone_min3_shops":      "iPhone主要商品（4種）で成功店舗3未満",
+    "switch2_min2_shops":     "Switch2 で成功店舗2未満",
+    "ps5pro_min2_shops":      "PS5 Pro で成功店舗2未満",
+}
+
+# WARNING 条件閾値
+WARNING_CONDITIONS = {
+    "fetch_failed_over50pct":     "取得失敗が全体の50%以上",
+    "consecutive_3day_failure":   "特定店舗が3日連続失敗",
+    "report_not_generated":       "collector_report が生成されていない",
+}
+
+# 主要商品の最小成功店舗数
+MIN_SHOPS = {
+    "iphone17pro256": 3,
+    "iphone17pro512": 3,
+    "iphone17pm256":  3,
+    "iphone17pm512":  3,
+    "switch2":        2,
+    "ps5_pro":        2,
+}
+
+
+# ──────────────────────────────────────────────
+# レポート読み込み
+# ──────────────────────────────────────────────
+
+def load_report() -> dict | None:
+    if not REPORT_PATH.exists():
+        return None
+    try:
+        return json.loads(REPORT_PATH.read_text(encoding="utf-8"))
+    except Exception as e:
+        print(f"[ERROR] collector_report/latest.json の読み込みに失敗: {e}", file=sys.stderr)
+        return None
+
+
+# ──────────────────────────────────────────────
+# 3日連続失敗 履歴管理
+# ──────────────────────────────────────────────
+
+def load_failure_history() -> dict:
+    """連続失敗履歴を読み込む。形式: {shop_id: [date_str, ...]}"""
+    if not HISTORY_PATH.exists():
+        return {}
+    try:
+        return json.loads(HISTORY_PATH.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+
+
+def save_failure_history(history: dict) -> None:
+    HISTORY_PATH.parent.mkdir(parents=True, exist_ok=True)
+    HISTORY_PATH.write_text(json.dumps(history, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
+def update_failure_history(report: dict) -> dict:
+    """今回のレポート結果で履歴を更新し、3日連続失敗のショップリストを返す。"""
+    today = datetime.now(tz=JST).strftime("%Y-%m-%d")
+    history = load_failure_history()
+
+    # 今回の shop 別結果
+    shop_detail = report.get("shop_detail", [])
+    consecutive_3day = []
+
+    for sd in shop_detail:
+        sid = sd.get("shop_id", "")
+        ok  = sd.get("ok", 0)
+        if not sid:
+            continue
+
+        hist = history.get(sid, [])
+        # 今日の分を追加
+        if ok == 0:
+            if not hist or hist[-1] != today:
+                hist.append(today)
+        else:
+            # 成功したらリセット
+            hist = []
+
+        # 直近3日以内のエントリのみ保持
+        cutoff = (datetime.now(tz=JST) - timedelta(days=3)).strftime("%Y-%m-%d")
+        hist = [d for d in hist if d >= cutoff]
+        history[sid] = hist
+
+        # 3日連続失敗チェック（3日分の日付が揃っているか）
+        if len(hist) >= 3:
+            consecutive_3day.append(sid)
+
+    save_failure_history(history)
+    return {"consecutive_3day": consecutive_3day}
+
+
+# ──────────────────────────────────────────────
+# 品質評価
+# ──────────────────────────────────────────────
+
+def evaluate(report: dict) -> dict:
+    """品質評価を実行し、結果 dict を返す。"""
+    summary    = report.get("summary", {})
+    total      = summary.get("total", 0)
+    ok_count   = summary.get("ok", 0)
+    failed_count = summary.get("failed", 0)
+    skip_count = summary.get("skip", 0)
+    low_conf   = report.get("low_confidence_count", 0)
+    suspicious = report.get("suspicious_prices", [])
+    psd        = report.get("product_shop_detail", {})
+    shop_p5    = report.get("shop_priority_top5", [])
+    prod_stats = report.get("product_price_stats", {})
+    fail_rank  = report.get("failure_reason_ranking", [])
+
+    failures = []
+    warnings = []
+
+    # ── FAILURE チェック ─────────────────────────────
+    if len(suspicious) > 0:
+        failures.append(f"suspicious_price {len(suspicious)}件（誤価格リスク）")
+
+    if low_conf > 0:
+        failures.append(f"low_confidence_count {low_conf}件（LPに表示リスク）")
+
+    # iPhone 主要4商品
+    iphone_fail = []
+    for alias in ["iphone17pro256", "iphone17pro512", "iphone17pm256", "iphone17pm512"]:
+        n = len(psd.get(alias, {}).get("success_shops", []))
+        if n < MIN_SHOPS.get(alias, 3):
+            iphone_fail.append(f"{alias}:{n}店舗(目標{MIN_SHOPS[alias]})")
+    if iphone_fail:
+        failures.append(f"iPhone主要商品 店舗不足: {', '.join(iphone_fail)}")
+
+    # Switch2
+    sw2_n = len(psd.get("switch2", {}).get("success_shops", []))
+    if sw2_n < MIN_SHOPS.get("switch2", 2):
+        failures.append(f"Switch2 成功店舗 {sw2_n}（目標2）")
+
+    # PS5 Pro
+    ps5_n = len(psd.get("ps5_pro", {}).get("success_shops", []))
+    if ps5_n < MIN_SHOPS.get("ps5_pro", 2):
+        failures.append(f"PS5 Pro 成功店舗 {ps5_n}（目標2）")
+
+    # ── WARNING チェック ─────────────────────────────
+    if total > 0:
+        fail_pct = failed_count / total * 100
+        if fail_pct >= 50.0:
+            warnings.append(f"取得失敗率 {fail_pct:.1f}%（50%以上）")
+
+    hist_result = update_failure_history(report)
+    if hist_result["consecutive_3day"]:
+        shops_str = ", ".join(hist_result["consecutive_3day"][:5])
+        warnings.append(f"3日連続失敗: {shops_str}")
+
+    return {
+        "failures":    failures,
+        "warnings":    warnings,
+        "ok_count":    ok_count,
+        "failed_count": failed_count,
+        "skip_count":  skip_count,
+        "total":       total,
+        "low_conf":    low_conf,
+        "suspicious":  suspicious,
+        "shop_p5":     shop_p5,
+        "prod_stats":  prod_stats,
+        "fail_rank":   fail_rank,
+        "psd":         psd,
+        "generated_at": report.get("generated_at", "—"),
+    }
+
+
+# ──────────────────────────────────────────────
+# GitHub Actions Summary 出力
+# ──────────────────────────────────────────────
+
+def build_summary_md(result: dict) -> str:
+    lines = []
+    lines.append("## 📊 Collector Quality Report")
+    lines.append("")
+    lines.append(f"生成日時: `{result['generated_at']}`")
+    lines.append("")
+
+    # ステータスバッジ
+    if result["failures"]:
+        lines.append("### ❌ FAILURE — 品質ゲート不通過")
+        for f in result["failures"]:
+            lines.append(f"- {f}")
+    elif result["warnings"]:
+        lines.append("### ⚠️ WARNING — 注意が必要")
+        for w in result["warnings"]:
+            lines.append(f"- {w}")
+    else:
+        lines.append("### ✅ 品質ゲート通過")
+    lines.append("")
+
+    # 取得サマリー
+    total   = result["total"]
+    ok      = result["ok_count"]
+    failed  = result["failed_count"]
+    skip    = result["skip_count"]
+    ok_pct  = round(ok / total * 100) if total > 0 else 0
+    lines.append("### 取得サマリー")
+    lines.append("")
+    lines.append("| 項目 | 件数 |")
+    lines.append("|------|------|")
+    lines.append(f"| ✅ 成功 | **{ok}** / {total} ({ok_pct}%) |")
+    lines.append(f"| ❌ 失敗 | {failed} |")
+    lines.append(f"| ⏭️ スキップ | {skip} |")
+    lines.append(f"| 🔴 low confidence | {result['low_conf']} |")
+    lines.append(f"| ⚠️ suspicious_price | {len(result['suspicious'])} |")
+    lines.append("")
+
+    # 商品別成功率
+    lines.append("### 商品別成功状況")
+    lines.append("")
+    lines.append("| 商品 | 成功店舗数 | 目標 | 達成 | 成功店舗 |")
+    lines.append("|------|-----------|------|------|---------|")
+    TARGET_NAMES = {
+        "iphone17pro256": "iPhone 17 Pro 256GB",
+        "iphone17pro512": "iPhone 17 Pro 512GB",
+        "iphone17pm256":  "iPhone 17 Pro Max 256GB",
+        "iphone17pm512":  "iPhone 17 Pro Max 512GB",
+        "switch2":        "Nintendo Switch 2",
+        "ps5_pro":        "PS5 Pro",
+    }
+    for alias, min_shops in MIN_SHOPS.items():
+        detail  = result["psd"].get(alias, {})
+        success = detail.get("success_shops", [])
+        ok_flag = "✅" if len(success) >= min_shops else "❌"
+        shops_str = ", ".join(success[:5]) if success else "—"
+        lines.append(f"| {TARGET_NAMES.get(alias, alias)} | {len(success)} | {min_shops} | {ok_flag} | {shops_str} |")
+    lines.append("")
+
+    # 失敗理由ランキング
+    fail_rank = result["fail_rank"]
+    if fail_rank:
+        lines.append("### 失敗理由 TOP5")
+        lines.append("")
+        lines.append("| 理由 | 件数 |")
+        lines.append("|------|------|")
+        for item in fail_rank[:5]:
+            lines.append(f"| `{item['reason']}` | {item['count']} |")
+        lines.append("")
+
+    # 優先修正TOP5
+    shop_p5 = result["shop_p5"]
+    if shop_p5:
+        lines.append("### 優先修正対象 TOP5（成功率0%）")
+        lines.append("")
+        for i, sp in enumerate(shop_p5[:5], 1):
+            lines.append(f"{i}. `{sp}`")
+        lines.append("")
+
+    # suspicious_prices 詳細
+    suspicious = result["suspicious"]
+    if suspicious:
+        lines.append("### ⚠️ 疑わしい価格（要確認）")
+        lines.append("")
+        lines.append("| 商品 | 店舗 | 価格 | 理由 |")
+        lines.append("|------|------|------|------|")
+        for sp in suspicious[:10]:
+            lines.append(
+                f"| {sp.get('product_alias','—')} "
+                f"| {sp.get('shop','—')} "
+                f"| ¥{sp.get('price', 0):,} "
+                f"| {sp.get('reason','—')} |"
+            )
+        lines.append("")
+
+    return "\n".join(lines)
+
+
+def write_github_summary(md: str) -> None:
+    """$GITHUB_STEP_SUMMARY へ書き込む（ローカル実行時はスキップ）。"""
+    summary_file = os.environ.get("GITHUB_STEP_SUMMARY", "")
+    if summary_file:
+        with open(summary_file, "a", encoding="utf-8") as f:
+            f.write(md + "\n")
+    else:
+        # ローカル実行時: stdout に出力
+        print("\n" + "=" * 60)
+        print(md)
+        print("=" * 60)
+
+
+# ──────────────────────────────────────────────
+# メイン
+# ──────────────────────────────────────────────
+
+def main() -> int:
+    # 1. レポート読み込み
+    report = load_report()
+    if report is None:
+        md = (
+            "## 📊 Collector Quality Report\n\n"
+            "### ⚠️ WARNING — collector_report/latest.json が見つからない\n\n"
+            "update_buyback_prices.py が正常に実行されなかった可能性があります。\n"
+        )
+        write_github_summary(md)
+        print("[WARNING] collector_report/latest.json が見つからない", file=sys.stderr)
+        return 2  # exit 2 = WARNING
+
+    # 2. 品質評価
+    result = evaluate(report)
+
+    # 3. サマリー出力
+    md = build_summary_md(result)
+    write_github_summary(md)
+
+    # 4. ローカル実行時: 簡易サマリーをstderrに出力
+    ok  = result["ok_count"]
+    total = result["total"]
+    fail = len(result["failures"])
+    warn = len(result["warnings"])
+    print(f"\n{'='*60}", file=sys.stderr)
+    print(f"  Collector Quality: OK={ok}/{total}  "
+          f"FAILURES={fail}  WARNINGS={warn}", file=sys.stderr)
+    if result["failures"]:
+        for f in result["failures"]:
+            print(f"  ❌ {f}", file=sys.stderr)
+    if result["warnings"]:
+        for w in result["warnings"]:
+            print(f"  ⚠️  {w}", file=sys.stderr)
+    if fail == 0 and warn == 0:
+        print("  ✅ 品質ゲート通過", file=sys.stderr)
+    print(f"{'='*60}\n", file=sys.stderr)
+
+    # 5. exit code
+    if result["failures"]:
+        return 1  # FAILURE
+    if result["warnings"]:
+        return 2  # WARNING
+    return 0  # 正常
+
+
+if __name__ == "__main__":
+    sys.exit(main())

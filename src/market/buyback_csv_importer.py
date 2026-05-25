@@ -109,6 +109,9 @@ class BuybackCSVImporter:
         observed_str = row.get("observed_at", "").strip()
         data_source = row.get("data_source", "manual_today").strip() or "manual_today"
         link_verified = row.get("link_verified", "false").strip().lower() == "true"
+        confidence = row.get("confidence", "high").strip() or "high"
+        if confidence not in ("high", "mid", "low"):
+            confidence = "high"
 
         product_id = ALIAS_MAP.get(alias, f"prod_{alias}")
         shop_id = SHOP_MAP.get(shop, f"src_{shop}")
@@ -136,6 +139,7 @@ class BuybackCSVImporter:
             observed_at=observed_at,
             data_source=data_source,
             link_verified=link_verified,
+            confidence=confidence,
         )
         self.repo.insert_buyback_price(bp)
 

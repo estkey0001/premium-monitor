@@ -20,6 +20,7 @@ class BuybackPriceModel(BaseModel):
     notes: str = Field(default="")
     data_source: str = Field(default="manual_today", description="live/manual_today/manual_recent/stale")
     link_verified: bool = Field(default=False, description="URLが検証済みか")
+    confidence: str = Field(default="high", description="価格信頼度: high=商品名マッチ確認済, mid=部分マッチ, low=最高値フォールバック")
 
 
 # 買取店マスタ

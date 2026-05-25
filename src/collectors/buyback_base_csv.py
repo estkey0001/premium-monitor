@@ -25,7 +25,8 @@ class BaseCsvBuybackCollector:
 
     def __init__(self, timeout: int = 20):
         self.timeout = timeout
-        self.last_failure_reason: Optional[str] = None  # 最後の失敗理由（report用）
+        self.last_failure_reason: Optional[str] = None   # 最後の失敗理由（report用）
+        self.last_confidence: str = "high"               # 価格信頼度: high/mid/low
         self.session = requests.Session()
         self.session.headers.update({
             "User-Agent": "Mozilla/5.0 (compatible; PremiumMonitor/1.0; +https://github.com/estkey0001/premium-monitor)",
@@ -36,6 +37,7 @@ class BaseCsvBuybackCollector:
     def fetch(self, product_alias: str, product_name: str, condition: str = "new_unopened_simfree") -> Optional[dict]:
         """価格取得。成功→dict, 失敗→None。失敗理由は last_failure_reason に保存。"""
         self.last_failure_reason = None
+        self.last_confidence = "high"  # デフォルトは high; コレクター内で mid/low に変更可能
         url = self._build_url(product_alias, product_name)
         if not url:
             logger.info("[%s] No URL defined for %s", self.SHOP_NAME, product_alias)
@@ -67,6 +69,7 @@ class BaseCsvBuybackCollector:
                 "link_verified": "true",
                 "observed_at": datetime.now(tz=JST).isoformat(timespec="seconds"),
                 "data_source": "auto_scraped",
+                "confidence": self.last_confidence,  # high / mid / low
             }
         except Exception as e:
             logger.warning("[%s] Error fetching %s: %s", self.SHOP_NAME, product_alias, e)
@@ -136,9 +139,13 @@ class BaseCsvBuybackCollector:
     def _parse_detail_url(self, html: str, fallback_url: str) -> str:
         return fallback_url
 
-    @staticmethod
-    def extract_price(text: str, min_price: int = 10000, max_price: int = 5_000_000) -> Optional[int]:
-        """テキストから買取価格を抽出する汎用ヘルパー。"""
+    def extract_price(self, text: str, min_price: int = 10000, max_price: int = 5_000_000) -> Optional[int]:
+        """テキストから買取価格を抽出する汎用ヘルパー。
+
+        ⚠️ 商品名マッチなしで全テキストの最高値を返すため confidence=low に設定。
+        キーワードで絞り込んだブロックにのみ使用してください。
+        """
+        self.last_confidence = "low"  # 汎用フォールバックは信頼度低
         patterns = [
             r'[¥￥]\s*([\d,]+)',
             r'([\d,]+)\s*円',

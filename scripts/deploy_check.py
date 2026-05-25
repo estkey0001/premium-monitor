@@ -1779,6 +1779,122 @@ def check() -> list[dict]:
         results.append({"level": "ok", "check": "fetch_failed_report_link",
                         "message": "collector_report/latest.json 未生成のためスキップ"})
 
+    # ── #185: iPhone系で auto_scraped 行が1件以上存在する ──
+    # iPhone買取コレクターが少なくとも1件でも成功していることを確認
+    import csv as _csv185
+    _csv185_path = PROJECT_ROOT / "data" / "manual_buyback_prices.csv"
+    _iphone_scraped = []
+    if _csv185_path.exists():
+        with open(_csv185_path, newline="", encoding="utf-8") as _f185:
+            for _row185 in _csv185.DictReader(_f185):
+                alias = _row185.get("product_alias", "")
+                if (alias.startswith("iphone") and
+                        _row185.get("data_source") == "auto_scraped"):
+                    _iphone_scraped.append(alias)
+    if _iphone_scraped:
+        results.append({"level": "ok", "check": "iphone_auto_scraped_exists",
+                        "message": f"iPhone系 auto_scraped 行が {len(_iphone_scraped)}件存在する: {list(set(_iphone_scraped))[:4]}"})
+    else:
+        results.append({"level": "error", "check": "iphone_auto_scraped_exists",
+                        "message": "iPhone系 auto_scraped 行が0件 — iPhone買取コレクターがすべて失敗している"})
+
+    # ── #186: 初心者ページの自動取得0件チェック ──
+    # LP HTMLに auto_scraped カードがまったくない場合はエラー（取得完全失敗）
+    _auto_scraped_in_lp = html.count('data-source="auto_scraped"') + html.count("data_source='auto_scraped'") + html.count("auto_scraped")
+    # 取得失敗バッジは初心者ページに表示されるはずなので、LP自体の存在確認に置き換え
+    # より確実な方法: collector_report の ok 数を確認
+    _cr_path186 = PROJECT_ROOT / "exports" / "collector_report" / "latest.json"
+    if _cr_path186.exists():
+        import json as _json186
+        _cr186 = _json186.loads(_cr_path186.read_text(encoding="utf-8"))
+        _ok186 = _cr186.get("summary", {}).get("ok", 0)
+        _total186 = _cr186.get("summary", {}).get("total", 0)
+        if _ok186 == 0 and _total186 > 0:
+            results.append({"level": "error", "check": "beginner_page_auto_scraped_exists",
+                            "message": f"自動取得0件（total={_total186}）— すべての買取コレクターが失敗している"})
+        elif _ok186 < 3:
+            results.append({"level": "warning", "check": "beginner_page_auto_scraped_exists",
+                            "message": f"自動取得成功が{_ok186}件のみ（total={_total186}）— 多くのコレクターが失敗している"})
+        else:
+            results.append({"level": "ok", "check": "beginner_page_auto_scraped_exists",
+                            "message": f"自動取得 OK {_ok186}件 / total {_total186}件"})
+    else:
+        results.append({"level": "ok", "check": "beginner_page_auto_scraped_exists",
+                        "message": "collector_report 未生成のためスキップ"})
+
+    # ── #187: 店舗名縦書き崩れなし (shop-name-col に word-break:keep-all が存在する) ──
+    if 'word-break: keep-all' in html or 'word-break:keep-all' in html:
+        results.append({"level": "ok", "check": "shop_name_no_vertical_wrap",
+                        "message": "shop-name-col に word-break:keep-all が設定されている"})
+    else:
+        results.append({"level": "warning", "check": "shop_name_no_vertical_wrap",
+                        "message": "shop-name-col の word-break:keep-all が見当たらない — 店舗名が縦書きになる可能性"})
+
+    # ── #188: iPhone 17 Pro 256GB に価格取得成功行が存在する ──
+    import csv as _csv188
+    _csv188_path = PROJECT_ROOT / "data" / "manual_buyback_prices.csv"
+    _i17p256_rows = []
+    if _csv188_path.exists():
+        with open(_csv188_path, newline="", encoding="utf-8") as _f188:
+            for _row188 in _csv188.DictReader(_f188):
+                if (_row188.get("product_alias") == "iphone17pro256" and
+                        _row188.get("data_source") == "auto_scraped"):
+                    _price188 = _row188.get("buyback_price", "0")
+                    try:
+                        if float(_price188) > 0:
+                            _i17p256_rows.append(_row188.get("buyback_shop"))
+                    except (ValueError, TypeError):
+                        pass
+    if _i17p256_rows:
+        results.append({"level": "ok", "check": "iphone17pro256_price_scraped",
+                        "message": f"iPhone 17 Pro 256GB の価格取得成功: {_i17p256_rows}"})
+    else:
+        results.append({"level": "warning", "check": "iphone17pro256_price_scraped",
+                        "message": "iPhone 17 Pro 256GB の auto_scraped 価格行がゼロ — コレクター修正が必要"})
+
+    # ── #189: 取得失敗セクションが折りたたみ可能（<details>タグ）──
+    # fetch_failed_details クラスの details タグが存在するか確認
+    if 'fetch-failed-details' in html:
+        results.append({"level": "ok", "check": "fetch_failed_section_collapsible",
+                        "message": "取得失敗セクションが <details> 折りたたみ対応されている"})
+    else:
+        results.append({"level": "warning", "check": "fetch_failed_section_collapsible",
+                        "message": "取得失敗セクションに fetch-failed-details が見当たらない — LP再生成が必要"})
+
+    # ── #190: 取得失敗が多すぎて初心者ページが埋まっていない ──
+    # fetch_failed 件数がページ内カード総数の70%未満であるべき
+    _ff_card_count = html.count('stripe-fetch-failed')
+    _total_cards = html.count('deal-card')
+    if _total_cards > 0:
+        _ff_ratio = _ff_card_count / _total_cards
+        if _ff_ratio >= 0.70:
+            results.append({"level": "warning", "check": "fetch_failed_not_dominant",
+                            "message": f"取得失敗カードが全カードの{_ff_ratio:.0%}（{_ff_card_count}/{_total_cards}）— 自動取得改善が必要"})
+        else:
+            results.append({"level": "ok", "check": "fetch_failed_not_dominant",
+                            "message": f"取得失敗カード比率 {_ff_ratio:.0%}（{_ff_card_count}/{_total_cards}）— 許容範囲内"})
+    else:
+        results.append({"level": "ok", "check": "fetch_failed_not_dominant",
+                        "message": "deal-card が見当たらない（LP未生成またはカード形式変更）"})
+
+    # ── #191: 取得失敗理由が reason フィールド付きで表示されている ──
+    # collector_report の fetch_failed 一覧に reason が含まれているか確認
+    _cr_path191 = PROJECT_ROOT / "exports" / "collector_report" / "latest.json"
+    if _cr_path191.exists():
+        import json as _json191
+        _cr191 = _json191.loads(_cr_path191.read_text(encoding="utf-8"))
+        _ff191 = _cr191.get("fetch_failed", [])
+        _no_reason = [f"{f.get('product_alias')}x{f.get('shop')}" for f in _ff191 if not f.get("reason")]
+        if _no_reason:
+            results.append({"level": "warning", "check": "fetch_failed_has_reason_field",
+                            "message": f"取得失敗エントリーに reason なしが {len(_no_reason)}件: {_no_reason[:3]}"})
+        else:
+            results.append({"level": "ok", "check": "fetch_failed_has_reason_field",
+                            "message": f"全取得失敗エントリーに reason フィールドあり（{len(_ff191)}件）"})
+    else:
+        results.append({"level": "ok", "check": "fetch_failed_has_reason_field",
+                        "message": "collector_report 未生成のためスキップ"})
+
     # ── #178: auto_scraped行のlink_verifiedがすべてtrue（URLスラッグ推測チェック） ──
     # URL推測（スラッグ生成）が禁止されているため、auto_scrapedはlink_verified=trueであるべき
     import csv as _csv178

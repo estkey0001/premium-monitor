@@ -29,11 +29,20 @@ PRODUCT_URLS = {
 
 # 商品特定用の直接正規表現パターン (Playwright inner_text に適用)
 # テキスト例: "iPhone 17 Pro 256GB\n\n新品\n\n未開封\n¥178,000\n開封済未使用品\n¥168,000"
+# [\s\n]+ で空白/改行の表記揺れ（\xa0 含む）に対応
 PRICE_PATTERNS = {
-    "iphone17pro256": r'iPhone 17 Pro 256GB.*?未開封\n¥([\d,]+)',
-    "iphone17pro512": r'iPhone 17 Pro 512GB.*?未開封\n¥([\d,]+)',
-    "iphone17pm256":  r'iPhone 17 Pro Max 256GB.*?未開封\n¥([\d,]+)',
-    "iphone17pm512":  r'iPhone 17 Pro Max 512GB.*?未開封\n¥([\d,]+)',
+    "iphone17pro256": r'iPhone 17 Pro 256GB.*?未開封[\s\n]+¥([\d,]+)',
+    "iphone17pro512": r'iPhone 17 Pro 512GB.*?未開封[\s\n]+¥([\d,]+)',
+    "iphone17pm256":  r'iPhone 17 Pro Max 256GB.*?未開封[\s\n]+¥([\d,]+)',
+    "iphone17pm512":  r'iPhone 17 Pro Max 512GB.*?未開封[\s\n]+¥([\d,]+)',
+}
+
+# 緩いフォールバックパターン: 商品名から500文字以内の ¥N,NNN
+FALLBACK_PATTERNS = {
+    "iphone17pro256": r'iPhone 17 Pro 256GB.{0,500}?¥([\d,]+)',
+    "iphone17pro512": r'iPhone 17 Pro 512GB.{0,500}?¥([\d,]+)',
+    "iphone17pm256":  r'iPhone 17 Pro Max 256GB.{0,500}?¥([\d,]+)',
+    "iphone17pm512":  r'iPhone 17 Pro Max 512GB.{0,500}?¥([\d,]+)',
 }
 
 
@@ -58,7 +67,7 @@ class KaitoriItchomeCsvCollector(BaseCsvBuybackCollector):
                 )
                 page.goto(url, timeout=30000)
                 page.wait_for_load_state("networkidle", timeout=15000)
-                page.wait_for_timeout(3000)  # JS描画完了まで待機
+                page.wait_for_timeout(5000)  # SPA描画完了まで待機（3000→5000ms）
                 text = page.inner_text("body")
                 browser.close()
                 return text
@@ -73,6 +82,7 @@ class KaitoriItchomeCsvCollector(BaseCsvBuybackCollector):
         """html は Playwright inner_text() の plain text (BS4 不使用)。"""
         text = html  # inner_text() をそのまま使用
 
+        # ── Step1: メインパターン（[\s\n]+ で空白表記揺れ吸収）──
         pat = PRICE_PATTERNS.get(product_alias)
         if pat:
             m = re.search(pat, text, re.DOTALL)
@@ -84,7 +94,19 @@ class KaitoriItchomeCsvCollector(BaseCsvBuybackCollector):
                 except ValueError:
                     pass
 
-        # フォールバック: ¥N,NNN 形式の最初の大きな価格
+        # ── Step2: 緩いフォールバックパターン ──
+        fb_pat = FALLBACK_PATTERNS.get(product_alias)
+        if fb_pat:
+            m = re.search(fb_pat, text, re.DOTALL)
+            if m:
+                try:
+                    price = int(m.group(1).replace(",", ""))
+                    if 10000 <= price <= 5_000_000:
+                        return price
+                except ValueError:
+                    pass
+
+        # ── Step3: ¥N,NNN 形式の最大価格 ──
         prices = []
         for m in re.finditer(r'¥([\d,]+)', text):
             try:

@@ -110,6 +110,13 @@ TARGET_PRODUCTS = [
 # ── 既存CSV内の他商品（自動取得対象外）は引き継ぐ ──
 AUTO_ALIASES = {p["product_alias"] for p in TARGET_PRODUCTS}
 
+# ── コレクター未実装・実装予定なしのショップ ──
+# これらは "collector_not_loaded" ではなく "not_supported" として分類する
+NOT_SUPPORTED_SHOPS = {
+    "bookoff",   # ブックオフ: オンライン自動見積もり非対応
+    "tsutaya",   # TSUTAYA: オンライン自動見積もり非対応
+}
+
 
 def _load_collectors() -> dict:
     """コレクターをロードして shop_id → collector インスタンスのdictを返す。"""
@@ -239,6 +246,7 @@ def run(dry_run: bool = False, no_scrape: bool = False) -> int:
     new_rows        = []
     results_summary = []   # (product_alias, shop, status, price)
     failure_reasons : dict[tuple, str] = {}  # (alias, shop_id) -> reason
+    collector_debug : dict[tuple, dict] = {}  # (alias, shop_id) -> {final_url, html_length, http_status}
 
     for product in TARGET_PRODUCTS:
         alias    = product["product_alias"]
@@ -250,7 +258,14 @@ def run(dry_run: bool = False, no_scrape: bool = False) -> int:
             collector = collectors.get(shop_id)
 
             if no_scrape or collector is None:
-                reason = "collector_not_loaded" if (not no_scrape and collector is None) else "scrape_skipped"
+                # not_supported: コレクター実装予定なし（bookoff/tsutayaなど）
+                # collector_not_loaded: コレクターファイルはあるがロード失敗
+                if not no_scrape and shop_id in NOT_SUPPORTED_SHOPS:
+                    reason = "not_supported"
+                elif not no_scrape and collector is None:
+                    reason = "collector_not_loaded"
+                else:
+                    reason = "scrape_skipped"
                 row = {
                     "product_alias": alias,
                     "buyback_shop":  shop_id,
@@ -299,6 +314,12 @@ def run(dry_run: bool = False, no_scrape: bool = False) -> int:
                     new_rows.append(row)
                     results_summary.append((alias, shop_id, "FAILED", 0))
                     failure_reasons[(alias, shop_id)] = reason
+                    collector_debug[(alias, shop_id)] = {
+                        "final_url":   getattr(collector, "last_fetch_url", ""),
+                        "html_length": getattr(collector, "last_html_length", 0),
+                        "http_status": getattr(collector, "last_http_status", 0),
+                    }
+                    _save_debug_txt(shop_id, alias, collector, reason)
             except Exception as e:
                 logger.error("Error fetching %s x %s: %s", alias, shop_id, e)
                 reason = getattr(collector, "last_failure_reason", None) or f"exception_{type(e).__name__}"
@@ -315,6 +336,12 @@ def run(dry_run: bool = False, no_scrape: bool = False) -> int:
                 new_rows.append(row)
                 results_summary.append((alias, shop_id, "ERROR", 0))
                 failure_reasons[(alias, shop_id)] = reason
+                collector_debug[(alias, shop_id)] = {
+                    "final_url":   getattr(collector, "last_fetch_url", ""),
+                    "html_length": getattr(collector, "last_html_length", 0),
+                    "http_status": getattr(collector, "last_http_status", 0),
+                }
+                _save_debug_txt(shop_id, alias, collector, reason)
 
     # 結果サマリー表示
     print("\n" + "="*60)
@@ -350,9 +377,29 @@ def run(dry_run: bool = False, no_scrape: bool = False) -> int:
         now_jst=now_jst,
         existing_rows=existing_rows,
         failure_reasons=failure_reasons,
+        collector_debug=collector_debug,
     )
 
     return 1 if fail_count > 0 else 0
+
+
+def _save_debug_txt(shop_id: str, alias: str, collector, reason: str) -> None:
+    """取得失敗時のデバッグ情報を exports/debug/{shop}_{alias}.txt に保存。"""
+    debug_dir = PROJECT_ROOT / "exports" / "debug"
+    debug_dir.mkdir(parents=True, exist_ok=True)
+    path = debug_dir / f"{shop_id}_{alias}.txt"
+    lines = [
+        f"[DEBUG] {shop_id} × {alias}",
+        f"Generated: {datetime.now(tz=JST).isoformat(timespec='seconds')}",
+        f"Failure Reason: {reason}",
+        f"HTTP Status: {getattr(collector, 'last_http_status', 0)}",
+        f"Final URL: {getattr(collector, 'last_fetch_url', '')}",
+        f"HTML Length: {getattr(collector, 'last_html_length', 0)} chars",
+    ]
+    try:
+        path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    except Exception as e:
+        logger.debug("debug_txt save failed: %s", e)
 
 
 def _generate_collector_report(
@@ -361,6 +408,7 @@ def _generate_collector_report(
     now_jst,
     existing_rows: list[dict],
     failure_reasons: dict,
+    collector_debug: dict | None = None,
 ) -> None:
     """コレクターレポートを exports/collector_report/latest.{json,md} に出力する。"""
     REPORT_DIR.mkdir(parents=True, exist_ok=True)
@@ -386,6 +434,7 @@ def _generate_collector_report(
     skip_count = sum(1 for _, _, s, _ in results_summary if s == "SKIP")
 
     # ── 取得失敗一覧 ───────────────────────────────────────────────────────
+    _dbg = collector_debug or {}
     fetch_failed_list = []
     for alias, shop_id, status, _price in results_summary:
         if status != "OK":
@@ -395,12 +444,16 @@ def _generate_collector_report(
                  if r.get("product_alias") == alias and r.get("buyback_shop") == shop_id),
                 {}
             )
+            dbg = _dbg.get((alias, shop_id), {})
             fetch_failed_list.append({
                 "product_alias": alias,
                 "shop": shop_id,
                 "status": status,
                 "reason": reason,
                 "url": row_match.get("url", ""),
+                "final_url":   dbg.get("final_url", ""),
+                "html_length": dbg.get("html_length", 0),
+                "http_status": dbg.get("http_status", 0),
                 "observed_at": row_match.get("observed_at", ""),
             })
 

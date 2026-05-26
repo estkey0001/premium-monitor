@@ -12,6 +12,7 @@ permissions:
 jobs:
   update-lp:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -31,7 +32,7 @@ jobs:
       - name: Init DB
         run: python -m src.cli init-db
 
-      - name: Update buyback prices (auto scraping)
+      - name: Update buyback prices auto scraping
         run: python scripts/update_buyback_prices.py
         continue-on-error: true
         env:
@@ -54,13 +55,13 @@ jobs:
         env:
           PYTHONPATH: .
 
-      - name: Import buyback CSV (手動確認データ)
+      - name: Import buyback CSV
         run: python -m src.cli import-buyback-csv --file data/manual_buyback_prices.csv
 
-      - name: Import market CSV (手動確認データ)
+      - name: Import market CSV
         run: python -m src.cli import-market-csv --file data/manual_market_prices.csv
 
-      - name: Run buyback + premium check
+      - name: Run buyback premium check
         run: python -m src.cli run-buyback-premium-check
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
@@ -71,7 +72,7 @@ jobs:
         run: python -m src.cli calculate-sedori-routes
         continue-on-error: true
 
-      - name: Generate daily LP (Variant A)
+      - name: Generate daily LP Variant A
         run: python -m src.cli generate-daily-lp --variant A
 
       - name: Build public LP
@@ -84,14 +85,16 @@ jobs:
         run: python -m src.cli prelaunch-check
         continue-on-error: true
 
-      - name: Commit & push
+      - name: Commit and push
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+
           git add docs/ exports/lp/daily/ exports/collector_report/
+
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "Daily LP update $(TZ=Asia/Tokyo date +%Y-%m-%d_%H:%M) [手動CSVデータ]"
+            git commit -m "Daily LP update $(TZ=Asia/Tokyo date +%Y-%m-%d_%H:%M) [auto update]"
             git push
           fi

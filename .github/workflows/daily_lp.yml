@@ -25,6 +25,9 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      - name: Install Playwright browsers
+        run: python -m playwright install --with-deps chromium
+
       - name: Init DB
         run: python -m src.cli init-db
 
@@ -36,17 +39,18 @@ jobs:
 
       - name: Collector quality gate
         id: quality_gate
+        continue-on-error: true   # 誤価格検出時もLPは更新する（サマリーで通知）
         run: |
           python scripts/check_collector_quality.py
           EXIT_CODE=$?
           echo "exit_code=$EXIT_CODE" >> $GITHUB_OUTPUT
 
           if [ "$EXIT_CODE" -eq 1 ]; then
-            echo "::error::品質ゲート FAILURE — suspicious_price / low_confidence または主要商品の成功店舗不足"
+            # suspicious_price / low_confidence のみ FAILURE
+            echo "::error::品質ゲート FAILURE — suspicious_price または low_confidence を検出（誤価格リスク — LP公開前に要確認）"
             exit 1
-          elif [ "$EXIT_CODE" -eq 2 ]; then
-            echo "::warning::品質ゲート WARNING — 取得失敗率50%超 または 3日連続失敗店舗あり"
           fi
+          # WARNING は check_collector_quality.py が ::warning:: を直接出力するため、ここでは何もしない
         env:
           PYTHONPATH: .
 

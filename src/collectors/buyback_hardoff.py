@@ -13,7 +13,8 @@ from src.collectors.buyback_base_csv import BaseCsvBuybackCollector
 
 def _search_url(keyword: str) -> str:
     encoded = urllib.parse.quote(keyword)
-    return f"https://www.hardoff.co.jp/search/?keyword={encoded}&condition=S"
+    # &condition=S は新品フィルター（中古売り物リスト用）→ 404になるため削除
+    return f"https://www.hardoff.co.jp/search/?keyword={encoded}"
 
 
 SEARCH_KEYWORDS = {

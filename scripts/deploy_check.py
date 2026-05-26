@@ -2121,6 +2121,88 @@ def check() -> list[dict]:
         results.append({"level": "warning", "check": "collector_summary_in_report",
                         "message": "latest.json に summary フィールドがないか total=0"})
 
+    # ── #205: Playwright browser install が daily_lp.yml に存在する ──────────────
+    if _workflow_path.exists() and '_workflow_text' in dir():
+        if "playwright install" in _workflow_text and "chromium" in _workflow_text:
+            results.append({"level": "ok", "check": "playwright_install_in_workflow",
+                            "message": "daily_lp.yml に playwright install --with-deps chromium が存在"})
+        else:
+            results.append({"level": "error", "check": "playwright_install_in_workflow",
+                            "message": "daily_lp.yml に playwright install --with-deps chromium が見つからない（JS系コレクターが失敗する）"})
+    else:
+        results.append({"level": "warning", "check": "playwright_install_in_workflow",
+                        "message": ".github/workflows/daily_lp.yml が見つからない"})
+
+    # ── #206: collector_not_loaded が 0 件 ───────────────────────────────────
+    if _collector_report_path.exists() and '_cr' in dir() and _cr:
+        _ff206 = _cr.get("fetch_failed", [])
+        _not_loaded = [
+            f"{f.get('shop')}×{f.get('product_alias')}"
+            for f in _ff206
+            if f.get("reason") == "collector_not_loaded"
+        ]
+        if _not_loaded:
+            results.append({"level": "warning", "check": "no_collector_not_loaded",
+                            "message": f"collector_not_loaded が {len(_not_loaded)}件残存: {_not_loaded[:3]}（NOT_SUPPORTED_SHOPS に追加してください）"})
+        else:
+            results.append({"level": "ok", "check": "no_collector_not_loaded",
+                            "message": "collector_not_loaded = 0（すべて not_supported または実装済み）"})
+    else:
+        results.append({"level": "ok", "check": "no_collector_not_loaded",
+                        "message": "collector_report 未生成のためスキップ"})
+
+    # ── #207: playwright_not_installed が 0 件 ──────────────────────────────
+    if _collector_report_path.exists() and '_cr' in dir() and _cr:
+        _ff207 = _cr.get("fetch_failed", [])
+        _pw_fail = [
+            f"{f.get('shop')}×{f.get('product_alias')}"
+            for f in _ff207
+            if f.get("reason") == "playwright_not_installed"
+        ]
+        if _pw_fail:
+            results.append({"level": "warning", "check": "no_playwright_not_installed",
+                            "message": f"playwright_not_installed が {len(_pw_fail)}件（workflow に playwright install ステップが必要）: {_pw_fail[:3]}"})
+        else:
+            results.append({"level": "ok", "check": "no_playwright_not_installed",
+                            "message": "playwright_not_installed = 0"})
+    else:
+        results.append({"level": "ok", "check": "no_playwright_not_installed",
+                        "message": "collector_report 未生成のためスキップ"})
+
+    # ── #208: GitHub Actions 環境別閾値が check_collector_quality.py に存在する ──
+    if _quality_script.exists():
+        _qs_text = _quality_script.read_text(encoding="utf-8")
+        if "GITHUB_ACTIONS" in _qs_text and "IS_GITHUB_ACTIONS" in _qs_text:
+            results.append({"level": "ok", "check": "github_actions_threshold_exists",
+                            "message": "check_collector_quality.py に IS_GITHUB_ACTIONS フラグが存在"})
+        else:
+            results.append({"level": "warning", "check": "github_actions_threshold_exists",
+                            "message": "check_collector_quality.py に IS_GITHUB_ACTIONS 環境別閾値がない（GH Actions上で false warning が出る可能性）"})
+    else:
+        results.append({"level": "warning", "check": "github_actions_threshold_exists",
+                        "message": "check_collector_quality.py が見つからない"})
+
+    # ── #209: quality gate の FAILURE 条件が suspicious_price/low_confidence のみ ──
+    if _quality_script.exists():
+        _qs_text2 = _quality_script.read_text(encoding="utf-8") if '_qs_text' not in dir() else _qs_text
+        # 旧FAILUREパターン（店舗数不足がFAILURE条件になっている）の検出
+        _old_failure_pattern = (
+            "iphone_min3_shops" in _qs_text2 and
+            '"FAILURE"' in _qs_text2 and
+            "switch2_min2_shops" in _qs_text2
+        )
+        # 正しいパターン: suspicious_price と low_confidence のみ FAILURE
+        _has_suspicious_failure = "suspicious_price" in _qs_text2 and "low_confidence" in _qs_text2
+        if _has_suspicious_failure and not _old_failure_pattern:
+            results.append({"level": "ok", "check": "only_suspicious_low_conf_is_failure",
+                            "message": "quality gate の FAILURE 条件が suspicious_price / low_confidence のみ（店舗数不足はWARNING）"})
+        else:
+            results.append({"level": "warning", "check": "only_suspicious_low_conf_is_failure",
+                            "message": "quality gate の FAILURE 条件を確認してください（suspicious_price / low_confidence のみにすべき）"})
+    else:
+        results.append({"level": "warning", "check": "only_suspicious_low_conf_is_failure",
+                        "message": "check_collector_quality.py が見つからない"})
+
     return results
 
 

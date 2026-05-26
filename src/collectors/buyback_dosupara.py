@@ -12,9 +12,17 @@ from src.collectors.buyback_base_csv import BaseCsvBuybackCollector
 
 
 def _search_url(keyword: str) -> str:
+    # keyword パラメーター付き URL は 404 になるため、
+    # 買取一覧ページ（トップ）を使用。価格はページ内テキスト検索で取得。
     encoded = urllib.parse.quote(keyword)
-    return f"https://www.dospara.co.jp/kaitori/?keyword={encoded}"
+    return f"https://www.dospara.co.jp/kaitori/web/search?keyword={encoded}"
 
+
+# 代替URL（検索が使えない場合のフォールバック）
+FALLBACK_URLS: dict[str, str] = {
+    "switch2": "https://www.dospara.co.jp/kaitori/",
+    "ps5_pro": "https://www.dospara.co.jp/kaitori/",
+}
 
 SEARCH_KEYWORDS = {
     "switch2": "Nintendo Switch 2",
@@ -35,7 +43,24 @@ class DosuparaCsvCollector(BaseCsvBuybackCollector):
 
     def _build_url(self, product_alias: str, product_name: str) -> str:
         kw = SEARCH_KEYWORDS.get(product_alias)
-        return _search_url(kw) if kw else ""
+        if not kw:
+            return ""
+        return _search_url(kw)
+
+    def _fetch_html(self, url: str):
+        """HTTPエラー時にフォールバックURLを試みる。"""
+        html = super()._fetch_html(url)
+        if html is None and self.last_failure_reason in ("http_404", "http_error"):
+            # フォールバック: 商品alias はURL自体からは取れないので _build_url で渡された alias を使う
+            # → 検索URLからaliasを逆引き
+            fallback = next(
+                (fb for alias, fb in FALLBACK_URLS.items() if SEARCH_KEYWORDS.get(alias, "") in url),
+                None
+            )
+            if fallback and fallback != url:
+                self.last_failure_reason = None
+                html = super()._fetch_html(fallback)
+        return html
 
     def _parse_price(self, html: str, product_alias: str, product_name: str) -> Optional[int]:
         from bs4 import BeautifulSoup

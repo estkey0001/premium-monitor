@@ -28,30 +28,39 @@ HISTORY_PATH = PROJECT_ROOT / "exports" / "collector_report" / "failure_history.
 
 JST = timezone(timedelta(hours=9))
 
+# ── 実行環境判定 ───────────────────────────────────────────────────────────
+# GitHub Actions 上では取得できる店舗数がローカルより少ない（IP制限）
+# → iPhone の最低目標を下げて warning を抑制
+IS_GITHUB_ACTIONS = os.environ.get("GITHUB_ACTIONS", "").lower() == "true"
+
 # ──────────────────────────────────────────────
 # FAILURE 条件閾値
+# FAILURE = suspicious_price または low_confidence のみ
+# （誤価格がLPに出るリスクがある場合だけ stop-the-world）
 # ──────────────────────────────────────────────
 FAILURE_CONDITIONS = {
     "suspicious_price_gt0":   "suspicious_price > 0（誤価格リスク）",
     "low_confidence_gt0":     "low_confidence_count > 0（信頼度低価格がLPに表示される可能性）",
-    "iphone_min3_shops":      "iPhone主要商品（4種）で成功店舗3未満",
-    "switch2_min2_shops":     "Switch2 で成功店舗2未満",
-    "ps5pro_min2_shops":      "PS5 Pro で成功店舗2未満",
 }
 
-# WARNING 条件閾値
+# WARNING 条件閾値（exit 0 で継続 — GitHub Actionsには ::warning:: annotationを出力）
 WARNING_CONDITIONS = {
+    "iphone_min_shops":           "iPhone主要商品の成功店舗数不足",
+    "switch2_min2_shops":         "Switch2 で成功店舗2未満",
+    "ps5pro_min2_shops":          "PS5 Pro で成功店舗2未満",
     "fetch_failed_over50pct":     "取得失敗が全体の50%以上",
     "consecutive_3day_failure":   "特定店舗が3日連続失敗",
     "report_not_generated":       "collector_report が生成されていない",
 }
 
 # 主要商品の最小成功店舗数
+# GitHub Actions 上はIPブロックで取得数が少ないため閾値を下げる
+_IPHONE_MIN = 2 if IS_GITHUB_ACTIONS else 3
 MIN_SHOPS = {
-    "iphone17pro256": 3,
-    "iphone17pro512": 3,
-    "iphone17pm256":  3,
-    "iphone17pm512":  3,
+    "iphone17pro256": _IPHONE_MIN,
+    "iphone17pro512": _IPHONE_MIN,
+    "iphone17pm256":  _IPHONE_MIN,
+    "iphone17pm512":  _IPHONE_MIN,
     "switch2":        2,
     "ps5_pro":        2,
 }
@@ -346,7 +355,7 @@ def main() -> int:
     md = build_summary_md(result)
     write_github_summary(md)
 
-    # 4. ローカル実行時: 簡易サマリーをstderrに出力
+    # 4. サマリーをstderrに出力
     ok  = result["ok_count"]
     total = result["total"]
     fail = len(result["failures"])
@@ -364,12 +373,19 @@ def main() -> int:
         print("  ✅ 品質ゲート通過", file=sys.stderr)
     print(f"{'='*60}\n", file=sys.stderr)
 
-    # 5. exit code
+    # 5. GitHub Actions 上では ::warning:: annotation を直接出力（exit codeに頼らない）
+    if IS_GITHUB_ACTIONS and result["warnings"]:
+        for w in result["warnings"]:
+            # ::warning:: annotation — Actions UI に黄色マークで表示
+            print(f"::warning::品質ゲート WARNING — {w}")
+
+    # 6. exit code
+    # FAILURE（誤価格リスク）: exit 1
+    # WARNING（取得数不足など）: exit 0 で継続（annotation は上で出力済み）
+    # 正常: exit 0
     if result["failures"]:
-        return 1  # FAILURE
-    if result["warnings"]:
-        return 2  # WARNING
-    return 0  # 正常
+        return 1  # FAILURE — suspicious_price または low_confidence
+    return 0  # 正常 or WARNING（ワークフロー継続）
 
 
 if __name__ == "__main__":

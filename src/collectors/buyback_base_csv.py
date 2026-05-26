@@ -27,6 +27,9 @@ class BaseCsvBuybackCollector:
         self.timeout = timeout
         self.last_failure_reason: Optional[str] = None   # 最後の失敗理由（report用）
         self.last_confidence: str = "high"               # 価格信頼度: high/mid/low
+        self.last_http_status: int = 0                   # 最後のHTTPステータスコード（debug用）
+        self.last_html_length: int = 0                   # 取得HTMLの文字数（debug用）
+        self.last_fetch_url: str = ""                    # 実際にfetchしたURL（debug用）
         self.session = requests.Session()
         self.session.headers.update({
             "User-Agent": "Mozilla/5.0 (compatible; PremiumMonitor/1.0; +https://github.com/estkey0001/premium-monitor)",
@@ -78,32 +81,46 @@ class BaseCsvBuybackCollector:
             return None
 
     def _fetch_html(self, url: str) -> Optional[str]:
+        self.last_fetch_url = url
+        self.last_http_status = 0
+        self.last_html_length = 0
         try:
             time.sleep(1.5)  # レートリミット遵守
             resp = self.session.get(url, timeout=self.timeout)
+            self.last_http_status = resp.status_code
             resp.raise_for_status()
             resp.encoding = resp.apparent_encoding or "utf-8"
             if self.REQUIRES_JS and len(resp.text) < 3000:
-                return self._fetch_with_playwright(url)
+                html = self._fetch_with_playwright(url)
+                self.last_html_length = len(html) if html else 0
+                return html
+            self.last_html_length = len(resp.text)
             return resp.text
         except requests.HTTPError as e:
             status = e.response.status_code if (hasattr(e, 'response') and e.response is not None) else 0
+            self.last_http_status = status
             self.last_failure_reason = f"http_{status}" if status else "http_error"
             logger.warning("[%s] HTTP error %s: %s", self.SHOP_NAME, url, e)
             if self.REQUIRES_JS:
-                return self._fetch_with_playwright(url)
+                html = self._fetch_with_playwright(url)
+                self.last_html_length = len(html) if html else 0
+                return html
             return None
         except requests.exceptions.SSLError as e:
             self.last_failure_reason = "ssl_error"
             logger.warning("[%s] SSL error %s: %s", self.SHOP_NAME, url, e)
             if self.REQUIRES_JS:
-                return self._fetch_with_playwright(url)
+                html = self._fetch_with_playwright(url)
+                self.last_html_length = len(html) if html else 0
+                return html
             return None
         except requests.RequestException as e:
             self.last_failure_reason = "connection_error"
             logger.warning("[%s] HTTP error %s: %s", self.SHOP_NAME, url, e)
             if self.REQUIRES_JS:
-                return self._fetch_with_playwright(url)
+                html = self._fetch_with_playwright(url)
+                self.last_html_length = len(html) if html else 0
+                return html
             return None
 
     def _fetch_with_playwright(self, url: str) -> Optional[str]:

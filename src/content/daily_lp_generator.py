@@ -394,6 +394,8 @@ class DailyLPGenerator:
         caution_html = self._section_caution()
         cta_html     = self._section_cta()
         footer_html  = self._section_footer()
+        # Task 6: アラートポップアップHTML を生成（右下固定表示）
+        alert_popup_html = self._section_alert_popup(buyback_alerts)
 
         # collector report: 取得失敗警告バナー（一定数以上の場合のみ表示）
         _collector_warn_html = self._collector_warn_bar_html()
@@ -1215,11 +1217,6 @@ a[href], button, [role="tab"], [role="button"],
   .genre-btn {{ font-size: 0.74rem; padding: 5px 11px; }}
   .maker-chip {{ font-size: 0.72rem; padding: 3px 10px; }}
 }}
-.tab-btn.active[data-tab="sokuhoh"] {{
-  background: #F0EEFF;
-  color: #6040E8;
-}}
-
 /* ── カウントバッジ ── */
 .tab-count {{
   font-size: 0.62rem; font-weight: 800;
@@ -3338,7 +3335,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 
 </head>
 <body>
-{_collector_warn_html}<div class="announce-bar"><a href="#tab-beginner">{_announce_bar_inner}</a></div>
+{alert_popup_html}{_collector_warn_html}<div class="announce-bar"><a href="#tab-beginner">{_announce_bar_inner}</a></div>
 <header class="topbar">
   <a href="/" class="topbar-brand">
     <div class="brand-icon">S</div>
@@ -3893,10 +3890,28 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             v = it.get("entry_end_at") or it.get("entry_end") or ""
             return bool(str(v).strip())
 
+        # Task 2: 禁止文言リスト — note に含まれている場合は active から除外して参考リンクへ
+        _LOTTERY_FORBIDDEN_NOTES = frozenset({
+            "抽選情報未確認",
+            "公式商品ページで要確認",
+            "次回未定",
+            "近日開始",
+            "受付中",
+            "販売中",
+            "日付不明",
+        })
+
+        def _is_forbidden_note(it: dict) -> bool:
+            """note フィールドに禁止文言を含む場合 True を返す。"""
+            note = str(it.get("note") or "")
+            return any(kw in note for kw in _LOTTERY_FORBIDDEN_NOTES)
+
+        # A. 現在受付中: active かつ entry_end_at あり かつ reference_only でない かつ禁止文言なし
         active_items   = [it for it in all_items
                           if it["_auto_status"] == "active"
                           and _has_end_date(it)
-                          and not it.get("reference_only", False)]
+                          and not it.get("reference_only", False)
+                          and not _is_forbidden_note(it)]
         # B. 近日開始: upcoming かつ reference_only でない
         upcoming_items = [it for it in all_items
                           if it["_auto_status"] == "upcoming"
@@ -3908,12 +3923,14 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         # D. 参考リンク:
         #    ① reference_only=True
         #    ② 日付なし active（旧エントリ・詳細不明）
+        #    ③ note に禁止文言がある active アイテム（Task 2）
         #    ※ closed は Section C で表示済みなので除外
         reference_items = [it for it in all_items
                            if it.get("reference_only", False)
                            or (it["_auto_status"] == "active"
                                and not _has_end_date(it)
-                               and not it.get("reference_only", False))]
+                               and not it.get("reference_only", False))
+                           or _is_forbidden_note(it)]
 
         # ── A. 現在受付中 ──────────────────────────────────────────────────
         if active_items:
@@ -4094,7 +4111,6 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         lottery_badge  = f'<span class="tab-count">{lottery_count}</span>' if lottery_count else ''
         return f"""<div class="tab-wrap" id="main-tab-nav">
 <nav class="tab-nav" role="tablist">
-  <button class="tab-btn" data-tab="sokuhoh" role="tab" aria-selected="false">&#128248; 速報{sokuhoh_badge}</button>
   <button class="tab-btn" data-tab="lottery" role="tab" aria-selected="false">&#127915; 抽選情報{lottery_badge}</button>
   <button class="tab-btn" data-tab="ranking" role="tab" aria-selected="false">&#127942; ランキング</button>
   <button class="tab-btn active" data-tab="beginner" role="tab" aria-selected="true">&#128100; 初心者向け <span class="tab-count">{beginner_count}</span></button>
@@ -4190,7 +4206,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                                               latest_buyback_at=latest_buyback_at)
         surge_html       = self._tab_surge(buyback_alerts)
         ranking_html     = self._tab_ranking(all_deals, iphone_deals, game_deals, sedori_routes=sedori_routes)
-        new_products_html = self._section_sokuhoh(buyback_alerts)
+        # Task 3: 速報タブを削除 → ポップアップ速報へ移行（_section_alert_popup 参照）
         sedori_html      = self._tab_sedori(sedori_routes or [])
         lottery_html     = self._section_lottery(lottery_events)
 
@@ -4206,11 +4222,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         lottery_count = lottery_display_count if lottery_display_count is not None else len(lottery_events)
         lottery_badge = f'<span class="tab-count">{lottery_count}</span>' if lottery_count else ''
 
-        return f"""<div id="tab-sokuhoh" class="tab-panel section-sokuhoh" role="tabpanel">
-{new_products_html}
-</div>
-
-<div id="tab-lottery" class="tab-panel" role="tabpanel">
+        return f"""<div id="tab-lottery" class="tab-panel" role="tabpanel">
 {lottery_html}
 </div>
 
@@ -4286,7 +4298,14 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 
     def _tab_sedori(self, sedori_routes: list = None) -> str:
         """せどりルート比較タブ — DBから自動算出済みルートを表示する（Phase 14/15）。"""
-        routes = sedori_routes or []
+        # Task 9: 新品・未使用のみ表示（中古・状態不明は除外）
+        _UNUSED_CONDITIONS = frozenset({"new", "unused", "sealed", "未使用", "新品", "未開封"})
+        _all_routes = sedori_routes or []
+        routes = [
+            r for r in _all_routes
+            if getattr(r, "buy_condition", "") in _UNUSED_CONDITIONS
+        ]
+        _excluded_by_cond = len(_all_routes) - len(routes)
 
         # コスト情報（最初のルートから取得）
         if routes:
@@ -4299,6 +4318,13 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 
         # ── ヘッダー ──
         route_count = len(routes)
+        # 除外件数表示 HTML（中古等を除外した場合のみ表示）
+        _excluded_html = (
+            f'  <span class="sc-meta-sep">|</span>\n'
+            f'  <span class="sc-meta-label">除外 (中古等)</span>\n'
+            f'  <span class="sc-meta-val" style="color:var(--ink3)">{_excluded_by_cond}件</span>\n'
+        ) if _excluded_by_cond > 0 else ''
+
         parts.append(f'''<div class="sc-wrap">
 <div class="sc-header">
   <div class="sc-eyebrow">&#9736; Auto Calculated</div>
@@ -4311,7 +4337,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
   <span class="sc-meta-sep">|</span>
   <span class="sc-meta-label">&#128179; 推定コスト</span>
   <span class="sc-meta-val">{cost_info}</span>
-</div>''')
+{_excluded_html}</div>''')
 
         if not routes:
             # データなしフォールバック
@@ -6304,7 +6330,6 @@ python3 -m src.cli calculate-sedori-routes</pre>
     <a href="#tab-advanced" class="footer-link">Pro向け相場</a>
     <a href="#tab-ranking" class="footer-link">買取ランキング</a>
     <a href="#tab-surge" class="footer-link">急騰/急落アラート</a>
-    <a href="#tab-sokuhoh" class="footer-link">速報</a>
     <a href="#note-cta" class="footer-link">詳細レポート</a>
     <a href="collector_report.html" class="footer-link admin-report-link" data-track="collector_report_click">取得レポート</a>
   </div>
@@ -6404,6 +6429,172 @@ python3 -m src.cli calculate-sedori-routes</pre>
             '</div>'
             '<div class="sokuhoh-feed">' + ''.join(cards) + '</div>'
         )
+
+    def _section_alert_popup(self, buyback_alerts: list = None) -> str:
+        """速報ポップアップ — ページ右下に最大3件表示 (severity high優先)。
+        data/alerts.csv を読み込んで高優先アラートを表示する。
+        localStorage で同日再表示なし。
+        """
+        import csv as _csv_mod
+        from datetime import datetime as _dt
+
+        # alerts.csv から高優先アラートを読み込む
+        alerts_csv_path = PROJECT_ROOT / "data" / "alerts.csv"
+        popup_items = []
+
+        try:
+            now_jst = _dt.now(tz=JST)
+            if alerts_csv_path.exists():
+                with open(alerts_csv_path, encoding="utf-8", newline="") as f:
+                    reader = _csv_mod.DictReader(f)
+                    for row in reader:
+                        # expires_at チェック
+                        expires = row.get("expires_at", "")
+                        if expires:
+                            try:
+                                exp_dt = _dt.strptime(expires[:16], "%Y-%m-%d %H:%M").replace(tzinfo=JST)
+                                if exp_dt < now_jst:
+                                    continue
+                            except Exception:
+                                pass
+                        # severity high/medium のみ表示
+                        sev = row.get("severity", "low")
+                        if sev not in ("high", "medium"):
+                            continue
+                        popup_items.append(row)
+        except Exception:
+            pass
+
+        # buyback_alerts からも surge/drop を追加（alerts.csv がない場合のフォールバック）
+        if not popup_items and buyback_alerts:
+            for a in (buyback_alerts or [])[:3]:
+                atype = a.get("alert_type", "")
+                if atype in ("buyback_surge", "buyback_drop"):
+                    popup_items.append({
+                        "alert_id": str(a.get("id", "")),
+                        "alert_type": atype,
+                        "product_name": a.get("product_name", ""),
+                        "title": "買取急騰" if atype == "buyback_surge" else "買取急落",
+                        "message": f"¥{a.get('price_after', 0):,}",
+                        "severity": "medium",
+                        "product_url": a.get("url", ""),
+                        "expires_at": "",
+                    })
+
+        if not popup_items:
+            return ""
+
+        # 最大3件、severity high 優先にソート
+        _sev_order = {"high": 0, "medium": 1, "low": 2}
+        popup_items.sort(key=lambda x: _sev_order.get(x.get("severity", "low"), 2))
+        popup_items = popup_items[:3]
+
+        # ポップアップカード生成
+        cards_html = []
+        for item in popup_items:
+            atype = item.get("alert_type", "")
+            sev = item.get("severity", "medium")
+            title = _esc(item.get("title") or atype)
+            msg = _esc(item.get("message", ""))
+            prod_name = _esc(item.get("product_name", ""))
+            url = item.get("product_url") or item.get("action_url") or ""
+            alert_id = _esc(item.get("alert_id", ""))
+
+            sev_icon = {"high": "🔴", "medium": "🟡", "low": "🟢"}.get(sev, "🟡")
+            link_html = (
+                f'<a href="{_esc(url)}" target="_blank" rel="noopener" class="popup-alert-link">'
+                f'詳細を確認 ›</a>'
+            ) if url else ""
+
+            cards_html.append(
+                f'<div class="popup-alert-card popup-sev-{_esc(sev)}" data-alert-id="{alert_id}">\n'
+                f'  <div class="popup-alert-top">\n'
+                f'    <span class="popup-alert-icon">{sev_icon}</span>\n'
+                f'    <span class="popup-alert-title">{title}</span>\n'
+                f'    <button class="popup-alert-close" onclick="dismissPopupAlert(this)" aria-label="閉じる">&#10005;</button>\n'
+                f'  </div>\n'
+                + (f'  <div class="popup-alert-product">{prod_name}</div>\n' if prod_name else '')
+                + (f'  <div class="popup-alert-msg">{msg}</div>\n' if msg else '')
+                + (link_html + '\n' if link_html else '')
+                + '</div>'
+            )
+
+        if not cards_html:
+            return ""
+
+        return f'''<div id="alert-popup-container" class="alert-popup-container">
+{''.join(cards_html)}
+</div>
+<style>
+.alert-popup-container {{
+  position: fixed; bottom: 20px; right: 16px; z-index: 9999;
+  display: flex; flex-direction: column; gap: 8px;
+  max-width: 320px; width: calc(100vw - 32px);
+}}
+.popup-alert-card {{
+  background: #fff; border-radius: 12px; padding: 12px 14px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  border-left: 4px solid #F59E0B;
+  display: flex; flex-direction: column; gap: 4px;
+  animation: popupSlideIn 0.3s ease;
+}}
+.popup-sev-high {{ border-left-color: #EF4444; }}
+.popup-sev-medium {{ border-left-color: #F59E0B; }}
+.popup-sev-low {{ border-left-color: #22C55E; }}
+@keyframes popupSlideIn {{
+  from {{ transform: translateX(100%); opacity: 0; }}
+  to   {{ transform: translateX(0); opacity: 1; }}
+}}
+.popup-alert-top {{ display: flex; align-items: center; gap: 6px; }}
+.popup-alert-icon {{ font-size: 0.9rem; }}
+.popup-alert-title {{ font-weight: 700; font-size: 0.85rem; flex: 1; color: #1e293b; }}
+.popup-alert-close {{
+  background: none; border: none; cursor: pointer; padding: 2px 6px;
+  font-size: 0.75rem; color: #94a3b8; border-radius: 4px;
+}}
+.popup-alert-close:hover {{ background: #f1f5f9; }}
+.popup-alert-product {{ font-size: 0.8rem; font-weight: 600; color: #334155; }}
+.popup-alert-msg {{ font-size: 0.78rem; color: #64748b; }}
+.popup-alert-link {{
+  font-size: 0.75rem; color: #7C3AED; text-decoration: none; font-weight: 600;
+}}
+.popup-alert-link:hover {{ text-decoration: underline; }}
+@media (max-width: 480px) {{
+  .alert-popup-container {{ bottom: 12px; right: 8px; max-width: 90vw; }}
+}}
+</style>
+<script>
+(function() {{
+  var todayKey = 'popupDismissed_' + new Date().toISOString().slice(0, 10);
+  var dismissed = JSON.parse(localStorage.getItem(todayKey) || '[]');
+  document.querySelectorAll('.popup-alert-card').forEach(function(card) {{
+    var aid = card.getAttribute('data-alert-id');
+    if (aid && dismissed.indexOf(aid) >= 0) card.style.display = 'none';
+  }});
+  var container = document.getElementById('alert-popup-container');
+  if (container) {{
+    var visible = container.querySelectorAll('.popup-alert-card:not([style*="none"])');
+    if (!visible.length) container.style.display = 'none';
+  }}
+}})();
+function dismissPopupAlert(btn) {{
+  var card = btn.closest('.popup-alert-card');
+  if (!card) return;
+  var aid = card.getAttribute('data-alert-id');
+  card.style.display = 'none';
+  if (aid) {{
+    var todayKey = 'popupDismissed_' + new Date().toISOString().slice(0, 10);
+    var dismissed = JSON.parse(localStorage.getItem(todayKey) || '[]');
+    if (dismissed.indexOf(aid) < 0) dismissed.push(aid);
+    localStorage.setItem(todayKey, JSON.stringify(dismissed));
+  }}
+  var container = document.getElementById('alert-popup-container');
+  if (container) {{
+    var visible = container.querySelectorAll('.popup-alert-card:not([style*="display: none"])');
+    if (!visible.length) container.style.display = 'none';
+  }}
+}}
+</script>'''
 
     def _render_markdown(self, date_str, time_str, beginner_deals, advanced_snaps, buyback_alerts) -> str:
         lines = [

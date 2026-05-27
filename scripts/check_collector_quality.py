@@ -58,14 +58,16 @@ WARNING_CONDITIONS = {
 #   （ただし deploy-check の error 原因にしない）
 OPTIONAL_SHOPS: dict[str, str] = {
     "2ndstreet":  "product_not_listed",  # iPhone17等が掲載されていない
-    "bookoff":    "product_not_listed",  # 買取価格ページ構造が対象外
+    "bookoff":    "product_not_listed",  # オンライン自動見積もり非対応（NOT_SUPPORTED_SHOPS）
     "dosupara":   "url_invalid",         # 検索URLが404返し
+    "geo":        "product_not_listed",  # iPhone17/PS5Pro未掲載（geo_mobileがiPhone担当）（2026-05-27確認）
     "geo_mobile": "site_blocked",        # Cloudflareブロック
     "hardoff":    "url_invalid",         # 検索URLが404返し
     "janpara":    "rate_limited_429",    # GitHub Actions IP で全リクエスト429ブロック（2026-05-27確認）
     "pasoko":     "product_not_listed",  # PC専門店 — PS5/Switch2取り扱いなし（2026-05-27確認）
     "sofmap":     "service_unavailable", # 503サーバー障害継続中（2026-05-27確認）
     "surugaya":   "site_blocked",        # 403ボット検知、改善不可（2026-05-27確認）
+    "tsutaya":    "not_supported",       # オンライン自動見積もり非対応（NOT_SUPPORTED_SHOPS）（2026-05-27確認）
 }
 
 # 主要商品の最小成功店舗数

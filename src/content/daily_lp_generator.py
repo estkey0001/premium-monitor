@@ -6222,9 +6222,13 @@ python3 -m src.cli calculate-sedori-routes</pre>
         from pathlib import Path as _Path
 
         # optional扱いの店舗ID（これらの失敗は軽微）
+        # check_collector_quality.py の OPTIONAL_SHOPS と同期すること
         _OPTIONAL_SHOP_IDS = {
-            "2ndstreet", "bookoff", "dosupara", "geo_mobile", "hardoff",
+            "2ndstreet", "bookoff", "dosupara",
+            "geo",        # iPhone17/PS5Pro未掲載（geo_mobileがiPhone担当）
+            "geo_mobile", "hardoff",
             "pasoko", "janpara", "sofmap", "surugaya",
+            "tsutaya",    # オンライン自動見積もり非対応（NOT_SUPPORTED_SHOPS）
         }
 
         _report_path = _Path(__file__).resolve().parent.parent.parent / "exports" / "collector_report" / "latest.json"

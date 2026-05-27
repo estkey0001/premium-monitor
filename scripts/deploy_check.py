@@ -3037,6 +3037,43 @@ def check() -> list[dict]:
         results.append({"level": "warning", "check": "geo_ps5pro_not_listed",
                         "message": f"geo ps5_pro チェック失敗: {e}"})
 
+    # ── #272: 速報タブなし確認 (sokuhoh tab removed, Task 3) ──
+    # CSS セレクタに data-tab="sokuhoh" が残るため id="tab-sokuhoh" で判定
+    lp_src = html  # index.html は既に読み込み済み
+    if 'id="tab-sokuhoh"' in lp_src:
+        results.append({"level": "error", "check": "no_sokuhoh_tab",
+                        "message": "#272 LP に速報タブパネルが残っている (tab-sokuhoh) — Task 3 未適用"})
+    else:
+        results.append({"level": "ok", "check": "no_sokuhoh_tab",
+                        "message": "#272 速報タブなし（削除済み）"})
+
+    # ── #273: アラートポップアップコンテナ存在確認 (Task 6) ──
+    if 'id="alert-popup-container"' in lp_src:
+        results.append({"level": "ok", "check": "alert_popup_container",
+                        "message": "#273 アラートポップアップコンテナあり（alert-popup-container）"})
+    else:
+        results.append({"level": "warning", "check": "alert_popup_container",
+                        "message": "#273 alert-popup-container が LP に存在しない（Task 6 未適用 or アラートデータなし）"})
+
+    # ── #274: alerts.csv 存在確認 (Task 5) ──
+    alerts_csv = PROJECT_ROOT / "data" / "alerts.csv"
+    if alerts_csv.exists():
+        results.append({"level": "ok", "check": "alerts_csv_exists",
+                        "message": "#274 data/alerts.csv 存在"})
+    else:
+        results.append({"level": "warning", "check": "alerts_csv_exists",
+                        "message": "#274 data/alerts.csv が存在しない（update_alerts.py 未実行）"})
+
+    # ── #275: 抽選 active section に禁止文言なし (Task 2) ──
+    _lottery_forbidden = ["抽選情報未確認", "公式商品ページで要確認"]
+    _found_forbidden = [kw for kw in _lottery_forbidden if kw in lp_src]
+    if _found_forbidden:
+        results.append({"level": "warning", "check": "lottery_no_forbidden_notes",
+                        "message": f"#275 抽選 active section に禁止文言あり: {_found_forbidden}"})
+    else:
+        results.append({"level": "ok", "check": "lottery_no_forbidden_notes",
+                        "message": "#275 抽選 active section 禁止文言なし"})
+
     return results
 
 

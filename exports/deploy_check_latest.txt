@@ -1,6 +1,6 @@
 
 ============================================================
- Deploy Check (261 items)
+ Deploy Check (271 items)
 ============================================================
   ✅ [index_exists] docs/index.html 存在
   ✅ [forbidden_phrases] 禁止表現なし
@@ -165,7 +165,7 @@
   ✅ [collection_stats_shown] ページ上部に取得統計（自動取得N件/取得失敗N件）が表示されている
   ✅ [hero_deals_dynamic] 参考DEALSが動的データから生成されている
   ✅ [fetch_failed_no_price_calc] fetch_failed 行の価格欄が「—」（価格計算に使われていない）
-  ✅ [game_console_shops] ゲーム機向け店舗が表示されている: ['ゲオ', 'イオシス', 'ブックオフ', '駿河屋', 'ソフマップ', '買取商店']
+  ✅ [game_console_shops] ゲーム機向け店舗が表示されている: ['ゲオ', 'イオシス', 'ブックオフ', '駿河屋', 'ソフマップ', 'TSUTAYA', '買取商店']
   ✅ [switch2_game_shop_links] Switch 2 / ゲーム機向け確認リンク（ゲオ/ブックオフ/駿河屋/ソフマップ）が存在する
   ✅ [iphone17pro_in_beginner] iPhone 17 Pro 256GB が初心者向けセクションに表示されている
   ✅ [monitoring_badge_shown] 「現在は赤字」バッジが表示されている
@@ -185,23 +185,23 @@
   ✅ [ipad_not_in_other] iPad は「その他」欄に混入していない
   ✅ [airpods_not_in_smartphone] AirPods はスマートフォン欄に混入していない
   ✅ [applewatch_in_wearable_section] Apple Watch がウェアラブル欄に表示
-  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-05-27T16:56:58+09:00）
+  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-05-27T19:17:14+09:00）
   ✅ [suspicious_price_format] suspicious_prices 形式OK（suspicious_price なし）
-  ✅ [fetch_failed_has_reason] fetch_failed 31件すべてに reason あり
+  ✅ [fetch_failed_has_reason] fetch_failed 34件すべてに reason あり
   ✅ [collector_report_html_exists] docs/collector_report.html 存在
   ✅ [collector_report_link_in_lp] LP内に collector_report.html へのリンクがある
-  ✅ [fetch_failed_report_link] 取得失敗27件 / suspicious0件 → 警告バーが表示されている
-  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 18件存在する: ['iphone17pm512', 'iphone17pro256', 'iphone17pro512', 'iphone17pm256']
-  ✅ [beginner_page_auto_scraped_exists] 自動取得 OK 24件 / total 55件
+  ✅ [fetch_failed_report_link] 取得失敗30件 / suspicious0件 → 警告バーが表示されている
+  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 16件存在する: ['iphone17pm256', 'iphone17pro512', 'iphone17pro256', 'iphone17pm512']
+  ✅ [beginner_page_auto_scraped_exists] 自動取得 OK 21件 / total 55件
   ✅ [shop_name_no_vertical_wrap] shop-name-col に word-break:keep-all が設定されている
-  ✅ [iphone17pro256_price_scraped] iPhone 17 Pro 256GB の価格取得成功: ['mobile_ichiban', 'kaitori_shouten', 'kaitori_itchome', 'iosys', 'netoff']
+  ✅ [iphone17pro256_price_scraped] iPhone 17 Pro 256GB の価格取得成功: ['kaitori_shouten', 'kaitori_itchome', 'iosys', 'netoff']
   ✅ [fetch_failed_section_collapsible] 取得失敗セクションが <details> 折りたたみ対応されている
   ✅ [fetch_failed_not_dominant] 取得失敗カード比率 6%（2/34）— 許容範囲内
-  ✅ [fetch_failed_has_reason_field] 全取得失敗エントリーに reason フィールドあり（31件）
+  ✅ [fetch_failed_has_reason_field] 全取得失敗エントリーに reason フィールドあり（34件）
   ✅ [auto_scraped_link_verified] auto_scraped行のlink_verifiedはすべてtrue（URL推測なし）
   ✅ [iphone_min3_shops] iPhone主要4商品すべて成功店舗≥3
   ✅ [switch2_min2_shops] Switch2 成功店舗≥2（3店舗）
-  ✅ [ps5pro_min2_shops] PS5 Pro 成功店舗≥2（3店舗）
+  ✅ [ps5pro_min2_shops] PS5 Pro 成功店舗≥2（2店舗）
   ✅ [no_unknown_failure_reason] すべての取得失敗に reason が設定されている（unknown なし）
   ✅ [debug_files_saved] exports/debug/ に診断ファイル 59件あり
   ✅ [low_confidence_not_in_lp] confidence=low 価格がLPに含まれていない（low=0件）
@@ -211,7 +211,7 @@
   ✅ [fetch_failed_description_exists] fetch_failed セクションに説明文が存在
   ✅ [quality_gate_script_exists] scripts/check_collector_quality.py が存在
   ✅ [quality_gate_in_workflow] GitHub Actions に quality gate step がある
-  ✅ [collector_summary_in_report] latest.json summary OK: 24/55 (44%)
+  ✅ [collector_summary_in_report] latest.json summary OK: 21/55 (38%)
   ✅ [playwright_install_in_workflow] daily_lp.yml に playwright install --with-deps chromium が存在
   ✅ [no_collector_not_loaded] collector_not_loaded = 0（すべて not_supported または実装済み）
   ✅ [no_playwright_not_installed] playwright_not_installed = 0
@@ -263,8 +263,18 @@
   ✅ [fallback_data_caution] 参考データ・古いデータの注意文が表示されている
   ✅ [repo_manual_fallback] repository.py に manual_today フォールバック優先ロジックが存在する
   ✅ [scanner_fetch_failed_keep] beginner_deal_scanner.py に fetch_failed 時の deal 保持ロジックが存在する
+  ✅ [janpara_in_optional_shops] janpara が OPTIONAL_SHOPS に分類されている（rate_limited_429 — LP品質ゲート対象外）
+  ✅ [sofmap_in_optional_shops] sofmap が OPTIONAL_SHOPS に分類されている（service_unavailable — LP品質ゲート対象外）
+  ✅ [surugaya_in_optional_shops] surugaya が OPTIONAL_SHOPS に分類されている（site_blocked — LP品質ゲート対象外）
+  ✅ [optional_only_no_strong_warn] LP生成器が required/optional を区別して警告強度を調整している
+  ✅ [suspicious_still_strong_warn] suspicious_price / low_confidence 時は強警告が出る設計になっている
+  ✅ [collector_report_required_optional_split] collector_report に Required / Optional failures の分離表示がある
+  ✅ [geo_in_optional_shops] geo が OPTIONAL_SHOPS に含まれている（iPhone17/PS5Pro未掲載）
+  ✅ [tsutaya_in_optional_shops] tsutaya が OPTIONAL_SHOPS に含まれている（not_supported）
+  ✅ [kaitori_itchome_no_networkidle] kaitori_itchome: networkidle を使っていない（タイムアウト対策済み）
+  ✅ [geo_ps5pro_not_listed] geo: ps5_pro を product_not_listed で処理している
 
-  Errors: 0 | Warnings: 0 | OK: 261
+  Errors: 0 | Warnings: 0 | OK: 271
 
   ✅ Deploy check PASSED
 ============================================================

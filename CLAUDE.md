@@ -59,13 +59,63 @@ streamlit run dashboard/app.py
 ```
 
 ## 現在のフェーズ
-Phase 13完了。LP公開準備完了。prelaunch-check PASS (0 errors, 3 warnings)。
-Warningsは GA ID / note_url / site_url の未設定（公開後に設定可能）。
+**stable-collector-2026-05-27** — コレクター安定版ベースライン確立済み。
+- GitHub Actions Run #26505153639: success
+- deploy-check: 0 errors / 0 warnings / 271 OK（Actions上）
+- collector FAILURES=0 / suspicious_price=0 / low_confidence=0
+- kaitori_itchome 全4モデル取得成功（networkidle→domcontentloaded 修正）
+- geo/tsutaya を OPTIONAL_SHOPS に追加済み
 
 ## 次にやること
-1. Mac上で init-db → seed → import-buyback-csv → run-buyback-premium-check → generate-daily-lp → build-public-lp → prelaunch-check を実行
-2. GitHubにpush → GitHub Pages有効化
-3. GA ID / note_url / site_url を設定 → LP再生成
+1. GA ID / note_url / site_url を設定 → LP再生成
+2. コレクター追加候補: geo_mobile（Cloudflare 対策）/ janpara（429 回避策）
+
+## コレクター運用ルール（2026-05-27 確立）
+
+### 優先度分類
+
+| 分類 | 定義 | 対応 |
+|------|------|------|
+| **required** | LP 品質に直接影響する取得失敗 | **優先修正**（ワークフロー継続・警告） |
+| **optional** | サイト制限・未対応で改善困難 | LP を止めない（`OPTIONAL_SHOPS` に追加） |
+| **FAILURE** | suspicious_price または low_confidence | **強制対応**（ワークフロー停止） |
+
+### 失敗理由の意味
+
+| 理由 | 意味 | 対応 |
+|------|------|------|
+| `product_not_listed` | サイトに掲載なし | 正常分類。OPTIONAL_SHOPS 追加を検討 |
+| `price_not_found` | ページ取得成功だが価格なし | URL/regex 調査が必要 |
+| `rate_limited_429` | IP レートリミット | バックオフ延長 or optional 化 |
+| `site_blocked` | Cloudflare 等ブロック | optional 化 |
+| `service_unavailable` | サーバー障害 | optional 化 + 復旧待ち |
+| `not_supported` | オンライン見積もり非対応 | optional 化（手動価格でカバー） |
+| `timeout` | Playwright タイムアウト | domcontentloaded + リトライで対策 |
+
+### 品質チェック体系
+
+```
+scripts/check_collector_quality.py  ← 取得品質チェック（FAILURES/WARNINGS/OPT_WARNINGS）
+python -m src.cli deploy-check-lp   ← LP 構造チェック（271項目）
+python -m src.cli prelaunch-check   ← 公開前最終チェック
+```
+
+### OPTIONAL_SHOPS（2026-05-27 現在）
+
+```python
+# scripts/check_collector_quality.py および src/content/daily_lp_generator.py
+# の _OPTIONAL_SHOP_IDS と同期を保つこと
+2ndstreet, bookoff, dosupara, geo, geo_mobile, hardoff,
+janpara, pasoko, sofmap, surugaya, tsutaya
+```
+
+### LP 警告バー 3 段階
+
+| レベル | 条件 | 表示 |
+|--------|------|------|
+| `collector-warn-strong` | suspicious_price > 0 または low_confidence > 0 | 🔴 強警告（価格精度に問題） |
+| `collector-warn-soft`   | required 店舗の失敗が閾値以上 | 🟡 軟警告（一部取得失敗） |
+| `collector-warn-info`   | optional 店舗のみ失敗 | ℹ️ 情報（サイト制限） |
 
 ## 通知 Secrets 設定（Discord / Telegram）
 

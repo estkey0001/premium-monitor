@@ -2496,6 +2496,152 @@ def check() -> list[dict]:
         results.append({"level": "warning", "check": "not_listed_badge_not_green",
                         "message": "src/content/daily_lp_generator.py が見つからない"})
 
+    # ── #225〜#232: 抽選タブ正規化チェック ─────────────────────────────────────
+    import re as _re3
+    _lp_gen_path_v2 = PROJECT_ROOT / "src" / "content" / "daily_lp_generator.py"
+    if _lp_gen_path_v2.exists():
+        _lp_gen_text = _lp_gen_path_v2.read_text(encoding="utf-8")
+
+        # ── #225: RICOH GR IV Monochrome がリファレンスアイテムに1回だけ含まれる ──
+        _mono_count = _lp_gen_text.count("RICOH GR IV Monochrome")
+        if _mono_count == 1:
+            results.append({"level": "ok", "check": "ricoh_monochrome_single",
+                            "message": "RICOH GR IV Monochrome が _LOTTERY_REFERENCE_ITEMS に1件のみ定義"})
+        elif _mono_count == 0:
+            results.append({"level": "error", "check": "ricoh_monochrome_single",
+                            "message": "RICOH GR IV Monochrome が _LOTTERY_REFERENCE_ITEMS に存在しない"})
+        else:
+            results.append({"level": "warning", "check": "ricoh_monochrome_single",
+                            "message": f"RICOH GR IV Monochrome が {_mono_count} 件定義（重複の可能性）"})
+
+        # ── #226: RICOH GR IV HDF がリファレンスアイテムに1回だけ含まれる ─────────
+        _hdf_count = _lp_gen_text.count("RICOH GR IV HDF")
+        if _hdf_count == 1:
+            results.append({"level": "ok", "check": "ricoh_hdf_single",
+                            "message": "RICOH GR IV HDF が _LOTTERY_REFERENCE_ITEMS に1件のみ定義"})
+        elif _hdf_count == 0:
+            results.append({"level": "error", "check": "ricoh_hdf_single",
+                            "message": "RICOH GR IV HDF が _LOTTERY_REFERENCE_ITEMS に存在しない"})
+        else:
+            results.append({"level": "warning", "check": "ricoh_hdf_single",
+                            "message": f"RICOH GR IV HDF が {_hdf_count} 件定義（重複の可能性）"})
+
+        # ── #227: X100VI / PS5 / Switch2 が reference_only=True で定義されている ──
+        _ref_items_block = _re3.search(
+            r'_LOTTERY_REFERENCE_ITEMS\s*=\s*\[(.*?)\n    \]',
+            _lp_gen_text, _re3.DOTALL
+        )
+        _ref_block_text = _ref_items_block.group(1) if _ref_items_block else _lp_gen_text
+        _ref_only_items = {"FUJIFILM X100VI", "PlayStation 5 Pro", "Nintendo Switch 2"}
+        _ref_only_ok = True
+        _ref_only_missing = []
+        for _item_name in _ref_only_items:
+            # そのアイテム名が含まれるブロック周辺に reference_only: True があるか確認
+            _item_pos = _ref_block_text.find(_item_name)
+            if _item_pos == -1:
+                _ref_only_missing.append(_item_name)
+                _ref_only_ok = False
+                continue
+            # 前後 300 文字内に reference_only があるか
+            _nearby = _ref_block_text[max(0, _item_pos - 50):_item_pos + 300]
+            if '"reference_only": True' not in _nearby and "'reference_only': True" not in _nearby:
+                _ref_only_missing.append(f"{_item_name}(reference_only なし)")
+                _ref_only_ok = False
+        if _ref_only_ok:
+            results.append({"level": "ok", "check": "reference_only_items_flagged",
+                            "message": "X100VI / PS5 / Switch2 に reference_only=True が設定済み"})
+        else:
+            results.append({"level": "error", "check": "reference_only_items_flagged",
+                            "message": f"reference_only=True が未設定: {', '.join(_ref_only_missing)}"})
+
+        # ── #228: RICOH 3件に reference_only=True が含まれていない ──────────────
+        _ricoh_items = ["RICOH GR IV Monochrome", "RICOH GR IV HDF", '"RICOH GR IV"']
+        _ricoh_ref_only_found = []
+        for _rname in ["RICOH GR IV Monochrome", "RICOH GR IV HDF"]:
+            _pos = _ref_block_text.find(_rname)
+            if _pos != -1:
+                _ctx = _ref_block_text[_pos:_pos + 200]
+                if '"reference_only": True' in _ctx or "'reference_only': True" in _ctx:
+                    _ricoh_ref_only_found.append(_rname)
+        # "RICOH GR IV" スタンダードも確認（Monochromeより後）
+        _giv_match = _re3.search(r'"product_name":\s*"RICOH GR IV"[^M]', _ref_block_text)
+        if _giv_match:
+            _ctx2 = _ref_block_text[_giv_match.start():_giv_match.start() + 200]
+            if '"reference_only": True' in _ctx2 or "'reference_only': True" in _ctx2:
+                _ricoh_ref_only_found.append("RICOH GR IV (standard)")
+        if not _ricoh_ref_only_found:
+            results.append({"level": "ok", "check": "ricoh_not_reference_only",
+                            "message": "RICOH GR IV 3件に reference_only=True が含まれていない（受付中として正しく分類）"})
+        else:
+            results.append({"level": "error", "check": "ricoh_not_reference_only",
+                            "message": f"RICOH 以下のアイテムに reference_only=True が誤設定: {', '.join(_ricoh_ref_only_found)}"})
+
+        # ── #229: _section_lottery が 4セクション（A/B/C/D）を持つ ─────────────
+        _lottery_fn_m = _re3.search(
+            r'def _section_lottery\(.*?\n    def ', _lp_gen_text, _re3.DOTALL
+        )
+        _lottery_fn_text = _lottery_fn_m.group(0) if _lottery_fn_m else ""
+        _has_active_section   = "現在受付中" in _lottery_fn_text
+        _has_closed_section   = "受付終了" in _lottery_fn_text and "lottery-closed-section" in _lottery_fn_text
+        _has_reference_section = "lottery-reference-section" in _lottery_fn_text or "参考リンク" in _lottery_fn_text
+        if _has_active_section and _has_closed_section and _has_reference_section:
+            results.append({"level": "ok", "check": "lottery_4sections",
+                            "message": "_section_lottery に 受付中/受付終了/参考リンク の3種+フォールバック構造が存在"})
+        else:
+            _missing = []
+            if not _has_active_section:   _missing.append("現在受付中セクション")
+            if not _has_closed_section:   _missing.append("受付終了セクション(lottery-closed-section)")
+            if not _has_reference_section: _missing.append("参考リンクセクション(lottery-reference-section)")
+            results.append({"level": "error", "check": "lottery_4sections",
+                            "message": f"_section_lottery に以下が不足: {', '.join(_missing)}"})
+
+        # ── #230: lottery_count が reference_only を除外している ────────────────
+        # _lottery_active_count の sum() 定義周辺 1500 文字内に reference_only があれば OK
+        # （sum に渡すヘルパー関数が reference_only を参照していれば同様に OK）
+        _count_pos = _lp_gen_text.find("_lottery_active_count")
+        # ヘルパー関数は sum() より前に定義されるため、広範囲（前後 800 文字）をチェック
+        _count_region = _lp_gen_text[max(0, _count_pos - 800):_count_pos + 1500] if _count_pos >= 0 else ""
+        if "reference_only" in _count_region:
+            results.append({"level": "ok", "check": "lottery_count_excludes_reference",
+                            "message": "_lottery_active_count の計算が reference_only を除外している"})
+        else:
+            results.append({"level": "warning", "check": "lottery_count_excludes_reference",
+                            "message": "_lottery_active_count の計算で reference_only が除外されていない可能性"})
+
+        # ── #231: "次回未定" / "抽選情報未確認" が _LOTTERY_REFERENCE_ITEMS に存在しない ──
+        _stale_phrases = ["次回未定", "抽選情報未確認", "一次抽選終了"]
+        _stale_found = [p for p in _stale_phrases if p in _ref_block_text]
+        if not _stale_found:
+            results.append({"level": "ok", "check": "no_stale_lottery_phrases",
+                            "message": "「次回未定」「抽選情報未確認」「一次抽選終了」等の古い文言が _LOTTERY_REFERENCE_ITEMS に含まれていない"})
+        else:
+            results.append({"level": "warning", "check": "no_stale_lottery_phrases",
+                            "message": f"古い抽選文言が残存: {', '.join(_stale_found)}"})
+
+        # ── #232: _lottery_status_from_dates が entry_start_at を参照している ──────
+        # 関数定義ブロックを抽出（次の staticmethod/def まで）
+        _status_fn_m = _re3.search(
+            r'def _lottery_status_from_dates\((.+?)(?=\n    @|\n    def )',
+            _lp_gen_text, _re3.DOTALL
+        )
+        _status_fn_text = _status_fn_m.group(0) if _status_fn_m else ""
+        # フォールバック: 関数名周辺 800 文字で判断
+        if not _status_fn_text:
+            _pos = _lp_gen_text.find("def _lottery_status_from_dates(")
+            _status_fn_text = _lp_gen_text[_pos:_pos + 800] if _pos != -1 else ""
+        if "entry_start_at" in _status_fn_text or "entry_start" in _status_fn_text:
+            results.append({"level": "ok", "check": "lottery_status_checks_start",
+                            "message": "_lottery_status_from_dates が entry_start_at を参照して近日開始を判定"})
+        else:
+            results.append({"level": "warning", "check": "lottery_status_checks_start",
+                            "message": "_lottery_status_from_dates が entry_start_at を参照していない（近日開始判定なし）"})
+    else:
+        for _chk_name in ["ricoh_monochrome_single", "ricoh_hdf_single", "reference_only_items_flagged",
+                          "ricoh_not_reference_only", "lottery_4sections", "lottery_count_excludes_reference",
+                          "no_stale_lottery_phrases", "lottery_status_checks_start"]:
+            results.append({"level": "warning", "check": _chk_name,
+                            "message": "src/content/daily_lp_generator.py が見つからない"})
+
     return results
 
 

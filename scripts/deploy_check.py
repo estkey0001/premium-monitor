@@ -2838,6 +2838,93 @@ def check() -> list[dict]:
             results.append({"level": "warning", "check": _chk_n,
                             "message": ".github/workflows/daily_lp.yml が見つからない"})
 
+    # ── フォールバック表示 / Hero 0件防止 チェック群 ────────────────────────
+
+    # #249: 初心者カードが完全消滅しない（fetch_failed / stale でもカードが表示される）
+    _beg_has_any = any(x in html for x in [
+        'badge-easy', 'badge-watch', 'badge-monitoring', 'badge-fetch-failed-card',
+        'data-user-level="beginner_easy"', 'data-user-level="beginner_watch"',
+        'data-user-level="monitoring"',
+    ])
+    if _beg_has_any:
+        results.append({"level": "ok", "check": "beginner_cards_not_zero",
+                        "message": "初心者向けタブにカードが1件以上表示されている（フォールバック正常）"})
+    else:
+        results.append({"level": "error", "check": "beginner_cards_not_zero",
+                        "message": "初心者向けタブのカードが完全に0件（フォールバックが機能していない可能性）"})
+
+    # #250: Proカードが完全消滅しない
+    _pro_has_any = 'pro-candidate-card' in html or 'watch-candidate-card' in html
+    if _pro_has_any:
+        results.append({"level": "ok", "check": "pro_cards_not_zero",
+                        "message": "Pro向けタブにカードが1件以上表示されている"})
+    else:
+        results.append({"level": "warning", "check": "pro_cards_not_zero",
+                        "message": "Pro向けカードが0件（market_snapshot / price_history データを確認）"})
+
+    # #251: Hero の初心者向けボタンに「(0件)」が表示されていない
+    import re as _re251
+    _hero_zero = bool(_re251.search(r'hero[^<]{0,200}\(0件\)', html))
+    if _hero_zero:
+        results.append({"level": "warning", "check": "hero_not_zero_count",
+                        "message": "Hero の初心者向けボタンに「(0件)」が表示されている（フォールバックデータを確認）"})
+    else:
+        results.append({"level": "ok", "check": "hero_not_zero_count",
+                        "message": "Hero の初心者向けボタンに「0件」表示なし"})
+
+    # #252: stale データがある場合、注意バナーが表示されている
+    _has_stale_structure = 'data-stale-warn' in html or 'stale-warning-block' in html
+    _has_stale_message   = '要更新' in html or '古い参考' in html or '公式サイトで最新価格' in html
+    if _has_stale_structure:
+        results.append({"level": "ok", "check": "stale_warning_present",
+                        "message": "stale データ警告バナー（data-stale-warn）の構造が存在する"})
+    else:
+        results.append({"level": "warning", "check": "stale_warning_present",
+                        "message": "stale データ警告バナーが見つからない（stale-warning-block / data-stale-warn が未設定）"})
+
+    # #253: 参考データ表示時に注意文がある（手動確認データ注意・stale 注意のいずれか）
+    _has_data_caution = (
+        '手動確認データ' in html
+        or '古い参考データ' in html
+        or '購入前に必ず公式サイト' in html
+        or '最新価格を必ずご確認' in html
+        or '参考値として' in html
+    )
+    if _has_data_caution:
+        results.append({"level": "ok", "check": "fallback_data_caution",
+                        "message": "参考データ・古いデータの注意文が表示されている"})
+    else:
+        results.append({"level": "warning", "check": "fallback_data_caution",
+                        "message": "参考データ・古いデータの注意文が見つからない（ユーザーへの誤解防止に追記推奨）"})
+
+    # #254: repository.py に manual_today フォールバック優先ロジックが存在する
+    _repo_path = PROJECT_ROOT / "src" / "db" / "repository.py"
+    _repo_txt  = _repo_path.read_text(encoding="utf-8") if _repo_path.exists() else ""
+    _has_manual_fallback = (
+        ("manual_today" in _repo_txt and "_priority" in _repo_txt)
+        or ("manual_today" in _repo_txt and "ROW_NUMBER" in _repo_txt)
+        or ("manual_today" in _repo_txt and "CASE WHEN" in _repo_txt)
+    )
+    if _has_manual_fallback:
+        results.append({"level": "ok", "check": "repo_manual_fallback",
+                        "message": "repository.py に manual_today フォールバック優先ロジックが存在する"})
+    else:
+        results.append({"level": "warning", "check": "repo_manual_fallback",
+                        "message": "repository.py に manual_today フォールバックが見つからない（auto_scraped失敗時に手動データが使われない可能性）"})
+
+    # #255: beginner_deal_scanner.py に fetch_failed 保持ロジックが存在する
+    _scanner_path = PROJECT_ROOT / "src" / "market" / "beginner_deal_scanner.py"
+    _scanner_txt  = _scanner_path.read_text(encoding="utf-8") if _scanner_path.exists() else ""
+    _has_ff_keep  = "fetch_failed" in _scanner_txt and (
+        "既存" in _scanner_txt or "保持" in _scanner_txt or "continue" in _scanner_txt
+    )
+    if _has_ff_keep:
+        results.append({"level": "ok", "check": "scanner_fetch_failed_keep",
+                        "message": "beginner_deal_scanner.py に fetch_failed 時の deal 保持ロジックが存在する"})
+    else:
+        results.append({"level": "warning", "check": "scanner_fetch_failed_keep",
+                        "message": "beginner_deal_scanner.py の fetch_failed 保持ロジックが見つからない（自動取得失敗時に deal が消える可能性）"})
+
     return results
 
 

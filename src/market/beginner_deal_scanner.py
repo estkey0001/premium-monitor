@@ -40,6 +40,21 @@ class BeginnerDealScanner:
                 self.repo.upsert_beginner_deal(deal)
                 deals.append(deal)
             else:
+                # scan_product が None を返した場合: 全店舗 fetch_failed のみか確認
+                # fetch_failed / product_not_listed のみの場合は既存 deal を保持する
+                all_prices = self.repo.list_buyback_prices_by_product(product.id, limit=30)
+                valid_prices = [
+                    p for p in all_prices
+                    if p.get("data_source") not in ("fetch_failed", "product_not_listed")
+                    and (p.get("buyback_price") or 0) > 0
+                ]
+                if all_prices and not valid_prices:
+                    # 全店舗 fetch_failed → 既存 deal を維持（deactivate しない）
+                    logger.info(
+                        "[%s] 全店舗 fetch_failed のみ — 既存 deal を保持してスキップ",
+                        product.id,
+                    )
+                    continue
                 # データなし（buyback_list が空 or official_price なし）→ 非アクティブ化
                 self.repo.deactivate_beginner_deal(product.id)
 
@@ -114,10 +129,34 @@ class BeginnerDealScanner:
             )
 
         # fetch_failed (price=0) は価格計算から完全除外
-        valid_buybacks = [
+        # auto_scraped が有効（price>0）な店舗を優先取得
+        auto_valid = [
             b for b in buyback_list
-            if b.buyback_price > 0 and getattr(b, "data_source", "") != "fetch_failed"
+            if b.buyback_price > 0 and getattr(b, "data_source", "") == "auto_scraped"
         ]
+        # manual_today / manual_confirmed フォールバック候補
+        manual_valid = [
+            b for b in buyback_list
+            if b.buyback_price > 0
+            and getattr(b, "data_source", "") in ("manual_today", "manual_confirmed")
+        ]
+        # auto_scraped が全店舗取得失敗または存在しない場合は手動データを使用
+        if auto_valid:
+            # auto_scraped 優先。auto がない店舗のみ manual を補完
+            auto_shop_ids = {b.shop_id for b in auto_valid}
+            valid_buybacks = auto_valid + [
+                m for m in manual_valid if m.shop_id not in auto_shop_ids
+            ]
+        else:
+            # auto_scraped が使えない → manual_today / manual_confirmed で代替
+            valid_buybacks = manual_valid
+            if not valid_buybacks:
+                # それも無ければ fetch_failed / product_not_listed 以外の全有効データ
+                valid_buybacks = [
+                    b for b in buyback_list
+                    if b.buyback_price > 0
+                    and getattr(b, "data_source", "") not in ("fetch_failed", "product_not_listed")
+                ]
         if not valid_buybacks:
             return None
 

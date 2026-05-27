@@ -9,7 +9,7 @@
   ✅ [line_cta_off] LINE CTA非表示（正常）
   ✅ [telegram_cta_off] Telegram CTA非表示（正常）
   ✅ [analytics_empty] GA ID未設定 → GAスニペット非出力（正常）
-  ✅ [today_date] 今日の日付 2026-05-28 あり
+  ✅ [today_date] 今日の日付 2026-05-27 あり
   ✅ [price_exists] 価格表記あり
   ✅ [disclaimer] 免責事項あり
   ✅ [data_track] data-track属性あり
@@ -83,7 +83,7 @@
   ✅ [lottery_official_link] 抽選情報タブに公式リンク（data-track=lottery_click）がある
   ✅ [buyback_verify_guidance] 買取店比較に確認導線（要確認/公式で要確認）が存在する
   ✅ [kaitori_shouten_link] 買取商店の確認導線が存在する
-  ⚠️ [kaitori_itchome_link] 買取一丁目の確認導線が見つからない（buyback CSV の URL を確認）
+  ✅ [kaitori_itchome_link] 買取一丁目の確認導線が存在する
   ✅ [pro_domestic_price_table] Pro向け国内二次流通価格の確認導線が存在する
   ✅ [pro_overseas_price_link] Pro向け海外相場の確認導線が存在する
   ✅ [lottery_product_link] 抽選カードに製品/販売直リンクが含まれている
@@ -95,7 +95,7 @@
   ✅ [no_empty_href] 空href なし
   ✅ [shop_name_mobile_ichiban] 買取比較テーブルに「モバイル一番」の店舗名が表示されている
   ✅ [shop_name_kaitori_shouten] 買取比較テーブルに「買取商店」の店舗名が表示されている
-  ⚠️ [shop_name_kaitori_itchome] 「買取一丁目」の店舗名がLP上に見つからない（買取データ取得失敗の可能性）
+  ✅ [shop_name_kaitori_itchome] 買取比較テーブルに「買取一丁目」の店舗名が表示されている
   ✅ [shop_name_janpara] 買取比較テーブルに「じゃんぱら」の店舗名が表示されている
   ✅ [shop_name_iosys] 買取比較テーブルに「イオシス」の店舗名が表示されている
   ✅ [shop_name_col_no_label] shop-name-col に「買取価格を確認」ラベルなし（店舗名が正しく表示されている）
@@ -154,18 +154,18 @@
   ✅ [freshness_yoko_format] 古い価格に「要更新 / N日前」形式が使われている
   ✅ [deal_card_no_saishin_label] updated-row に旧「最終更新：」表記なし（価格確認：に統一済み）
   ✅ [stale_banner_date_mismatch] stale バナーに「本日の価格データ未更新」日付不一致メッセージが含まれている
-  ⚠️ [csv_today_observed_at] manual_buyback_prices.csv に本日(2026-05-28)の observed_at なし（手動更新が必要な可能性）
+  ⚠️ [csv_today_observed_at] manual_buyback_prices.csv に本日(2026-05-27)の observed_at なし（手動更新が必要な可能性）
   ✅ [iphone17_price_fetched] iPhone 17 Pro 系の買取価格が1件以上取得されている
   ✅ [mobile_ichiban_price] モバイル一番の買取価格（price > 0）が存在する
   ⚠️ [fetch_failed_display] CSV上に fetch_failed 行があるが、LP上に「取得失敗 / 要確認」表示が見つからない
   ✅ [no_price_zero_shown] LP上に¥0の価格表記なし（0価格行は非表示 or fetch_failed表示で正常）
   ✅ [auto_scraped_badge] 「自動取得」バッジ（badge-auto-scraped）が表示されている
   ✅ [fetch_failed_badge] 「取得失敗」バッジ（badge-fetch-failed）が表示されている
-  ✅ [fetch_failed_has_link] 取得失敗行なし（全取得成功）
+  ✅ [fetch_failed_has_link] 取得失敗行（shop-row-failed）に確認リンクがある（18行）
   ✅ [collection_stats_shown] ページ上部に取得統計（自動取得N件/取得失敗N件）が表示されている
   ✅ [hero_deals_dynamic] 参考DEALSが動的データから生成されている
   ✅ [fetch_failed_no_price_calc] fetch_failed 行の価格欄が「—」（価格計算に使われていない）
-  ✅ [game_console_shops] ゲーム機向け店舗が表示されている: ['ゲオ', 'イオシス', 'ソフマップ', '買取商店']
+  ✅ [game_console_shops] ゲーム機向け店舗が表示されている: ['ゲオ', 'イオシス', 'ブックオフ', 'ソフマップ', '買取商店']
   ✅ [switch2_game_shop_links] Switch 2 / ゲーム機向け確認リンク（ゲオ/ブックオフ/駿河屋/ソフマップ）が存在する
   ✅ [iphone17pro_in_beginner] iPhone 17 Pro 256GB が初心者向けセクションに表示されている
   ✅ [monitoring_badge_shown] 「現在は赤字」バッジが表示されている
@@ -173,7 +173,7 @@
   ✅ [fetch_failed_card_shown] 取得失敗カードが表示されている
   ✅ [beginner_tab_not_empty] 初心者向けタブに1件以上の商品が表示されている
   ✅ [best_price_matches_table] 利益ありカードなし（価格整合チェックスキップ）
-  ⚠️ [iphone17_in_iphone_section] iPhone 17 Pro がスマホ欄に見つからない（買取データ取得失敗の可能性）
+  ✅ [iphone17_in_iphone_section] iPhone 17 Pro がスマホ欄に表示
   ✅ [game_console_in_game_section] ゲーム機がゲーム機欄に表示
   ✅ [monitoring_inside_genre] 監視中セクションはジャンル内に正しく配置されている
   ✅ [status_subhead_exists] ジャンル内に状態別見出しが存在する
@@ -185,33 +185,33 @@
   ✅ [ipad_not_in_other] iPad は「その他」欄に混入していない
   ✅ [airpods_not_in_smartphone] AirPods はスマートフォン欄に混入していない
   ✅ [applewatch_in_wearable_section] Apple Watch がウェアラブル欄に表示
-  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-05-28T00:33:32+09:00）
+  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-05-28T03:49:26+09:00）
   ✅ [suspicious_price_format] suspicious_prices 形式OK（suspicious_price なし）
-  ✅ [fetch_failed_has_reason] fetch_failed 34件すべてに reason あり
+  ✅ [fetch_failed_has_reason] fetch_failed 35件すべてに reason あり
   ✅ [collector_report_html_exists] docs/collector_report.html 存在
   ✅ [collector_report_link_in_lp] LP内に collector_report.html へのリンクがある
-  ✅ [fetch_failed_report_link] 取得失敗30件 / suspicious0件 → 警告バーが表示されている
-  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 14件存在する: ['iphone17pro512', 'iphone17pro256', 'iphone17pm256', 'iphone17pm512']
-  ✅ [beginner_page_auto_scraped_exists] 自動取得 OK 21件 / total 55件
+  ✅ [fetch_failed_report_link] 取得失敗31件 / suspicious0件 → 警告バーが表示されている
+  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 16件存在する: ['iphone17pro256', 'iphone17pm512', 'iphone17pm256', 'iphone17pro512']
+  ✅ [beginner_page_auto_scraped_exists] 自動取得 OK 20件 / total 55件
   ✅ [shop_name_no_vertical_wrap] shop-name-col に word-break:keep-all が設定されている
-  ✅ [iphone17pro256_price_scraped] iPhone 17 Pro 256GB の価格取得成功: ['mobile_ichiban', 'kaitori_shouten', 'iosys', 'netoff']
+  ✅ [iphone17pro256_price_scraped] iPhone 17 Pro 256GB の価格取得成功: ['kaitori_shouten', 'kaitori_itchome', 'iosys', 'netoff']
   ✅ [fetch_failed_section_collapsible] 取得失敗セクションが <details> 折りたたみ対応されている
-  ✅ [fetch_failed_not_dominant] 取得失敗カード比率 7%（2/28）— 許容範囲内
-  ✅ [fetch_failed_has_reason_field] 全取得失敗エントリーに reason フィールドあり（34件）
+  ✅ [fetch_failed_not_dominant] 取得失敗カード比率 6%（2/34）— 許容範囲内
+  ✅ [fetch_failed_has_reason_field] 全取得失敗エントリーに reason フィールドあり（35件）
   ✅ [auto_scraped_link_verified] auto_scraped行のlink_verifiedはすべてtrue（URL推測なし）
   ✅ [iphone_min3_shops] iPhone主要4商品すべて成功店舗≥3
   ✅ [switch2_min2_shops] Switch2 成功店舗≥2（3店舗）
-  ✅ [ps5pro_min2_shops] PS5 Pro 成功店舗≥2（2店舗）
+  ⚠️ [ps5pro_min2_shops] PS5 Proの成功店舗数が2未満: 1店舗
   ✅ [no_unknown_failure_reason] すべての取得失敗に reason が設定されている（unknown なし）
-  ✅ [debug_files_saved] exports/debug/ に診断ファイル 60件あり
+  ✅ [debug_files_saved] exports/debug/ に診断ファイル 61件あり
   ✅ [low_confidence_not_in_lp] confidence=low 価格がLPに含まれていない（low=0件）
   ✅ [suspicious_price_not_in_lp] suspicious_price がLPに含まれていない（要疑い価格=0件）
-  ✅ [fetch_failed_collapse_ui_exists] fetch_failed店舗 0件（3件以下のため折りたたみUI不要）
+  ✅ [fetch_failed_collapse_ui_exists] fetch_failed店舗 18件で「さらに表示」UIが存在
   ✅ [monitoring_description_exists] monitoring カードに説明文が存在
   ✅ [fetch_failed_description_exists] fetch_failed セクションに説明文が存在
   ✅ [quality_gate_script_exists] scripts/check_collector_quality.py が存在
   ✅ [quality_gate_in_workflow] GitHub Actions に quality gate step がある
-  ✅ [collector_summary_in_report] latest.json summary OK: 21/55 (38%)
+  ✅ [collector_summary_in_report] latest.json summary OK: 20/55 (36%)
   ✅ [playwright_install_in_workflow] daily_lp.yml に playwright install --with-deps chromium が存在
   ✅ [no_collector_not_loaded] collector_not_loaded = 0（すべて not_supported または実装済み）
   ✅ [no_playwright_not_installed] playwright_not_installed = 0
@@ -276,7 +276,7 @@
   ✅ [no_sokuhoh_tab] #272 速報タブなし（削除済み）
   ✅ [alert_popup_container] #273 アラートポップアップコンテナあり（alert-popup-container）
   ✅ [alerts_csv_exists] #274 data/alerts.csv 存在
-  ⚠️ [lottery_no_forbidden_notes] #275 抽選 active section に禁止文言あり: ['抽選情報未確認', '公式商品ページで要確認']
+  ✅ [lottery_no_forbidden_notes] #275 抽選 active section 禁止文言なし
   ✅ [ricoh_date_consistency] #276 RICOH GR IV: debug text に5月29日あり → entry_end_at=2026-05-29 12:00 ✅
   ✅ [lottery_conflict_warning_in_lp] #277 status_conflict active 商品 ['RICOH GR IV Monochrome', 'RICOH GR IV HDF', 'RICOH GR IV'] → LP に conflict warning あり ✅
   ✅ [lottery_conflict_active_preserved] #278 status_conflict かつ entry_end_at が未来 → active card として保持: ['RICOH GR IV Monochrome', 'RICOH GR IV HDF', 'RICOH GR IV']
@@ -298,7 +298,7 @@
   ✅ [sedori_pro_routes] #294 sedori_routes_report に pro_routes フィールドがある
   ✅ [genre_menu_exists] #295 ジャンルメニュー（genre-toggle-btn または genre-dropdown）が存在する
 
-  Errors: 0 | Warnings: 10 | OK: 285
+  Errors: 0 | Warnings: 7 | OK: 288
 
   ✅ Deploy check PASSED
 ============================================================

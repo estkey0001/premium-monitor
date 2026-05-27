@@ -1254,30 +1254,54 @@ class Repository:
 
     def list_buyback_prices_by_product(self, product_id: str, limit: int = 10) -> list[dict]:
         """商品の全買取店価格を降順で返す（複数店舗比較用、1店舗1エントリに重複排除）。
-        優先順位: 価格あり行 > fetch_failed行、同順位内は価格降順。
+
+        優先順位（shop_idごとに最優先の1行を選択）:
+          1. auto_scraped かつ buyback_price > 0
+          2. manual_today  かつ buyback_price > 0
+          3. manual_confirmed かつ buyback_price > 0
+          4. その他データソース かつ buyback_price > 0
+          5. 上記どれにも当てはまらない行（fetch_failed 等）
+
+        同じ優先度内では observed_at が新しい行を採用する。
         比較テーブル表示用なので fetch_failed も返す（確認リンク表示のため）。
         """
         try:
             rows = self.db.connection.execute(
-                """SELECT bp.shop_id, bp.shop_name, bp.buyback_price, bp.condition,
-                          bp.buyback_url, bp.observed_at, bp.data_source, bp.link_verified,
-                          COALESCE(bp.confidence, 'high') AS confidence
-                   FROM buyback_prices bp
-                   INNER JOIN (
-                       SELECT shop_id, MAX(observed_at) AS max_at
+                """SELECT shop_id, shop_name, buyback_price, condition,
+                          buyback_url, observed_at, data_source, link_verified,
+                          COALESCE(confidence, 'high') AS confidence
+                   FROM (
+                       SELECT *,
+                           -- data_source × buyback_price の優先度（小さいほど優先）
+                           CASE
+                               WHEN data_source = 'auto_scraped'    AND buyback_price > 0 THEN 1
+                               WHEN data_source = 'manual_today'    AND buyback_price > 0 THEN 2
+                               WHEN data_source = 'manual_confirmed' AND buyback_price > 0 THEN 3
+                               WHEN buyback_price > 0                                      THEN 4
+                               ELSE 5
+                           END AS _priority,
+                           ROW_NUMBER() OVER (
+                               PARTITION BY shop_id
+                               ORDER BY
+                                   CASE
+                                       WHEN data_source = 'auto_scraped'    AND buyback_price > 0 THEN 1
+                                       WHEN data_source = 'manual_today'    AND buyback_price > 0 THEN 2
+                                       WHEN data_source = 'manual_confirmed' AND buyback_price > 0 THEN 3
+                                       WHEN buyback_price > 0                                      THEN 4
+                                       ELSE 5
+                                   END ASC,
+                                   observed_at DESC
+                           ) AS _rn
                        FROM buyback_prices
                        WHERE product_id = ? AND is_active = 1
-                       GROUP BY shop_id
-                   ) best ON bp.shop_id = best.shop_id
-                          AND bp.observed_at = best.max_at
-                          AND bp.product_id = ?
-                          AND bp.is_active = 1
-                   GROUP BY bp.shop_id
+                   )
+                   WHERE _rn = 1
                    ORDER BY
-                     CASE WHEN bp.data_source = 'fetch_failed' THEN 1 ELSE 0 END ASC,
-                     bp.buyback_price DESC
+                       -- fetch_failed 等（_priority=5）は末尾に
+                       CASE WHEN _priority = 5 THEN 1 ELSE 0 END ASC,
+                       buyback_price DESC
                    LIMIT ?""",
-                (product_id, product_id, limit)
+                (product_id, limit)
             ).fetchall()
         except Exception:
             return []
@@ -1285,6 +1309,9 @@ class Repository:
         for row in rows:
             d = dict(row)
             d["link_verified"] = bool(d.get("link_verified", 0))
+            # 内部管理用カラムは除去して返す
+            d.pop("_priority", None)
+            d.pop("_rn", None)
             result.append(d)
         return result
 

@@ -154,8 +154,10 @@ def _generate_lottery_alerts(now: datetime) -> list[dict]:
 def _load_buyback_alerts_from_db() -> list[dict]:
     """DBから買取急騰/急落アラートを読み込む。"""
     try:
+        from src.db.database import Database
         from src.db.repository import Repository
-        repo = Repository()
+        db = Database()
+        repo = Repository(db)
         db_alerts = repo.list_buyback_alerts(limit=20)
         return [dict(a) for a in db_alerts if a.get("alert_type") in ("buyback_surge", "buyback_drop")]
     except Exception as e:

@@ -56,8 +56,10 @@ def main() -> int:
     print(f"[generate_ranking_report] 開始: {now.strftime('%Y-%m-%d %H:%M')} JST")
 
     try:
+        from src.db.database import Database
         from src.db.repository import Repository
-        repo = Repository()
+        db = Database()
+        repo = Repository(db)
         all_deals = repo.list_beginner_deals(min_profit=0, limit=50)
     except Exception as e:
         print(f"[WARN] DB 読み込み失敗: {e}", file=sys.stderr)
@@ -94,7 +96,21 @@ def main() -> int:
             "net_profit_rate": round(float(getattr(d, "net_profit_rate", 0) or 0), 4),
         }
 
-    report = {
+    # reason_if_empty: データがない場合の理由を生成
+    if len(all_deals) == 0:
+        reason_if_empty = (
+            "run-buyback-premium-check 未実行 or DBに beginner_deals データなし。"
+            "import-buyback-csv / import-market-csv が先行して完了していることを確認してください。"
+        )
+    elif not beginner_top and not pro_top:
+        reason_if_empty = (
+            f"全{len(all_deals)}件が利益なし or カテゴリ/ユーザーレベル条件に該当なし "
+            f"(iphone/game_console: {len([d for d in all_deals if getattr(d,'category','') in ('iphone','game_console')])}件)"
+        )
+    else:
+        reason_if_empty = None
+
+    report: dict = {
         "generated_at": now.strftime("%Y-%m-%d %H:%M JST"),
         "beginner_top10": [_deal_to_dict(d) for d in beginner_top],
         "pro_top10": [_deal_to_dict(d) for d in pro_top],
@@ -107,6 +123,8 @@ def main() -> int:
         },
         "stale_data_count": 0,
     }
+    if reason_if_empty:
+        report["reason_if_empty"] = reason_if_empty
 
     REPORT_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -115,31 +133,37 @@ def main() -> int:
     with open(json_path, "w", encoding="utf-8") as f:
         json.dump(report, f, ensure_ascii=False, indent=2)
     print(f"[INFO] ranking_report/latest.json 保存完了 (beginner={len(beginner_top)}, pro={len(pro_top)})")
+    if reason_if_empty:
+        print(f"[INFO] reason_if_empty: {reason_if_empty}")
 
     # MD レポート保存
     lines = [
         f"# ランキングレポート — {now.strftime('%Y-%m-%d %H:%M JST')}",
         "",
         f"- 総案件数: {len(all_deals)} / 利益あり: {report['confidence_summary']['profitable']}",
+    ]
+    if reason_if_empty:
+        lines.append(f"- ⚠️ reason_if_empty: {reason_if_empty}")
+    lines.extend([
         "",
         "## 👤 初心者ランキング Top10",
         "",
-    ]
-    for i, d in enumerate(beginner_top, 1):
+    ])
+    for i, d in enumerate(report["beginner_top10"], 1):
         lines.append(
             f"{i}. **{d['product_name']}** — 実質{_fmt_profit(d['net_profit_jpy'])} "
             f"({d['best_buyback_shop']})"
         )
-    if not beginner_top:
+    if not report["beginner_top10"]:
         lines.append("データなし")
 
     lines.extend(["", "## 🎯 Pro ランキング Top10", ""])
-    for i, d in enumerate(pro_top, 1):
+    for i, d in enumerate(report["pro_top10"], 1):
         lines.append(
             f"{i}. **{d['product_name']}** — 実質{_fmt_profit(d['net_profit_jpy'])} "
             f"/ 利益率{d['net_profit_rate']*100:.1f}%"
         )
-    if not pro_top:
+    if not report["pro_top10"]:
         lines.append("データなし")
 
     md_path = REPORT_DIR / "latest.md"

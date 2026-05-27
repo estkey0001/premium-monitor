@@ -2465,6 +2465,37 @@ def check() -> list[dict]:
         results.append({"level": "warning", "check": "mobile_ichiban_512_not_listed",
                         "message": "latest.json が見つからない"})
 
+    # ── #224: badge-not-listed が green 系色を使っていない ─────────────────────
+    if _lp_gen_path.exists():
+        import re as _re2
+        # .badge-not-listed ブロックを抽出して green 系色 (#0A7C4F, #166534, rgba(0,200 など) を検出
+        _badge_block = _re2.search(
+            r'\.badge-not-listed\s*\{\{(.*?)\}\}', _lp_text, _re2.DOTALL
+        )
+        _fresh_block = _re2.search(
+            r'\.freshness-not-listed\s*\{\{(.*?)\}\}', _lp_text, _re2.DOTALL
+        )
+        _GREEN_PATTERNS = [r'#0A7C4F', r'#166534', r'#15803D', r'rgba\(0,200', r'rgba\(21,128']
+        def _has_green(block_match) -> bool:
+            if not block_match:
+                return False
+            content = block_match.group(1)
+            return any(_re2.search(p, content, _re2.IGNORECASE) for p in _GREEN_PATTERNS)
+        _badge_green = _has_green(_badge_block)
+        _fresh_green = _has_green(_fresh_block)
+        if not _badge_green and not _fresh_green:
+            results.append({"level": "ok", "check": "not_listed_badge_not_green",
+                            "message": "badge-not-listed / freshness-not-listed が green 系色を使っていない（自動取得成功と区別）"})
+        else:
+            which = []
+            if _badge_green:  which.append("badge-not-listed")
+            if _fresh_green:  which.append("freshness-not-listed")
+            results.append({"level": "warning", "check": "not_listed_badge_not_green",
+                            "message": f"{', '.join(which)} が green 系色を使用 — 自動取得成功（緑）と紛らわしい"})
+    else:
+        results.append({"level": "warning", "check": "not_listed_badge_not_green",
+                        "message": "src/content/daily_lp_generator.py が見つからない"})
+
     return results
 
 

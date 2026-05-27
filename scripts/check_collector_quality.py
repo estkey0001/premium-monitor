@@ -290,8 +290,16 @@ def build_summary_md(result: dict) -> str:
             lines.append(f"| `{item['reason']}` | {item['count']} |")
         lines.append("")
 
-    # 優先修正TOP5
-    shop_p5 = result["shop_p5"]
+    # 優先修正TOP5（timeout が失敗理由TOP5 にある場合は mobile_ichiban を上位に）
+    shop_p5 = list(result.get("shop_p5", []))
+    fail_rank = result.get("fail_rank", [])
+    _top5_reasons = [item["reason"] for item in fail_rank[:5]]
+    _timeout_in_top5 = "timeout" in _top5_reasons
+    if _timeout_in_top5 and "mobile_ichiban" not in shop_p5[:1]:
+        # mobile_ichiban が優先修正対象に含まれていれば先頭に移動、なければ追加
+        if "mobile_ichiban" in shop_p5:
+            shop_p5.remove("mobile_ichiban")
+        shop_p5.insert(0, "mobile_ichiban ⚠️ timeout — 要優先確認")
     if shop_p5:
         lines.append("### 優先修正対象 TOP5（成功率0%）")
         lines.append("")

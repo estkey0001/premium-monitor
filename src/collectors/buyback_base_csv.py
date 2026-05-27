@@ -30,6 +30,9 @@ class BaseCsvBuybackCollector:
         self.last_http_status: int = 0                   # 最後のHTTPステータスコード（debug用）
         self.last_html_length: int = 0                   # 取得HTMLの文字数（debug用）
         self.last_fetch_url: str = ""                    # 実際にfetchしたURL（debug用）
+        self.last_elapsed_seconds: float = 0.0           # fetch所要時間（debug用）
+        self.last_text_length: int = 0                   # inner_text の文字数（Playwright系）
+        self.last_error_type: str = ""                   # 例外クラス名（debug用）
         self.session = requests.Session()
         self.session.headers.update({
             "User-Agent": "Mozilla/5.0 (compatible; PremiumMonitor/1.0; +https://github.com/estkey0001/premium-monitor)",

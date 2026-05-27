@@ -1,12 +1,164 @@
 {
-  "generated_at": "2026-05-27 23:01 JST",
-  "beginner_top10": [],
-  "pro_top10": [],
+  "generated_at": "2026-05-27 23:15 JST",
+  "beginner_top10": [
+    {
+      "product_name": "PlayStation 5 Pro",
+      "category": "game_console",
+      "user_level": "beginner_easy",
+      "official_price_jpy": 119980,
+      "best_buyback_price": 190000,
+      "best_buyback_shop": "ゲオ",
+      "net_profit_jpy": 68220,
+      "net_profit_rate": 0.5686
+    },
+    {
+      "product_name": "Nintendo Switch 2 マリオカートセット",
+      "category": "game_console",
+      "user_level": "beginner_easy",
+      "official_price_jpy": 59980,
+      "best_buyback_price": 67000,
+      "best_buyback_shop": "買取商店",
+      "net_profit_jpy": 5220,
+      "net_profit_rate": 0.087
+    },
+    {
+      "product_name": "Nintendo Switch 2",
+      "category": "game_console",
+      "user_level": "beginner_watch",
+      "official_price_jpy": 49980,
+      "best_buyback_price": 55500,
+      "best_buyback_shop": "じゃんぱら",
+      "net_profit_jpy": 3720,
+      "net_profit_rate": 0.0744
+    },
+    {
+      "product_name": "iPhone 17 Pro Max 256GB SIMフリー",
+      "category": "iphone",
+      "user_level": "beginner_watch",
+      "official_price_jpy": 219800,
+      "best_buyback_price": 225000,
+      "best_buyback_shop": "じゃんぱら",
+      "net_profit_jpy": 3400,
+      "net_profit_rate": 0.0155
+    },
+    {
+      "product_name": "iPhone 17 Pro Max 512GB SIMフリー",
+      "category": "iphone",
+      "user_level": "beginner_watch",
+      "official_price_jpy": 254800,
+      "best_buyback_price": 260000,
+      "best_buyback_shop": "じゃんぱら",
+      "net_profit_jpy": 3400,
+      "net_profit_rate": 0.0133
+    },
+    {
+      "product_name": "iPhone 17 Pro 256GB SIMフリー",
+      "category": "iphone",
+      "user_level": "beginner_watch",
+      "official_price_jpy": 179800,
+      "best_buyback_price": 184000,
+      "best_buyback_shop": "じゃんぱら",
+      "net_profit_jpy": 2400,
+      "net_profit_rate": 0.0133
+    },
+    {
+      "product_name": "iPhone 17 Pro 512GB SIMフリー",
+      "category": "iphone",
+      "user_level": "beginner_watch",
+      "official_price_jpy": 214800,
+      "best_buyback_price": 217000,
+      "best_buyback_shop": "じゃんぱら",
+      "net_profit_jpy": 400,
+      "net_profit_rate": 0.0019
+    }
+  ],
+  "pro_top10": [
+    {
+      "product_name": "PlayStation 5 Pro",
+      "category": "game_console",
+      "user_level": "beginner_easy",
+      "official_price_jpy": 119980,
+      "best_buyback_price": 190000,
+      "best_buyback_shop": "ゲオ",
+      "net_profit_jpy": 68220,
+      "net_profit_rate": 0.5686
+    },
+    {
+      "product_name": "FUJIFILM X100VI",
+      "category": "camera",
+      "user_level": "beginner_easy",
+      "official_price_jpy": 269500,
+      "best_buyback_price": 415000,
+      "best_buyback_shop": "マップカメラ",
+      "net_profit_jpy": 143700,
+      "net_profit_rate": 0.5332
+    },
+    {
+      "product_name": "Nintendo Switch 2 マリオカートセット",
+      "category": "game_console",
+      "user_level": "beginner_easy",
+      "official_price_jpy": 59980,
+      "best_buyback_price": 67000,
+      "best_buyback_shop": "買取商店",
+      "net_profit_jpy": 5220,
+      "net_profit_rate": 0.087
+    },
+    {
+      "product_name": "Nintendo Switch 2",
+      "category": "game_console",
+      "user_level": "beginner_watch",
+      "official_price_jpy": 49980,
+      "best_buyback_price": 55500,
+      "best_buyback_shop": "じゃんぱら",
+      "net_profit_jpy": 3720,
+      "net_profit_rate": 0.0744
+    },
+    {
+      "product_name": "iPhone 17 Pro Max 256GB SIMフリー",
+      "category": "iphone",
+      "user_level": "beginner_watch",
+      "official_price_jpy": 219800,
+      "best_buyback_price": 225000,
+      "best_buyback_shop": "じゃんぱら",
+      "net_profit_jpy": 3400,
+      "net_profit_rate": 0.0155
+    },
+    {
+      "product_name": "iPhone 17 Pro Max 512GB SIMフリー",
+      "category": "iphone",
+      "user_level": "beginner_watch",
+      "official_price_jpy": 254800,
+      "best_buyback_price": 260000,
+      "best_buyback_shop": "じゃんぱら",
+      "net_profit_jpy": 3400,
+      "net_profit_rate": 0.0133
+    },
+    {
+      "product_name": "iPhone 17 Pro 256GB SIMフリー",
+      "category": "iphone",
+      "user_level": "beginner_watch",
+      "official_price_jpy": 179800,
+      "best_buyback_price": 184000,
+      "best_buyback_shop": "じゃんぱら",
+      "net_profit_jpy": 2400,
+      "net_profit_rate": 0.0133
+    },
+    {
+      "product_name": "iPhone 17 Pro 512GB SIMフリー",
+      "category": "iphone",
+      "user_level": "beginner_watch",
+      "official_price_jpy": 214800,
+      "best_buyback_price": 217000,
+      "best_buyback_shop": "じゃんぱら",
+      "net_profit_jpy": 400,
+      "net_profit_rate": 0.0019
+    }
+  ],
   "excluded_items": 0,
-  "total_deals": 0,
+  "total_deals": 8,
   "confidence_summary": {
-    "total": 0,
-    "profitable": 0,
+    "total": 8,
+    "profitable": 8,
     "negative": 0
   },
   "stale_data_count": 0

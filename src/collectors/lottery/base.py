@@ -163,13 +163,23 @@ class BaseLotteryCollector:
     def _extract_all_dates(self, text: str) -> list[str]:
         """テキストから日付文字列リストを返す（重複除去・順序保持）。
 
+        前処理として「正午」→「 12:00」、「深夜」→「 00:00」に変換する。
+        また年なし「M月D日」パターンも対応し、直前の YYYY年 から年を推定する。
+
         NOTE: 同一テキスト位置を複数のパターンがマッチする場合（例: 時刻付きパターンと
         日付のみパターン）、先に登録された範囲（より具体的なパターン）を優先して
         後続パターンの重複マッチを除外する。
         """
+        # ---------- 前処理 ----------
+        # 「正午」→「 12:00」（「午前0時」等との混同を避けるため先に処理）
+        text = re.sub(r'正午', ' 12:00', text)
+        # 「深夜」「深夜0時」→「 00:00」
+        text = re.sub(r'深夜(?:0時|零時)?(?=[^0-9]|$)', ' 00:00', text)
+
         # (start, end, date_str) のリスト
         found: list[tuple[int, int, str]] = []
 
+        # ---------- 年付きパターン ----------
         for pat in _DATE_PATTERNS:
             for m in pat.finditer(text):
                 s = _match_to_str(m)
@@ -181,6 +191,55 @@ class BaseLotteryCollector:
                 )
                 if not overlaps:
                     found.append((m_start, m_end, s))
+
+        # ---------- 年なし「M月D日」パターン（年は直前の YYYY年 から推定）----------
+        # テキスト中の YYYY年 の位置を収集
+        _year_positions: list[tuple[int, int]] = [
+            (m.start(), int(m.group(1)))
+            for m in re.finditer(r'(\d{4})年', text)
+        ]
+        _default_year = datetime.now(tz=JST).year
+
+        # 時刻あり: M月D日（曜）HH:MM
+        _noyr_with_time = re.compile(
+            r"(\d{1,2})月\s*(\d{1,2})日\s*(?:（[日月火水木金土]）)?\s*(\d{1,2}):(\d{2})"
+        )
+        # 時刻なし: M月D日
+        _noyr_date_only = re.compile(r"(\d{1,2})月\s*(\d{1,2})日")
+
+        for pat in (_noyr_with_time, _noyr_date_only):
+            for m in pat.finditer(text):
+                m_start, m_end = m.start(), m.end()
+                # 既存マッチと重複していればスキップ
+                overlaps = any(
+                    not (m_end <= ex_start or m_start >= ex_end)
+                    for ex_start, ex_end, _ in found
+                )
+                if overlaps:
+                    continue
+
+                # 直前の YYYY年 から年を推定（見つからなければ当年）
+                yr = _default_year
+                for ypos, yval in reversed(_year_positions):
+                    if ypos <= m_start:
+                        yr = yval
+                        break
+
+                groups = m.groups()
+                month, day = int(groups[0]), int(groups[1])
+                if len(groups) >= 4:
+                    hour, minute = int(groups[2]), int(groups[3])
+                else:
+                    hour, minute = 0, 0
+
+                # 有効な日付かチェック
+                try:
+                    datetime(yr, month, day, hour, minute)
+                except ValueError:
+                    continue
+
+                s = f"{yr:04d}-{month:02d}-{day:02d} {hour:02d}:{minute:02d}"
+                found.append((m_start, m_end, s))
 
         # 出現位置順にソート
         found.sort(key=lambda x: x[0])

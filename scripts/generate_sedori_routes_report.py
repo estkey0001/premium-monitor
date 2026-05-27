@@ -33,8 +33,10 @@ def main() -> int:
     print(f"[generate_sedori_routes_report] 開始: {now.strftime('%Y-%m-%d %H:%M')} JST")
 
     try:
+        from src.db.database import Database
         from src.db.repository import Repository
-        repo = Repository()
+        db = Database()
+        repo = Repository(db)
         all_routes = repo.list_sedori_routes(min_net_profit=-9999999, limit=100)
     except Exception as e:
         print(f"[WARN] DB 読み込み失敗: {e}", file=sys.stderr)
@@ -42,16 +44,58 @@ def main() -> int:
 
     total = len(all_routes)
 
+    # 除外フラグ付きルートをカウント・除外
+    _EXCLUDE_FLAGS = frozenset({
+        "suspicious_price", "product_not_listed", "fetch_failed",
+        "low_confidence", "price_not_found",
+    })
+    confidence_excluded = [
+        r for r in all_routes
+        if any(getattr(r, f, False) for f in _EXCLUDE_FLAGS)
+    ]
+    excluded_by_confidence = len(confidence_excluded)
+    valid_routes = [r for r in all_routes if r not in confidence_excluded]
+
+    # 価格なし（buy_price or sell_price が 0 以下 or None）を除外
+    price_missing = [
+        r for r in valid_routes
+        if not (getattr(r, "buy_price", 0) or 0) or not (getattr(r, "sell_price", 0) or 0)
+    ]
+    excluded_by_missing_price = len(price_missing)
+    valid_routes = [r for r in valid_routes if r not in price_missing]
+
     # 新品・未使用のみフィルタ（中古・状態不明は除外）
     unused_routes = [
-        r for r in all_routes
+        r for r in valid_routes
         if getattr(r, "buy_condition", "") in _UNUSED_CONDITIONS
     ]
-    excluded_by_condition = total - len(unused_routes)
+    excluded_by_condition = len(valid_routes) - len(unused_routes)
 
     # 利益あり/赤字で分類
     profitable = [r for r in unused_routes if getattr(r, "net_profit", 0) > 0]
     negative = [r for r in unused_routes if getattr(r, "net_profit", 0) <= 0]
+
+    # reason_if_empty: データがない場合の理由を生成
+    if len(profitable) == 0:
+        if total == 0:
+            reason_if_empty = "calculate-sedori-routes 未実行 or DBにルートデータなし"
+        elif excluded_by_confidence > 0 and len(unused_routes) == 0:
+            reason_if_empty = (
+                f"全{total}件が低信頼度/価格未取得のため除外 "
+                f"(confidence={excluded_by_confidence}, missing_price={excluded_by_missing_price})"
+            )
+        elif excluded_by_condition == len(valid_routes) and len(valid_routes) > 0:
+            reason_if_empty = (
+                f"全{len(valid_routes)}件が中古/状態不明のため除外 "
+                f"(新品・未使用条件: {sorted(_UNUSED_CONDITIONS)})"
+            )
+        else:
+            reason_if_empty = (
+                f"全{len(unused_routes)}件が赤字ルートのみ "
+                f"(total={total}, excl_cond={excluded_by_condition}, excl_conf={excluded_by_confidence})"
+            )
+    else:
+        reason_if_empty = None
 
     def _route_to_dict(r) -> dict:
         """SedoriRoute オブジェクトを辞書に変換する。"""
@@ -67,16 +111,20 @@ def main() -> int:
             "needs_review": getattr(r, "needs_review", False),
         }
 
-    report = {
+    report: dict = {
         "generated_at": now.strftime("%Y-%m-%d %H:%M JST"),
         "routes_total": total,
         "routes_unused_only": len(unused_routes),
         "profitable_routes": len(profitable),
         "negative_routes": len(negative),
         "excluded_by_condition": excluded_by_condition,
+        "excluded_by_confidence": excluded_by_confidence,
+        "excluded_by_missing_price": excluded_by_missing_price,
         "top_profitable": [_route_to_dict(r) for r in
                            sorted(profitable, key=lambda r: getattr(r, "net_profit", 0), reverse=True)[:10]],
     }
+    if reason_if_empty:
+        report["reason_if_empty"] = reason_if_empty
 
     REPORT_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -85,17 +133,22 @@ def main() -> int:
     with open(json_path, "w", encoding="utf-8") as f:
         json.dump(report, f, ensure_ascii=False, indent=2)
     print(f"[INFO] sedori_routes_report/latest.json 保存完了 (profitable={len(profitable)})")
+    if reason_if_empty:
+        print(f"[INFO] reason_if_empty: {reason_if_empty}")
 
     # MD レポート保存
     lines = [
         f"# せどりルートレポート — {now.strftime('%Y-%m-%d %H:%M JST')}",
         "",
         f"- 全ルート: {total} / 新品・未使用のみ: {len(unused_routes)} (除外: {excluded_by_condition})",
+        f"- 低信頼度除外: {excluded_by_confidence} / 価格未取得除外: {excluded_by_missing_price}",
         f"- 利益あり: {len(profitable)} / 赤字: {len(negative)}",
         "",
         "## Top利益ルート",
         "",
     ]
+    if reason_if_empty:
+        lines.insert(3, f"- ⚠️ reason_if_empty: {reason_if_empty}")
     for i, r in enumerate(report["top_profitable"], 1):
         lines.append(
             f"{i}. **{r['product_name']}** {r['buy_shop_name']} → {r['sell_shop_name']}: "

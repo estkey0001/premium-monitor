@@ -375,6 +375,22 @@ def save_reports(result: dict) -> None:
     if not result["issues_failure"] and not result["issues_warning"]:
         md_lines += ["## ✅ 問題なし", "", "すべての品質チェックをパスしました。", ""]
 
+    # RICOH 日付判定の根拠テキストを追記
+    _ricoh_debug = PROJECT_ROOT / "exports" / "debug" / "ricoh_lottery_latest.txt"
+    if _ricoh_debug.exists():
+        try:
+            _debug_text = _ricoh_debug.read_text(encoding="utf-8").strip()
+            md_lines += [
+                "## 🔍 RICOH 日付判定根拠テキスト",
+                "",
+                "```",
+                _debug_text[:600],
+                "```",
+                "",
+            ]
+        except Exception:
+            pass
+
     REPORT_MD.write_text("\n".join(md_lines), encoding="utf-8")
 
 

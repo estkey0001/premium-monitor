@@ -1,12 +1,12 @@
 # Collector Quality Report
 
-生成日時: 2026-05-28 00:33:32 UTC+09:00
+生成日時: 2026-05-28 03:49:26 UTC+09:00
 
 ## サマリ
 
 | 合計 | OK | 失敗 | スキップ |
 |------|-----|------|----------|
-| 55 | 21 | 30 | 4 |
+| 55 | 20 | 31 | 4 |
 
 ## 店舗別 OK/失敗/スキップ
 
@@ -21,7 +21,7 @@
 | iosys | 6 | 0 | 0 |
 | janpara | 0 | 6 | 0 |
 | kaitori_itchome | 4 | 0 | 0 |
-| kaitori_shouten | 6 | 0 | 0 |
+| kaitori_shouten | 5 | 1 | 0 |
 | mobile_ichiban | 0 | 5 | 0 |
 | netoff | 4 | 0 | 0 |
 | pasoko | 0 | 2 | 0 |
@@ -37,7 +37,7 @@
 | iphone17pm512 | 4 | 4 | 0 |
 | iphone17pro256 | 4 | 4 | 0 |
 | iphone17pro512 | 4 | 4 | 0 |
-| ps5_pro | 2 | 8 | 2 |
+| ps5_pro | 1 | 9 | 2 |
 | switch2 | 3 | 6 | 2 |
 
 ## 商品別 成功店舗数（目標達成状況）
@@ -48,7 +48,7 @@
 | iphone17pm512 | 4 | 3 | ✅ | ¥217,062 | ¥204,750 | ¥231,500 | — |
 | iphone17pro256 | 4 | 3 | ✅ | ¥169,900 | ¥157,000 | ¥181,500 | — |
 | iphone17pro512 | 4 | 3 | ✅ | ¥201,762 | ¥187,000 | ¥215,000 | — |
-| ps5_pro | 2 | 2 | ✅ | ¥117,250 | ¥100,000 | ¥134,500 | — |
+| ps5_pro | 1 | 2 | ❌ | ¥100,000 | ¥100,000 | ¥100,000 | — |
 | switch2 | 3 | 2 | ✅ | ¥48,600 | ¥46,000 | ¥50,000 | — |
 
 | 商品 | 成功店舗 |
@@ -57,7 +57,7 @@
 | iphone17pm512 | kaitori_shouten, kaitori_itchome, iosys, netoff |
 | iphone17pro256 | kaitori_shouten, kaitori_itchome, iosys, netoff |
 | iphone17pro512 | kaitori_shouten, kaitori_itchome, iosys, netoff |
-| ps5_pro | iosys, kaitori_shouten |
+| ps5_pro | iosys |
 | switch2 | geo, iosys, kaitori_shouten |
 
 ## 店舗別 詳細統計
@@ -73,7 +73,7 @@
 | iosys | 100% | 6 | 0 | — | — | — |
 | janpara | 0% | 0 | 6 | 6/6 | — | rate_limited_429 |
 | kaitori_itchome | 100% | 4 | 0 | — | — | — |
-| kaitori_shouten | 100% | 6 | 0 | — | — | — |
+| kaitori_shouten | 83% | 5 | 1 | — | — | http_503 |
 | mobile_ichiban | 0% | 0 | 5 | — | — | product_not_listed |
 | netoff | 100% | 4 | 0 | — | — | — |
 | pasoko | 0% | 0 | 2 | — | — | product_not_listed |
@@ -83,7 +83,8 @@
 
 ## 優先修正対象
 
-**商品別**: すべての商品が目標店舗数を達成しています
+### 商品別（目標店舗数未達）
+- ps5_pro: 成功1店舗 (目標2) — あと1店舗必要
 
 ### 店舗別 TOP5（成功率0%）
 1. 2ndstreet (price_not_found 4件)
@@ -103,8 +104,9 @@
 | http_404 | 4 |
 | not_supported | 4 |
 | service_unavailable | 2 |
+| http_503 | 1 |
 
-## 取得失敗一覧 (34件)
+## 取得失敗一覧 (35件)
 
 | 商品 | 店舗 | ステータス | 理由 |
 |------|------|-----------|------|
@@ -133,6 +135,7 @@
 | switch2 | surugaya | FAILED | site_blocked |
 | switch2 | tsutaya | SKIP | not_supported |
 | ps5_pro | geo | FAILED | product_not_listed |
+| ps5_pro | kaitori_shouten | FAILED | http_503 |
 | ps5_pro | mobile_ichiban | FAILED | product_not_listed |
 | ps5_pro | janpara | FAILED | rate_limited_429 |
 | ps5_pro | hardoff | FAILED | http_404 |

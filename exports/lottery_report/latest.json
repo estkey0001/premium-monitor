@@ -1,14 +1,45 @@
 {
-  "checked_at": "2026-05-27 23:16 JST",
-  "active_count": 0,
+  "checked_at": "2026-05-27 23:25 JST",
+  "active_count": 3,
   "upcoming_count": 0,
-  "closed_count": 6,
+  "closed_count": 3,
   "reference_count": 8,
-  "lp_badge_count": 0,
+  "lp_badge_count": 3,
   "duplicate_count": 0,
   "stale_phrase_count": 0,
   "missing_form_url_count": 0,
-  "active_items": [],
+  "active_items": [
+    {
+      "product_name": "RICOH GR IV Monochrome",
+      "brand": "RICOH",
+      "entry_start_at": "2026-05-27 12:00",
+      "entry_end_at": "2026-05-29 12:00",
+      "official_price": "¥283,800（税込）",
+      "has_form_url": true,
+      "has_url": true,
+      "product_code": "S0001580"
+    },
+    {
+      "product_name": "RICOH GR IV HDF",
+      "brand": "RICOH",
+      "entry_start_at": "2026-05-27 12:00",
+      "entry_end_at": "2026-05-29 12:00",
+      "official_price": "¥187,020（税込）",
+      "has_form_url": true,
+      "has_url": true,
+      "product_code": "S0001566"
+    },
+    {
+      "product_name": "RICOH GR IV",
+      "brand": "RICOH",
+      "entry_start_at": "2026-05-27 12:00",
+      "entry_end_at": "2026-05-29 12:00",
+      "official_price": "¥194,800（税込）",
+      "has_form_url": true,
+      "has_url": true,
+      "product_code": "S0001551"
+    }
+  ],
   "issues_failure": [],
   "issues_warning": []
 }

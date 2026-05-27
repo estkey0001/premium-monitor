@@ -144,8 +144,11 @@ class BaseLotteryCollector:
             idx = text.find(keyword)
             if idx == -1:
                 continue
-            # キーワード前後 500 文字を対象にする
-            chunk = text[max(0, idx - 50): idx + 500]
+            # キーワード位置から 500 文字を対象にする（キーワード前は含めない）
+            # ※ キーワード前に「YYYY年M月D日より開始いたします」のような告知日が
+            #   混入して最初の日付がズレるのを防ぐため。年コンテキストは
+            #   キーワード後の「YYYY年M月D日」テキスト自体から取得できる。
+            chunk = text[idx: idx + 500]
             dates = self._extract_all_dates(chunk)
             if len(dates) >= 2:
                 return dates[0], dates[1]

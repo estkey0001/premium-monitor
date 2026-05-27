@@ -1,8 +1,11 @@
-# アラートレポート — 2026-05-27 23:16 JST
+# アラートレポート — 2026-05-27 23:25 JST
 
-- 合計: 20 件（High: 0 / Medium: 20 / Low: 0）
+- 合計: 23 件（High: 0 / Medium: 23 / Low: 0）
 
 ## 🟡 Medium Priority
+- [lottery_closing_soon] **RICOH GR IV Monochrome**: 抽選締め切り間近: RICOH GR IV Monochrome — 受付終了: 2026-05-29 (36時間後)
+- [lottery_closing_soon] **RICOH GR IV HDF**: 抽選締め切り間近: RICOH GR IV HDF — 受付終了: 2026-05-29 (36時間後)
+- [lottery_closing_soon] **RICOH GR IV**: 抽選締め切り間近: RICOH GR IV — 受付終了: 2026-05-29 (36時間後)
 - [buyback_surge] **iPhone 17 Pro Max 512GB SIMフリー**: 買取急騰: iPhone 17 Pro Max 512GB SIMフリー — 
 - [buyback_surge] **iPhone 17 Pro Max 256GB SIMフリー**: 買取急騰: iPhone 17 Pro Max 256GB SIMフリー — 
 - [buyback_surge] **iPhone 17 Pro 512GB SIMフリー**: 買取急騰: iPhone 17 Pro 512GB SIMフリー — 

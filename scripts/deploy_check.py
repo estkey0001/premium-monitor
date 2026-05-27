@@ -3074,6 +3074,38 @@ def check() -> list[dict]:
         results.append({"level": "ok", "check": "lottery_no_forbidden_notes",
                         "message": "#275 抽選 active section 禁止文言なし"})
 
+    # ── #276: RICOH 日付整合性チェック ──────────────────────────────────────────
+    # debug text に「5月29日」があれば entry_end_at=2026-05-29 12:00 になっているはず
+    _ricoh_debug = PROJECT_ROOT / "exports" / "debug" / "ricoh_lottery_latest.txt"
+    _lottery_csv = PROJECT_ROOT / "data" / "lottery_events.csv"
+    if _ricoh_debug.exists() and _lottery_csv.exists():
+        try:
+            import csv as _csv
+            _debug_text = _ricoh_debug.read_text(encoding="utf-8")
+            _has_may29 = "5月29日" in _debug_text
+            _ricoh_end = ""
+            with open(_lottery_csv, encoding="utf-8") as _f:
+                for _row in _csv.DictReader(_f):
+                    if _row.get("brand", "").upper() == "RICOH" and _row.get("product_code") == "S0001551":
+                        _ricoh_end = _row.get("entry_end_at", "")
+                        break
+            if _has_may29:
+                if "2026-05-29 12:00" in _ricoh_end:
+                    results.append({"level": "ok", "check": "ricoh_date_consistency",
+                                    "message": "#276 RICOH GR IV: debug text に5月29日あり → entry_end_at=2026-05-29 12:00 ✅"})
+                else:
+                    results.append({"level": "warning", "check": "ricoh_date_consistency",
+                                    "message": f"#276 RICOH GR IV: debug text に5月29日あるが entry_end_at={_ricoh_end!r}（期待: 2026-05-29 12:00）"})
+            else:
+                results.append({"level": "ok", "check": "ricoh_date_consistency",
+                                "message": f"#276 RICOH GR IV: debug text に5月29日なし → entry_end_at={_ricoh_end!r} で OK"})
+        except Exception as _e:
+            results.append({"level": "warning", "check": "ricoh_date_consistency",
+                            "message": f"#276 RICOH 日付整合性チェック失敗: {_e}"})
+    else:
+        results.append({"level": "warning", "check": "ricoh_date_consistency",
+                        "message": "#276 ricoh_lottery_latest.txt または lottery_events.csv が存在しない"})
+
     return results
 
 

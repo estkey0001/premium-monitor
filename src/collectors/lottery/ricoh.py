@@ -11,8 +11,13 @@ URL: https://ricohimagingstore.com/Form/Product/ProductDetail.aspx?shop=0&pid={p
 from __future__ import annotations
 
 import logging
+import re
+from pathlib import Path
 
 from .base import BaseLotteryCollector
+
+# デバッグテキスト保存先
+_DEBUG_DIR = Path(__file__).resolve().parents[3] / "exports" / "debug"
 
 logger = logging.getLogger(__name__)
 
@@ -102,6 +107,9 @@ class RicohLotteryCollector(BaseLotteryCollector):
             self.SHOP_ID, product["product_name"], status, entry_start_at, entry_end_at,
         )
 
+        # デバッグテキスト保存（最後に収集した GR IV の根拠テキストを保存）
+        self._save_debug_text(product["product_name"], text)
+
         return self._make_event(
             product_name=product["product_name"],
             brand="RICOH",
@@ -114,3 +122,26 @@ class RicohLotteryCollector(BaseLotteryCollector):
             entry_end_at=entry_end_at,
             status=status,
         )
+
+    def _save_debug_text(self, product_name: str, text: str) -> None:
+        """日付パースの根拠テキストをデバッグファイルに保存する。"""
+        try:
+            _DEBUG_DIR.mkdir(parents=True, exist_ok=True)
+            # エントリー受付期間の周辺 500 文字を抽出
+            from .base import _PERIOD_KEYWORDS
+            chunk = ""
+            for kw in _PERIOD_KEYWORDS:
+                idx = text.find(kw)
+                if idx != -1:
+                    chunk = text[idx: idx + 500]
+                    break
+            if not chunk:
+                chunk = text[:500]
+            debug_path = _DEBUG_DIR / "ricoh_lottery_latest.txt"
+            debug_path.write_text(
+                f"# RICOH 抽選日付根拠テキスト ({product_name})\n\n{chunk}\n",
+                encoding="utf-8",
+            )
+            logger.debug("[%s] デバッグテキスト保存: %s", self.SHOP_ID, debug_path)
+        except Exception as e:
+            logger.warning("[%s] デバッグテキスト保存失敗: %s", self.SHOP_ID, e)

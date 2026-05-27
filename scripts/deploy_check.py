@@ -2502,29 +2502,30 @@ def check() -> list[dict]:
     if _lp_gen_path_v2.exists():
         _lp_gen_text = _lp_gen_path_v2.read_text(encoding="utf-8")
 
-        # ── #225: RICOH GR IV Monochrome がリファレンスアイテムに1回だけ含まれる ──
-        _mono_count = _lp_gen_text.count("RICOH GR IV Monochrome")
-        if _mono_count == 1:
+        # ── #225: RICOH GR IV Monochrome が lottery_events.csv または _LOTTERY_REFERENCE_ITEMS に存在 ──
+        # RICOH は CSV(auto_scraped) 管理に移行済みのため、CSV を優先して確認
+        _lottery_csv_path = PROJECT_ROOT / "data" / "lottery_events.csv"
+        _lottery_csv_text = _lottery_csv_path.read_text(encoding="utf-8") if _lottery_csv_path.exists() else ""
+        _mono_in_csv  = "RICOH GR IV Monochrome" in _lottery_csv_text
+        _mono_in_code = "RICOH GR IV Monochrome" in _lp_gen_text
+        if _mono_in_csv or _mono_in_code:
+            _loc = "lottery_events.csv" if _mono_in_csv else "_LOTTERY_REFERENCE_ITEMS"
             results.append({"level": "ok", "check": "ricoh_monochrome_single",
-                            "message": "RICOH GR IV Monochrome が _LOTTERY_REFERENCE_ITEMS に1件のみ定義"})
-        elif _mono_count == 0:
+                            "message": f"RICOH GR IV Monochrome が {_loc} に定義済み"})
+        else:
             results.append({"level": "error", "check": "ricoh_monochrome_single",
-                            "message": "RICOH GR IV Monochrome が _LOTTERY_REFERENCE_ITEMS に存在しない"})
-        else:
-            results.append({"level": "warning", "check": "ricoh_monochrome_single",
-                            "message": f"RICOH GR IV Monochrome が {_mono_count} 件定義（重複の可能性）"})
+                            "message": "RICOH GR IV Monochrome が lottery_events.csv にも _LOTTERY_REFERENCE_ITEMS にも存在しない"})
 
-        # ── #226: RICOH GR IV HDF がリファレンスアイテムに1回だけ含まれる ─────────
-        _hdf_count = _lp_gen_text.count("RICOH GR IV HDF")
-        if _hdf_count == 1:
+        # ── #226: RICOH GR IV HDF が lottery_events.csv または _LOTTERY_REFERENCE_ITEMS に存在 ──
+        _hdf_in_csv  = "RICOH GR IV HDF" in _lottery_csv_text
+        _hdf_in_code = "RICOH GR IV HDF" in _lp_gen_text
+        if _hdf_in_csv or _hdf_in_code:
+            _loc_hdf = "lottery_events.csv" if _hdf_in_csv else "_LOTTERY_REFERENCE_ITEMS"
             results.append({"level": "ok", "check": "ricoh_hdf_single",
-                            "message": "RICOH GR IV HDF が _LOTTERY_REFERENCE_ITEMS に1件のみ定義"})
-        elif _hdf_count == 0:
-            results.append({"level": "error", "check": "ricoh_hdf_single",
-                            "message": "RICOH GR IV HDF が _LOTTERY_REFERENCE_ITEMS に存在しない"})
+                            "message": f"RICOH GR IV HDF が {_loc_hdf} に定義済み"})
         else:
-            results.append({"level": "warning", "check": "ricoh_hdf_single",
-                            "message": f"RICOH GR IV HDF が {_hdf_count} 件定義（重複の可能性）"})
+            results.append({"level": "error", "check": "ricoh_hdf_single",
+                            "message": "RICOH GR IV HDF が lottery_events.csv にも _LOTTERY_REFERENCE_ITEMS にも存在しない"})
 
         # ── #227: X100VI / PS5 / Switch2 が reference_only=True で定義されている ──
         _ref_items_block = _re3.search(
@@ -2554,8 +2555,9 @@ def check() -> list[dict]:
             results.append({"level": "error", "check": "reference_only_items_flagged",
                             "message": f"reference_only=True が未設定: {', '.join(_ref_only_missing)}"})
 
-        # ── #228: RICOH 3件に reference_only=True が含まれていない ──────────────
-        _ricoh_items = ["RICOH GR IV Monochrome", "RICOH GR IV HDF", '"RICOH GR IV"']
+        # ── #228: RICOH 3件が CSV で auto_scraped 管理 OR reference_only でない ──────
+        # RICOH は lottery_events.csv(auto_scraped) に移行済み
+        # _LOTTERY_REFERENCE_ITEMS 内に RICOH + reference_only=True の組み合わせがないことを確認
         _ricoh_ref_only_found = []
         for _rname in ["RICOH GR IV Monochrome", "RICOH GR IV HDF"]:
             _pos = _ref_block_text.find(_rname)
@@ -2563,15 +2565,12 @@ def check() -> list[dict]:
                 _ctx = _ref_block_text[_pos:_pos + 200]
                 if '"reference_only": True' in _ctx or "'reference_only': True" in _ctx:
                     _ricoh_ref_only_found.append(_rname)
-        # "RICOH GR IV" スタンダードも確認（Monochromeより後）
-        _giv_match = _re3.search(r'"product_name":\s*"RICOH GR IV"[^M]', _ref_block_text)
-        if _giv_match:
-            _ctx2 = _ref_block_text[_giv_match.start():_giv_match.start() + 200]
-            if '"reference_only": True' in _ctx2 or "'reference_only': True" in _ctx2:
-                _ricoh_ref_only_found.append("RICOH GR IV (standard)")
+        # CSV で管理されているなら問題なし（_LOTTERY_REFERENCE_ITEMS に RICOH がなくても OK）
+        _ricoh_in_csv = "RICOH GR IV" in _lottery_csv_text
         if not _ricoh_ref_only_found:
+            _where = "lottery_events.csv（auto_scraped）" if _ricoh_in_csv else "_LOTTERY_REFERENCE_ITEMS（reference_only なし）"
             results.append({"level": "ok", "check": "ricoh_not_reference_only",
-                            "message": "RICOH GR IV 3件に reference_only=True が含まれていない（受付中として正しく分類）"})
+                            "message": f"RICOH GR IV は {_where} で管理 — reference_only=True なし"})
         else:
             results.append({"level": "error", "check": "ricoh_not_reference_only",
                             "message": f"RICOH 以下のアイテムに reference_only=True が誤設定: {', '.join(_ricoh_ref_only_found)}"})
@@ -2742,6 +2741,44 @@ def check() -> list[dict]:
                      "lottery_quality_no_failure"]:
             results.append({"level": "warning", "check": _chk,
                             "message": "lottery_report が未生成のためスキップ"})
+
+    # ── #241: update_lottery_events.py が存在する ────────────────────────────────
+    _update_lottery_script = PROJECT_ROOT / "scripts" / "update_lottery_events.py"
+    if _update_lottery_script.exists():
+        results.append({"level": "ok", "check": "update_lottery_events_exists",
+                        "message": "scripts/update_lottery_events.py が存在する"})
+    else:
+        results.append({"level": "error", "check": "update_lottery_events_exists",
+                        "message": "scripts/update_lottery_events.py が存在しない"})
+
+    # ── #242: daily_lp.yml に Update lottery events step がある ──────────────────
+    if _workflow_path.exists():
+        _wf_text2 = _workflow_path.read_text(encoding="utf-8")
+        if "update_lottery_events.py" in _wf_text2 and "Update lottery events" in _wf_text2:
+            results.append({"level": "ok", "check": "update_lottery_events_in_workflow",
+                            "message": "daily_lp.yml に Update lottery events ステップが存在する"})
+        else:
+            results.append({"level": "error", "check": "update_lottery_events_in_workflow",
+                            "message": "daily_lp.yml に Update lottery events ステップが存在しない"})
+    else:
+        results.append({"level": "warning", "check": "update_lottery_events_in_workflow",
+                        "message": ".github/workflows/daily_lp.yml が見つからない"})
+
+    # ── #243: data/lottery_events.csv が存在し RICOH 3件を含む ───────────────────
+    _lottery_csv_check = PROJECT_ROOT / "data" / "lottery_events.csv"
+    if _lottery_csv_check.exists():
+        _csv_check_text = _lottery_csv_check.read_text(encoding="utf-8")
+        _csv_ricoh_names = ["RICOH GR IV Monochrome", "RICOH GR IV HDF", "RICOH GR IV,"]
+        _csv_missing = [n for n in _csv_ricoh_names if n not in _csv_check_text]
+        if not _csv_missing:
+            results.append({"level": "ok", "check": "lottery_csv_has_ricoh",
+                            "message": "data/lottery_events.csv に RICOH GR IV 3件が存在する"})
+        else:
+            results.append({"level": "warning", "check": "lottery_csv_has_ricoh",
+                            "message": f"data/lottery_events.csv に不足: {', '.join(_csv_missing)}"})
+    else:
+        results.append({"level": "warning", "check": "lottery_csv_has_ricoh",
+                        "message": "data/lottery_events.csv が存在しない（update_lottery_events.py を実行してください）"})
 
     return results
 

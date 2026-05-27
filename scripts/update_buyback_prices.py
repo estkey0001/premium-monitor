@@ -315,9 +315,12 @@ def run(dry_run: bool = False, no_scrape: bool = False) -> int:
                     results_summary.append((alias, shop_id, "FAILED", 0))
                     failure_reasons[(alias, shop_id)] = reason
                     collector_debug[(alias, shop_id)] = {
-                        "final_url":   getattr(collector, "last_fetch_url", ""),
-                        "html_length": getattr(collector, "last_html_length", 0),
-                        "http_status": getattr(collector, "last_http_status", 0),
+                        "final_url":       getattr(collector, "last_fetch_url", ""),
+                        "html_length":     getattr(collector, "last_html_length", 0),
+                        "http_status":     getattr(collector, "last_http_status", 0),
+                        "text_length":     getattr(collector, "last_text_length", 0),
+                        "elapsed_seconds": getattr(collector, "last_elapsed_seconds", 0.0),
+                        "error_type":      getattr(collector, "last_error_type", ""),
                     }
                     _save_debug_txt(shop_id, alias, collector, reason)
             except Exception as e:
@@ -337,9 +340,12 @@ def run(dry_run: bool = False, no_scrape: bool = False) -> int:
                 results_summary.append((alias, shop_id, "ERROR", 0))
                 failure_reasons[(alias, shop_id)] = reason
                 collector_debug[(alias, shop_id)] = {
-                    "final_url":   getattr(collector, "last_fetch_url", ""),
-                    "html_length": getattr(collector, "last_html_length", 0),
-                    "http_status": getattr(collector, "last_http_status", 0),
+                    "final_url":       getattr(collector, "last_fetch_url", ""),
+                    "html_length":     getattr(collector, "last_html_length", 0),
+                    "http_status":     getattr(collector, "last_http_status", 0),
+                    "text_length":     getattr(collector, "last_text_length", 0),
+                    "elapsed_seconds": getattr(collector, "last_elapsed_seconds", 0.0),
+                    "error_type":      getattr(collector, "last_error_type", ""),
                 }
                 _save_debug_txt(shop_id, alias, collector, reason)
 
@@ -388,6 +394,9 @@ def _save_debug_txt(shop_id: str, alias: str, collector, reason: str) -> None:
     debug_dir = PROJECT_ROOT / "exports" / "debug"
     debug_dir.mkdir(parents=True, exist_ok=True)
     path = debug_dir / f"{shop_id}_{alias}.txt"
+    elapsed  = getattr(collector, "last_elapsed_seconds", 0.0)
+    txt_len  = getattr(collector, "last_text_length", 0)
+    err_type = getattr(collector, "last_error_type", "")
     lines = [
         f"[DEBUG] {shop_id} × {alias}",
         f"Generated: {datetime.now(tz=JST).isoformat(timespec='seconds')}",
@@ -395,6 +404,9 @@ def _save_debug_txt(shop_id: str, alias: str, collector, reason: str) -> None:
         f"HTTP Status: {getattr(collector, 'last_http_status', 0)}",
         f"Final URL: {getattr(collector, 'last_fetch_url', '')}",
         f"HTML Length: {getattr(collector, 'last_html_length', 0)} chars",
+        f"Text Length (inner_text): {txt_len} chars",
+        f"Elapsed Seconds: {elapsed:.2f}s",
+        f"Error Type: {err_type or '(none)'}",
     ]
     try:
         path.write_text("\n".join(lines) + "\n", encoding="utf-8")
@@ -451,9 +463,12 @@ def _generate_collector_report(
                 "status": status,
                 "reason": reason,
                 "url": row_match.get("url", ""),
-                "final_url":   dbg.get("final_url", ""),
-                "html_length": dbg.get("html_length", 0),
-                "http_status": dbg.get("http_status", 0),
+                "final_url":        dbg.get("final_url", ""),
+                "html_length":      dbg.get("html_length", 0),
+                "http_status":      dbg.get("http_status", 0),
+                "text_length":      dbg.get("text_length", 0),
+                "elapsed_seconds":  dbg.get("elapsed_seconds", 0.0),
+                "error_type":       dbg.get("error_type", ""),
                 "observed_at": row_match.get("observed_at", ""),
             })
 

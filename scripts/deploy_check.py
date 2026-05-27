@@ -2981,6 +2981,62 @@ def check() -> list[dict]:
         results.append({"level": "warning", "check": "collector_report_required_optional_split",
                         "message": "collector_report に Required / Optional failures の分離表示が見つからない"})
 
+    # ── #262: geo が OPTIONAL_SHOPS に含まれるか ────────────────────────────
+    try:
+        _qgate_path = Path(__file__).resolve().parent / "check_collector_quality.py"
+        _qgate_src = _qgate_path.read_text(encoding="utf-8") if _qgate_path.exists() else ""
+        if '"geo"' in _qgate_src and "OPTIONAL_SHOPS" in _qgate_src:
+            results.append({"level": "ok", "check": "geo_in_optional_shops",
+                            "message": "geo が OPTIONAL_SHOPS に含まれている（iPhone17/PS5Pro未掲載）"})
+        else:
+            results.append({"level": "warning", "check": "geo_in_optional_shops",
+                            "message": "geo が OPTIONAL_SHOPS に未追加（required_failed に計上される）"})
+    except Exception as e:
+        results.append({"level": "warning", "check": "geo_in_optional_shops",
+                        "message": f"geo OPTIONAL_SHOPS チェック失敗: {e}"})
+
+    # ── #263: tsutaya が OPTIONAL_SHOPS に含まれるか ─────────────────────────
+    try:
+        _qgate_path2 = Path(__file__).resolve().parent / "check_collector_quality.py"
+        _qgate_src2 = _qgate_path2.read_text(encoding="utf-8") if _qgate_path2.exists() else ""
+        if '"tsutaya"' in _qgate_src2 and "OPTIONAL_SHOPS" in _qgate_src2:
+            results.append({"level": "ok", "check": "tsutaya_in_optional_shops",
+                            "message": "tsutaya が OPTIONAL_SHOPS に含まれている（not_supported）"})
+        else:
+            results.append({"level": "warning", "check": "tsutaya_in_optional_shops",
+                            "message": "tsutaya が OPTIONAL_SHOPS に未追加（required_failed に計上される）"})
+    except Exception as e:
+        results.append({"level": "warning", "check": "tsutaya_in_optional_shops",
+                        "message": f"tsutaya OPTIONAL_SHOPS チェック失敗: {e}"})
+
+    # ── #264: kaitori_itchome が networkidle を使っていないか ─────────────────
+    try:
+        _itchome_path = Path(__file__).resolve().parent.parent / "src" / "collectors" / "buyback_kaitori_itchome.py"
+        _itchome_src = _itchome_path.read_text(encoding="utf-8") if _itchome_path.exists() else ""
+        if "networkidle" not in _itchome_src:
+            results.append({"level": "ok", "check": "kaitori_itchome_no_networkidle",
+                            "message": "kaitori_itchome: networkidle を使っていない（タイムアウト対策済み）"})
+        else:
+            results.append({"level": "warning", "check": "kaitori_itchome_no_networkidle",
+                            "message": "kaitori_itchome: networkidle を使用中（SPA タイムアウトの原因になる）"})
+    except Exception as e:
+        results.append({"level": "warning", "check": "kaitori_itchome_no_networkidle",
+                        "message": f"kaitori_itchome networkidle チェック失敗: {e}"})
+
+    # ── #265: geo が ps5_pro を product_not_listed で返すか ───────────────────
+    try:
+        _geo_path = Path(__file__).resolve().parent.parent / "src" / "collectors" / "buyback_geo.py"
+        _geo_src = _geo_path.read_text(encoding="utf-8") if _geo_path.exists() else ""
+        if "product_not_listed" in _geo_src and "_NOT_LISTED" in _geo_src and "ps5_pro" in _geo_src:
+            results.append({"level": "ok", "check": "geo_ps5pro_not_listed",
+                            "message": "geo: ps5_pro を product_not_listed で処理している"})
+        else:
+            results.append({"level": "warning", "check": "geo_ps5pro_not_listed",
+                            "message": "geo: ps5_pro が price_not_found のまま（product_not_listed に修正推奨）"})
+    except Exception as e:
+        results.append({"level": "warning", "check": "geo_ps5pro_not_listed",
+                        "message": f"geo ps5_pro チェック失敗: {e}"})
+
     return results
 
 

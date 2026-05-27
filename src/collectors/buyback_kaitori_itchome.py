@@ -56,27 +56,83 @@ class KaitoriItchomeCsvCollector(BaseCsvBuybackCollector):
         return PRODUCT_URLS.get(product_alias, "")
 
     def _fetch_html(self, url: str) -> Optional[str]:
-        """SPA のため、常にPlaywrightを使用。inner_text()を返す。"""
+        """SPA のため、常にPlaywrightを使用。inner_text()を返す。
+
+        wait_until="domcontentloaded" を使用（SPA では network-idle は永遠に完了しないため）。
+        本文が短すぎる場合は追加で 5 秒待機して再取得（1 回のみ）。
+        """
         time.sleep(1.5)  # レートリミット遵守
         try:
             from playwright.sync_api import sync_playwright
-            with sync_playwright() as p:
-                browser = p.chromium.launch(headless=True)
-                page = browser.new_page(
-                    user_agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-                )
-                page.goto(url, timeout=30000)
-                page.wait_for_load_state("networkidle", timeout=15000)
-                page.wait_for_timeout(5000)  # SPA描画完了まで待機（3000→5000ms）
-                text = page.inner_text("body")
-                browser.close()
-                return text
         except ImportError:
             logger.warning("[買取一丁目] Playwright not installed")
+            self.last_failure_reason = "playwright_not_installed"
             return None
-        except Exception as e:
-            logger.warning("[買取一丁目] Playwright error: %s", e)
-            return None
+
+        for attempt in range(2):  # タイムアウト失敗時に1回リトライ
+            try:
+                with sync_playwright() as p:
+                    browser = p.chromium.launch(headless=True)
+                    try:
+                        context = browser.new_context(
+                            user_agent=(
+                                "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+                                "AppleWebKit/537.36 (KHTML, like Gecko) "
+                                "Chrome/120.0.0.0 Safari/537.36"
+                            ),
+                            locale="ja-JP",
+                            extra_http_headers={"Accept-Language": "ja,en;q=0.9"},
+                        )
+                        page = context.new_page()
+                        # SPA は network-idle に到達しないため domcontentloaded で十分
+                        page.goto(url, timeout=45000, wait_until="domcontentloaded")
+
+                        # domcontentloaded 後に JS 描画を待つ
+                        try:
+                            page.wait_for_load_state("domcontentloaded", timeout=10000)
+                        except Exception:
+                            pass  # タイムアウトしても inner_text を試みる
+
+                        # SPA 描画完了まで待機
+                        page.wait_for_timeout(5000)
+                        text = page.inner_text("body")
+
+                        # 本文が短すぎる場合は追加待機して再取得（1 回）
+                        if not text or len(text) < 500:
+                            logger.debug(
+                                "[買取一丁目] 本文短い (%d chars)、5s 追加待機",
+                                len(text) if text else 0,
+                            )
+                            page.wait_for_timeout(5000)
+                            text = page.inner_text("body")
+
+                        self.last_html_length = len(text) if text else 0
+                    finally:
+                        browser.close()
+
+                    if text and len(text) >= 100:
+                        self.last_failure_reason = None
+                        return text
+
+                    logger.warning("[買取一丁目] 本文取得失敗 (attempt %d, %d chars)",
+                                   attempt + 1, len(text) if text else 0)
+                    self.last_failure_reason = "empty_html"
+                    if attempt < 1:
+                        time.sleep(5)  # リトライ前に少し待機
+
+            except Exception as e:
+                err_str = str(e)
+                logger.warning("[買取一丁目] Playwright error (attempt %d): %s", attempt + 1, e)
+                if "Timeout" in type(e).__name__ or "timeout" in err_str.lower():
+                    self.last_failure_reason = "timeout"
+                else:
+                    self.last_failure_reason = "playwright_error"
+                if attempt < 1:
+                    time.sleep(10)
+                    continue
+                return None
+
+        return None
 
     def _parse_price(self, html: str, product_alias: str, product_name: str) -> Optional[int]:
         """html は Playwright inner_text() の plain text (BS4 不使用)。"""

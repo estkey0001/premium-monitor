@@ -1,6 +1,6 @@
 
 ============================================================
- Deploy Check (271 items)
+ Deploy Check (275 items)
 ============================================================
   ✅ [index_exists] docs/index.html 存在
   ✅ [forbidden_phrases] 禁止表現なし
@@ -25,7 +25,7 @@
   ✅ [advanced_in_tab] 上級者向け確定案件が存在する
   ✅ [buyback_links_exist] 買取リンクが存在する
   ✅ [multi_shop_compare] 複数店舗比較が表示されている
-  ✅ [sokuhoh_tab_exists] 速報タブ（tab-sokuhoh）が存在する
+  ❌ [sokuhoh_tab_exists] 速報タブ（id=tab-sokuhoh）が見つからない
   ✅ [new_products_removed] 「新商品候補」テキストは存在しない（速報タブに移行済み）
   ✅ [sokuhoh_content] 速報タブにコンテンツ（카드またはデータなし表示）がある
   ✅ [lottery_link_type_label] 抽選カードにリンク種別ラベルがある
@@ -88,7 +88,7 @@
   ✅ [pro_overseas_price_link] Pro向け海外相場の確認導線が存在する
   ✅ [lottery_product_link] 抽選カードに製品/販売直リンクが含まれている
   ✅ [lottery_status_label] 抽選カードにステータスラベル（受付中/近日開始/終了済み/要確認）がある
-  ✅ [lottery_closed_section] 抽選情報に終了済みアイテムなし（全て現在進行中）
+  ✅ [lottery_closed_section] 終了済み抽選が折り畳みセクションに分離されている
   ✅ [pro_price_row_links] Pro向け価格テーブルの各行に確認ボタンがある
   ✅ [pro_all_sites_shown] Pro向け価格表に全サイト行（価格未取得含む）が表示されている
   ✅ [no_bare_hash_href] href="#" なし
@@ -137,7 +137,7 @@
   ✅ [pro_filter_price_gap] 「価格差あり」フィルタボタンが存在する
   ✅ [pro_cards_sorted_by_gap] 価格差ありカードが存在し、ソート構造が正常
   ✅ [no_surge_tab] 急騰/急落タブは削除済み
-  ✅ [sokuhoh_tab_exists] 速報タブが存在する
+  ❌ [sokuhoh_tab_exists] 速報タブ（data-tab=sokuhoh）が存在しない
   ✅ [single_lottery_tab] 抽選情報タブが1つだけ存在する
   ✅ [unified_main_nav] メインナビが1つに統合されている（cat-nav-wrapなし）
   ✅ [genre_dropdown_exists] ジャンルドロップダウンが存在する
@@ -185,13 +185,13 @@
   ✅ [ipad_not_in_other] iPad は「その他」欄に混入していない
   ✅ [airpods_not_in_smartphone] AirPods はスマートフォン欄に混入していない
   ✅ [applewatch_in_wearable_section] Apple Watch がウェアラブル欄に表示
-  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-05-27T19:17:14+09:00）
+  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-05-27T21:41:38+09:00）
   ✅ [suspicious_price_format] suspicious_prices 形式OK（suspicious_price なし）
   ✅ [fetch_failed_has_reason] fetch_failed 34件すべてに reason あり
   ✅ [collector_report_html_exists] docs/collector_report.html 存在
   ✅ [collector_report_link_in_lp] LP内に collector_report.html へのリンクがある
   ✅ [fetch_failed_report_link] 取得失敗30件 / suspicious0件 → 警告バーが表示されている
-  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 16件存在する: ['iphone17pm256', 'iphone17pro512', 'iphone17pro256', 'iphone17pm512']
+  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 16件存在する: ['iphone17pro256', 'iphone17pro512', 'iphone17pm256', 'iphone17pm512']
   ✅ [beginner_page_auto_scraped_exists] 自動取得 OK 21件 / total 55件
   ✅ [shop_name_no_vertical_wrap] shop-name-col に word-break:keep-all が設定されている
   ✅ [iphone17pro256_price_scraped] iPhone 17 Pro 256GB の価格取得成功: ['kaitori_shouten', 'kaitori_itchome', 'iosys', 'netoff']
@@ -217,9 +217,9 @@
   ✅ [no_playwright_not_installed] playwright_not_installed = 0
   ✅ [github_actions_threshold_exists] check_collector_quality.py に IS_GITHUB_ACTIONS フラグが存在
   ✅ [only_suspicious_low_conf_is_failure] quality gate の FAILURE 条件が suspicious_price / low_confidence のみ（店舗数不足はWARNING）
-  ✅ [gr4_forms_links] RICOH GR IV 3モデルの抽選フォームリンク（forms.gle）がすべて存在する
+  ⚠️ [gr4_forms_links] RICOH GR IV フォームリンクが見つからないモデル: GR IV, GR IV HDF, GR IV Monochrome
   ✅ [gr4_prices_present] RICOH GR IV 3モデルの公式価格（¥194,800/¥187,020/¥283,800）がすべて存在する
-  ✅ [gr4_entry_period_present] RICOH GR IV 抽選受付期間（2026-05-27〜2026-05-29）がLP内に存在する
+  ⚠️ [gr4_entry_period_present] RICOH GR IV 抽選期間の日付が見つからない: 2026-05-29（受付終了）
   ✅ [mobile_ichiban_timeout_gte45s] mobile_ichiban Playwright goto timeout = 60000ms（>= 45000）
   ✅ [mobile_ichiban_no_networkidle] mobile_ichiban が domcontentloaded を使用、networkidle は使用していない（タイムアウト対策）
   ✅ [mobile_ichiban_requests_fastpath] mobile_ichiban が requests fast path を実装（Playwright 前にまず requests 試行）
@@ -243,8 +243,8 @@
   ✅ [lottery_quality_script_exists] scripts/check_lottery_quality.py が存在する
   ✅ [lottery_quality_in_workflow] daily_lp.yml に Lottery quality gate ステップが存在する
   ✅ [lottery_report_exists] exports/lottery_report/latest.json が生成されている
-  ✅ [lottery_active_count_gte3] lottery_report active_count = 3（>= 3）
-  ✅ [ricoh_gr4_in_active_items] RICOH GR IV 系 3 件が active_items に存在
+  ❌ [lottery_active_count_gte3] lottery_report active_count = 0（受付中の抽選がない）
+  ⚠️ [ricoh_gr4_in_active_items] RICOH GR IV 系が active_items に 0 件のみ（期待値: 3）
   ✅ [reference_only_excluded_from_active] reference_only アイテムが active count に混入していない
   ✅ [no_stale_in_active_section] 「次回未定」「抽選情報未確認」等の古い文言が active section にない
   ✅ [lottery_quality_no_failure] lottery_quality_gate: FAILURE 項目なし
@@ -273,9 +273,13 @@
   ✅ [tsutaya_in_optional_shops] tsutaya が OPTIONAL_SHOPS に含まれている（not_supported）
   ✅ [kaitori_itchome_no_networkidle] kaitori_itchome: networkidle を使っていない（タイムアウト対策済み）
   ✅ [geo_ps5pro_not_listed] geo: ps5_pro を product_not_listed で処理している
+  ✅ [no_sokuhoh_tab] #272 速報タブなし（削除済み）
+  ⚠️ [alert_popup_container] #273 alert-popup-container が LP に存在しない（Task 6 未適用 or アラートデータなし）
+  ✅ [alerts_csv_exists] #274 data/alerts.csv 存在
+  ✅ [lottery_no_forbidden_notes] #275 抽選 active section 禁止文言なし
 
-  Errors: 0 | Warnings: 0 | OK: 271
+  Errors: 3 | Warnings: 4 | OK: 268
 
-  ✅ Deploy check PASSED
+  ❌ Deploy check FAILED
 ============================================================
 

@@ -20,5 +20,8 @@ ulid-py>=1.1,<2
 streamlit>=1.30,<2
 plotly>=5.18,<6
 
+# Browser automation (JS系コレクター用)
+playwright>=1.40,<2
+
 # Dev / Test
 pytest>=7.4,<9

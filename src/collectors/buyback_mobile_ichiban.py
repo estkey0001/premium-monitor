@@ -253,30 +253,22 @@ class MobileIchibanCsvCollector(BaseCsvBuybackCollector):
         """
         text = html
 
-        # ── 前処理: 商品の容量キーワードが本文にあるか確認 ──────────────────────
-        # 例: "iphone17pro512" → "512GB" が本文にないなら JS未描画 → None を返す
-        _cap_check = {
-            "iphone17pro256": "256GB",
-            "iphone17pro512": "512GB",
-            "iphone17pm256":  "256GB",
-            "iphone17pm512":  "512GB",
-        }
-        _product_kw_check = {
-            "iphone17pro256": "iPhone 17 Pro",
-            "iphone17pro512": "iPhone 17 Pro",
-            "iphone17pm256":  "iPhone 17 Pro Max",
-            "iphone17pm512":  "iPhone 17 Pro Max",
+        # ── 前処理: 商品名＋容量の完全キーワードが本文にあるか確認 ───────────────
+        # "512GB" だけでは別商品にも含まれるため、"iPhone 17 Pro 512GB" のように
+        # 商品名と容量を組み合わせた完全文字列でチェックする
+        _full_keyword_check = {
+            "iphone17pro256": "iPhone 17 Pro 256GB",
+            "iphone17pro512": "iPhone 17 Pro 512GB",
+            "iphone17pm256":  "iPhone 17 Pro Max 256GB",
+            "iphone17pm512":  "iPhone 17 Pro Max 512GB",
             "ps5_pro":        "PlayStation 5 Pro",
         }
-        _required_kw = _product_kw_check.get(product_alias, "")
-        _cap_kw = _cap_check.get(product_alias, "")
-        if _required_kw and _required_kw not in text:
-            # 商品名が本文にない → JS未描画またはページ構造変更
-            logger.debug("[モバイル一番] %s: 商品名'%s'が本文にない → None", product_alias, _required_kw)
-            return None
-        if _cap_kw and _cap_kw not in text:
-            # 容量が本文にない（ナビだけに商品名がある場合も弾く）
-            logger.debug("[モバイル一番] %s: 容量'%s'が本文にない → None", product_alias, _cap_kw)
+        _full_kw = _full_keyword_check.get(product_alias, "")
+        if _full_kw and _full_kw not in text:
+            # 商品名＋容量が本文にない → このサイトでは該当商品が未掲載
+            logger.debug("[モバイル一番] %s: '%s'が本文にない → product_not_listed",
+                         product_alias, _full_kw)
+            self.last_failure_reason = "product_not_listed"
             return None
 
         # ── Step1: メインパターン（確定\n価格 構造に対応）────────────────────────
@@ -296,10 +288,9 @@ class MobileIchibanCsvCollector(BaseCsvBuybackCollector):
         anchor_info = PRODUCT_ANCHORS.get(product_alias)
         if anchor_info:
             model_kw, cap_kw = anchor_info
-            # 商品名＋容量 を含む正確な行を探す（容量が後続行にある前提）
-            # 例: "iPhone 17 Pro 256GB" の行を直接検索
-            _exact_kw = f"{model_kw} {cap_kw}GB" if cap_kw else model_kw
-            m_anchor = re.search(re.escape(_exact_kw) if cap_kw else re.escape(model_kw), text)
+            # 完全商品名（前処理で存在確認済み）でアンカー位置を特定
+            _exact_kw = _full_kw if _full_kw else (f"{model_kw} {cap_kw}GB" if cap_kw else model_kw)
+            m_anchor = re.search(re.escape(_exact_kw), text)
             if m_anchor:
                 start = m_anchor.start()
                 block = text[start:start + 600]

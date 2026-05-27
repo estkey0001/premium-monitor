@@ -258,11 +258,11 @@ def build_summary_md(result: dict) -> str:
     lines.append(f"| ⚠️ suspicious_price | {len(result['suspicious'])} |")
     lines.append("")
 
-    # 商品別成功率
+    # 商品別成功状況（成功 / 未掲載 / 取得失敗 の3列）
     lines.append("### 商品別成功状況")
     lines.append("")
-    lines.append("| 商品 | 成功店舗数 | 目標 | 達成 | 成功店舗 |")
-    lines.append("|------|-----------|------|------|---------|")
+    lines.append("| 商品 | 成功 | 目標 | 達成 | 未掲載 | 取得失敗 | 成功店舗 |")
+    lines.append("|------|------|------|------|--------|---------|---------|")
     TARGET_NAMES = {
         "iphone17pro256": "iPhone 17 Pro 256GB",
         "iphone17pro512": "iPhone 17 Pro 512GB",
@@ -272,11 +272,18 @@ def build_summary_md(result: dict) -> str:
         "ps5_pro":        "PS5 Pro",
     }
     for alias, min_shops in MIN_SHOPS.items():
-        detail  = result["psd"].get(alias, {})
-        success = detail.get("success_shops", [])
-        ok_flag = "✅" if len(success) >= min_shops else "❌"
-        shops_str = ", ".join(success[:5]) if success else "—"
-        lines.append(f"| {TARGET_NAMES.get(alias, alias)} | {len(success)} | {min_shops} | {ok_flag} | {shops_str} |")
+        detail      = result["psd"].get(alias, {})
+        success     = detail.get("success_shops", [])
+        not_listed  = detail.get("not_listed_shops", [])
+        failed      = detail.get("failed_shops", [])
+        ok_flag     = "✅" if len(success) >= min_shops else "❌"
+        shops_str   = ", ".join(success[:5]) if success else "—"
+        nl_str      = str(len(not_listed)) if not_listed else "—"
+        fail_str    = str(len(failed)) if failed else "—"
+        lines.append(
+            f"| {TARGET_NAMES.get(alias, alias)} | {len(success)} | {min_shops} | {ok_flag} "
+            f"| {nl_str} | {fail_str} | {shops_str} |"
+        )
     lines.append("")
 
     # 失敗理由ランキング

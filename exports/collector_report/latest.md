@@ -1,6 +1,6 @@
 # Collector Quality Report
 
-生成日時: 2026-05-27 13:35:38 UTC+09:00
+生成日時: 2026-05-27 13:50:31 UTC+09:00
 
 ## サマリ
 
@@ -74,7 +74,7 @@
 | janpara | 0% | 0 | 6 | — | — | playwright_not_installed |
 | kaitori_itchome | 0% | 0 | 4 | — | — | empty_html |
 | kaitori_shouten | 100% | 6 | 0 | — | — | — |
-| mobile_ichiban | 60% | 3 | 2 | — | — | price_not_found |
+| mobile_ichiban | 60% | 3 | 2 | — | — | product_not_listed |
 | netoff | 0% | 0 | 4 | — | — | price_not_found |
 | pasoko | 0% | 0 | 2 | — | — | price_not_found |
 | sofmap | 0% | 0 | 2 | — | — | service_unavailable |
@@ -99,11 +99,12 @@
 | 理由 | 件数 |
 |------|------|
 | playwright_not_installed | 10 |
-| price_not_found | 9 |
+| price_not_found | 7 |
 | empty_html | 4 |
 | http_403 | 4 |
 | http_404 | 4 |
 | not_supported | 4 |
+| product_not_listed | 2 |
 | service_unavailable | 2 |
 | site_blocked | 2 |
 
@@ -116,7 +117,7 @@
 | iphone17pro256 | geo_mobile | FAILED | playwright_not_installed |
 | iphone17pro256 | 2ndstreet | FAILED | http_403 |
 | iphone17pro256 | netoff | FAILED | price_not_found |
-| iphone17pro512 | mobile_ichiban | FAILED | price_not_found |
+| iphone17pro512 | mobile_ichiban | FAILED | product_not_listed |
 | iphone17pro512 | kaitori_itchome | FAILED | empty_html |
 | iphone17pro512 | janpara | FAILED | playwright_not_installed |
 | iphone17pro512 | geo_mobile | FAILED | playwright_not_installed |
@@ -127,7 +128,7 @@
 | iphone17pm256 | geo_mobile | FAILED | playwright_not_installed |
 | iphone17pm256 | 2ndstreet | FAILED | http_403 |
 | iphone17pm256 | netoff | FAILED | price_not_found |
-| iphone17pm512 | mobile_ichiban | FAILED | price_not_found |
+| iphone17pm512 | mobile_ichiban | FAILED | product_not_listed |
 | iphone17pm512 | kaitori_itchome | FAILED | empty_html |
 | iphone17pm512 | janpara | FAILED | playwright_not_installed |
 | iphone17pm512 | geo_mobile | FAILED | playwright_not_installed |

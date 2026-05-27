@@ -2360,6 +2360,111 @@ def check() -> list[dict]:
         results.append({"level": "warning", "check": "mobile_ichiban_timeout_reason_classified",
                         "message": "src/collectors/buyback_mobile_ichiban.py が見つからない"})
 
+    # ── #219: mobile_ichiban が product_not_listed を分類している ────────────────
+    if _mi_collector.exists():
+        _has_not_listed = (
+            'last_failure_reason = "product_not_listed"' in _mi_text or
+            "last_failure_reason = 'product_not_listed'" in _mi_text
+        )
+        if _has_not_listed:
+            results.append({"level": "ok", "check": "mobile_ichiban_not_listed_classified",
+                            "message": "mobile_ichiban が product_not_listed を last_failure_reason に分類している"})
+        else:
+            results.append({"level": "warning", "check": "mobile_ichiban_not_listed_classified",
+                            "message": "mobile_ichiban が product_not_listed を分類していない — 未掲載と取得失敗が区別できない"})
+    else:
+        results.append({"level": "warning", "check": "mobile_ichiban_not_listed_classified",
+                        "message": "src/collectors/buyback_mobile_ichiban.py が見つからない"})
+
+    # ── #220: collector_report に product_not_listed が分類されている ────────────
+    _latest_report = PROJECT_ROOT / "exports" / "collector_report" / "latest.json"
+    if _latest_report.exists():
+        import json as _json
+        try:
+            _report = _json.loads(_latest_report.read_text(encoding="utf-8"))
+            _fail_ranking = _report.get("failure_reason_ranking", [])
+            _reason_names = [item["reason"] for item in _fail_ranking]
+            _has_not_listed_in_report = "product_not_listed" in _reason_names
+            _has_price_not_found      = "price_not_found" in _reason_names
+            # 両方存在する or 片方だけ存在する（どちらか1つでもあれば分類できている）
+            if _has_not_listed_in_report:
+                results.append({"level": "ok", "check": "report_has_not_listed_reason",
+                                "message": "collector_report の failure_reason_ranking に product_not_listed が存在する（未掲載/失敗が別集計）"})
+            else:
+                results.append({"level": "warning", "check": "report_has_not_listed_reason",
+                                "message": "collector_report の failure_reason_ranking に product_not_listed がない — 実際に未掲載商品があるか確認してください"})
+        except Exception as _e:
+            results.append({"level": "warning", "check": "report_has_not_listed_reason",
+                            "message": f"latest.json の読み込みエラー: {_e}"})
+    else:
+        results.append({"level": "warning", "check": "report_has_not_listed_reason",
+                        "message": "exports/collector_report/latest.json が見つからない"})
+
+    # ── #221: LP上で product_not_listed が「現在未掲載」と表示される ────────────
+    _lp_gen_path = PROJECT_ROOT / "src" / "content" / "daily_lp_generator.py"
+    if _lp_gen_path.exists():
+        _lp_text = _lp_gen_path.read_text(encoding="utf-8")
+        _has_not_listed_display = (
+            "product_not_listed" in _lp_text and
+            "現在未掲載" in _lp_text and
+            "badge-not-listed" in _lp_text
+        )
+        if _has_not_listed_display:
+            results.append({"level": "ok", "check": "lp_not_listed_display",
+                            "message": "LP が product_not_listed を「現在未掲載」バッジで表示する実装が存在する"})
+        else:
+            results.append({"level": "warning", "check": "lp_not_listed_display",
+                            "message": "LP が product_not_listed を「現在未掲載」で表示していない — _source_badge の更新が必要"})
+    else:
+        results.append({"level": "warning", "check": "lp_not_listed_display",
+                        "message": "src/content/daily_lp_generator.py が見つからない"})
+
+    # ── #222: base_csv_collector が failure_reason を上書きしない ────────────────
+    _base_collector = PROJECT_ROOT / "src" / "collectors" / "buyback_base_csv.py"
+    if _base_collector.exists():
+        _bc_text = _base_collector.read_text(encoding="utf-8")
+        # 正しいパターン: if self.last_failure_reason is None: が price_not_found の前にある
+        _has_none_check = bool(
+            _re.search(r'if\s+self\.last_failure_reason\s+is\s+None.*?price_not_found', _bc_text, _re.DOTALL)
+        )
+        if _has_none_check:
+            results.append({"level": "ok", "check": "base_collector_no_reason_overwrite",
+                            "message": "buyback_base_csv.py が last_failure_reason を上書きしない（None チェック実装済み）"})
+        else:
+            results.append({"level": "warning", "check": "base_collector_no_reason_overwrite",
+                            "message": "buyback_base_csv.py が last_failure_reason を上書きしている可能性 — None チェックが必要"})
+    else:
+        results.append({"level": "warning", "check": "base_collector_no_reason_overwrite",
+                        "message": "src/collectors/buyback_base_csv.py が見つからない"})
+
+    # ── #223: mobile_ichiban 512GB が price_not_found でなく product_not_listed ──
+    if _latest_report.exists():
+        try:
+            _psd = _report.get("product_shop_detail", {})
+            _512_not_listed = (
+                "mobile_ichiban" in _psd.get("iphone17pro512", {}).get("not_listed_shops", []) or
+                "mobile_ichiban" in _psd.get("iphone17pm512",  {}).get("not_listed_shops", [])
+            )
+            _512_price_not_found = (
+                "mobile_ichiban" in _psd.get("iphone17pro512", {}).get("failed_shops", []) or
+                "mobile_ichiban" in _psd.get("iphone17pm512",  {}).get("failed_shops", [])
+            )
+            if _512_not_listed:
+                results.append({"level": "ok", "check": "mobile_ichiban_512_not_listed",
+                                "message": "mobile_ichiban の 512GB 系が product_not_listed として正しく分類されている"})
+            elif _512_price_not_found:
+                results.append({"level": "warning", "check": "mobile_ichiban_512_not_listed",
+                                "message": "mobile_ichiban の 512GB 系が product_not_listed でなく failed_shops に入っている — 分類の修正が必要"})
+            else:
+                results.append({"level": "ok", "check": "mobile_ichiban_512_not_listed",
+                                "message": "mobile_ichiban 512GB エントリが report に存在しない（今回の取得対象外またはスキップ）"})
+        except Exception as _e:
+            results.append({"level": "warning", "check": "mobile_ichiban_512_not_listed",
+                            "message": f"512GB 分類チェックエラー: {_e}"})
+    else:
+        results.append({"level": "warning", "check": "mobile_ichiban_512_not_listed",
+                        "message": "latest.json が見つからない"})
+
     return results
 
 

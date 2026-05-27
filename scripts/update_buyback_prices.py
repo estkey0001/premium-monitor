@@ -299,8 +299,10 @@ def run(dry_run: bool = False, no_scrape: bool = False) -> int:
                     new_rows.append(row)
                     results_summary.append((alias, shop_id, "OK", result["buyback_price"]))
                 else:
-                    # 取得失敗 → fetch_failed として記録
+                    # 取得失敗 → fetch_failed / product_not_listed として記録
                     reason = getattr(collector, "last_failure_reason", None) or "price_not_found"
+                    # product_not_listed（サイト未掲載）は fetch_failed と区別して記録
+                    _data_source = "product_not_listed" if reason == "product_not_listed" else "fetch_failed"
                     row = {
                         "product_alias": alias,
                         "buyback_shop":  shop_id,
@@ -308,7 +310,7 @@ def run(dry_run: bool = False, no_scrape: bool = False) -> int:
                         "condition":     cond,
                         "url":           _fallback_url(shop_id, alias),
                         "observed_at":   now_jst.isoformat(timespec="seconds"),
-                        "data_source":   "fetch_failed",
+                        "data_source":   _data_source,
                         "link_verified": "false",
                     }
                     new_rows.append(row)
@@ -652,15 +654,23 @@ def _generate_collector_report(
                 "details":        flag["details"],
             })
 
-    # ── 商品別 成功/失敗店舗の内訳 ─────────────────────────────────────────
+    # ── 商品別 成功/未掲載/失敗/スキップ店舗の内訳 ───────────────────────────
     product_shop_detail: dict[str, dict] = {}
     for alias, shop_id, status, _price in results_summary:
         if alias not in product_shop_detail:
-            product_shop_detail[alias] = {"success_shops": [], "failed_shops": [], "skip_shops": []}
+            product_shop_detail[alias] = {
+                "success_shops":    [],
+                "not_listed_shops": [],   # product_not_listed: サイト未掲載
+                "failed_shops":     [],   # 取得失敗（HTMLエラー・価格未発見など）
+                "skip_shops":       [],
+            }
+        reason = failure_reasons.get((alias, shop_id), "")
         if status == "OK":
             product_shop_detail[alias]["success_shops"].append(shop_id)
         elif status == "SKIP":
             product_shop_detail[alias]["skip_shops"].append(shop_id)
+        elif reason == "product_not_listed":
+            product_shop_detail[alias]["not_listed_shops"].append(shop_id)
         else:
             product_shop_detail[alias]["failed_shops"].append(shop_id)
 

@@ -1603,6 +1603,16 @@ a[href], button, [role="tab"], [role="button"],
   background: rgba(0,200,150,0.12); color: #0A7C4F;
   border: 1px solid rgba(0,200,150,0.25); white-space: nowrap;
 }}
+.badge-not-listed {{
+  font-size: 0.66rem; font-weight: 700; padding: 2px 6px; border-radius: 99px;
+  background: rgba(21,128,61,0.08); color: #166534;
+  border: 1px solid rgba(21,128,61,0.20); white-space: nowrap;
+}}
+.freshness-not-listed {{
+  color: #166534; font-size: 0.7rem; font-weight: 700;
+  background: rgba(21,128,61,0.08); padding: 2px 7px; border-radius: 99px;
+  border: 1px solid rgba(21,128,61,0.18);
+}}
 .badge-fetch-failed {{
   font-size: 0.66rem; font-weight: 700; padding: 2px 6px; border-radius: 99px;
   background: rgba(255,59,92,0.10); color: #B91C1C;
@@ -4354,6 +4364,8 @@ python3 -m src.cli calculate-sedori-routes</pre>
         ds = str(data_source) if data_source else ""
         if ds == "auto_scraped":
             return '<span class="badge-auto-scraped">自動取得</span>'
+        elif ds == "product_not_listed":
+            return '<span class="badge-not-listed">現在未掲載</span>'
         elif ds == "fetch_failed":
             return '<span class="badge-fetch-failed">取得失敗</span>'
         elif ds.startswith("manual"):
@@ -4370,9 +4382,13 @@ python3 -m src.cli calculate-sedori-routes</pre>
         - 手動CSV由来 → 「手動確認データ」表示・「最新」は使わない
         - 実際に取得した価格ではない場合は「最新」と表示しない
         """
+        is_not_listed = (str(data_source) == "product_not_listed")
         is_failed = (str(data_source) == "fetch_failed")
         is_auto   = (str(data_source) == "auto_scraped")   # 自動スクレイピング成功
         is_manual = bool(data_source and str(data_source).startswith("manual"))  # 手動CSV由来
+        # product_not_listed: この店舗では現在、該当商品の掲載が確認できない
+        if is_not_listed:
+            return '<span class="freshness-not-listed" title="この店舗では現在、該当商品の掲載が確認できません">現在未掲載</span>'
         # fetch_failed は価格取得失敗を示す特殊値
         if is_failed:
             return '<span class="freshness-warn freshness-fetch-failed" title="価格取得失敗">取得失敗 / 要確認</span>'

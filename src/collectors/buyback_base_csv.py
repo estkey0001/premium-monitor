@@ -61,7 +61,10 @@ class BaseCsvBuybackCollector:
             price = self._parse_price(html, product_alias, product_name)
             if not price or price <= 0:
                 logger.info("[%s] Price not found for %s", self.SHOP_NAME, product_alias)
-                self.last_failure_reason = "price_not_found"
+                # サブクラスが _parse_price 内で reason をセット済みの場合は上書きしない
+                # 例: product_not_listed（掲載なし）は price_not_found とは別扱い
+                if self.last_failure_reason is None:
+                    self.last_failure_reason = "price_not_found"
                 return None
 
             actual_url = self._parse_detail_url(html, url)

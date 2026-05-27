@@ -3106,6 +3106,91 @@ def check() -> list[dict]:
         results.append({"level": "warning", "check": "ricoh_date_consistency",
                         "message": "#276 ricoh_lottery_latest.txt または lottery_events.csv が存在しない"})
 
+    # ── #277: status_conflict=true の場合 LP に conflict warning が存在 ──────────
+    _lp_html_path = PROJECT_ROOT / "docs" / "index.html"
+    _lottery_csv2 = PROJECT_ROOT / "data" / "lottery_events.csv"
+    if _lottery_csv2.exists() and _lp_html_path.exists():
+        try:
+            import csv as _csv2
+            _conflict_items = []
+            with open(_lottery_csv2, encoding="utf-8") as _f2:
+                for _row2 in _csv2.DictReader(_f2):
+                    if (str(_row2.get("status_conflict", "")).lower() == "true"
+                            and _row2.get("status", "") == "active"):
+                        _conflict_items.append(_row2.get("product_name", "?"))
+
+            if _conflict_items:
+                _lp_html2 = _lp_html_path.read_text(encoding="utf-8")
+                _has_conflict_warning = "lottery-conflict-warning" in _lp_html2
+                if _has_conflict_warning:
+                    results.append({"level": "ok", "check": "lottery_conflict_warning_in_lp",
+                                    "message": f"#277 status_conflict active 商品 {_conflict_items} → LP に conflict warning あり ✅"})
+                else:
+                    results.append({"level": "warning", "check": "lottery_conflict_warning_in_lp",
+                                    "message": f"#277 status_conflict active 商品 {_conflict_items} があるが LP に lottery-conflict-warning が存在しない"})
+            else:
+                results.append({"level": "ok", "check": "lottery_conflict_warning_in_lp",
+                                "message": "#277 status_conflict=true の active 商品なし（LP conflict warning 不要）"})
+        except Exception as _e2:
+            results.append({"level": "warning", "check": "lottery_conflict_warning_in_lp",
+                            "message": f"#277 conflict warning チェック失敗: {_e2}"})
+
+    # ── #278: status_conflict=true でも entry_end_at が未来なら active card に残る ──
+    if _lottery_csv2.exists():
+        try:
+            import csv as _csv3
+            from datetime import datetime as _dt, timezone as _tz, timedelta as _td
+            _jst = _tz(_td(hours=9))
+            _now_jst = _dt.now(tz=_jst)
+            _conflict_but_active = []
+            _conflict_but_closed = []
+            with open(_lottery_csv2, encoding="utf-8") as _f3:
+                for _row3 in _csv3.DictReader(_f3):
+                    if str(_row3.get("status_conflict", "")).lower() != "true":
+                        continue
+                    _end = _row3.get("entry_end_at", "")
+                    try:
+                        _end_dt = _dt.strptime(_end, "%Y-%m-%d %H:%M").replace(tzinfo=_jst) if _end else None
+                    except ValueError:
+                        _end_dt = None
+                    if _end_dt and _end_dt >= _now_jst:
+                        _conflict_but_active.append(_row3.get("product_name", "?"))
+                    elif _end_dt:
+                        _conflict_but_closed.append(_row3.get("product_name", "?"))
+
+            if _conflict_but_active:
+                results.append({"level": "ok", "check": "lottery_conflict_active_preserved",
+                                "message": f"#278 status_conflict かつ entry_end_at が未来 → active card として保持: {_conflict_but_active}"})
+            if _conflict_but_closed:
+                results.append({"level": "ok", "check": "lottery_conflict_closed",
+                                "message": f"#278 status_conflict かつ entry_end_at が過去 → closed: {_conflict_but_closed}"})
+            if not _conflict_but_active and not _conflict_but_closed:
+                results.append({"level": "ok", "check": "lottery_conflict_active_preserved",
+                                "message": "#278 status_conflict=true の商品なし"})
+        except Exception as _e3:
+            results.append({"level": "warning", "check": "lottery_conflict_active_preserved",
+                            "message": f"#278 conflict active チェック失敗: {_e3}"})
+
+    # ── #279: source_text_excerpt が lottery_report に保存されている ─────────────
+    _lr_json = PROJECT_ROOT / "exports" / "lottery_report" / "latest.json"
+    if _lr_json.exists():
+        try:
+            import json as _json2
+            _lr = _json2.loads(_lr_json.read_text(encoding="utf-8"))
+            _items_with_excerpt = [
+                it for it in (_lr.get("active_items") or [])
+                if it.get("source_text_excerpt")
+            ]
+            if _items_with_excerpt:
+                results.append({"level": "ok", "check": "lottery_source_text_excerpt",
+                                "message": f"#279 source_text_excerpt が {len(_items_with_excerpt)}件の active item に保存されている"})
+            else:
+                results.append({"level": "ok", "check": "lottery_source_text_excerpt",
+                                "message": "#279 source_text_excerpt あり active item なし（conflict なし）"})
+        except Exception as _e4:
+            results.append({"level": "warning", "check": "lottery_source_text_excerpt",
+                            "message": f"#279 source_text_excerpt チェック失敗: {_e4}"})
+
     return results
 
 

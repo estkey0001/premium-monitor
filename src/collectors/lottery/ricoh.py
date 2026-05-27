@@ -102,9 +102,23 @@ class RicohLotteryCollector(BaseLotteryCollector):
         # フォーム URL
         entry_form_url = self._extract_form_url(text)
 
+        # ステータス矛盾検知
+        conflict_info = self._detect_status_conflict(
+            text=text,
+            status=status,
+            entry_start_at=entry_start_at,
+            entry_end_at=entry_end_at,
+        )
+        if conflict_info["status_conflict"] == "true":
+            logger.warning(
+                "[%s] ステータス矛盾検知: %s — %s",
+                self.SHOP_ID, product["product_name"], conflict_info["status_conflict_reason"],
+            )
+
         logger.info(
-            "[%s] 取得成功: %s status=%s start=%s end=%s",
-            self.SHOP_ID, product["product_name"], status, entry_start_at, entry_end_at,
+            "[%s] 取得成功: %s status=%s start=%s end=%s conflict=%s",
+            self.SHOP_ID, product["product_name"], status,
+            entry_start_at, entry_end_at, conflict_info["status_conflict"],
         )
 
         # デバッグテキスト保存（最後に収集した GR IV の根拠テキストを保存）
@@ -121,6 +135,7 @@ class RicohLotteryCollector(BaseLotteryCollector):
             entry_start_at=entry_start_at,
             entry_end_at=entry_end_at,
             status=status,
+            **conflict_info,
         )
 
     def _save_debug_text(self, product_name: str, text: str) -> None:

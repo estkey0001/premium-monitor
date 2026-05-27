@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-05-27 23:25 JST",
+  "checked_at": "2026-05-27 23:38 JST",
   "active_count": 3,
   "upcoming_count": 0,
   "closed_count": 3,
@@ -8,6 +8,7 @@
   "duplicate_count": 0,
   "stale_phrase_count": 0,
   "missing_form_url_count": 0,
+  "status_conflict_count": 3,
   "active_items": [
     {
       "product_name": "RICOH GR IV Monochrome",
@@ -17,7 +18,11 @@
       "official_price": "¥283,800（税込）",
       "has_form_url": true,
       "has_url": true,
-      "product_code": "S0001580"
+      "product_code": "S0001580",
+      "status_conflict": "true",
+      "status_conflict_reason": "本文に「受付は終了いたしました」が含まれるが、entry_end_at は2026-05-29 12:00（active）",
+      "status_basis": "date_range_active",
+      "source_text_excerpt": "e抽選エントリーフォームは こちら 今回の抽選販売エントリー受付は終了いたしました。 次回の予定は現時点では未定となっております。決まり次第、こちらの商品ページやお知らせに掲載いたします。 --> 定価 &#165;283,800 税込 送料"
     },
     {
       "product_name": "RICOH GR IV HDF",
@@ -27,7 +32,11 @@
       "official_price": "¥187,020（税込）",
       "has_form_url": true,
       "has_url": true,
-      "product_code": "S0001566"
+      "product_code": "S0001566",
+      "status_conflict": "true",
+      "status_conflict_reason": "本文に「受付は終了いたしました」が含まれるが、entry_end_at は2026-05-29 12:00（active）",
+      "status_basis": "date_range_active",
+      "source_text_excerpt": "抽選エントリーフォームは こちら 今回の抽選販売エントリー受付は終了いたしました。 次回の予定は現時点では未定となっております。決まり次第、こちらの商品ページやお知らせに掲載いたします。 --> 定価 &#165;187,020 税込 送料"
     },
     {
       "product_name": "RICOH GR IV",
@@ -37,9 +46,17 @@
       "official_price": "¥194,800（税込）",
       "has_form_url": true,
       "has_url": true,
-      "product_code": "S0001551"
+      "product_code": "S0001551",
+      "status_conflict": "true",
+      "status_conflict_reason": "本文に「受付は終了いたしました」が含まれるが、entry_end_at は2026-05-29 12:00（active）",
+      "status_basis": "date_range_active",
+      "source_text_excerpt": "抽選エントリーフォームは こちら 今回の抽選販売エントリー受付は終了いたしました。 次回の予定は現時点では未定となっております。決まり次第、こちらの商品ページやお知らせに掲載いたします。 --> 定価 &#165;194,800 税込 送料"
     }
   ],
   "issues_failure": [],
-  "issues_warning": []
+  "issues_warning": [
+    "【ステータス矛盾】RICOH GR IV Monochrome: 本文に「受付は終了いたしました」が含まれるが、entry_end_at は2026-05-29 12:00（active）",
+    "【ステータス矛盾】RICOH GR IV HDF: 本文に「受付は終了いたしました」が含まれるが、entry_end_at は2026-05-29 12:00（active）",
+    "【ステータス矛盾】RICOH GR IV: 本文に「受付は終了いたしました」が含まれるが、entry_end_at は2026-05-29 12:00（active）"
+  ]
 }

@@ -265,6 +265,18 @@ def run_checks(ref_items: list[dict], db_items: list[dict], now: datetime) -> di
     if stale_found:
         issues_failure.extend(stale_found)
 
+    # ── Check 11: ステータス矛盾（active だが終了文言あり）────────────────────
+    conflict_items = [
+        it for it in active_items
+        if str(it.get("status_conflict", "")).lower() == "true"
+    ]
+    if conflict_items:
+        for it in conflict_items:
+            issues_warning.append(
+                f"【ステータス矛盾】{it.get('product_name', '?')}: "
+                f"{it.get('status_conflict_reason', '理由不明')}"
+            )
+
     # ── サマリー集計 ──────────────────────────────────────────────────────────
     missing_form_count = sum(
         1 for it in active_items
@@ -287,16 +299,21 @@ def run_checks(ref_items: list[dict], db_items: list[dict], now: datetime) -> di
         "duplicate_count":       duplicate_codes,
         "stale_phrase_count":    stale_count,
         "missing_form_url_count": missing_form_count,
+        "status_conflict_count": len(conflict_items),
         "active_items": [
             {
-                "product_name":  it.get("product_name", ""),
-                "brand":         it.get("brand", ""),
-                "entry_start_at": it.get("entry_start_at") or it.get("entry_start") or "",
-                "entry_end_at":  it.get("entry_end_at")   or it.get("entry_end")   or "",
-                "official_price": it.get("official_price") or it.get("price") or "",
-                "has_form_url":  bool((it.get("entry_form_url") or "").strip()),
-                "has_url":       bool((it.get("url") or "").strip()),
-                "product_code":  it.get("product_code", ""),
+                "product_name":          it.get("product_name", ""),
+                "brand":                 it.get("brand", ""),
+                "entry_start_at":        it.get("entry_start_at") or it.get("entry_start") or "",
+                "entry_end_at":          it.get("entry_end_at")   or it.get("entry_end")   or "",
+                "official_price":        it.get("official_price") or it.get("price") or "",
+                "has_form_url":          bool((it.get("entry_form_url") or "").strip()),
+                "has_url":               bool((it.get("url") or "").strip()),
+                "product_code":          it.get("product_code", ""),
+                "status_conflict":       it.get("status_conflict", "false"),
+                "status_conflict_reason": it.get("status_conflict_reason", ""),
+                "status_basis":          it.get("status_basis", ""),
+                "source_text_excerpt":   it.get("source_text_excerpt", ""),
             }
             for it in active_items
         ],
@@ -337,6 +354,7 @@ def save_reports(result: dict) -> None:
         f"| 重複 product_code   | {result['duplicate_count']} |",
         f"| 古い文言あり        | {result['stale_phrase_count']} |",
         f"| entry_form_url なし  | {result['missing_form_url_count']} |",
+        f"| ステータス矛盾      | {'⚠️ ' if result.get('status_conflict_count', 0) > 0 else ''}{result.get('status_conflict_count', 0)} |",
         "",
     ]
 
@@ -345,17 +363,40 @@ def save_reports(result: dict) -> None:
         md_lines += [
             "## 現在受付中アイテム",
             "",
-            "| 商品名 | 受付開始 | 受付終了 | 公式価格 | フォーム |",
-            "|--------|----------|----------|----------|----------|",
+            "| 商品名 | 受付開始 | 受付終了 | 公式価格 | フォーム | 矛盾 |",
+            "|--------|----------|----------|----------|----------|------|",
         ]
         for it in result["active_items"]:
-            form_icon = "✅" if it["has_form_url"] else "❌"
+            form_icon     = "✅" if it["has_form_url"] else "❌"
+            conflict_icon = "⚠️" if str(it.get("status_conflict", "")).lower() == "true" else "—"
             md_lines.append(
                 f"| {it['product_name']} "
                 f"| {it['entry_start_at'][:10] if it['entry_start_at'] else '—'} "
                 f"| {it['entry_end_at'][:10] if it['entry_end_at'] else '—'} "
                 f"| {it['official_price'] or '—'} "
-                f"| {form_icon} |"
+                f"| {form_icon} "
+                f"| {conflict_icon} |"
+            )
+        md_lines.append("")
+
+    # ステータス矛盾詳細テーブル
+    conflict_actives = [it for it in result["active_items"]
+                        if str(it.get("status_conflict", "")).lower() == "true"]
+    if conflict_actives:
+        md_lines += [
+            "## ⚠️ ステータス矛盾アイテム",
+            "",
+            "| 商品名 | status_basis | 矛盾理由 | 根拠テキスト |",
+            "|--------|-------------|---------|-------------|",
+        ]
+        for it in conflict_actives:
+            excerpt = (it.get("source_text_excerpt") or "")[:60].replace("|", "｜")
+            reason  = (it.get("status_conflict_reason") or "")[:80].replace("|", "｜")
+            md_lines.append(
+                f"| {it['product_name']} "
+                f"| {it.get('status_basis', '—')} "
+                f"| {reason} "
+                f"| {excerpt} |"
             )
         md_lines.append("")
 

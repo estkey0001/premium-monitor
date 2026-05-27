@@ -3322,6 +3322,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 .lottery-ref-badge {{ display: inline-block; padding: 2px 8px; border-radius: 99px; font-size: 0.72rem; font-weight: 600; background: #EEF2FF; color: #4338CA; margin-left: 6px; vertical-align: middle; }}
 .lottery-no-link {{ display: inline-block; font-size: 0.82rem; color: var(--text-2); padding: 6px 10px; background: var(--surface2); border-radius: 8px; }}
 .lottery-checked-at {{ display: inline-block; font-size: 0.78rem; color: var(--text-3, #94A3B8); margin-top: 6px; }}
+.lottery-conflict-warning {{ margin: 8px 0 4px; padding: 7px 10px; border-radius: 8px; background: #FEF9C3; border: 1px solid #FDE047; color: #854D0E; font-size: 0.8rem; line-height: 1.4; }}
 .lottery-link-btn {{ font-size: 0.85rem; padding: 7px 14px; }}
 
 /* Ranking nav */
@@ -4084,6 +4085,16 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             if checked_at and checked_at not in ("", "None") else ''
         )
 
+        # ステータス矛盾警告（公式ページに終了文言があるが日付上はまだ active の場合）
+        conflict_warning = ""
+        if str(ev.get("status_conflict", "")).lower() == "true":
+            conflict_warning = (
+                '<div class="lottery-conflict-warning">'
+                '&#9888; 公式ページ内に終了表記もあります。'
+                '応募前に必ず公式ページをご確認ください。'
+                '</div>'
+            )
+
         return f'''<div class="lottery-card{'  lottery-ref-card' if is_reference else ''}">
   <div class="lottery-card-header">
     <div class="lottery-name">{_esc(ev.get("product_name", ""))} {ref_badge}</div>
@@ -4098,6 +4109,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
     {checked_row}
   </div>
   {note_row}
+  {conflict_warning}
   <div class="lottery-btn-group">
     {form_btn}
     {link_btn}

@@ -1,9 +1,9 @@
 [DEBUG] pasoko × ps5_pro
-Generated: 2026-05-27T13:52:29+09:00
-Failure Reason: price_not_found
-HTTP Status: 200
-Final URL: https://www.pc-koubou.jp/pc/used/buy/?keyword=PlayStation%205%20Pro
-HTML Length: 90646 chars
+Generated: 2026-05-27T16:54:00+09:00
+Failure Reason: product_not_listed
+HTTP Status: 0
+Final URL: 
+HTML Length: 0 chars
 Text Length (inner_text): 0 chars
 Elapsed Seconds: 0.00s
 Error Type: (none)

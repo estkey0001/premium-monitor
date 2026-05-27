@@ -602,6 +602,17 @@ a[href], button, [role="tab"], [role="button"],
   margin-left: 4px;
 }}
 .collector-warn-bar a:hover {{ color: #fff; }}
+.collector-warn-soft {{
+  background: rgba(245, 158, 11, 0.7);
+}}
+.collector-warn-info {{
+  background: rgba(99, 102, 241, 0.15);
+  color: var(--ink2, #444);
+  border-left: 3px solid rgba(99, 102, 241, 0.4);
+}}
+.collector-warn-info a {{
+  color: var(--accent, #7C5CFC);
+}}
 
 /* ============================================================
    ANNOUNCEMENT BAR
@@ -6205,35 +6216,73 @@ python3 -m src.cli calculate-sedori-routes</pre>
     _COLLECTOR_WARN_THRESHOLD: int = 5  # failed >= この件数で表示
 
     def _collector_warn_bar_html(self) -> str:
-        """collector_report/latest.json を読み、失敗件数に応じた警告バー HTMLを返す。
-        失敗 < threshold の場合は空文字を返す。"""
+        """collector_report/latest.json を読み、失敗件数・精度問題に応じた警告バー HTMLを返す。
+        shop_detail を参照し、required店舗とoptional店舗の失敗を区別して3段階で表示する。"""
         import json as _json
         from pathlib import Path as _Path
+
+        # optional扱いの店舗ID（これらの失敗は軽微）
+        _OPTIONAL_SHOP_IDS = {
+            "2ndstreet", "bookoff", "dosupara", "geo_mobile", "hardoff",
+            "pasoko", "janpara", "sofmap", "surugaya",
+        }
+
         _report_path = _Path(__file__).resolve().parent.parent.parent / "exports" / "collector_report" / "latest.json"
         if not _report_path.exists():
             return ""
         try:
-            _data   = _json.loads(_report_path.read_text(encoding="utf-8"))
-            _failed = _data.get("summary", {}).get("failed", 0)
+            _data = _json.loads(_report_path.read_text(encoding="utf-8"))
             _suspicious = len(_data.get("suspicious_prices", []))
+            _low_conf = _data.get("summary", {}).get("low_confidence_count", 0)
+
+            # shop_detail から required / optional の失敗数を集計
+            _shop_detail = _data.get("shop_detail", [])
+            _required_failed = 0
+            _optional_failed = 0
+            for _shop in _shop_detail:
+                _sid = _shop.get("shop_id", "")
+                _f = _shop.get("failed", 0)
+                if _sid in _OPTIONAL_SHOP_IDS:
+                    _optional_failed += _f
+                else:
+                    _required_failed += _f
         except Exception:
             return ""
 
-        if _failed < self._COLLECTOR_WARN_THRESHOLD and _suspicious == 0:
-            return ""
+        _link = '<a href="collector_report.html" data-track="collector_warn_click">取得レポートを確認</a>'
 
-        _parts = []
-        if _failed >= self._COLLECTOR_WARN_THRESHOLD:
-            _parts.append(f'取得失敗 {_failed}件あり')
-        if _suspicious > 0:
-            _parts.append(f'疑わしい価格 {_suspicious}件')
-        _msg = " / ".join(_parts)
-        return (
-            f'<div class="collector-warn-bar" id="collector-warn-bar">'
-            f'⚠️ {_esc(_msg)} —'
-            f' <a href="collector_report.html" data-track="collector_warn_click">取得レポートを確認</a>'
-            f'</div>\n'
-        )
+        # 強警告: 価格精度に問題あり（suspicious or low_confidence）
+        if _suspicious > 0 or _low_conf > 0:
+            _parts = []
+            if _suspicious > 0:
+                _parts.append(f'疑わしい価格 {_suspicious}件')
+            if _low_conf > 0:
+                _parts.append(f'低信頼度 {_low_conf}件')
+            _detail = " / ".join(_parts)
+            return (
+                f'<div class="collector-warn-bar collector-warn-strong" id="collector-warn-bar">'
+                f'⚠️ 価格精度に問題があります（{_esc(_detail)}） — {_link}'
+                f'</div>\n'
+            )
+
+        # 控えめ警告: required店舗の失敗が閾値以上
+        if _required_failed >= self._COLLECTOR_WARN_THRESHOLD:
+            return (
+                f'<div class="collector-warn-bar collector-warn-soft" id="collector-warn-bar">'
+                f'⚠️ 一部店舗データ取得失敗あり（{_required_failed}件） — {_link}'
+                f'</div>\n'
+            )
+
+        # リンクのみ: optional店舗の失敗が閾値以上（required は問題なし）
+        if _optional_failed >= self._COLLECTOR_WARN_THRESHOLD:
+            return (
+                f'<div class="collector-warn-bar collector-warn-info" id="collector-warn-bar">'
+                f'ℹ️ 一部店舗はサイト制限により取得不可（LP品質に影響なし） — {_link}'
+                f'</div>\n'
+            )
+
+        # 非表示
+        return ""
 
     def _section_footer(self) -> str:
 

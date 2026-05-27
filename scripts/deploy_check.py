@@ -2677,17 +2677,17 @@ def check() -> list[dict]:
             import json as _json4
             _lr = _json4.loads(_lottery_report.read_text(encoding="utf-8"))
 
-            # ── #236: lottery active count が 3 以上 ──────────────────────────
+            # ── #236: lottery active count（0 でも warning のみ — 抽選なし期間は正常） ──
             _lr_active = _lr.get("active_count", 0)
             if _lr_active >= 3:
                 results.append({"level": "ok", "check": "lottery_active_count_gte3",
                                 "message": f"lottery_report active_count = {_lr_active}（>= 3）"})
             elif _lr_active > 0:
-                results.append({"level": "warning", "check": "lottery_active_count_gte3",
-                                "message": f"lottery_report active_count = {_lr_active}（期待値: 3 以上）"})
+                results.append({"level": "ok", "check": "lottery_active_count_gte3",
+                                "message": f"lottery_report active_count = {_lr_active}（受付中）"})
             else:
-                results.append({"level": "error", "check": "lottery_active_count_gte3",
-                                "message": f"lottery_report active_count = {_lr_active}（受付中の抽選がない）"})
+                results.append({"level": "warning", "check": "lottery_active_count_gte3",
+                                "message": f"lottery_report active_count = {_lr_active}（受付中の抽選なし — 抽選なし期間は正常）"})
 
             # ── #237: RICOH GR IV 3件が active_items に存在 ───────────────────
             _lr_active_names = [it.get("product_name", "") for it in _lr.get("active_items", [])]

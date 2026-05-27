@@ -145,7 +145,7 @@ jobs:
 
           git add docs/ exports/lp/daily/ exports/collector_report/ exports/lottery_report/ \
                   exports/alerts_report/ exports/ranking_report/ exports/sedori_routes_report/ \
-                  data/alerts.csv \
+                  data/alerts.csv data/lottery_events.csv \
                   exports/deploy_check_latest.txt exports/prelaunch_check_latest.txt
 
           if git diff --cached --quiet; then

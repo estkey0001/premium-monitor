@@ -4392,6 +4392,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             latest_buyback_at=latest_buyback_at,
             monitoring_deals=_monitoring_filtered,
             fetch_failed_deals=_fetch_failed_filtered,
+            market_prices_by_product=market_prices_by_product or {},
         )
         advanced_html    = self._tab_advanced(advanced_deals, advanced_snaps, watch_candidates,
                                               camera_watch=camera_watch,
@@ -4789,11 +4790,26 @@ python3 -m src.cli calculate-sedori-routes</pre>
     def _tab_beginner(self, easy_deals, watch_deals, buyback_by_product: dict = None,
                        latest_buyback_at: Optional[datetime] = None,
                        monitoring_deals: list = None,
-                       fetch_failed_deals: list = None) -> str:
-        """初心者向けタブ（v7: 第一階層=ジャンル、第二階層=状態 の2階層構造）"""
+                       fetch_failed_deals: list = None,
+                       market_prices_by_product: dict = None) -> str:
+        """初心者向けタブ（v8: 一次流通仕入れ→二次流通販売モデル、海外価格対応）"""
         bybp = buyback_by_product or {}
+        mprices = market_prices_by_product or {}
         monitoring_deals   = monitoring_deals   or []
         fetch_failed_deals = fetch_failed_deals or []
+
+        def _get_overseas(deal) -> tuple[int | None, str, str]:
+            """deal の海外価格（price_jpy, source, observed_at）を取得する。"""
+            pid = getattr(deal, 'product_id', '') or ''
+            snap = mprices.get(pid)
+            if snap:
+                if isinstance(snap, list):
+                    snap = snap[0] if snap else None
+            if snap:
+                if isinstance(snap, dict):
+                    return snap.get('overseas_price_jpy'), snap.get('overseas_source', ''), snap.get('scanned_at', '')
+                return getattr(snap, 'overseas_price_jpy', None), getattr(snap, 'overseas_source', ''), str(getattr(snap, 'scanned_at', ''))
+            return None, '', ''
         parts = []
 
         # データ鮮度バナー
@@ -4942,7 +4958,10 @@ python3 -m src.cli calculate-sedori-routes</pre>
                     rows = bybp.get(d.product_id, [])
                     badge_cls = 'badge-easy' if getattr(d, 'user_level', '') == 'beginner_easy' else 'badge-watch'
                     label = '低難度' if getattr(d, 'user_level', '') == 'beginner_easy' else '様子見'
-                    parts.append(self._deal_card(d, badge_cls, label, buyback_rows=rows))
+                    _ovs_p, _ovs_s, _ovs_obs = _get_overseas(d)
+                    parts.append(self._deal_card(d, badge_cls, label, buyback_rows=rows,
+                                                 overseas_price_jpy=_ovs_p, overseas_source=_ovs_s,
+                                                 overseas_observed_at=_ovs_obs))
                 parts.append('</div></div>')
 
             # 監視中 / 赤字
@@ -5309,8 +5328,8 @@ python3 -m src.cli calculate-sedori-routes</pre>
         return '\n'.join(parts)
 
 
-    def _deal_card(self, d, badge_cls: str, label: str, buyback_rows: list = None, genre: str = None, pro_mode: bool = False) -> str:
-        """案件カード HTML を生成する（v5 Professional Design）。"""
+    def _deal_card(self, d, badge_cls: str, label: str, buyback_rows: list = None, genre: str = None, pro_mode: bool = False, overseas_price_jpy: int = None, overseas_source: str = None, overseas_observed_at: str = None) -> str:
+        """案件カード HTML を生成する（v6 Primary/Secondary Arbitrage）。"""
         pid  = _esc(d.product_id)
         shop = _esc(d.best_buyback_shop or '—')
         genre_cls = genre or (d.category if hasattr(d, 'category') else '')
@@ -5446,6 +5465,43 @@ python3 -m src.cli calculate-sedori-routes</pre>
                 + ''.join(rows_html)
                 + '</div>'
             )
+        # ── 海外価格セル（一次/二次流通販売時の海外相場表示）──
+        overseas_price_cell_html = ''
+        if not pro_mode:
+            # 海外価格が渡された場合は表示
+            _ovs_price = overseas_price_jpy or getattr(d, 'overseas_price_jpy', None)
+            _ovs_src = overseas_source or getattr(d, 'overseas_source', '') or ''
+            _ovs_obs = overseas_observed_at or ''
+            if _ovs_price and _ovs_price > 0:
+                # stale判定（72時間超）
+                _stale_cls = ''
+                if _ovs_obs:
+                    try:
+                        _ovs_dt = datetime.fromisoformat(str(_ovs_obs))
+                        if _ovs_dt.tzinfo is None:
+                            _ovs_dt = _ovs_dt.replace(tzinfo=JST)
+                        _ovs_age_h = (datetime.now(tz=JST) - _ovs_dt.astimezone(JST)).total_seconds() / 3600
+                        if _ovs_age_h > 72:
+                            _stale_cls = ' style="opacity:0.7"'
+                    except Exception:
+                        pass
+                _src_lbl = _esc(_ovs_src) if _ovs_src else 'eBay / StockX'
+                overseas_price_cell_html = (
+                    f'<div class="price-cell"{_stale_cls}>'
+                    f'<div class="price-cell-lbl">&#127758; 海外二次流通</div>'
+                    f'<div class="price-cell-val" style="color:#7c3aed">¥{_ovs_price:,}</div>'
+                    f'<div style="font-size:0.7rem;color:#9ca3af">{_src_lbl}</div>'
+                    f'</div>'
+                )
+            else:
+                # 海外価格未取得の場合
+                overseas_price_cell_html = (
+                    '<div class="price-cell" style="opacity:0.5">'
+                    '<div class="price-cell-lbl">&#127758; 海外二次流通</div>'
+                    '<div class="price-cell-val" style="color:#9ca3af;font-size:0.8rem">未取得</div>'
+                    '</div>'
+                )
+
         # Overseas links
         overseas_html = ''
         try:
@@ -5534,6 +5590,7 @@ python3 -m src.cli calculate-sedori-routes</pre>
       <div class="price-cell-lbl">{buyback_price_lbl}</div>
       <div class="{buyback_price_val_cls}">{_esc(fmt_price(d.best_buyback_price))}</div>
     </div>
+    {overseas_price_cell_html}
   </div>
   <div class="card-body">
     <div class="condition-row buyback-notice">

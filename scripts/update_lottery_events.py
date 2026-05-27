@@ -56,6 +56,11 @@ CSV_COLUMNS = [
     "checked_at",
     "data_source",
     "note",
+    # ── ステータス矛盾検知（2026-05-27 追加）──
+    "status_conflict",        # "true" / "false"
+    "status_conflict_reason", # 矛盾理由テキスト
+    "status_basis",           # "date_range_active" / "date_range_closed" / "no_date" / "text_terminated"
+    "source_text_excerpt",    # 判定根拠テキスト（最大200文字）
 ]
 
 # コレクター間のスリープ（秒）— 過度なアクセスを防ぐ

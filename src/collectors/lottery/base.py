@@ -40,6 +40,24 @@ _PERIOD_KEYWORDS = [
     "販売期間", "抽選期間", "受付開始", "受付終了",
 ]
 
+# ステータス矛盾を示すフレーズ（ページ本文に終了文言が含まれている場合）
+_CONFLICT_PHRASES: tuple[str, ...] = (
+    "受付は終了いたしました",
+    "受付を終了いたしました",
+    "エントリーは終了いたしました",
+    "エントリーを終了しました",
+    "受付を終了しました",
+    "受付は終了しました",
+    "抽選は終了いたしました",
+    "応募は終了いたしました",
+    "応募受付は終了いたしました",
+    "販売を終了いたしました",
+    "受付終了となりました",
+    "entry has closed",
+    "entries are closed",
+    "lottery has ended",
+)
+
 
 def _match_to_str(m: re.Match) -> str:
     """re.Match から "YYYY-MM-DD HH:MM" 文字列を生成する。"""
@@ -272,6 +290,66 @@ class BaseLotteryCollector:
     # ステータス判定
     # ======================================================================
 
+    def _detect_status_conflict(
+        self,
+        text: str,
+        status: str,
+        entry_start_at: str = "",
+        entry_end_at: str = "",
+    ) -> dict:
+        """ページ本文の終了文言と日付ベースのステータスの矛盾を検知する。
+
+        Returns:
+            {
+                "status_conflict":        "true" or "false",
+                "status_conflict_reason": str,
+                "status_basis":           str,  # date_range_active / date_range_closed / no_date / text_terminated
+                "source_text_excerpt":    str,  # 矛盾フレーズ周辺の最大200文字
+            }
+        """
+        # ステータス根拠を判定
+        if entry_end_at:
+            if status == "active":
+                status_basis = "date_range_active"
+            elif status == "upcoming":
+                status_basis = "date_range_upcoming"
+            else:
+                status_basis = "date_range_closed"
+        else:
+            status_basis = "no_date"
+
+        # 終了文言を探す
+        found_phrase = ""
+        excerpt = ""
+        for phrase in _CONFLICT_PHRASES:
+            idx = text.find(phrase)
+            if idx != -1:
+                found_phrase = phrase
+                # 前後50文字を根拠テキストとして保存（最大200文字）
+                start = max(0, idx - 30)
+                end = min(len(text), idx + len(phrase) + 80)
+                excerpt = text[start:end].strip()[:200]
+                break
+
+        # 矛盾判定: active/upcoming なのに終了文言がある場合
+        if found_phrase and status in ("active", "upcoming"):
+            return {
+                "status_conflict":        "true",
+                "status_conflict_reason": (
+                    f'本文に「{found_phrase}」が含まれるが、'
+                    f"entry_end_at は{entry_end_at or '未設定'}（{status}）"
+                ),
+                "status_basis":           status_basis,
+                "source_text_excerpt":    excerpt,
+            }
+
+        return {
+            "status_conflict":        "false",
+            "status_conflict_reason": "",
+            "status_basis":           status_basis,
+            "source_text_excerpt":    excerpt if found_phrase else "",
+        }
+
     def _determine_status(self, entry_start_at: str, entry_end_at: str) -> str:
         """
         "active" / "closed" / "upcoming" を返す。
@@ -329,6 +407,11 @@ class BaseLotteryCollector:
             "checked_at": self._now_jst_str(),
             "data_source": "auto_scraped",
             "note": "",
+            # ── ステータス矛盾検知フィールド ──
+            "status_conflict": "false",
+            "status_conflict_reason": "",
+            "status_basis": "",
+            "source_text_excerpt": "",
         }
         base.update(kwargs)
         return base

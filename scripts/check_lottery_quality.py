@@ -421,18 +421,19 @@ def main() -> int:
         print("::warning::抽選品質 WARNING — lottery_events.csv が空または存在しない（update_lottery_events.py の実行を確認）",
               file=sys.stderr)
 
-    # CSV アイテムを db_items にマージ（product_code で重複排除、DB 優先）
+    # CSV アイテムを db_items にマージ（CSV 優先: auto_scraped CSV は最新状態を反映）
+    # CSV の product_code/name が DB に存在する場合は DB 側のアイテムを CSV で上書き
     if csv_items:
-        _db_codes = {it.get("product_code", "") for it in db_items if it.get("product_code")}
-        _db_names = {it.get("product_name", "") for it in db_items}
-        for csv_ev in csv_items:
-            _code = csv_ev.get("product_code", "")
-            _name = csv_ev.get("product_name", "")
-            if _code and _code in _db_codes:
-                continue
-            if _name and _name in _db_names:
-                continue
-            db_items.append(csv_ev)
+        _csv_codes = {it.get("product_code", "") for it in csv_items if it.get("product_code")}
+        _csv_names = {it.get("product_name", "") for it in csv_items}
+        # DB アイテムから CSV と重複するものを除外
+        db_items = [
+            it for it in db_items
+            if not (it.get("product_code", "") and it.get("product_code", "") in _csv_codes)
+            and not (it.get("product_name", "") and it.get("product_name", "") in _csv_names)
+        ]
+        # CSV アイテムを追加（CSV が権威ある最新ソース）
+        db_items.extend(csv_items)
 
     if not ref_items and not db_items:
         print("[WARN] lottery アイテムが0件 — _LOTTERY_REFERENCE_ITEMS / DB / CSV ともに空", file=sys.stderr)

@@ -225,11 +225,11 @@ def check() -> list[dict]:
     else:
         results.append({"level": "warning", "check": "multi_shop_compare", "message": "複数店舗比較が見つからない"})
 
-    # 20. 速報タブが存在する
-    if 'id="tab-sokuhoh"' in html or 'data-tab="sokuhoh"' in html:
-        results.append({"level": "ok", "check": "sokuhoh_tab_exists", "message": "速報タブ（tab-sokuhoh）が存在する"})
+    # 20. 速報タブ削除確認（Task 3: 速報はポップアップへ移行済み）
+    if 'id="tab-sokuhoh"' in html:
+        results.append({"level": "warning", "check": "sokuhoh_tab_exists", "message": "速報タブパネルが残っている（Task 3 で削除予定）"})
     else:
-        results.append({"level": "error", "check": "sokuhoh_tab_exists", "message": "速報タブ（id=tab-sokuhoh）が見つからない"})
+        results.append({"level": "ok", "check": "sokuhoh_tab_exists", "message": "速報タブ削除済み（ポップアップへ移行）"})
 
     # 20b. 「新商品候補」がLP上に存在しない
     if '新商品候補' not in html:
@@ -1105,11 +1105,11 @@ def check() -> list[dict]:
     else:
         results.append({"level": "ok", "check": "no_surge_tab", "message": "急騰/急落タブは削除済み"})
 
-    # ── #128: 速報タブが存在する ──
-    if 'data-tab="sokuhoh"' in html:
-        results.append({"level": "ok", "check": "sokuhoh_tab_exists", "message": "速報タブが存在する"})
+    # ── #128: 速報タブ削除確認（Task 3: 速報はポップアップへ移行済み）──
+    if 'id="tab-sokuhoh"' in html:
+        results.append({"level": "warning", "check": "sokuhoh_tab_exists", "message": "#128 速報タブパネルが残っている（Task 3 で削除予定）"})
     else:
-        results.append({"level": "error", "check": "sokuhoh_tab_exists", "message": "速報タブ（data-tab=sokuhoh）が存在しない"})
+        results.append({"level": "ok", "check": "sokuhoh_tab_exists", "message": "#128 速報タブ削除済み（ポップアップへ移行）"})
 
     # ── #129: 抽選情報タブが1つだけ（CSS セレクタは除外）──
     lottery_tab_count = len(_re.findall(r'<button[^>]+data-tab="lottery"', html))

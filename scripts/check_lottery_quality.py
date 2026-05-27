@@ -109,6 +109,24 @@ def load_db_lottery_events() -> list[dict]:
         return []
 
 
+def load_csv_lottery_events() -> list[dict]:
+    """data/lottery_events.csv から auto_scraped イベントを読み込む（失敗時は空リスト）。"""
+    csv_path = PROJECT_ROOT / "data" / "lottery_events.csv"
+    if not csv_path.exists():
+        return []
+    try:
+        import csv
+        rows = []
+        with open(csv_path, encoding="utf-8", newline="") as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                rows.append(dict(row))
+        return rows
+    except Exception as e:
+        print(f"[WARN] lottery_events.csv 読み込み失敗: {e}", file=sys.stderr)
+        return []
+
+
 # ──────────────────────────────────────────────────────────────────────────────
 # 品質チェック
 # ──────────────────────────────────────────────────────────────────────────────
@@ -200,11 +218,24 @@ def run_checks(ref_items: list[dict], db_items: list[dict], now: datetime) -> di
     if LP_HTML_PATH.exists():
         try:
             lp_html = LP_HTML_PATH.read_text(encoding="utf-8")
-            # タブナビからカウントを取得
+            # タブナビからカウントを取得 — lottery ボタン要素のみを対象とする
+            # lottery ボタン: data-tab="lottery"... の button タグ内にある tab-count を探す
             nav_m = re.search(r'class="tab-nav"[^>]*>(.*?)</nav>', lp_html, re.DOTALL)
             if nav_m:
-                cnt_m = re.search(r'lottery.*?tab-count[^>]*>(\d+)', nav_m.group(1), re.DOTALL)
-                lp_count = int(cnt_m.group(1)) if cnt_m else None
+                nav_html = nav_m.group(1)
+                # lottery ボタン要素 (button ... data-tab="lottery" ...) の内容だけ取り出す
+                lottery_btn_m = re.search(
+                    r'<button[^>]*data-tab="lottery"[^>]*>(.*?)</button>',
+                    nav_html,
+                    re.DOTALL,
+                )
+                if lottery_btn_m:
+                    btn_content = lottery_btn_m.group(1)
+                    cnt_m = re.search(r'tab-count[^>]*>(\d+)', btn_content)
+                    lp_count = int(cnt_m.group(1)) if cnt_m else None
+                    # tab-count がないのは 0 件表示（バッジなし）
+                    if lp_count is None:
+                        lp_count = 0
         except Exception:
             pass
     expected_count = len(active_items)
@@ -383,9 +414,28 @@ def main() -> int:
     # データ読み込み
     ref_items = load_lottery_items()
     db_items  = load_db_lottery_events()
+    csv_items = load_csv_lottery_events()
+
+    # CSV が空の場合は WARNING を出す
+    if not csv_items:
+        print("::warning::抽選品質 WARNING — lottery_events.csv が空または存在しない（update_lottery_events.py の実行を確認）",
+              file=sys.stderr)
+
+    # CSV アイテムを db_items にマージ（product_code で重複排除、DB 優先）
+    if csv_items:
+        _db_codes = {it.get("product_code", "") for it in db_items if it.get("product_code")}
+        _db_names = {it.get("product_name", "") for it in db_items}
+        for csv_ev in csv_items:
+            _code = csv_ev.get("product_code", "")
+            _name = csv_ev.get("product_name", "")
+            if _code and _code in _db_codes:
+                continue
+            if _name and _name in _db_names:
+                continue
+            db_items.append(csv_ev)
 
     if not ref_items and not db_items:
-        print("[WARN] lottery アイテムが0件 — _LOTTERY_REFERENCE_ITEMS / DB ともに空", file=sys.stderr)
+        print("[WARN] lottery アイテムが0件 — _LOTTERY_REFERENCE_ITEMS / DB / CSV ともに空", file=sys.stderr)
         save_reports({
             "checked_at": now.strftime("%Y-%m-%d %H:%M") + " JST",
             "active_count": 0, "upcoming_count": 0, "closed_count": 0,

@@ -309,9 +309,24 @@ class DailyLPGenerator:
         # 抽選情報
         lottery_events = []
         try:
-            lottery_events = self.repo.list_lottery_events(status="active", limit=20)
+            lottery_events = list(self.repo.list_lottery_events(status="active", limit=20))
         except Exception:
             lottery_events = []
+
+        # CSV から auto_scraped イベントを追加（product_code で重複排除、CSV が優先）
+        _csv_events = self._load_csv_lottery_events()
+        if _csv_events:
+            _db_codes = {ev.get("product_code", "") for ev in lottery_events if ev.get("product_code")}
+            _db_names = {ev.get("product_name", "") for ev in lottery_events}
+            for _csv_ev in _csv_events:
+                _code = _csv_ev.get("product_code", "")
+                _name = _csv_ev.get("product_name", "")
+                # product_code または product_name で重複チェック
+                if _code and _code in _db_codes:
+                    continue
+                if _name and _name in _db_names:
+                    continue
+                lottery_events.append(_csv_ev)
 
         # ── 件数の整合：全表示箇所で同一の定義を使う ──────────────────────────
         # カメラ案件は初心者タブから除外してPro向けへ移動するため、beginner件数から除外
@@ -3680,54 +3695,25 @@ tr.sc-route-review {{ background: #FFFBEB; }}
   </div>
 </section>"""
 
-    # 抽選情報リファレンスカード（DBデータがない場合に表示する静的カード）
+    @classmethod
+    def _load_csv_lottery_events(cls) -> list[dict]:
+        """data/lottery_events.csv から抽選情報を読み込む。"""
+        csv_path = Path(__file__).resolve().parent.parent.parent / "data" / "lottery_events.csv"
+        if not csv_path.exists():
+            return []
+        try:
+            import csv
+            rows = []
+            with open(csv_path, encoding="utf-8", newline="") as f:
+                reader = csv.DictReader(f)
+                for row in reader:
+                    rows.append(dict(row))
+            return rows
+        except Exception:
+            return []
+
+    # 抽選情報リファレンスカード（CSV/DB で管理されていない商品のみ）
     _LOTTERY_REFERENCE_ITEMS = [
-        # ── 受付中（RICOH GR IV 3モデル）— reference_only なし ────────
-        {
-            "product_name": "RICOH GR IV Monochrome",
-            "brand": "RICOH",
-            "status": "active",
-            "product_code": "S0001580",
-            "note": "モノクロームモデル。受付期間: 2026年5月27日12:00〜5月29日12:00。抽選フォームから応募してください。",
-            "url": "https://ricohimagingstore.com/Form/Product/ProductDetail.aspx?shop=0&pid=S0001580&cat=002010",
-            "entry_form_url": "https://forms.gle/FjicSoGraoJuQwBd9",
-            "sale_method": "抽選販売",
-            "official_price": "¥283,800（税込）",
-            "link_type": "product_page",
-            "entry_start_at": "2026-05-27 12:00",
-            "entry_end_at": "2026-05-29 12:00",
-            "checked_at": "2026-05-27",
-        },
-        {
-            "product_name": "RICOH GR IV HDF",
-            "brand": "RICOH",
-            "status": "active",
-            "product_code": "S0001566",
-            "note": "ハイブリッドディフュージョンフィルター搭載モデル。受付期間: 2026年5月27日12:00〜5月29日12:00。抽選フォームから応募してください。",
-            "url": "https://ricohimagingstore.com/Form/Product/ProductDetail.aspx?shop=0&pid=S0001566&cat=002010",
-            "entry_form_url": "https://forms.gle/tAWGX3dnehAnWgX5A",
-            "sale_method": "抽選販売",
-            "official_price": "¥187,020（税込）",
-            "link_type": "product_page",
-            "entry_start_at": "2026-05-27 12:00",
-            "entry_end_at": "2026-05-29 12:00",
-            "checked_at": "2026-05-27",
-        },
-        {
-            "product_name": "RICOH GR IV",
-            "brand": "RICOH",
-            "status": "active",
-            "product_code": "S0001551",
-            "note": "スタンダードモデル。受付期間: 2026年5月27日12:00〜5月29日12:00。抽選フォームから応募してください。",
-            "url": "https://ricohimagingstore.com/Form/Product/ProductDetail.aspx?shop=0&pid=S0001551&cat=002010",
-            "entry_form_url": "https://forms.gle/4vvkxe1e9ghfiy667",
-            "sale_method": "抽選販売",
-            "official_price": "¥194,800（税込）",
-            "link_type": "product_page",
-            "entry_start_at": "2026-05-27 12:00",
-            "entry_end_at": "2026-05-29 12:00",
-            "checked_at": "2026-05-27",
-        },
         # ── 参考リンク（reference_only=True: 抽選期間なし・旧情報） ────────
         {
             "product_name": "FUJIFILM X100VI",

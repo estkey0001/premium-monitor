@@ -421,6 +421,17 @@ class DailyLPGenerator:
         _beginner_count_top = _beginner_disp_count
         _max_profit_top = max((d.net_profit_jpy or 0) for d in _beginner_easy_disp) if _beginner_easy_disp else 0
         _max_profit_str_top = f'+¥{_max_profit_top:,}' if _max_profit_top > 0 else '—'
+        # announce bar フォールバック: 利益0件でも「0件」を大きく出さない
+        if _beginner_count_top > 0:
+            _announce_bar_inner = (
+                f'&#127919; 最終確認 {_beginner_count_top} 件の初心者向け案件（手動確認データ）'
+                f'&mdash; 最大利益 {html_mod.escape(_max_profit_str_top)}'
+            )
+        else:
+            _announce_bar_inner = (
+                '&#127919; 参考データを掲載中 &mdash; '
+                '本日の自動取得 0件 / 前回・手動データで表示中（公式サイトで必ずご確認ください）'
+            )
 
         return f"""<!DOCTYPE html>
 <html lang="ja">
@@ -3316,7 +3327,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 
 </head>
 <body>
-{_collector_warn_html}<div class="announce-bar"><a href="#tab-beginner">&#127919; 最終確認 {_beginner_count_top} 件の初心者向け案件（手動確認データ）&mdash; 最大利益 {_esc(_max_profit_str_top)}</a></div>
+{_collector_warn_html}<div class="announce-bar"><a href="#tab-beginner">{_announce_bar_inner}</a></div>
 <header class="topbar">
   <a href="/" class="topbar-brand">
     <div class="brand-icon">S</div>
@@ -3514,6 +3525,25 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 
         max_profit_str = f'+¥{max_profit:,}' if max_profit > 0 else '—'
 
+        # Hero ボタン / social proof テキスト: all_count=0 でも「0件」を大きく出さない
+        _all_deals_total = len(all_deals) if all_deals else 0
+        if all_count > 0:
+            _hero_btn_label     = f"&#128100; 初心者向け案件を見る ({all_count}件)"
+            _hero_social_html   = (
+                f"最終確認 <strong>{all_count}</strong> 件（初心者向け・手動確認）"
+                f"— 最高利益参考 <strong>{_esc(max_profit_str)}</strong>"
+            )
+        elif _all_deals_total > 0:
+            # 監視中・前回データのみ（利益案件なし）
+            _hero_btn_label   = f"&#128100; 初心者向け案件を見る（参考データ {_all_deals_total}件）"
+            _hero_social_html = (
+                f"参考案件 <strong>{_all_deals_total}</strong> 件表示中（監視中・前回データ）"
+                f"— 本日自動取得 0件"
+            )
+        else:
+            _hero_btn_label   = "&#128100; 初心者向け案件を見る（取得中）"
+            _hero_social_html = "本日のデータ取得中。前回データを参考として表示します。"
+
         # 参考DEALS パネル: all_deals の上位5件を動的生成（fetch_failed 除外済み）
         _GENRE_ICON = {
             "iphone": "&#128241;", "smartphone": "&#128241;",
@@ -3564,7 +3594,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
       <h1 class="hero-title">最新<span class="accent">価格差</span>を把握する。</h1>
       <p class="hero-subtitle">公式購入→国内買取比較（初心者向け）から、二次流通→海外相場比較（Pro向け）まで、手動確認データによる参考値を掲載。iPhone・カメラ・ゲーム機の価格差を一枚で確認できます。公式サイトで最新価格を必ずご確認ください。</p>
       <div class="hero-cta-row">
-        <a href="#tab-beginner" class="hero-btn primary" data-track="hero_beginner_click">&#128100; 初心者向け案件を見る ({all_count}件)</a>
+        <a href="#tab-beginner" class="hero-btn primary" data-track="hero_beginner_click">{_hero_btn_label}</a>
         <a href="#tab-advanced" class="hero-btn violet" data-track="hero_pro_click">&#9997; Pro向け相場を見る</a>
         <a href="#tab-sedori" class="hero-btn secondary" data-track="hero_sedori_click">&#9636; せどりルートを見る</a>
       </div>
@@ -3574,7 +3604,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
           <div class="social-avatar">B</div>
           <div class="social-avatar">C</div>
         </div>
-        <div class="social-text">最終確認 <strong>{all_count}</strong> 件（初心者向け・手動確認）— 最高利益参考 <strong>{_esc(max_profit_str)}</strong></div>
+        <div class="social-text">{_hero_social_html}</div>
       </div>
       <div class="hero-timestamps">
         <span class="ts-pill {_esc(stale_cls)}" data-buyback-updated title="DBに記録された最新の買取価格データ取得日時。各カードの価格には個別の取得日時を表示しています。"><span class="ts-dot"></span>最終買取データ取得：{_esc(buyback_str)}</span>

@@ -1,6 +1,6 @@
 
 ============================================================
- Deploy Check (275 items)
+ Deploy Check (279 items)
 ============================================================
   ✅ [index_exists] docs/index.html 存在
   ✅ [forbidden_phrases] 禁止表現なし
@@ -153,8 +153,8 @@
   ✅ [freshness_kakunin_format] 鮮度ラベルに「価格確認: MM/DD」形式が使われている
   ✅ [freshness_yoko_format] 古い価格に「要更新 / N日前」形式が使われている
   ✅ [deal_card_no_saishin_label] updated-row に旧「最終更新：」表記なし（価格確認：に統一済み）
-  ✅ [stale_banner_date_mismatch] stale バナーなし（データが新鮮）— 日付不一致チェックはスキップ
-  ✅ [csv_today_observed_at] manual_buyback_prices.csv に本日(2026-05-27)の observed_at あり
+  ✅ [stale_banner_date_mismatch] stale バナーに「本日の価格データ未更新」日付不一致メッセージが含まれている
+  ⚠️ [csv_today_observed_at] manual_buyback_prices.csv に本日(2026-05-27)の observed_at なし（手動更新が必要な可能性）
   ✅ [iphone17_price_fetched] iPhone 17 Pro 系の買取価格が1件以上取得されている
   ✅ [mobile_ichiban_price] モバイル一番の買取価格（price > 0）が存在する
   ✅ [fetch_failed_display] fetch_failed 行があり、LP上に「取得失敗 / 要確認」表示がある
@@ -185,13 +185,13 @@
   ✅ [ipad_not_in_other] iPad は「その他」欄に混入していない
   ✅ [airpods_not_in_smartphone] AirPods はスマートフォン欄に混入していない
   ✅ [applewatch_in_wearable_section] Apple Watch がウェアラブル欄に表示
-  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-05-27T22:45:36+09:00）
+  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-05-28T00:33:32+09:00）
   ✅ [suspicious_price_format] suspicious_prices 形式OK（suspicious_price なし）
   ✅ [fetch_failed_has_reason] fetch_failed 34件すべてに reason あり
   ✅ [collector_report_html_exists] docs/collector_report.html 存在
   ✅ [collector_report_link_in_lp] LP内に collector_report.html へのリンクがある
   ✅ [fetch_failed_report_link] 取得失敗30件 / suspicious0件 → 警告バーが表示されている
-  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 16件存在する: ['iphone17pm512', 'iphone17pro512', 'iphone17pro256', 'iphone17pm256']
+  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 16件存在する: ['iphone17pro256', 'iphone17pro512', 'iphone17pm512', 'iphone17pm256']
   ✅ [beginner_page_auto_scraped_exists] 自動取得 OK 21件 / total 55件
   ✅ [shop_name_no_vertical_wrap] shop-name-col に word-break:keep-all が設定されている
   ✅ [iphone17pro256_price_scraped] iPhone 17 Pro 256GB の価格取得成功: ['kaitori_shouten', 'kaitori_itchome', 'iosys', 'netoff']
@@ -203,7 +203,7 @@
   ✅ [switch2_min2_shops] Switch2 成功店舗≥2（3店舗）
   ✅ [ps5pro_min2_shops] PS5 Pro 成功店舗≥2（2店舗）
   ✅ [no_unknown_failure_reason] すべての取得失敗に reason が設定されている（unknown なし）
-  ✅ [debug_files_saved] exports/debug/ に診断ファイル 59件あり
+  ✅ [debug_files_saved] exports/debug/ に診断ファイル 60件あり
   ✅ [low_confidence_not_in_lp] confidence=low 価格がLPに含まれていない（low=0件）
   ✅ [suspicious_price_not_in_lp] suspicious_price がLPに含まれていない（要疑い価格=0件）
   ✅ [fetch_failed_collapse_ui_exists] fetch_failed店舗 22件で「さらに表示」UIが存在
@@ -219,7 +219,7 @@
   ✅ [only_suspicious_low_conf_is_failure] quality gate の FAILURE 条件が suspicious_price / low_confidence のみ（店舗数不足はWARNING）
   ⚠️ [gr4_forms_links] RICOH GR IV フォームリンクが見つからないモデル: GR IV, GR IV HDF, GR IV Monochrome
   ✅ [gr4_prices_present] RICOH GR IV 3モデルの公式価格（¥194,800/¥187,020/¥283,800）がすべて存在する
-  ⚠️ [gr4_entry_period_present] RICOH GR IV 抽選期間の日付が見つからない: 2026-05-29（受付終了）
+  ✅ [gr4_entry_period_present] RICOH GR IV 抽選受付期間（2026-05-27〜2026-05-29）がLP内に存在する
   ✅ [mobile_ichiban_timeout_gte45s] mobile_ichiban Playwright goto timeout = 60000ms（>= 45000）
   ✅ [mobile_ichiban_no_networkidle] mobile_ichiban が domcontentloaded を使用、networkidle は使用していない（タイムアウト対策）
   ✅ [mobile_ichiban_requests_fastpath] mobile_ichiban が requests fast path を実装（Playwright 前にまず requests 試行）
@@ -243,8 +243,8 @@
   ✅ [lottery_quality_script_exists] scripts/check_lottery_quality.py が存在する
   ✅ [lottery_quality_in_workflow] daily_lp.yml に Lottery quality gate ステップが存在する
   ✅ [lottery_report_exists] exports/lottery_report/latest.json が生成されている
-  ⚠️ [lottery_active_count_gte3] lottery_report active_count = 0（受付中の抽選なし — 抽選なし期間は正常）
-  ⚠️ [ricoh_gr4_in_active_items] RICOH GR IV 系が active_items に 0 件のみ（期待値: 3）
+  ✅ [lottery_active_count_gte3] lottery_report active_count = 3（>= 3）
+  ✅ [ricoh_gr4_in_active_items] RICOH GR IV 系 3 件が active_items に存在
   ✅ [reference_only_excluded_from_active] reference_only アイテムが active count に混入していない
   ✅ [no_stale_in_active_section] 「次回未定」「抽選情報未確認」等の古い文言が active section にない
   ✅ [lottery_quality_no_failure] lottery_quality_gate: FAILURE 項目なし
@@ -274,11 +274,15 @@
   ✅ [kaitori_itchome_no_networkidle] kaitori_itchome: networkidle を使っていない（タイムアウト対策済み）
   ✅ [geo_ps5pro_not_listed] geo: ps5_pro を product_not_listed で処理している
   ✅ [no_sokuhoh_tab] #272 速報タブなし（削除済み）
-  ⚠️ [alert_popup_container] #273 alert-popup-container が LP に存在しない（Task 6 未適用 or アラートデータなし）
+  ✅ [alert_popup_container] #273 アラートポップアップコンテナあり（alert-popup-container）
   ✅ [alerts_csv_exists] #274 data/alerts.csv 存在
   ✅ [lottery_no_forbidden_notes] #275 抽選 active section 禁止文言なし
+  ✅ [ricoh_date_consistency] #276 RICOH GR IV: debug text に5月29日あり → entry_end_at=2026-05-29 12:00 ✅
+  ✅ [lottery_conflict_warning_in_lp] #277 status_conflict active 商品 ['RICOH GR IV Monochrome', 'RICOH GR IV HDF', 'RICOH GR IV'] → LP に conflict warning あり ✅
+  ✅ [lottery_conflict_active_preserved] #278 status_conflict かつ entry_end_at が未来 → active card として保持: ['RICOH GR IV Monochrome', 'RICOH GR IV HDF', 'RICOH GR IV']
+  ✅ [lottery_source_text_excerpt] #279 source_text_excerpt が 3件の active item に保存されている
 
-  Errors: 0 | Warnings: 5 | OK: 270
+  Errors: 0 | Warnings: 2 | OK: 277
 
   ✅ Deploy check PASSED
 ============================================================

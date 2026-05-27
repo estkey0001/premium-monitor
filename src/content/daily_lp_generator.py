@@ -1605,13 +1605,13 @@ a[href], button, [role="tab"], [role="button"],
 }}
 .badge-not-listed {{
   font-size: 0.66rem; font-weight: 700; padding: 2px 6px; border-radius: 99px;
-  background: rgba(21,128,61,0.08); color: #166534;
-  border: 1px solid rgba(21,128,61,0.20); white-space: nowrap;
+  background: rgba(100,116,139,0.10); color: #475569;
+  border: 1px solid rgba(100,116,139,0.28); white-space: nowrap;
 }}
 .freshness-not-listed {{
-  color: #166534; font-size: 0.7rem; font-weight: 700;
-  background: rgba(21,128,61,0.08); padding: 2px 7px; border-radius: 99px;
-  border: 1px solid rgba(21,128,61,0.18);
+  color: #475569; font-size: 0.7rem; font-weight: 700;
+  background: rgba(100,116,139,0.10); padding: 2px 7px; border-radius: 99px;
+  border: 1px solid rgba(100,116,139,0.25);
 }}
 .badge-fetch-failed {{
   font-size: 0.66rem; font-weight: 700; padding: 2px 6px; border-radius: 99px;

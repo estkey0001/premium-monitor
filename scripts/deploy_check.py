@@ -2925,6 +2925,62 @@ def check() -> list[dict]:
         results.append({"level": "warning", "check": "scanner_fetch_failed_keep",
                         "message": "beginner_deal_scanner.py の fetch_failed 保持ロジックが見つからない（自動取得失敗時に deal が消える可能性）"})
 
+    # ── #256〜#261: OPTIONAL_SHOPS 分類チェック ──────────────────────────────
+    import json as _json256
+    _cq_path = PROJECT_ROOT / "scripts" / "check_collector_quality.py"
+    _cq_txt  = _cq_path.read_text(encoding="utf-8") if _cq_path.exists() else ""
+
+    # #256: janpara が OPTIONAL_SHOPS に含まれる
+    if '"janpara"' in _cq_txt and "OPTIONAL_SHOPS" in _cq_txt:
+        results.append({"level": "ok", "check": "janpara_in_optional_shops",
+                        "message": "janpara が OPTIONAL_SHOPS に分類されている（rate_limited_429 — LP品質ゲート対象外）"})
+    else:
+        results.append({"level": "warning", "check": "janpara_in_optional_shops",
+                        "message": "janpara が OPTIONAL_SHOPS に含まれていない（429ブロックでも品質ゲートFAILUREになる可能性）"})
+
+    # #257: sofmap が OPTIONAL_SHOPS に含まれる
+    if '"sofmap"' in _cq_txt and "OPTIONAL_SHOPS" in _cq_txt:
+        results.append({"level": "ok", "check": "sofmap_in_optional_shops",
+                        "message": "sofmap が OPTIONAL_SHOPS に分類されている（service_unavailable — LP品質ゲート対象外）"})
+    else:
+        results.append({"level": "warning", "check": "sofmap_in_optional_shops",
+                        "message": "sofmap が OPTIONAL_SHOPS に含まれていない（503障害でも品質ゲートFAILUREになる可能性）"})
+
+    # #258: surugaya が OPTIONAL_SHOPS に含まれる
+    if '"surugaya"' in _cq_txt and "OPTIONAL_SHOPS" in _cq_txt:
+        results.append({"level": "ok", "check": "surugaya_in_optional_shops",
+                        "message": "surugaya が OPTIONAL_SHOPS に分類されている（site_blocked — LP品質ゲート対象外）"})
+    else:
+        results.append({"level": "warning", "check": "surugaya_in_optional_shops",
+                        "message": "surugaya が OPTIONAL_SHOPS に含まれていない（403ブロックでも品質ゲートFAILUREになる可能性）"})
+
+    # #259: optional failureのみのとき LP に強警告バー（collector-warn-strong）が出ない
+    _cr_json259_path = PROJECT_ROOT / "exports" / "collector_report" / "latest.json"
+    _lp_generator_path = PROJECT_ROOT / "src" / "content" / "daily_lp_generator.py"
+    _lp_gen_txt = _lp_generator_path.read_text(encoding="utf-8") if _lp_generator_path.exists() else ""
+    if "collector-warn-strong" in _lp_gen_txt and "_OPTIONAL_SHOP_IDS" in _lp_gen_txt:
+        results.append({"level": "ok", "check": "optional_only_no_strong_warn",
+                        "message": "LP生成器が required/optional を区別して警告強度を調整している"})
+    else:
+        results.append({"level": "warning", "check": "optional_only_no_strong_warn",
+                        "message": "LP生成器が optional only の場合でも強警告を出す可能性がある"})
+
+    # #260: suspicious_price / low_confidence は強警告のまま
+    if "suspicious" in _lp_gen_txt and "collector-warn-strong" in _lp_gen_txt:
+        results.append({"level": "ok", "check": "suspicious_still_strong_warn",
+                        "message": "suspicious_price / low_confidence 時は強警告が出る設計になっている"})
+    else:
+        results.append({"level": "warning", "check": "suspicious_still_strong_warn",
+                        "message": "suspicious_price / low_confidence 時の強警告ロジックが見つからない"})
+
+    # #261: collector_report に Required / Optional failures の分離表示がある
+    if "optional_warnings" in _cq_txt and "Required" in _cq_txt:
+        results.append({"level": "ok", "check": "collector_report_required_optional_split",
+                        "message": "collector_report に Required / Optional failures の分離表示がある"})
+    else:
+        results.append({"level": "warning", "check": "collector_report_required_optional_split",
+                        "message": "collector_report に Required / Optional failures の分離表示が見つからない"})
+
     return results
 
 

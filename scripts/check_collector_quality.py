@@ -62,7 +62,10 @@ OPTIONAL_SHOPS: dict[str, str] = {
     "dosupara":   "url_invalid",         # 検索URLが404返し
     "geo_mobile": "site_blocked",        # Cloudflareブロック
     "hardoff":    "url_invalid",         # 検索URLが404返し
+    "janpara":    "rate_limited_429",    # GitHub Actions IP で全リクエスト429ブロック（2026-05-27確認）
     "pasoko":     "product_not_listed",  # PC専門店 — PS5/Switch2取り扱いなし（2026-05-27確認）
+    "sofmap":     "service_unavailable", # 503サーバー障害継続中（2026-05-27確認）
+    "surugaya":   "site_blocked",        # 403ボット検知、改善不可（2026-05-27確認）
 }
 
 # 主要商品の最小成功店舗数
@@ -168,6 +171,7 @@ def evaluate(report: dict) -> dict:
 
     failures = []
     warnings = []
+    optional_warnings = []
 
     # ── FAILURE チェック（誤価格リスクのみ — ワークフロー停止） ──────────────
     # NOTE: GitHub Actions の IP がサイトにブロックされることが多く、
@@ -211,27 +215,27 @@ def evaluate(report: dict) -> dict:
     if hist_result["consecutive_3day"]:
         required = [s for s in hist_result["consecutive_3day"] if s not in OPTIONAL_SHOPS]
         optional  = [s for s in hist_result["consecutive_3day"] if s in OPTIONAL_SHOPS]
-        parts = []
         if required:
-            parts.append(f"要対応: {', '.join(required[:5])}")
+            warnings.append(f"3日連続失敗（required）: {', '.join(required[:5])}")
         if optional:
-            parts.append(f"optional: {', '.join(optional[:5])}")
-        warnings.append(f"3日連続失敗 — {' / '.join(parts)}")
+            # optional は全件表示（5件制限なし — janpara/sofmap/surugaya が含まれる）
+            optional_warnings.append(f"3日連続失敗（optional）: {', '.join(optional)}")
 
     return {
-        "failures":    failures,
-        "warnings":    warnings,
-        "ok_count":    ok_count,
-        "failed_count": failed_count,
-        "skip_count":  skip_count,
-        "total":       total,
-        "low_conf":    low_conf,
-        "suspicious":  suspicious,
-        "shop_p5":     shop_p5,
-        "prod_stats":  prod_stats,
-        "fail_rank":   fail_rank,
-        "psd":         psd,
-        "generated_at": report.get("generated_at", "—"),
+        "failures":          failures,
+        "warnings":          warnings,
+        "optional_warnings": optional_warnings,
+        "ok_count":          ok_count,
+        "failed_count":      failed_count,
+        "skip_count":        skip_count,
+        "total":             total,
+        "low_conf":          low_conf,
+        "suspicious":        suspicious,
+        "shop_p5":           shop_p5,
+        "prod_stats":        prod_stats,
+        "fail_rank":         fail_rank,
+        "psd":               psd,
+        "generated_at":      report.get("generated_at", "—"),
     }
 
 
@@ -252,12 +256,36 @@ def build_summary_md(result: dict) -> str:
         for f in result["failures"]:
             lines.append(f"- {f}")
     elif result["warnings"]:
-        lines.append("### ⚠️ WARNING — 注意が必要")
+        lines.append("### ⚠️ WARNING — 注意が必要（必須店舗）")
         for w in result["warnings"]:
+            lines.append(f"- {w}")
+    elif result.get("optional_warnings"):
+        lines.append("### 🟡 INFO — optional店舗の失敗あり（LP生成に影響なし）")
+        for w in result["optional_warnings"]:
             lines.append(f"- {w}")
     else:
         lines.append("### ✅ 品質ゲート通過")
     lines.append("")
+
+    # Required / Optional 失敗の分離表示
+    if result["warnings"] or result.get("optional_warnings"):
+        if result["warnings"]:
+            lines.append("### ❌ Required 失敗（LP品質に直接影響）")
+            lines.append("")
+            for w in result["warnings"]:
+                lines.append(f"- {w}")
+            lines.append("")
+        if result.get("optional_warnings"):
+            lines.append("### ⚠️ Optional 失敗（サイト制限・一時障害）")
+            lines.append("")
+            for w in result["optional_warnings"]:
+                lines.append(f"- {w}")
+            opt_shops_in_fail = [
+                s for s in OPTIONAL_SHOPS if any(s in ow for ow in result["optional_warnings"])
+            ]
+            if opt_shops_in_fail:
+                lines.append(f"  対象店舗: {', '.join(opt_shops_in_fail)}")
+            lines.append("")
 
     # 取得サマリー
     total   = result["total"]
@@ -343,6 +371,8 @@ def build_summary_md(result: dict) -> str:
         "site_blocked":              "Cloudflare 等によるブロック",
         "collector_not_implemented": "Collector 未実装",
         "playwright_timeout":        "JS描画タイムアウト",
+        "rate_limited_429":          "GitHub Actions IP がレートリミットでブロックされている",
+        "service_unavailable":       "503サーバー障害 — 復旧待ち",
     }
     for shop_id, cls in OPTIONAL_SHOPS.items():
         desc = CLASSIFICATION_DESC.get(cls, cls)
@@ -429,16 +459,20 @@ def main() -> int:
     total = result["total"]
     fail = len(result["failures"])
     warn = len(result["warnings"])
+    opt_warn = len(result.get("optional_warnings", []))
     print(f"\n{'='*60}", file=sys.stderr)
     print(f"  Collector Quality: OK={ok}/{total}  "
-          f"FAILURES={fail}  WARNINGS={warn}", file=sys.stderr)
+          f"FAILURES={fail}  WARNINGS={warn}  OPT_WARNINGS={opt_warn}", file=sys.stderr)
     if result["failures"]:
         for f in result["failures"]:
             print(f"  ❌ {f}", file=sys.stderr)
     if result["warnings"]:
         for w in result["warnings"]:
             print(f"  ⚠️  {w}", file=sys.stderr)
-    if fail == 0 and warn == 0:
+    if result.get("optional_warnings"):
+        for w in result["optional_warnings"]:
+            print(f"  🟡 {w}", file=sys.stderr)
+    if fail == 0 and warn == 0 and opt_warn == 0:
         print("  ✅ 品質ゲート通過", file=sys.stderr)
     print(f"{'='*60}\n", file=sys.stderr)
 
@@ -447,6 +481,10 @@ def main() -> int:
         for w in result["warnings"]:
             # ::warning:: annotation — Actions UI に黄色マークで表示
             print(f"::warning::品質ゲート WARNING — {w}")
+    if IS_GITHUB_ACTIONS and result.get("optional_warnings"):
+        for w in result["optional_warnings"]:
+            # ::notice:: annotation — optional失敗はnoticeレベル
+            print(f"::notice::optional店舗 INFO — {w}")
 
     # 6. exit code
     # FAILURE（誤価格リスク）: exit 1

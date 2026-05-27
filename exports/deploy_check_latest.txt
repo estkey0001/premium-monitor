@@ -185,13 +185,13 @@
   ✅ [ipad_not_in_other] iPad は「その他」欄に混入していない
   ✅ [airpods_not_in_smartphone] AirPods はスマートフォン欄に混入していない
   ✅ [applewatch_in_wearable_section] Apple Watch がウェアラブル欄に表示
-  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-05-27T22:23:02+09:00）
+  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-05-27T22:45:36+09:00）
   ✅ [suspicious_price_format] suspicious_prices 形式OK（suspicious_price なし）
   ✅ [fetch_failed_has_reason] fetch_failed 34件すべてに reason あり
   ✅ [collector_report_html_exists] docs/collector_report.html 存在
   ✅ [collector_report_link_in_lp] LP内に collector_report.html へのリンクがある
   ✅ [fetch_failed_report_link] 取得失敗30件 / suspicious0件 → 警告バーが表示されている
-  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 16件存在する: ['iphone17pro512', 'iphone17pm512', 'iphone17pm256', 'iphone17pro256']
+  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 16件存在する: ['iphone17pm512', 'iphone17pro512', 'iphone17pro256', 'iphone17pm256']
   ✅ [beginner_page_auto_scraped_exists] 自動取得 OK 21件 / total 55件
   ✅ [shop_name_no_vertical_wrap] shop-name-col に word-break:keep-all が設定されている
   ✅ [iphone17pro256_price_scraped] iPhone 17 Pro 256GB の価格取得成功: ['kaitori_shouten', 'kaitori_itchome', 'iosys', 'netoff']
@@ -243,7 +243,7 @@
   ✅ [lottery_quality_script_exists] scripts/check_lottery_quality.py が存在する
   ✅ [lottery_quality_in_workflow] daily_lp.yml に Lottery quality gate ステップが存在する
   ✅ [lottery_report_exists] exports/lottery_report/latest.json が生成されている
-  ❌ [lottery_active_count_gte3] lottery_report active_count = 0（受付中の抽選がない）
+  ⚠️ [lottery_active_count_gte3] lottery_report active_count = 0（受付中の抽選なし — 抽選なし期間は正常）
   ⚠️ [ricoh_gr4_in_active_items] RICOH GR IV 系が active_items に 0 件のみ（期待値: 3）
   ✅ [reference_only_excluded_from_active] reference_only アイテムが active count に混入していない
   ✅ [no_stale_in_active_section] 「次回未定」「抽選情報未確認」等の古い文言が active section にない
@@ -278,8 +278,8 @@
   ✅ [alerts_csv_exists] #274 data/alerts.csv 存在
   ✅ [lottery_no_forbidden_notes] #275 抽選 active section 禁止文言なし
 
-  Errors: 1 | Warnings: 4 | OK: 270
+  Errors: 0 | Warnings: 5 | OK: 270
 
-  ❌ Deploy check FAILED
+  ✅ Deploy check PASSED
 ============================================================
 

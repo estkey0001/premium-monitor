@@ -25,7 +25,7 @@
   ✅ [advanced_in_tab] 上級者向け確定案件が存在する
   ✅ [buyback_links_exist] 買取リンクが存在する
   ✅ [multi_shop_compare] 複数店舗比較が表示されている
-  ❌ [sokuhoh_tab_exists] 速報タブ（id=tab-sokuhoh）が見つからない
+  ✅ [sokuhoh_tab_exists] 速報タブ削除済み（ポップアップへ移行）
   ✅ [new_products_removed] 「新商品候補」テキストは存在しない（速報タブに移行済み）
   ✅ [sokuhoh_content] 速報タブにコンテンツ（카드またはデータなし表示）がある
   ✅ [lottery_link_type_label] 抽選カードにリンク種別ラベルがある
@@ -137,7 +137,7 @@
   ✅ [pro_filter_price_gap] 「価格差あり」フィルタボタンが存在する
   ✅ [pro_cards_sorted_by_gap] 価格差ありカードが存在し、ソート構造が正常
   ✅ [no_surge_tab] 急騰/急落タブは削除済み
-  ❌ [sokuhoh_tab_exists] 速報タブ（data-tab=sokuhoh）が存在しない
+  ✅ [sokuhoh_tab_exists] #128 速報タブ削除済み（ポップアップへ移行）
   ✅ [single_lottery_tab] 抽選情報タブが1つだけ存在する
   ✅ [unified_main_nav] メインナビが1つに統合されている（cat-nav-wrapなし）
   ✅ [genre_dropdown_exists] ジャンルドロップダウンが存在する
@@ -185,7 +185,7 @@
   ✅ [ipad_not_in_other] iPad は「その他」欄に混入していない
   ✅ [airpods_not_in_smartphone] AirPods はスマートフォン欄に混入していない
   ✅ [applewatch_in_wearable_section] Apple Watch がウェアラブル欄に表示
-  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-05-27T21:41:38+09:00）
+  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-05-27T22:03:58+09:00）
   ✅ [suspicious_price_format] suspicious_prices 形式OK（suspicious_price なし）
   ✅ [fetch_failed_has_reason] fetch_failed 34件すべてに reason あり
   ✅ [collector_report_html_exists] docs/collector_report.html 存在
@@ -278,7 +278,7 @@
   ✅ [alerts_csv_exists] #274 data/alerts.csv 存在
   ✅ [lottery_no_forbidden_notes] #275 抽選 active section 禁止文言なし
 
-  Errors: 3 | Warnings: 4 | OK: 268
+  Errors: 1 | Warnings: 4 | OK: 270
 
   ❌ Deploy check FAILED
 ============================================================

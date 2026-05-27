@@ -53,6 +53,17 @@ WARNING_CONDITIONS = {
     "report_not_generated":       "collector_report が生成されていない",
 }
 
+# optional_shop: 不安定または未対応扱いの店舗
+# → 成功率分母には含めるが、3日連続失敗でもWARNINGを抑制しない
+#   （ただし deploy-check の error 原因にしない）
+OPTIONAL_SHOPS: dict[str, str] = {
+    "2ndstreet":  "product_not_listed",  # iPhone17等が掲載されていない
+    "bookoff":    "product_not_listed",  # 買取価格ページ構造が対象外
+    "dosupara":   "url_invalid",         # 検索URLが404返し
+    "geo_mobile": "site_blocked",        # Cloudflareブロック
+    "hardoff":    "url_invalid",         # 検索URLが404返し
+}
+
 # 主要商品の最小成功店舗数
 # GitHub Actions 上はIPブロックで取得数が少ないため閾値を下げる
 _IPHONE_MIN = 2 if IS_GITHUB_ACTIONS else 3
@@ -197,8 +208,14 @@ def evaluate(report: dict) -> dict:
 
     hist_result = update_failure_history(report)
     if hist_result["consecutive_3day"]:
-        shops_str = ", ".join(hist_result["consecutive_3day"][:5])
-        warnings.append(f"3日連続失敗: {shops_str}")
+        required = [s for s in hist_result["consecutive_3day"] if s not in OPTIONAL_SHOPS]
+        optional  = [s for s in hist_result["consecutive_3day"] if s in OPTIONAL_SHOPS]
+        parts = []
+        if required:
+            parts.append(f"要対応: {', '.join(required[:5])}")
+        if optional:
+            parts.append(f"optional: {', '.join(optional[:5])}")
+        warnings.append(f"3日連続失敗 — {' / '.join(parts)}")
 
     return {
         "failures":    failures,
@@ -313,6 +330,25 @@ def build_summary_md(result: dict) -> str:
         for i, sp in enumerate(shop_p5[:5], 1):
             lines.append(f"{i}. `{sp}`")
         lines.append("")
+
+    # optional_shop 分類セクション
+    lines.append("### 🔧 不安定/未対応店舗（optional shops）")
+    lines.append("")
+    lines.append("| 店舗ID | 分類 | 説明 |")
+    lines.append("|--------|------|------|")
+    CLASSIFICATION_DESC = {
+        "product_not_listed": "対象商品を掲載していない",
+        "url_invalid":        "検索URL が 404 / 構造変更の可能性",
+        "site_blocked":       "Cloudflare 等によるブロック",
+        "collector_not_implemented": "Collector 未実装",
+        "playwright_timeout": "JS描画タイムアウト",
+    }
+    for shop_id, cls in OPTIONAL_SHOPS.items():
+        desc = CLASSIFICATION_DESC.get(cls, cls)
+        lines.append(f"| `{shop_id}` | `{cls}` | {desc} |")
+    lines.append("")
+    lines.append("> ℹ️ これらの店舗は`deploy-check`のエラー原因に含まれません。")
+    lines.append("")
 
     # suspicious_prices 詳細
     suspicious = result["suspicious"]

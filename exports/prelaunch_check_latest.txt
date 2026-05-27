@@ -1,0 +1,34 @@
+
+======================================================================
+ 本番前チェックリスト (16 項目)
+======================================================================
+  ✅ [public_index] docs/index.html 存在
+  ✅ [forbidden] 禁止表現なし
+  ⚠️ [ga_id] GA ID未設定 → 設定するとPV・CTR計測が可能
+  ⚠️ [note_url] note_url未設定 → LP上は「準備中」表示。note記事公開後に設定
+  ✅ [site_url] site_url設定済み: https://estkey0001.github.io/premium-monitor
+  ✅ [note_cta] enable_note_cta: true
+  ✅ [line_cta] enable_line_cta: false（初期運用OFF）
+  ✅ [telegram_cta] enable_telegram_cta: false（初期運用OFF）
+  ✅ [empty_links] 空リンクなし
+  ✅ [today_date] 今日の日付 2026-05-27 あり
+  ✅ [price] 価格表記あり
+  ✅ [beginner_easy] beginner_easy案件あり
+  ✅ [ab_variants] A/B/C全バリアント生成済み
+  ✅ [sitemap] sitemap.xml あり
+  ✅ [robots] robots.txt あり
+  ✅ [disclaimer] 免責事項あり
+
+  --- サマリ ---
+  Errors:   0
+  Warnings: 2
+  OK:       14
+
+  ✅ 公開準備完了！
+  次のステップ:
+    git add . && git commit -m 'Launch LP' && git push
+    → GitHub Pages URL を確認
+
+  ℹ️ Warningは公開を妨げませんが、設定すると運用が改善します。
+======================================================================
+

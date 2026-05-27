@@ -2780,6 +2780,64 @@ def check() -> list[dict]:
         results.append({"level": "warning", "check": "lottery_csv_has_ricoh",
                         "message": "data/lottery_events.csv が存在しない（update_lottery_events.py を実行してください）"})
 
+    # ── #244〜#248: 通知スクリプト・ワークフロー連携チェック ────────────────────────
+
+    # ── #244: notify_workflow_result.py が存在する ───────────────────────────
+    _notify_script = PROJECT_ROOT / "scripts" / "notify_workflow_result.py"
+    if _notify_script.exists():
+        results.append({"level": "ok", "check": "notify_script_exists",
+                        "message": "scripts/notify_workflow_result.py が存在する"})
+    else:
+        results.append({"level": "error", "check": "notify_script_exists",
+                        "message": "scripts/notify_workflow_result.py が存在しない"})
+
+    # ── #245〜#248: daily_lp.yml の通知・出力ステップ確認 ────────────────────
+    _wf_notify_path = PROJECT_ROOT / ".github" / "workflows" / "daily_lp.yml"
+    if _wf_notify_path.exists():
+        _wf_notify_text = _wf_notify_path.read_text(encoding="utf-8")
+
+        # #245: Notify ステップがある
+        if "notify_workflow_result.py" in _wf_notify_text and "Notify" in _wf_notify_text:
+            results.append({"level": "ok", "check": "notify_step_in_workflow",
+                            "message": "daily_lp.yml に Notify workflow result ステップが存在する"})
+        else:
+            results.append({"level": "error", "check": "notify_step_in_workflow",
+                            "message": "daily_lp.yml に Notify workflow result ステップが存在しない"})
+
+        # #246: deploy-check が exports/deploy_check_latest.txt に tee している
+        if "deploy_check_latest.txt" in _wf_notify_text and "tee" in _wf_notify_text:
+            results.append({"level": "ok", "check": "deploy_check_tee_output",
+                            "message": "deploy-check の出力が exports/deploy_check_latest.txt に保存される"})
+        else:
+            results.append({"level": "warning", "check": "deploy_check_tee_output",
+                            "message": "deploy-check が exports/deploy_check_latest.txt に tee されていない"})
+
+        # #247: prelaunch-check が exports/prelaunch_check_latest.txt に tee している
+        if "prelaunch_check_latest.txt" in _wf_notify_text and "tee" in _wf_notify_text:
+            results.append({"level": "ok", "check": "prelaunch_tee_output",
+                            "message": "prelaunch-check の出力が exports/prelaunch_check_latest.txt に保存される"})
+        else:
+            results.append({"level": "warning", "check": "prelaunch_tee_output",
+                            "message": "prelaunch-check が exports/prelaunch_check_latest.txt に tee されていない"})
+
+        # #248: DISCORD_WEBHOOK_URL / TELEGRAM_BOT_TOKEN を参照している
+        _has_discord  = "DISCORD_WEBHOOK_URL" in _wf_notify_text
+        _has_telegram = "TELEGRAM_BOT_TOKEN"  in _wf_notify_text
+        if _has_discord and _has_telegram:
+            results.append({"level": "ok", "check": "notify_env_vars",
+                            "message": "DISCORD_WEBHOOK_URL / TELEGRAM_BOT_TOKEN が workflow に設定されている"})
+        else:
+            _missing_envs = []
+            if not _has_discord:  _missing_envs.append("DISCORD_WEBHOOK_URL")
+            if not _has_telegram: _missing_envs.append("TELEGRAM_BOT_TOKEN")
+            results.append({"level": "warning", "check": "notify_env_vars",
+                            "message": f"通知環境変数が未設定: {', '.join(_missing_envs)}"})
+    else:
+        for _chk_n in ["notify_step_in_workflow", "deploy_check_tee_output",
+                       "prelaunch_tee_output", "notify_env_vars"]:
+            results.append({"level": "warning", "check": _chk_n,
+                            "message": ".github/workflows/daily_lp.yml が見つからない"})
+
     return results
 
 

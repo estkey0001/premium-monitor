@@ -32,6 +32,9 @@ jobs:
       - name: Init DB
         run: python -m src.cli init-db
 
+      - name: Seed products
+        run: python -m src.cli seed
+
       - name: Update buyback prices auto scraping
         run: python scripts/update_buyback_prices.py
         continue-on-error: true

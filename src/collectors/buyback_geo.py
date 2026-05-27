@@ -4,6 +4,14 @@ URL: https://www.geo-online.co.jp/store_info/buy/
 注: iPhoneページは /store_info/buy/iphone/ で静的HTML公開。
     ゲーム機本体は /store_info/buy/ (トップ) に掲載。
     buy.geo-online.co.jp は 403 Forbidden のためアクセス不可。
+
+2026-05-27 調査結果:
+  - iPhone 17 シリーズ: geo の /store_info/buy/iphone/ は iPhone 16 以前のみ掲載。
+    iPhone 17 Pro/Max は geo_mobile コレクターが Playwright で担当する。
+  - PS5 Pro (CFI-7000): /store_info/buy/ に掲載なし（2026-05現在）。
+    PS5 CFI-2000 はジャンク品欄にあるが PS5 Pro は未掲載。
+    → ps5_pro は product_not_listed として記録。
+  - Switch 2 (ＳＷ２): 本体・周辺機器欄に 50,000円 で掲載 → 取得成功。
 """
 import re
 from typing import Optional
@@ -15,8 +23,17 @@ PRODUCT_URLS = {
     "iphone17pm256":   "https://www.geo-online.co.jp/store_info/buy/iphone/",
     "iphone17pm512":   "https://www.geo-online.co.jp/store_info/buy/iphone/",
     "switch2":         "https://www.geo-online.co.jp/store_info/buy/",
-    "ps5_pro":         "https://www.geo-online.co.jp/store_info/buy/",
+    "ps5_pro":         "",  # geo では PS5 Pro 未掲載（2026-05現在）→ product_not_listed
 }
+
+# geo では掲載のない商品（product_not_listed として記録）
+_NOT_LISTED: frozenset[str] = frozenset({
+    "ps5_pro",         # PS5 Pro: 2026-05現在 /store_info/buy/ に未掲載
+    "iphone17pro256",  # iPhone 17 Pro/Max: geo_mobile が担当。geo/iphone/ は iPhone 16 以前のみ
+    "iphone17pro512",
+    "iphone17pm256",
+    "iphone17pm512",
+})
 
 # 直接正規表現パターン（ゲオのページは全角文字・全角スペース混在）
 # 実際のページテキスト例: "ＳＷ２　ニンテンドー　スイッチ　２　（日本語・国内専用） 参考買取価格 40,000円"
@@ -39,6 +56,14 @@ class GeoCsvCollector(BaseCsvBuybackCollector):
 
     def _build_url(self, product_alias: str, product_name: str) -> str:
         return PRODUCT_URLS.get(product_alias, "")
+
+    def fetch(self, product_alias: str, product_name: str, condition: str = "new_unopened_simfree"):
+        """商品未掲載の場合は product_not_listed として早期リターン。"""
+        if product_alias in _NOT_LISTED:
+            self.last_failure_reason = "product_not_listed"
+            self.last_confidence = "high"
+            return None
+        return super().fetch(product_alias, product_name, condition)
 
     def _parse_price(self, html: str, product_alias: str, product_name: str) -> Optional[int]:
         from bs4 import BeautifulSoup

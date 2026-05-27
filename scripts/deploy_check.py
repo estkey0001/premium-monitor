@@ -2249,6 +2249,117 @@ def check() -> list[dict]:
         results.append({"level": "warning", "check": "gr4_entry_period_present",
                         "message": f"RICOH GR IV 抽選期間の日付が見つからない: {', '.join(missing_dates)}"})
 
+    # ── #213: mobile_ichiban コレクターに timeout >= 45秒 の設定がある ─────────────
+    _mi_collector = PROJECT_ROOT / "src" / "collectors" / "buyback_mobile_ichiban.py"
+    if _mi_collector.exists():
+        _mi_text = _mi_collector.read_text(encoding="utf-8")
+        # _PW_GOTO_TIMEOUT_MS >= 45000 が設定されているか確認
+        # Python の数値リテラルは _ 区切り可能（例: 60_000）→ _ を除去して数値化
+        import re as _re
+        _timeout_match = _re.search(r'_PW_GOTO_TIMEOUT_MS\s*=\s*([\d_]+)', _mi_text)
+        _timeout_val = int(_timeout_match.group(1).replace("_", "")) if _timeout_match else 0
+        if _timeout_val >= 45_000:
+            results.append({"level": "ok", "check": "mobile_ichiban_timeout_gte45s",
+                            "message": f"mobile_ichiban Playwright goto timeout = {_timeout_val}ms（>= 45000）"})
+        else:
+            results.append({"level": "warning", "check": "mobile_ichiban_timeout_gte45s",
+                            "message": f"mobile_ichiban Playwright timeout が {_timeout_val}ms — 45000ms 以上推奨"})
+    else:
+        results.append({"level": "warning", "check": "mobile_ichiban_timeout_gte45s",
+                        "message": "src/collectors/buyback_mobile_ichiban.py が見つからない"})
+
+    # ── #214: mobile_ichiban が domcontentloaded を使用している（networkidle 禁止）───
+    if _mi_collector.exists():
+        _uses_domcontentloaded = "domcontentloaded" in _mi_text
+        # コード内で networkidle を wait_until 引数として使用しているか確認
+        # （docstring / コメント内の言及は除外）
+        _uses_networkidle = bool(
+            _re.search(r'wait_until\s*=\s*["\']networkidle["\']', _mi_text) or
+            _re.search(r'wait_for_load_state\s*\(\s*["\']networkidle["\']', _mi_text)
+        )
+        if _uses_domcontentloaded and not _uses_networkidle:
+            results.append({"level": "ok", "check": "mobile_ichiban_no_networkidle",
+                            "message": "mobile_ichiban が domcontentloaded を使用、networkidle は使用していない（タイムアウト対策）"})
+        elif _uses_networkidle:
+            results.append({"level": "warning", "check": "mobile_ichiban_no_networkidle",
+                            "message": "mobile_ichiban が networkidle を使用している — タイムアウトの原因になるため domcontentloaded に変更推奨"})
+        else:
+            results.append({"level": "warning", "check": "mobile_ichiban_no_networkidle",
+                            "message": "mobile_ichiban の wait_until 設定が不明 — domcontentloaded を使用しているか確認してください"})
+    else:
+        results.append({"level": "warning", "check": "mobile_ichiban_no_networkidle",
+                        "message": "src/collectors/buyback_mobile_ichiban.py が見つからない"})
+
+    # ── #215: mobile_ichiban が requests fast path を持っている ──────────────────
+    if _mi_collector.exists():
+        _has_requests_fastpath = (
+            "requests" in _mi_text and
+            "_MIN_CONTENT_LENGTH" in _mi_text
+        )
+        if _has_requests_fastpath:
+            results.append({"level": "ok", "check": "mobile_ichiban_requests_fastpath",
+                            "message": "mobile_ichiban が requests fast path を実装（Playwright 前にまず requests 試行）"})
+        else:
+            results.append({"level": "warning", "check": "mobile_ichiban_requests_fastpath",
+                            "message": "mobile_ichiban に requests fast path がない — Playwright タイムアウトリスクあり"})
+    else:
+        results.append({"level": "warning", "check": "mobile_ichiban_requests_fastpath",
+                        "message": "src/collectors/buyback_mobile_ichiban.py が見つからない"})
+
+    # ── #216: mobile_ichiban が全文fallback（extract_price）を使っていない ──────────
+    if _mi_collector.exists():
+        _no_extract_price_fallback = "extract_price" not in _mi_text or (
+            # コメントのみの言及は許可（コードとして呼ばれていない）
+            all("# " in line for line in _mi_text.split("\n") if "extract_price" in line)
+        )
+        # より確実な確認: return self.extract_price の呼び出しがないか
+        _has_extract_price_call = bool(_re.search(r'return\s+self\.extract_price\(', _mi_text))
+        if not _has_extract_price_call:
+            results.append({"level": "ok", "check": "mobile_ichiban_no_extract_price_fallback",
+                            "message": "mobile_ichiban が全文 extract_price() fallback を使っていない（商品名マッチなし価格採用禁止）"})
+        else:
+            results.append({"level": "warning", "check": "mobile_ichiban_no_extract_price_fallback",
+                            "message": "mobile_ichiban が extract_price() fallback を使用 — 商品名と無関係な価格を採用するリスクあり"})
+    else:
+        results.append({"level": "warning", "check": "mobile_ichiban_no_extract_price_fallback",
+                        "message": "src/collectors/buyback_mobile_ichiban.py が見つからない"})
+
+    # ── #217: mobile_ichiban debug ファイルが生成される仕組みが存在する ──────────
+    _debug_script = PROJECT_ROOT / "scripts" / "update_buyback_prices.py"
+    if _debug_script.exists():
+        _ds_text = _debug_script.read_text(encoding="utf-8")
+        _has_save_debug = "_save_debug_txt" in _ds_text
+        _has_elapsed    = "elapsed_seconds" in _ds_text
+        _has_error_type = "error_type" in _ds_text
+        if _has_save_debug and _has_elapsed and _has_error_type:
+            results.append({"level": "ok", "check": "mobile_ichiban_debug_output",
+                            "message": "_save_debug_txt が elapsed_seconds / error_type を含む詳細デバッグを出力する"})
+        else:
+            missing_fields = [f for f, v in [("_save_debug_txt", _has_save_debug),
+                                              ("elapsed_seconds", _has_elapsed),
+                                              ("error_type", _has_error_type)] if not v]
+            results.append({"level": "warning", "check": "mobile_ichiban_debug_output",
+                            "message": f"debug_txt に不足フィールドあり: {', '.join(missing_fields)}"})
+    else:
+        results.append({"level": "warning", "check": "mobile_ichiban_debug_output",
+                        "message": "scripts/update_buyback_prices.py が見つからない"})
+
+    # ── #218: mobile_ichiban failure_reason に timeout が分類されている ─────────
+    if _mi_collector.exists():
+        _has_timeout_reason = (
+            'last_failure_reason = "timeout"' in _mi_text or
+            "last_failure_reason = 'timeout'" in _mi_text
+        )
+        if _has_timeout_reason:
+            results.append({"level": "ok", "check": "mobile_ichiban_timeout_reason_classified",
+                            "message": "mobile_ichiban が timeout を last_failure_reason に分類している"})
+        else:
+            results.append({"level": "warning", "check": "mobile_ichiban_timeout_reason_classified",
+                            "message": "mobile_ichiban が timeout を last_failure_reason に分類していない — debug レポートでタイムアウトが不明になる"})
+    else:
+        results.append({"level": "warning", "check": "mobile_ichiban_timeout_reason_classified",
+                        "message": "src/collectors/buyback_mobile_ichiban.py が見つからない"})
+
     return results
 
 

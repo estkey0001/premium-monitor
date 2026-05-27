@@ -323,12 +323,20 @@ class DailyLPGenerator:
         _beginner_disp_count = (len(_beginner_easy_disp) + len(_beginner_watch_disp)
                                 + len(_monitoring_disp) + len(_fetch_failed_disp))
 
-        # 抽選情報: DBイベント + リファレンスアイテム の active/upcoming/unknown 件数
+        # 抽選情報カウント: Section A（受付中 + 日付あり + reference_only でない）のみ
+        # ・reference_only=True（X100VI/PS5/Switch2 等）は除外
+        # ・entry_end_at なし（旧DB エントリ等）は除外
+        def _count_as_active(raw_it) -> bool:
+            it = raw_it if isinstance(raw_it, dict) else dict(raw_it)
+            if it.get("reference_only", False):
+                return False
+            if self._lottery_status_from_dates(it) != "active":
+                return False
+            v = it.get("entry_end_at") or it.get("entry_end") or ""
+            return bool(str(v).strip())
+
         _all_lottery_for_count = list(lottery_events) + list(self._LOTTERY_REFERENCE_ITEMS)
-        _lottery_active_count = sum(
-            1 for it in _all_lottery_for_count
-            if self._lottery_status_from_dates(it) in ("active", "upcoming", "unknown")
-        )
+        _lottery_active_count = sum(1 for it in _all_lottery_for_count if _count_as_active(it))
 
         # セクション生成
         hero_html    = self._section_hero(date_str, time_str, latest_buyback_at, lp_generated_at,
@@ -3674,19 +3682,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 
     # 抽選情報リファレンスカード（DBデータがない場合に表示する静的カード）
     _LOTTERY_REFERENCE_ITEMS = [
-        # ── 受付中 ───────────────────────────────────────────────────
-        {
-            "product_name": "Nintendo Switch 2 限定モデル",
-            "brand": "Nintendo",
-            "status": "upcoming",
-            "note": "通常モデルは2025年6月発売済み。限定エディションの抽選は随時マイニンテンドーストアで告知予定。",
-            "url": "https://store.nintendo.co.jp/category/NINTENDO_SWITCH_2",
-            "sale_method": "抽選（マイニンテンドーストア予定）",
-            "official_price": "未定",
-            "link_type": "sale_page",
-            "checked_at": "2026-05-21",
-        },
-        # ── 受付中（RICOH GR IV 3モデル）────────────────────────────
+        # ── 受付中（RICOH GR IV 3モデル）— reference_only なし ────────
         {
             "product_name": "RICOH GR IV Monochrome",
             "brand": "RICOH",
@@ -3732,11 +3728,12 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             "entry_end_at": "2026-05-29 12:00",
             "checked_at": "2026-05-27",
         },
-        # ── 要確認（販売中・抽選受付状況要確認） ─────────────────────
+        # ── 参考リンク（reference_only=True: 抽選期間なし・旧情報） ────────
         {
             "product_name": "FUJIFILM X100VI",
             "brand": "FUJIFILM",
             "status": "active",
+            "reference_only": True,
             "note": "2024年2月発売。抽選受付は終了済み。中古市場でプレ値継続中。公式での入手は在庫次第。",
             "url": "https://fujifilm-x.com/ja-jp/products/cameras/x100vi/",
             "sale_method": "通常販売（在庫次第）",
@@ -3748,6 +3745,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             "product_name": "PlayStation 5 Pro",
             "brand": "Sony Interactive Entertainment",
             "status": "active",
+            "reference_only": True,
             "note": "2024年11月発売。通常販売中。限定エディションは抽選または先着順。PS Directでの購入を推奨。",
             "url": "https://direct.playstation.com/ja-jp/buy-consoles/playstation5-console",
             "sale_method": "通常販売 / 限定版は抽選",
@@ -3755,12 +3753,28 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             "link_type": "sale_page",
             "checked_at": "2026-05-21",
         },
+        {
+            "product_name": "Nintendo Switch 2 限定モデル",
+            "brand": "Nintendo",
+            "status": "upcoming",
+            "reference_only": True,
+            "note": "通常モデルは2025年6月発売済み。限定エディションの抽選は随時マイニンテンドーストアで告知予定。",
+            "url": "https://store.nintendo.co.jp/category/NINTENDO_SWITCH_2",
+            "sale_method": "抽選（マイニンテンドーストア予定）",
+            "official_price": "未定",
+            "link_type": "sale_page",
+            "checked_at": "2026-05-21",
+        },
     ]
 
     @staticmethod
     def _lottery_status_from_dates(ev: dict) -> str:
-        """entry_end_at / status から現在の有効ステータスを自動判定する（JST基準）。
-        優先: entry_end_at による期限切れ判定 → 元の status → unknown
+        """entry_start_at / entry_end_at / status から有効ステータスを自動判定（JST基準）。
+        優先順位:
+          1. entry_end_at が過去 → "closed"
+          2. entry_start_at が未来 → "upcoming"
+          3. entry_start_at が過去 かつ entry_end_at が未来 → "active"
+          4. それ以外 → 元の status → "unknown"
         """
         import zoneinfo
         try:
@@ -3768,22 +3782,38 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             now = datetime.now(tz=JST).replace(tzinfo=None)
         except Exception:
             now = datetime.now()
-        end_str = (ev.get("entry_end_at") or ev.get("entry_end") or "")
-        if end_str:
+
+        def _parse_dt(s: str):
+            """YYYY-MM-DD HH:MM 形式の文字列を datetime に変換。失敗時は None。"""
             try:
-                end_dt_str = str(end_str)[:16]  # "YYYY-MM-DD HH:MM"
-                end_dt = datetime.fromisoformat(end_dt_str)
-                if end_dt.tzinfo is not None:
-                    end_dt = end_dt.replace(tzinfo=None)
-                if end_dt < now:
-                    return "closed"
-                # 終了前 → 元の status を使用
+                dt = datetime.fromisoformat(str(s)[:16])
+                if dt.tzinfo is not None:
+                    dt = dt.replace(tzinfo=None)
+                return dt
             except Exception:
-                pass
+                return None
+
+        end_str   = ev.get("entry_end_at")   or ev.get("entry_end")   or ""
+        start_str = ev.get("entry_start_at") or ev.get("entry_start") or ""
+        end_dt   = _parse_dt(end_str)   if end_str   else None
+        start_dt = _parse_dt(start_str) if start_str else None
+
+        # 受付終了
+        if end_dt is not None and end_dt < now:
+            return "closed"
+        # 受付開始前
+        if start_dt is not None and start_dt > now:
+            return "upcoming"
+        # 受付中（start は過去 or なし、end は未来 or なし）
+        if end_dt is not None and end_dt >= now:
+            return "active"
+
         return ev.get("status", "unknown") or "unknown"
 
     def _section_lottery(self, lottery_events: list) -> str:
-        """抽選情報セクション（DBデータ＋リファレンスカード、期限切れ自動分離）"""
+        """抽選情報セクション（4分類: 受付中 / 近日開始 / 受付終了 / 参考リンク）。
+        reference_only=True のアイテムは常に「参考リンク」折りたたみへ。
+        """
         parts = []
         parts.append(
             '<div id="category-lottery" class="info-banner violet">'
@@ -3793,53 +3823,100 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         )
 
         # すべての表示対象（DB + リファレンス）を集約してステータス自動判定
-        all_items: list[dict] = []
-
-        # DBデータ
-        for ev in (lottery_events or []):
-            if not isinstance(ev, dict):
+        def _prep(ev_raw, is_ref: bool) -> dict:
+            if not isinstance(ev_raw, dict):
                 try:
-                    ev = dict(ev)
+                    ev_raw = dict(ev_raw)
                 except Exception:
-                    continue
-            ev = dict(ev)
+                    return {}
+            ev = dict(ev_raw)
             ev["_auto_status"] = self._lottery_status_from_dates(ev)
-            ev["_is_reference"] = False
-            all_items.append(ev)
+            ev["_is_reference"] = is_ref
+            return ev
 
-        # リファレンスカード
+        all_items: list[dict] = []
+        for ev in (lottery_events or []):
+            r = _prep(ev, is_ref=False)
+            if r:
+                all_items.append(r)
         for item in self._LOTTERY_REFERENCE_ITEMS:
-            item = dict(item)
-            item["_auto_status"] = self._lottery_status_from_dates(item)
-            item["_is_reference"] = True
-            all_items.append(item)
+            r = _prep(item, is_ref=True)
+            if r:
+                all_items.append(r)
 
-        # ステータス優先順: active(受付中) → upcoming(近日開始) → unknown(要確認) → closed(終了済み)
-        _priority = {"active": 0, "upcoming": 1, "unknown": 2, "closed": 3}
-        active_items = [it for it in all_items if it["_auto_status"] in ("active", "upcoming", "unknown")]
-        closed_items = [it for it in all_items if it["_auto_status"] == "closed"]
-        active_items.sort(key=lambda x: _priority.get(x["_auto_status"], 9))
+        # ── 4分類 ─────────────────────────────────────────────────────────
+        # A. 現在受付中: active かつ entry_end_at あり かつ reference_only でない
+        #    ← entry_end_at がない「日付なし active」は Section D へ
+        def _has_end_date(it: dict) -> bool:
+            v = it.get("entry_end_at") or it.get("entry_end") or ""
+            return bool(str(v).strip())
 
+        active_items   = [it for it in all_items
+                          if it["_auto_status"] == "active"
+                          and _has_end_date(it)
+                          and not it.get("reference_only", False)]
+        # B. 近日開始: upcoming かつ reference_only でない
+        upcoming_items = [it for it in all_items
+                          if it["_auto_status"] == "upcoming"
+                          and not it.get("reference_only", False)]
+        # C. 受付終了: closed かつ reference_only でない
+        closed_items   = [it for it in all_items
+                          if it["_auto_status"] == "closed"
+                          and not it.get("reference_only", False)]
+        # D. 参考リンク:
+        #    ① reference_only=True
+        #    ② 日付なし active（旧エントリ・詳細不明）
+        #    ※ closed は Section C で表示済みなので除外
+        reference_items = [it for it in all_items
+                           if it.get("reference_only", False)
+                           or (it["_auto_status"] == "active"
+                               and not _has_end_date(it)
+                               and not it.get("reference_only", False))]
+
+        # ── A. 現在受付中 ──────────────────────────────────────────────────
         if active_items:
-            parts.append('<div class="sec-head" style="margin-top:20px"><div class="sec-title">&#128204; 受付中・近日開始・要確認</div></div>')
+            parts.append('<div class="sec-head" style="margin-top:20px">'
+                         '<div class="sec-title">&#128308; 現在受付中</div></div>')
             parts.append('<div class="lottery-ref-grid">')
             for it in active_items:
                 parts.append(self._lottery_card_html(it, is_reference=it["_is_reference"]))
             parts.append('</div>')
         else:
-            parts.append('<p class="empty-state">現在受付中の抽選情報はありません。</p>')
+            parts.append('<p class="empty-state" style="margin-top:20px">現在受付中の抽選情報はありません。</p>')
 
-        # 終了済みを下部に折り畳み表示
+        # ── B. 近日開始 ────────────────────────────────────────────────────
+        if upcoming_items:
+            parts.append('<div class="sec-head" style="margin-top:24px">'
+                         '<div class="sec-title">&#128336; 近日開始</div></div>')
+            parts.append('<div class="lottery-ref-grid">')
+            for it in upcoming_items:
+                parts.append(self._lottery_card_html(it, is_reference=it["_is_reference"]))
+            parts.append('</div>')
+
+        # ── C. 受付終了（折りたたみ） ─────────────────────────────────────
         if closed_items:
             parts.append(
                 '<details class="lottery-closed-section" style="margin-top:24px">'
                 '<summary style="cursor:pointer;font-size:0.82rem;color:var(--ink3);padding:8px 4px;">'
-                f'&#128197; 終了済み / 過去の情報（{len(closed_items)}件）'
+                f'&#128197; 受付終了 / 過去の情報（{len(closed_items)}件）'
                 '</summary>'
                 '<div class="lottery-ref-grid" style="margin-top:8px;opacity:0.65">'
             )
             for it in closed_items:
                 parts.append(self._lottery_card_html(it, is_reference=it["_is_reference"]))
+            parts.append('</div></details>')
+
+        # ── D. 参考リンク（折りたたみ） ───────────────────────────────────
+        if reference_items:
+            parts.append(
+                '<details class="lottery-reference-section" style="margin-top:24px">'
+                '<summary style="cursor:pointer;font-size:0.82rem;color:var(--ink3);padding:8px 4px;">'
+                f'&#128279; 参考リンク（抽選期間なし・販売中商品: {len(reference_items)}件）'
+                '</summary>'
+                '<div class="lottery-ref-grid" style="margin-top:8px;opacity:0.75">'
+            )
+            for it in reference_items:
+                parts.append(self._lottery_card_html(it, is_reference=True))
             parts.append('</div></details>')
 
         # ── 公式ページリンク集 ──

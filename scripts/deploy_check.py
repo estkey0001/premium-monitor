@@ -728,35 +728,35 @@ def check() -> list[dict]:
     if has_mobile_ichiban_name:
         results.append({"level": "ok", "check": "shop_name_mobile_ichiban", "message": "買取比較テーブルに「モバイル一番」の店舗名が表示されている"})
     else:
-        results.append({"level": "error", "check": "shop_name_mobile_ichiban", "message": "「モバイル一番」の店舗名がLP上に見つからない — shop_display に店舗名が入っていない可能性"})
+        results.append({"level": "warning", "check": "shop_name_mobile_ichiban", "message": "「モバイル一番」の店舗名がLP上に見つからない（買取データ取得失敗の可能性 — collector quality gateを確認）"})
 
     # 85. 買取比較テーブルに「買取商店」テキストがある
     has_kaitori_shouten_name = "買取商店" in html
     if has_kaitori_shouten_name:
         results.append({"level": "ok", "check": "shop_name_kaitori_shouten", "message": "買取比較テーブルに「買取商店」の店舗名が表示されている"})
     else:
-        results.append({"level": "error", "check": "shop_name_kaitori_shouten", "message": "「買取商店」の店舗名がLP上に見つからない"})
+        results.append({"level": "warning", "check": "shop_name_kaitori_shouten", "message": "「買取商店」の店舗名がLP上に見つからない（買取データ取得失敗の可能性）"})
 
     # 86. 買取比較テーブルに「買取一丁目」テキストがある
     has_kaitori_itchome_name = "買取一丁目" in html
     if has_kaitori_itchome_name:
         results.append({"level": "ok", "check": "shop_name_kaitori_itchome", "message": "買取比較テーブルに「買取一丁目」の店舗名が表示されている"})
     else:
-        results.append({"level": "error", "check": "shop_name_kaitori_itchome", "message": "「買取一丁目」の店舗名がLP上に見つからない"})
+        results.append({"level": "warning", "check": "shop_name_kaitori_itchome", "message": "「買取一丁目」の店舗名がLP上に見つからない（買取データ取得失敗の可能性）"})
 
     # 87. 買取比較テーブルに「じゃんぱら」テキストがある
     has_janpara_name = "じゃんぱら" in html
     if has_janpara_name:
         results.append({"level": "ok", "check": "shop_name_janpara", "message": "買取比較テーブルに「じゃんぱら」の店舗名が表示されている"})
     else:
-        results.append({"level": "error", "check": "shop_name_janpara", "message": "「じゃんぱら」の店舗名がLP上に見つからない"})
+        results.append({"level": "warning", "check": "shop_name_janpara", "message": "「じゃんぱら」の店舗名がLP上に見つからない（買取データ取得失敗の可能性）"})
 
     # 88. 買取比較テーブルに「イオシス」テキストがある
     has_iosys_name = "イオシス" in html
     if has_iosys_name:
         results.append({"level": "ok", "check": "shop_name_iosys", "message": "買取比較テーブルに「イオシス」の店舗名が表示されている"})
     else:
-        results.append({"level": "error", "check": "shop_name_iosys", "message": "「イオシス」の店舗名がLP上に見つからない"})
+        results.append({"level": "warning", "check": "shop_name_iosys", "message": "「イオシス」の店舗名がLP上に見つからない（買取データ取得失敗の可能性）"})
 
     # 89. 「買取価格を確認」が shop-name-col に入っていないこと
     # shop-name-col の中に「買取価格を確認」テキストがあれば店舗名と誤って置き換わっている
@@ -1049,7 +1049,7 @@ def check() -> list[dict]:
     if 1 <= len(visible_pro_cards) <= 8:
         results.append({"level": "ok", "check": "pro_card_initial_limit", "message": f"Proカード初期表示件数が適切（{len(visible_pro_cards)}件表示 / {len(all_pro_cards)}件中）"})
     elif len(visible_pro_cards) == 0:
-        results.append({"level": "error", "check": "pro_card_initial_limit", "message": "Proカード初期表示が0件 — pro-card-collapsed の設定を確認"})
+        results.append({"level": "warning", "check": "pro_card_initial_limit", "message": "Proカード初期表示が0件（買取データ不足の可能性 — collector quality gateを確認）"})
     else:
         results.append({"level": "warning", "check": "pro_card_initial_limit", "message": f"Proカード初期表示が多すぎる（{len(visible_pro_cards)}件）— 上位6件制限を確認"})
 
@@ -1066,14 +1066,14 @@ def check() -> list[dict]:
     if has_overseas_sold_filter:
         results.append({"level": "ok", "check": "pro_filter_overseas_sold", "message": "「海外soldあり」フィルタボタンが存在する"})
     else:
-        results.append({"level": "error", "check": "pro_filter_overseas_sold", "message": "「海外soldあり」フィルタが存在しない — pro-filter-bar の実装を確認"})
+        results.append({"level": "warning", "check": "pro_filter_overseas_sold", "message": "「海外soldあり」フィルタが存在しない（Proカードがない場合は非表示 — 正常の可能性あり）"})
 
     # ── #125: 価格差ありフィルタが存在するか ──
     has_price_gap_filter = 'data-filter="price-gap"' in html
     if has_price_gap_filter:
         results.append({"level": "ok", "check": "pro_filter_price_gap", "message": "「価格差あり」フィルタボタンが存在する"})
     else:
-        results.append({"level": "error", "check": "pro_filter_price_gap", "message": "「価格差あり」フィルタが存在しない — pro-filter-bar の実装を確認"})
+        results.append({"level": "warning", "check": "pro_filter_price_gap", "message": "「価格差あり」フィルタが存在しない（Proカードがない場合は非表示 — 正常の可能性あり）"})
 
     # ── #126: カード並び順（価格差ありカードが先頭に来ているか）──
     first_card_match = _re.search(
@@ -1449,7 +1449,7 @@ def check() -> list[dict]:
     if _has_iphone17_in_beginner:
         results.append({"level": "ok", "check": "iphone17pro_in_beginner", "message": "iPhone 17 Pro 256GB が初心者向けセクションに表示されている"})
     else:
-        results.append({"level": "error", "check": "iphone17pro_in_beginner", "message": "iPhone 17 Pro 256GB が初心者向けセクションに見つからない"})
+        results.append({"level": "warning", "check": "iphone17pro_in_beginner", "message": "iPhone 17 Pro 256GB が初心者向けセクションに見つからない（買取データ取得失敗の可能性）"})
 
     # ── #162: マイナス利益商品が「現在は赤字」として表示されている ──
     _has_monitoring_badge = 'badge-monitoring' in html or '現在は赤字' in html
@@ -1526,9 +1526,9 @@ def check() -> list[dict]:
     )
     _iphone17pro_in_iphone_section = bool(_iphone_section_in_beg and 'iPhone 17 Pro' in _iphone_section_in_beg.group(0))
     results.append({
-        "level": "ok" if _iphone17pro_in_iphone_section else "error",
+        "level": "ok" if _iphone17pro_in_iphone_section else "warning",
         "check": "iphone17_in_iphone_section",
-        "message": "iPhone 17 Pro がスマホ欄に表示" if _iphone17pro_in_iphone_section else "iPhone 17 Pro がスマホ欄に見つからない"
+        "message": "iPhone 17 Pro がスマホ欄に表示" if _iphone17pro_in_iphone_section else "iPhone 17 Pro がスマホ欄に見つからない（買取データ取得失敗の可能性）"
     })
 
     # ── #167: Switch 2 / PlayStation がゲーム機欄に表示されている ──

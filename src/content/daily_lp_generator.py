@@ -1668,6 +1668,21 @@ a[href], button, [role="tab"], [role="button"],
 }}
 .beginner-summary-bar strong {{ color: var(--ink); }}
 
+/* ジャンル別データなし通知 */
+.collector-empty-notice {{
+  padding: 16px;
+  background: #f8f8f8;
+  border-left: 3px solid #ccc;
+  border-radius: 4px;
+  margin: 8px 0 16px;
+  font-size: 0.85rem;
+  color: var(--ink3, #666);
+}}
+.collector-empty-notice a {{
+  color: var(--accent, #7C5CFC);
+  text-decoration: underline;
+}}
+
 /* 監視中カード */
 .badge-monitoring {{
   font-size: 0.66rem; font-weight: 700; padding: 2px 6px; border-radius: 99px;
@@ -4635,6 +4650,12 @@ python3 -m src.cli calculate-sedori-routes</pre>
             monitoring_genre = [d for d in genre_deals if getattr(d, 'user_level', '') == 'monitoring']
             ff_genre        = [d for d in genre_deals if getattr(d, 'user_level', '') == 'fetch_failed']
 
+            # 有効カード判定: beginner_easy / beginner_watch が1件もない場合は空状態とみなす
+            _has_beginner_cards = any(
+                getattr(d, 'user_level', '') in ('beginner_easy', 'beginner_watch')
+                for d in genre_deals
+            )
+
             # ジャンルヘッダー（件数・内訳付き）
             total_in_genre = len(genre_deals)
             summary_text = (
@@ -4686,6 +4707,15 @@ python3 -m src.cli calculate-sedori-routes</pre>
                     rows = bybp.get(d.product_id, [])
                     parts.append(self._deal_card_fetch_failed(d, buyback_rows=rows))
                 parts.append('</div></details>')
+
+            # beginner_easy / beginner_watch カードが0件（fetch_failed のみ）の場合は空状態メッセージを表示
+            if not _has_beginner_cards:
+                parts.append(
+                    '<div class="collector-empty-notice">'
+                    '<p>現在、十分な自動取得データがありません。取得成功店舗が増え次第、案件を表示します。</p>'
+                    '<p><a href="collector_report.html">取得状況の詳細はこちら</a></p>'
+                    '</div>'
+                )
 
             # ゲーム機への注釈
             if genre_key == 'game_console':

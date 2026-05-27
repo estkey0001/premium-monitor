@@ -1010,19 +1010,22 @@ def check() -> list[dict]:
     else:
         results.append({"level": "warning", "check": "stale_48h_critical_css", "message": "data-stale-critical CSS が見つからない"})
 
-    # 117. RICOH GR IV が「一次抽選終了 / 次回未定」になっている
-    has_gr4_closed = "一次抽選終了" in html
-    if has_gr4_closed:
-        results.append({"level": "ok", "check": "gr4_lottery_closed", "message": "RICOH GR IV が「一次抽選終了」として表示されている"})
+    # 117. RICOH GR IV 3モデルが「抽選受付中」として表示されている
+    has_gr4_active = "抽選受付中" in html and "RICOH GR IV" in html
+    if has_gr4_active:
+        results.append({"level": "ok", "check": "gr4_lottery_active", "message": "RICOH GR IV が「抽選受付中」として表示されている"})
     else:
-        results.append({"level": "warning", "check": "gr4_lottery_closed", "message": "「一次抽選終了」表記が見つからない（RICOH GR IV 抽選状態要確認）"})
+        results.append({"level": "warning", "check": "gr4_lottery_active", "message": "「抽選受付中」＋「RICOH GR IV」の組み合わせが見つからない（抽選ステータス要確認）"})
 
-    # 118. RICOH GR IV に指定の公式ストアURLが入っている
-    has_gr4_url = "S0001551" in html or "ricohimagingstore.com" in html
-    if has_gr4_url:
-        results.append({"level": "ok", "check": "gr4_official_url", "message": "RICOH GR IV に公式ストア直リンク（ricohimagingstore.com）が含まれている"})
+    # 118. RICOH GR IV 3モデルの公式ストアURL・製品コードが存在する
+    has_gr4_s0001551 = "S0001551" in html
+    has_gr4_s0001566 = "S0001566" in html
+    has_gr4_s0001580 = "S0001580" in html
+    if has_gr4_s0001551 and has_gr4_s0001566 and has_gr4_s0001580:
+        results.append({"level": "ok", "check": "gr4_three_models_present", "message": "RICOH GR IV 3モデル（S0001551/S0001566/S0001580）がすべてLP内に存在する"})
     else:
-        results.append({"level": "warning", "check": "gr4_official_url", "message": "RICOH GR IV の公式ストアURL（ricohimagingstore.com）が見つからない"})
+        missing = [c for c, v in [("S0001551(GR IV)", has_gr4_s0001551), ("S0001566(HDF)", has_gr4_s0001566), ("S0001580(Monochrome)", has_gr4_s0001580)] if not v]
+        results.append({"level": "warning", "check": "gr4_three_models_present", "message": f"RICOH GR IV モデルのうち一部が見つからない: {', '.join(missing)}"})
 
     # 119. iPhone 17 Pro / Pro Max が「近日開始」「候補」「新商品候補」扱いされていない
     iphone17_upcoming = bool(re.search(r'iPhone\s+17\s+Pro[^<]{0,100}近日開始', html))
@@ -2202,6 +2205,49 @@ def check() -> list[dict]:
     else:
         results.append({"level": "warning", "check": "only_suspicious_low_conf_is_failure",
                         "message": "check_collector_quality.py が見つからない"})
+
+    # ── #210: RICOH GR IV 3モデルの forms.gle リンクが LP に存在する ──────────────
+    _gr4_forms = {
+        "GR IV":            "forms.gle/4vvkxe1e9ghfiy667",
+        "GR IV HDF":        "forms.gle/tAWGX3dnehAnWgX5A",
+        "GR IV Monochrome": "forms.gle/FjicSoGraoJuQwBd9",
+    }
+    _missing_forms = [name for name, url in _gr4_forms.items() if url not in html]
+    if not _missing_forms:
+        results.append({"level": "ok", "check": "gr4_forms_links",
+                        "message": "RICOH GR IV 3モデルの抽選フォームリンク（forms.gle）がすべて存在する"})
+    else:
+        results.append({"level": "warning", "check": "gr4_forms_links",
+                        "message": f"RICOH GR IV フォームリンクが見つからないモデル: {', '.join(_missing_forms)}"})
+
+    # ── #211: RICOH GR IV 3モデルの公式価格が LP に存在する ──────────────────────
+    _gr4_prices = {
+        "GR IV ¥194,800":        "194,800",
+        "GR IV HDF ¥187,020":    "187,020",
+        "GR IV Monochrome ¥283,800": "283,800",
+    }
+    _missing_prices = [label for label, price in _gr4_prices.items() if price not in html]
+    if not _missing_prices:
+        results.append({"level": "ok", "check": "gr4_prices_present",
+                        "message": "RICOH GR IV 3モデルの公式価格（¥194,800/¥187,020/¥283,800）がすべて存在する"})
+    else:
+        results.append({"level": "warning", "check": "gr4_prices_present",
+                        "message": f"RICOH GR IV 価格が見つからない: {', '.join(_missing_prices)}"})
+
+    # ── #212: RICOH GR IV 抽選受付期間（2026-05-27〜2026-05-29）が LP に存在する ──
+    _has_entry_start = "2026-05-27" in html
+    _has_entry_end   = "2026-05-29" in html
+    if _has_entry_start and _has_entry_end:
+        results.append({"level": "ok", "check": "gr4_entry_period_present",
+                        "message": "RICOH GR IV 抽選受付期間（2026-05-27〜2026-05-29）がLP内に存在する"})
+    else:
+        missing_dates = []
+        if not _has_entry_start:
+            missing_dates.append("2026-05-27（受付開始）")
+        if not _has_entry_end:
+            missing_dates.append("2026-05-29（受付終了）")
+        results.append({"level": "warning", "check": "gr4_entry_period_present",
+                        "message": f"RICOH GR IV 抽選期間の日付が見つからない: {', '.join(missing_dates)}"})
 
     return results
 

@@ -3676,28 +3676,51 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             "link_type": "sale_page",
             "checked_at": "2026-05-21",
         },
-        # ── 近日開始 ─────────────────────────────────────────────────
+        # ── 受付中（RICOH GR IV 3モデル）────────────────────────────
         {
-            "product_name": "RICOH GR IV",
+            "product_name": "RICOH GR IV Monochrome",
             "brand": "RICOH",
-            "status": "closed",
-            "note": "2026年5月一次抽選終了。次回販売未定。公式ストアで再販・次回抽選情報を確認してください。",
-            "url": "https://ricohimagingstore.com/Form/Product/ProductDetail.aspx?shop=0&pid=S0001551&cat=002010",
-            "sale_method": "一次抽選終了 / 次回未定",
-            "official_price": "未定",
+            "status": "active",
+            "product_code": "S0001580",
+            "note": "モノクロームモデル。受付期間: 2026年5月27日12:00〜5月29日12:00。抽選フォームから応募してください。",
+            "url": "https://ricohimagingstore.com/Form/Product/ProductDetail.aspx?shop=0&pid=S0001580&cat=002010",
+            "entry_form_url": "https://forms.gle/FjicSoGraoJuQwBd9",
+            "sale_method": "抽選販売",
+            "official_price": "¥283,800（税込）",
             "link_type": "product_page",
-            "checked_at": "2026-05-21",
+            "entry_start_at": "2026-05-27 12:00",
+            "entry_end_at": "2026-05-29 12:00",
+            "checked_at": "2026-05-27",
         },
         {
             "product_name": "RICOH GR IV HDF",
             "brand": "RICOH",
-            "status": "upcoming",
-            "note": "ハイブリッドディフュージョンフィルター搭載モデル。GR IV と同時または後続発売の可能性。限定抽選の可能性大。",
-            "url": "https://www.ricoh-imaging.co.jp/japan/products/cameras/gr/",
-            "sale_method": "未定（限定抽選の可能性）",
-            "official_price": "未定",
+            "status": "active",
+            "product_code": "S0001566",
+            "note": "ハイブリッドディフュージョンフィルター搭載モデル。受付期間: 2026年5月27日12:00〜5月29日12:00。抽選フォームから応募してください。",
+            "url": "https://ricohimagingstore.com/Form/Product/ProductDetail.aspx?shop=0&pid=S0001566&cat=002010",
+            "entry_form_url": "https://forms.gle/tAWGX3dnehAnWgX5A",
+            "sale_method": "抽選販売",
+            "official_price": "¥187,020（税込）",
             "link_type": "product_page",
-            "checked_at": "2026-05-21",
+            "entry_start_at": "2026-05-27 12:00",
+            "entry_end_at": "2026-05-29 12:00",
+            "checked_at": "2026-05-27",
+        },
+        {
+            "product_name": "RICOH GR IV",
+            "brand": "RICOH",
+            "status": "active",
+            "product_code": "S0001551",
+            "note": "スタンダードモデル。受付期間: 2026年5月27日12:00〜5月29日12:00。抽選フォームから応募してください。",
+            "url": "https://ricohimagingstore.com/Form/Product/ProductDetail.aspx?shop=0&pid=S0001551&cat=002010",
+            "entry_form_url": "https://forms.gle/4vvkxe1e9ghfiy667",
+            "sale_method": "抽選販売",
+            "official_price": "¥194,800（税込）",
+            "link_type": "product_page",
+            "entry_start_at": "2026-05-27 12:00",
+            "entry_end_at": "2026-05-29 12:00",
+            "checked_at": "2026-05-27",
         },
         # ── 要確認（販売中・抽選受付状況要確認） ─────────────────────
         {
@@ -3726,19 +3749,25 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 
     @staticmethod
     def _lottery_status_from_dates(ev: dict) -> str:
-        """entry_end_at / status から現在の有効ステータスを自動判定する。
-        優先: DB status → entry_end_at による期限切れ判定 → unknown
+        """entry_end_at / status から現在の有効ステータスを自動判定する（JST基準）。
+        優先: entry_end_at による期限切れ判定 → 元の status → unknown
         """
-        now = datetime.now()
+        import zoneinfo
+        try:
+            JST = zoneinfo.ZoneInfo("Asia/Tokyo")
+            now = datetime.now(tz=JST).replace(tzinfo=None)
+        except Exception:
+            now = datetime.now()
         end_str = (ev.get("entry_end_at") or ev.get("entry_end") or "")
         if end_str:
             try:
-                end_dt_str = str(end_str)[:19]
+                end_dt_str = str(end_str)[:16]  # "YYYY-MM-DD HH:MM"
                 end_dt = datetime.fromisoformat(end_dt_str)
                 if end_dt.tzinfo is not None:
                     end_dt = end_dt.replace(tzinfo=None)
                 if end_dt < now:
                     return "closed"
+                # 終了前 → 元の status を使用
             except Exception:
                 pass
         return ev.get("status", "unknown") or "unknown"
@@ -3819,8 +3848,11 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         """抽選情報カード HTML を生成する。_auto_status があればそちらを優先。"""
         # ステータス
         status = ev.get("_auto_status") or ev.get("status", "unknown") or "unknown"
+        # sale_method が "抽選販売" なら active ラベルを "抽選受付中" に変更
+        _sale_method = str(ev.get("sale_method") or "")
+        _is_lottery = "抽選" in _sale_method
         status_label = {
-            "active":   "受付中 / 販売中",
+            "active":   "抽選受付中" if _is_lottery else "受付中 / 販売中",
             "upcoming": "近日開始",
             "closed":   "終了済み",
             "unknown":  "要確認",
@@ -3859,6 +3891,17 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         else:
             # データなし: メッセージ表示
             link_btn = '<span class="lottery-no-link">抽選情報未確認。公式商品ページで要確認。</span>'
+
+        # 抽選フォームへの第2CTAボタン
+        entry_form_url = str(ev.get("entry_form_url") or "")
+        if entry_form_url:
+            form_btn = (
+                f'<a href="{_esc(entry_form_url)}" target="_blank" rel="noopener noreferrer" '
+                f'class="btn btn-primary lottery-link-btn" data-track="lottery_form_click">'
+                f'&#128221; 抽選フォームを開く</a>'
+            )
+        else:
+            form_btn = ""
 
         # 各フィールド
         entry_start    = str(ev.get("entry_start_at") or ev.get("entry_start") or "")
@@ -3909,7 +3952,10 @@ tr.sc-route-review {{ background: #FFFBEB; }}
     {checked_row}
   </div>
   {note_row}
-  {link_btn}
+  <div class="lottery-btn-group">
+    {form_btn}
+    {link_btn}
+  </div>
 </div>'''
 
     def _section_tab_nav(self, beginner_count: int = 0, adv_total: int = 0,

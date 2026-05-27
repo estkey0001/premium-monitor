@@ -3191,6 +3191,118 @@ def check() -> list[dict]:
             results.append({"level": "warning", "check": "lottery_source_text_excerpt",
                             "message": f"#279 source_text_excerpt チェック失敗: {_e4}"})
 
+    # ── #280: タブ順（抽選情報→ランキング→せどりルート→初心者→Pro）──
+    # nav.tab-nav 内だけで確認（CSS セクションの data-tab= を除外）
+    try:
+        import re as _re280
+        _nav_m = _re280.search(r'<nav[^>]*class="tab-nav[^"]*"[^>]*>.*?</nav>', html, _re280.DOTALL)
+        _nav_html = _nav_m.group(0) if _nav_m else html
+        _t280 = (
+            _nav_html.find('data-tab="lottery"') < _nav_html.find('data-tab="ranking"') <
+            _nav_html.find('data-tab="sedori"') < _nav_html.find('data-tab="beginner"') <
+            _nav_html.find('data-tab="advanced"')
+        )
+        results.append({"level": "ok" if _t280 else "error", "check": "tab_order",
+                        "message": "#280 タブ順: 抽選情報→ランキング→せどりルート→初心者→Pro" + ("" if _t280 else " ← 順番がおかしい")})
+    except Exception as _e280:
+        results.append({"level": "warning", "check": "tab_order", "message": f"#280 タブ順チェック失敗: {_e280}"})
+
+    # ── #281: 速報タブが存在しない（ポップアップのみ）──
+    _t281 = ('<button class="tab-btn" data-tab="surge"' not in html and
+             '<button class="tab-btn active" data-tab="surge"' not in html)
+    results.append({"level": "ok" if _t281 else "error", "check": "no_surge_tab",
+                    "message": "#281 速報タブ（surge）がタブナビに存在しない" + ("" if _t281 else " ← surge タブが残っている")})
+
+    # ── #282: lottery タブがデフォルトアクティブ ──
+    _t282 = ('data-tab="lottery" role="tab" aria-selected="true"' in html or
+             'class="tab-btn active" data-tab="lottery"' in html)
+    results.append({"level": "ok" if _t282 else "warning", "check": "lottery_tab_active",
+                    "message": "#282 抽選情報タブ（lottery）がデフォルトアクティブ" + ("" if _t282 else " ← active でない")})
+
+    # ── #283: lottery パネルがデフォルトアクティブ ──
+    _t283 = ('id="tab-lottery" class="tab-panel active"' in html or
+             'class="tab-panel active" id="tab-lottery"' in html or
+             '"tab-lottery" class="tab-panel active"' in html)
+    results.append({"level": "ok" if _t283 else "warning", "check": "lottery_panel_active",
+                    "message": "#283 抽選情報パネル（tab-lottery）がデフォルトアクティブ" + ("" if _t283 else " ← active でない")})
+
+    # ── #284: 初心者タブ内に「推定コスト」表示なし（せどりルートセクションは除外）──
+    try:
+        import re as _re284
+        _beg_m = _re284.search(r'id="tab-beginner"[^>]*>(.*?)(?=<div id="tab-|</body>)', html, _re284.DOTALL)
+        _beg_html = _beg_m.group(1) if _beg_m else ""
+        _t284 = '推定コスト' not in _beg_html
+        results.append({"level": "ok" if _t284 else "warning", "check": "no_estimated_cost",
+                        "message": "#284 初心者タブ内に推定コスト表示がない" + ("" if _t284 else " ← beginnerタブに推定コスト表示が残っている")})
+    except Exception as _e284:
+        results.append({"level": "warning", "check": "no_estimated_cost", "message": f"#284 チェック失敗: {_e284}"})
+
+    # ── #285: 初心者ページに「一次流通」または「公式価格→二次流通」の説明あり ──
+    _t285 = ('一次流通' in html or '公式価格→二次流通' in html or '差益（公式価格→二次流通）' in html)
+    results.append({"level": "ok" if _t285 else "warning", "check": "primary_to_secondary_desc",
+                    "message": "#285 初心者ページに一次流通→二次流通の説明あり" + ("" if _t285 else " ← 説明がない")})
+
+    # ── #286: lottery-conflict-warning CSS が存在する ──
+    _t286 = 'lottery-conflict-warning' in html
+    results.append({"level": "ok" if _t286 else "warning", "check": "lottery_conflict_warning_css",
+                    "message": "#286 lottery-conflict-warning CSS クラスが存在する" + ("" if _t286 else " ← なし")})
+
+    # ── #287: ポップアップ速報（alert-popup）が存在する ──
+    _t287 = 'alert-popup' in html or 'id="alert-popup"' in html
+    results.append({"level": "ok" if _t287 else "warning", "check": "alert_popup_exists",
+                    "message": "#287 ポップアップ速報（alert-popup）が存在する" + ("" if _t287 else " ← alert-popup なし")})
+
+    # ── #288: モバイルドロワー要素が存在する ──
+    _t288 = 'mobile-drawer' in html and 'mobile-hamburger' in html
+    results.append({"level": "ok" if _t288 else "warning", "check": "mobile_drawer_exists",
+                    "message": "#288 モバイルドロワー（mobile-drawer + mobile-hamburger）が存在する" + ("" if _t288 else " ← なし")})
+
+    # ── #289-#291: ランキングレポート ──
+    import json as _json_dc
+    _rr_path = PROJECT_ROOT / "exports" / "ranking_report" / "latest.json"
+    if _rr_path.exists():
+        results.append({"level": "ok", "check": "ranking_report_exists",
+                        "message": "#289 exports/ranking_report/latest.json が存在する"})
+        try:
+            _rr = _json_dc.loads(_rr_path.read_text(encoding="utf-8"))
+            _t290 = "beginner_top10" in _rr
+            results.append({"level": "ok" if _t290 else "warning", "check": "ranking_beginner_top10",
+                            "message": "#290 ranking_report に beginner_top10 フィールドがある" + ("" if _t290 else " ← なし")})
+            _t291 = "route_type_beginner" in _rr
+            results.append({"level": "ok" if _t291 else "warning", "check": "ranking_route_type",
+                            "message": "#291 ranking_report に route_type_beginner フィールドがある" + ("" if _t291 else " ← なし")})
+        except Exception as _e291:
+            results.append({"level": "warning", "check": "ranking_report_parse",
+                            "message": f"#290-#291 ranking_report パース失敗: {_e291}"})
+    else:
+        results.append({"level": "warning", "check": "ranking_report_exists",
+                        "message": "#289 exports/ranking_report/latest.json が存在しない"})
+
+    # ── #292-#294: せどりルートレポート ──
+    _sr_path = PROJECT_ROOT / "exports" / "sedori_routes_report" / "latest.json"
+    if _sr_path.exists():
+        results.append({"level": "ok", "check": "sedori_report_exists",
+                        "message": "#292 exports/sedori_routes_report/latest.json が存在する"})
+        try:
+            _sr = _json_dc.loads(_sr_path.read_text(encoding="utf-8"))
+            _t293 = "beginner_routes" in _sr
+            results.append({"level": "ok" if _t293 else "warning", "check": "sedori_beginner_routes",
+                            "message": "#293 sedori_routes_report に beginner_routes フィールドがある" + ("" if _t293 else " ← なし")})
+            _t294 = "pro_routes" in _sr
+            results.append({"level": "ok" if _t294 else "warning", "check": "sedori_pro_routes",
+                            "message": "#294 sedori_routes_report に pro_routes フィールドがある" + ("" if _t294 else " ← なし")})
+        except Exception as _e294:
+            results.append({"level": "warning", "check": "sedori_report_parse",
+                            "message": f"#293-#294 sedori_routes_report パース失敗: {_e294}"})
+    else:
+        results.append({"level": "warning", "check": "sedori_report_exists",
+                        "message": "#292 exports/sedori_routes_report/latest.json が存在しない"})
+
+    # ── #295: ジャンルタブ（ドロワー/ドロップダウン）が存在する ──
+    _t295 = 'genre-toggle-btn' in html or 'genre-dropdown' in html
+    results.append({"level": "ok" if _t295 else "warning", "check": "genre_menu_exists",
+                    "message": "#295 ジャンルメニュー（genre-toggle-btn または genre-dropdown）が存在する" + ("" if _t295 else " ← なし")})
+
     return results
 
 

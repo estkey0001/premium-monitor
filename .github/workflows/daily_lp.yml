@@ -58,6 +58,12 @@ jobs:
         env:
           PYTHONPATH: .
 
+      - name: Update lottery events
+        run: python scripts/update_lottery_events.py
+        continue-on-error: true
+        env:
+          PYTHONPATH: .
+
       - name: Import buyback CSV
         run: python -m src.cli import-buyback-csv --file data/manual_buyback_prices.csv
 
@@ -74,12 +80,6 @@ jobs:
       - name: Calculate sedori routes
         run: python -m src.cli calculate-sedori-routes
         continue-on-error: true
-
-      - name: Update lottery events
-        run: python scripts/update_lottery_events.py
-        continue-on-error: true
-        env:
-          PYTHONPATH: .
 
       - name: Update alerts
         run: python scripts/update_alerts.py

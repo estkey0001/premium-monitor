@@ -75,6 +75,30 @@ def main() -> int:
     profitable = [r for r in unused_routes if getattr(r, "net_profit", 0) > 0]
     negative = [r for r in unused_routes if getattr(r, "net_profit", 0) <= 0]
 
+    # 初心者ルート: 仕入れ先が公式・一次販売店であるルート（一次流通 → 二次流通）
+    _PRIMARY_KEYWORDS = frozenset({
+        "公式", "apple", "任天堂", "nintendo", "sony", "ricoh", "fuji",
+        "canon", "nikon", "official", "正規",
+    })
+    def _is_primary_shop(shop_name: str) -> bool:
+        """仕入れ先が一次流通（公式・正規店）かどうか判定する。"""
+        lower = shop_name.lower()
+        return any(kw in lower for kw in _PRIMARY_KEYWORDS)
+
+    beginner_routes = [
+        r for r in profitable
+        if _is_primary_shop(getattr(r, "buy_shop_name", ""))
+    ]
+
+    # Proルート: 二次流通仕入れ → 二次流通販売（初心者ルート以外）
+    _OVERSEAS_KEYWORDS = frozenset({"ebay", "stockx", "overseas", "海外"})
+    def _is_overseas_sell(shop_name: str) -> bool:
+        """販売先が海外系かどうか判定する。"""
+        lower = shop_name.lower()
+        return any(kw in lower for kw in _OVERSEAS_KEYWORDS)
+
+    pro_routes = [r for r in profitable if r not in beginner_routes]
+
     # reason_if_empty: データがない場合の理由を生成
     if len(profitable) == 0:
         if total == 0:
@@ -97,7 +121,7 @@ def main() -> int:
     else:
         reason_if_empty = None
 
-    def _route_to_dict(r) -> dict:
+    def _route_to_dict(r, route_type: str = "secondary_to_secondary") -> dict:
         """SedoriRoute オブジェクトを辞書に変換する。"""
         return {
             "product_name": getattr(r, "product_name", ""),
@@ -109,7 +133,12 @@ def main() -> int:
             "net_profit": getattr(r, "net_profit", 0),
             "profit_rate": round(float(getattr(r, "profit_rate", 0) or 0), 4),
             "needs_review": getattr(r, "needs_review", False),
+            "route_type": route_type,
         }
+
+    _beginner_sorted = sorted(beginner_routes, key=lambda r: getattr(r, "net_profit", 0), reverse=True)
+    _pro_sorted = sorted(pro_routes, key=lambda r: getattr(r, "profit_rate", 0) or 0, reverse=True)
+    _all_profitable_sorted = sorted(profitable, key=lambda r: getattr(r, "net_profit", 0), reverse=True)
 
     report: dict = {
         "generated_at": now.strftime("%Y-%m-%d %H:%M JST"),
@@ -117,11 +146,20 @@ def main() -> int:
         "routes_unused_only": len(unused_routes),
         "profitable_routes": len(profitable),
         "negative_routes": len(negative),
+        "beginner_routes": {
+            "route_type": "primary_to_secondary",
+            "count": len(beginner_routes),
+            "top": [_route_to_dict(r, route_type="primary_to_secondary") for r in _beginner_sorted[:10]],
+        },
+        "pro_routes": {
+            "route_type": "secondary_to_secondary",
+            "count": len(pro_routes),
+            "top": [_route_to_dict(r, route_type="secondary_to_secondary") for r in _pro_sorted[:10]],
+        },
+        "all_profitable": [_route_to_dict(r) for r in _all_profitable_sorted[:10]],
         "excluded_by_condition": excluded_by_condition,
         "excluded_by_confidence": excluded_by_confidence,
         "excluded_by_missing_price": excluded_by_missing_price,
-        "top_profitable": [_route_to_dict(r) for r in
-                           sorted(profitable, key=lambda r: getattr(r, "net_profit", 0), reverse=True)[:10]],
     }
     if reason_if_empty:
         report["reason_if_empty"] = reason_if_empty
@@ -132,7 +170,7 @@ def main() -> int:
     json_path = REPORT_DIR / "latest.json"
     with open(json_path, "w", encoding="utf-8") as f:
         json.dump(report, f, ensure_ascii=False, indent=2)
-    print(f"[INFO] sedori_routes_report/latest.json 保存完了 (profitable={len(profitable)})")
+    print(f"[INFO] sedori_routes_report/latest.json 保存完了 (profitable={len(profitable)}, beginner={len(beginner_routes)}, pro={len(pro_routes)})")
     if reason_if_empty:
         print(f"[INFO] reason_if_empty: {reason_if_empty}")
 
@@ -143,18 +181,47 @@ def main() -> int:
         f"- 全ルート: {total} / 新品・未使用のみ: {len(unused_routes)} (除外: {excluded_by_condition})",
         f"- 低信頼度除外: {excluded_by_confidence} / 価格未取得除外: {excluded_by_missing_price}",
         f"- 利益あり: {len(profitable)} / 赤字: {len(negative)}",
-        "",
-        "## Top利益ルート",
-        "",
+        f"- 初心者ルート(一次仕入れ): {len(beginner_routes)} / Proルート(二次流通): {len(pro_routes)}",
     ]
     if reason_if_empty:
-        lines.insert(3, f"- ⚠️ reason_if_empty: {reason_if_empty}")
-    for i, r in enumerate(report["top_profitable"], 1):
+        lines.append(f"- ⚠️ reason_if_empty: {reason_if_empty}")
+    lines.extend([
+        "",
+        "## 🟢 初心者ルート（一次仕入れ → 二次流通）",
+        "",
+    ])
+    for i, r in enumerate(report["beginner_routes"]["top"], 1):
         lines.append(
             f"{i}. **{r['product_name']}** {r['buy_shop_name']} → {r['sell_shop_name']}: "
             f"+¥{r['net_profit']:,} ({r['profit_rate']*100:.1f}%) [{r['buy_condition']}]"
         )
-    if not report["top_profitable"]:
+    if not report["beginner_routes"]["top"]:
+        lines.append("データなし")
+
+    lines.extend([
+        "",
+        "## 🔵 Proルート（二次流通 → 二次流通）",
+        "",
+    ])
+    for i, r in enumerate(report["pro_routes"]["top"], 1):
+        lines.append(
+            f"{i}. **{r['product_name']}** {r['buy_shop_name']} → {r['sell_shop_name']}: "
+            f"+¥{r['net_profit']:,} ({r['profit_rate']*100:.1f}%) [{r['buy_condition']}]"
+        )
+    if not report["pro_routes"]["top"]:
+        lines.append("データなし")
+
+    lines.extend([
+        "",
+        "## 全利益ルート Top10",
+        "",
+    ])
+    for i, r in enumerate(report["all_profitable"], 1):
+        lines.append(
+            f"{i}. **{r['product_name']}** {r['buy_shop_name']} → {r['sell_shop_name']}: "
+            f"+¥{r['net_profit']:,} ({r['profit_rate']*100:.1f}%) [{r['buy_condition']}]"
+        )
+    if not report["all_profitable"]:
         lines.append("データなし")
 
     md_path = REPORT_DIR / "latest.md"

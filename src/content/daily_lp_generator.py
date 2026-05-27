@@ -1169,6 +1169,111 @@ a[href], button, [role="tab"], [role="button"],
   background: #FFF8E8;
   color: #B45309;
 }}
+/* ── モバイルドロワー ── */
+.mobile-drawer-overlay {{
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 1000;
+}}
+.mobile-drawer-overlay.open {{ display: block; }}
+.mobile-drawer {{
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  width: 260px;
+  background: #fff;
+  z-index: 1001;
+  transform: translateX(-100%);
+  transition: transform 0.25s ease;
+  overflow-y: auto;
+  box-shadow: 4px 0 16px rgba(0,0,0,0.15);
+  padding: 0;
+}}
+.mobile-drawer.open {{ transform: translateX(0); }}
+.mobile-drawer-header {{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  border-bottom: 1px solid #e5e7eb;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #374151;
+}}
+.mobile-drawer-close {{
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  cursor: pointer;
+  color: #6b7280;
+  padding: 4px 8px;
+}}
+.mobile-drawer-nav {{
+  display: flex;
+  flex-direction: column;
+  padding: 8px 0;
+}}
+.mobile-drawer-nav-btn {{
+  background: none;
+  border: none;
+  text-align: left;
+  padding: 14px 20px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  color: #374151;
+  border-bottom: 1px solid #f3f4f6;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: background 0.15s;
+}}
+.mobile-drawer-nav-btn:hover {{ background: #f9fafb; }}
+.mobile-drawer-nav-btn.active {{
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-weight: 600;
+}}
+.mobile-hamburger {{
+  display: none;
+  background: none;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 8px 10px;
+  cursor: pointer;
+  color: #374151;
+  font-size: 1.2rem;
+  align-items: center;
+  justify-content: center;
+}}
+@media (max-width: 640px) {{
+  .mobile-hamburger {{ display: flex; }}
+  .tab-nav {{ display: none !important; }}
+  .tab-wrap {{ position: relative; }}
+  .mobile-tab-topbar {{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    background: #fff;
+    border-bottom: 2px solid #e5e7eb;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }}
+  .mobile-tab-current-label {{
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #374151;
+    flex: 1;
+  }}
+}}
+@media (min-width: 641px) {{
+  .mobile-hamburger {{ display: none !important; }}
+  .mobile-tab-topbar {{ display: none !important; }}
+  .mobile-drawer {{ display: none !important; }}
+  .mobile-drawer-overlay {{ display: none !important; }}
+}}
 /* ジャンルトグルボタン */
 .tab-btn.genre-toggle-btn.active {{
   background: #F0F4FF; color: #4338CA;
@@ -3494,6 +3599,63 @@ tr.sc-route-review {{ background: #FFFBEB; }}
       if (tabId) activateCategory(tabId, targetId||"");
     }});
   }});
+
+  // ── モバイルドロワー ──
+  var drawerOverlay = document.getElementById("mobile-drawer-overlay");
+  var drawer = document.getElementById("mobile-drawer");
+  var drawerClose = document.getElementById("mobile-drawer-close");
+  var hamburger = document.getElementById("mobile-hamburger");
+  var currentLabel = document.getElementById("mobile-tab-current-label");
+
+  var drawerTabLabels = {{
+    "lottery": "&#127915; 抽選情報",
+    "ranking": "&#127942; ランキング",
+    "sedori": "&#9636; せどりルート",
+    "beginner": "&#128100; 初心者",
+    "advanced": "&#9997; Pro"
+  }};
+
+  function openDrawer() {{
+    if (drawer) drawer.classList.add("open");
+    if (drawerOverlay) drawerOverlay.classList.add("open");
+    document.body.style.overflow = "hidden";
+  }}
+  function closeDrawer() {{
+    if (drawer) drawer.classList.remove("open");
+    if (drawerOverlay) drawerOverlay.classList.remove("open");
+    document.body.style.overflow = "";
+  }}
+  if (hamburger) hamburger.addEventListener("click", openDrawer);
+  if (drawerClose) drawerClose.addEventListener("click", closeDrawer);
+  if (drawerOverlay) drawerOverlay.addEventListener("click", closeDrawer);
+
+  // ドロワーのタブボタン
+  document.querySelectorAll(".mobile-drawer-nav-btn").forEach(function(btn) {{
+    btn.addEventListener("click", function() {{
+      var tabId = btn.getAttribute("data-drawer-tab");
+      if (tabId) {{
+        activateTab(tabId);
+        // ドロワーのアクティブ更新
+        document.querySelectorAll(".mobile-drawer-nav-btn").forEach(function(b) {{
+          b.classList.toggle("active", b.getAttribute("data-drawer-tab") === tabId);
+        }});
+        // トップバーラベル更新
+        if (currentLabel) currentLabel.innerHTML = drawerTabLabels[tabId] || tabId;
+        closeDrawer();
+      }}
+    }});
+  }});
+
+  // activateTab にフック（PCタブ切り替え時もトップバー更新）
+  var _origActivateTab = activateTab;
+  activateTab = function(tabId) {{
+    _origActivateTab(tabId);
+    // ドロワーアクティブ更新
+    document.querySelectorAll(".mobile-drawer-nav-btn").forEach(function(b) {{
+      b.classList.toggle("active", b.getAttribute("data-drawer-tab") === tabId);
+    }});
+    if (currentLabel) currentLabel.innerHTML = drawerTabLabels[tabId] || tabId;
+  }};
 }})();
 </script>
 <noscript><style>.tab-nav{{display:none;}}.tab-panel{{display:block!important;}}</style></noscript>
@@ -3603,7 +3765,8 @@ tr.sc-route-review {{ background: #FFFBEB; }}
       <h1 class="hero-title">最新<span class="accent">価格差</span>を把握する。</h1>
       <p class="hero-subtitle">公式購入→国内買取比較（初心者向け）から、二次流通→海外相場比較（Pro向け）まで、手動確認データによる参考値を掲載。iPhone・カメラ・ゲーム機の価格差を一枚で確認できます。公式サイトで最新価格を必ずご確認ください。</p>
       <div class="hero-cta-row">
-        <a href="#tab-beginner" class="hero-btn primary" data-track="hero_beginner_click">{_hero_btn_label}</a>
+        <a href="#tab-lottery" class="hero-btn primary" data-track="hero_lottery_click">&#127915; 抽選情報を見る</a>
+        <a href="#tab-beginner" class="hero-btn secondary" data-track="hero_beginner_click">{_hero_btn_label}</a>
         <a href="#tab-advanced" class="hero-btn violet" data-track="hero_pro_click">&#9997; Pro向け相場を見る</a>
         <a href="#tab-sedori" class="hero-btn secondary" data-track="hero_sedori_click">&#9636; せどりルートを見る</a>
       </div>
@@ -4121,13 +4284,32 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         """統合ナビゲーション（タブ + ジャンルドロップダウン）。"""
         sokuhoh_badge  = f'<span class="tab-count">{surge_count}</span>' if surge_count else ''
         lottery_badge  = f'<span class="tab-count">{lottery_count}</span>' if lottery_count else ''
-        return f"""<div class="tab-wrap" id="main-tab-nav">
+        return f"""<!-- モバイルドロワー -->
+<div class="mobile-drawer-overlay" id="mobile-drawer-overlay"></div>
+<div class="mobile-drawer" id="mobile-drawer" role="dialog" aria-label="ナビゲーション">
+  <div class="mobile-drawer-header">
+    <span>&#128230; メニュー</span>
+    <button class="mobile-drawer-close" id="mobile-drawer-close" aria-label="閉じる">&times;</button>
+  </div>
+  <div class="mobile-drawer-nav">
+    <button class="mobile-drawer-nav-btn active" data-drawer-tab="lottery">&#127915; 抽選情報{lottery_badge}</button>
+    <button class="mobile-drawer-nav-btn" data-drawer-tab="ranking">&#127942; ランキング</button>
+    <button class="mobile-drawer-nav-btn" data-drawer-tab="sedori">&#9636; せどりルート</button>
+    <button class="mobile-drawer-nav-btn" data-drawer-tab="beginner">&#128100; 初心者 <span class="tab-count">{beginner_count}</span></button>
+    <button class="mobile-drawer-nav-btn" data-drawer-tab="advanced">&#9997; Pro <span class="tab-count">{adv_total}</span></button>
+  </div>
+</div>
+<div class="mobile-tab-topbar" id="mobile-tab-topbar">
+  <button class="mobile-hamburger" id="mobile-hamburger" aria-label="メニューを開く">&#9776;</button>
+  <span class="mobile-tab-current-label" id="mobile-tab-current-label">&#127915; 抽選情報</span>
+</div>
+<div class="tab-wrap" id="main-tab-nav">
 <nav class="tab-nav" role="tablist">
-  <button class="tab-btn" data-tab="lottery" role="tab" aria-selected="false">&#127915; 抽選情報{lottery_badge}</button>
+  <button class="tab-btn active" data-tab="lottery" role="tab" aria-selected="true">&#127915; 抽選情報{lottery_badge}</button>
   <button class="tab-btn" data-tab="ranking" role="tab" aria-selected="false">&#127942; ランキング</button>
-  <button class="tab-btn active" data-tab="beginner" role="tab" aria-selected="true">&#128100; 初心者向け <span class="tab-count">{beginner_count}</span></button>
-  <button class="tab-btn" data-tab="advanced" role="tab" aria-selected="false">&#9997; Pro <span class="tab-count">{adv_total}</span></button>
   <button class="tab-btn" data-tab="sedori" role="tab" aria-selected="false">&#9636; せどりルート</button>
+  <button class="tab-btn" data-tab="beginner" role="tab" aria-selected="false">&#128100; 初心者 <span class="tab-count">{beginner_count}</span></button>
+  <button class="tab-btn" data-tab="advanced" role="tab" aria-selected="false">&#9997; Pro <span class="tab-count">{adv_total}</span></button>
   <button class="tab-btn genre-toggle-btn" id="genre-toggle-btn" data-action="toggle-genre" role="button" aria-expanded="false">&#128230; ジャンル &#9660;</button>
 </nav>
 <div class="genre-dropdown" id="genre-dropdown">
@@ -4234,7 +4416,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         lottery_count = lottery_display_count if lottery_display_count is not None else len(lottery_events)
         lottery_badge = f'<span class="tab-count">{lottery_count}</span>' if lottery_count else ''
 
-        return f"""<div id="tab-lottery" class="tab-panel" role="tabpanel">
+        return f"""<div id="tab-lottery" class="tab-panel active" role="tabpanel">
 {lottery_html}
 </div>
 
@@ -4242,16 +4424,16 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 {ranking_html}
 </div>
 
-<div id="tab-beginner" class="tab-panel active" role="tabpanel">
+<div id="tab-sedori" class="tab-panel" role="tabpanel">
+{sedori_html}
+</div>
+
+<div id="tab-beginner" class="tab-panel" role="tabpanel">
 {beginner_html}
 </div>
 
 <div id="tab-advanced" class="tab-panel" role="tabpanel">
 {advanced_html}
-</div>
-
-<div id="tab-sedori" class="tab-panel" role="tabpanel">
-{sedori_html}
 </div>"""
 
 
@@ -4639,11 +4821,11 @@ python3 -m src.cli calculate-sedori-routes</pre>
 
         # ── Info banner ──
         parts.append('<div class="info-banner blue">\n'
-                     '<div class="ib-title">&#128100; 初心者向け：公式購入 &rarr; 国内買取比較</div>\n'
-                     'Apple Store・任天堂公式などの<strong>公式サイトで定価購入できる商品</strong>を、'
-                     '国内の複数買取サイトで売却した場合の価格差を比較します。'
-                     'iPhone・ゲーム機など比較的入手しやすい商品を中心に掲載しています。\n'
-                     '<strong>掲載価格は更新時点の参考値です。参考利益は保証されません。購入前に必ず各店舗の最新価格をご確認ください。</strong>\n'
+                     '<div class="ib-title">&#128100; 初心者向け：一次流通仕入れ &rarr; 二次流通販売</div>\n'
+                     'Apple Store・任天堂公式・RICOH公式など<strong>公式・正規一次販売店で定価購入した新品・未使用品</strong>を、'
+                     'メルカリ・ラクマ・ヤフオク・eBay・国内買取店などの二次流通市場で売却した場合の差益を比較します。'
+                     '<strong>対象は新品・未使用・未開封のみ。中古・開封済み・ジャンクは除外しています。</strong>\n'
+                     '<strong>掲載価格は更新時点の参考値です。差益は保証されません。購入前に必ず各店舗の最新価格をご確認ください。</strong>\n'
                      '</div>')
 
         # 48h超古い買取価格を持つ案件を初心者向けセクションから除外（価格信頼性確保）
@@ -4839,7 +5021,7 @@ python3 -m src.cli calculate-sedori-routes</pre>
         name   = _esc(d.product_name or '—')
         official = d.official_price_jpy or 0
         best_bp  = d.best_buyback_price or 0
-        cost     = d.estimated_costs_jpy or 0
+        cost     = 0  # 推定コスト表示廃止
         diff     = best_bp - official - cost  # 通常マイナス
 
         # 差額表示
@@ -4910,7 +5092,7 @@ python3 -m src.cli calculate-sedori-routes</pre>
             f'<div class="monitoring-section">'
             f'<div class="monitoring-label">現在は赤字 / 監視中</div>'
             f'<div class="monitoring-detail">公式価格: ¥{official:,} → 最高買取: ¥{best_bp:,}</div>'
-            f'<div class="monitoring-diff">差額: {diff_str}（推定コスト¥{cost:,}込み）</div>'
+            f'<div class="monitoring-diff">差額: {diff_str}（公式→二次流通）</div>'
             f'<div class="monitoring-note">現在は赤字ですが、価格変動で利益化する可能性があります。</div>'
             f'</div>'
             f'{compare_html}'
@@ -5291,7 +5473,7 @@ python3 -m src.cli calculate-sedori-routes</pre>
         profit_lbl_cls = 'profit-lbl amber' if is_watch else 'profit-lbl'
         profit_num_cls = 'profit-num amber' if is_watch else 'profit-num'
         profit_rate_cls = 'profit-rate amber' if is_watch else 'profit-rate'
-        profit_note_text = '利益率が低め。様子見推奨' if is_watch else f'推定コスト -{_esc(fmt_price(d.estimated_costs_jpy))}'
+        profit_note_text = '利益率が低め。様子見推奨' if is_watch else '公式価格→二次流通販売'
         condition_text = _esc(d.buyback_condition or '新品未開封')
         profit_rate_str = _esc(fmt_rate(d.net_profit_rate))
 
@@ -5310,9 +5492,9 @@ python3 -m src.cli calculate-sedori-routes</pre>
             buyback_compare_hd = '参考買取価格（補助情報）'
         else:
             official_price_lbl = '公式価格（定価）'
-            buyback_price_lbl = '最高買取価格'
+            buyback_price_lbl = '二次流通最高価格'
             buyback_price_val_cls = 'price-cell-val green'
-            profit_main_lbl = '実質利益（推定コスト差引後）'
+            profit_main_lbl = '差益（公式価格→二次流通）'
             pro_mode_note = ''
             buyback_compare_hd = '買取店比較'
 
@@ -6338,9 +6520,11 @@ python3 -m src.cli calculate-sedori-routes</pre>
     <div class="footer-live"><span class="live-dot"></span>手動確認</div>
   </div>
   <div class="footer-links">
-    <a href="#tab-beginner" class="footer-link">初心者向け案件</a>
-    <a href="#tab-advanced" class="footer-link">Pro向け相場</a>
-    <a href="#tab-ranking" class="footer-link">買取ランキング</a>
+    <a href="#tab-lottery" class="footer-link">抽選情報</a>
+    <a href="#tab-ranking" class="footer-link">ランキング</a>
+    <a href="#tab-sedori" class="footer-link">せどりルート</a>
+    <a href="#tab-beginner" class="footer-link">初心者向け</a>
+    <a href="#tab-advanced" class="footer-link">Pro向け</a>
     <a href="#tab-surge" class="footer-link">急騰/急落アラート</a>
     <a href="#note-cta" class="footer-link">詳細レポート</a>
     <a href="collector_report.html" class="footer-link admin-report-link" data-track="collector_report_click">取得レポート</a>

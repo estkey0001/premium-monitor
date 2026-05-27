@@ -1,12 +1,22 @@
 {
-  "generated_at": "2026-05-28 00:49 JST",
-  "routes_total": 0,
+  "generated_at": "2026-05-28 02:58 JST",
+  "routes_total": 45,
   "routes_unused_only": 0,
   "profitable_routes": 0,
   "negative_routes": 0,
-  "excluded_by_condition": 0,
+  "beginner_routes": {
+    "route_type": "primary_to_secondary",
+    "count": 0,
+    "top": []
+  },
+  "pro_routes": {
+    "route_type": "secondary_to_secondary",
+    "count": 0,
+    "top": []
+  },
+  "all_profitable": [],
+  "excluded_by_condition": 45,
   "excluded_by_confidence": 0,
   "excluded_by_missing_price": 0,
-  "top_profitable": [],
-  "reason_if_empty": "calculate-sedori-routes 未実行 or DBにルートデータなし"
+  "reason_if_empty": "全45件が中古/状態不明のため除外 (新品・未使用条件: ['new', 'sealed', 'unused', '新品', '未使用', '未開封'])"
 }

@@ -75,6 +75,23 @@ jobs:
       - name: Generate daily LP Variant A
         run: python -m src.cli generate-daily-lp --variant A
 
+      - name: Lottery quality gate
+        id: lottery_quality_gate
+        continue-on-error: true   # 期限切れ検出時もLPは更新する（サマリーで通知）
+        run: |
+          python scripts/check_lottery_quality.py
+          EXIT_CODE=$?
+          echo "exit_code=$EXIT_CODE" >> $GITHUB_OUTPUT
+
+          if [ "$EXIT_CODE" -eq 1 ]; then
+            # FAILURE: 期限切れ active / 重複 / 古い文言 → LP公開前に要確認
+            echo "::error::抽選品質ゲート FAILURE — 受付終了済み active または古い文言を検出（抽選タブ表示ミスリスク）"
+            exit 1
+          fi
+          # WARNING は check_lottery_quality.py が ::warning:: を直接出力するため、ここでは何もしない
+        env:
+          PYTHONPATH: .
+
       - name: Build public LP
         run: python -m src.cli build-public-lp
 
@@ -90,7 +107,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          git add docs/ exports/lp/daily/ exports/collector_report/
+          git add docs/ exports/lp/daily/ exports/collector_report/ exports/lottery_report/
 
           if git diff --cached --quiet; then
             echo "No changes to commit"

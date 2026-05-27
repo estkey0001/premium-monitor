@@ -2642,6 +2642,107 @@ def check() -> list[dict]:
             results.append({"level": "warning", "check": _chk_name,
                             "message": "src/content/daily_lp_generator.py が見つからない"})
 
+    # ── #233〜#240: lottery quality gate チェック ────────────────────────────────
+    import re as _re4
+
+    # ── #233: check_lottery_quality.py が存在する ─────────────────────────────
+    _lottery_script = PROJECT_ROOT / "scripts" / "check_lottery_quality.py"
+    if _lottery_script.exists():
+        results.append({"level": "ok", "check": "lottery_quality_script_exists",
+                        "message": "scripts/check_lottery_quality.py が存在する"})
+    else:
+        results.append({"level": "error", "check": "lottery_quality_script_exists",
+                        "message": "scripts/check_lottery_quality.py が存在しない"})
+
+    # ── #234: daily_lp.yml に Lottery quality gate ステップがある ──────────────
+    _workflow_path = PROJECT_ROOT / ".github" / "workflows" / "daily_lp.yml"
+    if _workflow_path.exists():
+        _workflow_text = _workflow_path.read_text(encoding="utf-8")
+        if "check_lottery_quality.py" in _workflow_text and "lottery_quality" in _workflow_text.lower():
+            results.append({"level": "ok", "check": "lottery_quality_in_workflow",
+                            "message": "daily_lp.yml に Lottery quality gate ステップが存在する"})
+        else:
+            results.append({"level": "error", "check": "lottery_quality_in_workflow",
+                            "message": "daily_lp.yml に Lottery quality gate ステップが存在しない"})
+    else:
+        results.append({"level": "warning", "check": "lottery_quality_in_workflow",
+                        "message": ".github/workflows/daily_lp.yml が見つからない"})
+
+    # ── #235: exports/lottery_report/latest.json が生成されている ──────────────
+    _lottery_report = PROJECT_ROOT / "exports" / "lottery_report" / "latest.json"
+    if _lottery_report.exists():
+        results.append({"level": "ok", "check": "lottery_report_exists",
+                        "message": "exports/lottery_report/latest.json が生成されている"})
+        # JSON 読み込んで内容チェック
+        try:
+            import json as _json4
+            _lr = _json4.loads(_lottery_report.read_text(encoding="utf-8"))
+
+            # ── #236: lottery active count が 3 以上 ──────────────────────────
+            _lr_active = _lr.get("active_count", 0)
+            if _lr_active >= 3:
+                results.append({"level": "ok", "check": "lottery_active_count_gte3",
+                                "message": f"lottery_report active_count = {_lr_active}（>= 3）"})
+            elif _lr_active > 0:
+                results.append({"level": "warning", "check": "lottery_active_count_gte3",
+                                "message": f"lottery_report active_count = {_lr_active}（期待値: 3 以上）"})
+            else:
+                results.append({"level": "error", "check": "lottery_active_count_gte3",
+                                "message": f"lottery_report active_count = {_lr_active}（受付中の抽選がない）"})
+
+            # ── #237: RICOH GR IV 3件が active_items に存在 ───────────────────
+            _lr_active_names = [it.get("product_name", "") for it in _lr.get("active_items", [])]
+            _ricoh_in_active = [n for n in _lr_active_names if "RICOH GR IV" in n]
+            if len(_ricoh_in_active) >= 3:
+                results.append({"level": "ok", "check": "ricoh_gr4_in_active_items",
+                                "message": f"RICOH GR IV 系 {len(_ricoh_in_active)} 件が active_items に存在"})
+            else:
+                results.append({"level": "warning", "check": "ricoh_gr4_in_active_items",
+                                "message": f"RICOH GR IV 系が active_items に {len(_ricoh_in_active)} 件のみ（期待値: 3）"})
+
+            # ── #238: reference_only が active count に含まれていない ──────────
+            _lr_dup = _lr.get("duplicate_count", 0)
+            _lr_failures = _lr.get("issues_failure", [])
+            _ref_in_active_issues = [f for f in _lr_failures if "reference_only" in f and "active" in f]
+            if not _ref_in_active_issues:
+                results.append({"level": "ok", "check": "reference_only_excluded_from_active",
+                                "message": "reference_only アイテムが active count に混入していない"})
+            else:
+                results.append({"level": "error", "check": "reference_only_excluded_from_active",
+                                "message": f"reference_only が active に混入: {_ref_in_active_issues}"})
+
+            # ── #239: 古い文言が active section にない ──────────────────────
+            _lr_stale = _lr.get("stale_phrase_count", 0)
+            if _lr_stale == 0:
+                results.append({"level": "ok", "check": "no_stale_in_active_section",
+                                "message": "「次回未定」「抽選情報未確認」等の古い文言が active section にない"})
+            else:
+                results.append({"level": "error", "check": "no_stale_in_active_section",
+                                "message": f"古い文言が active section に {_lr_stale} 件検出"})
+
+            # ── #240: lottery_report に FAILURE がない ────────────────────────
+            _lr_issues = _lr.get("issues_failure", [])
+            if not _lr_issues:
+                results.append({"level": "ok", "check": "lottery_quality_no_failure",
+                                "message": "lottery_quality_gate: FAILURE 項目なし"})
+            else:
+                results.append({"level": "warning", "check": "lottery_quality_no_failure",
+                                "message": f"lottery_quality_gate FAILURE 項目 {len(_lr_issues)} 件: {_lr_issues[0][:60]}..."
+                                if _lr_issues[0] and len(_lr_issues[0]) > 60
+                                else f"lottery_quality_gate FAILURE 項目 {len(_lr_issues)} 件"})
+
+        except Exception as _e4:
+            results.append({"level": "warning", "check": "lottery_report_exists",
+                            "message": f"exports/lottery_report/latest.json の解析に失敗: {_e4}"})
+    else:
+        results.append({"level": "warning", "check": "lottery_report_exists",
+                        "message": "exports/lottery_report/latest.json が未生成（check_lottery_quality.py を実行してください）"})
+        for _chk in ["lottery_active_count_gte3", "ricoh_gr4_in_active_items",
+                     "reference_only_excluded_from_active", "no_stale_in_active_section",
+                     "lottery_quality_no_failure"]:
+            results.append({"level": "warning", "check": _chk,
+                            "message": "lottery_report が未生成のためスキップ"})
+
     return results
 
 

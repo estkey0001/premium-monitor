@@ -1,5 +1,3 @@
-2026-05-27 16:02:34 [INFO] src.db.database: Database connected: /Users/yuyaarito/Desktop/claude code/premium-monitor/data/premium_monitor.db
-2026-05-27 16:02:34 [INFO] src.db.database: Schema initialization complete.
 
 ======================================================================
  本番前チェックリスト (16 項目)
@@ -15,7 +13,7 @@
   ✅ [empty_links] 空リンクなし
   ✅ [today_date] 今日の日付 2026-05-27 あり
   ✅ [price] 価格表記あり
-  ✅ [beginner_easy] beginner_easy案件あり
+  ⚠️ [beginner_easy] beginner_easy案件なし → scan-beginner-deals を実行
   ✅ [ab_variants] A/B/C全バリアント生成済み
   ✅ [sitemap] sitemap.xml あり
   ✅ [robots] robots.txt あり
@@ -23,8 +21,8 @@
 
   --- サマリ ---
   Errors:   0
-  Warnings: 2
-  OK:       14
+  Warnings: 3
+  OK:       13
 
   ✅ 公開準備完了！
   次のステップ:

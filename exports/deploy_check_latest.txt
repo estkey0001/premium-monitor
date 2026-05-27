@@ -1,6 +1,6 @@
 
 ============================================================
- Deploy Check (254 items)
+ Deploy Check (261 items)
 ============================================================
   ✅ [index_exists] docs/index.html 存在
   ✅ [forbidden_phrases] 禁止表現なし
@@ -185,13 +185,13 @@
   ✅ [ipad_not_in_other] iPad は「その他」欄に混入していない
   ✅ [airpods_not_in_smartphone] AirPods はスマートフォン欄に混入していない
   ⚠️ [applewatch_in_wearable_section] Apple Watch がウェアラブル欄に見つからない（データなし or genre設定を確認）
-  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-05-27T15:57:10+09:00）
+  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-05-27T16:11:41+09:00）
   ✅ [suspicious_price_format] suspicious_prices 形式OK（suspicious_price なし）
   ✅ [fetch_failed_has_reason] fetch_failed 35件すべてに reason あり
   ✅ [collector_report_html_exists] docs/collector_report.html 存在
   ✅ [collector_report_link_in_lp] LP内に collector_report.html へのリンクがある
   ✅ [fetch_failed_report_link] 取得失敗31件 / suspicious0件 → 警告バーが表示されている
-  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 14件存在する: ['iphone17pm512', 'iphone17pro256', 'iphone17pro512', 'iphone17pm256']
+  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 14件存在する: ['iphone17pm512', 'iphone17pro256', 'iphone17pm256', 'iphone17pro512']
   ✅ [beginner_page_auto_scraped_exists] 自動取得 OK 20件 / total 55件
   ✅ [shop_name_no_vertical_wrap] shop-name-col に word-break:keep-all が設定されている
   ✅ [iphone17pro256_price_scraped] iPhone 17 Pro 256GB の価格取得成功: ['mobile_ichiban', 'kaitori_shouten', 'kaitori_itchome', 'iosys']
@@ -256,8 +256,15 @@
   ✅ [deploy_check_tee_output] deploy-check の出力が exports/deploy_check_latest.txt に保存される
   ✅ [prelaunch_tee_output] prelaunch-check の出力が exports/prelaunch_check_latest.txt に保存される
   ✅ [notify_env_vars] DISCORD_WEBHOOK_URL / TELEGRAM_BOT_TOKEN が workflow に設定されている
+  ✅ [beginner_cards_not_zero] 初心者向けタブにカードが1件以上表示されている（フォールバック正常）
+  ✅ [pro_cards_not_zero] Pro向けタブにカードが1件以上表示されている
+  ⚠️ [hero_not_zero_count] Hero の初心者向けボタンに「(0件)」が表示されている（フォールバックデータを確認）
+  ✅ [stale_warning_present] stale データ警告バナー（data-stale-warn）の構造が存在する
+  ✅ [fallback_data_caution] 参考データ・古いデータの注意文が表示されている
+  ✅ [repo_manual_fallback] repository.py に manual_today フォールバック優先ロジックが存在する
+  ✅ [scanner_fetch_failed_keep] beginner_deal_scanner.py に fetch_failed 時の deal 保持ロジックが存在する
 
-  Errors: 0 | Warnings: 51 | OK: 203
+  Errors: 0 | Warnings: 52 | OK: 209
 
   ✅ Deploy check PASSED
 ============================================================

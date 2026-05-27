@@ -65,38 +65,72 @@ def main() -> int:
         print(f"[WARN] DB 読み込み失敗: {e}", file=sys.stderr)
         all_deals = []
 
-    # 初心者向け: 公式購入可能 / iPhone・ゲーム機 / 利益あり
-    beginner_top = [
-        d for d in all_deals
-        if getattr(d, "user_level", "") in ("beginner_easy", "beginner_watch")
-        and getattr(d, "category", "") in ("iphone", "game_console")
-        and d.net_profit_jpy >= 0
-    ][:10]
-
-    # Pro向け: 全カテゴリ / 利益率高い順
-    pro_top = sorted(
-        [d for d in all_deals if d.net_profit_jpy >= 0],
-        key=lambda d: getattr(d, "net_profit_rate", 0) or 0,
+    # 初心者向け: 一次流通仕入れ → 二次流通販売 / 全カテゴリ / 利益あり / 差益順
+    _BEGINNER_CATEGORIES = ("iphone", "game_console", "tablet", "wearable", "audio", "pc")
+    beginner_top = sorted(
+        [
+            d for d in all_deals
+            if getattr(d, "user_level", "") in ("beginner_easy", "beginner_watch")
+            and getattr(d, "category", "") in _BEGINNER_CATEGORIES
+            and d.net_profit_jpy >= 0
+        ],
+        key=lambda d: d.net_profit_jpy,
         reverse=True,
     )[:10]
+
+    # Pro向け: 二次流通仕入れ → 二次流通販売 / 全カテゴリ / 利益率高い順 / camera・pc優先
+    _PRO_PRIORITY_CATEGORIES = ("camera", "pc")
+    _pro_all = sorted(
+        [d for d in all_deals if d.net_profit_jpy >= 0],
+        key=lambda d: (
+            getattr(d, "category", "") in _PRO_PRIORITY_CATEGORIES,
+            getattr(d, "net_profit_rate", 0) or 0,
+        ),
+        reverse=True,
+    )
+    pro_top = _pro_all[:10]
 
     # 赤字案件
     excluded = [d for d in all_deals if d.net_profit_jpy < 0]
 
-    def _deal_to_dict(d) -> dict:
+    # カテゴリ別の仕入れ先ラベル（初心者向け一次流通）
+    _BEGINNER_SOURCE_LABELS: dict[str, str] = {
+        "iphone": "Apple Store",
+        "game_console": "任天堂公式 / PlayStation Direct / Xbox Store",
+        "camera": "RICOH公式 / FUJIFILM公式 / キタムラ",
+        "tablet": "Apple Store",
+    }
+    _BEGINNER_SOURCE_DEFAULT = "公式ストア / 正規一次販売店"
+    _DEST_LABEL = "メルカリ / ラクマ / ヤフオク / 国内買取店"
+
+    def _deal_to_dict(d, is_beginner: bool = True) -> dict:
         """BeginnerDeal オブジェクトを辞書に変換する。"""
+        cat = getattr(d, "category", "")
+        if is_beginner:
+            route_type = "primary_to_secondary"
+            source_label = _BEGINNER_SOURCE_LABELS.get(cat, _BEGINNER_SOURCE_DEFAULT)
+        else:
+            route_type = "secondary_to_secondary"
+            source_label = "中古市場 / フリマ / 買取店"
         return {
             "product_name": getattr(d, "product_name", ""),
-            "category": getattr(d, "category", ""),
+            "category": cat,
             "user_level": getattr(d, "user_level", ""),
             "official_price_jpy": getattr(d, "official_price_jpy", None),
             "best_buyback_price": getattr(d, "best_buyback_price", None),
             "best_buyback_shop": getattr(d, "best_buyback_shop", ""),
             "net_profit_jpy": getattr(d, "net_profit_jpy", 0),
             "net_profit_rate": round(float(getattr(d, "net_profit_rate", 0) or 0), 4),
+            "route_type": route_type,
+            "source_label": source_label,
+            "dest_label": _DEST_LABEL,
         }
 
     # reason_if_empty: データがない場合の理由を生成
+    _beginner_cat_count = len([
+        d for d in all_deals
+        if getattr(d, "category", "") in _BEGINNER_CATEGORIES
+    ])
     if len(all_deals) == 0:
         reason_if_empty = (
             "run-buyback-premium-check 未実行 or DBに beginner_deals データなし。"
@@ -105,15 +139,17 @@ def main() -> int:
     elif not beginner_top and not pro_top:
         reason_if_empty = (
             f"全{len(all_deals)}件が利益なし or カテゴリ/ユーザーレベル条件に該当なし "
-            f"(iphone/game_console: {len([d for d in all_deals if getattr(d,'category','') in ('iphone','game_console')])}件)"
+            f"(初心者対象カテゴリ: {_beginner_cat_count}件)"
         )
     else:
         reason_if_empty = None
 
     report: dict = {
         "generated_at": now.strftime("%Y-%m-%d %H:%M JST"),
-        "beginner_top10": [_deal_to_dict(d) for d in beginner_top],
-        "pro_top10": [_deal_to_dict(d) for d in pro_top],
+        "route_type_beginner": "primary_to_secondary",
+        "route_type_pro": "secondary_to_secondary",
+        "beginner_top10": [_deal_to_dict(d, is_beginner=True) for d in beginner_top],
+        "pro_top10": [_deal_to_dict(d, is_beginner=False) for d in pro_top],
         "excluded_items": len(excluded),
         "total_deals": len(all_deals),
         "confidence_summary": {
@@ -146,7 +182,7 @@ def main() -> int:
         lines.append(f"- ⚠️ reason_if_empty: {reason_if_empty}")
     lines.extend([
         "",
-        "## 👤 初心者ランキング Top10",
+        "## 👤 初心者ランキング Top10（一次仕入れ → 二次流通販売）",
         "",
     ])
     for i, d in enumerate(report["beginner_top10"], 1):
@@ -157,7 +193,7 @@ def main() -> int:
     if not report["beginner_top10"]:
         lines.append("データなし")
 
-    lines.extend(["", "## 🎯 Pro ランキング Top10", ""])
+    lines.extend(["", "## 🎯 Pro ランキング Top10（二次流通仕入れ → 二次流通販売）", ""])
     for i, d in enumerate(report["pro_top10"], 1):
         lines.append(
             f"{i}. **{d['product_name']}** — 実質{_fmt_profit(d['net_profit_jpy'])} "

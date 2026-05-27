@@ -2,7 +2,12 @@
 買取価格ページ: https://buy.janpara.co.jp/buy/search/result/
 注: www.janpara.co.jp/buy/ は buy.janpara.co.jp へリダイレクトされる。
     JS レンダリング必須。レートリミット (429) が発生しやすいため、
-    Playwright + リトライ（5秒スリープ）で対応。
+    Playwright + リトライ（バックオフ付き）で対応。
+
+2026-05-27 GitHub Actions での挙動:
+    GitHub Actions IP では全リクエストで429が返却される。
+    初回スリープを 8s、429 バックオフを 30s/60s に延長して対策。
+    それでも継続的に429の場合は rate_limited_429 として記録。
 """
 import logging
 import re
@@ -34,9 +39,15 @@ class JanparaCsvCollector(BaseCsvBuybackCollector):
         return PRODUCT_URLS.get(product_alias, "")
 
     def _fetch_html(self, url: str) -> Optional[str]:
-        """Playwright + リトライ（429対策）。inner_text() または page.content() を返す。"""
-        time.sleep(3)  # レートリミット遵守（長めのスリープ）
-        for attempt in range(2):  # 最大2回試行
+        """Playwright + リトライ（429対策）。inner_text() または page.content() を返す。
+
+        レートリミット対策:
+          - 初回アクセス前に 8s スリープ（丁重なアクセス間隔）
+          - 429 検出時は 30s / 60s バックオフ後リトライ（最大3回）
+          - 連続 429 の場合は rate_limited_429 として記録し終了
+        """
+        time.sleep(8)  # レートリミット遵守（丁重なアクセス間隔）
+        for attempt in range(3):  # 最大3回試行
             try:
                 from playwright.sync_api import sync_playwright
                 with sync_playwright() as p:
@@ -58,13 +69,17 @@ class JanparaCsvCollector(BaseCsvBuybackCollector):
                     # 429 検出: Playwright は例外を投げず status で判定
                     if status == 429:
                         browser.close()
-                        if attempt == 0:
-                            logger.warning("[じゃんぱら] 429 Rate Limit — 10秒後リトライ")
-                            time.sleep(10)
+                        if attempt < 2:
+                            wait_sec = 30 * (attempt + 1)  # 30s, 60s
+                            logger.warning(
+                                "[じゃんぱら] 429 Rate Limit (attempt %d) — %ds後リトライ",
+                                attempt + 1, wait_sec,
+                            )
+                            time.sleep(wait_sec)
                             continue
                         else:
                             self.last_failure_reason = "rate_limited_429"
-                            logger.warning("[じゃんぱら] 429 Rate Limit — リトライ上限到達")
+                            logger.warning("[じゃんぱら] 429 Rate Limit — リトライ上限到達(3回)")
                             return None
 
                     page.wait_for_timeout(3000)  # JS描画待機
@@ -80,9 +95,9 @@ class JanparaCsvCollector(BaseCsvBuybackCollector):
                 return None
             except Exception as e:
                 logger.warning("[じゃんぱら] Playwright error (attempt %d): %s", attempt + 1, e)
-                self.last_failure_reason = f"playwright_error"
-                if attempt == 0:
-                    time.sleep(5)
+                self.last_failure_reason = "playwright_error"
+                if attempt < 2:
+                    time.sleep(10)
                     continue
                 return None
 

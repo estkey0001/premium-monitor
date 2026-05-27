@@ -62,6 +62,7 @@ OPTIONAL_SHOPS: dict[str, str] = {
     "dosupara":   "url_invalid",         # 検索URLが404返し
     "geo_mobile": "site_blocked",        # Cloudflareブロック
     "hardoff":    "url_invalid",         # 検索URLが404返し
+    "pasoko":     "product_not_listed",  # PC専門店 — PS5/Switch2取り扱いなし（2026-05-27確認）
 }
 
 # 主要商品の最小成功店舗数
@@ -337,11 +338,11 @@ def build_summary_md(result: dict) -> str:
     lines.append("| 店舗ID | 分類 | 説明 |")
     lines.append("|--------|------|------|")
     CLASSIFICATION_DESC = {
-        "product_not_listed": "対象商品を掲載していない",
-        "url_invalid":        "検索URL が 404 / 構造変更の可能性",
-        "site_blocked":       "Cloudflare 等によるブロック",
+        "product_not_listed":        "対象商品を掲載していない",
+        "url_invalid":               "検索URL が 404 / 構造変更の可能性",
+        "site_blocked":              "Cloudflare 等によるブロック",
         "collector_not_implemented": "Collector 未実装",
-        "playwright_timeout": "JS描画タイムアウト",
+        "playwright_timeout":        "JS描画タイムアウト",
     }
     for shop_id, cls in OPTIONAL_SHOPS.items():
         desc = CLASSIFICATION_DESC.get(cls, cls)
@@ -365,6 +366,23 @@ def build_summary_md(result: dict) -> str:
                 f"| {sp.get('reason','—')} |"
             )
         lines.append("")
+
+    # next_action: 店舗別の対応状況
+    lines.append("### 🔧 店舗別 next_action")
+    lines.append("")
+    lines.append("| 店舗 | 失敗理由 | ステータス | next_action |")
+    lines.append("|------|---------|-----------|------------|")
+    SHOP_NEXT_ACTIONS: dict[str, tuple[str, str, str]] = {
+        # (失敗理由, ステータス, next_action)
+        "janpara":  ("rate_limited_429",    "⚠️ 調査中",   "sleep 8s+30s backoff適用済み — Actions IP制限の可能性。継続監視"),
+        "netoff":   ("price_not_found→修正済", "✅ 修正済み", "URL /sell/→/mobilebuy/ 修正 + regex修正 — 次回取得で確認"),
+        "pasoko":   ("product_not_listed",  "✅ 分類変更",  "PC専門店でPS5/Switch非対応を確認 — product_not_listedに変更"),
+        "sofmap":   ("service_unavailable", "🔴 復旧待ち", "503サーバー障害 — サイト側の問題。復旧を待って再確認"),
+        "surugaya": ("site_blocked",        "🔴 改善不可",  "403ボット検知 — 無理に突破しない。手動価格でカバー"),
+    }
+    for shop_id, (reason, status, action) in SHOP_NEXT_ACTIONS.items():
+        lines.append(f"| `{shop_id}` | `{reason}` | {status} | {action} |")
+    lines.append("")
 
     return "\n".join(lines)
 

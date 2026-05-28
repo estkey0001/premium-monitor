@@ -104,6 +104,12 @@ jobs:
         run: python -m src.cli calculate-sedori-routes
         continue-on-error: true
 
+      # 11.5. Scan primary-to-secondary deals（一次→二次流通 利益案件スキャン）
+      # run-buyback-premium-check(step10) の後に実行して海外価格ベースの利益案件を上書き保存
+      - name: Scan primary-to-secondary deals
+        run: python -m src.cli scan-primary-to-secondary
+        continue-on-error: true
+
       # 12. Generate ranking report
       - name: Generate ranking report
         run: python scripts/generate_ranking_report.py

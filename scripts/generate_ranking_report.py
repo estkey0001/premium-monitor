@@ -144,12 +144,47 @@ def main() -> int:
     else:
         reason_if_empty = None
 
+    # カテゴリ別初心者ランキング（利益額順）
+    _ALL_BEG_CATEGORIES = ("iphone", "game_console", "tablet", "wearable", "audio", "pc", "camera")
+    beginner_by_category: dict[str, list] = {}
+    for cat in _ALL_BEG_CATEGORIES:
+        cat_deals = sorted(
+            [
+                d for d in all_deals
+                if getattr(d, "user_level", "") in ("beginner_easy", "beginner_watch")
+                and getattr(d, "category", "") == cat
+                and d.net_profit_jpy >= 0
+            ],
+            key=lambda d: d.net_profit_jpy,
+            reverse=True,
+        )[:5]  # カテゴリ別5件まで
+        if cat_deals:
+            beginner_by_category[cat] = [_deal_to_dict(d, is_beginner=True) for d in cat_deals]
+
+    # カテゴリ別プロランキング（利益率順）
+    _ALL_PRO_CATEGORIES = ("camera", "pc", "iphone", "game_console", "tablet", "wearable", "audio")
+    pro_by_category: dict[str, list] = {}
+    for cat in _ALL_PRO_CATEGORIES:
+        cat_deals = sorted(
+            [
+                d for d in all_deals
+                if d.net_profit_jpy >= 0
+                and getattr(d, "category", "") == cat
+            ],
+            key=lambda d: getattr(d, "net_profit_rate", 0) or 0,
+            reverse=True,
+        )[:5]  # カテゴリ別5件まで
+        if cat_deals:
+            pro_by_category[cat] = [_deal_to_dict(d, is_beginner=False) for d in cat_deals]
+
     report: dict = {
         "generated_at": now.strftime("%Y-%m-%d %H:%M JST"),
         "route_type_beginner": "primary_to_secondary",
         "route_type_pro": "secondary_to_secondary",
         "beginner_top10": [_deal_to_dict(d, is_beginner=True) for d in beginner_top],
         "pro_top10": [_deal_to_dict(d, is_beginner=False) for d in pro_top],
+        "beginner_by_category": beginner_by_category,
+        "pro_by_category": pro_by_category,
         "excluded_items": len(excluded),
         "total_deals": len(all_deals),
         "confidence_summary": {
@@ -201,6 +236,30 @@ def main() -> int:
         )
     if not report["pro_top10"]:
         lines.append("データなし")
+
+    # カテゴリ別初心者ランキング
+    if report.get("beginner_by_category"):
+        lines.extend(["", "## 👤 カテゴリ別初心者ランキング（利益額順）", ""])
+        for cat, deals in sorted(report["beginner_by_category"].items()):
+            lines.append(f"### {cat.upper()}")
+            for i, d in enumerate(deals, 1):
+                lines.append(
+                    f"{i}. **{d['product_name']}** — 実質{_fmt_profit(d['net_profit_jpy'])} "
+                    f"({d['best_buyback_shop']})"
+                )
+            lines.append("")
+
+    # カテゴリ別プロランキング
+    if report.get("pro_by_category"):
+        lines.extend(["", "## 🎯 カテゴリ別プロランキング（利益率順）", ""])
+        for cat, deals in sorted(report["pro_by_category"].items()):
+            lines.append(f"### {cat.upper()}")
+            for i, d in enumerate(deals, 1):
+                lines.append(
+                    f"{i}. **{d['product_name']}** — 実質{_fmt_profit(d['net_profit_jpy'])} "
+                    f"/ 利益率{d['net_profit_rate']*100:.1f}%"
+                )
+            lines.append("")
 
     md_path = REPORT_DIR / "latest.md"
     with open(md_path, "w", encoding="utf-8") as f:

@@ -4846,7 +4846,28 @@ python3 -m src.cli calculate-sedori-routes</pre>
 
         # 48h超古い買取価格を持つ案件を初心者向けセクションから除外（価格信頼性確保）
         def _bybp_age_h(deal):
-            """deal の buyback_by_product 先頭行の observed_at からの経過時間（h）。データなし→0。"""
+            """deal の buyback_by_product 先頭行の observed_at からの経過時間（h）。
+
+            primary_to_secondary deal (海外価格基準) の場合は scanned_at を参照する。
+            buybackデータなし / primary_to_secondary → 0.0（除外しない）。
+            """
+            # primary_to_secondary deal は buyback行の鮮度ではなく scanned_at を参照
+            notes_str = getattr(deal, 'notes', '') or ''
+            if 'route=primary_to_secondary' in notes_str:
+                scanned_at = getattr(deal, 'scanned_at', None)
+                if scanned_at:
+                    try:
+                        if isinstance(scanned_at, str):
+                            dt = datetime.fromisoformat(scanned_at)
+                        else:
+                            dt = scanned_at
+                        if dt.tzinfo is None:
+                            dt = dt.replace(tzinfo=JST)
+                        return (datetime.now(tz=JST) - dt.astimezone(JST)).total_seconds() / 3600
+                    except Exception:
+                        pass
+                return 0.0  # scanned_at なし → 除外しない
+
             rows = bybp.get(deal.product_id, [])
             if not rows:
                 return 0.0

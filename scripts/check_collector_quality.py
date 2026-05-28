@@ -157,6 +157,53 @@ def update_failure_history(report: dict) -> dict:
 # 品質評価
 # ──────────────────────────────────────────────
 
+def _check_overseas_quality() -> list[str]:
+    """海外価格データの品質チェックを実行する。
+
+    チェック項目:
+      - overseas_price stale > 48h
+      - confidence low が top card に混入
+      - listing_count < 3
+    """
+    issues = []
+    overseas_path = PROJECT_ROOT / "exports" / "overseas_prices" / "latest.json"
+    if not overseas_path.exists():
+        return []
+
+    try:
+        overseas_data = json.loads(overseas_path.read_text(encoding="utf-8"))
+    except Exception:
+        return []
+
+    prices = overseas_data.get("prices", [])
+    stale_count = 0
+    low_conf_count = 0
+    low_listing_count = 0
+
+    for entry in prices:
+        product_name = entry.get("product_name", entry.get("product_alias", "?"))
+        # stale チェック (48h超)
+        if entry.get("stale", False):
+            stale_count += 1
+
+        # confidence low チェック
+        if entry.get("confidence", "low") == "low" and entry.get("price_jpy", 0) > 0:
+            low_conf_count += 1
+
+        # listing_count < 3 チェック
+        if 0 < entry.get("listing_count", 0) < 3:
+            low_listing_count += 1
+
+    if stale_count > 0:
+        issues.append(f"overseas_price stale(48h超): {stale_count}件 — update_overseas_prices.pyを再実行してください")
+    if low_conf_count > 0:
+        issues.append(f"overseas_price low confidence: {low_conf_count}件 — listing_count不足の可能性")
+    if low_listing_count > 0:
+        issues.append(f"overseas_price listing_count<3: {low_listing_count}件 — 価格精度が低い")
+
+    return issues
+
+
 def evaluate(report: dict) -> dict:
     """品質評価を実行し、結果 dict を返す。"""
     summary    = report.get("summary", {})
@@ -222,6 +269,10 @@ def evaluate(report: dict) -> dict:
         if optional:
             # optional は全件表示（5件制限なし — janpara/sofmap/surugaya が含まれる）
             optional_warnings.append(f"3日連続失敗（optional）: {', '.join(optional)}")
+
+    # ── 海外価格チェック (PHASE 7 Quality Gate) ───────────────────────────────
+    overseas_issues = _check_overseas_quality()
+    optional_warnings.extend(overseas_issues)
 
     return {
         "failures":          failures,

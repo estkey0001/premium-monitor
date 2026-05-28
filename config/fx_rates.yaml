@@ -1,18 +1,15 @@
-# 為替レート（手入力。外部API連携は将来対応）
-# 更新日: 2026-05-18
 fx_rates:
-  USD_JPY: 155
-  EUR_JPY: 170
-  GBP_JPY: 195
-  HKD_JPY: 20
-  CNY_JPY: 21
-  KRW_JPY: 0.11
-  TWD_JPY: 4.8
   AUD_JPY: 100
   CAD_JPY: 113
-
-# 海外購入時のデフォルト手数料
+  CNY_JPY: 21
+  EUR_JPY: 185.49
+  GBP_JPY: 195
+  HKD_JPY: 20
+  KRW_JPY: 0.11
+  TWD_JPY: 4.8
+  USD_JPY: 159.47
 overseas_fees:
-  default_shipping_jpy: 3000
-  default_import_tax_rate: 0.10   # 消費税相当
+  default_import_tax_rate: 0.1
   default_platform_fee_rate: 0.05
+  default_shipping_jpy: 3000
+updated_at: 2026-05-28 12:40 JST

@@ -265,5 +265,122 @@
       "url": "https://www.ebay.com/sch/i.html?_nkw=Nintendo+Switch+2&LH_Sold=1&LH_Complete=1",
       "product_name": "Nintendo Switch 2"
     }
-  ]
+  ],
+  "by_product_detailed": {
+    "airpods_max": [],
+    "airpods_pro3": [],
+    "x100vi": [
+      {
+        "source": "ebay",
+        "market": "eBay",
+        "product_id": "prod_x100vi",
+        "product_alias": "x100vi",
+        "country": "US",
+        "currency": "USD",
+        "price_local": 3200.0,
+        "fx_rate": 159.471405,
+        "price_jpy": 510308,
+        "confidence": "medium",
+        "listing_count": 1,
+        "median_price_jpy": 510308,
+        "min_price_jpy": 510308,
+        "max_price_jpy": 510308,
+        "fetched_at": "2026-05-28T10:00:00+09:00",
+        "stale": false,
+        "failure_reason": "",
+        "url": "https://www.ebay.com/sch/i.html?_nkw=FUJIFILM+X100VI&LH_Sold=1&LH_Complete=1"
+      }
+    ],
+    "gr3": [],
+    "gr3_hdf": [],
+    "gr3x": [
+      {
+        "source": "ebay",
+        "market": "eBay",
+        "product_id": "prod_gr3x",
+        "product_alias": "gr3x",
+        "country": "US",
+        "currency": "USD",
+        "price_local": 1400.0,
+        "fx_rate": 159.471405,
+        "price_jpy": 223259,
+        "confidence": "medium",
+        "listing_count": 1,
+        "median_price_jpy": 223259,
+        "min_price_jpy": 223259,
+        "max_price_jpy": 223259,
+        "fetched_at": "2026-05-28T10:00:00+09:00",
+        "stale": false,
+        "failure_reason": "",
+        "url": "https://www.ebay.com/sch/i.html?_nkw=Ricoh+GR+IIIx&LH_Sold=1&LH_Complete=1"
+      }
+    ],
+    "gr4": [
+      {
+        "source": "ebay",
+        "market": "eBay",
+        "product_id": "prod_gr4",
+        "product_alias": "gr4",
+        "country": "US",
+        "currency": "USD",
+        "price_local": 1850.0,
+        "fx_rate": 159.471405,
+        "price_jpy": 295022,
+        "confidence": "medium",
+        "listing_count": 1,
+        "median_price_jpy": 295022,
+        "min_price_jpy": 295022,
+        "max_price_jpy": 295022,
+        "fetched_at": "2026-05-28T10:00:00+09:00",
+        "stale": false,
+        "failure_reason": "",
+        "url": "https://www.ebay.com/sch/i.html?_nkw=Ricoh+GR+IV&LH_Sold=1&LH_Complete=1"
+      }
+    ],
+    "gr4_hdf": [],
+    "gr4_mono": [],
+    "switch2": [
+      {
+        "source": "ebay",
+        "market": "eBay",
+        "product_id": "prod_switch2",
+        "product_alias": "switch2",
+        "country": "US",
+        "currency": "USD",
+        "price_local": 480.0,
+        "fx_rate": 159.471405,
+        "price_jpy": 76546,
+        "confidence": "medium",
+        "listing_count": 1,
+        "median_price_jpy": 76546,
+        "min_price_jpy": 76546,
+        "max_price_jpy": 76546,
+        "fetched_at": "2026-05-28T10:00:00+09:00",
+        "stale": false,
+        "failure_reason": "",
+        "url": "https://www.ebay.com/sch/i.html?_nkw=Nintendo+Switch+2&LH_Sold=1&LH_Complete=1"
+      }
+    ],
+    "switch2_mk": [],
+    "ps5_de": [],
+    "ps5_pro": [],
+    "xbox_sx": [],
+    "iphone16pro_256": [],
+    "iphone16pm_256": [],
+    "iphone16pm_512": [],
+    "iphone17_256": [],
+    "iphone17pro_256": [],
+    "iphone17pro_512": [],
+    "iphone17pm_256": [],
+    "iphone17pm_512": [],
+    "mac_mini_m4": [],
+    "macbook_air_m4_13": [],
+    "macbook_air_m4_15": [],
+    "macbook_pro_m4_14": [],
+    "ipad_air_m3": [],
+    "ipad_pro_m4_11": [],
+    "ipad_pro_m4_13": [],
+    "apple_watch_s11": [],
+    "apple_watch_ultra3": []
+  }
 }

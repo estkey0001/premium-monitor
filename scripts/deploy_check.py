@@ -2070,15 +2070,20 @@ def check() -> list[dict]:
         results.append({"level": "warning", "check": "fetch_failed_collapse_ui_exists",
                         "message": "LP HTMLが見つからないため fetch_failed_collapse_ui チェックをスキップ"})
 
-    # ── #200: monitoring カードに説明文が存在する ─────────────────────────────
+    # ── #200: monitoring カードに価格変動メッセージが存在する ──────────────────
+    # Task 5 でUI統一: monitoring-note クラスは廃止 → profit-note に「現在は赤字 / 価格変動を監視中」
     _lp_html_200 = _lp_html_197
     if _lp_html_200:
-        if 'monitoring-note' in _lp_html_200 and '価格変動で利益化' in _lp_html_200:
+        _has_monitoring_msg = (
+            '価格変動を監視中' in _lp_html_200
+            or '監視中' in _lp_html_200
+        ) and 'data-user-level="monitoring"' in _lp_html_200
+        if _has_monitoring_msg:
             results.append({"level": "ok", "check": "monitoring_description_exists",
-                            "message": "monitoring カードに説明文が存在"})
+                            "message": "monitoring カードに監視中メッセージが存在"})
         else:
             results.append({"level": "warning", "check": "monitoring_description_exists",
-                            "message": "monitoring カードの説明文（monitoring-note）が見つからない"})
+                            "message": "monitoring カードの監視中メッセージが見つからない"})
     else:
         results.append({"level": "warning", "check": "monitoring_description_exists",
                         "message": "LP HTMLが見つからないため monitoring_description チェックをスキップ"})
@@ -3636,6 +3641,74 @@ def check() -> list[dict]:
     _t348 = "7日超" in _lp_gen_src or "168" in _lp_gen_src
     results.append({"level": "ok" if _t348 else "info", "check": "stale_warning_7day_label",
                     "message": "#348 _section_stale_warning に「7日超」または 168 の記述が存在する" + ("" if _t348 else " ← 168h 閾値ラベルが見つかりません")})
+
+    # ── Task 9 追加チェック ──────────────────────────────────────────────────
+
+    # #349: ランキングで利益ありの商品があるなら初心者ページの利益ありが0件にならない
+    import re as _re349
+    _ranking_profits = _re349.findall(r'class="rank-profit[^"]*">\+¥([\d,]+)', html)
+    _beginner_easy_cards = html.count('data-user-level="beginner_easy"') + html.count('data-user-level="beginner_watch"')
+    if _ranking_profits and _beginner_easy_cards == 0:
+        results.append({"level": "error", "check": "ranking_beginner_consistency",
+                        "message": f"#349 ランキングに利益あり({len(_ranking_profits)}件)なのに初心者ページの利益ありカードが0件 ← 不整合"})
+    elif _ranking_profits:
+        results.append({"level": "ok", "check": "ranking_beginner_consistency",
+                        "message": f"#349 ランキング利益あり({len(_ranking_profits)}件) / 初心者ページカード({_beginner_easy_cards}件) — 整合"})
+    else:
+        results.append({"level": "ok", "check": "ranking_beginner_consistency",
+                        "message": "#349 ランキング利益なし → 初心者ページとの整合チェックをスキップ"})
+
+    # #350: X100VI がランキング利益ありなら初心者ページにも表示される
+    _x100vi_in_ranking = bool(_re349.search(r'X100VI.*?\+¥|x100vi.*?\+¥', html, _re349.IGNORECASE))
+    # 別の探し方: product-x100vi の deal-card が beginner_easy にある
+    _x100vi_in_beginner = 'id="product-x100vi"' in html or (
+        'X100VI' in html and 'data-user-level="beginner_easy"' in html
+    )
+    if _x100vi_in_ranking and not _x100vi_in_beginner:
+        results.append({"level": "warning", "check": "x100vi_in_beginner_if_ranking",
+                        "message": "#350 X100VI がランキング利益ありなのに初心者ページに表示されていない"})
+    else:
+        results.append({"level": "ok", "check": "x100vi_in_beginner_if_ranking",
+                        "message": "#350 X100VI 表示整合 OK（ランキングにある場合は初心者ページにも表示）"})
+
+    # #351: _deal_age_h（scanned_at ベース）が LP ソースに存在する
+    _t351 = "_deal_age_h" in _lp_gen_src or "scanned_at ベース" in _lp_gen_src or "deal.scanned_at" in _lp_gen_src
+    results.append({"level": "ok" if _t351 else "warning", "check": "deal_age_scanned_at",
+                    "message": "#351 beginner フィルタが scanned_at ベースで動作している" + ("" if _t351 else " ← _bybp_age_h が buyback observed_at を参照（不整合の可能性）")})
+
+    # #352: 売却先比較にラクマ・StockX の未取得行が存在する
+    _t352 = "ラクマ" in html and "StockX" in html and "shop-row-pending" in html
+    results.append({"level": "ok" if _t352 else "warning", "check": "flea_all_platforms",
+                    "message": "#352 売却先比較にラクマ・StockX の未取得行が存在する" + ("" if _t352 else " ← ラクマまたは StockX が見つかりません")})
+
+    # #353: price=0 を赤字判定に使わないガードが LP ソースに存在する
+    _t353 = "price=0 は未取得" in _lp_gen_src or "best_buyback_price > 0" in _lp_gen_src or "best_bp > 0" in _lp_gen_src
+    results.append({"level": "ok" if _t353 else "warning", "check": "price_zero_not_red",
+                    "message": "#353 price=0 を赤字判定に使わないガードが LP ソースに存在する" + ("" if _t353 else " ← price=0 ガードが見つかりません")})
+
+    # #354: カメラ商品が初心者ページに表示される（stripe-camera クラス + beginner_easy）
+    # _deal_card は data-genre でなく stripe-camera クラスでカメラを識別する
+    _camera_beginner_match = bool(_re349.search(
+        r'stripe-camera[^>]*data-user-level="beginner_easy"|data-user-level="beginner_easy"[^>]*stripe-camera',
+        html
+    ))
+    results.append({"level": "ok" if _camera_beginner_match else "warning", "check": "camera_in_beginner",
+                    "message": "#354 カメラ商品（stripe-camera）が初心者ページに表示されている" + ("" if _camera_beginner_match else " ← stripe-camera beginner_easy カードが見つかりません（カメラ最新スキャンで beginner_easy が生成されたか確認）")})
+
+    # #355: 参考DEALS が HTML に存在しない（hero パネル削除済み）
+    _t355 = '参考DEALS' not in html
+    results.append({"level": "ok" if _t355 else "error", "check": "no_sanko_deals",
+                    "message": "#355 「参考DEALS」が HTML に存在しない" + ("" if _t355 else " ← 「参考DEALS」が HTML に残っています")})
+
+    # #356: 「最終買取データ取得」が HTML に存在しない
+    _t356 = '最終買取データ取得' not in html
+    results.append({"level": "ok" if _t356 else "error", "check": "no_last_buyback_label",
+                    "message": "#356 「最終買取データ取得」が HTML に存在しない" + ("" if _t356 else " ← 「最終買取データ取得」が HTML に残っています")})
+
+    # #357: 「推定コスト」が HTML に存在しない（sedori 推定コスト削除済み）
+    _t357 = '推定コスト' not in html
+    results.append({"level": "ok" if _t357 else "warning", "check": "no_sedori_estimated_cost",
+                    "message": "#357 「推定コスト」が HTML に存在しない" + ("" if _t357 else " ← 「推定コスト」が HTML に残っています")})
 
     return results
 

@@ -3303,6 +3303,56 @@ def check() -> list[dict]:
     results.append({"level": "ok" if _t295 else "warning", "check": "genre_menu_exists",
                     "message": "#295 ジャンルメニュー（genre-toggle-btn または genre-dropdown）が存在する" + ("" if _t295 else " ← なし")})
 
+    # ── #296-#303: 海外価格収集 API / 履歴 / アラートチェック ─────────────────
+
+    _ebay_collector_path = PROJECT_ROOT / "src" / "collectors" / "overseas" / "ebay_completed.py"
+    _ebay_src = _ebay_collector_path.read_text(encoding="utf-8") if _ebay_collector_path.exists() else ""
+
+    # #296: eBay HTML scraping が primary method ではない
+    _t296 = "FINDING_API_URL" in _ebay_src and "_fetch_via_api" in _ebay_src
+    results.append({"level": "ok" if _t296 else "error", "check": "ebay_api_primary",
+                    "message": "#296 eBay Finding API が primary method として実装されている" + ("" if _t296 else " ← HTML scraping が主軸になっている")})
+
+    # #297: EBAY_APP_ID なしの場合 manual fallback に移行する設計
+    _t297 = "_ebay_app_id" in _ebay_src and "html_blocked" in _ebay_src
+    results.append({"level": "ok" if _t297 else "error", "check": "ebay_api_key_handling",
+                    "message": "#297 EBAY_APP_ID 未設定時の html_blocked 分類が実装されている" + ("" if _t297 else " ← API key なし時の fallback 処理が不足")})
+
+    # #298: access denied は site_blocked として正常分類される
+    _t298 = "site_blocked" in _ebay_src and "html_blocked" in _ebay_src
+    results.append({"level": "ok" if _t298 else "warning", "check": "ebay_blocked_classified",
+                    "message": "#298 eBay アクセス拒否が site_blocked として正常分類される" + ("" if _t298 else " ← blocked 分類が未実装")})
+
+    # #299: overseas_price_history.csv が存在する
+    _hist_csv = PROJECT_ROOT / "data" / "overseas_price_history.csv"
+    _t299 = _hist_csv.exists()
+    results.append({"level": "ok" if _t299 else "warning", "check": "overseas_history_csv_exists",
+                    "message": "#299 data/overseas_price_history.csv が存在する" + ("" if _t299 else " ← update_overseas_prices.py 未実行の可能性")})
+
+    # #300: overseas_price_surge / overseas_price_drop アラートロジックが存在する
+    _alerts_path = PROJECT_ROOT / "scripts" / "update_alerts.py"
+    _alerts_src = _alerts_path.read_text(encoding="utf-8") if _alerts_path.exists() else ""
+    _t300 = "overseas_price_surge" in _alerts_src and "overseas_price_drop" in _alerts_src
+    results.append({"level": "ok" if _t300 else "error", "check": "overseas_alert_logic",
+                    "message": "#300 update_alerts.py に overseas_price_surge / overseas_price_drop ロジックが存在する" + ("" if _t300 else " ← アラートロジックが未実装")})
+
+    # #301: confidence=low のデータがアラート対象外になっている
+    _t301 = 'confidence == "low"' in _alerts_src and "continue" in _alerts_src
+    results.append({"level": "ok" if _t301 else "warning", "check": "overseas_alert_low_conf_excluded",
+                    "message": "#301 confidence=low のデータがアラート除外されている" + ("" if _t301 else " ← low confidence データがアラートに含まれる可能性")})
+
+    # #302: LP 生成器に manual fallback 表示（eBay 手動確認）が実装されている
+    _lp_gen_path = PROJECT_ROOT / "src" / "content" / "daily_lp_generator.py"
+    _lp_gen_src = _lp_gen_path.read_text(encoding="utf-8") if _lp_gen_path.exists() else ""
+    _t302 = "eBay 手動確認" in _lp_gen_src and "overseas_collector_method" in _lp_gen_src
+    results.append({"level": "ok" if _t302 else "warning", "check": "lp_manual_fallback_display",
+                    "message": "#302 LP生成器に collector_method バッジ表示（eBay 手動確認）が実装されている" + ("" if _t302 else " ← manual fallback 明示が未実装")})
+
+    # #303: LP に html_blocked 時の通知文がある、または collector_method="manual" の場合の note がある
+    _t303 = "eBay自動取得は制限中" in _lp_gen_src or "eBay 手動確認" in _lp_gen_src
+    results.append({"level": "ok" if _t303 else "warning", "check": "lp_blocked_notice",
+                    "message": "#303 LP生成器に eBay 取得制限中の案内文が実装されている" + ("" if _t303 else " ← html_blocked 時の案内文が未実装")})
+
     return results
 
 

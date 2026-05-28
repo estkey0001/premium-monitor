@@ -33,15 +33,18 @@ class OverseasPriceResult:
     failure_reason: str       # "" or エラー理由
     url: str                  # 参照URL
     raw_prices_json: str      # デバッグ用生価格JSON
+    collector_method: str = "unknown"
+    # 収集方法: "api" / "html" / "html_blocked" / "manual" / "unknown"
 
     @property
     def is_valid(self) -> bool:
         """利益計算に使用できる有効な価格かどうか。"""
         return (
             self.price_jpy > 0
-            and not self.failure_reason
             and self.confidence in ("high", "medium")
             and not self.stale
+            # html_blocked は価格0のはずだが念のため
+            and self.collector_method != "html_blocked"
         )
 
     def to_dict(self) -> dict:
@@ -64,6 +67,7 @@ class OverseasPriceResult:
             "stale": self.stale,
             "failure_reason": self.failure_reason,
             "url": self.url,
+            "collector_method": self.collector_method,
         }
 
 

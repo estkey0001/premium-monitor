@@ -1,0 +1,9 @@
+product_id,product_alias,source,market,currency,price_local,fx_rate,price_jpy,median_price_jpy,max_price_jpy,min_price_jpy,listing_count,confidence,collector_method,observed_at
+prod_x100vi,x100vi,ebay,eBay,USD,3200.0,159.471405,510308,510308,510308,510308,1,medium,unknown,2026-05-28T10:00:00+09:00
+prod_gr3x,gr3x,ebay,eBay,USD,1400.0,159.471405,223259,223259,223259,223259,1,medium,unknown,2026-05-28T10:00:00+09:00
+prod_gr4,gr4,ebay,eBay,USD,1850.0,159.471405,295022,295022,295022,295022,1,medium,unknown,2026-05-28T10:00:00+09:00
+prod_switch2,switch2,ebay,eBay,USD,480.0,159.471405,76546,76546,76546,76546,1,medium,unknown,2026-05-28T10:00:00+09:00
+prod_x100vi,x100vi,ebay,eBay,USD,3200.0,159.471405,510308,510308,510308,510308,1,medium,unknown,2026-05-28T10:00:00+09:00
+prod_gr3x,gr3x,ebay,eBay,USD,1400.0,159.471405,223259,223259,223259,223259,1,medium,unknown,2026-05-28T10:00:00+09:00
+prod_gr4,gr4,ebay,eBay,USD,1850.0,159.471405,295022,295022,295022,295022,1,medium,unknown,2026-05-28T10:00:00+09:00
+prod_switch2,switch2,ebay,eBay,USD,480.0,159.471405,76546,76546,76546,76546,1,medium,unknown,2026-05-28T10:00:00+09:00

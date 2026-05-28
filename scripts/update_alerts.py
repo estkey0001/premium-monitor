@@ -280,35 +280,104 @@ def _save_reports(alerts: list[dict], now: datetime) -> None:
     print(f"[INFO] alerts_report/latest.md 保存完了")
 
 
+def _load_previous_overseas_prices(exclude_today: str) -> dict[str, dict]:
+    """前回の海外価格履歴 JSON を読み込む。
+
+    Args:
+        exclude_today: 除外する日付文字列 (例: "2026-05-28")
+
+    Returns:
+        {product_alias: entry_dict} の辞書
+    """
+    history_dir = PROJECT_ROOT / "exports" / "overseas_prices" / "history"
+    if not history_dir.exists():
+        return {}
+
+    import json as _json
+    history_files = sorted(history_dir.glob("????-??-??.json"), reverse=True)
+    for hf in history_files:
+        if hf.stem == exclude_today:
+            continue
+        try:
+            with open(hf, encoding="utf-8") as f:
+                data = _json.load(f)
+            prev = {}
+            for entry in data.get("prices", []):
+                alias = entry.get("product_alias", "")
+                if alias:
+                    prev[alias] = entry
+            return prev
+        except Exception:
+            continue
+    return {}
+
+
+def _load_official_prices() -> dict[str, int]:
+    """DB から公式価格を読み込む。
+
+    Returns:
+        {product_alias: official_price_jpy} の辞書
+    """
+    try:
+        from src.db.database import Database
+        from src.db.repository import Repository
+        db = Database()
+        repo = Repository(db)
+        products = repo.list_products()
+        result = {}
+        for p in products:
+            alias = p.id.replace("prod_", "")
+            price = getattr(p, "official_price", None) or getattr(p, "official_price_jpy", None)
+            if price and price > 0:
+                result[alias] = int(price)
+        return result
+    except Exception as e:
+        print(f"[WARN] 公式価格読み込み失敗: {e}", file=sys.stderr)
+        return {}
+
+
 def _generate_overseas_alerts(now: datetime) -> list[dict]:
     """海外価格関連のアラートを生成する。
 
     以下のアラートタイプを生成:
-      - overseas_price_surge: 海外価格急騰 (前回比+10%以上)
-      - overseas_price_drop:  海外価格急落
-      - listing_count_spike:  海外listing急増
-      - stale_overseas:       海外価格stale警告 (48h超)
-      - confidence_degraded:  confidence が high→medium に低下
+      - overseas_price_surge:  海外価格急騰 (前回比+5%以上)
+      - overseas_price_drop:   海外価格急落 (前回比-5%以下)
+      - overseas_price_stale:  海外価格stale警告 (48h超)
+      - premium_detected:      公式価格 < 海外価格 (プレ値検出)
+      - pro_arbitrage:         海外価格が公式の110%以上 (裁定機会)
+
+    除外条件:
+      - confidence=low
+      - collector_method=html_blocked
+      - stale のみで他の条件を満たさない場合は stale alert のみ生成
     """
     alerts = []
+    today_str = now.strftime("%Y-%m-%d")
 
-    # exports/overseas_prices/latest.json を読み込む
+    # 現在の海外価格を読み込む
     json_path = PROJECT_ROOT / "exports" / "overseas_prices" / "latest.json"
     if not json_path.exists():
         return []
 
     try:
-        import json
+        import json as _json
         with open(json_path, encoding="utf-8") as f:
-            data = json.load(f)
+            data = _json.load(f)
     except Exception as e:
         print(f"[WARN] overseas_prices/latest.json 読み込みエラー: {e}", file=sys.stderr)
         return []
 
     prices = data.get("prices", [])
 
+    # 前回の海外価格を読み込む (今日を除外)
+    prev_prices = _load_previous_overseas_prices(exclude_today=today_str)
+
+    # 公式価格を読み込む
+    official_prices = _load_official_prices()
+
     for entry in prices:
         product_name = entry.get("product_name", entry.get("product_alias", ""))
+        product_alias = entry.get("product_alias", "")
         price_jpy = entry.get("price_jpy", 0)
         confidence = entry.get("confidence", "low")
         listing_count = entry.get("listing_count", 0)
@@ -316,30 +385,119 @@ def _generate_overseas_alerts(now: datetime) -> list[dict]:
         market = entry.get("market", "eBay")
         fetched_at = entry.get("fetched_at", "")
         failure_reason = entry.get("failure_reason", "")
+        collector_method = entry.get("collector_method", "unknown")
+        url = entry.get("url", "")
 
-        # stale_overseas: 48h超のデータ
+        # html_blocked は除外 (価格データなし)
+        if collector_method == "html_blocked":
+            continue
+
+        # 有効な価格がない場合はスキップ
+        if not price_jpy or price_jpy <= 0:
+            continue
+
+        # confidence=low のみのデータは除外 (アラート対象外)
+        if confidence == "low":
+            continue
+
+        # overseas_price_stale: 48h超のデータ (confidence≥medium のみ)
         if stale:
             alerts.append(_make_alert(
-                alert_type="stale_overseas",
+                alert_type="overseas_price_stale",
                 product_name=product_name,
                 severity="low",
-                title=f"海外価格データ古い: {product_name}",
-                message=f"{market} / 最終取得: {fetched_at[:16] if fetched_at else '不明'} (48h超)",
+                title=f"海外価格データ更新が必要: {product_name}",
+                message=(
+                    f"{market} ¥{price_jpy:,} / "
+                    f"最終取得: {fetched_at[:16] if fetched_at else '不明'} (48h超) / "
+                    f"confidence={confidence}"
+                ),
+                product_url=url,
                 source="overseas_prices_json",
-                confidence="low",
+                confidence=confidence,
             ))
+            continue  # stale データはそれ以上の比較アラートを出さない
 
-        # confidence_degraded: low confidence で価格あり
-        if confidence == "low" and price_jpy > 0 and not failure_reason:
-            alerts.append(_make_alert(
-                alert_type="confidence_degraded",
-                product_name=product_name,
-                severity="low",
-                title=f"海外価格 low confidence: {product_name}",
-                message=f"{market} ¥{price_jpy:,} / listing_count={listing_count}",
-                source="overseas_prices_json",
-                confidence="low",
-            ))
+        # ─── 前回比較アラート ───
+        prev = prev_prices.get(product_alias)
+        if prev:
+            prev_jpy = prev.get("price_jpy", 0)
+            prev_conf = prev.get("confidence", "low")
+
+            # 前回も有効データがある場合のみ比較
+            if prev_jpy > 0 and prev_conf != "low":
+                change_rate = (price_jpy - prev_jpy) / prev_jpy
+
+                if change_rate >= 0.05:
+                    # overseas_price_surge (+5%以上)
+                    alerts.append(_make_alert(
+                        alert_type="overseas_price_surge",
+                        product_name=product_name,
+                        severity="high" if change_rate >= 0.10 else "medium",
+                        title=f"海外価格急騰: {product_name}",
+                        message=(
+                            f"{market} ¥{prev_jpy:,} → ¥{price_jpy:,} "
+                            f"(+{change_rate*100:.1f}%) / confidence={confidence}"
+                        ),
+                        product_url=url,
+                        source="overseas_prices_json",
+                        confidence=confidence,
+                    ))
+
+                elif change_rate <= -0.05:
+                    # overseas_price_drop (-5%以下)
+                    alerts.append(_make_alert(
+                        alert_type="overseas_price_drop",
+                        product_name=product_name,
+                        severity="medium",
+                        title=f"海外価格急落: {product_name}",
+                        message=(
+                            f"{market} ¥{prev_jpy:,} → ¥{price_jpy:,} "
+                            f"({change_rate*100:.1f}%) / confidence={confidence}"
+                        ),
+                        product_url=url,
+                        source="overseas_prices_json",
+                        confidence=confidence,
+                    ))
+
+        # ─── 公式価格比較アラート ───
+        official_jpy = official_prices.get(product_alias, 0)
+        if official_jpy > 0 and price_jpy > 0:
+            premium_rate = (price_jpy - official_jpy) / official_jpy
+
+            if premium_rate > 0:
+                # premium_detected: 公式価格 < 海外価格
+                alerts.append(_make_alert(
+                    alert_type="premium_detected",
+                    product_name=product_name,
+                    severity="high" if premium_rate >= 0.10 else "medium",
+                    title=f"プレ値検出: {product_name}",
+                    message=(
+                        f"公式 ¥{official_jpy:,} < 海外 ¥{price_jpy:,} "
+                        f"(+{premium_rate*100:.1f}%) / {market} / confidence={confidence}"
+                    ),
+                    product_url=url,
+                    source="overseas_prices_json",
+                    confidence=confidence,
+                ))
+
+            if premium_rate >= 0.10:
+                # pro_arbitrage: 海外価格が公式の110%以上 (裁定機会)
+                profit_est = price_jpy - official_jpy
+                alerts.append(_make_alert(
+                    alert_type="pro_arbitrage",
+                    product_name=product_name,
+                    severity="high",
+                    title=f"海外裁定機会: {product_name}",
+                    message=(
+                        f"公式 ¥{official_jpy:,} → 海外 ¥{price_jpy:,} "
+                        f"差額 ¥{profit_est:,} (+{premium_rate*100:.1f}%) / "
+                        f"{market} / listing_count={listing_count}"
+                    ),
+                    product_url=url,
+                    source="overseas_prices_json",
+                    confidence=confidence,
+                ))
 
     return alerts
 

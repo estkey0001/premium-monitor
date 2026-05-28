@@ -103,6 +103,12 @@ def main() -> int:
         logger.error("JSON保存エラー: %s", e)
         return 1
 
+    # 日次履歴保存 (exports/overseas_prices/history/ + data/overseas_price_history.csv)
+    try:
+        orch.save_history(best_results, products)
+    except Exception as e:
+        logger.warning("履歴保存エラー (続行): %s", e)
+
     # サマリー出力
     high = sum(1 for r in best_results.values() if r.confidence == "high")
     medium = sum(1 for r in best_results.values() if r.confidence == "medium")

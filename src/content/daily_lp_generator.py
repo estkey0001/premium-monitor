@@ -329,12 +329,11 @@ class DailyLPGenerator:
                 lottery_events.append(_csv_ev)
 
         # ── 件数の整合：全表示箇所で同一の定義を使う ──────────────────────────
-        # カメラ案件は初心者タブから除外してPro向けへ移動するため、beginner件数から除外
-        _beginner_easy_disp  = [d for d in beginner_easy  if getattr(d, 'category', '') != 'camera']
-        _beginner_watch_disp = [d for d in beginner_watch if getattr(d, 'category', '') != 'camera']
-        # 監視中・取得失敗もカメラ除外して件数に加算
-        _monitoring_disp    = [d for d in (monitoring_deals   or []) if getattr(d, 'category', '') != 'camera']
-        _fetch_failed_disp  = [d for d in (fetch_failed_deals or []) if getattr(d, 'category', '') != 'camera']
+        # カメラも初心者タブに表示する（overseas price で利益確認可能）
+        _beginner_easy_disp  = list(beginner_easy)
+        _beginner_watch_disp = list(beginner_watch)
+        _monitoring_disp    = list(monitoring_deals or [])
+        _fetch_failed_disp  = list(fetch_failed_deals or [])
         _beginner_disp_count = (len(_beginner_easy_disp) + len(_beginner_watch_disp)
                                 + len(_monitoring_disp) + len(_fetch_failed_disp))
 
@@ -3451,18 +3450,16 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 
 </head>
 <body>
-{alert_popup_html}{_collector_warn_html}<div class="announce-bar"><a href="#tab-beginner">{_announce_bar_inner}</a></div>
-<header class="topbar">
+{alert_popup_html}{_collector_warn_html}<header class="topbar">
   <a href="/" class="topbar-brand">
     <div class="brand-icon">S</div>
     プレ値速報
   </a>
-  <div class="topbar-live"><span class="live-dot"></span>手動確認</div>
-  <div class="topbar-date" data-buyback-updated title="DBに記録された最新の買取価格データ取得日時">最終データ取得: {_esc(_buyback_str_top)}{_collection_stats_html}</div>
+  <div class="topbar-live"><span class="live-dot"></span><span class="topbar-update-text">毎日更新</span></div>
+  <div class="topbar-date" data-buyback-updated title="DBに記録された最新の買取価格データ取得日時">最終更新: {_esc(_buyback_str_top)}{_collection_stats_html}</div>
   <div class="topbar-spacer"></div>
   <a href="#note-cta" class="topbar-note-btn" data-track="note_click">&#128221; 詳細レポートを見る</a>
 </header>
-<div class="ticker-bar"><div class="ticker-inner"><span class="ticker-item"><span class="t-name">iPhone 16 Pro 256GB</span><span class="ticker-sep">|</span><span class="t-profit">+¥18,400</span></span><span class="ticker-item"><span class="t-name">SONY α7C II</span><span class="ticker-sep">|</span><span class="t-profit">+¥32,000</span></span><span class="ticker-item"><span class="t-name">Nintendo Switch 2</span><span class="ticker-sep">|</span><span class="t-profit">+¥9,800</span></span><span class="ticker-item"><span class="t-name">iPhone 15 Plus 128GB</span><span class="ticker-sep">|</span><span class="t-profit">+¥12,000</span></span><span class="ticker-item"><span class="t-name">Canon EOS R6 Mark II</span><span class="ticker-sep">|</span><span class="t-profit">+¥45,000</span></span><span class="ticker-item"><span class="t-name">PS5 Digital</span><span class="ticker-sep">|</span><span class="t-profit">+¥6,500</span></span><span class="ticker-item"><span class="t-name">iPhone 16 Pro 256GB</span><span class="ticker-sep">|</span><span class="t-profit">+¥18,400</span></span><span class="ticker-item"><span class="t-name">SONY α7C II</span><span class="ticker-sep">|</span><span class="t-profit">+¥32,000</span></span><span class="ticker-item"><span class="t-name">Nintendo Switch 2</span><span class="ticker-sep">|</span><span class="t-profit">+¥9,800</span></span><span class="ticker-item"><span class="t-name">iPhone 15 Plus 128GB</span><span class="ticker-sep">|</span><span class="t-profit">+¥12,000</span></span><span class="ticker-item"><span class="t-name">Canon EOS R6 Mark II</span><span class="ticker-sep">|</span><span class="t-profit">+¥45,000</span></span><span class="ticker-item"><span class="t-name">PS5 Digital</span><span class="ticker-sep">|</span><span class="t-profit">+¥6,500</span></span></div></div>
 {hero_html}
 {stale_html}
 {tab_nav_html}
@@ -3772,8 +3769,8 @@ tr.sc-route-review {{ background: #FFFBEB; }}
   <div class="hero-inner">
     <div class="hero-left">
       <div class="hero-eyebrow"><span class="live-dot"></span> 手動確認データ &mdash; {_esc(date_str)}</div>
-      <h1 class="hero-title">最新<span class="accent">価格差</span>を把握する。</h1>
-      <p class="hero-subtitle">公式購入→国内買取比較（初心者向け）から、二次流通→海外相場比較（Pro向け）まで、手動確認データによる参考値を掲載。iPhone・カメラ・ゲーム機の価格差を一枚で確認できます。公式サイトで最新価格を必ずご確認ください。</p>
+      <h1 class="hero-title">最新<span class="accent">価格差</span>を<br>すぐに把握。</h1>
+      <p class="hero-subtitle">新品・未使用品の公式価格と買取・海外相場を毎日チェック。iPhone・カメラ・ゲーム機の差益を一枚で確認できます。公式サイトで最新価格を必ずご確認ください。</p>
       <div class="hero-cta-row">
         <a href="#tab-lottery" class="hero-btn primary" data-track="hero_lottery_click">&#127915; 抽選情報を見る</a>
         <a href="#tab-beginner" class="hero-btn secondary" data-track="hero_beginner_click">{_hero_btn_label}</a>
@@ -3879,9 +3876,9 @@ tr.sc-route-review {{ background: #FFFBEB; }}
   <div class="cat-nav-inner">
     <div class="cat-genre-bar" role="tablist">
       <button class="cat-genre-btn active" data-genre="smartphone" data-target-tab="beginner" data-target-id="category-beginner-iphone">&#128241; スマホ</button>
-      <button class="cat-genre-btn" data-genre="tablet" data-target-tab="beginner" data-target-id="category-beginner-tablet">&#128222; タブレット</button>
+      <button class="cat-genre-btn" data-genre="tablet" data-target-tab="beginner" data-target-id="category-beginner-tablet">&#128187; タブレット</button>
       <button class="cat-genre-btn" data-genre="pc" data-target-tab="beginner" data-target-id="category-beginner-pc">&#128187; PC / Mac</button>
-      <button class="cat-genre-btn" data-genre="camera" data-target-tab="advanced" data-target-id="category-pro-camera">&#128247; カメラ</button>
+      <button class="cat-genre-btn" data-genre="camera" data-target-tab="beginner" data-target-id="category-beginner-camera">&#128247; カメラ</button>
       <button class="cat-genre-btn" data-genre="game" data-target-tab="beginner" data-target-id="category-beginner-game">&#127918; ゲーム機</button>
       <button class="cat-genre-btn" data-genre="lottery" data-target-tab="lottery" data-target-id="category-lottery">&#127915; 抽選情報{lottery_badge}</button>
     </div>
@@ -3902,12 +3899,12 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         <a class="cat-maker-chip" data-target-tab="advanced" data-target-id="category-pro-pc" href="#tab-advanced">HP</a>
       </div>
       <div class="cat-maker-group" data-genre-panel="camera">
-        <a class="cat-maker-chip" data-target-tab="advanced" data-target-id="category-pro-camera" href="#tab-advanced">RICOH</a>
-        <a class="cat-maker-chip" data-target-tab="advanced" data-target-id="category-pro-camera" href="#tab-advanced">FUJIFILM</a>
-        <a class="cat-maker-chip" data-target-tab="advanced" data-target-id="category-pro-camera" href="#tab-advanced">Canon</a>
-        <a class="cat-maker-chip" data-target-tab="advanced" data-target-id="category-pro-camera" href="#tab-advanced">Nikon</a>
-        <a class="cat-maker-chip" data-target-tab="advanced" data-target-id="category-pro-camera" href="#tab-advanced">Sony</a>
-        <a class="cat-maker-chip" data-target-tab="advanced" data-target-id="category-pro-camera" href="#tab-advanced">Leica</a>
+        <a class="cat-maker-chip" data-target-tab="beginner" data-target-id="category-beginner-camera" href="#tab-beginner">RICOH</a>
+        <a class="cat-maker-chip" data-target-tab="beginner" data-target-id="category-beginner-camera" href="#tab-beginner">FUJIFILM</a>
+        <a class="cat-maker-chip" data-target-tab="beginner" data-target-id="category-beginner-camera" href="#tab-beginner">Canon</a>
+        <a class="cat-maker-chip" data-target-tab="beginner" data-target-id="category-beginner-camera" href="#tab-beginner">Nikon</a>
+        <a class="cat-maker-chip" data-target-tab="beginner" data-target-id="category-beginner-camera" href="#tab-beginner">Sony</a>
+        <a class="cat-maker-chip" data-target-tab="beginner" data-target-id="category-beginner-camera" href="#tab-beginner">Leica</a>
       </div>
       <div class="cat-maker-group" data-genre-panel="game">
         <a class="cat-maker-chip" data-target-tab="beginner" data-target-id="category-beginner-game" href="#tab-beginner">Nintendo</a>
@@ -4388,25 +4385,17 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         bybp = buyback_by_product or {}
         lottery_events = lottery_events or []
 
-        # カメラを初心者タブから除外してPro向けへ移動
-        _beginner_easy_filtered = [d for d in beginner_easy if getattr(d, 'category', '') != 'camera']
-        _beginner_watch_filtered = [d for d in beginner_watch if getattr(d, 'category', '') != 'camera']
-        _camera_from_beginner = [d for d in beginner_easy + beginner_watch if getattr(d, 'category', '') == 'camera']
-
-        # 監視中・取得失敗もカメラ除外
-        _monitoring_filtered    = [d for d in (monitoring_deals   or []) if getattr(d, 'category', '') != 'camera']
-        _fetch_failed_filtered  = [d for d in (fetch_failed_deals or []) if getattr(d, 'category', '') != 'camera']
-
+        # カメラも初心者タブに表示する（overseas price で利益確認可能）
         beginner_html    = self._tab_beginner(
-            _beginner_easy_filtered, _beginner_watch_filtered, bybp,
+            list(beginner_easy), list(beginner_watch), bybp,
             latest_buyback_at=latest_buyback_at,
-            monitoring_deals=_monitoring_filtered,
-            fetch_failed_deals=_fetch_failed_filtered,
+            monitoring_deals=list(monitoring_deals or []),
+            fetch_failed_deals=list(fetch_failed_deals or []),
             market_prices_by_product=market_prices_by_product or {},
         )
         advanced_html    = self._tab_advanced(advanced_deals, advanced_snaps, watch_candidates,
                                               camera_watch=camera_watch,
-                                              camera_beginner_deals=_camera_from_beginner,
+                                              camera_beginner_deals=[],
                                               market_prices_by_product=market_prices_by_product or {},
                                               latest_buyback_at=latest_buyback_at)
         surge_html       = self._tab_surge(buyback_alerts)
@@ -4933,8 +4922,9 @@ python3 -m src.cli calculate-sedori-routes</pre>
         KNOWN_GENRES = {'iphone', 'tablet', 'pc', 'wearable', 'audio', 'game_console', 'camera'}
         GENRE_GROUPS = [
             ('iphone',       '&#128241; iPhone / スマホ',    'category-beginner-iphone'),
-            ('tablet',       '&#128222; タブレット / iPad',   'category-beginner-tablet'),
+            ('tablet',       '&#128187; タブレット / iPad',   'category-beginner-tablet'),
             ('pc',           '&#128187; PC / Mac',            'category-beginner-pc'),
+            ('camera',       '&#128247; カメラ',              'category-beginner-camera'),
             ('wearable',     '&#8987; ウェアラブル',           'category-beginner-wearable'),
             ('audio',        '&#127911; オーディオ',           'category-beginner-audio'),
             ('game_console', '&#127918; ゲーム機',             'category-beginner-game'),
@@ -5589,7 +5579,7 @@ python3 -m src.cli calculate-sedori-routes</pre>
         profit_lbl_cls = 'profit-lbl amber' if is_watch else 'profit-lbl'
         profit_num_cls = 'profit-num amber' if is_watch else 'profit-num'
         profit_rate_cls = 'profit-rate amber' if is_watch else 'profit-rate'
-        profit_note_text = '利益率が低め。様子見推奨' if is_watch else '公式価格→二次流通販売'
+        profit_note_text = '利益率が低め。様子見推奨' if is_watch else '公式価格→買取店売却（参考値）'
         condition_text = _esc(d.buyback_condition or '新品未開封')
         profit_rate_str = _esc(fmt_rate(d.net_profit_rate))
 
@@ -5608,9 +5598,9 @@ python3 -m src.cli calculate-sedori-routes</pre>
             buyback_compare_hd = '参考買取価格（補助情報）'
         else:
             official_price_lbl = '公式価格（定価）'
-            buyback_price_lbl = '二次流通最高価格'
+            buyback_price_lbl = '買取店最高価格'
             buyback_price_val_cls = 'price-cell-val green'
-            profit_main_lbl = '差益（公式価格→二次流通）'
+            profit_main_lbl = '差益（公式価格→買取）'
             pro_mode_note = ''
             buyback_compare_hd = '買取店比較'
 
@@ -5729,32 +5719,8 @@ python3 -m src.cli calculate-sedori-routes</pre>
                 label = "Proのみ" if d.user_level == "expert_only" else "Pro向け"
                 parts.append(self._deal_card(d, badge_cls, label, pro_mode=True))
 
-        if advanced_snaps:
-            parts.append('<div class="section-header"><h2>&#128202; 価格差・プレ値候補</h2><span class="section-count">スナップショット分析</span></div>')
-            rows = []
-            for s in advanced_snaps:
-                method = {"lottery": "抽選", "soldout": "SOLD OUT", "discontinued": "終了"}.get(
-                    getattr(s, "sale_method", ""), getattr(s, "sale_method", "通常"))
-                pname = _esc(s.product_name)
-                rows.append(
-                    f"<tr>"
-                    f"<td data-user-level='{_esc(getattr(s,'user_level',''))}'><strong>{pname}</strong></td>"
-                    f"<td>{_esc(fmt_price(s.official_price_jpy))}</td>"
-                    f"<td>{_esc(fmt_price(s.domestic_used_price_jpy))}</td>"
-                    f"<td>{_esc(fmt_price(getattr(s,'overseas_price_jpy',None)))}</td>"
-                    f"<td style='color:var(--orange);font-weight:600'>{_esc(fmt_profit(s.premium_gap_jpy))}</td>"
-                    f"<td>{_esc(method)}</td>"
-                    f"<td>{getattr(s,'difficulty_score',0):.2f}</td>"
-                    f"</tr>"
-                )
-            parts.append(f"""<div class="ranking-card"><div class="table-wrap">
-<table>
-<thead><tr><th>商品</th><th>定価</th><th>国内中古</th><th>海外</th><th>価格差</th><th>方式</th><th>難易度</th></tr></thead>
-<tbody>{"".join(rows)}</tbody>
-</table>
-</div>
-<p style="color:var(--text-3);font-size:0.78rem;margin-top:10px;padding:0 4px;">※ 難易度0.0〜1.0（低いほど入手しやすい）</p>
-</div>""")
+        # 価格差・プレ値候補セクション（advanced_snaps）は非表示
+        # 中古・開封済み・旧スナップショット比較はメインから除外
 
         # ----- Pro向け監視候補（フォールバック含む） -----
         if watch_candidates:
@@ -5792,7 +5758,7 @@ python3 -m src.cli calculate-sedori-routes</pre>
                 parts.append(self._deal_card(d, 'badge-adv', 'Pro向け', pro_mode=True))
             parts.append('</div>')
 
-        if not advanced_deals and not advanced_snaps and not watch_candidates and not camera_beginner_deals:
+        if not advanced_deals and not watch_candidates and not camera_beginner_deals:
             parts.append("""<div class="section-header"><h2>Pro向け候補</h2></div>
 <div class="empty-state"><span class="empty-icon">&#128202;</span>現在、条件を満たす候補はありません。</div>""")
 
@@ -6074,13 +6040,13 @@ python3 -m src.cli calculate-sedori-routes</pre>
                     f'<tbody>{"".join(otrows)}</tbody>'
                     f'</table>'
                     + ovs_no_html
-                    + f'<p class="pro-overseas-note">※ 送料・関税概算込み。為替変動あり。参考値として活用してください。</p>'
+                    + f'<p class="pro-overseas-note">※ 送料・関税概算込み。為替変動あり。参考値として活用してください。eBay販売手数料は約13%、メルカリ販売手数料は10%が別途かかります。</p>'
                 )
             else:
                 overseas_table_html = (
                     f'<div class="pro-no-data-note">海外相場データ未取得</div>'
                     + ovs_no_html
-                    + f'<p class="pro-overseas-note">※ 送料・関税概算込み。為替変動あり。参考値として活用してください。</p>'
+                    + f'<p class="pro-overseas-note">※ 送料・関税概算込み。為替変動あり。参考値として活用してください。eBay販売手数料は約13%、メルカリ販売手数料は10%が別途かかります。</p>'
                 )
 
             # ── カード上部：要約ボックス ──

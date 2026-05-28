@@ -3717,24 +3717,29 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 
         max_profit_str = f'+¥{max_profit:,}' if max_profit > 0 else '—'
 
-        # Hero ボタン / social proof テキスト: all_count=0 でも「0件」を大きく出さない
+        # Hero ボタン / social proof テキスト: 件数は鮮度に応じて出し分け
         _all_deals_total = len(all_deals) if all_deals else 0
-        if all_count > 0:
+        _buyback_fresh = _hours_ago(latest_buyback_at) <= 24  # 24h以内 = 新鮮
+        if all_count > 0 and _buyback_fresh:
             _hero_btn_label     = f"&#128100; 初心者向け案件を見る ({all_count}件)"
             _hero_social_html   = (
-                f"差益案件 <strong>{all_count}</strong> 件"
-                f"— 最高利益参考 <strong>{_esc(max_profit_str)}</strong>"
+                f"最高利益参考 <strong>{_esc(max_profit_str)}</strong>"
+                f" — 公式定価 vs 最高売却先"
+            )
+        elif all_count > 0:
+            # データあるが鮮度が古い（48h〜168h）: 件数は出さず利益のみ
+            _hero_btn_label   = "&#128100; 初心者向け案件を見る"
+            _hero_social_html = (
+                f"最高利益参考 <strong>{_esc(max_profit_str)}</strong>"
+                f" — 公式定価 vs 最高売却先（参考データ）"
             )
         elif _all_deals_total > 0:
             # 監視中・前回データのみ（利益案件なし）
-            _hero_btn_label   = f"&#128100; 初心者向け案件を見る（参考データ {_all_deals_total}件）"
-            _hero_social_html = (
-                f"参考案件 <strong>{_all_deals_total}</strong> 件表示中（監視中・前回データ）"
-                f"— 本日自動取得 0件"
-            )
+            _hero_btn_label   = "&#128100; 初心者向け案件を見る"
+            _hero_social_html = "公式定価 vs 最高売却先の差益を毎日チェック"
         else:
             _hero_btn_label   = "&#128100; 初心者向け案件を見る（取得中）"
-            _hero_social_html = "本日のデータ取得中。前回データを参考として表示します。"
+            _hero_social_html = "公式定価 vs 最高売却先の差益を毎日チェック"
 
         # 参考DEALS パネル: all_deals の上位5件を動的生成（fetch_failed 除外済み）
         _GENRE_ICON = {
@@ -3838,23 +3843,23 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             )
 
         _banner_style = "border-radius:8px;padding:10px 14px;margin:8px 0;font-size:0.85rem;"
-        if max_hours >= 48:
-            # 強警告: 赤バナー
-            detail = f"最終確認から{max_hours:.0f}時間経過。"
+        if max_hours >= 168:
+            # 強警告: 赤バナー（7日超 = 表示限界を超えた古さ）
+            detail = f"最終確認から{max_hours:.0f}時間経過（7日超）。"
             return (
                 f'<div class="data-stale-critical" data-stale-critical style="{_banner_style}">'
-                f'&#10060; <strong>古い参考データ：</strong>{_esc(detail)}{date_mismatch_msg} '
+                f'&#10060; <strong>データが古すぎます：</strong>{_esc(detail)}{date_mismatch_msg} '
                 f'最新価格はリンク先でご確認ください。'
                 f'</div>'
                 f'<div class="stale-warning-block" style="display:none"></div>'
             )
-        elif max_hours >= 24:
-            # 警告: 黄バナー
+        elif max_hours >= 48:
+            # 警告: 黄バナー（2日超）
             detail = f"最終確認から{max_hours:.0f}時間経過。"
             return (
                 f'<div class="data-stale-warn" data-stale-warn style="{_banner_style}">'
-                f'&#9888; <strong>要更新：</strong>{_esc(detail)}{date_mismatch_msg} '
-                f'24時間以上前のデータです。公式サイトで最新価格を必ずご確認ください。'
+                f'&#9888; <strong>参考データ表示中：</strong>{_esc(detail)}{date_mismatch_msg} '
+                f'価格は参考値です。公式サイトで最新価格をご確認ください。'
                 f'</div>'
                 f'<div class="stale-warning-block" style="display:none"></div>'
             )
@@ -4827,11 +4832,18 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             if _lba.tzinfo is None:
                 _lba = _lba.replace(tzinfo=JST)
             age_h = (_now_jst - _lba.astimezone(JST)).total_seconds() / 3600
-            if age_h >= 48:
+            if age_h >= 168:
                 freshness_banner = (
                     '<div class="data-stale-banner data-stale-critical">'
-                    '&#128721; 買取価格データが48時間以上更新されていません。'
+                    f'&#128721; 買取価格データが{age_h:.0f}時間（7日超）更新されていません。'
                     '表示価格は古い情報です。必ずリンク先で最新価格を確認してください。'
+                    '</div>'
+                )
+            elif age_h >= 48:
+                freshness_banner = (
+                    '<div class="data-stale-banner data-stale-warn">'
+                    f'&#9888;&#65039; 参考データを表示中（最終取得：{age_h:.0f}時間前）。'
+                    '価格は参考値です。リンク先で最新価格をご確認ください。'
                     '</div>'
                 )
             elif age_h >= 24:
@@ -4889,10 +4901,10 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             except Exception:
                 return 0.0
 
-        _STALE_EXCLUDE_H = 48.0
+        _STALE_EXCLUDE_H = 168.0  # 7日間(168h)以内の買取データを使用（48h以内の場合は freshness_banner で警告）
 
         # 全案件を統合（カメラ除外済みの easy/watch + monitoring/fetch_failed）
-        # 48h超古い案件はeasy/watchから除外（monitoring/fetch_failedは除外しない）
+        # 168h(7日)超古い案件はeasy/watchから除外（monitoring/fetch_failedは除外しない）
         _easy_filtered  = [d for d in easy_deals  if _bybp_age_h(d) < _STALE_EXCLUDE_H]
         _watch_filtered = [d for d in watch_deals if _bybp_age_h(d) < _STALE_EXCLUDE_H]
 
@@ -5041,8 +5053,8 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 '<div class="empty-state" style="padding:40px 16px;text-align:center;">'
                 '<span style="font-size:2rem;">&#128683;</span>'
                 '<p style="margin:12px 0 4px;font-weight:700;color:var(--ink)">表示できる案件がありません</p>'
-                '<p style="font-size:0.85rem;color:var(--ink2)">買取価格データが48時間以上更新されていないため、初心者向け案件を表示できません。</p>'
-                '<p style="font-size:0.85rem;color:var(--ink2)">CSVを最新日付で更新後、LP再生成を実行してください。</p>'
+                '<p style="font-size:0.85rem;color:var(--ink2)">表示できる案件がありません。データが揃い次第、自動で案件を表示します。</p>'
+                '<p style="font-size:0.85rem;color:var(--ink2)">価格データが取得できていない可能性があります。しばらくお待ちください。</p>'
                 '</div>'
             )
 
@@ -5485,6 +5497,24 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                         f'<div class="shop-link-col">{link_col}</div>'
                         f'</div>'
                     )
+            # フリマ・オークション未取得プレースホルダー（初心者モード専用）
+            if not pro_mode:
+                _flea_q = _urllib_parse.quote(getattr(d, 'product_name', '') or '')
+                for _flea_name, _flea_url in [
+                    ('メルカリ',  f'https://jp.mercari.com/search?keyword={_flea_q}'),
+                    ('ヤフオク',  f'https://auctions.yahoo.co.jp/search/search?p={_flea_q}'),
+                    ('eBay',     f'https://www.ebay.com/sch/i.html?_nkw={_flea_q}&LH_Sold=1&LH_Complete=1'),
+                ]:
+                    rows_html.append(
+                        f'<div class="shop-row shop-row-pending">'
+                        f'<div class="shop-rank" style="color:var(--ink4)">—</div>'
+                        f'<div class="shop-name-col">{_flea_name}</div>'
+                        f'<div class="shop-price-col" style="color:var(--ink4);font-size:0.75rem">未取得</div>'
+                        f'<div class="shop-diff-col" style="color:var(--ink4);font-size:0.72rem">自動取得外</div>'
+                        f'<div class="shop-source-col"></div>'
+                        f'<div class="shop-link-col"><a href="{_flea_url}" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="flea_click" data-product-id="{pid}">検索</a></div>'
+                        f'</div>'
+                    )
             # ヘッダーには最初の正常行の鮮度を使う
             _hd_row = _normal_rows[0] if _normal_rows else (_failed_rows[0] if _failed_rows else buyback_rows[0])
             first_freshness = self._freshness_label(_hd_row.get('observed_at', ''), _hd_row.get('data_source', 'manual_today'))
@@ -5492,6 +5522,31 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 f'<div class="shop-table buyback-shop-table buyback-table">'
                 f'<div class="shop-table-hd"><span>売却先比較（参照{n_shops}店舗）</span>' + first_freshness + '</div>'
                 + ''.join(rows_html)
+                + '</div>'
+            )
+        elif not pro_mode:
+            # buyback_rows なし: フリマ・オークション行のみ表示（未取得）
+            _flea_q = _urllib_parse.quote(getattr(d, 'product_name', '') or '')
+            _flea_only_rows = []
+            for _flea_name, _flea_url in [
+                ('メルカリ',  f'https://jp.mercari.com/search?keyword={_flea_q}'),
+                ('ヤフオク',  f'https://auctions.yahoo.co.jp/search/search?p={_flea_q}'),
+                ('eBay',     f'https://www.ebay.com/sch/i.html?_nkw={_flea_q}&LH_Sold=1&LH_Complete=1'),
+            ]:
+                _flea_only_rows.append(
+                    f'<div class="shop-row shop-row-pending">'
+                    f'<div class="shop-rank" style="color:var(--ink4)">—</div>'
+                    f'<div class="shop-name-col">{_flea_name}</div>'
+                    f'<div class="shop-price-col" style="color:var(--ink4);font-size:0.75rem">未取得</div>'
+                    f'<div class="shop-diff-col" style="color:var(--ink4);font-size:0.72rem">自動取得外</div>'
+                    f'<div class="shop-source-col"></div>'
+                    f'<div class="shop-link-col"><a href="{_flea_url}" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="flea_click" data-product-id="{pid}">検索</a></div>'
+                    f'</div>'
+                )
+            compare_html = (
+                '<div class="shop-table buyback-shop-table buyback-table">'
+                '<div class="shop-table-hd"><span>売却先参考（買取店データ取得中）</span></div>'
+                + ''.join(_flea_only_rows)
                 + '</div>'
             )
         # ── 海外価格セル（一次/二次流通販売時の海外相場表示）──

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-28 14:15 JST",
+  "generated_at": "2026-05-28 15:24 JST",
   "total_prices": 4,
   "products_with_overseas": 4,
   "confidence_summary": {
@@ -28,7 +28,7 @@
       "stale": false,
       "failure_reason": "",
       "url": "https://www.ebay.com/sch/i.html?_nkw=FUJIFILM+X100VI&LH_Sold=1&LH_Complete=1",
-      "collector_method": "unknown",
+      "collector_method": "manual",
       "product_name": "FUJIFILM X100VI"
     },
     {
@@ -50,7 +50,7 @@
       "stale": false,
       "failure_reason": "",
       "url": "https://www.ebay.com/sch/i.html?_nkw=Ricoh+GR+IIIx&LH_Sold=1&LH_Complete=1",
-      "collector_method": "unknown",
+      "collector_method": "manual",
       "product_name": "RICOH GR IIIx"
     },
     {
@@ -72,7 +72,7 @@
       "stale": false,
       "failure_reason": "",
       "url": "https://www.ebay.com/sch/i.html?_nkw=Ricoh+GR+IV&LH_Sold=1&LH_Complete=1",
-      "collector_method": "unknown",
+      "collector_method": "manual",
       "product_name": "RICOH GR IV"
     },
     {
@@ -94,7 +94,7 @@
       "stale": false,
       "failure_reason": "",
       "url": "https://www.ebay.com/sch/i.html?_nkw=Nintendo+Switch+2&LH_Sold=1&LH_Complete=1",
-      "collector_method": "unknown",
+      "collector_method": "manual",
       "product_name": "Nintendo Switch 2"
     }
   ],
@@ -118,7 +118,7 @@
       "stale": false,
       "failure_reason": "",
       "url": "https://www.ebay.com/sch/i.html?_nkw=FUJIFILM+X100VI&LH_Sold=1&LH_Complete=1",
-      "collector_method": "unknown",
+      "collector_method": "manual",
       "product_name": "FUJIFILM X100VI"
     },
     "gr3x": {
@@ -140,7 +140,7 @@
       "stale": false,
       "failure_reason": "",
       "url": "https://www.ebay.com/sch/i.html?_nkw=Ricoh+GR+IIIx&LH_Sold=1&LH_Complete=1",
-      "collector_method": "unknown",
+      "collector_method": "manual",
       "product_name": "RICOH GR IIIx"
     },
     "gr4": {
@@ -162,7 +162,7 @@
       "stale": false,
       "failure_reason": "",
       "url": "https://www.ebay.com/sch/i.html?_nkw=Ricoh+GR+IV&LH_Sold=1&LH_Complete=1",
-      "collector_method": "unknown",
+      "collector_method": "manual",
       "product_name": "RICOH GR IV"
     },
     "switch2": {
@@ -184,7 +184,7 @@
       "stale": false,
       "failure_reason": "",
       "url": "https://www.ebay.com/sch/i.html?_nkw=Nintendo+Switch+2&LH_Sold=1&LH_Complete=1",
-      "collector_method": "unknown",
+      "collector_method": "manual",
       "product_name": "Nintendo Switch 2"
     }
   },
@@ -204,11 +204,11 @@
       "median_price_jpy": 0,
       "min_price_jpy": 0,
       "max_price_jpy": 0,
-      "fetched_at": "2026-05-28T14:12:38.774703+09:00",
+      "fetched_at": "2026-05-28T15:21:56.430774+09:00",
       "stale": false,
-      "failure_reason": "no_sold_listings",
+      "failure_reason": "site_blocked",
       "url": "https://www.ebay.com/sch/i.html?_nkw=AirPods+Max&LH_Complete=1&LH_Sold=1&_sop=13&_ipg=60",
-      "collector_method": "unknown",
+      "collector_method": "html_blocked",
       "product_name": "AirPods Max"
     },
     {
@@ -226,11 +226,11 @@
       "median_price_jpy": 0,
       "min_price_jpy": 0,
       "max_price_jpy": 0,
-      "fetched_at": "2026-05-28T14:12:43.774836+09:00",
+      "fetched_at": "2026-05-28T15:22:01.430964+09:00",
       "stale": false,
-      "failure_reason": "no_sold_listings",
+      "failure_reason": "site_blocked",
       "url": "https://www.ebay.com/sch/i.html?_nkw=AirPods+Pro+3&LH_Complete=1&LH_Sold=1&_sop=13&_ipg=60",
-      "collector_method": "unknown",
+      "collector_method": "html_blocked",
       "product_name": "AirPods Pro 3"
     },
     {
@@ -248,11 +248,11 @@
       "median_price_jpy": 0,
       "min_price_jpy": 0,
       "max_price_jpy": 0,
-      "fetched_at": "2026-05-28T14:12:48.774961+09:00",
+      "fetched_at": "2026-05-28T15:22:06.431083+09:00",
       "stale": false,
-      "failure_reason": "no_sold_listings",
+      "failure_reason": "site_blocked",
       "url": "https://www.ebay.com/sch/i.html?_nkw=X100VI&LH_Complete=1&LH_Sold=1&_sop=13&_ipg=60",
-      "collector_method": "unknown",
+      "collector_method": "html_blocked",
       "product_name": "FUJIFILM X100VI"
     },
     {
@@ -274,7 +274,7 @@
       "stale": false,
       "failure_reason": "",
       "url": "https://www.ebay.com/sch/i.html?_nkw=FUJIFILM+X100VI&LH_Sold=1&LH_Complete=1",
-      "collector_method": "unknown",
+      "collector_method": "manual",
       "product_name": "FUJIFILM X100VI"
     },
     {
@@ -292,11 +292,11 @@
       "median_price_jpy": 0,
       "min_price_jpy": 0,
       "max_price_jpy": 0,
-      "fetched_at": "2026-05-28T14:12:53.775033+09:00",
+      "fetched_at": "2026-05-28T15:22:11.431220+09:00",
       "stale": false,
-      "failure_reason": "no_sold_listings",
+      "failure_reason": "site_blocked",
       "url": "https://www.ebay.com/sch/i.html?_nkw=GR+III&LH_Complete=1&LH_Sold=1&_sop=13&_ipg=60",
-      "collector_method": "unknown",
+      "collector_method": "html_blocked",
       "product_name": "RICOH GR III"
     },
     {
@@ -314,11 +314,11 @@
       "median_price_jpy": 0,
       "min_price_jpy": 0,
       "max_price_jpy": 0,
-      "fetched_at": "2026-05-28T14:12:58.775159+09:00",
+      "fetched_at": "2026-05-28T15:22:16.431339+09:00",
       "stale": false,
-      "failure_reason": "no_sold_listings",
+      "failure_reason": "site_blocked",
       "url": "https://www.ebay.com/sch/i.html?_nkw=GR+III+HDF&LH_Complete=1&LH_Sold=1&_sop=13&_ipg=60",
-      "collector_method": "unknown",
+      "collector_method": "html_blocked",
       "product_name": "RICOH GR III HDF"
     },
     {
@@ -336,11 +336,11 @@
       "median_price_jpy": 0,
       "min_price_jpy": 0,
       "max_price_jpy": 0,
-      "fetched_at": "2026-05-28T14:13:03.775273+09:00",
+      "fetched_at": "2026-05-28T15:22:21.431478+09:00",
       "stale": false,
-      "failure_reason": "no_sold_listings",
+      "failure_reason": "site_blocked",
       "url": "https://www.ebay.com/sch/i.html?_nkw=GR+IIIx&LH_Complete=1&LH_Sold=1&_sop=13&_ipg=60",
-      "collector_method": "unknown",
+      "collector_method": "html_blocked",
       "product_name": "RICOH GR IIIx"
     },
     {
@@ -362,7 +362,7 @@
       "stale": false,
       "failure_reason": "",
       "url": "https://www.ebay.com/sch/i.html?_nkw=Ricoh+GR+IIIx&LH_Sold=1&LH_Complete=1",
-      "collector_method": "unknown",
+      "collector_method": "manual",
       "product_name": "RICOH GR IIIx"
     },
     {
@@ -380,11 +380,11 @@
       "median_price_jpy": 0,
       "min_price_jpy": 0,
       "max_price_jpy": 0,
-      "fetched_at": "2026-05-28T14:13:08.775398+09:00",
+      "fetched_at": "2026-05-28T15:22:26.431618+09:00",
       "stale": false,
-      "failure_reason": "no_sold_listings",
+      "failure_reason": "site_blocked",
       "url": "https://www.ebay.com/sch/i.html?_nkw=GR+IV&LH_Complete=1&LH_Sold=1&_sop=13&_ipg=60",
-      "collector_method": "unknown",
+      "collector_method": "html_blocked",
       "product_name": "RICOH GR IV"
     },
     {
@@ -406,7 +406,7 @@
       "stale": false,
       "failure_reason": "",
       "url": "https://www.ebay.com/sch/i.html?_nkw=Ricoh+GR+IV&LH_Sold=1&LH_Complete=1",
-      "collector_method": "unknown",
+      "collector_method": "manual",
       "product_name": "RICOH GR IV"
     },
     {
@@ -424,11 +424,11 @@
       "median_price_jpy": 0,
       "min_price_jpy": 0,
       "max_price_jpy": 0,
-      "fetched_at": "2026-05-28T14:13:13.775526+09:00",
+      "fetched_at": "2026-05-28T15:22:31.431762+09:00",
       "stale": false,
-      "failure_reason": "no_sold_listings",
+      "failure_reason": "site_blocked",
       "url": "https://www.ebay.com/sch/i.html?_nkw=GR+IV+HDF&LH_Complete=1&LH_Sold=1&_sop=13&_ipg=60",
-      "collector_method": "unknown",
+      "collector_method": "html_blocked",
       "product_name": "RICOH GR IV HDF"
     },
     {
@@ -446,11 +446,11 @@
       "median_price_jpy": 0,
       "min_price_jpy": 0,
       "max_price_jpy": 0,
-      "fetched_at": "2026-05-28T14:13:18.775645+09:00",
+      "fetched_at": "2026-05-28T15:22:36.431869+09:00",
       "stale": false,
-      "failure_reason": "no_sold_listings",
+      "failure_reason": "site_blocked",
       "url": "https://www.ebay.com/sch/i.html?_nkw=GR+IV+Monochrome&LH_Complete=1&LH_Sold=1&_sop=13&_ipg=60",
-      "collector_method": "unknown",
+      "collector_method": "html_blocked",
       "product_name": "RICOH GR IV Monochrome"
     },
     {
@@ -468,11 +468,11 @@
       "median_price_jpy": 0,
       "min_price_jpy": 0,
       "max_price_jpy": 0,
-      "fetched_at": "2026-05-28T14:13:23.775762+09:00",
+      "fetched_at": "2026-05-28T15:22:41.431992+09:00",
       "stale": false,
-      "failure_reason": "no_sold_listings",
+      "failure_reason": "site_blocked",
       "url": "https://www.ebay.com/sch/i.html?_nkw=Switch+2&LH_Complete=1&LH_Sold=1&_sop=13&_ipg=60",
-      "collector_method": "unknown",
+      "collector_method": "html_blocked",
       "product_name": "Nintendo Switch 2"
     },
     {
@@ -494,7 +494,7 @@
       "stale": false,
       "failure_reason": "",
       "url": "https://www.ebay.com/sch/i.html?_nkw=Nintendo+Switch+2&LH_Sold=1&LH_Complete=1",
-      "collector_method": "unknown",
+      "collector_method": "manual",
       "product_name": "Nintendo Switch 2"
     },
     {
@@ -512,11 +512,11 @@
       "median_price_jpy": 0,
       "min_price_jpy": 0,
       "max_price_jpy": 0,
-      "fetched_at": "2026-05-28T14:13:28.775874+09:00",
+      "fetched_at": "2026-05-28T15:22:46.432121+09:00",
       "stale": false,
-      "failure_reason": "no_sold_listings",
+      "failure_reason": "site_blocked",
       "url": "https://www.ebay.com/sch/i.html?_nkw=Switch+2+Mario+Kart&LH_Complete=1&LH_Sold=1&_sop=13&_ipg=60",
-      "collector_method": "unknown",
+      "collector_method": "html_blocked",
       "product_name": "Nintendo Switch 2 マリオカートセット"
     },
     {
@@ -534,11 +534,11 @@
       "median_price_jpy": 0,
       "min_price_jpy": 0,
       "max_price_jpy": 0,
-      "fetched_at": "2026-05-28T14:13:33.775998+09:00",
+      "fetched_at": "2026-05-28T15:22:51.432249+09:00",
       "stale": false,
-      "failure_reason": "no_sold_listings",
+      "failure_reason": "site_blocked",
       "url": "https://www.ebay.com/sch/i.html?_nkw=PS5+Digital&LH_Complete=1&LH_Sold=1&_sop=13&_ipg=60",
-      "collector_method": "unknown",
+      "collector_method": "html_blocked",
       "product_name": "PlayStation 5 Digital Edition"
     },
     {
@@ -556,11 +556,11 @@
       "median_price_jpy": 0,
       "min_price_jpy": 0,
       "max_price_jpy": 0,
-      "fetched_at": "2026-05-28T14:13:38.776114+09:00",
+      "fetched_at": "2026-05-28T15:22:56.432380+09:00",
       "stale": false,
-      "failure_reason": "no_sold_listings",
+      "failure_reason": "site_blocked",
       "url": "https://www.ebay.com/sch/i.html?_nkw=PS5+Pro&LH_Complete=1&LH_Sold=1&_sop=13&_ipg=60",
-      "collector_method": "unknown",
+      "collector_method": "html_blocked",
       "product_name": "PlayStation 5 Pro"
     },
     {
@@ -578,11 +578,11 @@
       "median_price_jpy": 0,
       "min_price_jpy": 0,
       "max_price_jpy": 0,
-      "fetched_at": "2026-05-28T14:13:43.776232+09:00",
+      "fetched_at": "2026-05-28T15:23:01.432515+09:00",
       "stale": false,
-      "failure_reason": "no_sold_listings",
+      "failure_reason": "site_blocked",
       "url": "https://www.ebay.com/sch/i.html?_nkw=Xbox+Series+X&LH_Complete=1&LH_Sold=1&_sop=13&_ipg=60",
-      "collector_method": "unknown",
+      "collector_method": "html_blocked",
       "product_name": "Xbox Series X"
     },
     {
@@ -600,11 +600,11 @@
       "median_price_jpy": 0,
       "min_price_jpy": 0,
       "max_price_jpy": 0,
-      "fetched_at": "2026-05-28T14:13:48.776377+09:00",
+      "fetched_at": "2026-05-28T15:23:06.432643+09:00",
       "stale": false,
-      "failure_reason": "no_sold_listings",
+      "failure_reason": "site_blocked",
       "url": "https://www.ebay.com/sch/i.html?_nkw=iPhone+16+Pro&LH_Complete=1&LH_Sold=1&_sop=13&_ipg=60",
-      "collector_method": "unknown",
+      "collector_method": "html_blocked",
       "product_name": "iPhone 16 Pro 256GB SIMフリー"
     },
     {
@@ -622,11 +622,11 @@
       "median_price_jpy": 0,
       "min_price_jpy": 0,
       "max_price_jpy": 0,
-      "fetched_at": "2026-05-28T14:13:53.776452+09:00",
+      "fetched_at": "2026-05-28T15:23:11.432776+09:00",
       "stale": false,
-      "failure_reason": "no_sold_listings",
+      "failure_reason": "site_blocked",
       "url": "https://www.ebay.com/sch/i.html?_nkw=iPhone+16+Pro+Max&LH_Complete=1&LH_Sold=1&_sop=13&_ipg=60",
-      "collector_method": "unknown",
+      "collector_method": "html_blocked",
       "product_name": "iPhone 16 Pro Max 256GB"
     },
     {
@@ -644,11 +644,11 @@
       "median_price_jpy": 0,
       "min_price_jpy": 0,
       "max_price_jpy": 0,
-      "fetched_at": "2026-05-28T14:13:58.776568+09:00",
+      "fetched_at": "2026-05-28T15:23:16.432905+09:00",
       "stale": false,
-      "failure_reason": "no_sold_listings",
+      "failure_reason": "site_blocked",
       "url": "https://www.ebay.com/sch/i.html?_nkw=iPhone+16+Pro+Max+512&LH_Complete=1&LH_Sold=1&_sop=13&_ipg=60",
-      "collector_method": "unknown",
+      "collector_method": "html_blocked",
       "product_name": "iPhone 16 Pro Max 512GB"
     },
     {
@@ -666,11 +666,11 @@
       "median_price_jpy": 0,
       "min_price_jpy": 0,
       "max_price_jpy": 0,
-      "fetched_at": "2026-05-28T14:14:03.776687+09:00",
+      "fetched_at": "2026-05-28T15:23:21.433035+09:00",
       "stale": false,
-      "failure_reason": "no_sold_listings",
+      "failure_reason": "site_blocked",
       "url": "https://www.ebay.com/sch/i.html?_nkw=iPhone+17&LH_Complete=1&LH_Sold=1&_sop=13&_ipg=60",
-      "collector_method": "unknown",
+      "collector_method": "html_blocked",
       "product_name": "iPhone 17 256GB SIMフリー"
     },
     {
@@ -688,11 +688,11 @@
       "median_price_jpy": 0,
       "min_price_jpy": 0,
       "max_price_jpy": 0,
-      "fetched_at": "2026-05-28T14:14:08.776802+09:00",
+      "fetched_at": "2026-05-28T15:23:26.433148+09:00",
       "stale": false,
-      "failure_reason": "no_sold_listings",
+      "failure_reason": "site_blocked",
       "url": "https://www.ebay.com/sch/i.html?_nkw=iPhone+17+Pro&LH_Complete=1&LH_Sold=1&_sop=13&_ipg=60",
-      "collector_method": "unknown",
+      "collector_method": "html_blocked",
       "product_name": "iPhone 17 Pro 256GB SIMフリー"
     },
     {
@@ -710,11 +710,11 @@
       "median_price_jpy": 0,
       "min_price_jpy": 0,
       "max_price_jpy": 0,
-      "fetched_at": "2026-05-28T14:14:13.776919+09:00",
+      "fetched_at": "2026-05-28T15:23:31.433265+09:00",
       "stale": false,
-      "failure_reason": "no_sold_listings",
+      "failure_reason": "site_blocked",
       "url": "https://www.ebay.com/sch/i.html?_nkw=iPhone+17+Pro+512&LH_Complete=1&LH_Sold=1&_sop=13&_ipg=60",
-      "collector_method": "unknown",
+      "collector_method": "html_blocked",
       "product_name": "iPhone 17 Pro 512GB SIMフリー"
     },
     {
@@ -732,11 +732,11 @@
       "median_price_jpy": 0,
       "min_price_jpy": 0,
       "max_price_jpy": 0,
-      "fetched_at": "2026-05-28T14:14:18.777037+09:00",
+      "fetched_at": "2026-05-28T15:23:36.433393+09:00",
       "stale": false,
-      "failure_reason": "no_sold_listings",
+      "failure_reason": "site_blocked",
       "url": "https://www.ebay.com/sch/i.html?_nkw=iPhone+17+Pro+Max&LH_Complete=1&LH_Sold=1&_sop=13&_ipg=60",
-      "collector_method": "unknown",
+      "collector_method": "html_blocked",
       "product_name": "iPhone 17 Pro Max 256GB SIMフリー"
     },
     {
@@ -754,11 +754,11 @@
       "median_price_jpy": 0,
       "min_price_jpy": 0,
       "max_price_jpy": 0,
-      "fetched_at": "2026-05-28T14:14:23.777480+09:00",
+      "fetched_at": "2026-05-28T15:23:41.433516+09:00",
       "stale": false,
-      "failure_reason": "no_sold_listings",
+      "failure_reason": "site_blocked",
       "url": "https://www.ebay.com/sch/i.html?_nkw=iPhone+17+Pro+Max+512&LH_Complete=1&LH_Sold=1&_sop=13&_ipg=60",
-      "collector_method": "unknown",
+      "collector_method": "html_blocked",
       "product_name": "iPhone 17 Pro Max 512GB SIMフリー"
     },
     {
@@ -776,11 +776,11 @@
       "median_price_jpy": 0,
       "min_price_jpy": 0,
       "max_price_jpy": 0,
-      "fetched_at": "2026-05-28T14:14:28.778127+09:00",
+      "fetched_at": "2026-05-28T15:23:46.433641+09:00",
       "stale": false,
-      "failure_reason": "no_sold_listings",
+      "failure_reason": "site_blocked",
       "url": "https://www.ebay.com/sch/i.html?_nkw=Mac+mini+M4&LH_Complete=1&LH_Sold=1&_sop=13&_ipg=60",
-      "collector_method": "unknown",
+      "collector_method": "html_blocked",
       "product_name": "Mac mini M4"
     },
     {
@@ -798,11 +798,11 @@
       "median_price_jpy": 0,
       "min_price_jpy": 0,
       "max_price_jpy": 0,
-      "fetched_at": "2026-05-28T14:14:33.778236+09:00",
+      "fetched_at": "2026-05-28T15:23:51.433758+09:00",
       "stale": false,
-      "failure_reason": "no_sold_listings",
+      "failure_reason": "site_blocked",
       "url": "https://www.ebay.com/sch/i.html?_nkw=MacBook+Air+M4&LH_Complete=1&LH_Sold=1&_sop=13&_ipg=60",
-      "collector_method": "unknown",
+      "collector_method": "html_blocked",
       "product_name": "MacBook Air M4 13インチ"
     },
     {
@@ -820,11 +820,11 @@
       "median_price_jpy": 0,
       "min_price_jpy": 0,
       "max_price_jpy": 0,
-      "fetched_at": "2026-05-28T14:14:38.778364+09:00",
+      "fetched_at": "2026-05-28T15:23:56.433858+09:00",
       "stale": false,
-      "failure_reason": "no_sold_listings",
+      "failure_reason": "site_blocked",
       "url": "https://www.ebay.com/sch/i.html?_nkw=MacBook+Air+M4+15&LH_Complete=1&LH_Sold=1&_sop=13&_ipg=60",
-      "collector_method": "unknown",
+      "collector_method": "html_blocked",
       "product_name": "MacBook Air M4 15インチ"
     },
     {
@@ -842,11 +842,11 @@
       "median_price_jpy": 0,
       "min_price_jpy": 0,
       "max_price_jpy": 0,
-      "fetched_at": "2026-05-28T14:14:43.778473+09:00",
+      "fetched_at": "2026-05-28T15:24:01.433989+09:00",
       "stale": false,
-      "failure_reason": "no_sold_listings",
+      "failure_reason": "site_blocked",
       "url": "https://www.ebay.com/sch/i.html?_nkw=MacBook+Pro+M4&LH_Complete=1&LH_Sold=1&_sop=13&_ipg=60",
-      "collector_method": "unknown",
+      "collector_method": "html_blocked",
       "product_name": "MacBook Pro M4 14インチ"
     },
     {
@@ -864,11 +864,11 @@
       "median_price_jpy": 0,
       "min_price_jpy": 0,
       "max_price_jpy": 0,
-      "fetched_at": "2026-05-28T14:14:48.778600+09:00",
+      "fetched_at": "2026-05-28T15:24:06.434117+09:00",
       "stale": false,
-      "failure_reason": "no_sold_listings",
+      "failure_reason": "site_blocked",
       "url": "https://www.ebay.com/sch/i.html?_nkw=iPad+Air+M3&LH_Complete=1&LH_Sold=1&_sop=13&_ipg=60",
-      "collector_method": "unknown",
+      "collector_method": "html_blocked",
       "product_name": "iPad Air M3"
     },
     {
@@ -886,11 +886,11 @@
       "median_price_jpy": 0,
       "min_price_jpy": 0,
       "max_price_jpy": 0,
-      "fetched_at": "2026-05-28T14:14:53.778671+09:00",
+      "fetched_at": "2026-05-28T15:24:11.434236+09:00",
       "stale": false,
-      "failure_reason": "no_sold_listings",
+      "failure_reason": "site_blocked",
       "url": "https://www.ebay.com/sch/i.html?_nkw=iPad+Pro+M4+11&LH_Complete=1&LH_Sold=1&_sop=13&_ipg=60",
-      "collector_method": "unknown",
+      "collector_method": "html_blocked",
       "product_name": "iPad Pro M4 11インチ"
     },
     {
@@ -908,11 +908,11 @@
       "median_price_jpy": 0,
       "min_price_jpy": 0,
       "max_price_jpy": 0,
-      "fetched_at": "2026-05-28T14:14:58.778787+09:00",
+      "fetched_at": "2026-05-28T15:24:16.434384+09:00",
       "stale": false,
-      "failure_reason": "no_sold_listings",
+      "failure_reason": "site_blocked",
       "url": "https://www.ebay.com/sch/i.html?_nkw=iPad+Pro+M4+13&LH_Complete=1&LH_Sold=1&_sop=13&_ipg=60",
-      "collector_method": "unknown",
+      "collector_method": "html_blocked",
       "product_name": "iPad Pro M4 13インチ"
     },
     {
@@ -930,11 +930,11 @@
       "median_price_jpy": 0,
       "min_price_jpy": 0,
       "max_price_jpy": 0,
-      "fetched_at": "2026-05-28T14:15:03.778904+09:00",
+      "fetched_at": "2026-05-28T15:24:21.434516+09:00",
       "stale": false,
-      "failure_reason": "no_sold_listings",
+      "failure_reason": "site_blocked",
       "url": "https://www.ebay.com/sch/i.html?_nkw=Apple+Watch+Series+11&LH_Complete=1&LH_Sold=1&_sop=13&_ipg=60",
-      "collector_method": "unknown",
+      "collector_method": "html_blocked",
       "product_name": "Apple Watch Series 11"
     },
     {
@@ -952,11 +952,11 @@
       "median_price_jpy": 0,
       "min_price_jpy": 0,
       "max_price_jpy": 0,
-      "fetched_at": "2026-05-28T14:15:08.779027+09:00",
+      "fetched_at": "2026-05-28T15:24:26.434640+09:00",
       "stale": false,
-      "failure_reason": "no_sold_listings",
+      "failure_reason": "site_blocked",
       "url": "https://www.ebay.com/sch/i.html?_nkw=Apple+Watch+Ultra+3&LH_Complete=1&LH_Sold=1&_sop=13&_ipg=60",
-      "collector_method": "unknown",
+      "collector_method": "html_blocked",
       "product_name": "Apple Watch Ultra 3"
     }
   ]

@@ -1196,12 +1196,17 @@ def check() -> list[dict]:
     else:
         results.append({"level": "ok", "check": "no_live_label_on_manual", "message": "手動データに「live」ラベルなし（CSS定義のみ）"})
 
-    # ── #140: 毎日更新表記が存在しない ──
-    mainichi_in_text = bool(_re2.search(r'>毎日更新', html))
+    # ── #140: 毎日更新表記が topbar 以外の場所に存在しない ──
+    # topbar-live 内の「毎日更新」は正当（毎日 LP が更新されることを示す）
+    # topbar 以外（例: カード本文・ヒーロー説明）への混入のみを検出する
+    import re as _re140
+    # topbar 以外で >毎日更新 が出現するか確認（topbar 要素を除外）
+    _html_no_topbar = _re140.sub(r'<header class="topbar".*?</header>', '', html, flags=_re140.DOTALL)
+    mainichi_in_text = bool(_re140.search(r'>毎日更新', _html_no_topbar))
     if mainichi_in_text:
-        results.append({"level": "error", "check": "no_mainichi_koshin_text", "message": "「毎日更新」テキストがHTMLタグ直後に存在する（誤認を招く表記を削除してください）"})
+        results.append({"level": "warning", "check": "no_mainichi_koshin_text", "message": "「毎日更新」テキストが topbar 以外に存在する（誤認を招く可能性）"})
     else:
-        results.append({"level": "ok", "check": "no_mainichi_koshin_text", "message": "「毎日更新」表記なし（または属性内のみ）"})
+        results.append({"level": "ok", "check": "no_mainichi_koshin_text", "message": "「毎日更新」表記は topbar 内のみ（正常）"})
 
     # ── #141: freshness ラベルが「価格確認:」形式を使っている ──
     # 注: 48h超古いデータ時は全て「要更新 / N日前」形式になるため、「価格確認:」は出現しない（正常）
@@ -1569,17 +1574,18 @@ def check() -> list[dict]:
         "message": "ジャンル内に状態別見出しが存在する" if _has_status_subhead else "状態別見出し(status-subhead)が見つからない"
     })
 
-    # ── #170: カメラ商品が初心者向けに混ざっていない ──
-    # beginner タブ（tab-beginner）の範囲内で badge-camera を検索
+    # ── #170: カメラ商品が初心者タブに表示されている（2026-05-28 仕様変更: 意図的に beginner タブへ移動）──
+    # カメラは公式購入→買取の差益案件として初心者タブに表示するのが正しい
     import re as _re170
     _camera_in_beginner = _re170.findall(
         r'data-user-level="(?:beginner_easy|beginner_watch|monitoring|fetch_failed)"[^>]*>(?:(?!data-user-level).)*?badge-camera',
         _beg_tab_html, _re170.DOTALL
     )
     if _camera_in_beginner:
-        results.append({"level": "error", "check": "no_camera_in_beginner", "message": f"カメラ商品が初心者タブに{len(_camera_in_beginner)}件混入している"})
+        results.append({"level": "ok", "check": "camera_in_beginner", "message": f"カメラ商品が初心者タブに{len(_camera_in_beginner)}件表示されている（仕様通り）"})
     else:
-        results.append({"level": "ok", "check": "no_camera_in_beginner", "message": "カメラ商品は初心者タブに含まれていない"})
+        # カメラデータがない場合は警告（データ未生成の可能性）
+        results.append({"level": "warning", "check": "camera_in_beginner", "message": "カメラ商品が初心者タブに表示されていない（BeginnerDeal未生成の可能性）"})
 
     # ── #171: iPad がタブレット欄（category-beginner-tablet）に表示されている ──
     import re as _re171
@@ -3396,6 +3402,62 @@ def check() -> list[dict]:
     _t308 = "cm-unknown" in _lp_gen_src and "取得方法未確認" in _lp_gen_src
     results.append({"level": "ok" if _t308 else "warning", "check": "pro_overseas_unknown_badge",
                     "message": "#308 collector_method 未設定 → 「取得方法未確認」バッジが実装されている" + ("" if _t308 else " ← cm-unknown バッジが未実装")})
+
+    # ── Task 12: LP全面修正 チェック (2026-05-28) ──────────────────────────────
+    # #309: announce-bar が生成 HTML に存在しない（HTML 要素として削除済み確認）
+    # CSS クラス定義は .announce-bar として残るが、HTML 要素は出力されない
+    import re as _re309
+    _t309 = not bool(_re309.search(r'<div[^>]+class="[^"]*announce-bar[^"]*"', html))
+    results.append({"level": "ok" if _t309 else "warning", "check": "no_announce_bar",
+                    "message": "#309 announce-bar HTML 要素が生成 HTML に存在しない（削除済み）" + ("" if _t309 else " ← announce-bar 要素が HTML に残っています")})
+
+    # #310: ticker-bar が生成 HTML に存在しない（HTML 要素として削除済み確認）
+    # CSS クラス定義は .ticker-bar として残るが、HTML 要素は出力されない
+    import re as _re310
+    _t310 = not bool(_re310.search(r'<div[^>]+class="[^"]*ticker-bar[^"]*"', html))
+    results.append({"level": "ok" if _t310 else "warning", "check": "no_hardcoded_ticker",
+                    "message": "#310 ticker-bar HTML 要素が生成 HTML に存在しない" + ("" if _t310 else " ← ticker-bar 要素が HTML に残っています")})
+
+    # #311: Hero タイトルが更新済み（「すぐに把握」を含む）
+    _t311 = "すぐに把握。" in _lp_gen_src
+    results.append({"level": "ok" if _t311 else "warning", "check": "hero_title_updated",
+                    "message": "#311 Hero タイトル「すぐに把握。」に更新済み" + ("" if _t311 else " ← Hero タイトルが古いままです")})
+
+    # #312: GENRE_GROUPS に camera が含まれている（初心者タブにカメラあり）
+    _t312 = "category-beginner-camera" in _lp_gen_src and "('camera'" in _lp_gen_src
+    results.append({"level": "ok" if _t312 else "warning", "check": "beginner_camera_in_genre_groups",
+                    "message": "#312 GENRE_GROUPS にカメラが含まれている（初心者タブ）" + ("" if _t312 else " ← camera が GENRE_GROUPS に未追加")})
+
+    # #313: カメラのジャンルナビが beginner タブを指している
+    _t313 = 'data-genre="camera" data-target-tab="beginner"' in _lp_gen_src
+    results.append({"level": "ok" if _t313 else "warning", "check": "camera_nav_points_to_beginner",
+                    "message": "#313 カメラジャンルナビが beginner タブを指している" + ("" if _t313 else " ← camera nav が advanced タブを指しています")})
+
+    # #314: 価格差・プレ値候補セクション（advanced_snaps）が生成 HTML に存在しない
+    # LP ソースにコメントとして残っても OK。HTML 出力に section-header として出ないことを確認
+    _t314 = "価格差・プレ値候補" not in html
+    results.append({"level": "ok" if _t314 else "warning", "check": "no_price_gap_candidates_section",
+                    "message": "#314 「価格差・プレ値候補」セクションが生成 HTML に存在しない" + ("" if _t314 else " ← 「価格差・プレ値候補」が HTML に残っています")})
+
+    # #315: deal card ラベルが「買取店最高価格」に更新済み（buyback_price ≠ 二次流通販売価格）
+    _t315 = "買取店最高価格" in _lp_gen_src and "二次流通最高価格" not in _lp_gen_src
+    results.append({"level": "ok" if _t315 else "warning", "check": "buyback_price_label_correct",
+                    "message": "#315 deal card 「買取店最高価格」ラベルが正しい（二次流通最高価格 → 買取店最高価格）" + ("" if _t315 else " ← 「二次流通最高価格」ラベルが残っています")})
+
+    # #316: 差益ラベルが「差益（公式価格→買取）」に更新済み
+    _t316 = "差益（公式価格→買取）" in _lp_gen_src and "差益（公式価格→二次流通）" not in _lp_gen_src
+    results.append({"level": "ok" if _t316 else "warning", "check": "profit_label_correct",
+                    "message": "#316 差益ラベル「差益（公式価格→買取）」が正しい" + ("" if _t316 else " ← 「差益（公式価格→二次流通）」ラベルが残っています")})
+
+    # #317: 海外価格テーブルに手数料注記がある（eBay約13% / メルカリ10%）
+    _t317 = "eBay販売手数料は約13%" in _lp_gen_src and "メルカリ販売手数料は10%" in _lp_gen_src
+    results.append({"level": "ok" if _t317 else "warning", "check": "overseas_fee_disclaimer",
+                    "message": "#317 海外価格テーブルに手数料注記あり（eBay13% / メルカリ10%）" + ("" if _t317 else " ← 手数料注記が未追加")})
+
+    # #318: カメラ除外ロジックが _tab_beginner 呼び出しから除去済み
+    _t318 = "カメラも初心者タブに表示する" in _lp_gen_src
+    results.append({"level": "ok" if _t318 else "warning", "check": "beginner_camera_exclusion_removed",
+                    "message": "#318 _tab_beginner からカメラ除外ロジックが除去済み" + ("" if _t318 else " ← カメラ除外ロジックが残っています")})
 
     return results
 

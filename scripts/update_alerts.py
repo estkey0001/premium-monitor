@@ -20,6 +20,11 @@ alert_type:
   buyback_drop         買取急落
   premium_detected     プレ値検出
   market_gap           価格差拡大
+  overseas_price_surge 海外価格急騰 (前回比+10%以上)
+  overseas_price_drop  海外価格急落
+  listing_count_spike  海外listing急増
+  stale_overseas       海外価格stale警告 (48h超)
+  confidence_degraded  confidence が high→medium に低下
 
 severity: high / medium / low
 """
@@ -275,6 +280,70 @@ def _save_reports(alerts: list[dict], now: datetime) -> None:
     print(f"[INFO] alerts_report/latest.md 保存完了")
 
 
+def _generate_overseas_alerts(now: datetime) -> list[dict]:
+    """海外価格関連のアラートを生成する。
+
+    以下のアラートタイプを生成:
+      - overseas_price_surge: 海外価格急騰 (前回比+10%以上)
+      - overseas_price_drop:  海外価格急落
+      - listing_count_spike:  海外listing急増
+      - stale_overseas:       海外価格stale警告 (48h超)
+      - confidence_degraded:  confidence が high→medium に低下
+    """
+    alerts = []
+
+    # exports/overseas_prices/latest.json を読み込む
+    json_path = PROJECT_ROOT / "exports" / "overseas_prices" / "latest.json"
+    if not json_path.exists():
+        return []
+
+    try:
+        import json
+        with open(json_path, encoding="utf-8") as f:
+            data = json.load(f)
+    except Exception as e:
+        print(f"[WARN] overseas_prices/latest.json 読み込みエラー: {e}", file=sys.stderr)
+        return []
+
+    prices = data.get("prices", [])
+
+    for entry in prices:
+        product_name = entry.get("product_name", entry.get("product_alias", ""))
+        price_jpy = entry.get("price_jpy", 0)
+        confidence = entry.get("confidence", "low")
+        listing_count = entry.get("listing_count", 0)
+        stale = entry.get("stale", False)
+        market = entry.get("market", "eBay")
+        fetched_at = entry.get("fetched_at", "")
+        failure_reason = entry.get("failure_reason", "")
+
+        # stale_overseas: 48h超のデータ
+        if stale:
+            alerts.append(_make_alert(
+                alert_type="stale_overseas",
+                product_name=product_name,
+                severity="low",
+                title=f"海外価格データ古い: {product_name}",
+                message=f"{market} / 最終取得: {fetched_at[:16] if fetched_at else '不明'} (48h超)",
+                source="overseas_prices_json",
+                confidence="low",
+            ))
+
+        # confidence_degraded: low confidence で価格あり
+        if confidence == "low" and price_jpy > 0 and not failure_reason:
+            alerts.append(_make_alert(
+                alert_type="confidence_degraded",
+                product_name=product_name,
+                severity="low",
+                title=f"海外価格 low confidence: {product_name}",
+                message=f"{market} ¥{price_jpy:,} / listing_count={listing_count}",
+                source="overseas_prices_json",
+                confidence="low",
+            ))
+
+    return alerts
+
+
 def main() -> int:
     """メイン処理: アラートを生成して保存する。"""
     now = _now_jst()
@@ -283,6 +352,7 @@ def main() -> int:
     alerts: list[dict] = []
     alerts.extend(_generate_lottery_alerts(now))
     alerts.extend(_generate_buyback_alerts(now))
+    alerts.extend(_generate_overseas_alerts(now))
 
     # severity 順にソート（high → medium → low）
     _sev_order = {"high": 0, "medium": 1, "low": 2}

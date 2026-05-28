@@ -2,39 +2,31 @@
 # -*- coding: utf-8 -*-
 """海外市場価格を更新するスクリプト。
 
-現時点では data/manual_market_prices.csv から海外価格データを読み込み、
-exports/overseas_prices/latest.json として保存します。
+PHASE 1 実装:
+  1. eBay completed listings (Playwright scraping - 公開ページ)
+  2. 手動CSV補完 (manual_market_prices.csv)
+  3. 為替レートのライブ取得 (open.er-api.com)
 
-将来的には eBay API / StockX API 等のリアルタイム取得に拡張予定。
+将来対応:
+  - StockX公式API (現在ToS上スクレイピング禁止)
+  - Chrono24 API (時計ジャンル)
+  - Amazon SP-API
 
-対象市場:
-  - eBay sold
-  - StockX
-  - Amazon US
-  - B&H Photo
-  - Adorama
-  - MPB
-  - KEH Camera
-  - 海外カメラ店
-  - 海外ゲーム機相場
+confidence 計算:
+  high:   completed listings >=10件 かつ 価格ばらつき<30%
+  medium: completed listings >=3件 かつ 価格ばらつき<60%
+  low:    それ以外
 
-最低限保存項目:
-  - product_name
-  - market
-  - price_jpy
-  - currency
-  - original_price
-  - condition
-  - sold_or_listing
-  - observed_at
-  - url
-  - confidence
-  - failure_reason
+stale 判定:
+  fetched_at から 48h 超でstale=True
+
+Usage:
+  python scripts/update_overseas_prices.py [--skip-ebay] [--manual-only] [--verbose]
 """
 from __future__ import annotations
 
-import csv
-import json
+import argparse
+import logging
 import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -43,177 +35,91 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
 JST = timezone(timedelta(hours=9))
-EXPORT_DIR = PROJECT_ROOT / "exports" / "overseas_prices"
-
-# 海外市場と判定するソース名
-OVERSEAS_SOURCES: frozenset[str] = frozenset({
-    "ebay", "ebay_sold", "ebay_listing",
-    "stockx",
-    "amazon_us", "amazon_com",
-    "bh", "bhphotovideo", "b&h",
-    "adorama",
-    "mpb", "mpb_com",
-    "keh", "keh_camera",
-    "roberts", "roberts_camera",
-    "used.photo",
-    "mr_photo",
-})
-
-# ソース → 表示名マッピング
-SOURCE_LABELS: dict[str, str] = {
-    "ebay": "eBay",
-    "ebay_sold": "eBay (sold)",
-    "ebay_listing": "eBay (listing)",
-    "stockx": "StockX",
-    "amazon_us": "Amazon US",
-    "amazon_com": "Amazon.com",
-    "bh": "B&H Photo",
-    "bhphotovideo": "B&H Photo",
-    "b&h": "B&H Photo",
-    "adorama": "Adorama",
-    "mpb": "MPB",
-    "mpb_com": "MPB",
-    "keh": "KEH Camera",
-    "keh_camera": "KEH Camera",
-    "roberts": "Roberts Camera",
-    "roberts_camera": "Roberts Camera",
-    "used.photo": "Used Photo",
-    "mr_photo": "MR Photo",
-}
-
-# スタブデータ（リアルタイム取得が未対応の場合のフォールバック）
-_STUB_MARKETS: list[dict] = [
-    {
-        "market": "eBay",
-        "url": "https://www.ebay.com/sch/i.html?_nkw=",
-        "note": "eBay sold listingsを手動で確認してください",
-    },
-    {
-        "market": "StockX",
-        "url": "https://stockx.com/",
-        "note": "StockXの取引履歴を手動で確認してください",
-    },
-]
 
 
-def _load_manual_overseas_prices() -> list[dict]:
-    """data/manual_market_prices.csv から海外価格データを読み込む。"""
-    csv_path = PROJECT_ROOT / "data" / "manual_market_prices.csv"
-    if not csv_path.exists():
-        return []
-
-    results = []
-    try:
-        with open(csv_path, encoding="utf-8") as f:
-            reader = csv.DictReader(f)
-            for row in reader:
-                source = (row.get("source") or "").strip().lower()
-                if source not in OVERSEAS_SOURCES:
-                    continue
-
-                # 状態フィルタ（新品・未使用のみ）
-                condition = (row.get("condition") or "").strip()
-
-                # 価格
-                try:
-                    price_raw = float(row.get("price") or 0)
-                except (ValueError, TypeError):
-                    price_raw = 0.0
-
-                currency = (row.get("currency") or "JPY").strip().upper()
-
-                # JPY換算（USD→JPY 仮レート: 155円）
-                if currency == "USD":
-                    price_jpy = int(price_raw * 155)
-                elif currency == "EUR":
-                    price_jpy = int(price_raw * 168)
-                elif currency == "GBP":
-                    price_jpy = int(price_raw * 196)
-                else:
-                    price_jpy = int(price_raw)
-
-                results.append({
-                    "product_name": (row.get("product_alias") or "").strip(),
-                    "market": SOURCE_LABELS.get(source, source.upper()),
-                    "source": source,
-                    "price_jpy": price_jpy,
-                    "currency": currency,
-                    "original_price": price_raw,
-                    "condition": condition,
-                    "sold_or_listing": "sold" if row.get("is_sold", "").lower() in ("true", "1", "yes") else "listing",
-                    "observed_at": (row.get("observed_at") or "").strip(),
-                    "url": (row.get("url") or "").strip(),
-                    "confidence": "manual",
-                    "failure_reason": "",
-                    "price_basis": (row.get("price_basis") or "").strip(),
-                    "data_source": (row.get("data_source") or "manual").strip(),
-                })
-    except Exception as e:
-        print(f"[WARN] manual_market_prices.csv 読み込みエラー: {e}", file=sys.stderr)
-
-    return results
-
-
-def _build_product_index(prices: list[dict]) -> dict[str, list[dict]]:
-    """商品名をキーとした海外価格インデックスを構築する。"""
-    index: dict[str, list[dict]] = {}
-    for p in prices:
-        name = p.get("product_name", "").strip()
-        if not name:
-            continue
-        if name not in index:
-            index[name] = []
-        index[name].append(p)
-    # 各商品の価格を価格降順でソート
-    for name in index:
-        index[name].sort(key=lambda x: x.get("price_jpy", 0), reverse=True)
-    return index
+def setup_logging(verbose: bool) -> None:
+    level = logging.DEBUG if verbose else logging.INFO
+    logging.basicConfig(
+        level=level,
+        format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+        datefmt="%H:%M:%S",
+    )
 
 
 def main() -> int:
-    """メイン処理: 海外価格データを更新・保存する。"""
+    parser = argparse.ArgumentParser(description="海外価格更新スクリプト")
+    parser.add_argument("--skip-ebay", action="store_true", help="eBay収集をスキップ")
+    parser.add_argument("--manual-only", action="store_true", help="手動CSVのみ使用")
+    parser.add_argument("--verbose", action="store_true", help="詳細ログ")
+    args = parser.parse_args()
+
+    setup_logging(args.verbose)
+    logger = logging.getLogger("update_overseas_prices")
+
     now = datetime.now(tz=JST)
-    print(f"[update_overseas_prices] 開始: {now.strftime('%Y-%m-%d %H:%M')} JST")
+    logger.info("[update_overseas_prices] 開始: %s JST", now.strftime("%Y-%m-%d %H:%M"))
 
-    # manual_market_prices.csv から海外価格を読み込む
-    overseas_prices = _load_manual_overseas_prices()
-    print(f"[INFO] manual_market_prices.csv から {len(overseas_prices)} 件の海外価格を読み込みました")
+    # DB接続 + 商品一覧取得
+    try:
+        from src.db.database import Database
+        from src.db.repository import Repository
+        db = Database()
+        db.init_schema()
+        repo = Repository(db)
+        products = repo.list_products()
+        logger.info("商品数: %d", len(products))
+    except Exception as e:
+        logger.error("DB接続失敗: %s", e)
+        return 1
 
-    # 商品別インデックス
-    product_index = _build_product_index(overseas_prices)
+    # FXレート更新
+    try:
+        from src.collectors.overseas.fx_fetcher import get_usd_jpy, get_eur_jpy, update_fx_yaml
+        usd_jpy, usd_src = get_usd_jpy(force_refresh=True)
+        eur_jpy, eur_src = get_eur_jpy(force_refresh=True)
+        logger.info("FX: USD/JPY=%.2f(%s) EUR/JPY=%.2f(%s)", usd_jpy, usd_src, eur_jpy, eur_src)
+        if usd_src == "live":
+            update_fx_yaml({"USD_JPY": round(usd_jpy, 2), "EUR_JPY": round(eur_jpy, 2)})
+            logger.info("fx_rates.yaml 更新完了")
+    except Exception as e:
+        logger.warning("FX取得エラー (静的レート使用): %s", e)
 
-    # 統計
-    markets = {}
-    for p in overseas_prices:
-        m = p.get("market", "unknown")
-        markets[m] = markets.get(m, 0) + 1
+    # オーケストレーター実行
+    try:
+        from src.collectors.overseas.orchestrator import OverseasPriceOrchestrator
+        orch = OverseasPriceOrchestrator(
+            skip_ebay=args.skip_ebay or args.manual_only,
+            use_manual_only=args.manual_only,
+        )
+        best_results, all_results = orch.run_all(products)
+    except Exception as e:
+        logger.error("オーケストレーター実行エラー: %s", e)
+        return 1
 
-    # レポート構築
-    report = {
-        "generated_at": now.strftime("%Y-%m-%d %H:%M JST"),
-        "total_prices": len(overseas_prices),
-        "products_with_overseas": len(product_index),
-        "markets": markets,
-        "note": "現時点では manual_market_prices.csv からの読み込みのみ。将来的にeBay API/StockX API等のリアルタイム取得に拡張予定。",
-        "prices": overseas_prices,
-        "by_product": {
-            name: prices
-            for name, prices in sorted(product_index.items())
-        },
-    }
+    # 統計集計 + JSON保存
+    try:
+        json_path = orch.save_json(best_results, all_results, products)
+    except Exception as e:
+        logger.error("JSON保存エラー: %s", e)
+        return 1
 
-    EXPORT_DIR.mkdir(parents=True, exist_ok=True)
-    json_path = EXPORT_DIR / "latest.json"
-    with open(json_path, "w", encoding="utf-8") as f:
-        json.dump(report, f, ensure_ascii=False, indent=2)
+    # サマリー出力
+    high = sum(1 for r in best_results.values() if r.confidence == "high")
+    medium = sum(1 for r in best_results.values() if r.confidence == "medium")
+    low = sum(1 for r in best_results.values() if r.confidence == "low")
+    stale = sum(1 for r in best_results.values() if r.stale)
 
-    print(f"[INFO] overseas_prices/latest.json 保存完了 "
-          f"(商品数: {len(product_index)}, 価格数: {len(overseas_prices)})")
-    if markets:
-        for m, c in sorted(markets.items(), key=lambda x: -x[1]):
-            print(f"  {m}: {c} 件")
-    else:
-        print("[INFO] 海外価格データなし（manual_market_prices.csv に overseas ソースなし）")
+    logger.info(
+        "overseas_prices/latest.json 保存完了 "
+        "(商品数: %d, high=%d, medium=%d, low=%d, stale=%d)",
+        len(best_results), high, medium, low, stale
+    )
+
+    # 品質警告
+    if high == 0 and medium == 0:
+        logger.warning("WARNING: 有効な海外価格データが0件 (全てlow confidence)")
+    elif stale > len(best_results) // 2:
+        logger.warning("WARNING: 海外価格の50%%以上がstale(48h超)")
 
     return 0
 

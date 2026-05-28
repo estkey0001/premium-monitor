@@ -1784,6 +1784,29 @@ def scan_beginner_deals(category):
         db.close()
 
 
+@cli.command("scan-primary-to-secondary")
+def scan_primary_to_secondary():
+    """一次流通→二次流通 利益案件スキャン (PrimaryToSecondaryScanner)"""
+    db = _get_db()
+    try:
+        db.init_schema()
+        repo = Repository(db)
+        from src.market.primary_to_secondary_scanner import PrimaryToSecondaryScanner
+        scanner = PrimaryToSecondaryScanner(repo)
+        deals = scanner.scan_all()
+        easy = [d for d in deals if d.user_level == "beginner_easy"]
+        watch = [d for d in deals if d.user_level == "beginner_watch"]
+        monitoring = [d for d in deals if d.user_level == "monitoring"]
+        click.echo(f"primary_to_secondary scan: {len(deals)} deals")
+        click.echo(f"  beginner_easy: {len(easy)}")
+        click.echo(f"  beginner_watch: {len(watch)}")
+        click.echo(f"  monitoring: {len(monitoring)}")
+        for d in easy[:5]:
+            click.echo(f"  [EASY] {d.product_name}: net=¥{d.net_profit_jpy:,} rate={d.net_profit_rate:.1%}")
+    finally:
+        db.close()
+
+
 @cli.command("list-beginner-deals")
 @click.option("--min-profit", "-m", default=0, help="最低利益額")
 @click.option("--category", "-c", default=None)

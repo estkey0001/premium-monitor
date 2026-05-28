@@ -1976,6 +1976,16 @@ details[open] > .fetch-failed-summary::before {{ transform: rotate(90deg); }}
 .pro-action-cell {{ text-align: right; white-space: nowrap; }}
 .pro-meta-cell {{ font-size: 0.73rem; color: var(--ink3); white-space: nowrap; }}
 .pro-basis-cell {{ white-space: nowrap; }}
+.pro-method-cell {{ white-space: nowrap; font-size: 0.72rem; }}
+/* collector_method バッジ */
+.collector-method-badge {{
+  display: inline-block; font-size: 0.68rem; font-weight: 600;
+  padding: 2px 7px; border-radius: 99px; white-space: nowrap;
+}}
+.cm-api     {{ background: #d1fae5; color: #065f46; border: 1px solid #6ee7b7; }}
+.cm-manual  {{ background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; }}
+.cm-blocked {{ background: #f3f4f6; color: #4b5563; border: 1px solid #d1d5db; }}
+.cm-unknown {{ background: var(--surface-2); color: var(--ink3); border: 1px solid var(--border-1); }}
 .pro-price-basis {{
   display: inline-block; font-size: 0.72rem; padding: 2px 7px;
   border-radius: 99px; background: #EEF2FF; color: #4338CA;
@@ -5847,6 +5857,25 @@ python3 -m src.cli calculate-sedori-routes</pre>
         mdata = market_prices_by_product or {}
         INITIAL_VISIBLE = 6  # 初期表示件数
 
+        # overseas_prices/latest.json から collector_method を読み込む
+        # {product_id: collector_method} のマッピングを構築
+        _overseas_cm: dict[str, str] = {}
+        try:
+            import json as _json_mod
+            _ovs_latest = (
+                Path(__file__).resolve().parent.parent.parent
+                / "exports" / "overseas_prices" / "latest.json"
+            )
+            if _ovs_latest.exists():
+                _ovs_data = _json_mod.loads(_ovs_latest.read_text(encoding="utf-8"))
+                for _entry in _ovs_data.get("prices", []):
+                    _pid = _entry.get("product_id", "")
+                    _cm  = _entry.get("collector_method", "")
+                    if _pid and _cm:
+                        _overseas_cm[_pid] = _cm
+        except Exception:
+            pass  # 読み込み失敗時はバッジ非表示で続行
+
         # Pass 1: 全カードのデータ計算 → ソートキー付きリストに格納
         card_data = []  # [(sort_key_tuple, card_html_str)]
         for c in candidates:
@@ -6000,12 +6029,25 @@ python3 -m src.cli calculate-sedori-routes</pre>
                     f'<span class="pro-price-basis">{_esc(pbasis)}</span>'
                     if pbasis else '<span class="pro-price-basis pro-price-basis-unknown">—</span>'
                 )
+                # collector_method バッジ（overseas_prices/latest.json から）
+                _cm = _overseas_cm.get(prod_id, "")
+                if _cm == "api":
+                    _cm_badge = '<span class="collector-method-badge cm-api">API取得</span>'
+                elif _cm == "manual":
+                    _cm_badge = '<span class="collector-method-badge cm-manual">eBay 手動確認</span>'
+                elif _cm == "html_blocked":
+                    _cm_badge = '<span class="collector-method-badge cm-blocked">自動取得制限中</span>'
+                elif _cm == "html":
+                    _cm_badge = '<span class="collector-method-badge cm-unknown">HTML取得</span>'
+                else:
+                    _cm_badge = '<span class="collector-method-badge cm-unknown">取得方法未確認</span>'
                 otrows.append(
                     f'<tr class="pro-overseas-row pro-row-has-price">'
                     f'<td class="pro-src-cell"><strong class="pro-src-name">{_esc(slabel)}</strong></td>'
                     f'<td class="pro-price-cell"><strong class="price-value">¥{pprice:,}</strong>'
                     f'<small class="pro-jpy-note">（円換算）</small></td>'
                     f'<td class="pro-basis-cell">{basis_cell}</td>'
+                    f'<td class="pro-method-cell">{_cm_badge}</td>'
                     f'<td class="pro-meta-cell">{freshness}</td>'
                     f'<td class="pro-action-cell"><a href="{_esc(surl)}" target="_blank" rel="noopener noreferrer" '
                     f'class="pro-link-btn" data-track="pro_overseas_click">相場確認</a></td>'
@@ -6028,7 +6070,7 @@ python3 -m src.cli calculate-sedori-routes</pre>
             if otrows:
                 overseas_table_html = (
                     f'<table class="pro-price-table pro-overseas-price-table">'
-                    f'<thead><tr><th>サイト</th><th>参考価格（円換算）</th><th>種別</th><th>確認日</th><th></th></tr></thead>'
+                    f'<thead><tr><th>サイト</th><th>参考価格（円換算）</th><th>種別</th><th>取得方法</th><th>確認日</th><th></th></tr></thead>'
                     f'<tbody>{"".join(otrows)}</tbody>'
                     f'</table>'
                     + ovs_no_html

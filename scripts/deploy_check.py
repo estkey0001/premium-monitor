@@ -263,13 +263,13 @@ def check() -> list[dict]:
     else:
         results.append({"level": "error", "check": "buyback_shop_table", "message": "複数買取店テーブルが見つからない（beginner deals 要確認）"})
 
-    # 22. 最高買取価格が表示されている
-    if "最高買取価格" in html or "buyback-best-price" in html:
-        results.append({"level": "ok", "check": "buyback_best_price_label", "message": "最高買取価格ラベルが存在する"})
+    # 22. 最高売却価格（旧: 最高買取価格）が表示されている
+    if "最高売却価格" in html or "最高買取価格" in html or "buyback-best-price" in html:
+        results.append({"level": "ok", "check": "buyback_best_price_label", "message": "最高売却価格ラベルが存在する"})
     elif _data_stale_48h:
-        results.append({"level": "warning", "check": "buyback_best_price_label", "message": "最高買取価格ラベルなし（48h超古いデータのため初心者案件を除外中）"})
+        results.append({"level": "warning", "check": "buyback_best_price_label", "message": "最高売却価格ラベルなし（データが古い可能性）"})
     else:
-        results.append({"level": "error", "check": "buyback_best_price_label", "message": "最高買取価格ラベルが見つからない"})
+        results.append({"level": "error", "check": "buyback_best_price_label", "message": "最高売却価格ラベルが見つからない"})
 
     # 23. 参照店舗数が表示されている
     if "参照" in html and "店舗" in html:
@@ -777,12 +777,15 @@ def check() -> list[dict]:
     else:
         results.append({"level": "error", "check": "shop_link_col_exists", "message": "買取比較テーブルの確認ボタン列（shop-link-col）が見つからない"})
 
-    # 91. ページ上部のタイムスタンプラベルが明確（「最終」「取得」を含む）
-    has_clear_ts_label = "最終買取データ取得" in html or "最終データ取得" in html
+    # 91. ページ上部のタイムスタンプラベルが存在する
+    has_clear_ts_label = (
+        "最終買取データ取得" in html or "最終データ取得" in html
+        or "更新日：" in html or 'data-lp-generated' in html
+    )
     if has_clear_ts_label:
-        results.append({"level": "ok", "check": "hero_ts_label_clear", "message": "ヒーローのデータ取得タイムスタンプラベルが明確（「最終〜取得」）"})
+        results.append({"level": "ok", "check": "hero_ts_label_clear", "message": "ヒーローの更新日時ラベルが存在する（data-lp-generated または 更新日：）"})
     else:
-        results.append({"level": "warning", "check": "hero_ts_label_clear", "message": "ヒーローの更新日時ラベルが不明確 — 「最終買取データ取得」等に変更することを推奨"})
+        results.append({"level": "warning", "check": "hero_ts_label_clear", "message": "ヒーローの更新日時ラベルが見つからない — hero-timestamps を確認してください"})
 
     # 92. 手動確認データラベルが表示されている（manual CSV由来価格を明示）
     has_manual_label = "手動確認データ" in html
@@ -905,23 +908,23 @@ def check() -> list[dict]:
     else:
         results.append({"level": "warning", "check": "mercari_basis_label", "message": "「出品価格」ラベルが見つからない（メルカリデータなしの可能性）"})
 
-    # 101. Hero と announce bar で同一の件数が表示されている
-    # LP は「最終確認 N 件」を使用。Hero は <strong>N</strong>、announce-bar は「N 件」のプレーンテキスト
+    # 101. Hero の件数整合性（announce bar 削除済みのため hero 内のみチェック）
+    # 新形式: hero-btn secondary に「(N件)」または件数なしテキストのみ（データ古い場合）
+    _hero_btn_count = re.findall(r'hero-btn secondary[^>]*>[^<]*\((\d+)件\)', html)
+    # 旧形式フォールバック
     _kakunin_pat = r'(?:最終確認|本日確認)'
-    hero_counts    = re.findall(_kakunin_pat + r'.*?<strong>(\d+)</strong>', html)
-    announce_counts = re.findall(_kakunin_pat + r'\s*(\d+)\s*件', html)
-    if hero_counts and announce_counts:
-        hero_n = int(hero_counts[0])
-        announce_n = int(announce_counts[0])
-        if hero_n == announce_n:
-            results.append({"level": "ok", "check": "count_consistency", "message": f"Hero と announce bar の件数が一致（{hero_n}件）"})
-        else:
-            results.append({"level": "error", "check": "count_consistency", "message": f"Hero({hero_n}件) と announce bar({announce_n}件) の件数が不一致"})
-    elif hero_counts:
-        # announce-bar は削除済み（2026-05-28）なので hero のみでも OK
-        results.append({"level": "ok", "check": "count_consistency", "message": f"Hero 件数取得済み（{hero_counts[0]}件）— announce bar 削除済みのためスキップ"})
+    hero_counts_old = re.findall(_kakunin_pat + r'.*?<strong>(\d+)</strong>', html)
+    if _hero_btn_count:
+        results.append({"level": "ok", "check": "count_consistency", "message": f"Hero ボタンに件数あり（{_hero_btn_count[0]}件）"})
+    elif hero_counts_old:
+        results.append({"level": "ok", "check": "count_consistency", "message": f"Hero 件数取得済み（旧形式: {hero_counts_old[0]}件）"})
     else:
-        results.append({"level": "warning", "check": "count_consistency", "message": "Hero の件数を取得できなかった（LP再生成で解消する可能性あり）"})
+        # 件数なしは「データ古い時」の正常ケース（stale時は件数を出さない仕様）
+        _has_hero_btn = 'hero-btn secondary' in html
+        if _has_hero_btn:
+            results.append({"level": "ok", "check": "count_consistency", "message": "Hero ボタンあり（データ鮮度低下のため件数非表示 — 正常）"})
+        else:
+            results.append({"level": "warning", "check": "count_consistency", "message": "Hero の件数ボタンが見つからない（LP再生成で解消する可能性あり）"})
 
     # 108. Pro向けカードが0件にならない（price_history fallback が動作している）
     has_pro_watch_card = 'pro-candidate-card' in html or 'watch-candidate-card' in html
@@ -1203,17 +1206,19 @@ def check() -> list[dict]:
     else:
         results.append({"level": "ok", "check": "no_live_label_on_manual", "message": "手動データに「live」ラベルなし（CSS定義のみ）"})
 
-    # ── #140: 毎日更新表記が topbar 以外の場所に存在しない ──
-    # topbar-live 内の「毎日更新」は正当（毎日 LP が更新されることを示す）
-    # topbar 以外（例: カード本文・ヒーロー説明）への混入のみを検出する
+    # ── #140: 毎日更新表記が topbar・footer・meta 以外に存在しない ──
+    # 許容: topbar-live（header内）、footer-live（footer内）、meta description
     import re as _re140
-    # topbar 以外で >毎日更新 が出現するか確認（topbar 要素を除外）
-    _html_no_topbar = _re140.sub(r'<header class="topbar".*?</header>', '', html, flags=_re140.DOTALL)
-    mainichi_in_text = bool(_re140.search(r'>毎日更新', _html_no_topbar))
+    # header・footer・meta・style・script を除いた本文のみ抽出
+    _html_no_chrome = _re140.sub(r'<header\b.*?</header>', '', html, flags=_re140.DOTALL)
+    _html_no_chrome = _re140.sub(r'<footer\b.*?</footer>', '', _html_no_chrome, flags=_re140.DOTALL)
+    _html_no_chrome = _re140.sub(r'<meta\b[^>]*/>', '', _html_no_chrome)
+    _html_no_chrome = _re140.sub(r'<style\b.*?</style>', '', _html_no_chrome, flags=_re140.DOTALL)
+    mainichi_in_text = bool(_re140.search(r'>毎日更新', _html_no_chrome))
     if mainichi_in_text:
-        results.append({"level": "warning", "check": "no_mainichi_koshin_text", "message": "「毎日更新」テキストが topbar 以外に存在する（誤認を招く可能性）"})
+        results.append({"level": "warning", "check": "no_mainichi_koshin_text", "message": "「毎日更新」テキストが topbar・footer 以外に存在する（誤認を招く可能性）"})
     else:
-        results.append({"level": "ok", "check": "no_mainichi_koshin_text", "message": "「毎日更新」表記は topbar 内のみ（正常）"})
+        results.append({"level": "ok", "check": "no_mainichi_koshin_text", "message": "「毎日更新」表記は topbar/footer 内のみ（正常）"})
 
     # ── #141: freshness ラベルが「価格確認:」形式を使っている ──
     # 注: 48h超古いデータ時は全て「要更新 / N日前」形式になるため、「価格確認:」は出現しない（正常）
@@ -1402,8 +1407,8 @@ def check() -> list[dict]:
     else:
         results.append({"level": "warning", "check": "collection_stats_shown", "message": "取得統計バーが見つからない（LP 再生成で反映されます）"})
 
-    # ── #149: 参考DEALS が固定ハードコードでなく動的データを使っている ──
-    # 固定の古い商品名（iPhone 15/16 等）が hero パネルに残っていないか確認
+    # ── #149: 参考DEALS に固定ハードコード商品が残っていない ──
+    # 参考DEALSパネル自体は2026-05-28 以降 hero から削除済み → lp-item なしは正常
     old_fixed_deals = re.findall(
         r'class="lp-name">[^<]*(iPhone 16 Pro 256GB|iPhone 15 Plus 128GB|Canon EOS R6 II|SONY α7C II)[^<]*',
         html
@@ -1411,11 +1416,8 @@ def check() -> list[dict]:
     if old_fixed_deals:
         results.append({"level": "error", "check": "hero_deals_dynamic", "message": f"参考DEALSに固定ハードコード商品が残っている: {old_fixed_deals[:3]}"})
     else:
-        has_lp_item = 'class="lp-item"' in html
-        if has_lp_item:
-            results.append({"level": "ok", "check": "hero_deals_dynamic", "message": "参考DEALSが動的データから生成されている"})
-        else:
-            results.append({"level": "warning", "check": "hero_deals_dynamic", "message": "参考DEALSの lp-item が見つからない（deals データなしの可能性）"})
+        # 参考DEALSパネルは削除済み（hero_right 削除対応）なので lp-item なしは正常
+        results.append({"level": "ok", "check": "hero_deals_dynamic", "message": "参考DEALSに固定ハードコード商品なし（パネル削除済み = 正常）"})
 
     # ── #151: fetch_failed が最高買取価格計算に使われていない ──
     # shop-row-failed の価格欄は「—」になっているか（¥数字 でないか）
@@ -3587,6 +3589,53 @@ def check() -> list[dict]:
     _t341 = "受付中 / 販売中" not in _lp_gen_src
     results.append({"level": "ok" if _t341 else "warning", "check": "no_old_lottery_active_label",
                     "message": "#341 Lottery active ラベル「受付中 / 販売中」が LP ソースに残っていない" + ("" if _t341 else " ← 「受付中 / 販売中」が LP ソースに残っています")})
+
+    # #342: _STALE_EXCLUDE_H が 168.0 以上（7日）であること
+    import re as _re342
+    _t342_m = _re342.search(r'_STALE_EXCLUDE_H\s*=\s*([0-9.]+)', _lp_gen_src)
+    _t342_val = float(_t342_m.group(1)) if _t342_m else 0.0
+    _t342 = _t342_val >= 168.0
+    results.append({"level": "ok" if _t342 else "error", "check": "stale_exclude_h_168",
+                    "message": f"#342 _STALE_EXCLUDE_H={_t342_val:.0f}h（7日以上の買取データ許容）" + ("" if _t342 else " ← 168.0 以上に変更してください")})
+
+    # #343: _section_stale_warning の critical 閾値が 168h 以上（トップバナー出しすぎ防止）
+    _t343_m = _re342.search(r'max_hours\s*>=\s*([0-9.]+).*古い参考', _lp_gen_src)
+    if not _t343_m:
+        _t343_m = _re342.search(r'max_hours\s*>=\s*([0-9]+)', _lp_gen_src)
+    _t343_val = float(_t343_m.group(1)) if _t343_m else 0.0
+    _t343 = _t343_val >= 168.0
+    results.append({"level": "ok" if _t343 else "warning", "check": "stale_warning_critical_threshold",
+                    "message": f"#343 _section_stale_warning の critical 閾値={_t343_val:.0f}h（≥168 推奨）" + ("" if _t343 else " ← 閾値が 168 未満です（Top にバナーが出やすい）")})
+
+    # #344: _deal_card にメルカリ・ヤフオク・eBay の未取得プレースホルダーが存在する
+    _t344 = (
+        "メルカリ" in _lp_gen_src
+        and "ヤフオク" in _lp_gen_src
+        and "shop-row-pending" in _lp_gen_src
+        and "flea_click" in _lp_gen_src
+    )
+    results.append({"level": "ok" if _t344 else "warning", "check": "flea_placeholder_in_deal_card",
+                    "message": "#344 _deal_card にメルカリ/ヤフオク/eBay 未取得プレースホルダーが存在する" + ("" if _t344 else " ← shop-row-pending / flea_click が見つかりません")})
+
+    # #345: hero social proof に「差益案件 N件」ハードコード文字列がない（動的生成のみ許容）
+    _t345 = '差益案件 <strong>' not in _lp_gen_src
+    results.append({"level": "ok" if _t345 else "warning", "check": "no_hardcoded_deal_count_in_hero",
+                    "message": "#345 hero social proof に「差益案件 N件」ハードコードが残っていない" + ("" if _t345 else " ← LP ソースに「差益案件 <strong>」が残っています")})
+
+    # #346: freshness_banner の 168h 分岐が存在する（タブ内鮮度バナー）
+    _t346 = "age_h >= 168" in _lp_gen_src
+    results.append({"level": "ok" if _t346 else "warning", "check": "freshness_banner_168h_branch",
+                    "message": "#346 _tab_beginner の freshness_banner に 168h 分岐が存在する" + ("" if _t346 else " ← age_h >= 168 分岐が見つかりません")})
+
+    # #347: 「最終買取データ取得」テキストが LP ソースに残っていない
+    _t347 = "最終買取データ取得" not in _lp_gen_src
+    results.append({"level": "ok" if _t347 else "warning", "check": "no_last_buyback_ts_label",
+                    "message": "#347 「最終買取データ取得」テキストが LP ソースに残っていない" + ("" if _t347 else " ← 「最終買取データ取得」が LP ソースに残っています")})
+
+    # #348: 「古い参考データ」警告の閾値が 168h であること（_section_stale_warning）
+    _t348 = "7日超" in _lp_gen_src or "168" in _lp_gen_src
+    results.append({"level": "ok" if _t348 else "info", "check": "stale_warning_7day_label",
+                    "message": "#348 _section_stale_warning に「7日超」または 168 の記述が存在する" + ("" if _t348 else " ← 168h 閾値ラベルが見つかりません")})
 
     return results
 

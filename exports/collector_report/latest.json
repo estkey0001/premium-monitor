@@ -1,22 +1,22 @@
 {
-  "generated_at": "2026-05-28T03:49:26+09:00",
+  "generated_at": "2026-05-28T12:49:23+09:00",
   "summary": {
     "total": 55,
-    "ok": 20,
-    "failed": 31,
+    "ok": 24,
+    "failed": 27,
     "skip": 4,
     "low_confidence_count": 0
   },
   "low_confidence_count": 0,
   "by_shop": {
     "mobile_ichiban": {
-      "ok": 0,
-      "failed": 5,
+      "ok": 3,
+      "failed": 2,
       "skip": 0
     },
     "kaitori_shouten": {
-      "ok": 5,
-      "failed": 1,
+      "ok": 6,
+      "failed": 0,
       "skip": 0
     },
     "kaitori_itchome": {
@@ -92,8 +92,8 @@
   },
   "by_product": {
     "iphone17pro256": {
-      "ok": 4,
-      "failed": 4,
+      "ok": 5,
+      "failed": 3,
       "skip": 0
     },
     "iphone17pro512": {
@@ -102,8 +102,8 @@
       "skip": 0
     },
     "iphone17pm256": {
-      "ok": 4,
-      "failed": 4,
+      "ok": 5,
+      "failed": 3,
       "skip": 0
     },
     "iphone17pm512": {
@@ -117,22 +117,21 @@
       "skip": 2
     },
     "ps5_pro": {
-      "ok": 1,
-      "failed": 9,
+      "ok": 3,
+      "failed": 7,
       "skip": 2
     }
   },
   "product_shop_detail": {
     "iphone17pro256": {
       "success_shops": [
+        "mobile_ichiban",
         "kaitori_shouten",
         "kaitori_itchome",
         "iosys",
         "netoff"
       ],
-      "not_listed_shops": [
-        "mobile_ichiban"
-      ],
+      "not_listed_shops": [],
       "failed_shops": [
         "janpara",
         "geo_mobile",
@@ -159,14 +158,13 @@
     },
     "iphone17pm256": {
       "success_shops": [
+        "mobile_ichiban",
         "kaitori_shouten",
         "kaitori_itchome",
         "iosys",
         "netoff"
       ],
-      "not_listed_shops": [
-        "mobile_ichiban"
-      ],
+      "not_listed_shops": [],
       "failed_shops": [
         "janpara",
         "geo_mobile",
@@ -214,15 +212,15 @@
     },
     "ps5_pro": {
       "success_shops": [
-        "iosys"
+        "iosys",
+        "kaitori_shouten",
+        "mobile_ichiban"
       ],
       "not_listed_shops": [
         "geo",
-        "mobile_ichiban",
         "pasoko"
       ],
       "failed_shops": [
-        "kaitori_shouten",
         "janpara",
         "hardoff",
         "dosupara",
@@ -238,38 +236,40 @@
   "product_price_stats": {
     "iphone17pro256": {
       "prices": [
-        181500,
-        181500,
+        180000,
+        180500,
+        180000,
         157000,
         159600
       ],
-      "avg": 169900,
+      "avg": 171420,
       "min": 157000,
-      "max": 181500,
+      "max": 180500,
       "suspicious": false
     },
     "iphone17pro512": {
       "prices": [
         215000,
-        215000,
+        214000,
         187000,
         190050
       ],
-      "avg": 201762,
+      "avg": 201512,
       "min": 187000,
       "max": 215000,
       "suspicious": false
     },
     "iphone17pm256": {
       "prices": [
-        197500,
-        197500,
+        196000,
+        196000,
+        196000,
         172000,
         173250
       ],
-      "avg": 185062,
+      "avg": 186650,
       "min": 172000,
-      "max": 197500,
+      "max": 196000,
       "suspicious": false
     },
     "iphone17pm512": {
@@ -288,20 +288,22 @@
       "prices": [
         50000,
         46000,
-        49800
+        50000
       ],
-      "avg": 48600,
+      "avg": 48667,
       "min": 46000,
       "max": 50000,
       "suspicious": false
     },
     "ps5_pro": {
       "prices": [
-        100000
+        100000,
+        134500,
+        134500
       ],
-      "avg": 100000,
+      "avg": 123000,
       "min": 100000,
-      "max": 100000,
+      "max": 134500,
       "suspicious": false
     }
   },
@@ -399,19 +401,19 @@
     {
       "shop_id": "kaitori_shouten",
       "total": 6,
-      "ok": 5,
-      "failed": 1,
-      "success_rate_pct": 83,
+      "ok": 6,
+      "failed": 0,
+      "success_rate_pct": 100,
       "rate_429_count": 0,
       "blocked_count": 0,
-      "top_reason": "http_503"
+      "top_reason": "—"
     },
     {
       "shop_id": "mobile_ichiban",
       "total": 5,
-      "ok": 0,
-      "failed": 5,
-      "success_rate_pct": 0,
+      "ok": 3,
+      "failed": 2,
+      "success_rate_pct": 60,
       "rate_429_count": 0,
       "blocked_count": 0,
       "top_reason": "product_not_listed"
@@ -469,16 +471,16 @@
   ],
   "failure_reason_ranking": [
     {
-      "reason": "product_not_listed",
-      "count": 8
-    },
-    {
       "reason": "rate_limited_429",
       "count": 6
     },
     {
       "reason": "site_blocked",
       "count": 6
+    },
+    {
+      "reason": "product_not_listed",
+      "count": 5
     },
     {
       "reason": "price_not_found",
@@ -495,15 +497,9 @@
     {
       "reason": "service_unavailable",
       "count": 2
-    },
-    {
-      "reason": "http_503",
-      "count": 1
     }
   ],
-  "priority_fixes": [
-    "ps5_pro: 成功1店舗 (目標2) — あと1店舗必要"
-  ],
+  "priority_fixes": [],
   "shop_priority_top5": [
     "2ndstreet (price_not_found 4件)",
     "bookoff (not_supported 2件)",
@@ -514,20 +510,6 @@
   "fetch_failed": [
     {
       "product_alias": "iphone17pro256",
-      "shop": "mobile_ichiban",
-      "status": "FAILED",
-      "reason": "product_not_listed",
-      "url": "https://www.mobile-ichiban.com/",
-      "final_url": "https://www.mobile-ichiban.com/",
-      "html_length": 951,
-      "http_status": 200,
-      "text_length": 951,
-      "elapsed_seconds": 4.684034771,
-      "error_type": "",
-      "observed_at": "2026-05-28T03:49:26+09:00"
-    },
-    {
-      "product_alias": "iphone17pro256",
       "shop": "janpara",
       "status": "FAILED",
       "reason": "rate_limited_429",
@@ -538,7 +520,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-28T03:49:26+09:00"
+      "observed_at": "2026-05-28T12:49:23+09:00"
     },
     {
       "product_alias": "iphone17pro256",
@@ -552,7 +534,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-28T03:49:26+09:00"
+      "observed_at": "2026-05-28T12:49:23+09:00"
     },
     {
       "product_alias": "iphone17pro256",
@@ -561,12 +543,12 @@
       "reason": "price_not_found",
       "url": "https://www.2ndstreet.jp/sell/",
       "final_url": "https://www.2ndstreet.jp/sell/?keyword=iPhone%2017%20Pro%20256GB",
-      "html_length": 181361,
+      "html_length": 181365,
       "http_status": 200,
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-28T03:49:26+09:00"
+      "observed_at": "2026-05-28T12:49:23+09:00"
     },
     {
       "product_alias": "iphone17pro512",
@@ -575,12 +557,12 @@
       "reason": "product_not_listed",
       "url": "https://www.mobile-ichiban.com/",
       "final_url": "https://www.mobile-ichiban.com/",
-      "html_length": 951,
+      "html_length": 268019,
       "http_status": 200,
-      "text_length": 951,
-      "elapsed_seconds": 4.811010459000016,
+      "text_length": 6662,
+      "elapsed_seconds": 2.9865987719999794,
       "error_type": "",
-      "observed_at": "2026-05-28T03:49:26+09:00"
+      "observed_at": "2026-05-28T12:49:23+09:00"
     },
     {
       "product_alias": "iphone17pro512",
@@ -594,7 +576,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-28T03:49:26+09:00"
+      "observed_at": "2026-05-28T12:49:23+09:00"
     },
     {
       "product_alias": "iphone17pro512",
@@ -608,7 +590,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-28T03:49:26+09:00"
+      "observed_at": "2026-05-28T12:49:23+09:00"
     },
     {
       "product_alias": "iphone17pro512",
@@ -617,26 +599,12 @@
       "reason": "price_not_found",
       "url": "https://www.2ndstreet.jp/sell/",
       "final_url": "https://www.2ndstreet.jp/sell/?keyword=iPhone%2017%20Pro%20512GB",
-      "html_length": 181361,
+      "html_length": 181365,
       "http_status": 200,
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-28T03:49:26+09:00"
-    },
-    {
-      "product_alias": "iphone17pm256",
-      "shop": "mobile_ichiban",
-      "status": "FAILED",
-      "reason": "product_not_listed",
-      "url": "https://www.mobile-ichiban.com/",
-      "final_url": "https://www.mobile-ichiban.com/",
-      "html_length": 951,
-      "http_status": 200,
-      "text_length": 951,
-      "elapsed_seconds": 4.562116493000019,
-      "error_type": "",
-      "observed_at": "2026-05-28T03:49:26+09:00"
+      "observed_at": "2026-05-28T12:49:23+09:00"
     },
     {
       "product_alias": "iphone17pm256",
@@ -650,7 +618,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-28T03:49:26+09:00"
+      "observed_at": "2026-05-28T12:49:23+09:00"
     },
     {
       "product_alias": "iphone17pm256",
@@ -664,7 +632,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-28T03:49:26+09:00"
+      "observed_at": "2026-05-28T12:49:23+09:00"
     },
     {
       "product_alias": "iphone17pm256",
@@ -673,12 +641,12 @@
       "reason": "price_not_found",
       "url": "https://www.2ndstreet.jp/sell/",
       "final_url": "https://www.2ndstreet.jp/sell/?keyword=iPhone%2017%20Pro%20Max%20256GB",
-      "html_length": 181373,
+      "html_length": 181377,
       "http_status": 200,
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-28T03:49:26+09:00"
+      "observed_at": "2026-05-28T12:49:23+09:00"
     },
     {
       "product_alias": "iphone17pm512",
@@ -687,12 +655,12 @@
       "reason": "product_not_listed",
       "url": "https://www.mobile-ichiban.com/",
       "final_url": "https://www.mobile-ichiban.com/",
-      "html_length": 951,
+      "html_length": 268019,
       "http_status": 200,
-      "text_length": 951,
-      "elapsed_seconds": 4.45861579599989,
+      "text_length": 6662,
+      "elapsed_seconds": 3.0023069719999285,
       "error_type": "",
-      "observed_at": "2026-05-28T03:49:26+09:00"
+      "observed_at": "2026-05-28T12:49:23+09:00"
     },
     {
       "product_alias": "iphone17pm512",
@@ -706,7 +674,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-28T03:49:26+09:00"
+      "observed_at": "2026-05-28T12:49:23+09:00"
     },
     {
       "product_alias": "iphone17pm512",
@@ -720,7 +688,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-28T03:49:26+09:00"
+      "observed_at": "2026-05-28T12:49:23+09:00"
     },
     {
       "product_alias": "iphone17pm512",
@@ -729,12 +697,12 @@
       "reason": "price_not_found",
       "url": "https://www.2ndstreet.jp/sell/",
       "final_url": "https://www.2ndstreet.jp/sell/?keyword=iPhone%2017%20Pro%20Max%20512GB",
-      "html_length": 181373,
+      "html_length": 181377,
       "http_status": 200,
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-28T03:49:26+09:00"
+      "observed_at": "2026-05-28T12:49:23+09:00"
     },
     {
       "product_alias": "switch2",
@@ -748,7 +716,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-28T03:49:26+09:00"
+      "observed_at": "2026-05-28T12:49:23+09:00"
     },
     {
       "product_alias": "switch2",
@@ -762,7 +730,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-28T03:49:26+09:00"
+      "observed_at": "2026-05-28T12:49:23+09:00"
     },
     {
       "product_alias": "switch2",
@@ -776,7 +744,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-28T03:49:26+09:00"
+      "observed_at": "2026-05-28T12:49:23+09:00"
     },
     {
       "product_alias": "switch2",
@@ -790,7 +758,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-28T03:49:26+09:00"
+      "observed_at": "2026-05-28T12:49:23+09:00"
     },
     {
       "product_alias": "switch2",
@@ -804,7 +772,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-28T03:49:26+09:00"
+      "observed_at": "2026-05-28T12:49:23+09:00"
     },
     {
       "product_alias": "switch2",
@@ -818,7 +786,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-28T03:49:26+09:00"
+      "observed_at": "2026-05-28T12:49:23+09:00"
     },
     {
       "product_alias": "switch2",
@@ -832,7 +800,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-28T03:49:26+09:00"
+      "observed_at": "2026-05-28T12:49:23+09:00"
     },
     {
       "product_alias": "switch2",
@@ -846,7 +814,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-28T03:49:26+09:00"
+      "observed_at": "2026-05-28T12:49:23+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -855,40 +823,12 @@
       "reason": "product_not_listed",
       "url": "https://www.geo-online.co.jp/store_info/buy/",
       "final_url": "https://www.geo-online.co.jp/store_info/buy/",
-      "html_length": 125105,
+      "html_length": 125106,
       "http_status": 200,
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-28T03:49:26+09:00"
-    },
-    {
-      "product_alias": "ps5_pro",
-      "shop": "kaitori_shouten",
-      "status": "FAILED",
-      "reason": "http_503",
-      "url": "https://www.kaitorishouten-co.jp/keitai",
-      "final_url": "https://www.kaitorishouten-co.jp/kaden",
-      "html_length": 0,
-      "http_status": 503,
-      "text_length": 0,
-      "elapsed_seconds": 0.0,
-      "error_type": "",
-      "observed_at": "2026-05-28T03:49:26+09:00"
-    },
-    {
-      "product_alias": "ps5_pro",
-      "shop": "mobile_ichiban",
-      "status": "FAILED",
-      "reason": "product_not_listed",
-      "url": "https://www.mobile-ichiban.com/",
-      "final_url": "https://www.mobile-ichiban.com/",
-      "html_length": 951,
-      "http_status": 200,
-      "text_length": 951,
-      "elapsed_seconds": 5.041893608000009,
-      "error_type": "",
-      "observed_at": "2026-05-28T03:49:26+09:00"
+      "observed_at": "2026-05-28T12:49:23+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -902,7 +842,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-28T03:49:26+09:00"
+      "observed_at": "2026-05-28T12:49:23+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -916,7 +856,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-28T03:49:26+09:00"
+      "observed_at": "2026-05-28T12:49:23+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -930,7 +870,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-28T03:49:26+09:00"
+      "observed_at": "2026-05-28T12:49:23+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -944,7 +884,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-28T03:49:26+09:00"
+      "observed_at": "2026-05-28T12:49:23+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -958,7 +898,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-28T03:49:26+09:00"
+      "observed_at": "2026-05-28T12:49:23+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -972,7 +912,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-28T03:49:26+09:00"
+      "observed_at": "2026-05-28T12:49:23+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -986,7 +926,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-28T03:49:26+09:00"
+      "observed_at": "2026-05-28T12:49:23+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -1000,9 +940,50 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-28T03:49:26+09:00"
+      "observed_at": "2026-05-28T12:49:23+09:00"
     }
   ],
-  "price_changes": [],
+  "price_changes": [
+    {
+      "product_alias": "iphone17pro256",
+      "shop": "mobile_ichiban",
+      "prev_price": 181500,
+      "new_price": 180000,
+      "change_pct": -0.8,
+      "direction": "down"
+    },
+    {
+      "product_alias": "iphone17pro256",
+      "shop": "kaitori_shouten",
+      "prev_price": 181500,
+      "new_price": 180500,
+      "change_pct": -0.6,
+      "direction": "down"
+    },
+    {
+      "product_alias": "iphone17pm256",
+      "shop": "mobile_ichiban",
+      "prev_price": 197500,
+      "new_price": 196000,
+      "change_pct": -0.8,
+      "direction": "down"
+    },
+    {
+      "product_alias": "iphone17pm256",
+      "shop": "kaitori_shouten",
+      "prev_price": 197500,
+      "new_price": 196000,
+      "change_pct": -0.8,
+      "direction": "down"
+    },
+    {
+      "product_alias": "switch2",
+      "shop": "kaitori_shouten",
+      "prev_price": 49800,
+      "new_price": 50000,
+      "change_pct": 0.4,
+      "direction": "up"
+    }
+  ],
   "suspicious_prices": []
 }

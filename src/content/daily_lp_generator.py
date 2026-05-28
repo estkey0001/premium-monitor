@@ -3800,19 +3800,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         <div class="social-text">{_hero_social_html}</div>
       </div>
       <div class="hero-timestamps">
-        <span class="ts-pill {_esc(stale_cls)}" data-buyback-updated title="DBに記録された最新の買取価格データ取得日時。各カードの価格には個別の取得日時を表示しています。"><span class="ts-dot"></span>最終買取データ取得：{_esc(buyback_str)}</span>
-        <span class="ts-pill" data-lp-generated title="このページを生成した日時"><span class="ts-dot blue"></span>LP生成：{_esc(lp_str)}</span>
-      </div>
-    </div>
-    <div class="hero-right">
-      <div class="hero-live-panel">
-        <div class="live-panel-hd">
-          <a href="#tab-beginner" class="live-panel-title live-panel-link" data-track="hero_live_deals_click">本日の差益案件 &#8594;</a>
-          <div class="live-panel-badge"><span class="live-dot"></span> 毎日更新</div>
-        </div>
-        <div class="live-panel-items">
-          {_hero_live_panel_items}
-        </div>
+        <span class="ts-pill" data-lp-generated title="このページを生成した日時"><span class="ts-dot blue"></span>更新日：{_esc(lp_str)}</span>
       </div>
     </div>
   </div>
@@ -4183,7 +4171,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         _sale_method = str(ev.get("sale_method") or "")
         _is_lottery = "抽選" in _sale_method
         status_label = {
-            "active":   "抽選受付中" if _is_lottery else "受付中 / 販売中",
+            "active":   "抽選受付中" if _is_lottery else "現在販売中",
             "upcoming": "近日開始",
             "closed":   "終了済み",
             "unknown":  "要確認",
@@ -4221,7 +4209,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             )
         else:
             # データなし: メッセージ表示
-            link_btn = '<span class="lottery-no-link">抽選情報未確認。公式商品ページで要確認。</span>'
+            link_btn = '<span class="lottery-no-link" style="font-size:0.75rem;color:var(--ink4);font-style:italic;">公式ページで最新情報をご確認ください。</span>'
 
         # 抽選フォームへの第2CTAボタン
         entry_form_url = str(ev.get("entry_form_url") or "")
@@ -4263,7 +4251,14 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         price_row  = f'<span>&#128176; 公式価格: {_esc(official_price)}</span>'  if official_price and official_price != "None" else ''
         method_row = f'<span>&#127919; 販売方式: {_esc(sale_method)}</span>'     if sale_method and sale_method != "None" else ''
         brand_row  = f'<span>&#127468; {_esc(brand)}</span>'                     if brand else ''
-        note_row   = f'<div class="lottery-note">{_esc(note)}</div>'             if note and note != "None" else ''
+        # 弱表示キーワード: reference/詳細欄でのみ出し、目立たない表示にする
+        _MUTED_NOTE_KEYWORDS = {"抽選情報未確認", "公式商品ページで要確認", "受付中", "販売中"}
+        _note_is_muted = note and any(kw in note for kw in _MUTED_NOTE_KEYWORDS)
+        note_row   = (
+            f'<div class="lottery-note lottery-note-muted" style="font-size:0.72rem;color:var(--ink4);font-style:italic;">{_esc(note)}</div>'
+            if (note and note != "None" and _note_is_muted) else
+            (f'<div class="lottery-note">{_esc(note)}</div>' if note and note != "None" else '')
+        )
         checked_row = (
             f'<span class="lottery-checked-at">&#128204; 最終確認: {_esc(checked_at[:10])}</span>'
             if checked_at and checked_at not in ("", "None") else ''
@@ -4542,9 +4537,6 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 <div class="sc-meta-row">
   <span class="sc-meta-label">&#128203; 算出ルート数</span>
   <span class="sc-meta-val sc-routes-count-badge">{route_count}ルート</span>
-  <span class="sc-meta-sep">|</span>
-  <span class="sc-meta-label">&#128179; 推定コスト</span>
-  <span class="sc-meta-val">{cost_info}</span>
 {_excluded_html}</div>''')
 
         if not routes:
@@ -4618,10 +4610,6 @@ tr.sc-route-review {{ background: #FFFBEB; }}
     <div class="sc-profit-block">
       <div class="sc-profit-lbl">粗利</div>
       <div class="sc-profit-val sc-col-amber">+¥{best_r.gross_profit:,}</div>
-    </div>
-    <div class="sc-profit-block">
-      <div class="sc-profit-lbl">推定コスト</div>
-      <div class="sc-profit-val sc-col-gray">-¥{best_r.estimated_costs:,}</div>
     </div>
     <div class="sc-profit-block sc-profit-main">
       <div class="sc-profit-lbl">実質利益</div>

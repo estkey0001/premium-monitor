@@ -6,6 +6,11 @@ on:
     - cron: '0 3 * * *'
   workflow_dispatch:
 
+# 同一ワークフローの同時実行を防ぐ（後続Runを待機させ、push競合を回避）
+concurrency:
+  group: daily-lp-update
+  cancel-in-progress: false
+
 permissions:
   contents: write
 
@@ -175,6 +180,9 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
+          # 他Runが先にpushしていた場合に備えてrebase（concurrencyで通常不要だが二重安全策）
+          git pull --rebase origin main || true
+
           git add docs/ exports/lp/daily/ exports/collector_report/ exports/lottery_report/ \
                   exports/alerts_report/ exports/ranking_report/ exports/sedori_routes_report/ \
                   exports/overseas_prices/ \
@@ -186,5 +194,5 @@ jobs:
             echo "No changes to commit"
           else
             git commit -m "Daily LP update $(TZ=Asia/Tokyo date +%Y-%m-%d_%H:%M) [auto update]"
-            git push
+            git push origin main
           fi

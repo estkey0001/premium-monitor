@@ -913,8 +913,11 @@ def check() -> list[dict]:
             results.append({"level": "ok", "check": "count_consistency", "message": f"Hero と announce bar の件数が一致（{hero_n}件）"})
         else:
             results.append({"level": "error", "check": "count_consistency", "message": f"Hero({hero_n}件) と announce bar({announce_n}件) の件数が不一致"})
+    elif hero_counts:
+        # announce-bar は削除済み（2026-05-28）なので hero のみでも OK
+        results.append({"level": "ok", "check": "count_consistency", "message": f"Hero 件数取得済み（{hero_counts[0]}件）— announce bar 削除済みのためスキップ"})
     else:
-        results.append({"level": "warning", "check": "count_consistency", "message": "Hero または announce bar の件数を取得できなかった（LP再生成で解消する可能性あり）"})
+        results.append({"level": "warning", "check": "count_consistency", "message": "Hero の件数を取得できなかった（LP再生成で解消する可能性あり）"})
 
     # 108. Pro向けカードが0件にならない（price_history fallback が動作している）
     has_pro_watch_card = 'pro-candidate-card' in html or 'watch-candidate-card' in html
@@ -3262,10 +3265,10 @@ def check() -> list[dict]:
     except Exception as _e284:
         results.append({"level": "warning", "check": "no_estimated_cost", "message": f"#284 チェック失敗: {_e284}"})
 
-    # ── #285: 初心者ページに「一次流通」または「公式価格→二次流通」の説明あり ──
-    _t285 = ('一次流通' in html or '公式価格→二次流通' in html or '差益（公式価格→二次流通）' in html)
+    # ── #285: 初心者ページに「最高売却先」または「公式店定価購入」の説明あり（2026-05-28 仕様変更）──
+    _t285 = ('最高売却先' in html or '公式店定価購入' in html or '最も高く売れる売却先' in html)
     results.append({"level": "ok" if _t285 else "warning", "check": "primary_to_secondary_desc",
-                    "message": "#285 初心者ページに一次流通→二次流通の説明あり" + ("" if _t285 else " ← 説明がない")})
+                    "message": "#285 初心者ページに「公式店定価購入 → 最高売却先」の説明あり" + ("" if _t285 else " ← 説明がない")})
 
     # ── #286: lottery-conflict-warning CSS が存在する ──
     _t286 = 'lottery-conflict-warning' in html
@@ -3439,25 +3442,71 @@ def check() -> list[dict]:
     results.append({"level": "ok" if _t314 else "warning", "check": "no_price_gap_candidates_section",
                     "message": "#314 「価格差・プレ値候補」セクションが生成 HTML に存在しない" + ("" if _t314 else " ← 「価格差・プレ値候補」が HTML に残っています")})
 
-    # #315: deal card ラベルが「買取店最高価格」に更新済み（buyback_price ≠ 二次流通販売価格）
-    _t315 = "買取店最高価格" in _lp_gen_src and "二次流通最高価格" not in _lp_gen_src
+    # #315: deal card ラベルが「最高売却価格」に更新済み（2026-05-28 仕様変更: 買取+二次流通統合）
+    _t315 = "最高売却価格" in _lp_gen_src and "二次流通最高価格" not in _lp_gen_src
     results.append({"level": "ok" if _t315 else "warning", "check": "buyback_price_label_correct",
-                    "message": "#315 deal card 「買取店最高価格」ラベルが正しい（二次流通最高価格 → 買取店最高価格）" + ("" if _t315 else " ← 「二次流通最高価格」ラベルが残っています")})
+                    "message": "#315 deal card 「最高売却価格」ラベルが正しい（買取店最高価格 → 最高売却価格）" + ("" if _t315 else " ← 「最高売却価格」が未実装")})
 
-    # #316: 差益ラベルが「差益（公式価格→買取）」に更新済み
-    _t316 = "差益（公式価格→買取）" in _lp_gen_src and "差益（公式価格→二次流通）" not in _lp_gen_src
+    # #316: 差益ラベルが「差益（定価購入→最高売却）」に更新済み（2026-05-28 仕様変更）
+    _t316 = "差益（定価購入→最高売却）" in _lp_gen_src and "差益（公式価格→二次流通）" not in _lp_gen_src
     results.append({"level": "ok" if _t316 else "warning", "check": "profit_label_correct",
-                    "message": "#316 差益ラベル「差益（公式価格→買取）」が正しい" + ("" if _t316 else " ← 「差益（公式価格→二次流通）」ラベルが残っています")})
+                    "message": "#316 差益ラベル「差益（定価購入→最高売却）」が正しい" + ("" if _t316 else " ← 差益ラベルが旧形式")})
 
-    # #317: 海外価格テーブルに手数料注記がある（eBay約13% / メルカリ10%）
-    _t317 = "eBay販売手数料は約13%" in _lp_gen_src and "メルカリ販売手数料は10%" in _lp_gen_src
+    # #317: 海外価格テーブルに手数料注記がある（メルカリ・eBay等）
+    _t317 = "メルカリ・eBay等は販売手数料" in _lp_gen_src
     results.append({"level": "ok" if _t317 else "warning", "check": "overseas_fee_disclaimer",
-                    "message": "#317 海外価格テーブルに手数料注記あり（eBay13% / メルカリ10%）" + ("" if _t317 else " ← 手数料注記が未追加")})
+                    "message": "#317 海外価格テーブルに手数料注記あり（メルカリ・eBay等）" + ("" if _t317 else " ← 手数料注記が未追加")})
 
     # #318: カメラ除外ロジックが _tab_beginner 呼び出しから除去済み
     _t318 = "カメラも初心者タブに表示する" in _lp_gen_src
     results.append({"level": "ok" if _t318 else "warning", "check": "beginner_camera_exclusion_removed",
                     "message": "#318 _tab_beginner からカメラ除外ロジックが除去済み" + ("" if _t318 else " ← カメラ除外ロジックが残っています")})
+
+    # ── Task 14: 売却先定義・ランキング・せどり 追加チェック (2026-05-28) ────────────
+    # #319: 「最高売却価格」ラベルが初心者 deal card に実装済み
+    _t319 = "最高売却価格" in _lp_gen_src and "買取店最高価格" not in _lp_gen_src
+    results.append({"level": "ok" if _t319 else "warning", "check": "sell_price_label_correct",
+                    "message": "#319 初心者カード「最高売却価格」ラベルが正しい" + ("" if _t319 else " ← 「最高売却価格」未実装または「買取店最高価格」が残存")})
+
+    # #320: 「売却先比較」ラベルが初心者 deal card に実装済み
+    _t320 = "売却先比較" in _lp_gen_src
+    results.append({"level": "ok" if _t320 else "warning", "check": "sell_comparison_label",
+                    "message": "#320 初心者カード「売却先比較」ラベルが実装済み" + ("" if _t320 else " ← 「売却先比較」が未実装")})
+
+    # #321: 差益ラベルが「差益（定価購入→最高売却）」
+    _t321 = "差益（定価購入→最高売却）" in _lp_gen_src
+    results.append({"level": "ok" if _t321 else "warning", "check": "profit_label_sell_price",
+                    "message": "#321 差益ラベル「差益（定価購入→最高売却）」が実装済み" + ("" if _t321 else " ← 差益ラベルが旧形式")})
+
+    # #322: 「買取ランキング」がランキングタイトルに使われていない
+    _t322 = "買取ランキング" not in _lp_gen_src or "差益ランキング" in _lp_gen_src
+    results.append({"level": "ok" if _t322 else "warning", "check": "ranking_title_updated",
+                    "message": "#322 ランキングタイトルが「差益ランキング」に更新済み" + ("" if _t322 else " ← 「買取ランキング」が残っています")})
+
+    # #323: sedori 空状態にCLIコマンドが出ていない
+    _t323 = "import-sale-csv" not in _lp_gen_src
+    results.append({"level": "ok" if _t323 else "warning", "check": "sedori_no_cli_command",
+                    "message": "#323 せどり空状態にCLIコマンドが表示されない" + ("" if _t323 else " ← CLIコマンドがLPソースに残っています")})
+
+    # #324: collector-warn-info バーが LP に出力されない（optional 失敗のみでは非表示）
+    _t324 = "一部店舗はサイト制限により取得不可" not in _lp_gen_src
+    results.append({"level": "ok" if _t324 else "warning", "check": "no_optional_warn_bar",
+                    "message": "#324 optional 失敗のみの場合の warn バーが非表示" + ("" if _t324 else " ← collector-warn-info バーが LP ソースに残っています")})
+
+    # #325: hero-eyebrow から「手動確認データ」が除去済み
+    _t325 = "手動確認データ &mdash;" not in html
+    results.append({"level": "ok" if _t325 else "warning", "check": "no_manual_data_in_eyebrow",
+                    "message": "#325 hero-eyebrow から「手動確認データ」が除去済み" + ("" if _t325 else " ← hero-eyebrow に「手動確認データ」が残っています")})
+
+    # #326: price=0 の場合「価格未取得」表示が monitoring card に実装されている
+    _t326 = "価格未取得" in _lp_gen_src
+    results.append({"level": "ok" if _t326 else "warning", "check": "zero_price_shows_not_found",
+                    "message": "#326 price=0 の場合「価格未取得」表示が実装済み" + ("" if _t326 else " ← monitoring card の price=0 対応が未実装")})
+
+    # #327: info banner が「最高売却先」の説明に更新済み
+    _t327 = "最高売却先" in _lp_gen_src or "最も高く売れる売却先" in _lp_gen_src
+    results.append({"level": "ok" if _t327 else "warning", "check": "beginner_banner_sell_source",
+                    "message": "#327 初心者 info banner が「最高売却先」説明に更新済み" + ("" if _t327 else " ← info banner の売却先説明が古い")})
 
     return results
 

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-28 12:40 JST",
+  "generated_at": "2026-05-28 13:44 JST",
   "total_prices": 4,
   "products_with_overseas": 4,
   "confidence_summary": {
@@ -28,6 +28,7 @@
       "stale": false,
       "failure_reason": "",
       "url": "https://www.ebay.com/sch/i.html?_nkw=FUJIFILM+X100VI&LH_Sold=1&LH_Complete=1",
+      "collector_method": "unknown",
       "product_name": "FUJIFILM X100VI"
     },
     {
@@ -49,6 +50,7 @@
       "stale": false,
       "failure_reason": "",
       "url": "https://www.ebay.com/sch/i.html?_nkw=Ricoh+GR+IIIx&LH_Sold=1&LH_Complete=1",
+      "collector_method": "unknown",
       "product_name": "RICOH GR IIIx"
     },
     {
@@ -70,6 +72,7 @@
       "stale": false,
       "failure_reason": "",
       "url": "https://www.ebay.com/sch/i.html?_nkw=Ricoh+GR+IV&LH_Sold=1&LH_Complete=1",
+      "collector_method": "unknown",
       "product_name": "RICOH GR IV"
     },
     {
@@ -91,6 +94,7 @@
       "stale": false,
       "failure_reason": "",
       "url": "https://www.ebay.com/sch/i.html?_nkw=Nintendo+Switch+2&LH_Sold=1&LH_Complete=1",
+      "collector_method": "unknown",
       "product_name": "Nintendo Switch 2"
     }
   ],
@@ -114,6 +118,7 @@
       "stale": false,
       "failure_reason": "",
       "url": "https://www.ebay.com/sch/i.html?_nkw=FUJIFILM+X100VI&LH_Sold=1&LH_Complete=1",
+      "collector_method": "unknown",
       "product_name": "FUJIFILM X100VI"
     },
     "gr3x": {
@@ -135,6 +140,7 @@
       "stale": false,
       "failure_reason": "",
       "url": "https://www.ebay.com/sch/i.html?_nkw=Ricoh+GR+IIIx&LH_Sold=1&LH_Complete=1",
+      "collector_method": "unknown",
       "product_name": "RICOH GR IIIx"
     },
     "gr4": {
@@ -156,6 +162,7 @@
       "stale": false,
       "failure_reason": "",
       "url": "https://www.ebay.com/sch/i.html?_nkw=Ricoh+GR+IV&LH_Sold=1&LH_Complete=1",
+      "collector_method": "unknown",
       "product_name": "RICOH GR IV"
     },
     "switch2": {
@@ -177,6 +184,7 @@
       "stale": false,
       "failure_reason": "",
       "url": "https://www.ebay.com/sch/i.html?_nkw=Nintendo+Switch+2&LH_Sold=1&LH_Complete=1",
+      "collector_method": "unknown",
       "product_name": "Nintendo Switch 2"
     }
   },
@@ -200,6 +208,7 @@
       "stale": false,
       "failure_reason": "",
       "url": "https://www.ebay.com/sch/i.html?_nkw=FUJIFILM+X100VI&LH_Sold=1&LH_Complete=1",
+      "collector_method": "unknown",
       "product_name": "FUJIFILM X100VI"
     },
     {
@@ -221,6 +230,7 @@
       "stale": false,
       "failure_reason": "",
       "url": "https://www.ebay.com/sch/i.html?_nkw=Ricoh+GR+IIIx&LH_Sold=1&LH_Complete=1",
+      "collector_method": "unknown",
       "product_name": "RICOH GR IIIx"
     },
     {
@@ -242,6 +252,7 @@
       "stale": false,
       "failure_reason": "",
       "url": "https://www.ebay.com/sch/i.html?_nkw=Ricoh+GR+IV&LH_Sold=1&LH_Complete=1",
+      "collector_method": "unknown",
       "product_name": "RICOH GR IV"
     },
     {
@@ -263,6 +274,7 @@
       "stale": false,
       "failure_reason": "",
       "url": "https://www.ebay.com/sch/i.html?_nkw=Nintendo+Switch+2&LH_Sold=1&LH_Complete=1",
+      "collector_method": "unknown",
       "product_name": "Nintendo Switch 2"
     }
   ],
@@ -288,7 +300,8 @@
         "fetched_at": "2026-05-28T10:00:00+09:00",
         "stale": false,
         "failure_reason": "",
-        "url": "https://www.ebay.com/sch/i.html?_nkw=FUJIFILM+X100VI&LH_Sold=1&LH_Complete=1"
+        "url": "https://www.ebay.com/sch/i.html?_nkw=FUJIFILM+X100VI&LH_Sold=1&LH_Complete=1",
+        "collector_method": "unknown"
       }
     ],
     "gr3": [],
@@ -312,7 +325,8 @@
         "fetched_at": "2026-05-28T10:00:00+09:00",
         "stale": false,
         "failure_reason": "",
-        "url": "https://www.ebay.com/sch/i.html?_nkw=Ricoh+GR+IIIx&LH_Sold=1&LH_Complete=1"
+        "url": "https://www.ebay.com/sch/i.html?_nkw=Ricoh+GR+IIIx&LH_Sold=1&LH_Complete=1",
+        "collector_method": "unknown"
       }
     ],
     "gr4": [
@@ -334,7 +348,8 @@
         "fetched_at": "2026-05-28T10:00:00+09:00",
         "stale": false,
         "failure_reason": "",
-        "url": "https://www.ebay.com/sch/i.html?_nkw=Ricoh+GR+IV&LH_Sold=1&LH_Complete=1"
+        "url": "https://www.ebay.com/sch/i.html?_nkw=Ricoh+GR+IV&LH_Sold=1&LH_Complete=1",
+        "collector_method": "unknown"
       }
     ],
     "gr4_hdf": [],
@@ -358,7 +373,8 @@
         "fetched_at": "2026-05-28T10:00:00+09:00",
         "stale": false,
         "failure_reason": "",
-        "url": "https://www.ebay.com/sch/i.html?_nkw=Nintendo+Switch+2&LH_Sold=1&LH_Complete=1"
+        "url": "https://www.ebay.com/sch/i.html?_nkw=Nintendo+Switch+2&LH_Sold=1&LH_Complete=1",
+        "collector_method": "unknown"
       }
     ],
     "switch2_mk": [],

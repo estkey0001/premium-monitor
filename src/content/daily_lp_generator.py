@@ -4798,8 +4798,8 @@ python3 -m src.cli calculate-sedori-routes</pre>
         monitoring_deals   = monitoring_deals   or []
         fetch_failed_deals = fetch_failed_deals or []
 
-        def _get_overseas(deal) -> tuple[int | None, str, str]:
-            """deal の海外価格（price_jpy, source, observed_at）を取得する。"""
+        def _get_overseas(deal) -> tuple[int | None, str, str, str]:
+            """deal の海外価格（price_jpy, source, observed_at, collector_method）を取得する。"""
             pid = getattr(deal, 'product_id', '') or ''
             snap = mprices.get(pid)
             if snap:
@@ -4807,9 +4807,11 @@ python3 -m src.cli calculate-sedori-routes</pre>
                     snap = snap[0] if snap else None
             if snap:
                 if isinstance(snap, dict):
-                    return snap.get('overseas_price_jpy'), snap.get('overseas_source', ''), snap.get('scanned_at', '')
-                return getattr(snap, 'overseas_price_jpy', None), getattr(snap, 'overseas_source', ''), str(getattr(snap, 'scanned_at', ''))
-            return None, '', ''
+                    return (snap.get('overseas_price_jpy'), snap.get('overseas_source', ''),
+                            snap.get('scanned_at', ''), snap.get('overseas_collector_method', ''))
+                return (getattr(snap, 'overseas_price_jpy', None), getattr(snap, 'overseas_source', ''),
+                        str(getattr(snap, 'scanned_at', '')), getattr(snap, 'overseas_collector_method', ''))
+            return None, '', '', ''
         parts = []
 
         # データ鮮度バナー
@@ -4979,10 +4981,10 @@ python3 -m src.cli calculate-sedori-routes</pre>
                     rows = bybp.get(d.product_id, [])
                     badge_cls = 'badge-easy' if getattr(d, 'user_level', '') == 'beginner_easy' else 'badge-watch'
                     label = '低難度' if getattr(d, 'user_level', '') == 'beginner_easy' else '様子見'
-                    _ovs_p, _ovs_s, _ovs_obs = _get_overseas(d)
+                    _ovs_p, _ovs_s, _ovs_obs, _ovs_method = _get_overseas(d)
                     parts.append(self._deal_card(d, badge_cls, label, buyback_rows=rows,
                                                  overseas_price_jpy=_ovs_p, overseas_source=_ovs_s,
-                                                 overseas_observed_at=_ovs_obs))
+                                                 overseas_observed_at=_ovs_obs, overseas_collector_method=_ovs_method))
                 parts.append('</div></div>')
 
             # 監視中 / 赤字
@@ -5349,7 +5351,7 @@ python3 -m src.cli calculate-sedori-routes</pre>
         return '\n'.join(parts)
 
 
-    def _deal_card(self, d, badge_cls: str, label: str, buyback_rows: list = None, genre: str = None, pro_mode: bool = False, overseas_price_jpy: int = None, overseas_source: str = None, overseas_observed_at: str = None) -> str:
+    def _deal_card(self, d, badge_cls: str, label: str, buyback_rows: list = None, genre: str = None, pro_mode: bool = False, overseas_price_jpy: int = None, overseas_source: str = None, overseas_observed_at: str = None, overseas_collector_method: str = None) -> str:
         """案件カード HTML を生成する（v6 Primary/Secondary Arbitrage）。"""
         pid  = _esc(d.product_id)
         shop = _esc(d.best_buyback_shop or '—')
@@ -5507,19 +5509,46 @@ python3 -m src.cli calculate-sedori-routes</pre>
                     except Exception:
                         pass
                 _src_lbl = _esc(_ovs_src) if _ovs_src else 'eBay / StockX'
+                # collector_method に応じてバッジを表示
+                _ovs_method = overseas_collector_method or getattr(d, 'overseas_collector_method', '') or ''
+                if _ovs_method == 'manual':
+                    _method_badge = (
+                        '<span style="font-size:0.65rem;color:#f59e0b;background:#fef3c7;'
+                        'padding:1px 5px;border-radius:3px;margin-left:4px">eBay 手動確認</span>'
+                    )
+                elif _ovs_method == 'html_blocked':
+                    _method_badge = (
+                        '<span style="font-size:0.65rem;color:#6b7280;background:#f3f4f6;'
+                        'padding:1px 5px;border-radius:3px;margin-left:4px">取得制限中</span>'
+                    )
+                elif _ovs_method == 'api':
+                    _method_badge = (
+                        '<span style="font-size:0.65rem;color:#059669;background:#d1fae5;'
+                        'padding:1px 5px;border-radius:3px;margin-left:4px">API</span>'
+                    )
+                else:
+                    _method_badge = ''
                 overseas_price_cell_html = (
                     f'<div class="price-cell"{_stale_cls}>'
                     f'<div class="price-cell-lbl">&#127758; 海外二次流通</div>'
                     f'<div class="price-cell-val" style="color:#7c3aed">¥{_ovs_price:,}</div>'
-                    f'<div style="font-size:0.7rem;color:#9ca3af">{_src_lbl}</div>'
+                    f'<div style="font-size:0.7rem;color:#9ca3af">{_src_lbl}{_method_badge}</div>'
                     f'</div>'
                 )
             else:
-                # 海外価格未取得の場合
+                # 海外価格未取得 / html_blocked の場合
+                _ovs_method2 = overseas_collector_method or getattr(d, 'overseas_collector_method', '') or ''
+                if _ovs_method2 == 'html_blocked':
+                    _blocked_note = (
+                        '<div style="font-size:0.65rem;color:#6b7280">eBay自動取得は制限中。'
+                        '<br>前回確認データを表示</div>'
+                    )
+                else:
+                    _blocked_note = '<div class="price-cell-val" style="color:#9ca3af;font-size:0.8rem">未取得</div>'
                 overseas_price_cell_html = (
                     '<div class="price-cell" style="opacity:0.5">'
                     '<div class="price-cell-lbl">&#127758; 海外二次流通</div>'
-                    '<div class="price-cell-val" style="color:#9ca3af;font-size:0.8rem">未取得</div>'
+                    + _blocked_note +
                     '</div>'
                 )
 

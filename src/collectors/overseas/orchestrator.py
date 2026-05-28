@@ -5,6 +5,7 @@
 """
 from __future__ import annotations
 
+import csv
 import json
 import logging
 import sys
@@ -25,7 +26,16 @@ logger = logging.getLogger(__name__)
 JST = timezone(timedelta(hours=9))
 
 EXPORT_DIR = PROJECT_ROOT / "exports" / "overseas_prices"
+HISTORY_DIR = EXPORT_DIR / "history"
 REPORT_DIR = PROJECT_ROOT / "exports" / "overseas_report"
+HISTORY_CSV = PROJECT_ROOT / "data" / "overseas_price_history.csv"
+
+HISTORY_CSV_COLUMNS = [
+    "product_id", "product_alias", "source", "market",
+    "currency", "price_local", "fx_rate",
+    "price_jpy", "median_price_jpy", "max_price_jpy", "min_price_jpy",
+    "listing_count", "confidence", "collector_method", "observed_at",
+]
 
 # 商品あたりの eBay リクエスト間隔（秒）
 # レートリミット遵守 + eBay への過負荷防止
@@ -242,3 +252,102 @@ class OverseasPriceOrchestrator:
             len(best_results)
         )
         return json_path
+
+    def save_history(self, best_results: dict, products: list) -> None:
+        """海外価格の日次履歴を保存する。
+
+        保存先:
+          exports/overseas_prices/history/YYYY-MM-DD.json  — 当日分の全データ
+          data/overseas_price_history.csv                  — 時系列 CSV (追記)
+        """
+        now = datetime.now(tz=JST)
+        date_str = now.strftime("%Y-%m-%d")
+        prod_map = {p.id: p for p in products}
+
+        # ── JSON 保存 ──────────────────────────────────────────────
+        HISTORY_DIR.mkdir(parents=True, exist_ok=True)
+        json_entries = []
+        for pid, result in best_results.items():
+            prod = prod_map.get(pid)
+            entry = result.to_dict()
+            entry["product_name"] = prod.name if prod else pid.replace("prod_", "")
+            json_entries.append(entry)
+
+        history_json = {
+            "date": date_str,
+            "generated_at": now.isoformat(),
+            "total": len(json_entries),
+            "prices": json_entries,
+        }
+        json_path = HISTORY_DIR / f"{date_str}.json"
+        with open(json_path, "w", encoding="utf-8") as f:
+            json.dump(history_json, f, ensure_ascii=False, indent=2)
+        logger.info("overseas history JSON saved: %s (%d entries)", json_path, len(json_entries))
+
+        # ── CSV 追記 ───────────────────────────────────────────────
+        HISTORY_CSV.parent.mkdir(parents=True, exist_ok=True)
+        write_header = not HISTORY_CSV.exists()
+        with open(HISTORY_CSV, "a", encoding="utf-8", newline="") as f:
+            writer = csv.DictWriter(f, fieldnames=HISTORY_CSV_COLUMNS, extrasaction="ignore")
+            if write_header:
+                writer.writeheader()
+            for pid, result in best_results.items():
+                # confidence=low / stale / html_blocked は除外
+                if result.confidence == "low" or result.stale or result.collector_method == "html_blocked":
+                    continue
+                if result.price_jpy <= 0:
+                    continue
+                row = {
+                    "product_id": result.product_id,
+                    "product_alias": result.product_alias,
+                    "source": result.source,
+                    "market": result.market,
+                    "currency": result.currency,
+                    "price_local": result.price_local,
+                    "fx_rate": result.fx_rate,
+                    "price_jpy": result.price_jpy,
+                    "median_price_jpy": result.median_price_jpy,
+                    "max_price_jpy": result.max_price_jpy,
+                    "min_price_jpy": result.min_price_jpy,
+                    "listing_count": result.listing_count,
+                    "confidence": result.confidence,
+                    "collector_method": result.collector_method,
+                    "observed_at": result.fetched_at,
+                }
+                writer.writerow(row)
+
+        logger.info("overseas history CSV appended: %s", HISTORY_CSV)
+
+    @staticmethod
+    def load_previous_history(exclude_date: str | None = None) -> dict[str, dict]:
+        """最新の履歴 JSON から前回価格を読み込む。
+
+        Args:
+            exclude_date: 除外する日付 (通常は今日の日付 "YYYY-MM-DD")
+
+        Returns:
+            {product_alias: entry_dict} の辞書 (前回取得データ)
+        """
+        if not HISTORY_DIR.exists():
+            return {}
+
+        history_files = sorted(HISTORY_DIR.glob("????-??-??.json"), reverse=True)
+        for hf in history_files:
+            date_part = hf.stem  # "2026-05-27"
+            if exclude_date and date_part == exclude_date:
+                continue
+            try:
+                with open(hf, encoding="utf-8") as f:
+                    data = json.load(f)
+                prev = {}
+                for entry in data.get("prices", []):
+                    alias = entry.get("product_alias", "")
+                    if alias:
+                        prev[alias] = entry
+                logger.debug("overseas history loaded: %s (%d entries)", hf.name, len(prev))
+                return prev
+            except Exception as e:
+                logger.warning("overseas history load failed %s: %s", hf, e)
+                continue
+
+        return {}

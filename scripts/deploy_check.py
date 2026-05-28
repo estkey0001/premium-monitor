@@ -3508,6 +3508,43 @@ def check() -> list[dict]:
     results.append({"level": "ok" if _t327 else "warning", "check": "beginner_banner_sell_source",
                     "message": "#327 初心者 info banner が「最高売却先」説明に更新済み" + ("" if _t327 else " ← info banner の売却先説明が古い")})
 
+    # ── Top / Ranking / Beginner 追加チェック (2026-05-28 Public LP Review) ──────
+    # #328: Topに「一部店舗はサイト制限により取得不可」が生成 HTML に出ていない
+    _t328 = "一部店舗はサイト制限により取得不可" not in html
+    results.append({"level": "ok" if _t328 else "warning", "check": "no_optional_bar_in_html",
+                    "message": "#328 生成 HTML に「一部店舗はサイト制限」バーが出ていない" + ("" if _t328 else " ← optional warn バーが HTML に残っています")})
+
+    # #329: Topに「参考DEALS」が生成 HTML に出ていない
+    _t329 = "参考DEALS" not in html
+    results.append({"level": "ok" if _t329 else "warning", "check": "no_sankoDEALS_in_html",
+                    "message": "#329 生成 HTML に「参考DEALS」が出ていない" + ("" if _t329 else " ← 「参考DEALS」が HTML に残っています")})
+
+    # #330: Topbar に古い最終更新日が出ない（データが >24h 古い場合は非表示）
+    _t330 = "_topbar_date_html" in _lp_gen_src and "_buyback_age_hours" in _lp_gen_src
+    results.append({"level": "ok" if _t330 else "warning", "check": "topbar_date_staleness_guard",
+                    "message": "#330 topbar-date に staleness guard が実装済み（古い日付を非表示）" + ("" if _t330 else " ← topbar-date の staleness guard が未実装")})
+
+    # #331: Rankingに「買取ランキング」が HTML に出ていない
+    _t331 = "買取ランキング" not in html
+    results.append({"level": "ok" if _t331 else "warning", "check": "no_kaitori_ranking_in_html",
+                    "message": "#331 生成 HTML に「買取ランキング」が出ていない（差益ランキングに変更済み）" + ("" if _t331 else " ← 「買取ランキング」が HTML に残っています")})
+
+    # #332: Beginnerに「最高売却価格」が生成 HTML に出ている
+    _t332 = "最高売却価格" in html
+    results.append({"level": "ok" if _t332 else "warning", "check": "sell_price_label_in_html",
+                    "message": "#332 生成 HTML に「最高売却価格」ラベルが出ている" + ("" if _t332 else " ← 「最高売却価格」が HTML に出ていない")})
+
+    # #333: Beginnerに「売却先比較」が生成 HTML に出ている
+    _t333 = "売却先比較" in html
+    results.append({"level": "ok" if _t333 else "warning", "check": "sell_comparison_in_html",
+                    "message": "#333 生成 HTML に「売却先比較」が出ている" + ("" if _t333 else " ← 「売却先比較」が HTML に出ていない")})
+
+    # #334: Topに「手動確認データ」が hero-eyebrow 等に出ていない
+    import re as _re334
+    _t334 = not bool(_re334.search(r'手動確認データ', html))
+    results.append({"level": "ok" if _t334 else "warning", "check": "no_manual_data_label_in_html",
+                    "message": "#334 生成 HTML に「手動確認データ」ラベルが出ていない" + ("" if _t334 else " ← 「手動確認データ」が HTML に残っています")})
+
     return results
 
 

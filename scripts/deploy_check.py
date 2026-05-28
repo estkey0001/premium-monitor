@@ -3353,6 +3353,31 @@ def check() -> list[dict]:
     results.append({"level": "ok" if _t303 else "warning", "check": "lp_blocked_notice",
                     "message": "#303 LP生成器に eBay 取得制限中の案内文が実装されている" + ("" if _t303 else " ← html_blocked 時の案内文が未実装")})
 
+    # #304: Pro海外相場テーブルに「取得方法」列ヘッダーがある
+    _t304 = "取得方法" in _lp_gen_src and "pro-overseas-price-table" in _lp_gen_src
+    results.append({"level": "ok" if _t304 else "warning", "check": "pro_overseas_method_col",
+                    "message": "#304 Pro海外相場テーブルに「取得方法」列が実装されている" + ("" if _t304 else " ← Pro海外テーブルに取得方法列が未実装")})
+
+    # #305: collector_method=manual の場合「eBay 手動確認」が Pro テーブルに表示されるロジック
+    _t305 = "collector-method-badge" in _lp_gen_src and "cm-manual" in _lp_gen_src
+    results.append({"level": "ok" if _t305 else "warning", "check": "pro_overseas_manual_badge",
+                    "message": "#305 collector_method=manual → 「eBay 手動確認」バッジがProテーブルに実装されている" + ("" if _t305 else " ← cm-manual バッジが未実装")})
+
+    # #306: collector_method=api の場合「API取得」ロジックが Proテーブルにある
+    _t306 = "cm-api" in _lp_gen_src and "API取得" in _lp_gen_src
+    results.append({"level": "ok" if _t306 else "warning", "check": "pro_overseas_api_badge",
+                    "message": "#306 collector_method=api → 「API取得」バッジが実装されている" + ("" if _t306 else " ← cm-api バッジが未実装")})
+
+    # #307: collector_method=html_blocked の場合「自動取得制限中」ロジックが Proテーブルにある
+    _t307 = "cm-blocked" in _lp_gen_src and "自動取得制限中" in _lp_gen_src
+    results.append({"level": "ok" if _t307 else "warning", "check": "pro_overseas_blocked_badge",
+                    "message": "#307 collector_method=html_blocked → 「自動取得制限中」バッジが実装されている" + ("" if _t307 else " ← cm-blocked バッジが未実装")})
+
+    # #308: unknown の場合「取得方法未確認」バッジが実装されている
+    _t308 = "cm-unknown" in _lp_gen_src and "取得方法未確認" in _lp_gen_src
+    results.append({"level": "ok" if _t308 else "warning", "check": "pro_overseas_unknown_badge",
+                    "message": "#308 collector_method 未設定 → 「取得方法未確認」バッジが実装されている" + ("" if _t308 else " ← cm-unknown バッジが未実装")})
+
     return results
 
 

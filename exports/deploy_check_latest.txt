@@ -1,6 +1,6 @@
 
 ============================================================
- Deploy Check (295 items)
+ Deploy Check (303 items)
 ============================================================
   ✅ [index_exists] docs/index.html 存在
   ✅ [forbidden_phrases] 禁止表現なし
@@ -185,13 +185,13 @@
   ✅ [ipad_not_in_other] iPad は「その他」欄に混入していない
   ✅ [airpods_not_in_smartphone] AirPods はスマートフォン欄に混入していない
   ✅ [applewatch_in_wearable_section] Apple Watch がウェアラブル欄に表示
-  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-05-28T12:49:23+09:00）
+  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-05-28T13:56:58+09:00）
   ✅ [suspicious_price_format] suspicious_prices 形式OK（suspicious_price なし）
   ✅ [fetch_failed_has_reason] fetch_failed 31件すべてに reason あり
   ✅ [collector_report_html_exists] docs/collector_report.html 存在
   ✅ [collector_report_link_in_lp] LP内に collector_report.html へのリンクがある
   ✅ [fetch_failed_report_link] 取得失敗27件 / suspicious0件 → 警告バーが表示されている
-  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 18件存在する: ['iphone17pro256', 'iphone17pm256', 'iphone17pro512', 'iphone17pm512']
+  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 18件存在する: ['iphone17pm256', 'iphone17pm512', 'iphone17pro512', 'iphone17pro256']
   ✅ [beginner_page_auto_scraped_exists] 自動取得 OK 24件 / total 55件
   ✅ [shop_name_no_vertical_wrap] shop-name-col に word-break:keep-all が設定されている
   ✅ [iphone17pro256_price_scraped] iPhone 17 Pro 256GB の価格取得成功: ['mobile_ichiban', 'kaitori_shouten', 'kaitori_itchome', 'iosys', 'netoff']
@@ -297,8 +297,16 @@
   ✅ [sedori_beginner_routes] #293 sedori_routes_report に beginner_routes フィールドがある
   ✅ [sedori_pro_routes] #294 sedori_routes_report に pro_routes フィールドがある
   ✅ [genre_menu_exists] #295 ジャンルメニュー（genre-toggle-btn または genre-dropdown）が存在する
+  ✅ [ebay_api_primary] #296 eBay Finding API が primary method として実装されている
+  ✅ [ebay_api_key_handling] #297 EBAY_APP_ID 未設定時の html_blocked 分類が実装されている
+  ✅ [ebay_blocked_classified] #298 eBay アクセス拒否が site_blocked として正常分類される
+  ✅ [overseas_history_csv_exists] #299 data/overseas_price_history.csv が存在する
+  ✅ [overseas_alert_logic] #300 update_alerts.py に overseas_price_surge / overseas_price_drop ロジックが存在する
+  ✅ [overseas_alert_low_conf_excluded] #301 confidence=low のデータがアラート除外されている
+  ✅ [lp_manual_fallback_display] #302 LP生成器に collector_method バッジ表示（eBay 手動確認）が実装されている
+  ✅ [lp_blocked_notice] #303 LP生成器に eBay 取得制限中の案内文が実装されている
 
-  Errors: 0 | Warnings: 6 | OK: 289
+  Errors: 0 | Warnings: 6 | OK: 297
 
   ✅ Deploy check PASSED
 ============================================================

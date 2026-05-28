@@ -2136,6 +2136,25 @@ def check() -> list[dict]:
         results.append({"level": "warning", "check": "playwright_install_in_workflow",
                         "message": ".github/workflows/daily_lp.yml が見つからない"})
 
+    # ── #206e: concurrency 設定が daily_lp.yml にある ────────────────────────
+    if _workflow_path.exists() and '_workflow_text' in dir():
+        _t206e1 = "concurrency:" in _workflow_text and "daily-lp-update" in _workflow_text
+        results.append({"level": "ok" if _t206e1 else "warning", "check": "workflow_concurrency_set",
+                        "message": "daily_lp.yml に concurrency: group=daily-lp-update が設定されている"
+                                   + ("" if _t206e1 else " ← 同時実行push競合が発生する可能性あり")})
+        _t206e2 = "cancel-in-progress: false" in _workflow_text
+        results.append({"level": "ok" if _t206e2 else "warning", "check": "workflow_concurrency_no_cancel",
+                        "message": "daily_lp.yml の concurrency が cancel-in-progress: false（後続を待機）"
+                                   + ("" if _t206e2 else " ← cancel-in-progress: false を推奨")})
+        _t206e3 = "git pull --rebase origin main" in _workflow_text
+        results.append({"level": "ok" if _t206e3 else "warning", "check": "workflow_pull_rebase_before_push",
+                        "message": "Commit and push ステップに git pull --rebase origin main がある"
+                                   + ("" if _t206e3 else " ← push競合の二重安全策が未設定")})
+    else:
+        for _ck in ("workflow_concurrency_set", "workflow_concurrency_no_cancel", "workflow_pull_rebase_before_push"):
+            results.append({"level": "warning", "check": _ck,
+                            "message": ".github/workflows/daily_lp.yml が見つからない"})
+
     # ── #206: collector_not_loaded が 0 件 ───────────────────────────────────
     if _collector_report_path.exists() and '_cr' in dir() and _cr:
         _ff206 = _cr.get("fetch_failed", [])

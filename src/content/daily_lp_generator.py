@@ -3708,7 +3708,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         if all_count > 0:
             _hero_btn_label     = f"&#128100; 初心者向け案件を見る ({all_count}件)"
             _hero_social_html   = (
-                f"最終確認 <strong>{all_count}</strong> 件（初心者向け・手動確認）"
+                f"差益案件 <strong>{all_count}</strong> 件"
                 f"— 最高利益参考 <strong>{_esc(max_profit_str)}</strong>"
             )
         elif _all_deals_total > 0:
@@ -3768,7 +3768,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         return f"""<section class="hero">
   <div class="hero-inner">
     <div class="hero-left">
-      <div class="hero-eyebrow"><span class="live-dot"></span> 手動確認データ &mdash; {_esc(date_str)}</div>
+      <div class="hero-eyebrow"><span class="live-dot"></span> {_esc(date_str)} 更新</div>
       <h1 class="hero-title">最新<span class="accent">価格差</span>を<br>すぐに把握。</h1>
       <p class="hero-subtitle">新品・未使用品の公式価格と買取・海外相場を毎日チェック。iPhone・カメラ・ゲーム機の差益を一枚で確認できます。公式サイトで最新価格を必ずご確認ください。</p>
       <div class="hero-cta-row">
@@ -3794,7 +3794,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
       <div class="hero-live-panel">
         <div class="live-panel-hd">
           <a href="#tab-beginner" class="live-panel-title live-panel-link" data-track="hero_live_deals_click">参考DEALS &#8594;</a>
-          <div class="live-panel-badge"><span class="live-dot"></span> 手動確認データ</div>
+          <div class="live-panel-badge"><span class="live-dot"></span> 毎日更新</div>
         </div>
         <div class="live-panel-items">
           {_hero_live_panel_items}
@@ -3876,7 +3876,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
   <div class="cat-nav-inner">
     <div class="cat-genre-bar" role="tablist">
       <button class="cat-genre-btn active" data-genre="smartphone" data-target-tab="beginner" data-target-id="category-beginner-iphone">&#128241; スマホ</button>
-      <button class="cat-genre-btn" data-genre="tablet" data-target-tab="beginner" data-target-id="category-beginner-tablet">&#128187; タブレット</button>
+      <button class="cat-genre-btn" data-genre="tablet" data-target-tab="beginner" data-target-id="category-beginner-tablet">&#9645; タブレット</button>
       <button class="cat-genre-btn" data-genre="pc" data-target-tab="beginner" data-target-id="category-beginner-pc">&#128187; PC / Mac</button>
       <button class="cat-genre-btn" data-genre="camera" data-target-tab="beginner" data-target-id="category-beginner-camera">&#128247; カメラ</button>
       <button class="cat-genre-btn" data-genre="game" data-target-tab="beginner" data-target-id="category-beginner-game">&#127918; ゲーム機</button>
@@ -4534,13 +4534,17 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 {_excluded_html}</div>''')
 
         if not routes:
-            # データなしフォールバック
+            # データなしフォールバック（開発者向けCLIコマンドはLPに出さない）
             parts.append('''<div class="sc-no-data">
   <div class="sc-no-data-icon">&#128202;</div>
-  <div class="sc-no-data-title">現在、利益が出るルートはありません</div>
-  <div class="sc-no-data-desc">以下を実行するとルートが表示されます：</div>
-  <pre class="sc-no-data-cmd">python3 -m src.cli import-sale-csv --file data/manual_sale_prices.csv
-python3 -m src.cli calculate-sedori-routes</pre>
+  <div class="sc-no-data-title">現在、条件を満たすルートはありません</div>
+  <div class="sc-no-data-desc">不足データ：</div>
+  <ul class="sc-no-data-list">
+    <li>国内未使用仕入れ価格</li>
+    <li>海外販売価格</li>
+    <li>売却手数料情報</li>
+  </ul>
+  <div class="sc-no-data-note">価格データが揃い次第、自動でルートを表示します。</div>
 </div>''')
         else:
             from src.models.sale_price import CONDITION_LABELS
@@ -4838,9 +4842,9 @@ python3 -m src.cli calculate-sedori-routes</pre>
 
         # ── Info banner ──
         parts.append('<div class="info-banner blue">\n'
-                     '<div class="ib-title">&#128100; 初心者向け：一次流通仕入れ &rarr; 二次流通販売</div>\n'
+                     '<div class="ib-title">&#128100; 初心者向け：公式店定価購入 &rarr; 最高売却先との差益</div>\n'
                      'Apple Store・任天堂公式・RICOH公式など<strong>公式・正規一次販売店で定価購入した新品・未使用品</strong>を、'
-                     'メルカリ・ラクマ・ヤフオク・eBay・国内買取店などの二次流通市場で売却した場合の差益を比較します。'
+                     '買取店・メルカリ・ラクマ・ヤフオク・eBay・StockXなどの中で<strong>その時点で最も高く売れる売却先</strong>との差益を比較します。'
                      '<strong>対象は新品・未使用・未開封のみ。中古・開封済み・ジャンクは除外しています。</strong>\n'
                      '<strong>掲載価格は更新時点の参考値です。差益は保証されません。購入前に必ず各店舗の最新価格をご確認ください。</strong>\n'
                      '</div>')
@@ -4922,7 +4926,7 @@ python3 -m src.cli calculate-sedori-routes</pre>
         KNOWN_GENRES = {'iphone', 'tablet', 'pc', 'wearable', 'audio', 'game_console', 'camera'}
         GENRE_GROUPS = [
             ('iphone',       '&#128241; iPhone / スマホ',    'category-beginner-iphone'),
-            ('tablet',       '&#128187; タブレット / iPad',   'category-beginner-tablet'),
+            ('tablet',       '&#9645; タブレット / iPad',     'category-beginner-tablet'),
             ('pc',           '&#128187; PC / Mac',            'category-beginner-pc'),
             ('camera',       '&#128247; カメラ',              'category-beginner-camera'),
             ('wearable',     '&#8987; ウェアラブル',           'category-beginner-wearable'),
@@ -5117,7 +5121,7 @@ python3 -m src.cli calculate-sedori-routes</pre>
             if rows_html:
                 compare_html = (
                     '<div class="shop-compare buyback-shop-table" style="margin-top:8px">'
-                    '<div class="shop-table-hd">買取店比較</div>'
+                    '<div class="shop-table-hd">売却先比較</div>'
                     + ''.join(rows_html) + '</div>'
                 )
 
@@ -5133,8 +5137,8 @@ python3 -m src.cli calculate-sedori-routes</pre>
             f'</div></div>'
             f'<div class="monitoring-section">'
             f'<div class="monitoring-label">現在は赤字 / 監視中</div>'
-            f'<div class="monitoring-detail">公式価格: ¥{official:,} → 最高買取: ¥{best_bp:,}</div>'
-            f'<div class="monitoring-diff">差額: {diff_str}（公式→二次流通）</div>'
+            f'<div class="monitoring-detail">公式価格: ¥{official:,} → 最高売却価格: {"¥{:,}".format(best_bp) if best_bp > 0 else "価格未取得"}</div>'
+            f'<div class="monitoring-diff">差額: {diff_str}（公式→売却先）</div>'
             f'<div class="monitoring-note">現在は赤字ですが、価格変動で利益化する可能性があります。</div>'
             f'</div>'
             f'{compare_html}'
@@ -5484,7 +5488,7 @@ python3 -m src.cli calculate-sedori-routes</pre>
             first_freshness = self._freshness_label(_hd_row.get('observed_at', ''), _hd_row.get('data_source', 'manual_today'))
             compare_html = (
                 f'<div class="shop-table buyback-shop-table buyback-table">'
-                f'<div class="shop-table-hd"><span>買取店比較（参照{n_shops}店舗）</span>' + first_freshness + '</div>'
+                f'<div class="shop-table-hd"><span>売却先比較（参照{n_shops}店舗）</span>' + first_freshness + '</div>'
                 + ''.join(rows_html)
                 + '</div>'
             )
@@ -5579,7 +5583,7 @@ python3 -m src.cli calculate-sedori-routes</pre>
         profit_lbl_cls = 'profit-lbl amber' if is_watch else 'profit-lbl'
         profit_num_cls = 'profit-num amber' if is_watch else 'profit-num'
         profit_rate_cls = 'profit-rate amber' if is_watch else 'profit-rate'
-        profit_note_text = '利益率が低め。様子見推奨' if is_watch else '公式価格→買取店売却（参考値）'
+        profit_note_text = '利益率が低め。様子見推奨' if is_watch else '定価購入→最高売却先（参考値）'
         condition_text = _esc(d.buyback_condition or '新品未開封')
         profit_rate_str = _esc(fmt_rate(d.net_profit_rate))
 
@@ -5598,16 +5602,16 @@ python3 -m src.cli calculate-sedori-routes</pre>
             buyback_compare_hd = '参考買取価格（補助情報）'
         else:
             official_price_lbl = '公式価格（定価）'
-            buyback_price_lbl = '買取店最高価格'
+            buyback_price_lbl = '最高売却価格'
             buyback_price_val_cls = 'price-cell-val green'
-            profit_main_lbl = '差益（公式価格→買取）'
+            profit_main_lbl = '差益（定価購入→最高売却）'
             pro_mode_note = ''
-            buyback_compare_hd = '買取店比較'
+            buyback_compare_hd = '売却先比較'
 
         # 買取店テーブルのヘッダーラベルを再構築（Pro向けは「参考」表記）
         if compare_html and pro_mode:
             compare_html = compare_html.replace(
-                '<div class="shop-table-hd"><span>買取店比較',
+                '<div class="shop-table-hd"><span>売却先比較',
                 f'<div class="shop-table-hd"><span>{buyback_compare_hd}',
             )
 
@@ -6040,13 +6044,13 @@ python3 -m src.cli calculate-sedori-routes</pre>
                     f'<tbody>{"".join(otrows)}</tbody>'
                     f'</table>'
                     + ovs_no_html
-                    + f'<p class="pro-overseas-note">※ 送料・関税概算込み。為替変動あり。参考値として活用してください。eBay販売手数料は約13%、メルカリ販売手数料は10%が別途かかります。</p>'
+                    + f'<p class="pro-overseas-note">※ メルカリ・eBay等は販売手数料、送料、為替変動、関税が発生します。表示利益は参考値です。（eBay販売手数料 約13% / メルカリ 10%）</p>'
                 )
             else:
                 overseas_table_html = (
                     f'<div class="pro-no-data-note">海外相場データ未取得</div>'
                     + ovs_no_html
-                    + f'<p class="pro-overseas-note">※ 送料・関税概算込み。為替変動あり。参考値として活用してください。eBay販売手数料は約13%、メルカリ販売手数料は10%が別途かかります。</p>'
+                    + f'<p class="pro-overseas-note">※ メルカリ・eBay等は販売手数料、送料、為替変動、関税が発生します。表示利益は参考値です。（eBay販売手数料 約13% / メルカリ 10%）</p>'
                 )
 
             # ── カード上部：要約ボックス ──
@@ -6367,7 +6371,7 @@ python3 -m src.cli calculate-sedori-routes</pre>
                     f'data-target-tab="{_target_tab}" data-target-id="product-{_esc(_pid_alias)}" style="cursor:pointer">'
                     f'<div class="rank-num {rank_cls}">{crown}</div>'
                     f'<div class="rank-info"><div class="rank-name rank-name-link">{_esc(d.product_name)}</div>'
-                    f'<div class="rank-meta">{_esc(d.best_buyback_shop or "—")}'
+                    f'<div class="rank-meta">{_esc(d.best_buyback_shop or "—")} → 最高売却先'
                     + (f' &nbsp;|&nbsp; {_esc(d.category)}' if show_cat else '')
                     + f'</div></div>'
                     f'<div><div class="rank-profit">{_esc(fmt_profit(d.net_profit_jpy))}</div>'
@@ -6417,7 +6421,7 @@ python3 -m src.cli calculate-sedori-routes</pre>
         else:
             sedori_rows_html = '<div class="empty-state"><span class="empty-icon">&#9636;</span>せどりルートデータなし</div>'
 
-        return f"""<div class="sec-head"><div class="sec-title">&#127942; 買取ランキング</div></div>
+        return f"""<div class="sec-head"><div class="sec-title">&#127942; 差益ランキング</div></div>
 <div class="ranking-card">
   <div class="ranking-tabs">
     <button class="ranking-tab-btn active" data-rtab="all">&#127942; 総合</button>
@@ -6612,13 +6616,10 @@ python3 -m src.cli calculate-sedori-routes</pre>
                 f'</div>\n'
             )
 
-        # リンクのみ: optional店舗の失敗が閾値以上（required は問題なし）
+        # optional店舗のみの失敗 → ユーザー向けLPには表示しない（LP品質に影響なし）
+        # （collector_report.html で確認可能）
         if _optional_failed >= self._COLLECTOR_WARN_THRESHOLD:
-            return (
-                f'<div class="collector-warn-bar collector-warn-info" id="collector-warn-bar">'
-                f'ℹ️ 一部店舗はサイト制限により取得不可（LP品質に影響なし） — {_link}'
-                f'</div>\n'
-            )
+            return ""
 
         # 非表示
         return ""

@@ -3816,65 +3816,13 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 
 
     def _section_stale_warning(self, latest_buyback_at, latest_deals_at, lp_generated_at) -> str:
-        """データ鮮度警告バナーを生成する。
-        - 48h以上: 強警告（古い参考データ）+ 本日の価格データ未更新メッセージ
-        - 24h以上: 警告（要更新）+ 本日の価格データ未更新メッセージ
-        - 日付不一致のみ: 注意（24h未満でもLP生成日とデータ日が異なる場合）
-        - 24h未満かつ日付一致: 非表示（ブロックはコメント用に常時出力）
+        """トップレベルの鮮度警告バナー。
+        各タブ内の freshness_banner に委譲するため、常に非表示ブロックのみ返す。
+        「本日の価格データ未更新」「最終データ: YYYY-MM-DD」などはトップに表示しない。
+        deploy-check 互換用の hidden ブロックのみ出力。
         """
-        hours_buyback = _hours_ago(latest_buyback_at)
-        hours_deals   = _hours_ago(latest_deals_at)
-        max_hours = max(hours_buyback, hours_deals)
-
-        # LP生成日と価格データ日の不一致チェック
-        _lp_date = None
-        _bp_date = None
-        if lp_generated_at:
-            _lpdt = lp_generated_at if lp_generated_at.tzinfo else lp_generated_at.replace(tzinfo=JST)
-            _lp_date = _lpdt.astimezone(JST).date()
-        if latest_buyback_at:
-            _bpdt = latest_buyback_at if latest_buyback_at.tzinfo else latest_buyback_at.replace(tzinfo=JST)
-            _bp_date = _bpdt.astimezone(JST).date()
-        date_mismatch_msg = ""
-        if _lp_date and _bp_date and _lp_date != _bp_date:
-            date_mismatch_msg = (
-                f' &#128680; <strong>本日の価格データ未更新</strong>'
-                f'（LP生成日: {_lp_date} / 最終データ: {_bp_date}）'
-            )
-
-        _banner_style = "border-radius:8px;padding:10px 14px;margin:8px 0;font-size:0.85rem;"
-        if max_hours >= 168:
-            # 強警告: 赤バナー（7日超 = 表示限界を超えた古さ）
-            detail = f"最終確認から{max_hours:.0f}時間経過（7日超）。"
-            return (
-                f'<div class="data-stale-critical" data-stale-critical style="{_banner_style}">'
-                f'&#10060; <strong>データが古すぎます：</strong>{_esc(detail)}{date_mismatch_msg} '
-                f'最新価格はリンク先でご確認ください。'
-                f'</div>'
-                f'<div class="stale-warning-block" style="display:none"></div>'
-            )
-        elif max_hours >= 48:
-            # 警告: 黄バナー（2日超）
-            detail = f"最終確認から{max_hours:.0f}時間経過。"
-            return (
-                f'<div class="data-stale-warn" data-stale-warn style="{_banner_style}">'
-                f'&#9888; <strong>参考データ表示中：</strong>{_esc(detail)}{date_mismatch_msg} '
-                f'価格は参考値です。公式サイトで最新価格をご確認ください。'
-                f'</div>'
-                f'<div class="stale-warning-block" style="display:none"></div>'
-            )
-        elif date_mismatch_msg:
-            # 24h未満でもLP生成日とデータ日が異なる場合（GitHub Actions 実行時に CSV が更新されていない）
-            return (
-                f'<div class="data-stale-warn" data-stale-warn style="{_banner_style}">'
-                f'&#9888;{date_mismatch_msg} '
-                f'公式サイトで最新価格をご確認ください。'
-                f'</div>'
-                f'<div class="stale-warning-block" style="display:none"></div>'
-            )
-        else:
-            # 新鮮かつ日付一致: 非表示ブロックのみ（deploy-check 互換用）
-            return '<div class="stale-warning-block" style="display:none"></div>'
+        # deploy-check 互換: stale-warning-block は常に存在する（display:none）
+        return '<div class="stale-warning-block" style="display:none"></div>'
 
     def _section_category_nav(self, lottery_count: int = 0) -> str:
         """カテゴリナビセクション（ジャンルタブ＋メーカーチップ）"""
@@ -4892,11 +4840,26 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         _easy_filtered  = [d for d in easy_deals  if _bybp_age_h(d) < _STALE_EXCLUDE_H]
         _watch_filtered = [d for d in watch_deals if _bybp_age_h(d) < _STALE_EXCLUDE_H]
 
+        # 中古条件チェック: 新品/未使用/未開封以外の条件は初心者メイン表示から除外
+        # 中古A / 美品 / 良品 / used / B品 / C品 / ジャンク / 開封済 などはNG
+        _USED_COND_KEYWORDS = ('中古', '美品', '良品', 'used', 'b品', 'c品', 'ジャンク', '開封済')
+        def _is_used_cond(deal):
+            cond = (getattr(deal, 'buyback_condition', '') or '').lower()
+            return any(kw in cond for kw in _USED_COND_KEYWORDS)
+
+        _easy_main   = [d for d in _easy_filtered  if not _is_used_cond(d)]
+        _watch_main  = [d for d in _watch_filtered if not _is_used_cond(d)]
+        # 中古条件案件は「参考データ」fold に回す（価格根拠を要確認）
+        _used_cond_deals = (
+            [d for d in _easy_filtered  if _is_used_cond(d)] +
+            [d for d in _watch_filtered if _is_used_cond(d)]
+        )
+
         # product_id で重複除去（同じ商品が複数レベルで来る場合の対策）
         # 利益降順でソートして重複除去
         _all_combined = (
-            list(_easy_filtered) +
-            list(_watch_filtered) +
+            list(_easy_main) +
+            list(_watch_main) +
             list(monitoring_deals) +
             list(fetch_failed_deals)
         )
@@ -5021,6 +4984,32 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                     '<p><a href="collector_report.html">取得状況の詳細はこちら</a></p>'
                     '</div>'
                 )
+
+            # 中古条件案件（参考データ fold）: このジャンルの中古条件案件を折りたたみで表示
+            if genre_key == 'other':
+                _used_genre = [d for d in _used_cond_deals if getattr(d, 'category', '') not in KNOWN_GENRES]
+            else:
+                _used_genre = [d for d in _used_cond_deals if getattr(d, 'category', '') == genre_key]
+            if _used_genre:
+                parts.append(
+                    f'<details class="status-subsection used-cond-details" style="margin-top:16px">'
+                    f'<summary class="status-subhead" style="cursor:pointer;color:var(--ink3);font-size:0.82rem;">'
+                    f'&#128218; 参考データ（中古・開封済み条件） '
+                    f'<span class="ff-count-badge">{len(_used_genre)}件</span>'
+                    f'<span class="ff-expand-hint">（クリックで展開）</span>'
+                    f'</summary>'
+                    f'<div style="font-size:0.78rem;color:var(--ink3);padding:6px 12px 2px;">&#9888; 以下は中古・開封済みなど新品以外の買取条件が付いた参考データです。初心者向け利益計算には含まれていません。</div>'
+                    f'<div class="cards-grid">'
+                )
+                for d in _used_genre:
+                    rows = bybp.get(d.product_id, [])
+                    badge_cls = 'badge-easy' if getattr(d, 'user_level', '') == 'beginner_easy' else 'badge-watch'
+                    label = '低難度（参考）' if getattr(d, 'user_level', '') == 'beginner_easy' else '様子見（参考）'
+                    _ovs_p, _ovs_s, _ovs_obs, _ovs_method = _get_overseas(d)
+                    parts.append(self._deal_card(d, badge_cls, label, buyback_rows=rows,
+                                                 overseas_price_jpy=_ovs_p, overseas_source=_ovs_s,
+                                                 overseas_observed_at=_ovs_obs, overseas_collector_method=_ovs_method))
+                parts.append('</div></details>')
 
             # ゲーム機への注釈
             if genre_key == 'game_console':
@@ -5736,6 +5725,38 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 f'<div class="shop-table-hd"><span>{buyback_compare_hd}',
             )
 
+        # 修正3: 価格根拠メタデータ行（最高売却先・状態・データ種別・最終確認日）
+        _src_label = '—'
+        _src_date  = '—'
+        if _ts_rows:
+            _ds = _ts_rows[0].get('data_source', '')
+            if str(_ds) == 'auto_scraped':
+                _src_label = '買取店（自動取得）'
+            elif str(_ds).startswith('manual'):
+                _src_label = '手動確認'
+            elif str(_ds) == 'live':
+                _src_label = 'リアルタイム'
+            else:
+                _src_label = _esc(str(_ds)) if _ds else '—'
+            _obs_raw = _ts_rows[0].get('observed_at', '')
+            if _obs_raw:
+                try:
+                    _obs_dt = datetime.fromisoformat(str(_obs_raw))
+                    if _obs_dt.tzinfo is None:
+                        _obs_dt = _obs_dt.replace(tzinfo=JST)
+                    _src_date = _obs_dt.astimezone(JST).strftime('%Y-%m-%d')
+                except Exception:
+                    _src_date = _esc(str(_obs_raw)[:10])
+        price_source_row_html = (
+            f'<div class="price-source-row" style="display:flex;gap:16px;flex-wrap:wrap;'
+            f'font-size:0.75rem;color:var(--ink3);padding:4px 0 2px;margin-top:2px;">'
+            f'<span>&#127978; 最高売却先：<strong>{_esc(d.best_buyback_shop or "—")}</strong></span>'
+            f'<span>&#9989; 状態：<strong>{condition_text}</strong></span>'
+            f'<span>&#128203; 取得方法：{_src_label}</span>'
+            f'<span>&#128197; 最終確認：{_src_date}</span>'
+            f'</div>'
+        ) if not pro_mode else ''
+
         return f"""<div class="deal-card stripe-{stripe_cls}"{card_id_attr}{brand_attr} data-user-level="{_esc(d.user_level)}">
   <div class="card-stripe {stripe_cls}"></div>
   <div class="card-hd">
@@ -5767,6 +5788,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
     </div>
     {overseas_price_cell_html}
   </div>
+  {price_source_row_html}
   <div class="card-body">
     <div class="condition-row buyback-notice">
       <span class="cond-icon">&#9888;</span>

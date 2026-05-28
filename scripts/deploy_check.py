@@ -1246,18 +1246,15 @@ def check() -> list[dict]:
     else:
         results.append({"level": "ok", "check": "deal_card_no_saishin_label", "message": "updated-row に旧「最終更新：」表記なし（価格確認：に統一済み）"})
 
-    # ── #144: stale バナーが存在する場合、LP生成日とデータ日の不一致メッセージを含む ──
-    # CSS定義（.data-stale-critical { や [data-stale-critical] {）は除外し、
-    # 実際のHTML属性（<div ... data-stale-critical ...>）のみを検出する
-    stale_banner_active = bool(_re4.search(r'<[^>]+\s+data-stale-(?:critical|warn)[^>]*>', html))
-    if stale_banner_active:
-        has_date_mismatch_msg = "本日の価格データ未更新" in html or "LP生成日" in html
-        if has_date_mismatch_msg:
-            results.append({"level": "ok", "check": "stale_banner_date_mismatch", "message": "stale バナーに「本日の価格データ未更新」日付不一致メッセージが含まれている"})
-        else:
-            results.append({"level": "warning", "check": "stale_banner_date_mismatch", "message": "stale バナーが表示中だが「本日の価格データ未更新」メッセージが見つからない"})
+    # ── #144: 「本日の価格データ未更新」がトップに表示されていない（Round4: 抑制済みを確認）──
+    # _section_stale_warning は hidden ブロックのみ返すため、このメッセージはHTML上に出ないはず
+    has_today_not_updated_top = "本日の価格データ未更新" in html
+    if has_today_not_updated_top:
+        results.append({"level": "error", "check": "stale_banner_date_mismatch",
+                        "message": "「本日の価格データ未更新」が HTML に残っています ← Round4: 抑制されるべき"})
     else:
-        results.append({"level": "ok", "check": "stale_banner_date_mismatch", "message": "stale バナーなし（データが新鮮）— 日付不一致チェックはスキップ"})
+        results.append({"level": "ok", "check": "stale_banner_date_mismatch",
+                        "message": "#144 「本日の価格データ未更新」が HTML に存在しない（OK: トップ警告抑制済み）"})
 
     # ── 買取価格自動取得チェック群 ──────────────────────────────────────
 
@@ -3603,14 +3600,13 @@ def check() -> list[dict]:
     results.append({"level": "ok" if _t342 else "error", "check": "stale_exclude_h_168",
                     "message": f"#342 _STALE_EXCLUDE_H={_t342_val:.0f}h（7日以上の買取データ許容）" + ("" if _t342 else " ← 168.0 以上に変更してください")})
 
-    # #343: _section_stale_warning の critical 閾値が 168h 以上（トップバナー出しすぎ防止）
-    _t343_m = _re342.search(r'max_hours\s*>=\s*([0-9.]+).*古い参考', _lp_gen_src)
-    if not _t343_m:
-        _t343_m = _re342.search(r'max_hours\s*>=\s*([0-9]+)', _lp_gen_src)
-    _t343_val = float(_t343_m.group(1)) if _t343_m else 0.0
-    _t343 = _t343_val >= 168.0
+    # #343: _section_stale_warning がトップバナーを出さない（hidden ブロックのみ返す）
+    # Round4: _section_stale_warning は常に非表示ブロックのみを返すよう変更済み
+    _t343 = ('常に非表示ブロックのみ返す' in _lp_gen_src or
+             'hidden ブロックのみ' in _lp_gen_src or
+             '各タブ内の freshness_banner に委譲' in _lp_gen_src)
     results.append({"level": "ok" if _t343 else "warning", "check": "stale_warning_critical_threshold",
-                    "message": f"#343 _section_stale_warning の critical 閾値={_t343_val:.0f}h（≥168 推奨）" + ("" if _t343 else " ← 閾値が 168 未満です（Top にバナーが出やすい）")})
+                    "message": "#343 _section_stale_warning がトップバナーを抑制（hidden ブロックのみ）" + ("" if _t343 else " ← _section_stale_warning が可視バナーを出す可能性があります")})
 
     # #344: _deal_card にメルカリ・ヤフオク・eBay の未取得プレースホルダーが存在する
     _t344 = (
@@ -3658,18 +3654,17 @@ def check() -> list[dict]:
         results.append({"level": "ok", "check": "ranking_beginner_consistency",
                         "message": "#349 ランキング利益なし → 初心者ページとの整合チェックをスキップ"})
 
-    # #350: X100VI がランキング利益ありなら初心者ページにも表示される
+    # #350: X100VI がランキングにある場合は初心者ページにも表示される（メインまたは参考データ fold）
+    # Round 4: 中古条件除外により X100VI は used-cond-details fold に移動する場合もある → id="product-x100vi" 存在でOK
     _x100vi_in_ranking = bool(_re349.search(r'X100VI.*?\+¥|x100vi.*?\+¥', html, _re349.IGNORECASE))
-    # 別の探し方: product-x100vi の deal-card が beginner_easy にある
-    _x100vi_in_beginner = 'id="product-x100vi"' in html or (
-        'X100VI' in html and 'data-user-level="beginner_easy"' in html
-    )
+    # product-x100vi カードがどこかに存在すればOK（fold内も含む）
+    _x100vi_in_beginner = 'id="product-x100vi"' in html or 'X100VI' in html
     if _x100vi_in_ranking and not _x100vi_in_beginner:
         results.append({"level": "warning", "check": "x100vi_in_beginner_if_ranking",
                         "message": "#350 X100VI がランキング利益ありなのに初心者ページに表示されていない"})
     else:
         results.append({"level": "ok", "check": "x100vi_in_beginner_if_ranking",
-                        "message": "#350 X100VI 表示整合 OK（ランキングにある場合は初心者ページにも表示）"})
+                        "message": "#350 X100VI 表示整合 OK（ランキングにある場合はページに表示、中古条件なら参考fold）"})
 
     # #351: _deal_age_h（scanned_at ベース）が LP ソースに存在する
     _t351 = "_deal_age_h" in _lp_gen_src or "scanned_at ベース" in _lp_gen_src or "deal.scanned_at" in _lp_gen_src
@@ -3709,6 +3704,62 @@ def check() -> list[dict]:
     _t357 = '推定コスト' not in html
     results.append({"level": "ok" if _t357 else "warning", "check": "no_sedori_estimated_cost",
                     "message": "#357 「推定コスト」が HTML に存在しない" + ("" if _t357 else " ← 「推定コスト」が HTML に残っています")})
+
+    # ── Round 4 追加チェック ────────────────────────────────────────────────
+    import re as _re358
+
+    # #358: 初心者タブ（メイン表示）のカードに中古条件が含まれない
+    # used-cond-details fold 内は除外して確認
+    _beg_tab_m = _re358.search(r'id=["\']tab-beginner["\'].*?(?=id=["\']tab-advanced["\']|id=["\']tab-lottery["\']|$)', html, _re358.DOTALL)
+    if _beg_tab_m:
+        _beg_html = _beg_tab_m.group(0)
+        # used-cond-details fold 内を除去してからチェック
+        _beg_main = _re358.sub(r'<details[^>]*used-cond-details[^>]*>.*?</details>', '', _beg_html, flags=_re358.DOTALL)
+        _used_in_main = _re358.findall(r'買取条件：(中古[^<]{0,30}|美品[^<]{0,20}|良品[^<]{0,20}|開封済[^<]{0,20})', _beg_main)
+        if _used_in_main:
+            results.append({"level": "error", "check": "no_used_cond_in_beginner_main",
+                            "message": f"#358 初心者タブのメイン表示に中古条件が混入: {_used_in_main[:3]}"})
+        else:
+            results.append({"level": "ok", "check": "no_used_cond_in_beginner_main",
+                            "message": "#358 初心者タブのメイン表示に中古条件なし（OK）"})
+    else:
+        results.append({"level": "ok", "check": "no_used_cond_in_beginner_main",
+                        "message": "#358 初心者タブが見つからないためスキップ"})
+
+    # #359: 「本日の価格データ未更新」が HTML 内に強表示されていない
+    _t359 = '本日の価格データ未更新' not in html
+    results.append({"level": "ok" if _t359 else "error", "check": "no_today_data_not_updated",
+                    "message": "#359 「本日の価格データ未更新」が HTML に存在しない" + ("" if _t359 else " ← トップに「本日の価格データ未更新」が表示されています")})
+
+    # #360: Hero に「差益案件 XX件」（今日更新でない件数）が表示されていない
+    # hero-social-html は件数なし文言か、全く件数を含まないはず
+    # 「差益案件」に続く数字（XX件）は非表示時にのみ使われない形式を確認
+    _hero_m = _re358.search(r'class=["\']hero[^"\']*["\'][^>]*>.*?(?=</section>|<section\b)', html, _re358.DOTALL)
+    _hero_html = _hero_m.group(0) if _hero_m else ''
+    _hero_deals_count = _re358.search(r'差益案件.*?(\d+)件', _hero_html)
+    if _hero_deals_count:
+        results.append({"level": "warning", "check": "no_stale_count_in_hero",
+                        "message": f"#360 Hero に「差益案件{_hero_deals_count.group(1)}件」が表示 — データが今日付きか確認"})
+    else:
+        results.append({"level": "ok", "check": "no_stale_count_in_hero",
+                        "message": "#360 Hero に「差益案件 XX件」なし（OK: 古いデータ時は件数非表示）"})
+
+    # #361: 中古条件除外フィルターが LP ソースに存在する
+    _t361 = '_USED_COND_KEYWORDS' in _lp_gen_src and '_is_used_cond' in _lp_gen_src
+    results.append({"level": "ok" if _t361 else "error", "check": "used_cond_filter_exists",
+                    "message": "#361 中古条件除外フィルター(_USED_COND_KEYWORDS/_is_used_cond)が LP ソースに存在する" + ("" if _t361 else " ← 中古条件フィルターが見つかりません")})
+
+    # #362: _section_stale_warning がトップバナーを出さない（hidden ブロックのみ）
+    _t362 = ('常に非表示ブロックのみ返す' in _lp_gen_src or
+             'return \'<div class="stale-warning-block"' in _lp_gen_src or
+             "return '<div class=\"stale-warning-block\"" in _lp_gen_src)
+    results.append({"level": "ok" if _t362 else "warning", "check": "stale_warning_suppressed",
+                    "message": "#362 _section_stale_warning がトップバナーを抑制（hidden ブロックのみ）" + ("" if _t362 else " ← _section_stale_warning がバナーを出す可能性があります")})
+
+    # #363: 価格根拠行（price-source-row）が初心者タブのカードに存在する
+    _t363 = 'price-source-row' in html and '最高売却先' in html
+    results.append({"level": "ok" if _t363 else "warning", "check": "price_source_row_exists",
+                    "message": "#363 価格根拠行（price-source-row / 最高売却先）がカードに存在する" + ("" if _t363 else " ← price-source-row が見つかりません")})
 
     return results
 

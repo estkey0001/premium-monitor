@@ -148,18 +148,22 @@ def check() -> list[dict]:
     else:
         results.append({"level": "warning", "check": "robots", "message": "robots.txt なし"})
 
-    # 11. 買取価格更新日時の表示（ラベル名変更に対応: 旧「買取価格更新：」→新「最終買取データ取得：」）
-    has_buyback_ts = "最終買取データ取得：" in html or "最終データ取得:" in html or "買取価格更新：" in html
+    # 11. 更新日時の表示（2026-05-29 仕様変更: 買取データ日時は古い場合非表示のため「更新日：」に統合）
+    # 旧ラベル「最終買取データ取得：」「LP生成：」も後方互換として許容
+    has_buyback_ts = (
+        "最終買取データ取得：" in html or "最終データ取得:" in html or "買取価格更新：" in html
+        or "更新日：" in html  # 2026-05-29 新形式
+    )
     if has_buyback_ts:
-        results.append({"level": "ok", "check": "buyback_updated_ts", "message": "買取価格更新日時が表示されている"})
+        results.append({"level": "ok", "check": "buyback_updated_ts", "message": "更新日時が表示されている（topbar または hero-timestamps）"})
     else:
-        results.append({"level": "error", "check": "buyback_updated_ts", "message": "買取価格更新日時が見つからない（data-buyback-updated が未出力）"})
+        results.append({"level": "warning", "check": "buyback_updated_ts", "message": "更新日時が見つからない（staleness guard でstaleの場合は非表示が正常）"})
 
-    # 12. LP生成日時の表示
-    if "LP生成：" in html:
+    # 12. LP生成日時の表示（「LP生成：」または「更新日：」を許容）
+    if "LP生成：" in html or "更新日：" in html:
         results.append({"level": "ok", "check": "lp_generated_ts", "message": "LP生成日時が表示されている"})
     else:
-        results.append({"level": "error", "check": "lp_generated_ts", "message": "LP生成日時が見つからない"})
+        results.append({"level": "warning", "check": "lp_generated_ts", "message": "LP生成日時が見つからない（hero-timestamps 要確認）"})
 
     # 13. 初級者向けタブの存在
     if 'id="tab-beginner"' in html:
@@ -3544,6 +3548,45 @@ def check() -> list[dict]:
     _t334 = not bool(_re334.search(r'手動確認データ', html))
     results.append({"level": "ok" if _t334 else "warning", "check": "no_manual_data_label_in_html",
                     "message": "#334 生成 HTML に「手動確認データ」ラベルが出ていない" + ("" if _t334 else " ← 「手動確認データ」が HTML に残っています")})
+
+    # ── 2026-05-29 Public LP Review チェック (Round 3) ────────────────────────
+    # #335: Topに「最終買取データ取得」が出ていない
+    _t335 = "最終買取データ取得" not in html
+    results.append({"level": "ok" if _t335 else "warning", "check": "no_last_buyback_fetch_label",
+                    "message": "#335 生成 HTML に「最終買取データ取得」が出ていない" + ("" if _t335 else " ← 「最終買取データ取得」が HTML に残っています")})
+
+    # #336: Topに「参考DEALS」「本日の差益案件」パネルが出ていない（hero-right 削除済み）
+    # CSS クラス .live-panel-items は残るが、HTML 要素として <div class="live-panel-items"> は出ない
+    import re as _re336
+    _t336 = "参考DEALS" not in html and not bool(_re336.search(r'<div[^>]+class="[^"]*live-panel-items[^"]*"', html))
+    results.append({"level": "ok" if _t336 else "warning", "check": "no_hero_right_panel",
+                    "message": "#336 hero-right パネル（参考DEALS / live-panel-items）が HTML に出ていない" + ("" if _t336 else " ← hero-right パネルが残っています")})
+
+    # #337: Topに古い日付が topbar-date 要素として出ていない（>24h stale は非表示）
+    import re as _re337
+    _t337 = not bool(_re337.search(r'<div[^>]*topbar-date[^>]*>最終更新:', html))
+    results.append({"level": "ok" if _t337 else "warning", "check": "no_stale_topbar_date",
+                    "message": "#337 topbar-date に古い最終更新日が出ていない（staleness guard 動作確認）" + ("" if _t337 else " ← topbar-date に古い日付が出ています")})
+
+    # #338: Sedoriに「推定コスト」が出ていない
+    _t338 = "推定コスト" not in html
+    results.append({"level": "ok" if _t338 else "warning", "check": "no_estimated_cost_in_html",
+                    "message": "#338 生成 HTML に「推定コスト」が出ていない" + ("" if _t338 else " ← 「推定コスト」が HTML に残っています")})
+
+    # #339: Beginnerに「公式店定価購入」の説明が出ている
+    _t339 = "公式店定価購入" in html
+    results.append({"level": "ok" if _t339 else "warning", "check": "beginner_official_purchase_desc",
+                    "message": "#339 Beginner に「公式店定価購入 → 最高売却先との差益」説明あり" + ("" if _t339 else " ← Beginner 説明が古い")})
+
+    # #340: price=0 を利益計算に使わないロジックが LP ソースに存在する
+    _t340 = "price > 0" in _lp_gen_src or "buyback_price', 0) > 0" in _lp_gen_src or "best_bp > 0" in _lp_gen_src
+    results.append({"level": "ok" if _t340 else "warning", "check": "zero_price_not_used_in_profit",
+                    "message": "#340 price=0 を利益計算に使わないガードが LP ソースに存在する" + ("" if _t340 else " ← price=0 ガードが見つかりません")})
+
+    # #341: Lottery の active section に「受付中 / 販売中」が出ていない（→「現在販売中」に変更済み）
+    _t341 = "受付中 / 販売中" not in _lp_gen_src
+    results.append({"level": "ok" if _t341 else "warning", "check": "no_old_lottery_active_label",
+                    "message": "#341 Lottery active ラベル「受付中 / 販売中」が LP ソースに残っていない" + ("" if _t341 else " ← 「受付中 / 販売中」が LP ソースに残っています")})
 
     return results
 

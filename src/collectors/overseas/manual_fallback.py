@@ -103,6 +103,7 @@ class ManualFallbackCollector:
                         failure_reason="" if not stale else "stale_manual",
                         url=(row.get("url") or "").strip(),
                         raw_prices_json=f"[{price_raw}]",
+                        collector_method="manual",  # 手動CSVからの取得
                     ))
         except Exception as e:
             logger.warning("ManualFallback CSV error: %s", e)

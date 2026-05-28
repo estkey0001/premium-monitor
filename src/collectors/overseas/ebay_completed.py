@@ -476,6 +476,10 @@ class EbayCompletedCollector:
                 "Accept-Language": "en-US,en;q=0.9",
             }
             resp = requests.get(url, headers=headers, timeout=20)
+            # 403/429/503 は Cloud IP ブロックとして html_blocked 分類
+            if resp.status_code in (403, 429, 503):
+                logger.info("eBay requests: status %d → html_blocked", resp.status_code)
+                return [], True
             if resp.status_code != 200:
                 logger.warning("eBay requests: status %d", resp.status_code)
                 return [], False

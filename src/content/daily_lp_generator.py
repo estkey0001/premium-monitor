@@ -403,6 +403,20 @@ class DailyLPGenerator:
         _buyback_str_top = _jst_str(latest_buyback_at) if latest_buyback_at else "—"
         _lp_str_top = lp_generated_at.strftime("%m/%d %H:%M") if lp_generated_at else "—"
 
+        # topbar-date: 24h以内のデータのみ表示（古い日付をトップに出さない）
+        _buyback_age_hours = 0.0
+        if latest_buyback_at:
+            try:
+                _ba = latest_buyback_at if latest_buyback_at.tzinfo else latest_buyback_at.replace(tzinfo=JST)
+                _buyback_age_hours = (datetime.now(tz=JST) - _ba.astimezone(JST)).total_seconds() / 3600
+            except Exception:
+                _buyback_age_hours = 999.0
+        _topbar_date_html = (
+            f'<div class="topbar-date" data-buyback-updated title="DBに記録された最新の買取価格データ取得日時">'
+            f'最終更新: {_esc(_buyback_str_top)}{_collection_stats_html}</div>'
+            if _buyback_age_hours <= 24 else ''
+        )
+
         # 取得統計バー HTML
         _cs = collection_stats or {}
         _cs_auto   = _cs.get("auto",   0)
@@ -3456,7 +3470,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
     プレ値速報
   </a>
   <div class="topbar-live"><span class="live-dot"></span><span class="topbar-update-text">毎日更新</span></div>
-  <div class="topbar-date" data-buyback-updated title="DBに記録された最新の買取価格データ取得日時">最終更新: {_esc(_buyback_str_top)}{_collection_stats_html}</div>
+  {_topbar_date_html}
   <div class="topbar-spacer"></div>
   <a href="#note-cta" class="topbar-note-btn" data-track="note_click">&#128221; 詳細レポートを見る</a>
 </header>
@@ -3793,7 +3807,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
     <div class="hero-right">
       <div class="hero-live-panel">
         <div class="live-panel-hd">
-          <a href="#tab-beginner" class="live-panel-title live-panel-link" data-track="hero_live_deals_click">参考DEALS &#8594;</a>
+          <a href="#tab-beginner" class="live-panel-title live-panel-link" data-track="hero_live_deals_click">本日の差益案件 &#8594;</a>
           <div class="live-panel-badge"><span class="live-dot"></span> 毎日更新</div>
         </div>
         <div class="live-panel-items">
@@ -4779,7 +4793,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         if is_auto:
             source_label = "自動取得"
         elif is_manual:
-            source_label = "手動確認データ"
+            source_label = "参考データ"
         elif data_source == "live":
             source_label = "🟢live"
         else:
@@ -5741,9 +5755,9 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             if is_fallback:
                 parts.append(
                     '<div class="caution adv-fallback-notice" style="margin:16px 0 20px;">'
-                    '&#128204; <strong>手動確認データによる市場価格表示</strong><br>'
+                    '&#128204; <strong>参考価格データ表示</strong><br>'
                     'price_history に価格データがある商品を表示しています。'
-                    '価格は手動確認データです。最新価格は各リンク先でご確認ください。'
+                    '最新価格は各リンク先でご確認ください。'
                     '</div>'
                 )
             elif not has_confirmed:
@@ -6633,7 +6647,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
   <div class="footer-logo">
     <div class="footer-logo-icon">S</div>
     <div class="footer-logo-name">プレ値速報</div>
-    <div class="footer-live"><span class="live-dot"></span>手動確認</div>
+    <div class="footer-live"><span class="live-dot"></span>毎日更新</div>
   </div>
   <div class="footer-links">
     <a href="#tab-lottery" class="footer-link">抽選情報</a>

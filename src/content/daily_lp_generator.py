@@ -4863,48 +4863,32 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                      '<strong>掲載価格は更新時点の参考値です。差益は保証されません。購入前に必ず各店舗の最新価格をご確認ください。</strong>\n'
                      '</div>')
 
-        # 48h超古い買取価格を持つ案件を初心者向けセクションから除外（価格信頼性確保）
+        # deal.scanned_at ベースで鮮度判定（buyback_prices.observed_at ではなくスキャン日時で統一）
+        # ランキングも同じ beginner_deals テーブルを参照するため、スキャン日時で整合を保つ
         def _bybp_age_h(deal):
-            """deal の buyback_by_product 先頭行の observed_at からの経過時間（h）。
-
-            primary_to_secondary deal (海外価格基準) の場合は scanned_at を参照する。
-            buybackデータなし / primary_to_secondary → 0.0（除外しない）。
+            """deal.scanned_at からの経過時間（h）を返す。
+            スキャンが新しければ、利用した buyback 価格の観測日時に関わらず表示する。
+            scanned_at がない場合は 0.0（除外しない）。
             """
-            # primary_to_secondary deal は buyback行の鮮度ではなく scanned_at を参照
-            notes_str = getattr(deal, 'notes', '') or ''
-            if 'route=primary_to_secondary' in notes_str:
-                scanned_at = getattr(deal, 'scanned_at', None)
-                if scanned_at:
-                    try:
-                        if isinstance(scanned_at, str):
-                            dt = datetime.fromisoformat(scanned_at)
-                        else:
-                            dt = scanned_at
-                        if dt.tzinfo is None:
-                            dt = dt.replace(tzinfo=JST)
-                        return (datetime.now(tz=JST) - dt.astimezone(JST)).total_seconds() / 3600
-                    except Exception:
-                        pass
-                return 0.0  # scanned_at なし → 除外しない
+            scanned_at = getattr(deal, 'scanned_at', None)
+            if scanned_at:
+                try:
+                    if isinstance(scanned_at, str):
+                        dt = datetime.fromisoformat(scanned_at)
+                    else:
+                        dt = scanned_at
+                    if dt.tzinfo is None:
+                        dt = dt.replace(tzinfo=JST)
+                    return (datetime.now(tz=JST) - dt.astimezone(JST)).total_seconds() / 3600
+                except Exception:
+                    pass
+            return 0.0  # scanned_at なし → 除外しない
 
-            rows = bybp.get(deal.product_id, [])
-            if not rows:
-                return 0.0
-            obs = rows[0].get('observed_at', '')
-            if not obs:
-                return 0.0
-            try:
-                dt = datetime.fromisoformat(str(obs))
-                if dt.tzinfo is None:
-                    dt = dt.replace(tzinfo=JST)
-                return (datetime.now(tz=JST) - dt.astimezone(JST)).total_seconds() / 3600
-            except Exception:
-                return 0.0
-
-        _STALE_EXCLUDE_H = 168.0  # 7日間(168h)以内の買取データを使用（48h以内の場合は freshness_banner で警告）
+        _STALE_EXCLUDE_H = 168.0  # 7日間(168h)以内にスキャンされた案件を表示（scanned_at 基準）
 
         # 全案件を統合（カメラ除外済みの easy/watch + monitoring/fetch_failed）
-        # 168h(7日)超古い案件はeasy/watchから除外（monitoring/fetch_failedは除外しない）
+        # scanned_at が 168h(7日)以内の案件のみ easy/watch から表示
+        # ランキングと同じ beginner_deals テーブルを使うため、スキャン日時で一致させる
         _easy_filtered  = [d for d in easy_deals  if _bybp_age_h(d) < _STALE_EXCLUDE_H]
         _watch_filtered = [d for d in watch_deals if _bybp_age_h(d) < _STALE_EXCLUDE_H]
 
@@ -5061,7 +5045,10 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         return freshness_banner + '\n'.join(parts)
 
     def _deal_card_monitoring(self, d, buyback_rows: list = None) -> str:
-        """監視中（赤字）案件カード HTML を生成する。"""
+        """監視中（赤字・データ取得中）案件カード HTML を生成する。
+        Task 5: easy/watch カードと同じ UI 構造に統一。
+        Task 6: price=0 は利益計算に使わない（「未取得」表示）。
+        """
         pid       = _esc(d.product_id)
         _raw_pid  = getattr(d, 'product_id', '') or ''
         pid_alias = _raw_pid[len('prod_'):] if _raw_pid.startswith('prod_') else _raw_pid
@@ -5069,6 +5056,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         brand_val = _esc(getattr(d, 'brand', '') or '')
         brand_attr = f' data-brand="{brand_val}"' if brand_val else ''
         genre_cls = getattr(d, 'category', '') or ''
+        stripe_cls = {'iphone': 'iphone', 'camera': 'camera', 'game_console': 'game'}.get(genre_cls, 'monitoring')
         genre_badge = {
             'iphone':       '<span class="badge badge-iphone">iPhone</span>',
             'tablet':       '<span class="badge badge-iphone">タブレット</span>',
@@ -5078,87 +5066,159 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             'camera':       '<span class="badge badge-camera">カメラ</span>',
             'game_console': '<span class="badge badge-game">ゲーム機</span>',
         }.get(genre_cls, '')
-        name   = _esc(d.product_name or '—')
+        name     = _esc(d.product_name or '—')
         official = d.official_price_jpy or 0
-        best_bp  = d.best_buyback_price or 0
-        cost     = 0  # 推定コスト表示廃止
-        diff     = best_bp - official - cost  # 通常マイナス
+        # price=0 は未取得として扱う（Task 6）
+        best_bp  = d.best_buyback_price if (d.best_buyback_price and d.best_buyback_price > 0) else None
+        best_bp_str = f'¥{best_bp:,}' if best_bp else '未取得'
+        best_shop = _esc(d.best_buyback_shop or '—')
 
-        # 差額表示
-        diff_str = f'−¥{abs(diff):,}' if diff < 0 else f'+¥{diff:,}'
+        # 差益: price=0 があっても赤字判定しない。未取得なら「差益未確定」
+        if best_bp and official > 0:
+            diff = best_bp - official
+            diff_str = (f'+¥{diff:,}' if diff >= 0 else f'−¥{abs(diff):,}')
+            diff_cls = '' if diff >= 0 else ' neg'
+        else:
+            diff_str = '計算不可（未取得）'
+            diff_cls = ''
+
+        # 最終確認日（buyback_rows の最新 observed_at）
+        updated_str = ''
+        _ts_rows = [r for r in (buyback_rows or []) if r.get('data_source') != 'fetch_failed' and r.get('buyback_price', 0) > 0]
+        if _ts_rows:
+            _obs = _ts_rows[0].get('observed_at', '')
+            if _obs:
+                try:
+                    _dt = datetime.fromisoformat(str(_obs))
+                    if _dt.tzinfo is None:
+                        _dt = _dt.replace(tzinfo=JST)
+                    updated_str = (
+                        f'<div class="updated-row"><span>&#128336;</span>'
+                        f'価格確認：{_esc(_dt.astimezone(JST).strftime("%Y-%m-%d %H:%M JST"))}</div>'
+                    )
+                except Exception:
+                    pass
+        if not updated_str and hasattr(d, 'scanned_at') and d.scanned_at:
+            updated_str = f'<div class="updated-row"><span>&#128336;</span>スキャン：{_esc(_jst_str(d.scanned_at))}</div>'
 
         # 公式リンク
-        official_url  = _esc(getattr(d, 'official_url', '') or '')
-        official_btn  = ''
+        official_url = _esc(getattr(d, 'official_url', '') or '')
+        official_btn = ''
         if official_url:
-            official_btn = f'<a href="{official_url}" target="_blank" rel="noopener" class="btn btn-secondary" data-track="product_click" data-product-id="{pid}">&#128241; 公式で確認</a>'
+            icon = '&#128241;' if genre_cls == 'iphone' else ('&#128247;' if genre_cls == 'camera' else '&#127918;')
+            lbl  = 'Apple Store で確認' if genre_cls == 'iphone' else '公式で確認'
+            official_btn = f'<a href="{official_url}" target="_blank" rel="noopener" class="btn btn-secondary" data-track="product_click" data-product-id="{pid}">{icon} {lbl}</a>'
 
-        # 買取テーブル（compare_html）
+        # 売却先比較テーブル（buying/watch カードと同じ構造 + フリマ未取得行）
         compare_html = ''
+        rows_html = []
         if buyback_rows:
-            rows_html = []
-            # confidence=low は誤価格防止のためLPから除外（Task 7）
             _normal_rows  = [r for r in buyback_rows if r.get('buyback_price', 0) > 0 and r.get('confidence', 'high') != 'low'][:5]
-            _failed_rows_r = [r for r in buyback_rows if r.get('buyback_price', 0) == 0 or r.get('data_source') == 'fetch_failed']
+            _failed_rows_r = [r for r in buyback_rows if r.get('data_source') == 'fetch_failed']
             rank = 1
             for r in _normal_rows:
                 r_price = r.get('buyback_price', 0)
                 r_name  = _esc(r.get('shop_name') or r.get('shop_id') or '—')
-                rank_cls = {1:'gold',2:'silver',3:'bronze'}.get(rank,'other')
-                r_url   = r.get('buyback_url', '')
+                rank_cls = {1:'gold', 2:'silver', 3:'bronze'}.get(rank, 'other')
+                r_url   = r.get('buyback_url', '') or ''
                 r_link_verified = bool(r.get('link_verified', False))
-                if r_url and r_link_verified:
-                    link_cell = f'<a href="{_esc(r_url)}" target="_blank" rel="noopener noreferrer" class="shop-link-col" data-track="buyback_click" data-product-id="{pid}">確認</a>'
-                else:
-                    link_cell = f'<span class="shop-link-col unverified-link">公式買取ページで確認</span>'
+                link_cell = (
+                    f'<a href="{_esc(r_url)}" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="buyback_click" data-product-id="{pid}">確認</a>'
+                    if (r_url and r_link_verified)
+                    else '<span class="shop-check-btn normal" style="opacity:0.5;cursor:default;">公式で確認</span>'
+                )
                 rows_html.append(
-                    f'<div class="shop-row"><div class="shop-rank {rank_cls}">#{rank}</div>'
+                    f'<div class="shop-row">'
+                    f'<div class="shop-rank {rank_cls}">{rank}</div>'
                     f'<div class="shop-name-col">{r_name}</div>'
                     f'<div class="shop-price-col">¥{r_price:,}</div>'
-                    f'{link_cell}</div>'
+                    f'<div class="shop-diff-col"></div>'
+                    f'<div class="shop-source-col"></div>'
+                    f'<div class="shop-link-col">{link_cell}</div>'
+                    f'</div>'
                 )
                 rank += 1
-            for r in _failed_rows_r[:3]:
+            for r in _failed_rows_r[:2]:
                 r_name = _esc(r.get('shop_name') or r.get('shop_id') or '—')
-                r_url  = r.get('buyback_url', '')
-                if r_url:
-                    link_cell = f'<a href="{_esc(r_url)}" target="_blank" rel="noopener noreferrer" class="shop-link-col" data-track="buyback_click" data-product-id="{pid}">要確認</a>'
-                else:
-                    link_cell = '<span class="shop-link-col">—</span>'
+                r_url  = r.get('buyback_url', '') or ''
+                link_cell = (
+                    f'<a href="{_esc(r_url)}" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="buyback_click" data-product-id="{pid}">確認</a>'
+                    if r_url else '<span class="shop-check-btn normal" style="opacity:0.4;cursor:default;">確認不可</span>'
+                )
                 rows_html.append(
                     f'<div class="shop-row shop-row-failed">'
-                    f'<div class="shop-rank other"><span class="badge-fetch-failed">取得失敗</span></div>'
+                    f'<div class="shop-rank" style="color:var(--ink3)">—</div>'
                     f'<div class="shop-name-col">{r_name}</div>'
-                    f'<div class="shop-price-col">—</div>'
-                    f'{link_cell}</div>'
+                    f'<div class="shop-price-col" style="color:var(--ink3)">—</div>'
+                    f'<div class="shop-diff-col"></div><div class="shop-source-col"></div>'
+                    f'<div class="shop-link-col">{link_cell}</div>'
+                    f'</div>'
                 )
-            if rows_html:
-                compare_html = (
-                    '<div class="shop-compare buyback-shop-table" style="margin-top:8px">'
-                    '<div class="shop-table-hd">売却先比較</div>'
-                    + ''.join(rows_html) + '</div>'
-                )
+        # フリマ・オークション未取得行（Task 4）
+        _flea_q = _urllib_parse.quote(getattr(d, 'product_name', '') or '')
+        for _fn, _fu in [
+            ('メルカリ直近売買',   f'https://jp.mercari.com/search?keyword={_flea_q}'),
+            ('ヤフオク落札相場',   f'https://auctions.yahoo.co.jp/search/search?p={_flea_q}&va={_flea_q}&auccat=0&tab=closedsearch'),
+            ('ラクマ直近売買',     f'https://fril.jp/search?query={_flea_q}'),
+            ('eBay sold',        f'https://www.ebay.com/sch/i.html?_nkw={_flea_q}&LH_Sold=1&LH_Complete=1'),
+            ('StockX',           f'https://stockx.com/search?s={_flea_q}'),
+        ]:
+            rows_html.append(
+                f'<div class="shop-row shop-row-pending">'
+                f'<div class="shop-rank" style="color:var(--ink4)">—</div>'
+                f'<div class="shop-name-col">{_fn}</div>'
+                f'<div class="shop-price-col" style="color:var(--ink4);font-size:0.75rem">未取得</div>'
+                f'<div class="shop-diff-col" style="color:var(--ink4);font-size:0.72rem">自動取得外</div>'
+                f'<div class="shop-source-col"></div>'
+                f'<div class="shop-link-col"><a href="{_fu}" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="flea_click" data-product-id="{pid}">検索</a></div>'
+                f'</div>'
+            )
+        if rows_html:
+            compare_html = (
+                '<div class="shop-table buyback-shop-table buyback-table" style="margin-top:8px">'
+                '<div class="shop-table-hd"><span>売却先比較</span></div>'
+                + ''.join(rows_html)
+                + '</div>'
+            )
 
-        return (
-            f'<div class="deal-card stripe-monitoring"{card_id_attr}{brand_attr}'
-            f' data-user-level="monitoring" data-genre="{_esc(genre_cls)}">'
-            f'<div class="card-stripe monitoring"></div>'
-            f'<div class="card-hd">'
-            f'<div class="card-name">{name}</div>'
-            f'<div class="card-tags">'
-            f'<span class="badge badge-monitoring">現在は赤字</span>'
-            f'{genre_badge}'
-            f'</div></div>'
-            f'<div class="monitoring-section">'
-            f'<div class="monitoring-label">現在は赤字 / 監視中</div>'
-            f'<div class="monitoring-detail">公式価格: ¥{official:,} → 最高売却価格: {"¥{:,}".format(best_bp) if best_bp > 0 else "価格未取得"}</div>'
-            f'<div class="monitoring-diff">差額: {diff_str}（公式→売却先）</div>'
-            f'<div class="monitoring-note">現在は赤字ですが、価格変動で利益化する可能性があります。</div>'
-            f'</div>'
-            f'{compare_html}'
-            f'<div class="card-actions">{official_btn}</div>'
-            f'</div>'
-        )
+        return f"""<div class="deal-card stripe-{stripe_cls}"{card_id_attr}{brand_attr} data-user-level="monitoring" data-genre="{_esc(genre_cls)}">
+  <div class="card-stripe monitoring"></div>
+  <div class="card-hd">
+    <div class="card-name">{name}</div>
+    <div class="card-tags">
+      <span class="badge badge-monitoring">監視中</span>
+      {genre_badge}
+    </div>
+  </div>
+  <div class="profit-section amber">
+    <div class="profit-left">
+      <div class="profit-lbl amber">差益（定価購入→最高売却）</div>
+      <div class="profit-num amber">{_esc(diff_str)}</div>
+    </div>
+    <div class="profit-right">
+      <div class="profit-note">現在は赤字 / 価格変動を監視中</div>
+    </div>
+  </div>
+  <div class="price-row-wrap">
+    <div class="price-cell">
+      <div class="price-cell-lbl">公式価格（定価）</div>
+      <div class="price-cell-val">{"¥{:,}".format(official) if official > 0 else "未取得"}</div>
+    </div>
+    <div class="price-cell">
+      <div class="price-cell-lbl">最高売却価格</div>
+      <div class="price-cell-val" style="color:var(--ink3)">{_esc(best_bp_str)}</div>
+    </div>
+    <div class="price-cell" style="opacity:0.6">
+      <div class="price-cell-lbl">最高売却先</div>
+      <div class="price-cell-val" style="font-size:0.8rem">{best_shop}</div>
+    </div>
+  </div>
+  <div class="card-body">
+    {updated_str}
+    {compare_html}
+    <div class="card-actions">{official_btn}</div>
+  </div>
+</div>"""
 
     # 内部失敗コード → ユーザー向け日本語表示ラベル（Task 1）
     REASON_DISPLAY_LABELS: dict = {
@@ -5501,9 +5561,11 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             if not pro_mode:
                 _flea_q = _urllib_parse.quote(getattr(d, 'product_name', '') or '')
                 for _flea_name, _flea_url in [
-                    ('メルカリ',  f'https://jp.mercari.com/search?keyword={_flea_q}'),
-                    ('ヤフオク',  f'https://auctions.yahoo.co.jp/search/search?p={_flea_q}'),
-                    ('eBay',     f'https://www.ebay.com/sch/i.html?_nkw={_flea_q}&LH_Sold=1&LH_Complete=1'),
+                    ('メルカリ直近売買',   f'https://jp.mercari.com/search?keyword={_flea_q}'),
+                    ('ヤフオク落札相場',   f'https://auctions.yahoo.co.jp/search/search?p={_flea_q}&va={_flea_q}&auccat=0&tab=closedsearch'),
+                    ('ラクマ直近売買',     f'https://fril.jp/search?query={_flea_q}'),
+                    ('eBay sold',        f'https://www.ebay.com/sch/i.html?_nkw={_flea_q}&LH_Sold=1&LH_Complete=1'),
+                    ('StockX',           f'https://stockx.com/search?s={_flea_q}'),
                 ]:
                     rows_html.append(
                         f'<div class="shop-row shop-row-pending">'
@@ -5529,9 +5591,11 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             _flea_q = _urllib_parse.quote(getattr(d, 'product_name', '') or '')
             _flea_only_rows = []
             for _flea_name, _flea_url in [
-                ('メルカリ',  f'https://jp.mercari.com/search?keyword={_flea_q}'),
-                ('ヤフオク',  f'https://auctions.yahoo.co.jp/search/search?p={_flea_q}'),
-                ('eBay',     f'https://www.ebay.com/sch/i.html?_nkw={_flea_q}&LH_Sold=1&LH_Complete=1'),
+                ('メルカリ直近売買',   f'https://jp.mercari.com/search?keyword={_flea_q}'),
+                ('ヤフオク落札相場',   f'https://auctions.yahoo.co.jp/search/search?p={_flea_q}&va={_flea_q}&auccat=0&tab=closedsearch'),
+                ('ラクマ直近売買',     f'https://fril.jp/search?query={_flea_q}'),
+                ('eBay sold',        f'https://www.ebay.com/sch/i.html?_nkw={_flea_q}&LH_Sold=1&LH_Complete=1'),
+                ('StockX',           f'https://stockx.com/search?s={_flea_q}'),
             ]:
                 _flea_only_rows.append(
                     f'<div class="shop-row shop-row-pending">'
@@ -6419,8 +6483,14 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 rank_cls = 'r1' if i == 1 else ('r2' if i == 2 else ('r3' if i == 3 else ''))
                 crown = '&#128081;' if i == 1 else str(i)
                 cat_td = f'<td style="font-size:0.75rem;color:var(--ink3)">{_esc(d.category)}</td>' if show_cat else ''
-                # カメラはadvancedタブ、それ以外はbeginnerタブへ
-                _target_tab = "advanced" if getattr(d, 'category', '') == 'camera' else "beginner"
+                # user_level が beginner_easy/watch → beginnerタブ、それ以外はcategoryで判定
+                _ul = getattr(d, 'user_level', '') or ''
+                if _ul in ('beginner_easy', 'beginner_watch'):
+                    _target_tab = "beginner"
+                elif _ul in ('advanced', 'expert_only', 'advanced_high_profit'):
+                    _target_tab = "advanced"
+                else:
+                    _target_tab = "advanced" if getattr(d, 'category', '') == 'camera' else "beginner"
                 _raw_pid = getattr(d, 'product_id', '') or ''
                 _pid_alias = _raw_pid[len('prod_'):] if _raw_pid.startswith('prod_') else _raw_pid
                 rows.append(

@@ -86,6 +86,38 @@ class DailyLPGenerator:
     def __init__(self, repository: Repository):
         self.repo = repository
         self.settings = _load_lp_settings()
+        self._resale_status: dict = self._load_resale_status()
+
+    def _load_resale_status(self) -> dict:
+        """resale_collection_status.json を読み込む。
+
+        eBay等のプラットフォームごとの取得ステータスを LP 表示に使う。
+        ファイルが存在しない場合は空dictを返す。
+        """
+        try:
+            import json as _json
+            status_path = PROJECT_ROOT / "exports" / "resale_collection_status.json"
+            if status_path.exists():
+                return _json.loads(status_path.read_text(encoding="utf-8"))
+        except Exception:
+            pass
+        return {}
+
+    def _get_ebay_pending_label(self) -> str:
+        """eBay 未取得行の差異表示ラベルを返す。
+
+        blocked → 「eBay自動取得制限中」
+        その他  → 「自動取得外」
+        """
+        ebay_status = (
+            self._resale_status
+            .get("platforms", {})
+            .get("ebay", {})
+            .get("status", "")
+        )
+        if ebay_status == "blocked":
+            return "eBay自動取得制限中"
+        return "自動取得外"
 
     def generate(self, date_str: Optional[str] = None, variant: Optional[str] = None) -> dict:
         """LP HTMLを生成して保存する。"""
@@ -5193,12 +5225,13 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             ('eBay sold',        f'https://www.ebay.com/sch/i.html?_nkw={_flea_q}&LH_Sold=1&LH_Complete=1'),
             ('StockX',           f'https://stockx.com/search?s={_flea_q}'),
         ]:
+            _pending_diff_lbl = self._get_ebay_pending_label() if _fn == 'eBay sold' else '自動取得外'
             rows_html.append(
                 f'<div class="shop-row shop-row-pending">'
                 f'<div class="shop-rank" style="color:var(--ink4)">—</div>'
                 f'<div class="shop-name-col">{_fn}</div>'
                 f'<div class="shop-price-col" style="color:var(--ink4);font-size:0.75rem">未取得</div>'
-                f'<div class="shop-diff-col" style="color:var(--ink4);font-size:0.72rem">自動取得外</div>'
+                f'<div class="shop-diff-col" style="color:var(--ink4);font-size:0.72rem">{_pending_diff_lbl}</div>'
                 f'<div class="shop-source-col"></div>'
                 f'<div class="shop-link-col"><a href="{_fu}" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="flea_click" data-product-id="{pid}">検索</a></div>'
                 f'</div>'
@@ -5597,12 +5630,13 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                     ('eBay sold',        f'https://www.ebay.com/sch/i.html?_nkw={_flea_q}&LH_Sold=1&LH_Complete=1'),
                     ('StockX',           f'https://stockx.com/search?s={_flea_q}'),
                 ]:
+                    _flea_diff_lbl = self._get_ebay_pending_label() if _flea_name == 'eBay sold' else '自動取得外'
                     rows_html.append(
                         f'<div class="shop-row shop-row-pending">'
                         f'<div class="shop-rank" style="color:var(--ink4)">—</div>'
                         f'<div class="shop-name-col">{_flea_name}</div>'
                         f'<div class="shop-price-col" style="color:var(--ink4);font-size:0.75rem">未取得</div>'
-                        f'<div class="shop-diff-col" style="color:var(--ink4);font-size:0.72rem">自動取得外</div>'
+                        f'<div class="shop-diff-col" style="color:var(--ink4);font-size:0.72rem">{_flea_diff_lbl}</div>'
                         f'<div class="shop-source-col"></div>'
                         f'<div class="shop-link-col"><a href="{_flea_url}" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="flea_click" data-product-id="{pid}">検索</a></div>'
                         f'</div>'
@@ -5627,12 +5661,13 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 ('eBay sold',        f'https://www.ebay.com/sch/i.html?_nkw={_flea_q}&LH_Sold=1&LH_Complete=1'),
                 ('StockX',           f'https://stockx.com/search?s={_flea_q}'),
             ]:
+                _flea_only_diff_lbl = self._get_ebay_pending_label() if _flea_name == 'eBay sold' else '自動取得外'
                 _flea_only_rows.append(
                     f'<div class="shop-row shop-row-pending">'
                     f'<div class="shop-rank" style="color:var(--ink4)">—</div>'
                     f'<div class="shop-name-col">{_flea_name}</div>'
                     f'<div class="shop-price-col" style="color:var(--ink4);font-size:0.75rem">未取得</div>'
-                    f'<div class="shop-diff-col" style="color:var(--ink4);font-size:0.72rem">自動取得外</div>'
+                    f'<div class="shop-diff-col" style="color:var(--ink4);font-size:0.72rem">{_flea_only_diff_lbl}</div>'
                     f'<div class="shop-source-col"></div>'
                     f'<div class="shop-link-col"><a href="{_flea_url}" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="flea_click" data-product-id="{pid}">検索</a></div>'
                     f'</div>'

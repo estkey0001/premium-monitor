@@ -94,12 +94,45 @@ class BeginnerDealScanner:
         if not buyback_list:
             return None
 
+        # ── 二次流通（resale_market）価格を早期チェック ──
+        # all_failed 判定より先に sale_prices を確認し、有効な二次流通価格があれば
+        # fetch_failed 早期リターンをバイパスする（カメラ系：買取店全滅でも二次流通あり）
+        _RESALE_NEW_CONDITIONS = {'new_unopened', 'new_unopened_simfree', 'new', 'unused'}
+        _resale_precheck: list = []
+        try:
+            _sp_rows_pre = self.repo.list_sale_prices(product_id=product.id, active_only=True, limit=30)
+            for _sp_pre in _sp_rows_pre:
+                _sp_cond_pre = (getattr(_sp_pre, 'condition', '') or '').strip()
+                if _sp_cond_pre not in _RESALE_NEW_CONDITIONS:
+                    continue
+                if not _sp_pre.sale_price or _sp_pre.sale_price <= 0:
+                    continue
+                _sp_shop_pre = _sp_pre.shop_name or _sp_pre.shop_id or 'secondary_market'
+                _sp_sid_pre = f"resale_{(_sp_shop_pre or '').replace(' ', '_')[:24]}"
+                _obs_pre = _sp_pre.observed_at if _sp_pre.observed_at else datetime.now()
+                _resale_precheck.append(BuybackPriceModel(
+                    id=f"resale_{_sp_pre.id[:20]}",
+                    product_id=product.id,
+                    shop_id=_sp_sid_pre,
+                    shop_name=_sp_shop_pre,
+                    buyback_price=_sp_pre.sale_price,
+                    condition='new_unopened',
+                    buyback_url=_sp_pre.url or '',
+                    observed_at=_obs_pre,
+                    data_source='resale_market',
+                    link_verified=bool(getattr(_sp_pre, 'link_verified', False)),
+                ))
+        except Exception as _e_pre:
+            logger.debug("[%s] sale_prices 早期チェック エラー（スキップ）: %s", product.id, _e_pre)
+
         # 全店舗が fetch_failed → user_level="fetch_failed" で返す（Noneにしない）
+        # ただし、有効な二次流通価格（resale_market）が存在する場合はバイパスして処理継続
         all_failed = all(
             getattr(b, 'data_source', '') == 'fetch_failed' or b.buyback_price == 0
             for b in buyback_list
         )
-        if all_failed:
+        if all_failed and not _resale_precheck:
+            # 買取店全滅 かつ 二次流通価格もなし → fetch_failed
             official_url = self._get_official_url(product)
             return BeginnerDealModel(
                 id=str(ulid.new()),
@@ -126,6 +159,12 @@ class BeginnerDealScanner:
                 is_active=True,
                 scanned_at=datetime.now(),
                 notes="全店舗価格取得失敗",
+            )
+        # 買取店全滅でも二次流通価格あり → valid_buybacks を二次流通で代替して処理続行
+        if all_failed and _resale_precheck:
+            logger.info(
+                "[%s] 買取店全滅だが二次流通価格あり（%d件）→ scan 続行",
+                product.id, len(_resale_precheck),
             )
 
         # fetch_failed (price=0) は価格計算から完全除外
@@ -158,33 +197,13 @@ class BeginnerDealScanner:
                     and getattr(b, "data_source", "") not in ("fetch_failed", "product_not_listed")
                 ]
         # ── 二次流通（resale_market）価格を追加候補として追加 ──
-        # sale_prices テーブルの「新品/未使用」条件行を取得し、buyback_prices と競合させる。
-        # 初心者向け最高売却価格は: 最高値の buyback or 最高値の resale(new) を選択する。
-        _RESALE_NEW_CONDITIONS = {'new_unopened', 'new_unopened_simfree', 'new', 'unused'}
+        # 早期チェック（_resale_precheck）で取得済みの二次流通価格を valid_buybacks に追加する。
+        # 二重取得を避けるため、すでにチェック済みの _resale_precheck をそのまま利用する。
         try:
-            _sale_rows = self.repo.list_sale_prices(product_id=product.id, active_only=True, limit=30)
-            for _sp in _sale_rows:
-                _sp_cond = (getattr(_sp, 'condition', '') or '').strip()
-                if _sp_cond not in _RESALE_NEW_CONDITIONS:
-                    continue
-                if not _sp.sale_price or _sp.sale_price <= 0:
-                    continue
-                _sp_shop = _sp.shop_name or _sp.shop_id or 'secondary_market'
-                # shop_id は "resale_<shopname>" で一意化（buyback shop と衝突しない）
-                _sp_sid = f"resale_{(_sp_shop or '').replace(' ', '_')[:24]}"
-                _obs = _sp.observed_at if _sp.observed_at else datetime.now()
-                valid_buybacks.append(BuybackPriceModel(
-                    id=f"resale_{_sp.id[:20]}",
-                    product_id=product.id,
-                    shop_id=_sp_sid,
-                    shop_name=_sp_shop,
-                    buyback_price=_sp.sale_price,
-                    condition='new_unopened',  # 新品/未使用として扱う
-                    buyback_url=_sp.url or '',
-                    observed_at=_obs,
-                    data_source='resale_market',  # 二次流通市場価格（手動参考）
-                    link_verified=bool(getattr(_sp, 'link_verified', False)),
-                ))
+            if _resale_precheck:
+                valid_buybacks.extend(_resale_precheck)
+        except Exception as _e:
+            logger.debug("[%s] resale_precheck 注入エラー（スキップ）: %s", product.id, _e)
         except Exception as _e:
             logger.debug("[%s] sale_prices 取得エラー（スキップ）: %s", product.id, _e)
 

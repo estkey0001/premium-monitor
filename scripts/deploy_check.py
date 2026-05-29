@@ -3798,8 +3798,10 @@ def check() -> list[dict]:
 
     # #367: price=0 / null が利益計算に使われていない（BeginnerDealScanner の sale_price > 0 ガード）
     _t367 = ('_sp.sale_price <= 0' in _bds_src or
+             '_sp_pre.sale_price <= 0' in _bds_src or
              'sale_price > 0' in _bds_src or
-             'not _sp.sale_price' in _bds_src)
+             'not _sp.sale_price' in _bds_src or
+             'not _sp_pre.sale_price' in _bds_src)
     results.append({"level": "ok" if _t367 else "error", "check": "sale_price_zero_guard",
                     "message": "#367 sale_prices で price=0/null ガードが存在する" + ("" if _t367 else " ← sale_price > 0 のチェックが見つかりません")})
 

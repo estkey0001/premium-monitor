@@ -1,6 +1,6 @@
 # Collector Quality Report
 
-生成日時: 2026-05-29 23:36:27 UTC+09:00
+生成日時: 2026-05-30 01:01:06 UTC+09:00
 
 ## サマリ
 
@@ -49,7 +49,7 @@
 | iphone17pro256 | 4 | 3 | ✅ | ¥168,525 | ¥157,000 | ¥179,000 | — |
 | iphone17pro512 | 4 | 3 | ✅ | ¥201,388 | ¥187,000 | ¥214,500 | — |
 | ps5_pro | 2 | 2 | ✅ | ¥117,250 | ¥100,000 | ¥134,500 | — |
-| switch2 | 3 | 2 | ✅ | ¥48,767 | ¥46,000 | ¥50,300 | — |
+| switch2 | 3 | 2 | ✅ | ¥47,100 | ¥45,000 | ¥50,300 | — |
 
 | 商品 | 成功店舗 |
 |------|---------|
@@ -74,7 +74,7 @@
 | janpara | 0% | 0 | 6 | 6/6 | — | rate_limited_429 |
 | kaitori_itchome | 100% | 4 | 0 | — | — | — |
 | kaitori_shouten | 100% | 6 | 0 | — | — | — |
-| mobile_ichiban | 0% | 0 | 5 | — | — | product_not_listed |
+| mobile_ichiban | 0% | 0 | 5 | — | — | timeout |
 | netoff | 50% | 2 | 2 | — | — | price_not_found |
 | pasoko | 0% | 0 | 2 | — | — | product_not_listed |
 | sofmap | 0% | 0 | 2 | — | — | service_unavailable |
@@ -96,32 +96,33 @@
 
 | 理由 | 件数 |
 |------|------|
-| product_not_listed | 8 |
 | rate_limited_429 | 6 |
 | site_blocked | 6 |
 | price_not_found | 6 |
+| timeout | 5 |
 | http_404 | 4 |
 | not_supported | 4 |
+| product_not_listed | 3 |
 | service_unavailable | 2 |
 
 ## 取得失敗一覧 (36件)
 
 | 商品 | 店舗 | ステータス | 理由 |
 |------|------|-----------|------|
-| iphone17pro256 | mobile_ichiban | FAILED | product_not_listed |
+| iphone17pro256 | mobile_ichiban | FAILED | timeout |
 | iphone17pro256 | janpara | FAILED | rate_limited_429 |
 | iphone17pro256 | geo_mobile | FAILED | site_blocked |
 | iphone17pro256 | 2ndstreet | FAILED | price_not_found |
-| iphone17pro512 | mobile_ichiban | FAILED | product_not_listed |
+| iphone17pro512 | mobile_ichiban | FAILED | timeout |
 | iphone17pro512 | janpara | FAILED | rate_limited_429 |
 | iphone17pro512 | geo_mobile | FAILED | site_blocked |
 | iphone17pro512 | 2ndstreet | FAILED | price_not_found |
-| iphone17pm256 | mobile_ichiban | FAILED | product_not_listed |
+| iphone17pm256 | mobile_ichiban | FAILED | timeout |
 | iphone17pm256 | janpara | FAILED | rate_limited_429 |
 | iphone17pm256 | geo_mobile | FAILED | site_blocked |
 | iphone17pm256 | 2ndstreet | FAILED | price_not_found |
 | iphone17pm256 | netoff | FAILED | price_not_found |
-| iphone17pm512 | mobile_ichiban | FAILED | product_not_listed |
+| iphone17pm512 | mobile_ichiban | FAILED | timeout |
 | iphone17pm512 | janpara | FAILED | rate_limited_429 |
 | iphone17pm512 | geo_mobile | FAILED | site_blocked |
 | iphone17pm512 | 2ndstreet | FAILED | price_not_found |
@@ -135,7 +136,7 @@
 | switch2 | surugaya | FAILED | site_blocked |
 | switch2 | tsutaya | SKIP | not_supported |
 | ps5_pro | geo | FAILED | product_not_listed |
-| ps5_pro | mobile_ichiban | FAILED | product_not_listed |
+| ps5_pro | mobile_ichiban | FAILED | timeout |
 | ps5_pro | janpara | FAILED | rate_limited_429 |
 | ps5_pro | hardoff | FAILED | http_404 |
 | ps5_pro | dosupara | FAILED | http_404 |
@@ -145,10 +146,11 @@
 | ps5_pro | surugaya | FAILED | site_blocked |
 | ps5_pro | tsutaya | SKIP | not_supported |
 
-## 価格変動一覧 (5件)
+## 価格変動一覧 (6件)
 
 | 商品 | 店舗 | 前回 | 今回 | 変化率 |
 |------|------|------|------|--------|
+| switch2 | geo | ¥50,000 | ¥45,000 | ↓10.0% |
 | iphone17pm256 | kaitori_shouten | ¥197,500 | ¥193,000 | ↓2.3% |
 | iphone17pro256 | kaitori_shouten | ¥181,500 | ¥178,500 | ↓1.7% |
 | switch2 | kaitori_shouten | ¥49,800 | ¥50,300 | ↑1.0% |

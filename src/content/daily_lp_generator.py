@@ -4857,6 +4857,23 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             sale_method = getattr(deal, 'sale_method', None) or 'normal'
             stock_status = getattr(deal, 'stock_status', None) or ''
             difficulty = getattr(deal, 'difficulty_score', None) or 0.0
+            # 100.0 は primary_to_secondary_scanner._make_monitoring() のセンチネル値
+            # → sale_method + 商品名から実際の難易度を再推定する
+            if difficulty >= 100.0:
+                if sale_method == 'normal':
+                    difficulty = 0.0
+                    _name_lower = (getattr(deal, 'product_name', '') or '').lower()
+                    if any(_kw in _name_lower for _kw in ('monochrome', 'limited', '限定')):
+                        difficulty += 0.15
+                elif sale_method == 'lottery':
+                    difficulty = 0.70
+                elif sale_method == 'discontinued':
+                    difficulty = 0.80
+                elif sale_method == 'soldout':
+                    difficulty = 0.60
+                else:
+                    difficulty = 0.0
+                difficulty = min(1.0, difficulty)
             is_normal = sale_method == 'normal'
             stock_ok = 'SOLD' not in stock_status.upper()
             if is_normal and stock_ok and net >= 5000 and difficulty <= 0.35:

@@ -763,6 +763,15 @@ def run_collection(
             logger.warning("対象商品が見つかりません: %s", target_alias)
 
     stats = {"saved": 0, "skipped": 0, "errors": []}
+    # プラットフォームごとのステータス（LP表示用）
+    # "ok" | "blocked" | "no_data" | "skipped" | "error"
+    platform_status: dict[str, str] = {
+        "ebay": "skipped",
+        "amazon": "skipped",
+        "mercari": "skipped",
+        "yahoo": "skipped",
+        "rakuten": "skipped",
+    }
 
     for cfg in targets:
         alias  = cfg["product_alias"]
@@ -790,11 +799,20 @@ def run_collection(
                         now=now,
                     )
                     stats["saved"] += 1
+                    # 1件でも成功したらステータスを更新
+                    if platform_status["ebay"] != "ok":
+                        method = result.get("collector_method", "")
+                        platform_status["ebay"] = "ok_api" if method == "api" else "ok_html"
                 else:
+                    # 取得なし（ブロックまたはデータ無し）
+                    if platform_status["ebay"] == "skipped":
+                        platform_status["ebay"] = "blocked"
                     stats["skipped"] += 1
             except Exception as e:
                 logger.warning("[eBay:%s] エラー: %s", alias, e)
                 stats["errors"].append(f"ebay:{alias}: {e}")
+                if platform_status["ebay"] == "skipped":
+                    platform_status["ebay"] = "error"
             time.sleep(REQUEST_INTERVAL_SEC)
 
         # ──── Amazon JP ────
@@ -816,11 +834,16 @@ def run_collection(
                         now=now,
                     )
                     stats["saved"] += 1
+                    platform_status["amazon"] = "ok_html"
                 else:
+                    if platform_status["amazon"] == "skipped":
+                        platform_status["amazon"] = "blocked"
                     stats["skipped"] += 1
             except Exception as e:
                 logger.warning("[Amazon:%s] エラー: %s", alias, e)
                 stats["errors"].append(f"amazon:{alias}: {e}")
+                if platform_status["amazon"] == "skipped":
+                    platform_status["amazon"] = "error"
             time.sleep(REQUEST_INTERVAL_SEC)
 
         # ──── メルカリ ────
@@ -842,11 +865,16 @@ def run_collection(
                         now=now,
                     )
                     stats["saved"] += 1
+                    platform_status["mercari"] = "ok_html"
                 else:
+                    if platform_status["mercari"] == "skipped":
+                        platform_status["mercari"] = "blocked"
                     stats["skipped"] += 1
             except Exception as e:
                 logger.warning("[Mercari:%s] エラー: %s", alias, e)
                 stats["errors"].append(f"mercari:{alias}: {e}")
+                if platform_status["mercari"] == "skipped":
+                    platform_status["mercari"] = "error"
             time.sleep(REQUEST_INTERVAL_SEC)
 
         # ──── ヤフオク ────
@@ -868,11 +896,16 @@ def run_collection(
                         now=now,
                     )
                     stats["saved"] += 1
+                    platform_status["yahoo"] = "ok_html"
                 else:
+                    if platform_status["yahoo"] == "skipped":
+                        platform_status["yahoo"] = "blocked"
                     stats["skipped"] += 1
             except Exception as e:
                 logger.warning("[Yahoo:%s] エラー: %s", alias, e)
                 stats["errors"].append(f"yahoo:{alias}: {e}")
+                if platform_status["yahoo"] == "skipped":
+                    platform_status["yahoo"] = "error"
             time.sleep(REQUEST_INTERVAL_SEC)
 
         # ──── 楽天市場 ────
@@ -894,11 +927,16 @@ def run_collection(
                         now=now,
                     )
                     stats["saved"] += 1
+                    platform_status["rakuten"] = "ok_html"
                 else:
+                    if platform_status["rakuten"] == "skipped":
+                        platform_status["rakuten"] = "blocked"
                     stats["skipped"] += 1
             except Exception as e:
                 logger.warning("[Rakuten:%s] エラー: %s", alias, e)
                 stats["errors"].append(f"rakuten:{alias}: {e}")
+                if platform_status["rakuten"] == "skipped":
+                    platform_status["rakuten"] = "error"
             time.sleep(REQUEST_INTERVAL_SEC)
 
     logger.info(
@@ -909,7 +947,73 @@ def run_collection(
         for err in stats["errors"]:
             logger.warning("  ERROR: %s", err)
 
+    # ── ステータスレポートを書き出す（LP生成側で参照） ──
+    _save_collection_status_report(platform_status, now, stats)
+
     return stats
+
+
+def _save_collection_status_report(platform_status: dict, now: datetime, stats: dict) -> None:
+    """収集ステータスをJSONレポートとして保存する。
+
+    LP生成時に参照して「eBay自動取得制限中」などの表示に使う。
+    exports/resale_collection_status.json に保存。
+    """
+    report = {
+        "collected_at": now.isoformat(),
+        "platforms": {
+            "ebay": {
+                "status": platform_status.get("ebay", "skipped"),
+                # ok_api: Finding API成功, ok_html: HTML成功, blocked: Cloud IPブロック
+                # skipped: 実行せず, error: 例外, no_data: レスポンスあるが価格なし
+                "label_jp": _platform_label_jp(platform_status.get("ebay", "skipped")),
+                "needs_ebay_app_id": platform_status.get("ebay") == "blocked",
+            },
+            "amazon": {
+                "status": platform_status.get("amazon", "skipped"),
+                "label_jp": _platform_label_jp(platform_status.get("amazon", "skipped")),
+            },
+            "mercari": {
+                "status": platform_status.get("mercari", "skipped"),
+                "label_jp": _platform_label_jp(platform_status.get("mercari", "skipped")),
+            },
+            "yahoo": {
+                "status": platform_status.get("yahoo", "skipped"),
+                "label_jp": _platform_label_jp(platform_status.get("yahoo", "skipped")),
+            },
+            "rakuten": {
+                "status": platform_status.get("rakuten", "skipped"),
+                "label_jp": _platform_label_jp(platform_status.get("rakuten", "skipped")),
+            },
+        },
+        "summary": {
+            "saved": stats.get("saved", 0),
+            "skipped": stats.get("skipped", 0),
+            "errors": stats.get("errors", []),
+        },
+    }
+
+    try:
+        report_dir = PROJECT_ROOT / "exports"
+        report_dir.mkdir(parents=True, exist_ok=True)
+        report_path = report_dir / "resale_collection_status.json"
+        import json as _json
+        report_path.write_text(_json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
+        logger.info("収集ステータスレポート保存: %s", report_path)
+    except Exception as e:
+        logger.warning("ステータスレポート保存失敗: %s", e)
+
+
+def _platform_label_jp(status: str) -> str:
+    """ステータスを日本語ラベルに変換する。"""
+    return {
+        "ok_api":    "自動取得済（API）",
+        "ok_html":   "自動取得済（HTML）",
+        "blocked":   "自動取得制限中（Cloud IP）",
+        "no_data":   "価格データなし",
+        "skipped":   "実行スキップ",
+        "error":     "取得エラー",
+    }.get(status, status)
 
 
 # ─────────────────────────────────────────────────────────────

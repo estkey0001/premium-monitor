@@ -96,6 +96,21 @@ jobs:
       - name: Import market CSV
         run: python -m src.cli import-market-csv --file data/manual_market_prices.csv
 
+      # 9.5. Import sale price CSV（手動登録の二次流通価格）
+      - name: Import sale price CSV
+        run: python -m src.cli import-sale-csv --file data/manual_sale_prices.csv
+        continue-on-error: true
+
+      # 9.6. Collect resale prices（二次流通市場 新品/未使用 自動取得）
+      # eBay Finding API → HTML fallback / Amazon JP / メルカリ / ヤフオク / 楽天市場
+      # Cloud IP ブロック時は graceful fallback（exit 0）
+      - name: Collect resale prices
+        run: python scripts/collect_resale_prices.py
+        continue-on-error: true
+        env:
+          PYTHONPATH: .
+          EBAY_APP_ID: ${{ secrets.EBAY_APP_ID }}
+
       # 10. Run buyback premium check（統合ジョブ）
       - name: Run buyback premium check
         run: python -m src.cli run-buyback-premium-check

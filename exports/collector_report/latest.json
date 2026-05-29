@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-29T22:42:51+09:00",
+  "generated_at": "2026-05-29T23:36:27+09:00",
   "summary": {
     "total": 55,
     "ok": 19,
@@ -515,9 +515,9 @@
       "html_length": 951,
       "http_status": 200,
       "text_length": 951,
-      "elapsed_seconds": 5.770046979,
+      "elapsed_seconds": 5.440028065000007,
       "error_type": "",
-      "observed_at": "2026-05-29T22:42:51+09:00"
+      "observed_at": "2026-05-29T23:36:27+09:00"
     },
     {
       "product_alias": "iphone17pro256",
@@ -531,7 +531,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-29T22:42:51+09:00"
+      "observed_at": "2026-05-29T23:36:27+09:00"
     },
     {
       "product_alias": "iphone17pro256",
@@ -545,7 +545,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-29T22:42:51+09:00"
+      "observed_at": "2026-05-29T23:36:27+09:00"
     },
     {
       "product_alias": "iphone17pro256",
@@ -559,7 +559,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-29T22:42:51+09:00"
+      "observed_at": "2026-05-29T23:36:27+09:00"
     },
     {
       "product_alias": "iphone17pro512",
@@ -571,9 +571,9 @@
       "html_length": 951,
       "http_status": 200,
       "text_length": 951,
-      "elapsed_seconds": 5.139784001999999,
+      "elapsed_seconds": 5.3597220099999845,
       "error_type": "",
-      "observed_at": "2026-05-29T22:42:51+09:00"
+      "observed_at": "2026-05-29T23:36:27+09:00"
     },
     {
       "product_alias": "iphone17pro512",
@@ -587,7 +587,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-29T22:42:51+09:00"
+      "observed_at": "2026-05-29T23:36:27+09:00"
     },
     {
       "product_alias": "iphone17pro512",
@@ -601,7 +601,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-29T22:42:51+09:00"
+      "observed_at": "2026-05-29T23:36:27+09:00"
     },
     {
       "product_alias": "iphone17pro512",
@@ -615,7 +615,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-29T22:42:51+09:00"
+      "observed_at": "2026-05-29T23:36:27+09:00"
     },
     {
       "product_alias": "iphone17pm256",
@@ -627,9 +627,9 @@
       "html_length": 951,
       "http_status": 200,
       "text_length": 951,
-      "elapsed_seconds": 4.924570819999985,
+      "elapsed_seconds": 5.677620338999986,
       "error_type": "",
-      "observed_at": "2026-05-29T22:42:51+09:00"
+      "observed_at": "2026-05-29T23:36:27+09:00"
     },
     {
       "product_alias": "iphone17pm256",
@@ -643,7 +643,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-29T22:42:51+09:00"
+      "observed_at": "2026-05-29T23:36:27+09:00"
     },
     {
       "product_alias": "iphone17pm256",
@@ -657,7 +657,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-29T22:42:51+09:00"
+      "observed_at": "2026-05-29T23:36:27+09:00"
     },
     {
       "product_alias": "iphone17pm256",
@@ -671,7 +671,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-29T22:42:51+09:00"
+      "observed_at": "2026-05-29T23:36:27+09:00"
     },
     {
       "product_alias": "iphone17pm256",
@@ -685,7 +685,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-29T22:42:51+09:00"
+      "observed_at": "2026-05-29T23:36:27+09:00"
     },
     {
       "product_alias": "iphone17pm512",
@@ -697,9 +697,9 @@
       "html_length": 951,
       "http_status": 200,
       "text_length": 951,
-      "elapsed_seconds": 5.046637847999932,
+      "elapsed_seconds": 5.323516186000006,
       "error_type": "",
-      "observed_at": "2026-05-29T22:42:51+09:00"
+      "observed_at": "2026-05-29T23:36:27+09:00"
     },
     {
       "product_alias": "iphone17pm512",
@@ -713,7 +713,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-29T22:42:51+09:00"
+      "observed_at": "2026-05-29T23:36:27+09:00"
     },
     {
       "product_alias": "iphone17pm512",
@@ -727,7 +727,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-29T22:42:51+09:00"
+      "observed_at": "2026-05-29T23:36:27+09:00"
     },
     {
       "product_alias": "iphone17pm512",
@@ -741,7 +741,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-29T22:42:51+09:00"
+      "observed_at": "2026-05-29T23:36:27+09:00"
     },
     {
       "product_alias": "iphone17pm512",
@@ -755,7 +755,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-29T22:42:51+09:00"
+      "observed_at": "2026-05-29T23:36:27+09:00"
     },
     {
       "product_alias": "switch2",
@@ -769,7 +769,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-29T22:42:51+09:00"
+      "observed_at": "2026-05-29T23:36:27+09:00"
     },
     {
       "product_alias": "switch2",
@@ -783,7 +783,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-29T22:42:51+09:00"
+      "observed_at": "2026-05-29T23:36:27+09:00"
     },
     {
       "product_alias": "switch2",
@@ -797,7 +797,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-29T22:42:51+09:00"
+      "observed_at": "2026-05-29T23:36:27+09:00"
     },
     {
       "product_alias": "switch2",
@@ -811,7 +811,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-29T22:42:51+09:00"
+      "observed_at": "2026-05-29T23:36:27+09:00"
     },
     {
       "product_alias": "switch2",
@@ -825,7 +825,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-29T22:42:51+09:00"
+      "observed_at": "2026-05-29T23:36:27+09:00"
     },
     {
       "product_alias": "switch2",
@@ -839,7 +839,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-29T22:42:51+09:00"
+      "observed_at": "2026-05-29T23:36:27+09:00"
     },
     {
       "product_alias": "switch2",
@@ -853,7 +853,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-29T22:42:51+09:00"
+      "observed_at": "2026-05-29T23:36:27+09:00"
     },
     {
       "product_alias": "switch2",
@@ -867,7 +867,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-29T22:42:51+09:00"
+      "observed_at": "2026-05-29T23:36:27+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -881,7 +881,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-29T22:42:51+09:00"
+      "observed_at": "2026-05-29T23:36:27+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -893,9 +893,9 @@
       "html_length": 951,
       "http_status": 200,
       "text_length": 951,
-      "elapsed_seconds": 4.882056460999934,
+      "elapsed_seconds": 5.191957155000068,
       "error_type": "",
-      "observed_at": "2026-05-29T22:42:51+09:00"
+      "observed_at": "2026-05-29T23:36:27+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -909,7 +909,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-29T22:42:51+09:00"
+      "observed_at": "2026-05-29T23:36:27+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -923,7 +923,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-29T22:42:51+09:00"
+      "observed_at": "2026-05-29T23:36:27+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -937,7 +937,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-29T22:42:51+09:00"
+      "observed_at": "2026-05-29T23:36:27+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -951,7 +951,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-29T22:42:51+09:00"
+      "observed_at": "2026-05-29T23:36:27+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -965,7 +965,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-29T22:42:51+09:00"
+      "observed_at": "2026-05-29T23:36:27+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -979,7 +979,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-29T22:42:51+09:00"
+      "observed_at": "2026-05-29T23:36:27+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -993,7 +993,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-29T22:42:51+09:00"
+      "observed_at": "2026-05-29T23:36:27+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -1007,7 +1007,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-29T22:42:51+09:00"
+      "observed_at": "2026-05-29T23:36:27+09:00"
     }
   ],
   "price_changes": [

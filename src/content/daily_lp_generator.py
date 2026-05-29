@@ -4829,6 +4829,59 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         monitoring_deals   = monitoring_deals   or []
         fetch_failed_deals = fetch_failed_deals or []
 
+        def _enrich_from_sell_candidates(deal, rows: list):
+            """buyback_rows の有効価格で deal.best_buyback_price を補完する。
+            DB の best_buyback_price=0 の場合に buyback_rows の最高価格で上書きする。
+            """
+            if not rows:
+                return deal
+            valid_rows = [
+                r for r in rows
+                if r.get('buyback_price', 0) > 0
+                and r.get('data_source', '') not in ('fetch_failed', 'product_not_listed')
+                and r.get('confidence', 'high') != 'low'
+            ]
+            if not valid_rows:
+                return deal
+            best_row = max(valid_rows, key=lambda r: r.get('buyback_price', 0))
+            best_price = best_row.get('buyback_price', 0)
+            stored_bp = deal.best_buyback_price or 0
+            if best_price <= stored_bp:
+                return deal
+            # DB の値より buyback_rows の方が高い → 補完
+            official = deal.official_price_jpy or 0
+            costs = 1800  # 固定: 送料+振込手数料+移動コスト
+            gross = best_price - official
+            net = gross - costs
+            # user_level 再評価
+            sale_method = getattr(deal, 'sale_method', None) or 'normal'
+            stock_status = getattr(deal, 'stock_status', None) or ''
+            difficulty = getattr(deal, 'difficulty_score', None) or 0.0
+            is_normal = sale_method == 'normal'
+            stock_ok = 'SOLD' not in stock_status.upper()
+            if is_normal and stock_ok and net >= 5000 and difficulty <= 0.35:
+                new_level = 'beginner_easy'
+            elif is_normal and net >= 3000 and difficulty <= 0.50:
+                new_level = 'beginner_watch'
+            elif gross >= 30000:
+                new_level = 'advanced_high_profit'
+            elif net > 0:
+                new_level = 'beginner_watch'
+            else:
+                new_level = 'monitoring'
+            net_rate = (net / official) if official > 0 else 0.0
+            return deal.copy(update={
+                'best_buyback_price': best_price,
+                'best_buyback_shop': best_row.get('shop_name', deal.best_buyback_shop or ''),
+                'best_buyback_url': best_row.get('buyback_url', deal.best_buyback_url or ''),
+                'best_link_verified': bool(best_row.get('buyback_url', '')),
+                'buyback_condition': best_row.get('condition', deal.buyback_condition or ''),
+                'gross_profit_jpy': gross,
+                'net_profit_jpy': net,
+                'net_profit_rate': net_rate,
+                'user_level': new_level,
+            })
+
         def _get_overseas(deal) -> tuple[int | None, str, str, str]:
             """deal の海外価格（price_jpy, source, observed_at, collector_method）を取得する。"""
             pid = getattr(deal, 'product_id', '') or ''
@@ -4942,6 +4995,11 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             if d.product_id not in seen_pids:
                 seen_pids.add(d.product_id)
                 deduped_all.append(d)
+
+        # ── sell_candidates 補完: buyback_rows の最高価格で deal を補完 ──
+        # 売却先比較テーブルに有効価格があれば DB の best_buyback_price より優先して使う。
+        # これにより「比較テーブルに価格あり → メイン価格未取得」の不整合を防ぐ。
+        deduped_all = [_enrich_from_sell_candidates(d, bybp.get(d.product_id, [])) for d in deduped_all]
 
         # ── サマリバー（利益あり件数 / 監視中件数 / 取得失敗件数）──
         _profit_deals_all  = [d for d in deduped_all if (d.net_profit_jpy or 0) > 0]
@@ -5726,21 +5784,38 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                     f'</div>'
                 )
             else:
-                # 海外価格未取得 / html_blocked の場合
-                _ovs_method2 = overseas_collector_method or getattr(d, 'overseas_collector_method', '') or ''
-                if _ovs_method2 == 'html_blocked':
-                    _blocked_note = (
-                        '<div style="font-size:0.65rem;color:#6b7280">eBay自動取得は制限中。'
-                        '<br>前回確認データを表示</div>'
+                # eBay フォールバック: 海外価格未取得かつ最高売却先が eBay の場合
+                _best_shop = (d.best_buyback_shop or '').lower()
+                if 'ebay' in _best_shop and (d.best_buyback_price or 0) > 0:
+                    _ovs_price = d.best_buyback_price
+                    _ovs_src = d.best_buyback_shop or 'eBay'
+                    _method_badge = (
+                        '<span style="font-size:0.65rem;color:#7c3aed;background:#ede9fe;'
+                        'padding:1px 5px;border-radius:3px;margin-left:4px">eBay 売却参考</span>'
+                    )
+                    overseas_price_cell_html = (
+                        f'<div class="price-cell">'
+                        f'<div class="price-cell-lbl">&#127758; 海外二次流通</div>'
+                        f'<div class="price-cell-val" style="color:#7c3aed">¥{_ovs_price:,}</div>'
+                        f'<div style="font-size:0.7rem;color:#9ca3af">{_esc(_ovs_src)}{_method_badge}</div>'
+                        f'</div>'
                     )
                 else:
-                    _blocked_note = '<div class="price-cell-val" style="color:#9ca3af;font-size:0.8rem">未取得</div>'
-                overseas_price_cell_html = (
-                    '<div class="price-cell" style="opacity:0.5">'
-                    '<div class="price-cell-lbl">&#127758; 海外二次流通</div>'
-                    + _blocked_note +
-                    '</div>'
-                )
+                    # 海外価格未取得 / html_blocked の場合
+                    _ovs_method2 = overseas_collector_method or getattr(d, 'overseas_collector_method', '') or ''
+                    if _ovs_method2 == 'html_blocked':
+                        _blocked_note = (
+                            '<div style="font-size:0.65rem;color:#6b7280">eBay自動取得は制限中。'
+                            '<br>前回確認データを表示</div>'
+                        )
+                    else:
+                        _blocked_note = '<div class="price-cell-val" style="color:#9ca3af;font-size:0.8rem">未取得</div>'
+                    overseas_price_cell_html = (
+                        '<div class="price-cell" style="opacity:0.5">'
+                        '<div class="price-cell-lbl">&#127758; 海外二次流通</div>'
+                        + _blocked_note +
+                        '</div>'
+                    )
 
         # Overseas links
         overseas_html = ''
@@ -6073,7 +6148,8 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             price     = c["official_price"]
             bp        = c["buyback_price"]
             shop      = c["shop_name"] or "—"
-            flags     = "・".join(c["flags"]) if c["flags"] else "監視中"
+            _raw_flags = [f for f in (c["flags"] or []) if f != "中古プレ値あり"]
+            flags = "・".join(_raw_flags) if _raw_flags else "監視中"
             pname_raw = c["product_name"]
             pname_esc = _esc(pname_raw)
             pname_enc = _urllib_parse.quote(pname_raw)

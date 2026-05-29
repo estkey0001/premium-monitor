@@ -441,21 +441,7 @@ class DailyLPGenerator:
         _buyback_str_top = _jst_str(latest_buyback_at) if latest_buyback_at else "—"
         _lp_str_top = lp_generated_at.strftime("%m/%d %H:%M") if lp_generated_at else "—"
 
-        # topbar-date: 24h以内のデータのみ表示（古い日付をトップに出さない）
-        _buyback_age_hours = 0.0
-        if latest_buyback_at:
-            try:
-                _ba = latest_buyback_at if latest_buyback_at.tzinfo else latest_buyback_at.replace(tzinfo=JST)
-                _buyback_age_hours = (datetime.now(tz=JST) - _ba.astimezone(JST)).total_seconds() / 3600
-            except Exception:
-                _buyback_age_hours = 999.0
-        _topbar_date_html = (
-            f'<div class="topbar-date" data-buyback-updated title="DBに記録された最新の買取価格データ取得日時">'
-            f'最終更新: {_esc(_buyback_str_top)}{_collection_stats_html}</div>'
-            if _buyback_age_hours <= 24 else ''
-        )
-
-        # 取得統計バー HTML
+        # 取得統計バー HTML（_topbar_date_html より先に定義する必要あり）
         _cs = collection_stats or {}
         _cs_auto   = _cs.get("auto",   0)
         _cs_failed = _cs.get("failed", 0)
@@ -468,6 +454,20 @@ class DailyLPGenerator:
             f'<span class="cs-fail">取得失敗 {_cs_failed}件</span>'
             + (f'<span style="color:var(--ink4)">／</span>{_cs_manual_html}' if _cs_manual_html else '')
             + f'</span>'
+        )
+
+        # topbar-date: 24h以内のデータのみ表示（古い日付をトップに出さない）
+        _buyback_age_hours = 0.0
+        if latest_buyback_at:
+            try:
+                _ba = latest_buyback_at if latest_buyback_at.tzinfo else latest_buyback_at.replace(tzinfo=JST)
+                _buyback_age_hours = (datetime.now(tz=JST) - _ba.astimezone(JST)).total_seconds() / 3600
+            except Exception:
+                _buyback_age_hours = 999.0
+        _topbar_date_html = (
+            f'<div class="topbar-date" data-buyback-updated title="DBに記録された最新の買取価格データ取得日時">'
+            f'最終更新: {_esc(_buyback_str_top)}{_collection_stats_html}</div>'
+            if _buyback_age_hours <= 24 else ''
         )
         # アナウンスバー用
         # announce bar: 実際に初心者タブに表示するカード数（カメラ除外後）

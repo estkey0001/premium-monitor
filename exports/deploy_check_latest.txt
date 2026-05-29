@@ -1,6 +1,6 @@
 
 ============================================================
- Deploy Check (371 items)
+ Deploy Check (377 items)
 ============================================================
   ✅ [index_exists] docs/index.html 存在
   ✅ [forbidden_phrases] 禁止表現なし
@@ -185,13 +185,13 @@
   ✅ [ipad_not_in_other] iPad は「その他」欄に混入していない
   ✅ [airpods_not_in_smartphone] AirPods はスマートフォン欄に混入していない
   ✅ [applewatch_in_wearable_section] Apple Watch がウェアラブル欄に表示
-  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-05-29T22:12:20+09:00）
+  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-05-29T22:42:51+09:00）
   ✅ [suspicious_price_format] suspicious_prices 形式OK（suspicious_price なし）
   ✅ [fetch_failed_has_reason] fetch_failed 36件すべてに reason あり
   ✅ [collector_report_html_exists] docs/collector_report.html 存在
   ✅ [collector_report_link_in_lp] LP内に collector_report.html へのリンクがある
   ✅ [fetch_failed_report_link] 取得失敗32件 / suspicious0件 → 警告バーが表示されている
-  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 14件存在する: ['iphone17pro512', 'iphone17pro256', 'iphone17pm256', 'iphone17pm512']
+  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 14件存在する: ['iphone17pm512', 'iphone17pm256', 'iphone17pro512', 'iphone17pro256']
   ✅ [beginner_page_auto_scraped_exists] 自動取得 OK 19件 / total 55件
   ✅ [shop_name_no_vertical_wrap] shop-name-col に word-break:keep-all が設定されている
   ✅ [iphone17pro256_price_scraped] iPhone 17 Pro 256GB の価格取得成功: ['kaitori_shouten', 'kaitori_itchome', 'iosys', 'netoff']
@@ -353,7 +353,7 @@
   ✅ [freshness_banner_168h_branch] #346 _tab_beginner の freshness_banner に 168h 分岐が存在する
   ✅ [no_last_buyback_ts_label] #347 「最終買取データ取得」テキストが LP ソースに残っていない
   ✅ [stale_warning_7day_label] #348 _section_stale_warning に「7日超」または 168 の記述が存在する
-  ✅ [ranking_beginner_consistency] #349 ランキング利益あり(8件) / 初心者ページカード(4件) — 整合
+  ✅ [ranking_beginner_consistency] #349 ランキング利益あり(16件) / 初心者ページカード(4件) — 整合
   ✅ [x100vi_in_beginner_if_ranking] #350 X100VI 表示整合 OK（ランキングにある場合はページに表示、中古条件なら参考fold）
   ✅ [deal_age_scanned_at] #351 beginner フィルタが scanned_at ベースで動作している
   ✅ [flea_all_platforms] #352 売却先比較にラクマ・StockX の未取得行が存在する
@@ -373,8 +373,14 @@
   ✅ [ricoh_camera_in_beginner] #366 RICOH GR IV / GR IIIx が初心者ページ(beginner_easy)に存在する
   ✅ [sale_price_zero_guard] #367 sale_prices で price=0/null ガードが存在する
   ✅ [no_used_cond_in_best_price] #368 初心者メインカードの最高売却価格に中古条件なし（OK）
+  ✅ [collect_resale_script_exists] #369 collect_resale_prices.py が存在する
+  ✅ [resale_collectors_implemented] #370 eBay/Amazon/Mercari/ヤフオク/楽天市場コレクター実装済み
+  ✅ [resale_deterministic_id] #371 sale_price ID が決定論的（重複防止）に生成されている
+  ✅ [resale_camera_targets_defined] #372 GR IV / GR IIIx / X100VI がターゲット商品として設定されている
+  ✅ [resale_block_detection] #373 Cloud IP ブロック検出・graceful fallback が実装されている
+  ✅ [collect_resale_in_workflow] #374 daily_lp.yml に collect_resale_prices ステップ（EBAY_APP_ID 含む）が追加されている
 
-  Errors: 0 | Warnings: 8 | OK: 363
+  Errors: 0 | Warnings: 8 | OK: 369
 
   ✅ Deploy check PASSED
 ============================================================

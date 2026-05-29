@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-05-29 22:31 JST",
-  "routes_total": 0,
+  "generated_at": "2026-05-29 23:04 JST",
+  "routes_total": 49,
   "routes_unused_only": 0,
   "profitable_routes": 0,
   "negative_routes": 0,
@@ -15,8 +15,8 @@
     "top": []
   },
   "all_profitable": [],
-  "excluded_by_condition": 0,
+  "excluded_by_condition": 49,
   "excluded_by_confidence": 0,
   "excluded_by_missing_price": 0,
-  "reason_if_empty": "calculate-sedori-routes 未実行 or DBにルートデータなし"
+  "reason_if_empty": "全49件が中古/状態不明のため除外 (新品・未使用条件: ['new', 'sealed', 'unused', '新品', '未使用', '未開封'])"
 }

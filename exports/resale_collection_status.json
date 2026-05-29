@@ -1,0 +1,31 @@
+{
+  "collected_at": "2026-05-29T23:55:02.992874+09:00",
+  "platforms": {
+    "ebay": {
+      "status": "blocked",
+      "label_jp": "自動取得制限中（Cloud IP）",
+      "needs_ebay_app_id": true
+    },
+    "amazon": {
+      "status": "blocked",
+      "label_jp": "自動取得制限中（Cloud IP）"
+    },
+    "mercari": {
+      "status": "blocked",
+      "label_jp": "自動取得制限中（Cloud IP）"
+    },
+    "yahoo": {
+      "status": "ok_html",
+      "label_jp": "自動取得済（HTML）"
+    },
+    "rakuten": {
+      "status": "blocked",
+      "label_jp": "自動取得制限中（Cloud IP）"
+    }
+  },
+  "summary": {
+    "saved": 4,
+    "skipped": 21,
+    "errors": []
+  }
+}

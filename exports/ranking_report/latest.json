@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-29 03:22 JST",
+  "generated_at": "2026-05-29 19:33 JST",
   "route_type_beginner": "primary_to_secondary",
   "route_type_pro": "secondary_to_secondary",
   "beginner_top10": [
@@ -97,14 +97,40 @@
   ],
   "pro_top10": [
     {
+      "product_name": "RICOH GR IIIx",
+      "category": "camera",
+      "user_level": "beginner_easy",
+      "official_price_jpy": 139800,
+      "best_buyback_price": 265000,
+      "best_buyback_shop": "Amazon新品出品",
+      "net_profit_jpy": 123400,
+      "net_profit_rate": 0.8827,
+      "route_type": "secondary_to_secondary",
+      "source_label": "中古市場 / フリマ / 買取店",
+      "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
+    },
+    {
       "product_name": "FUJIFILM X100VI",
       "category": "camera",
       "user_level": "beginner_easy",
       "official_price_jpy": 269500,
-      "best_buyback_price": 415000,
-      "best_buyback_shop": "マップカメラ",
-      "net_profit_jpy": 143700,
-      "net_profit_rate": 0.5332,
+      "best_buyback_price": 470000,
+      "best_buyback_shop": "Amazon新品出品",
+      "net_profit_jpy": 198700,
+      "net_profit_rate": 0.7373,
+      "route_type": "secondary_to_secondary",
+      "source_label": "中古市場 / フリマ / 買取店",
+      "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
+    },
+    {
+      "product_name": "RICOH GR IV",
+      "category": "camera",
+      "user_level": "beginner_easy",
+      "official_price_jpy": 194800,
+      "best_buyback_price": 315000,
+      "best_buyback_shop": "Amazon新品出品",
+      "net_profit_jpy": 118400,
+      "net_profit_rate": 0.6078,
       "route_type": "secondary_to_secondary",
       "source_label": "中古市場 / フリマ / 買取店",
       "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
@@ -303,10 +329,36 @@
         "category": "camera",
         "user_level": "beginner_easy",
         "official_price_jpy": 269500,
-        "best_buyback_price": 415000,
-        "best_buyback_shop": "マップカメラ",
-        "net_profit_jpy": 143700,
-        "net_profit_rate": 0.5332,
+        "best_buyback_price": 470000,
+        "best_buyback_shop": "Amazon新品出品",
+        "net_profit_jpy": 198700,
+        "net_profit_rate": 0.7373,
+        "route_type": "primary_to_secondary",
+        "source_label": "RICOH公式 / FUJIFILM公式 / キタムラ",
+        "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
+      },
+      {
+        "product_name": "RICOH GR IIIx",
+        "category": "camera",
+        "user_level": "beginner_easy",
+        "official_price_jpy": 139800,
+        "best_buyback_price": 265000,
+        "best_buyback_shop": "Amazon新品出品",
+        "net_profit_jpy": 123400,
+        "net_profit_rate": 0.8827,
+        "route_type": "primary_to_secondary",
+        "source_label": "RICOH公式 / FUJIFILM公式 / キタムラ",
+        "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
+      },
+      {
+        "product_name": "RICOH GR IV",
+        "category": "camera",
+        "user_level": "beginner_easy",
+        "official_price_jpy": 194800,
+        "best_buyback_price": 315000,
+        "best_buyback_shop": "Amazon新品出品",
+        "net_profit_jpy": 118400,
+        "net_profit_rate": 0.6078,
         "route_type": "primary_to_secondary",
         "source_label": "RICOH公式 / FUJIFILM公式 / キタムラ",
         "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
@@ -316,14 +368,40 @@
   "pro_by_category": {
     "camera": [
       {
+        "product_name": "RICOH GR IIIx",
+        "category": "camera",
+        "user_level": "beginner_easy",
+        "official_price_jpy": 139800,
+        "best_buyback_price": 265000,
+        "best_buyback_shop": "Amazon新品出品",
+        "net_profit_jpy": 123400,
+        "net_profit_rate": 0.8827,
+        "route_type": "secondary_to_secondary",
+        "source_label": "中古市場 / フリマ / 買取店",
+        "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
+      },
+      {
         "product_name": "FUJIFILM X100VI",
         "category": "camera",
         "user_level": "beginner_easy",
         "official_price_jpy": 269500,
-        "best_buyback_price": 415000,
-        "best_buyback_shop": "マップカメラ",
-        "net_profit_jpy": 143700,
-        "net_profit_rate": 0.5332,
+        "best_buyback_price": 470000,
+        "best_buyback_shop": "Amazon新品出品",
+        "net_profit_jpy": 198700,
+        "net_profit_rate": 0.7373,
+        "route_type": "secondary_to_secondary",
+        "source_label": "中古市場 / フリマ / 買取店",
+        "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
+      },
+      {
+        "product_name": "RICOH GR IV",
+        "category": "camera",
+        "user_level": "beginner_easy",
+        "official_price_jpy": 194800,
+        "best_buyback_price": 315000,
+        "best_buyback_shop": "Amazon新品出品",
+        "net_profit_jpy": 118400,
+        "net_profit_rate": 0.6078,
         "route_type": "secondary_to_secondary",
         "source_label": "中古市場 / フリマ / 買取店",
         "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
@@ -426,10 +504,10 @@
     ]
   },
   "excluded_items": 0,
-  "total_deals": 8,
+  "total_deals": 10,
   "confidence_summary": {
-    "total": 8,
-    "profitable": 8,
+    "total": 10,
+    "profitable": 10,
     "negative": 0
   },
   "stale_data_count": 0

@@ -157,6 +157,37 @@ class BeginnerDealScanner:
                     if b.buyback_price > 0
                     and getattr(b, "data_source", "") not in ("fetch_failed", "product_not_listed")
                 ]
+        # ── 二次流通（resale_market）価格を追加候補として追加 ──
+        # sale_prices テーブルの「新品/未使用」条件行を取得し、buyback_prices と競合させる。
+        # 初心者向け最高売却価格は: 最高値の buyback or 最高値の resale(new) を選択する。
+        _RESALE_NEW_CONDITIONS = {'new_unopened', 'new_unopened_simfree', 'new', 'unused'}
+        try:
+            _sale_rows = self.repo.list_sale_prices(product_id=product.id, active_only=True, limit=30)
+            for _sp in _sale_rows:
+                _sp_cond = (getattr(_sp, 'condition', '') or '').strip()
+                if _sp_cond not in _RESALE_NEW_CONDITIONS:
+                    continue
+                if not _sp.sale_price or _sp.sale_price <= 0:
+                    continue
+                _sp_shop = _sp.shop_name or _sp.shop_id or 'secondary_market'
+                # shop_id は "resale_<shopname>" で一意化（buyback shop と衝突しない）
+                _sp_sid = f"resale_{(_sp_shop or '').replace(' ', '_')[:24]}"
+                _obs = _sp.observed_at if _sp.observed_at else datetime.now()
+                valid_buybacks.append(BuybackPriceModel(
+                    id=f"resale_{_sp.id[:20]}",
+                    product_id=product.id,
+                    shop_id=_sp_sid,
+                    shop_name=_sp_shop,
+                    buyback_price=_sp.sale_price,
+                    condition='new_unopened',  # 新品/未使用として扱う
+                    buyback_url=_sp.url or '',
+                    observed_at=_obs,
+                    data_source='resale_market',  # 二次流通市場価格（手動参考）
+                    link_verified=bool(getattr(_sp, 'link_verified', False)),
+                ))
+        except Exception as _e:
+            logger.debug("[%s] sale_prices 取得エラー（スキップ）: %s", product.id, _e)
+
         if not valid_buybacks:
             return None
 

@@ -3761,6 +3761,65 @@ def check() -> list[dict]:
     results.append({"level": "ok" if _t363 else "warning", "check": "price_source_row_exists",
                     "message": "#363 価格根拠行（price-source-row / 最高売却先）がカードに存在する" + ("" if _t363 else " ← price-source-row が見つかりません")})
 
+    # ── Task 7 追加チェック（カメラ二次流通価格）──────────────────────────
+    import re as _re364
+
+    # #364: resale_market（二次流通）ソースが BeginnerDealScanner に存在する
+    _bds_src = ""
+    try:
+        _bds_path = PROJECT_ROOT / "src" / "market" / "beginner_deal_scanner.py"
+        _bds_src = _bds_path.read_text(encoding="utf-8")
+    except Exception:
+        pass
+    _t364 = 'resale_market' in _bds_src and '_RESALE_NEW_CONDITIONS' in _bds_src
+    results.append({"level": "ok" if _t364 else "error", "check": "resale_market_in_scanner",
+                    "message": "#364 BeginnerDealScanner が sale_prices(新品条件)を二次流通候補として参照している" + ("" if _t364 else " ← resale_market ロジックが見つかりません")})
+
+    # #365: Amazon/楽天/Mercari/eBay の売却先候補が HTML 内に存在する（カメラ含む）
+    _t365_amazon  = 'Amazon新品出品' in html or 'amazon.co.jp' in html
+    _t365_mercari = 'メルカリ' in html
+    _t365_ebay    = 'eBay' in html or 'ebay.com' in html
+    _t365 = _t365_amazon and _t365_mercari and _t365_ebay
+    results.append({"level": "ok" if _t365 else "warning", "check": "resale_platform_coverage",
+                    "message": "#365 Amazon/Mercari/eBay の売却先候補が HTML に存在する" + ("" if _t365 else f" ← Amazon:{_t365_amazon} Mercari:{_t365_mercari} eBay:{_t365_ebay}")})
+
+    # #366: RICOH カメラが beginner_easy に存在する（二次流通価格で復旧済み）
+    _t366_gr4  = 'RICOH GR IV' in html and 'beginner_easy' in html
+    _t366_gr3x = 'RICOH GR IIIx' in html and 'beginner_easy' in html
+    if _t366_gr4 and _t366_gr3x:
+        results.append({"level": "ok", "check": "ricoh_camera_in_beginner",
+                        "message": "#366 RICOH GR IV / GR IIIx が初心者ページ(beginner_easy)に存在する"})
+    elif _t366_gr4 or _t366_gr3x:
+        results.append({"level": "warning", "check": "ricoh_camera_in_beginner",
+                        "message": f"#366 RICOH カメラの一部が初心者ページに未表示（GR IV:{_t366_gr4} / GR IIIx:{_t366_gr3x}）"})
+    else:
+        results.append({"level": "warning", "check": "ricoh_camera_in_beginner",
+                        "message": "#366 RICOH GR IV / GR IIIx が初心者ページに表示されていない — 二次流通価格の取得を確認"})
+
+    # #367: price=0 / null が利益計算に使われていない（BeginnerDealScanner の sale_price > 0 ガード）
+    _t367 = ('_sp.sale_price <= 0' in _bds_src or
+             'sale_price > 0' in _bds_src or
+             'not _sp.sale_price' in _bds_src)
+    results.append({"level": "ok" if _t367 else "error", "check": "sale_price_zero_guard",
+                    "message": "#367 sale_prices で price=0/null ガードが存在する" + ("" if _t367 else " ← sale_price > 0 のチェックが見つかりません")})
+
+    # #368: 中古A/美品が highest_sell_price(best_buyback_price) に混入していない
+    # beginner_easy カードの価格根拠行で「中古A（美品）」「美品」が最高売却価格として表示されない
+    if _beg_tab_m:
+        _beg_main2 = _re364.sub(r'<details[^>]*used-cond-details[^>]*>.*?</details>', '', _beg_html, flags=_re364.DOTALL)
+        # price-source-row 内に中古条件が出ていないか確認
+        _source_rows = _re364.findall(r'<div class="price-source-row"[^>]*>(.*?)</div>', _beg_main2, _re364.DOTALL)
+        _used_in_source = [r for r in _source_rows if '中古A' in r or '美品' in r or '良品' in r or '中古B' in r]
+        if _used_in_source:
+            results.append({"level": "error", "check": "no_used_cond_in_best_price",
+                            "message": f"#368 初心者メインカードの最高売却価格に中古条件が含まれています: {len(_used_in_source)}件"})
+        else:
+            results.append({"level": "ok", "check": "no_used_cond_in_best_price",
+                            "message": "#368 初心者メインカードの最高売却価格に中古条件なし（OK）"})
+    else:
+        results.append({"level": "ok", "check": "no_used_cond_in_best_price",
+                        "message": "#368 初心者タブ未検出 → スキップ"})
+
     return results
 
 

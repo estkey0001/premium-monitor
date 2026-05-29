@@ -128,6 +128,44 @@ class DailyLPGenerator:
             if _rows:
                 buyback_by_product[_p.id] = _rows
 
+        # sale_prices (新品/未使用条件) を buyback_by_product に追加（二次流通価格の表示用）
+        # resale_market ソースとして buyback_rows に注入することで売却先比較テーブルに反映する
+        _RESALE_NEW_CONDS = {'new_unopened', 'new_unopened_simfree', 'new', 'unused'}
+        try:
+            for _p in _all_products:
+                _sp_rows = self.repo.list_sale_prices(product_id=_p.id, active_only=True, limit=20)
+                _resale_rows = []
+                for _sp in _sp_rows:
+                    _sp_cond = (getattr(_sp, 'condition', '') or '').strip()
+                    if _sp_cond not in _RESALE_NEW_CONDS:
+                        continue
+                    if not _sp.sale_price or _sp.sale_price <= 0:
+                        continue
+                    # dict 形式で buyback_rows に追加（_deal_card の行形式に合わせる）
+                    _obs_str = _sp.observed_at.isoformat() if _sp.observed_at else ''
+                    _resale_rows.append({
+                        'shop_id':       f"resale_{(_sp.shop_id or _sp.shop_name or '').replace(' ', '_')[:20]}",
+                        'shop_name':     _sp.shop_name or _sp.shop_id or '二次流通',
+                        'buyback_price': _sp.sale_price,
+                        'condition':     'new_unopened',
+                        'buyback_url':   _sp.url or '',
+                        'observed_at':   _obs_str,
+                        'data_source':   'resale_market',
+                        'link_verified': bool(getattr(_sp, 'link_verified', False)),
+                        'confidence':    'high',
+                    })
+                if _resale_rows:
+                    if _p.id not in buyback_by_product:
+                        buyback_by_product[_p.id] = []
+                    # buyback_rows に追加（価格降順でソート後）
+                    buyback_by_product[_p.id] = sorted(
+                        buyback_by_product[_p.id] + _resale_rows,
+                        key=lambda r: r.get('buyback_price', 0),
+                        reverse=True
+                    )
+        except Exception:
+            pass
+
         # 取得種別統計（ページ上部表示用）
         _all_buyback_rows_flat = [row for rows in buyback_by_product.values() for row in rows]
         collection_stats = {
@@ -4666,6 +4704,8 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             return '<span class="badge-not-listed">現在未掲載</span>'
         elif ds == "fetch_failed":
             return '<span class="badge-fetch-failed">取得失敗</span>'
+        elif ds == "resale_market":
+            return '<span class="badge-manual">二次流通</span>'
         elif ds.startswith("manual"):
             return '<span class="badge-manual">手動</span>'
         elif ds == "live":
@@ -4683,7 +4723,8 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         is_not_listed = (str(data_source) == "product_not_listed")
         is_failed = (str(data_source) == "fetch_failed")
         is_auto   = (str(data_source) == "auto_scraped")   # 自動スクレイピング成功
-        is_manual = bool(data_source and str(data_source).startswith("manual"))  # 手動CSV由来
+        is_resale = (str(data_source) == "resale_market")  # 二次流通参考価格
+        is_manual = bool(data_source and (str(data_source).startswith("manual") or is_resale))  # 手動CSV由来 or 二次流通
         # product_not_listed: この店舗では現在、該当商品の掲載が確認できない
         if is_not_listed:
             return '<span class="freshness-not-listed" title="この店舗では現在、該当商品の掲載が確認できません">現在未掲載</span>'
@@ -5732,6 +5773,8 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             _ds = _ts_rows[0].get('data_source', '')
             if str(_ds) == 'auto_scraped':
                 _src_label = '買取店（自動取得）'
+            elif str(_ds) == 'resale_market':
+                _src_label = '二次流通（参考）'
             elif str(_ds).startswith('manual'):
                 _src_label = '手動確認'
             elif str(_ds) == 'live':

@@ -1,5 +1,5 @@
 {
-  "collected_at": "2026-05-30T01:25:26.962272+09:00",
+  "collected_at": "2026-05-30T02:01:17.793891+09:00",
   "platforms": {
     "ebay": {
       "status": "blocked",
@@ -7,8 +7,8 @@
       "needs_ebay_app_id": true
     },
     "amazon": {
-      "status": "blocked",
-      "label_jp": "自動取得制限中（Cloud IP）"
+      "status": "ok_html",
+      "label_jp": "自動取得済（HTML）"
     },
     "mercari": {
       "status": "blocked",
@@ -24,8 +24,8 @@
     }
   },
   "summary": {
-    "saved": 4,
-    "skipped": 21,
+    "saved": 5,
+    "skipped": 20,
     "errors": []
   }
 }

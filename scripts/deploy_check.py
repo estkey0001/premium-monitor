@@ -3885,6 +3885,27 @@ def check() -> list[dict]:
         results.append({"level": "warning", "check": "collect_resale_in_workflow",
                         "message": "#374 daily_lp.yml 未存在のためスキップ"})
 
+    # #375: sell_candidates 統一チェック
+    _t375 = '_enrich_from_sell_candidates' in _lp_gen_src
+    results.append({"level": "ok" if _t375 else "error", "check": "sell_candidates_unified",
+                    "message": "#375 sell_candidates が統一されている（_enrich_from_sell_candidates）" + ("" if _t375 else " ← 実装されていません")})
+
+    # #376: monitoring deal に有効価格があれば利益ありに昇格
+    _t376 = '_enrich_from_sell_candidates' in _lp_gen_src and 'deduped_all' in _lp_gen_src
+    results.append({"level": "ok" if _t376 else "error", "check": "monitoring_upgrade_to_profit",
+                    "message": "#376 監視中案件が有効価格で利益ありに昇格する" + ("" if _t376 else " ← deduped_all 補完が未実装")})
+
+    # #377: Pro「中古プレ値あり」除外
+    _t377 = ('中古プレ値あり' not in open(PROJECT_ROOT / 'src' / 'db' / 'repository.py', encoding='utf-8').read()
+             or '_raw_flags' in _lp_gen_src)
+    results.append({"level": "ok" if _t377 else "warning", "check": "pro_no_used_premium_badge",
+                    "message": "#377 Proメインに「中古プレ値あり」が出ない" + ("" if _t377 else " ← repository.py または LP 側でフィルタが必要")})
+
+    # #378: eBay 海外価格フォールバック
+    _t378 = 'ebay' in _lp_gen_src.lower() and ('_ovs_price = d.best_buyback_price' in _lp_gen_src or 'ebay_fallback' in _lp_gen_src or "'ebay' in _best_shop" in _lp_gen_src)
+    results.append({"level": "ok" if _t378 else "warning", "check": "ebay_overseas_fallback",
+                    "message": "#378 eBay 最高売却時に海外価格フォールバックあり" + ("" if _t378 else " ← eBay フォールバック未実装")})
+
     return results
 
 

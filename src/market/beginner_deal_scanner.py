@@ -91,12 +91,10 @@ class BeginnerDealScanner:
                 link_verified=bool(_d.get('link_verified', False)),
             ))
 
-        if not buyback_list:
-            return None
-
         # ── 二次流通（resale_market）価格を早期チェック ──
-        # all_failed 判定より先に sale_prices を確認し、有効な二次流通価格があれば
-        # fetch_failed 早期リターンをバイパスする（カメラ系：買取店全滅でも二次流通あり）
+        # buyback_list が空（買取店設定なし）または全店舗 fetch_failed の場合でも、
+        # sale_prices に有効価格があれば処理を続行する（カメラ系の主要対応）。
+        # ※ この check は buyback_list の空判定より先に行う必要がある。
         _RESALE_NEW_CONDITIONS = {'new_unopened', 'new_unopened_simfree', 'new', 'unused'}
         _resale_precheck: list = []
         try:
@@ -124,6 +122,10 @@ class BeginnerDealScanner:
                 ))
         except Exception as _e_pre:
             logger.debug("[%s] sale_prices 早期チェック エラー（スキップ）: %s", product.id, _e_pre)
+
+        # buyback_list が空 かつ 二次流通価格もなし → 設定不備（対象外商品）
+        if not buyback_list and not _resale_precheck:
+            return None
 
         # 全店舗が fetch_failed → user_level="fetch_failed" で返す（Noneにしない）
         # ただし、有効な二次流通価格（resale_market）が存在する場合はバイパスして処理継続

@@ -1231,9 +1231,6 @@ class Repository:
             if d.get("is_lottery"):       flags.append("抽選販売")
             if d.get("is_discontinued"):  flags.append("SOLD OUT")
             if d.get("is_production_ended"): flags.append("生産終了")
-            # カメラは希少性コメントを追加
-            if d["genre"] == "camera":
-                flags.append("中古プレ値あり")
             result.append({
                 "product_id":       d["id"],
                 "genre":            d["genre"],

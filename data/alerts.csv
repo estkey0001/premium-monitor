@@ -1,24 +1,24 @@
 alert_id,alert_type,product_name,brand,category,severity,title,message,product_url,action_url,action_label,detected_at,expires_at,source,data_source,confidence
-d39018f6-e45,lottery_closing_soon,RICOH GR IV Monochrome,RICOH,,high,抽選締め切り間近: RICOH GR IV Monochrome,受付終了: 2026-05-29 (10時間後),https://ricohimagingstore.com/Form/Product/ProductDetail.aspx?shop=0&pid=S0001580&cat=002010,https://ricohimagingstore.com/Form/Product/ProductDetail.aspx?shop=0&pid=S0001580&cat=002010,抽選フォームを確認,2026-05-29 01:52,2026-05-29 12:00,lottery_events_csv,auto_generated,medium
-ed18961b-c87,lottery_closing_soon,RICOH GR IV HDF,RICOH,,high,抽選締め切り間近: RICOH GR IV HDF,受付終了: 2026-05-29 (10時間後),https://ricohimagingstore.com/Form/Product/ProductDetail.aspx?shop=0&pid=S0001566&cat=002010,https://ricohimagingstore.com/Form/Product/ProductDetail.aspx?shop=0&pid=S0001566&cat=002010,抽選フォームを確認,2026-05-29 01:52,2026-05-29 12:00,lottery_events_csv,auto_generated,medium
-ce2c0acb-1a8,lottery_closing_soon,RICOH GR IV,RICOH,,high,抽選締め切り間近: RICOH GR IV,受付終了: 2026-05-29 (10時間後),https://ricohimagingstore.com/Form/Product/ProductDetail.aspx?shop=0&pid=S0001551&cat=002010,https://ricohimagingstore.com/Form/Product/ProductDetail.aspx?shop=0&pid=S0001551&cat=002010,抽選フォームを確認,2026-05-29 01:52,2026-05-29 12:00,lottery_events_csv,auto_generated,medium
-9e67582f-a42,buyback_surge,iPhone 17 Pro Max 512GB SIMフリー,,,medium,買取急騰: iPhone 17 Pro Max 512GB SIMフリー,,,,,2026-05-29 01:52,,buyback_db,auto_generated,medium
-f60aba1f-aeb,buyback_surge,iPhone 17 Pro Max 256GB SIMフリー,,,medium,買取急騰: iPhone 17 Pro Max 256GB SIMフリー,,,,,2026-05-29 01:52,,buyback_db,auto_generated,medium
-2fe6d3cf-391,buyback_surge,iPhone 17 Pro 512GB SIMフリー,,,medium,買取急騰: iPhone 17 Pro 512GB SIMフリー,,,,,2026-05-29 01:52,,buyback_db,auto_generated,medium
-8e3c19ba-14a,buyback_surge,iPhone 17 Pro 256GB SIMフリー,,,medium,買取急騰: iPhone 17 Pro 256GB SIMフリー,,,,,2026-05-29 01:52,,buyback_db,auto_generated,medium
-0a34105f-4be,buyback_surge,PlayStation 5 Pro,,,medium,買取急騰: PlayStation 5 Pro,,,,,2026-05-29 01:52,,buyback_db,auto_generated,medium
-039130c1-0a8,buyback_surge,Nintendo Switch 2,,,medium,買取急騰: Nintendo Switch 2,,,,,2026-05-29 01:52,,buyback_db,auto_generated,medium
-046fb0dc-aab,buyback_drop,Nintendo Switch 2,,,medium,買取急落: Nintendo Switch 2,,,,,2026-05-29 01:52,,buyback_db,auto_generated,medium
-abf73926-65b,buyback_surge,Nintendo Switch 2,,,medium,買取急騰: Nintendo Switch 2,,,,,2026-05-29 01:52,,buyback_db,auto_generated,medium
-9ac82df4-662,buyback_drop,MacBook Air M4 13インチ,,,medium,買取急落: MacBook Air M4 13インチ,,,,,2026-05-29 01:52,,buyback_db,auto_generated,medium
-6bb2d171-441,buyback_drop,MacBook Air M4 13インチ,,,medium,買取急落: MacBook Air M4 13インチ,,,,,2026-05-29 01:52,,buyback_db,auto_generated,medium
-5be77b7d-0ff,buyback_drop,Mac mini M4,,,medium,買取急落: Mac mini M4,,,,,2026-05-29 01:52,,buyback_db,auto_generated,medium
-89c45692-448,buyback_drop,iPhone 17 Pro Max 512GB SIMフリー,,,medium,買取急落: iPhone 17 Pro Max 512GB SIMフリー,,,,,2026-05-29 01:52,,buyback_db,auto_generated,medium
-268dd474-91e,buyback_drop,iPhone 17 Pro Max 256GB SIMフリー,,,medium,買取急落: iPhone 17 Pro Max 256GB SIMフリー,,,,,2026-05-29 01:52,,buyback_db,auto_generated,medium
-606fa89a-e2b,buyback_drop,iPhone 17 Pro 512GB SIMフリー,,,medium,買取急落: iPhone 17 Pro 512GB SIMフリー,,,,,2026-05-29 01:52,,buyback_db,auto_generated,medium
-d8c2b22e-ebd,buyback_drop,iPhone 17 Pro 256GB SIMフリー,,,medium,買取急落: iPhone 17 Pro 256GB SIMフリー,,,,,2026-05-29 01:52,,buyback_db,auto_generated,medium
-cadb8f43-f77,buyback_drop,iPhone 17 256GB SIMフリー,,,medium,買取急落: iPhone 17 256GB SIMフリー,,,,,2026-05-29 01:52,,buyback_db,auto_generated,medium
-c505f5d1-7e1,buyback_drop,iPhone 17 256GB SIMフリー,,,medium,買取急落: iPhone 17 256GB SIMフリー,,,,,2026-05-29 01:52,,buyback_db,auto_generated,medium
-24468dc0-28f,buyback_drop,iPhone 16 Pro 256GB SIMフリー,,,medium,買取急落: iPhone 16 Pro 256GB SIMフリー,,,,,2026-05-29 01:52,,buyback_db,auto_generated,medium
-c269ed08-dce,buyback_drop,iPhone 16 Pro 256GB SIMフリー,,,medium,買取急落: iPhone 16 Pro 256GB SIMフリー,,,,,2026-05-29 01:52,,buyback_db,auto_generated,medium
-55c678a2-eab,buyback_drop,iPad Pro M4 11インチ,,,medium,買取急落: iPad Pro M4 11インチ,,,,,2026-05-29 01:52,,buyback_db,auto_generated,medium
+49540161-1a0,lottery_closing_soon,RICOH GR IV Monochrome,RICOH,,high,抽選締め切り間近: RICOH GR IV Monochrome,受付終了: 2026-05-29 (8時間後),https://ricohimagingstore.com/Form/Product/ProductDetail.aspx?shop=0&pid=S0001580&cat=002010,https://ricohimagingstore.com/Form/Product/ProductDetail.aspx?shop=0&pid=S0001580&cat=002010,抽選フォームを確認,2026-05-29 03:24,2026-05-29 12:00,lottery_events_csv,auto_generated,medium
+814def49-33a,lottery_closing_soon,RICOH GR IV HDF,RICOH,,high,抽選締め切り間近: RICOH GR IV HDF,受付終了: 2026-05-29 (8時間後),https://ricohimagingstore.com/Form/Product/ProductDetail.aspx?shop=0&pid=S0001566&cat=002010,https://ricohimagingstore.com/Form/Product/ProductDetail.aspx?shop=0&pid=S0001566&cat=002010,抽選フォームを確認,2026-05-29 03:24,2026-05-29 12:00,lottery_events_csv,auto_generated,medium
+a62e7fcf-878,lottery_closing_soon,RICOH GR IV,RICOH,,high,抽選締め切り間近: RICOH GR IV,受付終了: 2026-05-29 (8時間後),https://ricohimagingstore.com/Form/Product/ProductDetail.aspx?shop=0&pid=S0001551&cat=002010,https://ricohimagingstore.com/Form/Product/ProductDetail.aspx?shop=0&pid=S0001551&cat=002010,抽選フォームを確認,2026-05-29 03:24,2026-05-29 12:00,lottery_events_csv,auto_generated,medium
+eb9004e7-e69,buyback_surge,iPhone 17 Pro Max 512GB SIMフリー,,,medium,買取急騰: iPhone 17 Pro Max 512GB SIMフリー,,,,,2026-05-29 03:24,,buyback_db,auto_generated,medium
+fa006492-604,buyback_surge,iPhone 17 Pro Max 256GB SIMフリー,,,medium,買取急騰: iPhone 17 Pro Max 256GB SIMフリー,,,,,2026-05-29 03:24,,buyback_db,auto_generated,medium
+f3a07021-1f9,buyback_surge,iPhone 17 Pro 512GB SIMフリー,,,medium,買取急騰: iPhone 17 Pro 512GB SIMフリー,,,,,2026-05-29 03:24,,buyback_db,auto_generated,medium
+a7206830-c94,buyback_surge,iPhone 17 Pro 256GB SIMフリー,,,medium,買取急騰: iPhone 17 Pro 256GB SIMフリー,,,,,2026-05-29 03:24,,buyback_db,auto_generated,medium
+b77c3c50-5e0,buyback_surge,PlayStation 5 Pro,,,medium,買取急騰: PlayStation 5 Pro,,,,,2026-05-29 03:24,,buyback_db,auto_generated,medium
+bb5fbeb7-d57,buyback_surge,Nintendo Switch 2,,,medium,買取急騰: Nintendo Switch 2,,,,,2026-05-29 03:24,,buyback_db,auto_generated,medium
+2f22a527-c4c,buyback_drop,Nintendo Switch 2,,,medium,買取急落: Nintendo Switch 2,,,,,2026-05-29 03:24,,buyback_db,auto_generated,medium
+d7d3b86a-1e3,buyback_surge,Nintendo Switch 2,,,medium,買取急騰: Nintendo Switch 2,,,,,2026-05-29 03:24,,buyback_db,auto_generated,medium
+6d98a3ba-367,buyback_drop,MacBook Air M4 13インチ,,,medium,買取急落: MacBook Air M4 13インチ,,,,,2026-05-29 03:24,,buyback_db,auto_generated,medium
+6846cd1b-237,buyback_drop,MacBook Air M4 13インチ,,,medium,買取急落: MacBook Air M4 13インチ,,,,,2026-05-29 03:24,,buyback_db,auto_generated,medium
+2ef87536-785,buyback_drop,Mac mini M4,,,medium,買取急落: Mac mini M4,,,,,2026-05-29 03:24,,buyback_db,auto_generated,medium
+8d67fc00-49c,buyback_drop,iPhone 17 Pro Max 512GB SIMフリー,,,medium,買取急落: iPhone 17 Pro Max 512GB SIMフリー,,,,,2026-05-29 03:24,,buyback_db,auto_generated,medium
+4be56041-079,buyback_drop,iPhone 17 Pro Max 256GB SIMフリー,,,medium,買取急落: iPhone 17 Pro Max 256GB SIMフリー,,,,,2026-05-29 03:24,,buyback_db,auto_generated,medium
+cc4c3eae-e4c,buyback_drop,iPhone 17 Pro 512GB SIMフリー,,,medium,買取急落: iPhone 17 Pro 512GB SIMフリー,,,,,2026-05-29 03:24,,buyback_db,auto_generated,medium
+55235b65-913,buyback_drop,iPhone 17 Pro 256GB SIMフリー,,,medium,買取急落: iPhone 17 Pro 256GB SIMフリー,,,,,2026-05-29 03:24,,buyback_db,auto_generated,medium
+b1c94d73-d58,buyback_drop,iPhone 17 256GB SIMフリー,,,medium,買取急落: iPhone 17 256GB SIMフリー,,,,,2026-05-29 03:24,,buyback_db,auto_generated,medium
+74ee1f94-454,buyback_drop,iPhone 17 256GB SIMフリー,,,medium,買取急落: iPhone 17 256GB SIMフリー,,,,,2026-05-29 03:24,,buyback_db,auto_generated,medium
+b4a287cb-54a,buyback_drop,iPhone 16 Pro 256GB SIMフリー,,,medium,買取急落: iPhone 16 Pro 256GB SIMフリー,,,,,2026-05-29 03:24,,buyback_db,auto_generated,medium
+860adfdb-aef,buyback_drop,iPhone 16 Pro 256GB SIMフリー,,,medium,買取急落: iPhone 16 Pro 256GB SIMフリー,,,,,2026-05-29 03:24,,buyback_db,auto_generated,medium
+49f641f4-2dd,buyback_drop,iPad Pro M4 11インチ,,,medium,買取急落: iPad Pro M4 11インチ,,,,,2026-05-29 03:24,,buyback_db,auto_generated,medium

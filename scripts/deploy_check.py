@@ -3820,6 +3820,69 @@ def check() -> list[dict]:
         results.append({"level": "ok", "check": "no_used_cond_in_best_price",
                         "message": "#368 初心者タブ未検出 → スキップ"})
 
+    # =========================================
+    # #369-#373: 二次流通自動収集コレクター (collect_resale_prices.py) チェック
+    # =========================================
+
+    # collect_resale_prices.py の存在確認
+    _crp_path = PROJECT_ROOT / "scripts" / "collect_resale_prices.py"
+    _crp_exists = _crp_path.exists()
+    results.append({"level": "ok" if _crp_exists else "error",
+                    "check": "collect_resale_script_exists",
+                    "message": "#369 collect_resale_prices.py が存在する" + ("" if _crp_exists else " ← scripts/collect_resale_prices.py が見つかりません")})
+
+    if _crp_exists:
+        _crp_src = _crp_path.read_text(encoding="utf-8")
+
+        # #370: eBay / Amazon / Mercari / ヤフオク / 楽天市場 コレクターが実装されている
+        _t370_ebay    = "EbayResaleCollector"    in _crp_src
+        _t370_amazon  = "AmazonJpResaleCollector" in _crp_src
+        _t370_mercari = "MercariResaleCollector"  in _crp_src
+        _t370_yahoo   = "YahooAuctionResaleCollector" in _crp_src
+        _t370_rakuten = "RakutenResaleCollector"  in _crp_src
+        _t370 = _t370_ebay and _t370_amazon and _t370_mercari and _t370_yahoo and _t370_rakuten
+        results.append({"level": "ok" if _t370 else "warning",
+                        "check": "resale_collectors_implemented",
+                        "message": "#370 eBay/Amazon/Mercari/ヤフオク/楽天市場コレクター実装済み"
+                                   + ("" if _t370 else
+                                      f" ← ebay:{_t370_ebay} amazon:{_t370_amazon} mercari:{_t370_mercari} yahoo:{_t370_yahoo} rakuten:{_t370_rakuten}")})
+
+        # #371: 決定論的 ID 生成（重複防止）が実装されている
+        _t371 = "_make_sp_id" in _crp_src and "sha1" in _crp_src
+        results.append({"level": "ok" if _t371 else "warning",
+                        "check": "resale_deterministic_id",
+                        "message": "#371 sale_price ID が決定論的（重複防止）に生成されている" + ("" if _t371 else " ← _make_sp_id / sha1 が見つかりません")})
+
+        # #372: カメラ製品ターゲット設定が存在する
+        _t372 = "prod_gr4" in _crp_src and "prod_x100vi" in _crp_src and "prod_gr3x" in _crp_src
+        results.append({"level": "ok" if _t372 else "error",
+                        "check": "resale_camera_targets_defined",
+                        "message": "#372 GR IV / GR IIIx / X100VI がターゲット商品として設定されている" + ("" if _t372 else " ← CAMERA_PRODUCT_CONFIGS にカメラ製品が未設定")})
+
+        # #373: ブロック検出・graceful fallback が実装されている
+        _t373 = "_is_blocked" in _crp_src and "site_blocked" in _crp_src
+        results.append({"level": "ok" if _t373 else "warning",
+                        "check": "resale_block_detection",
+                        "message": "#373 Cloud IP ブロック検出・graceful fallback が実装されている" + ("" if _t373 else " ← _is_blocked / site_blocked 処理が見つかりません")})
+    else:
+        for n, check in [(370, "resale_collectors_implemented"), (371, "resale_deterministic_id"),
+                         (372, "resale_camera_targets_defined"), (373, "resale_block_detection")]:
+            results.append({"level": "warning", "check": check,
+                            "message": f"#{n} collect_resale_prices.py 未存在のためスキップ"})
+
+    # #374: ワークフローに collect_resale_prices ステップが含まれている
+    _workflow_path = PROJECT_ROOT / ".github" / "workflows" / "daily_lp.yml"
+    if _workflow_path.exists():
+        _wf_src = _workflow_path.read_text(encoding="utf-8")
+        _t374 = "collect_resale_prices.py" in _wf_src and "EBAY_APP_ID" in _wf_src
+        results.append({"level": "ok" if _t374 else "warning",
+                        "check": "collect_resale_in_workflow",
+                        "message": "#374 daily_lp.yml に collect_resale_prices ステップ（EBAY_APP_ID 含む）が追加されている"
+                                   + ("" if _t374 else " ← workflow に collect_resale_prices.py ステップが見つかりません")})
+    else:
+        results.append({"level": "warning", "check": "collect_resale_in_workflow",
+                        "message": "#374 daily_lp.yml 未存在のためスキップ"})
+
     return results
 
 

@@ -3963,6 +3963,61 @@ def check() -> list[dict]:
                     "message": "#384 データソースバッジ（_data_source_badge）が実装されている"
                                + ("" if _t384 else " ← _data_source_badge 未実装")})
 
+    # #385: iPhone product_id がアンダースコア形式（products.yaml と一致）
+    if _collect_src_path.exists():
+        try:
+            _crs_src385 = _collect_src  # 上の #381/#382 ブロックで既に読み込み済み
+        except NameError:
+            _crs_src385 = _collect_src_path.read_text(encoding="utf-8")
+        # collect_resale_prices.py が prod_iphone17pro_256 形式を使用しているか確認
+        _t385 = (
+            'prod_iphone17pro_256' in _crs_src385
+            and 'prod_iphone17pro_512' in _crs_src385
+            and 'prod_iphone17pm_256' in _crs_src385
+            and 'prod_iphone17pm_512' in _crs_src385
+        )
+        # アンダースコアなし（誤形式）が残っていないか確認
+        _t385_bad = (
+            '"prod_iphone17pro256"' in _crs_src385
+            or '"prod_iphone17pro512"' in _crs_src385
+            or '"prod_iphone17pm256"' in _crs_src385
+            or '"prod_iphone17pm512"' in _crs_src385
+        )
+        _t385_ok = _t385 and not _t385_bad
+        results.append({"level": "ok" if _t385_ok else "error", "check": "iphone_product_id_format",
+                        "message": "#385 collect_resale_prices.py の iPhone product_id が products.yaml 形式（prod_iphone17pro_256 等）"
+                                   + ("" if _t385_ok else " ← アンダースコアなし形式（FOREIGN KEY エラーの原因）が残存")})
+    else:
+        results.append({"level": "warning", "check": "iphone_product_id_format",
+                        "message": "#385 collect_resale_prices.py が見つからない"})
+
+    # #386: ヤフオク pending row 重複排除ロジックが _deal_card と _deal_card_monitoring の両方に存在
+    _t386_card = '_already_shown' in _lp_gen_src and '_already_shown_mon' in _lp_gen_src
+    _t386_skip = '_plt in _already_shown' in _lp_gen_src and '_plt_mon in _already_shown_mon' in _lp_gen_src
+    _t386 = _t386_card and _t386_skip
+    results.append({"level": "ok" if _t386 else "warning", "check": "yahoo_pending_dedup",
+                    "message": "#386 ヤフオク pending row 重複排除（_already_shown）が _deal_card / _deal_card_monitoring 両方に実装"
+                               + ("" if _t386 else " ← _already_shown または _already_shown_mon が未実装")})
+
+    # #387: resale_collection_status.json に FOREIGN KEY エラーが記録されていない
+    import json as _json387
+    _crs_path387 = PROJECT_ROOT / "exports" / "resale_collection_status.json"
+    if _crs_path387.exists():
+        try:
+            _crs_data387 = _json387.loads(_crs_path387.read_text(encoding="utf-8"))
+            _errors387 = _crs_data387.get("summary", {}).get("errors", [])
+            _fk_errors = [e for e in _errors387 if "FOREIGN KEY" in str(e)]
+            _t387 = len(_fk_errors) == 0
+            results.append({"level": "ok" if _t387 else "error", "check": "no_fk_errors",
+                            "message": f"#387 resale_collection_status.json に FOREIGN KEY エラーなし"
+                                       + ("" if _t387 else f" ← FK エラー {len(_fk_errors)}件: {_fk_errors[:2]}")})
+        except Exception as _e387:
+            results.append({"level": "warning", "check": "no_fk_errors",
+                            "message": f"#387 resale_collection_status.json の読み込み失敗: {_e387}"})
+    else:
+        results.append({"level": "warning", "check": "no_fk_errors",
+                        "message": "#387 resale_collection_status.json が見つからない（collect_resale_prices.py 未実行）"})
+
     return results
 
 

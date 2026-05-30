@@ -141,7 +141,7 @@ CAMERA_PRODUCT_CONFIGS: list[dict] = [
 # iPhone製品の検索キーワード設定
 IPHONE_PRODUCT_CONFIGS: list[dict] = [
     {
-        "product_id": "prod_iphone17pro256",
+        "product_id": "prod_iphone17pro_256",
         "product_alias": "iphone17pro256",
         "name": "iPhone 17 Pro 256GB",
         "ebay_keywords": ["iPhone 17 Pro 256GB"],
@@ -150,7 +150,7 @@ IPHONE_PRODUCT_CONFIGS: list[dict] = [
         "yahoo_keywords": ["iPhone 17 Pro 256GB"],
     },
     {
-        "product_id": "prod_iphone17pro512",
+        "product_id": "prod_iphone17pro_512",
         "product_alias": "iphone17pro512",
         "name": "iPhone 17 Pro 512GB",
         "ebay_keywords": ["iPhone 17 Pro 512GB"],
@@ -159,7 +159,7 @@ IPHONE_PRODUCT_CONFIGS: list[dict] = [
         "yahoo_keywords": ["iPhone 17 Pro 512GB"],
     },
     {
-        "product_id": "prod_iphone17pm256",
+        "product_id": "prod_iphone17pm_256",
         "product_alias": "iphone17pm256",
         "name": "iPhone 17 Pro Max 256GB",
         "ebay_keywords": ["iPhone 17 Pro Max 256GB"],
@@ -168,7 +168,7 @@ IPHONE_PRODUCT_CONFIGS: list[dict] = [
         "yahoo_keywords": ["iPhone 17 Pro Max 256GB"],
     },
     {
-        "product_id": "prod_iphone17pm512",
+        "product_id": "prod_iphone17pm_512",
         "product_alias": "iphone17pm512",
         "name": "iPhone 17 Pro Max 512GB",
         "ebay_keywords": ["iPhone 17 Pro Max 512GB"],

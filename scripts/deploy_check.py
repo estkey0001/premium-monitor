@@ -3906,6 +3906,63 @@ def check() -> list[dict]:
     results.append({"level": "ok" if _t378 else "warning", "check": "ebay_overseas_fallback",
                     "message": "#378 eBay 最高売却時に海外価格フォールバックあり" + ("" if _t378 else " ← eBay フォールバック未実装")})
 
+    # #379: 自動取得レポート強化 — per-product tracking
+    _t379 = '_get_platform_pending_label' in _lp_gen_src and '_product_resale_status' in _lp_gen_src
+    results.append({"level": "ok" if _t379 else "warning", "check": "platform_pending_label",
+                    "message": "#379 プラットフォーム別未取得理由ラベルが実装されている（_get_platform_pending_label）"
+                               + ("" if _t379 else " ← _get_platform_pending_label 未実装")})
+
+    # #380: resale_collection_status.json が存在する
+    _crs_path = PROJECT_ROOT / "exports" / "resale_collection_status.json"
+    _t380 = _crs_path.exists()
+    if _t380:
+        try:
+            import json as _json380
+            _crs_data = _json380.loads(_crs_path.read_text(encoding="utf-8"))
+            _has_products = "products" in _crs_data
+            _has_platforms = "platforms" in _crs_data
+            results.append({"level": "ok" if (_has_products and _has_platforms) else "warning",
+                            "check": "resale_status_has_products",
+                            "message": f"#380 resale_collection_status.json に products/platforms フィールドあり"
+                                       + ("" if (_has_products and _has_platforms) else " ← products または platforms フィールドがない")})
+        except Exception as _e380:
+            results.append({"level": "warning", "check": "resale_status_has_products",
+                            "message": f"#380 resale_collection_status.json 読み込みエラー: {_e380}"})
+    else:
+        results.append({"level": "warning", "check": "resale_status_has_products",
+                        "message": "#380 resale_collection_status.json が存在しない（collect_resale_prices.py 実行後に生成される）"})
+
+    # #381: ALL_PRODUCT_CONFIGS が全カテゴリ対応
+    _collect_src_path = PROJECT_ROOT / "scripts" / "collect_resale_prices.py"
+    if _collect_src_path.exists():
+        _collect_src = _collect_src_path.read_text(encoding="utf-8")
+        _t381 = 'ALL_PRODUCT_CONFIGS' in _collect_src and 'IPHONE_PRODUCT_CONFIGS' in _collect_src and 'GAME_PRODUCT_CONFIGS' in _collect_src
+        results.append({"level": "ok" if _t381 else "warning", "check": "all_product_configs",
+                        "message": "#381 collect_resale_prices.py が全カテゴリ対応（ALL_PRODUCT_CONFIGS）"
+                                   + ("" if _t381 else " ← IPHONE/GAME_PRODUCT_CONFIGS が未定義")})
+        # #382: ラクマコレクター実装
+        _t382 = 'RakumaResaleCollector' in _collect_src
+        results.append({"level": "ok" if _t382 else "warning", "check": "rakuma_collector",
+                        "message": "#382 ラクマ（fril.jp）コレクター実装済み"
+                                   + ("" if _t382 else " ← RakumaResaleCollector 未実装")})
+    else:
+        results.append({"level": "warning", "check": "all_product_configs",
+                        "message": "#381 collect_resale_prices.py が見つからない"})
+        results.append({"level": "warning", "check": "rakuma_collector",
+                        "message": "#382 collect_resale_prices.py が見つからない"})
+
+    # #383: difficulty sentinel fix が適用されている
+    _t383 = 'difficulty >= 100' in _lp_gen_src or 'difficulty >= 100.0' in _lp_gen_src
+    results.append({"level": "ok" if _t383 else "warning", "check": "difficulty_sentinel_fix",
+                    "message": "#383 difficulty sentinel（100.0）再推定ロジックが実装されている"
+                               + ("" if _t383 else " ← difficulty >= 100.0 チェックが未実装")})
+
+    # #384: data_source バッジが実装されている
+    _t384 = '_data_source_badge' in _lp_gen_src
+    results.append({"level": "ok" if _t384 else "warning", "check": "data_source_badge",
+                    "message": "#384 データソースバッジ（_data_source_badge）が実装されている"
+                               + ("" if _t384 else " ← _data_source_badge 未実装")})
+
     return results
 
 

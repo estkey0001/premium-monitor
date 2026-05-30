@@ -7,13 +7,15 @@
   - Amazon JP 新品出品 — HTML scraping (Cloud IP ブロック時は site_blocked)
   - メルカリ 新品/未使用 — Playwright SPA scraping
   - ヤフオク 落札済み 未使用 — HTML scraping
+  - 楽天市場 新品出品 — HTML scraping
+  - ラクマ 新品/未使用 — HTML scraping (fril.jp)
 
 結果は sale_prices テーブルに保存する。
   condition = 'new_unopened'
   data_source = 'resale_market'
   id = 決定論的 (product_alias + shop_id のハッシュ) → INSERT OR REPLACE で更新
 
-対象商品: カメラジャンル全品 (genre='camera' の products)
+対象商品: カメラ・iPhone・ゲーム機 全品
 
 絶対禁止: 自動購入・自動応募・CAPTCHA突破・ログイン突破・複数アカウント運用・高頻度アクセス・規約違反行為
 """
@@ -135,6 +137,73 @@ CAMERA_PRODUCT_CONFIGS: list[dict] = [
         "yahoo_keywords": ["富士フイルム X100VI"],
     },
 ]
+
+# iPhone製品の検索キーワード設定
+IPHONE_PRODUCT_CONFIGS: list[dict] = [
+    {
+        "product_id": "prod_iphone17pro256",
+        "product_alias": "iphone17pro256",
+        "name": "iPhone 17 Pro 256GB",
+        "ebay_keywords": ["iPhone 17 Pro 256GB"],
+        "amazon_keywords": [],
+        "mercari_keywords": ["iPhone 17 Pro 256GB"],
+        "yahoo_keywords": ["iPhone 17 Pro 256GB"],
+    },
+    {
+        "product_id": "prod_iphone17pro512",
+        "product_alias": "iphone17pro512",
+        "name": "iPhone 17 Pro 512GB",
+        "ebay_keywords": ["iPhone 17 Pro 512GB"],
+        "amazon_keywords": [],
+        "mercari_keywords": [],
+        "yahoo_keywords": ["iPhone 17 Pro 512GB"],
+    },
+    {
+        "product_id": "prod_iphone17pm256",
+        "product_alias": "iphone17pm256",
+        "name": "iPhone 17 Pro Max 256GB",
+        "ebay_keywords": ["iPhone 17 Pro Max 256GB"],
+        "amazon_keywords": [],
+        "mercari_keywords": [],
+        "yahoo_keywords": ["iPhone 17 Pro Max 256GB"],
+    },
+    {
+        "product_id": "prod_iphone17pm512",
+        "product_alias": "iphone17pm512",
+        "name": "iPhone 17 Pro Max 512GB",
+        "ebay_keywords": ["iPhone 17 Pro Max 512GB"],
+        "amazon_keywords": [],
+        "mercari_keywords": [],
+        "yahoo_keywords": ["iPhone 17 Pro Max 512GB"],
+    },
+]
+
+# ゲーム機の検索キーワード設定
+GAME_PRODUCT_CONFIGS: list[dict] = [
+    {
+        "product_id": "prod_switch2",
+        "product_alias": "switch2",
+        "name": "Nintendo Switch 2",
+        "ebay_keywords": ["Nintendo Switch 2"],
+        "amazon_keywords": [],
+        "mercari_keywords": [],
+        "yahoo_keywords": ["Nintendo Switch 2"],
+    },
+    {
+        "product_id": "prod_ps5_pro",
+        "product_alias": "ps5_pro",
+        "name": "PlayStation 5 Pro",
+        "ebay_keywords": ["PlayStation 5 Pro"],
+        "amazon_keywords": [],
+        "mercari_keywords": [],
+        "yahoo_keywords": ["PlayStation 5 Pro"],
+    },
+]
+
+# 全商品設定（全カテゴリ統合）
+ALL_PRODUCT_CONFIGS: list[dict] = (
+    CAMERA_PRODUCT_CONFIGS + IPHONE_PRODUCT_CONFIGS + GAME_PRODUCT_CONFIGS
+)
 
 # ─────────────────────────────────────────────────────────────
 # ユーティリティ
@@ -683,6 +752,119 @@ class RakutenResaleCollector:
 
 
 # ─────────────────────────────────────────────────────────────
+# ラクマ コレクター
+# ─────────────────────────────────────────────────────────────
+
+
+class RakumaResaleCollector:
+    """ラクマ（fril.jp）新品/未使用 出品価格コレクター。
+
+    公開の fril.jp 検索ページを使用。ログイン不要。
+    """
+
+    SHOP_ID = "rakuma"
+    SHOP_NAME = "ラクマ(新品/未使用)"
+
+    SEARCH_URL = (
+        "https://fril.jp/search"
+        "?query={keyword}"
+        "&sort_column=created_at"
+        "&sort_order=desc"
+    )
+
+    def collect(self, product_alias: str, keywords: list[str]) -> Optional[dict]:
+        """fril.jp から新品/未使用の価格を取得する。"""
+        keyword = keywords[0] if keywords else ""
+        if not keyword:
+            return None
+
+        url = self.SEARCH_URL.format(keyword=urllib.parse.quote(keyword))
+        html = _fetch_html(url, headers={"Accept-Language": "ja"})
+        if not html:
+            logger.info("[Rakuma:%s] HTML取得失敗 → スキップ", product_alias)
+            return None
+
+        if _is_blocked(html):
+            logger.info("[Rakuma:%s] ブロック検出 → スキップ", product_alias)
+            return None
+
+        prices = self._parse_prices(html)
+        if not prices:
+            logger.info("[Rakuma:%s] 価格なし (keyword='%s')", product_alias, keyword)
+            return None
+
+        prices = _remove_outliers(prices)
+        if not prices:
+            return None
+
+        median_jpy = int(statistics.median(prices))
+        logger.info(
+            "[Rakuma:%s] ¥%s (median of %d listings)",
+            product_alias, f"{median_jpy:,}", len(prices),
+        )
+        return {
+            "price_jpy": median_jpy,
+            "listing_count": len(prices),
+            "url": url,
+            "collector_method": "html",
+        }
+
+    def _parse_prices(self, html: str) -> list[int]:
+        """ラクマ（fril.jp）検索結果から価格を抽出する。"""
+        prices: list[int] = []
+
+        try:
+            from bs4 import BeautifulSoup
+            soup = BeautifulSoup(html, "lxml")
+
+            # パターン1: <span class="item-price"> または data-price 属性
+            for el in soup.select(".item-price, [data-price]"):
+                # data-price 属性を優先
+                val = el.get("data-price", "")
+                if val:
+                    try:
+                        p = int(val)
+                        if PRICE_MIN_JPY <= p <= PRICE_MAX_JPY:
+                            prices.append(p)
+                        continue
+                    except ValueError:
+                        pass
+                # テキストから抽出
+                txt = el.get_text(strip=True).replace("¥", "").replace(",", "").strip()
+                try:
+                    p = int(txt)
+                    if PRICE_MIN_JPY <= p <= PRICE_MAX_JPY:
+                        prices.append(p)
+                except ValueError:
+                    pass
+
+        except ImportError:
+            pass
+
+        # フォールバック: JSON の "price": 数値 パターン
+        if not prices:
+            for m in re.finditer(r'"price":\s*(\d+)', html):
+                try:
+                    p = int(m.group(1))
+                    if PRICE_MIN_JPY <= p <= PRICE_MAX_JPY:
+                        prices.append(p)
+                except ValueError:
+                    pass
+
+        # さらにフォールバック: ¥XX,XXX 形式
+        if not prices:
+            for m in re.finditer(r'[¥￥]([\d,]{4,9})', html):
+                try:
+                    p = int(m.group(1).replace(",", ""))
+                    if PRICE_MIN_JPY <= p <= PRICE_MAX_JPY:
+                        prices.append(p)
+                except ValueError:
+                    pass
+
+        return prices[:30]
+
+
+# ─────────────────────────────────────────────────────────────
 # sale_prices 保存ヘルパー
 # ─────────────────────────────────────────────────────────────
 
@@ -731,6 +913,7 @@ def run_collection(
     skip_mercari: bool = False,
     skip_yahoo: bool = False,
     skip_rakuten: bool = False,
+    skip_rakuma: bool = False,
     target_alias: Optional[str] = None,
 ) -> dict:
     """全プラットフォームの価格収集を実行する。
@@ -749,14 +932,15 @@ def run_collection(
     logger.info("収集開始: %s JST", now.strftime("%Y-%m-%d %H:%M"))
 
     # コレクター初期化
-    ebay_collector     = EbayResaleCollector()     if not skip_ebay     else None
-    amazon_collector   = AmazonJpResaleCollector() if not skip_amazon   else None
-    mercari_collector  = MercariResaleCollector()  if not skip_mercari  else None
-    yahoo_collector    = YahooAuctionResaleCollector() if not skip_yahoo else None
-    rakuten_collector  = RakutenResaleCollector()  if not skip_rakuten  else None
+    ebay_collector     = EbayResaleCollector()        if not skip_ebay     else None
+    amazon_collector   = AmazonJpResaleCollector()    if not skip_amazon   else None
+    mercari_collector  = MercariResaleCollector()     if not skip_mercari  else None
+    yahoo_collector    = YahooAuctionResaleCollector() if not skip_yahoo   else None
+    rakuten_collector  = RakutenResaleCollector()     if not skip_rakuten  else None
+    rakuma_collector   = RakumaResaleCollector()      if not skip_rakuma   else None
 
     # 収集対象を絞り込む（--target 指定時）
-    targets = CAMERA_PRODUCT_CONFIGS
+    targets = ALL_PRODUCT_CONFIGS
     if target_alias:
         targets = [c for c in targets if c["product_alias"] == target_alias]
         if not targets:
@@ -764,14 +948,21 @@ def run_collection(
 
     stats = {"saved": 0, "skipped": 0, "errors": []}
     # プラットフォームごとのステータス（LP表示用）
-    # "ok" | "blocked" | "no_data" | "skipped" | "error"
+    # "ok_api" | "ok_html" | "blocked" | "blocked_cloud_ip" | "no_data"
+    # | "html_failed" | "skipped" | "error" | "api_key_missing" | "not_supported"
     platform_status: dict[str, str] = {
-        "ebay": "skipped",
-        "amazon": "skipped",
-        "mercari": "skipped",
-        "yahoo": "skipped",
-        "rakuten": "skipped",
+        "ebay":         "skipped",
+        "amazon":       "skipped",
+        "mercari":      "skipped",
+        "yahoo":        "skipped",
+        "rakuten":      "skipped",
+        "rakuma_direct": "skipped",
     }
+
+    # 商品ごとのプラットフォーム収集結果を追跡する
+    # alias -> {platform: status}
+    # status: "ok_html" | "ok_api" | "blocked_cloud_ip" | "html_failed" | "no_data" | "skipped"
+    product_results: dict[str, dict] = {}
 
     for cfg in targets:
         alias  = cfg["product_alias"]
@@ -779,164 +970,255 @@ def run_collection(
         name   = cfg["name"]
         logger.info("─── %s (%s) ───", name, alias)
 
+        # 商品の結果辞書を初期化
+        product_results[alias] = {
+            "ebay":    "skipped",
+            "amazon":  "skipped",
+            "mercari": "skipped",
+            "yahoo":   "skipped",
+            "rakuten": "skipped",
+            "rakuma":  "skipped",
+        }
+
         # ──── eBay ────
         if ebay_collector:
-            try:
-                result = ebay_collector.collect(
-                    product_alias=alias,
-                    product_id=pid,
-                    keywords=cfg["ebay_keywords"],
-                )
-                if result:
-                    _save_sale_price(
-                        repo=repo,
+            kws = cfg.get("ebay_keywords", [])
+            if not kws:
+                product_results[alias]["ebay"] = "not_supported"
+            else:
+                try:
+                    result = ebay_collector.collect(
                         product_alias=alias,
                         product_id=pid,
-                        shop_id=EbayResaleCollector.SHOP_ID,
-                        shop_name=EbayResaleCollector.SHOP_NAME,
-                        price_jpy=result["price_jpy"],
-                        url=result["url"],
-                        now=now,
+                        keywords=kws,
                     )
-                    stats["saved"] += 1
-                    # 1件でも成功したらステータスを更新
-                    if platform_status["ebay"] != "ok":
+                    if result:
+                        _save_sale_price(
+                            repo=repo,
+                            product_alias=alias,
+                            product_id=pid,
+                            shop_id=EbayResaleCollector.SHOP_ID,
+                            shop_name=EbayResaleCollector.SHOP_NAME,
+                            price_jpy=result["price_jpy"],
+                            url=result["url"],
+                            now=now,
+                        )
+                        stats["saved"] += 1
+                        # 1件でも成功したらステータスを更新
                         method = result.get("collector_method", "")
-                        platform_status["ebay"] = "ok_api" if method == "api" else "ok_html"
-                else:
-                    # 取得なし（ブロックまたはデータ無し）
+                        _st = "ok_api" if method == "api" else "ok_html"
+                        if platform_status["ebay"] not in ("ok_api", "ok_html"):
+                            platform_status["ebay"] = _st
+                        product_results[alias]["ebay"] = _st
+                    else:
+                        # 取得なし（ブロックまたはデータ無し）
+                        if platform_status["ebay"] == "skipped":
+                            platform_status["ebay"] = "blocked_cloud_ip"
+                        product_results[alias]["ebay"] = "blocked_cloud_ip"
+                        stats["skipped"] += 1
+                except Exception as e:
+                    logger.warning("[eBay:%s] エラー: %s", alias, e)
+                    stats["errors"].append(f"ebay:{alias}: {e}")
                     if platform_status["ebay"] == "skipped":
-                        platform_status["ebay"] = "blocked"
-                    stats["skipped"] += 1
-            except Exception as e:
-                logger.warning("[eBay:%s] エラー: %s", alias, e)
-                stats["errors"].append(f"ebay:{alias}: {e}")
-                if platform_status["ebay"] == "skipped":
-                    platform_status["ebay"] = "error"
+                        platform_status["ebay"] = "error"
+                    product_results[alias]["ebay"] = "html_failed"
             time.sleep(REQUEST_INTERVAL_SEC)
 
         # ──── Amazon JP ────
         if amazon_collector:
-            try:
-                result = amazon_collector.collect(
-                    product_alias=alias,
-                    keywords=cfg["amazon_keywords"],
-                )
-                if result:
-                    _save_sale_price(
-                        repo=repo,
+            kws = cfg.get("amazon_keywords", [])
+            if not kws:
+                product_results[alias]["amazon"] = "not_supported"
+            else:
+                try:
+                    result = amazon_collector.collect(
                         product_alias=alias,
-                        product_id=pid,
-                        shop_id=AmazonJpResaleCollector.SHOP_ID,
-                        shop_name=AmazonJpResaleCollector.SHOP_NAME,
-                        price_jpy=result["price_jpy"],
-                        url=result["url"],
-                        now=now,
+                        keywords=kws,
                     )
-                    stats["saved"] += 1
-                    platform_status["amazon"] = "ok_html"
-                else:
+                    if result:
+                        _save_sale_price(
+                            repo=repo,
+                            product_alias=alias,
+                            product_id=pid,
+                            shop_id=AmazonJpResaleCollector.SHOP_ID,
+                            shop_name=AmazonJpResaleCollector.SHOP_NAME,
+                            price_jpy=result["price_jpy"],
+                            url=result["url"],
+                            now=now,
+                        )
+                        stats["saved"] += 1
+                        if platform_status["amazon"] not in ("ok_api", "ok_html"):
+                            platform_status["amazon"] = "ok_html"
+                        product_results[alias]["amazon"] = "ok_html"
+                    else:
+                        if platform_status["amazon"] == "skipped":
+                            platform_status["amazon"] = "blocked_cloud_ip"
+                        product_results[alias]["amazon"] = "blocked_cloud_ip"
+                        stats["skipped"] += 1
+                except Exception as e:
+                    logger.warning("[Amazon:%s] エラー: %s", alias, e)
+                    stats["errors"].append(f"amazon:{alias}: {e}")
                     if platform_status["amazon"] == "skipped":
-                        platform_status["amazon"] = "blocked"
-                    stats["skipped"] += 1
-            except Exception as e:
-                logger.warning("[Amazon:%s] エラー: %s", alias, e)
-                stats["errors"].append(f"amazon:{alias}: {e}")
-                if platform_status["amazon"] == "skipped":
-                    platform_status["amazon"] = "error"
+                        platform_status["amazon"] = "error"
+                    product_results[alias]["amazon"] = "html_failed"
             time.sleep(REQUEST_INTERVAL_SEC)
 
         # ──── メルカリ ────
         if mercari_collector:
-            try:
-                result = mercari_collector.collect(
-                    product_alias=alias,
-                    keywords=cfg["mercari_keywords"],
-                )
-                if result:
-                    _save_sale_price(
-                        repo=repo,
+            kws = cfg.get("mercari_keywords", [])
+            if not kws:
+                product_results[alias]["mercari"] = "not_supported"
+            else:
+                try:
+                    result = mercari_collector.collect(
                         product_alias=alias,
-                        product_id=pid,
-                        shop_id=MercariResaleCollector.SHOP_ID,
-                        shop_name=MercariResaleCollector.SHOP_NAME,
-                        price_jpy=result["price_jpy"],
-                        url=result["url"],
-                        now=now,
+                        keywords=kws,
                     )
-                    stats["saved"] += 1
-                    platform_status["mercari"] = "ok_html"
-                else:
+                    if result:
+                        _save_sale_price(
+                            repo=repo,
+                            product_alias=alias,
+                            product_id=pid,
+                            shop_id=MercariResaleCollector.SHOP_ID,
+                            shop_name=MercariResaleCollector.SHOP_NAME,
+                            price_jpy=result["price_jpy"],
+                            url=result["url"],
+                            now=now,
+                        )
+                        stats["saved"] += 1
+                        if platform_status["mercari"] not in ("ok_api", "ok_html"):
+                            platform_status["mercari"] = "ok_html"
+                        product_results[alias]["mercari"] = "ok_html"
+                    else:
+                        if platform_status["mercari"] == "skipped":
+                            platform_status["mercari"] = "blocked_cloud_ip"
+                        product_results[alias]["mercari"] = "blocked_cloud_ip"
+                        stats["skipped"] += 1
+                except Exception as e:
+                    logger.warning("[Mercari:%s] エラー: %s", alias, e)
+                    stats["errors"].append(f"mercari:{alias}: {e}")
                     if platform_status["mercari"] == "skipped":
-                        platform_status["mercari"] = "blocked"
-                    stats["skipped"] += 1
-            except Exception as e:
-                logger.warning("[Mercari:%s] エラー: %s", alias, e)
-                stats["errors"].append(f"mercari:{alias}: {e}")
-                if platform_status["mercari"] == "skipped":
-                    platform_status["mercari"] = "error"
+                        platform_status["mercari"] = "error"
+                    product_results[alias]["mercari"] = "html_failed"
             time.sleep(REQUEST_INTERVAL_SEC)
 
         # ──── ヤフオク ────
         if yahoo_collector:
-            try:
-                result = yahoo_collector.collect(
-                    product_alias=alias,
-                    keywords=cfg["yahoo_keywords"],
-                )
-                if result:
-                    _save_sale_price(
-                        repo=repo,
+            kws = cfg.get("yahoo_keywords", [])
+            if not kws:
+                product_results[alias]["yahoo"] = "not_supported"
+            else:
+                try:
+                    result = yahoo_collector.collect(
                         product_alias=alias,
-                        product_id=pid,
-                        shop_id=YahooAuctionResaleCollector.SHOP_ID,
-                        shop_name=YahooAuctionResaleCollector.SHOP_NAME,
-                        price_jpy=result["price_jpy"],
-                        url=result["url"],
-                        now=now,
+                        keywords=kws,
                     )
-                    stats["saved"] += 1
-                    platform_status["yahoo"] = "ok_html"
-                else:
+                    if result:
+                        _save_sale_price(
+                            repo=repo,
+                            product_alias=alias,
+                            product_id=pid,
+                            shop_id=YahooAuctionResaleCollector.SHOP_ID,
+                            shop_name=YahooAuctionResaleCollector.SHOP_NAME,
+                            price_jpy=result["price_jpy"],
+                            url=result["url"],
+                            now=now,
+                        )
+                        stats["saved"] += 1
+                        if platform_status["yahoo"] not in ("ok_api", "ok_html"):
+                            platform_status["yahoo"] = "ok_html"
+                        product_results[alias]["yahoo"] = "ok_html"
+                    else:
+                        if platform_status["yahoo"] == "skipped":
+                            platform_status["yahoo"] = "no_data"
+                        product_results[alias]["yahoo"] = "no_data"
+                        stats["skipped"] += 1
+                except Exception as e:
+                    logger.warning("[Yahoo:%s] エラー: %s", alias, e)
+                    stats["errors"].append(f"yahoo:{alias}: {e}")
                     if platform_status["yahoo"] == "skipped":
-                        platform_status["yahoo"] = "blocked"
-                    stats["skipped"] += 1
-            except Exception as e:
-                logger.warning("[Yahoo:%s] エラー: %s", alias, e)
-                stats["errors"].append(f"yahoo:{alias}: {e}")
-                if platform_status["yahoo"] == "skipped":
-                    platform_status["yahoo"] = "error"
+                        platform_status["yahoo"] = "error"
+                    product_results[alias]["yahoo"] = "html_failed"
             time.sleep(REQUEST_INTERVAL_SEC)
 
         # ──── 楽天市場 ────
         if rakuten_collector:
-            try:
-                result = rakuten_collector.collect(
-                    product_alias=alias,
-                    keywords=cfg["amazon_keywords"],  # Amazon と同じキーワードを流用
-                )
-                if result:
-                    _save_sale_price(
-                        repo=repo,
+            # Amazon と同じキーワードを流用（空の場合はスキップ）
+            kws = cfg.get("amazon_keywords", [])
+            if not kws:
+                product_results[alias]["rakuten"] = "not_supported"
+            else:
+                try:
+                    result = rakuten_collector.collect(
                         product_alias=alias,
-                        product_id=pid,
-                        shop_id=RakutenResaleCollector.SHOP_ID,
-                        shop_name=RakutenResaleCollector.SHOP_NAME,
-                        price_jpy=result["price_jpy"],
-                        url=result["url"],
-                        now=now,
+                        keywords=kws,
                     )
-                    stats["saved"] += 1
-                    platform_status["rakuten"] = "ok_html"
-                else:
+                    if result:
+                        _save_sale_price(
+                            repo=repo,
+                            product_alias=alias,
+                            product_id=pid,
+                            shop_id=RakutenResaleCollector.SHOP_ID,
+                            shop_name=RakutenResaleCollector.SHOP_NAME,
+                            price_jpy=result["price_jpy"],
+                            url=result["url"],
+                            now=now,
+                        )
+                        stats["saved"] += 1
+                        if platform_status["rakuten"] not in ("ok_api", "ok_html"):
+                            platform_status["rakuten"] = "ok_html"
+                        product_results[alias]["rakuten"] = "ok_html"
+                    else:
+                        if platform_status["rakuten"] == "skipped":
+                            platform_status["rakuten"] = "html_failed"
+                        product_results[alias]["rakuten"] = "html_failed"
+                        stats["skipped"] += 1
+                except Exception as e:
+                    logger.warning("[Rakuten:%s] エラー: %s", alias, e)
+                    stats["errors"].append(f"rakuten:{alias}: {e}")
                     if platform_status["rakuten"] == "skipped":
-                        platform_status["rakuten"] = "blocked"
-                    stats["skipped"] += 1
-            except Exception as e:
-                logger.warning("[Rakuten:%s] エラー: %s", alias, e)
-                stats["errors"].append(f"rakuten:{alias}: {e}")
-                if platform_status["rakuten"] == "skipped":
-                    platform_status["rakuten"] = "error"
+                        platform_status["rakuten"] = "error"
+                    product_results[alias]["rakuten"] = "html_failed"
+            time.sleep(REQUEST_INTERVAL_SEC)
+
+        # ──── ラクマ ────
+        if rakuma_collector:
+            # ヤフオクキーワードを流用（新品未開封系の検索語）
+            kws = cfg.get("yahoo_keywords", [])
+            if not kws:
+                product_results[alias]["rakuma"] = "not_supported"
+            else:
+                try:
+                    result = rakuma_collector.collect(
+                        product_alias=alias,
+                        keywords=kws,
+                    )
+                    if result:
+                        _save_sale_price(
+                            repo=repo,
+                            product_alias=alias,
+                            product_id=pid,
+                            shop_id=RakumaResaleCollector.SHOP_ID,
+                            shop_name=RakumaResaleCollector.SHOP_NAME,
+                            price_jpy=result["price_jpy"],
+                            url=result["url"],
+                            now=now,
+                        )
+                        stats["saved"] += 1
+                        if platform_status["rakuma_direct"] not in ("ok_api", "ok_html"):
+                            platform_status["rakuma_direct"] = "ok_html"
+                        product_results[alias]["rakuma"] = "ok_html"
+                    else:
+                        if platform_status["rakuma_direct"] == "skipped":
+                            platform_status["rakuma_direct"] = "blocked_cloud_ip"
+                        product_results[alias]["rakuma"] = "blocked_cloud_ip"
+                        stats["skipped"] += 1
+                except Exception as e:
+                    logger.warning("[Rakuma:%s] エラー: %s", alias, e)
+                    stats["errors"].append(f"rakuma:{alias}: {e}")
+                    if platform_status["rakuma_direct"] == "skipped":
+                        platform_status["rakuma_direct"] = "error"
+                    product_results[alias]["rakuma"] = "html_failed"
             time.sleep(REQUEST_INTERVAL_SEC)
 
     logger.info(
@@ -948,26 +1230,32 @@ def run_collection(
             logger.warning("  ERROR: %s", err)
 
     # ── ステータスレポートを書き出す（LP生成側で参照） ──
-    _save_collection_status_report(platform_status, now, stats)
+    _save_collection_status_report(platform_status, now, stats, product_results)
 
     return stats
 
 
-def _save_collection_status_report(platform_status: dict, now: datetime, stats: dict) -> None:
+def _save_collection_status_report(
+    platform_status: dict,
+    now: datetime,
+    stats: dict,
+    product_results: Optional[dict] = None,
+) -> None:
     """収集ステータスをJSONレポートとして保存する。
 
     LP生成時に参照して「eBay自動取得制限中」などの表示に使う。
     exports/resale_collection_status.json に保存。
     """
+    ebay_st = platform_status.get("ebay", "skipped")
     report = {
         "collected_at": now.isoformat(),
         "platforms": {
             "ebay": {
-                "status": platform_status.get("ebay", "skipped"),
-                # ok_api: Finding API成功, ok_html: HTML成功, blocked: Cloud IPブロック
+                "status": ebay_st,
+                # ok_api: Finding API成功, ok_html: HTML成功, blocked_cloud_ip: Cloud IPブロック
                 # skipped: 実行せず, error: 例外, no_data: レスポンスあるが価格なし
-                "label_jp": _platform_label_jp(platform_status.get("ebay", "skipped")),
-                "needs_ebay_app_id": platform_status.get("ebay") == "blocked",
+                "label_jp": _platform_label_jp(ebay_st),
+                "needs_ebay_app_id": ebay_st in ("blocked", "blocked_cloud_ip"),
             },
             "amazon": {
                 "status": platform_status.get("amazon", "skipped"),
@@ -985,6 +1273,10 @@ def _save_collection_status_report(platform_status: dict, now: datetime, stats: 
                 "status": platform_status.get("rakuten", "skipped"),
                 "label_jp": _platform_label_jp(platform_status.get("rakuten", "skipped")),
             },
+            "rakuma_direct": {
+                "status": platform_status.get("rakuma_direct", "skipped"),
+                "label_jp": _platform_label_jp(platform_status.get("rakuma_direct", "skipped")),
+            },
         },
         "summary": {
             "saved": stats.get("saved", 0),
@@ -992,6 +1284,10 @@ def _save_collection_status_report(platform_status: dict, now: datetime, stats: 
             "errors": stats.get("errors", []),
         },
     }
+
+    # 商品ごとの収集結果を追加（product_results が渡された場合）
+    if product_results:
+        report["products"] = product_results
 
     try:
         report_dir = PROJECT_ROOT / "exports"
@@ -1007,12 +1303,16 @@ def _save_collection_status_report(platform_status: dict, now: datetime, stats: 
 def _platform_label_jp(status: str) -> str:
     """ステータスを日本語ラベルに変換する。"""
     return {
-        "ok_api":    "自動取得済（API）",
-        "ok_html":   "自動取得済（HTML）",
-        "blocked":   "自動取得制限中（Cloud IP）",
-        "no_data":   "価格データなし",
-        "skipped":   "実行スキップ",
-        "error":     "取得エラー",
+        "ok_api":           "自動取得済（API）",
+        "ok_html":          "自動取得済（HTML）",
+        "blocked":          "自動取得制限中（Cloud IP）",
+        "blocked_cloud_ip": "Cloud IP制限中（EBAY_APP_ID推奨）",
+        "html_failed":      "HTML取得失敗",
+        "no_data":          "該当商品なし",
+        "skipped":          "実行スキップ",
+        "error":            "取得エラー",
+        "api_key_missing":  "APIキー未設定",
+        "not_supported":    "未対応",
     }.get(status, status)
 
 
@@ -1030,6 +1330,7 @@ def main() -> int:
     parser.add_argument("--skip-mercari", action="store_true", help="メルカリ収集をスキップ")
     parser.add_argument("--skip-yahoo",   action="store_true", help="ヤフオク収集をスキップ")
     parser.add_argument("--skip-rakuten", action="store_true", help="楽天市場収集をスキップ")
+    parser.add_argument("--skip-rakuma",  action="store_true", help="ラクマ収集をスキップ")
     parser.add_argument("--target",       type=str, default=None,
                         help="特定 product_alias のみ対象 (例: gr4)")
     parser.add_argument("--verbose",      action="store_true", help="詳細ログ")
@@ -1049,6 +1350,7 @@ def main() -> int:
             skip_mercari=args.skip_mercari,
             skip_yahoo=args.skip_yahoo,
             skip_rakuten=args.skip_rakuten,
+            skip_rakuma=args.skip_rakuma,
             target_alias=args.target,
         )
     except Exception as e:

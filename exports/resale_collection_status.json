@@ -1,5 +1,5 @@
 {
-  "collected_at": "2026-05-30T15:42:09.905401+09:00",
+  "collected_at": "2026-05-30T19:36:47.106543+09:00",
   "platforms": {
     "ebay": {
       "status": "blocked_cloud_ip",
@@ -7,8 +7,8 @@
       "needs_ebay_app_id": true
     },
     "amazon": {
-      "status": "ok_html",
-      "label_jp": "自動取得済（HTML）"
+      "status": "blocked_cloud_ip",
+      "label_jp": "Cloud IP制限中（EBAY_APP_ID推奨）"
     },
     "mercari": {
       "status": "blocked_cloud_ip",
@@ -28,14 +28,9 @@
     }
   },
   "summary": {
-    "saved": 7,
-    "skipped": 38,
-    "errors": [
-      "yahoo:iphone17pro256: FOREIGN KEY constraint failed",
-      "yahoo:iphone17pro512: FOREIGN KEY constraint failed",
-      "yahoo:iphone17pm256: FOREIGN KEY constraint failed",
-      "yahoo:iphone17pm512: FOREIGN KEY constraint failed"
-    ]
+    "saved": 10,
+    "skipped": 39,
+    "errors": []
   },
   "products": {
     "gr4": {
@@ -64,7 +59,7 @@
     },
     "gr3x": {
       "ebay": "blocked_cloud_ip",
-      "amazon": "ok_html",
+      "amazon": "blocked_cloud_ip",
       "mercari": "blocked_cloud_ip",
       "yahoo": "ok_html",
       "rakuten": "html_failed",
@@ -82,7 +77,7 @@
       "ebay": "blocked_cloud_ip",
       "amazon": "not_supported",
       "mercari": "blocked_cloud_ip",
-      "yahoo": "html_failed",
+      "yahoo": "ok_html",
       "rakuten": "not_supported",
       "rakuma": "blocked_cloud_ip"
     },
@@ -90,7 +85,7 @@
       "ebay": "blocked_cloud_ip",
       "amazon": "not_supported",
       "mercari": "not_supported",
-      "yahoo": "html_failed",
+      "yahoo": "ok_html",
       "rakuten": "not_supported",
       "rakuma": "blocked_cloud_ip"
     },
@@ -98,7 +93,7 @@
       "ebay": "blocked_cloud_ip",
       "amazon": "not_supported",
       "mercari": "not_supported",
-      "yahoo": "html_failed",
+      "yahoo": "ok_html",
       "rakuten": "not_supported",
       "rakuma": "blocked_cloud_ip"
     },
@@ -106,7 +101,7 @@
       "ebay": "blocked_cloud_ip",
       "amazon": "not_supported",
       "mercari": "not_supported",
-      "yahoo": "html_failed",
+      "yahoo": "ok_html",
       "rakuten": "not_supported",
       "rakuma": "blocked_cloud_ip"
     },

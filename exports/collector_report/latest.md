@@ -1,6 +1,6 @@
 # Collector Quality Report
 
-生成日時: 2026-05-30 15:17:13 UTC+09:00
+生成日時: 2026-05-30 19:18:41 UTC+09:00
 
 ## サマリ
 
@@ -74,7 +74,7 @@
 | janpara | 0% | 0 | 6 | 6/6 | — | rate_limited_429 |
 | kaitori_itchome | 100% | 4 | 0 | — | — | — |
 | kaitori_shouten | 100% | 6 | 0 | — | — | — |
-| mobile_ichiban | 0% | 0 | 5 | — | — | timeout |
+| mobile_ichiban | 0% | 0 | 5 | — | — | product_not_listed |
 | netoff | 50% | 2 | 2 | — | — | price_not_found |
 | pasoko | 0% | 0 | 2 | — | — | product_not_listed |
 | sofmap | 0% | 0 | 2 | — | — | service_unavailable |
@@ -96,33 +96,32 @@
 
 | 理由 | 件数 |
 |------|------|
+| product_not_listed | 8 |
 | rate_limited_429 | 6 |
 | site_blocked | 6 |
 | price_not_found | 6 |
-| timeout | 5 |
 | http_404 | 4 |
 | not_supported | 4 |
-| product_not_listed | 3 |
 | service_unavailable | 2 |
 
 ## 取得失敗一覧 (36件)
 
 | 商品 | 店舗 | ステータス | 理由 |
 |------|------|-----------|------|
-| iphone17pro256 | mobile_ichiban | FAILED | timeout |
+| iphone17pro256 | mobile_ichiban | FAILED | product_not_listed |
 | iphone17pro256 | janpara | FAILED | rate_limited_429 |
 | iphone17pro256 | geo_mobile | FAILED | site_blocked |
 | iphone17pro256 | 2ndstreet | FAILED | price_not_found |
-| iphone17pro512 | mobile_ichiban | FAILED | timeout |
+| iphone17pro512 | mobile_ichiban | FAILED | product_not_listed |
 | iphone17pro512 | janpara | FAILED | rate_limited_429 |
 | iphone17pro512 | geo_mobile | FAILED | site_blocked |
 | iphone17pro512 | 2ndstreet | FAILED | price_not_found |
-| iphone17pm256 | mobile_ichiban | FAILED | timeout |
+| iphone17pm256 | mobile_ichiban | FAILED | product_not_listed |
 | iphone17pm256 | janpara | FAILED | rate_limited_429 |
 | iphone17pm256 | geo_mobile | FAILED | site_blocked |
 | iphone17pm256 | 2ndstreet | FAILED | price_not_found |
 | iphone17pm256 | netoff | FAILED | price_not_found |
-| iphone17pm512 | mobile_ichiban | FAILED | timeout |
+| iphone17pm512 | mobile_ichiban | FAILED | product_not_listed |
 | iphone17pm512 | janpara | FAILED | rate_limited_429 |
 | iphone17pm512 | geo_mobile | FAILED | site_blocked |
 | iphone17pm512 | 2ndstreet | FAILED | price_not_found |
@@ -136,7 +135,7 @@
 | switch2 | surugaya | FAILED | site_blocked |
 | switch2 | tsutaya | SKIP | not_supported |
 | ps5_pro | geo | FAILED | product_not_listed |
-| ps5_pro | mobile_ichiban | FAILED | timeout |
+| ps5_pro | mobile_ichiban | FAILED | product_not_listed |
 | ps5_pro | janpara | FAILED | rate_limited_429 |
 | ps5_pro | hardoff | FAILED | http_404 |
 | ps5_pro | dosupara | FAILED | http_404 |

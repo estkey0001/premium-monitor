@@ -1,6 +1,6 @@
 
 ============================================================
- Deploy Check (390 items)
+ Deploy Check (398 items)
 ============================================================
   ✅ [index_exists] docs/index.html 存在
   ✅ [forbidden_phrases] 禁止表現なし
@@ -35,11 +35,11 @@
   ✅ [unverified_url_not_linked] unverified-linkなし（全URL検証済みか買取データなし）
   ✅ [price_freshness_shown] 価格取得日時・鮮度ラベルが表示されている
   ✅ [buyback_notice] 買取価格注意文が表示されている
-  ✅ [overseas_links_section] 海外相場リンクセクションが存在する
+  ⚠️ [overseas_links_section] 海外相場リンクセクションが見つからない（上級者向けデータ要確認）
   ✅ [ebay_sold_link] eBay 落札済み検索リンクが存在する
   ✅ [overseas_specialist_links] 海外専門店リンク（B&H/Adorama/MPB/KEH）が存在する
   ✅ [overseas_btn_exists] 海外相場ボタンが存在する
-  ✅ [price_no_data_fallback] 価格未取得時の確認導線がある
+  ⚠️ [price_no_data_fallback] 価格未取得時の確認導線が見つからない
   ✅ [buyback_page_guidance] 公式買取ページ誘導テキストが存在する
   ✅ [sedori_tab_exists] せどりルートタブが存在する
   ✅ [sedori_best_route] せどりタブに最大利益ルートカードがある
@@ -161,7 +161,7 @@
   ✅ [no_price_zero_shown] LP上に¥0の価格表記なし（0価格行は非表示 or fetch_failed表示で正常）
   ✅ [auto_scraped_badge] 「自動取得」バッジ（badge-auto-scraped）が表示されている
   ✅ [fetch_failed_badge] 「取得失敗」バッジ（badge-fetch-failed）が表示されている
-  ✅ [fetch_failed_has_link] 取得失敗行（shop-row-failed）に確認リンクがある（28行）
+  ✅ [fetch_failed_has_link] 取得失敗行（shop-row-failed）に確認リンクがある（24行）
   ✅ [collection_stats_shown] ページ上部に取得統計（自動取得N件/取得失敗N件）が表示されている
   ✅ [hero_deals_dynamic] 参考DEALSに固定ハードコード商品なし（パネル削除済み = 正常）
   ✅ [fetch_failed_no_price_calc] fetch_failed 行の価格欄が「—」（価格計算に使われていない）
@@ -172,12 +172,12 @@
   ✅ [monitoring_not_in_green_card] monitoring商品は緑カードに混ざっていない
   ✅ [fetch_failed_card_shown] 取得失敗カードが表示されている
   ✅ [beginner_tab_not_empty] 初心者向けタブに1件以上の商品が表示されている
-  ✅ [best_price_matches_table] 利益ありカードなし（価格整合チェックスキップ）
+  ✅ [best_price_matches_table] カード最高価格と比較テーブル1位が一致（2件確認）
   ✅ [iphone17_in_iphone_section] iPhone 17 Pro がスマホ欄に表示
   ✅ [game_console_in_game_section] ゲーム機がゲーム機欄に表示
   ✅ [monitoring_inside_genre] 監視中セクションはジャンル内に正しく配置されている
   ✅ [status_subhead_exists] ジャンル内に状態別見出しが存在する
-  ✅ [camera_in_beginner] カメラ商品が初心者タブに7件表示されている（仕様通り）
+  ✅ [camera_in_beginner] カメラ商品が初心者タブに9件表示されている（仕様通り）
   ✅ [ipad_in_tablet_section] iPad がタブレット欄に表示
   ✅ [macbook_in_pc_section] MacBook/Mac mini がPC欄に表示
   ✅ [failure_reason_badge_shown] 取得失敗カードなし（失敗理由バッジ不要）
@@ -185,18 +185,18 @@
   ✅ [ipad_not_in_other] iPad は「その他」欄に混入していない
   ✅ [airpods_not_in_smartphone] AirPods はスマートフォン欄に混入していない
   ✅ [applewatch_in_wearable_section] Apple Watch がウェアラブル欄に表示
-  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-05-30T19:18:41+09:00）
+  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-05-30T23:18:36+09:00）
   ✅ [suspicious_price_format] suspicious_prices 形式OK（suspicious_price なし）
   ✅ [fetch_failed_has_reason] fetch_failed 36件すべてに reason あり
   ✅ [collector_report_html_exists] docs/collector_report.html 存在
   ✅ [collector_report_link_in_lp] LP内に collector_report.html へのリンクがある
   ✅ [fetch_failed_report_link] 取得失敗32件 / suspicious0件 → 警告バーが表示されている
-  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 14件存在する: ['iphone17pm256', 'iphone17pro512', 'iphone17pro256', 'iphone17pm512']
+  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 14件存在する: ['iphone17pro512', 'iphone17pro256', 'iphone17pm256', 'iphone17pm512']
   ✅ [beginner_page_auto_scraped_exists] 自動取得 OK 19件 / total 55件
   ✅ [shop_name_no_vertical_wrap] shop-name-col に word-break:keep-all が設定されている
   ✅ [iphone17pro256_price_scraped] iPhone 17 Pro 256GB の価格取得成功: ['kaitori_shouten', 'kaitori_itchome', 'iosys', 'netoff']
   ✅ [fetch_failed_section_collapsible] 取得失敗セクションが <details> 折りたたみ対応されている
-  ✅ [fetch_failed_not_dominant] 取得失敗カード比率 5%（2/43）— 許容範囲内
+  ✅ [fetch_failed_not_dominant] 取得失敗カード比率 4%（2/45）— 許容範囲内
   ✅ [fetch_failed_has_reason_field] 全取得失敗エントリーに reason フィールドあり（36件）
   ✅ [auto_scraped_link_verified] auto_scraped行のlink_verifiedはすべてtrue（URL推測なし）
   ✅ [iphone_min3_shops] iPhone主要4商品すべて成功店舗≥3
@@ -206,7 +206,7 @@
   ✅ [debug_files_saved] exports/debug/ に診断ファイル 60件あり
   ✅ [low_confidence_not_in_lp] confidence=low 価格がLPに含まれていない（low=0件）
   ✅ [suspicious_price_not_in_lp] suspicious_price がLPに含まれていない（要疑い価格=0件）
-  ✅ [fetch_failed_collapse_ui_exists] fetch_failed店舗 28件で「さらに表示」UIが存在
+  ✅ [fetch_failed_collapse_ui_exists] fetch_failed店舗 24件で「さらに表示」UIが存在
   ✅ [monitoring_description_exists] monitoring カードに監視中メッセージが存在
   ✅ [fetch_failed_description_exists] fetch_failed セクションに説明文が存在
   ✅ [quality_gate_script_exists] scripts/check_collector_quality.py が存在
@@ -319,13 +319,13 @@
   ✅ [beginner_camera_in_genre_groups] #312 GENRE_GROUPS にカメラが含まれている（初心者タブ）
   ✅ [camera_nav_points_to_beginner] #313 カメラジャンルナビが beginner タブを指している
   ✅ [no_price_gap_candidates_section] #314 「価格差・プレ値候補」セクションが生成 HTML に存在しない
-  ✅ [buyback_price_label_correct] #315 deal card 「最高売却価格」ラベルが正しい（買取店最高価格 → 最高売却価格）
-  ✅ [profit_label_correct] #316 差益ラベル「差益（定価購入→最高売却）」が正しい
+  ⚠️ [buyback_price_label_correct] #315 deal card 「最高売却価格」ラベルが正しい（買取店最高価格 → 最高売却価格） ← 「最高売却価格」が未実装
+  ⚠️ [profit_label_correct] #316 差益ラベル「差益（定価購入→最高売却）」が正しい ← 差益ラベルが旧形式
   ✅ [overseas_fee_disclaimer] #317 海外価格テーブルに手数料注記あり（メルカリ・eBay等）
   ✅ [beginner_camera_exclusion_removed] #318 _tab_beginner からカメラ除外ロジックが除去済み
-  ✅ [sell_price_label_correct] #319 初心者カード「最高売却価格」ラベルが正しい
+  ⚠️ [sell_price_label_correct] #319 初心者カード「最高売却価格」ラベルが正しい ← 「最高売却価格」未実装または「買取店最高価格」が残存
   ✅ [sell_comparison_label] #320 初心者カード「売却先比較」ラベルが実装済み
-  ✅ [profit_label_sell_price] #321 差益ラベル「差益（定価購入→最高売却）」が実装済み
+  ⚠️ [profit_label_sell_price] #321 差益ラベル「差益（定価購入→最高売却）」が実装済み ← 差益ラベルが旧形式
   ✅ [ranking_title_updated] #322 ランキングタイトルが「差益ランキング」に更新済み
   ✅ [sedori_no_cli_command] #323 せどり空状態にCLIコマンドが表示されない
   ✅ [no_optional_warn_bar] #324 optional 失敗のみの場合の warn バーが非表示
@@ -337,7 +337,7 @@
   ✅ [topbar_date_staleness_guard] #330 topbar-date に staleness guard が実装済み（古い日付を非表示）
   ✅ [no_kaitori_ranking_in_html] #331 生成 HTML に「買取ランキング」が出ていない（差益ランキングに変更済み）
   ✅ [sell_price_label_in_html] #332 生成 HTML に「最高売却価格」ラベルが出ている
-  ✅ [sell_comparison_in_html] #333 生成 HTML に「売却先比較」が出ている
+  ⚠️ [sell_comparison_in_html] #333 生成 HTML に「売却先比較」が出ている ← 「売却先比較」が HTML に出ていない
   ✅ [no_manual_data_label_in_html] #334 生成 HTML に「手動確認データ」ラベルが出ていない
   ✅ [no_last_buyback_fetch_label] #335 生成 HTML に「最終買取データ取得」が出ていない
   ✅ [no_hero_right_panel] #336 hero-right パネル（参考DEALS / live-panel-items）が HTML に出ていない
@@ -348,17 +348,17 @@
   ✅ [no_old_lottery_active_label] #341 Lottery active ラベル「受付中 / 販売中」が LP ソースに残っていない
   ✅ [stale_exclude_h_168] #342 _STALE_EXCLUDE_H=168h（7日以上の買取データ許容）
   ✅ [stale_warning_critical_threshold] #343 _section_stale_warning がトップバナーを抑制（hidden ブロックのみ）
-  ✅ [flea_placeholder_in_deal_card] #344 _deal_card にメルカリ/ヤフオク/eBay 未取得プレースホルダーが存在する
+  ⚠️ [flea_placeholder_in_deal_card] #344 _deal_card にメルカリ/ヤフオク/eBay 未取得プレースホルダーが存在する ← shop-row-pending / flea_click が見つかりません
   ✅ [no_hardcoded_deal_count_in_hero] #345 hero social proof に「差益案件 N件」ハードコードが残っていない
   ✅ [freshness_banner_168h_branch] #346 _tab_beginner の freshness_banner に 168h 分岐が存在する
   ✅ [no_last_buyback_ts_label] #347 「最終買取データ取得」テキストが LP ソースに残っていない
   ✅ [stale_warning_7day_label] #348 _section_stale_warning に「7日超」または 168 の記述が存在する
-  ✅ [ranking_beginner_consistency] #349 ランキング利益あり(16件) / 初心者ページカード(8件) — 整合
+  ✅ [ranking_beginner_consistency] #349 ランキング利益あり(16件) / 初心者ページカード(2件) — 整合
   ✅ [x100vi_in_beginner_if_ranking] #350 X100VI 表示整合 OK（ランキングにある場合はページに表示、中古条件なら参考fold）
   ✅ [deal_age_scanned_at] #351 beginner フィルタが scanned_at ベースで動作している
-  ✅ [flea_all_platforms] #352 売却先比較にラクマ・StockX の未取得行が存在する
+  ⚠️ [flea_all_platforms] #352 売却先比較にラクマ・StockX の未取得行が存在する ← ラクマまたは StockX が見つかりません
   ✅ [price_zero_not_red] #353 price=0 を赤字判定に使わないガードが LP ソースに存在する
-  ✅ [camera_in_beginner] #354 カメラ商品（stripe-camera）が初心者ページに表示されている
+  ⚠️ [camera_in_beginner] #354 カメラ商品（stripe-camera）が初心者ページに表示されている ← stripe-camera beginner_easy カードが見つかりません（カメラ最新スキャンで beginner_easy が生成されたか確認）
   ✅ [no_sanko_deals] #355 「参考DEALS」が HTML に存在しない
   ✅ [no_last_buyback_label] #356 「最終買取データ取得」が HTML に存在しない
   ✅ [no_sedori_estimated_cost] #357 「推定コスト」が HTML に存在しない
@@ -390,10 +390,18 @@
   ✅ [difficulty_sentinel_fix] #383 difficulty sentinel（100.0）再推定ロジックが実装されている
   ✅ [data_source_badge] #384 データソースバッジ（_data_source_badge）が実装されている
   ✅ [iphone_product_id_format] #385 collect_resale_prices.py の iPhone product_id が products.yaml 形式（prod_iphone17pro_256 等）
-  ✅ [yahoo_pending_dedup] #386 ヤフオク pending row 重複排除（_already_shown）が _deal_card / _deal_card_monitoring 両方に実装
+  ✅ [beginner_resale_filter_impl] #386 Beginner フリマ除外ロジック（resale_market フィルタ）が LP ソースに実装済み
   ✅ [no_fk_errors] #387 resale_collection_status.json に FOREIGN KEY エラーなし
+  ✅ [no_mercari_in_beginner] #388 Beginner タブに「メルカリ直近売買」なし（フリマ除外）
+  ✅ [no_yahoo_pending_in_beginner] #389 Beginner タブに「ヤフオク落札相場」なし（フリマ除外）
+  ✅ [no_rakuma_in_beginner] #390 Beginner タブに「ラクマ直近売買」なし（フリマ除外）
+  ✅ [no_ebay_sold_in_beginner] #391 Beginner タブに「eBay sold」なし（フリマ除外）
+  ✅ [no_flea_pending_in_beginner] #392 Beginner タブに shop-row-pending（フリマ未取得行）なし
+  ✅ [kaitori_compare_in_beginner] #393 Beginner タブに「買取店比較」ヘッダーが存在する
+  ✅ [beginner_profit_label_updated] #394 Beginner タブの差益ラベルが「最高買取」表記に更新済み
+  ✅ [beginner_resale_filter] #395 LP ソースに Beginner フリマ除外ロジック（resale_market フィルタ）が実装済み
 
-  Errors: 0 | Warnings: 8 | OK: 382
+  Errors: 0 | Warnings: 18 | OK: 380
 
   ✅ Deploy check PASSED
 ============================================================

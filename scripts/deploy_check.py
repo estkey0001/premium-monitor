@@ -4085,6 +4085,85 @@ def check() -> list[dict]:
                     "message": "#395 LP ソースに Beginner フリマ除外ロジック（resale_market フィルタ）が実装済み"
                                + ("" if _t395 else " ← resale_market フィルタが未実装")})
 
+    # ── Round 6: Beginner完全分離チェック ────────────────────────────────────
+    # _beg_html388 / _pro_html388 は Round 5 で既に抽出済み
+
+    # Rankingタブ HTML を抽出
+    _rank_tab_m396 = _re388.search(
+        r'id=["\']tab-ranking["\'].*?(?=id=["\']tab-sedori["\']|id=["\']tab-beginner["\']|$)',
+        html, _re388.DOTALL,
+    )
+    _rank_html396 = _rank_tab_m396.group(0) if _rank_tab_m396 else ''
+
+    # Sedoriタブ HTML を抽出
+    _sed_tab_m396 = _re388.search(
+        r'id=["\']tab-sedori["\'].*?(?=id=["\']tab-beginner["\']|id=["\']tab-advanced["\']|$)',
+        html, _re388.DOTALL,
+    )
+    _sed_html396 = _sed_tab_m396.group(0) if _sed_tab_m396 else ''
+
+    # #396: Beginner タブに「eBay」が存在しない
+    _t396 = 'eBay' not in _beg_html388
+    results.append({"level": "ok" if _t396 else "error", "check": "no_ebay_in_beginner",
+                    "message": "#396 Beginner タブに「eBay」なし（海外・フリマ除外）"
+                               + ("" if _t396 else " ← 「eBay」が Beginner タブに表示されています")})
+
+    # #397: Beginner タブに「ヤフオク」が存在しない
+    _t397 = 'ヤフオク' not in _beg_html388
+    results.append({"level": "ok" if _t397 else "error", "check": "no_yahuoku_in_beginner",
+                    "message": "#397 Beginner タブに「ヤフオク」なし（フリマ除外）"
+                               + ("" if _t397 else " ← 「ヤフオク」が Beginner タブに表示されています")})
+
+    # #398: Beginner タブに「メルカリ」が存在しない
+    _t398 = 'メルカリ' not in _beg_html388
+    results.append({"level": "ok" if _t398 else "error", "check": "no_mercari_in_beginner",
+                    "message": "#398 Beginner タブに「メルカリ」なし（フリマ除外）"
+                               + ("" if _t398 else " ← 「メルカリ」が Beginner タブに表示されています")})
+
+    # #399: Beginner タブに「ラクマ」が存在しない
+    _t399 = 'ラクマ' not in _beg_html388
+    results.append({"level": "ok" if _t399 else "error", "check": "no_rakuma_in_beginner",
+                    "message": "#399 Beginner タブに「ラクマ」なし（フリマ除外）"
+                               + ("" if _t399 else " ← 「ラクマ」が Beginner タブに表示されています")})
+
+    # #400: Beginner タブに「StockX」が存在しない
+    _t400 = 'StockX' not in _beg_html388
+    results.append({"level": "ok" if _t400 else "error", "check": "no_stockx_in_beginner",
+                    "message": "#400 Beginner タブに「StockX」なし（フリマ除外）"
+                               + ("" if _t400 else " ← 「StockX」が Beginner タブに表示されています")})
+
+    # #401: Ranking タブに「→ 最高売却先」が存在しない（「最高買取店」に変更済み）
+    _t401 = '→ 最高売却先' not in _rank_html396 and '&rarr; 最高売却先' not in _rank_html396
+    results.append({"level": "ok" if _t401 else "error", "check": "no_max_sell_in_ranking",
+                    "message": "#401 Ranking タブに「→ 最高売却先」なし（「最高買取店」に変更済み）"
+                               + ("" if _t401 else " ← Ranking タブに「→ 最高売却先」が残っています")})
+
+    # #402: Ranking タブに「eBay → 最高買取店」または「eBay → 最高売却先」が存在しない
+    _t402 = ('eBay → 最高買取店' not in _rank_html396
+             and 'eBay → 最高売却先' not in _rank_html396
+             and 'eBay &rarr; 最高' not in _rank_html396)
+    results.append({"level": "ok" if _t402 else "error", "check": "no_ebay_as_top_shop_in_ranking",
+                    "message": "#402 Ranking タブに「eBay」が最高買取店として表示されない（resale除外）"
+                               + ("" if _t402 else " ← Ranking タブに eBay が最高買取店として出ています")})
+
+    # #403: Beginner 説明文に「買取店で売却」が含まれる
+    _t403 = '買取店で売却' in _beg_html388
+    results.append({"level": "ok" if _t403 else "warning", "check": "beginner_desc_buyback_sell",
+                    "message": "#403 Beginner 説明文に「買取店で売却」が含まれる"
+                               + ("" if _t403 else " ← 「買取店で売却」が見つかりません（説明文要確認）")})
+
+    # #404: Pro タブに eBay / ヤフオク / メルカリ が存在する（Pro向け内容が維持されている）
+    _t404 = ('eBay' in _pro_html388 or 'ヤフオク' in _pro_html388 or 'メルカリ' in _pro_html388)
+    results.append({"level": "ok" if _t404 else "warning", "check": "pro_has_resale_platforms",
+                    "message": "#404 Pro タブに eBay / ヤフオク / メルカリ が存在する（Pro向け内容維持）"
+                               + ("" if _t404 else " ← Pro タブにフリマ/海外プラットフォームが見つかりません")})
+
+    # #405: Sedori タブに「Proルート」分類が存在する
+    _t405 = 'Proルート' in _sed_html396 or 'pro_routes' in _lp_gen_src
+    results.append({"level": "ok" if _t405 else "warning", "check": "sedori_has_pro_classification",
+                    "message": "#405 Sedori タブに「Proルート」分類が実装されている"
+                               + ("" if _t405 else " ← Sedori タブの Proルート分類が見つかりません")})
+
     return results
 
 

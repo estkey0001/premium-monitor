@@ -4613,17 +4613,32 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         else:
             from src.models.sale_price import CONDITION_LABELS
 
-            # ── ルートを「通常」と「Pro向け要確認（品質<0.6）」に分割 ──
-            ok_routes = [r for r in routes
-                         if not getattr(r, "needs_review", False)
-                         or getattr(r, "route_quality_score", 1.0) >= 0.6]
-            review_routes = [r for r in routes
-                             if getattr(r, "needs_review", False)
-                             and getattr(r, "route_quality_score", 1.0) < 0.6]
+            # ── ルートを「初心者ルート」と「Proルート」に分類 ──
+            # 初心者ルート: 公式店・カメラ店・家電量販店など正規チャネルで仕入れ → 買取店で売却
+            # Proルート: ヤフオク・メルカリ・ラクマ・eBay等フリマ・中古オークションで仕入れ
+            beginner_routes = [r for r in routes
+                               if not (self._is_resale_shop(getattr(r, 'buy_shop_name', '') or '')
+                                       or any(kw in (getattr(r, 'buy_shop_name', '') or '')
+                                              for kw in ['ヤフオク', 'メルカリ', 'ラクマ', 'eBay', 'StockX', '中古']))]
+            pro_routes = [r for r in routes
+                          if (self._is_resale_shop(getattr(r, 'buy_shop_name', '') or '')
+                              or any(kw in (getattr(r, 'buy_shop_name', '') or '')
+                                     for kw in ['ヤフオク', 'メルカリ', 'ラクマ', 'eBay', 'StockX', '中古']))]
 
-            # 表示対象：通常ルートがなければ要確認ルートを通常扱い
-            display_routes = ok_routes if ok_routes else routes
-            display_label = "通常ルート" if ok_routes else "全ルート"
+            # 各分類でさらに「通常」と「要確認」に分割
+            def _split_review(rlist):
+                ok  = [r for r in rlist if not getattr(r, "needs_review", False)
+                       or getattr(r, "route_quality_score", 1.0) >= 0.6]
+                rev = [r for r in rlist if getattr(r, "needs_review", False)
+                       and getattr(r, "route_quality_score", 1.0) < 0.6]
+                return (ok if ok else rlist), rev
+
+            beg_ok, beg_review = _split_review(beginner_routes)
+            pro_ok, pro_review = _split_review(pro_routes)
+
+            # 後方互換: display_routes は全ルート（1位カード用）
+            display_routes = beginner_routes if beginner_routes else pro_routes if pro_routes else routes
+            display_label = "通常ルート"
 
             def _make_best_card(best_r) -> str:
                 """1位ルート大型カードHTML生成。"""
@@ -4732,26 +4747,50 @@ tr.sc-route-review {{ background: #FFFBEB; }}
   </div>
 </div>'''
 
-            # ── 通常ルート：1位大型カード + 2位〜10位リスト ──
-            best = display_routes[0]
-            parts.append(_make_best_card(best))
-
-            rest = display_routes[1:10]
-            if rest:
-                parts.append(_make_route_table(rest, title_label=f"2位〜10位 {display_label}"))
-
-            # ── Pro向け要確認セクション ──
-            if review_routes:
-                parts.append(f'''<div class="sc-review-section">
+            # ── 初心者ルート（公式店 → 買取店）──
+            if beginner_routes:
+                parts.append('''<div class="sc-review-section" style="border-left:4px solid #059669;background:#f0fdf4;border-radius:8px;padding:12px 16px;margin:12px 0">
   <div class="sc-review-hd">
-    <span class="sc-review-icon">&#9888;</span>
+    <span class="sc-review-icon">&#128100;</span>
     <div>
-      <div class="sc-review-title">Pro向け要確認ルート（{len(review_routes)}件）</div>
-      <div class="sc-review-sub">このルートは価格差が大きい一方、状態・型番・買取上限価格の条件確認が必要です。経験者向けの参考情報としてご確認ください。</div>
+      <div class="sc-review-title" style="color:#059669">初心者ルート（公式店 → 買取店）</div>
+      <div class="sc-review-sub">公式店・正規店・量販店で定価購入 → 国内買取店へ売却。フリマ・海外販売不要のシンプルルートです。</div>
     </div>
   </div>
 </div>''')
-                parts.append(_make_route_table(review_routes, title_label="Pro向け要確認ルート（品質スコア低）"))
+                best_beg = beg_ok[0] if beg_ok else beginner_routes[0]
+                parts.append(_make_best_card(best_beg))
+                rest_beg = (beg_ok[1:10] if beg_ok else beginner_routes[1:10])
+                if rest_beg:
+                    parts.append(_make_route_table(rest_beg, title_label="初心者ルート 2位〜"))
+                if beg_review:
+                    parts.append(_make_route_table(beg_review, title_label="初心者ルート 要確認"))
+
+            # ── Proルート（フリマ仕入れ → 国内/海外売却）──
+            if pro_routes:
+                parts.append(f'''<div class="sc-review-section" style="border-left:4px solid #7c3aed;background:#faf5ff;border-radius:8px;padding:12px 16px;margin:12px 0">
+  <div class="sc-review-hd">
+    <span class="sc-review-icon">&#9997;&#65039;</span>
+    <div>
+      <div class="sc-review-title" style="color:#7c3aed">Proルート（フリマ/オークション仕入れ）</div>
+      <div class="sc-review-sub">ヤフオク・メルカリ・ラクマ・eBay等で仕入れ → 国内買取店・海外相場で売却。
+出品・手数料・為替リスクが発生します。経験者向けです。</div>
+    </div>
+  </div>
+</div>''')
+                best_pro = pro_ok[0] if pro_ok else pro_routes[0]
+                # Proルートは大型カードなしでリスト表示
+                all_pro = (pro_ok + pro_review)[:10]
+                if all_pro:
+                    parts.append(_make_route_table(all_pro, title_label=f"Proルート（{len(pro_routes)}件）"))
+
+            # データなしフォールバック
+            if not beginner_routes and not pro_routes:
+                best = display_routes[0]
+                parts.append(_make_best_card(best))
+                rest = display_routes[1:10]
+                if rest:
+                    parts.append(_make_route_table(rest, title_label=f"2位〜10位 {display_label}"))
 
         # ── 免責 ──
         parts.append('''<div class="sc-disclaimer">
@@ -4878,11 +4917,30 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         monitoring_deals   = monitoring_deals   or []
         fetch_failed_deals = fetch_failed_deals or []
 
+        # resale_market 売却先キーワード（Beginner では表示しない）
+        _RESALE_SHOP_KWS = ('ヤフオク', 'yahoo auction', 'メルカリ', 'mercari',
+                            'ラクマ', 'rakuma', 'ebay', 'stockx')
+
+        def _is_resale_shop_kw(shop_name: str) -> bool:
+            """売却先が resale_market（フリマ・海外）かどうか判定。"""
+            sl = (shop_name or '').lower()
+            return any(kw.lower() in sl for kw in _RESALE_SHOP_KWS)
+
         def _enrich_from_sell_candidates(deal, rows: list):
             """buyback_rows の有効価格で deal.best_buyback_price を補完する。
-            DB の best_buyback_price=0 の場合に buyback_rows の最高価格で上書きする。
+            DB の best_buyback_price が resale_market ショップ由来の場合は
+            buyback_rows（resale 除外済み）の最高価格で強制上書きする。
             """
             if not rows:
+                # 有効な買取店行なし → resale 由来のショップ名をクリア
+                stored_shop = deal.best_buyback_shop or ''
+                if _is_resale_shop_kw(stored_shop):
+                    return deal.copy(update={
+                        'best_buyback_shop': '—',
+                        'best_buyback_price': 0,
+                        'net_profit_jpy': 0,
+                        'gross_profit_jpy': 0,
+                    })
                 return deal
             valid_rows = [
                 r for r in rows
@@ -4891,11 +4949,23 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 and r.get('confidence', 'high') != 'low'
             ]
             if not valid_rows:
+                # resale 由来ショップをクリア
+                stored_shop = deal.best_buyback_shop or ''
+                if _is_resale_shop_kw(stored_shop):
+                    return deal.copy(update={
+                        'best_buyback_shop': '—',
+                        'best_buyback_price': 0,
+                        'net_profit_jpy': 0,
+                        'gross_profit_jpy': 0,
+                    })
                 return deal
             best_row = max(valid_rows, key=lambda r: r.get('buyback_price', 0))
             best_price = best_row.get('buyback_price', 0)
             stored_bp = deal.best_buyback_price or 0
-            if best_price <= stored_bp:
+            stored_shop = deal.best_buyback_shop or ''
+            # 既存値が resale 由来の場合は価格に関わらず buyback_rows の最高値で上書き
+            _force_update = _is_resale_shop_kw(stored_shop)
+            if best_price <= stored_bp and not _force_update:
                 return deal
             # DB の値より buyback_rows の方が高い → 補完
             official = deal.official_price_jpy or 0
@@ -4997,9 +5067,8 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         # ── Info banner ──
         parts.append('<div class="info-banner blue">\n'
                      '<div class="ib-title">&#128100; 初心者向け：公式店定価購入 &rarr; 最高買取価格との差益</div>\n'
-                     'Apple Store・任天堂公式・RICOH公式など<strong>公式・正規一次販売店で定価購入した新品・未使用品</strong>を、'
-                     '買取一丁目・じゃんぱら・イオシス・ネットオフ・マップカメラ・カメラのキタムラなど<strong>国内買取店の最高買取価格</strong>との差益を比較します。'
-                     'フリマ出品・海外販売は不要。<strong>公式で買って買取店に売るだけです。</strong>\n'
+                     '<strong>公式店・正規店で定価購入した新品・未使用品を、買取店で売却した場合の差益を比較します。</strong>'
+                     'フリマ出品・海外販売・個人間取引は不要です。<strong>公式で買って買取店に売るだけです。</strong>\n'
                      '<strong>対象は新品・未使用・未開封のみ。中古・開封済み・ジャンクは除外しています。</strong>\n'
                      '<strong>掲載価格は更新時点の参考値です。差益は保証されません。購入前に必ず各店舗の最新価格をご確認ください。</strong>\n'
                      '</div>')
@@ -5747,86 +5816,10 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 + ''.join(rows_html)
                 + '</div>'
             )
-        # ── 海外価格セル（一次/二次流通販売時の海外相場表示）──
+        # ── 海外価格セル（Pro モードのみ表示）──
+        # 初心者タブでは eBay 等海外参考価格は不要（公式定価購入 → 買取店売却に専念）
+        # Pro モードでも overseas_price_cell は現状不使用（overseas_html チップスで代替）
         overseas_price_cell_html = ''
-        if not pro_mode:
-            # 海外価格が渡された場合は表示
-            _ovs_price = overseas_price_jpy or getattr(d, 'overseas_price_jpy', None)
-            _ovs_src = overseas_source or getattr(d, 'overseas_source', '') or ''
-            _ovs_obs = overseas_observed_at or ''
-            if _ovs_price and _ovs_price > 0:
-                # stale判定（72時間超）
-                _stale_cls = ''
-                if _ovs_obs:
-                    try:
-                        _ovs_dt = datetime.fromisoformat(str(_ovs_obs))
-                        if _ovs_dt.tzinfo is None:
-                            _ovs_dt = _ovs_dt.replace(tzinfo=JST)
-                        _ovs_age_h = (datetime.now(tz=JST) - _ovs_dt.astimezone(JST)).total_seconds() / 3600
-                        if _ovs_age_h > 72:
-                            _stale_cls = ' style="opacity:0.7"'
-                    except Exception:
-                        pass
-                _src_lbl = _esc(_ovs_src) if _ovs_src else 'eBay / StockX'
-                # collector_method に応じてバッジを表示
-                _ovs_method = overseas_collector_method or getattr(d, 'overseas_collector_method', '') or ''
-                if _ovs_method == 'manual':
-                    _method_badge = (
-                        '<span style="font-size:0.65rem;color:#f59e0b;background:#fef3c7;'
-                        'padding:1px 5px;border-radius:3px;margin-left:4px">eBay 手動確認</span>'
-                    )
-                elif _ovs_method == 'html_blocked':
-                    _method_badge = (
-                        '<span style="font-size:0.65rem;color:#6b7280;background:#f3f4f6;'
-                        'padding:1px 5px;border-radius:3px;margin-left:4px">取得制限中</span>'
-                    )
-                elif _ovs_method == 'api':
-                    _method_badge = (
-                        '<span style="font-size:0.65rem;color:#059669;background:#d1fae5;'
-                        'padding:1px 5px;border-radius:3px;margin-left:4px">API</span>'
-                    )
-                else:
-                    _method_badge = ''
-                overseas_price_cell_html = (
-                    f'<div class="price-cell"{_stale_cls}>'
-                    f'<div class="price-cell-lbl">&#127758; 海外二次流通</div>'
-                    f'<div class="price-cell-val" style="color:#7c3aed">¥{_ovs_price:,}</div>'
-                    f'<div style="font-size:0.7rem;color:#9ca3af">{_src_lbl}{_method_badge}</div>'
-                    f'</div>'
-                )
-            else:
-                # eBay フォールバック: 海外価格未取得かつ最高売却先が eBay の場合
-                _best_shop = (d.best_buyback_shop or '').lower()
-                if 'ebay' in _best_shop and (d.best_buyback_price or 0) > 0:
-                    _ovs_price = d.best_buyback_price
-                    _ovs_src = d.best_buyback_shop or 'eBay'
-                    _method_badge = (
-                        '<span style="font-size:0.65rem;color:#7c3aed;background:#ede9fe;'
-                        'padding:1px 5px;border-radius:3px;margin-left:4px">eBay 売却参考</span>'
-                    )
-                    overseas_price_cell_html = (
-                        f'<div class="price-cell">'
-                        f'<div class="price-cell-lbl">&#127758; 海外二次流通</div>'
-                        f'<div class="price-cell-val" style="color:#7c3aed">¥{_ovs_price:,}</div>'
-                        f'<div style="font-size:0.7rem;color:#9ca3af">{_esc(_ovs_src)}{_method_badge}</div>'
-                        f'</div>'
-                    )
-                else:
-                    # 海外価格未取得 / html_blocked の場合
-                    _ovs_method2 = overseas_collector_method or getattr(d, 'overseas_collector_method', '') or ''
-                    if _ovs_method2 == 'html_blocked':
-                        _blocked_note = (
-                            '<div style="font-size:0.65rem;color:#6b7280">eBay自動取得は制限中。'
-                            '<br>前回確認データを表示</div>'
-                        )
-                    else:
-                        _blocked_note = '<div class="price-cell-val" style="color:#9ca3af;font-size:0.8rem">未取得</div>'
-                    overseas_price_cell_html = (
-                        '<div class="price-cell" style="opacity:0.5">'
-                        '<div class="price-cell-lbl">&#127758; 海外二次流通</div>'
-                        + _blocked_note +
-                        '</div>'
-                    )
 
         # Overseas links（Pro モードのみ表示。初心者は買取店売却に専念するため非表示）
         overseas_html = ''
@@ -6000,10 +5993,9 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 
         # ── Pro向けタブ説明バナー ──
         parts.append("""<div class="info-banner violet">
-<div class="ib-title">&#9997; Pro向け：二次流通 &rarr; 海外相場比較</div>
-公式では入手しづらいカメラ・限定モデルを、国内二次流通価格と海外相場で比較します。
-抽選・SOLD OUT・海外価格差のある商品を監視対象として整理しています。
-<strong>入手難易度が高い商品が対象です。出品・売却の参考情報としてご利用ください。価格は参考値です。</strong>
+<div class="ib-title">&#9997; Pro向け：二次流通仕入れ &rarr; 海外/国内売却比較</div>
+ヤフオク・メルカリ・国内中古店などで新品/未使用品を仕入れ、eBay・StockX・海外相場・国内買取店などで売却する価格差を確認します。
+<strong>フリマ出品・海外発送・手数料・為替リスクが発生します。経験者向けの参考情報です。価格は参考値です。</strong>
 </div>""")
 
         # ── PC セクション（anchor: category-pro-pc）──
@@ -6653,15 +6645,31 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 
     # ----- Tab: 買取ランキング -----
 
+    # フリマ・海外オークション系の売却先キーワード（ランキングから除外）
+    _RESALE_SHOP_KEYWORDS = ('ebay', 'ヤフオク', 'メルカリ', 'mercari', 'ラクマ', 'rakuma', 'stockx', 'amazon', '楽天')
+
+    @staticmethod
+    def _is_resale_shop(shop_name: str) -> bool:
+        """売却先が resale_market（フリマ・海外オークション）かどうか判定する。"""
+        if not shop_name:
+            return False
+        sl = shop_name.lower()
+        return any(kw.lower() in sl for kw in DailyLPGenerator._RESALE_SHOP_KEYWORDS)
+
     def _tab_ranking(self, all_deals, iphone_deals, game_deals, sedori_routes=None) -> str:
-        # 各カテゴリのデータ準備
-        profitable = sorted([d for d in all_deals if d.net_profit_jpy > 0],
+        # 各カテゴリのデータ準備（resale_market 売却先を除外して買取店のみランキング）
+        def _buyback_only(deals):
+            return [d for d in deals
+                    if d.net_profit_jpy > 0
+                    and not self._is_resale_shop(getattr(d, 'best_buyback_shop', '') or '')]
+
+        profitable = sorted(_buyback_only(all_deals),
                             key=lambda d: d.net_profit_jpy, reverse=True)
-        iphone_profitable = sorted([d for d in iphone_deals if d.net_profit_jpy > 0],
+        iphone_profitable = sorted(_buyback_only(iphone_deals),
                                     key=lambda d: d.net_profit_jpy, reverse=True)
-        game_profitable = sorted([d for d in game_deals if d.net_profit_jpy > 0],
+        game_profitable = sorted(_buyback_only(game_deals),
                                   key=lambda d: d.net_profit_jpy, reverse=True)
-        camera_profitable = sorted([d for d in all_deals if getattr(d, 'category', '') == 'camera' and d.net_profit_jpy > 0],
+        camera_profitable = sorted(_buyback_only([d for d in all_deals if getattr(d, 'category', '') == 'camera']),
                                     key=lambda d: d.net_profit_jpy, reverse=True)
 
         def _rank_rows_html(deals, show_cat=False):
@@ -6686,7 +6694,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                     f'data-target-tab="{_target_tab}" data-target-id="product-{_esc(_pid_alias)}" style="cursor:pointer">'
                     f'<div class="rank-num {rank_cls}">{crown}</div>'
                     f'<div class="rank-info"><div class="rank-name rank-name-link">{_esc(d.product_name)}</div>'
-                    f'<div class="rank-meta">{_esc(d.best_buyback_shop or "—")} → 最高売却先'
+                    f'<div class="rank-meta">{_esc(d.best_buyback_shop or "—")} → 最高買取店'
                     + (f' &nbsp;|&nbsp; {_esc(d.category)}' if show_cat else '')
                     + f'</div></div>'
                     f'<div><div class="rank-profit">{_esc(fmt_profit(d.net_profit_jpy))}</div>'
@@ -6720,12 +6728,22 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 rate = getattr(r, 'profit_rate', 0.0)
                 needs_review = getattr(r, 'needs_review', False)
                 review_badge = '<span class="badge" style="background:#FF9500;color:#fff;font-size:0.65rem;padding:1px 6px;border-radius:99px;margin-left:4px">要確認</span>' if needs_review else ''
+                # 仕入れ先がフリマ・オークション系 → Proルート
+                _buy_raw = getattr(r, 'buy_shop_name', '') or ''
+                _is_pro_route = self._is_resale_shop(_buy_raw) or any(
+                    kw in _buy_raw for kw in ['ヤフオク', 'メルカリ', 'ラクマ', 'eBay', 'StockX', '中古店']
+                )
+                route_badge = ('<span style="background:#7c3aed;color:#fff;font-size:0.6rem;'
+                               'padding:1px 5px;border-radius:99px;margin-left:4px">Pro</span>'
+                               if _is_pro_route else
+                               '<span style="background:#059669;color:#fff;font-size:0.6rem;'
+                               'padding:1px 5px;border-radius:99px;margin-left:4px">初心者</span>')
                 srows.append(
                     f'<div class="rank-row{row_cls} rank-row-clickable" '
                     f'data-target-tab="sedori" data-target-id="" style="cursor:pointer">'
                     f'<div class="rank-num {rank_cls}">{crown}</div>'
                     f'<div class="rank-info">'
-                    f'<div class="rank-name rank-name-link">{pname}{review_badge}</div>'
+                    f'<div class="rank-name rank-name-link">{pname}{route_badge}{review_badge}</div>'
                     f'<div class="rank-meta">{buy_s} &rarr; {sell_s}</div>'
                     f'</div>'
                     f'<div><div class="rank-profit">{_esc(fmt_profit(net))}</div>'

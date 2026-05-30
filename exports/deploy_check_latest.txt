@@ -161,7 +161,7 @@
   ✅ [no_price_zero_shown] LP上に¥0の価格表記なし（0価格行は非表示 or fetch_failed表示で正常）
   ✅ [auto_scraped_badge] 「自動取得」バッジ（badge-auto-scraped）が表示されている
   ✅ [fetch_failed_badge] 「取得失敗」バッジ（badge-fetch-failed）が表示されている
-  ✅ [fetch_failed_has_link] 取得失敗行（shop-row-failed）に確認リンクがある（24行）
+  ✅ [fetch_failed_has_link] 取得失敗行（shop-row-failed）に確認リンクがある（25行）
   ✅ [collection_stats_shown] ページ上部に取得統計（自動取得N件/取得失敗N件）が表示されている
   ✅ [hero_deals_dynamic] 参考DEALSに固定ハードコード商品なし（パネル削除済み = 正常）
   ✅ [fetch_failed_no_price_calc] fetch_failed 行の価格欄が「—」（価格計算に使われていない）
@@ -185,33 +185,33 @@
   ✅ [ipad_not_in_other] iPad は「その他」欄に混入していない
   ✅ [airpods_not_in_smartphone] AirPods はスマートフォン欄に混入していない
   ✅ [applewatch_in_wearable_section] Apple Watch がウェアラブル欄に表示
-  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-05-30T11:28:45+09:00）
+  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-05-30T15:17:13+09:00）
   ✅ [suspicious_price_format] suspicious_prices 形式OK（suspicious_price なし）
-  ✅ [fetch_failed_has_reason] fetch_failed 33件すべてに reason あり
+  ✅ [fetch_failed_has_reason] fetch_failed 36件すべてに reason あり
   ✅ [collector_report_html_exists] docs/collector_report.html 存在
   ✅ [collector_report_link_in_lp] LP内に collector_report.html へのリンクがある
-  ✅ [fetch_failed_report_link] 取得失敗29件 / suspicious0件 → 警告バーが表示されている
-  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 16件存在する: ['iphone17pro256', 'iphone17pm256', 'iphone17pm512', 'iphone17pro512']
-  ✅ [beginner_page_auto_scraped_exists] 自動取得 OK 22件 / total 55件
+  ✅ [fetch_failed_report_link] 取得失敗32件 / suspicious0件 → 警告バーが表示されている
+  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 14件存在する: ['iphone17pro256', 'iphone17pm256', 'iphone17pm512', 'iphone17pro512']
+  ✅ [beginner_page_auto_scraped_exists] 自動取得 OK 19件 / total 55件
   ✅ [shop_name_no_vertical_wrap] shop-name-col に word-break:keep-all が設定されている
-  ✅ [iphone17pro256_price_scraped] iPhone 17 Pro 256GB の価格取得成功: ['mobile_ichiban', 'kaitori_shouten', 'kaitori_itchome', 'iosys', 'netoff']
+  ✅ [iphone17pro256_price_scraped] iPhone 17 Pro 256GB の価格取得成功: ['kaitori_shouten', 'kaitori_itchome', 'iosys', 'netoff']
   ✅ [fetch_failed_section_collapsible] 取得失敗セクションが <details> 折りたたみ対応されている
   ✅ [fetch_failed_not_dominant] 取得失敗カード比率 5%（2/43）— 許容範囲内
-  ✅ [fetch_failed_has_reason_field] 全取得失敗エントリーに reason フィールドあり（33件）
+  ✅ [fetch_failed_has_reason_field] 全取得失敗エントリーに reason フィールドあり（36件）
   ✅ [auto_scraped_link_verified] auto_scraped行のlink_verifiedはすべてtrue（URL推測なし）
   ✅ [iphone_min3_shops] iPhone主要4商品すべて成功店舗≥3
   ✅ [switch2_min2_shops] Switch2 成功店舗≥2（3店舗）
-  ✅ [ps5pro_min2_shops] PS5 Pro 成功店舗≥2（3店舗）
+  ✅ [ps5pro_min2_shops] PS5 Pro 成功店舗≥2（2店舗）
   ✅ [no_unknown_failure_reason] すべての取得失敗に reason が設定されている（unknown なし）
   ✅ [debug_files_saved] exports/debug/ に診断ファイル 60件あり
   ✅ [low_confidence_not_in_lp] confidence=low 価格がLPに含まれていない（low=0件）
   ✅ [suspicious_price_not_in_lp] suspicious_price がLPに含まれていない（要疑い価格=0件）
-  ✅ [fetch_failed_collapse_ui_exists] fetch_failed店舗 24件で「さらに表示」UIが存在
+  ✅ [fetch_failed_collapse_ui_exists] fetch_failed店舗 25件で「さらに表示」UIが存在
   ✅ [monitoring_description_exists] monitoring カードに監視中メッセージが存在
   ✅ [fetch_failed_description_exists] fetch_failed セクションに説明文が存在
   ✅ [quality_gate_script_exists] scripts/check_collector_quality.py が存在
   ✅ [quality_gate_in_workflow] GitHub Actions に quality gate step がある
-  ✅ [collector_summary_in_report] latest.json summary OK: 22/55 (40%)
+  ✅ [collector_summary_in_report] latest.json summary OK: 19/55 (35%)
   ✅ [playwright_install_in_workflow] daily_lp.yml に playwright install --with-deps chromium が存在
   ✅ [workflow_concurrency_set] daily_lp.yml に concurrency: group=daily-lp-update が設定されている
   ✅ [workflow_concurrency_no_cancel] daily_lp.yml の concurrency が cancel-in-progress: false（後続を待機）
@@ -233,7 +233,7 @@
   ✅ [report_has_not_listed_reason] collector_report の failure_reason_ranking に product_not_listed が存在する（未掲載/失敗が別集計）
   ✅ [lp_not_listed_display] LP が product_not_listed を「現在未掲載」バッジで表示する実装が存在する
   ✅ [base_collector_no_reason_overwrite] buyback_base_csv.py が last_failure_reason を上書きしない（None チェック実装済み）
-  ✅ [mobile_ichiban_512_not_listed] mobile_ichiban の 512GB 系が product_not_listed として正しく分類されている
+  ⚠️ [mobile_ichiban_512_not_listed] mobile_ichiban の 512GB 系が product_not_listed でなく failed_shops に入っている — 分類の修正が必要
   ✅ [not_listed_badge_not_green] badge-not-listed / freshness-not-listed が green 系色を使っていない（自動取得成功と区別）
   ✅ [ricoh_monochrome_single] RICOH GR IV Monochrome が lottery_events.csv に定義済み
   ✅ [ricoh_hdf_single] RICOH GR IV HDF が lottery_events.csv に定義済み
@@ -390,7 +390,7 @@
   ✅ [difficulty_sentinel_fix] #383 difficulty sentinel（100.0）再推定ロジックが実装されている
   ✅ [data_source_badge] #384 データソースバッジ（_data_source_badge）が実装されている
 
-  Errors: 0 | Warnings: 8 | OK: 379
+  Errors: 0 | Warnings: 9 | OK: 378
 
   ✅ Deploy check PASSED
 ============================================================

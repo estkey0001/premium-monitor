@@ -1,11 +1,86 @@
 {
-  "generated_at": "2026-05-30 11:44 JST",
-  "total": 0,
+  "generated_at": "2026-05-30 15:39 JST",
+  "total": 4,
   "by_severity": {
     "high": 0,
     "medium": 0,
-    "low": 0
+    "low": 4
   },
-  "by_type": {},
-  "alerts": []
+  "by_type": {
+    "overseas_price_stale": 4
+  },
+  "alerts": [
+    {
+      "alert_id": "6285dc08-550",
+      "alert_type": "overseas_price_stale",
+      "product_name": "FUJIFILM X100VI",
+      "brand": "",
+      "category": "",
+      "severity": "low",
+      "title": "海外価格データ更新が必要: FUJIFILM X100VI",
+      "message": "eBay ¥509,650 / 最終取得: 2026-05-28T10:00 (48h超) / confidence=medium",
+      "product_url": "https://www.ebay.com/sch/i.html?_nkw=FUJIFILM+X100VI&LH_Sold=1&LH_Complete=1",
+      "action_url": "",
+      "action_label": "",
+      "detected_at": "2026-05-30 15:39",
+      "expires_at": "",
+      "source": "overseas_prices_json",
+      "data_source": "auto_generated",
+      "confidence": "medium"
+    },
+    {
+      "alert_id": "9c651964-b71",
+      "alert_type": "overseas_price_stale",
+      "product_name": "RICOH GR IIIx",
+      "brand": "",
+      "category": "",
+      "severity": "low",
+      "title": "海外価格データ更新が必要: RICOH GR IIIx",
+      "message": "eBay ¥222,972 / 最終取得: 2026-05-28T10:00 (48h超) / confidence=medium",
+      "product_url": "https://www.ebay.com/sch/i.html?_nkw=Ricoh+GR+IIIx&LH_Sold=1&LH_Complete=1",
+      "action_url": "",
+      "action_label": "",
+      "detected_at": "2026-05-30 15:39",
+      "expires_at": "",
+      "source": "overseas_prices_json",
+      "data_source": "auto_generated",
+      "confidence": "medium"
+    },
+    {
+      "alert_id": "d2cd6d7d-6d8",
+      "alert_type": "overseas_price_stale",
+      "product_name": "RICOH GR IV",
+      "brand": "",
+      "category": "",
+      "severity": "low",
+      "title": "海外価格データ更新が必要: RICOH GR IV",
+      "message": "eBay ¥294,641 / 最終取得: 2026-05-28T10:00 (48h超) / confidence=medium",
+      "product_url": "https://www.ebay.com/sch/i.html?_nkw=Ricoh+GR+IV&LH_Sold=1&LH_Complete=1",
+      "action_url": "",
+      "action_label": "",
+      "detected_at": "2026-05-30 15:39",
+      "expires_at": "",
+      "source": "overseas_prices_json",
+      "data_source": "auto_generated",
+      "confidence": "medium"
+    },
+    {
+      "alert_id": "c44267ea-727",
+      "alert_type": "overseas_price_stale",
+      "product_name": "Nintendo Switch 2",
+      "brand": "",
+      "category": "",
+      "severity": "low",
+      "title": "海外価格データ更新が必要: Nintendo Switch 2",
+      "message": "eBay ¥76,447 / 最終取得: 2026-05-28T10:00 (48h超) / confidence=medium",
+      "product_url": "https://www.ebay.com/sch/i.html?_nkw=Nintendo+Switch+2&LH_Sold=1&LH_Complete=1",
+      "action_url": "",
+      "action_label": "",
+      "detected_at": "2026-05-30 15:39",
+      "expires_at": "",
+      "source": "overseas_prices_json",
+      "data_source": "auto_generated",
+      "confidence": "medium"
+    }
+  ]
 }

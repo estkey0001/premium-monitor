@@ -4996,9 +4996,10 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 
         # ── Info banner ──
         parts.append('<div class="info-banner blue">\n'
-                     '<div class="ib-title">&#128100; 初心者向け：公式店定価購入 &rarr; 最高売却先との差益</div>\n'
+                     '<div class="ib-title">&#128100; 初心者向け：公式店定価購入 &rarr; 最高買取価格との差益</div>\n'
                      'Apple Store・任天堂公式・RICOH公式など<strong>公式・正規一次販売店で定価購入した新品・未使用品</strong>を、'
-                     '買取店・メルカリ・ラクマ・ヤフオク・eBay・StockXなどの中で<strong>その時点で最も高く売れる売却先</strong>との差益を比較します。'
+                     '買取一丁目・じゃんぱら・イオシス・ネットオフ・マップカメラ・カメラのキタムラなど<strong>国内買取店の最高買取価格</strong>との差益を比較します。'
+                     'フリマ出品・海外販売は不要。<strong>公式で買って買取店に売るだけです。</strong>\n'
                      '<strong>対象は新品・未使用・未開封のみ。中古・開封済み・ジャンクは除外しています。</strong>\n'
                      '<strong>掲載価格は更新時点の参考値です。差益は保証されません。購入前に必ず各店舗の最新価格をご確認ください。</strong>\n'
                      '</div>')
@@ -5065,7 +5066,13 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         # ── sell_candidates 補完: buyback_rows の最高価格で deal を補完 ──
         # 売却先比較テーブルに有効価格があれば DB の best_buyback_price より優先して使う。
         # これにより「比較テーブルに価格あり → メイン価格未取得」の不整合を防ぐ。
-        deduped_all = [_enrich_from_sell_candidates(d, bybp.get(d.product_id, [])) for d in deduped_all]
+        deduped_all = [
+            _enrich_from_sell_candidates(
+                d,
+                [r for r in bybp.get(d.product_id, []) if r.get('data_source') != 'resale_market']
+            )
+            for d in deduped_all
+        ]
 
         # ── サマリバー（利益あり件数 / 監視中件数 / 取得失敗件数）──
         _profit_deals_all  = [d for d in deduped_all if (d.net_profit_jpy or 0) > 0]
@@ -5295,9 +5302,12 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             lbl  = 'Apple Store で確認' if genre_cls == 'iphone' else '公式で確認'
             official_btn = f'<a href="{official_url}" target="_blank" rel="noopener" class="btn btn-secondary" data-track="product_click" data-product-id="{pid}">{icon} {lbl}</a>'
 
-        # 売却先比較テーブル（buying/watch カードと同じ構造 + フリマ未取得行）
+        # 売却先比較テーブル（買取店のみ）
         compare_html = ''
         rows_html = []
+        # 監視中カードも resale_market（フリマ）行を除外してから評価
+        if buyback_rows:
+            buyback_rows = [r for r in buyback_rows if r.get('data_source') != 'resale_market']
         if buyback_rows:
             _normal_rows  = [r for r in buyback_rows if r.get('buyback_price', 0) > 0 and r.get('confidence', 'high') != 'low'][:5]
             _failed_rows_r = [r for r in buyback_rows if r.get('data_source') == 'fetch_failed']
@@ -5340,56 +5350,10 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                     f'<div class="shop-link-col">{link_cell}</div>'
                     f'</div>'
                 )
-        # フリマ・オークション未取得行（Task 4）
-        _flea_q = _urllib_parse.quote(getattr(d, 'product_name', '') or '')
-        # プラットフォーム名 → platform キーのマッピング
-        _FLEA_PLATFORM_MAP = {
-            'メルカリ直近売買':  'mercari',
-            'ヤフオク落札相場':  'yahoo',
-            'ラクマ直近売買':    'rakuma',
-            'eBay sold':        'ebay',
-            'StockX':           'stockx',
-        }
-        # 比較テーブルに既に表示済みのプラットフォームをスキップ
-        _already_shown_mon = set()
-        for _r in (buyback_rows or []):
-            _sn = (_r.get('shop_name') or '').lower()
-            if 'ヤフオク' in _sn or 'yahoo' in _sn:
-                _already_shown_mon.add('yahoo')
-            if 'ebay' in _sn:
-                _already_shown_mon.add('ebay')
-            if 'メルカリ' in _sn or 'mercari' in _sn:
-                _already_shown_mon.add('mercari')
-            if 'amazon' in _sn:
-                _already_shown_mon.add('amazon')
-            if 'ラクマ' in _sn or 'rakuma' in _sn:
-                _already_shown_mon.add('rakuma')
-        _raw_pid_mon = getattr(d, 'product_id', '') or ''
-        for _fn, _fu in [
-            ('メルカリ直近売買',   f'https://jp.mercari.com/search?keyword={_flea_q}'),
-            ('ヤフオク落札相場',   f'https://auctions.yahoo.co.jp/search/search?p={_flea_q}&va={_flea_q}&auccat=0&tab=closedsearch'),
-            ('ラクマ直近売買',     f'https://fril.jp/search?query={_flea_q}'),
-            ('eBay sold',        f'https://www.ebay.com/sch/i.html?_nkw={_flea_q}&LH_Sold=1&LH_Complete=1'),
-            ('StockX',           f'https://stockx.com/search?s={_flea_q}'),
-        ]:
-            _plt_mon = _FLEA_PLATFORM_MAP.get(_fn, 'unknown')
-            if _plt_mon in _already_shown_mon:
-                continue  # 上表に表示済みなのでスキップ
-            _pending_diff_lbl = self._get_platform_pending_label(_plt_mon, _raw_pid_mon)
-            rows_html.append(
-                f'<div class="shop-row shop-row-pending">'
-                f'<div class="shop-rank" style="color:var(--ink4)">—</div>'
-                f'<div class="shop-name-col">{_fn}</div>'
-                f'<div class="shop-price-col" style="color:var(--ink4);font-size:0.75rem">未取得</div>'
-                f'<div class="shop-diff-col" style="color:var(--ink4);font-size:0.72rem">{_pending_diff_lbl}</div>'
-                f'<div class="shop-source-col"></div>'
-                f'<div class="shop-link-col"><a href="{_fu}" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="flea_click" data-product-id="{pid}">検索</a></div>'
-                f'</div>'
-            )
         if rows_html:
             compare_html = (
                 '<div class="shop-table buyback-shop-table buyback-table" style="margin-top:8px">'
-                '<div class="shop-table-hd"><span>売却先比較</span></div>'
+                '<div class="shop-table-hd"><span>買取店比較</span></div>'
                 + ''.join(rows_html)
                 + '</div>'
             )
@@ -5405,7 +5369,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
   </div>
   <div class="profit-section amber">
     <div class="profit-left">
-      <div class="profit-lbl amber">差益（定価購入→最高売却）</div>
+      <div class="profit-lbl amber">差益（定価購入→最高買取）</div>
       <div class="profit-num amber">{_esc(diff_str)}</div>
     </div>
     <div class="profit-right">
@@ -5418,11 +5382,11 @@ tr.sc-route-review {{ background: #FFFBEB; }}
       <div class="price-cell-val">{"¥{:,}".format(official) if official > 0 else "未取得"}</div>
     </div>
     <div class="price-cell">
-      <div class="price-cell-lbl">最高売却価格</div>
+      <div class="price-cell-lbl">最高買取価格</div>
       <div class="price-cell-val" style="color:var(--ink3)">{_esc(best_bp_str)}</div>
     </div>
     <div class="price-cell" style="opacity:0.6">
-      <div class="price-cell-lbl">最高売却先</div>
+      <div class="price-cell-lbl">最高買取店</div>
       <div class="price-cell-val" style="font-size:0.8rem">{best_shop}</div>
     </div>
   </div>
@@ -5707,6 +5671,9 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             updated_str = f'<div class="updated-row"><span>&#128336;</span>スキャン：{_esc(_jst_str(d.scanned_at))}</div>'
         # Shop compare
         compare_html = ''
+        # 初心者モード（non-pro）では resale_market（フリマ・オークション）行を除外
+        if not pro_mode and buyback_rows:
+            buyback_rows = [r for r in buyback_rows if r.get('data_source') != 'resale_market']
         if buyback_rows:
             official_price = d.official_price_jpy or 0
             rows_html = []
@@ -5770,98 +5737,14 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                         f'<div class="shop-link-col">{link_col}</div>'
                         f'</div>'
                     )
-            # フリマ・オークション未取得プレースホルダー（初心者モード専用）
-            if not pro_mode:
-                _flea_q = _urllib_parse.quote(getattr(d, 'product_name', '') or '')
-                # プラットフォーム名 → platform キーのマッピング
-                _FLEA_PLATFORM_MAP = {
-                    'メルカリ直近売買':  'mercari',
-                    'ヤフオク落札相場':  'yahoo',
-                    'ラクマ直近売買':    'rakuma',
-                    'eBay sold':        'ebay',
-                    'StockX':           'stockx',
-                }
-                # 比較テーブルに既に表示済みのプラットフォームをスキップ
-                _already_shown = set()
-                for _r in buyback_rows:
-                    _sn = (_r.get('shop_name') or '').lower()
-                    if 'ヤフオク' in _sn or 'yahoo' in _sn:
-                        _already_shown.add('yahoo')
-                    if 'ebay' in _sn:
-                        _already_shown.add('ebay')
-                    if 'メルカリ' in _sn or 'mercari' in _sn:
-                        _already_shown.add('mercari')
-                    if 'amazon' in _sn:
-                        _already_shown.add('amazon')
-                    if 'ラクマ' in _sn or 'rakuma' in _sn:
-                        _already_shown.add('rakuma')
-                _raw_pid_dc = getattr(d, 'product_id', '') or ''
-                for _flea_name, _flea_url in [
-                    ('メルカリ直近売買',   f'https://jp.mercari.com/search?keyword={_flea_q}'),
-                    ('ヤフオク落札相場',   f'https://auctions.yahoo.co.jp/search/search?p={_flea_q}&va={_flea_q}&auccat=0&tab=closedsearch'),
-                    ('ラクマ直近売買',     f'https://fril.jp/search?query={_flea_q}'),
-                    ('eBay sold',        f'https://www.ebay.com/sch/i.html?_nkw={_flea_q}&LH_Sold=1&LH_Complete=1'),
-                    ('StockX',           f'https://stockx.com/search?s={_flea_q}'),
-                ]:
-                    _plt = _FLEA_PLATFORM_MAP.get(_flea_name, 'unknown')
-                    if _plt in _already_shown:
-                        continue  # 上表に表示済みなのでスキップ
-                    _flea_diff_lbl = self._get_platform_pending_label(_plt, _raw_pid_dc)
-                    rows_html.append(
-                        f'<div class="shop-row shop-row-pending">'
-                        f'<div class="shop-rank" style="color:var(--ink4)">—</div>'
-                        f'<div class="shop-name-col">{_flea_name}</div>'
-                        f'<div class="shop-price-col" style="color:var(--ink4);font-size:0.75rem">未取得</div>'
-                        f'<div class="shop-diff-col" style="color:var(--ink4);font-size:0.72rem">{_flea_diff_lbl}</div>'
-                        f'<div class="shop-source-col"></div>'
-                        f'<div class="shop-link-col"><a href="{_flea_url}" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="flea_click" data-product-id="{pid}">検索</a></div>'
-                        f'</div>'
-                    )
             # ヘッダーには最初の正常行の鮮度を使う
-            _hd_row = _normal_rows[0] if _normal_rows else (_failed_rows[0] if _failed_rows else buyback_rows[0])
+            _hd_row = _normal_rows[0] if _normal_rows else (_failed_rows[0] if _failed_rows else (buyback_rows[0] if buyback_rows else {}))
             first_freshness = self._freshness_label(_hd_row.get('observed_at', ''), _hd_row.get('data_source', 'manual_today'))
+            _compare_hd_label = '参考買取価格（補助情報）' if pro_mode else '買取店比較'
             compare_html = (
                 f'<div class="shop-table buyback-shop-table buyback-table">'
-                f'<div class="shop-table-hd"><span>売却先比較（参照{n_shops}店舗）</span>' + first_freshness + '</div>'
+                f'<div class="shop-table-hd"><span>{_compare_hd_label}（参照{n_shops}店舗）</span>' + first_freshness + '</div>'
                 + ''.join(rows_html)
-                + '</div>'
-            )
-        elif not pro_mode:
-            # buyback_rows なし: フリマ・オークション行のみ表示（未取得）
-            _flea_q = _urllib_parse.quote(getattr(d, 'product_name', '') or '')
-            # プラットフォーム名 → platform キーのマッピング（buyback_rows なし時）
-            _FLEA_PLATFORM_MAP = {
-                'メルカリ直近売買':  'mercari',
-                'ヤフオク落札相場':  'yahoo',
-                'ラクマ直近売買':    'rakuma',
-                'eBay sold':        'ebay',
-                'StockX':           'stockx',
-            }
-            _raw_pid_dc2 = getattr(d, 'product_id', '') or ''
-            _flea_only_rows = []
-            for _flea_name, _flea_url in [
-                ('メルカリ直近売買',   f'https://jp.mercari.com/search?keyword={_flea_q}'),
-                ('ヤフオク落札相場',   f'https://auctions.yahoo.co.jp/search/search?p={_flea_q}&va={_flea_q}&auccat=0&tab=closedsearch'),
-                ('ラクマ直近売買',     f'https://fril.jp/search?query={_flea_q}'),
-                ('eBay sold',        f'https://www.ebay.com/sch/i.html?_nkw={_flea_q}&LH_Sold=1&LH_Complete=1'),
-                ('StockX',           f'https://stockx.com/search?s={_flea_q}'),
-            ]:
-                _plt2 = _FLEA_PLATFORM_MAP.get(_flea_name, 'unknown')
-                _flea_only_diff_lbl = self._get_platform_pending_label(_plt2, _raw_pid_dc2)
-                _flea_only_rows.append(
-                    f'<div class="shop-row shop-row-pending">'
-                    f'<div class="shop-rank" style="color:var(--ink4)">—</div>'
-                    f'<div class="shop-name-col">{_flea_name}</div>'
-                    f'<div class="shop-price-col" style="color:var(--ink4);font-size:0.75rem">未取得</div>'
-                    f'<div class="shop-diff-col" style="color:var(--ink4);font-size:0.72rem">{_flea_only_diff_lbl}</div>'
-                    f'<div class="shop-source-col"></div>'
-                    f'<div class="shop-link-col"><a href="{_flea_url}" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="flea_click" data-product-id="{pid}">検索</a></div>'
-                    f'</div>'
-                )
-            compare_html = (
-                '<div class="shop-table buyback-shop-table buyback-table">'
-                '<div class="shop-table-hd"><span>売却先参考（買取店データ取得中）</span></div>'
-                + ''.join(_flea_only_rows)
                 + '</div>'
             )
         # ── 海外価格セル（一次/二次流通販売時の海外相場表示）──
@@ -5945,34 +5828,35 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                         '</div>'
                     )
 
-        # Overseas links
+        # Overseas links（Pro モードのみ表示。初心者は買取店売却に専念するため非表示）
         overseas_html = ''
-        try:
-            resolver = get_resolver()
-            if resolver:
-                links = resolver.get_overseas_links(d.product_name, genre_cls, max_links=4)
-                if links:
-                    chips = []
-                    for lk in links:
-                        icon = _esc(lk.get('icon', ''))
-                        lbl = _esc(lk.get('label', lk.get('name', '')))
-                        url = _esc(lk.get('url', ''))
-                        note = _esc(lk.get('note', ''))
-                        if url:
-                            chips.append(f'<a href="{url}" target="_blank" rel="noopener" class="overseas-chip overseas-btn" title="{note}" data-track="overseas_click">{icon} {lbl}</a>')
-                    if chips:
-                        overseas_html = ('<div class="overseas-section overseas-links-section">'
-                                        '<div class="overseas-lbl">&#127758; 海外相場を確認</div>'
-                                        '<div class="overseas-chips">' + ''.join(chips) + '</div></div>')
-        except Exception:
-            pass
+        if pro_mode:
+            try:
+                resolver = get_resolver()
+                if resolver:
+                    links = resolver.get_overseas_links(d.product_name, genre_cls, max_links=4)
+                    if links:
+                        chips = []
+                        for lk in links:
+                            icon = _esc(lk.get('icon', ''))
+                            lbl = _esc(lk.get('label', lk.get('name', '')))
+                            url = _esc(lk.get('url', ''))
+                            note = _esc(lk.get('note', ''))
+                            if url:
+                                chips.append(f'<a href="{url}" target="_blank" rel="noopener" class="overseas-chip overseas-btn" title="{note}" data-track="overseas_click">{icon} {lbl}</a>')
+                        if chips:
+                            overseas_html = ('<div class="overseas-section overseas-links-section">'
+                                            '<div class="overseas-lbl">&#127758; 海外相場を確認</div>'
+                                            '<div class="overseas-chips">' + ''.join(chips) + '</div></div>')
+            except Exception:
+                pass
         # Profit section style
         is_watch = d.user_level == 'beginner_watch'
         profit_section_cls = 'profit-section amber' if is_watch else 'profit-section'
         profit_lbl_cls = 'profit-lbl amber' if is_watch else 'profit-lbl'
         profit_num_cls = 'profit-num amber' if is_watch else 'profit-num'
         profit_rate_cls = 'profit-rate amber' if is_watch else 'profit-rate'
-        profit_note_text = '利益率が低め。様子見推奨' if is_watch else '定価購入→最高売却先（参考値）'
+        profit_note_text = '利益率が低め。様子見推奨' if is_watch else '定価購入→最高買取（参考値）'
         condition_text = _esc(d.buyback_condition or '新品未開封')
         profit_rate_str = _esc(fmt_rate(d.net_profit_rate))
 
@@ -5991,11 +5875,11 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             buyback_compare_hd = '参考買取価格（補助情報）'
         else:
             official_price_lbl = '公式価格（定価）'
-            buyback_price_lbl = '最高売却価格'
+            buyback_price_lbl = '最高買取価格'
             buyback_price_val_cls = 'price-cell-val green'
-            profit_main_lbl = '差益（定価購入→最高売却）'
+            profit_main_lbl = '差益（定価購入→最高買取）'
             pro_mode_note = ''
-            buyback_compare_hd = '売却先比較'
+            buyback_compare_hd = '買取店比較'
 
         # 買取店テーブルのヘッダーラベルを再構築（Pro向けは「参考」表記）
         if compare_html and pro_mode:
@@ -6031,7 +5915,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         price_source_row_html = (
             f'<div class="price-source-row" style="display:flex;gap:16px;flex-wrap:wrap;'
             f'font-size:0.75rem;color:var(--ink3);padding:4px 0 2px;margin-top:2px;">'
-            f'<span>&#127978; 最高売却先：<strong>{_esc(d.best_buyback_shop or "—")}</strong></span>'
+            f'<span>&#127978; 最高買取店：<strong>{_esc(d.best_buyback_shop or "—")}</strong></span>'
             f'<span>&#9989; 状態：<strong>{condition_text}</strong></span>'
             f'<span>&#128203; 取得方法：{_src_label}</span>'
             f'<span>&#128197; 最終確認：{_src_date}</span>'

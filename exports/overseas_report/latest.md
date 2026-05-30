@@ -1,6 +1,6 @@
 # 海外価格レポート
 
-生成日時: 2026-05-30 00:11 JST
+生成日時: 2026-05-30 18:57 JST
 
 ## サマリー
 
@@ -8,13 +8,13 @@
 - confidence high: 0件
 - confidence medium: 4件
 - confidence low: 0件
-- stale (48h超): 0件
+- stale (48h超): 4件
 
 ## 商品別海外価格
 
 | 商品 | 市場 | 価格(JPY) | 件数 | confidence | stale | 取得時刻 |
 |------|------|-----------|------|------------|-------|---------|
-| RICOH GR IIIx | eBay | ¥223,032 | 1件 | medium | ok | 2026-05-28T10:00 |
-| RICOH GR IV | eBay | ¥294,722 | 1件 | medium | ok | 2026-05-28T10:00 |
-| Nintendo Switch 2 | eBay | ¥76,468 | 1件 | medium | ok | 2026-05-28T10:00 |
-| FUJIFILM X100VI | eBay | ¥509,789 | 1件 | medium | ok | 2026-05-28T10:00 |
+| RICOH GR IIIx | eBay | ¥222,972 | 1件 | medium | stale | 2026-05-28T10:00 |
+| RICOH GR IV | eBay | ¥294,641 | 1件 | medium | stale | 2026-05-28T10:00 |
+| Nintendo Switch 2 | eBay | ¥76,447 | 1件 | medium | stale | 2026-05-28T10:00 |
+| FUJIFILM X100VI | eBay | ¥509,650 | 1件 | medium | stale | 2026-05-28T10:00 |

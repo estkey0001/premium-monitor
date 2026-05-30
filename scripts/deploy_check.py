@@ -3991,13 +3991,14 @@ def check() -> list[dict]:
         results.append({"level": "warning", "check": "iphone_product_id_format",
                         "message": "#385 collect_resale_prices.py が見つからない"})
 
-    # #386: ヤフオク pending row 重複排除ロジックが _deal_card と _deal_card_monitoring の両方に存在
-    _t386_card = '_already_shown' in _lp_gen_src and '_already_shown_mon' in _lp_gen_src
-    _t386_skip = '_plt in _already_shown' in _lp_gen_src and '_plt_mon in _already_shown_mon' in _lp_gen_src
-    _t386 = _t386_card and _t386_skip
-    results.append({"level": "ok" if _t386 else "warning", "check": "yahoo_pending_dedup",
-                    "message": "#386 ヤフオク pending row 重複排除（_already_shown）が _deal_card / _deal_card_monitoring 両方に実装"
-                               + ("" if _t386 else " ← _already_shown または _already_shown_mon が未実装")})
+    # #386: Beginner から resale_market を除外するロジックが _deal_card に実装されている
+    _t386 = (
+        "data_source') != 'resale_market'" in _lp_gen_src
+        or "!= 'resale_market'" in _lp_gen_src
+    )
+    results.append({"level": "ok" if _t386 else "warning", "check": "beginner_resale_filter_impl",
+                    "message": "#386 Beginner フリマ除外ロジック（resale_market フィルタ）が LP ソースに実装済み"
+                               + ("" if _t386 else " ← resale_market フィルタが未実装")})
 
     # #387: resale_collection_status.json に FOREIGN KEY エラーが記録されていない
     import json as _json387
@@ -4017,6 +4018,72 @@ def check() -> list[dict]:
     else:
         results.append({"level": "warning", "check": "no_fk_errors",
                         "message": "#387 resale_collection_status.json が見つからない（collect_resale_prices.py 未実行）"})
+
+    # ── Round 5: Beginner/Pro 分離チェック ──────────────────────────────────
+    import re as _re388
+
+    # 初心者タブ HTML を抽出（#358 で使用したものを再利用）
+    _beg_tab_m388 = _re388.search(
+        r'id=["\']tab-beginner["\'].*?(?=id=["\']tab-advanced["\']|id=["\']tab-lottery["\']|$)',
+        html, _re388.DOTALL,
+    )
+    _beg_html388 = _beg_tab_m388.group(0) if _beg_tab_m388 else ''
+
+    # Pro タブ HTML を抽出
+    _pro_tab_m388 = _re388.search(
+        r'id=["\']tab-advanced["\'].*?(?=id=["\']tab-lottery["\']|$)',
+        html, _re388.DOTALL,
+    )
+    _pro_html388 = _pro_tab_m388.group(0) if _pro_tab_m388 else ''
+
+    # #388: Beginner タブに「メルカリ直近売買」が出ない
+    _t388 = 'メルカリ直近売買' not in _beg_html388
+    results.append({"level": "ok" if _t388 else "error", "check": "no_mercari_in_beginner",
+                    "message": "#388 Beginner タブに「メルカリ直近売買」なし（フリマ除外）"
+                               + ("" if _t388 else " ← 「メルカリ直近売買」が Beginner タブに表示されています")})
+
+    # #389: Beginner タブに「ヤフオク落札相場」が出ない
+    _t389 = 'ヤフオク落札相場' not in _beg_html388
+    results.append({"level": "ok" if _t389 else "error", "check": "no_yahoo_pending_in_beginner",
+                    "message": "#389 Beginner タブに「ヤフオク落札相場」なし（フリマ除外）"
+                               + ("" if _t389 else " ← 「ヤフオク落札相場」が Beginner タブに表示されています")})
+
+    # #390: Beginner タブに「ラクマ直近売買」が出ない
+    _t390 = 'ラクマ直近売買' not in _beg_html388
+    results.append({"level": "ok" if _t390 else "error", "check": "no_rakuma_in_beginner",
+                    "message": "#390 Beginner タブに「ラクマ直近売買」なし（フリマ除外）"
+                               + ("" if _t390 else " ← 「ラクマ直近売買」が Beginner タブに表示されています")})
+
+    # #391: Beginner タブに「eBay sold」が出ない
+    _t391 = 'eBay sold' not in _beg_html388
+    results.append({"level": "ok" if _t391 else "error", "check": "no_ebay_sold_in_beginner",
+                    "message": "#391 Beginner タブに「eBay sold」なし（フリマ除外）"
+                               + ("" if _t391 else " ← 「eBay sold」が Beginner タブに表示されています")})
+
+    # #392: Beginner タブに「StockX」が出ない（pending行として）
+    # ただし Proタブのランキング参照リンク等で出る可能性があるので shop-row-pending 限定チェック
+    _t392 = 'shop-row-pending' not in _beg_html388
+    results.append({"level": "ok" if _t392 else "error", "check": "no_flea_pending_in_beginner",
+                    "message": "#392 Beginner タブに shop-row-pending（フリマ未取得行）なし"
+                               + ("" if _t392 else " ← Beginner タブにフリマ未取得行が表示されています")})
+
+    # #393: Beginner タブに「買取店比較」が出る
+    _t393 = '買取店比較' in _beg_html388
+    results.append({"level": "ok" if _t393 else "warning", "check": "kaitori_compare_in_beginner",
+                    "message": "#393 Beginner タブに「買取店比較」ヘッダーが存在する"
+                               + ("" if _t393 else " ← 「買取店比較」が見つかりません（買取店データ未取得の可能性）")})
+
+    # #394: Beginner タブに「差益（定価購入→最高買取）」が出る（ラベル変更確認）
+    _t394 = '差益（定価購入→最高買取）' in _beg_html388
+    results.append({"level": "ok" if _t394 else "warning", "check": "beginner_profit_label_updated",
+                    "message": "#394 Beginner タブの差益ラベルが「最高買取」表記に更新済み"
+                               + ("" if _t394 else " ← 「差益（定価購入→最高買取）」が見つかりません")})
+
+    # #395: LP ソースに beginner フリマ除外ロジックが実装されている
+    _t395 = "data_source') != 'resale_market'" in _lp_gen_src or 'resale_market' in _lp_gen_src
+    results.append({"level": "ok" if _t395 else "warning", "check": "beginner_resale_filter",
+                    "message": "#395 LP ソースに Beginner フリマ除外ロジック（resale_market フィルタ）が実装済み"
+                               + ("" if _t395 else " ← resale_market フィルタが未実装")})
 
     return results
 

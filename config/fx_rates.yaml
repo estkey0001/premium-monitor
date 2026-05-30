@@ -2,14 +2,14 @@ fx_rates:
   AUD_JPY: 100
   CAD_JPY: 113
   CNY_JPY: 21
-  EUR_JPY: 185.48
+  EUR_JPY: 185.7
   GBP_JPY: 195
   HKD_JPY: 20
   KRW_JPY: 0.11
   TWD_JPY: 4.8
-  USD_JPY: 159.31
+  USD_JPY: 159.27
 overseas_fees:
   default_import_tax_rate: 0.1
   default_platform_fee_rate: 0.05
   default_shipping_jpy: 3000
-updated_at: 2026-05-30 00:09 JST
+updated_at: 2026-05-30 18:55 JST

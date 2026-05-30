@@ -98,26 +98,61 @@ class DailyLPGenerator:
             import json as _json
             status_path = PROJECT_ROOT / "exports" / "resale_collection_status.json"
             if status_path.exists():
-                return _json.loads(status_path.read_text(encoding="utf-8"))
+                data = _json.loads(status_path.read_text(encoding="utf-8"))
+                self._product_resale_status = data.get("products", {})
+                return data
         except Exception:
             pass
+        self._product_resale_status = {}
         return {}
 
-    def _get_ebay_pending_label(self) -> str:
-        """eBay 未取得行の差異表示ラベルを返す。
+    # プラットフォームステータス → 表示ラベルの対応表
+    _PENDING_LABEL_MAP: dict = {
+        "blocked":          "Cloud IP制限中",
+        "blocked_cloud_ip": "Cloud IP制限中",
+        "ok_html":          "自動取得済（HTML）",
+        "ok_api":           "自動取得済（API）",
+        "html_failed":      "HTML取得失敗",
+        "no_data":          "該当商品なし",
+        "api_key_missing":  "APIキー未設定",
+        "not_supported":    "未対応",
+        "skipped":          "自動取得外",
+        "error":            "取得エラー",
+    }
 
-        blocked → 「eBay自動取得制限中」
-        その他  → 「自動取得外」
+    def _label_from_status(self, status: str) -> str:
+        """ステータス文字列 → 表示ラベルに変換する。"""
+        return self._PENDING_LABEL_MAP.get(status, "自動取得外")
+
+    def _get_platform_pending_label(self, platform: str, product_id: str = "") -> str:
+        """プラットフォーム別の未取得理由ラベルを返す。
+
+        platform: "ebay" / "mercari" / "yahoo" / "amazon" / "rakuten" / "rakuma" / "stockx"
+        product_id: 商品別ステータスがあればそちらを優先（省略可）
         """
-        ebay_status = (
-            self._resale_status
-            .get("platforms", {})
-            .get("ebay", {})
-            .get("status", "")
-        )
-        if ebay_status == "blocked":
-            return "eBay自動取得制限中"
-        return "自動取得外"
+        # per-product ステータスが存在する場合は優先
+        if product_id and hasattr(self, '_product_resale_status'):
+            prod_st = self._product_resale_status.get(product_id, {}).get(platform, "")
+            if prod_st:
+                return self._label_from_status(prod_st)
+
+        p_status_obj = self._resale_status.get("platforms", {}).get(platform, {})
+        st = p_status_obj.get("status", "skipped")
+
+        base = self._PENDING_LABEL_MAP.get(st, "自動取得外")
+
+        # eBay は EBAY_APP_ID があれば解決できる旨を追加
+        if platform == "ebay" and st in ("blocked", "blocked_cloud_ip"):
+            needs_key = p_status_obj.get("needs_ebay_app_id", False)
+            if needs_key:
+                return "Cloud IP制限中（EBAY_APP_ID推奨）"
+            return "Cloud IP制限中"
+
+        return base
+
+    def _get_ebay_pending_label(self) -> str:
+        """後方互換ラッパー: _get_platform_pending_label("ebay") を呼ぶ。"""
+        return self._get_platform_pending_label("ebay")
 
     def generate(self, date_str: Optional[str] = None, variant: Optional[str] = None) -> dict:
         """LP HTMLを生成して保存する。"""
@@ -4745,6 +4780,20 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         else:
             return '<span class="badge-manual">—</span>'
 
+    def _data_source_badge(self, data_source: str, shop_name: str = "") -> str:
+        """data_source フィールドに基づくバッジ HTML を返す（比較テーブル用）。"""
+        ds = data_source or ''
+        if ds == 'auto_scraped':
+            return '<span class="badge-auto">自動取得</span>'
+        elif ds in ('manual_today', 'manual_confirmed'):
+            return '<span class="badge-manual">手動確認</span>'
+        elif ds == 'resale_market':
+            return '<span class="badge-manual">二次流通</span>'
+        elif ds in ('fetch_failed', 'product_not_listed'):
+            return '<span class="badge-failed">取得失敗</span>'
+        else:
+            return '<span class="badge-manual">参考データ</span>'
+
     def _freshness_label(self, observed_at_str: str, data_source: str) -> str:
         """データ鮮度ラベルを返す。
         - 24h超 → 「参考値」
@@ -5293,6 +5342,29 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 )
         # フリマ・オークション未取得行（Task 4）
         _flea_q = _urllib_parse.quote(getattr(d, 'product_name', '') or '')
+        # プラットフォーム名 → platform キーのマッピング
+        _FLEA_PLATFORM_MAP = {
+            'メルカリ直近売買':  'mercari',
+            'ヤフオク落札相場':  'yahoo',
+            'ラクマ直近売買':    'rakuma',
+            'eBay sold':        'ebay',
+            'StockX':           'stockx',
+        }
+        # 比較テーブルに既に表示済みのプラットフォームをスキップ
+        _already_shown_mon = set()
+        for _r in (buyback_rows or []):
+            _sn = (_r.get('shop_name') or '').lower()
+            if 'ヤフオク' in _sn or 'yahoo' in _sn:
+                _already_shown_mon.add('yahoo')
+            if 'ebay' in _sn:
+                _already_shown_mon.add('ebay')
+            if 'メルカリ' in _sn or 'mercari' in _sn:
+                _already_shown_mon.add('mercari')
+            if 'amazon' in _sn:
+                _already_shown_mon.add('amazon')
+            if 'ラクマ' in _sn or 'rakuma' in _sn:
+                _already_shown_mon.add('rakuma')
+        _raw_pid_mon = getattr(d, 'product_id', '') or ''
         for _fn, _fu in [
             ('メルカリ直近売買',   f'https://jp.mercari.com/search?keyword={_flea_q}'),
             ('ヤフオク落札相場',   f'https://auctions.yahoo.co.jp/search/search?p={_flea_q}&va={_flea_q}&auccat=0&tab=closedsearch'),
@@ -5300,7 +5372,10 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             ('eBay sold',        f'https://www.ebay.com/sch/i.html?_nkw={_flea_q}&LH_Sold=1&LH_Complete=1'),
             ('StockX',           f'https://stockx.com/search?s={_flea_q}'),
         ]:
-            _pending_diff_lbl = self._get_ebay_pending_label() if _fn == 'eBay sold' else '自動取得外'
+            _plt_mon = _FLEA_PLATFORM_MAP.get(_fn, 'unknown')
+            if _plt_mon in _already_shown_mon:
+                continue  # 上表に表示済みなのでスキップ
+            _pending_diff_lbl = self._get_platform_pending_label(_plt_mon, _raw_pid_mon)
             rows_html.append(
                 f'<div class="shop-row shop-row-pending">'
                 f'<div class="shop-rank" style="color:var(--ink4)">—</div>'
@@ -5650,7 +5725,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 url_val = r.get('buyback_url', '') or r.get('url', '')
                 freshness = self._freshness_label(r.get('observed_at', ''), r.get('data_source', 'manual_today'))
 
-                source_badge = self._source_badge(r.get('data_source', ''))
+                source_badge = self._data_source_badge(r.get('data_source', ''), r.get('shop_name', ''))
                 if is_failed_row:
                     # 取得失敗行: ランクなし・価格「—」・リンクは確認用
                     link_col = (
@@ -5698,6 +5773,29 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             # フリマ・オークション未取得プレースホルダー（初心者モード専用）
             if not pro_mode:
                 _flea_q = _urllib_parse.quote(getattr(d, 'product_name', '') or '')
+                # プラットフォーム名 → platform キーのマッピング
+                _FLEA_PLATFORM_MAP = {
+                    'メルカリ直近売買':  'mercari',
+                    'ヤフオク落札相場':  'yahoo',
+                    'ラクマ直近売買':    'rakuma',
+                    'eBay sold':        'ebay',
+                    'StockX':           'stockx',
+                }
+                # 比較テーブルに既に表示済みのプラットフォームをスキップ
+                _already_shown = set()
+                for _r in buyback_rows:
+                    _sn = (_r.get('shop_name') or '').lower()
+                    if 'ヤフオク' in _sn or 'yahoo' in _sn:
+                        _already_shown.add('yahoo')
+                    if 'ebay' in _sn:
+                        _already_shown.add('ebay')
+                    if 'メルカリ' in _sn or 'mercari' in _sn:
+                        _already_shown.add('mercari')
+                    if 'amazon' in _sn:
+                        _already_shown.add('amazon')
+                    if 'ラクマ' in _sn or 'rakuma' in _sn:
+                        _already_shown.add('rakuma')
+                _raw_pid_dc = getattr(d, 'product_id', '') or ''
                 for _flea_name, _flea_url in [
                     ('メルカリ直近売買',   f'https://jp.mercari.com/search?keyword={_flea_q}'),
                     ('ヤフオク落札相場',   f'https://auctions.yahoo.co.jp/search/search?p={_flea_q}&va={_flea_q}&auccat=0&tab=closedsearch'),
@@ -5705,7 +5803,10 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                     ('eBay sold',        f'https://www.ebay.com/sch/i.html?_nkw={_flea_q}&LH_Sold=1&LH_Complete=1'),
                     ('StockX',           f'https://stockx.com/search?s={_flea_q}'),
                 ]:
-                    _flea_diff_lbl = self._get_ebay_pending_label() if _flea_name == 'eBay sold' else '自動取得外'
+                    _plt = _FLEA_PLATFORM_MAP.get(_flea_name, 'unknown')
+                    if _plt in _already_shown:
+                        continue  # 上表に表示済みなのでスキップ
+                    _flea_diff_lbl = self._get_platform_pending_label(_plt, _raw_pid_dc)
                     rows_html.append(
                         f'<div class="shop-row shop-row-pending">'
                         f'<div class="shop-rank" style="color:var(--ink4)">—</div>'
@@ -5728,6 +5829,15 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         elif not pro_mode:
             # buyback_rows なし: フリマ・オークション行のみ表示（未取得）
             _flea_q = _urllib_parse.quote(getattr(d, 'product_name', '') or '')
+            # プラットフォーム名 → platform キーのマッピング（buyback_rows なし時）
+            _FLEA_PLATFORM_MAP = {
+                'メルカリ直近売買':  'mercari',
+                'ヤフオク落札相場':  'yahoo',
+                'ラクマ直近売買':    'rakuma',
+                'eBay sold':        'ebay',
+                'StockX':           'stockx',
+            }
+            _raw_pid_dc2 = getattr(d, 'product_id', '') or ''
             _flea_only_rows = []
             for _flea_name, _flea_url in [
                 ('メルカリ直近売買',   f'https://jp.mercari.com/search?keyword={_flea_q}'),
@@ -5736,7 +5846,8 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 ('eBay sold',        f'https://www.ebay.com/sch/i.html?_nkw={_flea_q}&LH_Sold=1&LH_Complete=1'),
                 ('StockX',           f'https://stockx.com/search?s={_flea_q}'),
             ]:
-                _flea_only_diff_lbl = self._get_ebay_pending_label() if _flea_name == 'eBay sold' else '自動取得外'
+                _plt2 = _FLEA_PLATFORM_MAP.get(_flea_name, 'unknown')
+                _flea_only_diff_lbl = self._get_platform_pending_label(_plt2, _raw_pid_dc2)
                 _flea_only_rows.append(
                     f'<div class="shop-row shop-row-pending">'
                     f'<div class="shop-rank" style="color:var(--ink4)">—</div>'

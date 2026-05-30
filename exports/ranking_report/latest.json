@@ -1,32 +1,18 @@
 {
-  "generated_at": "2026-05-30 02:04 JST",
+  "generated_at": "2026-05-30 12:14 JST",
   "route_type_beginner": "primary_to_secondary",
   "route_type_pro": "secondary_to_secondary",
-  "beginner_top10": [
-    {
-      "product_name": "Nintendo Switch 2",
-      "category": "game_console",
-      "user_level": "beginner_watch",
-      "official_price_jpy": 49980,
-      "best_buyback_price": 76468,
-      "best_buyback_shop": "eBay",
-      "net_profit_jpy": 13048,
-      "net_profit_rate": 0.2611,
-      "route_type": "primary_to_secondary",
-      "source_label": "任天堂公式 / PlayStation Direct / Xbox Store",
-      "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
-    }
-  ],
+  "beginner_top10": [],
   "pro_top10": [
     {
       "product_name": "FUJIFILM X100VI",
       "category": "camera",
-      "user_level": "beginner_easy",
+      "user_level": "monitoring",
       "official_price_jpy": 269500,
-      "best_buyback_price": 509789,
+      "best_buyback_price": 509650,
       "best_buyback_shop": "eBay",
-      "net_profit_jpy": 170517,
-      "net_profit_rate": 0.6327,
+      "net_profit_jpy": 170396,
+      "net_profit_rate": 0.6323,
       "route_type": "secondary_to_secondary",
       "source_label": "中古市場 / フリマ / 買取店",
       "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
@@ -34,12 +20,12 @@
     {
       "product_name": "RICOH GR IIIx",
       "category": "camera",
-      "user_level": "beginner_easy",
+      "user_level": "monitoring",
       "official_price_jpy": 139800,
-      "best_buyback_price": 223032,
+      "best_buyback_price": 222972,
       "best_buyback_shop": "eBay",
-      "net_profit_jpy": 50738,
-      "net_profit_rate": 0.3629,
+      "net_profit_jpy": 50686,
+      "net_profit_rate": 0.3626,
       "route_type": "secondary_to_secondary",
       "source_label": "中古市場 / フリマ / 買取店",
       "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
@@ -47,12 +33,12 @@
     {
       "product_name": "RICOH GR IV",
       "category": "camera",
-      "user_level": "beginner_easy",
+      "user_level": "monitoring",
       "official_price_jpy": 194800,
-      "best_buyback_price": 294722,
+      "best_buyback_price": 294641,
       "best_buyback_shop": "eBay",
-      "net_profit_jpy": 58109,
-      "net_profit_rate": 0.2983,
+      "net_profit_jpy": 58038,
+      "net_profit_rate": 0.2979,
       "route_type": "secondary_to_secondary",
       "source_label": "中古市場 / フリマ / 買取店",
       "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
@@ -60,86 +46,29 @@
     {
       "product_name": "Nintendo Switch 2",
       "category": "game_console",
-      "user_level": "beginner_watch",
+      "user_level": "monitoring",
       "official_price_jpy": 49980,
-      "best_buyback_price": 76468,
+      "best_buyback_price": 76447,
       "best_buyback_shop": "eBay",
-      "net_profit_jpy": 13048,
-      "net_profit_rate": 0.2611,
+      "net_profit_jpy": 13029,
+      "net_profit_rate": 0.2607,
       "route_type": "secondary_to_secondary",
       "source_label": "中古市場 / フリマ / 買取店",
       "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
     }
   ],
-  "beginner_by_category": {
-    "game_console": [
-      {
-        "product_name": "Nintendo Switch 2",
-        "category": "game_console",
-        "user_level": "beginner_watch",
-        "official_price_jpy": 49980,
-        "best_buyback_price": 76468,
-        "best_buyback_shop": "eBay",
-        "net_profit_jpy": 13048,
-        "net_profit_rate": 0.2611,
-        "route_type": "primary_to_secondary",
-        "source_label": "任天堂公式 / PlayStation Direct / Xbox Store",
-        "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
-      }
-    ],
-    "camera": [
-      {
-        "product_name": "FUJIFILM X100VI",
-        "category": "camera",
-        "user_level": "beginner_easy",
-        "official_price_jpy": 269500,
-        "best_buyback_price": 509789,
-        "best_buyback_shop": "eBay",
-        "net_profit_jpy": 170517,
-        "net_profit_rate": 0.6327,
-        "route_type": "primary_to_secondary",
-        "source_label": "RICOH公式 / FUJIFILM公式 / キタムラ",
-        "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
-      },
-      {
-        "product_name": "RICOH GR IV",
-        "category": "camera",
-        "user_level": "beginner_easy",
-        "official_price_jpy": 194800,
-        "best_buyback_price": 294722,
-        "best_buyback_shop": "eBay",
-        "net_profit_jpy": 58109,
-        "net_profit_rate": 0.2983,
-        "route_type": "primary_to_secondary",
-        "source_label": "RICOH公式 / FUJIFILM公式 / キタムラ",
-        "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
-      },
-      {
-        "product_name": "RICOH GR IIIx",
-        "category": "camera",
-        "user_level": "beginner_easy",
-        "official_price_jpy": 139800,
-        "best_buyback_price": 223032,
-        "best_buyback_shop": "eBay",
-        "net_profit_jpy": 50738,
-        "net_profit_rate": 0.3629,
-        "route_type": "primary_to_secondary",
-        "source_label": "RICOH公式 / FUJIFILM公式 / キタムラ",
-        "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
-      }
-    ]
-  },
+  "beginner_by_category": {},
   "pro_by_category": {
     "camera": [
       {
         "product_name": "FUJIFILM X100VI",
         "category": "camera",
-        "user_level": "beginner_easy",
+        "user_level": "monitoring",
         "official_price_jpy": 269500,
-        "best_buyback_price": 509789,
+        "best_buyback_price": 509650,
         "best_buyback_shop": "eBay",
-        "net_profit_jpy": 170517,
-        "net_profit_rate": 0.6327,
+        "net_profit_jpy": 170396,
+        "net_profit_rate": 0.6323,
         "route_type": "secondary_to_secondary",
         "source_label": "中古市場 / フリマ / 買取店",
         "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
@@ -147,12 +76,12 @@
       {
         "product_name": "RICOH GR IIIx",
         "category": "camera",
-        "user_level": "beginner_easy",
+        "user_level": "monitoring",
         "official_price_jpy": 139800,
-        "best_buyback_price": 223032,
+        "best_buyback_price": 222972,
         "best_buyback_shop": "eBay",
-        "net_profit_jpy": 50738,
-        "net_profit_rate": 0.3629,
+        "net_profit_jpy": 50686,
+        "net_profit_rate": 0.3626,
         "route_type": "secondary_to_secondary",
         "source_label": "中古市場 / フリマ / 買取店",
         "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
@@ -160,12 +89,12 @@
       {
         "product_name": "RICOH GR IV",
         "category": "camera",
-        "user_level": "beginner_easy",
+        "user_level": "monitoring",
         "official_price_jpy": 194800,
-        "best_buyback_price": 294722,
+        "best_buyback_price": 294641,
         "best_buyback_shop": "eBay",
-        "net_profit_jpy": 58109,
-        "net_profit_rate": 0.2983,
+        "net_profit_jpy": 58038,
+        "net_profit_rate": 0.2979,
         "route_type": "secondary_to_secondary",
         "source_label": "中古市場 / フリマ / 買取店",
         "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
@@ -175,12 +104,12 @@
       {
         "product_name": "Nintendo Switch 2",
         "category": "game_console",
-        "user_level": "beginner_watch",
+        "user_level": "monitoring",
         "official_price_jpy": 49980,
-        "best_buyback_price": 76468,
+        "best_buyback_price": 76447,
         "best_buyback_shop": "eBay",
-        "net_profit_jpy": 13048,
-        "net_profit_rate": 0.2611,
+        "net_profit_jpy": 13029,
+        "net_profit_rate": 0.2607,
         "route_type": "secondary_to_secondary",
         "source_label": "中古市場 / フリマ / 買取店",
         "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"

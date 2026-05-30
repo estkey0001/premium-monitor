@@ -263,13 +263,13 @@ def check() -> list[dict]:
     else:
         results.append({"level": "error", "check": "buyback_shop_table", "message": "複数買取店テーブルが見つからない（beginner deals 要確認）"})
 
-    # 22. 最高売却価格（旧: 最高買取価格）が表示されている
-    if "最高売却価格" in html or "最高買取価格" in html or "buyback-best-price" in html:
-        results.append({"level": "ok", "check": "buyback_best_price_label", "message": "最高売却価格ラベルが存在する"})
+    # 22. 最高買取価格ラベルが表示されている（旧: 最高売却価格 → 2026-05 に最高買取価格へ統一）
+    if "最高買取価格" in html or "buyback-best-price" in html:
+        results.append({"level": "ok", "check": "buyback_best_price_label", "message": "最高買取価格ラベルが存在する"})
     elif _data_stale_48h:
-        results.append({"level": "warning", "check": "buyback_best_price_label", "message": "最高売却価格ラベルなし（データが古い可能性）"})
+        results.append({"level": "warning", "check": "buyback_best_price_label", "message": "最高買取価格ラベルなし（データが古い可能性）"})
     else:
-        results.append({"level": "error", "check": "buyback_best_price_label", "message": "最高売却価格ラベルが見つからない"})
+        results.append({"level": "error", "check": "buyback_best_price_label", "message": "最高買取価格ラベルが見つからない"})
 
     # 23. 参照店舗数が表示されている
     if "参照" in html and "店舗" in html:
@@ -3450,15 +3450,15 @@ def check() -> list[dict]:
     results.append({"level": "ok" if _t314 else "warning", "check": "no_price_gap_candidates_section",
                     "message": "#314 「価格差・プレ値候補」セクションが生成 HTML に存在しない" + ("" if _t314 else " ← 「価格差・プレ値候補」が HTML に残っています")})
 
-    # #315: deal card ラベルが「最高売却価格」に更新済み（2026-05-28 仕様変更: 買取+二次流通統合）
-    _t315 = "最高売却価格" in _lp_gen_src and "二次流通最高価格" not in _lp_gen_src
+    # #315: deal card ラベルが「最高買取価格」に更新済み（2026-05-31 仕様変更: 最高売却価格 → 最高買取価格）
+    _t315 = "最高買取価格" in _lp_gen_src and "二次流通最高価格" not in _lp_gen_src
     results.append({"level": "ok" if _t315 else "warning", "check": "buyback_price_label_correct",
-                    "message": "#315 deal card 「最高売却価格」ラベルが正しい（買取店最高価格 → 最高売却価格）" + ("" if _t315 else " ← 「最高売却価格」が未実装")})
+                    "message": "#315 deal card 「最高買取価格」ラベルが正しい（2026-05-31 統一）" + ("" if _t315 else " ← 「最高買取価格」が未実装")})
 
-    # #316: 差益ラベルが「差益（定価購入→最高売却）」に更新済み（2026-05-28 仕様変更）
-    _t316 = "差益（定価購入→最高売却）" in _lp_gen_src and "差益（公式価格→二次流通）" not in _lp_gen_src
+    # #316: 差益ラベルが「差益（定価購入→最高買取）」に更新済み（2026-05-31 仕様変更）
+    _t316 = "差益（定価購入→最高買取）" in _lp_gen_src and "差益（公式価格→二次流通）" not in _lp_gen_src
     results.append({"level": "ok" if _t316 else "warning", "check": "profit_label_correct",
-                    "message": "#316 差益ラベル「差益（定価購入→最高売却）」が正しい" + ("" if _t316 else " ← 差益ラベルが旧形式")})
+                    "message": "#316 差益ラベル「差益（定価購入→最高買取）」が正しい" + ("" if _t316 else " ← 差益ラベルが旧形式")})
 
     # #317: 海外価格テーブルに手数料注記がある（メルカリ・eBay等）
     _t317 = "メルカリ・eBay等は販売手数料" in _lp_gen_src
@@ -3471,20 +3471,20 @@ def check() -> list[dict]:
                     "message": "#318 _tab_beginner からカメラ除外ロジックが除去済み" + ("" if _t318 else " ← カメラ除外ロジックが残っています")})
 
     # ── Task 14: 売却先定義・ランキング・せどり 追加チェック (2026-05-28) ────────────
-    # #319: 「最高売却価格」ラベルが初心者 deal card に実装済み
-    _t319 = "最高売却価格" in _lp_gen_src and "買取店最高価格" not in _lp_gen_src
+    # #319: 「最高買取価格」ラベルが初心者 deal card に実装済み（2026-05-31 統一）
+    _t319 = "最高買取価格" in _lp_gen_src and "買取店最高価格" not in _lp_gen_src
     results.append({"level": "ok" if _t319 else "warning", "check": "sell_price_label_correct",
-                    "message": "#319 初心者カード「最高売却価格」ラベルが正しい" + ("" if _t319 else " ← 「最高売却価格」未実装または「買取店最高価格」が残存")})
+                    "message": "#319 初心者カード「最高買取価格」ラベルが正しい" + ("" if _t319 else " ← 「最高買取価格」未実装または「買取店最高価格」が残存")})
 
-    # #320: 「売却先比較」ラベルが初心者 deal card に実装済み
-    _t320 = "売却先比較" in _lp_gen_src
+    # #320: 「買取店比較」ラベルが初心者 deal card に実装済み（旧: 売却先比較）
+    _t320 = "買取店比較" in _lp_gen_src
     results.append({"level": "ok" if _t320 else "warning", "check": "sell_comparison_label",
-                    "message": "#320 初心者カード「売却先比較」ラベルが実装済み" + ("" if _t320 else " ← 「売却先比較」が未実装")})
+                    "message": "#320 初心者カード「買取店比較」ラベルが実装済み" + ("" if _t320 else " ← 「買取店比較」が未実装")})
 
-    # #321: 差益ラベルが「差益（定価購入→最高売却）」
-    _t321 = "差益（定価購入→最高売却）" in _lp_gen_src
+    # #321: 差益ラベルが「差益（定価購入→最高買取）」（2026-05-31 統一）
+    _t321 = "差益（定価購入→最高買取）" in _lp_gen_src
     results.append({"level": "ok" if _t321 else "warning", "check": "profit_label_sell_price",
-                    "message": "#321 差益ラベル「差益（定価購入→最高売却）」が実装済み" + ("" if _t321 else " ← 差益ラベルが旧形式")})
+                    "message": "#321 差益ラベル「差益（定価購入→最高買取）」が実装済み" + ("" if _t321 else " ← 差益ラベルが旧形式")})
 
     # #322: 「買取ランキング」がランキングタイトルに使われていない
     _t322 = "買取ランキング" not in _lp_gen_src or "差益ランキング" in _lp_gen_src
@@ -3537,15 +3537,15 @@ def check() -> list[dict]:
     results.append({"level": "ok" if _t331 else "warning", "check": "no_kaitori_ranking_in_html",
                     "message": "#331 生成 HTML に「買取ランキング」が出ていない（差益ランキングに変更済み）" + ("" if _t331 else " ← 「買取ランキング」が HTML に残っています")})
 
-    # #332: Beginnerに「最高売却価格」が生成 HTML に出ている
-    _t332 = "最高売却価格" in html
+    # #332: Beginnerに「最高買取価格」が生成 HTML に出ている（2026-05-31 統一）
+    _t332 = "最高買取価格" in html
     results.append({"level": "ok" if _t332 else "warning", "check": "sell_price_label_in_html",
-                    "message": "#332 生成 HTML に「最高売却価格」ラベルが出ている" + ("" if _t332 else " ← 「最高売却価格」が HTML に出ていない")})
+                    "message": "#332 生成 HTML に「最高買取価格」ラベルが出ている" + ("" if _t332 else " ← 「最高買取価格」が HTML に出ていない")})
 
-    # #333: Beginnerに「売却先比較」が生成 HTML に出ている
-    _t333 = "売却先比較" in html
+    # #333: Beginnerに「買取店比較」が生成 HTML に出ている（旧: 売却先比較 → 2026-05-31 統一）
+    _t333 = "買取店比較" in html
     results.append({"level": "ok" if _t333 else "warning", "check": "sell_comparison_in_html",
-                    "message": "#333 生成 HTML に「売却先比較」が出ている" + ("" if _t333 else " ← 「売却先比較」が HTML に出ていない")})
+                    "message": "#333 生成 HTML に「買取店比較」が出ている" + ("" if _t333 else " ← 「買取店比較」が HTML に出ていない")})
 
     # #334: Topに「手動確認データ」が hero-eyebrow 等に出ていない
     import re as _re334
@@ -4163,6 +4163,77 @@ def check() -> list[dict]:
     results.append({"level": "ok" if _t405 else "warning", "check": "sedori_has_pro_classification",
                     "message": "#405 Sedori タブに「Proルート」分類が実装されている"
                                + ("" if _t405 else " ← Sedori タブの Proルート分類が見つかりません")})
+
+    # ── Round 7: 中古排除・赤字表示・せどりルート品質チェック ──────────────────
+
+    # #406: HTML 全体に「中古市場」が存在しない
+    _t406 = '中古市場' not in html
+    results.append({"level": "ok" if _t406 else "error", "check": "no_used_market_text",
+                    "message": "#406 HTML に「中古市場」が存在しない（新品・未使用方針）"
+                               + ("" if _t406 else " ← 「中古市場」が HTML に残っています")})
+
+    # #407: HTML 全体に「中古相場」が存在しない
+    _t407 = '中古相場' not in html
+    results.append({"level": "ok" if _t407 else "error", "check": "no_used_market_price_text",
+                    "message": "#407 HTML に「中古相場」が存在しない"
+                               + ("" if _t407 else " ← 「中古相場」が HTML に残っています")})
+
+    # #408: HTML 全体に「中古プレ値あり」が存在しない
+    _t408 = '中古プレ値あり' not in html
+    results.append({"level": "ok" if _t408 else "error", "check": "no_used_premium_flag_text",
+                    "message": "#408 HTML に「中古プレ値あり」が存在しない"
+                               + ("" if _t408 else " ← 「中古プレ値あり」が HTML に残っています")})
+
+    # #409: HTML 全体に「中古A」が存在しない（中古グレード表記）
+    _t409 = '中古A' not in html
+    results.append({"level": "ok" if _t409 else "warning", "check": "no_used_grade_text",
+                    "message": "#409 HTML に「中古A」が存在しない（新品・未使用方針）"
+                               + ("" if _t409 else " ← 「中古A」が HTML に残っています（中古グレード表記）")})
+
+    # #410: Beginner タブの監視中カードで「現在は赤字 / 価格変動」が +価格に表示されない
+    # （profit > 0 のカードに赤字表示が出ないよう profit-note ロジックを確認）
+    _t410 = '現在は赤字 / 価格変動を監視中' not in _lp_gen_src
+    results.append({"level": "ok" if _t410 else "error", "check": "no_false_negative_profit_label",
+                    "message": "#410 LP ソースに「現在は赤字 / 価格変動を監視中」（固定文言）が存在しない（profit-based に変更済み）"
+                               + ("" if _t410 else " ← 「現在は赤字 / 価格変動を監視中」が固定文言として残っています")})
+
+    # #411: Sedori タブに初心者合成ルート（公式→買取店）が実装されている
+    _t411 = '初心者ルート' in _sed_html396 or '_synth_routes' in _lp_gen_src
+    results.append({"level": "ok" if _t411 else "warning", "check": "sedori_has_synth_beginner_routes",
+                    "message": "#411 Sedori タブに初心者合成ルート（公式→買取店）が実装されている"
+                               + ("" if _t411 else " ← 初心者合成ルートが見つかりません")})
+
+    # #412: Sedori タブの説明文に「中古」が出ない
+    _t412 = '中古' not in _sed_html396
+    results.append({"level": "ok" if _t412 else "warning", "check": "no_used_in_sedori_tab",
+                    "message": "#412 Sedori タブに「中古」が存在しない（新品・未使用方針）"
+                               + ("" if _t412 else " ← Sedori タブに「中古」が残っています")})
+
+    # #413: Ranking タブに「最高買取店」ラベルが存在する（旧: 最高売却先）
+    _t413 = '最高買取店' in _rank_html396
+    results.append({"level": "ok" if _t413 else "warning", "check": "ranking_has_buyback_shop_label",
+                    "message": "#413 Ranking タブに「最高買取店」ラベルが存在する"
+                               + ("" if _t413 else " ← Ranking タブに「最高買取店」が見つかりません")})
+
+    # #414: Beginner タブに「除外（中古等）」が存在しない
+    _t414 = '除外 (中古等)' not in _beg_html388 and '除外（中古等）' not in _beg_html388
+    results.append({"level": "ok" if _t414 else "error", "check": "no_excluded_used_in_beginner",
+                    "message": "#414 Beginner タブに「除外（中古等）」が存在しない"
+                               + ("" if _t414 else " ← Beginner タブに「除外（中古等）」が残っています")})
+
+    # #415: Sedori タブに合成初心者ルート（sc-table）または「0ルート」の理由説明が存在する
+    _t415 = ('sc-table' in _sed_html396 or
+             '初心者ルート一覧' in _sed_html396 or
+             '現在、条件を満たすルートはありません' in _sed_html396)
+    results.append({"level": "ok" if _t415 else "warning", "check": "sedori_has_content_or_reason",
+                    "message": "#415 Sedori タブにルート表またはデータなし理由が存在する"
+                               + ("" if _t415 else " ← Sedori タブにルート表も理由説明もありません")})
+
+    # #416: Beginner タブに「参考データ（中古・開封済み条件）」が存在しない
+    _t416 = '参考データ（中古・開封済み条件）' not in _beg_html388
+    results.append({"level": "ok" if _t416 else "error", "check": "no_used_reference_in_beginner",
+                    "message": "#416 Beginner タブに「参考データ（中古・開封済み条件）」が存在しない"
+                               + ("" if _t416 else " ← 「参考データ（中古・開封済み条件）」が Beginner タブに残っています")})
 
     return results
 

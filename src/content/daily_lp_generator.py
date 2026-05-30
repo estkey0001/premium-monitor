@@ -4004,7 +4004,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             "brand": "FUJIFILM",
             "status": "active",
             "reference_only": True,
-            "note": "2024年2月発売。抽選受付は終了済み。中古市場でプレ値継続中。公式での入手は在庫次第。",
+            "note": "2024年2月発売。抽選受付は終了済み。公式での入手は在庫次第。",
             "url": "https://fujifilm-x.com/ja-jp/products/cameras/x100vi/",
             "sale_method": "通常販売（在庫次第）",
             "official_price": "¥230,230（税込）",
@@ -4468,7 +4468,9 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         surge_html       = self._tab_surge(buyback_alerts)
         ranking_html     = self._tab_ranking(all_deals, iphone_deals, game_deals, sedori_routes=sedori_routes)
         # Task 3: 速報タブを削除 → ポップアップ速報へ移行（_section_alert_popup 参照）
-        sedori_html      = self._tab_sedori(sedori_routes or [])
+        # beginner_deals（easy + watch）を sedori タブに渡し、初心者合成ルートを生成
+        _all_beginner_for_sedori = list(beginner_easy or []) + list(beginner_watch or [])
+        sedori_html      = self._tab_sedori(sedori_routes or [], beginner_deals=_all_beginner_for_sedori)
         lottery_html     = self._section_lottery(lottery_events)
 
         # 件数整合: 外部から渡された表示件数を優先（_render_page で整合済み）
@@ -4557,58 +4559,84 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             items.append(f'<span class="sc-flag-item{strong_cls}">{_esc(lbl)}</span>')
         return '<div class="sc-flag-detail">' + "".join(items) + '</div>'
 
-    def _tab_sedori(self, sedori_routes: list = None) -> str:
-        """せどりルート比較タブ — DBから自動算出済みルートを表示する（Phase 14/15）。"""
-        # Task 9: 新品・未使用のみ表示（中古・状態不明は除外）
+    def _tab_sedori(self, sedori_routes: list = None, beginner_deals: list = None) -> str:
+        """せどりルート比較タブ — DBから自動算出済みルートを表示する（Phase 14/15）。
+        routes が空の場合は beginner_deals から初心者ルート（公式→買取店）を合成表示する。
+        """
+        # 新品・未使用のみ（中古・状態不明は除外）
         _UNUSED_CONDITIONS = frozenset({"new", "unused", "sealed", "未使用", "新品", "未開封"})
         _all_routes = sedori_routes or []
         routes = [
             r for r in _all_routes
             if getattr(r, "buy_condition", "") in _UNUSED_CONDITIONS
         ]
-        _excluded_by_cond = len(_all_routes) - len(routes)
 
-        # コスト情報（最初のルートから取得）
-        if routes:
-            r0 = routes[0]
-            cost_info = f"送料¥{r0.shipping_fee:,} + 振込¥{r0.transfer_fee:,} + 交通費¥{r0.travel_fee:,}"
-        else:
-            cost_info = "送料¥1,000 + 振込¥300 + 交通費¥500"
+        # コスト固定値
+        cost_info = "送料¥1,000 + 振込¥300 + 交通費¥500"
+
+        # ── Beginner deals から初心者合成ルートを生成 ──
+        # DB の sedori_routes が全て中古条件の場合でも、毎日取得した buyback データから
+        # 「公式店 → 買取店」ルートを自動生成して表示する
+        _synth_routes = []
+        _COSTS = 1800
+        if beginner_deals:
+            for d in beginner_deals:
+                _bp = getattr(d, 'best_buyback_price', None) or 0
+                _op = getattr(d, 'official_price_jpy', None) or 0
+                _shop = getattr(d, 'best_buyback_shop', '') or ''
+                if _bp <= 0 or _op <= 0:
+                    continue
+                if self._is_resale_shop(_shop):
+                    continue  # resale_market 由来のショップはスキップ
+                _gross = _bp - _op
+                _net = _gross - _COSTS
+                if _net <= 0:
+                    continue
+                _rate = _net / _op if _op > 0 else 0.0
+                _pname = getattr(d, 'product_name', '') or ''
+                _cat = getattr(d, 'category', '') or ''
+                _synth_routes.append({
+                    'product_name': _pname,
+                    'category': _cat,
+                    'buy_shop_name': '公式店（定価購入）',
+                    'sell_shop_name': _shop,
+                    'buy_price': _op,
+                    'sell_price': _bp,
+                    'gross_profit': _gross,
+                    'net_profit': _net,
+                    'profit_rate': _rate,
+                    'is_synth': True,  # 合成ルートフラグ
+                    'buy_url': getattr(d, 'official_url', '') or '',
+                    'sell_url': getattr(d, 'best_buyback_url', '') or '',
+                })
+            # 実質利益降順でソート
+            _synth_routes.sort(key=lambda r: r['net_profit'], reverse=True)
 
         parts = []
 
-        # ── ヘッダー ──
-        route_count = len(routes)
-        # 除外件数表示 HTML（中古等を除外した場合のみ表示）
-        _excluded_html = (
-            f'  <span class="sc-meta-sep">|</span>\n'
-            f'  <span class="sc-meta-label">除外 (中古等)</span>\n'
-            f'  <span class="sc-meta-val" style="color:var(--ink3)">{_excluded_by_cond}件</span>\n'
-        ) if _excluded_by_cond > 0 else ''
-
+        total_beg_routes = len(routes) + len(_synth_routes)
         parts.append(f'''<div class="sc-wrap">
 <div class="sc-header">
   <div class="sc-eyebrow">&#9736; Auto Calculated</div>
   <h2 class="sc-title">店舗間せどりルート比較</h2>
-  <p class="sc-desc">システムが取得済みの販売価格・買取価格をもとに、利益が出るルートを自動算出します。価格は参考値です。実際の購入前に必ず各店舗の最新価格をご確認ください。</p>
+  <p class="sc-desc">毎日取得した価格データをもとに、新品・未使用品の利益ルートを自動算出します。価格は参考値です。実際の購入前に必ず各店舗の最新価格をご確認ください。</p>
 </div>
 <div class="sc-meta-row">
   <span class="sc-meta-label">&#128203; 算出ルート数</span>
-  <span class="sc-meta-val sc-routes-count-badge">{route_count}ルート</span>
-{_excluded_html}</div>''')
+  <span class="sc-meta-val sc-routes-count-badge">{total_beg_routes}ルート</span>
+</div>''')
 
-        if not routes:
-            # データなしフォールバック（開発者向けCLIコマンドはLPに出さない）
+        if not routes and not _synth_routes:
+            # データなしフォールバック
             parts.append('''<div class="sc-no-data">
   <div class="sc-no-data-icon">&#128202;</div>
   <div class="sc-no-data-title">現在、条件を満たすルートはありません</div>
-  <div class="sc-no-data-desc">不足データ：</div>
+  <div class="sc-no-data-desc">不足データ（すべて揃い次第、自動表示されます）：</div>
   <ul class="sc-no-data-list">
-    <li>国内未使用仕入れ価格</li>
-    <li>海外販売価格</li>
-    <li>売却手数料情報</li>
+    <li>新品・未使用の公式価格データ</li>
+    <li>国内買取店の買取価格データ</li>
   </ul>
-  <div class="sc-no-data-note">価格データが揃い次第、自動でルートを表示します。</div>
+  <div class="sc-no-data-note">毎日自動収集しています。価格データが揃い次第、ルートを表示します。</div>
 </div>''')
         else:
             from src.models.sale_price import CONDITION_LABELS
@@ -4784,13 +4812,63 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 if all_pro:
                     parts.append(_make_route_table(all_pro, title_label=f"Proルート（{len(pro_routes)}件）"))
 
-            # データなしフォールバック
-            if not beginner_routes and not pro_routes:
+            # データなしフォールバック（DB routes は存在するが分類不能の場合）
+            if not beginner_routes and not pro_routes and display_routes:
                 best = display_routes[0]
                 parts.append(_make_best_card(best))
                 rest = display_routes[1:10]
                 if rest:
                     parts.append(_make_route_table(rest, title_label=f"2位〜10位 {display_label}"))
+
+        # ── 合成初心者ルート（DB routes が空 or 不足の場合に beginner_deals から生成）──
+        if _synth_routes:
+            parts.append('''<div class="sc-review-section" style="border-left:4px solid #059669;background:#f0fdf4;border-radius:8px;padding:12px 16px;margin:12px 0">
+  <div class="sc-review-hd">
+    <span class="sc-review-icon">&#128100;</span>
+    <div>
+      <div class="sc-review-title" style="color:#059669">初心者ルート（公式店 → 買取店）</div>
+      <div class="sc-review-sub">毎日取得した買取価格データから自動算出。公式定価で購入して買取店に売却した場合の参考差益です。</div>
+    </div>
+  </div>
+</div>''')
+            # 合成ルートをテーブル形式で表示
+            _synth_rows = []
+            for i, r in enumerate(_synth_routes[:15], 1):
+                _buy_a = (f'<a href="{_esc(r["buy_url"])}" target="_blank" rel="noopener noreferrer" '
+                          f'class="sc-mini-link" data-track="sedori_buy_click">{_esc(r["buy_shop_name"])}</a>'
+                          if r.get("buy_url") else _esc(r["buy_shop_name"]))
+                _sell_a = (f'<a href="{_esc(r["sell_url"])}" target="_blank" rel="noopener noreferrer" '
+                           f'class="sc-mini-link" data-track="sedori_sell_click">{_esc(r["sell_shop_name"])}</a>'
+                           if r.get("sell_url") else _esc(r["sell_shop_name"]))
+                _cat_badge = f'<span style="font-size:0.65rem;color:#6b7280;margin-left:4px">[{_esc(r["category"])}]</span>' if r.get("category") else ''
+                _synth_rows.append(
+                    f'<tr class="sc-route-row">'
+                    f'<td class="sc-rank-cell">#{i}</td>'
+                    f'<td class="sc-prod-cell">{_esc(r["product_name"])}{_cat_badge}</td>'
+                    f'<td class="sc-shop-cell">{_buy_a}</td>'
+                    f'<td class="sc-price-cell sc-col-red">¥{r["buy_price"]:,}</td>'
+                    f'<td class="sc-shop-cell">{_sell_a}</td>'
+                    f'<td class="sc-price-cell sc-col-green">¥{r["sell_price"]:,}</td>'
+                    f'<td class="sc-profit-cell sc-col-green">+¥{r["net_profit"]:,}</td>'
+                    f'<td class="sc-rate-cell"><span class="sc-rate-badge sc-rate-pos">+{r["profit_rate"]:.1%}</span></td>'
+                    f'</tr>'
+                )
+            if _synth_rows:
+                parts.append(f'''<div class="sc-list-section">
+  <div class="sc-list-header">
+    <span class="sc-list-title">&#128202; 初心者ルート一覧（公式定価→買取店、参考差益）</span>
+    <span class="sc-list-count">{len(_synth_routes[:15])}件</span>
+  </div>
+  <div class="sc-table-scroll">
+    <table class="sc-table">
+      <thead><tr>
+        <th>#</th><th>商品</th><th>仕入れ（公式定価）</th><th>定価</th>
+        <th>売却先（買取店）</th><th>買取価格</th><th>参考差益</th><th>利益率</th>
+      </tr></thead>
+      <tbody>{"".join(_synth_rows)}</tbody>
+    </table>
+  </div>
+</div>''')
 
         # ── 免責 ──
         parts.append('''<div class="sc-disclaimer">
@@ -5227,7 +5305,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 
             # 監視中 / 赤字
             if monitoring_genre:
-                parts.append('<div class="status-subsection"><div class="status-subhead status-monitoring">監視中 / 現在は赤字</div><div class="cards-grid">')
+                parts.append('<div class="status-subsection"><div class="status-subhead status-monitoring">監視中（価格変動を監視中）</div><div class="cards-grid">')
                 for d in monitoring_genre:
                     rows = bybp.get(d.product_id, [])
                     parts.append(self._deal_card_monitoring(d, buyback_rows=rows))
@@ -5263,7 +5341,8 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 _used_genre = [d for d in _used_cond_deals if getattr(d, 'category', '') not in KNOWN_GENRES]
             else:
                 _used_genre = [d for d in _used_cond_deals if getattr(d, 'category', '') == genre_key]
-            if _used_genre:
+            # 中古条件案件は非表示（新品・未使用・未開封のみ方針）
+            if False and _used_genre:  # noqa: Dead code – 中古データ表示は無効化
                 parts.append(
                     f'<details class="status-subsection used-cond-details" style="margin-top:16px">'
                     f'<summary class="status-subhead" style="cursor:pointer;color:var(--ink3);font-size:0.82rem;">'
@@ -5340,9 +5419,18 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             diff = best_bp - official
             diff_str = (f'+¥{diff:,}' if diff >= 0 else f'−¥{abs(diff):,}')
             diff_cls = '' if diff >= 0 else ' neg'
+            # profit > 0: 利益あり表示 / profit == 0: ほぼ同値 / profit < 0: 赤字
+            if diff > 0:
+                monitoring_profit_note = '定価購入→最高買取（参考値）'
+            elif diff == 0:
+                diff_str = '±¥0'
+                monitoring_profit_note = 'ほぼ同値 / 価格変動を監視中'
+            else:
+                monitoring_profit_note = '現在は差益なし / 価格変動を監視中'
         else:
             diff_str = '計算不可（未取得）'
             diff_cls = ''
+            monitoring_profit_note = '買取価格取得中 / 監視中'
 
         # 最終確認日（buyback_rows の最新 observed_at）
         updated_str = ''
@@ -5442,7 +5530,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
       <div class="profit-num amber">{_esc(diff_str)}</div>
     </div>
     <div class="profit-right">
-      <div class="profit-note">現在は赤字 / 価格変動を監視中</div>
+      <div class="profit-note">{monitoring_profit_note}</div>
     </div>
   </div>
   <div class="price-row-wrap">
@@ -6049,7 +6137,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             elif not has_confirmed:
                 parts.append("""<div class="caution adv-fallback-notice" style="margin:16px 0 20px;">
 &#8505;&#65039; <strong>現在、Pro向けの確定候補は少ないため、価格差・希少性・海外相場差が大きい監視候補を表示しています。</strong><br>
-中古市場や海外相場のデータが入り次第、確定候補として昇格します。
+新品・未使用の二次流通価格や海外相場データが揃い次第、確定候補として昇格します。
 </div>""")
             parts.append('<div class="section-header" id="category-pro-camera"><h2>&#128204; Pro向け市場価格</h2><span class="section-count">二次流通・海外相場</span></div>')
             parts.append(self._watch_candidates_table(watch_candidates, market_prices_by_product=market_prices_by_product or {}))

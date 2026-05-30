@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-05-30T23:18:36+09:00",
+  "generated_at": "2026-05-31T01:43:20+09:00",
   "summary": {
     "total": 55,
-    "ok": 19,
-    "failed": 32,
+    "ok": 18,
+    "failed": 33,
     "skip": 4,
     "low_confidence_count": 0
   },
@@ -50,8 +50,8 @@
       "skip": 0
     },
     "geo": {
-      "ok": 1,
-      "failed": 1,
+      "ok": 0,
+      "failed": 2,
       "skip": 0
     },
     "hardoff": {
@@ -112,8 +112,8 @@
       "skip": 0
     },
     "switch2": {
-      "ok": 3,
-      "failed": 6,
+      "ok": 2,
+      "failed": 7,
       "skip": 2
     },
     "ps5_pro": {
@@ -193,7 +193,6 @@
     },
     "switch2": {
       "success_shops": [
-        "geo",
         "iosys",
         "kaitori_shouten"
       ],
@@ -201,6 +200,7 @@
         "pasoko"
       ],
       "failed_shops": [
+        "geo",
         "janpara",
         "hardoff",
         "dosupara",
@@ -284,12 +284,11 @@
     },
     "switch2": {
       "prices": [
-        45000,
         46000,
         50900
       ],
-      "avg": 47300,
-      "min": 45000,
+      "avg": 48450,
+      "min": 46000,
       "max": 50900,
       "suspicious": false
     },
@@ -338,12 +337,12 @@
     {
       "shop_id": "geo",
       "total": 2,
-      "ok": 1,
-      "failed": 1,
-      "success_rate_pct": 50,
+      "ok": 0,
+      "failed": 2,
+      "success_rate_pct": 0,
       "rate_429_count": 0,
       "blocked_count": 0,
-      "top_reason": "product_not_listed"
+      "top_reason": "connection_error"
     },
     {
       "shop_id": "geo_mobile",
@@ -494,6 +493,10 @@
     {
       "reason": "service_unavailable",
       "count": 2
+    },
+    {
+      "reason": "connection_error",
+      "count": 1
     }
   ],
   "priority_fixes": [],
@@ -501,8 +504,8 @@
     "2ndstreet (price_not_found 4件)",
     "bookoff (not_supported 2件)",
     "dosupara (http_404 2件)",
-    "geo_mobile (site_blocked 4件)",
-    "hardoff (http_404 2件)"
+    "geo (connection_error 2件)",
+    "geo_mobile (site_blocked 4件)"
   ],
   "fetch_failed": [
     {
@@ -515,9 +518,9 @@
       "html_length": 951,
       "http_status": 200,
       "text_length": 951,
-      "elapsed_seconds": 6.613294574999998,
+      "elapsed_seconds": 4.890564928000003,
       "error_type": "",
-      "observed_at": "2026-05-30T23:18:36+09:00"
+      "observed_at": "2026-05-31T01:43:20+09:00"
     },
     {
       "product_alias": "iphone17pro256",
@@ -531,7 +534,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-30T23:18:36+09:00"
+      "observed_at": "2026-05-31T01:43:20+09:00"
     },
     {
       "product_alias": "iphone17pro256",
@@ -545,7 +548,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-30T23:18:36+09:00"
+      "observed_at": "2026-05-31T01:43:20+09:00"
     },
     {
       "product_alias": "iphone17pro256",
@@ -559,7 +562,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-30T23:18:36+09:00"
+      "observed_at": "2026-05-31T01:43:20+09:00"
     },
     {
       "product_alias": "iphone17pro512",
@@ -571,9 +574,9 @@
       "html_length": 951,
       "http_status": 200,
       "text_length": 951,
-      "elapsed_seconds": 5.72917454200001,
+      "elapsed_seconds": 4.583197161000015,
       "error_type": "",
-      "observed_at": "2026-05-30T23:18:36+09:00"
+      "observed_at": "2026-05-31T01:43:20+09:00"
     },
     {
       "product_alias": "iphone17pro512",
@@ -587,7 +590,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-30T23:18:36+09:00"
+      "observed_at": "2026-05-31T01:43:20+09:00"
     },
     {
       "product_alias": "iphone17pro512",
@@ -601,7 +604,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-30T23:18:36+09:00"
+      "observed_at": "2026-05-31T01:43:20+09:00"
     },
     {
       "product_alias": "iphone17pro512",
@@ -615,7 +618,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-30T23:18:36+09:00"
+      "observed_at": "2026-05-31T01:43:20+09:00"
     },
     {
       "product_alias": "iphone17pm256",
@@ -627,9 +630,9 @@
       "html_length": 951,
       "http_status": 200,
       "text_length": 951,
-      "elapsed_seconds": 5.979384466999932,
+      "elapsed_seconds": 4.5439323809999905,
       "error_type": "",
-      "observed_at": "2026-05-30T23:18:36+09:00"
+      "observed_at": "2026-05-31T01:43:20+09:00"
     },
     {
       "product_alias": "iphone17pm256",
@@ -643,7 +646,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-30T23:18:36+09:00"
+      "observed_at": "2026-05-31T01:43:20+09:00"
     },
     {
       "product_alias": "iphone17pm256",
@@ -657,7 +660,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-30T23:18:36+09:00"
+      "observed_at": "2026-05-31T01:43:20+09:00"
     },
     {
       "product_alias": "iphone17pm256",
@@ -671,7 +674,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-30T23:18:36+09:00"
+      "observed_at": "2026-05-31T01:43:20+09:00"
     },
     {
       "product_alias": "iphone17pm256",
@@ -685,7 +688,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-30T23:18:36+09:00"
+      "observed_at": "2026-05-31T01:43:20+09:00"
     },
     {
       "product_alias": "iphone17pm512",
@@ -697,9 +700,9 @@
       "html_length": 951,
       "http_status": 200,
       "text_length": 951,
-      "elapsed_seconds": 5.633748037000032,
+      "elapsed_seconds": 4.430098813999962,
       "error_type": "",
-      "observed_at": "2026-05-30T23:18:36+09:00"
+      "observed_at": "2026-05-31T01:43:20+09:00"
     },
     {
       "product_alias": "iphone17pm512",
@@ -713,7 +716,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-30T23:18:36+09:00"
+      "observed_at": "2026-05-31T01:43:20+09:00"
     },
     {
       "product_alias": "iphone17pm512",
@@ -727,7 +730,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-30T23:18:36+09:00"
+      "observed_at": "2026-05-31T01:43:20+09:00"
     },
     {
       "product_alias": "iphone17pm512",
@@ -741,7 +744,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-30T23:18:36+09:00"
+      "observed_at": "2026-05-31T01:43:20+09:00"
     },
     {
       "product_alias": "iphone17pm512",
@@ -755,7 +758,21 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-30T23:18:36+09:00"
+      "observed_at": "2026-05-31T01:43:20+09:00"
+    },
+    {
+      "product_alias": "switch2",
+      "shop": "geo",
+      "status": "FAILED",
+      "reason": "connection_error",
+      "url": "https://www.geo-online.co.jp/store_info/buy/",
+      "final_url": "https://www.geo-online.co.jp/store_info/buy/",
+      "html_length": 0,
+      "http_status": 0,
+      "text_length": 0,
+      "elapsed_seconds": 0.0,
+      "error_type": "",
+      "observed_at": "2026-05-31T01:43:20+09:00"
     },
     {
       "product_alias": "switch2",
@@ -769,7 +786,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-30T23:18:36+09:00"
+      "observed_at": "2026-05-31T01:43:20+09:00"
     },
     {
       "product_alias": "switch2",
@@ -783,7 +800,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-30T23:18:36+09:00"
+      "observed_at": "2026-05-31T01:43:20+09:00"
     },
     {
       "product_alias": "switch2",
@@ -797,7 +814,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-30T23:18:36+09:00"
+      "observed_at": "2026-05-31T01:43:20+09:00"
     },
     {
       "product_alias": "switch2",
@@ -811,7 +828,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-30T23:18:36+09:00"
+      "observed_at": "2026-05-31T01:43:20+09:00"
     },
     {
       "product_alias": "switch2",
@@ -825,7 +842,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-30T23:18:36+09:00"
+      "observed_at": "2026-05-31T01:43:20+09:00"
     },
     {
       "product_alias": "switch2",
@@ -839,7 +856,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-30T23:18:36+09:00"
+      "observed_at": "2026-05-31T01:43:20+09:00"
     },
     {
       "product_alias": "switch2",
@@ -853,7 +870,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-30T23:18:36+09:00"
+      "observed_at": "2026-05-31T01:43:20+09:00"
     },
     {
       "product_alias": "switch2",
@@ -867,7 +884,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-30T23:18:36+09:00"
+      "observed_at": "2026-05-31T01:43:20+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -876,12 +893,12 @@
       "reason": "product_not_listed",
       "url": "https://www.geo-online.co.jp/store_info/buy/",
       "final_url": "https://www.geo-online.co.jp/store_info/buy/",
-      "html_length": 134115,
-      "http_status": 200,
+      "html_length": 0,
+      "http_status": 0,
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-30T23:18:36+09:00"
+      "observed_at": "2026-05-31T01:43:20+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -893,9 +910,9 @@
       "html_length": 951,
       "http_status": 200,
       "text_length": 951,
-      "elapsed_seconds": 5.633820601000025,
+      "elapsed_seconds": 4.665749214000016,
       "error_type": "",
-      "observed_at": "2026-05-30T23:18:36+09:00"
+      "observed_at": "2026-05-31T01:43:20+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -909,7 +926,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-30T23:18:36+09:00"
+      "observed_at": "2026-05-31T01:43:20+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -923,7 +940,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-30T23:18:36+09:00"
+      "observed_at": "2026-05-31T01:43:20+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -937,7 +954,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-30T23:18:36+09:00"
+      "observed_at": "2026-05-31T01:43:20+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -951,7 +968,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-30T23:18:36+09:00"
+      "observed_at": "2026-05-31T01:43:20+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -965,7 +982,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-30T23:18:36+09:00"
+      "observed_at": "2026-05-31T01:43:20+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -979,7 +996,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-30T23:18:36+09:00"
+      "observed_at": "2026-05-31T01:43:20+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -993,7 +1010,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-30T23:18:36+09:00"
+      "observed_at": "2026-05-31T01:43:20+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -1007,7 +1024,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-05-30T23:18:36+09:00"
+      "observed_at": "2026-05-31T01:43:20+09:00"
     }
   ],
   "price_changes": [
@@ -1033,14 +1050,6 @@
       "prev_price": 227000,
       "new_price": 226000,
       "change_pct": -0.4,
-      "direction": "down"
-    },
-    {
-      "product_alias": "switch2",
-      "shop": "geo",
-      "prev_price": 50000,
-      "new_price": 45000,
-      "change_pct": -10.0,
       "direction": "down"
     },
     {

@@ -1,6 +1,6 @@
 
 ============================================================
- Deploy Check (381 items)
+ Deploy Check (387 items)
 ============================================================
   ✅ [index_exists] docs/index.html 存在
   ✅ [forbidden_phrases] 禁止表現なし
@@ -9,7 +9,7 @@
   ✅ [line_cta_off] LINE CTA非表示（正常）
   ✅ [telegram_cta_off] Telegram CTA非表示（正常）
   ✅ [analytics_empty] GA ID未設定 → GAスニペット非出力（正常）
-  ✅ [today_date] 今日の日付 2026-05-29 あり
+  ✅ [today_date] 今日の日付 2026-05-30 あり
   ✅ [price_exists] 価格表記あり
   ✅ [disclaimer] 免責事項あり
   ✅ [data_track] data-track属性あり
@@ -154,14 +154,14 @@
   ✅ [freshness_yoko_format] 古い価格に「要更新 / N日前」形式が使われている
   ✅ [deal_card_no_saishin_label] updated-row に旧「最終更新：」表記なし（価格確認：に統一済み）
   ✅ [stale_banner_date_mismatch] #144 「本日の価格データ未更新」が HTML に存在しない（OK: トップ警告抑制済み）
-  ⚠️ [csv_today_observed_at] manual_buyback_prices.csv に本日(2026-05-29)の observed_at なし（手動更新が必要な可能性）
+  ✅ [csv_today_observed_at] manual_buyback_prices.csv に本日(2026-05-30)の observed_at あり
   ✅ [iphone17_price_fetched] iPhone 17 Pro 系の買取価格が1件以上取得されている
   ✅ [mobile_ichiban_price] モバイル一番の買取価格（price > 0）が存在する
   ✅ [fetch_failed_display] fetch_failed 行があり、LP上に「取得失敗 / 要確認」表示がある
   ✅ [no_price_zero_shown] LP上に¥0の価格表記なし（0価格行は非表示 or fetch_failed表示で正常）
   ✅ [auto_scraped_badge] 「自動取得」バッジ（badge-auto-scraped）が表示されている
   ✅ [fetch_failed_badge] 「取得失敗」バッジ（badge-fetch-failed）が表示されている
-  ✅ [fetch_failed_has_link] 取得失敗行（shop-row-failed）に確認リンクがある（22行）
+  ✅ [fetch_failed_has_link] 取得失敗行（shop-row-failed）に確認リンクがある（24行）
   ✅ [collection_stats_shown] ページ上部に取得統計（自動取得N件/取得失敗N件）が表示されている
   ✅ [hero_deals_dynamic] 参考DEALSに固定ハードコード商品なし（パネル削除済み = 正常）
   ✅ [fetch_failed_no_price_calc] fetch_failed 行の価格欄が「—」（価格計算に使われていない）
@@ -177,7 +177,7 @@
   ✅ [game_console_in_game_section] ゲーム機がゲーム機欄に表示
   ✅ [monitoring_inside_genre] 監視中セクションはジャンル内に正しく配置されている
   ✅ [status_subhead_exists] ジャンル内に状態別見出しが存在する
-  ✅ [camera_in_beginner] カメラ商品が初心者タブに6件表示されている（仕様通り）
+  ✅ [camera_in_beginner] カメラ商品が初心者タブに7件表示されている（仕様通り）
   ✅ [ipad_in_tablet_section] iPad がタブレット欄に表示
   ✅ [macbook_in_pc_section] MacBook/Mac mini がPC欄に表示
   ✅ [failure_reason_badge_shown] 取得失敗カードなし（失敗理由バッジ不要）
@@ -185,33 +185,33 @@
   ✅ [ipad_not_in_other] iPad は「その他」欄に混入していない
   ✅ [airpods_not_in_smartphone] AirPods はスマートフォン欄に混入していない
   ✅ [applewatch_in_wearable_section] Apple Watch がウェアラブル欄に表示
-  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-05-30T01:42:33+09:00）
+  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-05-30T11:28:45+09:00）
   ✅ [suspicious_price_format] suspicious_prices 形式OK（suspicious_price なし）
-  ✅ [fetch_failed_has_reason] fetch_failed 36件すべてに reason あり
+  ✅ [fetch_failed_has_reason] fetch_failed 33件すべてに reason あり
   ✅ [collector_report_html_exists] docs/collector_report.html 存在
   ✅ [collector_report_link_in_lp] LP内に collector_report.html へのリンクがある
-  ✅ [fetch_failed_report_link] 取得失敗32件 / suspicious0件 → 警告バーが表示されている
-  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 14件存在する: ['iphone17pm512', 'iphone17pro512', 'iphone17pro256', 'iphone17pm256']
-  ✅ [beginner_page_auto_scraped_exists] 自動取得 OK 19件 / total 55件
+  ✅ [fetch_failed_report_link] 取得失敗29件 / suspicious0件 → 警告バーが表示されている
+  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 16件存在する: ['iphone17pro256', 'iphone17pm256', 'iphone17pm512', 'iphone17pro512']
+  ✅ [beginner_page_auto_scraped_exists] 自動取得 OK 22件 / total 55件
   ✅ [shop_name_no_vertical_wrap] shop-name-col に word-break:keep-all が設定されている
-  ✅ [iphone17pro256_price_scraped] iPhone 17 Pro 256GB の価格取得成功: ['kaitori_shouten', 'kaitori_itchome', 'iosys', 'netoff']
+  ✅ [iphone17pro256_price_scraped] iPhone 17 Pro 256GB の価格取得成功: ['mobile_ichiban', 'kaitori_shouten', 'kaitori_itchome', 'iosys', 'netoff']
   ✅ [fetch_failed_section_collapsible] 取得失敗セクションが <details> 折りたたみ対応されている
-  ✅ [fetch_failed_not_dominant] 取得失敗カード比率 5%（2/41）— 許容範囲内
-  ✅ [fetch_failed_has_reason_field] 全取得失敗エントリーに reason フィールドあり（36件）
+  ✅ [fetch_failed_not_dominant] 取得失敗カード比率 5%（2/43）— 許容範囲内
+  ✅ [fetch_failed_has_reason_field] 全取得失敗エントリーに reason フィールドあり（33件）
   ✅ [auto_scraped_link_verified] auto_scraped行のlink_verifiedはすべてtrue（URL推測なし）
   ✅ [iphone_min3_shops] iPhone主要4商品すべて成功店舗≥3
   ✅ [switch2_min2_shops] Switch2 成功店舗≥2（3店舗）
-  ✅ [ps5pro_min2_shops] PS5 Pro 成功店舗≥2（2店舗）
+  ✅ [ps5pro_min2_shops] PS5 Pro 成功店舗≥2（3店舗）
   ✅ [no_unknown_failure_reason] すべての取得失敗に reason が設定されている（unknown なし）
   ✅ [debug_files_saved] exports/debug/ に診断ファイル 60件あり
   ✅ [low_confidence_not_in_lp] confidence=low 価格がLPに含まれていない（low=0件）
   ✅ [suspicious_price_not_in_lp] suspicious_price がLPに含まれていない（要疑い価格=0件）
-  ✅ [fetch_failed_collapse_ui_exists] fetch_failed店舗 22件で「さらに表示」UIが存在
+  ✅ [fetch_failed_collapse_ui_exists] fetch_failed店舗 24件で「さらに表示」UIが存在
   ✅ [monitoring_description_exists] monitoring カードに監視中メッセージが存在
   ✅ [fetch_failed_description_exists] fetch_failed セクションに説明文が存在
   ✅ [quality_gate_script_exists] scripts/check_collector_quality.py が存在
   ✅ [quality_gate_in_workflow] GitHub Actions に quality gate step がある
-  ✅ [collector_summary_in_report] latest.json summary OK: 19/55 (35%)
+  ✅ [collector_summary_in_report] latest.json summary OK: 22/55 (40%)
   ✅ [playwright_install_in_workflow] daily_lp.yml に playwright install --with-deps chromium が存在
   ✅ [workflow_concurrency_set] daily_lp.yml に concurrency: group=daily-lp-update が設定されている
   ✅ [workflow_concurrency_no_cancel] daily_lp.yml の concurrency が cancel-in-progress: false（後続を待機）
@@ -353,7 +353,7 @@
   ✅ [freshness_banner_168h_branch] #346 _tab_beginner の freshness_banner に 168h 分岐が存在する
   ✅ [no_last_buyback_ts_label] #347 「最終買取データ取得」テキストが LP ソースに残っていない
   ✅ [stale_warning_7day_label] #348 _section_stale_warning に「7日超」または 168 の記述が存在する
-  ✅ [ranking_beginner_consistency] #349 ランキング利益あり(16件) / 初心者ページカード(7件) — 整合
+  ✅ [ranking_beginner_consistency] #349 ランキング利益あり(16件) / 初心者ページカード(5件) — 整合
   ✅ [x100vi_in_beginner_if_ranking] #350 X100VI 表示整合 OK（ランキングにある場合はページに表示、中古条件なら参考fold）
   ✅ [deal_age_scanned_at] #351 beginner フィルタが scanned_at ベースで動作している
   ✅ [flea_all_platforms] #352 売却先比較にラクマ・StockX の未取得行が存在する
@@ -383,8 +383,14 @@
   ✅ [monitoring_upgrade_to_profit] #376 監視中案件が有効価格で利益ありに昇格する
   ✅ [pro_no_used_premium_badge] #377 Proメインに「中古プレ値あり」が出ない
   ✅ [ebay_overseas_fallback] #378 eBay 最高売却時に海外価格フォールバックあり
+  ✅ [platform_pending_label] #379 プラットフォーム別未取得理由ラベルが実装されている（_get_platform_pending_label）
+  ✅ [resale_status_has_products] #380 resale_collection_status.json に products/platforms フィールドあり
+  ✅ [all_product_configs] #381 collect_resale_prices.py が全カテゴリ対応（ALL_PRODUCT_CONFIGS）
+  ✅ [rakuma_collector] #382 ラクマ（fril.jp）コレクター実装済み
+  ✅ [difficulty_sentinel_fix] #383 difficulty sentinel（100.0）再推定ロジックが実装されている
+  ✅ [data_source_badge] #384 データソースバッジ（_data_source_badge）が実装されている
 
-  Errors: 0 | Warnings: 9 | OK: 372
+  Errors: 0 | Warnings: 8 | OK: 379
 
   ✅ Deploy check PASSED
 ============================================================

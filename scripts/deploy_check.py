@@ -4311,6 +4311,24 @@ def check() -> list[dict]:
                     "message": "#427 Beginner カードに『取得方法/最終確認/買取店比較』が描画されている"
                                + ("" if _t427 else " ← Beginner カードの買取メタ情報が不足しています")})
 
+    # #428: Ranking タブに「マップカメラ → フジヤカメラ」店舗間せどりルートが存在しない
+    _t428 = ('マップカメラ → フジヤカメラ' not in _rank_html396) and ('マップカメラ &rarr; フジヤカメラ' not in _rank_html396)
+    results.append({"level": "ok" if _t428 else "error", "check": "no_mapcamera_fujiya_in_ranking",
+                    "message": "#428 Ranking タブに『マップカメラ → フジヤカメラ』店舗間せどりルートが存在しない"
+                               + ("" if _t428 else " ← Ranking に店舗間せどりルートが残っています")})
+
+    # #429: Ranking タブに「カメラのキタムラ → フジヤカメラ」店舗間せどりルートが存在しない
+    _t429 = ('カメラのキタムラ → フジヤカメラ' not in _rank_html396) and ('カメラのキタムラ &rarr; フジヤカメラ' not in _rank_html396)
+    results.append({"level": "ok" if _t429 else "error", "check": "no_kitamura_fujiya_in_ranking",
+                    "message": "#429 Ranking タブに『カメラのキタムラ → フジヤカメラ』店舗間せどりルートが存在しない"
+                               + ("" if _t429 else " ← Ranking に店舗間せどりルートが残っています")})
+
+    # #430: Beginner 説明文が「対象は新品・未使用・未開封のみです。」になっている
+    _t430 = '対象は新品・未使用・未開封のみです' in _beg_html388
+    results.append({"level": "ok" if _t430 else "error", "check": "beginner_disclaimer_text",
+                    "message": "#430 Beginner 説明文が『対象は新品・未使用・未開封のみです。』になっている"
+                               + ("" if _t430 else " ← Beginner 説明文が想定と異なります")})
+
     return results
 
 

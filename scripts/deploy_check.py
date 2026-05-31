@@ -4197,11 +4197,13 @@ def check() -> list[dict]:
                     "message": "#410 LP ソースに「現在は赤字 / 価格変動を監視中」（固定文言）が存在しない（profit-based に変更済み）"
                                + ("" if _t410 else " ← 「現在は赤字 / 価格変動を監視中」が固定文言として残っています")})
 
-    # #411: Sedori タブに初心者合成ルート（公式→買取店）が実装されている
-    _t411 = '初心者ルート' in _sed_html396 or '_synth_routes' in _lp_gen_src
+    # #411: Sedori タブに初心者合成ルート（公式→買取店）が「実際に描画」されている
+    # （旧版はソースに _synth_routes があれば OK としていたため 0 ルートでも誤通過した。
+    #   実出力 _sed_html396 を検査する。データ次第で 0 件はあり得るため warning レベル）
+    _t411 = '初心者ルート' in _sed_html396
     results.append({"level": "ok" if _t411 else "warning", "check": "sedori_has_synth_beginner_routes",
-                    "message": "#411 Sedori タブに初心者合成ルート（公式→買取店）が実装されている"
-                               + ("" if _t411 else " ← 初心者合成ルートが見つかりません")})
+                    "message": "#411 Sedori タブに初心者合成ルート（公式→買取店）が描画されている"
+                               + ("" if _t411 else " ← Sedori 実出力に初心者ルートが描画されていません（データ不足の可能性）")})
 
     # #412: Sedori タブの説明文に「中古」が出ない
     _t412 = '中古' not in _sed_html396
@@ -4234,6 +4236,25 @@ def check() -> list[dict]:
     results.append({"level": "ok" if _t416 else "error", "check": "no_used_reference_in_beginner",
                     "message": "#416 Beginner タブに「参考データ（中古・開封済み条件）」が存在しない"
                                + ("" if _t416 else " ← 「参考データ（中古・開封済み条件）」が Beginner タブに残っています")})
+
+    # #417: Beginner タブに中古グレード表記「used_a」「used_b」が存在しない
+    # （正規買取店が出す中古価格が初心者タブに混入する不具合の回帰ガード）
+    _t417 = ('used_a' not in _beg_html388) and ('used_b' not in _beg_html388)
+    results.append({"level": "ok" if _t417 else "error", "check": "no_used_grade_enum_in_beginner",
+                    "message": "#417 Beginner タブに中古グレード（used_a/used_b）が存在しない（新品・未使用のみ）"
+                               + ("" if _t417 else " ← Beginner タブに中古グレード（used_a 等）が表示されています")})
+
+    # #418: Beginner タブに「二次流通（参考）」取得方法ラベルが存在しない
+    _t418 = '二次流通（参考）' not in _beg_html388
+    results.append({"level": "ok" if _t418 else "error", "check": "no_resale_source_in_beginner",
+                    "message": "#418 Beginner タブに「二次流通（参考）」取得方法ラベルが存在しない（公式→買取店のみ）"
+                               + ("" if _t418 else " ← Beginner タブに二次流通由来の価格が表示されています")})
+
+    # #419: LP ソースに中古・二次流通の共通除外ロジック（_enrich_deal / _cond_is_used）が実装されている
+    _t419 = ('_enrich_deal' in _lp_gen_src) and ('_cond_is_used' in _lp_gen_src)
+    results.append({"level": "ok" if _t419 else "warning", "check": "central_enrich_used_filter_impl",
+                    "message": "#419 LP ソースに中古・二次流通の共通除外ロジック（_enrich_deal / _cond_is_used）が実装済み"
+                               + ("" if _t419 else " ← 共通 enrich/中古フィルタが見つかりません")})
 
     return results
 

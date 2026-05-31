@@ -246,6 +246,18 @@ class DailyLPGenerator:
 
         # ランキング用 + カテゴリ別
         all_deals    = self.repo.list_beginner_deals(min_profit=0, limit=50)
+
+        # ── 中央集約 enrich（中古・二次流通価格を完全除外）──
+        # 初心者タブだけでなくランキング・せどりも同じ補完済み deal を参照させ、
+        # 「初心者は補完あり / ランキング・せどりは補完なし」の不整合を解消する。
+        def _enrich_list(_lst):
+            return [self._enrich_deal(_d, buyback_by_product.get(_d.product_id, []))
+                    for _d in (_lst or [])]
+        all_deals        = _enrich_list(all_deals)
+        beginner_easy    = _enrich_list(beginner_easy)
+        beginner_watch   = _enrich_list(beginner_watch)
+        monitoring_deals = _enrich_list(monitoring_deals)
+
         iphone_deals = [d for d in all_deals if d.category == "iphone"]
         game_deals   = [d for d in all_deals if d.category == "game_console"]
         camera_deals = [d for d in all_deals if d.category == "camera"]
@@ -5213,13 +5225,11 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         # ── sell_candidates 補完: buyback_rows の最高価格で deal を補完 ──
         # 売却先比較テーブルに有効価格があれば DB の best_buyback_price より優先して使う。
         # これにより「比較テーブルに価格あり → メイン価格未取得」の不整合を防ぐ。
-        deduped_all = [
-            _enrich_from_sell_candidates(
-                d,
-                [r for r in bybp.get(d.product_id, []) if r.get('data_source') != 'resale_market']
-            )
-            for d in deduped_all
-        ]
+        # 共通メソッドで補完（中古・二次流通価格は完全除外）。
+        # 補完で user_level が monitoring に降格した場合は再分類するため、後段で再フィルタする。
+        deduped_all = [self._enrich_deal(d, bybp.get(d.product_id, [])) for d in deduped_all]
+        # 補完後に中古条件へ変化した deal を main から除外（_is_used_cond 再適用）
+        deduped_all = [d for d in deduped_all if not _is_used_cond(d)]
 
         # ── サマリバー（利益あり件数 / 監視中件数 / 取得失敗件数）──
         _profit_deals_all  = [d for d in deduped_all if (d.net_profit_jpy or 0) > 0]
@@ -5390,6 +5400,14 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         Task 5: easy/watch カードと同じ UI 構造に統一。
         Task 6: price=0 は利益計算に使わない（「未取得」表示）。
         """
+        # 中古(used)・二次流通(resale_market/フリマ・海外店名)行は買取店比較から完全除外
+        if buyback_rows:
+            buyback_rows = [
+                r for r in buyback_rows
+                if r.get('data_source') != 'resale_market'
+                and not self._cond_is_used(r.get('condition', ''))
+                and not self._is_resale_shop(r.get('shop_name', ''))
+            ]
         pid       = _esc(d.product_id)
         _raw_pid  = getattr(d, 'product_id', '') or ''
         pid_alias = _raw_pid[len('prod_'):] if _raw_pid.startswith('prod_') else _raw_pid
@@ -5765,6 +5783,15 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 
     def _deal_card(self, d, badge_cls: str, label: str, buyback_rows: list = None, genre: str = None, pro_mode: bool = False, overseas_price_jpy: int = None, overseas_source: str = None, overseas_observed_at: str = None, overseas_collector_method: str = None) -> str:
         """案件カード HTML を生成する（v6 Primary/Secondary Arbitrage）。"""
+        # 初心者モード（non-pro）では中古(used)・二次流通(resale_market/フリマ・海外店名)行を
+        # 表示・タイムスタンプ・取得方法ラベルの算出前に除外する（新品・未使用のみ）。
+        if not pro_mode and buyback_rows:
+            buyback_rows = [
+                r for r in buyback_rows
+                if r.get('data_source') != 'resale_market'
+                and not self._cond_is_used(r.get('condition', ''))
+                and not self._is_resale_shop(r.get('shop_name', ''))
+            ]
         pid  = _esc(d.product_id)
         shop = _esc(d.best_buyback_shop or '—')
         genre_cls = genre or (d.category if hasattr(d, 'category') else '')
@@ -6743,6 +6770,105 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             return False
         sl = shop_name.lower()
         return any(kw.lower() in sl for kw in DailyLPGenerator._RESALE_SHOP_KEYWORDS)
+
+    # 中古・状態不良を示す買取条件キーワード（新品・未使用・未開封のみ採用）
+    _USED_COND_KEYWORDS = ('中古', '美品', '良品', 'used', 'b品', 'c品', 'ジャンク', '開封済')
+
+    @staticmethod
+    def _cond_is_used(cond) -> bool:
+        """買取条件が中古・状態不良かどうか判定する（新品/未使用/未開封以外）。"""
+        c = (cond or '').lower()
+        return any(kw in c for kw in DailyLPGenerator._USED_COND_KEYWORDS)
+
+    def _enrich_deal(self, deal, rows):
+        """買取行の「新品・未使用・非resale」価格のみで deal を補完する。
+
+        中古(used_a 等)・二次流通(resale_market / フリマ・海外店名)価格は完全除外。
+        有効な新品/未使用行が存在せず、既存値が中古/resale 由来（tainted）の場合は
+        買取価格をクリアして monitoring 扱いにする（誤った差益表示を防ぐ）。
+        全タブ（初心者 / ランキング / せどり）で一貫した補完を行うための共通メソッド。
+        """
+        def _clear(d):
+            return d.copy(update={
+                'best_buyback_shop': '—',
+                'best_buyback_price': 0,
+                'net_profit_jpy': 0,
+                'gross_profit_jpy': 0,
+                'net_profit_rate': 0.0,
+                'user_level': 'monitoring',
+            })
+
+        stored_shop = deal.best_buyback_shop or ''
+        stored_cond = getattr(deal, 'buyback_condition', '') or ''
+        # 既存値が中古条件 or resale 店名由来なら「汚染」とみなし、強制的に再評価
+        _tainted = self._is_resale_shop(stored_shop) or self._cond_is_used(stored_cond)
+
+        valid_rows = [
+            r for r in (rows or [])
+            if r.get('buyback_price', 0) > 0
+            and r.get('data_source', '') not in ('fetch_failed', 'product_not_listed', 'resale_market')
+            and r.get('confidence', 'high') != 'low'
+            and not self._cond_is_used(r.get('condition', ''))
+            and not self._is_resale_shop(r.get('shop_name', ''))
+        ]
+        if not valid_rows:
+            return _clear(deal) if _tainted else deal
+
+        best_row = max(valid_rows, key=lambda r: r.get('buyback_price', 0))
+        best_price = best_row.get('buyback_price', 0)
+        stored_bp = deal.best_buyback_price or 0
+        # 汚染されていなければ、より高い有効価格がある場合のみ更新
+        if best_price <= stored_bp and not _tainted:
+            return deal
+
+        official = deal.official_price_jpy or 0
+        costs = 1800  # 送料+振込手数料+移動コスト（固定）
+        gross = best_price - official
+        net = gross - costs
+
+        # user_level 再評価
+        sale_method = getattr(deal, 'sale_method', None) or 'normal'
+        stock_status = getattr(deal, 'stock_status', None) or ''
+        difficulty = getattr(deal, 'difficulty_score', None) or 0.0
+        if difficulty >= 100.0:  # センチネル値 → 再推定
+            if sale_method == 'normal':
+                difficulty = 0.0
+                _name_lower = (getattr(deal, 'product_name', '') or '').lower()
+                if any(_kw in _name_lower for _kw in ('monochrome', 'limited', '限定')):
+                    difficulty += 0.15
+            elif sale_method == 'lottery':
+                difficulty = 0.70
+            elif sale_method == 'discontinued':
+                difficulty = 0.80
+            elif sale_method == 'soldout':
+                difficulty = 0.60
+            else:
+                difficulty = 0.0
+            difficulty = min(1.0, difficulty)
+        is_normal = sale_method == 'normal'
+        stock_ok = 'SOLD' not in stock_status.upper()
+        if is_normal and stock_ok and net >= 5000 and difficulty <= 0.35:
+            new_level = 'beginner_easy'
+        elif is_normal and net >= 3000 and difficulty <= 0.50:
+            new_level = 'beginner_watch'
+        elif gross >= 30000:
+            new_level = 'advanced_high_profit'
+        elif net > 0:
+            new_level = 'beginner_watch'
+        else:
+            new_level = 'monitoring'
+        net_rate = (net / official) if official > 0 else 0.0
+        return deal.copy(update={
+            'best_buyback_price': best_price,
+            'best_buyback_shop': best_row.get('shop_name', deal.best_buyback_shop or ''),
+            'best_buyback_url': best_row.get('buyback_url', deal.best_buyback_url or ''),
+            'best_link_verified': bool(best_row.get('buyback_url', '')),
+            'buyback_condition': best_row.get('condition', deal.buyback_condition or ''),
+            'gross_profit_jpy': gross,
+            'net_profit_jpy': net,
+            'net_profit_rate': net_rate,
+            'user_level': new_level,
+        })
 
     def _tab_ranking(self, all_deals, iphone_deals, game_deals, sedori_routes=None) -> str:
         # 各カテゴリのデータ準備（resale_market 売却先を除外して買取店のみランキング）

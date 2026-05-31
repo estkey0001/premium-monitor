@@ -69,7 +69,7 @@
   ✅ [category_chip_target_id] カテゴリチップに data-target-id（category-pro-camera/category-beginner-iphone）が設定されている
   ✅ [category_anchor_ids] カテゴリアンカーID（category-pro-camera / category-beginner-iphone）が存在する
   ✅ [activate_category_fn] activateCategory JS関数が存在する
-  ⚠️ [ranking_target_id] ランキング行の data-target-id が未設定
+  ✅ [ranking_target_id] ランキング行に data-target-id（product-*）が設定されている
   ✅ [category_anchor_tablet] category-beginner-tablet アンカーが存在する
   ✅ [category_anchor_game] category-beginner-game アンカーが存在する
   ✅ [category_anchor_lottery] category-lottery アンカーが存在する
@@ -185,13 +185,13 @@
   ✅ [ipad_not_in_other] iPad は「その他」欄に混入していない
   ✅ [airpods_not_in_smartphone] AirPods はスマートフォン欄に混入していない
   ✅ [applewatch_in_wearable_section] Apple Watch がウェアラブル欄に表示
-  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-05-31T10:27:19+09:00）
+  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-05-31T15:05:04+09:00）
   ✅ [suspicious_price_format] suspicious_prices 形式OK（suspicious_price なし）
   ✅ [fetch_failed_has_reason] fetch_failed 33件すべてに reason あり
   ✅ [collector_report_html_exists] docs/collector_report.html 存在
   ✅ [collector_report_link_in_lp] LP内に collector_report.html へのリンクがある
   ✅ [fetch_failed_report_link] 取得失敗29件 / suspicious0件 → 警告バーが表示されている
-  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 16件存在する: ['iphone17pm512', 'iphone17pro512', 'iphone17pm256', 'iphone17pro256']
+  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 16件存在する: ['iphone17pro512', 'iphone17pm512', 'iphone17pro256', 'iphone17pm256']
   ✅ [beginner_page_auto_scraped_exists] 自動取得 OK 22件 / total 55件
   ✅ [shop_name_no_vertical_wrap] shop-name-col に word-break:keep-all が設定されている
   ✅ [iphone17pro256_price_scraped] iPhone 17 Pro 256GB の価格取得成功: ['mobile_ichiban', 'kaitori_shouten', 'kaitori_itchome', 'iosys', 'netoff']
@@ -353,7 +353,7 @@
   ✅ [freshness_banner_168h_branch] #346 _tab_beginner の freshness_banner に 168h 分岐が存在する
   ✅ [no_last_buyback_ts_label] #347 「最終買取データ取得」テキストが LP ソースに残っていない
   ✅ [stale_warning_7day_label] #348 _section_stale_warning に「7日超」または 168 の記述が存在する
-  ✅ [ranking_beginner_consistency] #349 ランキング利益あり(8件) / 初心者ページカード(2件) — 整合
+  ✅ [ranking_beginner_consistency] #349 ランキング利益あり(12件) / 初心者ページカード(2件) — 整合
   ✅ [x100vi_in_beginner_if_ranking] #350 X100VI 表示整合 OK（ランキングにある場合はページに表示、中古条件なら参考fold）
   ✅ [deal_age_scanned_at] #351 beginner フィルタが scanned_at ベースで動作している
   ⚠️ [flea_all_platforms] #352 売却先比較にラクマ・StockX の未取得行が存在する ← ラクマまたは StockX が見つかりません
@@ -415,9 +415,9 @@
   ✅ [no_used_premium_flag_text] #408 HTML に「中古プレ値あり」が存在しない
   ✅ [no_used_grade_text] #409 HTML に「中古A」が存在しない（新品・未使用方針）
   ✅ [no_false_negative_profit_label] #410 LP ソースに「現在は赤字 / 価格変動を監視中」（固定文言）が存在しない（profit-based に変更済み）
-  ⚠️ [sedori_has_synth_beginner_routes] #411 Sedori タブに初心者合成ルート（公式→買取店）が描画されている ← Sedori 実出力に初心者ルートが描画されていません（データ不足の可能性）
+  ✅ [sedori_has_synth_beginner_routes] #411 Sedori タブに初心者合成ルート（公式→買取店）が描画されている
   ✅ [no_used_in_sedori_tab] #412 Sedori タブに「中古」が存在しない（新品・未使用方針）
-  ⚠️ [ranking_has_buyback_shop_label] #413 Ranking タブに「最高買取店」ラベルが存在する ← Ranking タブに「最高買取店」が見つかりません
+  ✅ [ranking_has_buyback_shop_label] #413 Ranking タブに「最高買取店」ラベルが存在する
   ✅ [no_excluded_used_in_beginner] #414 Beginner タブに「除外（中古等）」が存在しない
   ✅ [sedori_has_content_or_reason] #415 Sedori タブにルート表またはデータなし理由が存在する
   ✅ [no_used_reference_in_beginner] #416 Beginner タブに「参考データ（中古・開封済み条件）」が存在しない
@@ -425,7 +425,7 @@
   ✅ [no_resale_source_in_beginner] #418 Beginner タブに「二次流通（参考）」取得方法ラベルが存在しない（公式→買取店のみ）
   ✅ [central_enrich_used_filter_impl] #419 LP ソースに中古・二次流通の共通除外ロジック（_enrich_deal / _cond_is_used）が実装済み
 
-  Errors: 0 | Warnings: 17 | OK: 405
+  Errors: 0 | Warnings: 14 | OK: 408
 
   ✅ Deploy check PASSED
 ============================================================

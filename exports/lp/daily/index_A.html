@@ -3014,7 +3014,100 @@ tr.sc-route-review { background: #FFFBEB; }
 
 </head>
 <body>
-<div class="collector-warn-bar collector-warn-soft" id="collector-warn-bar">⚠️ 一部店舗データ取得失敗あり（7件） — <a href="collector_report.html" data-track="collector_warn_click">取得レポートを確認</a></div>
+<div id="alert-popup-container" class="alert-popup-container">
+<div class="popup-alert-card popup-sev-medium" data-alert-id="af6348a7-ec9">
+  <div class="popup-alert-top">
+    <span class="popup-alert-icon">🟡</span>
+    <span class="popup-alert-title">買取急騰: iPhone 17 Pro Max 512GB SIMフリー</span>
+    <button class="popup-alert-close" onclick="dismissPopupAlert(this)" aria-label="閉じる">&#10005;</button>
+  </div>
+  <div class="popup-alert-product">iPhone 17 Pro Max 512GB SIMフリー</div>
+</div><div class="popup-alert-card popup-sev-medium" data-alert-id="0296f0c5-3d1">
+  <div class="popup-alert-top">
+    <span class="popup-alert-icon">🟡</span>
+    <span class="popup-alert-title">買取急騰: iPhone 17 Pro Max 256GB SIMフリー</span>
+    <button class="popup-alert-close" onclick="dismissPopupAlert(this)" aria-label="閉じる">&#10005;</button>
+  </div>
+  <div class="popup-alert-product">iPhone 17 Pro Max 256GB SIMフリー</div>
+</div><div class="popup-alert-card popup-sev-medium" data-alert-id="fb8ba697-56b">
+  <div class="popup-alert-top">
+    <span class="popup-alert-icon">🟡</span>
+    <span class="popup-alert-title">買取急騰: iPhone 17 Pro 512GB SIMフリー</span>
+    <button class="popup-alert-close" onclick="dismissPopupAlert(this)" aria-label="閉じる">&#10005;</button>
+  </div>
+  <div class="popup-alert-product">iPhone 17 Pro 512GB SIMフリー</div>
+</div>
+</div>
+<style>
+.alert-popup-container {
+  position: fixed; bottom: 20px; right: 16px; z-index: 9999;
+  display: flex; flex-direction: column; gap: 8px;
+  max-width: 320px; width: calc(100vw - 32px);
+}
+.popup-alert-card {
+  background: #fff; border-radius: 12px; padding: 12px 14px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  border-left: 4px solid #F59E0B;
+  display: flex; flex-direction: column; gap: 4px;
+  animation: popupSlideIn 0.3s ease;
+}
+.popup-sev-high { border-left-color: #EF4444; }
+.popup-sev-medium { border-left-color: #F59E0B; }
+.popup-sev-low { border-left-color: #22C55E; }
+@keyframes popupSlideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to   { transform: translateX(0); opacity: 1; }
+}
+.popup-alert-top { display: flex; align-items: center; gap: 6px; }
+.popup-alert-icon { font-size: 0.9rem; }
+.popup-alert-title { font-weight: 700; font-size: 0.85rem; flex: 1; color: #1e293b; }
+.popup-alert-close {
+  background: none; border: none; cursor: pointer; padding: 2px 6px;
+  font-size: 0.75rem; color: #94a3b8; border-radius: 4px;
+}
+.popup-alert-close:hover { background: #f1f5f9; }
+.popup-alert-product { font-size: 0.8rem; font-weight: 600; color: #334155; }
+.popup-alert-msg { font-size: 0.78rem; color: #64748b; }
+.popup-alert-link {
+  font-size: 0.75rem; color: #7C3AED; text-decoration: none; font-weight: 600;
+}
+.popup-alert-link:hover { text-decoration: underline; }
+@media (max-width: 480px) {
+  .alert-popup-container { bottom: 12px; right: 8px; max-width: 90vw; }
+}
+</style>
+<script>
+(function() {
+  var todayKey = 'popupDismissed_' + new Date().toISOString().slice(0, 10);
+  var dismissed = JSON.parse(localStorage.getItem(todayKey) || '[]');
+  document.querySelectorAll('.popup-alert-card').forEach(function(card) {
+    var aid = card.getAttribute('data-alert-id');
+    if (aid && dismissed.indexOf(aid) >= 0) card.style.display = 'none';
+  });
+  var container = document.getElementById('alert-popup-container');
+  if (container) {
+    var visible = container.querySelectorAll('.popup-alert-card:not([style*="none"])');
+    if (!visible.length) container.style.display = 'none';
+  }
+})();
+function dismissPopupAlert(btn) {
+  var card = btn.closest('.popup-alert-card');
+  if (!card) return;
+  var aid = card.getAttribute('data-alert-id');
+  card.style.display = 'none';
+  if (aid) {
+    var todayKey = 'popupDismissed_' + new Date().toISOString().slice(0, 10);
+    var dismissed = JSON.parse(localStorage.getItem(todayKey) || '[]');
+    if (dismissed.indexOf(aid) < 0) dismissed.push(aid);
+    localStorage.setItem(todayKey, JSON.stringify(dismissed));
+  }
+  var container = document.getElementById('alert-popup-container');
+  if (container) {
+    var visible = container.querySelectorAll('.popup-alert-card:not([style*="display: none"])');
+    if (!visible.length) container.style.display = 'none';
+  }
+}
+</script><div class="collector-warn-bar collector-warn-soft" id="collector-warn-bar">⚠️ 一部店舗データ取得失敗あり（7件） — <a href="collector_report.html" data-track="collector_warn_click">取得レポートを確認</a></div>
 <header class="topbar">
   <a href="/" class="topbar-brand">
     <div class="brand-icon">S</div>
@@ -3043,10 +3136,10 @@ tr.sc-route-review { background: #FFFBEB; }
           <div class="social-avatar">B</div>
           <div class="social-avatar">C</div>
         </div>
-        <div class="social-text">最高利益参考 <strong>+¥170,396</strong> — 公式定価 vs 最高売却先</div>
+        <div class="social-text">最高利益参考 <strong>+¥68,220</strong> — 公式定価 vs 最高売却先（参考データ）</div>
       </div>
       <div class="hero-timestamps">
-        <span class="ts-pill" data-lp-generated title="このページを生成した日時"><span class="ts-dot blue"></span>更新日：2026-05-30 17:29 JST</span>
+        <span class="ts-pill" data-lp-generated title="このページを生成した日時"><span class="ts-dot blue"></span>更新日：2026-05-31 10:22 JST</span>
       </div>
     </div>
   </div>
@@ -3125,7 +3218,7 @@ tr.sc-route-review { background: #FFFBEB; }
 <div id="tab-lottery" class="tab-panel active" role="tabpanel">
 <div id="category-lottery" class="info-banner violet"><div class="ib-title">&#127915; 抽選情報</div>各メーカーの抽選・予約情報です。&#9888; 価格・状態は変動します。必ず公式サイトで最新情報をご確認ください。</div>
 <p class="empty-state" style="margin-top:20px">現在受付中の抽選情報はありません。</p>
-<details class="lottery-closed-section" style="margin-top:24px"><summary style="cursor:pointer;font-size:0.82rem;color:var(--ink3);padding:8px 4px;">&#128197; 受付終了 / 過去の情報（8件）</summary><div class="lottery-ref-grid" style="margin-top:8px;opacity:0.65">
+<details class="lottery-closed-section" style="margin-top:24px"><summary style="cursor:pointer;font-size:0.82rem;color:var(--ink3);padding:8px 4px;">&#128197; 受付終了 / 過去の情報（6件）</summary><div class="lottery-ref-grid" style="margin-top:8px;opacity:0.65">
 <div class="lottery-card">
   <div class="lottery-card-header">
     <div class="lottery-name">RICOH GR IV Monochrome </div>
@@ -3219,46 +3312,6 @@ tr.sc-route-review { background: #FFFBEB; }
     
     <span class="lottery-checked-at">&#128204; 最終確認: 2026-05-31</span>
   </div>
-  
-  
-  <div class="lottery-btn-group">
-    
-    <a href="https://www.amazon.co.jp/dp/B0CX2YNK6V" target="_blank" rel="noopener noreferrer" class="btn btn-secondary lottery-link-btn" data-track="lottery_click" data-link-type="official_top">&#127915; 公式サイトで要確認</a>
-  </div>
-</div>
-<div class="lottery-card">
-  <div class="lottery-card-header">
-    <div class="lottery-name">PlayStation 5 Pro </div>
-    <span class="lottery-status-badge lottery-status-closed">終了済み</span>
-  </div>
-  <div class="lottery-meta">
-    <span>&#127468; Sony</span>
-    <span>&#128176; 公式価格: ¥119,980（税込）</span>
-    <span>&#127919; 販売方式: 抽選販売</span>
-    
-    
-    <span class="lottery-checked-at">&#128204; 最終確認: 2026-05-31</span>
-  </div>
-  
-  
-  <div class="lottery-btn-group">
-    
-    <a href="https://www.amazon.co.jp/dp/B0CPQWJHFF" target="_blank" rel="noopener noreferrer" class="btn btn-secondary lottery-link-btn" data-track="lottery_click" data-link-type="official_top">&#127915; 公式サイトで要確認</a>
-  </div>
-</div>
-<div class="lottery-card">
-  <div class="lottery-card-header">
-    <div class="lottery-name">Nintendo Switch 2 </div>
-    <span class="lottery-status-badge lottery-status-closed">終了済み</span>
-  </div>
-  <div class="lottery-meta">
-    <span>&#127468; Nintendo</span>
-    <span>&#128176; 公式価格: ¥49,980（税込）</span>
-    <span>&#127919; 販売方式: 抽選販売</span>
-    
-    
-    <span class="lottery-checked-at">&#128204; 最終確認: 2026-05-31</span>
-  </div>
   <div class="lottery-note">抽選キーワード未検出</div>
   
   <div class="lottery-btn-group">
@@ -3287,7 +3340,107 @@ tr.sc-route-review { background: #FFFBEB; }
   </div>
 </div>
 </div></details>
-<details class="lottery-reference-section" style="margin-top:24px"><summary style="cursor:pointer;font-size:0.82rem;color:var(--ink3);padding:8px 4px;">&#128279; 参考リンク（抽選期間なし・販売中商品: 3件）</summary><div class="lottery-ref-grid" style="margin-top:8px;opacity:0.75">
+<details class="lottery-reference-section" style="margin-top:24px"><summary style="cursor:pointer;font-size:0.82rem;color:var(--ink3);padding:8px 4px;">&#128279; 参考リンク（抽選期間なし・販売中商品: 8件）</summary><div class="lottery-ref-grid" style="margin-top:8px;opacity:0.75">
+<div class="lottery-card  lottery-ref-card">
+  <div class="lottery-card-header">
+    <div class="lottery-name">PlayStation 5 Pro 限定モデル <span class="lottery-ref-badge">参考情報</span></div>
+    <span class="lottery-status-badge lottery-status-open">現在販売中</span>
+  </div>
+  <div class="lottery-meta">
+    <span>&#127468; Sony</span>
+    
+    <span>&#127919; 販売方式: limited</span>
+    
+    
+    
+  </div>
+  
+  
+  <div class="lottery-btn-group">
+    
+    <span class="lottery-no-link" style="font-size:0.75rem;color:var(--ink4);font-style:italic;">公式ページで最新情報をご確認ください。</span>
+  </div>
+</div>
+<div class="lottery-card  lottery-ref-card">
+  <div class="lottery-card-header">
+    <div class="lottery-name">RICOH GR IV HDF Special Edition <span class="lottery-ref-badge">参考情報</span></div>
+    <span class="lottery-status-badge lottery-status-open">現在販売中</span>
+  </div>
+  <div class="lottery-meta">
+    <span>&#127468; RICOH</span>
+    
+    <span>&#127919; 販売方式: limited</span>
+    
+    
+    
+  </div>
+  
+  
+  <div class="lottery-btn-group">
+    
+    <span class="lottery-no-link" style="font-size:0.75rem;color:var(--ink4);font-style:italic;">公式ページで最新情報をご確認ください。</span>
+  </div>
+</div>
+<div class="lottery-card  lottery-ref-card">
+  <div class="lottery-card-header">
+    <div class="lottery-name">Nintendo Switch 2 限定モデル <span class="lottery-ref-badge">参考情報</span></div>
+    <span class="lottery-status-badge lottery-status-open">現在販売中</span>
+  </div>
+  <div class="lottery-meta">
+    <span>&#127468; Nintendo</span>
+    
+    <span>&#127919; 販売方式: lottery</span>
+    
+    
+    
+  </div>
+  
+  
+  <div class="lottery-btn-group">
+    
+    <span class="lottery-no-link" style="font-size:0.75rem;color:var(--ink4);font-style:italic;">公式ページで最新情報をご確認ください。</span>
+  </div>
+</div>
+<div class="lottery-card  lottery-ref-card">
+  <div class="lottery-card-header">
+    <div class="lottery-name">Nintendo Switch 2 <span class="lottery-ref-badge">参考情報</span></div>
+    <span class="lottery-status-badge lottery-status-open">抽選受付中</span>
+  </div>
+  <div class="lottery-meta">
+    <span>&#127468; Nintendo</span>
+    <span>&#128176; 公式価格: ¥49,980（税込）</span>
+    <span>&#127919; 販売方式: 抽選販売</span>
+    
+    
+    <span class="lottery-checked-at">&#128204; 最終確認: 2026-05-31</span>
+  </div>
+  <div class="lottery-note">fetch_failed: IP ブロックまたはタイムアウト</div>
+  
+  <div class="lottery-btn-group">
+    
+    <a href="https://www.amazon.co.jp/dp/B0CX2YNK6V" target="_blank" rel="noopener noreferrer" class="btn btn-secondary lottery-link-btn" data-track="lottery_click" data-link-type="official_top">&#127915; 公式サイトで要確認</a>
+  </div>
+</div>
+<div class="lottery-card  lottery-ref-card">
+  <div class="lottery-card-header">
+    <div class="lottery-name">PlayStation 5 Pro <span class="lottery-ref-badge">参考情報</span></div>
+    <span class="lottery-status-badge lottery-status-open">抽選受付中</span>
+  </div>
+  <div class="lottery-meta">
+    <span>&#127468; Sony</span>
+    <span>&#128176; 公式価格: ¥119,980（税込）</span>
+    <span>&#127919; 販売方式: 抽選販売</span>
+    
+    
+    <span class="lottery-checked-at">&#128204; 最終確認: 2026-05-31</span>
+  </div>
+  <div class="lottery-note">fetch_failed: IP ブロックまたはタイムアウト</div>
+  
+  <div class="lottery-btn-group">
+    
+    <a href="https://www.amazon.co.jp/dp/B0CPQWJHFF" target="_blank" rel="noopener noreferrer" class="btn btn-secondary lottery-link-btn" data-track="lottery_click" data-link-type="official_top">&#127915; 公式サイトで要確認</a>
+  </div>
+</div>
 <div class="lottery-card  lottery-ref-card">
   <div class="lottery-card-header">
     <div class="lottery-name">FUJIFILM X100VI <span class="lottery-ref-badge">参考情報</span></div>
@@ -3369,11 +3522,11 @@ tr.sc-route-review { background: #FFFBEB; }
     <button class="ranking-tab-btn" data-rtab="game">&#127918; ゲーム機</button>
     <button class="ranking-tab-btn" data-rtab="sedori">&#9636; せどり</button>
   </div>
-  <div class="ranking-tab-panel active" id="rtab-all"><div class="empty-state"><span class="empty-icon">&#128202;</span>データなし</div></div>
-  <div class="ranking-tab-panel" id="rtab-iphone"><div class="empty-state"><span class="empty-icon">&#128202;</span>データなし</div></div>
+  <div class="ranking-tab-panel active" id="rtab-all"><div class="rank-row rank-1 rank-row-clickable" data-target-tab="beginner" data-target-id="product-ps5_pro" style="cursor:pointer"><div class="rank-num r1">&#128081;</div><div class="rank-info"><div class="rank-name rank-name-link">PlayStation 5 Pro</div><div class="rank-meta">ゲオ → 最高買取店 &nbsp;|&nbsp; game_console</div></div><div><div class="rank-profit">+¥68,220</div><div class="rank-rate">56.9%</div></div></div><div class="rank-row rank-row-clickable" data-target-tab="beginner" data-target-id="product-switch2_mk" style="cursor:pointer"><div class="rank-num r2">2</div><div class="rank-info"><div class="rank-name rank-name-link">Nintendo Switch 2 マリオカートセット</div><div class="rank-meta">買取商店 → 最高買取店 &nbsp;|&nbsp; game_console</div></div><div><div class="rank-profit">+¥5,220</div><div class="rank-rate">8.7%</div></div></div><div class="rank-row rank-row-clickable" data-target-tab="beginner" data-target-id="product-switch2" style="cursor:pointer"><div class="rank-num r3">3</div><div class="rank-info"><div class="rank-name rank-name-link">Nintendo Switch 2</div><div class="rank-meta">じゃんぱら → 最高買取店 &nbsp;|&nbsp; game_console</div></div><div><div class="rank-profit">+¥3,720</div><div class="rank-rate">7.4%</div></div></div><div class="rank-row rank-row-clickable" data-target-tab="beginner" data-target-id="product-iphone17pm_256" style="cursor:pointer"><div class="rank-num ">4</div><div class="rank-info"><div class="rank-name rank-name-link">iPhone 17 Pro Max 256GB SIMフリー</div><div class="rank-meta">じゃんぱら → 最高買取店 &nbsp;|&nbsp; iphone</div></div><div><div class="rank-profit">+¥3,400</div><div class="rank-rate">1.5%</div></div></div><div class="rank-row rank-row-clickable" data-target-tab="beginner" data-target-id="product-iphone17pm_512" style="cursor:pointer"><div class="rank-num ">5</div><div class="rank-info"><div class="rank-name rank-name-link">iPhone 17 Pro Max 512GB SIMフリー</div><div class="rank-meta">じゃんぱら → 最高買取店 &nbsp;|&nbsp; iphone</div></div><div><div class="rank-profit">+¥3,400</div><div class="rank-rate">1.3%</div></div></div><div class="rank-row rank-row-clickable" data-target-tab="beginner" data-target-id="product-iphone17pro_256" style="cursor:pointer"><div class="rank-num ">6</div><div class="rank-info"><div class="rank-name rank-name-link">iPhone 17 Pro 256GB SIMフリー</div><div class="rank-meta">じゃんぱら → 最高買取店 &nbsp;|&nbsp; iphone</div></div><div><div class="rank-profit">+¥2,400</div><div class="rank-rate">1.3%</div></div></div><div class="rank-row rank-row-clickable" data-target-tab="beginner" data-target-id="product-iphone17pro_512" style="cursor:pointer"><div class="rank-num ">7</div><div class="rank-info"><div class="rank-name rank-name-link">iPhone 17 Pro 512GB SIMフリー</div><div class="rank-meta">じゃんぱら → 最高買取店 &nbsp;|&nbsp; iphone</div></div><div><div class="rank-profit">+¥400</div><div class="rank-rate">0.2%</div></div></div></div>
+  <div class="ranking-tab-panel" id="rtab-iphone"><div class="rank-row rank-1 rank-row-clickable" data-target-tab="beginner" data-target-id="product-iphone17pm_256" style="cursor:pointer"><div class="rank-num r1">&#128081;</div><div class="rank-info"><div class="rank-name rank-name-link">iPhone 17 Pro Max 256GB SIMフリー</div><div class="rank-meta">じゃんぱら → 最高買取店</div></div><div><div class="rank-profit">+¥3,400</div><div class="rank-rate">1.5%</div></div></div><div class="rank-row rank-row-clickable" data-target-tab="beginner" data-target-id="product-iphone17pm_512" style="cursor:pointer"><div class="rank-num r2">2</div><div class="rank-info"><div class="rank-name rank-name-link">iPhone 17 Pro Max 512GB SIMフリー</div><div class="rank-meta">じゃんぱら → 最高買取店</div></div><div><div class="rank-profit">+¥3,400</div><div class="rank-rate">1.3%</div></div></div><div class="rank-row rank-row-clickable" data-target-tab="beginner" data-target-id="product-iphone17pro_256" style="cursor:pointer"><div class="rank-num r3">3</div><div class="rank-info"><div class="rank-name rank-name-link">iPhone 17 Pro 256GB SIMフリー</div><div class="rank-meta">じゃんぱら → 最高買取店</div></div><div><div class="rank-profit">+¥2,400</div><div class="rank-rate">1.3%</div></div></div><div class="rank-row rank-row-clickable" data-target-tab="beginner" data-target-id="product-iphone17pro_512" style="cursor:pointer"><div class="rank-num ">4</div><div class="rank-info"><div class="rank-name rank-name-link">iPhone 17 Pro 512GB SIMフリー</div><div class="rank-meta">じゃんぱら → 最高買取店</div></div><div><div class="rank-profit">+¥400</div><div class="rank-rate">0.2%</div></div></div></div>
   <div class="ranking-tab-panel" id="rtab-camera"><div class="empty-state"><span class="empty-icon">&#128202;</span>データなし</div></div>
-  <div class="ranking-tab-panel" id="rtab-game"><div class="empty-state"><span class="empty-icon">&#128202;</span>データなし</div></div>
-  <div class="ranking-tab-panel" id="rtab-sedori"><div class="rank-row rank-1 rank-row-clickable" data-target-tab="sedori" data-target-id="" style="cursor:pointer"><div class="rank-num r1">&#128081;</div><div class="rank-info"><div class="rank-name rank-name-link">FUJIFILM X100VI<span style="background:#059669;color:#fff;font-size:0.6rem;padding:1px 5px;border-radius:99px;margin-left:4px">初心者</span><span class="badge" style="background:#FF9500;color:#fff;font-size:0.65rem;padding:1px 6px;border-radius:99px;margin-left:4px">要確認</span></div><div class="rank-meta">マップカメラ &rarr; フジヤカメラ</div></div><div><div class="rank-profit">+¥225,200</div><div class="rank-rate">126.5%</div></div></div><div class="rank-row rank-row-clickable" data-target-tab="sedori" data-target-id="" style="cursor:pointer"><div class="rank-num r2">2</div><div class="rank-info"><div class="rank-name rank-name-link">FUJIFILM X100VI<span style="background:#059669;color:#fff;font-size:0.6rem;padding:1px 5px;border-radius:99px;margin-left:4px">初心者</span><span class="badge" style="background:#FF9500;color:#fff;font-size:0.65rem;padding:1px 6px;border-radius:99px;margin-left:4px">要確認</span></div><div class="rank-meta">カメラのキタムラ &rarr; フジヤカメラ</div></div><div><div class="rank-profit">+¥223,200</div><div class="rank-rate">124.0%</div></div></div><div class="rank-row rank-row-clickable" data-target-tab="sedori" data-target-id="" style="cursor:pointer"><div class="rank-num r3">3</div><div class="rank-info"><div class="rank-name rank-name-link">FUJIFILM X100VI<span style="background:#7c3aed;color:#fff;font-size:0.6rem;padding:1px 5px;border-radius:99px;margin-left:4px">Pro</span></div><div class="rank-meta">ヤフオク (新品/未使用落札) &rarr; フジヤカメラ</div></div><div><div class="rank-profit">+¥63,400</div><div class="rank-rate">18.7%</div></div></div><div class="rank-row rank-row-clickable" data-target-tab="sedori" data-target-id="" style="cursor:pointer"><div class="rank-num ">4</div><div class="rank-info"><div class="rank-name rank-name-link">FUJIFILM X100VI<span style="background:#7c3aed;color:#fff;font-size:0.6rem;padding:1px 5px;border-radius:99px;margin-left:4px">Pro</span><span class="badge" style="background:#FF9500;color:#fff;font-size:0.65rem;padding:1px 6px;border-radius:99px;margin-left:4px">要確認</span></div><div class="rank-meta">ヤフオク (新品/未使用落札) &rarr; マップカメラ</div></div><div><div class="rank-profit">+¥73,400</div><div class="rank-rate">21.6%</div></div></div><div class="rank-row rank-row-clickable" data-target-tab="sedori" data-target-id="" style="cursor:pointer"><div class="rank-num ">5</div><div class="rank-info"><div class="rank-name rank-name-link">FUJIFILM X100VI<span style="background:#7c3aed;color:#fff;font-size:0.6rem;padding:1px 5px;border-radius:99px;margin-left:4px">Pro</span><span class="badge" style="background:#FF9500;color:#fff;font-size:0.65rem;padding:1px 6px;border-radius:99px;margin-left:4px">要確認</span></div><div class="rank-meta">ヤフオク (新品/未使用落札) &rarr; カメラのキタムラ</div></div><div><div class="rank-profit">+¥68,400</div><div class="rank-rate">20.1%</div></div></div><div class="rank-row rank-row-clickable" data-target-tab="sedori" data-target-id="" style="cursor:pointer"><div class="rank-num ">6</div><div class="rank-info"><div class="rank-name rank-name-link">FUJIFILM X100VI<span style="background:#059669;color:#fff;font-size:0.6rem;padding:1px 5px;border-radius:99px;margin-left:4px">初心者</span><span class="badge" style="background:#FF9500;color:#fff;font-size:0.65rem;padding:1px 6px;border-radius:99px;margin-left:4px">要確認</span></div><div class="rank-meta">フジヤカメラ &rarr; マップカメラ</div></div><div><div class="rank-profit">+¥238,200</div><div class="rank-rate">136.1%</div></div></div><div class="rank-row rank-row-clickable" data-target-tab="sedori" data-target-id="" style="cursor:pointer"><div class="rank-num ">7</div><div class="rank-info"><div class="rank-name rank-name-link">PlayStation 5 Pro<span style="background:#059669;color:#fff;font-size:0.6rem;padding:1px 5px;border-radius:99px;margin-left:4px">初心者</span><span class="badge" style="background:#FF9500;color:#fff;font-size:0.65rem;padding:1px 6px;border-radius:99px;margin-left:4px">要確認</span></div><div class="rank-meta">じゃんぱら &rarr; 買取商店</div></div><div><div class="rank-profit">+¥64,700</div><div class="rank-rate">95.1%</div></div></div><div class="rank-row rank-row-clickable" data-target-tab="sedori" data-target-id="" style="cursor:pointer"><div class="rank-num ">8</div><div class="rank-info"><div class="rank-name rank-name-link">FUJIFILM X100VI<span style="background:#059669;color:#fff;font-size:0.6rem;padding:1px 5px;border-radius:99px;margin-left:4px">初心者</span><span class="badge" style="background:#FF9500;color:#fff;font-size:0.65rem;padding:1px 6px;border-radius:99px;margin-left:4px">要確認</span></div><div class="rank-meta">フジヤカメラ &rarr; カメラのキタムラ</div></div><div><div class="rank-profit">+¥233,200</div><div class="rank-rate">133.3%</div></div></div></div>
+  <div class="ranking-tab-panel" id="rtab-game"><div class="rank-row rank-1 rank-row-clickable" data-target-tab="beginner" data-target-id="product-ps5_pro" style="cursor:pointer"><div class="rank-num r1">&#128081;</div><div class="rank-info"><div class="rank-name rank-name-link">PlayStation 5 Pro</div><div class="rank-meta">ゲオ → 最高買取店</div></div><div><div class="rank-profit">+¥68,220</div><div class="rank-rate">56.9%</div></div></div><div class="rank-row rank-row-clickable" data-target-tab="beginner" data-target-id="product-switch2_mk" style="cursor:pointer"><div class="rank-num r2">2</div><div class="rank-info"><div class="rank-name rank-name-link">Nintendo Switch 2 マリオカートセット</div><div class="rank-meta">買取商店 → 最高買取店</div></div><div><div class="rank-profit">+¥5,220</div><div class="rank-rate">8.7%</div></div></div><div class="rank-row rank-row-clickable" data-target-tab="beginner" data-target-id="product-switch2" style="cursor:pointer"><div class="rank-num r3">3</div><div class="rank-info"><div class="rank-name rank-name-link">Nintendo Switch 2</div><div class="rank-meta">じゃんぱら → 最高買取店</div></div><div><div class="rank-profit">+¥3,720</div><div class="rank-rate">7.4%</div></div></div></div>
+  <div class="ranking-tab-panel" id="rtab-sedori"><div class="rank-row rank-1 rank-row-clickable" data-target-tab="sedori" data-target-id="" style="cursor:pointer"><div class="rank-num r1">&#128081;</div><div class="rank-info"><div class="rank-name rank-name-link">FUJIFILM X100VI<span style="background:#059669;color:#fff;font-size:0.6rem;padding:1px 5px;border-radius:99px;margin-left:4px">初心者</span><span class="badge" style="background:#FF9500;color:#fff;font-size:0.65rem;padding:1px 6px;border-radius:99px;margin-left:4px">要確認</span></div><div class="rank-meta">マップカメラ &rarr; フジヤカメラ</div></div><div><div class="rank-profit">+¥225,200</div><div class="rank-rate">126.5%</div></div></div><div class="rank-row rank-row-clickable" data-target-tab="sedori" data-target-id="" style="cursor:pointer"><div class="rank-num r2">2</div><div class="rank-info"><div class="rank-name rank-name-link">FUJIFILM X100VI<span style="background:#059669;color:#fff;font-size:0.6rem;padding:1px 5px;border-radius:99px;margin-left:4px">初心者</span><span class="badge" style="background:#FF9500;color:#fff;font-size:0.65rem;padding:1px 6px;border-radius:99px;margin-left:4px">要確認</span></div><div class="rank-meta">カメラのキタムラ &rarr; フジヤカメラ</div></div><div><div class="rank-profit">+¥223,200</div><div class="rank-rate">124.0%</div></div></div><div class="rank-row rank-row-clickable" data-target-tab="sedori" data-target-id="" style="cursor:pointer"><div class="rank-num r3">3</div><div class="rank-info"><div class="rank-name rank-name-link">FUJIFILM X100VI<span style="background:#059669;color:#fff;font-size:0.6rem;padding:1px 5px;border-radius:99px;margin-left:4px">初心者</span><span class="badge" style="background:#FF9500;color:#fff;font-size:0.65rem;padding:1px 6px;border-radius:99px;margin-left:4px">要確認</span></div><div class="rank-meta">フジヤカメラ &rarr; マップカメラ</div></div><div><div class="rank-profit">+¥238,200</div><div class="rank-rate">136.1%</div></div></div><div class="rank-row rank-row-clickable" data-target-tab="sedori" data-target-id="" style="cursor:pointer"><div class="rank-num ">4</div><div class="rank-info"><div class="rank-name rank-name-link">FUJIFILM X100VI<span style="background:#059669;color:#fff;font-size:0.6rem;padding:1px 5px;border-radius:99px;margin-left:4px">初心者</span><span class="badge" style="background:#FF9500;color:#fff;font-size:0.65rem;padding:1px 6px;border-radius:99px;margin-left:4px">要確認</span></div><div class="rank-meta">フジヤカメラ &rarr; カメラのキタムラ</div></div><div><div class="rank-profit">+¥233,200</div><div class="rank-rate">133.3%</div></div></div><div class="rank-row rank-row-clickable" data-target-tab="sedori" data-target-id="" style="cursor:pointer"><div class="rank-num ">5</div><div class="rank-info"><div class="rank-name rank-name-link">FUJIFILM X100VI<span style="background:#059669;color:#fff;font-size:0.6rem;padding:1px 5px;border-radius:99px;margin-left:4px">初心者</span><span class="badge" style="background:#FF9500;color:#fff;font-size:0.65rem;padding:1px 6px;border-radius:99px;margin-left:4px">要確認</span></div><div class="rank-meta">カメラのキタムラ &rarr; マップカメラ</div></div><div><div class="rank-profit">+¥233,200</div><div class="rank-rate">129.6%</div></div></div><div class="rank-row rank-row-clickable" data-target-tab="sedori" data-target-id="" style="cursor:pointer"><div class="rank-num ">6</div><div class="rank-info"><div class="rank-name rank-name-link">FUJIFILM X100VI<span style="background:#059669;color:#fff;font-size:0.6rem;padding:1px 5px;border-radius:99px;margin-left:4px">初心者</span><span class="badge" style="background:#FF9500;color:#fff;font-size:0.65rem;padding:1px 6px;border-radius:99px;margin-left:4px">要確認</span></div><div class="rank-meta">マップカメラ &rarr; カメラのキタムラ</div></div><div><div class="rank-profit">+¥230,200</div><div class="rank-rate">129.3%</div></div></div><div class="rank-row rank-row-clickable" data-target-tab="sedori" data-target-id="" style="cursor:pointer"><div class="rank-num ">7</div><div class="rank-info"><div class="rank-name rank-name-link">PlayStation 5 Pro<span style="background:#059669;color:#fff;font-size:0.6rem;padding:1px 5px;border-radius:99px;margin-left:4px">初心者</span><span class="badge" style="background:#FF9500;color:#fff;font-size:0.65rem;padding:1px 6px;border-radius:99px;margin-left:4px">要確認</span></div><div class="rank-meta">じゃんぱら &rarr; ゲオ</div></div><div><div class="rank-profit">+¥120,200</div><div class="rank-rate">176.8%</div></div></div><div class="rank-row rank-row-clickable" data-target-tab="sedori" data-target-id="" style="cursor:pointer"><div class="rank-num ">8</div><div class="rank-info"><div class="rank-name rank-name-link">PlayStation 5 Pro<span style="background:#059669;color:#fff;font-size:0.6rem;padding:1px 5px;border-radius:99px;margin-left:4px">初心者</span><span class="badge" style="background:#FF9500;color:#fff;font-size:0.65rem;padding:1px 6px;border-radius:99px;margin-left:4px">要確認</span></div><div class="rank-meta">ソフマップ &rarr; ゲオ</div></div><div><div class="rank-profit">+¥118,400</div><div class="rank-rate">169.6%</div></div></div></div>
 </div>
 </div>
 
@@ -3386,17 +3539,31 @@ tr.sc-route-review { background: #FFFBEB; }
 </div>
 <div class="sc-meta-row">
   <span class="sc-meta-label">&#128203; 算出ルート数</span>
-  <span class="sc-meta-val sc-routes-count-badge">0ルート</span>
+  <span class="sc-meta-val sc-routes-count-badge">7ルート</span>
 </div>
-<div class="sc-no-data">
-  <div class="sc-no-data-icon">&#128202;</div>
-  <div class="sc-no-data-title">現在、条件を満たすルートはありません</div>
-  <div class="sc-no-data-desc">不足データ（すべて揃い次第、自動表示されます）：</div>
-  <ul class="sc-no-data-list">
-    <li>新品・未使用の公式価格データ</li>
-    <li>国内買取店の買取価格データ</li>
-  </ul>
-  <div class="sc-no-data-note">毎日自動収集しています。価格データが揃い次第、ルートを表示します。</div>
+<div class="sc-review-section" style="border-left:4px solid #059669;background:#f0fdf4;border-radius:8px;padding:12px 16px;margin:12px 0">
+  <div class="sc-review-hd">
+    <span class="sc-review-icon">&#128100;</span>
+    <div>
+      <div class="sc-review-title" style="color:#059669">初心者ルート（公式店 → 買取店）</div>
+      <div class="sc-review-sub">毎日取得した買取価格データから自動算出。公式定価で購入して買取店に売却した場合の参考差益です。</div>
+    </div>
+  </div>
+</div>
+<div class="sc-list-section">
+  <div class="sc-list-header">
+    <span class="sc-list-title">&#128202; 初心者ルート一覧（公式定価→買取店、参考差益）</span>
+    <span class="sc-list-count">7件</span>
+  </div>
+  <div class="sc-table-scroll">
+    <table class="sc-table">
+      <thead><tr>
+        <th>#</th><th>商品</th><th>仕入れ（公式定価）</th><th>定価</th>
+        <th>売却先（買取店）</th><th>買取価格</th><th>参考差益</th><th>利益率</th>
+      </tr></thead>
+      <tbody><tr class="sc-route-row"><td class="sc-rank-cell">#1</td><td class="sc-prod-cell">PlayStation 5 Pro<span style="font-size:0.65rem;color:#6b7280;margin-left:4px">[game_console]</span></td><td class="sc-shop-cell">公式店（定価購入）</td><td class="sc-price-cell sc-col-red">¥119,980</td><td class="sc-shop-cell"><a href="https://www.geo-online.co.jp/store_info/buy/" target="_blank" rel="noopener noreferrer" class="sc-mini-link" data-track="sedori_sell_click">ゲオ</a></td><td class="sc-price-cell sc-col-green">¥190,000</td><td class="sc-profit-cell sc-col-green">+¥68,220</td><td class="sc-rate-cell"><span class="sc-rate-badge sc-rate-pos">+56.9%</span></td></tr><tr class="sc-route-row"><td class="sc-rank-cell">#2</td><td class="sc-prod-cell">Nintendo Switch 2 マリオカートセット<span style="font-size:0.65rem;color:#6b7280;margin-left:4px">[game_console]</span></td><td class="sc-shop-cell">公式店（定価購入）</td><td class="sc-price-cell sc-col-red">¥59,980</td><td class="sc-shop-cell"><a href="https://www.kaitorishouten-co.jp/keitai" target="_blank" rel="noopener noreferrer" class="sc-mini-link" data-track="sedori_sell_click">買取商店</a></td><td class="sc-price-cell sc-col-green">¥67,000</td><td class="sc-profit-cell sc-col-green">+¥5,220</td><td class="sc-rate-cell"><span class="sc-rate-badge sc-rate-pos">+8.7%</span></td></tr><tr class="sc-route-row"><td class="sc-rank-cell">#3</td><td class="sc-prod-cell">Nintendo Switch 2<span style="font-size:0.65rem;color:#6b7280;margin-left:4px">[game_console]</span></td><td class="sc-shop-cell">公式店（定価購入）</td><td class="sc-price-cell sc-col-red">¥49,980</td><td class="sc-shop-cell"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener noreferrer" class="sc-mini-link" data-track="sedori_sell_click">じゃんぱら</a></td><td class="sc-price-cell sc-col-green">¥55,500</td><td class="sc-profit-cell sc-col-green">+¥3,720</td><td class="sc-rate-cell"><span class="sc-rate-badge sc-rate-pos">+7.4%</span></td></tr><tr class="sc-route-row"><td class="sc-rank-cell">#4</td><td class="sc-prod-cell">iPhone 17 Pro Max 256GB SIMフリー<span style="font-size:0.65rem;color:#6b7280;margin-left:4px">[iphone]</span></td><td class="sc-shop-cell"><a href="https://www.apple.com/jp/shop/" target="_blank" rel="noopener noreferrer" class="sc-mini-link" data-track="sedori_buy_click">公式店（定価購入）</a></td><td class="sc-price-cell sc-col-red">¥219,800</td><td class="sc-shop-cell"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener noreferrer" class="sc-mini-link" data-track="sedori_sell_click">じゃんぱら</a></td><td class="sc-price-cell sc-col-green">¥225,000</td><td class="sc-profit-cell sc-col-green">+¥3,400</td><td class="sc-rate-cell"><span class="sc-rate-badge sc-rate-pos">+1.5%</span></td></tr><tr class="sc-route-row"><td class="sc-rank-cell">#5</td><td class="sc-prod-cell">iPhone 17 Pro Max 512GB SIMフリー<span style="font-size:0.65rem;color:#6b7280;margin-left:4px">[iphone]</span></td><td class="sc-shop-cell"><a href="https://www.apple.com/jp/shop/" target="_blank" rel="noopener noreferrer" class="sc-mini-link" data-track="sedori_buy_click">公式店（定価購入）</a></td><td class="sc-price-cell sc-col-red">¥254,800</td><td class="sc-shop-cell"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener noreferrer" class="sc-mini-link" data-track="sedori_sell_click">じゃんぱら</a></td><td class="sc-price-cell sc-col-green">¥260,000</td><td class="sc-profit-cell sc-col-green">+¥3,400</td><td class="sc-rate-cell"><span class="sc-rate-badge sc-rate-pos">+1.3%</span></td></tr><tr class="sc-route-row"><td class="sc-rank-cell">#6</td><td class="sc-prod-cell">iPhone 17 Pro 256GB SIMフリー<span style="font-size:0.65rem;color:#6b7280;margin-left:4px">[iphone]</span></td><td class="sc-shop-cell"><a href="https://www.apple.com/jp/shop/" target="_blank" rel="noopener noreferrer" class="sc-mini-link" data-track="sedori_buy_click">公式店（定価購入）</a></td><td class="sc-price-cell sc-col-red">¥179,800</td><td class="sc-shop-cell"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener noreferrer" class="sc-mini-link" data-track="sedori_sell_click">じゃんぱら</a></td><td class="sc-price-cell sc-col-green">¥184,000</td><td class="sc-profit-cell sc-col-green">+¥2,400</td><td class="sc-rate-cell"><span class="sc-rate-badge sc-rate-pos">+1.3%</span></td></tr><tr class="sc-route-row"><td class="sc-rank-cell">#7</td><td class="sc-prod-cell">iPhone 17 Pro 512GB SIMフリー<span style="font-size:0.65rem;color:#6b7280;margin-left:4px">[iphone]</span></td><td class="sc-shop-cell"><a href="https://www.apple.com/jp/shop/" target="_blank" rel="noopener noreferrer" class="sc-mini-link" data-track="sedori_buy_click">公式店（定価購入）</a></td><td class="sc-price-cell sc-col-red">¥214,800</td><td class="sc-shop-cell"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener noreferrer" class="sc-mini-link" data-track="sedori_sell_click">じゃんぱら</a></td><td class="sc-price-cell sc-col-green">¥217,000</td><td class="sc-profit-cell sc-col-green">+¥400</td><td class="sc-rate-cell"><span class="sc-rate-badge sc-rate-pos">+0.2%</span></td></tr></tbody>
+    </table>
+  </div>
 </div>
 <div class="sc-disclaimer">
 &#9888; 価格は参考値です。実際の購入・売却前に各店舗の公式サイトで最新価格をご確認ください。
@@ -3406,14 +3573,200 @@ tr.sc-route-review { background: #FFFBEB; }
 </div>
 
 <div id="tab-beginner" class="tab-panel" role="tabpanel">
-<div class="info-banner blue">
+<div class="data-stale-banner data-stale-warn">&#9888;&#65039; 参考データを表示中（最終取得：87時間前）。価格は参考値です。リンク先で最新価格をご確認ください。</div><div class="info-banner blue">
 <div class="ib-title">&#128100; 初心者向け：公式店定価購入 &rarr; 最高買取価格との差益</div>
 <strong>公式店・正規店で定価購入した新品・未使用品を、買取店で売却した場合の差益を比較します。</strong>フリマ出品・海外販売・個人間取引は不要です。<strong>公式で買って買取店に売るだけです。</strong>
 <strong>対象は新品・未使用・未開封のみ。中古・開封済み・ジャンクは除外しています。</strong>
 <strong>掲載価格は更新時点の参考値です。差益は保証されません。購入前に必ず各店舗の最新価格をご確認ください。</strong>
 </div>
-<div class="beginner-summary-bar">利益あり: <strong>3</strong>件 ／ 監視中: <strong>27</strong>件 ／ 取得失敗: <strong>0</strong>件</div>
-<div id="category-beginner-iphone"><div class="sec-head"><div class="sec-title">&#128241; iPhone / スマホ</div><div class="sec-badge">8件</div></div><div class="genre-status-summary">利益あり 0 / 監視中 8 / 取得失敗 0</div>
+<div class="beginner-summary-bar">利益あり: <strong>7</strong>件 ／ 監視中: <strong>20</strong>件 ／ 取得失敗: <strong>0</strong>件</div>
+<div id="category-beginner-iphone"><div class="sec-head"><div class="sec-title">&#128241; iPhone / スマホ</div><div class="sec-badge">7件</div></div><div class="genre-status-summary">利益あり 4 / 監視中 3 / 取得失敗 0</div>
+<div class="status-subsection"><div class="status-subhead status-profit">利益あり</div><div class="cards-grid">
+<div class="deal-card stripe-iphone" id="product-iphone17pm_256" data-brand="Apple" data-user-level="beginner_watch">
+  <div class="card-stripe iphone"></div>
+  <div class="card-hd">
+    <div class="card-name">iPhone 17 Pro Max 256GB SIMフリー</div>
+    <div class="card-tags">
+      <span class="badge badge-watch">様子見</span>
+      <span class="badge badge-iphone">iPhone</span>
+    </div>
+  </div>
+  
+  <div class="profit-section amber">
+    <div class="profit-left">
+      <div class="profit-lbl amber">差益（定価購入→最高買取）</div>
+      <div class="profit-num amber">+¥3,400</div>
+    </div>
+    <div class="profit-right">
+      <div class="profit-rate amber">1.5%</div>
+      <div class="profit-note">利益率が低め。様子見推奨</div>
+    </div>
+  </div>
+  <div class="price-row-wrap">
+    <div class="price-cell">
+      <div class="price-cell-lbl">公式価格（定価）</div>
+      <div class="price-cell-val">¥219,800</div>
+    </div>
+    <div class="price-cell">
+      <div class="price-cell-lbl">最高買取価格</div>
+      <div class="price-cell-val green">¥225,000</div>
+    </div>
+    
+  </div>
+  <div class="price-source-row" style="display:flex;gap:16px;flex-wrap:wrap;font-size:0.75rem;color:var(--ink3);padding:4px 0 2px;margin-top:2px;"><span>&#127978; 最高買取店：<strong>じゃんぱら</strong></span><span>&#9989; 状態：<strong>new_unopened_simfree</strong></span><span>&#128203; 取得方法：手動確認</span><span>&#128197; 最終確認：2026-05-20</span></div>
+  <div class="card-body">
+    <div class="condition-row buyback-notice">
+      <span class="cond-icon">&#9888;</span>
+      <div><strong>買取条件：new_unopened_simfree</strong>&nbsp;<span style="font-size:0.72rem;color:var(--gray-400)">掲載価格は参考値です。売却前に必ず各社の公式買取ページで確認してください。</span></div>
+    </div>
+    <div class="updated-row"><span>&#128336;</span>価格確認：2026-05-20 12:00 JST</div>
+    <div class="shop-table buyback-shop-table buyback-table"><div class="shop-table-hd"><span>買取店比較（参照7店舗）</span><span class="freshness-warn" title="observed_at: 2026-05-20T12:00:00+09:00">参考データ / 要更新 / 10日前</span></div><div class="shop-row"><div class="shop-rank gold">1</div><div class="shop-name-col">じゃんぱら</div><div class="shop-price-col">¥225,000</div><div class="shop-diff-col">+¥5,200</div><div class="shop-source-col"><span class="badge-manual">手動確認</span></div><div class="shop-link-col"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener noreferrer" class="shop-check-btn best" data-track="buyback_click" data-product-id="prod_iphone17pm_256">確認</a></div></div><div class="shop-row"><div class="shop-rank silver">2</div><div class="shop-name-col">買取商店</div><div class="shop-price-col">¥197,500</div><div class="shop-diff-col neg">-¥22,300</div><div class="shop-source-col"><span class="badge-auto">自動取得</span></div><div class="shop-link-col"><a href="https://www.kaitorishouten-co.jp/keitai" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="buyback_click" data-product-id="prod_iphone17pm_256">確認</a></div></div><div class="shop-row"><div class="shop-rank ">3</div><div class="shop-name-col">モバイル一番</div><div class="shop-price-col">¥197,500</div><div class="shop-diff-col neg">-¥22,300</div><div class="shop-source-col"><span class="badge-auto">自動取得</span></div><div class="shop-link-col"><a href="https://www.mobile-ichiban.com/" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="buyback_click" data-product-id="prod_iphone17pm_256">確認</a></div></div><div class="shop-row"><div class="shop-rank ">4</div><div class="shop-name-col">買取一丁目</div><div class="shop-price-col">¥196,000</div><div class="shop-diff-col neg">-¥23,800</div><div class="shop-source-col"><span class="badge-auto">自動取得</span></div><div class="shop-link-col"><a href="https://www.1-chome.com/" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="buyback_click" data-product-id="prod_iphone17pm_256">確認</a></div></div><div class="shop-row"><div class="shop-rank ">5</div><div class="shop-name-col">ネットオフ</div><div class="shop-price-col">¥173,250</div><div class="shop-diff-col neg">-¥46,550</div><div class="shop-source-col"><span class="badge-auto">自動取得</span></div><div class="shop-link-col"><a href="https://www.netoff.co.jp/mobilebuy/" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="buyback_click" data-product-id="prod_iphone17pm_256">確認</a></div></div><div class="shop-row shop-row-failed"><div class="shop-rank" style="color:var(--ink3)">—</div><div class="shop-name-col">セカンドストリート</div><div class="shop-price-col" style="color:var(--ink3)">—</div><div class="shop-diff-col"><span class="freshness-warn freshness-fetch-failed" title="価格取得失敗">取得失敗 / 要確認</span></div><div class="shop-source-col"><span class="badge-failed">取得失敗</span></div><div class="shop-link-col"><a href="https://www.2ndstreet.jp/sell/" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="buyback_click" data-product-id="prod_iphone17pm_256">確認</a></div></div><div class="shop-row shop-row-failed"><div class="shop-rank" style="color:var(--ink3)">—</div><div class="shop-name-col">ゲオモバイル</div><div class="shop-price-col" style="color:var(--ink3)">—</div><div class="shop-diff-col"><span class="freshness-warn freshness-fetch-failed" title="価格取得失敗">取得失敗 / 要確認</span></div><div class="shop-source-col"><span class="badge-failed">取得失敗</span></div><div class="shop-link-col"><a href="https://geomobile.jp/purchase/" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="buyback_click" data-product-id="prod_iphone17pm_256">確認</a></div></div></div>
+    <div class="card-actions">
+      <a href="https://www.apple.com/jp/shop/" target="_blank" rel="noopener" class="btn btn-secondary" data-track="product_click" data-product-id="prod_iphone17pm_256">&#128241; Apple Store で買う</a>
+      <a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener noreferrer" class="btn btn-primary" data-track="product_click" data-product-id="prod_iphone17pm_256" data-shop="じゃんぱら">&#128176; 公式サイトで確認</a>
+    </div>
+    
+  </div>
+</div>
+<div class="deal-card stripe-iphone" id="product-iphone17pm_512" data-brand="Apple" data-user-level="beginner_watch">
+  <div class="card-stripe iphone"></div>
+  <div class="card-hd">
+    <div class="card-name">iPhone 17 Pro Max 512GB SIMフリー</div>
+    <div class="card-tags">
+      <span class="badge badge-watch">様子見</span>
+      <span class="badge badge-iphone">iPhone</span>
+    </div>
+  </div>
+  
+  <div class="profit-section amber">
+    <div class="profit-left">
+      <div class="profit-lbl amber">差益（定価購入→最高買取）</div>
+      <div class="profit-num amber">+¥3,400</div>
+    </div>
+    <div class="profit-right">
+      <div class="profit-rate amber">1.3%</div>
+      <div class="profit-note">利益率が低め。様子見推奨</div>
+    </div>
+  </div>
+  <div class="price-row-wrap">
+    <div class="price-cell">
+      <div class="price-cell-lbl">公式価格（定価）</div>
+      <div class="price-cell-val">¥254,800</div>
+    </div>
+    <div class="price-cell">
+      <div class="price-cell-lbl">最高買取価格</div>
+      <div class="price-cell-val green">¥260,000</div>
+    </div>
+    
+  </div>
+  <div class="price-source-row" style="display:flex;gap:16px;flex-wrap:wrap;font-size:0.75rem;color:var(--ink3);padding:4px 0 2px;margin-top:2px;"><span>&#127978; 最高買取店：<strong>じゃんぱら</strong></span><span>&#9989; 状態：<strong>新品未開封 SIMフリー</strong></span><span>&#128203; 取得方法：手動確認</span><span>&#128197; 最終確認：2026-05-20</span></div>
+  <div class="card-body">
+    <div class="condition-row buyback-notice">
+      <span class="cond-icon">&#9888;</span>
+      <div><strong>買取条件：新品未開封 SIMフリー</strong>&nbsp;<span style="font-size:0.72rem;color:var(--gray-400)">掲載価格は参考値です。売却前に必ず各社の公式買取ページで確認してください。</span></div>
+    </div>
+    <div class="updated-row"><span>&#128336;</span>価格確認：2026-05-20 12:00 JST</div>
+    <div class="shop-table buyback-shop-table buyback-table"><div class="shop-table-hd"><span>買取店比較（参照7店舗）</span><span class="freshness-warn" title="observed_at: 2026-05-20T12:00:00+09:00">参考データ / 要更新 / 10日前</span></div><div class="shop-row"><div class="shop-rank gold">1</div><div class="shop-name-col">じゃんぱら</div><div class="shop-price-col">¥260,000</div><div class="shop-diff-col">+¥5,200</div><div class="shop-source-col"><span class="badge-manual">手動確認</span></div><div class="shop-link-col"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener noreferrer" class="shop-check-btn best" data-track="buyback_click" data-product-id="prod_iphone17pm_512">確認</a></div></div><div class="shop-row"><div class="shop-rank silver">2</div><div class="shop-name-col">買取一丁目</div><div class="shop-price-col">¥230,000</div><div class="shop-diff-col neg">-¥24,800</div><div class="shop-source-col"><span class="badge-auto">自動取得</span></div><div class="shop-link-col"><a href="https://www.1-chome.com/" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="buyback_click" data-product-id="prod_iphone17pm_512">確認</a></div></div><div class="shop-row"><div class="shop-rank ">3</div><div class="shop-name-col">買取商店</div><div class="shop-price-col">¥227,000</div><div class="shop-diff-col neg">-¥27,800</div><div class="shop-source-col"><span class="badge-auto">自動取得</span></div><div class="shop-link-col"><a href="https://www.kaitorishouten-co.jp/keitai" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="buyback_click" data-product-id="prod_iphone17pm_512">確認</a></div></div><div class="shop-row"><div class="shop-rank ">4</div><div class="shop-name-col">イオシス</div><div class="shop-price-col">¥205,000</div><div class="shop-diff-col neg">-¥49,800</div><div class="shop-source-col"><span class="badge-auto">自動取得</span></div><div class="shop-link-col"><a href="https://k-tai-iosys.com/pricelist/smartphone/iphone/" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="buyback_click" data-product-id="prod_iphone17pm_512">確認</a></div></div><div class="shop-row"><div class="shop-rank ">5</div><div class="shop-name-col">ネットオフ</div><div class="shop-price-col">¥204,750</div><div class="shop-diff-col neg">-¥50,050</div><div class="shop-source-col"><span class="badge-auto">自動取得</span></div><div class="shop-link-col"><a href="https://www.netoff.co.jp/mobilebuy/" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="buyback_click" data-product-id="prod_iphone17pm_512">確認</a></div></div><div class="shop-row shop-row-failed"><div class="shop-rank" style="color:var(--ink3)">—</div><div class="shop-name-col">セカンドストリート</div><div class="shop-price-col" style="color:var(--ink3)">—</div><div class="shop-diff-col"><span class="freshness-warn freshness-fetch-failed" title="価格取得失敗">取得失敗 / 要確認</span></div><div class="shop-source-col"><span class="badge-failed">取得失敗</span></div><div class="shop-link-col"><a href="https://www.2ndstreet.jp/sell/" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="buyback_click" data-product-id="prod_iphone17pm_512">確認</a></div></div><div class="shop-row shop-row-failed"><div class="shop-rank" style="color:var(--ink3)">—</div><div class="shop-name-col">ゲオモバイル</div><div class="shop-price-col" style="color:var(--ink3)">—</div><div class="shop-diff-col"><span class="freshness-warn freshness-fetch-failed" title="価格取得失敗">取得失敗 / 要確認</span></div><div class="shop-source-col"><span class="badge-failed">取得失敗</span></div><div class="shop-link-col"><a href="https://geomobile.jp/purchase/" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="buyback_click" data-product-id="prod_iphone17pm_512">確認</a></div></div></div>
+    <div class="card-actions">
+      <a href="https://www.apple.com/jp/shop/" target="_blank" rel="noopener" class="btn btn-secondary" data-track="product_click" data-product-id="prod_iphone17pm_512">&#128241; Apple Store で買う</a>
+      <a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener noreferrer" class="btn btn-primary" data-track="product_click" data-product-id="prod_iphone17pm_512" data-shop="じゃんぱら">&#128176; 公式サイトで確認</a>
+    </div>
+    
+  </div>
+</div>
+<div class="deal-card stripe-iphone" id="product-iphone17pro_256" data-brand="Apple" data-user-level="beginner_watch">
+  <div class="card-stripe iphone"></div>
+  <div class="card-hd">
+    <div class="card-name">iPhone 17 Pro 256GB SIMフリー</div>
+    <div class="card-tags">
+      <span class="badge badge-watch">様子見</span>
+      <span class="badge badge-iphone">iPhone</span>
+    </div>
+  </div>
+  
+  <div class="profit-section amber">
+    <div class="profit-left">
+      <div class="profit-lbl amber">差益（定価購入→最高買取）</div>
+      <div class="profit-num amber">+¥2,400</div>
+    </div>
+    <div class="profit-right">
+      <div class="profit-rate amber">1.3%</div>
+      <div class="profit-note">利益率が低め。様子見推奨</div>
+    </div>
+  </div>
+  <div class="price-row-wrap">
+    <div class="price-cell">
+      <div class="price-cell-lbl">公式価格（定価）</div>
+      <div class="price-cell-val">¥179,800</div>
+    </div>
+    <div class="price-cell">
+      <div class="price-cell-lbl">最高買取価格</div>
+      <div class="price-cell-val green">¥184,000</div>
+    </div>
+    
+  </div>
+  <div class="price-source-row" style="display:flex;gap:16px;flex-wrap:wrap;font-size:0.75rem;color:var(--ink3);padding:4px 0 2px;margin-top:2px;"><span>&#127978; 最高買取店：<strong>じゃんぱら</strong></span><span>&#9989; 状態：<strong>new_unopened_simfree</strong></span><span>&#128203; 取得方法：手動確認</span><span>&#128197; 最終確認：2026-05-20</span></div>
+  <div class="card-body">
+    <div class="condition-row buyback-notice">
+      <span class="cond-icon">&#9888;</span>
+      <div><strong>買取条件：new_unopened_simfree</strong>&nbsp;<span style="font-size:0.72rem;color:var(--gray-400)">掲載価格は参考値です。売却前に必ず各社の公式買取ページで確認してください。</span></div>
+    </div>
+    <div class="updated-row"><span>&#128336;</span>価格確認：2026-05-20 12:00 JST</div>
+    <div class="shop-table buyback-shop-table buyback-table"><div class="shop-table-hd"><span>買取店比較（参照7店舗）</span><span class="freshness-warn" title="observed_at: 2026-05-20T12:00:00+09:00">参考データ / 要更新 / 10日前</span></div><div class="shop-row"><div class="shop-rank gold">1</div><div class="shop-name-col">じゃんぱら</div><div class="shop-price-col">¥184,000</div><div class="shop-diff-col">+¥4,200</div><div class="shop-source-col"><span class="badge-manual">手動確認</span></div><div class="shop-link-col"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener noreferrer" class="shop-check-btn best" data-track="buyback_click" data-product-id="prod_iphone17pro_256">確認</a></div></div><div class="shop-row"><div class="shop-rank silver">2</div><div class="shop-name-col">買取商店</div><div class="shop-price-col">¥181,500</div><div class="shop-diff-col">+¥1,700</div><div class="shop-source-col"><span class="badge-auto">自動取得</span></div><div class="shop-link-col"><a href="https://www.kaitorishouten-co.jp/keitai" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="buyback_click" data-product-id="prod_iphone17pro_256">確認</a></div></div><div class="shop-row"><div class="shop-rank ">3</div><div class="shop-name-col">モバイル一番</div><div class="shop-price-col">¥181,500</div><div class="shop-diff-col">+¥1,700</div><div class="shop-source-col"><span class="badge-auto">自動取得</span></div><div class="shop-link-col"><a href="https://www.mobile-ichiban.com/" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="buyback_click" data-product-id="prod_iphone17pro_256">確認</a></div></div><div class="shop-row"><div class="shop-rank ">4</div><div class="shop-name-col">買取一丁目</div><div class="shop-price-col">¥180,000</div><div class="shop-diff-col">+¥200</div><div class="shop-source-col"><span class="badge-auto">自動取得</span></div><div class="shop-link-col"><a href="https://www.1-chome.com/" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="buyback_click" data-product-id="prod_iphone17pro_256">確認</a></div></div><div class="shop-row"><div class="shop-rank ">5</div><div class="shop-name-col">ネットオフ</div><div class="shop-price-col">¥159,600</div><div class="shop-diff-col neg">-¥20,200</div><div class="shop-source-col"><span class="badge-auto">自動取得</span></div><div class="shop-link-col"><a href="https://www.netoff.co.jp/mobilebuy/" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="buyback_click" data-product-id="prod_iphone17pro_256">確認</a></div></div><div class="shop-row shop-row-failed"><div class="shop-rank" style="color:var(--ink3)">—</div><div class="shop-name-col">セカンドストリート</div><div class="shop-price-col" style="color:var(--ink3)">—</div><div class="shop-diff-col"><span class="freshness-warn freshness-fetch-failed" title="価格取得失敗">取得失敗 / 要確認</span></div><div class="shop-source-col"><span class="badge-failed">取得失敗</span></div><div class="shop-link-col"><a href="https://www.2ndstreet.jp/sell/" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="buyback_click" data-product-id="prod_iphone17pro_256">確認</a></div></div><div class="shop-row shop-row-failed"><div class="shop-rank" style="color:var(--ink3)">—</div><div class="shop-name-col">ゲオモバイル</div><div class="shop-price-col" style="color:var(--ink3)">—</div><div class="shop-diff-col"><span class="freshness-warn freshness-fetch-failed" title="価格取得失敗">取得失敗 / 要確認</span></div><div class="shop-source-col"><span class="badge-failed">取得失敗</span></div><div class="shop-link-col"><a href="https://geomobile.jp/purchase/" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="buyback_click" data-product-id="prod_iphone17pro_256">確認</a></div></div></div>
+    <div class="card-actions">
+      <a href="https://www.apple.com/jp/shop/" target="_blank" rel="noopener" class="btn btn-secondary" data-track="product_click" data-product-id="prod_iphone17pro_256">&#128241; Apple Store で買う</a>
+      <a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener noreferrer" class="btn btn-primary" data-track="product_click" data-product-id="prod_iphone17pro_256" data-shop="じゃんぱら">&#128176; 公式サイトで確認</a>
+    </div>
+    
+  </div>
+</div>
+<div class="deal-card stripe-iphone" id="product-iphone17pro_512" data-brand="Apple" data-user-level="beginner_watch">
+  <div class="card-stripe iphone"></div>
+  <div class="card-hd">
+    <div class="card-name">iPhone 17 Pro 512GB SIMフリー</div>
+    <div class="card-tags">
+      <span class="badge badge-watch">様子見</span>
+      <span class="badge badge-iphone">iPhone</span>
+    </div>
+  </div>
+  
+  <div class="profit-section amber">
+    <div class="profit-left">
+      <div class="profit-lbl amber">差益（定価購入→最高買取）</div>
+      <div class="profit-num amber">+¥400</div>
+    </div>
+    <div class="profit-right">
+      <div class="profit-rate amber">0.2%</div>
+      <div class="profit-note">利益率が低め。様子見推奨</div>
+    </div>
+  </div>
+  <div class="price-row-wrap">
+    <div class="price-cell">
+      <div class="price-cell-lbl">公式価格（定価）</div>
+      <div class="price-cell-val">¥214,800</div>
+    </div>
+    <div class="price-cell">
+      <div class="price-cell-lbl">最高買取価格</div>
+      <div class="price-cell-val green">¥217,000</div>
+    </div>
+    
+  </div>
+  <div class="price-source-row" style="display:flex;gap:16px;flex-wrap:wrap;font-size:0.75rem;color:var(--ink3);padding:4px 0 2px;margin-top:2px;"><span>&#127978; 最高買取店：<strong>じゃんぱら</strong></span><span>&#9989; 状態：<strong>new_unopened_simfree</strong></span><span>&#128203; 取得方法：手動確認</span><span>&#128197; 最終確認：2026-05-20</span></div>
+  <div class="card-body">
+    <div class="condition-row buyback-notice">
+      <span class="cond-icon">&#9888;</span>
+      <div><strong>買取条件：new_unopened_simfree</strong>&nbsp;<span style="font-size:0.72rem;color:var(--gray-400)">掲載価格は参考値です。売却前に必ず各社の公式買取ページで確認してください。</span></div>
+    </div>
+    <div class="updated-row"><span>&#128336;</span>価格確認：2026-05-20 12:00 JST</div>
+    <div class="shop-table buyback-shop-table buyback-table"><div class="shop-table-hd"><span>買取店比較（参照7店舗）</span><span class="freshness-warn" title="observed_at: 2026-05-20T12:00:00+09:00">参考データ / 要更新 / 10日前</span></div><div class="shop-row"><div class="shop-rank gold">1</div><div class="shop-name-col">じゃんぱら</div><div class="shop-price-col">¥217,000</div><div class="shop-diff-col">+¥2,200</div><div class="shop-source-col"><span class="badge-manual">手動確認</span></div><div class="shop-link-col"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener noreferrer" class="shop-check-btn best" data-track="buyback_click" data-product-id="prod_iphone17pro_512">確認</a></div></div><div class="shop-row"><div class="shop-rank silver">2</div><div class="shop-name-col">買取商店</div><div class="shop-price-col">¥215,000</div><div class="shop-diff-col">+¥200</div><div class="shop-source-col"><span class="badge-auto">自動取得</span></div><div class="shop-link-col"><a href="https://www.kaitorishouten-co.jp/keitai" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="buyback_click" data-product-id="prod_iphone17pro_512">確認</a></div></div><div class="shop-row"><div class="shop-rank ">3</div><div class="shop-name-col">買取一丁目</div><div class="shop-price-col">¥213,000</div><div class="shop-diff-col neg">-¥1,800</div><div class="shop-source-col"><span class="badge-auto">自動取得</span></div><div class="shop-link-col"><a href="https://www.1-chome.com/" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="buyback_click" data-product-id="prod_iphone17pro_512">確認</a></div></div><div class="shop-row"><div class="shop-rank ">4</div><div class="shop-name-col">モバイル一番</div><div class="shop-price-col">¥196,000</div><div class="shop-diff-col neg">-¥18,800</div><div class="shop-source-col"><span class="badge-auto">自動取得</span></div><div class="shop-link-col"><a href="https://www.mobile-ichiban.com/" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="buyback_click" data-product-id="prod_iphone17pro_512">確認</a></div></div><div class="shop-row"><div class="shop-rank ">5</div><div class="shop-name-col">ネットオフ</div><div class="shop-price-col">¥190,050</div><div class="shop-diff-col neg">-¥24,750</div><div class="shop-source-col"><span class="badge-auto">自動取得</span></div><div class="shop-link-col"><a href="https://www.netoff.co.jp/mobilebuy/" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="buyback_click" data-product-id="prod_iphone17pro_512">確認</a></div></div><div class="shop-row shop-row-failed"><div class="shop-rank" style="color:var(--ink3)">—</div><div class="shop-name-col">セカンドストリート</div><div class="shop-price-col" style="color:var(--ink3)">—</div><div class="shop-diff-col"><span class="freshness-warn freshness-fetch-failed" title="価格取得失敗">取得失敗 / 要確認</span></div><div class="shop-source-col"><span class="badge-failed">取得失敗</span></div><div class="shop-link-col"><a href="https://www.2ndstreet.jp/sell/" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="buyback_click" data-product-id="prod_iphone17pro_512">確認</a></div></div><div class="shop-row shop-row-failed"><div class="shop-rank" style="color:var(--ink3)">—</div><div class="shop-name-col">ゲオモバイル</div><div class="shop-price-col" style="color:var(--ink3)">—</div><div class="shop-diff-col"><span class="freshness-warn freshness-fetch-failed" title="価格取得失敗">取得失敗 / 要確認</span></div><div class="shop-source-col"><span class="badge-failed">取得失敗</span></div><div class="shop-link-col"><a href="https://geomobile.jp/purchase/" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="buyback_click" data-product-id="prod_iphone17pro_512">確認</a></div></div></div>
+    <div class="card-actions">
+      <a href="https://www.apple.com/jp/shop/" target="_blank" rel="noopener" class="btn btn-secondary" data-track="product_click" data-product-id="prod_iphone17pro_512">&#128241; Apple Store で買う</a>
+      <a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener noreferrer" class="btn btn-primary" data-track="product_click" data-product-id="prod_iphone17pro_512" data-shop="じゃんぱら">&#128176; 公式サイトで確認</a>
+    </div>
+    
+  </div>
+</div>
+</div></div>
 <div class="status-subsection"><div class="status-subhead status-monitoring">監視中（価格変動を監視中）</div><div class="cards-grid">
 <div class="deal-card stripe-iphone" id="product-iphone17_256" data-brand="Apple" data-user-level="monitoring" data-genre="iphone">
   <div class="card-stripe monitoring"></div>
@@ -3998,55 +4351,7 @@ tr.sc-route-review { background: #FFFBEB; }
 </div></div>
 <div class="collector-empty-notice"><p>現在、十分な自動取得データがありません。取得成功店舗が増え次第、案件を表示します。</p><p><a href="collector_report.html">取得状況の詳細はこちら</a></p></div>
 </div>
-<div id="category-beginner-camera" style="margin-top:40px;scroll-margin-top:80px"><div class="sec-head"><div class="sec-title">&#128247; カメラ</div><div class="sec-badge">6件</div></div><div class="genre-status-summary">利益あり 1 / 監視中 5 / 取得失敗 0</div>
-<div class="status-subsection"><div class="status-subhead status-profit">利益あり</div><div class="cards-grid">
-<div class="deal-card stripe-camera" id="product-x100vi" data-brand="FUJIFILM" data-user-level="beginner_easy">
-  <div class="card-stripe camera"></div>
-  <div class="card-hd">
-    <div class="card-name">FUJIFILM X100VI</div>
-    <div class="card-tags">
-      <span class="badge badge-easy">低難度</span>
-      <span class="badge badge-camera">カメラ</span>
-    </div>
-  </div>
-  
-  <div class="profit-section">
-    <div class="profit-left">
-      <div class="profit-lbl">差益（定価購入→最高買取）</div>
-      <div class="profit-num">+¥143,700</div>
-    </div>
-    <div class="profit-right">
-      <div class="profit-rate">53.3%</div>
-      <div class="profit-note">定価購入→最高買取（参考値）</div>
-    </div>
-  </div>
-  <div class="price-row-wrap">
-    <div class="price-cell">
-      <div class="price-cell-lbl">公式価格（定価）</div>
-      <div class="price-cell-val">¥269,500</div>
-    </div>
-    <div class="price-cell">
-      <div class="price-cell-lbl">最高買取価格</div>
-      <div class="price-cell-val green">¥415,000</div>
-    </div>
-    
-  </div>
-  <div class="price-source-row" style="display:flex;gap:16px;flex-wrap:wrap;font-size:0.75rem;color:var(--ink3);padding:4px 0 2px;margin-top:2px;"><span>&#127978; 最高買取店：<strong>マップカメラ</strong></span><span>&#9989; 状態：<strong>used_a</strong></span><span>&#128203; 取得方法：二次流通（参考）</span><span>&#128197; 最終確認：2026-05-29</span></div>
-  <div class="card-body">
-    <div class="condition-row buyback-notice">
-      <span class="cond-icon">&#9888;</span>
-      <div><strong>買取条件：used_a</strong>&nbsp;<span style="font-size:0.72rem;color:var(--gray-400)">掲載価格は参考値です。売却前に必ず各社の公式買取ページで確認してください。</span></div>
-    </div>
-    <div class="updated-row"><span>&#128336;</span>価格確認：2026-05-29 10:00 JST</div>
-    <div class="shop-table buyback-shop-table buyback-table"><div class="shop-table-hd"><span>買取店比較（参照3店舗）</span><span class="freshness-warn" title="observed_at: 2026-05-20T12:00:00+09:00">参考データ / 要更新 / 10日前</span></div><div class="shop-row"><div class="shop-rank gold">1</div><div class="shop-name-col">マップカメラ</div><div class="shop-price-col">¥415,000</div><div class="shop-diff-col">+¥145,500</div><div class="shop-source-col"><span class="badge-manual">手動確認</span></div><div class="shop-link-col"><span class="shop-check-btn normal" style="opacity:0.4;cursor:default;">確認不可</span></div></div><div class="shop-row"><div class="shop-rank silver">2</div><div class="shop-name-col">カメラのキタムラ</div><div class="shop-price-col">¥410,000</div><div class="shop-diff-col">+¥140,500</div><div class="shop-source-col"><span class="badge-manual">手動確認</span></div><div class="shop-link-col"><span class="shop-check-btn normal" style="opacity:0.4;cursor:default;">確認不可</span></div></div><div class="shop-row"><div class="shop-rank ">3</div><div class="shop-name-col">フジヤカメラ</div><div class="shop-price-col">¥405,000</div><div class="shop-diff-col">+¥135,500</div><div class="shop-source-col"><span class="badge-manual">手動確認</span></div><div class="shop-link-col"><a href="https://www.fujiyacamera.com/" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="buyback_click" data-product-id="prod_x100vi">確認</a></div></div></div>
-    <div class="card-actions">
-      <a href="https://fujifilm-x.com/ja-jp/" target="_blank" rel="noopener" class="btn btn-secondary" data-track="product_click" data-product-id="prod_x100vi">&#128247; 公式ページ</a>
-      <a href="https://www.kitamura.co.jp/" target="_blank" rel="noopener noreferrer" class="btn btn-primary" data-track="buyback_click" data-product-id="prod_x100vi">&#128176; カメラのキタムラで売る</a>
-    </div>
-    
-  </div>
-</div>
-</div></div>
+<div id="category-beginner-camera" style="margin-top:40px;scroll-margin-top:80px"><div class="sec-head"><div class="sec-title">&#128247; カメラ</div><div class="sec-badge">4件</div></div><div class="genre-status-summary">利益あり 0 / 監視中 4 / 取得失敗 0</div>
 <div class="status-subsection"><div class="status-subhead status-monitoring">監視中（価格変動を監視中）</div><div class="cards-grid">
 <div class="deal-card stripe-camera" id="product-gr4" data-brand="RICOH" data-user-level="monitoring" data-genre="camera">
   <div class="card-stripe monitoring"></div>
@@ -4060,10 +4365,10 @@ tr.sc-route-review { background: #FFFBEB; }
   <div class="profit-section amber">
     <div class="profit-left">
       <div class="profit-lbl amber">差益（定価購入→最高買取）</div>
-      <div class="profit-num amber">−¥19,800</div>
+      <div class="profit-num amber">計算不可（未取得）</div>
     </div>
     <div class="profit-right">
-      <div class="profit-note">現在は差益なし / 価格変動を監視中</div>
+      <div class="profit-note">買取価格取得中 / 監視中</div>
     </div>
   </div>
   <div class="price-row-wrap">
@@ -4073,82 +4378,6 @@ tr.sc-route-review { background: #FFFBEB; }
     </div>
     <div class="price-cell">
       <div class="price-cell-lbl">最高買取価格</div>
-      <div class="price-cell-val" style="color:var(--ink3)">¥175,000</div>
-    </div>
-    <div class="price-cell" style="opacity:0.6">
-      <div class="price-cell-lbl">最高買取店</div>
-      <div class="price-cell-val" style="font-size:0.8rem">マップカメラ</div>
-    </div>
-  </div>
-  <div class="card-body">
-    <div class="updated-row"><span>&#128336;</span>価格確認：2026-05-29 10:00 JST</div>
-    <div class="shop-table buyback-shop-table buyback-table" style="margin-top:8px"><div class="shop-table-hd"><span>買取店比較</span></div><div class="shop-row"><div class="shop-rank gold">1</div><div class="shop-name-col">マップカメラ</div><div class="shop-price-col">¥175,000</div><div class="shop-diff-col"></div><div class="shop-source-col"></div><div class="shop-link-col"><span class="shop-check-btn normal" style="opacity:0.5;cursor:default;">公式で確認</span></div></div><div class="shop-row"><div class="shop-rank silver">2</div><div class="shop-name-col">カメラのキタムラ</div><div class="shop-price-col">¥172,000</div><div class="shop-diff-col"></div><div class="shop-source-col"></div><div class="shop-link-col"><span class="shop-check-btn normal" style="opacity:0.5;cursor:default;">公式で確認</span></div></div><div class="shop-row"><div class="shop-rank bronze">3</div><div class="shop-name-col">フジヤカメラ</div><div class="shop-price-col">¥170,000</div><div class="shop-diff-col"></div><div class="shop-source-col"></div><div class="shop-link-col"><a href="https://www.fujiyacamera.com/" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="buyback_click" data-product-id="prod_gr4">確認</a></div></div><div class="shop-row"><div class="shop-rank other">4</div><div class="shop-name-col">じゃんぱら</div><div class="shop-price-col">¥165,000</div><div class="shop-diff-col"></div><div class="shop-source-col"></div><div class="shop-link-col"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="buyback_click" data-product-id="prod_gr4">確認</a></div></div></div>
-    <div class="card-actions"><a href="https://www.ricoh-imaging.co.jp/" target="_blank" rel="noopener" class="btn btn-secondary" data-track="product_click" data-product-id="prod_gr4">&#128247; 公式で確認</a></div>
-  </div>
-</div>
-<div class="deal-card stripe-camera" id="product-gr3x" data-brand="RICOH" data-user-level="monitoring" data-genre="camera">
-  <div class="card-stripe monitoring"></div>
-  <div class="card-hd">
-    <div class="card-name">RICOH GR IIIx</div>
-    <div class="card-tags">
-      <span class="badge badge-monitoring">監視中</span>
-      <span class="badge badge-camera">カメラ</span>
-    </div>
-  </div>
-  <div class="profit-section amber">
-    <div class="profit-left">
-      <div class="profit-lbl amber">差益（定価購入→最高買取）</div>
-      <div class="profit-num amber">−¥14,800</div>
-    </div>
-    <div class="profit-right">
-      <div class="profit-note">現在は差益なし / 価格変動を監視中</div>
-    </div>
-  </div>
-  <div class="price-row-wrap">
-    <div class="price-cell">
-      <div class="price-cell-lbl">公式価格（定価）</div>
-      <div class="price-cell-val">¥139,800</div>
-    </div>
-    <div class="price-cell">
-      <div class="price-cell-lbl">最高買取価格</div>
-      <div class="price-cell-val" style="color:var(--ink3)">¥125,000</div>
-    </div>
-    <div class="price-cell" style="opacity:0.6">
-      <div class="price-cell-lbl">最高買取店</div>
-      <div class="price-cell-val" style="font-size:0.8rem">マップカメラ</div>
-    </div>
-  </div>
-  <div class="card-body">
-    <div class="updated-row"><span>&#128336;</span>価格確認：2026-05-29 10:00 JST</div>
-    <div class="shop-table buyback-shop-table buyback-table" style="margin-top:8px"><div class="shop-table-hd"><span>買取店比較</span></div><div class="shop-row"><div class="shop-rank gold">1</div><div class="shop-name-col">マップカメラ</div><div class="shop-price-col">¥125,000</div><div class="shop-diff-col"></div><div class="shop-source-col"></div><div class="shop-link-col"><span class="shop-check-btn normal" style="opacity:0.5;cursor:default;">公式で確認</span></div></div><div class="shop-row"><div class="shop-rank silver">2</div><div class="shop-name-col">カメラのキタムラ</div><div class="shop-price-col">¥122,000</div><div class="shop-diff-col"></div><div class="shop-source-col"></div><div class="shop-link-col"><span class="shop-check-btn normal" style="opacity:0.5;cursor:default;">公式で確認</span></div></div><div class="shop-row"><div class="shop-rank bronze">3</div><div class="shop-name-col">じゃんぱら</div><div class="shop-price-col">¥118,000</div><div class="shop-diff-col"></div><div class="shop-source-col"></div><div class="shop-link-col"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="buyback_click" data-product-id="prod_gr3x">確認</a></div></div></div>
-    <div class="card-actions"><a href="https://www.ricoh-imaging.co.jp/" target="_blank" rel="noopener" class="btn btn-secondary" data-track="product_click" data-product-id="prod_gr3x">&#128247; 公式で確認</a></div>
-  </div>
-</div>
-<div class="deal-card stripe-camera" id="product-gr3" data-brand="RICOH" data-user-level="monitoring" data-genre="camera">
-  <div class="card-stripe monitoring"></div>
-  <div class="card-hd">
-    <div class="card-name">RICOH GR III</div>
-    <div class="card-tags">
-      <span class="badge badge-monitoring">監視中</span>
-      <span class="badge badge-camera">カメラ</span>
-    </div>
-  </div>
-  <div class="profit-section amber">
-    <div class="profit-left">
-      <div class="profit-lbl amber">差益（定価購入→最高買取）</div>
-      <div class="profit-num amber">計算不可（未取得）</div>
-    </div>
-    <div class="profit-right">
-      <div class="profit-note">買取価格取得中 / 監視中</div>
-    </div>
-  </div>
-  <div class="price-row-wrap">
-    <div class="price-cell">
-      <div class="price-cell-lbl">公式価格（定価）</div>
-      <div class="price-cell-val">¥129,800</div>
-    </div>
-    <div class="price-cell">
-      <div class="price-cell-lbl">最高買取価格</div>
       <div class="price-cell-val" style="color:var(--ink3)">未取得</div>
     </div>
     <div class="price-cell" style="opacity:0.6">
@@ -4157,47 +4386,9 @@ tr.sc-route-review { background: #FFFBEB; }
     </div>
   </div>
   <div class="card-body">
-    <div class="updated-row"><span>&#128336;</span>スキャン：2026-05-30 17:29 JST</div>
+    <div class="updated-row"><span>&#128336;</span>スキャン：2026-05-30 21:55 JST</div>
     
-    <div class="card-actions"><a href="https://www.ricoh-imaging.co.jp/" target="_blank" rel="noopener" class="btn btn-secondary" data-track="product_click" data-product-id="prod_gr3">&#128247; 公式で確認</a></div>
-  </div>
-</div>
-<div class="deal-card stripe-camera" id="product-gr3_hdf" data-brand="RICOH" data-user-level="monitoring" data-genre="camera">
-  <div class="card-stripe monitoring"></div>
-  <div class="card-hd">
-    <div class="card-name">RICOH GR III HDF</div>
-    <div class="card-tags">
-      <span class="badge badge-monitoring">監視中</span>
-      <span class="badge badge-camera">カメラ</span>
-    </div>
-  </div>
-  <div class="profit-section amber">
-    <div class="profit-left">
-      <div class="profit-lbl amber">差益（定価購入→最高買取）</div>
-      <div class="profit-num amber">計算不可（未取得）</div>
-    </div>
-    <div class="profit-right">
-      <div class="profit-note">買取価格取得中 / 監視中</div>
-    </div>
-  </div>
-  <div class="price-row-wrap">
-    <div class="price-cell">
-      <div class="price-cell-lbl">公式価格（定価）</div>
-      <div class="price-cell-val">¥147,400</div>
-    </div>
-    <div class="price-cell">
-      <div class="price-cell-lbl">最高買取価格</div>
-      <div class="price-cell-val" style="color:var(--ink3)">未取得</div>
-    </div>
-    <div class="price-cell" style="opacity:0.6">
-      <div class="price-cell-lbl">最高買取店</div>
-      <div class="price-cell-val" style="font-size:0.8rem">—</div>
-    </div>
-  </div>
-  <div class="card-body">
-    <div class="updated-row"><span>&#128336;</span>スキャン：2026-05-30 17:29 JST</div>
-    
-    <div class="card-actions"><a href="https://www.ricoh-imaging.co.jp/" target="_blank" rel="noopener" class="btn btn-secondary" data-track="product_click" data-product-id="prod_gr3_hdf">&#128247; 公式で確認</a></div>
+    <div class="card-actions"></div>
   </div>
 </div>
 <div class="deal-card stripe-camera" id="product-gr4_mono" data-brand="RICOH" data-user-level="monitoring" data-genre="camera">
@@ -4233,12 +4424,89 @@ tr.sc-route-review { background: #FFFBEB; }
     </div>
   </div>
   <div class="card-body">
-    <div class="updated-row"><span>&#128336;</span>価格確認：2026-05-31 02:01 JST</div>
+    <div class="updated-row"><span>&#128336;</span>スキャン：2026-05-30 21:55 JST</div>
     
-    <div class="card-actions"><a href="https://www.ricoh-imaging.co.jp/" target="_blank" rel="noopener" class="btn btn-secondary" data-track="product_click" data-product-id="prod_gr4_mono">&#128247; 公式で確認</a></div>
+    <div class="card-actions"></div>
+  </div>
+</div>
+<div class="deal-card stripe-camera" id="product-x100vi" data-brand="FUJIFILM" data-user-level="monitoring" data-genre="camera">
+  <div class="card-stripe monitoring"></div>
+  <div class="card-hd">
+    <div class="card-name">FUJIFILM X100VI</div>
+    <div class="card-tags">
+      <span class="badge badge-monitoring">監視中</span>
+      <span class="badge badge-camera">カメラ</span>
+    </div>
+  </div>
+  <div class="profit-section amber">
+    <div class="profit-left">
+      <div class="profit-lbl amber">差益（定価購入→最高買取）</div>
+      <div class="profit-num amber">計算不可（未取得）</div>
+    </div>
+    <div class="profit-right">
+      <div class="profit-note">買取価格取得中 / 監視中</div>
+    </div>
+  </div>
+  <div class="price-row-wrap">
+    <div class="price-cell">
+      <div class="price-cell-lbl">公式価格（定価）</div>
+      <div class="price-cell-val">¥269,500</div>
+    </div>
+    <div class="price-cell">
+      <div class="price-cell-lbl">最高買取価格</div>
+      <div class="price-cell-val" style="color:var(--ink3)">未取得</div>
+    </div>
+    <div class="price-cell" style="opacity:0.6">
+      <div class="price-cell-lbl">最高買取店</div>
+      <div class="price-cell-val" style="font-size:0.8rem">—</div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="updated-row"><span>&#128336;</span>スキャン：2026-05-30 21:55 JST</div>
+    
+    <div class="card-actions"></div>
+  </div>
+</div>
+<div class="deal-card stripe-camera" id="product-gr3x" data-brand="RICOH" data-user-level="monitoring" data-genre="camera">
+  <div class="card-stripe monitoring"></div>
+  <div class="card-hd">
+    <div class="card-name">RICOH GR IV</div>
+    <div class="card-tags">
+      <span class="badge badge-monitoring">監視中</span>
+      <span class="badge badge-camera">カメラ</span>
+    </div>
+  </div>
+  <div class="profit-section amber">
+    <div class="profit-left">
+      <div class="profit-lbl amber">差益（定価購入→最高買取）</div>
+      <div class="profit-num amber">計算不可（未取得）</div>
+    </div>
+    <div class="profit-right">
+      <div class="profit-note">買取価格取得中 / 監視中</div>
+    </div>
+  </div>
+  <div class="price-row-wrap">
+    <div class="price-cell">
+      <div class="price-cell-lbl">公式価格（定価）</div>
+      <div class="price-cell-val">¥139,800</div>
+    </div>
+    <div class="price-cell">
+      <div class="price-cell-lbl">最高買取価格</div>
+      <div class="price-cell-val" style="color:var(--ink3)">未取得</div>
+    </div>
+    <div class="price-cell" style="opacity:0.6">
+      <div class="price-cell-lbl">最高買取店</div>
+      <div class="price-cell-val" style="font-size:0.8rem">—</div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="updated-row"><span>&#128336;</span>スキャン：2026-05-30 21:55 JST</div>
+    
+    <div class="card-actions"></div>
   </div>
 </div>
 </div></div>
+<div class="collector-empty-notice"><p>現在、十分な自動取得データがありません。取得成功店舗が増え次第、案件を表示します。</p><p><a href="collector_report.html">取得状況の詳細はこちら</a></p></div>
 </div>
 <div id="category-beginner-wearable" style="margin-top:40px;scroll-margin-top:80px"><div class="sec-head"><div class="sec-title">&#8987; ウェアラブル</div><div class="sec-badge">2件</div></div><div class="genre-status-summary">利益あり 0 / 監視中 2 / 取得失敗 0</div>
 <div class="status-subsection"><div class="status-subhead status-monitoring">監視中（価格変動を監視中）</div><div class="cards-grid">
@@ -4404,6 +4672,52 @@ tr.sc-route-review { background: #FFFBEB; }
 </div>
 <div id="category-beginner-game" style="margin-top:40px;scroll-margin-top:80px"><div class="sec-head"><div class="sec-title">&#127918; ゲーム機</div><div class="sec-badge">5件</div></div><div class="genre-status-summary">利益あり 2 / 監視中 3 / 取得失敗 0</div>
 <div class="status-subsection"><div class="status-subhead status-profit">利益あり</div><div class="cards-grid">
+<div class="deal-card stripe-game" id="product-ps5_pro" data-brand="Sony" data-user-level="beginner_easy">
+  <div class="card-stripe game"></div>
+  <div class="card-hd">
+    <div class="card-name">PlayStation 5 Pro</div>
+    <div class="card-tags">
+      <span class="badge badge-easy">低難度</span>
+      <span class="badge badge-game">ゲーム機</span>
+    </div>
+  </div>
+  
+  <div class="profit-section">
+    <div class="profit-left">
+      <div class="profit-lbl">差益（定価購入→最高買取）</div>
+      <div class="profit-num">+¥68,220</div>
+    </div>
+    <div class="profit-right">
+      <div class="profit-rate">56.9%</div>
+      <div class="profit-note">定価購入→最高買取（参考値）</div>
+    </div>
+  </div>
+  <div class="price-row-wrap">
+    <div class="price-cell">
+      <div class="price-cell-lbl">公式価格（定価）</div>
+      <div class="price-cell-val">¥119,980</div>
+    </div>
+    <div class="price-cell">
+      <div class="price-cell-lbl">最高買取価格</div>
+      <div class="price-cell-val green">¥190,000</div>
+    </div>
+    
+  </div>
+  <div class="price-source-row" style="display:flex;gap:16px;flex-wrap:wrap;font-size:0.75rem;color:var(--ink3);padding:4px 0 2px;margin-top:2px;"><span>&#127978; 最高買取店：<strong>ゲオ</strong></span><span>&#9989; 状態：<strong>新品未開封</strong></span><span>&#128203; 取得方法：買取店（自動取得）</span><span>&#128197; 最終確認：2026-05-24</span></div>
+  <div class="card-body">
+    <div class="condition-row buyback-notice">
+      <span class="cond-icon">&#9888;</span>
+      <div><strong>買取条件：新品未開封</strong>&nbsp;<span style="font-size:0.72rem;color:var(--gray-400)">掲載価格は参考値です。売却前に必ず各社の公式買取ページで確認してください。</span></div>
+    </div>
+    <div class="updated-row"><span>&#128336;</span>価格確認：2026-05-24 21:23 JST</div>
+    <div class="shop-table buyback-shop-table buyback-table"><div class="shop-table-hd"><span>買取店比較（参照10店舗）</span><span class="freshness-warn" title="observed_at: 2026-05-24T21:23:12+09:00">自動取得 / 要更新 / 6日前</span></div><div class="shop-row"><div class="shop-rank gold">1</div><div class="shop-name-col">ゲオ</div><div class="shop-price-col">¥190,000</div><div class="shop-diff-col">+¥70,020</div><div class="shop-source-col"><span class="badge-auto">自動取得</span></div><div class="shop-link-col"><a href="https://www.geo-online.co.jp/store_info/buy/" target="_blank" rel="noopener noreferrer" class="shop-check-btn best" data-track="buyback_click" data-product-id="prod_ps5_pro">確認</a></div></div><div class="shop-row"><div class="shop-rank silver">2</div><div class="shop-name-col">買取商店</div><div class="shop-price-col">¥134,500</div><div class="shop-diff-col">+¥14,520</div><div class="shop-source-col"><span class="badge-auto">自動取得</span></div><div class="shop-link-col"><a href="https://www.kaitorishouten-co.jp/kaden" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="buyback_click" data-product-id="prod_ps5_pro">確認</a></div></div><div class="shop-row"><div class="shop-rank ">3</div><div class="shop-name-col">モバイル一番</div><div class="shop-price-col">¥134,500</div><div class="shop-diff-col">+¥14,520</div><div class="shop-source-col"><span class="badge-auto">自動取得</span></div><div class="shop-link-col"><a href="https://www.mobile-ichiban.com/" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="buyback_click" data-product-id="prod_ps5_pro">確認</a></div></div><div class="shop-row"><div class="shop-rank ">4</div><div class="shop-name-col">じゃんぱら</div><div class="shop-price-col">¥120,000</div><div class="shop-diff-col">+¥20</div><div class="shop-source-col"><span class="badge-manual">手動確認</span></div><div class="shop-link-col"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="buyback_click" data-product-id="prod_ps5_pro">確認</a></div></div><div class="shop-row"><div class="shop-rank ">5</div><div class="shop-name-col">イオシス</div><div class="shop-price-col">¥100,000</div><div class="shop-diff-col neg">-¥19,980</div><div class="shop-source-col"><span class="badge-auto">自動取得</span></div><div class="shop-link-col"><a href="https://k-tai-iosys.com/pricelist/game/hard/" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="buyback_click" data-product-id="prod_ps5_pro">確認</a></div></div><div class="shop-row shop-row-failed"><div class="shop-rank" style="color:var(--ink3)">—</div><div class="shop-name-col">ブックオフ</div><div class="shop-price-col" style="color:var(--ink3)">—</div><div class="shop-diff-col"><span class="freshness-warn freshness-fetch-failed" title="価格取得失敗">取得失敗 / 要確認</span></div><div class="shop-source-col"><span class="badge-failed">取得失敗</span></div><div class="shop-link-col"><a href="https://www.bookoffgroup.co.jp/sell/" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="buyback_click" data-product-id="prod_ps5_pro">確認</a></div></div><div class="shop-row shop-row-failed"><div class="shop-rank" style="color:var(--ink3)">—</div><div class="shop-name-col">ドスパラ</div><div class="shop-price-col" style="color:var(--ink3)">—</div><div class="shop-diff-col"><span class="freshness-warn freshness-fetch-failed" title="価格取得失敗">取得失敗 / 要確認</span></div><div class="shop-source-col"><span class="badge-failed">取得失敗</span></div><div class="shop-link-col"><a href="https://www.dospara.co.jp/kaitori/" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="buyback_click" data-product-id="prod_ps5_pro">確認</a></div></div><div class="shop-row shop-row-failed"><div class="shop-rank" style="color:var(--ink3)">—</div><div class="shop-name-col">ハードオフ</div><div class="shop-price-col" style="color:var(--ink3)">—</div><div class="shop-diff-col"><span class="freshness-warn freshness-fetch-failed" title="価格取得失敗">取得失敗 / 要確認</span></div><div class="shop-source-col"><span class="badge-failed">取得失敗</span></div><div class="shop-link-col"><a href="https://www.hardoff.co.jp/search/" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="buyback_click" data-product-id="prod_ps5_pro">確認</a></div></div><div class="shop-row shop-row-failed"><div class="shop-rank" style="color:var(--ink3)">—</div><div class="shop-name-col">パソコン工房</div><div class="shop-price-col" style="color:var(--ink3)">—</div><div class="shop-diff-col"><span class="freshness-warn freshness-fetch-failed" title="価格取得失敗">取得失敗 / 要確認</span></div><div class="shop-source-col"><span class="badge-failed">取得失敗</span></div><div class="shop-link-col"><a href="https://www.pc-koubou.jp/pc/used/buy/" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="buyback_click" data-product-id="prod_ps5_pro">確認</a></div></div><div class="shop-row shop-row-failed"><div class="shop-rank" style="color:var(--ink3)">—</div><div class="shop-name-col">ソフマップ</div><div class="shop-price-col" style="color:var(--ink3)">—</div><div class="shop-diff-col"><span class="freshness-warn freshness-fetch-failed" title="価格取得失敗">取得失敗 / 要確認</span></div><div class="shop-source-col"><span class="badge-failed">取得失敗</span></div><div class="shop-link-col"><a href="https://www.sofmap.com/buy_list.aspx" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="buyback_click" data-product-id="prod_ps5_pro">確認</a></div></div></div>
+    <div class="card-actions">
+      
+      <a href="https://www.geo-online.co.jp/store_info/buy/" target="_blank" rel="noopener noreferrer" class="btn btn-primary" data-track="product_click" data-product-id="prod_ps5_pro" data-shop="ゲオ">&#128176; 公式サイトで確認</a>
+    </div>
+    
+  </div>
+</div>
 <div class="deal-card stripe-game" id="product-switch2_mk" data-brand="Nintendo" data-user-level="beginner_easy">
   <div class="card-stripe game"></div>
   <div class="card-hd">
@@ -4450,48 +4764,48 @@ tr.sc-route-review { background: #FFFBEB; }
     
   </div>
 </div>
-<div class="deal-card stripe-game" id="product-ps5_pro" data-brand="Sony" data-user-level="beginner_easy">
+<div class="deal-card stripe-game" id="product-switch2" data-brand="Nintendo" data-user-level="beginner_watch">
   <div class="card-stripe game"></div>
   <div class="card-hd">
-    <div class="card-name">PlayStation 5 Pro</div>
+    <div class="card-name">Nintendo Switch 2</div>
     <div class="card-tags">
-      <span class="badge badge-easy">低難度</span>
+      <span class="badge badge-watch">様子見</span>
       <span class="badge badge-game">ゲーム機</span>
     </div>
   </div>
   
-  <div class="profit-section">
+  <div class="profit-section amber">
     <div class="profit-left">
-      <div class="profit-lbl">差益（定価購入→最高買取）</div>
-      <div class="profit-num">+¥12,720</div>
+      <div class="profit-lbl amber">差益（定価購入→最高買取）</div>
+      <div class="profit-num amber">+¥3,720</div>
     </div>
     <div class="profit-right">
-      <div class="profit-rate">10.6%</div>
-      <div class="profit-note">定価購入→最高買取（参考値）</div>
+      <div class="profit-rate amber">7.4%</div>
+      <div class="profit-note">利益率が低め。様子見推奨</div>
     </div>
   </div>
   <div class="price-row-wrap">
     <div class="price-cell">
       <div class="price-cell-lbl">公式価格（定価）</div>
-      <div class="price-cell-val">¥119,980</div>
+      <div class="price-cell-val">¥49,980</div>
     </div>
     <div class="price-cell">
       <div class="price-cell-lbl">最高買取価格</div>
-      <div class="price-cell-val green">¥134,500</div>
+      <div class="price-cell-val green">¥55,500</div>
     </div>
     
   </div>
-  <div class="price-source-row" style="display:flex;gap:16px;flex-wrap:wrap;font-size:0.75rem;color:var(--ink3);padding:4px 0 2px;margin-top:2px;"><span>&#127978; 最高買取店：<strong>買取商店</strong></span><span>&#9989; 状態：<strong>new_unopened</strong></span><span>&#128203; 取得方法：二次流通（参考）</span><span>&#128197; 最終確認：2026-05-31</span></div>
+  <div class="price-source-row" style="display:flex;gap:16px;flex-wrap:wrap;font-size:0.75rem;color:var(--ink3);padding:4px 0 2px;margin-top:2px;"><span>&#127978; 最高買取店：<strong>じゃんぱら</strong></span><span>&#9989; 状態：<strong>new_unopened</strong></span><span>&#128203; 取得方法：手動確認</span><span>&#128197; 最終確認：2026-05-20</span></div>
   <div class="card-body">
     <div class="condition-row buyback-notice">
       <span class="cond-icon">&#9888;</span>
       <div><strong>買取条件：new_unopened</strong>&nbsp;<span style="font-size:0.72rem;color:var(--gray-400)">掲載価格は参考値です。売却前に必ず各社の公式買取ページで確認してください。</span></div>
     </div>
-    <div class="updated-row"><span>&#128336;</span>価格確認：2026-05-31 02:01 JST</div>
-    <div class="shop-table buyback-shop-table buyback-table"><div class="shop-table-hd"><span>買取店比較（参照9店舗）</span><span class="freshness-auto" title="observed_at: 2026-05-31T01:55:53+09:00">自動取得 / 価格確認: 05/31 01:55</span></div><div class="shop-row"><div class="shop-rank gold">1</div><div class="shop-name-col">買取商店</div><div class="shop-price-col">¥134,500</div><div class="shop-diff-col">+¥14,520</div><div class="shop-source-col"><span class="badge-auto">自動取得</span></div><div class="shop-link-col"><a href="https://www.kaitorishouten-co.jp/kaden" target="_blank" rel="noopener noreferrer" class="shop-check-btn best" data-track="buyback_click" data-product-id="prod_ps5_pro">確認</a></div></div><div class="shop-row"><div class="shop-rank silver">2</div><div class="shop-name-col">イオシス</div><div class="shop-price-col">¥100,000</div><div class="shop-diff-col neg">-¥19,980</div><div class="shop-source-col"><span class="badge-auto">自動取得</span></div><div class="shop-link-col"><a href="https://k-tai-iosys.com/pricelist/game/hard/" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="buyback_click" data-product-id="prod_ps5_pro">確認</a></div></div><div class="shop-row shop-row-failed"><div class="shop-rank" style="color:var(--ink3)">—</div><div class="shop-name-col">ブックオフ</div><div class="shop-price-col" style="color:var(--ink3)">—</div><div class="shop-diff-col"><span class="freshness-warn freshness-fetch-failed" title="価格取得失敗">取得失敗 / 要確認</span></div><div class="shop-source-col"><span class="badge-failed">取得失敗</span></div><div class="shop-link-col"><a href="https://www.bookoffgroup.co.jp/sell/" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="buyback_click" data-product-id="prod_ps5_pro">確認</a></div></div><div class="shop-row shop-row-failed"><div class="shop-rank" style="color:var(--ink3)">—</div><div class="shop-name-col">ドスパラ</div><div class="shop-price-col" style="color:var(--ink3)">—</div><div class="shop-diff-col"><span class="freshness-warn freshness-fetch-failed" title="価格取得失敗">取得失敗 / 要確認</span></div><div class="shop-source-col"><span class="badge-failed">取得失敗</span></div><div class="shop-link-col"><a href="https://www.dospara.co.jp/kaitori/" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="buyback_click" data-product-id="prod_ps5_pro">確認</a></div></div><div class="shop-row shop-row-failed"><div class="shop-rank" style="color:var(--ink3)">—</div><div class="shop-name-col">ハードオフ</div><div class="shop-price-col" style="color:var(--ink3)">—</div><div class="shop-diff-col"><span class="freshness-warn freshness-fetch-failed" title="価格取得失敗">取得失敗 / 要確認</span></div><div class="shop-source-col"><span class="badge-failed">取得失敗</span></div><div class="shop-link-col"><a href="https://www.hardoff.co.jp/search/" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="buyback_click" data-product-id="prod_ps5_pro">確認</a></div></div><div class="shop-row shop-row-failed"><div class="shop-rank" style="color:var(--ink3)">—</div><div class="shop-name-col">じゃんぱら</div><div class="shop-price-col" style="color:var(--ink3)">—</div><div class="shop-diff-col"><span class="freshness-warn freshness-fetch-failed" title="価格取得失敗">取得失敗 / 要確認</span></div><div class="shop-source-col"><span class="badge-failed">取得失敗</span></div><div class="shop-link-col"><a href="https://buy.janpara.co.jp/buy/" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="buyback_click" data-product-id="prod_ps5_pro">確認</a></div></div><div class="shop-row shop-row-failed"><div class="shop-rank" style="color:var(--ink3)">—</div><div class="shop-name-col">ソフマップ</div><div class="shop-price-col" style="color:var(--ink3)">—</div><div class="shop-diff-col"><span class="freshness-warn freshness-fetch-failed" title="価格取得失敗">取得失敗 / 要確認</span></div><div class="shop-source-col"><span class="badge-failed">取得失敗</span></div><div class="shop-link-col"><a href="https://www.sofmap.com/buy_list.aspx" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="buyback_click" data-product-id="prod_ps5_pro">確認</a></div></div><div class="shop-row shop-row-failed"><div class="shop-rank" style="color:var(--ink3)">—</div><div class="shop-name-col">駿河屋</div><div class="shop-price-col" style="color:var(--ink3)">—</div><div class="shop-diff-col"><span class="freshness-warn freshness-fetch-failed" title="価格取得失敗">取得失敗 / 要確認</span></div><div class="shop-source-col"><span class="badge-failed">取得失敗</span></div><div class="shop-link-col"><a href="https://www.suruga-ya.jp/kaitori/" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="buyback_click" data-product-id="prod_ps5_pro">確認</a></div></div><div class="shop-row shop-row-failed"><div class="shop-rank" style="color:var(--ink3)">—</div><div class="shop-name-col">TSUTAYA</div><div class="shop-price-col" style="color:var(--ink3)">—</div><div class="shop-diff-col"><span class="freshness-warn freshness-fetch-failed" title="価格取得失敗">取得失敗 / 要確認</span></div><div class="shop-source-col"><span class="badge-failed">取得失敗</span></div><div class="shop-link-col"><a href="https://tsutaya.tsite.jp/feature/kaitori/" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="buyback_click" data-product-id="prod_ps5_pro">確認</a></div></div></div>
+    <div class="updated-row"><span>&#128336;</span>価格確認：2026-05-20 12:00 JST</div>
+    <div class="shop-table buyback-shop-table buyback-table"><div class="shop-table-hd"><span>買取店比較（参照10店舗）</span><span class="freshness-warn" title="observed_at: 2026-05-20T12:00:00+09:00">参考データ / 要更新 / 10日前</span></div><div class="shop-row"><div class="shop-rank gold">1</div><div class="shop-name-col">じゃんぱら</div><div class="shop-price-col">¥55,500</div><div class="shop-diff-col">+¥5,520</div><div class="shop-source-col"><span class="badge-manual">手動確認</span></div><div class="shop-link-col"><a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener noreferrer" class="shop-check-btn best" data-track="buyback_click" data-product-id="prod_switch2">確認</a></div></div><div class="shop-row"><div class="shop-rank silver">2</div><div class="shop-name-col">ゲオ</div><div class="shop-price-col">¥50,000</div><div class="shop-diff-col">+¥20</div><div class="shop-source-col"><span class="badge-auto">自動取得</span></div><div class="shop-link-col"><a href="https://www.geo-online.co.jp/store_info/buy/" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="buyback_click" data-product-id="prod_switch2">確認</a></div></div><div class="shop-row"><div class="shop-rank ">3</div><div class="shop-name-col">買取商店</div><div class="shop-price-col">¥49,800</div><div class="shop-diff-col neg">-¥180</div><div class="shop-source-col"><span class="badge-auto">自動取得</span></div><div class="shop-link-col"><a href="https://www.kaitorishouten-co.jp/kaden" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="buyback_click" data-product-id="prod_switch2">確認</a></div></div><div class="shop-row"><div class="shop-rank ">4</div><div class="shop-name-col">イオシス</div><div class="shop-price-col">¥46,000</div><div class="shop-diff-col neg">-¥3,980</div><div class="shop-source-col"><span class="badge-auto">自動取得</span></div><div class="shop-link-col"><a href="https://k-tai-iosys.com/pricelist/game/hard/" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="buyback_click" data-product-id="prod_switch2">確認</a></div></div><div class="shop-row shop-row-failed"><div class="shop-rank" style="color:var(--ink3)">—</div><div class="shop-name-col">ブックオフ</div><div class="shop-price-col" style="color:var(--ink3)">—</div><div class="shop-diff-col"><span class="freshness-warn freshness-fetch-failed" title="価格取得失敗">取得失敗 / 要確認</span></div><div class="shop-source-col"><span class="badge-failed">取得失敗</span></div><div class="shop-link-col"><a href="https://www.bookoffgroup.co.jp/sell/" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="buyback_click" data-product-id="prod_switch2">確認</a></div></div><div class="shop-row shop-row-failed"><div class="shop-rank" style="color:var(--ink3)">—</div><div class="shop-name-col">ドスパラ</div><div class="shop-price-col" style="color:var(--ink3)">—</div><div class="shop-diff-col"><span class="freshness-warn freshness-fetch-failed" title="価格取得失敗">取得失敗 / 要確認</span></div><div class="shop-source-col"><span class="badge-failed">取得失敗</span></div><div class="shop-link-col"><a href="https://www.dospara.co.jp/kaitori/" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="buyback_click" data-product-id="prod_switch2">確認</a></div></div><div class="shop-row shop-row-failed"><div class="shop-rank" style="color:var(--ink3)">—</div><div class="shop-name-col">ハードオフ</div><div class="shop-price-col" style="color:var(--ink3)">—</div><div class="shop-diff-col"><span class="freshness-warn freshness-fetch-failed" title="価格取得失敗">取得失敗 / 要確認</span></div><div class="shop-source-col"><span class="badge-failed">取得失敗</span></div><div class="shop-link-col"><a href="https://www.hardoff.co.jp/search/" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="buyback_click" data-product-id="prod_switch2">確認</a></div></div><div class="shop-row shop-row-failed"><div class="shop-rank" style="color:var(--ink3)">—</div><div class="shop-name-col">パソコン工房</div><div class="shop-price-col" style="color:var(--ink3)">—</div><div class="shop-diff-col"><span class="freshness-warn freshness-fetch-failed" title="価格取得失敗">取得失敗 / 要確認</span></div><div class="shop-source-col"><span class="badge-failed">取得失敗</span></div><div class="shop-link-col"><a href="https://www.pc-koubou.jp/pc/used/buy/" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="buyback_click" data-product-id="prod_switch2">確認</a></div></div><div class="shop-row shop-row-failed"><div class="shop-rank" style="color:var(--ink3)">—</div><div class="shop-name-col">ソフマップ</div><div class="shop-price-col" style="color:var(--ink3)">—</div><div class="shop-diff-col"><span class="freshness-warn freshness-fetch-failed" title="価格取得失敗">取得失敗 / 要確認</span></div><div class="shop-source-col"><span class="badge-failed">取得失敗</span></div><div class="shop-link-col"><a href="https://www.sofmap.com/buy_list.aspx" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="buyback_click" data-product-id="prod_switch2">確認</a></div></div><div class="shop-row shop-row-failed"><div class="shop-rank" style="color:var(--ink3)">—</div><div class="shop-name-col">駿河屋</div><div class="shop-price-col" style="color:var(--ink3)">—</div><div class="shop-diff-col"><span class="freshness-warn freshness-fetch-failed" title="価格取得失敗">取得失敗 / 要確認</span></div><div class="shop-source-col"><span class="badge-failed">取得失敗</span></div><div class="shop-link-col"><a href="https://www.suruga-ya.jp/kaitori/" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="buyback_click" data-product-id="prod_switch2">確認</a></div></div></div>
     <div class="card-actions">
       
-      <a href="https://www.kaitorishouten-co.jp/kaden" target="_blank" rel="noopener noreferrer" class="btn btn-primary" data-track="product_click" data-product-id="prod_ps5_pro" data-shop="買取商店">&#128176; 公式サイトで確認</a>
+      <a href="https://www.janpara.co.jp/sell/" target="_blank" rel="noopener noreferrer" class="btn btn-primary" data-track="product_click" data-product-id="prod_switch2" data-shop="じゃんぱら">&#128176; 公式サイトで確認</a>
     </div>
     
   </div>
@@ -4660,7 +4974,7 @@ tr.sc-route-review { background: #FFFBEB; }
   </div>
   <div class="pcc-links-section" style="margin-top:12px">
     <div class="pcc-links-label">&#127758; 海外相場</div>
-    <table class="pro-price-table pro-overseas-price-table"><thead><tr><th>サイト</th><th>参考価格（円換算）</th><th>種別</th><th>取得方法</th><th>確認日</th><th></th></tr></thead><tbody><tr class="pro-overseas-row pro-row-has-price"><td class="pro-src-cell"><strong class="pro-src-name">eBay</strong></td><td class="pro-price-cell"><strong class="price-value">¥563,930</strong><small class="pro-jpy-note">（円換算）</small></td><td class="pro-basis-cell"><span class="pro-price-basis">海外sold</span></td><td class="pro-method-cell"><span class="collector-method-badge cm-manual">eBay 手動確認</span></td><td class="pro-meta-cell"><span class="freshness-warn" title="observed_at: 2026-05-28T10:00:00+09:00">要更新 / 2日前</span></td><td class="pro-action-cell"><a href="https://www.ebay.com/sch/i.html?_nkw=FUJIFILM%20X100VI&amp;LH_Sold=1&amp;LH_Complete=1" target="_blank" rel="noopener noreferrer" class="pro-link-btn" data-track="pro_overseas_click">相場確認</a></td></tr></tbody></table><div class="pro-no-price-section"><span class="pro-no-price-label">海外相場確認リンク（価格未取得）</span><div class="pro-no-price-chips"><a href="https://stockx.com/search?s=FUJIFILM%20X100VI" class="pro-no-price-chip" target="_blank" rel="noopener noreferrer" data-track="pro_overseas_click">StockX</a><a href="https://www.bhphotovideo.com/c/search?Ntt=FUJIFILM%20X100VI" class="pro-no-price-chip" target="_blank" rel="noopener noreferrer" data-track="pro_overseas_click">B&amp;H Photo</a><a href="https://www.adorama.com/l/?searchinfo=FUJIFILM%20X100VI" class="pro-no-price-chip" target="_blank" rel="noopener noreferrer" data-track="pro_overseas_click">Adorama</a><a href="https://www.mpb.com/en-us/cameras/?q=FUJIFILM%20X100VI" class="pro-no-price-chip" target="_blank" rel="noopener noreferrer" data-track="pro_overseas_click">MPB</a><a href="https://www.keh.com/search#FUJIFILM%20X100VI" class="pro-no-price-chip" target="_blank" rel="noopener noreferrer" data-track="pro_overseas_click">KEH</a><a href="https://www.amazon.com/s?k=FUJIFILM%20X100VI" class="pro-no-price-chip" target="_blank" rel="noopener noreferrer" data-track="pro_overseas_click">Amazon US</a></div></div><p class="pro-overseas-note">※ メルカリ・eBay等は販売手数料、送料、為替変動、関税が発生します。表示利益は参考値です。（eBay販売手数料 約13% / メルカリ 10%）</p>
+    <table class="pro-price-table pro-overseas-price-table"><thead><tr><th>サイト</th><th>参考価格（円換算）</th><th>種別</th><th>取得方法</th><th>確認日</th><th></th></tr></thead><tbody><tr class="pro-overseas-row pro-row-has-price"><td class="pro-src-cell"><strong class="pro-src-name">eBay</strong></td><td class="pro-price-cell"><strong class="price-value">¥548,900</strong><small class="pro-jpy-note">（円換算）</small></td><td class="pro-basis-cell"><span class="pro-price-basis">海外sold</span></td><td class="pro-method-cell"><span class="collector-method-badge cm-manual">eBay 手動確認</span></td><td class="pro-meta-cell"><span class="freshness-warn" title="observed_at: 2026-05-20T10:00:00+09:00">要更新 / 11日前</span></td><td class="pro-action-cell"><a href="https://www.ebay.com/sch/i.html?_nkw=FUJIFILM%20X100VI&amp;LH_Sold=1&amp;LH_Complete=1" target="_blank" rel="noopener noreferrer" class="pro-link-btn" data-track="pro_overseas_click">相場確認</a></td></tr><tr class="pro-overseas-row pro-row-has-price"><td class="pro-src-cell"><strong class="pro-src-name">B&amp;H Photo</strong></td><td class="pro-price-cell"><strong class="price-value">¥275,929</strong><small class="pro-jpy-note">（円換算）</small></td><td class="pro-basis-cell"><span class="pro-price-basis">海外販売価格</span></td><td class="pro-method-cell"><span class="collector-method-badge cm-manual">eBay 手動確認</span></td><td class="pro-meta-cell"><span class="freshness-warn" title="observed_at: 2026-05-20T10:00:00+09:00">要更新 / 11日前</span></td><td class="pro-action-cell"><a href="https://www.bhphotovideo.com/c/search?Ntt=FUJIFILM%20X100VI" target="_blank" rel="noopener noreferrer" class="pro-link-btn" data-track="pro_overseas_click">相場確認</a></td></tr></tbody></table><div class="pro-no-price-section"><span class="pro-no-price-label">海外相場確認リンク（価格未取得）</span><div class="pro-no-price-chips"><a href="https://stockx.com/search?s=FUJIFILM%20X100VI" class="pro-no-price-chip" target="_blank" rel="noopener noreferrer" data-track="pro_overseas_click">StockX</a><a href="https://www.adorama.com/l/?searchinfo=FUJIFILM%20X100VI" class="pro-no-price-chip" target="_blank" rel="noopener noreferrer" data-track="pro_overseas_click">Adorama</a><a href="https://www.mpb.com/en-us/cameras/?q=FUJIFILM%20X100VI" class="pro-no-price-chip" target="_blank" rel="noopener noreferrer" data-track="pro_overseas_click">MPB</a><a href="https://www.keh.com/search#FUJIFILM%20X100VI" class="pro-no-price-chip" target="_blank" rel="noopener noreferrer" data-track="pro_overseas_click">KEH</a><a href="https://www.amazon.com/s?k=FUJIFILM%20X100VI" class="pro-no-price-chip" target="_blank" rel="noopener noreferrer" data-track="pro_overseas_click">Amazon US</a></div></div><p class="pro-overseas-note">※ メルカリ・eBay等は販売手数料、送料、為替変動、関税が発生します。表示利益は参考値です。（eBay販売手数料 約13% / メルカリ 10%）</p>
   </div>
 </div>
 <div id="category-pro-camera-ricoh" class="watch-candidate-card pro-candidate-card" data-genre="camera" data-has-overseas-sold="1" data-has-price-gap="1" data-has-overseas="1" data-has-domestic="1" data-needs-check="0">
@@ -4686,7 +5000,7 @@ tr.sc-route-review { background: #FFFBEB; }
   </div>
   <div class="pcc-links-section" style="margin-top:12px">
     <div class="pcc-links-label">&#127758; 海外相場</div>
-    <table class="pro-price-table pro-overseas-price-table"><thead><tr><th>サイト</th><th>参考価格（円換算）</th><th>種別</th><th>取得方法</th><th>確認日</th><th></th></tr></thead><tbody><tr class="pro-overseas-row pro-row-has-price"><td class="pro-src-cell"><strong class="pro-src-name">eBay</strong></td><td class="pro-price-cell"><strong class="price-value">¥248,575</strong><small class="pro-jpy-note">（円換算）</small></td><td class="pro-basis-cell"><span class="pro-price-basis">海外sold</span></td><td class="pro-method-cell"><span class="collector-method-badge cm-manual">eBay 手動確認</span></td><td class="pro-meta-cell"><span class="freshness-warn" title="observed_at: 2026-05-28T10:00:00+09:00">要更新 / 2日前</span></td><td class="pro-action-cell"><a href="https://www.ebay.com/sch/i.html?_nkw=RICOH%20GR%20IIIx&amp;LH_Sold=1&amp;LH_Complete=1" target="_blank" rel="noopener noreferrer" class="pro-link-btn" data-track="pro_overseas_click">相場確認</a></td></tr></tbody></table><div class="pro-no-price-section"><span class="pro-no-price-label">海外相場確認リンク（価格未取得）</span><div class="pro-no-price-chips"><a href="https://stockx.com/search?s=RICOH%20GR%20IIIx" class="pro-no-price-chip" target="_blank" rel="noopener noreferrer" data-track="pro_overseas_click">StockX</a><a href="https://www.bhphotovideo.com/c/search?Ntt=RICOH%20GR%20IIIx" class="pro-no-price-chip" target="_blank" rel="noopener noreferrer" data-track="pro_overseas_click">B&amp;H Photo</a><a href="https://www.adorama.com/l/?searchinfo=RICOH%20GR%20IIIx" class="pro-no-price-chip" target="_blank" rel="noopener noreferrer" data-track="pro_overseas_click">Adorama</a><a href="https://www.mpb.com/en-us/cameras/?q=RICOH%20GR%20IIIx" class="pro-no-price-chip" target="_blank" rel="noopener noreferrer" data-track="pro_overseas_click">MPB</a><a href="https://www.keh.com/search#RICOH%20GR%20IIIx" class="pro-no-price-chip" target="_blank" rel="noopener noreferrer" data-track="pro_overseas_click">KEH</a><a href="https://www.amazon.com/s?k=RICOH%20GR%20IIIx" class="pro-no-price-chip" target="_blank" rel="noopener noreferrer" data-track="pro_overseas_click">Amazon US</a></div></div><p class="pro-overseas-note">※ メルカリ・eBay等は販売手数料、送料、為替変動、関税が発生します。表示利益は参考値です。（eBay販売手数料 約13% / メルカリ 10%）</p>
+    <table class="pro-price-table pro-overseas-price-table"><thead><tr><th>サイト</th><th>参考価格（円換算）</th><th>種別</th><th>取得方法</th><th>確認日</th><th></th></tr></thead><tbody><tr class="pro-overseas-row pro-row-has-price"><td class="pro-src-cell"><strong class="pro-src-name">eBay</strong></td><td class="pro-price-cell"><strong class="price-value">¥242,000</strong><small class="pro-jpy-note">（円換算）</small></td><td class="pro-basis-cell"><span class="pro-price-basis">海外sold</span></td><td class="pro-method-cell"><span class="collector-method-badge cm-manual">eBay 手動確認</span></td><td class="pro-meta-cell"><span class="freshness-warn" title="observed_at: 2026-05-20T10:00:00+09:00">要更新 / 11日前</span></td><td class="pro-action-cell"><a href="https://www.ebay.com/sch/i.html?_nkw=RICOH%20GR%20IIIx&amp;LH_Sold=1&amp;LH_Complete=1" target="_blank" rel="noopener noreferrer" class="pro-link-btn" data-track="pro_overseas_click">相場確認</a></td></tr></tbody></table><div class="pro-no-price-section"><span class="pro-no-price-label">海外相場確認リンク（価格未取得）</span><div class="pro-no-price-chips"><a href="https://stockx.com/search?s=RICOH%20GR%20IIIx" class="pro-no-price-chip" target="_blank" rel="noopener noreferrer" data-track="pro_overseas_click">StockX</a><a href="https://www.bhphotovideo.com/c/search?Ntt=RICOH%20GR%20IIIx" class="pro-no-price-chip" target="_blank" rel="noopener noreferrer" data-track="pro_overseas_click">B&amp;H Photo</a><a href="https://www.adorama.com/l/?searchinfo=RICOH%20GR%20IIIx" class="pro-no-price-chip" target="_blank" rel="noopener noreferrer" data-track="pro_overseas_click">Adorama</a><a href="https://www.mpb.com/en-us/cameras/?q=RICOH%20GR%20IIIx" class="pro-no-price-chip" target="_blank" rel="noopener noreferrer" data-track="pro_overseas_click">MPB</a><a href="https://www.keh.com/search#RICOH%20GR%20IIIx" class="pro-no-price-chip" target="_blank" rel="noopener noreferrer" data-track="pro_overseas_click">KEH</a><a href="https://www.amazon.com/s?k=RICOH%20GR%20IIIx" class="pro-no-price-chip" target="_blank" rel="noopener noreferrer" data-track="pro_overseas_click">Amazon US</a></div></div><p class="pro-overseas-note">※ メルカリ・eBay等は販売手数料、送料、為替変動、関税が発生します。表示利益は参考値です。（eBay販売手数料 約13% / メルカリ 10%）</p>
   </div>
 </div>
 <div class="watch-candidate-card pro-candidate-card" data-genre="camera" data-has-overseas-sold="1" data-has-price-gap="1" data-has-overseas="1" data-has-domestic="1" data-needs-check="0">
@@ -4712,7 +5026,7 @@ tr.sc-route-review { background: #FFFBEB; }
   </div>
   <div class="pcc-links-section" style="margin-top:12px">
     <div class="pcc-links-label">&#127758; 海外相場</div>
-    <table class="pro-price-table pro-overseas-price-table"><thead><tr><th>サイト</th><th>参考価格（円換算）</th><th>種別</th><th>取得方法</th><th>確認日</th><th></th></tr></thead><tbody><tr class="pro-overseas-row pro-row-has-price"><td class="pro-src-cell"><strong class="pro-src-name">eBay</strong></td><td class="pro-price-cell"><strong class="price-value">¥327,413</strong><small class="pro-jpy-note">（円換算）</small></td><td class="pro-basis-cell"><span class="pro-price-basis">海外sold</span></td><td class="pro-method-cell"><span class="collector-method-badge cm-manual">eBay 手動確認</span></td><td class="pro-meta-cell"><span class="freshness-warn" title="observed_at: 2026-05-28T10:00:00+09:00">要更新 / 2日前</span></td><td class="pro-action-cell"><a href="https://www.ebay.com/sch/i.html?_nkw=RICOH%20GR%20IV&amp;LH_Sold=1&amp;LH_Complete=1" target="_blank" rel="noopener noreferrer" class="pro-link-btn" data-track="pro_overseas_click">相場確認</a></td></tr></tbody></table><div class="pro-no-price-section"><span class="pro-no-price-label">海外相場確認リンク（価格未取得）</span><div class="pro-no-price-chips"><a href="https://stockx.com/search?s=RICOH%20GR%20IV" class="pro-no-price-chip" target="_blank" rel="noopener noreferrer" data-track="pro_overseas_click">StockX</a><a href="https://www.bhphotovideo.com/c/search?Ntt=RICOH%20GR%20IV" class="pro-no-price-chip" target="_blank" rel="noopener noreferrer" data-track="pro_overseas_click">B&amp;H Photo</a><a href="https://www.adorama.com/l/?searchinfo=RICOH%20GR%20IV" class="pro-no-price-chip" target="_blank" rel="noopener noreferrer" data-track="pro_overseas_click">Adorama</a><a href="https://www.mpb.com/en-us/cameras/?q=RICOH%20GR%20IV" class="pro-no-price-chip" target="_blank" rel="noopener noreferrer" data-track="pro_overseas_click">MPB</a><a href="https://www.keh.com/search#RICOH%20GR%20IV" class="pro-no-price-chip" target="_blank" rel="noopener noreferrer" data-track="pro_overseas_click">KEH</a><a href="https://www.amazon.com/s?k=RICOH%20GR%20IV" class="pro-no-price-chip" target="_blank" rel="noopener noreferrer" data-track="pro_overseas_click">Amazon US</a></div></div><p class="pro-overseas-note">※ メルカリ・eBay等は販売手数料、送料、為替変動、関税が発生します。表示利益は参考値です。（eBay販売手数料 約13% / メルカリ 10%）</p>
+    <table class="pro-price-table pro-overseas-price-table"><thead><tr><th>サイト</th><th>参考価格（円換算）</th><th>種別</th><th>取得方法</th><th>確認日</th><th></th></tr></thead><tbody><tr class="pro-overseas-row pro-row-has-price"><td class="pro-src-cell"><strong class="pro-src-name">eBay</strong></td><td class="pro-price-cell"><strong class="price-value">¥318,725</strong><small class="pro-jpy-note">（円換算）</small></td><td class="pro-basis-cell"><span class="pro-price-basis">海外sold</span></td><td class="pro-method-cell"><span class="collector-method-badge cm-manual">eBay 手動確認</span></td><td class="pro-meta-cell"><span class="freshness-warn" title="observed_at: 2026-05-20T10:00:00+09:00">要更新 / 11日前</span></td><td class="pro-action-cell"><a href="https://www.ebay.com/sch/i.html?_nkw=RICOH%20GR%20IV&amp;LH_Sold=1&amp;LH_Complete=1" target="_blank" rel="noopener noreferrer" class="pro-link-btn" data-track="pro_overseas_click">相場確認</a></td></tr><tr class="pro-overseas-row pro-row-has-price"><td class="pro-src-cell"><strong class="pro-src-name">B&amp;H Photo</strong></td><td class="pro-price-cell"><strong class="price-value">¥190,679</strong><small class="pro-jpy-note">（円換算）</small></td><td class="pro-basis-cell"><span class="pro-price-basis">海外販売価格</span></td><td class="pro-method-cell"><span class="collector-method-badge cm-manual">eBay 手動確認</span></td><td class="pro-meta-cell"><span class="freshness-warn" title="observed_at: 2026-05-20T10:00:00+09:00">要更新 / 11日前</span></td><td class="pro-action-cell"><a href="https://www.bhphotovideo.com/c/search?Ntt=RICOH%20GR%20IV" target="_blank" rel="noopener noreferrer" class="pro-link-btn" data-track="pro_overseas_click">相場確認</a></td></tr></tbody></table><div class="pro-no-price-section"><span class="pro-no-price-label">海外相場確認リンク（価格未取得）</span><div class="pro-no-price-chips"><a href="https://stockx.com/search?s=RICOH%20GR%20IV" class="pro-no-price-chip" target="_blank" rel="noopener noreferrer" data-track="pro_overseas_click">StockX</a><a href="https://www.adorama.com/l/?searchinfo=RICOH%20GR%20IV" class="pro-no-price-chip" target="_blank" rel="noopener noreferrer" data-track="pro_overseas_click">Adorama</a><a href="https://www.mpb.com/en-us/cameras/?q=RICOH%20GR%20IV" class="pro-no-price-chip" target="_blank" rel="noopener noreferrer" data-track="pro_overseas_click">MPB</a><a href="https://www.keh.com/search#RICOH%20GR%20IV" class="pro-no-price-chip" target="_blank" rel="noopener noreferrer" data-track="pro_overseas_click">KEH</a><a href="https://www.amazon.com/s?k=RICOH%20GR%20IV" class="pro-no-price-chip" target="_blank" rel="noopener noreferrer" data-track="pro_overseas_click">Amazon US</a></div></div><p class="pro-overseas-note">※ メルカリ・eBay等は販売手数料、送料、為替変動、関税が発生します。表示利益は参考値です。（eBay販売手数料 約13% / メルカリ 10%）</p>
   </div>
 </div>
 <div id="category-pro-game" class="watch-candidate-card pro-candidate-card" data-genre="game_console" data-has-overseas-sold="1" data-has-price-gap="0" data-has-overseas="1" data-has-domestic="0" data-needs-check="1">
@@ -4738,7 +5052,7 @@ tr.sc-route-review { background: #FFFBEB; }
   </div>
   <div class="pcc-links-section" style="margin-top:12px">
     <div class="pcc-links-label">&#127758; 海外相場</div>
-    <table class="pro-price-table pro-overseas-price-table"><thead><tr><th>サイト</th><th>参考価格（円換算）</th><th>種別</th><th>取得方法</th><th>確認日</th><th></th></tr></thead><tbody><tr class="pro-overseas-row pro-row-has-price"><td class="pro-src-cell"><strong class="pro-src-name">eBay</strong></td><td class="pro-price-cell"><strong class="price-value">¥87,393</strong><small class="pro-jpy-note">（円換算）</small></td><td class="pro-basis-cell"><span class="pro-price-basis">海外sold</span></td><td class="pro-method-cell"><span class="collector-method-badge cm-manual">eBay 手動確認</span></td><td class="pro-meta-cell"><span class="freshness-warn" title="observed_at: 2026-05-28T10:00:00+09:00">要更新 / 2日前</span></td><td class="pro-action-cell"><a href="https://www.ebay.com/sch/i.html?_nkw=Nintendo%20Switch%202&amp;LH_Sold=1&amp;LH_Complete=1" target="_blank" rel="noopener noreferrer" class="pro-link-btn" data-track="pro_overseas_click">相場確認</a></td></tr></tbody></table><div class="pro-no-price-section"><span class="pro-no-price-label">海外相場確認リンク（価格未取得）</span><div class="pro-no-price-chips"><a href="https://stockx.com/search?s=Nintendo%20Switch%202" class="pro-no-price-chip" target="_blank" rel="noopener noreferrer" data-track="pro_overseas_click">StockX</a><a href="https://www.bhphotovideo.com/c/search?Ntt=Nintendo%20Switch%202" class="pro-no-price-chip" target="_blank" rel="noopener noreferrer" data-track="pro_overseas_click">B&amp;H Photo</a><a href="https://www.adorama.com/l/?searchinfo=Nintendo%20Switch%202" class="pro-no-price-chip" target="_blank" rel="noopener noreferrer" data-track="pro_overseas_click">Adorama</a><a href="https://www.mpb.com/en-us/cameras/?q=Nintendo%20Switch%202" class="pro-no-price-chip" target="_blank" rel="noopener noreferrer" data-track="pro_overseas_click">MPB</a><a href="https://www.keh.com/search#Nintendo%20Switch%202" class="pro-no-price-chip" target="_blank" rel="noopener noreferrer" data-track="pro_overseas_click">KEH</a><a href="https://www.amazon.com/s?k=Nintendo%20Switch%202" class="pro-no-price-chip" target="_blank" rel="noopener noreferrer" data-track="pro_overseas_click">Amazon US</a></div></div><p class="pro-overseas-note">※ メルカリ・eBay等は販売手数料、送料、為替変動、関税が発生します。表示利益は参考値です。（eBay販売手数料 約13% / メルカリ 10%）</p>
+    <table class="pro-price-table pro-overseas-price-table"><thead><tr><th>サイト</th><th>参考価格（円換算）</th><th>種別</th><th>取得方法</th><th>確認日</th><th></th></tr></thead><tbody><tr class="pro-overseas-row pro-row-has-price"><td class="pro-src-cell"><strong class="pro-src-name">eBay</strong></td><td class="pro-price-cell"><strong class="price-value">¥85,140</strong><small class="pro-jpy-note">（円換算）</small></td><td class="pro-basis-cell"><span class="pro-price-basis">海外sold</span></td><td class="pro-method-cell"><span class="collector-method-badge cm-manual">eBay 手動確認</span></td><td class="pro-meta-cell"><span class="freshness-warn" title="observed_at: 2026-05-20T10:00:00+09:00">要更新 / 11日前</span></td><td class="pro-action-cell"><a href="https://www.ebay.com/sch/i.html?_nkw=Nintendo%20Switch%202&amp;LH_Sold=1&amp;LH_Complete=1" target="_blank" rel="noopener noreferrer" class="pro-link-btn" data-track="pro_overseas_click">相場確認</a></td></tr></tbody></table><div class="pro-no-price-section"><span class="pro-no-price-label">海外相場確認リンク（価格未取得）</span><div class="pro-no-price-chips"><a href="https://stockx.com/search?s=Nintendo%20Switch%202" class="pro-no-price-chip" target="_blank" rel="noopener noreferrer" data-track="pro_overseas_click">StockX</a><a href="https://www.bhphotovideo.com/c/search?Ntt=Nintendo%20Switch%202" class="pro-no-price-chip" target="_blank" rel="noopener noreferrer" data-track="pro_overseas_click">B&amp;H Photo</a><a href="https://www.adorama.com/l/?searchinfo=Nintendo%20Switch%202" class="pro-no-price-chip" target="_blank" rel="noopener noreferrer" data-track="pro_overseas_click">Adorama</a><a href="https://www.mpb.com/en-us/cameras/?q=Nintendo%20Switch%202" class="pro-no-price-chip" target="_blank" rel="noopener noreferrer" data-track="pro_overseas_click">MPB</a><a href="https://www.keh.com/search#Nintendo%20Switch%202" class="pro-no-price-chip" target="_blank" rel="noopener noreferrer" data-track="pro_overseas_click">KEH</a><a href="https://www.amazon.com/s?k=Nintendo%20Switch%202" class="pro-no-price-chip" target="_blank" rel="noopener noreferrer" data-track="pro_overseas_click">Amazon US</a></div></div><p class="pro-overseas-note">※ メルカリ・eBay等は販売手数料、送料、為替変動、関税が発生します。表示利益は参考値です。（eBay販売手数料 約13% / メルカリ 10%）</p>
   </div>
 </div>
 <div id="category-pro-camera-sony" class="watch-candidate-card pro-candidate-card" data-genre="game_console" data-has-overseas-sold="0" data-has-price-gap="0" data-has-overseas="0" data-has-domestic="0" data-needs-check="1">

@@ -3511,10 +3511,10 @@ def check() -> list[dict]:
     results.append({"level": "ok" if _t326 else "warning", "check": "zero_price_shows_not_found",
                     "message": "#326 price=0 の場合「価格未取得」表示が実装済み" + ("" if _t326 else " ← monitoring card の price=0 対応が未実装")})
 
-    # #327: info banner が「最高売却先」の説明に更新済み
-    _t327 = "最高売却先" in _lp_gen_src or "最も高く売れる売却先" in _lp_gen_src
+    # #327: info banner が「最高買取価格/最高買取店」の説明に更新済み（旧: 最高売却先）
+    _t327 = "最高買取価格" in _lp_gen_src or "最高買取店" in _lp_gen_src
     results.append({"level": "ok" if _t327 else "warning", "check": "beginner_banner_sell_source",
-                    "message": "#327 初心者 info banner が「最高売却先」説明に更新済み" + ("" if _t327 else " ← info banner の売却先説明が古い")})
+                    "message": "#327 初心者 info banner が「最高買取価格/最高買取店」説明に更新済み" + ("" if _t327 else " ← info banner の買取説明が古い")})
 
     # ── Top / Ranking / Beginner 追加チェック (2026-05-28 Public LP Review) ──────
     # #328: Topに「一部店舗はサイト制限により取得不可」が生成 HTML に出ていない
@@ -3756,10 +3756,10 @@ def check() -> list[dict]:
     results.append({"level": "ok" if _t362 else "warning", "check": "stale_warning_suppressed",
                     "message": "#362 _section_stale_warning がトップバナーを抑制（hidden ブロックのみ）" + ("" if _t362 else " ← _section_stale_warning がバナーを出す可能性があります")})
 
-    # #363: 価格根拠行（price-source-row）が初心者タブのカードに存在する
-    _t363 = 'price-source-row' in html and '最高売却先' in html
+    # #363: 価格根拠行（price-source-row）が初心者タブのカードに存在する（旧ラベル: 最高売却先 → 最高買取店）
+    _t363 = 'price-source-row' in html and '最高買取店' in html
     results.append({"level": "ok" if _t363 else "warning", "check": "price_source_row_exists",
-                    "message": "#363 価格根拠行（price-source-row / 最高売却先）がカードに存在する" + ("" if _t363 else " ← price-source-row が見つかりません")})
+                    "message": "#363 価格根拠行（price-source-row / 最高買取店）がカードに存在する" + ("" if _t363 else " ← price-source-row が見つかりません")})
 
     # ── Task 7 追加チェック（カメラ二次流通価格）──────────────────────────
     import re as _re364
@@ -4255,6 +4255,61 @@ def check() -> list[dict]:
     results.append({"level": "ok" if _t419 else "warning", "check": "central_enrich_used_filter_impl",
                     "message": "#419 LP ソースに中古・二次流通の共通除外ロジック（_enrich_deal / _cond_is_used）が実装済み"
                                + ("" if _t419 else " ← 共通 enrich/中古フィルタが見つかりません")})
+
+    # ── Round 8: 実描画HTML（docs/index.html）ベースの追加検査（2026-05-31）──
+    # 全て html（公開ビルド後の実描画 HTML）または タブスライス を検査する＝false-positive を防ぐ
+
+    # #420: 公開HTML全体に「最高売却先」が存在しない（→「最高買取店」へ統一）
+    _t420 = '最高売却先' not in html
+    results.append({"level": "ok" if _t420 else "error", "check": "no_max_sell_label_in_html",
+                    "message": "#420 公開HTMLに「最高売却先」が存在しない（最高買取店へ統一）"
+                               + ("" if _t420 else " ← 公開HTMLに『最高売却先』が残っています")})
+
+    # #421: 公開HTML全体に「中古市場でプレ値継続中」が存在しない
+    _t421 = ('中古市場でプレ値継続中' not in html) and ('中古市場' not in html) and ('中古相場' not in html) and ('中古プレ値' not in html)
+    results.append({"level": "ok" if _t421 else "error", "check": "no_used_market_phrase_in_html",
+                    "message": "#421 公開HTMLに「中古市場/中古相場/中古プレ値」系の文言が存在しない"
+                               + ("" if _t421 else " ← 公開HTMLに中古市場系の文言が残っています")})
+
+    # #422: 公開HTML全体に「除外 (中古等)」が存在しない
+    _t422 = ('除外 (中古等)' not in html) and ('除外（中古等）' not in html)
+    results.append({"level": "ok" if _t422 else "error", "check": "no_excluded_used_phrase_in_html",
+                    "message": "#422 公開HTMLに「除外 (中古等)」が存在しない"
+                               + ("" if _t422 else " ← 公開HTMLに『除外 (中古等)』が残っています")})
+
+    # #423: Ranking タブにせどりサブタブ（rtab-sedori）が存在しない（せどりルートはせどりタブ専用）
+    _t423 = ('rtab-sedori' not in _rank_html396) and ('data-rtab="sedori"' not in _rank_html396)
+    results.append({"level": "ok" if _t423 else "error", "check": "no_sedori_subtab_in_ranking",
+                    "message": "#423 Ranking タブにせどりサブタブ（店舗間/二次流通ルート）が存在しない"
+                               + ("" if _t423 else " ← Ranking にせどりサブタブが残っています")})
+
+    # #424: Ranking タブに eBay / ヤフオク / メルカリ が主価格（店舗名）として出ない
+    _t424 = ('eBay' not in _rank_html396) and ('ヤフオク' not in _rank_html396) and ('メルカリ' not in _rank_html396)
+    results.append({"level": "ok" if _t424 else "error", "check": "no_resale_shop_in_ranking",
+                    "message": "#424 Ranking タブに eBay/ヤフオク/メルカリ が表示されない（初心者ランキングは公式→最高買取店のみ）"
+                               + ("" if _t424 else " ← Ranking に二次流通ショップが残っています")})
+
+    # #425: Beginner タブに「resale_market」が出ない
+    _t425 = 'resale_market' not in _beg_html388
+    results.append({"level": "ok" if _t425 else "error", "check": "no_resale_market_in_beginner",
+                    "message": "#425 Beginner タブに『resale_market』が存在しない"
+                               + ("" if _t425 else " ← Beginner に resale_market 由来データが残っています")})
+
+    # #426: Sedori タブが「0ルート」表示ではない（ルート表または正常な空状態説明が存在）
+    _t426_zero = '0ルート' in _sed_html396
+    _t426_has_content = ('初心者ルート一覧' in _sed_html396 or 'sc-table' in _sed_html396
+                         or 'Proルート' in _sed_html396
+                         or '現在、条件を満たすルートはありません' in _sed_html396)
+    _t426 = (not _t426_zero) and _t426_has_content
+    results.append({"level": "ok" if _t426 else "warning", "check": "sedori_not_zero_routes",
+                    "message": "#426 Sedori タブが『0ルート』表示でない（ルート表/正常な空状態説明が存在）"
+                               + ("" if _t426 else " ← Sedori タブが 0ルート、またはルート/説明が見つかりません")})
+
+    # #427: Beginner カードに「取得方法」「最終確認」「買取店比較」が描画されている
+    _t427 = ('取得方法' in _beg_html388) and ('最終確認' in _beg_html388) and ('買取店比較' in _beg_html388)
+    results.append({"level": "ok" if _t427 else "warning", "check": "beginner_card_buyback_meta",
+                    "message": "#427 Beginner カードに『取得方法/最終確認/買取店比較』が描画されている"
+                               + ("" if _t427 else " ← Beginner カードの買取メタ情報が不足しています")})
 
     return results
 

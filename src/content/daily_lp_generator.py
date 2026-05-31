@@ -3856,22 +3856,22 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             _hero_btn_label     = f"&#128100; 初心者向け案件を見る ({all_count}件)"
             _hero_social_html   = (
                 f"最高利益参考 <strong>{_esc(max_profit_str)}</strong>"
-                f" — 公式定価 vs 最高売却先"
+                f" — 公式定価 vs 最高買取店"
             )
         elif all_count > 0:
             # データあるが鮮度が古い（48h〜168h）: 件数は出さず利益のみ
             _hero_btn_label   = "&#128100; 初心者向け案件を見る"
             _hero_social_html = (
                 f"最高利益参考 <strong>{_esc(max_profit_str)}</strong>"
-                f" — 公式定価 vs 最高売却先（参考データ）"
+                f" — 公式定価 vs 最高買取店（参考データ）"
             )
         elif _all_deals_total > 0:
             # 監視中・前回データのみ（利益案件なし）
             _hero_btn_label   = "&#128100; 初心者向け案件を見る"
-            _hero_social_html = "公式定価 vs 最高売却先の差益を毎日チェック"
+            _hero_social_html = "公式定価 vs 最高買取店の差益を毎日チェック"
         else:
             _hero_btn_label   = "&#128100; 初心者向け案件を見る（取得中）"
-            _hero_social_html = "公式定価 vs 最高売却先の差益を毎日チェック"
+            _hero_social_html = "公式定価 vs 最高買取店の差益を毎日チェック"
 
         # 参考DEALS パネル: all_deals の上位5件を動的生成（fetch_failed 除外済み）
         _GENRE_ICON = {
@@ -4599,13 +4599,15 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         """せどりルート比較タブ — DBから自動算出済みルートを表示する（Phase 14/15）。
         routes が空の場合は beginner_deals から初心者ルート（公式→買取店）を合成表示する。
         """
-        # 新品・未使用のみ（中古・状態不明は除外）
-        _UNUSED_CONDITIONS = frozenset({"new", "unused", "sealed", "未使用", "新品", "未開封"})
+        # 新品・未使用・未開封のみ（中古・美品・開封済み・ジャンク等は完全除外）
         _all_routes = sedori_routes or []
         routes = [
             r for r in _all_routes
-            if getattr(r, "buy_condition", "") in _UNUSED_CONDITIONS
+            if not self._cond_is_used(getattr(r, "buy_condition", "") or "")
         ]
+        # Proルート = 新品・未使用の店舗間せどり／二次流通ルート（中古は上で除外済み）。
+        # 初心者ルート（公式店→買取店）は _synth_routes 側で別途生成・表示する。
+        pro_routes = list(routes)
 
         # コスト固定値
         cost_info = "送料¥1,000 + 振込¥300 + 交通費¥500"
@@ -4650,7 +4652,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 
         parts = []
 
-        total_beg_routes = len(routes) + len(_synth_routes)
+        total_beg_routes = len(pro_routes) + len(_synth_routes)
         parts.append(f'''<div class="sc-wrap">
 <div class="sc-header">
   <div class="sc-eyebrow">&#9736; Auto Calculated</div>
@@ -4662,7 +4664,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
   <span class="sc-meta-val sc-routes-count-badge">{total_beg_routes}ルート</span>
 </div>''')
 
-        if not routes and not _synth_routes:
+        if not pro_routes and not _synth_routes:
             # データなしフォールバック
             parts.append('''<div class="sc-no-data">
   <div class="sc-no-data-icon">&#128202;</div>
@@ -4678,16 +4680,11 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             from src.models.sale_price import CONDITION_LABELS
 
             # ── ルートを「初心者ルート」と「Proルート」に分類 ──
-            # 初心者ルート: 公式店・カメラ店・家電量販店など正規チャネルで仕入れ → 買取店で売却
-            # Proルート: ヤフオク・メルカリ・ラクマ・eBay等フリマ・中古オークションで仕入れ
-            beginner_routes = [r for r in routes
-                               if not (self._is_resale_shop(getattr(r, 'buy_shop_name', '') or '')
-                                       or any(kw in (getattr(r, 'buy_shop_name', '') or '')
-                                              for kw in ['ヤフオク', 'メルカリ', 'ラクマ', 'eBay', 'StockX', '中古']))]
-            pro_routes = [r for r in routes
-                          if (self._is_resale_shop(getattr(r, 'buy_shop_name', '') or '')
-                              or any(kw in (getattr(r, 'buy_shop_name', '') or '')
-                                     for kw in ['ヤフオク', 'メルカリ', 'ラクマ', 'eBay', 'StockX', '中古']))]
+            # Proルート: ヤフオク・メルカリ・ラクマ・eBay 等の二次流通（新品・未使用・未開封）仕入れ → 別市場売却。
+            # 初心者ルートは「公式店 → 買取店」の合成ルート（_synth_routes）のみを採用するため、
+            # DB routes 由来の beginner_routes は使わない（買取店→買取店など公式仕入れでないルートを除外）。
+            beginner_routes = []  # DB routes は初心者に使わない（合成ルートで担保）
+            # pro_routes は関数冒頭で算出済み
 
             # 各分類でさらに「通常」と「要確認」に分割
             def _split_review(rlist):
@@ -4700,9 +4697,9 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             beg_ok, beg_review = _split_review(beginner_routes)
             pro_ok, pro_review = _split_review(pro_routes)
 
-            # 後方互換: display_routes は全ルート（1位カード用）
-            display_routes = beginner_routes if beginner_routes else pro_routes if pro_routes else routes
-            display_label = "通常ルート"
+            # display_routes は表示対象（Proルートのみ。生 routes は使わない＝店舗間arbitrage混入防止）
+            display_routes = pro_routes
+            display_label = "Proルート"
 
             def _make_best_card(best_r) -> str:
                 """1位ルート大型カードHTML生成。"""
@@ -4830,15 +4827,15 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 if beg_review:
                     parts.append(_make_route_table(beg_review, title_label="初心者ルート 要確認"))
 
-            # ── Proルート（フリマ仕入れ → 国内/海外売却）──
+            # ── Proルート（店舗間せどり／二次流通仕入れ → 別市場売却）──
             if pro_routes:
                 parts.append(f'''<div class="sc-review-section" style="border-left:4px solid #7c3aed;background:#faf5ff;border-radius:8px;padding:12px 16px;margin:12px 0">
   <div class="sc-review-hd">
     <span class="sc-review-icon">&#9997;&#65039;</span>
     <div>
-      <div class="sc-review-title" style="color:#7c3aed">Proルート（フリマ/オークション仕入れ）</div>
-      <div class="sc-review-sub">ヤフオク・メルカリ・ラクマ・eBay等で仕入れ → 国内買取店・海外相場で売却。
-出品・手数料・為替リスクが発生します。経験者向けです。</div>
+      <div class="sc-review-title" style="color:#7c3aed">Proルート（店舗間せどり／二次流通）</div>
+      <div class="sc-review-sub">新品・未使用・未開封のみ。店舗間の価格差や二次流通（ヤフオク・メルカリ・eBay等）で仕入れ → 別市場で売却するルートです。
+出品・送料・手数料・在庫・為替リスクが発生します。経験者向けです（新品・未使用・未開封のみ）。</div>
     </div>
   </div>
 </div>''')
@@ -5183,7 +5180,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                      '<div class="ib-title">&#128100; 初心者向け：公式店定価購入 &rarr; 最高買取価格との差益</div>\n'
                      '<strong>公式店・正規店で定価購入した新品・未使用品を、買取店で売却した場合の差益を比較します。</strong>'
                      'フリマ出品・海外販売・個人間取引は不要です。<strong>公式で買って買取店に売るだけです。</strong>\n'
-                     '<strong>対象は新品・未使用・未開封のみ。中古・開封済み・ジャンクは除外しています。</strong>\n'
+                     '<strong>対象は新品・未使用・未開封のみです。</strong>\n'
                      '<strong>掲載価格は更新時点の参考値です。差益は保証されません。購入前に必ず各店舗の最新価格をご確認ください。</strong>\n'
                      '</div>')
 
@@ -6020,7 +6017,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 f'<div class="shop-table-hd"><span>{buyback_compare_hd}',
             )
 
-        # 修正3: 価格根拠メタデータ行（最高売却先・状態・データ種別・最終確認日）
+        # 修正3: 価格根拠メタデータ行（最高買取店・状態・データ種別・最終確認日）
         _src_label = '—'
         _src_date  = '—'
         if _ts_rows:
@@ -6948,64 +6945,23 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         camera_rows  = _rank_rows_html(camera_profitable[:8])
         game_rows    = _rank_rows_html(game_profitable[:8])
 
-        # ── せどりルートランキング ──
-        sedori_rows_html = ''
-        _routes = sedori_routes or []
-        if _routes:
-            srows = []
-            for i, r in enumerate(_routes[:8], 1):
-                rank_cls = 'r1' if i == 1 else ('r2' if i == 2 else ('r3' if i == 3 else ''))
-                crown = '&#128081;' if i == 1 else str(i)
-                row_cls = ' rank-1' if i == 1 else ''
-                _raw = getattr(r, 'product_alias', '') or getattr(r, 'product_id', '')
-                _alias = _raw[len('prod_'):] if _raw.startswith('prod_') else _raw
-                pname = _esc(getattr(r, 'product_name', _alias))
-                buy_s = _esc(getattr(r, 'buy_shop_name', ''))
-                sell_s = _esc(getattr(r, 'sell_shop_name', ''))
-                net = getattr(r, 'net_profit', 0)
-                rate = getattr(r, 'profit_rate', 0.0)
-                needs_review = getattr(r, 'needs_review', False)
-                review_badge = '<span class="badge" style="background:#FF9500;color:#fff;font-size:0.65rem;padding:1px 6px;border-radius:99px;margin-left:4px">要確認</span>' if needs_review else ''
-                # 仕入れ先がフリマ・オークション系 → Proルート
-                _buy_raw = getattr(r, 'buy_shop_name', '') or ''
-                _is_pro_route = self._is_resale_shop(_buy_raw) or any(
-                    kw in _buy_raw for kw in ['ヤフオク', 'メルカリ', 'ラクマ', 'eBay', 'StockX', '中古店']
-                )
-                route_badge = ('<span style="background:#7c3aed;color:#fff;font-size:0.6rem;'
-                               'padding:1px 5px;border-radius:99px;margin-left:4px">Pro</span>'
-                               if _is_pro_route else
-                               '<span style="background:#059669;color:#fff;font-size:0.6rem;'
-                               'padding:1px 5px;border-radius:99px;margin-left:4px">初心者</span>')
-                srows.append(
-                    f'<div class="rank-row{row_cls} rank-row-clickable" '
-                    f'data-target-tab="sedori" data-target-id="" style="cursor:pointer">'
-                    f'<div class="rank-num {rank_cls}">{crown}</div>'
-                    f'<div class="rank-info">'
-                    f'<div class="rank-name rank-name-link">{pname}{route_badge}{review_badge}</div>'
-                    f'<div class="rank-meta">{buy_s} &rarr; {sell_s}</div>'
-                    f'</div>'
-                    f'<div><div class="rank-profit">{_esc(fmt_profit(net))}</div>'
-                    f'<div class="rank-rate">{rate*100:.1f}%</div></div>'
-                    f'</div>'
-                )
-            sedori_rows_html = ''.join(srows)
-        else:
-            sedori_rows_html = '<div class="empty-state"><span class="empty-icon">&#9636;</span>せどりルートデータなし</div>'
+        # 注: せどりルート（店舗間/二次流通仕入れ）はランキングに混在させない。
+        # ランキングは初心者ランキング（公式価格 → 最高買取店、差益順）のみを表示し、
+        # せどりルートは専用の「せどりタブ」で Pro/初心者 を分けて表示する。
 
         return f"""<div class="sec-head"><div class="sec-title">&#127942; 差益ランキング</div></div>
 <div class="ranking-card">
+  <div class="ranking-note" style="font-size:0.78rem;color:var(--ink3);padding:0 4px 8px;">公式価格で購入 &rarr; 最高買取店で売却した場合の差益順（新品・未使用のみ）。せどりルートは <a href="#tab-sedori" class="inline-link">せどりタブ</a> をご覧ください。</div>
   <div class="ranking-tabs">
     <button class="ranking-tab-btn active" data-rtab="all">&#127942; 総合</button>
     <button class="ranking-tab-btn" data-rtab="iphone">&#128241; iPhone</button>
     <button class="ranking-tab-btn" data-rtab="camera">&#128247; カメラ</button>
     <button class="ranking-tab-btn" data-rtab="game">&#127918; ゲーム機</button>
-    <button class="ranking-tab-btn" data-rtab="sedori">&#9636; せどり</button>
   </div>
   <div class="ranking-tab-panel active" id="rtab-all">{all_rows}</div>
   <div class="ranking-tab-panel" id="rtab-iphone">{iphone_rows}</div>
   <div class="ranking-tab-panel" id="rtab-camera">{camera_rows}</div>
   <div class="ranking-tab-panel" id="rtab-game">{game_rows}</div>
-  <div class="ranking-tab-panel" id="rtab-sedori">{sedori_rows_html}</div>
 </div>"""
 
     def _ranking_table(self, deals, show_category: bool = False) -> str:

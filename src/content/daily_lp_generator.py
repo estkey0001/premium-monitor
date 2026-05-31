@@ -258,6 +258,21 @@ class DailyLPGenerator:
         beginner_watch   = _enrich_list(beginner_watch)
         monitoring_deals = _enrich_list(monitoring_deals)
 
+        # enrich により DB では monitoring（赤字）だったが net>0 に昇格した商品も
+        # ランキング・せどりへ反映するため、全リストを product_id で統合する。
+        # （初心者タブは昇格 deal を表示するが、ランキング/せどりが DB クエリ由来の
+        #   別リストを見ているため伝播せず空になる不整合を解消）
+        _union = {}
+        for _src in (all_deals, beginner_easy, beginner_watch, monitoring_deals):
+            for _d in (_src or []):
+                _pid = getattr(_d, 'product_id', None)
+                if _pid is None:
+                    continue
+                _ex = _union.get(_pid)
+                if _ex is None or (getattr(_d, 'net_profit_jpy', 0) or 0) > (getattr(_ex, 'net_profit_jpy', 0) or 0):
+                    _union[_pid] = _d
+        all_deals = list(_union.values())
+
         iphone_deals = [d for d in all_deals if d.category == "iphone"]
         game_deals   = [d for d in all_deals if d.category == "game_console"]
         camera_deals = [d for d in all_deals if d.category == "camera"]
@@ -4480,8 +4495,17 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         surge_html       = self._tab_surge(buyback_alerts)
         ranking_html     = self._tab_ranking(all_deals, iphone_deals, game_deals, sedori_routes=sedori_routes)
         # Task 3: 速報タブを削除 → ポップアップ速報へ移行（_section_alert_popup 参照）
-        # beginner_deals（easy + watch）を sedori タブに渡し、初心者合成ルートを生成
-        _all_beginner_for_sedori = list(beginner_easy or []) + list(beginner_watch or [])
+        # beginner_deals を sedori タブに渡し、初心者合成ルートを生成
+        # enrich により net>0 に昇格した監視中商品も含む union（all_deals）を優先利用し、
+        # easy/watch のみだと漏れる昇格 deal をせどりルートへ反映する
+        _seen_pids = set()
+        _all_beginner_for_sedori = []
+        for _d in list(all_deals or []) + list(beginner_easy or []) + list(beginner_watch or []):
+            _pid = getattr(_d, 'product_id', None)
+            if _pid is None or _pid in _seen_pids:
+                continue
+            _seen_pids.add(_pid)
+            _all_beginner_for_sedori.append(_d)
         sedori_html      = self._tab_sedori(sedori_routes or [], beginner_deals=_all_beginner_for_sedori)
         lottery_html     = self._section_lottery(lottery_events)
 

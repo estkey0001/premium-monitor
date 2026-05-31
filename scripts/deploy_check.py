@@ -4329,6 +4329,41 @@ def check() -> list[dict]:
                     "message": "#430 Beginner 説明文が『対象は新品・未使用・未開封のみです。』になっている"
                                + ("" if _t430 else " ← Beginner 説明文が想定と異なります")})
 
+    # #431: Beginner カードに内部コード（new_unopened_simfree 等）が出ない（Task 2）
+    _internal_codes = ('new_unopened_simfree', 'new_unopened', 'used_a', 'used_b',
+                       'resale_market', 'manual_today', 'manual_confirmed', 'auto_scraped')
+    _leaked = [c for c in _internal_codes if c in _beg_html388]
+    _t431 = not _leaked
+    results.append({"level": "ok" if _t431 else "error", "check": "no_internal_code_in_beginner",
+                    "message": "#431 Beginner カードに内部コード（new_unopened_simfree 等）が出ない（日本語表示に変換）"
+                               + ("" if _t431 else f" ← 内部コードが残っています: {', '.join(_leaked)}")})
+
+    # #432: 買取店比較が「上位3件表示 + details 折りたたみ」になっている（Task 1）
+    _t432 = ('shop-more-details' in _beg_html388) and ('もっと見る' in _beg_html388)
+    results.append({"level": "ok" if _t432 else "error", "check": "beginner_buyback_top3_collapse",
+                    "message": "#432 買取店比較が上位3件表示 + details 折りたたみ（『もっと見る』）になっている"
+                               + ("" if _t432 else " ← 折りたたみ（shop-more-details / もっと見る）が見つかりません")})
+
+    # #433: 古いデータの「N日前」がカード上部（買取店比較ヘッダー shop-table-hd）に強表示されない（Task 3）
+    import re as _re433
+    _hd_blocks = _re433.findall(r'shop-table-hd.*?</div>', _beg_html388)
+    _t433 = not any(('日前' in b or '要更新' in b) for b in _hd_blocks)
+    results.append({"level": "ok" if _t433 else "error", "check": "no_stale_in_card_top",
+                    "message": "#433 古いデータ（N日前/要更新）が買取店比較ヘッダーに強表示されない（価格確認行に小さく表示）"
+                               + ("" if _t433 else " ← shop-table-hd に『N日前/要更新』が残っています")})
+
+    # #434: Beginner カードに details 折りたたみが存在する（Task 1/5）
+    _t434 = '<details class="shop-more-details">' in _beg_html388
+    results.append({"level": "ok" if _t434 else "warning", "check": "beginner_has_details",
+                    "message": "#434 Beginner カードに details 折りたたみ（4店舗目以降）が存在する"
+                               + ("" if _t434 else " ← details 折りたたみが見つかりません（店舗数が少ない可能性）")})
+
+    # #435: 最高買取店が大きく表示されている（best-buyback-block）（Task 1/5）
+    _t435 = ('best-buyback-block' in _beg_html388) and ('bb-shop-price' in _beg_html388)
+    results.append({"level": "ok" if _t435 else "error", "check": "beginner_best_shop_prominent",
+                    "message": "#435 最高買取店が大きく表示されている（best-buyback-block / bb-shop-price）"
+                               + ("" if _t435 else " ← 最高買取店の大表示ブロックが見つかりません")})
+
     return results
 
 

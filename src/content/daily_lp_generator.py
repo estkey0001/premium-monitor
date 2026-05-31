@@ -1780,6 +1780,49 @@ a[href], button, [role="tab"], [role="button"],
   display: flex; align-items: center; gap: 6px;
 }}
 
+/* 最高買取店を大きく表示するブロック（初心者カード） */
+.best-buyback-block {{
+  margin: 10px 0 4px;
+  padding: 12px 16px;
+  background: linear-gradient(90deg, #F0FDF8 0%, #F7FFFE 100%);
+  border: 1px solid #B8F0DC;
+  border-left: 4px solid #00C896;
+  border-radius: 12px;
+}}
+.best-buyback-block .bb-shop-lbl {{
+  font-size: 0.72rem; font-weight: 800; letter-spacing: 0.04em;
+  color: var(--ink3); margin-bottom: 2px;
+}}
+.best-buyback-block .bb-shop-val {{
+  font-size: 1.35rem; font-weight: 800; color: var(--ink1);
+  line-height: 1.25;
+}}
+.best-buyback-block .bb-shop-val .bb-shop-price {{
+  font-size: 1.5rem; font-weight: 900; color: #00A37A;
+  font-variant-numeric: tabular-nums; margin-left: 6px;
+}}
+
+/* 4店舗目以降の折りたたみ（details） */
+.shop-more-details {{
+  border-top: 1px solid #F0F1F7;
+}}
+.shop-more-details > summary.shop-more-summary {{
+  cursor: pointer; list-style: none;
+  padding: 10px 14px;
+  font-size: 0.78rem; font-weight: 700;
+  color: #5B6BD6; text-align: center;
+  user-select: none;
+}}
+.shop-more-details > summary.shop-more-summary::-webkit-details-marker {{ display: none; }}
+.shop-more-details > summary.shop-more-summary::after {{ content: " ▾"; }}
+.shop-more-details[open] > summary.shop-more-summary::after {{ content: " ▴"; }}
+.shop-more-details > summary.shop-more-summary:hover {{ color: #3B4BB6; text-decoration: underline; }}
+
+/* 価格確認行の「要更新」表示（控えめ） */
+.confirm-line .confirm-stale {{
+  color: #C2701A; font-weight: 700; margin-left: 2px;
+}}
+
 .shop-row {{
   display: flex; align-items: center;
   padding: 11px 14px;
@@ -4930,6 +4973,45 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         else:
             return '<span class="badge-manual">—</span>'
 
+    @staticmethod
+    def _condition_label(cond) -> str:
+        """内部の状態コード（new_unopened_simfree 等）を日本語表示に変換する。
+        LP には内部コードを一切出さない（Task 2）。"""
+        c = (str(cond or '')).strip()
+        if not c:
+            return '新品未開封'
+        _map = {
+            'new_unopened_simfree': '新品未開封 SIMフリー',
+            'new_unopened':         '新品未開封',
+            'new':                  '新品',
+            'unused':               '未使用',
+            'sealed':               '新品未開封',
+            'used_a':               '中古A',
+            'used_b':               '中古B',
+            'used_c':               '中古C',
+        }
+        key = c.lower()
+        if key in _map:
+            return _map[key]
+        # 既に日本語など、コードでなければそのまま返す
+        return c
+
+    @staticmethod
+    def _source_label_jp(data_source) -> str:
+        """内部の data_source コードを日本語の取得方法ラベルに変換する（Task 2）。"""
+        ds = str(data_source or '')
+        if ds == 'auto_scraped':
+            return '自動取得'
+        if ds in ('manual_today', 'manual_confirmed') or ds.startswith('manual'):
+            return '手動確認'
+        if ds == 'resale_market':
+            return '二次流通（参考）'
+        if ds == 'live':
+            return 'リアルタイム'
+        if ds in ('fetch_failed', 'product_not_listed'):
+            return '取得失敗'
+        return '参考データ'
+
     def _data_source_badge(self, data_source: str, shop_name: str = "") -> str:
         """data_source フィールドに基づくバッジ HTML を返す（比較テーブル用）。"""
         ds = data_source or ''
@@ -5881,25 +5963,19 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             buyback_rows = [r for r in buyback_rows if r.get('data_source') != 'resale_market']
         if buyback_rows:
             official_price = d.official_price_jpy or 0
-            rows_html = []
-            # fetch_failed行を末尾に、正常行を先に表示（ランク番号は正常行のみ）
-            # 正常行は上位5件、失敗行は全件（確認リンク目的なので件数制限しない）
             # confidence=low は誤価格防止のためLPから除外（Task 7）
-            _normal_rows  = [r for r in buyback_rows if r.get('buyback_price', 0) > 0 and r.get('confidence', 'high') != 'low'][:5]
+            _normal_rows  = [r for r in buyback_rows if r.get('buyback_price', 0) > 0 and r.get('confidence', 'high') != 'low']
             _failed_rows  = [r for r in buyback_rows if r.get('data_source') == 'fetch_failed']
-            _all_disp = _normal_rows + _failed_rows
-            n_shops = len(_all_disp)
-            rank_counter = 0
-            for r in _all_disp:
+            n_shops = len(_normal_rows) + len(_failed_rows)
+
+            def _render_shop_row(r, rank_counter):
+                """1店舗ぶんの shop-row HTML を返す。rank_counter=None なら取得失敗行。"""
                 bp = r.get('buyback_price', 0)
                 sname = _esc(r.get('shop_name', ''))
-                is_failed_row = (r.get('data_source') == 'fetch_failed')
                 url_val = r.get('buyback_url', '') or r.get('url', '')
                 freshness = self._freshness_label(r.get('observed_at', ''), r.get('data_source', 'manual_today'))
-
                 source_badge = self._data_source_badge(r.get('data_source', ''), r.get('shop_name', ''))
-                if is_failed_row:
-                    # 取得失敗行: ランクなし・価格「—」・リンクは確認用
+                if rank_counter is None:
                     link_col = (
                         f'<a href="{_esc(url_val)}" target="_blank" rel="noopener noreferrer" '
                         f'class="shop-check-btn normal" data-track="buyback_click" '
@@ -5907,7 +5983,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                         if url_val else
                         '<span class="shop-check-btn normal" style="opacity:0.4;cursor:default;">確認不可</span>'
                     )
-                    rows_html.append(
+                    return (
                         f'<div class="shop-row shop-row-failed">'
                         f'<div class="shop-rank" style="color:var(--ink3)">—</div>'
                         f'<div class="shop-name-col">{sname}</div>'
@@ -5917,39 +5993,56 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                         f'<div class="shop-link-col">{link_col}</div>'
                         f'</div>'
                     )
-                else:
-                    # 正常行
-                    rank_counter += 1
-                    profit = bp - official_price
-                    profit_str = f'+¥{profit:,}' if profit >= 0 else f'-¥{abs(profit):,}'
-                    btn_cls = 'best' if rank_counter == 1 else 'normal'
-                    link_col = (
-                        f'<a href="{_esc(url_val)}" target="_blank" rel="noopener noreferrer" '
-                        f'class="shop-check-btn {btn_cls}" data-track="buyback_click" '
-                        f'data-product-id="{pid}">確認</a>'
-                        if url_val else
-                        '<span class="shop-check-btn normal" style="opacity:0.4;cursor:default;">確認不可</span>'
-                    )
-                    rank_cls = 'gold' if rank_counter == 1 else ('silver' if rank_counter == 2 else '')
-                    diff_cls = ' neg' if profit < 0 else ''
-                    rows_html.append(
-                        f'<div class="shop-row">'
-                        f'<div class="shop-rank {rank_cls}">{rank_counter}</div>'
-                        f'<div class="shop-name-col">{sname}</div>'
-                        f'<div class="shop-price-col">¥{bp:,}</div>'
-                        f'<div class="shop-diff-col{diff_cls}">{_esc(profit_str)}</div>'
-                        f'<div class="shop-source-col">{source_badge}</div>'
-                        f'<div class="shop-link-col">{link_col}</div>'
-                        f'</div>'
-                    )
-            # ヘッダーには最初の正常行の鮮度を使う
-            _hd_row = _normal_rows[0] if _normal_rows else (_failed_rows[0] if _failed_rows else (buyback_rows[0] if buyback_rows else {}))
-            first_freshness = self._freshness_label(_hd_row.get('observed_at', ''), _hd_row.get('data_source', 'manual_today'))
+                profit = bp - official_price
+                profit_str = f'+¥{profit:,}' if profit >= 0 else f'-¥{abs(profit):,}'
+                btn_cls = 'best' if rank_counter == 1 else 'normal'
+                link_col = (
+                    f'<a href="{_esc(url_val)}" target="_blank" rel="noopener noreferrer" '
+                    f'class="shop-check-btn {btn_cls}" data-track="buyback_click" '
+                    f'data-product-id="{pid}">確認</a>'
+                    if url_val else
+                    '<span class="shop-check-btn normal" style="opacity:0.4;cursor:default;">確認不可</span>'
+                )
+                rank_cls = 'gold' if rank_counter == 1 else ('silver' if rank_counter == 2 else '')
+                diff_cls = ' neg' if profit < 0 else ''
+                return (
+                    f'<div class="shop-row">'
+                    f'<div class="shop-rank {rank_cls}">{rank_counter}</div>'
+                    f'<div class="shop-name-col">{sname}</div>'
+                    f'<div class="shop-price-col">¥{bp:,}</div>'
+                    f'<div class="shop-diff-col{diff_cls}">{_esc(profit_str)}</div>'
+                    f'<div class="shop-source-col">{source_badge}</div>'
+                    f'<div class="shop-link-col">{link_col}</div>'
+                    f'</div>'
+                )
+
+            # 上位3店舗を常時表示、4店舗目以降（＋取得失敗行）は details で折りたたみ（Task 1）
+            _TOP_N = 3
+            visible_html = []
+            hidden_html  = []
+            for i, r in enumerate(_normal_rows):
+                row = _render_shop_row(r, i + 1)
+                (visible_html if i < _TOP_N else hidden_html).append(row)
+            # 取得失敗行は折りたたみ側へ（確認リンク目的・上位表示を圧迫しない）
+            for r in _failed_rows:
+                hidden_html.append(_render_shop_row(r, None))
+
+            _hidden_count = len(hidden_html)
+            details_html = ''
+            if hidden_html:
+                details_html = (
+                    f'<details class="shop-more-details">'
+                    f'<summary class="shop-more-summary">もっと見る（残り{_hidden_count}店舗）</summary>'
+                    + ''.join(hidden_html)
+                    + '</details>'
+                )
+
             _compare_hd_label = '参考買取価格（補助情報）' if pro_mode else '買取店比較'
             compare_html = (
                 f'<div class="shop-table buyback-shop-table buyback-table">'
-                f'<div class="shop-table-hd"><span>{_compare_hd_label}（参照{n_shops}店舗）</span>' + first_freshness + '</div>'
-                + ''.join(rows_html)
+                f'<div class="shop-table-hd"><span>{_compare_hd_label}（上位{min(_TOP_N, len(_normal_rows))}店舗 / 全{n_shops}店舗）</span></div>'
+                + ''.join(visible_html)
+                + details_html
                 + '</div>'
             )
         # ── 海外価格セル（Pro モードのみ表示）──
@@ -5986,7 +6079,8 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         profit_num_cls = 'profit-num amber' if is_watch else 'profit-num'
         profit_rate_cls = 'profit-rate amber' if is_watch else 'profit-rate'
         profit_note_text = '利益率が低め。様子見推奨' if is_watch else '定価購入→最高買取（参考値）'
-        condition_text = _esc(d.buyback_condition or '新品未開封')
+        # 内部の状態コード（new_unopened_simfree 等）は日本語へ変換して表示（Task 2）
+        condition_text = _esc(self._condition_label(d.buyback_condition))
         profit_rate_str = _esc(fmt_rate(d.net_profit_rate))
 
         # Pro向けモードでの価格ラベル切り替え
@@ -6017,37 +6111,45 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 f'<div class="shop-table-hd"><span>{buyback_compare_hd}',
             )
 
-        # 修正3: 価格根拠メタデータ行（最高買取店・状態・データ種別・最終確認日）
+        # 取得方法・最終確認日・データ鮮度（古いデータは「（要更新）」を最終確認行に小さく付与：Task 3）
         _src_label = '—'
         _src_date  = '—'
+        _src_stale = False   # 24h超で True
         if _ts_rows:
             _ds = _ts_rows[0].get('data_source', '')
-            if str(_ds) == 'auto_scraped':
-                _src_label = '買取店（自動取得）'
-            elif str(_ds) == 'resale_market':
-                _src_label = '二次流通（参考）'
-            elif str(_ds).startswith('manual'):
-                _src_label = '手動確認'
-            elif str(_ds) == 'live':
-                _src_label = 'リアルタイム'
-            else:
-                _src_label = _esc(str(_ds)) if _ds else '—'
+            _src_label = self._source_label_jp(_ds)
             _obs_raw = _ts_rows[0].get('observed_at', '')
             if _obs_raw:
                 try:
                     _obs_dt = datetime.fromisoformat(str(_obs_raw))
                     if _obs_dt.tzinfo is None:
                         _obs_dt = _obs_dt.replace(tzinfo=JST)
-                    _src_date = _obs_dt.astimezone(JST).strftime('%Y-%m-%d')
+                    _obs_dt = _obs_dt.astimezone(JST)
+                    _src_date = _obs_dt.strftime('%Y-%m-%d')
+                    _src_stale = (datetime.now(tz=JST) - _obs_dt).total_seconds() / 3600 >= 24
                 except Exception:
                     _src_date = _esc(str(_obs_raw)[:10])
+
+        # ── 最高買取店を大きく表示（Task 1）──
+        _best_shop_disp = _esc(d.best_buyback_shop or '—')
+        _best_price_disp = _esc(fmt_price(d.best_buyback_price))
+        best_buyback_block_html = (
+            f'<div class="best-buyback-block">'
+            f'<div class="bb-shop-lbl">&#127978; 最高買取店</div>'
+            f'<div class="bb-shop-val"><strong>{_best_shop_disp}</strong> '
+            f'<span class="bb-shop-price">{_best_price_disp}</span></div>'
+            f'</div>'
+        ) if not pro_mode else ''
+
+        # ── 価格確認行（小さく・古いデータ表示も控えめにここへ：Task 3）──
+        _stale_suffix = '<span class="confirm-stale">（要更新）</span>' if _src_stale else ''
         price_source_row_html = (
-            f'<div class="price-source-row" style="display:flex;gap:16px;flex-wrap:wrap;'
-            f'font-size:0.75rem;color:var(--ink3);padding:4px 0 2px;margin-top:2px;">'
-            f'<span>&#127978; 最高買取店：<strong>{_esc(d.best_buyback_shop or "—")}</strong></span>'
+            f'<div class="price-source-row confirm-line" '
+            f'style="display:flex;gap:14px;flex-wrap:wrap;'
+            f'font-size:0.72rem;color:var(--ink3);padding:4px 0 2px;margin-top:2px;">'
             f'<span>&#9989; 状態：<strong>{condition_text}</strong></span>'
             f'<span>&#128203; 取得方法：{_src_label}</span>'
-            f'<span>&#128197; 最終確認：{_src_date}</span>'
+            f'<span>&#128197; 最終確認：{_src_date}{_stale_suffix}</span>'
             f'</div>'
         ) if not pro_mode else ''
 
@@ -6061,16 +6163,6 @@ tr.sc-route-review {{ background: #FFFBEB; }}
     </div>
   </div>
   {pro_mode_note}
-  <div class="{profit_section_cls}">
-    <div class="profit-left">
-      <div class="{profit_lbl_cls}">{profit_main_lbl}</div>
-      <div class="{profit_num_cls}">{_esc(fmt_profit(d.net_profit_jpy))}</div>
-    </div>
-    <div class="profit-right">
-      <div class="{profit_rate_cls}">{profit_rate_str}</div>
-      <div class="profit-note">{profit_note_text}</div>
-    </div>
-  </div>
   <div class="price-row-wrap">
     <div class="price-cell">
       <div class="price-cell-lbl">{official_price_lbl}</div>
@@ -6082,14 +6174,25 @@ tr.sc-route-review {{ background: #FFFBEB; }}
     </div>
     {overseas_price_cell_html}
   </div>
-  {price_source_row_html}
+  <div class="{profit_section_cls}">
+    <div class="profit-left">
+      <div class="{profit_lbl_cls}">{profit_main_lbl}</div>
+      <div class="{profit_num_cls}">{_esc(fmt_profit(d.net_profit_jpy))}</div>
+    </div>
+    <div class="profit-right">
+      <div class="{profit_rate_cls}">{profit_rate_str}</div>
+      <div class="profit-note">{profit_note_text}</div>
+    </div>
+  </div>
+  {best_buyback_block_html}
   <div class="card-body">
+    {compare_html}
+    {price_source_row_html}
     <div class="condition-row buyback-notice">
       <span class="cond-icon">&#9888;</span>
       <div><strong>買取条件：{condition_text}</strong>&nbsp;<span style="font-size:0.72rem;color:var(--gray-400)">掲載価格は参考値です。売却前に必ず各社の公式買取ページで確認してください。</span></div>
     </div>
     {updated_str}
-    {compare_html}
     <div class="card-actions">
       {official_btn}
       {buyback_btn}

@@ -4816,6 +4816,71 @@ def check() -> list[dict]:
                     "message": "#481 fetch_failed の理由が LP またはレポートに表示される"
                                + ("" if _t481 else " ← 取得失敗理由がどこにも出ていません")})
 
+    # ── Improve daily data freshness and effective route generation ──
+    def _load_json_safe(rel):
+        try:
+            with open(_os468.path.join(_root, rel), encoding='utf-8') as _jf:
+                return _json482.load(_jf)
+        except Exception:
+            return None
+    import json as _json482
+
+    _rank_json = _load_json_safe('exports/ranking_report/latest.json') or {}
+    _sed_json = _load_json_safe('exports/sedori_routes_report/latest.json') or {}
+    _dq_json = _load_json_safe('exports/data_quality_report/latest.json') or {}
+
+    # #482: beginner ランキングが0件なら理由が表示される
+    _beg_rank_n = len(_rank_json.get('beginner_top10', []) or [])
+    _t482 = (_beg_rank_n > 0) or bool(_rank_json.get('reason_if_empty'))
+    results.append({"level": "ok" if _t482 else "error", "check": "ranking_empty_reason",
+                    "message": f"#482 beginner ランキングが0件なら理由が表示される（beginner={_beg_rank_n}）"
+                               + ("" if _t482 else " ← 0件なのに reason_if_empty がありません")})
+
+    # #483: sedori ルートが0件なら理由が表示される
+    _sed_route_n = len(_sed_json.get('routes', []) or _sed_json.get('pro_routes', []) or [])
+    _t483 = (_sed_route_n > 0) or bool(_sed_json.get('reason_if_empty'))
+    results.append({"level": "ok" if _t483 else "error", "check": "sedori_empty_reason",
+                    "message": f"#483 sedori ルートが0件なら理由が表示される（routes={_sed_route_n}）"
+                               + ("" if _t483 else " ← 0件なのに reason_if_empty がありません")})
+
+    # #484: overseas stale が主計算（ランキング/Pro/せどり）に使われない設計
+    #   update_overseas_prices.py に stale 判定があり、stale を主計算から除外する方針が明示されている。
+    _ovs_src = ''
+    try:
+        with open(_os468.path.join(_root, 'scripts', 'update_overseas_prices.py'), encoding='utf-8') as _of:
+            _ovs_src = _of.read()
+    except Exception:
+        _ovs_src = ''
+    _t484 = ('stale' in _ovs_src) and ('主計算' in _ovs_src or '除外' in _ovs_src)
+    results.append({"level": "ok" if _t484 else "warning", "check": "overseas_stale_excluded",
+                    "message": "#484 overseas stale は主計算から除外する方針が明示されている"
+                               + ("" if _t484 else " ← stale 除外の明示が見つかりません")})
+
+    # #485: EBAY_APP_ID 未設定時に明確な warning を出す実装がある
+    _t485 = ('EBAY_APP_ID' in _ovs_src) and ('STRONG WARNING' in _ovs_src or 'api_not_configured' in _ovs_src)
+    results.append({"level": "ok" if _t485 else "error", "check": "ebay_app_id_warning",
+                    "message": "#485 EBAY_APP_ID 未設定時に明確な warning を出す"
+                               + ("" if _t485 else " ← EBAY_APP_ID 未設定警告が見つかりません")})
+
+    # #486: 手動データ（camera 含む）が14日超なら利益判定から除外（LP・ranking 両方）
+    _ranking_src = ''
+    try:
+        with open(_os468.path.join(_root, 'scripts', 'generate_ranking_report.py'), encoding='utf-8') as _rf:
+            _ranking_src = _rf.read()
+    except Exception:
+        _ranking_src = ''
+    _t486 = ('EXCLUDE_STALE_H' in _gen_src) and ('336' in _ranking_src) and ('_stale_excluded' in _ranking_src)
+    results.append({"level": "ok" if _t486 else "error", "check": "camera_manual_14d_excluded",
+                    "message": "#486 手動データ（camera含む）が14日超なら利益判定から除外される（LP・ranking）"
+                               + ("" if _t486 else " ← 14日除外ロジックが見つかりません")})
+
+    # #487: データ品質レポートに 成功率 / 失敗理由 / 有効データ数 が出る
+    _dq_ok = bool(_dq_json) and ('collection' in _dq_json) and ('failure_reasons' in _dq_json) \
+        and ('effective_data' in _dq_json) and ('ranking_usable' in _dq_json) and ('sedori_usable' in _dq_json)
+    results.append({"level": "ok" if _dq_ok else "error", "check": "data_quality_report_present",
+                    "message": "#487 データ品質レポートに 成功率/失敗理由/有効データ数/ranking・sedori使用数 が出る"
+                               + ("" if _dq_ok else " ← data_quality_report/latest.json が不完全です")})
+
     return results
 
 

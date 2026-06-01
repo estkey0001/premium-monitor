@@ -144,6 +144,12 @@ jobs:
         env:
           PYTHONPATH: .
 
+      - name: Generate data quality report
+        run: python scripts/generate_data_quality_report.py
+        continue-on-error: true
+        env:
+          PYTHONPATH: .
+
       # 14. Generate daily LP
       - name: Generate daily LP Variant A
         run: python -m src.cli generate-daily-lp --variant A

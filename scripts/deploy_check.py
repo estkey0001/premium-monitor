@@ -4531,6 +4531,49 @@ def check() -> list[dict]:
                     "message": f"#453 Pro で買取候補が少ない商品に理由が表示される（<3件の商品={_bb_under3_sections} / 理由表示={_bb_reason_notes}）"
                                + ("" if _t453 else " ← 理由表示が不足しています")})
 
+    # ── Refine beginner profit labels and pro route priority ──
+    # #454: profit > 0 の利益ありカードに「様子見」バッジが出ない（Task 1）
+    #   status-profit サブセクション内の shop card に「様子見」ラベルが無いこと。
+    _profit_subsections = _re437.findall(
+        r'status-subhead status-profit.*?(?=status-subhead|monitoring-global-section|fetch-failed-details|<div id="category-beginner|$)',
+        _beg_html388, _re437.DOTALL
+    )
+    _t454 = not any('>様子見<' in s for s in _profit_subsections)
+    results.append({"level": "ok" if _t454 else "error", "check": "beginner_no_watch_badge_on_profit",
+                    "message": "#454 profit>0 の利益ありカードに『様子見』バッジが出ない（利益あり/小幅利益/微益）"
+                               + ("" if _t454 else " ← 利益ありカードに『様子見』が残っています")})
+
+    # #455: 価格「—」店舗が通常の「もっと見る」に混ざらず、別 details に分離されている（Task 2）
+    #   取得失敗・未掲載店舗は shop-failed-details（専用 details）にある。
+    _has_failed_rows = 'shop-row-failed' in _beg_html388
+    _t455 = (not _has_failed_rows) or ('shop-failed-details' in _beg_html388 and '取得失敗・未掲載店舗を見る' in _beg_html388)
+    results.append({"level": "ok" if _t455 else "error", "check": "beginner_failed_shops_separate_details",
+                    "message": "#455 価格『—』店舗は通常のもっと見るに混ざらず別 details に分離されている"
+                               + ("" if _t455 else " ← 取得失敗店舗が通常のもっと見るに混在しています")})
+
+    # #456: 取得失敗店舗（shop-row-failed）が通常の shop-more-details（価格取得済み）側に出ない（Task 2）
+    #   shop-failed-details を除いた通常 more-details 内に shop-row-failed が無いこと。
+    _normal_more = _re437.findall(
+        r'<details class="shop-more-details">.*?</details>', _beg_html388, _re437.DOTALL
+    )
+    _t456 = not any('shop-row-failed' in m for m in _normal_more)
+    results.append({"level": "ok" if _t456 else "error", "check": "beginner_no_failed_in_normal_more",
+                    "message": "#456 取得失敗店舗が通常の『もっと見る（価格取得済み）』に出ない"
+                               + ("" if _t456 else " ← 通常のもっと見るに取得失敗店舗が混在しています")})
+
+    # #457: Pro ルートで買取店→買取店ルートだけが上位を占めない（Task 4）
+    #   買取店→買取店ルートは『要確認（買取店→買取店）』セクションに分離され、警告ノートが付く。
+    #   推奨ルートがある場合は推奨が上に来る。bb2bb ルートが無い日は正常。
+    _pos_pref  = _sed_html396.find('Proルート 推奨')
+    _pos_bb2bb = _sed_html396.find('要確認（買取店→買取店）')
+    if _pos_bb2bb >= 0:
+        _t457 = ((_pos_pref < 0) or (_pos_pref < _pos_bb2bb)) and ('sc-route-bb2bb-note' in _sed_html396)
+    else:
+        _t457 = True
+    results.append({"level": "ok" if _t457 else "error", "check": "pro_route_bb2bb_not_top",
+                    "message": "#457 Pro ルートで買取店→買取店ルートだけが上位を占めない（要確認セクションへ分離）"
+                               + ("" if _t457 else " ← 買取店→買取店ルートが上位を占めています")})
+
     return results
 
 

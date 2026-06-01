@@ -1881,6 +1881,19 @@ a[href], button, [role="tab"], [role="button"],
   border-radius: 999px; padding: 1px 9px;
 }}
 .monitoring-global-section > .cards-grid {{ margin-top: 14px; }}
+.monitoring-genre-groups {{ margin-top: 14px; }}
+.monitoring-genre-group {{ margin-bottom: 18px; }}
+.monitoring-genre-group .monitoring-genre-head {{
+  font-size: 0.86rem; font-weight: 800; color: var(--ink2);
+  padding: 4px 2px 8px; border-bottom: 1px solid #EEE3D6; margin-bottom: 10px;
+}}
+.monitoring-genre-group .mon-genre-count {{
+  display: inline-block; margin-left: 6px;
+  font-size: 0.72rem; font-weight: 700; color: #99502A;
+}}
+/* 取得失敗・未掲載店舗の別 details（価格「—」店舗を通常のもっと見るに混ぜない） */
+.shop-failed-details > summary.shop-failed-summary {{ color: var(--ink3); }}
+.shop-failed-details > summary.shop-failed-summary:hover {{ color: #99502A; }}
 
 /* 4店舗目以降の折りたたみ（details） */
 .shop-more-details {{
@@ -3424,6 +3437,11 @@ details[open] > .fetch-failed-summary::before {{ transform: rotate(90deg); }}
   background: linear-gradient(135deg, #FFFBEB 0%, #FFF7ED 100%) !important;
 }}
 tr.sc-route-review {{ background: #FFFBEB; }}
+.sc-route-bb2bb-note {{
+  font-size: 0.78rem; color: #99502A; background: #FFF6EE;
+  border: 1px dashed #E6C29E; border-radius: 6px;
+  padding: 6px 10px; margin: 14px 0 6px;
+}}
 
 @media (max-width: 640px) {{
   .sc-best-card {{ padding: 16px; }}
@@ -4985,22 +5003,69 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                     parts.append(_make_route_table(beg_review, title_label="初心者ルート 要確認"))
 
             # ── Proルート（店舗間せどり／二次流通仕入れ → 別市場売却）──
+            # Task 4: 推奨ルートを優先し、買取店→買取店ルートは「要確認（下位）」へ。
+            #   推奨: フリマ/オークション/EC新品仕入れ → eBay/StockX/海外・買取店売却
+            #     ・ヤフオク未使用 → eBay / StockX
+            #     ・メルカリ未使用 → eBay / StockX
+            #     ・Amazon新品 / 楽天新品 → 買取店 / 海外
+            _OVERSEAS_SELL_KWS = ('ebay', 'stockx', '海外')
+            _RESALE_BUY_KWS = ('ヤフオク', 'yahoo', 'メルカリ', 'mercari', 'ラクマ', 'rakuma',
+                               'amazon', 'アマゾン', '楽天', 'rakuten')
+
+            def _is_overseas_sell(name):
+                n = (name or '').lower()
+                return any(k.lower() in n for k in _OVERSEAS_SELL_KWS)
+
+            def _is_resale_buy(name):
+                n = (name or '').lower()
+                return any(k.lower() in n for k in _RESALE_BUY_KWS)
+
+            def _is_buyback_shop_name(name):
+                # フリマ/オークション/EC でも海外でもない国内店 = 買取店扱い
+                return (not _is_resale_buy(name)) and (not _is_overseas_sell(name)) \
+                    and (not self._is_resale_shop(name))
+
+            def _route_pref(r):
+                bs = getattr(r, 'buy_shop_name', '') or ''
+                ss = getattr(r, 'sell_shop_name', '') or ''
+                if _is_buyback_shop_name(bs) and _is_buyback_shop_name(ss):
+                    return 2  # 買取店→買取店：下位（要確認）
+                # 推奨: フリマ/オークション/EC新品仕入れ → 海外 or 買取店売却
+                if _is_resale_buy(bs) and (_is_overseas_sell(ss) or _is_buyback_shop_name(ss)):
+                    return 0
+                return 1  # その他
+
+            _pro_pref    = [r for r in pro_routes if _route_pref(r) == 0]
+            _pro_neutral = [r for r in pro_routes if _route_pref(r) == 1]
+            _pro_bb2bb   = [r for r in pro_routes if _route_pref(r) == 2]
+            _pro_top = sorted(_pro_pref + _pro_neutral,
+                              key=lambda r: getattr(r, 'net_profit', 0) or 0, reverse=True)
+            _pro_low = sorted(_pro_bb2bb,
+                              key=lambda r: getattr(r, 'net_profit', 0) or 0, reverse=True)
+
             if pro_routes:
                 parts.append(f'''<div class="sc-review-section" style="border-left:4px solid #7c3aed;background:#faf5ff;border-radius:8px;padding:12px 16px;margin:12px 0">
   <div class="sc-review-hd">
     <span class="sc-review-icon">&#9997;&#65039;</span>
     <div>
-      <div class="sc-review-title" style="color:#7c3aed">Proルート（店舗間せどり／二次流通）</div>
-      <div class="sc-review-sub">新品・未使用・未開封のみ。店舗間の価格差や二次流通（ヤフオク・メルカリ・eBay等）で仕入れ → 別市場で売却するルートです。
-出品・送料・手数料・在庫・為替リスクが発生します。経験者向けです（新品・未使用・未開封のみ）。</div>
+      <div class="sc-review-title" style="color:#7c3aed">Proルート（二次流通仕入れ → 別市場売却）</div>
+      <div class="sc-review-sub">新品・未使用・未開封のみ。<strong>推奨：ヤフオク/メルカリ未使用 → eBay/StockX、Amazon/楽天新品 → 買取店/海外</strong>。
+出品・送料・手数料・在庫・為替リスクが発生します。経験者向けです（新品・未使用・未開封のみ）。
+買取店→買取店ルートは利幅が薄く要確認のため下位に表示します。</div>
     </div>
   </div>
 </div>''')
-                best_pro = pro_ok[0] if pro_ok else pro_routes[0]
-                # Proルートは大型カードなしでリスト表示
-                all_pro = (pro_ok + pro_review)[:10]
-                if all_pro:
-                    parts.append(_make_route_table(all_pro, title_label=f"Proルート（{len(pro_routes)}件）"))
+                # 推奨/通常ルート（買取店→買取店を除く）を上位表示
+                if _pro_top:
+                    parts.append(_make_route_table(_pro_top[:10],
+                                 title_label=f"Proルート 推奨（{len(_pro_top)}件）"))
+                # 買取店→買取店ルートは「要確認（下位）」セクションへ
+                if _pro_low:
+                    parts.append('<div class="sc-route-bb2bb-note">'
+                                 '&#9888; 以下は買取店→買取店ルートです。利幅が薄く価格変動リスクがあるため要確認・参考扱いです。'
+                                 '</div>')
+                    parts.append(_make_route_table(_pro_low[:10],
+                                 title_label="Proルート 要確認（買取店→買取店）"))
 
             # データなしフォールバック（DB routes は存在するが分類不能の場合）
             if not beginner_routes and not pro_routes and display_routes:
@@ -5086,6 +5151,27 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             return '<span class="badge-auto-scraped">LIVE</span>'
         else:
             return '<span class="badge-manual">—</span>'
+
+    @staticmethod
+    def _profit_badge(net_profit_jpy) -> tuple:
+        """利益額に応じた初心者カードのバッジ (css_class, label) を返す（Task 1）。
+        profit>0 のカードでは「様子見」を出さない。
+          +10,000円以上    → 利益あり
+          +3,000〜+9,999円 → 小幅利益
+          +1〜+2,999円     → 微益
+          0円以下          → 監視中（様子見）
+        """
+        try:
+            np = int(net_profit_jpy or 0)
+        except (TypeError, ValueError):
+            np = 0
+        if np >= 10000:
+            return ('badge-easy', '利益あり')
+        if np >= 3000:
+            return ('badge-easy', '小幅利益')
+        if np >= 1:
+            return ('badge-watch', '微益')
+        return ('badge-watch', '監視中')
 
     @staticmethod
     def _condition_label(cond) -> str:
@@ -5477,6 +5563,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         # ── 監視中 / 取得失敗カードはジャンルを横断して下部に集約（Task 4）──
         # 上部＝利益ありカードのみ。監視中・取得失敗は最下部の折りたたみセクションへ。
         _global_monitoring_html = []
+        _global_monitoring_count = 0  # 監視中カードの総数（ジャンル横断）
         _global_failed_html = []
 
         genre_rendered = False
@@ -5527,20 +5614,32 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 parts.append('<div class="status-subsection"><div class="status-subhead status-profit">利益あり</div><div class="cards-grid">')
                 for d in profit_deals:
                     rows = bybp.get(d.product_id, [])
-                    badge_cls = 'badge-easy' if getattr(d, 'user_level', '') == 'beginner_easy' else 'badge-watch'
-                    label = '低難度' if getattr(d, 'user_level', '') == 'beginner_easy' else '様子見'
+                    # 利益額に応じてバッジを段階化（Task 1）。
+                    # profit>0 のカードでは「様子見」を出さない。
+                    _np = d.net_profit_jpy or 0
+                    badge_cls, label = self._profit_badge(_np)
                     _ovs_p, _ovs_s, _ovs_obs, _ovs_method = _get_overseas(d)
                     parts.append(self._deal_card(d, badge_cls, label, buyback_rows=rows,
                                                  overseas_price_jpy=_ovs_p, overseas_source=_ovs_s,
                                                  overseas_observed_at=_ovs_obs, overseas_collector_method=_ovs_method))
                 parts.append('</div></div>')
 
-            # 監視中 / 赤字 → 下部のグローバル折りたたみへ集約（Task 4）
-            for d in monitoring_genre:
-                rows = bybp.get(d.product_id, [])
-                _global_monitoring_html.append(self._deal_card_monitoring(d, buyback_rows=rows))
+            # 監視中 / 赤字 → 下部のグローバル折りたたみへジャンル別に集約（Task 3）
+            if monitoring_genre:
+                _mon_cards = [
+                    self._deal_card_monitoring(d, buyback_rows=bybp.get(d.product_id, []))
+                    for d in monitoring_genre
+                ]
+                _global_monitoring_count += len(_mon_cards)
+                _global_monitoring_html.append(
+                    f'<div class="monitoring-genre-group">'
+                    f'<div class="monitoring-genre-head">{genre_label}'
+                    f'<span class="mon-genre-count">{len(_mon_cards)}件</span></div>'
+                    f'<div class="cards-grid">' + ''.join(_mon_cards) + '</div>'
+                    f'</div>'
+                )
 
-            # 取得失敗 → 下部のグローバル折りたたみへ集約（Task 4）
+            # 取得失敗 → 下部のグローバル折りたたみへ集約
             for d in ff_genre:
                 rows = bybp.get(d.product_id, [])
                 _global_failed_html.append(self._deal_card_fetch_failed(d, buyback_rows=rows))
@@ -5597,10 +5696,10 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 f'<details class="monitoring-global-section">'
                 f'<summary class="monitoring-global-summary">'
                 f'&#128064; 監視中の商品を見る '
-                f'<span class="mon-count-badge">{len(_global_monitoring_html)}件</span>'
+                f'<span class="mon-count-badge">{_global_monitoring_count}件</span>'
                 f'<span class="ff-expand-hint">（クリックで展開）</span>'
                 f'</summary>'
-                f'<div class="cards-grid">'
+                f'<div class="monitoring-genre-groups">'
                 + ''.join(_global_monitoring_html)
                 + '</div></details>'
             )
@@ -6164,24 +6263,31 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                     f'</div>'
                 )
 
-            # 上位3店舗を常時表示、4店舗目以降（＋取得失敗行）は details で折りたたみ（Task 1）
+            # 上位3店舗を常時表示。4店舗目以降（価格取得済み）と取得失敗・未掲載店舗は
+            # 別々の details に分離する（Task 2: 価格「—」店舗を通常のもっと見るに混ぜない）。
             _TOP_N = 3
             visible_html = []
-            hidden_html  = []
+            more_priced_html = []   # 4店舗目以降の「価格取得済み」店舗
+            failed_html = []        # 価格「—」の取得失敗・未掲載店舗
             for i, r in enumerate(_normal_rows):
                 row = _render_shop_row(r, i + 1)
-                (visible_html if i < _TOP_N else hidden_html).append(row)
-            # 取得失敗行は折りたたみ側へ（確認リンク目的・上位表示を圧迫しない）
+                (visible_html if i < _TOP_N else more_priced_html).append(row)
             for r in _failed_rows:
-                hidden_html.append(_render_shop_row(r, None))
+                failed_html.append(_render_shop_row(r, None))
 
-            _hidden_count = len(hidden_html)
             details_html = ''
-            if hidden_html:
-                details_html = (
+            if more_priced_html:
+                details_html += (
                     f'<details class="shop-more-details">'
-                    f'<summary class="shop-more-summary">もっと見る（残り{_hidden_count}店舗）</summary>'
-                    + ''.join(hidden_html)
+                    f'<summary class="shop-more-summary">もっと見る（残り価格取得済み店舗 {len(more_priced_html)}店舗）</summary>'
+                    + ''.join(more_priced_html)
+                    + '</details>'
+                )
+            if failed_html:
+                details_html += (
+                    f'<details class="shop-more-details shop-failed-details">'
+                    f'<summary class="shop-more-summary shop-failed-summary">取得失敗・未掲載店舗を見る（{len(failed_html)}店舗）</summary>'
+                    + ''.join(failed_html)
                     + '</details>'
                 )
 

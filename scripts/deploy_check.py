@@ -4604,6 +4604,42 @@ def check() -> list[dict]:
                     "message": "#462 『小幅利益』カードに本文『小幅利益（定価購入→最高買取・参考値）』が表示される"
                                + ("" if _t462 else " ← 小幅利益カードの正規 note 文言が見つかりません")})
 
+    # ── Restore camera buyback visibility in beginner tab ──
+    # #463: カメラ初心者カードが存在する
+    _t463 = ('badge-camera' in _beg_html388) or ('data-genre="camera"' in _beg_html388)
+    results.append({"level": "ok" if _t463 else "warning", "check": "beginner_camera_card_exists",
+                    "message": "#463 カメラの初心者カードが存在する"
+                               + ("" if _t463 else " ← カメラ初心者カードが見つかりません（カメラ案件0件の日は正常）")})
+
+    # #464: カメラ等の未取得カードに理由付き表示がある（理由ラベルのいずれかが出る）
+    _REASON_LABELS = ('中古価格のみ取得', '新品買取価格なし', 'サイト制限中', '商品未掲載', '取得失敗')
+    _has_reason = any(lbl in _beg_html388 for lbl in _REASON_LABELS)
+    # 未取得カードが存在するなら理由が併記されていること
+    _has_unavail = ('未取得' in _beg_html388)
+    _t464 = (not _has_unavail) or (_has_reason and ('未取得（' in _beg_html388))
+    results.append({"level": "ok" if _t464 else "error", "check": "beginner_missing_reason_shown",
+                    "message": "#464 未取得カードに理由（中古価格のみ取得/新品買取価格なし/サイト制限中/商品未掲載/取得失敗）が表示される"
+                               + ("" if _t464 else " ← 未取得カードに理由が併記されていません")})
+
+    # #465: 新品/未使用の買取価格がある利益カードには店舗名（最高買取店）が出る
+    #   利益サブセクションの best-buyback-hero に '—' でない店舗名が表示されている。
+    _hero_blocks = _re437.findall(r'best-buyback-hero">.*?</div>\s*</div>', _beg_html388, _re437.DOTALL)
+    _t465 = (not _hero_blocks) or all(
+        (m is not None and m.group(1).strip() not in ('', '—'))
+        for m in (_re437.search(r'bb-shop-val"><strong>([^<]*)</strong>', h) for h in _hero_blocks)
+    )
+    results.append({"level": "ok" if _t465 else "error", "check": "beginner_best_shop_name_shown",
+                    "message": "#465 新品/未使用の買取価格がある場合は最高買取店の店舗名が表示される"
+                               + ("" if _t465 else " ← 店舗名が空または『—』の最高買取店ブロックがあります")})
+
+    # #466: 中古価格（中古A/used_a/美品 等）が初心者カードの買取価格・条件として使われない
+    #   （理由テキストの『中古価格のみ取得』は説明文なので許容。条件ラベルとしての中古は不可）
+    _t466 = ('中古A' not in _beg_html388) and ('used_a' not in _beg_html388) \
+        and ('美品' not in _beg_html388) and ('中古販売価格' not in _beg_html388)
+    results.append({"level": "ok" if _t466 else "error", "check": "beginner_no_used_price_used",
+                    "message": "#466 中古価格（中古A/used_a/美品/中古販売価格）が初心者の買取価格に使われない"
+                               + ("" if _t466 else " ← 初心者カードに中古条件の価格が混入しています")})
+
     return results
 
 

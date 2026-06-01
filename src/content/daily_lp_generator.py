@@ -2234,6 +2234,11 @@ details[open] > .fetch-failed-summary::before {{ transform: rotate(90deg); }}
   font-weight: 800; color: #00A37A; font-variant-numeric: tabular-nums;
 }}
 .pro-buyback-table .pro-row-buyback .price-value {{ color: #00A37A; }}
+.pro-bb-reason-note {{
+  font-size: 0.74rem; color: #99502A; background: #FFF6EE;
+  border: 1px dashed #E6C29E; border-radius: 6px;
+  padding: 5px 9px; margin: 4px 0 6px;
+}}
 .pro-overseas-price-table .price-value {{
   font-weight: 700; color: #0369A1;
 }}
@@ -6703,16 +6708,32 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             _bb_rows = bybp.get(prod_id, [])
             _bb_seen = set()
             _bb_valid = []
+            # 除外理由カウンタ（候補が3件未満のとき理由を表示するため）
+            _bb_reason = {'failed': 0, 'not_listed': 0, 'blocked': 0, 'used': 0, 'lowconf': 0}
             for r in _bb_rows:
                 _bp = r.get("buyback_price", 0) or 0
                 _sname = (r.get("shop_name", "") or "").strip()
+                _ds = r.get("data_source", "")
+                _reason_raw = (r.get("reason", "") or r.get("failure_reason", "") or "").lower()
+                # 取得失敗・未掲載・サイト制限の分類
+                if _ds == 'fetch_failed' or _bp <= 0:
+                    if _ds == 'product_not_listed' or 'not_listed' in _reason_raw or 'not_found' in _reason_raw:
+                        _bb_reason['not_listed'] += 1
+                    elif ('429' in _reason_raw) or ('block' in _reason_raw) or ('cloudflare' in _reason_raw) or ('rate' in _reason_raw):
+                        _bb_reason['blocked'] += 1
+                    elif _ds == 'fetch_failed':
+                        _bb_reason['failed'] += 1
+                if _ds == 'product_not_listed':
+                    _bb_reason['not_listed'] += 1
                 if _bp <= 0 or not _sname:
                     continue
                 if r.get("data_source") == "resale_market":
                     continue
                 if r.get("confidence", "high") == "low":
+                    _bb_reason['lowconf'] += 1
                     continue
                 if self._cond_is_used(r.get("condition", "")):
+                    _bb_reason['used'] += 1
                     continue
                 if self._is_resale_shop(_sname):
                     continue
@@ -6743,16 +6764,53 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                     f'<td class="pro-action-cell">{_baction}</td>'
                     f'</tr>'
                 )
+            # ── 候補が3件未満のときの理由文言を生成（Pro：買取候補が少ない理由を明示）──
+            _bb_reason_note = ""
+            if len(bbrows) < 3:
+                _reasons = []
+                if _bb_reason['failed'] > 0:
+                    _reasons.append(f'取得失敗 {_bb_reason["failed"]}件')
+                if _bb_reason['not_listed'] > 0:
+                    _reasons.append(f'対象商品未掲載 {_bb_reason["not_listed"]}件')
+                if _bb_reason['blocked'] > 0:
+                    _reasons.append(f'サイト制限中 {_bb_reason["blocked"]}件')
+                if _bb_reason['used'] > 0:
+                    _reasons.append(f'新品/未使用価格なし（中古のみ）{_bb_reason["used"]}件')
+                if _bb_reason['lowconf'] > 0:
+                    _reasons.append(f'価格信頼度低 {_bb_reason["lowconf"]}件')
+                if not _reasons:
+                    # 生データが全く無い＝対象商品が買取対象外/未掲載
+                    if not _bb_rows:
+                        _reasons.append('対象商品未掲載（買取データ未取得）')
+                    else:
+                        _reasons.append('新品/未使用価格なし')
+                _bb_reason_note = (
+                    f'<div class="pro-bb-reason-note">'
+                    f'&#9888; 買取店候補が少ない理由：{_esc(" / ".join(_reasons))}'
+                    f'</div>'
+                )
+
             # 「国内売却候補 / 買取店」セクション（仕入れ候補と分離）
+            # 候補が0件でもセクション見出しと理由を表示する（買取店候補を完全に消さない）。
             buyback_table_html = ""
+            _bb_label_count = len(bbrows)
             if bbrows:
                 buyback_table_html = (
                     f'<div class="pro-subsection-label pro-buyback-label">'
-                    f'&#127974; 国内売却候補 / 買取店（{len(bbrows)}件）</div>'
+                    f'&#127974; 国内売却候補 / 買取店（{_bb_label_count}件）</div>'
                     f'<table class="pro-price-table pro-domestic-price-table pro-buyback-table">'
                     f'<thead><tr><th>買取店</th><th>買取価格</th><th>種別</th><th>確認日</th><th></th></tr></thead>'
                     f'<tbody>{"".join(bbrows)}</tbody>'
                     f'</table>'
+                    + _bb_reason_note
+                )
+            else:
+                # 候補0件 → 見出し＋理由のみ（セクション自体は残す）
+                buyback_table_html = (
+                    f'<div class="pro-subsection-label pro-buyback-label">'
+                    f'&#127974; 国内売却候補 / 買取店（0件）</div>'
+                    + (_bb_reason_note or
+                       '<div class="pro-bb-reason-note">&#9888; 買取店候補が少ない理由：対象商品未掲載（買取データ未取得）</div>')
                 )
 
             # 価格未取得 → チップ

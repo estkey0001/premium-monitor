@@ -1823,6 +1823,13 @@ a[href], button, [role="tab"], [role="button"],
   color: #C2701A; font-weight: 700; margin-left: 2px;
 }}
 
+/* 初心者カードの取得方法ラベル（小さく控えめ — 価格・店名より目立たせない） */
+.shop-source-col .shop-source-mini {{
+  font-size: 0.62rem; font-weight: 500;
+  color: var(--ink3); opacity: 0.7;
+  white-space: nowrap;
+}}
+
 .shop-row {{
   display: flex; align-items: center;
   padding: 11px 14px;
@@ -6005,13 +6012,22 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 )
                 rank_cls = 'gold' if rank_counter == 1 else ('silver' if rank_counter == 2 else '')
                 diff_cls = ' neg' if profit < 0 else ''
+                # 初心者モードでは「自動取得/手動確認」を大きなバッジで出さず、
+                # 小さく控えめに表示する（順位・店名・価格・差益・確認リンクを優先：Task 2）
+                if pro_mode:
+                    source_col_html = source_badge
+                else:
+                    source_col_html = (
+                        f'<span class="shop-source-mini">'
+                        f'{_esc(self._source_label_jp(r.get("data_source", "")))}</span>'
+                    )
                 return (
                     f'<div class="shop-row">'
                     f'<div class="shop-rank {rank_cls}">{rank_counter}</div>'
                     f'<div class="shop-name-col">{sname}</div>'
                     f'<div class="shop-price-col">¥{bp:,}</div>'
                     f'<div class="shop-diff-col{diff_cls}">{_esc(profit_str)}</div>'
-                    f'<div class="shop-source-col">{source_badge}</div>'
+                    f'<div class="shop-source-col">{source_col_html}</div>'
                     f'<div class="shop-link-col">{link_col}</div>'
                     f'</div>'
                 )
@@ -6439,15 +6455,22 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 ("src_kakaku",        "価格.com",      f"https://kakaku.com/search_results/{pname_enc}/"),
                 ("src_sofmap",        "ソフマップ中古",  f"https://www.sofmap.com/product_list.aspx?q={pname_enc}&st=1"),
             ]
-            dom_has = []  # (sid, slabel, surl, db_row) — 価格あり
+            dom_has = []  # (sid, slabel, surl, db_row) — 価格あり（新品・未使用・未開封のみ）
             dom_no  = []  # (sid, slabel, surl) — 価格未取得
+            _dom_used_filtered = 0  # 中古条件で除外した件数（fallback 文言判定用）
             for sid, slabel, surl in all_domestic_sites:
                 db_row = dom_by_src.get(sid)
                 if db_row:
+                    # Pro でも中古販売価格・中古・used・美品・開封済み・ジャンク等は表示しない（新品・未使用・未開封のみ）
+                    _basis = db_row.get("price_basis") or ""
+                    if self._cond_is_used(_basis):
+                        _dom_used_filtered += 1
+                        dom_no.append((sid, slabel, surl))
+                        continue
                     dom_has.append((sid, slabel, surl, db_row))
                 else:
                     dom_no.append((sid, slabel, surl))
-            # 安い順（中古国内相場は低い＝買いやすい）
+            # 安い順（新品・未使用の国内二次流通相場は低い＝買いやすい）
             dom_has.sort(key=lambda x: x[3].get("price", 0))
             dom_min_price = dom_has[0][3].get("price", 0) if dom_has else 0
             dom_min_label = dom_has[0][1] if dom_has else ""
@@ -6498,8 +6521,11 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                     + dom_no_html
                 )
             else:
+                # 中古データのみで新品・未使用・未開封が無い場合は明示する（中古価格は出さない方針）
+                _no_data_msg = ('新品・未使用価格未取得' if _dom_used_filtered > 0
+                                else '国内価格データ未取得')
                 domestic_table_html = (
-                    f'<div class="pro-no-data-note">国内価格データ未取得</div>'
+                    f'<div class="pro-no-data-note">{_no_data_msg}</div>'
                     + dom_no_html
                 )
 

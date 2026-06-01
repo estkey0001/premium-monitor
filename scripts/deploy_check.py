@@ -4364,6 +4364,44 @@ def check() -> list[dict]:
                     "message": "#435 最高買取店が大きく表示されている（best-buyback-block / bb-shop-price）"
                                + ("" if _t435 else " ← 最高買取店の大表示ブロックが見つかりません")})
 
+    # #436: Pro タブに「中古販売価格」が存在しない（Pro でも中古は出さない：Task 1）
+    _t436 = '中古販売価格' not in _pro_html388
+    results.append({"level": "ok" if _t436 else "error", "check": "no_used_sale_price_in_pro",
+                    "message": "#436 Pro タブに『中古販売価格』が存在しない（新品・未使用・未開封のみ）"
+                               + ("" if _t436 else " ← Pro に中古販売価格が残っています")})
+
+    # #437: Pro の価格根拠（pro-price-basis）に「中古」「used_a」「used」が主表示されない（Task 1）
+    import re as _re437
+    _basis_spans = _re437.findall(r'<span class="pro-price-basis[^"]*">(.*?)</span>', _pro_html388)
+    _bad_basis = [b for b in _basis_spans if ('中古' in b) or ('used_a' in b.lower()) or ('used' in b.lower()) or ('美品' in b) or ('開封済' in b) or ('ジャンク' in b)]
+    _t437 = not _bad_basis
+    results.append({"level": "ok" if _t437 else "error", "check": "no_used_basis_in_pro",
+                    "message": "#437 Pro の価格根拠に『中古/used_a/used/美品/開封済み/ジャンク』が主表示されない"
+                               + ("" if _t437 else f" ← 中古系の価格根拠が残っています: {', '.join(_bad_basis[:3])}")})
+
+    # #438: Pro で中古価格しかない場合「新品・未使用価格未取得」と表示される（Task 1）
+    #   中古販売価格が DB に存在する状況で、Pro 国内テーブルがそれを除外した結果の fallback 文言を検査。
+    #   （該当データが無い日もあるため warning レベル：存在すれば OK、無くても公開は妨げない）
+    _t438 = '新品・未使用価格未取得' in _pro_html388
+    results.append({"level": "ok" if _t438 else "warning", "check": "pro_used_only_fallback_label",
+                    "message": "#438 Pro で中古価格のみの商品は『新品・未使用価格未取得』と表示される"
+                               + ("" if _t438 else " ← 該当文言が見当たりません（中古のみの商品が無い日は正常）")})
+
+    # #439: Beginner の買取店比較で「自動取得」が価格/店舗名より目立つ大バッジで出ていない（Task 2）
+    #   shop-row 内に badge-auto / badge-manual（大きめバッジ）が無いことを検査（小さい shop-source-mini はOK）
+    _beg_shop_rows = _re437.findall(r'<div class="shop-row(?: [^"]*)?">.*?</div>\s*</div>', _beg_html388)
+    # Beginner の通常 shop-row 群に大バッジ（badge-auto/badge-manual）が無いことを検査
+    _t439 = not any(('badge-auto' in row) or ('badge-manual' in row) for row in _beg_shop_rows)
+    results.append({"level": "ok" if _t439 else "error", "check": "beginner_source_not_prominent",
+                    "message": "#439 Beginner の買取店比較で『自動取得/手動確認』が大バッジで目立っていない（小さく表示）"
+                               + ("" if _t439 else " ← Beginner の店舗行に大きな取得方法バッジが残っています")})
+
+    # #440: Beginner の取得方法は小さく表示（shop-source-mini）または details 内にある（Task 2）
+    _t440 = ('shop-source-mini' in _beg_html388) or ('confirm-line' in _beg_html388)
+    results.append({"level": "ok" if _t440 else "error", "check": "beginner_source_small_or_details",
+                    "message": "#440 Beginner の取得方法は小さく表示（shop-source-mini / confirm-line）されている"
+                               + ("" if _t440 else " ← 取得方法の小表示が見つかりません")})
+
     return results
 
 

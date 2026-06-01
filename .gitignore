@@ -40,3 +40,7 @@ build/
 # Playwright
 playwright-report/
 test-results/
+
+# macOS archive junk
+__MACOSX/
+.DS_Store

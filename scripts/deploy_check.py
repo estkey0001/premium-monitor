@@ -4612,14 +4612,14 @@ def check() -> list[dict]:
                                + ("" if _t463 else " ← カメラ初心者カードが見つかりません（カメラ案件0件の日は正常）")})
 
     # #464: カメラ等の未取得カードに理由付き表示がある（理由ラベルのいずれかが出る）
-    _REASON_LABELS = ('中古価格のみ取得', '新品買取価格なし', 'サイト制限中', '商品未掲載', '取得失敗')
-    _has_reason = any(lbl in _beg_html388 for lbl in _REASON_LABELS)
-    # 未取得カードが存在するなら理由が併記されていること
-    _has_unavail = ('未取得' in _beg_html388)
-    _t464 = (not _has_unavail) or (_has_reason and ('未取得（' in _beg_html388))
+    #   監視中カードの status バッジが必ず意味のある理由/状態ラベルを持つこと。
+    _REASON_LABELS = ('中古価格のみ取得', '新品買取価格なし', 'サイト制限中', '商品未掲載',
+                      '取得失敗', '買取価格取得待ち', '価格変動を監視中')
+    _mon_badges = _re437.findall(r'mon-status-badge">([^<]+)<', _beg_html388)
+    _t464 = all(b.strip() in _REASON_LABELS for b in _mon_badges)
     results.append({"level": "ok" if _t464 else "error", "check": "beginner_missing_reason_shown",
-                    "message": "#464 未取得カードに理由（中古価格のみ取得/新品買取価格なし/サイト制限中/商品未掲載/取得失敗）が表示される"
-                               + ("" if _t464 else " ← 未取得カードに理由が併記されていません")})
+                    "message": f"#464 未取得/監視中カードに理由（中古価格のみ取得/新品買取価格なし/サイト制限中/商品未掲載/取得失敗 等）が表示される（{len(_mon_badges)}枚）"
+                               + ("" if _t464 else f" ← 理由不明のステータス: {[b for b in _mon_badges if b.strip() not in _REASON_LABELS][:3]}")})
 
     # #465: 新品/未使用の買取価格がある利益カードには店舗名（最高買取店）が出る
     #   利益サブセクションの best-buyback-hero に '—' でない店舗名が表示されている。
@@ -4639,6 +4639,38 @@ def check() -> list[dict]:
     results.append({"level": "ok" if _t466 else "error", "check": "beginner_no_used_price_used",
                     "message": "#466 中古価格（中古A/used_a/美品/中古販売価格）が初心者の買取価格に使われない"
                                + ("" if _t466 else " ← 初心者カードに中古条件の価格が混入しています")})
+
+    # #467: X100VI / GR IV / GR IIIx のうち少なくとも1件は新品・未使用の買取価格（利益カード）が表示される
+    #   カメラの利益カード（stripe-camera + best-buyback-hero）が beginner に存在する。
+    _camera_profit_cards = _re437.findall(
+        r'<div class="deal-card deal-card-compact[^"]*stripe-camera[^"]*"[^>]*>.*?(?=<div class="deal-card |<details class="monitoring-global-section|<details class="status-subsection|$)',
+        _beg_html388, _re437.DOTALL
+    )
+    _t467 = any('best-buyback-hero' in c for c in _camera_profit_cards)
+    results.append({"level": "ok" if _t467 else "error", "check": "beginner_camera_new_unused_buyback_shown",
+                    "message": f"#467 カメラ（X100VI/GR IV/GR IIIx 等）に新品・未使用の買取価格が表示される（利益カード{len(_camera_profit_cards)}枚）"
+                               + ("" if _t467 else " ← カメラの新品・未使用買取価格が表示されていません")})
+
+    # #468: manual_buyback_prices.csv に camera 商品の new/unused 行がある
+    import os as _os468
+    _csv_path = _os468.path.join(_os468.path.dirname(_os468.path.dirname(_os468.path.abspath(__file__))),
+                                 'data', 'manual_buyback_prices.csv')
+    _csv_ok = False
+    try:
+        with open(_csv_path, encoding='utf-8') as _f:
+            _csv_txt = _f.read()
+        _cam_aliases = ('x100vi', 'gr4', 'gr4_hdf', 'gr4_mono', 'gr3x')
+        _new_conds = ('new_unopened', 'new', 'unused', 'sealed')
+        for _ln in _csv_txt.splitlines()[1:]:
+            _parts = _ln.split(',')
+            if len(_parts) >= 4 and _parts[0].strip() in _cam_aliases and _parts[3].strip() in _new_conds:
+                _csv_ok = True
+                break
+    except Exception:
+        _csv_ok = False
+    results.append({"level": "ok" if _csv_ok else "error", "check": "csv_has_camera_new_unused_rows",
+                    "message": "#468 manual_buyback_prices.csv に camera 商品の new/unused 行がある"
+                               + ("" if _csv_ok else " ← カメラの新品・未使用買取行が CSV に見つかりません")})
 
     return results
 

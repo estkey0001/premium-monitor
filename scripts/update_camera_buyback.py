@@ -37,21 +37,53 @@ STATUS_PATH = ROOT / "exports" / "camera_buyback_status.json"
 
 logger = logging.getLogger("update_camera_buyback")
 
-# 対象カメラ（product_alias）
+# 対象カメラ（product_alias → 検索キーワード）
 CAMERA_ALIASES = ["x100vi", "gr4", "gr4_hdf", "gr4_mono", "gr3x"]
+CAMERA_KEYWORDS = {
+    "x100vi":   "FUJIFILM X100VI",
+    "gr4":      "RICOH GR IV",
+    "gr4_hdf":  "RICOH GR IV HDF",
+    "gr4_mono": "RICOH GR IV Monochrome",
+    "gr3x":     "RICOH GR IIIx",
+}
 
-# 対象買取店（shop_id, 表示名, 買取ページURL）
+# 優先実装対象（Task 2: まず3店舗に絞る）
+PRIORITY_SHOPS = {"src_mapcamera", "src_fujiya", "src_kitamura"}
+
+# 対象買取店（shop_id, 表示名, 買取検索URLテンプレート {kw}=URLエンコード済キーワード）
 CAMERA_SHOPS = [
-    ("src_mapcamera",       "マップカメラ",       "https://www.mapcamera.com/"),
-    ("src_kitamura",        "カメラのキタムラ",   "https://www.kitamura.co.jp/"),
-    ("src_fujiya",          "フジヤカメラ",       "https://www.fujiyacamera.com/"),
-    ("src_sofmap",          "ソフマップ",         "https://www.sofmap.com/"),
-    ("src_janpara",         "じゃんぱら",         "https://www.janpara.co.jp/sell/"),
-    ("src_kaitori_shouten", "買取商店",           "https://www.kaitorishouten-co.jp/"),
+    # マップカメラ 買取検索（新品/新品同様の買取価格が掲載される検索ページ）
+    ("src_mapcamera", "マップカメラ",
+     "https://www.mapcamera.com/search?keyword={kw}&sell=1"),
+    # フジヤカメラ 買取（ネット販売・買取の検索）
+    ("src_fujiya", "フジヤカメラ",
+     "https://www.fujiya-camera.co.jp/shop/goods/search.aspx?search.x=0&keyword={kw}"),
+    # カメラのキタムラ ネットワンプライス買取（新品/未使用買取参考）
+    ("src_kitamura", "カメラのキタムラ",
+     "https://www.net-chuko.com/sell/search-list.do?goodsname={kw}"),
+    # 以下は補助（フォーム/JS のため取得困難・失敗理由を記録）
+    ("src_sofmap", "ソフマップ", "https://www.sofmap.com/"),
+    ("src_janpara", "じゃんぱら", "https://www.janpara.co.jp/sell/"),
+    ("src_kaitori_shouten", "買取商店", "https://www.kaitorishouten-co.jp/"),
 ]
 
 # オンライン見積もり非対応（HTML から新品買取が取れない）店舗 → not_supported
 NOT_SUPPORTED = {"src_kaitori_shouten"}
+
+# 店舗別 買取価格抽出パターン（新品/未使用の買取価格を優先的に拾う）
+import re as _re_shop  # noqa: E402
+_SHOP_PRICE_PATTERNS = {
+    # マップカメラ: 「買取価格」「新品」近接の金額
+    "src_mapcamera": [
+        _re_shop.compile(r"(?:買取|新品|未使用)[^¥￥\d]{0,30}[¥￥]\s?([0-9]{2,3}(?:,[0-9]{3})+)"),
+    ],
+    "src_fujiya": [
+        _re_shop.compile(r"(?:買取|新品|未使用)[^¥￥\d]{0,30}[¥￥]\s?([0-9]{2,3}(?:,[0-9]{3})+)"),
+    ],
+    "src_kitamura": [
+        _re_shop.compile(r"(?:買取|新品|未使用)[^¥￥\d]{0,30}[¥￥]\s?([0-9]{2,3}(?:,[0-9]{3})+)"),
+    ],
+}
 
 
 def setup_logging(verbose: bool) -> None:
@@ -93,17 +125,32 @@ def _fetch_html(url: str, timeout: int = 15) -> tuple[Optional[str], str]:
         return None, "http_error"
 
 
-def _parse_buyback_price(html: str, alias: str) -> Optional[int]:
-    """HTML から新品/未使用買取価格を抽出する（best-effort）。
+def _parse_buyback_price(html: str, alias: str, shop_id: str = "") -> Optional[int]:
+    """HTML から新品/未使用買取価格を抽出する（店舗別パターン優先）。
 
-    現状は汎用パターンのみ。確定的に新品買取と判別できない場合は None を返し、
-    price_not_found として記録する（manual_today にフォールバック）。
-    実セレクタが用意でき次第、店舗別に拡張する。
+    店舗別パターン（_SHOP_PRICE_PATTERNS）→ 汎用パターンの順に試行。
+    妥当範囲（¥10,000〜¥1,500,000）に収まる最初の金額を返す。
+    取得できない場合は None（price_not_found として記録、manual_today にフォールバック）。
     """
-    # 「買取価格 ¥xxx,xxx」「新品 買取 xxx円」などの近接パターンのみ採用
-    for m in re.finditer(r"(新品|未使用|未開封)[^¥\d]{0,20}[¥￥]?\s?([0-9]{2,3}(?:,[0-9]{3})+)\s*円?", html):
+    def _valid(v: int) -> bool:
+        return 10_000 <= v <= 1_500_000
+
+    # 1) 店舗別パターン
+    for pat in _SHOP_PRICE_PATTERNS.get(shop_id, []):
+        m = pat.search(html)
+        if m:
+            try:
+                v = int(m.group(1).replace(",", ""))
+                if _valid(v):
+                    return v
+            except (ValueError, IndexError):
+                pass
+    # 2) 汎用パターン（新品/未使用/未開封 近接の金額）
+    for m in re.finditer(r"(新品|未使用|未開封)[^¥￥\d]{0,20}[¥￥]?\s?([0-9]{2,3}(?:,[0-9]{3})+)\s*円?", html):
         try:
-            return int(m.group(2).replace(",", ""))
+            v = int(m.group(2).replace(",", ""))
+            if _valid(v):
+                return v
         except ValueError:
             continue
     return None
@@ -113,6 +160,8 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="カメラ新品/未使用買取価格コレクター")
     parser.add_argument("--verbose", action="store_true")
     parser.add_argument("--no-scrape", action="store_true", help="取得せず status のみ出力")
+    parser.add_argument("--priority-only", action="store_true",
+                        help="優先3店舗（マップ/フジヤ/キタムラ）のみ取得")
     args = parser.parse_args()
     setup_logging(args.verbose)
 
@@ -128,21 +177,27 @@ def main() -> int:
         logger.error("DB初期化失敗: %s", e)
         repo = None
 
+    import urllib.parse as _up
     results = []  # (alias, shop_id, status, price, reason)
     saved = 0
     for alias in CAMERA_ALIASES:
-        for shop_id, shop_name, url in CAMERA_SHOPS:
+        kw = CAMERA_KEYWORDS.get(alias, alias)
+        kw_enc = _up.quote(kw)
+        for shop_id, shop_name, url_tmpl in CAMERA_SHOPS:
+            if args.priority_only and shop_id not in PRIORITY_SHOPS:
+                continue
             if args.no_scrape:
                 results.append((alias, shop_id, "SKIP", 0, "scrape_skipped"))
                 continue
             if shop_id in NOT_SUPPORTED:
                 results.append((alias, shop_id, "FAILED", 0, "not_supported"))
                 continue
+            url = url_tmpl.format(kw=kw_enc) if "{kw}" in url_tmpl else url_tmpl
             html, reason = _fetch_html(url)
             if html is None:
                 results.append((alias, shop_id, "FAILED", 0, reason))
                 continue
-            price = _parse_buyback_price(html, alias)
+            price = _parse_buyback_price(html, alias, shop_id)
             if not price or price <= 0:
                 results.append((alias, shop_id, "FAILED", 0, "price_not_found"))
                 continue

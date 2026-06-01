@@ -3043,6 +3043,15 @@ details[open] > .fetch-failed-summary::before {{ transform: rotate(90deg); }}
   font-size: 0.75rem; color: rgba(255,255,255,0.25);
   line-height: 2;
 }}
+/* データ取得状況（簡易・控えめ） */
+.data-quality-note {{
+  font-size: 0.72rem; color: rgba(255,255,255,0.5);
+  line-height: 1.7; margin-bottom: 14px; padding: 8px 12px;
+  background: rgba(255,255,255,0.04); border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.08);
+}}
+.data-quality-note .dq-title {{ font-weight: 800; color: rgba(255,255,255,0.7); }}
+.data-quality-note strong {{ color: rgba(255,255,255,0.85); }}
 
 /* ============================================================
    NEW PRODUCT CARDS
@@ -7967,12 +7976,46 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         # 非表示
         return ""
 
+    def _data_quality_summary_html(self) -> str:
+        """LP下部の簡易データ取得状況ブロック（Task 4）。
+        exports/data_quality_report/latest.json を読んで小さく表示する。"""
+        try:
+            import json as _jdq
+            from pathlib import Path as _P
+            _p = _P(__file__).resolve().parent.parent.parent / "exports" / "data_quality_report" / "latest.json"
+            with open(_p, encoding="utf-8") as _f:
+                dq = _jdq.load(_f)
+        except Exception:
+            return ""
+        col = dq.get("collection", {}) or {}
+        ok = col.get("ok_jobs", 0)
+        total = col.get("total_jobs", 0)
+        rate = col.get("success_rate_pct", 0)
+        top = (dq.get("comparison", {}) or {}).get("top5_failure_reasons", []) or dq.get("failure_reasons", [])[:3]
+        reasons_str = ", ".join(f"{r.get('reason')} {r.get('count')}" for r in top[:3]) or "なし"
+        ovs = dq.get("overseas", {}) or {}
+        _ebay = "eBay API設定済" if ovs.get("ebay_app_id_configured") else "eBay API未設定"
+        _cmp = dq.get("comparison", {}) or {}
+        _trend = _cmp.get("trend", "")
+        _delta = _cmp.get("delta_pct")
+        _trend_str = (f" ・前回比 {'+' if (_delta or 0) > 0 else ''}{_delta}pt（{_trend}）"
+                      if _delta is not None else "")
+        return (
+            f'<div class="data-quality-note">'
+            f'<span class="dq-title">&#128202; データ取得状況</span> '
+            f'成功 <strong>{ok} / {total}</strong>（{rate}%）{_trend_str} ／ '
+            f'主な失敗理由: {_esc(reasons_str)} ／ 海外価格: {_esc(_ebay)}'
+            f'</div>'
+        )
+
     def _section_footer(self) -> str:
 
         now = datetime.now()
+        _dq_html = self._data_quality_summary_html()
 
         return f"""<footer class="footer">
 <div class="footer-inner">
+  {_dq_html}
   <div class="footer-logo">
     <div class="footer-logo-icon">S</div>
     <div class="footer-logo-name">プレ値速報</div>

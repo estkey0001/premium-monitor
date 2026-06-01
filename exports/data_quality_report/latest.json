@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-01T23:11:52+09:00",
+  "generated_at": "2026-06-01T23:35:37+09:00",
   "collection": {
     "total_shops": 16,
     "shops_with_success": 5,
@@ -9,6 +9,34 @@
     "failed_jobs": 32,
     "skip_jobs": 4,
     "success_rate_pct": 34.5
+  },
+  "comparison": {
+    "prev_success_rate_pct": 34.5,
+    "current_success_rate_pct": 34.5,
+    "delta_pct": 0.0,
+    "trend": "横ばい",
+    "top5_failure_reasons": [
+      {
+        "reason": "rate_limited_429",
+        "count": 6
+      },
+      {
+        "reason": "site_blocked",
+        "count": 6
+      },
+      {
+        "reason": "price_not_found",
+        "count": 6
+      },
+      {
+        "reason": "timeout",
+        "count": 5
+      },
+      {
+        "reason": "http_404",
+        "count": 4
+      }
+    ]
   },
   "failure_reasons": [
     {
@@ -87,8 +115,10 @@
     "reason_if_empty": null
   },
   "overseas": {
-    "total": 0,
+    "total": 4,
     "fresh": 0,
-    "stale": 0
+    "stale": 4,
+    "source_mode": "manual",
+    "ebay_app_id_configured": false
   }
 }

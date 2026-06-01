@@ -4918,6 +4918,42 @@ def check() -> list[dict]:
                     "message": "#490 resale collector に condition 推定ロジック（_infer_condition）がある"
                                + ("" if _t490 else " ← condition 推定ロジックが見つかりません")})
 
+    # ── Improve overseas api readiness and camera collector diagnostics ──
+    _ovs_json = _load_json_safe('exports/overseas_prices/latest.json') or {}
+    # #491: overseas latest.json に EBAY_APP_ID 設定状況/取得モードが明記される（Task 1）
+    _t491 = ('ebay_app_id_configured' in _ovs_json) and ('source_mode' in _ovs_json)
+    results.append({"level": "ok" if _t491 else "error", "check": "overseas_mode_annotated",
+                    "message": f"#491 overseas latest.json に ebay_app_id_configured / source_mode が明記される（mode={_ovs_json.get('source_mode')}）"
+                               + ("" if _t491 else " ← api/manual/html_blocked モードの明記が見つかりません")})
+
+    # #492: data_quality に 前回比較（comparison: 前回成功率/今回/差分/TOP5）がある（Task 3）
+    _cmp = (_dq_json.get('comparison', {}) or {})
+    _t492 = ('comparison' in _dq_json) and ('current_success_rate_pct' in _cmp) \
+        and ('trend' in _cmp) and ('top5_failure_reasons' in _cmp)
+    results.append({"level": "ok" if _t492 else "error", "check": "data_quality_comparison",
+                    "message": "#492 data_quality に前回比較（前回/今回成功率・改善悪化・失敗理由TOP5）がある"
+                               + ("" if _t492 else " ← comparison セクションが不完全です")})
+
+    # #493: LP に簡易データ取得状況（data-quality-note）が表示される（Task 4）
+    _t493 = ('data-quality-note' in html) and ('データ取得状況' in html)
+    results.append({"level": "ok" if _t493 else "error", "check": "lp_data_quality_note",
+                    "message": "#493 LP にデータ取得状況（成功数/失敗理由/海外API状況）が表示される"
+                               + ("" if _t493 else " ← LP のデータ取得状況表示が見つかりません")})
+
+    # #494: camera collector に優先3店舗の実セレクタ/キーワードURLがある（Task 2）
+    _cam_src = ''
+    try:
+        with open(_os468.path.join(_root, 'scripts', 'update_camera_buyback.py'), encoding='utf-8') as _cf:
+            _cam_src = _cf.read()
+    except Exception:
+        _cam_src = ''
+    _t494 = ('PRIORITY_SHOPS' in _cam_src) and ('_SHOP_PRICE_PATTERNS' in _cam_src) \
+        and ('{kw}' in _cam_src) and _os468.path.exists(
+            _os468.path.join(_root, 'exports', 'camera_buyback_status.json'))
+    results.append({"level": "ok" if _t494 else "error", "check": "camera_collector_selectors",
+                    "message": "#494 camera collector に優先3店舗の検索URL/店舗別抽出パターンがある"
+                               + ("" if _t494 else " ← 優先店舗のセレクタ/キーワードURLが見つかりません")})
+
     return results
 
 

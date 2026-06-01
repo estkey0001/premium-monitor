@@ -1,4 +1,4 @@
-# データ取得品質レポート（2026-06-01 21:57 JST）
+# データ取得品質レポート（2026-06-01 23:11 JST）
 
 ## 取得成功率
 - 全対象店舗数: 16
@@ -7,12 +7,13 @@
 - ジョブ成功率: 34.5%（OK 19 / 失敗 32 / SKIP 4 / 計 55）
 
 ## 失敗理由（内訳）
-- product_not_listed: 8件
 - rate_limited_429: 6件
 - site_blocked: 6件
 - price_not_found: 6件
+- timeout: 5件
 - http_404: 4件
 - not_supported: 4件
+- product_not_listed: 3件
 - service_unavailable: 2件
 
 ## 有効データ量（新品・未使用 / 14日以内 / price>0）
@@ -34,11 +35,11 @@
   - prod_macbook_air_m4_13: 3店舗
 
 ## ランキングに使えたデータ数
-- Beginner: 10 件
-- Pro: 10 件
+- Beginner: 5 件
+- Pro: 8 件
 
 ## せどりルートに使えたデータ数
-- ルート: 3 件
+- ルート: 32 件
 
 ## 海外価格の鮮度
 - fresh: 0 / stale: 0 / 計 0

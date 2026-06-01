@@ -4402,6 +4402,20 @@ def check() -> list[dict]:
                     "message": "#440 Beginner の取得方法は小さく表示（shop-source-mini / confirm-line）されている"
                                + ("" if _t440 else " ← 取得方法の小表示が見つかりません")})
 
+    # #441: Pro に買取店価格候補が残っている（問題2）
+    #   中古販売価格を除外しても、買取店価格（pro-row-buyback / 買取価格）が Pro 国内候補として表示される。
+    _t441 = ('pro-row-buyback' in _pro_html388) or ('買取価格' in _pro_html388)
+    results.append({"level": "ok" if _t441 else "error", "check": "pro_buyback_candidates_present",
+                    "message": "#441 Pro に買取店価格候補（買取価格）が残っている"
+                               + ("" if _t441 else " ← Pro から買取店候補が消えています")})
+
+    # #442: Pro に国内新品/未使用価格候補が残っている（問題2）
+    #   国内仕入れ/売却候補テーブル（pro-domestic-row / pro-row-has-price）が存在する。
+    _t442 = ('pro-domestic-row' in _pro_html388) or ('pro-row-has-price' in _pro_html388)
+    results.append({"level": "ok" if _t442 else "error", "check": "pro_domestic_candidates_present",
+                    "message": "#442 Pro に国内新品/未使用価格候補（国内候補テーブル）が残っている"
+                               + ("" if _t442 else " ← Pro の国内価格候補が消えています")})
+
     return results
 
 

@@ -1823,10 +1823,15 @@ a[href], button, [role="tab"], [role="button"],
   color: #C2701A; font-weight: 700; margin-left: 2px;
 }}
 
-/* 初心者カードの取得方法ラベル（小さく控えめ — 価格・店名より目立たせない） */
-.shop-source-col .shop-source-mini {{
-  font-size: 0.62rem; font-weight: 500;
-  color: var(--ink3); opacity: 0.7;
+/* 初心者カードの取得方法ラベル（行末の極薄補足 — 店名・価格・差益より目立たせない） */
+.shop-source-col-mini {{
+  min-width: 0 !important; flex-shrink: 1;
+  text-align: right; margin-left: 4px;
+}}
+.shop-source-col .shop-source-mini,
+.shop-source-col-mini .shop-source-mini {{
+  font-size: 0.58rem; font-weight: 400;
+  color: var(--ink3); opacity: 0.55;
   white-space: nowrap;
 }}
 
@@ -4541,6 +4546,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                                               camera_watch=camera_watch,
                                               camera_beginner_deals=[],
                                               market_prices_by_product=market_prices_by_product or {},
+                                              buyback_by_product=buyback_by_product or {},
                                               latest_buyback_at=latest_buyback_at)
         surge_html       = self._tab_surge(buyback_alerts)
         ranking_html     = self._tab_ranking(all_deals, iphone_deals, game_deals, sedori_routes=sedori_routes)
@@ -6012,14 +6018,17 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 )
                 rank_cls = 'gold' if rank_counter == 1 else ('silver' if rank_counter == 2 else '')
                 diff_cls = ' neg' if profit < 0 else ''
-                # 初心者モードでは「自動取得/手動確認」を大きなバッジで出さず、
-                # 小さく控えめに表示する（順位・店名・価格・差益・確認リンクを優先：Task 2）
+                # 初心者モードでは「自動取得/手動確認」を主表示の列として出さない。
+                # 主表示は 順位・店名・価格・差益・確認リンクのみ（Task 2）。
+                # 取得方法はカード下部の confirm-line（小さい補足）に集約する。
                 if pro_mode:
-                    source_col_html = source_badge
+                    source_col_html = f'<div class="shop-source-col">{source_badge}</div>'
                 else:
+                    # 行末に極薄の補足として取得方法を添える（店名・価格と同列にしない）
                     source_col_html = (
+                        f'<div class="shop-source-col shop-source-col-mini">'
                         f'<span class="shop-source-mini">'
-                        f'{_esc(self._source_label_jp(r.get("data_source", "")))}</span>'
+                        f'{_esc(self._source_label_jp(r.get("data_source", "")))}</span></div>'
                     )
                 return (
                     f'<div class="shop-row">'
@@ -6027,8 +6036,8 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                     f'<div class="shop-name-col">{sname}</div>'
                     f'<div class="shop-price-col">¥{bp:,}</div>'
                     f'<div class="shop-diff-col{diff_cls}">{_esc(profit_str)}</div>'
-                    f'<div class="shop-source-col">{source_col_html}</div>'
                     f'<div class="shop-link-col">{link_col}</div>'
+                    f'{source_col_html}'
                     f'</div>'
                 )
 
@@ -6218,6 +6227,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 </div>"""
 
     def _tab_advanced(self, advanced_deals, advanced_snaps, watch_candidates, camera_watch=None, camera_beginner_deals=None, market_prices_by_product: dict = None,
+                       buyback_by_product: dict = None,
                        latest_buyback_at: Optional[datetime] = None) -> str:
         camera_watch = camera_watch or []
         camera_beginner_deals = camera_beginner_deals or []
@@ -6307,7 +6317,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 新品・未使用の二次流通価格や海外相場データが揃い次第、確定候補として昇格します。
 </div>""")
             parts.append('<div class="section-header" id="category-pro-camera"><h2>&#128204; Pro向け市場価格</h2><span class="section-count">二次流通・海外相場</span></div>')
-            parts.append(self._watch_candidates_table(watch_candidates, market_prices_by_product=market_prices_by_product or {}))
+            parts.append(self._watch_candidates_table(watch_candidates, market_prices_by_product=market_prices_by_product or {}, buyback_by_product=buyback_by_product or {}))
 
         # カメラBeginnerDealを追加表示
         if camera_beginner_deals:
@@ -6372,7 +6382,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         "src_amazon_us": "https://www.amazon.com/s?k={enc}",
     }
 
-    def _watch_candidates_table(self, candidates: list, market_prices_by_product: dict = None) -> str:
+    def _watch_candidates_table(self, candidates: list, market_prices_by_product: dict = None, buyback_by_product: dict = None) -> str:
         """監視候補テーブルを生成する（products テーブル由来）。
         market_prices_by_product: {product_id: [{source_id, price_type, price, currency, recorded_at}]}
         実際の価格データがある場合は価格テーブルを表示し、ない場合は検索チップのみ表示。
@@ -6380,6 +6390,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         初期表示は上位6件、それ以降は「さらに表示」で展開。
         """
         mdata = market_prices_by_product or {}
+        bybp  = buyback_by_product or {}
         INITIAL_VISIBLE = 6  # 初期表示件数
 
         # overseas_prices/latest.json から collector_method を読み込む
@@ -6498,6 +6509,51 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                     f'class="pro-link-btn" data-track="pro_domestic_click">相場確認</a></td>'
                     f'</tr>'
                 )
+
+            # ── 国内買取店価格（新品・未使用・未開封のみ）を国内候補として追加（売却先候補・仕入れ判断材料）──
+            # Pro から買取店候補を消さない。中古・二次流通(resale_market)・低信頼は除外。
+            _bb_rows = bybp.get(prod_id, [])
+            _bb_seen = set()
+            _bb_valid = []
+            for r in _bb_rows:
+                _bp = r.get("buyback_price", 0) or 0
+                _sname = (r.get("shop_name", "") or "").strip()
+                if _bp <= 0 or not _sname:
+                    continue
+                if r.get("data_source") == "resale_market":
+                    continue
+                if r.get("confidence", "high") == "low":
+                    continue
+                if self._cond_is_used(r.get("condition", "")):
+                    continue
+                if self._is_resale_shop(_sname):
+                    continue
+                if _sname in _bb_seen:
+                    continue
+                _bb_seen.add(_sname)
+                _bb_valid.append(r)
+            # 買取は高い順（売却先として有利）
+            _bb_valid.sort(key=lambda x: x.get("buyback_price", 0), reverse=True)
+            for r in _bb_valid[:5]:
+                _bp = r.get("buyback_price", 0)
+                _sname = _esc(r.get("shop_name", ""))
+                _burl = r.get("buyback_url", "") or r.get("url", "")
+                _bfresh = self._freshness_label(r.get("observed_at", ""), r.get("data_source", "manual_today"))
+                _baction = (
+                    f'<a href="{_esc(_burl)}" target="_blank" rel="noopener noreferrer" '
+                    f'class="pro-link-btn" data-track="pro_buyback_click">買取確認</a>'
+                    if _burl else '<span class="pro-link-btn" style="opacity:0.4;cursor:default;">—</span>'
+                )
+                dtrows.append(
+                    f'<tr class="pro-domestic-row pro-row-has-price pro-row-buyback">'
+                    f'<td class="pro-src-cell"><strong class="pro-src-name">{_sname}</strong></td>'
+                    f'<td class="pro-price-cell"><strong class="price-value">¥{_bp:,}</strong></td>'
+                    f'<td class="pro-basis-cell"><span class="pro-price-basis">買取価格</span></td>'
+                    f'<td class="pro-meta-cell">{_bfresh}</td>'
+                    f'<td class="pro-action-cell">{_baction}</td>'
+                    f'</tr>'
+                )
+
             # 価格未取得 → チップ
             dom_no_html = ""
             if dom_no:

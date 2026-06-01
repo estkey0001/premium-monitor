@@ -4837,7 +4837,11 @@ def check() -> list[dict]:
                                + ("" if _t482 else " ← 0件なのに reason_if_empty がありません")})
 
     # #483: sedori ルートが0件なら理由が表示される
-    _sed_route_n = len(_sed_json.get('routes', []) or _sed_json.get('pro_routes', []) or [])
+    if isinstance(_sed_json.get('profitable_routes'), int):
+        _sed_route_n = _sed_json['profitable_routes']
+    else:
+        _sp = _sed_json.get('pro_routes', {})
+        _sed_route_n = int(_sp.get('count', 0) or 0) if isinstance(_sp, dict) else len(_sp or [])
     _t483 = (_sed_route_n > 0) or bool(_sed_json.get('reason_if_empty'))
     results.append({"level": "ok" if _t483 else "error", "check": "sedori_empty_reason",
                     "message": f"#483 sedori ルートが0件なら理由が表示される（routes={_sed_route_n}）"

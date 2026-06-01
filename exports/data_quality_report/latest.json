@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-01T21:57:39+09:00",
+  "generated_at": "2026-06-01T23:11:52+09:00",
   "collection": {
     "total_shops": 16,
     "shops_with_success": 5,
@@ -11,10 +11,6 @@
     "success_rate_pct": 34.5
   },
   "failure_reasons": [
-    {
-      "reason": "product_not_listed",
-      "count": 8
-    },
     {
       "reason": "rate_limited_429",
       "count": 6
@@ -28,12 +24,20 @@
       "count": 6
     },
     {
+      "reason": "timeout",
+      "count": 5
+    },
+    {
       "reason": "http_404",
       "count": 4
     },
     {
       "reason": "not_supported",
       "count": 4
+    },
+    {
+      "reason": "product_not_listed",
+      "count": 3
     },
     {
       "reason": "service_unavailable",
@@ -74,12 +78,12 @@
     }
   },
   "ranking_usable": {
-    "beginner": 10,
-    "pro": 10,
+    "beginner": 5,
+    "pro": 8,
     "reason_if_empty": null
   },
   "sedori_usable": {
-    "routes": 3,
+    "routes": 32,
     "reason_if_empty": null
   },
   "overseas": {

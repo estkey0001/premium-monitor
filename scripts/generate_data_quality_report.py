@@ -120,7 +120,17 @@ def main() -> int:
     beginner_n = len(ranking.get("beginner_top10", []) or [])
     pro_n = len(ranking.get("pro_top10", []) or [])
     ranking_reason = ranking.get("reason_if_empty")
-    sedori_routes_n = len(sedori.get("routes", []) or sedori.get("pro_routes", []) or [])
+    # sedori レポートは profitable_routes（int）/ pro_routes.count を持つ。
+    if isinstance(sedori.get("profitable_routes"), int):
+        sedori_routes_n = sedori["profitable_routes"]
+    else:
+        _sed_pro = sedori.get("pro_routes", {})
+        if isinstance(_sed_pro, dict):
+            sedori_routes_n = int(_sed_pro.get("count", 0) or 0)
+        elif isinstance(_sed_pro, list):
+            sedori_routes_n = len(_sed_pro)
+        else:
+            sedori_routes_n = len(sedori.get("routes", []) or [])
     sedori_reason = sedori.get("reason_if_empty")
 
     # overseas fresh / stale

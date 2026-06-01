@@ -4455,27 +4455,26 @@ def check() -> list[dict]:
         j = init.find('shop-more-details')
         return init[:j] if j >= 0 else init
 
-    # #445: Beginner カードの初期表示に買取店比較テーブル（上位3店舗）が見える
-    #   shop-table-hd（買取店比較ヘッダー）が初期表示にあり、常時表示の shop-row が1件以上。
-    _t445 = bool(_compact_cards) and all(
-        ('買取店比較' in _initial_view(c)) and (_visible_compare(c).count('class="shop-row') >= 1)
-        for c in _compact_cards
-    )
-    results.append({"level": "ok" if _t445 else "error", "check": "beginner_top3_visible_in_initial_view",
-                    "message": "#445 Beginner カードの初期表示に買取店比較（上位3店舗）が見える"
-                               + ("" if _t445 else " ← 初期表示に上位買取店が表示されていません")})
+    # #445: Beginner カードの details 外に shop-row が3件以上ある（上位3店舗が常時表示）
+    #   shop-more-details（4店舗目以降の折りたたみ）より前の常時表示 shop-row 数の最大値で判定。
+    _vis_row_counts = [_visible_compare(c).count('class="shop-row') for c in _compact_cards]
+    _max_visible_rows = max(_vis_row_counts, default=0)
+    _t445 = _max_visible_rows >= 3
+    results.append({"level": "ok" if _t445 else "error", "check": "beginner_3plus_shop_rows_outside_details",
+                    "message": f"#445 Beginner カードの details 外に shop-row が3件以上ある（常時表示 max={_max_visible_rows}店舗）"
+                               + ("" if _t445 else " ← 常時表示の店舗行が3件未満です")})
 
-    # #446: 「買取店比較を見る」を開かなくても、3店舗名と価格が見える
-    #   常時表示部分に shop-name-col / shop-price-col が複数（最大3まで）含まれる。
-    _vis_counts = [_visible_compare(c).count('shop-name-col') for c in _compact_cards]
+    # #446: 「買取店比較を見る（折りたたみ）」の前に店舗名・価格・確認リンクがある
+    #   常時表示部分に shop-name-col / shop-price-col / shop-check-btn(確認リンク) が含まれる。
     _t446 = bool(_compact_cards) and all(
         (_visible_compare(c).count('shop-name-col') >= 1)
         and (_visible_compare(c).count('shop-price-col') >= 1)
+        and ('shop-check-btn' in _visible_compare(c))
         for c in _compact_cards
     )
-    results.append({"level": "ok" if _t446 else "error", "check": "beginner_top_shops_visible_without_open",
-                    "message": f"#446 折りたたみを開かずに上位買取店の店名・価格が見える（常時表示店舗数={_vis_counts}）"
-                               + ("" if _t446 else " ← 店名・価格が常時表示されていません")})
+    results.append({"level": "ok" if _t446 else "error", "check": "beginner_name_price_link_before_fold",
+                    "message": f"#446 折りたたみの前に店舗名・価格・確認リンクがある（常時表示店舗数={[_visible_compare(c).count('shop-name-col') for c in _compact_cards]}）"
+                               + ("" if _t446 else " ← 店名・価格・確認リンクが常時表示されていません")})
 
     # #447: 監視中セクションが折りたたみ（details）になっている
     _t447 = ('monitoring-global-section' in _beg_html388) and ('監視中の商品を見る' in _beg_html388)
@@ -4513,13 +4512,24 @@ def check() -> list[dict]:
                     "message": "#451 Pro タブに『国内売却候補 / 買取店』セクションがある"
                                + ("" if _t451 else " ← 国内売却候補（買取店）セクションが見つかりません")})
 
-    # #452: Pro タブに買取店価格候補が3件以上表示される商品がある
+    # #452: Pro タブに買取店候補が3件以上ある商品が「複数」存在する
     _pro_bb_tables = _re437.findall(r'pro-buyback-table.*?</table>', _pro_html388, _re437.DOTALL)
-    _pro_bb_max = max((t.count('pro-row-buyback') for t in _pro_bb_tables), default=0)
-    _t452 = _pro_bb_max >= 3
-    results.append({"level": "ok" if _t452 else "warning", "check": "pro_buyback_3plus_some_product",
-                    "message": f"#452 Pro タブに買取店価格候補が3件以上の商品がある（最大{_pro_bb_max}件）"
-                               + ("" if _t452 else " ← 3件以上の商品が見つかりません（買取データが少ない日は正常）")})
+    _pro_bb_counts = [t.count('pro-row-buyback') for t in _pro_bb_tables]
+    _pro_bb_3plus = sum(1 for c in _pro_bb_counts if c >= 3)
+    _t452 = _pro_bb_3plus >= 2
+    results.append({"level": "ok" if _t452 else "warning", "check": "pro_buyback_3plus_multiple_products",
+                    "message": f"#452 Pro タブに買取店候補が3件以上の商品が複数存在する（該当{_pro_bb_3plus}商品 / 件数内訳={_pro_bb_counts}）"
+                               + ("" if _t452 else " ← 3件以上の商品が複数見つかりません（買取データが少ない日は正常）")})
+
+    # #453: Pro で買取候補が3件未満の商品には理由が表示される
+    #   「国内売却候補 / 買取店（N件）」の N<3 の数 ≦ 理由ノート(pro-bb-reason-note)の数。
+    _bb_section_counts = [int(n) for n in _re437.findall(r'国内売却候補 / 買取店（(\d+)件）', _pro_html388)]
+    _bb_under3_sections = sum(1 for n in _bb_section_counts if n < 3)
+    _bb_reason_notes = _pro_html388.count('pro-bb-reason-note')
+    _t453 = (_bb_under3_sections == 0) or (_bb_reason_notes >= _bb_under3_sections)
+    results.append({"level": "ok" if _t453 else "error", "check": "pro_buyback_few_reason_shown",
+                    "message": f"#453 Pro で買取候補が少ない商品に理由が表示される（<3件の商品={_bb_under3_sections} / 理由表示={_bb_reason_notes}）"
+                               + ("" if _t453 else " ← 理由表示が不足しています")})
 
     return results
 

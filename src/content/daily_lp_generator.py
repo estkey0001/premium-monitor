@@ -5996,13 +5996,16 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                         if url_val else
                         '<span class="shop-check-btn normal" style="opacity:0.4;cursor:default;">確認不可</span>'
                     )
+                    _failed_source_col = (
+                        f'<div class="shop-source-col">{source_badge}</div>' if pro_mode else ''
+                    )
                     return (
                         f'<div class="shop-row shop-row-failed">'
                         f'<div class="shop-rank" style="color:var(--ink3)">—</div>'
                         f'<div class="shop-name-col">{sname}</div>'
                         f'<div class="shop-price-col" style="color:var(--ink3)">—</div>'
                         f'<div class="shop-diff-col">{freshness}</div>'
-                        f'<div class="shop-source-col">{source_badge}</div>'
+                        f'{_failed_source_col}'
                         f'<div class="shop-link-col">{link_col}</div>'
                         f'</div>'
                     )
@@ -6018,18 +6021,13 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 )
                 rank_cls = 'gold' if rank_counter == 1 else ('silver' if rank_counter == 2 else '')
                 diff_cls = ' neg' if profit < 0 else ''
-                # 初心者モードでは「自動取得/手動確認」を主表示の列として出さない。
-                # 主表示は 順位・店名・価格・差益・確認リンクのみ（Task 2）。
-                # 取得方法はカード下部の confirm-line（小さい補足）に集約する。
+                # 初心者モードでは「自動取得/手動確認」を行内から完全に消す。
+                # 主表示は 順位・店名・価格・差益・確認リンクのみ。
+                # 取得方法はカード下部の confirm-line（取得方法行）にだけ集約する。
                 if pro_mode:
                     source_col_html = f'<div class="shop-source-col">{source_badge}</div>'
                 else:
-                    # 行末に極薄の補足として取得方法を添える（店名・価格と同列にしない）
-                    source_col_html = (
-                        f'<div class="shop-source-col shop-source-col-mini">'
-                        f'<span class="shop-source-mini">'
-                        f'{_esc(self._source_label_jp(r.get("data_source", "")))}</span></div>'
-                    )
+                    source_col_html = ''
                 return (
                     f'<div class="shop-row">'
                     f'<div class="shop-rank {rank_cls}">{rank_counter}</div>'

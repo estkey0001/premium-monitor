@@ -4387,20 +4387,23 @@ def check() -> list[dict]:
                     "message": "#438 Pro で中古価格のみの商品は『新品・未使用価格未取得』と表示される"
                                + ("" if _t438 else " ← 該当文言が見当たりません（中古のみの商品が無い日は正常）")})
 
-    # #439: Beginner の買取店比較で「自動取得」が価格/店舗名より目立つ大バッジで出ていない（Task 2）
-    #   shop-row 内に badge-auto / badge-manual（大きめバッジ）が無いことを検査（小さい shop-source-mini はOK）
+    # #439: Beginner の買取店比較テーブル（shop-row 群）に「自動取得」が直接出ない
+    #   取得方法は confirm-line / details にだけ集約。shop-row 内には大バッジも生テキストも残さない。
     _beg_shop_rows = _re437.findall(r'<div class="shop-row(?: [^"]*)?">.*?</div>\s*</div>', _beg_html388)
-    # Beginner の通常 shop-row 群に大バッジ（badge-auto/badge-manual）が無いことを検査
-    _t439 = not any(('badge-auto' in row) or ('badge-manual' in row) for row in _beg_shop_rows)
-    results.append({"level": "ok" if _t439 else "error", "check": "beginner_source_not_prominent",
-                    "message": "#439 Beginner の買取店比較で『自動取得/手動確認』が大バッジで目立っていない（小さく表示）"
-                               + ("" if _t439 else " ← Beginner の店舗行に大きな取得方法バッジが残っています")})
+    _t439 = not any(
+        ('badge-auto' in row) or ('badge-manual' in row)
+        or ('自動取得' in row) or ('手動確認' in row)
+        for row in _beg_shop_rows
+    )
+    results.append({"level": "ok" if _t439 else "error", "check": "beginner_source_not_in_shop_row",
+                    "message": "#439 Beginner の買取店比較テーブル（shop-row）に『自動取得/手動確認』が直接出ない"
+                               + ("" if _t439 else " ← 店舗行に取得方法ラベルが残っています")})
 
-    # #440: Beginner の取得方法は小さく表示（shop-source-mini）または details 内にある（Task 2）
-    _t440 = ('shop-source-mini' in _beg_html388) or ('confirm-line' in _beg_html388)
-    results.append({"level": "ok" if _t440 else "error", "check": "beginner_source_small_or_details",
-                    "message": "#440 Beginner の取得方法は小さく表示（shop-source-mini / confirm-line）されている"
-                               + ("" if _t440 else " ← 取得方法の小表示が見つかりません")})
+    # #440: Beginner の取得方法は confirm-line（または details）にだけ表示される（Task 2）
+    _t440 = ('取得方法' in _beg_html388) and ('confirm-line' in _beg_html388)
+    results.append({"level": "ok" if _t440 else "error", "check": "beginner_source_in_confirm_line",
+                    "message": "#440 Beginner の取得方法は confirm-line（最終確認行）にだけ表示されている"
+                               + ("" if _t440 else " ← confirm-line の取得方法表示が見つかりません")})
 
     # #441: Pro に買取店価格候補が残っている（問題2）
     #   中古販売価格を除外しても、買取店価格（pro-row-buyback / 買取価格）が Pro 国内候補として表示される。
@@ -4415,6 +4418,24 @@ def check() -> list[dict]:
     results.append({"level": "ok" if _t442 else "error", "check": "pro_domestic_candidates_present",
                     "message": "#442 Pro に国内新品/未使用価格候補（国内候補テーブル）が残っている"
                                + ("" if _t442 else " ← Pro の国内価格候補が消えています")})
+
+    # #443: Beginner の通常 shop-row（取得失敗以外）に 店舗名・価格・差益・確認リンクが揃っている
+    _beg_normal_rows = [r for r in _beg_shop_rows if 'shop-row-failed' not in r]
+    _t443 = bool(_beg_normal_rows) and all(
+        ('shop-name-col' in r) and ('shop-price-col' in r)
+        and ('shop-diff-col' in r) and ('shop-link-col' in r)
+        for r in _beg_normal_rows
+    )
+    results.append({"level": "ok" if _t443 else "error", "check": "beginner_row_has_core_cols",
+                    "message": "#443 Beginner の各店舗行に 店舗名・価格・差益・確認リンクが揃っている"
+                               + ("" if _t443 else " ← 主要列が欠けている店舗行があります")})
+
+    # #444: 取得方法ラベル（自動取得/手動確認）は confirm-line / details 内にだけ存在する
+    #   shop-row 群の外（confirm-line など）に出ていれば OK、shop-row 内には無いこと（#439と対）。
+    _t444 = _t439 and (('自動取得' in _beg_html388) or ('手動確認' in _beg_html388))
+    results.append({"level": "ok" if _t444 else "warning", "check": "beginner_source_only_in_details_or_confirm",
+                    "message": "#444 取得方法（自動取得/手動確認）は details / confirm-line にだけ表示される"
+                               + ("" if _t444 else " ← 取得方法ラベルが見つからない、または shop-row に残存")})
 
     return results
 

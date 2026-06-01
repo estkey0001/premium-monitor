@@ -191,6 +191,30 @@ class OverseasPriceOrchestrator:
         low_conf = sum(1 for r in best_results.values() if r.confidence == "low")
         stale_count = sum(1 for r in best_results.values() if r.stale)
 
+        # 取得モード集計（api / html / html_blocked / manual / unknown）を明記（Task 1）
+        import os as _os_mode
+        _ebay_app_id_set = bool(_os_mode.environ.get("EBAY_APP_ID")
+                                or _os_mode.environ.get("EBAY_CLIENT_ID"))
+        _method_counts: dict = {}
+        for r in best_results.values():
+            _m = getattr(r, "collector_method", "") or "unknown"
+            # manual CSV 由来は failure_reason=stale_manual 等で判別
+            _fr = getattr(r, "failure_reason", "") or ""
+            if "manual" in str(_fr).lower():
+                _m = "manual"
+            _method_counts[_m] = _method_counts.get(_m, 0) + 1
+        # overseas 全体の主モード判定
+        if _method_counts.get("api", 0) > 0:
+            _source_mode = "api"
+        elif _method_counts.get("html", 0) > 0:
+            _source_mode = "html"
+        elif _method_counts.get("html_blocked", 0) > 0:
+            _source_mode = "html_blocked"
+        elif _method_counts.get("manual", 0) > 0:
+            _source_mode = "manual"
+        else:
+            _source_mode = "none"
+
         report = {
             "generated_at": now.strftime("%Y-%m-%d %H:%M JST"),
             "total_prices": len(prices_list),
@@ -201,6 +225,10 @@ class OverseasPriceOrchestrator:
                 "low": low_conf,
             },
             "stale_count": stale_count,
+            # Task 1: EBAY_APP_ID 設定状況と取得モードを明記
+            "ebay_app_id_configured": _ebay_app_id_set,
+            "source_mode": _source_mode,
+            "method_counts": _method_counts,
             "prices": prices_list,
             "by_product": by_product,
             "all_results": all_entries,

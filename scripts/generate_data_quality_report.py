@@ -134,14 +134,31 @@ def main() -> int:
     sedori_reason = sedori.get("reason_if_empty")
 
     # overseas fresh / stale
-    ovs_products = overseas.get("products", overseas.get("items", [])) or []
-    if isinstance(ovs_products, dict):
-        ovs_products = list(ovs_products.values())
-    ovs_total = len(ovs_products)
-    ovs_stale = sum(1 for p in ovs_products if (isinstance(p, dict) and p.get("stale")))
-    ovs_fresh = ovs_total - ovs_stale
+    ovs_total = int(overseas.get("total_prices", 0) or 0)
+    ovs_stale = int(overseas.get("stale_count", 0) or 0)
+    ovs_fresh = max(0, ovs_total - ovs_stale)
+    ovs_mode = overseas.get("source_mode", "unknown")
+    ovs_ebay_configured = bool(overseas.get("ebay_app_id_configured", False))
 
     success_rate = round(100.0 * ok_jobs / total_jobs, 1) if total_jobs else 0.0
+
+    # ── 前回との比較（Task 3）── 上書き前の latest.json を読む
+    prev = _load_json(ROOT / "exports/data_quality_report/latest.json") or {}
+    prev_rate = (prev.get("collection", {}) or {}).get("success_rate_pct")
+    if isinstance(prev_rate, (int, float)):
+        delta = round(success_rate - prev_rate, 1)
+        trend = "改善" if delta > 0 else ("悪化" if delta < 0 else "横ばい")
+    else:
+        delta = None
+        trend = "初回"
+    top5_reasons = failure_reasons[:5]
+    comparison = {
+        "prev_success_rate_pct": prev_rate,
+        "current_success_rate_pct": success_rate,
+        "delta_pct": delta,
+        "trend": trend,
+        "top5_failure_reasons": top5_reasons,
+    }
 
     report = {
         "generated_at": now.isoformat(timespec="seconds"),
@@ -155,6 +172,7 @@ def main() -> int:
             "skip_jobs": skip_jobs,
             "success_rate_pct": success_rate,
         },
+        "comparison": comparison,
         "failure_reasons": failure_reasons,
         "effective_data": {
             "products_with_valid_buyback": products_with_valid,
@@ -173,10 +191,20 @@ def main() -> int:
             "total": ovs_total,
             "fresh": ovs_fresh,
             "stale": ovs_stale,
+            "source_mode": ovs_mode,
+            "ebay_app_id_configured": ovs_ebay_configured,
         },
     }
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
+    # 履歴に追記（成功率推移の追跡用）
+    try:
+        with open(OUT_DIR / "history.jsonl", "a", encoding="utf-8") as _hf:
+            _hf.write(json.dumps({"at": now.isoformat(timespec="seconds"),
+                                  "success_rate_pct": success_rate,
+                                  "ok": ok_jobs, "failed": failed_jobs}, ensure_ascii=False) + "\n")
+    except Exception:
+        pass
     (OUT_DIR / "latest.json").write_text(
         json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
 
@@ -189,6 +217,13 @@ def main() -> int:
         f"- 成功店舗数: {shops_with_success}",
         f"- 全失敗店舗数: {shops_all_failed}",
         f"- ジョブ成功率: {success_rate}%（OK {ok_jobs} / 失敗 {failed_jobs} / SKIP {skip_jobs} / 計 {total_jobs}）",
+        "",
+        "## 前回比較",
+        f"- 前回成功率: {prev_rate if prev_rate is not None else '—'}%",
+        f"- 今回成功率: {success_rate}%",
+        f"- 変化: {('+' if (delta or 0) > 0 else '')}{delta if delta is not None else '—'}pt（{trend}）",
+        "- 主要失敗理由 TOP5: "
+        + (", ".join(f"{r.get('reason')} {r.get('count')}" for r in top5_reasons) or "なし"),
         "",
         "## 失敗理由（内訳）",
     ]
@@ -223,6 +258,7 @@ def main() -> int:
         "",
         "## 海外価格の鮮度",
         f"- fresh: {ovs_fresh} / stale: {ovs_stale} / 計 {ovs_total}",
+        f"- eBay取得モード: {ovs_mode}（EBAY_APP_ID設定: {'あり' if ovs_ebay_configured else '未設定→stale除外'}）",
     ]
     (OUT_DIR / "latest.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 

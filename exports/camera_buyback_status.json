@@ -1,28 +1,24 @@
 {
-  "generated_at": "2026-06-01T21:12:56+09:00",
+  "generated_at": "2026-06-01T23:29:49+09:00",
   "summary": {
-    "total": 30,
+    "total": 15,
     "ok": 0,
-    "failed": 30,
+    "failed": 15,
     "skip": 0,
     "success_rate_pct": 0.0,
     "saved_to_db": 0
   },
   "failure_reasons": [
     {
-      "reason": "price_not_found",
-      "count": 10
-    },
-    {
-      "reason": "site_blocked",
-      "count": 10
-    },
-    {
       "reason": "timeout",
       "count": 5
     },
     {
-      "reason": "not_supported",
+      "reason": "price_not_found",
+      "count": 5
+    },
+    {
+      "reason": "http_error",
       "count": 5
     }
   ],
@@ -36,13 +32,6 @@
     },
     {
       "product_alias": "x100vi",
-      "shop_id": "src_kitamura",
-      "status": "FAILED",
-      "price": 0,
-      "reason": "price_not_found"
-    },
-    {
-      "product_alias": "x100vi",
       "shop_id": "src_fujiya",
       "status": "FAILED",
       "price": 0,
@@ -50,24 +39,10 @@
     },
     {
       "product_alias": "x100vi",
-      "shop_id": "src_sofmap",
+      "shop_id": "src_kitamura",
       "status": "FAILED",
       "price": 0,
-      "reason": "site_blocked"
-    },
-    {
-      "product_alias": "x100vi",
-      "shop_id": "src_janpara",
-      "status": "FAILED",
-      "price": 0,
-      "reason": "site_blocked"
-    },
-    {
-      "product_alias": "x100vi",
-      "shop_id": "src_kaitori_shouten",
-      "status": "FAILED",
-      "price": 0,
-      "reason": "not_supported"
+      "reason": "http_error"
     },
     {
       "product_alias": "gr4",
@@ -78,13 +53,6 @@
     },
     {
       "product_alias": "gr4",
-      "shop_id": "src_kitamura",
-      "status": "FAILED",
-      "price": 0,
-      "reason": "price_not_found"
-    },
-    {
-      "product_alias": "gr4",
       "shop_id": "src_fujiya",
       "status": "FAILED",
       "price": 0,
@@ -92,24 +60,10 @@
     },
     {
       "product_alias": "gr4",
-      "shop_id": "src_sofmap",
+      "shop_id": "src_kitamura",
       "status": "FAILED",
       "price": 0,
-      "reason": "site_blocked"
-    },
-    {
-      "product_alias": "gr4",
-      "shop_id": "src_janpara",
-      "status": "FAILED",
-      "price": 0,
-      "reason": "site_blocked"
-    },
-    {
-      "product_alias": "gr4",
-      "shop_id": "src_kaitori_shouten",
-      "status": "FAILED",
-      "price": 0,
-      "reason": "not_supported"
+      "reason": "http_error"
     },
     {
       "product_alias": "gr4_hdf",
@@ -120,13 +74,6 @@
     },
     {
       "product_alias": "gr4_hdf",
-      "shop_id": "src_kitamura",
-      "status": "FAILED",
-      "price": 0,
-      "reason": "price_not_found"
-    },
-    {
-      "product_alias": "gr4_hdf",
       "shop_id": "src_fujiya",
       "status": "FAILED",
       "price": 0,
@@ -134,24 +81,10 @@
     },
     {
       "product_alias": "gr4_hdf",
-      "shop_id": "src_sofmap",
+      "shop_id": "src_kitamura",
       "status": "FAILED",
       "price": 0,
-      "reason": "site_blocked"
-    },
-    {
-      "product_alias": "gr4_hdf",
-      "shop_id": "src_janpara",
-      "status": "FAILED",
-      "price": 0,
-      "reason": "site_blocked"
-    },
-    {
-      "product_alias": "gr4_hdf",
-      "shop_id": "src_kaitori_shouten",
-      "status": "FAILED",
-      "price": 0,
-      "reason": "not_supported"
+      "reason": "http_error"
     },
     {
       "product_alias": "gr4_mono",
@@ -162,13 +95,6 @@
     },
     {
       "product_alias": "gr4_mono",
-      "shop_id": "src_kitamura",
-      "status": "FAILED",
-      "price": 0,
-      "reason": "price_not_found"
-    },
-    {
-      "product_alias": "gr4_mono",
       "shop_id": "src_fujiya",
       "status": "FAILED",
       "price": 0,
@@ -176,24 +102,10 @@
     },
     {
       "product_alias": "gr4_mono",
-      "shop_id": "src_sofmap",
+      "shop_id": "src_kitamura",
       "status": "FAILED",
       "price": 0,
-      "reason": "site_blocked"
-    },
-    {
-      "product_alias": "gr4_mono",
-      "shop_id": "src_janpara",
-      "status": "FAILED",
-      "price": 0,
-      "reason": "site_blocked"
-    },
-    {
-      "product_alias": "gr4_mono",
-      "shop_id": "src_kaitori_shouten",
-      "status": "FAILED",
-      "price": 0,
-      "reason": "not_supported"
+      "reason": "http_error"
     },
     {
       "product_alias": "gr3x",
@@ -204,13 +116,6 @@
     },
     {
       "product_alias": "gr3x",
-      "shop_id": "src_kitamura",
-      "status": "FAILED",
-      "price": 0,
-      "reason": "price_not_found"
-    },
-    {
-      "product_alias": "gr3x",
       "shop_id": "src_fujiya",
       "status": "FAILED",
       "price": 0,
@@ -218,24 +123,10 @@
     },
     {
       "product_alias": "gr3x",
-      "shop_id": "src_sofmap",
+      "shop_id": "src_kitamura",
       "status": "FAILED",
       "price": 0,
-      "reason": "site_blocked"
-    },
-    {
-      "product_alias": "gr3x",
-      "shop_id": "src_janpara",
-      "status": "FAILED",
-      "price": 0,
-      "reason": "site_blocked"
-    },
-    {
-      "product_alias": "gr3x",
-      "shop_id": "src_kaitori_shouten",
-      "status": "FAILED",
-      "price": 0,
-      "reason": "not_supported"
+      "reason": "http_error"
     }
   ],
   "fallback_note": "HTMLから新品買取を確定できない店舗は manual_buyback_prices.csv の manual_today（手動確認）を使用。14日超は利益判定から除外。"

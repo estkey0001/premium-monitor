@@ -1,9 +1,9 @@
 [DEBUG] mobile_ichiban × iphone17pro512
-Generated: 2026-06-01T17:53:47+09:00
-Failure Reason: product_not_listed
+Generated: 2026-06-01T20:38:06+09:00
+Failure Reason: playwright_not_installed
 HTTP Status: 200
 Final URL: https://www.mobile-ichiban.com/
-HTML Length: 262055 chars
-Text Length (inner_text): 6590 chars
-Elapsed Seconds: 1.78s
-Error Type: (none)
+HTML Length: 169379 chars
+Text Length (inner_text): 5025 chars
+Elapsed Seconds: 1.69s
+Error Type: ImportError

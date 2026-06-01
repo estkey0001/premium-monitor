@@ -1,25 +1,25 @@
 alert_id,alert_type,product_name,brand,category,severity,title,message,product_url,action_url,action_label,detected_at,expires_at,source,data_source,confidence
-638432a1-340,buyback_surge,iPhone 17 Pro Max 512GB SIMフリー,,,medium,買取急騰: iPhone 17 Pro Max 512GB SIMフリー,,,,,2026-05-31 23:57,,buyback_db,auto_generated,medium
-586a2fbe-b57,buyback_surge,iPhone 17 Pro Max 256GB SIMフリー,,,medium,買取急騰: iPhone 17 Pro Max 256GB SIMフリー,,,,,2026-05-31 23:57,,buyback_db,auto_generated,medium
-75f4e8b2-d05,buyback_surge,iPhone 17 Pro 512GB SIMフリー,,,medium,買取急騰: iPhone 17 Pro 512GB SIMフリー,,,,,2026-05-31 23:57,,buyback_db,auto_generated,medium
-98e78e72-d5e,buyback_surge,iPhone 17 Pro 256GB SIMフリー,,,medium,買取急騰: iPhone 17 Pro 256GB SIMフリー,,,,,2026-05-31 23:57,,buyback_db,auto_generated,medium
-139f8a90-b02,buyback_surge,PlayStation 5 Pro,,,medium,買取急騰: PlayStation 5 Pro,,,,,2026-05-31 23:57,,buyback_db,auto_generated,medium
-7c4103a1-707,buyback_surge,Nintendo Switch 2,,,medium,買取急騰: Nintendo Switch 2,,,,,2026-05-31 23:57,,buyback_db,auto_generated,medium
-733f9440-5c1,buyback_drop,Nintendo Switch 2,,,medium,買取急落: Nintendo Switch 2,,,,,2026-05-31 23:57,,buyback_db,auto_generated,medium
-95b66e63-35d,buyback_surge,Nintendo Switch 2,,,medium,買取急騰: Nintendo Switch 2,,,,,2026-05-31 23:57,,buyback_db,auto_generated,medium
-bb606176-7d9,buyback_drop,MacBook Air M4 13インチ,,,medium,買取急落: MacBook Air M4 13インチ,,,,,2026-05-31 23:57,,buyback_db,auto_generated,medium
-4b05c597-366,buyback_drop,MacBook Air M4 13インチ,,,medium,買取急落: MacBook Air M4 13インチ,,,,,2026-05-31 23:57,,buyback_db,auto_generated,medium
-b0c5a010-24b,buyback_drop,Mac mini M4,,,medium,買取急落: Mac mini M4,,,,,2026-05-31 23:57,,buyback_db,auto_generated,medium
-9c180759-ced,buyback_drop,iPhone 17 Pro Max 512GB SIMフリー,,,medium,買取急落: iPhone 17 Pro Max 512GB SIMフリー,,,,,2026-05-31 23:57,,buyback_db,auto_generated,medium
-b348462d-f4d,buyback_drop,iPhone 17 Pro Max 256GB SIMフリー,,,medium,買取急落: iPhone 17 Pro Max 256GB SIMフリー,,,,,2026-05-31 23:57,,buyback_db,auto_generated,medium
-160cb53c-2e9,buyback_drop,iPhone 17 Pro 512GB SIMフリー,,,medium,買取急落: iPhone 17 Pro 512GB SIMフリー,,,,,2026-05-31 23:57,,buyback_db,auto_generated,medium
-a221cb2a-0ed,buyback_drop,iPhone 17 Pro 256GB SIMフリー,,,medium,買取急落: iPhone 17 Pro 256GB SIMフリー,,,,,2026-05-31 23:57,,buyback_db,auto_generated,medium
-73787647-a21,buyback_drop,iPhone 17 256GB SIMフリー,,,medium,買取急落: iPhone 17 256GB SIMフリー,,,,,2026-05-31 23:57,,buyback_db,auto_generated,medium
-34047535-34c,buyback_drop,iPhone 17 256GB SIMフリー,,,medium,買取急落: iPhone 17 256GB SIMフリー,,,,,2026-05-31 23:57,,buyback_db,auto_generated,medium
-2386ef9e-777,buyback_drop,iPhone 16 Pro 256GB SIMフリー,,,medium,買取急落: iPhone 16 Pro 256GB SIMフリー,,,,,2026-05-31 23:57,,buyback_db,auto_generated,medium
-33a9d3ab-cc6,buyback_drop,iPhone 16 Pro 256GB SIMフリー,,,medium,買取急落: iPhone 16 Pro 256GB SIMフリー,,,,,2026-05-31 23:57,,buyback_db,auto_generated,medium
-3be425ce-ac9,buyback_drop,iPad Pro M4 11インチ,,,medium,買取急落: iPad Pro M4 11インチ,,,,,2026-05-31 23:57,,buyback_db,auto_generated,medium
-be7bc38f-7f5,overseas_price_stale,FUJIFILM X100VI,,,low,海外価格データ更新が必要: FUJIFILM X100VI,"eBay ¥509,588 / 最終取得: 2026-05-28T10:00 (48h超) / confidence=medium",https://www.ebay.com/sch/i.html?_nkw=FUJIFILM+X100VI&LH_Sold=1&LH_Complete=1,,,2026-05-31 23:57,,overseas_prices_json,auto_generated,medium
-619ff271-309,overseas_price_stale,RICOH GR IIIx,,,low,海外価格データ更新が必要: RICOH GR IIIx,"eBay ¥222,945 / 最終取得: 2026-05-28T10:00 (48h超) / confidence=medium",https://www.ebay.com/sch/i.html?_nkw=Ricoh+GR+IIIx&LH_Sold=1&LH_Complete=1,,,2026-05-31 23:57,,overseas_prices_json,auto_generated,medium
-3c25594f-ea5,overseas_price_stale,RICOH GR IV,,,low,海外価格データ更新が必要: RICOH GR IV,"eBay ¥294,606 / 最終取得: 2026-05-28T10:00 (48h超) / confidence=medium",https://www.ebay.com/sch/i.html?_nkw=Ricoh+GR+IV&LH_Sold=1&LH_Complete=1,,,2026-05-31 23:57,,overseas_prices_json,auto_generated,medium
-ba636a63-87e,overseas_price_stale,Nintendo Switch 2,,,low,海外価格データ更新が必要: Nintendo Switch 2,"eBay ¥76,438 / 最終取得: 2026-05-28T10:00 (48h超) / confidence=medium",https://www.ebay.com/sch/i.html?_nkw=Nintendo+Switch+2&LH_Sold=1&LH_Complete=1,,,2026-05-31 23:57,,overseas_prices_json,auto_generated,medium
+69c72de4-069,buyback_drop,iPhone 17 Pro Max 256GB SIMフリー,,,medium,買取急落: iPhone 17 Pro Max 256GB SIMフリー,,,,,2026-06-01 20:51,,buyback_db,auto_generated,medium
+99d21af2-c1f,buyback_drop,iPhone 17 Pro Max 256GB SIMフリー,,,medium,買取急落: iPhone 17 Pro Max 256GB SIMフリー,,,,,2026-06-01 20:51,,buyback_db,auto_generated,medium
+5d62610f-cf7,buyback_surge,RICOH GR IV,,,medium,買取急騰: RICOH GR IV,,,,,2026-06-01 20:51,,buyback_db,auto_generated,medium
+1b3d2c75-8f5,buyback_surge,RICOH GR IV,,,medium,買取急騰: RICOH GR IV,,,,,2026-06-01 20:51,,buyback_db,auto_generated,medium
+e2a5cb78-934,buyback_surge,RICOH GR IV,,,medium,買取急騰: RICOH GR IV,,,,,2026-06-01 20:51,,buyback_db,auto_generated,medium
+3d2efceb-fa1,buyback_surge,RICOH GR IV,,,medium,買取急騰: RICOH GR IV,,,,,2026-06-01 20:51,,buyback_db,auto_generated,medium
+faf3e4fe-96b,buyback_surge,RICOH GR IIIx,,,medium,買取急騰: RICOH GR IIIx,,,,,2026-06-01 20:51,,buyback_db,auto_generated,medium
+9bc663c8-487,buyback_surge,RICOH GR IIIx,,,medium,買取急騰: RICOH GR IIIx,,,,,2026-06-01 20:51,,buyback_db,auto_generated,medium
+eb7fefb3-88d,buyback_surge,RICOH GR IIIx,,,medium,買取急騰: RICOH GR IIIx,,,,,2026-06-01 20:51,,buyback_db,auto_generated,medium
+2cc5893f-729,buyback_surge,FUJIFILM X100VI,,,medium,買取急騰: FUJIFILM X100VI,,,,,2026-06-01 20:51,,buyback_db,auto_generated,medium
+bf752e58-e47,buyback_surge,FUJIFILM X100VI,,,medium,買取急騰: FUJIFILM X100VI,,,,,2026-06-01 20:51,,buyback_db,auto_generated,medium
+a59e3621-242,buyback_surge,FUJIFILM X100VI,,,medium,買取急騰: FUJIFILM X100VI,,,,,2026-06-01 20:51,,buyback_db,auto_generated,medium
+152ccc82-7af,buyback_surge,iPhone 17 Pro Max 512GB SIMフリー,,,medium,買取急騰: iPhone 17 Pro Max 512GB SIMフリー,,,,,2026-06-01 20:51,,buyback_db,auto_generated,medium
+2f50f698-8af,buyback_surge,iPhone 17 Pro Max 256GB SIMフリー,,,medium,買取急騰: iPhone 17 Pro Max 256GB SIMフリー,,,,,2026-06-01 20:51,,buyback_db,auto_generated,medium
+c1572a3a-b66,buyback_surge,iPhone 17 Pro 512GB SIMフリー,,,medium,買取急騰: iPhone 17 Pro 512GB SIMフリー,,,,,2026-06-01 20:51,,buyback_db,auto_generated,medium
+baabfb4e-653,buyback_surge,iPhone 17 Pro 256GB SIMフリー,,,medium,買取急騰: iPhone 17 Pro 256GB SIMフリー,,,,,2026-06-01 20:51,,buyback_db,auto_generated,medium
+069ab710-917,buyback_surge,PlayStation 5 Pro,,,medium,買取急騰: PlayStation 5 Pro,,,,,2026-06-01 20:51,,buyback_db,auto_generated,medium
+3babd629-5e9,buyback_surge,Nintendo Switch 2,,,medium,買取急騰: Nintendo Switch 2,,,,,2026-06-01 20:51,,buyback_db,auto_generated,medium
+45f4492c-7a4,buyback_drop,Nintendo Switch 2,,,medium,買取急落: Nintendo Switch 2,,,,,2026-06-01 20:51,,buyback_db,auto_generated,medium
+97dc57cb-7c1,buyback_surge,Nintendo Switch 2,,,medium,買取急騰: Nintendo Switch 2,,,,,2026-06-01 20:51,,buyback_db,auto_generated,medium
+c3ecfc8d-7d9,overseas_price_stale,FUJIFILM X100VI,,,low,海外価格データ更新が必要: FUJIFILM X100VI,"eBay ¥509,884 / 最終取得: 2026-05-28T10:00 (48h超) / confidence=medium",https://www.ebay.com/sch/i.html?_nkw=FUJIFILM+X100VI&LH_Sold=1&LH_Complete=1,,,2026-06-01 20:51,,overseas_prices_json,auto_generated,medium
+172484ff-9ad,overseas_price_stale,RICOH GR IIIx,,,low,海外価格データ更新が必要: RICOH GR IIIx,"eBay ¥223,074 / 最終取得: 2026-05-28T10:00 (48h超) / confidence=medium",https://www.ebay.com/sch/i.html?_nkw=Ricoh+GR+IIIx&LH_Sold=1&LH_Complete=1,,,2026-06-01 20:51,,overseas_prices_json,auto_generated,medium
+ebb12379-358,overseas_price_stale,RICOH GR IV,,,low,海外価格データ更新が必要: RICOH GR IV,"eBay ¥294,776 / 最終取得: 2026-05-28T10:00 (48h超) / confidence=medium",https://www.ebay.com/sch/i.html?_nkw=Ricoh+GR+IV&LH_Sold=1&LH_Complete=1,,,2026-06-01 20:51,,overseas_prices_json,auto_generated,medium
+a2d13ae0-33f,overseas_price_stale,Nintendo Switch 2,,,low,海外価格データ更新が必要: Nintendo Switch 2,"eBay ¥76,482 / 最終取得: 2026-05-28T10:00 (48h超) / confidence=medium",https://www.ebay.com/sch/i.html?_nkw=Nintendo+Switch+2&LH_Sold=1&LH_Complete=1,,,2026-06-01 20:51,,overseas_prices_json,auto_generated,medium

@@ -5212,6 +5212,48 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             return '<span class="badge-manual">—</span>'
 
     @staticmethod
+    def _buyback_missing_reason(raw_rows) -> str:
+        """新品・未使用・未開封の買取価格が無い場合の理由ラベルを返す（Task 3）。
+        生の buyback 行（未フィルタ）から判定する。新品・未使用価格があれば '' を返す。
+          - 新品買取価格なし / 中古価格のみ取得 / サイト制限中 / 商品未掲載 / 取得失敗
+        """
+        rows = raw_rows or []
+        # 買取店の行のみで判定する（二次流通=resale_market・フリマ/海外店名は買取店ではないため除外）。
+        _shop_rows = [
+            r for r in rows
+            if r.get('data_source') != 'resale_market'
+            and not DailyLPGenerator._is_resale_shop(r.get('shop_name', ''))
+        ]
+        # 新品・未使用・未開封（中古でない）かつ価格>0 の「買取店」行があるか
+        _has_new = any(
+            (r.get('buyback_price', 0) or 0) > 0
+            and not DailyLPGenerator._cond_is_used(r.get('condition', ''))
+            for r in _shop_rows
+        )
+        if _has_new:
+            return ''
+        if not _shop_rows:
+            return '新品買取価格なし'
+        _priced = [r for r in _shop_rows if (r.get('buyback_price', 0) or 0) > 0]
+        _used_priced = [r for r in _priced if DailyLPGenerator._cond_is_used(r.get('condition', ''))]
+        def _blob(r):
+            return (str(r.get('reason', '') or '') + ' ' + str(r.get('notes', '') or '')).lower()
+        _blocked = any(('block' in _blob(r)) or ('429' in _blob(r)) or ('cloudflare' in _blob(r))
+                       or ('rate' in _blob(r)) for r in _shop_rows)
+        _notlisted = any(r.get('data_source') == 'product_not_listed' for r in _shop_rows)
+        _failed = any(r.get('data_source') == 'fetch_failed' for r in _shop_rows)
+        # 買取店の価格はあるが全て中古 → 中古価格のみ取得
+        if _priced and _used_priced and len(_used_priced) == len(_priced):
+            return '中古価格のみ取得'
+        if _blocked:
+            return 'サイト制限中'
+        if _notlisted and not _priced:
+            return '商品未掲載'
+        if _failed and not _priced:
+            return '取得失敗'
+        return '新品買取価格なし'
+
+    @staticmethod
     def _profit_badge(net_profit_jpy) -> tuple:
         """利益額に応じた初心者カードのバッジ (css_class, label) を返す（Task 1）。
         profit>0 のカードでは「様子見」を出さない。
@@ -5795,6 +5837,8 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         Task 5: easy/watch カードと同じ UI 構造に統一。
         Task 6: price=0 は利益計算に使わない（「未取得」表示）。
         """
+        # 新品・未使用買取価格が無い理由は、フィルタ前の生データから判定する（Task 3）
+        _missing_reason = self._buyback_missing_reason(buyback_rows)
         # 中古(used)・二次流通(resale_market/フリマ・海外店名)行は買取店比較から完全除外
         if buyback_rows:
             buyback_rows = [
@@ -5932,7 +5976,12 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         # 初期表示：商品名・公式価格・最高買取価格(未取得)・ステータスのみ。
         # 差益 / 買取店比較 / 確認時刻 / 公式リンクは <details> に格納。
         _has_bp = (getattr(d, 'best_buyback_price', 0) or 0) > 0
-        _mon_status = '価格変動を監視中' if _has_bp else '買取価格取得待ち'
+        # 新品・未使用買取価格が無い理由（Task 3）。価格があれば理由なし。
+        _reason = '' if _has_bp else (_missing_reason or '買取価格取得待ち')
+        _mon_status = '価格変動を監視中' if _has_bp else _reason
+        # 最高買取価格セルの表示（未取得時は理由を併記）
+        _bp_cell = (_esc(best_bp_str) if _has_bp
+                    else (f'未取得（{_esc(_reason)}）' if _reason and _reason != '買取価格取得待ち' else '未取得'))
         _mon_fold_inner = (
             f'<div class="profit-section amber" style="margin-top:6px">'
             f'<div class="profit-left">'
@@ -5961,7 +6010,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
   </div>
   <div class="monitoring-compact-row">
     <div class="mon-cell"><span class="mon-lbl">公式価格</span><span class="mon-val">{"¥{:,}".format(official) if official > 0 else "未取得"}</span></div>
-    <div class="mon-cell"><span class="mon-lbl">最高買取価格</span><span class="mon-val mon-val-muted">{_esc(best_bp_str) if _has_bp else "未取得"}</span></div>
+    <div class="mon-cell"><span class="mon-lbl">最高買取価格</span><span class="mon-val mon-val-muted">{_bp_cell}</span></div>
     <div class="mon-cell"><span class="mon-lbl">ステータス</span><span class="mon-status-badge">{_mon_status}</span></div>
   </div>
   <div class="card-body">

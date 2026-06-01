@@ -55,18 +55,62 @@ def main() -> int:
     now = datetime.now(tz=JST)
     print(f"[generate_ranking_report] 開始: {now.strftime('%Y-%m-%d %H:%M')} JST")
 
+    _stale_excluded = 0  # 14日超で利益判定から除外した件数（reason 用）
     try:
         from src.db.database import Database
         from src.db.repository import Repository
+        from src.content.daily_lp_generator import DailyLPGenerator
         db = Database()
         repo = Repository(db)
-        all_deals = repo.list_beginner_deals(min_profit=0, limit=50)
+        # LP と同じく「全レベル」を取得して enrich で昇格を反映（min_profit 制約なし）。
+        _raw = repo.list_beginner_deals(min_profit=-9999999, limit=80)
+        # 商品別買取行（bybp）を構築（中古・resale は enrich 側で除外）
+        _bybp = {}
+        for _p in repo.list_products():
+            _rows = repo.list_buyback_prices_by_product(_p.id, limit=10)
+            if _rows:
+                _bybp[_p.id] = _rows
+        _gen = DailyLPGenerator(repo)
+        # LP と同一の補完（新品・未使用・非resale 価格のみ採用、中古/resale 除外）
+        _enriched = [_gen._enrich_deal(d, _bybp.get(d.product_id, [])) for d in _raw]
+
+        # 14日(336h)超の手動価格は利益判定から除外（observed_at 基準・有効データのみ採用）
+        def _obs_age_h(d):
+            newest = None
+            for r in _bybp.get(getattr(d, "product_id", "") or "", []):
+                if (r.get("buyback_price", 0) or 0) <= 0:
+                    continue
+                if r.get("data_source") in ("fetch_failed", "product_not_listed", "resale_market"):
+                    continue
+                o = r.get("observed_at", "")
+                if not o:
+                    continue
+                try:
+                    dt = datetime.fromisoformat(str(o))
+                    if dt.tzinfo is None:
+                        dt = dt.replace(tzinfo=JST)
+                    dt = dt.astimezone(JST)
+                    if newest is None or dt > newest:
+                        newest = dt
+                except Exception:
+                    pass
+            if newest is None:
+                return 0.0
+            return (datetime.now(tz=JST) - newest).total_seconds() / 3600
+
+        all_deals = []
+        for d in _enriched:
+            if (d.net_profit_jpy or 0) > 0 and _obs_age_h(d) > 336.0:
+                _stale_excluded += 1
+                continue  # 14日超は利益ランキングから除外
+            all_deals.append(d)
     except Exception as e:
-        print(f"[WARN] DB 読み込み失敗: {e}", file=sys.stderr)
+        print(f"[WARN] DB 読み込み/enrich 失敗: {e}", file=sys.stderr)
         all_deals = []
 
     # 初心者向け: 一次流通仕入れ → 二次流通販売 / 全カテゴリ / 利益あり / 差益順
-    _BEGINNER_CATEGORIES = ("iphone", "game_console", "tablet", "wearable", "audio", "pc")
+    # camera も「公式→新品/未使用買取」モデルが成立するため beginner に含める。
+    _BEGINNER_CATEGORIES = ("iphone", "game_console", "tablet", "wearable", "audio", "pc", "camera")
     beginner_top = sorted(
         [
             d for d in all_deals
@@ -131,15 +175,18 @@ def main() -> int:
         d for d in all_deals
         if getattr(d, "category", "") in _BEGINNER_CATEGORIES
     ])
-    if len(all_deals) == 0:
+    if len(all_deals) == 0 and _stale_excluded == 0:
         reason_if_empty = (
             "run-buyback-premium-check 未実行 or DBに beginner_deals データなし。"
             "import-buyback-csv / import-market-csv が先行して完了していることを確認してください。"
         )
-    elif not beginner_top and not pro_top:
+    elif not beginner_top:
+        # beginner ランキングが0件のときは必ず理由を明示する（Task 1）
         reason_if_empty = (
-            f"全{len(all_deals)}件が利益なし or カテゴリ/ユーザーレベル条件に該当なし "
-            f"(初心者対象カテゴリ: {_beginner_cat_count}件)"
+            f"有効な初心者ランキング候補なし（公式価格→新品/未使用の最高買取・14日以内・"
+            f"price>0・suspicious/low除外）。"
+            f"全{len(all_deals)}件中 初心者対象カテゴリ{_beginner_cat_count}件 / "
+            f"14日超で除外{_stale_excluded}件。新品・未使用の買取価格取得が増え次第ランキングに反映されます。"
         )
     else:
         reason_if_empty = None

@@ -49,6 +49,12 @@ jobs:
         env:
           PYTHONPATH: .
 
+      - name: Update camera buyback (new/unused)
+        run: python scripts/update_camera_buyback.py --verbose
+        continue-on-error: true
+        env:
+          PYTHONPATH: .
+
       # 4. Collector quality gate
       - name: Collector quality gate
         id: quality_gate

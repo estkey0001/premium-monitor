@@ -869,6 +869,34 @@ class RakumaResaleCollector:
 # ─────────────────────────────────────────────────────────────
 
 
+# 状態推定キーワード（出品タイトル/状態テキストから condition を推定）
+_USED_HINTS = ("中古", "美品", "良品", "used", "ジャンク", "難あり", "傷", "訳あり",
+               "開封済", "b品", "c品")
+_NEW_HINTS = ("新品未開封", "新品・未開封", "未開封", "新品同様", "ほぼ新品",
+              "新品未使用", "新品", "未使用", "sealed", "brand new", "new")
+
+
+def _infer_condition(text: Optional[str], default: str = "new_unopened") -> str:
+    """出品タイトル/状態テキストから買取・販売条件を推定する（Task 1）。
+
+    各コレクターは新品/未使用フィルタ済みクエリで取得するが、タイトルに中古を示す
+    語が含まれる場合は used_a を返して下流（ランキング/せどり）で除外できるようにする。
+    新品系の語が明示されていれば new_unopened を返す。判定できなければ default。
+    """
+    if not text:
+        return default
+    t = str(text).lower()
+    # 中古を示す語が含まれていれば used 扱い（下流で除外される）
+    if any(k in t for k in _USED_HINTS):
+        # 「新品同様」「ほぼ新品」は新品系として扱う（中古語より優先）
+        if any(k in t for k in ("新品同様", "ほぼ新品", "新品未使用", "新品未開封")):
+            return "new_unopened"
+        return "used_a"
+    if any(k in t for k in _NEW_HINTS):
+        return "new_unopened"
+    return default
+
+
 def _save_sale_price(
     repo,
     product_alias: str,
@@ -878,11 +906,18 @@ def _save_sale_price(
     price_jpy: int,
     url: str,
     now: datetime,
+    condition: Optional[str] = None,
+    title: Optional[str] = None,
 ) -> None:
-    """sale_prices テーブルに保存する（INSERT OR REPLACE）。"""
+    """sale_prices テーブルに保存する（INSERT OR REPLACE）。
+
+    condition を明示しない場合は title から推定する（Task 1: condition 推定）。
+    どちらも無ければ new_unopened（クエリが新品/未使用フィルタ済みのため）。
+    """
     from src.models.sale_price import SalePriceModel
 
     sp_id = _make_sp_id(product_alias, shop_id)
+    _cond = condition or _infer_condition(title, default="new_unopened")
 
     sp = SalePriceModel(
         id=sp_id,
@@ -891,7 +926,7 @@ def _save_sale_price(
         shop_name=shop_name,
         shop_id=shop_id,
         sale_price=price_jpy,
-        condition="new_unopened",
+        condition=_cond,
         url=url,
         link_verified=False,
         observed_at=now,
@@ -899,7 +934,7 @@ def _save_sale_price(
         is_active=True,
     )
     repo.insert_sale_price(sp)
-    logger.debug("保存: %s / %s ¥%s", product_alias, shop_name, f"{price_jpy:,}")
+    logger.debug("保存: %s / %s ¥%s [%s]", product_alias, shop_name, f"{price_jpy:,}", _cond)
 
 
 # ─────────────────────────────────────────────────────────────

@@ -24,7 +24,11 @@ JST = timezone(timedelta(hours=9))
 REPORT_DIR = PROJECT_ROOT / "exports" / "sedori_routes_report"
 
 # 新品/未使用条件
-_UNUSED_CONDITIONS = frozenset({"new", "unused", "sealed", "未使用", "新品", "未開封"})
+_UNUSED_CONDITIONS = frozenset({
+    "new", "unused", "sealed", "未使用", "新品", "未開封",
+    # 内部コード（resale collector / 手動CSV が付与する新品系条件）
+    "new_unopened", "new_unopened_simfree", "新品未開封", "新品同様", "ほぼ新品",
+})
 
 
 def main() -> int:

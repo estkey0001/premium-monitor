@@ -1,23 +1,31 @@
 {
-  "generated_at": "2026-06-01T21:04:47+09:00",
+  "generated_at": "2026-06-01T21:57:39+09:00",
   "collection": {
     "total_shops": 16,
-    "shops_with_success": 4,
-    "shops_all_failed": 10,
+    "shops_with_success": 5,
+    "shops_all_failed": 9,
     "total_jobs": 55,
-    "ok_jobs": 15,
-    "failed_jobs": 36,
+    "ok_jobs": 19,
+    "failed_jobs": 32,
     "skip_jobs": 4,
-    "success_rate_pct": 27.3
+    "success_rate_pct": 34.5
   },
   "failure_reasons": [
     {
-      "reason": "playwright_not_installed",
-      "count": 19
+      "reason": "product_not_listed",
+      "count": 8
     },
     {
-      "reason": "http_403",
-      "count": 4
+      "reason": "rate_limited_429",
+      "count": 6
+    },
+    {
+      "reason": "site_blocked",
+      "count": 6
+    },
+    {
+      "reason": "price_not_found",
+      "count": 6
     },
     {
       "reason": "http_404",
@@ -28,19 +36,7 @@
       "count": 4
     },
     {
-      "reason": "product_not_listed",
-      "count": 3
-    },
-    {
-      "reason": "price_not_found",
-      "count": 2
-    },
-    {
       "reason": "service_unavailable",
-      "count": 2
-    },
-    {
-      "reason": "site_blocked",
       "count": 2
     }
   ],
@@ -84,7 +80,7 @@
   },
   "sedori_usable": {
     "routes": 3,
-    "reason_if_empty": "全100件が中古/状態不明のため除外 (新品・未使用条件: ['new', 'sealed', 'unused', '新品', '未使用', '未開封'])"
+    "reason_if_empty": null
   },
   "overseas": {
     "total": 0,

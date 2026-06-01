@@ -1823,6 +1823,13 @@ a[href], button, [role="tab"], [role="button"],
 .best-buyback-hero .bb-compared-note {{
   margin-top: 4px; font-size: 0.7rem; color: var(--ink3); font-weight: 600;
 }}
+.best-buyback-hero .bb-runnerup-note {{
+  margin-top: 6px; font-size: 0.86rem; color: var(--ink2); font-weight: 700;
+}}
+.best-buyback-hero .bb-runnerup-note strong {{ color: #00A37A; }}
+.best-buyback-hero .bb-runnerup-note .bb-compared-sub {{
+  margin-left: 6px; font-size: 0.68rem; color: var(--ink3); font-weight: 500;
+}}
 
 /* compact card 用の詳細折りたたみ（買取店比較を見る） */
 .card-detail-fold {{
@@ -6246,6 +6253,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         # Shop compare
         compare_html = ''
         _compare_shop_count = 0  # 比較対象の有効買取店数（「他N店舗と比較済み」表示用）
+        _runnerup_diff = None    # 最高買取店と2位の差額（初心者ヒーローに表示）
         # 初心者モード（non-pro）では resale_market（フリマ・オークション）行を除外
         if not pro_mode and buyback_rows:
             buyback_rows = [r for r in buyback_rows if r.get('data_source') != 'resale_market']
@@ -6338,42 +6346,60 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                     f'</div>'
                 )
 
-            # 上位3店舗を常時表示。4店舗目以降（価格取得済み）と取得失敗・未掲載店舗は
-            # 別々の details に分離する（Task 2: 価格「—」店舗を通常のもっと見るに混ぜない）。
-            _TOP_N = 3
-            visible_html = []
-            more_priced_html = []   # 4店舗目以降の「価格取得済み」店舗
-            failed_html = []        # 価格「—」の取得失敗・未掲載店舗
-            for i, r in enumerate(_normal_rows):
-                row = _render_shop_row(r, i + 1)
-                (visible_html if i < _TOP_N else more_priced_html).append(row)
-            for r in _failed_rows:
-                failed_html.append(_render_shop_row(r, None))
+            # 2位との差額（最高買取店ヒーローに小さく添える）
+            if len(_normal_rows) >= 2:
+                _runnerup_diff = (_normal_rows[0].get('buyback_price', 0)
+                                  - _normal_rows[1].get('buyback_price', 0))
 
-            details_html = ''
-            if more_priced_html:
-                details_html += (
-                    f'<details class="shop-more-details">'
-                    f'<summary class="shop-more-summary">価格取得済み店舗を見る（残り{len(more_priced_html)}店舗）</summary>'
-                    + ''.join(more_priced_html)
-                    + '</details>'
+            if pro_mode:
+                # Pro：従来どおり上位3店舗を常時表示 + 4位以降/失敗を details に折りたたみ
+                _TOP_N = 3
+                visible_html = []
+                more_priced_html = []
+                failed_html = []
+                for i, r in enumerate(_normal_rows):
+                    row = _render_shop_row(r, i + 1)
+                    (visible_html if i < _TOP_N else more_priced_html).append(row)
+                for r in _failed_rows:
+                    failed_html.append(_render_shop_row(r, None))
+                details_html = ''
+                if more_priced_html:
+                    details_html += (
+                        f'<details class="shop-more-details">'
+                        f'<summary class="shop-more-summary">価格取得済み店舗を見る（残り{len(more_priced_html)}店舗）</summary>'
+                        + ''.join(more_priced_html) + '</details>'
+                    )
+                if failed_html:
+                    details_html += (
+                        f'<details class="shop-more-details shop-failed-details">'
+                        f'<summary class="shop-more-summary shop-failed-summary">取得失敗・未掲載店舗を見る（{len(failed_html)}店舗）</summary>'
+                        + ''.join(failed_html) + '</details>'
+                    )
+                compare_html = (
+                    f'<div class="shop-table buyback-shop-table buyback-table">'
+                    f'<div class="shop-table-hd"><span>参考買取価格（補助情報）（上位{min(_TOP_N, len(_normal_rows))}店舗 / 全{n_shops}店舗）</span></div>'
+                    + ''.join(visible_html) + details_html + '</div>'
                 )
-            if failed_html:
-                details_html += (
-                    f'<details class="shop-more-details shop-failed-details">'
-                    f'<summary class="shop-more-summary shop-failed-summary">取得失敗・未掲載店舗を見る（{len(failed_html)}店舗）</summary>'
-                    + ''.join(failed_html)
-                    + '</details>'
+            else:
+                # 初心者：初期表示は最高買取店＋2位差額のみ。買取店比較は全店舗を
+                # 「買取店比較を見る」details に格納（価格取得済み → 取得失敗の順）。
+                _priced_cards = ''.join(_render_shop_row(r, i + 1) for i, r in enumerate(_normal_rows))
+                _failed_sub = ''
+                if _failed_rows:
+                    _failed_cards = ''.join(_render_shop_row(r, None) for r in _failed_rows)
+                    _failed_sub = (
+                        f'<details class="shop-more-details shop-failed-details">'
+                        f'<summary class="shop-more-summary shop-failed-summary">取得失敗・未掲載店舗を見る（{len(_failed_rows)}店舗）</summary>'
+                        + _failed_cards + '</details>'
+                    )
+                compare_html = (
+                    f'<details class="card-detail-fold shop-compare-fold">'
+                    f'<summary class="card-detail-summary">買取店比較を見る（全{n_shops}店舗）</summary>'
+                    f'<div class="card-detail-body">'
+                    f'<div class="shop-table buyback-shop-table buyback-table">'
+                    + _priced_cards + _failed_sub
+                    + '</div></div></details>'
                 )
-
-            _compare_hd_label = '参考買取価格（補助情報）' if pro_mode else '買取店比較'
-            compare_html = (
-                f'<div class="shop-table buyback-shop-table buyback-table">'
-                f'<div class="shop-table-hd"><span>{_compare_hd_label}（上位{min(_TOP_N, len(_normal_rows))}店舗 / 全{n_shops}店舗）</span></div>'
-                + ''.join(visible_html)
-                + details_html
-                + '</div>'
-            )
         # ── 海外価格セル（Pro モードのみ表示）──
         # 初心者タブでは eBay 等海外参考価格は不要（公式定価購入 → 買取店売却に専念）
         # Pro モードでも overseas_price_cell は現状不使用（overseas_html チップスで代替）
@@ -6479,16 +6505,23 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         _best_price_disp = _esc(fmt_price(d.best_buyback_price))
         # 「他◯店舗と比較済み」（最高買取店以外の比較対象数）
         _other_shops = max(0, _compare_shop_count - 1)
-        _compared_note = (
-            f'<div class="bb-compared-note">他{_other_shops}店舗と比較済み</div>'
-            if _other_shops > 0 else ''
-        )
+        # 2位との差額（初期表示はこれだけ。詳細比較は「買取店比較を見る」に格納）
+        if _runnerup_diff is not None and _runnerup_diff > 0:
+            _runnerup_note = (
+                f'<div class="bb-runnerup-note">2位との差額 '
+                f'<strong>+¥{_runnerup_diff:,}</strong>'
+                f'<span class="bb-compared-sub">（他{_other_shops}店舗と比較済み）</span></div>'
+            )
+        elif _other_shops > 0:
+            _runnerup_note = f'<div class="bb-compared-note">他{_other_shops}店舗と比較済み</div>'
+        else:
+            _runnerup_note = ''
         best_buyback_block_html = (
             f'<div class="best-buyback-block best-buyback-hero">'
             f'<div class="bb-shop-lbl">&#127978; 最高買取店</div>'
             f'<div class="bb-shop-val"><strong>{_best_shop_disp}</strong></div>'
             f'<div class="bb-shop-price">{_best_price_disp}</div>'
-            f'{_compared_note}'
+            f'{_runnerup_note}'
             f'</div>'
         ) if not pro_mode else ''
 
@@ -6605,11 +6638,11 @@ tr.sc-route-review {{ background: #FFFBEB; }}
   </div>
   {best_buyback_block_html}
   <div class="card-body">
-    {compare_html}
     <div class="card-actions">
       {official_btn}
       {buyback_btn}
     </div>
+    {compare_html}
     {detail_fold_html}
   </div>
 </div>"""

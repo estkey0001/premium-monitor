@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-06-01 21:56 JST",
-  "routes_total": 63,
-  "routes_unused_only": 0,
-  "profitable_routes": 0,
+  "generated_at": "2026-06-01 21:57 JST",
+  "routes_total": 100,
+  "routes_unused_only": 53,
+  "profitable_routes": 53,
   "negative_routes": 0,
   "beginner_routes": {
     "route_type": "primary_to_secondary",
@@ -11,12 +11,253 @@
   },
   "pro_routes": {
     "route_type": "secondary_to_secondary",
-    "count": 0,
-    "top": []
+    "count": 53,
+    "top": [
+      {
+        "product_name": "RICOH GR IV HDF",
+        "buy_shop_name": "Amazon JP (新品出品)",
+        "sell_shop_name": "マップカメラ",
+        "buy_condition": "new_unopened",
+        "buy_price": 44105,
+        "sell_price": 205000,
+        "net_profit": 159095,
+        "profit_rate": 3.6072,
+        "needs_review": true,
+        "route_type": "secondary_to_secondary"
+      },
+      {
+        "product_name": "RICOH GR IV HDF",
+        "buy_shop_name": "Amazon JP (新品出品)",
+        "sell_shop_name": "カメラのキタムラ",
+        "buy_condition": "new_unopened",
+        "buy_price": 44105,
+        "sell_price": 203000,
+        "net_profit": 157095,
+        "profit_rate": 3.5618,
+        "needs_review": true,
+        "route_type": "secondary_to_secondary"
+      },
+      {
+        "product_name": "RICOH GR IV HDF",
+        "buy_shop_name": "Amazon JP (新品出品)",
+        "sell_shop_name": "フジヤカメラ",
+        "buy_condition": "new_unopened",
+        "buy_price": 44105,
+        "sell_price": 200000,
+        "net_profit": 154095,
+        "profit_rate": 3.4938,
+        "needs_review": true,
+        "route_type": "secondary_to_secondary"
+      },
+      {
+        "product_name": "RICOH GR IV HDF",
+        "buy_shop_name": "Amazon JP (新品出品)",
+        "sell_shop_name": "ソフマップ",
+        "buy_condition": "new_unopened",
+        "buy_price": 44105,
+        "sell_price": 196000,
+        "net_profit": 150095,
+        "profit_rate": 3.4031,
+        "needs_review": true,
+        "route_type": "secondary_to_secondary"
+      },
+      {
+        "product_name": "RICOH GR IV",
+        "buy_shop_name": "Amazon JP (新品出品)",
+        "sell_shop_name": "マップカメラ",
+        "buy_condition": "new_unopened",
+        "buy_price": 61267,
+        "sell_price": 198000,
+        "net_profit": 134933,
+        "profit_rate": 2.2024,
+        "needs_review": true,
+        "route_type": "secondary_to_secondary"
+      },
+      {
+        "product_name": "RICOH GR IV",
+        "buy_shop_name": "Amazon JP (新品出品)",
+        "sell_shop_name": "カメラのキタムラ",
+        "buy_condition": "new_unopened",
+        "buy_price": 61267,
+        "sell_price": 196000,
+        "net_profit": 132933,
+        "profit_rate": 2.1697,
+        "needs_review": true,
+        "route_type": "secondary_to_secondary"
+      },
+      {
+        "product_name": "RICOH GR IV",
+        "buy_shop_name": "Amazon JP (新品出品)",
+        "sell_shop_name": "フジヤカメラ",
+        "buy_condition": "new_unopened",
+        "buy_price": 61267,
+        "sell_price": 194000,
+        "net_profit": 130933,
+        "profit_rate": 2.1371,
+        "needs_review": true,
+        "route_type": "secondary_to_secondary"
+      },
+      {
+        "product_name": "RICOH GR IV",
+        "buy_shop_name": "Amazon JP (新品出品)",
+        "sell_shop_name": "ソフマップ",
+        "buy_condition": "new_unopened",
+        "buy_price": 61267,
+        "sell_price": 190000,
+        "net_profit": 126933,
+        "profit_rate": 2.0718,
+        "needs_review": true,
+        "route_type": "secondary_to_secondary"
+      },
+      {
+        "product_name": "RICOH GR IV",
+        "buy_shop_name": "Amazon JP (新品出品)",
+        "sell_shop_name": "じゃんぱら",
+        "buy_condition": "new_unopened",
+        "buy_price": 61267,
+        "sell_price": 188000,
+        "net_profit": 124933,
+        "profit_rate": 2.0392,
+        "needs_review": true,
+        "route_type": "secondary_to_secondary"
+      },
+      {
+        "product_name": "RICOH GR IV",
+        "buy_shop_name": "Amazon JP (新品出品)",
+        "sell_shop_name": "買取商店",
+        "buy_condition": "new_unopened",
+        "buy_price": 61267,
+        "sell_price": 185000,
+        "net_profit": 121933,
+        "profit_rate": 1.9902,
+        "needs_review": true,
+        "route_type": "secondary_to_secondary"
+      }
+    ]
   },
-  "all_profitable": [],
-  "excluded_by_condition": 63,
+  "all_profitable": [
+    {
+      "product_name": "FUJIFILM X100VI",
+      "buy_shop_name": "Amazon JP (新品出品)",
+      "sell_shop_name": "マップカメラ",
+      "buy_condition": "new_unopened",
+      "buy_price": 237999,
+      "sell_price": 445000,
+      "net_profit": 205201,
+      "profit_rate": 0.8622,
+      "needs_review": true,
+      "route_type": "secondary_to_secondary"
+    },
+    {
+      "product_name": "FUJIFILM X100VI",
+      "buy_shop_name": "Amazon JP (新品出品)",
+      "sell_shop_name": "カメラのキタムラ",
+      "buy_condition": "new_unopened",
+      "buy_price": 237999,
+      "sell_price": 442000,
+      "net_profit": 202201,
+      "profit_rate": 0.8496,
+      "needs_review": true,
+      "route_type": "secondary_to_secondary"
+    },
+    {
+      "product_name": "FUJIFILM X100VI",
+      "buy_shop_name": "Amazon JP (新品出品)",
+      "sell_shop_name": "フジヤカメラ",
+      "buy_condition": "new_unopened",
+      "buy_price": 237999,
+      "sell_price": 440000,
+      "net_profit": 200201,
+      "profit_rate": 0.8412,
+      "needs_review": true,
+      "route_type": "secondary_to_secondary"
+    },
+    {
+      "product_name": "FUJIFILM X100VI",
+      "buy_shop_name": "Amazon JP (新品出品)",
+      "sell_shop_name": "ソフマップ",
+      "buy_condition": "new_unopened",
+      "buy_price": 237999,
+      "sell_price": 435000,
+      "net_profit": 195201,
+      "profit_rate": 0.8202,
+      "needs_review": true,
+      "route_type": "secondary_to_secondary"
+    },
+    {
+      "product_name": "FUJIFILM X100VI",
+      "buy_shop_name": "Amazon JP (新品出品)",
+      "sell_shop_name": "じゃんぱら",
+      "buy_condition": "new_unopened",
+      "buy_price": 237999,
+      "sell_price": 430000,
+      "net_profit": 190201,
+      "profit_rate": 0.7992,
+      "needs_review": true,
+      "route_type": "secondary_to_secondary"
+    },
+    {
+      "product_name": "FUJIFILM X100VI",
+      "buy_shop_name": "Amazon JP (新品出品)",
+      "sell_shop_name": "買取商店",
+      "buy_condition": "new_unopened",
+      "buy_price": 237999,
+      "sell_price": 428000,
+      "net_profit": 188201,
+      "profit_rate": 0.7908,
+      "needs_review": true,
+      "route_type": "secondary_to_secondary"
+    },
+    {
+      "product_name": "RICOH GR IV HDF",
+      "buy_shop_name": "Amazon JP (新品出品)",
+      "sell_shop_name": "マップカメラ",
+      "buy_condition": "new_unopened",
+      "buy_price": 44105,
+      "sell_price": 205000,
+      "net_profit": 159095,
+      "profit_rate": 3.6072,
+      "needs_review": true,
+      "route_type": "secondary_to_secondary"
+    },
+    {
+      "product_name": "RICOH GR IV HDF",
+      "buy_shop_name": "Amazon JP (新品出品)",
+      "sell_shop_name": "カメラのキタムラ",
+      "buy_condition": "new_unopened",
+      "buy_price": 44105,
+      "sell_price": 203000,
+      "net_profit": 157095,
+      "profit_rate": 3.5618,
+      "needs_review": true,
+      "route_type": "secondary_to_secondary"
+    },
+    {
+      "product_name": "RICOH GR IV HDF",
+      "buy_shop_name": "Amazon JP (新品出品)",
+      "sell_shop_name": "フジヤカメラ",
+      "buy_condition": "new_unopened",
+      "buy_price": 44105,
+      "sell_price": 200000,
+      "net_profit": 154095,
+      "profit_rate": 3.4938,
+      "needs_review": true,
+      "route_type": "secondary_to_secondary"
+    },
+    {
+      "product_name": "RICOH GR IV HDF",
+      "buy_shop_name": "Amazon JP (新品出品)",
+      "sell_shop_name": "ソフマップ",
+      "buy_condition": "new_unopened",
+      "buy_price": 44105,
+      "sell_price": 196000,
+      "net_profit": 150095,
+      "profit_rate": 3.4031,
+      "needs_review": true,
+      "route_type": "secondary_to_secondary"
+    }
+  ],
+  "excluded_by_condition": 47,
   "excluded_by_confidence": 0,
-  "excluded_by_missing_price": 0,
-  "reason_if_empty": "全63件が中古/状態不明のため除外 (新品・未使用条件: ['new', 'sealed', 'unused', '新品', '未使用', '未開封'])"
+  "excluded_by_missing_price": 0
 }

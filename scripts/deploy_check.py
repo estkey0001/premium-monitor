@@ -4881,6 +4881,39 @@ def check() -> list[dict]:
                     "message": "#487 データ品質レポートに 成功率/失敗理由/有効データ数/ranking・sedori使用数 が出る"
                                + ("" if _dq_ok else " ← data_quality_report/latest.json が不完全です")})
 
+    # #488: カメラ買取コレクターが workflow にあり、状態レポートが出力される
+    _t488 = ('update_camera_buyback.py' in _wf) and _os468.path.exists(
+        _os468.path.join(_root, 'exports', 'camera_buyback_status.json'))
+    results.append({"level": "ok" if _t488 else "warning", "check": "camera_buyback_collector_present",
+                    "message": "#488 カメラ買取コレクターが daily_lp.yml にあり camera_buyback_status.json を出力"
+                               + ("" if _t488 else " ← カメラ買取コレクターのステップ/レポートが見つかりません")})
+
+    # #489: EBAY_APP_ID 設定手順が README / CLAUDE.md に記載されている
+    _ebay_doc = False
+    for _doc in ('README.md', 'CLAUDE.md'):
+        try:
+            with open(_os468.path.join(_root, _doc), encoding='utf-8') as _df:
+                if 'EBAY_APP_ID' in _df.read():
+                    _ebay_doc = True
+                    break
+        except Exception:
+            pass
+    results.append({"level": "ok" if _ebay_doc else "error", "check": "ebay_app_id_documented",
+                    "message": "#489 EBAY_APP_ID の設定手順が README / CLAUDE.md に記載されている"
+                               + ("" if _ebay_doc else " ← EBAY_APP_ID の設定手順が見つかりません")})
+
+    # #490: resale collector に condition 推定ロジックがある（Task 1 次フェーズ）
+    _resale_src = ''
+    try:
+        with open(_os468.path.join(_root, 'scripts', 'collect_resale_prices.py'), encoding='utf-8') as _rsf:
+            _resale_src = _rsf.read()
+    except Exception:
+        _resale_src = ''
+    _t490 = ('_infer_condition' in _resale_src) and ('new_unopened' in _gen_src or 'new_unopened' in _resale_src)
+    results.append({"level": "ok" if _t490 else "error", "check": "resale_condition_inference",
+                    "message": "#490 resale collector に condition 推定ロジック（_infer_condition）がある"
+                               + ("" if _t490 else " ← condition 推定ロジックが見つかりません")})
+
     return results
 
 

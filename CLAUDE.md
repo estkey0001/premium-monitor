@@ -132,5 +132,30 @@ Settings → Secrets and variables → Actions に以下のシークレットを
 - 未設定の場合は自動でスキップ（エラーにならない）
 - 通知スクリプト: `scripts/notify_workflow_result.py`（`--dry-run` オプションで動作確認可能）
 
+## 海外価格 API 設定（EBAY_APP_ID）
+
+eBay の正確な成約相場（Finding API）を使うには `EBAY_APP_ID` を設定してください。
+未設定の場合は HTML フォールバックのみとなり、価格が **stale 化しやすく**、
+ランキング/Pro/せどりの**主計算からは stale 海外価格が除外**されます
+（`scripts/update_overseas_prices.py` が起動時に強警告 `STRONG WARNING ... api_not_configured` を出力）。
+
+### 取得手順
+1. https://developer.ebay.com/ にサインイン（無料）
+2. 「Application Keys」から **Production** の App ID（Client ID）を発行
+3. GitHub: Settings → Secrets and variables → Actions に登録
+
+| Secret 名 | 説明 | 必須 |
+|-----------|------|------|
+| `EBAY_APP_ID` | eBay Finding API の App ID（Client ID）| 任意（未設定でも動作・精度低下）|
+| `EBAY_CLIENT_ID` | `EBAY_APP_ID` の別名（どちらか一方でOK）| 任意 |
+
+### ローカル実行
+```bash
+export EBAY_APP_ID="YourAppId-xxxx-xxxx-xxxx-xxxx"
+python scripts/update_overseas_prices.py --verbose
+```
+- 未設定でも `--manual-only` / `--skip-ebay` でローカル動作可能。
+- 設定すると eBay 成約相場が fresh 化し、Pro/せどりの海外売却候補の精度が向上します。
+
 ## 絶対禁止
 - 自動購入・自動応募・CAPTCHA突破・ログイン突破・複数アカウント運用・高頻度アクセス・規約違反行為

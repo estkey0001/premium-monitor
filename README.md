@@ -37,6 +37,27 @@ TELEGRAM_BOT_TOKEN=...
 TELEGRAM_CHAT_ID=...
 ```
 
+#### eBay 海外相場 API（EBAY_APP_ID）
+
+eBay の正確な成約相場（Finding API）を使うには `EBAY_APP_ID` を設定します。
+**未設定でも動作しますが** HTML フォールバックのみとなり海外価格が stale 化しやすく、
+ランキング/Pro/せどりの主計算からは stale 海外価格が除外されます。
+
+```
+# .env もしくは環境変数
+EBAY_APP_ID=YourAppId-xxxx-xxxx-xxxx-xxxx   # = EBAY_CLIENT_ID でも可
+```
+
+取得手順:
+1. https://developer.ebay.com/ にサインイン（無料）
+2. 「Application Keys」→ **Production** の App ID（Client ID）を発行
+3. ローカルは `.env`、GitHub Actions は Settings → Secrets and variables → Actions に登録
+
+```bash
+export EBAY_APP_ID="YourAppId-..."
+python scripts/update_overseas_prices.py --verbose   # 未設定時は強警告を表示
+```
+
 ### CSVインポート
 
 手動収集した価格データを投入:

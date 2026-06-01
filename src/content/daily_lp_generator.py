@@ -1971,6 +1971,16 @@ a[href], button, [role="tab"], [role="button"],
 .confirm-line .confirm-stale {{
   color: #C2701A; font-weight: 700; margin-left: 2px;
 }}
+/* 7日以上前の参考値（控えめ補足） */
+.confirm-line .confirm-stale7 {{
+  color: #C2701A; font-weight: 600; font-size: 0.92em;
+}}
+/* 14日超降格カードの「価格情報が古い（要再確認）」バナー */
+.mon-stale14-note {{
+  margin: 6px 0 2px; padding: 6px 10px;
+  font-size: 0.8rem; font-weight: 800; color: #99502A;
+  background: #FFF3E6; border: 1px solid #F0CDA0; border-radius: 8px;
+}}
 
 /* 初心者カードの取得方法ラベル（行末の極薄補足 — 店名・価格・差益より目立たせない） */
 .shop-source-col-mini {{
@@ -5588,13 +5598,62 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                     pass
             return 0.0  # scanned_at なし → 除外しない
 
-        _STALE_EXCLUDE_H = 168.0  # 7日間(168h)以内にスキャンされた案件を表示（scanned_at 基準）
+        # ── 手動価格の2段階鮮度管理（observed_at 基準）──
+        #   7日超(WARNING_STALE_H)  : 利益判定に使用可。ただしカードに「要更新」を表示。
+        #   14日超(EXCLUDE_STALE_H) : 利益判定から除外し、監視中へ降格（カードは残す）。
+        WARNING_STALE_H = 168.0   # 7日
+        EXCLUDE_STALE_H = 336.0   # 14日
+        _STALE_EXCLUDE_H = EXCLUDE_STALE_H  # 後方互換（参照用）
 
-        # 全案件を統合（カメラ除外済みの easy/watch + monitoring/fetch_failed）
-        # scanned_at が 168h(7日)以内の案件のみ easy/watch から表示
-        # ランキングと同じ beginner_deals テーブルを使うため、スキャン日時で一致させる
-        _easy_filtered  = [d for d in easy_deals  if _bybp_age_h(d) < _STALE_EXCLUDE_H]
-        _watch_filtered = [d for d in watch_deals if _bybp_age_h(d) < _STALE_EXCLUDE_H]
+        def _price_obs_age_h(deal):
+            """deal を裏付ける手動買取価格の observed_at（最新）からの経過時間(h)。
+            manual_today / manual_confirmed の observed_at を優先。無ければ scanned_at。"""
+            rows = bybp.get(getattr(deal, 'product_id', '') or '', [])
+            newest = None
+            for r in rows:
+                if (r.get('buyback_price', 0) or 0) <= 0:
+                    continue
+                if r.get('data_source') in ('fetch_failed', 'product_not_listed', 'resale_market'):
+                    continue
+                o = r.get('observed_at', '')
+                if not o:
+                    continue
+                try:
+                    dt = datetime.fromisoformat(str(o))
+                    if dt.tzinfo is None:
+                        dt = dt.replace(tzinfo=JST)
+                    dt = dt.astimezone(JST)
+                    if newest is None or dt > newest:
+                        newest = dt
+                except Exception:
+                    pass
+            if newest is not None:
+                return (datetime.now(tz=JST) - newest).total_seconds() / 3600
+            return _bybp_age_h(deal)
+
+        def _apply_stale_downgrade(deal):
+            """14日超の手動価格は利益判定から除外し、監視中へ降格する（カードは残す）。
+            降格理由は notes に '||STALE14' を付与して後段の監視中カードで表示する。"""
+            try:
+                age = _price_obs_age_h(deal)
+            except Exception:
+                age = 0.0
+            if age > EXCLUDE_STALE_H:
+                return deal.copy(update={
+                    'best_buyback_price': 0,
+                    'best_buyback_shop': '—',
+                    'best_buyback_url': '',
+                    'net_profit_jpy': 0,
+                    'gross_profit_jpy': 0,
+                    'net_profit_rate': 0.0,
+                    'user_level': 'monitoring',
+                    'notes': ((getattr(deal, 'notes', '') or '') + '||STALE14'),
+                })
+            return deal
+
+        # 14日超は「除外」せず監視中へ降格するため、ここでは全件保持する（降格は enrich 後に適用）。
+        _easy_filtered  = list(easy_deals)
+        _watch_filtered = list(watch_deals)
 
         # 中古条件チェック: 新品/未使用/未開封以外の条件は初心者メイン表示から除外
         # 中古A / 美品 / 良品 / used / B品 / C品 / ジャンク / 開封済 などはNG
@@ -5634,6 +5693,8 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         deduped_all = [self._enrich_deal(d, bybp.get(d.product_id, [])) for d in deduped_all]
         # 補完後に中古条件へ変化した deal を main から除外（_is_used_cond 再適用）
         deduped_all = [d for d in deduped_all if not _is_used_cond(d)]
+        # 14日超の手動価格は enrich 後に監視中へ降格（再昇格を防ぐため最後に適用）。
+        deduped_all = [_apply_stale_downgrade(d) for d in deduped_all]
 
         # ── サマリバー（利益あり件数 / 監視中件数 / 取得失敗件数）──
         _profit_deals_all  = [d for d in deduped_all if (d.net_profit_jpy or 0) > 0]
@@ -5838,7 +5899,10 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         Task 6: price=0 は利益計算に使わない（「未取得」表示）。
         """
         # 新品・未使用買取価格が無い理由は、フィルタ前の生データから判定する（Task 3）
-        _missing_reason = self._buyback_missing_reason(buyback_rows)
+        # 14日超で監視中へ降格された商品（notes に '||STALE14'）は鮮度理由を優先表示。
+        _is_stale14 = 'STALE14' in (getattr(d, 'notes', '') or '')
+        _missing_reason = ('手動確認データが14日以上前' if _is_stale14
+                           else self._buyback_missing_reason(buyback_rows))
         # 中古(used)・二次流通(resale_market/フリマ・海外店名)行は買取店比較から完全除外
         if buyback_rows:
             buyback_rows = [
@@ -5982,6 +6046,9 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         # 最高買取価格セルの表示（未取得時は理由を併記）
         _bp_cell = (_esc(best_bp_str) if _has_bp
                     else (f'未取得（{_esc(_reason)}）' if _reason and _reason != '買取価格取得待ち' else '未取得'))
+        # 14日超で降格した商品は「価格情報が古い（要再確認）」を明示
+        _stale14_banner = ('<div class="mon-stale14-note">&#9888; 価格情報が古い（要再確認）</div>'
+                           if _is_stale14 else '')
         _mon_fold_inner = (
             f'<div class="profit-section amber" style="margin-top:6px">'
             f'<div class="profit-left">'
@@ -6008,6 +6075,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
       {genre_badge}
     </div>
   </div>
+  {_stale14_banner}
   <div class="monitoring-compact-row">
     <div class="mon-cell"><span class="mon-lbl">公式価格</span><span class="mon-val">{"¥{:,}".format(official) if official > 0 else "未取得"}</span></div>
     <div class="mon-cell"><span class="mon-lbl">最高買取価格</span><span class="mon-val mon-val-muted">{_bp_cell}</span></div>
@@ -6534,6 +6602,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         _src_label = '—'
         _src_date  = '—'
         _src_stale = False   # 24h超で True
+        _src_stale7 = False  # 168h(7日)超で True → 「7日以上前の参考値」表示
         if _ts_rows:
             _ds = _ts_rows[0].get('data_source', '')
             _src_label = self._source_label_jp(_ds)
@@ -6545,7 +6614,9 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                         _obs_dt = _obs_dt.replace(tzinfo=JST)
                     _obs_dt = _obs_dt.astimezone(JST)
                     _src_date = _obs_dt.strftime('%Y-%m-%d')
-                    _src_stale = (datetime.now(tz=JST) - _obs_dt).total_seconds() / 3600 >= 24
+                    _src_age_h = (datetime.now(tz=JST) - _obs_dt).total_seconds() / 3600
+                    _src_stale = _src_age_h >= 24
+                    _src_stale7 = _src_age_h >= 168
                 except Exception:
                     _src_date = _esc(str(_obs_raw)[:10])
 
@@ -6574,8 +6645,11 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             f'</div>'
         ) if not pro_mode else ''
 
-        # ── 価格確認行（小さく・古いデータ表示も控えめにここへ：Task 3）──
+        # ── 価格確認行（小さく・古いデータ表示も控えめにここへ）──
+        # 7日超は「要更新」＋「7日以上前の参考値」を表示（利益判定には引き続き使用）。
         _stale_suffix = '<span class="confirm-stale">（要更新）</span>' if _src_stale else ''
+        _stale7_note = ('<span class="confirm-stale7">7日以上前の参考値</span>'
+                        if _src_stale7 else '')
         price_source_row_html = (
             f'<div class="price-source-row confirm-line" '
             f'style="display:flex;gap:14px;flex-wrap:wrap;'
@@ -6583,6 +6657,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             f'<span>&#9989; 状態：<strong>{condition_text}</strong></span>'
             f'<span>&#128203; 取得方法：{_src_label}</span>'
             f'<span>&#128197; 最終確認：{_src_date}{_stale_suffix}</span>'
+            f'{_stale7_note}'
             f'</div>'
         ) if not pro_mode else ''
 

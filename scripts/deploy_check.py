@@ -4339,12 +4339,10 @@ def check() -> list[dict]:
                                + ("" if _t431 else f" ← 内部コードが残っています: {', '.join(_leaked)}")})
 
     # #432: 買取店比較が「上位3件表示 + details 折りたたみ」になっている（Task 1）
-    _t432 = ('shop-more-details' in _beg_html388) and (
-        ('もっと見る' in _beg_html388) or ('価格取得済み店舗を見る' in _beg_html388)
-    )
-    results.append({"level": "ok" if _t432 else "error", "check": "beginner_buyback_top3_collapse",
-                    "message": "#432 買取店比較が上位3件表示 + details 折りたたみ（『価格取得済み店舗を見る』）になっている"
-                               + ("" if _t432 else " ← 折りたたみ（shop-more-details）が見つかりません")})
+    _t432 = ('shop-compare-fold' in _beg_html388) and ('買取店比較を見る' in _beg_html388)
+    results.append({"level": "ok" if _t432 else "error", "check": "beginner_buyback_compare_collapsed",
+                    "message": "#432 買取店比較が『買取店比較を見る』details に折りたたまれている"
+                               + ("" if _t432 else " ← 買取店比較の折りたたみ（shop-compare-fold）が見つかりません")})
 
     # #433: 古いデータの「N日前」がカード上部（買取店比較ヘッダー shop-table-hd）に強表示されない（Task 3）
     import re as _re433
@@ -4354,11 +4352,11 @@ def check() -> list[dict]:
                     "message": "#433 古いデータ（N日前/要更新）が買取店比較ヘッダーに強表示されない（価格確認行に小さく表示）"
                                + ("" if _t433 else " ← shop-table-hd に『N日前/要更新』が残っています")})
 
-    # #434: Beginner カードに details 折りたたみが存在する（Task 1/5）
-    _t434 = '<details class="shop-more-details">' in _beg_html388
+    # #434: Beginner カードに買取店比較の details 折りたたみ（shop-compare-fold）が存在する
+    _t434 = 'shop-compare-fold' in _beg_html388
     results.append({"level": "ok" if _t434 else "warning", "check": "beginner_has_details",
-                    "message": "#434 Beginner カードに details 折りたたみ（4店舗目以降）が存在する"
-                               + ("" if _t434 else " ← details 折りたたみが見つかりません（店舗数が少ない可能性）")})
+                    "message": "#434 Beginner カードに買取店比較の折りたたみ（shop-compare-fold）が存在する"
+                               + ("" if _t434 else " ← 買取店比較の折りたたみが見つかりません（店舗数が少ない可能性）")})
 
     # #435: 最高買取店が大きく表示されている（best-buyback-block）（Task 1/5）
     _t435 = ('best-buyback-block' in _beg_html388) and ('bb-shop-price' in _beg_html388)
@@ -4446,36 +4444,29 @@ def check() -> list[dict]:
     )
 
     def _initial_view(card_html: str) -> str:
-        """card-detail-fold より前（初期表示部分）を返す。"""
-        i = card_html.find('card-detail-fold')
+        """買取店比較fold（shop-compare-fold）より前 = 初期表示部分を返す。"""
+        i = card_html.find('shop-compare-fold')
+        if i < 0:
+            i = card_html.find('card-detail-fold')
         return card_html[:i] if i >= 0 else card_html
 
-    def _visible_compare(card_html: str) -> str:
-        """初期表示のうち、shop-more-details（4店舗目以降の折りたたみ）より前 = 常時表示部分。"""
-        init = _initial_view(card_html)
-        j = init.find('shop-more-details')
-        return init[:j] if j >= 0 else init
+    # #445: 初期表示は最高買取店＋2位差額のみ（買取店比較テーブルは details 内）
+    #   初期表示（買取店比較foldより前）に shop-row が出ないこと。
+    _init_row_counts = [_initial_view(c).count('class="shop-row') for c in _compact_cards]
+    _max_init_rows = max(_init_row_counts, default=0)
+    _t445 = bool(_compact_cards) and (_max_init_rows == 0) and ('shop-compare-fold' in _beg_html388)
+    results.append({"level": "ok" if _t445 else "error", "check": "beginner_compare_folded_initial_hero_only",
+                    "message": f"#445 初期表示は最高買取店＋2位差額のみ・買取店比較は details 内（初期表示の shop-row max={_max_init_rows}）"
+                               + ("" if _t445 else " ← 初期表示に店舗行が残っている、または比較foldが無い")})
 
-    # #445: Beginner カードの details 外に shop-row が3件以上ある（上位3店舗が常時表示）
-    #   shop-more-details（4店舗目以降の折りたたみ）より前の常時表示 shop-row 数の最大値で判定。
-    _vis_row_counts = [_visible_compare(c).count('class="shop-row') for c in _compact_cards]
-    _max_visible_rows = max(_vis_row_counts, default=0)
-    _t445 = _max_visible_rows >= 3
-    results.append({"level": "ok" if _t445 else "error", "check": "beginner_3plus_shop_rows_outside_details",
-                    "message": f"#445 Beginner カードの details 外に shop-row が3件以上ある（常時表示 max={_max_visible_rows}店舗）"
-                               + ("" if _t445 else " ← 常時表示の店舗行が3件未満です")})
-
-    # #446: 「買取店比較を見る（折りたたみ）」の前に店舗名・価格・確認リンクがある
-    #   常時表示部分に shop-name-col / shop-price-col / shop-check-btn(確認リンク) が含まれる。
-    _t446 = bool(_compact_cards) and all(
-        (_visible_compare(c).count('shop-name-col') >= 1)
-        and (_visible_compare(c).count('shop-price-col') >= 1)
-        and ('shop-check-btn' in _visible_compare(c))
-        for c in _compact_cards
-    )
-    results.append({"level": "ok" if _t446 else "error", "check": "beginner_name_price_link_before_fold",
-                    "message": f"#446 折りたたみの前に店舗名・価格・確認リンクがある（常時表示店舗数={[_visible_compare(c).count('shop-name-col') for c in _compact_cards]}）"
-                               + ("" if _t446 else " ← 店名・価格・確認リンクが常時表示されていません")})
+    # #446: 初期表示に最高買取店ブロック（best-buyback-hero）と2位差額が出る
+    #   全カードの初期表示に best-buyback-hero があり、少なくとも一部に『2位との差額』が出る。
+    _all_hero = bool(_compact_cards) and all('best-buyback-hero' in _initial_view(c) for c in _compact_cards)
+    _any_runnerup = ('2位との差額' in _beg_html388)
+    _t446 = _all_hero and _any_runnerup
+    results.append({"level": "ok" if _t446 else "error", "check": "beginner_hero_and_runnerup_diff",
+                    "message": "#446 初期表示に最高買取店ブロックと『2位との差額』が表示される"
+                               + ("" if _t446 else " ← 最高買取店ブロックまたは2位差額が初期表示にありません")})
 
     # #447: 監視中セクションが折りたたみ（details）になっている
     _t447 = ('monitoring-global-section' in _beg_html388) and ('監視中の商品を見る' in _beg_html388)
@@ -4497,14 +4488,14 @@ def check() -> list[dict]:
                     "message": "#449 最高買取店ブロック（best-buyback-hero）が存在する"
                                + ("" if _t449 else " ← 最高買取店ブロックが見つかりません")})
 
-    # #450: 4店舗目以降だけが折りたたみ（shop-more-details）内、取得失敗店舗も折りたたみ内
-    #   常時表示の shop-row は最大3、取得失敗行（shop-row-failed）は常時表示部分に出ない。
-    _max_visible_rows = max((_visible_compare(c).count('class="shop-row') for c in _compact_cards), default=0)
-    _failed_in_visible = any('shop-row-failed' in _visible_compare(c) for c in _compact_cards)
-    _t450 = bool(_compact_cards) and (_max_visible_rows <= 3) and (not _failed_in_visible)
-    results.append({"level": "ok" if _t450 else "error", "check": "beginner_4th_and_failed_in_fold",
-                    "message": f"#450 4店舗目以降・取得失敗店舗のみ折りたたみ内（常時表示 max={_max_visible_rows}店舗 / 取得失敗の常時表示={_failed_in_visible}）"
-                               + ("" if _t450 else " ← 常時表示の店舗が多すぎる、または取得失敗が常時表示")})
+    # #450: 全買取店は比較fold内、取得失敗店舗は nested sub-details(shop-failed-details)内
+    #   初期表示に取得失敗行が出ないこと（取得失敗の常時表示=False）。
+    _failed_in_initial = any('shop-row-failed' in _initial_view(c) for c in _compact_cards)
+    _t450 = bool(_compact_cards) and (not _failed_in_initial) \
+        and ((('shop-row-failed' not in _beg_html388)) or ('shop-failed-details' in _beg_html388))
+    results.append({"level": "ok" if _t450 else "error", "check": "beginner_all_shops_in_fold_failed_nested",
+                    "message": f"#450 全買取店は比較fold内・取得失敗は別sub-details内（初期表示の取得失敗={_failed_in_initial}）"
+                               + ("" if _t450 else " ← 取得失敗店舗が初期表示に出ている、または別detailsに分離されていない")})
 
     # ── Pro 買取店候補（Show top buyback shops and restore pro buyback candidates） ──
     # #451: Pro タブに「国内売却候補 / 買取店」セクションがある

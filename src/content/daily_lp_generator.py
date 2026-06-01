@@ -6103,6 +6103,14 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         'unknown':             '情報確認中',
         'connection_error':    '接続エラー',
         'no_url':              '現在未掲載',
+        # 取得失敗の具体理由（毎日更新パイプライン用に追加）
+        'timeout':             'タイムアウト',
+        'ip_blocked':          'IPブロック',
+        'rate_limited_429':    'IPブロック',
+        'api_not_configured':  'API未設定',
+        'manual_only':         '手動データのみ',
+        'used_only':           '中古価格のみ取得',
+        'no_new_price':        '新品/未使用価格なし',
     }
 
     # 店舗別の既知の失敗理由（Task 1: ユーザー向け表示ラベルに更新）

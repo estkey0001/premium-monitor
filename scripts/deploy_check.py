@@ -4737,6 +4737,85 @@ def check() -> list[dict]:
                     "message": "#474 手動価格の observed_at を見て鮮度判定している"
                                + ("" if _t474 else " ← observed_at ベースの鮮度判定が見つかりません")})
 
+    # ── Enforce daily refresh pipeline and stale data policy ──
+    _root = _os468.path.dirname(_os468.path.dirname(_os468.path.abspath(__file__)))
+
+    # #475: daily_lp.yml に全取得・生成ステップがある
+    _wf = ''
+    try:
+        with open(_os468.path.join(_root, '.github', 'workflows', 'daily_lp.yml'), encoding='utf-8') as _wf_f:
+            _wf = _wf_f.read()
+    except Exception:
+        _wf = ''
+    _required_steps = [
+        'update_buyback_prices.py', 'collect_resale_prices.py', 'update_overseas_prices.py',
+        'update_lottery_events.py', 'update_alerts.py', 'generate_ranking_report.py',
+        'generate_sedori_routes_report.py', 'generate-daily-lp', 'build-public-lp',
+    ]
+    _missing_steps = [s for s in _required_steps if s not in _wf]
+    _has_push = ('git push' in _wf) or ('ad-m/github-push-action' in _wf) or ('Commit and push' in _wf)
+    _t475 = (not _missing_steps) and _has_push
+    results.append({"level": "ok" if _t475 else "error", "check": "daily_workflow_has_all_steps",
+                    "message": "#475 daily_lp.yml に全取得・生成・push ステップがある"
+                               + ("" if _t475 else f" ← 不足: {_missing_steps or 'push'}")})
+
+    # #476: 各レポートの latest.json / latest.md が存在する
+    _report_files = [
+        'exports/overseas_prices/latest.json',
+        'exports/ranking_report/latest.json', 'exports/ranking_report/latest.md',
+        'exports/sedori_routes_report/latest.json', 'exports/sedori_routes_report/latest.md',
+        'exports/collector_report/latest.json',
+    ]
+    _missing_reports = [f for f in _report_files if not _os468.path.exists(_os468.path.join(_root, f))]
+    _t476 = not _missing_reports
+    results.append({"level": "ok" if _t476 else "error", "check": "report_latest_files_present",
+                    "message": "#476 各レポートの latest.json / latest.md が存在する"
+                               + ("" if _t476 else f" ← 不足: {_missing_reports}")})
+
+    # #477: 24h超データに要更新表示がある（7〜14日の参考値含む）
+    _t477_struct = ('要更新' in _gen_src)
+    _t477_shown = ('要更新' in _beg_html388)
+    _t477 = _t477_struct and _t477_shown
+    results.append({"level": "ok" if _t477 else ("warning" if _t477_struct else "error"),
+                    "check": "stale_24h_warning_shown",
+                    "message": "#477 24時間超データに『要更新』表示がある"
+                               + ("" if _t477 else (" ← 24h超データが無い日は正常（実装有効）" if _t477_struct
+                                                    else " ← 要更新表示の実装が見つかりません"))})
+
+    # #478: ランキングが最新有効データから生成（中古/used をランキングに使わない）
+    _t478 = ('中古A' not in _rank_html396) and ('used_a' not in _rank_html396) \
+        and ('美品' not in _rank_html396)
+    results.append({"level": "ok" if _t478 else "error", "check": "ranking_from_valid_data",
+                    "message": "#478 ランキングが最新有効データから生成（中古/used を使わない）"
+                               + ("" if _t478 else " ← ランキングに中古/used 価格が混入しています")})
+
+    # #479: せどりルートが最新有効データから生成（中古を使わない / 中古除外ロジックあり）
+    _t479 = ('中古A' not in _sed_html396) and ('used_a' not in _sed_html396) \
+        and ('_cond_is_used' in _gen_src)
+    results.append({"level": "ok" if _t479 else "error", "check": "sedori_from_valid_data",
+                    "message": "#479 せどりルートが最新有効データから生成（中古/used を除外）"
+                               + ("" if _t479 else " ← せどりルートに中古/used が混入、または除外ロジックなし")})
+
+    # #480: 抽選情報が毎日更新される（workflow に update_lottery_events ステップがある）
+    _t480 = ('update_lottery_events.py' in _wf)
+    results.append({"level": "ok" if _t480 else "error", "check": "lottery_daily_update",
+                    "message": "#480 抽選情報が毎日更新される（daily_lp.yml に update_lottery_events ステップ）"
+                               + ("" if _t480 else " ← 抽選情報の更新ステップが見つかりません")})
+
+    # #481: fetch_failed の理由が LP（failure-reason-badge）またはレポートに出る
+    _t481_lp = ('failure-reason-badge' in _beg_html388) or ('failure-reason-badge' in html)
+    _t481_report = False
+    try:
+        with open(_os468.path.join(_root, 'exports/collector_report/latest.json'), encoding='utf-8') as _cr:
+            _cr_txt = _cr.read()
+        _t481_report = ('reason' in _cr_txt) or ('fail' in _cr_txt.lower())
+    except Exception:
+        _t481_report = False
+    _t481 = _t481_lp or _t481_report
+    results.append({"level": "ok" if _t481 else "error", "check": "fetch_failed_reason_visible",
+                    "message": "#481 fetch_failed の理由が LP またはレポートに表示される"
+                               + ("" if _t481 else " ← 取得失敗理由がどこにも出ていません")})
+
     return results
 
 

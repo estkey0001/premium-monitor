@@ -1802,6 +1802,86 @@ a[href], button, [role="tab"], [role="button"],
   font-variant-numeric: tabular-nums; margin-left: 6px;
 }}
 
+/* 最高買取店ヒーローブロック（Task 5: カード内で最も目立たせる） */
+.best-buyback-hero {{
+  margin: 12px 0 6px;
+  padding: 14px 18px;
+  background: linear-gradient(90deg, #E7FBF2 0%, #F3FFFB 100%);
+  border: 1px solid #9DEBC9;
+  border-left: 5px solid #00C896;
+  border-radius: 14px;
+  box-shadow: 0 2px 10px rgba(0,200,150,0.10);
+}}
+.best-buyback-hero .bb-shop-val {{
+  font-size: 1.25rem; font-weight: 800; color: var(--ink1); line-height: 1.2;
+}}
+.best-buyback-hero .bb-shop-price {{
+  display: block; margin-top: 2px;
+  font-size: 1.85rem; font-weight: 900; color: #00A37A;
+  font-variant-numeric: tabular-nums; letter-spacing: -0.01em;
+}}
+.best-buyback-hero .bb-compared-note {{
+  margin-top: 4px; font-size: 0.7rem; color: var(--ink3); font-weight: 600;
+}}
+
+/* compact card 用の詳細折りたたみ（買取店比較を見る） */
+.card-detail-fold {{
+  margin-top: 10px;
+  border-top: 1px solid #EEF0F6;
+}}
+.card-detail-fold > summary.card-detail-summary {{
+  cursor: pointer; list-style: none;
+  padding: 9px 12px; margin-top: 2px;
+  font-size: 0.8rem; font-weight: 700;
+  color: #5B6BD6; text-align: center;
+  background: #F7F8FC; border-radius: 8px;
+  user-select: none;
+}}
+.card-detail-fold > summary.card-detail-summary::-webkit-details-marker {{ display: none; }}
+.card-detail-fold > summary.card-detail-summary::after {{ content: " ▾"; }}
+.card-detail-fold[open] > summary.card-detail-summary::after {{ content: " ▴"; }}
+.card-detail-fold > summary.card-detail-summary:hover {{ color: #3B4BB6; }}
+.card-detail-fold .card-detail-body {{ padding-top: 8px; }}
+
+/* compact card 全体（縦の詰まりを緩和） */
+.deal-card-compact .card-body {{ padding-top: 10px; }}
+.deal-card-compact .card-actions {{ margin-top: 0; }}
+
+/* 監視中カード（超コンパクト：Task 3） */
+.monitoring-compact-row {{
+  display: flex; flex-wrap: wrap; gap: 10px 18px;
+  padding: 8px 4px 2px;
+}}
+.monitoring-compact-row .mon-cell {{ display: flex; flex-direction: column; gap: 1px; }}
+.monitoring-compact-row .mon-lbl {{ font-size: 0.68rem; color: var(--ink3); font-weight: 600; }}
+.monitoring-compact-row .mon-val {{ font-size: 0.95rem; font-weight: 800; color: var(--ink1); font-variant-numeric: tabular-nums; }}
+.monitoring-compact-row .mon-val-muted {{ color: var(--ink3); }}
+.monitoring-compact-row .mon-status-badge {{
+  display: inline-block; font-size: 0.75rem; font-weight: 700;
+  color: #CC2200; background: #FFF0F0; border: 1px solid #FFC9C9;
+  border-radius: 999px; padding: 1px 10px;
+}}
+
+/* 監視中グローバル折りたたみセクション（Task 4） */
+.monitoring-global-section {{ margin: 28px 0 8px; }}
+.monitoring-global-section > summary.monitoring-global-summary {{
+  cursor: pointer; list-style: none;
+  padding: 12px 16px;
+  font-size: 0.92rem; font-weight: 800;
+  color: #99502A; background: #FFF6EE;
+  border: 1px solid #F2D2B6; border-radius: 12px;
+  user-select: none;
+}}
+.monitoring-global-section > summary.monitoring-global-summary::-webkit-details-marker {{ display: none; }}
+.monitoring-global-section > summary.monitoring-global-summary::after {{ content: " ▾"; }}
+.monitoring-global-section[open] > summary.monitoring-global-summary::after {{ content: " ▴"; }}
+.monitoring-global-section .mon-count-badge {{
+  display: inline-block; margin-left: 6px;
+  font-size: 0.78rem; font-weight: 700; color: #fff; background: #C77B3E;
+  border-radius: 999px; padding: 1px 9px;
+}}
+.monitoring-global-section > .cards-grid {{ margin-top: 14px; }}
+
 /* 4店舗目以降の折りたたみ（details） */
 .shop-more-details {{
   border-top: 1px solid #F0F1F7;
@@ -5373,6 +5453,11 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             ('other',        '&#128230; その他',               'category-beginner-other'),
         ]
 
+        # ── 監視中 / 取得失敗カードはジャンルを横断して下部に集約（Task 4）──
+        # 上部＝利益ありカードのみ。監視中・取得失敗は最下部の折りたたみセクションへ。
+        _global_monitoring_html = []
+        _global_failed_html = []
+
         genre_rendered = False
         for genre_key, genre_label, anchor_id in GENRE_GROUPS:
             # このジャンルの全案件を抽出
@@ -5429,29 +5514,15 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                                                  overseas_observed_at=_ovs_obs, overseas_collector_method=_ovs_method))
                 parts.append('</div></div>')
 
-            # 監視中 / 赤字
-            if monitoring_genre:
-                parts.append('<div class="status-subsection"><div class="status-subhead status-monitoring">監視中（価格変動を監視中）</div><div class="cards-grid">')
-                for d in monitoring_genre:
-                    rows = bybp.get(d.product_id, [])
-                    parts.append(self._deal_card_monitoring(d, buyback_rows=rows))
-                parts.append('</div></div>')
+            # 監視中 / 赤字 → 下部のグローバル折りたたみへ集約（Task 4）
+            for d in monitoring_genre:
+                rows = bybp.get(d.product_id, [])
+                _global_monitoring_html.append(self._deal_card_monitoring(d, buyback_rows=rows))
 
-            # 取得失敗（デフォルト折りたたみ）
-            if ff_genre:
-                parts.append(
-                    f'<details class="status-subsection fetch-failed-details">'
-                    f'<summary class="status-subhead status-fetch-failed fetch-failed-summary">'
-                    f'取得失敗 / 要確認 '
-                    f'<span class="ff-count-badge">{len(ff_genre)}件</span>'
-                    f'<span class="ff-expand-hint">（クリックで展開）</span>'
-                    f'</summary>'
-                    f'<div class="cards-grid">'
-                )
-                for d in ff_genre:
-                    rows = bybp.get(d.product_id, [])
-                    parts.append(self._deal_card_fetch_failed(d, buyback_rows=rows))
-                parts.append('</div></details>')
+            # 取得失敗 → 下部のグローバル折りたたみへ集約（Task 4）
+            for d in ff_genre:
+                rows = bybp.get(d.product_id, [])
+                _global_failed_html.append(self._deal_card_fetch_failed(d, buyback_rows=rows))
 
             # beginner_easy / beginner_watch カードが0件（fetch_failed のみ）の場合は空状態メッセージを表示
             if not _has_beginner_cards:
@@ -5497,6 +5568,35 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                              '<a href="#tab-advanced" class="inline-link">Pro向けタブ</a> をご確認ください。</div>')
 
             parts.append('</div>')  # genre block end
+
+        # ── 監視中カードを下部のグローバル折りたたみセクションに表示（Task 4）──
+        #   利益ありカード（上部）より下に配置し、デフォルト折りたたみ。
+        if _global_monitoring_html:
+            parts.append(
+                f'<details class="monitoring-global-section">'
+                f'<summary class="monitoring-global-summary">'
+                f'&#128064; 監視中の商品を見る '
+                f'<span class="mon-count-badge">{len(_global_monitoring_html)}件</span>'
+                f'<span class="ff-expand-hint">（クリックで展開）</span>'
+                f'</summary>'
+                f'<div class="cards-grid">'
+                + ''.join(_global_monitoring_html)
+                + '</div></details>'
+            )
+
+        # ── 取得失敗カードも下部のグローバル折りたたみセクションに表示 ──
+        if _global_failed_html:
+            parts.append(
+                f'<details class="status-subsection fetch-failed-details">'
+                f'<summary class="status-subhead status-fetch-failed fetch-failed-summary">'
+                f'取得失敗 / 要確認 '
+                f'<span class="ff-count-badge">{len(_global_failed_html)}件</span>'
+                f'<span class="ff-expand-hint">（クリックで展開）</span>'
+                f'</summary>'
+                f'<div class="cards-grid">'
+                + ''.join(_global_failed_html)
+                + '</div></details>'
+            )
 
         # 全案件が表示不能な場合の空状態表示
         if not genre_rendered:
@@ -5649,7 +5749,29 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 + '</div>'
             )
 
-        return f"""<div class="deal-card stripe-{stripe_cls}"{card_id_attr}{brand_attr} data-user-level="monitoring" data-genre="{_esc(genre_cls)}">
+        # ── 監視中カードは超コンパクト表示（Task 3）──
+        # 初期表示：商品名・公式価格・最高買取価格(未取得)・ステータスのみ。
+        # 差益 / 買取店比較 / 確認時刻 / 公式リンクは <details> に格納。
+        _has_bp = (getattr(d, 'best_buyback_price', 0) or 0) > 0
+        _mon_status = '価格変動を監視中' if _has_bp else '買取価格取得待ち'
+        _mon_fold_inner = (
+            f'<div class="profit-section amber" style="margin-top:6px">'
+            f'<div class="profit-left">'
+            f'<div class="profit-lbl amber">差益（定価購入→最高買取）</div>'
+            f'<div class="profit-num amber">{_esc(diff_str)}</div>'
+            f'</div>'
+            f'<div class="profit-right"><div class="profit-note">{monitoring_profit_note}</div></div>'
+            f'</div>'
+            + updated_str + compare_html
+            + (f'<div class="card-actions">{official_btn}</div>' if official_btn else '')
+        )
+        _mon_fold = (
+            f'<details class="card-detail-fold">'
+            f'<summary class="card-detail-summary">詳細を見る</summary>'
+            f'<div class="card-detail-body">{_mon_fold_inner}</div>'
+            f'</details>'
+        )
+        return f"""<div class="deal-card deal-card-compact deal-card-monitoring stripe-{stripe_cls}"{card_id_attr}{brand_attr} data-user-level="monitoring" data-genre="{_esc(genre_cls)}">
   <div class="card-stripe monitoring"></div>
   <div class="card-hd">
     <div class="card-name">{name}</div>
@@ -5658,33 +5780,13 @@ tr.sc-route-review {{ background: #FFFBEB; }}
       {genre_badge}
     </div>
   </div>
-  <div class="profit-section amber">
-    <div class="profit-left">
-      <div class="profit-lbl amber">差益（定価購入→最高買取）</div>
-      <div class="profit-num amber">{_esc(diff_str)}</div>
-    </div>
-    <div class="profit-right">
-      <div class="profit-note">{monitoring_profit_note}</div>
-    </div>
-  </div>
-  <div class="price-row-wrap">
-    <div class="price-cell">
-      <div class="price-cell-lbl">公式価格（定価）</div>
-      <div class="price-cell-val">{"¥{:,}".format(official) if official > 0 else "未取得"}</div>
-    </div>
-    <div class="price-cell">
-      <div class="price-cell-lbl">最高買取価格</div>
-      <div class="price-cell-val" style="color:var(--ink3)">{_esc(best_bp_str)}</div>
-    </div>
-    <div class="price-cell" style="opacity:0.6">
-      <div class="price-cell-lbl">最高買取店</div>
-      <div class="price-cell-val" style="font-size:0.8rem">{best_shop}</div>
-    </div>
+  <div class="monitoring-compact-row">
+    <div class="mon-cell"><span class="mon-lbl">公式価格</span><span class="mon-val">{"¥{:,}".format(official) if official > 0 else "未取得"}</span></div>
+    <div class="mon-cell"><span class="mon-lbl">最高買取価格</span><span class="mon-val mon-val-muted">{_esc(best_bp_str) if _has_bp else "未取得"}</span></div>
+    <div class="mon-cell"><span class="mon-lbl">ステータス</span><span class="mon-status-badge">{_mon_status}</span></div>
   </div>
   <div class="card-body">
-    {updated_str}
-    {compare_html}
-    <div class="card-actions">{official_btn}</div>
+    {_mon_fold}
   </div>
 </div>"""
 
@@ -5971,6 +6073,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             updated_str = f'<div class="updated-row"><span>&#128336;</span>スキャン：{_esc(_jst_str(d.scanned_at))}</div>'
         # Shop compare
         compare_html = ''
+        _compare_shop_count = 0  # 比較対象の有効買取店数（「他N店舗と比較済み」表示用）
         # 初心者モード（non-pro）では resale_market（フリマ・オークション）行を除外
         if not pro_mode and buyback_rows:
             buyback_rows = [r for r in buyback_rows if r.get('data_source') != 'resale_market']
@@ -5980,6 +6083,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             _normal_rows  = [r for r in buyback_rows if r.get('buyback_price', 0) > 0 and r.get('confidence', 'high') != 'low']
             _failed_rows  = [r for r in buyback_rows if r.get('data_source') == 'fetch_failed']
             n_shops = len(_normal_rows) + len(_failed_rows)
+            _compare_shop_count = len(_normal_rows)
 
             def _render_shop_row(r, rank_counter):
                 """1店舗ぶんの shop-row HTML を返す。rank_counter=None なら取得失敗行。"""
@@ -6153,14 +6257,21 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 except Exception:
                     _src_date = _esc(str(_obs_raw)[:10])
 
-        # ── 最高買取店を大きく表示（Task 1）──
+        # ── 最高買取店を一番目立つブロックで表示（Task 5）──
         _best_shop_disp = _esc(d.best_buyback_shop or '—')
         _best_price_disp = _esc(fmt_price(d.best_buyback_price))
+        # 「他◯店舗と比較済み」（最高買取店以外の比較対象数）
+        _other_shops = max(0, _compare_shop_count - 1)
+        _compared_note = (
+            f'<div class="bb-compared-note">他{_other_shops}店舗と比較済み</div>'
+            if _other_shops > 0 else ''
+        )
         best_buyback_block_html = (
-            f'<div class="best-buyback-block">'
+            f'<div class="best-buyback-block best-buyback-hero">'
             f'<div class="bb-shop-lbl">&#127978; 最高買取店</div>'
-            f'<div class="bb-shop-val"><strong>{_best_shop_disp}</strong> '
-            f'<span class="bb-shop-price">{_best_price_disp}</span></div>'
+            f'<div class="bb-shop-val"><strong>{_best_shop_disp}</strong></div>'
+            f'<div class="bb-shop-price">{_best_price_disp}</div>'
+            f'{_compared_note}'
             f'</div>'
         ) if not pro_mode else ''
 
@@ -6176,7 +6287,19 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             f'</div>'
         ) if not pro_mode else ''
 
-        return f"""<div class="deal-card stripe-{stripe_cls}"{card_id_attr}{brand_attr} data-user-level="{_esc(d.user_level)}">
+        # 注意書き（買取条件）— 折りたたみ内に収納
+        condition_notice_html = (
+            f'<div class="condition-row buyback-notice">'
+            f'<span class="cond-icon">&#9888;</span>'
+            f'<div><strong>買取条件：{condition_text}</strong>&nbsp;'
+            f'<span style="font-size:0.72rem;color:var(--gray-400)">掲載価格は参考値です。'
+            f'売却前に必ず各社の公式買取ページで確認してください。</span></div>'
+            f'</div>'
+        )
+
+        if pro_mode:
+            # Pro カードは従来レイアウトを維持
+            return f"""<div class="deal-card stripe-{stripe_cls}"{card_id_attr}{brand_attr} data-user-level="{_esc(d.user_level)}">
   <div class="card-stripe {stripe_cls}"></div>
   <div class="card-hd">
     <div class="card-name">{_esc(d.product_name)}</div>
@@ -6211,16 +6334,63 @@ tr.sc-route-review {{ background: #FFFBEB; }}
   <div class="card-body">
     {compare_html}
     {price_source_row_html}
-    <div class="condition-row buyback-notice">
-      <span class="cond-icon">&#9888;</span>
-      <div><strong>買取条件：{condition_text}</strong>&nbsp;<span style="font-size:0.72rem;color:var(--gray-400)">掲載価格は参考値です。売却前に必ず各社の公式買取ページで確認してください。</span></div>
-    </div>
+    {condition_notice_html}
     {updated_str}
     <div class="card-actions">
       {official_btn}
       {buyback_btn}
     </div>
     {overseas_html}
+  </div>
+</div>"""
+
+        # ── 初心者モード：compact card レイアウト（Task 1/2）──
+        # 初期表示：商品名・バッジ・公式価格・最高買取価格・差益・最高買取店・CTA のみ。
+        # 買取店比較 / 取得方法 / 最終確認 / その他の買取店 / 注意書き は <details> に格納。
+        _fold_inner = compare_html + price_source_row_html + condition_notice_html + updated_str
+        detail_fold_html = (
+            f'<details class="card-detail-fold">'
+            f'<summary class="card-detail-summary">買取店比較を見る</summary>'
+            f'<div class="card-detail-body">{_fold_inner}</div>'
+            f'</details>'
+        ) if _fold_inner.strip() else ''
+
+        return f"""<div class="deal-card deal-card-compact stripe-{stripe_cls}"{card_id_attr}{brand_attr} data-user-level="{_esc(d.user_level)}">
+  <div class="card-stripe {stripe_cls}"></div>
+  <div class="card-hd">
+    <div class="card-name">{_esc(d.product_name)}</div>
+    <div class="card-tags">
+      <span class="badge {badge_cls}">{label}</span>
+      {genre_badge}
+    </div>
+  </div>
+  <div class="price-row-wrap">
+    <div class="price-cell">
+      <div class="price-cell-lbl">{official_price_lbl}</div>
+      <div class="price-cell-val">{_esc(fmt_price(d.official_price_jpy))}</div>
+    </div>
+    <div class="price-cell">
+      <div class="price-cell-lbl">{buyback_price_lbl}</div>
+      <div class="{buyback_price_val_cls}">{_esc(fmt_price(d.best_buyback_price))}</div>
+    </div>
+  </div>
+  <div class="{profit_section_cls}">
+    <div class="profit-left">
+      <div class="{profit_lbl_cls}">{profit_main_lbl}</div>
+      <div class="{profit_num_cls}">{_esc(fmt_profit(d.net_profit_jpy))}</div>
+    </div>
+    <div class="profit-right">
+      <div class="{profit_rate_cls}">{profit_rate_str}</div>
+      <div class="profit-note">{profit_note_text}</div>
+    </div>
+  </div>
+  {best_buyback_block_html}
+  <div class="card-body">
+    <div class="card-actions">
+      {official_btn}
+      {buyback_btn}
+    </div>
+    {detail_fold_html}
   </div>
 </div>"""
 

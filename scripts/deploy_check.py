@@ -4437,6 +4437,60 @@ def check() -> list[dict]:
                     "message": "#444 取得方法（自動取得/手動確認）は details / confirm-line にだけ表示される"
                                + ("" if _t444 else " ← 取得方法ラベルが見つからない、または shop-row に残存")})
 
+    # ── compact card レイアウト（Redesign beginner cards） ──
+    # compact 利益カード単位に分割（deal-card-compact、監視中カードを除く）
+    _compact_cards = _re437.findall(
+        r'<div class="deal-card deal-card-compact(?! deal-card-monitoring)[^"]*"[^>]*>.*?(?=<div class="deal-card |<details class="monitoring-global-section|<details class="status-subsection|$)',
+        _beg_html388, _re437.DOTALL
+    )
+
+    def _initial_view(card_html: str) -> str:
+        """card-detail-fold より前（初期表示部分）を返す。"""
+        i = card_html.find('card-detail-fold')
+        return card_html[:i] if i >= 0 else card_html
+
+    # #445: Beginner カードの初期表示に買取店比較テーブルが出ない
+    _t445 = bool(_compact_cards) and all(
+        ('buyback-shop-table' not in _initial_view(c)) and ('shop-table-hd' not in _initial_view(c))
+        for c in _compact_cards
+    )
+    results.append({"level": "ok" if _t445 else "error", "check": "beginner_compare_table_not_in_initial_view",
+                    "message": "#445 Beginner カードの初期表示に買取店比較テーブルが出ない（details 内に格納）"
+                               + ("" if _t445 else " ← 初期表示に買取店比較テーブルが残っています")})
+
+    # #446: Beginner カードに「買取店比較を見る」details がある
+    _t446 = ('card-detail-fold' in _beg_html388) and ('買取店比較を見る' in _beg_html388)
+    results.append({"level": "ok" if _t446 else "error", "check": "beginner_has_compare_details",
+                    "message": "#446 Beginner カードに『買取店比較を見る』折りたたみ（details）がある"
+                               + ("" if _t446 else " ← 折りたたみが見つかりません")})
+
+    # #447: 監視中セクションが折りたたみ（details）になっている
+    _t447 = ('monitoring-global-section' in _beg_html388) and ('監視中の商品を見る' in _beg_html388)
+    results.append({"level": "ok" if _t447 else "warning", "check": "beginner_monitoring_section_collapsed",
+                    "message": "#447 監視中セクションが折りたたみ（監視中の商品を見る）になっている"
+                               + ("" if _t447 else " ← 監視中の折りたたみセクションが見つかりません（監視中0件の日は正常）")})
+
+    # #448: 利益ありカードが監視中セクションより上にある
+    _pos_profit = _beg_html388.find('status-profit')
+    _pos_mon = _beg_html388.find('monitoring-global-section')
+    _t448 = (_pos_profit >= 0) and (_pos_mon < 0 or _pos_profit < _pos_mon)
+    results.append({"level": "ok" if _t448 else "error", "check": "beginner_profit_above_monitoring",
+                    "message": "#448 利益ありカードが監視中セクションより上に表示されている"
+                               + ("" if _t448 else " ← 監視中セクションが利益ありより上にあります")})
+
+    # #449: 最高買取店ブロック（best-buyback-hero）が存在する
+    _t449 = ('best-buyback-hero' in _beg_html388) or ('best-buyback-block' in _beg_html388)
+    results.append({"level": "ok" if _t449 else "error", "check": "beginner_best_buyback_block_present",
+                    "message": "#449 最高買取店ブロック（best-buyback-hero）が存在する"
+                               + ("" if _t449 else " ← 最高買取店ブロックが見つかりません")})
+
+    # #450: 1カード内の初期表示 shop-row 数が 0 または最大1
+    _max_init_rows = max((_initial_view(c).count('class="shop-row') for c in _compact_cards), default=0)
+    _t450 = _max_init_rows <= 1
+    results.append({"level": "ok" if _t450 else "error", "check": "beginner_initial_shop_rows_max1",
+                    "message": f"#450 1カード初期表示の shop-row 数が0または最大1（実測 max={_max_init_rows}）"
+                               + ("" if _t450 else " ← 初期表示に店舗行が多すぎます")})
+
     return results
 
 

@@ -1843,6 +1843,42 @@ a[href], button, [role="tab"], [role="button"],
 .card-detail-fold > summary.card-detail-summary:hover {{ color: #3B4BB6; }}
 .card-detail-fold .card-detail-body {{ padding-top: 8px; }}
 
+/* 初心者の買取店比較：スマホで読みやすい縦カード形式 */
+.shop-card {{
+  display: flex !important; flex-direction: column; gap: 4px;
+  padding: 10px 12px; margin: 8px 0;
+  border: 1px solid #ECEEF5; border-radius: 10px; background: #fff;
+  box-shadow: 0 1px 3px rgba(20,30,80,0.04);
+}}
+.shop-card .shop-card-top {{ display: flex; align-items: center; gap: 8px; }}
+.shop-card .shop-rank {{
+  flex: 0 0 auto; min-width: auto; width: auto;
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 1px 9px; border-radius: 999px;
+  font-size: 0.72rem; font-weight: 800;
+  background: #EEF1FA; color: #4A57B5;
+}}
+.shop-card .shop-rank.gold {{ background: #FFF4D6; color: #B8860B; }}
+.shop-card .shop-rank.silver {{ background: #EEF0F3; color: #6B7280; }}
+.shop-card .shop-name-col {{
+  flex: 1 1 auto; min-width: 0;
+  font-size: 0.96rem; font-weight: 700; color: var(--ink1);
+  text-align: left; white-space: normal;
+}}
+.shop-card .shop-card-mid {{ display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }}
+.shop-card .shop-price-col {{
+  font-size: 1.2rem; font-weight: 800; color: var(--ink1);
+  font-variant-numeric: tabular-nums; text-align: left; min-width: 0;
+}}
+.shop-card .shop-diff-col {{
+  font-size: 0.86rem; font-weight: 700; color: #00A37A; text-align: left; min-width: 0;
+}}
+.shop-card .shop-diff-col.neg {{ color: #C2453A; }}
+.shop-card .shop-link-col {{ margin-top: 2px; text-align: left; min-width: 0; }}
+.shop-card .shop-link-col .shop-check-btn {{ display: inline-block; padding: 5px 16px; }}
+.shop-card.shop-row-failed {{ opacity: 0.9; background: #FAFAFB; }}
+.shop-card.shop-row-failed .shop-price-col {{ font-size: 0.9rem; font-weight: 600; }}
+
 /* compact card 全体（縦の詰まりを緩和） */
 .deal-card-compact .card-body {{ padding-top: 10px; }}
 .deal-card-compact .card-actions {{ margin-top: 0; }}
@@ -2241,6 +2277,9 @@ details[open] > .fetch-failed-summary::before {{ transform: rotate(90deg); }}
 }}
 .pro-subsection-label.pro-buyback-label {{
   color: #176B4D; background: #ECFBF4; border-left: 3px solid #00A37A;
+}}
+.pro-subsection-label.pro-overseas-label {{
+  color: #0369A1; background: #EBF6FE; border-left: 3px solid #2E8FD0;
 }}
 .pro-buyback-table .pro-bb-rank {{
   display: inline-block; min-width: 1.3em; margin-right: 5px;
@@ -6223,6 +6262,19 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                     _failed_source_col = (
                         f'<div class="shop-source-col">{source_badge}</div>' if pro_mode else ''
                     )
+                    if not pro_mode:
+                        # スマホ向け縦カード（取得失敗・未掲載店舗）
+                        return (
+                            f'<div class="shop-row shop-card shop-row-failed">'
+                            f'<div class="shop-card-top">'
+                            f'<div class="shop-rank" style="color:var(--ink3)">—</div>'
+                            f'<div class="shop-name-col">{sname}</div></div>'
+                            f'<div class="shop-card-mid">'
+                            f'<div class="shop-price-col" style="color:var(--ink3)">価格未取得</div>'
+                            f'<div class="shop-diff-col">{freshness}</div></div>'
+                            f'<div class="shop-link-col">{link_col}</div>'
+                            f'</div>'
+                        )
                     return (
                         f'<div class="shop-row shop-row-failed">'
                         f'<div class="shop-rank" style="color:var(--ink3)">—</div>'
@@ -6250,16 +6302,26 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 # 取得方法はカード下部の confirm-line（取得方法行）にだけ集約する。
                 if pro_mode:
                     source_col_html = f'<div class="shop-source-col">{source_badge}</div>'
-                else:
-                    source_col_html = ''
+                    return (
+                        f'<div class="shop-row">'
+                        f'<div class="shop-rank {rank_cls}">{rank_counter}</div>'
+                        f'<div class="shop-name-col">{sname}</div>'
+                        f'<div class="shop-price-col">¥{bp:,}</div>'
+                        f'<div class="shop-diff-col{diff_cls}">{_esc(profit_str)}</div>'
+                        f'<div class="shop-link-col">{link_col}</div>'
+                        f'{source_col_html}'
+                        f'</div>'
+                    )
+                # 初心者モード：スマホで読みやすい縦カード形式（順位/店名 → 価格 → 差益 → 確認）
                 return (
-                    f'<div class="shop-row">'
-                    f'<div class="shop-rank {rank_cls}">{rank_counter}</div>'
-                    f'<div class="shop-name-col">{sname}</div>'
+                    f'<div class="shop-row shop-card">'
+                    f'<div class="shop-card-top">'
+                    f'<div class="shop-rank {rank_cls}">{rank_counter}位</div>'
+                    f'<div class="shop-name-col">{sname}</div></div>'
+                    f'<div class="shop-card-mid">'
                     f'<div class="shop-price-col">¥{bp:,}</div>'
-                    f'<div class="shop-diff-col{diff_cls}">{_esc(profit_str)}</div>'
+                    f'<div class="shop-diff-col{diff_cls}">差益 {_esc(profit_str)}</div></div>'
                     f'<div class="shop-link-col">{link_col}</div>'
-                    f'{source_col_html}'
                     f'</div>'
                 )
 
@@ -6279,7 +6341,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             if more_priced_html:
                 details_html += (
                     f'<details class="shop-more-details">'
-                    f'<summary class="shop-more-summary">もっと見る（残り価格取得済み店舗 {len(more_priced_html)}店舗）</summary>'
+                    f'<summary class="shop-more-summary">価格取得済み店舗を見る（残り{len(more_priced_html)}店舗）</summary>'
                     + ''.join(more_priced_html)
                     + '</details>'
                 )
@@ -6326,13 +6388,28 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                                             '<div class="overseas-chips">' + ''.join(chips) + '</div></div>')
             except Exception:
                 pass
-        # Profit section style
+        # Profit section style — 初心者は利益額ベースで判定（profit>0 では「様子見」を出さない）
         is_watch = d.user_level == 'beginner_watch'
-        profit_section_cls = 'profit-section amber' if is_watch else 'profit-section'
-        profit_lbl_cls = 'profit-lbl amber' if is_watch else 'profit-lbl'
-        profit_num_cls = 'profit-num amber' if is_watch else 'profit-num'
-        profit_rate_cls = 'profit-rate amber' if is_watch else 'profit-rate'
-        profit_note_text = '利益率が低め。様子見推奨' if is_watch else '定価購入→最高買取（参考値）'
+        if pro_mode:
+            _amber = is_watch
+            profit_note_text = '価格差（参考値）'
+        else:
+            _np = d.net_profit_jpy or 0
+            _has_price = (d.best_buyback_price or 0) > 0
+            if not _has_price:
+                profit_note_text = '買取価格取得待ち'; _amber = True
+            elif _np >= 10000:
+                profit_note_text = '定価購入→最高買取（参考値）'; _amber = False
+            elif _np >= 3000:
+                profit_note_text = '小幅利益（定価購入→最高買取・参考値）'; _amber = False
+            elif _np >= 1:
+                profit_note_text = '微益（定価購入→最高買取・参考値）'; _amber = True
+            else:
+                profit_note_text = '現在は差益なし'; _amber = True
+        profit_section_cls = 'profit-section amber' if _amber else 'profit-section'
+        profit_lbl_cls = 'profit-lbl amber' if _amber else 'profit-lbl'
+        profit_num_cls = 'profit-num amber' if _amber else 'profit-num'
+        profit_rate_cls = 'profit-rate amber' if _amber else 'profit-rate'
         # 内部の状態コード（new_unopened_simfree 等）は日本語へ変換して表示（Task 2）
         condition_text = _esc(self._condition_label(d.buyback_condition))
         profit_rate_str = _esc(fmt_rate(d.net_profit_rate))
@@ -7031,9 +7108,12 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                     f'<div class="pro-no-price-chips">{chips}</div>'
                     f'</div>'
                 )
+            _ovs_label = ('<div class="pro-subsection-label pro-overseas-label">'
+                          '&#127758; 海外売却候補</div>')
             if otrows:
                 overseas_table_html = (
-                    f'<table class="pro-price-table pro-overseas-price-table">'
+                    _ovs_label
+                    + f'<table class="pro-price-table pro-overseas-price-table">'
                     f'<thead><tr><th>サイト</th><th>参考価格（円換算）</th><th>種別</th><th>取得方法</th><th>確認日</th><th></th></tr></thead>'
                     f'<tbody>{"".join(otrows)}</tbody>'
                     f'</table>'
@@ -7042,7 +7122,8 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 )
             else:
                 overseas_table_html = (
-                    f'<div class="pro-no-data-note">海外相場データ未取得</div>'
+                    _ovs_label
+                    + f'<div class="pro-no-data-note">海外相場データ未取得</div>'
                     + ovs_no_html
                     + f'<p class="pro-overseas-note">※ メルカリ・eBay等は販売手数料、送料、為替変動、関税が発生します。表示利益は参考値です。（eBay販売手数料 約13% / メルカリ 10%）</p>'
                 )

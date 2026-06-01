@@ -4599,6 +4599,20 @@ def check() -> list[dict]:
                     "message": "#460 Pro に 国内仕入れ候補 / 国内売却候補 / 海外売却候補 が分離表示される"
                                + ("" if _t460 else " ← いずれかの候補セクションが見つかりません")})
 
+    # #461: Beginner タブ全体に「利益率が低め」「様子見推奨」が一切存在しない（問題1/2・本文も含む）
+    _t461 = ('様子見推奨' not in _beg_html388) and ('利益率が低め' not in _beg_html388)
+    results.append({"level": "ok" if _t461 else "error", "check": "beginner_no_wait_wording_anywhere",
+                    "message": "#461 Beginner タブ全体に『利益率が低め』『様子見推奨』が存在しない（本文含む）"
+                               + ("" if _t461 else " ← 本文に様子見系の文言が残っています")})
+
+    # #462: 「小幅利益」カードには本文に「小幅利益（定価購入→最高買取・参考値）」が表示される（問題2）
+    #   小幅利益バッジがある場合、対応する正規の note 文言が存在すること。
+    _has_kohaba_badge = ('>小幅利益<' in _beg_html388)
+    _t462 = (not _has_kohaba_badge) or ('小幅利益（定価購入→最高買取・参考値）' in _beg_html388)
+    results.append({"level": "ok" if _t462 else "error", "check": "beginner_kohaba_note_wording",
+                    "message": "#462 『小幅利益』カードに本文『小幅利益（定価購入→最高買取・参考値）』が表示される"
+                               + ("" if _t462 else " ← 小幅利益カードの正規 note 文言が見つかりません")})
+
     return results
 
 

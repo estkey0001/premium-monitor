@@ -4339,10 +4339,12 @@ def check() -> list[dict]:
                                + ("" if _t431 else f" ← 内部コードが残っています: {', '.join(_leaked)}")})
 
     # #432: 買取店比較が「上位3件表示 + details 折りたたみ」になっている（Task 1）
-    _t432 = ('shop-more-details' in _beg_html388) and ('もっと見る' in _beg_html388)
+    _t432 = ('shop-more-details' in _beg_html388) and (
+        ('もっと見る' in _beg_html388) or ('価格取得済み店舗を見る' in _beg_html388)
+    )
     results.append({"level": "ok" if _t432 else "error", "check": "beginner_buyback_top3_collapse",
-                    "message": "#432 買取店比較が上位3件表示 + details 折りたたみ（『もっと見る』）になっている"
-                               + ("" if _t432 else " ← 折りたたみ（shop-more-details / もっと見る）が見つかりません")})
+                    "message": "#432 買取店比較が上位3件表示 + details 折りたたみ（『価格取得済み店舗を見る』）になっている"
+                               + ("" if _t432 else " ← 折りたたみ（shop-more-details）が見つかりません")})
 
     # #433: 古いデータの「N日前」がカード上部（買取店比較ヘッダー shop-table-hd）に強表示されない（Task 3）
     import re as _re433
@@ -4419,16 +4421,15 @@ def check() -> list[dict]:
                     "message": "#442 Pro に国内新品/未使用価格候補（国内候補テーブル）が残っている"
                                + ("" if _t442 else " ← Pro の国内価格候補が消えています")})
 
-    # #443: Beginner の通常 shop-row（取得失敗以外）に 店舗名・価格・差益・確認リンクが揃っている
-    _beg_normal_rows = [r for r in _beg_shop_rows if 'shop-row-failed' not in r]
-    _t443 = bool(_beg_normal_rows) and all(
-        ('shop-name-col' in r) and ('shop-price-col' in r)
-        and ('shop-diff-col' in r) and ('shop-link-col' in r)
-        for r in _beg_normal_rows
-    )
+    # #443: Beginner の各店舗カードに 店舗名・価格・差益・確認リンクが揃っている
+    #   縦カード(shop-card)は入れ子構造のため、列クラスの個数整合で判定（店名数 == 確認リンク数）。
+    _beg_name_n = _beg_html388.count('shop-name-col')
+    _beg_link_n = _beg_html388.count('shop-link-col')
+    _t443 = (_beg_name_n > 0) and (_beg_name_n == _beg_link_n) \
+        and ('shop-price-col' in _beg_html388) and ('shop-diff-col' in _beg_html388)
     results.append({"level": "ok" if _t443 else "error", "check": "beginner_row_has_core_cols",
-                    "message": "#443 Beginner の各店舗行に 店舗名・価格・差益・確認リンクが揃っている"
-                               + ("" if _t443 else " ← 主要列が欠けている店舗行があります")})
+                    "message": f"#443 Beginner の各店舗カードに 店舗名・価格・差益・確認リンクが揃っている（店名{_beg_name_n}/リンク{_beg_link_n}）"
+                               + ("" if _t443 else " ← 主要列が欠けている店舗カードがあります")})
 
     # #444: 取得方法ラベル（自動取得/手動確認）は confirm-line / details 内にだけ存在する
     #   shop-row 群の外（confirm-line など）に出ていれば OK、shop-row 内には無いこと（#439と対）。
@@ -4538,9 +4539,10 @@ def check() -> list[dict]:
         r'status-subhead status-profit.*?(?=status-subhead|monitoring-global-section|fetch-failed-details|<div id="category-beginner|$)',
         _beg_html388, _re437.DOTALL
     )
-    _t454 = not any('>様子見<' in s for s in _profit_subsections)
+    # バッジだけでなく本文ノート（様子見推奨 等）も含め、利益ありサブセクションに「様子見」が一切無いこと。
+    _t454 = not any('様子見' in s for s in _profit_subsections)
     results.append({"level": "ok" if _t454 else "error", "check": "beginner_no_watch_badge_on_profit",
-                    "message": "#454 profit>0 の利益ありカードに『様子見』バッジが出ない（利益あり/小幅利益/微益）"
+                    "message": "#454 profit>0 の利益ありカードに『様子見』が出ない（バッジ・本文とも：利益あり/小幅利益/微益）"
                                + ("" if _t454 else " ← 利益ありカードに『様子見』が残っています")})
 
     # #455: 価格「—」店舗が通常の「もっと見る」に混ざらず、別 details に分離されている（Task 2）
@@ -4573,6 +4575,29 @@ def check() -> list[dict]:
     results.append({"level": "ok" if _t457 else "error", "check": "pro_route_bb2bb_not_top",
                     "message": "#457 Pro ルートで買取店→買取店ルートだけが上位を占めない（要確認セクションへ分離）"
                                + ("" if _t457 else " ← 買取店→買取店ルートが上位を占めています")})
+
+    # #458: 小幅利益カードに「小幅利益」と表示される（Task 1 / 段階バッジ）
+    #   利益あり/小幅利益/微益 のいずれかのバッジが利益サブセクションに存在する。
+    _has_tier_badge = any(
+        ('>小幅利益<' in s) or ('>利益あり<' in s) or ('>微益<' in s)
+        for s in _profit_subsections
+    )
+    _t458 = (not _profit_subsections) or _has_tier_badge
+    results.append({"level": "ok" if _t458 else "warning", "check": "beginner_profit_tier_badges",
+                    "message": "#458 利益カードに段階バッジ（利益あり/小幅利益/微益）が表示される"
+                               + ("" if _t458 else " ← 段階バッジが見つかりません（利益カード0件の日は正常）")})
+
+    # #459: 初心者の買取店比較がスマホ向け縦カード形式（shop-card）になっている（Task 2）
+    _t459 = ('shop-card' in _beg_html388) and ('shop-card-top' in _beg_html388)
+    results.append({"level": "ok" if _t459 else "error", "check": "beginner_buyback_vertical_card",
+                    "message": "#459 初心者の買取店比較が縦カード形式（shop-card）になっている"
+                               + ("" if _t459 else " ← 縦カード形式になっていません")})
+
+    # #460: Pro に「国内仕入れ候補 / 国内売却候補 / 海外売却候補」が分離表示される（問題4）
+    _t460 = ('国内仕入れ候補' in _pro_html388) and ('国内売却候補' in _pro_html388) and ('海外売却候補' in _pro_html388)
+    results.append({"level": "ok" if _t460 else "error", "check": "pro_three_candidate_sections",
+                    "message": "#460 Pro に 国内仕入れ候補 / 国内売却候補 / 海外売却候補 が分離表示される"
+                               + ("" if _t460 else " ← いずれかの候補セクションが見つかりません")})
 
     return results
 

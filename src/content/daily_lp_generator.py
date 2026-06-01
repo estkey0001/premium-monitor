@@ -2218,6 +2218,22 @@ details[open] > .fetch-failed-summary::before {{ transform: rotate(90deg); }}
 .pro-domestic-price-table .price-value {{
   font-weight: 700; color: var(--ink1);
 }}
+/* Pro: 国内仕入れ候補 / 国内売却候補(買取店) のセクションラベル */
+.pro-subsection-label {{
+  font-size: 0.82rem; font-weight: 800; margin: 12px 0 4px; padding: 4px 8px;
+  border-radius: 6px; letter-spacing: 0.02em;
+}}
+.pro-subsection-label.pro-buy-label {{
+  color: #1F5FA8; background: #EEF5FF; border-left: 3px solid #3B82C4;
+}}
+.pro-subsection-label.pro-buyback-label {{
+  color: #176B4D; background: #ECFBF4; border-left: 3px solid #00A37A;
+}}
+.pro-buyback-table .pro-bb-rank {{
+  display: inline-block; min-width: 1.3em; margin-right: 5px;
+  font-weight: 800; color: #00A37A; font-variant-numeric: tabular-nums;
+}}
+.pro-buyback-table .pro-row-buyback .price-value {{ color: #00A37A; }}
 .pro-overseas-price-table .price-value {{
   font-weight: 700; color: #0369A1;
 }}
@@ -6344,13 +6360,15 @@ tr.sc-route-review {{ background: #FFFBEB; }}
   </div>
 </div>"""
 
-        # ── 初心者モード：compact card レイアウト（Task 1/2）──
-        # 初期表示：商品名・バッジ・公式価格・最高買取価格・差益・最高買取店・CTA のみ。
-        # 買取店比較 / 取得方法 / 最終確認 / その他の買取店 / 注意書き は <details> に格納。
-        _fold_inner = compare_html + price_source_row_html + condition_notice_html + updated_str
+        # ── 初心者モード：compact card レイアウト（買取店上位3店舗は初期表示）──
+        # 初期表示：商品名・バッジ・公式価格・最高買取価格・差益・最高買取店・
+        #           買取店比較（上位3店舗＋もっと見る）・CTA。
+        # 折りたたみ（<details>）には 取得方法 / 最終確認 / 注意書き のみ格納。
+        # （4店舗目以降・取得失敗店舗は compare_html 内の「もっと見る」details に既に格納済み）
+        _fold_inner = price_source_row_html + condition_notice_html + updated_str
         detail_fold_html = (
             f'<details class="card-detail-fold">'
-            f'<summary class="card-detail-summary">買取店比較を見る</summary>'
+            f'<summary class="card-detail-summary">取得方法・注意事項を見る</summary>'
             f'<div class="card-detail-body">{_fold_inner}</div>'
             f'</details>'
         ) if _fold_inner.strip() else ''
@@ -6386,6 +6404,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
   </div>
   {best_buyback_block_html}
   <div class="card-body">
+    {compare_html}
     <div class="card-actions">
       {official_btn}
       {buyback_btn}
@@ -6678,8 +6697,9 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                     f'</tr>'
                 )
 
-            # ── 国内買取店価格（新品・未使用・未開封のみ）を国内候補として追加（売却先候補・仕入れ判断材料）──
-            # Pro から買取店候補を消さない。中古・二次流通(resale_market)・低信頼は除外。
+            # ── 国内買取店価格（新品・未使用・未開封のみ）を「国内売却候補 / 買取店」として
+            #    仕入れ候補とは別セクションに表示（Pro から買取店候補を消さない）。
+            #    中古・二次流通(resale_market)・低信頼は除外。
             _bb_rows = bybp.get(prod_id, [])
             _bb_seen = set()
             _bb_valid = []
@@ -6702,7 +6722,8 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 _bb_valid.append(r)
             # 買取は高い順（売却先として有利）
             _bb_valid.sort(key=lambda x: x.get("buyback_price", 0), reverse=True)
-            for r in _bb_valid[:5]:
+            bbrows = []
+            for _i_bb, r in enumerate(_bb_valid[:5], start=1):
                 _bp = r.get("buyback_price", 0)
                 _sname = _esc(r.get("shop_name", ""))
                 _burl = r.get("buyback_url", "") or r.get("url", "")
@@ -6712,14 +6733,26 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                     f'class="pro-link-btn" data-track="pro_buyback_click">買取確認</a>'
                     if _burl else '<span class="pro-link-btn" style="opacity:0.4;cursor:default;">—</span>'
                 )
-                dtrows.append(
+                bbrows.append(
                     f'<tr class="pro-domestic-row pro-row-has-price pro-row-buyback">'
-                    f'<td class="pro-src-cell"><strong class="pro-src-name">{_sname}</strong></td>'
+                    f'<td class="pro-src-cell"><span class="pro-bb-rank">{_i_bb}</span>'
+                    f'<strong class="pro-src-name">{_sname}</strong></td>'
                     f'<td class="pro-price-cell"><strong class="price-value">¥{_bp:,}</strong></td>'
                     f'<td class="pro-basis-cell"><span class="pro-price-basis">買取価格</span></td>'
                     f'<td class="pro-meta-cell">{_bfresh}</td>'
                     f'<td class="pro-action-cell">{_baction}</td>'
                     f'</tr>'
+                )
+            # 「国内売却候補 / 買取店」セクション（仕入れ候補と分離）
+            buyback_table_html = ""
+            if bbrows:
+                buyback_table_html = (
+                    f'<div class="pro-subsection-label pro-buyback-label">'
+                    f'&#127974; 国内売却候補 / 買取店（{len(bbrows)}件）</div>'
+                    f'<table class="pro-price-table pro-domestic-price-table pro-buyback-table">'
+                    f'<thead><tr><th>買取店</th><th>買取価格</th><th>種別</th><th>確認日</th><th></th></tr></thead>'
+                    f'<tbody>{"".join(bbrows)}</tbody>'
+                    f'</table>'
                 )
 
             # 価格未取得 → チップ
@@ -6736,8 +6769,11 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                     f'<div class="pro-no-price-chips">{chips}</div>'
                     f'</div>'
                 )
+            # 国内仕入れ候補（新品・未使用の国内二次流通価格）
             if dtrows:
-                domestic_table_html = (
+                _domestic_buy_html = (
+                    f'<div class="pro-subsection-label pro-buy-label">'
+                    f'&#128722; 国内仕入れ候補（新品・未使用）</div>'
                     f'<table class="pro-price-table pro-domestic-price-table">'
                     f'<thead><tr><th>サイト</th><th>参考価格</th><th>種別</th><th>確認日</th><th></th></tr></thead>'
                     f'<tbody>{"".join(dtrows)}</tbody>'
@@ -6748,10 +6784,14 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 # 中古データのみで新品・未使用・未開封が無い場合は明示する（中古価格は出さない方針）
                 _no_data_msg = ('新品・未使用価格未取得' if _dom_used_filtered > 0
                                 else '国内価格データ未取得')
-                domestic_table_html = (
+                _domestic_buy_html = (
+                    f'<div class="pro-subsection-label pro-buy-label">'
+                    f'&#128722; 国内仕入れ候補（新品・未使用）</div>'
                     f'<div class="pro-no-data-note">{_no_data_msg}</div>'
                     + dom_no_html
                 )
+            # 仕入れ候補 + 売却候補(買取店) を結合
+            domestic_table_html = _domestic_buy_html + buyback_table_html
 
             # ── 海外相場 ── 価格あり/なし分離 → 高い順ソート
             ovs_by_src: dict = {r.get("source_id", ""): r for r in overseas_rows}

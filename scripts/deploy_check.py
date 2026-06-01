@@ -3592,13 +3592,19 @@ def check() -> list[dict]:
     results.append({"level": "ok" if _t341 else "warning", "check": "no_old_lottery_active_label",
                     "message": "#341 Lottery active ラベル「受付中 / 販売中」が LP ソースに残っていない" + ("" if _t341 else " ← 「受付中 / 販売中」が LP ソースに残っています")})
 
-    # #342: _STALE_EXCLUDE_H が 168.0 以上（7日）であること
+    # #342: 除外閾値が 168h 以上であること（2段階鮮度導入後は EXCLUDE_STALE_H=336h を参照）
     import re as _re342
+    # 数値リテラル直書き、または EXCLUDE_STALE_H 経由（= EXCLUDE_STALE_H）の両方を許容
     _t342_m = _re342.search(r'_STALE_EXCLUDE_H\s*=\s*([0-9.]+)', _lp_gen_src)
-    _t342_val = float(_t342_m.group(1)) if _t342_m else 0.0
+    if _t342_m:
+        _t342_val = float(_t342_m.group(1))
+    else:
+        _excl_m = _re342.search(r'EXCLUDE_STALE_H\s*=\s*([0-9.]+)', _lp_gen_src)
+        _alias = bool(_re342.search(r'_STALE_EXCLUDE_H\s*=\s*EXCLUDE_STALE_H', _lp_gen_src))
+        _t342_val = float(_excl_m.group(1)) if (_excl_m and _alias) else 0.0
     _t342 = _t342_val >= 168.0
     results.append({"level": "ok" if _t342 else "error", "check": "stale_exclude_h_168",
-                    "message": f"#342 _STALE_EXCLUDE_H={_t342_val:.0f}h（7日以上の買取データ許容）" + ("" if _t342 else " ← 168.0 以上に変更してください")})
+                    "message": f"#342 除外閾値={_t342_val:.0f}h（168h以上で7日以上の買取データ許容）" + ("" if _t342 else " ← 168.0 以上に変更してください")})
 
     # #343: _section_stale_warning がトップバナーを出さない（hidden ブロックのみ返す）
     # Round4: _section_stale_warning は常に非表示ブロックのみを返すよう変更済み
@@ -4671,6 +4677,65 @@ def check() -> list[dict]:
     results.append({"level": "ok" if _csv_ok else "error", "check": "csv_has_camera_new_unused_rows",
                     "message": "#468 manual_buyback_prices.csv に camera 商品の new/unused 行がある"
                                + ("" if _csv_ok else " ← カメラの新品・未使用買取行が CSV に見つかりません")})
+
+    # ── 手動価格の2段階鮮度ルール（Add two-stage freshness rules for manual prices） ──
+    # ジェネレータのソースを読み、鮮度ロジックの実装を構造的に検証する。
+    _gen_src = ''
+    try:
+        _gen_path = _os468.path.join(_os468.path.dirname(_os468.path.dirname(_os468.path.abspath(__file__))),
+                                     'src', 'content', 'daily_lp_generator.py')
+        with open(_gen_path, encoding='utf-8') as _gf:
+            _gen_src = _gf.read()
+    except Exception:
+        _gen_src = ''
+
+    # #469: EXCLUDE_STALE_H が 336h（_STALE_EXCLUDE_H も同等）になっている
+    _t469 = ('EXCLUDE_STALE_H = 336' in _gen_src) and ('_STALE_EXCLUDE_H = EXCLUDE_STALE_H' in _gen_src) \
+        and ('WARNING_STALE_H = 168' in _gen_src)
+    results.append({"level": "ok" if _t469 else "error", "check": "freshness_thresholds_two_stage",
+                    "message": "#469 鮮度閾値が WARNING=168h / EXCLUDE=336h（_STALE_EXCLUDE_H=336h 同等）になっている"
+                               + ("" if _t469 else " ← 閾値定義が見つかりません")})
+
+    # #470: 7日超価格は「要更新」表示になる（7日以上前の参考値）
+    #   7〜14日の手動価格がある日は表示される。0件の日は warning。
+    _t470_struct = ('7日以上前の参考値' in _gen_src) and ('_src_stale7' in _gen_src)
+    _t470_shown = ('要更新' in _beg_html388) and ('7日以上前の参考値' in _beg_html388)
+    _t470 = _t470_struct and _t470_shown
+    results.append({"level": "ok" if _t470 else ("warning" if _t470_struct else "error"),
+                    "check": "freshness_7d_warning_shown",
+                    "message": "#470 7日超の価格に『要更新』『7日以上前の参考値』が表示される"
+                               + ("" if _t470 else (" ← 7〜14日の価格が無い日は正常（実装は有効）" if _t470_struct
+                                                    else " ← 7日超表示の実装が見つかりません"))})
+
+    # #471: 14日超価格は利益判定に使われない（enrich 後に降格を適用）
+    _t471 = ('_apply_stale_downgrade(d) for d in deduped_all' in _gen_src) \
+        and ("age > EXCLUDE_STALE_H" in _gen_src)
+    results.append({"level": "ok" if _t471 else "error", "check": "freshness_14d_excluded_from_profit",
+                    "message": "#471 14日超の手動価格は利益判定から除外される（enrich 後に降格適用）"
+                               + ("" if _t471 else " ← 14日超の除外処理が見つかりません")})
+
+    # #472: 14日超商品は監視中へ降格される（カードは消さない）
+    _t472 = ("'user_level': 'monitoring'" in _gen_src) and ('||STALE14' in _gen_src)
+    results.append({"level": "ok" if _t472 else "error", "check": "freshness_14d_downgraded_to_monitoring",
+                    "message": "#472 14日超商品は監視中へ降格される（カードは残す / STALE14 マーカー）"
+                               + ("" if _t472 else " ← 監視中降格の実装が見つかりません")})
+
+    # #473: 「価格情報が古い（要再確認）」が表示される（>14日商品がある日のみ可視）
+    _t473_struct = '価格情報が古い（要再確認）' in _gen_src
+    _t473_shown = '価格情報が古い（要再確認）' in _beg_html388
+    _t473 = _t473_struct and _t473_shown
+    results.append({"level": "ok" if _t473 else ("warning" if _t473_struct else "error"),
+                    "check": "freshness_stale14_note_shown",
+                    "message": "#473 14日超商品に『価格情報が古い（要再確認）』が表示される"
+                               + ("" if _t473 else (" ← 14日超商品が無い日は正常（実装は有効）" if _t473_struct
+                                                    else " ← 該当文言の実装が見つかりません"))})
+
+    # #474: manual_today / manual_confirmed の observed_at を見て鮮度判定している
+    _t474 = ('_price_obs_age_h' in _gen_src) and ("r.get('observed_at'" in _gen_src
+                                                  or 'observed_at' in _gen_src)
+    results.append({"level": "ok" if _t474 else "error", "check": "freshness_uses_observed_at",
+                    "message": "#474 手動価格の observed_at を見て鮮度判定している"
+                               + ("" if _t474 else " ← observed_at ベースの鮮度判定が見つかりません")})
 
     return results
 

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-01T23:29:49+09:00",
+  "generated_at": "2026-06-02T17:50:12+09:00",
   "summary": {
     "total": 15,
     "ok": 0,
@@ -10,15 +10,11 @@
   },
   "failure_reasons": [
     {
+      "reason": "site_blocked",
+      "count": 10
+    },
+    {
       "reason": "timeout",
-      "count": 5
-    },
-    {
-      "reason": "price_not_found",
-      "count": 5
-    },
-    {
-      "reason": "http_error",
       "count": 5
     }
   ],
@@ -35,14 +31,14 @@
       "shop_id": "src_fujiya",
       "status": "FAILED",
       "price": 0,
-      "reason": "price_not_found"
+      "reason": "site_blocked"
     },
     {
       "product_alias": "x100vi",
       "shop_id": "src_kitamura",
       "status": "FAILED",
       "price": 0,
-      "reason": "http_error"
+      "reason": "site_blocked"
     },
     {
       "product_alias": "gr4",
@@ -56,14 +52,14 @@
       "shop_id": "src_fujiya",
       "status": "FAILED",
       "price": 0,
-      "reason": "price_not_found"
+      "reason": "site_blocked"
     },
     {
       "product_alias": "gr4",
       "shop_id": "src_kitamura",
       "status": "FAILED",
       "price": 0,
-      "reason": "http_error"
+      "reason": "site_blocked"
     },
     {
       "product_alias": "gr4_hdf",
@@ -77,14 +73,14 @@
       "shop_id": "src_fujiya",
       "status": "FAILED",
       "price": 0,
-      "reason": "price_not_found"
+      "reason": "site_blocked"
     },
     {
       "product_alias": "gr4_hdf",
       "shop_id": "src_kitamura",
       "status": "FAILED",
       "price": 0,
-      "reason": "http_error"
+      "reason": "site_blocked"
     },
     {
       "product_alias": "gr4_mono",
@@ -98,14 +94,14 @@
       "shop_id": "src_fujiya",
       "status": "FAILED",
       "price": 0,
-      "reason": "price_not_found"
+      "reason": "site_blocked"
     },
     {
       "product_alias": "gr4_mono",
       "shop_id": "src_kitamura",
       "status": "FAILED",
       "price": 0,
-      "reason": "http_error"
+      "reason": "site_blocked"
     },
     {
       "product_alias": "gr3x",
@@ -119,14 +115,14 @@
       "shop_id": "src_fujiya",
       "status": "FAILED",
       "price": 0,
-      "reason": "price_not_found"
+      "reason": "site_blocked"
     },
     {
       "product_alias": "gr3x",
       "shop_id": "src_kitamura",
       "status": "FAILED",
       "price": 0,
-      "reason": "http_error"
+      "reason": "site_blocked"
     }
   ],
   "fallback_note": "HTMLから新品買取を確定できない店舗は manual_buyback_prices.csv の manual_today（手動確認）を使用。14日超は利益判定から除外。"

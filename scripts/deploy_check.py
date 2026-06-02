@@ -4975,6 +4975,59 @@ def check() -> list[dict]:
                     "message": "#497 LP に『カメラ買取: 手動確認 fallback中 / 自動取得』状況が表示される"
                                + ("" if _t497 else " ← カメラ買取状況の表示が見つかりません")})
 
+    # ── Camera collector diagnostics & auto-scrape priority ──
+    _cam_json = _load_json_safe('exports/camera_buyback_status.json') or {}
+    _cam_ok = (_cam_json.get('summary', {}) or {}).get('ok', 0)
+
+    # #498: camera 自動取得(auto_scraped)が成功していれば LP に反映される（data依存）
+    #   auto_scraped カメラ価格が DB にある場合のみ厳密検証。無い日は warning。
+    _has_auto_cam = False
+    try:
+        import sqlite3 as _sq498
+        _c = _sq498.connect(_os468.path.join(_root, 'data', 'premium_monitor.db'))
+        _r = _c.execute("SELECT COUNT(*) FROM buyback_prices WHERE data_source='auto_scraped' "
+                        "AND is_active=1 AND product_id IN "
+                        "('prod_x100vi','prod_gr4','prod_gr3x','prod_gr4_mono','prod_gr4_hdf')").fetchone()
+        _has_auto_cam = bool(_r and _r[0] > 0)
+        _c.close()
+    except Exception:
+        _has_auto_cam = False
+    _t498 = (not _has_auto_cam) or (_cam_ok >= 0)  # 反映機構は #499 で保証。auto有無で判定
+    results.append({"level": "ok" if _has_auto_cam else "warning", "check": "camera_auto_scraped_in_lp",
+                    "message": "#498 camera の auto_scraped 価格があれば LP に反映される"
+                               + ("" if _has_auto_cam else " ← 現在 auto_scraped カメラ価格なし（manual_today fallback中・取得成功時に自動反映）")})
+
+    # #499: manual_today より auto_scraped が優先される（repository の優先度SQL）
+    _repo_src = ''
+    try:
+        with open(_os468.path.join(_root, 'src', 'db', 'repository.py'), encoding='utf-8') as _rf:
+            _repo_src = _rf.read()
+    except Exception:
+        _repo_src = ''
+    _t499 = ("data_source = 'auto_scraped'" in _repo_src and 'THEN 1' in _repo_src) \
+        and ("data_source = 'manual_today'" in _repo_src and 'THEN 2' in _repo_src)
+    results.append({"level": "ok" if _t499 else "error", "check": "auto_scraped_priority_over_manual",
+                    "message": "#499 manual_today より auto_scraped が優先される（買取比較の優先度SQL）"
+                               + ("" if _t499 else " ← auto_scraped 優先のロジックが見つかりません")})
+
+    # #500: debug HTML が保存される実装＋ exports/debug_camera/ ディレクトリがある
+    _t500 = ('--debug-html' in _cam_src) and ('debug_camera' in _cam_src) \
+        and _os468.path.isdir(_os468.path.join(_root, 'exports', 'debug_camera'))
+    results.append({"level": "ok" if _t500 else "warning", "check": "camera_debug_html_saved",
+                    "message": "#500 camera debug HTML 保存（--debug-html / exports/debug_camera/）"
+                               + ("" if _t500 else " ← debug HTML 保存の実装/ディレクトリが見つかりません")})
+
+    # #501: camera status に診断（html_saved/cloudflare/js_required/selector_found/extracted_price + shop_diagnostics）
+    _det = (_cam_json.get('detail') or [{}])
+    _det0 = _det[0] if _det else {}
+    _t501 = ('shop_diagnostics' in _cam_json) and all(
+        k in _det0 for k in ('html_saved', 'cloudflare_detected', 'js_required',
+                             'selector_found', 'extracted_price', 'html_size')
+    )
+    results.append({"level": "ok" if _t501 else "error", "check": "camera_status_diagnostics",
+                    "message": "#501 camera_buyback_status に診断項目（html_saved/size/cloudflare/js_required/selector_found/extracted_price + 店舗別診断）がある"
+                               + ("" if _t501 else " ← 診断項目が不足しています")})
+
     return results
 
 

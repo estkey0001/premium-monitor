@@ -162,6 +162,8 @@ def main() -> int:
     parser.add_argument("--no-scrape", action="store_true", help="取得せず status のみ出力")
     parser.add_argument("--priority-only", action="store_true",
                         help="優先3店舗（マップ/フジヤ/キタムラ）のみ取得")
+    parser.add_argument("--debug-html", action="store_true",
+                        help="取得HTMLを exports/debug_camera/ に保存（全店舗）")
     args = parser.parse_args()
     setup_logging(args.verbose)
 
@@ -178,8 +180,18 @@ def main() -> int:
         repo = None
 
     import urllib.parse as _up
-    results = []  # (alias, shop_id, status, price, reason)
+    results = []  # list of dict（診断フィールド付き）
     saved = 0
+    _dbg = ROOT / "exports" / "debug_camera"
+
+    def _diag(alias, shop_id, status, price, reason, **kw):
+        d = {"product_alias": alias, "shop_id": shop_id, "status": status,
+             "price": price, "reason": reason,
+             "html_saved": False, "html_size": 0, "cloudflare_detected": False,
+             "js_required": False, "selector_found": False, "extracted_price": None}
+        d.update(kw)
+        return d
+
     for alias in CAMERA_ALIASES:
         kw = CAMERA_KEYWORDS.get(alias, alias)
         kw_enc = _up.quote(kw)
@@ -187,38 +199,50 @@ def main() -> int:
             if args.priority_only and shop_id not in PRIORITY_SHOPS:
                 continue
             if args.no_scrape:
-                results.append((alias, shop_id, "SKIP", 0, "scrape_skipped"))
+                results.append(_diag(alias, shop_id, "SKIP", 0, "scrape_skipped"))
                 continue
             if shop_id in NOT_SUPPORTED:
-                results.append((alias, shop_id, "FAILED", 0, "not_supported"))
+                results.append(_diag(alias, shop_id, "FAILED", 0, "not_supported"))
                 continue
             url = url_tmpl.format(kw=kw_enc) if "{kw}" in url_tmpl else url_tmpl
             html, reason = _fetch_html(url)
-            # 優先店舗は取得HTMLを保存（原因分析用）— 取得できた場合のみ
-            if html is not None and shop_id in PRIORITY_SHOPS:
+            if html is None:
+                results.append(_diag(alias, shop_id, "FAILED", 0, reason))
+                continue
+            # HTML 取得成功 → 診断（--debug-html 指定 or 優先店舗なら保存）
+            _size = len(html)
+            _low = html.lower()
+            _cf = any(k in _low for k in ("just a moment", "challenge-platform",
+                                          "cf-browser-verification", "captcha", "ロボットではありません"))
+            _js = (("__next_data__" in _low) or ("window.__nuxt__" in _low)
+                   or (_size < 3000 and "<script" in _low))  # JS shell の疑い
+            _saved = False
+            if args.debug_html or shop_id in PRIORITY_SHOPS:
                 try:
-                    _dbg = ROOT / "exports" / "debug_camera"
                     _dbg.mkdir(parents=True, exist_ok=True)
                     (_dbg / f"{shop_id}_{alias}.html").write_text(html[:200_000], encoding="utf-8")
+                    _saved = True
                 except Exception:
                     pass
-            if html is None:
-                results.append((alias, shop_id, "FAILED", 0, reason))
-                continue
             price = _parse_buyback_price(html, alias, shop_id)
+            _selector_found = price is not None
             if not price or price <= 0:
-                # HTML は取れたが価格抽出不可 → 原因を細分類
-                _low = html.lower()
-                if any(k in _low for k in ("captcha", "robot", "cloudflare", "access denied")):
+                if _cf:
                     _r = "site_blocked"
-                elif len(html) < 800:
-                    _r = "empty_html"
+                elif _size < 3000:
+                    _r = "js_required" if _js else "empty_html"
                 else:
                     _r = "price_not_found"
-                results.append((alias, shop_id, "FAILED", 0, _r))
+                results.append(_diag(alias, shop_id, "FAILED", 0, _r,
+                                     html_saved=_saved, html_size=_size,
+                                     cloudflare_detected=_cf, js_required=_js,
+                                     selector_found=False, extracted_price=None))
                 continue
-            # 取得成功 → auto_scraped（新品未開封）で保存
-            results.append((alias, shop_id, "OK", price, ""))
+            # 取得成功 → auto_scraped（新品未開封）で保存（manual_today より優先される）
+            results.append(_diag(alias, shop_id, "OK", price, "",
+                                 html_saved=_saved, html_size=_size,
+                                 cloudflare_detected=_cf, js_required=_js,
+                                 selector_found=True, extracted_price=price))
             if repo is not None:
                 try:
                     pid = "prod_" + alias if not alias.startswith("prod_") else alias
@@ -233,12 +257,33 @@ def main() -> int:
                 except Exception as e:  # noqa: BLE001
                     logger.debug("保存失敗 %s/%s: %s", alias, shop_id, e)
 
-    ok = sum(1 for r in results if r[2] == "OK")
-    failed = sum(1 for r in results if r[2] == "FAILED")
-    skip = sum(1 for r in results if r[2] == "SKIP")
+    ok = sum(1 for r in results if r["status"] == "OK")
+    failed = sum(1 for r in results if r["status"] == "FAILED")
+    skip = sum(1 for r in results if r["status"] == "SKIP")
     total = len(results)
     from collections import Counter
-    reasons = Counter(r[4] for r in results if r[2] == "FAILED" and r[4])
+    reasons = Counter(r["reason"] for r in results if r["status"] == "FAILED" and r["reason"])
+
+    # 店舗別の診断サマリ（原因分類）
+    shop_diag = {}
+    for r in results:
+        sid = r["shop_id"]
+        d = shop_diag.setdefault(sid, {"jobs": 0, "ok": 0, "html_saved": 0,
+                                       "cloudflare": 0, "js_required": 0, "top_reason": {}})
+        d["jobs"] += 1
+        if r["status"] == "OK":
+            d["ok"] += 1
+        if r.get("html_saved"):
+            d["html_saved"] += 1
+        if r.get("cloudflare_detected"):
+            d["cloudflare"] += 1
+        if r.get("js_required"):
+            d["js_required"] += 1
+        if r["status"] == "FAILED" and r["reason"]:
+            d["top_reason"][r["reason"]] = d["top_reason"].get(r["reason"], 0) + 1
+    for sid, d in shop_diag.items():
+        d["diagnosis"] = (max(d["top_reason"], key=d["top_reason"].get) if d["top_reason"]
+                          else ("ok" if d["ok"] else "unknown"))
 
     status = {
         "generated_at": now.isoformat(timespec="seconds"),
@@ -246,10 +291,15 @@ def main() -> int:
                     "success_rate_pct": round(100.0 * ok / total, 1) if total else 0.0,
                     "saved_to_db": saved},
         "failure_reasons": [{"reason": k, "count": v} for k, v in reasons.most_common()],
-        "detail": [{"product_alias": a, "shop_id": s, "status": st, "price": p, "reason": rs}
-                   for (a, s, st, p, rs) in results],
+        "shop_diagnostics": shop_diag,
+        "detail": results,
         "fallback_note": ("HTMLから新品買取を確定できない店舗は manual_buyback_prices.csv の "
-                          "manual_today（手動確認）を使用。14日超は利益判定から除外。"),
+                          "manual_today（手動確認）を使用。auto_scraped 取得時はそちらを優先。"
+                          "14日超は利益判定から除外。"),
+        "analysis_2026_06": ("マップカメラ=サンドボックスからtimeout（到達不可）/ "
+                             "キタムラ net-chuko=JSシェル(~2KB,JS必須) / "
+                             "フジヤ=検索フォームページ（価格はASP.NETポストバック/JSでレンダリング、静的HTMLに価格なし）。"
+                             "→ 静的HTTPでは取得不可。Playwright(JSレンダリング)が必要。"),
     }
     STATUS_PATH.parent.mkdir(parents=True, exist_ok=True)
     STATUS_PATH.write_text(json.dumps(status, ensure_ascii=False, indent=2), encoding="utf-8")

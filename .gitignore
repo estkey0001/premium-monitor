@@ -44,3 +44,6 @@ test-results/
 # macOS archive junk
 __MACOSX/
 .DS_Store
+
+# camera collector debug HTML (diagnostics only, not committed)
+exports/debug_camera/*.html

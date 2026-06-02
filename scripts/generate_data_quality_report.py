@@ -113,6 +113,51 @@ def main() -> int:
 
     failure_reasons = collector.get("failure_reason_ranking", []) or []
 
+    # ── 店舗別/商品別 成功率・連続失敗・改善優先順位（Task 3）──
+    _OPTIONAL_SHOPS = {"2ndstreet", "bookoff", "dosupara", "geo", "geo_mobile", "hardoff",
+                       "janpara", "pasoko", "sofmap", "surugaya", "tsutaya", "netoff"}
+    shop_detail = collector.get("shop_detail", []) or []
+    shop_success_rates = sorted(
+        [{"shop_id": s.get("shop_id"), "ok": s.get("ok", 0), "failed": s.get("failed", 0),
+          "success_rate_pct": s.get("success_rate_pct", 0), "top_reason": s.get("top_reason", ""),
+          "optional": s.get("shop_id") in _OPTIONAL_SHOPS}
+         for s in shop_detail],
+        key=lambda x: x["success_rate_pct"]
+    )
+    by_product = collector.get("by_product", {}) or {}
+    product_success_rates = {}
+    for pid, v in by_product.items():
+        _ok = v.get("ok", 0) or 0
+        _tot = _ok + (v.get("failed", 0) or 0)
+        product_success_rates[pid] = round(100.0 * _ok / _tot, 1) if _tot else 0.0
+
+    # 連続失敗店舗（shop_streaks.json に永続化：ok=0 で +1、成功で 0）
+    _streak_path = OUT_DIR / "shop_streaks.json"
+    try:
+        with open(_streak_path, encoding="utf-8") as _sf:
+            _streaks = json.load(_sf)
+    except Exception:
+        _streaks = {}
+    for s in shop_detail:
+        sid = s.get("shop_id")
+        if not sid:
+            continue
+        if (s.get("ok", 0) or 0) > 0:
+            _streaks[sid] = 0
+        else:
+            _streaks[sid] = int(_streaks.get(sid, 0)) + 1
+    consecutive_failed_shops = sorted(
+        [{"shop_id": k, "consecutive_failures": v} for k, v in _streaks.items() if v >= 2],
+        key=lambda x: -x["consecutive_failures"]
+    )
+    # 改善優先順位: required(非optional) かつ 失敗多い順
+    improvement_priority = [
+        {"shop_id": s["shop_id"], "failed": s["failed"], "top_reason": s["top_reason"],
+         "priority": "required"}
+        for s in shop_success_rates
+        if not s["optional"] and s["success_rate_pct"] < 100 and s["failed"] > 0
+    ][:5]
+
     valid_counts = _valid_buyback_counts(now)
     products_with_valid = sum(1 for v in valid_counts.values() if v > 0)
 
@@ -152,11 +197,25 @@ def main() -> int:
         delta = None
         trend = "初回"
     top5_reasons = failure_reasons[:5]
+    # 7日移動平均（history.jsonl の直近7件 + 今回値）
+    _hist_rates = []
+    try:
+        with open(OUT_DIR / "history.jsonl", encoding="utf-8") as _hf:
+            for _ln in _hf.read().splitlines():
+                try:
+                    _hist_rates.append(float(json.loads(_ln).get("success_rate_pct")))
+                except Exception:
+                    pass
+    except Exception:
+        pass
+    _recent = (_hist_rates + [success_rate])[-7:]
+    moving_avg_7 = round(sum(_recent) / len(_recent), 1) if _recent else success_rate
     comparison = {
         "prev_success_rate_pct": prev_rate,
         "current_success_rate_pct": success_rate,
         "delta_pct": delta,
         "trend": trend,
+        "moving_avg_7d_pct": moving_avg_7,
         "top5_failure_reasons": top5_reasons,
     }
 
@@ -194,9 +253,20 @@ def main() -> int:
             "source_mode": ovs_mode,
             "ebay_app_id_configured": ovs_ebay_configured,
         },
+        # Task 3: 店舗別/商品別 成功率・連続失敗・改善優先順位
+        "shop_success_rates": shop_success_rates,
+        "product_success_rates": product_success_rates,
+        "consecutive_failed_shops": consecutive_failed_shops,
+        "improvement_priority": improvement_priority,
     }
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
+    # 連続失敗ストリークを永続化
+    try:
+        (OUT_DIR / "shop_streaks.json").write_text(
+            json.dumps(_streaks, ensure_ascii=False, indent=2), encoding="utf-8")
+    except Exception:
+        pass
     # 履歴に追記（成功率推移の追跡用）
     try:
         with open(OUT_DIR / "history.jsonl", "a", encoding="utf-8") as _hf:
@@ -222,8 +292,31 @@ def main() -> int:
         f"- 前回成功率: {prev_rate if prev_rate is not None else '—'}%",
         f"- 今回成功率: {success_rate}%",
         f"- 変化: {('+' if (delta or 0) > 0 else '')}{delta if delta is not None else '—'}pt（{trend}）",
+        f"- 7日移動平均: {moving_avg_7}%",
         "- 主要失敗理由 TOP5: "
         + (", ".join(f"{r.get('reason')} {r.get('count')}" for r in top5_reasons) or "なし"),
+        "",
+        "## 店舗別成功率（低い順）",
+    ]
+    for s in shop_success_rates[:12]:
+        _opt = "（optional）" if s["optional"] else ""
+        lines.append(f"- {s['shop_id']}{_opt}: {s['success_rate_pct']}%（OK {s['ok']}/失敗 {s['failed']}・{s['top_reason']}）")
+    lines += ["", "## 商品別成功率"]
+    for pid, rate in sorted(product_success_rates.items(), key=lambda x: x[1]):
+        lines.append(f"- {pid}: {rate}%")
+    lines += ["", "## 連続失敗店舗（2回以上）"]
+    if consecutive_failed_shops:
+        for c in consecutive_failed_shops:
+            lines.append(f"- {c['shop_id']}: {c['consecutive_failures']}回連続")
+    else:
+        lines.append("- なし")
+    lines += ["", "## 改善優先順位（required店舗）"]
+    if improvement_priority:
+        for i, p in enumerate(improvement_priority, 1):
+            lines.append(f"{i}. {p['shop_id']}（失敗{p['failed']} / {p['top_reason']}）")
+    else:
+        lines.append("- なし")
+    lines += [
         "",
         "## 失敗理由（内訳）",
     ]

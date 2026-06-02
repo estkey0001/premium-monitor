@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-02T16:36:38+09:00",
+  "generated_at": "2026-06-02T17:51:40+09:00",
   "collection": {
     "total_shops": 16,
     "shops_with_success": 6,
@@ -11,10 +11,11 @@
     "success_rate_pct": 40.0
   },
   "comparison": {
-    "prev_success_rate_pct": 34.5,
+    "prev_success_rate_pct": 40.0,
     "current_success_rate_pct": 40.0,
-    "delta_pct": 5.5,
-    "trend": "改善",
+    "delta_pct": 0.0,
+    "trend": "横ばい",
+    "moving_avg_7d_pct": 37.2,
     "top5_failure_reasons": [
       {
         "reason": "rate_limited_429",
@@ -116,5 +117,152 @@
     "stale": 4,
     "source_mode": "manual",
     "ebay_app_id_configured": false
-  }
+  },
+  "shop_success_rates": [
+    {
+      "shop_id": "2ndstreet",
+      "ok": 0,
+      "failed": 4,
+      "success_rate_pct": 0,
+      "top_reason": "price_not_found",
+      "optional": true
+    },
+    {
+      "shop_id": "bookoff",
+      "ok": 0,
+      "failed": 0,
+      "success_rate_pct": 0,
+      "top_reason": "not_supported",
+      "optional": true
+    },
+    {
+      "shop_id": "dosupara",
+      "ok": 0,
+      "failed": 2,
+      "success_rate_pct": 0,
+      "top_reason": "http_404",
+      "optional": true
+    },
+    {
+      "shop_id": "geo_mobile",
+      "ok": 0,
+      "failed": 4,
+      "success_rate_pct": 0,
+      "top_reason": "site_blocked",
+      "optional": true
+    },
+    {
+      "shop_id": "hardoff",
+      "ok": 0,
+      "failed": 2,
+      "success_rate_pct": 0,
+      "top_reason": "http_404",
+      "optional": true
+    },
+    {
+      "shop_id": "janpara",
+      "ok": 0,
+      "failed": 6,
+      "success_rate_pct": 0,
+      "top_reason": "rate_limited_429",
+      "optional": true
+    },
+    {
+      "shop_id": "pasoko",
+      "ok": 0,
+      "failed": 2,
+      "success_rate_pct": 0,
+      "top_reason": "product_not_listed",
+      "optional": true
+    },
+    {
+      "shop_id": "sofmap",
+      "ok": 0,
+      "failed": 2,
+      "success_rate_pct": 0,
+      "top_reason": "service_unavailable",
+      "optional": true
+    },
+    {
+      "shop_id": "surugaya",
+      "ok": 0,
+      "failed": 2,
+      "success_rate_pct": 0,
+      "top_reason": "site_blocked",
+      "optional": true
+    },
+    {
+      "shop_id": "tsutaya",
+      "ok": 0,
+      "failed": 0,
+      "success_rate_pct": 0,
+      "top_reason": "not_supported",
+      "optional": true
+    },
+    {
+      "shop_id": "geo",
+      "ok": 1,
+      "failed": 1,
+      "success_rate_pct": 50,
+      "top_reason": "product_not_listed",
+      "optional": true
+    },
+    {
+      "shop_id": "netoff",
+      "ok": 2,
+      "failed": 2,
+      "success_rate_pct": 50,
+      "top_reason": "price_not_found",
+      "optional": true
+    },
+    {
+      "shop_id": "mobile_ichiban",
+      "ok": 3,
+      "failed": 2,
+      "success_rate_pct": 60,
+      "top_reason": "product_not_listed",
+      "optional": false
+    },
+    {
+      "shop_id": "iosys",
+      "ok": 6,
+      "failed": 0,
+      "success_rate_pct": 100,
+      "top_reason": "—",
+      "optional": false
+    },
+    {
+      "shop_id": "kaitori_itchome",
+      "ok": 4,
+      "failed": 0,
+      "success_rate_pct": 100,
+      "top_reason": "—",
+      "optional": false
+    },
+    {
+      "shop_id": "kaitori_shouten",
+      "ok": 6,
+      "failed": 0,
+      "success_rate_pct": 100,
+      "top_reason": "—",
+      "optional": false
+    }
+  ],
+  "product_success_rates": {
+    "iphone17pro256": 62.5,
+    "iphone17pro512": 50.0,
+    "iphone17pm256": 50.0,
+    "iphone17pm512": 37.5,
+    "switch2": 33.3,
+    "ps5_pro": 30.0
+  },
+  "consecutive_failed_shops": [],
+  "improvement_priority": [
+    {
+      "shop_id": "mobile_ichiban",
+      "failed": 2,
+      "top_reason": "product_not_listed",
+      "priority": "required"
+    }
+  ]
 }

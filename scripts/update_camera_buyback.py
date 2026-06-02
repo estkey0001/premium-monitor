@@ -194,12 +194,28 @@ def main() -> int:
                 continue
             url = url_tmpl.format(kw=kw_enc) if "{kw}" in url_tmpl else url_tmpl
             html, reason = _fetch_html(url)
+            # 優先店舗は取得HTMLを保存（原因分析用）— 取得できた場合のみ
+            if html is not None and shop_id in PRIORITY_SHOPS:
+                try:
+                    _dbg = ROOT / "exports" / "debug_camera"
+                    _dbg.mkdir(parents=True, exist_ok=True)
+                    (_dbg / f"{shop_id}_{alias}.html").write_text(html[:200_000], encoding="utf-8")
+                except Exception:
+                    pass
             if html is None:
                 results.append((alias, shop_id, "FAILED", 0, reason))
                 continue
             price = _parse_buyback_price(html, alias, shop_id)
             if not price or price <= 0:
-                results.append((alias, shop_id, "FAILED", 0, "price_not_found"))
+                # HTML は取れたが価格抽出不可 → 原因を細分類
+                _low = html.lower()
+                if any(k in _low for k in ("captcha", "robot", "cloudflare", "access denied")):
+                    _r = "site_blocked"
+                elif len(html) < 800:
+                    _r = "empty_html"
+                else:
+                    _r = "price_not_found"
+                results.append((alias, shop_id, "FAILED", 0, _r))
                 continue
             # 取得成功 → auto_scraped（新品未開封）で保存
             results.append((alias, shop_id, "OK", price, ""))

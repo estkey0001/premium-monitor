@@ -4961,6 +4961,20 @@ def check() -> list[dict]:
                     "message": "#495 daily_lp.yml が data_quality_report / camera_buyback_status をコミットする"
                                + ("" if _t495 else " ← 品質レポートが commit 対象に含まれていません")})
 
+    # #496: data_quality に 7日移動平均・店舗別/商品別成功率・連続失敗・改善優先順位がある（Task 3）
+    _t496 = (('moving_avg_7d_pct' in (_dq_json.get('comparison', {}) or {}))
+             and ('shop_success_rates' in _dq_json) and ('product_success_rates' in _dq_json)
+             and ('consecutive_failed_shops' in _dq_json) and ('improvement_priority' in _dq_json))
+    results.append({"level": "ok" if _t496 else "error", "check": "data_quality_advanced_metrics",
+                    "message": "#496 data_quality に 7日移動平均/店舗別/商品別成功率/連続失敗/改善優先順位がある"
+                               + ("" if _t496 else " ← 指標が不足しています")})
+
+    # #497: LP フッターに カメラ買取の状況（手動確認 fallback中 等）が表示される（Task 4）
+    _t497 = ('カメラ買取' in html) and ('data-quality-note' in html)
+    results.append({"level": "ok" if _t497 else "error", "check": "lp_camera_buyback_state",
+                    "message": "#497 LP に『カメラ買取: 手動確認 fallback中 / 自動取得』状況が表示される"
+                               + ("" if _t497 else " ← カメラ買取状況の表示が見つかりません")})
+
     return results
 
 

@@ -7995,6 +7995,16 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         reasons_str = ", ".join(f"{r.get('reason')} {r.get('count')}" for r in top[:3]) or "なし"
         ovs = dq.get("overseas", {}) or {}
         _ebay = "eBay API設定済" if ovs.get("ebay_app_id_configured") else "eBay API未設定"
+        # カメラ買取の自動取得状況（camera_buyback_status.json）
+        _cam_state = ""
+        try:
+            _cp = _P(__file__).resolve().parent.parent.parent / "exports" / "camera_buyback_status.json"
+            with open(_cp, encoding="utf-8") as _cf:
+                _cam = _jdq.load(_cf)
+            _cam_ok = (_cam.get("summary", {}) or {}).get("ok", 0)
+            _cam_state = ("自動取得" if _cam_ok > 0 else "手動確認 fallback中")
+        except Exception:
+            _cam_state = "手動確認 fallback中"
         _cmp = dq.get("comparison", {}) or {}
         _trend = _cmp.get("trend", "")
         _delta = _cmp.get("delta_pct")
@@ -8004,7 +8014,8 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             f'<div class="data-quality-note">'
             f'<span class="dq-title">&#128202; データ取得状況</span> '
             f'成功 <strong>{ok} / {total}</strong>（{rate}%）{_trend_str} ／ '
-            f'主な失敗理由: {_esc(reasons_str)} ／ 海外価格: {_esc(_ebay)}'
+            f'主な失敗理由: {_esc(reasons_str)} ／ 海外価格: {_esc(_ebay)} ／ '
+            f'カメラ買取: {_esc(_cam_state)}'
             f'</div>'
         )
 

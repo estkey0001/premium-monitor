@@ -1,20 +1,20 @@
 {
-  "generated_at": "2026-06-01T23:35:37+09:00",
+  "generated_at": "2026-06-02T16:36:38+09:00",
   "collection": {
     "total_shops": 16,
-    "shops_with_success": 5,
-    "shops_all_failed": 9,
+    "shops_with_success": 6,
+    "shops_all_failed": 8,
     "total_jobs": 55,
-    "ok_jobs": 19,
-    "failed_jobs": 32,
+    "ok_jobs": 22,
+    "failed_jobs": 29,
     "skip_jobs": 4,
-    "success_rate_pct": 34.5
+    "success_rate_pct": 40.0
   },
   "comparison": {
     "prev_success_rate_pct": 34.5,
-    "current_success_rate_pct": 34.5,
-    "delta_pct": 0.0,
-    "trend": "横ばい",
+    "current_success_rate_pct": 40.0,
+    "delta_pct": 5.5,
+    "trend": "改善",
     "top5_failure_reasons": [
       {
         "reason": "rate_limited_429",
@@ -29,7 +29,7 @@
         "count": 6
       },
       {
-        "reason": "timeout",
+        "reason": "product_not_listed",
         "count": 5
       },
       {
@@ -52,7 +52,7 @@
       "count": 6
     },
     {
-      "reason": "timeout",
+      "reason": "product_not_listed",
       "count": 5
     },
     {
@@ -62,10 +62,6 @@
     {
       "reason": "not_supported",
       "count": 4
-    },
-    {
-      "reason": "product_not_listed",
-      "count": 3
     },
     {
       "reason": "service_unavailable",
@@ -111,7 +107,7 @@
     "reason_if_empty": null
   },
   "sedori_usable": {
-    "routes": 32,
+    "routes": 31,
     "reason_if_empty": null
   },
   "overseas": {

@@ -213,6 +213,7 @@ jobs:
           git add docs/ exports/lp/daily/ exports/collector_report/ exports/lottery_report/ \
                   exports/alerts_report/ exports/ranking_report/ exports/sedori_routes_report/ \
                   exports/overseas_prices/ \
+                  exports/data_quality_report/ exports/camera_buyback_status.json \
                   data/alerts.csv data/lottery_events.csv \
                   data/overseas_price_history.csv \
                   exports/deploy_check_latest.txt exports/prelaunch_check_latest.txt \

@@ -4954,6 +4954,13 @@ def check() -> list[dict]:
                     "message": "#494 camera collector に優先3店舗の検索URL/店舗別抽出パターンがある"
                                + ("" if _t494 else " ← 優先店舗のセレクタ/キーワードURLが見つかりません")})
 
+    # #495: workflow の commit ステップが data_quality_report / camera_buyback_status を含む
+    #   （Actions が生成した品質レポートをリポジトリにコミットさせるため）
+    _t495 = ('exports/data_quality_report/' in _wf) and ('exports/camera_buyback_status.json' in _wf)
+    results.append({"level": "ok" if _t495 else "error", "check": "workflow_commits_quality_reports",
+                    "message": "#495 daily_lp.yml が data_quality_report / camera_buyback_status をコミットする"
+                               + ("" if _t495 else " ← 品質レポートが commit 対象に含まれていません")})
+
     return results
 
 

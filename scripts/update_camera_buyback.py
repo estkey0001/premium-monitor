@@ -125,6 +125,93 @@ def _fetch_html(url: str, timeout: int = 15) -> tuple[Optional[str], str]:
         return None, "http_error"
 
 
+# 店舗別 検索フォーム/結果セレクタ（Playwright 用）
+_PW_SHOP_CONFIG = {
+    "src_fujiya": {
+        "search_url": "https://www.fujiya-camera.co.jp/shop/goods/search.aspx?keyword={kw}",
+        "search_input": "input[name*='keyword'], input#keyword, input[type='search']",
+        "result_wait": ".goods, .item, .price, [class*='price']",
+        "strategy": "fujiya_search",
+    },
+    "src_kitamura": {
+        "search_url": "https://www.net-chuko.com/ec/list?keyword={kw}",
+        "search_input": "input[type='search'], input[name*='keyword']",
+        "result_wait": "[class*='price'], .itemList, .goodsList, .product",
+        "strategy": "kitamura_render",
+    },
+    "src_mapcamera": {
+        "search_url": "https://www.mapcamera.com/search?keyword={kw}",
+        "search_input": "input[name*='keyword'], input[type='search']",
+        "result_wait": "[class*='price'], .item, .goods",
+        "strategy": "mapcamera_retry",
+    },
+}
+
+
+def _fetch_with_playwright(url: str, shop_id: str, alias: str, dbg_dir,
+                           timeout_ms: int = 25000) -> dict:
+    """Playwright(chromium headless) で URL をレンダリングして取得する。
+
+    戻り値 dict:
+      html, screenshot_saved, rendered_html_size, selector_waited,
+      reason, strategy
+    Playwright 未導入時は reason='playwright_not_installed'。
+    """
+    out = {"html": None, "screenshot_saved": False, "rendered_html_size": 0,
+           "selector_waited": False, "reason": "", "strategy": ""}
+    try:
+        from playwright.sync_api import sync_playwright
+    except Exception:
+        out["reason"] = "playwright_not_installed"
+        return out
+
+    cfg = _PW_SHOP_CONFIG.get(shop_id, {})
+    out["strategy"] = cfg.get("strategy", "generic")
+    try:
+        with sync_playwright() as p:
+            browser = p.chromium.launch(headless=True, args=["--no-sandbox"])
+            ctx = browser.new_context(
+                user_agent=("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
+                            "(KHTML, like Gecko) Chrome/124.0 Safari/537.36"),
+                locale="ja-JP",
+            )
+            page = ctx.new_page()
+            try:
+                page.goto(url, wait_until="networkidle", timeout=timeout_ms)
+            except Exception:
+                # networkidle が来なくても domcontentloaded で続行
+                try:
+                    page.goto(url, wait_until="domcontentloaded", timeout=timeout_ms)
+                except Exception as e2:
+                    out["reason"] = "timeout" if "imeout" in type(e2).__name__ else "nav_error"
+                    browser.close()
+                    return out
+            # 結果セレクタを待つ（出れば selector_waited=True）
+            rw = cfg.get("result_wait")
+            if rw:
+                try:
+                    page.wait_for_selector(rw, timeout=8000)
+                    out["selector_waited"] = True
+                except Exception:
+                    out["selector_waited"] = False
+            html = page.content()
+            out["html"] = html
+            out["rendered_html_size"] = len(html)
+            # debug: HTML + スクリーンショット保存
+            try:
+                if dbg_dir is not None:
+                    dbg_dir.mkdir(parents=True, exist_ok=True)
+                    (dbg_dir / f"{shop_id}_{alias}.pw.html").write_text(html[:300_000], encoding="utf-8")
+                    page.screenshot(path=str(dbg_dir / f"{shop_id}_{alias}.png"), full_page=False)
+                    out["screenshot_saved"] = True
+            except Exception:
+                pass
+            browser.close()
+    except Exception as e:  # noqa: BLE001
+        out["reason"] = f"playwright_error_{type(e).__name__}"
+    return out
+
+
 def _parse_buyback_price(html: str, alias: str, shop_id: str = "") -> Optional[int]:
     """HTML から新品/未使用買取価格を抽出する（店舗別パターン優先）。
 
@@ -164,6 +251,8 @@ def main() -> int:
                         help="優先3店舗（マップ/フジヤ/キタムラ）のみ取得")
     parser.add_argument("--debug-html", action="store_true",
                         help="取得HTMLを exports/debug_camera/ に保存（全店舗）")
+    parser.add_argument("--playwright", action="store_true",
+                        help="requests 失敗時に Playwright(chromium) でレンダリング取得")
     args = parser.parse_args()
     setup_logging(args.verbose)
 
@@ -188,7 +277,11 @@ def main() -> int:
         d = {"product_alias": alias, "shop_id": shop_id, "status": status,
              "price": price, "reason": reason,
              "html_saved": False, "html_size": 0, "cloudflare_detected": False,
-             "js_required": False, "selector_found": False, "extracted_price": None}
+             "js_required": False, "selector_found": False, "extracted_price": None,
+             # Playwright 診断
+             "playwright_attempted": False, "playwright_success": False,
+             "screenshot_saved": False, "rendered_html_size": 0,
+             "selector_waited": False, "extraction_strategy": "requests"}
         d.update(kw)
         return d
 
@@ -205,44 +298,73 @@ def main() -> int:
                 results.append(_diag(alias, shop_id, "FAILED", 0, "not_supported"))
                 continue
             url = url_tmpl.format(kw=kw_enc) if "{kw}" in url_tmpl else url_tmpl
+
+            # 1) requests 取得
             html, reason = _fetch_html(url)
-            if html is None:
-                results.append(_diag(alias, shop_id, "FAILED", 0, reason))
-                continue
-            # HTML 取得成功 → 診断（--debug-html 指定 or 優先店舗なら保存）
-            _size = len(html)
-            _low = html.lower()
-            _cf = any(k in _low for k in ("just a moment", "challenge-platform",
-                                          "cf-browser-verification", "captcha", "ロボットではありません"))
-            _js = (("__next_data__" in _low) or ("window.__nuxt__" in _low)
-                   or (_size < 3000 and "<script" in _low))  # JS shell の疑い
             _saved = False
-            if args.debug_html or shop_id in PRIORITY_SHOPS:
+            _size = len(html) if html else 0
+            if html and (args.debug_html or shop_id in PRIORITY_SHOPS):
                 try:
                     _dbg.mkdir(parents=True, exist_ok=True)
                     (_dbg / f"{shop_id}_{alias}.html").write_text(html[:200_000], encoding="utf-8")
                     _saved = True
                 except Exception:
                     pass
-            price = _parse_buyback_price(html, alias, shop_id)
-            _selector_found = price is not None
+            price = _parse_buyback_price(html, alias, shop_id) if html else None
+            _strategy = "requests"
+            _pw = {}
+
+            # 2) requests で価格が取れない/失敗 → Playwright fallback（--playwright 時）
+            if (not price) and args.playwright and shop_id in _PW_SHOP_CONFIG:
+                _cfg = _PW_SHOP_CONFIG[shop_id]
+                _pw_url = _cfg.get("search_url", url).format(kw=kw_enc)
+                _pw = _fetch_with_playwright(_pw_url, shop_id, alias, _dbg)
+                if _pw.get("html"):
+                    _ph = _pw["html"]
+                    _pprice = _parse_buyback_price(_ph, alias, shop_id)
+                    if _pprice:
+                        price = _pprice
+                        html = _ph
+                        _size = _pw.get("rendered_html_size", len(_ph))
+                        _strategy = _pw.get("strategy", "playwright")
+
+            _low = (html or "").lower()
+            _cf = any(k in _low for k in ("just a moment", "challenge-platform",
+                                          "cf-browser-verification", "captcha", "ロボットではありません"))
+            _js = (("__next_data__" in _low) or ("window.__nuxt__" in _low)
+                   or (0 < _size < 3000 and "<script" in _low))
+            _pw_attempted = bool(_pw)
+            _pw_success = bool(_pw.get("html")) if _pw else False
+            _pw_kw = dict(playwright_attempted=_pw_attempted,
+                          playwright_success=_pw_success,
+                          screenshot_saved=_pw.get("screenshot_saved", False) if _pw else False,
+                          rendered_html_size=_pw.get("rendered_html_size", 0) if _pw else 0,
+                          selector_waited=_pw.get("selector_waited", False) if _pw else False,
+                          extraction_strategy=_strategy)
+
             if not price or price <= 0:
-                if _cf:
+                # 失敗理由の決定（requests 失敗理由 / Playwright 理由 / 抽出不可）
+                if _pw and _pw.get("reason"):
+                    _r = _pw["reason"]
+                elif html is None:
+                    _r = reason
+                elif _cf:
                     _r = "site_blocked"
-                elif _size < 3000:
+                elif 0 < _size < 3000:
                     _r = "js_required" if _js else "empty_html"
                 else:
                     _r = "price_not_found"
                 results.append(_diag(alias, shop_id, "FAILED", 0, _r,
                                      html_saved=_saved, html_size=_size,
                                      cloudflare_detected=_cf, js_required=_js,
-                                     selector_found=False, extracted_price=None))
+                                     selector_found=False, extracted_price=None, **_pw_kw))
                 continue
+
             # 取得成功 → auto_scraped（新品未開封）で保存（manual_today より優先される）
             results.append(_diag(alias, shop_id, "OK", price, "",
                                  html_saved=_saved, html_size=_size,
                                  cloudflare_detected=_cf, js_required=_js,
-                                 selector_found=True, extracted_price=price))
+                                 selector_found=True, extracted_price=price, **_pw_kw))
             if repo is not None:
                 try:
                     pid = "prod_" + alias if not alias.startswith("prod_") else alias
@@ -269,7 +391,9 @@ def main() -> int:
     for r in results:
         sid = r["shop_id"]
         d = shop_diag.setdefault(sid, {"jobs": 0, "ok": 0, "html_saved": 0,
-                                       "cloudflare": 0, "js_required": 0, "top_reason": {}})
+                                       "cloudflare": 0, "js_required": 0,
+                                       "playwright_attempted": 0, "playwright_success": 0,
+                                       "screenshot_saved": 0, "top_reason": {}})
         d["jobs"] += 1
         if r["status"] == "OK":
             d["ok"] += 1
@@ -279,6 +403,12 @@ def main() -> int:
             d["cloudflare"] += 1
         if r.get("js_required"):
             d["js_required"] += 1
+        if r.get("playwright_attempted"):
+            d["playwright_attempted"] += 1
+        if r.get("playwright_success"):
+            d["playwright_success"] += 1
+        if r.get("screenshot_saved"):
+            d["screenshot_saved"] += 1
         if r["status"] == "FAILED" and r["reason"]:
             d["top_reason"][r["reason"]] = d["top_reason"].get(r["reason"], 0) + 1
     for sid, d in shop_diag.items():

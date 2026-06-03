@@ -47,3 +47,5 @@ __MACOSX/
 
 # camera collector debug HTML (diagnostics only, not committed)
 exports/debug_camera/*.html
+exports/debug_camera/*.png
+exports/debug_camera/*.pw.html

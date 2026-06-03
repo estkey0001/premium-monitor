@@ -50,7 +50,7 @@ jobs:
           PYTHONPATH: .
 
       - name: Update camera buyback (new/unused)
-        run: python scripts/update_camera_buyback.py --verbose
+        run: python scripts/update_camera_buyback.py --priority-only --playwright --debug-html --verbose
         continue-on-error: true
         env:
           PYTHONPATH: .

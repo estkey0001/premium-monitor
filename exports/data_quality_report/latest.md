@@ -1,4 +1,4 @@
-# データ取得品質レポート（2026-06-02 22:31 JST）
+# データ取得品質レポート（2026-06-03 15:04 JST）
 
 ## 取得成功率
 - 全対象店舗数: 16
@@ -10,7 +10,7 @@
 - 前回成功率: 40.0%
 - 今回成功率: 40.0%
 - 変化: 0.0pt（横ばい）
-- 7日移動平均: 37.8%
+- 7日移動平均: 38.2%
 - 主要失敗理由 TOP5: rate_limited_429 6, site_blocked 6, price_not_found 6, product_not_listed 5, http_404 4
 
 ## 店舗別成功率（低い順）
@@ -36,16 +36,16 @@
 - iphone17pro256: 62.5%
 
 ## 連続失敗店舗（2回以上）
-- 2ndstreet: 2回連続
-- bookoff: 2回連続
-- dosupara: 2回連続
-- geo_mobile: 2回連続
-- hardoff: 2回連続
-- janpara: 2回連続
-- pasoko: 2回連続
-- sofmap: 2回連続
-- surugaya: 2回連続
-- tsutaya: 2回連続
+- 2ndstreet: 3回連続
+- bookoff: 3回連続
+- dosupara: 3回連続
+- geo_mobile: 3回連続
+- hardoff: 3回連続
+- janpara: 3回連続
+- pasoko: 3回連続
+- sofmap: 3回連続
+- surugaya: 3回連続
+- tsutaya: 3回連続
 
 ## 改善優先順位（required店舗）
 1. mobile_ichiban（失敗2 / product_not_listed）
@@ -60,22 +60,18 @@
 - service_unavailable: 2件
 
 ## 有効データ量（新品・未使用 / 14日以内 / price>0）
-- 有効買取データを持つ商品数: 28
-  - prod_iphone17pro_256: 37店舗
-  - prod_iphone17pro_512: 35店舗
-  - prod_iphone17pm_256: 35店舗
-  - prod_iphone17pm_512: 33店舗
-  - prod_switch2: 32店舗
-  - prod_ps5_pro: 29店舗
+- 有効買取データを持つ商品数: 11
+  - prod_iphone17pro_256: 32店舗
+  - prod_iphone17pro_512: 30店舗
+  - prod_iphone17pm_256: 30店舗
+  - prod_iphone17pm_512: 28店舗
+  - prod_switch2: 28店舗
+  - prod_ps5_pro: 25店舗
   - prod_x100vi: 6店舗
   - prod_gr4: 6店舗
-  - prod_iphone17_256: 4店舗
-  - prod_iphone16pro_256: 4店舗
-  - prod_iphone16pm_256: 4店舗
   - prod_gr4_hdf: 4店舗
   - prod_gr4_mono: 4店舗
   - prod_gr3x: 4店舗
-  - prod_macbook_air_m4_13: 3店舗
 
 ## ランキングに使えたデータ数
 - Beginner: 5 件

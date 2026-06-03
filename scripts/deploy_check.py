@@ -5119,6 +5119,30 @@ def check() -> list[dict]:
                     "message": "#514 camera_buyback_status の detail に keyword_hit_counts/best_keyword/hit_count がある"
                                + ("" if _t514 else " ← keyword 診断項目が detail に不足しています")})
 
+    # ── Buyback page discovery & sales-price guard ──
+    # #515: 販売価格を買取価格として保存しない（near_buyback ゲート / sales_catalog_no_buyback）
+    _t515 = ('near_buyback' in _cam_src) and ('has_buyback_context' in _cam_src) \
+        and ('sales_catalog_no_buyback' in _cam_src)
+    results.append({"level": "ok" if _t515 else "error", "check": "camera_no_sales_price_as_buyback",
+                    "message": "#515 販売価格を買取価格として保存しない（買取文脈ゲート）"
+                               + ("" if _t515 else " ← 販売価格ガードが見つかりません")})
+
+    # #516: 買取ページ探索の実装＋status detail フィールド（buyback_link_candidates/buyback_page_url/buyback_price_candidates）
+    _t516_impl = ('buyback_link_candidates' in _cam_src) and ('purchase/list.aspx' in _cam_src) \
+        and ('買取金額' in _cam_src or 'buyback_page_url' in _cam_src)
+    _t516_fields = all(k in _det0 for k in ('buyback_link_candidates', 'buyback_page_url',
+                                            'buyback_price_candidates', 'buyback_extracted_price'))
+    _t516 = _t516_impl and _t516_fields
+    results.append({"level": "ok" if _t516 else "error", "check": "camera_buyback_page_discovery",
+                    "message": "#516 買取ページ探索（買取専用URL/リンク候補/買取価格候補）が status に出る"
+                               + ("" if _t516 else " ← 買取ページ探索の実装/フィールドが不足しています")})
+
+    # #517: Fujiya は販売 search.aspx ではなく買取 purchase ページを使う
+    _t517 = ('/shop/purchase/list.aspx' in _cam_src) and ('fujiya_buyback' in _cam_src)
+    results.append({"level": "ok" if _t517 else "error", "check": "fujiya_uses_buyback_page",
+                    "message": "#517 Fujiya は買取専用ページ（/shop/purchase/list.aspx）を使う"
+                               + ("" if _t517 else " ← 買取専用ページの使用が見つかりません")})
+
     return results
 
 

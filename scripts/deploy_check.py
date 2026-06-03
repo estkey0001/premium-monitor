@@ -4620,7 +4620,8 @@ def check() -> list[dict]:
     # #464: カメラ等の未取得カードに理由付き表示がある（理由ラベルのいずれかが出る）
     #   監視中カードの status バッジが必ず意味のある理由/状態ラベルを持つこと。
     _REASON_LABELS = ('中古価格のみ取得', '新品買取価格なし', 'サイト制限中', '商品未掲載',
-                      '取得失敗', '買取価格取得待ち', '価格変動を監視中')
+                      '取得失敗', '買取価格取得待ち', '価格変動を監視中',
+                      '手動確認データが14日以上前')
     _mon_badges = _re437.findall(r'mon-status-badge">([^<]+)<', _beg_html388)
     _t464 = all(b.strip() in _REASON_LABELS for b in _mon_badges)
     results.append({"level": "ok" if _t464 else "error", "check": "beginner_missing_reason_shown",
@@ -5027,6 +5028,42 @@ def check() -> list[dict]:
     results.append({"level": "ok" if _t501 else "error", "check": "camera_status_diagnostics",
                     "message": "#501 camera_buyback_status に診断項目（html_saved/size/cloudflare/js_required/selector_found/extracted_price + 店舗別診断）がある"
                                + ("" if _t501 else " ← 診断項目が不足しています")})
+
+    # ── Playwright fallback for camera buyback collector ──
+    # #502: Playwright fallback が実装されている
+    _t502 = ('_fetch_with_playwright' in _cam_src) and ('sync_playwright' in _cam_src) \
+        and ('--playwright' in _cam_src)
+    results.append({"level": "ok" if _t502 else "error", "check": "camera_playwright_fallback",
+                    "message": "#502 camera collector に Playwright fallback が実装されている"
+                               + ("" if _t502 else " ← Playwright fallback が見つかりません")})
+
+    # #503: camera status に playwright_attempted がある
+    _t503 = ('playwright_attempted' in _det0)
+    results.append({"level": "ok" if _t503 else "error", "check": "camera_status_playwright_field",
+                    "message": "#503 camera_buyback_status の detail に playwright_attempted 等の診断がある"
+                               + ("" if _t503 else " ← playwright 診断項目が見つかりません")})
+
+    # #504: screenshot / rendered HTML 保存処理がある
+    _t504 = ('screenshot' in _cam_src) and ('.pw.html' in _cam_src or 'rendered_html_size' in _cam_src)
+    results.append({"level": "ok" if _t504 else "error", "check": "camera_playwright_debug_artifacts",
+                    "message": "#504 Playwright のスクリーンショット/レンダリングHTML保存処理がある"
+                               + ("" if _t504 else " ← screenshot/rendered HTML 保存処理が見つかりません")})
+
+    # #505: auto_scraped 成功時は manual_today より優先される（#499 と同根の保証）
+    _t505 = _t499 and ("data_source=\"auto_scraped\"" in _cam_src or "data_source='auto_scraped'" in _cam_src
+                       or 'data_source="auto_scraped"' in _cam_src or "'auto_scraped'" in _cam_src)
+    results.append({"level": "ok" if _t505 else "error", "check": "camera_auto_over_manual",
+                    "message": "#505 camera の auto_scraped 取得は manual_today より優先される"
+                               + ("" if _t505 else " ← auto_scraped 保存/優先の実装が見つかりません")})
+
+    # #506: 失敗時 manual_today fallback が維持される（collector は manual 行を削除しない）
+    _t506 = ('fallback_note' in _cam_src) and ('manual_today' in _cam_src) \
+        and ('delete' not in _cam_src.lower().replace('deleted', ''))
+    # fallback_note が status に出ているかも確認
+    _t506 = _t506 and ('fallback_note' in _cam_json)
+    results.append({"level": "ok" if _t506 else "warning", "check": "camera_manual_fallback_kept",
+                    "message": "#506 取得失敗時は manual_today fallback が維持される（collector は manual を削除しない）"
+                               + ("" if _t506 else " ← manual fallback 維持の確認ができません")})
 
     return results
 

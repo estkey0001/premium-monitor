@@ -253,13 +253,20 @@ _PW_DOM_PROBE_JS = r"""
       // フジヤ買取リストは class に「kitr」(=買取)、ラベルは「基準査定額/買取申し込み」。
       let ctx = t; let item_text = "";
       try {
-        if (el.closest) {
-          // 商品アイテムの「ラッパー」を優先（商品名+価格を含む単位）。
-          // フジヤ買取は -kitrListbox01（exact token）が1商品の単位。__boxPrice01 等の子は除外。
-          const c = el.closest("[class~='-kitrListbox01'],[class*='goods-list-d--item'],[class*='goods-list--item'],article,li")
-                 || el.closest("[class*='kitr'],[class*='kaitori'],[class*='satei'],[class*='assess'],[class*='box'],[class*='list'],[class*='item']");
-          if (c) { const ct=(c.textContent||""); ctx += " " + ct.slice(0,500); item_text = ct.replace(/\s+/g," ").trim().slice(0,200); }
+        // 価格要素から親方向へ辿り、ブランド/型番トークンを含む最初の祖先を商品単位とみなす。
+        // （フジヤ買取は商品名 __boxName01 と価格 __boxPrice01 が兄弟のため、共通の親まで上る）
+        const BRAND = /FUJIFILM|RICOH|フジフイルム|フジフィルム|富士フイルム|リコー|X100|GR\s?I|GR\s?V|GR\s?3|GRIII/i;
+        let node = el;
+        for (let lvl=0; lvl<7 && node; lvl++){
+          node = node.parentElement;
+          if (!node) break;
+          const ct = (node.textContent||"");
+          if (BRAND.test(ct)) { item_text = ct.replace(/\s+/g," ").trim().slice(0,240); break; }
         }
+        if (!item_text && el.parentElement) {
+          item_text = (el.parentElement.textContent||"").replace(/\s+/g," ").trim().slice(0,200);
+        }
+        ctx += " " + item_text;
       } catch(e){}
       const nearBuyback = /買取|査定|基準査定額|買取申し込み/.test(ctx)
                         || /kitr|kaitori|satei/i.test(el.className||"");

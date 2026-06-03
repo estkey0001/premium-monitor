@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-03T20:50:32+09:00",
+  "generated_at": "2026-06-03T21:13:48+09:00",
   "summary": {
     "total": 15,
     "ok": 0,
@@ -14,11 +14,11 @@
       "count": 5
     },
     {
-      "reason": "price_not_found",
+      "reason": "sales_catalog_no_buyback",
       "count": 5
     },
     {
-      "reason": "http_error",
+      "reason": "site_blocked",
       "count": 5
     }
   ],
@@ -29,9 +29,9 @@
       "html_saved": 0,
       "cloudflare": 0,
       "js_required": 0,
-      "playwright_attempted": 0,
-      "playwright_success": 0,
-      "screenshot_saved": 0,
+      "playwright_attempted": 5,
+      "playwright_success": 5,
+      "screenshot_saved": 5,
       "top_reason": {
         "timeout": 5
       },
@@ -43,13 +43,13 @@
       "html_saved": 5,
       "cloudflare": 0,
       "js_required": 0,
-      "playwright_attempted": 0,
-      "playwright_success": 0,
-      "screenshot_saved": 0,
+      "playwright_attempted": 5,
+      "playwright_success": 5,
+      "screenshot_saved": 5,
       "top_reason": {
-        "price_not_found": 5
+        "sales_catalog_no_buyback": 5
       },
-      "diagnosis": "price_not_found"
+      "diagnosis": "sales_catalog_no_buyback"
     },
     "src_kitamura": {
       "jobs": 5,
@@ -57,13 +57,13 @@
       "html_saved": 0,
       "cloudflare": 0,
       "js_required": 0,
-      "playwright_attempted": 0,
-      "playwright_success": 0,
-      "screenshot_saved": 0,
+      "playwright_attempted": 5,
+      "playwright_success": 5,
+      "screenshot_saved": 5,
       "top_reason": {
-        "http_error": 5
+        "site_blocked": 5
       },
-      "diagnosis": "http_error"
+      "diagnosis": "site_blocked"
     }
   },
   "detail": [
@@ -79,18 +79,18 @@
       "js_required": false,
       "selector_found": false,
       "extracted_price": null,
-      "playwright_attempted": false,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
+      "playwright_attempted": true,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 302,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.9094d817.1780488844.2317ffa4\n\nhttps://errors.edgesuite.net/18.9094d817.1780488844.2317ffa4",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
       "shadow_dom_detected": false,
-      "dom_ready_state": "",
+      "dom_ready_state": "complete",
       "hit_count": null,
       "keyword_hit_counts": {},
       "best_keyword": null,
@@ -98,8 +98,8 @@
       "sales_price_sample": null,
       "buyback_link_candidates": [],
       "buyback_page_url": null,
-      "buyback_page_html_size": 0,
-      "buyback_page_text_preview": "",
+      "buyback_page_html_size": 302,
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.9094d817.1780488844.2317ffa4\n\nhttps://errors.edgesuite.net/18.9094d817.1780488844.2317ffa4",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null
     },
@@ -108,34 +108,240 @@
       "shop_id": "src_fujiya",
       "status": "FAILED",
       "price": 0,
-      "reason": "price_not_found",
+      "reason": "sales_catalog_no_buyback",
       "html_saved": true,
       "html_size": 317294,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": false,
       "extracted_price": null,
-      "playwright_attempted": false,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
-      "selector_waited": false,
+      "playwright_attempted": true,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 270073,
+      "selector_waited": true,
       "extraction_strategy": "requests",
-      "body_text_preview": "",
-      "matched_selectors": [],
-      "selector_candidates": [],
-      "iframe_count": 0,
+      "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
+      "matched_selectors": [
+        {
+          "selector": "table td",
+          "hits": 162
+        },
+        {
+          "selector": ".price",
+          "hits": 162
+        },
+        {
+          "selector": "[class*='price']",
+          "hits": 162
+        }
+      ],
+      "selector_candidates": [
+        {
+          "selector": "table td",
+          "text": "￥805,000",
+          "price": 805000,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": ".price",
+          "text": "￥805,000",
+          "price": 805000,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥805,000",
+          "price": 805000,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": "table td",
+          "text": "￥803,850",
+          "price": 803850,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": ".price",
+          "text": "￥803,850",
+          "price": 803850,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥803,850",
+          "price": 803850,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": "table td",
+          "text": "￥770,000",
+          "price": 770000,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": ".price",
+          "text": "￥770,000",
+          "price": 770000,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥770,000",
+          "price": 770000,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": "table td",
+          "text": "￥768,900",
+          "price": 768900,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": ".price",
+          "text": "￥768,900",
+          "price": 768900,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥768,900",
+          "price": 768900,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": "table td",
+          "text": "￥700,000",
+          "price": 700000,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": ".price",
+          "text": "￥700,000",
+          "price": 700000,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥700,000",
+          "price": 700000,
+          "near_kw": false,
+          "near_buyback": false
+        }
+      ],
+      "iframe_count": 1,
       "shadow_dom_detected": false,
-      "dom_ready_state": "",
-      "hit_count": null,
-      "keyword_hit_counts": {},
-      "best_keyword": null,
+      "dom_ready_state": "interactive",
+      "hit_count": 32,
+      "keyword_hit_counts": {
+        "X100VI": 8,
+        "X100 VI": 8,
+        "X100V": 14,
+        "富士フイルム X100": 32,
+        "FUJIFILM X100VI": 5
+      },
+      "best_keyword": "富士フイルム X100",
       "has_buyback_context": false,
-      "sales_price_sample": null,
-      "buyback_link_candidates": [],
-      "buyback_page_url": null,
-      "buyback_page_html_size": 0,
-      "buyback_page_text_preview": "",
+      "sales_price_sample": 805000,
+      "buyback_link_candidates": [
+        {
+          "text": "買取金額を調べる",
+          "href": "/shop/purchase/list.aspx"
+        },
+        {
+          "text": "フジヤカメラの買取・下取り",
+          "href": "/shop/kaitori/pc/0c-kaitor/"
+        },
+        {
+          "text": "お得な特典",
+          "href": "/shop/kaitori/pc/0c-kaitor/#tokuten"
+        },
+        {
+          "text": "買取に関するお悩みを解決",
+          "href": "/shop/kaitori/pc/0c-kaitor/#onayami"
+        },
+        {
+          "text": "選ばれ続ける理由",
+          "href": "/shop/kaitori/pc/0c-kaitor/#because"
+        },
+        {
+          "text": "店頭買取のご案内",
+          "href": "/shop/kaitori/pc/0c-kaitor/#shop"
+        },
+        {
+          "text": "お問い合わせ",
+          "href": "/shop/kaitori/pc/0c-kaitor/#contact"
+        },
+        {
+          "text": "買取検索",
+          "href": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx"
+        },
+        {
+          "text": "Sell買取りについて",
+          "href": "/shop/kaitori/pc/0c-kaitor/"
+        },
+        {
+          "text": "条件をリセット",
+          "href": "/shop/purchase/list.aspx"
+        },
+        {
+          "text": "＜全品対象＞買取金額10%アップ とは",
+          "href": "/shop/kaitori/pg/1c-ck-kaitori/"
+        },
+        {
+          "text": "＜全品対象・下取限定＞買取金額15%アップ とは",
+          "href": "/shop/kaitori/pg/1c-ck-shitadori/"
+        },
+        {
+          "text": "",
+          "href": "/shop/purchase/list.aspx?search=%e6%a4%9c%e7%b4%a2"
+        },
+        {
+          "text": "おすすめ順",
+          "href": "/shop/purchase/list.aspx?sort=0&search=%e6%a4%9c%e7%b4%a2&keyword=%e5%af%8c%e5%a3%ab%e3%83%95%e3%82%a4%e3%83%ab%e3%83%a0+X100"
+        },
+        {
+          "text": "新着順",
+          "href": "/shop/purchase/list.aspx?sort=1&search=%e6%a4%9c%e7%b4%a2&keyword=%e5%af%8c%e5%a3%ab%e3%83%95%e3%82%a4%e3%83%ab%e3%83%a0+X100"
+        },
+        {
+          "text": "商品名",
+          "href": "/shop/purchase/list.aspx?sort=2&search=%e6%a4%9c%e7%b4%a2&keyword=%e5%af%8c%e5%a3%ab%e3%83%95%e3%82%a4%e3%83%ab%e3%83%a0+X100"
+        },
+        {
+          "text": "発売日",
+          "href": "/shop/purchase/list.aspx?sort=3&search=%e6%a4%9c%e7%b4%a2&keyword=%e5%af%8c%e5%a3%ab%e3%83%95%e3%82%a4%e3%83%ab%e3%83%a0+X100"
+        },
+        {
+          "text": "価格(安い順)",
+          "href": "/shop/purchase/list.aspx?sort=4&search=%e6%a4%9c%e7%b4%a2&keyword=%e5%af%8c%e5%a3%ab%e3%83%95%e3%82%a4%e3%83%ab%e3%83%a0+X100"
+        },
+        {
+          "text": "価格(高い順)",
+          "href": "/shop/purchase/list.aspx?sort=5&search=%e6%a4%9c%e7%b4%a2&keyword=%e5%af%8c%e5%a3%ab%e3%83%95%e3%82%a4%e3%83%ab%e3%83%a0+X100"
+        },
+        {
+          "text": "新着順+商品名",
+          "href": "/shop/purchase/list.aspx?sort=6&search=%e6%a4%9c%e7%b4%a2&keyword=%e5%af%8c%e5%a3%ab%e3%83%95%e3%82%a4%e3%83%ab%e3%83%a0+X100"
+        }
+      ],
+      "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=%E5%AF%8C%E5%A3%AB%E3%83%95%E3%82%A4%E3%83%AB%E3%83%A0%20X100&search=検索",
+      "buyback_page_html_size": 270073,
+      "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null
     },
@@ -144,25 +350,25 @@
       "shop_id": "src_kitamura",
       "status": "FAILED",
       "price": 0,
-      "reason": "http_error",
+      "reason": "site_blocked",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": false,
       "extracted_price": null,
-      "playwright_attempted": false,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
+      "playwright_attempted": true,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 453266,
       "selector_waited": false,
       "extraction_strategy": "requests",
       "body_text_preview": "",
       "matched_selectors": [],
       "selector_candidates": [],
-      "iframe_count": 0,
+      "iframe_count": 1,
       "shadow_dom_detected": false,
-      "dom_ready_state": "",
+      "dom_ready_state": "complete",
       "hit_count": null,
       "keyword_hit_counts": {},
       "best_keyword": null,
@@ -170,7 +376,7 @@
       "sales_price_sample": null,
       "buyback_link_candidates": [],
       "buyback_page_url": null,
-      "buyback_page_html_size": 0,
+      "buyback_page_html_size": 453266,
       "buyback_page_text_preview": "",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null
@@ -187,18 +393,18 @@
       "js_required": false,
       "selector_found": false,
       "extracted_price": null,
-      "playwright_attempted": false,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
+      "playwright_attempted": true,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 300,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.875ed617.1780489017.7c0a555\n\nhttps://errors.edgesuite.net/18.875ed617.1780489017.7c0a555",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
       "shadow_dom_detected": false,
-      "dom_ready_state": "",
+      "dom_ready_state": "complete",
       "hit_count": null,
       "keyword_hit_counts": {},
       "best_keyword": null,
@@ -206,8 +412,8 @@
       "sales_price_sample": null,
       "buyback_link_candidates": [],
       "buyback_page_url": null,
-      "buyback_page_html_size": 0,
-      "buyback_page_text_preview": "",
+      "buyback_page_html_size": 300,
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.875ed617.1780489017.7c0a555\n\nhttps://errors.edgesuite.net/18.875ed617.1780489017.7c0a555",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null
     },
@@ -216,34 +422,239 @@
       "shop_id": "src_fujiya",
       "status": "FAILED",
       "price": 0,
-      "reason": "price_not_found",
+      "reason": "sales_catalog_no_buyback",
       "html_saved": true,
       "html_size": 316351,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": false,
       "extracted_price": null,
-      "playwright_attempted": false,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
-      "selector_waited": false,
+      "playwright_attempted": true,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 215028,
+      "selector_waited": true,
       "extraction_strategy": "requests",
-      "body_text_preview": "",
-      "matched_selectors": [],
-      "selector_candidates": [],
-      "iframe_count": 0,
+      "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
+      "matched_selectors": [
+        {
+          "selector": "table td",
+          "hits": 30
+        },
+        {
+          "selector": ".price",
+          "hits": 30
+        },
+        {
+          "selector": "[class*='price']",
+          "hits": 30
+        }
+      ],
+      "selector_candidates": [
+        {
+          "selector": "table td",
+          "text": "￥223,100",
+          "price": 223100,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": "table td",
+          "text": "￥223,100",
+          "price": 223100,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": ".price",
+          "text": "￥223,100",
+          "price": 223100,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": ".price",
+          "text": "￥223,100",
+          "price": 223100,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥223,100",
+          "price": 223100,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥223,100",
+          "price": 223100,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": "table td",
+          "text": "￥221,950",
+          "price": 221950,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": "table td",
+          "text": "￥221,950",
+          "price": 221950,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": ".price",
+          "text": "￥221,950",
+          "price": 221950,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": ".price",
+          "text": "￥221,950",
+          "price": 221950,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥221,950",
+          "price": 221950,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥221,950",
+          "price": 221950,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": "table td",
+          "text": "￥213,400",
+          "price": 213400,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": "table td",
+          "text": "￥213,400",
+          "price": 213400,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": ".price",
+          "text": "￥213,400",
+          "price": 213400,
+          "near_kw": false,
+          "near_buyback": false
+        }
+      ],
+      "iframe_count": 1,
       "shadow_dom_detected": false,
-      "dom_ready_state": "",
-      "hit_count": null,
-      "keyword_hit_counts": {},
-      "best_keyword": null,
+      "dom_ready_state": "interactive",
+      "hit_count": 8,
+      "keyword_hit_counts": {
+        "GR IV": 8,
+        "GR4": 0,
+        "リコー GR IV": 7,
+        "RICOH GR IV": 7
+      },
+      "best_keyword": "GR IV",
       "has_buyback_context": false,
-      "sales_price_sample": null,
-      "buyback_link_candidates": [],
-      "buyback_page_url": null,
-      "buyback_page_html_size": 0,
-      "buyback_page_text_preview": "",
+      "sales_price_sample": 223100,
+      "buyback_link_candidates": [
+        {
+          "text": "買取金額を調べる",
+          "href": "/shop/purchase/list.aspx"
+        },
+        {
+          "text": "フジヤカメラの買取・下取り",
+          "href": "/shop/kaitori/pc/0c-kaitor/"
+        },
+        {
+          "text": "お得な特典",
+          "href": "/shop/kaitori/pc/0c-kaitor/#tokuten"
+        },
+        {
+          "text": "買取に関するお悩みを解決",
+          "href": "/shop/kaitori/pc/0c-kaitor/#onayami"
+        },
+        {
+          "text": "選ばれ続ける理由",
+          "href": "/shop/kaitori/pc/0c-kaitor/#because"
+        },
+        {
+          "text": "店頭買取のご案内",
+          "href": "/shop/kaitori/pc/0c-kaitor/#shop"
+        },
+        {
+          "text": "お問い合わせ",
+          "href": "/shop/kaitori/pc/0c-kaitor/#contact"
+        },
+        {
+          "text": "買取検索",
+          "href": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx"
+        },
+        {
+          "text": "Sell買取りについて",
+          "href": "/shop/kaitori/pc/0c-kaitor/"
+        },
+        {
+          "text": "条件をリセット",
+          "href": "/shop/purchase/list.aspx"
+        },
+        {
+          "text": "＜全品対象＞買取金額10%アップ とは",
+          "href": "/shop/kaitori/pg/1c-ck-kaitori/"
+        },
+        {
+          "text": "＜全品対象・下取限定＞買取金額15%アップ とは",
+          "href": "/shop/kaitori/pg/1c-ck-shitadori/"
+        },
+        {
+          "text": "",
+          "href": "/shop/purchase/list.aspx?search=%e6%a4%9c%e7%b4%a2"
+        },
+        {
+          "text": "おすすめ順",
+          "href": "/shop/purchase/list.aspx?sort=0&search=%e6%a4%9c%e7%b4%a2&keyword=GR+IV"
+        },
+        {
+          "text": "新着順",
+          "href": "/shop/purchase/list.aspx?sort=1&search=%e6%a4%9c%e7%b4%a2&keyword=GR+IV"
+        },
+        {
+          "text": "商品名",
+          "href": "/shop/purchase/list.aspx?sort=2&search=%e6%a4%9c%e7%b4%a2&keyword=GR+IV"
+        },
+        {
+          "text": "発売日",
+          "href": "/shop/purchase/list.aspx?sort=3&search=%e6%a4%9c%e7%b4%a2&keyword=GR+IV"
+        },
+        {
+          "text": "価格(安い順)",
+          "href": "/shop/purchase/list.aspx?sort=4&search=%e6%a4%9c%e7%b4%a2&keyword=GR+IV"
+        },
+        {
+          "text": "価格(高い順)",
+          "href": "/shop/purchase/list.aspx?sort=5&search=%e6%a4%9c%e7%b4%a2&keyword=GR+IV"
+        },
+        {
+          "text": "新着順+商品名",
+          "href": "/shop/purchase/list.aspx?sort=6&search=%e6%a4%9c%e7%b4%a2&keyword=GR+IV"
+        }
+      ],
+      "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=GR%20IV&search=検索",
+      "buyback_page_html_size": 215028,
+      "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null
     },
@@ -252,25 +663,25 @@
       "shop_id": "src_kitamura",
       "status": "FAILED",
       "price": 0,
-      "reason": "http_error",
+      "reason": "site_blocked",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": false,
       "extracted_price": null,
-      "playwright_attempted": false,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
+      "playwright_attempted": true,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 453266,
       "selector_waited": false,
       "extraction_strategy": "requests",
       "body_text_preview": "",
       "matched_selectors": [],
       "selector_candidates": [],
-      "iframe_count": 0,
+      "iframe_count": 1,
       "shadow_dom_detected": false,
-      "dom_ready_state": "",
+      "dom_ready_state": "complete",
       "hit_count": null,
       "keyword_hit_counts": {},
       "best_keyword": null,
@@ -278,7 +689,7 @@
       "sales_price_sample": null,
       "buyback_link_candidates": [],
       "buyback_page_url": null,
-      "buyback_page_html_size": 0,
+      "buyback_page_html_size": 453266,
       "buyback_page_text_preview": "",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null
@@ -295,18 +706,18 @@
       "js_required": false,
       "selector_found": false,
       "extracted_price": null,
-      "playwright_attempted": false,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
+      "playwright_attempted": true,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 300,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.875ed617.1780489163.7c29251\n\nhttps://errors.edgesuite.net/18.875ed617.1780489163.7c29251",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
       "shadow_dom_detected": false,
-      "dom_ready_state": "",
+      "dom_ready_state": "complete",
       "hit_count": null,
       "keyword_hit_counts": {},
       "best_keyword": null,
@@ -314,8 +725,8 @@
       "sales_price_sample": null,
       "buyback_link_candidates": [],
       "buyback_page_url": null,
-      "buyback_page_html_size": 0,
-      "buyback_page_text_preview": "",
+      "buyback_page_html_size": 300,
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.875ed617.1780489163.7c29251\n\nhttps://errors.edgesuite.net/18.875ed617.1780489163.7c29251",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null
     },
@@ -324,34 +735,238 @@
       "shop_id": "src_fujiya",
       "status": "FAILED",
       "price": 0,
-      "reason": "price_not_found",
+      "reason": "sales_catalog_no_buyback",
       "html_saved": true,
-      "html_size": 361670,
+      "html_size": 361650,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": false,
       "extracted_price": null,
-      "playwright_attempted": false,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
-      "selector_waited": false,
+      "playwright_attempted": true,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 201358,
+      "selector_waited": true,
       "extraction_strategy": "requests",
-      "body_text_preview": "",
-      "matched_selectors": [],
-      "selector_candidates": [],
-      "iframe_count": 0,
+      "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
+      "matched_selectors": [
+        {
+          "selector": "table td",
+          "hits": 6
+        },
+        {
+          "selector": ".price",
+          "hits": 6
+        },
+        {
+          "selector": "[class*='price']",
+          "hits": 6
+        }
+      ],
+      "selector_candidates": [
+        {
+          "selector": "table td",
+          "text": "￥223,100",
+          "price": 223100,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": ".price",
+          "text": "￥223,100",
+          "price": 223100,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥223,100",
+          "price": 223100,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": "table td",
+          "text": "￥221,950",
+          "price": 221950,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": ".price",
+          "text": "￥221,950",
+          "price": 221950,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥221,950",
+          "price": 221950,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": "table td",
+          "text": "￥213,400",
+          "price": 213400,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": ".price",
+          "text": "￥213,400",
+          "price": 213400,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥213,400",
+          "price": 213400,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": "table td",
+          "text": "￥212,300",
+          "price": 212300,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": ".price",
+          "text": "￥212,300",
+          "price": 212300,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥212,300",
+          "price": 212300,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": "table td",
+          "text": "￥194,000",
+          "price": 194000,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": ".price",
+          "text": "￥194,000",
+          "price": 194000,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥194,000",
+          "price": 194000,
+          "near_kw": false,
+          "near_buyback": false
+        }
+      ],
+      "iframe_count": 1,
       "shadow_dom_detected": false,
-      "dom_ready_state": "",
-      "hit_count": null,
-      "keyword_hit_counts": {},
-      "best_keyword": null,
+      "dom_ready_state": "interactive",
+      "hit_count": 1,
+      "keyword_hit_counts": {
+        "GR IV HDF": 1,
+        "GR4 HDF": 0,
+        "RICOH GR IV HDF": 1
+      },
+      "best_keyword": "GR IV HDF",
       "has_buyback_context": false,
-      "sales_price_sample": null,
-      "buyback_link_candidates": [],
-      "buyback_page_url": null,
-      "buyback_page_html_size": 0,
-      "buyback_page_text_preview": "",
+      "sales_price_sample": 223100,
+      "buyback_link_candidates": [
+        {
+          "text": "買取金額を調べる",
+          "href": "/shop/purchase/list.aspx"
+        },
+        {
+          "text": "フジヤカメラの買取・下取り",
+          "href": "/shop/kaitori/pc/0c-kaitor/"
+        },
+        {
+          "text": "お得な特典",
+          "href": "/shop/kaitori/pc/0c-kaitor/#tokuten"
+        },
+        {
+          "text": "買取に関するお悩みを解決",
+          "href": "/shop/kaitori/pc/0c-kaitor/#onayami"
+        },
+        {
+          "text": "選ばれ続ける理由",
+          "href": "/shop/kaitori/pc/0c-kaitor/#because"
+        },
+        {
+          "text": "店頭買取のご案内",
+          "href": "/shop/kaitori/pc/0c-kaitor/#shop"
+        },
+        {
+          "text": "お問い合わせ",
+          "href": "/shop/kaitori/pc/0c-kaitor/#contact"
+        },
+        {
+          "text": "買取検索",
+          "href": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx"
+        },
+        {
+          "text": "Sell買取りについて",
+          "href": "/shop/kaitori/pc/0c-kaitor/"
+        },
+        {
+          "text": "条件をリセット",
+          "href": "/shop/purchase/list.aspx"
+        },
+        {
+          "text": "＜全品対象＞買取金額10%アップ とは",
+          "href": "/shop/kaitori/pg/1c-ck-kaitori/"
+        },
+        {
+          "text": "＜全品対象・下取限定＞買取金額15%アップ とは",
+          "href": "/shop/kaitori/pg/1c-ck-shitadori/"
+        },
+        {
+          "text": "",
+          "href": "/shop/purchase/list.aspx?search=%e6%a4%9c%e7%b4%a2"
+        },
+        {
+          "text": "おすすめ順",
+          "href": "/shop/purchase/list.aspx?sort=0&search=%e6%a4%9c%e7%b4%a2&keyword=GR+IV+HDF"
+        },
+        {
+          "text": "新着順",
+          "href": "/shop/purchase/list.aspx?sort=1&search=%e6%a4%9c%e7%b4%a2&keyword=GR+IV+HDF"
+        },
+        {
+          "text": "商品名",
+          "href": "/shop/purchase/list.aspx?sort=2&search=%e6%a4%9c%e7%b4%a2&keyword=GR+IV+HDF"
+        },
+        {
+          "text": "発売日",
+          "href": "/shop/purchase/list.aspx?sort=3&search=%e6%a4%9c%e7%b4%a2&keyword=GR+IV+HDF"
+        },
+        {
+          "text": "価格(安い順)",
+          "href": "/shop/purchase/list.aspx?sort=4&search=%e6%a4%9c%e7%b4%a2&keyword=GR+IV+HDF"
+        },
+        {
+          "text": "価格(高い順)",
+          "href": "/shop/purchase/list.aspx?sort=5&search=%e6%a4%9c%e7%b4%a2&keyword=GR+IV+HDF"
+        },
+        {
+          "text": "新着順+商品名",
+          "href": "/shop/purchase/list.aspx?sort=6&search=%e6%a4%9c%e7%b4%a2&keyword=GR+IV+HDF"
+        }
+      ],
+      "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=GR%20IV%20HDF&search=検索",
+      "buyback_page_html_size": 201358,
+      "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null
     },
@@ -360,25 +975,25 @@
       "shop_id": "src_kitamura",
       "status": "FAILED",
       "price": 0,
-      "reason": "http_error",
+      "reason": "site_blocked",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": false,
       "extracted_price": null,
-      "playwright_attempted": false,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
+      "playwright_attempted": true,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 453266,
       "selector_waited": false,
       "extraction_strategy": "requests",
       "body_text_preview": "",
       "matched_selectors": [],
       "selector_candidates": [],
-      "iframe_count": 0,
+      "iframe_count": 1,
       "shadow_dom_detected": false,
-      "dom_ready_state": "",
+      "dom_ready_state": "complete",
       "hit_count": null,
       "keyword_hit_counts": {},
       "best_keyword": null,
@@ -386,7 +1001,7 @@
       "sales_price_sample": null,
       "buyback_link_candidates": [],
       "buyback_page_url": null,
-      "buyback_page_html_size": 0,
+      "buyback_page_html_size": 453266,
       "buyback_page_text_preview": "",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null
@@ -403,18 +1018,18 @@
       "js_required": false,
       "selector_found": false,
       "extracted_price": null,
-      "playwright_attempted": false,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
+      "playwright_attempted": true,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 302,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.925ed617.1780489280.29e6cbfd\n\nhttps://errors.edgesuite.net/18.925ed617.1780489280.29e6cbfd",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
       "shadow_dom_detected": false,
-      "dom_ready_state": "",
+      "dom_ready_state": "complete",
       "hit_count": null,
       "keyword_hit_counts": {},
       "best_keyword": null,
@@ -422,8 +1037,8 @@
       "sales_price_sample": null,
       "buyback_link_candidates": [],
       "buyback_page_url": null,
-      "buyback_page_html_size": 0,
-      "buyback_page_text_preview": "",
+      "buyback_page_html_size": 302,
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.925ed617.1780489280.29e6cbfd\n\nhttps://errors.edgesuite.net/18.925ed617.1780489280.29e6cbfd",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null
     },
@@ -432,34 +1047,238 @@
       "shop_id": "src_fujiya",
       "status": "FAILED",
       "price": 0,
-      "reason": "price_not_found",
+      "reason": "sales_catalog_no_buyback",
       "html_saved": true,
       "html_size": 313625,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": false,
       "extracted_price": null,
-      "playwright_attempted": false,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
-      "selector_waited": false,
+      "playwright_attempted": true,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 201469,
+      "selector_waited": true,
       "extraction_strategy": "requests",
-      "body_text_preview": "",
-      "matched_selectors": [],
-      "selector_candidates": [],
-      "iframe_count": 0,
-      "shadow_dom_detected": false,
-      "dom_ready_state": "",
-      "hit_count": null,
-      "keyword_hit_counts": {},
-      "best_keyword": null,
+      "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
+      "matched_selectors": [
+        {
+          "selector": "table td",
+          "hits": 6
+        },
+        {
+          "selector": ".price",
+          "hits": 6
+        },
+        {
+          "selector": "[class*='price']",
+          "hits": 6
+        }
+      ],
+      "selector_candidates": [
+        {
+          "selector": "table td",
+          "text": "￥223,100",
+          "price": 223100,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": ".price",
+          "text": "￥223,100",
+          "price": 223100,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥223,100",
+          "price": 223100,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": "table td",
+          "text": "￥221,950",
+          "price": 221950,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": ".price",
+          "text": "￥221,950",
+          "price": 221950,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥221,950",
+          "price": 221950,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": "table td",
+          "text": "￥213,400",
+          "price": 213400,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": ".price",
+          "text": "￥213,400",
+          "price": 213400,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥213,400",
+          "price": 213400,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": "table td",
+          "text": "￥212,300",
+          "price": 212300,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": ".price",
+          "text": "￥212,300",
+          "price": 212300,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥212,300",
+          "price": 212300,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": "table td",
+          "text": "￥194,000",
+          "price": 194000,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": ".price",
+          "text": "￥194,000",
+          "price": 194000,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥194,000",
+          "price": 194000,
+          "near_kw": false,
+          "near_buyback": false
+        }
+      ],
+      "iframe_count": 1,
+      "shadow_dom_detected": true,
+      "dom_ready_state": "interactive",
+      "hit_count": 1,
+      "keyword_hit_counts": {
+        "GR IV Monochrome": 1,
+        "GR IV モノクローム": 1,
+        "GR4 モノクロ": 0
+      },
+      "best_keyword": "GR IV Monochrome",
       "has_buyback_context": false,
-      "sales_price_sample": null,
-      "buyback_link_candidates": [],
-      "buyback_page_url": null,
-      "buyback_page_html_size": 0,
-      "buyback_page_text_preview": "",
+      "sales_price_sample": 223100,
+      "buyback_link_candidates": [
+        {
+          "text": "買取金額を調べる",
+          "href": "/shop/purchase/list.aspx"
+        },
+        {
+          "text": "フジヤカメラの買取・下取り",
+          "href": "/shop/kaitori/pc/0c-kaitor/"
+        },
+        {
+          "text": "お得な特典",
+          "href": "/shop/kaitori/pc/0c-kaitor/#tokuten"
+        },
+        {
+          "text": "買取に関するお悩みを解決",
+          "href": "/shop/kaitori/pc/0c-kaitor/#onayami"
+        },
+        {
+          "text": "選ばれ続ける理由",
+          "href": "/shop/kaitori/pc/0c-kaitor/#because"
+        },
+        {
+          "text": "店頭買取のご案内",
+          "href": "/shop/kaitori/pc/0c-kaitor/#shop"
+        },
+        {
+          "text": "お問い合わせ",
+          "href": "/shop/kaitori/pc/0c-kaitor/#contact"
+        },
+        {
+          "text": "買取検索",
+          "href": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx"
+        },
+        {
+          "text": "Sell買取りについて",
+          "href": "/shop/kaitori/pc/0c-kaitor/"
+        },
+        {
+          "text": "条件をリセット",
+          "href": "/shop/purchase/list.aspx"
+        },
+        {
+          "text": "＜全品対象＞買取金額10%アップ とは",
+          "href": "/shop/kaitori/pg/1c-ck-kaitori/"
+        },
+        {
+          "text": "＜全品対象・下取限定＞買取金額15%アップ とは",
+          "href": "/shop/kaitori/pg/1c-ck-shitadori/"
+        },
+        {
+          "text": "",
+          "href": "/shop/purchase/list.aspx?search=%e6%a4%9c%e7%b4%a2"
+        },
+        {
+          "text": "おすすめ順",
+          "href": "/shop/purchase/list.aspx?sort=0&search=%e6%a4%9c%e7%b4%a2&keyword=GR+IV+Monochrome"
+        },
+        {
+          "text": "新着順",
+          "href": "/shop/purchase/list.aspx?sort=1&search=%e6%a4%9c%e7%b4%a2&keyword=GR+IV+Monochrome"
+        },
+        {
+          "text": "商品名",
+          "href": "/shop/purchase/list.aspx?sort=2&search=%e6%a4%9c%e7%b4%a2&keyword=GR+IV+Monochrome"
+        },
+        {
+          "text": "発売日",
+          "href": "/shop/purchase/list.aspx?sort=3&search=%e6%a4%9c%e7%b4%a2&keyword=GR+IV+Monochrome"
+        },
+        {
+          "text": "価格(安い順)",
+          "href": "/shop/purchase/list.aspx?sort=4&search=%e6%a4%9c%e7%b4%a2&keyword=GR+IV+Monochrome"
+        },
+        {
+          "text": "価格(高い順)",
+          "href": "/shop/purchase/list.aspx?sort=5&search=%e6%a4%9c%e7%b4%a2&keyword=GR+IV+Monochrome"
+        },
+        {
+          "text": "新着順+商品名",
+          "href": "/shop/purchase/list.aspx?sort=6&search=%e6%a4%9c%e7%b4%a2&keyword=GR+IV+Monochrome"
+        }
+      ],
+      "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=GR%20IV%20Monochrome&search=検索",
+      "buyback_page_html_size": 201469,
+      "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null
     },
@@ -468,25 +1287,25 @@
       "shop_id": "src_kitamura",
       "status": "FAILED",
       "price": 0,
-      "reason": "http_error",
+      "reason": "site_blocked",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": false,
       "extracted_price": null,
-      "playwright_attempted": false,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
+      "playwright_attempted": true,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 453266,
       "selector_waited": false,
       "extraction_strategy": "requests",
       "body_text_preview": "",
       "matched_selectors": [],
       "selector_candidates": [],
-      "iframe_count": 0,
+      "iframe_count": 1,
       "shadow_dom_detected": false,
-      "dom_ready_state": "",
+      "dom_ready_state": "complete",
       "hit_count": null,
       "keyword_hit_counts": {},
       "best_keyword": null,
@@ -494,7 +1313,7 @@
       "sales_price_sample": null,
       "buyback_link_candidates": [],
       "buyback_page_url": null,
-      "buyback_page_html_size": 0,
+      "buyback_page_html_size": 453266,
       "buyback_page_text_preview": "",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null
@@ -511,18 +1330,18 @@
       "js_required": false,
       "selector_found": false,
       "extracted_price": null,
-      "playwright_attempted": false,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
+      "playwright_attempted": true,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 300,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.875ed617.1780489398.7c68b23\n\nhttps://errors.edgesuite.net/18.875ed617.1780489398.7c68b23",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
       "shadow_dom_detected": false,
-      "dom_ready_state": "",
+      "dom_ready_state": "complete",
       "hit_count": null,
       "keyword_hit_counts": {},
       "best_keyword": null,
@@ -530,8 +1349,8 @@
       "sales_price_sample": null,
       "buyback_link_candidates": [],
       "buyback_page_url": null,
-      "buyback_page_html_size": 0,
-      "buyback_page_text_preview": "",
+      "buyback_page_html_size": 300,
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.875ed617.1780489398.7c68b23\n\nhttps://errors.edgesuite.net/18.875ed617.1780489398.7c68b23",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null
     },
@@ -540,34 +1359,239 @@
       "shop_id": "src_fujiya",
       "status": "FAILED",
       "price": 0,
-      "reason": "price_not_found",
+      "reason": "sales_catalog_no_buyback",
       "html_saved": true,
       "html_size": 317634,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": false,
       "extracted_price": null,
-      "playwright_attempted": false,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
-      "selector_waited": false,
+      "playwright_attempted": true,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 205941,
+      "selector_waited": true,
       "extraction_strategy": "requests",
-      "body_text_preview": "",
-      "matched_selectors": [],
-      "selector_candidates": [],
-      "iframe_count": 0,
+      "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
+      "matched_selectors": [
+        {
+          "selector": "table td",
+          "hits": 18
+        },
+        {
+          "selector": ".price",
+          "hits": 18
+        },
+        {
+          "selector": "[class*='price']",
+          "hits": 18
+        }
+      ],
+      "selector_candidates": [
+        {
+          "selector": "table td",
+          "text": "￥174,800",
+          "price": 174800,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": ".price",
+          "text": "￥174,800",
+          "price": 174800,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥174,800",
+          "price": 174800,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": "table td",
+          "text": "￥173,650",
+          "price": 173650,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": ".price",
+          "text": "￥173,650",
+          "price": 173650,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥173,650",
+          "price": 173650,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": "table td",
+          "text": "￥167,200",
+          "price": 167200,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": ".price",
+          "text": "￥167,200",
+          "price": 167200,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥167,200",
+          "price": 167200,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": "table td",
+          "text": "￥166,100",
+          "price": 166100,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": ".price",
+          "text": "￥166,100",
+          "price": 166100,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥166,100",
+          "price": 166100,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": "table td",
+          "text": "￥152,000",
+          "price": 152000,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": ".price",
+          "text": "￥152,000",
+          "price": 152000,
+          "near_kw": false,
+          "near_buyback": false
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥152,000",
+          "price": 152000,
+          "near_kw": false,
+          "near_buyback": false
+        }
+      ],
+      "iframe_count": 1,
       "shadow_dom_detected": false,
-      "dom_ready_state": "",
-      "hit_count": null,
-      "keyword_hit_counts": {},
-      "best_keyword": null,
+      "dom_ready_state": "interactive",
+      "hit_count": 3,
+      "keyword_hit_counts": {
+        "GR IIIx": 3,
+        "GR3x": 0,
+        "リコー GR IIIx": 3,
+        "RICOH GR IIIx": 3
+      },
+      "best_keyword": "GR IIIx",
       "has_buyback_context": false,
-      "sales_price_sample": null,
-      "buyback_link_candidates": [],
-      "buyback_page_url": null,
-      "buyback_page_html_size": 0,
-      "buyback_page_text_preview": "",
+      "sales_price_sample": 174800,
+      "buyback_link_candidates": [
+        {
+          "text": "買取金額を調べる",
+          "href": "/shop/purchase/list.aspx"
+        },
+        {
+          "text": "フジヤカメラの買取・下取り",
+          "href": "/shop/kaitori/pc/0c-kaitor/"
+        },
+        {
+          "text": "お得な特典",
+          "href": "/shop/kaitori/pc/0c-kaitor/#tokuten"
+        },
+        {
+          "text": "買取に関するお悩みを解決",
+          "href": "/shop/kaitori/pc/0c-kaitor/#onayami"
+        },
+        {
+          "text": "選ばれ続ける理由",
+          "href": "/shop/kaitori/pc/0c-kaitor/#because"
+        },
+        {
+          "text": "店頭買取のご案内",
+          "href": "/shop/kaitori/pc/0c-kaitor/#shop"
+        },
+        {
+          "text": "お問い合わせ",
+          "href": "/shop/kaitori/pc/0c-kaitor/#contact"
+        },
+        {
+          "text": "買取検索",
+          "href": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx"
+        },
+        {
+          "text": "Sell買取りについて",
+          "href": "/shop/kaitori/pc/0c-kaitor/"
+        },
+        {
+          "text": "条件をリセット",
+          "href": "/shop/purchase/list.aspx"
+        },
+        {
+          "text": "＜全品対象＞買取金額10%アップ とは",
+          "href": "/shop/kaitori/pg/1c-ck-kaitori/"
+        },
+        {
+          "text": "＜全品対象・下取限定＞買取金額15%アップ とは",
+          "href": "/shop/kaitori/pg/1c-ck-shitadori/"
+        },
+        {
+          "text": "",
+          "href": "/shop/purchase/list.aspx?search=%e6%a4%9c%e7%b4%a2"
+        },
+        {
+          "text": "おすすめ順",
+          "href": "/shop/purchase/list.aspx?sort=0&search=%e6%a4%9c%e7%b4%a2&keyword=GR+IIIx"
+        },
+        {
+          "text": "新着順",
+          "href": "/shop/purchase/list.aspx?sort=1&search=%e6%a4%9c%e7%b4%a2&keyword=GR+IIIx"
+        },
+        {
+          "text": "商品名",
+          "href": "/shop/purchase/list.aspx?sort=2&search=%e6%a4%9c%e7%b4%a2&keyword=GR+IIIx"
+        },
+        {
+          "text": "発売日",
+          "href": "/shop/purchase/list.aspx?sort=3&search=%e6%a4%9c%e7%b4%a2&keyword=GR+IIIx"
+        },
+        {
+          "text": "価格(安い順)",
+          "href": "/shop/purchase/list.aspx?sort=4&search=%e6%a4%9c%e7%b4%a2&keyword=GR+IIIx"
+        },
+        {
+          "text": "価格(高い順)",
+          "href": "/shop/purchase/list.aspx?sort=5&search=%e6%a4%9c%e7%b4%a2&keyword=GR+IIIx"
+        },
+        {
+          "text": "新着順+商品名",
+          "href": "/shop/purchase/list.aspx?sort=6&search=%e6%a4%9c%e7%b4%a2&keyword=GR+IIIx"
+        }
+      ],
+      "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=GR%20IIIx&search=検索",
+      "buyback_page_html_size": 205941,
+      "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null
     },
@@ -576,25 +1600,25 @@
       "shop_id": "src_kitamura",
       "status": "FAILED",
       "price": 0,
-      "reason": "http_error",
+      "reason": "site_blocked",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": false,
       "extracted_price": null,
-      "playwright_attempted": false,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
+      "playwright_attempted": true,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 453266,
       "selector_waited": false,
       "extraction_strategy": "requests",
       "body_text_preview": "",
       "matched_selectors": [],
       "selector_candidates": [],
-      "iframe_count": 0,
+      "iframe_count": 1,
       "shadow_dom_detected": false,
-      "dom_ready_state": "",
+      "dom_ready_state": "complete",
       "hit_count": null,
       "keyword_hit_counts": {},
       "best_keyword": null,
@@ -602,7 +1626,7 @@
       "sales_price_sample": null,
       "buyback_link_candidates": [],
       "buyback_page_url": null,
-      "buyback_page_html_size": 0,
+      "buyback_page_html_size": 453266,
       "buyback_page_text_preview": "",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null

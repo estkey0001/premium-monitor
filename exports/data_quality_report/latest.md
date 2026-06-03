@@ -1,4 +1,4 @@
-# データ取得品質レポート（2026-06-03 20:52 JST）
+# データ取得品質レポート（2026-06-03 21:57 JST）
 
 ## 取得成功率
 - 全対象店舗数: 16
@@ -10,8 +10,8 @@
 - 前回成功率: 34.5%
 - 今回成功率: 34.5%
 - 変化: 0.0pt（横ばい）
-- 7日移動平均: 38.4%
-- 主要失敗理由 TOP5: product_not_listed 8, rate_limited_429 6, site_blocked 6, price_not_found 6, http_404 4
+- 7日移動平均: 37.6%
+- 主要失敗理由 TOP5: rate_limited_429 6, site_blocked 6, price_not_found 6, timeout 5, http_404 4
 
 ## 店舗別成功率（低い順）
 - 2ndstreet（optional）: 0%（OK 0/失敗 4・price_not_found）
@@ -20,7 +20,7 @@
 - geo_mobile（optional）: 0%（OK 0/失敗 4・site_blocked）
 - hardoff（optional）: 0%（OK 0/失敗 2・http_404）
 - janpara（optional）: 0%（OK 0/失敗 6・rate_limited_429）
-- mobile_ichiban: 0%（OK 0/失敗 5・product_not_listed）
+- mobile_ichiban: 0%（OK 0/失敗 5・timeout）
 - pasoko（optional）: 0%（OK 0/失敗 2・product_not_listed）
 - sofmap（optional）: 0%（OK 0/失敗 2・service_unavailable）
 - surugaya（optional）: 0%（OK 0/失敗 2・site_blocked）
@@ -36,43 +36,44 @@
 - iphone17pro512: 50.0%
 
 ## 連続失敗店舗（2回以上）
-- 2ndstreet: 13回連続
-- bookoff: 13回連続
-- dosupara: 13回連続
-- geo_mobile: 13回連続
-- hardoff: 13回連続
-- janpara: 13回連続
-- pasoko: 13回連続
-- sofmap: 13回連続
-- surugaya: 13回連続
-- tsutaya: 13回連続
-- mobile_ichiban: 2回連続
+- 2ndstreet: 14回連続
+- bookoff: 14回連続
+- dosupara: 14回連続
+- geo_mobile: 14回連続
+- hardoff: 14回連続
+- janpara: 14回連続
+- pasoko: 14回連続
+- sofmap: 14回連続
+- surugaya: 14回連続
+- tsutaya: 14回連続
+- mobile_ichiban: 3回連続
 
 ## 改善優先順位（required店舗）
-1. mobile_ichiban（失敗5 / product_not_listed）
+1. mobile_ichiban（失敗5 / timeout）
 
 ## 失敗理由（内訳）
-- product_not_listed: 8件
 - rate_limited_429: 6件
 - site_blocked: 6件
 - price_not_found: 6件
+- timeout: 5件
 - http_404: 4件
 - not_supported: 4件
+- product_not_listed: 3件
 - service_unavailable: 2件
 
 ## 有効データ量（新品・未使用 / 14日以内 / price>0）
 - 有効買取データを持つ商品数: 11
-  - prod_iphone17pro_256: 32店舗
-  - prod_iphone17pro_512: 30店舗
-  - prod_iphone17pm_256: 30店舗
-  - prod_iphone17pm_512: 28店舗
-  - prod_switch2: 28店舗
-  - prod_ps5_pro: 25店舗
   - prod_x100vi: 6店舗
   - prod_gr4: 6店舗
   - prod_gr4_hdf: 4店舗
   - prod_gr4_mono: 4店舗
   - prod_gr3x: 4店舗
+  - prod_iphone17pro_256: 4店舗
+  - prod_iphone17pro_512: 4店舗
+  - prod_iphone17pm_256: 3店舗
+  - prod_iphone17pm_512: 3店舗
+  - prod_switch2: 3店舗
+  - prod_ps5_pro: 2店舗
 
 ## ランキングに使えたデータ数
 - Beginner: 4 件

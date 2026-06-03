@@ -185,13 +185,13 @@
   ✅ [ipad_not_in_other] iPad は「その他」欄に混入していない
   ✅ [airpods_not_in_smartphone] AirPods はスマートフォン欄に混入していない
   ⚠️ [applewatch_in_wearable_section] Apple Watch がウェアラブル欄に見つからない（データなし or genre設定を確認）
-  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-06-04T01:05:20+09:00）
+  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-06-04T02:09:05+09:00）
   ✅ [suspicious_price_format] suspicious_prices 形式OK（suspicious_price なし）
   ✅ [fetch_failed_has_reason] fetch_failed 36件すべてに reason あり
   ✅ [collector_report_html_exists] docs/collector_report.html 存在
   ✅ [collector_report_link_in_lp] LP内に collector_report.html へのリンクがある
   ✅ [fetch_failed_report_link] 取得失敗32件 / suspicious0件 → 警告バーが表示されている
-  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 14件存在する: ['iphone17pm256', 'iphone17pm512', 'iphone17pro256', 'iphone17pro512']
+  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 14件存在する: ['iphone17pm256', 'iphone17pm512', 'iphone17pro512', 'iphone17pro256']
   ✅ [beginner_page_auto_scraped_exists] 自動取得 OK 19件 / total 55件
   ✅ [shop_name_no_vertical_wrap] shop-name-col に word-break:keep-all が設定されている
   ✅ [iphone17pro256_price_scraped] iPhone 17 Pro 256GB の価格取得成功: ['kaitori_shouten', 'kaitori_itchome', 'iosys', 'netoff']
@@ -487,7 +487,7 @@
   ✅ [lottery_daily_update] #480 抽選情報が毎日更新される（daily_lp.yml に update_lottery_events ステップ）
   ✅ [fetch_failed_reason_visible] #481 fetch_failed の理由が LP またはレポートに表示される
   ✅ [ranking_empty_reason] #482 beginner ランキングが0件なら理由が表示される（beginner=4）
-  ✅ [sedori_empty_reason] #483 sedori ルートが0件なら理由が表示される（routes=28）
+  ✅ [sedori_empty_reason] #483 sedori ルートが0件なら理由が表示される（routes=26）
   ✅ [overseas_stale_excluded] #484 overseas stale は主計算から除外する方針が明示されている
   ✅ [ebay_app_id_warning] #485 EBAY_APP_ID 未設定時に明確な warning を出す
   ✅ [camera_manual_14d_excluded] #486 手動データ（camera含む）が14日超なら利益判定から除外される（LP・ranking）
@@ -502,7 +502,7 @@
   ✅ [workflow_commits_quality_reports] #495 daily_lp.yml が data_quality_report / camera_buyback_status をコミットする
   ✅ [data_quality_advanced_metrics] #496 data_quality に 7日移動平均/店舗別/商品別成功率/連続失敗/改善優先順位がある
   ✅ [lp_camera_buyback_state] #497 LP に『カメラ買取: 手動確認 fallback中 / 自動取得』状況が表示される
-  ⚠️ [camera_auto_scraped_in_lp] #498 camera の auto_scraped 価格があれば LP に反映される ← 現在 auto_scraped カメラ価格なし（manual_today fallback中・取得成功時に自動反映）
+  ✅ [camera_auto_scraped_in_lp] #498 camera の auto_scraped 価格があれば LP に反映される
   ✅ [auto_scraped_priority_over_manual] #499 manual_today より auto_scraped が優先される（買取比較の優先度SQL）
   ✅ [camera_debug_html_saved] #500 camera debug HTML 保存（--debug-html / exports/debug_camera/）
   ✅ [camera_status_diagnostics] #501 camera_buyback_status に診断項目（html_saved/size/cloudflare/js_required/selector_found/extracted_price + 店舗別診断）がある
@@ -526,9 +526,9 @@
   ✅ [camera_confidence_classification] #519 strict一致の auto_scraped は confidence で分類（high）して保存
   ✅ [low_confidence_excluded] #520 low confidence の買取価格は主計算（enrich/比較）に使われない
   ✅ [manual_overprice_recheck_badge] #521 manual_today が auto より大幅に高い場合『手動価格・要確認』を表示
-  ⚠️ [fujiya_auto_scraped_present] #522 Fujiya の auto_scraped 買取価格が存在する（OK=0件） ← Fujiya auto_scraped が0件（取得失敗日は正常）
+  ✅ [fujiya_auto_scraped_present] #522 Fujiya の auto_scraped 買取価格が存在する（OK=4件）
 
-  Errors: 0 | Warnings: 19 | OK: 506
+  Errors: 0 | Warnings: 17 | OK: 508
 
   ✅ Deploy check PASSED
 ============================================================

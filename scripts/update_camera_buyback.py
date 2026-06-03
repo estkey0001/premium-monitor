@@ -548,6 +548,7 @@ def main() -> int:
                 try:
                     pid = "prod_" + alias if not alias.startswith("prod_") else alias
                     bp = BuybackPriceModel(
+                        id=f"camera_auto_{alias}_{shop_id}",  # 決定論的ID（再実行で同一行を更新）
                         product_id=pid, shop_id=shop_id, shop_name=shop_name,
                         buyback_price=price, condition="new_unopened", buyback_url=url,
                         observed_at=now, data_source="auto_scraped",

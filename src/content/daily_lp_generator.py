@@ -1894,6 +1894,12 @@ a[href], button, [role="tab"], [role="button"],
 .shop-card .shop-link-col .shop-check-btn.best {{ background: #00A37A; box-shadow: 0 2px 6px rgba(0,163,122,0.25); }}
 .shop-card .shop-link-col .shop-check-btn:hover {{ filter: brightness(1.05); }}
 .shop-card.shop-row-failed {{ opacity: 0.92; background: #FAFAFB; }}
+.manual-recheck-badge {{
+  display: inline-block; margin-left: 6px; padding: 0 6px;
+  font-size: 0.62rem; font-weight: 700; color: #99502A;
+  background: #FFF3E6; border: 1px solid #F0CDA0; border-radius: 999px;
+  vertical-align: middle;
+}}
 .shop-card.shop-row-failed .shop-price-col {{ font-size: 0.92rem; font-weight: 600; color: var(--ink3); }}
 .shop-card.shop-row-failed .shop-link-col .shop-check-btn {{
   background: #EEF0F5; color: #5B6677; box-shadow: none;
@@ -6398,11 +6404,20 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             _failed_rows  = [r for r in buyback_rows if r.get('data_source') == 'fetch_failed']
             n_shops = len(_normal_rows) + len(_failed_rows)
             _compare_shop_count = len(_normal_rows)
+            # auto_scraped の最高買取価格（手動価格の過大検出に使用：Task 2）
+            _auto_max = max((r.get('buyback_price', 0) or 0) for r in _normal_rows
+                            if r.get('data_source') == 'auto_scraped') if any(
+                            r.get('data_source') == 'auto_scraped' for r in _normal_rows) else 0
 
             def _render_shop_row(r, rank_counter):
                 """1店舗ぶんの shop-row HTML を返す。rank_counter=None なら取得失敗行。"""
                 bp = r.get('buyback_price', 0)
                 sname = _esc(r.get('shop_name', ''))
+                # 手動価格が auto より大幅(>1.4倍)に高い場合は「手動価格・要確認」バッジ（Task 2）
+                _ds_row = r.get('data_source', '')
+                if (str(_ds_row).startswith('manual') and _auto_max > 0
+                        and (r.get('buyback_price', 0) or 0) > _auto_max * 1.4):
+                    sname += '<span class="manual-recheck-badge">手動価格・要確認</span>'
                 url_val = r.get('buyback_url', '') or r.get('url', '')
                 freshness = self._freshness_label(r.get('observed_at', ''), r.get('data_source', 'manual_today'))
                 source_badge = self._data_source_badge(r.get('data_source', ''), r.get('shop_name', ''))

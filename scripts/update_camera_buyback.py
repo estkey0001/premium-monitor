@@ -66,6 +66,40 @@ FUJIYA_KEYWORD_VARIANTS = {
 # 優先実装対象（Task 2: まず3店舗に絞る）
 PRIORITY_SHOPS = {"src_mapcamera", "src_fujiya", "src_kitamura"}
 
+
+def _strict_model_match(item_text: str, alias: str) -> bool:
+    """商品名テキストが対象機種に厳密一致するか（Task 1: 機種厳密マッチ）。
+    一致しない行の価格は採用しない。"""
+    raw = item_text or ""
+    t = raw.upper().replace(" ", "").replace("　", "")
+    has_mono = ("MONOCHROME" in t) or ("モノクローム" in raw) or ("モノクロ" in raw)
+    if alias == "x100vi":
+        return "X100VI" in t
+    if alias == "gr4_hdf":
+        return ("GRIV" in t or "GR4" in t) and "HDF" in t
+    if alias == "gr4_mono":
+        return ("GRIV" in t or "GR4" in t) and has_mono
+    if alias == "gr3x":
+        return ("IIIX" in t) or ("GR3X" in t) or ("GRIIIX" in t)
+    if alias == "gr4":
+        # GR IV 無印：HDF / Monochrome / IIIx を含まない GR IV
+        return ("GRIV" in t or "GR4" in t) and ("HDF" not in t) and (not has_mono) and ("IIIX" not in t)
+    return False
+
+
+def _select_camera_buyback(candidates: list, alias: str):
+    """買取候補から機種厳密一致の価格を選ぶ。
+    戻り値: (price, confidence, matched_item_text)
+      strict model match + 買取文脈 + price>0 → high
+      strict 一致が無ければ採用しない（None）= 販売/別機種価格の誤採用を防ぐ。
+    """
+    buyback = [c for c in (candidates or []) if c.get("near_buyback") and (c.get("price", 0) or 0) > 0]
+    strict = [c for c in buyback if _strict_model_match(c.get("item_text", ""), alias)]
+    if strict:
+        best = max(strict, key=lambda c: c.get("price", 0))
+        return best["price"], "high", best.get("item_text", "")
+    return None, None, ""
+
 # 対象買取店（shop_id, 表示名, 買取検索URLテンプレート {kw}=URLエンコード済キーワード）
 CAMERA_SHOPS = [
     # マップカメラ 買取検索（新品/新品同様の買取価格が掲載される検索ページ）
@@ -217,18 +251,18 @@ _PW_DOM_PROBE_JS = r"""
       const nearKw = KW.some(k => t.includes(k));
       // 「買取/査定」の文脈か（要素or祖先テキスト）— 販売価格と区別するため判定。
       // フジヤ買取リストは class に「kitr」(=買取)、ラベルは「基準査定額/買取申し込み」。
-      let ctx = t;
+      let ctx = t; let item_text = "";
       try {
         if (el.closest) {
-          // kitr/kaitori/satei/assess クラス、または近傍の li/box/list コンテナを参照
+          // 商品アイテムのコンテナ（list/box）を参照し、商品名テキストを取得
           const c = el.closest("[class*='kitr'],[class*='kaitori'],[class*='satei'],[class*='assess']")
                  || el.closest("li,[class*='box'],[class*='list'],[class*='item']");
-          if (c) ctx += " " + (c.textContent||"").slice(0,400);
+          if (c) { const ct=(c.textContent||""); ctx += " " + ct.slice(0,400); item_text = ct.replace(/\s+/g," ").trim().slice(0,160); }
         }
       } catch(e){}
       const nearBuyback = /買取|査定|基準査定額|買取申し込み/.test(ctx)
                         || /kitr|kaitori|satei/i.test(el.className||"");
-      cands.push({selector: sel, text: t.slice(0,60), price: v, near_kw: nearKw, near_buyback: nearBuyback});
+      cands.push({selector: sel, text: t.slice(0,60), price: v, near_kw: nearKw, near_buyback: nearBuyback, item_text: item_text});
     }
     if (hit>0) out.matched_selectors.push({selector: sel, hits: hit});
   }
@@ -413,7 +447,8 @@ def main() -> int:
              "has_buyback_context": False, "sales_price_sample": None,
              "buyback_link_candidates": [], "buyback_page_url": None,
              "buyback_page_html_size": 0, "buyback_page_text_preview": "",
-             "buyback_price_candidates": [], "buyback_extracted_price": None}
+             "buyback_price_candidates": [], "buyback_extracted_price": None,
+             "confidence": None, "matched_item": ""}
         d.update(kw)
         return d
 
@@ -449,42 +484,51 @@ def main() -> int:
 
             _kw_hit_counts = {}
             _best_keyword = None
+            _confidence = "medium"   # auto_scraped の confidence（strict一致でhigh）
+            _matched_item = ""
             # 2) requests で価格が取れない/失敗 → Playwright fallback（--playwright 時）
             if (not price) and args.playwright and shop_id in _PW_SHOP_CONFIG:
                 _cfg = _PW_SHOP_CONFIG[shop_id]
-                # フジヤ：複数キーワードを試し、ヒット数/価格が最良のものを採用
+                # フジヤ：複数キーワードを試し、機種厳密一致の買取価格が取れるものを採用
                 if shop_id == "src_fujiya" and alias in FUJIYA_KEYWORD_VARIANTS:
                     _best = None
                     for _var in FUJIYA_KEYWORD_VARIANTS[alias]:
-                        # 買取専用ページ /shop/purchase/list.aspx（form: keyword/search/sort/style）。
-                        # 検索実行には submit パラメータ search=検索 が必須（無いと0件のカテゴリ表示）。
+                        # 買取専用ページ /shop/purchase/list.aspx（search=検索 必須）
                         _vurl = ("https://www.fujiya-camera.co.jp/shop/purchase/list.aspx"
                                  f"?keyword={_up.quote(_var)}&search=検索")
                         _try = _fetch_with_playwright(_vurl, shop_id, alias, _dbg, shot_dir=_shot)
                         _try["buyback_page_url"] = _vurl
                         _hc = _try.get("hit_count")
                         _kw_hit_counts[_var] = _hc
-                        # 買取文脈の価格が取れた or ヒット数が最大 の候補を保持
-                        _score = (1 if _try.get("extracted_price") else 0, _hc or 0)
+                        # 機種厳密一致の買取価格を選定（Task 1）
+                        _sp, _sconf, _sitem = _select_camera_buyback(
+                            _try.get("selector_candidates", []), alias)
+                        _try["strict_price"] = _sp
+                        # 厳密一致価格が取れた or ヒット数最大 の候補を保持
+                        _score = (1 if _sp else 0, _hc or 0)
                         if _best is None or _score > _best[0]:
-                            _best = (_score, _var, _try)
-                        if _try.get("extracted_price"):
-                            break  # 買取価格取得できたら確定
+                            _best = (_score, _var, _try, _sp, _sconf, _sitem)
+                        if _sp:
+                            break  # 厳密一致の買取価格取得で確定
                     if _best is not None:
                         _best_keyword = _best[1]
                         _pw = _best[2]
+                        if _best[3]:
+                            price = _best[3]; _confidence = _best[4] or "high"; _matched_item = _best[5]
+                            html = _pw.get("html") or html
+                            _size = _pw.get("rendered_html_size", _size)
+                            _strategy = _pw.get("strategy", "playwright")
                 else:
                     _pw_url = _cfg.get("search_url", url).format(kw=kw_enc, mkw=mkw_enc)
                     _pw = _fetch_with_playwright(_pw_url, shop_id, alias, _dbg, shot_dir=_shot)
-                if _pw.get("html"):
-                    _ph = _pw["html"]
-                    # 「買取文脈」で抽出できた価格のみ採用（販売価格の誤抽出を防ぐ）。
-                    _pprice = _pw.get("extracted_price")
-                    if _pprice:
-                        price = _pprice
-                        html = _ph
-                        _size = _pw.get("rendered_html_size", len(_ph))
-                        _strategy = _pw.get("strategy", "playwright")
+                    if _pw.get("html"):
+                        _sp, _sconf, _sitem = _select_camera_buyback(
+                            _pw.get("selector_candidates", []), alias)
+                        if _sp:
+                            price = _sp; _confidence = _sconf or "high"; _matched_item = _sitem
+                            html = _pw["html"]
+                            _size = _pw.get("rendered_html_size", len(html))
+                            _strategy = _pw.get("strategy", "playwright")
 
             _low = (html or "").lower()
             _cf = any(k in _low for k in ("just a moment", "challenge-platform",
@@ -516,7 +560,8 @@ def main() -> int:
                           buyback_page_text_preview=_pw.get("body_text_preview", "") if _pw else "",
                           buyback_price_candidates=[c for c in (_pw.get("selector_candidates", []) if _pw else [])
                                                     if c.get("near_buyback")],
-                          buyback_extracted_price=_pw.get("extracted_price") if _pw else None)
+                          buyback_extracted_price=_pw.get("extracted_price") if _pw else None,
+                          confidence=_confidence, matched_item=_matched_item)
 
             if not price or price <= 0:
                 # 失敗理由の決定（requests 失敗理由 / Playwright 理由 / 抽出不可）
@@ -552,7 +597,7 @@ def main() -> int:
                         product_id=pid, shop_id=shop_id, shop_name=shop_name,
                         buyback_price=price, condition="new_unopened", buyback_url=url,
                         observed_at=now, data_source="auto_scraped",
-                        link_verified=True, confidence="medium",
+                        link_verified=True, confidence=_confidence,
                     )
                     repo.insert_buyback_price(bp)
                     saved += 1

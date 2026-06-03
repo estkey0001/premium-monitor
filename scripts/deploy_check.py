@@ -5143,6 +5143,41 @@ def check() -> list[dict]:
                     "message": "#517 Fujiya は買取専用ページ（/shop/purchase/list.aspx）を使う"
                                + ("" if _t517 else " ← 買取専用ページの使用が見つかりません")})
 
+    # ── Fujiya model matching & confidence ──
+    # #518: 機種厳密マッチ（_strict_model_match / _select_camera_buyback）が実装されている
+    _t518 = ('_strict_model_match' in _cam_src) and ('_select_camera_buyback' in _cam_src) \
+        and ('item_text' in _cam_src)
+    results.append({"level": "ok" if _t518 else "error", "check": "fujiya_strict_model_match",
+                    "message": "#518 Fujiya 機種厳密マッチ（_strict_model_match/_select_camera_buyback）が実装されている"
+                               + ("" if _t518 else " ← 機種厳密マッチの実装が見つかりません")})
+
+    # #519: strict 一致は confidence=high で保存（confidence=_confidence）
+    _t519 = ('confidence=_confidence' in _cam_src) and ('high' in _cam_src)
+    results.append({"level": "ok" if _t519 else "error", "check": "camera_confidence_classification",
+                    "message": "#519 strict一致の auto_scraped は confidence で分類（high）して保存"
+                               + ("" if _t519 else " ← confidence 分類の実装が見つかりません")})
+
+    # #520: low confidence は主計算（enrich）に使われない
+    _t520 = ("r.get('confidence', 'high') != 'low'" in _gen_src) or ("confidence', 'high') != 'low'" in _gen_src)
+    results.append({"level": "ok" if _t520 else "error", "check": "low_confidence_excluded",
+                    "message": "#520 low confidence の買取価格は主計算（enrich/比較）に使われない"
+                               + ("" if _t520 else " ← low confidence 除外が見つかりません")})
+
+    # #521: manual_today が auto より大幅高い場合『手動価格・要確認』バッジ（Task 2）
+    _t521 = ('manual-recheck-badge' in _gen_src) and ('手動価格・要確認' in _gen_src) \
+        and ('_auto_max' in _gen_src)
+    results.append({"level": "ok" if _t521 else "error", "check": "manual_overprice_recheck_badge",
+                    "message": "#521 manual_today が auto より大幅に高い場合『手動価格・要確認』を表示"
+                               + ("" if _t521 else " ← 手動価格・要確認バッジの実装が見つかりません")})
+
+    # #522: Fujiya auto_scraped が status に存在する（data依存：取得成功時 OK>=1）
+    _fuji_ok = sum(1 for x in (_cam_json.get('detail') or [])
+                   if x.get('shop_id') == 'src_fujiya' and x.get('status') == 'OK')
+    _t522 = _fuji_ok >= 1
+    results.append({"level": "ok" if _t522 else "warning", "check": "fujiya_auto_scraped_present",
+                    "message": f"#522 Fujiya の auto_scraped 買取価格が存在する（OK={_fuji_ok}件）"
+                               + ("" if _t522 else " ← Fujiya auto_scraped が0件（取得失敗日は正常）")})
+
     return results
 
 

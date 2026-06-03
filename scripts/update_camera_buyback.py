@@ -215,10 +215,19 @@ _PW_DOM_PROBE_JS = r"""
       if (!(v>=10000 && v<=1500000)) continue;
       hit++;
       const nearKw = KW.some(k => t.includes(k));
-      // 「買取/査定」の文脈か（要素or近傍テキスト）— 販売価格と区別するため厳格判定
+      // 「買取/査定」の文脈か（要素or祖先テキスト）— 販売価格と区別するため判定。
+      // フジヤ買取リストは class に「kitr」(=買取)、ラベルは「基準査定額/買取申し込み」。
       let ctx = t;
-      try { if (el.closest) { const c = el.closest("[class*='kaitori'],[class*='satei'],[class*='assess']"); if (c) ctx += " " + (c.textContent||""); } } catch(e){}
-      const nearBuyback = /買取|査定/.test(ctx);
+      try {
+        if (el.closest) {
+          // kitr/kaitori/satei/assess クラス、または近傍の li/box/list コンテナを参照
+          const c = el.closest("[class*='kitr'],[class*='kaitori'],[class*='satei'],[class*='assess']")
+                 || el.closest("li,[class*='box'],[class*='list'],[class*='item']");
+          if (c) ctx += " " + (c.textContent||"").slice(0,400);
+        }
+      } catch(e){}
+      const nearBuyback = /買取|査定|基準査定額|買取申し込み/.test(ctx)
+                        || /kitr|kaitori|satei/i.test(el.className||"");
       cands.push({selector: sel, text: t.slice(0,60), price: v, near_kw: nearKw, near_buyback: nearBuyback});
     }
     if (hit>0) out.matched_selectors.push({selector: sel, hits: hit});

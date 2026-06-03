@@ -254,10 +254,11 @@ _PW_DOM_PROBE_JS = r"""
       let ctx = t; let item_text = "";
       try {
         if (el.closest) {
-          // 商品アイテムのコンテナ（list/box）を参照し、商品名テキストを取得
-          const c = el.closest("[class*='kitr'],[class*='kaitori'],[class*='satei'],[class*='assess']")
-                 || el.closest("li,[class*='box'],[class*='list'],[class*='item']");
-          if (c) { const ct=(c.textContent||""); ctx += " " + ct.slice(0,400); item_text = ct.replace(/\s+/g," ").trim().slice(0,160); }
+          // 商品アイテムの「ラッパー」を優先（商品名+価格を含む単位）。
+          // フジヤ買取は -kitrListbox01（exact token）が1商品の単位。__boxPrice01 等の子は除外。
+          const c = el.closest("[class~='-kitrListbox01'],[class*='goods-list-d--item'],[class*='goods-list--item'],article,li")
+                 || el.closest("[class*='kitr'],[class*='kaitori'],[class*='satei'],[class*='assess'],[class*='box'],[class*='list'],[class*='item']");
+          if (c) { const ct=(c.textContent||""); ctx += " " + ct.slice(0,500); item_text = ct.replace(/\s+/g," ").trim().slice(0,200); }
         }
       } catch(e){}
       const nearBuyback = /買取|査定|基準査定額|買取申し込み/.test(ctx)

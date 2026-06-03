@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-06-02 16:34 JST",
-  "routes_total": 72,
+  "generated_at": "2026-06-03 16:12 JST",
+  "routes_total": 75,
   "routes_unused_only": 31,
   "profitable_routes": 31,
   "negative_routes": 0,
@@ -257,7 +257,7 @@
       "route_type": "secondary_to_secondary"
     }
   ],
-  "excluded_by_condition": 41,
+  "excluded_by_condition": 44,
   "excluded_by_confidence": 0,
   "excluded_by_missing_price": 0
 }

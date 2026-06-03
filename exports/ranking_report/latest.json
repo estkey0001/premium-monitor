@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-02 16:34 JST",
+  "generated_at": "2026-06-03 16:12 JST",
   "route_type_beginner": "primary_to_secondary",
   "route_type_pro": "secondary_to_secondary",
   "beginner_top10": [
@@ -25,19 +25,6 @@
       "best_buyback_shop": "買取商店",
       "net_profit_jpy": 12920,
       "net_profit_rate": 0.1077,
-      "route_type": "primary_to_secondary",
-      "source_label": "任天堂公式 / PlayStation Direct / Xbox Store",
-      "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
-    },
-    {
-      "product_name": "Nintendo Switch 2 マリオカートセット",
-      "category": "game_console",
-      "user_level": "beginner_easy",
-      "official_price_jpy": 59980,
-      "best_buyback_price": 67000,
-      "best_buyback_shop": "買取商店",
-      "net_profit_jpy": 5220,
-      "net_profit_rate": 0.087,
       "route_type": "primary_to_secondary",
       "source_label": "任天堂公式 / PlayStation Direct / Xbox Store",
       "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
@@ -149,19 +136,6 @@
       "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
     },
     {
-      "product_name": "Nintendo Switch 2 マリオカートセット",
-      "category": "game_console",
-      "user_level": "beginner_easy",
-      "official_price_jpy": 59980,
-      "best_buyback_price": 67000,
-      "best_buyback_shop": "買取商店",
-      "net_profit_jpy": 5220,
-      "net_profit_rate": 0.087,
-      "route_type": "secondary_to_secondary",
-      "source_label": "中古市場 / フリマ / 買取店",
-      "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
-    },
-    {
       "product_name": "iPhone 16 Pro Max 512GB",
       "category": "iphone",
       "user_level": "monitoring",
@@ -186,19 +160,6 @@
         "best_buyback_shop": "買取商店",
         "net_profit_jpy": 12920,
         "net_profit_rate": 0.1077,
-        "route_type": "primary_to_secondary",
-        "source_label": "任天堂公式 / PlayStation Direct / Xbox Store",
-        "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
-      },
-      {
-        "product_name": "Nintendo Switch 2 マリオカートセット",
-        "category": "game_console",
-        "user_level": "beginner_easy",
-        "official_price_jpy": 59980,
-        "best_buyback_price": 67000,
-        "best_buyback_shop": "買取商店",
-        "net_profit_jpy": 5220,
-        "net_profit_rate": 0.087,
         "route_type": "primary_to_secondary",
         "source_label": "任天堂公式 / PlayStation Direct / Xbox Store",
         "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
@@ -342,27 +303,14 @@
         "route_type": "secondary_to_secondary",
         "source_label": "中古市場 / フリマ / 買取店",
         "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
-      },
-      {
-        "product_name": "Nintendo Switch 2 マリオカートセット",
-        "category": "game_console",
-        "user_level": "beginner_easy",
-        "official_price_jpy": 59980,
-        "best_buyback_price": 67000,
-        "best_buyback_shop": "買取商店",
-        "net_profit_jpy": 5220,
-        "net_profit_rate": 0.087,
-        "route_type": "secondary_to_secondary",
-        "source_label": "中古市場 / フリマ / 買取店",
-        "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
       }
     ]
   },
   "excluded_items": 22,
-  "total_deals": 30,
+  "total_deals": 29,
   "confidence_summary": {
-    "total": 30,
-    "profitable": 8,
+    "total": 29,
+    "profitable": 7,
     "negative": 22
   },
   "stale_data_count": 0

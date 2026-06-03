@@ -148,17 +148,61 @@ _PW_SHOP_CONFIG = {
 }
 
 
-def _fetch_with_playwright(url: str, shop_id: str, alias: str, dbg_dir,
-                           timeout_ms: int = 25000) -> dict:
-    """Playwright(chromium headless) で URL をレンダリングして取得する。
+# Playwright DOM内で価格候補を総当り探索する JS（selector brute force）
+_PW_DOM_PROBE_JS = r"""
+() => {
+  const PRICE_RE = /[¥￥]?\s?([0-9]{1,3}(?:,[0-9]{3})+|[0-9]{4,7})\s*円?/;
+  const SELECTORS = ["table td", ".price", ".kaitori", ".estimate",
+                     "[class*='price']", "[id*='price']", "[class*='kaitori']",
+                     "[class*='assess']", "[class*='satei']", ".goods", ".item"];
+  const KW = ["買取", "査定", "査定額", "税込", "円", "¥"];
+  const out = {readyState: document.readyState,
+               iframe_count: document.querySelectorAll('iframe').length,
+               shadow_dom: false,
+               body_text_preview: (document.body ? (document.body.innerText||"").slice(0,500) : ""),
+               matched_selectors: [], selector_candidates: [], best_price: null};
+  // shadow DOM 検出
+  try { out.shadow_dom = Array.from(document.querySelectorAll('*')).some(e => e.shadowRoot); } catch(e){}
+  const cands = [];
+  for (const sel of SELECTORS) {
+    let els;
+    try { els = document.querySelectorAll(sel); } catch(e){ continue; }
+    let hit = 0;
+    for (const el of els) {
+      const t = (el.textContent||"").trim();
+      const m = t.match(PRICE_RE);
+      if (!m) continue;
+      const v = parseInt(m[1].replace(/,/g,''),10);
+      if (!(v>=10000 && v<=1500000)) continue;
+      hit++;
+      const nearKw = KW.some(k => t.includes(k));
+      cands.push({selector: sel, text: t.slice(0,60), price: v, near_kw: nearKw});
+    }
+    if (hit>0) out.matched_selectors.push({selector: sel, hits: hit});
+  }
+  // 買取/査定キーワード近接を優先、なければ最大値
+  cands.sort((a,b)=> (b.near_kw - a.near_kw) || (b.price - a.price));
+  out.selector_candidates = cands.slice(0,15);
+  if (cands.length) out.best_price = (cands.find(c=>c.near_kw) || cands[0]).price;
+  return out;
+}
+"""
 
-    戻り値 dict:
-      html, screenshot_saved, rendered_html_size, selector_waited,
-      reason, strategy
+
+def _fetch_with_playwright(url: str, shop_id: str, alias: str, dbg_dir, shot_dir=None,
+                           timeout_ms: int = 25000) -> dict:
+    """Playwright(chromium headless) で URL をレンダリングし、DOM診断＋価格抽出を行う。
+
+    戻り値 dict: html, screenshot_saved, rendered_html_size, selector_waited,
+      reason, strategy, extracted_price, body_text_preview, matched_selectors,
+      selector_candidates, iframe_count, shadow_dom_detected, dom_ready_state
     Playwright 未導入時は reason='playwright_not_installed'。
     """
     out = {"html": None, "screenshot_saved": False, "rendered_html_size": 0,
-           "selector_waited": False, "reason": "", "strategy": ""}
+           "selector_waited": False, "reason": "", "strategy": "",
+           "extracted_price": None, "body_text_preview": "", "matched_selectors": [],
+           "selector_candidates": [], "iframe_count": 0,
+           "shadow_dom_detected": False, "dom_ready_state": ""}
     try:
         from playwright.sync_api import sync_playwright
     except Exception:
@@ -179,14 +223,12 @@ def _fetch_with_playwright(url: str, shop_id: str, alias: str, dbg_dir,
             try:
                 page.goto(url, wait_until="networkidle", timeout=timeout_ms)
             except Exception:
-                # networkidle が来なくても domcontentloaded で続行
                 try:
                     page.goto(url, wait_until="domcontentloaded", timeout=timeout_ms)
                 except Exception as e2:
                     out["reason"] = "timeout" if "imeout" in type(e2).__name__ else "nav_error"
                     browser.close()
                     return out
-            # 結果セレクタを待つ（出れば selector_waited=True）
             rw = cfg.get("result_wait")
             if rw:
                 try:
@@ -197,12 +239,29 @@ def _fetch_with_playwright(url: str, shop_id: str, alias: str, dbg_dir,
             html = page.content()
             out["html"] = html
             out["rendered_html_size"] = len(html)
-            # debug: HTML + スクリーンショット保存
+            # DOM 診断 + selector brute force（page.evaluate）
+            try:
+                probe = page.evaluate(_PW_DOM_PROBE_JS)
+                out["dom_ready_state"] = probe.get("readyState", "")
+                out["iframe_count"] = probe.get("iframe_count", 0)
+                out["shadow_dom_detected"] = bool(probe.get("shadow_dom", False))
+                out["body_text_preview"] = probe.get("body_text_preview", "")
+                out["matched_selectors"] = probe.get("matched_selectors", [])
+                out["selector_candidates"] = probe.get("selector_candidates", [])
+                _bp = probe.get("best_price")
+                if isinstance(_bp, (int, float)) and 10000 <= _bp <= 1500000:
+                    out["extracted_price"] = int(_bp)
+            except Exception:
+                pass
+            # debug: rendered HTML 保存 + スクリーンショット保存（別ディレクトリ）
             try:
                 if dbg_dir is not None:
                     dbg_dir.mkdir(parents=True, exist_ok=True)
                     (dbg_dir / f"{shop_id}_{alias}.pw.html").write_text(html[:300_000], encoding="utf-8")
-                    page.screenshot(path=str(dbg_dir / f"{shop_id}_{alias}.png"), full_page=False)
+                _sd = shot_dir or dbg_dir
+                if _sd is not None:
+                    _sd.mkdir(parents=True, exist_ok=True)
+                    page.screenshot(path=str(_sd / f"{shop_id}_{alias}.png"), full_page=False)
                     out["screenshot_saved"] = True
             except Exception:
                 pass
@@ -272,6 +331,7 @@ def main() -> int:
     results = []  # list of dict（診断フィールド付き）
     saved = 0
     _dbg = ROOT / "exports" / "debug_camera"
+    _shot = ROOT / "exports" / "debug_camera_screenshots"
 
     def _diag(alias, shop_id, status, price, reason, **kw):
         d = {"product_alias": alias, "shop_id": shop_id, "status": status,
@@ -281,7 +341,10 @@ def main() -> int:
              # Playwright 診断
              "playwright_attempted": False, "playwright_success": False,
              "screenshot_saved": False, "rendered_html_size": 0,
-             "selector_waited": False, "extraction_strategy": "requests"}
+             "selector_waited": False, "extraction_strategy": "requests",
+             # DOM 診断（Playwright）
+             "body_text_preview": "", "matched_selectors": [], "selector_candidates": [],
+             "iframe_count": 0, "shadow_dom_detected": False, "dom_ready_state": ""}
         d.update(kw)
         return d
 
@@ -318,10 +381,11 @@ def main() -> int:
             if (not price) and args.playwright and shop_id in _PW_SHOP_CONFIG:
                 _cfg = _PW_SHOP_CONFIG[shop_id]
                 _pw_url = _cfg.get("search_url", url).format(kw=kw_enc)
-                _pw = _fetch_with_playwright(_pw_url, shop_id, alias, _dbg)
+                _pw = _fetch_with_playwright(_pw_url, shop_id, alias, _dbg, shot_dir=_shot)
                 if _pw.get("html"):
                     _ph = _pw["html"]
-                    _pprice = _parse_buyback_price(_ph, alias, shop_id)
+                    # selector brute force（DOM内探索）→ パターン抽出 の順
+                    _pprice = _pw.get("extracted_price") or _parse_buyback_price(_ph, alias, shop_id)
                     if _pprice:
                         price = _pprice
                         html = _ph
@@ -340,7 +404,13 @@ def main() -> int:
                           screenshot_saved=_pw.get("screenshot_saved", False) if _pw else False,
                           rendered_html_size=_pw.get("rendered_html_size", 0) if _pw else 0,
                           selector_waited=_pw.get("selector_waited", False) if _pw else False,
-                          extraction_strategy=_strategy)
+                          extraction_strategy=_strategy,
+                          body_text_preview=_pw.get("body_text_preview", "") if _pw else "",
+                          matched_selectors=_pw.get("matched_selectors", []) if _pw else [],
+                          selector_candidates=_pw.get("selector_candidates", []) if _pw else [],
+                          iframe_count=_pw.get("iframe_count", 0) if _pw else 0,
+                          shadow_dom_detected=_pw.get("shadow_dom_detected", False) if _pw else False,
+                          dom_ready_state=_pw.get("dom_ready_state", "") if _pw else "")
 
             if not price or price <= 0:
                 # 失敗理由の決定（requests 失敗理由 / Playwright 理由 / 抽出不可）

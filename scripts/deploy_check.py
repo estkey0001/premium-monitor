@@ -5065,6 +5065,40 @@ def check() -> list[dict]:
                     "message": "#506 取得失敗時は manual_today fallback が維持される（collector は manual を削除しない）"
                                + ("" if _t506 else " ← manual fallback 維持の確認ができません")})
 
+    # ── Playwright artifact upload & DOM diagnostics ──
+    # #507: workflow に upload-artifact（camera-playwright-debug）がある
+    _t507 = ('actions/upload-artifact' in _wf) and ('camera-playwright-debug' in _wf)
+    results.append({"level": "ok" if _t507 else "error", "check": "workflow_uploads_camera_artifact",
+                    "message": "#507 daily_lp.yml に upload-artifact（camera-playwright-debug）がある"
+                               + ("" if _t507 else " ← upload-artifact ステップが見つかりません")})
+
+    # #508: artifact に debug_camera / screenshots / status が含まれる
+    _t508 = ('exports/debug_camera/' in _wf) and ('exports/debug_camera_screenshots/' in _wf) \
+        and ('exports/camera_buyback_status.json' in _wf)
+    results.append({"level": "ok" if _t508 else "error", "check": "artifact_paths_present",
+                    "message": "#508 artifact に debug_camera/ screenshots/ camera_buyback_status.json が含まれる"
+                               + ("" if _t508 else " ← artifact パスが不足しています")})
+
+    # #509: collector に selector brute force / DOM 診断（selector_candidates）がある
+    _t509 = ('selector_candidates' in _cam_src) and ('_PW_DOM_PROBE_JS' in _cam_src) \
+        and ('body_text_preview' in _cam_src)
+    results.append({"level": "ok" if _t509 else "error", "check": "camera_dom_diagnostics_impl",
+                    "message": "#509 collector に DOM診断/selector brute force（selector_candidates/body_text_preview）がある"
+                               + ("" if _t509 else " ← DOM診断の実装が見つかりません")})
+
+    # #510: status detail に body_text_preview / iframe_count がある（実行済みなら）
+    _t510_impl = all(k in _det0 for k in ('body_text_preview', 'iframe_count',
+                                          'selector_candidates', 'shadow_dom_detected', 'dom_ready_state'))
+    results.append({"level": "ok" if _t510_impl else "error", "check": "camera_status_dom_fields",
+                    "message": "#510 camera_buyback_status の detail に body_text_preview/iframe_count/selector_candidates 等がある"
+                               + ("" if _t510_impl else " ← DOM診断項目が detail に不足しています")})
+
+    # #511: 価格regex/候補セレクタ群が実装されている（table td / .price / [class*=price]）
+    _t511 = ("table td" in _cam_src) and ("[class*='price']" in _cam_src) and ('PRICE_RE' in _cam_src)
+    results.append({"level": "ok" if _t511 else "error", "check": "camera_selector_bruteforce_list",
+                    "message": "#511 selector brute force 候補（table td / .price / [class*=price]）と価格regexがある"
+                               + ("" if _t511 else " ← 候補セレクタ/価格regex が見つかりません")})
+
     return results
 
 

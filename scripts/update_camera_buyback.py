@@ -146,7 +146,7 @@ _PW_SHOP_CONFIG = {
     "src_fujiya": {
         # rendered DOM 解析で発見した「買取金額を調べる」買取専用ページ /shop/purchase/list.aspx を使用。
         # （/shop/goods/search.aspx は販売カタログ＝買取価格でないため不採用）
-        "search_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword={mkw}",
+        "search_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword={mkw}&search=検索",
         "buyback_landing": "https://www.fujiya-camera.co.jp/shop/kaitori/pc/0c-kaitor/",
         "search_input": "input[name='keyword']",
         "result_wait": "[class*='kaitori'], [class*='price'], [class*='purchase'], table td",
@@ -447,9 +447,10 @@ def main() -> int:
                 if shop_id == "src_fujiya" and alias in FUJIYA_KEYWORD_VARIANTS:
                     _best = None
                     for _var in FUJIYA_KEYWORD_VARIANTS[alias]:
-                        # 買取専用ページ /shop/purchase/list.aspx（販売 search.aspx ではない）
+                        # 買取専用ページ /shop/purchase/list.aspx（form: keyword/search/sort/style）。
+                        # 検索実行には submit パラメータ search=検索 が必須（無いと0件のカテゴリ表示）。
                         _vurl = ("https://www.fujiya-camera.co.jp/shop/purchase/list.aspx"
-                                 f"?keyword={_up.quote(_var)}")
+                                 f"?keyword={_up.quote(_var)}&search=検索")
                         _try = _fetch_with_playwright(_vurl, shop_id, alias, _dbg, shot_dir=_shot)
                         _try["buyback_page_url"] = _vurl
                         _hc = _try.get("hit_count")

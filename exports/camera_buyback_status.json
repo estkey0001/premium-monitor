@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-03T17:30:30+09:00",
+  "generated_at": "2026-06-03T18:03:10+09:00",
   "summary": {
     "total": 15,
     "ok": 0,
@@ -10,16 +10,8 @@
   },
   "failure_reasons": [
     {
-      "reason": "timeout",
-      "count": 5
-    },
-    {
-      "reason": "price_not_found",
-      "count": 5
-    },
-    {
-      "reason": "http_error",
-      "count": 5
+      "reason": "playwright_not_installed",
+      "count": 15
     }
   ],
   "shop_diagnostics": {
@@ -29,13 +21,13 @@
       "html_saved": 0,
       "cloudflare": 0,
       "js_required": 0,
-      "playwright_attempted": 0,
+      "playwright_attempted": 5,
       "playwright_success": 0,
       "screenshot_saved": 0,
       "top_reason": {
-        "timeout": 5
+        "playwright_not_installed": 5
       },
-      "diagnosis": "timeout"
+      "diagnosis": "playwright_not_installed"
     },
     "src_fujiya": {
       "jobs": 5,
@@ -43,13 +35,13 @@
       "html_saved": 5,
       "cloudflare": 0,
       "js_required": 0,
-      "playwright_attempted": 0,
+      "playwright_attempted": 5,
       "playwright_success": 0,
       "screenshot_saved": 0,
       "top_reason": {
-        "price_not_found": 5
+        "playwright_not_installed": 5
       },
-      "diagnosis": "price_not_found"
+      "diagnosis": "playwright_not_installed"
     },
     "src_kitamura": {
       "jobs": 5,
@@ -57,13 +49,13 @@
       "html_saved": 0,
       "cloudflare": 0,
       "js_required": 0,
-      "playwright_attempted": 0,
+      "playwright_attempted": 5,
       "playwright_success": 0,
       "screenshot_saved": 0,
       "top_reason": {
-        "http_error": 5
+        "playwright_not_installed": 5
       },
-      "diagnosis": "http_error"
+      "diagnosis": "playwright_not_installed"
     }
   },
   "detail": [
@@ -72,14 +64,14 @@
       "shop_id": "src_mapcamera",
       "status": "FAILED",
       "price": 0,
-      "reason": "timeout",
+      "reason": "playwright_not_installed",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": false,
       "extracted_price": null,
-      "playwright_attempted": false,
+      "playwright_attempted": true,
       "playwright_success": false,
       "screenshot_saved": false,
       "rendered_html_size": 0,
@@ -90,21 +82,24 @@
       "selector_candidates": [],
       "iframe_count": 0,
       "shadow_dom_detected": false,
-      "dom_ready_state": ""
+      "dom_ready_state": "",
+      "hit_count": null,
+      "keyword_hit_counts": {},
+      "best_keyword": null
     },
     {
       "product_alias": "x100vi",
       "shop_id": "src_fujiya",
       "status": "FAILED",
       "price": 0,
-      "reason": "price_not_found",
+      "reason": "playwright_not_installed",
       "html_saved": true,
       "html_size": 317294,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": false,
       "extracted_price": null,
-      "playwright_attempted": false,
+      "playwright_attempted": true,
       "playwright_success": false,
       "screenshot_saved": false,
       "rendered_html_size": 0,
@@ -115,21 +110,30 @@
       "selector_candidates": [],
       "iframe_count": 0,
       "shadow_dom_detected": false,
-      "dom_ready_state": ""
+      "dom_ready_state": "",
+      "hit_count": null,
+      "keyword_hit_counts": {
+        "X100VI": null,
+        "X100 VI": null,
+        "X100V": null,
+        "富士フイルム X100": null,
+        "FUJIFILM X100VI": null
+      },
+      "best_keyword": "X100VI"
     },
     {
       "product_alias": "x100vi",
       "shop_id": "src_kitamura",
       "status": "FAILED",
       "price": 0,
-      "reason": "http_error",
+      "reason": "playwright_not_installed",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": false,
       "extracted_price": null,
-      "playwright_attempted": false,
+      "playwright_attempted": true,
       "playwright_success": false,
       "screenshot_saved": false,
       "rendered_html_size": 0,
@@ -140,21 +144,24 @@
       "selector_candidates": [],
       "iframe_count": 0,
       "shadow_dom_detected": false,
-      "dom_ready_state": ""
+      "dom_ready_state": "",
+      "hit_count": null,
+      "keyword_hit_counts": {},
+      "best_keyword": null
     },
     {
       "product_alias": "gr4",
       "shop_id": "src_mapcamera",
       "status": "FAILED",
       "price": 0,
-      "reason": "timeout",
+      "reason": "playwright_not_installed",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": false,
       "extracted_price": null,
-      "playwright_attempted": false,
+      "playwright_attempted": true,
       "playwright_success": false,
       "screenshot_saved": false,
       "rendered_html_size": 0,
@@ -165,21 +172,24 @@
       "selector_candidates": [],
       "iframe_count": 0,
       "shadow_dom_detected": false,
-      "dom_ready_state": ""
+      "dom_ready_state": "",
+      "hit_count": null,
+      "keyword_hit_counts": {},
+      "best_keyword": null
     },
     {
       "product_alias": "gr4",
       "shop_id": "src_fujiya",
       "status": "FAILED",
       "price": 0,
-      "reason": "price_not_found",
+      "reason": "playwright_not_installed",
       "html_saved": true,
       "html_size": 316351,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": false,
       "extracted_price": null,
-      "playwright_attempted": false,
+      "playwright_attempted": true,
       "playwright_success": false,
       "screenshot_saved": false,
       "rendered_html_size": 0,
@@ -190,21 +200,29 @@
       "selector_candidates": [],
       "iframe_count": 0,
       "shadow_dom_detected": false,
-      "dom_ready_state": ""
+      "dom_ready_state": "",
+      "hit_count": null,
+      "keyword_hit_counts": {
+        "GR IV": null,
+        "GR4": null,
+        "リコー GR IV": null,
+        "RICOH GR IV": null
+      },
+      "best_keyword": "GR IV"
     },
     {
       "product_alias": "gr4",
       "shop_id": "src_kitamura",
       "status": "FAILED",
       "price": 0,
-      "reason": "http_error",
+      "reason": "playwright_not_installed",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": false,
       "extracted_price": null,
-      "playwright_attempted": false,
+      "playwright_attempted": true,
       "playwright_success": false,
       "screenshot_saved": false,
       "rendered_html_size": 0,
@@ -215,21 +233,24 @@
       "selector_candidates": [],
       "iframe_count": 0,
       "shadow_dom_detected": false,
-      "dom_ready_state": ""
+      "dom_ready_state": "",
+      "hit_count": null,
+      "keyword_hit_counts": {},
+      "best_keyword": null
     },
     {
       "product_alias": "gr4_hdf",
       "shop_id": "src_mapcamera",
       "status": "FAILED",
       "price": 0,
-      "reason": "timeout",
+      "reason": "playwright_not_installed",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": false,
       "extracted_price": null,
-      "playwright_attempted": false,
+      "playwright_attempted": true,
       "playwright_success": false,
       "screenshot_saved": false,
       "rendered_html_size": 0,
@@ -240,21 +261,24 @@
       "selector_candidates": [],
       "iframe_count": 0,
       "shadow_dom_detected": false,
-      "dom_ready_state": ""
+      "dom_ready_state": "",
+      "hit_count": null,
+      "keyword_hit_counts": {},
+      "best_keyword": null
     },
     {
       "product_alias": "gr4_hdf",
       "shop_id": "src_fujiya",
       "status": "FAILED",
       "price": 0,
-      "reason": "price_not_found",
+      "reason": "playwright_not_installed",
       "html_saved": true,
       "html_size": 361670,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": false,
       "extracted_price": null,
-      "playwright_attempted": false,
+      "playwright_attempted": true,
       "playwright_success": false,
       "screenshot_saved": false,
       "rendered_html_size": 0,
@@ -265,21 +289,28 @@
       "selector_candidates": [],
       "iframe_count": 0,
       "shadow_dom_detected": false,
-      "dom_ready_state": ""
+      "dom_ready_state": "",
+      "hit_count": null,
+      "keyword_hit_counts": {
+        "GR IV HDF": null,
+        "GR4 HDF": null,
+        "RICOH GR IV HDF": null
+      },
+      "best_keyword": "GR IV HDF"
     },
     {
       "product_alias": "gr4_hdf",
       "shop_id": "src_kitamura",
       "status": "FAILED",
       "price": 0,
-      "reason": "http_error",
+      "reason": "playwright_not_installed",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": false,
       "extracted_price": null,
-      "playwright_attempted": false,
+      "playwright_attempted": true,
       "playwright_success": false,
       "screenshot_saved": false,
       "rendered_html_size": 0,
@@ -290,21 +321,24 @@
       "selector_candidates": [],
       "iframe_count": 0,
       "shadow_dom_detected": false,
-      "dom_ready_state": ""
+      "dom_ready_state": "",
+      "hit_count": null,
+      "keyword_hit_counts": {},
+      "best_keyword": null
     },
     {
       "product_alias": "gr4_mono",
       "shop_id": "src_mapcamera",
       "status": "FAILED",
       "price": 0,
-      "reason": "timeout",
+      "reason": "playwright_not_installed",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": false,
       "extracted_price": null,
-      "playwright_attempted": false,
+      "playwright_attempted": true,
       "playwright_success": false,
       "screenshot_saved": false,
       "rendered_html_size": 0,
@@ -315,21 +349,24 @@
       "selector_candidates": [],
       "iframe_count": 0,
       "shadow_dom_detected": false,
-      "dom_ready_state": ""
+      "dom_ready_state": "",
+      "hit_count": null,
+      "keyword_hit_counts": {},
+      "best_keyword": null
     },
     {
       "product_alias": "gr4_mono",
       "shop_id": "src_fujiya",
       "status": "FAILED",
       "price": 0,
-      "reason": "price_not_found",
+      "reason": "playwright_not_installed",
       "html_saved": true,
       "html_size": 313625,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": false,
       "extracted_price": null,
-      "playwright_attempted": false,
+      "playwright_attempted": true,
       "playwright_success": false,
       "screenshot_saved": false,
       "rendered_html_size": 0,
@@ -340,21 +377,28 @@
       "selector_candidates": [],
       "iframe_count": 0,
       "shadow_dom_detected": false,
-      "dom_ready_state": ""
+      "dom_ready_state": "",
+      "hit_count": null,
+      "keyword_hit_counts": {
+        "GR IV Monochrome": null,
+        "GR IV モノクローム": null,
+        "GR4 モノクロ": null
+      },
+      "best_keyword": "GR IV Monochrome"
     },
     {
       "product_alias": "gr4_mono",
       "shop_id": "src_kitamura",
       "status": "FAILED",
       "price": 0,
-      "reason": "http_error",
+      "reason": "playwright_not_installed",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": false,
       "extracted_price": null,
-      "playwright_attempted": false,
+      "playwright_attempted": true,
       "playwright_success": false,
       "screenshot_saved": false,
       "rendered_html_size": 0,
@@ -365,21 +409,24 @@
       "selector_candidates": [],
       "iframe_count": 0,
       "shadow_dom_detected": false,
-      "dom_ready_state": ""
+      "dom_ready_state": "",
+      "hit_count": null,
+      "keyword_hit_counts": {},
+      "best_keyword": null
     },
     {
       "product_alias": "gr3x",
       "shop_id": "src_mapcamera",
       "status": "FAILED",
       "price": 0,
-      "reason": "timeout",
+      "reason": "playwright_not_installed",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": false,
       "extracted_price": null,
-      "playwright_attempted": false,
+      "playwright_attempted": true,
       "playwright_success": false,
       "screenshot_saved": false,
       "rendered_html_size": 0,
@@ -390,21 +437,24 @@
       "selector_candidates": [],
       "iframe_count": 0,
       "shadow_dom_detected": false,
-      "dom_ready_state": ""
+      "dom_ready_state": "",
+      "hit_count": null,
+      "keyword_hit_counts": {},
+      "best_keyword": null
     },
     {
       "product_alias": "gr3x",
       "shop_id": "src_fujiya",
       "status": "FAILED",
       "price": 0,
-      "reason": "price_not_found",
+      "reason": "playwright_not_installed",
       "html_saved": true,
       "html_size": 317634,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": false,
       "extracted_price": null,
-      "playwright_attempted": false,
+      "playwright_attempted": true,
       "playwright_success": false,
       "screenshot_saved": false,
       "rendered_html_size": 0,
@@ -415,21 +465,29 @@
       "selector_candidates": [],
       "iframe_count": 0,
       "shadow_dom_detected": false,
-      "dom_ready_state": ""
+      "dom_ready_state": "",
+      "hit_count": null,
+      "keyword_hit_counts": {
+        "GR IIIx": null,
+        "GR3x": null,
+        "リコー GR IIIx": null,
+        "RICOH GR IIIx": null
+      },
+      "best_keyword": "GR IIIx"
     },
     {
       "product_alias": "gr3x",
       "shop_id": "src_kitamura",
       "status": "FAILED",
       "price": 0,
-      "reason": "http_error",
+      "reason": "playwright_not_installed",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": false,
       "extracted_price": null,
-      "playwright_attempted": false,
+      "playwright_attempted": true,
       "playwright_success": false,
       "screenshot_saved": false,
       "rendered_html_size": 0,
@@ -440,7 +498,10 @@
       "selector_candidates": [],
       "iframe_count": 0,
       "shadow_dom_detected": false,
-      "dom_ready_state": ""
+      "dom_ready_state": "",
+      "hit_count": null,
+      "keyword_hit_counts": {},
+      "best_keyword": null
     }
   ],
   "fallback_note": "HTMLから新品買取を確定できない店舗は manual_buyback_prices.csv の manual_today（手動確認）を使用。auto_scraped 取得時はそちらを優先。14日超は利益判定から除外。",

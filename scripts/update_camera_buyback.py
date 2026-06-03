@@ -54,6 +54,14 @@ CAMERA_MODEL_KW = {
     "gr4_mono": "GR IV Monochrome",
     "gr3x":     "GR IIIx",
 }
+# フジヤ用：複数キーワード候補（ヒット数を比較して最良を採用）
+FUJIYA_KEYWORD_VARIANTS = {
+    "x100vi":   ["X100VI", "X100 VI", "X100V", "富士フイルム X100", "FUJIFILM X100VI"],
+    "gr4":      ["GR IV", "GR4", "リコー GR IV", "RICOH GR IV"],
+    "gr4_hdf":  ["GR IV HDF", "GR4 HDF", "RICOH GR IV HDF"],
+    "gr4_mono": ["GR IV Monochrome", "GR IV モノクローム", "GR4 モノクロ"],
+    "gr3x":     ["GR IIIx", "GR3x", "リコー GR IIIx", "RICOH GR IIIx"],
+}
 
 # 優先実装対象（Task 2: まず3店舗に絞る）
 PRIORITY_SHOPS = {"src_mapcamera", "src_fujiya", "src_kitamura"}
@@ -167,10 +175,16 @@ _PW_DOM_PROBE_JS = r"""
                      "[class*='price']", "[id*='price']", "[class*='kaitori']",
                      "[class*='assess']", "[class*='satei']", ".goods", ".item"];
   const KW = ["買取", "査定", "査定額", "税込", "円", "¥"];
+  const bodyText = (document.body ? (document.body.innerText||"") : "");
+  // 該当件数 N件 を抽出（フジヤ等の検索結果件数）
+  let hit_count = null;
+  const hm = bodyText.match(/該当件数\s*([0-9,]+)\s*件/);
+  if (hm) hit_count = parseInt(hm[1].replace(/,/g,''),10);
+  else if (/該当件数\s*[―ー\-]\s*件/.test(bodyText)) hit_count = 0;
   const out = {readyState: document.readyState,
                iframe_count: document.querySelectorAll('iframe').length,
-               shadow_dom: false,
-               body_text_preview: (document.body ? (document.body.innerText||"").slice(0,500) : ""),
+               shadow_dom: false, hit_count: hit_count,
+               body_text_preview: bodyText.slice(0,500),
                matched_selectors: [], selector_candidates: [], best_price: null};
   // shadow DOM 検出
   try { out.shadow_dom = Array.from(document.querySelectorAll('*')).some(e => e.shadowRoot); } catch(e){}
@@ -213,7 +227,7 @@ def _fetch_with_playwright(url: str, shop_id: str, alias: str, dbg_dir, shot_dir
            "selector_waited": False, "reason": "", "strategy": "",
            "extracted_price": None, "body_text_preview": "", "matched_selectors": [],
            "selector_candidates": [], "iframe_count": 0,
-           "shadow_dom_detected": False, "dom_ready_state": ""}
+           "shadow_dom_detected": False, "dom_ready_state": "", "hit_count": None}
     try:
         from playwright.sync_api import sync_playwright
     except Exception:
@@ -259,6 +273,7 @@ def _fetch_with_playwright(url: str, shop_id: str, alias: str, dbg_dir, shot_dir
                 out["body_text_preview"] = probe.get("body_text_preview", "")
                 out["matched_selectors"] = probe.get("matched_selectors", [])
                 out["selector_candidates"] = probe.get("selector_candidates", [])
+                out["hit_count"] = probe.get("hit_count")
                 _bp = probe.get("best_price")
                 if isinstance(_bp, (int, float)) and 10000 <= _bp <= 1500000:
                     out["extracted_price"] = int(_bp)
@@ -355,7 +370,8 @@ def main() -> int:
              "selector_waited": False, "extraction_strategy": "requests",
              # DOM 診断（Playwright）
              "body_text_preview": "", "matched_selectors": [], "selector_candidates": [],
-             "iframe_count": 0, "shadow_dom_detected": False, "dom_ready_state": ""}
+             "iframe_count": 0, "shadow_dom_detected": False, "dom_ready_state": "",
+             "hit_count": None, "keyword_hit_counts": {}, "best_keyword": None}
         d.update(kw)
         return d
 
@@ -389,11 +405,32 @@ def main() -> int:
             _strategy = "requests"
             _pw = {}
 
+            _kw_hit_counts = {}
+            _best_keyword = None
             # 2) requests で価格が取れない/失敗 → Playwright fallback（--playwright 時）
             if (not price) and args.playwright and shop_id in _PW_SHOP_CONFIG:
                 _cfg = _PW_SHOP_CONFIG[shop_id]
-                _pw_url = _cfg.get("search_url", url).format(kw=kw_enc, mkw=mkw_enc)
-                _pw = _fetch_with_playwright(_pw_url, shop_id, alias, _dbg, shot_dir=_shot)
+                # フジヤ：複数キーワードを試し、ヒット数/価格が最良のものを採用
+                if shop_id == "src_fujiya" and alias in FUJIYA_KEYWORD_VARIANTS:
+                    _best = None
+                    for _var in FUJIYA_KEYWORD_VARIANTS[alias]:
+                        _vurl = ("https://www.fujiya-camera.co.jp/shop/goods/search.aspx"
+                                 f"?keyword={_up.quote(_var)}&search=検索")
+                        _try = _fetch_with_playwright(_vurl, shop_id, alias, _dbg, shot_dir=_shot)
+                        _hc = _try.get("hit_count")
+                        _kw_hit_counts[_var] = _hc
+                        # 価格が取れた or ヒット数が最大 の候補を保持
+                        _score = (1 if _try.get("extracted_price") else 0, _hc or 0)
+                        if _best is None or _score > _best[0]:
+                            _best = (_score, _var, _try)
+                        if _try.get("extracted_price"):
+                            break  # 価格取得できたら確定
+                    if _best is not None:
+                        _best_keyword = _best[1]
+                        _pw = _best[2]
+                else:
+                    _pw_url = _cfg.get("search_url", url).format(kw=kw_enc, mkw=mkw_enc)
+                    _pw = _fetch_with_playwright(_pw_url, shop_id, alias, _dbg, shot_dir=_shot)
                 if _pw.get("html"):
                     _ph = _pw["html"]
                     # selector brute force（DOM内探索）→ パターン抽出 の順
@@ -422,7 +459,10 @@ def main() -> int:
                           selector_candidates=_pw.get("selector_candidates", []) if _pw else [],
                           iframe_count=_pw.get("iframe_count", 0) if _pw else 0,
                           shadow_dom_detected=_pw.get("shadow_dom_detected", False) if _pw else False,
-                          dom_ready_state=_pw.get("dom_ready_state", "") if _pw else "")
+                          dom_ready_state=_pw.get("dom_ready_state", "") if _pw else "",
+                          hit_count=_pw.get("hit_count") if _pw else None,
+                          keyword_hit_counts=_kw_hit_counts,
+                          best_keyword=_best_keyword)
 
             if not price or price <= 0:
                 # 失敗理由の決定（requests 失敗理由 / Playwright 理由 / 抽出不可）

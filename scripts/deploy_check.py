@@ -5099,6 +5099,26 @@ def check() -> list[dict]:
                     "message": "#511 selector brute force 候補（table td / .price / [class*=price]）と価格regexがある"
                                + ("" if _t511 else " ← 候補セレクタ/価格regex が見つかりません")})
 
+    # ── Fujiya keyword variants（追加対策）──
+    # #512: Fujiya keyword variants が定義されている
+    _t512 = ('FUJIYA_KEYWORD_VARIANTS' in _cam_src) and ('該当件数' in _cam_src)
+    results.append({"level": "ok" if _t512 else "error", "check": "fujiya_keyword_variants_defined",
+                    "message": "#512 Fujiya の複数キーワード候補（FUJIYA_KEYWORD_VARIANTS）が定義されている"
+                               + ("" if _t512 else " ← keyword variants が見つかりません")})
+
+    # #513: keyword別 hit_count / best_keyword を diagnostics に保存する実装がある
+    _t513 = ('keyword_hit_counts' in _cam_src) and ('best_keyword' in _cam_src) \
+        and ('hit_count' in _cam_src)
+    results.append({"level": "ok" if _t513 else "error", "check": "fujiya_hit_count_tracking",
+                    "message": "#513 keyword別 hit_count / best_keyword を diagnostics に保存する実装がある"
+                               + ("" if _t513 else " ← hit_count/best_keyword の実装が見つかりません")})
+
+    # #514: camera_buyback_status の detail に keyword_hit_counts / best_keyword / hit_count フィールドがある
+    _t514 = all(k in _det0 for k in ('keyword_hit_counts', 'best_keyword', 'hit_count'))
+    results.append({"level": "ok" if _t514 else "error", "check": "camera_status_keyword_fields",
+                    "message": "#514 camera_buyback_status の detail に keyword_hit_counts/best_keyword/hit_count がある"
+                               + ("" if _t514 else " ← keyword 診断項目が detail に不足しています")})
+
     return results
 
 

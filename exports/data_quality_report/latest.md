@@ -1,4 +1,4 @@
-# データ取得品質レポート（2026-06-03 17:32 JST）
+# データ取得品質レポート（2026-06-03 18:04 JST）
 
 ## 取得成功率
 - 全対象店舗数: 16
@@ -36,16 +36,16 @@
 - iphone17pro256: 62.5%
 
 ## 連続失敗店舗（2回以上）
-- 2ndstreet: 7回連続
-- bookoff: 7回連続
-- dosupara: 7回連続
-- geo_mobile: 7回連続
-- hardoff: 7回連続
-- janpara: 7回連続
-- pasoko: 7回連続
-- sofmap: 7回連続
-- surugaya: 7回連続
-- tsutaya: 7回連続
+- 2ndstreet: 8回連続
+- bookoff: 8回連続
+- dosupara: 8回連続
+- geo_mobile: 8回連続
+- hardoff: 8回連続
+- janpara: 8回連続
+- pasoko: 8回連続
+- sofmap: 8回連続
+- surugaya: 8回連続
+- tsutaya: 8回連続
 
 ## 改善優先順位（required店舗）
 1. mobile_ichiban（失敗2 / product_not_listed）

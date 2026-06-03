@@ -46,6 +46,14 @@ CAMERA_KEYWORDS = {
     "gr4_mono": "RICOH GR IV Monochrome",
     "gr3x":     "RICOH GR IIIx",
 }
+# 型番のみのキーワード（メーカー名を外した方がヒットしやすい店舗向け）
+CAMERA_MODEL_KW = {
+    "x100vi":   "X100VI",
+    "gr4":      "GR IV",
+    "gr4_hdf":  "GR IV HDF",
+    "gr4_mono": "GR IV Monochrome",
+    "gr3x":     "GR IIIx",
+}
 
 # 優先実装対象（Task 2: まず3店舗に絞る）
 PRIORITY_SHOPS = {"src_mapcamera", "src_fujiya", "src_kitamura"}
@@ -128,13 +136,16 @@ def _fetch_html(url: str, timeout: int = 15) -> tuple[Optional[str], str]:
 # 店舗別 検索フォーム/結果セレクタ（Playwright 用）
 _PW_SHOP_CONFIG = {
     "src_fujiya": {
-        "search_url": "https://www.fujiya-camera.co.jp/shop/goods/search.aspx?keyword={kw}",
-        "search_input": "input[name*='keyword'], input#keyword, input[type='search']",
-        "result_wait": ".goods, .item, .price, [class*='price']",
+        # フォーム解析（frmSearch GET /shop/goods/search.aspx, input: keyword/brand/form_genre/search）に基づく。
+        # 「FUJIFILM X100VI」は0件 → 型番のみ（mkw）の方がヒットしやすい。submit用 search=検索 を付与。
+        "search_url": "https://www.fujiya-camera.co.jp/shop/goods/search.aspx?keyword={mkw}&search=検索",
+        "search_input": "input[name='keyword']",
+        "result_wait": "[class*='goods-list'], [class*='price'], .goods, .item",
         "strategy": "fujiya_search",
     },
     "src_kitamura": {
-        "search_url": "https://www.net-chuko.com/ec/list?keyword={kw}",
+        # net-chuko の /ec/list は404（指定ページなし）→ 中古/買取検索の正しいパスへ。
+        "search_url": "https://www.net-chuko.com/ec/sell/category/list?keyword={mkw}",
         "search_input": "input[type='search'], input[name*='keyword']",
         "result_wait": "[class*='price'], .itemList, .goodsList, .product",
         "strategy": "kitamura_render",
@@ -351,6 +362,7 @@ def main() -> int:
     for alias in CAMERA_ALIASES:
         kw = CAMERA_KEYWORDS.get(alias, alias)
         kw_enc = _up.quote(kw)
+        mkw_enc = _up.quote(CAMERA_MODEL_KW.get(alias, kw))
         for shop_id, shop_name, url_tmpl in CAMERA_SHOPS:
             if args.priority_only and shop_id not in PRIORITY_SHOPS:
                 continue
@@ -380,7 +392,7 @@ def main() -> int:
             # 2) requests で価格が取れない/失敗 → Playwright fallback（--playwright 時）
             if (not price) and args.playwright and shop_id in _PW_SHOP_CONFIG:
                 _cfg = _PW_SHOP_CONFIG[shop_id]
-                _pw_url = _cfg.get("search_url", url).format(kw=kw_enc)
+                _pw_url = _cfg.get("search_url", url).format(kw=kw_enc, mkw=mkw_enc)
                 _pw = _fetch_with_playwright(_pw_url, shop_id, alias, _dbg, shot_dir=_shot)
                 if _pw.get("html"):
                     _ph = _pw["html"]

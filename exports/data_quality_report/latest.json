@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-03T18:04:40+09:00",
+  "generated_at": "2026-06-03T19:13:53+09:00",
   "collection": {
     "total_shops": 16,
     "shops_with_success": 6,
@@ -66,27 +66,23 @@
     },
     {
       "reason": "service_unavailable",
-      "count": 1
-    },
-    {
-      "reason": "connection_error",
-      "count": 1
+      "count": 2
     }
   ],
   "effective_data": {
     "products_with_valid_buyback": 11,
     "valid_buyback_by_product": {
-      "prod_iphone17pro_256": 32,
-      "prod_iphone17pro_512": 30,
-      "prod_iphone17pm_256": 30,
-      "prod_iphone17pm_512": 28,
-      "prod_switch2": 28,
-      "prod_ps5_pro": 25,
       "prod_x100vi": 6,
       "prod_gr4": 6,
       "prod_gr4_hdf": 4,
       "prod_gr4_mono": 4,
-      "prod_gr3x": 4
+      "prod_gr3x": 4,
+      "prod_iphone17pro_256": 5,
+      "prod_iphone17pro_512": 4,
+      "prod_iphone17pm_256": 4,
+      "prod_iphone17pm_512": 3,
+      "prod_switch2": 3,
+      "prod_ps5_pro": 3
     }
   },
   "ranking_usable": {
@@ -246,43 +242,43 @@
   "consecutive_failed_shops": [
     {
       "shop_id": "2ndstreet",
-      "consecutive_failures": 8
+      "consecutive_failures": 9
     },
     {
       "shop_id": "bookoff",
-      "consecutive_failures": 8
+      "consecutive_failures": 9
     },
     {
       "shop_id": "dosupara",
-      "consecutive_failures": 8
+      "consecutive_failures": 9
     },
     {
       "shop_id": "geo_mobile",
-      "consecutive_failures": 8
+      "consecutive_failures": 9
     },
     {
       "shop_id": "hardoff",
-      "consecutive_failures": 8
+      "consecutive_failures": 9
     },
     {
       "shop_id": "janpara",
-      "consecutive_failures": 8
+      "consecutive_failures": 9
     },
     {
       "shop_id": "pasoko",
-      "consecutive_failures": 8
+      "consecutive_failures": 9
     },
     {
       "shop_id": "sofmap",
-      "consecutive_failures": 8
+      "consecutive_failures": 9
     },
     {
       "shop_id": "surugaya",
-      "consecutive_failures": 8
+      "consecutive_failures": 9
     },
     {
       "shop_id": "tsutaya",
-      "consecutive_failures": 8
+      "consecutive_failures": 9
     }
   ],
   "improvement_priority": [

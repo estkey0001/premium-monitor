@@ -1,6 +1,6 @@
 
 ============================================================
- Deploy Check (514 items)
+ Deploy Check (517 items)
 ============================================================
   ✅ [index_exists] docs/index.html 存在
   ✅ [forbidden_phrases] 禁止表現なし
@@ -185,13 +185,13 @@
   ✅ [ipad_not_in_other] iPad は「その他」欄に混入していない
   ✅ [airpods_not_in_smartphone] AirPods はスマートフォン欄に混入していない
   ⚠️ [applewatch_in_wearable_section] Apple Watch がウェアラブル欄に見つからない（データなし or genre設定を確認）
-  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-06-03T16:31:46+09:00）
+  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-06-03T18:22:09+09:00）
   ✅ [suspicious_price_format] suspicious_prices 形式OK（suspicious_price なし）
   ✅ [fetch_failed_has_reason] fetch_failed 33件すべてに reason あり
   ✅ [collector_report_html_exists] docs/collector_report.html 存在
   ✅ [collector_report_link_in_lp] LP内に collector_report.html へのリンクがある
   ✅ [fetch_failed_report_link] 取得失敗29件 / suspicious0件 → 警告バーが表示されている
-  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 16件存在する: ['iphone17pm512', 'iphone17pro256', 'iphone17pro512', 'iphone17pm256']
+  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 16件存在する: ['iphone17pro256', 'iphone17pm512', 'iphone17pm256', 'iphone17pro512']
   ✅ [beginner_page_auto_scraped_exists] 自動取得 OK 22件 / total 55件
   ✅ [shop_name_no_vertical_wrap] shop-name-col に word-break:keep-all が設定されている
   ✅ [iphone17pro256_price_scraped] iPhone 17 Pro 256GB の価格取得成功: ['mobile_ichiban', 'kaitori_shouten', 'kaitori_itchome', 'iosys', 'netoff']
@@ -516,8 +516,11 @@
   ✅ [camera_dom_diagnostics_impl] #509 collector に DOM診断/selector brute force（selector_candidates/body_text_preview）がある
   ✅ [camera_status_dom_fields] #510 camera_buyback_status の detail に body_text_preview/iframe_count/selector_candidates 等がある
   ✅ [camera_selector_bruteforce_list] #511 selector brute force 候補（table td / .price / [class*=price]）と価格regexがある
+  ✅ [fujiya_keyword_variants_defined] #512 Fujiya の複数キーワード候補（FUJIYA_KEYWORD_VARIANTS）が定義されている
+  ✅ [fujiya_hit_count_tracking] #513 keyword別 hit_count / best_keyword を diagnostics に保存する実装がある
+  ✅ [camera_status_keyword_fields] #514 camera_buyback_status の detail に keyword_hit_counts/best_keyword/hit_count がある
 
-  Errors: 0 | Warnings: 17 | OK: 497
+  Errors: 0 | Warnings: 17 | OK: 500
 
   ✅ Deploy check PASSED
 ============================================================

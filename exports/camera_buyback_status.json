@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-03T15:03:08+09:00",
+  "generated_at": "2026-06-03T15:35:06+09:00",
   "summary": {
     "total": 15,
     "ok": 0,
@@ -10,8 +10,16 @@
   },
   "failure_reasons": [
     {
-      "reason": "playwright_not_installed",
-      "count": 15
+      "reason": "timeout",
+      "count": 5
+    },
+    {
+      "reason": "price_not_found",
+      "count": 5
+    },
+    {
+      "reason": "site_blocked",
+      "count": 5
     }
   ],
   "shop_diagnostics": {
@@ -22,12 +30,12 @@
       "cloudflare": 0,
       "js_required": 0,
       "playwright_attempted": 5,
-      "playwright_success": 0,
-      "screenshot_saved": 0,
+      "playwright_success": 5,
+      "screenshot_saved": 5,
       "top_reason": {
-        "playwright_not_installed": 5
+        "timeout": 5
       },
-      "diagnosis": "playwright_not_installed"
+      "diagnosis": "timeout"
     },
     "src_fujiya": {
       "jobs": 5,
@@ -36,12 +44,12 @@
       "cloudflare": 0,
       "js_required": 0,
       "playwright_attempted": 5,
-      "playwright_success": 0,
-      "screenshot_saved": 0,
+      "playwright_success": 5,
+      "screenshot_saved": 5,
       "top_reason": {
-        "playwright_not_installed": 5
+        "price_not_found": 5
       },
-      "diagnosis": "playwright_not_installed"
+      "diagnosis": "price_not_found"
     },
     "src_kitamura": {
       "jobs": 5,
@@ -50,12 +58,12 @@
       "cloudflare": 0,
       "js_required": 0,
       "playwright_attempted": 5,
-      "playwright_success": 0,
-      "screenshot_saved": 0,
+      "playwright_success": 5,
+      "screenshot_saved": 5,
       "top_reason": {
-        "playwright_not_installed": 5
+        "site_blocked": 5
       },
-      "diagnosis": "playwright_not_installed"
+      "diagnosis": "site_blocked"
     }
   },
   "detail": [
@@ -64,7 +72,7 @@
       "shop_id": "src_mapcamera",
       "status": "FAILED",
       "price": 0,
-      "reason": "playwright_not_installed",
+      "reason": "timeout",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -72,9 +80,9 @@
       "selector_found": false,
       "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 300,
       "selector_waited": false,
       "extraction_strategy": "requests"
     },
@@ -83,7 +91,7 @@
       "shop_id": "src_fujiya",
       "status": "FAILED",
       "price": 0,
-      "reason": "playwright_not_installed",
+      "reason": "price_not_found",
       "html_saved": true,
       "html_size": 317294,
       "cloudflare_detected": false,
@@ -91,9 +99,9 @@
       "selector_found": false,
       "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 525488,
       "selector_waited": false,
       "extraction_strategy": "requests"
     },
@@ -102,7 +110,7 @@
       "shop_id": "src_kitamura",
       "status": "FAILED",
       "price": 0,
-      "reason": "playwright_not_installed",
+      "reason": "site_blocked",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -110,9 +118,9 @@
       "selector_found": false,
       "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 453266,
       "selector_waited": false,
       "extraction_strategy": "requests"
     },
@@ -121,7 +129,7 @@
       "shop_id": "src_mapcamera",
       "status": "FAILED",
       "price": 0,
-      "reason": "playwright_not_installed",
+      "reason": "timeout",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -129,9 +137,9 @@
       "selector_found": false,
       "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 300,
       "selector_waited": false,
       "extraction_strategy": "requests"
     },
@@ -140,7 +148,7 @@
       "shop_id": "src_fujiya",
       "status": "FAILED",
       "price": 0,
-      "reason": "playwright_not_installed",
+      "reason": "price_not_found",
       "html_saved": true,
       "html_size": 316351,
       "cloudflare_detected": false,
@@ -148,9 +156,9 @@
       "selector_found": false,
       "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 525444,
       "selector_waited": false,
       "extraction_strategy": "requests"
     },
@@ -159,7 +167,7 @@
       "shop_id": "src_kitamura",
       "status": "FAILED",
       "price": 0,
-      "reason": "playwright_not_installed",
+      "reason": "site_blocked",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -167,9 +175,9 @@
       "selector_found": false,
       "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 453266,
       "selector_waited": false,
       "extraction_strategy": "requests"
     },
@@ -178,7 +186,7 @@
       "shop_id": "src_mapcamera",
       "status": "FAILED",
       "price": 0,
-      "reason": "playwright_not_installed",
+      "reason": "timeout",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -186,9 +194,9 @@
       "selector_found": false,
       "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 300,
       "selector_waited": false,
       "extraction_strategy": "requests"
     },
@@ -197,7 +205,7 @@
       "shop_id": "src_fujiya",
       "status": "FAILED",
       "price": 0,
-      "reason": "playwright_not_installed",
+      "reason": "price_not_found",
       "html_saved": true,
       "html_size": 361670,
       "cloudflare_detected": false,
@@ -205,9 +213,9 @@
       "selector_found": false,
       "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 525454,
       "selector_waited": false,
       "extraction_strategy": "requests"
     },
@@ -216,7 +224,7 @@
       "shop_id": "src_kitamura",
       "status": "FAILED",
       "price": 0,
-      "reason": "playwright_not_installed",
+      "reason": "site_blocked",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -224,9 +232,9 @@
       "selector_found": false,
       "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 453266,
       "selector_waited": false,
       "extraction_strategy": "requests"
     },
@@ -235,7 +243,7 @@
       "shop_id": "src_mapcamera",
       "status": "FAILED",
       "price": 0,
-      "reason": "playwright_not_installed",
+      "reason": "timeout",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -243,9 +251,9 @@
       "selector_found": false,
       "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 300,
       "selector_waited": false,
       "extraction_strategy": "requests"
     },
@@ -254,7 +262,7 @@
       "shop_id": "src_fujiya",
       "status": "FAILED",
       "price": 0,
-      "reason": "playwright_not_installed",
+      "reason": "price_not_found",
       "html_saved": true,
       "html_size": 313625,
       "cloudflare_detected": false,
@@ -262,9 +270,9 @@
       "selector_found": false,
       "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 525524,
       "selector_waited": false,
       "extraction_strategy": "requests"
     },
@@ -273,7 +281,7 @@
       "shop_id": "src_kitamura",
       "status": "FAILED",
       "price": 0,
-      "reason": "playwright_not_installed",
+      "reason": "site_blocked",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -281,9 +289,9 @@
       "selector_found": false,
       "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 453266,
       "selector_waited": false,
       "extraction_strategy": "requests"
     },
@@ -292,7 +300,7 @@
       "shop_id": "src_mapcamera",
       "status": "FAILED",
       "price": 0,
-      "reason": "playwright_not_installed",
+      "reason": "timeout",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -300,9 +308,9 @@
       "selector_found": false,
       "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 300,
       "selector_waited": false,
       "extraction_strategy": "requests"
     },
@@ -311,7 +319,7 @@
       "shop_id": "src_fujiya",
       "status": "FAILED",
       "price": 0,
-      "reason": "playwright_not_installed",
+      "reason": "price_not_found",
       "html_saved": true,
       "html_size": 317634,
       "cloudflare_detected": false,
@@ -319,9 +327,9 @@
       "selector_found": false,
       "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 525460,
       "selector_waited": false,
       "extraction_strategy": "requests"
     },
@@ -330,7 +338,7 @@
       "shop_id": "src_kitamura",
       "status": "FAILED",
       "price": 0,
-      "reason": "playwright_not_installed",
+      "reason": "site_blocked",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -338,9 +346,9 @@
       "selector_found": false,
       "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 453266,
       "selector_waited": false,
       "extraction_strategy": "requests"
     }

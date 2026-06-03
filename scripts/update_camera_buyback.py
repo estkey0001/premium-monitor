@@ -201,14 +201,23 @@ _PW_DOM_PROBE_JS = r"""
       if (!(v>=10000 && v<=1500000)) continue;
       hit++;
       const nearKw = KW.some(k => t.includes(k));
-      cands.push({selector: sel, text: t.slice(0,60), price: v, near_kw: nearKw});
+      // 「買取/査定」の文脈か（要素or近傍テキスト）— 販売価格と区別するため厳格判定
+      let ctx = t;
+      try { if (el.closest) { const c = el.closest("[class*='kaitori'],[class*='satei'],[class*='assess']"); if (c) ctx += " " + (c.textContent||""); } } catch(e){}
+      const nearBuyback = /買取|査定/.test(ctx);
+      cands.push({selector: sel, text: t.slice(0,60), price: v, near_kw: nearKw, near_buyback: nearBuyback});
     }
     if (hit>0) out.matched_selectors.push({selector: sel, hits: hit});
   }
-  // 買取/査定キーワード近接を優先、なければ最大値
+  // 買取/査定 文脈の候補のみを「買取価格」として採用（販売価格は採用しない）
+  const buybackCands = cands.filter(c => c.near_buyback);
+  buybackCands.sort((a,b)=> b.price - a.price);
   cands.sort((a,b)=> (b.near_kw - a.near_kw) || (b.price - a.price));
   out.selector_candidates = cands.slice(0,15);
-  if (cands.length) out.best_price = (cands.find(c=>c.near_kw) || cands[0]).price;
+  out.has_buyback_context = buybackCands.length > 0;
+  // best_price は「買取文脈」がある場合のみ設定（販売価格の誤抽出を防ぐ）
+  out.best_price = buybackCands.length ? buybackCands[0].price : null;
+  out.sales_price_sample = cands.length ? cands[0].price : null;  // 参考（販売価格の可能性）
   return out;
 }
 """
@@ -227,7 +236,8 @@ def _fetch_with_playwright(url: str, shop_id: str, alias: str, dbg_dir, shot_dir
            "selector_waited": False, "reason": "", "strategy": "",
            "extracted_price": None, "body_text_preview": "", "matched_selectors": [],
            "selector_candidates": [], "iframe_count": 0,
-           "shadow_dom_detected": False, "dom_ready_state": "", "hit_count": None}
+           "shadow_dom_detected": False, "dom_ready_state": "", "hit_count": None,
+           "has_buyback_context": False, "sales_price_sample": None}
     try:
         from playwright.sync_api import sync_playwright
     except Exception:
@@ -274,7 +284,10 @@ def _fetch_with_playwright(url: str, shop_id: str, alias: str, dbg_dir, shot_dir
                 out["matched_selectors"] = probe.get("matched_selectors", [])
                 out["selector_candidates"] = probe.get("selector_candidates", [])
                 out["hit_count"] = probe.get("hit_count")
+                out["has_buyback_context"] = bool(probe.get("has_buyback_context", False))
+                out["sales_price_sample"] = probe.get("sales_price_sample")
                 _bp = probe.get("best_price")
+                # 「買取文脈」のある価格のみ採用（販売価格は buyback として保存しない）
                 if isinstance(_bp, (int, float)) and 10000 <= _bp <= 1500000:
                     out["extracted_price"] = int(_bp)
             except Exception:
@@ -371,7 +384,8 @@ def main() -> int:
              # DOM 診断（Playwright）
              "body_text_preview": "", "matched_selectors": [], "selector_candidates": [],
              "iframe_count": 0, "shadow_dom_detected": False, "dom_ready_state": "",
-             "hit_count": None, "keyword_hit_counts": {}, "best_keyword": None}
+             "hit_count": None, "keyword_hit_counts": {}, "best_keyword": None,
+             "has_buyback_context": False, "sales_price_sample": None}
         d.update(kw)
         return d
 
@@ -433,8 +447,8 @@ def main() -> int:
                     _pw = _fetch_with_playwright(_pw_url, shop_id, alias, _dbg, shot_dir=_shot)
                 if _pw.get("html"):
                     _ph = _pw["html"]
-                    # selector brute force（DOM内探索）→ パターン抽出 の順
-                    _pprice = _pw.get("extracted_price") or _parse_buyback_price(_ph, alias, shop_id)
+                    # 「買取文脈」で抽出できた価格のみ採用（販売価格の誤抽出を防ぐ）。
+                    _pprice = _pw.get("extracted_price")
                     if _pprice:
                         price = _pprice
                         html = _ph
@@ -462,12 +476,17 @@ def main() -> int:
                           dom_ready_state=_pw.get("dom_ready_state", "") if _pw else "",
                           hit_count=_pw.get("hit_count") if _pw else None,
                           keyword_hit_counts=_kw_hit_counts,
-                          best_keyword=_best_keyword)
+                          best_keyword=_best_keyword,
+                          has_buyback_context=_pw.get("has_buyback_context", False) if _pw else False,
+                          sales_price_sample=_pw.get("sales_price_sample") if _pw else None)
 
             if not price or price <= 0:
                 # 失敗理由の決定（requests 失敗理由 / Playwright 理由 / 抽出不可）
                 if _pw and _pw.get("reason"):
                     _r = _pw["reason"]
+                elif _pw and _pw.get("sales_price_sample") and not _pw.get("has_buyback_context"):
+                    # 検索結果に価格はあるが「買取」文脈でない＝販売価格カタログ
+                    _r = "sales_catalog_no_buyback"
                 elif html is None:
                     _r = reason
                 elif _cf:

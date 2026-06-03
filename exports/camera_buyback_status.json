@@ -1,25 +1,17 @@
 {
-  "generated_at": "2026-06-03T18:36:19+09:00",
+  "generated_at": "2026-06-03T19:22:40+09:00",
   "summary": {
     "total": 15,
-    "ok": 4,
-    "failed": 11,
+    "ok": 0,
+    "failed": 15,
     "skip": 0,
-    "success_rate_pct": 26.7,
+    "success_rate_pct": 0.0,
     "saved_to_db": 0
   },
   "failure_reasons": [
     {
-      "reason": "timeout",
-      "count": 5
-    },
-    {
-      "reason": "site_blocked",
-      "count": 5
-    },
-    {
-      "reason": "price_not_found",
-      "count": 1
+      "reason": "playwright_not_installed",
+      "count": 15
     }
   ],
   "shop_diagnostics": {
@@ -30,26 +22,26 @@
       "cloudflare": 0,
       "js_required": 0,
       "playwright_attempted": 5,
-      "playwright_success": 5,
-      "screenshot_saved": 5,
+      "playwright_success": 0,
+      "screenshot_saved": 0,
       "top_reason": {
-        "timeout": 5
+        "playwright_not_installed": 5
       },
-      "diagnosis": "timeout"
+      "diagnosis": "playwright_not_installed"
     },
     "src_fujiya": {
       "jobs": 5,
-      "ok": 4,
+      "ok": 0,
       "html_saved": 5,
       "cloudflare": 0,
       "js_required": 0,
       "playwright_attempted": 5,
-      "playwright_success": 5,
-      "screenshot_saved": 5,
+      "playwright_success": 0,
+      "screenshot_saved": 0,
       "top_reason": {
-        "price_not_found": 1
+        "playwright_not_installed": 5
       },
-      "diagnosis": "price_not_found"
+      "diagnosis": "playwright_not_installed"
     },
     "src_kitamura": {
       "jobs": 5,
@@ -58,12 +50,12 @@
       "cloudflare": 0,
       "js_required": 0,
       "playwright_attempted": 5,
-      "playwright_success": 5,
-      "screenshot_saved": 5,
+      "playwright_success": 0,
+      "screenshot_saved": 0,
       "top_reason": {
-        "site_blocked": 5
+        "playwright_not_installed": 5
       },
-      "diagnosis": "site_blocked"
+      "diagnosis": "playwright_not_installed"
     }
   },
   "detail": [
@@ -72,7 +64,7 @@
       "shop_id": "src_mapcamera",
       "status": "FAILED",
       "price": 0,
-      "reason": "timeout",
+      "reason": "playwright_not_installed",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -80,157 +72,65 @@
       "selector_found": false,
       "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": true,
-      "screenshot_saved": true,
-      "rendered_html_size": 300,
+      "playwright_success": false,
+      "screenshot_saved": false,
+      "rendered_html_size": 0,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.67cfdb17.1780479395.96d7dd2\n\nhttps://errors.edgesuite.net/18.67cfdb17.1780479395.96d7dd2",
+      "body_text_preview": "",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
       "shadow_dom_detected": false,
-      "dom_ready_state": "complete",
+      "dom_ready_state": "",
       "hit_count": null,
       "keyword_hit_counts": {},
-      "best_keyword": null
+      "best_keyword": null,
+      "has_buyback_context": false,
+      "sales_price_sample": null
     },
     {
       "product_alias": "x100vi",
       "shop_id": "src_fujiya",
-      "status": "OK",
-      "price": 281600,
-      "reason": "",
+      "status": "FAILED",
+      "price": 0,
+      "reason": "playwright_not_installed",
       "html_saved": true,
-      "html_size": 341967,
+      "html_size": 317294,
       "cloudflare_detected": false,
       "js_required": false,
-      "selector_found": true,
-      "extracted_price": 281600,
+      "selector_found": false,
+      "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": true,
-      "screenshot_saved": true,
-      "rendered_html_size": 341967,
-      "selector_waited": true,
-      "extraction_strategy": "fujiya_search",
-      "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 商品検索・こだわり検索\n\n絞り込み\n\n条件をリセット\n検索\n該当件数\n12\n件\nカテゴリ\n\nカテゴリを選ぶ\n\nブランド\n\nブランドを選ぶ\n\n新品/中古\n新品\nアウトレット\n中古\n中古ランク\n未使用/未開封品\nA\nAB+\nAB\nAB-\nB\n現状品\nコレクション\n中古ランク表記について\nキーワード\n価格\n円 ～\n円\n販売状況\n売り切れ\n在庫あり\n予約商品\nお取り寄せ\n受注生産\nメーカー直送\nその他(注文開始前など)\nシリーズ\n\nシリーズを選ぶ\n\nマウント\nCanon EF\nCanon EF-S\nCanon EF-M\nCanon RF\nCanon RF-S\nCanon FD\nNikon F [FX]\nNikon F [DX]\nNikon Z [FX]\nNikon Z [DX]\nNikon 1 [CX]\nNikon S / Contax C\nNikon F [Auto Nikkor]\nNikon F [New Nikkor]\nNikon F [Ai Nikkor]\nNikon その他\nSONY E ",
-      "matched_selectors": [
-        {
-          "selector": ".price",
-          "hits": 8
-        },
-        {
-          "selector": "[class*='price']",
-          "hits": 24
-        }
-      ],
-      "selector_candidates": [
-        {
-          "selector": ".price",
-          "text": "￥281,600(税込)",
-          "price": 281600,
-          "near_kw": true
-        },
-        {
-          "selector": ".price",
-          "text": "￥281,600(税込)",
-          "price": 281600,
-          "near_kw": true
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "￥281,600(税込)",
-          "price": 281600,
-          "near_kw": true
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "￥281,600(税込)",
-          "price": 281600,
-          "near_kw": true
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "￥281,600(税込)",
-          "price": 281600,
-          "near_kw": true
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "￥281,600(税込)",
-          "price": 281600,
-          "near_kw": true
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "￥281,600(税込)",
-          "price": 281600,
-          "near_kw": true
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "￥281,600(税込)",
-          "price": 281600,
-          "near_kw": true
-        },
-        {
-          "selector": ".price",
-          "text": "￥198,000(税込)",
-          "price": 198000,
-          "near_kw": true
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "￥198,000(税込)",
-          "price": 198000,
-          "near_kw": true
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "￥198,000(税込)",
-          "price": 198000,
-          "near_kw": true
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "￥198,000(税込)",
-          "price": 198000,
-          "near_kw": true
-        },
-        {
-          "selector": ".price",
-          "text": "￥188,100(税込)",
-          "price": 188100,
-          "near_kw": true
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "￥188,100(税込)",
-          "price": 188100,
-          "near_kw": true
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "￥188,100(税込)",
-          "price": 188100,
-          "near_kw": true
-        }
-      ],
-      "iframe_count": 1,
+      "playwright_success": false,
+      "screenshot_saved": false,
+      "rendered_html_size": 0,
+      "selector_waited": false,
+      "extraction_strategy": "requests",
+      "body_text_preview": "",
+      "matched_selectors": [],
+      "selector_candidates": [],
+      "iframe_count": 0,
       "shadow_dom_detected": false,
-      "dom_ready_state": "interactive",
-      "hit_count": 12,
+      "dom_ready_state": "",
+      "hit_count": null,
       "keyword_hit_counts": {
-        "X100VI": 12
+        "X100VI": null,
+        "X100 VI": null,
+        "X100V": null,
+        "富士フイルム X100": null,
+        "FUJIFILM X100VI": null
       },
-      "best_keyword": "X100VI"
+      "best_keyword": "X100VI",
+      "has_buyback_context": false,
+      "sales_price_sample": null
     },
     {
       "product_alias": "x100vi",
       "shop_id": "src_kitamura",
       "status": "FAILED",
       "price": 0,
-      "reason": "site_blocked",
+      "reason": "playwright_not_installed",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -238,27 +138,29 @@
       "selector_found": false,
       "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": true,
-      "screenshot_saved": true,
-      "rendered_html_size": 453266,
+      "playwright_success": false,
+      "screenshot_saved": false,
+      "rendered_html_size": 0,
       "selector_waited": false,
       "extraction_strategy": "requests",
       "body_text_preview": "",
       "matched_selectors": [],
       "selector_candidates": [],
-      "iframe_count": 1,
+      "iframe_count": 0,
       "shadow_dom_detected": false,
-      "dom_ready_state": "complete",
+      "dom_ready_state": "",
       "hit_count": null,
       "keyword_hit_counts": {},
-      "best_keyword": null
+      "best_keyword": null,
+      "has_buyback_context": false,
+      "sales_price_sample": null
     },
     {
       "product_alias": "gr4",
       "shop_id": "src_mapcamera",
       "status": "FAILED",
       "price": 0,
-      "reason": "timeout",
+      "reason": "playwright_not_installed",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -266,157 +168,64 @@
       "selector_found": false,
       "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": true,
-      "screenshot_saved": true,
-      "rendered_html_size": 302,
+      "playwright_success": false,
+      "screenshot_saved": false,
+      "rendered_html_size": 0,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.64cfdb17.1780479460.22f3cb2e\n\nhttps://errors.edgesuite.net/18.64cfdb17.1780479460.22f3cb2e",
+      "body_text_preview": "",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
       "shadow_dom_detected": false,
-      "dom_ready_state": "complete",
+      "dom_ready_state": "",
       "hit_count": null,
       "keyword_hit_counts": {},
-      "best_keyword": null
+      "best_keyword": null,
+      "has_buyback_context": false,
+      "sales_price_sample": null
     },
     {
       "product_alias": "gr4",
       "shop_id": "src_fujiya",
-      "status": "OK",
-      "price": 255420,
-      "reason": "",
+      "status": "FAILED",
+      "price": 0,
+      "reason": "playwright_not_installed",
       "html_saved": true,
-      "html_size": 356854,
+      "html_size": 316351,
       "cloudflare_detected": false,
       "js_required": false,
-      "selector_found": true,
-      "extracted_price": 255420,
+      "selector_found": false,
+      "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": true,
-      "screenshot_saved": true,
-      "rendered_html_size": 356854,
-      "selector_waited": true,
-      "extraction_strategy": "fujiya_search",
-      "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 商品検索・こだわり検索\n\n絞り込み\n\n条件をリセット\n検索\n該当件数\n21\n件\nカテゴリ\n\nカテゴリを選ぶ\n\nブランド\n\nブランドを選ぶ\n\n新品/中古\n新品\nアウトレット\n中古\n中古ランク\n未使用/未開封品\nA\nAB+\nAB\nAB-\nB\n現状品\nコレクション\n中古ランク表記について\nキーワード\n価格\n円 ～\n円\n販売状況\n売り切れ\n在庫あり\n予約商品\nお取り寄せ\n受注生産\nメーカー直送\nその他(注文開始前など)\nシリーズ\n\nシリーズを選ぶ\n\nマウント\nCanon EF\nCanon EF-S\nCanon EF-M\nCanon RF\nCanon RF-S\nCanon FD\nNikon F [FX]\nNikon F [DX]\nNikon Z [FX]\nNikon Z [DX]\nNikon 1 [CX]\nNikon S / Contax C\nNikon F [Auto Nikkor]\nNikon F [New Nikkor]\nNikon F [Ai Nikkor]\nNikon その他\nSONY E ",
-      "matched_selectors": [
-        {
-          "selector": ".price",
-          "hits": 7
-        },
-        {
-          "selector": "[class*='price']",
-          "hits": 21
-        }
-      ],
-      "selector_candidates": [
-        {
-          "selector": ".price",
-          "text": "￥255,420(税込)",
-          "price": 255420,
-          "near_kw": true
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "￥255,420(税込)",
-          "price": 255420,
-          "near_kw": true
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "￥255,420(税込)",
-          "price": 255420,
-          "near_kw": true
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "￥255,420(税込)",
-          "price": 255420,
-          "near_kw": true
-        },
-        {
-          "selector": ".price",
-          "text": "￥52,173(税込)",
-          "price": 52173,
-          "near_kw": true
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "￥52,173(税込)",
-          "price": 52173,
-          "near_kw": true
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "￥52,173(税込)",
-          "price": 52173,
-          "near_kw": true
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "￥52,173(税込)",
-          "price": 52173,
-          "near_kw": true
-        },
-        {
-          "selector": ".price",
-          "text": "￥47,124(税込)",
-          "price": 47124,
-          "near_kw": true
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "￥47,124(税込)",
-          "price": 47124,
-          "near_kw": true
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "￥47,124(税込)",
-          "price": 47124,
-          "near_kw": true
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "￥47,124(税込)",
-          "price": 47124,
-          "near_kw": true
-        },
-        {
-          "selector": ".price",
-          "text": "￥42,570(税込)",
-          "price": 42570,
-          "near_kw": true
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "￥42,570(税込)",
-          "price": 42570,
-          "near_kw": true
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "￥42,570(税込)",
-          "price": 42570,
-          "near_kw": true
-        }
-      ],
-      "iframe_count": 1,
+      "playwright_success": false,
+      "screenshot_saved": false,
+      "rendered_html_size": 0,
+      "selector_waited": false,
+      "extraction_strategy": "requests",
+      "body_text_preview": "",
+      "matched_selectors": [],
+      "selector_candidates": [],
+      "iframe_count": 0,
       "shadow_dom_detected": false,
-      "dom_ready_state": "interactive",
-      "hit_count": 21,
+      "dom_ready_state": "",
+      "hit_count": null,
       "keyword_hit_counts": {
-        "GR IV": 21
+        "GR IV": null,
+        "GR4": null,
+        "リコー GR IV": null,
+        "RICOH GR IV": null
       },
-      "best_keyword": "GR IV"
+      "best_keyword": "GR IV",
+      "has_buyback_context": false,
+      "sales_price_sample": null
     },
     {
       "product_alias": "gr4",
       "shop_id": "src_kitamura",
       "status": "FAILED",
       "price": 0,
-      "reason": "site_blocked",
+      "reason": "playwright_not_installed",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -424,27 +233,29 @@
       "selector_found": false,
       "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": true,
-      "screenshot_saved": true,
-      "rendered_html_size": 453266,
+      "playwright_success": false,
+      "screenshot_saved": false,
+      "rendered_html_size": 0,
       "selector_waited": false,
       "extraction_strategy": "requests",
       "body_text_preview": "",
       "matched_selectors": [],
       "selector_candidates": [],
-      "iframe_count": 1,
+      "iframe_count": 0,
       "shadow_dom_detected": false,
-      "dom_ready_state": "complete",
+      "dom_ready_state": "",
       "hit_count": null,
       "keyword_hit_counts": {},
-      "best_keyword": null
+      "best_keyword": null,
+      "has_buyback_context": false,
+      "sales_price_sample": null
     },
     {
       "product_alias": "gr4_hdf",
       "shop_id": "src_mapcamera",
       "status": "FAILED",
       "price": 0,
-      "reason": "timeout",
+      "reason": "playwright_not_installed",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -452,157 +263,63 @@
       "selector_found": false,
       "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": true,
-      "screenshot_saved": true,
-      "rendered_html_size": 302,
+      "playwright_success": false,
+      "screenshot_saved": false,
+      "rendered_html_size": 0,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.64cfdb17.1780479524.22f4ccd0\n\nhttps://errors.edgesuite.net/18.64cfdb17.1780479524.22f4ccd0",
+      "body_text_preview": "",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
       "shadow_dom_detected": false,
-      "dom_ready_state": "complete",
+      "dom_ready_state": "",
       "hit_count": null,
       "keyword_hit_counts": {},
-      "best_keyword": null
+      "best_keyword": null,
+      "has_buyback_context": false,
+      "sales_price_sample": null
     },
     {
       "product_alias": "gr4_hdf",
       "shop_id": "src_fujiya",
-      "status": "OK",
-      "price": 666270,
-      "reason": "",
+      "status": "FAILED",
+      "price": 0,
+      "reason": "playwright_not_installed",
       "html_saved": true,
-      "html_size": 393469,
+      "html_size": 361670,
       "cloudflare_detected": false,
       "js_required": false,
-      "selector_found": true,
-      "extracted_price": 666270,
+      "selector_found": false,
+      "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": true,
-      "screenshot_saved": true,
-      "rendered_html_size": 393469,
-      "selector_waited": true,
-      "extraction_strategy": "fujiya_search",
-      "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 商品検索・こだわり検索\n商品検索・こだわり検索\n\nご指定の条件に一致する商品が見つかりませんでした。\n\nキーワード：GR IV HDF\n\n該当件数\n0\n件\n\n条件をリセット\n検索\n\nカテゴリ\nブランド\nシリーズ\n共通\nカメラ・レンズ\n用品\nスチール撮影機材\n動画撮影機材\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nすべて\nミラーレスカメラ\nデジタル一眼レフカメラ\nデジタルレンジファインダーカメラ\n中判デジタルカメラ\nコンパクトデジタルカメラ\nその他デジタルカメラ\n\n条件をリセット\n検索\n\n新製品・取り扱い開始\n新品\nSONY\nα7R VI ILCE-7RM6（2026年6月5日発売予定）\n￥666,270(税込)\n新品\nSONY\nFE 10",
-      "matched_selectors": [
-        {
-          "selector": ".price",
-          "hits": 31
-        },
-        {
-          "selector": "[class*='price']",
-          "hits": 93
-        }
-      ],
-      "selector_candidates": [
-        {
-          "selector": ".price",
-          "text": "￥666,270(税込)",
-          "price": 666270,
-          "near_kw": true
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "￥666,270(税込)",
-          "price": 666270,
-          "near_kw": true
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "￥666,270(税込)",
-          "price": 666270,
-          "near_kw": true
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "￥666,270(税込)",
-          "price": 666270,
-          "near_kw": true
-        },
-        {
-          "selector": ".price",
-          "text": "￥653,400(税込)",
-          "price": 653400,
-          "near_kw": true
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "￥653,400(税込)",
-          "price": 653400,
-          "near_kw": true
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "￥653,400(税込)",
-          "price": 653400,
-          "near_kw": true
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "￥653,400(税込)",
-          "price": 653400,
-          "near_kw": true
-        },
-        {
-          "selector": ".price",
-          "text": "￥504,400(税込)",
-          "price": 504400,
-          "near_kw": true
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "￥504,400(税込)",
-          "price": 504400,
-          "near_kw": true
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "￥504,400(税込)",
-          "price": 504400,
-          "near_kw": true
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "￥504,400(税込)",
-          "price": 504400,
-          "near_kw": true
-        },
-        {
-          "selector": ".price",
-          "text": "￥475,200(税込)",
-          "price": 475200,
-          "near_kw": true
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "￥475,200(税込)",
-          "price": 475200,
-          "near_kw": true
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "￥475,200(税込)",
-          "price": 475200,
-          "near_kw": true
-        }
-      ],
+      "playwright_success": false,
+      "screenshot_saved": false,
+      "rendered_html_size": 0,
+      "selector_waited": false,
+      "extraction_strategy": "requests",
+      "body_text_preview": "",
+      "matched_selectors": [],
+      "selector_candidates": [],
       "iframe_count": 0,
       "shadow_dom_detected": false,
-      "dom_ready_state": "interactive",
-      "hit_count": 0,
+      "dom_ready_state": "",
+      "hit_count": null,
       "keyword_hit_counts": {
-        "GR IV HDF": 0
+        "GR IV HDF": null,
+        "GR4 HDF": null,
+        "RICOH GR IV HDF": null
       },
-      "best_keyword": "GR IV HDF"
+      "best_keyword": "GR IV HDF",
+      "has_buyback_context": false,
+      "sales_price_sample": null
     },
     {
       "product_alias": "gr4_hdf",
       "shop_id": "src_kitamura",
       "status": "FAILED",
       "price": 0,
-      "reason": "site_blocked",
+      "reason": "playwright_not_installed",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -610,27 +327,29 @@
       "selector_found": false,
       "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": true,
-      "screenshot_saved": true,
-      "rendered_html_size": 453266,
+      "playwright_success": false,
+      "screenshot_saved": false,
+      "rendered_html_size": 0,
       "selector_waited": false,
       "extraction_strategy": "requests",
       "body_text_preview": "",
       "matched_selectors": [],
       "selector_candidates": [],
-      "iframe_count": 1,
+      "iframe_count": 0,
       "shadow_dom_detected": false,
-      "dom_ready_state": "complete",
+      "dom_ready_state": "",
       "hit_count": null,
       "keyword_hit_counts": {},
-      "best_keyword": null
+      "best_keyword": null,
+      "has_buyback_context": false,
+      "sales_price_sample": null
     },
     {
       "product_alias": "gr4_mono",
       "shop_id": "src_mapcamera",
       "status": "FAILED",
       "price": 0,
-      "reason": "timeout",
+      "reason": "playwright_not_installed",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -638,91 +357,63 @@
       "selector_found": false,
       "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": true,
-      "screenshot_saved": true,
-      "rendered_html_size": 302,
+      "playwright_success": false,
+      "screenshot_saved": false,
+      "rendered_html_size": 0,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.64cfdb17.1780479589.22f5b744\n\nhttps://errors.edgesuite.net/18.64cfdb17.1780479589.22f5b744",
+      "body_text_preview": "",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
       "shadow_dom_detected": false,
-      "dom_ready_state": "complete",
+      "dom_ready_state": "",
       "hit_count": null,
       "keyword_hit_counts": {},
-      "best_keyword": null
+      "best_keyword": null,
+      "has_buyback_context": false,
+      "sales_price_sample": null
     },
     {
       "product_alias": "gr4_mono",
       "shop_id": "src_fujiya",
-      "status": "OK",
-      "price": 255420,
-      "reason": "",
+      "status": "FAILED",
+      "price": 0,
+      "reason": "playwright_not_installed",
       "html_saved": true,
-      "html_size": 321882,
+      "html_size": 313625,
       "cloudflare_detected": false,
       "js_required": false,
-      "selector_found": true,
-      "extracted_price": 255420,
+      "selector_found": false,
+      "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": true,
-      "screenshot_saved": true,
-      "rendered_html_size": 321882,
-      "selector_waited": true,
-      "extraction_strategy": "fujiya_search",
-      "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 商品検索・こだわり検索\n\n絞り込み\n\n条件をリセット\n検索\n該当件数\n1\n件\nカテゴリ\n\nカテゴリを選ぶ\n\nブランド\n\nブランドを選ぶ\n\n新品/中古\n新品\nアウトレット\n中古\n中古ランク\n未使用/未開封品\nA\nAB+\nAB\nAB-\nB\n現状品\nコレクション\n中古ランク表記について\nキーワード\n価格\n円 ～\n円\n販売状況\n売り切れ\n在庫あり\n予約商品\nお取り寄せ\n受注生産\nメーカー直送\nその他(注文開始前など)\nシリーズ\n\nシリーズを選ぶ\n\nマウント\nCanon EF\nCanon EF-S\nCanon EF-M\nCanon RF\nCanon RF-S\nCanon FD\nNikon F [FX]\nNikon F [DX]\nNikon Z [FX]\nNikon Z [DX]\nNikon 1 [CX]\nNikon S / Contax C\nNikon F [Auto Nikkor]\nNikon F [New Nikkor]\nNikon F [Ai Nikkor]\nNikon その他\nSONY E [",
-      "matched_selectors": [
-        {
-          "selector": ".price",
-          "hits": 1
-        },
-        {
-          "selector": "[class*='price']",
-          "hits": 3
-        }
-      ],
-      "selector_candidates": [
-        {
-          "selector": ".price",
-          "text": "￥255,420(税込)",
-          "price": 255420,
-          "near_kw": true
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "￥255,420(税込)",
-          "price": 255420,
-          "near_kw": true
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "￥255,420(税込)",
-          "price": 255420,
-          "near_kw": true
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "￥255,420(税込)",
-          "price": 255420,
-          "near_kw": true
-        }
-      ],
-      "iframe_count": 1,
+      "playwright_success": false,
+      "screenshot_saved": false,
+      "rendered_html_size": 0,
+      "selector_waited": false,
+      "extraction_strategy": "requests",
+      "body_text_preview": "",
+      "matched_selectors": [],
+      "selector_candidates": [],
+      "iframe_count": 0,
       "shadow_dom_detected": false,
-      "dom_ready_state": "interactive",
-      "hit_count": 1,
+      "dom_ready_state": "",
+      "hit_count": null,
       "keyword_hit_counts": {
-        "GR IV Monochrome": 1
+        "GR IV Monochrome": null,
+        "GR IV モノクローム": null,
+        "GR4 モノクロ": null
       },
-      "best_keyword": "GR IV Monochrome"
+      "best_keyword": "GR IV Monochrome",
+      "has_buyback_context": false,
+      "sales_price_sample": null
     },
     {
       "product_alias": "gr4_mono",
       "shop_id": "src_kitamura",
       "status": "FAILED",
       "price": 0,
-      "reason": "site_blocked",
+      "reason": "playwright_not_installed",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -730,27 +421,29 @@
       "selector_found": false,
       "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": true,
-      "screenshot_saved": true,
-      "rendered_html_size": 453266,
+      "playwright_success": false,
+      "screenshot_saved": false,
+      "rendered_html_size": 0,
       "selector_waited": false,
       "extraction_strategy": "requests",
       "body_text_preview": "",
       "matched_selectors": [],
       "selector_candidates": [],
-      "iframe_count": 1,
+      "iframe_count": 0,
       "shadow_dom_detected": false,
-      "dom_ready_state": "complete",
+      "dom_ready_state": "",
       "hit_count": null,
       "keyword_hit_counts": {},
-      "best_keyword": null
+      "best_keyword": null,
+      "has_buyback_context": false,
+      "sales_price_sample": null
     },
     {
       "product_alias": "gr3x",
       "shop_id": "src_mapcamera",
       "status": "FAILED",
       "price": 0,
-      "reason": "timeout",
+      "reason": "playwright_not_installed",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -758,27 +451,29 @@
       "selector_found": false,
       "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": true,
-      "screenshot_saved": true,
-      "rendered_html_size": 300,
+      "playwright_success": false,
+      "screenshot_saved": false,
+      "rendered_html_size": 0,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.67cfdb17.1780479653.9710804\n\nhttps://errors.edgesuite.net/18.67cfdb17.1780479653.9710804",
+      "body_text_preview": "",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
       "shadow_dom_detected": false,
-      "dom_ready_state": "complete",
+      "dom_ready_state": "",
       "hit_count": null,
       "keyword_hit_counts": {},
-      "best_keyword": null
+      "best_keyword": null,
+      "has_buyback_context": false,
+      "sales_price_sample": null
     },
     {
       "product_alias": "gr3x",
       "shop_id": "src_fujiya",
       "status": "FAILED",
       "price": 0,
-      "reason": "price_not_found",
+      "reason": "playwright_not_installed",
       "html_saved": true,
       "html_size": 317634,
       "cloudflare_detected": false,
@@ -786,32 +481,34 @@
       "selector_found": false,
       "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": true,
-      "screenshot_saved": true,
-      "rendered_html_size": 325701,
-      "selector_waited": true,
+      "playwright_success": false,
+      "screenshot_saved": false,
+      "rendered_html_size": 0,
+      "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 商品検索・こだわり検索\n\n絞り込み\n\n条件をリセット\n検索\n該当件数\n4\n件\nカテゴリ\n\nカテゴリを選ぶ\n\nブランド\n\nブランドを選ぶ\n\n新品/中古\n新品\nアウトレット\n中古\n中古ランク\n未使用/未開封品\nA\nAB+\nAB\nAB-\nB\n現状品\nコレクション\n中古ランク表記について\nキーワード\n価格\n円 ～\n円\n販売状況\n売り切れ\n在庫あり\n予約商品\nお取り寄せ\n受注生産\nメーカー直送\nその他(注文開始前など)\nシリーズ\n\nシリーズを選ぶ\n\nマウント\nCanon EF\nCanon EF-S\nCanon EF-M\nCanon RF\nCanon RF-S\nCanon FD\nNikon F [FX]\nNikon F [DX]\nNikon Z [FX]\nNikon Z [DX]\nNikon 1 [CX]\nNikon S / Contax C\nNikon F [Auto Nikkor]\nNikon F [New Nikkor]\nNikon F [Ai Nikkor]\nNikon その他\nSONY E [",
+      "body_text_preview": "",
       "matched_selectors": [],
       "selector_candidates": [],
-      "iframe_count": 1,
+      "iframe_count": 0,
       "shadow_dom_detected": false,
-      "dom_ready_state": "interactive",
-      "hit_count": 4,
+      "dom_ready_state": "",
+      "hit_count": null,
       "keyword_hit_counts": {
-        "GR IIIx": 4,
-        "GR3x": 1,
-        "リコー GR IIIx": 2,
-        "RICOH GR IIIx": 4
+        "GR IIIx": null,
+        "GR3x": null,
+        "リコー GR IIIx": null,
+        "RICOH GR IIIx": null
       },
-      "best_keyword": "GR IIIx"
+      "best_keyword": "GR IIIx",
+      "has_buyback_context": false,
+      "sales_price_sample": null
     },
     {
       "product_alias": "gr3x",
       "shop_id": "src_kitamura",
       "status": "FAILED",
       "price": 0,
-      "reason": "site_blocked",
+      "reason": "playwright_not_installed",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -819,20 +516,22 @@
       "selector_found": false,
       "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": true,
-      "screenshot_saved": true,
-      "rendered_html_size": 453266,
+      "playwright_success": false,
+      "screenshot_saved": false,
+      "rendered_html_size": 0,
       "selector_waited": false,
       "extraction_strategy": "requests",
       "body_text_preview": "",
       "matched_selectors": [],
       "selector_candidates": [],
-      "iframe_count": 1,
+      "iframe_count": 0,
       "shadow_dom_detected": false,
-      "dom_ready_state": "complete",
+      "dom_ready_state": "",
       "hit_count": null,
       "keyword_hit_counts": {},
-      "best_keyword": null
+      "best_keyword": null,
+      "has_buyback_context": false,
+      "sales_price_sample": null
     }
   ],
   "fallback_note": "HTMLから新品買取を確定できない店舗は manual_buyback_prices.csv の manual_today（手動確認）を使用。auto_scraped 取得時はそちらを優先。14日超は利益判定から除外。",

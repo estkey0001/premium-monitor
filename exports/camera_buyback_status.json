@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-03T19:22:40+09:00",
+  "generated_at": "2026-06-03T19:43:34+09:00",
   "summary": {
     "total": 15,
     "ok": 0,
@@ -87,7 +87,13 @@
       "keyword_hit_counts": {},
       "best_keyword": null,
       "has_buyback_context": false,
-      "sales_price_sample": null
+      "sales_price_sample": null,
+      "buyback_link_candidates": [],
+      "buyback_page_url": null,
+      "buyback_page_html_size": 0,
+      "buyback_page_text_preview": "",
+      "buyback_price_candidates": [],
+      "buyback_extracted_price": null
     },
     {
       "product_alias": "x100vi",
@@ -123,7 +129,13 @@
       },
       "best_keyword": "X100VI",
       "has_buyback_context": false,
-      "sales_price_sample": null
+      "sales_price_sample": null,
+      "buyback_link_candidates": [],
+      "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=X100VI",
+      "buyback_page_html_size": 0,
+      "buyback_page_text_preview": "",
+      "buyback_price_candidates": [],
+      "buyback_extracted_price": null
     },
     {
       "product_alias": "x100vi",
@@ -153,7 +165,13 @@
       "keyword_hit_counts": {},
       "best_keyword": null,
       "has_buyback_context": false,
-      "sales_price_sample": null
+      "sales_price_sample": null,
+      "buyback_link_candidates": [],
+      "buyback_page_url": null,
+      "buyback_page_html_size": 0,
+      "buyback_page_text_preview": "",
+      "buyback_price_candidates": [],
+      "buyback_extracted_price": null
     },
     {
       "product_alias": "gr4",
@@ -183,7 +201,13 @@
       "keyword_hit_counts": {},
       "best_keyword": null,
       "has_buyback_context": false,
-      "sales_price_sample": null
+      "sales_price_sample": null,
+      "buyback_link_candidates": [],
+      "buyback_page_url": null,
+      "buyback_page_html_size": 0,
+      "buyback_page_text_preview": "",
+      "buyback_price_candidates": [],
+      "buyback_extracted_price": null
     },
     {
       "product_alias": "gr4",
@@ -218,7 +242,13 @@
       },
       "best_keyword": "GR IV",
       "has_buyback_context": false,
-      "sales_price_sample": null
+      "sales_price_sample": null,
+      "buyback_link_candidates": [],
+      "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=GR%20IV",
+      "buyback_page_html_size": 0,
+      "buyback_page_text_preview": "",
+      "buyback_price_candidates": [],
+      "buyback_extracted_price": null
     },
     {
       "product_alias": "gr4",
@@ -248,7 +278,13 @@
       "keyword_hit_counts": {},
       "best_keyword": null,
       "has_buyback_context": false,
-      "sales_price_sample": null
+      "sales_price_sample": null,
+      "buyback_link_candidates": [],
+      "buyback_page_url": null,
+      "buyback_page_html_size": 0,
+      "buyback_page_text_preview": "",
+      "buyback_price_candidates": [],
+      "buyback_extracted_price": null
     },
     {
       "product_alias": "gr4_hdf",
@@ -278,7 +314,13 @@
       "keyword_hit_counts": {},
       "best_keyword": null,
       "has_buyback_context": false,
-      "sales_price_sample": null
+      "sales_price_sample": null,
+      "buyback_link_candidates": [],
+      "buyback_page_url": null,
+      "buyback_page_html_size": 0,
+      "buyback_page_text_preview": "",
+      "buyback_price_candidates": [],
+      "buyback_extracted_price": null
     },
     {
       "product_alias": "gr4_hdf",
@@ -312,7 +354,13 @@
       },
       "best_keyword": "GR IV HDF",
       "has_buyback_context": false,
-      "sales_price_sample": null
+      "sales_price_sample": null,
+      "buyback_link_candidates": [],
+      "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=GR%20IV%20HDF",
+      "buyback_page_html_size": 0,
+      "buyback_page_text_preview": "",
+      "buyback_price_candidates": [],
+      "buyback_extracted_price": null
     },
     {
       "product_alias": "gr4_hdf",
@@ -342,7 +390,13 @@
       "keyword_hit_counts": {},
       "best_keyword": null,
       "has_buyback_context": false,
-      "sales_price_sample": null
+      "sales_price_sample": null,
+      "buyback_link_candidates": [],
+      "buyback_page_url": null,
+      "buyback_page_html_size": 0,
+      "buyback_page_text_preview": "",
+      "buyback_price_candidates": [],
+      "buyback_extracted_price": null
     },
     {
       "product_alias": "gr4_mono",
@@ -372,7 +426,13 @@
       "keyword_hit_counts": {},
       "best_keyword": null,
       "has_buyback_context": false,
-      "sales_price_sample": null
+      "sales_price_sample": null,
+      "buyback_link_candidates": [],
+      "buyback_page_url": null,
+      "buyback_page_html_size": 0,
+      "buyback_page_text_preview": "",
+      "buyback_price_candidates": [],
+      "buyback_extracted_price": null
     },
     {
       "product_alias": "gr4_mono",
@@ -406,7 +466,13 @@
       },
       "best_keyword": "GR IV Monochrome",
       "has_buyback_context": false,
-      "sales_price_sample": null
+      "sales_price_sample": null,
+      "buyback_link_candidates": [],
+      "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=GR%20IV%20Monochrome",
+      "buyback_page_html_size": 0,
+      "buyback_page_text_preview": "",
+      "buyback_price_candidates": [],
+      "buyback_extracted_price": null
     },
     {
       "product_alias": "gr4_mono",
@@ -436,7 +502,13 @@
       "keyword_hit_counts": {},
       "best_keyword": null,
       "has_buyback_context": false,
-      "sales_price_sample": null
+      "sales_price_sample": null,
+      "buyback_link_candidates": [],
+      "buyback_page_url": null,
+      "buyback_page_html_size": 0,
+      "buyback_page_text_preview": "",
+      "buyback_price_candidates": [],
+      "buyback_extracted_price": null
     },
     {
       "product_alias": "gr3x",
@@ -466,7 +538,13 @@
       "keyword_hit_counts": {},
       "best_keyword": null,
       "has_buyback_context": false,
-      "sales_price_sample": null
+      "sales_price_sample": null,
+      "buyback_link_candidates": [],
+      "buyback_page_url": null,
+      "buyback_page_html_size": 0,
+      "buyback_page_text_preview": "",
+      "buyback_price_candidates": [],
+      "buyback_extracted_price": null
     },
     {
       "product_alias": "gr3x",
@@ -501,7 +579,13 @@
       },
       "best_keyword": "GR IIIx",
       "has_buyback_context": false,
-      "sales_price_sample": null
+      "sales_price_sample": null,
+      "buyback_link_candidates": [],
+      "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=GR%20IIIx",
+      "buyback_page_html_size": 0,
+      "buyback_page_text_preview": "",
+      "buyback_price_candidates": [],
+      "buyback_extracted_price": null
     },
     {
       "product_alias": "gr3x",
@@ -531,7 +615,13 @@
       "keyword_hit_counts": {},
       "best_keyword": null,
       "has_buyback_context": false,
-      "sales_price_sample": null
+      "sales_price_sample": null,
+      "buyback_link_candidates": [],
+      "buyback_page_url": null,
+      "buyback_page_html_size": 0,
+      "buyback_page_text_preview": "",
+      "buyback_price_candidates": [],
+      "buyback_extracted_price": null
     }
   ],
   "fallback_note": "HTMLから新品買取を確定できない店舗は manual_buyback_prices.csv の manual_today（手動確認）を使用。auto_scraped 取得時はそちらを優先。14日超は利益判定から除外。",

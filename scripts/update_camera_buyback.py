@@ -144,12 +144,13 @@ def _fetch_html(url: str, timeout: int = 15) -> tuple[Optional[str], str]:
 # 店舗別 検索フォーム/結果セレクタ（Playwright 用）
 _PW_SHOP_CONFIG = {
     "src_fujiya": {
-        # フォーム解析（frmSearch GET /shop/goods/search.aspx, input: keyword/brand/form_genre/search）に基づく。
-        # 「FUJIFILM X100VI」は0件 → 型番のみ（mkw）の方がヒットしやすい。submit用 search=検索 を付与。
-        "search_url": "https://www.fujiya-camera.co.jp/shop/goods/search.aspx?keyword={mkw}&search=検索",
+        # rendered DOM 解析で発見した「買取金額を調べる」買取専用ページ /shop/purchase/list.aspx を使用。
+        # （/shop/goods/search.aspx は販売カタログ＝買取価格でないため不採用）
+        "search_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword={mkw}",
+        "buyback_landing": "https://www.fujiya-camera.co.jp/shop/kaitori/pc/0c-kaitor/",
         "search_input": "input[name='keyword']",
-        "result_wait": "[class*='goods-list'], [class*='price'], .goods, .item",
-        "strategy": "fujiya_search",
+        "result_wait": "[class*='kaitori'], [class*='price'], [class*='purchase'], table td",
+        "strategy": "fujiya_buyback",
     },
     "src_kitamura": {
         # net-chuko の /ec/list は404（指定ページなし）→ 中古/買取検索の正しいパスへ。
@@ -188,6 +189,19 @@ _PW_DOM_PROBE_JS = r"""
                matched_selectors: [], selector_candidates: [], best_price: null};
   // shadow DOM 検出
   try { out.shadow_dom = Array.from(document.querySelectorAll('*')).some(e => e.shadowRoot); } catch(e){}
+  // 買取ページへのリンク候補を収集（買取/査定/下取/kaitori/purchase/trade-in）
+  const blinks = [];
+  try {
+    for (const a of document.querySelectorAll('a[href]')) {
+      const t = (a.textContent||"").trim();
+      const href = a.getAttribute('href')||"";
+      const hl = href.toLowerCase();
+      if (/買取|査定|下取/.test(t) || /kaitori|purchase|satei|trade|sell|oneprice|one-price/.test(hl)) {
+        blinks.push({text: t.slice(0,30), href: href});
+      }
+    }
+  } catch(e){}
+  out.buyback_link_candidates = blinks.slice(0,20);
   const cands = [];
   for (const sel of SELECTORS) {
     let els;
@@ -237,7 +251,8 @@ def _fetch_with_playwright(url: str, shop_id: str, alias: str, dbg_dir, shot_dir
            "extracted_price": None, "body_text_preview": "", "matched_selectors": [],
            "selector_candidates": [], "iframe_count": 0,
            "shadow_dom_detected": False, "dom_ready_state": "", "hit_count": None,
-           "has_buyback_context": False, "sales_price_sample": None}
+           "has_buyback_context": False, "sales_price_sample": None,
+           "buyback_link_candidates": [], "buyback_page_url": None}
     try:
         from playwright.sync_api import sync_playwright
     except Exception:
@@ -286,6 +301,7 @@ def _fetch_with_playwright(url: str, shop_id: str, alias: str, dbg_dir, shot_dir
                 out["hit_count"] = probe.get("hit_count")
                 out["has_buyback_context"] = bool(probe.get("has_buyback_context", False))
                 out["sales_price_sample"] = probe.get("sales_price_sample")
+                out["buyback_link_candidates"] = probe.get("buyback_link_candidates", [])
                 _bp = probe.get("best_price")
                 # 「買取文脈」のある価格のみ採用（販売価格は buyback として保存しない）
                 if isinstance(_bp, (int, float)) and 10000 <= _bp <= 1500000:
@@ -385,7 +401,10 @@ def main() -> int:
              "body_text_preview": "", "matched_selectors": [], "selector_candidates": [],
              "iframe_count": 0, "shadow_dom_detected": False, "dom_ready_state": "",
              "hit_count": None, "keyword_hit_counts": {}, "best_keyword": None,
-             "has_buyback_context": False, "sales_price_sample": None}
+             "has_buyback_context": False, "sales_price_sample": None,
+             "buyback_link_candidates": [], "buyback_page_url": None,
+             "buyback_page_html_size": 0, "buyback_page_text_preview": "",
+             "buyback_price_candidates": [], "buyback_extracted_price": None}
         d.update(kw)
         return d
 
@@ -428,17 +447,19 @@ def main() -> int:
                 if shop_id == "src_fujiya" and alias in FUJIYA_KEYWORD_VARIANTS:
                     _best = None
                     for _var in FUJIYA_KEYWORD_VARIANTS[alias]:
-                        _vurl = ("https://www.fujiya-camera.co.jp/shop/goods/search.aspx"
-                                 f"?keyword={_up.quote(_var)}&search=検索")
+                        # 買取専用ページ /shop/purchase/list.aspx（販売 search.aspx ではない）
+                        _vurl = ("https://www.fujiya-camera.co.jp/shop/purchase/list.aspx"
+                                 f"?keyword={_up.quote(_var)}")
                         _try = _fetch_with_playwright(_vurl, shop_id, alias, _dbg, shot_dir=_shot)
+                        _try["buyback_page_url"] = _vurl
                         _hc = _try.get("hit_count")
                         _kw_hit_counts[_var] = _hc
-                        # 価格が取れた or ヒット数が最大 の候補を保持
+                        # 買取文脈の価格が取れた or ヒット数が最大 の候補を保持
                         _score = (1 if _try.get("extracted_price") else 0, _hc or 0)
                         if _best is None or _score > _best[0]:
                             _best = (_score, _var, _try)
                         if _try.get("extracted_price"):
-                            break  # 価格取得できたら確定
+                            break  # 買取価格取得できたら確定
                     if _best is not None:
                         _best_keyword = _best[1]
                         _pw = _best[2]
@@ -478,7 +499,14 @@ def main() -> int:
                           keyword_hit_counts=_kw_hit_counts,
                           best_keyword=_best_keyword,
                           has_buyback_context=_pw.get("has_buyback_context", False) if _pw else False,
-                          sales_price_sample=_pw.get("sales_price_sample") if _pw else None)
+                          sales_price_sample=_pw.get("sales_price_sample") if _pw else None,
+                          buyback_link_candidates=_pw.get("buyback_link_candidates", []) if _pw else [],
+                          buyback_page_url=_pw.get("buyback_page_url") if _pw else None,
+                          buyback_page_html_size=_pw.get("rendered_html_size", 0) if _pw else 0,
+                          buyback_page_text_preview=_pw.get("body_text_preview", "") if _pw else "",
+                          buyback_price_candidates=[c for c in (_pw.get("selector_candidates", []) if _pw else [])
+                                                    if c.get("near_buyback")],
+                          buyback_extracted_price=_pw.get("extracted_price") if _pw else None)
 
             if not price or price <= 0:
                 # 失敗理由の決定（requests 失敗理由 / Playwright 理由 / 抽出不可）

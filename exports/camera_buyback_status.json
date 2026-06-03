@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-03T19:43:34+09:00",
+  "generated_at": "2026-06-03T20:01:01+09:00",
   "summary": {
     "total": 15,
     "ok": 0,
@@ -10,8 +10,16 @@
   },
   "failure_reasons": [
     {
-      "reason": "playwright_not_installed",
-      "count": 15
+      "reason": "timeout",
+      "count": 5
+    },
+    {
+      "reason": "price_not_found",
+      "count": 5
+    },
+    {
+      "reason": "http_error",
+      "count": 5
     }
   ],
   "shop_diagnostics": {
@@ -22,12 +30,12 @@
       "cloudflare": 0,
       "js_required": 0,
       "playwright_attempted": 5,
-      "playwright_success": 0,
-      "screenshot_saved": 0,
+      "playwright_success": 5,
+      "screenshot_saved": 5,
       "top_reason": {
-        "playwright_not_installed": 5
+        "timeout": 5
       },
-      "diagnosis": "playwright_not_installed"
+      "diagnosis": "timeout"
     },
     "src_fujiya": {
       "jobs": 5,
@@ -36,12 +44,12 @@
       "cloudflare": 0,
       "js_required": 0,
       "playwright_attempted": 5,
-      "playwright_success": 0,
-      "screenshot_saved": 0,
+      "playwright_success": 5,
+      "screenshot_saved": 5,
       "top_reason": {
-        "playwright_not_installed": 5
+        "price_not_found": 5
       },
-      "diagnosis": "playwright_not_installed"
+      "diagnosis": "price_not_found"
     },
     "src_kitamura": {
       "jobs": 5,
@@ -50,12 +58,12 @@
       "cloudflare": 0,
       "js_required": 0,
       "playwright_attempted": 5,
-      "playwright_success": 0,
-      "screenshot_saved": 0,
+      "playwright_success": 5,
+      "screenshot_saved": 5,
       "top_reason": {
-        "playwright_not_installed": 5
+        "http_error": 5
       },
-      "diagnosis": "playwright_not_installed"
+      "diagnosis": "http_error"
     }
   },
   "detail": [
@@ -64,7 +72,7 @@
       "shop_id": "src_mapcamera",
       "status": "FAILED",
       "price": 0,
-      "reason": "playwright_not_installed",
+      "reason": "timeout",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -72,17 +80,17 @@
       "selector_found": false,
       "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 302,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.8a6bdc17.1780484476.1962c650\n\nhttps://errors.edgesuite.net/18.8a6bdc17.1780484476.1962c650",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
       "shadow_dom_detected": false,
-      "dom_ready_state": "",
+      "dom_ready_state": "complete",
       "hit_count": null,
       "keyword_hit_counts": {},
       "best_keyword": null,
@@ -90,8 +98,8 @@
       "sales_price_sample": null,
       "buyback_link_candidates": [],
       "buyback_page_url": null,
-      "buyback_page_html_size": 0,
-      "buyback_page_text_preview": "",
+      "buyback_page_html_size": 302,
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.8a6bdc17.1780484476.1962c650\n\nhttps://errors.edgesuite.net/18.8a6bdc17.1780484476.1962c650",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null
     },
@@ -100,7 +108,7 @@
       "shop_id": "src_fujiya",
       "status": "FAILED",
       "price": 0,
-      "reason": "playwright_not_installed",
+      "reason": "price_not_found",
       "html_saved": true,
       "html_size": 317294,
       "cloudflare_detected": false,
@@ -108,32 +116,85 @@
       "selector_found": false,
       "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
-      "selector_waited": false,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 194136,
+      "selector_waited": true,
       "extraction_strategy": "requests",
-      "body_text_preview": "",
+      "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
       "shadow_dom_detected": false,
-      "dom_ready_state": "",
-      "hit_count": null,
+      "dom_ready_state": "complete",
+      "hit_count": 0,
       "keyword_hit_counts": {
-        "X100VI": null,
-        "X100 VI": null,
-        "X100V": null,
-        "富士フイルム X100": null,
-        "FUJIFILM X100VI": null
+        "X100VI": 0,
+        "X100 VI": 0,
+        "X100V": 0,
+        "富士フイルム X100": 0,
+        "FUJIFILM X100VI": 0
       },
       "best_keyword": "X100VI",
       "has_buyback_context": false,
       "sales_price_sample": null,
-      "buyback_link_candidates": [],
+      "buyback_link_candidates": [
+        {
+          "text": "買取金額を調べる",
+          "href": "/shop/purchase/list.aspx"
+        },
+        {
+          "text": "フジヤカメラの買取・下取り",
+          "href": "/shop/kaitori/pc/0c-kaitor/"
+        },
+        {
+          "text": "お得な特典",
+          "href": "/shop/kaitori/pc/0c-kaitor/#tokuten"
+        },
+        {
+          "text": "買取に関するお悩みを解決",
+          "href": "/shop/kaitori/pc/0c-kaitor/#onayami"
+        },
+        {
+          "text": "選ばれ続ける理由",
+          "href": "/shop/kaitori/pc/0c-kaitor/#because"
+        },
+        {
+          "text": "店頭買取のご案内",
+          "href": "/shop/kaitori/pc/0c-kaitor/#shop"
+        },
+        {
+          "text": "お問い合わせ",
+          "href": "/shop/kaitori/pc/0c-kaitor/#contact"
+        },
+        {
+          "text": "買取検索",
+          "href": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx"
+        },
+        {
+          "text": "Sell買取りについて",
+          "href": "/shop/kaitori/pc/0c-kaitor/"
+        },
+        {
+          "text": "条件をリセット",
+          "href": "/shop/purchase/list.aspx"
+        },
+        {
+          "text": "＜全品対象＞買取金額10%アップ とは",
+          "href": "/shop/kaitori/pg/1c-ck-kaitori/"
+        },
+        {
+          "text": "＜全品対象・下取限定＞買取金額15%アップ とは",
+          "href": "/shop/kaitori/pg/1c-ck-shitadori/"
+        },
+        {
+          "text": "",
+          "href": "/shop/purchase/list.aspx?"
+        }
+      ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=X100VI",
-      "buyback_page_html_size": 0,
-      "buyback_page_text_preview": "",
+      "buyback_page_html_size": 194136,
+      "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null
     },
@@ -142,7 +203,7 @@
       "shop_id": "src_kitamura",
       "status": "FAILED",
       "price": 0,
-      "reason": "playwright_not_installed",
+      "reason": "http_error",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -150,26 +211,51 @@
       "selector_found": false,
       "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 549295,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "",
+      "body_text_preview": "select language\n言語を選択​▼\n​\n買取り\n​\n全てのカテゴリから\n​\n\n買取り履歴\n\n初めての方へ\n\nお気に入り\n\n買いたい\n売りたい\n\n各種サービス案内\n\nグループサイト\n\nネット中古TOP\n指定されたページが見つかりませんでした\n指定されたページが見つかりませんでした\nカメラのキタムラWEBサイトをご利用いただきありがとうございます。10秒後にサイトトップへ遷移します。\nトップへ戻る\nご利用案内\nお問い合わせ\nよくある質問\n各種サービス案内\n買取り・下取り\nなんでも下取り\nトクトク交換\nお支払い方法\n5年間保証\n修理のご案内\n送料・手数料\n返品・交換\n商品お届け・納期\nセール・特集一覧\n特定商取引法に基づく表示\nクレジットカード認証サービス\n（3Dセキュア）\n古物営業法に基づく表示\n株式会社カメラのキタムラ\n高知県公安委員会許可番号第831010002392号\n弊社を装った悪質サイトにご注意ください\nデジタル一眼レフ\n(\nキヤノン\nニコン\nソニー\nオリンパス\nペンタックス\nマミヤ・リーフ\nライカ\nシグマ\n)\nミラーレス一眼\n(\nキヤノン\nニコン\nソニー\nオリンパス",
       "matched_selectors": [],
       "selector_candidates": [],
-      "iframe_count": 0,
+      "iframe_count": 5,
       "shadow_dom_detected": false,
-      "dom_ready_state": "",
+      "dom_ready_state": "complete",
       "hit_count": null,
       "keyword_hit_counts": {},
       "best_keyword": null,
       "has_buyback_context": false,
       "sales_price_sample": null,
-      "buyback_link_candidates": [],
+      "buyback_link_candidates": [
+        {
+          "text": "買取り履歴",
+          "href": "https://shop.kitamura.jp/ec/mypage/odr/list?type=sell"
+        },
+        {
+          "text": "初めての方へ",
+          "href": "/ec/page/service/sell-guide"
+        },
+        {
+          "text": "",
+          "href": "/ec/campaign/sell-campaign.html"
+        },
+        {
+          "text": "買取り・下取り",
+          "href": "https://www.net-chuko.com/ec/page/service/sell-guide"
+        },
+        {
+          "text": "なんでも下取り",
+          "href": "https://shop.kitamura.jp/ec/guide/shitadori"
+        },
+        {
+          "text": "北村写真機店",
+          "href": "https://kitamuracamera.jp/sell/"
+        }
+      ],
       "buyback_page_url": null,
-      "buyback_page_html_size": 0,
-      "buyback_page_text_preview": "",
+      "buyback_page_html_size": 549295,
+      "buyback_page_text_preview": "select language\n言語を選択​▼\n​\n買取り\n​\n全てのカテゴリから\n​\n\n買取り履歴\n\n初めての方へ\n\nお気に入り\n\n買いたい\n売りたい\n\n各種サービス案内\n\nグループサイト\n\nネット中古TOP\n指定されたページが見つかりませんでした\n指定されたページが見つかりませんでした\nカメラのキタムラWEBサイトをご利用いただきありがとうございます。10秒後にサイトトップへ遷移します。\nトップへ戻る\nご利用案内\nお問い合わせ\nよくある質問\n各種サービス案内\n買取り・下取り\nなんでも下取り\nトクトク交換\nお支払い方法\n5年間保証\n修理のご案内\n送料・手数料\n返品・交換\n商品お届け・納期\nセール・特集一覧\n特定商取引法に基づく表示\nクレジットカード認証サービス\n（3Dセキュア）\n古物営業法に基づく表示\n株式会社カメラのキタムラ\n高知県公安委員会許可番号第831010002392号\n弊社を装った悪質サイトにご注意ください\nデジタル一眼レフ\n(\nキヤノン\nニコン\nソニー\nオリンパス\nペンタックス\nマミヤ・リーフ\nライカ\nシグマ\n)\nミラーレス一眼\n(\nキヤノン\nニコン\nソニー\nオリンパス",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null
     },
@@ -178,7 +264,7 @@
       "shop_id": "src_mapcamera",
       "status": "FAILED",
       "price": 0,
-      "reason": "playwright_not_installed",
+      "reason": "timeout",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -186,17 +272,17 @@
       "selector_found": false,
       "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 300,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.956bdc17.1780484672.9d7c3d8\n\nhttps://errors.edgesuite.net/18.956bdc17.1780484672.9d7c3d8",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
       "shadow_dom_detected": false,
-      "dom_ready_state": "",
+      "dom_ready_state": "complete",
       "hit_count": null,
       "keyword_hit_counts": {},
       "best_keyword": null,
@@ -204,8 +290,8 @@
       "sales_price_sample": null,
       "buyback_link_candidates": [],
       "buyback_page_url": null,
-      "buyback_page_html_size": 0,
-      "buyback_page_text_preview": "",
+      "buyback_page_html_size": 300,
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.956bdc17.1780484672.9d7c3d8\n\nhttps://errors.edgesuite.net/18.956bdc17.1780484672.9d7c3d8",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null
     },
@@ -214,7 +300,7 @@
       "shop_id": "src_fujiya",
       "status": "FAILED",
       "price": 0,
-      "reason": "playwright_not_installed",
+      "reason": "price_not_found",
       "html_saved": true,
       "html_size": 316351,
       "cloudflare_detected": false,
@@ -222,31 +308,84 @@
       "selector_found": false,
       "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
-      "selector_waited": false,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 194143,
+      "selector_waited": true,
       "extraction_strategy": "requests",
-      "body_text_preview": "",
+      "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
       "shadow_dom_detected": false,
-      "dom_ready_state": "",
-      "hit_count": null,
+      "dom_ready_state": "complete",
+      "hit_count": 0,
       "keyword_hit_counts": {
-        "GR IV": null,
-        "GR4": null,
-        "リコー GR IV": null,
-        "RICOH GR IV": null
+        "GR IV": 0,
+        "GR4": 0,
+        "リコー GR IV": 0,
+        "RICOH GR IV": 0
       },
       "best_keyword": "GR IV",
       "has_buyback_context": false,
       "sales_price_sample": null,
-      "buyback_link_candidates": [],
+      "buyback_link_candidates": [
+        {
+          "text": "買取金額を調べる",
+          "href": "/shop/purchase/list.aspx"
+        },
+        {
+          "text": "フジヤカメラの買取・下取り",
+          "href": "/shop/kaitori/pc/0c-kaitor/"
+        },
+        {
+          "text": "お得な特典",
+          "href": "/shop/kaitori/pc/0c-kaitor/#tokuten"
+        },
+        {
+          "text": "買取に関するお悩みを解決",
+          "href": "/shop/kaitori/pc/0c-kaitor/#onayami"
+        },
+        {
+          "text": "選ばれ続ける理由",
+          "href": "/shop/kaitori/pc/0c-kaitor/#because"
+        },
+        {
+          "text": "店頭買取のご案内",
+          "href": "/shop/kaitori/pc/0c-kaitor/#shop"
+        },
+        {
+          "text": "お問い合わせ",
+          "href": "/shop/kaitori/pc/0c-kaitor/#contact"
+        },
+        {
+          "text": "買取検索",
+          "href": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx"
+        },
+        {
+          "text": "Sell買取りについて",
+          "href": "/shop/kaitori/pc/0c-kaitor/"
+        },
+        {
+          "text": "条件をリセット",
+          "href": "/shop/purchase/list.aspx"
+        },
+        {
+          "text": "＜全品対象＞買取金額10%アップ とは",
+          "href": "/shop/kaitori/pg/1c-ck-kaitori/"
+        },
+        {
+          "text": "＜全品対象・下取限定＞買取金額15%アップ とは",
+          "href": "/shop/kaitori/pg/1c-ck-shitadori/"
+        },
+        {
+          "text": "",
+          "href": "/shop/purchase/list.aspx?"
+        }
+      ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=GR%20IV",
-      "buyback_page_html_size": 0,
-      "buyback_page_text_preview": "",
+      "buyback_page_html_size": 194143,
+      "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null
     },
@@ -255,7 +394,7 @@
       "shop_id": "src_kitamura",
       "status": "FAILED",
       "price": 0,
-      "reason": "playwright_not_installed",
+      "reason": "http_error",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -263,26 +402,51 @@
       "selector_found": false,
       "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 549338,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "",
+      "body_text_preview": "select language\n言語を選択​▼\n​\n買取り\n​\n全てのカテゴリから\n​\n\n買取り履歴\n\n初めての方へ\n\nお気に入り\n\n買いたい\n売りたい\n\n各種サービス案内\n\nグループサイト\n\nネット中古TOP\n指定されたページが見つかりませんでした\n指定されたページが見つかりませんでした\nカメラのキタムラWEBサイトをご利用いただきありがとうございます。10秒後にサイトトップへ遷移します。\nトップへ戻る\nご利用案内\nお問い合わせ\nよくある質問\n各種サービス案内\n買取り・下取り\nなんでも下取り\nトクトク交換\nお支払い方法\n5年間保証\n修理のご案内\n送料・手数料\n返品・交換\n商品お届け・納期\nセール・特集一覧\n特定商取引法に基づく表示\nクレジットカード認証サービス\n（3Dセキュア）\n古物営業法に基づく表示\n株式会社カメラのキタムラ\n高知県公安委員会許可番号第831010002392号\n弊社を装った悪質サイトにご注意ください\nデジタル一眼レフ\n(\nキヤノン\nニコン\nソニー\nオリンパス\nペンタックス\nマミヤ・リーフ\nライカ\nシグマ\n)\nミラーレス一眼\n(\nキヤノン\nニコン\nソニー\nオリンパス",
       "matched_selectors": [],
       "selector_candidates": [],
-      "iframe_count": 0,
+      "iframe_count": 5,
       "shadow_dom_detected": false,
-      "dom_ready_state": "",
+      "dom_ready_state": "complete",
       "hit_count": null,
       "keyword_hit_counts": {},
       "best_keyword": null,
       "has_buyback_context": false,
       "sales_price_sample": null,
-      "buyback_link_candidates": [],
+      "buyback_link_candidates": [
+        {
+          "text": "買取り履歴",
+          "href": "https://shop.kitamura.jp/ec/mypage/odr/list?type=sell"
+        },
+        {
+          "text": "初めての方へ",
+          "href": "/ec/page/service/sell-guide"
+        },
+        {
+          "text": "",
+          "href": "/ec/campaign/sell-campaign.html"
+        },
+        {
+          "text": "買取り・下取り",
+          "href": "https://www.net-chuko.com/ec/page/service/sell-guide"
+        },
+        {
+          "text": "なんでも下取り",
+          "href": "https://shop.kitamura.jp/ec/guide/shitadori"
+        },
+        {
+          "text": "北村写真機店",
+          "href": "https://kitamuracamera.jp/sell/"
+        }
+      ],
       "buyback_page_url": null,
-      "buyback_page_html_size": 0,
-      "buyback_page_text_preview": "",
+      "buyback_page_html_size": 549338,
+      "buyback_page_text_preview": "select language\n言語を選択​▼\n​\n買取り\n​\n全てのカテゴリから\n​\n\n買取り履歴\n\n初めての方へ\n\nお気に入り\n\n買いたい\n売りたい\n\n各種サービス案内\n\nグループサイト\n\nネット中古TOP\n指定されたページが見つかりませんでした\n指定されたページが見つかりませんでした\nカメラのキタムラWEBサイトをご利用いただきありがとうございます。10秒後にサイトトップへ遷移します。\nトップへ戻る\nご利用案内\nお問い合わせ\nよくある質問\n各種サービス案内\n買取り・下取り\nなんでも下取り\nトクトク交換\nお支払い方法\n5年間保証\n修理のご案内\n送料・手数料\n返品・交換\n商品お届け・納期\nセール・特集一覧\n特定商取引法に基づく表示\nクレジットカード認証サービス\n（3Dセキュア）\n古物営業法に基づく表示\n株式会社カメラのキタムラ\n高知県公安委員会許可番号第831010002392号\n弊社を装った悪質サイトにご注意ください\nデジタル一眼レフ\n(\nキヤノン\nニコン\nソニー\nオリンパス\nペンタックス\nマミヤ・リーフ\nライカ\nシグマ\n)\nミラーレス一眼\n(\nキヤノン\nニコン\nソニー\nオリンパス",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null
     },
@@ -291,7 +455,7 @@
       "shop_id": "src_mapcamera",
       "status": "FAILED",
       "price": 0,
-      "reason": "playwright_not_installed",
+      "reason": "timeout",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -299,17 +463,17 @@
       "selector_found": false,
       "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 300,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.956bdc17.1780484842.9dba74d\n\nhttps://errors.edgesuite.net/18.956bdc17.1780484842.9dba74d",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
       "shadow_dom_detected": false,
-      "dom_ready_state": "",
+      "dom_ready_state": "complete",
       "hit_count": null,
       "keyword_hit_counts": {},
       "best_keyword": null,
@@ -317,8 +481,8 @@
       "sales_price_sample": null,
       "buyback_link_candidates": [],
       "buyback_page_url": null,
-      "buyback_page_html_size": 0,
-      "buyback_page_text_preview": "",
+      "buyback_page_html_size": 300,
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.956bdc17.1780484842.9dba74d\n\nhttps://errors.edgesuite.net/18.956bdc17.1780484842.9dba74d",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null
     },
@@ -327,7 +491,7 @@
       "shop_id": "src_fujiya",
       "status": "FAILED",
       "price": 0,
-      "reason": "playwright_not_installed",
+      "reason": "price_not_found",
       "html_saved": true,
       "html_size": 361670,
       "cloudflare_detected": false,
@@ -335,30 +499,83 @@
       "selector_found": false,
       "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
-      "selector_waited": false,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 194137,
+      "selector_waited": true,
       "extraction_strategy": "requests",
-      "body_text_preview": "",
+      "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
       "shadow_dom_detected": false,
-      "dom_ready_state": "",
-      "hit_count": null,
+      "dom_ready_state": "complete",
+      "hit_count": 0,
       "keyword_hit_counts": {
-        "GR IV HDF": null,
-        "GR4 HDF": null,
-        "RICOH GR IV HDF": null
+        "GR IV HDF": 0,
+        "GR4 HDF": 0,
+        "RICOH GR IV HDF": 0
       },
       "best_keyword": "GR IV HDF",
       "has_buyback_context": false,
       "sales_price_sample": null,
-      "buyback_link_candidates": [],
+      "buyback_link_candidates": [
+        {
+          "text": "買取金額を調べる",
+          "href": "/shop/purchase/list.aspx"
+        },
+        {
+          "text": "フジヤカメラの買取・下取り",
+          "href": "/shop/kaitori/pc/0c-kaitor/"
+        },
+        {
+          "text": "お得な特典",
+          "href": "/shop/kaitori/pc/0c-kaitor/#tokuten"
+        },
+        {
+          "text": "買取に関するお悩みを解決",
+          "href": "/shop/kaitori/pc/0c-kaitor/#onayami"
+        },
+        {
+          "text": "選ばれ続ける理由",
+          "href": "/shop/kaitori/pc/0c-kaitor/#because"
+        },
+        {
+          "text": "店頭買取のご案内",
+          "href": "/shop/kaitori/pc/0c-kaitor/#shop"
+        },
+        {
+          "text": "お問い合わせ",
+          "href": "/shop/kaitori/pc/0c-kaitor/#contact"
+        },
+        {
+          "text": "買取検索",
+          "href": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx"
+        },
+        {
+          "text": "Sell買取りについて",
+          "href": "/shop/kaitori/pc/0c-kaitor/"
+        },
+        {
+          "text": "条件をリセット",
+          "href": "/shop/purchase/list.aspx"
+        },
+        {
+          "text": "＜全品対象＞買取金額10%アップ とは",
+          "href": "/shop/kaitori/pg/1c-ck-kaitori/"
+        },
+        {
+          "text": "＜全品対象・下取限定＞買取金額15%アップ とは",
+          "href": "/shop/kaitori/pg/1c-ck-shitadori/"
+        },
+        {
+          "text": "",
+          "href": "/shop/purchase/list.aspx?"
+        }
+      ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=GR%20IV%20HDF",
-      "buyback_page_html_size": 0,
-      "buyback_page_text_preview": "",
+      "buyback_page_html_size": 194137,
+      "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null
     },
@@ -367,7 +584,7 @@
       "shop_id": "src_kitamura",
       "status": "FAILED",
       "price": 0,
-      "reason": "playwright_not_installed",
+      "reason": "http_error",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -375,26 +592,51 @@
       "selector_found": false,
       "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 549411,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "",
+      "body_text_preview": "select language\n言語を選択​▼\n​\n買取り\n​\n全てのカテゴリから\n​\n\n買取り履歴\n\n初めての方へ\n\nお気に入り\n\n買いたい\n売りたい\n\n各種サービス案内\n\nグループサイト\n\nネット中古TOP\n指定されたページが見つかりませんでした\n指定されたページが見つかりませんでした\nカメラのキタムラWEBサイトをご利用いただきありがとうございます。10秒後にサイトトップへ遷移します。\nトップへ戻る\nご利用案内\nお問い合わせ\nよくある質問\n各種サービス案内\n買取り・下取り\nなんでも下取り\nトクトク交換\nお支払い方法\n5年間保証\n修理のご案内\n送料・手数料\n返品・交換\n商品お届け・納期\nセール・特集一覧\n特定商取引法に基づく表示\nクレジットカード認証サービス\n（3Dセキュア）\n古物営業法に基づく表示\n株式会社カメラのキタムラ\n高知県公安委員会許可番号第831010002392号\n弊社を装った悪質サイトにご注意ください\nデジタル一眼レフ\n(\nキヤノン\nニコン\nソニー\nオリンパス\nペンタックス\nマミヤ・リーフ\nライカ\nシグマ\n)\nミラーレス一眼\n(\nキヤノン\nニコン\nソニー\nオリンパス",
       "matched_selectors": [],
       "selector_candidates": [],
-      "iframe_count": 0,
+      "iframe_count": 5,
       "shadow_dom_detected": false,
-      "dom_ready_state": "",
+      "dom_ready_state": "complete",
       "hit_count": null,
       "keyword_hit_counts": {},
       "best_keyword": null,
       "has_buyback_context": false,
       "sales_price_sample": null,
-      "buyback_link_candidates": [],
+      "buyback_link_candidates": [
+        {
+          "text": "買取り履歴",
+          "href": "https://shop.kitamura.jp/ec/mypage/odr/list?type=sell"
+        },
+        {
+          "text": "初めての方へ",
+          "href": "/ec/page/service/sell-guide"
+        },
+        {
+          "text": "",
+          "href": "/ec/campaign/sell-campaign.html"
+        },
+        {
+          "text": "買取り・下取り",
+          "href": "https://www.net-chuko.com/ec/page/service/sell-guide"
+        },
+        {
+          "text": "なんでも下取り",
+          "href": "https://shop.kitamura.jp/ec/guide/shitadori"
+        },
+        {
+          "text": "北村写真機店",
+          "href": "https://kitamuracamera.jp/sell/"
+        }
+      ],
       "buyback_page_url": null,
-      "buyback_page_html_size": 0,
-      "buyback_page_text_preview": "",
+      "buyback_page_html_size": 549411,
+      "buyback_page_text_preview": "select language\n言語を選択​▼\n​\n買取り\n​\n全てのカテゴリから\n​\n\n買取り履歴\n\n初めての方へ\n\nお気に入り\n\n買いたい\n売りたい\n\n各種サービス案内\n\nグループサイト\n\nネット中古TOP\n指定されたページが見つかりませんでした\n指定されたページが見つかりませんでした\nカメラのキタムラWEBサイトをご利用いただきありがとうございます。10秒後にサイトトップへ遷移します。\nトップへ戻る\nご利用案内\nお問い合わせ\nよくある質問\n各種サービス案内\n買取り・下取り\nなんでも下取り\nトクトク交換\nお支払い方法\n5年間保証\n修理のご案内\n送料・手数料\n返品・交換\n商品お届け・納期\nセール・特集一覧\n特定商取引法に基づく表示\nクレジットカード認証サービス\n（3Dセキュア）\n古物営業法に基づく表示\n株式会社カメラのキタムラ\n高知県公安委員会許可番号第831010002392号\n弊社を装った悪質サイトにご注意ください\nデジタル一眼レフ\n(\nキヤノン\nニコン\nソニー\nオリンパス\nペンタックス\nマミヤ・リーフ\nライカ\nシグマ\n)\nミラーレス一眼\n(\nキヤノン\nニコン\nソニー\nオリンパス",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null
     },
@@ -403,7 +645,7 @@
       "shop_id": "src_mapcamera",
       "status": "FAILED",
       "price": 0,
-      "reason": "playwright_not_installed",
+      "reason": "timeout",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -411,17 +653,17 @@
       "selector_found": false,
       "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 302,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.8a6bdc17.1780484983.196e0e9f\n\nhttps://errors.edgesuite.net/18.8a6bdc17.1780484983.196e0e9f",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
       "shadow_dom_detected": false,
-      "dom_ready_state": "",
+      "dom_ready_state": "complete",
       "hit_count": null,
       "keyword_hit_counts": {},
       "best_keyword": null,
@@ -429,8 +671,8 @@
       "sales_price_sample": null,
       "buyback_link_candidates": [],
       "buyback_page_url": null,
-      "buyback_page_html_size": 0,
-      "buyback_page_text_preview": "",
+      "buyback_page_html_size": 302,
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.8a6bdc17.1780484983.196e0e9f\n\nhttps://errors.edgesuite.net/18.8a6bdc17.1780484983.196e0e9f",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null
     },
@@ -439,7 +681,7 @@
       "shop_id": "src_fujiya",
       "status": "FAILED",
       "price": 0,
-      "reason": "playwright_not_installed",
+      "reason": "price_not_found",
       "html_saved": true,
       "html_size": 313625,
       "cloudflare_detected": false,
@@ -447,30 +689,83 @@
       "selector_found": false,
       "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
-      "selector_waited": false,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 194678,
+      "selector_waited": true,
       "extraction_strategy": "requests",
-      "body_text_preview": "",
+      "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
       "shadow_dom_detected": false,
-      "dom_ready_state": "",
-      "hit_count": null,
+      "dom_ready_state": "complete",
+      "hit_count": 0,
       "keyword_hit_counts": {
-        "GR IV Monochrome": null,
-        "GR IV モノクローム": null,
-        "GR4 モノクロ": null
+        "GR IV Monochrome": 0,
+        "GR IV モノクローム": 0,
+        "GR4 モノクロ": 0
       },
       "best_keyword": "GR IV Monochrome",
       "has_buyback_context": false,
       "sales_price_sample": null,
-      "buyback_link_candidates": [],
+      "buyback_link_candidates": [
+        {
+          "text": "買取金額を調べる",
+          "href": "/shop/purchase/list.aspx"
+        },
+        {
+          "text": "フジヤカメラの買取・下取り",
+          "href": "/shop/kaitori/pc/0c-kaitor/"
+        },
+        {
+          "text": "お得な特典",
+          "href": "/shop/kaitori/pc/0c-kaitor/#tokuten"
+        },
+        {
+          "text": "買取に関するお悩みを解決",
+          "href": "/shop/kaitori/pc/0c-kaitor/#onayami"
+        },
+        {
+          "text": "選ばれ続ける理由",
+          "href": "/shop/kaitori/pc/0c-kaitor/#because"
+        },
+        {
+          "text": "店頭買取のご案内",
+          "href": "/shop/kaitori/pc/0c-kaitor/#shop"
+        },
+        {
+          "text": "お問い合わせ",
+          "href": "/shop/kaitori/pc/0c-kaitor/#contact"
+        },
+        {
+          "text": "買取検索",
+          "href": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx"
+        },
+        {
+          "text": "Sell買取りについて",
+          "href": "/shop/kaitori/pc/0c-kaitor/"
+        },
+        {
+          "text": "条件をリセット",
+          "href": "/shop/purchase/list.aspx"
+        },
+        {
+          "text": "＜全品対象＞買取金額10%アップ とは",
+          "href": "/shop/kaitori/pg/1c-ck-kaitori/"
+        },
+        {
+          "text": "＜全品対象・下取限定＞買取金額15%アップ とは",
+          "href": "/shop/kaitori/pg/1c-ck-shitadori/"
+        },
+        {
+          "text": "",
+          "href": "/shop/purchase/list.aspx?"
+        }
+      ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=GR%20IV%20Monochrome",
-      "buyback_page_html_size": 0,
-      "buyback_page_text_preview": "",
+      "buyback_page_html_size": 194678,
+      "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null
     },
@@ -479,7 +774,7 @@
       "shop_id": "src_kitamura",
       "status": "FAILED",
       "price": 0,
-      "reason": "playwright_not_installed",
+      "reason": "http_error",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -487,26 +782,51 @@
       "selector_found": false,
       "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 549501,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "",
+      "body_text_preview": "select language\n言語を選択​▼\n​\n買取り\n​\n全てのカテゴリから\n​\n\n買取り履歴\n\n初めての方へ\n\nお気に入り\n\n買いたい\n売りたい\n\n各種サービス案内\n\nグループサイト\n\nネット中古TOP\n指定されたページが見つかりませんでした\n指定されたページが見つかりませんでした\nカメラのキタムラWEBサイトをご利用いただきありがとうございます。10秒後にサイトトップへ遷移します。\nトップへ戻る\nご利用案内\nお問い合わせ\nよくある質問\n各種サービス案内\n買取り・下取り\nなんでも下取り\nトクトク交換\nお支払い方法\n5年間保証\n修理のご案内\n送料・手数料\n返品・交換\n商品お届け・納期\nセール・特集一覧\n特定商取引法に基づく表示\nクレジットカード認証サービス\n（3Dセキュア）\n古物営業法に基づく表示\n株式会社カメラのキタムラ\n高知県公安委員会許可番号第831010002392号\n弊社を装った悪質サイトにご注意ください\nデジタル一眼レフ\n(\nキヤノン\nニコン\nソニー\nオリンパス\nペンタックス\nマミヤ・リーフ\nライカ\nシグマ\n)\nミラーレス一眼\n(\nキヤノン\nニコン\nソニー\nオリンパス",
       "matched_selectors": [],
       "selector_candidates": [],
-      "iframe_count": 0,
+      "iframe_count": 5,
       "shadow_dom_detected": false,
-      "dom_ready_state": "",
+      "dom_ready_state": "complete",
       "hit_count": null,
       "keyword_hit_counts": {},
       "best_keyword": null,
       "has_buyback_context": false,
       "sales_price_sample": null,
-      "buyback_link_candidates": [],
+      "buyback_link_candidates": [
+        {
+          "text": "買取り履歴",
+          "href": "https://shop.kitamura.jp/ec/mypage/odr/list?type=sell"
+        },
+        {
+          "text": "初めての方へ",
+          "href": "/ec/page/service/sell-guide"
+        },
+        {
+          "text": "",
+          "href": "/ec/campaign/sell-campaign.html"
+        },
+        {
+          "text": "買取り・下取り",
+          "href": "https://www.net-chuko.com/ec/page/service/sell-guide"
+        },
+        {
+          "text": "なんでも下取り",
+          "href": "https://shop.kitamura.jp/ec/guide/shitadori"
+        },
+        {
+          "text": "北村写真機店",
+          "href": "https://kitamuracamera.jp/sell/"
+        }
+      ],
       "buyback_page_url": null,
-      "buyback_page_html_size": 0,
-      "buyback_page_text_preview": "",
+      "buyback_page_html_size": 549501,
+      "buyback_page_text_preview": "select language\n言語を選択​▼\n​\n買取り\n​\n全てのカテゴリから\n​\n\n買取り履歴\n\n初めての方へ\n\nお気に入り\n\n買いたい\n売りたい\n\n各種サービス案内\n\nグループサイト\n\nネット中古TOP\n指定されたページが見つかりませんでした\n指定されたページが見つかりませんでした\nカメラのキタムラWEBサイトをご利用いただきありがとうございます。10秒後にサイトトップへ遷移します。\nトップへ戻る\nご利用案内\nお問い合わせ\nよくある質問\n各種サービス案内\n買取り・下取り\nなんでも下取り\nトクトク交換\nお支払い方法\n5年間保証\n修理のご案内\n送料・手数料\n返品・交換\n商品お届け・納期\nセール・特集一覧\n特定商取引法に基づく表示\nクレジットカード認証サービス\n（3Dセキュア）\n古物営業法に基づく表示\n株式会社カメラのキタムラ\n高知県公安委員会許可番号第831010002392号\n弊社を装った悪質サイトにご注意ください\nデジタル一眼レフ\n(\nキヤノン\nニコン\nソニー\nオリンパス\nペンタックス\nマミヤ・リーフ\nライカ\nシグマ\n)\nミラーレス一眼\n(\nキヤノン\nニコン\nソニー\nオリンパス",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null
     },
@@ -515,7 +835,7 @@
       "shop_id": "src_mapcamera",
       "status": "FAILED",
       "price": 0,
-      "reason": "playwright_not_installed",
+      "reason": "timeout",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -523,17 +843,17 @@
       "selector_found": false,
       "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 300,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.956bdc17.1780485126.9e1b13d\n\nhttps://errors.edgesuite.net/18.956bdc17.1780485126.9e1b13d",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
       "shadow_dom_detected": false,
-      "dom_ready_state": "",
+      "dom_ready_state": "complete",
       "hit_count": null,
       "keyword_hit_counts": {},
       "best_keyword": null,
@@ -541,8 +861,8 @@
       "sales_price_sample": null,
       "buyback_link_candidates": [],
       "buyback_page_url": null,
-      "buyback_page_html_size": 0,
-      "buyback_page_text_preview": "",
+      "buyback_page_html_size": 300,
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.956bdc17.1780485126.9e1b13d\n\nhttps://errors.edgesuite.net/18.956bdc17.1780485126.9e1b13d",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null
     },
@@ -551,7 +871,7 @@
       "shop_id": "src_fujiya",
       "status": "FAILED",
       "price": 0,
-      "reason": "playwright_not_installed",
+      "reason": "price_not_found",
       "html_saved": true,
       "html_size": 317634,
       "cloudflare_detected": false,
@@ -559,31 +879,84 @@
       "selector_found": false,
       "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
-      "selector_waited": false,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 191276,
+      "selector_waited": true,
       "extraction_strategy": "requests",
-      "body_text_preview": "",
+      "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
       "shadow_dom_detected": false,
-      "dom_ready_state": "",
-      "hit_count": null,
+      "dom_ready_state": "interactive",
+      "hit_count": 0,
       "keyword_hit_counts": {
-        "GR IIIx": null,
-        "GR3x": null,
-        "リコー GR IIIx": null,
-        "RICOH GR IIIx": null
+        "GR IIIx": 0,
+        "GR3x": 0,
+        "リコー GR IIIx": 0,
+        "RICOH GR IIIx": 0
       },
       "best_keyword": "GR IIIx",
       "has_buyback_context": false,
       "sales_price_sample": null,
-      "buyback_link_candidates": [],
+      "buyback_link_candidates": [
+        {
+          "text": "買取金額を調べる",
+          "href": "/shop/purchase/list.aspx"
+        },
+        {
+          "text": "フジヤカメラの買取・下取り",
+          "href": "/shop/kaitori/pc/0c-kaitor/"
+        },
+        {
+          "text": "お得な特典",
+          "href": "/shop/kaitori/pc/0c-kaitor/#tokuten"
+        },
+        {
+          "text": "買取に関するお悩みを解決",
+          "href": "/shop/kaitori/pc/0c-kaitor/#onayami"
+        },
+        {
+          "text": "選ばれ続ける理由",
+          "href": "/shop/kaitori/pc/0c-kaitor/#because"
+        },
+        {
+          "text": "店頭買取のご案内",
+          "href": "/shop/kaitori/pc/0c-kaitor/#shop"
+        },
+        {
+          "text": "お問い合わせ",
+          "href": "/shop/kaitori/pc/0c-kaitor/#contact"
+        },
+        {
+          "text": "買取検索",
+          "href": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx"
+        },
+        {
+          "text": "Sell買取りについて",
+          "href": "/shop/kaitori/pc/0c-kaitor/"
+        },
+        {
+          "text": "条件をリセット",
+          "href": "/shop/purchase/list.aspx"
+        },
+        {
+          "text": "＜全品対象＞買取金額10%アップ とは",
+          "href": "/shop/kaitori/pg/1c-ck-kaitori/"
+        },
+        {
+          "text": "＜全品対象・下取限定＞買取金額15%アップ とは",
+          "href": "/shop/kaitori/pg/1c-ck-shitadori/"
+        },
+        {
+          "text": "",
+          "href": "/shop/purchase/list.aspx?"
+        }
+      ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=GR%20IIIx",
-      "buyback_page_html_size": 0,
-      "buyback_page_text_preview": "",
+      "buyback_page_html_size": 191276,
+      "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null
     },
@@ -592,7 +965,7 @@
       "shop_id": "src_kitamura",
       "status": "FAILED",
       "price": 0,
-      "reason": "playwright_not_installed",
+      "reason": "http_error",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -600,26 +973,51 @@
       "selector_found": false,
       "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 549306,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "",
+      "body_text_preview": "select language\n言語を選択​▼\n​\n買取り\n​\n全てのカテゴリから\n​\n\n買取り履歴\n\n初めての方へ\n\nお気に入り\n\n買いたい\n売りたい\n\n各種サービス案内\n\nグループサイト\n\nネット中古TOP\n指定されたページが見つかりませんでした\n指定されたページが見つかりませんでした\nカメラのキタムラWEBサイトをご利用いただきありがとうございます。10秒後にサイトトップへ遷移します。\nトップへ戻る\nご利用案内\nお問い合わせ\nよくある質問\n各種サービス案内\n買取り・下取り\nなんでも下取り\nトクトク交換\nお支払い方法\n5年間保証\n修理のご案内\n送料・手数料\n返品・交換\n商品お届け・納期\nセール・特集一覧\n特定商取引法に基づく表示\nクレジットカード認証サービス\n（3Dセキュア）\n古物営業法に基づく表示\n株式会社カメラのキタムラ\n高知県公安委員会許可番号第831010002392号\n弊社を装った悪質サイトにご注意ください\nデジタル一眼レフ\n(\nキヤノン\nニコン\nソニー\nオリンパス\nペンタックス\nマミヤ・リーフ\nライカ\nシグマ\n)\nミラーレス一眼\n(\nキヤノン\nニコン\nソニー\nオリンパス",
       "matched_selectors": [],
       "selector_candidates": [],
-      "iframe_count": 0,
+      "iframe_count": 5,
       "shadow_dom_detected": false,
-      "dom_ready_state": "",
+      "dom_ready_state": "complete",
       "hit_count": null,
       "keyword_hit_counts": {},
       "best_keyword": null,
       "has_buyback_context": false,
       "sales_price_sample": null,
-      "buyback_link_candidates": [],
+      "buyback_link_candidates": [
+        {
+          "text": "買取り履歴",
+          "href": "https://shop.kitamura.jp/ec/mypage/odr/list?type=sell"
+        },
+        {
+          "text": "初めての方へ",
+          "href": "/ec/page/service/sell-guide"
+        },
+        {
+          "text": "",
+          "href": "/ec/campaign/sell-campaign.html"
+        },
+        {
+          "text": "買取り・下取り",
+          "href": "https://www.net-chuko.com/ec/page/service/sell-guide"
+        },
+        {
+          "text": "なんでも下取り",
+          "href": "https://shop.kitamura.jp/ec/guide/shitadori"
+        },
+        {
+          "text": "北村写真機店",
+          "href": "https://kitamuracamera.jp/sell/"
+        }
+      ],
       "buyback_page_url": null,
-      "buyback_page_html_size": 0,
-      "buyback_page_text_preview": "",
+      "buyback_page_html_size": 549306,
+      "buyback_page_text_preview": "select language\n言語を選択​▼\n​\n買取り\n​\n全てのカテゴリから\n​\n\n買取り履歴\n\n初めての方へ\n\nお気に入り\n\n買いたい\n売りたい\n\n各種サービス案内\n\nグループサイト\n\nネット中古TOP\n指定されたページが見つかりませんでした\n指定されたページが見つかりませんでした\nカメラのキタムラWEBサイトをご利用いただきありがとうございます。10秒後にサイトトップへ遷移します。\nトップへ戻る\nご利用案内\nお問い合わせ\nよくある質問\n各種サービス案内\n買取り・下取り\nなんでも下取り\nトクトク交換\nお支払い方法\n5年間保証\n修理のご案内\n送料・手数料\n返品・交換\n商品お届け・納期\nセール・特集一覧\n特定商取引法に基づく表示\nクレジットカード認証サービス\n（3Dセキュア）\n古物営業法に基づく表示\n株式会社カメラのキタムラ\n高知県公安委員会許可番号第831010002392号\n弊社を装った悪質サイトにご注意ください\nデジタル一眼レフ\n(\nキヤノン\nニコン\nソニー\nオリンパス\nペンタックス\nマミヤ・リーフ\nライカ\nシグマ\n)\nミラーレス一眼\n(\nキヤノン\nニコン\nソニー\nオリンパス",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null
     }

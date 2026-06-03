@@ -1,6 +1,6 @@
 
 ============================================================
- Deploy Check (517 items)
+ Deploy Check (520 items)
 ============================================================
   ✅ [index_exists] docs/index.html 存在
   ✅ [forbidden_phrases] 禁止表現なし
@@ -185,23 +185,23 @@
   ✅ [ipad_not_in_other] iPad は「その他」欄に混入していない
   ✅ [airpods_not_in_smartphone] AirPods はスマートフォン欄に混入していない
   ⚠️ [applewatch_in_wearable_section] Apple Watch がウェアラブル欄に見つからない（データなし or genre設定を確認）
-  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-06-03T18:22:09+09:00）
+  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-06-03T19:46:22+09:00）
   ✅ [suspicious_price_format] suspicious_prices 形式OK（suspicious_price なし）
-  ✅ [fetch_failed_has_reason] fetch_failed 33件すべてに reason あり
+  ✅ [fetch_failed_has_reason] fetch_failed 36件すべてに reason あり
   ✅ [collector_report_html_exists] docs/collector_report.html 存在
   ✅ [collector_report_link_in_lp] LP内に collector_report.html へのリンクがある
-  ✅ [fetch_failed_report_link] 取得失敗29件 / suspicious0件 → 警告バーが表示されている
-  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 16件存在する: ['iphone17pro256', 'iphone17pm512', 'iphone17pm256', 'iphone17pro512']
-  ✅ [beginner_page_auto_scraped_exists] 自動取得 OK 22件 / total 55件
+  ✅ [fetch_failed_report_link] 取得失敗32件 / suspicious0件 → 警告バーが表示されている
+  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 14件存在する: ['iphone17pro256', 'iphone17pm256', 'iphone17pro512', 'iphone17pm512']
+  ✅ [beginner_page_auto_scraped_exists] 自動取得 OK 19件 / total 55件
   ✅ [shop_name_no_vertical_wrap] shop-name-col に word-break:keep-all が設定されている
-  ✅ [iphone17pro256_price_scraped] iPhone 17 Pro 256GB の価格取得成功: ['mobile_ichiban', 'kaitori_shouten', 'kaitori_itchome', 'iosys', 'netoff']
+  ✅ [iphone17pro256_price_scraped] iPhone 17 Pro 256GB の価格取得成功: ['kaitori_shouten', 'kaitori_itchome', 'iosys', 'netoff']
   ✅ [fetch_failed_section_collapsible] 取得失敗セクションが <details> 折りたたみ対応されている
   ✅ [fetch_failed_not_dominant] 取得失敗カード比率 2%（2/99）— 許容範囲内
-  ✅ [fetch_failed_has_reason_field] 全取得失敗エントリーに reason フィールドあり（33件）
+  ✅ [fetch_failed_has_reason_field] 全取得失敗エントリーに reason フィールドあり（36件）
   ✅ [auto_scraped_link_verified] auto_scraped行のlink_verifiedはすべてtrue（URL推測なし）
   ✅ [iphone_min3_shops] iPhone主要4商品すべて成功店舗≥3
   ✅ [switch2_min2_shops] Switch2 成功店舗≥2（3店舗）
-  ✅ [ps5pro_min2_shops] PS5 Pro 成功店舗≥2（3店舗）
+  ✅ [ps5pro_min2_shops] PS5 Pro 成功店舗≥2（2店舗）
   ✅ [no_unknown_failure_reason] すべての取得失敗に reason が設定されている（unknown なし）
   ✅ [debug_files_saved] exports/debug/ に診断ファイル 60件あり
   ✅ [low_confidence_not_in_lp] confidence=low 価格がLPに含まれていない（low=0件）
@@ -211,7 +211,7 @@
   ✅ [fetch_failed_description_exists] fetch_failed セクションに説明文が存在
   ✅ [quality_gate_script_exists] scripts/check_collector_quality.py が存在
   ✅ [quality_gate_in_workflow] GitHub Actions に quality gate step がある
-  ✅ [collector_summary_in_report] latest.json summary OK: 22/55 (40%)
+  ✅ [collector_summary_in_report] latest.json summary OK: 19/55 (35%)
   ✅ [playwright_install_in_workflow] daily_lp.yml に playwright install --with-deps chromium が存在
   ✅ [workflow_concurrency_set] daily_lp.yml に concurrency: group=daily-lp-update が設定されている
   ✅ [workflow_concurrency_no_cancel] daily_lp.yml の concurrency が cancel-in-progress: false（後続を待機）
@@ -447,7 +447,7 @@
   ✅ [beginner_source_in_confirm_line] #440 Beginner の取得方法は confirm-line（最終確認行）にだけ表示されている
   ✅ [pro_buyback_candidates_present] #441 Pro に買取店価格候補（買取価格）が残っている
   ✅ [pro_domestic_candidates_present] #442 Pro に国内新品/未使用価格候補（国内候補テーブル）が残っている
-  ✅ [beginner_row_has_core_cols] #443 Beginner の各店舗カードに 店舗名・価格・差益・確認リンクが揃っている（店名99/リンク99）
+  ✅ [beginner_row_has_core_cols] #443 Beginner の各店舗カードに 店舗名・価格・差益・確認リンクが揃っている（店名96/リンク96）
   ✅ [beginner_source_only_in_details_or_confirm] #444 取得方法（自動取得/手動確認）は details / confirm-line にだけ表示される
   ✅ [beginner_compare_folded_initial_hero_only] #445 初期表示は最高買取店＋2位差額のみ・買取店比較は details 内（初期表示の shop-row max=0）
   ✅ [beginner_hero_and_runnerup_diff] #446 初期表示に最高買取店ブロックと『2位との差額』が表示される
@@ -456,8 +456,8 @@
   ✅ [beginner_best_buyback_block_present] #449 最高買取店ブロック（best-buyback-hero）が存在する
   ✅ [beginner_all_shops_in_fold_failed_nested] #450 全買取店は比較fold内・取得失敗は別sub-details内（初期表示の取得失敗=False）
   ✅ [pro_buyback_sell_section_present] #451 Pro タブに『国内売却候補 / 買取店』セクションがある
-  ✅ [pro_buyback_3plus_multiple_products] #452 Pro タブに買取店候補が3件以上の商品が複数存在する（該当9商品 / 件数内訳=[5, 4, 5, 3, 3, 3, 4, 3, 2, 4]）
-  ✅ [pro_buyback_few_reason_shown] #453 Pro で買取候補が少ない商品に理由が表示される（<3件の商品=3 / 理由表示=3）
+  ✅ [pro_buyback_3plus_multiple_products] #452 Pro タブに買取店候補が3件以上の商品が複数存在する（該当8商品 / 件数内訳=[5, 4, 5, 3, 2, 3, 4, 3, 2, 4]）
+  ✅ [pro_buyback_few_reason_shown] #453 Pro で買取候補が少ない商品に理由が表示される（<3件の商品=4 / 理由表示=4）
   ✅ [beginner_no_watch_badge_on_profit] #454 profit>0 の利益ありカードに『様子見』が出ない（バッジ・本文とも：利益あり/小幅利益/微益）
   ✅ [beginner_failed_shops_separate_details] #455 価格『—』店舗は通常のもっと見るに混ざらず別 details に分離されている
   ✅ [beginner_no_failed_in_normal_more] #456 取得失敗店舗が通常の『もっと見る（価格取得済み）』に出ない
@@ -487,7 +487,7 @@
   ✅ [lottery_daily_update] #480 抽選情報が毎日更新される（daily_lp.yml に update_lottery_events ステップ）
   ✅ [fetch_failed_reason_visible] #481 fetch_failed の理由が LP またはレポートに表示される
   ✅ [ranking_empty_reason] #482 beginner ランキングが0件なら理由が表示される（beginner=4）
-  ✅ [sedori_empty_reason] #483 sedori ルートが0件なら理由が表示される（routes=31）
+  ✅ [sedori_empty_reason] #483 sedori ルートが0件なら理由が表示される（routes=28）
   ✅ [overseas_stale_excluded] #484 overseas stale は主計算から除外する方針が明示されている
   ✅ [ebay_app_id_warning] #485 EBAY_APP_ID 未設定時に明確な warning を出す
   ✅ [camera_manual_14d_excluded] #486 手動データ（camera含む）が14日超なら利益判定から除外される（LP・ranking）
@@ -519,8 +519,11 @@
   ✅ [fujiya_keyword_variants_defined] #512 Fujiya の複数キーワード候補（FUJIYA_KEYWORD_VARIANTS）が定義されている
   ✅ [fujiya_hit_count_tracking] #513 keyword別 hit_count / best_keyword を diagnostics に保存する実装がある
   ✅ [camera_status_keyword_fields] #514 camera_buyback_status の detail に keyword_hit_counts/best_keyword/hit_count がある
+  ✅ [camera_no_sales_price_as_buyback] #515 販売価格を買取価格として保存しない（買取文脈ゲート）
+  ✅ [camera_buyback_page_discovery] #516 買取ページ探索（買取専用URL/リンク候補/買取価格候補）が status に出る
+  ✅ [fujiya_uses_buyback_page] #517 Fujiya は買取専用ページ（/shop/purchase/list.aspx）を使う
 
-  Errors: 0 | Warnings: 17 | OK: 500
+  Errors: 0 | Warnings: 17 | OK: 503
 
   ✅ Deploy check PASSED
 ============================================================

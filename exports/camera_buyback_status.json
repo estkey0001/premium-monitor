@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-04T00:00:51+09:00",
+  "generated_at": "2026-06-04T00:18:33+09:00",
   "summary": {
     "total": 15,
     "ok": 0,
@@ -10,8 +10,16 @@
   },
   "failure_reasons": [
     {
-      "reason": "playwright_not_installed",
-      "count": 15
+      "reason": "timeout",
+      "count": 5
+    },
+    {
+      "reason": "price_not_found",
+      "count": 5
+    },
+    {
+      "reason": "site_blocked",
+      "count": 5
     }
   ],
   "shop_diagnostics": {
@@ -22,12 +30,12 @@
       "cloudflare": 0,
       "js_required": 0,
       "playwright_attempted": 5,
-      "playwright_success": 0,
-      "screenshot_saved": 0,
+      "playwright_success": 5,
+      "screenshot_saved": 5,
       "top_reason": {
-        "playwright_not_installed": 5
+        "timeout": 5
       },
-      "diagnosis": "playwright_not_installed"
+      "diagnosis": "timeout"
     },
     "src_fujiya": {
       "jobs": 5,
@@ -36,12 +44,12 @@
       "cloudflare": 0,
       "js_required": 0,
       "playwright_attempted": 5,
-      "playwright_success": 0,
-      "screenshot_saved": 0,
+      "playwright_success": 5,
+      "screenshot_saved": 5,
       "top_reason": {
-        "playwright_not_installed": 5
+        "price_not_found": 5
       },
-      "diagnosis": "playwright_not_installed"
+      "diagnosis": "price_not_found"
     },
     "src_kitamura": {
       "jobs": 5,
@@ -50,12 +58,12 @@
       "cloudflare": 0,
       "js_required": 0,
       "playwright_attempted": 5,
-      "playwright_success": 0,
-      "screenshot_saved": 0,
+      "playwright_success": 5,
+      "screenshot_saved": 5,
       "top_reason": {
-        "playwright_not_installed": 5
+        "site_blocked": 5
       },
-      "diagnosis": "playwright_not_installed"
+      "diagnosis": "site_blocked"
     }
   },
   "detail": [
@@ -64,7 +72,7 @@
       "shop_id": "src_mapcamera",
       "status": "FAILED",
       "price": 0,
-      "reason": "playwright_not_installed",
+      "reason": "timeout",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -72,17 +80,17 @@
       "selector_found": false,
       "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 302,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.47dfda17.1780499929.1bbe3033\n\nhttps://errors.edgesuite.net/18.47dfda17.1780499929.1bbe3033",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
       "shadow_dom_detected": false,
-      "dom_ready_state": "",
+      "dom_ready_state": "complete",
       "hit_count": null,
       "keyword_hit_counts": {},
       "best_keyword": null,
@@ -90,8 +98,8 @@
       "sales_price_sample": null,
       "buyback_link_candidates": [],
       "buyback_page_url": null,
-      "buyback_page_html_size": 0,
-      "buyback_page_text_preview": "",
+      "buyback_page_html_size": 302,
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.47dfda17.1780499929.1bbe3033\n\nhttps://errors.edgesuite.net/18.47dfda17.1780499929.1bbe3033",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -102,7 +110,7 @@
       "shop_id": "src_fujiya",
       "status": "FAILED",
       "price": 0,
-      "reason": "playwright_not_installed",
+      "reason": "price_not_found",
       "html_saved": true,
       "html_size": 317294,
       "cloudflare_detected": false,
@@ -110,34 +118,370 @@
       "selector_found": false,
       "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
-      "selector_waited": false,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 272400,
+      "selector_waited": true,
       "extraction_strategy": "requests",
-      "body_text_preview": "",
-      "matched_selectors": [],
-      "selector_candidates": [],
-      "iframe_count": 0,
+      "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
+      "matched_selectors": [
+        {
+          "selector": "table td",
+          "hits": 162
+        },
+        {
+          "selector": ".price",
+          "hits": 162
+        },
+        {
+          "selector": "[class*='price']",
+          "hits": 162
+        }
+      ],
+      "selector_candidates": [
+        {
+          "selector": "table td",
+          "text": "￥805,000",
+          "price": 805000,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥700,000 良品 ￥699,000 買取のみ10%UP 新品同様 ￥770,000 良品 ￥768,900 下取は15%UP 新品同様 ￥805,000 良品 ￥803,850"
+        },
+        {
+          "selector": ".price",
+          "text": "￥805,000",
+          "price": 805000,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥700,000 良品 ￥699,000 買取のみ10%UP 新品同様 ￥770,000 良品 ￥768,900 下取は15%UP 新品同様 ￥805,000 良品 ￥803,850"
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥805,000",
+          "price": 805000,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥700,000 良品 ￥699,000 買取のみ10%UP 新品同様 ￥770,000 良品 ￥768,900 下取は15%UP 新品同様 ￥805,000 良品 ￥803,850"
+        },
+        {
+          "selector": "table td",
+          "text": "￥803,850",
+          "price": 803850,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥700,000 良品 ￥699,000 買取のみ10%UP 新品同様 ￥770,000 良品 ￥768,900 下取は15%UP 新品同様 ￥805,000 良品 ￥803,850"
+        },
+        {
+          "selector": ".price",
+          "text": "￥803,850",
+          "price": 803850,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥700,000 良品 ￥699,000 買取のみ10%UP 新品同様 ￥770,000 良品 ￥768,900 下取は15%UP 新品同様 ￥805,000 良品 ￥803,850"
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥803,850",
+          "price": 803850,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥700,000 良品 ￥699,000 買取のみ10%UP 新品同様 ￥770,000 良品 ￥768,900 下取は15%UP 新品同様 ￥805,000 良品 ￥803,850"
+        },
+        {
+          "selector": "table td",
+          "text": "￥770,000",
+          "price": 770000,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥700,000 良品 ￥699,000 買取のみ10%UP 新品同様 ￥770,000 良品 ￥768,900 下取は15%UP 新品同様 ￥805,000 良品 ￥803,850"
+        },
+        {
+          "selector": ".price",
+          "text": "￥770,000",
+          "price": 770000,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥700,000 良品 ￥699,000 買取のみ10%UP 新品同様 ￥770,000 良品 ￥768,900 下取は15%UP 新品同様 ￥805,000 良品 ￥803,850"
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥770,000",
+          "price": 770000,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥700,000 良品 ￥699,000 買取のみ10%UP 新品同様 ￥770,000 良品 ￥768,900 下取は15%UP 新品同様 ￥805,000 良品 ￥803,850"
+        },
+        {
+          "selector": "table td",
+          "text": "￥768,900",
+          "price": 768900,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥700,000 良品 ￥699,000 買取のみ10%UP 新品同様 ￥770,000 良品 ￥768,900 下取は15%UP 新品同様 ￥805,000 良品 ￥803,850"
+        },
+        {
+          "selector": ".price",
+          "text": "￥768,900",
+          "price": 768900,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥700,000 良品 ￥699,000 買取のみ10%UP 新品同様 ￥770,000 良品 ￥768,900 下取は15%UP 新品同様 ￥805,000 良品 ￥803,850"
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥768,900",
+          "price": 768900,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥700,000 良品 ￥699,000 買取のみ10%UP 新品同様 ￥770,000 良品 ￥768,900 下取は15%UP 新品同様 ￥805,000 良品 ￥803,850"
+        },
+        {
+          "selector": "table td",
+          "text": "￥700,000",
+          "price": 700000,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥700,000 良品 ￥699,000 買取のみ10%UP 新品同様 ￥770,000 良品 ￥768,900 下取は15%UP 新品同様 ￥805,000 良品 ￥803,850"
+        },
+        {
+          "selector": ".price",
+          "text": "￥700,000",
+          "price": 700000,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥700,000 良品 ￥699,000 買取のみ10%UP 新品同様 ￥770,000 良品 ￥768,900 下取は15%UP 新品同様 ￥805,000 良品 ￥803,850"
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥700,000",
+          "price": 700000,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥700,000 良品 ￥699,000 買取のみ10%UP 新品同様 ￥770,000 良品 ￥768,900 下取は15%UP 新品同様 ￥805,000 良品 ￥803,850"
+        }
+      ],
+      "iframe_count": 1,
       "shadow_dom_detected": false,
-      "dom_ready_state": "",
-      "hit_count": null,
+      "dom_ready_state": "interactive",
+      "hit_count": 32,
       "keyword_hit_counts": {
-        "X100VI": null,
-        "X100 VI": null,
-        "X100V": null,
-        "富士フイルム X100": null,
-        "FUJIFILM X100VI": null
+        "X100VI": 8,
+        "X100 VI": 8,
+        "X100V": 14,
+        "富士フイルム X100": 32,
+        "FUJIFILM X100VI": 5
       },
-      "best_keyword": "X100VI",
-      "has_buyback_context": false,
-      "sales_price_sample": null,
-      "buyback_link_candidates": [],
-      "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=X100VI&search=検索",
-      "buyback_page_html_size": 0,
-      "buyback_page_text_preview": "",
-      "buyback_price_candidates": [],
-      "buyback_extracted_price": null,
+      "best_keyword": "富士フイルム X100",
+      "has_buyback_context": true,
+      "sales_price_sample": 805000,
+      "buyback_link_candidates": [
+        {
+          "text": "買取金額を調べる",
+          "href": "/shop/purchase/list.aspx"
+        },
+        {
+          "text": "フジヤカメラの買取・下取り",
+          "href": "/shop/kaitori/pc/0c-kaitor/"
+        },
+        {
+          "text": "お得な特典",
+          "href": "/shop/kaitori/pc/0c-kaitor/#tokuten"
+        },
+        {
+          "text": "買取に関するお悩みを解決",
+          "href": "/shop/kaitori/pc/0c-kaitor/#onayami"
+        },
+        {
+          "text": "選ばれ続ける理由",
+          "href": "/shop/kaitori/pc/0c-kaitor/#because"
+        },
+        {
+          "text": "店頭買取のご案内",
+          "href": "/shop/kaitori/pc/0c-kaitor/#shop"
+        },
+        {
+          "text": "お問い合わせ",
+          "href": "/shop/kaitori/pc/0c-kaitor/#contact"
+        },
+        {
+          "text": "買取検索",
+          "href": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx"
+        },
+        {
+          "text": "Sell買取りについて",
+          "href": "/shop/kaitori/pc/0c-kaitor/"
+        },
+        {
+          "text": "条件をリセット",
+          "href": "/shop/purchase/list.aspx"
+        },
+        {
+          "text": "＜全品対象＞買取金額10%アップ とは",
+          "href": "/shop/kaitori/pg/1c-ck-kaitori/"
+        },
+        {
+          "text": "＜全品対象・下取限定＞買取金額15%アップ とは",
+          "href": "/shop/kaitori/pg/1c-ck-shitadori/"
+        },
+        {
+          "text": "",
+          "href": "/shop/purchase/list.aspx?search=%e6%a4%9c%e7%b4%a2"
+        },
+        {
+          "text": "おすすめ順",
+          "href": "/shop/purchase/list.aspx?sort=0&search=%e6%a4%9c%e7%b4%a2&keyword=%e5%af%8c%e5%a3%ab%e3%83%95%e3%82%a4%e3%83%ab%e3%83%a0+X100"
+        },
+        {
+          "text": "新着順",
+          "href": "/shop/purchase/list.aspx?sort=1&search=%e6%a4%9c%e7%b4%a2&keyword=%e5%af%8c%e5%a3%ab%e3%83%95%e3%82%a4%e3%83%ab%e3%83%a0+X100"
+        },
+        {
+          "text": "商品名",
+          "href": "/shop/purchase/list.aspx?sort=2&search=%e6%a4%9c%e7%b4%a2&keyword=%e5%af%8c%e5%a3%ab%e3%83%95%e3%82%a4%e3%83%ab%e3%83%a0+X100"
+        },
+        {
+          "text": "発売日",
+          "href": "/shop/purchase/list.aspx?sort=3&search=%e6%a4%9c%e7%b4%a2&keyword=%e5%af%8c%e5%a3%ab%e3%83%95%e3%82%a4%e3%83%ab%e3%83%a0+X100"
+        },
+        {
+          "text": "価格(安い順)",
+          "href": "/shop/purchase/list.aspx?sort=4&search=%e6%a4%9c%e7%b4%a2&keyword=%e5%af%8c%e5%a3%ab%e3%83%95%e3%82%a4%e3%83%ab%e3%83%a0+X100"
+        },
+        {
+          "text": "価格(高い順)",
+          "href": "/shop/purchase/list.aspx?sort=5&search=%e6%a4%9c%e7%b4%a2&keyword=%e5%af%8c%e5%a3%ab%e3%83%95%e3%82%a4%e3%83%ab%e3%83%a0+X100"
+        },
+        {
+          "text": "新着順+商品名",
+          "href": "/shop/purchase/list.aspx?sort=6&search=%e6%a4%9c%e7%b4%a2&keyword=%e5%af%8c%e5%a3%ab%e3%83%95%e3%82%a4%e3%83%ab%e3%83%a0+X100"
+        }
+      ],
+      "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=%E5%AF%8C%E5%A3%AB%E3%83%95%E3%82%A4%E3%83%AB%E3%83%A0%20X100&search=検索",
+      "buyback_page_html_size": 272400,
+      "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
+      "buyback_price_candidates": [
+        {
+          "selector": "table td",
+          "text": "￥805,000",
+          "price": 805000,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥700,000 良品 ￥699,000 買取のみ10%UP 新品同様 ￥770,000 良品 ￥768,900 下取は15%UP 新品同様 ￥805,000 良品 ￥803,850"
+        },
+        {
+          "selector": ".price",
+          "text": "￥805,000",
+          "price": 805000,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥700,000 良品 ￥699,000 買取のみ10%UP 新品同様 ￥770,000 良品 ￥768,900 下取は15%UP 新品同様 ￥805,000 良品 ￥803,850"
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥805,000",
+          "price": 805000,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥700,000 良品 ￥699,000 買取のみ10%UP 新品同様 ￥770,000 良品 ￥768,900 下取は15%UP 新品同様 ￥805,000 良品 ￥803,850"
+        },
+        {
+          "selector": "table td",
+          "text": "￥803,850",
+          "price": 803850,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥700,000 良品 ￥699,000 買取のみ10%UP 新品同様 ￥770,000 良品 ￥768,900 下取は15%UP 新品同様 ￥805,000 良品 ￥803,850"
+        },
+        {
+          "selector": ".price",
+          "text": "￥803,850",
+          "price": 803850,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥700,000 良品 ￥699,000 買取のみ10%UP 新品同様 ￥770,000 良品 ￥768,900 下取は15%UP 新品同様 ￥805,000 良品 ￥803,850"
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥803,850",
+          "price": 803850,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥700,000 良品 ￥699,000 買取のみ10%UP 新品同様 ￥770,000 良品 ￥768,900 下取は15%UP 新品同様 ￥805,000 良品 ￥803,850"
+        },
+        {
+          "selector": "table td",
+          "text": "￥770,000",
+          "price": 770000,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥700,000 良品 ￥699,000 買取のみ10%UP 新品同様 ￥770,000 良品 ￥768,900 下取は15%UP 新品同様 ￥805,000 良品 ￥803,850"
+        },
+        {
+          "selector": ".price",
+          "text": "￥770,000",
+          "price": 770000,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥700,000 良品 ￥699,000 買取のみ10%UP 新品同様 ￥770,000 良品 ￥768,900 下取は15%UP 新品同様 ￥805,000 良品 ￥803,850"
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥770,000",
+          "price": 770000,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥700,000 良品 ￥699,000 買取のみ10%UP 新品同様 ￥770,000 良品 ￥768,900 下取は15%UP 新品同様 ￥805,000 良品 ￥803,850"
+        },
+        {
+          "selector": "table td",
+          "text": "￥768,900",
+          "price": 768900,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥700,000 良品 ￥699,000 買取のみ10%UP 新品同様 ￥770,000 良品 ￥768,900 下取は15%UP 新品同様 ￥805,000 良品 ￥803,850"
+        },
+        {
+          "selector": ".price",
+          "text": "￥768,900",
+          "price": 768900,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥700,000 良品 ￥699,000 買取のみ10%UP 新品同様 ￥770,000 良品 ￥768,900 下取は15%UP 新品同様 ￥805,000 良品 ￥803,850"
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥768,900",
+          "price": 768900,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥700,000 良品 ￥699,000 買取のみ10%UP 新品同様 ￥770,000 良品 ￥768,900 下取は15%UP 新品同様 ￥805,000 良品 ￥803,850"
+        },
+        {
+          "selector": "table td",
+          "text": "￥700,000",
+          "price": 700000,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥700,000 良品 ￥699,000 買取のみ10%UP 新品同様 ￥770,000 良品 ￥768,900 下取は15%UP 新品同様 ￥805,000 良品 ￥803,850"
+        },
+        {
+          "selector": ".price",
+          "text": "￥700,000",
+          "price": 700000,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥700,000 良品 ￥699,000 買取のみ10%UP 新品同様 ￥770,000 良品 ￥768,900 下取は15%UP 新品同様 ￥805,000 良品 ￥803,850"
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥700,000",
+          "price": 700000,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥700,000 良品 ￥699,000 買取のみ10%UP 新品同様 ￥770,000 良品 ￥768,900 下取は15%UP 新品同様 ￥805,000 良品 ￥803,850"
+        }
+      ],
+      "buyback_extracted_price": 805000,
       "confidence": "medium",
       "matched_item": ""
     },
@@ -146,7 +490,7 @@
       "shop_id": "src_kitamura",
       "status": "FAILED",
       "price": 0,
-      "reason": "playwright_not_installed",
+      "reason": "site_blocked",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -154,17 +498,17 @@
       "selector_found": false,
       "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 453266,
       "selector_waited": false,
       "extraction_strategy": "requests",
       "body_text_preview": "",
       "matched_selectors": [],
       "selector_candidates": [],
-      "iframe_count": 0,
+      "iframe_count": 1,
       "shadow_dom_detected": false,
-      "dom_ready_state": "",
+      "dom_ready_state": "complete",
       "hit_count": null,
       "keyword_hit_counts": {},
       "best_keyword": null,
@@ -172,7 +516,7 @@
       "sales_price_sample": null,
       "buyback_link_candidates": [],
       "buyback_page_url": null,
-      "buyback_page_html_size": 0,
+      "buyback_page_html_size": 453266,
       "buyback_page_text_preview": "",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
@@ -184,7 +528,7 @@
       "shop_id": "src_mapcamera",
       "status": "FAILED",
       "price": 0,
-      "reason": "playwright_not_installed",
+      "reason": "timeout",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -192,17 +536,17 @@
       "selector_found": false,
       "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 302,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.37643017.1780500106.30abd6f1\n\nhttps://errors.edgesuite.net/18.37643017.1780500106.30abd6f1",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
       "shadow_dom_detected": false,
-      "dom_ready_state": "",
+      "dom_ready_state": "complete",
       "hit_count": null,
       "keyword_hit_counts": {},
       "best_keyword": null,
@@ -210,8 +554,8 @@
       "sales_price_sample": null,
       "buyback_link_candidates": [],
       "buyback_page_url": null,
-      "buyback_page_html_size": 0,
-      "buyback_page_text_preview": "",
+      "buyback_page_html_size": 302,
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.37643017.1780500106.30abd6f1\n\nhttps://errors.edgesuite.net/18.37643017.1780500106.30abd6f1",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -222,7 +566,7 @@
       "shop_id": "src_fujiya",
       "status": "FAILED",
       "price": 0,
-      "reason": "playwright_not_installed",
+      "reason": "price_not_found",
       "html_saved": true,
       "html_size": 316351,
       "cloudflare_detected": false,
@@ -230,33 +574,369 @@
       "selector_found": false,
       "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
-      "selector_waited": false,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 217819,
+      "selector_waited": true,
       "extraction_strategy": "requests",
-      "body_text_preview": "",
-      "matched_selectors": [],
-      "selector_candidates": [],
-      "iframe_count": 0,
+      "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
+      "matched_selectors": [
+        {
+          "selector": "table td",
+          "hits": 30
+        },
+        {
+          "selector": ".price",
+          "hits": 30
+        },
+        {
+          "selector": "[class*='price']",
+          "hits": 30
+        }
+      ],
+      "selector_candidates": [
+        {
+          "selector": "table td",
+          "text": "￥223,100",
+          "price": 223100,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": "table td",
+          "text": "￥223,100",
+          "price": 223100,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": ".price",
+          "text": "￥223,100",
+          "price": 223100,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": ".price",
+          "text": "￥223,100",
+          "price": 223100,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥223,100",
+          "price": 223100,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥223,100",
+          "price": 223100,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": "table td",
+          "text": "￥221,950",
+          "price": 221950,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": "table td",
+          "text": "￥221,950",
+          "price": 221950,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": ".price",
+          "text": "￥221,950",
+          "price": 221950,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": ".price",
+          "text": "￥221,950",
+          "price": 221950,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥221,950",
+          "price": 221950,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥221,950",
+          "price": 221950,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": "table td",
+          "text": "￥213,400",
+          "price": 213400,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": "table td",
+          "text": "￥213,400",
+          "price": 213400,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": ".price",
+          "text": "￥213,400",
+          "price": 213400,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        }
+      ],
+      "iframe_count": 1,
       "shadow_dom_detected": false,
-      "dom_ready_state": "",
-      "hit_count": null,
+      "dom_ready_state": "interactive",
+      "hit_count": 8,
       "keyword_hit_counts": {
-        "GR IV": null,
-        "GR4": null,
-        "リコー GR IV": null,
-        "RICOH GR IV": null
+        "GR IV": 8,
+        "GR4": 0,
+        "リコー GR IV": 7,
+        "RICOH GR IV": 7
       },
       "best_keyword": "GR IV",
-      "has_buyback_context": false,
-      "sales_price_sample": null,
-      "buyback_link_candidates": [],
+      "has_buyback_context": true,
+      "sales_price_sample": 223100,
+      "buyback_link_candidates": [
+        {
+          "text": "買取金額を調べる",
+          "href": "/shop/purchase/list.aspx"
+        },
+        {
+          "text": "フジヤカメラの買取・下取り",
+          "href": "/shop/kaitori/pc/0c-kaitor/"
+        },
+        {
+          "text": "お得な特典",
+          "href": "/shop/kaitori/pc/0c-kaitor/#tokuten"
+        },
+        {
+          "text": "買取に関するお悩みを解決",
+          "href": "/shop/kaitori/pc/0c-kaitor/#onayami"
+        },
+        {
+          "text": "選ばれ続ける理由",
+          "href": "/shop/kaitori/pc/0c-kaitor/#because"
+        },
+        {
+          "text": "店頭買取のご案内",
+          "href": "/shop/kaitori/pc/0c-kaitor/#shop"
+        },
+        {
+          "text": "お問い合わせ",
+          "href": "/shop/kaitori/pc/0c-kaitor/#contact"
+        },
+        {
+          "text": "買取検索",
+          "href": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx"
+        },
+        {
+          "text": "Sell買取りについて",
+          "href": "/shop/kaitori/pc/0c-kaitor/"
+        },
+        {
+          "text": "条件をリセット",
+          "href": "/shop/purchase/list.aspx"
+        },
+        {
+          "text": "＜全品対象＞買取金額10%アップ とは",
+          "href": "/shop/kaitori/pg/1c-ck-kaitori/"
+        },
+        {
+          "text": "＜全品対象・下取限定＞買取金額15%アップ とは",
+          "href": "/shop/kaitori/pg/1c-ck-shitadori/"
+        },
+        {
+          "text": "",
+          "href": "/shop/purchase/list.aspx?search=%e6%a4%9c%e7%b4%a2"
+        },
+        {
+          "text": "おすすめ順",
+          "href": "/shop/purchase/list.aspx?sort=0&search=%e6%a4%9c%e7%b4%a2&keyword=GR+IV"
+        },
+        {
+          "text": "新着順",
+          "href": "/shop/purchase/list.aspx?sort=1&search=%e6%a4%9c%e7%b4%a2&keyword=GR+IV"
+        },
+        {
+          "text": "商品名",
+          "href": "/shop/purchase/list.aspx?sort=2&search=%e6%a4%9c%e7%b4%a2&keyword=GR+IV"
+        },
+        {
+          "text": "発売日",
+          "href": "/shop/purchase/list.aspx?sort=3&search=%e6%a4%9c%e7%b4%a2&keyword=GR+IV"
+        },
+        {
+          "text": "価格(安い順)",
+          "href": "/shop/purchase/list.aspx?sort=4&search=%e6%a4%9c%e7%b4%a2&keyword=GR+IV"
+        },
+        {
+          "text": "価格(高い順)",
+          "href": "/shop/purchase/list.aspx?sort=5&search=%e6%a4%9c%e7%b4%a2&keyword=GR+IV"
+        },
+        {
+          "text": "新着順+商品名",
+          "href": "/shop/purchase/list.aspx?sort=6&search=%e6%a4%9c%e7%b4%a2&keyword=GR+IV"
+        }
+      ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=GR%20IV&search=検索",
-      "buyback_page_html_size": 0,
-      "buyback_page_text_preview": "",
-      "buyback_price_candidates": [],
-      "buyback_extracted_price": null,
+      "buyback_page_html_size": 217819,
+      "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
+      "buyback_price_candidates": [
+        {
+          "selector": "table td",
+          "text": "￥223,100",
+          "price": 223100,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": "table td",
+          "text": "￥223,100",
+          "price": 223100,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": ".price",
+          "text": "￥223,100",
+          "price": 223100,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": ".price",
+          "text": "￥223,100",
+          "price": 223100,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥223,100",
+          "price": 223100,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥223,100",
+          "price": 223100,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": "table td",
+          "text": "￥221,950",
+          "price": 221950,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": "table td",
+          "text": "￥221,950",
+          "price": 221950,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": ".price",
+          "text": "￥221,950",
+          "price": 221950,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": ".price",
+          "text": "￥221,950",
+          "price": 221950,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥221,950",
+          "price": 221950,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥221,950",
+          "price": 221950,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": "table td",
+          "text": "￥213,400",
+          "price": 213400,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": "table td",
+          "text": "￥213,400",
+          "price": 213400,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": ".price",
+          "text": "￥213,400",
+          "price": 213400,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        }
+      ],
+      "buyback_extracted_price": 223100,
       "confidence": "medium",
       "matched_item": ""
     },
@@ -265,7 +945,7 @@
       "shop_id": "src_kitamura",
       "status": "FAILED",
       "price": 0,
-      "reason": "playwright_not_installed",
+      "reason": "site_blocked",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -273,17 +953,17 @@
       "selector_found": false,
       "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 453266,
       "selector_waited": false,
       "extraction_strategy": "requests",
       "body_text_preview": "",
       "matched_selectors": [],
       "selector_candidates": [],
-      "iframe_count": 0,
+      "iframe_count": 1,
       "shadow_dom_detected": false,
-      "dom_ready_state": "",
+      "dom_ready_state": "complete",
       "hit_count": null,
       "keyword_hit_counts": {},
       "best_keyword": null,
@@ -291,7 +971,7 @@
       "sales_price_sample": null,
       "buyback_link_candidates": [],
       "buyback_page_url": null,
-      "buyback_page_html_size": 0,
+      "buyback_page_html_size": 453266,
       "buyback_page_text_preview": "",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
@@ -303,7 +983,7 @@
       "shop_id": "src_mapcamera",
       "status": "FAILED",
       "price": 0,
-      "reason": "playwright_not_installed",
+      "reason": "timeout",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -311,17 +991,17 @@
       "selector_found": false,
       "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 302,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.25643017.1780500252.81756937\n\nhttps://errors.edgesuite.net/18.25643017.1780500252.81756937",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
       "shadow_dom_detected": false,
-      "dom_ready_state": "",
+      "dom_ready_state": "complete",
       "hit_count": null,
       "keyword_hit_counts": {},
       "best_keyword": null,
@@ -329,8 +1009,8 @@
       "sales_price_sample": null,
       "buyback_link_candidates": [],
       "buyback_page_url": null,
-      "buyback_page_html_size": 0,
-      "buyback_page_text_preview": "",
+      "buyback_page_html_size": 302,
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.25643017.1780500252.81756937\n\nhttps://errors.edgesuite.net/18.25643017.1780500252.81756937",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -341,7 +1021,7 @@
       "shop_id": "src_fujiya",
       "status": "FAILED",
       "price": 0,
-      "reason": "playwright_not_installed",
+      "reason": "price_not_found",
       "html_saved": true,
       "html_size": 361650,
       "cloudflare_detected": false,
@@ -349,32 +1029,368 @@
       "selector_found": false,
       "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
-      "selector_waited": false,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 198742,
+      "selector_waited": true,
       "extraction_strategy": "requests",
-      "body_text_preview": "",
-      "matched_selectors": [],
-      "selector_candidates": [],
-      "iframe_count": 0,
+      "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
+      "matched_selectors": [
+        {
+          "selector": "table td",
+          "hits": 6
+        },
+        {
+          "selector": ".price",
+          "hits": 6
+        },
+        {
+          "selector": "[class*='price']",
+          "hits": 6
+        }
+      ],
+      "selector_candidates": [
+        {
+          "selector": "table td",
+          "text": "￥223,100",
+          "price": 223100,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": ".price",
+          "text": "￥223,100",
+          "price": 223100,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥223,100",
+          "price": 223100,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": "table td",
+          "text": "￥221,950",
+          "price": 221950,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": ".price",
+          "text": "￥221,950",
+          "price": 221950,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥221,950",
+          "price": 221950,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": "table td",
+          "text": "￥213,400",
+          "price": 213400,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": ".price",
+          "text": "￥213,400",
+          "price": 213400,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥213,400",
+          "price": 213400,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": "table td",
+          "text": "￥212,300",
+          "price": 212300,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": ".price",
+          "text": "￥212,300",
+          "price": 212300,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥212,300",
+          "price": 212300,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": "table td",
+          "text": "￥194,000",
+          "price": 194000,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": ".price",
+          "text": "￥194,000",
+          "price": 194000,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥194,000",
+          "price": 194000,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        }
+      ],
+      "iframe_count": 1,
       "shadow_dom_detected": false,
-      "dom_ready_state": "",
-      "hit_count": null,
+      "dom_ready_state": "interactive",
+      "hit_count": 1,
       "keyword_hit_counts": {
-        "GR IV HDF": null,
-        "GR4 HDF": null,
-        "RICOH GR IV HDF": null
+        "GR IV HDF": 1,
+        "GR4 HDF": 0,
+        "RICOH GR IV HDF": 1
       },
       "best_keyword": "GR IV HDF",
-      "has_buyback_context": false,
-      "sales_price_sample": null,
-      "buyback_link_candidates": [],
+      "has_buyback_context": true,
+      "sales_price_sample": 223100,
+      "buyback_link_candidates": [
+        {
+          "text": "買取金額を調べる",
+          "href": "/shop/purchase/list.aspx"
+        },
+        {
+          "text": "フジヤカメラの買取・下取り",
+          "href": "/shop/kaitori/pc/0c-kaitor/"
+        },
+        {
+          "text": "お得な特典",
+          "href": "/shop/kaitori/pc/0c-kaitor/#tokuten"
+        },
+        {
+          "text": "買取に関するお悩みを解決",
+          "href": "/shop/kaitori/pc/0c-kaitor/#onayami"
+        },
+        {
+          "text": "選ばれ続ける理由",
+          "href": "/shop/kaitori/pc/0c-kaitor/#because"
+        },
+        {
+          "text": "店頭買取のご案内",
+          "href": "/shop/kaitori/pc/0c-kaitor/#shop"
+        },
+        {
+          "text": "お問い合わせ",
+          "href": "/shop/kaitori/pc/0c-kaitor/#contact"
+        },
+        {
+          "text": "買取検索",
+          "href": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx"
+        },
+        {
+          "text": "Sell買取りについて",
+          "href": "/shop/kaitori/pc/0c-kaitor/"
+        },
+        {
+          "text": "条件をリセット",
+          "href": "/shop/purchase/list.aspx"
+        },
+        {
+          "text": "＜全品対象＞買取金額10%アップ とは",
+          "href": "/shop/kaitori/pg/1c-ck-kaitori/"
+        },
+        {
+          "text": "＜全品対象・下取限定＞買取金額15%アップ とは",
+          "href": "/shop/kaitori/pg/1c-ck-shitadori/"
+        },
+        {
+          "text": "",
+          "href": "/shop/purchase/list.aspx?search=%e6%a4%9c%e7%b4%a2"
+        },
+        {
+          "text": "おすすめ順",
+          "href": "/shop/purchase/list.aspx?sort=0&search=%e6%a4%9c%e7%b4%a2&keyword=GR+IV+HDF"
+        },
+        {
+          "text": "新着順",
+          "href": "/shop/purchase/list.aspx?sort=1&search=%e6%a4%9c%e7%b4%a2&keyword=GR+IV+HDF"
+        },
+        {
+          "text": "商品名",
+          "href": "/shop/purchase/list.aspx?sort=2&search=%e6%a4%9c%e7%b4%a2&keyword=GR+IV+HDF"
+        },
+        {
+          "text": "発売日",
+          "href": "/shop/purchase/list.aspx?sort=3&search=%e6%a4%9c%e7%b4%a2&keyword=GR+IV+HDF"
+        },
+        {
+          "text": "価格(安い順)",
+          "href": "/shop/purchase/list.aspx?sort=4&search=%e6%a4%9c%e7%b4%a2&keyword=GR+IV+HDF"
+        },
+        {
+          "text": "価格(高い順)",
+          "href": "/shop/purchase/list.aspx?sort=5&search=%e6%a4%9c%e7%b4%a2&keyword=GR+IV+HDF"
+        },
+        {
+          "text": "新着順+商品名",
+          "href": "/shop/purchase/list.aspx?sort=6&search=%e6%a4%9c%e7%b4%a2&keyword=GR+IV+HDF"
+        }
+      ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=GR%20IV%20HDF&search=検索",
-      "buyback_page_html_size": 0,
-      "buyback_page_text_preview": "",
-      "buyback_price_candidates": [],
-      "buyback_extracted_price": null,
+      "buyback_page_html_size": 198742,
+      "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
+      "buyback_price_candidates": [
+        {
+          "selector": "table td",
+          "text": "￥223,100",
+          "price": 223100,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": ".price",
+          "text": "￥223,100",
+          "price": 223100,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥223,100",
+          "price": 223100,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": "table td",
+          "text": "￥221,950",
+          "price": 221950,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": ".price",
+          "text": "￥221,950",
+          "price": 221950,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥221,950",
+          "price": 221950,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": "table td",
+          "text": "￥213,400",
+          "price": 213400,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": ".price",
+          "text": "￥213,400",
+          "price": 213400,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥213,400",
+          "price": 213400,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": "table td",
+          "text": "￥212,300",
+          "price": 212300,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": ".price",
+          "text": "￥212,300",
+          "price": 212300,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥212,300",
+          "price": 212300,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": "table td",
+          "text": "￥194,000",
+          "price": 194000,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": ".price",
+          "text": "￥194,000",
+          "price": 194000,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥194,000",
+          "price": 194000,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        }
+      ],
+      "buyback_extracted_price": 223100,
       "confidence": "medium",
       "matched_item": ""
     },
@@ -383,7 +1399,7 @@
       "shop_id": "src_kitamura",
       "status": "FAILED",
       "price": 0,
-      "reason": "playwright_not_installed",
+      "reason": "site_blocked",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -391,17 +1407,17 @@
       "selector_found": false,
       "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 453266,
       "selector_waited": false,
       "extraction_strategy": "requests",
       "body_text_preview": "",
       "matched_selectors": [],
       "selector_candidates": [],
-      "iframe_count": 0,
+      "iframe_count": 1,
       "shadow_dom_detected": false,
-      "dom_ready_state": "",
+      "dom_ready_state": "complete",
       "hit_count": null,
       "keyword_hit_counts": {},
       "best_keyword": null,
@@ -409,7 +1425,7 @@
       "sales_price_sample": null,
       "buyback_link_candidates": [],
       "buyback_page_url": null,
-      "buyback_page_html_size": 0,
+      "buyback_page_html_size": 453266,
       "buyback_page_text_preview": "",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
@@ -421,7 +1437,7 @@
       "shop_id": "src_mapcamera",
       "status": "FAILED",
       "price": 0,
-      "reason": "playwright_not_installed",
+      "reason": "timeout",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -429,17 +1445,17 @@
       "selector_found": false,
       "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 302,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.c69b3e17.1780500370.15b4610f\n\nhttps://errors.edgesuite.net/18.c69b3e17.1780500370.15b4610f",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
       "shadow_dom_detected": false,
-      "dom_ready_state": "",
+      "dom_ready_state": "complete",
       "hit_count": null,
       "keyword_hit_counts": {},
       "best_keyword": null,
@@ -447,8 +1463,8 @@
       "sales_price_sample": null,
       "buyback_link_candidates": [],
       "buyback_page_url": null,
-      "buyback_page_html_size": 0,
-      "buyback_page_text_preview": "",
+      "buyback_page_html_size": 302,
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.c69b3e17.1780500370.15b4610f\n\nhttps://errors.edgesuite.net/18.c69b3e17.1780500370.15b4610f",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -459,7 +1475,7 @@
       "shop_id": "src_fujiya",
       "status": "FAILED",
       "price": 0,
-      "reason": "playwright_not_installed",
+      "reason": "price_not_found",
       "html_saved": true,
       "html_size": 313625,
       "cloudflare_detected": false,
@@ -467,32 +1483,368 @@
       "selector_found": false,
       "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
-      "selector_waited": false,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 198922,
+      "selector_waited": true,
       "extraction_strategy": "requests",
-      "body_text_preview": "",
-      "matched_selectors": [],
-      "selector_candidates": [],
-      "iframe_count": 0,
+      "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
+      "matched_selectors": [
+        {
+          "selector": "table td",
+          "hits": 6
+        },
+        {
+          "selector": ".price",
+          "hits": 6
+        },
+        {
+          "selector": "[class*='price']",
+          "hits": 6
+        }
+      ],
+      "selector_candidates": [
+        {
+          "selector": "table td",
+          "text": "￥223,100",
+          "price": 223100,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": ".price",
+          "text": "￥223,100",
+          "price": 223100,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥223,100",
+          "price": 223100,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": "table td",
+          "text": "￥221,950",
+          "price": 221950,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": ".price",
+          "text": "￥221,950",
+          "price": 221950,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥221,950",
+          "price": 221950,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": "table td",
+          "text": "￥213,400",
+          "price": 213400,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": ".price",
+          "text": "￥213,400",
+          "price": 213400,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥213,400",
+          "price": 213400,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": "table td",
+          "text": "￥212,300",
+          "price": 212300,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": ".price",
+          "text": "￥212,300",
+          "price": 212300,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥212,300",
+          "price": 212300,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": "table td",
+          "text": "￥194,000",
+          "price": 194000,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": ".price",
+          "text": "￥194,000",
+          "price": 194000,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥194,000",
+          "price": 194000,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        }
+      ],
+      "iframe_count": 1,
       "shadow_dom_detected": false,
-      "dom_ready_state": "",
-      "hit_count": null,
+      "dom_ready_state": "interactive",
+      "hit_count": 1,
       "keyword_hit_counts": {
-        "GR IV Monochrome": null,
-        "GR IV モノクローム": null,
-        "GR4 モノクロ": null
+        "GR IV Monochrome": 1,
+        "GR IV モノクローム": 1,
+        "GR4 モノクロ": 0
       },
       "best_keyword": "GR IV Monochrome",
-      "has_buyback_context": false,
-      "sales_price_sample": null,
-      "buyback_link_candidates": [],
+      "has_buyback_context": true,
+      "sales_price_sample": 223100,
+      "buyback_link_candidates": [
+        {
+          "text": "買取金額を調べる",
+          "href": "/shop/purchase/list.aspx"
+        },
+        {
+          "text": "フジヤカメラの買取・下取り",
+          "href": "/shop/kaitori/pc/0c-kaitor/"
+        },
+        {
+          "text": "お得な特典",
+          "href": "/shop/kaitori/pc/0c-kaitor/#tokuten"
+        },
+        {
+          "text": "買取に関するお悩みを解決",
+          "href": "/shop/kaitori/pc/0c-kaitor/#onayami"
+        },
+        {
+          "text": "選ばれ続ける理由",
+          "href": "/shop/kaitori/pc/0c-kaitor/#because"
+        },
+        {
+          "text": "店頭買取のご案内",
+          "href": "/shop/kaitori/pc/0c-kaitor/#shop"
+        },
+        {
+          "text": "お問い合わせ",
+          "href": "/shop/kaitori/pc/0c-kaitor/#contact"
+        },
+        {
+          "text": "買取検索",
+          "href": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx"
+        },
+        {
+          "text": "Sell買取りについて",
+          "href": "/shop/kaitori/pc/0c-kaitor/"
+        },
+        {
+          "text": "条件をリセット",
+          "href": "/shop/purchase/list.aspx"
+        },
+        {
+          "text": "＜全品対象＞買取金額10%アップ とは",
+          "href": "/shop/kaitori/pg/1c-ck-kaitori/"
+        },
+        {
+          "text": "＜全品対象・下取限定＞買取金額15%アップ とは",
+          "href": "/shop/kaitori/pg/1c-ck-shitadori/"
+        },
+        {
+          "text": "",
+          "href": "/shop/purchase/list.aspx?search=%e6%a4%9c%e7%b4%a2"
+        },
+        {
+          "text": "おすすめ順",
+          "href": "/shop/purchase/list.aspx?sort=0&search=%e6%a4%9c%e7%b4%a2&keyword=GR+IV+Monochrome"
+        },
+        {
+          "text": "新着順",
+          "href": "/shop/purchase/list.aspx?sort=1&search=%e6%a4%9c%e7%b4%a2&keyword=GR+IV+Monochrome"
+        },
+        {
+          "text": "商品名",
+          "href": "/shop/purchase/list.aspx?sort=2&search=%e6%a4%9c%e7%b4%a2&keyword=GR+IV+Monochrome"
+        },
+        {
+          "text": "発売日",
+          "href": "/shop/purchase/list.aspx?sort=3&search=%e6%a4%9c%e7%b4%a2&keyword=GR+IV+Monochrome"
+        },
+        {
+          "text": "価格(安い順)",
+          "href": "/shop/purchase/list.aspx?sort=4&search=%e6%a4%9c%e7%b4%a2&keyword=GR+IV+Monochrome"
+        },
+        {
+          "text": "価格(高い順)",
+          "href": "/shop/purchase/list.aspx?sort=5&search=%e6%a4%9c%e7%b4%a2&keyword=GR+IV+Monochrome"
+        },
+        {
+          "text": "新着順+商品名",
+          "href": "/shop/purchase/list.aspx?sort=6&search=%e6%a4%9c%e7%b4%a2&keyword=GR+IV+Monochrome"
+        }
+      ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=GR%20IV%20Monochrome&search=検索",
-      "buyback_page_html_size": 0,
-      "buyback_page_text_preview": "",
-      "buyback_price_candidates": [],
-      "buyback_extracted_price": null,
+      "buyback_page_html_size": 198922,
+      "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
+      "buyback_price_candidates": [
+        {
+          "selector": "table td",
+          "text": "￥223,100",
+          "price": 223100,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": ".price",
+          "text": "￥223,100",
+          "price": 223100,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥223,100",
+          "price": 223100,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": "table td",
+          "text": "￥221,950",
+          "price": 221950,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": ".price",
+          "text": "￥221,950",
+          "price": 221950,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥221,950",
+          "price": 221950,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": "table td",
+          "text": "￥213,400",
+          "price": 213400,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": ".price",
+          "text": "￥213,400",
+          "price": 213400,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥213,400",
+          "price": 213400,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": "table td",
+          "text": "￥212,300",
+          "price": 212300,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": ".price",
+          "text": "￥212,300",
+          "price": 212300,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥212,300",
+          "price": 212300,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": "table td",
+          "text": "￥194,000",
+          "price": 194000,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": ".price",
+          "text": "￥194,000",
+          "price": 194000,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥194,000",
+          "price": 194000,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950"
+        }
+      ],
+      "buyback_extracted_price": 223100,
       "confidence": "medium",
       "matched_item": ""
     },
@@ -501,7 +1853,7 @@
       "shop_id": "src_kitamura",
       "status": "FAILED",
       "price": 0,
-      "reason": "playwright_not_installed",
+      "reason": "site_blocked",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -509,17 +1861,17 @@
       "selector_found": false,
       "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 453266,
       "selector_waited": false,
       "extraction_strategy": "requests",
       "body_text_preview": "",
       "matched_selectors": [],
       "selector_candidates": [],
-      "iframe_count": 0,
+      "iframe_count": 1,
       "shadow_dom_detected": false,
-      "dom_ready_state": "",
+      "dom_ready_state": "complete",
       "hit_count": null,
       "keyword_hit_counts": {},
       "best_keyword": null,
@@ -527,7 +1879,7 @@
       "sales_price_sample": null,
       "buyback_link_candidates": [],
       "buyback_page_url": null,
-      "buyback_page_html_size": 0,
+      "buyback_page_html_size": 453266,
       "buyback_page_text_preview": "",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
@@ -539,7 +1891,7 @@
       "shop_id": "src_mapcamera",
       "status": "FAILED",
       "price": 0,
-      "reason": "playwright_not_installed",
+      "reason": "timeout",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -547,17 +1899,17 @@
       "selector_found": false,
       "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 302,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.aace4917.1780500489.19a3f594\n\nhttps://errors.edgesuite.net/18.aace4917.1780500489.19a3f594",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
       "shadow_dom_detected": false,
-      "dom_ready_state": "",
+      "dom_ready_state": "complete",
       "hit_count": null,
       "keyword_hit_counts": {},
       "best_keyword": null,
@@ -565,8 +1917,8 @@
       "sales_price_sample": null,
       "buyback_link_candidates": [],
       "buyback_page_url": null,
-      "buyback_page_html_size": 0,
-      "buyback_page_text_preview": "",
+      "buyback_page_html_size": 302,
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.aace4917.1780500489.19a3f594\n\nhttps://errors.edgesuite.net/18.aace4917.1780500489.19a3f594",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -577,7 +1929,7 @@
       "shop_id": "src_fujiya",
       "status": "FAILED",
       "price": 0,
-      "reason": "playwright_not_installed",
+      "reason": "price_not_found",
       "html_saved": true,
       "html_size": 317634,
       "cloudflare_detected": false,
@@ -585,33 +1937,369 @@
       "selector_found": false,
       "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
-      "selector_waited": false,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 205888,
+      "selector_waited": true,
       "extraction_strategy": "requests",
-      "body_text_preview": "",
-      "matched_selectors": [],
-      "selector_candidates": [],
-      "iframe_count": 0,
+      "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
+      "matched_selectors": [
+        {
+          "selector": "table td",
+          "hits": 18
+        },
+        {
+          "selector": ".price",
+          "hits": 18
+        },
+        {
+          "selector": "[class*='price']",
+          "hits": 18
+        }
+      ],
+      "selector_candidates": [
+        {
+          "selector": "table td",
+          "text": "￥174,800",
+          "price": 174800,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥152,000 良品 ￥151,000 買取のみ10%UP 新品同様 ￥167,200 良品 ￥166,100 下取は15%UP 新品同様 ￥174,800 良品 ￥173,650"
+        },
+        {
+          "selector": ".price",
+          "text": "￥174,800",
+          "price": 174800,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥152,000 良品 ￥151,000 買取のみ10%UP 新品同様 ￥167,200 良品 ￥166,100 下取は15%UP 新品同様 ￥174,800 良品 ￥173,650"
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥174,800",
+          "price": 174800,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥152,000 良品 ￥151,000 買取のみ10%UP 新品同様 ￥167,200 良品 ￥166,100 下取は15%UP 新品同様 ￥174,800 良品 ￥173,650"
+        },
+        {
+          "selector": "table td",
+          "text": "￥173,650",
+          "price": 173650,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥152,000 良品 ￥151,000 買取のみ10%UP 新品同様 ￥167,200 良品 ￥166,100 下取は15%UP 新品同様 ￥174,800 良品 ￥173,650"
+        },
+        {
+          "selector": ".price",
+          "text": "￥173,650",
+          "price": 173650,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥152,000 良品 ￥151,000 買取のみ10%UP 新品同様 ￥167,200 良品 ￥166,100 下取は15%UP 新品同様 ￥174,800 良品 ￥173,650"
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥173,650",
+          "price": 173650,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥152,000 良品 ￥151,000 買取のみ10%UP 新品同様 ￥167,200 良品 ￥166,100 下取は15%UP 新品同様 ￥174,800 良品 ￥173,650"
+        },
+        {
+          "selector": "table td",
+          "text": "￥167,200",
+          "price": 167200,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥152,000 良品 ￥151,000 買取のみ10%UP 新品同様 ￥167,200 良品 ￥166,100 下取は15%UP 新品同様 ￥174,800 良品 ￥173,650"
+        },
+        {
+          "selector": ".price",
+          "text": "￥167,200",
+          "price": 167200,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥152,000 良品 ￥151,000 買取のみ10%UP 新品同様 ￥167,200 良品 ￥166,100 下取は15%UP 新品同様 ￥174,800 良品 ￥173,650"
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥167,200",
+          "price": 167200,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥152,000 良品 ￥151,000 買取のみ10%UP 新品同様 ￥167,200 良品 ￥166,100 下取は15%UP 新品同様 ￥174,800 良品 ￥173,650"
+        },
+        {
+          "selector": "table td",
+          "text": "￥166,100",
+          "price": 166100,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥152,000 良品 ￥151,000 買取のみ10%UP 新品同様 ￥167,200 良品 ￥166,100 下取は15%UP 新品同様 ￥174,800 良品 ￥173,650"
+        },
+        {
+          "selector": ".price",
+          "text": "￥166,100",
+          "price": 166100,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥152,000 良品 ￥151,000 買取のみ10%UP 新品同様 ￥167,200 良品 ￥166,100 下取は15%UP 新品同様 ￥174,800 良品 ￥173,650"
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥166,100",
+          "price": 166100,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥152,000 良品 ￥151,000 買取のみ10%UP 新品同様 ￥167,200 良品 ￥166,100 下取は15%UP 新品同様 ￥174,800 良品 ￥173,650"
+        },
+        {
+          "selector": "table td",
+          "text": "￥152,000",
+          "price": 152000,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥152,000 良品 ￥151,000 買取のみ10%UP 新品同様 ￥167,200 良品 ￥166,100 下取は15%UP 新品同様 ￥174,800 良品 ￥173,650"
+        },
+        {
+          "selector": ".price",
+          "text": "￥152,000",
+          "price": 152000,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥152,000 良品 ￥151,000 買取のみ10%UP 新品同様 ￥167,200 良品 ￥166,100 下取は15%UP 新品同様 ￥174,800 良品 ￥173,650"
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥152,000",
+          "price": 152000,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥152,000 良品 ￥151,000 買取のみ10%UP 新品同様 ￥167,200 良品 ￥166,100 下取は15%UP 新品同様 ￥174,800 良品 ￥173,650"
+        }
+      ],
+      "iframe_count": 1,
       "shadow_dom_detected": false,
-      "dom_ready_state": "",
-      "hit_count": null,
+      "dom_ready_state": "interactive",
+      "hit_count": 3,
       "keyword_hit_counts": {
-        "GR IIIx": null,
-        "GR3x": null,
-        "リコー GR IIIx": null,
-        "RICOH GR IIIx": null
+        "GR IIIx": 3,
+        "GR3x": 0,
+        "リコー GR IIIx": 3,
+        "RICOH GR IIIx": 3
       },
       "best_keyword": "GR IIIx",
-      "has_buyback_context": false,
-      "sales_price_sample": null,
-      "buyback_link_candidates": [],
+      "has_buyback_context": true,
+      "sales_price_sample": 174800,
+      "buyback_link_candidates": [
+        {
+          "text": "買取金額を調べる",
+          "href": "/shop/purchase/list.aspx"
+        },
+        {
+          "text": "フジヤカメラの買取・下取り",
+          "href": "/shop/kaitori/pc/0c-kaitor/"
+        },
+        {
+          "text": "お得な特典",
+          "href": "/shop/kaitori/pc/0c-kaitor/#tokuten"
+        },
+        {
+          "text": "買取に関するお悩みを解決",
+          "href": "/shop/kaitori/pc/0c-kaitor/#onayami"
+        },
+        {
+          "text": "選ばれ続ける理由",
+          "href": "/shop/kaitori/pc/0c-kaitor/#because"
+        },
+        {
+          "text": "店頭買取のご案内",
+          "href": "/shop/kaitori/pc/0c-kaitor/#shop"
+        },
+        {
+          "text": "お問い合わせ",
+          "href": "/shop/kaitori/pc/0c-kaitor/#contact"
+        },
+        {
+          "text": "買取検索",
+          "href": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx"
+        },
+        {
+          "text": "Sell買取りについて",
+          "href": "/shop/kaitori/pc/0c-kaitor/"
+        },
+        {
+          "text": "条件をリセット",
+          "href": "/shop/purchase/list.aspx"
+        },
+        {
+          "text": "＜全品対象＞買取金額10%アップ とは",
+          "href": "/shop/kaitori/pg/1c-ck-kaitori/"
+        },
+        {
+          "text": "＜全品対象・下取限定＞買取金額15%アップ とは",
+          "href": "/shop/kaitori/pg/1c-ck-shitadori/"
+        },
+        {
+          "text": "",
+          "href": "/shop/purchase/list.aspx?search=%e6%a4%9c%e7%b4%a2"
+        },
+        {
+          "text": "おすすめ順",
+          "href": "/shop/purchase/list.aspx?sort=0&search=%e6%a4%9c%e7%b4%a2&keyword=GR+IIIx"
+        },
+        {
+          "text": "新着順",
+          "href": "/shop/purchase/list.aspx?sort=1&search=%e6%a4%9c%e7%b4%a2&keyword=GR+IIIx"
+        },
+        {
+          "text": "商品名",
+          "href": "/shop/purchase/list.aspx?sort=2&search=%e6%a4%9c%e7%b4%a2&keyword=GR+IIIx"
+        },
+        {
+          "text": "発売日",
+          "href": "/shop/purchase/list.aspx?sort=3&search=%e6%a4%9c%e7%b4%a2&keyword=GR+IIIx"
+        },
+        {
+          "text": "価格(安い順)",
+          "href": "/shop/purchase/list.aspx?sort=4&search=%e6%a4%9c%e7%b4%a2&keyword=GR+IIIx"
+        },
+        {
+          "text": "価格(高い順)",
+          "href": "/shop/purchase/list.aspx?sort=5&search=%e6%a4%9c%e7%b4%a2&keyword=GR+IIIx"
+        },
+        {
+          "text": "新着順+商品名",
+          "href": "/shop/purchase/list.aspx?sort=6&search=%e6%a4%9c%e7%b4%a2&keyword=GR+IIIx"
+        }
+      ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=GR%20IIIx&search=検索",
-      "buyback_page_html_size": 0,
-      "buyback_page_text_preview": "",
-      "buyback_price_candidates": [],
-      "buyback_extracted_price": null,
+      "buyback_page_html_size": 205888,
+      "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
+      "buyback_price_candidates": [
+        {
+          "selector": "table td",
+          "text": "￥174,800",
+          "price": 174800,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥152,000 良品 ￥151,000 買取のみ10%UP 新品同様 ￥167,200 良品 ￥166,100 下取は15%UP 新品同様 ￥174,800 良品 ￥173,650"
+        },
+        {
+          "selector": ".price",
+          "text": "￥174,800",
+          "price": 174800,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥152,000 良品 ￥151,000 買取のみ10%UP 新品同様 ￥167,200 良品 ￥166,100 下取は15%UP 新品同様 ￥174,800 良品 ￥173,650"
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥174,800",
+          "price": 174800,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥152,000 良品 ￥151,000 買取のみ10%UP 新品同様 ￥167,200 良品 ￥166,100 下取は15%UP 新品同様 ￥174,800 良品 ￥173,650"
+        },
+        {
+          "selector": "table td",
+          "text": "￥173,650",
+          "price": 173650,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥152,000 良品 ￥151,000 買取のみ10%UP 新品同様 ￥167,200 良品 ￥166,100 下取は15%UP 新品同様 ￥174,800 良品 ￥173,650"
+        },
+        {
+          "selector": ".price",
+          "text": "￥173,650",
+          "price": 173650,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥152,000 良品 ￥151,000 買取のみ10%UP 新品同様 ￥167,200 良品 ￥166,100 下取は15%UP 新品同様 ￥174,800 良品 ￥173,650"
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥173,650",
+          "price": 173650,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥152,000 良品 ￥151,000 買取のみ10%UP 新品同様 ￥167,200 良品 ￥166,100 下取は15%UP 新品同様 ￥174,800 良品 ￥173,650"
+        },
+        {
+          "selector": "table td",
+          "text": "￥167,200",
+          "price": 167200,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥152,000 良品 ￥151,000 買取のみ10%UP 新品同様 ￥167,200 良品 ￥166,100 下取は15%UP 新品同様 ￥174,800 良品 ￥173,650"
+        },
+        {
+          "selector": ".price",
+          "text": "￥167,200",
+          "price": 167200,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥152,000 良品 ￥151,000 買取のみ10%UP 新品同様 ￥167,200 良品 ￥166,100 下取は15%UP 新品同様 ￥174,800 良品 ￥173,650"
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥167,200",
+          "price": 167200,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥152,000 良品 ￥151,000 買取のみ10%UP 新品同様 ￥167,200 良品 ￥166,100 下取は15%UP 新品同様 ￥174,800 良品 ￥173,650"
+        },
+        {
+          "selector": "table td",
+          "text": "￥166,100",
+          "price": 166100,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥152,000 良品 ￥151,000 買取のみ10%UP 新品同様 ￥167,200 良品 ￥166,100 下取は15%UP 新品同様 ￥174,800 良品 ￥173,650"
+        },
+        {
+          "selector": ".price",
+          "text": "￥166,100",
+          "price": 166100,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥152,000 良品 ￥151,000 買取のみ10%UP 新品同様 ￥167,200 良品 ￥166,100 下取は15%UP 新品同様 ￥174,800 良品 ￥173,650"
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥166,100",
+          "price": 166100,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥152,000 良品 ￥151,000 買取のみ10%UP 新品同様 ￥167,200 良品 ￥166,100 下取は15%UP 新品同様 ￥174,800 良品 ￥173,650"
+        },
+        {
+          "selector": "table td",
+          "text": "￥152,000",
+          "price": 152000,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥152,000 良品 ￥151,000 買取のみ10%UP 新品同様 ￥167,200 良品 ￥166,100 下取は15%UP 新品同様 ￥174,800 良品 ￥173,650"
+        },
+        {
+          "selector": ".price",
+          "text": "￥152,000",
+          "price": 152000,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥152,000 良品 ￥151,000 買取のみ10%UP 新品同様 ￥167,200 良品 ￥166,100 下取は15%UP 新品同様 ￥174,800 良品 ￥173,650"
+        },
+        {
+          "selector": "[class*='price']",
+          "text": "￥152,000",
+          "price": 152000,
+          "near_kw": false,
+          "near_buyback": true,
+          "item_text": "基準査定額 新品同様 ￥152,000 良品 ￥151,000 買取のみ10%UP 新品同様 ￥167,200 良品 ￥166,100 下取は15%UP 新品同様 ￥174,800 良品 ￥173,650"
+        }
+      ],
+      "buyback_extracted_price": 174800,
       "confidence": "medium",
       "matched_item": ""
     },
@@ -620,7 +2308,7 @@
       "shop_id": "src_kitamura",
       "status": "FAILED",
       "price": 0,
-      "reason": "playwright_not_installed",
+      "reason": "site_blocked",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -628,17 +2316,17 @@
       "selector_found": false,
       "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 453266,
       "selector_waited": false,
       "extraction_strategy": "requests",
       "body_text_preview": "",
       "matched_selectors": [],
       "selector_candidates": [],
-      "iframe_count": 0,
+      "iframe_count": 1,
       "shadow_dom_detected": false,
-      "dom_ready_state": "",
+      "dom_ready_state": "complete",
       "hit_count": null,
       "keyword_hit_counts": {},
       "best_keyword": null,
@@ -646,7 +2334,7 @@
       "sales_price_sample": null,
       "buyback_link_candidates": [],
       "buyback_page_url": null,
-      "buyback_page_html_size": 0,
+      "buyback_page_html_size": 453266,
       "buyback_page_text_preview": "",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,

@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-06-03 23:33 JST",
-  "routes_total": 63,
-  "routes_unused_only": 26,
-  "profitable_routes": 26,
+  "generated_at": "2026-06-04 01:02 JST",
+  "routes_total": 65,
+  "routes_unused_only": 28,
+  "profitable_routes": 28,
   "negative_routes": 0,
   "beginner_routes": {
     "route_type": "primary_to_secondary",
@@ -11,7 +11,7 @@
   },
   "pro_routes": {
     "route_type": "secondary_to_secondary",
-    "count": 26,
+    "count": 28,
     "top": [
       {
         "product_name": "PlayStation 5 Pro",
@@ -112,24 +112,24 @@
       {
         "product_name": "FUJIFILM X100VI",
         "buy_shop_name": "ヤフオク (新品/未使用落札)",
-        "sell_shop_name": "ソフマップ",
+        "sell_shop_name": "フジヤカメラ",
         "buy_condition": "new_unopened",
         "buy_price": 339800,
-        "sell_price": 435000,
-        "net_profit": 93400,
-        "profit_rate": 0.2749,
+        "sell_price": 440000,
+        "net_profit": 98400,
+        "profit_rate": 0.2896,
         "needs_review": false,
         "route_type": "secondary_to_secondary"
       },
       {
         "product_name": "FUJIFILM X100VI",
         "buy_shop_name": "ヤフオク (新品/未使用落札)",
-        "sell_shop_name": "じゃんぱら",
+        "sell_shop_name": "ソフマップ",
         "buy_condition": "new_unopened",
         "buy_price": 339800,
-        "sell_price": 430000,
-        "net_profit": 88400,
-        "profit_rate": 0.2602,
+        "sell_price": 435000,
+        "net_profit": 93400,
+        "profit_rate": 0.2749,
         "needs_review": false,
         "route_type": "secondary_to_secondary"
       }
@@ -158,6 +158,18 @@
       "net_profit": 100400,
       "profit_rate": 0.2955,
       "needs_review": true,
+      "route_type": "secondary_to_secondary"
+    },
+    {
+      "product_name": "FUJIFILM X100VI",
+      "buy_shop_name": "ヤフオク (新品/未使用落札)",
+      "sell_shop_name": "フジヤカメラ",
+      "buy_condition": "new_unopened",
+      "buy_price": 339800,
+      "sell_price": 440000,
+      "net_profit": 98400,
+      "profit_rate": 0.2896,
+      "needs_review": false,
       "route_type": "secondary_to_secondary"
     },
     {
@@ -242,18 +254,6 @@
       "net_profit": 33200,
       "profit_rate": 0.5108,
       "needs_review": true,
-      "route_type": "secondary_to_secondary"
-    },
-    {
-      "product_name": "PlayStation 5 Pro",
-      "buy_shop_name": "じゃんぱら",
-      "sell_shop_name": "イオシス",
-      "buy_condition": "new_unopened",
-      "buy_price": 68000,
-      "sell_price": 100000,
-      "net_profit": 30200,
-      "profit_rate": 0.4441,
-      "needs_review": false,
       "route_type": "secondary_to_secondary"
     }
   ],

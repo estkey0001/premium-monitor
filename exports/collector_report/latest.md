@@ -1,6 +1,6 @@
 # Collector Quality Report
 
-生成日時: 2026-06-03 16:31:46 UTC+09:00
+生成日時: 2026-06-03 18:22:09 UTC+09:00
 
 ## サマリ
 
@@ -102,8 +102,7 @@
 | product_not_listed | 5 |
 | http_404 | 4 |
 | not_supported | 4 |
-| service_unavailable | 1 |
-| connection_error | 1 |
+| service_unavailable | 2 |
 
 ## 取得失敗一覧 (33件)
 
@@ -138,7 +137,7 @@
 | ps5_pro | hardoff | FAILED | http_404 |
 | ps5_pro | dosupara | FAILED | http_404 |
 | ps5_pro | pasoko | FAILED | product_not_listed |
-| ps5_pro | sofmap | FAILED | connection_error |
+| ps5_pro | sofmap | FAILED | service_unavailable |
 | ps5_pro | bookoff | SKIP | not_supported |
 | ps5_pro | surugaya | FAILED | site_blocked |
 | ps5_pro | tsutaya | SKIP | not_supported |

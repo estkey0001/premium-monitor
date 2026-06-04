@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-04T18:59:00+09:00",
+  "generated_at": "2026-06-04T23:36:33+09:00",
   "collection": {
     "total_shops": 16,
     "shops_with_success": 5,
@@ -18,6 +18,10 @@
     "moving_avg_7d_pct": 37.6,
     "top5_failure_reasons": [
       {
+        "reason": "product_not_listed",
+        "count": 8
+      },
+      {
         "reason": "rate_limited_429",
         "count": 6
       },
@@ -30,16 +34,16 @@
         "count": 6
       },
       {
-        "reason": "timeout",
-        "count": 5
-      },
-      {
         "reason": "http_404",
         "count": 4
       }
     ]
   },
   "failure_reasons": [
+    {
+      "reason": "product_not_listed",
+      "count": 8
+    },
     {
       "reason": "rate_limited_429",
       "count": 6
@@ -53,20 +57,12 @@
       "count": 6
     },
     {
-      "reason": "timeout",
-      "count": 5
-    },
-    {
       "reason": "http_404",
       "count": 4
     },
     {
       "reason": "not_supported",
       "count": 4
-    },
-    {
-      "reason": "product_not_listed",
-      "count": 3
     },
     {
       "reason": "service_unavailable",
@@ -107,7 +103,7 @@
     "reason_if_empty": null
   },
   "sedori_usable": {
-    "routes": 47,
+    "routes": 42,
     "reason_if_empty": null
   },
   "overseas": {
@@ -171,7 +167,7 @@
       "ok": 0,
       "failed": 5,
       "success_rate_pct": 0,
-      "top_reason": "timeout",
+      "top_reason": "product_not_listed",
       "optional": false
     },
     {
@@ -258,54 +254,54 @@
   "consecutive_failed_shops": [
     {
       "shop_id": "2ndstreet",
-      "consecutive_failures": 28
+      "consecutive_failures": 29
     },
     {
       "shop_id": "bookoff",
-      "consecutive_failures": 28
+      "consecutive_failures": 29
     },
     {
       "shop_id": "dosupara",
-      "consecutive_failures": 28
+      "consecutive_failures": 29
     },
     {
       "shop_id": "geo_mobile",
-      "consecutive_failures": 28
+      "consecutive_failures": 29
     },
     {
       "shop_id": "hardoff",
-      "consecutive_failures": 28
+      "consecutive_failures": 29
     },
     {
       "shop_id": "janpara",
-      "consecutive_failures": 28
+      "consecutive_failures": 29
     },
     {
       "shop_id": "pasoko",
-      "consecutive_failures": 28
+      "consecutive_failures": 29
     },
     {
       "shop_id": "sofmap",
-      "consecutive_failures": 28
+      "consecutive_failures": 29
     },
     {
       "shop_id": "surugaya",
-      "consecutive_failures": 28
+      "consecutive_failures": 29
     },
     {
       "shop_id": "tsutaya",
-      "consecutive_failures": 28
+      "consecutive_failures": 29
     },
     {
       "shop_id": "mobile_ichiban",
-      "consecutive_failures": 2
+      "consecutive_failures": 3
     }
   ],
   "improvement_priority": [
     {
       "shop_id": "mobile_ichiban",
       "failed": 5,
-      "top_reason": "timeout",
+      "top_reason": "product_not_listed",
       "priority": "required"
     }
   ],

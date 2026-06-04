@@ -4874,7 +4874,14 @@ def check() -> list[dict]:
             _ranking_src = _rf.read()
     except Exception:
         _ranking_src = ''
-    _t486 = ('EXCLUDE_STALE_H' in _gen_src) and ('336' in _ranking_src) and ('_stale_excluded' in _ranking_src)
+    try:
+        with open(_os468.path.join(_root, 'src', 'market', 'normalized_prices.py'), encoding='utf-8') as _nf:
+            _norm_src = _nf.read()
+    except Exception:
+        _norm_src = ''
+    # ranking は normalized_prices（STALE_DAYS=14 / is_fresh）を入力源とし、LP は EXCLUDE_STALE_H で14日除外。
+    _t486 = ('EXCLUDE_STALE_H' in _gen_src) and ('normalized_prices' in _ranking_src) \
+        and ('STALE_DAYS = 14' in _norm_src) and ('is_fresh' in _norm_src)
     results.append({"level": "ok" if _t486 else "error", "check": "camera_manual_14d_excluded",
                     "message": "#486 手動データ（camera含む）が14日超なら利益判定から除外される（LP・ranking）"
                                + ("" if _t486 else " ← 14日除外ロジックが見つかりません")})
@@ -5345,11 +5352,11 @@ def check() -> list[dict]:
                     "message": "#542 カメラ買取が下取(15%UP等)価格を現金買取価格から分離・除外している"
                                + ("" if _t542 else " ← 下取価格の除外ロジックが見つかりません")})
 
-    # #543: sedori が売却先に海外販売価格を含む（仕入=販売価格 → 売却=買取/海外販売）
-    _t543 = ('sell_options = buyback_prices + overseas_prices' in _sedori_src) \
-        and ("price_type=\"overseas\"" in _sedori_src or "price_type='overseas'" in _sedori_src)
+    # #543: sedori が売却先に海外販売価格を含む（NPO の PRO_SELL_TYPES = buyback + overseas_sold）
+    _t543 = ('overseas_sold_price' in _norm_src) and ('PRO_SELL_TYPES' in _norm_src) \
+        and ('pro_sell_options' in _sedori_src)
     results.append({"level": "ok" if _t543 else "error", "check": "sedori_overseas_sell",
-                    "message": "#543 せどり計算の売却先が「買取価格＋海外販売価格」になっている"
+                    "message": "#543 せどり計算の売却先が「買取価格＋海外販売価格」になっている（NPO PRO_SELL_TYPES）"
                                + ("" if _t543 else " ← 海外売却ルートが見つかりません")})
 
     # #544: ranking top_camera が参照価格(公式/定価)<=0 を除外（差益計算不能を弾く）
@@ -5415,6 +5422,59 @@ def check() -> list[dict]:
     results.append({"level": "ok" if _t551 else "error", "check": "npo_stale_not_main",
                     "message": "#551 stale（14日超）が main calculation に使われない"
                                + ("" if _t551 else f" ← stale が利用可 {_bad551} 件")})
+
+    # ── normalized_price_observations を唯一の入力源とする移行ガード #552-#557 ──
+    _t552 = ('from src.market.normalized_prices import' in _sedori_src) \
+        and ('pro_buy_options' in _sedori_src) and ('pro_sell_options' in _sedori_src)
+    results.append({"level": "ok" if _t552 else "error", "check": "sedori_uses_npo",
+                    "message": "#552 sedori 計算が normalized_prices（pro_buy/pro_sell）を唯一の入力源にしている"
+                               + ("" if _t552 else " ← sedori が NPO を使っていません")})
+
+    _t553 = ('from src.market.normalized_prices import' in _ranking_src) \
+        and ('beginner_official' in _ranking_src) and ('repo.list_beginner_deals(' not in _ranking_src)
+    results.append({"level": "ok" if _t553 else "error", "check": "ranking_uses_npo",
+                    "message": "#553 ranking が NPO（official+sell / buy+sell）由来で旧 list_beginner_deals 直読みを廃止"
+                               + ("" if _t553 else " ← ranking に旧DB直読みが残存")})
+
+    _sedori_rep_src = _read_src('scripts', 'generate_sedori_routes_report.py')
+    _t554 = all(k in _sedori_rep_src for k in
+                ('buy_price_type', 'sell_price_type', 'buy_source', 'sell_source'))
+    results.append({"level": "ok" if _t554 else "error", "check": "sedori_route_meta_fields",
+                    "message": "#554 sedori route に buy_price_type/sell_price_type/buy_source/sell_source が出力される"
+                               + ("" if _t554 else " ← route の型/ソース欄が見つかりません")})
+
+    # #555: sedori report の Pro route — buy 側に buyback が無い / sell 側に sale 系が無い
+    _srep = _load_json_safe('exports/sedori_routes_report/latest.json') or {}
+    _pro_top = (_srep.get('pro_routes', {}) or {}).get('top', []) if isinstance(_srep, dict) else []
+    _sale_t = {'shop_sale_price', 'flea_listing_price', 'flea_sold_price', 'overseas_listing_price'}
+    _bad555 = sum(1 for r in _pro_top
+                  if r.get('buy_price_type') == 'buyback_price'
+                  or r.get('sell_price_type') in _sale_t
+                  or r.get('buy_price_type') == 'trade_in_price'
+                  or r.get('sell_price_type') == 'trade_in_price')
+    _t555 = _bad555 == 0
+    results.append({"level": "ok" if _t555 else "error", "check": "sedori_pro_role_integrity",
+                    "message": "#555 sedori Pro route の buy=販売系 / sell=買取・海外落札 のみ（buyback仕入れ/sale売却/下取なし）"
+                               + ("" if _t555 else f" ← 役割違反 {_bad555} 件")})
+
+    # #556: ranking Pro top10 — buy 側に buyback が無い / sell 側に sale 系が無い
+    _rj = _load_json_safe('exports/ranking_report/latest.json') or {}
+    _rpro = _rj.get('pro_top10', []) if isinstance(_rj, dict) else []
+    _bad556 = sum(1 for r in _rpro
+                  if r.get('buy_price_type') == 'buyback_price'
+                  or r.get('sell_price_type') in _sale_t)
+    _t556 = _bad556 == 0
+    results.append({"level": "ok" if _t556 else "error", "check": "ranking_pro_role_integrity",
+                    "message": "#556 ranking Pro top10 が buy=販売系 / sell=買取 のみ（buyback仕入れ/sale売却なし）"
+                               + ("" if _t556 else f" ← 役割違反 {_bad556} 件")})
+
+    # #557: migration 018 + SedoriRouteModel に型/ソースフィールド
+    _mig018 = _os468.path.exists(_os468.path.join(_root, 'src', 'db', 'migrations', '018_sedori_route_price_meta.sql'))
+    _model_src = _read_src('src', 'models', 'sale_price.py')
+    _t557 = _mig018 and ('buy_price_type' in _model_src) and ('sell_source' in _model_src)
+    results.append({"level": "ok" if _t557 else "error", "check": "sedori_price_meta_migration",
+                    "message": "#557 migration 018 と SedoriRouteModel に価格種別/ソース欄がある"
+                               + ("" if _t557 else " ← migration 018 / モデル欄が見つかりません")})
 
     return results
 

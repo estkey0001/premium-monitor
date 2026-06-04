@@ -46,11 +46,15 @@ class SedoriRouteModel(BaseModel):
     buy_price: int = Field(..., description="仕入れ価格（円）")
     buy_url: str = Field(default="")
     buy_condition: str = Field(default="")
+    buy_price_type: str = Field(default="", description="仕入れ価格の種別（正規化観測 price_type）")
+    buy_source: str = Field(default="", description="仕入れソース（正規化観測 source_id）")
     # 売却側（買取店へ売却）
     sell_shop_name: str = Field(default="")
     sell_shop_id: str = Field(default="")
     sell_price: int = Field(..., description="売却価格（買取価格、円）")
     sell_url: str = Field(default="")
+    sell_price_type: str = Field(default="", description="売却価格の種別（正規化観測 price_type）")
+    sell_source: str = Field(default="", description="売却ソース（正規化観測 source_id）")
     # 利益計算
     gross_profit: int = Field(default=0, description="粗利（売却価格 - 仕入れ価格）")
     shipping_fee: int = Field(default=1000, description="送料（円）")

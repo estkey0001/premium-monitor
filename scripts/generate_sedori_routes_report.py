@@ -134,6 +134,11 @@ def main() -> int:
             "buy_condition": getattr(r, "buy_condition", ""),
             "buy_price": getattr(r, "buy_price", 0),
             "sell_price": getattr(r, "sell_price", 0),
+            # 正規化観測由来の価格種別・ソース（仕入れ=buy / 売却=sell を明示）
+            "buy_price_type": getattr(r, "buy_price_type", ""),
+            "sell_price_type": getattr(r, "sell_price_type", ""),
+            "buy_source": getattr(r, "buy_source", ""),
+            "sell_source": getattr(r, "sell_source", ""),
             "net_profit": getattr(r, "net_profit", 0),
             "profit_rate": round(float(getattr(r, "profit_rate", 0) or 0), 4),
             "needs_review": getattr(r, "needs_review", False),

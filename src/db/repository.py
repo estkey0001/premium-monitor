@@ -1540,8 +1540,9 @@ class Repository:
                 sell_shop_name, sell_shop_id, sell_price, sell_url,
                 gross_profit, shipping_fee, transfer_fee, travel_fee, other_costs,
                 estimated_costs, net_profit, profit_rate, rank, calculated_at,
-                route_quality_score, route_warning_flags, needs_review, sort_score)
-               VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+                route_quality_score, route_warning_flags, needs_review, sort_score,
+                buy_price_type, sell_price_type, buy_source, sell_source)
+               VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
             (route.id, route.product_id, route.product_name, route.product_alias,
              route.buy_shop_name, route.buy_shop_id, route.buy_price,
              route.buy_url, route.buy_condition,
@@ -1553,7 +1554,9 @@ class Repository:
              getattr(route, "route_quality_score", 1.0),
              json.dumps(getattr(route, "route_warning_flags", []), ensure_ascii=False),
              int(getattr(route, "needs_review", False)),
-             getattr(route, "sort_score", float(route.net_profit))),
+             getattr(route, "sort_score", float(route.net_profit)),
+             getattr(route, "buy_price_type", ""), getattr(route, "sell_price_type", ""),
+             getattr(route, "buy_source", ""), getattr(route, "sell_source", "")),
         )
         self.db.connection.commit()
 
@@ -1627,6 +1630,10 @@ class Repository:
                     route_warning_flags=warning_flags,
                     needs_review=bool(d.get("needs_review", 0)),
                     sort_score=d.get("sort_score", 0.0),
+                    buy_price_type=d.get("buy_price_type", ""),
+                    sell_price_type=d.get("sell_price_type", ""),
+                    buy_source=d.get("buy_source", ""),
+                    sell_source=d.get("sell_source", ""),
                 ))
             except Exception:
                 continue

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-05 02:29 JST",
+  "generated_at": "2026-06-05 08:18 JST",
   "routes_total": 23,
   "routes_unused_only": 23,
   "profitable_routes": 23,
@@ -50,14 +50,14 @@
         "buy_shop_name": "ヤフオク (新品/未使用落札)",
         "sell_shop_name": "src_ebay",
         "buy_condition": "new_unopened",
-        "buy_price": 220000,
+        "buy_price": 230000,
         "sell_price": 319961,
         "buy_price_type": "flea_sold_price",
         "sell_price_type": "overseas_sold_price",
         "buy_source": "yahoo_auction_new",
         "sell_source": "src_ebay",
-        "net_profit": 98161,
-        "profit_rate": 0.4462,
+        "net_profit": 88161,
+        "profit_rate": 0.3833,
         "needs_review": true,
         "route_type": "secondary_to_secondary"
       },
@@ -289,22 +289,6 @@
       "route_type": "secondary_to_secondary"
     },
     {
-      "product_name": "iPhone 17 Pro 256GB SIMフリー",
-      "buy_shop_name": "ヤフオク (新品/未使用落札)",
-      "sell_shop_name": "src_ebay",
-      "buy_condition": "new_unopened",
-      "buy_price": 220000,
-      "sell_price": 319961,
-      "buy_price_type": "flea_sold_price",
-      "sell_price_type": "overseas_sold_price",
-      "buy_source": "yahoo_auction_new",
-      "sell_source": "src_ebay",
-      "net_profit": 98161,
-      "profit_rate": 0.4462,
-      "needs_review": true,
-      "route_type": "secondary_to_secondary"
-    },
-    {
       "product_name": "FUJIFILM X100VI",
       "buy_shop_name": "Amazon新品出品",
       "sell_shop_name": "src_ebay",
@@ -333,6 +317,22 @@
       "sell_source": "src_sofmap",
       "net_profit": 93400,
       "profit_rate": 0.2749,
+      "needs_review": true,
+      "route_type": "secondary_to_secondary"
+    },
+    {
+      "product_name": "FUJIFILM X100VI",
+      "buy_shop_name": "ヤフオク (新品/未使用落札)",
+      "sell_shop_name": "じゃんぱら",
+      "buy_condition": "new_unopened",
+      "buy_price": 339800,
+      "sell_price": 430000,
+      "buy_price_type": "flea_sold_price",
+      "sell_price_type": "buyback_price",
+      "buy_source": "yahoo_auction_new",
+      "sell_source": "src_janpara",
+      "net_profit": 88400,
+      "profit_rate": 0.2602,
       "needs_review": true,
       "route_type": "secondary_to_secondary"
     }

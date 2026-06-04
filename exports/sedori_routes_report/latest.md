@@ -1,9 +1,9 @@
-# せどりルートレポート — 2026-06-04 18:58 JST
+# せどりルートレポート — 2026-06-04 22:21 JST
 
-- 全ルート: 91 / 新品・未使用のみ: 47 (除外: 44)
+- 全ルート: 100 / 新品・未使用のみ: 53 (除外: 47)
 - 低信頼度除外: 0 / 価格未取得除外: 0
-- 利益あり: 47 / 赤字: 0
-- 初心者ルート(一次仕入れ): 0 / Proルート(二次流通): 47
+- 利益あり: 53 / 赤字: 0
+- 初心者ルート(一次仕入れ): 0 / Proルート(二次流通): 53
 
 ## 🟢 初心者ルート（一次仕入れ → 二次流通）
 
@@ -11,26 +11,26 @@
 
 ## 🔵 Proルート（二次流通 → 二次流通）
 
-1. **RICOH GR IIIx** Amazon JP (新品出品) → eBay(海外売却): +¥159,022 (179.1%) [new_unopened]
-2. **Nintendo Switch 2** ゲオ → eBay(海外売却): +¥44,442 (107.1%) [new_unopened]
-3. **PlayStation 5 Pro** ゲオ → 買取商店: +¥67,900 (104.5%) [new_unopened]
-4. **Nintendo Switch 2** じゃんぱら → eBay(海外売却): +¥43,142 (100.8%) [new_unopened]
-5. **Nintendo Switch 2** ソフマップ → eBay(海外売却): +¥42,442 (97.6%) [new_unopened]
-6. **PlayStation 5 Pro** じゃんぱら → 買取商店: +¥64,900 (95.4%) [new_unopened]
-7. **RICOH GR IIIx** Amazon JP (新品出品) → フジヤカメラ: +¥84,230 (94.9%) [new_unopened]
-8. **PlayStation 5 Pro** ソフマップ → 買取商店: +¥63,100 (90.4%) [new_unopened]
-9. **FUJIFILM X100VI** ヤフオク (新品/未使用落札) → eBay(海外売却): +¥224,653 (66.1%) [new_unopened]
-10. **RICOH GR IIIx** Amazon JP (新品出品) → マップカメラ: +¥54,430 (61.3%) [new_unopened]
+1. **RICOH GR IV HDF** Amazon JP (新品出品) → マップカメラ: +¥159,095 (360.7%) [new_unopened]
+2. **RICOH GR IV HDF** Amazon JP (新品出品) → カメラのキタムラ: +¥157,095 (356.2%) [new_unopened]
+3. **RICOH GR IV HDF** Amazon JP (新品出品) → フジヤカメラ: +¥154,095 (349.4%) [new_unopened]
+4. **RICOH GR IV HDF** Amazon JP (新品出品) → ソフマップ: +¥150,095 (340.3%) [new_unopened]
+5. **RICOH GR IV** Amazon JP (新品出品) → マップカメラ: +¥134,933 (220.2%) [new_unopened]
+6. **RICOH GR IV** Amazon JP (新品出品) → カメラのキタムラ: +¥132,933 (217.0%) [new_unopened]
+7. **RICOH GR IV** Amazon JP (新品出品) → フジヤカメラ: +¥130,933 (213.7%) [new_unopened]
+8. **RICOH GR IV** Amazon JP (新品出品) → ソフマップ: +¥126,933 (207.2%) [new_unopened]
+9. **RICOH GR IV** Amazon JP (新品出品) → じゃんぱら: +¥124,933 (203.9%) [new_unopened]
+10. **RICOH GR IV** Amazon JP (新品出品) → 買取商店: +¥121,933 (199.0%) [new_unopened]
 
 ## 全利益ルート Top10
 
-1. **FUJIFILM X100VI** ヤフオク (新品/未使用落札) → eBay(海外売却): +¥224,653 (66.1%) [new_unopened]
-2. **RICOH GR IIIx** Amazon JP (新品出品) → eBay(海外売却): +¥159,022 (179.1%) [new_unopened]
-3. **FUJIFILM X100VI** eBay sold(新品) → eBay(海外売却): +¥134,453 (31.3%) [new_unopened]
-4. **FUJIFILM X100VI** メルカリ未使用 → eBay(海外売却): +¥114,453 (25.4%) [new_unopened]
-5. **FUJIFILM X100VI** 楽天市場新品 → eBay(海外売却): +¥109,453 (24.1%) [new_unopened]
-6. **FUJIFILM X100VI** ヤフオク (新品/未使用落札) → マップカメラ: +¥103,400 (30.4%) [new_unopened]
-7. **FUJIFILM X100VI** ヤフオク (新品/未使用落札) → カメラのキタムラ: +¥100,400 (29.5%) [new_unopened]
-8. **iPhone 17 Pro 256GB SIMフリー** ヤフオク (新品/未使用落札) → eBay(海外売却): +¥98,161 (44.6%) [new_unopened]
-9. **FUJIFILM X100VI** Amazon新品出品 → eBay(海外売却): +¥94,453 (20.1%) [new_unopened]
-10. **FUJIFILM X100VI** ヤフオク (新品/未使用落札) → ソフマップ: +¥93,400 (27.5%) [new_unopened]
+1. **FUJIFILM X100VI** Amazon JP (新品出品) → マップカメラ: +¥205,201 (86.2%) [new_unopened]
+2. **FUJIFILM X100VI** Amazon JP (新品出品) → カメラのキタムラ: +¥202,201 (85.0%) [new_unopened]
+3. **FUJIFILM X100VI** Amazon JP (新品出品) → フジヤカメラ: +¥200,201 (84.1%) [new_unopened]
+4. **FUJIFILM X100VI** Amazon JP (新品出品) → ソフマップ: +¥195,201 (82.0%) [new_unopened]
+5. **FUJIFILM X100VI** Amazon JP (新品出品) → じゃんぱら: +¥190,201 (79.9%) [new_unopened]
+6. **FUJIFILM X100VI** Amazon JP (新品出品) → 買取商店: +¥188,201 (79.1%) [new_unopened]
+7. **RICOH GR IV HDF** Amazon JP (新品出品) → マップカメラ: +¥159,095 (360.7%) [new_unopened]
+8. **RICOH GR IV HDF** Amazon JP (新品出品) → カメラのキタムラ: +¥157,095 (356.2%) [new_unopened]
+9. **RICOH GR IV HDF** Amazon JP (新品出品) → フジヤカメラ: +¥154,095 (349.4%) [new_unopened]
+10. **RICOH GR IV HDF** Amazon JP (新品出品) → ソフマップ: +¥150,095 (340.3%) [new_unopened]

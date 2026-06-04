@@ -5178,6 +5178,41 @@ def check() -> list[dict]:
                     "message": f"#522 Fujiya の auto_scraped 買取価格が存在する（OK={_fuji_ok}件）"
                                + ("" if _t522 else " ← Fujiya auto_scraped が0件（取得失敗日は正常）")})
 
+    # ── Expand Fujiya matching & suppress inflated manual prices ──
+    # #523: GR IV 無印は HDF/Mono/IIIx を誤採用しない（strict match の除外ロジック）
+    _t523 = ('"HDF" not in t' in _cam_src or "'HDF' not in t" in _cam_src
+             or 'HDF" not in' in _cam_src) and ('not has_mono' in _cam_src) and ('"IIIX" not in t' in _cam_src)
+    results.append({"level": "ok" if _t523 else "error", "check": "gr4_excludes_variants",
+                    "message": "#523 GR IV 無印は HDF/Monochrome/IIIx を誤採用しない（strict除外）"
+                               + ("" if _t523 else " ← GR IV 無印の除外ロジックが見つかりません")})
+
+    # #524: all_price_candidates / rejected_candidates が status に保存される
+    _t524 = ('all_price_candidates' in _cam_src) and ('rejected_candidates' in _cam_src) \
+        and ('rejection_reason' in _cam_src) and ('all_price_candidates' in _det0) \
+        and ('rejected_candidates' in _det0) and ('used_for_save' in _det0)
+    results.append({"level": "ok" if _t524 else "error", "check": "camera_candidate_tracking",
+                    "message": "#524 all_price_candidates / rejected_candidates / used_for_save が status に保存される"
+                               + ("" if _t524 else " ← 候補追跡フィールドが不足しています")})
+
+    # #525: auto_scraped(high) がある場合、30%超高い manual 価格はランキング主計算から除外
+    _t525 = ('_auto_high' in _gen_src) and ('* 1.3' in _gen_src) \
+        and ("data_source') == 'auto_scraped'" in _gen_src or 'auto_scraped' in _gen_src)
+    results.append({"level": "ok" if _t525 else "error", "check": "inflated_manual_excluded",
+                    "message": "#525 auto_scraped(high) 比30%超高い manual はランキング主計算から除外"
+                               + ("" if _t525 else " ← 過大 manual 除外ロジックが見つかりません")})
+
+    # #526: 手動価格・要確認バッジが LP に表示される（既存 #521 と対）
+    _t526 = ('手動価格・要確認' in html) or ('manual-recheck-badge' in html)
+    results.append({"level": "ok" if _t526 else "warning", "check": "manual_recheck_badge_in_lp",
+                    "message": "#526 手動価格・要確認バッジが LP に表示される"
+                               + ("" if _t526 else " ← 過大 manual が無い日は非表示（正常）")})
+
+    # #527: 販売価格を買取として保存しないガード維持（キタムラ対応後も）
+    _t527 = ('near_buyback' in _cam_src) and ('sales_catalog_no_buyback' in _cam_src)
+    results.append({"level": "ok" if _t527 else "error", "check": "sales_guard_maintained",
+                    "message": "#527 販売価格を買取価格として保存しないガードが維持されている"
+                               + ("" if _t527 else " ← 販売価格ガードが見つかりません")})
+
     return results
 
 

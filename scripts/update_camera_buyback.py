@@ -57,7 +57,8 @@ CAMERA_MODEL_KW = {
 # フジヤ用：複数キーワード候補（ヒット数を比較して最良を採用）
 FUJIYA_KEYWORD_VARIANTS = {
     "x100vi":   ["X100VI", "X100 VI", "X100V", "富士フイルム X100", "FUJIFILM X100VI"],
-    "gr4":      ["GR IV", "GR4", "リコー GR IV", "RICOH GR IV"],
+    # GR IV 無印：HDF/Monochrome/IIIx を含まない GR IV を狙う（strict matchで除外）。
+    "gr4":      ["GR IV", "GR4", "RICOH GR IV", "RICOH GR4", "リコー GR IV", "GR", "GR DIGITAL"],
     "gr4_hdf":  ["GR IV HDF", "GR4 HDF", "RICOH GR IV HDF"],
     "gr4_mono": ["GR IV Monochrome", "GR IV モノクローム", "GR4 モノクロ"],
     "gr3x":     ["GR IIIx", "GR3x", "リコー GR IIIx", "RICOH GR IIIx"],
@@ -87,18 +88,31 @@ def _strict_model_match(item_text: str, alias: str) -> bool:
     return False
 
 
-def _select_camera_buyback(candidates: list, alias: str):
-    """買取候補から機種厳密一致の価格を選ぶ。
-    戻り値: (price, confidence, matched_item_text)
-      strict model match + 買取文脈 + price>0 → high
-      strict 一致が無ければ採用しない（None）= 販売/別機種価格の誤採用を防ぐ。
+def _select_camera_buyback(candidates: list, alias: str) -> dict:
+    """買取候補から機種厳密一致の価格を選び、採用/不採用の追跡情報を返す（Task 2）。
+    戻り値 dict:
+      price, confidence(high/None), matched_item, used_for_save(bool),
+      all_price_candidates, rejected_candidates(rejection_reason付)
+    strict model match + 買取文脈 + price>0 → high。
+    strict 一致が無ければ採用しない（販売/別機種価格の誤採用を防ぐ）。
     """
-    buyback = [c for c in (candidates or []) if c.get("near_buyback") and (c.get("price", 0) or 0) > 0]
-    strict = [c for c in buyback if _strict_model_match(c.get("item_text", ""), alias)]
+    cands = [c for c in (candidates or []) if (c.get("price", 0) or 0) > 0]
+    out = {"price": None, "confidence": None, "matched_item": "", "used_for_save": False,
+           "all_price_candidates": [], "rejected_candidates": []}
+    for c in cands:
+        it = (c.get("item_text", "") or "")
+        rec = {"price": c.get("price"), "item": it[:70], "near_buyback": bool(c.get("near_buyback"))}
+        out["all_price_candidates"].append(rec)
+        if not c.get("near_buyback"):
+            out["rejected_candidates"].append({**rec, "rejection_reason": "not_buyback_context"})
+        elif not _strict_model_match(it, alias):
+            out["rejected_candidates"].append({**rec, "rejection_reason": "model_mismatch"})
+    strict = [c for c in cands if c.get("near_buyback") and _strict_model_match(c.get("item_text", ""), alias)]
     if strict:
         best = max(strict, key=lambda c: c.get("price", 0))
-        return best["price"], "high", best.get("item_text", "")
-    return None, None, ""
+        out.update(price=best["price"], confidence="high",
+                   matched_item=(best.get("item_text", "") or "")[:140], used_for_save=True)
+    return out
 
 # 対象買取店（shop_id, 表示名, 買取検索URLテンプレート {kw}=URLエンコード済キーワード）
 CAMERA_SHOPS = [
@@ -187,8 +201,8 @@ _PW_SHOP_CONFIG = {
         "strategy": "fujiya_buyback",
     },
     "src_kitamura": {
-        # net-chuko の /ec/list は404（指定ページなし）→ 中古/買取検索の正しいパスへ。
-        "search_url": "https://www.net-chuko.com/ec/sell/category/list?keyword={mkw}",
+        # net-chuko 買取検索（UA/viewport調整で bot 回避を試行）。site_blocked 継続なら manual fallback。
+        "search_url": "https://www.net-chuko.com/ec/sell/category/itemList?keyword={mkw}",
         "search_input": "input[type='search'], input[name*='keyword']",
         "result_wait": "[class*='price'], .itemList, .goodsList, .product",
         "strategy": "kitamura_render",
@@ -316,9 +330,11 @@ def _fetch_with_playwright(url: str, shop_id: str, alias: str, dbg_dir, shot_dir
         with sync_playwright() as p:
             browser = p.chromium.launch(headless=True, args=["--no-sandbox"])
             ctx = browser.new_context(
-                user_agent=("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
-                            "(KHTML, like Gecko) Chrome/124.0 Safari/537.36"),
-                locale="ja-JP",
+                user_agent=("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                            "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"),
+                locale="ja-JP", timezone_id="Asia/Tokyo",
+                viewport={"width": 1366, "height": 900},
+                extra_http_headers={"Accept-Language": "ja,en-US;q=0.9,en;q=0.8"},
             )
             page = ctx.new_page()
             try:
@@ -456,7 +472,8 @@ def main() -> int:
              "buyback_link_candidates": [], "buyback_page_url": None,
              "buyback_page_html_size": 0, "buyback_page_text_preview": "",
              "buyback_price_candidates": [], "buyback_extracted_price": None,
-             "confidence": None, "matched_item": ""}
+             "confidence": None, "matched_item": "",
+             "all_price_candidates": [], "rejected_candidates": [], "used_for_save": False}
         d.update(kw)
         return d
 
@@ -494,6 +511,7 @@ def main() -> int:
             _best_keyword = None
             _confidence = "medium"   # auto_scraped の confidence（strict一致でhigh）
             _matched_item = ""
+            _sel = {}                # _select_camera_buyback の追跡結果（all/rejected）
             # 2) requests で価格が取れない/失敗 → Playwright fallback（--playwright 時）
             if (not price) and args.playwright and shop_id in _PW_SHOP_CONFIG:
                 _cfg = _PW_SHOP_CONFIG[shop_id]
@@ -508,21 +526,20 @@ def main() -> int:
                         _try["buyback_page_url"] = _vurl
                         _hc = _try.get("hit_count")
                         _kw_hit_counts[_var] = _hc
-                        # 機種厳密一致の買取価格を選定（Task 1）
-                        _sp, _sconf, _sitem = _select_camera_buyback(
-                            _try.get("selector_candidates", []), alias)
-                        _try["strict_price"] = _sp
+                        # 機種厳密一致の買取価格を選定（Task 1/2）
+                        _selr = _select_camera_buyback(_try.get("selector_candidates", []), alias)
+                        _sp = _selr.get("price")
                         # 厳密一致価格が取れた or ヒット数最大 の候補を保持
                         _score = (1 if _sp else 0, _hc or 0)
                         if _best is None or _score > _best[0]:
-                            _best = (_score, _var, _try, _sp, _sconf, _sitem)
+                            _best = (_score, _var, _try, _selr)
                         if _sp:
                             break  # 厳密一致の買取価格取得で確定
                     if _best is not None:
-                        _best_keyword = _best[1]
-                        _pw = _best[2]
-                        if _best[3]:
-                            price = _best[3]; _confidence = _best[4] or "high"; _matched_item = _best[5]
+                        _best_keyword = _best[1]; _pw = _best[2]; _sel = _best[3]
+                        if _sel.get("price"):
+                            price = _sel["price"]; _confidence = _sel.get("confidence") or "high"
+                            _matched_item = _sel.get("matched_item", "")
                             html = _pw.get("html") or html
                             _size = _pw.get("rendered_html_size", _size)
                             _strategy = _pw.get("strategy", "playwright")
@@ -530,10 +547,10 @@ def main() -> int:
                     _pw_url = _cfg.get("search_url", url).format(kw=kw_enc, mkw=mkw_enc)
                     _pw = _fetch_with_playwright(_pw_url, shop_id, alias, _dbg, shot_dir=_shot)
                     if _pw.get("html"):
-                        _sp, _sconf, _sitem = _select_camera_buyback(
-                            _pw.get("selector_candidates", []), alias)
-                        if _sp:
-                            price = _sp; _confidence = _sconf or "high"; _matched_item = _sitem
+                        _sel = _select_camera_buyback(_pw.get("selector_candidates", []), alias)
+                        if _sel.get("price"):
+                            price = _sel["price"]; _confidence = _sel.get("confidence") or "high"
+                            _matched_item = _sel.get("matched_item", "")
                             html = _pw["html"]
                             _size = _pw.get("rendered_html_size", len(html))
                             _strategy = _pw.get("strategy", "playwright")
@@ -569,7 +586,10 @@ def main() -> int:
                           buyback_price_candidates=[c for c in (_pw.get("selector_candidates", []) if _pw else [])
                                                     if c.get("near_buyback")],
                           buyback_extracted_price=_pw.get("extracted_price") if _pw else None,
-                          confidence=_confidence, matched_item=_matched_item)
+                          confidence=_confidence, matched_item=_matched_item,
+                          all_price_candidates=_sel.get("all_price_candidates", []),
+                          rejected_candidates=_sel.get("rejected_candidates", []),
+                          used_for_save=bool(_sel.get("used_for_save", False)))
 
             if not price or price <= 0:
                 # 失敗理由の決定（requests 失敗理由 / Playwright 理由 / 抽出不可）

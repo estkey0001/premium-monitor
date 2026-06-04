@@ -259,3 +259,117 @@ products:
     model_number: "X100VI"
     retail_price: 269500
     keywords: ["X100VI", "X100 VI", "富士フイルム X100VI"]
+
+  # ── Camera Buyback Expansion（概算定価。要確認） ──
+  - id: "prod_gfx100rf"
+    genre: "camera"
+    name: "FUJIFILM GFX100RF"
+    brand: "FUJIFILM"
+    model_number: "GFX100RF"
+    retail_price: 750000
+    keywords: ["GFX100RF", "GFX 100RF", "FUJIFILM GFX100RF"]
+    memo: "概算定価（要確認）"
+  - id: "prod_xt5"
+    genre: "camera"
+    name: "FUJIFILM X-T5"
+    brand: "FUJIFILM"
+    model_number: "X-T5"
+    retail_price: 280000
+    keywords: ["X-T5", "XT5", "FUJIFILM X-T5"]
+    memo: "概算定価（要確認）"
+  - id: "prod_a7rv"
+    genre: "camera"
+    name: "SONY α7R V"
+    brand: "SONY"
+    model_number: "ILCE-7RM5"
+    retail_price: 440000
+    keywords: ["A7RV", "α7R V", "ILCE-7RM5"]
+    memo: "概算定価（要確認）"
+  - id: "prod_a1ii"
+    genre: "camera"
+    name: "SONY α1 II"
+    brand: "SONY"
+    model_number: "ILCE-1M2"
+    retail_price: 990000
+    keywords: ["A1 II", "α1 II", "ILCE-1M2"]
+    memo: "概算定価（要確認）"
+  - id: "prod_a7cr"
+    genre: "camera"
+    name: "SONY α7CR"
+    brand: "SONY"
+    model_number: "ILCE-7CR"
+    retail_price: 330000
+    keywords: ["A7CR", "α7CR", "ILCE-7CR"]
+    memo: "概算定価（要確認）"
+  - id: "prod_fx3"
+    genre: "camera"
+    name: "SONY FX3"
+    brand: "SONY"
+    model_number: "ILME-FX3"
+    retail_price: 520000
+    keywords: ["FX3", "ILME-FX3", "SONY FX3"]
+    memo: "概算定価（要確認）"
+  - id: "prod_r5ii"
+    genre: "camera"
+    name: "Canon EOS R5 Mark II"
+    brand: "CANON"
+    model_number: "EOS R5 Mark II"
+    retail_price: 620000
+    keywords: ["R5 Mark II", "EOS R5 Mark II", "R5II"]
+    memo: "概算定価（要確認）"
+  - id: "prod_r6ii"
+    genre: "camera"
+    name: "Canon EOS R6 Mark II"
+    brand: "CANON"
+    model_number: "EOS R6 Mark II"
+    retail_price: 390000
+    keywords: ["R6 Mark II", "EOS R6 Mark II", "R6II"]
+    memo: "概算定価（要確認）"
+  - id: "prod_r3"
+    genre: "camera"
+    name: "Canon EOS R3"
+    brand: "CANON"
+    model_number: "EOS R3"
+    retail_price: 830000
+    keywords: ["EOS R3", "Canon EOS R3"]
+    memo: "概算定価（要確認）"
+  - id: "prod_z8"
+    genre: "camera"
+    name: "Nikon Z8"
+    brand: "NIKON"
+    model_number: "Z8"
+    retail_price: 590000
+    keywords: ["Nikon Z8", "Z8"]
+    memo: "概算定価（要確認）"
+  - id: "prod_zf"
+    genre: "camera"
+    name: "Nikon Zf"
+    brand: "NIKON"
+    model_number: "Zf"
+    retail_price: 290000
+    keywords: ["Nikon Zf", "Z f"]
+    memo: "概算定価（要確認）"
+  - id: "prod_z9"
+    genre: "camera"
+    name: "Nikon Z9"
+    brand: "NIKON"
+    model_number: "Z9"
+    retail_price: 700000
+    keywords: ["Nikon Z9", "Z9"]
+    memo: "概算定価（要確認）"
+  - id: "prod_q3"
+    genre: "camera"
+    name: "Leica Q3"
+    brand: "LEICA"
+    model_number: "Q3"
+    retail_price: 880000
+    keywords: ["Leica Q3", "LEICA Q3"]
+    memo: "概算定価（要確認）"
+  - id: "prod_m11"
+    genre: "camera"
+    name: "Leica M11"
+    brand: "LEICA"
+    model_number: "M11"
+    retail_price: 1180000
+    keywords: ["Leica M11", "LEICA M11"]
+    memo: "概算定価（要確認）"

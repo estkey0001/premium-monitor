@@ -1,4 +1,4 @@
-# せどりルートレポート — 2026-06-05 02:29 JST
+# せどりルートレポート — 2026-06-05 08:18 JST
 
 - 全ルート: 23 / 新品・未使用のみ: 23 (除外: 0)
 - 低信頼度除外: 0 / 価格未取得除外: 0
@@ -13,7 +13,7 @@
 
 1. **FUJIFILM X100VI** ヤフオク (新品/未使用落札) → src_ebay: +¥224,653 (66.1%) [new_unopened]
 2. **Nintendo Switch 2** ヤフオク (新品/未使用落札) → src_ebay: +¥30,392 (54.7%) [new_unopened]
-3. **iPhone 17 Pro 256GB SIMフリー** ヤフオク (新品/未使用落札) → src_ebay: +¥98,161 (44.6%) [new_unopened]
+3. **iPhone 17 Pro 256GB SIMフリー** ヤフオク (新品/未使用落札) → src_ebay: +¥88,161 (38.3%) [new_unopened]
 4. **FUJIFILM X100VI** eBay sold(新品) → src_ebay: +¥134,453 (31.3%) [new_unopened]
 5. **FUJIFILM X100VI** ヤフオク (新品/未使用落札) → マップカメラ: +¥103,400 (30.4%) [new_unopened]
 6. **FUJIFILM X100VI** ヤフオク (新品/未使用落札) → カメラのキタムラ: +¥100,400 (29.5%) [new_unopened]
@@ -31,6 +31,6 @@
 5. **FUJIFILM X100VI** ヤフオク (新品/未使用落札) → マップカメラ: +¥103,400 (30.4%) [new_unopened]
 6. **FUJIFILM X100VI** ヤフオク (新品/未使用落札) → カメラのキタムラ: +¥100,400 (29.5%) [new_unopened]
 7. **FUJIFILM X100VI** ヤフオク (新品/未使用落札) → フジヤカメラ: +¥98,400 (29.0%) [new_unopened]
-8. **iPhone 17 Pro 256GB SIMフリー** ヤフオク (新品/未使用落札) → src_ebay: +¥98,161 (44.6%) [new_unopened]
-9. **FUJIFILM X100VI** Amazon新品出品 → src_ebay: +¥94,453 (20.1%) [new_unopened]
-10. **FUJIFILM X100VI** ヤフオク (新品/未使用落札) → ソフマップ: +¥93,400 (27.5%) [new_unopened]
+8. **FUJIFILM X100VI** Amazon新品出品 → src_ebay: +¥94,453 (20.1%) [new_unopened]
+9. **FUJIFILM X100VI** ヤフオク (新品/未使用落札) → ソフマップ: +¥93,400 (27.5%) [new_unopened]
+10. **FUJIFILM X100VI** ヤフオク (新品/未使用落札) → じゃんぱら: +¥88,400 (26.0%) [new_unopened]

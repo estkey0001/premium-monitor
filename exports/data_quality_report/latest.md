@@ -1,4 +1,4 @@
-# データ取得品質レポート（2026-06-04 18:59 JST）
+# データ取得品質レポート（2026-06-04 23:36 JST）
 
 ## 取得成功率
 - 全対象店舗数: 16
@@ -11,7 +11,7 @@
 - 今回成功率: 34.5%
 - 変化: 0.0pt（横ばい）
 - 7日移動平均: 37.6%
-- 主要失敗理由 TOP5: rate_limited_429 6, site_blocked 6, price_not_found 6, timeout 5, http_404 4
+- 主要失敗理由 TOP5: product_not_listed 8, rate_limited_429 6, site_blocked 6, price_not_found 6, http_404 4
 
 ## 店舗別成功率（低い順）
 - 2ndstreet（optional）: 0%（OK 0/失敗 4・price_not_found）
@@ -20,7 +20,7 @@
 - geo_mobile（optional）: 0%（OK 0/失敗 4・site_blocked）
 - hardoff（optional）: 0%（OK 0/失敗 2・http_404）
 - janpara（optional）: 0%（OK 0/失敗 6・rate_limited_429）
-- mobile_ichiban: 0%（OK 0/失敗 5・timeout）
+- mobile_ichiban: 0%（OK 0/失敗 5・product_not_listed）
 - pasoko（optional）: 0%（OK 0/失敗 2・product_not_listed）
 - sofmap（optional）: 0%（OK 0/失敗 2・service_unavailable）
 - surugaya（optional）: 0%（OK 0/失敗 2・site_blocked）
@@ -36,29 +36,28 @@
 - iphone17pro512: 50.0%
 
 ## 連続失敗店舗（2回以上）
-- 2ndstreet: 28回連続
-- bookoff: 28回連続
-- dosupara: 28回連続
-- geo_mobile: 28回連続
-- hardoff: 28回連続
-- janpara: 28回連続
-- pasoko: 28回連続
-- sofmap: 28回連続
-- surugaya: 28回連続
-- tsutaya: 28回連続
-- mobile_ichiban: 2回連続
+- 2ndstreet: 29回連続
+- bookoff: 29回連続
+- dosupara: 29回連続
+- geo_mobile: 29回連続
+- hardoff: 29回連続
+- janpara: 29回連続
+- pasoko: 29回連続
+- sofmap: 29回連続
+- surugaya: 29回連続
+- tsutaya: 29回連続
+- mobile_ichiban: 3回連続
 
 ## 改善優先順位（required店舗）
-1. mobile_ichiban（失敗5 / timeout）
+1. mobile_ichiban（失敗5 / product_not_listed）
 
 ## 失敗理由（内訳）
+- product_not_listed: 8件
 - rate_limited_429: 6件
 - site_blocked: 6件
 - price_not_found: 6件
-- timeout: 5件
 - http_404: 4件
 - not_supported: 4件
-- product_not_listed: 3件
 - service_unavailable: 2件
 
 ## 有効データ量（新品・未使用 / 14日以内 / price>0）
@@ -84,7 +83,7 @@
 - Pro: 9 件
 
 ## せどりルートに使えたデータ数
-- ルート: 47 件
+- ルート: 42 件
 
 ## 海外価格の鮮度
 - fresh: 0 / stale: 4 / 計 4

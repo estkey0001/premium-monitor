@@ -1,6 +1,6 @@
 
 ============================================================
- Deploy Check (525 items)
+ Deploy Check (530 items)
 ============================================================
   ✅ [index_exists] docs/index.html 存在
   ✅ [forbidden_phrases] 禁止表現なし
@@ -9,7 +9,7 @@
   ✅ [line_cta_off] LINE CTA非表示（正常）
   ✅ [telegram_cta_off] Telegram CTA非表示（正常）
   ✅ [analytics_empty] GA ID未設定 → GAスニペット非出力（正常）
-  ✅ [today_date] 今日の日付 2026-06-03 あり
+  ✅ [today_date] 今日の日付 2026-06-04 あり
   ✅ [price_exists] 価格表記あり
   ✅ [disclaimer] 免責事項あり
   ✅ [data_track] data-track属性あり
@@ -154,7 +154,7 @@
   ✅ [freshness_yoko_format] 古い価格に「要更新 / N日前」形式が使われている
   ✅ [deal_card_no_saishin_label] updated-row に旧「最終更新：」表記なし（価格確認：に統一済み）
   ✅ [stale_banner_date_mismatch] #144 「本日の価格データ未更新」が HTML に存在しない（OK: トップ警告抑制済み）
-  ⚠️ [csv_today_observed_at] manual_buyback_prices.csv に本日(2026-06-03)の observed_at なし（手動更新が必要な可能性）
+  ✅ [csv_today_observed_at] manual_buyback_prices.csv に本日(2026-06-04)の observed_at あり
   ✅ [iphone17_price_fetched] iPhone 17 Pro 系の買取価格が1件以上取得されている
   ✅ [mobile_ichiban_price] モバイル一番の買取価格（price > 0）が存在する
   ✅ [fetch_failed_display] fetch_failed 行があり、LP上に「取得失敗 / 要確認」表示がある
@@ -185,18 +185,18 @@
   ✅ [ipad_not_in_other] iPad は「その他」欄に混入していない
   ✅ [airpods_not_in_smartphone] AirPods はスマートフォン欄に混入していない
   ⚠️ [applewatch_in_wearable_section] Apple Watch がウェアラブル欄に見つからない（データなし or genre設定を確認）
-  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-06-04T02:09:05+09:00）
+  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-06-04T09:04:16+09:00）
   ✅ [suspicious_price_format] suspicious_prices 形式OK（suspicious_price なし）
   ✅ [fetch_failed_has_reason] fetch_failed 36件すべてに reason あり
   ✅ [collector_report_html_exists] docs/collector_report.html 存在
   ✅ [collector_report_link_in_lp] LP内に collector_report.html へのリンクがある
   ✅ [fetch_failed_report_link] 取得失敗32件 / suspicious0件 → 警告バーが表示されている
-  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 14件存在する: ['iphone17pm256', 'iphone17pm512', 'iphone17pro512', 'iphone17pro256']
+  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 14件存在する: ['iphone17pro512', 'iphone17pm256', 'iphone17pro256', 'iphone17pm512']
   ✅ [beginner_page_auto_scraped_exists] 自動取得 OK 19件 / total 55件
   ✅ [shop_name_no_vertical_wrap] shop-name-col に word-break:keep-all が設定されている
   ✅ [iphone17pro256_price_scraped] iPhone 17 Pro 256GB の価格取得成功: ['kaitori_shouten', 'kaitori_itchome', 'iosys', 'netoff']
   ✅ [fetch_failed_section_collapsible] 取得失敗セクションが <details> 折りたたみ対応されている
-  ✅ [fetch_failed_not_dominant] 取得失敗カード比率 2%（2/99）— 許容範囲内
+  ✅ [fetch_failed_not_dominant] 取得失敗カード比率 2%（2/100）— 許容範囲内
   ✅ [fetch_failed_has_reason_field] 全取得失敗エントリーに reason フィールドあり（36件）
   ✅ [auto_scraped_link_verified] auto_scraped行のlink_verifiedはすべてtrue（URL推測なし）
   ✅ [iphone_min3_shops] iPhone主要4商品すべて成功店舗≥3
@@ -353,7 +353,7 @@
   ✅ [freshness_banner_168h_branch] #346 _tab_beginner の freshness_banner に 168h 分岐が存在する
   ✅ [no_last_buyback_ts_label] #347 「最終買取データ取得」テキストが LP ソースに残っていない
   ✅ [stale_warning_7day_label] #348 _section_stale_warning に「7日超」または 168 の記述が存在する
-  ✅ [ranking_beginner_consistency] #349 ランキング利益あり(10件) / 初心者ページカード(4件) — 整合
+  ✅ [ranking_beginner_consistency] #349 ランキング利益あり(8件) / 初心者ページカード(3件) — 整合
   ✅ [x100vi_in_beginner_if_ranking] #350 X100VI 表示整合 OK（ランキングにある場合はページに表示、中古条件なら参考fold）
   ✅ [deal_age_scanned_at] #351 beginner フィルタが scanned_at ベースで動作している
   ⚠️ [flea_all_platforms] #352 売却先比較にラクマ・StockX の未取得行が存在する ← ラクマまたは StockX が見つかりません
@@ -447,7 +447,7 @@
   ✅ [beginner_source_in_confirm_line] #440 Beginner の取得方法は confirm-line（最終確認行）にだけ表示されている
   ✅ [pro_buyback_candidates_present] #441 Pro に買取店価格候補（買取価格）が残っている
   ✅ [pro_domestic_candidates_present] #442 Pro に国内新品/未使用価格候補（国内候補テーブル）が残っている
-  ✅ [beginner_row_has_core_cols] #443 Beginner の各店舗カードに 店舗名・価格・差益・確認リンクが揃っている（店名96/リンク96）
+  ✅ [beginner_row_has_core_cols] #443 Beginner の各店舗カードに 店舗名・価格・差益・確認リンクが揃っている（店名95/リンク95）
   ✅ [beginner_source_only_in_details_or_confirm] #444 取得方法（自動取得/手動確認）は details / confirm-line にだけ表示される
   ✅ [beginner_compare_folded_initial_hero_only] #445 初期表示は最高買取店＋2位差額のみ・買取店比較は details 内（初期表示の shop-row max=0）
   ✅ [beginner_hero_and_runnerup_diff] #446 初期表示に最高買取店ブロックと『2位との差額』が表示される
@@ -468,7 +468,7 @@
   ✅ [beginner_no_wait_wording_anywhere] #461 Beginner タブ全体に『利益率が低め』『様子見推奨』が存在しない（本文含む）
   ✅ [beginner_kohaba_note_wording] #462 『小幅利益』カードに本文『小幅利益（定価購入→最高買取・参考値）』が表示される
   ✅ [beginner_camera_card_exists] #463 カメラの初心者カードが存在する
-  ✅ [beginner_missing_reason_shown] #464 未取得/監視中カードに理由（中古価格のみ取得/新品買取価格なし/サイト制限中/商品未掲載/取得失敗 等）が表示される（26枚）
+  ✅ [beginner_missing_reason_shown] #464 未取得/監視中カードに理由（中古価格のみ取得/新品買取価格なし/サイト制限中/商品未掲載/取得失敗 等）が表示される（27枚）
   ✅ [beginner_best_shop_name_shown] #465 新品/未使用の買取価格がある場合は最高買取店の店舗名が表示される
   ✅ [beginner_no_used_price_used] #466 中古価格（中古A/used_a/美品/中古販売価格）が初心者の買取価格に使われない
   ✅ [beginner_camera_new_unused_buyback_shown] #467 カメラ（X100VI/GR IV/GR IIIx 等）に新品・未使用の買取価格が表示される（利益カード6枚）
@@ -486,7 +486,7 @@
   ✅ [sedori_from_valid_data] #479 せどりルートが最新有効データから生成（中古/used を除外）
   ✅ [lottery_daily_update] #480 抽選情報が毎日更新される（daily_lp.yml に update_lottery_events ステップ）
   ✅ [fetch_failed_reason_visible] #481 fetch_failed の理由が LP またはレポートに表示される
-  ✅ [ranking_empty_reason] #482 beginner ランキングが0件なら理由が表示される（beginner=4）
+  ✅ [ranking_empty_reason] #482 beginner ランキングが0件なら理由が表示される（beginner=3）
   ✅ [sedori_empty_reason] #483 sedori ルートが0件なら理由が表示される（routes=26）
   ✅ [overseas_stale_excluded] #484 overseas stale は主計算から除外する方針が明示されている
   ✅ [ebay_app_id_warning] #485 EBAY_APP_ID 未設定時に明確な warning を出す
@@ -527,8 +527,13 @@
   ✅ [low_confidence_excluded] #520 low confidence の買取価格は主計算（enrich/比較）に使われない
   ✅ [manual_overprice_recheck_badge] #521 manual_today が auto より大幅に高い場合『手動価格・要確認』を表示
   ✅ [fujiya_auto_scraped_present] #522 Fujiya の auto_scraped 買取価格が存在する（OK=4件）
+  ✅ [gr4_excludes_variants] #523 GR IV 無印は HDF/Monochrome/IIIx を誤採用しない（strict除外）
+  ✅ [camera_candidate_tracking] #524 all_price_candidates / rejected_candidates / used_for_save が status に保存される
+  ✅ [inflated_manual_excluded] #525 auto_scraped(high) 比30%超高い manual はランキング主計算から除外
+  ✅ [manual_recheck_badge_in_lp] #526 手動価格・要確認バッジが LP に表示される
+  ✅ [sales_guard_maintained] #527 販売価格を買取価格として保存しないガードが維持されている
 
-  Errors: 0 | Warnings: 17 | OK: 508
+  Errors: 0 | Warnings: 16 | OK: 514
 
   ✅ Deploy check PASSED
 ============================================================

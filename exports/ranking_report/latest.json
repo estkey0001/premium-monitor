@@ -1,21 +1,8 @@
 {
-  "generated_at": "2026-06-04 03:01 JST",
+  "generated_at": "2026-06-04 10:00 JST",
   "route_type_beginner": "primary_to_secondary",
   "route_type_pro": "secondary_to_secondary",
   "beginner_top10": [
-    {
-      "product_name": "FUJIFILM X100VI",
-      "category": "camera",
-      "user_level": "beginner_easy",
-      "official_price_jpy": 269500,
-      "best_buyback_price": 445000,
-      "best_buyback_shop": "マップカメラ",
-      "net_profit_jpy": 173700,
-      "net_profit_rate": 0.6445,
-      "route_type": "primary_to_secondary",
-      "source_label": "RICOH公式 / FUJIFILM公式 / キタムラ",
-      "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
-    },
     {
       "product_name": "RICOH GR IIIx",
       "category": "camera",
@@ -57,19 +44,6 @@
     }
   ],
   "pro_top10": [
-    {
-      "product_name": "FUJIFILM X100VI",
-      "category": "camera",
-      "user_level": "beginner_easy",
-      "official_price_jpy": 269500,
-      "best_buyback_price": 445000,
-      "best_buyback_shop": "マップカメラ",
-      "net_profit_jpy": 173700,
-      "net_profit_rate": 0.6445,
-      "route_type": "secondary_to_secondary",
-      "source_label": "中古市場 / フリマ / 買取店",
-      "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
-    },
     {
       "product_name": "RICOH GR IIIx",
       "category": "camera",
@@ -167,19 +141,6 @@
     ],
     "camera": [
       {
-        "product_name": "FUJIFILM X100VI",
-        "category": "camera",
-        "user_level": "beginner_easy",
-        "official_price_jpy": 269500,
-        "best_buyback_price": 445000,
-        "best_buyback_shop": "マップカメラ",
-        "net_profit_jpy": 173700,
-        "net_profit_rate": 0.6445,
-        "route_type": "primary_to_secondary",
-        "source_label": "RICOH公式 / FUJIFILM公式 / キタムラ",
-        "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
-      },
-      {
         "product_name": "RICOH GR IIIx",
         "category": "camera",
         "user_level": "beginner_easy",
@@ -209,19 +170,6 @@
   },
   "pro_by_category": {
     "camera": [
-      {
-        "product_name": "FUJIFILM X100VI",
-        "category": "camera",
-        "user_level": "beginner_easy",
-        "official_price_jpy": 269500,
-        "best_buyback_price": 445000,
-        "best_buyback_shop": "マップカメラ",
-        "net_profit_jpy": 173700,
-        "net_profit_rate": 0.6445,
-        "route_type": "secondary_to_secondary",
-        "source_label": "中古市場 / フリマ / 買取店",
-        "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
-      },
       {
         "product_name": "RICOH GR IIIx",
         "category": "camera",
@@ -306,12 +254,12 @@
       }
     ]
   },
-  "excluded_items": 22,
+  "excluded_items": 23,
   "total_deals": 29,
   "confidence_summary": {
     "total": 29,
-    "profitable": 7,
-    "negative": 22
+    "profitable": 6,
+    "negative": 23
   },
   "stale_data_count": 0
 }

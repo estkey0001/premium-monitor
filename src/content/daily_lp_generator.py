@@ -5485,9 +5485,18 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                     })
                 return deal
             def _is_tradein_row(r) -> bool:
-                """下取（トレードイン）価格の行か。最高買取価格に混ぜない。"""
+                """下取（トレードイン）価格「そのもの」の行か。最高買取価格に混ぜない。
+
+                買取ページ本文は現金買取と下取を併記するため、現金買取文脈
+                （基準査定額/買取/査定）がある行は下取扱いにしない（過剰除外防止）。
+                買取価格の抽出自体は scraper 側で下取段を除外済み。
+                """
                 blob = f"{r.get('shop_name', '') or ''} {r.get('notes', '') or ''}"
-                return ("下取" in blob) or ("トレードイン" in blob) or ("trade-in" in blob.lower())
+                has_ti = ("下取" in blob) or ("トレードイン" in blob) or ("trade-in" in blob.lower())
+                if not has_ti:
+                    return False
+                has_cash = ("基準査定額" in blob) or ("買取" in blob) or ("査定" in blob)
+                return not has_cash
             valid_rows = [
                 r for r in rows
                 if r.get('buyback_price', 0) > 0

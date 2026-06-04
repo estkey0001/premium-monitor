@@ -5476,6 +5476,13 @@ def check() -> list[dict]:
                     "message": "#557 migration 018 と SedoriRouteModel に価格種別/ソース欄がある"
                                + ("" if _t557 else " ← migration 018 / モデル欄が見つかりません")})
 
+    # #558: カメラ買取が段階表示の下取(trade-in)段を除外し現金買取最高値を採用
+    _t558 = ('_select_cash_buyback_price' in _cam_src) and ('下取' in _cam_src) \
+        and ('基準査定額' in _norm_src) and ('has_cash' in _norm_src)
+    results.append({"level": "ok" if _t558 else "error", "check": "camera_cash_buyback_tier",
+                    "message": "#558 カメラ買取が段階表示の下取(15%UP等)段を除外し現金買取の最高値を採用する"
+                               + ("" if _t558 else " ← 下取段除外/現金買取選定ロジックが見つかりません")})
+
     return results
 
 

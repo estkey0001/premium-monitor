@@ -89,9 +89,21 @@ def classify_sale_price_type(shop_name: str, condition: str) -> tuple[str, str]:
 
 
 def is_tradein(shop_name: str, notes: str) -> bool:
-    """下取（トレードイン）価格かどうかを判定する。"""
+    """下取（トレードイン）価格「そのもの」かどうかを判定する。
+
+    注意: 富士屋等の買取ページ本文（notes）は「基準査定額…下取は15%UP…」のように
+    現金買取と下取の両方を併記する。notes に「下取」が含まれるだけで trade_in 扱い
+    すると、現金買取行（基準査定額ベース）まで誤って除外してしまう。
+    そのため、現金買取の文脈（基準査定額 / 買取 / 査定）が存在する場合は trade_in と
+    みなさない。下取マーカーがあり、かつ現金買取マーカーが無い場合のみ trade_in とする。
+    （買取価格の抽出自体は scraper 側で下取段を除外済み: _select_cash_buyback_price）
+    """
     blob = f"{shop_name or ''} {notes or ''}"
-    return ("下取" in blob) or ("トレードイン" in blob) or ("trade-in" in blob.lower())
+    has_tradein = ("下取" in blob) or ("トレードイン" in blob) or ("trade-in" in blob.lower())
+    if not has_tradein:
+        return False
+    has_cash = ("基準査定額" in blob) or ("買取" in blob) or ("査定" in blob)
+    return not has_cash
 
 
 def _extraction_method(data_source: str) -> str:

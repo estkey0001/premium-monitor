@@ -194,6 +194,38 @@ def _pick_item_url(alias: str, item_link_candidates: list, base_url: str) -> tup
     return None, False
 
 
+import re as _re_tier  # noqa: E402
+# 富士屋等の段階表示「(段) 新品同様 ￥X 良品 ￥Y」から段ラベルと新品同様価格を抽出。
+# 段ラベル例: 基準査定額 / 買取のみ10%UP / 下取は15%UP
+_TIER_RE = _re_tier.compile(
+    r"(基準査定額|買取のみ[0-9]+%UP|下取は?[0-9]*%?UP|下取り?|トレードイン)"
+    r"[^¥￥]{0,12}新品同様[^¥￥\d]{0,4}[¥￥]\s?([0-9]{2,3}(?:,[0-9]{3})+)"
+)
+
+
+def _select_cash_buyback_price(item_text: str):
+    """段階表示テキストから「下取(トレードイン)を除いた現金買取の最高値」を返す。
+
+    富士屋は 基準査定額 < 買取のみX%UP < 下取はX%UP の3段階を併記するため、
+    最高値をそのまま採ると下取(trade-in)価格を買取価格として誤採用してしまう。
+    下取段を除外し、基準査定額・買取のみ段の中から最高値（現金買取の最高額）を返す。
+    段構造が無ければ None（呼び出し側で従来の候補価格にフォールバック）。
+    """
+    raw = item_text or ""
+    tiers = _TIER_RE.findall(raw)
+    if not tiers:
+        return None
+    cash = []
+    for label, price in tiers:
+        if ("下取" in label) or ("トレードイン" in label):
+            continue  # 下取(trade-in)段は現金買取ではないため除外
+        try:
+            cash.append(int(price.replace(",", "")))
+        except ValueError:
+            continue
+    return max(cash) if cash else None
+
+
 def _select_camera_buyback(candidates: list, alias: str) -> dict:
     """買取候補から機種厳密一致の価格を選び、採用/不採用の追跡情報を返す（Task 2）。
     戻り値 dict:
@@ -216,8 +248,17 @@ def _select_camera_buyback(candidates: list, alias: str) -> dict:
     strict = [c for c in cands if c.get("near_buyback") and _strict_model_match(c.get("item_text", ""), alias)]
     if strict:
         best = max(strict, key=lambda c: c.get("price", 0))
-        out.update(price=best["price"], confidence="high",
-                   matched_item=(best.get("item_text", "") or "")[:140], used_for_save=True)
+        item_text = best.get("item_text", "") or ""
+        price = best["price"]
+        # 段階表示（基準査定額/買取のみ%UP/下取は%UP）がある場合は、
+        # 下取(trade-in)段を除いた現金買取の最高値を採用する。
+        cash_price = _select_cash_buyback_price(item_text)
+        if cash_price and cash_price != price:
+            out["tradein_tier_excluded"] = True
+            out["raw_max_price"] = price  # 参考: 段込みの最高値（下取段の可能性）
+            price = cash_price
+        out.update(price=price, confidence="high",
+                   matched_item=item_text[:140], used_for_save=True)
     return out
 
 # 対象買取店（shop_id, 表示名, 買取検索URLテンプレート {kw}=URLエンコード済キーワード）

@@ -1900,6 +1900,15 @@ a[href], button, [role="tab"], [role="button"],
   background: #FFF3E6; border: 1px solid #F0CDA0; border-radius: 999px;
   vertical-align: middle;
 }}
+.shop-card .shop-auto-annot {{
+  font-size: 0.66rem; color: #176B4D; line-height: 1.4;
+  background: #ECFBF4; border-radius: 6px; padding: 3px 8px; margin: 2px 0;
+}}
+.shop-card .shop-auto-annot .shop-auto-item {{ color: var(--ink3); }}
+.camera-auto-note {{
+  font-size: 0.72rem; color: var(--ink3); line-height: 1.5;
+  background: #F7F8FC; border-radius: 6px; padding: 6px 9px; margin: 2px 0 6px;
+}}
 .shop-card.shop-row-failed .shop-price-col {{ font-size: 0.92rem; font-weight: 600; color: var(--ink3); }}
 .shop-card.shop-row-failed .shop-link-col .shop-check-btn {{
   background: #EEF0F5; color: #5B6677; box-shadow: none;
@@ -6482,6 +6491,26 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                         f'{source_col_html}'
                         f'</div>'
                     )
+                # auto_scraped の場合は「自動取得 / confidence / 最終取得日 / matched_item」を明示（Task 1）
+                _auto_annot = ''
+                if r.get('data_source') == 'auto_scraped':
+                    _conf = _esc(r.get('confidence', 'high'))
+                    _matched = _esc((r.get('notes', '') or '').strip())
+                    _obs = r.get('observed_at', '')
+                    _obs_d = ''
+                    try:
+                        _od = datetime.fromisoformat(str(_obs))
+                        if _od.tzinfo is None:
+                            _od = _od.replace(tzinfo=JST)
+                        _obs_d = _od.astimezone(JST).strftime('%Y-%m-%d')
+                    except Exception:
+                        _obs_d = _esc(str(_obs)[:10])
+                    _auto_annot = (
+                        f'<div class="shop-auto-annot">&#129302; 自動取得 / {_conf}'
+                        + (f' / 最終取得: {_obs_d}' if _obs_d else '')
+                        + (f'<br><span class="shop-auto-item">{_matched}</span>' if _matched else '')
+                        + '</div>'
+                    )
                 # 初心者モード：スマホで読みやすい縦カード形式（順位/店名 → 価格 → 差益 → 確認）
                 return (
                     f'<div class="shop-row shop-card">'
@@ -6491,6 +6520,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                     f'<div class="shop-card-mid">'
                     f'<div class="shop-price-col">¥{bp:,}</div>'
                     f'<div class="shop-diff-col{diff_cls}">差益 {_esc(profit_str)}</div></div>'
+                    f'{_auto_annot}'
                     f'<div class="shop-link-col">{link_col}</div>'
                     f'</div>'
                 )
@@ -6755,7 +6785,19 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         #           買取店比較（上位3店舗＋もっと見る）・CTA。
         # 折りたたみ（<details>）には 取得方法 / 最終確認 / 注意書き のみ格納。
         # （4店舗目以降・取得失敗店舗は compare_html 内の「もっと見る」details に既に格納済み）
-        _fold_inner = price_source_row_html + condition_notice_html + updated_str
+        # カメラで auto_scraped 買取が無い場合は理由を明示（Task 2: GR IV無印等）
+        _camera_auto_note = ''
+        if genre_cls == 'camera':
+            _has_auto = any((br.get('data_source') == 'auto_scraped')
+                            for br in (buyback_rows or []))
+            if not _has_auto:
+                _camera_auto_note = (
+                    '<div class="camera-auto-note">'
+                    '&#9432; 自動取得価格は未取得（自動取得候補なし）。'
+                    'HDF / Monochrome / IIIx は別機種として除外済み。'
+                    '掲載は手動確認価格です。</div>'
+                )
+        _fold_inner = _camera_auto_note + price_source_row_html + condition_notice_html + updated_str
         detail_fold_html = (
             f'<details class="card-detail-fold">'
             f'<summary class="card-detail-summary">取得方法・注意事項を見る</summary>'

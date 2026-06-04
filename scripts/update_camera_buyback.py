@@ -626,6 +626,7 @@ def main() -> int:
                         buyback_price=price, condition="new_unopened", buyback_url=url,
                         observed_at=now, data_source="auto_scraped",
                         link_verified=True, confidence=_confidence,
+                        notes=(_matched_item or "")[:120],  # matched_item を notes に保存（LP表示用）
                     )
                     repo.insert_buyback_price(bp)
                     saved += 1

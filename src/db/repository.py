@@ -1266,7 +1266,8 @@ class Repository:
             rows = self.db.connection.execute(
                 """SELECT shop_id, shop_name, buyback_price, condition,
                           buyback_url, observed_at, data_source, link_verified,
-                          COALESCE(confidence, 'high') AS confidence
+                          COALESCE(confidence, 'high') AS confidence,
+                          COALESCE(notes, '') AS notes
                    FROM (
                        SELECT *,
                            -- data_source × buyback_price の優先度（小さいほど優先）

@@ -1,6 +1,6 @@
 
 ============================================================
- Deploy Check (541 items)
+ Deploy Check (547 items)
 ============================================================
   ✅ [index_exists] docs/index.html 存在
   ✅ [forbidden_phrases] 禁止表現なし
@@ -185,13 +185,13 @@
   ✅ [ipad_not_in_other] iPad は「その他」欄に混入していない
   ✅ [airpods_not_in_smartphone] AirPods はスマートフォン欄に混入していない
   ⚠️ [applewatch_in_wearable_section] Apple Watch がウェアラブル欄に見つからない（データなし or genre設定を確認）
-  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-06-04T15:15:06+09:00）
+  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-06-04T17:40:12+09:00）
   ✅ [suspicious_price_format] suspicious_prices 形式OK（suspicious_price なし）
   ✅ [fetch_failed_has_reason] fetch_failed 36件すべてに reason あり
   ✅ [collector_report_html_exists] docs/collector_report.html 存在
   ✅ [collector_report_link_in_lp] LP内に collector_report.html へのリンクがある
   ✅ [fetch_failed_report_link] 取得失敗32件 / suspicious0件 → 警告バーが表示されている
-  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 14件存在する: ['iphone17pro256', 'iphone17pro512', 'iphone17pm512', 'iphone17pm256']
+  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 14件存在する: ['iphone17pro512', 'iphone17pro256', 'iphone17pm512', 'iphone17pm256']
   ✅ [beginner_page_auto_scraped_exists] 自動取得 OK 19件 / total 55件
   ✅ [shop_name_no_vertical_wrap] shop-name-col に word-break:keep-all が設定されている
   ✅ [iphone17pro256_price_scraped] iPhone 17 Pro 256GB の価格取得成功: ['kaitori_shouten', 'kaitori_itchome', 'iosys', 'netoff']
@@ -487,7 +487,7 @@
   ✅ [lottery_daily_update] #480 抽選情報が毎日更新される（daily_lp.yml に update_lottery_events ステップ）
   ✅ [fetch_failed_reason_visible] #481 fetch_failed の理由が LP またはレポートに表示される
   ✅ [ranking_empty_reason] #482 beginner ランキングが0件なら理由が表示される（beginner=4）
-  ✅ [sedori_empty_reason] #483 sedori ルートが0件なら理由が表示される（routes=26）
+  ✅ [sedori_empty_reason] #483 sedori ルートが0件なら理由が表示される（routes=47）
   ✅ [overseas_stale_excluded] #484 overseas stale は主計算から除外する方針が明示されている
   ✅ [ebay_app_id_warning] #485 EBAY_APP_ID 未設定時に明確な warning を出す
   ✅ [camera_manual_14d_excluded] #486 手動データ（camera含む）が14日超なら利益判定から除外される（LP・ranking）
@@ -539,12 +539,18 @@
   ✅ [data_quality_camera_reliability] #532 data_quality_report に camera 信頼性メトリクスがある（auto=16）
   ✅ [camera_models_all_aliases] #533 全対象機種(20)に model alias / strict ルールが定義されている
   ✅ [strict_match_data_driven] #534 strict model match がデータ駆動（require_any/include_all/exclude）で有効
-  ✅ [top_camera_buyback_ranking] #535 Top Camera Buyback Opportunities（high/auto/fresh<=7d）がランキングにある（16件）
+  ✅ [top_camera_buyback_ranking] #535 Top Camera Buyback Opportunities（high/auto/fresh<=7d）がランキングにある（15件）
   ✅ [camera_brand_success_rates] #536 data_quality に ブランド別成功率 / low_confidence_count がある
   ✅ [expansion_products_seeded] #537 拡張カメラ製品（Sony/Canon/Nikon/Leica/GFX/X-T5）が products.yaml に定義されている
   ✅ [top_camera_buyback_camera_only] #538 Top Camera Buyback ランキングがカメラ製品（genre='camera'）のみに限定されている
+  ✅ [buyback_alert_zero_guard] #539 買取急変検知が price<=0（取得失敗/前回なし）をガードしている
+  ✅ [alert_zero_diff_skip] #540 アラート生成が 0円/差分0 をスキップしている
+  ✅ [camera_item_url] #541 カメラ買取リンクが商品個別ページURL（店舗トップ/検索でない）を優先している
+  ✅ [camera_tradein_exclude] #542 カメラ買取が下取(15%UP等)価格を現金買取価格から分離・除外している
+  ✅ [sedori_overseas_sell] #543 せどり計算の売却先が「買取価格＋海外販売価格」になっている
+  ✅ [top_camera_reference_guard] #544 Top Camera Buyback が参照価格(公式/定価)未取得の商品を除外している
 
-  Errors: 0 | Warnings: 17 | OK: 524
+  Errors: 0 | Warnings: 17 | OK: 530
 
   ✅ Deploy check PASSED
 ============================================================

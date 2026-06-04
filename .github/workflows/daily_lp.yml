@@ -136,6 +136,13 @@ jobs:
         run: python -m src.cli scan-primary-to-secondary
         continue-on-error: true
 
+      # 11.5 Generate normalized price observations（ranking/sedori/LP 共通の価格定義）
+      - name: Generate normalized price observations
+        run: python scripts/generate_normalized_price_observations.py
+        continue-on-error: true
+        env:
+          PYTHONPATH: .
+
       # 12. Generate ranking report
       - name: Generate ranking report
         run: python scripts/generate_ranking_report.py
@@ -226,6 +233,7 @@ jobs:
           git add docs/ exports/lp/daily/ exports/collector_report/ exports/lottery_report/ \
                   exports/alerts_report/ exports/ranking_report/ exports/sedori_routes_report/ \
                   exports/overseas_prices/ \
+                  exports/normalized_price_observations/ \
                   exports/data_quality_report/ exports/camera_buyback_status.json \
                   data/alerts.csv data/lottery_events.csv \
                   data/overseas_price_history.csv \

@@ -5358,6 +5358,64 @@ def check() -> list[dict]:
                     "message": "#544 Top Camera Buyback が参照価格(公式/定価)未取得の商品を除外している"
                                + ("" if _t544 else " ← 参照価格0の除外ロジックが見つかりません")})
 
+    # ── normalized_price_observations（正規化価格テーブル）ガード #545-#551 ──
+    _npo = _load_json_safe('exports/normalized_price_observations/latest.json')
+    _obs = (_npo or {}).get("observations", []) if isinstance(_npo, dict) else []
+
+    # #545: latest.json が存在する
+    _t545 = isinstance(_npo, dict) and ("observations" in _npo)
+    results.append({"level": "ok" if _t545 else "error", "check": "npo_exists",
+                    "message": f"#545 normalized_price_observations/latest.json が存在する（{len(_obs)}観測）"
+                               + ("" if _t545 else " ← ファイルが見つかりません")})
+
+    # #546: price_role が全観測に必ずある
+    _missing_role = sum(1 for r in _obs if not r.get("price_role"))
+    _t546 = _t545 and _missing_role == 0 and len(_obs) > 0
+    results.append({"level": "ok" if _t546 else "error", "check": "npo_price_role_required",
+                    "message": "#546 全観測に price_role が付与されている"
+                               + ("" if _t546 else f" ← price_role 欠落 {_missing_role} 件")})
+
+    # #547: trade_in_price が最高買取価格(=main calc)に使われない
+    _bad547 = sum(1 for r in _obs if r.get("price_type") == "trade_in_price"
+                  and (r.get("is_usable_for_beginner") or r.get("is_usable_for_pro")))
+    _t547 = _t545 and _bad547 == 0
+    results.append({"level": "ok" if _t547 else "error", "check": "npo_tradein_not_main",
+                    "message": "#547 trade_in_price が main calculation（最高買取等）に使われない"
+                               + ("" if _t547 else f" ← trade_in が利用可 {_bad547} 件")})
+
+    # #548: Pro route の buy 側に buyback_price が使われない
+    _bad548 = sum(1 for r in _obs if r.get("is_usable_for_pro")
+                  and r.get("price_role") == "buy" and r.get("price_type") == "buyback_price")
+    _t548 = _t545 and _bad548 == 0
+    results.append({"level": "ok" if _t548 else "error", "check": "npo_pro_buy_no_buyback",
+                    "message": "#548 Pro route の buy 側に buyback_price が使われない"
+                               + ("" if _t548 else f" ← buyback を仕入れに使用 {_bad548} 件")})
+
+    # #549: Pro route の sell 側に sale/listing/sold 価格が使われない
+    _sale_types = {"shop_sale_price", "flea_listing_price", "flea_sold_price", "overseas_listing_price"}
+    _bad549 = sum(1 for r in _obs if r.get("is_usable_for_pro")
+                  and r.get("price_role") == "sell" and r.get("price_type") in _sale_types)
+    _t549 = _t545 and _bad549 == 0
+    results.append({"level": "ok" if _t549 else "error", "check": "npo_pro_sell_no_sale",
+                    "message": "#549 Pro route の sell 側に sale/listing 価格が使われない"
+                               + ("" if _t549 else f" ← sale/listing を売却に使用 {_bad549} 件")})
+
+    # #550: price=0 が main calculation に使われない
+    _bad550 = sum(1 for r in _obs if (r.get("price") or 0) <= 0
+                  and (r.get("is_usable_for_beginner") or r.get("is_usable_for_pro")))
+    _t550 = _t545 and _bad550 == 0
+    results.append({"level": "ok" if _t550 else "error", "check": "npo_price_zero_not_main",
+                    "message": "#550 price=0 が main calculation に使われない"
+                               + ("" if _t550 else f" ← price=0 が利用可 {_bad550} 件")})
+
+    # #551: stale 14日超が main calculation に使われない
+    _bad551 = sum(1 for r in _obs if (not r.get("is_fresh"))
+                  and (r.get("is_usable_for_beginner") or r.get("is_usable_for_pro")))
+    _t551 = _t545 and _bad551 == 0
+    results.append({"level": "ok" if _t551 else "error", "check": "npo_stale_not_main",
+                    "message": "#551 stale（14日超）が main calculation に使われない"
+                               + ("" if _t551 else f" ← stale が利用可 {_bad551} 件")})
+
     return results
 
 

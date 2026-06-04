@@ -236,7 +236,7 @@ def main() -> int:
             "       p.name AS product_name, p.official_price, p.retail_price "
             "FROM buyback_prices b LEFT JOIN products p ON p.id=b.product_id "
             "WHERE b.is_active=1 AND b.data_source='auto_scraped' AND b.confidence='high' "
-            "AND b.buyback_price>0"
+            "AND b.buyback_price>0 AND p.genre='camera'"
         ).fetchall()
         _con.close()
         for r in _prices:

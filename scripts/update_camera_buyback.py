@@ -111,8 +111,9 @@ CAMERA_MODELS = {
                  "require_any": ["NIKONZ9", "Z9"]},
     # LEICA
     "q3":       {"brand": "LEICA", "name": "Leica Q3", "retail": 880000,
-                 "variants": ["Leica Q3", "LEICA Q3"],
-                 "require_any": ["LEICAQ3"]},
+                 "variants": ["Leica Q3", "LEICA Q3", "ライカ Q3"],
+                 "require_any": ["LEICAQ3", "ライカQ3", "Q3"],
+                 "exclude": ["Q30", "Q3X"]},
     "m11":      {"brand": "LEICA", "name": "Leica M11", "retail": 1180000,
                  "variants": ["Leica M11", "LEICA M11"],
                  "require_any": ["LEICAM11", "M11"]},

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-04 13:42 JST",
+  "generated_at": "2026-06-04 15:07 JST",
   "route_type_beginner": "primary_to_secondary",
   "top_camera_buyback_opportunities": [
     {
@@ -27,18 +27,6 @@
       "age_days": 0.0
     },
     {
-      "product_id": "prod_a7rv",
-      "product_name": "SONY α7R V",
-      "shop_name": "フジヤカメラ",
-      "buyback_price": 517500,
-      "official_price": 440000,
-      "diff_vs_official": 77500,
-      "matched_item": "α7R VI ILCE-7RM6（2026年6月5日発売予定） SONY 基準査定額 新品同様 ￥450,000 良品 ￥445,000 買取のみ10%UP 新品同様 ￥495,000 良品 ￥489,500 下取は15%UP 新品同様 ￥",
-      "confidence": "high",
-      "source": "auto_scraped",
-      "age_days": 0.0
-    },
-    {
       "product_id": "prod_gr3x",
       "product_name": "RICOH GR IIIx",
       "shop_name": "フジヤカメラ",
@@ -46,18 +34,6 @@
       "official_price": 139800,
       "diff_vs_official": 35000,
       "matched_item": "RICOH GR IIIx HDF RICOH 基準査定額 新品同様 ￥152,000 良品 ￥151,000 買取のみ10%UP 新品同様 ￥167,200 良品 ￥166,100 下取は15%UP 新品同様 ￥174,800 良品 ￥1",
-      "confidence": "high",
-      "source": "auto_scraped",
-      "age_days": 0.0
-    },
-    {
-      "product_id": "prod_r6ii",
-      "product_name": "Canon EOS R6 Mark II",
-      "shop_name": "フジヤカメラ",
-      "buyback_price": 420900,
-      "official_price": 390000,
-      "diff_vs_official": 30900,
-      "matched_item": "EOS R6 Mark III RF24-105L IS USM レンズキット Canon 基準査定額 新品同様 ￥366,000 良品 ￥365,000 買取のみ10%UP 新品同様 ￥402,600 良品 ￥401,500 下取は15%",
       "confidence": "high",
       "source": "auto_scraped",
       "age_days": 0.0
@@ -85,6 +61,18 @@
       "confidence": "high",
       "source": "auto_scraped",
       "age_days": 0.0
+    },
+    {
+      "product_id": "prod_iphone17pro_256",
+      "product_name": "iPhone 17 Pro 256GB SIMフリー",
+      "shop_name": "買取一丁目",
+      "buyback_price": 180000,
+      "official_price": 179800,
+      "diff_vs_official": 200,
+      "matched_item": "",
+      "confidence": "high",
+      "source": "auto_scraped",
+      "age_days": 0.1
     },
     {
       "product_id": "prod_iphone17pro_512",
@@ -126,18 +114,6 @@
       "product_id": "prod_iphone17pro_256",
       "product_name": "iPhone 17 Pro 256GB SIMフリー",
       "shop_name": "買取商店",
-      "buyback_price": 179500,
-      "official_price": 179800,
-      "diff_vs_official": -300,
-      "matched_item": "",
-      "confidence": "high",
-      "source": "auto_scraped",
-      "age_days": 0.1
-    },
-    {
-      "product_id": "prod_iphone17pro_256",
-      "product_name": "iPhone 17 Pro 256GB SIMフリー",
-      "shop_name": "買取一丁目",
       "buyback_price": 179500,
       "official_price": 179800,
       "diff_vs_official": -300,
@@ -219,6 +195,18 @@
       "age_days": 0.1
     },
     {
+      "product_id": "prod_iphone17pm_256",
+      "product_name": "iPhone 17 Pro Max 256GB SIMフリー",
+      "shop_name": "買取一丁目",
+      "buyback_price": 196000,
+      "official_price": 219800,
+      "diff_vs_official": -23800,
+      "matched_item": "",
+      "confidence": "high",
+      "source": "auto_scraped",
+      "age_days": 0.1
+    },
+    {
       "product_id": "prod_iphone17pm_512",
       "product_name": "iPhone 17 Pro Max 512GB SIMフリー",
       "shop_name": "買取一丁目",
@@ -241,6 +229,18 @@
       "confidence": "high",
       "source": "auto_scraped",
       "age_days": 0.1
+    },
+    {
+      "product_id": "prod_iphone17pm_256",
+      "product_name": "iPhone 17 Pro Max 256GB SIMフリー",
+      "shop_name": "モバイル一番",
+      "buyback_price": 195000,
+      "official_price": 219800,
+      "diff_vs_official": -24800,
+      "matched_item": "",
+      "confidence": "high",
+      "source": "auto_scraped",
+      "age_days": 0.1
     }
   ],
   "route_type_pro": "secondary_to_secondary",
@@ -259,19 +259,6 @@
       "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
     },
     {
-      "product_name": "SONY α7R V",
-      "category": "camera",
-      "user_level": "beginner_easy",
-      "official_price_jpy": 440000,
-      "best_buyback_price": 517500,
-      "best_buyback_shop": "フジヤカメラ",
-      "net_profit_jpy": 75700,
-      "net_profit_rate": 0.172,
-      "route_type": "primary_to_secondary",
-      "source_label": "RICOH公式 / FUJIFILM公式 / キタムラ",
-      "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
-    },
-    {
       "product_name": "RICOH GR IIIx",
       "category": "camera",
       "user_level": "beginner_easy",
@@ -280,19 +267,6 @@
       "best_buyback_shop": "フジヤカメラ",
       "net_profit_jpy": 33200,
       "net_profit_rate": 0.2375,
-      "route_type": "primary_to_secondary",
-      "source_label": "RICOH公式 / FUJIFILM公式 / キタムラ",
-      "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
-    },
-    {
-      "product_name": "Canon EOS R6 Mark II",
-      "category": "camera",
-      "user_level": "beginner_easy",
-      "official_price_jpy": 390000,
-      "best_buyback_price": 420900,
-      "best_buyback_shop": "フジヤカメラ",
-      "net_profit_jpy": 29100,
-      "net_profit_rate": 0.0746,
       "route_type": "primary_to_secondary",
       "source_label": "RICOH公式 / FUJIFILM公式 / キタムラ",
       "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
@@ -339,19 +313,6 @@
       "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
     },
     {
-      "product_name": "SONY α7R V",
-      "category": "camera",
-      "user_level": "beginner_easy",
-      "official_price_jpy": 440000,
-      "best_buyback_price": 517500,
-      "best_buyback_shop": "フジヤカメラ",
-      "net_profit_jpy": 75700,
-      "net_profit_rate": 0.172,
-      "route_type": "secondary_to_secondary",
-      "source_label": "中古市場 / フリマ / 買取店",
-      "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
-    },
-    {
       "product_name": "Leica M11",
       "category": "camera",
       "user_level": "beginner_easy",
@@ -360,19 +321,6 @@
       "best_buyback_shop": "フジヤカメラ",
       "net_profit_jpy": 193600,
       "net_profit_rate": 0.1641,
-      "route_type": "secondary_to_secondary",
-      "source_label": "中古市場 / フリマ / 買取店",
-      "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
-    },
-    {
-      "product_name": "Canon EOS R6 Mark II",
-      "category": "camera",
-      "user_level": "beginner_easy",
-      "official_price_jpy": 390000,
-      "best_buyback_price": 420900,
-      "best_buyback_shop": "フジヤカメラ",
-      "net_profit_jpy": 29100,
-      "net_profit_rate": 0.0746,
       "route_type": "secondary_to_secondary",
       "source_label": "中古市場 / フリマ / 買取店",
       "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
@@ -430,6 +378,19 @@
       "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
     },
     {
+      "product_name": "Canon EOS R6 Mark II",
+      "category": "camera",
+      "user_level": "monitoring",
+      "official_price_jpy": 390000,
+      "best_buyback_price": 0,
+      "best_buyback_shop": "—",
+      "net_profit_jpy": 0,
+      "net_profit_rate": 0.0,
+      "route_type": "secondary_to_secondary",
+      "source_label": "中古市場 / フリマ / 買取店",
+      "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
+    },
+    {
       "product_name": "Leica Q3",
       "category": "camera",
       "user_level": "monitoring",
@@ -451,6 +412,19 @@
       "best_buyback_shop": "買取商店",
       "net_profit_jpy": 12920,
       "net_profit_rate": 0.1077,
+      "route_type": "secondary_to_secondary",
+      "source_label": "中古市場 / フリマ / 買取店",
+      "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
+    },
+    {
+      "product_name": "iPhone 16 Pro Max 512GB",
+      "category": "iphone",
+      "user_level": "monitoring",
+      "official_price_jpy": 224800,
+      "best_buyback_price": 0,
+      "best_buyback_shop": "—",
+      "net_profit_jpy": 0,
+      "net_profit_rate": 0.0,
       "route_type": "secondary_to_secondary",
       "source_label": "中古市場 / フリマ / 買取店",
       "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
@@ -487,19 +461,6 @@
         "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
       },
       {
-        "product_name": "SONY α7R V",
-        "category": "camera",
-        "user_level": "beginner_easy",
-        "official_price_jpy": 440000,
-        "best_buyback_price": 517500,
-        "best_buyback_shop": "フジヤカメラ",
-        "net_profit_jpy": 75700,
-        "net_profit_rate": 0.172,
-        "route_type": "primary_to_secondary",
-        "source_label": "RICOH公式 / FUJIFILM公式 / キタムラ",
-        "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
-      },
-      {
         "product_name": "RICOH GR IIIx",
         "category": "camera",
         "user_level": "beginner_easy",
@@ -508,19 +469,6 @@
         "best_buyback_shop": "フジヤカメラ",
         "net_profit_jpy": 33200,
         "net_profit_rate": 0.2375,
-        "route_type": "primary_to_secondary",
-        "source_label": "RICOH公式 / FUJIFILM公式 / キタムラ",
-        "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
-      },
-      {
-        "product_name": "Canon EOS R6 Mark II",
-        "category": "camera",
-        "user_level": "beginner_easy",
-        "official_price_jpy": 390000,
-        "best_buyback_price": 420900,
-        "best_buyback_shop": "フジヤカメラ",
-        "net_profit_jpy": 29100,
-        "net_profit_rate": 0.0746,
         "route_type": "primary_to_secondary",
         "source_label": "RICOH公式 / FUJIFILM公式 / キタムラ",
         "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
@@ -556,19 +504,6 @@
         "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
       },
       {
-        "product_name": "SONY α7R V",
-        "category": "camera",
-        "user_level": "beginner_easy",
-        "official_price_jpy": 440000,
-        "best_buyback_price": 517500,
-        "best_buyback_shop": "フジヤカメラ",
-        "net_profit_jpy": 75700,
-        "net_profit_rate": 0.172,
-        "route_type": "secondary_to_secondary",
-        "source_label": "中古市場 / フリマ / 買取店",
-        "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
-      },
-      {
         "product_name": "Leica M11",
         "category": "camera",
         "user_level": "beginner_easy",
@@ -582,19 +517,6 @@
         "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
       },
       {
-        "product_name": "Canon EOS R6 Mark II",
-        "category": "camera",
-        "user_level": "beginner_easy",
-        "official_price_jpy": 390000,
-        "best_buyback_price": 420900,
-        "best_buyback_shop": "フジヤカメラ",
-        "net_profit_jpy": 29100,
-        "net_profit_rate": 0.0746,
-        "route_type": "secondary_to_secondary",
-        "source_label": "中古市場 / フリマ / 買取店",
-        "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
-      },
-      {
         "product_name": "RICOH GR IV",
         "category": "camera",
         "user_level": "beginner_watch",
@@ -603,6 +525,32 @@
         "best_buyback_shop": "マップカメラ",
         "net_profit_jpy": 1400,
         "net_profit_rate": 0.0072,
+        "route_type": "secondary_to_secondary",
+        "source_label": "中古市場 / フリマ / 買取店",
+        "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
+      },
+      {
+        "product_name": "RICOH GR III",
+        "category": "camera",
+        "user_level": "monitoring",
+        "official_price_jpy": 129800,
+        "best_buyback_price": 0,
+        "best_buyback_shop": "—",
+        "net_profit_jpy": 0,
+        "net_profit_rate": 0.0,
+        "route_type": "secondary_to_secondary",
+        "source_label": "中古市場 / フリマ / 買取店",
+        "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
+      },
+      {
+        "product_name": "RICOH GR III HDF",
+        "category": "camera",
+        "user_level": "monitoring",
+        "official_price_jpy": 147400,
+        "best_buyback_price": 0,
+        "best_buyback_shop": "—",
+        "net_profit_jpy": 0,
+        "net_profit_rate": 0.0,
         "route_type": "secondary_to_secondary",
         "source_label": "中古市場 / フリマ / 買取店",
         "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
@@ -639,12 +587,12 @@
       }
     ]
   },
-  "excluded_items": 32,
+  "excluded_items": 33,
   "total_deals": 43,
   "confidence_summary": {
     "total": 43,
-    "profitable": 11,
-    "negative": 32
+    "profitable": 10,
+    "negative": 33
   },
   "stale_data_count": 0
 }

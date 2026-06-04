@@ -1,6 +1,6 @@
 # Collector Quality Report
 
-生成日時: 2026-06-04 12:21:39 UTC+09:00
+生成日時: 2026-06-04 13:46:34 UTC+09:00
 
 ## サマリ
 
@@ -44,9 +44,9 @@
 
 | 商品 | 成功店舗数 | 目標 | 達成 | 平均価格 | 最低価格 | 最高価格 | suspicious |
 |------|-----------|------|------|---------|---------|---------|-----------|
-| iphone17pm256 | 4 | 3 | ✅ | ¥189,250 | ¥172,000 | ¥195,000 | — |
+| iphone17pm256 | 4 | 3 | ✅ | ¥189,500 | ¥172,000 | ¥196,000 | — |
 | iphone17pm512 | 3 | 3 | ✅ | ¥221,000 | ¥205,000 | ¥231,000 | — |
-| iphone17pro256 | 5 | 3 | ✅ | ¥171,020 | ¥157,000 | ¥179,500 | — |
+| iphone17pro256 | 5 | 3 | ✅ | ¥171,120 | ¥157,000 | ¥180,000 | — |
 | iphone17pro512 | 4 | 3 | ✅ | ¥201,512 | ¥187,000 | ¥215,000 | — |
 | ps5_pro | 3 | 2 | ✅ | ¥123,133 | ¥100,000 | ¥134,700 | — |
 | switch2 | 3 | 2 | ✅ | ¥47,000 | ¥45,000 | ¥50,000 | — |
@@ -102,7 +102,8 @@
 | product_not_listed | 5 |
 | http_404 | 4 |
 | not_supported | 4 |
-| service_unavailable | 2 |
+| service_unavailable | 1 |
+| connection_error | 1 |
 
 ## 取得失敗一覧 (33件)
 
@@ -137,7 +138,7 @@
 | ps5_pro | hardoff | FAILED | http_404 |
 | ps5_pro | dosupara | FAILED | http_404 |
 | ps5_pro | pasoko | FAILED | product_not_listed |
-| ps5_pro | sofmap | FAILED | service_unavailable |
+| ps5_pro | sofmap | FAILED | connection_error |
 | ps5_pro | bookoff | SKIP | not_supported |
 | ps5_pro | surugaya | FAILED | site_blocked |
 | ps5_pro | tsutaya | SKIP | not_supported |

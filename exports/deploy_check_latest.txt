@@ -185,13 +185,13 @@
   ✅ [ipad_not_in_other] iPad は「その他」欄に混入していない
   ✅ [airpods_not_in_smartphone] AirPods はスマートフォン欄に混入していない
   ⚠️ [applewatch_in_wearable_section] Apple Watch がウェアラブル欄に見つからない（データなし or genre設定を確認）
-  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-06-04T12:21:39+09:00）
+  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-06-04T13:46:34+09:00）
   ✅ [suspicious_price_format] suspicious_prices 形式OK（suspicious_price なし）
   ✅ [fetch_failed_has_reason] fetch_failed 33件すべてに reason あり
   ✅ [collector_report_html_exists] docs/collector_report.html 存在
   ✅ [collector_report_link_in_lp] LP内に collector_report.html へのリンクがある
   ✅ [fetch_failed_report_link] 取得失敗29件 / suspicious0件 → 警告バーが表示されている
-  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 16件存在する: ['iphone17pro256', 'iphone17pm512', 'iphone17pro512', 'iphone17pm256']
+  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 16件存在する: ['iphone17pm256', 'iphone17pm512', 'iphone17pro512', 'iphone17pro256']
   ✅ [beginner_page_auto_scraped_exists] 自動取得 OK 22件 / total 55件
   ✅ [shop_name_no_vertical_wrap] shop-name-col に word-break:keep-all が設定されている
   ✅ [iphone17pro256_price_scraped] iPhone 17 Pro 256GB の価格取得成功: ['mobile_ichiban', 'kaitori_shouten', 'kaitori_itchome', 'iosys', 'netoff']
@@ -456,7 +456,7 @@
   ✅ [beginner_best_buyback_block_present] #449 最高買取店ブロック（best-buyback-hero）が存在する
   ✅ [beginner_all_shops_in_fold_failed_nested] #450 全買取店は比較fold内・取得失敗は別sub-details内（初期表示の取得失敗=False）
   ✅ [pro_buyback_sell_section_present] #451 Pro タブに『国内売却候補 / 買取店』セクションがある
-  ✅ [pro_buyback_3plus_multiple_products] #452 Pro タブに買取店候補が3件以上の商品が複数存在する（該当7商品 / 件数内訳=[5, 4, 5, 3, 3, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4]）
+  ✅ [pro_buyback_3plus_multiple_products] #452 Pro タブに買取店候補が3件以上の商品が複数存在する（該当7商品 / 件数内訳=[5, 4, 5, 3, 3, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4]）
   ✅ [pro_buyback_few_reason_shown] #453 Pro で買取候補が少ない商品に理由が表示される（<3件の商品=13 / 理由表示=13）
   ✅ [beginner_no_watch_badge_on_profit] #454 profit>0 の利益ありカードに『様子見』が出ない（バッジ・本文とも：利益あり/小幅利益/微益）
   ✅ [beginner_failed_shops_separate_details] #455 価格『—』店舗は通常のもっと見るに混ざらず別 details に分離されている
@@ -486,8 +486,8 @@
   ✅ [sedori_from_valid_data] #479 せどりルートが最新有効データから生成（中古/used を除外）
   ✅ [lottery_daily_update] #480 抽選情報が毎日更新される（daily_lp.yml に update_lottery_events ステップ）
   ✅ [fetch_failed_reason_visible] #481 fetch_failed の理由が LP またはレポートに表示される
-  ✅ [ranking_empty_reason] #482 beginner ランキングが0件なら理由が表示される（beginner=6）
-  ✅ [sedori_empty_reason] #483 sedori ルートが0件なら理由が表示される（routes=29）
+  ✅ [ranking_empty_reason] #482 beginner ランキングが0件なら理由が表示される（beginner=4）
+  ✅ [sedori_empty_reason] #483 sedori ルートが0件なら理由が表示される（routes=35）
   ✅ [overseas_stale_excluded] #484 overseas stale は主計算から除外する方針が明示されている
   ✅ [ebay_app_id_warning] #485 EBAY_APP_ID 未設定時に明確な warning を出す
   ✅ [camera_manual_14d_excluded] #486 手動データ（camera含む）が14日超なら利益判定から除外される（LP・ranking）
@@ -526,7 +526,7 @@
   ✅ [camera_confidence_classification] #519 strict一致の auto_scraped は confidence で分類（high）して保存
   ✅ [low_confidence_excluded] #520 low confidence の買取価格は主計算（enrich/比較）に使われない
   ✅ [manual_overprice_recheck_badge] #521 manual_today が auto より大幅に高い場合『手動価格・要確認』を表示
-  ✅ [fujiya_auto_scraped_present] #522 Fujiya の auto_scraped 買取価格が存在する（OK=16件）
+  ✅ [fujiya_auto_scraped_present] #522 Fujiya の auto_scraped 買取価格が存在する（OK=15件）
   ✅ [gr4_excludes_variants] #523 GR IV 無印は HDF/Monochrome/IIIx を誤採用しない（CAMERA_MODELS exclude）
   ✅ [camera_candidate_tracking] #524 all_price_candidates / rejected_candidates / used_for_save が status に保存される
   ✅ [inflated_manual_excluded] #525 auto_scraped(high) 比30%超高い manual はランキング主計算から除外
@@ -536,7 +536,7 @@
   ✅ [matched_item_persisted] #529 matched_item を notes に保存し買取比較に表示できる
   ✅ [gr4_plain_no_variant_misadopt] #530 GR IV 無印が HDF/Monochrome/IIIx 価格を誤採用しない
   ✅ [inflated_manual_not_in_ranking] #531 manual 過大価格（auto high比1.3倍超）がランキング主計算に使われない
-  ✅ [data_quality_camera_reliability] #532 data_quality_report に camera 信頼性メトリクスがある（auto=16）
+  ✅ [data_quality_camera_reliability] #532 data_quality_report に camera 信頼性メトリクスがある（auto=15）
   ✅ [camera_models_all_aliases] #533 全対象機種(20)に model alias / strict ルールが定義されている
   ✅ [strict_match_data_driven] #534 strict model match がデータ駆動（require_any/include_all/exclude）で有効
   ✅ [top_camera_buyback_ranking] #535 Top Camera Buyback Opportunities（high/auto/fresh<=7d）がランキングにある（20件）

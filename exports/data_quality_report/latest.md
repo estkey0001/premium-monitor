@@ -1,4 +1,4 @@
-# データ取得品質レポート（2026-06-04 11:35 JST）
+# データ取得品質レポート（2026-06-04 12:19 JST）
 
 ## 取得成功率
 - 全対象店舗数: 16
@@ -7,10 +7,10 @@
 - ジョブ成功率: 40.0%（OK 22 / 失敗 29 / SKIP 4 / 計 55）
 
 ## 前回比較
-- 前回成功率: 34.5%
+- 前回成功率: 40.0%
 - 今回成功率: 40.0%
-- 変化: +5.5pt（改善）
-- 7日移動平均: 35.3%
+- 変化: 0.0pt（横ばい）
+- 7日移動平均: 36.1%
 - 主要失敗理由 TOP5: rate_limited_429 6, site_blocked 6, price_not_found 6, product_not_listed 5, http_404 4
 
 ## 店舗別成功率（低い順）
@@ -36,16 +36,16 @@
 - iphone17pro256: 62.5%
 
 ## 連続失敗店舗（2回以上）
-- 2ndstreet: 23回連続
-- bookoff: 23回連続
-- dosupara: 23回連続
-- geo_mobile: 23回連続
-- hardoff: 23回連続
-- janpara: 23回連続
-- pasoko: 23回連続
-- sofmap: 23回連続
-- surugaya: 23回連続
-- tsutaya: 23回連続
+- 2ndstreet: 24回連続
+- bookoff: 24回連続
+- dosupara: 24回連続
+- geo_mobile: 24回連続
+- hardoff: 24回連続
+- janpara: 24回連続
+- pasoko: 24回連続
+- sofmap: 24回連続
+- surugaya: 24回連続
+- tsutaya: 24回連続
 
 ## 改善優先順位（required店舗）
 1. mobile_ichiban（失敗2 / product_not_listed）
@@ -61,21 +61,21 @@
 
 ## 有効データ量（新品・未使用 / 14日以内 / price>0）
 - 有効買取データを持つ商品数: 11
-  - prod_x100vi: 7店舗
+  - prod_iphone17pro_256: 32店舗
+  - prod_iphone17pro_512: 30店舗
+  - prod_iphone17pm_256: 30店舗
+  - prod_iphone17pm_512: 28店舗
+  - prod_switch2: 28店舗
+  - prod_ps5_pro: 25店舗
+  - prod_x100vi: 6店舗
   - prod_gr4: 6店舗
-  - prod_gr4_hdf: 5店舗
-  - prod_gr4_mono: 5店舗
-  - prod_gr3x: 5店舗
-  - prod_iphone17pro_256: 5店舗
-  - prod_iphone17pro_512: 4店舗
-  - prod_iphone17pm_256: 4店舗
-  - prod_iphone17pm_512: 3店舗
-  - prod_switch2: 3店舗
-  - prod_ps5_pro: 3店舗
+  - prod_gr4_hdf: 4店舗
+  - prod_gr4_mono: 4店舗
+  - prod_gr3x: 4店舗
 
 ## ランキングに使えたデータ数
-- Beginner: 3 件
-- Pro: 6 件
+- Beginner: 9 件
+- Pro: 9 件
 
 ## せどりルートに使えたデータ数
 - ルート: 29 件
@@ -85,7 +85,7 @@
 - eBay取得モード: manual（EBAY_APP_ID設定: 未設定→stale除外）
 
 ## カメラ自動取得の信頼性
-- auto_scraped 取得: 4 件（うち high: 4）
-- manual fallback: 11 件
-- 棄却候補数: 53
-- 棄却理由: {'not_buyback_context': 53}
+- auto_scraped 取得: 0 件（うち high: 0）
+- manual fallback: 60 件
+- 棄却候補数: 0
+- 棄却理由: なし

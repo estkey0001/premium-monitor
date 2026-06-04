@@ -5180,10 +5180,10 @@ def check() -> list[dict]:
 
     # ── Expand Fujiya matching & suppress inflated manual prices ──
     # #523: GR IV 無印は HDF/Mono/IIIx を誤採用しない（strict match の除外ロジック）
-    _t523 = ('"HDF" not in t' in _cam_src or "'HDF' not in t" in _cam_src
-             or 'HDF" not in' in _cam_src) and ('not has_mono' in _cam_src) and ('"IIIX" not in t' in _cam_src)
+    # データ駆動 CAMERA_MODELS の gr4 が HDF/IIIX/MONOCHROME を exclude しているか（ソース文字列で検証）
+    _t523 = ('"gr4":' in _cam_src) and ('"exclude": ["HDF", "IIIX", "3X", "MONOCHROME"]' in _cam_src)
     results.append({"level": "ok" if _t523 else "error", "check": "gr4_excludes_variants",
-                    "message": "#523 GR IV 無印は HDF/Monochrome/IIIx を誤採用しない（strict除外）"
+                    "message": "#523 GR IV 無印は HDF/Monochrome/IIIx を誤採用しない（CAMERA_MODELS exclude）"
                                + ("" if _t523 else " ← GR IV 無印の除外ロジックが見つかりません")})
 
     # #524: all_price_candidates / rejected_candidates が status に保存される
@@ -5253,6 +5253,50 @@ def check() -> list[dict]:
     results.append({"level": "ok" if _t532 else "error", "check": "data_quality_camera_reliability",
                     "message": f"#532 data_quality_report に camera 信頼性メトリクスがある（auto={_cr.get('camera_auto_scraped_count')}）"
                                + ("" if _t532 else " ← camera_reliability メトリクスが不足しています")})
+
+    # ── Camera Buyback Expansion Phase ──
+    # #533: 全対象機種に model alias と strict ルール（CAMERA_MODELS）が定義されている
+    _expected_models = ["a7rv", "a1ii", "a7cr", "fx3", "r5ii", "r6ii", "r3",
+                        "z8", "zf", "z9", "q3", "m11", "gr3", "gr3x", "gr4",
+                        "gr4_hdf", "gr4_mono", "x100vi", "gfx100rf", "xt5"]
+    _t533 = ('CAMERA_MODELS' in _cam_src) and all(f'"{a}":' in _cam_src for a in _expected_models)
+    results.append({"level": "ok" if _t533 else "error", "check": "camera_models_all_aliases",
+                    "message": f"#533 全対象機種({len(_expected_models)})に model alias / strict ルールが定義されている"
+                               + ("" if _t533 else " ← 一部機種の alias 定義が見つかりません")})
+
+    # #534: strict match がデータ駆動（require_any/include_all/exclude）で有効
+    _t534 = ('require_any' in _cam_src) and ('include_all' in _cam_src) \
+        and ('exclude_raw' in _cam_src) and ('CAMERA_MODELS.get(alias)' in _cam_src)
+    results.append({"level": "ok" if _t534 else "error", "check": "strict_match_data_driven",
+                    "message": "#534 strict model match がデータ駆動（require_any/include_all/exclude）で有効"
+                               + ("" if _t534 else " ← データ駆動 strict match が見つかりません")})
+
+    # #535: ランキングに Top Camera Buyback Opportunities（high/auto/fresh<=7d）がある
+    _topcam = _rank_json.get('top_camera_buyback_opportunities')
+    _t535 = ('top_camera_buyback_opportunities' in _ranking_src) and ("data_source='auto_scraped'" in _ranking_src) \
+        and ("confidence='high'" in _ranking_src) and ('> 7' in _ranking_src) and (_topcam is not None)
+    results.append({"level": "ok" if _t535 else "error", "check": "top_camera_buyback_ranking",
+                    "message": f"#535 Top Camera Buyback Opportunities（high/auto/fresh<=7d）がランキングにある（{len(_topcam or [])}件）"
+                               + ("" if _t535 else " ← Top Camera Buyback ランキングが見つかりません")})
+
+    # #536: data_quality に per_brand_success_rates と low_confidence_count がある
+    _t536 = ('per_brand_success_rates' in _cr) and ('camera_auto_low_confidence_count' in _cr)
+    results.append({"level": "ok" if _t536 else "error", "check": "camera_brand_success_rates",
+                    "message": "#536 data_quality に ブランド別成功率 / low_confidence_count がある"
+                               + ("" if _t536 else " ← ブランド別成功率/low_confidence が不足しています")})
+
+    # #537: 拡張カメラ製品が products.yaml に seed されている
+    _yaml_ok = False
+    try:
+        with open(_os468.path.join(_root, 'config', 'products.yaml'), encoding='utf-8') as _yf:
+            _ytxt = _yf.read()
+        _yaml_ok = all(pid in _ytxt for pid in
+                       ('prod_a7rv', 'prod_r5ii', 'prod_z8', 'prod_q3', 'prod_m11', 'prod_gfx100rf', 'prod_xt5'))
+    except Exception:
+        _yaml_ok = False
+    results.append({"level": "ok" if _yaml_ok else "error", "check": "expansion_products_seeded",
+                    "message": "#537 拡張カメラ製品（Sony/Canon/Nikon/Leica/GFX/X-T5）が products.yaml に定義されている"
+                               + ("" if _yaml_ok else " ← 拡張製品が products.yaml に見つかりません")})
 
     return results
 

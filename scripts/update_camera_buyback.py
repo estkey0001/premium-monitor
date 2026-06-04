@@ -37,55 +37,128 @@ STATUS_PATH = ROOT / "exports" / "camera_buyback_status.json"
 
 logger = logging.getLogger("update_camera_buyback")
 
-# 対象カメラ（product_alias → 検索キーワード）
-CAMERA_ALIASES = ["x100vi", "gr4", "gr4_hdf", "gr4_mono", "gr3x"]
-CAMERA_KEYWORDS = {
-    "x100vi":   "FUJIFILM X100VI",
-    "gr4":      "RICOH GR IV",
-    "gr4_hdf":  "RICOH GR IV HDF",
-    "gr4_mono": "RICOH GR IV Monochrome",
-    "gr3x":     "RICOH GR IIIx",
+# ── カメラ機種マスター（Camera Buyback Expansion）──
+# 1機種= alias(=product_id の prod_ 抜き) / brand / name / retail(概算定価) /
+#   variants(検索キーワード候補) / strict 一致ルール:
+#     require_any  : 大文字・空白除去トークン（いずれか含む）
+#     include_all  : 大文字・空白除去トークン（すべて含む）
+#     include_raw_any: 生テキスト部分一致（いずれか含む。日本語語句用）
+#     exclude      : 大文字・空白除去トークン（含んだら不一致）
+#     exclude_raw  : 生テキスト部分一致（含んだら不一致）
+CAMERA_MODELS = {
+    # FUJIFILM
+    "x100vi":   {"brand": "FUJIFILM", "name": "FUJIFILM X100VI", "retail": 280000,
+                 "variants": ["X100VI", "X100 VI", "FUJIFILM X100VI"],
+                 "require_any": ["X100VI"]},
+    "gfx100rf": {"brand": "FUJIFILM", "name": "FUJIFILM GFX100RF", "retail": 750000,
+                 "variants": ["GFX100RF", "GFX 100RF", "FUJIFILM GFX100RF"],
+                 "require_any": ["GFX100RF"]},
+    "xt5":      {"brand": "FUJIFILM", "name": "FUJIFILM X-T5", "retail": 280000,
+                 "variants": ["X-T5", "FUJIFILM X-T5", "XT5"],
+                 "require_any": ["X-T5", "XT5"]},
+    # RICOH
+    "gr3":      {"brand": "RICOH", "name": "RICOH GR III", "retail": 110000,
+                 "variants": ["RICOH GR III", "GR III", "GR3"],
+                 "require_any": ["GRIII", "GR3"], "exclude": ["IIIX", "3X", "HDF"],
+                 "exclude_raw": ["Monochrome", "モノクローム"]},
+    "gr3x":     {"brand": "RICOH", "name": "RICOH GR IIIx", "retail": 130000,
+                 "variants": ["RICOH GR IIIx", "GR IIIx", "GR3x"],
+                 "require_any": ["GRIIIX", "GR3X", "IIIX"]},
+    "gr4":      {"brand": "RICOH", "name": "RICOH GR IV", "retail": 195000,
+                 "variants": ["RICOH GR IV", "GR IV", "GR4"],
+                 "require_any": ["GRIV", "GR4"], "exclude": ["HDF", "IIIX", "3X", "MONOCHROME"],
+                 "exclude_raw": ["モノクローム", "モノクロ"]},
+    "gr4_hdf":  {"brand": "RICOH", "name": "RICOH GR IV HDF", "retail": 200000,
+                 "variants": ["RICOH GR IV HDF", "GR IV HDF", "GR4 HDF"],
+                 "require_any": ["GRIV", "GR4"], "include_all": ["HDF"]},
+    "gr4_mono": {"brand": "RICOH", "name": "RICOH GR IV Monochrome", "retail": 210000,
+                 "variants": ["RICOH GR IV Monochrome", "GR IV Monochrome", "GR4 モノクローム"],
+                 "require_any": ["GRIV", "GR4"], "include_raw_any": ["Monochrome", "MONOCHROME", "モノクローム", "モノクロ"]},
+    # SONY
+    "a7rv":     {"brand": "SONY", "name": "SONY α7R V", "retail": 440000,
+                 "variants": ["SONY A7RV", "α7R V", "ILCE-7RM5"],
+                 "require_any": ["A7RV", "ILCE7RM5"], "exclude": ["A7RIV", "A7R4"]},
+    "a1ii":     {"brand": "SONY", "name": "SONY α1 II", "retail": 990000,
+                 "variants": ["SONY A1 II", "α1 II", "ILCE-1M2"],
+                 "require_any": ["A1II", "A1M2", "ILCE1M2"]},
+    "a7cr":     {"brand": "SONY", "name": "SONY α7CR", "retail": 330000,
+                 "variants": ["SONY A7CR", "α7CR", "ILCE-7CR"],
+                 "require_any": ["A7CR", "ILCE7CR"]},
+    "fx3":      {"brand": "SONY", "name": "SONY FX3", "retail": 520000,
+                 "variants": ["SONY FX3", "ILME-FX3"],
+                 "require_any": ["FX3", "ILMEFX3"], "exclude": ["FX30", "FX6"]},
+    # CANON
+    "r5ii":     {"brand": "CANON", "name": "Canon EOS R5 Mark II", "retail": 620000,
+                 "variants": ["Canon EOS R5 Mark II", "EOS R5 Mark II", "R5 Mark II"],
+                 "require_any": ["R5MARKII", "R5II", "R5M2"]},
+    "r6ii":     {"brand": "CANON", "name": "Canon EOS R6 Mark II", "retail": 390000,
+                 "variants": ["Canon EOS R6 Mark II", "EOS R6 Mark II", "R6 Mark II"],
+                 "require_any": ["R6MARKII", "R6II", "R6M2"]},
+    "r3":       {"brand": "CANON", "name": "Canon EOS R3", "retail": 830000,
+                 "variants": ["Canon EOS R3", "EOS R3"],
+                 "require_any": ["EOSR3"]},
+    # NIKON
+    "z8":       {"brand": "NIKON", "name": "Nikon Z8", "retail": 590000,
+                 "variants": ["Nikon Z8", "Z8"],
+                 "require_any": ["NIKONZ8", "Z8"], "exclude": ["Z80"]},
+    "zf":       {"brand": "NIKON", "name": "Nikon Zf", "retail": 290000,
+                 "variants": ["Nikon Zf", "Z f"],
+                 "require_any": ["NIKONZF", "Z F"], "exclude": ["ZFC"],
+                 "include_raw_any": ["Zf", "Ｚｆ", "NIKON"]},
+    "z9":       {"brand": "NIKON", "name": "Nikon Z9", "retail": 700000,
+                 "variants": ["Nikon Z9", "Z9"],
+                 "require_any": ["NIKONZ9", "Z9"]},
+    # LEICA
+    "q3":       {"brand": "LEICA", "name": "Leica Q3", "retail": 880000,
+                 "variants": ["Leica Q3", "LEICA Q3"],
+                 "require_any": ["LEICAQ3"]},
+    "m11":      {"brand": "LEICA", "name": "Leica M11", "retail": 1180000,
+                 "variants": ["Leica M11", "LEICA M11"],
+                 "require_any": ["LEICAM11", "M11"]},
 }
-# 型番のみのキーワード（メーカー名を外した方がヒットしやすい店舗向け）
-CAMERA_MODEL_KW = {
-    "x100vi":   "X100VI",
-    "gr4":      "GR IV",
-    "gr4_hdf":  "GR IV HDF",
-    "gr4_mono": "GR IV Monochrome",
-    "gr3x":     "GR IIIx",
-}
-# フジヤ用：複数キーワード候補（ヒット数を比較して最良を採用）
-FUJIYA_KEYWORD_VARIANTS = {
-    "x100vi":   ["X100VI", "X100 VI", "X100V", "富士フイルム X100", "FUJIFILM X100VI"],
-    # GR IV 無印：HDF/Monochrome/IIIx を含まない GR IV を狙う（strict matchで除外）。
-    "gr4":      ["GR IV", "GR4", "RICOH GR IV", "RICOH GR4", "リコー GR IV", "GR", "GR DIGITAL"],
-    "gr4_hdf":  ["GR IV HDF", "GR4 HDF", "RICOH GR IV HDF"],
-    "gr4_mono": ["GR IV Monochrome", "GR IV モノクローム", "GR4 モノクロ"],
-    "gr3x":     ["GR IIIx", "GR3x", "リコー GR IIIx", "RICOH GR IIIx"],
-}
+
+# 派生リスト（既存コードとの互換用）
+CAMERA_ALIASES = list(CAMERA_MODELS.keys())
+CAMERA_KEYWORDS = {a: (m.get("variants") or [m["name"]])[0] for a, m in CAMERA_MODELS.items()}
+CAMERA_MODEL_KW = {a: (m.get("variants") or [m["name"]])[0] for a, m in CAMERA_MODELS.items()}
+# フジヤ用：機種ごとの検索キーワード候補（最大3件で実行時間を抑制）
+FUJIYA_KEYWORD_VARIANTS = {a: (m.get("variants") or [m["name"]])[:3] for a, m in CAMERA_MODELS.items()}
 
 # 優先実装対象（Task 2: まず3店舗に絞る）
 PRIORITY_SHOPS = {"src_mapcamera", "src_fujiya", "src_kitamura"}
 
 
 def _strict_model_match(item_text: str, alias: str) -> bool:
-    """商品名テキストが対象機種に厳密一致するか（Task 1: 機種厳密マッチ）。
-    一致しない行の価格は採用しない。"""
+    """商品名テキストが対象機種に厳密一致するか（データ駆動・全機種対応）。
+    require_any / include_all / include_raw_any / exclude / exclude_raw で判定。
+    """
+    m = CAMERA_MODELS.get(alias)
+    if not m:
+        return False
     raw = item_text or ""
-    t = raw.upper().replace(" ", "").replace("　", "")
-    has_mono = ("MONOCHROME" in t) or ("モノクローム" in raw) or ("モノクロ" in raw)
-    if alias == "x100vi":
-        return "X100VI" in t
-    if alias == "gr4_hdf":
-        return ("GRIV" in t or "GR4" in t) and "HDF" in t
-    if alias == "gr4_mono":
-        return ("GRIV" in t or "GR4" in t) and has_mono
-    if alias == "gr3x":
-        return ("IIIX" in t) or ("GR3X" in t) or ("GRIIIX" in t)
-    if alias == "gr4":
-        # GR IV 無印：HDF / Monochrome / IIIx を含まない GR IV
-        return ("GRIV" in t or "GR4" in t) and ("HDF" not in t) and (not has_mono) and ("IIIX" not in t)
-    return False
+    # Sony の「α」(ギリシャ文字/全角) を A に正規化してから判定
+    t = (raw.replace("α", "A").replace("Α", "A").replace("ａ", "A")
+         .upper().replace(" ", "").replace("　", "").replace("-", ""))
+    # 除外条件（先に評価）
+    for ex in m.get("exclude", []):
+        if ex.upper().replace(" ", "").replace("-", "") in t:
+            return False
+    for exr in m.get("exclude_raw", []):
+        if exr in raw:
+            return False
+    # require_any: いずれか必須
+    req = [r.upper().replace(" ", "").replace("-", "") for r in m.get("require_any", [])]
+    if req and not any(r in t for r in req):
+        return False
+    # include_all: すべて必須
+    inc = [i.upper().replace(" ", "").replace("-", "") for i in m.get("include_all", [])]
+    if inc and not all(i in t for i in inc):
+        return False
+    # include_raw_any: 生テキストでいずれか必須
+    incr = m.get("include_raw_any", [])
+    if incr and not any(i in raw for i in incr):
+        return False
+    return True
 
 
 def _select_camera_buyback(candidates: list, alias: str) -> dict:
@@ -269,7 +342,7 @@ _PW_DOM_PROBE_JS = r"""
       try {
         // 価格要素から親方向へ辿り、ブランド/型番トークンを含む最初の祖先を商品単位とみなす。
         // （フジヤ買取は商品名 __boxName01 と価格 __boxPrice01 が兄弟のため、共通の親まで上る）
-        const BRAND = /FUJIFILM|RICOH|フジフイルム|フジフィルム|富士フイルム|リコー|X100|GR\s?I|GR\s?V|GR\s?3|GRIII/i;
+        const BRAND = /FUJIFILM|RICOH|SONY|CANON|NIKON|LEICA|ソニー|キヤノン|ニコン|ライカ|富士フイルム|リコー|X100|GFX|X-?T5|GR\s?I|GR\s?V|GR\s?3|GRIII|A7|A1|FX3|EOS|R5|R6|R3|Z8|Z9|ZF|Q3|M11/i;
         let node = el;
         for (let lvl=0; lvl<7 && node; lvl++){
           node = node.parentElement;
@@ -457,6 +530,7 @@ def main() -> int:
 
     def _diag(alias, shop_id, status, price, reason, **kw):
         d = {"product_alias": alias, "shop_id": shop_id, "status": status,
+             "brand": CAMERA_MODELS.get(alias, {}).get("brand", ""),
              "price": price, "reason": reason,
              "html_saved": False, "html_size": 0, "cloudflare_detected": False,
              "js_required": False, "selector_found": False, "extracted_price": None,

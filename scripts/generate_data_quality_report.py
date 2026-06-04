@@ -110,12 +110,29 @@ def main() -> int:
     for r in _cam_detail:
         for rc in (r.get("rejected_candidates", []) or []):
             _cam_rej_reasons[rc.get("rejection_reason", "unknown")] += 1
+    _cam_low = [r for r in _cam_auto if r.get("confidence") in ("low", "medium")]
+    # ブランド別 成功率（auto_scraped 取得できた model 数 / 対象 model 数）
+    _brand_models = {}   # brand -> set of aliases attempted
+    _brand_auto = {}     # brand -> set of aliases auto-scraped (OK)
+    for r in _cam_detail:
+        br = r.get("brand") or "UNKNOWN"
+        al = r.get("product_alias")
+        _brand_models.setdefault(br, set()).add(al)
+        if r.get("status") == "OK":
+            _brand_auto.setdefault(br, set()).add(al)
+    per_brand = {}
+    for br, models in _brand_models.items():
+        got = len(_brand_auto.get(br, set()))
+        per_brand[br] = {"models": len(models), "auto_scraped": got,
+                         "success_rate_pct": round(100.0 * got / len(models), 1) if models else 0.0}
     camera_reliability = {
         "camera_auto_scraped_count": len(_cam_auto),
         "camera_auto_high_confidence_count": len(_cam_high),
+        "camera_auto_low_confidence_count": len(_cam_low),
         "camera_manual_fallback_count": len(_cam_fail),
         "camera_rejected_candidate_count": _cam_rejected,
         "camera_rejection_reasons": dict(_cam_rej_reasons.most_common()),
+        "per_brand_success_rates": per_brand,
     }
 
     summary = collector.get("summary", {}) or {}

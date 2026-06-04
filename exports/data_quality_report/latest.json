@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-04T11:35:35+09:00",
+  "generated_at": "2026-06-04T12:19:03+09:00",
   "collection": {
     "total_shops": 16,
     "shops_with_success": 6,
@@ -11,11 +11,11 @@
     "success_rate_pct": 40.0
   },
   "comparison": {
-    "prev_success_rate_pct": 34.5,
+    "prev_success_rate_pct": 40.0,
     "current_success_rate_pct": 40.0,
-    "delta_pct": 5.5,
-    "trend": "改善",
-    "moving_avg_7d_pct": 35.3,
+    "delta_pct": 0.0,
+    "trend": "横ばい",
+    "moving_avg_7d_pct": 36.1,
     "top5_failure_reasons": [
       {
         "reason": "rate_limited_429",
@@ -72,22 +72,22 @@
   "effective_data": {
     "products_with_valid_buyback": 11,
     "valid_buyback_by_product": {
-      "prod_x100vi": 7,
-      "prod_gr4_hdf": 5,
-      "prod_gr4_mono": 5,
-      "prod_gr3x": 5,
+      "prod_iphone17pro_256": 32,
+      "prod_iphone17pro_512": 30,
+      "prod_iphone17pm_256": 30,
+      "prod_iphone17pm_512": 28,
+      "prod_switch2": 28,
+      "prod_ps5_pro": 25,
+      "prod_x100vi": 6,
       "prod_gr4": 6,
-      "prod_iphone17pro_256": 5,
-      "prod_iphone17pro_512": 4,
-      "prod_iphone17pm_256": 4,
-      "prod_iphone17pm_512": 3,
-      "prod_switch2": 3,
-      "prod_ps5_pro": 3
+      "prod_gr4_hdf": 4,
+      "prod_gr4_mono": 4,
+      "prod_gr3x": 4
     }
   },
   "ranking_usable": {
-    "beginner": 3,
-    "pro": 6,
+    "beginner": 9,
+    "pro": 9,
     "reason_if_empty": null
   },
   "sedori_usable": {
@@ -242,43 +242,43 @@
   "consecutive_failed_shops": [
     {
       "shop_id": "2ndstreet",
-      "consecutive_failures": 23
+      "consecutive_failures": 24
     },
     {
       "shop_id": "bookoff",
-      "consecutive_failures": 23
+      "consecutive_failures": 24
     },
     {
       "shop_id": "dosupara",
-      "consecutive_failures": 23
+      "consecutive_failures": 24
     },
     {
       "shop_id": "geo_mobile",
-      "consecutive_failures": 23
+      "consecutive_failures": 24
     },
     {
       "shop_id": "hardoff",
-      "consecutive_failures": 23
+      "consecutive_failures": 24
     },
     {
       "shop_id": "janpara",
-      "consecutive_failures": 23
+      "consecutive_failures": 24
     },
     {
       "shop_id": "pasoko",
-      "consecutive_failures": 23
+      "consecutive_failures": 24
     },
     {
       "shop_id": "sofmap",
-      "consecutive_failures": 23
+      "consecutive_failures": 24
     },
     {
       "shop_id": "surugaya",
-      "consecutive_failures": 23
+      "consecutive_failures": 24
     },
     {
       "shop_id": "tsutaya",
-      "consecutive_failures": 23
+      "consecutive_failures": 24
     }
   ],
   "improvement_priority": [
@@ -290,12 +290,43 @@
     }
   ],
   "camera_reliability": {
-    "camera_auto_scraped_count": 4,
-    "camera_auto_high_confidence_count": 4,
-    "camera_manual_fallback_count": 11,
-    "camera_rejected_candidate_count": 53,
-    "camera_rejection_reasons": {
-      "not_buyback_context": 53
+    "camera_auto_scraped_count": 0,
+    "camera_auto_high_confidence_count": 0,
+    "camera_auto_low_confidence_count": 0,
+    "camera_manual_fallback_count": 60,
+    "camera_rejected_candidate_count": 0,
+    "camera_rejection_reasons": {},
+    "per_brand_success_rates": {
+      "FUJIFILM": {
+        "models": 3,
+        "auto_scraped": 0,
+        "success_rate_pct": 0.0
+      },
+      "RICOH": {
+        "models": 5,
+        "auto_scraped": 0,
+        "success_rate_pct": 0.0
+      },
+      "SONY": {
+        "models": 4,
+        "auto_scraped": 0,
+        "success_rate_pct": 0.0
+      },
+      "CANON": {
+        "models": 3,
+        "auto_scraped": 0,
+        "success_rate_pct": 0.0
+      },
+      "NIKON": {
+        "models": 3,
+        "auto_scraped": 0,
+        "success_rate_pct": 0.0
+      },
+      "LEICA": {
+        "models": 2,
+        "auto_scraped": 0,
+        "success_rate_pct": 0.0
+      }
     }
   }
 }

@@ -224,9 +224,51 @@ def main() -> int:
         if cat_deals:
             pro_by_category[cat] = [_deal_to_dict(d, is_beginner=False) for d in cat_deals]
 
+    # ── Top Camera Buyback Opportunities（auto_scraped / confidence=high / fresh<=7d のみ）──
+    top_camera_buyback = []
+    try:
+        import sqlite3 as _sq
+        from datetime import datetime as _dt
+        _con = _sq.connect(str(PROJECT_ROOT / "data" / "premium_monitor.db"))
+        _con.row_factory = _sq.Row
+        _prices = _con.execute(
+            "SELECT b.product_id, b.shop_name, b.buyback_price, b.observed_at, b.notes, "
+            "       p.name AS product_name, p.official_price, p.retail_price "
+            "FROM buyback_prices b LEFT JOIN products p ON p.id=b.product_id "
+            "WHERE b.is_active=1 AND b.data_source='auto_scraped' AND b.confidence='high' "
+            "AND b.buyback_price>0"
+        ).fetchall()
+        _con.close()
+        for r in _prices:
+            d = dict(r)
+            o = d.get("observed_at", "")
+            try:
+                dt = _dt.fromisoformat(str(o))
+                if dt.tzinfo is None:
+                    dt = dt.replace(tzinfo=JST)
+                age_d = (now - dt.astimezone(JST)).total_seconds() / 86400
+            except Exception:
+                age_d = 0.0
+            if age_d > 7:  # fresh<=7d のみ
+                continue
+            official = d.get("official_price") or d.get("retail_price") or 0
+            bp = d.get("buyback_price", 0) or 0
+            top_camera_buyback.append({
+                "product_id": d.get("product_id"), "product_name": d.get("product_name", ""),
+                "shop_name": d.get("shop_name", ""), "buyback_price": bp,
+                "official_price": official, "diff_vs_official": (bp - official) if official else None,
+                "matched_item": d.get("notes", ""), "confidence": "high",
+                "source": "auto_scraped", "age_days": round(age_d, 1),
+            })
+        top_camera_buyback.sort(key=lambda x: (x["diff_vs_official"] if x["diff_vs_official"] is not None else x["buyback_price"]), reverse=True)
+        top_camera_buyback = top_camera_buyback[:20]
+    except Exception as e:
+        print(f"[WARN] top_camera_buyback 生成失敗: {e}", file=sys.stderr)
+
     report: dict = {
         "generated_at": now.strftime("%Y-%m-%d %H:%M JST"),
         "route_type_beginner": "primary_to_secondary",
+        "top_camera_buyback_opportunities": top_camera_buyback,
         "route_type_pro": "secondary_to_secondary",
         "beginner_top10": [_deal_to_dict(d, is_beginner=True) for d in beginner_top],
         "pro_top10": [_deal_to_dict(d, is_beginner=False) for d in pro_top],

@@ -251,26 +251,16 @@ def main() -> int:
                 age_d = 0.0
             if age_d > 7:  # fresh<=7d のみ
                 continue
-            # 参照価格（公式価格 → 無ければ概算定価）。両方無い商品は差益計算不能のため除外する。
-            _official = d.get("official_price") or 0
-            _retail = d.get("retail_price") or 0
-            reference = _official or _retail
-            if reference <= 0:
-                # 公式価格・定価とも未取得 → 差益（買取-公式）が計算できないのでランキングに載せない。
-                continue
-            reference_source = "official" if _official > 0 else "retail_concept"
+            official = d.get("official_price") or d.get("retail_price") or 0
             bp = d.get("buyback_price", 0) or 0
             top_camera_buyback.append({
                 "product_id": d.get("product_id"), "product_name": d.get("product_name", ""),
                 "shop_name": d.get("shop_name", ""), "buyback_price": bp,
-                # official_price は後方互換のため reference を入れる（公式が無い場合は概算定価）
-                "official_price": reference,
-                "reference_price": reference, "reference_source": reference_source,
-                "diff_vs_official": bp - reference,
+                "official_price": official, "diff_vs_official": (bp - official) if official else None,
                 "matched_item": d.get("notes", ""), "confidence": "high",
                 "source": "auto_scraped", "age_days": round(age_d, 1),
             })
-        top_camera_buyback.sort(key=lambda x: x["diff_vs_official"], reverse=True)
+        top_camera_buyback.sort(key=lambda x: (x["diff_vs_official"] if x["diff_vs_official"] is not None else x["buyback_price"]), reverse=True)
         top_camera_buyback = top_camera_buyback[:20]
     except Exception as e:
         print(f"[WARN] top_camera_buyback 生成失敗: {e}", file=sys.stderr)

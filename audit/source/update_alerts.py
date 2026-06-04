@@ -179,12 +179,7 @@ def _generate_buyback_alerts(now: datetime) -> list[dict]:
         product_name = a.get("product_name", "") or a.get("product_id", "")
         price_after = a.get("price_after") or a.get("new_price") or a.get("buyback_price", 0)
         price_before = a.get("price_before") or a.get("prev_price", 0)
-        # 0円（取得失敗/前回価格なし）は差分計算不能 → 偽の「¥0」急騰/急落アラートを出さない。
-        if (price_after or 0) <= 0 or (price_before or 0) <= 0:
-            continue
-        diff = price_after - price_before
-        if diff == 0:
-            continue
+        diff = (price_after - price_before) if (price_after and price_before) else 0
 
         is_surge = atype == "buyback_surge"
         title = f"買取急騰: {product_name}" if is_surge else f"買取急落: {product_name}"

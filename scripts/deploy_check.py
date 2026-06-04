@@ -5298,6 +5298,17 @@ def check() -> list[dict]:
                     "message": "#537 拡張カメラ製品（Sony/Canon/Nikon/Leica/GFX/X-T5）が products.yaml に定義されている"
                                + ("" if _yaml_ok else " ← 拡張製品が products.yaml に見つかりません")})
 
+    # #538: Top Camera Buyback ランキングがカメラ製品のみ（genre='camera'）に限定されている
+    _t538 = ("genre='camera'" in _ranking_src) and all(
+        (x.get('product_name', '') != '') for x in (_topcam or [])
+    ) and not any(
+        kw in (x.get('product_name', '') or '')
+        for x in (_topcam or []) for kw in ('iPhone', 'PlayStation', 'PS5', 'Switch')
+    )
+    results.append({"level": "ok" if _t538 else "error", "check": "top_camera_buyback_camera_only",
+                    "message": "#538 Top Camera Buyback ランキングがカメラ製品（genre='camera'）のみに限定されている"
+                               + ("" if _t538 else " ← 非カメラ製品（iPhone/PS5等）が混入しています")})
+
     return results
 
 

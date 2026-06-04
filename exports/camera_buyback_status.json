@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-04T15:35:39+09:00",
+  "generated_at": "2026-06-04T18:00:42+09:00",
   "summary": {
     "total": 60,
     "ok": 16,
@@ -86,7 +86,7 @@
       "rendered_html_size": 300,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.273b2f17.1780554955.f097330\n\nhttps://errors.edgesuite.net/18.273b2f17.1780554955.f097330",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.273b2f17.1780563658.fd68a12\n\nhttps://errors.edgesuite.net/18.273b2f17.1780563658.fd68a12",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -100,7 +100,7 @@
       "buyback_link_candidates": [],
       "buyback_page_url": null,
       "buyback_page_html_size": 300,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.273b2f17.1780554955.f097330\n\nhttps://errors.edgesuite.net/18.273b2f17.1780554955.f097330",
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.273b2f17.1780563658.fd68a12\n\nhttps://errors.edgesuite.net/18.273b2f17.1780563658.fd68a12",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -117,7 +117,7 @@
       "price": 227700,
       "reason": "",
       "html_saved": true,
-      "html_size": 217189,
+      "html_size": 217013,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -125,7 +125,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 217189,
+      "rendered_html_size": 217013,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -150,6 +150,7 @@
           "price": 227700,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "FUJIFILM X100VI シルバー 富士フイルム 基準査定額 新品同様 ￥198,000 良品 ￥197,000 買取のみ10%UP 新品同様 ￥217,800 良品 ￥216,700 下取は15%UP 新品同様 ￥227,700 良品 ￥226,550 買取申し込み"
         },
         {
@@ -158,6 +159,7 @@
           "price": 227700,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "FUJIFILM X100VI ブラック 富士フイルム 基準査定額 新品同様 ￥198,000 良品 ￥197,000 買取のみ10%UP 新品同様 ￥217,800 良品 ￥216,700 下取は15%UP 新品同様 ￥227,700 良品 ￥226,550 買取申し込み"
         },
         {
@@ -166,6 +168,7 @@
           "price": 227700,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "FUJIFILM X100VI ブラック 日英二言語モデル 富士フイルム 基準査定額 新品同様 ￥198,000 良品 ￥197,000 買取のみ10%UP 新品同様 ￥217,800 良品 ￥216,700 下取は15%UP 新品同様 ￥227,700 良品 ￥226,550 買取申し込み"
         },
         {
@@ -174,6 +177,7 @@
           "price": 227700,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "FUJIFILM X100VI シルバー 日英二言語モデル 富士フイルム 基準査定額 新品同様 ￥198,000 良品 ￥197,000 買取のみ10%UP 新品同様 ￥217,800 良品 ￥216,700 下取は15%UP 新品同様 ￥227,700 良品 ￥226,550 買取申し込み"
         },
         {
@@ -182,6 +186,7 @@
           "price": 227700,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥227,700"
         },
         {
@@ -190,6 +195,7 @@
           "price": 227700,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥227,700"
         },
         {
@@ -198,6 +204,7 @@
           "price": 227700,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥227,700"
         },
         {
@@ -206,6 +213,7 @@
           "price": 227700,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥227,700"
         },
         {
@@ -214,6 +222,7 @@
           "price": 227700,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥227,700"
         },
         {
@@ -222,6 +231,7 @@
           "price": 227700,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥227,700"
         },
         {
@@ -230,6 +240,7 @@
           "price": 227700,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥227,700"
         },
         {
@@ -238,6 +249,7 @@
           "price": 227700,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥227,700"
         },
         {
@@ -246,6 +258,7 @@
           "price": 226550,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "FUJIFILM X100VI シルバー 富士フイルム 基準査定額 新品同様 ￥198,000 良品 ￥197,000 買取のみ10%UP 新品同様 ￥217,800 良品 ￥216,700 下取は15%UP 新品同様 ￥227,700 良品 ￥226,550 買取申し込み"
         },
         {
@@ -254,6 +267,7 @@
           "price": 226550,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "FUJIFILM X100VI ブラック 富士フイルム 基準査定額 新品同様 ￥198,000 良品 ￥197,000 買取のみ10%UP 新品同様 ￥217,800 良品 ￥216,700 下取は15%UP 新品同様 ￥227,700 良品 ￥226,550 買取申し込み"
         },
         {
@@ -262,6 +276,7 @@
           "price": 226550,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "FUJIFILM X100VI ブラック 日英二言語モデル 富士フイルム 基準査定額 新品同様 ￥198,000 良品 ￥197,000 買取のみ10%UP 新品同様 ￥217,800 良品 ￥216,700 下取は15%UP 新品同様 ￥227,700 良品 ￥226,550 買取申し込み"
         }
       ],
@@ -358,7 +373,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=X100VI&search=検索",
-      "buyback_page_html_size": 217189,
+      "buyback_page_html_size": 217013,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -367,6 +382,7 @@
           "price": 227700,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "FUJIFILM X100VI シルバー 富士フイルム 基準査定額 新品同様 ￥198,000 良品 ￥197,000 買取のみ10%UP 新品同様 ￥217,800 良品 ￥216,700 下取は15%UP 新品同様 ￥227,700 良品 ￥226,550 買取申し込み"
         },
         {
@@ -375,6 +391,7 @@
           "price": 227700,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "FUJIFILM X100VI ブラック 富士フイルム 基準査定額 新品同様 ￥198,000 良品 ￥197,000 買取のみ10%UP 新品同様 ￥217,800 良品 ￥216,700 下取は15%UP 新品同様 ￥227,700 良品 ￥226,550 買取申し込み"
         },
         {
@@ -383,6 +400,7 @@
           "price": 227700,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "FUJIFILM X100VI ブラック 日英二言語モデル 富士フイルム 基準査定額 新品同様 ￥198,000 良品 ￥197,000 買取のみ10%UP 新品同様 ￥217,800 良品 ￥216,700 下取は15%UP 新品同様 ￥227,700 良品 ￥226,550 買取申し込み"
         },
         {
@@ -391,6 +409,7 @@
           "price": 227700,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "FUJIFILM X100VI シルバー 日英二言語モデル 富士フイルム 基準査定額 新品同様 ￥198,000 良品 ￥197,000 買取のみ10%UP 新品同様 ￥217,800 良品 ￥216,700 下取は15%UP 新品同様 ￥227,700 良品 ￥226,550 買取申し込み"
         },
         {
@@ -399,6 +418,7 @@
           "price": 226550,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "FUJIFILM X100VI シルバー 富士フイルム 基準査定額 新品同様 ￥198,000 良品 ￥197,000 買取のみ10%UP 新品同様 ￥217,800 良品 ￥216,700 下取は15%UP 新品同様 ￥227,700 良品 ￥226,550 買取申し込み"
         },
         {
@@ -407,6 +427,7 @@
           "price": 226550,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "FUJIFILM X100VI ブラック 富士フイルム 基準査定額 新品同様 ￥198,000 良品 ￥197,000 買取のみ10%UP 新品同様 ￥217,800 良品 ￥216,700 下取は15%UP 新品同様 ￥227,700 良品 ￥226,550 買取申し込み"
         },
         {
@@ -415,6 +436,7 @@
           "price": 226550,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "FUJIFILM X100VI ブラック 日英二言語モデル 富士フイルム 基準査定額 新品同様 ￥198,000 良品 ￥197,000 買取のみ10%UP 新品同様 ￥217,800 良品 ￥216,700 下取は15%UP 新品同様 ￥227,700 良品 ￥226,550 買取申し込み"
         }
       ],
@@ -611,7 +633,7 @@
       "rendered_html_size": 300,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.273b2f17.1780555020.f0af63b\n\nhttps://errors.edgesuite.net/18.273b2f17.1780555020.f0af63b",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.273b2f17.1780563724.fd76e6d\n\nhttps://errors.edgesuite.net/18.273b2f17.1780563724.fd76e6d",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -625,7 +647,7 @@
       "buyback_link_candidates": [],
       "buyback_page_url": null,
       "buyback_page_html_size": 300,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.273b2f17.1780555020.f0af63b\n\nhttps://errors.edgesuite.net/18.273b2f17.1780555020.f0af63b",
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.273b2f17.1780563724.fd76e6d\n\nhttps://errors.edgesuite.net/18.273b2f17.1780563724.fd76e6d",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -642,7 +664,7 @@
       "price": 451950,
       "reason": "",
       "html_saved": true,
-      "html_size": 203629,
+      "html_size": 203406,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -650,7 +672,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 203629,
+      "rendered_html_size": 203406,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -675,6 +697,7 @@
           "price": 451950,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "FUJIFILM GFX100RF ブラック 富士フイルム 基準査定額 新品同様 ￥393,000 良品 ￥392,000 買取のみ10%UP 新品同様 ￥432,300 良品 ￥431,200 下取は15%UP 新品同様 ￥451,950 良品 ￥450,800 買取申し込み"
         },
         {
@@ -683,6 +706,7 @@
           "price": 451950,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "FUJIFILM GFX100RF シルバー 富士フイルム 基準査定額 新品同様 ￥393,000 良品 ￥392,000 買取のみ10%UP 新品同様 ￥432,300 良品 ￥431,200 下取は15%UP 新品同様 ￥451,950 良品 ￥450,800 買取申し込み"
         },
         {
@@ -691,6 +715,7 @@
           "price": 451950,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥451,950"
         },
         {
@@ -699,6 +724,7 @@
           "price": 451950,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥451,950"
         },
         {
@@ -707,6 +733,7 @@
           "price": 451950,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥451,950"
         },
         {
@@ -715,6 +742,7 @@
           "price": 451950,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥451,950"
         },
         {
@@ -723,6 +751,7 @@
           "price": 450800,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "FUJIFILM GFX100RF ブラック 富士フイルム 基準査定額 新品同様 ￥393,000 良品 ￥392,000 買取のみ10%UP 新品同様 ￥432,300 良品 ￥431,200 下取は15%UP 新品同様 ￥451,950 良品 ￥450,800 買取申し込み"
         },
         {
@@ -731,6 +760,7 @@
           "price": 450800,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "FUJIFILM GFX100RF シルバー 富士フイルム 基準査定額 新品同様 ￥393,000 良品 ￥392,000 買取のみ10%UP 新品同様 ￥432,300 良品 ￥431,200 下取は15%UP 新品同様 ￥451,950 良品 ￥450,800 買取申し込み"
         },
         {
@@ -739,6 +769,7 @@
           "price": 450800,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥450,800"
         },
         {
@@ -747,6 +778,7 @@
           "price": 450800,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥450,800"
         },
         {
@@ -755,6 +787,7 @@
           "price": 450800,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥450,800"
         },
         {
@@ -763,6 +796,7 @@
           "price": 450800,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥450,800"
         },
         {
@@ -771,6 +805,7 @@
           "price": 432300,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "FUJIFILM GFX100RF ブラック 富士フイルム 基準査定額 新品同様 ￥393,000 良品 ￥392,000 買取のみ10%UP 新品同様 ￥432,300 良品 ￥431,200 下取は15%UP 新品同様 ￥451,950 良品 ￥450,800 買取申し込み"
         },
         {
@@ -779,6 +814,7 @@
           "price": 432300,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "FUJIFILM GFX100RF シルバー 富士フイルム 基準査定額 新品同様 ￥393,000 良品 ￥392,000 買取のみ10%UP 新品同様 ￥432,300 良品 ￥431,200 下取は15%UP 新品同様 ￥451,950 良品 ￥450,800 買取申し込み"
         },
         {
@@ -787,6 +823,7 @@
           "price": 432300,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥432,300"
         }
       ],
@@ -883,7 +920,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=GFX100RF&search=検索",
-      "buyback_page_html_size": 203629,
+      "buyback_page_html_size": 203406,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -892,6 +929,7 @@
           "price": 451950,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "FUJIFILM GFX100RF ブラック 富士フイルム 基準査定額 新品同様 ￥393,000 良品 ￥392,000 買取のみ10%UP 新品同様 ￥432,300 良品 ￥431,200 下取は15%UP 新品同様 ￥451,950 良品 ￥450,800 買取申し込み"
         },
         {
@@ -900,6 +938,7 @@
           "price": 451950,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "FUJIFILM GFX100RF シルバー 富士フイルム 基準査定額 新品同様 ￥393,000 良品 ￥392,000 買取のみ10%UP 新品同様 ￥432,300 良品 ￥431,200 下取は15%UP 新品同様 ￥451,950 良品 ￥450,800 買取申し込み"
         },
         {
@@ -908,6 +947,7 @@
           "price": 450800,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "FUJIFILM GFX100RF ブラック 富士フイルム 基準査定額 新品同様 ￥393,000 良品 ￥392,000 買取のみ10%UP 新品同様 ￥432,300 良品 ￥431,200 下取は15%UP 新品同様 ￥451,950 良品 ￥450,800 買取申し込み"
         },
         {
@@ -916,6 +956,7 @@
           "price": 450800,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "FUJIFILM GFX100RF シルバー 富士フイルム 基準査定額 新品同様 ￥393,000 良品 ￥392,000 買取のみ10%UP 新品同様 ￥432,300 良品 ￥431,200 下取は15%UP 新品同様 ￥451,950 良品 ￥450,800 買取申し込み"
         },
         {
@@ -924,6 +965,7 @@
           "price": 432300,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "FUJIFILM GFX100RF ブラック 富士フイルム 基準査定額 新品同様 ￥393,000 良品 ￥392,000 買取のみ10%UP 新品同様 ￥432,300 良品 ￥431,200 下取は15%UP 新品同様 ￥451,950 良品 ￥450,800 買取申し込み"
         },
         {
@@ -932,6 +974,7 @@
           "price": 432300,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "FUJIFILM GFX100RF シルバー 富士フイルム 基準査定額 新品同様 ￥393,000 良品 ￥392,000 買取のみ10%UP 新品同様 ￥432,300 良品 ￥431,200 下取は15%UP 新品同様 ￥451,950 良品 ￥450,800 買取申し込み"
         }
       ],
@@ -1131,10 +1174,10 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 300,
+      "rendered_html_size": 302,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.273b2f17.1780555085.f0ccd7e\n\nhttps://errors.edgesuite.net/18.273b2f17.1780555085.f0ccd7e",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.293b2f17.1780563788.364d661a\n\nhttps://errors.edgesuite.net/18.293b2f17.1780563788.364d661a",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -1147,8 +1190,8 @@
       "sales_price_sample": null,
       "buyback_link_candidates": [],
       "buyback_page_url": null,
-      "buyback_page_html_size": 300,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.273b2f17.1780555085.f0ccd7e\n\nhttps://errors.edgesuite.net/18.273b2f17.1780555085.f0ccd7e",
+      "buyback_page_html_size": 302,
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.293b2f17.1780563788.364d661a\n\nhttps://errors.edgesuite.net/18.293b2f17.1780563788.364d661a",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -1165,7 +1208,7 @@
       "price": 233450,
       "reason": "",
       "html_saved": true,
-      "html_size": 226940,
+      "html_size": 226895,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -1173,7 +1216,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 226940,
+      "rendered_html_size": 226895,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -1198,6 +1241,7 @@
           "price": 233450,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "FUJIFILM X-T5 XF16-50mmレンズキット シルバー 日英二言語モデル 富士フイルム 基準査定額 新品同様 ￥203,000 良品 ￥200,000 買取のみ10%UP 新品同様 ￥223,300 良品 ￥220,000 下取は15%UP 新品同様 ￥233,450 良品 ￥230,000 買取申し込み"
         },
         {
@@ -1206,6 +1250,7 @@
           "price": 233450,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥233,450"
         },
         {
@@ -1214,6 +1259,7 @@
           "price": 233450,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥233,450"
         },
         {
@@ -1222,6 +1268,7 @@
           "price": 230000,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "FUJIFILM X-T5 XF16-50mmレンズキット シルバー 日英二言語モデル 富士フイルム 基準査定額 新品同様 ￥203,000 良品 ￥200,000 買取のみ10%UP 新品同様 ￥223,300 良品 ￥220,000 下取は15%UP 新品同様 ￥233,450 良品 ￥230,000 買取申し込み"
         },
         {
@@ -1230,6 +1277,7 @@
           "price": 230000,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥230,000"
         },
         {
@@ -1238,6 +1286,7 @@
           "price": 230000,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥230,000"
         },
         {
@@ -1246,6 +1295,7 @@
           "price": 223300,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "FUJIFILM X-T5 XF16-50mmレンズキット シルバー 日英二言語モデル 富士フイルム 基準査定額 新品同様 ￥203,000 良品 ￥200,000 買取のみ10%UP 新品同様 ￥223,300 良品 ￥220,000 下取は15%UP 新品同様 ￥233,450 良品 ￥230,000 買取申し込み"
         },
         {
@@ -1254,6 +1304,7 @@
           "price": 223300,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥223,300"
         },
         {
@@ -1262,6 +1313,7 @@
           "price": 223300,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥223,300"
         },
         {
@@ -1270,6 +1322,7 @@
           "price": 220000,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "FUJIFILM X-T5 XF16-50mmレンズキット シルバー 日英二言語モデル 富士フイルム 基準査定額 新品同様 ￥203,000 良品 ￥200,000 買取のみ10%UP 新品同様 ￥223,300 良品 ￥220,000 下取は15%UP 新品同様 ￥233,450 良品 ￥230,000 買取申し込み"
         },
         {
@@ -1278,6 +1331,7 @@
           "price": 220000,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥220,000"
         },
         {
@@ -1286,6 +1340,7 @@
           "price": 220000,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥220,000"
         },
         {
@@ -1294,6 +1349,7 @@
           "price": 216200,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "FUJIFILM X-T5 XF16-50mmレンズキット ブラック 日英二言語モデル 富士フイルム 基準査定額 新品同様 ￥188,000 良品 ￥185,000 買取のみ10%UP 新品同様 ￥206,800 良品 ￥203,500 下取は15%UP 新品同様 ￥216,200 良品 ￥212,750 買取申し込み"
         },
         {
@@ -1302,6 +1358,7 @@
           "price": 216200,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥216,200"
         },
         {
@@ -1310,6 +1367,7 @@
           "price": 216200,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥216,200"
         }
       ],
@@ -1406,7 +1464,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=X-T5&search=検索",
-      "buyback_page_html_size": 226940,
+      "buyback_page_html_size": 226895,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -1415,6 +1473,7 @@
           "price": 233450,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "FUJIFILM X-T5 XF16-50mmレンズキット シルバー 日英二言語モデル 富士フイルム 基準査定額 新品同様 ￥203,000 良品 ￥200,000 買取のみ10%UP 新品同様 ￥223,300 良品 ￥220,000 下取は15%UP 新品同様 ￥233,450 良品 ￥230,000 買取申し込み"
         },
         {
@@ -1423,6 +1482,7 @@
           "price": 230000,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "FUJIFILM X-T5 XF16-50mmレンズキット シルバー 日英二言語モデル 富士フイルム 基準査定額 新品同様 ￥203,000 良品 ￥200,000 買取のみ10%UP 新品同様 ￥223,300 良品 ￥220,000 下取は15%UP 新品同様 ￥233,450 良品 ￥230,000 買取申し込み"
         },
         {
@@ -1431,6 +1491,7 @@
           "price": 223300,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "FUJIFILM X-T5 XF16-50mmレンズキット シルバー 日英二言語モデル 富士フイルム 基準査定額 新品同様 ￥203,000 良品 ￥200,000 買取のみ10%UP 新品同様 ￥223,300 良品 ￥220,000 下取は15%UP 新品同様 ￥233,450 良品 ￥230,000 買取申し込み"
         },
         {
@@ -1439,6 +1500,7 @@
           "price": 220000,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "FUJIFILM X-T5 XF16-50mmレンズキット シルバー 日英二言語モデル 富士フイルム 基準査定額 新品同様 ￥203,000 良品 ￥200,000 買取のみ10%UP 新品同様 ￥223,300 良品 ￥220,000 下取は15%UP 新品同様 ￥233,450 良品 ￥230,000 買取申し込み"
         },
         {
@@ -1447,6 +1509,7 @@
           "price": 216200,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "FUJIFILM X-T5 XF16-50mmレンズキット ブラック 日英二言語モデル 富士フイルム 基準査定額 新品同様 ￥188,000 良品 ￥185,000 買取のみ10%UP 新品同様 ￥206,800 良品 ￥203,500 下取は15%UP 新品同様 ￥216,200 良品 ￥212,750 買取申し込み"
         }
       ],
@@ -1652,10 +1715,10 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 300,
+      "rendered_html_size": 302,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.d05c617.1780555150.511cc617\n\nhttps://errors.edgesuite.net/18.d05c617.1780555150.511cc617",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.293b2f17.1780563854.364e7d17\n\nhttps://errors.edgesuite.net/18.293b2f17.1780563854.364e7d17",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -1668,8 +1731,8 @@
       "sales_price_sample": null,
       "buyback_link_candidates": [],
       "buyback_page_url": null,
-      "buyback_page_html_size": 300,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.d05c617.1780555150.511cc617\n\nhttps://errors.edgesuite.net/18.d05c617.1780555150.511cc617",
+      "buyback_page_html_size": 302,
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.293b2f17.1780563854.364e7d17\n\nhttps://errors.edgesuite.net/18.293b2f17.1780563854.364e7d17",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -1694,7 +1757,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 231034,
+      "rendered_html_size": 230995,
       "selector_waited": true,
       "extraction_strategy": "requests",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -1719,6 +1782,7 @@
           "price": 182850,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "RICOH GR III HDF RICOH 基準査定額 新品同様 ￥159,000 良品 ￥158,000 買取のみ10%UP 新品同様 ￥174,900 良品 ￥173,800 下取は15%UP 新品同様 ￥182,850 良品 ￥181,700 買取申し込み"
         },
         {
@@ -1727,6 +1791,7 @@
           "price": 182850,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥182,850"
         },
         {
@@ -1735,6 +1800,7 @@
           "price": 182850,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥182,850"
         },
         {
@@ -1743,6 +1809,7 @@
           "price": 181700,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "RICOH GR III HDF RICOH 基準査定額 新品同様 ￥159,000 良品 ￥158,000 買取のみ10%UP 新品同様 ￥174,900 良品 ￥173,800 下取は15%UP 新品同様 ￥182,850 良品 ￥181,700 買取申し込み"
         },
         {
@@ -1751,6 +1818,7 @@
           "price": 181700,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥181,700"
         },
         {
@@ -1759,6 +1827,7 @@
           "price": 181700,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥181,700"
         },
         {
@@ -1767,6 +1836,7 @@
           "price": 174900,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "RICOH GR III HDF RICOH 基準査定額 新品同様 ￥159,000 良品 ￥158,000 買取のみ10%UP 新品同様 ￥174,900 良品 ￥173,800 下取は15%UP 新品同様 ￥182,850 良品 ￥181,700 買取申し込み"
         },
         {
@@ -1775,6 +1845,7 @@
           "price": 174900,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥174,900"
         },
         {
@@ -1783,6 +1854,7 @@
           "price": 174900,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥174,900"
         },
         {
@@ -1791,6 +1863,7 @@
           "price": 174800,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "RICOH GR IIIx HDF RICOH 基準査定額 新品同様 ￥152,000 良品 ￥151,000 買取のみ10%UP 新品同様 ￥167,200 良品 ￥166,100 下取は15%UP 新品同様 ￥174,800 良品 ￥173,650 買取申し込み"
         },
         {
@@ -1799,6 +1872,7 @@
           "price": 174800,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥174,800"
         },
         {
@@ -1807,6 +1881,7 @@
           "price": 174800,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥174,800"
         },
         {
@@ -1815,6 +1890,7 @@
           "price": 173800,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "RICOH GR III HDF RICOH 基準査定額 新品同様 ￥159,000 良品 ￥158,000 買取のみ10%UP 新品同様 ￥174,900 良品 ￥173,800 下取は15%UP 新品同様 ￥182,850 良品 ￥181,700 買取申し込み"
         },
         {
@@ -1823,6 +1899,7 @@
           "price": 173800,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥173,800"
         },
         {
@@ -1831,6 +1908,7 @@
           "price": 173800,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥173,800"
         }
       ],
@@ -1929,7 +2007,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=RICOH%20GR%20III&search=検索",
-      "buyback_page_html_size": 231034,
+      "buyback_page_html_size": 230995,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -1938,6 +2016,7 @@
           "price": 182850,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "RICOH GR III HDF RICOH 基準査定額 新品同様 ￥159,000 良品 ￥158,000 買取のみ10%UP 新品同様 ￥174,900 良品 ￥173,800 下取は15%UP 新品同様 ￥182,850 良品 ￥181,700 買取申し込み"
         },
         {
@@ -1946,6 +2025,7 @@
           "price": 181700,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "RICOH GR III HDF RICOH 基準査定額 新品同様 ￥159,000 良品 ￥158,000 買取のみ10%UP 新品同様 ￥174,900 良品 ￥173,800 下取は15%UP 新品同様 ￥182,850 良品 ￥181,700 買取申し込み"
         },
         {
@@ -1954,6 +2034,7 @@
           "price": 174900,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "RICOH GR III HDF RICOH 基準査定額 新品同様 ￥159,000 良品 ￥158,000 買取のみ10%UP 新品同様 ￥174,900 良品 ￥173,800 下取は15%UP 新品同様 ￥182,850 良品 ￥181,700 買取申し込み"
         },
         {
@@ -1962,6 +2043,7 @@
           "price": 174800,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "RICOH GR IIIx HDF RICOH 基準査定額 新品同様 ￥152,000 良品 ￥151,000 買取のみ10%UP 新品同様 ￥167,200 良品 ￥166,100 下取は15%UP 新品同様 ￥174,800 良品 ￥173,650 買取申し込み"
         },
         {
@@ -1970,6 +2052,7 @@
           "price": 173800,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "RICOH GR III HDF RICOH 基準査定額 新品同様 ￥159,000 良品 ￥158,000 買取のみ10%UP 新品同様 ￥174,900 良品 ￥173,800 下取は15%UP 新品同様 ￥182,850 良品 ￥181,700 買取申し込み"
         }
       ],
@@ -2208,7 +2291,7 @@
       "rendered_html_size": 302,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.2705c617.1780555271.3980b161\n\nhttps://errors.edgesuite.net/18.2705c617.1780555271.3980b161",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.293b2f17.1780563975.36507f15\n\nhttps://errors.edgesuite.net/18.293b2f17.1780563975.36507f15",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -2222,7 +2305,7 @@
       "buyback_link_candidates": [],
       "buyback_page_url": null,
       "buyback_page_html_size": 302,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.2705c617.1780555271.3980b161\n\nhttps://errors.edgesuite.net/18.2705c617.1780555271.3980b161",
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.293b2f17.1780563975.36507f15\n\nhttps://errors.edgesuite.net/18.293b2f17.1780563975.36507f15",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -2239,7 +2322,7 @@
       "price": 174800,
       "reason": "",
       "html_saved": true,
-      "html_size": 205837,
+      "html_size": 205548,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -2247,7 +2330,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 205837,
+      "rendered_html_size": 205548,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -2272,6 +2355,7 @@
           "price": 174800,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "RICOH GR IIIx HDF RICOH 基準査定額 新品同様 ￥152,000 良品 ￥151,000 買取のみ10%UP 新品同様 ￥167,200 良品 ￥166,100 下取は15%UP 新品同様 ￥174,800 良品 ￥173,650 買取申し込み"
         },
         {
@@ -2280,6 +2364,7 @@
           "price": 174800,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥174,800"
         },
         {
@@ -2288,6 +2373,7 @@
           "price": 174800,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥174,800"
         },
         {
@@ -2296,6 +2382,7 @@
           "price": 173650,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "RICOH GR IIIx HDF RICOH 基準査定額 新品同様 ￥152,000 良品 ￥151,000 買取のみ10%UP 新品同様 ￥167,200 良品 ￥166,100 下取は15%UP 新品同様 ￥174,800 良品 ￥173,650 買取申し込み"
         },
         {
@@ -2304,6 +2391,7 @@
           "price": 173650,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥173,650"
         },
         {
@@ -2312,6 +2400,7 @@
           "price": 173650,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥173,650"
         },
         {
@@ -2320,6 +2409,7 @@
           "price": 167200,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "RICOH GR IIIx HDF RICOH 基準査定額 新品同様 ￥152,000 良品 ￥151,000 買取のみ10%UP 新品同様 ￥167,200 良品 ￥166,100 下取は15%UP 新品同様 ￥174,800 良品 ￥173,650 買取申し込み"
         },
         {
@@ -2328,6 +2418,7 @@
           "price": 167200,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥167,200"
         },
         {
@@ -2336,6 +2427,7 @@
           "price": 167200,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥167,200"
         },
         {
@@ -2344,6 +2436,7 @@
           "price": 166100,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "RICOH GR IIIx HDF RICOH 基準査定額 新品同様 ￥152,000 良品 ￥151,000 買取のみ10%UP 新品同様 ￥167,200 良品 ￥166,100 下取は15%UP 新品同様 ￥174,800 良品 ￥173,650 買取申し込み"
         },
         {
@@ -2352,6 +2445,7 @@
           "price": 166100,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥166,100"
         },
         {
@@ -2360,6 +2454,7 @@
           "price": 166100,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥166,100"
         },
         {
@@ -2368,6 +2463,7 @@
           "price": 152000,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "RICOH GR IIIx HDF RICOH 基準査定額 新品同様 ￥152,000 良品 ￥151,000 買取のみ10%UP 新品同様 ￥167,200 良品 ￥166,100 下取は15%UP 新品同様 ￥174,800 良品 ￥173,650 買取申し込み"
         },
         {
@@ -2376,6 +2472,7 @@
           "price": 152000,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥152,000"
         },
         {
@@ -2384,6 +2481,7 @@
           "price": 152000,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥152,000"
         }
       ],
@@ -2480,7 +2578,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=RICOH%20GR%20IIIx&search=検索",
-      "buyback_page_html_size": 205837,
+      "buyback_page_html_size": 205548,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -2489,6 +2587,7 @@
           "price": 174800,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "RICOH GR IIIx HDF RICOH 基準査定額 新品同様 ￥152,000 良品 ￥151,000 買取のみ10%UP 新品同様 ￥167,200 良品 ￥166,100 下取は15%UP 新品同様 ￥174,800 良品 ￥173,650 買取申し込み"
         },
         {
@@ -2497,6 +2596,7 @@
           "price": 173650,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "RICOH GR IIIx HDF RICOH 基準査定額 新品同様 ￥152,000 良品 ￥151,000 買取のみ10%UP 新品同様 ￥167,200 良品 ￥166,100 下取は15%UP 新品同様 ￥174,800 良品 ￥173,650 買取申し込み"
         },
         {
@@ -2505,6 +2605,7 @@
           "price": 167200,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "RICOH GR IIIx HDF RICOH 基準査定額 新品同様 ￥152,000 良品 ￥151,000 買取のみ10%UP 新品同様 ￥167,200 良品 ￥166,100 下取は15%UP 新品同様 ￥174,800 良品 ￥173,650 買取申し込み"
         },
         {
@@ -2513,6 +2614,7 @@
           "price": 166100,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "RICOH GR IIIx HDF RICOH 基準査定額 新品同様 ￥152,000 良品 ￥151,000 買取のみ10%UP 新品同様 ￥167,200 良品 ￥166,100 下取は15%UP 新品同様 ￥174,800 良品 ￥173,650 買取申し込み"
         },
         {
@@ -2521,6 +2623,7 @@
           "price": 152000,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "RICOH GR IIIx HDF RICOH 基準査定額 新品同様 ￥152,000 良品 ￥151,000 買取のみ10%UP 新品同様 ￥167,200 良品 ￥166,100 下取は15%UP 新品同様 ￥174,800 良品 ￥173,650 買取申し込み"
         }
       ],
@@ -2729,7 +2832,7 @@
       "rendered_html_size": 300,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.273b2f17.1780555336.f12e72c\n\nhttps://errors.edgesuite.net/18.273b2f17.1780555336.f12e72c",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.273b2f17.1780564040.fdb69b1\n\nhttps://errors.edgesuite.net/18.273b2f17.1780564040.fdb69b1",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -2743,7 +2846,7 @@
       "buyback_link_candidates": [],
       "buyback_page_url": null,
       "buyback_page_html_size": 300,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.273b2f17.1780555336.f12e72c\n\nhttps://errors.edgesuite.net/18.273b2f17.1780555336.f12e72c",
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.273b2f17.1780564040.fdb69b1\n\nhttps://errors.edgesuite.net/18.273b2f17.1780564040.fdb69b1",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -2768,7 +2871,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 217210,
+      "rendered_html_size": 216713,
       "selector_waited": true,
       "extraction_strategy": "requests",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -2793,6 +2896,7 @@
           "price": 223100,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "RICOH GR IV Monochrome RICOH 基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950 買取申し込み"
         },
         {
@@ -2801,6 +2905,7 @@
           "price": 223100,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "RICOH GR IV HDF RICOH 基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950 買取申し込み"
         },
         {
@@ -2809,6 +2914,7 @@
           "price": 223100,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥223,100"
         },
         {
@@ -2817,6 +2923,7 @@
           "price": 223100,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥223,100"
         },
         {
@@ -2825,6 +2932,7 @@
           "price": 223100,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥223,100"
         },
         {
@@ -2833,6 +2941,7 @@
           "price": 223100,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥223,100"
         },
         {
@@ -2841,6 +2950,7 @@
           "price": 221950,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "RICOH GR IV Monochrome RICOH 基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950 買取申し込み"
         },
         {
@@ -2849,6 +2959,7 @@
           "price": 221950,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "RICOH GR IV HDF RICOH 基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950 買取申し込み"
         },
         {
@@ -2857,6 +2968,7 @@
           "price": 221950,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥221,950"
         },
         {
@@ -2865,6 +2977,7 @@
           "price": 221950,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥221,950"
         },
         {
@@ -2873,6 +2986,7 @@
           "price": 221950,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥221,950"
         },
         {
@@ -2881,6 +2995,7 @@
           "price": 221950,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥221,950"
         },
         {
@@ -2889,6 +3004,7 @@
           "price": 213400,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "RICOH GR IV Monochrome RICOH 基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950 買取申し込み"
         },
         {
@@ -2897,6 +3013,7 @@
           "price": 213400,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "RICOH GR IV HDF RICOH 基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950 買取申し込み"
         },
         {
@@ -2905,6 +3022,7 @@
           "price": 213400,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥213,400"
         }
       ],
@@ -3003,7 +3121,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=GR%20IV&search=検索",
-      "buyback_page_html_size": 217210,
+      "buyback_page_html_size": 216713,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -3012,6 +3130,7 @@
           "price": 223100,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "RICOH GR IV Monochrome RICOH 基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950 買取申し込み"
         },
         {
@@ -3020,6 +3139,7 @@
           "price": 223100,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "RICOH GR IV HDF RICOH 基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950 買取申し込み"
         },
         {
@@ -3028,6 +3148,7 @@
           "price": 221950,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "RICOH GR IV Monochrome RICOH 基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950 買取申し込み"
         },
         {
@@ -3036,6 +3157,7 @@
           "price": 221950,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "RICOH GR IV HDF RICOH 基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950 買取申し込み"
         },
         {
@@ -3044,6 +3166,7 @@
           "price": 213400,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "RICOH GR IV Monochrome RICOH 基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950 買取申し込み"
         },
         {
@@ -3052,6 +3175,7 @@
           "price": 213400,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "RICOH GR IV HDF RICOH 基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950 買取申し込み"
         }
       ],
@@ -3290,7 +3414,7 @@
       "rendered_html_size": 300,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.273b2f17.1780555455.f16e0ad\n\nhttps://errors.edgesuite.net/18.273b2f17.1780555455.f16e0ad",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.273b2f17.1780564161.fdcf5a2\n\nhttps://errors.edgesuite.net/18.273b2f17.1780564161.fdcf5a2",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -3304,7 +3428,7 @@
       "buyback_link_candidates": [],
       "buyback_page_url": null,
       "buyback_page_html_size": 300,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.273b2f17.1780555455.f16e0ad\n\nhttps://errors.edgesuite.net/18.273b2f17.1780555455.f16e0ad",
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.273b2f17.1780564161.fdcf5a2\n\nhttps://errors.edgesuite.net/18.273b2f17.1780564161.fdcf5a2",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -3321,7 +3445,7 @@
       "price": 223100,
       "reason": "",
       "html_saved": true,
-      "html_size": 201201,
+      "html_size": 201414,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -3329,7 +3453,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 201201,
+      "rendered_html_size": 201414,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -3354,6 +3478,7 @@
           "price": 223100,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "RICOH GR IV HDF RICOH 基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950 買取申し込み"
         },
         {
@@ -3362,6 +3487,7 @@
           "price": 223100,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥223,100"
         },
         {
@@ -3370,6 +3496,7 @@
           "price": 223100,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥223,100"
         },
         {
@@ -3378,6 +3505,7 @@
           "price": 221950,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "RICOH GR IV HDF RICOH 基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950 買取申し込み"
         },
         {
@@ -3386,6 +3514,7 @@
           "price": 221950,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥221,950"
         },
         {
@@ -3394,6 +3523,7 @@
           "price": 221950,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥221,950"
         },
         {
@@ -3402,6 +3532,7 @@
           "price": 213400,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "RICOH GR IV HDF RICOH 基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950 買取申し込み"
         },
         {
@@ -3410,6 +3541,7 @@
           "price": 213400,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥213,400"
         },
         {
@@ -3418,6 +3550,7 @@
           "price": 213400,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥213,400"
         },
         {
@@ -3426,6 +3559,7 @@
           "price": 212300,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "RICOH GR IV HDF RICOH 基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950 買取申し込み"
         },
         {
@@ -3434,6 +3568,7 @@
           "price": 212300,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥212,300"
         },
         {
@@ -3442,6 +3577,7 @@
           "price": 212300,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥212,300"
         },
         {
@@ -3450,6 +3586,7 @@
           "price": 194000,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "RICOH GR IV HDF RICOH 基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950 買取申し込み"
         },
         {
@@ -3458,6 +3595,7 @@
           "price": 194000,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥194,000"
         },
         {
@@ -3466,6 +3604,7 @@
           "price": 194000,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥194,000"
         }
       ],
@@ -3562,7 +3701,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=RICOH%20GR%20IV%20HDF&search=検索",
-      "buyback_page_html_size": 201201,
+      "buyback_page_html_size": 201414,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -3571,6 +3710,7 @@
           "price": 223100,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "RICOH GR IV HDF RICOH 基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950 買取申し込み"
         },
         {
@@ -3579,6 +3719,7 @@
           "price": 221950,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "RICOH GR IV HDF RICOH 基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950 買取申し込み"
         },
         {
@@ -3587,6 +3728,7 @@
           "price": 213400,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "RICOH GR IV HDF RICOH 基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950 買取申し込み"
         },
         {
@@ -3595,6 +3737,7 @@
           "price": 212300,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "RICOH GR IV HDF RICOH 基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950 買取申し込み"
         },
         {
@@ -3603,6 +3746,7 @@
           "price": 194000,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "RICOH GR IV HDF RICOH 基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950 買取申し込み"
         }
       ],
@@ -3811,7 +3955,7 @@
       "rendered_html_size": 300,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.c6f8cd17.1780555520.d40147a\n\nhttps://errors.edgesuite.net/18.c6f8cd17.1780555520.d40147a",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.273b2f17.1780564226.fddf3a6\n\nhttps://errors.edgesuite.net/18.273b2f17.1780564226.fddf3a6",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -3825,7 +3969,7 @@
       "buyback_link_candidates": [],
       "buyback_page_url": null,
       "buyback_page_html_size": 300,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.c6f8cd17.1780555520.d40147a\n\nhttps://errors.edgesuite.net/18.c6f8cd17.1780555520.d40147a",
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.273b2f17.1780564226.fddf3a6\n\nhttps://errors.edgesuite.net/18.273b2f17.1780564226.fddf3a6",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -3875,6 +4019,7 @@
           "price": 223100,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "RICOH GR IV Monochrome RICOH 基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950 買取申し込み"
         },
         {
@@ -3883,6 +4028,7 @@
           "price": 223100,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥223,100"
         },
         {
@@ -3891,6 +4037,7 @@
           "price": 223100,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥223,100"
         },
         {
@@ -3899,6 +4046,7 @@
           "price": 221950,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "RICOH GR IV Monochrome RICOH 基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950 買取申し込み"
         },
         {
@@ -3907,6 +4055,7 @@
           "price": 221950,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥221,950"
         },
         {
@@ -3915,6 +4064,7 @@
           "price": 221950,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥221,950"
         },
         {
@@ -3923,6 +4073,7 @@
           "price": 213400,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "RICOH GR IV Monochrome RICOH 基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950 買取申し込み"
         },
         {
@@ -3931,6 +4082,7 @@
           "price": 213400,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥213,400"
         },
         {
@@ -3939,6 +4091,7 @@
           "price": 213400,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥213,400"
         },
         {
@@ -3947,6 +4100,7 @@
           "price": 212300,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "RICOH GR IV Monochrome RICOH 基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950 買取申し込み"
         },
         {
@@ -3955,6 +4109,7 @@
           "price": 212300,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥212,300"
         },
         {
@@ -3963,6 +4118,7 @@
           "price": 212300,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥212,300"
         },
         {
@@ -3971,6 +4127,7 @@
           "price": 194000,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "RICOH GR IV Monochrome RICOH 基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950 買取申し込み"
         },
         {
@@ -3979,6 +4136,7 @@
           "price": 194000,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥194,000"
         },
         {
@@ -3987,6 +4145,7 @@
           "price": 194000,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥194,000"
         }
       ],
@@ -4092,6 +4251,7 @@
           "price": 223100,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "RICOH GR IV Monochrome RICOH 基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950 買取申し込み"
         },
         {
@@ -4100,6 +4260,7 @@
           "price": 221950,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "RICOH GR IV Monochrome RICOH 基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950 買取申し込み"
         },
         {
@@ -4108,6 +4269,7 @@
           "price": 213400,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "RICOH GR IV Monochrome RICOH 基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950 買取申し込み"
         },
         {
@@ -4116,6 +4278,7 @@
           "price": 212300,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "RICOH GR IV Monochrome RICOH 基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950 買取申し込み"
         },
         {
@@ -4124,6 +4287,7 @@
           "price": 194000,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "RICOH GR IV Monochrome RICOH 基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 良品 ￥221,950 買取申し込み"
         }
       ],
@@ -4329,10 +4493,10 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 300,
+      "rendered_html_size": 302,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.273b2f17.1780555585.f1b2f49\n\nhttps://errors.edgesuite.net/18.273b2f17.1780555585.f1b2f49",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.293b2f17.1780564292.3656269a\n\nhttps://errors.edgesuite.net/18.293b2f17.1780564292.3656269a",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -4345,8 +4509,8 @@
       "sales_price_sample": null,
       "buyback_link_candidates": [],
       "buyback_page_url": null,
-      "buyback_page_html_size": 300,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.273b2f17.1780555585.f1b2f49\n\nhttps://errors.edgesuite.net/18.273b2f17.1780555585.f1b2f49",
+      "buyback_page_html_size": 302,
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.293b2f17.1780564292.3656269a\n\nhttps://errors.edgesuite.net/18.293b2f17.1780564292.3656269a",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -4363,7 +4527,7 @@
       "price": 254150,
       "reason": "",
       "html_saved": true,
-      "html_size": 201294,
+      "html_size": 201311,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -4371,7 +4535,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 201294,
+      "rendered_html_size": 201311,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -4396,6 +4560,7 @@
           "price": 254150,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "α7R V ボディ ILCE-7RM5 SONY 基準査定額 新品同様 ￥221,000 良品 ￥220,000 買取のみ10%UP 新品同様 ￥243,100 良品 ￥242,000 下取は15%UP 新品同様 ￥254,150 良品 ￥253,000 買取申し込み"
         },
         {
@@ -4404,6 +4569,7 @@
           "price": 254150,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥254,150"
         },
         {
@@ -4412,6 +4578,7 @@
           "price": 254150,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥254,150"
         },
         {
@@ -4420,6 +4587,7 @@
           "price": 253000,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "α7R V ボディ ILCE-7RM5 SONY 基準査定額 新品同様 ￥221,000 良品 ￥220,000 買取のみ10%UP 新品同様 ￥243,100 良品 ￥242,000 下取は15%UP 新品同様 ￥254,150 良品 ￥253,000 買取申し込み"
         },
         {
@@ -4428,6 +4596,7 @@
           "price": 253000,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥253,000"
         },
         {
@@ -4436,6 +4605,7 @@
           "price": 253000,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥253,000"
         },
         {
@@ -4444,6 +4614,7 @@
           "price": 243100,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "α7R V ボディ ILCE-7RM5 SONY 基準査定額 新品同様 ￥221,000 良品 ￥220,000 買取のみ10%UP 新品同様 ￥243,100 良品 ￥242,000 下取は15%UP 新品同様 ￥254,150 良品 ￥253,000 買取申し込み"
         },
         {
@@ -4452,6 +4623,7 @@
           "price": 243100,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥243,100"
         },
         {
@@ -4460,6 +4632,7 @@
           "price": 243100,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥243,100"
         },
         {
@@ -4468,6 +4641,7 @@
           "price": 242000,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "α7R V ボディ ILCE-7RM5 SONY 基準査定額 新品同様 ￥221,000 良品 ￥220,000 買取のみ10%UP 新品同様 ￥243,100 良品 ￥242,000 下取は15%UP 新品同様 ￥254,150 良品 ￥253,000 買取申し込み"
         },
         {
@@ -4476,6 +4650,7 @@
           "price": 242000,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥242,000"
         },
         {
@@ -4484,6 +4659,7 @@
           "price": 242000,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥242,000"
         },
         {
@@ -4492,6 +4668,7 @@
           "price": 221000,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "α7R V ボディ ILCE-7RM5 SONY 基準査定額 新品同様 ￥221,000 良品 ￥220,000 買取のみ10%UP 新品同様 ￥243,100 良品 ￥242,000 下取は15%UP 新品同様 ￥254,150 良品 ￥253,000 買取申し込み"
         },
         {
@@ -4500,6 +4677,7 @@
           "price": 221000,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥221,000"
         },
         {
@@ -4508,6 +4686,7 @@
           "price": 221000,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥221,000"
         }
       ],
@@ -4605,7 +4784,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=%CE%B17R%20V%20ILCE-7RM5&search=検索",
-      "buyback_page_html_size": 201294,
+      "buyback_page_html_size": 201311,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -4614,6 +4793,7 @@
           "price": 254150,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "α7R V ボディ ILCE-7RM5 SONY 基準査定額 新品同様 ￥221,000 良品 ￥220,000 買取のみ10%UP 新品同様 ￥243,100 良品 ￥242,000 下取は15%UP 新品同様 ￥254,150 良品 ￥253,000 買取申し込み"
         },
         {
@@ -4622,6 +4802,7 @@
           "price": 253000,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "α7R V ボディ ILCE-7RM5 SONY 基準査定額 新品同様 ￥221,000 良品 ￥220,000 買取のみ10%UP 新品同様 ￥243,100 良品 ￥242,000 下取は15%UP 新品同様 ￥254,150 良品 ￥253,000 買取申し込み"
         },
         {
@@ -4630,6 +4811,7 @@
           "price": 243100,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "α7R V ボディ ILCE-7RM5 SONY 基準査定額 新品同様 ￥221,000 良品 ￥220,000 買取のみ10%UP 新品同様 ￥243,100 良品 ￥242,000 下取は15%UP 新品同様 ￥254,150 良品 ￥253,000 買取申し込み"
         },
         {
@@ -4638,6 +4820,7 @@
           "price": 242000,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "α7R V ボディ ILCE-7RM5 SONY 基準査定額 新品同様 ￥221,000 良品 ￥220,000 買取のみ10%UP 新品同様 ￥243,100 良品 ￥242,000 下取は15%UP 新品同様 ￥254,150 良品 ￥253,000 買取申し込み"
         },
         {
@@ -4646,6 +4829,7 @@
           "price": 221000,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "α7R V ボディ ILCE-7RM5 SONY 基準査定額 新品同様 ￥221,000 良品 ￥220,000 買取のみ10%UP 新品同様 ￥243,100 良品 ￥242,000 下取は15%UP 新品同様 ￥254,150 良品 ￥253,000 買取申し込み"
         }
       ],
@@ -4854,7 +5038,7 @@
       "rendered_html_size": 300,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.605c617.1780555678.5d09af67\n\nhttps://errors.edgesuite.net/18.605c617.1780555678.5d09af67",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.273b2f17.1780564385.fe0a43b\n\nhttps://errors.edgesuite.net/18.273b2f17.1780564385.fe0a43b",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -4868,7 +5052,7 @@
       "buyback_link_candidates": [],
       "buyback_page_url": null,
       "buyback_page_html_size": 300,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.605c617.1780555678.5d09af67\n\nhttps://errors.edgesuite.net/18.605c617.1780555678.5d09af67",
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.273b2f17.1780564385.fe0a43b\n\nhttps://errors.edgesuite.net/18.273b2f17.1780564385.fe0a43b",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -4885,7 +5069,7 @@
       "price": 610650,
       "reason": "",
       "html_saved": true,
-      "html_size": 201437,
+      "html_size": 201436,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -4893,7 +5077,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 201437,
+      "rendered_html_size": 201436,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -4918,6 +5102,7 @@
           "price": 610650,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "α1 II ボディ ILCE-1M2 SONY 基準査定額 新品同様 ￥531,000 良品 ￥530,000 買取のみ10%UP 新品同様 ￥584,100 良品 ￥583,000 下取は15%UP 新品同様 ￥610,650 良品 ￥609,500 買取申し込み"
         },
         {
@@ -4926,6 +5111,7 @@
           "price": 610650,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥610,650"
         },
         {
@@ -4934,6 +5120,7 @@
           "price": 610650,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥610,650"
         },
         {
@@ -4942,6 +5129,7 @@
           "price": 609500,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "α1 II ボディ ILCE-1M2 SONY 基準査定額 新品同様 ￥531,000 良品 ￥530,000 買取のみ10%UP 新品同様 ￥584,100 良品 ￥583,000 下取は15%UP 新品同様 ￥610,650 良品 ￥609,500 買取申し込み"
         },
         {
@@ -4950,6 +5138,7 @@
           "price": 609500,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥609,500"
         },
         {
@@ -4958,6 +5147,7 @@
           "price": 609500,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥609,500"
         },
         {
@@ -4966,6 +5156,7 @@
           "price": 584100,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "α1 II ボディ ILCE-1M2 SONY 基準査定額 新品同様 ￥531,000 良品 ￥530,000 買取のみ10%UP 新品同様 ￥584,100 良品 ￥583,000 下取は15%UP 新品同様 ￥610,650 良品 ￥609,500 買取申し込み"
         },
         {
@@ -4974,6 +5165,7 @@
           "price": 584100,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥584,100"
         },
         {
@@ -4982,6 +5174,7 @@
           "price": 584100,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥584,100"
         },
         {
@@ -4990,6 +5183,7 @@
           "price": 583000,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "α1 II ボディ ILCE-1M2 SONY 基準査定額 新品同様 ￥531,000 良品 ￥530,000 買取のみ10%UP 新品同様 ￥584,100 良品 ￥583,000 下取は15%UP 新品同様 ￥610,650 良品 ￥609,500 買取申し込み"
         },
         {
@@ -4998,6 +5192,7 @@
           "price": 583000,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥583,000"
         },
         {
@@ -5006,6 +5201,7 @@
           "price": 583000,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥583,000"
         },
         {
@@ -5014,6 +5210,7 @@
           "price": 531000,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "α1 II ボディ ILCE-1M2 SONY 基準査定額 新品同様 ￥531,000 良品 ￥530,000 買取のみ10%UP 新品同様 ￥584,100 良品 ￥583,000 下取は15%UP 新品同様 ￥610,650 良品 ￥609,500 買取申し込み"
         },
         {
@@ -5022,6 +5219,7 @@
           "price": 531000,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥531,000"
         },
         {
@@ -5030,6 +5228,7 @@
           "price": 531000,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥531,000"
         }
       ],
@@ -5126,7 +5325,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=SONY%20%CE%B11%20II&search=検索",
-      "buyback_page_html_size": 201437,
+      "buyback_page_html_size": 201436,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -5135,6 +5334,7 @@
           "price": 610650,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "α1 II ボディ ILCE-1M2 SONY 基準査定額 新品同様 ￥531,000 良品 ￥530,000 買取のみ10%UP 新品同様 ￥584,100 良品 ￥583,000 下取は15%UP 新品同様 ￥610,650 良品 ￥609,500 買取申し込み"
         },
         {
@@ -5143,6 +5343,7 @@
           "price": 609500,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "α1 II ボディ ILCE-1M2 SONY 基準査定額 新品同様 ￥531,000 良品 ￥530,000 買取のみ10%UP 新品同様 ￥584,100 良品 ￥583,000 下取は15%UP 新品同様 ￥610,650 良品 ￥609,500 買取申し込み"
         },
         {
@@ -5151,6 +5352,7 @@
           "price": 584100,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "α1 II ボディ ILCE-1M2 SONY 基準査定額 新品同様 ￥531,000 良品 ￥530,000 買取のみ10%UP 新品同様 ￥584,100 良品 ￥583,000 下取は15%UP 新品同様 ￥610,650 良品 ￥609,500 買取申し込み"
         },
         {
@@ -5159,6 +5361,7 @@
           "price": 583000,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "α1 II ボディ ILCE-1M2 SONY 基準査定額 新品同様 ￥531,000 良品 ￥530,000 買取のみ10%UP 新品同様 ￥584,100 良品 ￥583,000 下取は15%UP 新品同様 ￥610,650 良品 ￥609,500 買取申し込み"
         },
         {
@@ -5167,6 +5370,7 @@
           "price": 531000,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "α1 II ボディ ILCE-1M2 SONY 基準査定額 新品同様 ￥531,000 良品 ￥530,000 買取のみ10%UP 新品同様 ￥584,100 良品 ￥583,000 下取は15%UP 新品同様 ￥610,650 良品 ￥609,500 買取申し込み"
         }
       ],
@@ -5372,10 +5576,10 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 300,
+      "rendered_html_size": 302,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.273b2f17.1780555743.f20186a\n\nhttps://errors.edgesuite.net/18.273b2f17.1780555743.f20186a",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.293b2f17.1780564451.36598949\n\nhttps://errors.edgesuite.net/18.293b2f17.1780564451.36598949",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -5388,8 +5592,8 @@
       "sales_price_sample": null,
       "buyback_link_candidates": [],
       "buyback_page_url": null,
-      "buyback_page_html_size": 300,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.273b2f17.1780555743.f20186a\n\nhttps://errors.edgesuite.net/18.273b2f17.1780555743.f20186a",
+      "buyback_page_html_size": 302,
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.293b2f17.1780564451.36598949\n\nhttps://errors.edgesuite.net/18.293b2f17.1780564451.36598949",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -5406,7 +5610,7 @@
       "price": 253000,
       "reason": "",
       "html_saved": true,
-      "html_size": 203704,
+      "html_size": 201570,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -5414,7 +5618,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 203704,
+      "rendered_html_size": 201570,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -5439,6 +5643,7 @@
           "price": 253000,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "α7CR ボディ ブラック ILCE-7CRB SONY 基準査定額 新品同様 ￥220,000 良品 ￥219,000 買取のみ10%UP 新品同様 ￥242,000 良品 ￥240,900 下取は15%UP 新品同様 ￥253,000 良品 ￥251,850 買取申し込み"
         },
         {
@@ -5447,6 +5652,7 @@
           "price": 253000,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "α7CR ボディ シルバー ILCE-7CRS SONY 基準査定額 新品同様 ￥220,000 良品 ￥219,000 買取のみ10%UP 新品同様 ￥242,000 良品 ￥240,900 下取は15%UP 新品同様 ￥253,000 良品 ￥251,850 買取申し込み"
         },
         {
@@ -5455,6 +5661,7 @@
           "price": 253000,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥253,000"
         },
         {
@@ -5463,6 +5670,7 @@
           "price": 253000,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥253,000"
         },
         {
@@ -5471,6 +5679,7 @@
           "price": 253000,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥253,000"
         },
         {
@@ -5479,6 +5688,7 @@
           "price": 253000,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥253,000"
         },
         {
@@ -5487,6 +5697,7 @@
           "price": 251850,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "α7CR ボディ ブラック ILCE-7CRB SONY 基準査定額 新品同様 ￥220,000 良品 ￥219,000 買取のみ10%UP 新品同様 ￥242,000 良品 ￥240,900 下取は15%UP 新品同様 ￥253,000 良品 ￥251,850 買取申し込み"
         },
         {
@@ -5495,6 +5706,7 @@
           "price": 251850,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "α7CR ボディ シルバー ILCE-7CRS SONY 基準査定額 新品同様 ￥220,000 良品 ￥219,000 買取のみ10%UP 新品同様 ￥242,000 良品 ￥240,900 下取は15%UP 新品同様 ￥253,000 良品 ￥251,850 買取申し込み"
         },
         {
@@ -5503,6 +5715,7 @@
           "price": 251850,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥251,850"
         },
         {
@@ -5511,6 +5724,7 @@
           "price": 251850,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥251,850"
         },
         {
@@ -5519,6 +5733,7 @@
           "price": 251850,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥251,850"
         },
         {
@@ -5527,6 +5742,7 @@
           "price": 251850,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥251,850"
         },
         {
@@ -5535,6 +5751,7 @@
           "price": 242000,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "α7CR ボディ ブラック ILCE-7CRB SONY 基準査定額 新品同様 ￥220,000 良品 ￥219,000 買取のみ10%UP 新品同様 ￥242,000 良品 ￥240,900 下取は15%UP 新品同様 ￥253,000 良品 ￥251,850 買取申し込み"
         },
         {
@@ -5543,6 +5760,7 @@
           "price": 242000,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "α7CR ボディ シルバー ILCE-7CRS SONY 基準査定額 新品同様 ￥220,000 良品 ￥219,000 買取のみ10%UP 新品同様 ￥242,000 良品 ￥240,900 下取は15%UP 新品同様 ￥253,000 良品 ￥251,850 買取申し込み"
         },
         {
@@ -5551,6 +5769,7 @@
           "price": 242000,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥242,000"
         }
       ],
@@ -5647,7 +5866,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=SONY%20%CE%B17CR&search=検索",
-      "buyback_page_html_size": 203704,
+      "buyback_page_html_size": 201570,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -5656,6 +5875,7 @@
           "price": 253000,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "α7CR ボディ ブラック ILCE-7CRB SONY 基準査定額 新品同様 ￥220,000 良品 ￥219,000 買取のみ10%UP 新品同様 ￥242,000 良品 ￥240,900 下取は15%UP 新品同様 ￥253,000 良品 ￥251,850 買取申し込み"
         },
         {
@@ -5664,6 +5884,7 @@
           "price": 253000,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "α7CR ボディ シルバー ILCE-7CRS SONY 基準査定額 新品同様 ￥220,000 良品 ￥219,000 買取のみ10%UP 新品同様 ￥242,000 良品 ￥240,900 下取は15%UP 新品同様 ￥253,000 良品 ￥251,850 買取申し込み"
         },
         {
@@ -5672,6 +5893,7 @@
           "price": 251850,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "α7CR ボディ ブラック ILCE-7CRB SONY 基準査定額 新品同様 ￥220,000 良品 ￥219,000 買取のみ10%UP 新品同様 ￥242,000 良品 ￥240,900 下取は15%UP 新品同様 ￥253,000 良品 ￥251,850 買取申し込み"
         },
         {
@@ -5680,6 +5902,7 @@
           "price": 251850,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "α7CR ボディ シルバー ILCE-7CRS SONY 基準査定額 新品同様 ￥220,000 良品 ￥219,000 買取のみ10%UP 新品同様 ￥242,000 良品 ￥240,900 下取は15%UP 新品同様 ￥253,000 良品 ￥251,850 買取申し込み"
         },
         {
@@ -5688,6 +5911,7 @@
           "price": 242000,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "α7CR ボディ ブラック ILCE-7CRB SONY 基準査定額 新品同様 ￥220,000 良品 ￥219,000 買取のみ10%UP 新品同様 ￥242,000 良品 ￥240,900 下取は15%UP 新品同様 ￥253,000 良品 ￥251,850 買取申し込み"
         },
         {
@@ -5696,6 +5920,7 @@
           "price": 242000,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "α7CR ボディ シルバー ILCE-7CRS SONY 基準査定額 新品同様 ￥220,000 良品 ￥219,000 買取のみ10%UP 新品同様 ￥242,000 良品 ￥240,900 下取は15%UP 新品同様 ￥253,000 良品 ￥251,850 買取申し込み"
         }
       ],
@@ -5895,10 +6120,10 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 300,
+      "rendered_html_size": 302,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.273b2f17.1780555808.f224257\n\nhttps://errors.edgesuite.net/18.273b2f17.1780555808.f224257",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.293b2f17.1780564516.365b0f74\n\nhttps://errors.edgesuite.net/18.293b2f17.1780564516.365b0f74",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -5911,8 +6136,8 @@
       "sales_price_sample": null,
       "buyback_link_candidates": [],
       "buyback_page_url": null,
-      "buyback_page_html_size": 300,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.273b2f17.1780555808.f224257\n\nhttps://errors.edgesuite.net/18.273b2f17.1780555808.f224257",
+      "buyback_page_html_size": 302,
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.293b2f17.1780564516.365b0f74\n\nhttps://errors.edgesuite.net/18.293b2f17.1780564516.365b0f74",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -5929,7 +6154,7 @@
       "price": 440450,
       "reason": "",
       "html_saved": true,
-      "html_size": 217557,
+      "html_size": 217577,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -5937,7 +6162,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 217557,
+      "rendered_html_size": 217577,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -5962,6 +6187,7 @@
           "price": 443900,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "FX3A ボディ ILME-FX3A SONY 基準査定額 新品同様 ￥386,000 良品 ￥383,000 買取のみ10%UP 新品同様 ￥424,600 良品 ￥421,300 下取は15%UP 新品同様 ￥443,900 良品 ￥440,450 買取申し込み"
         },
         {
@@ -5970,6 +6196,7 @@
           "price": 443900,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥443,900"
         },
         {
@@ -5978,6 +6205,7 @@
           "price": 443900,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥443,900"
         },
         {
@@ -5986,6 +6214,7 @@
           "price": 440450,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "FX3 ボディ ILME-FX3 SONY 基準査定額 新品同様 ￥383,000 良品 ￥379,000 買取のみ10%UP 新品同様 ￥421,300 良品 ￥416,900 下取は15%UP 新品同様 ￥440,450 良品 ￥435,850 買取申し込み"
         },
         {
@@ -5994,6 +6223,7 @@
           "price": 440450,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "FX3A ボディ ILME-FX3A SONY 基準査定額 新品同様 ￥386,000 良品 ￥383,000 買取のみ10%UP 新品同様 ￥424,600 良品 ￥421,300 下取は15%UP 新品同様 ￥443,900 良品 ￥440,450 買取申し込み"
         },
         {
@@ -6002,6 +6232,7 @@
           "price": 440450,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥440,450"
         },
         {
@@ -6010,6 +6241,7 @@
           "price": 440450,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥440,450"
         },
         {
@@ -6018,6 +6250,7 @@
           "price": 440450,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥440,450"
         },
         {
@@ -6026,6 +6259,7 @@
           "price": 440450,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥440,450"
         },
         {
@@ -6034,6 +6268,7 @@
           "price": 435850,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "FX3 ボディ ILME-FX3 SONY 基準査定額 新品同様 ￥383,000 良品 ￥379,000 買取のみ10%UP 新品同様 ￥421,300 良品 ￥416,900 下取は15%UP 新品同様 ￥440,450 良品 ￥435,850 買取申し込み"
         },
         {
@@ -6042,6 +6277,7 @@
           "price": 435850,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥435,850"
         },
         {
@@ -6050,6 +6286,7 @@
           "price": 435850,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥435,850"
         },
         {
@@ -6058,6 +6295,7 @@
           "price": 424600,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "FX3A ボディ ILME-FX3A SONY 基準査定額 新品同様 ￥386,000 良品 ￥383,000 買取のみ10%UP 新品同様 ￥424,600 良品 ￥421,300 下取は15%UP 新品同様 ￥443,900 良品 ￥440,450 買取申し込み"
         },
         {
@@ -6066,6 +6304,7 @@
           "price": 424600,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥424,600"
         },
         {
@@ -6074,6 +6313,7 @@
           "price": 424600,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥424,600"
         }
       ],
@@ -6170,7 +6410,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=SONY%20FX3&search=検索",
-      "buyback_page_html_size": 217557,
+      "buyback_page_html_size": 217577,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -6179,6 +6419,7 @@
           "price": 443900,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "FX3A ボディ ILME-FX3A SONY 基準査定額 新品同様 ￥386,000 良品 ￥383,000 買取のみ10%UP 新品同様 ￥424,600 良品 ￥421,300 下取は15%UP 新品同様 ￥443,900 良品 ￥440,450 買取申し込み"
         },
         {
@@ -6187,6 +6428,7 @@
           "price": 440450,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "FX3 ボディ ILME-FX3 SONY 基準査定額 新品同様 ￥383,000 良品 ￥379,000 買取のみ10%UP 新品同様 ￥421,300 良品 ￥416,900 下取は15%UP 新品同様 ￥440,450 良品 ￥435,850 買取申し込み"
         },
         {
@@ -6195,6 +6437,7 @@
           "price": 440450,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "FX3A ボディ ILME-FX3A SONY 基準査定額 新品同様 ￥386,000 良品 ￥383,000 買取のみ10%UP 新品同様 ￥424,600 良品 ￥421,300 下取は15%UP 新品同様 ￥443,900 良品 ￥440,450 買取申し込み"
         },
         {
@@ -6203,6 +6446,7 @@
           "price": 435850,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "FX3 ボディ ILME-FX3 SONY 基準査定額 新品同様 ￥383,000 良品 ￥379,000 買取のみ10%UP 新品同様 ￥421,300 良品 ￥416,900 下取は15%UP 新品同様 ￥440,450 良品 ￥435,850 買取申し込み"
         },
         {
@@ -6211,6 +6455,7 @@
           "price": 424600,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "FX3A ボディ ILME-FX3A SONY 基準査定額 新品同様 ￥386,000 良品 ￥383,000 買取のみ10%UP 新品同様 ￥424,600 良品 ￥421,300 下取は15%UP 新品同様 ￥443,900 良品 ￥440,450 買取申し込み"
         }
       ],
@@ -6434,10 +6679,10 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 300,
+      "rendered_html_size": 302,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.273b2f17.1780555873.f240781\n\nhttps://errors.edgesuite.net/18.273b2f17.1780555873.f240781",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.293b2f17.1780564582.365c26b4\n\nhttps://errors.edgesuite.net/18.293b2f17.1780564582.365c26b4",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -6450,8 +6695,8 @@
       "sales_price_sample": null,
       "buyback_link_candidates": [],
       "buyback_page_url": null,
-      "buyback_page_html_size": 300,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.273b2f17.1780555873.f240781\n\nhttps://errors.edgesuite.net/18.273b2f17.1780555873.f240781",
+      "buyback_page_html_size": 302,
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.293b2f17.1780564582.365c26b4\n\nhttps://errors.edgesuite.net/18.293b2f17.1780564582.365c26b4",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -6468,7 +6713,7 @@
       "price": 547400,
       "reason": "",
       "html_saved": true,
-      "html_size": 206130,
+      "html_size": 205990,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -6476,7 +6721,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 206130,
+      "rendered_html_size": 205990,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -6501,6 +6746,7 @@
           "price": 547400,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "EOS R5 Mark II RF24-105L IS USM レンズキット Canon 基準査定額 新品同様 ￥476,000 良品 ￥475,000 買取のみ10%UP 新品同様 ￥523,600 良品 ￥522,500 下取は15%UP 新品同様 ￥547,400 良品 ￥546,250 買取申し込み"
         },
         {
@@ -6509,6 +6755,7 @@
           "price": 547400,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥547,400"
         },
         {
@@ -6517,6 +6764,7 @@
           "price": 547400,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥547,400"
         },
         {
@@ -6525,6 +6773,7 @@
           "price": 546250,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "EOS R5 Mark II RF24-105L IS USM レンズキット Canon 基準査定額 新品同様 ￥476,000 良品 ￥475,000 買取のみ10%UP 新品同様 ￥523,600 良品 ￥522,500 下取は15%UP 新品同様 ￥547,400 良品 ￥546,250 買取申し込み"
         },
         {
@@ -6533,6 +6782,7 @@
           "price": 546250,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥546,250"
         },
         {
@@ -6541,6 +6791,7 @@
           "price": 546250,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥546,250"
         },
         {
@@ -6549,6 +6800,7 @@
           "price": 523600,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "EOS R5 Mark II RF24-105L IS USM レンズキット Canon 基準査定額 新品同様 ￥476,000 良品 ￥475,000 買取のみ10%UP 新品同様 ￥523,600 良品 ￥522,500 下取は15%UP 新品同様 ￥547,400 良品 ￥546,250 買取申し込み"
         },
         {
@@ -6557,6 +6809,7 @@
           "price": 523600,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥523,600"
         },
         {
@@ -6565,6 +6818,7 @@
           "price": 523600,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥523,600"
         },
         {
@@ -6573,6 +6827,7 @@
           "price": 522500,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "EOS R5 Mark II RF24-105L IS USM レンズキット Canon 基準査定額 新品同様 ￥476,000 良品 ￥475,000 買取のみ10%UP 新品同様 ￥523,600 良品 ￥522,500 下取は15%UP 新品同様 ￥547,400 良品 ￥546,250 買取申し込み"
         },
         {
@@ -6581,6 +6836,7 @@
           "price": 522500,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥522,500"
         },
         {
@@ -6589,6 +6845,7 @@
           "price": 522500,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥522,500"
         },
         {
@@ -6597,6 +6854,7 @@
           "price": 476000,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "EOS R5 Mark II RF24-105L IS USM レンズキット Canon 基準査定額 新品同様 ￥476,000 良品 ￥475,000 買取のみ10%UP 新品同様 ￥523,600 良品 ￥522,500 下取は15%UP 新品同様 ￥547,400 良品 ￥546,250 買取申し込み"
         },
         {
@@ -6605,6 +6863,7 @@
           "price": 476000,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥476,000"
         },
         {
@@ -6613,6 +6872,7 @@
           "price": 476000,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥476,000"
         }
       ],
@@ -6709,7 +6969,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=Canon%20EOS%20R5%20Mark%20II&search=検索",
-      "buyback_page_html_size": 206130,
+      "buyback_page_html_size": 205990,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -6718,6 +6978,7 @@
           "price": 547400,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "EOS R5 Mark II RF24-105L IS USM レンズキット Canon 基準査定額 新品同様 ￥476,000 良品 ￥475,000 買取のみ10%UP 新品同様 ￥523,600 良品 ￥522,500 下取は15%UP 新品同様 ￥547,400 良品 ￥546,250 買取申し込み"
         },
         {
@@ -6726,6 +6987,7 @@
           "price": 546250,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "EOS R5 Mark II RF24-105L IS USM レンズキット Canon 基準査定額 新品同様 ￥476,000 良品 ￥475,000 買取のみ10%UP 新品同様 ￥523,600 良品 ￥522,500 下取は15%UP 新品同様 ￥547,400 良品 ￥546,250 買取申し込み"
         },
         {
@@ -6734,6 +6996,7 @@
           "price": 523600,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "EOS R5 Mark II RF24-105L IS USM レンズキット Canon 基準査定額 新品同様 ￥476,000 良品 ￥475,000 買取のみ10%UP 新品同様 ￥523,600 良品 ￥522,500 下取は15%UP 新品同様 ￥547,400 良品 ￥546,250 買取申し込み"
         },
         {
@@ -6742,6 +7005,7 @@
           "price": 522500,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "EOS R5 Mark II RF24-105L IS USM レンズキット Canon 基準査定額 新品同様 ￥476,000 良品 ￥475,000 買取のみ10%UP 新品同様 ￥523,600 良品 ￥522,500 下取は15%UP 新品同様 ￥547,400 良品 ￥546,250 買取申し込み"
         },
         {
@@ -6750,6 +7014,7 @@
           "price": 476000,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "EOS R5 Mark II RF24-105L IS USM レンズキット Canon 基準査定額 新品同様 ￥476,000 良品 ￥475,000 買取のみ10%UP 新品同様 ￥523,600 良品 ￥522,500 下取は15%UP 新品同様 ￥547,400 良品 ￥546,250 買取申し込み"
         }
       ],
@@ -6955,10 +7220,10 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 302,
+      "rendered_html_size": 300,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.293b2f17.1780555939.3586c546\n\nhttps://errors.edgesuite.net/18.293b2f17.1780555939.3586c546",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.273b2f17.1780564647.fe50e33\n\nhttps://errors.edgesuite.net/18.273b2f17.1780564647.fe50e33",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -6971,8 +7236,8 @@
       "sales_price_sample": null,
       "buyback_link_candidates": [],
       "buyback_page_url": null,
-      "buyback_page_html_size": 302,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.293b2f17.1780555939.3586c546\n\nhttps://errors.edgesuite.net/18.293b2f17.1780555939.3586c546",
+      "buyback_page_html_size": 300,
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.273b2f17.1780564647.fe50e33\n\nhttps://errors.edgesuite.net/18.273b2f17.1780564647.fe50e33",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -6997,7 +7262,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 215200,
+      "rendered_html_size": 213054,
       "selector_waited": true,
       "extraction_strategy": "requests",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -7022,6 +7287,7 @@
           "price": 420900,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "EOS R6 Mark III RF24-105L IS USM レンズキット Canon 基準査定額 新品同様 ￥366,000 良品 ￥365,000 買取のみ10%UP 新品同様 ￥402,600 良品 ￥401,500 下取は15%UP 新品同様 ￥420,900 良品 ￥419,750 買取申し込み"
         },
         {
@@ -7030,6 +7296,7 @@
           "price": 420900,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥420,900"
         },
         {
@@ -7038,6 +7305,7 @@
           "price": 420900,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥420,900"
         },
         {
@@ -7046,6 +7314,7 @@
           "price": 419750,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "EOS R6 Mark III RF24-105L IS USM レンズキット Canon 基準査定額 新品同様 ￥366,000 良品 ￥365,000 買取のみ10%UP 新品同様 ￥402,600 良品 ￥401,500 下取は15%UP 新品同様 ￥420,900 良品 ￥419,750 買取申し込み"
         },
         {
@@ -7054,6 +7323,7 @@
           "price": 419750,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥419,750"
         },
         {
@@ -7062,6 +7332,7 @@
           "price": 419750,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥419,750"
         },
         {
@@ -7070,6 +7341,7 @@
           "price": 402600,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "EOS R6 Mark III RF24-105L IS USM レンズキット Canon 基準査定額 新品同様 ￥366,000 良品 ￥365,000 買取のみ10%UP 新品同様 ￥402,600 良品 ￥401,500 下取は15%UP 新品同様 ￥420,900 良品 ￥419,750 買取申し込み"
         },
         {
@@ -7078,6 +7350,7 @@
           "price": 402600,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥402,600"
         },
         {
@@ -7086,6 +7359,7 @@
           "price": 402600,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥402,600"
         },
         {
@@ -7094,6 +7368,7 @@
           "price": 401500,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "EOS R6 Mark III RF24-105L IS USM レンズキット Canon 基準査定額 新品同様 ￥366,000 良品 ￥365,000 買取のみ10%UP 新品同様 ￥402,600 良品 ￥401,500 下取は15%UP 新品同様 ￥420,900 良品 ￥419,750 買取申し込み"
         },
         {
@@ -7102,6 +7377,7 @@
           "price": 401500,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥401,500"
         },
         {
@@ -7110,6 +7386,7 @@
           "price": 401500,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥401,500"
         },
         {
@@ -7118,6 +7395,7 @@
           "price": 366000,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "EOS R6 Mark III RF24-105L IS USM レンズキット Canon 基準査定額 新品同様 ￥366,000 良品 ￥365,000 買取のみ10%UP 新品同様 ￥402,600 良品 ￥401,500 下取は15%UP 新品同様 ￥420,900 良品 ￥419,750 買取申し込み"
         },
         {
@@ -7126,6 +7404,7 @@
           "price": 366000,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥366,000"
         },
         {
@@ -7134,6 +7413,7 @@
           "price": 366000,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥366,000"
         }
       ],
@@ -7232,7 +7512,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=Canon%20EOS%20R6%20Mark%20II&search=検索",
-      "buyback_page_html_size": 215200,
+      "buyback_page_html_size": 213054,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -7241,6 +7521,7 @@
           "price": 420900,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "EOS R6 Mark III RF24-105L IS USM レンズキット Canon 基準査定額 新品同様 ￥366,000 良品 ￥365,000 買取のみ10%UP 新品同様 ￥402,600 良品 ￥401,500 下取は15%UP 新品同様 ￥420,900 良品 ￥419,750 買取申し込み"
         },
         {
@@ -7249,6 +7530,7 @@
           "price": 419750,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "EOS R6 Mark III RF24-105L IS USM レンズキット Canon 基準査定額 新品同様 ￥366,000 良品 ￥365,000 買取のみ10%UP 新品同様 ￥402,600 良品 ￥401,500 下取は15%UP 新品同様 ￥420,900 良品 ￥419,750 買取申し込み"
         },
         {
@@ -7257,6 +7539,7 @@
           "price": 402600,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "EOS R6 Mark III RF24-105L IS USM レンズキット Canon 基準査定額 新品同様 ￥366,000 良品 ￥365,000 買取のみ10%UP 新品同様 ￥402,600 良品 ￥401,500 下取は15%UP 新品同様 ￥420,900 良品 ￥419,750 買取申し込み"
         },
         {
@@ -7265,6 +7548,7 @@
           "price": 401500,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "EOS R6 Mark III RF24-105L IS USM レンズキット Canon 基準査定額 新品同様 ￥366,000 良品 ￥365,000 買取のみ10%UP 新品同様 ￥402,600 良品 ￥401,500 下取は15%UP 新品同様 ￥420,900 良品 ￥419,750 買取申し込み"
         },
         {
@@ -7273,6 +7557,7 @@
           "price": 366000,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "EOS R6 Mark III RF24-105L IS USM レンズキット Canon 基準査定額 新品同様 ￥366,000 良品 ￥365,000 買取のみ10%UP 新品同様 ￥402,600 良品 ￥401,500 下取は15%UP 新品同様 ￥420,900 良品 ￥419,750 買取申し込み"
         }
       ],
@@ -7508,10 +7793,10 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 302,
+      "rendered_html_size": 300,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.2705c617.1780556064.398a5468\n\nhttps://errors.edgesuite.net/18.2705c617.1780556064.398a5468",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.273b2f17.1780564768.fe6e041\n\nhttps://errors.edgesuite.net/18.273b2f17.1780564768.fe6e041",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -7524,8 +7809,8 @@
       "sales_price_sample": null,
       "buyback_link_candidates": [],
       "buyback_page_url": null,
-      "buyback_page_html_size": 302,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.2705c617.1780556064.398a5468\n\nhttps://errors.edgesuite.net/18.2705c617.1780556064.398a5468",
+      "buyback_page_html_size": 300,
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.273b2f17.1780564768.fe6e041\n\nhttps://errors.edgesuite.net/18.273b2f17.1780564768.fe6e041",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -7542,7 +7827,7 @@
       "price": 295550,
       "reason": "",
       "html_saved": true,
-      "html_size": 201390,
+      "html_size": 201350,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -7550,7 +7835,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 201390,
+      "rendered_html_size": 201350,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -7575,6 +7860,7 @@
           "price": 295550,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "EOS R3 ボディー Canon 基準査定額 新品同様 ￥257,000 良品 ￥256,000 買取のみ10%UP 新品同様 ￥282,700 良品 ￥281,600 下取は15%UP 新品同様 ￥295,550 良品 ￥294,400 買取申し込み"
         },
         {
@@ -7583,6 +7869,7 @@
           "price": 295550,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥295,550"
         },
         {
@@ -7591,6 +7878,7 @@
           "price": 295550,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥295,550"
         },
         {
@@ -7599,6 +7887,7 @@
           "price": 294400,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "EOS R3 ボディー Canon 基準査定額 新品同様 ￥257,000 良品 ￥256,000 買取のみ10%UP 新品同様 ￥282,700 良品 ￥281,600 下取は15%UP 新品同様 ￥295,550 良品 ￥294,400 買取申し込み"
         },
         {
@@ -7607,6 +7896,7 @@
           "price": 294400,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥294,400"
         },
         {
@@ -7615,6 +7905,7 @@
           "price": 294400,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥294,400"
         },
         {
@@ -7623,6 +7914,7 @@
           "price": 282700,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "EOS R3 ボディー Canon 基準査定額 新品同様 ￥257,000 良品 ￥256,000 買取のみ10%UP 新品同様 ￥282,700 良品 ￥281,600 下取は15%UP 新品同様 ￥295,550 良品 ￥294,400 買取申し込み"
         },
         {
@@ -7631,6 +7923,7 @@
           "price": 282700,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥282,700"
         },
         {
@@ -7639,6 +7932,7 @@
           "price": 282700,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥282,700"
         },
         {
@@ -7647,6 +7941,7 @@
           "price": 281600,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "EOS R3 ボディー Canon 基準査定額 新品同様 ￥257,000 良品 ￥256,000 買取のみ10%UP 新品同様 ￥282,700 良品 ￥281,600 下取は15%UP 新品同様 ￥295,550 良品 ￥294,400 買取申し込み"
         },
         {
@@ -7655,6 +7950,7 @@
           "price": 281600,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥281,600"
         },
         {
@@ -7663,6 +7959,7 @@
           "price": 281600,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥281,600"
         },
         {
@@ -7671,6 +7968,7 @@
           "price": 257000,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "EOS R3 ボディー Canon 基準査定額 新品同様 ￥257,000 良品 ￥256,000 買取のみ10%UP 新品同様 ￥282,700 良品 ￥281,600 下取は15%UP 新品同様 ￥295,550 良品 ￥294,400 買取申し込み"
         },
         {
@@ -7679,6 +7977,7 @@
           "price": 257000,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥257,000"
         },
         {
@@ -7687,6 +7986,7 @@
           "price": 257000,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥257,000"
         }
       ],
@@ -7783,7 +8083,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=Canon%20EOS%20R3&search=検索",
-      "buyback_page_html_size": 201390,
+      "buyback_page_html_size": 201350,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -7792,6 +8092,7 @@
           "price": 295550,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "EOS R3 ボディー Canon 基準査定額 新品同様 ￥257,000 良品 ￥256,000 買取のみ10%UP 新品同様 ￥282,700 良品 ￥281,600 下取は15%UP 新品同様 ￥295,550 良品 ￥294,400 買取申し込み"
         },
         {
@@ -7800,6 +8101,7 @@
           "price": 294400,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "EOS R3 ボディー Canon 基準査定額 新品同様 ￥257,000 良品 ￥256,000 買取のみ10%UP 新品同様 ￥282,700 良品 ￥281,600 下取は15%UP 新品同様 ￥295,550 良品 ￥294,400 買取申し込み"
         },
         {
@@ -7808,6 +8110,7 @@
           "price": 282700,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "EOS R3 ボディー Canon 基準査定額 新品同様 ￥257,000 良品 ￥256,000 買取のみ10%UP 新品同様 ￥282,700 良品 ￥281,600 下取は15%UP 新品同様 ￥295,550 良品 ￥294,400 買取申し込み"
         },
         {
@@ -7816,6 +8119,7 @@
           "price": 281600,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "EOS R3 ボディー Canon 基準査定額 新品同様 ￥257,000 良品 ￥256,000 買取のみ10%UP 新品同様 ￥282,700 良品 ￥281,600 下取は15%UP 新品同様 ￥295,550 良品 ￥294,400 買取申し込み"
         },
         {
@@ -7824,6 +8128,7 @@
           "price": 257000,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "EOS R3 ボディー Canon 基準査定額 新品同様 ￥257,000 良品 ￥256,000 買取のみ10%UP 新品同様 ￥282,700 良品 ￥281,600 下取は15%UP 新品同様 ￥295,550 良品 ￥294,400 買取申し込み"
         }
       ],
@@ -8029,10 +8334,10 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 302,
+      "rendered_html_size": 300,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.293b2f17.1780556130.358d4082\n\nhttps://errors.edgesuite.net/18.293b2f17.1780556130.358d4082",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.273b2f17.1780564833.fe7e4cf\n\nhttps://errors.edgesuite.net/18.273b2f17.1780564833.fe7e4cf",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -8045,8 +8350,8 @@
       "sales_price_sample": null,
       "buyback_link_candidates": [],
       "buyback_page_url": null,
-      "buyback_page_html_size": 302,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.293b2f17.1780556130.358d4082\n\nhttps://errors.edgesuite.net/18.293b2f17.1780556130.358d4082",
+      "buyback_page_html_size": 300,
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.273b2f17.1780564833.fe7e4cf\n\nhttps://errors.edgesuite.net/18.273b2f17.1780564833.fe7e4cf",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -8063,7 +8368,7 @@
       "price": 323150,
       "reason": "",
       "html_saved": true,
-      "html_size": 201756,
+      "html_size": 201333,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -8071,7 +8376,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 201756,
+      "rendered_html_size": 201333,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -8096,6 +8401,7 @@
           "price": 323150,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "Z8 ボディ Nikon 基準査定額 新品同様 ￥281,000 良品 ￥280,000 買取のみ10%UP 新品同様 ￥309,100 良品 ￥308,000 下取は15%UP 新品同様 ￥323,150 良品 ￥322,000 買取申し込み"
         },
         {
@@ -8104,6 +8410,7 @@
           "price": 323150,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥323,150"
         },
         {
@@ -8112,6 +8419,7 @@
           "price": 323150,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥323,150"
         },
         {
@@ -8120,6 +8428,7 @@
           "price": 322000,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "Z8 ボディ Nikon 基準査定額 新品同様 ￥281,000 良品 ￥280,000 買取のみ10%UP 新品同様 ￥309,100 良品 ￥308,000 下取は15%UP 新品同様 ￥323,150 良品 ￥322,000 買取申し込み"
         },
         {
@@ -8128,6 +8437,7 @@
           "price": 322000,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥322,000"
         },
         {
@@ -8136,6 +8446,7 @@
           "price": 322000,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥322,000"
         },
         {
@@ -8144,6 +8455,7 @@
           "price": 309100,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "Z8 ボディ Nikon 基準査定額 新品同様 ￥281,000 良品 ￥280,000 買取のみ10%UP 新品同様 ￥309,100 良品 ￥308,000 下取は15%UP 新品同様 ￥323,150 良品 ￥322,000 買取申し込み"
         },
         {
@@ -8152,6 +8464,7 @@
           "price": 309100,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥309,100"
         },
         {
@@ -8160,6 +8473,7 @@
           "price": 309100,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥309,100"
         },
         {
@@ -8168,6 +8482,7 @@
           "price": 308000,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "Z8 ボディ Nikon 基準査定額 新品同様 ￥281,000 良品 ￥280,000 買取のみ10%UP 新品同様 ￥309,100 良品 ￥308,000 下取は15%UP 新品同様 ￥323,150 良品 ￥322,000 買取申し込み"
         },
         {
@@ -8176,6 +8491,7 @@
           "price": 308000,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥308,000"
         },
         {
@@ -8184,6 +8500,7 @@
           "price": 308000,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥308,000"
         },
         {
@@ -8192,6 +8509,7 @@
           "price": 281000,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "Z8 ボディ Nikon 基準査定額 新品同様 ￥281,000 良品 ￥280,000 買取のみ10%UP 新品同様 ￥309,100 良品 ￥308,000 下取は15%UP 新品同様 ￥323,150 良品 ￥322,000 買取申し込み"
         },
         {
@@ -8200,6 +8518,7 @@
           "price": 281000,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥281,000"
         },
         {
@@ -8208,6 +8527,7 @@
           "price": 281000,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥281,000"
         }
       ],
@@ -8304,7 +8624,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=Nikon%20Z8&search=検索",
-      "buyback_page_html_size": 201756,
+      "buyback_page_html_size": 201333,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -8313,6 +8633,7 @@
           "price": 323150,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "Z8 ボディ Nikon 基準査定額 新品同様 ￥281,000 良品 ￥280,000 買取のみ10%UP 新品同様 ￥309,100 良品 ￥308,000 下取は15%UP 新品同様 ￥323,150 良品 ￥322,000 買取申し込み"
         },
         {
@@ -8321,6 +8642,7 @@
           "price": 322000,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "Z8 ボディ Nikon 基準査定額 新品同様 ￥281,000 良品 ￥280,000 買取のみ10%UP 新品同様 ￥309,100 良品 ￥308,000 下取は15%UP 新品同様 ￥323,150 良品 ￥322,000 買取申し込み"
         },
         {
@@ -8329,6 +8651,7 @@
           "price": 309100,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "Z8 ボディ Nikon 基準査定額 新品同様 ￥281,000 良品 ￥280,000 買取のみ10%UP 新品同様 ￥309,100 良品 ￥308,000 下取は15%UP 新品同様 ￥323,150 良品 ￥322,000 買取申し込み"
         },
         {
@@ -8337,6 +8660,7 @@
           "price": 308000,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "Z8 ボディ Nikon 基準査定額 新品同様 ￥281,000 良品 ￥280,000 買取のみ10%UP 新品同様 ￥309,100 良品 ￥308,000 下取は15%UP 新品同様 ￥323,150 良品 ￥322,000 買取申し込み"
         },
         {
@@ -8345,6 +8669,7 @@
           "price": 281000,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "Z8 ボディ Nikon 基準査定額 新品同様 ￥281,000 良品 ￥280,000 買取のみ10%UP 新品同様 ￥309,100 良品 ￥308,000 下取は15%UP 新品同様 ￥323,150 良品 ￥322,000 買取申し込み"
         }
       ],
@@ -8550,10 +8875,10 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 302,
+      "rendered_html_size": 300,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.ce427568.1780556195.26e22482\n\nhttps://errors.edgesuite.net/18.ce427568.1780556195.26e22482",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.273b2f17.1780564899.fe8dc6c\n\nhttps://errors.edgesuite.net/18.273b2f17.1780564899.fe8dc6c",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -8566,8 +8891,8 @@
       "sales_price_sample": null,
       "buyback_link_candidates": [],
       "buyback_page_url": null,
-      "buyback_page_html_size": 302,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.ce427568.1780556195.26e22482\n\nhttps://errors.edgesuite.net/18.ce427568.1780556195.26e22482",
+      "buyback_page_html_size": 300,
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.273b2f17.1780564899.fe8dc6c\n\nhttps://errors.edgesuite.net/18.273b2f17.1780564899.fe8dc6c",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -8584,7 +8909,7 @@
       "price": 0,
       "reason": "price_not_found",
       "html_saved": true,
-      "html_size": 364454,
+      "html_size": 364316,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": false,
@@ -8592,7 +8917,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 315558,
+      "rendered_html_size": 315553,
       "selector_waited": true,
       "extraction_strategy": "requests",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -8617,6 +8942,7 @@
           "price": 401350,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "EOS R6V RF20-50mm F4 L IS USM PZ レンズキット（2026年6月下旬発売予定） Canon 基準査定額 新品同様 ￥349,000 良品 ￥330,000 買取のみ10%UP 新品同様 ￥383,900 良品 ￥363,000 下取は15%UP 新品同様 ￥401,350 良品 ￥379,500 買取申し込み"
         },
         {
@@ -8625,6 +8951,7 @@
           "price": 401350,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥401,350"
         },
         {
@@ -8633,6 +8960,7 @@
           "price": 401350,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥401,350"
         },
         {
@@ -8641,6 +8969,7 @@
           "price": 383900,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "EOS R6V RF20-50mm F4 L IS USM PZ レンズキット（2026年6月下旬発売予定） Canon 基準査定額 新品同様 ￥349,000 良品 ￥330,000 買取のみ10%UP 新品同様 ￥383,900 良品 ￥363,000 下取は15%UP 新品同様 ￥401,350 良品 ￥379,500 買取申し込み"
         },
         {
@@ -8649,6 +8978,7 @@
           "price": 383900,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥383,900"
         },
         {
@@ -8657,6 +8987,7 @@
           "price": 383900,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥383,900"
         },
         {
@@ -8665,6 +8996,7 @@
           "price": 379500,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "EOS R6V RF20-50mm F4 L IS USM PZ レンズキット（2026年6月下旬発売予定） Canon 基準査定額 新品同様 ￥349,000 良品 ￥330,000 買取のみ10%UP 新品同様 ￥383,900 良品 ￥363,000 下取は15%UP 新品同様 ￥401,350 良品 ￥379,500 買取申し込み"
         },
         {
@@ -8673,6 +9005,7 @@
           "price": 379500,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥379,500"
         },
         {
@@ -8681,6 +9014,7 @@
           "price": 379500,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥379,500"
         },
         {
@@ -8689,6 +9023,7 @@
           "price": 363000,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "EOS R6V RF20-50mm F4 L IS USM PZ レンズキット（2026年6月下旬発売予定） Canon 基準査定額 新品同様 ￥349,000 良品 ￥330,000 買取のみ10%UP 新品同様 ￥383,900 良品 ￥363,000 下取は15%UP 新品同様 ￥401,350 良品 ￥379,500 買取申し込み"
         },
         {
@@ -8697,6 +9032,7 @@
           "price": 363000,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥363,000"
         },
         {
@@ -8705,6 +9041,7 @@
           "price": 363000,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥363,000"
         },
         {
@@ -8713,6 +9050,7 @@
           "price": 358800,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "新品同様 ￥358,800"
         },
         {
@@ -8721,6 +9059,7 @@
           "price": 358800,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥358,800"
         },
         {
@@ -8729,6 +9068,7 @@
           "price": 358800,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥358,800"
         }
       ],
@@ -8826,7 +9166,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=Z%20f&search=検索",
-      "buyback_page_html_size": 315558,
+      "buyback_page_html_size": 315553,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -8835,6 +9175,7 @@
           "price": 401350,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "EOS R6V RF20-50mm F4 L IS USM PZ レンズキット（2026年6月下旬発売予定） Canon 基準査定額 新品同様 ￥349,000 良品 ￥330,000 買取のみ10%UP 新品同様 ￥383,900 良品 ￥363,000 下取は15%UP 新品同様 ￥401,350 良品 ￥379,500 買取申し込み"
         },
         {
@@ -8843,6 +9184,7 @@
           "price": 383900,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "EOS R6V RF20-50mm F4 L IS USM PZ レンズキット（2026年6月下旬発売予定） Canon 基準査定額 新品同様 ￥349,000 良品 ￥330,000 買取のみ10%UP 新品同様 ￥383,900 良品 ￥363,000 下取は15%UP 新品同様 ￥401,350 良品 ￥379,500 買取申し込み"
         },
         {
@@ -8851,6 +9193,7 @@
           "price": 379500,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "EOS R6V RF20-50mm F4 L IS USM PZ レンズキット（2026年6月下旬発売予定） Canon 基準査定額 新品同様 ￥349,000 良品 ￥330,000 買取のみ10%UP 新品同様 ￥383,900 良品 ￥363,000 下取は15%UP 新品同様 ￥401,350 良品 ￥379,500 買取申し込み"
         },
         {
@@ -8859,6 +9202,7 @@
           "price": 363000,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "EOS R6V RF20-50mm F4 L IS USM PZ レンズキット（2026年6月下旬発売予定） Canon 基準査定額 新品同様 ￥349,000 良品 ￥330,000 買取のみ10%UP 新品同様 ￥383,900 良品 ￥363,000 下取は15%UP 新品同様 ￥401,350 良品 ￥379,500 買取申し込み"
         }
       ],
@@ -9094,10 +9438,10 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 302,
+      "rendered_html_size": 300,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.d5427568.1780556290.33e40709\n\nhttps://errors.edgesuite.net/18.d5427568.1780556290.33e40709",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.273b2f17.1780564995.fea3254\n\nhttps://errors.edgesuite.net/18.273b2f17.1780564995.fea3254",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -9110,8 +9454,8 @@
       "sales_price_sample": null,
       "buyback_link_candidates": [],
       "buyback_page_url": null,
-      "buyback_page_html_size": 302,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.d5427568.1780556290.33e40709\n\nhttps://errors.edgesuite.net/18.d5427568.1780556290.33e40709",
+      "buyback_page_html_size": 300,
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.273b2f17.1780564995.fea3254\n\nhttps://errors.edgesuite.net/18.273b2f17.1780564995.fea3254",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -9128,7 +9472,7 @@
       "price": 362250,
       "reason": "",
       "html_saved": true,
-      "html_size": 203770,
+      "html_size": 203748,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -9136,7 +9480,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 203770,
+      "rendered_html_size": 203748,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -9161,6 +9505,7 @@
           "price": 362250,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "Z9 ボディ Nikon 基準査定額 新品同様 ￥315,000 良品 ￥314,000 買取のみ10%UP 新品同様 ￥346,500 良品 ￥345,400 下取は15%UP 新品同様 ￥362,250 良品 ￥361,100 買取申し込み"
         },
         {
@@ -9169,6 +9514,7 @@
           "price": 362250,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥362,250"
         },
         {
@@ -9177,6 +9523,7 @@
           "price": 362250,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥362,250"
         },
         {
@@ -9185,6 +9532,7 @@
           "price": 361100,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "Z9 ボディ Nikon 基準査定額 新品同様 ￥315,000 良品 ￥314,000 買取のみ10%UP 新品同様 ￥346,500 良品 ￥345,400 下取は15%UP 新品同様 ￥362,250 良品 ￥361,100 買取申し込み"
         },
         {
@@ -9193,6 +9541,7 @@
           "price": 361100,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥361,100"
         },
         {
@@ -9201,6 +9550,7 @@
           "price": 361100,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥361,100"
         },
         {
@@ -9209,6 +9559,7 @@
           "price": 346500,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "Z9 ボディ Nikon 基準査定額 新品同様 ￥315,000 良品 ￥314,000 買取のみ10%UP 新品同様 ￥346,500 良品 ￥345,400 下取は15%UP 新品同様 ￥362,250 良品 ￥361,100 買取申し込み"
         },
         {
@@ -9217,6 +9568,7 @@
           "price": 346500,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥346,500"
         },
         {
@@ -9225,6 +9577,7 @@
           "price": 346500,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥346,500"
         },
         {
@@ -9233,6 +9586,7 @@
           "price": 345400,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "Z9 ボディ Nikon 基準査定額 新品同様 ￥315,000 良品 ￥314,000 買取のみ10%UP 新品同様 ￥346,500 良品 ￥345,400 下取は15%UP 新品同様 ￥362,250 良品 ￥361,100 買取申し込み"
         },
         {
@@ -9241,6 +9595,7 @@
           "price": 345400,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥345,400"
         },
         {
@@ -9249,6 +9604,7 @@
           "price": 345400,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥345,400"
         },
         {
@@ -9257,6 +9613,7 @@
           "price": 315000,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "Z9 ボディ Nikon 基準査定額 新品同様 ￥315,000 良品 ￥314,000 買取のみ10%UP 新品同様 ￥346,500 良品 ￥345,400 下取は15%UP 新品同様 ￥362,250 良品 ￥361,100 買取申し込み"
         },
         {
@@ -9265,6 +9622,7 @@
           "price": 315000,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥315,000"
         },
         {
@@ -9273,6 +9631,7 @@
           "price": 315000,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥315,000"
         }
       ],
@@ -9369,7 +9728,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=Nikon%20Z9&search=検索",
-      "buyback_page_html_size": 203770,
+      "buyback_page_html_size": 203748,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -9378,6 +9737,7 @@
           "price": 362250,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "Z9 ボディ Nikon 基準査定額 新品同様 ￥315,000 良品 ￥314,000 買取のみ10%UP 新品同様 ￥346,500 良品 ￥345,400 下取は15%UP 新品同様 ￥362,250 良品 ￥361,100 買取申し込み"
         },
         {
@@ -9386,6 +9746,7 @@
           "price": 361100,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "Z9 ボディ Nikon 基準査定額 新品同様 ￥315,000 良品 ￥314,000 買取のみ10%UP 新品同様 ￥346,500 良品 ￥345,400 下取は15%UP 新品同様 ￥362,250 良品 ￥361,100 買取申し込み"
         },
         {
@@ -9394,6 +9755,7 @@
           "price": 346500,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "Z9 ボディ Nikon 基準査定額 新品同様 ￥315,000 良品 ￥314,000 買取のみ10%UP 新品同様 ￥346,500 良品 ￥345,400 下取は15%UP 新品同様 ￥362,250 良品 ￥361,100 買取申し込み"
         },
         {
@@ -9402,6 +9764,7 @@
           "price": 345400,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "Z9 ボディ Nikon 基準査定額 新品同様 ￥315,000 良品 ￥314,000 買取のみ10%UP 新品同様 ￥346,500 良品 ￥345,400 下取は15%UP 新品同様 ￥362,250 良品 ￥361,100 買取申し込み"
         },
         {
@@ -9410,6 +9773,7 @@
           "price": 315000,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "Z9 ボディ Nikon 基準査定額 新品同様 ￥315,000 良品 ￥314,000 買取のみ10%UP 新品同様 ￥346,500 良品 ￥345,400 下取は15%UP 新品同様 ￥362,250 良品 ￥361,100 買取申し込み"
         }
       ],
@@ -9615,10 +9979,10 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 302,
+      "rendered_html_size": 300,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.ce427568.1780556356.26e5f72f\n\nhttps://errors.edgesuite.net/18.ce427568.1780556356.26e5f72f",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.273b2f17.1780565059.feb4ac9\n\nhttps://errors.edgesuite.net/18.273b2f17.1780565059.feb4ac9",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -9631,8 +9995,8 @@
       "sales_price_sample": null,
       "buyback_link_candidates": [],
       "buyback_page_url": null,
-      "buyback_page_html_size": 302,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.ce427568.1780556356.26e5f72f\n\nhttps://errors.edgesuite.net/18.ce427568.1780556356.26e5f72f",
+      "buyback_page_html_size": 300,
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.273b2f17.1780565059.feb4ac9\n\nhttps://errors.edgesuite.net/18.273b2f17.1780565059.feb4ac9",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -9649,7 +10013,7 @@
       "price": 871700,
       "reason": "",
       "html_saved": true,
-      "html_size": 217301,
+      "html_size": 216844,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -9657,7 +10021,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 217301,
+      "rendered_html_size": 216844,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -9682,6 +10046,7 @@
           "price": 871700,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "ライカ Q3 43 19085 Leica 基準査定額 新品同様 ￥758,000 良品 ￥757,000 買取のみ10%UP 新品同様 ￥833,800 良品 ￥832,700 下取は15%UP 新品同様 ￥871,700 良品 ￥870,550 買取申し込み"
         },
         {
@@ -9690,6 +10055,7 @@
           "price": 871700,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥871,700"
         },
         {
@@ -9698,6 +10064,7 @@
           "price": 871700,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥871,700"
         },
         {
@@ -9706,6 +10073,7 @@
           "price": 870550,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "ライカ Q3 43 19085 Leica 基準査定額 新品同様 ￥758,000 良品 ￥757,000 買取のみ10%UP 新品同様 ￥833,800 良品 ￥832,700 下取は15%UP 新品同様 ￥871,700 良品 ￥870,550 買取申し込み"
         },
         {
@@ -9714,6 +10082,7 @@
           "price": 870550,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥870,550"
         },
         {
@@ -9722,6 +10091,7 @@
           "price": 870550,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥870,550"
         },
         {
@@ -9730,6 +10100,7 @@
           "price": 833800,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "ライカ Q3 43 19085 Leica 基準査定額 新品同様 ￥758,000 良品 ￥757,000 買取のみ10%UP 新品同様 ￥833,800 良品 ￥832,700 下取は15%UP 新品同様 ￥871,700 良品 ￥870,550 買取申し込み"
         },
         {
@@ -9738,6 +10109,7 @@
           "price": 833800,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥833,800"
         },
         {
@@ -9746,6 +10118,7 @@
           "price": 833800,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥833,800"
         },
         {
@@ -9754,6 +10127,7 @@
           "price": 832700,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "ライカ Q3 43 19085 Leica 基準査定額 新品同様 ￥758,000 良品 ￥757,000 買取のみ10%UP 新品同様 ￥833,800 良品 ￥832,700 下取は15%UP 新品同様 ￥871,700 良品 ￥870,550 買取申し込み"
         },
         {
@@ -9762,6 +10136,7 @@
           "price": 832700,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥832,700"
         },
         {
@@ -9770,6 +10145,7 @@
           "price": 832700,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥832,700"
         },
         {
@@ -9778,6 +10154,7 @@
           "price": 758000,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "ライカ Q3 43 19085 Leica 基準査定額 新品同様 ￥758,000 良品 ￥757,000 買取のみ10%UP 新品同様 ￥833,800 良品 ￥832,700 下取は15%UP 新品同様 ￥871,700 良品 ￥870,550 買取申し込み"
         },
         {
@@ -9786,6 +10163,7 @@
           "price": 758000,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥758,000"
         },
         {
@@ -9794,6 +10172,7 @@
           "price": 758000,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥758,000"
         }
       ],
@@ -9890,7 +10269,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=Leica%20Q3&search=検索",
-      "buyback_page_html_size": 217301,
+      "buyback_page_html_size": 216844,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -9899,6 +10278,7 @@
           "price": 871700,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "ライカ Q3 43 19085 Leica 基準査定額 新品同様 ￥758,000 良品 ￥757,000 買取のみ10%UP 新品同様 ￥833,800 良品 ￥832,700 下取は15%UP 新品同様 ￥871,700 良品 ￥870,550 買取申し込み"
         },
         {
@@ -9907,6 +10287,7 @@
           "price": 870550,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "ライカ Q3 43 19085 Leica 基準査定額 新品同様 ￥758,000 良品 ￥757,000 買取のみ10%UP 新品同様 ￥833,800 良品 ￥832,700 下取は15%UP 新品同様 ￥871,700 良品 ￥870,550 買取申し込み"
         },
         {
@@ -9915,6 +10296,7 @@
           "price": 833800,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "ライカ Q3 43 19085 Leica 基準査定額 新品同様 ￥758,000 良品 ￥757,000 買取のみ10%UP 新品同様 ￥833,800 良品 ￥832,700 下取は15%UP 新品同様 ￥871,700 良品 ￥870,550 買取申し込み"
         },
         {
@@ -9923,6 +10305,7 @@
           "price": 832700,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "ライカ Q3 43 19085 Leica 基準査定額 新品同様 ￥758,000 良品 ￥757,000 買取のみ10%UP 新品同様 ￥833,800 良品 ￥832,700 下取は15%UP 新品同様 ￥871,700 良品 ￥870,550 買取申し込み"
         },
         {
@@ -9931,6 +10314,7 @@
           "price": 758000,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "ライカ Q3 43 19085 Leica 基準査定額 新品同様 ￥758,000 良品 ￥757,000 買取のみ10%UP 新品同様 ￥833,800 良品 ￥832,700 下取は15%UP 新品同様 ￥871,700 良品 ￥870,550 買取申し込み"
         }
       ],
@@ -10139,7 +10523,7 @@
       "rendered_html_size": 302,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.d5427568.1780556421.33e7e9bb\n\nhttps://errors.edgesuite.net/18.d5427568.1780556421.33e7e9bb",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.293b2f17.1780565124.3666a91e\n\nhttps://errors.edgesuite.net/18.293b2f17.1780565124.3666a91e",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -10153,7 +10537,7 @@
       "buyback_link_candidates": [],
       "buyback_page_url": null,
       "buyback_page_html_size": 302,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.d5427568.1780556421.33e7e9bb\n\nhttps://errors.edgesuite.net/18.d5427568.1780556421.33e7e9bb",
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.293b2f17.1780565124.3666a91e\n\nhttps://errors.edgesuite.net/18.293b2f17.1780565124.3666a91e",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -10170,7 +10554,7 @@
       "price": 1375400,
       "reason": "",
       "html_saved": true,
-      "html_size": 238241,
+      "html_size": 238028,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -10178,7 +10562,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 238241,
+      "rendered_html_size": 238028,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -10203,6 +10587,7 @@
           "price": 1375400,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "ライカM 11-P メタルグレーペイント 20072（2026年6月6日発売予定） Leica 基準査定額 新品同様 ￥1,196,000 良品 ￥1,133,000 買取のみ10%UP 新品同様 ￥1,315,600 良品 ￥1,246,300 下取は15%UP 新品同様 ￥1,375,400 良品 ￥1,302,950 買取申し込み"
         },
         {
@@ -10211,6 +10596,7 @@
           "price": 1375400,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥1,375,400"
         },
         {
@@ -10219,6 +10605,7 @@
           "price": 1375400,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥1,375,400"
         },
         {
@@ -10227,6 +10614,7 @@
           "price": 1315600,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "ライカM 11-P メタルグレーペイント 20072（2026年6月6日発売予定） Leica 基準査定額 新品同様 ￥1,196,000 良品 ￥1,133,000 買取のみ10%UP 新品同様 ￥1,315,600 良品 ￥1,246,300 下取は15%UP 新品同様 ￥1,375,400 良品 ￥1,302,950 買取申し込み"
         },
         {
@@ -10235,6 +10623,7 @@
           "price": 1315600,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥1,315,600"
         },
         {
@@ -10243,6 +10632,7 @@
           "price": 1315600,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥1,315,600"
         },
         {
@@ -10251,6 +10641,7 @@
           "price": 1302950,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "ライカM 11-P メタルグレーペイント 20072（2026年6月6日発売予定） Leica 基準査定額 新品同様 ￥1,196,000 良品 ￥1,133,000 買取のみ10%UP 新品同様 ￥1,315,600 良品 ￥1,246,300 下取は15%UP 新品同様 ￥1,375,400 良品 ￥1,302,950 買取申し込み"
         },
         {
@@ -10259,6 +10650,7 @@
           "price": 1302950,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥1,302,950"
         },
         {
@@ -10267,6 +10659,7 @@
           "price": 1302950,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥1,302,950"
         },
         {
@@ -10275,6 +10668,7 @@
           "price": 1246300,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "ライカM 11-P メタルグレーペイント 20072（2026年6月6日発売予定） Leica 基準査定額 新品同様 ￥1,196,000 良品 ￥1,133,000 買取のみ10%UP 新品同様 ￥1,315,600 良品 ￥1,246,300 下取は15%UP 新品同様 ￥1,375,400 良品 ￥1,302,950 買取申し込み"
         },
         {
@@ -10283,6 +10677,7 @@
           "price": 1246300,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥1,246,300"
         },
         {
@@ -10291,6 +10686,7 @@
           "price": 1246300,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥1,246,300"
         },
         {
@@ -10299,6 +10695,7 @@
           "price": 1196000,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "ライカM 11-P メタルグレーペイント 20072（2026年6月6日発売予定） Leica 基準査定額 新品同様 ￥1,196,000 良品 ￥1,133,000 買取のみ10%UP 新品同様 ￥1,315,600 良品 ￥1,246,300 下取は15%UP 新品同様 ￥1,375,400 良品 ￥1,302,950 買取申し込み"
         },
         {
@@ -10307,6 +10704,7 @@
           "price": 1196000,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥1,196,000"
         },
         {
@@ -10315,6 +10713,7 @@
           "price": 1196000,
           "near_kw": false,
           "near_buyback": false,
+          "is_tradein": false,
           "item_text": "￥1,196,000"
         }
       ],
@@ -10411,7 +10810,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=Leica%20M11&search=検索",
-      "buyback_page_html_size": 238241,
+      "buyback_page_html_size": 238028,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -10420,6 +10819,7 @@
           "price": 1375400,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "ライカM 11-P メタルグレーペイント 20072（2026年6月6日発売予定） Leica 基準査定額 新品同様 ￥1,196,000 良品 ￥1,133,000 買取のみ10%UP 新品同様 ￥1,315,600 良品 ￥1,246,300 下取は15%UP 新品同様 ￥1,375,400 良品 ￥1,302,950 買取申し込み"
         },
         {
@@ -10428,6 +10828,7 @@
           "price": 1315600,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "ライカM 11-P メタルグレーペイント 20072（2026年6月6日発売予定） Leica 基準査定額 新品同様 ￥1,196,000 良品 ￥1,133,000 買取のみ10%UP 新品同様 ￥1,315,600 良品 ￥1,246,300 下取は15%UP 新品同様 ￥1,375,400 良品 ￥1,302,950 買取申し込み"
         },
         {
@@ -10436,6 +10837,7 @@
           "price": 1302950,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "ライカM 11-P メタルグレーペイント 20072（2026年6月6日発売予定） Leica 基準査定額 新品同様 ￥1,196,000 良品 ￥1,133,000 買取のみ10%UP 新品同様 ￥1,315,600 良品 ￥1,246,300 下取は15%UP 新品同様 ￥1,375,400 良品 ￥1,302,950 買取申し込み"
         },
         {
@@ -10444,6 +10846,7 @@
           "price": 1246300,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "ライカM 11-P メタルグレーペイント 20072（2026年6月6日発売予定） Leica 基準査定額 新品同様 ￥1,196,000 良品 ￥1,133,000 買取のみ10%UP 新品同様 ￥1,315,600 良品 ￥1,246,300 下取は15%UP 新品同様 ￥1,375,400 良品 ￥1,302,950 買取申し込み"
         },
         {
@@ -10452,6 +10855,7 @@
           "price": 1196000,
           "near_kw": false,
           "near_buyback": true,
+          "is_tradein": false,
           "item_text": "ライカM 11-P メタルグレーペイント 20072（2026年6月6日発売予定） Leica 基準査定額 新品同様 ￥1,196,000 良品 ￥1,133,000 買取のみ10%UP 新品同様 ￥1,315,600 良品 ￥1,246,300 下取は15%UP 新品同様 ￥1,375,400 良品 ￥1,302,950 買取申し込み"
         }
       ],

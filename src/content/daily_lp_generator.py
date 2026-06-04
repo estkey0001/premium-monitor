@@ -7675,6 +7675,20 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         if not valid_rows:
             return _clear(deal) if _tainted else deal
 
+        # auto_scraped(confidence=high) がある場合、それより30%超高い manual 価格は
+        # 過大の疑い → 利益判定/ランキングの「最高買取」選定から除外（Task 3）。
+        _auto_high = [r for r in valid_rows
+                      if r.get('data_source') == 'auto_scraped'
+                      and r.get('confidence', 'high') == 'high']
+        if _auto_high:
+            _auto_high_max = max(r.get('buyback_price', 0) or 0 for r in _auto_high)
+            if _auto_high_max > 0:
+                valid_rows = [
+                    r for r in valid_rows
+                    if not (str(r.get('data_source', '')).startswith('manual')
+                            and (r.get('buyback_price', 0) or 0) > _auto_high_max * 1.3)
+                ]
+
         best_row = max(valid_rows, key=lambda r: r.get('buyback_price', 0))
         best_price = best_row.get('buyback_price', 0)
         stored_bp = deal.best_buyback_price or 0

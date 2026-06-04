@@ -1,6 +1,6 @@
 
 ============================================================
- Deploy Check (554 items)
+ Deploy Check (560 items)
 ============================================================
   ✅ [index_exists] docs/index.html 存在
   ✅ [forbidden_phrases] 禁止表現なし
@@ -185,13 +185,13 @@
   ✅ [ipad_not_in_other] iPad は「その他」欄に混入していない
   ✅ [airpods_not_in_smartphone] AirPods はスマートフォン欄に混入していない
   ⚠️ [applewatch_in_wearable_section] Apple Watch がウェアラブル欄に見つからない（データなし or genre設定を確認）
-  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-06-04T22:23:42+09:00）
+  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-06-04T23:57:14+09:00）
   ✅ [suspicious_price_format] suspicious_prices 形式OK（suspicious_price なし）
   ✅ [fetch_failed_has_reason] fetch_failed 36件すべてに reason あり
   ✅ [collector_report_html_exists] docs/collector_report.html 存在
   ✅ [collector_report_link_in_lp] LP内に collector_report.html へのリンクがある
   ✅ [fetch_failed_report_link] 取得失敗32件 / suspicious0件 → 警告バーが表示されている
-  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 14件存在する: ['iphone17pm256', 'iphone17pm512', 'iphone17pro256', 'iphone17pro512']
+  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 14件存在する: ['iphone17pro256', 'iphone17pro512', 'iphone17pm512', 'iphone17pm256']
   ✅ [beginner_page_auto_scraped_exists] 自動取得 OK 19件 / total 55件
   ✅ [shop_name_no_vertical_wrap] shop-name-col に word-break:keep-all が設定されている
   ✅ [iphone17pro256_price_scraped] iPhone 17 Pro 256GB の価格取得成功: ['kaitori_shouten', 'kaitori_itchome', 'iosys', 'netoff']
@@ -486,8 +486,8 @@
   ✅ [sedori_from_valid_data] #479 せどりルートが最新有効データから生成（中古/used を除外）
   ✅ [lottery_daily_update] #480 抽選情報が毎日更新される（daily_lp.yml に update_lottery_events ステップ）
   ✅ [fetch_failed_reason_visible] #481 fetch_failed の理由が LP またはレポートに表示される
-  ✅ [ranking_empty_reason] #482 beginner ランキングが0件なら理由が表示される（beginner=4）
-  ✅ [sedori_empty_reason] #483 sedori ルートが0件なら理由が表示される（routes=42）
+  ✅ [ranking_empty_reason] #482 beginner ランキングが0件なら理由が表示される（beginner=5）
+  ✅ [sedori_empty_reason] #483 sedori ルートが0件なら理由が表示される（routes=23）
   ✅ [overseas_stale_excluded] #484 overseas stale は主計算から除外する方針が明示されている
   ✅ [ebay_app_id_warning] #485 EBAY_APP_ID 未設定時に明確な warning を出す
   ✅ [camera_manual_14d_excluded] #486 手動データ（camera含む）が14日超なら利益判定から除外される（LP・ranking）
@@ -547,7 +547,7 @@
   ✅ [alert_zero_diff_skip] #540 アラート生成が 0円/差分0 をスキップしている
   ✅ [camera_item_url] #541 カメラ買取リンクが商品個別ページURL（店舗トップ/検索でない）を優先している
   ✅ [camera_tradein_exclude] #542 カメラ買取が下取(15%UP等)価格を現金買取価格から分離・除外している
-  ✅ [sedori_overseas_sell] #543 せどり計算の売却先が「買取価格＋海外販売価格」になっている
+  ✅ [sedori_overseas_sell] #543 せどり計算の売却先が「買取価格＋海外販売価格」になっている（NPO PRO_SELL_TYPES）
   ✅ [top_camera_reference_guard] #544 Top Camera Buyback が参照価格(公式/定価)未取得の商品を除外している
   ✅ [npo_exists] #545 normalized_price_observations/latest.json が存在する（236観測）
   ✅ [npo_price_role_required] #546 全観測に price_role が付与されている
@@ -556,8 +556,14 @@
   ✅ [npo_pro_sell_no_sale] #549 Pro route の sell 側に sale/listing 価格が使われない
   ✅ [npo_price_zero_not_main] #550 price=0 が main calculation に使われない
   ✅ [npo_stale_not_main] #551 stale（14日超）が main calculation に使われない
+  ✅ [sedori_uses_npo] #552 sedori 計算が normalized_prices（pro_buy/pro_sell）を唯一の入力源にしている
+  ✅ [ranking_uses_npo] #553 ranking が NPO（official+sell / buy+sell）由来で旧 list_beginner_deals 直読みを廃止
+  ✅ [sedori_route_meta_fields] #554 sedori route に buy_price_type/sell_price_type/buy_source/sell_source が出力される
+  ✅ [sedori_pro_role_integrity] #555 sedori Pro route の buy=販売系 / sell=買取・海外落札 のみ（buyback仕入れ/sale売却/下取なし）
+  ✅ [ranking_pro_role_integrity] #556 ranking Pro top10 が buy=販売系 / sell=買取 のみ（buyback仕入れ/sale売却なし）
+  ✅ [sedori_price_meta_migration] #557 migration 018 と SedoriRouteModel に価格種別/ソース欄がある
 
-  Errors: 0 | Warnings: 16 | OK: 538
+  Errors: 0 | Warnings: 16 | OK: 544
 
   ✅ Deploy check PASSED
 ============================================================

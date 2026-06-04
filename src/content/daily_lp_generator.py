@@ -1905,6 +1905,7 @@ a[href], button, [role="tab"], [role="button"],
   background: #ECFBF4; border-radius: 6px; padding: 3px 8px; margin: 2px 0;
 }}
 .shop-card .shop-auto-annot .shop-auto-item {{ color: var(--ink3); }}
+.shop-card .shop-auto-annot .shop-tradein-note {{ color: #b45309; font-size: 0.78em; }}
 .camera-auto-note {{
   font-size: 0.72rem; color: var(--ink3); line-height: 1.5;
   background: #F7F8FC; border-radius: 6px; padding: 6px 9px; margin: 2px 0 6px;
@@ -6523,7 +6524,23 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 _auto_annot = ''
                 if r.get('data_source') == 'auto_scraped':
                     _conf = _esc(r.get('confidence', 'high'))
-                    _matched = _esc((r.get('notes', '') or '').strip())
+                    _notes_raw = (r.get('notes', '') or '').strip()
+                    _matched = _esc(_notes_raw)
+                    # 下取(トレードイン)段の参考額を補足表示（通常買取＝現金値、下取なら最大の旨）
+                    _tradein_note = ''
+                    try:
+                        import re as _re_ti
+                        _m = _re_ti.search(
+                            r'下取は?[0-9]*%?UP[^¥￥]{0,12}新品同様[^¥￥\d]{0,4}[¥￥]\s?'
+                            r'([0-9]{2,3}(?:,[0-9]{3})+)', _notes_raw)
+                        if _m:
+                            _tradein_note = (
+                                f'<br><span class="shop-tradein-note">'
+                                f'&#8505;&#65039; 下取なら最大 ¥{_esc(_m.group(1))}'
+                                f'（通常買取価格とは別）</span>'
+                            )
+                    except Exception:
+                        _tradein_note = ''
                     _obs = r.get('observed_at', '')
                     _obs_d = ''
                     try:
@@ -6537,6 +6554,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                         f'<div class="shop-auto-annot">&#129302; 自動取得 / {_conf}'
                         + (f' / 最終取得: {_obs_d}' if _obs_d else '')
                         + (f'<br><span class="shop-auto-item">{_matched}</span>' if _matched else '')
+                        + _tradein_note
                         + '</div>'
                     )
                 # 初心者モード：スマホで読みやすい縦カード形式（順位/店名 → 価格 → 差益 → 確認）

@@ -1,4 +1,4 @@
-# データ取得品質レポート（2026-06-04 13:42 JST）
+# データ取得品質レポート（2026-06-04 15:07 JST）
 
 ## 取得成功率
 - 全対象店舗数: 16
@@ -10,7 +10,7 @@
 - 前回成功率: 40.0%
 - 今回成功率: 40.0%
 - 変化: 0.0pt（横ばい）
-- 7日移動平均: 36.9%
+- 7日移動平均: 37.6%
 - 主要失敗理由 TOP5: rate_limited_429 6, site_blocked 6, price_not_found 6, product_not_listed 5, http_404 4
 
 ## 店舗別成功率（低い順）
@@ -36,16 +36,16 @@
 - iphone17pro256: 62.5%
 
 ## 連続失敗店舗（2回以上）
-- 2ndstreet: 25回連続
-- bookoff: 25回連続
-- dosupara: 25回連続
-- geo_mobile: 25回連続
-- hardoff: 25回連続
-- janpara: 25回連続
-- pasoko: 25回連続
-- sofmap: 25回連続
-- surugaya: 25回連続
-- tsutaya: 25回連続
+- 2ndstreet: 26回連続
+- bookoff: 26回連続
+- dosupara: 26回連続
+- geo_mobile: 26回連続
+- hardoff: 26回連続
+- janpara: 26回連続
+- pasoko: 26回連続
+- sofmap: 26回連続
+- surugaya: 26回連続
+- tsutaya: 26回連続
 
 ## 改善優先順位（required店舗）
 1. mobile_ichiban（失敗2 / product_not_listed）
@@ -57,10 +57,11 @@
 - product_not_listed: 5件
 - http_404: 4件
 - not_supported: 4件
-- service_unavailable: 2件
+- service_unavailable: 1件
+- connection_error: 1件
 
 ## 有効データ量（新品・未使用 / 14日以内 / price>0）
-- 有効買取データを持つ商品数: 23
+- 有効買取データを持つ商品数: 22
   - prod_x100vi: 7店舗
   - prod_gr4: 6店舗
   - prod_gr3x: 5店舗
@@ -78,18 +79,18 @@
   - prod_a1ii: 1店舗
 
 ## ランキングに使えたデータ数
-- Beginner: 6 件
+- Beginner: 4 件
 - Pro: 10 件
 
 ## せどりルートに使えたデータ数
-- ルート: 29 件
+- ルート: 35 件
 
 ## 海外価格の鮮度
 - fresh: 0 / stale: 4 / 計 4
 - eBay取得モード: manual（EBAY_APP_ID設定: 未設定→stale除外）
 
 ## カメラ自動取得の信頼性
-- auto_scraped 取得: 16 件（うち high: 16）
-- manual fallback: 44 件
-- 棄却候補数: 216
-- 棄却理由: {'not_buyback_context': 196, 'model_mismatch': 20}
+- auto_scraped 取得: 15 件（うち high: 15）
+- manual fallback: 45 件
+- 棄却候補数: 224
+- 棄却理由: {'not_buyback_context': 196, 'model_mismatch': 28}

@@ -5309,6 +5309,55 @@ def check() -> list[dict]:
                     "message": "#538 Top Camera Buyback ランキングがカメラ製品（genre='camera'）のみに限定されている"
                                + ("" if _t538 else " ← 非カメラ製品（iPhone/PS5等）が混入しています")})
 
+    # ── 監査指摘（Issue 1-6）の修正ガード ──
+    def _read_src(*parts):
+        try:
+            with open(_os468.path.join(_root, *parts), encoding='utf-8') as _f:
+                return _f.read()
+        except Exception:
+            return ''
+    _det_src = _read_src('src', 'market', 'buyback_change_detector.py')
+    _alert_src = _read_src('scripts', 'update_alerts.py')
+    _sedori_src = _read_src('src', 'market', 'sedori_route_calculator.py')
+
+    # #539: 買取急変検知が price<=0 をガード（0円→急騰/急落の偽アラート防止）
+    _t539 = ('current <= 0 or previous <= 0' in _det_src)
+    results.append({"level": "ok" if _t539 else "error", "check": "buyback_alert_zero_guard",
+                    "message": "#539 買取急変検知が price<=0（取得失敗/前回なし）をガードしている"
+                               + ("" if _t539 else " ← 0円アラートのガードが見つかりません")})
+
+    # #540: alert生成側でも 0円 / diff==0 をスキップ
+    _t540 = ('(price_after or 0) <= 0 or (price_before or 0) <= 0' in _alert_src) and ('if diff == 0' in _alert_src)
+    results.append({"level": "ok" if _t540 else "error", "check": "alert_zero_diff_skip",
+                    "message": "#540 アラート生成が 0円/差分0 をスキップしている"
+                               + ("" if _t540 else " ← 0円/差分0 スキップが見つかりません")})
+
+    # #541: カメラ買取が商品個別URL（item_link_candidates / _pick_item_url）を採用
+    _t541 = ('_pick_item_url' in _cam_src) and ('item_link_candidates' in _cam_src) \
+        and ('link_verified=_url_verified' in _cam_src)
+    results.append({"level": "ok" if _t541 else "error", "check": "camera_item_url",
+                    "message": "#541 カメラ買取リンクが商品個別ページURL（店舗トップ/検索でない）を優先している"
+                               + ("" if _t541 else " ← 商品個別URLの採用ロジックが見つかりません")})
+
+    # #542: DOM probe が下取（トレードイン/%UP）価格を現金買取から分離・除外
+    _t542 = ('is_tradein' in _cam_src) and ('下取' in _cam_src) and ('!c.is_tradein' in _cam_src)
+    results.append({"level": "ok" if _t542 else "error", "check": "camera_tradein_exclude",
+                    "message": "#542 カメラ買取が下取(15%UP等)価格を現金買取価格から分離・除外している"
+                               + ("" if _t542 else " ← 下取価格の除外ロジックが見つかりません")})
+
+    # #543: sedori が売却先に海外販売価格を含む（仕入=販売価格 → 売却=買取/海外販売）
+    _t543 = ('sell_options = buyback_prices + overseas_prices' in _sedori_src) \
+        and ("price_type=\"overseas\"" in _sedori_src or "price_type='overseas'" in _sedori_src)
+    results.append({"level": "ok" if _t543 else "error", "check": "sedori_overseas_sell",
+                    "message": "#543 せどり計算の売却先が「買取価格＋海外販売価格」になっている"
+                               + ("" if _t543 else " ← 海外売却ルートが見つかりません")})
+
+    # #544: ranking top_camera が参照価格(公式/定価)<=0 を除外（差益計算不能を弾く）
+    _t544 = ('reference <= 0' in _ranking_src) and ('reference_source' in _ranking_src)
+    results.append({"level": "ok" if _t544 else "error", "check": "top_camera_reference_guard",
+                    "message": "#544 Top Camera Buyback が参照価格(公式/定価)未取得の商品を除外している"
+                               + ("" if _t544 else " ← 参照価格0の除外ロジックが見つかりません")})
+
     return results
 
 

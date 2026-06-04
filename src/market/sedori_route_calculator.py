@@ -137,13 +137,54 @@ class SedoriRouteCalculator:
             if r.get("buyback_price", 0) > 0
         ]
 
-        if not sale_prices or not buyback_prices:
+        # 売却先（海外販売価格）を追加 — 仕入れ(販売価格) → 海外売却 のルートも算出する。
+        # せどりの売却チャネルは「国内買取」だけでなく「海外販売」も含むため。
+        # 鮮度ガード: stale（観測から7日超）な海外価格は主計算から除外（CLAUDE.md 準拠）。
+        overseas_prices = []
+        try:
+            _ov_rows = self.repo.list_price_history(
+                product_id=product_id, price_type="overseas", limit=10
+            )
+            _now = datetime.now()
+            _seen_src = set()
+            for ph in _ov_rows:
+                if (ph.price or 0) <= 0:
+                    continue
+                rec = ph.recorded_at
+                if rec is not None and getattr(rec, "tzinfo", None) is not None:
+                    rec = rec.replace(tzinfo=None)
+                age_days = (_now - rec).days if rec else 999
+                if age_days > 7:
+                    continue  # stale な海外価格は除外
+                src = ph.source_id or "overseas"
+                if src in _seen_src:
+                    continue  # ソースごとに最新1件
+                _seen_src.add(src)
+                _label = "eBay(海外売却)" if "ebay" in src.lower() else f"海外売却({src})"
+                overseas_prices.append(
+                    SimpleNamespace(
+                        shop_id=f"overseas_{src}",
+                        shop_name=_label,
+                        buyback_price=int(ph.price),
+                        buyback_url="",
+                        condition="new_unopened",
+                        link_verified=False,
+                        observed_at=ph.recorded_at or datetime.now(),
+                    )
+                )
+        except Exception as e:
+            logger.debug("overseas sell option fetch failed: %s", e)
+
+        # 売却先 = 国内買取 + 海外販売
+        sell_options = buyback_prices + overseas_prices
+
+        if not sale_prices or not sell_options:
             return []
 
         routes: list[SedoriRouteModel] = []
 
         for sp in sale_prices:
-            for bp in buyback_prices:
+            for bp in sell_options:
                 # 同一店舗はスキップ
                 if sp.shop_id == bp.shop_id or sp.shop_name == bp.shop_name:
                     continue

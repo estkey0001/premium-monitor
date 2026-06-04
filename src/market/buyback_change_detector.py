@@ -48,6 +48,12 @@ class BuybackChangeDetector:
         if current is None or previous is None:
             return None
 
+        # 価格0（取得失敗/未掲載）は急変判定の対象外。
+        # current=0 だと「→¥0 の買取急落」、previous=0 だと「¥0→ の買取急騰」という
+        # 差分計算不能な偽アラートになるため、両方が正の値のときのみ比較する。
+        if current <= 0 or previous <= 0:
+            return None
+
         change = current - previous
         shop_name = BUYBACK_SHOPS.get(shop_id, {}).get("name", shop_id)
 

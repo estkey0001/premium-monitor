@@ -1,6 +1,6 @@
 
 ============================================================
- Deploy Check (535 items)
+ Deploy Check (540 items)
 ============================================================
   ✅ [index_exists] docs/index.html 存在
   ✅ [forbidden_phrases] 禁止表現なし
@@ -131,8 +131,8 @@
   ✅ [gr4_three_models_present] RICOH GR IV 3モデル（S0001551/S0001566/S0001580）がすべてLP内に存在する
   ✅ [iphone17_not_upcoming] iPhone 17 Pro / Pro Max が「近日開始」「候補」扱いではない
   ✅ [no_new_product_candidate_label] 「新商品候補」表記なし
-  ✅ [pro_card_initial_limit] Proカード初期表示件数が適切（6件表示 / 12件中）
-  ✅ [pro_show_more_btn] 「さらに表示」ボタンが存在する（折り畳みカードあり: 10件）
+  ✅ [pro_card_initial_limit] Proカード初期表示件数が適切（6件表示 / 20件中）
+  ✅ [pro_show_more_btn] 「さらに表示」ボタンが存在する（折り畳みカードあり: 18件）
   ✅ [pro_filter_overseas_sold] 「海外soldあり」フィルタボタンが存在する
   ✅ [pro_filter_price_gap] 「価格差あり」フィルタボタンが存在する
   ✅ [pro_cards_sorted_by_gap] 価格差ありカードが存在し、ソート構造が正常
@@ -185,13 +185,13 @@
   ✅ [ipad_not_in_other] iPad は「その他」欄に混入していない
   ✅ [airpods_not_in_smartphone] AirPods はスマートフォン欄に混入していない
   ⚠️ [applewatch_in_wearable_section] Apple Watch がウェアラブル欄に見つからない（データなし or genre設定を確認）
-  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-06-04T11:03:32+09:00）
+  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-06-04T12:21:39+09:00）
   ✅ [suspicious_price_format] suspicious_prices 形式OK（suspicious_price なし）
   ✅ [fetch_failed_has_reason] fetch_failed 33件すべてに reason あり
   ✅ [collector_report_html_exists] docs/collector_report.html 存在
   ✅ [collector_report_link_in_lp] LP内に collector_report.html へのリンクがある
   ✅ [fetch_failed_report_link] 取得失敗29件 / suspicious0件 → 警告バーが表示されている
-  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 16件存在する: ['iphone17pro256', 'iphone17pro512', 'iphone17pm512', 'iphone17pm256']
+  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 16件存在する: ['iphone17pro256', 'iphone17pm512', 'iphone17pro512', 'iphone17pm256']
   ✅ [beginner_page_auto_scraped_exists] 自動取得 OK 22件 / total 55件
   ✅ [shop_name_no_vertical_wrap] shop-name-col に word-break:keep-all が設定されている
   ✅ [iphone17pro256_price_scraped] iPhone 17 Pro 256GB の価格取得成功: ['mobile_ichiban', 'kaitori_shouten', 'kaitori_itchome', 'iosys', 'netoff']
@@ -447,7 +447,7 @@
   ✅ [beginner_source_in_confirm_line] #440 Beginner の取得方法は confirm-line（最終確認行）にだけ表示されている
   ✅ [pro_buyback_candidates_present] #441 Pro に買取店価格候補（買取価格）が残っている
   ✅ [pro_domestic_candidates_present] #442 Pro に国内新品/未使用価格候補（国内候補テーブル）が残っている
-  ✅ [beginner_row_has_core_cols] #443 Beginner の各店舗カードに 店舗名・価格・差益・確認リンクが揃っている（店名98/リンク98）
+  ✅ [beginner_row_has_core_cols] #443 Beginner の各店舗カードに 店舗名・価格・差益・確認リンクが揃っている（店名95/リンク95）
   ✅ [beginner_source_only_in_details_or_confirm] #444 取得方法（自動取得/手動確認）は details / confirm-line にだけ表示される
   ✅ [beginner_compare_folded_initial_hero_only] #445 初期表示は最高買取店＋2位差額のみ・買取店比較は details 内（初期表示の shop-row max=0）
   ✅ [beginner_hero_and_runnerup_diff] #446 初期表示に最高買取店ブロックと『2位との差額』が表示される
@@ -456,8 +456,8 @@
   ✅ [beginner_best_buyback_block_present] #449 最高買取店ブロック（best-buyback-hero）が存在する
   ✅ [beginner_all_shops_in_fold_failed_nested] #450 全買取店は比較fold内・取得失敗は別sub-details内（初期表示の取得失敗=False）
   ✅ [pro_buyback_sell_section_present] #451 Pro タブに『国内売却候補 / 買取店』セクションがある
-  ✅ [pro_buyback_3plus_multiple_products] #452 Pro タブに買取店候補が3件以上の商品が複数存在する（該当9商品 / 件数内訳=[5, 4, 5, 3, 3, 3, 4, 3, 2, 4]）
-  ✅ [pro_buyback_few_reason_shown] #453 Pro で買取候補が少ない商品に理由が表示される（<3件の商品=3 / 理由表示=3）
+  ✅ [pro_buyback_3plus_multiple_products] #452 Pro タブに買取店候補が3件以上の商品が複数存在する（該当7商品 / 件数内訳=[5, 4, 5, 3, 3, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4]）
+  ✅ [pro_buyback_few_reason_shown] #453 Pro で買取候補が少ない商品に理由が表示される（<3件の商品=13 / 理由表示=13）
   ✅ [beginner_no_watch_badge_on_profit] #454 profit>0 の利益ありカードに『様子見』が出ない（バッジ・本文とも：利益あり/小幅利益/微益）
   ✅ [beginner_failed_shops_separate_details] #455 価格『—』店舗は通常のもっと見るに混ざらず別 details に分離されている
   ✅ [beginner_no_failed_in_normal_more] #456 取得失敗店舗が通常の『もっと見る（価格取得済み）』に出ない
@@ -486,7 +486,7 @@
   ✅ [sedori_from_valid_data] #479 せどりルートが最新有効データから生成（中古/used を除外）
   ✅ [lottery_daily_update] #480 抽選情報が毎日更新される（daily_lp.yml に update_lottery_events ステップ）
   ✅ [fetch_failed_reason_visible] #481 fetch_failed の理由が LP またはレポートに表示される
-  ✅ [ranking_empty_reason] #482 beginner ランキングが0件なら理由が表示される（beginner=3）
+  ✅ [ranking_empty_reason] #482 beginner ランキングが0件なら理由が表示される（beginner=6）
   ✅ [sedori_empty_reason] #483 sedori ルートが0件なら理由が表示される（routes=29）
   ✅ [overseas_stale_excluded] #484 overseas stale は主計算から除外する方針が明示されている
   ✅ [ebay_app_id_warning] #485 EBAY_APP_ID 未設定時に明確な warning を出す
@@ -526,8 +526,8 @@
   ✅ [camera_confidence_classification] #519 strict一致の auto_scraped は confidence で分類（high）して保存
   ✅ [low_confidence_excluded] #520 low confidence の買取価格は主計算（enrich/比較）に使われない
   ✅ [manual_overprice_recheck_badge] #521 manual_today が auto より大幅に高い場合『手動価格・要確認』を表示
-  ✅ [fujiya_auto_scraped_present] #522 Fujiya の auto_scraped 買取価格が存在する（OK=4件）
-  ✅ [gr4_excludes_variants] #523 GR IV 無印は HDF/Monochrome/IIIx を誤採用しない（strict除外）
+  ✅ [fujiya_auto_scraped_present] #522 Fujiya の auto_scraped 買取価格が存在する（OK=16件）
+  ✅ [gr4_excludes_variants] #523 GR IV 無印は HDF/Monochrome/IIIx を誤採用しない（CAMERA_MODELS exclude）
   ✅ [camera_candidate_tracking] #524 all_price_candidates / rejected_candidates / used_for_save が status に保存される
   ✅ [inflated_manual_excluded] #525 auto_scraped(high) 比30%超高い manual はランキング主計算から除外
   ✅ [manual_recheck_badge_in_lp] #526 手動価格・要確認バッジが LP に表示される
@@ -536,9 +536,14 @@
   ✅ [matched_item_persisted] #529 matched_item を notes に保存し買取比較に表示できる
   ✅ [gr4_plain_no_variant_misadopt] #530 GR IV 無印が HDF/Monochrome/IIIx 価格を誤採用しない
   ✅ [inflated_manual_not_in_ranking] #531 manual 過大価格（auto high比1.3倍超）がランキング主計算に使われない
-  ✅ [data_quality_camera_reliability] #532 data_quality_report に camera 信頼性メトリクスがある（auto=4）
+  ✅ [data_quality_camera_reliability] #532 data_quality_report に camera 信頼性メトリクスがある（auto=16）
+  ✅ [camera_models_all_aliases] #533 全対象機種(20)に model alias / strict ルールが定義されている
+  ✅ [strict_match_data_driven] #534 strict model match がデータ駆動（require_any/include_all/exclude）で有効
+  ✅ [top_camera_buyback_ranking] #535 Top Camera Buyback Opportunities（high/auto/fresh<=7d）がランキングにある（20件）
+  ✅ [camera_brand_success_rates] #536 data_quality に ブランド別成功率 / low_confidence_count がある
+  ✅ [expansion_products_seeded] #537 拡張カメラ製品（Sony/Canon/Nikon/Leica/GFX/X-T5）が products.yaml に定義されている
 
-  Errors: 0 | Warnings: 16 | OK: 519
+  Errors: 0 | Warnings: 16 | OK: 524
 
   ✅ Deploy check PASSED
 ============================================================

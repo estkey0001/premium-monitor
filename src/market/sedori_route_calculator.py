@@ -19,6 +19,9 @@ import ulid
 
 from src.db.repository import Repository
 from src.models.sale_price import SedoriRouteModel
+from src.market.normalized_prices import (
+    build_observations, pro_buy_options, pro_sell_options,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -50,16 +53,30 @@ class SedoriRouteCalculator:
     def estimated_costs(self) -> int:
         return self.shipping_fee + self.transfer_fee + self.travel_fee + self.other_costs
 
+    def _load_observations(self) -> list[dict]:
+        """正規化価格観測を構築する（唯一の入力源）。
+
+        now は build_observations 側で JST aware（datetime.now(tz=JST)）が
+        デフォルト適用される。naive を渡すと _age_days のタイムゾーン比較で
+        例外→全 stale 扱いになるため、ここでは明示的に渡さない。
+        """
+        try:
+            return build_observations(self.repo.db.connection)
+        except Exception as e:
+            logger.warning("normalized observations build failed: %s", e)
+            return []
+
     def calculate_all(self) -> dict:
         """全商品のせどりルートを計算して保存する。"""
         products = self.repo.list_products()
         total_saved = 0
         total_routes = 0
         results_by_product = {}
+        obs = self._load_observations()
 
         for product in products:
             alias = product.id.replace("prod_", "")
-            routes = self._calculate_for_product(product.id, product.name, alias)
+            routes = self._calculate_for_product(product.id, product.name, alias, obs)
             total_routes += len(routes)
             saved = self._save_routes(alias, routes)
             total_saved += saved
@@ -88,7 +105,8 @@ class SedoriRouteCalculator:
         product = self.repo.get_product(product_id)
         product_name = product.name if product else product_alias
 
-        routes = self._calculate_for_product(product_id, product_name, product_alias)
+        obs = self._load_observations()
+        routes = self._calculate_for_product(product_id, product_name, product_alias, obs)
         self._save_routes(product_alias, routes)
         return routes
 
@@ -97,126 +115,76 @@ class SedoriRouteCalculator:
         product_id: str,
         product_name: str,
         product_alias: str,
+        obs: list[dict],
     ) -> list[SedoriRouteModel]:
-        """商品の全ルートを計算する（保存はしない）。"""
-        # 仕入れ候補（販売価格）を取得 — 店舗ごとに最安値1件に絞る
-        _sp_all = self.repo.list_sale_prices(
-            product_id=product_id, active_only=True, limit=50
-        )
-        # product_aliasでも検索（product_idが解決できない場合のフォールバック）
-        if not _sp_all:
-            _sp_all = self.repo.list_sale_prices(
-                product_alias=product_alias, active_only=True, limit=50
-            )
-        # 店舗ごとに最安値1件のみ残す（重複排除）
-        _sp_map: dict = {}
-        for sp in _sp_all:
-            key = sp.shop_id or sp.shop_name
-            if key not in _sp_map or sp.sale_price < _sp_map[key].sale_price:
-                _sp_map[key] = sp
-        sale_prices = list(_sp_map.values())
+        """商品の全ルートを計算する（保存はしない）。
 
-        # 売却先（買取価格）を取得 — list_buyback_prices_by_product で店舗別最高価格のみ
-        _bp_rows = self.repo.list_buyback_prices_by_product(product_id=product_id, limit=20)
-        # dict形式から必要フィールドを抽出してシンプルなオブジェクト化
-        from types import SimpleNamespace
-        buyback_prices = [
-            SimpleNamespace(
-                shop_id=r.get("shop_id", ""),
-                shop_name=r.get("shop_name", ""),
-                buyback_price=r.get("buyback_price", 0),
-                buyback_url=r.get("buyback_url", ""),
-                condition=r.get("condition", ""),
-                link_verified=bool(r.get("link_verified", False)),
-                observed_at=(
-                    datetime.fromisoformat(r["observed_at"])
-                    if r.get("observed_at") else datetime.now()
-                ),
-            )
-            for r in _bp_rows
-            if r.get("buyback_price", 0) > 0
-        ]
+        仕入れ・売却の双方を normalized_price_observations（唯一の入力源）から取得する。
+        - buy:  price_role=buy（shop_sale / flea_listing / flea_sold / overseas_listing）
+        - sell: price_role=sell（buyback / overseas_sold）
+        これにより buyback を仕入れに使う・sale/listing を売却に使う等の混同は構造的に排除される。
+        trade_in / price=0 / stale / unknown condition も is_usable_for_pro=False で除外済み。
+        """
+        def _parse_dt(s):
+            try:
+                d = datetime.fromisoformat(str(s))
+                return d.replace(tzinfo=None) if d.tzinfo else d
+            except Exception:
+                return datetime.now()
 
-        # 売却先（海外販売価格）を追加 — 仕入れ(販売価格) → 海外売却 のルートも算出する。
-        # せどりの売却チャネルは「国内買取」だけでなく「海外販売」も含むため。
-        # 鮮度ガード: stale（観測から7日超）な海外価格は主計算から除外（CLAUDE.md 準拠）。
-        overseas_prices = []
-        try:
-            _ov_rows = self.repo.list_price_history(
-                product_id=product_id, price_type="overseas", limit=10
-            )
-            _now = datetime.now()
-            _seen_src = set()
-            for ph in _ov_rows:
-                if (ph.price or 0) <= 0:
-                    continue
-                rec = ph.recorded_at
-                if rec is not None and getattr(rec, "tzinfo", None) is not None:
-                    rec = rec.replace(tzinfo=None)
-                age_days = (_now - rec).days if rec else 999
-                if age_days > 7:
-                    continue  # stale な海外価格は除外
-                src = ph.source_id or "overseas"
-                if src in _seen_src:
-                    continue  # ソースごとに最新1件
-                _seen_src.add(src)
-                _label = "eBay(海外売却)" if "ebay" in src.lower() else f"海外売却({src})"
-                overseas_prices.append(
-                    SimpleNamespace(
-                        shop_id=f"overseas_{src}",
-                        shop_name=_label,
-                        buyback_price=int(ph.price),
-                        buyback_url="",
-                        condition="new_unopened",
-                        link_verified=False,
-                        observed_at=ph.recorded_at or datetime.now(),
-                    )
-                )
-        except Exception as e:
-            logger.debug("overseas sell option fetch failed: %s", e)
+        # ソースごとに最良の1件に集約（仕入れ=最安, 売却=最高）
+        _buy_by_src: dict = {}
+        for o in pro_buy_options(obs, product_id):  # 安い順
+            key = o["source_id"] or o["source_name"]
+            if key not in _buy_by_src:
+                _buy_by_src[key] = o  # 安い順なので先勝ち=最安
+        _sell_by_src: dict = {}
+        for o in pro_sell_options(obs, product_id):  # 高い順
+            key = o["source_id"] or o["source_name"]
+            if key not in _sell_by_src:
+                _sell_by_src[key] = o  # 高い順なので先勝ち=最高
+        buy_opts = list(_buy_by_src.values())
+        sell_opts = list(_sell_by_src.values())
 
-        # 売却先 = 国内買取 + 海外販売
-        sell_options = buyback_prices + overseas_prices
-
-        if not sale_prices or not sell_options:
+        if not buy_opts or not sell_opts:
             return []
 
         routes: list[SedoriRouteModel] = []
 
-        for sp in sale_prices:
-            for bp in sell_options:
-                # 同一店舗はスキップ
-                if sp.shop_id == bp.shop_id or sp.shop_name == bp.shop_name:
+        for b in buy_opts:
+            for s in sell_opts:
+                # 同一ソースはスキップ
+                if b["source_id"] and b["source_id"] == s["source_id"]:
                     continue
 
-                gross_profit = bp.buyback_price - sp.sale_price
-
-                # 粗利がゼロ以下はスキップ
+                buy_price = int(b["price"])
+                sell_price = int(s["price"])
+                gross_profit = sell_price - buy_price
                 if gross_profit <= 0:
                     continue
-
                 net_profit = gross_profit - self.estimated_costs
-
-                # 実質利益がゼロ以下はスキップ
                 if net_profit <= 0:
                     continue
-
-                profit_rate = net_profit / sp.sale_price if sp.sale_price > 0 else 0.0
+                profit_rate = net_profit / buy_price if buy_price > 0 else 0.0
 
                 route = SedoriRouteModel(
                     id=str(ulid.new()),
                     product_id=product_id,
                     product_name=product_name,
                     product_alias=product_alias,
-                    buy_shop_name=sp.shop_name,
-                    buy_shop_id=sp.shop_id,
-                    buy_price=sp.sale_price,
-                    buy_url=sp.url,
-                    buy_condition=sp.condition,
-                    sell_shop_name=bp.shop_name,
-                    sell_shop_id=bp.shop_id,
-                    sell_price=bp.buyback_price,
-                    sell_url=bp.buyback_url,
+                    buy_shop_name=b["source_name"],
+                    buy_shop_id=b["source_id"],
+                    buy_price=buy_price,
+                    buy_url=b["item_url"] or b["source_url"],
+                    buy_condition=b["condition"],
+                    buy_price_type=b["price_type"],
+                    buy_source=b["source_id"],
+                    sell_shop_name=s["source_name"],
+                    sell_shop_id=s["source_id"],
+                    sell_price=sell_price,
+                    sell_url=s["item_url"] or s["source_url"],
+                    sell_price_type=s["price_type"],
+                    sell_source=s["source_id"],
                     gross_profit=gross_profit,
                     shipping_fee=self.shipping_fee,
                     transfer_fee=self.transfer_fee,
@@ -228,12 +196,12 @@ class SedoriRouteCalculator:
                     rank=0,  # 後でランク付け
                     calculated_at=datetime.now(),
                 )
-                # 品質チェック用メタデータを一時属性として付与（DBには保存しない）
-                route._buy_observed_at = getattr(sp, "observed_at", None)
-                route._buy_link_verified = getattr(sp, "link_verified", False)
-                route._sell_observed_at = getattr(bp, "observed_at", None)
-                route._sell_link_verified = getattr(bp, "link_verified", False)
-                route._sell_condition = getattr(bp, "condition", "")
+                # 品質チェック用メタデータ（DBには保存しない一時属性）
+                route._buy_observed_at = _parse_dt(b["observed_at"])
+                route._buy_link_verified = (b["link_type"] == "item")
+                route._sell_observed_at = _parse_dt(s["observed_at"])
+                route._sell_link_verified = (s["link_type"] == "item")
+                route._sell_condition = s["condition"]
                 routes.append(route)
 
         # 品質スコア計算

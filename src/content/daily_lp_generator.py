@@ -5033,16 +5033,30 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 if not route_list:
                     return ""
                 rows_html = []
+                def _link_kind(url: str) -> tuple[str, str]:
+                    """URL を item / search / shop_home に分類し、(種別, 絵文字ラベル) を返す。"""
+                    u = (url or "").lower()
+                    if not u:
+                        return "none", ""
+                    if any(k in u for k in ("/detail", "/item", "/products/", "/dp/", "itemid", "goods/")):
+                        return "item", "&#128279;"      # 🔗 商品ページ直リンク
+                    if any(k in u for k in ("search", "list.aspx", "keyword=", "/sch/", "itemlist")):
+                        return "search", "&#128269;"     # 🔍 検索結果ページ
+                    return "shop_home", "&#127968;"      # 🏠 店舗トップ
                 for r in route_list:
+                    _bk, _bk_ic = _link_kind(getattr(r, "buy_url", ""))
+                    _sk, _sk_ic = _link_kind(getattr(r, "sell_url", ""))
                     buy_a = (
                         f'<a href="{_esc(r.buy_url)}" target="_blank" rel="noopener noreferrer" '
-                        f'class="sc-mini-link" data-track="sedori_buy_click">'
-                        f'{_esc(r.buy_shop_name)}</a>'
+                        f'class="sc-mini-link sc-link-{_bk}" data-link-type="{_bk}" '
+                        f'title="{_bk}リンク" data-track="sedori_buy_click">'
+                        f'{_bk_ic} {_esc(r.buy_shop_name)}</a>'
                     ) if r.buy_url else _esc(r.buy_shop_name)
                     sell_a = (
                         f'<a href="{_esc(r.sell_url)}" target="_blank" rel="noopener noreferrer" '
-                        f'class="sc-mini-link" data-track="sedori_sell_click">'
-                        f'{_esc(r.sell_shop_name)}</a>'
+                        f'class="sc-mini-link sc-link-{_sk}" data-link-type="{_sk}" '
+                        f'title="{_sk}リンク" data-track="sedori_sell_click">'
+                        f'{_sk_ic} {_esc(r.sell_shop_name)}</a>'
                     ) if r.sell_url else _esc(r.sell_shop_name)
                     row_badge = self._route_quality_badge_html(r)
                     row_cls = ' class="sc-route-row sc-route-review"' if getattr(r, "needs_review", False) else ' class="sc-route-row"'
@@ -5470,11 +5484,16 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                         'gross_profit_jpy': 0,
                     })
                 return deal
+            def _is_tradein_row(r) -> bool:
+                """下取（トレードイン）価格の行か。最高買取価格に混ぜない。"""
+                blob = f"{r.get('shop_name', '') or ''} {r.get('notes', '') or ''}"
+                return ("下取" in blob) or ("トレードイン" in blob) or ("trade-in" in blob.lower())
             valid_rows = [
                 r for r in rows
                 if r.get('buyback_price', 0) > 0
                 and r.get('data_source', '') not in ('fetch_failed', 'product_not_listed')
                 and r.get('confidence', 'high') != 'low'
+                and not _is_tradein_row(r)  # 下取価格は現金買取の最高値に含めない
             ]
             if not valid_rows:
                 # resale 由来ショップをクリア

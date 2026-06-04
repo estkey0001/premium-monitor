@@ -97,6 +97,26 @@ def main() -> int:
     ranking = _load_json(ROOT / "exports/ranking_report/latest.json") or {}
     sedori = _load_json(ROOT / "exports/sedori_routes_report/latest.json") or {}
     overseas = _load_json(ROOT / "exports/overseas_prices/latest.json") or {}
+    camera = _load_json(ROOT / "exports/camera_buyback_status.json") or {}
+
+    # ── カメラ自動取得の信頼性メトリクス（Task 4）──
+    _cam_detail = camera.get("detail", []) or []
+    _cam_auto = [r for r in _cam_detail if r.get("status") == "OK"]
+    _cam_high = [r for r in _cam_auto if r.get("confidence") == "high"]
+    _cam_fail = [r for r in _cam_detail if r.get("status") == "FAILED"]
+    _cam_rejected = sum(len(r.get("rejected_candidates", []) or []) for r in _cam_detail)
+    from collections import Counter as _Counter
+    _cam_rej_reasons = _Counter()
+    for r in _cam_detail:
+        for rc in (r.get("rejected_candidates", []) or []):
+            _cam_rej_reasons[rc.get("rejection_reason", "unknown")] += 1
+    camera_reliability = {
+        "camera_auto_scraped_count": len(_cam_auto),
+        "camera_auto_high_confidence_count": len(_cam_high),
+        "camera_manual_fallback_count": len(_cam_fail),
+        "camera_rejected_candidate_count": _cam_rejected,
+        "camera_rejection_reasons": dict(_cam_rej_reasons.most_common()),
+    }
 
     summary = collector.get("summary", {}) or {}
     total_shops = len(collector.get("by_shop", {}) or {})
@@ -258,6 +278,7 @@ def main() -> int:
         "product_success_rates": product_success_rates,
         "consecutive_failed_shops": consecutive_failed_shops,
         "improvement_priority": improvement_priority,
+        "camera_reliability": camera_reliability,
     }
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -352,6 +373,13 @@ def main() -> int:
         "## 海外価格の鮮度",
         f"- fresh: {ovs_fresh} / stale: {ovs_stale} / 計 {ovs_total}",
         f"- eBay取得モード: {ovs_mode}（EBAY_APP_ID設定: {'あり' if ovs_ebay_configured else '未設定→stale除外'}）",
+        "",
+        "## カメラ自動取得の信頼性",
+        f"- auto_scraped 取得: {camera_reliability['camera_auto_scraped_count']} 件"
+        f"（うち high: {camera_reliability['camera_auto_high_confidence_count']}）",
+        f"- manual fallback: {camera_reliability['camera_manual_fallback_count']} 件",
+        f"- 棄却候補数: {camera_reliability['camera_rejected_candidate_count']}",
+        f"- 棄却理由: {camera_reliability['camera_rejection_reasons'] or 'なし'}",
     ]
     (OUT_DIR / "latest.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 

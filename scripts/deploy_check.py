@@ -5213,6 +5213,47 @@ def check() -> list[dict]:
                     "message": "#527 販売価格を買取価格として保存しないガードが維持されている"
                                + ("" if _t527 else " ← 販売価格ガードが見つかりません")})
 
+    # ── Stabilize camera auto price confidence reporting ──
+    # #528: auto_scraped 買取に『自動取得 / confidence / matched_item』表示の実装がある
+    _t528 = ('shop-auto-annot' in _gen_src) and ('自動取得' in _gen_src) \
+        and ("data_source') == 'auto_scraped'" in _gen_src)
+    results.append({"level": "ok" if _t528 else "error", "check": "lp_auto_confidence_display",
+                    "message": "#528 LP の auto_scraped 行に『自動取得/confidence/matched_item』を表示"
+                               + ("" if _t528 else " ← auto_scraped 表示の実装が見つかりません")})
+
+    # #529: matched_item を notes に保存し repo が notes を返す
+    _t529 = ('notes=(_matched_item' in _cam_src) and ('notes' in _repo_src) \
+        and ("COALESCE(notes" in _repo_src)
+    results.append({"level": "ok" if _t529 else "error", "check": "matched_item_persisted",
+                    "message": "#529 matched_item を notes に保存し買取比較に表示できる"
+                               + ("" if _t529 else " ← matched_item の保存/取得が見つかりません")})
+
+    # #530: GR IV 無印が HDF/Mono/IIIx を誤採用しない（#523 と対：camera_buyback_status で確認）
+    _gr4 = next((x for x in (_cam_json.get('detail') or [])
+                 if x.get('shop_id') == 'src_fujiya' and x.get('product_alias') == 'gr4'
+                 and x.get('status') == 'OK'), None)
+    _gr4_item = (_gr4.get('matched_item', '') if _gr4 else '')
+    _t530 = (_gr4 is None) or (('HDF' not in _gr4_item) and ('Monochrome' not in _gr4_item)
+                               and ('モノクローム' not in _gr4_item) and ('IIIx' not in _gr4_item))
+    results.append({"level": "ok" if _t530 else "error", "check": "gr4_plain_no_variant_misadopt",
+                    "message": "#530 GR IV 無印が HDF/Monochrome/IIIx 価格を誤採用しない"
+                               + ("" if _t530 else f" ← GR IV 無印が派生機種を誤採用: {_gr4_item[:40]}")})
+
+    # #531: manual 過大価格がランキングに使われない（enrich 除外＝LP/ranking 双方に効く）
+    _t531 = ('_auto_high' in _gen_src) and ('* 1.3' in _gen_src)
+    results.append({"level": "ok" if _t531 else "error", "check": "inflated_manual_not_in_ranking",
+                    "message": "#531 manual 過大価格（auto high比1.3倍超）がランキング主計算に使われない"
+                               + ("" if _t531 else " ← 過大 manual 除外が見つかりません")})
+
+    # #532: data_quality_report に camera_auto_scraped_count 等の信頼性メトリクスがある
+    _cr = (_dq_json.get('camera_reliability', {}) or {})
+    _t532 = all(k in _cr for k in ('camera_auto_scraped_count', 'camera_auto_high_confidence_count',
+                                   'camera_manual_fallback_count', 'camera_rejected_candidate_count',
+                                   'camera_rejection_reasons'))
+    results.append({"level": "ok" if _t532 else "error", "check": "data_quality_camera_reliability",
+                    "message": f"#532 data_quality_report に camera 信頼性メトリクスがある（auto={_cr.get('camera_auto_scraped_count')}）"
+                               + ("" if _t532 else " ← camera_reliability メトリクスが不足しています")})
+
     return results
 
 

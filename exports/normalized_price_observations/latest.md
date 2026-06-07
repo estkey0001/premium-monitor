@@ -1,6 +1,6 @@
 # Normalized Price Observations
 
-生成: 2026-06-06 16:36 JST
+生成: 2026-06-07 17:19 JST
 
 全価格（買取/販売/出品/落札/海外/下取/公式）を単一スキーマに正規化。
 `price_role`（buy/sell/official/trade_in）を必ず付与し、
@@ -10,34 +10,34 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 ## サマリ
 
 - 総観測数: **241**
-- Beginner 利用可: 106 / Pro 利用可: 96
+- Beginner 利用可: 103 / Pro 利用可: 91
 - fresh(≤14日): 168
 
 ### price_role 別
 
 | role | 件数 |
 |---|---|
-| buy | 51 |
+| buy | 49 |
 | official | 44 |
-| sell | 146 |
+| sell | 148 |
 
 ### price_type 別
 
 | type | 件数 |
 |---|---|
-| buyback_price | 140 |
+| buyback_price | 142 |
 | flea_listing_price | 5 |
 | flea_sold_price | 10 |
 | official_price | 44 |
 | overseas_listing_price | 5 |
 | overseas_sold_price | 6 |
-| shop_sale_price | 31 |
+| shop_sale_price | 29 |
 
 ### rejection_reason 別（main calc 除外）
 
 | reason | 件数 |
 |---|---|
-| price_zero | 28 |
+| price_zero | 33 |
 | stale_over_14d | 73 |
 
 ## Beginner 利用可（official_price / buyback_price のみ）
@@ -95,17 +95,17 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 | Nikon Z9 | sell | buyback_price | ¥346,500 | new_unopened | 0.0d | フジヤカメラ |
 | Leica Q3 | sell | buyback_price | ¥833,800 | new_unopened | 0.0d | フジヤカメラ |
 | Leica M11 | sell | buyback_price | ¥1,375,400 | new_unopened | 0.0d | フジヤカメラ |
-| FUJIFILM X100VI | sell | buyback_price | ¥445,000 | new_unopened | 5.2d | マップカメラ |
-| FUJIFILM X100VI | sell | buyback_price | ¥442,000 | new_unopened | 5.2d | カメラのキタムラ |
-| FUJIFILM X100VI | sell | buyback_price | ¥440,000 | new_unopened | 5.2d | フジヤカメラ |
-| FUJIFILM X100VI | sell | buyback_price | ¥435,000 | new_unopened | 5.2d | ソフマップ |
-| FUJIFILM X100VI | sell | buyback_price | ¥430,000 | new_unopened | 5.2d | じゃんぱら |
-| FUJIFILM X100VI | sell | buyback_price | ¥428,000 | new_unopened | 5.2d | 買取商店 |
-| RICOH GR IV | sell | buyback_price | ¥198,000 | new_unopened | 5.2d | マップカメラ |
-| RICOH GR IV | sell | buyback_price | ¥196,000 | new_unopened | 5.2d | カメラのキタムラ |
-| RICOH GR IV | sell | buyback_price | ¥194,000 | new_unopened | 5.2d | フジヤカメラ |
-| RICOH GR IV | sell | buyback_price | ¥190,000 | new_unopened | 5.2d | ソフマップ |
-| RICOH GR IV | sell | buyback_price | ¥188,000 | new_unopened | 5.2d | じゃんぱら |
-| RICOH GR IV | sell | buyback_price | ¥185,000 | new_unopened | 5.2d | 買取商店 |
-| RICOH GR IV HDF | sell | buyback_price | ¥205,000 | new_unopened | 5.2d | マップカメラ |
-| RICOH GR IV HDF | sell | buyback_price | ¥203,000 | new_unopened | 5.2d | カメラのキタムラ |
+| FUJIFILM X100VI | sell | buyback_price | ¥445,000 | new_unopened | 6.2d | マップカメラ |
+| FUJIFILM X100VI | sell | buyback_price | ¥442,000 | new_unopened | 6.2d | カメラのキタムラ |
+| FUJIFILM X100VI | sell | buyback_price | ¥440,000 | new_unopened | 6.2d | フジヤカメラ |
+| FUJIFILM X100VI | sell | buyback_price | ¥435,000 | new_unopened | 6.2d | ソフマップ |
+| FUJIFILM X100VI | sell | buyback_price | ¥430,000 | new_unopened | 6.2d | じゃんぱら |
+| FUJIFILM X100VI | sell | buyback_price | ¥428,000 | new_unopened | 6.2d | 買取商店 |
+| RICOH GR IV | sell | buyback_price | ¥198,000 | new_unopened | 6.2d | マップカメラ |
+| RICOH GR IV | sell | buyback_price | ¥196,000 | new_unopened | 6.2d | カメラのキタムラ |
+| RICOH GR IV | sell | buyback_price | ¥194,000 | new_unopened | 6.2d | フジヤカメラ |
+| RICOH GR IV | sell | buyback_price | ¥190,000 | new_unopened | 6.2d | ソフマップ |
+| RICOH GR IV | sell | buyback_price | ¥188,000 | new_unopened | 6.2d | じゃんぱら |
+| RICOH GR IV | sell | buyback_price | ¥185,000 | new_unopened | 6.2d | 買取商店 |
+| RICOH GR IV HDF | sell | buyback_price | ¥205,000 | new_unopened | 6.2d | マップカメラ |
+| RICOH GR IV HDF | sell | buyback_price | ¥203,000 | new_unopened | 6.2d | カメラのキタムラ |

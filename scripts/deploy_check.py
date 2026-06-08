@@ -5483,6 +5483,31 @@ def check() -> list[dict]:
                     "message": "#558 カメラ買取が段階表示の下取(15%UP等)段を除外し現金買取の最高値を採用する"
                                + ("" if _t558 else " ← 下取段除外/現金買取選定ロジックが見つかりません")})
 
+    # #559: auto_scraped high がある商品で、manual 買取が +30% 超なら主計算から除外
+    _lp_src559 = _read_src('src', 'content', 'daily_lp_generator.py')
+    _code559 = ('MANUAL_OVER_AUTO_RATIO' in _norm_src) and ('manual_over_auto_high' in _norm_src) \
+        and ('_auto_hi' in _lp_src559 or 'manual_outlier' in _lp_src559.lower())
+    # データ面: auto_high*1.3 を超える manual 買取が usable になっていない
+    _bad559 = 0
+    if _t545:
+        from collections import defaultdict as _dd559
+        _ah = _dd559(float)
+        for r in _obs:
+            if (r.get('price_type') == 'buyback_price' and r.get('extraction_method') == 'auto_scraped'
+                    and r.get('confidence') == 'high' and r.get('is_fresh') and (r.get('price') or 0) > 0):
+                _ah[r.get('product_id')] = max(_ah[r.get('product_id')], r.get('price'))
+        for r in _obs:
+            if (r.get('price_type') == 'buyback_price' and r.get('extraction_method') == 'manual'
+                    and (r.get('price') or 0) > 0):
+                _a = _ah.get(r.get('product_id'), 0)
+                if _a > 0 and (r.get('price') or 0) > _a * 1.3 \
+                        and (r.get('is_usable_for_beginner') or r.get('is_usable_for_pro')):
+                    _bad559 += 1
+    _t559 = _code559 and _bad559 == 0
+    results.append({"level": "ok" if _t559 else "error", "check": "manual_over_auto_excluded",
+                    "message": "#559 auto_scraped high の+30%超の manual 買取が主計算/最高買取から除外される"
+                               + ("" if _t559 else f" ← コード未実装 or 異常manual残存 {_bad559} 件")})
+
     return results
 
 

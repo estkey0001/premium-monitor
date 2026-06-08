@@ -195,6 +195,25 @@ class DailyLPGenerator:
             if _rows:
                 buyback_by_product[_p.id] = _rows
 
+        # 異常 manual 買取の除外（auto_scraped high の +30% 超）。
+        # 同一商品に信頼できる auto_scraped high 買取があるのに manual がそれを大幅に上回る場合、
+        # 手動入力ミス/販売・相場価格の転記ミスの可能性が高い。auto を信頼し manual を除外する。
+        # （normalized_prices.MANUAL_OVER_AUTO_RATIO と同一ルール）。全表示・全計算へ波及。
+        for _pid, _rws in list(buyback_by_product.items()):
+            _auto_hi = max(
+                [(_r.get('buyback_price', 0) or 0) for _r in _rws
+                 if _r.get('data_source') == 'auto_scraped'
+                 and (_r.get('confidence', 'high') or 'high') == 'high'
+                 and (_r.get('buyback_price', 0) or 0) > 0],
+                default=0,
+            )
+            if _auto_hi > 0:
+                buyback_by_product[_pid] = [
+                    _r for _r in _rws
+                    if not (str(_r.get('data_source', '')).startswith('manual')
+                            and (_r.get('buyback_price', 0) or 0) > _auto_hi * 1.3)
+                ]
+
         # sale_prices (新品/未使用条件) を buyback_by_product に追加（二次流通価格の表示用）
         # resale_market ソースとして buyback_rows に注入することで売却先比較テーブルに反映する
         _RESALE_NEW_CONDS = {'new_unopened', 'new_unopened_simfree', 'new', 'unused'}
@@ -5498,12 +5517,31 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                     return False
                 has_cash = ("基準査定額" in blob) or ("買取" in blob) or ("査定" in blob)
                 return not has_cash
+            # auto_scraped high の買取最高値（manual 異常値の判定基準）
+            _auto_high = max(
+                [r.get('buyback_price', 0) or 0 for r in rows
+                 if r.get('data_source') == 'auto_scraped'
+                 and (r.get('confidence', 'high') or 'high') == 'high'
+                 and (r.get('buyback_price', 0) or 0) > 0],
+                default=0,
+            )
+
+            def _is_manual_outlier(r) -> bool:
+                """auto_scraped high がある商品で、それを +30% 超える manual 買取は異常値。
+                手動入力ミス/販売・相場価格の転記ミスとみなし主計算から除外する。"""
+                if _auto_high <= 0:
+                    return False
+                if not str(r.get('data_source', '')).startswith('manual'):
+                    return False
+                return (r.get('buyback_price', 0) or 0) > _auto_high * 1.3
+
             valid_rows = [
                 r for r in rows
                 if r.get('buyback_price', 0) > 0
                 and r.get('data_source', '') not in ('fetch_failed', 'product_not_listed')
                 and r.get('confidence', 'high') != 'low'
                 and not _is_tradein_row(r)  # 下取価格は現金買取の最高値に含めない
+                and not _is_manual_outlier(r)  # auto high の+30%超の manual 異常値を除外
             ]
             if not valid_rows:
                 # resale 由来ショップをクリア
@@ -7081,7 +7119,6 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         card_data = []  # [(sort_key_tuple, card_html_str)]
         for c in candidates:
             price     = c["official_price"]
-            bp        = c["buyback_price"]
             shop      = c["shop_name"] or "—"
             _raw_flags = [f for f in (c["flags"] or []) if f != "中古プレ値あり"]
             flags = "・".join(_raw_flags) if _raw_flags else "監視中"
@@ -7089,6 +7126,16 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             pname_esc = _esc(pname_raw)
             pname_enc = _urllib_parse.quote(pname_raw)
             prod_id    = c.get("product_id", "")
+            # 参考買取価格は、フィルタ済み buyback_by_product（manual異常値・下取・resale除外）の
+            # 最高値で上書きする。snapshot 由来の生値（manual過大価格）を主表示しない。
+            bp = c["buyback_price"]
+            _bp_valid = [
+                (r.get('buyback_price', 0) or 0) for r in bybp.get(prod_id, [])
+                if r.get('data_source') not in ('resale_market', 'fetch_failed', 'product_not_listed')
+                and (r.get('buyback_price', 0) or 0) > 0
+            ]
+            if _bp_valid:
+                bp = max(_bp_valid)
             genre_attr = c.get("genre", "other")
 
             # 価格差表示（Pro向け：買取価格を主役にせず補助情報として表示）

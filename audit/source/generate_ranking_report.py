@@ -55,58 +55,83 @@ def main() -> int:
     now = datetime.now(tz=JST)
     print(f"[generate_ranking_report] 開始: {now.strftime('%Y-%m-%d %H:%M')} JST")
 
-    _stale_excluded = 0  # 14日超で利益判定から除外した件数（reason 用）
+    # ── 唯一の入力源: normalized_price_observations ──
+    # Beginner = official + sell(buyback) のみ / Pro = buy + sell（= sedori ルート）。
+    # 旧 list_beginner_deals + enrich の DB 直読みは廃止し、価格定義を一元化する。
+    from types import SimpleNamespace
+    _stale_excluded = 0
+    BEGINNER_COST = 1300  # 送料+振込手数料の概算（初心者: 公式購入→買取売却）
+    all_deals = []   # Beginner エントリ（NPO official+buyback 由来）
+    pro_objs = []    # Pro エントリ（sedori ルート = NPO buy+sell 由来）
+    _genre_by_pid: dict[str, str] = {}
     try:
+        import sqlite3 as _sq3
         from src.db.database import Database
         from src.db.repository import Repository
-        from src.content.daily_lp_generator import DailyLPGenerator
+        from src.market.normalized_prices import (
+            build_observations, beginner_official, beginner_sell,
+        )
         db = Database()
         repo = Repository(db)
-        # LP と同じく「全レベル」を取得して enrich で昇格を反映（min_profit 制約なし）。
-        _raw = repo.list_beginner_deals(min_profit=-9999999, limit=80)
-        # 商品別買取行（bybp）を構築（中古・resale は enrich 側で除外）
-        _bybp = {}
         for _p in repo.list_products():
-            _rows = repo.list_buyback_prices_by_product(_p.id, limit=10)
-            if _rows:
-                _bybp[_p.id] = _rows
-        _gen = DailyLPGenerator(repo)
-        # LP と同一の補完（新品・未使用・非resale 価格のみ採用、中古/resale 除外）
-        _enriched = [_gen._enrich_deal(d, _bybp.get(d.product_id, [])) for d in _raw]
+            _genre_by_pid[_p.id] = getattr(_p, "genre", "") or ""
 
-        # 14日(336h)超の手動価格は利益判定から除外（observed_at 基準・有効データのみ採用）
-        def _obs_age_h(d):
-            newest = None
-            for r in _bybp.get(getattr(d, "product_id", "") or "", []):
-                if (r.get("buyback_price", 0) or 0) <= 0:
-                    continue
-                if r.get("data_source") in ("fetch_failed", "product_not_listed", "resale_market"):
-                    continue
-                o = r.get("observed_at", "")
-                if not o:
-                    continue
-                try:
-                    dt = datetime.fromisoformat(str(o))
-                    if dt.tzinfo is None:
-                        dt = dt.replace(tzinfo=JST)
-                    dt = dt.astimezone(JST)
-                    if newest is None or dt > newest:
-                        newest = dt
-                except Exception:
-                    pass
-            if newest is None:
-                return 0.0
-            return (datetime.now(tz=JST) - newest).total_seconds() / 3600
+        _con = _sq3.connect(str(PROJECT_ROOT / "data" / "premium_monitor.db"))
+        obs = build_observations(_con, now)
+        _con.close()
 
-        all_deals = []
-        for d in _enriched:
-            if (d.net_profit_jpy or 0) > 0 and _obs_age_h(d) > 336.0:
-                _stale_excluded += 1
-                continue  # 14日超は利益ランキングから除外
-            all_deals.append(d)
+        # Beginner: 商品ごとに 公式/定価(official) + 最高買取(sell, usable_for_beginner)
+        _pids = sorted({o["product_id"] for o in obs if o["product_id"]})
+        for pid in _pids:
+            off = beginner_official(obs, pid)
+            sells = beginner_sell(obs, pid)
+            if not off or not sells:
+                continue
+            best = sells[0]
+            official = int(off["price"])
+            buyback = int(best["price"])
+            net = buyback - official - BEGINNER_COST
+            rate = (net / official) if official > 0 else 0.0
+            cat = _genre_by_pid.get(pid, "")
+            all_deals.append(SimpleNamespace(
+                product_id=pid,
+                product_name=off["product_name"] or best["product_name"],
+                category=cat,
+                user_level="beginner_easy" if net >= 0 else "beginner_watch",
+                official_price_jpy=official,
+                reference_source=off["extraction_method"],  # official / retail_concept
+                best_buyback_price=buyback,
+                best_buyback_shop=best["source_name"],
+                best_buyback_url=best["item_url"] or best["source_url"],
+                net_profit_jpy=net,
+                net_profit_rate=rate,
+                # pro 用フィールドは Beginner では未使用
+                buy_price=None, buy_shop_name="", buy_price_type="", sell_price_type="buyback_price",
+            ))
+
+        # Pro: sedori ルート（NPO buy+sell 由来）。
+        for r in repo.list_sedori_routes(min_net_profit=0, limit=100):
+            cat = _genre_by_pid.get(getattr(r, "product_id", ""), "")
+            pro_objs.append(SimpleNamespace(
+                product_id=getattr(r, "product_id", ""),
+                product_name=getattr(r, "product_name", ""),
+                category=cat,
+                user_level="pro",
+                official_price_jpy=None,
+                best_buyback_price=getattr(r, "sell_price", 0),
+                best_buyback_shop=getattr(r, "sell_shop_name", ""),
+                best_buyback_url=getattr(r, "sell_url", ""),
+                net_profit_jpy=getattr(r, "net_profit", 0),
+                net_profit_rate=float(getattr(r, "profit_rate", 0) or 0),
+                buy_price=getattr(r, "buy_price", 0),
+                buy_shop_name=getattr(r, "buy_shop_name", ""),
+                buy_price_type=getattr(r, "buy_price_type", ""),
+                sell_price_type=getattr(r, "sell_price_type", ""),
+            ))
     except Exception as e:
-        print(f"[WARN] DB 読み込み/enrich 失敗: {e}", file=sys.stderr)
+        print(f"[WARN] NPO 読み込み失敗: {e}", file=sys.stderr)
         all_deals = []
+        pro_objs = []
 
     # 初心者向け: 一次流通仕入れ → 二次流通販売 / 全カテゴリ / 利益あり / 差益順
     # camera も「公式→新品/未使用買取」モデルが成立するため beginner に含める。
@@ -125,7 +150,7 @@ def main() -> int:
     # Pro向け: 二次流通仕入れ → 二次流通販売 / 全カテゴリ / 利益率高い順 / camera・pc優先
     _PRO_PRIORITY_CATEGORIES = ("camera", "pc")
     _pro_all = sorted(
-        [d for d in all_deals if d.net_profit_jpy >= 0],
+        [d for d in pro_objs if d.net_profit_jpy >= 0],
         key=lambda d: (
             getattr(d, "category", "") in _PRO_PRIORITY_CATEGORIES,
             getattr(d, "net_profit_rate", 0) or 0,
@@ -161,8 +186,14 @@ def main() -> int:
             "category": cat,
             "user_level": getattr(d, "user_level", ""),
             "official_price_jpy": getattr(d, "official_price_jpy", None),
+            "reference_source": getattr(d, "reference_source", None),
             "best_buyback_price": getattr(d, "best_buyback_price", None),
             "best_buyback_shop": getattr(d, "best_buyback_shop", ""),
+            # Pro ルートの仕入れ側（買取=売却 と区別して明示）
+            "buy_price": getattr(d, "buy_price", None),
+            "buy_shop_name": getattr(d, "buy_shop_name", ""),
+            "buy_price_type": getattr(d, "buy_price_type", ""),
+            "sell_price_type": getattr(d, "sell_price_type", ""),
             "net_profit_jpy": getattr(d, "net_profit_jpy", 0),
             "net_profit_rate": round(float(getattr(d, "net_profit_rate", 0) or 0), 4),
             "route_type": route_type,
@@ -214,7 +245,7 @@ def main() -> int:
     for cat in _ALL_PRO_CATEGORIES:
         cat_deals = sorted(
             [
-                d for d in all_deals
+                d for d in pro_objs
                 if d.net_profit_jpy >= 0
                 and getattr(d, "category", "") == cat
             ],
@@ -251,16 +282,26 @@ def main() -> int:
                 age_d = 0.0
             if age_d > 7:  # fresh<=7d のみ
                 continue
-            official = d.get("official_price") or d.get("retail_price") or 0
+            # 参照価格（公式価格 → 無ければ概算定価）。両方無い商品は差益計算不能のため除外する。
+            _official = d.get("official_price") or 0
+            _retail = d.get("retail_price") or 0
+            reference = _official or _retail
+            if reference <= 0:
+                # 公式価格・定価とも未取得 → 差益（買取-公式）が計算できないのでランキングに載せない。
+                continue
+            reference_source = "official" if _official > 0 else "retail_concept"
             bp = d.get("buyback_price", 0) or 0
             top_camera_buyback.append({
                 "product_id": d.get("product_id"), "product_name": d.get("product_name", ""),
                 "shop_name": d.get("shop_name", ""), "buyback_price": bp,
-                "official_price": official, "diff_vs_official": (bp - official) if official else None,
+                # official_price は後方互換のため reference を入れる（公式が無い場合は概算定価）
+                "official_price": reference,
+                "reference_price": reference, "reference_source": reference_source,
+                "diff_vs_official": bp - reference,
                 "matched_item": d.get("notes", ""), "confidence": "high",
                 "source": "auto_scraped", "age_days": round(age_d, 1),
             })
-        top_camera_buyback.sort(key=lambda x: (x["diff_vs_official"] if x["diff_vs_official"] is not None else x["buyback_price"]), reverse=True)
+        top_camera_buyback.sort(key=lambda x: x["diff_vs_official"], reverse=True)
         top_camera_buyback = top_camera_buyback[:20]
     except Exception as e:
         print(f"[WARN] top_camera_buyback 生成失敗: {e}", file=sys.stderr)

@@ -1,52 +1,46 @@
-# 環境変数（実際の秘密情報）
-.env
-.env.local
-.env.*.local
-
-# SQLite DB（ローカルデータ）
-data/*.db
-data/*.sqlite
-
-# ログ
-data/logs/
-
-# Python
-.venv/
-venv/
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-.Python
-*.egg-info/
-dist/
-build/
-.pytest_cache/
-
-# macOS
-.DS_Store
-.AppleDouble
-.LSOverride
-
-# エディタ
-.vscode/
-.idea/
-*.swp
-*.swo
 
 # .github は追跡対象（GitHub Actions に必要）
 # .github/
-
 # Playwright
-playwright-report/
-test-results/
-
-# macOS archive junk
-__MACOSX/
-.DS_Store
-
+# Python
+# SQLite DB（ローカルデータ）
 # camera collector debug HTML (diagnostics only, not committed)
+# macOS
+# macOS archive junk
+# エディタ
+# ログ
+# 環境変数（実際の秘密情報）
+*.egg-info/
+*.pyc
+*.pyd
+*.pyo
+*.swo
+*.swp
+.AppleDouble
+.DS_Store
+.LSOverride
+.Python
+.env
+.env.*.local
+.env.local
+.idea/
+.pytest_cache/
+.venv/
+.vscode/
+__MACOSX/
+__pycache__/
+audit/
+audit_*.zip
+audit_price_validation/
+build/
+data/*.db
+data/*.sqlite
+data/logs/
+dist/
 exports/debug_camera/*.html
 exports/debug_camera/*.png
 exports/debug_camera/*.pw.html
 exports/debug_camera_screenshots/
+playwright-report/
+test-results/
+venv/

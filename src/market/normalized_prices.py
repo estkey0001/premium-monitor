@@ -37,6 +37,24 @@ SALE_LISTING_TYPES = frozenset({
     "shop_sale_price", "flea_listing_price", "flea_sold_price", "overseas_listing_price",
 })
 
+# 本体以外（アクセサリー/ケース/レンズ等）を示すキーワード。タイトル/文脈に含まれれば本体ではない。
+ACCESSORY_KEYWORDS = (
+    "ケース", "case", "カバー", "cover", "バッテリー", "battery", "充電器", "charger",
+    "ストラップ", "strap", "レンズ", "lens", "フィルター", "filter", "アダプター", "adapter",
+    "保護", "protector", "leather", "pouch", "grip", "グリップ", "フード", "hood",
+    "シール", "skin", "三脚", "tripod", "純正アクセサリ", "アクセサリー", "accessory",
+)
+# 本体価格の下限比率。参照価格（定価/公式 or 買取中央値）のこの割合未満は本体でない疑い。
+BODY_PRICE_FLOOR_RATIO = 0.5
+
+
+def detect_accessory_in_title(*texts: str) -> bool:
+    """タイトル/文脈テキストにアクセサリー語が含まれるか。"""
+    blob = " ".join(t for t in texts if t).lower()
+    if not blob:
+        return False
+    return any(kw.lower() in blob for kw in ACCESSORY_KEYWORDS)
+
 
 def _age_days(observed_at: str, now: datetime) -> float:
     if not observed_at:
@@ -133,28 +151,63 @@ def make_observation(now: datetime, **kw) -> dict:
     unknown_cond = condition in UNKNOWN_CONDITIONS
     is_ti = price_type == "trade_in_price"
 
+    # ── 製品同一性（本体判定）──
+    # extracted_title: 取得元の実タイトル。auto_scraped 買取は notes(price_context)=実商品名。
+    #                  販売系(resale)は title 列が無いため source_name を代替に用いる。
+    extracted_title = (kw.get("extracted_title") or kw.get("price_context", "")
+                       or kw.get("source_name", "") or "")
+    extracted_text_preview = (kw.get("price_context", "") or "")[:160]
+    extraction_method = kw.get("extraction_method", "")
+    # タイトル/文脈にアクセサリー語があれば本体でない
+    accessory_flag = detect_accessory_in_title(
+        extracted_title, kw.get("source_name", ""), kw.get("price_context", ""))
+    wrong_model_flag = False  # 機種違いは auto_scraped で strict 一致済み。価格フロアは後段で判定
+    # auto_scraped 買取は scraper 側で機種厳密一致済 → 本体確定度 high
+    is_exact_product_match = (extraction_method == "auto_scraped") and not accessory_flag
+    is_body_only = not accessory_flag
+    if accessory_flag:
+        product_match_confidence = "low"
+        product_match_reason = "accessory_keyword_in_title"
+    elif is_exact_product_match:
+        product_match_confidence = "high"
+        product_match_reason = "strict_model_match"
+    elif price_role == "official":
+        product_match_confidence = "high"
+        product_match_reason = "official_reference"
+    else:
+        product_match_confidence = "medium"
+        product_match_reason = "unverified_title_price_band_pending"
+
     rejection_reason = ""
     if price <= 0:
         rejection_reason = "price_zero"
     elif not is_fresh:
         rejection_reason = "stale_over_14d"
+    elif accessory_flag:
+        rejection_reason = "accessory_or_wrong_product"
+
+    # 製品同一性ゲート: 本体のみ / アクセサリー否 / 機種違い否 / 一致度 medium 以上
+    identity_ok = (is_body_only and not accessory_flag and not wrong_model_flag
+                   and product_match_confidence in ("high", "medium"))
 
     # Beginner: official_price → buyback_price のみ / trade_in 除外 / sale系除外 /
-    #           stale除外 / low除外 / price0除外
+    #           stale除外 / low除外 / price0除外 / 本体のみ
     is_usable_for_beginner = (
         price > 0 and is_fresh and not is_ti
         and price_type in BEGINNER_TYPES
         and price_role in ("official", "sell")
         and confidence != "low"
+        and identity_ok
     )
 
     # Pro: buy=PRO_BUY_TYPES, sell=PRO_SELL_TYPES / buyback仕入れ禁止 /
-    #      trade_in通常売却禁止 / unknown condition除外
+    #      trade_in通常売却禁止 / unknown condition除外 / 本体のみ
     pro_buy_ok = (price_role == "buy" and price_type in PRO_BUY_TYPES)
     pro_sell_ok = (price_role == "sell" and price_type in PRO_SELL_TYPES)
     is_usable_for_pro = (
         price > 0 and is_fresh and not is_ti and not unknown_cond
         and (pro_buy_ok or pro_sell_ok)
+        and identity_ok
     )
 
     if not rejection_reason and not is_usable_for_beginner and not is_usable_for_pro:
@@ -168,6 +221,14 @@ def make_observation(now: datetime, **kw) -> dict:
             rejection_reason = "role_type_not_in_main_calc"
 
     return {
+        "extracted_title": extracted_title[:160],
+        "extracted_text_preview": extracted_text_preview,
+        "is_exact_product_match": is_exact_product_match,
+        "is_body_only": is_body_only,
+        "product_match_confidence": product_match_confidence,
+        "product_match_reason": product_match_reason,
+        "accessory_flag": accessory_flag,
+        "wrong_model_flag": wrong_model_flag,
         "product_id": kw.get("product_id", ""),
         "product_name": kw.get("product_name", ""),
         "source_id": kw.get("source_id", ""),
@@ -323,6 +384,42 @@ def build_observations(con, now: datetime | None = None) -> list[dict]:
                 r["is_usable_for_pro"] = False
                 if not r["rejection_reason"]:
                     r["rejection_reason"] = "manual_over_auto_high"
+
+    # ── 本体価格フロア検証（アクセサリー/別商品の誤採用を除外）──
+    # 参照価格 = 定価/公式 と auto_scraped high 買取中央値 の大きい方。
+    # 例: GR IV(定価¥194,800) の Amazon ¥61,267 は本体でなくケース/アクセサリーの可能性が高い。
+    # 参照価格の BODY_PRICE_FLOOR_RATIO(50%) 未満は本体でないとみなし main calc から除外。
+    body_ref: dict = {}
+    # 本体参照価格の買取シグナル = manual_over_auto 除外後に「使用可能」な買取価格。
+    # （auto_scraped が無い商品でも、信頼できる買取価格を本体参照に使えるようにする。
+    #   manual_over_auto で除外済みの異常 manual はここに含まれない＝過大基準を避ける）
+    _ref_buyback: dict = _dd(list)
+    for r in rows:
+        if (r["price_type"] == "buyback_price" and r["price"] > 0
+                and r["is_usable_for_beginner"]):
+            _ref_buyback[r["product_id"]].append(r["price"])
+    for pid, prod in products.items():
+        ref = (prod["official_price"] or 0) or (prod["retail_price"] or 0)
+        bl = _ref_buyback.get(pid, [])
+        if bl:
+            bl_sorted = sorted(bl)
+            median = bl_sorted[len(bl_sorted) // 2]
+            ref = max(ref, median)
+        body_ref[pid] = ref
+    for r in rows:
+        ref = body_ref.get(r["product_id"], 0)
+        if ref > 0 and r["price"] > 0 and r["price"] < ref * BODY_PRICE_FLOOR_RATIO:
+            # 本体価格として安すぎる → アクセサリー/別商品の疑い
+            r["accessory_flag"] = True
+            r["is_body_only"] = False
+            r["is_exact_product_match"] = False
+            r["product_match_confidence"] = "low"
+            r["product_match_reason"] = (
+                f"price_below_body_floor(<{int(BODY_PRICE_FLOOR_RATIO*100)}%_of_ref¥{ref:,})")
+            r["is_usable_for_beginner"] = False
+            r["is_usable_for_pro"] = False
+            if not r["rejection_reason"] or r["rejection_reason"] == "role_type_not_in_main_calc":
+                r["rejection_reason"] = "accessory_or_wrong_product"
 
     return rows
 

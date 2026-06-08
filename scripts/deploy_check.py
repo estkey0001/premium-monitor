@@ -5508,7 +5508,86 @@ def check() -> list[dict]:
                     "message": "#559 auto_scraped high の+30%超の manual 買取が主計算/最高買取から除外される"
                                + ("" if _t559 else f" ← コード未実装 or 異常manual残存 {_bad559} 件")})
 
+    # ── 製品同一性（本体判定）ガード #560-#565 ──
+    _sed_rep = _load_json_safe('exports/sedori_routes_report/latest.json') or {}
+    _pro_routes = (_sed_rep.get('pro_routes', {}) or {}).get('top', []) if isinstance(_sed_rep, dict) else []
+    _all_routes = _pro_routes + (_sed_rep.get('all_profitable', []) if isinstance(_sed_rep, dict) else [])
+
+    # #560: NPO に product_match_confidence / accessory_flag フィールドがある
+    _t560 = _t545 and len(_obs) > 0 and all(
+        ('product_match_confidence' in r and 'accessory_flag' in r and 'is_body_only' in r)
+        for r in _obs[:50])
+    results.append({"level": "ok" if _t560 else "error", "check": "npo_product_identity_fields",
+                    "message": "#560 normalized_price_observations に product_match_confidence/accessory_flag/is_body_only がある"
+                               + ("" if _t560 else " ← 製品同一性フィールドが不足")})
+
+    # #561: accessory_flag=true が main calculation に使われない
+    _bad561 = sum(1 for r in _obs if r.get('accessory_flag')
+                  and (r.get('is_usable_for_beginner') or r.get('is_usable_for_pro')))
+    _t561 = _t545 and _bad561 == 0
+    results.append({"level": "ok" if _t561 else "error", "check": "npo_accessory_not_main",
+                    "message": "#561 accessory_flag=true の価格が main calculation に使われない"
+                               + ("" if _t561 else f" ← accessory が利用可 {_bad561} 件")})
+
+    # #562: wrong_model_flag=true が main calculation に使われない
+    _bad562 = sum(1 for r in _obs if r.get('wrong_model_flag')
+                  and (r.get('is_usable_for_beginner') or r.get('is_usable_for_pro')))
+    _t562 = _t545 and _bad562 == 0
+    results.append({"level": "ok" if _t562 else "error", "check": "npo_wrong_model_not_main",
+                    "message": "#562 wrong_model_flag=true の価格が main calculation に使われない"
+                               + ("" if _t562 else f" ← wrong_model が利用可 {_bad562} 件")})
+
+    # #563: 本体価格フロア未満（GR IV ¥61,267 等の異常安値）が Pro route の buy に使われない
+    #   sedori report の buy_price が、その商品の参照価格(retail/official)の50%未満でない
+    _prod_ref = {}
+    try:
+        for _p in _load_products_for_ref():
+            _prod_ref[_p[0]] = _p[1]
+    except Exception:
+        _prod_ref = {}
+    _bad563 = 0
+    for r in _all_routes:
+        # report には product_name のみ。buy_price が極端に安いものを検出（保守的に絶対閾値併用）
+        bp = r.get('buy_price', 0) or 0
+        if 0 < bp < 70000 and r.get('buy_price_type') in (
+                'shop_sale_price', 'flea_listing_price', 'flea_sold_price', 'overseas_listing_price'):
+            # カメラ/高額機の本体が7万未満で仕入れられるのは異常 → 要確認
+            _nm = r.get('product_name', '')
+            if any(k in _nm for k in ('GR IV', 'X100', 'Leica', 'α7', 'R5', 'FX3', 'Z8', 'Z9', 'GFX')):
+                _bad563 += 1
+    _t563 = _bad563 == 0
+    results.append({"level": "ok" if _t563 else "error", "check": "pro_buy_body_price_floor",
+                    "message": "#563 Pro route の buy 側に本体価格フロア未満の異常安値(GR IV¥61,267等)が使われない"
+                               + ("" if _t563 else f" ← 異常安値 buy {_bad563} 件")})
+
+    # #564: 本体価格フロア検証ロジック（BODY_PRICE_FLOOR_RATIO / accessory_or_wrong_product）が実装されている
+    _t564 = ('BODY_PRICE_FLOOR_RATIO' in _norm_src) and ('accessory_or_wrong_product' in _norm_src) \
+        and ('ACCESSORY_KEYWORDS' in _norm_src)
+    results.append({"level": "ok" if _t564 else "error", "check": "body_price_floor_logic",
+                    "message": "#564 本体価格フロア/アクセサリー除外ロジックが normalized_prices に実装されている"
+                               + ("" if _t564 else " ← 本体判定ロジックが見つかりません")})
+
+    # #565: item_url が無い場合は route/観測を high confidence にしない
+    #   （product_match_confidence=high は auto_scraped 由来のみ。sale系は medium 以下）
+    _bad565 = sum(1 for r in _obs if r.get('product_match_confidence') == 'high'
+                  and not (r.get('item_url') or r.get('extraction_method') in ('auto_scraped', 'official', 'retail_concept')))
+    _t565 = _t545 and _bad565 == 0
+    results.append({"level": "ok" if _t565 else "error", "check": "no_high_conf_without_item_url",
+                    "message": "#565 item_url が無い価格を product_match high にしない（auto/official のみ high）"
+                               + ("" if _t565 else f" ← item_url無しでhigh {_bad565} 件")})
+
     return results
+
+
+def _load_products_for_ref():
+    """商品IDと参照価格(official or retail)のリストを返す（#563 用）。"""
+    import sqlite3 as _sq
+    _con = _sq.connect(str(PROJECT_ROOT / "data" / "premium_monitor.db"))
+    out = []
+    for r in _con.execute("SELECT id, COALESCE(official_price,0), COALESCE(retail_price,0) FROM products"):
+        out.append((r[0], r[1] or r[2]))
+    _con.close()
+    return out
 
 
 def main():

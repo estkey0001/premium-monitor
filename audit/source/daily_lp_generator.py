@@ -195,6 +195,25 @@ class DailyLPGenerator:
             if _rows:
                 buyback_by_product[_p.id] = _rows
 
+        # 異常 manual 買取の除外（auto_scraped high の +30% 超）。
+        # 同一商品に信頼できる auto_scraped high 買取があるのに manual がそれを大幅に上回る場合、
+        # 手動入力ミス/販売・相場価格の転記ミスの可能性が高い。auto を信頼し manual を除外する。
+        # （normalized_prices.MANUAL_OVER_AUTO_RATIO と同一ルール）。全表示・全計算へ波及。
+        for _pid, _rws in list(buyback_by_product.items()):
+            _auto_hi = max(
+                [(_r.get('buyback_price', 0) or 0) for _r in _rws
+                 if _r.get('data_source') == 'auto_scraped'
+                 and (_r.get('confidence', 'high') or 'high') == 'high'
+                 and (_r.get('buyback_price', 0) or 0) > 0],
+                default=0,
+            )
+            if _auto_hi > 0:
+                buyback_by_product[_pid] = [
+                    _r for _r in _rws
+                    if not (str(_r.get('data_source', '')).startswith('manual')
+                            and (_r.get('buyback_price', 0) or 0) > _auto_hi * 1.3)
+                ]
+
         # sale_prices (新品/未使用条件) を buyback_by_product に追加（二次流通価格の表示用）
         # resale_market ソースとして buyback_rows に注入することで売却先比較テーブルに反映する
         _RESALE_NEW_CONDS = {'new_unopened', 'new_unopened_simfree', 'new', 'unused'}
@@ -1905,6 +1924,7 @@ a[href], button, [role="tab"], [role="button"],
   background: #ECFBF4; border-radius: 6px; padding: 3px 8px; margin: 2px 0;
 }}
 .shop-card .shop-auto-annot .shop-auto-item {{ color: var(--ink3); }}
+.shop-card .shop-auto-annot .shop-tradein-note {{ color: #b45309; font-size: 0.78em; }}
 .camera-auto-note {{
   font-size: 0.72rem; color: var(--ink3); line-height: 1.5;
   background: #F7F8FC; border-radius: 6px; padding: 6px 9px; margin: 2px 0 6px;
@@ -5033,16 +5053,30 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 if not route_list:
                     return ""
                 rows_html = []
+                def _link_kind(url: str) -> tuple[str, str]:
+                    """URL を item / search / shop_home に分類し、(種別, 絵文字ラベル) を返す。"""
+                    u = (url or "").lower()
+                    if not u:
+                        return "none", ""
+                    if any(k in u for k in ("/detail", "/item", "/products/", "/dp/", "itemid", "goods/")):
+                        return "item", "&#128279;"      # 🔗 商品ページ直リンク
+                    if any(k in u for k in ("search", "list.aspx", "keyword=", "/sch/", "itemlist")):
+                        return "search", "&#128269;"     # 🔍 検索結果ページ
+                    return "shop_home", "&#127968;"      # 🏠 店舗トップ
                 for r in route_list:
+                    _bk, _bk_ic = _link_kind(getattr(r, "buy_url", ""))
+                    _sk, _sk_ic = _link_kind(getattr(r, "sell_url", ""))
                     buy_a = (
                         f'<a href="{_esc(r.buy_url)}" target="_blank" rel="noopener noreferrer" '
-                        f'class="sc-mini-link" data-track="sedori_buy_click">'
-                        f'{_esc(r.buy_shop_name)}</a>'
+                        f'class="sc-mini-link sc-link-{_bk}" data-link-type="{_bk}" '
+                        f'title="{_bk}リンク" data-track="sedori_buy_click">'
+                        f'{_bk_ic} {_esc(r.buy_shop_name)}</a>'
                     ) if r.buy_url else _esc(r.buy_shop_name)
                     sell_a = (
                         f'<a href="{_esc(r.sell_url)}" target="_blank" rel="noopener noreferrer" '
-                        f'class="sc-mini-link" data-track="sedori_sell_click">'
-                        f'{_esc(r.sell_shop_name)}</a>'
+                        f'class="sc-mini-link sc-link-{_sk}" data-link-type="{_sk}" '
+                        f'title="{_sk}リンク" data-track="sedori_sell_click">'
+                        f'{_sk_ic} {_esc(r.sell_shop_name)}</a>'
                     ) if r.sell_url else _esc(r.sell_shop_name)
                     row_badge = self._route_quality_badge_html(r)
                     row_cls = ' class="sc-route-row sc-route-review"' if getattr(r, "needs_review", False) else ' class="sc-route-row"'
@@ -5470,11 +5504,44 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                         'gross_profit_jpy': 0,
                     })
                 return deal
+            def _is_tradein_row(r) -> bool:
+                """下取（トレードイン）価格「そのもの」の行か。最高買取価格に混ぜない。
+
+                買取ページ本文は現金買取と下取を併記するため、現金買取文脈
+                （基準査定額/買取/査定）がある行は下取扱いにしない（過剰除外防止）。
+                買取価格の抽出自体は scraper 側で下取段を除外済み。
+                """
+                blob = f"{r.get('shop_name', '') or ''} {r.get('notes', '') or ''}"
+                has_ti = ("下取" in blob) or ("トレードイン" in blob) or ("trade-in" in blob.lower())
+                if not has_ti:
+                    return False
+                has_cash = ("基準査定額" in blob) or ("買取" in blob) or ("査定" in blob)
+                return not has_cash
+            # auto_scraped high の買取最高値（manual 異常値の判定基準）
+            _auto_high = max(
+                [r.get('buyback_price', 0) or 0 for r in rows
+                 if r.get('data_source') == 'auto_scraped'
+                 and (r.get('confidence', 'high') or 'high') == 'high'
+                 and (r.get('buyback_price', 0) or 0) > 0],
+                default=0,
+            )
+
+            def _is_manual_outlier(r) -> bool:
+                """auto_scraped high がある商品で、それを +30% 超える manual 買取は異常値。
+                手動入力ミス/販売・相場価格の転記ミスとみなし主計算から除外する。"""
+                if _auto_high <= 0:
+                    return False
+                if not str(r.get('data_source', '')).startswith('manual'):
+                    return False
+                return (r.get('buyback_price', 0) or 0) > _auto_high * 1.3
+
             valid_rows = [
                 r for r in rows
                 if r.get('buyback_price', 0) > 0
                 and r.get('data_source', '') not in ('fetch_failed', 'product_not_listed')
                 and r.get('confidence', 'high') != 'low'
+                and not _is_tradein_row(r)  # 下取価格は現金買取の最高値に含めない
+                and not _is_manual_outlier(r)  # auto high の+30%超の manual 異常値を除外
             ]
             if not valid_rows:
                 # resale 由来ショップをクリア
@@ -6495,7 +6562,23 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 _auto_annot = ''
                 if r.get('data_source') == 'auto_scraped':
                     _conf = _esc(r.get('confidence', 'high'))
-                    _matched = _esc((r.get('notes', '') or '').strip())
+                    _notes_raw = (r.get('notes', '') or '').strip()
+                    _matched = _esc(_notes_raw)
+                    # 下取(トレードイン)段の参考額を補足表示（通常買取＝現金値、下取なら最大の旨）
+                    _tradein_note = ''
+                    try:
+                        import re as _re_ti
+                        _m = _re_ti.search(
+                            r'下取は?[0-9]*%?UP[^¥￥]{0,12}新品同様[^¥￥\d]{0,4}[¥￥]\s?'
+                            r'([0-9]{2,3}(?:,[0-9]{3})+)', _notes_raw)
+                        if _m:
+                            _tradein_note = (
+                                f'<br><span class="shop-tradein-note">'
+                                f'&#8505;&#65039; 下取なら最大 ¥{_esc(_m.group(1))}'
+                                f'（通常買取価格とは別）</span>'
+                            )
+                    except Exception:
+                        _tradein_note = ''
                     _obs = r.get('observed_at', '')
                     _obs_d = ''
                     try:
@@ -6509,6 +6592,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                         f'<div class="shop-auto-annot">&#129302; 自動取得 / {_conf}'
                         + (f' / 最終取得: {_obs_d}' if _obs_d else '')
                         + (f'<br><span class="shop-auto-item">{_matched}</span>' if _matched else '')
+                        + _tradein_note
                         + '</div>'
                     )
                 # 初心者モード：スマホで読みやすい縦カード形式（順位/店名 → 価格 → 差益 → 確認）
@@ -7035,7 +7119,6 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         card_data = []  # [(sort_key_tuple, card_html_str)]
         for c in candidates:
             price     = c["official_price"]
-            bp        = c["buyback_price"]
             shop      = c["shop_name"] or "—"
             _raw_flags = [f for f in (c["flags"] or []) if f != "中古プレ値あり"]
             flags = "・".join(_raw_flags) if _raw_flags else "監視中"
@@ -7043,6 +7126,16 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             pname_esc = _esc(pname_raw)
             pname_enc = _urllib_parse.quote(pname_raw)
             prod_id    = c.get("product_id", "")
+            # 参考買取価格は、フィルタ済み buyback_by_product（manual異常値・下取・resale除外）の
+            # 最高値で上書きする。snapshot 由来の生値（manual過大価格）を主表示しない。
+            bp = c["buyback_price"]
+            _bp_valid = [
+                (r.get('buyback_price', 0) or 0) for r in bybp.get(prod_id, [])
+                if r.get('data_source') not in ('resale_market', 'fetch_failed', 'product_not_listed')
+                and (r.get('buyback_price', 0) or 0) > 0
+            ]
+            if _bp_valid:
+                bp = max(_bp_valid)
             genre_attr = c.get("genre", "other")
 
             # 価格差表示（Pro向け：買取価格を主役にせず補助情報として表示）

@@ -163,6 +163,69 @@ def _strict_model_match(item_text: str, alias: str) -> bool:
     return True
 
 
+def _pick_item_url(alias: str, item_link_candidates: list, base_url: str) -> tuple[Optional[str], bool]:
+    """機種に厳密一致する商品個別ページURLを選ぶ。
+
+    DOM から収集した item_link_candidates（[{text, href}]）のうち、機種一致した
+    アンカーの href を商品URLとして返す。相対URLは base_url で絶対化する。
+
+    Returns:
+        (item_url, verified): 個別ページが見つかれば (絶対URL, True)。
+                              見つからなければ (None, False)。
+    """
+    if not item_link_candidates:
+        return None, False
+    import urllib.parse as _up
+    for c in item_link_candidates:
+        text = (c or {}).get("text", "") or ""
+        href = (c or {}).get("href", "") or ""
+        if not href:
+            continue
+        if _strict_model_match(text, alias):
+            try:
+                abs_url = _up.urljoin(base_url, href)
+            except Exception:
+                abs_url = href
+            # 検索ページ自身（list.aspx?keyword=...）は個別ページではないので除外
+            if "list.aspx" in abs_url and "keyword=" in abs_url:
+                continue
+            if abs_url.startswith("http"):
+                return abs_url, True
+    return None, False
+
+
+import re as _re_tier  # noqa: E402
+# 富士屋等の段階表示「(段) 新品同様 ￥X 良品 ￥Y」から段ラベルと新品同様価格を抽出。
+# 段ラベル例: 基準査定額 / 買取のみ10%UP / 下取は15%UP
+_TIER_RE = _re_tier.compile(
+    r"(基準査定額|買取のみ[0-9]+%UP|下取は?[0-9]*%?UP|下取り?|トレードイン)"
+    r"[^¥￥]{0,12}新品同様[^¥￥\d]{0,4}[¥￥]\s?([0-9]{2,3}(?:,[0-9]{3})+)"
+)
+
+
+def _select_cash_buyback_price(item_text: str):
+    """段階表示テキストから「下取(トレードイン)を除いた現金買取の最高値」を返す。
+
+    富士屋は 基準査定額 < 買取のみX%UP < 下取はX%UP の3段階を併記するため、
+    最高値をそのまま採ると下取(trade-in)価格を買取価格として誤採用してしまう。
+    下取段を除外し、基準査定額・買取のみ段の中から最高値（現金買取の最高額）を返す。
+    段構造が無ければ None（呼び出し側で従来の候補価格にフォールバック）。
+    """
+    raw = item_text or ""
+    tiers = _TIER_RE.findall(raw)
+    if not tiers:
+        return None
+    cash = []
+    for label, price in tiers:
+        if ("下取" in label) or ("トレードイン" in label):
+            continue  # 下取(trade-in)段は現金買取ではないため除外
+        try:
+            cash.append(int(price.replace(",", "")))
+        except ValueError:
+            continue
+    return max(cash) if cash else None
+
+
 def _select_camera_buyback(candidates: list, alias: str) -> dict:
     """買取候補から機種厳密一致の価格を選び、採用/不採用の追跡情報を返す（Task 2）。
     戻り値 dict:
@@ -185,8 +248,17 @@ def _select_camera_buyback(candidates: list, alias: str) -> dict:
     strict = [c for c in cands if c.get("near_buyback") and _strict_model_match(c.get("item_text", ""), alias)]
     if strict:
         best = max(strict, key=lambda c: c.get("price", 0))
-        out.update(price=best["price"], confidence="high",
-                   matched_item=(best.get("item_text", "") or "")[:140], used_for_save=True)
+        item_text = best.get("item_text", "") or ""
+        price = best["price"]
+        # 段階表示（基準査定額/買取のみ%UP/下取は%UP）がある場合は、
+        # 下取(trade-in)段を除いた現金買取の最高値を採用する。
+        cash_price = _select_cash_buyback_price(item_text)
+        if cash_price and cash_price != price:
+            out["tradein_tier_excluded"] = True
+            out["raw_max_price"] = price  # 参考: 段込みの最高値（下取段の可能性）
+            price = cash_price
+        out.update(price=price, confidence="high",
+                   matched_item=item_text[:140], used_for_save=True)
     return out
 
 # 対象買取店（shop_id, 表示名, 買取検索URLテンプレート {kw}=URLエンコード済キーワード）
@@ -325,6 +397,20 @@ _PW_DOM_PROBE_JS = r"""
     }
   } catch(e){}
   out.buyback_link_candidates = blinks.slice(0,20);
+  // 商品個別ページへのリンク候補（ブランド/型番を含むアンカー）を収集。
+  // 店舗トップ/検索URLではなく、機種一致した商品詳細URLを買取リンクに使うため。
+  const ilinks = [];
+  try {
+    const BRANDL = /FUJIFILM|RICOH|SONY|CANON|NIKON|LEICA|ソニー|キヤノン|ニコン|ライカ|富士フイルム|リコー|X100|GFX|X-?T5|GR\s?I|GRIII|ILCE|ILME|EOS|α7|α1|Z8|Z9|Q3|M11/i;
+    for (const a of document.querySelectorAll('a[href]')) {
+      const t = (a.textContent||"").replace(/\s+/g," ").trim();
+      const href = a.getAttribute('href')||"";
+      if (t.length >= 4 && BRANDL.test(t)) {
+        ilinks.push({text: t.slice(0,120), href: href});
+      }
+    }
+  } catch(e){}
+  out.item_link_candidates = ilinks.slice(0,40);
   const cands = [];
   for (const sel of SELECTORS) {
     let els;
@@ -359,12 +445,20 @@ _PW_DOM_PROBE_JS = r"""
       } catch(e){}
       const nearBuyback = /買取|査定|基準査定額|買取申し込み/.test(ctx)
                         || /kitr|kaitori|satei/i.test(el.className||"");
-      cands.push({selector: sel, text: t.slice(0,60), price: v, near_kw: nearKw, near_buyback: nearBuyback, item_text: item_text});
+      // 下取（トレードイン）価格の検出。フジヤ等は「下取15%UP」等の販促で
+      // 現金買取より高い下取価格を併記するため、現金買取価格と分離する。
+      // 直近の文脈（要素+直親）のみで判定し、7階層上の祖先まで巻き込まない（過剰除外防止）。
+      let localCtx = t;
+      try { if (el.parentElement) localCtx += " " + (el.parentElement.textContent||"").slice(0,150); } catch(e){}
+      const isTradein = /下取|トレードイン|trade-?in|[0-9]+\s?%\s?(?:UP|アップ|増)/i.test(localCtx);
+      cands.push({selector: sel, text: t.slice(0,60), price: v, near_kw: nearKw, near_buyback: nearBuyback, is_tradein: isTradein, item_text: item_text});
     }
     if (hit>0) out.matched_selectors.push({selector: sel, hits: hit});
   }
-  // 買取/査定 文脈の候補のみを「買取価格」として採用（販売価格は採用しない）
-  const buybackCands = cands.filter(c => c.near_buyback);
+  // 買取/査定 文脈かつ「下取(トレードイン)でない」候補のみを現金買取価格として採用。
+  // （販売価格カタログ・下取UP価格は採用しない）
+  const buybackCands = cands.filter(c => c.near_buyback && !c.is_tradein);
+  out.tradein_excluded = cands.filter(c => c.near_buyback && c.is_tradein).length;
   buybackCands.sort((a,b)=> b.price - a.price);
   cands.sort((a,b)=> (b.near_kw - a.near_kw) || (b.price - a.price));
   out.selector_candidates = cands.slice(0,15);
@@ -444,6 +538,8 @@ def _fetch_with_playwright(url: str, shop_id: str, alias: str, dbg_dir, shot_dir
                 out["has_buyback_context"] = bool(probe.get("has_buyback_context", False))
                 out["sales_price_sample"] = probe.get("sales_price_sample")
                 out["buyback_link_candidates"] = probe.get("buyback_link_candidates", [])
+                out["item_link_candidates"] = probe.get("item_link_candidates", [])
+                out["tradein_excluded"] = probe.get("tradein_excluded", 0)
                 _bp = probe.get("best_price")
                 # 「買取文脈」のある価格のみ採用（販売価格は buyback として保存しない）
                 if isinstance(_bp, (int, float)) and 10000 <= _bp <= 1500000:
@@ -696,12 +792,17 @@ def main() -> int:
             if repo is not None:
                 try:
                     pid = "prod_" + alias if not alias.startswith("prod_") else alias
+                    # 商品個別ページURLを優先。見つからなければ買取ページURL→検索URLにフォールバック。
+                    # link_verified は「商品個別URLを特定できた」場合のみ True にする。
+                    _item_links = _pw.get("item_link_candidates", []) if _pw else []
+                    _detail_url, _url_verified = _pick_item_url(alias, _item_links, url)
+                    _save_url = _detail_url or (_pw.get("buyback_page_url") if _pw else None) or url
                     bp = BuybackPriceModel(
                         id=f"camera_auto_{alias}_{shop_id}",  # 決定論的ID（再実行で同一行を更新）
                         product_id=pid, shop_id=shop_id, shop_name=shop_name,
-                        buyback_price=price, condition="new_unopened", buyback_url=url,
+                        buyback_price=price, condition="new_unopened", buyback_url=_save_url,
                         observed_at=now, data_source="auto_scraped",
-                        link_verified=True, confidence=_confidence,
+                        link_verified=_url_verified, confidence=_confidence,
                         notes=(_matched_item or "")[:120],  # matched_item を notes に保存（LP表示用）
                     )
                     repo.insert_buyback_price(bp)

@@ -18,6 +18,9 @@ from datetime import datetime, timedelta, timezone
 JST = timezone(timedelta(hours=9))
 
 STALE_DAYS = 14  # これを超えると stale（main calculation から除外）
+# 同一商品で auto_scraped high 買取がある場合、これを超える倍率の manual 買取は
+# 異常値（手動入力ミス/相場転記ミス）として main calculation から除外する。
+MANUAL_OVER_AUTO_RATIO = 1.3  # auto_scraped high の 1.3倍（+30%）超の manual を除外
 
 # Pro ルートで使える price_type
 PRO_BUY_TYPES = frozenset({
@@ -300,6 +303,26 @@ def build_observations(con, now: datetime | None = None) -> list[dict]:
             source_url="", item_url="", link_type="none",
             extraction_method="overseas_history", price_context=ctx,
         ))
+
+    # ── 異常 manual 買取の除外（auto_scraped high 基準の +30% 超）──
+    # 同一商品に auto_scraped high の買取があるのに、manual 買取がそれを大幅に上回る場合、
+    # 手動入力ミス/販売・相場価格の転記ミスの可能性が高い。auto を信頼して manual を除外する。
+    from collections import defaultdict as _dd
+    _auto_high = _dd(float)
+    for r in rows:
+        if (r["price_type"] == "buyback_price" and r["extraction_method"] == "auto_scraped"
+                and r["confidence"] == "high" and r["is_fresh"] and r["price"] > 0):
+            if r["price"] > _auto_high[r["product_id"]]:
+                _auto_high[r["product_id"]] = r["price"]
+    for r in rows:
+        if (r["price_type"] == "buyback_price" and r["extraction_method"] == "manual"
+                and r["price"] > 0):
+            ah = _auto_high.get(r["product_id"], 0)
+            if ah > 0 and r["price"] > ah * MANUAL_OVER_AUTO_RATIO:
+                r["is_usable_for_beginner"] = False
+                r["is_usable_for_pro"] = False
+                if not r["rejection_reason"]:
+                    r["rejection_reason"] = "manual_over_auto_high"
 
     return rows
 

@@ -4794,7 +4794,8 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 continue
             _seen_pids.add(_pid)
             _all_beginner_for_sedori.append(_d)
-        sedori_html      = self._tab_sedori(sedori_routes or [], beginner_deals=_all_beginner_for_sedori)
+        profit_html      = self._profit_routes_section()
+        sedori_html      = profit_html + self._tab_sedori(sedori_routes or [], beginner_deals=_all_beginner_for_sedori)
         lottery_html     = self._section_lottery(lottery_events)
 
         # 件数整合: 外部から渡された表示件数を優先（_render_page で整合済み）
@@ -4882,6 +4883,92 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             strong_cls = " sc-flag-strong" if f in self._SC_STRONG_FLAGS else ""
             items.append(f'<span class="sc-flag-item{strong_cls}">{_esc(lbl)}</span>')
         return '<div class="sc-flag-detail">' + "".join(items) + '</div>'
+
+    def _profit_routes_section(self) -> str:
+        """検証済み Pro 利益ルート（exports/profit_routes/latest.json）をカード表示する。
+        0件でも理由・候補数・参考ルート（海外sold fresh化で成立）を表示する。"""
+        import json as _json_pr
+        from html import escape as _esc
+        p = Path(__file__).resolve().parent.parent.parent / "exports" / "profit_routes" / "latest.json"
+        if not p.exists():
+            return ""
+        try:
+            data = _json_pr.loads(p.read_text(encoding="utf-8"))
+        except Exception:
+            return ""
+        s = data.get("summary", {})
+        main = data.get("main_routes", [])
+        refs = data.get("reference_routes", [])
+        diag = data.get("zero_route_diagnostics", {})
+        parts = ['<div class="profit-routes-section" style="margin:16px 0 24px;border-left:4px solid #2563eb;'
+                 'background:#eff6ff;border-radius:8px;padding:14px 16px">',
+                 '<div style="font-weight:700;color:#1d4ed8;font-size:1.05rem">&#128176; 検証済み利益ルート（Pro）</div>',
+                 '<div style="font-size:0.8rem;color:#475569;margin:4px 0 10px">'
+                 '正規化価格から本体一致・非stale・非0円・confidence≥medium の価格のみで算出。'
+                 'アクセサリー/異常値/下取は除外済み。</div>']
+
+        def _fmt_card(r, reference=False):
+            ov = (r["sell_price_type"] == "overseas_sold_price")
+            fees = []
+            if ov:
+                fees.append(f"eBay手数料 ¥{r['platform_fee']:,}")
+                fees.append(f"決済手数料 ¥{r['payment_fee']:,}")
+                fees.append(f"為替バッファ ¥{r['fx_buffer']:,}")
+            fees.append(f"送料 ¥{r['shipping_cost']:,}")
+            fees.append(f"安全マージン ¥{r['safety_margin']:,}")
+            badge = ('<span style="background:#f59e0b;color:#fff;padding:1px 6px;border-radius:4px;'
+                     'font-size:0.7rem">参考（海外sold ' + _esc(r.get("rejection_reason", "")) + '）</span>') if reference else \
+                    (f'<span style="background:#2563eb;color:#fff;padding:1px 6px;border-radius:4px;'
+                     f'font-size:0.7rem">信頼度 {_esc(r["route_confidence"])}</span>')
+            buy_link = (f'<a href="{_esc(r["buy_url"])}" target="_blank" rel="noopener noreferrer">仕入れ確認</a>'
+                        if r.get("buy_url") else "仕入れURLなし")
+            sell_link = (f'<a href="{_esc(r["sell_url"])}" target="_blank" rel="noopener noreferrer">売却相場確認</a>'
+                         if r.get("sell_url") else "売却相場確認")
+            return (
+                f'<div style="background:#fff;border:1px solid #dbeafe;border-radius:8px;padding:10px 12px;margin:8px 0">'
+                f'<div style="font-weight:700">{_esc(r["product_name"])} {badge}</div>'
+                f'<div style="font-size:0.85rem;margin-top:4px">'
+                f'仕入: {_esc(r["buy_source"])}（{_esc(r["buy_price_type"])}） <b>¥{r["buy_price"]:,}</b> ／ '
+                f'売却: {_esc(r["sell_source"])}（{_esc(r["sell_price_type"])}） <b>¥{r["sell_price"]:,}</b></div>'
+                f'<div style="font-size:0.78rem;color:#64748b;margin-top:2px">コスト: {" / ".join(fees)}</div>'
+                f'<div style="margin-top:4px">概算利益: <b style="color:#059669">+¥{r["net_profit"]:,}</b> '
+                f'／ ROI <b>{r["roi"]*100:.1f}%</b> ／ {buy_link} ｜ {sell_link}</div>'
+                f'</div>')
+
+        if main:
+            parts.append(f'<div style="font-weight:600;margin-top:6px">主要利益ルート {len(main)}件</div>')
+            for r in main[:20]:
+                parts.append(_fmt_card(r))
+        else:
+            # 0件表示（単に0件と出さず理由・候補数・参考ルートを表示）
+            buy_c = sum(z.get("buy_candidates", 0) for z in diag.values())
+            sell_c = sum(z.get("sell_candidates", 0) for z in diag.values())
+            from collections import Counter as _C
+            allrej = _C()
+            stale_total = ov_stale_total = 0
+            for z in diag.values():
+                for k, v in z.get("rejection_top5", []):
+                    allrej[k] += v
+                stale_total += z.get("stale_excluded", 0)
+                ov_stale_total += z.get("overseas_stale", 0)
+            parts.append('<div style="background:#fff;border:1px dashed #93c5fd;border-radius:8px;padding:10px 12px">')
+            parts.append('<div style="font-weight:700;color:#1d4ed8">現在、確定利益ルートは 0 件です</div>')
+            parts.append(f'<div style="font-size:0.85rem;margin-top:4px">buy候補 {buy_c}件 / sell候補 {sell_c}件 / '
+                         f'stale除外 {stale_total}件 / 海外sold stale {ov_stale_total}件</div>')
+            top5 = "、".join(f"{_esc(k)} {v}" for k, v in allrej.most_common(5))
+            parts.append(f'<div style="font-size:0.8rem;color:#64748b;margin-top:2px">除外理由TOP5: {top5 or "—"}</div>')
+            parts.append('<div style="font-size:0.85rem;color:#b45309;margin-top:6px">'
+                         '&#9888;&#65039; 国内完結（販売≥買取）では利益が出ません。'
+                         '<b>eBay sold（海外成約相場）を最新化</b>すると下記の参考ルートが成立します。</div>')
+            parts.append('</div>')
+
+        if refs:
+            parts.append(f'<div style="font-weight:600;margin-top:12px">参考ルート（海外sold を最新化すれば成立） {len(refs)}件</div>')
+            for r in refs[:5]:
+                parts.append(_fmt_card(r, reference=True))
+
+        parts.append('</div>')
+        return "".join(parts)
 
     def _tab_sedori(self, sedori_routes: list = None, beginner_deals: list = None) -> str:
         """せどりルート比較タブ — DBから自動算出済みルートを表示する（Phase 14/15）。

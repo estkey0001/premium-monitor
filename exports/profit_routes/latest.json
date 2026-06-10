@@ -1,0 +1,729 @@
+{
+  "generated_at": "2026-06-10 22:21 JST",
+  "summary": {
+    "main_route_count": 0,
+    "reference_route_count": 3,
+    "by_product": {},
+    "by_confidence": {},
+    "by_route_type": {},
+    "max_profit": null,
+    "max_roi": null,
+    "zero_route_products": 45
+  },
+  "main_routes": [],
+  "reference_routes": [
+    {
+      "product_id": "prod_x100vi",
+      "product_name": "FUJIFILM X100VI",
+      "buy_source": "Amazon JP (新品出品)",
+      "buy_price": 237999,
+      "buy_price_type": "shop_sale_price",
+      "buy_price_role": "buy",
+      "buy_condition": "new_unopened",
+      "buy_url": "https://www.amazon.co.jp/s?k=FUJIFILM%20X100VI&rh=p_n_condition-type%3A1294724011&s=price-asc-rank",
+      "buy_link_type": "unknown",
+      "sell_source": "src_ebay",
+      "sell_price": 548900,
+      "sell_price_type": "overseas_sold_price",
+      "sell_price_role": "sell",
+      "sell_condition": "new_unopened",
+      "sell_url": "",
+      "sell_link_type": "none",
+      "gross_profit": 310901,
+      "estimated_fee": 109780,
+      "platform_fee": 71357,
+      "payment_fee": 21956,
+      "fx_buffer": 16467,
+      "shipping_cost": 5000,
+      "safety_margin": 7140,
+      "net_profit": 188981,
+      "roi": 0.794,
+      "route_confidence": "low",
+      "buy_observed_at": "2026-05-31T23:06:30.713675+09:00",
+      "sell_observed_at": "2026-05-20T10:00:00+09:00",
+      "route_type": "shop_to_overseas",
+      "reference_route": true,
+      "rejection_reason": "overseas_sold_stale(21.5d)"
+    },
+    {
+      "product_id": "prod_x100vi",
+      "product_name": "FUJIFILM X100VI",
+      "buy_source": "ヤフオク (新品/未使用落札)",
+      "buy_price": 339800,
+      "buy_price_type": "flea_sold_price",
+      "buy_price_role": "buy",
+      "buy_condition": "new_unopened",
+      "buy_url": "https://auctions.yahoo.co.jp/search/search?p=%E5%AF%8C%E5%A3%AB%E3%83%95%E3%82%A4%E3%83%AB%E3%83%A0%20X100VI&va=%E5%AF%8C%E5%A3%AB%E3%83%95%E3%82%A4%E3%83%AB%E3%83%A0%20X100VI&istatus=2&n=20&s1=cbids&o1=d&ei=utf-8&auccat=&tab_ex=commerce&item_condition=1",
+      "buy_link_type": "search",
+      "sell_source": "src_ebay",
+      "sell_price": 548900,
+      "sell_price_type": "overseas_sold_price",
+      "sell_price_role": "sell",
+      "sell_condition": "new_unopened",
+      "sell_url": "",
+      "sell_link_type": "none",
+      "gross_profit": 209100,
+      "estimated_fee": 109780,
+      "platform_fee": 71357,
+      "payment_fee": 21956,
+      "fx_buffer": 16467,
+      "shipping_cost": 5000,
+      "safety_margin": 10194,
+      "net_profit": 84126,
+      "roi": 0.2476,
+      "route_confidence": "low",
+      "buy_observed_at": "2026-06-01T20:39:57.882064+09:00",
+      "sell_observed_at": "2026-05-20T10:00:00+09:00",
+      "route_type": "flea_to_overseas",
+      "reference_route": true,
+      "rejection_reason": "overseas_sold_stale(21.5d)"
+    },
+    {
+      "product_id": "prod_switch2",
+      "product_name": "Nintendo Switch 2",
+      "buy_source": "ヤフオク (新品/未使用落札)",
+      "buy_price": 51005,
+      "buy_price_type": "flea_sold_price",
+      "buy_price_role": "buy",
+      "buy_condition": "new_unopened",
+      "buy_url": "https://auctions.yahoo.co.jp/search/search?p=Nintendo%20Switch%202&va=Nintendo%20Switch%202&istatus=2&n=20&s1=cbids&o1=d&ei=utf-8&auccat=&tab_ex=commerce&item_condition=1",
+      "buy_link_type": "search",
+      "sell_source": "src_ebay",
+      "sell_price": 85140,
+      "sell_price_type": "overseas_sold_price",
+      "sell_price_role": "sell",
+      "sell_condition": "new_unopened",
+      "sell_url": "",
+      "sell_link_type": "none",
+      "gross_profit": 34135,
+      "estimated_fee": 17028,
+      "platform_fee": 11068,
+      "payment_fee": 3406,
+      "fx_buffer": 2554,
+      "shipping_cost": 5000,
+      "safety_margin": 5000,
+      "net_profit": 7107,
+      "roi": 0.1393,
+      "route_confidence": "low",
+      "buy_observed_at": "2026-06-01T20:39:57.882064+09:00",
+      "sell_observed_at": "2026-05-20T10:00:00+09:00",
+      "route_type": "flea_to_overseas",
+      "reference_route": true,
+      "rejection_reason": "overseas_sold_stale(21.5d)"
+    }
+  ],
+  "zero_route_diagnostics": {
+    "prod_iphone17pro_256": {
+      "product_name": "iPhone 17 Pro 256GB SIMフリー",
+      "buy_candidates": 1,
+      "sell_candidates": 7,
+      "rejection_top5": [
+        [
+          "price_zero",
+          57
+        ],
+        [
+          "stale_over_14d",
+          51
+        ]
+      ],
+      "stale_excluded": 99,
+      "overseas_stale": 1,
+      "fresh_overseas_whatif_top5": []
+    },
+    "prod_iphone17pro_512": {
+      "product_name": "iPhone 17 Pro 512GB SIMフリー",
+      "buy_candidates": 1,
+      "sell_candidates": 6,
+      "rejection_top5": [
+        [
+          "price_zero",
+          57
+        ],
+        [
+          "stale_over_14d",
+          44
+        ]
+      ],
+      "stale_excluded": 92,
+      "overseas_stale": 0,
+      "fresh_overseas_whatif_top5": []
+    },
+    "prod_iphone17pm_256": {
+      "product_name": "iPhone 17 Pro Max 256GB SIMフリー",
+      "buy_candidates": 1,
+      "sell_candidates": 5,
+      "rejection_top5": [
+        [
+          "price_zero",
+          59
+        ],
+        [
+          "stale_over_14d",
+          45
+        ]
+      ],
+      "stale_excluded": 93,
+      "overseas_stale": 0,
+      "fresh_overseas_whatif_top5": []
+    },
+    "prod_iphone17pm_512": {
+      "product_name": "iPhone 17 Pro Max 512GB SIMフリー",
+      "buy_candidates": 1,
+      "sell_candidates": 4,
+      "rejection_top5": [
+        [
+          "price_zero",
+          59
+        ],
+        [
+          "stale_over_14d",
+          29
+        ]
+      ],
+      "stale_excluded": 77,
+      "overseas_stale": 0,
+      "fresh_overseas_whatif_top5": []
+    },
+    "prod_iphone17_256": {
+      "product_name": "iPhone 17 256GB SIMフリー",
+      "buy_candidates": 0,
+      "sell_candidates": 0,
+      "rejection_top5": [
+        [
+          "stale_over_14d",
+          4
+        ]
+      ],
+      "stale_excluded": 4,
+      "overseas_stale": 0,
+      "fresh_overseas_whatif_top5": []
+    },
+    "prod_iphone16pro_256": {
+      "product_name": "iPhone 16 Pro 256GB SIMフリー",
+      "buy_candidates": 0,
+      "sell_candidates": 0,
+      "rejection_top5": [
+        [
+          "stale_over_14d",
+          4
+        ]
+      ],
+      "stale_excluded": 4,
+      "overseas_stale": 0,
+      "fresh_overseas_whatif_top5": []
+    },
+    "prod_iphone16pm_256": {
+      "product_name": "iPhone 16 Pro Max 256GB",
+      "buy_candidates": 0,
+      "sell_candidates": 0,
+      "rejection_top5": [
+        [
+          "stale_over_14d",
+          5
+        ]
+      ],
+      "stale_excluded": 5,
+      "overseas_stale": 1,
+      "fresh_overseas_whatif_top5": []
+    },
+    "prod_iphone16pm_512": {
+      "product_name": "iPhone 16 Pro Max 512GB",
+      "buy_candidates": 0,
+      "sell_candidates": 0,
+      "rejection_top5": [],
+      "stale_excluded": 0,
+      "overseas_stale": 0,
+      "fresh_overseas_whatif_top5": []
+    },
+    "prod_macbook_air_m4_13": {
+      "product_name": "MacBook Air M4 13インチ",
+      "buy_candidates": 0,
+      "sell_candidates": 0,
+      "rejection_top5": [
+        [
+          "stale_over_14d",
+          13
+        ]
+      ],
+      "stale_excluded": 13,
+      "overseas_stale": 0,
+      "fresh_overseas_whatif_top5": []
+    },
+    "prod_macbook_air_m4_15": {
+      "product_name": "MacBook Air M4 15インチ",
+      "buy_candidates": 0,
+      "sell_candidates": 0,
+      "rejection_top5": [
+        [
+          "stale_over_14d",
+          2
+        ]
+      ],
+      "stale_excluded": 2,
+      "overseas_stale": 0,
+      "fresh_overseas_whatif_top5": []
+    },
+    "prod_macbook_pro_m4_14": {
+      "product_name": "MacBook Pro M4 14インチ",
+      "buy_candidates": 0,
+      "sell_candidates": 0,
+      "rejection_top5": [
+        [
+          "stale_over_14d",
+          2
+        ]
+      ],
+      "stale_excluded": 2,
+      "overseas_stale": 0,
+      "fresh_overseas_whatif_top5": []
+    },
+    "prod_mac_mini_m4": {
+      "product_name": "Mac mini M4",
+      "buy_candidates": 0,
+      "sell_candidates": 0,
+      "rejection_top5": [
+        [
+          "stale_over_14d",
+          2
+        ]
+      ],
+      "stale_excluded": 2,
+      "overseas_stale": 0,
+      "fresh_overseas_whatif_top5": []
+    },
+    "prod_ipad_pro_m4_11": {
+      "product_name": "iPad Pro M4 11インチ",
+      "buy_candidates": 0,
+      "sell_candidates": 0,
+      "rejection_top5": [
+        [
+          "stale_over_14d",
+          1
+        ]
+      ],
+      "stale_excluded": 1,
+      "overseas_stale": 0,
+      "fresh_overseas_whatif_top5": []
+    },
+    "prod_ipad_pro_m4_13": {
+      "product_name": "iPad Pro M4 13インチ",
+      "buy_candidates": 0,
+      "sell_candidates": 0,
+      "rejection_top5": [
+        [
+          "stale_over_14d",
+          1
+        ]
+      ],
+      "stale_excluded": 1,
+      "overseas_stale": 0,
+      "fresh_overseas_whatif_top5": []
+    },
+    "prod_ipad_air_m3": {
+      "product_name": "iPad Air M3",
+      "buy_candidates": 0,
+      "sell_candidates": 0,
+      "rejection_top5": [
+        [
+          "stale_over_14d",
+          1
+        ]
+      ],
+      "stale_excluded": 1,
+      "overseas_stale": 0,
+      "fresh_overseas_whatif_top5": []
+    },
+    "prod_apple_watch_s11": {
+      "product_name": "Apple Watch Series 11",
+      "buy_candidates": 0,
+      "sell_candidates": 0,
+      "rejection_top5": [
+        [
+          "stale_over_14d",
+          2
+        ]
+      ],
+      "stale_excluded": 2,
+      "overseas_stale": 0,
+      "fresh_overseas_whatif_top5": []
+    },
+    "prod_apple_watch_ultra3": {
+      "product_name": "Apple Watch Ultra 3",
+      "buy_candidates": 0,
+      "sell_candidates": 0,
+      "rejection_top5": [
+        [
+          "stale_over_14d",
+          2
+        ]
+      ],
+      "stale_excluded": 2,
+      "overseas_stale": 0,
+      "fresh_overseas_whatif_top5": []
+    },
+    "prod_airpods_pro3": {
+      "product_name": "AirPods Pro 3",
+      "buy_candidates": 0,
+      "sell_candidates": 0,
+      "rejection_top5": [
+        [
+          "stale_over_14d",
+          2
+        ]
+      ],
+      "stale_excluded": 2,
+      "overseas_stale": 0,
+      "fresh_overseas_whatif_top5": []
+    },
+    "prod_airpods_max": {
+      "product_name": "AirPods Max",
+      "buy_candidates": 0,
+      "sell_candidates": 0,
+      "rejection_top5": [
+        [
+          "stale_over_14d",
+          2
+        ]
+      ],
+      "stale_excluded": 2,
+      "overseas_stale": 0,
+      "fresh_overseas_whatif_top5": []
+    },
+    "prod_switch2": {
+      "product_name": "Nintendo Switch 2",
+      "buy_candidates": 1,
+      "sell_candidates": 6,
+      "rejection_top5": [
+        [
+          "price_zero",
+          85
+        ],
+        [
+          "stale_over_14d",
+          42
+        ]
+      ],
+      "stale_excluded": 113,
+      "overseas_stale": 1,
+      "fresh_overseas_whatif_top5": [
+        {
+          "sell": "src_ebay",
+          "sell_price": 85140,
+          "net_if_fresh": 7107,
+          "roi": 0.1393
+        }
+      ]
+    },
+    "prod_switch2_mk": {
+      "product_name": "Nintendo Switch 2 マリオカートセット",
+      "buy_candidates": 0,
+      "sell_candidates": 0,
+      "rejection_top5": [
+        [
+          "stale_over_14d",
+          13
+        ]
+      ],
+      "stale_excluded": 13,
+      "overseas_stale": 0,
+      "fresh_overseas_whatif_top5": []
+    },
+    "prod_ps5_pro": {
+      "product_name": "PlayStation 5 Pro",
+      "buy_candidates": 1,
+      "sell_candidates": 5,
+      "rejection_top5": [
+        [
+          "price_zero",
+          93
+        ],
+        [
+          "stale_over_14d",
+          39
+        ]
+      ],
+      "stale_excluded": 117,
+      "overseas_stale": 0,
+      "fresh_overseas_whatif_top5": []
+    },
+    "prod_ps5_de": {
+      "product_name": "PlayStation 5 Digital Edition",
+      "buy_candidates": 0,
+      "sell_candidates": 0,
+      "rejection_top5": [
+        [
+          "stale_over_14d",
+          3
+        ]
+      ],
+      "stale_excluded": 3,
+      "overseas_stale": 0,
+      "fresh_overseas_whatif_top5": []
+    },
+    "prod_xbox_sx": {
+      "product_name": "Xbox Series X",
+      "buy_candidates": 0,
+      "sell_candidates": 0,
+      "rejection_top5": [
+        [
+          "stale_over_14d",
+          2
+        ]
+      ],
+      "stale_excluded": 2,
+      "overseas_stale": 0,
+      "fresh_overseas_whatif_top5": []
+    },
+    "prod_gr4": {
+      "product_name": "RICOH GR IV",
+      "buy_candidates": 13,
+      "sell_candidates": 6,
+      "rejection_top5": [
+        [
+          "stale_over_14d",
+          6
+        ],
+        [
+          "accessory_or_wrong_product",
+          1
+        ]
+      ],
+      "stale_excluded": 6,
+      "overseas_stale": 1,
+      "fresh_overseas_whatif_top5": []
+    },
+    "prod_gr4_mono": {
+      "product_name": "RICOH GR IV Monochrome",
+      "buy_candidates": 8,
+      "sell_candidates": 5,
+      "rejection_top5": [],
+      "stale_excluded": 0,
+      "overseas_stale": 0,
+      "fresh_overseas_whatif_top5": []
+    },
+    "prod_gr3x": {
+      "product_name": "RICOH GR IIIx",
+      "buy_candidates": 11,
+      "sell_candidates": 5,
+      "rejection_top5": [
+        [
+          "stale_over_14d",
+          4
+        ]
+      ],
+      "stale_excluded": 4,
+      "overseas_stale": 1,
+      "fresh_overseas_whatif_top5": []
+    },
+    "prod_gr3_hdf": {
+      "product_name": "RICOH GR III HDF",
+      "buy_candidates": 0,
+      "sell_candidates": 0,
+      "rejection_top5": [],
+      "stale_excluded": 0,
+      "overseas_stale": 0,
+      "fresh_overseas_whatif_top5": []
+    },
+    "prod_gr3": {
+      "product_name": "RICOH GR III",
+      "buy_candidates": 0,
+      "sell_candidates": 0,
+      "rejection_top5": [],
+      "stale_excluded": 0,
+      "overseas_stale": 0,
+      "fresh_overseas_whatif_top5": []
+    },
+    "prod_x100vi": {
+      "product_name": "FUJIFILM X100VI",
+      "buy_candidates": 14,
+      "sell_candidates": 1,
+      "rejection_top5": [
+        [
+          "stale_over_14d",
+          20
+        ],
+        [
+          "manual_over_auto_high",
+          6
+        ]
+      ],
+      "stale_excluded": 20,
+      "overseas_stale": 1,
+      "fresh_overseas_whatif_top5": [
+        {
+          "sell": "src_ebay",
+          "sell_price": 548900,
+          "net_if_fresh": 188981,
+          "roi": 0.794
+        },
+        {
+          "sell": "src_ebay",
+          "sell_price": 548900,
+          "net_if_fresh": 84126,
+          "roi": 0.2476
+        }
+      ]
+    },
+    "prod_gfx100rf": {
+      "product_name": "FUJIFILM GFX100RF",
+      "buy_candidates": 0,
+      "sell_candidates": 1,
+      "rejection_top5": [],
+      "stale_excluded": 0,
+      "overseas_stale": 0,
+      "fresh_overseas_whatif_top5": []
+    },
+    "prod_xt5": {
+      "product_name": "FUJIFILM X-T5",
+      "buy_candidates": 0,
+      "sell_candidates": 0,
+      "rejection_top5": [
+        [
+          "accessory_or_wrong_product",
+          1
+        ]
+      ],
+      "stale_excluded": 0,
+      "overseas_stale": 0,
+      "fresh_overseas_whatif_top5": []
+    },
+    "prod_a7rv": {
+      "product_name": "SONY α7R V",
+      "buy_candidates": 0,
+      "sell_candidates": 1,
+      "rejection_top5": [],
+      "stale_excluded": 0,
+      "overseas_stale": 0,
+      "fresh_overseas_whatif_top5": []
+    },
+    "prod_a1ii": {
+      "product_name": "SONY α1 II",
+      "buy_candidates": 0,
+      "sell_candidates": 1,
+      "rejection_top5": [],
+      "stale_excluded": 0,
+      "overseas_stale": 0,
+      "fresh_overseas_whatif_top5": []
+    },
+    "prod_a7cr": {
+      "product_name": "SONY α7CR",
+      "buy_candidates": 0,
+      "sell_candidates": 1,
+      "rejection_top5": [],
+      "stale_excluded": 0,
+      "overseas_stale": 0,
+      "fresh_overseas_whatif_top5": []
+    },
+    "prod_fx3": {
+      "product_name": "SONY FX3",
+      "buy_candidates": 0,
+      "sell_candidates": 1,
+      "rejection_top5": [],
+      "stale_excluded": 0,
+      "overseas_stale": 0,
+      "fresh_overseas_whatif_top5": []
+    },
+    "prod_r5ii": {
+      "product_name": "Canon EOS R5 Mark II",
+      "buy_candidates": 0,
+      "sell_candidates": 0,
+      "rejection_top5": [
+        [
+          "accessory_or_wrong_product",
+          1
+        ]
+      ],
+      "stale_excluded": 0,
+      "overseas_stale": 0,
+      "fresh_overseas_whatif_top5": []
+    },
+    "prod_r6ii": {
+      "product_name": "Canon EOS R6 Mark II",
+      "buy_candidates": 0,
+      "sell_candidates": 0,
+      "rejection_top5": [],
+      "stale_excluded": 0,
+      "overseas_stale": 0,
+      "fresh_overseas_whatif_top5": []
+    },
+    "prod_r3": {
+      "product_name": "Canon EOS R3",
+      "buy_candidates": 0,
+      "sell_candidates": 0,
+      "rejection_top5": [
+        [
+          "accessory_or_wrong_product",
+          1
+        ]
+      ],
+      "stale_excluded": 0,
+      "overseas_stale": 0,
+      "fresh_overseas_whatif_top5": []
+    },
+    "prod_z8": {
+      "product_name": "Nikon Z8",
+      "buy_candidates": 0,
+      "sell_candidates": 1,
+      "rejection_top5": [],
+      "stale_excluded": 0,
+      "overseas_stale": 0,
+      "fresh_overseas_whatif_top5": []
+    },
+    "prod_zf": {
+      "product_name": "Nikon Zf",
+      "buy_candidates": 0,
+      "sell_candidates": 0,
+      "rejection_top5": [],
+      "stale_excluded": 0,
+      "overseas_stale": 0,
+      "fresh_overseas_whatif_top5": []
+    },
+    "prod_z9": {
+      "product_name": "Nikon Z9",
+      "buy_candidates": 0,
+      "sell_candidates": 0,
+      "rejection_top5": [
+        [
+          "accessory_or_wrong_product",
+          1
+        ]
+      ],
+      "stale_excluded": 0,
+      "overseas_stale": 0,
+      "fresh_overseas_whatif_top5": []
+    },
+    "prod_q3": {
+      "product_name": "Leica Q3",
+      "buy_candidates": 0,
+      "sell_candidates": 1,
+      "rejection_top5": [],
+      "stale_excluded": 0,
+      "overseas_stale": 0,
+      "fresh_overseas_whatif_top5": []
+    },
+    "prod_m11": {
+      "product_name": "Leica M11",
+      "buy_candidates": 0,
+      "sell_candidates": 1,
+      "rejection_top5": [],
+      "stale_excluded": 0,
+      "overseas_stale": 0,
+      "fresh_overseas_whatif_top5": []
+    },
+    "prod_gr4_hdf": {
+      "product_name": "RICOH GR IV HDF",
+      "buy_candidates": 6,
+      "sell_candidates": 5,
+      "rejection_top5": [
+        [
+          "accessory_or_wrong_product",
+          1
+        ]
+      ],
+      "stale_excluded": 0,
+      "overseas_stale": 0,
+      "fresh_overseas_whatif_top5": []
+    }
+  }
+}

@@ -143,6 +143,13 @@ jobs:
         env:
           PYTHONPATH: .
 
+      # 11.6 Generate validated pro profit routes
+      - name: Generate profit routes
+        run: python scripts/generate_profit_routes.py
+        continue-on-error: true
+        env:
+          PYTHONPATH: .
+
       # 12. Generate ranking report
       - name: Generate ranking report
         run: python scripts/generate_ranking_report.py
@@ -234,6 +241,7 @@ jobs:
                   exports/alerts_report/ exports/ranking_report/ exports/sedori_routes_report/ \
                   exports/overseas_prices/ \
                   exports/normalized_price_observations/ \
+                  exports/profit_routes/ \
                   exports/data_quality_report/ exports/camera_buyback_status.json \
                   data/alerts.csv data/lottery_events.csv \
                   data/overseas_price_history.csv \

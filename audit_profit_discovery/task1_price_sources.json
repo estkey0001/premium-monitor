@@ -1,0 +1,279 @@
+{
+  "prod_x100vi": {
+    "name": "X100VI",
+    "buy_total": 30,
+    "buy_usable": 14,
+    "sell_total": 11,
+    "sell_usable": 1,
+    "buy_sources": [
+      "Amazon JP (新品出品)(shop_sale_price)",
+      "Amazon新品出品(shop_sale_price)",
+      "eBay sold(新品)(overseas_listing_price)",
+      "src_bhphoto(overseas_listing_price)",
+      "カメラのキタムラ(shop_sale_price)",
+      "フジヤカメラ(shop_sale_price)",
+      "マップカメラ(shop_sale_price)",
+      "メルカリ未使用(flea_listing_price)",
+      "ヤフオク (新品/未使用落札)(flea_sold_price)",
+      "楽天市場新品(shop_sale_price)"
+    ],
+    "sell_sources": [
+      "src_ebay(overseas_sold_price)",
+      "じゃんぱら(buyback_price)",
+      "カメラのキタムラ(buyback_price)",
+      "ソフマップ(buyback_price)",
+      "フジヤカメラ(buyback_price)",
+      "マップカメラ(buyback_price)",
+      "買取商店(buyback_price)"
+    ],
+    "buy_usable_sources": [
+      "Amazon JP (新品出品)",
+      "Amazon新品出品",
+      "eBay sold(新品)",
+      "メルカリ未使用",
+      "ヤフオク (新品/未使用落札)",
+      "楽天市場新品"
+    ],
+    "sell_usable_sources": [
+      "フジヤカメラ"
+    ]
+  },
+  "prod_q3": {
+    "name": "Leica Q3",
+    "buy_total": 0,
+    "buy_usable": 0,
+    "sell_total": 0,
+    "sell_usable": 0,
+    "buy_sources": [],
+    "sell_sources": [],
+    "buy_usable_sources": [],
+    "sell_usable_sources": []
+  },
+  "prod_gr3x": {
+    "name": "GR IIIx",
+    "buy_total": 11,
+    "buy_usable": 11,
+    "sell_total": 8,
+    "sell_usable": 4,
+    "buy_sources": [
+      "Amazon JP (新品出品)(shop_sale_price)",
+      "Amazon新品出品(shop_sale_price)",
+      "eBay sold(新品)(overseas_listing_price)",
+      "メルカリ未使用(flea_listing_price)",
+      "ヤフオク (新品/未使用落札)(flea_sold_price)"
+    ],
+    "sell_sources": [
+      "src_ebay(overseas_sold_price)",
+      "じゃんぱら(buyback_price)",
+      "カメラのキタムラ(buyback_price)",
+      "フジヤカメラ(buyback_price)",
+      "マップカメラ(buyback_price)"
+    ],
+    "buy_usable_sources": [
+      "Amazon JP (新品出品)",
+      "Amazon新品出品",
+      "eBay sold(新品)",
+      "メルカリ未使用",
+      "ヤフオク (新品/未使用落札)"
+    ],
+    "sell_usable_sources": [
+      "じゃんぱら",
+      "カメラのキタムラ",
+      "フジヤカメラ",
+      "マップカメラ"
+    ]
+  },
+  "prod_gr4": {
+    "name": "GR IV",
+    "buy_total": 15,
+    "buy_usable": 13,
+    "sell_total": 11,
+    "sell_usable": 6,
+    "buy_sources": [
+      "Amazon JP (新品出品)(shop_sale_price)",
+      "Amazon新品出品(shop_sale_price)",
+      "eBay sold(新品)(overseas_listing_price)",
+      "src_bhphoto(overseas_listing_price)",
+      "メルカリ未使用(flea_listing_price)",
+      "ヤフオク (新品/未使用落札)(flea_sold_price)",
+      "楽天市場新品(shop_sale_price)"
+    ],
+    "sell_sources": [
+      "src_ebay(overseas_sold_price)",
+      "じゃんぱら(buyback_price)",
+      "カメラのキタムラ(buyback_price)",
+      "ソフマップ(buyback_price)",
+      "フジヤカメラ(buyback_price)",
+      "マップカメラ(buyback_price)",
+      "買取商店(buyback_price)"
+    ],
+    "buy_usable_sources": [
+      "Amazon新品出品",
+      "eBay sold(新品)",
+      "メルカリ未使用",
+      "ヤフオク (新品/未使用落札)",
+      "楽天市場新品"
+    ],
+    "sell_usable_sources": [
+      "じゃんぱら",
+      "カメラのキタムラ",
+      "ソフマップ",
+      "フジヤカメラ",
+      "マップカメラ",
+      "買取商店"
+    ]
+  },
+  "prod_gr4_hdf": {
+    "name": "GR IV HDF",
+    "buy_total": 7,
+    "buy_usable": 6,
+    "sell_total": 4,
+    "sell_usable": 4,
+    "buy_sources": [
+      "Amazon JP (新品出品)(shop_sale_price)",
+      "eBay sold(新品)(overseas_listing_price)",
+      "メルカリ未使用(flea_listing_price)"
+    ],
+    "sell_sources": [
+      "カメラのキタムラ(buyback_price)",
+      "ソフマップ(buyback_price)",
+      "フジヤカメラ(buyback_price)",
+      "マップカメラ(buyback_price)"
+    ],
+    "buy_usable_sources": [
+      "eBay sold(新品)",
+      "メルカリ未使用"
+    ],
+    "sell_usable_sources": [
+      "カメラのキタムラ",
+      "ソフマップ",
+      "フジヤカメラ",
+      "マップカメラ"
+    ]
+  },
+  "prod_a7rv": {
+    "name": "A7RV",
+    "buy_total": 0,
+    "buy_usable": 0,
+    "sell_total": 0,
+    "sell_usable": 0,
+    "buy_sources": [],
+    "sell_sources": [],
+    "buy_usable_sources": [],
+    "sell_usable_sources": []
+  },
+  "prod_fx3": {
+    "name": "FX3",
+    "buy_total": 0,
+    "buy_usable": 0,
+    "sell_total": 0,
+    "sell_usable": 0,
+    "buy_sources": [],
+    "sell_sources": [],
+    "buy_usable_sources": [],
+    "sell_usable_sources": []
+  },
+  "prod_r5ii": {
+    "name": "R5 Mark II",
+    "buy_total": 0,
+    "buy_usable": 0,
+    "sell_total": 0,
+    "sell_usable": 0,
+    "buy_sources": [],
+    "sell_sources": [],
+    "buy_usable_sources": [],
+    "sell_usable_sources": []
+  },
+  "prod_z8": {
+    "name": "Z8",
+    "buy_total": 0,
+    "buy_usable": 0,
+    "sell_total": 0,
+    "sell_usable": 0,
+    "buy_sources": [],
+    "sell_sources": [],
+    "buy_usable_sources": [],
+    "sell_usable_sources": []
+  },
+  "prod_z9": {
+    "name": "Z9",
+    "buy_total": 0,
+    "buy_usable": 0,
+    "sell_total": 0,
+    "sell_usable": 0,
+    "buy_sources": [],
+    "sell_sources": [],
+    "buy_usable_sources": [],
+    "sell_usable_sources": []
+  },
+  "prod_ps5_pro": {
+    "name": "PS5 Pro",
+    "buy_total": 16,
+    "buy_usable": 1,
+    "sell_total": 122,
+    "sell_usable": 8,
+    "buy_sources": [
+      "じゃんぱら(shop_sale_price)",
+      "ゲオ(shop_sale_price)",
+      "ソフマップ(shop_sale_price)",
+      "ヤフオク (新品/未使用落札)(flea_sold_price)"
+    ],
+    "sell_sources": [
+      "TSUTAYA(buyback_price)",
+      "じゃんぱら(buyback_price)",
+      "イオシス(buyback_price)",
+      "ゲオ(buyback_price)",
+      "ソフマップ(buyback_price)",
+      "ドスパラ(buyback_price)",
+      "ハードオフ(buyback_price)",
+      "パソコン工房(buyback_price)",
+      "ブックオフ(buyback_price)",
+      "モバイル一番(buyback_price)",
+      "買取商店(buyback_price)",
+      "駿河屋(buyback_price)"
+    ],
+    "buy_usable_sources": [
+      "ヤフオク (新品/未使用落札)"
+    ],
+    "sell_usable_sources": [
+      "イオシス",
+      "モバイル一番",
+      "買取商店"
+    ]
+  },
+  "prod_switch2": {
+    "name": "Switch2",
+    "buy_total": 16,
+    "buy_usable": 1,
+    "sell_total": 118,
+    "sell_usable": 9,
+    "buy_sources": [
+      "じゃんぱら(shop_sale_price)",
+      "ゲオ(shop_sale_price)",
+      "ソフマップ(shop_sale_price)",
+      "ヤフオク (新品/未使用落札)(flea_sold_price)"
+    ],
+    "sell_sources": [
+      "TSUTAYA(buyback_price)",
+      "src_ebay(overseas_sold_price)",
+      "じゃんぱら(buyback_price)",
+      "イオシス(buyback_price)",
+      "ゲオ(buyback_price)",
+      "ソフマップ(buyback_price)",
+      "ドスパラ(buyback_price)",
+      "ハードオフ(buyback_price)",
+      "パソコン工房(buyback_price)",
+      "ブックオフ(buyback_price)",
+      "買取商店(buyback_price)",
+      "駿河屋(buyback_price)"
+    ],
+    "buy_usable_sources": [
+      "ヤフオク (新品/未使用落札)"
+    ],
+    "sell_usable_sources": [
+      "イオシス",
+      "ゲオ",
+      "買取商店"
+    ]
+  }
+}

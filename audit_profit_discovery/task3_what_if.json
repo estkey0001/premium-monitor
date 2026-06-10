@@ -1,0 +1,71 @@
+{
+  "X100VI": {
+    "status": "data_exists_but_stale",
+    "potential_net": 309101,
+    "need_source": "src_ebay",
+    "need_type": "overseas_sold_price",
+    "need_price": 548900,
+    "blocker": "stale_over_14d"
+  },
+  "Leica Q3": {
+    "status": "no_buy",
+    "need": "本体 buy/sell データ取得"
+  },
+  "GR IIIx": {
+    "status": "data_exists_but_stale",
+    "potential_net": 3878,
+    "need_source": "src_ebay",
+    "need_type": "overseas_sold_price",
+    "need_price": 242000,
+    "blocker": "stale_over_14d"
+  },
+  "GR IV": {
+    "status": "data_exists_but_stale",
+    "potential_net": 35925,
+    "need_source": "src_ebay",
+    "need_type": "overseas_sold_price",
+    "need_price": 318725,
+    "blocker": "stale_over_14d"
+  },
+  "GR IV HDF": {
+    "status": "need_higher_sell",
+    "need_sell_min": 341801,
+    "best_known_sell": 205000
+  },
+  "A7RV": {
+    "status": "no_buy",
+    "need": "本体 buy/sell データ取得"
+  },
+  "FX3": {
+    "status": "no_buy",
+    "need": "本体 buy/sell データ取得"
+  },
+  "R5 Mark II": {
+    "status": "no_buy",
+    "need": "本体 buy/sell データ取得"
+  },
+  "Z8": {
+    "status": "no_buy",
+    "need": "本体 buy/sell データ取得"
+  },
+  "Z9": {
+    "status": "no_buy",
+    "need": "本体 buy/sell データ取得"
+  },
+  "PS5 Pro": {
+    "status": "data_exists_but_stale",
+    "potential_net": 53200,
+    "need_source": "ゲオ",
+    "need_type": "buyback_price",
+    "need_price": 190000,
+    "blocker": "stale_over_14d"
+  },
+  "Switch2": {
+    "status": "data_exists_but_stale",
+    "potential_net": 137195,
+    "need_source": "ゲオ",
+    "need_type": "buyback_price",
+    "need_price": 190000,
+    "blocker": "stale_over_14d"
+  }
+}

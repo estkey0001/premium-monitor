@@ -1,0 +1,158 @@
+{
+  "X100VI": {
+    "flags": {
+      "buy不足": false,
+      "sell不足": false,
+      "stale": false,
+      "conf不足": false,
+      "official不足": false,
+      "overseas不足": false,
+      "item_url不足": false,
+      "title不足": true
+    },
+    "cause": "経済ギャップ（usable sell < usable buy）→ 高い売却先(海外sold)が必要"
+  },
+  "Leica Q3": {
+    "flags": {
+      "buy不足": true,
+      "sell不足": true,
+      "stale": false,
+      "conf不足": false,
+      "official不足": false,
+      "overseas不足": true,
+      "item_url不足": true,
+      "title不足": true
+    },
+    "cause": "sell候補なし（買取未取得 or 全stale）"
+  },
+  "GR IIIx": {
+    "flags": {
+      "buy不足": false,
+      "sell不足": false,
+      "stale": false,
+      "conf不足": false,
+      "official不足": false,
+      "overseas不足": false,
+      "item_url不足": false,
+      "title不足": true
+    },
+    "cause": "経済ギャップ（usable sell < usable buy）→ 高い売却先(海外sold)が必要"
+  },
+  "GR IV": {
+    "flags": {
+      "buy不足": false,
+      "sell不足": false,
+      "stale": false,
+      "conf不足": false,
+      "official不足": false,
+      "overseas不足": false,
+      "item_url不足": false,
+      "title不足": true
+    },
+    "cause": "経済ギャップ（usable sell < usable buy）→ 高い売却先(海外sold)が必要"
+  },
+  "GR IV HDF": {
+    "flags": {
+      "buy不足": false,
+      "sell不足": false,
+      "stale": false,
+      "conf不足": false,
+      "official不足": true,
+      "overseas不足": false,
+      "item_url不足": false,
+      "title不足": true
+    },
+    "cause": "経済ギャップ（usable sell < usable buy）→ 高い売却先(海外sold)が必要"
+  },
+  "A7RV": {
+    "flags": {
+      "buy不足": true,
+      "sell不足": true,
+      "stale": false,
+      "conf不足": false,
+      "official不足": false,
+      "overseas不足": true,
+      "item_url不足": true,
+      "title不足": true
+    },
+    "cause": "sell候補なし（買取未取得 or 全stale）"
+  },
+  "FX3": {
+    "flags": {
+      "buy不足": true,
+      "sell不足": true,
+      "stale": false,
+      "conf不足": false,
+      "official不足": false,
+      "overseas不足": true,
+      "item_url不足": true,
+      "title不足": true
+    },
+    "cause": "sell候補なし（買取未取得 or 全stale）"
+  },
+  "R5 Mark II": {
+    "flags": {
+      "buy不足": true,
+      "sell不足": true,
+      "stale": false,
+      "conf不足": false,
+      "official不足": false,
+      "overseas不足": true,
+      "item_url不足": true,
+      "title不足": true
+    },
+    "cause": "sell候補なし（買取未取得 or 全stale）"
+  },
+  "Z8": {
+    "flags": {
+      "buy不足": true,
+      "sell不足": true,
+      "stale": false,
+      "conf不足": false,
+      "official不足": false,
+      "overseas不足": true,
+      "item_url不足": true,
+      "title不足": true
+    },
+    "cause": "sell候補なし（買取未取得 or 全stale）"
+  },
+  "Z9": {
+    "flags": {
+      "buy不足": true,
+      "sell不足": true,
+      "stale": false,
+      "conf不足": false,
+      "official不足": false,
+      "overseas不足": true,
+      "item_url不足": true,
+      "title不足": true
+    },
+    "cause": "sell候補なし（買取未取得 or 全stale）"
+  },
+  "PS5 Pro": {
+    "flags": {
+      "buy不足": false,
+      "sell不足": false,
+      "stale": false,
+      "conf不足": false,
+      "official不足": false,
+      "overseas不足": true,
+      "item_url不足": true,
+      "title不足": true
+    },
+    "cause": "経済ギャップ（usable sell < usable buy）→ 高い売却先(海外sold)が必要"
+  },
+  "Switch2": {
+    "flags": {
+      "buy不足": false,
+      "sell不足": false,
+      "stale": false,
+      "conf不足": false,
+      "official不足": false,
+      "overseas不足": true,
+      "item_url不足": true,
+      "title不足": true
+    },
+    "cause": "経済ギャップ（usable sell < usable buy）→ 高い売却先(海外sold)が必要"
+  }
+}

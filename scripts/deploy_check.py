@@ -5576,6 +5576,73 @@ def check() -> list[dict]:
                     "message": "#565 item_url が無い価格を product_match high にしない（auto/official のみ high）"
                                + ("" if _t565 else f" ← item_url無しでhigh {_bad565} 件")})
 
+    # ── Pro 利益ルート（profit_routes）ガード #566-#576 ──
+    _pr = _load_json_safe('exports/profit_routes/latest.json') or {}
+    _pr_main = _pr.get('main_routes', []) if isinstance(_pr, dict) else []
+    _pr_ref = _pr.get('reference_routes', []) if isinstance(_pr, dict) else []
+    _SALE_T = {'shop_sale_price', 'flea_listing_price', 'flea_sold_price', 'overseas_listing_price'}
+
+    _t566 = isinstance(_pr, dict) and ('main_routes' in _pr)
+    results.append({"level": "ok" if _t566 else "error", "check": "profit_routes_exists",
+                    "message": f"#566 profit_routes/latest.json が存在する（main {len(_pr_main)}件）"
+                               + ("" if _t566 else " ← ファイルが見つかりません")})
+
+    _b567 = sum(1 for r in _pr_main if r.get('buy_price_type') == 'buyback_price')
+    _t567 = _t566 and _b567 == 0
+    results.append({"level": "ok" if _t567 else "error", "check": "profit_buy_no_buyback",
+                    "message": "#567 Pro route の buy 側に buyback_price がない" + ("" if _t567 else f" ← {_b567}件")})
+
+    _b568 = sum(1 for r in _pr_main if r.get('sell_price_type') in _SALE_T)
+    _t568 = _t566 and _b568 == 0
+    results.append({"level": "ok" if _t568 else "error", "check": "profit_sell_no_sale",
+                    "message": "#568 Pro route の sell 側に sale/listing 価格がない" + ("" if _t568 else f" ← {_b568}件")})
+
+    _b569 = sum(1 for r in _pr_main if 'trade_in_price' in (r.get('buy_price_type'), r.get('sell_price_type')))
+    _t569 = _t566 and _b569 == 0
+    results.append({"level": "ok" if _t569 else "error", "check": "profit_no_trade_in",
+                    "message": "#569 Pro route に trade_in_price が使われない" + ("" if _t569 else f" ← {_b569}件")})
+
+    _b570 = sum(1 for r in _pr_main if (r.get('buy_price') or 0) <= 0 or (r.get('sell_price') or 0) <= 0)
+    _t570 = _t566 and _b570 == 0
+    results.append({"level": "ok" if _t570 else "error", "check": "profit_no_zero",
+                    "message": "#570 Pro route に price=0 が使われない" + ("" if _t570 else f" ← {_b570}件")})
+
+    _b571 = sum(1 for r in _pr_main if (r.get('net_profit') or 0) <= 0 or (r.get('roi') or 0) < 0.05)
+    _t571 = _t566 and _b571 == 0
+    results.append({"level": "ok" if _t571 else "error", "check": "profit_net_roi",
+                    "message": "#571 全 Pro route が net_profit>0 かつ roi>=5%" + ("" if _t571 else f" ← 不適合 {_b571}件")})
+
+    _t572 = _t566 and all(r.get('route_confidence') in ('high', 'medium') for r in _pr_main)
+    results.append({"level": "ok" if _t572 else "error", "check": "profit_confidence",
+                    "message": "#572 main route は route_confidence high/medium のみ（low不使用）"
+                               + ("" if _t572 else " ← low が混入")})
+
+    # #573: 0件時に診断（理由表示）がある
+    _t573 = _t566 and (len(_pr_main) > 0 or bool(_pr.get('zero_route_diagnostics')))
+    results.append({"level": "ok" if _t573 else "error", "check": "profit_zero_diagnostics",
+                    "message": "#573 利益ルート0件時に診断（候補数/除外理由）が出力される"
+                               + ("" if _t573 else " ← 0件診断がありません")})
+
+    # #574: eBay stale は main route に使われない（main の sell に reference/stale が無い）
+    _b574 = sum(1 for r in _pr_main if r.get('reference_route') or 'stale' in (r.get('rejection_reason') or ''))
+    _t574 = _t566 and _b574 == 0
+    results.append({"level": "ok" if _t574 else "error", "check": "profit_no_stale_in_main",
+                    "message": "#574 eBay stale が main route に使われない" + ("" if _t574 else f" ← {_b574}件")})
+
+    # #575: eBay stale 参考ルートは reference_route=true
+    _b575 = sum(1 for r in _pr_ref if not r.get('reference_route'))
+    _t575 = _t566 and _b575 == 0
+    results.append({"level": "ok" if _t575 else "error", "check": "profit_reference_flag",
+                    "message": "#575 海外sold stale 参考ルートは reference_route=true で明示"
+                               + ("" if _t575 else f" ← 未フラグ {_b575}件")})
+
+    # #576: 生成スクリプトが is_usable_for_pro を入力源にしている（独自再判定で異常値混入を防ぐ）
+    _pr_src = _read_src('scripts', 'generate_profit_routes.py')
+    _t576 = ('is_usable_for_pro' in _pr_src) and ('reference_route' in _pr_src)
+    results.append({"level": "ok" if _t576 else "error", "check": "profit_uses_npo_usable",
+                    "message": "#576 profit_routes が is_usable_for_pro を入力源にしている"
+                               + ("" if _t576 else " ← NPO usable を使っていません")})
+
     return results
 
 

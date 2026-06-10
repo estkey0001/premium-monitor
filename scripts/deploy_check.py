@@ -5643,6 +5643,58 @@ def check() -> list[dict]:
                     "message": "#576 profit_routes が is_usable_for_pro を入力源にしている"
                                + ("" if _t576 else " ← NPO usable を使っていません")})
 
+    # ── eBay fresh化 / 参考ルート明示 ガード #577-#582 ──
+    _ebay_cfg = bool(_pr.get("ebay_api_configured")) if isinstance(_pr, dict) else False
+    _lp_html = ""
+    try:
+        _lp_html = (PROJECT_ROOT / "docs" / "index.html").read_text(encoding="utf-8")
+    except Exception:
+        _lp_html = ""
+
+    # #577: EBAY_APP_ID 未設定時に LP に「eBay API未設定」表示
+    if _ebay_cfg:
+        _t577 = True
+        _msg577 = "#577 eBay API 設定済み（未設定時の注意表示チェックはスキップ）"
+    else:
+        _t577 = ("eBay API未設定" in _lp_html) and _t566
+        _msg577 = "#577 EBAY_APP_ID 未設定時に LP へ「eBay API未設定」を表示している" \
+            + ("" if _t577 else " ← 注意表示が LP に見つかりません")
+    results.append({"level": "ok" if _t577 else "error", "check": "lp_ebay_api_notice", "message": _msg577})
+
+    # #578: stale eBay sold は main route に使われない（reference でのみ）
+    _b578 = sum(1 for r in _pr_main if r.get('sell_price_type') == 'overseas_sold_price'
+                and (r.get('sell_observed_age_days') or 0) > 14)
+    _t578 = _t566 and _b578 == 0
+    results.append({"level": "ok" if _t578 else "error", "check": "profit_stale_overseas_reference_only",
+                    "message": "#578 stale な海外sold が main route に使われない（参考のみ）"
+                               + ("" if _t578 else f" ← main に stale海外sold {_b578}件")})
+
+    # #579: 参考ルートはすべて overseas_sold かつ reference_route=true
+    _b579 = sum(1 for r in _pr_ref if not (r.get('reference_route') and r.get('sell_price_type') == 'overseas_sold_price'))
+    _t579 = _t566 and _b579 == 0
+    results.append({"level": "ok" if _t579 else "error", "check": "profit_reference_overseas",
+                    "message": "#579 stale海外sold は reference_route=true でのみ表示"
+                               + ("" if _t579 else f" ← 不適合 {_b579}件")})
+
+    # #580: 参考ルートに observed_age_days（経過日数）が出力される
+    _t580 = _t566 and all(('sell_observed_age_days' in r) for r in _pr_ref) if _pr_ref else _t566
+    results.append({"level": "ok" if _t580 else "error", "check": "profit_reference_age",
+                    "message": "#580 参考ルートに observed_age_days（経過日数）が含まれる"
+                               + ("" if _t580 else " ← age が欠落")})
+
+    # #581: 海外sold の main 昇格は fresh かつ API のみ（生成ロジックで担保）
+    _t581 = ("collector_method" in _pr_src) and ("source_mode" in _pr_src) \
+        and ("overseas_sold_price" in _pr_src)
+    results.append({"level": "ok" if _t581 else "error", "check": "profit_overseas_main_requires_api",
+                    "message": "#581 海外sold の main 昇格は fresh かつ API 取得時のみ（collector_method/source_mode 判定）"
+                               + ("" if _t581 else " ← API昇格条件が未実装")})
+
+    # #582: main route 0件でも参考ルート or 0件診断が表示される
+    _t582 = _t566 and (len(_pr_main) > 0 or len(_pr_ref) > 0 or bool(_pr.get('zero_route_diagnostics')))
+    results.append({"level": "ok" if _t582 else "error", "check": "profit_zero_shows_reference",
+                    "message": "#582 main 0件でも参考ルート/診断が表示される"
+                               + ("" if _t582 else " ← 0件時に何も表示されない")})
+
     return results
 
 

@@ -60,18 +60,31 @@ def _buy_ok(o: dict) -> bool:
 
 
 def _sell_ok(o: dict) -> bool:
-    return (o.get("is_usable_for_pro") and o["price_role"] == "sell"
+    base = (o.get("is_usable_for_pro") and o["price_role"] == "sell"
             and o["price_type"] in SELL_TYPES and o["confidence"] != "low")
+    if not base:
+        return False
+    # Task4: 海外sold を main に昇格するには API 取得（collector_method=api or source_mode=api）が必須。
+    # 手動/HTML フォールバックの海外価格は stale 化しやすいため main では使わず参考扱い。
+    if o["price_type"] == "overseas_sold_price":
+        return (o.get("collector_method") == "api" or o.get("source_mode") == "api")
+    return True
 
 
 def _reference_sell_ok(o: dict) -> bool:
-    """参考ルート用: stale のみが原因で除外された海外sold（fresh化すれば成立）。
-    manual_over_auto_high / accessory / wrong_model 等の品質除外は参考でも使わない。"""
-    return (o["price_role"] == "sell" and o["price_type"] == "overseas_sold_price"
+    """参考ルート用: 海外sold で main 条件（fresh かつ API）を満たさないもの。
+    fresh化 or API化すれば成立する。品質除外(accessory/wrong_model/manual_over_auto)は参考でも使わない。"""
+    if not (o["price_role"] == "sell" and o["price_type"] == "overseas_sold_price"
             and (o["price"] or 0) > 0 and o["confidence"] != "low"
-            and _identity_clean(o) and not o["is_fresh"]
-            and o.get("rejection_reason") in ("", "stale_over_14d")
-            and not o.get("accessory_flag") and not o.get("wrong_model_flag"))
+            and _identity_clean(o)
+            and not o.get("accessory_flag") and not o.get("wrong_model_flag")):
+        return False
+    # 品質起因(manual_over_auto等)で除外されたものは参考にも出さない。stale or 空のみ許可
+    if o.get("rejection_reason") not in ("", "stale_over_14d"):
+        return False
+    is_api = (o.get("collector_method") == "api" or o.get("source_mode") == "api")
+    # main に行けない（stale or 非API）= 参考
+    return (not o["is_fresh"]) or (not is_api)
 
 
 def _has_link(o: dict) -> bool:
@@ -142,6 +155,9 @@ def _make_route(buy: dict, sell: dict, now: datetime, reference: bool = False) -
         "net_profit": net, "roi": round(roi, 4),
         "route_confidence": _route_confidence(buy, sell, now),
         "buy_observed_at": buy["observed_at"], "sell_observed_at": sell["observed_at"],
+        "buy_observed_age_days": buy.get("observed_age_days", buy.get("age_days")),
+        "sell_observed_age_days": sell.get("observed_age_days", sell.get("age_days")),
+        "sell_collector_method": sell.get("collector_method", ""),
         "route_type": _route_type(buy["price_type"], sell["price_type"]),
         "reference_route": reference, "rejection_reason": "",
     }
@@ -216,11 +232,25 @@ def main() -> int:
     main_routes.sort(key=lambda r: r["net_profit"], reverse=True)
     ref_routes.sort(key=lambda r: r["net_profit"], reverse=True)
 
+    # eBay API 設定状況（overseas_prices/latest.json から）
+    ebay_api_configured = False
+    overseas_source_mode = "manual"
+    try:
+        _ovp = PROJECT_ROOT / "exports" / "overseas_prices" / "latest.json"
+        if _ovp.exists():
+            _ovd = json.loads(_ovp.read_text(encoding="utf-8"))
+            ebay_api_configured = bool(_ovd.get("ebay_app_id_configured"))
+            overseas_source_mode = _ovd.get("source_mode", "manual")
+    except Exception:
+        pass
+
     by_product = Counter(r["product_name"] for r in main_routes)
     by_conf = Counter(r["route_confidence"] for r in main_routes)
     by_rtype = Counter(r["route_type"] for r in main_routes)
     payload = {
         "generated_at": now.strftime("%Y-%m-%d %H:%M JST"),
+        "ebay_api_configured": ebay_api_configured,
+        "overseas_source_mode": overseas_source_mode,
         "summary": {
             "main_route_count": len(main_routes),
             "reference_route_count": len(ref_routes),

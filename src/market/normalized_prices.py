@@ -244,8 +244,11 @@ def make_observation(now: datetime, **kw) -> dict:
         "item_url": kw.get("item_url", "") or "",
         "link_type": kw.get("link_type", ""),
         "extraction_method": kw.get("extraction_method", ""),
+        "collector_method": kw.get("collector_method", "") or "",
+        "source_mode": kw.get("source_mode", "") or "",
         "price_context": kw.get("price_context", "") or "",
         "age_days": round(age, 1),
+        "observed_age_days": round(age, 1),
         "is_fresh": is_fresh,
         "is_usable_for_beginner": is_usable_for_beginner,
         "is_usable_for_pro": is_usable_for_pro,
@@ -338,6 +341,23 @@ def build_observations(con, now: datetime | None = None) -> list[dict]:
         ))
 
     # 4) price_history overseas（海外: sold=sell / listing=buy）
+    # 海外価格の collector_method / source_mode を overseas_prices/latest.json から取得
+    # （price_history にはこの情報が無いため）。EBAY_APP_ID 未設定なら source_mode=manual。
+    _ov_meta = {}
+    _ov_source_mode = ""
+    try:
+        import json as _json_ov
+        from pathlib import Path as _P
+        _ovp = _P(__file__).resolve().parent.parent.parent / "exports" / "overseas_prices" / "latest.json"
+        if _ovp.exists():
+            _ovd = _json_ov.loads(_ovp.read_text(encoding="utf-8"))
+            _ov_source_mode = _ovd.get("source_mode", "")
+            for _e in _ovd.get("prices", []):
+                _sid = "src_" + str(_e.get("source", "")).lower()
+                _ov_meta[(_e.get("product_id"), _sid)] = _e.get("collector_method", "")
+    except Exception:
+        pass
+
     ov = con.execute(
         "SELECT h.*, p.name AS pname FROM price_history h "
         "LEFT JOIN products p ON p.id=h.product_id WHERE h.price_type='overseas'"
@@ -355,6 +375,7 @@ def build_observations(con, now: datetime | None = None) -> list[dict]:
             ptype, role, ctx = "overseas_sold_price", "sell", "海外落札価格(sold)"
         else:
             ptype, role, ctx = "overseas_listing_price", "buy", "海外出品価格(listing)"
+        _cm = _ov_meta.get((r["product_id"], r["source_id"]), "")
         rows.append(make_observation(
             now, product_id=r["product_id"], product_name=r["pname"] or "",
             source_id=r["source_id"] or "", source_name=r["source_id"] or "overseas",
@@ -363,6 +384,7 @@ def build_observations(con, now: datetime | None = None) -> list[dict]:
             observed_at=r["recorded_at"] or "", confidence="medium",
             source_url="", item_url="", link_type="none",
             extraction_method="overseas_history", price_context=ctx,
+            collector_method=_cm, source_mode=_ov_source_mode,
         ))
 
     # ── 異常 manual 買取の除外（auto_scraped high 基準の +30% 超）──

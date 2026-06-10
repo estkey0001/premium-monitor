@@ -4900,12 +4900,20 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         main = data.get("main_routes", [])
         refs = data.get("reference_routes", [])
         diag = data.get("zero_route_diagnostics", {})
+        ebay_api = bool(data.get("ebay_api_configured"))
         parts = ['<div class="profit-routes-section" style="margin:16px 0 24px;border-left:4px solid #2563eb;'
                  'background:#eff6ff;border-radius:8px;padding:14px 16px">',
                  '<div style="font-weight:700;color:#1d4ed8;font-size:1.05rem">&#128176; 検証済み利益ルート（Pro）</div>',
                  '<div style="font-size:0.8rem;color:#475569;margin:4px 0 10px">'
                  '正規化価格から本体一致・非stale・非0円・confidence≥medium の価格のみで算出。'
                  'アクセサリー/異常値/下取は除外済み。</div>']
+        # Task2: eBay API 未設定の明示
+        if not ebay_api:
+            parts.append('<div class="ebay-api-notice" style="background:#fffbeb;border:1px solid #fde68a;'
+                         'border-radius:6px;padding:8px 10px;margin-bottom:10px;font-size:0.82rem;color:#92400e">'
+                         '&#9888;&#65039; eBay API未設定のため、海外sold価格は<b>参考値</b>です。'
+                         '現在は数日〜十数日前のデータを参考表示しています。'
+                         'API設定後、fresh化された場合のみ main 利益ルートに昇格します。</div>')
 
         def _fmt_card(r, reference=False):
             ov = (r["sell_price_type"] == "overseas_sold_price")
@@ -4924,15 +4932,30 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                         if r.get("buy_url") else "仕入れURLなし")
             sell_link = (f'<a href="{_esc(r["sell_url"])}" target="_blank" rel="noopener noreferrer">売却相場確認</a>'
                          if r.get("sell_url") else "売却相場確認")
+            # Task3: 参考ルートは「何日前か / main でない理由 / API設定後にmain化」を明示
+            sell_age = r.get("sell_observed_age_days")
+            age_note = (f"※{sell_age}日前の参考値" if (reference and sell_age is not None) else "")
+            ref_extra = ""
+            if reference:
+                ref_extra = (
+                    f'<div style="font-size:0.78rem;color:#b45309;margin-top:3px">'
+                    f'状態: eBay API未設定 / fresh化待ち（main routeではありません）<br>'
+                    f'理由: 海外sold が {_esc(r.get("rejection_reason",""))}。'
+                    f'API設定後に observed_at≤14日 & API取得になれば <b>main 利益ルートに昇格</b>します。</div>')
+            sell_line = (f'売却参考: {_esc(r["sell_source"])}（{_esc(r["sell_price_type"])}） '
+                         f'<b>¥{r["sell_price"]:,}</b> {age_note}') if reference else \
+                        (f'売却: {_esc(r["sell_source"])}（{_esc(r["sell_price_type"])}） <b>¥{r["sell_price"]:,}</b>')
+            profit_lbl = "参考利益" if reference else "概算利益"
             return (
                 f'<div style="background:#fff;border:1px solid #dbeafe;border-radius:8px;padding:10px 12px;margin:8px 0">'
                 f'<div style="font-weight:700">{_esc(r["product_name"])} {badge}</div>'
                 f'<div style="font-size:0.85rem;margin-top:4px">'
                 f'仕入: {_esc(r["buy_source"])}（{_esc(r["buy_price_type"])}） <b>¥{r["buy_price"]:,}</b> ／ '
-                f'売却: {_esc(r["sell_source"])}（{_esc(r["sell_price_type"])}） <b>¥{r["sell_price"]:,}</b></div>'
+                f'{sell_line}</div>'
                 f'<div style="font-size:0.78rem;color:#64748b;margin-top:2px">コスト: {" / ".join(fees)}</div>'
-                f'<div style="margin-top:4px">概算利益: <b style="color:#059669">+¥{r["net_profit"]:,}</b> '
+                f'<div style="margin-top:4px">{profit_lbl}: <b style="color:#059669">+¥{r["net_profit"]:,}</b> '
                 f'／ ROI <b>{r["roi"]*100:.1f}%</b> ／ {buy_link} ｜ {sell_link}</div>'
+                f'{ref_extra}'
                 f'</div>')
 
         if main:

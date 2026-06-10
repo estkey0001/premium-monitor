@@ -1,5 +1,7 @@
 {
-  "generated_at": "2026-06-10 22:22 JST",
+  "generated_at": "2026-06-11 00:11 JST",
+  "ebay_api_configured": false,
+  "overseas_source_mode": "manual",
   "summary": {
     "main_route_count": 0,
     "reference_route_count": 3,
@@ -41,9 +43,12 @@
       "route_confidence": "low",
       "buy_observed_at": "2026-05-31T23:06:30.713675+09:00",
       "sell_observed_at": "2026-05-20T10:00:00+09:00",
+      "buy_observed_age_days": 10.0,
+      "sell_observed_age_days": 21.6,
+      "sell_collector_method": "manual",
       "route_type": "shop_to_overseas",
       "reference_route": true,
-      "rejection_reason": "overseas_sold_stale(21.5d)"
+      "rejection_reason": "overseas_sold_stale(21.6d)"
     },
     {
       "product_id": "prod_x100vi",
@@ -74,9 +79,12 @@
       "route_confidence": "low",
       "buy_observed_at": "2026-06-01T20:39:57.882064+09:00",
       "sell_observed_at": "2026-05-20T10:00:00+09:00",
+      "buy_observed_age_days": 9.1,
+      "sell_observed_age_days": 21.6,
+      "sell_collector_method": "manual",
       "route_type": "flea_to_overseas",
       "reference_route": true,
-      "rejection_reason": "overseas_sold_stale(21.5d)"
+      "rejection_reason": "overseas_sold_stale(21.6d)"
     },
     {
       "product_id": "prod_switch2",
@@ -107,9 +115,12 @@
       "route_confidence": "low",
       "buy_observed_at": "2026-06-01T20:39:57.882064+09:00",
       "sell_observed_at": "2026-05-20T10:00:00+09:00",
+      "buy_observed_age_days": 9.1,
+      "sell_observed_age_days": 21.6,
+      "sell_collector_method": "manual",
       "route_type": "flea_to_overseas",
       "reference_route": true,
-      "rejection_reason": "overseas_sold_stale(21.5d)"
+      "rejection_reason": "overseas_sold_stale(21.6d)"
     }
   ],
   "zero_route_diagnostics": {

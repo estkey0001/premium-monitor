@@ -1,6 +1,6 @@
 # Pro 利益ルート（normalized_price_observations 由来・検証済み）
 
-生成: 2026-06-10 22:22 JST
+生成: 2026-06-11 00:11 JST
 
 - **main 利益ルート: 0件**（route_confidence high/medium のみ）
 - 参考ルート(海外sold stale・要fresh化): 3件
@@ -17,9 +17,9 @@
 
 | product | buy¥ | sell(海外sold)¥ | 潜在net | ROI | stale |
 |---|---|---|---|---|---|
-| FUJIFILM X100VI | ¥237,999 | ¥548,900 | +¥188,981 | 79% | overseas_sold_stale(21.5d) |
-| FUJIFILM X100VI | ¥339,800 | ¥548,900 | +¥84,126 | 25% | overseas_sold_stale(21.5d) |
-| Nintendo Switch  | ¥51,005 | ¥85,140 | +¥7,107 | 14% | overseas_sold_stale(21.5d) |
+| FUJIFILM X100VI | ¥237,999 | ¥548,900 | +¥188,981 | 79% | overseas_sold_stale(21.6d) |
+| FUJIFILM X100VI | ¥339,800 | ¥548,900 | +¥84,126 | 25% | overseas_sold_stale(21.6d) |
+| Nintendo Switch  | ¥51,005 | ¥85,140 | +¥7,107 | 14% | overseas_sold_stale(21.6d) |
 
 ## 0件商品の診断
 

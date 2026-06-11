@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-10T17:22:09+09:00",
+  "generated_at": "2026-06-11T17:44:06+09:00",
   "collection": {
     "total_shops": 16,
     "shops_with_success": 6,
@@ -11,10 +11,10 @@
     "success_rate_pct": 40.0
   },
   "comparison": {
-    "prev_success_rate_pct": 34.5,
+    "prev_success_rate_pct": 40.0,
     "current_success_rate_pct": 40.0,
-    "delta_pct": 5.5,
-    "trend": "改善",
+    "delta_pct": 0.0,
+    "trend": "横ばい",
     "moving_avg_7d_pct": 38.4,
     "top5_failure_reasons": [
       {
@@ -99,12 +99,12 @@
   },
   "ranking_usable": {
     "beginner": 4,
-    "pro": 10,
+    "pro": 0,
     "reason_if_empty": null
   },
   "sedori_usable": {
-    "routes": 18,
-    "reason_if_empty": null
+    "routes": 0,
+    "reason_if_empty": "calculate-sedori-routes 未実行 or DBにルートデータなし"
   },
   "overseas": {
     "total": 4,
@@ -254,43 +254,43 @@
   "consecutive_failed_shops": [
     {
       "shop_id": "2ndstreet",
-      "consecutive_failures": 39
+      "consecutive_failures": 40
     },
     {
       "shop_id": "bookoff",
-      "consecutive_failures": 39
+      "consecutive_failures": 40
     },
     {
       "shop_id": "dosupara",
-      "consecutive_failures": 39
+      "consecutive_failures": 40
     },
     {
       "shop_id": "geo_mobile",
-      "consecutive_failures": 39
+      "consecutive_failures": 40
     },
     {
       "shop_id": "hardoff",
-      "consecutive_failures": 39
+      "consecutive_failures": 40
     },
     {
       "shop_id": "janpara",
-      "consecutive_failures": 39
+      "consecutive_failures": 40
     },
     {
       "shop_id": "pasoko",
-      "consecutive_failures": 39
+      "consecutive_failures": 40
     },
     {
       "shop_id": "sofmap",
-      "consecutive_failures": 39
+      "consecutive_failures": 40
     },
     {
       "shop_id": "surugaya",
-      "consecutive_failures": 39
+      "consecutive_failures": 40
     },
     {
       "shop_id": "tsutaya",
-      "consecutive_failures": 39
+      "consecutive_failures": 40
     }
   ],
   "improvement_priority": [

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-11 17:44 JST",
+  "generated_at": "2026-06-12 17:27 JST",
   "ebay_api_configured": false,
   "overseas_source_mode": "manual",
   "summary": {
@@ -25,30 +25,30 @@
       "buy_url": "https://auctions.yahoo.co.jp/search/search?p=%E5%AF%8C%E5%A3%AB%E3%83%95%E3%82%A4%E3%83%AB%E3%83%A0%20X100VI&va=%E5%AF%8C%E5%A3%AB%E3%83%95%E3%82%A4%E3%83%AB%E3%83%A0%20X100VI&istatus=2&n=20&s1=cbids&o1=d&ei=utf-8&auccat=&tab_ex=commerce&item_condition=1",
       "buy_link_type": "search",
       "sell_source": "src_ebay",
-      "sell_price": 568154,
+      "sell_price": 567450,
       "sell_price_type": "overseas_sold_price",
       "sell_price_role": "sell",
       "sell_condition": "new_unopened",
       "sell_url": "",
       "sell_link_type": "none",
-      "gross_profit": 228354,
-      "estimated_fee": 113631,
-      "platform_fee": 73860,
-      "payment_fee": 22726,
-      "fx_buffer": 17045,
+      "gross_profit": 227650,
+      "estimated_fee": 113490,
+      "platform_fee": 73768,
+      "payment_fee": 22698,
+      "fx_buffer": 17024,
       "shipping_cost": 5000,
       "safety_margin": 10194,
-      "net_profit": 99529,
-      "roi": 0.2929,
+      "net_profit": 98966,
+      "roi": 0.2912,
       "route_confidence": "low",
-      "buy_observed_at": "2026-06-11T17:16:45.746270+09:00",
+      "buy_observed_at": "2026-06-12T17:00:48.660148+09:00",
       "sell_observed_at": "2026-05-28T10:00:00+09:00",
       "buy_observed_age_days": 0.0,
-      "sell_observed_age_days": 14.3,
+      "sell_observed_age_days": 15.3,
       "sell_collector_method": "manual",
       "route_type": "flea_to_overseas",
       "reference_route": true,
-      "rejection_reason": "overseas_sold_stale(14.3d)"
+      "rejection_reason": "overseas_sold_stale(15.3d)"
     },
     {
       "product_id": "prod_iphone17pro_256",
@@ -61,66 +61,66 @@
       "buy_url": "https://auctions.yahoo.co.jp/search/search?p=iPhone%2017%20Pro%20256GB&va=iPhone%2017%20Pro%20256GB&istatus=2&n=20&s1=cbids&o1=d&ei=utf-8&auccat=&tab_ex=commerce&item_condition=1",
       "buy_link_type": "search",
       "sell_source": "src_ebay",
-      "sell_price": 321030,
+      "sell_price": 320634,
       "sell_price_type": "overseas_sold_price",
       "sell_price_role": "sell",
       "sell_condition": "new_unopened",
       "sell_url": "",
       "sell_link_type": "none",
-      "gross_profit": 120291,
-      "estimated_fee": 64206,
-      "platform_fee": 41734,
-      "payment_fee": 12841,
-      "fx_buffer": 9631,
+      "gross_profit": 119895,
+      "estimated_fee": 64126,
+      "platform_fee": 41682,
+      "payment_fee": 12825,
+      "fx_buffer": 9619,
       "shipping_cost": 5000,
       "safety_margin": 6022,
-      "net_profit": 45063,
-      "roi": 0.2245,
+      "net_profit": 44747,
+      "roi": 0.2229,
       "route_confidence": "low",
-      "buy_observed_at": "2026-06-11T17:16:45.746270+09:00",
+      "buy_observed_at": "2026-06-12T17:00:48.660148+09:00",
       "sell_observed_at": "2026-05-28T10:00:00+09:00",
       "buy_observed_age_days": 0.0,
-      "sell_observed_age_days": 14.3,
+      "sell_observed_age_days": 15.3,
       "sell_collector_method": "",
       "route_type": "flea_to_overseas",
       "reference_route": true,
-      "rejection_reason": "overseas_sold_stale(14.3d)"
+      "rejection_reason": "overseas_sold_stale(15.3d)"
     },
     {
       "product_id": "prod_switch2",
       "product_name": "Nintendo Switch 2",
       "buy_source": "ヤフオク (新品/未使用落札)",
-      "buy_price": 55500,
+      "buy_price": 56891,
       "buy_price_type": "flea_sold_price",
       "buy_price_role": "buy",
       "buy_condition": "new_unopened",
       "buy_url": "https://auctions.yahoo.co.jp/search/search?p=Nintendo%20Switch%202&va=Nintendo%20Switch%202&istatus=2&n=20&s1=cbids&o1=d&ei=utf-8&auccat=&tab_ex=commerce&item_condition=1",
       "buy_link_type": "search",
       "sell_source": "src_ebay",
-      "sell_price": 88027,
+      "sell_price": 87921,
       "sell_price_type": "overseas_sold_price",
       "sell_price_role": "sell",
       "sell_condition": "new_unopened",
       "sell_url": "",
       "sell_link_type": "none",
-      "gross_profit": 32527,
-      "estimated_fee": 17606,
-      "platform_fee": 11444,
-      "payment_fee": 3521,
-      "fx_buffer": 2641,
+      "gross_profit": 31030,
+      "estimated_fee": 17585,
+      "platform_fee": 11430,
+      "payment_fee": 3517,
+      "fx_buffer": 2638,
       "shipping_cost": 5000,
       "safety_margin": 5000,
-      "net_profit": 4921,
-      "roi": 0.0887,
+      "net_profit": 3445,
+      "roi": 0.0606,
       "route_confidence": "low",
-      "buy_observed_at": "2026-06-11T17:16:45.746270+09:00",
+      "buy_observed_at": "2026-06-12T17:00:48.660148+09:00",
       "sell_observed_at": "2026-05-28T10:00:00+09:00",
       "buy_observed_age_days": 0.0,
-      "sell_observed_age_days": 14.3,
+      "sell_observed_age_days": 15.3,
       "sell_collector_method": "manual",
       "route_type": "flea_to_overseas",
       "reference_route": true,
-      "rejection_reason": "overseas_sold_stale(14.3d)"
+      "rejection_reason": "overseas_sold_stale(15.3d)"
     }
   ],
   "zero_route_diagnostics": {
@@ -143,9 +143,9 @@
       "fresh_overseas_whatif_top5": [
         {
           "sell": "src_ebay",
-          "sell_price": 321030,
-          "net_if_fresh": 45063,
-          "roi": 0.2245
+          "sell_price": 320634,
+          "net_if_fresh": 44747,
+          "roi": 0.2229
         }
       ]
     },
@@ -407,11 +407,11 @@
     "prod_switch2": {
       "product_name": "Nintendo Switch 2",
       "buy_candidates": 1,
-      "sell_candidates": 3,
+      "sell_candidates": 2,
       "rejection_top5": [
         [
           "price_zero",
-          7
+          8
         ],
         [
           "stale_over_14d",
@@ -423,9 +423,9 @@
       "fresh_overseas_whatif_top5": [
         {
           "sell": "src_ebay",
-          "sell_price": 88027,
-          "net_if_fresh": 4921,
-          "roi": 0.0887
+          "sell_price": 87921,
+          "net_if_fresh": 3445,
+          "roi": 0.0606
         }
       ]
     },
@@ -491,42 +491,51 @@
     },
     "prod_gr4": {
       "product_name": "RICOH GR IV",
-      "buy_candidates": 5,
+      "buy_candidates": 1,
       "sell_candidates": 6,
       "rejection_top5": [
         [
           "stale_over_14d",
-          5
-        ]
-      ],
-      "stale_excluded": 5,
-      "overseas_stale": 1,
-      "fresh_overseas_whatif_top5": []
-    },
-    "prod_gr4_mono": {
-      "product_name": "RICOH GR IV Monochrome",
-      "buy_candidates": 3,
-      "sell_candidates": 5,
-      "rejection_top5": [],
-      "stale_excluded": 0,
-      "overseas_stale": 0,
-      "fresh_overseas_whatif_top5": []
-    },
-    "prod_gr3x": {
-      "product_name": "RICOH GR IIIx",
-      "buy_candidates": 4,
-      "sell_candidates": 5,
-      "rejection_top5": [
-        [
-          "stale_over_14d",
-          4
+          9
         ],
         [
           "accessory_or_wrong_product",
           1
         ]
       ],
-      "stale_excluded": 4,
+      "stale_excluded": 9,
+      "overseas_stale": 1,
+      "fresh_overseas_whatif_top5": []
+    },
+    "prod_gr4_mono": {
+      "product_name": "RICOH GR IV Monochrome",
+      "buy_candidates": 1,
+      "sell_candidates": 5,
+      "rejection_top5": [
+        [
+          "stale_over_14d",
+          2
+        ]
+      ],
+      "stale_excluded": 2,
+      "overseas_stale": 0,
+      "fresh_overseas_whatif_top5": []
+    },
+    "prod_gr3x": {
+      "product_name": "RICOH GR IIIx",
+      "buy_candidates": 1,
+      "sell_candidates": 5,
+      "rejection_top5": [
+        [
+          "stale_over_14d",
+          7
+        ],
+        [
+          "accessory_or_wrong_product",
+          1
+        ]
+      ],
+      "stale_excluded": 7,
       "overseas_stale": 1,
       "fresh_overseas_whatif_top5": []
     },
@@ -550,26 +559,30 @@
     },
     "prod_x100vi": {
       "product_name": "FUJIFILM X100VI",
-      "buy_candidates": 5,
+      "buy_candidates": 1,
       "sell_candidates": 1,
       "rejection_top5": [
         [
           "stale_over_14d",
-          7
+          11
         ],
         [
           "manual_over_auto_high",
           6
+        ],
+        [
+          "accessory_or_wrong_product",
+          1
         ]
       ],
-      "stale_excluded": 7,
+      "stale_excluded": 11,
       "overseas_stale": 1,
       "fresh_overseas_whatif_top5": [
         {
           "sell": "src_ebay",
-          "sell_price": 568154,
-          "net_if_fresh": 99529,
-          "roi": 0.2929
+          "sell_price": 567450,
+          "net_if_fresh": 98966,
+          "roi": 0.2912
         }
       ]
     },
@@ -721,10 +734,15 @@
     },
     "prod_gr4_hdf": {
       "product_name": "RICOH GR IV HDF",
-      "buy_candidates": 2,
+      "buy_candidates": 0,
       "sell_candidates": 5,
-      "rejection_top5": [],
-      "stale_excluded": 0,
+      "rejection_top5": [
+        [
+          "stale_over_14d",
+          2
+        ]
+      ],
+      "stale_excluded": 2,
       "overseas_stale": 0,
       "fresh_overseas_whatif_top5": []
     }

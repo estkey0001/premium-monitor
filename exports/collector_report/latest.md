@@ -1,12 +1,12 @@
 # Collector Quality Report
 
-生成日時: 2026-06-11 16:24:11 UTC+09:00
+生成日時: 2026-06-12 16:15:37 UTC+09:00
 
 ## サマリ
 
 | 合計 | OK | 失敗 | スキップ |
 |------|-----|------|----------|
-| 55 | 22 | 29 | 4 |
+| 55 | 21 | 30 | 4 |
 
 ## 店舗別 OK/失敗/スキップ
 
@@ -15,7 +15,7 @@
 | 2ndstreet | 0 | 4 | 0 |
 | bookoff | 0 | 0 | 2 |
 | dosupara | 0 | 2 | 0 |
-| geo | 1 | 1 | 0 |
+| geo | 0 | 2 | 0 |
 | geo_mobile | 0 | 4 | 0 |
 | hardoff | 0 | 2 | 0 |
 | iosys | 6 | 0 | 0 |
@@ -38,18 +38,18 @@
 | iphone17pro256 | 5 | 3 | 0 |
 | iphone17pro512 | 4 | 4 | 0 |
 | ps5_pro | 3 | 7 | 2 |
-| switch2 | 3 | 6 | 2 |
+| switch2 | 2 | 7 | 2 |
 
 ## 商品別 成功店舗数（目標達成状況）
 
 | 商品 | 成功店舗数 | 目標 | 達成 | 平均価格 | 最低価格 | 最高価格 | suspicious |
 |------|-----------|------|------|---------|---------|---------|-----------|
 | iphone17pm256 | 4 | 3 | ✅ | ¥182,750 | ¥172,000 | ¥187,000 | — |
-| iphone17pm512 | 3 | 3 | ✅ | ¥215,667 | ¥205,000 | ¥223,000 | — |
+| iphone17pm512 | 3 | 3 | ✅ | ¥216,000 | ¥205,000 | ¥224,000 | — |
 | iphone17pro256 | 5 | 3 | ✅ | ¥166,500 | ¥157,000 | ¥173,000 | — |
 | iphone17pro512 | 4 | 3 | ✅ | ¥198,238 | ¥187,000 | ¥209,000 | — |
 | ps5_pro | 3 | 2 | ✅ | ¥125,133 | ¥105,000 | ¥135,200 | — |
-| switch2 | 3 | 2 | ✅ | ¥46,000 | ¥45,000 | ¥47,000 | — |
+| switch2 | 2 | 2 | ✅ | ¥46,500 | ¥46,000 | ¥47,000 | — |
 
 | 商品 | 成功店舗 |
 |------|---------|
@@ -58,7 +58,7 @@
 | iphone17pro256 | mobile_ichiban, kaitori_shouten, kaitori_itchome, iosys, netoff |
 | iphone17pro512 | kaitori_shouten, kaitori_itchome, iosys, netoff |
 | ps5_pro | iosys, kaitori_shouten, mobile_ichiban |
-| switch2 | geo, iosys, kaitori_shouten |
+| switch2 | iosys, kaitori_shouten |
 
 ## 店舗別 詳細統計
 
@@ -67,7 +67,7 @@
 | 2ndstreet | 0% | 0 | 4 | — | — | price_not_found |
 | bookoff | 0% | 0 | 0 | — | — | not_supported |
 | dosupara | 0% | 0 | 2 | — | — | http_404 |
-| geo | 50% | 1 | 1 | — | — | product_not_listed |
+| geo | 0% | 0 | 2 | — | — | connection_error |
 | geo_mobile | 0% | 0 | 4 | — | 4/4 | site_blocked |
 | hardoff | 0% | 0 | 2 | — | — | http_404 |
 | iosys | 100% | 6 | 0 | — | — | — |
@@ -89,8 +89,8 @@
 1. 2ndstreet (price_not_found 4件)
 2. bookoff (not_supported 2件)
 3. dosupara (http_404 2件)
-4. geo_mobile (site_blocked 4件)
-5. hardoff (http_404 2件)
+4. geo (connection_error 2件)
+5. geo_mobile (site_blocked 4件)
 
 ## 取得不可理由ランキング
 
@@ -103,8 +103,9 @@
 | http_404 | 4 |
 | not_supported | 4 |
 | service_unavailable | 2 |
+| connection_error | 1 |
 
-## 取得失敗一覧 (33件)
+## 取得失敗一覧 (34件)
 
 | 商品 | 店舗 | ステータス | 理由 |
 |------|------|-----------|------|
@@ -124,6 +125,7 @@
 | iphone17pm512 | geo_mobile | FAILED | site_blocked |
 | iphone17pm512 | 2ndstreet | FAILED | price_not_found |
 | iphone17pm512 | netoff | FAILED | price_not_found |
+| switch2 | geo | FAILED | connection_error |
 | switch2 | janpara | FAILED | rate_limited_429 |
 | switch2 | hardoff | FAILED | http_404 |
 | switch2 | dosupara | FAILED | http_404 |

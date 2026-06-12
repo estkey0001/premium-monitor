@@ -1,22 +1,23 @@
-# データ取得品質レポート（2026-06-11 17:44 JST）
+# データ取得品質レポート（2026-06-12 17:27 JST）
 
 ## 取得成功率
 - 全対象店舗数: 16
-- 成功店舗数: 6
-- 全失敗店舗数: 8
-- ジョブ成功率: 40.0%（OK 22 / 失敗 29 / SKIP 4 / 計 55）
+- 成功店舗数: 5
+- 全失敗店舗数: 9
+- ジョブ成功率: 38.2%（OK 21 / 失敗 30 / SKIP 4 / 計 55）
 
 ## 前回比較
 - 前回成功率: 40.0%
-- 今回成功率: 40.0%
-- 変化: 0.0pt（横ばい）
-- 7日移動平均: 38.4%
+- 今回成功率: 38.2%
+- 変化: -1.8pt（悪化）
+- 7日移動平均: 38.2%
 - 主要失敗理由 TOP5: rate_limited_429 6, site_blocked 6, price_not_found 6, product_not_listed 5, http_404 4
 
 ## 店舗別成功率（低い順）
 - 2ndstreet（optional）: 0%（OK 0/失敗 4・price_not_found）
 - bookoff（optional）: 0%（OK 0/失敗 0・not_supported）
 - dosupara（optional）: 0%（OK 0/失敗 2・http_404）
+- geo（optional）: 0%（OK 0/失敗 2・connection_error）
 - geo_mobile（optional）: 0%（OK 0/失敗 4・site_blocked）
 - hardoff（optional）: 0%（OK 0/失敗 2・http_404）
 - janpara（optional）: 0%（OK 0/失敗 6・rate_limited_429）
@@ -24,28 +25,27 @@
 - sofmap（optional）: 0%（OK 0/失敗 2・service_unavailable）
 - surugaya（optional）: 0%（OK 0/失敗 2・site_blocked）
 - tsutaya（optional）: 0%（OK 0/失敗 0・not_supported）
-- geo（optional）: 50%（OK 1/失敗 1・product_not_listed）
 - netoff（optional）: 50%（OK 2/失敗 2・price_not_found）
 
 ## 商品別成功率
+- switch2: 22.2%
 - ps5_pro: 30.0%
-- switch2: 33.3%
 - iphone17pm512: 37.5%
 - iphone17pro512: 50.0%
 - iphone17pm256: 50.0%
 - iphone17pro256: 62.5%
 
 ## 連続失敗店舗（2回以上）
-- 2ndstreet: 40回連続
-- bookoff: 40回連続
-- dosupara: 40回連続
-- geo_mobile: 40回連続
-- hardoff: 40回連続
-- janpara: 40回連続
-- pasoko: 40回連続
-- sofmap: 40回連続
-- surugaya: 40回連続
-- tsutaya: 40回連続
+- 2ndstreet: 41回連続
+- bookoff: 41回連続
+- dosupara: 41回連続
+- geo_mobile: 41回連続
+- hardoff: 41回連続
+- janpara: 41回連続
+- pasoko: 41回連続
+- sofmap: 41回連続
+- surugaya: 41回連続
+- tsutaya: 41回連続
 
 ## 改善優先順位（required店舗）
 1. mobile_ichiban（失敗2 / product_not_listed）
@@ -58,6 +58,7 @@
 - http_404: 4件
 - not_supported: 4件
 - service_unavailable: 2件
+- connection_error: 1件
 
 ## 有効データ量（新品・未使用 / 14日以内 / price>0）
 - 有効買取データを持つ商品数: 23
@@ -70,8 +71,8 @@
   - prod_iphone17pro_512: 4店舗
   - prod_iphone17pm_256: 4店舗
   - prod_iphone17pm_512: 3店舗
-  - prod_switch2: 3店舗
   - prod_ps5_pro: 3店舗
+  - prod_switch2: 2店舗
   - prod_gfx100rf: 1店舗
   - prod_xt5: 1店舗
   - prod_a7rv: 1店舗

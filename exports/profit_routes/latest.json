@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-12 17:27 JST",
+  "generated_at": "2026-06-13 17:04 JST",
   "ebay_api_configured": false,
   "overseas_source_mode": "manual",
   "summary": {
@@ -25,30 +25,30 @@
       "buy_url": "https://auctions.yahoo.co.jp/search/search?p=%E5%AF%8C%E5%A3%AB%E3%83%95%E3%82%A4%E3%83%AB%E3%83%A0%20X100VI&va=%E5%AF%8C%E5%A3%AB%E3%83%95%E3%82%A4%E3%83%AB%E3%83%A0%20X100VI&istatus=2&n=20&s1=cbids&o1=d&ei=utf-8&auccat=&tab_ex=commerce&item_condition=1",
       "buy_link_type": "search",
       "sell_source": "src_ebay",
-      "sell_price": 567450,
+      "sell_price": 567344,
       "sell_price_type": "overseas_sold_price",
       "sell_price_role": "sell",
       "sell_condition": "new_unopened",
       "sell_url": "",
       "sell_link_type": "none",
-      "gross_profit": 227650,
-      "estimated_fee": 113490,
-      "platform_fee": 73768,
-      "payment_fee": 22698,
-      "fx_buffer": 17024,
+      "gross_profit": 227544,
+      "estimated_fee": 113469,
+      "platform_fee": 73755,
+      "payment_fee": 22694,
+      "fx_buffer": 17020,
       "shipping_cost": 5000,
       "safety_margin": 10194,
-      "net_profit": 98966,
-      "roi": 0.2912,
+      "net_profit": 98881,
+      "roi": 0.291,
       "route_confidence": "low",
-      "buy_observed_at": "2026-06-12T17:00:48.660148+09:00",
+      "buy_observed_at": "2026-06-13T16:36:48.513843+09:00",
       "sell_observed_at": "2026-05-28T10:00:00+09:00",
       "buy_observed_age_days": 0.0,
-      "sell_observed_age_days": 15.3,
+      "sell_observed_age_days": 16.3,
       "sell_collector_method": "manual",
       "route_type": "flea_to_overseas",
       "reference_route": true,
-      "rejection_reason": "overseas_sold_stale(15.3d)"
+      "rejection_reason": "overseas_sold_stale(16.3d)"
     },
     {
       "product_id": "prod_iphone17pro_256",
@@ -61,30 +61,30 @@
       "buy_url": "https://auctions.yahoo.co.jp/search/search?p=iPhone%2017%20Pro%20256GB&va=iPhone%2017%20Pro%20256GB&istatus=2&n=20&s1=cbids&o1=d&ei=utf-8&auccat=&tab_ex=commerce&item_condition=1",
       "buy_link_type": "search",
       "sell_source": "src_ebay",
-      "sell_price": 320634,
+      "sell_price": 320575,
       "sell_price_type": "overseas_sold_price",
       "sell_price_role": "sell",
       "sell_condition": "new_unopened",
       "sell_url": "",
       "sell_link_type": "none",
-      "gross_profit": 119895,
-      "estimated_fee": 64126,
-      "platform_fee": 41682,
-      "payment_fee": 12825,
-      "fx_buffer": 9619,
+      "gross_profit": 119836,
+      "estimated_fee": 64115,
+      "platform_fee": 41675,
+      "payment_fee": 12823,
+      "fx_buffer": 9617,
       "shipping_cost": 5000,
       "safety_margin": 6022,
-      "net_profit": 44747,
-      "roi": 0.2229,
+      "net_profit": 44699,
+      "roi": 0.2227,
       "route_confidence": "low",
-      "buy_observed_at": "2026-06-12T17:00:48.660148+09:00",
+      "buy_observed_at": "2026-06-13T16:36:48.513843+09:00",
       "sell_observed_at": "2026-05-28T10:00:00+09:00",
       "buy_observed_age_days": 0.0,
-      "sell_observed_age_days": 15.3,
+      "sell_observed_age_days": 16.3,
       "sell_collector_method": "",
       "route_type": "flea_to_overseas",
       "reference_route": true,
-      "rejection_reason": "overseas_sold_stale(15.3d)"
+      "rejection_reason": "overseas_sold_stale(16.3d)"
     },
     {
       "product_id": "prod_switch2",
@@ -97,30 +97,30 @@
       "buy_url": "https://auctions.yahoo.co.jp/search/search?p=Nintendo%20Switch%202&va=Nintendo%20Switch%202&istatus=2&n=20&s1=cbids&o1=d&ei=utf-8&auccat=&tab_ex=commerce&item_condition=1",
       "buy_link_type": "search",
       "sell_source": "src_ebay",
-      "sell_price": 87921,
+      "sell_price": 87906,
       "sell_price_type": "overseas_sold_price",
       "sell_price_role": "sell",
       "sell_condition": "new_unopened",
       "sell_url": "",
       "sell_link_type": "none",
-      "gross_profit": 31030,
-      "estimated_fee": 17585,
-      "platform_fee": 11430,
-      "payment_fee": 3517,
-      "fx_buffer": 2638,
+      "gross_profit": 31015,
+      "estimated_fee": 17581,
+      "platform_fee": 11428,
+      "payment_fee": 3516,
+      "fx_buffer": 2637,
       "shipping_cost": 5000,
       "safety_margin": 5000,
-      "net_profit": 3445,
-      "roi": 0.0606,
+      "net_profit": 3434,
+      "roi": 0.0604,
       "route_confidence": "low",
-      "buy_observed_at": "2026-06-12T17:00:48.660148+09:00",
+      "buy_observed_at": "2026-06-13T16:36:48.513843+09:00",
       "sell_observed_at": "2026-05-28T10:00:00+09:00",
       "buy_observed_age_days": 0.0,
-      "sell_observed_age_days": 15.3,
+      "sell_observed_age_days": 16.3,
       "sell_collector_method": "manual",
       "route_type": "flea_to_overseas",
       "reference_route": true,
-      "rejection_reason": "overseas_sold_stale(15.3d)"
+      "rejection_reason": "overseas_sold_stale(16.3d)"
     }
   ],
   "zero_route_diagnostics": {
@@ -143,9 +143,9 @@
       "fresh_overseas_whatif_top5": [
         {
           "sell": "src_ebay",
-          "sell_price": 320634,
-          "net_if_fresh": 44747,
-          "roi": 0.2229
+          "sell_price": 320575,
+          "net_if_fresh": 44699,
+          "roi": 0.2227
         }
       ]
     },
@@ -407,11 +407,11 @@
     "prod_switch2": {
       "product_name": "Nintendo Switch 2",
       "buy_candidates": 1,
-      "sell_candidates": 2,
+      "sell_candidates": 3,
       "rejection_top5": [
         [
           "price_zero",
-          8
+          7
         ],
         [
           "stale_over_14d",
@@ -423,9 +423,9 @@
       "fresh_overseas_whatif_top5": [
         {
           "sell": "src_ebay",
-          "sell_price": 87921,
-          "net_if_fresh": 3445,
-          "roi": 0.0606
+          "sell_price": 87906,
+          "net_if_fresh": 3434,
+          "roi": 0.0604
         }
       ]
     },
@@ -497,10 +497,6 @@
         [
           "stale_over_14d",
           9
-        ],
-        [
-          "accessory_or_wrong_product",
-          1
         ]
       ],
       "stale_excluded": 9,
@@ -529,10 +525,6 @@
         [
           "stale_over_14d",
           7
-        ],
-        [
-          "accessory_or_wrong_product",
-          1
         ]
       ],
       "stale_excluded": 7,
@@ -569,10 +561,6 @@
         [
           "manual_over_auto_high",
           6
-        ],
-        [
-          "accessory_or_wrong_product",
-          1
         ]
       ],
       "stale_excluded": 11,
@@ -580,9 +568,9 @@
       "fresh_overseas_whatif_top5": [
         {
           "sell": "src_ebay",
-          "sell_price": 567450,
-          "net_if_fresh": 98966,
-          "roi": 0.2912
+          "sell_price": 567344,
+          "net_if_fresh": 98881,
+          "roi": 0.291
         }
       ]
     },

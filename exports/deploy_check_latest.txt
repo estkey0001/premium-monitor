@@ -9,7 +9,7 @@
   ✅ [line_cta_off] LINE CTA非表示（正常）
   ✅ [telegram_cta_off] Telegram CTA非表示（正常）
   ✅ [analytics_empty] GA ID未設定 → GAスニペット非出力（正常）
-  ✅ [today_date] 今日の日付 2026-06-12 あり
+  ✅ [today_date] 今日の日付 2026-06-13 あり
   ✅ [price_exists] 価格表記あり
   ✅ [disclaimer] 免責事項あり
   ✅ [data_track] data-track属性あり
@@ -154,7 +154,7 @@
   ✅ [freshness_yoko_format] 古い価格に「要更新 / N日前」形式が使われている
   ✅ [deal_card_no_saishin_label] updated-row に旧「最終更新：」表記なし（価格確認：に統一済み）
   ✅ [stale_banner_date_mismatch] #144 「本日の価格データ未更新」が HTML に存在しない（OK: トップ警告抑制済み）
-  ✅ [csv_today_observed_at] manual_buyback_prices.csv に本日(2026-06-12)の observed_at あり
+  ✅ [csv_today_observed_at] manual_buyback_prices.csv に本日(2026-06-13)の observed_at あり
   ✅ [iphone17_price_fetched] iPhone 17 Pro 系の買取価格が1件以上取得されている
   ✅ [mobile_ichiban_price] モバイル一番の買取価格（price > 0）が存在する
   ✅ [fetch_failed_display] fetch_failed 行があり、LP上に「取得失敗 / 要確認」表示がある
@@ -185,25 +185,25 @@
   ✅ [ipad_not_in_other] iPad は「その他」欄に混入していない
   ✅ [airpods_not_in_smartphone] AirPods はスマートフォン欄に混入していない
   ⚠️ [applewatch_in_wearable_section] Apple Watch がウェアラブル欄に見つからない（データなし or genre設定を確認）
-  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-06-12T16:15:37+09:00）
+  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-06-13T15:52:06+09:00）
   ✅ [suspicious_price_format] suspicious_prices 形式OK（suspicious_price なし）
-  ✅ [fetch_failed_has_reason] fetch_failed 34件すべてに reason あり
+  ✅ [fetch_failed_has_reason] fetch_failed 33件すべてに reason あり
   ✅ [collector_report_html_exists] docs/collector_report.html 存在
   ✅ [collector_report_link_in_lp] LP内に collector_report.html へのリンクがある
-  ✅ [fetch_failed_report_link] 取得失敗30件 / suspicious0件 → 警告バーが表示されている
-  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 16件存在する: ['iphone17pm512', 'iphone17pro512', 'iphone17pro256', 'iphone17pm256']
-  ✅ [beginner_page_auto_scraped_exists] 自動取得 OK 21件 / total 55件
+  ✅ [fetch_failed_report_link] 取得失敗29件 / suspicious0件 → 警告バーが表示されている
+  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 16件存在する: ['iphone17pm256', 'iphone17pro512', 'iphone17pro256', 'iphone17pm512']
+  ✅ [beginner_page_auto_scraped_exists] 自動取得 OK 22件 / total 55件
   ✅ [shop_name_no_vertical_wrap] shop-name-col に word-break:keep-all が設定されている
   ✅ [iphone17pro256_price_scraped] iPhone 17 Pro 256GB の価格取得成功: ['mobile_ichiban', 'kaitori_shouten', 'kaitori_itchome', 'iosys', 'netoff']
   ✅ [fetch_failed_section_collapsible] 取得失敗セクションが <details> 折りたたみ対応されている
   ✅ [fetch_failed_not_dominant] 取得失敗カード比率 2%（2/100）— 許容範囲内
-  ✅ [fetch_failed_has_reason_field] 全取得失敗エントリーに reason フィールドあり（34件）
+  ✅ [fetch_failed_has_reason_field] 全取得失敗エントリーに reason フィールドあり（33件）
   ✅ [auto_scraped_link_verified] auto_scraped行のlink_verifiedはすべてtrue（URL推測なし）
   ✅ [iphone_min3_shops] iPhone主要4商品すべて成功店舗≥3
-  ✅ [switch2_min2_shops] Switch2 成功店舗≥2（2店舗）
+  ✅ [switch2_min2_shops] Switch2 成功店舗≥2（3店舗）
   ✅ [ps5pro_min2_shops] PS5 Pro 成功店舗≥2（3店舗）
   ✅ [no_unknown_failure_reason] すべての取得失敗に reason が設定されている（unknown なし）
-  ✅ [debug_files_saved] exports/debug/ に診断ファイル 61件あり
+  ✅ [debug_files_saved] exports/debug/ に診断ファイル 60件あり
   ✅ [low_confidence_not_in_lp] confidence=low 価格がLPに含まれていない（low=0件）
   ✅ [suspicious_price_not_in_lp] suspicious_price がLPに含まれていない（要疑い価格=0件）
   ✅ [fetch_failed_collapse_ui_exists] fetch_failed店舗 20件で「さらに表示」UIが存在
@@ -211,7 +211,7 @@
   ✅ [fetch_failed_description_exists] fetch_failed セクションに説明文が存在
   ✅ [quality_gate_script_exists] scripts/check_collector_quality.py が存在
   ✅ [quality_gate_in_workflow] GitHub Actions に quality gate step がある
-  ✅ [collector_summary_in_report] latest.json summary OK: 21/55 (38%)
+  ✅ [collector_summary_in_report] latest.json summary OK: 22/55 (40%)
   ✅ [playwright_install_in_workflow] daily_lp.yml に playwright install --with-deps chromium が存在
   ✅ [workflow_concurrency_set] daily_lp.yml に concurrency: group=daily-lp-update が設定されている
   ✅ [workflow_concurrency_no_cancel] daily_lp.yml の concurrency が cancel-in-progress: false（後続を待機）
@@ -447,7 +447,7 @@
   ✅ [beginner_source_in_confirm_line] #440 Beginner の取得方法は confirm-line（最終確認行）にだけ表示されている
   ✅ [pro_buyback_candidates_present] #441 Pro に買取店価格候補（買取価格）が残っている
   ✅ [pro_domestic_candidates_present] #442 Pro に国内新品/未使用価格候補（国内候補テーブル）が残っている
-  ✅ [beginner_row_has_core_cols] #443 Beginner の各店舗カードに 店舗名・価格・差益・確認リンクが揃っている（店名90/リンク90）
+  ✅ [beginner_row_has_core_cols] #443 Beginner の各店舗カードに 店舗名・価格・差益・確認リンクが揃っている（店名91/リンク91）
   ✅ [beginner_source_only_in_details_or_confirm] #444 取得方法（自動取得/手動確認）は details / confirm-line にだけ表示される
   ✅ [beginner_compare_folded_initial_hero_only] #445 初期表示は最高買取店＋2位差額のみ・買取店比較は details 内（初期表示の shop-row max=0）
   ✅ [beginner_hero_and_runnerup_diff] #446 初期表示に最高買取店ブロックと『2位との差額』が表示される
@@ -456,8 +456,8 @@
   ✅ [beginner_best_buyback_block_present] #449 最高買取店ブロック（best-buyback-hero）が存在する
   ✅ [beginner_all_shops_in_fold_failed_nested] #450 全買取店は比較fold内・取得失敗は別sub-details内（初期表示の取得失敗=False）
   ✅ [pro_buyback_sell_section_present] #451 Pro タブに『国内売却候補 / 買取店』セクションがある
-  ✅ [pro_buyback_3plus_multiple_products] #452 Pro タブに買取店候補が3件以上の商品が複数存在する（該当5商品 / 件数内訳=[1, 4, 5, 2, 3, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4]）
-  ✅ [pro_buyback_few_reason_shown] #453 Pro で買取候補が少ない商品に理由が表示される（<3件の商品=15 / 理由表示=15）
+  ✅ [pro_buyback_3plus_multiple_products] #452 Pro タブに買取店候補が3件以上の商品が複数存在する（該当6商品 / 件数内訳=[1, 4, 5, 3, 3, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4]）
+  ✅ [pro_buyback_few_reason_shown] #453 Pro で買取候補が少ない商品に理由が表示される（<3件の商品=14 / 理由表示=14）
   ✅ [beginner_no_watch_badge_on_profit] #454 profit>0 の利益ありカードに『様子見』が出ない（バッジ・本文とも：利益あり/小幅利益/微益）
   ✅ [beginner_failed_shops_separate_details] #455 価格『—』店舗は通常のもっと見るに混ざらず別 details に分離されている
   ✅ [beginner_no_failed_in_normal_more] #456 取得失敗店舗が通常の『もっと見る（価格取得済み）』に出ない
@@ -549,7 +549,7 @@
   ✅ [camera_tradein_exclude] #542 カメラ買取が下取(15%UP等)価格を現金買取価格から分離・除外している
   ✅ [sedori_overseas_sell] #543 せどり計算の売却先が「買取価格＋海外販売価格」になっている（NPO PRO_SELL_TYPES）
   ✅ [top_camera_reference_guard] #544 Top Camera Buyback が参照価格(公式/定価)未取得の商品を除外している
-  ✅ [npo_exists] #545 normalized_price_observations/latest.json が存在する（241観測）
+  ✅ [npo_exists] #545 normalized_price_observations/latest.json が存在する（238観測）
   ✅ [npo_price_role_required] #546 全観測に price_role が付与されている
   ✅ [npo_tradein_not_main] #547 trade_in_price が main calculation（最高買取等）に使われない
   ✅ [npo_pro_buy_no_buyback] #548 Pro route の buy 側に buyback_price が使われない

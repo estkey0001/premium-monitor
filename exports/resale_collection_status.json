@@ -1,5 +1,5 @@
 {
-  "collected_at": "2026-06-12T17:00:48.660148+09:00",
+  "collected_at": "2026-06-13T16:36:48.513843+09:00",
   "platforms": {
     "ebay": {
       "status": "blocked_cloud_ip",
@@ -7,8 +7,8 @@
       "needs_ebay_app_id": true
     },
     "amazon": {
-      "status": "ok_html",
-      "label_jp": "自動取得済（HTML）"
+      "status": "blocked_cloud_ip",
+      "label_jp": "Cloud IP制限中（EBAY_APP_ID推奨）"
     },
     "mercari": {
       "status": "blocked_cloud_ip",
@@ -28,14 +28,14 @@
     }
   },
   "summary": {
-    "saved": 13,
-    "skipped": 36,
+    "saved": 10,
+    "skipped": 39,
     "errors": []
   },
   "products": {
     "gr4": {
       "ebay": "blocked_cloud_ip",
-      "amazon": "ok_html",
+      "amazon": "blocked_cloud_ip",
       "mercari": "blocked_cloud_ip",
       "yahoo": "ok_html",
       "rakuten": "html_failed",
@@ -59,7 +59,7 @@
     },
     "gr3x": {
       "ebay": "blocked_cloud_ip",
-      "amazon": "ok_html",
+      "amazon": "blocked_cloud_ip",
       "mercari": "blocked_cloud_ip",
       "yahoo": "ok_html",
       "rakuten": "html_failed",
@@ -67,7 +67,7 @@
     },
     "x100vi": {
       "ebay": "blocked_cloud_ip",
-      "amazon": "ok_html",
+      "amazon": "blocked_cloud_ip",
       "mercari": "blocked_cloud_ip",
       "yahoo": "ok_html",
       "rakuten": "html_failed",

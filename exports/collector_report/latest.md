@@ -1,12 +1,12 @@
 # Collector Quality Report
 
-生成日時: 2026-06-12 16:15:37 UTC+09:00
+生成日時: 2026-06-13 15:52:06 UTC+09:00
 
 ## サマリ
 
 | 合計 | OK | 失敗 | スキップ |
 |------|-----|------|----------|
-| 55 | 21 | 30 | 4 |
+| 55 | 22 | 29 | 4 |
 
 ## 店舗別 OK/失敗/スキップ
 
@@ -15,7 +15,7 @@
 | 2ndstreet | 0 | 4 | 0 |
 | bookoff | 0 | 0 | 2 |
 | dosupara | 0 | 2 | 0 |
-| geo | 0 | 2 | 0 |
+| geo | 1 | 1 | 0 |
 | geo_mobile | 0 | 4 | 0 |
 | hardoff | 0 | 2 | 0 |
 | iosys | 6 | 0 | 0 |
@@ -38,18 +38,18 @@
 | iphone17pro256 | 5 | 3 | 0 |
 | iphone17pro512 | 4 | 4 | 0 |
 | ps5_pro | 3 | 7 | 2 |
-| switch2 | 2 | 7 | 2 |
+| switch2 | 3 | 6 | 2 |
 
 ## 商品別 成功店舗数（目標達成状況）
 
 | 商品 | 成功店舗数 | 目標 | 達成 | 平均価格 | 最低価格 | 最高価格 | suspicious |
 |------|-----------|------|------|---------|---------|---------|-----------|
-| iphone17pm256 | 4 | 3 | ✅ | ¥182,750 | ¥172,000 | ¥187,000 | — |
-| iphone17pm512 | 3 | 3 | ✅ | ¥216,000 | ¥205,000 | ¥224,000 | — |
-| iphone17pro256 | 5 | 3 | ✅ | ¥166,500 | ¥157,000 | ¥173,000 | — |
-| iphone17pro512 | 4 | 3 | ✅ | ¥198,238 | ¥187,000 | ¥209,000 | — |
-| ps5_pro | 3 | 2 | ✅ | ¥125,133 | ¥105,000 | ¥135,200 | — |
-| switch2 | 2 | 2 | ✅ | ¥46,500 | ¥46,000 | ¥47,000 | — |
+| iphone17pm256 | 4 | 3 | ✅ | ¥181,250 | ¥172,000 | ¥185,000 | — |
+| iphone17pm512 | 3 | 3 | ✅ | ¥214,333 | ¥205,000 | ¥221,000 | — |
+| iphone17pro256 | 5 | 3 | ✅ | ¥165,300 | ¥157,000 | ¥171,000 | — |
+| iphone17pro512 | 4 | 3 | ✅ | ¥197,238 | ¥187,000 | ¥207,000 | — |
+| ps5_pro | 3 | 2 | ✅ | ¥125,167 | ¥105,000 | ¥135,300 | — |
+| switch2 | 3 | 2 | ✅ | ¥45,667 | ¥45,000 | ¥46,000 | — |
 
 | 商品 | 成功店舗 |
 |------|---------|
@@ -58,7 +58,7 @@
 | iphone17pro256 | mobile_ichiban, kaitori_shouten, kaitori_itchome, iosys, netoff |
 | iphone17pro512 | kaitori_shouten, kaitori_itchome, iosys, netoff |
 | ps5_pro | iosys, kaitori_shouten, mobile_ichiban |
-| switch2 | iosys, kaitori_shouten |
+| switch2 | geo, iosys, kaitori_shouten |
 
 ## 店舗別 詳細統計
 
@@ -67,7 +67,7 @@
 | 2ndstreet | 0% | 0 | 4 | — | — | price_not_found |
 | bookoff | 0% | 0 | 0 | — | — | not_supported |
 | dosupara | 0% | 0 | 2 | — | — | http_404 |
-| geo | 0% | 0 | 2 | — | — | connection_error |
+| geo | 50% | 1 | 1 | — | — | product_not_listed |
 | geo_mobile | 0% | 0 | 4 | — | 4/4 | site_blocked |
 | hardoff | 0% | 0 | 2 | — | — | http_404 |
 | iosys | 100% | 6 | 0 | — | — | — |
@@ -89,8 +89,8 @@
 1. 2ndstreet (price_not_found 4件)
 2. bookoff (not_supported 2件)
 3. dosupara (http_404 2件)
-4. geo (connection_error 2件)
-5. geo_mobile (site_blocked 4件)
+4. geo_mobile (site_blocked 4件)
+5. hardoff (http_404 2件)
 
 ## 取得不可理由ランキング
 
@@ -103,9 +103,8 @@
 | http_404 | 4 |
 | not_supported | 4 |
 | service_unavailable | 2 |
-| connection_error | 1 |
 
-## 取得失敗一覧 (34件)
+## 取得失敗一覧 (33件)
 
 | 商品 | 店舗 | ステータス | 理由 |
 |------|------|-----------|------|
@@ -125,7 +124,6 @@
 | iphone17pm512 | geo_mobile | FAILED | site_blocked |
 | iphone17pm512 | 2ndstreet | FAILED | price_not_found |
 | iphone17pm512 | netoff | FAILED | price_not_found |
-| switch2 | geo | FAILED | connection_error |
 | switch2 | janpara | FAILED | rate_limited_429 |
 | switch2 | hardoff | FAILED | http_404 |
 | switch2 | dosupara | FAILED | http_404 |
@@ -148,15 +146,15 @@
 
 | 商品 | 店舗 | 前回 | 今回 | 変化率 |
 |------|------|------|------|--------|
-| switch2 | kaitori_shouten | ¥50,800 | ¥47,000 | ↓7.5% |
+| switch2 | kaitori_shouten | ¥50,800 | ¥46,000 | ↓9.4% |
 | ps5_pro | iosys | ¥100,000 | ¥105,000 | ↑5.0% |
-| iphone17pm256 | kaitori_shouten | ¥192,000 | ¥185,000 | ↓3.6% |
-| iphone17pro256 | kaitori_shouten | ¥178,000 | ¥172,000 | ↓3.4% |
-| iphone17pm512 | kaitori_shouten | ¥226,000 | ¥219,000 | ↓3.1% |
-| iphone17pro512 | kaitori_shouten | ¥214,000 | ¥209,000 | ↓2.3% |
+| iphone17pm256 | kaitori_shouten | ¥192,000 | ¥183,000 | ↓4.7% |
+| iphone17pro256 | kaitori_shouten | ¥178,000 | ¥170,000 | ↓4.5% |
+| iphone17pm512 | kaitori_shouten | ¥226,000 | ¥217,000 | ↓4.0% |
+| iphone17pro512 | kaitori_shouten | ¥214,000 | ¥207,000 | ↓3.3% |
 | iphone17pro256 | netoff | ¥159,600 | ¥157,500 | ↓1.3% |
 | iphone17pro512 | netoff | ¥190,050 | ¥187,950 | ↓1.1% |
-| ps5_pro | kaitori_shouten | ¥134,500 | ¥135,200 | ↑0.5% |
+| ps5_pro | kaitori_shouten | ¥134,500 | ¥135,300 | ↑0.6% |
 
 ## ⚠️ suspicious_price 一覧 (0件)
 

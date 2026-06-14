@@ -4924,10 +4924,12 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 fees.append(f"為替バッファ ¥{r['fx_buffer']:,}")
             fees.append(f"送料 ¥{r['shipping_cost']:,}")
             fees.append(f"安全マージン ¥{r['safety_margin']:,}")
-            badge = ('<span style="background:#f59e0b;color:#fff;padding:1px 6px;border-radius:4px;'
-                     'font-size:0.7rem">参考（海外sold ' + _esc(r.get("rejection_reason", "")) + '）</span>') if reference else \
-                    (f'<span style="background:#2563eb;color:#fff;padding:1px 6px;border-radius:4px;'
-                     f'font-size:0.7rem">信頼度 {_esc(r["route_confidence"])}</span>')
+            badge = ('<span style="background:#7c3aed;color:#fff;padding:1px 6px;border-radius:4px;'
+                     'font-size:0.7rem">参考利益ルート</span> '
+                     '<span style="background:#a78bfa;color:#fff;padding:1px 6px;border-radius:4px;'
+                     'font-size:0.7rem">鮮度待ち</span>') if reference else \
+                    (f'<span style="background:#059669;color:#fff;padding:1px 6px;border-radius:4px;'
+                     f'font-size:0.7rem">検証済み・信頼度 {_esc(r["route_confidence"])}</span>')
             buy_link = (f'<a href="{_esc(r["buy_url"])}" target="_blank" rel="noopener noreferrer">仕入れ確認</a>'
                         if r.get("buy_url") else "仕入れURLなし")
             sell_link = (f'<a href="{_esc(r["sell_url"])}" target="_blank" rel="noopener noreferrer">売却相場確認</a>'
@@ -4946,8 +4948,13 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                          f'<b>¥{r["sell_price"]:,}</b> {age_note}') if reference else \
                         (f'売却: {_esc(r["sell_source"])}（{_esc(r["sell_price_type"])}） <b>¥{r["sell_price"]:,}</b>')
             profit_lbl = "参考利益" if reference else "概算利益"
+            # Task4: main=緑系 / reference=青紫系 で視覚分離（CSSクラス + 左ボーダー色）
+            card_cls = "pr-reference-card" if reference else "pr-main-card"
+            card_style = ("background:#faf5ff;border:1px solid #e9d5ff;border-left:4px solid #7c3aed;"
+                          if reference else
+                          "background:#f0fdf4;border:1px solid #bbf7d0;border-left:4px solid #059669;")
             return (
-                f'<div style="background:#fff;border:1px solid #dbeafe;border-radius:8px;padding:10px 12px;margin:8px 0">'
+                f'<div class="{card_cls}" style="{card_style}border-radius:8px;padding:10px 12px;margin:8px 0">'
                 f'<div style="font-weight:700">{_esc(r["product_name"])} {badge}</div>'
                 f'<div style="font-size:0.85rem;margin-top:4px">'
                 f'仕入: {_esc(r["buy_source"])}（{_esc(r["buy_price_type"])}） <b>¥{r["buy_price"]:,}</b> ／ '
@@ -4958,8 +4965,11 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 f'{ref_extra}'
                 f'</div>')
 
+        # ── main 利益ルート（緑系・検証済み）──
         if main:
-            parts.append(f'<div style="font-weight:600;margin-top:6px">主要利益ルート {len(main)}件</div>')
+            parts.append('<div class="pr-main-header" style="font-weight:700;margin-top:6px;color:#047857">'
+                         '&#9989; 検証済み利益ルート <span style="font-weight:600">'
+                         f'{len(main)}件</span></div>')
             for r in main[:20]:
                 parts.append(_fmt_card(r))
         else:
@@ -4974,7 +4984,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                     allrej[k] += v
                 stale_total += z.get("stale_excluded", 0)
                 ov_stale_total += z.get("overseas_stale", 0)
-            parts.append('<div style="background:#fff;border:1px dashed #93c5fd;border-radius:8px;padding:10px 12px">')
+            parts.append('<div class="pr-main-empty" style="background:#fff;border:1px dashed #93c5fd;border-radius:8px;padding:10px 12px">')
             parts.append('<div style="font-weight:700;color:#1d4ed8">現在、確定利益ルートは 0 件です</div>')
             parts.append(f'<div style="font-size:0.85rem;margin-top:4px">buy候補 {buy_c}件 / sell候補 {sell_c}件 / '
                          f'stale除外 {stale_total}件 / 海外sold stale {ov_stale_total}件</div>')
@@ -4982,13 +4992,41 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             parts.append(f'<div style="font-size:0.8rem;color:#64748b;margin-top:2px">除外理由TOP5: {top5 or "—"}</div>')
             parts.append('<div style="font-size:0.85rem;color:#b45309;margin-top:6px">'
                          '&#9888;&#65039; 国内完結（販売≥買取）では利益が出ません。'
-                         '<b>eBay sold（海外成約相場）を最新化</b>すると下記の参考ルートが成立します。</div>')
+                         '<b>海外相場（eBay sold）の最新化</b>で下記の参考ルートが成立します。</div>')
             parts.append('</div>')
 
+        # ── 参考利益ルート（青/紫系・鮮度待ち）──
         if refs:
-            parts.append(f'<div style="font-weight:600;margin-top:12px">参考ルート（海外sold を最新化すれば成立） {len(refs)}件</div>')
+            total_pot = sum(r.get("net_profit", 0) for r in refs)
+            max_pot = max((r.get("net_profit", 0) for r in refs), default=0)
+            max_age = max((r.get("sell_observed_age_days") or 0 for r in refs), default=0)
+            # Task1: 参考ルートサマリー
+            parts.append(
+                '<div class="pr-reference-summary" style="margin-top:16px;background:#f5f3ff;'
+                'border:1px solid #ddd6fe;border-radius:8px;padding:12px 14px">'
+                '<div style="font-weight:700;color:#6d28d9;font-size:1.0rem">'
+                '&#128202; 参考利益ルート（eBay API設定で有効化） '
+                '<span style="background:#7c3aed;color:#fff;padding:1px 7px;border-radius:10px;font-size:0.7rem">鮮度待ち</span></div>'
+                f'<div style="font-size:0.86rem;margin-top:6px;color:#4c1d95">'
+                f'参考ルート数: <b>{len(refs)}件</b> ／ 最大参考利益: <b>+¥{max_pot:,}</b> ／ '
+                f'合計潜在利益: <b>+¥{total_pot:,}</b></div>'
+                f'<div style="font-size:0.82rem;margin-top:3px;color:#6b21a8">'
+                f'eBay sold が約{max_age:.1f}日前のため main ルートには未採用（API設定待ち）。</div>'
+                '</div>')
             for r in refs[:5]:
                 parts.append(_fmt_card(r, reference=True))
+
+        # ── Task3: 管理者向け eBay API 設定導線 ──
+        if not ebay_api:
+            parts.append(
+                '<details class="pr-admin-setup" style="margin-top:14px;font-size:0.8rem;color:#475569">'
+                '<summary style="cursor:pointer;color:#64748b">管理者向け: 海外相場（eBay API）の有効化方法</summary>'
+                '<div style="margin-top:6px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:10px 12px">'
+                'eBay API を有効化すると参考ルートが main 利益ルートへ自動昇格します。<br>'
+                '<b>GitHub Secrets</b> に <code>EBAY_APP_ID</code> を登録 → '
+                '<code>gh workflow run daily_lp.yml</code> で再生成。<br>'
+                '昇格条件: eBay API で 14日以内の sold 価格を取得（collector_method=api）。'
+                '</div></details>')
 
         parts.append('</div>')
         return "".join(parts)

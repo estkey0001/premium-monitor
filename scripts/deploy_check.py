@@ -5695,6 +5695,46 @@ def check() -> list[dict]:
                     "message": "#582 main 0件でも参考ルート/診断が表示される"
                                + ("" if _t582 else " ← 0件時に何も表示されない")})
 
+    # ── Pro 参考ルート UI / eBay 設定導線 ガード #583-#588 ──
+    _has_refs = len(_pr_ref) > 0
+
+    # #583: 参考ルートサマリーが LP に表示される（参考ルートがある場合）
+    _t583 = (not _has_refs) or ('参考利益ルート（eBay API設定で有効化）' in _lp_html)
+    results.append({"level": "ok" if _t583 else "error", "check": "lp_reference_summary",
+                    "message": "#583 参考ルートサマリーが LP に表示される"
+                               + ("" if _t583 else " ← サマリー見出しが見つかりません")})
+
+    # #584: 最大参考利益が LP に表示される
+    _t584 = (not _has_refs) or ('最大参考利益' in _lp_html)
+    results.append({"level": "ok" if _t584 else "error", "check": "lp_reference_max_profit",
+                    "message": "#584 最大参考利益が LP に表示される"
+                               + ("" if _t584 else " ← 最大参考利益が見つかりません")})
+
+    # #585: stale 日数（経過日数）が LP に表示される
+    _t585 = (not _has_refs) or ('日前' in _lp_html)
+    results.append({"level": "ok" if _t585 else "error", "check": "lp_reference_stale_days",
+                    "message": "#585 参考ルートの stale 日数が LP に表示される"
+                               + ("" if _t585 else " ← 経過日数表示が見つかりません")})
+
+    # #586: EBAY_APP_ID 設定導線が LP に表示される（未設定時）
+    _t586 = bool(_ebay_cfg) or ('EBAY_APP_ID' in _lp_html and 'daily_lp.yml' in _lp_html)
+    results.append({"level": "ok" if _t586 else "error", "check": "lp_ebay_setup_guidance",
+                    "message": "#586 EBAY_APP_ID 設定導線（管理者向け）が LP に表示される"
+                               + ("" if _t586 else " ← 設定導線が見つかりません")})
+
+    # #587: main 0件でも reference route カードが LP に表示される
+    _t587 = (len(_pr_main) > 0) or (not _has_refs) or ('pr-reference-card' in _lp_html)
+    results.append({"level": "ok" if _t587 else "error", "check": "lp_reference_card_when_zero_main",
+                    "message": "#587 main 0件でも参考ルートカードが LP に表示される"
+                               + ("" if _t587 else " ← 参考カードが見つかりません")})
+
+    # #588: reference route と main route の CSS クラスが分かれている
+    _lp_src588 = _read_src('src', 'content', 'daily_lp_generator.py')
+    _t588 = ('pr-main-card' in _lp_src588) and ('pr-reference-card' in _lp_src588)
+    results.append({"level": "ok" if _t588 else "error", "check": "lp_main_reference_css_separated",
+                    "message": "#588 main route と reference route の CSS クラスが分離されている"
+                               + ("" if _t588 else " ← CSS クラス分離が見つかりません")})
+
     return results
 
 

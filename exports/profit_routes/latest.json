@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-14 18:21 JST",
+  "generated_at": "2026-06-14 18:41 JST",
   "ebay_api_configured": false,
   "overseas_source_mode": "manual",
   "summary": {
@@ -12,6 +12,32 @@
     "max_roi": null,
     "zero_route_products": 45
   },
+  "missing_data_priority": [
+    {
+      "rank": 1,
+      "key": "flea_sold",
+      "label": "メルカリsold / ヤフオク落札（より安い仕入れ）",
+      "potential_profit": 488728,
+      "product_count": 10,
+      "priority": "high"
+    },
+    {
+      "rank": 2,
+      "key": "ebay_sold_fresh",
+      "label": "eBay sold（海外成約相場）の最新化",
+      "potential_profit": 196088,
+      "product_count": 2,
+      "priority": "high"
+    },
+    {
+      "rank": 3,
+      "key": "shop_item_url",
+      "label": "店舗販売価格 item_url 付き取得",
+      "potential_profit": 0,
+      "product_count": 0,
+      "priority": "low"
+    }
+  ],
   "main_routes": [],
   "reference_routes": [
     {
@@ -128,6 +154,14 @@
       "product_name": "iPhone 17 Pro 256GB SIMフリー",
       "buy_candidates": 1,
       "sell_candidates": 7,
+      "min_usable_buy": 231000,
+      "min_usable_buy_source": "ヤフオク (新品/未使用落札)",
+      "max_usable_sell": 178000,
+      "max_usable_sell_source": "モバイル一番",
+      "gross_gap": -53000,
+      "net_domestic": -59120,
+      "best_reference_net": null,
+      "main_blocked_reason": "国内完結（販売≥買取）で赤字",
       "rejection_top5": [
         [
           "price_zero",
@@ -140,12 +174,24 @@
       ],
       "stale_excluded": 99,
       "overseas_stale": 1,
+      "needed": [
+        "メルカリsold/ヤフオク落札 ≤ ¥171,879 取得で国内買取ルート成立",
+        "国内買取価格が +¥59,121 上昇すれば成立"
+      ],
       "fresh_overseas_whatif_top5": []
     },
     "prod_iphone17pro_512": {
       "product_name": "iPhone 17 Pro 512GB SIMフリー",
       "buy_candidates": 1,
       "sell_candidates": 6,
+      "min_usable_buy": 236544,
+      "min_usable_buy_source": "ヤフオク (新品/未使用落札)",
+      "max_usable_sell": 214000,
+      "max_usable_sell_source": "買取商店",
+      "gross_gap": -22544,
+      "net_domestic": -28775,
+      "best_reference_net": null,
+      "main_blocked_reason": "国内完結（販売≥買取）で赤字",
       "rejection_top5": [
         [
           "price_zero",
@@ -158,12 +204,24 @@
       ],
       "stale_excluded": 92,
       "overseas_stale": 0,
+      "needed": [
+        "メルカリsold/ヤフオク落札 ≤ ¥207,768 取得で国内買取ルート成立",
+        "国内買取価格が +¥28,776 上昇すれば成立"
+      ],
       "fresh_overseas_whatif_top5": []
     },
     "prod_iphone17pm_256": {
       "product_name": "iPhone 17 Pro Max 256GB SIMフリー",
       "buy_candidates": 1,
       "sell_candidates": 5,
+      "min_usable_buy": 231000,
+      "min_usable_buy_source": "ヤフオク (新品/未使用落札)",
+      "max_usable_sell": 192000,
+      "max_usable_sell_source": "モバイル一番",
+      "gross_gap": -39000,
+      "net_domestic": -45120,
+      "best_reference_net": null,
+      "main_blocked_reason": "国内完結（販売≥買取）で赤字",
       "rejection_top5": [
         [
           "price_zero",
@@ -176,12 +234,24 @@
       ],
       "stale_excluded": 93,
       "overseas_stale": 0,
+      "needed": [
+        "メルカリsold/ヤフオク落札 ≤ ¥185,879 取得で国内買取ルート成立",
+        "国内買取価格が +¥45,121 上昇すれば成立"
+      ],
       "fresh_overseas_whatif_top5": []
     },
     "prod_iphone17pm_512": {
       "product_name": "iPhone 17 Pro Max 512GB SIMフリー",
       "buy_candidates": 1,
       "sell_candidates": 4,
+      "min_usable_buy": 236544,
+      "min_usable_buy_source": "ヤフオク (新品/未使用落札)",
+      "max_usable_sell": 226000,
+      "max_usable_sell_source": "買取商店",
+      "gross_gap": -10544,
+      "net_domestic": -16775,
+      "best_reference_net": null,
+      "main_blocked_reason": "国内完結（販売≥買取）で赤字",
       "rejection_top5": [
         [
           "price_zero",
@@ -194,12 +264,24 @@
       ],
       "stale_excluded": 77,
       "overseas_stale": 0,
+      "needed": [
+        "メルカリsold/ヤフオク落札 ≤ ¥219,768 取得で国内買取ルート成立",
+        "国内買取価格が +¥16,776 上昇すれば成立"
+      ],
       "fresh_overseas_whatif_top5": []
     },
     "prod_iphone17_256": {
       "product_name": "iPhone 17 256GB SIMフリー",
       "buy_candidates": 0,
       "sell_candidates": 0,
+      "min_usable_buy": null,
+      "min_usable_buy_source": "",
+      "max_usable_sell": null,
+      "max_usable_sell_source": "",
+      "gross_gap": null,
+      "net_domestic": null,
+      "best_reference_net": null,
+      "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
       "rejection_top5": [
         [
           "stale_over_14d",
@@ -208,12 +290,21 @@
       ],
       "stale_excluded": 4,
       "overseas_stale": 0,
+      "needed": [],
       "fresh_overseas_whatif_top5": []
     },
     "prod_iphone16pro_256": {
       "product_name": "iPhone 16 Pro 256GB SIMフリー",
       "buy_candidates": 0,
       "sell_candidates": 0,
+      "min_usable_buy": null,
+      "min_usable_buy_source": "",
+      "max_usable_sell": null,
+      "max_usable_sell_source": "",
+      "gross_gap": null,
+      "net_domestic": null,
+      "best_reference_net": null,
+      "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
       "rejection_top5": [
         [
           "stale_over_14d",
@@ -222,12 +313,21 @@
       ],
       "stale_excluded": 4,
       "overseas_stale": 0,
+      "needed": [],
       "fresh_overseas_whatif_top5": []
     },
     "prod_iphone16pm_256": {
       "product_name": "iPhone 16 Pro Max 256GB",
       "buy_candidates": 0,
       "sell_candidates": 0,
+      "min_usable_buy": null,
+      "min_usable_buy_source": "",
+      "max_usable_sell": null,
+      "max_usable_sell_source": "",
+      "gross_gap": null,
+      "net_domestic": null,
+      "best_reference_net": null,
+      "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
       "rejection_top5": [
         [
           "stale_over_14d",
@@ -236,21 +336,39 @@
       ],
       "stale_excluded": 5,
       "overseas_stale": 1,
+      "needed": [],
       "fresh_overseas_whatif_top5": []
     },
     "prod_iphone16pm_512": {
       "product_name": "iPhone 16 Pro Max 512GB",
       "buy_candidates": 0,
       "sell_candidates": 0,
+      "min_usable_buy": null,
+      "min_usable_buy_source": "",
+      "max_usable_sell": null,
+      "max_usable_sell_source": "",
+      "gross_gap": null,
+      "net_domestic": null,
+      "best_reference_net": null,
+      "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
       "rejection_top5": [],
       "stale_excluded": 0,
       "overseas_stale": 0,
+      "needed": [],
       "fresh_overseas_whatif_top5": []
     },
     "prod_macbook_air_m4_13": {
       "product_name": "MacBook Air M4 13インチ",
       "buy_candidates": 0,
       "sell_candidates": 0,
+      "min_usable_buy": null,
+      "min_usable_buy_source": "",
+      "max_usable_sell": null,
+      "max_usable_sell_source": "",
+      "gross_gap": null,
+      "net_domestic": null,
+      "best_reference_net": null,
+      "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
       "rejection_top5": [
         [
           "stale_over_14d",
@@ -259,12 +377,21 @@
       ],
       "stale_excluded": 13,
       "overseas_stale": 0,
+      "needed": [],
       "fresh_overseas_whatif_top5": []
     },
     "prod_macbook_air_m4_15": {
       "product_name": "MacBook Air M4 15インチ",
       "buy_candidates": 0,
       "sell_candidates": 0,
+      "min_usable_buy": null,
+      "min_usable_buy_source": "",
+      "max_usable_sell": null,
+      "max_usable_sell_source": "",
+      "gross_gap": null,
+      "net_domestic": null,
+      "best_reference_net": null,
+      "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
       "rejection_top5": [
         [
           "stale_over_14d",
@@ -273,12 +400,21 @@
       ],
       "stale_excluded": 2,
       "overseas_stale": 0,
+      "needed": [],
       "fresh_overseas_whatif_top5": []
     },
     "prod_macbook_pro_m4_14": {
       "product_name": "MacBook Pro M4 14インチ",
       "buy_candidates": 0,
       "sell_candidates": 0,
+      "min_usable_buy": null,
+      "min_usable_buy_source": "",
+      "max_usable_sell": null,
+      "max_usable_sell_source": "",
+      "gross_gap": null,
+      "net_domestic": null,
+      "best_reference_net": null,
+      "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
       "rejection_top5": [
         [
           "stale_over_14d",
@@ -287,12 +423,21 @@
       ],
       "stale_excluded": 2,
       "overseas_stale": 0,
+      "needed": [],
       "fresh_overseas_whatif_top5": []
     },
     "prod_mac_mini_m4": {
       "product_name": "Mac mini M4",
       "buy_candidates": 0,
       "sell_candidates": 0,
+      "min_usable_buy": null,
+      "min_usable_buy_source": "",
+      "max_usable_sell": null,
+      "max_usable_sell_source": "",
+      "gross_gap": null,
+      "net_domestic": null,
+      "best_reference_net": null,
+      "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
       "rejection_top5": [
         [
           "stale_over_14d",
@@ -301,12 +446,21 @@
       ],
       "stale_excluded": 2,
       "overseas_stale": 0,
+      "needed": [],
       "fresh_overseas_whatif_top5": []
     },
     "prod_ipad_pro_m4_11": {
       "product_name": "iPad Pro M4 11インチ",
       "buy_candidates": 0,
       "sell_candidates": 0,
+      "min_usable_buy": null,
+      "min_usable_buy_source": "",
+      "max_usable_sell": null,
+      "max_usable_sell_source": "",
+      "gross_gap": null,
+      "net_domestic": null,
+      "best_reference_net": null,
+      "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
       "rejection_top5": [
         [
           "stale_over_14d",
@@ -315,12 +469,21 @@
       ],
       "stale_excluded": 1,
       "overseas_stale": 0,
+      "needed": [],
       "fresh_overseas_whatif_top5": []
     },
     "prod_ipad_pro_m4_13": {
       "product_name": "iPad Pro M4 13インチ",
       "buy_candidates": 0,
       "sell_candidates": 0,
+      "min_usable_buy": null,
+      "min_usable_buy_source": "",
+      "max_usable_sell": null,
+      "max_usable_sell_source": "",
+      "gross_gap": null,
+      "net_domestic": null,
+      "best_reference_net": null,
+      "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
       "rejection_top5": [
         [
           "stale_over_14d",
@@ -329,12 +492,21 @@
       ],
       "stale_excluded": 1,
       "overseas_stale": 0,
+      "needed": [],
       "fresh_overseas_whatif_top5": []
     },
     "prod_ipad_air_m3": {
       "product_name": "iPad Air M3",
       "buy_candidates": 0,
       "sell_candidates": 0,
+      "min_usable_buy": null,
+      "min_usable_buy_source": "",
+      "max_usable_sell": null,
+      "max_usable_sell_source": "",
+      "gross_gap": null,
+      "net_domestic": null,
+      "best_reference_net": null,
+      "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
       "rejection_top5": [
         [
           "stale_over_14d",
@@ -343,12 +515,21 @@
       ],
       "stale_excluded": 1,
       "overseas_stale": 0,
+      "needed": [],
       "fresh_overseas_whatif_top5": []
     },
     "prod_apple_watch_s11": {
       "product_name": "Apple Watch Series 11",
       "buy_candidates": 0,
       "sell_candidates": 0,
+      "min_usable_buy": null,
+      "min_usable_buy_source": "",
+      "max_usable_sell": null,
+      "max_usable_sell_source": "",
+      "gross_gap": null,
+      "net_domestic": null,
+      "best_reference_net": null,
+      "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
       "rejection_top5": [
         [
           "stale_over_14d",
@@ -357,12 +538,21 @@
       ],
       "stale_excluded": 2,
       "overseas_stale": 0,
+      "needed": [],
       "fresh_overseas_whatif_top5": []
     },
     "prod_apple_watch_ultra3": {
       "product_name": "Apple Watch Ultra 3",
       "buy_candidates": 0,
       "sell_candidates": 0,
+      "min_usable_buy": null,
+      "min_usable_buy_source": "",
+      "max_usable_sell": null,
+      "max_usable_sell_source": "",
+      "gross_gap": null,
+      "net_domestic": null,
+      "best_reference_net": null,
+      "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
       "rejection_top5": [
         [
           "stale_over_14d",
@@ -371,12 +561,21 @@
       ],
       "stale_excluded": 2,
       "overseas_stale": 0,
+      "needed": [],
       "fresh_overseas_whatif_top5": []
     },
     "prod_airpods_pro3": {
       "product_name": "AirPods Pro 3",
       "buy_candidates": 0,
       "sell_candidates": 0,
+      "min_usable_buy": null,
+      "min_usable_buy_source": "",
+      "max_usable_sell": null,
+      "max_usable_sell_source": "",
+      "gross_gap": null,
+      "net_domestic": null,
+      "best_reference_net": null,
+      "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
       "rejection_top5": [
         [
           "stale_over_14d",
@@ -385,12 +584,21 @@
       ],
       "stale_excluded": 2,
       "overseas_stale": 0,
+      "needed": [],
       "fresh_overseas_whatif_top5": []
     },
     "prod_airpods_max": {
       "product_name": "AirPods Max",
       "buy_candidates": 0,
       "sell_candidates": 0,
+      "min_usable_buy": null,
+      "min_usable_buy_source": "",
+      "max_usable_sell": null,
+      "max_usable_sell_source": "",
+      "gross_gap": null,
+      "net_domestic": null,
+      "best_reference_net": null,
+      "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
       "rejection_top5": [
         [
           "stale_over_14d",
@@ -399,12 +607,21 @@
       ],
       "stale_excluded": 2,
       "overseas_stale": 0,
+      "needed": [],
       "fresh_overseas_whatif_top5": []
     },
     "prod_switch2": {
       "product_name": "Nintendo Switch 2",
       "buy_candidates": 1,
       "sell_candidates": 6,
+      "min_usable_buy": 51005,
+      "min_usable_buy_source": "ヤフオク (新品/未使用落札)",
+      "max_usable_sell": 50800,
+      "max_usable_sell_source": "買取商店",
+      "gross_gap": -205,
+      "net_domestic": -4705,
+      "best_reference_net": 7107,
+      "main_blocked_reason": "eBay sold が25.3日前のため main 除外（国内完結は赤字）",
       "rejection_top5": [
         [
           "price_zero",
@@ -417,6 +634,11 @@
       ],
       "stale_excluded": 113,
       "overseas_stale": 1,
+      "needed": [
+        "eBay sold fresh化で main化（参考 +¥7,107 / ROI 14%）",
+        "メルカリsold/ヤフオク落札 ≤ ¥46,299 取得で国内買取ルート成立",
+        "国内買取価格が +¥4,706 上昇すれば成立"
+      ],
       "fresh_overseas_whatif_top5": [
         {
           "sell": "src_ebay",
@@ -430,6 +652,14 @@
       "product_name": "Nintendo Switch 2 マリオカートセット",
       "buy_candidates": 0,
       "sell_candidates": 0,
+      "min_usable_buy": null,
+      "min_usable_buy_source": "",
+      "max_usable_sell": null,
+      "max_usable_sell_source": "",
+      "gross_gap": null,
+      "net_domestic": null,
+      "best_reference_net": null,
+      "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
       "rejection_top5": [
         [
           "stale_over_14d",
@@ -438,12 +668,21 @@
       ],
       "stale_excluded": 13,
       "overseas_stale": 0,
+      "needed": [],
       "fresh_overseas_whatif_top5": []
     },
     "prod_ps5_pro": {
       "product_name": "PlayStation 5 Pro",
       "buy_candidates": 1,
       "sell_candidates": 5,
+      "min_usable_buy": 135000,
+      "min_usable_buy_source": "ヤフオク (新品/未使用落札)",
+      "max_usable_sell": 134700,
+      "max_usable_sell_source": "モバイル一番",
+      "gross_gap": -300,
+      "net_domestic": -4800,
+      "best_reference_net": null,
+      "main_blocked_reason": "国内完結（販売≥買取）で赤字",
       "rejection_top5": [
         [
           "price_zero",
@@ -456,12 +695,24 @@
       ],
       "stale_excluded": 117,
       "overseas_stale": 0,
+      "needed": [
+        "メルカリsold/ヤフオク落札 ≤ ¥130,199 取得で国内買取ルート成立",
+        "国内買取価格が +¥4,801 上昇すれば成立"
+      ],
       "fresh_overseas_whatif_top5": []
     },
     "prod_ps5_de": {
       "product_name": "PlayStation 5 Digital Edition",
       "buy_candidates": 0,
       "sell_candidates": 0,
+      "min_usable_buy": null,
+      "min_usable_buy_source": "",
+      "max_usable_sell": null,
+      "max_usable_sell_source": "",
+      "gross_gap": null,
+      "net_domestic": null,
+      "best_reference_net": null,
+      "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
       "rejection_top5": [
         [
           "stale_over_14d",
@@ -470,12 +721,21 @@
       ],
       "stale_excluded": 3,
       "overseas_stale": 0,
+      "needed": [],
       "fresh_overseas_whatif_top5": []
     },
     "prod_xbox_sx": {
       "product_name": "Xbox Series X",
       "buy_candidates": 0,
       "sell_candidates": 0,
+      "min_usable_buy": null,
+      "min_usable_buy_source": "",
+      "max_usable_sell": null,
+      "max_usable_sell_source": "",
+      "gross_gap": null,
+      "net_domestic": null,
+      "best_reference_net": null,
+      "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
       "rejection_top5": [
         [
           "stale_over_14d",
@@ -484,12 +744,21 @@
       ],
       "stale_excluded": 2,
       "overseas_stale": 0,
+      "needed": [],
       "fresh_overseas_whatif_top5": []
     },
     "prod_gr4": {
       "product_name": "RICOH GR IV",
       "buy_candidates": 1,
       "sell_candidates": 6,
+      "min_usable_buy": 281000,
+      "min_usable_buy_source": "ヤフオク (新品/未使用落札)",
+      "max_usable_sell": 198000,
+      "max_usable_sell_source": "マップカメラ",
+      "gross_gap": -83000,
+      "net_domestic": -90120,
+      "best_reference_net": null,
+      "main_blocked_reason": "国内完結（販売≥買取）で赤字",
       "rejection_top5": [
         [
           "stale_over_14d",
@@ -502,12 +771,24 @@
       ],
       "stale_excluded": 18,
       "overseas_stale": 1,
+      "needed": [
+        "メルカリsold/ヤフオク落札 ≤ ¥190,879 取得で国内買取ルート成立",
+        "国内買取価格が +¥90,121 上昇すれば成立"
+      ],
       "fresh_overseas_whatif_top5": []
     },
     "prod_gr4_mono": {
       "product_name": "RICOH GR IV Monochrome",
       "buy_candidates": 1,
       "sell_candidates": 5,
+      "min_usable_buy": 346280,
+      "min_usable_buy_source": "ヤフオク (新品/未使用落札)",
+      "max_usable_sell": 215000,
+      "max_usable_sell_source": "マップカメラ",
+      "gross_gap": -131280,
+      "net_domestic": -139706,
+      "best_reference_net": null,
+      "main_blocked_reason": "国内完結（販売≥買取）で赤字",
       "rejection_top5": [
         [
           "stale_over_14d",
@@ -516,12 +797,24 @@
       ],
       "stale_excluded": 7,
       "overseas_stale": 0,
+      "needed": [
+        "メルカリsold/ヤフオク落札 ≤ ¥206,573 取得で国内買取ルート成立",
+        "国内買取価格が +¥139,707 上昇すれば成立"
+      ],
       "fresh_overseas_whatif_top5": []
     },
     "prod_gr3x": {
       "product_name": "RICOH GR IIIx",
       "buy_candidates": 2,
       "sell_candidates": 5,
+      "min_usable_buy": 236322,
+      "min_usable_buy_source": "ヤフオク (新品/未使用落札)",
+      "max_usable_sell": 167200,
+      "max_usable_sell_source": "フジヤカメラ",
+      "gross_gap": -69122,
+      "net_domestic": -75348,
+      "best_reference_net": null,
+      "main_blocked_reason": "国内完結（販売≥買取）で赤字",
       "rejection_top5": [
         [
           "stale_over_14d",
@@ -530,30 +823,60 @@
       ],
       "stale_excluded": 13,
       "overseas_stale": 1,
+      "needed": [
+        "メルカリsold/ヤフオク落札 ≤ ¥160,973 取得で国内買取ルート成立",
+        "国内買取価格が +¥75,349 上昇すれば成立"
+      ],
       "fresh_overseas_whatif_top5": []
     },
     "prod_gr3_hdf": {
       "product_name": "RICOH GR III HDF",
       "buy_candidates": 0,
       "sell_candidates": 0,
+      "min_usable_buy": null,
+      "min_usable_buy_source": "",
+      "max_usable_sell": null,
+      "max_usable_sell_source": "",
+      "gross_gap": null,
+      "net_domestic": null,
+      "best_reference_net": null,
+      "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
       "rejection_top5": [],
       "stale_excluded": 0,
       "overseas_stale": 0,
+      "needed": [],
       "fresh_overseas_whatif_top5": []
     },
     "prod_gr3": {
       "product_name": "RICOH GR III",
       "buy_candidates": 0,
       "sell_candidates": 0,
+      "min_usable_buy": null,
+      "min_usable_buy_source": "",
+      "max_usable_sell": null,
+      "max_usable_sell_source": "",
+      "gross_gap": null,
+      "net_domestic": null,
+      "best_reference_net": null,
+      "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
       "rejection_top5": [],
       "stale_excluded": 0,
       "overseas_stale": 0,
+      "needed": [],
       "fresh_overseas_whatif_top5": []
     },
     "prod_x100vi": {
       "product_name": "FUJIFILM X100VI",
       "buy_candidates": 2,
       "sell_candidates": 1,
+      "min_usable_buy": 237999,
+      "min_usable_buy_source": "Amazon JP (新品出品)",
+      "max_usable_sell": 220000,
+      "max_usable_sell_source": "フジヤカメラ",
+      "gross_gap": -17999,
+      "net_domestic": -24259,
+      "best_reference_net": 188981,
+      "main_blocked_reason": "eBay sold が25.3日前のため main 除外（国内完結は赤字）",
       "rejection_top5": [
         [
           "stale_over_14d",
@@ -566,6 +889,11 @@
       ],
       "stale_excluded": 32,
       "overseas_stale": 1,
+      "needed": [
+        "eBay sold fresh化で main化（参考 +¥188,981 / ROI 79%）",
+        "メルカリsold/ヤフオク落札 ≤ ¥213,739 取得で国内買取ルート成立",
+        "国内買取価格が +¥24,260 上昇すれば成立"
+      ],
       "fresh_overseas_whatif_top5": [
         {
           "sell": "src_ebay",
@@ -585,15 +913,32 @@
       "product_name": "FUJIFILM GFX100RF",
       "buy_candidates": 0,
       "sell_candidates": 1,
+      "min_usable_buy": null,
+      "min_usable_buy_source": "",
+      "max_usable_sell": 432300,
+      "max_usable_sell_source": "フジヤカメラ",
+      "gross_gap": null,
+      "net_domestic": null,
+      "best_reference_net": null,
+      "main_blocked_reason": "有効な仕入(販売/出品/落札)候補なし",
       "rejection_top5": [],
       "stale_excluded": 0,
       "overseas_stale": 0,
+      "needed": [],
       "fresh_overseas_whatif_top5": []
     },
     "prod_xt5": {
       "product_name": "FUJIFILM X-T5",
       "buy_candidates": 0,
       "sell_candidates": 0,
+      "min_usable_buy": null,
+      "min_usable_buy_source": "",
+      "max_usable_sell": null,
+      "max_usable_sell_source": "",
+      "gross_gap": null,
+      "net_domestic": null,
+      "best_reference_net": null,
+      "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
       "rejection_top5": [
         [
           "accessory_or_wrong_product",
@@ -602,48 +947,93 @@
       ],
       "stale_excluded": 0,
       "overseas_stale": 0,
+      "needed": [],
       "fresh_overseas_whatif_top5": []
     },
     "prod_a7rv": {
       "product_name": "SONY α7R V",
       "buy_candidates": 0,
       "sell_candidates": 1,
+      "min_usable_buy": null,
+      "min_usable_buy_source": "",
+      "max_usable_sell": 236500,
+      "max_usable_sell_source": "フジヤカメラ",
+      "gross_gap": null,
+      "net_domestic": null,
+      "best_reference_net": null,
+      "main_blocked_reason": "有効な仕入(販売/出品/落札)候補なし",
       "rejection_top5": [],
       "stale_excluded": 0,
       "overseas_stale": 0,
+      "needed": [],
       "fresh_overseas_whatif_top5": []
     },
     "prod_a1ii": {
       "product_name": "SONY α1 II",
       "buy_candidates": 0,
       "sell_candidates": 1,
+      "min_usable_buy": null,
+      "min_usable_buy_source": "",
+      "max_usable_sell": 584100,
+      "max_usable_sell_source": "フジヤカメラ",
+      "gross_gap": null,
+      "net_domestic": null,
+      "best_reference_net": null,
+      "main_blocked_reason": "有効な仕入(販売/出品/落札)候補なし",
       "rejection_top5": [],
       "stale_excluded": 0,
       "overseas_stale": 0,
+      "needed": [],
       "fresh_overseas_whatif_top5": []
     },
     "prod_a7cr": {
       "product_name": "SONY α7CR",
       "buy_candidates": 0,
       "sell_candidates": 1,
+      "min_usable_buy": null,
+      "min_usable_buy_source": "",
+      "max_usable_sell": 242000,
+      "max_usable_sell_source": "フジヤカメラ",
+      "gross_gap": null,
+      "net_domestic": null,
+      "best_reference_net": null,
+      "main_blocked_reason": "有効な仕入(販売/出品/落札)候補なし",
       "rejection_top5": [],
       "stale_excluded": 0,
       "overseas_stale": 0,
+      "needed": [],
       "fresh_overseas_whatif_top5": []
     },
     "prod_fx3": {
       "product_name": "SONY FX3",
       "buy_candidates": 0,
       "sell_candidates": 1,
+      "min_usable_buy": null,
+      "min_usable_buy_source": "",
+      "max_usable_sell": 421300,
+      "max_usable_sell_source": "フジヤカメラ",
+      "gross_gap": null,
+      "net_domestic": null,
+      "best_reference_net": null,
+      "main_blocked_reason": "有効な仕入(販売/出品/落札)候補なし",
       "rejection_top5": [],
       "stale_excluded": 0,
       "overseas_stale": 0,
+      "needed": [],
       "fresh_overseas_whatif_top5": []
     },
     "prod_r5ii": {
       "product_name": "Canon EOS R5 Mark II",
       "buy_candidates": 0,
       "sell_candidates": 0,
+      "min_usable_buy": null,
+      "min_usable_buy_source": "",
+      "max_usable_sell": null,
+      "max_usable_sell_source": "",
+      "gross_gap": null,
+      "net_domestic": null,
+      "best_reference_net": null,
+      "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
       "rejection_top5": [
         [
           "accessory_or_wrong_product",
@@ -652,21 +1042,39 @@
       ],
       "stale_excluded": 0,
       "overseas_stale": 0,
+      "needed": [],
       "fresh_overseas_whatif_top5": []
     },
     "prod_r6ii": {
       "product_name": "Canon EOS R6 Mark II",
       "buy_candidates": 0,
       "sell_candidates": 0,
+      "min_usable_buy": null,
+      "min_usable_buy_source": "",
+      "max_usable_sell": null,
+      "max_usable_sell_source": "",
+      "gross_gap": null,
+      "net_domestic": null,
+      "best_reference_net": null,
+      "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
       "rejection_top5": [],
       "stale_excluded": 0,
       "overseas_stale": 0,
+      "needed": [],
       "fresh_overseas_whatif_top5": []
     },
     "prod_r3": {
       "product_name": "Canon EOS R3",
       "buy_candidates": 0,
       "sell_candidates": 0,
+      "min_usable_buy": null,
+      "min_usable_buy_source": "",
+      "max_usable_sell": null,
+      "max_usable_sell_source": "",
+      "gross_gap": null,
+      "net_domestic": null,
+      "best_reference_net": null,
+      "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
       "rejection_top5": [
         [
           "accessory_or_wrong_product",
@@ -675,30 +1083,57 @@
       ],
       "stale_excluded": 0,
       "overseas_stale": 0,
+      "needed": [],
       "fresh_overseas_whatif_top5": []
     },
     "prod_z8": {
       "product_name": "Nikon Z8",
       "buy_candidates": 0,
       "sell_candidates": 1,
+      "min_usable_buy": null,
+      "min_usable_buy_source": "",
+      "max_usable_sell": 309100,
+      "max_usable_sell_source": "フジヤカメラ",
+      "gross_gap": null,
+      "net_domestic": null,
+      "best_reference_net": null,
+      "main_blocked_reason": "有効な仕入(販売/出品/落札)候補なし",
       "rejection_top5": [],
       "stale_excluded": 0,
       "overseas_stale": 0,
+      "needed": [],
       "fresh_overseas_whatif_top5": []
     },
     "prod_zf": {
       "product_name": "Nikon Zf",
       "buy_candidates": 0,
       "sell_candidates": 0,
+      "min_usable_buy": null,
+      "min_usable_buy_source": "",
+      "max_usable_sell": null,
+      "max_usable_sell_source": "",
+      "gross_gap": null,
+      "net_domestic": null,
+      "best_reference_net": null,
+      "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
       "rejection_top5": [],
       "stale_excluded": 0,
       "overseas_stale": 0,
+      "needed": [],
       "fresh_overseas_whatif_top5": []
     },
     "prod_z9": {
       "product_name": "Nikon Z9",
       "buy_candidates": 0,
       "sell_candidates": 0,
+      "min_usable_buy": null,
+      "min_usable_buy_source": "",
+      "max_usable_sell": null,
+      "max_usable_sell_source": "",
+      "gross_gap": null,
+      "net_domestic": null,
+      "best_reference_net": null,
+      "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
       "rejection_top5": [
         [
           "accessory_or_wrong_product",
@@ -707,30 +1142,57 @@
       ],
       "stale_excluded": 0,
       "overseas_stale": 0,
+      "needed": [],
       "fresh_overseas_whatif_top5": []
     },
     "prod_q3": {
       "product_name": "Leica Q3",
       "buy_candidates": 0,
       "sell_candidates": 1,
+      "min_usable_buy": null,
+      "min_usable_buy_source": "",
+      "max_usable_sell": 833800,
+      "max_usable_sell_source": "フジヤカメラ",
+      "gross_gap": null,
+      "net_domestic": null,
+      "best_reference_net": null,
+      "main_blocked_reason": "有効な仕入(販売/出品/落札)候補なし",
       "rejection_top5": [],
       "stale_excluded": 0,
       "overseas_stale": 0,
+      "needed": [],
       "fresh_overseas_whatif_top5": []
     },
     "prod_m11": {
       "product_name": "Leica M11",
       "buy_candidates": 0,
       "sell_candidates": 1,
+      "min_usable_buy": null,
+      "min_usable_buy_source": "",
+      "max_usable_sell": 1375400,
+      "max_usable_sell_source": "フジヤカメラ",
+      "gross_gap": null,
+      "net_domestic": null,
+      "best_reference_net": null,
+      "main_blocked_reason": "有効な仕入(販売/出品/落札)候補なし",
       "rejection_top5": [],
       "stale_excluded": 0,
       "overseas_stale": 0,
+      "needed": [],
       "fresh_overseas_whatif_top5": []
     },
     "prod_gr4_hdf": {
       "product_name": "RICOH GR IV HDF",
       "buy_candidates": 0,
       "sell_candidates": 5,
+      "min_usable_buy": null,
+      "min_usable_buy_source": "",
+      "max_usable_sell": 213400,
+      "max_usable_sell_source": "フジヤカメラ",
+      "gross_gap": null,
+      "net_domestic": null,
+      "best_reference_net": null,
+      "main_blocked_reason": "有効な仕入(販売/出品/落札)候補なし",
       "rejection_top5": [
         [
           "stale_over_14d",
@@ -743,6 +1205,7 @@
       ],
       "stale_excluded": 6,
       "overseas_stale": 0,
+      "needed": [],
       "fresh_overseas_whatif_top5": []
     }
   }

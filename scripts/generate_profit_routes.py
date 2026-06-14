@@ -210,22 +210,62 @@ def main() -> int:
 
         # 0件診断
         if not prod_routes:
-            all_sells = [o for o in rows if o["price_role"] == "sell" and (o["price"] or 0) > 0]
             reasons = Counter(o["rejection_reason"] for o in rows if o["rejection_reason"])
             ovs_stale = [o for o in rows if o["price_type"] == "overseas_sold_price"
                          and not o["is_fresh"] and (o["price"] or 0) > 0]
-            # eBay sold fresh化で成立する候補
+            # 有効 buy 最安 / 有効 sell 最高
+            min_buy = min(buys_b, key=lambda o: o["price"]) if buys_b else None
+            max_sell = max(sells_b, key=lambda o: o["price"]) if sells_b else None
+            mb = int(min_buy["price"]) if min_buy else None
+            ms = int(max_sell["price"]) if max_sell else None
+            gross = (ms - mb) if (mb is not None and ms is not None) else None
+            dom_fee = (1500 + max(3000, round(mb * 0.02))) if mb else 0
+            net_dom = (ms - mb - dom_fee) if (mb is not None and ms is not None) else None
+            # 参考(海外sold)で成立する候補
             whatif = []
+            best_ref = None
             for r in ref_routes:
                 if r["product_id"] == pid:
                     whatif.append({"sell": r["sell_source"], "sell_price": r["sell_price"],
                                    "net_if_fresh": r["net_profit"], "roi": r["roi"]})
+                    if best_ref is None or r["net_profit"] > best_ref["net_profit"]:
+                        best_ref = r
+            # 「あと何が必要か」
+            needed = []
+            if best_ref:
+                needed.append(f"eBay sold fresh化で main化（参考 +¥{best_ref['net_profit']:,} / ROI {best_ref['roi']:.0%}）")
+            if mb is not None and ms is not None:
+                # 国内買取ルート成立に必要な buy 上限（sell - 手数料 - 1）
+                need_buy_max = ms - dom_fee - 1
+                if need_buy_max > 0 and mb > need_buy_max:
+                    needed.append(f"メルカリsold/ヤフオク落札 ≤ ¥{need_buy_max:,} 取得で国内買取ルート成立")
+                # 国内買取が何円上がれば成立するか
+                need_sell_up = (mb + dom_fee + 1) - ms
+                if need_sell_up > 0:
+                    needed.append(f"国内買取価格が +¥{need_sell_up:,} 上昇すれば成立")
+            # 主な未成立理由
+            if best_ref and (net_dom is None or net_dom <= 0):
+                reason = f"eBay sold が{best_ref.get('sell_observed_age_days')}日前のため main 除外（国内完結は赤字）"
+            elif ms is None:
+                reason = "有効な売却(買取/海外sold)候補なし"
+            elif mb is None:
+                reason = "有効な仕入(販売/出品/落札)候補なし"
+            elif net_dom is not None and net_dom <= 0:
+                reason = "国内完結（販売≥買取）で赤字"
+            else:
+                reason = reasons.most_common(1)[0][0] if reasons else "候補不足"
             zero_diag[pid] = {
                 "product_name": rows[0]["product_name"] if rows else pid,
                 "buy_candidates": len(buys), "sell_candidates": len(sells),
+                "min_usable_buy": mb, "min_usable_buy_source": (min_buy["source_name"] if min_buy else ""),
+                "max_usable_sell": ms, "max_usable_sell_source": (max_sell["source_name"] if max_sell else ""),
+                "gross_gap": gross, "net_domestic": net_dom,
+                "best_reference_net": (best_ref["net_profit"] if best_ref else None),
+                "main_blocked_reason": reason,
                 "rejection_top5": reasons.most_common(5),
                 "stale_excluded": sum(1 for o in rows if not o["is_fresh"]),
                 "overseas_stale": len(ovs_stale),
+                "needed": needed,
                 "fresh_overseas_whatif_top5": sorted(whatif, key=lambda x: -x["net_if_fresh"])[:5],
             }
 
@@ -244,6 +284,34 @@ def main() -> int:
     except Exception:
         pass
 
+    # ── 次に取得すべきデータ ランキング（Task3）──
+    # 不足データ別に、解放される潜在利益 / 該当商品数 / 優先度 を集計。
+    md_prio = {
+        "ebay_sold_fresh": {"label": "eBay sold（海外成約相場）の最新化", "potential": 0, "products": 0},
+        "flea_sold": {"label": "メルカリsold / ヤフオク落札（より安い仕入れ）", "potential": 0, "products": 0},
+        "shop_item_url": {"label": "店舗販売価格 item_url 付き取得", "potential": 0, "products": 0},
+    }
+    for pid, z in zero_diag.items():
+        if z.get("best_reference_net"):
+            md_prio["ebay_sold_fresh"]["potential"] += z["best_reference_net"]
+            md_prio["ebay_sold_fresh"]["products"] += 1
+        # 国内買取ルートは「安いフリマsold」で成立しうる（net_domestic<0 かつ sell有り）
+        if z.get("max_usable_sell") and z.get("min_usable_buy") and (z.get("net_domestic") or 0) <= 0:
+            # 成立に必要な buy 上限まで下げられれば利益化（控えめに gross 改善分を潜在とみなす）
+            gap = abs(z.get("net_domestic") or 0)
+            md_prio["flea_sold"]["potential"] += gap
+            md_prio["flea_sold"]["products"] += 1
+    # item_url 不足は全ルート(参考含む)で buy_url 空のもの
+    _no_item = sum(1 for r in (main_routes + ref_routes) if not r.get("buy_url"))
+    md_prio["shop_item_url"]["products"] = _no_item
+    _prio_rank = sorted(md_prio.items(), key=lambda kv: kv[1]["potential"], reverse=True)
+    missing_data_priority = [
+        {"rank": i + 1, "key": k, "label": v["label"], "potential_profit": v["potential"],
+         "product_count": v["products"],
+         "priority": ("high" if v["potential"] >= 100000 else "medium" if v["potential"] > 0 else "low")}
+        for i, (k, v) in enumerate(_prio_rank)
+    ]
+
     by_product = Counter(r["product_name"] for r in main_routes)
     by_conf = Counter(r["route_confidence"] for r in main_routes)
     by_rtype = Counter(r["route_type"] for r in main_routes)
@@ -261,6 +329,7 @@ def main() -> int:
             "max_roi": (max(main_routes, key=lambda r: r["roi"]) if main_routes else None),
             "zero_route_products": len(zero_diag),
         },
+        "missing_data_priority": missing_data_priority,
         "main_routes": main_routes,
         "reference_routes": ref_routes,
         "zero_route_diagnostics": zero_diag,

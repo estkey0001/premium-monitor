@@ -4995,6 +4995,55 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                          '<b>海外相場（eBay sold）の最新化</b>で下記の参考ルートが成立します。</div>')
             parts.append('</div>')
 
+            # Task1+2: 商品別「利益ルート未成立の理由」＋「あと何が必要か」
+            _diag_sorted = sorted(diag.values(),
+                                  key=lambda z: (z.get("best_reference_net") or 0), reverse=True)
+            _diag_show = [z for z in _diag_sorted
+                          if (z.get("min_usable_buy") or z.get("max_usable_sell") or z.get("best_reference_net"))][:8]
+            if _diag_show:
+                parts.append('<div class="pr-zero-reasons" style="margin-top:14px">'
+                             '<div style="font-weight:700;color:#334155">&#128270; 利益ルート未成立の理由（商品別）</div>')
+                for z in _diag_show:
+                    mb = z.get("min_usable_buy"); ms = z.get("max_usable_sell")
+                    nd = z.get("net_domestic"); bref = z.get("best_reference_net")
+                    parts.append(
+                        '<div class="pr-zero-card" style="background:#fff;border:1px solid #e2e8f0;'
+                        'border-left:4px solid #94a3b8;border-radius:8px;padding:9px 12px;margin:7px 0">'
+                        f'<div style="font-weight:700">{_esc(z.get("product_name",""))}</div>'
+                        f'<div style="font-size:0.83rem;margin-top:3px">'
+                        f'buy候補: <b>{z.get("buy_candidates",0)}件</b>'
+                        + (f'（最安 {_esc(z.get("min_usable_buy_source",""))} ¥{mb:,}）' if mb else '（有効なし）')
+                        + f' ／ sell候補: <b>{z.get("sell_candidates",0)}件</b>'
+                        + (f'（最高 {_esc(z.get("max_usable_sell_source",""))} ¥{ms:,}）' if ms else '（有効なし）')
+                        + '</div>'
+                        + (f'<div style="font-size:0.83rem;margin-top:2px">国内完結: '
+                           f'<b style="color:{"#dc2626" if (nd or 0)<=0 else "#059669"}">{nd:+,}円</b>' if nd is not None else '')
+                        + (f' ／ 海外sold参考: <b style="color:#059669">+¥{bref:,}</b>' if bref else '')
+                        + ('</div>' if nd is not None else '')
+                        + f'<div style="font-size:0.8rem;color:#b45309;margin-top:3px">未成立理由: {_esc(z.get("main_blocked_reason",""))}</div>'
+                        + (('<div style="font-size:0.8rem;color:#475569;margin-top:3px">あと何が必要か:<ul style="margin:3px 0 0 18px;padding:0">'
+                            + "".join(f"<li>{_esc(n)}</li>" for n in z.get("needed", [])) + '</ul></div>')
+                           if z.get("needed") else '')
+                        + '</div>')
+                parts.append('</div>')
+
+            # Task3: 次に取得すべきデータ ランキング
+            mdp = data.get("missing_data_priority", [])
+            if mdp:
+                parts.append('<div class="pr-missing-data" style="margin-top:14px;background:#f8fafc;'
+                             'border:1px solid #e2e8f0;border-radius:8px;padding:10px 12px">'
+                             '<div style="font-weight:700;color:#334155">&#128228; 次に取得すべきデータ（優先度順）</div>'
+                             '<table style="width:100%;font-size:0.82rem;margin-top:6px;border-collapse:collapse">'
+                             '<tr style="color:#64748b;text-align:left"><th>#</th><th>データソース</th>'
+                             '<th>解放潜在利益</th><th>該当商品</th><th>優先度</th></tr>')
+                _pcolor = {"high": "#dc2626", "medium": "#d97706", "low": "#94a3b8"}
+                for m in mdp:
+                    parts.append(
+                        f'<tr><td>{m["rank"]}</td><td>{_esc(m["label"])}</td>'
+                        f'<td>+¥{m["potential_profit"]:,}</td><td>{m["product_count"]}件</td>'
+                        f'<td style="color:{_pcolor.get(m["priority"],"#94a3b8")};font-weight:700">{m["priority"]}</td></tr>')
+                parts.append('</table></div>')
+
         # ── 参考利益ルート（青/紫系・鮮度待ち）──
         if refs:
             total_pot = sum(r.get("net_profit", 0) for r in refs)

@@ -5735,6 +5735,48 @@ def check() -> list[dict]:
                     "message": "#588 main route と reference route の CSS クラスが分離されている"
                                + ("" if _t588 else " ← CSS クラス分離が見つかりません")})
 
+    # ── 0件状態の説明 UI ガード #589-#594 ──
+    _zero_mode = (len(_pr_main) == 0)  # main 0件のときに LP 説明UIを検証
+
+    # #589: 「利益ルート未成立の理由」が LP にある
+    _t589 = (not _zero_mode) or ('利益ルート未成立の理由' in _lp_html)
+    results.append({"level": "ok" if _t589 else "error", "check": "lp_zero_reason_section",
+                    "message": "#589 Proタブに「利益ルート未成立の理由」が表示される"
+                               + ("" if _t589 else " ← 未成立理由セクションがありません")})
+
+    # #590: 商品別に buy候補数/sell候補数 が表示される
+    _t590 = (not _zero_mode) or ('buy候補:' in _lp_html and 'sell候補:' in _lp_html)
+    results.append({"level": "ok" if _t590 else "error", "check": "lp_zero_candidate_counts",
+                    "message": "#590 商品別に buy候補数/sell候補数 が表示される"
+                               + ("" if _t590 else " ← 候補数表示がありません")})
+
+    # #591: 最安buy/最高sell が表示される
+    _t591 = (not _zero_mode) or ('最安' in _lp_html and '最高' in _lp_html)
+    results.append({"level": "ok" if _t591 else "error", "check": "lp_zero_min_buy_max_sell",
+                    "message": "#591 最安buy/最高sell が表示される"
+                               + ("" if _t591 else " ← 最安buy/最高sell がありません")})
+
+    # #592: eBay sold stale が理由として表示される
+    _t592 = (not _zero_mode) or ('main 除外' in _lp_html or 'main除外' in _lp_html or '日前のため' in _lp_html)
+    results.append({"level": "ok" if _t592 else "error", "check": "lp_zero_stale_reason",
+                    "message": "#592 eBay sold stale が未成立理由として表示される"
+                               + ("" if _t592 else " ← stale理由が見つかりません")})
+
+    # #593: 次に取得すべきデータランキングが表示される
+    _t593 = (not _zero_mode) or ('次に取得すべきデータ' in _lp_html)
+    results.append({"level": "ok" if _t593 else "error", "check": "lp_missing_data_ranking",
+                    "message": "#593 次に取得すべきデータランキングが表示される"
+                               + ("" if _t593 else " ← データ優先度ランキングがありません")})
+
+    # #594: profit_routes に missing_data_priority と充実した zero 診断がある
+    _zd = _pr.get('zero_route_diagnostics', {}) if isinstance(_pr, dict) else {}
+    _has_rich = any(('min_usable_buy' in z and 'main_blocked_reason' in z and 'needed' in z)
+                    for z in _zd.values()) if _zd else (len(_pr_main) > 0)
+    _t594 = _t566 and ('missing_data_priority' in _pr) and _has_rich
+    results.append({"level": "ok" if _t594 else "error", "check": "profit_zero_rich_diagnostics",
+                    "message": "#594 profit_routes に missing_data_priority と商品別詳細診断がある"
+                               + ("" if _t594 else " ← 診断データが不足")})
+
     return results
 
 

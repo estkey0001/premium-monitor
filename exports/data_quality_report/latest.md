@@ -1,4 +1,4 @@
-# データ取得品質レポート（2026-06-13 17:04 JST）
+# データ取得品質レポート（2026-06-14 17:30 JST）
 
 ## 取得成功率
 - 全対象店舗数: 16
@@ -7,9 +7,9 @@
 - ジョブ成功率: 40.0%（OK 22 / 失敗 29 / SKIP 4 / 計 55）
 
 ## 前回比較
-- 前回成功率: 38.2%
+- 前回成功率: 40.0%
 - 今回成功率: 40.0%
-- 変化: +1.8pt（改善）
+- 変化: 0.0pt（横ばい）
 - 7日移動平均: 39.0%
 - 主要失敗理由 TOP5: rate_limited_429 6, site_blocked 6, price_not_found 6, product_not_listed 5, http_404 4
 
@@ -36,16 +36,16 @@
 - iphone17pro256: 62.5%
 
 ## 連続失敗店舗（2回以上）
-- 2ndstreet: 42回連続
-- bookoff: 42回連続
-- dosupara: 42回連続
-- geo_mobile: 42回連続
-- hardoff: 42回連続
-- janpara: 42回連続
-- pasoko: 42回連続
-- sofmap: 42回連続
-- surugaya: 42回連続
-- tsutaya: 42回連続
+- 2ndstreet: 43回連続
+- bookoff: 43回連続
+- dosupara: 43回連続
+- geo_mobile: 43回連続
+- hardoff: 43回連続
+- janpara: 43回連続
+- pasoko: 43回連続
+- sofmap: 43回連続
+- surugaya: 43回連続
+- tsutaya: 43回連続
 
 ## 改善優先順位（required店舗）
 1. mobile_ichiban（失敗2 / product_not_listed）

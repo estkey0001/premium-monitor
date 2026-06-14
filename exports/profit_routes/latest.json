@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-06-13 17:04 JST",
+  "generated_at": "2026-06-14 17:30 JST",
   "ebay_api_configured": false,
   "overseas_source_mode": "manual",
   "summary": {
     "main_route_count": 0,
-    "reference_route_count": 3,
+    "reference_route_count": 2,
     "by_product": {},
     "by_confidence": {},
     "by_route_type": {},
@@ -25,30 +25,30 @@
       "buy_url": "https://auctions.yahoo.co.jp/search/search?p=%E5%AF%8C%E5%A3%AB%E3%83%95%E3%82%A4%E3%83%AB%E3%83%A0%20X100VI&va=%E5%AF%8C%E5%A3%AB%E3%83%95%E3%82%A4%E3%83%AB%E3%83%A0%20X100VI&istatus=2&n=20&s1=cbids&o1=d&ei=utf-8&auccat=&tab_ex=commerce&item_condition=1",
       "buy_link_type": "search",
       "sell_source": "src_ebay",
-      "sell_price": 567344,
+      "sell_price": 567308,
       "sell_price_type": "overseas_sold_price",
       "sell_price_role": "sell",
       "sell_condition": "new_unopened",
       "sell_url": "",
       "sell_link_type": "none",
-      "gross_profit": 227544,
-      "estimated_fee": 113469,
-      "platform_fee": 73755,
-      "payment_fee": 22694,
-      "fx_buffer": 17020,
+      "gross_profit": 227508,
+      "estimated_fee": 113461,
+      "platform_fee": 73750,
+      "payment_fee": 22692,
+      "fx_buffer": 17019,
       "shipping_cost": 5000,
       "safety_margin": 10194,
-      "net_profit": 98881,
-      "roi": 0.291,
+      "net_profit": 98853,
+      "roi": 0.2909,
       "route_confidence": "low",
-      "buy_observed_at": "2026-06-13T16:36:48.513843+09:00",
+      "buy_observed_at": "2026-06-14T17:02:48.894854+09:00",
       "sell_observed_at": "2026-05-28T10:00:00+09:00",
       "buy_observed_age_days": 0.0,
-      "sell_observed_age_days": 16.3,
+      "sell_observed_age_days": 17.3,
       "sell_collector_method": "manual",
       "route_type": "flea_to_overseas",
       "reference_route": true,
-      "rejection_reason": "overseas_sold_stale(16.3d)"
+      "rejection_reason": "overseas_sold_stale(17.3d)"
     },
     {
       "product_id": "prod_iphone17pro_256",
@@ -61,66 +61,30 @@
       "buy_url": "https://auctions.yahoo.co.jp/search/search?p=iPhone%2017%20Pro%20256GB&va=iPhone%2017%20Pro%20256GB&istatus=2&n=20&s1=cbids&o1=d&ei=utf-8&auccat=&tab_ex=commerce&item_condition=1",
       "buy_link_type": "search",
       "sell_source": "src_ebay",
-      "sell_price": 320575,
+      "sell_price": 320555,
       "sell_price_type": "overseas_sold_price",
       "sell_price_role": "sell",
       "sell_condition": "new_unopened",
       "sell_url": "",
       "sell_link_type": "none",
-      "gross_profit": 119836,
-      "estimated_fee": 64115,
-      "platform_fee": 41675,
-      "payment_fee": 12823,
+      "gross_profit": 119816,
+      "estimated_fee": 64111,
+      "platform_fee": 41672,
+      "payment_fee": 12822,
       "fx_buffer": 9617,
       "shipping_cost": 5000,
       "safety_margin": 6022,
-      "net_profit": 44699,
-      "roi": 0.2227,
+      "net_profit": 44683,
+      "roi": 0.2226,
       "route_confidence": "low",
-      "buy_observed_at": "2026-06-13T16:36:48.513843+09:00",
+      "buy_observed_at": "2026-06-14T17:02:48.894854+09:00",
       "sell_observed_at": "2026-05-28T10:00:00+09:00",
       "buy_observed_age_days": 0.0,
-      "sell_observed_age_days": 16.3,
+      "sell_observed_age_days": 17.3,
       "sell_collector_method": "",
       "route_type": "flea_to_overseas",
       "reference_route": true,
-      "rejection_reason": "overseas_sold_stale(16.3d)"
-    },
-    {
-      "product_id": "prod_switch2",
-      "product_name": "Nintendo Switch 2",
-      "buy_source": "ヤフオク (新品/未使用落札)",
-      "buy_price": 56891,
-      "buy_price_type": "flea_sold_price",
-      "buy_price_role": "buy",
-      "buy_condition": "new_unopened",
-      "buy_url": "https://auctions.yahoo.co.jp/search/search?p=Nintendo%20Switch%202&va=Nintendo%20Switch%202&istatus=2&n=20&s1=cbids&o1=d&ei=utf-8&auccat=&tab_ex=commerce&item_condition=1",
-      "buy_link_type": "search",
-      "sell_source": "src_ebay",
-      "sell_price": 87906,
-      "sell_price_type": "overseas_sold_price",
-      "sell_price_role": "sell",
-      "sell_condition": "new_unopened",
-      "sell_url": "",
-      "sell_link_type": "none",
-      "gross_profit": 31015,
-      "estimated_fee": 17581,
-      "platform_fee": 11428,
-      "payment_fee": 3516,
-      "fx_buffer": 2637,
-      "shipping_cost": 5000,
-      "safety_margin": 5000,
-      "net_profit": 3434,
-      "roi": 0.0604,
-      "route_confidence": "low",
-      "buy_observed_at": "2026-06-13T16:36:48.513843+09:00",
-      "sell_observed_at": "2026-05-28T10:00:00+09:00",
-      "buy_observed_age_days": 0.0,
-      "sell_observed_age_days": 16.3,
-      "sell_collector_method": "manual",
-      "route_type": "flea_to_overseas",
-      "reference_route": true,
-      "rejection_reason": "overseas_sold_stale(16.3d)"
+      "rejection_reason": "overseas_sold_stale(17.3d)"
     }
   ],
   "zero_route_diagnostics": {
@@ -143,9 +107,9 @@
       "fresh_overseas_whatif_top5": [
         {
           "sell": "src_ebay",
-          "sell_price": 320575,
-          "net_if_fresh": 44699,
-          "roi": 0.2227
+          "sell_price": 320555,
+          "net_if_fresh": 44683,
+          "roi": 0.2226
         }
       ]
     },
@@ -420,14 +384,7 @@
       ],
       "stale_excluded": 4,
       "overseas_stale": 1,
-      "fresh_overseas_whatif_top5": [
-        {
-          "sell": "src_ebay",
-          "sell_price": 87906,
-          "net_if_fresh": 3434,
-          "roi": 0.0604
-        }
-      ]
+      "fresh_overseas_whatif_top5": []
     },
     "prod_switch2_mk": {
       "product_name": "Nintendo Switch 2 マリオカートセット",
@@ -561,6 +518,10 @@
         [
           "manual_over_auto_high",
           6
+        ],
+        [
+          "accessory_or_wrong_product",
+          1
         ]
       ],
       "stale_excluded": 11,
@@ -568,9 +529,9 @@
       "fresh_overseas_whatif_top5": [
         {
           "sell": "src_ebay",
-          "sell_price": 567344,
-          "net_if_fresh": 98881,
-          "roi": 0.291
+          "sell_price": 567308,
+          "net_if_fresh": 98853,
+          "roi": 0.2909
         }
       ]
     },

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-13 17:04 JST",
+  "generated_at": "2026-06-14 17:30 JST",
   "route_type_beginner": "primary_to_secondary",
   "top_camera_buyback_opportunities": [
     {
@@ -101,20 +101,6 @@
       "age_days": 0.0
     },
     {
-      "product_id": "prod_r5ii",
-      "product_name": "Canon EOS R5 Mark II",
-      "shop_name": "フジヤカメラ",
-      "buyback_price": 523600,
-      "official_price": 620000,
-      "reference_price": 620000,
-      "reference_source": "retail_concept",
-      "diff_vs_official": -96400,
-      "matched_item": "EOS R5 Mark II RF24-105L IS USM レンズキット Canon 基準査定額 新品同様 ￥476,000 良品 ￥475,000 買取のみ10%UP 新品同様 ￥523,600 良品 ￥522,500 下取は15%U",
-      "confidence": "high",
-      "source": "auto_scraped",
-      "age_days": 0.0
-    },
-    {
       "product_id": "prod_fx3",
       "product_name": "SONY FX3",
       "shop_name": "フジヤカメラ",
@@ -129,15 +115,29 @@
       "age_days": 0.0
     },
     {
+      "product_id": "prod_r5ii",
+      "product_name": "Canon EOS R5 Mark II",
+      "shop_name": "フジヤカメラ",
+      "buyback_price": 517000,
+      "official_price": 620000,
+      "reference_price": 620000,
+      "reference_source": "retail_concept",
+      "diff_vs_official": -103000,
+      "matched_item": "EOS R5 Mark II RF24-105L IS USM レンズキット Canon 基準査定額 新品同様 ￥470,000 良品 ￥469,000 買取のみ10%UP 新品同様 ￥517,000 良品 ￥515,900 下取は15%U",
+      "confidence": "high",
+      "source": "auto_scraped",
+      "age_days": 0.0
+    },
+    {
       "product_id": "prod_a7rv",
       "product_name": "SONY α7R V",
       "shop_name": "フジヤカメラ",
-      "buyback_price": 237600,
+      "buyback_price": 236500,
       "official_price": 440000,
       "reference_price": 440000,
       "reference_source": "retail_concept",
-      "diff_vs_official": -202400,
-      "matched_item": "α7R V ボディ ILCE-7RM5 SONY 基準査定額 新品同様 ￥216,000 良品 ￥215,000 買取のみ10%UP 新品同様 ￥237,600 良品 ￥236,500 下取は15%UP 新品同様 ￥248,400 良品 ￥",
+      "diff_vs_official": -203500,
+      "matched_item": "α7R V ボディ ILCE-7RM5 SONY 基準査定額 新品同様 ￥215,000 良品 ￥214,000 買取のみ10%UP 新品同様 ￥236,500 良品 ￥235,400 下取は15%UP 新品同様 ￥247,250 良品 ￥",
       "confidence": "high",
       "source": "auto_scraped",
       "age_days": 0.0

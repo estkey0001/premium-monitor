@@ -1,0 +1,15 @@
+# フリマ成約(sold)価格 手動キュレーションCSV（ToS安全: ライブスクレイピングはしない）
+# メルカリ/ヤフオク/ラクマ等の「sold/完売/落札済み」価格を人手で確認して記録する。
+# collect_flea_sold_prices.py が読み込み、target_buy_price 以下のものを Pro buy 候補(flea_sold_price)に採用。
+# 規約遵守: 自動大量取得は行わない。検索URLは collector が生成する（手動確認用）。
+# 列: product_alias,source,price,condition,title,item_url,observed_at
+# source: mercari / yahoo_auction / rakuma
+# observed_at は ISO8601（14日以内のもののみ main 候補）。title にアクセサリー語があれば除外。
+product_alias,source,price,condition,title,item_url,observed_at
+switch2,yahoo_auction,46000,new_unopened,Nintendo Switch 2 本体 新品未開封 マリオカートワールド無し,https://auctions.yahoo.co.jp/jp/auction/x000000001,2026-06-08T12:00:00+09:00
+switch2,mercari,46500,unused,ニンテンドースイッチ2 本体 未使用,https://jp.mercari.com/item/m00000000001,2026-06-09T09:00:00+09:00
+ps5_pro,yahoo_auction,128000,new_unopened,PlayStation 5 Pro 本体 新品未開封 CFI-7000,https://auctions.yahoo.co.jp/jp/auction/x000000002,2026-06-08T18:00:00+09:00
+ps5_pro,mercari,129000,unused,PS5 Pro 本体 未使用品,https://jp.mercari.com/item/m00000000002,2026-06-09T10:00:00+09:00
+gr3x,mercari,150000,new_unopened,RICOH GR IIIx 新品未開封,https://jp.mercari.com/item/m00000000003,2026-06-07T15:00:00+09:00
+x100vi,yahoo_auction,255000,new_unopened,FUJIFILM X100VI シルバー 新品未開封,https://auctions.yahoo.co.jp/jp/auction/x000000004,2026-06-08T20:00:00+09:00
+gr4,mercari,265000,unused,RICOH GR IV 未使用 ケース付き,https://jp.mercari.com/item/m00000000005,2026-06-09T11:00:00+09:00

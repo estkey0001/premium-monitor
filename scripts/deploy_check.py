@@ -5777,6 +5777,74 @@ def check() -> list[dict]:
                     "message": "#594 profit_routes に missing_data_priority と商品別詳細診断がある"
                                + ("" if _t594 else " ← 診断データが不足")})
 
+    # ── フリマsold 仕入れ側 ガード #595-#601 ──
+    _flea_obs = [r for r in _obs if r.get('price_type') == 'flea_sold_price']
+
+    # #595: flea_sold_price が NPO に存在
+    _t595 = len(_flea_obs) > 0
+    results.append({"level": "ok" if _t595 else "error", "check": "npo_has_flea_sold",
+                    "message": f"#595 normalized_price_observations に flea_sold_price がある（{len(_flea_obs)}件）"
+                               + ("" if _t595 else " ← flea_sold_price が見つかりません")})
+
+    # #596: flea_sold_price が Pro buy 側として使われる（usable な flea_sold buy が存在）
+    _flea_usable = [r for r in _flea_obs if r.get('price_role') == 'buy' and r.get('is_usable_for_pro')]
+    _t596 = _t595 and (len(_flea_usable) > 0)
+    results.append({"level": "ok" if _t596 else "warning", "check": "flea_sold_pro_buy",
+                    "message": f"#596 flea_sold_price が Pro buy 候補として使われる（usable {len(_flea_usable)}件）"
+                               + ("" if _t596 else " ← 現状 target以下のusableなflea_soldがありません（薄利/データ次第）")})
+
+    # #597: flea_sold で accessory/wrong_model が main calc に使われない
+    _bad597 = sum(1 for r in _flea_obs if (r.get('accessory_flag') or r.get('wrong_model_flag'))
+                  and r.get('is_usable_for_pro'))
+    _t597 = _bad597 == 0
+    results.append({"level": "ok" if _t597 else "error", "check": "flea_sold_no_accessory",
+                    "message": "#597 flea_sold の accessory/wrong_model が main calc に使われない"
+                               + ("" if _t597 else f" ← 混入 {_bad597}件")})
+
+    # #598: flea_sold に item_url または search_url が存在（収集物）
+    _flea_files = ['exports/flea_sold_prices/yahoo_sold.json', 'exports/flea_sold_prices/mercari_sold.json']
+    _flea_data = [(_load_json_safe(f) or {}) for f in _flea_files]
+    _flea_present = any(isinstance(d, dict) and d.get('products') for d in _flea_data)
+    _no_url = 0
+    for d in _flea_data:
+        for _a, _p in (d.get('products', {}) if isinstance(d, dict) else {}).items():
+            if not _p.get('search_url') and not _p.get('item_urls'):
+                _no_url += 1
+    _t598 = (not _flea_present) or (_no_url == 0)
+    results.append({"level": "ok" if _t598 else "error", "check": "flea_sold_url_present",
+                    "message": "#598 flea_sold に item_url または search_url が存在する"
+                               + ("" if _t598 else f" ← URL欠落 {_no_url}件")})
+
+    # #599: target_buy_price 以下の sold だけが main route 候補（main の flea_sold buy が target以下）
+    _zd2 = _pr.get('zero_route_diagnostics', {}) if isinstance(_pr, dict) else {}
+    _tgt = {}
+    for pid, z in _zd2.items():
+        if z.get('target_buy_price'):
+            _tgt[pid] = z['target_buy_price']
+    # main route の buy も対象（routeになった商品はzeroになく target を別途持たないため緩く検査）
+    _bad599 = 0
+    for r in _pr_main:
+        if r.get('buy_price_type') == 'flea_sold_price':
+            t = _tgt.get(r.get('product_id'))
+            if t is not None and (r.get('buy_price') or 0) > t:
+                _bad599 += 1
+    _t599 = _bad599 == 0
+    results.append({"level": "ok" if _t599 else "error", "check": "flea_sold_target_only",
+                    "message": "#599 target_buy_price 超の flea_sold が main route に使われない"
+                               + ("" if _t599 else f" ← target超 {_bad599}件")})
+
+    # #600: main route 件数が増えた場合に LP に表示される（main>0 なら検証済み利益ルート見出し）
+    _t600 = (len(_pr_main) == 0) or ('検証済み利益ルート' in _lp_html)
+    results.append({"level": "ok" if _t600 else "error", "check": "lp_main_routes_shown",
+                    "message": f"#600 main route（{len(_pr_main)}件）が LP に表示される"
+                               + ("" if _t600 else " ← main route 見出しが LP にありません")})
+
+    # #601: LP にフリマsold仕入れ候補セクションがある（収集物がある場合）
+    _t601 = (not _flea_present) or ('新規取得したフリマsold価格' in _lp_html)
+    results.append({"level": "ok" if _t601 else "error", "check": "lp_flea_sold_section",
+                    "message": "#601 LP にフリマsold仕入れ候補セクションが表示される"
+                               + ("" if _t601 else " ← フリマsold表示が見つかりません")})
+
     return results
 
 

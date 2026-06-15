@@ -136,6 +136,13 @@ jobs:
         run: python -m src.cli scan-primary-to-secondary
         continue-on-error: true
 
+      # 11.4 Collect flea sold prices（規約遵守: 手動キュレーション + 検索URL方式）
+      - name: Collect flea sold prices
+        run: python scripts/collect_flea_sold_prices.py --sources yahoo,mercari,rakuma
+        continue-on-error: true
+        env:
+          PYTHONPATH: .
+
       # 11.5 Generate normalized price observations（ranking/sedori/LP 共通の価格定義）
       - name: Generate normalized price observations
         run: python scripts/generate_normalized_price_observations.py
@@ -242,6 +249,7 @@ jobs:
                   exports/overseas_prices/ \
                   exports/normalized_price_observations/ \
                   exports/profit_routes/ \
+                  exports/flea_sold_prices/ \
                   exports/data_quality_report/ exports/camera_buyback_status.json \
                   data/alerts.csv data/lottery_events.csv \
                   data/overseas_price_history.csv \

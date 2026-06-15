@@ -1,0 +1,95 @@
+{
+  "generated_at": "2026-06-15 23:24 JST",
+  "source": "Yahoo Auction sold",
+  "policy": "no_live_scraping_tos_safe_manual_curation_plus_search_url",
+  "fresh_days": 14,
+  "products": {
+    "switch2": {
+      "product_name": "Nintendo Switch 2",
+      "count_recent": 1,
+      "median_price": 46000,
+      "min_price": 46000,
+      "target_buy_price": null,
+      "within_target_count": 0,
+      "search_url": "https://auctions.yahoo.co.jp/closedsearch/closedsearch?p=%5B%22Switch%202%22%2C%20%22Switch2%22%2C%20%22%E3%83%8B%E3%83%B3%E3%83%86%E3%83%B3%E3%83%89%E3%83%BC%E3%82%B9%E3%82%A4%E3%83%83%E3%83%812%22%2C%20%22SW2%22%2C%20%22Nintendo%20Switch2%22%2C%20%22%E3%82%B9%E3%82%A4%E3%83%83%E3%83%812%22%2C%20%22NintendoSwitch2%22%5D&va=%5B%22Switch%202%22%2C%20%22Switch2%22%2C%20%22%E3%83%8B%E3%83%B3%E3%83%86%E3%83%B3%E3%83%89%E3%83%BC%E3%82%B9%E3%82%A4%E3%83%83%E3%83%812%22%2C%20%22SW2%22%2C%20%22Nintendo%20Switch2%22%2C%20%22%E3%82%B9%E3%82%A4%E3%83%83%E3%83%812%22%2C%20%22NintendoSwitch2%22%5D",
+      "item_urls": [
+        "https://auctions.yahoo.co.jp/jp/auction/x000000001"
+      ],
+      "items": [
+        {
+          "product_id": "prod_switch2",
+          "product_alias": "switch2",
+          "product_name": "Nintendo Switch 2",
+          "price": 46000,
+          "condition": "new_unopened",
+          "title": "Nintendo Switch 2 本体 新品未開封 マリオカートワールド無し",
+          "item_url": "https://auctions.yahoo.co.jp/jp/auction/x000000001",
+          "search_url": "https://auctions.yahoo.co.jp/closedsearch/closedsearch?p=%5B%22Switch%202%22%2C%20%22Switch2%22%2C%20%22%E3%83%8B%E3%83%B3%E3%83%86%E3%83%B3%E3%83%89%E3%83%BC%E3%82%B9%E3%82%A4%E3%83%83%E3%83%812%22%2C%20%22SW2%22%2C%20%22Nintendo%20Switch2%22%2C%20%22%E3%82%B9%E3%82%A4%E3%83%83%E3%83%812%22%2C%20%22NintendoSwitch2%22%5D&va=%5B%22Switch%202%22%2C%20%22Switch2%22%2C%20%22%E3%83%8B%E3%83%B3%E3%83%86%E3%83%B3%E3%83%89%E3%83%BC%E3%82%B9%E3%82%A4%E3%83%83%E3%83%812%22%2C%20%22SW2%22%2C%20%22Nintendo%20Switch2%22%2C%20%22%E3%82%B9%E3%82%A4%E3%83%83%E3%83%812%22%2C%20%22NintendoSwitch2%22%5D",
+          "observed_at": "2026-06-08T12:00:00+09:00",
+          "age_days": 7.5,
+          "target_buy_price": null,
+          "within_target": false,
+          "rejection_reason": ""
+        }
+      ]
+    },
+    "ps5_pro": {
+      "product_name": "PlayStation 5 Pro",
+      "count_recent": 1,
+      "median_price": 128000,
+      "min_price": 128000,
+      "target_buy_price": null,
+      "within_target_count": 0,
+      "search_url": "https://auctions.yahoo.co.jp/closedsearch/closedsearch?p=%5B%22PS5%20Pro%22%2C%20%22PlayStation5Pro%22%2C%20%22CFI-7000%22%2C%20%22PlayStation%205%20Pro%22%2C%20%22CFI-7000A01%22%2C%20%22PS5Pro%22%5D&va=%5B%22PS5%20Pro%22%2C%20%22PlayStation5Pro%22%2C%20%22CFI-7000%22%2C%20%22PlayStation%205%20Pro%22%2C%20%22CFI-7000A01%22%2C%20%22PS5Pro%22%5D",
+      "item_urls": [
+        "https://auctions.yahoo.co.jp/jp/auction/x000000002"
+      ],
+      "items": [
+        {
+          "product_id": "prod_ps5_pro",
+          "product_alias": "ps5_pro",
+          "product_name": "PlayStation 5 Pro",
+          "price": 128000,
+          "condition": "new_unopened",
+          "title": "PlayStation 5 Pro 本体 新品未開封 CFI-7000",
+          "item_url": "https://auctions.yahoo.co.jp/jp/auction/x000000002",
+          "search_url": "https://auctions.yahoo.co.jp/closedsearch/closedsearch?p=%5B%22PS5%20Pro%22%2C%20%22PlayStation5Pro%22%2C%20%22CFI-7000%22%2C%20%22PlayStation%205%20Pro%22%2C%20%22CFI-7000A01%22%2C%20%22PS5Pro%22%5D&va=%5B%22PS5%20Pro%22%2C%20%22PlayStation5Pro%22%2C%20%22CFI-7000%22%2C%20%22PlayStation%205%20Pro%22%2C%20%22CFI-7000A01%22%2C%20%22PS5Pro%22%5D",
+          "observed_at": "2026-06-08T18:00:00+09:00",
+          "age_days": 7.2,
+          "target_buy_price": null,
+          "within_target": false,
+          "rejection_reason": ""
+        }
+      ]
+    },
+    "x100vi": {
+      "product_name": "FUJIFILM X100VI",
+      "count_recent": 1,
+      "median_price": 255000,
+      "min_price": 255000,
+      "target_buy_price": 213399,
+      "within_target_count": 0,
+      "search_url": "https://auctions.yahoo.co.jp/closedsearch/closedsearch?p=%5B%22X100VI%22%2C%20%22X100%20VI%22%2C%20%22%E5%AF%8C%E5%A3%AB%E3%83%95%E3%82%A4%E3%83%AB%E3%83%A0%20X100VI%22%5D&va=%5B%22X100VI%22%2C%20%22X100%20VI%22%2C%20%22%E5%AF%8C%E5%A3%AB%E3%83%95%E3%82%A4%E3%83%AB%E3%83%A0%20X100VI%22%5D",
+      "item_urls": [
+        "https://auctions.yahoo.co.jp/jp/auction/x000000004"
+      ],
+      "items": [
+        {
+          "product_id": "prod_x100vi",
+          "product_alias": "x100vi",
+          "product_name": "FUJIFILM X100VI",
+          "price": 255000,
+          "condition": "new_unopened",
+          "title": "FUJIFILM X100VI シルバー 新品未開封",
+          "item_url": "https://auctions.yahoo.co.jp/jp/auction/x000000004",
+          "search_url": "https://auctions.yahoo.co.jp/closedsearch/closedsearch?p=%5B%22X100VI%22%2C%20%22X100%20VI%22%2C%20%22%E5%AF%8C%E5%A3%AB%E3%83%95%E3%82%A4%E3%83%AB%E3%83%A0%20X100VI%22%5D&va=%5B%22X100VI%22%2C%20%22X100%20VI%22%2C%20%22%E5%AF%8C%E5%A3%AB%E3%83%95%E3%82%A4%E3%83%AB%E3%83%A0%20X100VI%22%5D",
+          "observed_at": "2026-06-08T20:00:00+09:00",
+          "age_days": 7.1,
+          "target_buy_price": 213399,
+          "within_target": false,
+          "rejection_reason": ""
+        }
+      ]
+    }
+  }
+}

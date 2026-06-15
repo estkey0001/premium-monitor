@@ -98,14 +98,14 @@ def classify_sale_price_type(shop_name: str, condition: str) -> tuple[str, str]:
     sl = s.lower()
     if any(k in sl for k in ("ebay", "stockx", "amazon.com")) or "海外" in s:
         return "overseas_listing_price", "overseas"
+    # sold/完売/落札 を含むフリマは成約価格(flea_sold_price)、それ以外は出品価格(flea_listing_price)
+    _is_sold = ("落札" in s) or ("sold" in sl) or ("完売" in s) or ("成約" in s)
     if "メルカリ" in s or "mercari" in sl:
-        return "flea_listing_price", "flea_market"
+        return ("flea_sold_price" if _is_sold else "flea_listing_price"), "flea_market"
     if "ヤフオク" in s or "yahoo" in sl or "ヤフー" in s:
-        if "落札" in s or "sold" in sl:
-            return "flea_sold_price", "flea_market"
-        return "flea_listing_price", "flea_market"
+        return ("flea_sold_price" if _is_sold else "flea_listing_price"), "flea_market"
     if "ラクマ" in s or "rakuma" in sl or "paypay" in sl:
-        return "flea_listing_price", "flea_market"
+        return ("flea_sold_price" if _is_sold else "flea_listing_price"), "flea_market"
     return "shop_sale_price", "domestic_retail"
 
 

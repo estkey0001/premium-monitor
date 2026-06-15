@@ -227,6 +227,9 @@ class DailyLPGenerator:
                         continue
                     if not _sp.sale_price or _sp.sale_price <= 0:
                         continue
+                    # flea_sold は Pro 仕入れ側データ。beginner の売却先(買取)比較には注入しない。
+                    if getattr(_sp, 'data_source', '') == 'flea_sold':
+                        continue
                     # dict 形式で buyback_rows に追加（_deal_card の行形式に合わせる）
                     _obs_str = _sp.observed_at.isoformat() if _sp.observed_at else ''
                     _resale_rows.append({
@@ -4884,6 +4887,75 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             items.append(f'<span class="sc-flag-item{strong_cls}">{_esc(lbl)}</span>')
         return '<div class="sc-flag-detail">' + "".join(items) + '</div>'
 
+    def _flea_sold_section(self) -> str:
+        """Task7: 新規取得したフリマsold価格を target差・route化状態とともに表示する。"""
+        import json as _json_fs
+        from html import escape as _esc
+        base = Path(__file__).resolve().parent.parent.parent / "exports" / "flea_sold_prices"
+        if not base.exists():
+            return ""
+        # main route 化された (product_id) を取得
+        routed = set()
+        try:
+            _pr = _json_fs.loads((base.parent / "profit_routes" / "latest.json").read_text(encoding="utf-8"))
+            for r in _pr.get("main_routes", []):
+                if r.get("buy_price_type") == "flea_sold_price":
+                    routed.add(r.get("product_id"))
+        except Exception:
+            pass
+        rows = []
+        for fn in ("yahoo_sold.json", "mercari_sold.json", "rakuma_sold.json"):
+            fp = base / fn
+            if not fp.exists():
+                continue
+            try:
+                d = _json_fs.loads(fp.read_text(encoding="utf-8"))
+            except Exception:
+                continue
+            src = d.get("source", fn)
+            for alias, p in d.get("products", {}).items():
+                for it in p.get("items", []):
+                    if it.get("rejection_reason"):
+                        continue
+                    tgt = it.get("target_buy_price")
+                    diff = (tgt - it["price"]) if tgt else None
+                    pid = it.get("product_id")
+                    # main_routes に flea_sold buy として採用されていれば route化（targetは採用後に消えるため within は条件にしない）
+                    is_routed = pid in routed
+                    rows.append({
+                        "product": it.get("product_name", alias), "source": src,
+                        "price": it["price"], "target": tgt, "diff": diff,
+                        "within": it.get("within_target"), "routed": is_routed,
+                        "item_url": it.get("item_url") or p.get("search_url", ""),
+                    })
+        if not rows:
+            return ""
+        rows.sort(key=lambda x: (not x["routed"], -(x["diff"] or -10**9)))
+        parts = ['<div class="pr-flea-sold" style="margin-top:14px;background:#ecfeff;'
+                 'border:1px solid #a5f3fc;border-radius:8px;padding:10px 12px">',
+                 '<div style="font-weight:700;color:#0e7490">&#128722; 新規取得したフリマsold価格（仕入れ候補）</div>',
+                 '<div style="font-size:0.78rem;color:#155e75;margin:3px 0 6px">'
+                 'メルカリ/ヤフオク/ラクマの成約価格（手動確認・規約遵守）。target_buy_price 以下なら国内買取ルート候補。</div>',
+                 '<table style="width:100%;font-size:0.82rem;border-collapse:collapse">'
+                 '<tr style="color:#64748b;text-align:left"><th>商品</th><th>ソース</th><th>sold価格</th>'
+                 '<th>target上限</th><th>差</th><th>状態</th></tr>']
+        for r in rows[:15]:
+            if r["routed"]:
+                status = '<span style="color:#059669;font-weight:700">✅ route化</span>'
+            elif r["within"]:
+                status = '<span style="color:#d97706">target内・薄利(ROI<5%)等で未採用</span>'
+            else:
+                status = '<span style="color:#94a3b8">target超・参考</span>'
+            diff_s = (f'{r["diff"]:+,}円' if r["diff"] is not None else '—')
+            link = (f'<a href="{_esc(r["item_url"])}" target="_blank" rel="noopener noreferrer">確認</a>'
+                    if r["item_url"] else '')
+            parts.append(
+                f'<tr><td>{_esc(r["product"][:16])} {link}</td><td>{_esc(r["source"])}</td>'
+                f'<td>¥{r["price"]:,}</td><td>{("¥%d"%r["target"]) if r["target"] else "—"}</td>'
+                f'<td>{diff_s}</td><td>{status}</td></tr>')
+        parts.append('</table></div>')
+        return "".join(parts)
+
     def _profit_routes_section(self) -> str:
         """検証済み Pro 利益ルート（exports/profit_routes/latest.json）をカード表示する。
         0件でも理由・候補数・参考ルート（海外sold fresh化で成立）を表示する。"""
@@ -5043,6 +5115,9 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                         f'<td>+¥{m["potential_profit"]:,}</td><td>{m["product_count"]}件</td>'
                         f'<td style="color:{_pcolor.get(m["priority"],"#94a3b8")};font-weight:700">{m["priority"]}</td></tr>')
                 parts.append('</table></div>')
+
+        # ── Task7: 新規取得したフリマsold価格（target差・route化状態）──
+        parts.append(self._flea_sold_section())
 
         # ── 参考利益ルート（青/紫系・鮮度待ち）──
         if refs:
@@ -6300,6 +6375,8 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                     f'</div>'
                 )
                 rank += 1
+            # 取得失敗店舗は別 details（shop-failed-details）に分離（#450/#455: 初期表示に出さない）
+            _failed_html_m = []
             for r in _failed_rows_r[:2]:
                 r_name = _esc(r.get('shop_name') or r.get('shop_id') or '—')
                 r_url  = r.get('buyback_url', '') or ''
@@ -6307,7 +6384,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                     f'<a href="{_esc(r_url)}" target="_blank" rel="noopener noreferrer" class="shop-check-btn normal" data-track="buyback_click" data-product-id="{pid}">確認</a>'
                     if r_url else '<span class="shop-check-btn normal" style="opacity:0.4;cursor:default;">確認不可</span>'
                 )
-                rows_html.append(
+                _failed_html_m.append(
                     f'<div class="shop-row shop-row-failed">'
                     f'<div class="shop-rank" style="color:var(--ink3)">—</div>'
                     f'<div class="shop-name-col">{r_name}</div>'
@@ -6316,11 +6393,19 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                     f'<div class="shop-link-col">{link_cell}</div>'
                     f'</div>'
                 )
-        if rows_html:
+        if rows_html or (buyback_rows and _failed_html_m):
+            _failed_details_m = ''
+            if _failed_html_m:
+                _failed_details_m = (
+                    '<details class="shop-more-details shop-failed-details">'
+                    f'<summary class="shop-more-summary shop-failed-summary">取得失敗・未掲載店舗を見る（{len(_failed_html_m)}店舗）</summary>'
+                    + ''.join(_failed_html_m) + '</details>'
+                )
             compare_html = (
                 '<div class="shop-table buyback-shop-table buyback-table" style="margin-top:8px">'
                 '<div class="shop-table-hd"><span>買取店比較</span></div>'
                 + ''.join(rows_html)
+                + _failed_details_m
                 + '</div>'
             )
 

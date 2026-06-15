@@ -254,11 +254,14 @@ def main() -> int:
                 reason = "国内完結（販売≥買取）で赤字"
             else:
                 reason = reasons.most_common(1)[0][0] if reasons else "候補不足"
+            # target_buy_price: この価格以下の仕入れなら国内買取ルートが成立
+            target_buy_price = (ms - dom_fee - 1) if ms else None
             zero_diag[pid] = {
                 "product_name": rows[0]["product_name"] if rows else pid,
                 "buy_candidates": len(buys), "sell_candidates": len(sells),
                 "min_usable_buy": mb, "min_usable_buy_source": (min_buy["source_name"] if min_buy else ""),
                 "max_usable_sell": ms, "max_usable_sell_source": (max_sell["source_name"] if max_sell else ""),
+                "target_buy_price": target_buy_price,
                 "gross_gap": gross, "net_domestic": net_dom,
                 "best_reference_net": (best_ref["net_profit"] if best_ref else None),
                 "main_blocked_reason": reason,

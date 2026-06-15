@@ -1,0 +1,122 @@
+{
+  "generated_at": "2026-06-15 23:24 JST",
+  "source": "Mercari sold",
+  "policy": "no_live_scraping_tos_safe_manual_curation_plus_search_url",
+  "fresh_days": 14,
+  "products": {
+    "switch2": {
+      "product_name": "Nintendo Switch 2",
+      "count_recent": 1,
+      "median_price": 46500,
+      "min_price": 46500,
+      "target_buy_price": null,
+      "within_target_count": 0,
+      "search_url": "https://jp.mercari.com/search?keyword=%5B%22Switch%202%22%2C%20%22Switch2%22%2C%20%22%E3%83%8B%E3%83%B3%E3%83%86%E3%83%B3%E3%83%89%E3%83%BC%E3%82%B9%E3%82%A4%E3%83%83%E3%83%812%22%2C%20%22SW2%22%2C%20%22Nintendo%20Switch2%22%2C%20%22%E3%82%B9%E3%82%A4%E3%83%83%E3%83%812%22%2C%20%22NintendoSwitch2%22%5D&status=sold_out",
+      "item_urls": [
+        "https://jp.mercari.com/item/m00000000001"
+      ],
+      "items": [
+        {
+          "product_id": "prod_switch2",
+          "product_alias": "switch2",
+          "product_name": "Nintendo Switch 2",
+          "price": 46500,
+          "condition": "unused",
+          "title": "ニンテンドースイッチ2 本体 未使用",
+          "item_url": "https://jp.mercari.com/item/m00000000001",
+          "search_url": "https://jp.mercari.com/search?keyword=%5B%22Switch%202%22%2C%20%22Switch2%22%2C%20%22%E3%83%8B%E3%83%B3%E3%83%86%E3%83%B3%E3%83%89%E3%83%BC%E3%82%B9%E3%82%A4%E3%83%83%E3%83%812%22%2C%20%22SW2%22%2C%20%22Nintendo%20Switch2%22%2C%20%22%E3%82%B9%E3%82%A4%E3%83%83%E3%83%812%22%2C%20%22NintendoSwitch2%22%5D&status=sold_out",
+          "observed_at": "2026-06-09T09:00:00+09:00",
+          "age_days": 6.6,
+          "target_buy_price": null,
+          "within_target": false,
+          "rejection_reason": ""
+        }
+      ]
+    },
+    "ps5_pro": {
+      "product_name": "PlayStation 5 Pro",
+      "count_recent": 1,
+      "median_price": 129000,
+      "min_price": 129000,
+      "target_buy_price": null,
+      "within_target_count": 0,
+      "search_url": "https://jp.mercari.com/search?keyword=%5B%22PS5%20Pro%22%2C%20%22PlayStation5Pro%22%2C%20%22CFI-7000%22%2C%20%22PlayStation%205%20Pro%22%2C%20%22CFI-7000A01%22%2C%20%22PS5Pro%22%5D&status=sold_out",
+      "item_urls": [
+        "https://jp.mercari.com/item/m00000000002"
+      ],
+      "items": [
+        {
+          "product_id": "prod_ps5_pro",
+          "product_alias": "ps5_pro",
+          "product_name": "PlayStation 5 Pro",
+          "price": 129000,
+          "condition": "unused",
+          "title": "PS5 Pro 本体 未使用品",
+          "item_url": "https://jp.mercari.com/item/m00000000002",
+          "search_url": "https://jp.mercari.com/search?keyword=%5B%22PS5%20Pro%22%2C%20%22PlayStation5Pro%22%2C%20%22CFI-7000%22%2C%20%22PlayStation%205%20Pro%22%2C%20%22CFI-7000A01%22%2C%20%22PS5Pro%22%5D&status=sold_out",
+          "observed_at": "2026-06-09T10:00:00+09:00",
+          "age_days": 6.6,
+          "target_buy_price": null,
+          "within_target": false,
+          "rejection_reason": ""
+        }
+      ]
+    },
+    "gr3x": {
+      "product_name": "RICOH GR IIIx",
+      "count_recent": 1,
+      "median_price": 150000,
+      "min_price": 150000,
+      "target_buy_price": null,
+      "within_target_count": 0,
+      "search_url": "https://jp.mercari.com/search?keyword=%5B%22GR%20IIIx%22%2C%20%22GR3x%22%2C%20%22GRIIIx%22%2C%20%2215286%22%5D&status=sold_out",
+      "item_urls": [
+        "https://jp.mercari.com/item/m00000000003"
+      ],
+      "items": [
+        {
+          "product_id": "prod_gr3x",
+          "product_alias": "gr3x",
+          "product_name": "RICOH GR IIIx",
+          "price": 150000,
+          "condition": "new_unopened",
+          "title": "RICOH GR IIIx 新品未開封",
+          "item_url": "https://jp.mercari.com/item/m00000000003",
+          "search_url": "https://jp.mercari.com/search?keyword=%5B%22GR%20IIIx%22%2C%20%22GR3x%22%2C%20%22GRIIIx%22%2C%20%2215286%22%5D&status=sold_out",
+          "observed_at": "2026-06-07T15:00:00+09:00",
+          "age_days": 8.4,
+          "target_buy_price": null,
+          "within_target": false,
+          "rejection_reason": ""
+        }
+      ]
+    },
+    "gr4": {
+      "product_name": "RICOH GR IV",
+      "count_recent": 0,
+      "median_price": null,
+      "min_price": null,
+      "target_buy_price": null,
+      "within_target_count": 0,
+      "search_url": "https://jp.mercari.com/search?keyword=%5B%22GR%20IV%22%2C%20%22GR4%22%2C%20%22GRIV%22%2C%20%22GR%204%22%5D&status=sold_out",
+      "item_urls": [],
+      "items": [
+        {
+          "product_id": "prod_gr4",
+          "product_alias": "gr4",
+          "product_name": "RICOH GR IV",
+          "price": 265000,
+          "condition": "unused",
+          "title": "RICOH GR IV 未使用 ケース付き",
+          "item_url": "https://jp.mercari.com/item/m00000000005",
+          "search_url": "https://jp.mercari.com/search?keyword=%5B%22GR%20IV%22%2C%20%22GR4%22%2C%20%22GRIV%22%2C%20%22GR%204%22%5D&status=sold_out",
+          "observed_at": "2026-06-09T11:00:00+09:00",
+          "age_days": 6.5,
+          "target_buy_price": null,
+          "within_target": false,
+          "rejection_reason": "accessory_or_wrong_product"
+        }
+      ]
+    }
+  }
+}

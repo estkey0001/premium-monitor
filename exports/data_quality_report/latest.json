@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-16T19:00:56+09:00",
+  "generated_at": "2026-06-17T18:43:31+09:00",
   "collection": {
     "total_shops": 16,
     "shops_with_success": 6,
@@ -253,43 +253,43 @@
   "consecutive_failed_shops": [
     {
       "shop_id": "2ndstreet",
-      "consecutive_failures": 45
+      "consecutive_failures": 46
     },
     {
       "shop_id": "bookoff",
-      "consecutive_failures": 45
+      "consecutive_failures": 46
     },
     {
       "shop_id": "dosupara",
-      "consecutive_failures": 45
+      "consecutive_failures": 46
     },
     {
       "shop_id": "geo_mobile",
-      "consecutive_failures": 45
+      "consecutive_failures": 46
     },
     {
       "shop_id": "hardoff",
-      "consecutive_failures": 45
+      "consecutive_failures": 46
     },
     {
       "shop_id": "janpara",
-      "consecutive_failures": 45
+      "consecutive_failures": 46
     },
     {
       "shop_id": "pasoko",
-      "consecutive_failures": 45
+      "consecutive_failures": 46
     },
     {
       "shop_id": "sofmap",
-      "consecutive_failures": 45
+      "consecutive_failures": 46
     },
     {
       "shop_id": "surugaya",
-      "consecutive_failures": 45
+      "consecutive_failures": 46
     },
     {
       "shop_id": "tsutaya",
-      "consecutive_failures": 45
+      "consecutive_failures": 46
     }
   ],
   "improvement_priority": [
@@ -305,9 +305,9 @@
     "camera_auto_high_confidence_count": 16,
     "camera_auto_low_confidence_count": 0,
     "camera_manual_fallback_count": 44,
-    "camera_rejected_candidate_count": 221,
+    "camera_rejected_candidate_count": 219,
     "camera_rejection_reasons": {
-      "not_buyback_context": 198,
+      "not_buyback_context": 196,
       "model_mismatch": 23
     },
     "per_brand_success_rates": {

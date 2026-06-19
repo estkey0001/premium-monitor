@@ -5845,6 +5845,55 @@ def check() -> list[dict]:
                     "message": "#601 LP にフリマsold仕入れ候補セクションが表示される"
                                + ("" if _t601 else " ← フリマsold表示が見つかりません")})
 
+    # ── Pro route 品質表示 / 再現性スコア ガード #602-#608 ──
+    _has_main = len(_pr_main) > 0
+
+    # #602: main route が Pro タブに表示される
+    _t602 = (not _has_main) or ('pr-main-card' in _lp_html)
+    results.append({"level": "ok" if _t602 else "error", "check": "lp_main_route_card",
+                    "message": "#602 main route が Pro タブに表示される"
+                               + ("" if _t602 else " ← main route カードが LP にありません")})
+
+    # #603: GR IIIx route（または main route 商品名）が LP に表示される
+    _main_names = [r.get('product_name', '') for r in _pr_main]
+    _t603 = (not _has_main) or any(nm and nm in _lp_html for nm in _main_names)
+    results.append({"level": "ok" if _t603 else "error", "check": "lp_main_route_product_shown",
+                    "message": "#603 main route 商品（GR IIIx等）が LP に表示される"
+                               + ("" if _t603 else " ← main route 商品名が LP にありません")})
+
+    # #604: buy_age_days / sell_age_days がルートに含まれる
+    _t604 = (not _has_main) or all(('buy_observed_age_days' in r and 'sell_observed_age_days' in r)
+                                   for r in _pr_main)
+    results.append({"level": "ok" if _t604 else "error", "check": "profit_route_age_fields",
+                    "message": "#604 main route に buy_age_days / sell_age_days が含まれる"
+                               + ("" if _t604 else " ← 鮮度フィールドが欠落")})
+
+    # #605: reproducibility_score がルートに含まれ LP に表示される
+    _t605 = (not _has_main) or (all('reproducibility_score' in r for r in _pr_main)
+                                and '再現性スコア' in _lp_html)
+    results.append({"level": "ok" if _t605 else "error", "check": "profit_route_reproducibility",
+                    "message": "#605 reproducibility_score がルートに付与され LP に表示される"
+                               + ("" if _t605 else " ← 再現性スコアがありません")})
+
+    # #606: 手動キュレーション由来ルートに注意書きが表示される
+    _has_manual = any(r.get('is_manual_curated') for r in _pr_main)
+    _t606 = (not _has_manual) or ('手動確認済み' in _lp_html)
+    results.append({"level": "ok" if _t606 else "error", "check": "lp_manual_route_notice",
+                    "message": "#606 手動キュレーション由来ルートに注意書きが表示される"
+                               + ("" if _t606 else " ← 手動注意書きが見つかりません")})
+
+    # #607: reference route が main route と分離表示される（CSSクラス）
+    _t607 = ('pr-main-card' in _lp_src588) and ('pr-reference-card' in _lp_src588)
+    results.append({"level": "ok" if _t607 else "error", "check": "lp_main_reference_separated2",
+                    "message": "#607 reference route が main route と分離表示される"
+                               + ("" if _t607 else " ← 分離表示が見つかりません")})
+
+    # #608: main route 1件でも Pro サマリーが表示される
+    _t608 = (not _has_main) or ('検証済み利益ルート:' in _lp_html and 'pr-summary' in _lp_html)
+    results.append({"level": "ok" if _t608 else "error", "check": "lp_pro_summary",
+                    "message": "#608 main route がある場合 Pro サマリーが表示される"
+                               + ("" if _t608 else " ← Pro サマリーが見つかりません")})
+
     return results
 
 

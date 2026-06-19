@@ -4979,6 +4979,17 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                  '<div style="font-size:0.8rem;color:#475569;margin:4px 0 10px">'
                  '正規化価格から本体一致・非stale・非0円・confidence≥medium の価格のみで算出。'
                  'アクセサリー/異常値/下取は除外済み。</div>']
+        # Task5: Pro サマリー（main 1件でも表示）
+        _max_p = s.get("max_profit") or {}
+        _max_r = s.get("max_roi") or {}
+        parts.append(
+            '<div class="pr-summary" style="background:#fff;border:1px solid #bfdbfe;border-radius:6px;'
+            'padding:8px 12px;margin-bottom:10px;font-size:0.86rem;color:#1e3a8a">'
+            f'検証済み利益ルート: <b>{s.get("main_route_count", 0)}件</b>'
+            + (f' ／ 最大利益: <b>+¥{_max_p.get("net_profit", 0):,}</b>' if _max_p else '')
+            + (f' ／ 最大ROI: <b>{(_max_r.get("roi", 0) or 0)*100:.0f}%</b>' if _max_r else '')
+            + f' ／ 参考ルート: <b>{s.get("reference_route_count", 0)}件</b>'
+            + '</div>')
         # Task2: eBay API 未設定の明示
         if not ebay_api:
             parts.append('<div class="ebay-api-notice" style="background:#fffbeb;border:1px solid #fde68a;'
@@ -5025,6 +5036,34 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             card_style = ("background:#faf5ff;border:1px solid #e9d5ff;border-left:4px solid #7c3aed;"
                           if reference else
                           "background:#f0fdf4;border:1px solid #bbf7d0;border-left:4px solid #059669;")
+            # Task1: 品質情報（鮮度・リンク種別・ソース数・同条件件数）
+            _bage = r.get("buy_observed_age_days")
+            _sage = r.get("sell_observed_age_days")
+            quality_html = ""
+            repro_html = ""
+            manual_html = ""
+            if not reference:
+                quality_html = (
+                    f'<div style="font-size:0.76rem;color:#64748b;margin-top:3px">'
+                    f'鮮度: 仕入 {("%.1f日前" % _bage) if _bage is not None else "—"}（{_esc(r.get("buy_link_type") or "—")}） / '
+                    f'売却 {("%.1f日前" % _sage) if _sage is not None else "—"}（{_esc(r.get("sell_link_type") or "—")}） ／ '
+                    f'信頼度 {_esc(r.get("route_confidence","—"))} ／ ソース数 {r.get("source_count","—")} ／ '
+                    f'同条件件数 {r.get("same_condition_count","—")}</div>')
+                # Task3: 再現性スコア
+                _rs = r.get("reproducibility_score", 0)
+                _rl = r.get("reproducibility_level", "—")
+                _rc = {"高": "#059669", "中": "#d97706", "低": "#dc2626"}.get(_rl, "#64748b")
+                repro_html = (
+                    f'<div style="font-size:0.78rem;margin-top:3px">再現性スコア: '
+                    f'<b style="color:{_rc}">{_rs} / 100（{_rl}）</b>'
+                    f'<span style="color:#94a3b8"> ※item_url/鮮度/同条件件数/信頼度/ROIで評価</span></div>')
+                # Task2: 手動キュレーション由来の注意書き
+                if r.get("is_manual_curated"):
+                    manual_html = (
+                        '<div style="font-size:0.78rem;color:#92400e;background:#fffbeb;border:1px solid #fde68a;'
+                        'border-radius:5px;padding:6px 8px;margin-top:5px">'
+                        '&#9888;&#65039; 注意: このルートは手動確認済みの sold 価格をもとにした参考ルートです。'
+                        '実際の購入可否・送料・状態・付属品は必ずご確認ください。</div>')
             return (
                 f'<div class="{card_cls}" style="{card_style}border-radius:8px;padding:10px 12px;margin:8px 0">'
                 f'<div style="font-weight:700">{_esc(r["product_name"])} {badge}</div>'
@@ -5034,6 +5073,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 f'<div style="font-size:0.78rem;color:#64748b;margin-top:2px">コスト: {" / ".join(fees)}</div>'
                 f'<div style="margin-top:4px">{profit_lbl}: <b style="color:#059669">+¥{r["net_profit"]:,}</b> '
                 f'／ ROI <b>{r["roi"]*100:.1f}%</b> ／ {buy_link} ｜ {sell_link}</div>'
+                f'{quality_html}{repro_html}{manual_html}'
                 f'{ref_extra}'
                 f'</div>')
 

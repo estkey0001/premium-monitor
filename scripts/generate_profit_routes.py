@@ -103,6 +103,28 @@ def _route_confidence(buy: dict, sell: dict, now: datetime) -> str:
     return "low"
 
 
+def _reproducibility(route: dict, buy: dict, sell: dict, same_cond_count: int) -> tuple[int, str]:
+    """ルート再現性スコアを算出する。
+    +30 item_urlあり / +20 observed_at<=3日 / +20 同条件sold>=3 /
+    +15 buy/sell両方high|medium / +15 ROI>=10%。 80+:高 / 50-79:中 / <50:低
+    """
+    score = 0
+    if buy.get("item_url") or sell.get("item_url"):
+        score += 30
+    ba = route.get("buy_observed_age_days") or 999
+    sa = route.get("sell_observed_age_days") or 999
+    if ba <= 3 and sa <= 3:
+        score += 20
+    if same_cond_count >= 3:
+        score += 20
+    if buy.get("confidence") in ("high", "medium") and sell.get("confidence") in ("high", "medium"):
+        score += 15
+    if (route.get("roi") or 0) >= 0.10:
+        score += 15
+    level = "高" if score >= 80 else "中" if score >= 50 else "低"
+    return score, level
+
+
 def _route_type(buy_type: str, sell_type: str) -> str:
     buy_pref = {"shop_sale_price": "shop", "flea_listing_price": "flea",
                 "flea_sold_price": "flea", "overseas_listing_price": "domestic"}.get(buy_type, "domestic")
@@ -190,11 +212,20 @@ def main() -> int:
             return list(m.values())
         buys_b = best(buys, "price", False)
         sells_b = best(sells, "price", True)
+        # 商品単位のメタ: ソース数 / 同条件 sold 件数
+        source_count = len({o["source_id"] or o["source_name"] for o in (buys + sells)})
         prod_routes = []
         for b in buys_b:
             for s in sells_b:
                 r = _make_route(b, s, now)
                 if r and r["route_confidence"] in ("high", "medium"):
+                    # 同条件（buy と同じ condition）の sold/買い候補件数
+                    same_cond = sum(1 for o in buys if (o.get("condition") or "") == (b.get("condition") or ""))
+                    r["source_count"] = source_count
+                    r["same_condition_count"] = same_cond
+                    r["is_manual_curated"] = (b.get("price_type") == "flea_sold_price"
+                                              or b.get("extraction_method") in ("flea_sold", "manual"))
+                    r["reproducibility_score"], r["reproducibility_level"] = _reproducibility(r, b, s, same_cond)
                     prod_routes.append(r)
         main_routes.extend(prod_routes)
 
@@ -272,7 +303,14 @@ def main() -> int:
                 "fresh_overseas_whatif_top5": sorted(whatif, key=lambda x: -x["net_if_fresh"])[:5],
             }
 
-    main_routes.sort(key=lambda r: r["net_profit"], reverse=True)
+    # Task4 ソート: route_confidence high → reproducibility_score 高 → net_profit 高 → ROI 高
+    _conf_rank = {"high": 2, "medium": 1, "low": 0}
+    main_routes.sort(key=lambda r: (
+        _conf_rank.get(r.get("route_confidence"), 0),
+        r.get("reproducibility_score", 0),
+        r.get("net_profit", 0),
+        r.get("roi", 0),
+    ), reverse=True)
     ref_routes.sort(key=lambda r: r["net_profit"], reverse=True)
 
     # eBay API 設定状況（overseas_prices/latest.json から）

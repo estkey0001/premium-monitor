@@ -1,6 +1,6 @@
 # Normalized Price Observations
 
-生成: 2026-06-20 17:14 JST
+生成: 2026-06-21 17:45 JST
 
 全価格（買取/販売/出品/落札/海外/下取/公式）を単一スキーマに正規化。
 `price_role`（buy/sell/official/trade_in）を必ず付与し、
@@ -9,15 +9,15 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 
 ## サマリ
 
-- 総観測数: **247**
-- Beginner 利用可: 75 / Pro 利用可: 47
-- fresh(≤14日): 129
+- 総観測数: **248**
+- Beginner 利用可: 75 / Pro 利用可: 46
+- fresh(≤14日): 130
 
 ### price_role 別
 
 | role | 件数 |
 |---|---|
-| buy | 55 |
+| buy | 56 |
 | official | 44 |
 | sell | 148 |
 
@@ -27,17 +27,17 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 |---|---|
 | buyback_price | 142 |
 | flea_listing_price | 5 |
-| flea_sold_price | 16 |
+| flea_sold_price | 15 |
 | official_price | 44 |
 | overseas_listing_price | 5 |
 | overseas_sold_price | 6 |
-| shop_sale_price | 29 |
+| shop_sale_price | 31 |
 
 ### rejection_reason 別（main calc 除外）
 
 | reason | 件数 |
 |---|---|
-| accessory_or_wrong_product | 5 |
+| accessory_or_wrong_product | 7 |
 | price_zero | 33 |
 | stale_over_14d | 118 |
 

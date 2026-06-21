@@ -1,117 +1,31 @@
 {
-  "generated_at": "2026-06-20 17:14 JST",
+  "generated_at": "2026-06-21 17:45 JST",
   "ebay_api_configured": false,
   "overseas_source_mode": "manual",
   "summary": {
-    "main_route_count": 1,
-    "reference_route_count": 6,
-    "by_product": {
-      "RICOH GR IIIx": 1
-    },
-    "by_confidence": {
-      "medium": 1
-    },
-    "by_route_type": {
-      "flea_to_buyback": 1
-    },
-    "max_profit": {
-      "product_id": "prod_gr3x",
-      "product_name": "RICOH GR IIIx",
-      "buy_source": "Mercari sold",
-      "buy_price": 150000,
-      "buy_price_type": "flea_sold_price",
-      "buy_price_role": "buy",
-      "buy_condition": "new_unopened",
-      "buy_url": "https://jp.mercari.com/item/m00000000003",
-      "buy_link_type": "item",
-      "sell_source": "フジヤカメラ",
-      "sell_price": 167200,
-      "sell_price_type": "buyback_price",
-      "sell_price_role": "sell",
-      "sell_condition": "new_unopened",
-      "sell_url": "https://www.fujiya-camera.co.jp/shop/g/gC4549212304507/",
-      "sell_link_type": "unknown",
-      "gross_profit": 17200,
-      "estimated_fee": 0,
-      "platform_fee": 0,
-      "payment_fee": 0,
-      "fx_buffer": 0,
-      "shipping_cost": 1500,
-      "safety_margin": 3000,
-      "net_profit": 12700,
-      "roi": 0.0847,
-      "route_confidence": "medium",
-      "buy_observed_at": "2026-06-07T15:00:00+09:00",
-      "sell_observed_at": "2026-06-20T16:16:55.826314+09:00",
-      "buy_observed_age_days": 13.1,
-      "sell_observed_age_days": 0.0,
-      "sell_collector_method": "",
-      "route_type": "flea_to_buyback",
-      "reference_route": false,
-      "rejection_reason": "",
-      "source_count": 3,
-      "same_condition_count": 2,
-      "is_manual_curated": true,
-      "reproducibility_score": 45,
-      "reproducibility_level": "低"
-    },
-    "max_roi": {
-      "product_id": "prod_gr3x",
-      "product_name": "RICOH GR IIIx",
-      "buy_source": "Mercari sold",
-      "buy_price": 150000,
-      "buy_price_type": "flea_sold_price",
-      "buy_price_role": "buy",
-      "buy_condition": "new_unopened",
-      "buy_url": "https://jp.mercari.com/item/m00000000003",
-      "buy_link_type": "item",
-      "sell_source": "フジヤカメラ",
-      "sell_price": 167200,
-      "sell_price_type": "buyback_price",
-      "sell_price_role": "sell",
-      "sell_condition": "new_unopened",
-      "sell_url": "https://www.fujiya-camera.co.jp/shop/g/gC4549212304507/",
-      "sell_link_type": "unknown",
-      "gross_profit": 17200,
-      "estimated_fee": 0,
-      "platform_fee": 0,
-      "payment_fee": 0,
-      "fx_buffer": 0,
-      "shipping_cost": 1500,
-      "safety_margin": 3000,
-      "net_profit": 12700,
-      "roi": 0.0847,
-      "route_confidence": "medium",
-      "buy_observed_at": "2026-06-07T15:00:00+09:00",
-      "sell_observed_at": "2026-06-20T16:16:55.826314+09:00",
-      "buy_observed_age_days": 13.1,
-      "sell_observed_age_days": 0.0,
-      "sell_collector_method": "",
-      "route_type": "flea_to_buyback",
-      "reference_route": false,
-      "rejection_reason": "",
-      "source_count": 3,
-      "same_condition_count": 2,
-      "is_manual_curated": true,
-      "reproducibility_score": 45,
-      "reproducibility_level": "低"
-    },
-    "zero_route_products": 44
+    "main_route_count": 0,
+    "reference_route_count": 5,
+    "by_product": {},
+    "by_confidence": {},
+    "by_route_type": {},
+    "max_profit": null,
+    "max_roi": null,
+    "zero_route_products": 45
   },
   "missing_data_priority": [
     {
       "rank": 1,
       "key": "flea_sold",
       "label": "メルカリsold / ヤフオク落札（より安い仕入れ）",
-      "potential_profit": 268010,
-      "product_count": 7,
+      "potential_profit": 343358,
+      "product_count": 8,
       "priority": "high"
     },
     {
       "rank": 2,
       "key": "ebay_sold_fresh",
       "label": "eBay sold（海外成約相場）の最新化",
-      "potential_profit": 250167,
+      "potential_profit": 249974,
       "product_count": 3,
       "priority": "high"
     },
@@ -124,49 +38,7 @@
       "priority": "low"
     }
   ],
-  "main_routes": [
-    {
-      "product_id": "prod_gr3x",
-      "product_name": "RICOH GR IIIx",
-      "buy_source": "Mercari sold",
-      "buy_price": 150000,
-      "buy_price_type": "flea_sold_price",
-      "buy_price_role": "buy",
-      "buy_condition": "new_unopened",
-      "buy_url": "https://jp.mercari.com/item/m00000000003",
-      "buy_link_type": "item",
-      "sell_source": "フジヤカメラ",
-      "sell_price": 167200,
-      "sell_price_type": "buyback_price",
-      "sell_price_role": "sell",
-      "sell_condition": "new_unopened",
-      "sell_url": "https://www.fujiya-camera.co.jp/shop/g/gC4549212304507/",
-      "sell_link_type": "unknown",
-      "gross_profit": 17200,
-      "estimated_fee": 0,
-      "platform_fee": 0,
-      "payment_fee": 0,
-      "fx_buffer": 0,
-      "shipping_cost": 1500,
-      "safety_margin": 3000,
-      "net_profit": 12700,
-      "roi": 0.0847,
-      "route_confidence": "medium",
-      "buy_observed_at": "2026-06-07T15:00:00+09:00",
-      "sell_observed_at": "2026-06-20T16:16:55.826314+09:00",
-      "buy_observed_age_days": 13.1,
-      "sell_observed_age_days": 0.0,
-      "sell_collector_method": "",
-      "route_type": "flea_to_buyback",
-      "reference_route": false,
-      "rejection_reason": "",
-      "source_count": 3,
-      "same_condition_count": 2,
-      "is_manual_curated": true,
-      "reproducibility_score": 45,
-      "reproducibility_level": "低"
-    }
-  ],
+  "main_routes": [],
   "reference_routes": [
     {
       "product_id": "prod_x100vi",
@@ -179,30 +51,30 @@
       "buy_url": "https://auctions.yahoo.co.jp/jp/auction/x000000004",
       "buy_link_type": "unknown",
       "sell_source": "src_ebay",
-      "sell_price": 570935,
+      "sell_price": 570794,
       "sell_price_type": "overseas_sold_price",
       "sell_price_role": "sell",
       "sell_condition": "new_unopened",
       "sell_url": "",
       "sell_link_type": "none",
-      "gross_profit": 315935,
-      "estimated_fee": 114187,
-      "platform_fee": 74222,
-      "payment_fee": 22837,
-      "fx_buffer": 17128,
+      "gross_profit": 315794,
+      "estimated_fee": 114159,
+      "platform_fee": 74203,
+      "payment_fee": 22832,
+      "fx_buffer": 17124,
       "shipping_cost": 5000,
       "safety_margin": 7650,
-      "net_profit": 189098,
-      "roi": 0.7416,
+      "net_profit": 188985,
+      "roi": 0.7411,
       "route_confidence": "low",
       "buy_observed_at": "2026-06-08T20:00:00+09:00",
       "sell_observed_at": "2026-05-28T10:00:00+09:00",
-      "buy_observed_age_days": 11.9,
-      "sell_observed_age_days": 23.3,
+      "buy_observed_age_days": 12.9,
+      "sell_observed_age_days": 24.3,
       "sell_collector_method": "manual",
       "route_type": "flea_to_overseas",
       "reference_route": true,
-      "rejection_reason": "overseas_sold_stale(23.3d)"
+      "rejection_reason": "overseas_sold_stale(24.3d)"
     },
     {
       "product_id": "prod_x100vi",
@@ -215,30 +87,30 @@
       "buy_url": "https://auctions.yahoo.co.jp/search/search?p=%E5%AF%8C%E5%A3%AB%E3%83%95%E3%82%A4%E3%83%AB%E3%83%A0%20X100VI&va=%E5%AF%8C%E5%A3%AB%E3%83%95%E3%82%A4%E3%83%AB%E3%83%A0%20X100VI&istatus=2&n=20&s1=cbids&o1=d&ei=utf-8&auccat=&tab_ex=commerce&item_condition=1",
       "buy_link_type": "search",
       "sell_source": "src_ebay",
-      "sell_price": 570935,
+      "sell_price": 570794,
       "sell_price_type": "overseas_sold_price",
       "sell_price_role": "sell",
       "sell_condition": "new_unopened",
       "sell_url": "",
       "sell_link_type": "none",
-      "gross_profit": 231135,
-      "estimated_fee": 114187,
-      "platform_fee": 74222,
-      "payment_fee": 22837,
-      "fx_buffer": 17128,
+      "gross_profit": 230994,
+      "estimated_fee": 114159,
+      "platform_fee": 74203,
+      "payment_fee": 22832,
+      "fx_buffer": 17124,
       "shipping_cost": 5000,
       "safety_margin": 10194,
-      "net_profit": 101754,
-      "roi": 0.2995,
+      "net_profit": 101641,
+      "roi": 0.2991,
       "route_confidence": "low",
-      "buy_observed_at": "2026-06-20T16:47:48.745832+09:00",
+      "buy_observed_at": "2026-06-21T17:18:43.235109+09:00",
       "sell_observed_at": "2026-05-28T10:00:00+09:00",
       "buy_observed_age_days": 0.0,
-      "sell_observed_age_days": 23.3,
+      "sell_observed_age_days": 24.3,
       "sell_collector_method": "manual",
       "route_type": "flea_to_overseas",
       "reference_route": true,
-      "rejection_reason": "overseas_sold_stale(23.3d)"
+      "rejection_reason": "overseas_sold_stale(24.3d)"
     },
     {
       "product_id": "prod_iphone17pro_256",
@@ -251,66 +123,30 @@
       "buy_url": "https://auctions.yahoo.co.jp/search/search?p=iPhone%2017%20Pro%20256GB&va=iPhone%2017%20Pro%20256GB&istatus=2&n=20&s1=cbids&o1=d&ei=utf-8&auccat=&tab_ex=commerce&item_condition=1",
       "buy_link_type": "search",
       "sell_source": "src_ebay",
-      "sell_price": 322594,
+      "sell_price": 322515,
       "sell_price_type": "overseas_sold_price",
       "sell_price_role": "sell",
       "sell_condition": "new_unopened",
       "sell_url": "",
       "sell_link_type": "none",
-      "gross_profit": 121855,
-      "estimated_fee": 64519,
-      "platform_fee": 41937,
-      "payment_fee": 12904,
-      "fx_buffer": 9678,
+      "gross_profit": 121776,
+      "estimated_fee": 64503,
+      "platform_fee": 41927,
+      "payment_fee": 12901,
+      "fx_buffer": 9675,
       "shipping_cost": 5000,
       "safety_margin": 6022,
-      "net_profit": 46314,
-      "roi": 0.2307,
+      "net_profit": 46251,
+      "roi": 0.2304,
       "route_confidence": "low",
-      "buy_observed_at": "2026-06-20T16:47:48.745832+09:00",
+      "buy_observed_at": "2026-06-21T17:18:43.235109+09:00",
       "sell_observed_at": "2026-05-28T10:00:00+09:00",
       "buy_observed_age_days": 0.0,
-      "sell_observed_age_days": 23.3,
+      "sell_observed_age_days": 24.3,
       "sell_collector_method": "",
       "route_type": "flea_to_overseas",
       "reference_route": true,
-      "rejection_reason": "overseas_sold_stale(23.3d)"
-    },
-    {
-      "product_id": "prod_gr3x",
-      "product_name": "RICOH GR IIIx",
-      "buy_source": "Mercari sold",
-      "buy_price": 150000,
-      "buy_price_type": "flea_sold_price",
-      "buy_price_role": "buy",
-      "buy_condition": "new_unopened",
-      "buy_url": "https://jp.mercari.com/item/m00000000003",
-      "buy_link_type": "item",
-      "sell_source": "src_ebay",
-      "sell_price": 251640,
-      "sell_price_type": "overseas_sold_price",
-      "sell_price_role": "sell",
-      "sell_condition": "new_unopened",
-      "sell_url": "",
-      "sell_link_type": "none",
-      "gross_profit": 101640,
-      "estimated_fee": 50328,
-      "platform_fee": 32713,
-      "payment_fee": 10066,
-      "fx_buffer": 7549,
-      "shipping_cost": 5000,
-      "safety_margin": 5000,
-      "net_profit": 41312,
-      "roi": 0.2754,
-      "route_confidence": "low",
-      "buy_observed_at": "2026-06-07T15:00:00+09:00",
-      "sell_observed_at": "2026-05-28T10:00:00+09:00",
-      "buy_observed_age_days": 13.1,
-      "sell_observed_age_days": 23.3,
-      "sell_collector_method": "manual",
-      "route_type": "flea_to_overseas",
-      "reference_route": true,
-      "rejection_reason": "overseas_sold_stale(23.3d)"
+      "rejection_reason": "overseas_sold_stale(24.3d)"
     },
     {
       "product_id": "prod_switch2",
@@ -323,30 +159,30 @@
       "buy_url": "https://auctions.yahoo.co.jp/jp/auction/x000000001",
       "buy_link_type": "unknown",
       "sell_source": "src_ebay",
-      "sell_price": 88444,
+      "sell_price": 88423,
       "sell_price_type": "overseas_sold_price",
       "sell_price_role": "sell",
       "sell_condition": "new_unopened",
       "sell_url": "",
       "sell_link_type": "none",
-      "gross_profit": 42444,
-      "estimated_fee": 17689,
-      "platform_fee": 11498,
-      "payment_fee": 3538,
+      "gross_profit": 42423,
+      "estimated_fee": 17685,
+      "platform_fee": 11495,
+      "payment_fee": 3537,
       "fx_buffer": 2653,
       "shipping_cost": 5000,
       "safety_margin": 5000,
-      "net_profit": 14755,
-      "roi": 0.3208,
+      "net_profit": 14738,
+      "roi": 0.3204,
       "route_confidence": "low",
       "buy_observed_at": "2026-06-08T12:00:00+09:00",
       "sell_observed_at": "2026-05-28T10:00:00+09:00",
-      "buy_observed_age_days": 12.2,
-      "sell_observed_age_days": 23.3,
+      "buy_observed_age_days": 13.2,
+      "sell_observed_age_days": 24.3,
       "sell_collector_method": "manual",
       "route_type": "flea_to_overseas",
       "reference_route": true,
-      "rejection_reason": "overseas_sold_stale(23.3d)"
+      "rejection_reason": "overseas_sold_stale(24.3d)"
     },
     {
       "product_id": "prod_switch2",
@@ -359,30 +195,30 @@
       "buy_url": "https://jp.mercari.com/item/m00000000001",
       "buy_link_type": "item",
       "sell_source": "src_ebay",
-      "sell_price": 88444,
+      "sell_price": 88423,
       "sell_price_type": "overseas_sold_price",
       "sell_price_role": "sell",
       "sell_condition": "new_unopened",
       "sell_url": "",
       "sell_link_type": "none",
-      "gross_profit": 41944,
-      "estimated_fee": 17689,
-      "platform_fee": 11498,
-      "payment_fee": 3538,
+      "gross_profit": 41923,
+      "estimated_fee": 17685,
+      "platform_fee": 11495,
+      "payment_fee": 3537,
       "fx_buffer": 2653,
       "shipping_cost": 5000,
       "safety_margin": 5000,
-      "net_profit": 14255,
-      "roi": 0.3066,
+      "net_profit": 14238,
+      "roi": 0.3062,
       "route_confidence": "low",
       "buy_observed_at": "2026-06-09T09:00:00+09:00",
       "sell_observed_at": "2026-05-28T10:00:00+09:00",
-      "buy_observed_age_days": 11.3,
-      "sell_observed_age_days": 23.3,
+      "buy_observed_age_days": 12.4,
+      "sell_observed_age_days": 24.3,
       "sell_collector_method": "manual",
       "route_type": "flea_to_overseas",
       "reference_route": true,
-      "rejection_reason": "overseas_sold_stale(23.3d)"
+      "rejection_reason": "overseas_sold_stale(24.3d)"
     }
   ],
   "zero_route_diagnostics": {
@@ -397,8 +233,8 @@
       "target_buy_price": 172484,
       "gross_gap": -22739,
       "net_domestic": -28254,
-      "best_reference_net": 46314,
-      "main_blocked_reason": "eBay sold が23.3日前のため main 除外（国内完結は赤字）",
+      "best_reference_net": 46251,
+      "main_blocked_reason": "eBay sold が24.3日前のため main 除外（国内完結は赤字）",
       "rejection_top5": [
         [
           "stale_over_14d",
@@ -412,16 +248,16 @@
       "stale_excluded": 5,
       "overseas_stale": 1,
       "needed": [
-        "eBay sold fresh化で main化（参考 +¥46,314 / ROI 23%）",
+        "eBay sold fresh化で main化（参考 +¥46,251 / ROI 23%）",
         "メルカリsold/ヤフオク落札 ≤ ¥172,484 取得で国内買取ルート成立",
         "国内買取価格が +¥28,255 上昇すれば成立"
       ],
       "fresh_overseas_whatif_top5": [
         {
           "sell": "src_ebay",
-          "sell_price": 322594,
-          "net_if_fresh": 46314,
-          "roi": 0.2307
+          "sell_price": 322515,
+          "net_if_fresh": 46251,
+          "roi": 0.2304
         }
       ]
     },
@@ -880,8 +716,8 @@
       "target_buy_price": 42999,
       "gross_gap": 1500,
       "net_domestic": -3000,
-      "best_reference_net": 14755,
-      "main_blocked_reason": "eBay sold が23.3日前のため main 除外（国内完結は赤字）",
+      "best_reference_net": 14738,
+      "main_blocked_reason": "eBay sold が24.3日前のため main 除外（国内完結は赤字）",
       "rejection_top5": [
         [
           "price_zero",
@@ -895,22 +731,22 @@
       "stale_excluded": 4,
       "overseas_stale": 1,
       "needed": [
-        "eBay sold fresh化で main化（参考 +¥14,755 / ROI 32%）",
+        "eBay sold fresh化で main化（参考 +¥14,738 / ROI 32%）",
         "メルカリsold/ヤフオク落札 ≤ ¥42,999 取得で国内買取ルート成立",
         "国内買取価格が +¥3,001 上昇すれば成立"
       ],
       "fresh_overseas_whatif_top5": [
         {
           "sell": "src_ebay",
-          "sell_price": 88444,
-          "net_if_fresh": 14755,
-          "roi": 0.3208
+          "sell_price": 88423,
+          "net_if_fresh": 14738,
+          "roi": 0.3204
         },
         {
           "sell": "src_ebay",
-          "sell_price": 88444,
-          "net_if_fresh": 14255,
-          "roi": 0.3066
+          "sell_price": 88423,
+          "net_if_fresh": 14238,
+          "roi": 0.3062
         }
       ]
     },
@@ -1031,6 +867,10 @@
         [
           "stale_over_14d",
           15
+        ],
+        [
+          "accessory_or_wrong_product",
+          1
         ]
       ],
       "stale_excluded": 15,
@@ -1062,6 +902,37 @@
       "needed": [
         "メルカリsold/ヤフオク落札 ≤ ¥204,973 取得で国内買取ルート成立",
         "国内買取価格が +¥141,307 上昇すれば成立"
+      ],
+      "fresh_overseas_whatif_top5": []
+    },
+    "prod_gr3x": {
+      "product_name": "RICOH GR IIIx",
+      "buy_candidates": 1,
+      "sell_candidates": 1,
+      "min_usable_buy": 236322,
+      "min_usable_buy_source": "ヤフオク (新品/未使用落札)",
+      "max_usable_sell": 167200,
+      "max_usable_sell_source": "フジヤカメラ",
+      "target_buy_price": 160973,
+      "gross_gap": -69122,
+      "net_domestic": -75348,
+      "best_reference_net": null,
+      "main_blocked_reason": "国内完結（販売≥買取）で赤字",
+      "rejection_top5": [
+        [
+          "stale_over_14d",
+          11
+        ],
+        [
+          "accessory_or_wrong_product",
+          1
+        ]
+      ],
+      "stale_excluded": 11,
+      "overseas_stale": 1,
+      "needed": [
+        "メルカリsold/ヤフオク落札 ≤ ¥160,973 取得で国内買取ルート成立",
+        "国内買取価格が +¥75,349 上昇すれば成立"
       ],
       "fresh_overseas_whatif_top5": []
     },
@@ -1114,33 +985,37 @@
       "target_buy_price": 213399,
       "gross_gap": -35000,
       "net_domestic": -41600,
-      "best_reference_net": 189098,
-      "main_blocked_reason": "eBay sold が23.3日前のため main 除外（国内完結は赤字）",
+      "best_reference_net": 188985,
+      "main_blocked_reason": "eBay sold が24.3日前のため main 除外（国内完結は赤字）",
       "rejection_top5": [
         [
           "stale_over_14d",
           17
+        ],
+        [
+          "accessory_or_wrong_product",
+          1
         ]
       ],
       "stale_excluded": 17,
       "overseas_stale": 1,
       "needed": [
-        "eBay sold fresh化で main化（参考 +¥189,098 / ROI 74%）",
+        "eBay sold fresh化で main化（参考 +¥188,985 / ROI 74%）",
         "メルカリsold/ヤフオク落札 ≤ ¥213,399 取得で国内買取ルート成立",
         "国内買取価格が +¥41,601 上昇すれば成立"
       ],
       "fresh_overseas_whatif_top5": [
         {
           "sell": "src_ebay",
-          "sell_price": 570935,
-          "net_if_fresh": 189098,
-          "roi": 0.7416
+          "sell_price": 570794,
+          "net_if_fresh": 188985,
+          "roi": 0.7411
         },
         {
           "sell": "src_ebay",
-          "sell_price": 570935,
-          "net_if_fresh": 101754,
-          "roi": 0.2995
+          "sell_price": 570794,
+          "net_if_fresh": 101641,
+          "roi": 0.2991
         }
       ]
     },
@@ -1447,10 +1322,6 @@
         [
           "stale_over_14d",
           6
-        ],
-        [
-          "accessory_or_wrong_product",
-          1
         ]
       ],
       "stale_excluded": 6,

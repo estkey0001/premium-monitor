@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-06-21 17:45 JST",
-  "routes_total": 1,
-  "routes_unused_only": 1,
-  "profitable_routes": 1,
+  "generated_at": "2026-06-22 19:03 JST",
+  "routes_total": 2,
+  "routes_unused_only": 2,
+  "profitable_routes": 2,
   "negative_routes": 0,
   "beginner_routes": {
     "route_type": "primary_to_secondary",
@@ -11,7 +11,7 @@
   },
   "pro_routes": {
     "route_type": "secondary_to_secondary",
-    "count": 1,
+    "count": 2,
     "top": [
       {
         "product_name": "PlayStation 5 Pro",
@@ -19,13 +19,29 @@
         "sell_shop_name": "買取商店",
         "buy_condition": "new_unopened",
         "buy_price": 129999,
-        "sell_price": 135500,
+        "sell_price": 135700,
         "buy_price_type": "flea_sold_price",
         "sell_price_type": "buyback_price",
         "buy_source": "yahoo_auction_new",
         "sell_source": "src_kaitori_shouten",
-        "net_profit": 3701,
-        "profit_rate": 0.0285,
+        "net_profit": 3901,
+        "profit_rate": 0.03,
+        "needs_review": true,
+        "route_type": "secondary_to_secondary"
+      },
+      {
+        "product_name": "PlayStation 5 Pro",
+        "buy_shop_name": "ヤフオク (新品/未使用落札)",
+        "sell_shop_name": "モバイル一番",
+        "buy_condition": "new_unopened",
+        "buy_price": 129999,
+        "sell_price": 135700,
+        "buy_price_type": "flea_sold_price",
+        "sell_price_type": "buyback_price",
+        "buy_source": "yahoo_auction_new",
+        "sell_source": "src_mobile_ichiban",
+        "net_profit": 3901,
+        "profit_rate": 0.03,
         "needs_review": true,
         "route_type": "secondary_to_secondary"
       }
@@ -38,13 +54,29 @@
       "sell_shop_name": "買取商店",
       "buy_condition": "new_unopened",
       "buy_price": 129999,
-      "sell_price": 135500,
+      "sell_price": 135700,
       "buy_price_type": "flea_sold_price",
       "sell_price_type": "buyback_price",
       "buy_source": "yahoo_auction_new",
       "sell_source": "src_kaitori_shouten",
-      "net_profit": 3701,
-      "profit_rate": 0.0285,
+      "net_profit": 3901,
+      "profit_rate": 0.03,
+      "needs_review": true,
+      "route_type": "secondary_to_secondary"
+    },
+    {
+      "product_name": "PlayStation 5 Pro",
+      "buy_shop_name": "ヤフオク (新品/未使用落札)",
+      "sell_shop_name": "モバイル一番",
+      "buy_condition": "new_unopened",
+      "buy_price": 129999,
+      "sell_price": 135700,
+      "buy_price_type": "flea_sold_price",
+      "sell_price_type": "buyback_price",
+      "buy_source": "yahoo_auction_new",
+      "sell_source": "src_mobile_ichiban",
+      "net_profit": 3901,
+      "profit_rate": 0.03,
       "needs_review": true,
       "route_type": "secondary_to_secondary"
     }

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-22 18:32 JST",
+  "generated_at": "2026-06-23 16:16 JST",
   "total": 4,
   "by_severity": {
     "high": 0,
@@ -11,7 +11,7 @@
   },
   "alerts": [
     {
-      "alert_id": "e31b94f0-46f",
+      "alert_id": "afd08da9-5e4",
       "alert_type": "overseas_price_stale",
       "product_name": "FUJIFILM X100VI",
       "brand": "",
@@ -22,14 +22,14 @@
       "product_url": "https://www.ebay.com/sch/i.html?_nkw=FUJIFILM+X100VI&LH_Sold=1&LH_Complete=1",
       "action_url": "",
       "action_label": "",
-      "detected_at": "2026-06-22 18:32",
+      "detected_at": "2026-06-23 16:16",
       "expires_at": "",
       "source": "overseas_prices_json",
       "data_source": "auto_generated",
       "confidence": "medium"
     },
     {
-      "alert_id": "cec1a8ba-431",
+      "alert_id": "41597ef7-3af",
       "alert_type": "overseas_price_stale",
       "product_name": "RICOH GR IIIx",
       "brand": "",
@@ -40,14 +40,14 @@
       "product_url": "https://www.ebay.com/sch/i.html?_nkw=Ricoh+GR+IIIx&LH_Sold=1&LH_Complete=1",
       "action_url": "",
       "action_label": "",
-      "detected_at": "2026-06-22 18:32",
+      "detected_at": "2026-06-23 16:16",
       "expires_at": "",
       "source": "overseas_prices_json",
       "data_source": "auto_generated",
       "confidence": "medium"
     },
     {
-      "alert_id": "6f6888e9-147",
+      "alert_id": "90be79a9-2b5",
       "alert_type": "overseas_price_stale",
       "product_name": "RICOH GR IV",
       "brand": "",
@@ -58,14 +58,14 @@
       "product_url": "https://www.ebay.com/sch/i.html?_nkw=Ricoh+GR+IV&LH_Sold=1&LH_Complete=1",
       "action_url": "",
       "action_label": "",
-      "detected_at": "2026-06-22 18:32",
+      "detected_at": "2026-06-23 16:16",
       "expires_at": "",
       "source": "overseas_prices_json",
       "data_source": "auto_generated",
       "confidence": "medium"
     },
     {
-      "alert_id": "2446f41b-04f",
+      "alert_id": "e094ccb3-a5c",
       "alert_type": "overseas_price_stale",
       "product_name": "Nintendo Switch 2",
       "brand": "",
@@ -76,7 +76,7 @@
       "product_url": "https://www.ebay.com/sch/i.html?_nkw=Nintendo+Switch+2&LH_Sold=1&LH_Complete=1",
       "action_url": "",
       "action_label": "",
-      "detected_at": "2026-06-22 18:32",
+      "detected_at": "2026-06-23 16:16",
       "expires_at": "",
       "source": "overseas_prices_json",
       "data_source": "auto_generated",

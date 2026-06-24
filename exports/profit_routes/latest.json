@@ -1,32 +1,118 @@
 {
-  "generated_at": "2026-06-23 16:47 JST",
+  "generated_at": "2026-06-24 16:45 JST",
   "ebay_api_configured": false,
   "overseas_source_mode": "manual",
   "summary": {
-    "main_route_count": 0,
+    "main_route_count": 1,
     "reference_route_count": 3,
-    "by_product": {},
-    "by_confidence": {},
-    "by_route_type": {},
-    "max_profit": null,
-    "max_roi": null,
-    "zero_route_products": 45
+    "by_product": {
+      "RICOH GR IIIx": 1
+    },
+    "by_confidence": {
+      "high": 1
+    },
+    "by_route_type": {
+      "shop_to_buyback": 1
+    },
+    "max_profit": {
+      "product_id": "prod_gr3x",
+      "product_name": "RICOH GR IIIx",
+      "buy_source": "Amazon JP (新品出品)",
+      "buy_price": 97685,
+      "buy_price_type": "shop_sale_price",
+      "buy_price_role": "buy",
+      "buy_condition": "new_unopened",
+      "buy_url": "https://www.amazon.co.jp/s?k=RICOH%20GR%20IIIx&rh=p_n_condition-type%3A1294724011&s=price-asc-rank",
+      "buy_link_type": "unknown",
+      "sell_source": "フジヤカメラ",
+      "sell_price": 167200,
+      "sell_price_type": "buyback_price",
+      "sell_price_role": "sell",
+      "sell_condition": "new_unopened",
+      "sell_url": "https://www.fujiya-camera.co.jp/shop/g/gC4549212304507/",
+      "sell_link_type": "unknown",
+      "gross_profit": 69515,
+      "estimated_fee": 0,
+      "platform_fee": 0,
+      "payment_fee": 0,
+      "fx_buffer": 0,
+      "shipping_cost": 1500,
+      "safety_margin": 3000,
+      "net_profit": 65015,
+      "roi": 0.6656,
+      "route_confidence": "high",
+      "buy_observed_at": "2026-06-24T16:17:17.993572+09:00",
+      "sell_observed_at": "2026-06-24T15:52:00.278519+09:00",
+      "buy_observed_age_days": 0.0,
+      "sell_observed_age_days": 0.0,
+      "sell_collector_method": "",
+      "route_type": "shop_to_buyback",
+      "reference_route": false,
+      "rejection_reason": "",
+      "source_count": 3,
+      "same_condition_count": 2,
+      "is_manual_curated": false,
+      "reproducibility_score": 60,
+      "reproducibility_level": "中"
+    },
+    "max_roi": {
+      "product_id": "prod_gr3x",
+      "product_name": "RICOH GR IIIx",
+      "buy_source": "Amazon JP (新品出品)",
+      "buy_price": 97685,
+      "buy_price_type": "shop_sale_price",
+      "buy_price_role": "buy",
+      "buy_condition": "new_unopened",
+      "buy_url": "https://www.amazon.co.jp/s?k=RICOH%20GR%20IIIx&rh=p_n_condition-type%3A1294724011&s=price-asc-rank",
+      "buy_link_type": "unknown",
+      "sell_source": "フジヤカメラ",
+      "sell_price": 167200,
+      "sell_price_type": "buyback_price",
+      "sell_price_role": "sell",
+      "sell_condition": "new_unopened",
+      "sell_url": "https://www.fujiya-camera.co.jp/shop/g/gC4549212304507/",
+      "sell_link_type": "unknown",
+      "gross_profit": 69515,
+      "estimated_fee": 0,
+      "platform_fee": 0,
+      "payment_fee": 0,
+      "fx_buffer": 0,
+      "shipping_cost": 1500,
+      "safety_margin": 3000,
+      "net_profit": 65015,
+      "roi": 0.6656,
+      "route_confidence": "high",
+      "buy_observed_at": "2026-06-24T16:17:17.993572+09:00",
+      "sell_observed_at": "2026-06-24T15:52:00.278519+09:00",
+      "buy_observed_age_days": 0.0,
+      "sell_observed_age_days": 0.0,
+      "sell_collector_method": "",
+      "route_type": "shop_to_buyback",
+      "reference_route": false,
+      "rejection_reason": "",
+      "source_count": 3,
+      "same_condition_count": 2,
+      "is_manual_curated": false,
+      "reproducibility_score": 60,
+      "reproducibility_level": "中"
+    },
+    "zero_route_products": 44
   },
   "missing_data_priority": [
     {
       "rank": 1,
       "key": "flea_sold",
       "label": "メルカリsold / ヤフオク落札（より安い仕入れ）",
-      "potential_profit": 425769,
-      "product_count": 8,
+      "potential_profit": 374847,
+      "product_count": 7,
       "priority": "high"
     },
     {
       "rank": 2,
       "key": "ebay_sold_fresh",
       "label": "eBay sold（海外成約相場）の最新化",
-      "potential_profit": 153620,
-      "product_count": 3,
+      "potential_profit": 149300,
+      "product_count": 2,
       "priority": "high"
     },
     {
@@ -38,7 +124,49 @@
       "priority": "low"
     }
   ],
-  "main_routes": [],
+  "main_routes": [
+    {
+      "product_id": "prod_gr3x",
+      "product_name": "RICOH GR IIIx",
+      "buy_source": "Amazon JP (新品出品)",
+      "buy_price": 97685,
+      "buy_price_type": "shop_sale_price",
+      "buy_price_role": "buy",
+      "buy_condition": "new_unopened",
+      "buy_url": "https://www.amazon.co.jp/s?k=RICOH%20GR%20IIIx&rh=p_n_condition-type%3A1294724011&s=price-asc-rank",
+      "buy_link_type": "unknown",
+      "sell_source": "フジヤカメラ",
+      "sell_price": 167200,
+      "sell_price_type": "buyback_price",
+      "sell_price_role": "sell",
+      "sell_condition": "new_unopened",
+      "sell_url": "https://www.fujiya-camera.co.jp/shop/g/gC4549212304507/",
+      "sell_link_type": "unknown",
+      "gross_profit": 69515,
+      "estimated_fee": 0,
+      "platform_fee": 0,
+      "payment_fee": 0,
+      "fx_buffer": 0,
+      "shipping_cost": 1500,
+      "safety_margin": 3000,
+      "net_profit": 65015,
+      "roi": 0.6656,
+      "route_confidence": "high",
+      "buy_observed_at": "2026-06-24T16:17:17.993572+09:00",
+      "sell_observed_at": "2026-06-24T15:52:00.278519+09:00",
+      "buy_observed_age_days": 0.0,
+      "sell_observed_age_days": 0.0,
+      "sell_collector_method": "",
+      "route_type": "shop_to_buyback",
+      "reference_route": false,
+      "rejection_reason": "",
+      "source_count": 3,
+      "same_condition_count": 2,
+      "is_manual_curated": false,
+      "reproducibility_score": 60,
+      "reproducibility_level": "中"
+    }
+  ],
   "reference_routes": [
     {
       "product_id": "prod_x100vi",
@@ -51,30 +179,66 @@
       "buy_url": "https://auctions.yahoo.co.jp/search/search?p=%E5%AF%8C%E5%A3%AB%E3%83%95%E3%82%A4%E3%83%AB%E3%83%A0%20X100VI&va=%E5%AF%8C%E5%A3%AB%E3%83%95%E3%82%A4%E3%83%AB%E3%83%A0%20X100VI&istatus=2&n=20&s1=cbids&o1=d&ei=utf-8&auccat=&tab_ex=commerce&item_condition=1",
       "buy_link_type": "search",
       "sell_source": "src_ebay",
-      "sell_price": 572167,
+      "sell_price": 571920,
       "sell_price_type": "overseas_sold_price",
       "sell_price_role": "sell",
       "sell_condition": "new_unopened",
       "sell_url": "",
       "sell_link_type": "none",
-      "gross_profit": 232367,
-      "estimated_fee": 114434,
-      "platform_fee": 74382,
-      "payment_fee": 22887,
-      "fx_buffer": 17165,
+      "gross_profit": 232120,
+      "estimated_fee": 114385,
+      "platform_fee": 74350,
+      "payment_fee": 22877,
+      "fx_buffer": 17158,
       "shipping_cost": 5000,
       "safety_margin": 10194,
-      "net_profit": 102739,
-      "roi": 0.3024,
+      "net_profit": 102541,
+      "roi": 0.3018,
       "route_confidence": "low",
-      "buy_observed_at": "2026-06-23T16:20:44.030910+09:00",
+      "buy_observed_at": "2026-06-24T16:17:17.993572+09:00",
       "sell_observed_at": "2026-05-28T10:00:00+09:00",
       "buy_observed_age_days": 0.0,
-      "sell_observed_age_days": 26.3,
+      "sell_observed_age_days": 27.3,
       "sell_collector_method": "manual",
       "route_type": "flea_to_overseas",
       "reference_route": true,
-      "rejection_reason": "overseas_sold_stale(26.3d)"
+      "rejection_reason": "overseas_sold_stale(27.3d)"
+    },
+    {
+      "product_id": "prod_gr3x",
+      "product_name": "RICOH GR IIIx",
+      "buy_source": "Amazon JP (新品出品)",
+      "buy_price": 97685,
+      "buy_price_type": "shop_sale_price",
+      "buy_price_role": "buy",
+      "buy_condition": "new_unopened",
+      "buy_url": "https://www.amazon.co.jp/s?k=RICOH%20GR%20IIIx&rh=p_n_condition-type%3A1294724011&s=price-asc-rank",
+      "buy_link_type": "unknown",
+      "sell_source": "src_ebay",
+      "sell_price": 252071,
+      "sell_price_type": "overseas_sold_price",
+      "sell_price_role": "sell",
+      "sell_condition": "new_unopened",
+      "sell_url": "",
+      "sell_link_type": "none",
+      "gross_profit": 154386,
+      "estimated_fee": 50414,
+      "platform_fee": 32769,
+      "payment_fee": 10083,
+      "fx_buffer": 7562,
+      "shipping_cost": 5000,
+      "safety_margin": 5000,
+      "net_profit": 93972,
+      "roi": 0.962,
+      "route_confidence": "low",
+      "buy_observed_at": "2026-06-24T16:17:17.993572+09:00",
+      "sell_observed_at": "2026-05-28T10:00:00+09:00",
+      "buy_observed_age_days": 0.0,
+      "sell_observed_age_days": 27.3,
+      "sell_collector_method": "manual",
+      "route_type": "shop_to_overseas",
+      "reference_route": true,
+      "rejection_reason": "overseas_sold_stale(27.3d)"
     },
     {
       "product_id": "prod_iphone17pro_256",
@@ -87,66 +251,30 @@
       "buy_url": "https://auctions.yahoo.co.jp/search/search?p=iPhone%2017%20Pro%20256GB&va=iPhone%2017%20Pro%20256GB&istatus=2&n=20&s1=cbids&o1=d&ei=utf-8&auccat=&tab_ex=commerce&item_condition=1",
       "buy_link_type": "search",
       "sell_source": "src_ebay",
-      "sell_price": 323287,
+      "sell_price": 323149,
       "sell_price_type": "overseas_sold_price",
       "sell_price_role": "sell",
       "sell_condition": "new_unopened",
       "sell_url": "",
       "sell_link_type": "none",
-      "gross_profit": 122548,
-      "estimated_fee": 64657,
-      "platform_fee": 42027,
-      "payment_fee": 12931,
-      "fx_buffer": 9699,
+      "gross_profit": 122410,
+      "estimated_fee": 64629,
+      "platform_fee": 42009,
+      "payment_fee": 12926,
+      "fx_buffer": 9694,
       "shipping_cost": 5000,
       "safety_margin": 6022,
-      "net_profit": 46869,
-      "roi": 0.2335,
+      "net_profit": 46759,
+      "roi": 0.2329,
       "route_confidence": "low",
-      "buy_observed_at": "2026-06-23T16:20:44.030910+09:00",
+      "buy_observed_at": "2026-06-24T16:17:17.993572+09:00",
       "sell_observed_at": "2026-05-28T10:00:00+09:00",
       "buy_observed_age_days": 0.0,
-      "sell_observed_age_days": 26.3,
+      "sell_observed_age_days": 27.3,
       "sell_collector_method": "",
       "route_type": "flea_to_overseas",
       "reference_route": true,
-      "rejection_reason": "overseas_sold_stale(26.3d)"
-    },
-    {
-      "product_id": "prod_switch2",
-      "product_name": "Nintendo Switch 2",
-      "buy_source": "ヤフオク (新品/未使用落札)",
-      "buy_price": 56891,
-      "buy_price_type": "flea_sold_price",
-      "buy_price_role": "buy",
-      "buy_condition": "new_unopened",
-      "buy_url": "https://auctions.yahoo.co.jp/search/search?p=Nintendo%20Switch%202&va=Nintendo%20Switch%202&istatus=2&n=20&s1=cbids&o1=d&ei=utf-8&auccat=&tab_ex=commerce&item_condition=1",
-      "buy_link_type": "search",
-      "sell_source": "src_ebay",
-      "sell_price": 88629,
-      "sell_price_type": "overseas_sold_price",
-      "sell_price_role": "sell",
-      "sell_condition": "new_unopened",
-      "sell_url": "",
-      "sell_link_type": "none",
-      "gross_profit": 31738,
-      "estimated_fee": 17726,
-      "platform_fee": 11522,
-      "payment_fee": 3545,
-      "fx_buffer": 2659,
-      "shipping_cost": 5000,
-      "safety_margin": 5000,
-      "net_profit": 4012,
-      "roi": 0.0705,
-      "route_confidence": "low",
-      "buy_observed_at": "2026-06-23T16:20:44.030910+09:00",
-      "sell_observed_at": "2026-05-28T10:00:00+09:00",
-      "buy_observed_age_days": 0.0,
-      "sell_observed_age_days": 26.3,
-      "sell_collector_method": "manual",
-      "route_type": "flea_to_overseas",
-      "reference_route": true,
-      "rejection_reason": "overseas_sold_stale(26.3d)"
+      "rejection_reason": "overseas_sold_stale(27.3d)"
     }
   ],
   "zero_route_diagnostics": {
@@ -161,8 +289,8 @@
       "target_buy_price": 172484,
       "gross_gap": -22739,
       "net_domestic": -28254,
-      "best_reference_net": 46869,
-      "main_blocked_reason": "eBay sold が26.3日前のため main 除外（国内完結は赤字）",
+      "best_reference_net": 46759,
+      "main_blocked_reason": "eBay sold が27.3日前のため main 除外（国内完結は赤字）",
       "rejection_top5": [
         [
           "stale_over_14d",
@@ -176,16 +304,16 @@
       "stale_excluded": 5,
       "overseas_stale": 1,
       "needed": [
-        "eBay sold fresh化で main化（参考 +¥46,869 / ROI 23%）",
+        "eBay sold fresh化で main化（参考 +¥46,759 / ROI 23%）",
         "メルカリsold/ヤフオク落札 ≤ ¥172,484 取得で国内買取ルート成立",
         "国内買取価格が +¥28,255 上昇すれば成立"
       ],
       "fresh_overseas_whatif_top5": [
         {
           "sell": "src_ebay",
-          "sell_price": 323287,
-          "net_if_fresh": 46869,
-          "roi": 0.2335
+          "sell_price": 323149,
+          "net_if_fresh": 46759,
+          "roi": 0.2329
         }
       ]
     },
@@ -193,13 +321,13 @@
       "product_name": "iPhone 17 Pro 512GB SIMフリー",
       "buy_candidates": 1,
       "sell_candidates": 4,
-      "min_usable_buy": 228000,
+      "min_usable_buy": 225280,
       "min_usable_buy_source": "ヤフオク (新品/未使用落札)",
       "max_usable_sell": 214000,
       "max_usable_sell_source": "買取商店",
-      "target_buy_price": 207939,
-      "gross_gap": -14000,
-      "net_domestic": -20060,
+      "target_buy_price": 207993,
+      "gross_gap": -11280,
+      "net_domestic": -17286,
       "best_reference_net": null,
       "main_blocked_reason": "国内完結（販売≥買取）で赤字",
       "rejection_top5": [
@@ -215,8 +343,8 @@
       "stale_excluded": 3,
       "overseas_stale": 0,
       "needed": [
-        "メルカリsold/ヤフオク落札 ≤ ¥207,939 取得で国内買取ルート成立",
-        "国内買取価格が +¥20,061 上昇すれば成立"
+        "メルカリsold/ヤフオク落札 ≤ ¥207,993 取得で国内買取ルート成立",
+        "国内買取価格が +¥17,287 上昇すれば成立"
       ],
       "fresh_overseas_whatif_top5": []
     },
@@ -226,11 +354,11 @@
       "sell_candidates": 4,
       "min_usable_buy": 200739,
       "min_usable_buy_source": "ヤフオク (新品/未使用落札)",
-      "max_usable_sell": 192500,
+      "max_usable_sell": 192000,
       "max_usable_sell_source": "モバイル一番",
-      "target_buy_price": 186984,
-      "gross_gap": -8239,
-      "net_domestic": -13754,
+      "target_buy_price": 186484,
+      "gross_gap": -8739,
+      "net_domestic": -14254,
       "best_reference_net": null,
       "main_blocked_reason": "国内完結（販売≥買取）で赤字",
       "rejection_top5": [
@@ -246,8 +374,8 @@
       "stale_excluded": 3,
       "overseas_stale": 0,
       "needed": [
-        "メルカリsold/ヤフオク落札 ≤ ¥186,984 取得で国内買取ルート成立",
-        "国内買取価格が +¥13,755 上昇すれば成立"
+        "メルカリsold/ヤフオク落札 ≤ ¥186,484 取得で国内買取ルート成立",
+        "国内買取価格が +¥14,255 上昇すれば成立"
       ],
       "fresh_overseas_whatif_top5": []
     },
@@ -255,13 +383,13 @@
       "product_name": "iPhone 17 Pro Max 512GB SIMフリー",
       "buy_candidates": 1,
       "sell_candidates": 3,
-      "min_usable_buy": 228000,
+      "min_usable_buy": 225280,
       "min_usable_buy_source": "ヤフオク (新品/未使用落札)",
       "max_usable_sell": 229000,
       "max_usable_sell_source": "買取一丁目",
-      "target_buy_price": 222939,
-      "gross_gap": 1000,
-      "net_domestic": -5060,
+      "target_buy_price": 222993,
+      "gross_gap": 3720,
+      "net_domestic": -2286,
       "best_reference_net": null,
       "main_blocked_reason": "国内完結（販売≥買取）で赤字",
       "rejection_top5": [
@@ -273,8 +401,8 @@
       "stale_excluded": 0,
       "overseas_stale": 0,
       "needed": [
-        "メルカリsold/ヤフオク落札 ≤ ¥222,939 取得で国内買取ルート成立",
-        "国内買取価格が +¥5,061 上昇すれば成立"
+        "メルカリsold/ヤフオク落札 ≤ ¥222,993 取得で国内買取ルート成立",
+        "国内買取価格が +¥2,287 上昇すれば成立"
       ],
       "fresh_overseas_whatif_top5": []
     },
@@ -637,15 +765,15 @@
       "product_name": "Nintendo Switch 2",
       "buy_candidates": 1,
       "sell_candidates": 3,
-      "min_usable_buy": 56891,
+      "min_usable_buy": 86365,
       "min_usable_buy_source": "ヤフオク (新品/未使用落札)",
       "max_usable_sell": 47500,
       "max_usable_sell_source": "買取商店",
       "target_buy_price": 42999,
-      "gross_gap": -9391,
-      "net_domestic": -13891,
-      "best_reference_net": 4012,
-      "main_blocked_reason": "eBay sold が26.3日前のため main 除外（国内完結は赤字）",
+      "gross_gap": -38865,
+      "net_domestic": -43365,
+      "best_reference_net": null,
+      "main_blocked_reason": "国内完結（販売≥買取）で赤字",
       "rejection_top5": [
         [
           "price_zero",
@@ -659,18 +787,10 @@
       "stale_excluded": 4,
       "overseas_stale": 1,
       "needed": [
-        "eBay sold fresh化で main化（参考 +¥4,012 / ROI 7%）",
         "メルカリsold/ヤフオク落札 ≤ ¥42,999 取得で国内買取ルート成立",
-        "国内買取価格が +¥13,892 上昇すれば成立"
+        "国内買取価格が +¥43,366 上昇すれば成立"
       ],
-      "fresh_overseas_whatif_top5": [
-        {
-          "sell": "src_ebay",
-          "sell_price": 88629,
-          "net_if_fresh": 4012,
-          "roi": 0.0705
-        }
-      ]
+      "fresh_overseas_whatif_top5": []
     },
     "prod_switch2_mk": {
       "product_name": "Nintendo Switch 2 マリオカートセット",
@@ -823,33 +943,6 @@
       ],
       "fresh_overseas_whatif_top5": []
     },
-    "prod_gr3x": {
-      "product_name": "RICOH GR IIIx",
-      "buy_candidates": 1,
-      "sell_candidates": 1,
-      "min_usable_buy": 236322,
-      "min_usable_buy_source": "ヤフオク (新品/未使用落札)",
-      "max_usable_sell": 167200,
-      "max_usable_sell_source": "フジヤカメラ",
-      "target_buy_price": 160973,
-      "gross_gap": -69122,
-      "net_domestic": -75348,
-      "best_reference_net": null,
-      "main_blocked_reason": "国内完結（販売≥買取）で赤字",
-      "rejection_top5": [
-        [
-          "stale_over_14d",
-          11
-        ]
-      ],
-      "stale_excluded": 11,
-      "overseas_stale": 1,
-      "needed": [
-        "メルカリsold/ヤフオク落札 ≤ ¥160,973 取得で国内買取ルート成立",
-        "国内買取価格が +¥75,349 上昇すれば成立"
-      ],
-      "fresh_overseas_whatif_top5": []
-    },
     "prod_gr3_hdf": {
       "product_name": "RICOH GR III HDF",
       "buy_candidates": 0,
@@ -899,27 +992,31 @@
       "target_buy_price": 211703,
       "gross_gap": -119800,
       "net_domestic": -128096,
-      "best_reference_net": 102739,
-      "main_blocked_reason": "eBay sold が26.3日前のため main 除外（国内完結は赤字）",
+      "best_reference_net": 102541,
+      "main_blocked_reason": "eBay sold が27.3日前のため main 除外（国内完結は赤字）",
       "rejection_top5": [
         [
           "stale_over_14d",
           17
+        ],
+        [
+          "accessory_or_wrong_product",
+          1
         ]
       ],
       "stale_excluded": 17,
       "overseas_stale": 1,
       "needed": [
-        "eBay sold fresh化で main化（参考 +¥102,739 / ROI 30%）",
+        "eBay sold fresh化で main化（参考 +¥102,541 / ROI 30%）",
         "メルカリsold/ヤフオク落札 ≤ ¥211,703 取得で国内買取ルート成立",
         "国内買取価格が +¥128,097 上昇すれば成立"
       ],
       "fresh_overseas_whatif_top5": [
         {
           "sell": "src_ebay",
-          "sell_price": 572167,
-          "net_if_fresh": 102739,
-          "roi": 0.3024
+          "sell_price": 571920,
+          "net_if_fresh": 102541,
+          "roi": 0.3018
         }
       ]
     },

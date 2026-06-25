@@ -1,27 +1,24 @@
 # Pro 利益ルート（normalized_price_observations 由来・検証済み）
 
-生成: 2026-06-24 16:45 JST
+生成: 2026-06-25 16:48 JST
 
-- **main 利益ルート: 1件**（route_confidence high/medium のみ）
-- 参考ルート(海外sold stale・要fresh化): 3件
-- confidence別: {'high': 1} / route_type別: {'shop_to_buyback': 1}
+- **main 利益ルート: 0件**（route_confidence high/medium のみ）
+- 参考ルート(海外sold stale・要fresh化): 2件
+- confidence別: {} / route_type別: {}
 
-- 最大利益: RICOH GR IIIx +¥65,015（Amazon JP (新品出品)→フジヤカメラ, ROI 67%）
-- 最大ROI: RICOH GR IIIx ROI 67%（+¥65,015）
 
 ## main 利益ルート
 
 | product | buy | buy¥ | sell | sell¥ | net | ROI | conf | type |
 |---|---|---|---|---|---|---|---|---|
-| RICOH GR IIIx | shop_sale_price | ¥97,685 | buyback_price | ¥167,200 | **+¥65,015** | 67% | high | shop_to_buyback |
+| (main利益ルート0件) | | | | | | | | |
 
 ## 参考ルート（海外sold が stale・fresh化すれば成立）
 
 | product | buy¥ | sell(海外sold)¥ | 潜在net | ROI | stale |
 |---|---|---|---|---|---|
-| FUJIFILM X100VI | ¥339,800 | ¥571,920 | +¥102,541 | 30% | overseas_sold_stale(27.3d) |
-| RICOH GR IIIx | ¥97,685 | ¥252,071 | +¥93,972 | 96% | overseas_sold_stale(27.3d) |
-| iPhone 17 Pro 25 | ¥200,739 | ¥323,149 | +¥46,759 | 23% | overseas_sold_stale(27.3d) |
+| FUJIFILM X100VI | ¥339,800 | ¥572,624 | +¥103,105 | 30% | overseas_sold_stale(28.3d) |
+| iPhone 17 Pro 25 | ¥200,739 | ¥323,545 | +¥47,075 | 23% | overseas_sold_stale(28.3d) |
 
 ## 0件商品の診断
 
@@ -29,7 +26,7 @@
 - buy候補 1 / sell候補 5 / stale除外 5 / 海外sold stale 1
 - 除外理由TOP5: [('stale_over_14d', 5), ('price_zero', 3)]
 - eBay sold を fresh化すると成立する候補:
-  - src_ebay ¥323,149 → 潜在 +¥46,759（ROI 23%）
+  - src_ebay ¥323,545 → 潜在 +¥47,075（ROI 23%）
 
 ### iPhone 17 Pro 512GB SIMフリー
 - buy候補 1 / sell候補 4 / stale除外 3 / 海外sold stale 0
@@ -125,11 +122,15 @@
 
 ### RICOH GR IV
 - buy候補 1 / sell候補 0 / stale除外 15 / 海外sold stale 1
-- 除外理由TOP5: [('stale_over_14d', 15)]
+- 除外理由TOP5: [('stale_over_14d', 15), ('accessory_or_wrong_product', 1)]
 
 ### RICOH GR IV Monochrome
 - buy候補 1 / sell候補 1 / stale除外 6 / 海外sold stale 0
 - 除外理由TOP5: [('stale_over_14d', 6)]
+
+### RICOH GR IIIx
+- buy候補 1 / sell候補 1 / stale除外 11 / 海外sold stale 1
+- 除外理由TOP5: [('stale_over_14d', 11)]
 
 ### RICOH GR III HDF
 - buy候補 0 / sell候補 0 / stale除外 0 / 海外sold stale 0
@@ -141,9 +142,9 @@
 
 ### FUJIFILM X100VI
 - buy候補 1 / sell候補 1 / stale除外 17 / 海外sold stale 1
-- 除外理由TOP5: [('stale_over_14d', 17), ('accessory_or_wrong_product', 1)]
+- 除外理由TOP5: [('stale_over_14d', 17)]
 - eBay sold を fresh化すると成立する候補:
-  - src_ebay ¥571,920 → 潜在 +¥102,541（ROI 30%）
+  - src_ebay ¥572,624 → 潜在 +¥103,105（ROI 30%）
 
 ### FUJIFILM GFX100RF
 - buy候補 0 / sell候補 1 / stale除外 0 / 海外sold stale 0

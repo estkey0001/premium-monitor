@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-25 16:48 JST",
+  "generated_at": "2026-06-26 17:00 JST",
   "source": "Mercari sold",
   "policy": "no_live_scraping_tos_safe_manual_curation_plus_search_url",
   "fresh_days": 14,
@@ -9,7 +9,7 @@
       "count_recent": 0,
       "median_price": null,
       "min_price": null,
-      "target_buy_price": 42999,
+      "target_buy_price": 43299,
       "within_target_count": 0,
       "search_url": "https://jp.mercari.com/search?keyword=%5B%22Switch%202%22%2C%20%22Switch2%22%2C%20%22%E3%83%8B%E3%83%B3%E3%83%86%E3%83%B3%E3%83%89%E3%83%BC%E3%82%B9%E3%82%A4%E3%83%83%E3%83%812%22%2C%20%22SW2%22%2C%20%22Nintendo%20Switch2%22%2C%20%22%E3%82%B9%E3%82%A4%E3%83%83%E3%83%812%22%2C%20%22NintendoSwitch2%22%5D&status=sold_out",
       "item_urls": [],
@@ -24,8 +24,8 @@
           "item_url": "https://jp.mercari.com/item/m00000000001",
           "search_url": "https://jp.mercari.com/search?keyword=%5B%22Switch%202%22%2C%20%22Switch2%22%2C%20%22%E3%83%8B%E3%83%B3%E3%83%86%E3%83%B3%E3%83%89%E3%83%BC%E3%82%B9%E3%82%A4%E3%83%83%E3%83%812%22%2C%20%22SW2%22%2C%20%22Nintendo%20Switch2%22%2C%20%22%E3%82%B9%E3%82%A4%E3%83%83%E3%83%812%22%2C%20%22NintendoSwitch2%22%5D&status=sold_out",
           "observed_at": "2026-06-09T09:00:00+09:00",
-          "age_days": 16.3,
-          "target_buy_price": 42999,
+          "age_days": 17.3,
+          "target_buy_price": 43299,
           "within_target": false,
           "rejection_reason": "stale_over_14d"
         }
@@ -36,7 +36,7 @@
       "count_recent": 0,
       "median_price": null,
       "min_price": null,
-      "target_buy_price": 131299,
+      "target_buy_price": 131499,
       "within_target_count": 0,
       "search_url": "https://jp.mercari.com/search?keyword=%5B%22PS5%20Pro%22%2C%20%22PlayStation5Pro%22%2C%20%22CFI-7000%22%2C%20%22PlayStation%205%20Pro%22%2C%20%22CFI-7000A01%22%2C%20%22PS5Pro%22%5D&status=sold_out",
       "item_urls": [],
@@ -51,8 +51,8 @@
           "item_url": "https://jp.mercari.com/item/m00000000002",
           "search_url": "https://jp.mercari.com/search?keyword=%5B%22PS5%20Pro%22%2C%20%22PlayStation5Pro%22%2C%20%22CFI-7000%22%2C%20%22PlayStation%205%20Pro%22%2C%20%22CFI-7000A01%22%2C%20%22PS5Pro%22%5D&status=sold_out",
           "observed_at": "2026-06-09T10:00:00+09:00",
-          "age_days": 16.3,
-          "target_buy_price": 131299,
+          "age_days": 17.3,
+          "target_buy_price": 131499,
           "within_target": true,
           "rejection_reason": "stale_over_14d"
         }
@@ -63,7 +63,7 @@
       "count_recent": 0,
       "median_price": null,
       "min_price": null,
-      "target_buy_price": null,
+      "target_buy_price": 160973,
       "within_target_count": 0,
       "search_url": "https://jp.mercari.com/search?keyword=%5B%22GR%20IIIx%22%2C%20%22GR3x%22%2C%20%22GRIIIx%22%2C%20%2215286%22%5D&status=sold_out",
       "item_urls": [],
@@ -78,9 +78,9 @@
           "item_url": "https://jp.mercari.com/item/m00000000003",
           "search_url": "https://jp.mercari.com/search?keyword=%5B%22GR%20IIIx%22%2C%20%22GR3x%22%2C%20%22GRIIIx%22%2C%20%2215286%22%5D&status=sold_out",
           "observed_at": "2026-06-07T15:00:00+09:00",
-          "age_days": 18.1,
-          "target_buy_price": null,
-          "within_target": false,
+          "age_days": 19.1,
+          "target_buy_price": 160973,
+          "within_target": true,
           "rejection_reason": "stale_over_14d"
         }
       ]
@@ -105,7 +105,7 @@
           "item_url": "https://jp.mercari.com/item/m00000000005",
           "search_url": "https://jp.mercari.com/search?keyword=%5B%22GR%20IV%22%2C%20%22GR4%22%2C%20%22GRIV%22%2C%20%22GR%204%22%5D&status=sold_out",
           "observed_at": "2026-06-09T11:00:00+09:00",
-          "age_days": 16.2,
+          "age_days": 17.3,
           "target_buy_price": null,
           "within_target": false,
           "rejection_reason": "accessory_or_wrong_product"

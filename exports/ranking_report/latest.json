@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-26 17:00 JST",
+  "generated_at": "2026-06-27 16:35 JST",
   "route_type_beginner": "primary_to_secondary",
   "top_camera_buyback_opportunities": [
     {
@@ -257,20 +257,39 @@
       "user_level": "beginner_easy",
       "official_price_jpy": 119980,
       "reference_source": "retail_concept",
-      "best_buyback_price": 136100,
+      "best_buyback_price": 136400,
       "best_buyback_shop": "買取商店",
       "buy_price": null,
       "buy_shop_name": "",
       "buy_price_type": "",
       "sell_price_type": "buyback_price",
-      "net_profit_jpy": 14820,
-      "net_profit_rate": 0.1235,
+      "net_profit_jpy": 15120,
+      "net_profit_rate": 0.126,
       "route_type": "primary_to_secondary",
       "source_label": "任天堂公式 / PlayStation Direct / Xbox Store",
       "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
     }
   ],
-  "pro_top10": [],
+  "pro_top10": [
+    {
+      "product_name": "iPhone 17 Pro Max 512GB SIMフリー",
+      "category": "iphone",
+      "user_level": "pro",
+      "official_price_jpy": null,
+      "reference_source": null,
+      "best_buyback_price": 228000,
+      "best_buyback_shop": "買取一丁目",
+      "buy_price": 225280,
+      "buy_shop_name": "ヤフオク (新品/未使用落札)",
+      "buy_price_type": "flea_sold_price",
+      "sell_price_type": "buyback_price",
+      "net_profit_jpy": 920,
+      "net_profit_rate": 0.0041,
+      "route_type": "secondary_to_secondary",
+      "source_label": "中古市場 / フリマ / 買取店",
+      "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
+    }
+  ],
   "beginner_by_category": {
     "game_console": [
       {
@@ -279,14 +298,14 @@
         "user_level": "beginner_easy",
         "official_price_jpy": 119980,
         "reference_source": "retail_concept",
-        "best_buyback_price": 136100,
+        "best_buyback_price": 136400,
         "best_buyback_shop": "買取商店",
         "buy_price": null,
         "buy_shop_name": "",
         "buy_price_type": "",
         "sell_price_type": "buyback_price",
-        "net_profit_jpy": 14820,
-        "net_profit_rate": 0.1235,
+        "net_profit_jpy": 15120,
+        "net_profit_rate": 0.126,
         "route_type": "primary_to_secondary",
         "source_label": "任天堂公式 / PlayStation Direct / Xbox Store",
         "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
@@ -331,7 +350,28 @@
       }
     ]
   },
-  "pro_by_category": {},
+  "pro_by_category": {
+    "iphone": [
+      {
+        "product_name": "iPhone 17 Pro Max 512GB SIMフリー",
+        "category": "iphone",
+        "user_level": "pro",
+        "official_price_jpy": null,
+        "reference_source": null,
+        "best_buyback_price": 228000,
+        "best_buyback_shop": "買取一丁目",
+        "buy_price": 225280,
+        "buy_shop_name": "ヤフオク (新品/未使用落札)",
+        "buy_price_type": "flea_sold_price",
+        "sell_price_type": "buyback_price",
+        "net_profit_jpy": 920,
+        "net_profit_rate": 0.0041,
+        "route_type": "secondary_to_secondary",
+        "source_label": "中古市場 / フリマ / 買取店",
+        "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
+      }
+    ]
+  },
   "excluded_items": 15,
   "total_deals": 18,
   "confidence_summary": {

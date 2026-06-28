@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-27 16:35 JST",
+  "generated_at": "2026-06-28 17:11 JST",
   "route_type_beginner": "primary_to_secondary",
   "top_camera_buyback_opportunities": [
     {
@@ -59,20 +59,6 @@
       "age_days": 0.0
     },
     {
-      "product_id": "prod_xt5",
-      "product_name": "FUJIFILM X-T5",
-      "shop_name": "フジヤカメラ",
-      "buyback_price": 223300,
-      "official_price": 280000,
-      "reference_price": 280000,
-      "reference_source": "retail_concept",
-      "diff_vs_official": -56700,
-      "matched_item": "FUJIFILM X-T5 XF16-50mmレンズキット シルバー 日英二言語モデル 富士フイルム 基準査定額 新品同様 ￥203,000 良品 ￥200,000 買取のみ10%UP 新品同様 ￥223,300 良品 ￥220,000 下",
-      "confidence": "high",
-      "source": "auto_scraped",
-      "age_days": 0.0
-    },
-    {
       "product_id": "prod_gr4_mono",
       "product_name": "RICOH GR IV Monochrome",
       "shop_name": "フジヤカメラ",
@@ -82,6 +68,20 @@
       "reference_source": "retail_concept",
       "diff_vs_official": -70400,
       "matched_item": "RICOH GR IV Monochrome RICOH 基準査定額 新品同様 ￥194,000 良品 ￥193,000 買取のみ10%UP 新品同様 ￥213,400 良品 ￥212,300 下取は15%UP 新品同様 ￥223,100 ",
+      "confidence": "high",
+      "source": "auto_scraped",
+      "age_days": 0.0
+    },
+    {
+      "product_id": "prod_xt5",
+      "product_name": "FUJIFILM X-T5",
+      "shop_name": "フジヤカメラ",
+      "buyback_price": 206800,
+      "official_price": 280000,
+      "reference_price": 280000,
+      "reference_source": "retail_concept",
+      "diff_vs_official": -73200,
+      "matched_item": "FUJIFILM X-T5 XF16-50mmレンズキット ブラック 日英二言語モデル 富士フイルム 基準査定額 新品同様 ￥188,000 良品 ￥185,000 買取のみ10%UP 新品同様 ￥206,800 良品 ￥203,500 下",
       "confidence": "high",
       "source": "auto_scraped",
       "age_days": 0.0
@@ -277,14 +277,14 @@
       "user_level": "pro",
       "official_price_jpy": null,
       "reference_source": null,
-      "best_buyback_price": 228000,
+      "best_buyback_price": 228200,
       "best_buyback_shop": "買取一丁目",
       "buy_price": 225280,
       "buy_shop_name": "ヤフオク (新品/未使用落札)",
       "buy_price_type": "flea_sold_price",
       "sell_price_type": "buyback_price",
-      "net_profit_jpy": 920,
-      "net_profit_rate": 0.0041,
+      "net_profit_jpy": 1120,
+      "net_profit_rate": 0.005,
       "route_type": "secondary_to_secondary",
       "source_label": "中古市場 / フリマ / 買取店",
       "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
@@ -358,14 +358,14 @@
         "user_level": "pro",
         "official_price_jpy": null,
         "reference_source": null,
-        "best_buyback_price": 228000,
+        "best_buyback_price": 228200,
         "best_buyback_shop": "買取一丁目",
         "buy_price": 225280,
         "buy_shop_name": "ヤフオク (新品/未使用落札)",
         "buy_price_type": "flea_sold_price",
         "sell_price_type": "buyback_price",
-        "net_profit_jpy": 920,
-        "net_profit_rate": 0.0041,
+        "net_profit_jpy": 1120,
+        "net_profit_rate": 0.005,
         "route_type": "secondary_to_secondary",
         "source_label": "中古市場 / フリマ / 買取店",
         "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"

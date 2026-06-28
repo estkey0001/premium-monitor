@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-27 16:35 JST",
+  "generated_at": "2026-06-28 17:11 JST",
   "routes_total": 1,
   "routes_unused_only": 1,
   "profitable_routes": 1,
@@ -19,13 +19,13 @@
         "sell_shop_name": "買取一丁目",
         "buy_condition": "new_unopened",
         "buy_price": 225280,
-        "sell_price": 228000,
+        "sell_price": 228200,
         "buy_price_type": "flea_sold_price",
         "sell_price_type": "buyback_price",
         "buy_source": "yahoo_auction_new",
         "sell_source": "src_kaitori_itchome",
-        "net_profit": 920,
-        "profit_rate": 0.0041,
+        "net_profit": 1120,
+        "profit_rate": 0.005,
         "needs_review": true,
         "route_type": "secondary_to_secondary"
       }
@@ -38,13 +38,13 @@
       "sell_shop_name": "買取一丁目",
       "buy_condition": "new_unopened",
       "buy_price": 225280,
-      "sell_price": 228000,
+      "sell_price": 228200,
       "buy_price_type": "flea_sold_price",
       "sell_price_type": "buyback_price",
       "buy_source": "yahoo_auction_new",
       "sell_source": "src_kaitori_itchome",
-      "net_profit": 920,
-      "profit_rate": 0.0041,
+      "net_profit": 1120,
+      "profit_rate": 0.005,
       "needs_review": true,
       "route_type": "secondary_to_secondary"
     }

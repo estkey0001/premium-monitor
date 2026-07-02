@@ -1,9 +1,9 @@
 # Pro 利益ルート（normalized_price_observations 由来・検証済み）
 
-生成: 2026-07-01 16:49 JST
+生成: 2026-07-02 16:39 JST
 
 - **main 利益ルート: 0件**（route_confidence high/medium のみ）
-- 参考ルート(海外sold stale・要fresh化): 3件
+- 参考ルート(海外sold stale・要fresh化): 2件
 - confidence別: {} / route_type別: {}
 
 
@@ -17,9 +17,8 @@
 
 | product | buy¥ | sell(海外sold)¥ | 潜在net | ROI | stale |
 |---|---|---|---|---|---|
-| FUJIFILM X100VI | ¥339,800 | ¥575,300 | +¥105,246 | 31% | overseas_sold_stale(34.3d) |
-| iPhone 17 Pro 25 | ¥200,739 | ¥325,050 | +¥48,279 | 24% | overseas_sold_stale(34.3d) |
-| Nintendo Switch  | ¥57,764 | ¥89,100 | +¥3,516 | 6% | overseas_sold_stale(34.3d) |
+| FUJIFILM X100VI | ¥339,800 | ¥575,476 | +¥105,387 | 31% | overseas_sold_stale(35.3d) |
+| iPhone 17 Pro 25 | ¥200,739 | ¥325,149 | +¥48,359 | 24% | overseas_sold_stale(35.3d) |
 
 ## 0件商品の診断
 
@@ -27,7 +26,7 @@
 - buy候補 1 / sell候補 5 / stale除外 5 / 海外sold stale 1
 - 除外理由TOP5: [('stale_over_14d', 5), ('price_zero', 3)]
 - eBay sold を fresh化すると成立する候補:
-  - src_ebay ¥325,050 → 潜在 +¥48,279（ROI 24%）
+  - src_ebay ¥325,149 → 潜在 +¥48,359（ROI 24%）
 
 ### iPhone 17 Pro 512GB SIMフリー
 - buy候補 1 / sell候補 4 / stale除外 3 / 海外sold stale 0
@@ -104,8 +103,6 @@
 ### Nintendo Switch 2
 - buy候補 1 / sell候補 3 / stale除外 4 / 海外sold stale 1
 - 除外理由TOP5: [('price_zero', 7), ('stale_over_14d', 4)]
-- eBay sold を fresh化すると成立する候補:
-  - src_ebay ¥89,100 → 潜在 +¥3,516（ROI 6%）
 
 ### Nintendo Switch 2 マリオカートセット
 - buy候補 0 / sell候補 0 / stale除外 5 / 海外sold stale 0
@@ -129,11 +126,11 @@
 
 ### RICOH GR IV Monochrome
 - buy候補 1 / sell候補 1 / stale除外 6 / 海外sold stale 0
-- 除外理由TOP5: [('stale_over_14d', 6)]
+- 除外理由TOP5: [('stale_over_14d', 6), ('accessory_or_wrong_product', 1)]
 
 ### RICOH GR IIIx
 - buy候補 1 / sell候補 1 / stale除外 11 / 海外sold stale 1
-- 除外理由TOP5: [('stale_over_14d', 11)]
+- 除外理由TOP5: [('stale_over_14d', 11), ('accessory_or_wrong_product', 1)]
 
 ### RICOH GR III HDF
 - buy候補 0 / sell候補 0 / stale除外 0 / 海外sold stale 0
@@ -147,7 +144,7 @@
 - buy候補 1 / sell候補 1 / stale除外 17 / 海外sold stale 1
 - 除外理由TOP5: [('stale_over_14d', 17)]
 - eBay sold を fresh化すると成立する候補:
-  - src_ebay ¥575,300 → 潜在 +¥105,246（ROI 31%）
+  - src_ebay ¥575,476 → 潜在 +¥105,387（ROI 31%）
 
 ### FUJIFILM GFX100RF
 - buy候補 0 / sell候補 1 / stale除外 0 / 海外sold stale 0

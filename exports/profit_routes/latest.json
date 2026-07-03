@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-07-02 16:39 JST",
+  "generated_at": "2026-07-03 16:29 JST",
   "ebay_api_configured": false,
   "overseas_source_mode": "manual",
   "summary": {
     "main_route_count": 0,
-    "reference_route_count": 2,
+    "reference_route_count": 3,
     "by_product": {},
     "by_confidence": {},
     "by_route_type": {},
@@ -17,7 +17,7 @@
       "rank": 1,
       "key": "flea_sold",
       "label": "メルカリsold / ヤフオク落札（より安い仕入れ）",
-      "potential_profit": 490880,
+      "potential_profit": 461054,
       "product_count": 9,
       "priority": "high"
     },
@@ -25,8 +25,8 @@
       "rank": 2,
       "key": "ebay_sold_fresh",
       "label": "eBay sold（海外成約相場）の最新化",
-      "potential_profit": 153746,
-      "product_count": 2,
+      "potential_profit": 154162,
+      "product_count": 3,
       "priority": "high"
     },
     {
@@ -51,30 +51,30 @@
       "buy_url": "https://auctions.yahoo.co.jp/search/search?p=%E5%AF%8C%E5%A3%AB%E3%83%95%E3%82%A4%E3%83%AB%E3%83%A0%20X100VI&va=%E5%AF%8C%E5%A3%AB%E3%83%95%E3%82%A4%E3%83%AB%E3%83%A0%20X100VI&istatus=2&n=20&s1=cbids&o1=d&ei=utf-8&auccat=&tab_ex=commerce&item_condition=1",
       "buy_link_type": "search",
       "sell_source": "src_ebay",
-      "sell_price": 575476,
+      "sell_price": 571181,
       "sell_price_type": "overseas_sold_price",
       "sell_price_role": "sell",
       "sell_condition": "new_unopened",
       "sell_url": "",
       "sell_link_type": "none",
-      "gross_profit": 235676,
-      "estimated_fee": 115095,
-      "platform_fee": 74812,
-      "payment_fee": 23019,
-      "fx_buffer": 17264,
+      "gross_profit": 231381,
+      "estimated_fee": 114236,
+      "platform_fee": 74254,
+      "payment_fee": 22847,
+      "fx_buffer": 17135,
       "shipping_cost": 5000,
       "safety_margin": 10194,
-      "net_profit": 105387,
-      "roi": 0.3101,
+      "net_profit": 101951,
+      "roi": 0.3,
       "route_confidence": "low",
-      "buy_observed_at": "2026-07-02T16:11:56.534171+09:00",
+      "buy_observed_at": "2026-07-03T16:02:48.122548+09:00",
       "sell_observed_at": "2026-05-28T10:00:00+09:00",
       "buy_observed_age_days": 0.0,
-      "sell_observed_age_days": 35.3,
+      "sell_observed_age_days": 36.3,
       "sell_collector_method": "manual",
       "route_type": "flea_to_overseas",
       "reference_route": true,
-      "rejection_reason": "overseas_sold_stale(35.3d)"
+      "rejection_reason": "overseas_sold_stale(36.3d)"
     },
     {
       "product_id": "prod_iphone17pro_256",
@@ -87,30 +87,66 @@
       "buy_url": "https://auctions.yahoo.co.jp/search/search?p=iPhone%2017%20Pro%20256GB&va=iPhone%2017%20Pro%20256GB&istatus=2&n=20&s1=cbids&o1=d&ei=utf-8&auccat=&tab_ex=commerce&item_condition=1",
       "buy_link_type": "search",
       "sell_source": "src_ebay",
-      "sell_price": 325149,
+      "sell_price": 322733,
       "sell_price_type": "overseas_sold_price",
       "sell_price_role": "sell",
       "sell_condition": "new_unopened",
       "sell_url": "",
       "sell_link_type": "none",
-      "gross_profit": 124410,
-      "estimated_fee": 65029,
-      "platform_fee": 42269,
-      "payment_fee": 13006,
-      "fx_buffer": 9754,
+      "gross_profit": 121994,
+      "estimated_fee": 64546,
+      "platform_fee": 41955,
+      "payment_fee": 12909,
+      "fx_buffer": 9682,
       "shipping_cost": 5000,
       "safety_margin": 6022,
-      "net_profit": 48359,
-      "roi": 0.2409,
+      "net_profit": 46426,
+      "roi": 0.2313,
       "route_confidence": "low",
-      "buy_observed_at": "2026-07-02T16:11:56.534171+09:00",
+      "buy_observed_at": "2026-07-03T16:02:48.122548+09:00",
       "sell_observed_at": "2026-05-28T10:00:00+09:00",
       "buy_observed_age_days": 0.0,
-      "sell_observed_age_days": 35.3,
+      "sell_observed_age_days": 36.3,
       "sell_collector_method": "",
       "route_type": "flea_to_overseas",
       "reference_route": true,
-      "rejection_reason": "overseas_sold_stale(35.3d)"
+      "rejection_reason": "overseas_sold_stale(36.3d)"
+    },
+    {
+      "product_id": "prod_switch2",
+      "product_name": "Nintendo Switch 2",
+      "buy_source": "ヤフオク (新品/未使用落札)",
+      "buy_price": 55000,
+      "buy_price_type": "flea_sold_price",
+      "buy_price_role": "buy",
+      "buy_condition": "new_unopened",
+      "buy_url": "https://auctions.yahoo.co.jp/search/search?p=Nintendo%20Switch%202&va=Nintendo%20Switch%202&istatus=2&n=20&s1=cbids&o1=d&ei=utf-8&auccat=&tab_ex=commerce&item_condition=1",
+      "buy_link_type": "search",
+      "sell_source": "src_ebay",
+      "sell_price": 88481,
+      "sell_price_type": "overseas_sold_price",
+      "sell_price_role": "sell",
+      "sell_condition": "new_unopened",
+      "sell_url": "",
+      "sell_link_type": "none",
+      "gross_profit": 33481,
+      "estimated_fee": 17696,
+      "platform_fee": 11503,
+      "payment_fee": 3539,
+      "fx_buffer": 2654,
+      "shipping_cost": 5000,
+      "safety_margin": 5000,
+      "net_profit": 5785,
+      "roi": 0.1052,
+      "route_confidence": "low",
+      "buy_observed_at": "2026-07-03T16:02:48.122548+09:00",
+      "sell_observed_at": "2026-05-28T10:00:00+09:00",
+      "buy_observed_age_days": 0.0,
+      "sell_observed_age_days": 36.3,
+      "sell_collector_method": "manual",
+      "route_type": "flea_to_overseas",
+      "reference_route": true,
+      "rejection_reason": "overseas_sold_stale(36.3d)"
     }
   ],
   "zero_route_diagnostics": {
@@ -120,13 +156,13 @@
       "sell_candidates": 5,
       "min_usable_buy": 200739,
       "min_usable_buy_source": "ヤフオク (新品/未使用落札)",
-      "max_usable_sell": 181500,
+      "max_usable_sell": 178000,
       "max_usable_sell_source": "モバイル一番",
-      "target_buy_price": 175984,
-      "gross_gap": -19239,
-      "net_domestic": -24754,
-      "best_reference_net": 48359,
-      "main_blocked_reason": "eBay sold が35.3日前のため main 除外（国内完結は赤字）",
+      "target_buy_price": 172484,
+      "gross_gap": -22739,
+      "net_domestic": -28254,
+      "best_reference_net": 46426,
+      "main_blocked_reason": "eBay sold が36.3日前のため main 除外（国内完結は赤字）",
       "rejection_top5": [
         [
           "stale_over_14d",
@@ -140,16 +176,16 @@
       "stale_excluded": 5,
       "overseas_stale": 1,
       "needed": [
-        "eBay sold fresh化で main化（参考 +¥48,359 / ROI 24%）",
-        "メルカリsold/ヤフオク落札 ≤ ¥175,984 取得で国内買取ルート成立",
-        "国内買取価格が +¥24,755 上昇すれば成立"
+        "eBay sold fresh化で main化（参考 +¥46,426 / ROI 23%）",
+        "メルカリsold/ヤフオク落札 ≤ ¥172,484 取得で国内買取ルート成立",
+        "国内買取価格が +¥28,255 上昇すれば成立"
       ],
       "fresh_overseas_whatif_top5": [
         {
           "sell": "src_ebay",
-          "sell_price": 325149,
-          "net_if_fresh": 48359,
-          "roi": 0.2409
+          "sell_price": 322733,
+          "net_if_fresh": 46426,
+          "roi": 0.2313
         }
       ]
     },
@@ -157,13 +193,13 @@
       "product_name": "iPhone 17 Pro 512GB SIMフリー",
       "buy_candidates": 1,
       "sell_candidates": 4,
-      "min_usable_buy": 225280,
+      "min_usable_buy": 236322,
       "min_usable_buy_source": "ヤフオク (新品/未使用落札)",
-      "max_usable_sell": 216000,
+      "max_usable_sell": 213000,
       "max_usable_sell_source": "買取商店",
-      "target_buy_price": 209993,
-      "gross_gap": -9280,
-      "net_domestic": -15286,
+      "target_buy_price": 206773,
+      "gross_gap": -23322,
+      "net_domestic": -29548,
       "best_reference_net": null,
       "main_blocked_reason": "国内完結（販売≥買取）で赤字",
       "rejection_top5": [
@@ -179,8 +215,8 @@
       "stale_excluded": 3,
       "overseas_stale": 0,
       "needed": [
-        "メルカリsold/ヤフオク落札 ≤ ¥209,993 取得で国内買取ルート成立",
-        "国内買取価格が +¥15,287 上昇すれば成立"
+        "メルカリsold/ヤフオク落札 ≤ ¥206,773 取得で国内買取ルート成立",
+        "国内買取価格が +¥29,549 上昇すれば成立"
       ],
       "fresh_overseas_whatif_top5": []
     },
@@ -190,11 +226,11 @@
       "sell_candidates": 4,
       "min_usable_buy": 200739,
       "min_usable_buy_source": "ヤフオク (新品/未使用落札)",
-      "max_usable_sell": 196000,
+      "max_usable_sell": 193000,
       "max_usable_sell_source": "モバイル一番",
-      "target_buy_price": 190484,
-      "gross_gap": -4739,
-      "net_domestic": -10254,
+      "target_buy_price": 187484,
+      "gross_gap": -7739,
+      "net_domestic": -13254,
       "best_reference_net": null,
       "main_blocked_reason": "国内完結（販売≥買取）で赤字",
       "rejection_top5": [
@@ -210,8 +246,8 @@
       "stale_excluded": 3,
       "overseas_stale": 0,
       "needed": [
-        "メルカリsold/ヤフオク落札 ≤ ¥190,484 取得で国内買取ルート成立",
-        "国内買取価格が +¥10,255 上昇すれば成立"
+        "メルカリsold/ヤフオク落札 ≤ ¥187,484 取得で国内買取ルート成立",
+        "国内買取価格が +¥13,255 上昇すれば成立"
       ],
       "fresh_overseas_whatif_top5": []
     },
@@ -219,13 +255,13 @@
       "product_name": "iPhone 17 Pro Max 512GB SIMフリー",
       "buy_candidates": 1,
       "sell_candidates": 3,
-      "min_usable_buy": 225280,
+      "min_usable_buy": 236322,
       "min_usable_buy_source": "ヤフオク (新品/未使用落札)",
-      "max_usable_sell": 230000,
-      "max_usable_sell_source": "買取一丁目",
-      "target_buy_price": 223993,
-      "gross_gap": 4720,
-      "net_domestic": -1286,
+      "max_usable_sell": 228000,
+      "max_usable_sell_source": "買取商店",
+      "target_buy_price": 221773,
+      "gross_gap": -8322,
+      "net_domestic": -14548,
       "best_reference_net": null,
       "main_blocked_reason": "国内完結（販売≥買取）で赤字",
       "rejection_top5": [
@@ -237,8 +273,8 @@
       "stale_excluded": 0,
       "overseas_stale": 0,
       "needed": [
-        "メルカリsold/ヤフオク落札 ≤ ¥223,993 取得で国内買取ルート成立",
-        "国内買取価格が +¥1,287 上昇すれば成立"
+        "メルカリsold/ヤフオク落札 ≤ ¥221,773 取得で国内買取ルート成立",
+        "国内買取価格が +¥14,549 上昇すれば成立"
       ],
       "fresh_overseas_whatif_top5": []
     },
@@ -601,15 +637,15 @@
       "product_name": "Nintendo Switch 2",
       "buy_candidates": 1,
       "sell_candidates": 3,
-      "min_usable_buy": 58637,
+      "min_usable_buy": 55000,
       "min_usable_buy_source": "ヤフオク (新品/未使用落札)",
       "max_usable_sell": 49900,
       "max_usable_sell_source": "買取商店",
       "target_buy_price": 45399,
-      "gross_gap": -8737,
-      "net_domestic": -13237,
-      "best_reference_net": null,
-      "main_blocked_reason": "国内完結（販売≥買取）で赤字",
+      "gross_gap": -5100,
+      "net_domestic": -9600,
+      "best_reference_net": 5785,
+      "main_blocked_reason": "eBay sold が36.3日前のため main 除外（国内完結は赤字）",
       "rejection_top5": [
         [
           "price_zero",
@@ -623,10 +659,18 @@
       "stale_excluded": 4,
       "overseas_stale": 1,
       "needed": [
+        "eBay sold fresh化で main化（参考 +¥5,785 / ROI 11%）",
         "メルカリsold/ヤフオク落札 ≤ ¥45,399 取得で国内買取ルート成立",
-        "国内買取価格が +¥13,238 上昇すれば成立"
+        "国内買取価格が +¥9,601 上昇すれば成立"
       ],
-      "fresh_overseas_whatif_top5": []
+      "fresh_overseas_whatif_top5": [
+        {
+          "sell": "src_ebay",
+          "sell_price": 88481,
+          "net_if_fresh": 5785,
+          "roi": 0.1052
+        }
+      ]
     },
     "prod_switch2_mk": {
       "product_name": "Nintendo Switch 2 マリオカートセット",
@@ -656,13 +700,13 @@
       "product_name": "PlayStation 5 Pro",
       "buy_candidates": 1,
       "sell_candidates": 3,
-      "min_usable_buy": 213738,
+      "min_usable_buy": 155000,
       "min_usable_buy_source": "ヤフオク (新品/未使用落札)",
-      "max_usable_sell": 138200,
+      "max_usable_sell": 138500,
       "max_usable_sell_source": "買取商店",
-      "target_buy_price": 132424,
-      "gross_gap": -75538,
-      "net_domestic": -81313,
+      "target_buy_price": 133899,
+      "gross_gap": -16500,
+      "net_domestic": -21100,
       "best_reference_net": null,
       "main_blocked_reason": "国内完結（販売≥買取）で赤字",
       "rejection_top5": [
@@ -678,8 +722,8 @@
       "stale_excluded": 3,
       "overseas_stale": 0,
       "needed": [
-        "メルカリsold/ヤフオク落札 ≤ ¥132,424 取得で国内買取ルート成立",
-        "国内買取価格が +¥81,314 上昇すれば成立"
+        "メルカリsold/ヤフオク落札 ≤ ¥133,899 取得で国内買取ルート成立",
+        "国内買取価格が +¥21,101 上昇すれば成立"
       ],
       "fresh_overseas_whatif_top5": []
     },
@@ -748,6 +792,10 @@
         [
           "stale_over_14d",
           15
+        ],
+        [
+          "accessory_or_wrong_product",
+          1
         ]
       ],
       "stale_excluded": 15,
@@ -772,10 +820,6 @@
         [
           "stale_over_14d",
           6
-        ],
-        [
-          "accessory_or_wrong_product",
-          1
         ]
       ],
       "stale_excluded": 6,
@@ -803,10 +847,6 @@
         [
           "stale_over_14d",
           11
-        ],
-        [
-          "accessory_or_wrong_product",
-          1
         ]
       ],
       "stale_excluded": 11,
@@ -866,8 +906,8 @@
       "target_buy_price": 211703,
       "gross_gap": -119800,
       "net_domestic": -128096,
-      "best_reference_net": 105387,
-      "main_blocked_reason": "eBay sold が35.3日前のため main 除外（国内完結は赤字）",
+      "best_reference_net": 101951,
+      "main_blocked_reason": "eBay sold が36.3日前のため main 除外（国内完結は赤字）",
       "rejection_top5": [
         [
           "stale_over_14d",
@@ -877,16 +917,16 @@
       "stale_excluded": 17,
       "overseas_stale": 1,
       "needed": [
-        "eBay sold fresh化で main化（参考 +¥105,387 / ROI 31%）",
+        "eBay sold fresh化で main化（参考 +¥101,951 / ROI 30%）",
         "メルカリsold/ヤフオク落札 ≤ ¥211,703 取得で国内買取ルート成立",
         "国内買取価格が +¥128,097 上昇すれば成立"
       ],
       "fresh_overseas_whatif_top5": [
         {
           "sell": "src_ebay",
-          "sell_price": 575476,
-          "net_if_fresh": 105387,
-          "roi": 0.3101
+          "sell_price": 571181,
+          "net_if_fresh": 101951,
+          "roi": 0.3
         }
       ]
     },
@@ -939,9 +979,9 @@
       "sell_candidates": 1,
       "min_usable_buy": null,
       "min_usable_buy_source": "",
-      "max_usable_sell": 229900,
+      "max_usable_sell": 227700,
       "max_usable_sell_source": "フジヤカメラ",
-      "target_buy_price": 229899,
+      "target_buy_price": 227699,
       "gross_gap": null,
       "net_domestic": null,
       "best_reference_net": null,

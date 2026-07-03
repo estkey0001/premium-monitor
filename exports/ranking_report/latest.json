@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-02 16:39 JST",
+  "generated_at": "2026-07-03 16:29 JST",
   "route_type_beginner": "primary_to_secondary",
   "top_camera_buyback_opportunities": [
     {
@@ -132,12 +132,12 @@
       "product_id": "prod_a7rv",
       "product_name": "SONY α7R V",
       "shop_name": "フジヤカメラ",
-      "buyback_price": 229900,
+      "buyback_price": 227700,
       "official_price": 440000,
       "reference_price": 440000,
       "reference_source": "retail_concept",
-      "diff_vs_official": -210100,
-      "matched_item": "α7R V ボディ ILCE-7RM5 SONY 基準査定額 新品同様 ￥209,000 良品 ￥208,000 買取のみ10%UP 新品同様 ￥229,900 良品 ￥228,800 下取は15%UP 新品同様 ￥240,350 良品 ￥",
+      "diff_vs_official": -212300,
+      "matched_item": "α7R V ボディ ILCE-7RM5 SONY 基準査定額 新品同様 ￥207,000 良品 ￥206,000 買取のみ10%UP 新品同様 ￥227,700 良品 ￥226,600 下取は15%UP 新品同様 ￥238,050 良品 ￥",
       "confidence": "high",
       "source": "auto_scraped",
       "age_days": 0.0
@@ -257,96 +257,21 @@
       "user_level": "beginner_easy",
       "official_price_jpy": 119980,
       "reference_source": "retail_concept",
-      "best_buyback_price": 138200,
+      "best_buyback_price": 138500,
       "best_buyback_shop": "買取商店",
       "buy_price": null,
       "buy_shop_name": "",
       "buy_price_type": "",
       "sell_price_type": "buyback_price",
-      "net_profit_jpy": 16920,
-      "net_profit_rate": 0.141,
+      "net_profit_jpy": 17220,
+      "net_profit_rate": 0.1435,
       "route_type": "primary_to_secondary",
       "source_label": "任天堂公式 / PlayStation Direct / Xbox Store",
       "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
-    },
-    {
-      "product_name": "iPhone 17 Pro 256GB SIMフリー",
-      "category": "iphone",
-      "user_level": "beginner_easy",
-      "official_price_jpy": 179800,
-      "reference_source": "retail_concept",
-      "best_buyback_price": 181500,
-      "best_buyback_shop": "モバイル一番",
-      "buy_price": null,
-      "buy_shop_name": "",
-      "buy_price_type": "",
-      "sell_price_type": "buyback_price",
-      "net_profit_jpy": 400,
-      "net_profit_rate": 0.0022,
-      "route_type": "primary_to_secondary",
-      "source_label": "Apple Store",
-      "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
     }
   ],
-  "pro_top10": [
-    {
-      "product_name": "iPhone 17 Pro Max 512GB SIMフリー",
-      "category": "iphone",
-      "user_level": "pro",
-      "official_price_jpy": null,
-      "reference_source": null,
-      "best_buyback_price": 230000,
-      "best_buyback_shop": "買取一丁目",
-      "buy_price": 225280,
-      "buy_shop_name": "ヤフオク (新品/未使用落札)",
-      "buy_price_type": "flea_sold_price",
-      "sell_price_type": "buyback_price",
-      "net_profit_jpy": 2920,
-      "net_profit_rate": 0.013,
-      "route_type": "secondary_to_secondary",
-      "source_label": "中古市場 / フリマ / 買取店",
-      "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
-    },
-    {
-      "product_name": "iPhone 17 Pro Max 512GB SIMフリー",
-      "category": "iphone",
-      "user_level": "pro",
-      "official_price_jpy": null,
-      "reference_source": null,
-      "best_buyback_price": 229000,
-      "best_buyback_shop": "買取商店",
-      "buy_price": 225280,
-      "buy_shop_name": "ヤフオク (新品/未使用落札)",
-      "buy_price_type": "flea_sold_price",
-      "sell_price_type": "buyback_price",
-      "net_profit_jpy": 1920,
-      "net_profit_rate": 0.0085,
-      "route_type": "secondary_to_secondary",
-      "source_label": "中古市場 / フリマ / 買取店",
-      "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
-    }
-  ],
+  "pro_top10": [],
   "beginner_by_category": {
-    "iphone": [
-      {
-        "product_name": "iPhone 17 Pro 256GB SIMフリー",
-        "category": "iphone",
-        "user_level": "beginner_easy",
-        "official_price_jpy": 179800,
-        "reference_source": "retail_concept",
-        "best_buyback_price": 181500,
-        "best_buyback_shop": "モバイル一番",
-        "buy_price": null,
-        "buy_shop_name": "",
-        "buy_price_type": "",
-        "sell_price_type": "buyback_price",
-        "net_profit_jpy": 400,
-        "net_profit_rate": 0.0022,
-        "route_type": "primary_to_secondary",
-        "source_label": "Apple Store",
-        "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
-      }
-    ],
     "game_console": [
       {
         "product_name": "PlayStation 5 Pro",
@@ -354,14 +279,14 @@
         "user_level": "beginner_easy",
         "official_price_jpy": 119980,
         "reference_source": "retail_concept",
-        "best_buyback_price": 138200,
+        "best_buyback_price": 138500,
         "best_buyback_shop": "買取商店",
         "buy_price": null,
         "buy_shop_name": "",
         "buy_price_type": "",
         "sell_price_type": "buyback_price",
-        "net_profit_jpy": 16920,
-        "net_profit_rate": 0.141,
+        "net_profit_jpy": 17220,
+        "net_profit_rate": 0.1435,
         "route_type": "primary_to_secondary",
         "source_label": "任天堂公式 / PlayStation Direct / Xbox Store",
         "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
@@ -406,52 +331,13 @@
       }
     ]
   },
-  "pro_by_category": {
-    "iphone": [
-      {
-        "product_name": "iPhone 17 Pro Max 512GB SIMフリー",
-        "category": "iphone",
-        "user_level": "pro",
-        "official_price_jpy": null,
-        "reference_source": null,
-        "best_buyback_price": 230000,
-        "best_buyback_shop": "買取一丁目",
-        "buy_price": 225280,
-        "buy_shop_name": "ヤフオク (新品/未使用落札)",
-        "buy_price_type": "flea_sold_price",
-        "sell_price_type": "buyback_price",
-        "net_profit_jpy": 2920,
-        "net_profit_rate": 0.013,
-        "route_type": "secondary_to_secondary",
-        "source_label": "中古市場 / フリマ / 買取店",
-        "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
-      },
-      {
-        "product_name": "iPhone 17 Pro Max 512GB SIMフリー",
-        "category": "iphone",
-        "user_level": "pro",
-        "official_price_jpy": null,
-        "reference_source": null,
-        "best_buyback_price": 229000,
-        "best_buyback_shop": "買取商店",
-        "buy_price": 225280,
-        "buy_shop_name": "ヤフオク (新品/未使用落札)",
-        "buy_price_type": "flea_sold_price",
-        "sell_price_type": "buyback_price",
-        "net_profit_jpy": 1920,
-        "net_profit_rate": 0.0085,
-        "route_type": "secondary_to_secondary",
-        "source_label": "中古市場 / フリマ / 買取店",
-        "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
-      }
-    ]
-  },
-  "excluded_items": 14,
+  "pro_by_category": {},
+  "excluded_items": 15,
   "total_deals": 18,
   "confidence_summary": {
     "total": 18,
-    "profitable": 4,
-    "negative": 14
+    "profitable": 3,
+    "negative": 15
   },
   "stale_data_count": 0
 }

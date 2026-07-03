@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-07-02 16:39 JST",
-  "routes_total": 2,
-  "routes_unused_only": 2,
-  "profitable_routes": 2,
+  "generated_at": "2026-07-03 16:29 JST",
+  "routes_total": 0,
+  "routes_unused_only": 0,
+  "profitable_routes": 0,
   "negative_routes": 0,
   "beginner_routes": {
     "route_type": "primary_to_secondary",
@@ -11,77 +11,12 @@
   },
   "pro_routes": {
     "route_type": "secondary_to_secondary",
-    "count": 2,
-    "top": [
-      {
-        "product_name": "iPhone 17 Pro Max 512GB SIMフリー",
-        "buy_shop_name": "ヤフオク (新品/未使用落札)",
-        "sell_shop_name": "買取一丁目",
-        "buy_condition": "new_unopened",
-        "buy_price": 225280,
-        "sell_price": 230000,
-        "buy_price_type": "flea_sold_price",
-        "sell_price_type": "buyback_price",
-        "buy_source": "yahoo_auction_new",
-        "sell_source": "src_kaitori_itchome",
-        "net_profit": 2920,
-        "profit_rate": 0.013,
-        "needs_review": true,
-        "route_type": "secondary_to_secondary"
-      },
-      {
-        "product_name": "iPhone 17 Pro Max 512GB SIMフリー",
-        "buy_shop_name": "ヤフオク (新品/未使用落札)",
-        "sell_shop_name": "買取商店",
-        "buy_condition": "new_unopened",
-        "buy_price": 225280,
-        "sell_price": 229000,
-        "buy_price_type": "flea_sold_price",
-        "sell_price_type": "buyback_price",
-        "buy_source": "yahoo_auction_new",
-        "sell_source": "src_kaitori_shouten",
-        "net_profit": 1920,
-        "profit_rate": 0.0085,
-        "needs_review": true,
-        "route_type": "secondary_to_secondary"
-      }
-    ]
+    "count": 0,
+    "top": []
   },
-  "all_profitable": [
-    {
-      "product_name": "iPhone 17 Pro Max 512GB SIMフリー",
-      "buy_shop_name": "ヤフオク (新品/未使用落札)",
-      "sell_shop_name": "買取一丁目",
-      "buy_condition": "new_unopened",
-      "buy_price": 225280,
-      "sell_price": 230000,
-      "buy_price_type": "flea_sold_price",
-      "sell_price_type": "buyback_price",
-      "buy_source": "yahoo_auction_new",
-      "sell_source": "src_kaitori_itchome",
-      "net_profit": 2920,
-      "profit_rate": 0.013,
-      "needs_review": true,
-      "route_type": "secondary_to_secondary"
-    },
-    {
-      "product_name": "iPhone 17 Pro Max 512GB SIMフリー",
-      "buy_shop_name": "ヤフオク (新品/未使用落札)",
-      "sell_shop_name": "買取商店",
-      "buy_condition": "new_unopened",
-      "buy_price": 225280,
-      "sell_price": 229000,
-      "buy_price_type": "flea_sold_price",
-      "sell_price_type": "buyback_price",
-      "buy_source": "yahoo_auction_new",
-      "sell_source": "src_kaitori_shouten",
-      "net_profit": 1920,
-      "profit_rate": 0.0085,
-      "needs_review": true,
-      "route_type": "secondary_to_secondary"
-    }
-  ],
+  "all_profitable": [],
   "excluded_by_condition": 0,
   "excluded_by_confidence": 0,
-  "excluded_by_missing_price": 0
+  "excluded_by_missing_price": 0,
+  "reason_if_empty": "calculate-sedori-routes 未実行 or DBにルートデータなし"
 }

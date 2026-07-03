@@ -1,4 +1,4 @@
-# データ取得品質レポート（2026-07-02 16:39 JST）
+# データ取得品質レポート（2026-07-03 16:29 JST）
 
 ## 取得成功率
 - 全対象店舗数: 16
@@ -36,16 +36,16 @@
 - iphone17pro256: 62.5%
 
 ## 連続失敗店舗（2回以上）
-- 2ndstreet: 61回連続
-- bookoff: 61回連続
-- dosupara: 61回連続
-- geo_mobile: 61回連続
-- hardoff: 61回連続
-- janpara: 61回連続
-- pasoko: 61回連続
-- sofmap: 61回連続
-- surugaya: 61回連続
-- tsutaya: 61回連続
+- 2ndstreet: 62回連続
+- bookoff: 62回連続
+- dosupara: 62回連続
+- geo_mobile: 62回連続
+- hardoff: 62回連続
+- janpara: 62回連続
+- pasoko: 62回連続
+- sofmap: 62回連続
+- surugaya: 62回連続
+- tsutaya: 62回連続
 
 ## 改善優先順位（required店舗）
 1. mobile_ichiban（失敗2 / product_not_listed）
@@ -78,11 +78,12 @@
   - prod_a7cr: 1店舗
 
 ## ランキングに使えたデータ数
-- Beginner: 4 件
-- Pro: 2 件
+- Beginner: 3 件
+- Pro: 0 件
 
 ## せどりルートに使えたデータ数
-- ルート: 2 件
+- ルート: 0 件
+- ⚠️ reason_if_empty: calculate-sedori-routes 未実行 or DBにルートデータなし
 
 ## 海外価格の鮮度
 - fresh: 0 / stale: 4 / 計 4

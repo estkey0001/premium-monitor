@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-02T16:39:19+09:00",
+  "generated_at": "2026-07-03T16:29:28+09:00",
   "collection": {
     "total_shops": 16,
     "shops_with_success": 6,
@@ -97,13 +97,13 @@
     }
   },
   "ranking_usable": {
-    "beginner": 4,
-    "pro": 2,
+    "beginner": 3,
+    "pro": 0,
     "reason_if_empty": null
   },
   "sedori_usable": {
-    "routes": 2,
-    "reason_if_empty": null
+    "routes": 0,
+    "reason_if_empty": "calculate-sedori-routes 未実行 or DBにルートデータなし"
   },
   "overseas": {
     "total": 4,
@@ -253,43 +253,43 @@
   "consecutive_failed_shops": [
     {
       "shop_id": "2ndstreet",
-      "consecutive_failures": 61
+      "consecutive_failures": 62
     },
     {
       "shop_id": "bookoff",
-      "consecutive_failures": 61
+      "consecutive_failures": 62
     },
     {
       "shop_id": "dosupara",
-      "consecutive_failures": 61
+      "consecutive_failures": 62
     },
     {
       "shop_id": "geo_mobile",
-      "consecutive_failures": 61
+      "consecutive_failures": 62
     },
     {
       "shop_id": "hardoff",
-      "consecutive_failures": 61
+      "consecutive_failures": 62
     },
     {
       "shop_id": "janpara",
-      "consecutive_failures": 61
+      "consecutive_failures": 62
     },
     {
       "shop_id": "pasoko",
-      "consecutive_failures": 61
+      "consecutive_failures": 62
     },
     {
       "shop_id": "sofmap",
-      "consecutive_failures": 61
+      "consecutive_failures": 62
     },
     {
       "shop_id": "surugaya",
-      "consecutive_failures": 61
+      "consecutive_failures": 62
     },
     {
       "shop_id": "tsutaya",
-      "consecutive_failures": 61
+      "consecutive_failures": 62
     }
   ],
   "improvement_priority": [

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-02 16:39 JST",
+  "generated_at": "2026-07-03 16:29 JST",
   "source": "Yahoo Auction sold",
   "policy": "no_live_scraping_tos_safe_manual_curation_plus_search_url",
   "fresh_days": 14,
@@ -24,7 +24,7 @@
           "item_url": "https://auctions.yahoo.co.jp/jp/auction/x000000001",
           "search_url": "https://auctions.yahoo.co.jp/closedsearch/closedsearch?p=%5B%22Switch%202%22%2C%20%22Switch2%22%2C%20%22%E3%83%8B%E3%83%B3%E3%83%86%E3%83%B3%E3%83%89%E3%83%BC%E3%82%B9%E3%82%A4%E3%83%83%E3%83%812%22%2C%20%22SW2%22%2C%20%22Nintendo%20Switch2%22%2C%20%22%E3%82%B9%E3%82%A4%E3%83%83%E3%83%812%22%2C%20%22NintendoSwitch2%22%5D&va=%5B%22Switch%202%22%2C%20%22Switch2%22%2C%20%22%E3%83%8B%E3%83%B3%E3%83%86%E3%83%B3%E3%83%89%E3%83%BC%E3%82%B9%E3%82%A4%E3%83%83%E3%83%812%22%2C%20%22SW2%22%2C%20%22Nintendo%20Switch2%22%2C%20%22%E3%82%B9%E3%82%A4%E3%83%83%E3%83%812%22%2C%20%22NintendoSwitch2%22%5D",
           "observed_at": "2026-06-08T12:00:00+09:00",
-          "age_days": 24.2,
+          "age_days": 25.2,
           "target_buy_price": 45399,
           "within_target": false,
           "rejection_reason": "stale_over_14d"
@@ -36,7 +36,7 @@
       "count_recent": 0,
       "median_price": null,
       "min_price": null,
-      "target_buy_price": 133399,
+      "target_buy_price": 132424,
       "within_target_count": 0,
       "search_url": "https://auctions.yahoo.co.jp/closedsearch/closedsearch?p=%5B%22PS5%20Pro%22%2C%20%22PlayStation5Pro%22%2C%20%22CFI-7000%22%2C%20%22PlayStation%205%20Pro%22%2C%20%22CFI-7000A01%22%2C%20%22PS5Pro%22%5D&va=%5B%22PS5%20Pro%22%2C%20%22PlayStation5Pro%22%2C%20%22CFI-7000%22%2C%20%22PlayStation%205%20Pro%22%2C%20%22CFI-7000A01%22%2C%20%22PS5Pro%22%5D",
       "item_urls": [],
@@ -51,8 +51,8 @@
           "item_url": "https://auctions.yahoo.co.jp/jp/auction/x000000002",
           "search_url": "https://auctions.yahoo.co.jp/closedsearch/closedsearch?p=%5B%22PS5%20Pro%22%2C%20%22PlayStation5Pro%22%2C%20%22CFI-7000%22%2C%20%22PlayStation%205%20Pro%22%2C%20%22CFI-7000A01%22%2C%20%22PS5Pro%22%5D&va=%5B%22PS5%20Pro%22%2C%20%22PlayStation5Pro%22%2C%20%22CFI-7000%22%2C%20%22PlayStation%205%20Pro%22%2C%20%22CFI-7000A01%22%2C%20%22PS5Pro%22%5D",
           "observed_at": "2026-06-08T18:00:00+09:00",
-          "age_days": 23.9,
-          "target_buy_price": 133399,
+          "age_days": 24.9,
+          "target_buy_price": 132424,
           "within_target": true,
           "rejection_reason": "stale_over_14d"
         }
@@ -78,7 +78,7 @@
           "item_url": "https://auctions.yahoo.co.jp/jp/auction/x000000004",
           "search_url": "https://auctions.yahoo.co.jp/closedsearch/closedsearch?p=%5B%22X100VI%22%2C%20%22X100%20VI%22%2C%20%22%E5%AF%8C%E5%A3%AB%E3%83%95%E3%82%A4%E3%83%AB%E3%83%A0%20X100VI%22%5D&va=%5B%22X100VI%22%2C%20%22X100%20VI%22%2C%20%22%E5%AF%8C%E5%A3%AB%E3%83%95%E3%82%A4%E3%83%AB%E3%83%A0%20X100VI%22%5D",
           "observed_at": "2026-06-08T20:00:00+09:00",
-          "age_days": 23.9,
+          "age_days": 24.9,
           "target_buy_price": 211703,
           "within_target": false,
           "rejection_reason": "stale_over_14d"

@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-07-03 16:29 JST",
-  "routes_total": 0,
-  "routes_unused_only": 0,
-  "profitable_routes": 0,
+  "generated_at": "2026-07-04 16:19 JST",
+  "routes_total": 1,
+  "routes_unused_only": 1,
+  "profitable_routes": 1,
   "negative_routes": 0,
   "beginner_routes": {
     "route_type": "primary_to_secondary",
@@ -11,12 +11,45 @@
   },
   "pro_routes": {
     "route_type": "secondary_to_secondary",
-    "count": 0,
-    "top": []
+    "count": 1,
+    "top": [
+      {
+        "product_name": "RICOH GR IIIx",
+        "buy_shop_name": "Amazon JP (新品出品)",
+        "sell_shop_name": "フジヤカメラ",
+        "buy_condition": "new_unopened",
+        "buy_price": 84959,
+        "sell_price": 167200,
+        "buy_price_type": "shop_sale_price",
+        "sell_price_type": "buyback_price",
+        "buy_source": "amazon_jp_new",
+        "sell_source": "src_fujiya",
+        "net_profit": 80441,
+        "profit_rate": 0.9468,
+        "needs_review": true,
+        "route_type": "secondary_to_secondary"
+      }
+    ]
   },
-  "all_profitable": [],
+  "all_profitable": [
+    {
+      "product_name": "RICOH GR IIIx",
+      "buy_shop_name": "Amazon JP (新品出品)",
+      "sell_shop_name": "フジヤカメラ",
+      "buy_condition": "new_unopened",
+      "buy_price": 84959,
+      "sell_price": 167200,
+      "buy_price_type": "shop_sale_price",
+      "sell_price_type": "buyback_price",
+      "buy_source": "amazon_jp_new",
+      "sell_source": "src_fujiya",
+      "net_profit": 80441,
+      "profit_rate": 0.9468,
+      "needs_review": true,
+      "route_type": "secondary_to_secondary"
+    }
+  ],
   "excluded_by_condition": 0,
   "excluded_by_confidence": 0,
-  "excluded_by_missing_price": 0,
-  "reason_if_empty": "calculate-sedori-routes 未実行 or DBにルートデータなし"
+  "excluded_by_missing_price": 0
 }

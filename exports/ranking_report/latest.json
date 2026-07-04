@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-03 16:29 JST",
+  "generated_at": "2026-07-04 16:19 JST",
   "route_type_beginner": "primary_to_secondary",
   "top_camera_buyback_opportunities": [
     {
@@ -257,20 +257,39 @@
       "user_level": "beginner_easy",
       "official_price_jpy": 119980,
       "reference_source": "retail_concept",
-      "best_buyback_price": 138500,
+      "best_buyback_price": 139500,
       "best_buyback_shop": "買取商店",
       "buy_price": null,
       "buy_shop_name": "",
       "buy_price_type": "",
       "sell_price_type": "buyback_price",
-      "net_profit_jpy": 17220,
-      "net_profit_rate": 0.1435,
+      "net_profit_jpy": 18220,
+      "net_profit_rate": 0.1519,
       "route_type": "primary_to_secondary",
       "source_label": "任天堂公式 / PlayStation Direct / Xbox Store",
       "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
     }
   ],
-  "pro_top10": [],
+  "pro_top10": [
+    {
+      "product_name": "RICOH GR IIIx",
+      "category": "camera",
+      "user_level": "pro",
+      "official_price_jpy": null,
+      "reference_source": null,
+      "best_buyback_price": 167200,
+      "best_buyback_shop": "フジヤカメラ",
+      "buy_price": 84959,
+      "buy_shop_name": "Amazon JP (新品出品)",
+      "buy_price_type": "shop_sale_price",
+      "sell_price_type": "buyback_price",
+      "net_profit_jpy": 80441,
+      "net_profit_rate": 0.9468,
+      "route_type": "secondary_to_secondary",
+      "source_label": "中古市場 / フリマ / 買取店",
+      "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
+    }
+  ],
   "beginner_by_category": {
     "game_console": [
       {
@@ -279,14 +298,14 @@
         "user_level": "beginner_easy",
         "official_price_jpy": 119980,
         "reference_source": "retail_concept",
-        "best_buyback_price": 138500,
+        "best_buyback_price": 139500,
         "best_buyback_shop": "買取商店",
         "buy_price": null,
         "buy_shop_name": "",
         "buy_price_type": "",
         "sell_price_type": "buyback_price",
-        "net_profit_jpy": 17220,
-        "net_profit_rate": 0.1435,
+        "net_profit_jpy": 18220,
+        "net_profit_rate": 0.1519,
         "route_type": "primary_to_secondary",
         "source_label": "任天堂公式 / PlayStation Direct / Xbox Store",
         "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
@@ -331,7 +350,28 @@
       }
     ]
   },
-  "pro_by_category": {},
+  "pro_by_category": {
+    "camera": [
+      {
+        "product_name": "RICOH GR IIIx",
+        "category": "camera",
+        "user_level": "pro",
+        "official_price_jpy": null,
+        "reference_source": null,
+        "best_buyback_price": 167200,
+        "best_buyback_shop": "フジヤカメラ",
+        "buy_price": 84959,
+        "buy_shop_name": "Amazon JP (新品出品)",
+        "buy_price_type": "shop_sale_price",
+        "sell_price_type": "buyback_price",
+        "net_profit_jpy": 80441,
+        "net_profit_rate": 0.9468,
+        "route_type": "secondary_to_secondary",
+        "source_label": "中古市場 / フリマ / 買取店",
+        "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
+      }
+    ]
+  },
   "excluded_items": 15,
   "total_deals": 18,
   "confidence_summary": {

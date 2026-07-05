@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-04 16:19 JST",
+  "generated_at": "2026-07-05 16:45 JST",
   "route_type_beginner": "primary_to_secondary",
   "top_camera_buyback_opportunities": [
     {
@@ -132,12 +132,12 @@
       "product_id": "prod_a7rv",
       "product_name": "SONY α7R V",
       "shop_name": "フジヤカメラ",
-      "buyback_price": 227700,
+      "buyback_price": 225500,
       "official_price": 440000,
       "reference_price": 440000,
       "reference_source": "retail_concept",
-      "diff_vs_official": -212300,
-      "matched_item": "α7R V ボディ ILCE-7RM5 SONY 基準査定額 新品同様 ￥207,000 良品 ￥206,000 買取のみ10%UP 新品同様 ￥227,700 良品 ￥226,600 下取は15%UP 新品同様 ￥238,050 良品 ￥",
+      "diff_vs_official": -214500,
+      "matched_item": "α7R V ボディ ILCE-7RM5 SONY 基準査定額 新品同様 ￥205,000 良品 ￥204,000 買取のみ10%UP 新品同様 ￥225,500 良品 ￥224,400 下取は15%UP 新品同様 ￥235,750 良品 ￥",
       "confidence": "high",
       "source": "auto_scraped",
       "age_days": 0.0
@@ -188,12 +188,12 @@
       "product_id": "prod_a1ii",
       "product_name": "SONY α1 II",
       "shop_name": "フジヤカメラ",
-      "buyback_price": 584100,
+      "buyback_price": 586300,
       "official_price": 990000,
       "reference_price": 990000,
       "reference_source": "retail_concept",
-      "diff_vs_official": -405900,
-      "matched_item": "α1 II ボディ ILCE-1M2 SONY 基準査定額 新品同様 ￥531,000 良品 ￥530,000 買取のみ10%UP 新品同様 ￥584,100 良品 ￥583,000 下取は15%UP 新品同様 ￥610,650 良品 ￥6",
+      "diff_vs_official": -403700,
+      "matched_item": "α1 II ボディ ILCE-1M2 SONY 基準査定額 新品同様 ￥533,000 良品 ￥532,000 買取のみ10%UP 新品同様 ￥586,300 良品 ￥585,200 下取は15%UP 新品同様 ￥612,950 良品 ￥6",
       "confidence": "high",
       "source": "auto_scraped",
       "age_days": 0.0
@@ -270,26 +270,7 @@
       "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
     }
   ],
-  "pro_top10": [
-    {
-      "product_name": "RICOH GR IIIx",
-      "category": "camera",
-      "user_level": "pro",
-      "official_price_jpy": null,
-      "reference_source": null,
-      "best_buyback_price": 167200,
-      "best_buyback_shop": "フジヤカメラ",
-      "buy_price": 84959,
-      "buy_shop_name": "Amazon JP (新品出品)",
-      "buy_price_type": "shop_sale_price",
-      "sell_price_type": "buyback_price",
-      "net_profit_jpy": 80441,
-      "net_profit_rate": 0.9468,
-      "route_type": "secondary_to_secondary",
-      "source_label": "中古市場 / フリマ / 買取店",
-      "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
-    }
-  ],
+  "pro_top10": [],
   "beginner_by_category": {
     "game_console": [
       {
@@ -350,28 +331,7 @@
       }
     ]
   },
-  "pro_by_category": {
-    "camera": [
-      {
-        "product_name": "RICOH GR IIIx",
-        "category": "camera",
-        "user_level": "pro",
-        "official_price_jpy": null,
-        "reference_source": null,
-        "best_buyback_price": 167200,
-        "best_buyback_shop": "フジヤカメラ",
-        "buy_price": 84959,
-        "buy_shop_name": "Amazon JP (新品出品)",
-        "buy_price_type": "shop_sale_price",
-        "sell_price_type": "buyback_price",
-        "net_profit_jpy": 80441,
-        "net_profit_rate": 0.9468,
-        "route_type": "secondary_to_secondary",
-        "source_label": "中古市場 / フリマ / 買取店",
-        "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
-      }
-    ]
-  },
+  "pro_by_category": {},
   "excluded_items": 15,
   "total_deals": 18,
   "confidence_summary": {

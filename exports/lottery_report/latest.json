@@ -1,62 +1,15 @@
 {
-  "checked_at": "2026-07-05 16:45 JST",
-  "active_count": 3,
+  "checked_at": "2026-07-06 17:10 JST",
+  "active_count": 0,
   "upcoming_count": 0,
-  "closed_count": 5,
+  "closed_count": 8,
   "reference_count": 3,
-  "lp_badge_count": 3,
+  "lp_badge_count": 0,
   "duplicate_count": 0,
   "stale_phrase_count": 0,
   "missing_form_url_count": 0,
-  "status_conflict_count": 3,
-  "active_items": [
-    {
-      "product_name": "RICOH GR IV Monochrome",
-      "brand": "RICOH",
-      "entry_start_at": "2026-07-03 12:00",
-      "entry_end_at": "2026-07-06 12:00",
-      "official_price": "¥283,800（税込）",
-      "has_form_url": true,
-      "has_url": true,
-      "product_code": "S0001580",
-      "status_conflict": "true",
-      "status_conflict_reason": "本文に「受付は終了いたしました」が含まれるが、entry_end_at は2026-07-06 12:00（active）",
-      "status_basis": "date_range_active",
-      "source_text_excerpt": "e抽選エントリーフォームは こちら 今回の抽選販売エントリー受付は終了いたしました。 次回の予定は現時点では未定となっております。決まり次第、こちらの商品ページやお知らせに掲載いたします。 --> 定価 &#165;299,800 税込 送料"
-    },
-    {
-      "product_name": "RICOH GR IV HDF",
-      "brand": "RICOH",
-      "entry_start_at": "2026-07-03 12:00",
-      "entry_end_at": "2026-07-06 12:00",
-      "official_price": "¥187,020（税込）",
-      "has_form_url": true,
-      "has_url": true,
-      "product_code": "S0001566",
-      "status_conflict": "true",
-      "status_conflict_reason": "本文に「受付は終了いたしました」が含まれるが、entry_end_at は2026-07-06 12:00（active）",
-      "status_basis": "date_range_active",
-      "source_text_excerpt": "抽選エントリーフォームは こちら 今回の抽選販売エントリー受付は終了いたしました。 次回の予定は現時点では未定となっております。決まり次第、こちらの商品ページやお知らせに掲載いたします。 --> 定価 &#165;222,000 税込 送料"
-    },
-    {
-      "product_name": "RICOH GR IV",
-      "brand": "RICOH",
-      "entry_start_at": "2026-07-03 12:00",
-      "entry_end_at": "2026-07-06 12:00",
-      "official_price": "¥194,800（税込）",
-      "has_form_url": true,
-      "has_url": true,
-      "product_code": "S0001551",
-      "status_conflict": "true",
-      "status_conflict_reason": "本文に「受付は終了いたしました」が含まれるが、entry_end_at は2026-07-06 12:00（active）",
-      "status_basis": "date_range_active",
-      "source_text_excerpt": "抽選エントリーフォームは こちら 今回の抽選販売エントリー受付は終了いたしました。 次回の予定は現時点では未定となっております。決まり次第、こちらの商品ページやお知らせに掲載いたします。 --> 定価 &#165;211,800 税込 送料"
-    }
-  ],
+  "status_conflict_count": 0,
+  "active_items": [],
   "issues_failure": [],
-  "issues_warning": [
-    "【ステータス矛盾】RICOH GR IV Monochrome: 本文に「受付は終了いたしました」が含まれるが、entry_end_at は2026-07-06 12:00（active）",
-    "【ステータス矛盾】RICOH GR IV HDF: 本文に「受付は終了いたしました」が含まれるが、entry_end_at は2026-07-06 12:00（active）",
-    "【ステータス矛盾】RICOH GR IV: 本文に「受付は終了いたしました」が含まれるが、entry_end_at は2026-07-06 12:00（active）"
-  ]
+  "issues_warning": []
 }

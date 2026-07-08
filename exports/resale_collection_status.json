@@ -1,5 +1,5 @@
 {
-  "collected_at": "2026-07-07T16:25:52.721188+09:00",
+  "collected_at": "2026-07-08T15:21:06.974725+09:00",
   "platforms": {
     "ebay": {
       "status": "blocked_cloud_ip",
@@ -35,7 +35,7 @@
   "products": {
     "gr4": {
       "ebay": "blocked_cloud_ip",
-      "amazon": "ok_html",
+      "amazon": "blocked_cloud_ip",
       "mercari": "blocked_cloud_ip",
       "yahoo": "ok_html",
       "rakuten": "html_failed",
@@ -67,7 +67,7 @@
     },
     "x100vi": {
       "ebay": "blocked_cloud_ip",
-      "amazon": "blocked_cloud_ip",
+      "amazon": "ok_html",
       "mercari": "blocked_cloud_ip",
       "yahoo": "ok_html",
       "rakuten": "html_failed",

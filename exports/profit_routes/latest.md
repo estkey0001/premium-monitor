@@ -1,6 +1,6 @@
 # Pro 利益ルート（normalized_price_observations 由来・検証済み）
 
-生成: 2026-07-09 16:42 JST
+生成: 2026-07-10 16:48 JST
 
 - **main 利益ルート: 0件**（route_confidence high/medium のみ）
 - 参考ルート(海外sold stale・要fresh化): 2件
@@ -17,28 +17,28 @@
 
 | product | buy¥ | sell(海外sold)¥ | 潜在net | ROI | stale |
 |---|---|---|---|---|---|
-| FUJIFILM X100VI | ¥329,800 | ¥575,370 | +¥115,602 | 35% | overseas_sold_stale(42.3d) |
-| iPhone 17 Pro 25 | ¥200,739 | ¥325,089 | +¥48,309 | 24% | overseas_sold_stale(42.3d) |
+| FUJIFILM X100VI | ¥319,800 | ¥574,877 | +¥125,508 | 39% | overseas_sold_stale(43.3d) |
+| iPhone 17 Pro 25 | ¥200,739 | ¥324,812 | +¥48,089 | 24% | overseas_sold_stale(43.3d) |
 
 ## 0件商品の診断
 
 ### iPhone 17 Pro 256GB SIMフリー
-- buy候補 1 / sell候補 4 / stale除外 5 / 海外sold stale 1
-- 除外理由TOP5: [('stale_over_14d', 5), ('price_zero', 4)]
+- buy候補 1 / sell候補 3 / stale除外 5 / 海外sold stale 1
+- 除外理由TOP5: [('price_zero', 5), ('stale_over_14d', 5)]
 - eBay sold を fresh化すると成立する候補:
-  - src_ebay ¥325,089 → 潜在 +¥48,309（ROI 24%）
+  - src_ebay ¥324,812 → 潜在 +¥48,089（ROI 24%）
 
 ### iPhone 17 Pro 512GB SIMフリー
 - buy候補 1 / sell候補 3 / stale除外 3 / 海外sold stale 0
-- 除外理由TOP5: [('price_zero', 4), ('stale_over_14d', 3)]
+- 除外理由TOP5: [('price_zero', 5), ('stale_over_14d', 3)]
 
 ### iPhone 17 Pro Max 256GB SIMフリー
-- buy候補 1 / sell候補 3 / stale除外 3 / 海外sold stale 0
-- 除外理由TOP5: [('price_zero', 5), ('stale_over_14d', 3)]
+- buy候補 1 / sell候補 2 / stale除外 3 / 海外sold stale 0
+- 除外理由TOP5: [('price_zero', 6), ('stale_over_14d', 3)]
 
 ### iPhone 17 Pro Max 512GB SIMフリー
 - buy候補 1 / sell候補 2 / stale除外 0 / 海外sold stale 0
-- 除外理由TOP5: [('price_zero', 5)]
+- 除外理由TOP5: [('price_zero', 6)]
 
 ### iPhone 17 256GB SIMフリー
 - buy候補 0 / sell候補 0 / stale除外 4 / 海外sold stale 0
@@ -109,8 +109,8 @@
 - 除外理由TOP5: [('stale_over_14d', 5)]
 
 ### PlayStation 5 Pro
-- buy候補 1 / sell候補 2 / stale除外 3 / 海外sold stale 0
-- 除外理由TOP5: [('price_zero', 8), ('stale_over_14d', 3)]
+- buy候補 1 / sell候補 1 / stale除外 3 / 海外sold stale 0
+- 除外理由TOP5: [('price_zero', 9), ('stale_over_14d', 3)]
 
 ### PlayStation 5 Digital Edition
 - buy候補 0 / sell候補 0 / stale除外 3 / 海外sold stale 0
@@ -122,11 +122,11 @@
 
 ### RICOH GR IV
 - buy候補 1 / sell候補 0 / stale除外 15 / 海外sold stale 1
-- 除外理由TOP5: [('stale_over_14d', 15)]
+- 除外理由TOP5: [('stale_over_14d', 15), ('accessory_or_wrong_product', 1)]
 
 ### RICOH GR IV Monochrome
 - buy候補 1 / sell候補 1 / stale除外 6 / 海外sold stale 0
-- 除外理由TOP5: [('stale_over_14d', 6)]
+- 除外理由TOP5: [('stale_over_14d', 6), ('accessory_or_wrong_product', 1)]
 
 ### RICOH GR IIIx
 - buy候補 1 / sell候補 1 / stale除外 11 / 海外sold stale 1
@@ -141,10 +141,10 @@
 - 除外理由TOP5: []
 
 ### FUJIFILM X100VI
-- buy候補 2 / sell候補 1 / stale除外 17 / 海外sold stale 1
+- buy候補 1 / sell候補 1 / stale除外 17 / 海外sold stale 1
 - 除外理由TOP5: [('stale_over_14d', 17)]
 - eBay sold を fresh化すると成立する候補:
-  - src_ebay ¥575,370 → 潜在 +¥115,602（ROI 35%）
+  - src_ebay ¥574,877 → 潜在 +¥125,508（ROI 39%）
 
 ### FUJIFILM GFX100RF
 - buy候補 0 / sell候補 1 / stale除外 0 / 海外sold stale 0

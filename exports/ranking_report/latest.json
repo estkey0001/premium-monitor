@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-10 16:48 JST",
+  "generated_at": "2026-07-11 15:39 JST",
   "route_type_beginner": "primary_to_secondary",
   "top_camera_buyback_opportunities": [
     {
@@ -252,6 +252,24 @@
       "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
     },
     {
+      "product_name": "PlayStation 5 Pro",
+      "category": "game_console",
+      "user_level": "beginner_easy",
+      "official_price_jpy": 119980,
+      "reference_source": "retail_concept",
+      "best_buyback_price": 147600,
+      "best_buyback_shop": "買取商店",
+      "buy_price": null,
+      "buy_shop_name": "",
+      "buy_price_type": "",
+      "sell_price_type": "buyback_price",
+      "net_profit_jpy": 26320,
+      "net_profit_rate": 0.2194,
+      "route_type": "primary_to_secondary",
+      "source_label": "任天堂公式 / PlayStation Direct / Xbox Store",
+      "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
+    },
+    {
       "product_name": "RICOH GR IIIx",
       "category": "camera",
       "user_level": "beginner_easy",
@@ -268,24 +286,6 @@
       "route_type": "primary_to_secondary",
       "source_label": "RICOH公式 / FUJIFILM公式 / キタムラ",
       "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
-    },
-    {
-      "product_name": "PlayStation 5 Pro",
-      "category": "game_console",
-      "user_level": "beginner_easy",
-      "official_price_jpy": 119980,
-      "reference_source": "retail_concept",
-      "best_buyback_price": 147200,
-      "best_buyback_shop": "買取商店",
-      "buy_price": null,
-      "buy_shop_name": "",
-      "buy_price_type": "",
-      "sell_price_type": "buyback_price",
-      "net_profit_jpy": 25920,
-      "net_profit_rate": 0.216,
-      "route_type": "primary_to_secondary",
-      "source_label": "任天堂公式 / PlayStation Direct / Xbox Store",
-      "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
     }
   ],
   "pro_top10": [],
@@ -297,14 +297,14 @@
         "user_level": "beginner_easy",
         "official_price_jpy": 119980,
         "reference_source": "retail_concept",
-        "best_buyback_price": 147200,
+        "best_buyback_price": 147600,
         "best_buyback_shop": "買取商店",
         "buy_price": null,
         "buy_shop_name": "",
         "buy_price_type": "",
         "sell_price_type": "buyback_price",
-        "net_profit_jpy": 25920,
-        "net_profit_rate": 0.216,
+        "net_profit_jpy": 26320,
+        "net_profit_rate": 0.2194,
         "route_type": "primary_to_secondary",
         "source_label": "任天堂公式 / PlayStation Direct / Xbox Store",
         "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"

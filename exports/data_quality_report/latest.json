@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-15T15:39:32+09:00",
+  "generated_at": "2026-07-16T15:38:40+09:00",
   "collection": {
     "total_shops": 16,
     "shops_with_success": 5,
@@ -11,10 +11,10 @@
     "success_rate_pct": 29.1
   },
   "comparison": {
-    "prev_success_rate_pct": 23.6,
+    "prev_success_rate_pct": 29.1,
     "current_success_rate_pct": 29.1,
-    "delta_pct": 5.5,
-    "trend": "改善",
+    "delta_pct": 0.0,
+    "trend": "横ばい",
     "moving_avg_7d_pct": 26.0,
     "top5_failure_reasons": [
       {
@@ -257,47 +257,47 @@
   "consecutive_failed_shops": [
     {
       "shop_id": "2ndstreet",
-      "consecutive_failures": 74
+      "consecutive_failures": 75
     },
     {
       "shop_id": "bookoff",
-      "consecutive_failures": 74
+      "consecutive_failures": 75
     },
     {
       "shop_id": "dosupara",
-      "consecutive_failures": 74
+      "consecutive_failures": 75
     },
     {
       "shop_id": "geo_mobile",
-      "consecutive_failures": 74
+      "consecutive_failures": 75
     },
     {
       "shop_id": "hardoff",
-      "consecutive_failures": 74
+      "consecutive_failures": 75
     },
     {
       "shop_id": "janpara",
-      "consecutive_failures": 74
+      "consecutive_failures": 75
     },
     {
       "shop_id": "pasoko",
-      "consecutive_failures": 74
+      "consecutive_failures": 75
     },
     {
       "shop_id": "sofmap",
-      "consecutive_failures": 74
+      "consecutive_failures": 75
     },
     {
       "shop_id": "surugaya",
-      "consecutive_failures": 74
+      "consecutive_failures": 75
     },
     {
       "shop_id": "tsutaya",
-      "consecutive_failures": 74
+      "consecutive_failures": 75
     },
     {
       "shop_id": "iosys",
-      "consecutive_failures": 7
+      "consecutive_failures": 8
     }
   ],
   "improvement_priority": [

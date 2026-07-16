@@ -1,6 +1,6 @@
 # Pro 利益ルート（normalized_price_observations 由来・検証済み）
 
-生成: 2026-07-15 15:39 JST
+生成: 2026-07-16 15:38 JST
 
 - **main 利益ルート: 0件**（route_confidence high/medium のみ）
 - 参考ルート(海外sold stale・要fresh化): 3件
@@ -17,9 +17,9 @@
 
 | product | buy¥ | sell(海外sold)¥ | 潜在net | ROI | stale |
 |---|---|---|---|---|---|
-| FUJIFILM X100VI | ¥319,800 | ¥574,137 | +¥124,916 | 39% | overseas_sold_stale(48.2d) |
-| iPhone 17 Pro 25 | ¥200,739 | ¥324,396 | +¥47,756 | 24% | overseas_sold_stale(48.2d) |
-| Nintendo Switch  | ¥55,695 | ¥88,925 | +¥5,445 | 10% | overseas_sold_stale(48.2d) |
+| FUJIFILM X100VI | ¥319,800 | ¥574,103 | +¥124,889 | 39% | overseas_sold_stale(49.2d) |
+| iPhone 17 Pro 25 | ¥200,739 | ¥324,376 | +¥47,740 | 24% | overseas_sold_stale(49.2d) |
+| Nintendo Switch  | ¥56,891 | ¥88,919 | +¥4,244 | 7% | overseas_sold_stale(49.2d) |
 
 ## 0件商品の診断
 
@@ -27,7 +27,7 @@
 - buy候補 1 / sell候補 4 / stale除外 5 / 海外sold stale 1
 - 除外理由TOP5: [('stale_over_14d', 5), ('price_zero', 4)]
 - eBay sold を fresh化すると成立する候補:
-  - src_ebay ¥324,396 → 潜在 +¥47,756（ROI 24%）
+  - src_ebay ¥324,376 → 潜在 +¥47,740（ROI 24%）
 
 ### iPhone 17 Pro 512GB SIMフリー
 - buy候補 1 / sell候補 3 / stale除外 3 / 海外sold stale 0
@@ -105,7 +105,7 @@
 - buy候補 1 / sell候補 2 / stale除外 4 / 海外sold stale 1
 - 除外理由TOP5: [('price_zero', 8), ('stale_over_14d', 4)]
 - eBay sold を fresh化すると成立する候補:
-  - src_ebay ¥88,925 → 潜在 +¥5,445（ROI 10%）
+  - src_ebay ¥88,919 → 潜在 +¥4,244（ROI 7%）
 
 ### Nintendo Switch 2 マリオカートセット
 - buy候補 0 / sell候補 0 / stale除外 5 / 海外sold stale 0
@@ -147,7 +147,7 @@
 - buy候補 1 / sell候補 1 / stale除外 17 / 海外sold stale 1
 - 除外理由TOP5: [('stale_over_14d', 17)]
 - eBay sold を fresh化すると成立する候補:
-  - src_ebay ¥574,137 → 潜在 +¥124,916（ROI 39%）
+  - src_ebay ¥574,103 → 潜在 +¥124,889（ROI 39%）
 
 ### FUJIFILM GFX100RF
 - buy候補 0 / sell候補 1 / stale除外 0 / 海外sold stale 0
@@ -207,5 +207,5 @@
 
 ### RICOH GR IV HDF
 - buy候補 1 / sell候補 1 / stale除外 6 / 海外sold stale 0
-- 除外理由TOP5: [('stale_over_14d', 6), ('accessory_or_wrong_product', 1)]
+- 除外理由TOP5: [('stale_over_14d', 6)]
 

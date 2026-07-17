@@ -1,6 +1,6 @@
 # Normalized Price Observations
 
-生成: 2026-07-16 15:38 JST
+生成: 2026-07-17 15:46 JST
 
 全価格（買取/販売/出品/落札/海外/下取/公式）を単一スキーマに正規化。
 `price_role`（buy/sell/official/trade_in）を必ず付与し、
@@ -9,9 +9,9 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 
 ## サマリ
 
-- 総観測数: **239**
-- Beginner 利用可: 73 / Pro 利用可: 40
-- fresh(≤14日): 121
+- 総観測数: **241**
+- Beginner 利用可: 70 / Pro 利用可: 37
+- fresh(≤14日): 123
 
 ### price_role 別
 
@@ -19,13 +19,13 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 |---|---|
 | buy | 49 |
 | official | 44 |
-| sell | 146 |
+| sell | 148 |
 
 ### price_type 別
 
 | type | 件数 |
 |---|---|
-| buyback_price | 140 |
+| buyback_price | 142 |
 | flea_listing_price | 5 |
 | flea_sold_price | 11 |
 | official_price | 44 |
@@ -38,7 +38,7 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 | reason | 件数 |
 |---|---|
 | accessory_or_wrong_product | 3 |
-| price_zero | 34 |
+| price_zero | 39 |
 | stale_over_14d | 118 |
 
 ## Beginner 利用可（official_price / buyback_price のみ）
@@ -93,20 +93,20 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 | Nikon Z9 | sell | buyback_price | ¥354,200 | new_unopened | 0.0d | フジヤカメラ |
 | Leica Q3 | sell | buyback_price | ¥927,300 | new_unopened | 0.0d | フジヤカメラ |
 | Leica M11 | sell | buyback_price | ¥1,375,400 | new_unopened | 0.0d | フジヤカメラ |
-| iPhone 17 Pro 256GB SI | sell | buyback_price | ¥178,000 | new_unopened_simfree | 0.0d | モバイル一番 |
 | iPhone 17 Pro 256GB SI | sell | buyback_price | ¥177,000 | new_unopened_simfree | 0.0d | 買取商店 |
 | iPhone 17 Pro 256GB SI | sell | buyback_price | ¥178,000 | new_unopened_simfree | 0.0d | 買取一丁目 |
 | iPhone 17 Pro 256GB SI | sell | buyback_price | ¥157,500 | new_unopened_simfree | 0.0d | ネットオフ |
 | iPhone 17 Pro 512GB SI | sell | buyback_price | ¥211,500 | new_unopened_simfree | 0.0d | 買取商店 |
 | iPhone 17 Pro 512GB SI | sell | buyback_price | ¥211,000 | new_unopened_simfree | 0.0d | 買取一丁目 |
 | iPhone 17 Pro 512GB SI | sell | buyback_price | ¥187,950 | new_unopened_simfree | 0.0d | ネットオフ |
-| iPhone 17 Pro Max 256G | sell | buyback_price | ¥193,000 | new_unopened_simfree | 0.0d | モバイル一番 |
 | iPhone 17 Pro Max 256G | sell | buyback_price | ¥192,500 | new_unopened_simfree | 0.0d | 買取商店 |
 | iPhone 17 Pro Max 256G | sell | buyback_price | ¥193,000 | new_unopened_simfree | 0.0d | 買取一丁目 |
 | iPhone 17 Pro Max 512G | sell | buyback_price | ¥226,500 | new_unopened_simfree | 0.0d | 買取商店 |
 | iPhone 17 Pro Max 512G | sell | buyback_price | ¥226,500 | new_unopened_simfree | 0.0d | 買取一丁目 |
 | Nintendo Switch 2 | sell | buyback_price | ¥40,000 | new_unopened | 0.0d | ゲオ |
-| Nintendo Switch 2 | sell | buyback_price | ¥49,500 | new_unopened | 0.0d | 買取商店 |
-| PlayStation 5 Pro | sell | buyback_price | ¥151,000 | new_unopened | 0.0d | 買取商店 |
-| PlayStation 5 Pro | sell | buyback_price | ¥151,000 | new_unopened | 0.0d | モバイル一番 |
+| Nintendo Switch 2 | sell | buyback_price | ¥50,000 | new_unopened | 0.0d | 買取商店 |
+| PlayStation 5 Pro | sell | buyback_price | ¥152,200 | new_unopened | 0.0d | 買取商店 |
 | RICOH GR IV | buy | flea_sold_price | ¥327,400 | new_unopened | 0.0d | ヤフオク (新品/未使用落札) |
+| RICOH GR IV HDF | buy | flea_sold_price | ¥282,480 | new_unopened | 0.0d | ヤフオク (新品/未使用落札) |
+| RICOH GR IV Monochrome | buy | flea_sold_price | ¥346,280 | new_unopened | 0.0d | ヤフオク (新品/未使用落札) |
+| RICOH GR IIIx | buy | flea_sold_price | ¥236,322 | new_unopened | 0.0d | ヤフオク (新品/未使用落札) |

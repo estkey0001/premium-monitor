@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-07-17 15:46 JST",
-  "routes_total": 0,
-  "routes_unused_only": 0,
-  "profitable_routes": 0,
+  "generated_at": "2026-07-18 15:24 JST",
+  "routes_total": 3,
+  "routes_unused_only": 3,
+  "profitable_routes": 3,
   "negative_routes": 0,
   "beginner_routes": {
     "route_type": "primary_to_secondary",
@@ -11,12 +11,109 @@
   },
   "pro_routes": {
     "route_type": "secondary_to_secondary",
-    "count": 0,
-    "top": []
+    "count": 3,
+    "top": [
+      {
+        "product_name": "iPhone 17 Pro Max 256GB SIMフリー",
+        "buy_shop_name": "ヤフオク (新品/未使用落札)",
+        "sell_shop_name": "モバイル一番",
+        "buy_condition": "new_unopened",
+        "buy_price": 189200,
+        "sell_price": 198000,
+        "buy_price_type": "flea_sold_price",
+        "sell_price_type": "buyback_price",
+        "buy_source": "yahoo_auction_new",
+        "sell_source": "src_mobile_ichiban",
+        "net_profit": 7000,
+        "profit_rate": 0.037,
+        "needs_review": true,
+        "route_type": "secondary_to_secondary"
+      },
+      {
+        "product_name": "iPhone 17 Pro Max 256GB SIMフリー",
+        "buy_shop_name": "ヤフオク (新品/未使用落札)",
+        "sell_shop_name": "買取商店",
+        "buy_condition": "new_unopened",
+        "buy_price": 189200,
+        "sell_price": 198000,
+        "buy_price_type": "flea_sold_price",
+        "sell_price_type": "buyback_price",
+        "buy_source": "yahoo_auction_new",
+        "sell_source": "src_kaitori_shouten",
+        "net_profit": 7000,
+        "profit_rate": 0.037,
+        "needs_review": true,
+        "route_type": "secondary_to_secondary"
+      },
+      {
+        "product_name": "iPhone 17 Pro Max 256GB SIMフリー",
+        "buy_shop_name": "ヤフオク (新品/未使用落札)",
+        "sell_shop_name": "買取一丁目",
+        "buy_condition": "new_unopened",
+        "buy_price": 189200,
+        "sell_price": 198000,
+        "buy_price_type": "flea_sold_price",
+        "sell_price_type": "buyback_price",
+        "buy_source": "yahoo_auction_new",
+        "sell_source": "src_kaitori_itchome",
+        "net_profit": 7000,
+        "profit_rate": 0.037,
+        "needs_review": true,
+        "route_type": "secondary_to_secondary"
+      }
+    ]
   },
-  "all_profitable": [],
+  "all_profitable": [
+    {
+      "product_name": "iPhone 17 Pro Max 256GB SIMフリー",
+      "buy_shop_name": "ヤフオク (新品/未使用落札)",
+      "sell_shop_name": "モバイル一番",
+      "buy_condition": "new_unopened",
+      "buy_price": 189200,
+      "sell_price": 198000,
+      "buy_price_type": "flea_sold_price",
+      "sell_price_type": "buyback_price",
+      "buy_source": "yahoo_auction_new",
+      "sell_source": "src_mobile_ichiban",
+      "net_profit": 7000,
+      "profit_rate": 0.037,
+      "needs_review": true,
+      "route_type": "secondary_to_secondary"
+    },
+    {
+      "product_name": "iPhone 17 Pro Max 256GB SIMフリー",
+      "buy_shop_name": "ヤフオク (新品/未使用落札)",
+      "sell_shop_name": "買取商店",
+      "buy_condition": "new_unopened",
+      "buy_price": 189200,
+      "sell_price": 198000,
+      "buy_price_type": "flea_sold_price",
+      "sell_price_type": "buyback_price",
+      "buy_source": "yahoo_auction_new",
+      "sell_source": "src_kaitori_shouten",
+      "net_profit": 7000,
+      "profit_rate": 0.037,
+      "needs_review": true,
+      "route_type": "secondary_to_secondary"
+    },
+    {
+      "product_name": "iPhone 17 Pro Max 256GB SIMフリー",
+      "buy_shop_name": "ヤフオク (新品/未使用落札)",
+      "sell_shop_name": "買取一丁目",
+      "buy_condition": "new_unopened",
+      "buy_price": 189200,
+      "sell_price": 198000,
+      "buy_price_type": "flea_sold_price",
+      "sell_price_type": "buyback_price",
+      "buy_source": "yahoo_auction_new",
+      "sell_source": "src_kaitori_itchome",
+      "net_profit": 7000,
+      "profit_rate": 0.037,
+      "needs_review": true,
+      "route_type": "secondary_to_secondary"
+    }
+  ],
   "excluded_by_condition": 0,
   "excluded_by_confidence": 0,
-  "excluded_by_missing_price": 0,
-  "reason_if_empty": "calculate-sedori-routes 未実行 or DBにルートデータなし"
+  "excluded_by_missing_price": 0
 }

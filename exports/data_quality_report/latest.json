@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-18T15:24:40+09:00",
+  "generated_at": "2026-07-19T15:49:50+09:00",
   "collection": {
     "total_shops": 16,
     "shops_with_success": 5,
@@ -11,11 +11,11 @@
     "success_rate_pct": 32.7
   },
   "comparison": {
-    "prev_success_rate_pct": 23.6,
+    "prev_success_rate_pct": 32.7,
     "current_success_rate_pct": 32.7,
-    "delta_pct": 9.1,
-    "trend": "改善",
-    "moving_avg_7d_pct": 26.5,
+    "delta_pct": 0.0,
+    "trend": "横ばい",
+    "moving_avg_7d_pct": 27.8,
     "top5_failure_reasons": [
       {
         "reason": "rate_limited_429",
@@ -102,11 +102,11 @@
   },
   "ranking_usable": {
     "beginner": 5,
-    "pro": 3,
+    "pro": 4,
     "reason_if_empty": null
   },
   "sedori_usable": {
-    "routes": 3,
+    "routes": 4,
     "reason_if_empty": null
   },
   "overseas": {
@@ -257,47 +257,47 @@
   "consecutive_failed_shops": [
     {
       "shop_id": "2ndstreet",
-      "consecutive_failures": 77
+      "consecutive_failures": 78
     },
     {
       "shop_id": "bookoff",
-      "consecutive_failures": 77
+      "consecutive_failures": 78
     },
     {
       "shop_id": "dosupara",
-      "consecutive_failures": 77
+      "consecutive_failures": 78
     },
     {
       "shop_id": "geo_mobile",
-      "consecutive_failures": 77
+      "consecutive_failures": 78
     },
     {
       "shop_id": "hardoff",
-      "consecutive_failures": 77
+      "consecutive_failures": 78
     },
     {
       "shop_id": "janpara",
-      "consecutive_failures": 77
+      "consecutive_failures": 78
     },
     {
       "shop_id": "pasoko",
-      "consecutive_failures": 77
+      "consecutive_failures": 78
     },
     {
       "shop_id": "sofmap",
-      "consecutive_failures": 77
+      "consecutive_failures": 78
     },
     {
       "shop_id": "surugaya",
-      "consecutive_failures": 77
+      "consecutive_failures": 78
     },
     {
       "shop_id": "tsutaya",
-      "consecutive_failures": 77
+      "consecutive_failures": 78
     },
     {
       "shop_id": "iosys",
-      "consecutive_failures": 10
+      "consecutive_failures": 11
     }
   ],
   "improvement_priority": [

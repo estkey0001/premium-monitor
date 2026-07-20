@@ -1,9 +1,9 @@
-# せどりルートレポート — 2026-07-19 15:49 JST
+# せどりルートレポート — 2026-07-20 16:14 JST
 
-- 全ルート: 4 / 新品・未使用のみ: 4 (除外: 0)
+- 全ルート: 5 / 新品・未使用のみ: 5 (除外: 0)
 - 低信頼度除外: 0 / 価格未取得除外: 0
-- 利益あり: 4 / 赤字: 0
-- 初心者ルート(一次仕入れ): 0 / Proルート(二次流通): 4
+- 利益あり: 5 / 赤字: 0
+- 初心者ルート(一次仕入れ): 0 / Proルート(二次流通): 5
 
 ## 🟢 初心者ルート（一次仕入れ → 二次流通）
 
@@ -11,14 +11,16 @@
 
 ## 🔵 Proルート（二次流通 → 二次流通）
 
-1. **RICOH GR IIIx** Amazon JP (新品出品) → フジヤカメラ: +¥80,002 (93.7%) [new_unopened]
-2. **iPhone 17 Pro Max 256GB SIMフリー** ヤフオク (新品/未使用落札) → モバイル一番: +¥8,900 (4.7%) [new_unopened]
-3. **iPhone 17 Pro Max 256GB SIMフリー** ヤフオク (新品/未使用落札) → 買取商店: +¥5,900 (3.1%) [new_unopened]
-4. **iPhone 17 Pro Max 256GB SIMフリー** ヤフオク (新品/未使用落札) → 買取一丁目: +¥5,900 (3.1%) [new_unopened]
+1. **iPhone 17 Pro Max 256GB SIMフリー** ヤフオク (新品/未使用落札) → 買取一丁目: +¥11,400 (6.0%) [new_unopened]
+2. **iPhone 17 Pro Max 256GB SIMフリー** ヤフオク (新品/未使用落札) → モバイル一番: +¥10,400 (5.5%) [new_unopened]
+3. **iPhone 17 Pro Max 256GB SIMフリー** ヤフオク (新品/未使用落札) → 買取商店: +¥10,400 (5.5%) [new_unopened]
+4. **PlayStation 5 Pro** ヤフオク (新品/未使用落札) → モバイル一番: +¥201 (0.1%) [new_unopened]
+5. **PlayStation 5 Pro** ヤフオク (新品/未使用落札) → 買取商店: +¥1 (0.0%) [new_unopened]
 
 ## 全利益ルート Top10
 
-1. **RICOH GR IIIx** Amazon JP (新品出品) → フジヤカメラ: +¥80,002 (93.7%) [new_unopened]
-2. **iPhone 17 Pro Max 256GB SIMフリー** ヤフオク (新品/未使用落札) → モバイル一番: +¥8,900 (4.7%) [new_unopened]
-3. **iPhone 17 Pro Max 256GB SIMフリー** ヤフオク (新品/未使用落札) → 買取商店: +¥5,900 (3.1%) [new_unopened]
-4. **iPhone 17 Pro Max 256GB SIMフリー** ヤフオク (新品/未使用落札) → 買取一丁目: +¥5,900 (3.1%) [new_unopened]
+1. **iPhone 17 Pro Max 256GB SIMフリー** ヤフオク (新品/未使用落札) → 買取一丁目: +¥11,400 (6.0%) [new_unopened]
+2. **iPhone 17 Pro Max 256GB SIMフリー** ヤフオク (新品/未使用落札) → モバイル一番: +¥10,400 (5.5%) [new_unopened]
+3. **iPhone 17 Pro Max 256GB SIMフリー** ヤフオク (新品/未使用落札) → 買取商店: +¥10,400 (5.5%) [new_unopened]
+4. **PlayStation 5 Pro** ヤフオク (新品/未使用落札) → モバイル一番: +¥201 (0.1%) [new_unopened]
+5. **PlayStation 5 Pro** ヤフオク (新品/未使用落札) → 買取商店: +¥1 (0.0%) [new_unopened]

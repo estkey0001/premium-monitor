@@ -1,21 +1,23 @@
-# ランキングレポート — 2026-07-19 15:49 JST
+# ランキングレポート — 2026-07-20 16:14 JST
 
-- 総案件数: 18 / 利益あり: 5
+- 総案件数: 18 / 利益あり: 6
 
 ## 👤 初心者ランキング Top10（一次仕入れ → 二次流通販売）
 
 1. **Leica M11** — 実質+¥194,100 (フジヤカメラ)
 2. **Leica Q3** — 実質+¥46,000 (フジヤカメラ)
-3. **PlayStation 5 Pro** — 実質+¥34,220 (買取商店)
+3. **PlayStation 5 Pro** — 実質+¥35,720 (モバイル一番)
 4. **RICOH GR IIIx** — 実質+¥26,100 (フジヤカメラ)
-5. **iPhone 17 Pro 256GB SIMフリー** — 実質+¥4,900 (モバイル一番)
+5. **iPhone 17 Pro 256GB SIMフリー** — 実質+¥7,400 (モバイル一番)
+6. **iPhone 17 Pro 512GB SIMフリー** — 実質+¥4,900 (買取商店)
 
 ## 🎯 Pro ランキング Top10（二次流通仕入れ → 二次流通販売）
 
-1. **RICOH GR IIIx** — 実質+¥80,002 / 利益率93.7%
-2. **iPhone 17 Pro Max 256GB SIMフリー** — 実質+¥8,900 / 利益率4.7%
-3. **iPhone 17 Pro Max 256GB SIMフリー** — 実質+¥5,900 / 利益率3.1%
-4. **iPhone 17 Pro Max 256GB SIMフリー** — 実質+¥5,900 / 利益率3.1%
+1. **iPhone 17 Pro Max 256GB SIMフリー** — 実質+¥11,400 / 利益率6.0%
+2. **iPhone 17 Pro Max 256GB SIMフリー** — 実質+¥10,400 / 利益率5.5%
+3. **iPhone 17 Pro Max 256GB SIMフリー** — 実質+¥10,400 / 利益率5.5%
+4. **PlayStation 5 Pro** — 実質+¥201 / 利益率0.1%
+5. **PlayStation 5 Pro** — 実質+¥1 / 利益率0.0%
 
 ## 👤 カテゴリ別初心者ランキング（利益額順）
 
@@ -25,18 +27,20 @@
 3. **RICOH GR IIIx** — 実質+¥26,100 (フジヤカメラ)
 
 ### GAME_CONSOLE
-1. **PlayStation 5 Pro** — 実質+¥34,220 (買取商店)
+1. **PlayStation 5 Pro** — 実質+¥35,720 (モバイル一番)
 
 ### IPHONE
-1. **iPhone 17 Pro 256GB SIMフリー** — 実質+¥4,900 (モバイル一番)
+1. **iPhone 17 Pro 256GB SIMフリー** — 実質+¥7,400 (モバイル一番)
+2. **iPhone 17 Pro 512GB SIMフリー** — 実質+¥4,900 (買取商店)
 
 
 ## 🎯 カテゴリ別プロランキング（利益率順）
 
-### CAMERA
-1. **RICOH GR IIIx** — 実質+¥80,002 / 利益率93.7%
+### GAME_CONSOLE
+1. **PlayStation 5 Pro** — 実質+¥201 / 利益率0.1%
+2. **PlayStation 5 Pro** — 実質+¥1 / 利益率0.0%
 
 ### IPHONE
-1. **iPhone 17 Pro Max 256GB SIMフリー** — 実質+¥8,900 / 利益率4.7%
-2. **iPhone 17 Pro Max 256GB SIMフリー** — 実質+¥5,900 / 利益率3.1%
-3. **iPhone 17 Pro Max 256GB SIMフリー** — 実質+¥5,900 / 利益率3.1%
+1. **iPhone 17 Pro Max 256GB SIMフリー** — 実質+¥11,400 / 利益率6.0%
+2. **iPhone 17 Pro Max 256GB SIMフリー** — 実質+¥10,400 / 利益率5.5%
+3. **iPhone 17 Pro Max 256GB SIMフリー** — 実質+¥10,400 / 利益率5.5%

@@ -9,7 +9,7 @@
   ✅ [line_cta_off] LINE CTA非表示（正常）
   ✅ [telegram_cta_off] Telegram CTA非表示（正常）
   ✅ [analytics_empty] GA ID未設定 → GAスニペット非出力（正常）
-  ✅ [today_date] 今日の日付 2026-07-20 あり
+  ✅ [today_date] 今日の日付 2026-07-21 あり
   ✅ [price_exists] 価格表記あり
   ✅ [disclaimer] 免責事項あり
   ✅ [data_track] data-track属性あり
@@ -154,11 +154,11 @@
   ✅ [freshness_yoko_format] 古い価格に「要更新 / N日前」形式が使われている
   ✅ [deal_card_no_saishin_label] updated-row に旧「最終更新：」表記なし（価格確認：に統一済み）
   ✅ [stale_banner_date_mismatch] #144 「本日の価格データ未更新」が HTML に存在しない（OK: トップ警告抑制済み）
-  ✅ [csv_today_observed_at] manual_buyback_prices.csv に本日(2026-07-20)の observed_at あり
+  ✅ [csv_today_observed_at] manual_buyback_prices.csv に本日(2026-07-21)の observed_at あり
   ✅ [iphone17_price_fetched] iPhone 17 Pro 系の買取価格が1件以上取得されている
   ✅ [mobile_ichiban_price] モバイル一番の買取価格（price > 0）が存在する
   ✅ [fetch_failed_display] fetch_failed 行があり、LP上に「取得失敗 / 要確認」表示がある
-  ⚠️ [no_price_zero_shown] LP上に¥0の価格表記が4件存在する（fetch_failed以外の0価格行が表示されている可能性）
+  ⚠️ [no_price_zero_shown] LP上に¥0の価格表記が3件存在する（fetch_failed以外の0価格行が表示されている可能性）
   ✅ [auto_scraped_badge] 「自動取得」バッジ（badge-auto-scraped）が表示されている
   ✅ [fetch_failed_badge] 「取得失敗」バッジ（badge-fetch-failed）が表示されている
   ✅ [fetch_failed_has_link] 取得失敗行（shop-row-failed）に確認リンクがある（23行）
@@ -185,13 +185,13 @@
   ✅ [ipad_not_in_other] iPad は「その他」欄に混入していない
   ✅ [airpods_not_in_smartphone] AirPods はスマートフォン欄に混入していない
   ⚠️ [applewatch_in_wearable_section] Apple Watch がウェアラブル欄に見つからない（データなし or genre設定を確認）
-  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-07-20T15:08:08+09:00）
+  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-07-21T14:41:59+09:00）
   ✅ [suspicious_price_format] suspicious_prices 形式OK（suspicious_price なし）
   ✅ [fetch_failed_has_reason] fetch_failed 37件すべてに reason あり
   ✅ [collector_report_html_exists] docs/collector_report.html 存在
   ✅ [collector_report_link_in_lp] LP内に collector_report.html へのリンクがある
   ✅ [fetch_failed_report_link] 取得失敗33件 / suspicious0件 → 警告バーが表示されている
-  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 14件存在する: ['iphone17pro256', 'iphone17pm512', 'iphone17pro512', 'iphone17pm256']
+  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 14件存在する: ['iphone17pm512', 'iphone17pm256', 'iphone17pro512', 'iphone17pro256']
   ✅ [beginner_page_auto_scraped_exists] 自動取得 OK 18件 / total 55件
   ✅ [shop_name_no_vertical_wrap] shop-name-col に word-break:keep-all が設定されている
   ✅ [iphone17pro256_price_scraped] iPhone 17 Pro 256GB の価格取得成功: ['mobile_ichiban', 'kaitori_shouten', 'kaitori_itchome', 'netoff']
@@ -486,7 +486,7 @@
   ✅ [sedori_from_valid_data] #479 せどりルートが最新有効データから生成（中古/used を除外）
   ✅ [lottery_daily_update] #480 抽選情報が毎日更新される（daily_lp.yml に update_lottery_events ステップ）
   ✅ [fetch_failed_reason_visible] #481 fetch_failed の理由が LP またはレポートに表示される
-  ✅ [ranking_empty_reason] #482 beginner ランキングが0件なら理由が表示される（beginner=6）
+  ✅ [ranking_empty_reason] #482 beginner ランキングが0件なら理由が表示される（beginner=5）
   ✅ [sedori_empty_reason] #483 sedori ルートが0件なら理由が表示される（routes=5）
   ✅ [overseas_stale_excluded] #484 overseas stale は主計算から除外する方針が明示されている
   ✅ [ebay_app_id_warning] #485 EBAY_APP_ID 未設定時に明確な warning を出す
@@ -549,7 +549,7 @@
   ✅ [camera_tradein_exclude] #542 カメラ買取が下取(15%UP等)価格を現金買取価格から分離・除外している
   ✅ [sedori_overseas_sell] #543 せどり計算の売却先が「買取価格＋海外販売価格」になっている（NPO PRO_SELL_TYPES）
   ✅ [top_camera_reference_guard] #544 Top Camera Buyback が参照価格(公式/定価)未取得の商品を除外している
-  ✅ [npo_exists] #545 normalized_price_observations/latest.json が存在する（239観測）
+  ✅ [npo_exists] #545 normalized_price_observations/latest.json が存在する（242観測）
   ✅ [npo_price_role_required] #546 全観測に price_role が付与されている
   ✅ [npo_tradein_not_main] #547 trade_in_price が main calculation（最高買取等）に使われない
   ✅ [npo_pro_buy_no_buyback] #548 Pro route の buy 側に buyback_price が使われない
@@ -570,7 +570,7 @@
   ✅ [pro_buy_body_price_floor] #563 Pro route の buy 側に本体価格フロア未満の異常安値(GR IV¥61,267等)が使われない
   ✅ [body_price_floor_logic] #564 本体価格フロア/アクセサリー除外ロジックが normalized_prices に実装されている
   ✅ [no_high_conf_without_item_url] #565 item_url が無い価格を product_match high にしない（auto/official のみ high）
-  ✅ [profit_routes_exists] #566 profit_routes/latest.json が存在する（main 0件）
+  ✅ [profit_routes_exists] #566 profit_routes/latest.json が存在する（main 3件）
   ✅ [profit_buy_no_buyback] #567 Pro route の buy 側に buyback_price がない
   ✅ [profit_sell_no_sale] #568 Pro route の sell 側に sale/listing 価格がない
   ✅ [profit_no_trade_in] #569 Pro route に trade_in_price が使われない
@@ -604,7 +604,7 @@
   ✅ [flea_sold_no_accessory] #597 flea_sold の accessory/wrong_model が main calc に使われない
   ✅ [flea_sold_url_present] #598 flea_sold に item_url または search_url が存在する
   ✅ [flea_sold_target_only] #599 target_buy_price 超の flea_sold が main route に使われない
-  ✅ [lp_main_routes_shown] #600 main route（0件）が LP に表示される
+  ✅ [lp_main_routes_shown] #600 main route（3件）が LP に表示される
   ❌ [lp_flea_sold_section] #601 LP にフリマsold仕入れ候補セクションが表示される ← フリマsold表示が見つかりません
   ✅ [lp_main_route_card] #602 main route が Pro タブに表示される
   ✅ [lp_main_route_product_shown] #603 main route 商品（GR IIIx等）が LP に表示される

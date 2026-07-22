@@ -1,0 +1,45 @@
+{
+  "date": "2026-07-22",
+  "health_score": 49.9,
+  "stale_rate": 0.857,
+  "main_products": [
+    "prod_gr3x"
+  ],
+  "reference_products": [
+    "prod_gr3x",
+    "prod_switch2",
+    "prod_x100vi"
+  ],
+  "ops": {
+    "prod_gr3x": {
+      "action": "WAIT",
+      "buy_now": "WATCH",
+      "roi": 0.2596,
+      "net_profit": 38947,
+      "buy_price": 150000,
+      "product": "RICOH GR IIIx",
+      "buy_source": "Mercari sold",
+      "kind": "reference"
+    },
+    "prod_x100vi": {
+      "action": "WAIT",
+      "buy_now": "WATCH",
+      "roi": 0.7204,
+      "net_profit": 183691,
+      "buy_price": 255000,
+      "product": "FUJIFILM X100VI",
+      "buy_source": "Yahoo Auction sold",
+      "kind": "reference"
+    },
+    "prod_switch2": {
+      "action": "WAIT",
+      "buy_now": "WATCH",
+      "roi": 0.3032,
+      "net_profit": 13945,
+      "buy_price": 46000,
+      "product": "Nintendo Switch 2",
+      "buy_source": "Yahoo Auction sold",
+      "kind": "reference"
+    }
+  }
+}

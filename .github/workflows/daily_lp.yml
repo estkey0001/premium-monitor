@@ -185,6 +185,16 @@ jobs:
         env:
           PYTHONPATH: .
 
+      # 13.7 Generate Notifications（条件成立を検知して通知イベント生成）
+      - name: Generate notifications
+        run: python scripts/generate_notifications.py
+        continue-on-error: true
+        env:
+          PYTHONPATH: .
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+
       - name: Generate data quality report
         run: python scripts/generate_data_quality_report.py
         continue-on-error: true
@@ -265,6 +275,7 @@ jobs:
                   exports/profit_routes/ \
                   exports/flea_sold_prices/ \
                   exports/ai_opportunities/ \
+                  exports/notifications/ \
                   audit_health/ \
                   exports/data_quality_report/ exports/camera_buyback_status.json \
                   data/alerts.csv data/lottery_events.csv \

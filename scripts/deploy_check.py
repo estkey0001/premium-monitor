@@ -6038,6 +6038,54 @@ def check() -> list[dict]:
                     "message": "#627 成立確率/次回更新予測/価格トレンドが付与される"
                                + ("" if _t627 else " ← 一部フィールドが欠落")})
 
+    # ── AI Notification Engine ガード #628-#633 ──
+    _nt = _load_json_safe('exports/notifications/latest.json') or {}
+    _nt_ok = isinstance(_nt, dict) and ('events' in _nt)
+    _nt_events = _nt.get('events', []) if _nt_ok else []
+    _nt_src = _read_src('scripts', 'generate_notifications.py')
+
+    # #628: notification_events（latest.json）が存在
+    _t628 = _nt_ok and ('delivery_status' in _nt) and ('channels' in _nt)
+    results.append({"level": "ok" if _t628 else "error", "check": "notification_events_exists",
+                    "message": f"#628 notifications/latest.json が存在する（events {len(_nt_events)}）"
+                               + ("" if _t628 else " ← ファイルが見つかりません")})
+
+    # #629: history/ に日次スナップショットが保存される
+    _nt_hist = list((PROJECT_ROOT / "exports" / "notifications" / "history").glob("*.json"))
+    _t629 = len(_nt_hist) > 0
+    results.append({"level": "ok" if _t629 else "error", "check": "notification_history",
+                    "message": f"#629 notifications/history/ に履歴が保存される（{len(_nt_hist)}日分）"
+                               + ("" if _t629 else " ← 履歴が見つかりません")})
+
+    # #630: suppression（再送抑制・24h/ROI+5%例外）が実装される
+    _supp_exists = (PROJECT_ROOT / "exports" / "notifications" / "suppression.json").exists()
+    _t630 = _supp_exists and ('SUPPRESS_HOURS' in _nt_src) and ('RESEND_ROI_GAIN' in _nt_src) \
+        and ('apply_suppression' in _nt_src)
+    results.append({"level": "ok" if _t630 else "error", "check": "notification_suppression",
+                    "message": "#630 通知抑制（24h再送禁止・ROI+5%例外）が実装される"
+                               + ("" if _t630 else " ← 抑制ロジックが見つかりません")})
+
+    # #631: priority（Critical/High/Medium/Low）が全イベントに付与
+    _valid_pri = {"Critical", "High", "Medium", "Low"}
+    _t631 = _nt_ok and (len(_nt_events) == 0 or all(e.get("priority") in _valid_pri for e in _nt_events)) \
+        and ('WATCH_TO_BUY' in _nt_src) and ('NEW_MAIN' in _nt_src)
+    results.append({"level": "ok" if _t631 else "error", "check": "notification_priority",
+                    "message": "#631 通知に priority（Critical/High/Medium/Low）が付与される"
+                               + ("" if _t631 else " ← priority が不正")})
+
+    # #632: latest notifications が LP（AI Dashboard）に表示される
+    _t632 = _nt_ok and ('ai-notifications' in _lp_html) and ('最新通知' in _lp_html)
+    results.append({"level": "ok" if _t632 else "error", "check": "lp_latest_notifications",
+                    "message": "#632 最新通知が LP（AI Dashboard）に表示される"
+                               + ("" if _t632 else " ← 最新通知表示が見つかりません")})
+
+    # #633: 通知先チャネル（Discord/Telegram）が拡張しやすい構造で定義される
+    _t633 = _nt_ok and ("discord" in _nt.get("channels", []) and "telegram" in _nt.get("channels", [])) \
+        and ('CHANNELS' in _nt_src)
+    results.append({"level": "ok" if _t633 else "error", "check": "notification_channels",
+                    "message": "#633 通知チャネル（Discord/Telegram）が定義される"
+                               + ("" if _t633 else " ← チャネル定義が見つかりません")})
+
     return results
 
 

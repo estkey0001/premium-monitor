@@ -1,0 +1,16 @@
+{
+  "generated_at": "2026-07-22 19:28 JST",
+  "date": "2026-07-22",
+  "is_baseline": false,
+  "channels": [
+    "discord",
+    "telegram"
+  ],
+  "delivery_status": {
+    "discord": "no_events",
+    "telegram": "no_events"
+  },
+  "event_count": 0,
+  "suppressed_count": 0,
+  "events": []
+}

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-22 15:29 JST",
+  "generated_at": "2026-07-22 15:31 JST",
   "date": "2026-07-22",
   "health_score": {
     "data_quality": 6.4,
@@ -11,7 +11,7 @@
   },
   "data_quality": {
     "total_obs": 1098,
-    "usable_obs": 110,
+    "usable_obs": 111,
     "stale_count": 941,
     "stale_rate": 0.857,
     "zero_count": 447,
@@ -404,15 +404,15 @@
   "diff_vs_prev": {
     "available": true,
     "stale_rate": {
-      "prev": 0.9293,
+      "prev": 0.857,
       "cur": 0.857
     },
     "zero_rate": {
-      "prev": 0.439,
+      "prev": 0.4071,
       "cur": 0.4071
     },
     "item_url_rate": {
-      "prev": 0.4229,
+      "prev": 0.4627,
       "cur": 0.4627
     },
     "main_route_count": {

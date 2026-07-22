@@ -4778,7 +4778,8 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             fetch_failed_deals=list(fetch_failed_deals or []),
             market_prices_by_product=market_prices_by_product or {},
         )
-        advanced_html    = self._tab_advanced(advanced_deals, advanced_snaps, watch_candidates,
+        advanced_html    = self._ai_dashboard_section() + self._tab_advanced(
+                                              advanced_deals, advanced_snaps, watch_candidates,
                                               camera_watch=camera_watch,
                                               camera_beginner_deals=[],
                                               market_prices_by_product=market_prices_by_product or {},
@@ -4960,6 +4961,76 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 f'<td>¥{r["price"]:,}</td><td>{("¥%d"%r["target"]) if r["target"] else "—"}</td>'
                 f'<td>{diff_s}</td><td>{status}</td></tr>')
         parts.append('</table></div>')
+        return "".join(parts)
+
+    def _ai_dashboard_section(self) -> str:
+        """AI Dashboard（Proタブ最上部）: 今日のおすすめ / Today's Opportunities / Health / Main・Reference。"""
+        import json as _json_ai
+        from html import escape as _esc
+        p = Path(__file__).resolve().parent.parent.parent / "exports" / "ai_opportunities" / "latest.json"
+        if not p.exists():
+            return ""
+        try:
+            d = _json_ai.loads(p.read_text(encoding="utf-8"))
+        except Exception:
+            return ""
+        ops = d.get("todays_opportunities", [])
+        daily = d.get("daily_recommendation")
+        hs = d.get("health_score")
+        note = d.get("health_note", "")
+        parts = ['<div class="ai-dashboard" style="margin:8px 0 18px;border:1px solid #c7d2fe;'
+                 'background:linear-gradient(180deg,#eef2ff,#f8fafc);border-radius:10px;padding:14px 16px">',
+                 '<div style="font-weight:800;color:#4338ca;font-size:1.1rem">&#129302; AI Dashboard</div>']
+        # Health連携メッセージ
+        if note:
+            ncol = "#dc2626" if (hs is not None and hs < 60) else "#059669" if (hs is not None and hs >= 80) else "#64748b"
+            parts.append(f'<div style="font-size:0.82rem;color:{ncol};margin-top:2px">{_esc(note)}'
+                         f'（Health Score {hs}）</div>')
+        # 指標バー
+        parts.append('<div style="display:flex;flex-wrap:wrap;gap:8px;margin:8px 0">')
+        for lbl, val, col in [("Main Routes", d.get("main_route_count", 0), "#059669"),
+                              ("Reference Routes", d.get("reference_route_count", 0), "#7c3aed"),
+                              ("Health Score", f"{hs}/100" if hs is not None else "—", "#2563eb")]:
+            parts.append(f'<span style="background:#fff;border:1px solid #e2e8f0;border-radius:8px;'
+                         f'padding:5px 10px;font-size:0.82rem">{lbl}: <b style="color:{col}">{val}</b></span>')
+        parts.append('</div>')
+        # 今日のおすすめ（1商品）
+        if daily:
+            dcol = {"BUY": "#059669", "WATCH": "#d97706", "PASS": "#dc2626"}.get(daily["buy_now"], "#64748b")
+            parts.append(
+                '<div class="ai-daily-reco" style="background:#fff;border-left:4px solid #4338ca;border-radius:8px;'
+                'padding:10px 12px;margin:6px 0">'
+                '<div style="font-weight:700;color:#4338ca">&#11088; 今日のおすすめ</div>'
+                f'<div style="margin-top:3px"><b>{_esc(daily["product"])}</b> '
+                f'<span style="background:{dcol};color:#fff;border-radius:5px;padding:1px 7px;font-size:0.75rem">'
+                f'{_esc(daily["buy_now"])}</span> '
+                f'<span style="color:#64748b;font-size:0.8rem">Score {daily["opportunity_score"]}/100</span></div>'
+                f'<div style="font-size:0.82rem;color:#334155;margin-top:2px">{_esc(daily["reason"])}</div></div>')
+        # Today's Opportunities（TOP10）
+        parts.append('<div class="ai-opportunities" style="margin-top:8px">'
+                     '<div style="font-weight:700;color:#334155">&#128200; Today\'s Opportunities（期待度順 TOP10）</div>')
+        if not ops:
+            parts.append('<div style="font-size:0.85rem;color:#94a3b8;margin-top:4px">本日は候補がありません。'
+                         'Health タブでデータ取得状況をご確認ください。</div>')
+        for c in ops:
+            dcol = {"BUY": "#059669", "WATCH": "#d97706", "PASS": "#dc2626"}.get(c["buy_now"], "#64748b")
+            sm = c["summary"].splitlines()
+            parts.append(
+                '<div class="ai-op-card" style="background:#fff;border:1px solid #e2e8f0;border-radius:8px;'
+                'padding:9px 12px;margin:6px 0">'
+                f'<div style="font-weight:700">#{c["priority"]} {_esc(c["product"])} '
+                f'<span style="background:{dcol};color:#fff;border-radius:5px;padding:1px 7px;font-size:0.74rem">'
+                f'{_esc(c["buy_now"])}</span> '
+                f'<span style="color:#64748b;font-size:0.78rem">Opportunity {c["opportunity_score"]}/100・'
+                f'confidence {_esc(c["confidence"])}</span></div>'
+                f'<div style="font-size:0.82rem;margin-top:3px">{_esc(sm[0])} '
+                + " ".join(_esc(x) for x in sm[1:]) + '</div>'
+                f'<div style="font-size:0.8rem;color:#334155;margin-top:2px">'
+                f'利益 +¥{c["net_profit"]:,} / ROI {c["roi"]*100:.1f}% / 保有 {_esc(c["holding_period"])}</div>'
+                f'<div style="font-size:0.76rem;color:#64748b;margin-top:2px">Why: {_esc("; ".join(c["why"]))}</div>'
+                f'<div style="font-size:0.76rem;color:#b45309;margin-top:2px">Risk: {_esc(" / ".join(c["risks"]))}</div>'
+                '</div>')
+        parts.append('</div></div>')
         return "".join(parts)
 
     def _tab_health(self) -> str:

@@ -178,6 +178,13 @@ jobs:
         env:
           PYTHONPATH: .
 
+      # 13.6 Generate AI Opportunities（AI Dashboard の中核・ルールベース）
+      - name: Generate AI opportunities
+        run: python scripts/generate_ai_opportunities.py
+        continue-on-error: true
+        env:
+          PYTHONPATH: .
+
       - name: Generate data quality report
         run: python scripts/generate_data_quality_report.py
         continue-on-error: true
@@ -257,6 +264,7 @@ jobs:
                   exports/normalized_price_observations/ \
                   exports/profit_routes/ \
                   exports/flea_sold_prices/ \
+                  exports/ai_opportunities/ \
                   audit_health/ \
                   exports/data_quality_report/ exports/camera_buyback_status.json \
                   data/alerts.csv data/lottery_events.csv \

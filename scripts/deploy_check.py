@@ -5937,6 +5937,60 @@ def check() -> list[dict]:
                                f"（C{len(_anom.get('critical',[]))}/W{len(_anom.get('warning',[]))}/I{len(_anom.get('info',[]))}）"
                                + ("" if _t614 else " ← 異常分類がありません")})
 
+    # ── AI Opportunities Engine ガード #615-#621 ──
+    _ai = _load_json_safe('exports/ai_opportunities/latest.json') or {}
+    _ai_ok = isinstance(_ai, dict) and ('todays_opportunities' in _ai)
+    _ai_ops = _ai.get('todays_opportunities', []) if _ai_ok else []
+
+    # #615: ai_opportunities.json が存在し AI Dashboard が LP にある
+    _t615 = _ai_ok and ('ai-dashboard' in _lp_html) and ('AI Dashboard' in _lp_html)
+    results.append({"level": "ok" if _t615 else "error", "check": "ai_dashboard_exists",
+                    "message": f"#615 ai_opportunities.json と LP の AI Dashboard が存在する（{len(_ai_ops)}件）"
+                               + ("" if _t615 else " ← ファイルまたは AI Dashboard がありません")})
+
+    # #616: Opportunity Score が全候補に付与される
+    _t616 = _ai_ok and (len(_ai_ops) == 0 or all(
+        isinstance(o.get('opportunity_score'), int) and 0 <= o['opportunity_score'] <= 100 for o in _ai_ops))
+    results.append({"level": "ok" if _t616 else "error", "check": "ai_opportunity_score",
+                    "message": "#616 Opportunity Score（0-100）が全候補に付与される"
+                               + ("" if _t616 else " ← Opportunity Score が不正")})
+
+    # #617: BUY/WATCH/PASS 判定が付与される
+    _valid_dec = {"BUY", "WATCH", "PASS"}
+    _t617 = _ai_ok and (len(_ai_ops) == 0 or all(o.get('buy_now') in _valid_dec for o in _ai_ops))
+    results.append({"level": "ok" if _t617 else "error", "check": "ai_buy_decision",
+                    "message": "#617 BUY/WATCH/PASS 判定が付与される"
+                               + ("" if _t617 else " ← 判定値が不正")})
+
+    # #618: Today's Recommendation（今日のおすすめ）が表示される
+    _t618 = _ai_ok and (bool(_ai.get('daily_recommendation')) == (len(_ai_ops) > 0)) \
+        and (len(_ai_ops) == 0 or '今日のおすすめ' in _lp_html)
+    results.append({"level": "ok" if _t618 else "error", "check": "ai_daily_recommendation",
+                    "message": "#618 今日のおすすめ（Daily Recommendation）が表示される"
+                               + ("" if _t618 else " ← 今日のおすすめが見つかりません")})
+
+    # #619: Risk が全候補に付与される
+    _t619 = _ai_ok and (len(_ai_ops) == 0 or all(isinstance(o.get('risks'), list) and o['risks'] for o in _ai_ops))
+    results.append({"level": "ok" if _t619 else "error", "check": "ai_risks",
+                    "message": "#619 Risk が全候補に付与される"
+                               + ("" if _t619 else " ← Risk がありません")})
+
+    # #620: Holding Period が全候補に付与される
+    _valid_hold = {"即日", "数日", "1週間", "1ヶ月", "長期"}
+    _t620 = _ai_ok and (len(_ai_ops) == 0 or all(o.get('holding_period') in _valid_hold for o in _ai_ops))
+    results.append({"level": "ok" if _t620 else "error", "check": "ai_holding_period",
+                    "message": "#620 Holding Period が全候補に付与される"
+                               + ("" if _t620 else " ← Holding Period が不正")})
+
+    # #621: Health連携（60未満=低下中 / 80以上=良好）が実装される
+    _hnote = _ai.get('health_note', '') if _ai_ok else ''
+    _ai_src = _read_src('scripts', 'generate_ai_opportunities.py')
+    _t621 = _ai_ok and ('現在データ品質低下中' in _ai_src) and ('データ品質は良好です' in _ai_src) \
+        and (_hnote != '' if _ai.get('health_score') is not None else True)
+    results.append({"level": "ok" if _t621 else "error", "check": "ai_health_link",
+                    "message": f"#621 Health連携メッセージが実装される（現在: {_hnote or '—'}）"
+                               + ("" if _t621 else " ← Health連携が見つかりません")})
+
     return results
 
 

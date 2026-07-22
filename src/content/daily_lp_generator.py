@@ -5059,7 +5059,55 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 f'<div style="font-size:0.76rem;color:#64748b;margin-top:2px">Why: {_esc("; ".join(c["why"]))}</div>'
                 f'<div style="font-size:0.76rem;color:#b45309;margin-top:2px">Risk: {_esc(" / ".join(c["risks"]))}</div>'
                 '</div>')
-        parts.append('</div></div>')
+        parts.append('</div>')
+        # 最新通知10件（Notification Engine）
+        parts.append(self._notifications_html())
+        parts.append('</div>')
+        return "".join(parts)
+
+    def _notifications_html(self) -> str:
+        """最新通知10件（exports/notifications/latest.json + 直近history）。"""
+        import json as _json_n
+        from html import escape as _esc
+        base = Path(__file__).resolve().parent.parent.parent / "exports" / "notifications"
+        latest = base / "latest.json"
+        if not latest.exists():
+            return ""
+        try:
+            d = _json_n.loads(latest.read_text(encoding="utf-8"))
+        except Exception:
+            return ""
+        events = list(d.get("events", []))
+        # 直近history からも補完して最新10件に
+        try:
+            hs = sorted((base / "history").glob("*.json"), reverse=True)
+            for hp in hs[:7]:
+                if len(events) >= 10:
+                    break
+                hd = _json_n.loads(hp.read_text(encoding="utf-8"))
+                for e in hd.get("events", []):
+                    if e not in events:
+                        events.append(e)
+        except Exception:
+            pass
+        events = events[:10]
+        pcol = {"Critical": "#dc2626", "High": "#ea580c", "Medium": "#d97706", "Low": "#64748b"}
+        parts = ['<div class="ai-notifications" style="margin-top:10px">',
+                 '<div style="font-weight:700;color:#334155">&#128276; 最新通知（最大10件）</div>',
+                 f'<div style="font-size:0.76rem;color:#64748b">配信: {_esc(", ".join(d.get("channels",[])))} '
+                 f'（{_esc(str(d.get("delivery_status",{})))}）</div>']
+        if not events:
+            parts.append('<div style="font-size:0.85rem;color:#94a3b8;margin-top:4px">'
+                         '新規通知はありません（条件成立で自動通知されます）。</div>')
+        for e in events:
+            col = pcol.get(e.get("priority"), "#64748b")
+            msg = _esc((e.get("message") or "").replace("\n", " / "))
+            parts.append(
+                f'<div style="background:#fff;border:1px solid #e2e8f0;border-left:3px solid {col};'
+                f'border-radius:6px;padding:6px 10px;margin:4px 0;font-size:0.82rem">'
+                f'<b style="color:{col}">[{_esc(e.get("priority",""))}] {_esc(e.get("type",""))}</b>'
+                f'<span style="color:#64748b"> · {_esc(e.get("created_at",""))}</span><br>{msg}</div>')
+        parts.append('</div>')
         return "".join(parts)
 
     def _tab_health(self) -> str:

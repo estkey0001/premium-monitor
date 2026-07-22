@@ -5991,6 +5991,53 @@ def check() -> list[dict]:
                     "message": f"#621 Health連携メッセージが実装される（現在: {_hnote or '—'}）"
                                + ("" if _t621 else " ← Health連携が見つかりません")})
 
+    # ── AI Action Engine ガード #622-#627 ──
+    # #622: Action（WAIT/BUY/SKIP/ALERT）が全候補に付与
+    _valid_act = {"BUY", "WAIT", "SKIP", "ALERT"}
+    _t622 = _ai_ok and (len(_ai_ops) == 0 or all(o.get("action") in _valid_act for o in _ai_ops)) \
+        and ('Action:' in _lp_html)
+    results.append({"level": "ok" if _t622 else "error", "check": "ai_action",
+                    "message": "#622 Action（WAIT/BUY/SKIP/ALERT）が付与・表示される"
+                               + ("" if _t622 else " ← Action が不正/未表示")})
+
+    # #623: Alert（アラート閾値）が実装・表示される
+    _has_alert = any(o.get("alert_threshold") for o in _ai_ops)
+    _t623 = _ai_ok and ((not _has_alert) or ('アラート' in _lp_html or '以下になったら通知' in _lp_html))
+    results.append({"level": "ok" if _t623 else "error", "check": "ai_alert",
+                    "message": "#623 Alert（価格閾値通知）が表示される"
+                               + ("" if _t623 else " ← Alert 表示が見つかりません")})
+
+    # #624: Timeline（現在→監視→成立→通知）が付与・表示される
+    _t624 = _ai_ok and (len(_ai_ops) == 0 or all(
+        isinstance(o.get("timeline"), dict) and o["timeline"].get("current") for o in _ai_ops)) \
+        and ('タイムライン' in _lp_html)
+    results.append({"level": "ok" if _t624 else "error", "check": "ai_timeline",
+                    "message": "#624 Opportunity Timeline が付与・表示される"
+                               + ("" if _t624 else " ← Timeline が不正/未表示")})
+
+    # #625: Expected Buy Price / Expected Sell Price が付与される
+    _t625 = _ai_ok and (len(_ai_ops) == 0 or all(
+        ("expected_buy_price" in o and "expected_sell_price" in o) for o in _ai_ops)) \
+        and ('想定仕入' in _lp_html)
+    results.append({"level": "ok" if _t625 else "error", "check": "ai_expected_prices",
+                    "message": "#625 Expected Buy/Sell Price が付与・表示される"
+                               + ("" if _t625 else " ← 想定価格が見つかりません")})
+
+    # #626: Today Tasks（今日やること）が Dashboard 最上部に表示される
+    _t626 = _ai_ok and isinstance(_ai.get("today_tasks"), list) and len(_ai["today_tasks"]) > 0 \
+        and ('今日やること' in _lp_html)
+    results.append({"level": "ok" if _t626 else "error", "check": "ai_today_tasks",
+                    "message": f"#626 今日やること（Today Tasks）が表示される（{len(_ai.get('today_tasks',[]))}件）"
+                               + ("" if _t626 else " ← 今日やること が見つかりません")})
+
+    # #627: 成立確率・次回更新予測・価格トレンドが付与される
+    _t627 = _ai_ok and (len(_ai_ops) == 0 or all(
+        ("success_probability" in o and o.get("next_update") and isinstance(o.get("price_trend"), dict))
+        for o in _ai_ops))
+    results.append({"level": "ok" if _t627 else "error", "check": "ai_probability_forecast_trend",
+                    "message": "#627 成立確率/次回更新予測/価格トレンドが付与される"
+                               + ("" if _t627 else " ← 一部フィールドが欠落")})
+
     return results
 
 

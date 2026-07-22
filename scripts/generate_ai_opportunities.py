@@ -21,11 +21,71 @@ NOW = datetime.now(tz=JST)
 OUT = ROOT / "exports" / "ai_opportunities"
 
 
+DB_PATH = ROOT / "data" / "premium_monitor.db"
+
+
 def _load(p):
     try:
         return json.loads((ROOT / p).read_text(encoding="utf-8"))
     except Exception:
         return {}
+
+
+def _dom_fee(buy: int) -> int:
+    return 1500 + max(3000, round(buy * 0.02))
+
+
+def _next_update() -> str:
+    """次回データ更新予測。workflow は毎日 12:00 JST（cron 03:00 UTC）。"""
+    noon = NOW.replace(hour=12, minute=0, second=0, microsecond=0)
+    if NOW < noon:
+        return f"次回自動更新: 本日 {noon.strftime('%H:%M')}頃（買取/価格 日次取得）"
+    nxt = noon + timedelta(days=1)
+    return f"次回自動更新: 明日 {nxt.strftime('%H:%M')}頃（通常24時間以内）"
+
+
+def _price_trend(product_id: str) -> dict:
+    """買取価格の簡易トレンド（7d/30d/90d）。↑上昇 / ↓下降 / → 横ばい・データ不足。"""
+    import sqlite3
+    out = {"7d": "→", "30d": "→", "90d": "→"}
+    try:
+        con = sqlite3.connect(str(DB_PATH))
+        rows = con.execute(
+            "SELECT buyback_price, observed_at FROM buyback_prices "
+            "WHERE product_id=? AND buyback_price>0 AND data_source!='fetch_failed'",
+            (product_id,)).fetchall()
+        con.close()
+    except Exception:
+        return out
+    pts = []
+    for price, oa in rows:
+        try:
+            dt = datetime.fromisoformat(str(oa))
+            if dt.tzinfo is None:
+                dt = dt.replace(tzinfo=JST)
+            age = (NOW - dt.astimezone(JST)).total_seconds() / 86400
+            pts.append((age, price))
+        except Exception:
+            pass
+    if len(pts) < 2:
+        return out
+
+    def _arrow(win):
+        inside = [p for a, p in pts if a <= win]
+        older = [p for a, p in pts if win < a <= win * 3]
+        if not inside or not older:
+            return "→"
+        mi = sorted(inside)[len(inside) // 2]
+        mo = sorted(older)[len(older) // 2]
+        if mi > mo * 1.02:
+            return "↑"
+        if mi < mo * 0.98:
+            return "↓"
+        return "→"
+    out["7d"] = _arrow(7)
+    out["30d"] = _arrow(30)
+    out["90d"] = _arrow(90)
+    return out
 
 
 def _stars(score: int) -> str:
@@ -188,10 +248,57 @@ def main() -> int:
     for c in cands:
         score, breakdown = _score(c)
         decision = _buy_decision(c, score)
+        # ── Action Engine ──
+        sell = c["sell_price"]; buy = c["buy_price"]
+        # ROI8% を満たす仕入れ上限（国内）= (sell - fee) / 1.08
+        exp_buy = int((sell - _dom_fee(buy)) / 1.08) if sell else buy
+        exp_sell = sell
+        if decision == "BUY":
+            action = "BUY"
+            action_reason = "成立条件を満たしています。仕入れ→売却を実行できます。"
+        elif decision == "PASS":
+            action = "SKIP"
+            action_reason = "現時点では利益条件を満たしません。見送り推奨。"
+        elif c["kind"] == "reference":
+            action = "WAIT"
+            action_reason = "eBay sold 更新（EBAY_APP_ID 設定）後に BUY 候補へ昇格します。海外価格の更新待ちです。"
+        elif c["roi"] < 0.08:
+            action = "WAIT"
+            gap = max(0, buy - exp_buy)
+            action_reason = f"あと ¥{gap:,} 価格が下がれば ROI8%（BUY候補）になります。"
+        else:
+            # ROI は8%以上だが Opportunity Score<80（manual等）。価格アラートで監視。
+            action = "ALERT"
+            action_reason = f"価格が ¥{exp_buy:,} 以下になったら通知（BUY化を狙う）。"
+        # 成立確率（ルールベース）
+        if c["kind"] == "main":
+            prob = max(30, min(95, round(c.get("reproducibility_score", 40) * 0.9 + (10 if c["age_days"] and c["age_days"] <= 7 else 0))))
+        else:
+            prob = 30
+        # タイムライン（現在→監視→成立→通知）
+        stages = ["候補", "監視", "成立", "通知"]
+        if decision == "BUY":
+            cur_stage = "成立"
+        elif action in ("WAIT", "ALERT"):
+            cur_stage = "監視"
+        else:
+            cur_stage = "候補"
         ops.append({
             "product": c["product_name"], "product_id": c["product_id"], "kind": c["kind"],
             "opportunity_score": score, "score_breakdown": breakdown,
             "buy_now": decision, "confidence": _confidence(c, score),
+            "action": action, "action_reason": action_reason,
+            "alert_threshold": exp_buy if action in ("ALERT", "WAIT") else None,
+            "expected_buy_price": exp_buy, "expected_sell_price": exp_sell,
+            "buy_conditions": {
+                "buy": f"{c['buy_source']} ≤ ¥{exp_buy:,}",
+                "sell": f"{c['sell_source']} ≥ ¥{exp_sell:,}",
+                "roi": "ROI ≥ 8%",
+            },
+            "next_update": _next_update(),
+            "price_trend": _price_trend(c["product_id"]),
+            "success_probability": prob,
+            "timeline": {"stages": stages, "current": cur_stage},
             "summary": _summary(c, score), "why": _why(c), "risks": _risks(c),
             "holding_period": _holding(c),
             "net_profit": c["net_profit"], "roi": round(c["roi"], 4),
@@ -227,11 +334,23 @@ def main() -> int:
     else:
         health_note = "データ品質は標準的です"
 
+    # Task9 今日やること（上位候補の Action を行動文に変換）
+    _act_verb = {
+        "BUY": lambda o: f"✅ {o['product']} を仕入れる（{o['buy_source']} ≤¥{o['expected_buy_price']:,}）",
+        "ALERT": lambda o: f"🔔 {o['product']} を監視（¥{o['alert_threshold']:,}以下で通知）",
+        "WAIT": lambda o: f"⏳ {o['product']} は待機（{o['action_reason']}）",
+        "SKIP": lambda o: f"⏭ {o['product']} は見送り",
+    }
+    today_tasks = [_act_verb.get(o["action"], lambda x: x["product"])(o) for o in top10[:5]]
+    if not today_tasks:
+        today_tasks = ["本日の対象なし（データ取得状況を Health タブで確認）"]
+
     payload = {
         "generated_at": NOW.strftime("%Y-%m-%d %H:%M JST"),
         "health_score": health_score, "health_note": health_note,
         "main_route_count": sum(1 for o in ops if o["kind"] == "main"),
         "reference_route_count": sum(1 for o in ops if o["kind"] == "reference"),
+        "today_tasks": today_tasks,
         "daily_recommendation": daily,
         "todays_opportunities": top10,
     }
@@ -251,8 +370,11 @@ def _write_md(p):
          f"生成: {p['generated_at']}",
          f"Health Score: {p['health_score']}（{p['health_note']}） / "
          f"main {p['main_route_count']} / reference {p['reference_route_count']}", ""]
+    o += ["## 今日やること", ""]
+    for t in p.get("today_tasks", []):
+        o.append(f"- {t}")
     d = p.get("daily_recommendation")
-    o += ["## 今日のおすすめ", ""]
+    o += ["", "## 今日のおすすめ", ""]
     if d:
         o.append(f"> **{d['product']}**（{d['buy_now']} / Score {d['opportunity_score']}）")
         o.append(f"> {d['reason']}")
@@ -261,17 +383,24 @@ def _write_md(p):
     if p["health_note"]:
         o += ["", f"**{p['health_note']}**"]
     o += ["", "## Opportunity Ranking TOP10", ""]
+    _act = {"BUY": "🟢 BUY", "ALERT": "🔔 ALERT", "WAIT": "⏳ WAIT", "SKIP": "⏭ SKIP"}
     for c in p["todays_opportunities"]:
-        deci = {"BUY": "🟢 BUY", "WATCH": "🟡 WATCH", "PASS": "🔴 PASS"}[c["buy_now"]]
-        o += [f"### #{c['priority']} {c['product']} — {deci}（Score {c['opportunity_score']}/100）",
+        tl = c["timeline"]
+        tl_str = " → ".join((f"**{s}**" if s == tl["current"] else s) for s in tl["stages"])
+        o += [f"### #{c['priority']} {c['product']} — {_act.get(c['action'], c['action'])}（Score {c['opportunity_score']}/100・成立確率 {c['success_probability']}%）",
               f"- {c['summary'].splitlines()[0]}",
               "  " + " ".join(c["summary"].splitlines()[1:]),
+              f"- Action: {c['action']} — {c['action_reason']}",
+              f"- 成立条件: {c['buy_conditions']['buy']} ／ {c['buy_conditions']['sell']} ／ {c['buy_conditions']['roi']}",
+              f"- 想定仕入 ¥{c['expected_buy_price']:,} / 想定売却 ¥{c['expected_sell_price']:,}"
+              + (f" ／ 🔔 ¥{c['alert_threshold']:,}以下で通知" if c.get('alert_threshold') else ""),
+              f"- 価格トレンド: 7d {c['price_trend']['7d']} / 30d {c['price_trend']['30d']} / 90d {c['price_trend']['90d']}",
+              f"- {c['next_update']}",
+              f"- タイムライン: {tl_str}",
               f"- 期待: 利益 ¥{c['net_profit']:,} / ROI {c['roi']*100:.1f}% / confidence {c['confidence']}",
-              f"- Score内訳: {c['score_breakdown']}",
-              f"- 仕入 {c['buy_source']} ¥{c['buy_price']:,} → 売却 {c['sell_source']} ¥{c['sell_price']:,}",
+              f"- 保有期間: {c['holding_period']}",
               f"- Why: {'; '.join(c['why'])}",
-              f"- Risk: {' / '.join(c['risks'])}",
-              f"- 保有期間: {c['holding_period']}", ""]
+              f"- Risk: {' / '.join(c['risks'])}", ""]
     if not p["todays_opportunities"]:
         o.append("（本日は候補なし）")
     (OUT / "latest.md").write_text("\n".join(o) + "\n", encoding="utf-8")

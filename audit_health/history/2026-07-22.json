@@ -1,0 +1,515 @@
+{
+  "generated_at": "2026-07-22 15:29 JST",
+  "date": "2026-07-22",
+  "health_score": {
+    "data_quality": 6.4,
+    "profit_discovery": 25,
+    "source_health": 12.5,
+    "link_quality": 4.6,
+    "freshness": 1.4,
+    "total": 49.9
+  },
+  "data_quality": {
+    "total_obs": 1098,
+    "usable_obs": 110,
+    "stale_count": 941,
+    "stale_rate": 0.857,
+    "zero_count": 447,
+    "zero_rate": 0.4071,
+    "item_url_rate": 0.4627,
+    "search_url_rate": 0.1403,
+    "manual_rate": 0.3579,
+    "api_rate": 0.0,
+    "html_rate": 0.0036
+  },
+  "profit": {
+    "main_route_count": 1,
+    "reference_route_count": 4,
+    "max_profit": 12700,
+    "avg_profit": 12700,
+    "avg_roi": 0.0847,
+    "main_route_products": [
+      "prod_gr3x"
+    ]
+  },
+  "sources": {
+    "じゃんぱら": {
+      "success_count": 90,
+      "stale_count": 165,
+      "zero_count": 84,
+      "item_url_rate": 0.4138,
+      "freshness": 0.0517,
+      "success_rate": 0.5172,
+      "confidence": {
+        "high": 132,
+        "medium": 42
+      },
+      "n": 174
+    },
+    "イオシス": {
+      "success_count": 104,
+      "stale_count": 128,
+      "zero_count": 30,
+      "item_url_rate": 0.7761,
+      "freshness": 0.0448,
+      "success_rate": 0.7761,
+      "confidence": {
+        "high": 110,
+        "medium": 24
+      },
+      "n": 134
+    },
+    "買取商店": {
+      "success_count": 94,
+      "stale_count": 104,
+      "zero_count": 18,
+      "item_url_rate": 0.8393,
+      "freshness": 0.0714,
+      "success_rate": 0.8393,
+      "confidence": {
+        "high": 112
+      },
+      "n": 112
+    },
+    "モバイル一番": {
+      "success_count": 31,
+      "stale_count": 69,
+      "zero_count": 43,
+      "item_url_rate": 0.4189,
+      "freshness": 0.0676,
+      "success_rate": 0.4189,
+      "confidence": {
+        "high": 74
+      },
+      "n": 74
+    },
+    "ゲオ": {
+      "success_count": 53,
+      "stale_count": 60,
+      "zero_count": 8,
+      "item_url_rate": 0.5738,
+      "freshness": 0.0164,
+      "success_rate": 0.8689,
+      "confidence": {
+        "high": 25,
+        "medium": 36
+      },
+      "n": 61
+    },
+    "買取一丁目": {
+      "success_count": 28,
+      "stale_count": 56,
+      "zero_count": 32,
+      "item_url_rate": 0.4667,
+      "freshness": 0.0667,
+      "success_rate": 0.4667,
+      "confidence": {
+        "high": 60
+      },
+      "n": 60
+    },
+    "ソフマップ": {
+      "success_count": 28,
+      "stale_count": 44,
+      "zero_count": 22,
+      "item_url_rate": 0.32,
+      "freshness": 0.12,
+      "success_rate": 0.56,
+      "confidence": {
+        "high": 32,
+        "medium": 18
+      },
+      "n": 50
+    },
+    "メーカー公式/定価": {
+      "success_count": 44,
+      "stale_count": 0,
+      "zero_count": 0,
+      "item_url_rate": 0.0,
+      "freshness": 1.0,
+      "success_rate": 1.0,
+      "confidence": {
+        "medium": 44
+      },
+      "n": 44
+    },
+    "フジヤカメラ": {
+      "success_count": 36,
+      "stale_count": 15,
+      "zero_count": 0,
+      "item_url_rate": 0.5556,
+      "freshness": 0.5833,
+      "success_rate": 1.0,
+      "confidence": {
+        "high": 30,
+        "medium": 6
+      },
+      "n": 36
+    },
+    "ゲオモバイル": {
+      "success_count": 0,
+      "stale_count": 32,
+      "zero_count": 36,
+      "item_url_rate": 0.0,
+      "freshness": 0.1111,
+      "success_rate": 0.0,
+      "confidence": {
+        "high": 36
+      },
+      "n": 36
+    },
+    "セカンドストリート": {
+      "success_count": 0,
+      "stale_count": 32,
+      "zero_count": 36,
+      "item_url_rate": 0.0,
+      "freshness": 0.1111,
+      "success_rate": 0.0,
+      "confidence": {
+        "high": 36
+      },
+      "n": 36
+    },
+    "ネットオフ": {
+      "success_count": 10,
+      "stale_count": 32,
+      "zero_count": 26,
+      "item_url_rate": 0.2778,
+      "freshness": 0.1111,
+      "success_rate": 0.2778,
+      "confidence": {
+        "high": 36
+      },
+      "n": 36
+    },
+    "マップカメラ": {
+      "success_count": 22,
+      "stale_count": 17,
+      "zero_count": 0,
+      "item_url_rate": 0.7273,
+      "freshness": 0.2273,
+      "success_rate": 1.0,
+      "confidence": {
+        "high": 16,
+        "medium": 6
+      },
+      "n": 22
+    },
+    "カメラのキタムラ": {
+      "success_count": 22,
+      "stale_count": 17,
+      "zero_count": 0,
+      "item_url_rate": 0.7273,
+      "freshness": 0.2273,
+      "success_rate": 1.0,
+      "confidence": {
+        "high": 16,
+        "medium": 6
+      },
+      "n": 22
+    },
+    "ブックオフ": {
+      "success_count": 0,
+      "stale_count": 20,
+      "zero_count": 22,
+      "item_url_rate": 0.0,
+      "freshness": 0.0909,
+      "success_rate": 0.0,
+      "confidence": {
+        "high": 22
+      },
+      "n": 22
+    },
+    "駿河屋": {
+      "success_count": 0,
+      "stale_count": 20,
+      "zero_count": 22,
+      "item_url_rate": 0.0,
+      "freshness": 0.0909,
+      "success_rate": 0.0,
+      "confidence": {
+        "high": 22
+      },
+      "n": 22
+    },
+    "TSUTAYA": {
+      "success_count": 0,
+      "stale_count": 20,
+      "zero_count": 22,
+      "item_url_rate": 0.0,
+      "freshness": 0.0909,
+      "success_rate": 0.0,
+      "confidence": {
+        "high": 22
+      },
+      "n": 22
+    },
+    "eBay sold(新品)": {
+      "success_count": 20,
+      "stale_count": 15,
+      "zero_count": 0,
+      "item_url_rate": 1.0,
+      "freshness": 0.25,
+      "success_rate": 1.0,
+      "confidence": {
+        "medium": 20
+      },
+      "n": 20
+    },
+    "メルカリ未使用": {
+      "success_count": 20,
+      "stale_count": 15,
+      "zero_count": 0,
+      "item_url_rate": 1.0,
+      "freshness": 0.25,
+      "success_rate": 1.0,
+      "confidence": {
+        "medium": 20
+      },
+      "n": 20
+    },
+    "ハードオフ": {
+      "success_count": 0,
+      "stale_count": 16,
+      "zero_count": 18,
+      "item_url_rate": 0.0,
+      "freshness": 0.1111,
+      "success_rate": 0.0,
+      "confidence": {
+        "high": 18
+      },
+      "n": 18
+    },
+    "ドスパラ": {
+      "success_count": 0,
+      "stale_count": 16,
+      "zero_count": 18,
+      "item_url_rate": 0.0,
+      "freshness": 0.1111,
+      "success_rate": 0.0,
+      "confidence": {
+        "high": 18
+      },
+      "n": 18
+    },
+    "Amazon新品出品": {
+      "success_count": 12,
+      "stale_count": 9,
+      "zero_count": 0,
+      "item_url_rate": 1.0,
+      "freshness": 0.25,
+      "success_rate": 1.0,
+      "confidence": {
+        "medium": 12
+      },
+      "n": 12
+    },
+    "パソコン工房": {
+      "success_count": 0,
+      "stale_count": 10,
+      "zero_count": 10,
+      "item_url_rate": 0.0,
+      "freshness": 0.0,
+      "success_rate": 0.0,
+      "confidence": {
+        "high": 10
+      },
+      "n": 10
+    },
+    "ヤフオク (新品/未使用落札)": {
+      "success_count": 10,
+      "stale_count": 10,
+      "zero_count": 0,
+      "item_url_rate": 0.0,
+      "freshness": 0.0,
+      "success_rate": 1.0,
+      "confidence": {
+        "medium": 10
+      },
+      "n": 10
+    },
+    "楽天市場新品": {
+      "success_count": 8,
+      "stale_count": 6,
+      "zero_count": 0,
+      "item_url_rate": 1.0,
+      "freshness": 0.25,
+      "success_rate": 1.0,
+      "confidence": {
+        "medium": 8
+      },
+      "n": 8
+    },
+    "src_ebay": {
+      "success_count": 6,
+      "stale_count": 6,
+      "zero_count": 0,
+      "item_url_rate": 0.0,
+      "freshness": 0.0,
+      "success_rate": 1.0,
+      "confidence": {
+        "medium": 6
+      },
+      "n": 6
+    },
+    "Amazon JP (新品出品)": {
+      "success_count": 5,
+      "stale_count": 5,
+      "zero_count": 0,
+      "item_url_rate": 0.0,
+      "freshness": 0.0,
+      "success_rate": 1.0,
+      "confidence": {
+        "medium": 5
+      },
+      "n": 5
+    },
+    "Yahoo Auction sold": {
+      "success_count": 3,
+      "stale_count": 0,
+      "zero_count": 0,
+      "item_url_rate": 1.0,
+      "freshness": 1.0,
+      "success_rate": 1.0,
+      "confidence": {
+        "medium": 3
+      },
+      "n": 3
+    },
+    "Mercari sold": {
+      "success_count": 3,
+      "stale_count": 0,
+      "zero_count": 0,
+      "item_url_rate": 1.0,
+      "freshness": 1.0,
+      "success_rate": 1.0,
+      "confidence": {
+        "medium": 3
+      },
+      "n": 3
+    },
+    "src_bhphoto": {
+      "success_count": 2,
+      "stale_count": 2,
+      "zero_count": 0,
+      "item_url_rate": 0.0,
+      "freshness": 0.0,
+      "success_rate": 1.0,
+      "confidence": {
+        "medium": 2
+      },
+      "n": 2
+    }
+  },
+  "diff_vs_prev": {
+    "available": true,
+    "stale_rate": {
+      "prev": 0.9293,
+      "cur": 0.857
+    },
+    "zero_rate": {
+      "prev": 0.439,
+      "cur": 0.4071
+    },
+    "item_url_rate": {
+      "prev": 0.4229,
+      "cur": 0.4627
+    },
+    "main_route_count": {
+      "prev": 1,
+      "cur": 1
+    },
+    "reference_route_count": {
+      "prev": 4,
+      "cur": 4
+    },
+    "new_main": [],
+    "lost_main": [],
+    "source_success_changes": []
+  },
+  "anomalies": {
+    "critical": [
+      "stale率 86% (>=50%)",
+      "0円率 41% (>=30%)",
+      "取得成功率 42%: モバイル一番",
+      "取得成功率 47%: 買取一丁目",
+      "取得成功率 0%: ゲオモバイル",
+      "取得成功率 0%: セカンドストリート",
+      "取得成功率 28%: ネットオフ",
+      "取得成功率 0%: ブックオフ",
+      "取得成功率 0%: 駿河屋",
+      "取得成功率 0%: TSUTAYA",
+      "取得成功率 0%: ハードオフ",
+      "取得成功率 0%: ドスパラ",
+      "取得成功率 0%: パソコン工房"
+    ],
+    "warning": [
+      "item_url率 46% (<50%)"
+    ],
+    "info": [
+      "検証済み利益ルート 1件 / 最大 +¥12,700"
+    ]
+  },
+  "improvements_top10": [
+    {
+      "stars": 5,
+      "action": "EBAY_APP_ID 設定",
+      "effect": "+¥250,028（参考4→main昇格）",
+      "effort": "1時間"
+    },
+    {
+      "stars": 4,
+      "action": "取得失敗修正: モバイル一番",
+      "effect": "0円43件の解消でsell候補復活",
+      "effort": "4時間"
+    },
+    {
+      "stars": 4,
+      "action": "取得失敗修正: ゲオモバイル",
+      "effect": "0円36件の解消でsell候補復活",
+      "effort": "4時間"
+    },
+    {
+      "stars": 4,
+      "action": "取得失敗修正: セカンドストリート",
+      "effect": "0円36件の解消でsell候補復活",
+      "effort": "4時間"
+    },
+    {
+      "stars": 4,
+      "action": "取得失敗修正: 買取一丁目",
+      "effect": "0円32件の解消でsell候補復活",
+      "effort": "4時間"
+    },
+    {
+      "stars": 4,
+      "action": "Mercari/Yahoo sold 手動CSV追加",
+      "effect": "国内買取ルートの裾拡大",
+      "effort": "1時間"
+    },
+    {
+      "stars": 3,
+      "action": "official_price を products.yaml 登録",
+      "effect": "差益基準の信頼性向上",
+      "effort": "4時間"
+    },
+    {
+      "stars": 3,
+      "action": "買取/販売リンクの item_url 個別化",
+      "effect": "再現性スコア+30・確認導線",
+      "effort": "1日"
+    },
+    {
+      "stars": 3,
+      "action": "ヤフオク closedsearch 半自動取得",
+      "effect": "同条件sold≥3で再現性向上",
+      "effort": "1日"
+    },
+    {
+      "stars": 2,
+      "action": "freshness横断監視＋自動再取得",
+      "effect": "stale率恒常低下",
+      "effort": "1週間"
+    }
+  ]
+}

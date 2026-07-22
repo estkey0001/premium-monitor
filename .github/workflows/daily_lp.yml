@@ -171,6 +171,13 @@ jobs:
         env:
           PYTHONPATH: .
 
+      # 13.5 Generate Profit Health Dashboard（日次システム監視）
+      - name: Generate health report
+        run: python scripts/generate_health_report.py
+        continue-on-error: true
+        env:
+          PYTHONPATH: .
+
       - name: Generate data quality report
         run: python scripts/generate_data_quality_report.py
         continue-on-error: true
@@ -250,6 +257,7 @@ jobs:
                   exports/normalized_price_observations/ \
                   exports/profit_routes/ \
                   exports/flea_sold_prices/ \
+                  audit_health/ \
                   exports/data_quality_report/ exports/camera_buyback_status.json \
                   data/alerts.csv data/lottery_events.csv \
                   data/overseas_price_history.csv \

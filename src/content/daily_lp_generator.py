@@ -4701,6 +4701,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
   <button class="tab-btn" data-tab="sedori" role="tab" aria-selected="false">&#9636; せどりルート</button>
   <button class="tab-btn" data-tab="beginner" role="tab" aria-selected="false">&#128100; 初心者 <span class="tab-count">{beginner_count}</span></button>
   <button class="tab-btn" data-tab="advanced" role="tab" aria-selected="false">&#9997; Pro <span class="tab-count">{adv_total}</span></button>
+  <button class="tab-btn tab-btn-admin" data-tab="health" role="tab" aria-selected="false" title="管理者向け: システム健康状態">&#129658; Health</button>
   <button class="tab-btn genre-toggle-btn" id="genre-toggle-btn" data-action="toggle-genre" role="button" aria-expanded="false">&#128230; ジャンル &#9660;</button>
 </nav>
 <div class="genre-dropdown" id="genre-dropdown">
@@ -4798,6 +4799,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             _seen_pids.add(_pid)
             _all_beginner_for_sedori.append(_d)
         profit_html      = self._profit_routes_section()
+        health_html      = self._tab_health()
         sedori_html      = profit_html + self._tab_sedori(sedori_routes or [], beginner_deals=_all_beginner_for_sedori)
         lottery_html     = self._section_lottery(lottery_events)
 
@@ -4831,6 +4833,10 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 
 <div id="tab-advanced" class="tab-panel" role="tabpanel">
 {advanced_html}
+</div>
+
+<div id="tab-health" class="tab-panel" role="tabpanel">
+{health_html}
 </div>"""
 
 
@@ -4954,6 +4960,93 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 f'<td>¥{r["price"]:,}</td><td>{("¥%d"%r["target"]) if r["target"] else "—"}</td>'
                 f'<td>{diff_s}</td><td>{status}</td></tr>')
         parts.append('</table></div>')
+        return "".join(parts)
+
+    def _tab_health(self) -> str:
+        """管理者向け Health タブ（audit_health/health_report.json）。"""
+        import json as _json_h
+        from html import escape as _esc
+        p = Path(__file__).resolve().parent.parent.parent / "audit_health" / "health_report.json"
+        if not p.exists():
+            return ('<div class="health-dashboard" style="padding:14px">'
+                    '<div style="color:#64748b">Health レポート未生成（generate_health_report.py を実行してください）。</div></div>')
+        try:
+            h = _json_h.loads(p.read_text(encoding="utf-8"))
+        except Exception:
+            return ''
+        s = h.get("health_score", {}); dq = h.get("data_quality", {}); pf = h.get("profit", {})
+        a = h.get("anomalies", {}); d = h.get("diff_vs_prev", {})
+        total = s.get("total", 0)
+        sc_color = "#059669" if total >= 80 else "#d97706" if total >= 50 else "#dc2626"
+        parts = ['<div class="health-dashboard" style="padding:8px 4px">',
+                 '<div style="background:#fef3c7;border:1px solid #fde68a;border-radius:6px;padding:6px 10px;'
+                 'font-size:0.8rem;color:#92400e;margin-bottom:10px">&#128274; 管理者向け: システム健康状態モニタ</div>',
+                 f'<div style="font-size:0.82rem;color:#64748b">生成: {_esc(h.get("generated_at",""))}</div>',
+                 f'<div style="font-size:2rem;font-weight:800;color:{sc_color};margin:6px 0">'
+                 f'Health Score {total} <span style="font-size:1rem;color:#94a3b8">/ 100</span></div>']
+        # スコア内訳
+        parts.append('<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px">')
+        for lbl, key, mx in [("Data Quality", "data_quality", 35), ("Profit", "profit_discovery", 25),
+                             ("Source", "source_health", 20), ("Link", "link_quality", 10), ("Fresh", "freshness", 10)]:
+            parts.append(f'<span style="background:#f1f5f9;border-radius:6px;padding:4px 8px;font-size:0.78rem">'
+                         f'{lbl}: <b>{s.get(key,0)}</b>/{mx}</span>')
+        parts.append('</div>')
+        # Today's Health 数値
+        parts.append('<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin-bottom:12px">')
+        for lbl, val, color in [
+            ("Main", pf.get("main_route_count", 0), "#059669"),
+            ("Reference", pf.get("reference_route_count", 0), "#7c3aed"),
+            ("Stale率", f"{dq.get('stale_rate',0)*100:.0f}%", "#dc2626"),
+            ("0円率", f"{dq.get('zero_rate',0)*100:.0f}%", "#dc2626"),
+            ("item_url率", f"{dq.get('item_url_rate',0)*100:.0f}%", "#2563eb"),
+            ("usable", dq.get("usable_obs", 0), "#0e7490"),
+        ]:
+            parts.append(f'<div style="background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:8px 10px">'
+                         f'<div style="font-size:0.72rem;color:#64748b">{lbl}</div>'
+                         f'<div style="font-size:1.1rem;font-weight:700;color:{color}">{val}</div></div>')
+        parts.append('</div>')
+        # 前日比較
+        if d.get("available"):
+            def _fx(k, lbl, pct=True):
+                pv = d[k]["prev"]; cv = d[k]["cur"]
+                if pv is None:
+                    return f'{lbl}: {cv}'
+                if pct:
+                    return f'{lbl}: {pv*100:.0f}%→{cv*100:.0f}%'
+                return f'{lbl}: {pv}→{cv}'
+            chips = [_fx("main_route_count", "main", False), _fx("stale_rate", "stale"),
+                     _fx("zero_rate", "0円"), _fx("item_url_rate", "item_url")]
+            parts.append('<div class="health-diff" style="font-size:0.8rem;color:#475569;margin-bottom:10px">'
+                         '<b>前日比較:</b> ' + ' ／ '.join(_esc(c) for c in chips))
+            if d.get("new_main"):
+                parts.append(f' ／ 🆕 新規main: {_esc(", ".join(d["new_main"]))}')
+            if d.get("lost_main"):
+                parts.append(f' ／ ⚠️ 消失main: {_esc(", ".join(d["lost_main"]))}')
+            parts.append('</div>')
+        else:
+            parts.append('<div class="health-diff" style="font-size:0.8rem;color:#94a3b8;margin-bottom:10px">'
+                         '前日比較: 初回（前日レポートなし）</div>')
+        # 異常一覧
+        parts.append('<div class="health-anomalies" style="margin-bottom:12px">'
+                     '<div style="font-weight:700;color:#334155">異常一覧</div>')
+        for lvl, items, color, icon in [("Critical", a.get("critical", []), "#dc2626", "🔴"),
+                                         ("Warning", a.get("warning", []), "#d97706", "🟡"),
+                                         ("Info", a.get("info", []), "#2563eb", "ℹ️")]:
+            if items:
+                parts.append(f'<div style="margin-top:4px;font-size:0.82rem"><b style="color:{color}">{icon} {lvl}（{len(items)}）</b>'
+                             '<ul style="margin:2px 0 0 18px;padding:0">'
+                             + ''.join(f'<li>{_esc(str(x))}</li>' for x in items[:10]) + '</ul></div>')
+        parts.append('</div>')
+        # 改善TOP10
+        parts.append('<div class="health-improvements"><div style="font-weight:700;color:#334155">改善優先順位 TOP10</div>'
+                     '<table style="width:100%;font-size:0.82rem;border-collapse:collapse;margin-top:6px">'
+                     '<tr style="color:#64748b;text-align:left"><th>優先</th><th>施策</th><th>効果</th><th>工数</th></tr>')
+        for i in h.get("improvements_top10", []):
+            stars = '★' * i.get("stars", 0) + '☆' * (5 - i.get("stars", 0))
+            parts.append(f'<tr><td>{stars}</td><td>{_esc(i.get("action",""))}</td>'
+                         f'<td>{_esc(i.get("effect",""))}</td><td>{_esc(i.get("effort",""))}</td></tr>')
+        parts.append('</table></div>')
+        parts.append('</div>')
         return "".join(parts)
 
     def _profit_routes_section(self) -> str:

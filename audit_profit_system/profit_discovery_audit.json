@@ -1,0 +1,2065 @@
+{
+  "generated_at": "2026-07-22 14:54 JST",
+  "npo_generated_at": "2026-06-20 03:07 JST",
+  "profit_summary": {
+    "main_route_count": 1,
+    "reference_route_count": 4,
+    "by_product": {
+      "RICOH GR IIIx": 1
+    },
+    "by_confidence": {
+      "medium": 1
+    },
+    "by_route_type": {
+      "flea_to_buyback": 1
+    },
+    "max_profit": {
+      "product_id": "prod_gr3x",
+      "product_name": "RICOH GR IIIx",
+      "buy_source": "Mercari sold",
+      "buy_price": 150000,
+      "buy_price_type": "flea_sold_price",
+      "buy_price_role": "buy",
+      "buy_condition": "new_unopened",
+      "buy_url": "https://jp.mercari.com/item/m00000000003",
+      "buy_link_type": "item",
+      "sell_source": "フジヤカメラ",
+      "sell_price": 167200,
+      "sell_price_type": "buyback_price",
+      "sell_price_role": "sell",
+      "sell_condition": "new_unopened",
+      "sell_url": "",
+      "sell_link_type": "none",
+      "gross_profit": 17200,
+      "estimated_fee": 0,
+      "platform_fee": 0,
+      "payment_fee": 0,
+      "fx_buffer": 0,
+      "shipping_cost": 1500,
+      "safety_margin": 3000,
+      "net_profit": 12700,
+      "roi": 0.0847,
+      "route_confidence": "medium",
+      "buy_observed_at": "2026-06-07T15:00:00+09:00",
+      "sell_observed_at": "2026-06-19T11:07:36",
+      "buy_observed_age_days": 12.5,
+      "sell_observed_age_days": 0.7,
+      "sell_collector_method": "",
+      "route_type": "flea_to_buyback",
+      "reference_route": false,
+      "rejection_reason": "",
+      "source_count": 2,
+      "same_condition_count": 1,
+      "is_manual_curated": true,
+      "reproducibility_score": 45,
+      "reproducibility_level": "低"
+    },
+    "max_roi": {
+      "product_id": "prod_gr3x",
+      "product_name": "RICOH GR IIIx",
+      "buy_source": "Mercari sold",
+      "buy_price": 150000,
+      "buy_price_type": "flea_sold_price",
+      "buy_price_role": "buy",
+      "buy_condition": "new_unopened",
+      "buy_url": "https://jp.mercari.com/item/m00000000003",
+      "buy_link_type": "item",
+      "sell_source": "フジヤカメラ",
+      "sell_price": 167200,
+      "sell_price_type": "buyback_price",
+      "sell_price_role": "sell",
+      "sell_condition": "new_unopened",
+      "sell_url": "",
+      "sell_link_type": "none",
+      "gross_profit": 17200,
+      "estimated_fee": 0,
+      "platform_fee": 0,
+      "payment_fee": 0,
+      "fx_buffer": 0,
+      "shipping_cost": 1500,
+      "safety_margin": 3000,
+      "net_profit": 12700,
+      "roi": 0.0847,
+      "route_confidence": "medium",
+      "buy_observed_at": "2026-06-07T15:00:00+09:00",
+      "sell_observed_at": "2026-06-19T11:07:36",
+      "buy_observed_age_days": 12.5,
+      "sell_observed_age_days": 0.7,
+      "sell_collector_method": "",
+      "route_type": "flea_to_buyback",
+      "reference_route": false,
+      "rejection_reason": "",
+      "source_count": 2,
+      "same_condition_count": 1,
+      "is_manual_curated": true,
+      "reproducibility_score": 45,
+      "reproducibility_level": "低"
+    },
+    "zero_route_products": 44
+  },
+  "ebay_api_configured": false,
+  "task1_excluded_candidates": [
+    {
+      "product": "FUJIFILM X100VI",
+      "product_id": "prod_x100vi",
+      "status": "usable両方あるが未成立",
+      "buy_source": "Yahoo Auction sold",
+      "sell_source": "フジヤカメラ",
+      "buy_price": 255000,
+      "sell_price": 220000,
+      "gross_profit": 373900,
+      "net_profit": -41600,
+      "roi": -0.163,
+      "exclusion_reason": "国内完結が赤字（sell≤buy）"
+    },
+    {
+      "product": "RICOH GR IV",
+      "product_id": "prod_gr4",
+      "status": "候補不足",
+      "buy_source": "Amazon JP (新品出品)",
+      "sell_source": "src_ebay",
+      "buy_price": 61267,
+      "sell_price": 318725,
+      "gross_profit": 257458,
+      "net_profit": 252958,
+      "roi": 4.129,
+      "exclusion_reason": "全 sell が除外（stale_over_14d）"
+    },
+    {
+      "product": "RICOH GR IV HDF",
+      "product_id": "prod_gr4_hdf",
+      "status": "候補不足",
+      "buy_source": "Amazon JP (新品出品)",
+      "sell_source": "フジヤカメラ",
+      "buy_price": 44105,
+      "sell_price": 213400,
+      "gross_profit": 169295,
+      "net_profit": 164795,
+      "roi": 3.736,
+      "exclusion_reason": "全 buy が除外（stale_over_14d）"
+    },
+    {
+      "product": "Nintendo Switch 2",
+      "product_id": "prod_switch2",
+      "status": "候補不足",
+      "buy_source": "Yahoo Auction sold",
+      "sell_source": "ゲオ",
+      "buy_price": 46000,
+      "sell_price": 190000,
+      "gross_profit": 148500,
+      "net_profit": 139500,
+      "roi": 3.033,
+      "exclusion_reason": "全 sell が除外（price_zero）"
+    },
+    {
+      "product": "iPhone 17 Pro 256GB SIMフリー",
+      "product_id": "prod_iphone17pro_256",
+      "status": "候補不足",
+      "buy_source": "ゲオ",
+      "sell_source": "src_ebay",
+      "buy_price": 169800,
+      "sell_price": 310200,
+      "gross_profit": 140400,
+      "net_profit": 135504,
+      "roi": 0.798,
+      "exclusion_reason": "全 sell が除外（stale_over_14d）"
+    },
+    {
+      "product": "iPhone 17 Pro Max 256GB SIMフリー",
+      "product_id": "prod_iphone17pm_256",
+      "status": "候補不足",
+      "buy_source": "ゲオ",
+      "sell_source": "モバイル一番",
+      "buy_price": 154800,
+      "sell_price": 232000,
+      "gross_profit": 77200,
+      "net_profit": 72604,
+      "roi": 0.469,
+      "exclusion_reason": "全 sell が除外（price_zero）"
+    },
+    {
+      "product": "PlayStation 5 Pro",
+      "product_id": "prod_ps5_pro",
+      "status": "候補不足",
+      "buy_source": "Yahoo Auction sold",
+      "sell_source": "ゲオ",
+      "buy_price": 128000,
+      "sell_price": 190000,
+      "gross_profit": 125000,
+      "net_profit": 57500,
+      "roi": 0.449,
+      "exclusion_reason": "全 sell が除外（price_zero）"
+    },
+    {
+      "product": "iPhone 17 Pro Max 512GB SIMフリー",
+      "product_id": "prod_iphone17pm_512",
+      "status": "候補不足",
+      "buy_source": "ヤフオク (新品/未使用落札)",
+      "sell_source": "モバイル一番",
+      "buy_price": 236544,
+      "sell_price": 268000,
+      "gross_profit": 31456,
+      "net_profit": 25225,
+      "roi": 0.107,
+      "exclusion_reason": "全 sell が除外（price_zero）"
+    },
+    {
+      "product": "RICOH GR IIIx",
+      "product_id": "prod_gr3x",
+      "status": "成立(main)",
+      "buy_source": "Mercari sold",
+      "sell_source": "フジヤカメラ",
+      "buy_price": 150000,
+      "sell_price": 167200,
+      "gross_profit": 92000,
+      "net_profit": 12700,
+      "roi": 0.085,
+      "exclusion_reason": "—（成立）"
+    },
+    {
+      "product": "iPhone 17 Pro 512GB SIMフリー",
+      "product_id": "prod_iphone17pro_512",
+      "status": "候補不足",
+      "buy_source": "ゲオ",
+      "sell_source": "モバイル一番",
+      "buy_price": 204800,
+      "sell_price": 223000,
+      "gross_profit": 18200,
+      "net_profit": 12604,
+      "roi": 0.062,
+      "exclusion_reason": "全 sell が除外（price_zero）"
+    },
+    {
+      "product": "Nintendo Switch 2 マリオカートセット",
+      "product_id": "prod_switch2_mk",
+      "status": "候補不足",
+      "buy_source": "ゲオ",
+      "sell_source": "買取商店",
+      "buy_price": 53000,
+      "sell_price": 67000,
+      "gross_profit": 14000,
+      "net_profit": 9500,
+      "roi": 0.179,
+      "exclusion_reason": "全 sell が除外（stale_over_14d）"
+    },
+    {
+      "product": "MacBook Air M4 13インチ",
+      "product_id": "prod_macbook_air_m4_13",
+      "status": "候補不足",
+      "buy_source": "イオシス",
+      "sell_source": "じゃんぱら",
+      "buy_price": 145000,
+      "sell_price": 143000,
+      "gross_profit": -2000,
+      "net_profit": -6500,
+      "roi": -0.045,
+      "exclusion_reason": "全 sell が除外（stale_over_14d）"
+    },
+    {
+      "product": "RICOH GR IV Monochrome",
+      "product_id": "prod_gr4_mono",
+      "status": "候補不足",
+      "buy_source": "メルカリ未使用",
+      "sell_source": "フジヤカメラ",
+      "buy_price": 300000,
+      "sell_price": 213400,
+      "gross_profit": -85000,
+      "net_profit": -94100,
+      "roi": -0.314,
+      "exclusion_reason": "全 buy が除外（stale_over_14d）"
+    },
+    {
+      "product": "iPhone 17 256GB SIMフリー",
+      "product_id": "prod_iphone17_256",
+      "status": "候補不足",
+      "buy_source": null,
+      "sell_source": "モバイル一番",
+      "buy_price": null,
+      "sell_price": 135000,
+      "gross_profit": null,
+      "net_profit": null,
+      "roi": null,
+      "exclusion_reason": "全 sell が除外（stale_over_14d）"
+    },
+    {
+      "product": "iPhone 16 Pro 256GB SIMフリー",
+      "product_id": "prod_iphone16pro_256",
+      "status": "候補不足",
+      "buy_source": null,
+      "sell_source": "モバイル一番",
+      "buy_price": null,
+      "sell_price": 152000,
+      "gross_profit": null,
+      "net_profit": null,
+      "roi": null,
+      "exclusion_reason": "全 sell が除外（stale_over_14d）"
+    },
+    {
+      "product": "iPhone 16 Pro Max 256GB",
+      "product_id": "prod_iphone16pm_256",
+      "status": "候補不足",
+      "buy_source": null,
+      "sell_source": "src_ebay",
+      "buy_price": null,
+      "sell_price": 216425,
+      "gross_profit": null,
+      "net_profit": null,
+      "roi": null,
+      "exclusion_reason": "全 sell が除外（stale_over_14d）"
+    },
+    {
+      "product": "MacBook Air M4 15インチ",
+      "product_id": "prod_macbook_air_m4_15",
+      "status": "候補不足",
+      "buy_source": null,
+      "sell_source": "じゃんぱら",
+      "buy_price": null,
+      "sell_price": 175000,
+      "gross_profit": null,
+      "net_profit": null,
+      "roi": null,
+      "exclusion_reason": "全 sell が除外（stale_over_14d）"
+    },
+    {
+      "product": "MacBook Pro M4 14インチ",
+      "product_id": "prod_macbook_pro_m4_14",
+      "status": "候補不足",
+      "buy_source": null,
+      "sell_source": "じゃんぱら",
+      "buy_price": null,
+      "sell_price": 220000,
+      "gross_profit": null,
+      "net_profit": null,
+      "roi": null,
+      "exclusion_reason": "全 sell が除外（stale_over_14d）"
+    },
+    {
+      "product": "Mac mini M4",
+      "product_id": "prod_mac_mini_m4",
+      "status": "候補不足",
+      "buy_source": null,
+      "sell_source": "じゃんぱら",
+      "buy_price": null,
+      "sell_price": 78000,
+      "gross_profit": null,
+      "net_profit": null,
+      "roi": null,
+      "exclusion_reason": "全 sell が除外（stale_over_14d）"
+    },
+    {
+      "product": "iPad Pro M4 11インチ",
+      "product_id": "prod_ipad_pro_m4_11",
+      "status": "候補不足",
+      "buy_source": null,
+      "sell_source": "じゃんぱら",
+      "buy_price": null,
+      "sell_price": 148000,
+      "gross_profit": null,
+      "net_profit": null,
+      "roi": null,
+      "exclusion_reason": "全 sell が除外（stale_over_14d）"
+    },
+    {
+      "product": "iPad Pro M4 13インチ",
+      "product_id": "prod_ipad_pro_m4_13",
+      "status": "候補不足",
+      "buy_source": null,
+      "sell_source": "じゃんぱら",
+      "buy_price": null,
+      "sell_price": 192000,
+      "gross_profit": null,
+      "net_profit": null,
+      "roi": null,
+      "exclusion_reason": "全 sell が除外（stale_over_14d）"
+    },
+    {
+      "product": "iPad Air M3",
+      "product_id": "prod_ipad_air_m3",
+      "status": "候補不足",
+      "buy_source": null,
+      "sell_source": "じゃんぱら",
+      "buy_price": null,
+      "sell_price": 78000,
+      "gross_profit": null,
+      "net_profit": null,
+      "roi": null,
+      "exclusion_reason": "全 sell が除外（stale_over_14d）"
+    },
+    {
+      "product": "Apple Watch Series 11",
+      "product_id": "prod_apple_watch_s11",
+      "status": "候補不足",
+      "buy_source": null,
+      "sell_source": "買取商店",
+      "buy_price": null,
+      "sell_price": 48000,
+      "gross_profit": null,
+      "net_profit": null,
+      "roi": null,
+      "exclusion_reason": "全 sell が除外（stale_over_14d）"
+    },
+    {
+      "product": "Apple Watch Ultra 3",
+      "product_id": "prod_apple_watch_ultra3",
+      "status": "候補不足",
+      "buy_source": null,
+      "sell_source": "買取商店",
+      "buy_price": null,
+      "sell_price": 105000,
+      "gross_profit": null,
+      "net_profit": null,
+      "roi": null,
+      "exclusion_reason": "全 sell が除外（stale_over_14d）"
+    },
+    {
+      "product": "AirPods Pro 3",
+      "product_id": "prod_airpods_pro3",
+      "status": "候補不足",
+      "buy_source": null,
+      "sell_source": "買取商店",
+      "buy_price": null,
+      "sell_price": 32000,
+      "gross_profit": null,
+      "net_profit": null,
+      "roi": null,
+      "exclusion_reason": "全 sell が除外（stale_over_14d）"
+    },
+    {
+      "product": "AirPods Max",
+      "product_id": "prod_airpods_max",
+      "status": "候補不足",
+      "buy_source": null,
+      "sell_source": "買取商店",
+      "buy_price": null,
+      "sell_price": 68000,
+      "gross_profit": null,
+      "net_profit": null,
+      "roi": null,
+      "exclusion_reason": "全 sell が除外（stale_over_14d）"
+    },
+    {
+      "product": "PlayStation 5 Digital Edition",
+      "product_id": "prod_ps5_de",
+      "status": "候補不足",
+      "buy_source": null,
+      "sell_source": "イオシス",
+      "buy_price": null,
+      "sell_price": 65000,
+      "gross_profit": null,
+      "net_profit": null,
+      "roi": null,
+      "exclusion_reason": "全 sell が除外（stale_over_14d）"
+    },
+    {
+      "product": "Xbox Series X",
+      "product_id": "prod_xbox_sx",
+      "status": "候補不足",
+      "buy_source": null,
+      "sell_source": "イオシス",
+      "buy_price": null,
+      "sell_price": 50000,
+      "gross_profit": null,
+      "net_profit": null,
+      "roi": null,
+      "exclusion_reason": "全 sell が除外（stale_over_14d）"
+    },
+    {
+      "product": "FUJIFILM GFX100RF",
+      "product_id": "prod_gfx100rf",
+      "status": "候補不足",
+      "buy_source": null,
+      "sell_source": "フジヤカメラ",
+      "buy_price": null,
+      "sell_price": 432300,
+      "gross_profit": null,
+      "net_profit": null,
+      "roi": null,
+      "exclusion_reason": "buy候補なし"
+    },
+    {
+      "product": "FUJIFILM X-T5",
+      "product_id": "prod_xt5",
+      "status": "候補不足",
+      "buy_source": null,
+      "sell_source": "フジヤカメラ",
+      "buy_price": null,
+      "sell_price": 223300,
+      "gross_profit": null,
+      "net_profit": null,
+      "roi": null,
+      "exclusion_reason": "全 sell が除外（accessory_or_wrong_product）"
+    },
+    {
+      "product": "SONY α7R V",
+      "product_id": "prod_a7rv",
+      "status": "候補不足",
+      "buy_source": null,
+      "sell_source": "フジヤカメラ",
+      "buy_price": null,
+      "sell_price": 236500,
+      "gross_profit": null,
+      "net_profit": null,
+      "roi": null,
+      "exclusion_reason": "buy候補なし"
+    },
+    {
+      "product": "SONY α1 II",
+      "product_id": "prod_a1ii",
+      "status": "候補不足",
+      "buy_source": null,
+      "sell_source": "フジヤカメラ",
+      "buy_price": null,
+      "sell_price": 584100,
+      "gross_profit": null,
+      "net_profit": null,
+      "roi": null,
+      "exclusion_reason": "buy候補なし"
+    },
+    {
+      "product": "SONY α7CR",
+      "product_id": "prod_a7cr",
+      "status": "候補不足",
+      "buy_source": null,
+      "sell_source": "フジヤカメラ",
+      "buy_price": null,
+      "sell_price": 242000,
+      "gross_profit": null,
+      "net_profit": null,
+      "roi": null,
+      "exclusion_reason": "buy候補なし"
+    },
+    {
+      "product": "SONY FX3",
+      "product_id": "prod_fx3",
+      "status": "候補不足",
+      "buy_source": null,
+      "sell_source": "フジヤカメラ",
+      "buy_price": null,
+      "sell_price": 421300,
+      "gross_profit": null,
+      "net_profit": null,
+      "roi": null,
+      "exclusion_reason": "buy候補なし"
+    },
+    {
+      "product": "Canon EOS R5 Mark II",
+      "product_id": "prod_r5ii",
+      "status": "候補不足",
+      "buy_source": null,
+      "sell_source": "フジヤカメラ",
+      "buy_price": null,
+      "sell_price": 517000,
+      "gross_profit": null,
+      "net_profit": null,
+      "roi": null,
+      "exclusion_reason": "全 sell が除外（accessory_or_wrong_product）"
+    },
+    {
+      "product": "Canon EOS R3",
+      "product_id": "prod_r3",
+      "status": "候補不足",
+      "buy_source": null,
+      "sell_source": "フジヤカメラ",
+      "buy_price": null,
+      "sell_price": 282700,
+      "gross_profit": null,
+      "net_profit": null,
+      "roi": null,
+      "exclusion_reason": "全 sell が除外（accessory_or_wrong_product）"
+    },
+    {
+      "product": "Nikon Z8",
+      "product_id": "prod_z8",
+      "status": "候補不足",
+      "buy_source": null,
+      "sell_source": "フジヤカメラ",
+      "buy_price": null,
+      "sell_price": 309100,
+      "gross_profit": null,
+      "net_profit": null,
+      "roi": null,
+      "exclusion_reason": "buy候補なし"
+    },
+    {
+      "product": "Nikon Z9",
+      "product_id": "prod_z9",
+      "status": "候補不足",
+      "buy_source": null,
+      "sell_source": "フジヤカメラ",
+      "buy_price": null,
+      "sell_price": 346500,
+      "gross_profit": null,
+      "net_profit": null,
+      "roi": null,
+      "exclusion_reason": "全 sell が除外（accessory_or_wrong_product）"
+    },
+    {
+      "product": "Leica Q3",
+      "product_id": "prod_q3",
+      "status": "候補不足",
+      "buy_source": null,
+      "sell_source": "フジヤカメラ",
+      "buy_price": null,
+      "sell_price": 833800,
+      "gross_profit": null,
+      "net_profit": null,
+      "roi": null,
+      "exclusion_reason": "buy候補なし"
+    },
+    {
+      "product": "Leica M11",
+      "product_id": "prod_m11",
+      "status": "候補不足",
+      "buy_source": null,
+      "sell_source": "フジヤカメラ",
+      "buy_price": null,
+      "sell_price": 1375400,
+      "gross_profit": null,
+      "net_profit": null,
+      "roi": null,
+      "exclusion_reason": "buy候補なし"
+    }
+  ],
+  "task2_failure_reasons": [
+    {
+      "reason": "stale_over_14d",
+      "count": 458
+    },
+    {
+      "reason": "price_zero",
+      "count": 410
+    },
+    {
+      "reason": "accessory_or_wrong_product",
+      "count": 4
+    },
+    {
+      "reason": "route_gross_negative(国内赤字)",
+      "count": 1
+    }
+  ],
+  "task3_improvement_impact": {
+    "EBAY_API (海外sold fresh化)": {
+      "unlocked_routes": 3,
+      "potential_profit": 228794,
+      "note": "現状stale/manualの海外soldをAPI fresh化"
+    },
+    "Mercari/Yahoo Sold (安い仕入れ取得)": {
+      "unlocked_routes": 1,
+      "potential_profit": 833,
+      "note": "target_buy_price 以下の国内sold取得で国内買取ルート成立"
+    },
+    "買取店fresh化: 買取商店": {
+      "unlocked_routes": 0,
+      "potential_profit": 0,
+      "stale_rows": 77,
+      "note": "stale買取をfresh化(daily取得)でsell候補が復活しうる"
+    },
+    "買取店fresh化: イオシス": {
+      "unlocked_routes": 0,
+      "potential_profit": 0,
+      "stale_rows": 64,
+      "note": "stale買取をfresh化(daily取得)でsell候補が復活しうる"
+    },
+    "買取店fresh化: モバイル一番": {
+      "unlocked_routes": 0,
+      "potential_profit": 0,
+      "stale_rows": 28,
+      "note": "stale買取をfresh化(daily取得)でsell候補が復活しうる"
+    },
+    "買取店fresh化: 買取一丁目": {
+      "unlocked_routes": 0,
+      "potential_profit": 0,
+      "stale_rows": 28,
+      "note": "stale買取をfresh化(daily取得)でsell候補が復活しうる"
+    },
+    "買取店fresh化: じゃんぱら": {
+      "unlocked_routes": 0,
+      "potential_profit": 0,
+      "stale_rows": 27,
+      "note": "stale買取をfresh化(daily取得)でsell候補が復活しうる"
+    },
+    "買取店fresh化: ゲオ": {
+      "unlocked_routes": 0,
+      "potential_profit": 0,
+      "stale_rows": 15,
+      "note": "stale買取をfresh化(daily取得)でsell候補が復活しうる"
+    },
+    "買取店fresh化: マップカメラ": {
+      "unlocked_routes": 0,
+      "potential_profit": 0,
+      "stale_rows": 8,
+      "note": "stale買取をfresh化(daily取得)でsell候補が復活しうる"
+    },
+    "買取店fresh化: カメラのキタムラ": {
+      "unlocked_routes": 0,
+      "potential_profit": 0,
+      "stale_rows": 8,
+      "note": "stale買取をfresh化(daily取得)でsell候補が復活しうる"
+    }
+  },
+  "task4_gap_to_profit": [
+    {
+      "product": "FUJIFILM X100VI",
+      "product_id": "prod_x100vi",
+      "buy": 255000,
+      "sell": 220000,
+      "fee": 6600,
+      "current_net": -41600,
+      "roi": -0.163,
+      "status": "未成立",
+      "need_buy_down": 54350,
+      "need_sell_up": 54350,
+      "note": "buy -¥54,350 または sell +¥54,350 で ROI5%成立"
+    },
+    {
+      "product": "RICOH GR IIIx",
+      "product_id": "prod_gr3x",
+      "buy": 150000,
+      "sell": 167200,
+      "fee": 4500,
+      "current_net": 12700,
+      "roi": 0.085,
+      "status": "成立(ROI≥5%)",
+      "need_buy_down": 0,
+      "need_sell_up": 0,
+      "note": "既に成立"
+    }
+  ],
+  "task5_price_sources": {
+    "じゃんぱら": {
+      "count": 140,
+      "fresh_rate": 0.0,
+      "item_url_rate": 0.336,
+      "median_age_days": 27.3,
+      "confidence": {
+        "high": 105,
+        "medium": 35
+      },
+      "method": {
+        "manual": 62,
+        "fetch_failed": 78
+      }
+    },
+    "イオシス": {
+      "count": 114,
+      "fresh_rate": 0.0,
+      "item_url_rate": 0.737,
+      "median_age_days": 26.3,
+      "confidence": {
+        "high": 94,
+        "medium": 20
+      },
+      "method": {
+        "manual": 36,
+        "fetch_failed": 30,
+        "auto_scraped": 48
+      }
+    },
+    "買取商店": {
+      "count": 95,
+      "fresh_rate": 0.0,
+      "item_url_rate": 0.811,
+      "median_age_days": 26.2,
+      "confidence": {
+        "high": 95
+      },
+      "method": {
+        "manual": 17,
+        "fetch_failed": 18,
+        "auto_scraped": 60
+      }
+    },
+    "モバイル一番": {
+      "count": 66,
+      "fresh_rate": 0.0,
+      "item_url_rate": 0.424,
+      "median_age_days": 26.2,
+      "confidence": {
+        "high": 66
+      },
+      "method": {
+        "manual": 7,
+        "fetch_failed": 38,
+        "auto_scraped": 21
+      }
+    },
+    "買取一丁目": {
+      "count": 56,
+      "fresh_rate": 0.0,
+      "item_url_rate": 0.5,
+      "median_age_days": 26.2,
+      "confidence": {
+        "high": 56
+      },
+      "method": {
+        "manual": 4,
+        "fetch_failed": 28,
+        "auto_scraped": 24
+      }
+    },
+    "ゲオ": {
+      "count": 53,
+      "fresh_rate": 0.0,
+      "item_url_rate": 0.566,
+      "median_age_days": 31.6,
+      "confidence": {
+        "high": 23,
+        "medium": 30
+      },
+      "method": {
+        "manual": 33,
+        "fetch_failed": 8,
+        "auto_scraped": 12
+      }
+    },
+    "メーカー公式/定価": {
+      "count": 44,
+      "fresh_rate": 1.0,
+      "item_url_rate": 0.0,
+      "median_age_days": 0.0,
+      "confidence": {
+        "medium": 44
+      },
+      "method": {
+        "retail_concept": 44
+      }
+    },
+    "ソフマップ": {
+      "count": 40,
+      "fresh_rate": 0.0,
+      "item_url_rate": 0.25,
+      "median_age_days": 26.2,
+      "confidence": {
+        "high": 25,
+        "medium": 15
+      },
+      "method": {
+        "manual": 20,
+        "fetch_failed": 20
+      }
+    },
+    "ゲオモバイル": {
+      "count": 32,
+      "fresh_rate": 0.0,
+      "item_url_rate": 0.0,
+      "median_age_days": 25.5,
+      "confidence": {
+        "high": 32
+      },
+      "method": {
+        "fetch_failed": 32
+      }
+    },
+    "セカンドストリート": {
+      "count": 32,
+      "fresh_rate": 0.0,
+      "item_url_rate": 0.0,
+      "median_age_days": 25.5,
+      "confidence": {
+        "high": 32
+      },
+      "method": {
+        "fetch_failed": 32
+      }
+    },
+    "ネットオフ": {
+      "count": 32,
+      "fresh_rate": 0.0,
+      "item_url_rate": 0.25,
+      "median_age_days": 25.5,
+      "confidence": {
+        "high": 32
+      },
+      "method": {
+        "fetch_failed": 24,
+        "auto_scraped": 8
+      }
+    },
+    "フジヤカメラ": {
+      "count": 28,
+      "fresh_rate": 0.571,
+      "item_url_rate": 0.429,
+      "median_age_days": 0.7,
+      "confidence": {
+        "high": 23,
+        "medium": 5
+      },
+      "method": {
+        "manual": 12,
+        "auto_scraped": 16
+      }
+    },
+    "ブックオフ": {
+      "count": 20,
+      "fresh_rate": 0.0,
+      "item_url_rate": 0.0,
+      "median_age_days": 26.2,
+      "confidence": {
+        "high": 20
+      },
+      "method": {
+        "fetch_failed": 20
+      }
+    },
+    "駿河屋": {
+      "count": 20,
+      "fresh_rate": 0.0,
+      "item_url_rate": 0.0,
+      "median_age_days": 26.2,
+      "confidence": {
+        "high": 20
+      },
+      "method": {
+        "fetch_failed": 20
+      }
+    },
+    "TSUTAYA": {
+      "count": 20,
+      "fresh_rate": 0.0,
+      "item_url_rate": 0.0,
+      "median_age_days": 26.2,
+      "confidence": {
+        "high": 20
+      },
+      "method": {
+        "fetch_failed": 20
+      }
+    },
+    "ハードオフ": {
+      "count": 16,
+      "fresh_rate": 0.0,
+      "item_url_rate": 0.0,
+      "median_age_days": 25.5,
+      "confidence": {
+        "high": 16
+      },
+      "method": {
+        "fetch_failed": 16
+      }
+    },
+    "ドスパラ": {
+      "count": 16,
+      "fresh_rate": 0.0,
+      "item_url_rate": 0.0,
+      "median_age_days": 25.5,
+      "confidence": {
+        "high": 16
+      },
+      "method": {
+        "fetch_failed": 16
+      }
+    },
+    "eBay sold(新品)": {
+      "count": 15,
+      "fresh_rate": 0.0,
+      "item_url_rate": 1.0,
+      "median_age_days": 21.7,
+      "confidence": {
+        "medium": 15
+      },
+      "method": {
+        "manual": 15
+      }
+    },
+    "メルカリ未使用": {
+      "count": 15,
+      "fresh_rate": 0.0,
+      "item_url_rate": 1.0,
+      "median_age_days": 21.7,
+      "confidence": {
+        "medium": 15
+      },
+      "method": {
+        "manual": 15
+      }
+    },
+    "マップカメラ": {
+      "count": 13,
+      "fresh_rate": 0.0,
+      "item_url_rate": 0.769,
+      "median_age_days": 30.6,
+      "confidence": {
+        "high": 8,
+        "medium": 5
+      },
+      "method": {
+        "manual": 13
+      }
+    },
+    "カメラのキタムラ": {
+      "count": 13,
+      "fresh_rate": 0.0,
+      "item_url_rate": 0.769,
+      "median_age_days": 30.6,
+      "confidence": {
+        "high": 8,
+        "medium": 5
+      },
+      "method": {
+        "manual": 13
+      }
+    },
+    "パソコン工房": {
+      "count": 10,
+      "fresh_rate": 0.0,
+      "item_url_rate": 0.0,
+      "median_age_days": 26.2,
+      "confidence": {
+        "high": 10
+      },
+      "method": {
+        "fetch_failed": 10
+      }
+    },
+    "ヤフオク (新品/未使用落札)": {
+      "count": 10,
+      "fresh_rate": 0.0,
+      "item_url_rate": 0.0,
+      "median_age_days": 18.3,
+      "confidence": {
+        "medium": 10
+      },
+      "method": {
+        "resale_market_manual": 10
+      }
+    },
+    "Amazon新品出品": {
+      "count": 9,
+      "fresh_rate": 0.0,
+      "item_url_rate": 1.0,
+      "median_age_days": 21.7,
+      "confidence": {
+        "medium": 9
+      },
+      "method": {
+        "manual": 9
+      }
+    },
+    "楽天市場新品": {
+      "count": 6,
+      "fresh_rate": 0.0,
+      "item_url_rate": 1.0,
+      "median_age_days": 21.7,
+      "confidence": {
+        "medium": 6
+      },
+      "method": {
+        "manual": 6
+      }
+    },
+    "src_ebay": {
+      "count": 6,
+      "fresh_rate": 0.0,
+      "item_url_rate": 0.0,
+      "median_age_days": 30.7,
+      "confidence": {
+        "medium": 6
+      },
+      "method": {
+        "manual": 4,
+        "overseas_history": 2
+      }
+    },
+    "Amazon JP (新品出品)": {
+      "count": 5,
+      "fresh_rate": 0.0,
+      "item_url_rate": 0.0,
+      "median_age_days": 18.3,
+      "confidence": {
+        "medium": 5
+      },
+      "method": {
+        "resale_market_manual": 5
+      }
+    },
+    "Yahoo Auction sold": {
+      "count": 3,
+      "fresh_rate": 1.0,
+      "item_url_rate": 1.0,
+      "median_age_days": 11.4,
+      "confidence": {
+        "medium": 3
+      },
+      "method": {
+        "flea_sold": 3
+      }
+    },
+    "Mercari sold": {
+      "count": 3,
+      "fresh_rate": 1.0,
+      "item_url_rate": 1.0,
+      "median_age_days": 10.8,
+      "confidence": {
+        "medium": 3
+      },
+      "method": {
+        "flea_sold": 3
+      }
+    },
+    "src_bhphoto": {
+      "count": 2,
+      "fresh_rate": 0.0,
+      "item_url_rate": 0.0,
+      "median_age_days": 30.7,
+      "confidence": {
+        "medium": 2
+      },
+      "method": {
+        "overseas_history": 2
+      }
+    }
+  },
+  "task6_shop_quality": [
+    {
+      "shop": "Yahoo Auction sold",
+      "n": 3,
+      "score": 90.0,
+      "price_quality": 1.0,
+      "link_quality": 1.0,
+      "freshness": 1.0,
+      "acquire_rate": 1.0,
+      "false_rate": 0.0
+    },
+    {
+      "shop": "Mercari sold",
+      "n": 3,
+      "score": 90.0,
+      "price_quality": 1.0,
+      "link_quality": 1.0,
+      "freshness": 1.0,
+      "acquire_rate": 1.0,
+      "false_rate": 0.0
+    },
+    {
+      "shop": "メーカー公式/定価",
+      "n": 44,
+      "score": 70.0,
+      "price_quality": 1.0,
+      "link_quality": 0.0,
+      "freshness": 1.0,
+      "acquire_rate": 1.0,
+      "false_rate": 0.0
+    },
+    {
+      "shop": "eBay sold(新品)",
+      "n": 15,
+      "score": 70.0,
+      "price_quality": 1.0,
+      "link_quality": 1.0,
+      "freshness": 0.0,
+      "acquire_rate": 1.0,
+      "false_rate": 0.0
+    },
+    {
+      "shop": "メルカリ未使用",
+      "n": 15,
+      "score": 70.0,
+      "price_quality": 1.0,
+      "link_quality": 1.0,
+      "freshness": 0.0,
+      "acquire_rate": 1.0,
+      "false_rate": 0.0
+    },
+    {
+      "shop": "Amazon新品出品",
+      "n": 9,
+      "score": 70.0,
+      "price_quality": 1.0,
+      "link_quality": 1.0,
+      "freshness": 0.0,
+      "acquire_rate": 1.0,
+      "false_rate": 0.0
+    },
+    {
+      "shop": "楽天市場新品",
+      "n": 6,
+      "score": 70.0,
+      "price_quality": 1.0,
+      "link_quality": 1.0,
+      "freshness": 0.0,
+      "acquire_rate": 1.0,
+      "false_rate": 0.0
+    },
+    {
+      "shop": "フジヤカメラ",
+      "n": 28,
+      "score": 68.6,
+      "price_quality": 1.0,
+      "link_quality": 0.43,
+      "freshness": 0.57,
+      "acquire_rate": 1.0,
+      "false_rate": 0.14
+    },
+    {
+      "shop": "マップカメラ",
+      "n": 13,
+      "score": 65.4,
+      "price_quality": 1.0,
+      "link_quality": 0.77,
+      "freshness": 0.0,
+      "acquire_rate": 1.0,
+      "false_rate": 0.0
+    },
+    {
+      "shop": "カメラのキタムラ",
+      "n": 13,
+      "score": 65.4,
+      "price_quality": 1.0,
+      "link_quality": 0.77,
+      "freshness": 0.0,
+      "acquire_rate": 1.0,
+      "false_rate": 0.0
+    },
+    {
+      "shop": "買取商店",
+      "n": 95,
+      "score": 56.7,
+      "price_quality": 0.81,
+      "link_quality": 0.81,
+      "freshness": 0.0,
+      "acquire_rate": 0.81,
+      "false_rate": 0.0
+    },
+    {
+      "shop": "ゲオ",
+      "n": 53,
+      "score": 53.8,
+      "price_quality": 0.85,
+      "link_quality": 0.57,
+      "freshness": 0.0,
+      "acquire_rate": 0.85,
+      "false_rate": 0.0
+    },
+    {
+      "shop": "イオシス",
+      "n": 114,
+      "score": 51.6,
+      "price_quality": 0.74,
+      "link_quality": 0.74,
+      "freshness": 0.0,
+      "acquire_rate": 0.74,
+      "false_rate": 0.0
+    },
+    {
+      "shop": "ヤフオク (新品/未使用落札)",
+      "n": 10,
+      "score": 50.0,
+      "price_quality": 1.0,
+      "link_quality": 0.0,
+      "freshness": 0.0,
+      "acquire_rate": 1.0,
+      "false_rate": 0.0
+    },
+    {
+      "shop": "src_ebay",
+      "n": 6,
+      "score": 50.0,
+      "price_quality": 1.0,
+      "link_quality": 0.0,
+      "freshness": 0.0,
+      "acquire_rate": 1.0,
+      "false_rate": 0.0
+    },
+    {
+      "shop": "src_bhphoto",
+      "n": 2,
+      "score": 50.0,
+      "price_quality": 1.0,
+      "link_quality": 0.0,
+      "freshness": 0.0,
+      "acquire_rate": 1.0,
+      "false_rate": 0.0
+    },
+    {
+      "shop": "Amazon JP (新品出品)",
+      "n": 5,
+      "score": 46.0,
+      "price_quality": 1.0,
+      "link_quality": 0.0,
+      "freshness": 0.0,
+      "acquire_rate": 1.0,
+      "false_rate": 0.4
+    },
+    {
+      "shop": "買取一丁目",
+      "n": 56,
+      "score": 35.0,
+      "price_quality": 0.5,
+      "link_quality": 0.5,
+      "freshness": 0.0,
+      "acquire_rate": 0.5,
+      "false_rate": 0.0
+    },
+    {
+      "shop": "ソフマップ",
+      "n": 40,
+      "score": 30.0,
+      "price_quality": 0.5,
+      "link_quality": 0.25,
+      "freshness": 0.0,
+      "acquire_rate": 0.5,
+      "false_rate": 0.0
+    },
+    {
+      "shop": "モバイル一番",
+      "n": 66,
+      "score": 29.7,
+      "price_quality": 0.42,
+      "link_quality": 0.42,
+      "freshness": 0.0,
+      "acquire_rate": 0.42,
+      "false_rate": 0.0
+    },
+    {
+      "shop": "じゃんぱら",
+      "n": 140,
+      "score": 28.9,
+      "price_quality": 0.44,
+      "link_quality": 0.34,
+      "freshness": 0.0,
+      "acquire_rate": 0.44,
+      "false_rate": 0.0
+    },
+    {
+      "shop": "ネットオフ",
+      "n": 32,
+      "score": 17.5,
+      "price_quality": 0.25,
+      "link_quality": 0.25,
+      "freshness": 0.0,
+      "acquire_rate": 0.25,
+      "false_rate": 0.0
+    },
+    {
+      "shop": "ブックオフ",
+      "n": 20,
+      "score": 0.0,
+      "price_quality": 0.0,
+      "link_quality": 0.0,
+      "freshness": 0.0,
+      "acquire_rate": 0.0,
+      "false_rate": 0.0
+    },
+    {
+      "shop": "駿河屋",
+      "n": 20,
+      "score": 0.0,
+      "price_quality": 0.0,
+      "link_quality": 0.0,
+      "freshness": 0.0,
+      "acquire_rate": 0.0,
+      "false_rate": 0.0
+    },
+    {
+      "shop": "TSUTAYA",
+      "n": 20,
+      "score": 0.0,
+      "price_quality": 0.0,
+      "link_quality": 0.0,
+      "freshness": 0.0,
+      "acquire_rate": 0.0,
+      "false_rate": 0.0
+    },
+    {
+      "shop": "ゲオモバイル",
+      "n": 32,
+      "score": 0.0,
+      "price_quality": 0.0,
+      "link_quality": 0.0,
+      "freshness": 0.0,
+      "acquire_rate": 0.0,
+      "false_rate": 0.0
+    },
+    {
+      "shop": "セカンドストリート",
+      "n": 32,
+      "score": 0.0,
+      "price_quality": 0.0,
+      "link_quality": 0.0,
+      "freshness": 0.0,
+      "acquire_rate": 0.0,
+      "false_rate": 0.0
+    },
+    {
+      "shop": "ハードオフ",
+      "n": 16,
+      "score": 0.0,
+      "price_quality": 0.0,
+      "link_quality": 0.0,
+      "freshness": 0.0,
+      "acquire_rate": 0.0,
+      "false_rate": 0.0
+    },
+    {
+      "shop": "ドスパラ",
+      "n": 16,
+      "score": 0.0,
+      "price_quality": 0.0,
+      "link_quality": 0.0,
+      "freshness": 0.0,
+      "acquire_rate": 0.0,
+      "false_rate": 0.0
+    },
+    {
+      "shop": "パソコン工房",
+      "n": 10,
+      "score": 0.0,
+      "price_quality": 0.0,
+      "link_quality": 0.0,
+      "freshness": 0.0,
+      "acquire_rate": 0.0,
+      "false_rate": 0.0
+    }
+  ],
+  "task7_data_gaps": [
+    {
+      "product": "iPhone 16 Pro Max 512GB",
+      "product_id": "prod_iphone16pm_512",
+      "missing_count": 5,
+      "missing": [
+        "海外sold(fresh)",
+        "フリマsold",
+        "店舗販売価格",
+        "買取価格(fresh)",
+        "item_url"
+      ]
+    },
+    {
+      "product": "RICOH GR III HDF",
+      "product_id": "prod_gr3_hdf",
+      "missing_count": 5,
+      "missing": [
+        "海外sold(fresh)",
+        "フリマsold",
+        "店舗販売価格",
+        "買取価格(fresh)",
+        "item_url"
+      ]
+    },
+    {
+      "product": "RICOH GR III",
+      "product_id": "prod_gr3",
+      "missing_count": 5,
+      "missing": [
+        "海外sold(fresh)",
+        "フリマsold",
+        "店舗販売価格",
+        "買取価格(fresh)",
+        "item_url"
+      ]
+    },
+    {
+      "product": "Canon EOS R6 Mark II",
+      "product_id": "prod_r6ii",
+      "missing_count": 5,
+      "missing": [
+        "海外sold(fresh)",
+        "フリマsold",
+        "店舗販売価格",
+        "買取価格(fresh)",
+        "item_url"
+      ]
+    },
+    {
+      "product": "Nikon Zf",
+      "product_id": "prod_zf",
+      "missing_count": 5,
+      "missing": [
+        "海外sold(fresh)",
+        "フリマsold",
+        "店舗販売価格",
+        "買取価格(fresh)",
+        "item_url"
+      ]
+    },
+    {
+      "product": "iPhone 17 Pro 256GB SIMフリー",
+      "product_id": "prod_iphone17pro_256",
+      "missing_count": 4,
+      "missing": [
+        "海外sold(fresh)",
+        "フリマsold",
+        "店舗販売価格",
+        "買取価格(fresh)"
+      ]
+    },
+    {
+      "product": "iPhone 17 Pro 512GB SIMフリー",
+      "product_id": "prod_iphone17pro_512",
+      "missing_count": 4,
+      "missing": [
+        "海外sold(fresh)",
+        "フリマsold",
+        "店舗販売価格",
+        "買取価格(fresh)"
+      ]
+    },
+    {
+      "product": "iPhone 17 Pro Max 256GB SIMフリー",
+      "product_id": "prod_iphone17pm_256",
+      "missing_count": 4,
+      "missing": [
+        "海外sold(fresh)",
+        "フリマsold",
+        "店舗販売価格",
+        "買取価格(fresh)"
+      ]
+    },
+    {
+      "product": "iPhone 17 Pro Max 512GB SIMフリー",
+      "product_id": "prod_iphone17pm_512",
+      "missing_count": 4,
+      "missing": [
+        "海外sold(fresh)",
+        "フリマsold",
+        "店舗販売価格",
+        "買取価格(fresh)"
+      ]
+    },
+    {
+      "product": "iPhone 17 256GB SIMフリー",
+      "product_id": "prod_iphone17_256",
+      "missing_count": 4,
+      "missing": [
+        "海外sold(fresh)",
+        "フリマsold",
+        "店舗販売価格",
+        "買取価格(fresh)"
+      ]
+    },
+    {
+      "product": "iPhone 16 Pro 256GB SIMフリー",
+      "product_id": "prod_iphone16pro_256",
+      "missing_count": 4,
+      "missing": [
+        "海外sold(fresh)",
+        "フリマsold",
+        "店舗販売価格",
+        "買取価格(fresh)"
+      ]
+    },
+    {
+      "product": "iPhone 16 Pro Max 256GB",
+      "product_id": "prod_iphone16pm_256",
+      "missing_count": 4,
+      "missing": [
+        "海外sold(fresh)",
+        "フリマsold",
+        "店舗販売価格",
+        "買取価格(fresh)"
+      ]
+    },
+    {
+      "product": "MacBook Air M4 13インチ",
+      "product_id": "prod_macbook_air_m4_13",
+      "missing_count": 4,
+      "missing": [
+        "海外sold(fresh)",
+        "フリマsold",
+        "店舗販売価格",
+        "買取価格(fresh)"
+      ]
+    },
+    {
+      "product": "MacBook Air M4 15インチ",
+      "product_id": "prod_macbook_air_m4_15",
+      "missing_count": 4,
+      "missing": [
+        "海外sold(fresh)",
+        "フリマsold",
+        "店舗販売価格",
+        "買取価格(fresh)"
+      ]
+    },
+    {
+      "product": "MacBook Pro M4 14インチ",
+      "product_id": "prod_macbook_pro_m4_14",
+      "missing_count": 4,
+      "missing": [
+        "海外sold(fresh)",
+        "フリマsold",
+        "店舗販売価格",
+        "買取価格(fresh)"
+      ]
+    },
+    {
+      "product": "Mac mini M4",
+      "product_id": "prod_mac_mini_m4",
+      "missing_count": 4,
+      "missing": [
+        "海外sold(fresh)",
+        "フリマsold",
+        "店舗販売価格",
+        "買取価格(fresh)"
+      ]
+    },
+    {
+      "product": "iPad Pro M4 11インチ",
+      "product_id": "prod_ipad_pro_m4_11",
+      "missing_count": 4,
+      "missing": [
+        "海外sold(fresh)",
+        "フリマsold",
+        "店舗販売価格",
+        "買取価格(fresh)"
+      ]
+    },
+    {
+      "product": "iPad Pro M4 13インチ",
+      "product_id": "prod_ipad_pro_m4_13",
+      "missing_count": 4,
+      "missing": [
+        "海外sold(fresh)",
+        "フリマsold",
+        "店舗販売価格",
+        "買取価格(fresh)"
+      ]
+    },
+    {
+      "product": "iPad Air M3",
+      "product_id": "prod_ipad_air_m3",
+      "missing_count": 4,
+      "missing": [
+        "海外sold(fresh)",
+        "フリマsold",
+        "店舗販売価格",
+        "買取価格(fresh)"
+      ]
+    },
+    {
+      "product": "Apple Watch Series 11",
+      "product_id": "prod_apple_watch_s11",
+      "missing_count": 4,
+      "missing": [
+        "海外sold(fresh)",
+        "フリマsold",
+        "店舗販売価格",
+        "買取価格(fresh)"
+      ]
+    },
+    {
+      "product": "Apple Watch Ultra 3",
+      "product_id": "prod_apple_watch_ultra3",
+      "missing_count": 4,
+      "missing": [
+        "海外sold(fresh)",
+        "フリマsold",
+        "店舗販売価格",
+        "買取価格(fresh)"
+      ]
+    },
+    {
+      "product": "AirPods Pro 3",
+      "product_id": "prod_airpods_pro3",
+      "missing_count": 4,
+      "missing": [
+        "海外sold(fresh)",
+        "フリマsold",
+        "店舗販売価格",
+        "買取価格(fresh)"
+      ]
+    },
+    {
+      "product": "AirPods Max",
+      "product_id": "prod_airpods_max",
+      "missing_count": 4,
+      "missing": [
+        "海外sold(fresh)",
+        "フリマsold",
+        "店舗販売価格",
+        "買取価格(fresh)"
+      ]
+    },
+    {
+      "product": "Nintendo Switch 2 マリオカートセット",
+      "product_id": "prod_switch2_mk",
+      "missing_count": 4,
+      "missing": [
+        "海外sold(fresh)",
+        "フリマsold",
+        "店舗販売価格",
+        "買取価格(fresh)"
+      ]
+    },
+    {
+      "product": "PlayStation 5 Digital Edition",
+      "product_id": "prod_ps5_de",
+      "missing_count": 4,
+      "missing": [
+        "海外sold(fresh)",
+        "フリマsold",
+        "店舗販売価格",
+        "買取価格(fresh)"
+      ]
+    },
+    {
+      "product": "Xbox Series X",
+      "product_id": "prod_xbox_sx",
+      "missing_count": 4,
+      "missing": [
+        "海外sold(fresh)",
+        "フリマsold",
+        "店舗販売価格",
+        "買取価格(fresh)"
+      ]
+    },
+    {
+      "product": "RICOH GR IV",
+      "product_id": "prod_gr4",
+      "missing_count": 4,
+      "missing": [
+        "海外sold(fresh)",
+        "フリマsold",
+        "店舗販売価格",
+        "買取価格(fresh)"
+      ]
+    },
+    {
+      "product": "FUJIFILM GFX100RF",
+      "product_id": "prod_gfx100rf",
+      "missing_count": 4,
+      "missing": [
+        "海外sold(fresh)",
+        "フリマsold",
+        "店舗販売価格",
+        "item_url"
+      ]
+    },
+    {
+      "product": "FUJIFILM X-T5",
+      "product_id": "prod_xt5",
+      "missing_count": 4,
+      "missing": [
+        "海外sold(fresh)",
+        "フリマsold",
+        "店舗販売価格",
+        "item_url"
+      ]
+    },
+    {
+      "product": "SONY α7R V",
+      "product_id": "prod_a7rv",
+      "missing_count": 4,
+      "missing": [
+        "海外sold(fresh)",
+        "フリマsold",
+        "店舗販売価格",
+        "item_url"
+      ]
+    },
+    {
+      "product": "SONY α1 II",
+      "product_id": "prod_a1ii",
+      "missing_count": 4,
+      "missing": [
+        "海外sold(fresh)",
+        "フリマsold",
+        "店舗販売価格",
+        "item_url"
+      ]
+    },
+    {
+      "product": "SONY α7CR",
+      "product_id": "prod_a7cr",
+      "missing_count": 4,
+      "missing": [
+        "海外sold(fresh)",
+        "フリマsold",
+        "店舗販売価格",
+        "item_url"
+      ]
+    },
+    {
+      "product": "SONY FX3",
+      "product_id": "prod_fx3",
+      "missing_count": 4,
+      "missing": [
+        "海外sold(fresh)",
+        "フリマsold",
+        "店舗販売価格",
+        "item_url"
+      ]
+    },
+    {
+      "product": "Canon EOS R5 Mark II",
+      "product_id": "prod_r5ii",
+      "missing_count": 4,
+      "missing": [
+        "海外sold(fresh)",
+        "フリマsold",
+        "店舗販売価格",
+        "item_url"
+      ]
+    },
+    {
+      "product": "Canon EOS R3",
+      "product_id": "prod_r3",
+      "missing_count": 4,
+      "missing": [
+        "海外sold(fresh)",
+        "フリマsold",
+        "店舗販売価格",
+        "item_url"
+      ]
+    },
+    {
+      "product": "Nikon Z8",
+      "product_id": "prod_z8",
+      "missing_count": 4,
+      "missing": [
+        "海外sold(fresh)",
+        "フリマsold",
+        "店舗販売価格",
+        "item_url"
+      ]
+    },
+    {
+      "product": "Nikon Z9",
+      "product_id": "prod_z9",
+      "missing_count": 4,
+      "missing": [
+        "海外sold(fresh)",
+        "フリマsold",
+        "店舗販売価格",
+        "item_url"
+      ]
+    },
+    {
+      "product": "Leica Q3",
+      "product_id": "prod_q3",
+      "missing_count": 4,
+      "missing": [
+        "海外sold(fresh)",
+        "フリマsold",
+        "店舗販売価格",
+        "item_url"
+      ]
+    },
+    {
+      "product": "Leica M11",
+      "product_id": "prod_m11",
+      "missing_count": 4,
+      "missing": [
+        "海外sold(fresh)",
+        "フリマsold",
+        "店舗販売価格",
+        "item_url"
+      ]
+    },
+    {
+      "product": "Nintendo Switch 2",
+      "product_id": "prod_switch2",
+      "missing_count": 3,
+      "missing": [
+        "海外sold(fresh)",
+        "店舗販売価格",
+        "買取価格(fresh)"
+      ]
+    },
+    {
+      "product": "PlayStation 5 Pro",
+      "product_id": "prod_ps5_pro",
+      "missing_count": 3,
+      "missing": [
+        "海外sold(fresh)",
+        "店舗販売価格",
+        "買取価格(fresh)"
+      ]
+    },
+    {
+      "product": "RICOH GR IV Monochrome",
+      "product_id": "prod_gr4_mono",
+      "missing_count": 3,
+      "missing": [
+        "海外sold(fresh)",
+        "フリマsold",
+        "店舗販売価格"
+      ]
+    },
+    {
+      "product": "RICOH GR IV HDF",
+      "product_id": "prod_gr4_hdf",
+      "missing_count": 3,
+      "missing": [
+        "海外sold(fresh)",
+        "フリマsold",
+        "店舗販売価格"
+      ]
+    },
+    {
+      "product": "RICOH GR IIIx",
+      "product_id": "prod_gr3x",
+      "missing_count": 2,
+      "missing": [
+        "海外sold(fresh)",
+        "店舗販売価格"
+      ]
+    },
+    {
+      "product": "FUJIFILM X100VI",
+      "product_id": "prod_x100vi",
+      "missing_count": 2,
+      "missing": [
+        "海外sold(fresh)",
+        "店舗販売価格"
+      ]
+    }
+  ],
+  "task8_bottlenecks": [
+    {
+      "rank": 1,
+      "bottleneck": "海外sold が stale/manual（EBAY_APP_ID未設定）",
+      "evidence": "reference4件が全てstale・main昇格不可",
+      "impact": 5
+    },
+    {
+      "rank": 2,
+      "bottleneck": "stale価格が多数（458件）",
+      "evidence": "手動CSV/海外が14日超で除外",
+      "impact": 5
+    },
+    {
+      "rank": 3,
+      "bottleneck": "除外: stale_over_14d（458件）",
+      "evidence": "NPO rejection集計",
+      "impact": 5
+    },
+    {
+      "rank": 4,
+      "bottleneck": "除外: price_zero（410件）",
+      "evidence": "NPO rejection集計",
+      "impact": 5
+    },
+    {
+      "rank": 5,
+      "bottleneck": "price=0(取得失敗) 410件",
+      "evidence": "PS5/Switch買取店の¥0多数",
+      "impact": 4
+    },
+    {
+      "rank": 6,
+      "bottleneck": "フリマsoldが手動キュレーションのみ",
+      "evidence": "自動取得なし・裾データ薄い",
+      "impact": 4
+    },
+    {
+      "rank": 7,
+      "bottleneck": "国内完結ルートは構造的に薄利",
+      "evidence": "人気機種は買取>販売でROI<5%",
+      "impact": 4
+    },
+    {
+      "rank": 8,
+      "bottleneck": "official_price 未登録（retail_concept依存）",
+      "evidence": "全カメラで公式価格None",
+      "impact": 3
+    },
+    {
+      "rank": 9,
+      "bottleneck": "item_url率が低い",
+      "evidence": "買取/販売の多くが検索/店舗トップ",
+      "impact": 3
+    },
+    {
+      "rank": 10,
+      "bottleneck": "Mapcamera/Kitamura 買取が取得困難",
+      "evidence": "Akamai/site_blocked",
+      "impact": 3
+    },
+    {
+      "rank": 11,
+      "bottleneck": "同条件sold件数が少なく再現性低",
+      "evidence": "GR IIIx再現性45(低)",
+      "impact": 2
+    },
+    {
+      "rank": 12,
+      "bottleneck": "camera買取はローカルに無くCI依存",
+      "evidence": "監査はCI status注入で代替",
+      "impact": 2
+    },
+    {
+      "rank": 13,
+      "bottleneck": "除外: accessory_or_wrong_product（4件）",
+      "evidence": "NPO rejection集計",
+      "impact": 1
+    }
+  ],
+  "task9_improvement_roi": [
+    {
+      "effort": "1時間",
+      "action": "EBAY_APP_ID を GitHub Secrets に設定",
+      "impact": "参考4ルート→main昇格、潜在+¥183,582解放",
+      "priority": 1
+    },
+    {
+      "effort": "1時間",
+      "action": "manual_flea_sold_prices.csv に確認済みsoldを追記運用",
+      "impact": "国内買取ルートの裾を拡大（商品ごと+数千〜1万）",
+      "priority": 2
+    },
+    {
+      "effort": "4時間",
+      "action": "買取店のstale再取得（daily fresh化の安定化）",
+      "impact": "sell候補復活・reference→main化の前提",
+      "priority": 3
+    },
+    {
+      "effort": "4時間",
+      "action": "official_price を products.yaml に登録",
+      "impact": "差益基準の信頼性・beginner精度向上",
+      "priority": 4
+    },
+    {
+      "effort": "1日",
+      "action": "item_url を買取/販売で個別ページ化",
+      "impact": "再現性スコア+30・確認導線改善",
+      "priority": 5
+    },
+    {
+      "effort": "1日",
+      "action": "ヤフオク落札(公開closedsearch)取得の半自動化",
+      "impact": "フリマsold件数増→同条件≥3で再現性中〜高",
+      "priority": 6
+    },
+    {
+      "effort": "3日",
+      "action": "eBay Finding API 連携実装＋為替反映",
+      "impact": "海外sold常時fresh・海外売却ルート量産",
+      "priority": 7
+    },
+    {
+      "effort": "1週間",
+      "action": "価格ソース横断のfreshness監視＋自動再取得基盤",
+      "impact": "stale率恒常低下・利益発見率の底上げ",
+      "priority": 8
+    }
+  ],
+  "task10_final_score": {
+    "overall": 75.6,
+    "scores": {
+      "データ品質": 78,
+      "利益発見能力": 55,
+      "スクレイピング品質": 62,
+      "UI": 80,
+      "利益精度": 88,
+      "保守性": 82,
+      "速度": 75,
+      "将来性": 85
+    },
+    "top10_todo": [
+      "EBAY_APP_ID 設定（海外sold fresh化・最大の利益解放）",
+      "フリマsold（メルカリ/ヤフオク落札）の継続取得運用",
+      "買取店 stale の daily fresh 化安定運用",
+      "official_price を products.yaml へ登録",
+      "買取/販売リンクの item_url 個別ページ化",
+      "ヤフオク closedsearch の半自動取得",
+      "eBay Finding API 本実装（為替バッファ込み）",
+      "PS5/Switch の買取¥0(取得失敗)の原因対処 or optional化",
+      "同条件sold件数を増やし再現性スコアを引き上げ",
+      "freshness横断監視＋自動再取得の基盤化"
+    ],
+    "main_routes": 1
+  }
+}

@@ -5894,6 +5894,49 @@ def check() -> list[dict]:
                     "message": "#608 main route がある場合 Pro サマリーが表示される"
                                + ("" if _t608 else " ← Pro サマリーが見つかりません")})
 
+    # ── Profit Health Dashboard ガード #609-#614 ──
+    _hr = _load_json_safe('audit_health/health_report.json') or {}
+    _hr_ok = isinstance(_hr, dict) and ('health_score' in _hr)
+
+    # #609: Health レポート/ページが存在する
+    _t609 = _hr_ok and ('id="tab-health"' in _lp_html) and ('data-tab="health"' in _lp_html)
+    results.append({"level": "ok" if _t609 else "error", "check": "health_page_exists",
+                    "message": "#609 Health レポートと LP の Health タブが存在する"
+                               + ("" if _t609 else " ← health_report.json または Health タブがありません")})
+
+    # #610: Health Score が表示される
+    _t610 = _hr_ok and ('Health Score' in _lp_html) and ('total' in (_hr.get('health_score') or {}))
+    results.append({"level": "ok" if _t610 else "error", "check": "health_score_shown",
+                    "message": f"#610 Health Score が表示される（{(_hr.get('health_score') or {}).get('total','?')}/100）"
+                               + ("" if _t610 else " ← Health Score が見つかりません")})
+
+    # #611: 異常一覧が表示される
+    _t611 = _hr_ok and ('異常一覧' in _lp_html) and ('anomalies' in _hr)
+    results.append({"level": "ok" if _t611 else "error", "check": "health_anomalies_shown",
+                    "message": "#611 異常一覧（Critical/Warning/Info）が表示される"
+                               + ("" if _t611 else " ← 異常一覧が見つかりません")})
+
+    # #612: 改善TOP10 が表示される
+    _imp = _hr.get('improvements_top10', []) if _hr_ok else []
+    _t612 = _hr_ok and ('改善優先順位 TOP10' in _lp_html) and len(_imp) > 0
+    results.append({"level": "ok" if _t612 else "error", "check": "health_improvements_shown",
+                    "message": f"#612 改善TOP10 が表示される（{len(_imp)}件）"
+                               + ("" if _t612 else " ← 改善TOP10 が見つかりません")})
+
+    # #613: 前日比較が表示される
+    _t613 = _hr_ok and ('前日比較' in _lp_html) and ('diff_vs_prev' in _hr)
+    results.append({"level": "ok" if _t613 else "error", "check": "health_diff_shown",
+                    "message": "#613 前日比較が表示される"
+                               + ("" if _t613 else " ← 前日比較が見つかりません")})
+
+    # #614: Critical 判定が算出・表示される（異常検知が機能）
+    _anom = _hr.get('anomalies', {}) if _hr_ok else {}
+    _t614 = _hr_ok and ('critical' in _anom and 'warning' in _anom and 'info' in _anom)
+    results.append({"level": "ok" if _t614 else "error", "check": "health_critical_classification",
+                    "message": f"#614 異常が Critical/Warning/Info に分類される"
+                               f"（C{len(_anom.get('critical',[]))}/W{len(_anom.get('warning',[]))}/I{len(_anom.get('info',[]))}）"
+                               + ("" if _t614 else " ← 異常分類がありません")})
+
     return results
 
 

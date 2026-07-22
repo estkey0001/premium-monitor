@@ -4978,9 +4978,18 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         daily = d.get("daily_recommendation")
         hs = d.get("health_score")
         note = d.get("health_note", "")
+        tasks = d.get("today_tasks", [])
         parts = ['<div class="ai-dashboard" style="margin:8px 0 18px;border:1px solid #c7d2fe;'
                  'background:linear-gradient(180deg,#eef2ff,#f8fafc);border-radius:10px;padding:14px 16px">',
                  '<div style="font-weight:800;color:#4338ca;font-size:1.1rem">&#129302; AI Dashboard</div>']
+        # 今日やること（最上部）
+        if tasks:
+            parts.append('<div class="ai-today-tasks" style="background:#fff;border:1px solid #c7d2fe;'
+                         'border-radius:8px;padding:10px 12px;margin:8px 0">'
+                         '<div style="font-weight:700;color:#4338ca">&#128203; 今日やること</div>'
+                         '<ul style="margin:4px 0 0 4px;padding:0;list-style:none;font-size:0.86rem">'
+                         + ''.join(f'<li style="margin:2px 0">{_esc(t)}</li>' for t in tasks)
+                         + '</ul></div>')
         # Health連携メッセージ
         if note:
             ncol = "#dc2626" if (hs is not None and hs < 60) else "#059669" if (hs is not None and hs >= 80) else "#64748b"
@@ -5012,19 +5021,39 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         if not ops:
             parts.append('<div style="font-size:0.85rem;color:#94a3b8;margin-top:4px">本日は候補がありません。'
                          'Health タブでデータ取得状況をご確認ください。</div>')
+        _acol = {"BUY": "#059669", "ALERT": "#2563eb", "WAIT": "#d97706", "SKIP": "#94a3b8"}
         for c in ops:
-            dcol = {"BUY": "#059669", "WATCH": "#d97706", "PASS": "#dc2626"}.get(c["buy_now"], "#64748b")
+            act = c.get("action", c["buy_now"])
+            dcol = _acol.get(act, "#64748b")
             sm = c["summary"].splitlines()
+            tl = c.get("timeline", {})
+            tl_str = " → ".join((f'<b style="color:#4338ca">{_esc(s)}</b>' if s == tl.get("current") else _esc(s))
+                                for s in tl.get("stages", []))
+            pt = c.get("price_trend", {})
+            alert_html = (f'<div style="font-size:0.78rem;color:#2563eb;margin-top:2px">'
+                          f'&#128276; アラート: 価格が ¥{c["alert_threshold"]:,} 以下になったら通知</div>'
+                          if c.get("alert_threshold") else "")
+            bc = c.get("buy_conditions", {})
             parts.append(
                 '<div class="ai-op-card" style="background:#fff;border:1px solid #e2e8f0;border-radius:8px;'
                 'padding:9px 12px;margin:6px 0">'
                 f'<div style="font-weight:700">#{c["priority"]} {_esc(c["product"])} '
                 f'<span style="background:{dcol};color:#fff;border-radius:5px;padding:1px 7px;font-size:0.74rem">'
-                f'{_esc(c["buy_now"])}</span> '
+                f'{_esc(act)}</span> '
                 f'<span style="color:#64748b;font-size:0.78rem">Opportunity {c["opportunity_score"]}/100・'
-                f'confidence {_esc(c["confidence"])}</span></div>'
+                f'成立確率 {c.get("success_probability","?")}%</span></div>'
                 f'<div style="font-size:0.82rem;margin-top:3px">{_esc(sm[0])} '
                 + " ".join(_esc(x) for x in sm[1:]) + '</div>'
+                f'<div style="font-size:0.8rem;color:#334155;margin-top:3px">&#127919; Action: '
+                f'<b>{_esc(act)}</b> — {_esc(c.get("action_reason",""))}</div>'
+                + alert_html
+                + (f'<div style="font-size:0.78rem;color:#334155;margin-top:2px">成立条件: '
+                   f'{_esc(bc.get("buy",""))} ／ {_esc(bc.get("sell",""))} ／ {_esc(bc.get("roi",""))}</div>' if bc else "")
+                + f'<div style="font-size:0.78rem;color:#64748b;margin-top:2px">'
+                f'想定仕入 ¥{c.get("expected_buy_price",0):,} / 想定売却 ¥{c.get("expected_sell_price",0):,} ／ '
+                f'価格トレンド 7d {_esc(pt.get("7d","→"))} 30d {_esc(pt.get("30d","→"))} 90d {_esc(pt.get("90d","→"))}</div>'
+                f'<div style="font-size:0.76rem;color:#64748b;margin-top:2px">{_esc(c.get("next_update",""))}</div>'
+                f'<div style="font-size:0.78rem;color:#334155;margin-top:2px">タイムライン: {tl_str}</div>'
                 f'<div style="font-size:0.8rem;color:#334155;margin-top:2px">'
                 f'利益 +¥{c["net_profit"]:,} / ROI {c["roi"]*100:.1f}% / 保有 {_esc(c["holding_period"])}</div>'
                 f'<div style="font-size:0.76rem;color:#64748b;margin-top:2px">Why: {_esc("; ".join(c["why"]))}</div>'

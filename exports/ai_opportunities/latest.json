@@ -1,9 +1,15 @@
 {
-  "generated_at": "2026-07-22 18:16 JST",
+  "generated_at": "2026-07-22 18:24 JST",
   "health_score": 49.9,
   "health_note": "現在データ品質低下中",
   "main_route_count": 1,
   "reference_route_count": 3,
+  "today_tasks": [
+    "🔔 RICOH GR IIIx を監視（¥150,648以下で通知）",
+    "⏳ FUJIFILM X100VI は待機（eBay sold 更新（EBAY_APP_ID 設定）後に BUY 候補へ昇格します。海外価格の更新待ちです。）",
+    "⏳ RICOH GR IIIx は待機（eBay sold 更新（EBAY_APP_ID 設定）後に BUY 候補へ昇格します。海外価格の更新待ちです。）",
+    "⏳ Nintendo Switch 2 は待機（eBay sold 更新（EBAY_APP_ID 設定）後に BUY 候補へ昇格します。海外価格の更新待ちです。）"
+  ],
   "daily_recommendation": {
     "product": "RICOH GR IIIx",
     "buy_now": "WATCH",
@@ -27,6 +33,32 @@
       },
       "buy_now": "WATCH",
       "confidence": "medium",
+      "action": "ALERT",
+      "action_reason": "価格が ¥150,648 以下になったら通知（BUY化を狙う）。",
+      "alert_threshold": 150648,
+      "expected_buy_price": 150648,
+      "expected_sell_price": 167200,
+      "buy_conditions": {
+        "buy": "Mercari sold ≤ ¥150,648",
+        "sell": "フジヤカメラ ≥ ¥167,200",
+        "roi": "ROI ≥ 8%"
+      },
+      "next_update": "次回自動更新: 明日 12:00頃（通常24時間以内）",
+      "price_trend": {
+        "7d": "↑",
+        "30d": "↑",
+        "90d": "→"
+      },
+      "success_probability": 68,
+      "timeline": {
+        "stages": [
+          "候補",
+          "監視",
+          "成立",
+          "通知"
+        ],
+        "current": "監視"
+      },
       "summary": "★★★☆☆\n国内で成立している利益ルートです。\n利益 ¥12,700 / ROI 8%。\nフジヤカメラ買取が高水準です。",
       "why": [
         "main route 成立（国内完結で利益）",
@@ -66,6 +98,32 @@
       },
       "buy_now": "WATCH",
       "confidence": "low",
+      "action": "WAIT",
+      "action_reason": "eBay sold 更新（EBAY_APP_ID 設定）後に BUY 候補へ昇格します。海外価格の更新待ちです。",
+      "alert_threshold": 516274,
+      "expected_buy_price": 516274,
+      "expected_sell_price": 564176,
+      "buy_conditions": {
+        "buy": "Yahoo Auction sold ≤ ¥516,274",
+        "sell": "src_ebay ≥ ¥564,176",
+        "roi": "ROI ≥ 8%"
+      },
+      "next_update": "次回自動更新: 明日 12:00頃（通常24時間以内）",
+      "price_trend": {
+        "7d": "↓",
+        "30d": "↑",
+        "90d": "→"
+      },
+      "success_probability": 30,
+      "timeline": {
+        "stages": [
+          "候補",
+          "監視",
+          "成立",
+          "通知"
+        ],
+        "current": "監視"
+      },
       "summary": "★★☆☆☆\n海外売却で成立見込みの参考ルートです。\neBay更新後の想定利益 ¥183,691 / ROI 72%。\n現在は海外価格の更新待ちです。",
       "why": [
         "reference route（海外sold更新で成立見込み）",
@@ -106,6 +164,32 @@
       },
       "buy_now": "WATCH",
       "confidence": "low",
+      "action": "WAIT",
+      "action_reason": "eBay sold 更新（EBAY_APP_ID 設定）後に BUY 候補へ昇格します。海外価格の更新待ちです。",
+      "alert_threshold": 226095,
+      "expected_buy_price": 226095,
+      "expected_sell_price": 248683,
+      "buy_conditions": {
+        "buy": "Mercari sold ≤ ¥226,095",
+        "sell": "src_ebay ≥ ¥248,683",
+        "roi": "ROI ≥ 8%"
+      },
+      "next_update": "次回自動更新: 明日 12:00頃（通常24時間以内）",
+      "price_trend": {
+        "7d": "↑",
+        "30d": "↑",
+        "90d": "→"
+      },
+      "success_probability": 30,
+      "timeline": {
+        "stages": [
+          "候補",
+          "監視",
+          "成立",
+          "通知"
+        ],
+        "current": "監視"
+      },
       "summary": "★★☆☆☆\n海外売却で成立見込みの参考ルートです。\neBay更新後の想定利益 ¥38,947 / ROI 26%。\n現在は海外価格の更新待ちです。",
       "why": [
         "reference route（海外sold更新で成立見込み）",
@@ -146,6 +230,32 @@
       },
       "buy_now": "WATCH",
       "confidence": "low",
+      "action": "WAIT",
+      "action_reason": "eBay sold 更新（EBAY_APP_ID 設定）後に BUY 候補へ昇格します。海外価格の更新待ちです。",
+      "alert_threshold": 76787,
+      "expected_buy_price": 76787,
+      "expected_sell_price": 87431,
+      "buy_conditions": {
+        "buy": "Yahoo Auction sold ≤ ¥76,787",
+        "sell": "src_ebay ≥ ¥87,431",
+        "roi": "ROI ≥ 8%"
+      },
+      "next_update": "次回自動更新: 明日 12:00頃（通常24時間以内）",
+      "price_trend": {
+        "7d": "→",
+        "30d": "↓",
+        "90d": "→"
+      },
+      "success_probability": 30,
+      "timeline": {
+        "stages": [
+          "候補",
+          "監視",
+          "成立",
+          "通知"
+        ],
+        "current": "監視"
+      },
       "summary": "★☆☆☆☆\n海外売却で成立見込みの参考ルートです。\neBay更新後の想定利益 ¥13,945 / ROI 30%。\n現在は海外価格の更新待ちです。",
       "why": [
         "reference route（海外sold更新で成立見込み）",

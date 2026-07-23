@@ -5060,8 +5060,58 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 f'<div style="font-size:0.76rem;color:#b45309;margin-top:2px">Risk: {_esc(" / ".join(c["risks"]))}</div>'
                 '</div>')
         parts.append('</div>')
+        # Capital Allocation（資金配分・意思決定層）
+        parts.append(self._capital_dashboard_html())
         # 最新通知10件（Notification Engine）
         parts.append(self._notifications_html())
+        parts.append('</div>')
+        return "".join(parts)
+
+    def _capital_dashboard_html(self) -> str:
+        """Capital Dashboard（exports/allocation/latest.json・既定予算のプランを表示）。"""
+        import json as _json_cap
+        from html import escape as _esc
+        p = Path(__file__).resolve().parent.parent.parent / "exports" / "allocation" / "latest.json"
+        if not p.exists():
+            return ""
+        try:
+            d = _json_cap.loads(p.read_text(encoding="utf-8"))
+        except Exception:
+            return ""
+        budget = d.get("default_budget")
+        pl = (d.get("plans", {}) or {}).get(str(budget))
+        if not pl:
+            return ""
+        parts = ['<div class="capital-dashboard" style="margin-top:10px;background:#fff;'
+                 'border:1px solid #c7d2fe;border-radius:8px;padding:10px 12px">',
+                 f'<div style="font-weight:700;color:#4338ca">&#128176; Capital Dashboard '
+                 f'<span style="font-size:0.78rem;color:#64748b">（予算 ¥{budget:,}・account: {_esc(d.get("account_id","default"))}）</span></div>',
+                 '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:6px;margin:6px 0">']
+        for lbl, val, col in [
+            ("Budget", f"¥{budget:,}", "#334155"),
+            ("Allocated", f"¥{pl['allocated']:,}", "#2563eb"),
+            ("Cash", f"¥{pl['cash']:,}（{pl['cash_ratio']*100:.0f}%）", "#059669"),
+            ("Expected Profit", f"+¥{pl['expected_profit']:,}", "#059669"),
+            ("Expected ROI", f"{pl['expected_roi']*100:.1f}%", "#7c3aed"),
+            ("Risk", f"{pl['avg_risk_score']}/100", "#dc2626"),
+            ("Diversification", f"{pl['diversification_score']}/100", "#0e7490"),
+        ]:
+            parts.append(f'<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:6px 8px">'
+                         f'<div style="font-size:0.7rem;color:#64748b">{lbl}</div>'
+                         f'<div style="font-size:0.95rem;font-weight:700;color:{col}">{val}</div></div>')
+        parts.append('</div>')
+        if pl["allocations"]:
+            parts.append('<div style="font-size:0.82rem;font-weight:700;color:#334155">今日の資金配分</div>')
+            for a in pl["allocations"]:
+                parts.append(f'<div style="font-size:0.84rem;margin:2px 0">・{_esc(a["product"])} '
+                             f'<b>{a["units"]}台</b>（¥{a["total"]:,}） → 期待利益 +¥{a["expected_profit"]:,}'
+                             f'（保有 {_esc(a["holding_period"])}）</div>')
+        for w in pl.get("waiting", [])[:4]:
+            parts.append(f'<div style="font-size:0.78rem;color:#64748b">・待機: {_esc(w["product"])} — {_esc(w["reason"])}</div>')
+        parts.append(f'<div style="font-size:0.78rem;color:#059669;margin-top:3px">'
+                     f'💰 現金 ¥{pl["cash"]:,} を留保（推奨20%: 急なBUY通知に即応）</div>')
+        parts.append('<div style="font-size:0.74rem;color:#94a3b8;margin-top:2px">'
+                     '他予算（100万〜3000万）のWhat-Ifプランは exports/allocation/latest.json 参照。</div>')
         parts.append('</div>')
         return "".join(parts)
 

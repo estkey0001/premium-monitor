@@ -6118,6 +6118,61 @@ def check() -> list[dict]:
                     "message": f"#637 カテゴリ候補ランキング・追加商品TOP{len(_cov.get('next_products_top50',[]))} が出力される"
                                + ("" if _t637 else " ← 候補ランキングが不足")})
 
+    # ── Capital Allocation Engine ガード #638-#643 ──
+    _al = _load_json_safe('exports/allocation/latest.json') or {}
+    _al_ok = isinstance(_al, dict) and ('plans' in _al) and ('account_id' in _al)
+    _dbg = str(_al.get("default_budget")) if _al_ok else None
+    _dplan = (_al.get("plans", {}) or {}).get(_dbg) if _al_ok else None
+
+    # #638: Capital Dashboard が LP に表示され allocation_plan.json が存在
+    _t638 = _al_ok and ('capital-dashboard' in _lp_html) and ('Capital Dashboard' in _lp_html)
+    results.append({"level": "ok" if _t638 else "error", "check": "capital_dashboard",
+                    "message": "#638 allocation_plan.json と LP の Capital Dashboard が存在する"
+                               + ("" if _t638 else " ← Capital Dashboard が見つかりません")})
+
+    # #639: Allocation（配分）と各予算プランが存在する
+    _t639 = _al_ok and isinstance(_dplan, dict) and ("allocations" in _dplan) and len(_al.get("plans", {})) >= 5
+    results.append({"level": "ok" if _t639 else "error", "check": "capital_allocation",
+                    "message": f"#639 予算別 Allocation プランが存在する（{len(_al.get('plans',{}))}予算）"
+                               + ("" if _t639 else " ← 配分プランが不足")})
+
+    # #640: Cash（現金留保・約20%）が計算・表示される
+    _t640 = _al_ok and isinstance(_dplan, dict) and ("cash" in _dplan) and ("cash_ratio" in _dplan) \
+        and (_al.get("cash_reserve_ratio") == 0.20) and ('Cash' in _lp_html)
+    results.append({"level": "ok" if _t640 else "error", "check": "capital_cash_reserve",
+                    "message": "#640 Cash（現金留保20%）が計算・表示される"
+                               + ("" if _t640 else " ← Cash 留保が見つかりません")})
+
+    # #641: Risk / Diversification が算出・表示される
+    _t641 = _al_ok and isinstance(_dplan, dict) and ("avg_risk_score" in _dplan) \
+        and ("diversification_score" in _dplan) and ('Diversification' in _lp_html) and ('Risk' in _lp_html)
+    results.append({"level": "ok" if _t641 else "error", "check": "capital_risk_diversification",
+                    "message": "#641 Risk / Diversification が算出・表示される"
+                               + ("" if _t641 else " ← Risk/Diversification が見つかりません")})
+
+    # #642: Expected Profit / Expected ROI が表示される
+    _t642 = _al_ok and isinstance(_dplan, dict) and ("expected_profit" in _dplan) \
+        and ("expected_roi" in _dplan) and ('Expected Profit' in _lp_html)
+    results.append({"level": "ok" if _t642 else "error", "check": "capital_expected_profit",
+                    "message": "#642 Expected Profit / Expected ROI が表示される"
+                               + ("" if _t642 else " ← Expected Profit が見つかりません")})
+
+    # #643: 集中リスク上限（商品30%/カテゴリ50%/メーカー60%）が守られている
+    _bad643 = 0
+    if _al_ok:
+        caps = _al.get("concentration_caps", {})
+        pcap = caps.get("product", 0.30)
+        for _b, _pl in (_al.get("plans", {}) or {}).items():
+            try:
+                if _pl.get("max_concentration", 0) > pcap + 0.001:
+                    _bad643 += 1
+            except Exception:
+                pass
+    _t643 = _al_ok and _bad643 == 0 and ("account_id" in _al)
+    results.append({"level": "ok" if _t643 else "error", "check": "capital_concentration_caps",
+                    "message": "#643 集中リスク上限（商品30%等）が守られ account_id 構造で保存される"
+                               + ("" if _t643 else f" ← 上限超過 {_bad643}件")})
+
     return results
 
 

@@ -1,0 +1,318 @@
+{
+  "generated_at": "2026-07-23 15:52 JST",
+  "account_id": "default",
+  "cash_reserve_ratio": 0.2,
+  "concentration_caps": {
+    "product": 0.3,
+    "category": 0.5,
+    "maker": 0.6
+  },
+  "opportunity_metrics": [
+    {
+      "product": "RICOH GR IIIx",
+      "product_id": "prod_gr3x",
+      "action": "ALERT",
+      "kind": "main",
+      "buy_price": 150000,
+      "net_profit": 12700,
+      "roi": 0.0847,
+      "success_probability": 68,
+      "opportunity_score": 58,
+      "reproducibility_score": 65,
+      "holding_period": "数日",
+      "expected_value": 8636,
+      "capital_efficiency": 0.0576,
+      "risk_score": 36,
+      "liquidity_score": 85,
+      "category": "camera",
+      "maker": "RICOH"
+    },
+    {
+      "product": "FUJIFILM X100VI",
+      "product_id": "prod_x100vi",
+      "action": "WAIT",
+      "kind": "reference",
+      "buy_price": 255000,
+      "net_profit": 183691,
+      "roi": 0.7204,
+      "success_probability": 30,
+      "opportunity_score": 41,
+      "reproducibility_score": 30,
+      "holding_period": "1ヶ月",
+      "expected_value": 55107,
+      "capital_efficiency": 0.2161,
+      "risk_score": 48,
+      "liquidity_score": 25,
+      "category": "camera",
+      "maker": "FUJIFILM"
+    },
+    {
+      "product": "RICOH GR IIIx",
+      "product_id": "prod_gr3x",
+      "action": "WAIT",
+      "kind": "reference",
+      "buy_price": 150000,
+      "net_profit": 38947,
+      "roi": 0.2596,
+      "success_probability": 30,
+      "opportunity_score": 41,
+      "reproducibility_score": 30,
+      "holding_period": "1ヶ月",
+      "expected_value": 11684,
+      "capital_efficiency": 0.0779,
+      "risk_score": 48,
+      "liquidity_score": 25,
+      "category": "camera",
+      "maker": "RICOH"
+    },
+    {
+      "product": "Nintendo Switch 2",
+      "product_id": "prod_switch2",
+      "action": "WAIT",
+      "kind": "reference",
+      "buy_price": 46000,
+      "net_profit": 13945,
+      "roi": 0.3032,
+      "success_probability": 30,
+      "opportunity_score": 32,
+      "reproducibility_score": 30,
+      "holding_period": "1ヶ月",
+      "expected_value": 4184,
+      "capital_efficiency": 0.091,
+      "risk_score": 48,
+      "liquidity_score": 25,
+      "category": "game_console",
+      "maker": "Nintendo"
+    }
+  ],
+  "default_budget": 3000000,
+  "budgets": [
+    1000000,
+    3000000,
+    5000000,
+    10000000,
+    30000000
+  ],
+  "plans": {
+    "1000000": {
+      "budget": 1000000,
+      "investable": 800000,
+      "cash_reserve_ratio": 0.2,
+      "allocations": [
+        {
+          "product": "RICOH GR IIIx",
+          "product_id": "prod_gr3x",
+          "units": 2,
+          "unit_price": 150000,
+          "total": 300000,
+          "expected_profit": 25400,
+          "expected_value": 17272,
+          "category": "camera",
+          "maker": "RICOH",
+          "holding_period": "数日",
+          "roi": 0.0847,
+          "risk_score": 36,
+          "liquidity_score": 85
+        }
+      ],
+      "waiting": [
+        {
+          "product": "FUJIFILM X100VI",
+          "reason": "海外価格更新待ち（eBay sold）"
+        },
+        {
+          "product": "RICOH GR IIIx",
+          "reason": "海外価格更新待ち（eBay sold）"
+        },
+        {
+          "product": "Nintendo Switch 2",
+          "reason": "海外価格更新待ち（eBay sold）"
+        }
+      ],
+      "allocated": 300000,
+      "cash": 700000,
+      "cash_ratio": 0.7,
+      "expected_profit": 25400,
+      "expected_roi": 0.0847,
+      "avg_risk_score": 36,
+      "diversification_score": 28,
+      "max_concentration": 0.3
+    },
+    "3000000": {
+      "budget": 3000000,
+      "investable": 2400000,
+      "cash_reserve_ratio": 0.2,
+      "allocations": [
+        {
+          "product": "RICOH GR IIIx",
+          "product_id": "prod_gr3x",
+          "units": 6,
+          "unit_price": 150000,
+          "total": 900000,
+          "expected_profit": 76200,
+          "expected_value": 51816,
+          "category": "camera",
+          "maker": "RICOH",
+          "holding_period": "数日",
+          "roi": 0.0847,
+          "risk_score": 36,
+          "liquidity_score": 85
+        }
+      ],
+      "waiting": [
+        {
+          "product": "FUJIFILM X100VI",
+          "reason": "海外価格更新待ち（eBay sold）"
+        },
+        {
+          "product": "RICOH GR IIIx",
+          "reason": "海外価格更新待ち（eBay sold）"
+        },
+        {
+          "product": "Nintendo Switch 2",
+          "reason": "海外価格更新待ち（eBay sold）"
+        }
+      ],
+      "allocated": 900000,
+      "cash": 2100000,
+      "cash_ratio": 0.7,
+      "expected_profit": 76200,
+      "expected_roi": 0.0847,
+      "avg_risk_score": 36,
+      "diversification_score": 28,
+      "max_concentration": 0.3
+    },
+    "5000000": {
+      "budget": 5000000,
+      "investable": 4000000,
+      "cash_reserve_ratio": 0.2,
+      "allocations": [
+        {
+          "product": "RICOH GR IIIx",
+          "product_id": "prod_gr3x",
+          "units": 10,
+          "unit_price": 150000,
+          "total": 1500000,
+          "expected_profit": 127000,
+          "expected_value": 86360,
+          "category": "camera",
+          "maker": "RICOH",
+          "holding_period": "数日",
+          "roi": 0.0847,
+          "risk_score": 36,
+          "liquidity_score": 85
+        }
+      ],
+      "waiting": [
+        {
+          "product": "FUJIFILM X100VI",
+          "reason": "海外価格更新待ち（eBay sold）"
+        },
+        {
+          "product": "RICOH GR IIIx",
+          "reason": "海外価格更新待ち（eBay sold）"
+        },
+        {
+          "product": "Nintendo Switch 2",
+          "reason": "海外価格更新待ち（eBay sold）"
+        }
+      ],
+      "allocated": 1500000,
+      "cash": 3500000,
+      "cash_ratio": 0.7,
+      "expected_profit": 127000,
+      "expected_roi": 0.0847,
+      "avg_risk_score": 36,
+      "diversification_score": 28,
+      "max_concentration": 0.3
+    },
+    "10000000": {
+      "budget": 10000000,
+      "investable": 8000000,
+      "cash_reserve_ratio": 0.2,
+      "allocations": [
+        {
+          "product": "RICOH GR IIIx",
+          "product_id": "prod_gr3x",
+          "units": 20,
+          "unit_price": 150000,
+          "total": 3000000,
+          "expected_profit": 254000,
+          "expected_value": 172720,
+          "category": "camera",
+          "maker": "RICOH",
+          "holding_period": "数日",
+          "roi": 0.0847,
+          "risk_score": 36,
+          "liquidity_score": 85
+        }
+      ],
+      "waiting": [
+        {
+          "product": "FUJIFILM X100VI",
+          "reason": "海外価格更新待ち（eBay sold）"
+        },
+        {
+          "product": "RICOH GR IIIx",
+          "reason": "海外価格更新待ち（eBay sold）"
+        },
+        {
+          "product": "Nintendo Switch 2",
+          "reason": "海外価格更新待ち（eBay sold）"
+        }
+      ],
+      "allocated": 3000000,
+      "cash": 7000000,
+      "cash_ratio": 0.7,
+      "expected_profit": 254000,
+      "expected_roi": 0.0847,
+      "avg_risk_score": 36,
+      "diversification_score": 28,
+      "max_concentration": 0.3
+    },
+    "30000000": {
+      "budget": 30000000,
+      "investable": 24000000,
+      "cash_reserve_ratio": 0.2,
+      "allocations": [
+        {
+          "product": "RICOH GR IIIx",
+          "product_id": "prod_gr3x",
+          "units": 60,
+          "unit_price": 150000,
+          "total": 9000000,
+          "expected_profit": 762000,
+          "expected_value": 518160,
+          "category": "camera",
+          "maker": "RICOH",
+          "holding_period": "数日",
+          "roi": 0.0847,
+          "risk_score": 36,
+          "liquidity_score": 85
+        }
+      ],
+      "waiting": [
+        {
+          "product": "FUJIFILM X100VI",
+          "reason": "海外価格更新待ち（eBay sold）"
+        },
+        {
+          "product": "RICOH GR IIIx",
+          "reason": "海外価格更新待ち（eBay sold）"
+        },
+        {
+          "product": "Nintendo Switch 2",
+          "reason": "海外価格更新待ち（eBay sold）"
+        }
+      ],
+      "allocated": 9000000,
+      "cash": 21000000,
+      "cash_ratio": 0.7,
+      "expected_profit": 762000,
+      "expected_roi": 0.0847,
+      "avg_risk_score": 36,
+      "diversification_score": 28,
+      "max_concentration": 0.3
+    }
+  }
+}

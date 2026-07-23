@@ -1,0 +1,31 @@
+{
+  "account_id": "demo_pro",
+  "email": "demo@example.com",
+  "auth_provider": "google",
+  "tier": "pro",
+  "created_at": "2026-07-23 16:05 JST",
+  "settings": {
+    "notify_channels": [
+      "discord",
+      "telegram",
+      "email"
+    ],
+    "notify_frequency": "daily",
+    "roi_threshold": 0.05,
+    "profit_threshold": 5000
+  },
+  "watchlist": [
+    "prod_gr3x",
+    "prod_x100vi"
+  ],
+  "portfolio": {
+    "cash": 0,
+    "holdings": []
+  },
+  "subscription": {
+    "status": "active",
+    "plan": "pro",
+    "billing_cycle": "monthly",
+    "trial_until": null
+  }
+}

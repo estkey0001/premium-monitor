@@ -1,0 +1,38 @@
+# ==========================================================
+# Accounts 設定サンプル（SaaS 基盤）
+# 実データは data/accounts/<account_id>.json（src/saas/accounts.py が管理）。
+# これは構造リファレンス。機密（パスワード/トークン）は保存しない。
+# ==========================================================
+accounts:
+  - account_id: default            # 運営/管理用
+    email: ""
+    auth_provider: email           # email / google / apple
+    tier: enterprise               # free / pro / enterprise
+    settings:
+      notify_channels: [email, discord, telegram]
+      notify_frequency: daily      # realtime / hourly / daily
+      roi_threshold: 0.08          # これ以上のROIのみ通知
+      profit_threshold: 5000       # これ以上の利益のみ通知
+    watchlist: []                  # 空=全商品。product_id を列挙で監視限定
+    portfolio:
+      cash: 0
+      holdings: []
+
+  - account_id: demo_pro           # Pro プラン例
+    email: demo@example.com
+    auth_provider: google
+    tier: pro
+    settings:
+      notify_channels: [discord, telegram, email]
+      notify_frequency: daily
+      roi_threshold: 0.05
+      profit_threshold: 5000
+    watchlist: [prod_gr3x, prod_x100vi]
+    portfolio:
+      cash: 3000000
+      holdings: []
+
+# プラン別機能（src/saas/subscription.py が正）
+# free       : beginner のみ
+# pro        : beginner + pro + ai_dashboard + notification + capital
+# enterprise : 全機能 + api + multi_account + csv_export

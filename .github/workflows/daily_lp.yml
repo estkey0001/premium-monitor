@@ -216,6 +216,13 @@ jobs:
         env:
           PYTHONPATH: .
 
+      # 13.11 Generate Admin Dashboard（SaaS 運営集計）
+      - name: Generate admin dashboard
+        run: python scripts/generate_admin_dashboard.py
+        continue-on-error: true
+        env:
+          PYTHONPATH: .
+
       - name: Generate data quality report
         run: python scripts/generate_data_quality_report.py
         continue-on-error: true
@@ -300,6 +307,8 @@ jobs:
                   exports/coverage/ \
                   exports/allocation/ \
                   exports/execution/ \
+                  exports/admin/ \
+                  data/accounts/ \
                   audit_health/ \
                   exports/data_quality_report/ exports/camera_buyback_status.json \
                   data/alerts.csv data/lottery_events.csv \

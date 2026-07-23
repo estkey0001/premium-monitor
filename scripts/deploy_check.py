@@ -6214,6 +6214,76 @@ def check() -> list[dict]:
                     "message": "#648 週次 Learning Report（weekly_learning.md）が生成される"
                                + ("" if _t648 else " ← 週次レポートが見つかりません")})
 
+    # ── SaaS 基盤 ガード #649-#655 ──
+    def _mod_exists(*parts):
+        return (PROJECT_ROOT.joinpath(*parts)).exists()
+
+    # #649: SaaS モジュール（subscription/accounts/auth/billing/api）が存在
+    _saas_files = ["subscription.py", "accounts.py", "auth.py", "billing.py", "api.py"]
+    _t649 = all(_mod_exists("src", "saas", f) for f in _saas_files)
+    results.append({"level": "ok" if _t649 else "error", "check": "saas_modules",
+                    "message": "#649 SaaS モジュール（subscription/accounts/auth/billing/api）が存在する"
+                               + ("" if _t649 else " ← SaaS モジュールが不足")})
+
+    # #650: サブスク権限ゲート（Free/Pro/Enterprise）が定義され機能する
+    _t650 = False
+    try:
+        import importlib
+        _sub = importlib.import_module("src.saas.subscription")
+        _t650 = (not _sub.can_access("free", "pro")) and _sub.can_access("pro", "capital") \
+            and _sub.can_access("enterprise", "api") and set(_sub.TIERS) == {"free", "pro", "enterprise"}
+    except Exception:
+        _t650 = False
+    results.append({"level": "ok" if _t650 else "error", "check": "saas_subscription_gate",
+                    "message": "#650 サブスク権限ゲート（Free/Pro/Enterprise）が機能する"
+                               + ("" if _t650 else " ← 権限ゲートが不正")})
+
+    # #651: account_id 単位のストア（settings/watchlist/portfolio）が機能する
+    _t651 = False
+    try:
+        _accs = importlib.import_module("src.saas.accounts")
+        _al = _accs.list_accounts()
+        _t651 = isinstance(_al, list) and all(
+            ("account_id" in a and "tier" in a and "settings" in a and "watchlist" in a and "portfolio" in a)
+            for a in _al) and len(_al) >= 1
+    except Exception:
+        _t651 = False
+    results.append({"level": "ok" if _t651 else "error", "check": "saas_accounts_store",
+                    "message": f"#651 account 単位ストア（settings/watchlist/portfolio）が機能する（{len(_al) if _t651 else '?'}件）"
+                               + ("" if _t651 else " ← account ストアが不正")})
+
+    # #652: REST API のルート（/account /opportunities /notifications /capital /execution）が定義される
+    _api_src = _read_src("src", "saas", "api.py")
+    _t652 = all(r in _api_src for r in
+                ('"/account"', '"/opportunities"', '"/notifications"', '"/capital"', '"/execution"'))
+    results.append({"level": "ok" if _t652 else "error", "check": "saas_api_routes",
+                    "message": "#652 REST API ルート（account/opportunities/notifications/capital/execution）が定義される"
+                               + ("" if _t652 else " ← API ルートが不足")})
+
+    # #653: 認証/課金が env gating（キー未埋め込み・未設定で無効）で実装される
+    _auth_src = _read_src("src", "saas", "auth.py"); _bill_src = _read_src("src", "saas", "billing.py")
+    _t653 = ('os.environ' in _auth_src) and ('GOOGLE_OAUTH_CLIENT_ID' in _auth_src) \
+        and ('STRIPE_SECRET_KEY' in _bill_src) and ('TRIAL_DAYS' in _bill_src)
+    results.append({"level": "ok" if _t653 else "error", "check": "saas_auth_billing_gated",
+                    "message": "#653 認証(email/google/apple)・課金(Stripe/Trial)が env gating で実装される"
+                               + ("" if _t653 else " ← 認証/課金の env gating が見つかりません")})
+
+    # #654: Admin Dashboard（登録者数/通知/利益ルート/Health/実行成功率）が生成される
+    _adm = _load_json_safe('exports/admin/latest.json') or {}
+    _t654 = isinstance(_adm, dict) and ('accounts' in _adm) and ('metrics' in _adm) \
+        and ('health_score' in (_adm.get('metrics') or {}))
+    results.append({"level": "ok" if _t654 else "error", "check": "saas_admin_dashboard",
+                    "message": f"#654 Admin Dashboard が生成される（登録者 {(_adm.get('accounts') or {}).get('total','?')}）"
+                               + ("" if _t654 else " ← Admin Dashboard が見つかりません")})
+
+    # #655: ROADMAP.md（運用/障害/デプロイ/課金/バックアップ）が存在
+    _rm = PROJECT_ROOT / "ROADMAP.md"
+    _rm_txt = _rm.read_text(encoding="utf-8") if _rm.exists() else ""
+    _t655 = all(k in _rm_txt for k in ("デプロイ", "障害", "課金", "バックアップ"))
+    results.append({"level": "ok" if _t655 else "error", "check": "saas_roadmap",
+                    "message": "#655 ROADMAP.md（運用/障害/デプロイ/課金/バックアップ）が存在する"
+                               + ("" if _t655 else " ← ROADMAP が不足")})
+
     return results
 
 

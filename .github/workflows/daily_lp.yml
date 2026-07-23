@@ -55,6 +55,14 @@ jobs:
         env:
           PYTHONPATH: .
 
+      # 3.5 公式定価の自動収集（apple/ricoh/fujifilm/canon/nikon/sony）
+      # source config(target_url) 未設定の商品は安全にスキップ。IPブロック時も継続。
+      - name: Collect official prices
+        run: python -m src.cli collect-official
+        continue-on-error: true
+        env:
+          PYTHONPATH: .
+
       # 4. Collector quality gate
       - name: Collector quality gate
         id: quality_gate
@@ -116,6 +124,10 @@ jobs:
         env:
           PYTHONPATH: .
           EBAY_APP_ID: ${{ secrets.EBAY_APP_ID }}
+          # 公式API統合（キー設定時のみ自動有効化・未設定ならHTMLフォールバック）
+          RAKUTEN_APP_ID: ${{ secrets.RAKUTEN_APP_ID }}
+          RAKUTEN_AFFILIATE_ID: ${{ secrets.RAKUTEN_AFFILIATE_ID }}
+          YAHOO_SHOPPING_APP_ID: ${{ secrets.YAHOO_SHOPPING_APP_ID }}
 
       # 10. Run buyback premium check（統合ジョブ）
       - name: Run buyback premium check

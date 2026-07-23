@@ -157,5 +157,31 @@ python scripts/update_overseas_prices.py --verbose
 - 未設定でも `--manual-only` / `--skip-ebay` でローカル動作可能。
 - 設定すると eBay 成約相場が fresh 化し、Pro/せどりの海外売却候補の精度が向上します。
 
+## 自動取得の拡張（2026-07-23）— キー投入で自動起動
+
+「できるだけ自動取得」方針。以下は**Secret を登録するだけで自動化が起動**する設計。
+未設定でも動作（既存のHTMLフォールバック/手動キュレーションが働く）。
+
+### 公式定価コレクター（キー不要・実装済み）
+- `apple/ricoh/fujifilm` に加え `canon/nikon/sony` を追加（`src/collectors/official/`）。
+- 日次CIで `python -m src.cli collect-official` が走り公式定価を自動更新。
+- **canon/nikon/sony を実際に収集するには** `product_source_config` に各商品の
+  公式ストア `target_url` を登録する必要がある（未登録の商品は安全にスキップ）。
+- robots.txt 準拠・`rate_limit_sec` 遵守で低頻度アクセス。
+
+### 公式API統合（env-gated・キー投入で自動有効化）
+`src/collectors/api/official_apis.py`。GitHub Secrets に登録すると自動でAPI優先に切替:
+
+| Secret 名 | 用途 | 効果 |
+|-----------|------|------|
+| `EBAY_APP_ID` | eBay Finding API | 海外sold相場が fresh 化（Data Quality +25pt見込み・最優先）|
+| `RAKUTEN_APP_ID` | 楽天 Ichiba Item Search API | 楽天新品価格をHTMLでなくAPIで取得（IPブロック回避）|
+| `RAKUTEN_AFFILIATE_ID` | 楽天アフィリ（任意）| 任意 |
+| `YAHOO_SHOPPING_APP_ID` | Yahoo!ショッピング API | 新品ショッピング価格（※落札soldとは別種・混在させない）|
+
+### 自動化できない領域（ToS・正直な上限）
+- **メルカリ / ラクマ**: スクレイピング禁止・公式価格APIなし → **手動キュレーション継続**が正しい設計。
+- **クラウドIPブロック**: GitHub Actions のIPは多くの日本の小売サイトにブロックされる（成功率が上がらない主因）。回避はセルフホストRunner/プロキシ等のインフラ判断が必要（コードだけでは解決しない）。
+
 ## 絶対禁止
 - 自動購入・自動応募・CAPTCHA突破・ログイン突破・複数アカウント運用・高頻度アクセス・規約違反行為

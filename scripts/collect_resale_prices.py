@@ -685,10 +685,23 @@ class RakutenResaleCollector:
     )
 
     def collect(self, product_alias: str, keywords: list[str]) -> Optional[dict]:
-        """楽天市場の新品出品価格を取得する。"""
+        """楽天市場の新品出品価格を取得する。
+
+        公式API（RAKUTEN_APP_ID 設定時）を優先し、未設定/失敗時は従来のHTMLへフォールバック。
+        """
         keyword = keywords[0] if keywords else ""
         if not keyword:
             return None
+
+        # 公式API優先（キー設定時のみ有効・未設定なら None を返しHTMLへ）
+        try:
+            from src.collectors.api.official_apis import rakuten_ichiba_search
+            api_res = rakuten_ichiba_search(keyword)
+            if api_res:
+                logger.info("[Rakuten:%s] 公式API使用", product_alias)
+                return api_res
+        except Exception as e:
+            logger.info("[Rakuten:%s] API試行エラー→HTMLへ: %s", product_alias, e)
 
         url = self.SEARCH_URL.format(keyword=urllib.parse.quote(keyword))
         html = _fetch_html(url, headers={"Accept-Language": "ja"})

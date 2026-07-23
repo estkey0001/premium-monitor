@@ -5194,6 +5194,44 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             parts.append(f'<tr><td>{stars}</td><td>{_esc(i.get("action",""))}</td>'
                          f'<td>{_esc(i.get("effect",""))}</td><td>{_esc(i.get("effort",""))}</td></tr>')
         parts.append('</table></div>')
+        # Coverage Dashboard（Market Coverage Engine）
+        parts.append(self._coverage_html())
+        parts.append('</div>')
+        return "".join(parts)
+
+    def _coverage_html(self) -> str:
+        """Coverage Dashboard（exports/coverage/latest.json）を Health タブに表示。"""
+        import json as _json_c
+        from html import escape as _esc
+        p = Path(__file__).resolve().parent.parent.parent / "exports" / "coverage" / "latest.json"
+        if not p.exists():
+            return ""
+        try:
+            d = _json_c.loads(p.read_text(encoding="utf-8"))
+        except Exception:
+            return ""
+        cs = d.get("coverage_score", 0)
+        col = "#059669" if cs >= 80 else "#d97706" if cs >= 60 else "#dc2626"
+        parts = ['<div class="coverage-dashboard" style="margin-top:14px;border-top:1px dashed #cbd5e1;padding-top:10px">',
+                 '<div style="font-weight:700;color:#334155">&#127758; Market Coverage</div>',
+                 f'<div style="font-size:1.2rem;font-weight:800;color:{col};margin:4px 0">'
+                 f'Coverage Score {cs}/100</div>',
+                 '<div style="display:flex;flex-wrap:wrap;gap:6px;font-size:0.78rem;margin-bottom:8px">']
+        for c in d.get("current_coverage", []):
+            parts.append(f'<span style="background:#f1f5f9;border-radius:6px;padding:3px 8px">'
+                         f'{_esc(c["category"])}: <b>{c["products"]}</b>商品</span>')
+        parts.append('</div>')
+        # カテゴリ候補 TOP5
+        parts.append('<div style="font-size:0.82rem;font-weight:700;color:#334155">追加候補カテゴリ TOP5</div>'
+                     '<table style="width:100%;font-size:0.78rem;border-collapse:collapse;margin-top:4px">'
+                     '<tr style="color:#64748b;text-align:left"><th>カテゴリ</th><th>優先度</th><th>工数</th><th>備考</th></tr>')
+        for c in d.get("category_candidates_ranked", [])[:5]:
+            parts.append(f'<tr><td>{_esc(c["category"])}</td><td>{c["priority_score"]}</td>'
+                         f'<td>{_esc(c["effort"])}</td><td style="color:#64748b">{_esc(c["note"][:40])}</td></tr>')
+        parts.append('</table>')
+        parts.append(f'<div style="font-size:0.76rem;color:#64748b;margin-top:4px">'
+                     f'次に追加すべき商品 TOP50 は exports/coverage/latest.md、'
+                     f'候補yaml は products_candidates.yaml（提案・非破壊）。</div>')
         parts.append('</div>')
         return "".join(parts)
 

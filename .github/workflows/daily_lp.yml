@@ -195,6 +195,13 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
 
+      # 13.8 Generate Market Coverage（監視対象カバレッジ分析・拡充提案）
+      - name: Generate coverage report
+        run: python scripts/generate_coverage_report.py
+        continue-on-error: true
+        env:
+          PYTHONPATH: .
+
       - name: Generate data quality report
         run: python scripts/generate_data_quality_report.py
         continue-on-error: true
@@ -276,6 +283,7 @@ jobs:
                   exports/flea_sold_prices/ \
                   exports/ai_opportunities/ \
                   exports/notifications/ \
+                  exports/coverage/ \
                   audit_health/ \
                   exports/data_quality_report/ exports/camera_buyback_status.json \
                   data/alerts.csv data/lottery_events.csv \

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-23 16:14 JST",
+  "generated_at": "2026-07-23 17:17 JST",
   "date": "2026-07-23",
   "is_baseline": false,
   "channels": [
@@ -7,10 +7,168 @@
     "telegram"
   ],
   "delivery_status": {
-    "discord": "no_events",
-    "telegram": "no_events"
+    "discord": "pending(未設定)",
+    "telegram": "pending(未設定)"
   },
-  "event_count": 0,
+  "event_count": 9,
   "suppressed_count": 0,
-  "events": []
+  "events": [
+    {
+      "type": "NEW_MAIN",
+      "product_id": "prod_iphone17pm_256",
+      "data": {
+        "product": "prod_iphone17pm_256",
+        "net_profit": 0,
+        "roi": 0
+      },
+      "priority": "High",
+      "message": "🆕 新しい利益ルート成立\nprod_iphone17pm_256\n利益 ¥0 / ROI 0%",
+      "channels": [
+        "discord",
+        "telegram"
+      ],
+      "created_at": "2026-07-23 17:17 JST",
+      "suppressed": false
+    },
+    {
+      "type": "NEW_MAIN",
+      "product_id": "prod_ps5_pro",
+      "data": {
+        "product": "PlayStation 5 Pro",
+        "net_profit": 60200,
+        "roi": 0.8625
+      },
+      "priority": "High",
+      "message": "🆕 新しい利益ルート成立\nPlayStation 5 Pro\n利益 ¥60,200 / ROI 86%",
+      "channels": [
+        "discord",
+        "telegram"
+      ],
+      "created_at": "2026-07-23 17:17 JST",
+      "suppressed": false
+    },
+    {
+      "type": "NEW_MAIN",
+      "product_id": "prod_switch2",
+      "data": {
+        "product": "Nintendo Switch 2",
+        "net_profit": 18445,
+        "roi": 0.4445
+      },
+      "priority": "High",
+      "message": "🆕 新しい利益ルート成立\nNintendo Switch 2\n利益 ¥18,445 / ROI 44%",
+      "channels": [
+        "discord",
+        "telegram"
+      ],
+      "created_at": "2026-07-23 17:17 JST",
+      "suppressed": false
+    },
+    {
+      "type": "NEW_MAIN",
+      "product_id": "prod_switch2_mk",
+      "data": {
+        "product": "prod_switch2_mk",
+        "net_profit": 0,
+        "roi": 0
+      },
+      "priority": "High",
+      "message": "🆕 新しい利益ルート成立\nprod_switch2_mk\n利益 ¥0 / ROI 0%",
+      "channels": [
+        "discord",
+        "telegram"
+      ],
+      "created_at": "2026-07-23 17:17 JST",
+      "suppressed": false
+    },
+    {
+      "type": "NEW_MAIN",
+      "product_id": "prod_x100vi",
+      "data": {
+        "product": "FUJIFILM X100VI",
+        "net_profit": 34900,
+        "roi": 0.1939
+      },
+      "priority": "High",
+      "message": "🆕 新しい利益ルート成立\nFUJIFILM X100VI\n利益 ¥34,900 / ROI 19%",
+      "channels": [
+        "discord",
+        "telegram"
+      ],
+      "created_at": "2026-07-23 17:17 JST",
+      "suppressed": false
+    },
+    {
+      "type": "PRICE_DROP",
+      "product_id": "prod_x100vi",
+      "data": {
+        "product": "FUJIFILM X100VI",
+        "buy_source": "カメラのキタムラ",
+        "prev_price": 255000,
+        "buy_price": 180000,
+        "delta": 75000
+      },
+      "priority": "High",
+      "message": "📉 価格下落\nFUJIFILM X100VI\nカメラのキタムラ ¥255,000 → ¥180,000（-¥75,000）",
+      "channels": [
+        "discord",
+        "telegram"
+      ],
+      "created_at": "2026-07-23 17:17 JST",
+      "suppressed": false
+    },
+    {
+      "type": "PRICE_DROP",
+      "product_id": "prod_switch2",
+      "data": {
+        "product": "Nintendo Switch 2",
+        "buy_source": "ゲオ",
+        "prev_price": 46000,
+        "buy_price": 41500,
+        "delta": 4500
+      },
+      "priority": "High",
+      "message": "📉 価格下落\nNintendo Switch 2\nゲオ ¥46,000 → ¥41,500（-¥4,500）",
+      "channels": [
+        "discord",
+        "telegram"
+      ],
+      "created_at": "2026-07-23 17:17 JST",
+      "suppressed": false
+    },
+    {
+      "type": "ROI_UP",
+      "product_id": "prod_switch2",
+      "data": {
+        "product": "Nintendo Switch 2",
+        "prev_roi": 0.3032,
+        "roi": 0.4445
+      },
+      "priority": "Medium",
+      "message": "⬆️ ROI改善\nNintendo Switch 2\nROI 30% → 44%",
+      "channels": [
+        "discord",
+        "telegram"
+      ],
+      "created_at": "2026-07-23 17:17 JST",
+      "suppressed": false
+    },
+    {
+      "type": "ROI_DOWN",
+      "product_id": "prod_x100vi",
+      "data": {
+        "product": "FUJIFILM X100VI",
+        "prev_roi": 0.7204,
+        "roi": 0.1939
+      },
+      "priority": "Low",
+      "message": "⬇️ ROI低下\nFUJIFILM X100VI\nROI 72% → 19%",
+      "channels": [
+        "discord",
+        "telegram"
+      ],
+      "created_at": "2026-07-23 17:17 JST",
+      "suppressed": false
+    }
+  ]
 }

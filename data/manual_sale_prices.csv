@@ -1,39 +1,39 @@
 product_alias,shop_name,sale_price,condition,url,observed_at,link_verified,data_source
-iphone17pro256,じゃんぱら,174800,used_a,https://www.janpara.co.jp/sale/search/?search=iPhone+17+Pro,2026-06-29T12:00:00+09:00,true,manual_today
-iphone17pro256,イオシス,172800,used_a,https://iosys.co.jp/items/search/?q=iPhone+17+Pro,2026-06-29T12:00:00+09:00,true,manual_today
-iphone17pro256,ソフマップ,176800,used_a,https://www.sofmap.com/product_list.aspx?q=iPhone+17+Pro,2026-06-29T12:00:00+09:00,true,manual_today
-iphone17pro256,ゲオ,169800,used_b,https://www.geo-online.co.jp/search/?q=iPhone+17+Pro,2026-06-29T12:00:00+09:00,true,manual_today
-iphone17pro512,じゃんぱら,209800,used_a,https://www.janpara.co.jp/sale/search/?search=iPhone+17+Pro+512,2026-06-29T12:00:00+09:00,true,manual_today
-iphone17pro512,イオシス,207800,used_a,https://iosys.co.jp/items/search/?q=iPhone+17+Pro+512,2026-06-29T12:00:00+09:00,true,manual_today
-iphone17pro512,ゲオ,204800,used_b,https://www.geo-online.co.jp/search/?q=iPhone+17+Pro+512,2026-06-29T12:00:00+09:00,true,manual_today
-switch2,じゃんぱら,42800,new_unopened,,2026-06-29T12:00:00+09:00,false,manual_today
-switch2,ゲオ,41500,new_unopened,,2026-06-29T12:00:00+09:00,false,manual_today
-switch2,ソフマップ,43500,new_unopened,,2026-06-29T12:00:00+09:00,false,manual_today
-switch2_mk,じゃんぱら,54800,new_unopened,,2026-06-29T12:00:00+09:00,false,manual_today
-switch2_mk,ゲオ,53000,new_unopened,,2026-06-29T12:00:00+09:00,false,manual_today
-x100vi,マップカメラ,178000,used_a,https://www.mapcamera.com/ec/search?q=X100VI,2026-06-29T12:00:00+09:00,true,manual_today
-x100vi,フジヤカメラ,175000,used_a,https://www.fujiyacamera.com/shopbrand/ct10/,2026-06-29T12:00:00+09:00,true,manual_today
-x100vi,カメラのキタムラ,180000,used_a,https://www.kitamura.co.jp/ec/special/camera/used/,2026-06-29T12:00:00+09:00,true,manual_today
-iphone17pm256,じゃんぱら,159800,used_a,https://www.janpara.co.jp/sale/search/?search=iPhone+17+Plus,2026-06-29T12:00:00+09:00,true,manual_today
-iphone17pm256,イオシス,157800,used_a,https://iosys.co.jp/items/search/?q=iPhone+17+Plus,2026-06-29T12:00:00+09:00,true,manual_today
-iphone17pm256,ゲオ,154800,used_b,https://www.geo-online.co.jp/search/?q=iPhone+17+Plus,2026-06-29T12:00:00+09:00,true,manual_today
-ps5_pro,じゃんぱら,68000,new_unopened,,2026-06-29T12:00:00+09:00,false,manual_today
-ps5_pro,ゲオ,65000,new_unopened,,2026-06-29T12:00:00+09:00,false,manual_today
-ps5_pro,ソフマップ,69800,new_unopened,,2026-06-29T12:00:00+09:00,false,manual_today
-macbook_air_m4_13,じゃんぱら,148000,used_a,https://www.janpara.co.jp/sale/search/?search=MacBook+Air+M4,2026-06-29T12:00:00+09:00,true,manual_today
-macbook_air_m4_13,イオシス,145000,used_a,https://iosys.co.jp/items/search/?q=MacBook+Air+M4,2026-06-29T12:00:00+09:00,true,manual_today
-gr4,eBay sold(新品),295000,new_unopened,https://www.ebay.com/sch/i.html?_nkw=Ricoh+GR+IV&LH_Sold=1&LH_Complete=1&LH_ItemCondition=1000,2026-07-09T10:00:00+09:00,true,manual_today
-gr4,メルカリ未使用,290000,new_unopened,https://jp.mercari.com/search?keyword=RICOH+GR+IV&status=on_sale,2026-07-09T10:00:00+09:00,true,manual_today
-gr4,Amazon新品出品,315000,new_unopened,https://www.amazon.co.jp/s?k=RICOH+GR+IV&rh=p_n_condition-type%3A1294724011,2026-07-09T10:00:00+09:00,true,manual_today
-gr4,楽天市場新品,305000,new_unopened,https://search.rakuten.co.jp/search/mall/RICOH+GR+IV/?f=1,2026-07-09T10:00:00+09:00,true,manual_today
-gr3x,eBay sold(新品),255000,new_unopened,https://www.ebay.com/sch/i.html?_nkw=Ricoh+GR+IIIx&LH_Sold=1&LH_Complete=1&LH_ItemCondition=1000,2026-07-09T10:00:00+09:00,true,manual_today
-gr3x,メルカリ未使用,250000,new_unopened,https://jp.mercari.com/search?keyword=RICOH+GR+IIIx&status=on_sale,2026-07-09T10:00:00+09:00,true,manual_today
-gr3x,Amazon新品出品,265000,new_unopened,https://www.amazon.co.jp/s?k=RICOH+GR+IIIx&rh=p_n_condition-type%3A1294724011,2026-07-09T10:00:00+09:00,true,manual_today
-x100vi,eBay sold(新品),430000,new_unopened,https://www.ebay.com/sch/i.html?_nkw=FUJIFILM+X100VI&LH_Sold=1&LH_Complete=1&LH_ItemCondition=1000,2026-07-09T10:00:00+09:00,true,manual_today
-x100vi,メルカリ未使用,450000,new_unopened,https://jp.mercari.com/search?keyword=FUJIFILM+X100VI&status=on_sale,2026-07-09T10:00:00+09:00,true,manual_today
-x100vi,Amazon新品出品,470000,new_unopened,https://www.amazon.co.jp/s?k=FUJIFILM+X100VI&rh=p_n_condition-type%3A1294724011,2026-07-09T10:00:00+09:00,true,manual_today
-x100vi,楽天市場新品,455000,new_unopened,https://search.rakuten.co.jp/search/mall/FUJIFILM+X100VI/?f=1,2026-07-09T10:00:00+09:00,true,manual_today
-gr4_mono,eBay sold(新品),303000,new_unopened,https://www.ebay.com/sch/i.html?_nkw=Ricoh+GR+IV+Monochrome&LH_Sold=1&LH_Complete=1&LH_ItemCondition=1000,2026-07-09T10:00:00+09:00,true,manual_today
-gr4_mono,メルカリ未使用,300000,new_unopened,https://jp.mercari.com/search?keyword=RICOH+GR+IV+Monochrome&status=on_sale,2026-07-09T10:00:00+09:00,true,manual_today
-gr4_hdf,eBay sold(新品),350000,new_unopened,https://www.ebay.com/sch/i.html?_nkw=Ricoh+GR+IV+HDF&LH_Sold=1&LH_Complete=1&LH_ItemCondition=1000,2026-07-09T10:00:00+09:00,true,manual_today
-gr4_hdf,メルカリ未使用,340000,new_unopened,https://jp.mercari.com/search?keyword=RICOH+GR+IV+HDF&status=on_sale,2026-07-09T10:00:00+09:00,true,manual_today
+iphone17pro256,じゃんぱら,174800,used_a,https://www.janpara.co.jp/sale/search/?search=iPhone+17+Pro,2026-07-12T12:00:00+09:00,true,manual_today
+iphone17pro256,イオシス,172800,used_a,https://iosys.co.jp/items/search/?q=iPhone+17+Pro,2026-07-12T12:00:00+09:00,true,manual_today
+iphone17pro256,ソフマップ,176800,used_a,https://www.sofmap.com/product_list.aspx?q=iPhone+17+Pro,2026-07-12T12:00:00+09:00,true,manual_today
+iphone17pro256,ゲオ,169800,used_b,https://www.geo-online.co.jp/search/?q=iPhone+17+Pro,2026-07-12T12:00:00+09:00,true,manual_today
+iphone17pro512,じゃんぱら,209800,used_a,https://www.janpara.co.jp/sale/search/?search=iPhone+17+Pro+512,2026-07-12T12:00:00+09:00,true,manual_today
+iphone17pro512,イオシス,207800,used_a,https://iosys.co.jp/items/search/?q=iPhone+17+Pro+512,2026-07-12T12:00:00+09:00,true,manual_today
+iphone17pro512,ゲオ,204800,used_b,https://www.geo-online.co.jp/search/?q=iPhone+17+Pro+512,2026-07-12T12:00:00+09:00,true,manual_today
+switch2,じゃんぱら,42800,new_unopened,,2026-07-12T12:00:00+09:00,false,manual_today
+switch2,ゲオ,41500,new_unopened,,2026-07-12T12:00:00+09:00,false,manual_today
+switch2,ソフマップ,43500,new_unopened,,2026-07-12T12:00:00+09:00,false,manual_today
+switch2_mk,じゃんぱら,54800,new_unopened,,2026-07-12T12:00:00+09:00,false,manual_today
+switch2_mk,ゲオ,53000,new_unopened,,2026-07-12T12:00:00+09:00,false,manual_today
+x100vi,マップカメラ,178000,used_a,https://www.mapcamera.com/ec/search?q=X100VI,2026-07-12T12:00:00+09:00,true,manual_today
+x100vi,フジヤカメラ,175000,used_a,https://www.fujiyacamera.com/shopbrand/ct10/,2026-07-12T12:00:00+09:00,true,manual_today
+x100vi,カメラのキタムラ,180000,used_a,https://www.kitamura.co.jp/ec/special/camera/used/,2026-07-12T12:00:00+09:00,true,manual_today
+iphone17pm256,じゃんぱら,159800,used_a,https://www.janpara.co.jp/sale/search/?search=iPhone+17+Plus,2026-07-12T12:00:00+09:00,true,manual_today
+iphone17pm256,イオシス,157800,used_a,https://iosys.co.jp/items/search/?q=iPhone+17+Plus,2026-07-12T12:00:00+09:00,true,manual_today
+iphone17pm256,ゲオ,154800,used_b,https://www.geo-online.co.jp/search/?q=iPhone+17+Plus,2026-07-12T12:00:00+09:00,true,manual_today
+ps5_pro,じゃんぱら,68000,new_unopened,,2026-07-12T12:00:00+09:00,false,manual_today
+ps5_pro,ゲオ,65000,new_unopened,,2026-07-12T12:00:00+09:00,false,manual_today
+ps5_pro,ソフマップ,69800,new_unopened,,2026-07-12T12:00:00+09:00,false,manual_today
+macbook_air_m4_13,じゃんぱら,148000,used_a,https://www.janpara.co.jp/sale/search/?search=MacBook+Air+M4,2026-07-12T12:00:00+09:00,true,manual_today
+macbook_air_m4_13,イオシス,145000,used_a,https://iosys.co.jp/items/search/?q=MacBook+Air+M4,2026-07-12T12:00:00+09:00,true,manual_today
+gr4,eBay sold(新品),295000,new_unopened,https://www.ebay.com/sch/i.html?_nkw=Ricoh+GR+IV&LH_Sold=1&LH_Complete=1&LH_ItemCondition=1000,2026-07-22T10:00:00+09:00,true,manual_today
+gr4,メルカリ未使用,290000,new_unopened,https://jp.mercari.com/search?keyword=RICOH+GR+IV&status=on_sale,2026-07-22T10:00:00+09:00,true,manual_today
+gr4,Amazon新品出品,315000,new_unopened,https://www.amazon.co.jp/s?k=RICOH+GR+IV&rh=p_n_condition-type%3A1294724011,2026-07-22T10:00:00+09:00,true,manual_today
+gr4,楽天市場新品,305000,new_unopened,https://search.rakuten.co.jp/search/mall/RICOH+GR+IV/?f=1,2026-07-22T10:00:00+09:00,true,manual_today
+gr3x,eBay sold(新品),255000,new_unopened,https://www.ebay.com/sch/i.html?_nkw=Ricoh+GR+IIIx&LH_Sold=1&LH_Complete=1&LH_ItemCondition=1000,2026-07-22T10:00:00+09:00,true,manual_today
+gr3x,メルカリ未使用,250000,new_unopened,https://jp.mercari.com/search?keyword=RICOH+GR+IIIx&status=on_sale,2026-07-22T10:00:00+09:00,true,manual_today
+gr3x,Amazon新品出品,265000,new_unopened,https://www.amazon.co.jp/s?k=RICOH+GR+IIIx&rh=p_n_condition-type%3A1294724011,2026-07-22T10:00:00+09:00,true,manual_today
+x100vi,eBay sold(新品),430000,new_unopened,https://www.ebay.com/sch/i.html?_nkw=FUJIFILM+X100VI&LH_Sold=1&LH_Complete=1&LH_ItemCondition=1000,2026-07-22T10:00:00+09:00,true,manual_today
+x100vi,メルカリ未使用,450000,new_unopened,https://jp.mercari.com/search?keyword=FUJIFILM+X100VI&status=on_sale,2026-07-22T10:00:00+09:00,true,manual_today
+x100vi,Amazon新品出品,470000,new_unopened,https://www.amazon.co.jp/s?k=FUJIFILM+X100VI&rh=p_n_condition-type%3A1294724011,2026-07-22T10:00:00+09:00,true,manual_today
+x100vi,楽天市場新品,455000,new_unopened,https://search.rakuten.co.jp/search/mall/FUJIFILM+X100VI/?f=1,2026-07-22T10:00:00+09:00,true,manual_today
+gr4_mono,eBay sold(新品),303000,new_unopened,https://www.ebay.com/sch/i.html?_nkw=Ricoh+GR+IV+Monochrome&LH_Sold=1&LH_Complete=1&LH_ItemCondition=1000,2026-07-22T10:00:00+09:00,true,manual_today
+gr4_mono,メルカリ未使用,300000,new_unopened,https://jp.mercari.com/search?keyword=RICOH+GR+IV+Monochrome&status=on_sale,2026-07-22T10:00:00+09:00,true,manual_today
+gr4_hdf,eBay sold(新品),350000,new_unopened,https://www.ebay.com/sch/i.html?_nkw=Ricoh+GR+IV+HDF&LH_Sold=1&LH_Complete=1&LH_ItemCondition=1000,2026-07-22T10:00:00+09:00,true,manual_today
+gr4_hdf,メルカリ未使用,340000,new_unopened,https://jp.mercari.com/search?keyword=RICOH+GR+IV+HDF&status=on_sale,2026-07-22T10:00:00+09:00,true,manual_today

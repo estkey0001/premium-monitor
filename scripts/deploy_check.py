@@ -6340,6 +6340,62 @@ def check() -> list[dict]:
                     "message": f"#662 Overall Score {_ov}/100（>=70 でリリース水準）"
                                + ("" if _t662 else " ← スコアが基準未満")})
 
+    # ── Data Quality Engine ガード #663-#669 ──
+    _dq = _load_json_safe('exports/data_quality/latest.json') or {}
+    _dq_ok = isinstance(_dq, dict) and ('quality_score' in _dq) and ('dashboard' in _dq)
+
+    # #663: Data Quality Report が存在する
+    _t663 = _dq_ok and ('methodology' in _dq) and ('production_recommendation' in _dq)
+    results.append({"level": "ok" if _t663 else "error", "check": "data_quality_report",
+                    "message": f"#663 Data Quality Report が存在する（Overall {(_dq.get('quality_score') or {}).get('overall','?')}/100）"
+                               + ("" if _t663 else " ← Data Quality Report が見つかりません")})
+
+    # #664: Source Quality Ranking（100点・主要9ソース）が生成される
+    _rank = _dq.get('source_ranking', []) if _dq_ok else []
+    _t664 = isinstance(_rank, list) and len(_rank) >= 9 and all(
+        ('source' in x and 'quality_score' in x and 'rank' in x) for x in _rank)
+    results.append({"level": "ok" if _t664 else "error", "check": "data_quality_source_ranking",
+                    "message": f"#664 Source Quality Ranking が生成される（{len(_rank)}ソース）"
+                               + ("" if _t664 else " ← Source Ranking が不足")})
+
+    # #665: Stale 分析（原因分類・カテゴリ別）が生成される
+    _st = _dq.get('stale_analysis', {}) if _dq_ok else {}
+    _t665 = isinstance(_st, dict) and ('causes' in _st) and ('by_source' in _st) and ('stale_keys' in _st)
+    results.append({"level": "ok" if _t665 else "error", "check": "data_quality_stale_analysis",
+                    "message": f"#665 Stale 分析が生成される（stale {_st.get('stale_keys','?')}キー・原因分類あり）"
+                               + ("" if _t665 else " ← Stale 分析が不足")})
+
+    # #666: ¥0 分析（原因分類・実失敗件数）が生成される
+    _zp = _dq.get('zero_price_analysis', {}) if _dq_ok else {}
+    _t666 = isinstance(_zp, dict) and ('causes' in _zp) and ('real_failures' in _zp)
+    results.append({"level": "ok" if _t666 else "error", "check": "data_quality_zero_price",
+                    "message": f"#666 ¥0 分析が生成される（実取得失敗 {_zp.get('real_failures','?')}件）"
+                               + ("" if _t666 else " ← ¥0 分析が不足")})
+
+    # #667: Coverage Validation（商品単位・監視対象網羅）が生成される
+    _cv = _dq.get('coverage_validation', {}) if _dq_ok else {}
+    _t667 = isinstance(_cv, dict) and ('status_breakdown' in _cv) \
+        and ('products_with_data' in _cv) and ('products_total_monitored' in _cv)
+    results.append({"level": "ok" if _t667 else "error", "check": "data_quality_coverage",
+                    "message": f"#667 Coverage Validation が生成される（{_cv.get('products_with_data','?')}/{_cv.get('products_total_monitored','?')}商品）"
+                               + ("" if _t667 else " ← Coverage Validation が不足")})
+
+    # #668: Normalization 監査（税/送料/ポイント/通貨の統一）+ 自動化カバレッジ透明性
+    _nm = _dq.get('normalization_audit', {}) if _dq_ok else {}
+    _acov = _dq.get('automation_coverage', {}) if _dq_ok else {}
+    _t668 = isinstance(_nm, dict) and ('unified_rules' in _nm) and ('consistency_ok' in _nm) \
+        and isinstance(_acov, dict) and ('by_method' in _acov)
+    results.append({"level": "ok" if _t668 else "error", "check": "data_quality_normalization",
+                    "message": "#668 Normalization 監査 + 自動化カバレッジ透明性が生成される"
+                               + ("" if _t668 else " ← Normalization/自動化監査が不足")})
+
+    # #669: Data Quality Overall Score が閾値（>=70）以上
+    _dqov = (_dq.get('quality_score') or {}).get('overall', 0) if _dq_ok else 0
+    _t669 = _dq_ok and _dqov >= 70
+    results.append({"level": "ok" if _t669 else "warning", "check": "data_quality_overall_score",
+                    "message": f"#669 Data Quality Overall {_dqov}/100（>=70 でデータ品質水準）"
+                               + ("" if _t669 else " ← データ品質スコアが基準未満")})
+
     return results
 
 

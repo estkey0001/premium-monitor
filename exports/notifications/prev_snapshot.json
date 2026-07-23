@@ -1,12 +1,19 @@
 {
   "date": "2026-07-23",
-  "health_score": 49.9,
-  "stale_rate": 0.857,
+  "health_score": 49.4,
+  "stale_rate": 0.8707,
   "main_products": [
-    "prod_gr3x"
+    "prod_gr3x",
+    "prod_iphone17pm_256",
+    "prod_ps5_pro",
+    "prod_switch2",
+    "prod_switch2_mk",
+    "prod_x100vi"
   ],
   "reference_products": [
     "prod_gr3x",
+    "prod_gr4",
+    "prod_iphone17pro_256",
     "prod_switch2",
     "prod_x100vi"
   ],
@@ -22,24 +29,54 @@
       "kind": "reference"
     },
     "prod_x100vi": {
+      "action": "ALERT",
+      "buy_now": "WATCH",
+      "roi": 0.1939,
+      "net_profit": 34900,
+      "buy_price": 180000,
+      "product": "FUJIFILM X100VI",
+      "buy_source": "カメラのキタムラ",
+      "kind": "main"
+    },
+    "prod_iphone17pro_256": {
       "action": "WAIT",
       "buy_now": "WATCH",
-      "roi": 0.7204,
-      "net_profit": 183691,
-      "buy_price": 255000,
-      "product": "FUJIFILM X100VI",
-      "buy_source": "Yahoo Auction sold",
+      "roi": 0.4425,
+      "net_profit": 75140,
+      "buy_price": 169800,
+      "product": "iPhone 17 Pro 256GB SIMフリー",
+      "buy_source": "ゲオ",
+      "kind": "reference"
+    },
+    "prod_gr4": {
+      "action": "WAIT",
+      "buy_now": "WATCH",
+      "roi": 0.282,
+      "net_profit": 55242,
+      "buy_price": 195925,
+      "product": "RICOH GR IV",
+      "buy_source": "src_bhphoto",
       "kind": "reference"
     },
     "prod_switch2": {
       "action": "WAIT",
       "buy_now": "WATCH",
-      "roi": 0.3032,
-      "net_profit": 13945,
-      "buy_price": 46000,
+      "roi": 0.4445,
+      "net_profit": 18445,
+      "buy_price": 41500,
       "product": "Nintendo Switch 2",
-      "buy_source": "Yahoo Auction sold",
+      "buy_source": "ゲオ",
       "kind": "reference"
+    },
+    "prod_ps5_pro": {
+      "action": "ALERT",
+      "buy_now": "WATCH",
+      "roi": 0.8625,
+      "net_profit": 60200,
+      "buy_price": 69800,
+      "product": "PlayStation 5 Pro",
+      "buy_source": "ソフマップ",
+      "kind": "main"
     }
   }
 }

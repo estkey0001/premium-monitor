@@ -6,10 +6,10 @@
 # source: mercari / yahoo_auction / rakuma
 # observed_at は ISO8601（14日以内のもののみ main 候補）。title にアクセサリー語があれば除外。
 product_alias,source,price,condition,title,item_url,observed_at
-switch2,yahoo_auction,46000,new_unopened,Nintendo Switch 2 本体 新品未開封 マリオカートワールド無し,https://auctions.yahoo.co.jp/jp/auction/x000000001,2026-07-19T12:00:00+09:00
-switch2,mercari,46500,unused,ニンテンドースイッチ2 本体 未使用,https://jp.mercari.com/item/m00000000001,2026-07-20T09:00:00+09:00
-ps5_pro,yahoo_auction,128000,new_unopened,PlayStation 5 Pro 本体 新品未開封 CFI-7000,https://auctions.yahoo.co.jp/jp/auction/x000000002,2026-07-19T18:00:00+09:00
-ps5_pro,mercari,129000,unused,PS5 Pro 本体 未使用品,https://jp.mercari.com/item/m00000000002,2026-07-20T10:00:00+09:00
-gr3x,mercari,150000,new_unopened,RICOH GR IIIx 新品未開封,https://jp.mercari.com/item/m00000000003,2026-07-18T15:00:00+09:00
-x100vi,yahoo_auction,255000,new_unopened,FUJIFILM X100VI シルバー 新品未開封,https://auctions.yahoo.co.jp/jp/auction/x000000004,2026-07-19T20:00:00+09:00
-gr4,mercari,265000,unused,RICOH GR IV 未使用 ケース付き,https://jp.mercari.com/item/m00000000005,2026-07-20T11:00:00+09:00
+switch2,yahoo_auction,46000,new_unopened,Nintendo Switch 2 本体 新品未開封 マリオカートワールド無し,https://auctions.yahoo.co.jp/jp/auction/x000000001,2026-07-21T12:00:00+09:00
+switch2,mercari,46500,unused,ニンテンドースイッチ2 本体 未使用,https://jp.mercari.com/item/m00000000001,2026-07-22T09:00:00+09:00
+ps5_pro,yahoo_auction,128000,new_unopened,PlayStation 5 Pro 本体 新品未開封 CFI-7000,https://auctions.yahoo.co.jp/jp/auction/x000000002,2026-07-21T18:00:00+09:00
+ps5_pro,mercari,129000,unused,PS5 Pro 本体 未使用品,https://jp.mercari.com/item/m00000000002,2026-07-22T10:00:00+09:00
+gr3x,mercari,150000,new_unopened,RICOH GR IIIx 新品未開封,https://jp.mercari.com/item/m00000000003,2026-07-20T15:00:00+09:00
+x100vi,yahoo_auction,255000,new_unopened,FUJIFILM X100VI シルバー 新品未開封,https://auctions.yahoo.co.jp/jp/auction/x000000004,2026-07-21T20:00:00+09:00
+gr4,mercari,265000,unused,RICOH GR IV 未使用 ケース付き,https://jp.mercari.com/item/m00000000005,2026-07-22T11:00:00+09:00

@@ -1,1 +1,38 @@
-{}
+{
+  "NEW_MAIN::prod_iphone17pm_256": {
+    "sent_at": "2026-07-23T17:17:55.409104+09:00",
+    "roi": 0
+  },
+  "NEW_MAIN::prod_ps5_pro": {
+    "sent_at": "2026-07-23T17:17:55.409104+09:00",
+    "roi": 0.8625
+  },
+  "NEW_MAIN::prod_switch2": {
+    "sent_at": "2026-07-23T17:17:55.409104+09:00",
+    "roi": 0.4445
+  },
+  "NEW_MAIN::prod_switch2_mk": {
+    "sent_at": "2026-07-23T17:17:55.409104+09:00",
+    "roi": 0
+  },
+  "NEW_MAIN::prod_x100vi": {
+    "sent_at": "2026-07-23T17:17:55.409104+09:00",
+    "roi": 0.1939
+  },
+  "PRICE_DROP::prod_x100vi": {
+    "sent_at": "2026-07-23T17:17:55.409104+09:00",
+    "roi": null
+  },
+  "ROI_DOWN::prod_x100vi": {
+    "sent_at": "2026-07-23T17:17:55.409104+09:00",
+    "roi": 0.1939
+  },
+  "PRICE_DROP::prod_switch2": {
+    "sent_at": "2026-07-23T17:17:55.409104+09:00",
+    "roi": null
+  },
+  "ROI_UP::prod_switch2": {
+    "sent_at": "2026-07-23T17:17:55.409104+09:00",
+    "roi": 0.4445
+  }
+}

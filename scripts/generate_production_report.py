@@ -70,6 +70,9 @@ def audit():
     secrets = _secret_scan()
     ebay = bool(ov.get("ebay_app_id_configured"))
     stale = dq.get("stale_rate", 1.0)
+    # Data Quality Engine（重複排除・not_applicable考慮の honest スコア）があれば優先参照
+    dqe = _load("exports/data_quality/latest.json")
+    dqe_overall = (dqe.get("quality_score") or {}).get("overall") if dqe else None
 
     # ── スコア（100点・実状態ベース）──
     scores = {
@@ -80,7 +83,9 @@ def audit():
         "Scalability": 66,       # account_id構造有・実APIは外部基盤要
         "Operations": 82,        # ROADMAP/Runbook/Health/Admin/History
         "Deployment": 70,        # Pages+CI稼働・SaaS常駐は外部基盤要
-        "Data Quality": round(max(20, (1 - stale) * 60 + (30 if ebay else 0) + 10)),
+        # Data Quality Engine の honest スコアを優先（無ければ従来の簡易式）
+        "Data Quality": dqe_overall if isinstance(dqe_overall, (int, float))
+        else round(max(20, (1 - stale) * 60 + (30 if ebay else 0) + 10)),
         "Monitoring": 84,        # Health+Execution+Admin dashboards
         "Recovery": 76,          # git rollback + backup手順
         "Documentation": 86,     # ROADMAP/CLAUDE.md/各report

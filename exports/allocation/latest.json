@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-23 15:52 JST",
+  "generated_at": "2026-07-23 16:14 JST",
   "account_id": "default",
   "cash_reserve_ratio": 0.2,
   "concentration_caps": {
@@ -16,13 +16,13 @@
       "buy_price": 150000,
       "net_profit": 12700,
       "roi": 0.0847,
-      "success_probability": 68,
-      "opportunity_score": 58,
-      "reproducibility_score": 65,
+      "success_probability": 50,
+      "opportunity_score": 55,
+      "reproducibility_score": 45,
       "holding_period": "数日",
-      "expected_value": 8636,
-      "capital_efficiency": 0.0576,
-      "risk_score": 36,
+      "expected_value": 6350,
+      "capital_efficiency": 0.0423,
+      "risk_score": 41,
       "liquidity_score": 85,
       "category": "camera",
       "maker": "RICOH"
@@ -41,7 +41,7 @@
       "holding_period": "1ヶ月",
       "expected_value": 55107,
       "capital_efficiency": 0.2161,
-      "risk_score": 48,
+      "risk_score": 49,
       "liquidity_score": 25,
       "category": "camera",
       "maker": "FUJIFILM"
@@ -60,7 +60,7 @@
       "holding_period": "1ヶ月",
       "expected_value": 11684,
       "capital_efficiency": 0.0779,
-      "risk_score": 48,
+      "risk_score": 49,
       "liquidity_score": 25,
       "category": "camera",
       "maker": "RICOH"
@@ -79,7 +79,7 @@
       "holding_period": "1ヶ月",
       "expected_value": 4184,
       "capital_efficiency": 0.091,
-      "risk_score": 48,
+      "risk_score": 49,
       "liquidity_score": 25,
       "category": "game_console",
       "maker": "Nintendo"
@@ -106,12 +106,12 @@
           "unit_price": 150000,
           "total": 300000,
           "expected_profit": 25400,
-          "expected_value": 17272,
+          "expected_value": 12700,
           "category": "camera",
           "maker": "RICOH",
           "holding_period": "数日",
           "roi": 0.0847,
-          "risk_score": 36,
+          "risk_score": 41,
           "liquidity_score": 85
         }
       ],
@@ -134,7 +134,7 @@
       "cash_ratio": 0.7,
       "expected_profit": 25400,
       "expected_roi": 0.0847,
-      "avg_risk_score": 36,
+      "avg_risk_score": 41,
       "diversification_score": 28,
       "max_concentration": 0.3
     },
@@ -150,12 +150,12 @@
           "unit_price": 150000,
           "total": 900000,
           "expected_profit": 76200,
-          "expected_value": 51816,
+          "expected_value": 38100,
           "category": "camera",
           "maker": "RICOH",
           "holding_period": "数日",
           "roi": 0.0847,
-          "risk_score": 36,
+          "risk_score": 41,
           "liquidity_score": 85
         }
       ],
@@ -178,7 +178,7 @@
       "cash_ratio": 0.7,
       "expected_profit": 76200,
       "expected_roi": 0.0847,
-      "avg_risk_score": 36,
+      "avg_risk_score": 41,
       "diversification_score": 28,
       "max_concentration": 0.3
     },
@@ -194,12 +194,12 @@
           "unit_price": 150000,
           "total": 1500000,
           "expected_profit": 127000,
-          "expected_value": 86360,
+          "expected_value": 63500,
           "category": "camera",
           "maker": "RICOH",
           "holding_period": "数日",
           "roi": 0.0847,
-          "risk_score": 36,
+          "risk_score": 41,
           "liquidity_score": 85
         }
       ],
@@ -222,7 +222,7 @@
       "cash_ratio": 0.7,
       "expected_profit": 127000,
       "expected_roi": 0.0847,
-      "avg_risk_score": 36,
+      "avg_risk_score": 41,
       "diversification_score": 28,
       "max_concentration": 0.3
     },
@@ -238,12 +238,12 @@
           "unit_price": 150000,
           "total": 3000000,
           "expected_profit": 254000,
-          "expected_value": 172720,
+          "expected_value": 127000,
           "category": "camera",
           "maker": "RICOH",
           "holding_period": "数日",
           "roi": 0.0847,
-          "risk_score": 36,
+          "risk_score": 41,
           "liquidity_score": 85
         }
       ],
@@ -266,7 +266,7 @@
       "cash_ratio": 0.7,
       "expected_profit": 254000,
       "expected_roi": 0.0847,
-      "avg_risk_score": 36,
+      "avg_risk_score": 41,
       "diversification_score": 28,
       "max_concentration": 0.3
     },
@@ -282,12 +282,12 @@
           "unit_price": 150000,
           "total": 9000000,
           "expected_profit": 762000,
-          "expected_value": 518160,
+          "expected_value": 381000,
           "category": "camera",
           "maker": "RICOH",
           "holding_period": "数日",
           "roi": 0.0847,
-          "risk_score": 36,
+          "risk_score": 41,
           "liquidity_score": 85
         }
       ],
@@ -310,7 +310,7 @@
       "cash_ratio": 0.7,
       "expected_profit": 762000,
       "expected_roi": 0.0847,
-      "avg_risk_score": 36,
+      "avg_risk_score": 41,
       "diversification_score": 28,
       "max_concentration": 0.3
     }

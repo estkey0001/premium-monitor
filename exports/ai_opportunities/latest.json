@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-22 19:28 JST",
+  "generated_at": "2026-07-23 16:14 JST",
   "health_score": 49.9,
   "health_note": "現在データ品質低下中",
   "main_route_count": 1,
@@ -13,20 +13,20 @@
   "daily_recommendation": {
     "product": "RICOH GR IIIx",
     "buy_now": "WATCH",
-    "opportunity_score": 58,
-    "reason": "RICOH GR IIIx: WATCH。国内成立 利益¥12,700/ROI8%/Score58"
+    "opportunity_score": 55,
+    "reason": "RICOH GR IIIx: WATCH。国内成立 利益¥12,700/ROI8%/Score55"
   },
   "todays_opportunities": [
     {
       "product": "RICOH GR IIIx",
       "product_id": "prod_gr3x",
       "kind": "main",
-      "opportunity_score": 58,
+      "opportunity_score": 55,
       "score_breakdown": {
         "利益": 19,
         "ROI": 11,
         "鮮度": 8,
-        "再現性": 10,
+        "再現性": 7,
         "データ品質": 10,
         "confidence": 10,
         "減点(manual/stale)": -10
@@ -49,7 +49,7 @@
         "30d": "↑",
         "90d": "→"
       },
-      "success_probability": 68,
+      "success_probability": 50,
       "timeline": {
         "stages": [
           "候補",
@@ -63,23 +63,23 @@
       "why": [
         "main route 成立（国内完結で利益）",
         "ROIが8%以上（8%）",
-        "価格 4日前（比較的新鮮）",
-        "再現性スコア 65（中〜高）",
+        "価格 5日前（比較的新鮮）",
         "route confidence high"
       ],
       "risks": [
         "manualデータ由来（購入可否・状態要確認）",
+        "同条件件数不足（再現性低）",
         "アクセサリー混在に注意（本体判定要確認）"
       ],
       "holding_period": "数日",
       "net_profit": 12700,
       "roi": 0.0847,
-      "reproducibility_score": 65,
+      "reproducibility_score": 45,
       "buy_source": "Mercari sold",
       "buy_price": 150000,
       "sell_source": "フジヤカメラ",
       "sell_price": 167200,
-      "age_days": 4.0,
+      "age_days": 5.1,
       "priority": 1
     },
     {
@@ -128,10 +128,10 @@
       "why": [
         "reference route（海外sold更新で成立見込み）",
         "ROIが8%以上（72%）",
-        "価格 14日前（要更新）"
+        "価格 15日前（要更新）"
       ],
       "risks": [
-        "stale（14日前・main計算除外水準）",
+        "stale（15日前・main計算除外水準）",
         "海外依存（為替・関税・輸送）",
         "送料・決済手数料が大きい",
         "同条件件数不足（再現性低）",
@@ -145,7 +145,7 @@
       "buy_price": 255000,
       "sell_source": "src_ebay",
       "sell_price": 564176,
-      "age_days": 14.2,
+      "age_days": 15.3,
       "priority": 2
     },
     {
@@ -194,10 +194,10 @@
       "why": [
         "reference route（海外sold更新で成立見込み）",
         "ROIが8%以上（26%）",
-        "価格 14日前（要更新）"
+        "価格 15日前（要更新）"
       ],
       "risks": [
-        "stale（14日前・main計算除外水準）",
+        "stale（15日前・main計算除外水準）",
         "海外依存（為替・関税・輸送）",
         "送料・決済手数料が大きい",
         "同条件件数不足（再現性低）",
@@ -211,7 +211,7 @@
       "buy_price": 150000,
       "sell_source": "src_ebay",
       "sell_price": 248683,
-      "age_days": 14.2,
+      "age_days": 15.3,
       "priority": 3
     },
     {
@@ -260,10 +260,10 @@
       "why": [
         "reference route（海外sold更新で成立見込み）",
         "ROIが8%以上（30%）",
-        "価格 14日前（要更新）"
+        "価格 15日前（要更新）"
       ],
       "risks": [
-        "stale（14日前・main計算除外水準）",
+        "stale（15日前・main計算除外水準）",
         "海外依存（為替・関税・輸送）",
         "送料・決済手数料が大きい",
         "同条件件数不足（再現性低）"
@@ -276,7 +276,7 @@
       "buy_price": 46000,
       "sell_source": "src_ebay",
       "sell_price": 87431,
-      "age_days": 14.2,
+      "age_days": 15.3,
       "priority": 4
     }
   ]

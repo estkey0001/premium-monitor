@@ -1,0 +1,187 @@
+{
+  "generated_at": "2026-07-23 16:20 JST",
+  "scores": {
+    "Security": 90,
+    "Reliability": 85,
+    "Performance": 92,
+    "Maintainability": 83,
+    "Scalability": 66,
+    "Operations": 82,
+    "Deployment": 70,
+    "Data Quality": 20,
+    "Monitoring": 84,
+    "Recovery": 76,
+    "Documentation": 86
+  },
+  "overall_score": 75.8,
+  "issues": {
+    "Critical": [],
+    "High": [
+      "EBAY_APP_ID 未設定 → 海外sold stale・利益ルート限定（要: Secrets設定/運用）",
+      "SaaS 実稼働（実OAuth/Stripe/常時API/マネージドDB）は外部基盤が必要（ROADMAP記載）"
+    ],
+    "Medium": [
+      "stale率 87%（サンプル/手動データ鮮度・日次運用で改善）",
+      "item_url率 46%（確認導線/再現性の改善余地）",
+      "Coverage 7カテゴリ（Apple/GPU等の拡充で候補増）"
+    ],
+    "Low": [
+      "依存監査/未使用コード検出の自動化（pip-audit/vulture 等）未導入",
+      "API のページネーション未実装（現状データ規模では不要）"
+    ]
+  },
+  "resolved_this_audit": [
+    "accounts.load の account_id 未検証によるパストラバーサル（検証追加で修正済）",
+    "REST API の入力検証欠如（account_id/budget を400検証で修正済）",
+    "REST API のセキュリティヘッダ/CORS/レート制限欠如（追加で修正済）"
+  ],
+  "security": {
+    "secrets_in_code": 0,
+    "git_history_clean": true,
+    "env_example_ok": true,
+    "path_traversal_guarded": true,
+    "api_hardening": {
+      "input_validation": true,
+      "security_headers": true,
+      "rate_limit": true,
+      "cors": true,
+      "account_isolation": true
+    },
+    "auth_billing_env_gated": true
+  },
+  "data_quality": {
+    "stale_rate": 0.8707,
+    "zero_rate": 0.4071,
+    "item_url_rate": 0.4627,
+    "usable": 96,
+    "total": 1098,
+    "ebay_configured": false,
+    "coverage_score": 71,
+    "main_routes": 1,
+    "improvement_priority": [
+      "EBAY_APP_ID設定（海外sold fresh化・最大効果）",
+      "買取/フリマ日次更新でstale率低下",
+      "item_url個別化",
+      "Coverage拡充"
+    ]
+  },
+  "api": {
+    "routes": [
+      "/account",
+      "/opportunities",
+      "/notifications",
+      "/capital",
+      "/execution",
+      "/plans",
+      "/health"
+    ],
+    "versioning": "X-API-Version",
+    "status_codes": [
+      200,
+      400,
+      402,
+      403,
+      404,
+      429,
+      500
+    ],
+    "validation": true,
+    "error_handling": true,
+    "account_isolation": true,
+    "json": true,
+    "pagination": false,
+    "gaps": [
+      "pagination未実装",
+      "認証はゲートウェイ/JWT前提（前段実装要）",
+      "アクセスログ集約は外部基盤"
+    ]
+  },
+  "operations": {
+    "backup": "git履歴 + (DB移行後)マネージドDB",
+    "restore": "clone+init-db+seed+import+generate",
+    "runbook": true,
+    "health": true,
+    "monitoring": true,
+    "alert": "notifications engine（webhook設定で有効）",
+    "history": true,
+    "rollback": "git revert / 直前docs配信"
+  },
+  "deployment": {
+    "github_pages": true,
+    "ci": true,
+    "production_backend": {
+      "recommended": [
+        "Cloud Run",
+        "Fly.io",
+        "Railway"
+      ],
+      "docker": "要Dockerfile追加",
+      "https": "マネージドで自動",
+      "secrets": "各PaaSのSecret Manager"
+    },
+    "status": "LP/分析はPages稼働・SaaS常駐は外部基盤導入で"
+  },
+  "business_readiness": {
+    "tiers": [
+      "free",
+      "pro",
+      "enterprise"
+    ],
+    "billing": "Stripe抽象(env gated)",
+    "user_management": "account_id + settings/watchlist/portfolio",
+    "notification": "engine実装済(webhook設定要)",
+    "watchlist": true,
+    "api": true,
+    "admin": true,
+    "operating_cost": "静的+バッチは低コスト・実SaaSはPaaS/DB/Stripe費用",
+    "priority": [
+      "実課金(Stripe)接続",
+      "実認証(OAuth)接続",
+      "常駐API+DB",
+      "Trial/解約フロー"
+    ]
+  },
+  "production_checklist": [
+    {
+      "item": "コードにSecret無し",
+      "ok": true
+    },
+    {
+      "item": "パストラバーサル対策",
+      "ok": true
+    },
+    {
+      "item": "API 入力検証/ヘッダ/レート制限",
+      "ok": true
+    },
+    {
+      "item": "認証/課金 env gated（キー非埋め込み）",
+      "ok": true
+    },
+    {
+      "item": "deploy-check Errors 0（別途）",
+      "ok": true
+    },
+    {
+      "item": "Health/Monitoring 稼働",
+      "ok": true
+    },
+    {
+      "item": "Runbook/ROADMAP 整備",
+      "ok": true
+    },
+    {
+      "item": "EBAY_APP_ID 設定（データ鮮度）",
+      "ok": false
+    },
+    {
+      "item": "実OAuth/Stripe/常駐API（外部基盤）",
+      "ok": false
+    }
+  ],
+  "no_critical": true,
+  "go_no_go": {
+    "lp_analysis": "GO (LP/分析リリース可)",
+    "saas_live": "NO-GO (外部基盤導入まで): 実OAuth/Stripe/常駐API/マネージドDB"
+  }
+}

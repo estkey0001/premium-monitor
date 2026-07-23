@@ -130,6 +130,9 @@ COLLECTOR_MAP = {
     "src_ricoh_imaging": "src.collectors.official.ricoh.RicohOfficialCollector",
     "src_fujifilm_official": "src.collectors.official.fujifilm.FujifilmOfficialCollector",
     "src_apple_jp": "src.collectors.official.apple.AppleOfficialCollector",
+    "src_canon_official": "src.collectors.official.canon.CanonOfficialCollector",
+    "src_nikon_direct": "src.collectors.official.nikon.NikonOfficialCollector",
+    "src_sony_store": "src.collectors.official.sony.SonyOfficialCollector",
     # 買取・中古
     "src_janpara": "src.collectors.buyback.janpara.JanparaCollector",
     "src_iosys": "src.collectors.buyback.iosys.IosysCollector",
@@ -809,6 +812,21 @@ def run_price_check():
     click.echo("Running price check...")
     orch = Orchestrator()
     r = orch.run_price_check()
+    orch.close()
+    click.echo(f"  Success: {r['success']}, Errors: {r['errors']}, Skipped: {r['skipped']}")
+
+
+@cli.command("collect-official")
+def collect_official():
+    """公式ストアの定価・在庫を収集する（apple/ricoh/fujifilm/canon/nikon/sony）。
+
+    source config(target_url) が未設定の商品×ソースは安全にスキップする。
+    日次CIで公式定価を自動更新するためのエントリ（クラウドIPブロック時も継続）。
+    """
+    from src.orchestrator import Orchestrator, OFFICIAL_SOURCES
+    click.echo("Collecting official prices...")
+    orch = Orchestrator()
+    r = orch.run_collectors(OFFICIAL_SOURCES & set(COLLECTOR_MAP.keys()))
     orch.close()
     click.echo(f"  Success: {r['success']}, Errors: {r['errors']}, Skipped: {r['skipped']}")
 

@@ -209,6 +209,13 @@ jobs:
         env:
           PYTHONPATH: .
 
+      # 13.10 Generate Execution Intelligence（予測 vs 実績の評価・学習）
+      - name: Generate execution intelligence
+        run: python scripts/generate_execution_intelligence.py
+        continue-on-error: true
+        env:
+          PYTHONPATH: .
+
       - name: Generate data quality report
         run: python scripts/generate_data_quality_report.py
         continue-on-error: true
@@ -292,6 +299,7 @@ jobs:
                   exports/notifications/ \
                   exports/coverage/ \
                   exports/allocation/ \
+                  exports/execution/ \
                   audit_health/ \
                   exports/data_quality_report/ exports/camera_buyback_status.json \
                   data/alerts.csv data/lottery_events.csv \

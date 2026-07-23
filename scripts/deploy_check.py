@@ -6173,6 +6173,47 @@ def check() -> list[dict]:
                     "message": "#643 集中リスク上限（商品30%等）が守られ account_id 構造で保存される"
                                + ("" if _t643 else f" ← 上限超過 {_bad643}件")})
 
+    # ── Execution Intelligence Engine ガード #644-#648 ──
+    _ex = _load_json_safe('exports/execution/latest.json') or {}
+    _ex_ok = isinstance(_ex, dict) and ('prediction_accuracy' in _ex)
+    _ex_hist = (PROJECT_ROOT / "exports" / "execution" / "execution_history.json")
+
+    # #644: Execution Dashboard が LP に表示され execution_history.json が存在
+    _t644 = _ex_ok and _ex_hist.exists() and ('execution-dashboard' in _lp_html) \
+        and ('Execution Intelligence' in _lp_html)
+    results.append({"level": "ok" if _t644 else "error", "check": "execution_dashboard",
+                    "message": "#644 Execution Dashboard と execution_history.json が存在する"
+                               + ("" if _t644 else " ← Execution Dashboard が見つかりません")})
+
+    # #645: Prediction / Notification / Allocation Accuracy が算出される
+    _t645 = _ex_ok and ('error_points' in _ex.get('prediction_accuracy', {})) \
+        and ('notification_accuracy' in _ex) and ('allocation_accuracy' in _ex)
+    results.append({"level": "ok" if _t645 else "error", "check": "execution_accuracy",
+                    "message": f"#645 予測/通知/配分の精度が算出される（予測誤差 "
+                               f"{_ex.get('prediction_accuracy',{}).get('error_points','?')}pt）"
+                               + ("" if _t645 else " ← Accuracy が不足")})
+
+    # #646: Self Improvement 補正係数（利益ロジック不適用）が学習される
+    _lc = _ex.get('learning_coefficients', {}) if _ex_ok else {}
+    _t646 = _ex_ok and all(k in _lc for k in
+                           ("opportunity_score_coeff", "success_probability_coeff", "risk_score_coeff"))
+    results.append({"level": "ok" if _t646 else "error", "check": "execution_learning_coeff",
+                    "message": "#646 補正係数（score/probability/risk）が学習される（利益ロジック不変）"
+                               + ("" if _t646 else " ← 補正係数が見つかりません")})
+
+    # #647: Insights TOP10 が LP に表示される
+    _ins = _ex.get('insights_top10', []) if _ex_ok else []
+    _t647 = _ex_ok and len(_ins) > 0 and ('今週学んだこと' in _lp_html)
+    results.append({"level": "ok" if _t647 else "error", "check": "execution_insights",
+                    "message": f"#647 Insights（今週学んだこと TOP{len(_ins)}）が表示される"
+                               + ("" if _t647 else " ← Insights が見つかりません")})
+
+    # #648: 週次 Learning Report が生成される
+    _t648 = (PROJECT_ROOT / "exports" / "execution" / "weekly_learning.md").exists()
+    results.append({"level": "ok" if _t648 else "error", "check": "execution_weekly_report",
+                    "message": "#648 週次 Learning Report（weekly_learning.md）が生成される"
+                               + ("" if _t648 else " ← 週次レポートが見つかりません")})
+
     return results
 
 

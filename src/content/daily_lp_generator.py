@@ -5246,6 +5246,49 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         parts.append('</table></div>')
         # Coverage Dashboard（Market Coverage Engine）
         parts.append(self._coverage_html())
+        # Execution Dashboard（Execution Intelligence Engine）
+        parts.append(self._execution_html())
+        parts.append('</div>')
+        return "".join(parts)
+
+    def _execution_html(self) -> str:
+        """Execution Dashboard（exports/execution/latest.json）を Health タブに表示。"""
+        import json as _json_e
+        from html import escape as _esc
+        p = Path(__file__).resolve().parent.parent.parent / "exports" / "execution" / "latest.json"
+        if not p.exists():
+            return ""
+        try:
+            d = _json_e.loads(p.read_text(encoding="utf-8"))
+        except Exception:
+            return ""
+        pa = d.get("prediction_accuracy", {}); na = d.get("notification_accuracy", {})
+        lc = d.get("learning_coefficients", {})
+        parts = ['<div class="execution-dashboard" style="margin-top:14px;border-top:1px dashed #cbd5e1;padding-top:10px">',
+                 '<div style="font-weight:700;color:#334155">&#129504; Execution Intelligence</div>',
+                 '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:6px;margin:6px 0">']
+        for lbl, val, col in [
+            ("Execution Success", f"{d.get('execution_success_rate',0)}%", "#059669"),
+            ("Prediction Accuracy", f"誤差{pa.get('error_points','?')}pt", "#2563eb"),
+            ("予測/実績", f"{pa.get('predicted_success_prob_avg','?')}% / {pa.get('realized_success_rate','?')}%", "#7c3aed"),
+            ("Notif Success", f"{na.get('notification_success_rate',0)*100:.0f}%", "#0e7490"),
+            ("CLOSED", f"{d.get('closed_count',0)}（成功{d.get('success_count',0)}）", "#334155"),
+        ]:
+            parts.append(f'<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:6px 8px">'
+                         f'<div style="font-size:0.7rem;color:#64748b">{lbl}</div>'
+                         f'<div style="font-size:0.95rem;font-weight:700;color:{col}">{val}</div></div>')
+        parts.append('</div>')
+        parts.append(f'<div style="font-size:0.78rem;color:#64748b">補正係数（学習・利益ロジック不適用）: '
+                     f'prob {lc.get("success_probability_coeff","?")} / score {lc.get("opportunity_score_coeff","?")} / '
+                     f'risk {lc.get("risk_score_coeff","?")}（信頼度 {_esc(str(lc.get("confidence","?")))}）</div>')
+        # Insights TOP10
+        parts.append('<div style="font-size:0.82rem;font-weight:700;color:#334155;margin-top:6px">'
+                     '今週学んだこと TOP10</div><ol style="margin:2px 0 0 18px;padding:0;font-size:0.8rem">')
+        for s in d.get("insights_top10", []):
+            parts.append(f'<li style="margin:1px 0">{_esc(s)}</li>')
+        parts.append('</ol>')
+        parts.append('<div style="font-size:0.74rem;color:#94a3b8;margin-top:2px">'
+                     '週次 Learning Report は exports/execution/weekly_learning.md。実績台帳: data/manual_execution_outcomes.json</div>')
         parts.append('</div>')
         return "".join(parts)
 

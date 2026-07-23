@@ -1,0 +1,8 @@
+{
+  "_comment": "実行結果台帳（手動記録・サンプル）。実際に仕入れ→売却した結果を人手で記録する。無ければ空配列で可。予測精度・補正係数の学習に使用（利益判定ロジックは変更しない）。",
+  "outcomes": [
+    {"product_id": "prod_gr3x", "action": "BUY", "status": "SUCCESS", "predicted_probability": 58, "predicted_net": 12700, "realized_profit": 12700, "realized_roi": 0.085, "hold_days": 3, "note": "sample: メルカリ¥150,000→フジヤ買取¥167,200で売却成立"},
+    {"product_id": "prod_x100vi", "action": "WAIT", "status": "CANCELLED", "predicted_probability": 30, "predicted_net": 183691, "realized_profit": 0, "realized_roi": 0.0, "hold_days": 0, "note": "sample: eBay sold未更新のため実行見送り"},
+    {"product_id": "prod_switch2", "action": "WAIT", "status": "FAILED", "predicted_probability": 30, "predicted_net": 13945, "realized_profit": -1500, "realized_roi": -0.03, "hold_days": 5, "note": "sample: 国内価格下落で薄利・送料負けで損"}
+  ]
+}

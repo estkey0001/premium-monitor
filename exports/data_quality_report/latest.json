@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-21T15:48:24+09:00",
+  "generated_at": "2026-07-23T17:17:55+09:00",
   "collection": {
     "total_shops": 16,
     "shops_with_success": 5,
@@ -15,7 +15,7 @@
     "current_success_rate_pct": 32.7,
     "delta_pct": 0.0,
     "trend": "横ばい",
-    "moving_avg_7d_pct": 30.4,
+    "moving_avg_7d_pct": 30.9,
     "top5_failure_reasons": [
       {
         "reason": "rate_limited_429",
@@ -74,14 +74,21 @@
     }
   ],
   "effective_data": {
-    "products_with_valid_buyback": 22,
+    "products_with_valid_buyback": 40,
     "valid_buyback_by_product": {
-      "prod_x100vi": 1,
+      "prod_x100vi": 13,
+      "prod_gr4": 12,
+      "prod_gr4_hdf": 9,
+      "prod_gr4_mono": 9,
+      "prod_gr3x": 9,
+      "prod_iphone17pro_256": 6,
+      "prod_iphone17pro_512": 6,
+      "prod_iphone17pm_256": 4,
+      "prod_iphone17pm_512": 4,
+      "prod_switch2": 6,
+      "prod_ps5_pro": 4,
       "prod_gfx100rf": 1,
       "prod_xt5": 1,
-      "prod_gr3x": 1,
-      "prod_gr4_hdf": 1,
-      "prod_gr4_mono": 1,
       "prod_a7rv": 1,
       "prod_a1ii": 1,
       "prod_a7cr": 1,
@@ -92,22 +99,33 @@
       "prod_z9": 1,
       "prod_q3": 1,
       "prod_m11": 1,
-      "prod_iphone17pro_256": 4,
-      "prod_iphone17pro_512": 3,
-      "prod_iphone17pm_256": 4,
-      "prod_iphone17pm_512": 3,
-      "prod_switch2": 2,
-      "prod_ps5_pro": 2
+      "prod_iphone17_256": 4,
+      "prod_iphone16pro_256": 4,
+      "prod_iphone16pm_256": 4,
+      "prod_macbook_air_m4_13": 3,
+      "prod_macbook_air_m4_15": 2,
+      "prod_macbook_pro_m4_14": 2,
+      "prod_mac_mini_m4": 2,
+      "prod_ipad_pro_m4_11": 1,
+      "prod_ipad_pro_m4_13": 1,
+      "prod_ipad_air_m3": 1,
+      "prod_apple_watch_s11": 2,
+      "prod_apple_watch_ultra3": 2,
+      "prod_airpods_pro3": 2,
+      "prod_airpods_max": 2,
+      "prod_switch2_mk": 3,
+      "prod_ps5_de": 3,
+      "prod_xbox_sx": 2
     }
   },
   "ranking_usable": {
     "beginner": 5,
-    "pro": 5,
+    "pro": 0,
     "reason_if_empty": null
   },
   "sedori_usable": {
-    "routes": 5,
-    "reason_if_empty": null
+    "routes": 0,
+    "reason_if_empty": "calculate-sedori-routes 未実行 or DBにルートデータなし"
   },
   "overseas": {
     "total": 4,
@@ -257,47 +275,47 @@
   "consecutive_failed_shops": [
     {
       "shop_id": "2ndstreet",
-      "consecutive_failures": 80
+      "consecutive_failures": 81
     },
     {
       "shop_id": "bookoff",
-      "consecutive_failures": 80
+      "consecutive_failures": 81
     },
     {
       "shop_id": "dosupara",
-      "consecutive_failures": 80
+      "consecutive_failures": 81
     },
     {
       "shop_id": "geo_mobile",
-      "consecutive_failures": 80
+      "consecutive_failures": 81
     },
     {
       "shop_id": "hardoff",
-      "consecutive_failures": 80
+      "consecutive_failures": 81
     },
     {
       "shop_id": "janpara",
-      "consecutive_failures": 80
+      "consecutive_failures": 81
     },
     {
       "shop_id": "pasoko",
-      "consecutive_failures": 80
+      "consecutive_failures": 81
     },
     {
       "shop_id": "sofmap",
-      "consecutive_failures": 80
+      "consecutive_failures": 81
     },
     {
       "shop_id": "surugaya",
-      "consecutive_failures": 80
+      "consecutive_failures": 81
     },
     {
       "shop_id": "tsutaya",
-      "consecutive_failures": 80
+      "consecutive_failures": 81
     },
     {
       "shop_id": "iosys",
-      "consecutive_failures": 13
+      "consecutive_failures": 14
     }
   ],
   "improvement_priority": [

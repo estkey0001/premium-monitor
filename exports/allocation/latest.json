@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-23 16:14 JST",
+  "generated_at": "2026-07-23 17:17 JST",
   "account_id": "default",
   "cash_reserve_ratio": 0.2,
   "concentration_caps": {
@@ -11,19 +11,19 @@
     {
       "product": "RICOH GR IIIx",
       "product_id": "prod_gr3x",
-      "action": "ALERT",
-      "kind": "main",
+      "action": "WAIT",
+      "kind": "reference",
       "buy_price": 150000,
-      "net_profit": 12700,
-      "roi": 0.0847,
-      "success_probability": 50,
-      "opportunity_score": 55,
-      "reproducibility_score": 45,
-      "holding_period": "数日",
-      "expected_value": 6350,
-      "capital_efficiency": 0.0423,
-      "risk_score": 41,
-      "liquidity_score": 85,
+      "net_profit": 38947,
+      "roi": 0.2596,
+      "success_probability": 30,
+      "opportunity_score": 81,
+      "reproducibility_score": 30,
+      "holding_period": "1ヶ月",
+      "expected_value": 11684,
+      "capital_efficiency": 0.0779,
+      "risk_score": 35,
+      "liquidity_score": 25,
       "category": "camera",
       "maker": "RICOH"
     },
@@ -32,35 +32,54 @@
       "product_id": "prod_x100vi",
       "action": "WAIT",
       "kind": "reference",
-      "buy_price": 255000,
-      "net_profit": 183691,
-      "roi": 0.7204,
+      "buy_price": 175000,
+      "net_profit": 266091,
+      "roi": 1.5205,
       "success_probability": 30,
-      "opportunity_score": 41,
+      "opportunity_score": 77,
       "reproducibility_score": 30,
       "holding_period": "1ヶ月",
-      "expected_value": 55107,
-      "capital_efficiency": 0.2161,
-      "risk_score": 49,
+      "expected_value": 79827,
+      "capital_efficiency": 0.4562,
+      "risk_score": 35,
       "liquidity_score": 25,
       "category": "camera",
       "maker": "FUJIFILM"
     },
     {
-      "product": "RICOH GR IIIx",
-      "product_id": "prod_gr3x",
+      "product": "iPhone 17 Pro 256GB SIMフリー",
+      "product_id": "prod_iphone17pro_256",
       "action": "WAIT",
       "kind": "reference",
-      "buy_price": 150000,
-      "net_profit": 38947,
-      "roi": 0.2596,
+      "buy_price": 169800,
+      "net_profit": 75140,
+      "roi": 0.4425,
       "success_probability": 30,
-      "opportunity_score": 41,
+      "opportunity_score": 77,
       "reproducibility_score": 30,
       "holding_period": "1ヶ月",
-      "expected_value": 11684,
-      "capital_efficiency": 0.0779,
-      "risk_score": 49,
+      "expected_value": 22542,
+      "capital_efficiency": 0.1328,
+      "risk_score": 35,
+      "liquidity_score": 25,
+      "category": "iphone",
+      "maker": "Apple"
+    },
+    {
+      "product": "RICOH GR IV",
+      "product_id": "prod_gr4",
+      "action": "WAIT",
+      "kind": "reference",
+      "buy_price": 195925,
+      "net_profit": 55242,
+      "roi": 0.282,
+      "success_probability": 30,
+      "opportunity_score": 77,
+      "reproducibility_score": 30,
+      "holding_period": "1ヶ月",
+      "expected_value": 16573,
+      "capital_efficiency": 0.0846,
+      "risk_score": 35,
       "liquidity_score": 25,
       "category": "camera",
       "maker": "RICOH"
@@ -70,19 +89,114 @@
       "product_id": "prod_switch2",
       "action": "WAIT",
       "kind": "reference",
-      "buy_price": 46000,
-      "net_profit": 13945,
-      "roi": 0.3032,
+      "buy_price": 41500,
+      "net_profit": 18445,
+      "roi": 0.4445,
       "success_probability": 30,
-      "opportunity_score": 32,
+      "opportunity_score": 75,
       "reproducibility_score": 30,
       "holding_period": "1ヶ月",
-      "expected_value": 4184,
-      "capital_efficiency": 0.091,
-      "risk_score": 49,
+      "expected_value": 5534,
+      "capital_efficiency": 0.1333,
+      "risk_score": 35,
       "liquidity_score": 25,
       "category": "game_console",
       "maker": "Nintendo"
+    },
+    {
+      "product": "PlayStation 5 Pro",
+      "product_id": "prod_ps5_pro",
+      "action": "ALERT",
+      "kind": "main",
+      "buy_price": 68000,
+      "net_profit": 62000,
+      "roi": 0.9118,
+      "success_probability": 72,
+      "opportunity_score": 72,
+      "reproducibility_score": 80,
+      "holding_period": "数日",
+      "expected_value": 44640,
+      "capital_efficiency": 0.6565,
+      "risk_score": 40,
+      "liquidity_score": 85,
+      "category": "game_console",
+      "maker": "Sony"
+    },
+    {
+      "product": "PlayStation 5 Pro",
+      "product_id": "prod_ps5_pro",
+      "action": "ALERT",
+      "kind": "main",
+      "buy_price": 69800,
+      "net_profit": 60200,
+      "roi": 0.8625,
+      "success_probability": 72,
+      "opportunity_score": 72,
+      "reproducibility_score": 80,
+      "holding_period": "数日",
+      "expected_value": 43344,
+      "capital_efficiency": 0.621,
+      "risk_score": 40,
+      "liquidity_score": 85,
+      "category": "game_console",
+      "maker": "Sony"
+    },
+    {
+      "product": "FUJIFILM X100VI",
+      "product_id": "prod_x100vi",
+      "action": "ALERT",
+      "kind": "main",
+      "buy_price": 175000,
+      "net_profit": 40000,
+      "roi": 0.2286,
+      "success_probability": 72,
+      "opportunity_score": 72,
+      "reproducibility_score": 80,
+      "holding_period": "数日",
+      "expected_value": 28800,
+      "capital_efficiency": 0.1646,
+      "risk_score": 40,
+      "liquidity_score": 85,
+      "category": "camera",
+      "maker": "FUJIFILM"
+    },
+    {
+      "product": "FUJIFILM X100VI",
+      "product_id": "prod_x100vi",
+      "action": "ALERT",
+      "kind": "main",
+      "buy_price": 178000,
+      "net_profit": 36940,
+      "roi": 0.2075,
+      "success_probability": 72,
+      "opportunity_score": 72,
+      "reproducibility_score": 80,
+      "holding_period": "数日",
+      "expected_value": 26597,
+      "capital_efficiency": 0.1494,
+      "risk_score": 40,
+      "liquidity_score": 85,
+      "category": "camera",
+      "maker": "FUJIFILM"
+    },
+    {
+      "product": "FUJIFILM X100VI",
+      "product_id": "prod_x100vi",
+      "action": "ALERT",
+      "kind": "main",
+      "buy_price": 180000,
+      "net_profit": 34900,
+      "roi": 0.1939,
+      "success_probability": 72,
+      "opportunity_score": 72,
+      "reproducibility_score": 80,
+      "holding_period": "数日",
+      "expected_value": 25128,
+      "capital_efficiency": 0.1396,
+      "risk_score": 40,
+      "liquidity_score": 85,
+      "category": "camera",
+      "maker": "FUJIFILM"
     }
   ],
   "default_budget": 3000000,
@@ -100,43 +214,78 @@
       "cash_reserve_ratio": 0.2,
       "allocations": [
         {
-          "product": "RICOH GR IIIx",
-          "product_id": "prod_gr3x",
-          "units": 2,
-          "unit_price": 150000,
-          "total": 300000,
-          "expected_profit": 25400,
-          "expected_value": 12700,
-          "category": "camera",
-          "maker": "RICOH",
+          "product": "PlayStation 5 Pro",
+          "product_id": "prod_ps5_pro",
+          "units": 4,
+          "unit_price": 68000,
+          "total": 272000,
+          "expected_profit": 248000,
+          "expected_value": 178560,
+          "category": "game_console",
+          "maker": "Sony",
           "holding_period": "数日",
-          "roi": 0.0847,
-          "risk_score": 41,
+          "roi": 0.9118,
+          "risk_score": 40,
+          "liquidity_score": 85
+        },
+        {
+          "product": "PlayStation 5 Pro",
+          "product_id": "prod_ps5_pro",
+          "units": 2,
+          "unit_price": 69800,
+          "total": 139600,
+          "expected_profit": 120400,
+          "expected_value": 86688,
+          "category": "game_console",
+          "maker": "Sony",
+          "holding_period": "数日",
+          "roi": 0.8625,
+          "risk_score": 40,
           "liquidity_score": 85
         }
       ],
       "waiting": [
         {
+          "product": "RICOH GR IIIx",
+          "reason": "海外価格更新待ち（eBay sold）"
+        },
+        {
           "product": "FUJIFILM X100VI",
           "reason": "海外価格更新待ち（eBay sold）"
         },
         {
-          "product": "RICOH GR IIIx",
+          "product": "iPhone 17 Pro 256GB SIMフリー",
+          "reason": "海外価格更新待ち（eBay sold）"
+        },
+        {
+          "product": "RICOH GR IV",
           "reason": "海外価格更新待ち（eBay sold）"
         },
         {
           "product": "Nintendo Switch 2",
           "reason": "海外価格更新待ち（eBay sold）"
+        },
+        {
+          "product": "FUJIFILM X100VI",
+          "reason": "予算/集中リスク制約で配分なし"
+        },
+        {
+          "product": "FUJIFILM X100VI",
+          "reason": "予算/集中リスク制約で配分なし"
+        },
+        {
+          "product": "FUJIFILM X100VI",
+          "reason": "予算/集中リスク制約で配分なし"
         }
       ],
-      "allocated": 300000,
-      "cash": 700000,
-      "cash_ratio": 0.7,
-      "expected_profit": 25400,
-      "expected_roi": 0.0847,
-      "avg_risk_score": 41,
-      "diversification_score": 28,
-      "max_concentration": 0.3
+      "allocated": 411600,
+      "cash": 588400,
+      "cash_ratio": 0.5884,
+      "expected_profit": 368400,
+      "expected_roi": 0.895,
+      "avg_risk_score": 40,
+      "diversification_score": 54,
+      "max_concentration": 0.272
     },
     "3000000": {
       "budget": 3000000,
@@ -144,43 +293,78 @@
       "cash_reserve_ratio": 0.2,
       "allocations": [
         {
-          "product": "RICOH GR IIIx",
-          "product_id": "prod_gr3x",
-          "units": 6,
-          "unit_price": 150000,
-          "total": 900000,
-          "expected_profit": 76200,
-          "expected_value": 38100,
-          "category": "camera",
-          "maker": "RICOH",
+          "product": "PlayStation 5 Pro",
+          "product_id": "prod_ps5_pro",
+          "units": 13,
+          "unit_price": 68000,
+          "total": 884000,
+          "expected_profit": 806000,
+          "expected_value": 580320,
+          "category": "game_console",
+          "maker": "Sony",
           "holding_period": "数日",
-          "roi": 0.0847,
-          "risk_score": 41,
+          "roi": 0.9118,
+          "risk_score": 40,
+          "liquidity_score": 85
+        },
+        {
+          "product": "PlayStation 5 Pro",
+          "product_id": "prod_ps5_pro",
+          "units": 7,
+          "unit_price": 69800,
+          "total": 488600,
+          "expected_profit": 421400,
+          "expected_value": 303408,
+          "category": "game_console",
+          "maker": "Sony",
+          "holding_period": "数日",
+          "roi": 0.8625,
+          "risk_score": 40,
           "liquidity_score": 85
         }
       ],
       "waiting": [
         {
+          "product": "RICOH GR IIIx",
+          "reason": "海外価格更新待ち（eBay sold）"
+        },
+        {
           "product": "FUJIFILM X100VI",
           "reason": "海外価格更新待ち（eBay sold）"
         },
         {
-          "product": "RICOH GR IIIx",
+          "product": "iPhone 17 Pro 256GB SIMフリー",
+          "reason": "海外価格更新待ち（eBay sold）"
+        },
+        {
+          "product": "RICOH GR IV",
           "reason": "海外価格更新待ち（eBay sold）"
         },
         {
           "product": "Nintendo Switch 2",
           "reason": "海外価格更新待ち（eBay sold）"
+        },
+        {
+          "product": "FUJIFILM X100VI",
+          "reason": "予算/集中リスク制約で配分なし"
+        },
+        {
+          "product": "FUJIFILM X100VI",
+          "reason": "予算/集中リスク制約で配分なし"
+        },
+        {
+          "product": "FUJIFILM X100VI",
+          "reason": "予算/集中リスク制約で配分なし"
         }
       ],
-      "allocated": 900000,
-      "cash": 2100000,
-      "cash_ratio": 0.7,
-      "expected_profit": 76200,
-      "expected_roi": 0.0847,
-      "avg_risk_score": 41,
-      "diversification_score": 28,
-      "max_concentration": 0.3
+      "allocated": 1372600,
+      "cash": 1627400,
+      "cash_ratio": 0.5425,
+      "expected_profit": 1227400,
+      "expected_roi": 0.8942,
+      "avg_risk_score": 40,
+      "diversification_score": 53,
+      "max_concentration": 0.2947
     },
     "5000000": {
       "budget": 5000000,
@@ -188,43 +372,78 @@
       "cash_reserve_ratio": 0.2,
       "allocations": [
         {
-          "product": "RICOH GR IIIx",
-          "product_id": "prod_gr3x",
-          "units": 10,
-          "unit_price": 150000,
-          "total": 1500000,
-          "expected_profit": 127000,
-          "expected_value": 63500,
-          "category": "camera",
-          "maker": "RICOH",
+          "product": "PlayStation 5 Pro",
+          "product_id": "prod_ps5_pro",
+          "units": 22,
+          "unit_price": 68000,
+          "total": 1496000,
+          "expected_profit": 1364000,
+          "expected_value": 982080,
+          "category": "game_console",
+          "maker": "Sony",
           "holding_period": "数日",
-          "roi": 0.0847,
-          "risk_score": 41,
+          "roi": 0.9118,
+          "risk_score": 40,
+          "liquidity_score": 85
+        },
+        {
+          "product": "PlayStation 5 Pro",
+          "product_id": "prod_ps5_pro",
+          "units": 12,
+          "unit_price": 69800,
+          "total": 837600,
+          "expected_profit": 722400,
+          "expected_value": 520128,
+          "category": "game_console",
+          "maker": "Sony",
+          "holding_period": "数日",
+          "roi": 0.8625,
+          "risk_score": 40,
           "liquidity_score": 85
         }
       ],
       "waiting": [
         {
+          "product": "RICOH GR IIIx",
+          "reason": "海外価格更新待ち（eBay sold）"
+        },
+        {
           "product": "FUJIFILM X100VI",
           "reason": "海外価格更新待ち（eBay sold）"
         },
         {
-          "product": "RICOH GR IIIx",
+          "product": "iPhone 17 Pro 256GB SIMフリー",
+          "reason": "海外価格更新待ち（eBay sold）"
+        },
+        {
+          "product": "RICOH GR IV",
           "reason": "海外価格更新待ち（eBay sold）"
         },
         {
           "product": "Nintendo Switch 2",
           "reason": "海外価格更新待ち（eBay sold）"
+        },
+        {
+          "product": "FUJIFILM X100VI",
+          "reason": "予算/集中リスク制約で配分なし"
+        },
+        {
+          "product": "FUJIFILM X100VI",
+          "reason": "予算/集中リスク制約で配分なし"
+        },
+        {
+          "product": "FUJIFILM X100VI",
+          "reason": "予算/集中リスク制約で配分なし"
         }
       ],
-      "allocated": 1500000,
-      "cash": 3500000,
-      "cash_ratio": 0.7,
-      "expected_profit": 127000,
-      "expected_roi": 0.0847,
-      "avg_risk_score": 41,
-      "diversification_score": 28,
-      "max_concentration": 0.3
+      "allocated": 2333600,
+      "cash": 2666400,
+      "cash_ratio": 0.5333,
+      "expected_profit": 2086400,
+      "expected_roi": 0.8941,
+      "avg_risk_score": 40,
+      "diversification_score": 53,
+      "max_concentration": 0.2992
     },
     "10000000": {
       "budget": 10000000,
@@ -232,43 +451,78 @@
       "cash_reserve_ratio": 0.2,
       "allocations": [
         {
-          "product": "RICOH GR IIIx",
-          "product_id": "prod_gr3x",
-          "units": 20,
-          "unit_price": 150000,
-          "total": 3000000,
-          "expected_profit": 254000,
-          "expected_value": 127000,
-          "category": "camera",
-          "maker": "RICOH",
+          "product": "PlayStation 5 Pro",
+          "product_id": "prod_ps5_pro",
+          "units": 44,
+          "unit_price": 68000,
+          "total": 2992000,
+          "expected_profit": 2728000,
+          "expected_value": 1964160,
+          "category": "game_console",
+          "maker": "Sony",
           "holding_period": "数日",
-          "roi": 0.0847,
-          "risk_score": 41,
+          "roi": 0.9118,
+          "risk_score": 40,
+          "liquidity_score": 85
+        },
+        {
+          "product": "PlayStation 5 Pro",
+          "product_id": "prod_ps5_pro",
+          "units": 25,
+          "unit_price": 69800,
+          "total": 1745000,
+          "expected_profit": 1505000,
+          "expected_value": 1083600,
+          "category": "game_console",
+          "maker": "Sony",
+          "holding_period": "数日",
+          "roi": 0.8625,
+          "risk_score": 40,
           "liquidity_score": 85
         }
       ],
       "waiting": [
         {
+          "product": "RICOH GR IIIx",
+          "reason": "海外価格更新待ち（eBay sold）"
+        },
+        {
           "product": "FUJIFILM X100VI",
           "reason": "海外価格更新待ち（eBay sold）"
         },
         {
-          "product": "RICOH GR IIIx",
+          "product": "iPhone 17 Pro 256GB SIMフリー",
+          "reason": "海外価格更新待ち（eBay sold）"
+        },
+        {
+          "product": "RICOH GR IV",
           "reason": "海外価格更新待ち（eBay sold）"
         },
         {
           "product": "Nintendo Switch 2",
           "reason": "海外価格更新待ち（eBay sold）"
+        },
+        {
+          "product": "FUJIFILM X100VI",
+          "reason": "予算/集中リスク制約で配分なし"
+        },
+        {
+          "product": "FUJIFILM X100VI",
+          "reason": "予算/集中リスク制約で配分なし"
+        },
+        {
+          "product": "FUJIFILM X100VI",
+          "reason": "予算/集中リスク制約で配分なし"
         }
       ],
-      "allocated": 3000000,
-      "cash": 7000000,
-      "cash_ratio": 0.7,
-      "expected_profit": 254000,
-      "expected_roi": 0.0847,
-      "avg_risk_score": 41,
-      "diversification_score": 28,
-      "max_concentration": 0.3
+      "allocated": 4737000,
+      "cash": 5263000,
+      "cash_ratio": 0.5263,
+      "expected_profit": 4233000,
+      "expected_roi": 0.8936,
+      "avg_risk_score": 40,
+      "diversification_score": 53,
+      "max_concentration": 0.2992
     },
     "30000000": {
       "budget": 30000000,
@@ -276,43 +530,78 @@
       "cash_reserve_ratio": 0.2,
       "allocations": [
         {
-          "product": "RICOH GR IIIx",
-          "product_id": "prod_gr3x",
-          "units": 60,
-          "unit_price": 150000,
-          "total": 9000000,
-          "expected_profit": 762000,
-          "expected_value": 381000,
-          "category": "camera",
-          "maker": "RICOH",
+          "product": "PlayStation 5 Pro",
+          "product_id": "prod_ps5_pro",
+          "units": 132,
+          "unit_price": 68000,
+          "total": 8976000,
+          "expected_profit": 8184000,
+          "expected_value": 5892480,
+          "category": "game_console",
+          "maker": "Sony",
           "holding_period": "数日",
-          "roi": 0.0847,
-          "risk_score": 41,
+          "roi": 0.9118,
+          "risk_score": 40,
+          "liquidity_score": 85
+        },
+        {
+          "product": "PlayStation 5 Pro",
+          "product_id": "prod_ps5_pro",
+          "units": 77,
+          "unit_price": 69800,
+          "total": 5374600,
+          "expected_profit": 4635400,
+          "expected_value": 3337488,
+          "category": "game_console",
+          "maker": "Sony",
+          "holding_period": "数日",
+          "roi": 0.8625,
+          "risk_score": 40,
           "liquidity_score": 85
         }
       ],
       "waiting": [
         {
+          "product": "RICOH GR IIIx",
+          "reason": "海外価格更新待ち（eBay sold）"
+        },
+        {
           "product": "FUJIFILM X100VI",
           "reason": "海外価格更新待ち（eBay sold）"
         },
         {
-          "product": "RICOH GR IIIx",
+          "product": "iPhone 17 Pro 256GB SIMフリー",
+          "reason": "海外価格更新待ち（eBay sold）"
+        },
+        {
+          "product": "RICOH GR IV",
           "reason": "海外価格更新待ち（eBay sold）"
         },
         {
           "product": "Nintendo Switch 2",
           "reason": "海外価格更新待ち（eBay sold）"
+        },
+        {
+          "product": "FUJIFILM X100VI",
+          "reason": "予算/集中リスク制約で配分なし"
+        },
+        {
+          "product": "FUJIFILM X100VI",
+          "reason": "予算/集中リスク制約で配分なし"
+        },
+        {
+          "product": "FUJIFILM X100VI",
+          "reason": "予算/集中リスク制約で配分なし"
         }
       ],
-      "allocated": 9000000,
-      "cash": 21000000,
-      "cash_ratio": 0.7,
-      "expected_profit": 762000,
-      "expected_roi": 0.0847,
-      "avg_risk_score": 41,
-      "diversification_score": 28,
-      "max_concentration": 0.3
+      "allocated": 14350600,
+      "cash": 15649400,
+      "cash_ratio": 0.5216,
+      "expected_profit": 12819400,
+      "expected_roi": 0.8933,
+      "avg_risk_score": 40,
+      "diversification_score": 53,
+      "max_concentration": 0.2992
     }
   }
 }

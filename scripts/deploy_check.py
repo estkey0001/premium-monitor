@@ -6396,6 +6396,65 @@ def check() -> list[dict]:
                     "message": f"#669 Data Quality Overall {_dqov}/100（>=70 でデータ品質水準）"
                                + ("" if _t669 else " ← データ品質スコアが基準未満")})
 
+    # ── Beta Launch Preparation ガード #670-#676 ──
+    _beta = _load_json_safe('exports/beta/latest.json') or {}
+    _beta_ok = isinstance(_beta, dict) and ('beta_ready_score' in _beta) and ('readiness' in _beta)
+
+    # #670: Beta Report が存在する（Score/Issues/Checklist/Ready判定）
+    _t670 = _beta_ok and ('issues' in _beta) and ('launch_checklist' in _beta) and ('verdict' in _beta)
+    results.append({"level": "ok" if _t670 else "error", "check": "beta_report",
+                    "message": f"#670 Beta Report が存在する（Ready {_beta.get('beta_ready_score','?')}/100・{_beta.get('verdict','?')}）"
+                               + ("" if _t670 else " ← Beta Report が見つかりません")})
+
+    # #671: Onboarding（5ステップ）が定義され β体験ページに出力される
+    _steps = _beta.get('onboarding_steps', []) if _beta_ok else []
+    _beta_html = _read_src("docs", "beta", "index.html") if (PROJECT_ROOT / "docs" / "beta" / "index.html").exists() else ""
+    _t671 = isinstance(_steps, list) and len(_steps) == 5 and ("STEP" in _beta_html) and ("5ステップ" in _beta_html)
+    results.append({"level": "ok" if _t671 else "error", "check": "beta_onboarding",
+                    "message": f"#671 初回オンボーディング（{len(_steps)}ステップ）がβ体験ページに出力される"
+                               + ("" if _t671 else " ← Onboarding が不足")})
+
+    # #672: Demo Account（Watchlist/Notification/Capital/Execution/History）が存在
+    _demo = _load_json_safe('data/accounts/demo_beta.json') or {}
+    _t672 = isinstance(_demo, dict) and all(k in _demo for k in
+            ("watchlist", "settings", "portfolio", "execution", "history")) and len(_demo.get("watchlist", [])) >= 1
+    results.append({"level": "ok" if _t672 else "error", "check": "beta_demo_account",
+                    "message": f"#672 Demo Account が存在する（watchlist {len(_demo.get('watchlist', []))}件・execution/history有）"
+                               + ("" if _t672 else " ← Demo Account が不足")})
+
+    # #673: Feedback 導線（Bug Report / Feature Request）がβ体験ページにある
+    _t673 = ("Feedback" in _beta_html) and ("Bug Report" in _beta_html) and ("Feature Request" in _beta_html)
+    results.append({"level": "ok" if _t673 else "error", "check": "beta_feedback",
+                    "message": "#673 Feedback（Bug Report/Feature Request）導線がある"
+                               + ("" if _t673 else " ← Feedback 導線が不足")})
+
+    # #674: Analytics（匿名・集計）構造 + クライアントが存在
+    _an = _beta.get('analytics', {}) if _beta_ok else {}
+    _an_names = {e.get('name') for e in (_an.get('events') or [])}
+    _t674 = ({"dau", "watchlist_count", "notification_count", "opportunity_view",
+              "capital_view", "execution_view"} <= _an_names) \
+        and ("beta_analytics" in _beta_html) and ("localStorage" in _beta_html)
+    results.append({"level": "ok" if _t674 else "error", "check": "beta_analytics",
+                    "message": "#674 Analytics（匿名集計・DAU/Watchlist/通知/各閲覧）構造が配置される"
+                               + ("" if _t674 else " ← Analytics 構造が不足")})
+
+    # #675: Admin Beta Dashboard（登録者/通知/Opportunity/Execution/Feedback）
+    _ab = _beta.get('admin_beta', {}) if _beta_ok else {}
+    _t675 = isinstance(_ab, dict) and all(k in _ab for k in
+            ("registered_users", "notification_count", "opportunity_count",
+             "execution_usage_rate", "feedback_count"))
+    results.append({"level": "ok" if _t675 else "error", "check": "beta_admin_dashboard",
+                    "message": f"#675 Admin Beta Dashboard が生成される（登録者 {_ab.get('registered_users','?')}）"
+                               + ("" if _t675 else " ← Admin Beta Dashboard が不足")})
+
+    # #676: Beta Ready Score が閾値（>=75）以上・Critical ゼロ
+    _bscore = _beta.get('beta_ready_score', 0) if _beta_ok else 0
+    _bcrit = len((_beta.get('issues', {}) or {}).get('Critical', [])) if _beta_ok else 99
+    _t676 = _beta_ok and _bscore >= 75 and _bcrit == 0
+    results.append({"level": "ok" if _t676 else "warning", "check": "beta_overall",
+                    "message": f"#676 Beta Ready {_bscore}/100・Critical {_bcrit}件（>=75かつCritical0でβ公開水準）"
+                               + ("" if _t676 else " ← β公開基準未満")})
+
     return results
 
 

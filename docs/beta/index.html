@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="ja"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>AI Profit Assistant — Closed Beta</title>
+<style>
+:root{--bg:#0f1216;--card:#1a1f27;--fg:#e8ecf1;--mut:#9aa7b4;--acc:#4f9dff;--ok:#3ecf8e;--line:#2a323d}
+@media (prefers-color-scheme: light){:root{--bg:#f6f8fb;--card:#fff;--fg:#1a2230;--mut:#5b6675;--acc:#2f7fe0;--ok:#1a9d63;--line:#e2e8f0}}
+*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--fg);line-height:1.6}
+.wrap{max-width:860px;margin:0 auto;padding:20px}
+.badge{display:inline-block;background:var(--acc);color:#fff;font-size:12px;padding:3px 10px;border-radius:20px;font-weight:600}
+h1{font-size:24px;margin:12px 0 4px}h2{font-size:18px;margin:28px 0 12px;border-left:3px solid var(--acc);padding-left:10px}
+.mut{color:var(--mut);font-size:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin:12px 0}
+.score{font-size:40px;font-weight:800;color:var(--ok)}
+.step{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 16px}
+.snum{font-size:11px;color:var(--acc);font-weight:700;letter-spacing:.05em}
+.stitle{font-size:16px;font-weight:700;margin-top:2px}.sdesc{color:var(--mut);font-size:14px}
+.arrow{text-align:center;color:var(--mut);font-size:18px;margin:4px 0}
+.empty{text-align:center;padding:32px 16px;color:var(--mut)}
+.empty .ei{font-size:34px}.empty .et{font-weight:700;color:var(--fg);margin-top:8px}
+.ncard{border:1px solid var(--line);border-radius:10px;overflow:hidden;margin:10px 0}
+.nhead{background:var(--acc);color:#fff;padding:6px 12px;font-weight:700;font-size:13px}
+.nbody{margin:0;padding:12px;white-space:pre-wrap;font-size:13px;background:var(--card)}
+.faq{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin:8px 0}
+.faq summary{cursor:pointer;font-weight:600}.faq p{color:var(--mut);font-size:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.dim{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px}
+.dim b{font-size:20px}.dim span{display:block;color:var(--mut);font-size:12px}
+.fab{position:fixed;right:18px;bottom:18px;z-index:50}
+.fab button{background:var(--acc);color:#fff;border:0;border-radius:28px;padding:12px 18px;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.3)}
+.fmenu{display:none;position:absolute;right:0;bottom:56px;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden;min-width:180px}
+.fmenu a{display:block;padding:10px 14px;color:var(--fg);text-decoration:none;border-bottom:1px solid var(--line);font-size:14px}
+.fmenu a:hover{background:var(--acc);color:#fff}
+.note{font-size:12px;color:var(--mut);margin-top:6px}
+</style></head>
+<body>
+<div class="wrap">
+  <span class="badge">CLOSED BETA</span>
+  <h1>AI Profit Assistant — β体験</h1>
+  <p class="mut">招待制のクローズドβです。すべて参考情報で、自動購入・自動応募は行いません。生成: 2026-07-23 17:29 JST</p>
+
+  <div class="card">
+    <div class="mut">Beta Ready Score</div>
+    <div class="score">86 <span style="font-size:18px;color:var(--mut)">/ 100</span></div>
+    <div class="note">判定: READY (closed beta)</div>
+  </div>
+
+  <h2>はじめかた（5ステップ）</h2>
+  <div class="step" data-step="1"><div class="snum">STEP 1</div><div class="stitle">監視商品を選択</div><div class="sdesc">Watchlist に気になる商品を追加</div></div><div class="arrow">↓</div><div class="step" data-step="2"><div class="snum">STEP 2</div><div class="stitle">通知方法を選択</div><div class="sdesc">Discord / Telegram / Email / LINE から選ぶ</div></div><div class="arrow">↓</div><div class="step" data-step="3"><div class="snum">STEP 3</div><div class="stitle">利益条件を設定</div><div class="sdesc">ROI閾値・利益閾値を設定</div></div><div class="arrow">↓</div><div class="step" data-step="4"><div class="snum">STEP 4</div><div class="stitle">AI Dashboard を見る</div><div class="sdesc">本日のOpportunityと推奨を確認</div></div><div class="arrow">↓</div><div class="step" data-step="5"><div class="snum">STEP 5</div><div class="stitle">初回Opportunity確認</div><div class="sdesc">根拠(利益/ROI/再現性)を読み判断</div></div>
+
+  <h2>データがまだ無いとき（Empty State）</h2>
+  <div class="card"><div class="empty"><div class="ei">📭</div>
+    <div class="et">現在、利益商品はありません</div>
+    <div>通知条件（ROI・利益閾値）を満たす候補が出ると、ここに表示されます。</div></div></div>
+  <div class="card"><div class="empty"><div class="ei">🔔</div>
+    <div class="et">通知はまだありません</div>
+    <div>Watchlist と通知条件を設定すると、条件成立時にお知らせします。</div></div></div>
+  <div class="card"><div class="empty"><div class="ei">📊</div>
+    <div class="et">Watchlist が空です</div>
+    <div>気になる商品を追加すると監視が始まります。</div></div></div>
+
+  <h2>通知プレビュー（サンプル・実送信なし）</h2>
+  <div class="ncard"><div class="nhead">Discord</div><pre class="nbody">【AI Profit Assistant】本日の注目: RICOH GR IIIx
+銘柄: RICOH GR IIIx
+判定: WATCH（Opportunity Score 81/100）
+根拠: RICOH GR IIIx: WATCH。海外更新後見込み 利益¥38,947/ROI26%/Score81
+※ 参考情報です。購入・応募の自動実行は行いません。最終判断はご自身で。</pre></div>
+  <div class="ncard"><div class="nhead">Telegram</div><pre class="nbody">*【AI Profit Assistant】本日の注目: RICOH GR IIIx*
+銘柄: RICOH GR IIIx
+判定: WATCH（Opportunity Score 81/100）
+根拠: RICOH GR IIIx: WATCH。海外更新後見込み 利益¥38,947/ROI26%/Score81
+
+※ 参考情報です。購入・応募の自動実行は行いません。最終判断はご自身で。</pre></div>
+  <div class="ncard"><div class="nhead">Email</div><pre class="nbody">Subject: 【AI Profit Assistant】本日の注目: RICOH GR IIIx
+From: AI Profit Assistant &lt;no-reply@example.com&gt;
+
+銘柄: RICOH GR IIIx
+判定: WATCH（Opportunity Score 81/100）
+根拠: RICOH GR IIIx: WATCH。海外更新後見込み 利益¥38,947/ROI26%/Score81
+※ 参考情報です。購入・応募の自動実行は行いません。最終判断はご自身で。
+
+配信停止は設定画面から。</pre></div>
+  <div class="ncard"><div class="nhead">LINE</div><pre class="nbody">【AI Profit Assistant】本日の注目: RICOH GR IIIx
+
+銘柄: RICOH GR IIIx
+判定: WATCH（Opportunity Score 81/100）
+根拠: RICOH GR IIIx: WATCH。海外更新後見込み 利益¥38,947/ROI26%/Score81
+※ 参考情報です。購入・応募の自動実行は行いません。最終判断はご自身で。</pre></div>
+
+  <h2>Beta Readiness（10項目）</h2>
+  <div class="grid">
+    <div class="dim"><b>88</b><span>User Experience</span></div><div class="dim"><b>90</b><span>Onboarding</span></div><div class="dim"><b>86</b><span>Notification</span></div><div class="dim"><b>84</b><span>Dashboard</span></div><div class="dim"><b>92</b><span>Performance</span></div><div class="dim"><b>90</b><span>Data Quality</span></div><div class="dim"><b>90</b><span>Documentation</span></div><div class="dim"><b>82</b><span>Support</span></div><div class="dim"><b>82</b><span>Operations</span></div><div class="dim"><b>72</b><span>Business</span></div>
+  </div>
+
+  <h2>Help Center — よくある質問</h2>
+  <details class="faq"><summary>Opportunityとは？</summary><p>AIが日次で算出する『利益が見込める仕入れ候補』です。利益額・ROI・鮮度・再現性・データ品質を合成したOpportunity Score(100点)で優先度を示します。自動購入は行いません。</p></details><details class="faq"><summary>Capitalとは？</summary><p>手元資金に対する配分プランです。どの候補にいくら振り分けると期待利益が最大化するかの目安を示します（意思決定支援であり指図ではありません）。</p></details><details class="faq"><summary>Executionとは？</summary><p>予測と実績を突き合わせて精度を学習する層です。予測精度・実行成功率を可視化し、通知の信頼度に反映します。</p></details><details class="faq"><summary>通知はどう届きますか？</summary><p>Discord / Telegram / Email / LINE から選べます。ROI閾値・利益閾値を満たした時のみ通知します。βではサンプル/日次配信です。</p></details><details class="faq"><summary>価格や利益は保証されますか？</summary><p>いいえ。すべて参考情報です。相場は変動し、購入/応募の自動実行は一切行いません。最終判断はご自身で行ってください。</p></details><details class="faq"><summary>データはどこから？</summary><p>公式定価・国内買取・カメラ専門店・フリマ成約(手動キュレーション)・海外相場です。海外はEBAY_APP_ID設定で精度が上がります。規約遵守のためライブスクレイピングは行いません。</p></details>
+
+  <p class="note">お問い合わせ / 不具合報告は右下の Feedback から。※送信先はβ運用で差し替え予定のダミーです。</p>
+</div>
+
+<div class="fab">
+  <div class="fmenu" id="fmenu">
+    <a href="mailto:beta-feedback@example.com?subject=[Bug]%20AI%20Profit%20Assistant">🐞 Bug Report</a>
+    <a href="mailto:beta-feedback@example.com?subject=[Feature]%20AI%20Profit%20Assistant">💡 Feature Request</a>
+    <a href="mailto:beta-feedback@example.com?subject=[Feedback]%20AI%20Profit%20Assistant">✉️ Feedback</a>
+  </div>
+  <button onclick="var m=document.getElementById('fmenu');m.style.display=m.style.display==='block'?'none':'block';track('feedback_open')">Feedback</button>
+</div>
+
+<script>
+// 匿名 Analytics（localStorage・集計のみ・PIIなし・サーバ送信なし）
+(function(){
+  var K='beta_analytics';
+  function load(){try{return JSON.parse(localStorage.getItem(K))||{}}catch(e){return {} }}
+  function save(o){try{localStorage.setItem(K,JSON.stringify(o))}catch(e){}}
+  window.track=function(name){
+    var o=load(); o[name]=(o[name]||0)+1;
+    var d=new Date().toISOString().slice(0,10);
+    o.dau=o.dau||{}; o.dau[d]=1; // 日次ユニーク（件数ではなく訪問フラグ）
+    save(o);
+  };
+  // 初回訪問=DAU、各セクションの表示で view を記録
+  track('visit');
+  var map={'Opportunity':'opportunity_view','Capital':'capital_view','Execution':'execution_view'};
+  // ページ内テキストに応じた閲覧計測（簡易）
+  track('opportunity_view');
+})();
+</script>
+</body></html>

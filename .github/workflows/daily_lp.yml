@@ -223,26 +223,34 @@ jobs:
         env:
           PYTHONPATH: .
 
-      # 13.12 Generate Production Readiness Report（本番監査）
-      - name: Generate production report
-        run: python scripts/generate_production_report.py
-        continue-on-error: true
-        env:
-          PYTHONPATH: .
-
       - name: Generate data quality report
         run: python scripts/generate_data_quality_report.py
         continue-on-error: true
         env:
           PYTHONPATH: .
 
-      # 13.13 Generate Data Quality Engine（取得・正規化・品質管理の可視化と改善計画）
+      # 13.12 Generate Data Quality Engine（取得・正規化・品質管理の可視化と改善計画）
+      # ※ Production Report が本エンジンの honest スコアを参照するため先に実行する
       - name: Generate data quality dashboard
         run: python scripts/generate_data_quality_dashboard.py
         continue-on-error: true
         env:
           PYTHONPATH: .
           EBAY_APP_ID: ${{ secrets.EBAY_APP_ID }}
+
+      # 13.13 Generate Production Readiness Report（本番監査・Data Quality次元は上のエンジンを参照）
+      - name: Generate production report
+        run: python scripts/generate_production_report.py
+        continue-on-error: true
+        env:
+          PYTHONPATH: .
+
+      # 13.14 Generate Beta Launch Preparation（β体験ページ + Beta Report）
+      - name: Generate beta report
+        run: python scripts/generate_beta_report.py
+        continue-on-error: true
+        env:
+          PYTHONPATH: .
 
       # 14. Generate daily LP
       - name: Generate daily LP Variant A
@@ -326,7 +334,8 @@ jobs:
                   exports/production/ \
                   data/accounts/ \
                   audit_health/ \
-                  exports/data_quality_report/ exports/data_quality/ exports/camera_buyback_status.json \
+                  exports/data_quality_report/ exports/data_quality/ exports/beta/ docs/beta/ \
+                  exports/camera_buyback_status.json \
                   data/alerts.csv data/lottery_events.csv \
                   data/overseas_price_history.csv \
                   exports/deploy_check_latest.txt exports/prelaunch_check_latest.txt \

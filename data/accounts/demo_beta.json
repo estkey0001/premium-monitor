@@ -1,0 +1,50 @@
+{
+  "account_id": "demo_beta",
+  "email": "beta-demo@example.com",
+  "auth_provider": "google",
+  "tier": "pro",
+  "created_at": "2026-07-20 10:00 JST",
+  "is_demo": true,
+  "settings": {
+    "notify_channels": [
+      "discord",
+      "telegram",
+      "email"
+    ],
+    "notify_frequency": "daily",
+    "roi_threshold": 0.05,
+    "profit_threshold": 5000
+  },
+  "watchlist": [
+    "prod_gr3x",
+    "prod_x100vi",
+    "prod_gr4",
+    "prod_ps5_pro",
+    "prod_switch2"
+  ],
+  "portfolio": {
+    "cash": 3000000,
+    "holdings": [
+      {"product_id": "prod_gr3x", "qty": 2, "avg_cost": 118000, "acquired_at": "2026-07-10"},
+      {"product_id": "prod_x100vi", "qty": 1, "avg_cost": 268000, "acquired_at": "2026-07-14"}
+    ]
+  },
+  "execution": {
+    "prediction_accuracy": 0.86,
+    "execution_success_rate": 0.8,
+    "trades_completed": 5,
+    "trades_pending": 2
+  },
+  "history": [
+    {"date": "2026-07-11", "action": "BUY", "product_id": "prod_gr3x", "price": 118000, "channel": "map_camera", "result": "acquired"},
+    {"date": "2026-07-15", "action": "BUY", "product_id": "prod_x100vi", "price": 268000, "channel": "fujiya", "result": "acquired"},
+    {"date": "2026-07-18", "action": "SELL", "product_id": "prod_gr3x", "price": 152000, "channel": "mercari", "result": "sold", "net_profit": 30500, "roi": 0.258},
+    {"date": "2026-07-21", "action": "WATCH", "product_id": "prod_ps5_pro", "note": "海外相場更新待ち"}
+  ],
+  "subscription": {
+    "status": "active",
+    "plan": "pro",
+    "billing_cycle": "monthly",
+    "trial_until": "2026-08-19"
+  }
+}

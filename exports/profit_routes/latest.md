@@ -1,6 +1,6 @@
 # Pro 利益ルート（normalized_price_observations 由来・検証済み）
 
-生成: 2026-07-22 15:31 JST
+生成: 2026-07-23 16:14 JST
 
 - **main 利益ルート: 1件**（route_confidence high/medium のみ）
 - 参考ルート(海外sold stale・要fresh化): 4件
@@ -19,10 +19,10 @@
 
 | product | buy¥ | sell(海外sold)¥ | 潜在net | ROI | stale |
 |---|---|---|---|---|---|
-| FUJIFILM X100VI | ¥255,000 | ¥564,176 | +¥183,691 | 72% | overseas_sold_stale(14.2d) |
-| RICOH GR IIIx | ¥150,000 | ¥248,683 | +¥38,947 | 26% | overseas_sold_stale(14.2d) |
-| Nintendo Switch  | ¥46,000 | ¥87,431 | +¥13,945 | 30% | overseas_sold_stale(14.2d) |
-| Nintendo Switch  | ¥46,500 | ¥87,431 | +¥13,445 | 29% | overseas_sold_stale(14.2d) |
+| FUJIFILM X100VI | ¥255,000 | ¥564,176 | +¥183,691 | 72% | overseas_sold_stale(15.3d) |
+| RICOH GR IIIx | ¥150,000 | ¥248,683 | +¥38,947 | 26% | overseas_sold_stale(15.3d) |
+| Nintendo Switch  | ¥46,000 | ¥87,431 | +¥13,945 | 30% | overseas_sold_stale(15.3d) |
+| Nintendo Switch  | ¥46,500 | ¥87,431 | +¥13,445 | 29% | overseas_sold_stale(15.3d) |
 
 ## 0件商品の診断
 
@@ -126,12 +126,12 @@
 - 除外理由TOP5: [('stale_over_14d', 4)]
 
 ### RICOH GR IV
-- buy候補 4 / sell候補 6 / stale除外 30 / 海外sold stale 1
-- 除外理由TOP5: [('stale_over_14d', 30)]
+- buy候補 0 / sell候補 6 / stale除外 34 / 海外sold stale 1
+- 除外理由TOP5: [('stale_over_14d', 34)]
 
 ### RICOH GR IV Monochrome
-- buy候補 2 / sell候補 5 / stale除外 12 / 海外sold stale 0
-- 除外理由TOP5: [('stale_over_14d', 12)]
+- buy候補 0 / sell候補 5 / stale除外 14 / 海外sold stale 0
+- 除外理由TOP5: [('stale_over_14d', 14)]
 
 ### RICOH GR III HDF
 - buy候補 0 / sell候補 0 / stale除外 0 / 海外sold stale 0
@@ -142,8 +142,8 @@
 - 除外理由TOP5: []
 
 ### FUJIFILM X100VI
-- buy候補 5 / sell候補 1 / stale除外 46 / 海外sold stale 1
-- 除外理由TOP5: [('stale_over_14d', 46), ('manual_over_auto_high', 6)]
+- buy候補 1 / sell候補 1 / stale除外 50 / 海外sold stale 1
+- 除外理由TOP5: [('stale_over_14d', 50), ('manual_over_auto_high', 6)]
 - eBay sold を fresh化すると成立する候補:
   - src_ebay ¥564,176 → 潜在 +¥183,691（ROI 72%）
 
@@ -204,6 +204,6 @@
 - 除外理由TOP5: []
 
 ### RICOH GR IV HDF
-- buy候補 2 / sell候補 5 / stale除外 11 / 海外sold stale 0
-- 除外理由TOP5: [('stale_over_14d', 11)]
+- buy候補 0 / sell候補 5 / stale除外 13 / 海外sold stale 0
+- 除外理由TOP5: [('stale_over_14d', 13)]
 

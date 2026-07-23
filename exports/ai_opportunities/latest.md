@@ -1,6 +1,6 @@
 # AI Opportunities Engine — Today's Opportunities
 
-生成: 2026-07-22 19:28 JST
+生成: 2026-07-23 16:14 JST
 Health Score: 49.9（現在データ品質低下中） / main 1 / reference 3
 
 ## 今日やること
@@ -12,14 +12,14 @@ Health Score: 49.9（現在データ品質低下中） / main 1 / reference 3
 
 ## 今日のおすすめ
 
-> **RICOH GR IIIx**（WATCH / Score 58）
-> RICOH GR IIIx: WATCH。国内成立 利益¥12,700/ROI8%/Score58
+> **RICOH GR IIIx**（WATCH / Score 55）
+> RICOH GR IIIx: WATCH。国内成立 利益¥12,700/ROI8%/Score55
 
 **現在データ品質低下中**
 
 ## Opportunity Ranking TOP10
 
-### #1 RICOH GR IIIx — 🔔 ALERT（Score 58/100・成立確率 68%）
+### #1 RICOH GR IIIx — 🔔 ALERT（Score 55/100・成立確率 50%）
 - ★★★☆☆
   国内で成立している利益ルートです。 利益 ¥12,700 / ROI 8%。 フジヤカメラ買取が高水準です。
 - Action: ALERT — 価格が ¥150,648 以下になったら通知（BUY化を狙う）。
@@ -30,8 +30,8 @@ Health Score: 49.9（現在データ品質低下中） / main 1 / reference 3
 - タイムライン: 候補 → **監視** → 成立 → 通知
 - 期待: 利益 ¥12,700 / ROI 8.5% / confidence medium
 - 保有期間: 数日
-- Why: main route 成立（国内完結で利益）; ROIが8%以上（8%）; 価格 4日前（比較的新鮮）; 再現性スコア 65（中〜高）; route confidence high
-- Risk: manualデータ由来（購入可否・状態要確認） / アクセサリー混在に注意（本体判定要確認）
+- Why: main route 成立（国内完結で利益）; ROIが8%以上（8%）; 価格 5日前（比較的新鮮）; route confidence high
+- Risk: manualデータ由来（購入可否・状態要確認） / 同条件件数不足（再現性低） / アクセサリー混在に注意（本体判定要確認）
 
 ### #2 FUJIFILM X100VI — ⏳ WAIT（Score 41/100・成立確率 30%）
 - ★★☆☆☆
@@ -44,8 +44,8 @@ Health Score: 49.9（現在データ品質低下中） / main 1 / reference 3
 - タイムライン: 候補 → **監視** → 成立 → 通知
 - 期待: 利益 ¥183,691 / ROI 72.0% / confidence low
 - 保有期間: 1ヶ月
-- Why: reference route（海外sold更新で成立見込み）; ROIが8%以上（72%）; 価格 14日前（要更新）
-- Risk: stale（14日前・main計算除外水準） / 海外依存（為替・関税・輸送） / 送料・決済手数料が大きい / 同条件件数不足（再現性低） / アクセサリー混在に注意（本体判定要確認）
+- Why: reference route（海外sold更新で成立見込み）; ROIが8%以上（72%）; 価格 15日前（要更新）
+- Risk: stale（15日前・main計算除外水準） / 海外依存（為替・関税・輸送） / 送料・決済手数料が大きい / 同条件件数不足（再現性低） / アクセサリー混在に注意（本体判定要確認）
 
 ### #3 RICOH GR IIIx — ⏳ WAIT（Score 41/100・成立確率 30%）
 - ★★☆☆☆
@@ -58,8 +58,8 @@ Health Score: 49.9（現在データ品質低下中） / main 1 / reference 3
 - タイムライン: 候補 → **監視** → 成立 → 通知
 - 期待: 利益 ¥38,947 / ROI 26.0% / confidence low
 - 保有期間: 1ヶ月
-- Why: reference route（海外sold更新で成立見込み）; ROIが8%以上（26%）; 価格 14日前（要更新）
-- Risk: stale（14日前・main計算除外水準） / 海外依存（為替・関税・輸送） / 送料・決済手数料が大きい / 同条件件数不足（再現性低） / アクセサリー混在に注意（本体判定要確認）
+- Why: reference route（海外sold更新で成立見込み）; ROIが8%以上（26%）; 価格 15日前（要更新）
+- Risk: stale（15日前・main計算除外水準） / 海外依存（為替・関税・輸送） / 送料・決済手数料が大きい / 同条件件数不足（再現性低） / アクセサリー混在に注意（本体判定要確認）
 
 ### #4 Nintendo Switch 2 — ⏳ WAIT（Score 32/100・成立確率 30%）
 - ★☆☆☆☆
@@ -72,6 +72,6 @@ Health Score: 49.9（現在データ品質低下中） / main 1 / reference 3
 - タイムライン: 候補 → **監視** → 成立 → 通知
 - 期待: 利益 ¥13,945 / ROI 30.3% / confidence low
 - 保有期間: 1ヶ月
-- Why: reference route（海外sold更新で成立見込み）; ROIが8%以上（30%）; 価格 14日前（要更新）
-- Risk: stale（14日前・main計算除外水準） / 海外依存（為替・関税・輸送） / 送料・決済手数料が大きい / 同条件件数不足（再現性低）
+- Why: reference route（海外sold更新で成立見込み）; ROIが8%以上（30%）; 価格 15日前（要更新）
+- Risk: stale（15日前・main計算除外水準） / 海外依存（為替・関税・輸送） / 送料・決済手数料が大きい / 同条件件数不足（再現性低）
 

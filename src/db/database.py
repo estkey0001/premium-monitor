@@ -29,8 +29,13 @@ class Database:
     def _connect(self) -> sqlite3.Connection:
         """SQLiteに接続。data/ ディレクトリがなければ作成。"""
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
-        conn = sqlite3.connect(str(self.db_path))
+        # check_same_thread=False: Orchestrator の ThreadPoolExecutor から
+        #   単一接続を跨スレッド利用できるようにする（collector 並列実行時の
+        #   "SQLite objects created in a thread..." エラーを解消）。
+        # WAL(下で設定) + busy_timeout でロック競合はエラーでなく待機に。
+        conn = sqlite3.connect(str(self.db_path), check_same_thread=False, timeout=30)
         conn.row_factory = sqlite3.Row
+        conn.execute("PRAGMA busy_timeout=30000")
         # ジャーナルモード設定: WAL → DELETE → MEMORY の順にフォールバック
         for mode in ("WAL", "DELETE", "MEMORY"):
             try:

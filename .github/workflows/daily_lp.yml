@@ -223,6 +223,13 @@ jobs:
         env:
           PYTHONPATH: .
 
+      # 13.12 Generate Production Readiness Report（本番監査）
+      - name: Generate production report
+        run: python scripts/generate_production_report.py
+        continue-on-error: true
+        env:
+          PYTHONPATH: .
+
       - name: Generate data quality report
         run: python scripts/generate_data_quality_report.py
         continue-on-error: true
@@ -308,6 +315,7 @@ jobs:
                   exports/allocation/ \
                   exports/execution/ \
                   exports/admin/ \
+                  exports/production/ \
                   data/accounts/ \
                   audit_health/ \
                   exports/data_quality_report/ exports/camera_buyback_status.json \

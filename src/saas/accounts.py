@@ -53,6 +53,9 @@ def new_account(account_id: str, email: str = "", auth_provider: str = "email",
 
 
 def load(account_id: str) -> dict | None:
+    # パストラバーサル防止: 不正な account_id は _path 生成前に拒否
+    if not _account_id_ok(account_id):
+        return None
     p = _path(account_id)
     if not p.exists():
         return None

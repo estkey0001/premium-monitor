@@ -6284,6 +6284,62 @@ def check() -> list[dict]:
                     "message": "#655 ROADMAP.md（運用/障害/デプロイ/課金/バックアップ）が存在する"
                                + ("" if _t655 else " ← ROADMAP が不足")})
 
+    # ── Production Readiness Audit ガード #656-#662 ──
+    _prod = _load_json_safe('exports/production/latest.json') or {}
+    _prod_ok = isinstance(_prod, dict) and ('overall_score' in _prod) and ('scores' in _prod)
+
+    # #656: Production Report が存在する
+    _t656 = _prod_ok and ('issues' in _prod) and ('go_no_go' in _prod)
+    results.append({"level": "ok" if _t656 else "error", "check": "production_report",
+                    "message": f"#656 Production Report が存在する（Overall {_prod.get('overall_score','?')}/100）"
+                               + ("" if _t656 else " ← Production Report が見つかりません")})
+
+    # #657: Security 監査（Secret無し・path traversal対策・API hardening）
+    _sec = _prod.get('security', {}) if _prod_ok else {}
+    _t657 = _prod_ok and (_sec.get('secrets_in_code') == 0) and _sec.get('path_traversal_guarded') \
+        and all((_sec.get('api_hardening', {}) or {}).get(k) for k in
+                ("input_validation", "security_headers", "rate_limit", "account_isolation"))
+    results.append({"level": "ok" if _t657 else "error", "check": "production_security",
+                    "message": "#657 Security 監査（Secret0/パストラバーサル対策/API hardening）合格"
+                               + ("" if _t657 else " ← Security に問題あり")})
+
+    # #658: Operations 監査（Runbook/Health/Monitoring/Rollback）
+    _ops = _prod.get('operations', {}) if _prod_ok else {}
+    _t658 = _prod_ok and _ops.get('runbook') and _ops.get('health') and _ops.get('monitoring') \
+        and _ops.get('rollback')
+    results.append({"level": "ok" if _t658 else "error", "check": "production_operations",
+                    "message": "#658 Operations 監査（Runbook/Health/Monitoring/Rollback）合格"
+                               + ("" if _t658 else " ← Operations に不足")})
+
+    # #659: Deployment 監査（Pages/CI 稼働・本番構成案あり）
+    _dep = _prod.get('deployment', {}) if _prod_ok else {}
+    _t659 = _prod_ok and _dep.get('github_pages') and _dep.get('ci') \
+        and bool((_dep.get('production_backend', {}) or {}).get('recommended'))
+    results.append({"level": "ok" if _t659 else "error", "check": "production_deployment",
+                    "message": "#659 Deployment 監査（Pages/CI・本番構成案）合格"
+                               + ("" if _t659 else " ← Deployment に不足")})
+
+    # #660: Business Readiness（プラン/課金/ユーザー管理/Admin）
+    _biz = _prod.get('business_readiness', {}) if _prod_ok else {}
+    _t660 = _prod_ok and set(_biz.get('tiers', [])) == {"free", "pro", "enterprise"} \
+        and _biz.get('admin') and _biz.get('watchlist')
+    results.append({"level": "ok" if _t660 else "error", "check": "production_business",
+                    "message": "#660 Business Readiness（3プラン/Admin/Watchlist）合格"
+                               + ("" if _t660 else " ← Business Readiness に不足")})
+
+    # #661: No Critical（本番前にCritical課題ゼロ）
+    _t661 = _prod_ok and _prod.get('no_critical') is True and len(_prod.get('issues', {}).get('Critical', [])) == 0
+    results.append({"level": "ok" if _t661 else "error", "check": "production_no_critical",
+                    "message": f"#661 Critical 課題ゼロ（残 {len(_prod.get('issues',{}).get('Critical',[]))}件）"
+                               + ("" if _t661 else " ← Critical 課題が残存")})
+
+    # #662: Overall Score が閾値（>=70）以上
+    _ov = _prod.get('overall_score', 0) if _prod_ok else 0
+    _t662 = _prod_ok and _ov >= 70
+    results.append({"level": "ok" if _t662 else "warning", "check": "production_overall_score",
+                    "message": f"#662 Overall Score {_ov}/100（>=70 でリリース水準）"
+                               + ("" if _t662 else " ← スコアが基準未満")})
+
     return results
 
 

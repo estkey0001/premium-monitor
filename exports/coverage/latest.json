@@ -1,0 +1,490 @@
+{
+  "generated_at": "2026-07-23 15:41 JST",
+  "total_products": 45,
+  "covered_categories": 7,
+  "coverage_score": 71,
+  "coverage_score_breakdown": {
+    "breadth": 21,
+    "depth": 17,
+    "profitability": 18,
+    "freshness": 15
+  },
+  "current_coverage": [
+    {
+      "category": "camera",
+      "products": 21,
+      "main": 1,
+      "reference": 2,
+      "avg_profit": 12700,
+      "avg_roi": 0.0847
+    },
+    {
+      "category": "iphone",
+      "products": 8,
+      "main": 0,
+      "reference": 0,
+      "avg_profit": 0,
+      "avg_roi": 0
+    },
+    {
+      "category": "game_console",
+      "products": 5,
+      "main": 0,
+      "reference": 2,
+      "avg_profit": 0,
+      "avg_roi": 0
+    },
+    {
+      "category": "pc",
+      "products": 4,
+      "main": 0,
+      "reference": 0,
+      "avg_profit": 0,
+      "avg_roi": 0
+    },
+    {
+      "category": "tablet",
+      "products": 3,
+      "main": 0,
+      "reference": 0,
+      "avg_profit": 0,
+      "avg_roi": 0
+    },
+    {
+      "category": "audio",
+      "products": 2,
+      "main": 0,
+      "reference": 0,
+      "avg_profit": 0,
+      "avg_roi": 0
+    },
+    {
+      "category": "wearable",
+      "products": 2,
+      "main": 0,
+      "reference": 0,
+      "avg_profit": 0,
+      "avg_roi": 0
+    }
+  ],
+  "category_candidates_ranked": [
+    {
+      "category": "Apple",
+      "expected_profit": 4,
+      "difficulty": 2,
+      "api": true,
+      "update_freq": "高",
+      "competition": 4,
+      "effort": "1時間",
+      "note": "iPhone/iPad/Watch/MacBook。流動性最高・kakaku等で価格取得容易だが競合多",
+      "priority_score": 8.1
+    },
+    {
+      "category": "GPU",
+      "expected_profit": 4,
+      "difficulty": 3,
+      "api": true,
+      "update_freq": "高",
+      "competition": 4,
+      "effort": "1日",
+      "note": "RTX 50 系。発売直後プレ値・価格.com/PC店で取得可",
+      "priority_score": 6.9
+    },
+    {
+      "category": "Sony Camera",
+      "expected_profit": 5,
+      "difficulty": 3,
+      "api": false,
+      "update_freq": "中",
+      "competition": 3,
+      "effort": "4時間",
+      "note": "α7/α9/ZV。高単価・買取店網羅済みで拡張容易",
+      "priority_score": 6.4
+    },
+    {
+      "category": "Canon",
+      "expected_profit": 5,
+      "difficulty": 3,
+      "api": false,
+      "update_freq": "中",
+      "competition": 3,
+      "effort": "4時間",
+      "note": "EOS R 系。高単価・供給不足でプレ値化しやすい",
+      "priority_score": 6.4
+    },
+    {
+      "category": "Nintendo",
+      "expected_profit": 4,
+      "difficulty": 2,
+      "api": false,
+      "update_freq": "高",
+      "competition": 4,
+      "effort": "1時間",
+      "note": "Switch2 系。発売直後プレ値・買取活発",
+      "priority_score": 6.1
+    },
+    {
+      "category": "DJI",
+      "expected_profit": 4,
+      "difficulty": 3,
+      "api": false,
+      "update_freq": "中",
+      "competition": 2,
+      "effort": "4時間",
+      "note": "Osmo/Mini/Air。競合少・海外差益大",
+      "priority_score": 5.4
+    },
+    {
+      "category": "Leica",
+      "expected_profit": 5,
+      "difficulty": 4,
+      "api": false,
+      "update_freq": "低",
+      "competition": 2,
+      "effort": "4時間",
+      "note": "Q/M/SL。超高単価・玉数少だが利益絶対額大",
+      "priority_score": 4.7
+    },
+    {
+      "category": "Pokemon",
+      "expected_profit": 4,
+      "difficulty": 4,
+      "api": false,
+      "update_freq": "高",
+      "competition": 5,
+      "effort": "1日",
+      "note": "TCG。ドメイン異質（型番/状態/PSA）。別スキーマ要",
+      "priority_score": 2.7
+    },
+    {
+      "category": "Rolex",
+      "expected_profit": 5,
+      "difficulty": 5,
+      "api": false,
+      "update_freq": "低",
+      "competition": 5,
+      "effort": "3日",
+      "note": "超高単価だが真贋・資金・在庫リスク大。要慎重（規約/本人確認）",
+      "priority_score": 0.5
+    },
+    {
+      "category": "Hermes",
+      "expected_profit": 5,
+      "difficulty": 5,
+      "api": false,
+      "update_freq": "低",
+      "competition": 5,
+      "effort": "3日",
+      "note": "バッグ等。真贋・仕入れ困難。参考カテゴリ（優先度低）",
+      "priority_score": 0.5
+    }
+  ],
+  "next_products_top50": [
+    {
+      "category": "Apple",
+      "alias": "iphone16",
+      "genre": "iphone",
+      "brand": "Apple",
+      "name": "iPhone 16",
+      "concept_retail": 124800,
+      "priority_score": 8.1
+    },
+    {
+      "category": "Apple",
+      "alias": "iphone16_plus",
+      "genre": "iphone",
+      "brand": "Apple",
+      "name": "iPhone 16 Plus",
+      "concept_retail": 139800,
+      "priority_score": 8.1
+    },
+    {
+      "category": "Apple",
+      "alias": "iphone16pro_max_1tb",
+      "genre": "iphone",
+      "brand": "Apple",
+      "name": "iPhone 16 Pro Max 1TB",
+      "concept_retail": 249800,
+      "priority_score": 8.1
+    },
+    {
+      "category": "Apple",
+      "alias": "ipad_pro_m4_11",
+      "genre": "tablet",
+      "brand": "Apple",
+      "name": "iPad Pro M4 11",
+      "concept_retail": 168800,
+      "priority_score": 8.1
+    },
+    {
+      "category": "Apple",
+      "alias": "ipad_pro_m4_13",
+      "genre": "tablet",
+      "brand": "Apple",
+      "name": "iPad Pro M4 13",
+      "concept_retail": 218800,
+      "priority_score": 8.1
+    },
+    {
+      "category": "Apple",
+      "alias": "ipad_air_m3_11",
+      "genre": "tablet",
+      "brand": "Apple",
+      "name": "iPad Air M3 11",
+      "concept_retail": 98800,
+      "priority_score": 8.1
+    },
+    {
+      "category": "Apple",
+      "alias": "macbook_pro_m4_16",
+      "genre": "pc",
+      "brand": "Apple",
+      "name": "MacBook Pro M4 16",
+      "concept_retail": 398000,
+      "priority_score": 8.1
+    },
+    {
+      "category": "Apple",
+      "alias": "mac_studio_m4",
+      "genre": "pc",
+      "brand": "Apple",
+      "name": "Mac Studio M4",
+      "concept_retail": 298000,
+      "priority_score": 8.1
+    },
+    {
+      "category": "Apple",
+      "alias": "apple_watch_ultra2",
+      "genre": "wearable",
+      "brand": "Apple",
+      "name": "Apple Watch Ultra 2",
+      "concept_retail": 128800,
+      "priority_score": 8.1
+    },
+    {
+      "category": "Apple",
+      "alias": "airpods_pro2",
+      "genre": "audio",
+      "brand": "Apple",
+      "name": "AirPods Pro 2",
+      "concept_retail": 39800,
+      "priority_score": 8.1
+    },
+    {
+      "category": "Apple",
+      "alias": "airpods_max_usbc",
+      "genre": "audio",
+      "brand": "Apple",
+      "name": "AirPods Max USB-C",
+      "concept_retail": 84800,
+      "priority_score": 8.1
+    },
+    {
+      "category": "Apple",
+      "alias": "vision_pro",
+      "genre": "wearable",
+      "brand": "Apple",
+      "name": "Apple Vision Pro",
+      "concept_retail": 599800,
+      "priority_score": 8.1
+    },
+    {
+      "category": "GPU",
+      "alias": "rtx5090",
+      "genre": "pc",
+      "brand": "NVIDIA",
+      "name": "GeForce RTX 5090",
+      "concept_retail": 400000,
+      "priority_score": 6.9
+    },
+    {
+      "category": "GPU",
+      "alias": "rtx5080",
+      "genre": "pc",
+      "brand": "NVIDIA",
+      "name": "GeForce RTX 5080",
+      "concept_retail": 200000,
+      "priority_score": 6.9
+    },
+    {
+      "category": "GPU",
+      "alias": "rtx5070ti",
+      "genre": "pc",
+      "brand": "NVIDIA",
+      "name": "GeForce RTX 5070 Ti",
+      "concept_retail": 130000,
+      "priority_score": 6.9
+    },
+    {
+      "category": "Sony Camera",
+      "alias": "a7iv",
+      "genre": "camera",
+      "brand": "SONY",
+      "name": "SONY α7 IV",
+      "concept_retail": 330000,
+      "priority_score": 6.4
+    },
+    {
+      "category": "Sony Camera",
+      "alias": "a7c2",
+      "genre": "camera",
+      "brand": "SONY",
+      "name": "SONY α7C II",
+      "concept_retail": 270000,
+      "priority_score": 6.4
+    },
+    {
+      "category": "Sony Camera",
+      "alias": "a6700",
+      "genre": "camera",
+      "brand": "SONY",
+      "name": "SONY α6700",
+      "concept_retail": 190000,
+      "priority_score": 6.4
+    },
+    {
+      "category": "Sony Camera",
+      "alias": "zve10m2",
+      "genre": "camera",
+      "brand": "SONY",
+      "name": "SONY ZV-E10 II",
+      "concept_retail": 130000,
+      "priority_score": 6.4
+    },
+    {
+      "category": "Sony Camera",
+      "alias": "a9iii",
+      "genre": "camera",
+      "brand": "SONY",
+      "name": "SONY α9 III",
+      "concept_retail": 880000,
+      "priority_score": 6.4
+    },
+    {
+      "category": "Sony Camera",
+      "alias": "a1",
+      "genre": "camera",
+      "brand": "SONY",
+      "name": "SONY α1",
+      "concept_retail": 900000,
+      "priority_score": 6.4
+    },
+    {
+      "category": "Canon",
+      "alias": "r6m3",
+      "genre": "camera",
+      "brand": "CANON",
+      "name": "Canon EOS R6 Mark III",
+      "concept_retail": 400000,
+      "priority_score": 6.4
+    },
+    {
+      "category": "Canon",
+      "alias": "r8",
+      "genre": "camera",
+      "brand": "CANON",
+      "name": "Canon EOS R8",
+      "concept_retail": 270000,
+      "priority_score": 6.4
+    },
+    {
+      "category": "Canon",
+      "alias": "r50",
+      "genre": "camera",
+      "brand": "CANON",
+      "name": "Canon EOS R50",
+      "concept_retail": 110000,
+      "priority_score": 6.4
+    },
+    {
+      "category": "Canon",
+      "alias": "r7",
+      "genre": "camera",
+      "brand": "CANON",
+      "name": "Canon EOS R7",
+      "concept_retail": 210000,
+      "priority_score": 6.4
+    },
+    {
+      "category": "Nintendo",
+      "alias": "switch2_pokemon",
+      "genre": "game_console",
+      "brand": "Nintendo",
+      "name": "Nintendo Switch 2 ポケモン版",
+      "concept_retail": 53980,
+      "priority_score": 6.1
+    },
+    {
+      "category": "Nintendo",
+      "alias": "switch2_splatoon",
+      "genre": "game_console",
+      "brand": "Nintendo",
+      "name": "Nintendo Switch 2 スプラ版",
+      "concept_retail": 53980,
+      "priority_score": 6.1
+    },
+    {
+      "category": "DJI",
+      "alias": "dji_pocket3",
+      "genre": "camera",
+      "brand": "DJI",
+      "name": "DJI Osmo Pocket 3",
+      "concept_retail": 74800,
+      "priority_score": 5.4
+    },
+    {
+      "category": "DJI",
+      "alias": "dji_mini4pro",
+      "genre": "camera",
+      "brand": "DJI",
+      "name": "DJI Mini 4 Pro",
+      "concept_retail": 128700,
+      "priority_score": 5.4
+    },
+    {
+      "category": "DJI",
+      "alias": "dji_action5",
+      "genre": "camera",
+      "brand": "DJI",
+      "name": "DJI Osmo Action 5 Pro",
+      "concept_retail": 59400,
+      "priority_score": 5.4
+    },
+    {
+      "category": "DJI",
+      "alias": "dji_air3s",
+      "genre": "camera",
+      "brand": "DJI",
+      "name": "DJI Air 3S",
+      "concept_retail": 145200,
+      "priority_score": 5.4
+    },
+    {
+      "category": "Leica",
+      "alias": "leica_dlux8",
+      "genre": "camera",
+      "brand": "LEICA",
+      "name": "Leica D-Lux 8",
+      "concept_retail": 220000,
+      "priority_score": 4.7
+    },
+    {
+      "category": "Leica",
+      "alias": "leica_sl3",
+      "genre": "camera",
+      "brand": "LEICA",
+      "name": "Leica SL3",
+      "concept_retail": 1250000,
+      "priority_score": 4.7
+    },
+    {
+      "category": "Leica",
+      "alias": "leica_q3_43",
+      "genre": "camera",
+      "brand": "LEICA",
+      "name": "Leica Q3 43",
+      "concept_retail": 990000,
+      "priority_score": 4.7
+    }
+  ]
+}

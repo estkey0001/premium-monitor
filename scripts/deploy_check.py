@@ -6086,6 +6086,38 @@ def check() -> list[dict]:
                     "message": "#633 通知チャネル（Discord/Telegram）が定義される"
                                + ("" if _t633 else " ← チャネル定義が見つかりません")})
 
+    # ── Market Coverage Engine ガード #634-#637 ──
+    _cov = _load_json_safe('exports/coverage/latest.json') or {}
+    _cov_ok = isinstance(_cov, dict) and ('coverage_score' in _cov)
+
+    # #634: Coverage レポート存在 + LP に Coverage Dashboard 表示
+    _t634 = _cov_ok and ('coverage-dashboard' in _lp_html) and ('Market Coverage' in _lp_html)
+    results.append({"level": "ok" if _t634 else "error", "check": "coverage_dashboard",
+                    "message": "#634 Coverage レポートと LP の Coverage Dashboard が存在する"
+                               + ("" if _t634 else " ← Coverage Dashboard が見つかりません")})
+
+    # #635: Coverage Score（0-100）が算出・表示される
+    _cs = _cov.get('coverage_score') if _cov_ok else None
+    _t635 = _cov_ok and isinstance(_cs, int) and 0 <= _cs <= 100 and ('Coverage Score' in _lp_html)
+    results.append({"level": "ok" if _t635 else "error", "check": "coverage_score",
+                    "message": f"#635 Coverage Score が算出・表示される（{_cs}/100）"
+                               + ("" if _t635 else " ← Coverage Score が不正")})
+
+    # #636: 候補 products.yaml（提案・非破壊）が生成される。live products.yaml は上書きしない
+    _cand_yaml = (PROJECT_ROOT / "exports" / "coverage" / "products_candidates.yaml")
+    _t636 = _cand_yaml.exists() and ('自動生成' in _cand_yaml.read_text(encoding="utf-8")
+                                     if _cand_yaml.exists() else False)
+    results.append({"level": "ok" if _t636 else "error", "check": "coverage_candidate_yaml",
+                    "message": "#636 拡充候補 products_candidates.yaml が生成される（既存yaml非破壊）"
+                               + ("" if _t636 else " ← 候補yaml が見つかりません")})
+
+    # #637: カテゴリ候補ランキングと次に追加すべき商品TOP50 が出力される
+    _t637 = _cov_ok and len(_cov.get('category_candidates_ranked', [])) >= 5 \
+        and len(_cov.get('next_products_top50', [])) > 0
+    results.append({"level": "ok" if _t637 else "error", "check": "coverage_candidates",
+                    "message": f"#637 カテゴリ候補ランキング・追加商品TOP{len(_cov.get('next_products_top50',[]))} が出力される"
+                               + ("" if _t637 else " ← 候補ランキングが不足")})
+
     return results
 
 

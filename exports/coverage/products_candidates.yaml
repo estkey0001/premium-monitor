@@ -1,0 +1,260 @@
+# ==========================================================
+# Market Coverage — 監視対象拡充候補（提案・自動生成）
+# 注意: これは提案です。既存 config/products.yaml は上書きしません。
+#       採用時は各商品の retail_price・keywords を精査し手動でマージしてください。
+# 生成: 2026-07-23 15:41 JST
+# ==========================================================
+
+products:
+  # --- Apple（優先度 8.1 / 1時間）: iPhone/iPad/Watch/MacBook。流動性最高・kakaku等で価格取得容易だが競合多 ---
+  - id: prod_iphone16
+    genre: iphone
+    brand: Apple
+    name: "iPhone 16"
+    retail_price: 124800   # 概算定価（要確認）
+    keywords: "iPhone 16"
+    memo: "coverage候補（Apple）"
+  - id: prod_iphone16_plus
+    genre: iphone
+    brand: Apple
+    name: "iPhone 16 Plus"
+    retail_price: 139800   # 概算定価（要確認）
+    keywords: "iPhone 16 Plus"
+    memo: "coverage候補（Apple）"
+  - id: prod_iphone16pro_max_1tb
+    genre: iphone
+    brand: Apple
+    name: "iPhone 16 Pro Max 1TB"
+    retail_price: 249800   # 概算定価（要確認）
+    keywords: "iPhone 16 Pro Max 1TB"
+    memo: "coverage候補（Apple）"
+  - id: prod_ipad_pro_m4_11
+    genre: tablet
+    brand: Apple
+    name: "iPad Pro M4 11"
+    retail_price: 168800   # 概算定価（要確認）
+    keywords: "iPad Pro M4 11"
+    memo: "coverage候補（Apple）"
+  - id: prod_ipad_pro_m4_13
+    genre: tablet
+    brand: Apple
+    name: "iPad Pro M4 13"
+    retail_price: 218800   # 概算定価（要確認）
+    keywords: "iPad Pro M4 13"
+    memo: "coverage候補（Apple）"
+  - id: prod_ipad_air_m3_11
+    genre: tablet
+    brand: Apple
+    name: "iPad Air M3 11"
+    retail_price: 98800   # 概算定価（要確認）
+    keywords: "iPad Air M3 11"
+    memo: "coverage候補（Apple）"
+  - id: prod_macbook_pro_m4_16
+    genre: pc
+    brand: Apple
+    name: "MacBook Pro M4 16"
+    retail_price: 398000   # 概算定価（要確認）
+    keywords: "MacBook Pro M4 16"
+    memo: "coverage候補（Apple）"
+  - id: prod_mac_studio_m4
+    genre: pc
+    brand: Apple
+    name: "Mac Studio M4"
+    retail_price: 298000   # 概算定価（要確認）
+    keywords: "Mac Studio M4"
+    memo: "coverage候補（Apple）"
+  - id: prod_apple_watch_ultra2
+    genre: wearable
+    brand: Apple
+    name: "Apple Watch Ultra 2"
+    retail_price: 128800   # 概算定価（要確認）
+    keywords: "Apple Watch Ultra 2"
+    memo: "coverage候補（Apple）"
+  - id: prod_airpods_pro2
+    genre: audio
+    brand: Apple
+    name: "AirPods Pro 2"
+    retail_price: 39800   # 概算定価（要確認）
+    keywords: "AirPods Pro 2"
+    memo: "coverage候補（Apple）"
+  - id: prod_airpods_max_usbc
+    genre: audio
+    brand: Apple
+    name: "AirPods Max USB-C"
+    retail_price: 84800   # 概算定価（要確認）
+    keywords: "AirPods Max USB-C"
+    memo: "coverage候補（Apple）"
+  - id: prod_vision_pro
+    genre: wearable
+    brand: Apple
+    name: "Apple Vision Pro"
+    retail_price: 599800   # 概算定価（要確認）
+    keywords: "Apple Vision Pro"
+    memo: "coverage候補（Apple）"
+
+  # --- GPU（優先度 6.9 / 1日）: RTX 50 系。発売直後プレ値・価格.com/PC店で取得可 ---
+  - id: prod_rtx5090
+    genre: pc
+    brand: NVIDIA
+    name: "GeForce RTX 5090"
+    retail_price: 400000   # 概算定価（要確認）
+    keywords: "GeForce RTX 5090"
+    memo: "coverage候補（GPU）"
+  - id: prod_rtx5080
+    genre: pc
+    brand: NVIDIA
+    name: "GeForce RTX 5080"
+    retail_price: 200000   # 概算定価（要確認）
+    keywords: "GeForce RTX 5080"
+    memo: "coverage候補（GPU）"
+  - id: prod_rtx5070ti
+    genre: pc
+    brand: NVIDIA
+    name: "GeForce RTX 5070 Ti"
+    retail_price: 130000   # 概算定価（要確認）
+    keywords: "GeForce RTX 5070 Ti"
+    memo: "coverage候補（GPU）"
+
+  # --- Sony Camera（優先度 6.4 / 4時間）: α7/α9/ZV。高単価・買取店網羅済みで拡張容易 ---
+  - id: prod_a7iv
+    genre: camera
+    brand: SONY
+    name: "SONY α7 IV"
+    retail_price: 330000   # 概算定価（要確認）
+    keywords: "SONY α7 IV"
+    memo: "coverage候補（Sony Camera）"
+  - id: prod_a7c2
+    genre: camera
+    brand: SONY
+    name: "SONY α7C II"
+    retail_price: 270000   # 概算定価（要確認）
+    keywords: "SONY α7C II"
+    memo: "coverage候補（Sony Camera）"
+  - id: prod_a6700
+    genre: camera
+    brand: SONY
+    name: "SONY α6700"
+    retail_price: 190000   # 概算定価（要確認）
+    keywords: "SONY α6700"
+    memo: "coverage候補（Sony Camera）"
+  - id: prod_zve10m2
+    genre: camera
+    brand: SONY
+    name: "SONY ZV-E10 II"
+    retail_price: 130000   # 概算定価（要確認）
+    keywords: "SONY ZV-E10 II"
+    memo: "coverage候補（Sony Camera）"
+  - id: prod_a9iii
+    genre: camera
+    brand: SONY
+    name: "SONY α9 III"
+    retail_price: 880000   # 概算定価（要確認）
+    keywords: "SONY α9 III"
+    memo: "coverage候補（Sony Camera）"
+  - id: prod_a1
+    genre: camera
+    brand: SONY
+    name: "SONY α1"
+    retail_price: 900000   # 概算定価（要確認）
+    keywords: "SONY α1"
+    memo: "coverage候補（Sony Camera）"
+
+  # --- Canon（優先度 6.4 / 4時間）: EOS R 系。高単価・供給不足でプレ値化しやすい ---
+  - id: prod_r6m3
+    genre: camera
+    brand: CANON
+    name: "Canon EOS R6 Mark III"
+    retail_price: 400000   # 概算定価（要確認）
+    keywords: "Canon EOS R6 Mark III"
+    memo: "coverage候補（Canon）"
+  - id: prod_r8
+    genre: camera
+    brand: CANON
+    name: "Canon EOS R8"
+    retail_price: 270000   # 概算定価（要確認）
+    keywords: "Canon EOS R8"
+    memo: "coverage候補（Canon）"
+  - id: prod_r50
+    genre: camera
+    brand: CANON
+    name: "Canon EOS R50"
+    retail_price: 110000   # 概算定価（要確認）
+    keywords: "Canon EOS R50"
+    memo: "coverage候補（Canon）"
+  - id: prod_r7
+    genre: camera
+    brand: CANON
+    name: "Canon EOS R7"
+    retail_price: 210000   # 概算定価（要確認）
+    keywords: "Canon EOS R7"
+    memo: "coverage候補（Canon）"
+
+  # --- Nintendo（優先度 6.1 / 1時間）: Switch2 系。発売直後プレ値・買取活発 ---
+  - id: prod_switch2_pokemon
+    genre: game_console
+    brand: Nintendo
+    name: "Nintendo Switch 2 ポケモン版"
+    retail_price: 53980   # 概算定価（要確認）
+    keywords: "Nintendo Switch 2 ポケモン版"
+    memo: "coverage候補（Nintendo）"
+  - id: prod_switch2_splatoon
+    genre: game_console
+    brand: Nintendo
+    name: "Nintendo Switch 2 スプラ版"
+    retail_price: 53980   # 概算定価（要確認）
+    keywords: "Nintendo Switch 2 スプラ版"
+    memo: "coverage候補（Nintendo）"
+
+  # --- DJI（優先度 5.4 / 4時間）: Osmo/Mini/Air。競合少・海外差益大 ---
+  - id: prod_dji_pocket3
+    genre: camera
+    brand: DJI
+    name: "DJI Osmo Pocket 3"
+    retail_price: 74800   # 概算定価（要確認）
+    keywords: "DJI Osmo Pocket 3"
+    memo: "coverage候補（DJI）"
+  - id: prod_dji_mini4pro
+    genre: camera
+    brand: DJI
+    name: "DJI Mini 4 Pro"
+    retail_price: 128700   # 概算定価（要確認）
+    keywords: "DJI Mini 4 Pro"
+    memo: "coverage候補（DJI）"
+  - id: prod_dji_action5
+    genre: camera
+    brand: DJI
+    name: "DJI Osmo Action 5 Pro"
+    retail_price: 59400   # 概算定価（要確認）
+    keywords: "DJI Osmo Action 5 Pro"
+    memo: "coverage候補（DJI）"
+  - id: prod_dji_air3s
+    genre: camera
+    brand: DJI
+    name: "DJI Air 3S"
+    retail_price: 145200   # 概算定価（要確認）
+    keywords: "DJI Air 3S"
+    memo: "coverage候補（DJI）"
+
+  # --- Leica（優先度 4.7 / 4時間）: Q/M/SL。超高単価・玉数少だが利益絶対額大 ---
+  - id: prod_leica_dlux8
+    genre: camera
+    brand: LEICA
+    name: "Leica D-Lux 8"
+    retail_price: 220000   # 概算定価（要確認）
+    keywords: "Leica D-Lux 8"
+    memo: "coverage候補（Leica）"
+  - id: prod_leica_sl3
+    genre: camera
+    brand: LEICA
+    name: "Leica SL3"
+    retail_price: 1250000   # 概算定価（要確認）
+    keywords: "Leica SL3"
+    memo: "coverage候補（Leica）"
+  - id: prod_leica_q3_43
+    genre: camera
+    brand: LEICA
+    name: "Leica Q3 43"
+    retail_price: 990000   # 概算定価（要確認）
+    keywords: "Leica Q3 43"
+    memo: "coverage候補（Leica）"
+

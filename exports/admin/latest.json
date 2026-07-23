@@ -1,0 +1,63 @@
+{
+  "generated_at": "2026-07-23 16:07 JST",
+  "accounts": {
+    "total": 2,
+    "by_tier": {
+      "enterprise": 1,
+      "pro": 1
+    },
+    "by_auth_provider": {
+      "email": 1,
+      "google": 1
+    },
+    "watchlist_total": 2
+  },
+  "service": {
+    "auth": {
+      "providers": [
+        "email",
+        "google",
+        "apple"
+      ],
+      "enabled": [],
+      "note": "実OAuth/メール認証はバックエンド（サーバ+HTTPS+セッション）が必要。env（GOOGLE_OAUTH_CLIENT_ID / APPLE_OAUTH_CLIENT_ID / AUTH_EMAIL_ENABLED）で有効化。"
+    },
+    "billing": {
+      "stripe_configured": false,
+      "trial_days": 14,
+      "plans": [
+        [
+          "free",
+          0,
+          0
+        ],
+        [
+          "pro",
+          1480,
+          14800
+        ],
+        [
+          "enterprise",
+          9800,
+          98000
+        ]
+      ],
+      "note": "実課金は Stripe アカウント + サーバ + webhook が必要。STRIPE_SECRET_KEY / STRIPE_PRICE_* を環境変数で設定して有効化。"
+    },
+    "plans": [
+      "free",
+      "pro",
+      "enterprise"
+    ]
+  },
+  "metrics": {
+    "main_route_count": 1,
+    "reference_route_count": 4,
+    "opportunities": 4,
+    "notifications_today": 0,
+    "notifications_total": 0,
+    "health_score": 49.9,
+    "execution_success_rate": 50.0,
+    "prediction_error_pt": 6.0
+  }
+}

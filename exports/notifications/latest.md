@@ -1,71 +1,53 @@
 # AI Notification Engine
 
-生成: 2026-07-23 17:17 JST
-イベント 9件 / 抑制 0件
+生成: 2026-07-24 15:54 JST
+イベント 6件 / 抑制 1件
 配信チャネル: ['discord', 'telegram'] / 状態: {'discord': 'pending(未設定)', 'telegram': 'pending(未設定)'}
 
 ## 通知イベント（優先度順）
 
-### [High] NEW_MAIN
+### [Critical] WATCH_TO_BUY
 ```
-🆕 新しい利益ルート成立
-prod_iphone17pm_256
-利益 ¥0 / ROI 0%
-```
-
-### [High] NEW_MAIN
-```
-🆕 新しい利益ルート成立
+🎉 BUYチャンス
 PlayStation 5 Pro
-利益 ¥60,200 / ROI 86%
+現在価格 ¥129,000
+利益 ¥30,500
+ROI 24%
+今すぐ確認
 ```
 
 ### [High] NEW_MAIN
 ```
 🆕 新しい利益ルート成立
-Nintendo Switch 2
-利益 ¥18,445 / ROI 44%
-```
-
-### [High] NEW_MAIN
-```
-🆕 新しい利益ルート成立
-prod_switch2_mk
-利益 ¥0 / ROI 0%
-```
-
-### [High] NEW_MAIN
-```
-🆕 新しい利益ルート成立
-FUJIFILM X100VI
-利益 ¥34,900 / ROI 19%
-```
-
-### [High] PRICE_DROP
-```
-📉 価格下落
-FUJIFILM X100VI
-カメラのキタムラ ¥255,000 → ¥180,000（-¥75,000）
-```
-
-### [High] PRICE_DROP
-```
-📉 価格下落
-Nintendo Switch 2
-ゲオ ¥46,000 → ¥41,500（-¥4,500）
+iPhone 17 Pro 256GB SIMフリー
+利益 ¥82,031 / ROI 48%
 ```
 
 ### [Medium] ROI_UP
 ```
 ⬆️ ROI改善
-Nintendo Switch 2
-ROI 30% → 44%
+RICOH GR IIIx
+ROI 26% → 30%
+```
+
+### [Medium] PRICE_RISE
+```
+📈 価格上昇
+PlayStation 5 Pro
+Mercari sold ¥69,800 → ¥129,000（+¥59,200）
+```
+
+### [Medium] ROI_UP
+```
+⬆️ ROI改善
+iPhone 17 Pro 256GB SIMフリー
+ROI 44% → 48%
 ```
 
 ### [Low] ROI_DOWN
 ```
 ⬇️ ROI低下
-FUJIFILM X100VI
-ROI 72% → 19%
+PlayStation 5 Pro
+ROI 86% → 24%
 ```
 

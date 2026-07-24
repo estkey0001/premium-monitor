@@ -1,18 +1,17 @@
 {
-  "date": "2026-07-23",
-  "health_score": 49.4,
-  "stale_rate": 0.8707,
+  "date": "2026-07-24",
+  "health_score": 77.7,
+  "stale_rate": 0.2024,
   "main_products": [
     "prod_gr3x",
     "prod_iphone17pm_256",
+    "prod_iphone17pro_256",
     "prod_ps5_pro",
     "prod_switch2",
-    "prod_switch2_mk",
     "prod_x100vi"
   ],
   "reference_products": [
     "prod_gr3x",
-    "prod_gr4",
     "prod_iphone17pro_256",
     "prod_switch2",
     "prod_x100vi"
@@ -21,62 +20,52 @@
     "prod_gr3x": {
       "action": "WAIT",
       "buy_now": "WATCH",
-      "roi": 0.2596,
-      "net_profit": 38947,
+      "roi": 0.2954,
+      "net_profit": 44306,
       "buy_price": 150000,
       "product": "RICOH GR IIIx",
       "buy_source": "Mercari sold",
       "kind": "reference"
     },
+    "prod_ps5_pro": {
+      "action": "BUY",
+      "buy_now": "BUY",
+      "roi": 0.2364,
+      "net_profit": 30500,
+      "buy_price": 129000,
+      "product": "PlayStation 5 Pro",
+      "buy_source": "Mercari sold",
+      "kind": "main"
+    },
     "prod_x100vi": {
       "action": "ALERT",
       "buy_now": "WATCH",
-      "roi": 0.1939,
-      "net_profit": 34900,
-      "buy_price": 180000,
+      "roi": 0.2075,
+      "net_profit": 36940,
+      "buy_price": 178000,
       "product": "FUJIFILM X100VI",
-      "buy_source": "カメラのキタムラ",
+      "buy_source": "マップカメラ",
       "kind": "main"
     },
     "prod_iphone17pro_256": {
       "action": "WAIT",
       "buy_now": "WATCH",
-      "roi": 0.4425,
-      "net_profit": 75140,
+      "roi": 0.4831,
+      "net_profit": 82031,
       "buy_price": 169800,
       "product": "iPhone 17 Pro 256GB SIMフリー",
       "buy_source": "ゲオ",
       "kind": "reference"
     },
-    "prod_gr4": {
-      "action": "WAIT",
-      "buy_now": "WATCH",
-      "roi": 0.282,
-      "net_profit": 55242,
-      "buy_price": 195925,
-      "product": "RICOH GR IV",
-      "buy_source": "src_bhphoto",
-      "kind": "reference"
-    },
     "prod_switch2": {
       "action": "WAIT",
       "buy_now": "WATCH",
-      "roi": 0.4445,
-      "net_profit": 18445,
+      "roi": 0.4887,
+      "net_profit": 20282,
       "buy_price": 41500,
       "product": "Nintendo Switch 2",
       "buy_source": "ゲオ",
       "kind": "reference"
-    },
-    "prod_ps5_pro": {
-      "action": "ALERT",
-      "buy_now": "WATCH",
-      "roi": 0.8625,
-      "net_profit": 60200,
-      "buy_price": 69800,
-      "product": "PlayStation 5 Pro",
-      "buy_source": "ソフマップ",
-      "kind": "main"
     }
   }
 }

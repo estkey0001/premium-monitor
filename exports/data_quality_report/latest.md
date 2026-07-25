@@ -1,17 +1,17 @@
-# データ取得品質レポート（2026-07-24 15:54 JST）
+# データ取得品質レポート（2026-07-25 15:55 JST）
 
 ## 取得成功率
 - 全対象店舗数: 16
-- 成功店舗数: 5
-- 全失敗店舗数: 9
-- ジョブ成功率: 32.7%（OK 18 / 失敗 33 / SKIP 4 / 計 55）
+- 成功店舗数: 4
+- 全失敗店舗数: 10
+- ジョブ成功率: 27.3%（OK 15 / 失敗 36 / SKIP 4 / 計 55）
 
 ## 前回比較
 - 前回成功率: 32.7%
-- 今回成功率: 32.7%
-- 変化: 0.0pt（横ばい）
-- 7日移動平均: 31.4%
-- 主要失敗理由 TOP5: rate_limited_429 6, http_403 6, site_blocked 6, product_not_listed 5, price_not_found 4
+- 今回成功率: 27.3%
+- 変化: -5.4pt（悪化）
+- 7日移動平均: 31.9%
+- 主要失敗理由 TOP5: rate_limited_429 6, http_403 6, site_blocked 6, timeout 5, price_not_found 4
 
 ## 店舗別成功率（低い順）
 - 2ndstreet（optional）: 0%（OK 0/失敗 4・price_not_found）
@@ -21,45 +21,46 @@
 - hardoff（optional）: 0%（OK 0/失敗 2・http_404）
 - iosys: 0%（OK 0/失敗 6・http_403）
 - janpara（optional）: 0%（OK 0/失敗 6・rate_limited_429）
+- mobile_ichiban: 0%（OK 0/失敗 5・timeout）
 - pasoko（optional）: 0%（OK 0/失敗 2・product_not_listed）
 - sofmap（optional）: 0%（OK 0/失敗 2・service_unavailable）
 - surugaya（optional）: 0%（OK 0/失敗 2・site_blocked）
 - tsutaya（optional）: 0%（OK 0/失敗 0・not_supported）
-- geo（optional）: 50%（OK 1/失敗 1・product_not_listed）
 
 ## 商品別成功率
-- ps5_pro: 20.0%
+- ps5_pro: 10.0%
 - switch2: 22.2%
+- iphone17pro256: 37.5%
 - iphone17pro512: 37.5%
+- iphone17pm256: 37.5%
 - iphone17pm512: 37.5%
-- iphone17pro256: 50.0%
-- iphone17pm256: 50.0%
 
 ## 連続失敗店舗（2回以上）
-- 2ndstreet: 82回連続
-- bookoff: 82回連続
-- dosupara: 82回連続
-- geo_mobile: 82回連続
-- hardoff: 82回連続
-- janpara: 82回連続
-- pasoko: 82回連続
-- sofmap: 82回連続
-- surugaya: 82回連続
-- tsutaya: 82回連続
-- iosys: 15回連続
+- 2ndstreet: 83回連続
+- bookoff: 83回連続
+- dosupara: 83回連続
+- geo_mobile: 83回連続
+- hardoff: 83回連続
+- janpara: 83回連続
+- pasoko: 83回連続
+- sofmap: 83回連続
+- surugaya: 83回連続
+- tsutaya: 83回連続
+- iosys: 16回連続
 
 ## 改善優先順位（required店舗）
 1. iosys（失敗6 / http_403）
-2. mobile_ichiban（失敗2 / product_not_listed）
+2. mobile_ichiban（失敗5 / timeout）
 
 ## 失敗理由（内訳）
 - rate_limited_429: 6件
 - http_403: 6件
 - site_blocked: 6件
-- product_not_listed: 5件
+- timeout: 5件
 - price_not_found: 4件
 - http_404: 4件
 - not_supported: 4件
+- product_not_listed: 3件
 - service_unavailable: 2件
 
 ## 有効データ量（新品・未使用 / 14日以内 / price>0）
@@ -69,23 +70,23 @@
   - prod_gr3x: 5店舗
   - prod_gr4_hdf: 5店舗
   - prod_gr4_mono: 5店舗
-  - prod_iphone17pro_256: 4店舗
-  - prod_iphone17pm_256: 4店舗
+  - prod_iphone17pro_256: 3店舗
   - prod_iphone17pro_512: 3店舗
+  - prod_iphone17pm_256: 3店舗
   - prod_iphone17pm_512: 3店舗
   - prod_switch2: 2店舗
-  - prod_ps5_pro: 2店舗
   - prod_gfx100rf: 1店舗
   - prod_xt5: 1店舗
   - prod_a7rv: 1店舗
   - prod_a1ii: 1店舗
+  - prod_a7cr: 1店舗
 
 ## ランキングに使えたデータ数
-- Beginner: 5 件
+- Beginner: 4 件
 - Pro: 10 件
 
 ## せどりルートに使えたデータ数
-- ルート: 25 件
+- ルート: 22 件
 
 ## 海外価格の鮮度
 - fresh: 0 / stale: 4 / 計 4

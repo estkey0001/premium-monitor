@@ -58,5 +58,33 @@
   "ROI_UP::prod_iphone17pro_256": {
     "sent_at": "2026-07-24T15:54:13.492675+09:00",
     "roi": 0.4831
+  },
+  "PRICE_RISE::prod_x100vi": {
+    "sent_at": "2026-07-26T15:42:10.058953+09:00",
+    "roi": null
+  },
+  "ROI_UP::prod_x100vi": {
+    "sent_at": "2026-07-26T15:42:10.058953+09:00",
+    "roi": 0.7697
+  },
+  "PRICE_RISE::prod_iphone17pro_256": {
+    "sent_at": "2026-07-26T15:42:10.058953+09:00",
+    "roi": null
+  },
+  "ROI_DOWN::prod_iphone17pro_256": {
+    "sent_at": "2026-07-26T15:42:10.058953+09:00",
+    "roi": 0.2885
+  },
+  "ROI_DOWN::prod_gr3x": {
+    "sent_at": "2026-07-26T15:42:10.058953+09:00",
+    "roi": 0.0847
+  },
+  "PRICE_RISE::prod_switch2": {
+    "sent_at": "2026-07-26T15:42:10.058953+09:00",
+    "roi": null
+  },
+  "ROI_DOWN::prod_switch2": {
+    "sent_at": "2026-07-26T15:42:10.058953+09:00",
+    "roi": 0.3442
   }
 }

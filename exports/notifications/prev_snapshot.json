@@ -1,5 +1,5 @@
 {
-  "date": "2026-07-29",
+  "date": "2026-07-30",
   "health_score": 74.2,
   "stale_rate": 0.2944,
   "main_products": [
@@ -16,8 +16,8 @@
     "prod_x100vi": {
       "action": "WAIT",
       "buy_now": "WATCH",
-      "roi": 0.7699,
-      "net_profit": 196335,
+      "roi": 0.7666,
+      "net_profit": 195490,
       "buy_price": 255000,
       "product": "FUJIFILM X100VI",
       "buy_source": "Yahoo Auction sold",
@@ -36,8 +36,8 @@
     "prod_ps5_pro": {
       "action": "ALERT",
       "buy_now": "WATCH",
-      "roi": 0.2674,
-      "net_profit": 34500,
+      "roi": 0.2713,
+      "net_profit": 35000,
       "buy_price": 129000,
       "product": "PlayStation 5 Pro",
       "buy_source": "Mercari sold",
@@ -46,8 +46,8 @@
     "prod_iphone17pro_256": {
       "action": "WAIT",
       "buy_now": "WATCH",
-      "roi": 0.1308,
-      "net_profit": 28972,
+      "roi": 0.1286,
+      "net_profit": 28495,
       "buy_price": 221529,
       "product": "iPhone 17 Pro 256GB SIMフリー",
       "buy_source": "ヤフオク (新品/未使用落札)",
@@ -56,8 +56,8 @@
     "prod_switch2": {
       "action": "WAIT",
       "buy_now": "WATCH",
-      "roi": 0.3444,
-      "net_profit": 15841,
+      "roi": 0.3416,
+      "net_profit": 15714,
       "buy_price": 46000,
       "product": "Nintendo Switch 2",
       "buy_source": "Yahoo Auction sold",

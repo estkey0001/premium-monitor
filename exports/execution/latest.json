@@ -1,41 +1,41 @@
 {
-  "generated_at": "2026-07-30 15:44 JST",
-  "open_count": 19,
-  "closed_count": 33,
-  "success_count": 14,
-  "execution_success_rate": 42.4,
+  "generated_at": "2026-07-31 16:16 JST",
+  "open_count": 22,
+  "closed_count": 37,
+  "success_count": 16,
+  "execution_success_rate": 43.2,
   "prediction_accuracy": {
-    "closed_count": 33,
-    "predicted_success_prob_avg": 41.8788,
-    "realized_success_rate": 42.4,
-    "error_points": 0.5,
-    "opportunity_score_avg": 65.7273
+    "closed_count": 37,
+    "predicted_success_prob_avg": 42.1081,
+    "realized_success_rate": 43.2,
+    "error_points": 1.1,
+    "opportunity_score_avg": 65.3514
   },
   "notification_accuracy": {
-    "total_notifications": 30,
+    "total_notifications": 33,
     "buy_notifications": 1,
     "watch_to_buy": 1,
-    "notification_success_rate": 0.467,
-    "false_positive_rate": 0.242
+    "notification_success_rate": 0.485,
+    "false_positive_rate": 0.243
   },
   "allocation_accuracy": {
     "budget": 3000000,
-    "allocated_expected_profit": 396700,
+    "allocated_expected_profit": 400800,
     "realized_profit_of_allocated": 0,
     "accuracy_ratio": 0.0
   },
   "execution_metrics": {
     "by_product": {
       "RICOH GR IIIx": {
-        "count": 14,
-        "success": 14,
+        "count": 16,
+        "success": 16,
         "success_rate": 1.0,
         "avg_profit": 12700,
         "avg_roi": 0.085,
         "avg_hold_days": 3.0
       },
       "FUJIFILM X100VI": {
-        "count": 11,
+        "count": 12,
         "success": 0,
         "success_rate": 0.0,
         "avg_profit": 0,
@@ -43,7 +43,7 @@
         "avg_hold_days": 0.0
       },
       "Nintendo Switch 2": {
-        "count": 8,
+        "count": 9,
         "success": 0,
         "success_rate": 0.0,
         "avg_profit": -1500,
@@ -53,15 +53,15 @@
     },
     "by_category": {
       "camera": {
-        "count": 25,
-        "success": 14,
-        "success_rate": 0.56,
-        "avg_profit": 7112,
-        "avg_roi": 0.0476,
-        "avg_hold_days": 1.68
+        "count": 28,
+        "success": 16,
+        "success_rate": 0.571,
+        "avg_profit": 7257,
+        "avg_roi": 0.0486,
+        "avg_hold_days": 1.7143
       },
       "game_console": {
-        "count": 8,
+        "count": 9,
         "success": 0,
         "success_rate": 0.0,
         "avg_profit": -1500,
@@ -71,15 +71,15 @@
     },
     "by_maker": {
       "RICOH": {
-        "count": 14,
-        "success": 14,
+        "count": 16,
+        "success": 16,
         "success_rate": 1.0,
         "avg_profit": 12700,
         "avg_roi": 0.085,
         "avg_hold_days": 3.0
       },
       "FUJIFILM": {
-        "count": 11,
+        "count": 12,
         "success": 0,
         "success_rate": 0.0,
         "avg_profit": 0,
@@ -87,7 +87,7 @@
         "avg_hold_days": 0.0
       },
       "Nintendo": {
-        "count": 8,
+        "count": 9,
         "success": 0,
         "success_rate": 0.0,
         "avg_profit": -1500,
@@ -98,16 +98,16 @@
   },
   "learning_coefficients": {
     "opportunity_score_coeff": 0.952,
-    "success_probability_coeff": 1.012,
+    "success_probability_coeff": 1.026,
     "risk_score_coeff": 1.0,
     "note": "補正係数のみ学習。利益判定ロジックには適用しない（表示・将来の予測校正用）。",
-    "sample_size": 33,
+    "sample_size": 37,
     "confidence": "high"
   },
   "insights_top10": [
-    "カテゴリ「camera」の成功率が最も高い（56%）",
+    "カテゴリ「camera」の成功率が最も高い（57%）",
     "RICOH GR IIIx は約3日で売却成立（回転が速い）",
-    "成立確率の予測誤差は 0.5pt（概ね良好）",
+    "成立確率の予測誤差は 1.1pt（概ね良好）",
     "Nintendo Switch 2 は薄利/送料負けで失敗（国内薄利ルートは要注意）",
     "Fujiya 買取は日次で更新され鮮度が高い（sell側の信頼性◎）",
     "海外sold（eBay）は EBAY_APP_ID 未設定で stale・main昇格の最大ボトルネック",

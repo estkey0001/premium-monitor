@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-31 16:16 JST",
+  "generated_at": "2026-08-01 16:06 JST",
   "schema_version": 1,
   "engine": "beta",
   "scope": "初回体験最適化・運用準備・βテスト計測・フィードバック（AI/利益/DataQualityロジックは不変）",
@@ -105,10 +105,10 @@
           "embeds": [
             {
               "title": "【AI Profit Assistant】本日の注目: FUJIFILM X100VI",
-              "description": "銘柄: FUJIFILM X100VI\n判定: WATCH（Opportunity Score 69/100）\n根拠: FUJIFILM X100VI: WATCH。海外更新後見込み 利益¥187,155/ROI73%/Score69\n※ 参考情報です。購入・応募の自動実行は行いません。最終判断はご自身で。",
+              "description": "銘柄: FUJIFILM X100VI\n判定: WATCH（Opportunity Score 69/100）\n根拠: FUJIFILM X100VI: WATCH。海外更新後見込み 利益¥181,438/ROI71%/Score69\n※ 参考情報です。購入・応募の自動実行は行いません。最終判断はご自身で。",
               "color": 5814783,
               "footer": {
-                "text": "2026-07-31 16:16 JST / closed beta"
+                "text": "2026-08-01 16:06 JST / closed beta"
               }
             }
           ]
@@ -116,19 +116,19 @@
       },
       "telegram": {
         "format": "markdown",
-        "sample": "*【AI Profit Assistant】本日の注目: FUJIFILM X100VI*\n銘柄: FUJIFILM X100VI\n判定: WATCH（Opportunity Score 69/100）\n根拠: FUJIFILM X100VI: WATCH。海外更新後見込み 利益¥187,155/ROI73%/Score69\n\n※ 参考情報です。購入・応募の自動実行は行いません。最終判断はご自身で。"
+        "sample": "*【AI Profit Assistant】本日の注目: FUJIFILM X100VI*\n銘柄: FUJIFILM X100VI\n判定: WATCH（Opportunity Score 69/100）\n根拠: FUJIFILM X100VI: WATCH。海外更新後見込み 利益¥181,438/ROI71%/Score69\n\n※ 参考情報です。購入・応募の自動実行は行いません。最終判断はご自身で。"
       },
       "email": {
         "format": "text",
         "sample": {
           "subject": "【AI Profit Assistant】本日の注目: FUJIFILM X100VI",
           "from": "AI Profit Assistant <no-reply@example.com>",
-          "body": "銘柄: FUJIFILM X100VI\n判定: WATCH（Opportunity Score 69/100）\n根拠: FUJIFILM X100VI: WATCH。海外更新後見込み 利益¥187,155/ROI73%/Score69\n※ 参考情報です。購入・応募の自動実行は行いません。最終判断はご自身で。\n\n配信停止は設定画面から。"
+          "body": "銘柄: FUJIFILM X100VI\n判定: WATCH（Opportunity Score 69/100）\n根拠: FUJIFILM X100VI: WATCH。海外更新後見込み 利益¥181,438/ROI71%/Score69\n※ 参考情報です。購入・応募の自動実行は行いません。最終判断はご自身で。\n\n配信停止は設定画面から。"
         }
       },
       "line": {
         "format": "text",
-        "sample": "【AI Profit Assistant】本日の注目: FUJIFILM X100VI\n\n銘柄: FUJIFILM X100VI\n判定: WATCH（Opportunity Score 69/100）\n根拠: FUJIFILM X100VI: WATCH。海外更新後見込み 利益¥187,155/ROI73%/Score69\n※ 参考情報です。購入・応募の自動実行は行いません。最終判断はご自身で。"
+        "sample": "【AI Profit Assistant】本日の注目: FUJIFILM X100VI\n\n銘柄: FUJIFILM X100VI\n判定: WATCH（Opportunity Score 69/100）\n根拠: FUJIFILM X100VI: WATCH。海外更新後見込み 利益¥181,438/ROI71%/Score69\n※ 参考情報です。購入・応募の自動実行は行いません。最終判断はご自身で。"
       }
     }
   },
@@ -169,7 +169,7 @@
     "notification_count": 33,
     "opportunity_count": 8,
     "capital_usage_rate": null,
-    "execution_usage_rate": 43.2,
+    "execution_usage_rate": 43.9,
     "feedback_count": 0,
     "note": "利用率/Feedback件数はβ運用開始後に Analytics(匿名集計) から投入する器。"
   },

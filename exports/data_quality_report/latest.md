@@ -1,4 +1,4 @@
-# データ取得品質レポート（2026-07-31 16:16 JST）
+# データ取得品質レポート（2026-08-01 16:06 JST）
 
 ## 取得成功率
 - 全対象店舗数: 16
@@ -7,9 +7,9 @@
 - ジョブ成功率: 27.3%（OK 15 / 失敗 36 / SKIP 4 / 計 55）
 
 ## 前回比較
-- 前回成功率: 32.7%
+- 前回成功率: 27.3%
 - 今回成功率: 27.3%
-- 変化: -5.4pt（悪化）
+- 変化: 0.0pt（横ばい）
 - 7日移動平均: 30.4%
 - 主要失敗理由 TOP5: rate_limited_429 6, http_403 6, site_blocked 6, timeout 5, price_not_found 4
 
@@ -36,17 +36,18 @@
 - iphone17pm512: 37.5%
 
 ## 連続失敗店舗（2回以上）
-- 2ndstreet: 89回連続
-- bookoff: 89回連続
-- dosupara: 89回連続
-- geo_mobile: 89回連続
-- hardoff: 89回連続
-- janpara: 89回連続
-- pasoko: 89回連続
-- sofmap: 89回連続
-- surugaya: 89回連続
-- tsutaya: 89回連続
-- iosys: 22回連続
+- 2ndstreet: 90回連続
+- bookoff: 90回連続
+- dosupara: 90回連続
+- geo_mobile: 90回連続
+- hardoff: 90回連続
+- janpara: 90回連続
+- pasoko: 90回連続
+- sofmap: 90回連続
+- surugaya: 90回連続
+- tsutaya: 90回連続
+- iosys: 23回連続
+- mobile_ichiban: 2回連続
 
 ## 改善優先順位（required店舗）
 1. iosys（失敗6 / http_403）
@@ -82,7 +83,7 @@
   - prod_a7cr: 1店舗
 
 ## ランキングに使えたデータ数
-- Beginner: 4 件
+- Beginner: 3 件
 - Pro: 10 件
 
 ## せどりルートに使えたデータ数
@@ -95,5 +96,5 @@
 ## カメラ自動取得の信頼性
 - auto_scraped 取得: 16 件（うち high: 16）
 - manual fallback: 44 件
-- 棄却候補数: 209
-- 棄却理由: {'not_buyback_context': 182, 'model_mismatch': 27}
+- 棄却候補数: 210
+- 棄却理由: {'not_buyback_context': 183, 'model_mismatch': 27}

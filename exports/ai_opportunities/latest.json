@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-31 16:16 JST",
+  "generated_at": "2026-08-01 16:06 JST",
   "health_score": 73.2,
   "health_note": "データ品質は標準的です",
   "main_route_count": 4,
@@ -15,7 +15,7 @@
     "product": "FUJIFILM X100VI",
     "buy_now": "WATCH",
     "opportunity_score": 69,
-    "reason": "FUJIFILM X100VI: WATCH。海外更新後見込み 利益¥187,155/ROI73%/Score69"
+    "reason": "FUJIFILM X100VI: WATCH。海外更新後見込み 利益¥181,438/ROI71%/Score69"
   },
   "todays_opportunities": [
     {
@@ -36,12 +36,12 @@
       "confidence": "medium",
       "action": "WAIT",
       "action_reason": "eBay sold 更新（EBAY_APP_ID 設定）後に BUY 候補へ昇格します。海外価格の更新待ちです。",
-      "alert_threshold": 520283,
-      "expected_buy_price": 520283,
-      "expected_sell_price": 568506,
+      "alert_threshold": 513666,
+      "expected_buy_price": 513666,
+      "expected_sell_price": 561360,
       "buy_conditions": {
-        "buy": "Yahoo Auction sold ≤ ¥520,283",
-        "sell": "src_ebay ≥ ¥568,506",
+        "buy": "Yahoo Auction sold ≤ ¥513,666",
+        "sell": "src_ebay ≥ ¥561,360",
         "roi": "ROI ≥ 8%"
       },
       "next_update": "次回自動更新: 明日 12:00頃（通常24時間以内）",
@@ -60,28 +60,28 @@
         ],
         "current": "監視"
       },
-      "summary": "★★★☆☆\n海外売却で成立見込みの参考ルートです。\neBay更新後の想定利益 ¥187,155 / ROI 73%。\n現在は海外価格の更新待ちです。",
+      "summary": "★★★☆☆\n海外売却で成立見込みの参考ルートです。\neBay更新後の想定利益 ¥181,438 / ROI 71%。\n現在は海外価格の更新待ちです。",
       "why": [
         "reference route（海外sold更新で成立見込み）",
-        "ROIが8%以上（73%）",
-        "価格 9日前（要更新）"
+        "ROIが8%以上（71%）",
+        "価格 10日前（要更新）"
       ],
       "risks": [
-        "鮮度低（9日前）",
+        "鮮度低（10日前）",
         "海外依存（為替・関税・輸送）",
         "送料・決済手数料が大きい",
         "同条件件数不足（再現性低）",
         "アクセサリー混在に注意（本体判定要確認）"
       ],
       "holding_period": "1ヶ月",
-      "net_profit": 187155,
-      "roi": 0.7339,
+      "net_profit": 181438,
+      "roi": 0.7115,
       "reproducibility_score": 30,
       "buy_source": "Yahoo Auction sold",
       "buy_price": 255000,
       "sell_source": "src_ebay",
-      "sell_price": 568506,
-      "age_days": 9.3,
+      "sell_price": 561360,
+      "age_days": 10.3,
       "priority": 1
     },
     {
@@ -102,12 +102,12 @@
       "confidence": "medium",
       "action": "WAIT",
       "action_reason": "eBay sold 更新（EBAY_APP_ID 設定）後に BUY 候補へ昇格します。海外価格の更新待ちです。",
-      "alert_threshold": 227849,
-      "expected_buy_price": 227849,
-      "expected_sell_price": 250577,
+      "alert_threshold": 224954,
+      "expected_buy_price": 224954,
+      "expected_sell_price": 247451,
       "buy_conditions": {
-        "buy": "Mercari sold ≤ ¥227,849",
-        "sell": "src_ebay ≥ ¥250,577",
+        "buy": "Mercari sold ≤ ¥224,954",
+        "sell": "src_ebay ≥ ¥247,451",
         "roi": "ROI ≥ 8%"
       },
       "next_update": "次回自動更新: 明日 12:00頃（通常24時間以内）",
@@ -126,28 +126,28 @@
         ],
         "current": "監視"
       },
-      "summary": "★★★☆☆\n海外売却で成立見込みの参考ルートです。\neBay更新後の想定利益 ¥40,462 / ROI 27%。\n現在は海外価格の更新待ちです。",
+      "summary": "★★★☆☆\n海外売却で成立見込みの参考ルートです。\neBay更新後の想定利益 ¥37,960 / ROI 25%。\n現在は海外価格の更新待ちです。",
       "why": [
         "reference route（海外sold更新で成立見込み）",
-        "ROIが8%以上（27%）",
-        "価格 9日前（要更新）"
+        "ROIが8%以上（25%）",
+        "価格 10日前（要更新）"
       ],
       "risks": [
-        "鮮度低（9日前）",
+        "鮮度低（10日前）",
         "海外依存（為替・関税・輸送）",
         "送料・決済手数料が大きい",
         "同条件件数不足（再現性低）",
         "アクセサリー混在に注意（本体判定要確認）"
       ],
       "holding_period": "1ヶ月",
-      "net_profit": 40462,
-      "roi": 0.2697,
+      "net_profit": 37960,
+      "roi": 0.2531,
       "reproducibility_score": 30,
       "buy_source": "Mercari sold",
       "buy_price": 150000,
       "sell_source": "src_ebay",
-      "sell_price": 250577,
-      "age_days": 9.3,
+      "sell_price": 247451,
+      "age_days": 10.3,
       "priority": 2
     },
     {
@@ -196,12 +196,12 @@
       "why": [
         "main route 成立（国内完結で利益）",
         "ROIが8%以上（29%）",
-        "価格 10日前（要更新）",
+        "価格 11日前（要更新）",
         "再現性スコア 60（中〜高）"
       ],
       "risks": [
         "manualデータ由来（購入可否・状態要確認）",
-        "鮮度低（10日前）",
+        "鮮度低（11日前）",
         "同条件件数不足（再現性低）"
       ],
       "holding_period": "数日",
@@ -212,7 +212,7 @@
       "buy_price": 128000,
       "sell_source": "買取商店",
       "sell_price": 169300,
-      "age_days": 9.9,
+      "age_days": 10.9,
       "priority": 3
     },
     {
@@ -261,12 +261,12 @@
       "why": [
         "main route 成立（国内完結で利益）",
         "ROIが8%以上（28%）",
-        "価格 9日前（要更新）",
+        "価格 10日前（要更新）",
         "再現性スコア 60（中〜高）"
       ],
       "risks": [
         "manualデータ由来（購入可否・状態要確認）",
-        "鮮度低（9日前）",
+        "鮮度低（10日前）",
         "同条件件数不足（再現性低）"
       ],
       "holding_period": "数日",
@@ -277,17 +277,17 @@
       "buy_price": 129000,
       "sell_source": "買取商店",
       "sell_price": 169300,
-      "age_days": 9.3,
+      "age_days": 10.3,
       "priority": 4
     },
     {
       "product": "iPhone 17 Pro 256GB SIMフリー",
       "product_id": "prod_iphone17pro_256",
       "kind": "reference",
-      "opportunity_score": 63,
+      "opportunity_score": 61,
       "score_breakdown": {
         "利益": 30,
-        "ROI": 14,
+        "ROI": 12,
         "鮮度": 4,
         "再現性": 4,
         "データ品質": 5,
@@ -298,12 +298,12 @@
       "confidence": "medium",
       "action": "WAIT",
       "action_reason": "eBay sold 更新（EBAY_APP_ID 設定）後に BUY 候補へ昇格します。海外価格の更新待ちです。",
-      "alert_threshold": 291941,
-      "expected_buy_price": 291941,
-      "expected_sell_price": 321228,
+      "alert_threshold": 288220,
+      "expected_buy_price": 288220,
+      "expected_sell_price": 317209,
       "buy_conditions": {
-        "buy": "ヤフオク (新品/未使用落札) ≤ ¥291,941",
-        "sell": "src_ebay ≥ ¥321,228",
+        "buy": "ヤフオク (新品/未使用落札) ≤ ¥288,220",
+        "sell": "src_ebay ≥ ¥317,209",
         "roi": "ROI ≥ 8%"
       },
       "next_update": "次回自動更新: 明日 12:00頃（通常24時間以内）",
@@ -322,36 +322,36 @@
         ],
         "current": "監視"
       },
-      "summary": "★★★☆☆\n海外売却で成立見込みの参考ルートです。\neBay更新後の想定利益 ¥23,807 / ROI 11%。\n現在は海外価格の更新待ちです。",
+      "summary": "★★★☆☆\n海外売却で成立見込みの参考ルートです。\neBay更新後の想定利益 ¥20,593 / ROI 9%。\n現在は海外価格の更新待ちです。",
       "why": [
         "reference route（海外sold更新で成立見込み）",
-        "ROIが8%以上（11%）",
-        "価格 9日前（要更新）"
+        "ROIが8%以上（9%）",
+        "価格 10日前（要更新）"
       ],
       "risks": [
-        "鮮度低（9日前）",
+        "鮮度低（10日前）",
         "海外依存（為替・関税・輸送）",
         "送料・決済手数料が大きい",
         "同条件件数不足（再現性低）"
       ],
       "holding_period": "1ヶ月",
-      "net_profit": 23807,
-      "roi": 0.1075,
+      "net_profit": 20593,
+      "roi": 0.093,
       "reproducibility_score": 30,
       "buy_source": "ヤフオク (新品/未使用落札)",
       "buy_price": 221529,
       "sell_source": "src_ebay",
-      "sell_price": 321228,
-      "age_days": 9.3,
+      "sell_price": 317209,
+      "age_days": 10.3,
       "priority": 5
     },
     {
       "product": "Nintendo Switch 2",
       "product_id": "prod_switch2",
       "kind": "reference",
-      "opportunity_score": 61,
+      "opportunity_score": 59,
       "score_breakdown": {
-        "利益": 22,
+        "利益": 20,
         "ROI": 20,
         "鮮度": 4,
         "再現性": 4,
@@ -363,12 +363,12 @@
       "confidence": "medium",
       "action": "WAIT",
       "action_reason": "eBay sold 更新（EBAY_APP_ID 設定）後に BUY 候補へ昇格します。海外価格の更新待ちです。",
-      "alert_threshold": 77388,
-      "expected_buy_price": 77388,
-      "expected_sell_price": 88080,
+      "alert_threshold": 76396,
+      "expected_buy_price": 76396,
+      "expected_sell_price": 87008,
       "buy_conditions": {
-        "buy": "Yahoo Auction sold ≤ ¥77,388",
-        "sell": "src_ebay ≥ ¥88,080",
+        "buy": "Yahoo Auction sold ≤ ¥76,396",
+        "sell": "src_ebay ≥ ¥87,008",
         "roi": "ROI ≥ 8%"
       },
       "next_update": "次回自動更新: 明日 12:00頃（通常24時間以内）",
@@ -387,27 +387,27 @@
         ],
         "current": "監視"
       },
-      "summary": "★★★☆☆\n海外売却で成立見込みの参考ルートです。\neBay更新後の想定利益 ¥14,465 / ROI 31%。\n現在は海外価格の更新待ちです。",
+      "summary": "★★★☆☆\n海外売却で成立見込みの参考ルートです。\neBay更新後の想定利益 ¥13,607 / ROI 30%。\n現在は海外価格の更新待ちです。",
       "why": [
         "reference route（海外sold更新で成立見込み）",
-        "ROIが8%以上（31%）",
-        "価格 9日前（要更新）"
+        "ROIが8%以上（30%）",
+        "価格 10日前（要更新）"
       ],
       "risks": [
-        "鮮度低（9日前）",
+        "鮮度低（10日前）",
         "海外依存（為替・関税・輸送）",
         "送料・決済手数料が大きい",
         "同条件件数不足（再現性低）"
       ],
       "holding_period": "1ヶ月",
-      "net_profit": 14465,
-      "roi": 0.3145,
+      "net_profit": 13607,
+      "roi": 0.2958,
       "reproducibility_score": 30,
       "buy_source": "Yahoo Auction sold",
       "buy_price": 46000,
       "sell_source": "src_ebay",
-      "sell_price": 88080,
-      "age_days": 9.3,
+      "sell_price": 87008,
+      "age_days": 10.3,
       "priority": 6
     },
     {
@@ -456,12 +456,12 @@
       "why": [
         "main route 成立（国内完結で利益）",
         "ROIが8%以上（8%）",
-        "価格 11日前（要更新）",
+        "価格 12日前（要更新）",
         "再現性スコア 65（中〜高）"
       ],
       "risks": [
         "manualデータ由来（購入可否・状態要確認）",
-        "鮮度低（11日前）",
+        "鮮度低（12日前）",
         "アクセサリー混在に注意（本体判定要確認）"
       ],
       "holding_period": "数日",
@@ -472,7 +472,7 @@
       "buy_price": 150000,
       "sell_source": "フジヤカメラ",
       "sell_price": 167200,
-      "age_days": 11.1,
+      "age_days": 12.0,
       "priority": 7
     },
     {

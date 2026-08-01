@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-31 16:16 JST",
+  "generated_at": "2026-08-01 16:06 JST",
   "account_id": "default",
   "cash_reserve_ratio": 0.2,
   "concentration_caps": {
@@ -14,15 +14,15 @@
       "action": "WAIT",
       "kind": "reference",
       "buy_price": 255000,
-      "net_profit": 187155,
-      "roi": 0.7339,
+      "net_profit": 181438,
+      "roi": 0.7115,
       "success_probability": 30,
       "opportunity_score": 69,
       "reproducibility_score": 30,
       "holding_period": "1ヶ月",
-      "expected_value": 56146,
-      "capital_efficiency": 0.2202,
-      "risk_score": 43,
+      "expected_value": 54431,
+      "capital_efficiency": 0.2135,
+      "risk_score": 44,
       "liquidity_score": 25,
       "category": "camera",
       "maker": "FUJIFILM"
@@ -33,15 +33,15 @@
       "action": "WAIT",
       "kind": "reference",
       "buy_price": 150000,
-      "net_profit": 40462,
-      "roi": 0.2697,
+      "net_profit": 37960,
+      "roi": 0.2531,
       "success_probability": 30,
       "opportunity_score": 69,
       "reproducibility_score": 30,
       "holding_period": "1ヶ月",
-      "expected_value": 12139,
-      "capital_efficiency": 0.0809,
-      "risk_score": 43,
+      "expected_value": 11388,
+      "capital_efficiency": 0.0759,
+      "risk_score": 44,
       "liquidity_score": 25,
       "category": "camera",
       "maker": "RICOH"
@@ -60,7 +60,7 @@
       "holding_period": "数日",
       "expected_value": 19872,
       "capital_efficiency": 0.1552,
-      "risk_score": 42,
+      "risk_score": 43,
       "liquidity_score": 85,
       "category": "game_console",
       "maker": "Sony"
@@ -79,7 +79,7 @@
       "holding_period": "数日",
       "expected_value": 19332,
       "capital_efficiency": 0.1499,
-      "risk_score": 42,
+      "risk_score": 43,
       "liquidity_score": 85,
       "category": "game_console",
       "maker": "Sony"
@@ -90,15 +90,15 @@
       "action": "WAIT",
       "kind": "reference",
       "buy_price": 221529,
-      "net_profit": 23807,
-      "roi": 0.1075,
+      "net_profit": 20593,
+      "roi": 0.093,
       "success_probability": 30,
-      "opportunity_score": 63,
+      "opportunity_score": 61,
       "reproducibility_score": 30,
       "holding_period": "1ヶ月",
-      "expected_value": 7142,
-      "capital_efficiency": 0.0322,
-      "risk_score": 43,
+      "expected_value": 6178,
+      "capital_efficiency": 0.0279,
+      "risk_score": 44,
       "liquidity_score": 25,
       "category": "iphone",
       "maker": "Apple"
@@ -109,15 +109,15 @@
       "action": "WAIT",
       "kind": "reference",
       "buy_price": 46000,
-      "net_profit": 14465,
-      "roi": 0.3145,
+      "net_profit": 13607,
+      "roi": 0.2958,
       "success_probability": 30,
-      "opportunity_score": 61,
+      "opportunity_score": 59,
       "reproducibility_score": 30,
       "holding_period": "1ヶ月",
-      "expected_value": 4340,
-      "capital_efficiency": 0.0943,
-      "risk_score": 43,
+      "expected_value": 4082,
+      "capital_efficiency": 0.0887,
+      "risk_score": 44,
       "liquidity_score": 25,
       "category": "game_console",
       "maker": "Nintendo"
@@ -136,7 +136,7 @@
       "holding_period": "数日",
       "expected_value": 7366,
       "capital_efficiency": 0.0491,
-      "risk_score": 43,
+      "risk_score": 44,
       "liquidity_score": 85,
       "category": "camera",
       "maker": "RICOH"
@@ -187,7 +187,7 @@
           "maker": "Sony",
           "holding_period": "数日",
           "roi": 0.2875,
-          "risk_score": 42,
+          "risk_score": 43,
           "liquidity_score": 85
         },
         {
@@ -202,7 +202,7 @@
           "maker": "Sony",
           "holding_period": "数日",
           "roi": 0.2775,
-          "risk_score": 42,
+          "risk_score": 43,
           "liquidity_score": 85
         }
       ],
@@ -237,7 +237,7 @@
       "cash_ratio": 0.615,
       "expected_profit": 109400,
       "expected_roi": 0.2842,
-      "avg_risk_score": 42,
+      "avg_risk_score": 43,
       "diversification_score": 55,
       "max_concentration": 0.256
     },
@@ -258,7 +258,7 @@
           "maker": "Sony",
           "holding_period": "数日",
           "roi": 0.2875,
-          "risk_score": 42,
+          "risk_score": 43,
           "liquidity_score": 85
         },
         {
@@ -273,7 +273,7 @@
           "maker": "Sony",
           "holding_period": "数日",
           "roi": 0.2775,
-          "risk_score": 42,
+          "risk_score": 43,
           "liquidity_score": 85
         }
       ],
@@ -308,7 +308,7 @@
       "cash_ratio": 0.5293,
       "expected_profit": 400800,
       "expected_roi": 0.2839,
-      "avg_risk_score": 42,
+      "avg_risk_score": 43,
       "diversification_score": 53,
       "max_concentration": 0.2987
     },
@@ -329,7 +329,7 @@
           "maker": "Sony",
           "holding_period": "数日",
           "roi": 0.2875,
-          "risk_score": 42,
+          "risk_score": 43,
           "liquidity_score": 85
         },
         {
@@ -344,7 +344,7 @@
           "maker": "Sony",
           "holding_period": "数日",
           "roi": 0.2775,
-          "risk_score": 42,
+          "risk_score": 43,
           "liquidity_score": 85
         }
       ],
@@ -379,7 +379,7 @@
       "cash_ratio": 0.5378,
       "expected_profit": 655400,
       "expected_roi": 0.2836,
-      "avg_risk_score": 42,
+      "avg_risk_score": 43,
       "diversification_score": 54,
       "max_concentration": 0.2816
     },
@@ -400,7 +400,7 @@
           "maker": "Sony",
           "holding_period": "数日",
           "roi": 0.2875,
-          "risk_score": 42,
+          "risk_score": 43,
           "liquidity_score": 85
         },
         {
@@ -415,7 +415,7 @@
           "maker": "Sony",
           "holding_period": "数日",
           "roi": 0.2775,
-          "risk_score": 42,
+          "risk_score": 43,
           "liquidity_score": 85
         }
       ],
@@ -450,7 +450,7 @@
       "cash_ratio": 0.525,
       "expected_profit": 1347600,
       "expected_roi": 0.2837,
-      "avg_risk_score": 42,
+      "avg_risk_score": 43,
       "diversification_score": 53,
       "max_concentration": 0.2944
     },
@@ -471,7 +471,7 @@
           "maker": "Sony",
           "holding_period": "数日",
           "roi": 0.2875,
-          "risk_score": 42,
+          "risk_score": 43,
           "liquidity_score": 85
         },
         {
@@ -486,7 +486,7 @@
           "maker": "Sony",
           "holding_period": "数日",
           "roi": 0.2775,
-          "risk_score": 42,
+          "risk_score": 43,
           "liquidity_score": 85
         }
       ],
@@ -521,7 +521,7 @@
       "cash_ratio": 0.5207,
       "expected_profit": 4079600,
       "expected_roi": 0.2837,
-      "avg_risk_score": 42,
+      "avg_risk_score": 43,
       "diversification_score": 53,
       "max_concentration": 0.2987
     }

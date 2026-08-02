@@ -1,6 +1,6 @@
 # Beta Launch Preparation — Beta Report
 
-> 生成: 2026-08-01 16:06 JST / 初回体験最適化・運用準備・βテスト計測・フィードバック（AI/利益/DataQualityロジックは不変）
+> 生成: 2026-08-02 16:00 JST / 初回体験最適化・運用準備・βテスト計測・フィードバック（AI/利益/DataQualityロジックは不変）
 
 ## Beta Ready Score: **85 / 100** — 判定: **READY (closed beta)**
 
@@ -28,7 +28,7 @@
 - EBAY_APP_ID 未設定 → 海外sold stale・利益ルート限定（要: Secrets設定/運用）
 - SaaS 実稼働（実OAuth/Stripe/常時API/マネージドDB）は外部基盤が必要（ROADMAP記載）
 ### Medium（2件）
-- item_url率 54%（確認導線/再現性の改善余地）
+- item_url率 56%（確認導線/再現性の改善余地）
 - Coverage 7カテゴリ（Apple/GPU等の拡充で候補増）
 ### Low（0件）
 - なし
@@ -67,8 +67,8 @@
 - line: プレビュー生成済み
 
 ## Admin Beta Dashboard
-- 登録者数: 3 / 通知数: 33 / Opportunity数: 8
-- Execution成功率: 43.9 / Feedback件数: 0
+- 登録者数: 3 / 通知数: 35 / Opportunity数: 9
+- Execution成功率: 44.4 / Feedback件数: 0
 - 利用率/Feedback件数はβ運用開始後に Analytics(匿名集計) から投入する器。
 
 ## βリリース後KPI

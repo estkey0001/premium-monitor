@@ -1,13 +1,11 @@
 {
-  "date": "2026-08-02",
-  "health_score": 73.9,
-  "stale_rate": 0.2967,
+  "date": "2026-08-03",
+  "health_score": 74.0,
+  "stale_rate": 0.298,
   "main_products": [
-    "prod_gr3x",
     "prod_ps5_pro"
   ],
   "reference_products": [
-    "prod_gr3x",
     "prod_iphone17pro_256",
     "prod_switch2",
     "prod_x100vi"
@@ -16,22 +14,12 @@
     "prod_x100vi": {
       "action": "WAIT",
       "buy_now": "WATCH",
-      "roi": 0.7094,
-      "net_profit": 180903,
+      "roi": 0.7058,
+      "net_profit": 179974,
       "buy_price": 255000,
       "product": "FUJIFILM X100VI",
       "buy_source": "Yahoo Auction sold",
       "kind": "reference"
-    },
-    "prod_gr3x": {
-      "action": "ALERT",
-      "buy_now": "WATCH",
-      "roi": 0.0847,
-      "net_profit": 12700,
-      "buy_price": 150000,
-      "product": "RICOH GR IIIx",
-      "buy_source": "Mercari sold",
-      "kind": "main"
     },
     "prod_ps5_pro": {
       "action": "ALERT",
@@ -46,8 +34,8 @@
     "prod_iphone17pro_256": {
       "action": "WAIT",
       "buy_now": "WATCH",
-      "roi": 0.0916,
-      "net_profit": 20292,
+      "roi": 0.0892,
+      "net_profit": 19769,
       "buy_price": 221529,
       "product": "iPhone 17 Pro 256GB SIMフリー",
       "buy_source": "ヤフオク (新品/未使用落札)",
@@ -56,8 +44,8 @@
     "prod_switch2": {
       "action": "WAIT",
       "buy_now": "WATCH",
-      "roi": 0.2941,
-      "net_profit": 13527,
+      "roi": 0.291,
+      "net_profit": 13387,
       "buy_price": 46000,
       "product": "Nintendo Switch 2",
       "buy_source": "Yahoo Auction sold",

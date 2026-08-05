@@ -1,6 +1,6 @@
 # Normalized Price Observations
 
-生成: 2026-08-04 16:00 JST
+生成: 2026-08-05 15:46 JST
 
 全価格（買取/販売/出品/落札/海外/下取/公式）を単一スキーマに正規化。
 `price_role`（buy/sell/official/trade_in）を必ず付与し、
@@ -9,38 +9,37 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 
 ## サマリ
 
-- 総観測数: **245**
-- Beginner 利用可: 91 / Pro 利用可: 81
-- fresh(≤14日): 172
+- 総観測数: **246**
+- Beginner 利用可: 76 / Pro 利用可: 42
+- fresh(≤14日): 128
 
 ### price_role 別
 
 | role | 件数 |
 |---|---|
-| buy | 52 |
+| buy | 51 |
 | official | 45 |
-| sell | 148 |
+| sell | 150 |
 
 ### price_type 別
 
 | type | 件数 |
 |---|---|
-| buyback_price | 142 |
+| buyback_price | 144 |
 | flea_listing_price | 5 |
-| flea_sold_price | 14 |
+| flea_sold_price | 10 |
 | official_price | 45 |
 | overseas_listing_price | 5 |
 | overseas_sold_price | 6 |
-| shop_sale_price | 28 |
+| shop_sale_price | 31 |
 
 ### rejection_reason 別（main calc 除外）
 
 | reason | 件数 |
 |---|---|
-| accessory_or_wrong_product | 3 |
-| manual_over_auto_high | 6 |
-| price_zero | 37 |
-| stale_over_14d | 73 |
+| accessory_or_wrong_product | 9 |
+| price_zero | 32 |
+| stale_over_14d | 118 |
 
 ## Beginner 利用可（official_price / buyback_price のみ）
 
@@ -81,33 +80,33 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 
 | product | role | type | price | cond | age | source |
 |---|---|---|---|---|---|---|
-| FUJIFILM X100VI | sell | buyback_price | ¥220,000 | new_unopened | 0.0d | フジヤカメラ |
+| FUJIFILM X100VI | sell | buyback_price | ¥200,000 | new_unopened | 0.0d | フジヤカメラ |
 | FUJIFILM GFX100RF | sell | buyback_price | ¥521,400 | new_unopened | 0.0d | フジヤカメラ |
+| RICOH GR III | sell | buyback_price | ¥144,000 | new_unopened | 0.0d | フジヤカメラ |
 | RICOH GR IIIx | sell | buyback_price | ¥167,200 | new_unopened | 0.0d | フジヤカメラ |
 | RICOH GR IV HDF | sell | buyback_price | ¥213,400 | new_unopened | 0.0d | フジヤカメラ |
 | RICOH GR IV Monochrome | sell | buyback_price | ¥213,400 | new_unopened | 0.0d | フジヤカメラ |
-| SONY α7R V | sell | buyback_price | ¥223,300 | new_unopened | 0.0d | フジヤカメラ |
 | SONY α1 II | sell | buyback_price | ¥590,700 | new_unopened | 0.0d | フジヤカメラ |
 | SONY α7CR | sell | buyback_price | ¥242,000 | new_unopened | 0.0d | フジヤカメラ |
-| SONY FX3 | sell | buyback_price | ¥359,700 | new_unopened | 0.0d | フジヤカメラ |
+| SONY FX3 | sell | buyback_price | ¥327,000 | new_unopened | 0.0d | フジヤカメラ |
 | Nikon Z8 | sell | buyback_price | ¥295,900 | new_unopened | 0.0d | フジヤカメラ |
 | Nikon Z9 | sell | buyback_price | ¥354,200 | new_unopened | 0.0d | フジヤカメラ |
-| Leica Q3 | sell | buyback_price | ¥925,100 | new_unopened | 0.0d | フジヤカメラ |
-| Leica M11 | sell | buyback_price | ¥1,056,000 | new_unopened | 0.0d | フジヤカメラ |
-| RICOH GR IV | sell | buyback_price | ¥198,000 | new_unopened | 13.2d | マップカメラ |
-| RICOH GR IV | sell | buyback_price | ¥196,000 | new_unopened | 13.2d | カメラのキタムラ |
-| RICOH GR IV | sell | buyback_price | ¥194,000 | new_unopened | 13.2d | フジヤカメラ |
-| RICOH GR IV | sell | buyback_price | ¥190,000 | new_unopened | 13.2d | ソフマップ |
-| RICOH GR IV | sell | buyback_price | ¥188,000 | new_unopened | 13.2d | じゃんぱら |
-| RICOH GR IV | sell | buyback_price | ¥185,000 | new_unopened | 13.2d | 買取商店 |
-| RICOH GR IV HDF | sell | buyback_price | ¥205,000 | new_unopened | 13.2d | マップカメラ |
-| RICOH GR IV HDF | sell | buyback_price | ¥203,000 | new_unopened | 13.2d | カメラのキタムラ |
-| RICOH GR IV HDF | sell | buyback_price | ¥200,000 | new_unopened | 13.2d | フジヤカメラ |
-| RICOH GR IV HDF | sell | buyback_price | ¥196,000 | new_unopened | 13.2d | ソフマップ |
-| RICOH GR IV Monochrome | sell | buyback_price | ¥215,000 | new_unopened | 13.2d | マップカメラ |
-| RICOH GR IV Monochrome | sell | buyback_price | ¥212,000 | new_unopened | 13.2d | カメラのキタムラ |
-| RICOH GR IV Monochrome | sell | buyback_price | ¥210,000 | new_unopened | 13.2d | フジヤカメラ |
-| RICOH GR IV Monochrome | sell | buyback_price | ¥205,000 | new_unopened | 13.2d | ソフマップ |
-| RICOH GR IIIx | sell | buyback_price | ¥145,000 | new_unopened | 13.2d | マップカメラ |
-| RICOH GR IIIx | sell | buyback_price | ¥143,000 | new_unopened | 13.2d | カメラのキタムラ |
-| RICOH GR IIIx | sell | buyback_price | ¥140,000 | new_unopened | 13.2d | フジヤカメラ |
+| Leica Q3 | sell | buyback_price | ¥841,000 | new_unopened | 0.0d | フジヤカメラ |
+| Leica M11 | sell | buyback_price | ¥960,000 | new_unopened | 0.0d | フジヤカメラ |
+| iPhone 17 Pro 256GB SI | sell | buyback_price | ¥183,000 | new_unopened_simfree | 0.0d | モバイル一番 |
+| iPhone 17 Pro 256GB SI | sell | buyback_price | ¥176,000 | new_unopened_simfree | 0.0d | 買取商店 |
+| iPhone 17 Pro 256GB SI | sell | buyback_price | ¥183,000 | new_unopened_simfree | 0.0d | 買取一丁目 |
+| iPhone 17 Pro 256GB SI | sell | buyback_price | ¥168,000 | new_unopened_simfree | 0.0d | ネットオフ |
+| iPhone 17 Pro 512GB SI | sell | buyback_price | ¥211,500 | new_unopened_simfree | 0.0d | 買取商店 |
+| iPhone 17 Pro 512GB SI | sell | buyback_price | ¥211,500 | new_unopened_simfree | 0.0d | 買取一丁目 |
+| iPhone 17 Pro 512GB SI | sell | buyback_price | ¥197,400 | new_unopened_simfree | 0.0d | ネットオフ |
+| iPhone 17 Pro Max 256G | sell | buyback_price | ¥192,500 | new_unopened_simfree | 0.0d | モバイル一番 |
+| iPhone 17 Pro Max 256G | sell | buyback_price | ¥193,000 | new_unopened_simfree | 0.0d | 買取商店 |
+| iPhone 17 Pro Max 256G | sell | buyback_price | ¥193,000 | new_unopened_simfree | 0.0d | 買取一丁目 |
+| iPhone 17 Pro Max 256G | sell | buyback_price | ¥184,800 | new_unopened_simfree | 0.0d | ネットオフ |
+| iPhone 17 Pro Max 512G | sell | buyback_price | ¥222,500 | new_unopened_simfree | 0.0d | 買取商店 |
+| iPhone 17 Pro Max 512G | sell | buyback_price | ¥222,000 | new_unopened_simfree | 0.0d | 買取一丁目 |
+| iPhone 17 Pro Max 512G | sell | buyback_price | ¥214,200 | new_unopened_simfree | 0.0d | ネットオフ |
+| Nintendo Switch 2 | sell | buyback_price | ¥38,000 | new_unopened | 0.0d | ゲオ |
+| Nintendo Switch 2 | sell | buyback_price | ¥50,600 | new_unopened | 0.0d | 買取商店 |
+| PlayStation 5 Pro | sell | buyback_price | ¥170,800 | new_unopened | 0.0d | 買取商店 |

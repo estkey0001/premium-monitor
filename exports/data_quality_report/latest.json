@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-05T15:46:39+09:00",
+  "generated_at": "2026-08-06T15:49:15+09:00",
   "collection": {
     "total_shops": 16,
     "shops_with_success": 5,
@@ -11,10 +11,10 @@
     "success_rate_pct": 32.7
   },
   "comparison": {
-    "prev_success_rate_pct": 27.3,
+    "prev_success_rate_pct": 32.7,
     "current_success_rate_pct": 32.7,
-    "delta_pct": 5.4,
-    "trend": "改善",
+    "delta_pct": 0.0,
+    "trend": "横ばい",
     "moving_avg_7d_pct": 30.4,
     "top5_failure_reasons": [
       {
@@ -106,11 +106,11 @@
   },
   "ranking_usable": {
     "beginner": 4,
-    "pro": 3,
+    "pro": 2,
     "reason_if_empty": null
   },
   "sedori_usable": {
-    "routes": 3,
+    "routes": 2,
     "reason_if_empty": null
   },
   "overseas": {
@@ -261,47 +261,47 @@
   "consecutive_failed_shops": [
     {
       "shop_id": "2ndstreet",
-      "consecutive_failures": 94
+      "consecutive_failures": 95
     },
     {
       "shop_id": "bookoff",
-      "consecutive_failures": 94
+      "consecutive_failures": 95
     },
     {
       "shop_id": "dosupara",
-      "consecutive_failures": 94
+      "consecutive_failures": 95
     },
     {
       "shop_id": "geo_mobile",
-      "consecutive_failures": 94
+      "consecutive_failures": 95
     },
     {
       "shop_id": "hardoff",
-      "consecutive_failures": 94
+      "consecutive_failures": 95
     },
     {
       "shop_id": "janpara",
-      "consecutive_failures": 94
+      "consecutive_failures": 95
     },
     {
       "shop_id": "pasoko",
-      "consecutive_failures": 94
+      "consecutive_failures": 95
     },
     {
       "shop_id": "sofmap",
-      "consecutive_failures": 94
+      "consecutive_failures": 95
     },
     {
       "shop_id": "surugaya",
-      "consecutive_failures": 94
+      "consecutive_failures": 95
     },
     {
       "shop_id": "tsutaya",
-      "consecutive_failures": 94
+      "consecutive_failures": 95
     },
     {
       "shop_id": "iosys",
-      "consecutive_failures": 27
+      "consecutive_failures": 28
     }
   ],
   "improvement_priority": [
@@ -323,10 +323,10 @@
     "camera_auto_high_confidence_count": 20,
     "camera_auto_low_confidence_count": 0,
     "camera_manual_fallback_count": 40,
-    "camera_rejected_candidate_count": 119,
+    "camera_rejected_candidate_count": 116,
     "camera_rejection_reasons": {
       "not_buyback_context": 67,
-      "model_mismatch": 52
+      "model_mismatch": 49
     },
     "per_brand_success_rates": {
       "FUJIFILM": {

@@ -1,4 +1,4 @@
-# データ取得品質レポート（2026-08-05 15:46 JST）
+# データ取得品質レポート（2026-08-06 15:49 JST）
 
 ## 取得成功率
 - 全対象店舗数: 16
@@ -7,9 +7,9 @@
 - ジョブ成功率: 32.7%（OK 18 / 失敗 33 / SKIP 4 / 計 55）
 
 ## 前回比較
-- 前回成功率: 27.3%
+- 前回成功率: 32.7%
 - 今回成功率: 32.7%
-- 変化: +5.4pt（改善）
+- 変化: 0.0pt（横ばい）
 - 7日移動平均: 30.4%
 - 主要失敗理由 TOP5: rate_limited_429 6, http_403 6, site_blocked 6, product_not_listed 5, price_not_found 4
 
@@ -36,17 +36,17 @@
 - iphone17pm256: 50.0%
 
 ## 連続失敗店舗（2回以上）
-- 2ndstreet: 94回連続
-- bookoff: 94回連続
-- dosupara: 94回連続
-- geo_mobile: 94回連続
-- hardoff: 94回連続
-- janpara: 94回連続
-- pasoko: 94回連続
-- sofmap: 94回連続
-- surugaya: 94回連続
-- tsutaya: 94回連続
-- iosys: 27回連続
+- 2ndstreet: 95回連続
+- bookoff: 95回連続
+- dosupara: 95回連続
+- geo_mobile: 95回連続
+- hardoff: 95回連続
+- janpara: 95回連続
+- pasoko: 95回連続
+- sofmap: 95回連続
+- surugaya: 95回連続
+- tsutaya: 95回連続
+- iosys: 28回連続
 
 ## 改善優先順位（required店舗）
 1. iosys（失敗6 / http_403）
@@ -82,10 +82,10 @@
 
 ## ランキングに使えたデータ数
 - Beginner: 4 件
-- Pro: 3 件
+- Pro: 2 件
 
 ## せどりルートに使えたデータ数
-- ルート: 3 件
+- ルート: 2 件
 
 ## 海外価格の鮮度
 - fresh: 0 / stale: 4 / 計 4
@@ -94,5 +94,5 @@
 ## カメラ自動取得の信頼性
 - auto_scraped 取得: 20 件（うち high: 20）
 - manual fallback: 40 件
-- 棄却候補数: 119
-- 棄却理由: {'not_buyback_context': 67, 'model_mismatch': 52}
+- 棄却候補数: 116
+- 棄却理由: {'not_buyback_context': 67, 'model_mismatch': 49}

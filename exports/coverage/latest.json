@@ -1,22 +1,22 @@
 {
-  "generated_at": "2026-08-05 15:46 JST",
+  "generated_at": "2026-08-06 15:49 JST",
   "total_products": 45,
   "covered_categories": 7,
-  "coverage_score": 78,
+  "coverage_score": 77,
   "coverage_score_breakdown": {
     "breadth": 21,
     "depth": 17,
-    "profitability": 25,
+    "profitability": 24,
     "freshness": 15
   },
   "current_coverage": [
     {
       "category": "camera",
       "products": 21,
-      "main": 1,
-      "reference": 2,
-      "avg_profit": 36700,
-      "avg_roi": 0.2913
+      "main": 0,
+      "reference": 1,
+      "avg_profit": 0,
+      "avg_roi": 0
     },
     {
       "category": "iphone",
@@ -31,8 +31,8 @@
       "products": 5,
       "main": 2,
       "reference": 0,
-      "avg_profit": 11301,
-      "avg_roi": 0.073
+      "avg_profit": 13051,
+      "avg_roi": 0.0842
     },
     {
       "category": "pc",

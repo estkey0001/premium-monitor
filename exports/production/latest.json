@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-05 15:46 JST",
+  "generated_at": "2026-08-06 15:49 JST",
   "scores": {
     "Security": 90,
     "Reliability": 85,
@@ -49,14 +49,14 @@
     "auth_billing_env_gated": true
   },
   "data_quality": {
-    "stale_rate": 0.4797,
-    "zero_rate": 0.1301,
-    "item_url_rate": 0.4715,
-    "usable": 87,
-    "total": 246,
+    "stale_rate": 0.4816,
+    "zero_rate": 0.1306,
+    "item_url_rate": 0.4735,
+    "usable": 86,
+    "total": 245,
     "ebay_configured": false,
-    "coverage_score": 78,
-    "main_routes": 3,
+    "coverage_score": 77,
+    "main_routes": 2,
     "improvement_priority": [
       "EBAY_APP_ID設定（海外sold fresh化・最大効果）",
       "買取/フリマ日次更新でstale率低下",

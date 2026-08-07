@@ -1,37 +1,36 @@
 # Profit Health Dashboard
 
-生成: 2026-08-06 15:49 JST
+生成: 2026-08-07 14:58 JST
 
-## Health Score: **60.6 / 100**
+## Health Score: **60.7 / 100**
 
 | 観点 | 配点 | スコア |
 |---|---|---|
 | Data Quality | 35 | 16.6 |
 | Profit Discovery | 25 | 20.0 |
 | Source Health | 20 | 14.1 |
-| Link Quality | 10 | 4.7 |
+| Link Quality | 10 | 4.8 |
 | Freshness | 10 | 5.2 |
 
 ## Data Quality KPI
 
-- 総観測 245 / usable 86
+- 総観測 244 / usable 86
 - stale 118（48%） / 0円 32（13%）
-- item_url率 47% / search 23%
+- item_url率 48% / search 23%
 - manual 52% / API 0% / HTML 1%
 
 ## Profit KPI
 
 - main route **2** / reference 2
-- 最大利益 +¥13,101 / 平均利益 +¥13,051 / 平均ROI 8.4%
+- 最大利益 +¥13,101 / 平均利益 +¥13,101 / 平均ROI 8.5%
 
 ## 前日比較
 
-- main route: 3 → 2
-- reference: 3 → 2
+- main route: 2 → 2
+- reference: 2 → 2
 - stale率: 48% → 48%
 - 0円率: 13% → 13%
-- item_url率: 47% → 47%
-- ⚠️ 消失main: prod_gr3x
+- item_url率: 47% → 48%
 
 ## 異常検知
 
@@ -40,8 +39,7 @@
 - 取得成功率 0%: セカンドストリート
 
 ### 🟡 Warning
-- main route 減少 3→2
-- item_url率 47% (<50%)
+- item_url率 48% (<50%)
 
 ### ℹ️ Info
 - 検証済み利益ルート 2件 / 最大 +¥13,101
@@ -75,13 +73,13 @@
 | 駿河屋 | 2 | 0% | 0 | 2 | 0% | 100% |
 | TSUTAYA | 2 | 0% | 0 | 2 | 0% | 100% |
 | 楽天市場新品 | 2 | 100% | 2 | 0 | 100% | 0% |
-| Amazon JP (新品出品) | 2 | 100% | 0 | 0 | 0% | 100% |
+| Amazon JP (新品出品) | 1 | 100% | 0 | 0 | 0% | 100% |
 
 ## 改善提案 TOP10
 
 | 優先 | 施策 | 効果 | 工数 |
 |---|---|---|---|
-| ★★★★★ | EBAY_APP_ID 設定 | +¥71,997（参考2→main昇格） | 1時間 |
+| ★★★★★ | EBAY_APP_ID 設定 | +¥74,637（参考2→main昇格） | 1時間 |
 | ★★★★☆ | 取得失敗修正: ゲオモバイル | 0円4件の解消でsell候補復活 | 4時間 |
 | ★★★★☆ | 取得失敗修正: セカンドストリート | 0円4件の解消でsell候補復活 | 4時間 |
 | ★★★★☆ | Mercari/Yahoo sold 手動CSV追加 | 国内買取ルートの裾拡大 | 1時間 |

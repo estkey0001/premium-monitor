@@ -1,6 +1,6 @@
 # Collector Quality Report
 
-生成日時: 2026-08-06 14:40:09 UTC+09:00
+生成日時: 2026-08-07 13:49:00 UTC+09:00
 
 ## サマリ
 
@@ -44,11 +44,11 @@
 
 | 商品 | 成功店舗数 | 目標 | 達成 | 平均価格 | 最低価格 | 最高価格 | suspicious |
 |------|-----------|------|------|---------|---------|---------|-----------|
-| iphone17pm256 | 4 | 3 | ✅ | ¥191,200 | ¥184,800 | ¥194,000 | — |
+| iphone17pm256 | 4 | 3 | ✅ | ¥191,450 | ¥184,800 | ¥194,000 | — |
 | iphone17pm512 | 3 | 3 | ✅ | ¥219,733 | ¥214,200 | ¥222,500 | — |
 | iphone17pro256 | 4 | 3 | ✅ | ¥177,500 | ¥168,000 | ¥183,000 | — |
-| iphone17pro512 | 3 | 3 | ✅ | ¥207,133 | ¥197,400 | ¥212,500 | — |
-| ps5_pro | 2 | 2 | ✅ | ¥172,650 | ¥172,600 | ¥172,700 | ⚠️ |
+| iphone17pro512 | 3 | 3 | ✅ | ¥206,800 | ¥197,400 | ¥211,500 | — |
+| ps5_pro | 2 | 2 | ✅ | ¥172,700 | ¥172,700 | ¥172,700 | ⚠️ |
 | switch2 | 2 | 2 | ✅ | ¥44,300 | ¥38,000 | ¥50,600 | — |
 
 | 商品 | 成功店舗 |
@@ -77,7 +77,7 @@
 | mobile_ichiban | 60% | 3 | 2 | — | — | product_not_listed |
 | netoff | 100% | 4 | 0 | — | — | — |
 | pasoko | 0% | 0 | 2 | — | — | product_not_listed |
-| sofmap | 0% | 0 | 2 | — | — | service_unavailable |
+| sofmap | 0% | 0 | 2 | — | — | connection_error |
 | surugaya | 0% | 0 | 2 | — | 2/2 | site_blocked |
 | tsutaya | 0% | 0 | 0 | — | — | not_supported |
 
@@ -103,7 +103,7 @@
 | price_not_found | 4 |
 | http_404 | 4 |
 | not_supported | 4 |
-| service_unavailable | 2 |
+| connection_error | 2 |
 
 ## 取得失敗一覧 (37件)
 
@@ -132,7 +132,7 @@
 | switch2 | hardoff | FAILED | http_404 |
 | switch2 | dosupara | FAILED | http_404 |
 | switch2 | pasoko | FAILED | product_not_listed |
-| switch2 | sofmap | FAILED | service_unavailable |
+| switch2 | sofmap | FAILED | connection_error |
 | switch2 | bookoff | SKIP | not_supported |
 | switch2 | surugaya | FAILED | site_blocked |
 | switch2 | tsutaya | SKIP | not_supported |
@@ -142,7 +142,7 @@
 | ps5_pro | hardoff | FAILED | http_404 |
 | ps5_pro | dosupara | FAILED | http_404 |
 | ps5_pro | pasoko | FAILED | product_not_listed |
-| ps5_pro | sofmap | FAILED | service_unavailable |
+| ps5_pro | sofmap | FAILED | connection_error |
 | ps5_pro | bookoff | SKIP | not_supported |
 | ps5_pro | surugaya | FAILED | site_blocked |
 | ps5_pro | tsutaya | SKIP | not_supported |
@@ -151,7 +151,7 @@
 
 | 商品 | 店舗 | 前回 | 今回 | 変化率 |
 |------|------|------|------|--------|
-| ps5_pro | kaitori_shouten | ¥134,500 | ¥172,600 | ↑28.3% |
+| ps5_pro | kaitori_shouten | ¥134,500 | ¥172,700 | ↑28.4% |
 | switch2 | geo | ¥45,000 | ¥38,000 | ↓15.6% |
 | iphone17pro256 | netoff | ¥159,600 | ¥168,000 | ↑5.3% |
 | iphone17pro512 | netoff | ¥190,050 | ¥197,400 | ↑3.9% |
@@ -165,4 +165,4 @@
 
 | 商品 | 店舗 | 価格 | 理由 | 詳細 |
 |------|------|------|------|------|
-| ps5_pro | kaitori_shouten | ¥172,600 | price_change_over_20pct | 前回¥134,500 → 今回¥172,600（+28.3% 上昇） |
+| ps5_pro | kaitori_shouten | ¥172,700 | price_change_over_20pct | 前回¥134,500 → 今回¥172,700（+28.4% 上昇） |

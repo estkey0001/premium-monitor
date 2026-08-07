@@ -1,4 +1,4 @@
-# データ取得品質レポート（2026-08-06 15:49 JST）
+# データ取得品質レポート（2026-08-07 14:58 JST）
 
 ## 取得成功率
 - 全対象店舗数: 16
@@ -10,7 +10,7 @@
 - 前回成功率: 32.7%
 - 今回成功率: 32.7%
 - 変化: 0.0pt（横ばい）
-- 7日移動平均: 30.4%
+- 7日移動平均: 31.2%
 - 主要失敗理由 TOP5: rate_limited_429 6, http_403 6, site_blocked 6, product_not_listed 5, price_not_found 4
 
 ## 店舗別成功率（低い順）
@@ -22,7 +22,7 @@
 - iosys: 0%（OK 0/失敗 6・http_403）
 - janpara（optional）: 0%（OK 0/失敗 6・rate_limited_429）
 - pasoko（optional）: 0%（OK 0/失敗 2・product_not_listed）
-- sofmap（optional）: 0%（OK 0/失敗 2・service_unavailable）
+- sofmap（optional）: 0%（OK 0/失敗 2・connection_error）
 - surugaya（optional）: 0%（OK 0/失敗 2・site_blocked）
 - tsutaya（optional）: 0%（OK 0/失敗 0・not_supported）
 - geo（optional）: 50%（OK 1/失敗 1・product_not_listed）
@@ -36,17 +36,17 @@
 - iphone17pm256: 50.0%
 
 ## 連続失敗店舗（2回以上）
-- 2ndstreet: 95回連続
-- bookoff: 95回連続
-- dosupara: 95回連続
-- geo_mobile: 95回連続
-- hardoff: 95回連続
-- janpara: 95回連続
-- pasoko: 95回連続
-- sofmap: 95回連続
-- surugaya: 95回連続
-- tsutaya: 95回連続
-- iosys: 28回連続
+- 2ndstreet: 96回連続
+- bookoff: 96回連続
+- dosupara: 96回連続
+- geo_mobile: 96回連続
+- hardoff: 96回連続
+- janpara: 96回連続
+- pasoko: 96回連続
+- sofmap: 96回連続
+- surugaya: 96回連続
+- tsutaya: 96回連続
+- iosys: 29回連続
 
 ## 改善優先順位（required店舗）
 1. iosys（失敗6 / http_403）
@@ -60,7 +60,7 @@
 - price_not_found: 4件
 - http_404: 4件
 - not_supported: 4件
-- service_unavailable: 2件
+- connection_error: 2件
 
 ## 有効データ量（新品・未使用 / 14日以内 / price>0）
 - 有効買取データを持つ商品数: 26

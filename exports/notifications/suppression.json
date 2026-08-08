@@ -98,5 +98,9 @@
   "NEW_MAIN::prod_gr3x": {
     "sent_at": "2026-08-05T15:46:39.722633+09:00",
     "roi": 0.4828
+  },
+  "HEALTH_ALERT::_health": {
+    "sent_at": "2026-08-08T14:20:30.542101+09:00",
+    "roi": null
   }
 }

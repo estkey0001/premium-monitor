@@ -1,20 +1,19 @@
 {
-  "generated_at": "2026-08-07 14:58 JST",
-  "health_score": 60.7,
-  "health_note": "データ品質は標準的です",
-  "main_route_count": 2,
+  "generated_at": "2026-08-08 14:20 JST",
+  "health_score": 59.6,
+  "health_note": "現在データ品質低下中",
+  "main_route_count": 1,
   "reference_route_count": 2,
   "today_tasks": [
     "⏳ FUJIFILM X100VI は待機（eBay sold 更新（EBAY_APP_ID 設定）後に BUY 候補へ昇格します。海外価格の更新待ちです。）",
     "⏳ iPhone 17 Pro 256GB SIMフリー は待機（eBay sold 更新（EBAY_APP_ID 設定）後に BUY 候補へ昇格します。海外価格の更新待ちです。）",
-    "⏭ PlayStation 5 Pro は見送り",
     "⏭ PlayStation 5 Pro は見送り"
   ],
   "daily_recommendation": {
     "product": "FUJIFILM X100VI",
     "buy_now": "WATCH",
     "opportunity_score": 40,
-    "reason": "FUJIFILM X100VI: WATCH。海外更新後見込み 利益¥54,568/ROI14%/Score40"
+    "reason": "FUJIFILM X100VI: WATCH。海外更新後見込み 利益¥53,582/ROI14%/Score40"
   },
   "todays_opportunities": [
     {
@@ -35,12 +34,12 @@
       "confidence": "low",
       "action": "WAIT",
       "action_reason": "eBay sold 更新（EBAY_APP_ID 設定）後に BUY 候補へ昇格します。海外価格の更新待ちです。",
-      "alert_threshold": 510327,
-      "expected_buy_price": 510327,
-      "expected_sell_price": 560199,
+      "alert_threshold": 509187,
+      "expected_buy_price": 509187,
+      "expected_sell_price": 558967,
       "buy_conditions": {
-        "buy": "ヤフオク (新品/未使用落札) ≤ ¥510,327",
-        "sell": "src_ebay ≥ ¥560,199",
+        "buy": "ヤフオク (新品/未使用落札) ≤ ¥509,187",
+        "sell": "src_ebay ≥ ¥558,967",
         "roi": "ROI ≥ 8%"
       },
       "next_update": "次回自動更新: 明日 12:00頃（通常24時間以内）",
@@ -59,37 +58,37 @@
         ],
         "current": "監視"
       },
-      "summary": "★★☆☆☆\n海外売却で成立見込みの参考ルートです。\neBay更新後の想定利益 ¥54,568 / ROI 14%。\n現在は海外価格の更新待ちです。",
+      "summary": "★★☆☆☆\n海外売却で成立見込みの参考ルートです。\neBay更新後の想定利益 ¥53,582 / ROI 14%。\n現在は海外価格の更新待ちです。",
       "why": [
         "reference route（海外sold更新で成立見込み）",
         "ROIが8%以上（14%）",
-        "価格 16日前（要更新）"
+        "価格 17日前（要更新）"
       ],
       "risks": [
-        "stale（16日前・main計算除外水準）",
+        "stale（17日前・main計算除外水準）",
         "海外依存（為替・関税・輸送）",
         "送料・決済手数料が大きい",
         "同条件件数不足（再現性低）",
         "アクセサリー混在に注意（本体判定要確認）"
       ],
       "holding_period": "1ヶ月",
-      "net_profit": 54568,
-      "roi": 0.1446,
+      "net_profit": 53582,
+      "roi": 0.142,
       "reproducibility_score": 30,
       "buy_source": "ヤフオク (新品/未使用落札)",
       "buy_price": 377273,
       "sell_source": "src_ebay",
-      "sell_price": 560199,
-      "age_days": 16.2,
+      "sell_price": 558967,
+      "age_days": 17.2,
       "priority": 1
     },
     {
       "product": "iPhone 17 Pro 256GB SIMフリー",
       "product_id": "prod_iphone17pro_256",
       "kind": "reference",
-      "opportunity_score": 33,
+      "opportunity_score": 32,
       "score_breakdown": {
-        "利益": 30,
+        "利益": 29,
         "ROI": 12,
         "鮮度": 0,
         "再現性": 4,
@@ -101,12 +100,12 @@
       "confidence": "low",
       "action": "WAIT",
       "action_reason": "eBay sold 更新（EBAY_APP_ID 設定）後に BUY 候補へ昇格します。海外価格の更新待ちです。",
-      "alert_threshold": 287614,
-      "expected_buy_price": 287614,
-      "expected_sell_price": 316555,
+      "alert_threshold": 286973,
+      "expected_buy_price": 286973,
+      "expected_sell_price": 315862,
       "buy_conditions": {
-        "buy": "ヤフオク (新品/未使用落札) ≤ ¥287,614",
-        "sell": "src_ebay ≥ ¥316,555",
+        "buy": "ヤフオク (新品/未使用落札) ≤ ¥286,973",
+        "sell": "src_ebay ≥ ¥315,862",
         "roi": "ROI ≥ 8%"
       },
       "next_update": "次回自動更新: 明日 12:00頃（通常24時間以内）",
@@ -125,27 +124,27 @@
         ],
         "current": "監視"
       },
-      "summary": "★☆☆☆☆\n海外売却で成立見込みの参考ルートです。\neBay更新後の想定利益 ¥20,069 / ROI 9%。\n現在は海外価格の更新待ちです。",
+      "summary": "★☆☆☆☆\n海外売却で成立見込みの参考ルートです。\neBay更新後の想定利益 ¥19,515 / ROI 9%。\n現在は海外価格の更新待ちです。",
       "why": [
         "reference route（海外sold更新で成立見込み）",
         "ROIが8%以上（9%）",
-        "価格 16日前（要更新）"
+        "価格 17日前（要更新）"
       ],
       "risks": [
-        "stale（16日前・main計算除外水準）",
+        "stale（17日前・main計算除外水準）",
         "海外依存（為替・関税・輸送）",
         "送料・決済手数料が大きい",
         "同条件件数不足（再現性低）"
       ],
       "holding_period": "1ヶ月",
-      "net_profit": 20069,
-      "roi": 0.0906,
+      "net_profit": 19515,
+      "roi": 0.0881,
       "reproducibility_score": 30,
       "buy_source": "ヤフオク (新品/未使用落札)",
       "buy_price": 221529,
       "sell_source": "src_ebay",
-      "sell_price": 316555,
-      "age_days": 16.2,
+      "sell_price": 315862,
+      "age_days": 17.2,
       "priority": 2
     },
     {
@@ -212,71 +211,6 @@
       "sell_price": 172700,
       "age_days": 0,
       "priority": 3
-    },
-    {
-      "product": "PlayStation 5 Pro",
-      "product_id": "prod_ps5_pro",
-      "kind": "main",
-      "opportunity_score": 28,
-      "score_breakdown": {
-        "利益": 20,
-        "ROI": 11,
-        "鮮度": 0,
-        "再現性": 7,
-        "データ品質": 10,
-        "confidence": 10,
-        "減点(manual/stale)": -30
-      },
-      "buy_now": "PASS",
-      "confidence": "low",
-      "action": "SKIP",
-      "action_reason": "現時点では利益条件を満たしません。見送り推奨。",
-      "alert_threshold": null,
-      "expected_buy_price": 155648,
-      "expected_sell_price": 172700,
-      "buy_conditions": {
-        "buy": "ヤフオク (新品/未使用落札) ≤ ¥155,648",
-        "sell": "モバイル一番 ≥ ¥172,700",
-        "roi": "ROI ≥ 8%"
-      },
-      "next_update": "次回自動更新: 明日 12:00頃（通常24時間以内）",
-      "price_trend": {
-        "7d": "→",
-        "30d": "→",
-        "90d": "→"
-      },
-      "success_probability": 40,
-      "timeline": {
-        "stages": [
-          "候補",
-          "監視",
-          "成立",
-          "通知"
-        ],
-        "current": "候補"
-      },
-      "summary": "★☆☆☆☆\n国内で成立している利益ルートです。\n利益 ¥13,101 / ROI 8%。\nモバイル一番買取が高水準です。",
-      "why": [
-        "main route 成立（国内完結で利益）",
-        "ROIが8%以上（8%）",
-        "価格 99日前（要更新）",
-        "route confidence high"
-      ],
-      "risks": [
-        "manualデータ由来（購入可否・状態要確認）",
-        "stale（99日前・main計算除外水準）",
-        "同条件件数不足（再現性低）"
-      ],
-      "holding_period": "数日",
-      "net_profit": 13101,
-      "roi": 0.0845,
-      "reproducibility_score": 45,
-      "buy_source": "ヤフオク (新品/未使用落札)",
-      "buy_price": 154999,
-      "sell_source": "モバイル一番",
-      "sell_price": 172700,
-      "age_days": 0,
-      "priority": 4
     }
   ]
 }

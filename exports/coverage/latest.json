@@ -1,20 +1,20 @@
 {
-  "generated_at": "2026-08-09 14:26 JST",
+  "generated_at": "2026-08-10 14:32 JST",
   "total_products": 45,
   "covered_categories": 7,
-  "coverage_score": 69,
+  "coverage_score": 47,
   "coverage_score_breakdown": {
     "breadth": 21,
     "depth": 17,
-    "profitability": 16,
-    "freshness": 15
+    "profitability": 4,
+    "freshness": 5
   },
   "current_coverage": [
     {
       "category": "camera",
       "products": 21,
       "main": 0,
-      "reference": 2,
+      "reference": 1,
       "avg_profit": 0,
       "avg_roi": 0
     },
@@ -29,10 +29,10 @@
     {
       "category": "game_console",
       "products": 5,
-      "main": 1,
+      "main": 0,
       "reference": 0,
-      "avg_profit": 13101,
-      "avg_roi": 0.0845
+      "avg_profit": 0,
+      "avg_roi": 0
     },
     {
       "category": "pc",

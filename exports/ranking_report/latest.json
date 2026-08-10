@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-09 14:26 JST",
+  "generated_at": "2026-08-10 14:32 JST",
   "route_type_beginner": "primary_to_secondary",
   "top_camera_buyback_opportunities": [
     {
@@ -216,12 +216,12 @@
       "product_id": "prod_a7rv",
       "product_name": "SONY α7R V",
       "shop_name": "フジヤカメラ",
-      "buyback_price": 203000,
+      "buyback_price": 202000,
       "official_price": 440000,
       "reference_price": 440000,
       "reference_source": "retail_concept",
-      "diff_vs_official": -237000,
-      "matched_item": "α7R V ボディ ILCE-7RM5 SONY 買取金額 新品同様 ￥203,000 良品 ￥202,000 下取は10%UP 新品同様 ￥223,300 良品 ￥222,200 買取申し込み 買取検討リストへ",
+      "diff_vs_official": -238000,
+      "matched_item": "α7R V ボディ ILCE-7RM5 SONY 買取金額 新品同様 ￥202,000 良品 ￥201,000 下取は10%UP 新品同様 ￥222,200 良品 ￥221,100 買取申し込み 買取検討リストへ",
       "confidence": "high",
       "source": "auto_scraped",
       "age_days": 0.0
@@ -230,12 +230,12 @@
       "product_id": "prod_z8",
       "product_name": "Nikon Z8",
       "shop_name": "フジヤカメラ",
-      "buyback_price": 295900,
+      "buyback_price": 317900,
       "official_price": 590000,
       "reference_price": 590000,
       "reference_source": "retail_concept",
-      "diff_vs_official": -294100,
-      "matched_item": "Z8 ボディ Nikon 買取金額 新品同様 ￥269,000 良品 ￥268,000 下取は10%UP 新品同様 ￥295,900 良品 ￥294,800 買取申し込み 買取検討リストへ",
+      "diff_vs_official": -272100,
+      "matched_item": "Z8 ボディ Nikon 買取金額 新品同様 ￥289,000 良品 ￥288,000 下取は10%UP 新品同様 ￥317,900 良品 ￥316,800 買取申し込み 買取検討リストへ",
       "confidence": "high",
       "source": "auto_scraped",
       "age_days": 0.0
@@ -291,14 +291,14 @@
       "user_level": "beginner_easy",
       "official_price_jpy": 119980,
       "reference_source": "retail_concept",
-      "best_buyback_price": 172700,
+      "best_buyback_price": 173000,
       "best_buyback_shop": "買取商店",
       "buy_price": null,
       "buy_shop_name": "",
       "buy_price_type": "",
       "sell_price_type": "buyback_price",
-      "net_profit_jpy": 51420,
-      "net_profit_rate": 0.4286,
+      "net_profit_jpy": 51720,
+      "net_profit_rate": 0.4311,
       "route_type": "primary_to_secondary",
       "source_label": "任天堂公式 / PlayStation Direct / Xbox Store",
       "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
@@ -346,7 +346,7 @@
       "official_price_jpy": 179800,
       "reference_source": "retail_concept",
       "best_buyback_price": 183000,
-      "best_buyback_shop": "買取一丁目",
+      "best_buyback_shop": "モバイル一番",
       "buy_price": null,
       "buy_shop_name": "",
       "buy_price_type": "",
@@ -358,26 +358,7 @@
       "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
     }
   ],
-  "pro_top10": [
-    {
-      "product_name": "PlayStation 5 Pro",
-      "category": "game_console",
-      "user_level": "pro",
-      "official_price_jpy": null,
-      "reference_source": null,
-      "best_buyback_price": 172700,
-      "best_buyback_shop": "買取商店",
-      "buy_price": 154999,
-      "buy_shop_name": "ヤフオク (新品/未使用落札)",
-      "buy_price_type": "flea_sold_price",
-      "sell_price_type": "buyback_price",
-      "net_profit_jpy": 15901,
-      "net_profit_rate": 0.1026,
-      "route_type": "secondary_to_secondary",
-      "source_label": "中古市場 / フリマ / 買取店",
-      "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
-    }
-  ],
+  "pro_top10": [],
   "beginner_by_category": {
     "iphone": [
       {
@@ -387,7 +368,7 @@
         "official_price_jpy": 179800,
         "reference_source": "retail_concept",
         "best_buyback_price": 183000,
-        "best_buyback_shop": "買取一丁目",
+        "best_buyback_shop": "モバイル一番",
         "buy_price": null,
         "buy_shop_name": "",
         "buy_price_type": "",
@@ -406,14 +387,14 @@
         "user_level": "beginner_easy",
         "official_price_jpy": 119980,
         "reference_source": "retail_concept",
-        "best_buyback_price": 172700,
+        "best_buyback_price": 173000,
         "best_buyback_shop": "買取商店",
         "buy_price": null,
         "buy_shop_name": "",
         "buy_price_type": "",
         "sell_price_type": "buyback_price",
-        "net_profit_jpy": 51420,
-        "net_profit_rate": 0.4286,
+        "net_profit_jpy": 51720,
+        "net_profit_rate": 0.4311,
         "route_type": "primary_to_secondary",
         "source_label": "任天堂公式 / PlayStation Direct / Xbox Store",
         "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
@@ -458,28 +439,7 @@
       }
     ]
   },
-  "pro_by_category": {
-    "game_console": [
-      {
-        "product_name": "PlayStation 5 Pro",
-        "category": "game_console",
-        "user_level": "pro",
-        "official_price_jpy": null,
-        "reference_source": null,
-        "best_buyback_price": 172700,
-        "best_buyback_shop": "買取商店",
-        "buy_price": 154999,
-        "buy_shop_name": "ヤフオク (新品/未使用落札)",
-        "buy_price_type": "flea_sold_price",
-        "sell_price_type": "buyback_price",
-        "net_profit_jpy": 15901,
-        "net_profit_rate": 0.1026,
-        "route_type": "secondary_to_secondary",
-        "source_label": "中古市場 / フリマ / 買取店",
-        "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
-      }
-    ]
-  },
+  "pro_by_category": {},
   "excluded_items": 15,
   "total_deals": 19,
   "confidence_summary": {

@@ -1,14 +1,14 @@
 # Capital Allocation Engine
 
-生成: 2026-08-10 14:32 JST / account_id: default
+生成: 2026-08-11 14:21 JST / account_id: default
 現金留保 20% / 集中上限 商品30%・カテゴリ50%・メーカー60%
 
 ## Opportunity 指標
 
 | 商品 | action | 買値 | 期待値(EV) | 資本効率 | Risk | Liquidity |
 |---|---|---|---|---|---|---|
-| FUJIFILM X100VI | WAIT | ¥377,273 | ¥16,092 | 0.0427 | 53 | 25 |
-| iPhone 17 Pro 256GB SIMフリー | WAIT | ¥221,529 | ¥5,864 | 0.0265 | 53 | 25 |
+| FUJIFILM X100VI | WAIT | ¥377,273 | ¥16,995 | 0.045 | 54 | 25 |
+| iPhone 17 Pro 256GB SIMフリー | WAIT | ¥221,529 | ¥6,372 | 0.0288 | 54 | 25 |
 
 ## 予算 ¥1,000,000 の配分プラン
 

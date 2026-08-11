@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-08-10 14:32 JST",
-  "health_score": 45.7,
+  "generated_at": "2026-08-11 14:21 JST",
+  "health_score": 45.5,
   "health_note": "現在データ品質低下中",
   "main_route_count": 0,
   "reference_route_count": 2,
@@ -11,18 +11,18 @@
   "daily_recommendation": {
     "product": "FUJIFILM X100VI",
     "buy_now": "WATCH",
-    "opportunity_score": 40,
-    "reason": "FUJIFILM X100VI: WATCH。海外更新後見込み 利益¥53,639/ROI14%/Score40"
+    "opportunity_score": 41,
+    "reason": "FUJIFILM X100VI: WATCH。海外更新後見込み 利益¥56,651/ROI15%/Score41"
   },
   "todays_opportunities": [
     {
       "product": "FUJIFILM X100VI",
       "product_id": "prod_x100vi",
       "kind": "reference",
-      "opportunity_score": 40,
+      "opportunity_score": 41,
       "score_breakdown": {
         "利益": 30,
-        "ROI": 19,
+        "ROI": 20,
         "鮮度": 0,
         "再現性": 4,
         "データ品質": 5,
@@ -33,12 +33,12 @@
       "confidence": "low",
       "action": "WAIT",
       "action_reason": "eBay sold 更新（EBAY_APP_ID 設定）後に BUY 候補へ昇格します。海外価格の更新待ちです。",
-      "alert_threshold": 509251,
-      "expected_buy_price": 509251,
-      "expected_sell_price": 559037,
+      "alert_threshold": 512737,
+      "expected_buy_price": 512737,
+      "expected_sell_price": 562802,
       "buy_conditions": {
-        "buy": "ヤフオク (新品/未使用落札) ≤ ¥509,251",
-        "sell": "src_ebay ≥ ¥559,037",
+        "buy": "ヤフオク (新品/未使用落札) ≤ ¥512,737",
+        "sell": "src_ebay ≥ ¥562,802",
         "roi": "ROI ≥ 8%"
       },
       "next_update": "次回自動更新: 明日 12:00頃（通常24時間以内）",
@@ -57,38 +57,38 @@
         ],
         "current": "監視"
       },
-      "summary": "★★☆☆☆\n海外売却で成立見込みの参考ルートです。\neBay更新後の想定利益 ¥53,639 / ROI 14%。\n現在は海外価格の更新待ちです。",
+      "summary": "★★☆☆☆\n海外売却で成立見込みの参考ルートです。\neBay更新後の想定利益 ¥56,651 / ROI 15%。\n現在は海外価格の更新待ちです。",
       "why": [
         "reference route（海外sold更新で成立見込み）",
-        "ROIが8%以上（14%）",
-        "価格 19日前（要更新）"
+        "ROIが8%以上（15%）",
+        "価格 20日前（要更新）"
       ],
       "risks": [
-        "stale（19日前・main計算除外水準）",
+        "stale（20日前・main計算除外水準）",
         "海外依存（為替・関税・輸送）",
         "送料・決済手数料が大きい",
         "同条件件数不足（再現性低）",
         "アクセサリー混在に注意（本体判定要確認）"
       ],
       "holding_period": "1ヶ月",
-      "net_profit": 53639,
-      "roi": 0.1422,
+      "net_profit": 56651,
+      "roi": 0.1502,
       "reproducibility_score": 30,
       "buy_source": "ヤフオク (新品/未使用落札)",
       "buy_price": 377273,
       "sell_source": "src_ebay",
-      "sell_price": 559037,
-      "age_days": 19.2,
+      "sell_price": 562802,
+      "age_days": 20.2,
       "priority": 1
     },
     {
       "product": "iPhone 17 Pro 256GB SIMフリー",
       "product_id": "prod_iphone17pro_256",
       "kind": "reference",
-      "opportunity_score": 32,
+      "opportunity_score": 34,
       "score_breakdown": {
-        "利益": 29,
-        "ROI": 12,
+        "利益": 30,
+        "ROI": 13,
         "鮮度": 0,
         "再現性": 4,
         "データ品質": 5,
@@ -99,12 +99,12 @@
       "confidence": "low",
       "action": "WAIT",
       "action_reason": "eBay sold 更新（EBAY_APP_ID 設定）後に BUY 候補へ昇格します。海外価格の更新待ちです。",
-      "alert_threshold": 287010,
-      "expected_buy_price": 287010,
-      "expected_sell_price": 315902,
+      "alert_threshold": 288972,
+      "expected_buy_price": 288972,
+      "expected_sell_price": 318021,
       "buy_conditions": {
-        "buy": "ヤフオク (新品/未使用落札) ≤ ¥287,010",
-        "sell": "src_ebay ≥ ¥315,902",
+        "buy": "ヤフオク (新品/未使用落札) ≤ ¥288,972",
+        "sell": "src_ebay ≥ ¥318,021",
         "roi": "ROI ≥ 8%"
       },
       "next_update": "次回自動更新: 明日 12:00頃（通常24時間以内）",
@@ -123,27 +123,27 @@
         ],
         "current": "監視"
       },
-      "summary": "★☆☆☆☆\n海外売却で成立見込みの参考ルートです。\neBay更新後の想定利益 ¥19,547 / ROI 9%。\n現在は海外価格の更新待ちです。",
+      "summary": "★☆☆☆☆\n海外売却で成立見込みの参考ルートです。\neBay更新後の想定利益 ¥21,241 / ROI 10%。\n現在は海外価格の更新待ちです。",
       "why": [
         "reference route（海外sold更新で成立見込み）",
-        "ROIが8%以上（9%）",
-        "価格 19日前（要更新）"
+        "ROIが8%以上（10%）",
+        "価格 20日前（要更新）"
       ],
       "risks": [
-        "stale（19日前・main計算除外水準）",
+        "stale（20日前・main計算除外水準）",
         "海外依存（為替・関税・輸送）",
         "送料・決済手数料が大きい",
         "同条件件数不足（再現性低）"
       ],
       "holding_period": "1ヶ月",
-      "net_profit": 19547,
-      "roi": 0.0882,
+      "net_profit": 21241,
+      "roi": 0.0959,
       "reproducibility_score": 30,
       "buy_source": "ヤフオク (新品/未使用落札)",
       "buy_price": 221529,
       "sell_source": "src_ebay",
-      "sell_price": 315902,
-      "age_days": 19.2,
+      "sell_price": 318021,
+      "age_days": 20.2,
       "priority": 2
     }
   ]

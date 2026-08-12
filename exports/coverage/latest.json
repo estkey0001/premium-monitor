@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-08-11 14:21 JST",
+  "generated_at": "2026-08-12 14:50 JST",
   "total_products": 45,
   "covered_categories": 7,
-  "coverage_score": 47,
+  "coverage_score": 67,
   "coverage_score_breakdown": {
     "breadth": 21,
     "depth": 17,
-    "profitability": 4,
-    "freshness": 5
+    "profitability": 14,
+    "freshness": 15
   },
   "current_coverage": [
     {
@@ -29,10 +29,10 @@
     {
       "category": "game_console",
       "products": 5,
-      "main": 0,
+      "main": 1,
       "reference": 0,
-      "avg_profit": 0,
-      "avg_roi": 0
+      "avg_profit": 13401,
+      "avg_roi": 0.0865
     },
     {
       "category": "pc",

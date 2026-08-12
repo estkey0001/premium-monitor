@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-11 14:21 JST",
+  "generated_at": "2026-08-12 14:50 JST",
   "account_id": "default",
   "cash_reserve_ratio": 0.2,
   "concentration_caps": {
@@ -14,15 +14,15 @@
       "action": "WAIT",
       "kind": "reference",
       "buy_price": 377273,
-      "net_profit": 56651,
-      "roi": 0.1502,
+      "net_profit": 57609,
+      "roi": 0.1527,
       "success_probability": 30,
       "opportunity_score": 41,
       "reproducibility_score": 30,
       "holding_period": "1ヶ月",
-      "expected_value": 16995,
-      "capital_efficiency": 0.045,
-      "risk_score": 54,
+      "expected_value": 17283,
+      "capital_efficiency": 0.0458,
+      "risk_score": 55,
       "liquidity_score": 25,
       "category": "camera",
       "maker": "FUJIFILM"
@@ -33,18 +33,37 @@
       "action": "WAIT",
       "kind": "reference",
       "buy_price": 221529,
-      "net_profit": 21241,
-      "roi": 0.0959,
+      "net_profit": 21780,
+      "roi": 0.0983,
       "success_probability": 30,
       "opportunity_score": 34,
       "reproducibility_score": 30,
       "holding_period": "1ヶ月",
-      "expected_value": 6372,
-      "capital_efficiency": 0.0288,
-      "risk_score": 54,
+      "expected_value": 6534,
+      "capital_efficiency": 0.0295,
+      "risk_score": 55,
       "liquidity_score": 25,
       "category": "iphone",
       "maker": "Apple"
+    },
+    {
+      "product": "PlayStation 5 Pro",
+      "product_id": "prod_ps5_pro",
+      "action": "SKIP",
+      "kind": "main",
+      "buy_price": 154999,
+      "net_profit": 13401,
+      "roi": 0.0865,
+      "success_probability": 40,
+      "opportunity_score": 29,
+      "reproducibility_score": 45,
+      "holding_period": "数日",
+      "expected_value": 5360,
+      "capital_efficiency": 0.0346,
+      "risk_score": 36,
+      "liquidity_score": 85,
+      "category": "game_console",
+      "maker": "Sony"
     }
   ],
   "default_budget": 3000000,
@@ -60,7 +79,23 @@
       "budget": 1000000,
       "investable": 800000,
       "cash_reserve_ratio": 0.2,
-      "allocations": [],
+      "allocations": [
+        {
+          "product": "PlayStation 5 Pro",
+          "product_id": "prod_ps5_pro",
+          "units": 1,
+          "unit_price": 154999,
+          "total": 154999,
+          "expected_profit": 13401,
+          "expected_value": 5360,
+          "category": "game_console",
+          "maker": "Sony",
+          "holding_period": "数日",
+          "roi": 0.0865,
+          "risk_score": 36,
+          "liquidity_score": 85
+        }
+      ],
       "waiting": [
         {
           "product": "FUJIFILM X100VI",
@@ -71,20 +106,36 @@
           "reason": "海外価格更新待ち（eBay sold）"
         }
       ],
-      "allocated": 0,
-      "cash": 1000000,
-      "cash_ratio": 1.0,
-      "expected_profit": 0,
-      "expected_roi": 0.0,
-      "avg_risk_score": 0,
-      "diversification_score": 0,
-      "max_concentration": 0.0
+      "allocated": 154999,
+      "cash": 845001,
+      "cash_ratio": 0.845,
+      "expected_profit": 13401,
+      "expected_roi": 0.0865,
+      "avg_risk_score": 36,
+      "diversification_score": 34,
+      "max_concentration": 0.155
     },
     "3000000": {
       "budget": 3000000,
       "investable": 2400000,
       "cash_reserve_ratio": 0.2,
-      "allocations": [],
+      "allocations": [
+        {
+          "product": "PlayStation 5 Pro",
+          "product_id": "prod_ps5_pro",
+          "units": 5,
+          "unit_price": 154999,
+          "total": 774995,
+          "expected_profit": 67005,
+          "expected_value": 26800,
+          "category": "game_console",
+          "maker": "Sony",
+          "holding_period": "数日",
+          "roi": 0.0865,
+          "risk_score": 36,
+          "liquidity_score": 85
+        }
+      ],
       "waiting": [
         {
           "product": "FUJIFILM X100VI",
@@ -95,20 +146,36 @@
           "reason": "海外価格更新待ち（eBay sold）"
         }
       ],
-      "allocated": 0,
-      "cash": 3000000,
-      "cash_ratio": 1.0,
-      "expected_profit": 0,
-      "expected_roi": 0.0,
-      "avg_risk_score": 0,
-      "diversification_score": 0,
-      "max_concentration": 0.0
+      "allocated": 774995,
+      "cash": 2225005,
+      "cash_ratio": 0.7417,
+      "expected_profit": 67005,
+      "expected_roi": 0.0865,
+      "avg_risk_score": 36,
+      "diversification_score": 30,
+      "max_concentration": 0.2583
     },
     "5000000": {
       "budget": 5000000,
       "investable": 4000000,
       "cash_reserve_ratio": 0.2,
-      "allocations": [],
+      "allocations": [
+        {
+          "product": "PlayStation 5 Pro",
+          "product_id": "prod_ps5_pro",
+          "units": 9,
+          "unit_price": 154999,
+          "total": 1394991,
+          "expected_profit": 120609,
+          "expected_value": 48240,
+          "category": "game_console",
+          "maker": "Sony",
+          "holding_period": "数日",
+          "roi": 0.0865,
+          "risk_score": 36,
+          "liquidity_score": 85
+        }
+      ],
       "waiting": [
         {
           "product": "FUJIFILM X100VI",
@@ -119,20 +186,36 @@
           "reason": "海外価格更新待ち（eBay sold）"
         }
       ],
-      "allocated": 0,
-      "cash": 5000000,
-      "cash_ratio": 1.0,
-      "expected_profit": 0,
-      "expected_roi": 0.0,
-      "avg_risk_score": 0,
-      "diversification_score": 0,
-      "max_concentration": 0.0
+      "allocated": 1394991,
+      "cash": 3605009,
+      "cash_ratio": 0.721,
+      "expected_profit": 120609,
+      "expected_roi": 0.0865,
+      "avg_risk_score": 36,
+      "diversification_score": 29,
+      "max_concentration": 0.279
     },
     "10000000": {
       "budget": 10000000,
       "investable": 8000000,
       "cash_reserve_ratio": 0.2,
-      "allocations": [],
+      "allocations": [
+        {
+          "product": "PlayStation 5 Pro",
+          "product_id": "prod_ps5_pro",
+          "units": 19,
+          "unit_price": 154999,
+          "total": 2944981,
+          "expected_profit": 254619,
+          "expected_value": 101840,
+          "category": "game_console",
+          "maker": "Sony",
+          "holding_period": "数日",
+          "roi": 0.0865,
+          "risk_score": 36,
+          "liquidity_score": 85
+        }
+      ],
       "waiting": [
         {
           "product": "FUJIFILM X100VI",
@@ -143,20 +226,36 @@
           "reason": "海外価格更新待ち（eBay sold）"
         }
       ],
-      "allocated": 0,
-      "cash": 10000000,
-      "cash_ratio": 1.0,
-      "expected_profit": 0,
-      "expected_roi": 0.0,
-      "avg_risk_score": 0,
-      "diversification_score": 0,
-      "max_concentration": 0.0
+      "allocated": 2944981,
+      "cash": 7055019,
+      "cash_ratio": 0.7055,
+      "expected_profit": 254619,
+      "expected_roi": 0.0865,
+      "avg_risk_score": 36,
+      "diversification_score": 28,
+      "max_concentration": 0.2945
     },
     "30000000": {
       "budget": 30000000,
       "investable": 24000000,
       "cash_reserve_ratio": 0.2,
-      "allocations": [],
+      "allocations": [
+        {
+          "product": "PlayStation 5 Pro",
+          "product_id": "prod_ps5_pro",
+          "units": 58,
+          "unit_price": 154999,
+          "total": 8989942,
+          "expected_profit": 777258,
+          "expected_value": 310880,
+          "category": "game_console",
+          "maker": "Sony",
+          "holding_period": "数日",
+          "roi": 0.0865,
+          "risk_score": 36,
+          "liquidity_score": 85
+        }
+      ],
       "waiting": [
         {
           "product": "FUJIFILM X100VI",
@@ -167,14 +266,14 @@
           "reason": "海外価格更新待ち（eBay sold）"
         }
       ],
-      "allocated": 0,
-      "cash": 30000000,
-      "cash_ratio": 1.0,
-      "expected_profit": 0,
-      "expected_roi": 0.0,
-      "avg_risk_score": 0,
-      "diversification_score": 0,
-      "max_concentration": 0.0
+      "allocated": 8989942,
+      "cash": 21010058,
+      "cash_ratio": 0.7003,
+      "expected_profit": 777258,
+      "expected_roi": 0.0865,
+      "avg_risk_score": 36,
+      "diversification_score": 28,
+      "max_concentration": 0.2997
     }
   }
 }

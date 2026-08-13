@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-08-12 14:50 JST",
-  "health_score": 60.2,
+  "generated_at": "2026-08-13 14:54 JST",
+  "health_score": 60.1,
   "health_note": "データ品質は標準的です",
   "main_route_count": 1,
   "reference_route_count": 2,
@@ -62,10 +62,10 @@
       "why": [
         "reference route（海外sold更新で成立見込み）",
         "ROIが8%以上（15%）",
-        "価格 21日前（要更新）"
+        "価格 22日前（要更新）"
       ],
       "risks": [
-        "stale（21日前・main計算除外水準）",
+        "stale（22日前・main計算除外水準）",
         "海外依存（為替・関税・輸送）",
         "送料・決済手数料が大きい",
         "同条件件数不足（再現性低）",
@@ -79,7 +79,7 @@
       "buy_price": 377273,
       "sell_source": "src_ebay",
       "sell_price": 564000,
-      "age_days": 21.2,
+      "age_days": 22.2,
       "priority": 1
     },
     {
@@ -128,10 +128,10 @@
       "why": [
         "reference route（海外sold更新で成立見込み）",
         "ROIが8%以上（10%）",
-        "価格 21日前（要更新）"
+        "価格 22日前（要更新）"
       ],
       "risks": [
-        "stale（21日前・main計算除外水準）",
+        "stale（22日前・main計算除外水準）",
         "海外依存（為替・関税・輸送）",
         "送料・決済手数料が大きい",
         "同条件件数不足（再現性低）"
@@ -144,7 +144,7 @@
       "buy_price": 221529,
       "sell_source": "src_ebay",
       "sell_price": 318694,
-      "age_days": 21.2,
+      "age_days": 22.2,
       "priority": 2
     },
     {

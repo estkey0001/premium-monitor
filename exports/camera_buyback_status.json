@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-12T13:55:54+09:00",
+  "generated_at": "2026-08-13T13:59:44+09:00",
   "summary": {
     "total": 60,
     "ok": 20,
@@ -76,7 +76,7 @@
       "rendered_html_size": 300,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.10422417.1786510555.ce3e27c\n\nhttps://errors.edgesuite.net/18.10422417.1786510555.ce3e27c",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.ca7cb17.1786597185.12f15bb1\n\nhttps://errors.edgesuite.net/18.ca7cb17.1786597185.12f15bb1",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -90,7 +90,7 @@
       "buyback_link_candidates": [],
       "buyback_page_url": null,
       "buyback_page_html_size": 300,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.10422417.1786510555.ce3e27c\n\nhttps://errors.edgesuite.net/18.10422417.1786510555.ce3e27c",
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.ca7cb17.1786597185.12f15bb1\n\nhttps://errors.edgesuite.net/18.ca7cb17.1786597185.12f15bb1",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -107,7 +107,7 @@
       "price": 200000,
       "reason": "",
       "html_saved": true,
-      "html_size": 213904,
+      "html_size": 214066,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -115,7 +115,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 213904,
+      "rendered_html_size": 214066,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -330,6 +330,10 @@
           "href": "/shop/purchase/list.aspx"
         },
         {
+          "text": "買取検討リストを見る »",
+          "href": "/shop/customer/appraisal_guest.aspx"
+        },
+        {
           "text": "",
           "href": "/shop/purchase/list.aspx?search=%e6%a4%9c%e7%b4%a2"
         },
@@ -360,14 +364,10 @@
         {
           "text": "新着順+商品名",
           "href": "/shop/purchase/list.aspx?sort=6&search=%e6%a4%9c%e7%b4%a2&keyword=X100VI"
-        },
-        {
-          "text": "買取申し込み",
-          "href": "/shop/cart/cart.aspx?purchase_goods=C4547410540741"
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=X100VI&search=検索",
-      "buyback_page_html_size": 213904,
+      "buyback_page_html_size": 214066,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -650,7 +650,7 @@
       "rendered_html_size": 302,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.490f3417.1786510605.645f7b9a\n\nhttps://errors.edgesuite.net/18.490f3417.1786510605.645f7b9a",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.e7f12417.1786597233.38fe4b17\n\nhttps://errors.edgesuite.net/18.e7f12417.1786597233.38fe4b17",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -664,7 +664,7 @@
       "buyback_link_candidates": [],
       "buyback_page_url": null,
       "buyback_page_html_size": 302,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.490f3417.1786510605.645f7b9a\n\nhttps://errors.edgesuite.net/18.490f3417.1786510605.645f7b9a",
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.e7f12417.1786597233.38fe4b17\n\nhttps://errors.edgesuite.net/18.e7f12417.1786597233.38fe4b17",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -681,7 +681,7 @@
       "price": 521400,
       "reason": "",
       "html_saved": true,
-      "html_size": 203435,
+      "html_size": 201432,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -689,7 +689,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 203435,
+      "rendered_html_size": 201432,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -904,6 +904,10 @@
           "href": "/shop/purchase/list.aspx"
         },
         {
+          "text": "買取検討リストを見る »",
+          "href": "/shop/customer/appraisal_guest.aspx"
+        },
+        {
           "text": "",
           "href": "/shop/purchase/list.aspx?search=%e6%a4%9c%e7%b4%a2"
         },
@@ -934,14 +938,10 @@
         {
           "text": "新着順+商品名",
           "href": "/shop/purchase/list.aspx?sort=6&search=%e6%a4%9c%e7%b4%a2&keyword=GFX100RF"
-        },
-        {
-          "text": "買取申し込み",
-          "href": "/shop/cart/cart.aspx?purchase_goods=C4547410556551"
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=GFX100RF&search=検索",
-      "buyback_page_html_size": 203435,
+      "buyback_page_html_size": 201432,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -1207,7 +1207,7 @@
       "rendered_html_size": 302,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.c569dc17.1786510654.6753bbb0\n\nhttps://errors.edgesuite.net/18.c569dc17.1786510654.6753bbb0",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.f0f12417.1786597282.2bd239fd\n\nhttps://errors.edgesuite.net/18.f0f12417.1786597282.2bd239fd",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -1221,7 +1221,7 @@
       "buyback_link_candidates": [],
       "buyback_page_url": null,
       "buyback_page_html_size": 302,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.c569dc17.1786510654.6753bbb0\n\nhttps://errors.edgesuite.net/18.c569dc17.1786510654.6753bbb0",
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.f0f12417.1786597282.2bd239fd\n\nhttps://errors.edgesuite.net/18.f0f12417.1786597282.2bd239fd",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -1238,7 +1238,7 @@
       "price": 213000,
       "reason": "",
       "html_saved": true,
-      "html_size": 225105,
+      "html_size": 225257,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -1246,7 +1246,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 225105,
+      "rendered_html_size": 225257,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -1461,6 +1461,10 @@
           "href": "/shop/purchase/list.aspx"
         },
         {
+          "text": "買取検討リストを見る »",
+          "href": "/shop/customer/appraisal_guest.aspx"
+        },
+        {
           "text": "",
           "href": "/shop/purchase/list.aspx?search=%e6%a4%9c%e7%b4%a2"
         },
@@ -1491,14 +1495,10 @@
         {
           "text": "新着順+商品名",
           "href": "/shop/purchase/list.aspx?sort=6&search=%e6%a4%9c%e7%b4%a2&keyword=X-T5"
-        },
-        {
-          "text": "買取申し込み",
-          "href": "/shop/cart/cart.aspx?purchase_goods=C4547410556339"
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=X-T5&search=検索",
-      "buyback_page_html_size": 225105,
+      "buyback_page_html_size": 225257,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -1781,7 +1781,7 @@
       "rendered_html_size": 302,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.490f3417.1786510705.6466c84c\n\nhttps://errors.edgesuite.net/18.490f3417.1786510705.6466c84c",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.2f4e4317.1786597330.1978c03c\n\nhttps://errors.edgesuite.net/18.2f4e4317.1786597330.1978c03c",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -1795,7 +1795,7 @@
       "buyback_link_candidates": [],
       "buyback_page_url": null,
       "buyback_page_html_size": 302,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.490f3417.1786510705.6466c84c\n\nhttps://errors.edgesuite.net/18.490f3417.1786510705.6466c84c",
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.2f4e4317.1786597330.1978c03c\n\nhttps://errors.edgesuite.net/18.2f4e4317.1786597330.1978c03c",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -1812,7 +1812,7 @@
       "price": 144000,
       "reason": "",
       "html_saved": true,
-      "html_size": 229424,
+      "html_size": 226573,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -1820,7 +1820,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 229424,
+      "rendered_html_size": 226573,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -2035,6 +2035,10 @@
           "href": "/shop/purchase/list.aspx"
         },
         {
+          "text": "買取検討リストを見る »",
+          "href": "/shop/customer/appraisal_guest.aspx"
+        },
+        {
           "text": "",
           "href": "/shop/purchase/list.aspx?search=%e6%a4%9c%e7%b4%a2"
         },
@@ -2065,14 +2069,10 @@
         {
           "text": "新着順+商品名",
           "href": "/shop/purchase/list.aspx?sort=6&search=%e6%a4%9c%e7%b4%a2&keyword=RICOH+GR+III"
-        },
-        {
-          "text": "買取申し込み",
-          "href": "/shop/cart/cart.aspx?purchase_goods=C4549212300158"
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=RICOH%20GR%20III&search=検索",
-      "buyback_page_html_size": 229424,
+      "buyback_page_html_size": 226573,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -2389,10 +2389,10 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 302,
+      "rendered_html_size": 298,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.4f0f3417.1786510755.44085bd8\n\nhttps://errors.edgesuite.net/18.4f0f3417.1786510755.44085bd8",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.44e4317.1786597378.1be3c21\n\nhttps://errors.edgesuite.net/18.44e4317.1786597378.1be3c21",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -2405,8 +2405,8 @@
       "sales_price_sample": null,
       "buyback_link_candidates": [],
       "buyback_page_url": null,
-      "buyback_page_html_size": 302,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.4f0f3417.1786510755.44085bd8\n\nhttps://errors.edgesuite.net/18.4f0f3417.1786510755.44085bd8",
+      "buyback_page_html_size": 298,
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.44e4317.1786597378.1be3c21\n\nhttps://errors.edgesuite.net/18.44e4317.1786597378.1be3c21",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -2423,7 +2423,7 @@
       "price": 167200,
       "reason": "",
       "html_saved": true,
-      "html_size": 205395,
+      "html_size": 203639,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -2431,7 +2431,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 205395,
+      "rendered_html_size": 203639,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -2646,6 +2646,10 @@
           "href": "/shop/purchase/list.aspx"
         },
         {
+          "text": "買取検討リストを見る »",
+          "href": "/shop/customer/appraisal_guest.aspx"
+        },
+        {
           "text": "",
           "href": "/shop/purchase/list.aspx?search=%e6%a4%9c%e7%b4%a2"
         },
@@ -2676,14 +2680,10 @@
         {
           "text": "新着順+商品名",
           "href": "/shop/purchase/list.aspx?sort=6&search=%e6%a4%9c%e7%b4%a2&keyword=RICOH+GR+IIIx"
-        },
-        {
-          "text": "買取申し込み",
-          "href": "/shop/cart/cart.aspx?purchase_goods=C4549212304507"
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=RICOH%20GR%20IIIx&search=検索",
-      "buyback_page_html_size": 205395,
+      "buyback_page_html_size": 203639,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -2958,7 +2958,7 @@
       "rendered_html_size": 302,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.4f0f3417.1786510805.440bd727\n\nhttps://errors.edgesuite.net/18.4f0f3417.1786510805.440bd727",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.f0f12417.1786597427.2bdfa24b\n\nhttps://errors.edgesuite.net/18.f0f12417.1786597427.2bdfa24b",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -2972,7 +2972,7 @@
       "buyback_link_candidates": [],
       "buyback_page_url": null,
       "buyback_page_html_size": 302,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.4f0f3417.1786510805.440bd727\n\nhttps://errors.edgesuite.net/18.4f0f3417.1786510805.440bd727",
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.f0f12417.1786597427.2bdfa24b\n\nhttps://errors.edgesuite.net/18.f0f12417.1786597427.2bdfa24b",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -2989,7 +2989,7 @@
       "price": 139000,
       "reason": "",
       "html_saved": true,
-      "html_size": 211767,
+      "html_size": 212011,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -2997,7 +2997,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 211767,
+      "rendered_html_size": 212011,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -3212,6 +3212,10 @@
           "href": "/shop/purchase/list.aspx"
         },
         {
+          "text": "買取検討リストを見る »",
+          "href": "/shop/customer/appraisal_guest.aspx"
+        },
+        {
           "text": "",
           "href": "/shop/purchase/list.aspx?search=%e6%a4%9c%e7%b4%a2"
         },
@@ -3242,14 +3246,10 @@
         {
           "text": "新着順+商品名",
           "href": "/shop/purchase/list.aspx?sort=6&search=%e6%a4%9c%e7%b4%a2&keyword=RICOH+GR+IV"
-        },
-        {
-          "text": "買取申し込み",
-          "href": "/shop/cart/cart.aspx?purchase_goods=C4549212311291"
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=RICOH%20GR%20IV&search=検索",
-      "buyback_page_html_size": 211767,
+      "buyback_page_html_size": 212011,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -3605,7 +3605,7 @@
       "rendered_html_size": 302,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.4f0f3417.1786510854.440f7799\n\nhttps://errors.edgesuite.net/18.4f0f3417.1786510854.440f7799",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.4e60d017.1786597475.2a3e0f8f\n\nhttps://errors.edgesuite.net/18.4e60d017.1786597475.2a3e0f8f",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -3619,7 +3619,7 @@
       "buyback_link_candidates": [],
       "buyback_page_url": null,
       "buyback_page_html_size": 302,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.4f0f3417.1786510854.440f7799\n\nhttps://errors.edgesuite.net/18.4f0f3417.1786510854.440f7799",
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.4e60d017.1786597475.2a3e0f8f\n\nhttps://errors.edgesuite.net/18.4e60d017.1786597475.2a3e0f8f",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -3636,7 +3636,7 @@
       "price": 213400,
       "reason": "",
       "html_saved": true,
-      "html_size": 201318,
+      "html_size": 201310,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -3644,7 +3644,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 201318,
+      "rendered_html_size": 201310,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -3859,6 +3859,10 @@
           "href": "/shop/purchase/list.aspx"
         },
         {
+          "text": "買取検討リストを見る »",
+          "href": "/shop/customer/appraisal_guest.aspx"
+        },
+        {
           "text": "",
           "href": "/shop/purchase/list.aspx?search=%e6%a4%9c%e7%b4%a2"
         },
@@ -3889,14 +3893,10 @@
         {
           "text": "新着順+商品名",
           "href": "/shop/purchase/list.aspx?sort=6&search=%e6%a4%9c%e7%b4%a2&keyword=RICOH+GR+IV+HDF"
-        },
-        {
-          "text": "買取申し込み",
-          "href": "/shop/cart/cart.aspx?purchase_goods=C4549212311871"
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=RICOH%20GR%20IV%20HDF&search=検索",
-      "buyback_page_html_size": 201318,
+      "buyback_page_html_size": 201310,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -4153,10 +4153,10 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 302,
+      "rendered_html_size": 300,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.4f0f3417.1786510906.441309b6\n\nhttps://errors.edgesuite.net/18.4f0f3417.1786510906.441309b6",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.c44f4317.1786597525.43c9fb5\n\nhttps://errors.edgesuite.net/18.c44f4317.1786597525.43c9fb5",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -4169,8 +4169,8 @@
       "sales_price_sample": null,
       "buyback_link_candidates": [],
       "buyback_page_url": null,
-      "buyback_page_html_size": 302,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.4f0f3417.1786510906.441309b6\n\nhttps://errors.edgesuite.net/18.4f0f3417.1786510906.441309b6",
+      "buyback_page_html_size": 300,
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.c44f4317.1786597525.43c9fb5\n\nhttps://errors.edgesuite.net/18.c44f4317.1786597525.43c9fb5",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -4187,7 +4187,7 @@
       "price": 213400,
       "reason": "",
       "html_saved": true,
-      "html_size": 201482,
+      "html_size": 198407,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -4195,7 +4195,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 201482,
+      "rendered_html_size": 198407,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -4410,6 +4410,10 @@
           "href": "/shop/purchase/list.aspx"
         },
         {
+          "text": "買取検討リストを見る »",
+          "href": "/shop/customer/appraisal_guest.aspx"
+        },
+        {
           "text": "",
           "href": "/shop/purchase/list.aspx?search=%e6%a4%9c%e7%b4%a2"
         },
@@ -4440,14 +4444,10 @@
         {
           "text": "新着順+商品名",
           "href": "/shop/purchase/list.aspx?sort=6&search=%e6%a4%9c%e7%b4%a2&keyword=RICOH+GR+IV+Monochrome"
-        },
-        {
-          "text": "買取申し込み",
-          "href": "/shop/cart/cart.aspx?purchase_goods=C4549212311994"
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=RICOH%20GR%20IV%20Monochrome&search=検索",
-      "buyback_page_html_size": 201482,
+      "buyback_page_html_size": 198407,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -4704,10 +4704,10 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 302,
+      "rendered_html_size": 300,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.956bdc17.1786510955.7b59eeaf\n\nhttps://errors.edgesuite.net/18.956bdc17.1786510955.7b59eeaf",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.eb4f4317.1786597574.5309355\n\nhttps://errors.edgesuite.net/18.eb4f4317.1786597574.5309355",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -4720,8 +4720,8 @@
       "sales_price_sample": null,
       "buyback_link_candidates": [],
       "buyback_page_url": null,
-      "buyback_page_html_size": 302,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.956bdc17.1786510955.7b59eeaf\n\nhttps://errors.edgesuite.net/18.956bdc17.1786510955.7b59eeaf",
+      "buyback_page_html_size": 300,
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.eb4f4317.1786597574.5309355\n\nhttps://errors.edgesuite.net/18.eb4f4317.1786597574.5309355",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -4738,7 +4738,7 @@
       "price": 202000,
       "reason": "",
       "html_saved": true,
-      "html_size": 207795,
+      "html_size": 346474,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -4746,7 +4746,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 207795,
+      "rendered_html_size": 346474,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -4853,29 +4853,29 @@
         {
           "selector": "[class*='assess']",
           "text": "α7R IV ボディ ILCE-7RM4\n\t\t\t\n\t\t\t\tSONY\n\t\t\t\n\t\t\t\n\t\t\n\t\t\n\t\t\n\t\t\t\n\t\t\t\n\t",
-          "price": 116000,
+          "price": 117000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "α7R IV ボディ ILCE-7RM4 SONY 買取金額 新品同様 ￥116,000 良品 ￥115,000 下取は10%UP 新品同様 ￥127,600 良品 ￥126,500 買取申し込み 買取検討リストへ"
+          "item_text": "α7R IV ボディ ILCE-7RM4 SONY 買取金額 新品同様 ￥117,000 良品 ￥116,000 下取は10%UP 新品同様 ￥128,700 良品 ￥127,600 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥116,000\n\t\t\t\t\t\t\n",
-          "price": 116000,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥117,000\n\t\t\t\t\t\t\n",
+          "price": 117000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "α7R IV ボディ ILCE-7RM4 SONY 買取金額 新品同様 ￥116,000 良品 ￥115,000 下取は10%UP 新品同様 ￥127,600 良品 ￥126,500 買取申し込み 買取検討リストへ"
+          "item_text": "α7R IV ボディ ILCE-7RM4 SONY 買取金額 新品同様 ￥117,000 良品 ￥116,000 下取は10%UP 新品同様 ￥128,700 良品 ￥127,600 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥116,000\n\t\t\t\t\t\t\n",
-          "price": 116000,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥117,000\n\t\t\t\t\t\t\n",
+          "price": 117000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "α7R IV ボディ ILCE-7RM4 SONY 買取金額 新品同様 ￥116,000 良品 ￥115,000 下取は10%UP 新品同様 ￥127,600 良品 ￥126,500 買取申し込み 買取検討リストへ"
+          "item_text": "α7R IV ボディ ILCE-7RM4 SONY 買取金額 新品同様 ￥117,000 良品 ￥116,000 下取は10%UP 新品同様 ￥128,700 良品 ￥127,600 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "table td",
@@ -4961,6 +4961,10 @@
           "href": "/shop/purchase/list.aspx"
         },
         {
+          "text": "買取検討リストを見る »",
+          "href": "/shop/customer/appraisal_guest.aspx"
+        },
+        {
           "text": "",
           "href": "/shop/purchase/list.aspx?search=%e6%a4%9c%e7%b4%a2"
         },
@@ -4991,14 +4995,10 @@
         {
           "text": "新着順+商品名",
           "href": "/shop/purchase/list.aspx?sort=6&search=%e6%a4%9c%e7%b4%a2&keyword=SONY+%ce%b17R+V"
-        },
-        {
-          "text": "買取申し込み",
-          "href": "/shop/cart/cart.aspx?purchase_goods=C4548736182646"
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=SONY%20%CE%B17R%20V&search=検索",
-      "buyback_page_html_size": 207795,
+      "buyback_page_html_size": 346474,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -5085,29 +5085,29 @@
         {
           "selector": "[class*='assess']",
           "text": "α7R IV ボディ ILCE-7RM4\n\t\t\t\n\t\t\t\tSONY\n\t\t\t\n\t\t\t\n\t\t\n\t\t\n\t\t\n\t\t\t\n\t\t\t\n\t",
-          "price": 116000,
+          "price": 117000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "α7R IV ボディ ILCE-7RM4 SONY 買取金額 新品同様 ￥116,000 良品 ￥115,000 下取は10%UP 新品同様 ￥127,600 良品 ￥126,500 買取申し込み 買取検討リストへ"
+          "item_text": "α7R IV ボディ ILCE-7RM4 SONY 買取金額 新品同様 ￥117,000 良品 ￥116,000 下取は10%UP 新品同様 ￥128,700 良品 ￥127,600 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥116,000\n\t\t\t\t\t\t\n",
-          "price": 116000,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥117,000\n\t\t\t\t\t\t\n",
+          "price": 117000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "α7R IV ボディ ILCE-7RM4 SONY 買取金額 新品同様 ￥116,000 良品 ￥115,000 下取は10%UP 新品同様 ￥127,600 良品 ￥126,500 買取申し込み 買取検討リストへ"
+          "item_text": "α7R IV ボディ ILCE-7RM4 SONY 買取金額 新品同様 ￥117,000 良品 ￥116,000 下取は10%UP 新品同様 ￥128,700 良品 ￥127,600 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥116,000\n\t\t\t\t\t\t\n",
-          "price": 116000,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥117,000\n\t\t\t\t\t\t\n",
+          "price": 117000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "α7R IV ボディ ILCE-7RM4 SONY 買取金額 新品同様 ￥116,000 良品 ￥115,000 下取は10%UP 新品同様 ￥127,600 良品 ￥126,500 買取申し込み 買取検討リストへ"
+          "item_text": "α7R IV ボディ ILCE-7RM4 SONY 買取金額 新品同様 ￥117,000 良品 ￥116,000 下取は10%UP 新品同様 ￥128,700 良品 ￥127,600 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "table td",
@@ -5169,18 +5169,18 @@
           "near_buyback": true
         },
         {
-          "price": 116000,
-          "item": "α7R IV ボディ ILCE-7RM4 SONY 買取金額 新品同様 ￥116,000 良品 ￥115,000 下取は10%UP 新品同様",
+          "price": 117000,
+          "item": "α7R IV ボディ ILCE-7RM4 SONY 買取金額 新品同様 ￥117,000 良品 ￥116,000 下取は10%UP 新品同様",
           "near_buyback": true
         },
         {
-          "price": 116000,
-          "item": "α7R IV ボディ ILCE-7RM4 SONY 買取金額 新品同様 ￥116,000 良品 ￥115,000 下取は10%UP 新品同様",
+          "price": 117000,
+          "item": "α7R IV ボディ ILCE-7RM4 SONY 買取金額 新品同様 ￥117,000 良品 ￥116,000 下取は10%UP 新品同様",
           "near_buyback": true
         },
         {
-          "price": 116000,
-          "item": "α7R IV ボディ ILCE-7RM4 SONY 買取金額 新品同様 ￥116,000 良品 ￥115,000 下取は10%UP 新品同様",
+          "price": 117000,
+          "item": "α7R IV ボディ ILCE-7RM4 SONY 買取金額 新品同様 ￥117,000 良品 ￥116,000 下取は10%UP 新品同様",
           "near_buyback": true
         },
         {
@@ -5237,20 +5237,20 @@
           "rejection_reason": "model_mismatch"
         },
         {
-          "price": 116000,
-          "item": "α7R IV ボディ ILCE-7RM4 SONY 買取金額 新品同様 ￥116,000 良品 ￥115,000 下取は10%UP 新品同様",
+          "price": 117000,
+          "item": "α7R IV ボディ ILCE-7RM4 SONY 買取金額 新品同様 ￥117,000 良品 ￥116,000 下取は10%UP 新品同様",
           "near_buyback": true,
           "rejection_reason": "model_mismatch"
         },
         {
-          "price": 116000,
-          "item": "α7R IV ボディ ILCE-7RM4 SONY 買取金額 新品同様 ￥116,000 良品 ￥115,000 下取は10%UP 新品同様",
+          "price": 117000,
+          "item": "α7R IV ボディ ILCE-7RM4 SONY 買取金額 新品同様 ￥117,000 良品 ￥116,000 下取は10%UP 新品同様",
           "near_buyback": true,
           "rejection_reason": "model_mismatch"
         },
         {
-          "price": 116000,
-          "item": "α7R IV ボディ ILCE-7RM4 SONY 買取金額 新品同様 ￥116,000 良品 ￥115,000 下取は10%UP 新品同様",
+          "price": 117000,
+          "item": "α7R IV ボディ ILCE-7RM4 SONY 買取金額 新品同様 ￥117,000 良品 ￥116,000 下取は10%UP 新品同様",
           "near_buyback": true,
           "rejection_reason": "model_mismatch"
         },
@@ -5333,10 +5333,10 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 300,
+      "rendered_html_size": 302,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.8a6bdc17.1786511006.c23e20f\n\nhttps://errors.edgesuite.net/18.8a6bdc17.1786511006.c23e20f",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.f0f12417.1786597623.2bf3d1a1\n\nhttps://errors.edgesuite.net/18.f0f12417.1786597623.2bf3d1a1",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -5349,8 +5349,8 @@
       "sales_price_sample": null,
       "buyback_link_candidates": [],
       "buyback_page_url": null,
-      "buyback_page_html_size": 300,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.8a6bdc17.1786511006.c23e20f\n\nhttps://errors.edgesuite.net/18.8a6bdc17.1786511006.c23e20f",
+      "buyback_page_html_size": 302,
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.f0f12417.1786597623.2bf3d1a1\n\nhttps://errors.edgesuite.net/18.f0f12417.1786597623.2bf3d1a1",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -5367,7 +5367,7 @@
       "price": 590700,
       "reason": "",
       "html_saved": true,
-      "html_size": 201373,
+      "html_size": 201532,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -5375,7 +5375,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 201373,
+      "rendered_html_size": 201532,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -5590,6 +5590,10 @@
           "href": "/shop/purchase/list.aspx"
         },
         {
+          "text": "買取検討リストを見る »",
+          "href": "/shop/customer/appraisal_guest.aspx"
+        },
+        {
           "text": "",
           "href": "/shop/purchase/list.aspx?search=%e6%a4%9c%e7%b4%a2"
         },
@@ -5620,14 +5624,10 @@
         {
           "text": "新着順+商品名",
           "href": "/shop/purchase/list.aspx?sort=6&search=%e6%a4%9c%e7%b4%a2&keyword=SONY+%ce%b11+II"
-        },
-        {
-          "text": "買取申し込み",
-          "href": "/shop/cart/cart.aspx?purchase_goods=C4548736162075"
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=SONY%20%CE%B11%20II&search=検索",
-      "buyback_page_html_size": 201373,
+      "buyback_page_html_size": 201532,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -5887,7 +5887,7 @@
       "rendered_html_size": 302,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.956bdc17.1786511056.7b5b49e3\n\nhttps://errors.edgesuite.net/18.956bdc17.1786511056.7b5b49e3",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.e7f12417.1786597672.3929fd24\n\nhttps://errors.edgesuite.net/18.e7f12417.1786597672.3929fd24",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -5901,7 +5901,7 @@
       "buyback_link_candidates": [],
       "buyback_page_url": null,
       "buyback_page_html_size": 302,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.956bdc17.1786511056.7b5b49e3\n\nhttps://errors.edgesuite.net/18.956bdc17.1786511056.7b5b49e3",
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.e7f12417.1786597672.3929fd24\n\nhttps://errors.edgesuite.net/18.e7f12417.1786597672.3929fd24",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -5915,18 +5915,18 @@
       "shop_id": "src_fujiya",
       "status": "OK",
       "brand": "SONY",
-      "price": 242000,
+      "price": 265100,
       "reason": "",
       "html_saved": true,
-      "html_size": 203504,
+      "html_size": 201344,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
-      "extracted_price": 242000,
+      "extracted_price": 265100,
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 203504,
+      "rendered_html_size": 201344,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -5952,137 +5952,137 @@
         {
           "selector": "[class*='assess']",
           "text": "α7CR ボディ ブラック ILCE-7CRB\n\t\t\t\n\t\t\t\tSONY\n\t\t\t\n\t\t\t\n\t\t\n\t\t\n\t\t\n\t\t\t\n\t\t",
-          "price": 220000,
+          "price": 241000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "α7CR ボディ ブラック ILCE-7CRB SONY 買取金額 新品同様 ￥220,000 良品 ￥219,000 下取は10%UP 新品同様 ￥242,000 良品 ￥240,900 買取申し込み 買取検討リストへ"
+          "item_text": "α7CR ボディ ブラック ILCE-7CRB SONY 買取金額 新品同様 ￥241,000 良品 ￥240,000 下取は10%UP 新品同様 ￥265,100 良品 ￥264,000 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥220,000\n\t\t\t\t\t\t\n",
-          "price": 220000,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥241,000\n\t\t\t\t\t\t\n",
+          "price": 241000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "α7CR ボディ ブラック ILCE-7CRB SONY 買取金額 新品同様 ￥220,000 良品 ￥219,000 下取は10%UP 新品同様 ￥242,000 良品 ￥240,900 買取申し込み 買取検討リストへ"
+          "item_text": "α7CR ボディ ブラック ILCE-7CRB SONY 買取金額 新品同様 ￥241,000 良品 ￥240,000 下取は10%UP 新品同様 ￥265,100 良品 ￥264,000 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥220,000\n\t\t\t\t\t\t\n",
-          "price": 220000,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥241,000\n\t\t\t\t\t\t\n",
+          "price": 241000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "α7CR ボディ ブラック ILCE-7CRB SONY 買取金額 新品同様 ￥220,000 良品 ￥219,000 下取は10%UP 新品同様 ￥242,000 良品 ￥240,900 買取申し込み 買取検討リストへ"
+          "item_text": "α7CR ボディ ブラック ILCE-7CRB SONY 買取金額 新品同様 ￥241,000 良品 ￥240,000 下取は10%UP 新品同様 ￥265,100 良品 ￥264,000 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
           "text": "α7CR ボディ シルバー ILCE-7CRS\n\t\t\t\n\t\t\t\tSONY\n\t\t\t\n\t\t\t\n\t\t\n\t\t\n\t\t\n\t\t\t\n\t\t",
-          "price": 220000,
+          "price": 241000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "α7CR ボディ シルバー ILCE-7CRS SONY 買取金額 新品同様 ￥220,000 良品 ￥219,000 下取は10%UP 新品同様 ￥242,000 良品 ￥240,900 買取申し込み 買取検討リストへ"
+          "item_text": "α7CR ボディ シルバー ILCE-7CRS SONY 買取金額 新品同様 ￥241,000 良品 ￥240,000 下取は10%UP 新品同様 ￥265,100 良品 ￥264,000 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥220,000\n\t\t\t\t\t\t\n",
-          "price": 220000,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥241,000\n\t\t\t\t\t\t\n",
+          "price": 241000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "α7CR ボディ シルバー ILCE-7CRS SONY 買取金額 新品同様 ￥220,000 良品 ￥219,000 下取は10%UP 新品同様 ￥242,000 良品 ￥240,900 買取申し込み 買取検討リストへ"
+          "item_text": "α7CR ボディ シルバー ILCE-7CRS SONY 買取金額 新品同様 ￥241,000 良品 ￥240,000 下取は10%UP 新品同様 ￥265,100 良品 ￥264,000 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥220,000\n\t\t\t\t\t\t\n",
-          "price": 220000,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥241,000\n\t\t\t\t\t\t\n",
+          "price": 241000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "α7CR ボディ シルバー ILCE-7CRS SONY 買取金額 新品同様 ￥220,000 良品 ￥219,000 下取は10%UP 新品同様 ￥242,000 良品 ￥240,900 買取申し込み 買取検討リストへ"
+          "item_text": "α7CR ボディ シルバー ILCE-7CRS SONY 買取金額 新品同様 ￥241,000 良品 ￥240,000 下取は10%UP 新品同様 ￥265,100 良品 ￥264,000 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "table td",
-          "text": "￥242,000",
-          "price": 242000,
+          "text": "￥265,100",
+          "price": 265100,
           "near_kw": false,
           "near_buyback": true,
           "is_tradein": false,
-          "item_text": "α7CR ボディ ブラック ILCE-7CRB SONY 買取金額 新品同様 ￥220,000 良品 ￥219,000 下取は10%UP 新品同様 ￥242,000 良品 ￥240,900 買取申し込み 買取検討リストへ"
+          "item_text": "α7CR ボディ ブラック ILCE-7CRB SONY 買取金額 新品同様 ￥241,000 良品 ￥240,000 下取は10%UP 新品同様 ￥265,100 良品 ￥264,000 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "table td",
-          "text": "￥242,000",
-          "price": 242000,
+          "text": "￥265,100",
+          "price": 265100,
           "near_kw": false,
           "near_buyback": true,
           "is_tradein": false,
-          "item_text": "α7CR ボディ シルバー ILCE-7CRS SONY 買取金額 新品同様 ￥220,000 良品 ￥219,000 下取は10%UP 新品同様 ￥242,000 良品 ￥240,900 買取申し込み 買取検討リストへ"
+          "item_text": "α7CR ボディ シルバー ILCE-7CRS SONY 買取金額 新品同様 ￥241,000 良品 ￥240,000 下取は10%UP 新品同様 ￥265,100 良品 ￥264,000 買取申し込み 買取検討リストへ"
         },
         {
           "selector": ".price",
-          "text": "￥242,000",
-          "price": 242000,
+          "text": "￥265,100",
+          "price": 265100,
           "near_kw": false,
           "near_buyback": false,
           "is_tradein": false,
-          "item_text": "￥242,000"
+          "item_text": "￥265,100"
         },
         {
           "selector": ".price",
-          "text": "￥242,000",
-          "price": 242000,
+          "text": "￥265,100",
+          "price": 265100,
           "near_kw": false,
           "near_buyback": false,
           "is_tradein": false,
-          "item_text": "￥242,000"
+          "item_text": "￥265,100"
         },
         {
           "selector": "[class*='price']",
-          "text": "￥242,000",
-          "price": 242000,
+          "text": "￥265,100",
+          "price": 265100,
           "near_kw": false,
           "near_buyback": false,
           "is_tradein": false,
-          "item_text": "￥242,000"
+          "item_text": "￥265,100"
         },
         {
           "selector": "[class*='price']",
-          "text": "￥242,000",
-          "price": 242000,
+          "text": "￥265,100",
+          "price": 265100,
           "near_kw": false,
           "near_buyback": false,
           "is_tradein": false,
-          "item_text": "￥242,000"
+          "item_text": "￥265,100"
         },
         {
           "selector": "[class*='assess']",
-          "text": "新品同様\n\t\t\t\t\t\t\t￥242,000\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t良品\n\t",
-          "price": 242000,
+          "text": "新品同様\n\t\t\t\t\t\t\t￥265,100\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t良品\n\t",
+          "price": 265100,
           "near_kw": false,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "α7CR ボディ ブラック ILCE-7CRB SONY 買取金額 新品同様 ￥220,000 良品 ￥219,000 下取は10%UP 新品同様 ￥242,000 良品 ￥240,900 買取申し込み 買取検討リストへ"
+          "item_text": "α7CR ボディ ブラック ILCE-7CRB SONY 買取金額 新品同様 ￥241,000 良品 ￥240,000 下取は10%UP 新品同様 ￥265,100 良品 ￥264,000 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "￥242,000",
-          "price": 242000,
+          "text": "￥265,100",
+          "price": 265100,
           "near_kw": false,
           "near_buyback": false,
           "is_tradein": false,
-          "item_text": "￥242,000"
+          "item_text": "￥265,100"
         },
         {
           "selector": "[class*='assess']",
-          "text": "新品同様\n\t\t\t\t\t\t\t￥242,000\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t良品\n\t",
-          "price": 242000,
+          "text": "新品同様\n\t\t\t\t\t\t\t￥265,100\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t良品\n\t",
+          "price": 265100,
           "near_kw": false,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "α7CR ボディ シルバー ILCE-7CRS SONY 買取金額 新品同様 ￥220,000 良品 ￥219,000 下取は10%UP 新品同様 ￥242,000 良品 ￥240,900 買取申し込み 買取検討リストへ"
+          "item_text": "α7CR ボディ シルバー ILCE-7CRS SONY 買取金額 新品同様 ￥241,000 良品 ￥240,000 下取は10%UP 新品同様 ￥265,100 良品 ￥264,000 買取申し込み 買取検討リストへ"
         }
       ],
       "iframe_count": 1,
@@ -6094,7 +6094,7 @@
       },
       "best_keyword": "SONY α7CR",
       "has_buyback_context": true,
-      "sales_price_sample": 220000,
+      "sales_price_sample": 241000,
       "buyback_link_candidates": [
         {
           "text": "買取金額を調べる",
@@ -6141,6 +6141,10 @@
           "href": "/shop/purchase/list.aspx"
         },
         {
+          "text": "買取検討リストを見る »",
+          "href": "/shop/customer/appraisal_guest.aspx"
+        },
+        {
           "text": "",
           "href": "/shop/purchase/list.aspx?search=%e6%a4%9c%e7%b4%a2"
         },
@@ -6171,215 +6175,211 @@
         {
           "text": "新着順+商品名",
           "href": "/shop/purchase/list.aspx?sort=6&search=%e6%a4%9c%e7%b4%a2&keyword=SONY+%ce%b17CR"
-        },
-        {
-          "text": "買取申し込み",
-          "href": "/shop/cart/cart.aspx?purchase_goods=C4548736153936"
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=SONY%20%CE%B17CR&search=検索",
-      "buyback_page_html_size": 203504,
+      "buyback_page_html_size": 201344,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
           "selector": "[class*='assess']",
           "text": "α7CR ボディ ブラック ILCE-7CRB\n\t\t\t\n\t\t\t\tSONY\n\t\t\t\n\t\t\t\n\t\t\n\t\t\n\t\t\n\t\t\t\n\t\t",
-          "price": 220000,
+          "price": 241000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "α7CR ボディ ブラック ILCE-7CRB SONY 買取金額 新品同様 ￥220,000 良品 ￥219,000 下取は10%UP 新品同様 ￥242,000 良品 ￥240,900 買取申し込み 買取検討リストへ"
+          "item_text": "α7CR ボディ ブラック ILCE-7CRB SONY 買取金額 新品同様 ￥241,000 良品 ￥240,000 下取は10%UP 新品同様 ￥265,100 良品 ￥264,000 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥220,000\n\t\t\t\t\t\t\n",
-          "price": 220000,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥241,000\n\t\t\t\t\t\t\n",
+          "price": 241000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "α7CR ボディ ブラック ILCE-7CRB SONY 買取金額 新品同様 ￥220,000 良品 ￥219,000 下取は10%UP 新品同様 ￥242,000 良品 ￥240,900 買取申し込み 買取検討リストへ"
+          "item_text": "α7CR ボディ ブラック ILCE-7CRB SONY 買取金額 新品同様 ￥241,000 良品 ￥240,000 下取は10%UP 新品同様 ￥265,100 良品 ￥264,000 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥220,000\n\t\t\t\t\t\t\n",
-          "price": 220000,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥241,000\n\t\t\t\t\t\t\n",
+          "price": 241000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "α7CR ボディ ブラック ILCE-7CRB SONY 買取金額 新品同様 ￥220,000 良品 ￥219,000 下取は10%UP 新品同様 ￥242,000 良品 ￥240,900 買取申し込み 買取検討リストへ"
+          "item_text": "α7CR ボディ ブラック ILCE-7CRB SONY 買取金額 新品同様 ￥241,000 良品 ￥240,000 下取は10%UP 新品同様 ￥265,100 良品 ￥264,000 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
           "text": "α7CR ボディ シルバー ILCE-7CRS\n\t\t\t\n\t\t\t\tSONY\n\t\t\t\n\t\t\t\n\t\t\n\t\t\n\t\t\n\t\t\t\n\t\t",
-          "price": 220000,
+          "price": 241000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "α7CR ボディ シルバー ILCE-7CRS SONY 買取金額 新品同様 ￥220,000 良品 ￥219,000 下取は10%UP 新品同様 ￥242,000 良品 ￥240,900 買取申し込み 買取検討リストへ"
+          "item_text": "α7CR ボディ シルバー ILCE-7CRS SONY 買取金額 新品同様 ￥241,000 良品 ￥240,000 下取は10%UP 新品同様 ￥265,100 良品 ￥264,000 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥220,000\n\t\t\t\t\t\t\n",
-          "price": 220000,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥241,000\n\t\t\t\t\t\t\n",
+          "price": 241000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "α7CR ボディ シルバー ILCE-7CRS SONY 買取金額 新品同様 ￥220,000 良品 ￥219,000 下取は10%UP 新品同様 ￥242,000 良品 ￥240,900 買取申し込み 買取検討リストへ"
+          "item_text": "α7CR ボディ シルバー ILCE-7CRS SONY 買取金額 新品同様 ￥241,000 良品 ￥240,000 下取は10%UP 新品同様 ￥265,100 良品 ￥264,000 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥220,000\n\t\t\t\t\t\t\n",
-          "price": 220000,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥241,000\n\t\t\t\t\t\t\n",
+          "price": 241000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "α7CR ボディ シルバー ILCE-7CRS SONY 買取金額 新品同様 ￥220,000 良品 ￥219,000 下取は10%UP 新品同様 ￥242,000 良品 ￥240,900 買取申し込み 買取検討リストへ"
+          "item_text": "α7CR ボディ シルバー ILCE-7CRS SONY 買取金額 新品同様 ￥241,000 良品 ￥240,000 下取は10%UP 新品同様 ￥265,100 良品 ￥264,000 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "table td",
-          "text": "￥242,000",
-          "price": 242000,
+          "text": "￥265,100",
+          "price": 265100,
           "near_kw": false,
           "near_buyback": true,
           "is_tradein": false,
-          "item_text": "α7CR ボディ ブラック ILCE-7CRB SONY 買取金額 新品同様 ￥220,000 良品 ￥219,000 下取は10%UP 新品同様 ￥242,000 良品 ￥240,900 買取申し込み 買取検討リストへ"
+          "item_text": "α7CR ボディ ブラック ILCE-7CRB SONY 買取金額 新品同様 ￥241,000 良品 ￥240,000 下取は10%UP 新品同様 ￥265,100 良品 ￥264,000 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "table td",
-          "text": "￥242,000",
-          "price": 242000,
+          "text": "￥265,100",
+          "price": 265100,
           "near_kw": false,
           "near_buyback": true,
           "is_tradein": false,
-          "item_text": "α7CR ボディ シルバー ILCE-7CRS SONY 買取金額 新品同様 ￥220,000 良品 ￥219,000 下取は10%UP 新品同様 ￥242,000 良品 ￥240,900 買取申し込み 買取検討リストへ"
+          "item_text": "α7CR ボディ シルバー ILCE-7CRS SONY 買取金額 新品同様 ￥241,000 良品 ￥240,000 下取は10%UP 新品同様 ￥265,100 良品 ￥264,000 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "新品同様\n\t\t\t\t\t\t\t￥242,000\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t良品\n\t",
-          "price": 242000,
+          "text": "新品同様\n\t\t\t\t\t\t\t￥265,100\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t良品\n\t",
+          "price": 265100,
           "near_kw": false,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "α7CR ボディ ブラック ILCE-7CRB SONY 買取金額 新品同様 ￥220,000 良品 ￥219,000 下取は10%UP 新品同様 ￥242,000 良品 ￥240,900 買取申し込み 買取検討リストへ"
+          "item_text": "α7CR ボディ ブラック ILCE-7CRB SONY 買取金額 新品同様 ￥241,000 良品 ￥240,000 下取は10%UP 新品同様 ￥265,100 良品 ￥264,000 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "新品同様\n\t\t\t\t\t\t\t￥242,000\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t良品\n\t",
-          "price": 242000,
+          "text": "新品同様\n\t\t\t\t\t\t\t￥265,100\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t良品\n\t",
+          "price": 265100,
           "near_kw": false,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "α7CR ボディ シルバー ILCE-7CRS SONY 買取金額 新品同様 ￥220,000 良品 ￥219,000 下取は10%UP 新品同様 ￥242,000 良品 ￥240,900 買取申し込み 買取検討リストへ"
+          "item_text": "α7CR ボディ シルバー ILCE-7CRS SONY 買取金額 新品同様 ￥241,000 良品 ￥240,000 下取は10%UP 新品同様 ￥265,100 良品 ￥264,000 買取申し込み 買取検討リストへ"
         }
       ],
-      "buyback_extracted_price": 242000,
+      "buyback_extracted_price": 265100,
       "confidence": "high",
-      "matched_item": "α7CR ボディ ブラック ILCE-7CRB SONY 買取金額 新品同様 ￥220,000 良品 ￥219,000 下取は10%UP 新品同様 ￥242,000 良品 ￥240,900 買取申し込み 買取検討リストへ",
+      "matched_item": "α7CR ボディ ブラック ILCE-7CRB SONY 買取金額 新品同様 ￥241,000 良品 ￥240,000 下取は10%UP 新品同様 ￥265,100 良品 ￥264,000 買取申し込み 買取検討リストへ",
       "all_price_candidates": [
         {
-          "price": 220000,
-          "item": "α7CR ボディ ブラック ILCE-7CRB SONY 買取金額 新品同様 ￥220,000 良品 ￥219,000 下取は10%UP 新",
+          "price": 241000,
+          "item": "α7CR ボディ ブラック ILCE-7CRB SONY 買取金額 新品同様 ￥241,000 良品 ￥240,000 下取は10%UP 新",
           "near_buyback": true
         },
         {
-          "price": 220000,
-          "item": "α7CR ボディ ブラック ILCE-7CRB SONY 買取金額 新品同様 ￥220,000 良品 ￥219,000 下取は10%UP 新",
+          "price": 241000,
+          "item": "α7CR ボディ ブラック ILCE-7CRB SONY 買取金額 新品同様 ￥241,000 良品 ￥240,000 下取は10%UP 新",
           "near_buyback": true
         },
         {
-          "price": 220000,
-          "item": "α7CR ボディ ブラック ILCE-7CRB SONY 買取金額 新品同様 ￥220,000 良品 ￥219,000 下取は10%UP 新",
+          "price": 241000,
+          "item": "α7CR ボディ ブラック ILCE-7CRB SONY 買取金額 新品同様 ￥241,000 良品 ￥240,000 下取は10%UP 新",
           "near_buyback": true
         },
         {
-          "price": 220000,
-          "item": "α7CR ボディ シルバー ILCE-7CRS SONY 買取金額 新品同様 ￥220,000 良品 ￥219,000 下取は10%UP 新",
+          "price": 241000,
+          "item": "α7CR ボディ シルバー ILCE-7CRS SONY 買取金額 新品同様 ￥241,000 良品 ￥240,000 下取は10%UP 新",
           "near_buyback": true
         },
         {
-          "price": 220000,
-          "item": "α7CR ボディ シルバー ILCE-7CRS SONY 買取金額 新品同様 ￥220,000 良品 ￥219,000 下取は10%UP 新",
+          "price": 241000,
+          "item": "α7CR ボディ シルバー ILCE-7CRS SONY 買取金額 新品同様 ￥241,000 良品 ￥240,000 下取は10%UP 新",
           "near_buyback": true
         },
         {
-          "price": 220000,
-          "item": "α7CR ボディ シルバー ILCE-7CRS SONY 買取金額 新品同様 ￥220,000 良品 ￥219,000 下取は10%UP 新",
+          "price": 241000,
+          "item": "α7CR ボディ シルバー ILCE-7CRS SONY 買取金額 新品同様 ￥241,000 良品 ￥240,000 下取は10%UP 新",
           "near_buyback": true
         },
         {
-          "price": 242000,
-          "item": "α7CR ボディ ブラック ILCE-7CRB SONY 買取金額 新品同様 ￥220,000 良品 ￥219,000 下取は10%UP 新",
+          "price": 265100,
+          "item": "α7CR ボディ ブラック ILCE-7CRB SONY 買取金額 新品同様 ￥241,000 良品 ￥240,000 下取は10%UP 新",
           "near_buyback": true
         },
         {
-          "price": 242000,
-          "item": "α7CR ボディ シルバー ILCE-7CRS SONY 買取金額 新品同様 ￥220,000 良品 ￥219,000 下取は10%UP 新",
+          "price": 265100,
+          "item": "α7CR ボディ シルバー ILCE-7CRS SONY 買取金額 新品同様 ￥241,000 良品 ￥240,000 下取は10%UP 新",
           "near_buyback": true
         },
         {
-          "price": 242000,
-          "item": "￥242,000",
+          "price": 265100,
+          "item": "￥265,100",
           "near_buyback": false
         },
         {
-          "price": 242000,
-          "item": "￥242,000",
+          "price": 265100,
+          "item": "￥265,100",
           "near_buyback": false
         },
         {
-          "price": 242000,
-          "item": "￥242,000",
+          "price": 265100,
+          "item": "￥265,100",
           "near_buyback": false
         },
         {
-          "price": 242000,
-          "item": "￥242,000",
+          "price": 265100,
+          "item": "￥265,100",
           "near_buyback": false
         },
         {
-          "price": 242000,
-          "item": "α7CR ボディ ブラック ILCE-7CRB SONY 買取金額 新品同様 ￥220,000 良品 ￥219,000 下取は10%UP 新",
+          "price": 265100,
+          "item": "α7CR ボディ ブラック ILCE-7CRB SONY 買取金額 新品同様 ￥241,000 良品 ￥240,000 下取は10%UP 新",
           "near_buyback": true
         },
         {
-          "price": 242000,
-          "item": "￥242,000",
+          "price": 265100,
+          "item": "￥265,100",
           "near_buyback": false
         },
         {
-          "price": 242000,
-          "item": "α7CR ボディ シルバー ILCE-7CRS SONY 買取金額 新品同様 ￥220,000 良品 ￥219,000 下取は10%UP 新",
+          "price": 265100,
+          "item": "α7CR ボディ シルバー ILCE-7CRS SONY 買取金額 新品同様 ￥241,000 良品 ￥240,000 下取は10%UP 新",
           "near_buyback": true
         }
       ],
       "rejected_candidates": [
         {
-          "price": 242000,
-          "item": "￥242,000",
+          "price": 265100,
+          "item": "￥265,100",
           "near_buyback": false,
           "rejection_reason": "not_buyback_context"
         },
         {
-          "price": 242000,
-          "item": "￥242,000",
+          "price": 265100,
+          "item": "￥265,100",
           "near_buyback": false,
           "rejection_reason": "not_buyback_context"
         },
         {
-          "price": 242000,
-          "item": "￥242,000",
+          "price": 265100,
+          "item": "￥265,100",
           "near_buyback": false,
           "rejection_reason": "not_buyback_context"
         },
         {
-          "price": 242000,
-          "item": "￥242,000",
+          "price": 265100,
+          "item": "￥265,100",
           "near_buyback": false,
           "rejection_reason": "not_buyback_context"
         },
         {
-          "price": 242000,
-          "item": "￥242,000",
+          "price": 265100,
+          "item": "￥265,100",
           "near_buyback": false,
           "rejection_reason": "not_buyback_context"
         }
@@ -6444,10 +6444,10 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 302,
+      "rendered_html_size": 300,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.c569dc17.1786511106.675c36dd\n\nhttps://errors.edgesuite.net/18.c569dc17.1786511106.675c36dd",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.eb4f4317.1786597720.53359f3\n\nhttps://errors.edgesuite.net/18.eb4f4317.1786597720.53359f3",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -6460,8 +6460,8 @@
       "sales_price_sample": null,
       "buyback_link_candidates": [],
       "buyback_page_url": null,
-      "buyback_page_html_size": 302,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.c569dc17.1786511106.675c36dd\n\nhttps://errors.edgesuite.net/18.c569dc17.1786511106.675c36dd",
+      "buyback_page_html_size": 300,
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.eb4f4317.1786597720.53359f3\n\nhttps://errors.edgesuite.net/18.eb4f4317.1786597720.53359f3",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -6478,7 +6478,7 @@
       "price": 327000,
       "reason": "",
       "html_saved": true,
-      "html_size": 216169,
+      "html_size": 214152,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -6486,7 +6486,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 216169,
+      "rendered_html_size": 214152,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -6701,6 +6701,10 @@
           "href": "/shop/purchase/list.aspx"
         },
         {
+          "text": "買取検討リストを見る »",
+          "href": "/shop/customer/appraisal_guest.aspx"
+        },
+        {
           "text": "",
           "href": "/shop/purchase/list.aspx?search=%e6%a4%9c%e7%b4%a2"
         },
@@ -6731,14 +6735,10 @@
         {
           "text": "新着順+商品名",
           "href": "/shop/purchase/list.aspx?sort=6&search=%e6%a4%9c%e7%b4%a2&keyword=SONY+FX3"
-        },
-        {
-          "text": "買取申し込み",
-          "href": "/shop/cart/cart.aspx?purchase_goods=C4548736123205"
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=SONY%20FX3&search=検索",
-      "buyback_page_html_size": 216169,
+      "buyback_page_html_size": 214152,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -7055,10 +7055,10 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 300,
+      "rendered_html_size": 302,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.daed1502.1786511157.b19a2db\n\nhttps://errors.edgesuite.net/18.daed1502.1786511157.b19a2db",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.e7f12417.1786597770.3934daff\n\nhttps://errors.edgesuite.net/18.e7f12417.1786597770.3934daff",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -7071,8 +7071,8 @@
       "sales_price_sample": null,
       "buyback_link_candidates": [],
       "buyback_page_url": null,
-      "buyback_page_html_size": 300,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.daed1502.1786511157.b19a2db\n\nhttps://errors.edgesuite.net/18.daed1502.1786511157.b19a2db",
+      "buyback_page_html_size": 302,
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.e7f12417.1786597770.3934daff\n\nhttps://errors.edgesuite.net/18.e7f12417.1786597770.3934daff",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -7089,7 +7089,7 @@
       "price": 562100,
       "reason": "",
       "html_saved": true,
-      "html_size": 205785,
+      "html_size": 203809,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -7097,7 +7097,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 205785,
+      "rendered_html_size": 203809,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -7312,6 +7312,10 @@
           "href": "/shop/purchase/list.aspx"
         },
         {
+          "text": "買取検討リストを見る »",
+          "href": "/shop/customer/appraisal_guest.aspx"
+        },
+        {
           "text": "",
           "href": "/shop/purchase/list.aspx?search=%e6%a4%9c%e7%b4%a2"
         },
@@ -7342,14 +7346,10 @@
         {
           "text": "新着順+商品名",
           "href": "/shop/purchase/list.aspx?sort=6&search=%e6%a4%9c%e7%b4%a2&keyword=Canon+EOS+R5+Mark+II"
-        },
-        {
-          "text": "買取申し込み",
-          "href": "/shop/cart/cart.aspx?purchase_goods=C4549292229141"
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=Canon%20EOS%20R5%20Mark%20II&search=検索",
-      "buyback_page_html_size": 205785,
+      "buyback_page_html_size": 203809,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -7624,7 +7624,7 @@
       "rendered_html_size": 302,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.4f0f3417.1786511209.4429c643\n\nhttps://errors.edgesuite.net/18.4f0f3417.1786511209.4429c643",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.e7f12417.1786597819.393a799c\n\nhttps://errors.edgesuite.net/18.e7f12417.1786597819.393a799c",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -7638,7 +7638,7 @@
       "buyback_link_candidates": [],
       "buyback_page_url": null,
       "buyback_page_html_size": 302,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.4f0f3417.1786511209.4429c643\n\nhttps://errors.edgesuite.net/18.4f0f3417.1786511209.4429c643",
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.e7f12417.1786597819.393a799c\n\nhttps://errors.edgesuite.net/18.e7f12417.1786597819.393a799c",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -7655,7 +7655,7 @@
       "price": 309000,
       "reason": "",
       "html_saved": true,
-      "html_size": 214411,
+      "html_size": 212430,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -7663,7 +7663,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 214411,
+      "rendered_html_size": 212430,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -7878,6 +7878,10 @@
           "href": "/shop/purchase/list.aspx"
         },
         {
+          "text": "買取検討リストを見る »",
+          "href": "/shop/customer/appraisal_guest.aspx"
+        },
+        {
           "text": "",
           "href": "/shop/purchase/list.aspx?search=%e6%a4%9c%e7%b4%a2"
         },
@@ -7908,14 +7912,10 @@
         {
           "text": "新着順+商品名",
           "href": "/shop/purchase/list.aspx?sort=6&search=%e6%a4%9c%e7%b4%a2&keyword=Canon+EOS+R6+Mark+II"
-        },
-        {
-          "text": "買取申し込み",
-          "href": "/shop/cart/cart.aspx?purchase_goods=C4549292246285"
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=Canon%20EOS%20R6%20Mark%20II&search=検索",
-      "buyback_page_html_size": 214411,
+      "buyback_page_html_size": 212430,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -8250,10 +8250,10 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 300,
+      "rendered_html_size": 302,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.daed1502.1786511259.b1c8537\n\nhttps://errors.edgesuite.net/18.daed1502.1786511259.b1c8537",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.e7f12417.1786597868.394005ad\n\nhttps://errors.edgesuite.net/18.e7f12417.1786597868.394005ad",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -8266,8 +8266,8 @@
       "sales_price_sample": null,
       "buyback_link_candidates": [],
       "buyback_page_url": null,
-      "buyback_page_html_size": 300,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.daed1502.1786511259.b1c8537\n\nhttps://errors.edgesuite.net/18.daed1502.1786511259.b1c8537",
+      "buyback_page_html_size": 302,
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.e7f12417.1786597868.394005ad\n\nhttps://errors.edgesuite.net/18.e7f12417.1786597868.394005ad",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -8284,7 +8284,7 @@
       "price": 305800,
       "reason": "",
       "html_saved": true,
-      "html_size": 201280,
+      "html_size": 199168,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -8292,7 +8292,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 201280,
+      "rendered_html_size": 199168,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -8507,6 +8507,10 @@
           "href": "/shop/purchase/list.aspx"
         },
         {
+          "text": "買取検討リストを見る »",
+          "href": "/shop/customer/appraisal_guest.aspx"
+        },
+        {
           "text": "",
           "href": "/shop/purchase/list.aspx?search=%e6%a4%9c%e7%b4%a2"
         },
@@ -8537,14 +8541,10 @@
         {
           "text": "新着順+商品名",
           "href": "/shop/purchase/list.aspx?sort=6&search=%e6%a4%9c%e7%b4%a2&keyword=Canon+EOS+R3"
-        },
-        {
-          "text": "買取申し込み",
-          "href": "/shop/cart/cart.aspx?purchase_goods=C4549292181661"
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=Canon%20EOS%20R3&search=検索",
-      "buyback_page_html_size": 201280,
+      "buyback_page_html_size": 199168,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -8804,7 +8804,7 @@
       "rendered_html_size": 302,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.d469dc17.1786511310.6c52c242\n\nhttps://errors.edgesuite.net/18.d469dc17.1786511310.6c52c242",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.f0f12417.1786597918.2c12eb26\n\nhttps://errors.edgesuite.net/18.f0f12417.1786597918.2c12eb26",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -8818,7 +8818,7 @@
       "buyback_link_candidates": [],
       "buyback_page_url": null,
       "buyback_page_html_size": 302,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.d469dc17.1786511310.6c52c242\n\nhttps://errors.edgesuite.net/18.d469dc17.1786511310.6c52c242",
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.f0f12417.1786597918.2c12eb26\n\nhttps://errors.edgesuite.net/18.f0f12417.1786597918.2c12eb26",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -8835,7 +8835,7 @@
       "price": 317900,
       "reason": "",
       "html_saved": true,
-      "html_size": 201223,
+      "html_size": 199270,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -8843,7 +8843,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 201223,
+      "rendered_html_size": 199270,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -9058,6 +9058,10 @@
           "href": "/shop/purchase/list.aspx"
         },
         {
+          "text": "買取検討リストを見る »",
+          "href": "/shop/customer/appraisal_guest.aspx"
+        },
+        {
           "text": "",
           "href": "/shop/purchase/list.aspx?search=%e6%a4%9c%e7%b4%a2"
         },
@@ -9088,14 +9092,10 @@
         {
           "text": "新着順+商品名",
           "href": "/shop/purchase/list.aspx?sort=6&search=%e6%a4%9c%e7%b4%a2&keyword=Nikon+Z8"
-        },
-        {
-          "text": "買取申し込み",
-          "href": "/shop/cart/cart.aspx?purchase_goods=C4960759909947"
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=Nikon%20Z8&search=検索",
-      "buyback_page_html_size": 201223,
+      "buyback_page_html_size": 199270,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -9355,7 +9355,7 @@
       "rendered_html_size": 300,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.c8ed1502.1786511359.d708aa4\n\nhttps://errors.edgesuite.net/18.c8ed1502.1786511359.d708aa4",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.c44f4317.1786597967.4459757\n\nhttps://errors.edgesuite.net/18.c44f4317.1786597967.4459757",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -9369,7 +9369,7 @@
       "buyback_link_candidates": [],
       "buyback_page_url": null,
       "buyback_page_html_size": 300,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.c8ed1502.1786511359.d708aa4\n\nhttps://errors.edgesuite.net/18.c8ed1502.1786511359.d708aa4",
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.c44f4317.1786597967.4459757\n\nhttps://errors.edgesuite.net/18.c44f4317.1786597967.4459757",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -9386,7 +9386,7 @@
       "price": 158000,
       "reason": "",
       "html_saved": true,
-      "html_size": 306009,
+      "html_size": 304340,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -9394,7 +9394,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 306009,
+      "rendered_html_size": 304340,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -9609,6 +9609,10 @@
           "href": "/shop/purchase/list.aspx"
         },
         {
+          "text": "買取検討リストを見る »",
+          "href": "/shop/customer/appraisal_guest.aspx"
+        },
+        {
           "text": "",
           "href": "/shop/purchase/list.aspx?search=%e6%a4%9c%e7%b4%a2"
         },
@@ -9639,14 +9643,10 @@
         {
           "text": "新着順+商品名",
           "href": "/shop/purchase/list.aspx?sort=6&search=%e6%a4%9c%e7%b4%a2&keyword=Nikon+Zf"
-        },
-        {
-          "text": "2",
-          "href": "/shop/purchase/list.aspx?p=2&search=%e6%a4%9c%e7%b4%a2&keyword=Nikon+Zf&ps=50"
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=Nikon%20Zf&search=検索",
-      "buyback_page_html_size": 306009,
+      "buyback_page_html_size": 304340,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -9963,10 +9963,10 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 300,
+      "rendered_html_size": 302,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.daed1502.1786511410.b20d239\n\nhttps://errors.edgesuite.net/18.daed1502.1786511410.b20d239",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.f0f12417.1786598017.2c1f5c47\n\nhttps://errors.edgesuite.net/18.f0f12417.1786598017.2c1f5c47",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -9979,8 +9979,8 @@
       "sales_price_sample": null,
       "buyback_link_candidates": [],
       "buyback_page_url": null,
-      "buyback_page_html_size": 300,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.daed1502.1786511410.b20d239\n\nhttps://errors.edgesuite.net/18.daed1502.1786511410.b20d239",
+      "buyback_page_html_size": 302,
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.f0f12417.1786598017.2c1f5c47\n\nhttps://errors.edgesuite.net/18.f0f12417.1786598017.2c1f5c47",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -9997,7 +9997,7 @@
       "price": 376200,
       "reason": "",
       "html_saved": true,
-      "html_size": 203495,
+      "html_size": 201497,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -10005,7 +10005,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 203495,
+      "rendered_html_size": 201497,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -10220,6 +10220,10 @@
           "href": "/shop/purchase/list.aspx"
         },
         {
+          "text": "買取検討リストを見る »",
+          "href": "/shop/customer/appraisal_guest.aspx"
+        },
+        {
           "text": "",
           "href": "/shop/purchase/list.aspx?search=%e6%a4%9c%e7%b4%a2"
         },
@@ -10250,14 +10254,10 @@
         {
           "text": "新着順+商品名",
           "href": "/shop/purchase/list.aspx?sort=6&search=%e6%a4%9c%e7%b4%a2&keyword=Nikon+Z9"
-        },
-        {
-          "text": "買取申し込み",
-          "href": "/shop/cart/cart.aspx?purchase_goods=C4960759906168"
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=Nikon%20Z9&search=検索",
-      "buyback_page_html_size": 203495,
+      "buyback_page_html_size": 201497,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -10517,7 +10517,7 @@
       "rendered_html_size": 302,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.490f3417.1786511460.649c8bf0\n\nhttps://errors.edgesuite.net/18.490f3417.1786511460.649c8bf0",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.4760d017.1786598065.116c4391\n\nhttps://errors.edgesuite.net/18.4760d017.1786598065.116c4391",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -10531,7 +10531,7 @@
       "buyback_link_candidates": [],
       "buyback_page_url": null,
       "buyback_page_html_size": 302,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.490f3417.1786511460.649c8bf0\n\nhttps://errors.edgesuite.net/18.490f3417.1786511460.649c8bf0",
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.4760d017.1786598065.116c4391\n\nhttps://errors.edgesuite.net/18.4760d017.1786598065.116c4391",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -10548,7 +10548,7 @@
       "price": 841000,
       "reason": "",
       "html_saved": true,
-      "html_size": 215970,
+      "html_size": 216033,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -10556,7 +10556,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 215970,
+      "rendered_html_size": 216033,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -10771,6 +10771,10 @@
           "href": "/shop/purchase/list.aspx"
         },
         {
+          "text": "買取検討リストを見る »",
+          "href": "/shop/customer/appraisal_guest.aspx"
+        },
+        {
           "text": "",
           "href": "/shop/purchase/list.aspx?search=%e6%a4%9c%e7%b4%a2"
         },
@@ -10801,14 +10805,10 @@
         {
           "text": "新着順+商品名",
           "href": "/shop/purchase/list.aspx?sort=6&search=%e6%a4%9c%e7%b4%a2&keyword=Leica+Q3"
-        },
-        {
-          "text": "買取申し込み",
-          "href": "/shop/cart/cart.aspx?purchase_goods=C4548182192114"
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=Leica%20Q3&search=検索",
-      "buyback_page_html_size": 215970,
+      "buyback_page_html_size": 216033,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -11091,7 +11091,7 @@
       "rendered_html_size": 302,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.c569dc17.1786511509.67641462\n\nhttps://errors.edgesuite.net/18.c569dc17.1786511509.67641462",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.2f4e4317.1786598115.198eb8d7\n\nhttps://errors.edgesuite.net/18.2f4e4317.1786598115.198eb8d7",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -11105,7 +11105,7 @@
       "buyback_link_candidates": [],
       "buyback_page_url": null,
       "buyback_page_html_size": 302,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.c569dc17.1786511509.67641462\n\nhttps://errors.edgesuite.net/18.c569dc17.1786511509.67641462",
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.2f4e4317.1786598115.198eb8d7\n\nhttps://errors.edgesuite.net/18.2f4e4317.1786598115.198eb8d7",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -11122,7 +11122,7 @@
       "price": 960000,
       "reason": "",
       "html_saved": true,
-      "html_size": 238246,
+      "html_size": 237934,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -11130,7 +11130,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 238246,
+      "rendered_html_size": 237934,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -11345,6 +11345,10 @@
           "href": "/shop/purchase/list.aspx"
         },
         {
+          "text": "買取検討リストを見る »",
+          "href": "/shop/customer/appraisal_guest.aspx"
+        },
+        {
           "text": "",
           "href": "/shop/purchase/list.aspx?search=%e6%a4%9c%e7%b4%a2"
         },
@@ -11375,14 +11379,10 @@
         {
           "text": "新着順+商品名",
           "href": "/shop/purchase/list.aspx?sort=6&search=%e6%a4%9c%e7%b4%a2&keyword=Leica+M11"
-        },
-        {
-          "text": "買取申し込み",
-          "href": "/shop/cart/cart.aspx?purchase_goods=C4548182202318"
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=Leica%20M11&search=検索",
-      "buyback_page_html_size": 238246,
+      "buyback_page_html_size": 237934,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {

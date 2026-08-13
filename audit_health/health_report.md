@@ -1,12 +1,12 @@
 # Profit Health Dashboard
 
-生成: 2026-08-12 14:50 JST
+生成: 2026-08-13 14:54 JST
 
-## Health Score: **60.2 / 100**
+## Health Score: **60.1 / 100**
 
 | 観点 | 配点 | スコア |
 |---|---|---|
-| Data Quality | 35 | 16.3 |
+| Data Quality | 35 | 16.2 |
 | Profit Discovery | 25 | 20.0 |
 | Source Health | 20 | 14.1 |
 | Link Quality | 10 | 4.7 |
@@ -14,7 +14,7 @@
 
 ## Data Quality KPI
 
-- 総観測 241 / usable 83
+- 総観測 242 / usable 82
 - stale 118（49%） / 0円 32（13%）
 - item_url率 47% / search 23%
 - manual 53% / API 0% / HTML 1%
@@ -26,12 +26,11 @@
 
 ## 前日比較
 
-- main route: 0 → 1
+- main route: 1 → 1
 - reference: 2 → 2
-- stale率: 48% → 49%
+- stale率: 49% → 49%
 - 0円率: 13% → 13%
 - item_url率: 47% → 47%
-- 🆕 新規main: prod_ps5_pro
 
 ## 異常検知
 
@@ -44,7 +43,6 @@
 - item_url率 47% (<50%)
 
 ### ℹ️ Info
-- 新規 main: prod_ps5_pro
 - 検証済み利益ルート 1件 / 最大 +¥13,401
 
 ## ソース別品質
@@ -76,7 +74,7 @@
 | 駿河屋 | 2 | 0% | 0 | 2 | 0% | 100% |
 | TSUTAYA | 2 | 0% | 0 | 2 | 0% | 100% |
 | 楽天市場新品 | 2 | 100% | 2 | 0 | 100% | 0% |
-| Amazon JP (新品出品) | 1 | 100% | 0 | 0 | 0% | 100% |
+| Amazon JP (新品出品) | 2 | 100% | 0 | 0 | 0% | 100% |
 
 ## 改善提案 TOP10
 

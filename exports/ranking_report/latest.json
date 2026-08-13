@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-12 14:50 JST",
+  "generated_at": "2026-08-13 14:54 JST",
   "route_type_beginner": "primary_to_secondary",
   "top_camera_buyback_opportunities": [
     {
@@ -54,6 +54,20 @@
       "reference_source": "retail_concept",
       "diff_vs_official": -57900,
       "matched_item": "EOS R5 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥511,000 良品 ￥510,000 下取は10%UP 新品同様 ￥562,100 良品 ￥561,000 買取申し込み 買取",
+      "confidence": "high",
+      "source": "auto_scraped",
+      "age_days": 0.0
+    },
+    {
+      "product_id": "prod_a7cr",
+      "product_name": "SONY α7CR",
+      "shop_name": "フジヤカメラ",
+      "buyback_price": 265100,
+      "official_price": 330000,
+      "reference_price": 330000,
+      "reference_source": "retail_concept",
+      "diff_vs_official": -64900,
+      "matched_item": "α7CR ボディ ブラック ILCE-7CRB SONY 買取金額 新品同様 ￥241,000 良品 ￥240,000 下取は10%UP 新品同様 ￥265,100 良品 ￥264,000 買取申し込み 買取検討リストへ",
       "confidence": "high",
       "source": "auto_scraped",
       "age_days": 0.0
@@ -124,20 +138,6 @@
       "reference_source": "official",
       "diff_vs_official": -86400,
       "matched_item": "RICOH GR IV Monochrome RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新品同様 ￥213,400 良品 ￥212,300 買取申し込み 買取検討リストへ",
-      "confidence": "high",
-      "source": "auto_scraped",
-      "age_days": 0.0
-    },
-    {
-      "product_id": "prod_a7cr",
-      "product_name": "SONY α7CR",
-      "shop_name": "フジヤカメラ",
-      "buyback_price": 242000,
-      "official_price": 330000,
-      "reference_price": 330000,
-      "reference_source": "retail_concept",
-      "diff_vs_official": -88000,
-      "matched_item": "α7CR ボディ ブラック ILCE-7CRB SONY 買取金額 新品同様 ￥220,000 良品 ￥219,000 下取は10%UP 新品同様 ￥242,000 良品 ￥240,900 買取申し込み 買取検討リストへ",
       "confidence": "high",
       "source": "auto_scraped",
       "age_days": 0.0

@@ -1,7 +1,7 @@
 # AI Opportunities Engine — Today's Opportunities
 
-生成: 2026-08-12 14:50 JST
-Health Score: 60.2（データ品質は標準的です） / main 1 / reference 2
+生成: 2026-08-13 14:54 JST
+Health Score: 60.1（データ品質は標準的です） / main 1 / reference 2
 
 ## 今日やること
 
@@ -29,8 +29,8 @@ Health Score: 60.2（データ品質は標準的です） / main 1 / reference 2
 - タイムライン: 候補 → **監視** → 成立 → 通知
 - 期待: 利益 ¥57,609 / ROI 15.3% / confidence low
 - 保有期間: 1ヶ月
-- Why: reference route（海外sold更新で成立見込み）; ROIが8%以上（15%）; 価格 21日前（要更新）
-- Risk: stale（21日前・main計算除外水準） / 海外依存（為替・関税・輸送） / 送料・決済手数料が大きい / 同条件件数不足（再現性低） / アクセサリー混在に注意（本体判定要確認）
+- Why: reference route（海外sold更新で成立見込み）; ROIが8%以上（15%）; 価格 22日前（要更新）
+- Risk: stale（22日前・main計算除外水準） / 海外依存（為替・関税・輸送） / 送料・決済手数料が大きい / 同条件件数不足（再現性低） / アクセサリー混在に注意（本体判定要確認）
 
 ### #2 iPhone 17 Pro 256GB SIMフリー — ⏳ WAIT（Score 34/100・成立確率 30%）
 - ★☆☆☆☆
@@ -43,8 +43,8 @@ Health Score: 60.2（データ品質は標準的です） / main 1 / reference 2
 - タイムライン: 候補 → **監視** → 成立 → 通知
 - 期待: 利益 ¥21,780 / ROI 9.8% / confidence low
 - 保有期間: 1ヶ月
-- Why: reference route（海外sold更新で成立見込み）; ROIが8%以上（10%）; 価格 21日前（要更新）
-- Risk: stale（21日前・main計算除外水準） / 海外依存（為替・関税・輸送） / 送料・決済手数料が大きい / 同条件件数不足（再現性低）
+- Why: reference route（海外sold更新で成立見込み）; ROIが8%以上（10%）; 価格 22日前（要更新）
+- Risk: stale（22日前・main計算除外水準） / 海外依存（為替・関税・輸送） / 送料・決済手数料が大きい / 同条件件数不足（再現性低）
 
 ### #3 PlayStation 5 Pro — ⏭ SKIP（Score 29/100・成立確率 40%）
 - ★☆☆☆☆

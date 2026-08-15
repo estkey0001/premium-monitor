@@ -1,6 +1,6 @@
 # Collector Quality Report
 
-生成日時: 2026-08-14 13:42:57 UTC+09:00
+生成日時: 2026-08-15 12:32:21 UTC+09:00
 
 ## サマリ
 
@@ -97,7 +97,7 @@
 
 | 理由 | 件数 |
 |------|------|
-| product_not_listed | 8 |
+| product_not_listed | 7 |
 | rate_limited_429 | 6 |
 | http_403 | 6 |
 | site_blocked | 6 |
@@ -105,6 +105,7 @@
 | http_404 | 4 |
 | not_supported | 4 |
 | service_unavailable | 2 |
+| timeout | 1 |
 
 ## 取得失敗一覧 (40件)
 
@@ -141,7 +142,7 @@
 | switch2 | tsutaya | SKIP | not_supported |
 | ps5_pro | geo | FAILED | product_not_listed |
 | ps5_pro | iosys | FAILED | http_403 |
-| ps5_pro | mobile_ichiban | FAILED | product_not_listed |
+| ps5_pro | mobile_ichiban | FAILED | timeout |
 | ps5_pro | janpara | FAILED | rate_limited_429 |
 | ps5_pro | hardoff | FAILED | http_404 |
 | ps5_pro | dosupara | FAILED | http_404 |

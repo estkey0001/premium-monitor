@@ -1,4 +1,4 @@
-# データ取得品質レポート（2026-08-14 14:52 JST）
+# データ取得品質レポート（2026-08-15 13:41 JST）
 
 ## 取得成功率
 - 全対象店舗数: 16
@@ -11,7 +11,7 @@
 - 今回成功率: 27.3%
 - 変化: 0.0pt（横ばい）
 - 7日移動平均: 28.8%
-- 主要失敗理由 TOP5: product_not_listed 8, rate_limited_429 6, http_403 6, site_blocked 6, price_not_found 4
+- 主要失敗理由 TOP5: product_not_listed 7, rate_limited_429 6, http_403 6, site_blocked 6, price_not_found 4
 
 ## 店舗別成功率（低い順）
 - 2ndstreet（optional）: 0%（OK 0/失敗 4・price_not_found）
@@ -36,25 +36,25 @@
 - iphone17pm512: 37.5%
 
 ## 連続失敗店舗（2回以上）
-- 2ndstreet: 103回連続
-- bookoff: 103回連続
-- dosupara: 103回連続
-- geo_mobile: 103回連続
-- hardoff: 103回連続
-- janpara: 103回連続
-- pasoko: 103回連続
-- sofmap: 103回連続
-- surugaya: 103回連続
-- tsutaya: 103回連続
-- iosys: 36回連続
-- mobile_ichiban: 3回連続
+- 2ndstreet: 104回連続
+- bookoff: 104回連続
+- dosupara: 104回連続
+- geo_mobile: 104回連続
+- hardoff: 104回連続
+- janpara: 104回連続
+- pasoko: 104回連続
+- sofmap: 104回連続
+- surugaya: 104回連続
+- tsutaya: 104回連続
+- iosys: 37回連続
+- mobile_ichiban: 4回連続
 
 ## 改善優先順位（required店舗）
 1. iosys（失敗6 / http_403）
 2. mobile_ichiban（失敗5 / product_not_listed）
 
 ## 失敗理由（内訳）
-- product_not_listed: 8件
+- product_not_listed: 7件
 - rate_limited_429: 6件
 - http_403: 6件
 - site_blocked: 6件
@@ -62,6 +62,7 @@
 - http_404: 4件
 - not_supported: 4件
 - service_unavailable: 2件
+- timeout: 1件
 
 ## 有効データ量（新品・未使用 / 14日以内 / price>0）
 - 有効買取データを持つ商品数: 26

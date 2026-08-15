@@ -1881,6 +1881,56 @@
       "realized_profit": null,
       "realized_roi": null,
       "hold_days": null
+    },
+    {
+      "exec_id": "2026-08-15_prod_x100vi_WAIT",
+      "date": "2026-08-15",
+      "product_id": "prod_x100vi",
+      "product": "FUJIFILM X100VI",
+      "action": "WAIT",
+      "opportunity_score": 41,
+      "predicted_probability": 30,
+      "predicted_net": 57468,
+      "category": "camera",
+      "maker": "FUJIFILM",
+      "status": "CANCELLED",
+      "realized_profit": 0,
+      "realized_roi": 0.0,
+      "hold_days": 0,
+      "closed_date": "2026-08-15",
+      "note": "sample: eBay sold未更新のため実行見送り"
+    },
+    {
+      "exec_id": "2026-08-15_prod_iphone17pro_256_WAIT",
+      "date": "2026-08-15",
+      "product_id": "prod_iphone17pro_256",
+      "product": "iPhone 17 Pro 256GB SIMフリー",
+      "action": "WAIT",
+      "opportunity_score": 34,
+      "predicted_probability": 30,
+      "predicted_net": 21701,
+      "category": "iphone",
+      "maker": "Apple",
+      "status": "OPEN",
+      "realized_profit": null,
+      "realized_roi": null,
+      "hold_days": null
+    },
+    {
+      "exec_id": "2026-08-15_prod_ps5_pro_SKIP",
+      "date": "2026-08-15",
+      "product_id": "prod_ps5_pro",
+      "product": "PlayStation 5 Pro",
+      "action": "SKIP",
+      "opportunity_score": 30,
+      "predicted_probability": 40,
+      "predicted_net": 13900,
+      "category": "game_console",
+      "maker": "Sony",
+      "status": "OPEN",
+      "realized_profit": null,
+      "realized_roi": null,
+      "hold_days": null
     }
   ]
 }

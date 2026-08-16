@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-08-15 13:41 JST",
-  "health_score": 60.0,
+  "generated_at": "2026-08-16 13:49 JST",
+  "health_score": 60.2,
   "health_note": "データ品質は標準的です",
   "main_route_count": 1,
   "reference_route_count": 2,
@@ -13,7 +13,7 @@
     "product": "FUJIFILM X100VI",
     "buy_now": "WATCH",
     "opportunity_score": 41,
-    "reason": "FUJIFILM X100VI: WATCH。海外更新後見込み 利益¥57,468/ROI15%/Score41"
+    "reason": "FUJIFILM X100VI: WATCH。海外更新後見込み 利益¥57,439/ROI15%/Score41"
   },
   "todays_opportunities": [
     {
@@ -34,12 +34,12 @@
       "confidence": "low",
       "action": "WAIT",
       "action_reason": "eBay sold 更新（EBAY_APP_ID 設定）後に BUY 候補へ昇格します。海外価格の更新待ちです。",
-      "alert_threshold": 513684,
-      "expected_buy_price": 513684,
-      "expected_sell_price": 563824,
+      "alert_threshold": 513650,
+      "expected_buy_price": 513650,
+      "expected_sell_price": 563788,
       "buy_conditions": {
-        "buy": "ヤフオク (新品/未使用落札) ≤ ¥513,684",
-        "sell": "src_ebay ≥ ¥563,824",
+        "buy": "ヤフオク (新品/未使用落札) ≤ ¥513,650",
+        "sell": "src_ebay ≥ ¥563,788",
         "roi": "ROI ≥ 8%"
       },
       "next_update": "次回自動更新: 明日 12:00頃（通常24時間以内）",
@@ -58,28 +58,28 @@
         ],
         "current": "監視"
       },
-      "summary": "★★☆☆☆\n海外売却で成立見込みの参考ルートです。\neBay更新後の想定利益 ¥57,468 / ROI 15%。\n現在は海外価格の更新待ちです。",
+      "summary": "★★☆☆☆\n海外売却で成立見込みの参考ルートです。\neBay更新後の想定利益 ¥57,439 / ROI 15%。\n現在は海外価格の更新待ちです。",
       "why": [
         "reference route（海外sold更新で成立見込み）",
         "ROIが8%以上（15%）",
-        "価格 24日前（要更新）"
+        "価格 25日前（要更新）"
       ],
       "risks": [
-        "stale（24日前・main計算除外水準）",
+        "stale（25日前・main計算除外水準）",
         "海外依存（為替・関税・輸送）",
         "送料・決済手数料が大きい",
         "同条件件数不足（再現性低）",
         "アクセサリー混在に注意（本体判定要確認）"
       ],
       "holding_period": "1ヶ月",
-      "net_profit": 57468,
-      "roi": 0.1523,
+      "net_profit": 57439,
+      "roi": 0.1522,
       "reproducibility_score": 30,
       "buy_source": "ヤフオク (新品/未使用落札)",
       "buy_price": 377273,
       "sell_source": "src_ebay",
-      "sell_price": 563824,
-      "age_days": 24.2,
+      "sell_price": 563788,
+      "age_days": 25.2,
       "priority": 1
     },
     {
@@ -100,12 +100,12 @@
       "confidence": "low",
       "action": "WAIT",
       "action_reason": "eBay sold 更新（EBAY_APP_ID 設定）後に BUY 候補へ昇格します。海外価格の更新待ちです。",
-      "alert_threshold": 289503,
-      "expected_buy_price": 289503,
-      "expected_sell_price": 318595,
+      "alert_threshold": 289485,
+      "expected_buy_price": 289485,
+      "expected_sell_price": 318575,
       "buy_conditions": {
-        "buy": "ヤフオク (新品/未使用落札) ≤ ¥289,503",
-        "sell": "src_ebay ≥ ¥318,595",
+        "buy": "ヤフオク (新品/未使用落札) ≤ ¥289,485",
+        "sell": "src_ebay ≥ ¥318,575",
         "roi": "ROI ≥ 8%"
       },
       "next_update": "次回自動更新: 明日 12:00頃（通常24時間以内）",
@@ -124,27 +124,27 @@
         ],
         "current": "監視"
       },
-      "summary": "★☆☆☆☆\n海外売却で成立見込みの参考ルートです。\neBay更新後の想定利益 ¥21,701 / ROI 10%。\n現在は海外価格の更新待ちです。",
+      "summary": "★☆☆☆☆\n海外売却で成立見込みの参考ルートです。\neBay更新後の想定利益 ¥21,685 / ROI 10%。\n現在は海外価格の更新待ちです。",
       "why": [
         "reference route（海外sold更新で成立見込み）",
         "ROIが8%以上（10%）",
-        "価格 24日前（要更新）"
+        "価格 25日前（要更新）"
       ],
       "risks": [
-        "stale（24日前・main計算除外水準）",
+        "stale（25日前・main計算除外水準）",
         "海外依存（為替・関税・輸送）",
         "送料・決済手数料が大きい",
         "同条件件数不足（再現性低）"
       ],
       "holding_period": "1ヶ月",
-      "net_profit": 21701,
-      "roi": 0.098,
+      "net_profit": 21685,
+      "roi": 0.0979,
       "reproducibility_score": 30,
       "buy_source": "ヤフオク (新品/未使用落札)",
       "buy_price": 221529,
       "sell_source": "src_ebay",
-      "sell_price": 318595,
-      "age_days": 24.2,
+      "sell_price": 318575,
+      "age_days": 25.2,
       "priority": 2
     },
     {
@@ -189,7 +189,7 @@
         ],
         "current": "候補"
       },
-      "summary": "★☆☆☆☆\n国内で成立している利益ルートです。\n利益 ¥13,900 / ROI 9%。\n買取商店買取が高水準です。",
+      "summary": "★☆☆☆☆\n国内で成立している利益ルートです。\n利益 ¥13,901 / ROI 9%。\n買取商店買取が高水準です。",
       "why": [
         "main route 成立（国内完結で利益）",
         "ROIが8%以上（9%）",
@@ -202,11 +202,11 @@
         "同条件件数不足（再現性低）"
       ],
       "holding_period": "数日",
-      "net_profit": 13900,
+      "net_profit": 13901,
       "roi": 0.0897,
       "reproducibility_score": 45,
       "buy_source": "ヤフオク (新品/未使用落札)",
-      "buy_price": 155000,
+      "buy_price": 154999,
       "sell_source": "買取商店",
       "sell_price": 173500,
       "age_days": 0,

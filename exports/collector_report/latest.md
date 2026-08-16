@@ -1,6 +1,6 @@
 # Collector Quality Report
 
-生成日時: 2026-08-15 12:32:21 UTC+09:00
+生成日時: 2026-08-16 12:40:42 UTC+09:00
 
 ## サマリ
 
@@ -44,10 +44,10 @@
 
 | 商品 | 成功店舗数 | 目標 | 達成 | 平均価格 | 最低価格 | 最高価格 | suspicious |
 |------|-----------|------|------|---------|---------|---------|-----------|
-| iphone17pm256 | 3 | 3 | ✅ | ¥192,100 | ¥184,800 | ¥196,500 | — |
-| iphone17pm512 | 3 | 3 | ✅ | ¥221,917 | ¥215,250 | ¥226,000 | — |
-| iphone17pro256 | 3 | 3 | ✅ | ¥177,000 | ¥168,000 | ¥184,000 | — |
-| iphone17pro512 | 3 | 3 | ✅ | ¥207,633 | ¥197,400 | ¥213,000 | — |
+| iphone17pm256 | 3 | 3 | ✅ | ¥192,600 | ¥184,800 | ¥196,500 | — |
+| iphone17pm512 | 3 | 3 | ✅ | ¥222,417 | ¥215,250 | ¥226,000 | — |
+| iphone17pro256 | 3 | 3 | ✅ | ¥177,333 | ¥168,000 | ¥185,000 | — |
+| iphone17pro512 | 3 | 3 | ✅ | ¥207,800 | ¥197,400 | ¥213,000 | — |
 | ps5_pro | 1 | 2 | ❌ | ¥173,500 | ¥173,500 | ¥173,500 | ⚠️ |
 | switch2 | 2 | 2 | ✅ | ¥44,250 | ¥38,000 | ¥50,500 | — |
 
@@ -97,7 +97,7 @@
 
 | 理由 | 件数 |
 |------|------|
-| product_not_listed | 7 |
+| product_not_listed | 8 |
 | rate_limited_429 | 6 |
 | http_403 | 6 |
 | site_blocked | 6 |
@@ -105,7 +105,6 @@
 | http_404 | 4 |
 | not_supported | 4 |
 | service_unavailable | 2 |
-| timeout | 1 |
 
 ## 取得失敗一覧 (40件)
 
@@ -142,7 +141,7 @@
 | switch2 | tsutaya | SKIP | not_supported |
 | ps5_pro | geo | FAILED | product_not_listed |
 | ps5_pro | iosys | FAILED | http_403 |
-| ps5_pro | mobile_ichiban | FAILED | timeout |
+| ps5_pro | mobile_ichiban | FAILED | product_not_listed |
 | ps5_pro | janpara | FAILED | rate_limited_429 |
 | ps5_pro | hardoff | FAILED | http_404 |
 | ps5_pro | dosupara | FAILED | http_404 |

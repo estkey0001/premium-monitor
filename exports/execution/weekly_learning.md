@@ -1,14 +1,14 @@
-# Weekly Learning Report — 2026-08-18
+# Weekly Learning Report — 2026-08-19
 
-- 実行成功率: 33.8%（CLOSED 65 / 成功 22）
-- 予測精度: 予測 39.4769% vs 実績 33.8%（誤差 5.7pt）
-- 学習: prob係数 0.856 / score係数 1.024（信頼度 high）
+- 実行成功率: 33.3%（CLOSED 66 / 成功 22）
+- 予測精度: 予測 39.3333% vs 実績 33.3%（誤差 6.0pt）
+- 学習: prob係数 0.847 / score係数 1.029（信頼度 high）
 
 ## 今週学んだこと TOP10
 
 1. カテゴリ「camera」の成功率が最も高い（42%）
 2. RICOH GR IIIx は約3日で売却成立（回転が速い）
-3. 成立確率の予測誤差は 5.7pt（概ね良好）
+3. 成立確率の予測誤差は 6.0pt（概ね良好）
 4. Nintendo Switch 2 は薄利/送料負けで失敗（国内薄利ルートは要注意）
 5. Fujiya 買取は日次で更新され鮮度が高い（sell側の信頼性◎）
 6. 海外sold（eBay）は EBAY_APP_ID 未設定で stale・main昇格の最大ボトルネック

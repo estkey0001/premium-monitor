@@ -1,4 +1,4 @@
-# データ取得品質レポート（2026-08-19 13:48 JST）
+# データ取得品質レポート（2026-08-20 13:46 JST）
 
 ## 取得成功率
 - 全対象店舗数: 16
@@ -7,11 +7,11 @@
 - ジョブ成功率: 25.5%（OK 14 / 失敗 37 / SKIP 4 / 計 55）
 
 ## 前回比較
-- 前回成功率: 32.7%
+- 前回成功率: 25.5%
 - 今回成功率: 25.5%
-- 変化: -7.2pt（悪化）
-- 7日移動平均: 28.6%
-- 主要失敗理由 TOP5: rate_limited_429 6, http_403 6, site_blocked 6, product_not_listed 5, price_not_found 4
+- 変化: 0.0pt（横ばい）
+- 7日移動平均: 28.3%
+- 主要失敗理由 TOP5: http_403 6, site_blocked 6, rate_limited_429 5, price_not_found 5, product_not_listed 5
 
 ## 店舗別成功率（低い順）
 - 2ndstreet（optional）: 0%（OK 0/失敗 4・price_not_found）
@@ -36,28 +36,29 @@
 - iphone17pm256: 37.5%
 
 ## 連続失敗店舗（2回以上）
-- 2ndstreet: 108回連続
-- bookoff: 108回連続
-- dosupara: 108回連続
-- geo_mobile: 108回連続
-- hardoff: 108回連続
-- janpara: 108回連続
-- pasoko: 108回連続
-- sofmap: 108回連続
-- surugaya: 108回連続
-- tsutaya: 108回連続
-- iosys: 41回連続
+- 2ndstreet: 109回連続
+- bookoff: 109回連続
+- dosupara: 109回連続
+- geo_mobile: 109回連続
+- hardoff: 109回連続
+- janpara: 109回連続
+- pasoko: 109回連続
+- sofmap: 109回連続
+- surugaya: 109回連続
+- tsutaya: 109回連続
+- iosys: 42回連続
+- netoff: 2回連続
 
 ## 改善優先順位（required店舗）
 1. iosys（失敗6 / http_403）
 2. mobile_ichiban（失敗2 / product_not_listed）
 
 ## 失敗理由（内訳）
-- rate_limited_429: 6件
 - http_403: 6件
 - site_blocked: 6件
+- rate_limited_429: 5件
+- price_not_found: 5件
 - product_not_listed: 5件
-- price_not_found: 4件
 - connection_error: 4件
 - http_404: 4件
 - not_supported: 4件

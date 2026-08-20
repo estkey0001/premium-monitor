@@ -1,5 +1,5 @@
 {
-  "date": "2026-08-19",
+  "date": "2026-08-20",
   "health_score": 59.3,
   "stale_rate": 0.4836,
   "main_products": [
@@ -13,8 +13,8 @@
     "prod_x100vi": {
       "action": "WAIT",
       "buy_now": "WATCH",
-      "roi": 0.1549,
-      "net_profit": 58454,
+      "roi": 0.1472,
+      "net_profit": 55526,
       "buy_price": 377273,
       "product": "FUJIFILM X100VI",
       "buy_source": "ヤフオク (新品/未使用落札)",
@@ -23,8 +23,8 @@
     "prod_iphone17pro_256": {
       "action": "WAIT",
       "buy_now": "WATCH",
-      "roi": 0.1005,
-      "net_profit": 22255,
+      "roi": 0.093,
+      "net_profit": 20608,
       "buy_price": 221529,
       "product": "iPhone 17 Pro 256GB SIMフリー",
       "buy_source": "ヤフオク (新品/未使用落札)",
@@ -33,8 +33,8 @@
     "prod_ps5_pro": {
       "action": "SKIP",
       "buy_now": "PASS",
-      "roi": 0.0948,
-      "net_profit": 14701,
+      "roi": 0.0994,
+      "net_profit": 15401,
       "buy_price": 154999,
       "product": "PlayStation 5 Pro",
       "buy_source": "ヤフオク (新品/未使用落札)",

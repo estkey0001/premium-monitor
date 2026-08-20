@@ -9,7 +9,7 @@
   ✅ [line_cta_off] LINE CTA非表示（正常）
   ✅ [telegram_cta_off] Telegram CTA非表示（正常）
   ✅ [analytics_empty] GA ID未設定 → GAスニペット非出力（正常）
-  ✅ [today_date] 今日の日付 2026-08-19 あり
+  ✅ [today_date] 今日の日付 2026-08-20 あり
   ✅ [price_exists] 価格表記あり
   ✅ [disclaimer] 免責事項あり
   ✅ [data_track] data-track属性あり
@@ -154,7 +154,7 @@
   ✅ [freshness_yoko_format] 古い価格に「要更新 / N日前」形式が使われている
   ✅ [deal_card_no_saishin_label] updated-row に旧「最終更新：」表記なし（価格確認：に統一済み）
   ✅ [stale_banner_date_mismatch] #144 「本日の価格データ未更新」が HTML に存在しない（OK: トップ警告抑制済み）
-  ✅ [csv_today_observed_at] manual_buyback_prices.csv に本日(2026-08-19)の observed_at あり
+  ✅ [csv_today_observed_at] manual_buyback_prices.csv に本日(2026-08-20)の observed_at あり
   ✅ [iphone17_price_fetched] iPhone 17 Pro 系の買取価格が1件以上取得されている
   ✅ [mobile_ichiban_price] モバイル一番の買取価格（price > 0）が存在する
   ✅ [fetch_failed_display] fetch_failed 行があり、LP上に「取得失敗 / 要確認」表示がある
@@ -185,13 +185,13 @@
   ✅ [ipad_not_in_other] iPad は「その他」欄に混入していない
   ✅ [airpods_not_in_smartphone] AirPods はスマートフォン欄に混入していない
   ⚠️ [applewatch_in_wearable_section] Apple Watch がウェアラブル欄に見つからない（データなし or genre設定を確認）
-  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-08-19T12:39:28+09:00）
+  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-08-20T12:39:06+09:00）
   ⚠️ [suspicious_price_format] suspicious_prices 形式OK（suspicious_price 1件あり — 確認推奨）
   ✅ [fetch_failed_has_reason] fetch_failed 41件すべてに reason あり
   ✅ [collector_report_html_exists] docs/collector_report.html 存在
   ✅ [collector_report_link_in_lp] LP内に collector_report.html へのリンクがある
   ✅ [fetch_failed_report_link] 取得失敗37件 / suspicious1件 → 警告バーが表示されている
-  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 10件存在する: ['iphone17pm256', 'iphone17pro256', 'iphone17pm512', 'iphone17pro512']
+  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 10件存在する: ['iphone17pro512', 'iphone17pm512', 'iphone17pro256', 'iphone17pm256']
   ✅ [beginner_page_auto_scraped_exists] 自動取得 OK 14件 / total 55件
   ✅ [shop_name_no_vertical_wrap] shop-name-col に word-break:keep-all が設定されている
   ✅ [iphone17pro256_price_scraped] iPhone 17 Pro 256GB の価格取得成功: ['mobile_ichiban', 'kaitori_shouten', 'kaitori_itchome']
@@ -618,7 +618,7 @@
   ✅ [health_anomalies_shown] #611 異常一覧（Critical/Warning/Info）が表示される
   ✅ [health_improvements_shown] #612 改善TOP10 が表示される（9件）
   ✅ [health_diff_shown] #613 前日比較が表示される
-  ✅ [health_critical_classification] #614 異常が Critical/Warning/Info に分類される（C3/W3/I1）
+  ✅ [health_critical_classification] #614 異常が Critical/Warning/Info に分類される（C3/W1/I1）
   ✅ [ai_dashboard_exists] #615 ai_opportunities.json と LP の AI Dashboard が存在する（4件）
   ✅ [ai_opportunity_score] #616 Opportunity Score（0-100）が全候補に付与される
   ✅ [ai_buy_decision] #617 BUY/WATCH/PASS 判定が付与される
@@ -632,8 +632,8 @@
   ✅ [ai_expected_prices] #625 Expected Buy/Sell Price が付与・表示される
   ✅ [ai_today_tasks] #626 今日やること（Today Tasks）が表示される（4件）
   ✅ [ai_probability_forecast_trend] #627 成立確率/次回更新予測/価格トレンドが付与される
-  ✅ [notification_events_exists] #628 notifications/latest.json が存在する（events 1）
-  ✅ [notification_history] #629 notifications/history/ に履歴が保存される（29日分）
+  ✅ [notification_events_exists] #628 notifications/latest.json が存在する（events 0）
+  ✅ [notification_history] #629 notifications/history/ に履歴が保存される（30日分）
   ✅ [notification_suppression] #630 通知抑制（24h再送禁止・ROI+5%例外）が実装される
   ✅ [notification_priority] #631 通知に priority（Critical/High/Medium/Low）が付与される
   ✅ [lp_latest_notifications] #632 最新通知が LP（AI Dashboard）に表示される
@@ -649,7 +649,7 @@
   ✅ [capital_expected_profit] #642 Expected Profit / Expected ROI が表示される
   ✅ [capital_concentration_caps] #643 集中リスク上限（商品30%等）が守られ account_id 構造で保存される
   ✅ [execution_dashboard] #644 Execution Dashboard と execution_history.json が存在する
-  ✅ [execution_accuracy] #645 予測/通知/配分の精度が算出される（予測誤差 6.0pt）
+  ✅ [execution_accuracy] #645 予測/通知/配分の精度が算出される（予測誤差 6.4pt）
   ✅ [execution_learning_coeff] #646 補正係数（score/probability/risk）が学習される（利益ロジック不変）
   ✅ [execution_insights] #647 Insights（今週学んだこと TOP10）が表示される
   ✅ [execution_weekly_report] #648 週次 Learning Report（weekly_learning.md）が生成される

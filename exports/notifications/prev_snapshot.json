@@ -1,7 +1,7 @@
 {
-  "date": "2026-08-20",
-  "health_score": 59.3,
-  "stale_rate": 0.4836,
+  "date": "2026-08-21",
+  "health_score": 59.7,
+  "stale_rate": 0.4777,
   "main_products": [
     "prod_ps5_pro"
   ],
@@ -13,32 +13,32 @@
     "prod_x100vi": {
       "action": "WAIT",
       "buy_now": "WATCH",
-      "roi": 0.1472,
-      "net_profit": 55526,
+      "roi": 0.1493,
+      "net_profit": 56314,
       "buy_price": 377273,
       "product": "FUJIFILM X100VI",
-      "buy_source": "ヤフオク (新品/未使用落札)",
-      "kind": "reference"
-    },
-    "prod_iphone17pro_256": {
-      "action": "WAIT",
-      "buy_now": "WATCH",
-      "roi": 0.093,
-      "net_profit": 20608,
-      "buy_price": 221529,
-      "product": "iPhone 17 Pro 256GB SIMフリー",
       "buy_source": "ヤフオク (新品/未使用落札)",
       "kind": "reference"
     },
     "prod_ps5_pro": {
       "action": "SKIP",
       "buy_now": "PASS",
-      "roi": 0.0994,
-      "net_profit": 15401,
+      "roi": 0.1039,
+      "net_profit": 16101,
       "buy_price": 154999,
       "product": "PlayStation 5 Pro",
       "buy_source": "ヤフオク (新品/未使用落札)",
       "kind": "main"
+    },
+    "prod_iphone17pro_256": {
+      "action": "WAIT",
+      "buy_now": "WATCH",
+      "roi": 0.095,
+      "net_profit": 21052,
+      "buy_price": 221529,
+      "product": "iPhone 17 Pro 256GB SIMフリー",
+      "buy_source": "ヤフオク (新品/未使用落札)",
+      "kind": "reference"
     }
   }
 }

@@ -1,22 +1,26 @@
 {
-  "generated_at": "2026-08-20T13:46:52+09:00",
+  "generated_at": "2026-08-21T13:58:37+09:00",
   "collection": {
     "total_shops": 16,
     "shops_with_success": 4,
     "shops_all_failed": 10,
     "total_jobs": 55,
-    "ok_jobs": 14,
-    "failed_jobs": 37,
+    "ok_jobs": 15,
+    "failed_jobs": 36,
     "skip_jobs": 4,
-    "success_rate_pct": 25.5
+    "success_rate_pct": 27.3
   },
   "comparison": {
     "prev_success_rate_pct": 25.5,
-    "current_success_rate_pct": 25.5,
-    "delta_pct": 0.0,
-    "trend": "横ばい",
+    "current_success_rate_pct": 27.3,
+    "delta_pct": 1.8,
+    "trend": "改善",
     "moving_avg_7d_pct": 28.3,
     "top5_failure_reasons": [
+      {
+        "reason": "rate_limited_429",
+        "count": 6
+      },
       {
         "reason": "http_403",
         "count": 6
@@ -26,20 +30,20 @@
         "count": 6
       },
       {
-        "reason": "rate_limited_429",
+        "reason": "timeout",
         "count": 5
       },
       {
         "reason": "price_not_found",
-        "count": 5
-      },
-      {
-        "reason": "product_not_listed",
-        "count": 5
+        "count": 4
       }
     ]
   },
   "failure_reasons": [
+    {
+      "reason": "rate_limited_429",
+      "count": 6
+    },
     {
       "reason": "http_403",
       "count": 6
@@ -49,19 +53,11 @@
       "count": 6
     },
     {
-      "reason": "rate_limited_429",
+      "reason": "timeout",
       "count": 5
     },
     {
       "reason": "price_not_found",
-      "count": 5
-    },
-    {
-      "reason": "product_not_listed",
-      "count": 5
-    },
-    {
-      "reason": "connection_error",
       "count": 4
     },
     {
@@ -71,6 +67,10 @@
     {
       "reason": "not_supported",
       "count": 4
+    },
+    {
+      "reason": "product_not_listed",
+      "count": 3
     },
     {
       "reason": "service_unavailable",
@@ -101,20 +101,20 @@
       "prod_q3": 1,
       "prod_m11": 1,
       "prod_iphone17pro_256": 3,
-      "prod_iphone17pro_512": 2,
+      "prod_iphone17pro_512": 3,
       "prod_iphone17pm_256": 3,
-      "prod_iphone17pm_512": 2,
+      "prod_iphone17pm_512": 3,
       "prod_switch2": 2,
-      "prod_ps5_pro": 2
+      "prod_ps5_pro": 1
     }
   },
   "ranking_usable": {
     "beginner": 5,
-    "pro": 2,
+    "pro": 1,
     "reason_if_empty": null
   },
   "sedori_usable": {
-    "routes": 2,
+    "routes": 1,
     "reason_if_empty": null
   },
   "overseas": {
@@ -182,12 +182,12 @@
       "optional": true
     },
     {
-      "shop_id": "netoff",
+      "shop_id": "mobile_ichiban",
       "ok": 0,
-      "failed": 4,
+      "failed": 5,
       "success_rate_pct": 0,
-      "top_reason": "connection_error",
-      "optional": true
+      "top_reason": "timeout",
+      "optional": false
     },
     {
       "shop_id": "pasoko",
@@ -230,14 +230,6 @@
       "optional": true
     },
     {
-      "shop_id": "mobile_ichiban",
-      "ok": 3,
-      "failed": 2,
-      "success_rate_pct": 60,
-      "top_reason": "product_not_listed",
-      "optional": false
-    },
-    {
       "shop_id": "kaitori_itchome",
       "ok": 4,
       "failed": 0,
@@ -252,64 +244,68 @@
       "success_rate_pct": 100,
       "top_reason": "—",
       "optional": false
+    },
+    {
+      "shop_id": "netoff",
+      "ok": 4,
+      "failed": 0,
+      "success_rate_pct": 100,
+      "top_reason": "—",
+      "optional": true
     }
   ],
   "product_success_rates": {
     "iphone17pro256": 37.5,
-    "iphone17pro512": 25.0,
+    "iphone17pro512": 37.5,
     "iphone17pm256": 37.5,
-    "iphone17pm512": 25.0,
+    "iphone17pm512": 37.5,
     "switch2": 22.2,
-    "ps5_pro": 20.0
+    "ps5_pro": 10.0
   },
   "consecutive_failed_shops": [
     {
       "shop_id": "2ndstreet",
-      "consecutive_failures": 109
+      "consecutive_failures": 110
     },
     {
       "shop_id": "bookoff",
-      "consecutive_failures": 109
+      "consecutive_failures": 110
     },
     {
       "shop_id": "dosupara",
-      "consecutive_failures": 109
+      "consecutive_failures": 110
     },
     {
       "shop_id": "geo_mobile",
-      "consecutive_failures": 109
+      "consecutive_failures": 110
     },
     {
       "shop_id": "hardoff",
-      "consecutive_failures": 109
+      "consecutive_failures": 110
     },
     {
       "shop_id": "janpara",
-      "consecutive_failures": 109
+      "consecutive_failures": 110
     },
     {
       "shop_id": "pasoko",
-      "consecutive_failures": 109
+      "consecutive_failures": 110
     },
     {
       "shop_id": "sofmap",
-      "consecutive_failures": 109
+      "consecutive_failures": 110
     },
     {
       "shop_id": "surugaya",
-      "consecutive_failures": 109
+      "consecutive_failures": 110
     },
     {
       "shop_id": "tsutaya",
-      "consecutive_failures": 109
+      "consecutive_failures": 110
     },
     {
       "shop_id": "iosys",
-      "consecutive_failures": 42
-    },
-    {
-      "shop_id": "netoff",
-      "consecutive_failures": 2
+      "consecutive_failures": 43
     }
   ],
   "improvement_priority": [
@@ -321,8 +317,8 @@
     },
     {
       "shop_id": "mobile_ichiban",
-      "failed": 2,
-      "top_reason": "product_not_listed",
+      "failed": 5,
+      "top_reason": "timeout",
       "priority": "required"
     }
   ],

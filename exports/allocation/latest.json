@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-21 13:58 JST",
+  "generated_at": "2026-08-22 13:43 JST",
   "account_id": "default",
   "cash_reserve_ratio": 0.2,
   "concentration_caps": {
@@ -13,19 +13,38 @@
       "product_id": "prod_x100vi",
       "action": "WAIT",
       "kind": "reference",
-      "buy_price": 377273,
-      "net_profit": 56314,
-      "roi": 0.1493,
+      "buy_price": 361819,
+      "net_profit": 72568,
+      "roi": 0.2006,
       "success_probability": 30,
       "opportunity_score": 41,
       "reproducibility_score": 30,
       "holding_period": "1ヶ月",
-      "expected_value": 16894,
-      "capital_efficiency": 0.0448,
+      "expected_value": 21770,
+      "capital_efficiency": 0.0602,
       "risk_score": 59,
       "liquidity_score": 25,
       "category": "camera",
       "maker": "FUJIFILM"
+    },
+    {
+      "product": "PlayStation 5 Pro",
+      "product_id": "prod_ps5_pro",
+      "action": "SKIP",
+      "kind": "main",
+      "buy_price": 154999,
+      "net_profit": 16101,
+      "roi": 0.1039,
+      "success_probability": 54,
+      "opportunity_score": 37,
+      "reproducibility_score": 60,
+      "holding_period": "数日",
+      "expected_value": 8695,
+      "capital_efficiency": 0.0561,
+      "risk_score": 33,
+      "liquidity_score": 85,
+      "category": "game_console",
+      "maker": "Sony"
     },
     {
       "product": "PlayStation 5 Pro",
@@ -52,14 +71,14 @@
       "action": "WAIT",
       "kind": "reference",
       "buy_price": 221529,
-      "net_profit": 21052,
-      "roi": 0.095,
+      "net_profit": 21241,
+      "roi": 0.0959,
       "success_probability": 30,
       "opportunity_score": 34,
       "reproducibility_score": 30,
       "holding_period": "1ヶ月",
-      "expected_value": 6316,
-      "capital_efficiency": 0.0285,
+      "expected_value": 6372,
+      "capital_efficiency": 0.0288,
       "risk_score": 59,
       "liquidity_score": 25,
       "category": "iphone",
@@ -94,6 +113,21 @@
           "roi": 0.1039,
           "risk_score": 33,
           "liquidity_score": 85
+        },
+        {
+          "product": "PlayStation 5 Pro",
+          "product_id": "prod_ps5_pro",
+          "units": 1,
+          "unit_price": 154999,
+          "total": 154999,
+          "expected_profit": 16101,
+          "expected_value": 8695,
+          "category": "game_console",
+          "maker": "Sony",
+          "holding_period": "数日",
+          "roi": 0.1039,
+          "risk_score": 33,
+          "liquidity_score": 85
         }
       ],
       "waiting": [
@@ -106,13 +140,13 @@
           "reason": "海外価格更新待ち（eBay sold）"
         }
       ],
-      "allocated": 154999,
-      "cash": 845001,
-      "cash_ratio": 0.845,
-      "expected_profit": 16101,
+      "allocated": 309998,
+      "cash": 690002,
+      "cash_ratio": 0.69,
+      "expected_profit": 32202,
       "expected_roi": 0.1039,
       "avg_risk_score": 33,
-      "diversification_score": 34,
+      "diversification_score": 59,
       "max_concentration": 0.155
     },
     "3000000": {
@@ -134,6 +168,21 @@
           "roi": 0.1039,
           "risk_score": 33,
           "liquidity_score": 85
+        },
+        {
+          "product": "PlayStation 5 Pro",
+          "product_id": "prod_ps5_pro",
+          "units": 4,
+          "unit_price": 154999,
+          "total": 619996,
+          "expected_profit": 64404,
+          "expected_value": 34780,
+          "category": "game_console",
+          "maker": "Sony",
+          "holding_period": "数日",
+          "roi": 0.1039,
+          "risk_score": 33,
+          "liquidity_score": 85
         }
       ],
       "waiting": [
@@ -146,13 +195,13 @@
           "reason": "海外価格更新待ち（eBay sold）"
         }
       ],
-      "allocated": 774995,
-      "cash": 2225005,
-      "cash_ratio": 0.7417,
-      "expected_profit": 80505,
+      "allocated": 1394991,
+      "cash": 1605009,
+      "cash_ratio": 0.535,
+      "expected_profit": 144909,
       "expected_roi": 0.1039,
       "avg_risk_score": 33,
-      "diversification_score": 30,
+      "diversification_score": 55,
       "max_concentration": 0.2583
     },
     "5000000": {
@@ -174,6 +223,21 @@
           "roi": 0.1039,
           "risk_score": 33,
           "liquidity_score": 85
+        },
+        {
+          "product": "PlayStation 5 Pro",
+          "product_id": "prod_ps5_pro",
+          "units": 6,
+          "unit_price": 154999,
+          "total": 929994,
+          "expected_profit": 96606,
+          "expected_value": 52170,
+          "category": "game_console",
+          "maker": "Sony",
+          "holding_period": "数日",
+          "roi": 0.1039,
+          "risk_score": 33,
+          "liquidity_score": 85
         }
       ],
       "waiting": [
@@ -186,13 +250,13 @@
           "reason": "海外価格更新待ち（eBay sold）"
         }
       ],
-      "allocated": 1394991,
-      "cash": 3605009,
-      "cash_ratio": 0.721,
-      "expected_profit": 144909,
+      "allocated": 2324985,
+      "cash": 2675015,
+      "cash_ratio": 0.535,
+      "expected_profit": 241515,
       "expected_roi": 0.1039,
       "avg_risk_score": 33,
-      "diversification_score": 29,
+      "diversification_score": 54,
       "max_concentration": 0.279
     },
     "10000000": {
@@ -214,6 +278,21 @@
           "roi": 0.1039,
           "risk_score": 33,
           "liquidity_score": 85
+        },
+        {
+          "product": "PlayStation 5 Pro",
+          "product_id": "prod_ps5_pro",
+          "units": 11,
+          "unit_price": 154999,
+          "total": 1704989,
+          "expected_profit": 177111,
+          "expected_value": 95645,
+          "category": "game_console",
+          "maker": "Sony",
+          "holding_period": "数日",
+          "roi": 0.1039,
+          "risk_score": 33,
+          "liquidity_score": 85
         }
       ],
       "waiting": [
@@ -226,13 +305,13 @@
           "reason": "海外価格更新待ち（eBay sold）"
         }
       ],
-      "allocated": 2944981,
-      "cash": 7055019,
-      "cash_ratio": 0.7055,
-      "expected_profit": 305919,
+      "allocated": 4649970,
+      "cash": 5350030,
+      "cash_ratio": 0.535,
+      "expected_profit": 483030,
       "expected_roi": 0.1039,
       "avg_risk_score": 33,
-      "diversification_score": 28,
+      "diversification_score": 53,
       "max_concentration": 0.2945
     },
     "30000000": {
@@ -254,6 +333,21 @@
           "roi": 0.1039,
           "risk_score": 33,
           "liquidity_score": 85
+        },
+        {
+          "product": "PlayStation 5 Pro",
+          "product_id": "prod_ps5_pro",
+          "units": 34,
+          "unit_price": 154999,
+          "total": 5269966,
+          "expected_profit": 547434,
+          "expected_value": 295630,
+          "category": "game_console",
+          "maker": "Sony",
+          "holding_period": "数日",
+          "roi": 0.1039,
+          "risk_score": 33,
+          "liquidity_score": 85
         }
       ],
       "waiting": [
@@ -266,13 +360,13 @@
           "reason": "海外価格更新待ち（eBay sold）"
         }
       ],
-      "allocated": 8989942,
-      "cash": 21010058,
-      "cash_ratio": 0.7003,
-      "expected_profit": 933858,
+      "allocated": 14259908,
+      "cash": 15740092,
+      "cash_ratio": 0.5247,
+      "expected_profit": 1481292,
       "expected_roi": 0.1039,
       "avg_risk_score": 33,
-      "diversification_score": 28,
+      "diversification_score": 53,
       "max_concentration": 0.2997
     }
   }

@@ -162,8 +162,12 @@ def make_observation(now: datetime, **kw) -> dict:
     accessory_flag = detect_accessory_in_title(
         extracted_title, kw.get("source_name", ""), kw.get("price_context", ""))
     wrong_model_flag = False  # 機種違いは auto_scraped で strict 一致済み。価格フロアは後段で判定
-    # auto_scraped 買取は scraper 側で機種厳密一致済 → 本体確定度 high
-    is_exact_product_match = (extraction_method == "auto_scraped") and not accessory_flag
+    # auto_scraped 買取は scraper 側で機種厳密一致済 → 本体確定度 high。
+    # ただし URL が shop_home / search（＝トップページ/検索結果でSKU個別確定ができない）の場合は
+    # exact 扱いにしない（モバイル一番等の「トップページ価格を複数SKUへ同額割当」誤マッチ対策）。
+    _link_type = kw.get("link_type", "")
+    _url_confirms_sku = _link_type not in ("shop_home", "search")
+    is_exact_product_match = (extraction_method == "auto_scraped") and not accessory_flag and _url_confirms_sku
     is_body_only = not accessory_flag
     if accessory_flag:
         product_match_confidence = "low"
@@ -442,6 +446,51 @@ def build_observations(con, now: datetime | None = None) -> list[dict]:
             r["is_usable_for_pro"] = False
             if not r["rejection_reason"] or r["rejection_reason"] == "role_type_not_in_main_calc":
                 r["rejection_reason"] = "accessory_or_wrong_product"
+
+    # ── 重複価格衝突の検出（収集時マッチング誤り対策）──
+    # 同一 source × 同一 role/type × 同額 が、容量 or 機種の異なる複数SKUに付与されている
+    # 場合は「トップページ/検索の価格を複数SKUへ同額割当」した誤マッチの疑い。
+    # 公式(official)は特別仕様で実同額があり得るため対象外（RICOH GR IV系等は別途 audit で reviewed）。
+    from src.market.price_quality import (extract_capacity_gb as _cap, _model_key as _mkey,
+                                           model_compatible as _mcompat)
+    # ── 機種矛盾の検出（例: Leica M11-P リスティングが M11 に割当）──
+    # ソースの実タイトルと割当商品名の variant/世代が矛盾する場合は降格（manual_review）。
+    for r in rows:
+        if r.get("price_role") == "official":
+            continue
+        title = r.get("extracted_title") or ""
+        mc = _mcompat(title, r.get("product_name") or "")
+        if mc is False:
+            r["is_exact_product_match"] = False
+            r["product_match_confidence"] = "low"
+            r["product_match_reason"] = "model_variant_mismatch_vs_title"
+            r["is_usable_for_pro"] = False
+            r["is_usable_for_beginner"] = False
+            if not r["rejection_reason"]:
+                r["rejection_reason"] = "model_mismatch"
+    from collections import defaultdict as _dd2
+    _coll = _dd2(list)
+    for r in rows:
+        if r.get("price_role") == "official" or not r.get("price"):
+            continue
+        key = (r.get("source_name"), r.get("price_role"), r.get("price_type"), r["price"])
+        _coll[key].append(r)
+    for key, group in _coll.items():
+        pids = {r["product_id"] for r in group}
+        if len(pids) < 2:
+            continue
+        caps = {_cap(r.get("product_name") or "") for r in group}
+        models = {_mkey(r.get("product_name") or "") for r in group}
+        # 容量 or 機種が2種以上 → 別SKUに同額 = 誤マッチの疑い
+        if len([c for c in caps if c is not None]) >= 2 or len(models) >= 2:
+            for r in group:
+                r["is_exact_product_match"] = False
+                r["product_match_confidence"] = "low"
+                r["product_match_reason"] = "duplicate_price_collision_across_skus"
+                r["is_usable_for_pro"] = False
+                r["is_usable_for_beginner"] = False
+                if not r["rejection_reason"]:
+                    r["rejection_reason"] = "duplicate_price_collision"
 
     return rows
 

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-23 16:05 JST",
+  "generated_at": "2026-08-23 20:48 JST",
   "scope": "販売/買取/二次流通の取得品質・正規化・同一性（利益/AI/UI/SaaSロジックは不変）",
   "rules": {
     "identity": "容量・型番・カラー・新品/中古 を厳格一致",
@@ -11,16 +11,17 @@
     "buyback": {
       "observations": 953,
       "with_price": 705,
-      "exact_match": 210,
-      "high_confidence": 210,
+      "exact_match": 168,
+      "high_confidence": 168,
       "fresh": 123,
-      "main_promotable": 15,
+      "main_promotable": 14,
       "zero": 248,
       "stale": 830,
-      "rejected": 848,
+      "rejected": 857,
       "failure_reasons": {
         "stale_over_14d": 596,
         "price_zero": 248,
+        "duplicate_price_collision": 9,
         "accessory_or_wrong_product": 4
       }
     },
@@ -108,8 +109,8 @@
     "フジヤカメラ": {
       "observations": 52,
       "with_price": 52,
-      "exact_match": 13,
-      "high_confidence": 13,
+      "exact_match": 9,
+      "high_confidence": 9,
       "fresh": 8,
       "main_promotable": 0,
       "zero": 0,
@@ -129,25 +130,27 @@
       "main_promotable": 0,
       "zero": 96,
       "stale": 208,
-      "rejected": 214,
+      "rejected": 220,
       "failure_reasons": {
         "stale_over_14d": 118,
-        "price_zero": 96
+        "price_zero": 96,
+        "duplicate_price_collision": 6
       }
     },
     "イオシス": {
       "observations": 174,
       "with_price": 144,
-      "exact_match": 66,
-      "high_confidence": 66,
+      "exact_match": 55,
+      "high_confidence": 55,
       "fresh": 20,
-      "main_promotable": 6,
+      "main_promotable": 5,
       "zero": 30,
       "stale": 154,
-      "rejected": 154,
+      "rejected": 157,
       "failure_reasons": {
         "stale_over_14d": 124,
-        "price_zero": 30
+        "price_zero": 30,
+        "duplicate_price_collision": 3
       }
     },
     "カメラのキタムラ": {
@@ -198,8 +201,8 @@
     "ゲオ": {
       "observations": 77,
       "with_price": 69,
-      "exact_match": 15,
-      "high_confidence": 15,
+      "exact_match": 12,
+      "high_confidence": 12,
       "fresh": 8,
       "main_promotable": 1,
       "zero": 8,
@@ -214,8 +217,8 @@
     "買取一丁目": {
       "observations": 68,
       "with_price": 28,
-      "exact_match": 24,
-      "high_confidence": 24,
+      "exact_match": 0,
+      "high_confidence": 0,
       "fresh": 4,
       "main_promotable": 0,
       "zero": 40,
@@ -338,25 +341,27 @@
       "main_promotable": 0,
       "zero": 96,
       "stale": 208,
-      "rejected": 214,
+      "rejected": 220,
       "failure_reasons": {
         "stale_over_14d": 118,
-        "price_zero": 96
+        "price_zero": 96,
+        "duplicate_price_collision": 6
       }
     },
     "イオシス": {
       "observations": 174,
       "with_price": 144,
-      "exact_match": 66,
-      "high_confidence": 66,
+      "exact_match": 55,
+      "high_confidence": 55,
       "fresh": 20,
-      "main_promotable": 6,
+      "main_promotable": 5,
       "zero": 30,
       "stale": 154,
-      "rejected": 154,
+      "rejected": 157,
       "failure_reasons": {
         "stale_over_14d": 124,
-        "price_zero": 30
+        "price_zero": 30,
+        "duplicate_price_collision": 3
       }
     },
     "買取商店": {
@@ -377,8 +382,8 @@
     "ゲオ": {
       "observations": 77,
       "with_price": 69,
-      "exact_match": 15,
-      "high_confidence": 15,
+      "exact_match": 12,
+      "high_confidence": 12,
       "fresh": 8,
       "main_promotable": 1,
       "zero": 8,
@@ -408,8 +413,8 @@
     "買取一丁目": {
       "observations": 68,
       "with_price": 28,
-      "exact_match": 24,
-      "high_confidence": 24,
+      "exact_match": 0,
+      "high_confidence": 0,
       "fresh": 4,
       "main_promotable": 0,
       "zero": 40,
@@ -423,8 +428,8 @@
     "フジヤカメラ": {
       "observations": 52,
       "with_price": 52,
-      "exact_match": 13,
-      "high_confidence": 13,
+      "exact_match": 9,
+      "high_confidence": 9,
       "fresh": 8,
       "main_promotable": 0,
       "zero": 0,
@@ -603,19 +608,6 @@
   },
   "duplicate_price_pattern": [
     {
-      "source_name": "メーカー公式/定価",
-      "price_role": "official",
-      "price_type": "official_price",
-      "price": 299800,
-      "product_ids": [
-        "prod_gr4",
-        "prod_gr4_hdf",
-        "prod_gr4_mono"
-      ],
-      "count": 3,
-      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認"
-    },
-    {
       "source_name": "モバイル一番",
       "price_role": "sell",
       "price_type": "buyback_price",
@@ -626,7 +618,27 @@
         "prod_iphone17pro_512"
       ],
       "count": 3,
-      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認"
+      "models": [
+        "17 iphone max pro",
+        "17 iphone pro"
+      ],
+      "capacities": [
+        "256",
+        "512"
+      ],
+      "conditions": [
+        "new"
+      ],
+      "first_seen": 91.4,
+      "last_seen": 91.4,
+      "risk_level": "high",
+      "possible_reason": [
+        "different_capacity_same_price",
+        "pro_vs_promax_same_price"
+      ],
+      "is_official": false,
+      "review_status": "pending",
+      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認（弾かない）"
     },
     {
       "source_name": "モバイル一番",
@@ -639,7 +651,27 @@
         "prod_iphone17pro_512"
       ],
       "count": 3,
-      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認"
+      "models": [
+        "17 iphone max pro",
+        "17 iphone pro"
+      ],
+      "capacities": [
+        "256",
+        "512"
+      ],
+      "conditions": [
+        "new"
+      ],
+      "first_seen": 90.2,
+      "last_seen": 90.2,
+      "risk_level": "high",
+      "possible_reason": [
+        "different_capacity_same_price",
+        "pro_vs_promax_same_price"
+      ],
+      "is_official": false,
+      "review_status": "pending",
+      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認（弾かない）"
     },
     {
       "source_name": "モバイル一番",
@@ -652,7 +684,27 @@
         "prod_iphone17pro_512"
       ],
       "count": 3,
-      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認"
+      "models": [
+        "17 iphone max pro",
+        "17 iphone pro"
+      ],
+      "capacities": [
+        "256",
+        "512"
+      ],
+      "conditions": [
+        "new"
+      ],
+      "first_seen": 90.2,
+      "last_seen": 90.2,
+      "risk_level": "high",
+      "possible_reason": [
+        "different_capacity_same_price",
+        "pro_vs_promax_same_price"
+      ],
+      "is_official": false,
+      "review_status": "pending",
+      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認（弾かない）"
     },
     {
       "source_name": "メーカー公式/定価",
@@ -664,55 +716,27 @@
         "prod_iphone17pro_512"
       ],
       "count": 2,
-      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認"
-    },
-    {
-      "source_name": "メーカー公式/定価",
-      "price_role": "official",
-      "price_type": "official_price",
-      "price": 142800,
-      "product_ids": [
-        "prod_apple_watch_ultra3",
-        "prod_iphone17_256"
+      "models": [
+        "17 iphone max pro",
+        "17 iphone pro"
       ],
-      "count": 2,
-      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認"
-    },
-    {
-      "source_name": "メーカー公式/定価",
-      "price_role": "official",
-      "price_type": "official_price",
-      "price": 129800,
-      "product_ids": [
-        "prod_gr3",
-        "prod_ipad_air_m3"
+      "capacities": [
+        "256",
+        "512"
       ],
-      "count": 2,
-      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認"
-    },
-    {
-      "source_name": "イオシス",
-      "price_role": "sell",
-      "price_type": "buyback_price",
-      "price": 215000,
-      "product_ids": [
-        "prod_iphone17pro_512",
-        "prod_macbook_pro_m4_14"
+      "conditions": [
+        "new"
       ],
-      "count": 2,
-      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認"
-    },
-    {
-      "source_name": "じゃんぱら",
-      "price_role": "sell",
-      "price_type": "buyback_price",
-      "price": 148000,
-      "product_ids": [
-        "prod_ipad_pro_m4_11",
-        "prod_iphone16pro_256"
+      "first_seen": 0.0,
+      "last_seen": 0.0,
+      "risk_level": "high",
+      "possible_reason": [
+        "different_capacity_same_price",
+        "pro_vs_promax_same_price"
       ],
-      "count": 2,
-      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認"
+      "is_official": true,
+      "review_status": "pending",
+      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認（弾かない）"
     },
     {
       "source_name": "モバイル一番",
@@ -724,7 +748,26 @@
         "prod_iphone17pro_256"
       ],
       "count": 2,
-      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認"
+      "models": [
+        "16 iphone max pro",
+        "17 iphone pro"
+      ],
+      "capacities": [
+        "256"
+      ],
+      "conditions": [
+        "new"
+      ],
+      "first_seen": 95.4,
+      "last_seen": 13.4,
+      "risk_level": "high",
+      "possible_reason": [
+        "different_model_same_price",
+        "pro_vs_promax_same_price"
+      ],
+      "is_official": false,
+      "review_status": "pending",
+      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認（弾かない）"
     },
     {
       "source_name": "イオシス",
@@ -736,55 +779,27 @@
         "prod_macbook_air_m4_15"
       ],
       "count": 2,
-      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認"
-    },
-    {
-      "source_name": "じゃんぱら",
-      "price_role": "sell",
-      "price_type": "buyback_price",
-      "price": 78000,
-      "product_ids": [
-        "prod_ipad_air_m3",
-        "prod_mac_mini_m4"
+      "models": [
+        "15インチ air m4 macbook",
+        "17 iphone max pro"
       ],
-      "count": 2,
-      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認"
-    },
-    {
-      "source_name": "じゃんぱら",
-      "price_role": "sell",
-      "price_type": "buyback_price",
-      "price": 65000,
-      "product_ids": [
-        "prod_airpods_max",
-        "prod_switch2_mk"
+      "capacities": [
+        "256",
+        "None"
       ],
-      "count": 2,
-      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認"
-    },
-    {
-      "source_name": "ゲオ",
-      "price_role": "sell",
-      "price_type": "buyback_price",
-      "price": 190000,
-      "product_ids": [
-        "prod_ps5_pro",
-        "prod_switch2"
+      "conditions": [
+        "new"
       ],
-      "count": 2,
-      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認"
-    },
-    {
-      "source_name": "フジヤカメラ",
-      "price_role": "sell",
-      "price_type": "buyback_price",
-      "price": 213400,
-      "product_ids": [
-        "prod_gr4_hdf",
-        "prod_gr4_mono"
+      "first_seen": 95.4,
+      "last_seen": 1.0,
+      "risk_level": "high",
+      "possible_reason": [
+        "different_model_same_price",
+        "pro_vs_promax_same_price"
       ],
-      "count": 2,
-      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認"
+      "is_official": false,
+      "review_status": "pending",
+      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認（弾かない）"
     },
     {
       "source_name": "ヤフオク (新品/未使用落札)",
@@ -796,7 +811,26 @@
         "prod_iphone17pro_256"
       ],
       "count": 2,
-      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認"
+      "models": [
+        "17 iphone max pro",
+        "17 iphone pro"
+      ],
+      "capacities": [
+        "256"
+      ],
+      "conditions": [
+        "new"
+      ],
+      "first_seen": 83.0,
+      "last_seen": 83.0,
+      "risk_level": "high",
+      "possible_reason": [
+        "different_model_same_price",
+        "pro_vs_promax_same_price"
+      ],
+      "is_official": false,
+      "review_status": "pending",
+      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認（弾かない）"
     },
     {
       "source_name": "ヤフオク (新品/未使用落札)",
@@ -808,16 +842,310 @@
         "prod_iphone17pro_512"
       ],
       "count": 2,
-      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認"
+      "models": [
+        "17 iphone max pro",
+        "17 iphone pro"
+      ],
+      "capacities": [
+        "512"
+      ],
+      "conditions": [
+        "new"
+      ],
+      "first_seen": 83.0,
+      "last_seen": 83.0,
+      "risk_level": "high",
+      "possible_reason": [
+        "different_model_same_price",
+        "pro_vs_promax_same_price"
+      ],
+      "is_official": false,
+      "review_status": "pending",
+      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認（弾かない）"
+    },
+    {
+      "source_name": "メーカー公式/定価",
+      "price_role": "official",
+      "price_type": "official_price",
+      "price": 299800,
+      "product_ids": [
+        "prod_gr4",
+        "prod_gr4_hdf",
+        "prod_gr4_mono"
+      ],
+      "count": 3,
+      "models": [
+        "gr hdf iv ricoh",
+        "gr iv monochrome ricoh",
+        "gr iv ricoh"
+      ],
+      "capacities": [
+        "None"
+      ],
+      "conditions": [
+        "new"
+      ],
+      "first_seen": 0.0,
+      "last_seen": 0.0,
+      "risk_level": "medium",
+      "possible_reason": [
+        "different_model_same_price"
+      ],
+      "is_official": true,
+      "review_status": "pending",
+      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認（弾かない）"
+    },
+    {
+      "source_name": "メーカー公式/定価",
+      "price_role": "official",
+      "price_type": "official_price",
+      "price": 142800,
+      "product_ids": [
+        "prod_apple_watch_ultra3",
+        "prod_iphone17_256"
+      ],
+      "count": 2,
+      "models": [
+        "17 iphone",
+        "3 ultra watch"
+      ],
+      "capacities": [
+        "256",
+        "None"
+      ],
+      "conditions": [
+        "new"
+      ],
+      "first_seen": 0.0,
+      "last_seen": 0.0,
+      "risk_level": "medium",
+      "possible_reason": [
+        "different_model_same_price"
+      ],
+      "is_official": true,
+      "review_status": "pending",
+      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認（弾かない）"
+    },
+    {
+      "source_name": "メーカー公式/定価",
+      "price_role": "official",
+      "price_type": "official_price",
+      "price": 129800,
+      "product_ids": [
+        "prod_gr3",
+        "prod_ipad_air_m3"
+      ],
+      "count": 2,
+      "models": [
+        "air ipad m3",
+        "gr iii ricoh"
+      ],
+      "capacities": [
+        "None"
+      ],
+      "conditions": [
+        "new"
+      ],
+      "first_seen": 0.0,
+      "last_seen": 0.0,
+      "risk_level": "medium",
+      "possible_reason": [
+        "different_model_same_price"
+      ],
+      "is_official": true,
+      "review_status": "pending",
+      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認（弾かない）"
+    },
+    {
+      "source_name": "イオシス",
+      "price_role": "sell",
+      "price_type": "buyback_price",
+      "price": 215000,
+      "product_ids": [
+        "prod_iphone17pro_512",
+        "prod_macbook_pro_m4_14"
+      ],
+      "count": 2,
+      "models": [
+        "14インチ m4 macbook pro",
+        "17 iphone pro"
+      ],
+      "capacities": [
+        "512",
+        "None"
+      ],
+      "conditions": [
+        "new"
+      ],
+      "first_seen": 95.4,
+      "last_seen": 13.4,
+      "risk_level": "medium",
+      "possible_reason": [
+        "different_model_same_price"
+      ],
+      "is_official": false,
+      "review_status": "pending",
+      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認（弾かない）"
+    },
+    {
+      "source_name": "じゃんぱら",
+      "price_role": "sell",
+      "price_type": "buyback_price",
+      "price": 148000,
+      "product_ids": [
+        "prod_ipad_pro_m4_11",
+        "prod_iphone16pro_256"
+      ],
+      "count": 2,
+      "models": [
+        "11インチ ipad m4 pro",
+        "16 iphone pro"
+      ],
+      "capacities": [
+        "256",
+        "None"
+      ],
+      "conditions": [
+        "new"
+      ],
+      "first_seen": 95.4,
+      "last_seen": 13.4,
+      "risk_level": "medium",
+      "possible_reason": [
+        "different_model_same_price"
+      ],
+      "is_official": false,
+      "review_status": "pending",
+      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認（弾かない）"
+    },
+    {
+      "source_name": "じゃんぱら",
+      "price_role": "sell",
+      "price_type": "buyback_price",
+      "price": 78000,
+      "product_ids": [
+        "prod_ipad_air_m3",
+        "prod_mac_mini_m4"
+      ],
+      "count": 2,
+      "models": [
+        "air ipad m3",
+        "m4 mac mini"
+      ],
+      "capacities": [
+        "None"
+      ],
+      "conditions": [
+        "new"
+      ],
+      "first_seen": 95.4,
+      "last_seen": 13.4,
+      "risk_level": "medium",
+      "possible_reason": [
+        "different_model_same_price"
+      ],
+      "is_official": false,
+      "review_status": "pending",
+      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認（弾かない）"
+    },
+    {
+      "source_name": "じゃんぱら",
+      "price_role": "sell",
+      "price_type": "buyback_price",
+      "price": 65000,
+      "product_ids": [
+        "prod_airpods_max",
+        "prod_switch2_mk"
+      ],
+      "count": 2,
+      "models": [
+        "2 nintendo switch",
+        "airpods max"
+      ],
+      "capacities": [
+        "None"
+      ],
+      "conditions": [
+        "new"
+      ],
+      "first_seen": 95.4,
+      "last_seen": 13.4,
+      "risk_level": "medium",
+      "possible_reason": [
+        "different_model_same_price"
+      ],
+      "is_official": false,
+      "review_status": "pending",
+      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認（弾かない）"
+    },
+    {
+      "source_name": "ゲオ",
+      "price_role": "sell",
+      "price_type": "buyback_price",
+      "price": 190000,
+      "product_ids": [
+        "prod_ps5_pro",
+        "prod_switch2"
+      ],
+      "count": 2,
+      "models": [
+        "2 nintendo switch",
+        "5 playstation pro"
+      ],
+      "capacities": [
+        "None"
+      ],
+      "conditions": [
+        "new"
+      ],
+      "first_seen": 91.0,
+      "last_seen": 91.0,
+      "risk_level": "medium",
+      "possible_reason": [
+        "different_model_same_price"
+      ],
+      "is_official": false,
+      "review_status": "pending",
+      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認（弾かない）"
+    },
+    {
+      "source_name": "フジヤカメラ",
+      "price_role": "sell",
+      "price_type": "buyback_price",
+      "price": 213400,
+      "product_ids": [
+        "prod_gr4_hdf",
+        "prod_gr4_mono"
+      ],
+      "count": 2,
+      "models": [
+        "gr hdf iv ricoh",
+        "gr iv monochrome ricoh"
+      ],
+      "capacities": [
+        "None"
+      ],
+      "conditions": [
+        "new"
+      ],
+      "first_seen": 32.2,
+      "last_seen": 32.2,
+      "risk_level": "medium",
+      "possible_reason": [
+        "different_model_same_price"
+      ],
+      "is_official": false,
+      "review_status": "pending",
+      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認（弾かない）"
     }
   ],
   "main_promotion": {
     "by_category": {
-      "buyback": 15,
+      "buyback": 14,
       "resale": 0,
       "retail": 0
     },
-    "total": 15
+    "total": 14
   },
   "freshness_compliance": {
     "violations": [],

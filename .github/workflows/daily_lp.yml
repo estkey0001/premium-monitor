@@ -248,6 +248,13 @@ jobs:
         env:
           PYTHONPATH: .
 
+      # 13.11a Source Matching 精度監査（商品同一性 resolver・誤マッチ・False Main）
+      - name: Source matching audit
+        run: python scripts/audit_source_matching.py
+        continue-on-error: true
+        env:
+          PYTHONPATH: .
+
       # 13.11b Retail & Buyback 品質監査（販売/買取/二次流通の同一性・正規化・Main昇格）
       - name: Retail & buyback audit
         run: python scripts/audit_retail_buyback.py
@@ -362,6 +369,7 @@ jobs:
                   audit_health/ \
                   exports/data_quality_report/ exports/data_quality/ exports/beta/ docs/beta/ \
                   exports/official_source_audit/ exports/retail_buyback_audit/ \
+                  exports/source_matching/ \
                   exports/camera_buyback_status.json \
                   data/alerts.csv data/lottery_events.csv \
                   data/overseas_price_history.csv \

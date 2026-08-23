@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-23 14:45 JST",
+  "generated_at": "2026-08-23 20:48 JST",
   "open_count": 66,
   "closed_count": 71,
   "success_count": 22,
@@ -12,10 +12,10 @@
     "opportunity_score_avg": 58.0704
   },
   "notification_accuracy": {
-    "total_notifications": 58,
-    "buy_notifications": 2,
-    "watch_to_buy": 2,
-    "notification_success_rate": 0.379,
+    "total_notifications": 50,
+    "buy_notifications": 1,
+    "watch_to_buy": 1,
+    "notification_success_rate": 0.44,
     "false_positive_rate": 0.183
   },
   "allocation_accuracy": {

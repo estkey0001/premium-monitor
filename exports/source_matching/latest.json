@@ -1,0 +1,1243 @@
+{
+  "generated_at": "2026-08-23 20:48 JST",
+  "scope": "商品同一性マッチング精度（利益/AI/UI/SaaS/DQ思想は不変）",
+  "accuracy": {
+    "product_match_accuracy": 1.0,
+    "capacity_match_accuracy": 1.0,
+    "model_match_accuracy": 1.0,
+    "condition_match_accuracy": 1.0,
+    "confirmed_mismatches_active": 0,
+    "detected_mismatches_total": 1,
+    "detected_mismatches_rejected": 1,
+    "independently_verified_exact": 168,
+    "unverifiable_trusted": 1412,
+    "accessory_misclassification": 0,
+    "false_main_promotion": 0,
+    "duplicate_patterns": 17,
+    "high_risk_duplicates": 8,
+    "duplicate_reviewed_pct": 0.2353,
+    "manual_review_queue": 464
+  },
+  "targets": {
+    "product_match": ">=0.99",
+    "capacity_match": "=1.0",
+    "model_match": "=1.0",
+    "condition_match": "=1.0",
+    "false_main_promotion": 0
+  },
+  "totals": {
+    "total": 1427,
+    "product_mismatch_or_unverified": 1259,
+    "model_unverifiable": 1412,
+    "main_rejected": 1413,
+    "manual_review_required": 464,
+    "exact_product_match": 168,
+    "model_match": 14,
+    "accessory_detected": 37,
+    "model_mismatch": 1,
+    "main_eligible": 14
+  },
+  "by_source": {
+    "メーカー公式/定価": {
+      "total": 45,
+      "product_mismatch_or_unverified": 45,
+      "model_unverifiable": 45,
+      "main_rejected": 45,
+      "exact_product_match": 0,
+      "capacity_mismatch": 0,
+      "model_mismatch": 0,
+      "main_eligible": 0
+    },
+    "モバイル一番": {
+      "total": 90,
+      "product_mismatch_or_unverified": 90,
+      "model_unverifiable": 90,
+      "main_rejected": 90,
+      "manual_review_required": 82,
+      "exact_product_match": 0,
+      "capacity_mismatch": 0,
+      "model_mismatch": 0,
+      "main_eligible": 0
+    },
+    "買取商店": {
+      "total": 146,
+      "product_mismatch_or_unverified": 68,
+      "model_unverifiable": 146,
+      "main_rejected": 140,
+      "manual_review_required": 14,
+      "exact_product_match": 78,
+      "main_eligible": 6,
+      "capacity_mismatch": 0,
+      "model_mismatch": 0
+    },
+    "買取一丁目": {
+      "total": 68,
+      "product_mismatch_or_unverified": 68,
+      "model_unverifiable": 68,
+      "main_rejected": 68,
+      "manual_review_required": 24,
+      "exact_product_match": 0,
+      "capacity_mismatch": 0,
+      "model_mismatch": 0,
+      "main_eligible": 0
+    },
+    "じゃんぱら": {
+      "total": 242,
+      "product_mismatch_or_unverified": 242,
+      "model_unverifiable": 242,
+      "main_rejected": 242,
+      "manual_review_required": 32,
+      "exact_product_match": 0,
+      "capacity_mismatch": 0,
+      "model_mismatch": 0,
+      "main_eligible": 0
+    },
+    "イオシス": {
+      "total": 174,
+      "product_mismatch_or_unverified": 119,
+      "model_unverifiable": 174,
+      "main_rejected": 169,
+      "manual_review_required": 46,
+      "exact_product_match": 55,
+      "main_eligible": 5,
+      "capacity_mismatch": 0,
+      "model_mismatch": 0
+    },
+    "ソフマップ": {
+      "total": 70,
+      "product_mismatch_or_unverified": 70,
+      "model_unverifiable": 70,
+      "main_rejected": 70,
+      "manual_review_required": 54,
+      "exact_product_match": 0,
+      "capacity_mismatch": 0,
+      "model_mismatch": 0,
+      "main_eligible": 0
+    },
+    "ゲオ": {
+      "total": 77,
+      "product_mismatch_or_unverified": 65,
+      "model_unverifiable": 77,
+      "main_rejected": 76,
+      "manual_review_required": 31,
+      "exact_product_match": 12,
+      "main_eligible": 1,
+      "accessory_detected": 8,
+      "capacity_mismatch": 0,
+      "model_mismatch": 0
+    },
+    "マップカメラ": {
+      "total": 40,
+      "product_mismatch_or_unverified": 40,
+      "model_unverifiable": 40,
+      "main_rejected": 40,
+      "manual_review_required": 28,
+      "accessory_detected": 8,
+      "exact_product_match": 0,
+      "capacity_mismatch": 0,
+      "model_mismatch": 0,
+      "main_eligible": 0
+    },
+    "カメラのキタムラ": {
+      "total": 40,
+      "product_mismatch_or_unverified": 40,
+      "model_unverifiable": 40,
+      "main_rejected": 40,
+      "manual_review_required": 20,
+      "accessory_detected": 8,
+      "exact_product_match": 0,
+      "capacity_mismatch": 0,
+      "model_mismatch": 0,
+      "main_eligible": 0
+    },
+    "フジヤカメラ": {
+      "total": 52,
+      "product_mismatch_or_unverified": 43,
+      "model_unverifiable": 37,
+      "main_rejected": 52,
+      "manual_review_required": 29,
+      "exact_product_match": 9,
+      "model_match": 14,
+      "accessory_detected": 11,
+      "model_mismatch": 1,
+      "capacity_mismatch": 0,
+      "main_eligible": 0
+    },
+    "ブックオフ": {
+      "total": 26,
+      "product_mismatch_or_unverified": 26,
+      "model_unverifiable": 26,
+      "main_rejected": 26,
+      "exact_product_match": 0,
+      "capacity_mismatch": 0,
+      "model_mismatch": 0,
+      "main_eligible": 0
+    },
+    "駿河屋": {
+      "total": 26,
+      "product_mismatch_or_unverified": 26,
+      "model_unverifiable": 26,
+      "main_rejected": 26,
+      "exact_product_match": 0,
+      "capacity_mismatch": 0,
+      "model_mismatch": 0,
+      "main_eligible": 0
+    },
+    "TSUTAYA": {
+      "total": 26,
+      "product_mismatch_or_unverified": 26,
+      "model_unverifiable": 26,
+      "main_rejected": 26,
+      "exact_product_match": 0,
+      "capacity_mismatch": 0,
+      "model_mismatch": 0,
+      "main_eligible": 0
+    },
+    "ゲオモバイル": {
+      "total": 44,
+      "product_mismatch_or_unverified": 44,
+      "model_unverifiable": 44,
+      "main_rejected": 44,
+      "exact_product_match": 0,
+      "capacity_mismatch": 0,
+      "model_mismatch": 0,
+      "main_eligible": 0
+    },
+    "セカンドストリート": {
+      "total": 44,
+      "product_mismatch_or_unverified": 44,
+      "model_unverifiable": 44,
+      "main_rejected": 44,
+      "exact_product_match": 0,
+      "capacity_mismatch": 0,
+      "model_mismatch": 0,
+      "main_eligible": 0
+    },
+    "ネットオフ": {
+      "total": 44,
+      "product_mismatch_or_unverified": 30,
+      "model_unverifiable": 44,
+      "main_rejected": 42,
+      "exact_product_match": 14,
+      "main_eligible": 2,
+      "capacity_mismatch": 0,
+      "model_mismatch": 0
+    },
+    "ハードオフ": {
+      "total": 22,
+      "product_mismatch_or_unverified": 22,
+      "model_unverifiable": 22,
+      "main_rejected": 22,
+      "manual_review_required": 22,
+      "exact_product_match": 0,
+      "capacity_mismatch": 0,
+      "model_mismatch": 0,
+      "main_eligible": 0
+    },
+    "ドスパラ": {
+      "total": 22,
+      "product_mismatch_or_unverified": 22,
+      "model_unverifiable": 22,
+      "main_rejected": 22,
+      "exact_product_match": 0,
+      "capacity_mismatch": 0,
+      "model_mismatch": 0,
+      "main_eligible": 0
+    },
+    "パソコン工房": {
+      "total": 10,
+      "product_mismatch_or_unverified": 10,
+      "model_unverifiable": 10,
+      "main_rejected": 10,
+      "exact_product_match": 0,
+      "capacity_mismatch": 0,
+      "model_mismatch": 0,
+      "main_eligible": 0
+    },
+    "eBay sold(新品)": {
+      "total": 30,
+      "product_mismatch_or_unverified": 30,
+      "model_unverifiable": 30,
+      "main_rejected": 30,
+      "manual_review_required": 30,
+      "exact_product_match": 0,
+      "capacity_mismatch": 0,
+      "model_mismatch": 0,
+      "main_eligible": 0
+    },
+    "メルカリ未使用": {
+      "total": 30,
+      "product_mismatch_or_unverified": 30,
+      "model_unverifiable": 30,
+      "main_rejected": 30,
+      "manual_review_required": 30,
+      "exact_product_match": 0,
+      "capacity_mismatch": 0,
+      "model_mismatch": 0,
+      "main_eligible": 0
+    },
+    "Amazon新品出品": {
+      "total": 18,
+      "product_mismatch_or_unverified": 18,
+      "model_unverifiable": 18,
+      "main_rejected": 18,
+      "exact_product_match": 0,
+      "capacity_mismatch": 0,
+      "model_mismatch": 0,
+      "main_eligible": 0
+    },
+    "楽天市場新品": {
+      "total": 12,
+      "product_mismatch_or_unverified": 12,
+      "model_unverifiable": 12,
+      "main_rejected": 12,
+      "manual_review_required": 12,
+      "exact_product_match": 0,
+      "capacity_mismatch": 0,
+      "model_mismatch": 0,
+      "main_eligible": 0
+    },
+    "Amazon JP (新品出品)": {
+      "total": 5,
+      "product_mismatch_or_unverified": 5,
+      "model_unverifiable": 5,
+      "main_rejected": 5,
+      "accessory_detected": 2,
+      "exact_product_match": 0,
+      "capacity_mismatch": 0,
+      "model_mismatch": 0,
+      "main_eligible": 0
+    },
+    "ヤフオク (新品/未使用落札)": {
+      "total": 10,
+      "product_mismatch_or_unverified": 10,
+      "model_unverifiable": 10,
+      "main_rejected": 10,
+      "manual_review_required": 10,
+      "exact_product_match": 0,
+      "capacity_mismatch": 0,
+      "model_mismatch": 0,
+      "main_eligible": 0
+    },
+    "Yahoo Auction sold": {
+      "total": 3,
+      "product_mismatch_or_unverified": 3,
+      "model_unverifiable": 3,
+      "main_rejected": 3,
+      "exact_product_match": 0,
+      "capacity_mismatch": 0,
+      "model_mismatch": 0,
+      "main_eligible": 0
+    },
+    "Mercari sold": {
+      "total": 3,
+      "product_mismatch_or_unverified": 3,
+      "model_unverifiable": 3,
+      "main_rejected": 3,
+      "exact_product_match": 0,
+      "capacity_mismatch": 0,
+      "model_mismatch": 0,
+      "main_eligible": 0
+    },
+    "src_ebay": {
+      "total": 6,
+      "product_mismatch_or_unverified": 6,
+      "model_unverifiable": 6,
+      "main_rejected": 6,
+      "exact_product_match": 0,
+      "capacity_mismatch": 0,
+      "model_mismatch": 0,
+      "main_eligible": 0
+    },
+    "src_bhphoto": {
+      "total": 2,
+      "product_mismatch_or_unverified": 2,
+      "model_unverifiable": 2,
+      "main_rejected": 2,
+      "exact_product_match": 0,
+      "capacity_mismatch": 0,
+      "model_mismatch": 0,
+      "main_eligible": 0
+    }
+  },
+  "false_main_promotion": [],
+  "detected_mismatches": [
+    {
+      "product_id": "prod_m11",
+      "source": "フジヤカメラ",
+      "title": "ライカ M11-P メタルグレーペイント 20072 Leica 基準査定額 新品同様 ￥960,000 良品 ￥959,000 買取のみ10%UP 新品同様 ",
+      "kinds": [
+        "model"
+      ],
+      "rejected": true,
+      "rejection_reason": "stale_over_14d",
+      "usable_pro": false
+    }
+  ],
+  "duplicate_price_pattern": [
+    {
+      "source_name": "モバイル一番",
+      "price_role": "sell",
+      "price_type": "buyback_price",
+      "price": 193500,
+      "product_ids": [
+        "prod_iphone17pm_256",
+        "prod_iphone17pm_512",
+        "prod_iphone17pro_512"
+      ],
+      "count": 3,
+      "models": [
+        "17 iphone max pro",
+        "17 iphone pro"
+      ],
+      "capacities": [
+        "256",
+        "512"
+      ],
+      "conditions": [
+        "new"
+      ],
+      "first_seen": 91.4,
+      "last_seen": 91.4,
+      "risk_level": "high",
+      "possible_reason": [
+        "different_capacity_same_price",
+        "pro_vs_promax_same_price"
+      ],
+      "is_official": false,
+      "review_status": "pending",
+      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認（弾かない）"
+    },
+    {
+      "source_name": "モバイル一番",
+      "price_role": "sell",
+      "price_type": "buyback_price",
+      "price": 195500,
+      "product_ids": [
+        "prod_iphone17pm_256",
+        "prod_iphone17pm_512",
+        "prod_iphone17pro_512"
+      ],
+      "count": 3,
+      "models": [
+        "17 iphone max pro",
+        "17 iphone pro"
+      ],
+      "capacities": [
+        "256",
+        "512"
+      ],
+      "conditions": [
+        "new"
+      ],
+      "first_seen": 90.2,
+      "last_seen": 90.2,
+      "risk_level": "high",
+      "possible_reason": [
+        "different_capacity_same_price",
+        "pro_vs_promax_same_price"
+      ],
+      "is_official": false,
+      "review_status": "pending",
+      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認（弾かない）"
+    },
+    {
+      "source_name": "モバイル一番",
+      "price_role": "sell",
+      "price_type": "buyback_price",
+      "price": 196000,
+      "product_ids": [
+        "prod_iphone17pm_256",
+        "prod_iphone17pm_512",
+        "prod_iphone17pro_512"
+      ],
+      "count": 3,
+      "models": [
+        "17 iphone max pro",
+        "17 iphone pro"
+      ],
+      "capacities": [
+        "256",
+        "512"
+      ],
+      "conditions": [
+        "new"
+      ],
+      "first_seen": 90.2,
+      "last_seen": 90.2,
+      "risk_level": "high",
+      "possible_reason": [
+        "different_capacity_same_price",
+        "pro_vs_promax_same_price"
+      ],
+      "is_official": false,
+      "review_status": "pending",
+      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認（弾かない）"
+    },
+    {
+      "source_name": "メーカー公式/定価",
+      "price_role": "official",
+      "price_type": "official_price",
+      "price": 214800,
+      "product_ids": [
+        "prod_iphone17pm_256",
+        "prod_iphone17pro_512"
+      ],
+      "count": 2,
+      "models": [
+        "17 iphone max pro",
+        "17 iphone pro"
+      ],
+      "capacities": [
+        "256",
+        "512"
+      ],
+      "conditions": [
+        "new"
+      ],
+      "first_seen": 0.0,
+      "last_seen": 0.0,
+      "risk_level": "high",
+      "possible_reason": [
+        "different_capacity_same_price",
+        "pro_vs_promax_same_price"
+      ],
+      "is_official": true,
+      "review_status": "manual_review_required",
+      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認（弾かない）"
+    },
+    {
+      "source_name": "モバイル一番",
+      "price_role": "sell",
+      "price_type": "buyback_price",
+      "price": 178000,
+      "product_ids": [
+        "prod_iphone16pm_256",
+        "prod_iphone17pro_256"
+      ],
+      "count": 2,
+      "models": [
+        "16 iphone max pro",
+        "17 iphone pro"
+      ],
+      "capacities": [
+        "256"
+      ],
+      "conditions": [
+        "new"
+      ],
+      "first_seen": 95.4,
+      "last_seen": 13.4,
+      "risk_level": "high",
+      "possible_reason": [
+        "different_model_same_price",
+        "pro_vs_promax_same_price"
+      ],
+      "is_official": false,
+      "review_status": "pending",
+      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認（弾かない）"
+    },
+    {
+      "source_name": "イオシス",
+      "price_role": "sell",
+      "price_type": "buyback_price",
+      "price": 172000,
+      "product_ids": [
+        "prod_iphone17pm_256",
+        "prod_macbook_air_m4_15"
+      ],
+      "count": 2,
+      "models": [
+        "15インチ air m4 macbook",
+        "17 iphone max pro"
+      ],
+      "capacities": [
+        "256",
+        "None"
+      ],
+      "conditions": [
+        "new"
+      ],
+      "first_seen": 95.4,
+      "last_seen": 1.0,
+      "risk_level": "high",
+      "possible_reason": [
+        "different_model_same_price",
+        "pro_vs_promax_same_price"
+      ],
+      "is_official": false,
+      "review_status": "pending",
+      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認（弾かない）"
+    },
+    {
+      "source_name": "ヤフオク (新品/未使用落札)",
+      "price_role": "buy",
+      "price_type": "flea_sold_price",
+      "price": 231000,
+      "product_ids": [
+        "prod_iphone17pm_256",
+        "prod_iphone17pro_256"
+      ],
+      "count": 2,
+      "models": [
+        "17 iphone max pro",
+        "17 iphone pro"
+      ],
+      "capacities": [
+        "256"
+      ],
+      "conditions": [
+        "new"
+      ],
+      "first_seen": 83.0,
+      "last_seen": 83.0,
+      "risk_level": "high",
+      "possible_reason": [
+        "different_model_same_price",
+        "pro_vs_promax_same_price"
+      ],
+      "is_official": false,
+      "review_status": "pending",
+      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認（弾かない）"
+    },
+    {
+      "source_name": "ヤフオク (新品/未使用落札)",
+      "price_role": "buy",
+      "price_type": "flea_sold_price",
+      "price": 236544,
+      "product_ids": [
+        "prod_iphone17pm_512",
+        "prod_iphone17pro_512"
+      ],
+      "count": 2,
+      "models": [
+        "17 iphone max pro",
+        "17 iphone pro"
+      ],
+      "capacities": [
+        "512"
+      ],
+      "conditions": [
+        "new"
+      ],
+      "first_seen": 83.0,
+      "last_seen": 83.0,
+      "risk_level": "high",
+      "possible_reason": [
+        "different_model_same_price",
+        "pro_vs_promax_same_price"
+      ],
+      "is_official": false,
+      "review_status": "pending",
+      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認（弾かない）"
+    },
+    {
+      "source_name": "メーカー公式/定価",
+      "price_role": "official",
+      "price_type": "official_price",
+      "price": 299800,
+      "product_ids": [
+        "prod_gr4",
+        "prod_gr4_hdf",
+        "prod_gr4_mono"
+      ],
+      "count": 3,
+      "models": [
+        "gr hdf iv ricoh",
+        "gr iv monochrome ricoh",
+        "gr iv ricoh"
+      ],
+      "capacities": [
+        "None"
+      ],
+      "conditions": [
+        "new"
+      ],
+      "first_seen": 0.0,
+      "last_seen": 0.0,
+      "risk_level": "medium",
+      "possible_reason": [
+        "different_model_same_price"
+      ],
+      "is_official": true,
+      "review_status": "reviewed_true_same_price",
+      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認（弾かない）"
+    },
+    {
+      "source_name": "メーカー公式/定価",
+      "price_role": "official",
+      "price_type": "official_price",
+      "price": 142800,
+      "product_ids": [
+        "prod_apple_watch_ultra3",
+        "prod_iphone17_256"
+      ],
+      "count": 2,
+      "models": [
+        "17 iphone",
+        "3 ultra watch"
+      ],
+      "capacities": [
+        "256",
+        "None"
+      ],
+      "conditions": [
+        "new"
+      ],
+      "first_seen": 0.0,
+      "last_seen": 0.0,
+      "risk_level": "medium",
+      "possible_reason": [
+        "different_model_same_price"
+      ],
+      "is_official": true,
+      "review_status": "reviewed_true_same_price",
+      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認（弾かない）"
+    },
+    {
+      "source_name": "メーカー公式/定価",
+      "price_role": "official",
+      "price_type": "official_price",
+      "price": 129800,
+      "product_ids": [
+        "prod_gr3",
+        "prod_ipad_air_m3"
+      ],
+      "count": 2,
+      "models": [
+        "air ipad m3",
+        "gr iii ricoh"
+      ],
+      "capacities": [
+        "None"
+      ],
+      "conditions": [
+        "new"
+      ],
+      "first_seen": 0.0,
+      "last_seen": 0.0,
+      "risk_level": "medium",
+      "possible_reason": [
+        "different_model_same_price"
+      ],
+      "is_official": true,
+      "review_status": "reviewed_true_same_price",
+      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認（弾かない）"
+    },
+    {
+      "source_name": "イオシス",
+      "price_role": "sell",
+      "price_type": "buyback_price",
+      "price": 215000,
+      "product_ids": [
+        "prod_iphone17pro_512",
+        "prod_macbook_pro_m4_14"
+      ],
+      "count": 2,
+      "models": [
+        "14インチ m4 macbook pro",
+        "17 iphone pro"
+      ],
+      "capacities": [
+        "512",
+        "None"
+      ],
+      "conditions": [
+        "new"
+      ],
+      "first_seen": 95.4,
+      "last_seen": 13.4,
+      "risk_level": "medium",
+      "possible_reason": [
+        "different_model_same_price"
+      ],
+      "is_official": false,
+      "review_status": "pending",
+      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認（弾かない）"
+    },
+    {
+      "source_name": "じゃんぱら",
+      "price_role": "sell",
+      "price_type": "buyback_price",
+      "price": 148000,
+      "product_ids": [
+        "prod_ipad_pro_m4_11",
+        "prod_iphone16pro_256"
+      ],
+      "count": 2,
+      "models": [
+        "11インチ ipad m4 pro",
+        "16 iphone pro"
+      ],
+      "capacities": [
+        "256",
+        "None"
+      ],
+      "conditions": [
+        "new"
+      ],
+      "first_seen": 95.4,
+      "last_seen": 13.4,
+      "risk_level": "medium",
+      "possible_reason": [
+        "different_model_same_price"
+      ],
+      "is_official": false,
+      "review_status": "pending",
+      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認（弾かない）"
+    },
+    {
+      "source_name": "じゃんぱら",
+      "price_role": "sell",
+      "price_type": "buyback_price",
+      "price": 78000,
+      "product_ids": [
+        "prod_ipad_air_m3",
+        "prod_mac_mini_m4"
+      ],
+      "count": 2,
+      "models": [
+        "air ipad m3",
+        "m4 mac mini"
+      ],
+      "capacities": [
+        "None"
+      ],
+      "conditions": [
+        "new"
+      ],
+      "first_seen": 95.4,
+      "last_seen": 13.4,
+      "risk_level": "medium",
+      "possible_reason": [
+        "different_model_same_price"
+      ],
+      "is_official": false,
+      "review_status": "pending",
+      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認（弾かない）"
+    },
+    {
+      "source_name": "じゃんぱら",
+      "price_role": "sell",
+      "price_type": "buyback_price",
+      "price": 65000,
+      "product_ids": [
+        "prod_airpods_max",
+        "prod_switch2_mk"
+      ],
+      "count": 2,
+      "models": [
+        "2 nintendo switch",
+        "airpods max"
+      ],
+      "capacities": [
+        "None"
+      ],
+      "conditions": [
+        "new"
+      ],
+      "first_seen": 95.4,
+      "last_seen": 13.4,
+      "risk_level": "medium",
+      "possible_reason": [
+        "different_model_same_price"
+      ],
+      "is_official": false,
+      "review_status": "pending",
+      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認（弾かない）"
+    },
+    {
+      "source_name": "ゲオ",
+      "price_role": "sell",
+      "price_type": "buyback_price",
+      "price": 190000,
+      "product_ids": [
+        "prod_ps5_pro",
+        "prod_switch2"
+      ],
+      "count": 2,
+      "models": [
+        "2 nintendo switch",
+        "5 playstation pro"
+      ],
+      "capacities": [
+        "None"
+      ],
+      "conditions": [
+        "new"
+      ],
+      "first_seen": 91.0,
+      "last_seen": 91.0,
+      "risk_level": "medium",
+      "possible_reason": [
+        "different_model_same_price"
+      ],
+      "is_official": false,
+      "review_status": "pending",
+      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認（弾かない）"
+    },
+    {
+      "source_name": "フジヤカメラ",
+      "price_role": "sell",
+      "price_type": "buyback_price",
+      "price": 213400,
+      "product_ids": [
+        "prod_gr4_hdf",
+        "prod_gr4_mono"
+      ],
+      "count": 2,
+      "models": [
+        "gr hdf iv ricoh",
+        "gr iv monochrome ricoh"
+      ],
+      "capacities": [
+        "None"
+      ],
+      "conditions": [
+        "new"
+      ],
+      "first_seen": 32.2,
+      "last_seen": 32.2,
+      "risk_level": "medium",
+      "possible_reason": [
+        "different_model_same_price"
+      ],
+      "is_official": false,
+      "review_status": "pending",
+      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認（弾かない）"
+    }
+  ],
+  "source_accuracy_ranking": [
+    {
+      "source": "買取商店",
+      "observations": 146,
+      "score": 84,
+      "identity": 0.534,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 0.116,
+      "main_eligible": 6
+    },
+    {
+      "source": "イオシス",
+      "observations": 174,
+      "score": 78,
+      "identity": 0.316,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 0.115,
+      "main_eligible": 5
+    },
+    {
+      "source": "ネットオフ",
+      "observations": 44,
+      "score": 78,
+      "identity": 0.318,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 0.091,
+      "main_eligible": 2
+    },
+    {
+      "source": "メーカー公式/定価",
+      "observations": 45,
+      "score": 75,
+      "identity": 0.0,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 1.0,
+      "main_eligible": 0
+    },
+    {
+      "source": "Yahoo Auction sold",
+      "observations": 3,
+      "score": 75,
+      "identity": 0.0,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 1.0,
+      "main_eligible": 0
+    },
+    {
+      "source": "Mercari sold",
+      "observations": 3,
+      "score": 75,
+      "identity": 0.0,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 1.0,
+      "main_eligible": 0
+    },
+    {
+      "source": "src_ebay",
+      "observations": 6,
+      "score": 75,
+      "identity": 0.0,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 1.0,
+      "main_eligible": 0
+    },
+    {
+      "source": "src_bhphoto",
+      "observations": 2,
+      "score": 75,
+      "identity": 0.0,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 1.0,
+      "main_eligible": 0
+    },
+    {
+      "source": "ゲオ",
+      "observations": 77,
+      "score": 73,
+      "identity": 0.156,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 0.104,
+      "main_eligible": 1
+    },
+    {
+      "source": "フジヤカメラ",
+      "observations": 52,
+      "score": 73,
+      "identity": 0.173,
+      "capacity": 1.0,
+      "model": 0.981,
+      "condition": 1.0,
+      "freshness": 0.154,
+      "main_eligible": 0
+    },
+    {
+      "source": "じゃんぱら",
+      "observations": 242,
+      "score": 71,
+      "identity": 0.0,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 0.141,
+      "main_eligible": 0
+    },
+    {
+      "source": "ソフマップ",
+      "observations": 70,
+      "score": 71,
+      "identity": 0.0,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 0.143,
+      "main_eligible": 0
+    },
+    {
+      "source": "eBay sold(新品)",
+      "observations": 30,
+      "score": 71,
+      "identity": 0.0,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 0.167,
+      "main_eligible": 0
+    },
+    {
+      "source": "メルカリ未使用",
+      "observations": 30,
+      "score": 71,
+      "identity": 0.0,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 0.167,
+      "main_eligible": 0
+    },
+    {
+      "source": "Amazon新品出品",
+      "observations": 18,
+      "score": 71,
+      "identity": 0.0,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 0.167,
+      "main_eligible": 0
+    },
+    {
+      "source": "楽天市場新品",
+      "observations": 12,
+      "score": 71,
+      "identity": 0.0,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 0.167,
+      "main_eligible": 0
+    },
+    {
+      "source": "モバイル一番",
+      "observations": 90,
+      "score": 70,
+      "identity": 0.0,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 0.089,
+      "main_eligible": 0
+    },
+    {
+      "source": "買取一丁目",
+      "observations": 68,
+      "score": 70,
+      "identity": 0.0,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 0.059,
+      "main_eligible": 0
+    },
+    {
+      "source": "ブックオフ",
+      "observations": 26,
+      "score": 70,
+      "identity": 0.0,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 0.077,
+      "main_eligible": 0
+    },
+    {
+      "source": "駿河屋",
+      "observations": 26,
+      "score": 70,
+      "identity": 0.0,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 0.077,
+      "main_eligible": 0
+    },
+    {
+      "source": "TSUTAYA",
+      "observations": 26,
+      "score": 70,
+      "identity": 0.0,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 0.077,
+      "main_eligible": 0
+    },
+    {
+      "source": "ゲオモバイル",
+      "observations": 44,
+      "score": 70,
+      "identity": 0.0,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 0.091,
+      "main_eligible": 0
+    },
+    {
+      "source": "セカンドストリート",
+      "observations": 44,
+      "score": 70,
+      "identity": 0.0,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 0.091,
+      "main_eligible": 0
+    },
+    {
+      "source": "ハードオフ",
+      "observations": 22,
+      "score": 70,
+      "identity": 0.0,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 0.091,
+      "main_eligible": 0
+    },
+    {
+      "source": "ドスパラ",
+      "observations": 22,
+      "score": 70,
+      "identity": 0.0,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 0.091,
+      "main_eligible": 0
+    },
+    {
+      "source": "パソコン工房",
+      "observations": 10,
+      "score": 70,
+      "identity": 0.0,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 0.0,
+      "main_eligible": 0
+    },
+    {
+      "source": "ヤフオク (新品/未使用落札)",
+      "observations": 10,
+      "score": 70,
+      "identity": 0.0,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 0.0,
+      "main_eligible": 0
+    },
+    {
+      "source": "マップカメラ",
+      "observations": 40,
+      "score": 69,
+      "identity": 0.0,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 0.225,
+      "main_eligible": 0
+    },
+    {
+      "source": "カメラのキタムラ",
+      "observations": 40,
+      "score": 69,
+      "identity": 0.0,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 0.225,
+      "main_eligible": 0
+    },
+    {
+      "source": "Amazon JP (新品出品)",
+      "observations": 5,
+      "score": 66,
+      "identity": 0.0,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 0.0,
+      "main_eligible": 0
+    }
+  ],
+  "resolver": "src/market/product_identity_resolver.py（JAN→SKU/MPN→型番→機種名→容量→variant→color→condition）"
+}

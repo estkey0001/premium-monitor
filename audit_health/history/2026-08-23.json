@@ -1,17 +1,17 @@
 {
-  "generated_at": "2026-08-23 14:45 JST",
+  "generated_at": "2026-08-23 20:48 JST",
   "date": "2026-08-23",
   "health_score": {
-    "data_quality": 7.3,
+    "data_quality": 7.1,
     "profit_discovery": 25,
     "source_health": 12.6,
     "link_quality": 5.1,
     "freshness": 1.6,
-    "total": 51.6
+    "total": 51.4
   },
   "data_quality": {
     "total_obs": 1427,
-    "usable_obs": 182,
+    "usable_obs": 172,
     "stale_count": 1204,
     "stale_rate": 0.8437,
     "zero_count": 521,
@@ -23,11 +23,11 @@
     "html_rate": 0.0028
   },
   "profit": {
-    "main_route_count": 30,
+    "main_route_count": 26,
     "reference_route_count": 13,
     "max_profit": 183400,
-    "avg_profit": 75497,
-    "avg_roi": 0.3828,
+    "avg_profit": 85752,
+    "avg_roi": 0.4267,
     "main_route_products": [
       "prod_iphone17pm_256",
       "prod_ps5_pro",
@@ -409,59 +409,28 @@
   "diff_vs_prev": {
     "available": true,
     "stale_rate": {
-      "prev": 0.4836,
+      "prev": 0.8437,
       "cur": 0.8437
     },
     "zero_rate": {
-      "prev": 0.1311,
+      "prev": 0.3651,
       "cur": 0.3651
     },
     "item_url_rate": {
-      "prev": 0.4754,
+      "prev": 0.5144,
       "cur": 0.5144
     },
     "main_route_count": {
-      "prev": 0,
-      "cur": 30
+      "prev": 30,
+      "cur": 26
     },
     "reference_route_count": {
-      "prev": 2,
+      "prev": 13,
       "cur": 13
     },
-    "new_main": [
-      "prod_iphone17pm_256",
-      "prod_ps5_pro",
-      "prod_switch2",
-      "prod_switch2_mk",
-      "prod_x100vi"
-    ],
+    "new_main": [],
     "lost_main": [],
-    "source_success_changes": [
-      {
-        "source": "ネットオフ",
-        "prev": 1.0,
-        "cur": 0.3182,
-        "delta": -0.682
-      },
-      {
-        "source": "モバイル一番",
-        "prev": 1.0,
-        "cur": 0.4111,
-        "delta": -0.589
-      },
-      {
-        "source": "買取一丁目",
-        "prev": 1.0,
-        "cur": 0.4118,
-        "delta": -0.588
-      },
-      {
-        "source": "じゃんぱら",
-        "prev": 0.8235,
-        "cur": 0.6033,
-        "delta": -0.22
-      }
-    ]
+    "source_success_changes": []
   },
   "anomalies": {
     "critical": [
@@ -480,15 +449,10 @@
       "取得成功率 0%: パソコン工房"
     ],
     "warning": [
-      "reference 急増 2→13",
-      "ネットオフ 取得成功率 100%→32%",
-      "モバイル一番 取得成功率 100%→41%",
-      "買取一丁目 取得成功率 100%→41%",
-      "じゃんぱら 取得成功率 82%→60%"
+      "main route 減少 30→26"
     ],
     "info": [
-      "新規 main: prod_iphone17pm_256, prod_ps5_pro, prod_switch2, prod_switch2_mk, prod_x100vi",
-      "検証済み利益ルート 30件 / 最大 +¥183,400"
+      "検証済み利益ルート 26件 / 最大 +¥183,400"
     ]
   },
   "improvements_top10": [

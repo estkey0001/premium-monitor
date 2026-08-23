@@ -6599,6 +6599,100 @@ def check() -> list[dict]:
                     "message": f"#694 Freshness 遵守（時刻だけ更新の疑い {len((_fc or {}).get('violations', []))}件）"
                                + ("" if _t694 else " ← Freshness 違反の疑い")})
 
+    # ── Source Matching Accuracy ガード #695-#707 ──
+    _sm = _load_json_safe('exports/source_matching/latest.json') or {}
+    _sm_ok = isinstance(_sm, dict) and ('accuracy' in _sm)
+    _acc = _sm.get('accuracy', {}) if _sm_ok else {}
+
+    # #695: ProductIdentityResolver が存在する
+    _res_src = _read_src("src", "market", "product_identity_resolver.py")
+    _t695 = all(k in _res_src for k in ("class ProductIdentityResolver", "def resolve",
+                                        "matched_product_id", "identity_confidence"))
+    results.append({"level": "ok" if _t695 else "error", "check": "product_identity_resolver",
+                    "message": "#695 ProductIdentityResolver が存在する"
+                               + ("" if _t695 else " ← Resolver が見つかりません")})
+
+    # #696-#701: マッチング品質の機能テスト（resolver/price_quality を直接検証）
+    try:
+        import importlib
+        _pq = importlib.import_module("src.market.price_quality")
+        _pir = importlib.import_module("src.market.product_identity_resolver")
+        importlib.reload(_pq)  # 最新実装で検証
+        cap_ok = (_pq.extract_capacity_gb("1TB") == 1024 and
+                  _pq.extract_capacity_gb("256GB") == 256 and
+                  _pq.extract_capacity_gb("256GB") != _pq.extract_capacity_gb("512GB"))
+        model_ok = (_pq.model_compatible("iPhone 17 Pro", "iPhone 17 Pro Max") is False and
+                    _pq.model_compatible("RICOH GR IV", "RICOH GR IV HDF") is False and
+                    _pq.model_compatible("iPhone 16 Pro", "iPhone 17 Pro") is False)
+        _R = _pir.ProductIdentityResolver({"p": {"name": "iPhone 17 Pro 256GB", "model_number": ""}})
+        acc_ok = _R.resolve(source_title="iPhone 17 Pro ケース", link_type="item").accessory_flag is True
+        from src.market.official_price_validator import sanity_check_price as _sc
+        ti_ok = (_sc(180000, 200000, "下取価格") is not None and _sc(8000, 200000, "月々分割") is not None)
+        search_ok = _R.resolve(source_title="iPhone 17 Pro 256GB", link_type="search",
+                               expected_product_id="p").identity_confidence != "high"
+        gate_ok = (_pq.is_main_promotable({"price": 1, "is_fresh": False, "is_exact_product_match": True,
+                   "product_match_confidence": "high", "link_type": "item", "is_body_only": True,
+                   "product_name": "x", "rejection_reason": "stale_over_14d"}) is False)
+    except Exception:
+        cap_ok = model_ok = acc_ok = ti_ok = search_ok = gate_ok = False
+
+    for num, key, ok, msg in [
+        (696, "capacity_normalization", cap_ok, "容量正規化(1TB=1024/256≠512)が正しい"),
+        (697, "model_normalization", model_ok, "型番/機種判別(Pro≠Pro Max/GR IV≠HDF/世代)が正しい"),
+        (698, "accessory_rejection", acc_ok, "アクセサリー拒否が機能する"),
+        (699, "tradein_rejection", ti_ok, "下取/分割月額の拒否が機能する"),
+        (700, "search_result_downgrade", search_ok, "検索結果は high にしない"),
+        (701, "main_promotion_strict_gate", gate_ok, "Main昇格ゲート(stale等)が厳格"),
+    ]:
+        results.append({"level": "ok" if ok else "error", "check": key,
+                        "message": f"#{num} {msg}" + ("" if ok else " ← 機能テスト失敗")})
+
+    # #702: False Main Promotion = 0
+    _fmp = _acc.get("false_main_promotion", 99) if _sm_ok else 99
+    _t702 = _sm_ok and _fmp == 0
+    results.append({"level": "ok" if _t702 else "error", "check": "false_main_promotion_zero",
+                    "message": f"#702 False Main Promotion = {_fmp}（目標0）"
+                               + ("" if _t702 else " ← False Main Promotion が残存")})
+
+    # #703: Duplicate audit が生成される
+    _t703 = _sm_ok and isinstance(_sm.get("duplicate_price_pattern"), list)
+    results.append({"level": "ok" if _t703 else "error", "check": "duplicate_audit_generated",
+                    "message": f"#703 Duplicate audit が生成される（{len(_sm.get('duplicate_price_pattern', []))}件）"
+                               + ("" if _t703 else " ← Duplicate audit が不足")})
+
+    # #704: RICOH duplicate が reviewed または flagged
+    _ricoh_dup = [d for d in _sm.get("duplicate_price_pattern", [])
+                  if any("gr4" in p or "gr" in str(d.get("models", "")).lower() for p in d.get("product_ids", []))
+                  or (d.get("is_official") and d.get("price") == 299800)]
+    _t704 = any(d.get("review_status") in ("reviewed_true_same_price", "manual_review_required")
+                for d in _ricoh_dup) or len(_ricoh_dup) == 0
+    results.append({"level": "ok" if _t704 else "warning", "check": "ricoh_duplicate_reviewed",
+                    "message": "#704 RICOH GR IV 同額が reviewed/flagged 済み"
+                               + ("" if _t704 else " ← RICOH duplicate 未レビュー")})
+
+    # #705: Mobile Ichiban mismatch が解消/flag（同額の複数SKU割当が main から除外）
+    _mi_main = [f for f in _sm.get("false_main_promotion", []) if f.get("source") == "モバイル一番"]
+    _t705 = len(_mi_main) == 0
+    results.append({"level": "ok" if _t705 else "error", "check": "mobile_ichiban_resolved",
+                    "message": "#705 モバイル一番の誤マッチが main から除外されている"
+                               + ("" if _t705 else " ← モバイル一番の誤マッチが main に残存")})
+
+    # #706: Apple SKU mismatch が解消/flag（未検証SKUに推測価格を main 昇格しない）
+    _apple_fm = [f for f in _sm.get("false_main_promotion", []) if "メーカー公式" in str(f.get("source", ""))]
+    _t706 = len(_apple_fm) == 0
+    results.append({"level": "ok" if _t706 else "error", "check": "apple_sku_mismatch_resolved",
+                    "message": "#706 Apple 統合ページ由来の誤 SKU 価格が main 昇格していない"
+                               + ("" if _t706 else " ← Apple SKU 誤価格が main に残存")})
+
+    # #707: Source Matching Report が存在し精度目標を満たす
+    _pma = _acc.get("product_match_accuracy", 0) if _sm_ok else 0
+    _cma = _acc.get("capacity_match_accuracy", 0) if _sm_ok else 0
+    _mma = _acc.get("model_match_accuracy", 0) if _sm_ok else 0
+    _t707 = _sm_ok and _pma >= 0.99 and _cma >= 1.0 and _mma >= 1.0
+    results.append({"level": "ok" if _t707 else "warning", "check": "source_matching_report",
+                    "message": f"#707 Source Matching 精度（product {_pma:.1%}/cap {_cma:.0%}/model {_mma:.0%}）"
+                               + ("" if _t707 else " ← 精度目標未達")})
+
     return results
 
 

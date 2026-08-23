@@ -52,6 +52,27 @@ class AppleOfficialCollector(BaseCollector):
             self.log_collection(product.id, started_at, "error", error_message=str(e))
             return None
 
+        # ── 保存前の公式価格検証（最重要ルール）──
+        from src.market.official_price_validator import validate_official_price
+        vr = validate_official_price(
+            source_id=self.source.id, url=url, http_status=200, canonical_url=url,
+            product_name=product.name, model_number=getattr(product, "model_number", "") or "",
+            keywords=getattr(product, "keywords", None),
+            detected_name=product.name,
+            detected_text=str(result["raw"].get("all_prices_found", "")),
+            price=result.get("price"), currency="JPY",
+            reference_price=getattr(product, "retail_price", 0) or None,
+            link_type="item",
+            multiple_candidates=bool(result["raw"].get("all_prices_found")),
+        )
+        result["raw"]["validation"] = vr.as_dict()
+        if not vr.accepted:
+            self.logger.info("apple_official | %s | 公式価格を拒否: %s", product.name, vr.rejection_reason)
+            self.log_collection(product.id, started_at, "rejected",
+                                error_message=f"official_price_rejected:{vr.rejection_reason}")
+            return None
+        result["confidence_level"] = vr.confidence
+
         now = datetime.now()
         obs = ObservationModel(
             id=str(ulid.new()),

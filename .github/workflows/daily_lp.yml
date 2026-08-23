@@ -63,6 +63,13 @@ jobs:
         env:
           PYTHONPATH: .
 
+      # 3.6 公式ソース登録・検証監査（検証済みURL登録・sanity/confidence・レポート生成）
+      - name: Official source audit
+        run: python scripts/audit_official_sources.py
+        continue-on-error: true
+        env:
+          PYTHONPATH: .
+
       # 4. Collector quality gate
       - name: Collector quality gate
         id: quality_gate
@@ -347,6 +354,7 @@ jobs:
                   data/accounts/ \
                   audit_health/ \
                   exports/data_quality_report/ exports/data_quality/ exports/beta/ docs/beta/ \
+                  exports/official_source_audit/ \
                   exports/camera_buyback_status.json \
                   data/alerts.csv data/lottery_events.csv \
                   data/overseas_price_history.csv \

@@ -60,6 +60,29 @@ class GenericOfficialCollector(BaseCollector):
             self.log_collection(product.id, started_at, "error", error_message=str(e))
             return None
 
+        # ── 保存前の公式価格検証（最重要ルール）──
+        from src.market.official_price_validator import validate_official_price
+        vr = validate_official_price(
+            source_id=self.source.id, url=url, http_status=200,
+            canonical_url=url,
+            product_name=product.name, model_number=getattr(product, "model_number", "") or "",
+            keywords=getattr(product, "keywords", None),
+            detected_name=(result["raw"].get("detected_name") or product.name),
+            detected_text=result["raw"].get("page_text_sample", ""),
+            price=result.get("price"), currency="JPY",
+            reference_price=getattr(product, "retail_price", 0) or None,
+            link_type=result["raw"].get("link_type", "item"),
+            multiple_candidates=bool(result["raw"].get("all_prices_found")),
+            page_text=result["raw"].get("page_text_sample", ""),
+        )
+        result["raw"]["validation"] = vr.as_dict()
+        if not vr.accepted:
+            self.logger.info("%s | %s | 公式価格を拒否: %s", self.LABEL, product.name, vr.rejection_reason)
+            self.log_collection(product.id, started_at, "rejected",
+                                error_message=f"official_price_rejected:{vr.rejection_reason}")
+            return None
+        result["confidence_level"] = vr.confidence
+
         now = datetime.now()
         obs = ObservationModel(
             id=str(ulid.new()),
@@ -101,6 +124,20 @@ class GenericOfficialCollector(BaseCollector):
     def _parse(self, html: str, product: ProductModel, url: str) -> dict:
         result = {"price": None, "is_in_stock": None, "raw": {"url": url, "label": self.LABEL}}
         soup = self.parse_html(html)
+        # 検証用: ページの検出名と本文サンプル（オープン価格/型番一致の判定に使う）
+        page_text = soup.get_text(" ", strip=True)
+        result["raw"]["page_text_sample"] = page_text[:3000]
+        detected_name = None
+        try:
+            for item in Normalizer.extract_json_ld(html):
+                if item.get("@type") == "Product" and item.get("name"):
+                    detected_name = item.get("name"); break
+        except Exception:
+            pass
+        if not detected_name:
+            detected_name = Normalizer.extract_meta_content(html, "og:title") or \
+                (soup.title.get_text(strip=True) if soup.title else "")
+        result["raw"]["detected_name"] = detected_name
 
         # --- 戦略1: JSON-LD ---
         try:

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-22 13:43 JST",
+  "generated_at": "2026-08-23 13:51 JST",
   "route_type_beginner": "primary_to_secondary",
   "top_camera_buyback_opportunities": [
     {
@@ -216,12 +216,12 @@
       "product_id": "prod_a7rv",
       "product_name": "SONY α7R V",
       "shop_name": "フジヤカメラ",
-      "buyback_price": 202000,
+      "buyback_price": 204000,
       "official_price": 440000,
       "reference_price": 440000,
       "reference_source": "retail_concept",
-      "diff_vs_official": -238000,
-      "matched_item": "α7R V ボディ ILCE-7RM5 SONY 買取金額 新品同様 ￥202,000 良品 ￥201,000 下取は10%UP 新品同様 ￥222,200 良品 ￥221,100 買取申し込み 買取検討リストへ",
+      "diff_vs_official": -236000,
+      "matched_item": "α7R V ボディ ILCE-7RM5 SONY 買取金額 新品同様 ￥204,000 良品 ￥203,000 下取は10%UP 新品同様 ￥224,400 良品 ￥223,300 買取申し込み 買取検討リストへ",
       "confidence": "high",
       "source": "auto_scraped",
       "age_days": 0.0
@@ -258,12 +258,12 @@
       "product_id": "prod_a1ii",
       "product_name": "SONY α1 II",
       "shop_name": "フジヤカメラ",
-      "buyback_price": 590700,
+      "buyback_price": 592900,
       "official_price": 990000,
       "reference_price": 990000,
       "reference_source": "retail_concept",
-      "diff_vs_official": -399300,
-      "matched_item": "α1 II ボディ ILCE-1M2 SONY 買取金額 新品同様 ￥537,000 良品 ￥536,000 下取は10%UP 新品同様 ￥590,700 良品 ￥589,600 買取申し込み 買取検討リストへ",
+      "diff_vs_official": -397100,
+      "matched_item": "α1 II ボディ ILCE-1M2 SONY 買取金額 新品同様 ￥539,000 良品 ￥538,000 下取は10%UP 新品同様 ￥592,900 良品 ￥591,800 買取申し込み 買取検討リストへ",
       "confidence": "high",
       "source": "auto_scraped",
       "age_days": 0.0
@@ -356,24 +356,6 @@
       "route_type": "primary_to_secondary",
       "source_label": "Apple Store",
       "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
-    },
-    {
-      "product_name": "Nintendo Switch 2",
-      "category": "game_console",
-      "user_level": "beginner_easy",
-      "official_price_jpy": 49980,
-      "reference_source": "retail_concept",
-      "best_buyback_price": 51400,
-      "best_buyback_shop": "買取商店",
-      "buy_price": null,
-      "buy_shop_name": "",
-      "buy_price_type": "",
-      "sell_price_type": "buyback_price",
-      "net_profit_jpy": 120,
-      "net_profit_rate": 0.0024,
-      "route_type": "primary_to_secondary",
-      "source_label": "任天堂公式 / PlayStation Direct / Xbox Store",
-      "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
     }
   ],
   "pro_top10": [
@@ -385,12 +367,12 @@
       "reference_source": null,
       "best_buyback_price": 175700,
       "best_buyback_shop": "買取商店",
-      "buy_price": 154999,
+      "buy_price": 168900,
       "buy_shop_name": "ヤフオク (新品/未使用落札)",
       "buy_price_type": "flea_sold_price",
       "sell_price_type": "buyback_price",
-      "net_profit_jpy": 18901,
-      "net_profit_rate": 0.1219,
+      "net_profit_jpy": 5000,
+      "net_profit_rate": 0.0296,
       "route_type": "secondary_to_secondary",
       "source_label": "中古市場 / フリマ / 買取店",
       "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
@@ -403,12 +385,12 @@
       "reference_source": null,
       "best_buyback_price": 175700,
       "best_buyback_shop": "モバイル一番",
-      "buy_price": 154999,
+      "buy_price": 168900,
       "buy_shop_name": "ヤフオク (新品/未使用落札)",
       "buy_price_type": "flea_sold_price",
       "sell_price_type": "buyback_price",
-      "net_profit_jpy": 18901,
-      "net_profit_rate": 0.1219,
+      "net_profit_jpy": 5000,
+      "net_profit_rate": 0.0296,
       "route_type": "secondary_to_secondary",
       "source_label": "中古市場 / フリマ / 買取店",
       "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
@@ -450,24 +432,6 @@
         "sell_price_type": "buyback_price",
         "net_profit_jpy": 54420,
         "net_profit_rate": 0.4536,
-        "route_type": "primary_to_secondary",
-        "source_label": "任天堂公式 / PlayStation Direct / Xbox Store",
-        "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
-      },
-      {
-        "product_name": "Nintendo Switch 2",
-        "category": "game_console",
-        "user_level": "beginner_easy",
-        "official_price_jpy": 49980,
-        "reference_source": "retail_concept",
-        "best_buyback_price": 51400,
-        "best_buyback_shop": "買取商店",
-        "buy_price": null,
-        "buy_shop_name": "",
-        "buy_price_type": "",
-        "sell_price_type": "buyback_price",
-        "net_profit_jpy": 120,
-        "net_profit_rate": 0.0024,
         "route_type": "primary_to_secondary",
         "source_label": "任天堂公式 / PlayStation Direct / Xbox Store",
         "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
@@ -522,12 +486,12 @@
         "reference_source": null,
         "best_buyback_price": 175700,
         "best_buyback_shop": "買取商店",
-        "buy_price": 154999,
+        "buy_price": 168900,
         "buy_shop_name": "ヤフオク (新品/未使用落札)",
         "buy_price_type": "flea_sold_price",
         "sell_price_type": "buyback_price",
-        "net_profit_jpy": 18901,
-        "net_profit_rate": 0.1219,
+        "net_profit_jpy": 5000,
+        "net_profit_rate": 0.0296,
         "route_type": "secondary_to_secondary",
         "source_label": "中古市場 / フリマ / 買取店",
         "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
@@ -540,24 +504,24 @@
         "reference_source": null,
         "best_buyback_price": 175700,
         "best_buyback_shop": "モバイル一番",
-        "buy_price": 154999,
+        "buy_price": 168900,
         "buy_shop_name": "ヤフオク (新品/未使用落札)",
         "buy_price_type": "flea_sold_price",
         "sell_price_type": "buyback_price",
-        "net_profit_jpy": 18901,
-        "net_profit_rate": 0.1219,
+        "net_profit_jpy": 5000,
+        "net_profit_rate": 0.0296,
         "route_type": "secondary_to_secondary",
         "source_label": "中古市場 / フリマ / 買取店",
         "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
       }
     ]
   },
-  "excluded_items": 15,
+  "excluded_items": 16,
   "total_deals": 20,
   "confidence_summary": {
     "total": 20,
-    "profitable": 5,
-    "negative": 15
+    "profitable": 4,
+    "negative": 16
   },
   "stale_data_count": 0
 }

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-23 14:45 JST",
+  "generated_at": "2026-08-23 20:48 JST",
   "route_type_beginner": "primary_to_secondary",
   "top_camera_buyback_opportunities": [],
   "route_type_pro": "secondary_to_secondary",
@@ -121,12 +121,12 @@
     ]
   },
   "pro_by_category": {},
-  "excluded_items": 25,
-  "total_deals": 28,
+  "excluded_items": 23,
+  "total_deals": 26,
   "confidence_summary": {
-    "total": 28,
+    "total": 26,
     "profitable": 3,
-    "negative": 25
+    "negative": 23
   },
   "stale_data_count": 0
 }

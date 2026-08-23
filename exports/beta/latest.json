@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-23 14:45 JST",
+  "generated_at": "2026-08-23 20:48 JST",
   "schema_version": 1,
   "engine": "beta",
   "scope": "初回体験最適化・運用準備・βテスト計測・フィードバック（AI/利益/DataQualityロジックは不変）",
@@ -27,7 +27,8 @@
       "SaaS 実稼働（実OAuth/Stripe/常時API/マネージドDB）は外部基盤が必要（ROADMAP記載）"
     ],
     "Medium": [
-      "item_url率 48%（確認導線/再現性の改善余地）",
+      "stale率 84%（サンプル/手動データ鮮度・日次運用で改善）",
+      "item_url率 51%（確認導線/再現性の改善余地）",
       "Coverage 7カテゴリ（Apple/GPU等の拡充で候補増）"
     ],
     "Low": []
@@ -108,7 +109,7 @@
               "description": "銘柄: FUJIFILM X100VI\n判定: BUY（Opportunity Score 87/100）\n根拠: FUJIFILM X100VI: BUY。国内成立 利益¥183,400/ROI72%/Score87\n※ 参考情報です。購入・応募の自動実行は行いません。最終判断はご自身で。",
               "color": 5814783,
               "footer": {
-                "text": "2026-08-23 14:45 JST / closed beta"
+                "text": "2026-08-23 20:48 JST / closed beta"
               }
             }
           ]
@@ -166,7 +167,7 @@
   "admin_beta": {
     "registered_users": 3,
     "active_rate": null,
-    "notification_count": 58,
+    "notification_count": 50,
     "opportunity_count": 10,
     "capital_usage_rate": null,
     "execution_usage_rate": 31.0,

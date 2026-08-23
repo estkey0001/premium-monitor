@@ -1,12 +1,12 @@
 # Profit Health Dashboard
 
-生成: 2026-08-23 14:45 JST
+生成: 2026-08-23 20:48 JST
 
-## Health Score: **51.6 / 100**
+## Health Score: **51.4 / 100**
 
 | 観点 | 配点 | スコア |
 |---|---|---|
-| Data Quality | 35 | 7.3 |
+| Data Quality | 35 | 7.1 |
 | Profit Discovery | 25 | 25 |
 | Source Health | 20 | 12.6 |
 | Link Quality | 10 | 5.1 |
@@ -14,28 +14,23 @@
 
 ## Data Quality KPI
 
-- 総観測 1427 / usable 182
+- 総観測 1427 / usable 172
 - stale 1204（84%） / 0円 521（37%）
 - item_url率 51% / search 14%
 - manual 43% / API 0% / HTML 0%
 
 ## Profit KPI
 
-- main route **30** / reference 13
-- 最大利益 +¥183,400 / 平均利益 +¥75,497 / 平均ROI 38.3%
+- main route **26** / reference 13
+- 最大利益 +¥183,400 / 平均利益 +¥85,752 / 平均ROI 42.7%
 
 ## 前日比較
 
-- main route: 0 → 30
-- reference: 2 → 13
-- stale率: 48% → 84%
-- 0円率: 13% → 37%
-- item_url率: 48% → 51%
-- 🆕 新規main: prod_iphone17pm_256, prod_ps5_pro, prod_switch2, prod_switch2_mk, prod_x100vi
-- ネットオフ 取得成功率 100%→32%（-68pt）
-- モバイル一番 取得成功率 100%→41%（-59pt）
-- 買取一丁目 取得成功率 100%→41%（-59pt）
-- じゃんぱら 取得成功率 82%→60%（-22pt）
+- main route: 30 → 26
+- reference: 13 → 13
+- stale率: 84% → 84%
+- 0円率: 37% → 37%
+- item_url率: 51% → 51%
 
 ## 異常検知
 
@@ -55,15 +50,10 @@
 - 取得成功率 0%: パソコン工房
 
 ### 🟡 Warning
-- reference 急増 2→13
-- ネットオフ 取得成功率 100%→32%
-- モバイル一番 取得成功率 100%→41%
-- 買取一丁目 取得成功率 100%→41%
-- じゃんぱら 取得成功率 82%→60%
+- main route 減少 30→26
 
 ### ℹ️ Info
-- 新規 main: prod_iphone17pm_256, prod_ps5_pro, prod_switch2, prod_switch2_mk, prod_x100vi
-- 検証済み利益ルート 30件 / 最大 +¥183,400
+- 検証済み利益ルート 26件 / 最大 +¥183,400
 
 ## ソース別品質
 

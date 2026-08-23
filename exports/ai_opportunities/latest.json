@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-08-23 14:45 JST",
-  "health_score": 45.7,
+  "generated_at": "2026-08-23 20:48 JST",
+  "health_score": 51.6,
   "health_note": "現在データ品質低下中",
-  "main_route_count": 30,
+  "main_route_count": 26,
   "reference_route_count": 5,
   "today_tasks": [
     "✅ FUJIFILM X100VI を仕入れる（Yahoo Auction sold ≤¥405,925）",
@@ -80,7 +80,7 @@
       "buy_price": 255000,
       "sell_source": "マップカメラ",
       "sell_price": 445000,
-      "age_days": 1.8,
+      "age_days": 2.0,
       "priority": 1
     },
     {
@@ -145,7 +145,7 @@
       "buy_price": 255000,
       "sell_source": "カメラのキタムラ",
       "sell_price": 442000,
-      "age_days": 1.8,
+      "age_days": 2.0,
       "priority": 2
     },
     {
@@ -210,7 +210,7 @@
       "buy_price": 255000,
       "sell_source": "フジヤカメラ",
       "sell_price": 440000,
-      "age_days": 1.8,
+      "age_days": 2.0,
       "priority": 3
     },
     {
@@ -275,7 +275,7 @@
       "buy_price": 255000,
       "sell_source": "ソフマップ",
       "sell_price": 435000,
-      "age_days": 1.8,
+      "age_days": 2.0,
       "priority": 4
     },
     {
@@ -340,7 +340,7 @@
       "buy_price": 255000,
       "sell_source": "じゃんぱら",
       "sell_price": 430000,
-      "age_days": 1.8,
+      "age_days": 2.0,
       "priority": 5
     },
     {
@@ -405,7 +405,7 @@
       "buy_price": 255000,
       "sell_source": "買取商店",
       "sell_price": 428000,
-      "age_days": 1.8,
+      "age_days": 2.0,
       "priority": 6
     },
     {
@@ -454,11 +454,11 @@
       "why": [
         "main route 成立（国内完結で利益）",
         "ROIが8%以上（54%）",
-        "価格 9日前（要更新）",
+        "価格 10日前（要更新）",
         "再現性スコア 80（中〜高）"
       ],
       "risks": [
-        "鮮度低（9日前）",
+        "鮮度低（10日前）",
         "アクセサリー混在に注意（本体判定要確認）"
       ],
       "holding_period": "数日",
@@ -469,7 +469,7 @@
       "buy_price": 283562,
       "sell_source": "マップカメラ",
       "sell_price": 445000,
-      "age_days": 9.2,
+      "age_days": 9.5,
       "priority": 7
     },
     {
@@ -518,11 +518,11 @@
       "why": [
         "main route 成立（国内完結で利益）",
         "ROIが8%以上（53%）",
-        "価格 9日前（要更新）",
+        "価格 10日前（要更新）",
         "再現性スコア 80（中〜高）"
       ],
       "risks": [
-        "鮮度低（9日前）",
+        "鮮度低（10日前）",
         "アクセサリー混在に注意（本体判定要確認）"
       ],
       "holding_period": "数日",
@@ -533,7 +533,7 @@
       "buy_price": 283562,
       "sell_source": "カメラのキタムラ",
       "sell_price": 442000,
-      "age_days": 9.2,
+      "age_days": 9.5,
       "priority": 8
     },
     {
@@ -582,11 +582,11 @@
       "why": [
         "main route 成立（国内完結で利益）",
         "ROIが8%以上（53%）",
-        "価格 9日前（要更新）",
+        "価格 10日前（要更新）",
         "再現性スコア 80（中〜高）"
       ],
       "risks": [
-        "鮮度低（9日前）",
+        "鮮度低（10日前）",
         "アクセサリー混在に注意（本体判定要確認）"
       ],
       "holding_period": "数日",
@@ -597,7 +597,7 @@
       "buy_price": 283562,
       "sell_source": "フジヤカメラ",
       "sell_price": 440000,
-      "age_days": 9.2,
+      "age_days": 9.5,
       "priority": 9
     },
     {
@@ -646,11 +646,11 @@
       "why": [
         "main route 成立（国内完結で利益）",
         "ROIが8%以上（51%）",
-        "価格 9日前（要更新）",
+        "価格 10日前（要更新）",
         "再現性スコア 80（中〜高）"
       ],
       "risks": [
-        "鮮度低（9日前）",
+        "鮮度低（10日前）",
         "アクセサリー混在に注意（本体判定要確認）"
       ],
       "holding_period": "数日",
@@ -661,7 +661,7 @@
       "buy_price": 283562,
       "sell_source": "ソフマップ",
       "sell_price": 435000,
-      "age_days": 9.2,
+      "age_days": 9.5,
       "priority": 10
     }
   ]

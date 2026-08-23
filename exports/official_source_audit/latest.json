@@ -1,0 +1,1537 @@
+{
+  "generated_at": "2026-08-23 14:43 JST",
+  "scope": "公式ソース登録・検証（利益/AI/Opportunity/Notification/Capital/Execution は不変）",
+  "methodology": {
+    "verification": "WebFetch で HTTP200/公式ドメイン/canonical/商品一致を実確認したURLのみ verified",
+    "no_guess_url": "推測URLは verified 扱いしない（検証不能は needs_manual_verification）",
+    "open_price": "オープン価格のメーカー(Fujifilm/Nikon等)は公式定価なし→category/価格null",
+    "no_fake_freshness": "実検証した日時のみ last_verified_at に記録（Task12）"
+  },
+  "apple_audit": [
+    {
+      "product_id": "prod_iphone16pm_256",
+      "product_name": "iPhone 16 Pro Max 256GB",
+      "current_url": "https://www.apple.com/jp/shop/buy-iphone/iphone-16-pro-max",
+      "http_status": 404,
+      "canonical_url": null,
+      "resolved_product": "?",
+      "exact_product_match": false,
+      "action": "replace(old/404)",
+      "note": "iPhone 16 世代の購入ページ。iphone-17-pro ページに統合/404"
+    },
+    {
+      "product_id": "prod_iphone16pm_512",
+      "product_name": "iPhone 16 Pro Max 512GB",
+      "current_url": "https://www.apple.com/jp/shop/buy-iphone/iphone-16-pro-max",
+      "http_status": 404,
+      "canonical_url": null,
+      "resolved_product": "?",
+      "exact_product_match": false,
+      "action": "replace(old/404)",
+      "note": "iPhone 16 世代の購入ページ。iphone-17-pro ページに統合/404"
+    },
+    {
+      "product_id": "prod_iphone17_256",
+      "product_name": "iPhone 17 256GB SIMフリー",
+      "current_url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17",
+      "http_status": "200",
+      "canonical_url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17",
+      "resolved_product": "iPhone 17 256GB SIMフリー",
+      "exact_product_match": true,
+      "action": "keep",
+      "note": null
+    },
+    {
+      "product_id": "prod_iphone17pro_256",
+      "product_name": "iPhone 17 Pro 256GB SIMフリー",
+      "current_url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17-pro",
+      "http_status": "200",
+      "canonical_url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17-pro",
+      "resolved_product": "iPhone 17 Pro 256GB SIMフリー",
+      "exact_product_match": true,
+      "action": "keep",
+      "note": null
+    },
+    {
+      "product_id": "prod_iphone17pro_512",
+      "product_name": "iPhone 17 Pro 512GB SIMフリー",
+      "current_url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17-pro",
+      "http_status": "200",
+      "canonical_url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17-pro",
+      "resolved_product": "iPhone 17 Pro 512GB SIMフリー",
+      "exact_product_match": true,
+      "action": "keep",
+      "note": null
+    },
+    {
+      "product_id": "prod_iphone17pm_256",
+      "product_name": "iPhone 17 Pro Max 256GB SIMフリー",
+      "current_url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17-pro",
+      "http_status": "200",
+      "canonical_url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17-pro",
+      "resolved_product": "iPhone 17 Pro Max 256GB SIMフリー",
+      "exact_product_match": true,
+      "action": "keep",
+      "note": null
+    },
+    {
+      "product_id": "prod_iphone17pm_512",
+      "product_name": "iPhone 17 Pro Max 512GB SIMフリー",
+      "current_url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17-pro",
+      "http_status": "200",
+      "canonical_url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17-pro",
+      "resolved_product": "iPhone 17 Pro Max 512GB SIMフリー",
+      "exact_product_match": true,
+      "action": "keep",
+      "note": null
+    },
+    {
+      "product_id": "prod_ipad_pro_m4_11",
+      "product_name": "iPad Pro M4 11インチ",
+      "current_url": "https://www.apple.com/jp/shop/buy-ipad/ipad-pro",
+      "http_status": "200",
+      "canonical_url": "https://www.apple.com/jp/shop/buy-ipad/ipad-pro",
+      "resolved_product": "iPad Pro M4 11インチ",
+      "exact_product_match": true,
+      "action": "keep",
+      "note": null
+    },
+    {
+      "product_id": "prod_ipad_pro_m4_13",
+      "product_name": "iPad Pro M4 13インチ",
+      "current_url": "https://www.apple.com/jp/shop/buy-ipad/ipad-pro",
+      "http_status": "200",
+      "canonical_url": "https://www.apple.com/jp/shop/buy-ipad/ipad-pro",
+      "resolved_product": "iPad Pro M4 13インチ",
+      "exact_product_match": true,
+      "action": "keep",
+      "note": null
+    },
+    {
+      "product_id": "prod_ipad_air_m3",
+      "product_name": "iPad Air M3",
+      "current_url": "https://www.apple.com/jp/shop/buy-ipad/ipad-air",
+      "http_status": "200",
+      "canonical_url": "https://www.apple.com/jp/shop/buy-ipad/ipad-air",
+      "resolved_product": "iPad Air M3",
+      "exact_product_match": true,
+      "action": "keep",
+      "note": null
+    },
+    {
+      "product_id": "prod_macbook_air_m4_13",
+      "product_name": "MacBook Air M4 13インチ",
+      "current_url": "https://www.apple.com/jp/shop/buy-mac/macbook-air",
+      "http_status": "200",
+      "canonical_url": "https://www.apple.com/jp/shop/buy-mac/macbook-air",
+      "resolved_product": "MacBook Air M4 13インチ",
+      "exact_product_match": true,
+      "action": "keep",
+      "note": "現行はM5世代（M4は旧世代の可能性）"
+    },
+    {
+      "product_id": "prod_macbook_air_m4_15",
+      "product_name": "MacBook Air M4 15インチ",
+      "current_url": "https://www.apple.com/jp/shop/buy-mac/macbook-air",
+      "http_status": "200",
+      "canonical_url": "https://www.apple.com/jp/shop/buy-mac/macbook-air",
+      "resolved_product": "MacBook Air M4 15インチ",
+      "exact_product_match": true,
+      "action": "keep",
+      "note": "現行はM5世代"
+    },
+    {
+      "product_id": "prod_macbook_pro_m4_14",
+      "product_name": "MacBook Pro M4 14インチ",
+      "current_url": "https://www.apple.com/jp/shop/buy-mac/macbook-pro",
+      "http_status": "200",
+      "canonical_url": "https://www.apple.com/jp/shop/buy-mac/macbook-pro",
+      "resolved_product": "MacBook Pro M4 14インチ",
+      "exact_product_match": true,
+      "action": "keep",
+      "note": "現行はM5世代"
+    },
+    {
+      "product_id": "prod_apple_watch_s11",
+      "product_name": "Apple Watch Series 11",
+      "current_url": "https://www.apple.com/jp/shop/buy-watch/apple-watch",
+      "http_status": "200",
+      "canonical_url": "https://www.apple.com/jp/shop/buy-watch/apple-watch",
+      "resolved_product": "Apple Watch Series 11",
+      "exact_product_match": true,
+      "action": "keep",
+      "note": null
+    },
+    {
+      "product_id": "prod_apple_watch_ultra3",
+      "product_name": "Apple Watch Ultra 3",
+      "current_url": "https://www.apple.com/jp/shop/buy-watch/apple-watch",
+      "http_status": "200",
+      "canonical_url": "https://www.apple.com/jp/shop/buy-watch/apple-watch",
+      "resolved_product": "Apple Watch Ultra 3",
+      "exact_product_match": true,
+      "action": "keep",
+      "note": null
+    },
+    {
+      "product_id": "prod_airpods_pro3",
+      "product_name": "AirPods Pro 3",
+      "current_url": "https://www.apple.com/jp/shop/buy-airpods/airpods-pro-3",
+      "http_status": "200",
+      "canonical_url": "https://www.apple.com/jp/shop/buy-airpods/airpods-pro-3",
+      "resolved_product": "AirPods Pro 3",
+      "exact_product_match": true,
+      "action": "keep",
+      "note": null
+    }
+  ],
+  "registered": [
+    {
+      "product_id": "prod_iphone17_256",
+      "source": "src_apple_jp",
+      "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17",
+      "link_type": "item",
+      "confidence": "high",
+      "official_price": 142800,
+      "verified": true
+    },
+    {
+      "product_id": "prod_iphone17pro_256",
+      "source": "src_apple_jp",
+      "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17-pro",
+      "link_type": "item",
+      "confidence": "high",
+      "official_price": 194800,
+      "verified": true
+    },
+    {
+      "product_id": "prod_iphone17pro_512",
+      "source": "src_apple_jp",
+      "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17-pro",
+      "link_type": "item",
+      "confidence": "medium",
+      "official_price": null,
+      "verified": true
+    },
+    {
+      "product_id": "prod_iphone17pm_256",
+      "source": "src_apple_jp",
+      "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17-pro",
+      "link_type": "item",
+      "confidence": "high",
+      "official_price": 214800,
+      "verified": true
+    },
+    {
+      "product_id": "prod_iphone17pm_512",
+      "source": "src_apple_jp",
+      "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17-pro",
+      "link_type": "item",
+      "confidence": "medium",
+      "official_price": null,
+      "verified": true
+    },
+    {
+      "product_id": "prod_ipad_pro_m4_11",
+      "source": "src_apple_jp",
+      "url": "https://www.apple.com/jp/shop/buy-ipad/ipad-pro",
+      "link_type": "item",
+      "confidence": "high",
+      "official_price": 209800,
+      "verified": true
+    },
+    {
+      "product_id": "prod_ipad_pro_m4_13",
+      "source": "src_apple_jp",
+      "url": "https://www.apple.com/jp/shop/buy-ipad/ipad-pro",
+      "link_type": "item",
+      "confidence": "high",
+      "official_price": 269800,
+      "verified": true
+    },
+    {
+      "product_id": "prod_ipad_air_m3",
+      "source": "src_apple_jp",
+      "url": "https://www.apple.com/jp/shop/buy-ipad/ipad-air",
+      "link_type": "item",
+      "confidence": "high",
+      "official_price": 129800,
+      "verified": true
+    },
+    {
+      "product_id": "prod_macbook_air_m4_13",
+      "source": "src_apple_jp",
+      "url": "https://www.apple.com/jp/shop/buy-mac/macbook-air",
+      "link_type": "category",
+      "confidence": "medium",
+      "official_price": null,
+      "verified": true
+    },
+    {
+      "product_id": "prod_macbook_air_m4_15",
+      "source": "src_apple_jp",
+      "url": "https://www.apple.com/jp/shop/buy-mac/macbook-air",
+      "link_type": "category",
+      "confidence": "medium",
+      "official_price": null,
+      "verified": true
+    },
+    {
+      "product_id": "prod_macbook_pro_m4_14",
+      "source": "src_apple_jp",
+      "url": "https://www.apple.com/jp/shop/buy-mac/macbook-pro",
+      "link_type": "category",
+      "confidence": "medium",
+      "official_price": null,
+      "verified": true
+    },
+    {
+      "product_id": "prod_apple_watch_s11",
+      "source": "src_apple_jp",
+      "url": "https://www.apple.com/jp/shop/buy-watch/apple-watch",
+      "link_type": "category",
+      "confidence": "medium",
+      "official_price": 71800,
+      "verified": true
+    },
+    {
+      "product_id": "prod_apple_watch_ultra3",
+      "source": "src_apple_jp",
+      "url": "https://www.apple.com/jp/shop/buy-watch/apple-watch",
+      "link_type": "category",
+      "confidence": "medium",
+      "official_price": 142800,
+      "verified": true
+    },
+    {
+      "product_id": "prod_airpods_pro3",
+      "source": "src_apple_jp",
+      "url": "https://www.apple.com/jp/shop/buy-airpods/airpods-pro-3",
+      "link_type": "item",
+      "confidence": "high",
+      "official_price": 42800,
+      "verified": true
+    },
+    {
+      "product_id": "prod_z8",
+      "source": "src_nikon_direct",
+      "url": "https://nij.nikon.com/products/lineup/mirrorless/z8/",
+      "link_type": "category",
+      "confidence": "medium",
+      "official_price": null,
+      "verified": true
+    },
+    {
+      "product_id": "prod_x100vi",
+      "source": "src_fujifilm_official",
+      "url": "https://www.fujifilm-x.com/ja-jp/products/cameras/x100vi/",
+      "link_type": "category",
+      "confidence": "medium",
+      "official_price": null,
+      "verified": true
+    },
+    {
+      "product_id": "prod_r5ii",
+      "source": "src_canon_official",
+      "url": null,
+      "verified": false,
+      "reason": "canon.jp が当環境からDNS解決不可（要手動検証）"
+    },
+    {
+      "product_id": "prod_r6ii",
+      "source": "src_canon_official",
+      "url": null,
+      "verified": false,
+      "reason": "canon.jp が当環境からDNS解決不可（要手動検証）"
+    },
+    {
+      "product_id": "prod_r3",
+      "source": "src_canon_official",
+      "url": null,
+      "verified": false,
+      "reason": "canon.jp が当環境からDNS解決不可（要手動検証）"
+    },
+    {
+      "product_id": "prod_z9",
+      "source": "src_nikon_direct",
+      "url": null,
+      "verified": false,
+      "reason": "オープン価格の可能性・個別URL未検証"
+    },
+    {
+      "product_id": "prod_zf",
+      "source": "src_nikon_direct",
+      "url": null,
+      "verified": false,
+      "reason": "オープン価格の可能性・個別URL未検証"
+    },
+    {
+      "product_id": "prod_a1ii",
+      "source": "src_sony_store",
+      "url": null,
+      "verified": false,
+      "reason": "store.sony.jp が当環境からDNS解決不可（要手動検証）"
+    },
+    {
+      "product_id": "prod_a7rv",
+      "source": "src_sony_store",
+      "url": null,
+      "verified": false,
+      "reason": "store.sony.jp が当環境からDNS解決不可（要手動検証）"
+    },
+    {
+      "product_id": "prod_a7cr",
+      "source": "src_sony_store",
+      "url": null,
+      "verified": false,
+      "reason": "store.sony.jp が当環境からDNS解決不可（要手動検証）"
+    },
+    {
+      "product_id": "prod_fx3",
+      "source": "src_sony_store",
+      "url": null,
+      "verified": false,
+      "reason": "store.sony.jp が当環境からDNS解決不可（要手動検証）"
+    }
+  ],
+  "source_matrix": {
+    "prod_iphone17pro_256": {
+      "product_name": "iPhone 17 Pro 256GB SIMフリー",
+      "brand": "Apple",
+      "sources": {
+        "official": {
+          "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17-pro",
+          "link_type": "item",
+          "verified": true,
+          "last_verified_at": "2026-08-23",
+          "extraction_method": "webfetch_verified",
+          "confidence": "high",
+          "official_price": 194800,
+          "enabled": true,
+          "reason_if_disabled": null
+        },
+        "pricecom": null,
+        "yodobashi": null,
+        "biccamera": null,
+        "mapcamera": null,
+        "fujiya": null,
+        "rakuten": null,
+        "yahoo": null,
+        "ebay": null
+      }
+    },
+    "prod_iphone17pro_512": {
+      "product_name": "iPhone 17 Pro 512GB SIMフリー",
+      "brand": "Apple",
+      "sources": {
+        "official": {
+          "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17-pro",
+          "link_type": "item",
+          "verified": true,
+          "last_verified_at": "2026-08-23",
+          "extraction_method": "webfetch_verified",
+          "confidence": "medium",
+          "official_price": null,
+          "enabled": true,
+          "reason_if_disabled": null
+        },
+        "pricecom": null,
+        "yodobashi": null,
+        "biccamera": null,
+        "mapcamera": null,
+        "fujiya": null,
+        "rakuten": null,
+        "yahoo": null,
+        "ebay": null
+      }
+    },
+    "prod_iphone17pm_256": {
+      "product_name": "iPhone 17 Pro Max 256GB SIMフリー",
+      "brand": "Apple",
+      "sources": {
+        "official": {
+          "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17-pro",
+          "link_type": "item",
+          "verified": true,
+          "last_verified_at": "2026-08-23",
+          "extraction_method": "webfetch_verified",
+          "confidence": "high",
+          "official_price": 214800,
+          "enabled": true,
+          "reason_if_disabled": null
+        },
+        "pricecom": null,
+        "yodobashi": null,
+        "biccamera": null,
+        "mapcamera": null,
+        "fujiya": null,
+        "rakuten": null,
+        "yahoo": null,
+        "ebay": null
+      }
+    },
+    "prod_iphone17pm_512": {
+      "product_name": "iPhone 17 Pro Max 512GB SIMフリー",
+      "brand": "Apple",
+      "sources": {
+        "official": {
+          "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17-pro",
+          "link_type": "item",
+          "verified": true,
+          "last_verified_at": "2026-08-23",
+          "extraction_method": "webfetch_verified",
+          "confidence": "medium",
+          "official_price": null,
+          "enabled": true,
+          "reason_if_disabled": null
+        },
+        "pricecom": null,
+        "yodobashi": null,
+        "biccamera": null,
+        "mapcamera": null,
+        "fujiya": null,
+        "rakuten": null,
+        "yahoo": null,
+        "ebay": null
+      }
+    },
+    "prod_iphone17_256": {
+      "product_name": "iPhone 17 256GB SIMフリー",
+      "brand": "Apple",
+      "sources": {
+        "official": {
+          "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17",
+          "link_type": "item",
+          "verified": true,
+          "last_verified_at": "2026-08-23",
+          "extraction_method": "webfetch_verified",
+          "confidence": "high",
+          "official_price": 142800,
+          "enabled": true,
+          "reason_if_disabled": null
+        },
+        "pricecom": null,
+        "yodobashi": null,
+        "biccamera": null,
+        "mapcamera": null,
+        "fujiya": null,
+        "rakuten": null,
+        "yahoo": null,
+        "ebay": null
+      }
+    },
+    "prod_iphone16pro_256": {
+      "product_name": "iPhone 16 Pro 256GB SIMフリー",
+      "brand": "Apple",
+      "sources": {
+        "official": null,
+        "pricecom": null,
+        "yodobashi": null,
+        "biccamera": null,
+        "mapcamera": null,
+        "fujiya": null,
+        "rakuten": null,
+        "yahoo": null,
+        "ebay": null
+      }
+    },
+    "prod_iphone16pm_256": {
+      "product_name": "iPhone 16 Pro Max 256GB",
+      "brand": "Apple",
+      "sources": {
+        "official": {
+          "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-16-pro-max",
+          "link_type": null,
+          "verified": false,
+          "last_verified_at": null,
+          "extraction_method": null,
+          "confidence": null,
+          "official_price": null,
+          "enabled": true,
+          "reason_if_disabled": null
+        },
+        "pricecom": null,
+        "yodobashi": null,
+        "biccamera": {
+          "url": "https://www.biccamera.com/bc/category/?q=iPhone+16+Pro+Max",
+          "link_type": null,
+          "verified": false,
+          "enabled": true
+        },
+        "mapcamera": null,
+        "fujiya": null,
+        "rakuten": null,
+        "yahoo": null,
+        "ebay": null
+      }
+    },
+    "prod_iphone16pm_512": {
+      "product_name": "iPhone 16 Pro Max 512GB",
+      "brand": "Apple",
+      "sources": {
+        "official": {
+          "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-16-pro-max",
+          "link_type": null,
+          "verified": false,
+          "last_verified_at": null,
+          "extraction_method": null,
+          "confidence": null,
+          "official_price": null,
+          "enabled": true,
+          "reason_if_disabled": null
+        },
+        "pricecom": null,
+        "yodobashi": null,
+        "biccamera": null,
+        "mapcamera": null,
+        "fujiya": null,
+        "rakuten": null,
+        "yahoo": null,
+        "ebay": null
+      }
+    },
+    "prod_macbook_air_m4_13": {
+      "product_name": "MacBook Air M4 13インチ",
+      "brand": "Apple",
+      "sources": {
+        "official": {
+          "url": "https://www.apple.com/jp/shop/buy-mac/macbook-air",
+          "link_type": "category",
+          "verified": true,
+          "last_verified_at": "2026-08-23",
+          "extraction_method": "webfetch_verified",
+          "confidence": "medium",
+          "official_price": null,
+          "enabled": true,
+          "reason_if_disabled": null
+        },
+        "pricecom": null,
+        "yodobashi": null,
+        "biccamera": null,
+        "mapcamera": null,
+        "fujiya": null,
+        "rakuten": null,
+        "yahoo": null,
+        "ebay": null
+      }
+    },
+    "prod_macbook_air_m4_15": {
+      "product_name": "MacBook Air M4 15インチ",
+      "brand": "Apple",
+      "sources": {
+        "official": {
+          "url": "https://www.apple.com/jp/shop/buy-mac/macbook-air",
+          "link_type": "category",
+          "verified": true,
+          "last_verified_at": "2026-08-23",
+          "extraction_method": "webfetch_verified",
+          "confidence": "medium",
+          "official_price": null,
+          "enabled": true,
+          "reason_if_disabled": null
+        },
+        "pricecom": null,
+        "yodobashi": null,
+        "biccamera": null,
+        "mapcamera": null,
+        "fujiya": null,
+        "rakuten": null,
+        "yahoo": null,
+        "ebay": null
+      }
+    },
+    "prod_macbook_pro_m4_14": {
+      "product_name": "MacBook Pro M4 14インチ",
+      "brand": "Apple",
+      "sources": {
+        "official": {
+          "url": "https://www.apple.com/jp/shop/buy-mac/macbook-pro",
+          "link_type": "category",
+          "verified": true,
+          "last_verified_at": "2026-08-23",
+          "extraction_method": "webfetch_verified",
+          "confidence": "medium",
+          "official_price": null,
+          "enabled": true,
+          "reason_if_disabled": null
+        },
+        "pricecom": null,
+        "yodobashi": null,
+        "biccamera": null,
+        "mapcamera": null,
+        "fujiya": null,
+        "rakuten": null,
+        "yahoo": null,
+        "ebay": null
+      }
+    },
+    "prod_mac_mini_m4": {
+      "product_name": "Mac mini M4",
+      "brand": "Apple",
+      "sources": {
+        "official": null,
+        "pricecom": null,
+        "yodobashi": null,
+        "biccamera": null,
+        "mapcamera": null,
+        "fujiya": null,
+        "rakuten": null,
+        "yahoo": null,
+        "ebay": null
+      }
+    },
+    "prod_ipad_pro_m4_11": {
+      "product_name": "iPad Pro M4 11インチ",
+      "brand": "Apple",
+      "sources": {
+        "official": {
+          "url": "https://www.apple.com/jp/shop/buy-ipad/ipad-pro",
+          "link_type": "item",
+          "verified": true,
+          "last_verified_at": "2026-08-23",
+          "extraction_method": "webfetch_verified",
+          "confidence": "high",
+          "official_price": 209800,
+          "enabled": true,
+          "reason_if_disabled": null
+        },
+        "pricecom": null,
+        "yodobashi": null,
+        "biccamera": null,
+        "mapcamera": null,
+        "fujiya": null,
+        "rakuten": null,
+        "yahoo": null,
+        "ebay": null
+      }
+    },
+    "prod_ipad_pro_m4_13": {
+      "product_name": "iPad Pro M4 13インチ",
+      "brand": "Apple",
+      "sources": {
+        "official": {
+          "url": "https://www.apple.com/jp/shop/buy-ipad/ipad-pro",
+          "link_type": "item",
+          "verified": true,
+          "last_verified_at": "2026-08-23",
+          "extraction_method": "webfetch_verified",
+          "confidence": "high",
+          "official_price": 269800,
+          "enabled": true,
+          "reason_if_disabled": null
+        },
+        "pricecom": null,
+        "yodobashi": null,
+        "biccamera": null,
+        "mapcamera": null,
+        "fujiya": null,
+        "rakuten": null,
+        "yahoo": null,
+        "ebay": null
+      }
+    },
+    "prod_ipad_air_m3": {
+      "product_name": "iPad Air M3",
+      "brand": "Apple",
+      "sources": {
+        "official": {
+          "url": "https://www.apple.com/jp/shop/buy-ipad/ipad-air",
+          "link_type": "item",
+          "verified": true,
+          "last_verified_at": "2026-08-23",
+          "extraction_method": "webfetch_verified",
+          "confidence": "high",
+          "official_price": 129800,
+          "enabled": true,
+          "reason_if_disabled": null
+        },
+        "pricecom": null,
+        "yodobashi": null,
+        "biccamera": null,
+        "mapcamera": null,
+        "fujiya": null,
+        "rakuten": null,
+        "yahoo": null,
+        "ebay": null
+      }
+    },
+    "prod_apple_watch_s11": {
+      "product_name": "Apple Watch Series 11",
+      "brand": "Apple",
+      "sources": {
+        "official": {
+          "url": "https://www.apple.com/jp/shop/buy-watch/apple-watch",
+          "link_type": "category",
+          "verified": true,
+          "last_verified_at": "2026-08-23",
+          "extraction_method": "webfetch_verified",
+          "confidence": "medium",
+          "official_price": 71800,
+          "enabled": true,
+          "reason_if_disabled": null
+        },
+        "pricecom": null,
+        "yodobashi": null,
+        "biccamera": null,
+        "mapcamera": null,
+        "fujiya": null,
+        "rakuten": null,
+        "yahoo": null,
+        "ebay": null
+      }
+    },
+    "prod_apple_watch_ultra3": {
+      "product_name": "Apple Watch Ultra 3",
+      "brand": "Apple",
+      "sources": {
+        "official": {
+          "url": "https://www.apple.com/jp/shop/buy-watch/apple-watch",
+          "link_type": "category",
+          "verified": true,
+          "last_verified_at": "2026-08-23",
+          "extraction_method": "webfetch_verified",
+          "confidence": "medium",
+          "official_price": 142800,
+          "enabled": true,
+          "reason_if_disabled": null
+        },
+        "pricecom": null,
+        "yodobashi": null,
+        "biccamera": null,
+        "mapcamera": null,
+        "fujiya": null,
+        "rakuten": null,
+        "yahoo": null,
+        "ebay": null
+      }
+    },
+    "prod_airpods_pro3": {
+      "product_name": "AirPods Pro 3",
+      "brand": "Apple",
+      "sources": {
+        "official": {
+          "url": "https://www.apple.com/jp/shop/buy-airpods/airpods-pro-3",
+          "link_type": "item",
+          "verified": true,
+          "last_verified_at": "2026-08-23",
+          "extraction_method": "webfetch_verified",
+          "confidence": "high",
+          "official_price": 42800,
+          "enabled": true,
+          "reason_if_disabled": null
+        },
+        "pricecom": null,
+        "yodobashi": null,
+        "biccamera": null,
+        "mapcamera": null,
+        "fujiya": null,
+        "rakuten": null,
+        "yahoo": null,
+        "ebay": null
+      }
+    },
+    "prod_airpods_max": {
+      "product_name": "AirPods Max",
+      "brand": "Apple",
+      "sources": {
+        "official": null,
+        "pricecom": null,
+        "yodobashi": null,
+        "biccamera": null,
+        "mapcamera": null,
+        "fujiya": null,
+        "rakuten": null,
+        "yahoo": null,
+        "ebay": null
+      }
+    },
+    "prod_switch2": {
+      "product_name": "Nintendo Switch 2",
+      "brand": "Nintendo",
+      "sources": {
+        "official": null,
+        "pricecom": null,
+        "yodobashi": null,
+        "biccamera": null,
+        "mapcamera": null,
+        "fujiya": null,
+        "rakuten": null,
+        "yahoo": null,
+        "ebay": null
+      }
+    },
+    "prod_switch2_mk": {
+      "product_name": "Nintendo Switch 2 マリオカートセット",
+      "brand": "Nintendo",
+      "sources": {
+        "official": null,
+        "pricecom": null,
+        "yodobashi": null,
+        "biccamera": null,
+        "mapcamera": null,
+        "fujiya": null,
+        "rakuten": null,
+        "yahoo": null,
+        "ebay": null
+      }
+    },
+    "prod_ps5_pro": {
+      "product_name": "PlayStation 5 Pro",
+      "brand": "Sony",
+      "sources": {
+        "official": null,
+        "pricecom": null,
+        "yodobashi": null,
+        "biccamera": null,
+        "mapcamera": null,
+        "fujiya": null,
+        "rakuten": null,
+        "yahoo": null,
+        "ebay": null
+      }
+    },
+    "prod_ps5_de": {
+      "product_name": "PlayStation 5 Digital Edition",
+      "brand": "Sony",
+      "sources": {
+        "official": null,
+        "pricecom": null,
+        "yodobashi": null,
+        "biccamera": null,
+        "mapcamera": null,
+        "fujiya": null,
+        "rakuten": null,
+        "yahoo": null,
+        "ebay": null
+      }
+    },
+    "prod_xbox_sx": {
+      "product_name": "Xbox Series X",
+      "brand": "Microsoft",
+      "sources": {
+        "official": null,
+        "pricecom": null,
+        "yodobashi": null,
+        "biccamera": null,
+        "mapcamera": null,
+        "fujiya": null,
+        "rakuten": null,
+        "yahoo": null,
+        "ebay": null
+      }
+    },
+    "prod_gr4": {
+      "product_name": "RICOH GR IV",
+      "brand": "RICOH",
+      "sources": {
+        "official": {
+          "url": "https://ricohimagingstore.com/Form/Product/ProductList.aspx?shop=0&cat=002010",
+          "link_type": null,
+          "verified": false,
+          "last_verified_at": null,
+          "extraction_method": null,
+          "confidence": null,
+          "official_price": null,
+          "enabled": true,
+          "reason_if_disabled": null
+        },
+        "pricecom": {
+          "url": null,
+          "link_type": null,
+          "verified": false,
+          "enabled": true
+        },
+        "yodobashi": null,
+        "biccamera": {
+          "url": "https://www.biccamera.com/bc/category/?q=RICOH+GR+IV",
+          "link_type": null,
+          "verified": false,
+          "enabled": true
+        },
+        "mapcamera": {
+          "url": "https://www.mapcamera.com/search?keyword=GR+IV&category=all&sell=used",
+          "link_type": null,
+          "verified": false,
+          "enabled": true
+        },
+        "fujiya": null,
+        "rakuten": null,
+        "yahoo": null,
+        "ebay": null
+      }
+    },
+    "prod_gr4_hdf": {
+      "product_name": "RICOH GR IV HDF",
+      "brand": "RICOH",
+      "sources": {
+        "official": {
+          "url": "https://ricohimagingstore.com/Form/Product/ProductList.aspx?shop=0&cat=002010",
+          "link_type": null,
+          "verified": false,
+          "last_verified_at": null,
+          "extraction_method": null,
+          "confidence": null,
+          "official_price": null,
+          "enabled": true,
+          "reason_if_disabled": null
+        },
+        "pricecom": null,
+        "yodobashi": null,
+        "biccamera": null,
+        "mapcamera": null,
+        "fujiya": null,
+        "rakuten": null,
+        "yahoo": null,
+        "ebay": null
+      }
+    },
+    "prod_gr4_mono": {
+      "product_name": "RICOH GR IV Monochrome",
+      "brand": "RICOH",
+      "sources": {
+        "official": {
+          "url": "https://ricohimagingstore.com/Form/Product/ProductList.aspx?shop=0&cat=002010",
+          "link_type": null,
+          "verified": false,
+          "last_verified_at": null,
+          "extraction_method": null,
+          "confidence": null,
+          "official_price": null,
+          "enabled": true,
+          "reason_if_disabled": null
+        },
+        "pricecom": null,
+        "yodobashi": null,
+        "biccamera": null,
+        "mapcamera": null,
+        "fujiya": null,
+        "rakuten": null,
+        "yahoo": null,
+        "ebay": null
+      }
+    },
+    "prod_gr3x": {
+      "product_name": "RICOH GR IIIx",
+      "brand": "RICOH",
+      "sources": {
+        "official": {
+          "url": "https://ricohimagingstore.com/Form/Product/ProductList.aspx?shop=0&cat=002002",
+          "link_type": null,
+          "verified": false,
+          "last_verified_at": null,
+          "extraction_method": null,
+          "confidence": null,
+          "official_price": null,
+          "enabled": true,
+          "reason_if_disabled": null
+        },
+        "pricecom": {
+          "url": "https://kakaku.com/item/K0001382380/",
+          "link_type": null,
+          "verified": false,
+          "enabled": true
+        },
+        "yodobashi": {
+          "url": "https://www.yodobashi.com/product/100000001006498782/",
+          "link_type": null,
+          "verified": false,
+          "enabled": true
+        },
+        "biccamera": null,
+        "mapcamera": {
+          "url": "https://www.mapcamera.com/search?keyword=GR+IIIx&category=all&sell=used",
+          "link_type": null,
+          "verified": false,
+          "enabled": true
+        },
+        "fujiya": null,
+        "rakuten": null,
+        "yahoo": null,
+        "ebay": null
+      }
+    },
+    "prod_gr3_hdf": {
+      "product_name": "RICOH GR III HDF",
+      "brand": "RICOH",
+      "sources": {
+        "official": null,
+        "pricecom": null,
+        "yodobashi": null,
+        "biccamera": null,
+        "mapcamera": null,
+        "fujiya": null,
+        "rakuten": null,
+        "yahoo": null,
+        "ebay": null
+      }
+    },
+    "prod_gr3": {
+      "product_name": "RICOH GR III",
+      "brand": "RICOH",
+      "sources": {
+        "official": null,
+        "pricecom": null,
+        "yodobashi": null,
+        "biccamera": null,
+        "mapcamera": null,
+        "fujiya": null,
+        "rakuten": null,
+        "yahoo": null,
+        "ebay": null
+      }
+    },
+    "prod_x100vi": {
+      "product_name": "FUJIFILM X100VI",
+      "brand": "FUJIFILM",
+      "sources": {
+        "official": {
+          "url": "https://www.fujifilm-x.com/ja-jp/products/cameras/x100vi/",
+          "link_type": "category",
+          "verified": true,
+          "last_verified_at": "2026-08-23",
+          "extraction_method": "webfetch_verified",
+          "confidence": "medium",
+          "official_price": null,
+          "enabled": true,
+          "reason_if_disabled": null
+        },
+        "pricecom": {
+          "url": "https://kakaku.com/item/J0000044026/",
+          "link_type": null,
+          "verified": false,
+          "enabled": true
+        },
+        "yodobashi": {
+          "url": "https://www.yodobashi.com/product/100000001008364231/",
+          "link_type": null,
+          "verified": false,
+          "enabled": true
+        },
+        "biccamera": null,
+        "mapcamera": {
+          "url": "https://www.mapcamera.com/search?keyword=X100VI&category=all&sell=used",
+          "link_type": null,
+          "verified": false,
+          "enabled": true
+        },
+        "fujiya": null,
+        "rakuten": null,
+        "yahoo": null,
+        "ebay": null
+      }
+    },
+    "prod_gfx100rf": {
+      "product_name": "FUJIFILM GFX100RF",
+      "brand": "FUJIFILM",
+      "sources": {
+        "official": null,
+        "pricecom": null,
+        "yodobashi": null,
+        "biccamera": null,
+        "mapcamera": null,
+        "fujiya": null,
+        "rakuten": null,
+        "yahoo": null,
+        "ebay": null
+      }
+    },
+    "prod_xt5": {
+      "product_name": "FUJIFILM X-T5",
+      "brand": "FUJIFILM",
+      "sources": {
+        "official": null,
+        "pricecom": null,
+        "yodobashi": null,
+        "biccamera": null,
+        "mapcamera": null,
+        "fujiya": null,
+        "rakuten": null,
+        "yahoo": null,
+        "ebay": null
+      }
+    },
+    "prod_a7rv": {
+      "product_name": "SONY α7R V",
+      "brand": "SONY",
+      "sources": {
+        "official": {
+          "url": null,
+          "link_type": null,
+          "verified": false,
+          "last_verified_at": null,
+          "extraction_method": null,
+          "confidence": "low",
+          "official_price": null,
+          "enabled": true,
+          "reason_if_disabled": "store.sony.jp が当環境からDNS解決不可（要手動検証）"
+        },
+        "pricecom": null,
+        "yodobashi": null,
+        "biccamera": null,
+        "mapcamera": null,
+        "fujiya": null,
+        "rakuten": null,
+        "yahoo": null,
+        "ebay": null
+      }
+    },
+    "prod_a1ii": {
+      "product_name": "SONY α1 II",
+      "brand": "SONY",
+      "sources": {
+        "official": {
+          "url": null,
+          "link_type": null,
+          "verified": false,
+          "last_verified_at": null,
+          "extraction_method": null,
+          "confidence": "low",
+          "official_price": null,
+          "enabled": true,
+          "reason_if_disabled": "store.sony.jp が当環境からDNS解決不可（要手動検証）"
+        },
+        "pricecom": null,
+        "yodobashi": null,
+        "biccamera": null,
+        "mapcamera": null,
+        "fujiya": null,
+        "rakuten": null,
+        "yahoo": null,
+        "ebay": null
+      }
+    },
+    "prod_a7cr": {
+      "product_name": "SONY α7CR",
+      "brand": "SONY",
+      "sources": {
+        "official": {
+          "url": null,
+          "link_type": null,
+          "verified": false,
+          "last_verified_at": null,
+          "extraction_method": null,
+          "confidence": "low",
+          "official_price": null,
+          "enabled": true,
+          "reason_if_disabled": "store.sony.jp が当環境からDNS解決不可（要手動検証）"
+        },
+        "pricecom": null,
+        "yodobashi": null,
+        "biccamera": null,
+        "mapcamera": null,
+        "fujiya": null,
+        "rakuten": null,
+        "yahoo": null,
+        "ebay": null
+      }
+    },
+    "prod_fx3": {
+      "product_name": "SONY FX3",
+      "brand": "SONY",
+      "sources": {
+        "official": {
+          "url": null,
+          "link_type": null,
+          "verified": false,
+          "last_verified_at": null,
+          "extraction_method": null,
+          "confidence": "low",
+          "official_price": null,
+          "enabled": true,
+          "reason_if_disabled": "store.sony.jp が当環境からDNS解決不可（要手動検証）"
+        },
+        "pricecom": null,
+        "yodobashi": null,
+        "biccamera": null,
+        "mapcamera": null,
+        "fujiya": null,
+        "rakuten": null,
+        "yahoo": null,
+        "ebay": null
+      }
+    },
+    "prod_r5ii": {
+      "product_name": "Canon EOS R5 Mark II",
+      "brand": "CANON",
+      "sources": {
+        "official": {
+          "url": null,
+          "link_type": null,
+          "verified": false,
+          "last_verified_at": null,
+          "extraction_method": null,
+          "confidence": "low",
+          "official_price": null,
+          "enabled": true,
+          "reason_if_disabled": "canon.jp が当環境からDNS解決不可（要手動検証）"
+        },
+        "pricecom": null,
+        "yodobashi": null,
+        "biccamera": null,
+        "mapcamera": null,
+        "fujiya": null,
+        "rakuten": null,
+        "yahoo": null,
+        "ebay": null
+      }
+    },
+    "prod_r6ii": {
+      "product_name": "Canon EOS R6 Mark II",
+      "brand": "CANON",
+      "sources": {
+        "official": {
+          "url": null,
+          "link_type": null,
+          "verified": false,
+          "last_verified_at": null,
+          "extraction_method": null,
+          "confidence": "low",
+          "official_price": null,
+          "enabled": true,
+          "reason_if_disabled": "canon.jp が当環境からDNS解決不可（要手動検証）"
+        },
+        "pricecom": null,
+        "yodobashi": null,
+        "biccamera": null,
+        "mapcamera": null,
+        "fujiya": null,
+        "rakuten": null,
+        "yahoo": null,
+        "ebay": null
+      }
+    },
+    "prod_r3": {
+      "product_name": "Canon EOS R3",
+      "brand": "CANON",
+      "sources": {
+        "official": {
+          "url": null,
+          "link_type": null,
+          "verified": false,
+          "last_verified_at": null,
+          "extraction_method": null,
+          "confidence": "low",
+          "official_price": null,
+          "enabled": true,
+          "reason_if_disabled": "canon.jp が当環境からDNS解決不可（要手動検証）"
+        },
+        "pricecom": null,
+        "yodobashi": null,
+        "biccamera": null,
+        "mapcamera": null,
+        "fujiya": null,
+        "rakuten": null,
+        "yahoo": null,
+        "ebay": null
+      }
+    },
+    "prod_z8": {
+      "product_name": "Nikon Z8",
+      "brand": "NIKON",
+      "sources": {
+        "official": {
+          "url": "https://nij.nikon.com/products/lineup/mirrorless/z8/",
+          "link_type": "category",
+          "verified": true,
+          "last_verified_at": "2026-08-23",
+          "extraction_method": "webfetch_verified",
+          "confidence": "medium",
+          "official_price": null,
+          "enabled": true,
+          "reason_if_disabled": null
+        },
+        "pricecom": null,
+        "yodobashi": null,
+        "biccamera": null,
+        "mapcamera": null,
+        "fujiya": null,
+        "rakuten": null,
+        "yahoo": null,
+        "ebay": null
+      }
+    },
+    "prod_zf": {
+      "product_name": "Nikon Zf",
+      "brand": "NIKON",
+      "sources": {
+        "official": {
+          "url": null,
+          "link_type": null,
+          "verified": false,
+          "last_verified_at": null,
+          "extraction_method": null,
+          "confidence": "low",
+          "official_price": null,
+          "enabled": true,
+          "reason_if_disabled": "オープン価格の可能性・個別URL未検証"
+        },
+        "pricecom": null,
+        "yodobashi": null,
+        "biccamera": null,
+        "mapcamera": null,
+        "fujiya": null,
+        "rakuten": null,
+        "yahoo": null,
+        "ebay": null
+      }
+    },
+    "prod_z9": {
+      "product_name": "Nikon Z9",
+      "brand": "NIKON",
+      "sources": {
+        "official": {
+          "url": null,
+          "link_type": null,
+          "verified": false,
+          "last_verified_at": null,
+          "extraction_method": null,
+          "confidence": "low",
+          "official_price": null,
+          "enabled": true,
+          "reason_if_disabled": "オープン価格の可能性・個別URL未検証"
+        },
+        "pricecom": null,
+        "yodobashi": null,
+        "biccamera": null,
+        "mapcamera": null,
+        "fujiya": null,
+        "rakuten": null,
+        "yahoo": null,
+        "ebay": null
+      }
+    },
+    "prod_q3": {
+      "product_name": "Leica Q3",
+      "brand": "LEICA",
+      "sources": {
+        "official": null,
+        "pricecom": null,
+        "yodobashi": null,
+        "biccamera": null,
+        "mapcamera": null,
+        "fujiya": null,
+        "rakuten": null,
+        "yahoo": null,
+        "ebay": null
+      }
+    },
+    "prod_m11": {
+      "product_name": "Leica M11",
+      "brand": "LEICA",
+      "sources": {
+        "official": null,
+        "pricecom": null,
+        "yodobashi": null,
+        "biccamera": null,
+        "mapcamera": null,
+        "fujiya": null,
+        "rakuten": null,
+        "yahoo": null,
+        "ebay": null
+      }
+    }
+  },
+  "maker_report": {
+    "Apple": {
+      "products": 14,
+      "url_verified": 14,
+      "http_200": 14,
+      "exact_match": 7,
+      "price_ok": 9,
+      "high_conf": 7,
+      "failed": 0,
+      "failures": []
+    },
+    "Nikon": {
+      "products": 3,
+      "url_verified": 1,
+      "http_200": 1,
+      "exact_match": 0,
+      "price_ok": 0,
+      "high_conf": 0,
+      "failed": 2,
+      "failures": [
+        {
+          "product_id": "prod_z9",
+          "reason": "オープン価格の可能性・個別URL未検証"
+        },
+        {
+          "product_id": "prod_zf",
+          "reason": "オープン価格の可能性・個別URL未検証"
+        }
+      ]
+    },
+    "FUJIFILM": {
+      "products": 1,
+      "url_verified": 1,
+      "http_200": 1,
+      "exact_match": 0,
+      "price_ok": 0,
+      "high_conf": 0,
+      "failed": 0,
+      "failures": []
+    },
+    "Canon": {
+      "products": 3,
+      "url_verified": 0,
+      "http_200": 0,
+      "exact_match": 0,
+      "price_ok": 0,
+      "high_conf": 0,
+      "failed": 3,
+      "failures": [
+        {
+          "product_id": "prod_r5ii",
+          "reason": "canon.jp が当環境からDNS解決不可（要手動検証）"
+        },
+        {
+          "product_id": "prod_r6ii",
+          "reason": "canon.jp が当環境からDNS解決不可（要手動検証）"
+        },
+        {
+          "product_id": "prod_r3",
+          "reason": "canon.jp が当環境からDNS解決不可（要手動検証）"
+        }
+      ]
+    },
+    "Sony": {
+      "products": 4,
+      "url_verified": 0,
+      "http_200": 0,
+      "exact_match": 0,
+      "price_ok": 0,
+      "high_conf": 0,
+      "failed": 4,
+      "failures": [
+        {
+          "product_id": "prod_a1ii",
+          "reason": "store.sony.jp が当環境からDNS解決不可（要手動検証）"
+        },
+        {
+          "product_id": "prod_a7rv",
+          "reason": "store.sony.jp が当環境からDNS解決不可（要手動検証）"
+        },
+        {
+          "product_id": "prod_a7cr",
+          "reason": "store.sony.jp が当環境からDNS解決不可（要手動検証）"
+        },
+        {
+          "product_id": "prod_fx3",
+          "reason": "store.sony.jp が当環境からDNS解決不可（要手動検証）"
+        }
+      ]
+    }
+  },
+  "success_rate": {
+    "before": {
+      "official_price_products": 13,
+      "official_configs": 31
+    },
+    "after": {
+      "url_verified": 16,
+      "price_captured": 9,
+      "verified_targets": 16,
+      "unverified_targets": 9
+    }
+  }
+}

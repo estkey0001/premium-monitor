@@ -6455,6 +6455,95 @@ def check() -> list[dict]:
                     "message": f"#676 Beta Ready {_bscore}/100・Critical {_bcrit}件（>=75かつCritical0でβ公開水準）"
                                + ("" if _t676 else " ← β公開基準未満")})
 
+    # ── Official Source Registry & Validation ガード #677-#687 ──
+    _osa = _load_json_safe('exports/official_source_audit/latest.json') or {}
+    _osa_ok = isinstance(_osa, dict) and ('registered' in _osa) and ('maker_report' in _osa)
+    _reg = _osa.get('registered', []) if _osa_ok else []
+
+    # #677: official_source_audit が生成される
+    results.append({"level": "ok" if _osa_ok else "error", "check": "official_source_audit",
+                    "message": f"#677 official_source_audit が生成される（verified {sum(1 for x in _reg if x.get('verified'))}件）"
+                               + ("" if _osa_ok else " ← official_source_audit が見つかりません")})
+
+    # #678: Apple 旧404 URL(iphone-16-pro-max)を verified として登録していない
+    _t678 = not any((x.get('url') and 'iphone-16-pro-max' in x.get('url', '') and x.get('verified'))
+                    for x in _reg)
+    results.append({"level": "ok" if _t678 else "error", "check": "official_no_stale_apple_url",
+                    "message": "#678 Apple 旧404 URL(iphone-16-pro-max)を verified 登録していない"
+                               + ("" if _t678 else " ← 旧URLが verified 登録されています")})
+
+    # #679: official price = 0/None を verified 価格として登録していない
+    _t679 = not any((x.get('verified') and x.get('official_price') is not None and x.get('official_price') <= 0)
+                    for x in _reg)
+    results.append({"level": "ok" if _t679 else "error", "check": "official_no_zero_price",
+                    "message": "#679 official price=0 を保存/main利用していない"
+                               + ("" if _t679 else " ← ¥0 が登録されています")})
+
+    # #680: 検証済み価格はすべて sanity 合格（validator で異常値が弾かれている）
+    try:
+        from src.market.official_price_validator import sanity_check_price
+        _bad = [x for x in _reg if x.get('official_price') and sanity_check_price(x['official_price'], None)]
+        _t680 = len(_bad) == 0
+    except Exception:
+        _t680 = False
+    results.append({"level": "ok" if _t680 else "error", "check": "official_price_sanity",
+                    "message": "#680 登録済み公式価格が sanity check を通過（アクセサリー/月額/1円等なし）"
+                               + ("" if _t680 else " ← 異常価格が登録されています")})
+
+    # #681: low confidence の公式価格を main 利用しない（high/medium のみ price 付与）
+    _t681 = not any((x.get('official_price') and x.get('confidence') == 'low') for x in _reg)
+    results.append({"level": "ok" if _t681 else "error", "check": "official_low_conf_not_main",
+                    "message": "#681 low confidence の公式価格を main 利用していない"
+                               + ("" if _t681 else " ← low confidence 価格が main 利用されています")})
+
+    # #682: 公式価格 validator モジュールが存在（保存前検証の実装）
+    _val_src = _read_src("src", "market", "official_price_validator.py")
+    _t682 = all(k in _val_src for k in ("validate_official_price", "sanity_check_price",
+                                        "classify_confidence", "is_official_domain", "detect_open_price"))
+    results.append({"level": "ok" if _t682 else "error", "check": "official_validator_impl",
+                    "message": "#682 公式価格 validator（保存前検証・sanity・confidence）が実装される"
+                               + ("" if _t682 else " ← validator 実装が不足")})
+
+    # #683: 公式コレクターが保存前に validator を呼ぶ（accessory/mismatch を保存しない）
+    _gen_src = _read_src("src", "collectors", "official", "_generic.py")
+    _ap_src = _read_src("src", "collectors", "official", "apple.py")
+    _t683 = ("validate_official_price" in _gen_src) and ("validate_official_price" in _ap_src) \
+        and ("official_price_rejected" in _gen_src)
+    results.append({"level": "ok" if _t683 else "error", "check": "official_collector_guarded",
+                    "message": "#683 公式コレクターが保存前検証を実施（mismatch/accessory を保存しない）"
+                               + ("" if _t683 else " ← コレクターの保存前検証が不足")})
+
+    # #684: Canon が registry に存在（verified もしくは needs_manual_verification で明示）
+    _canon = [x for x in _reg if x.get('source') == 'src_canon_official']
+    _t684 = len(_canon) >= 1
+    results.append({"level": "ok" if _t684 else "warning", "check": "official_canon_registered",
+                    "message": f"#684 Canon が registry に登録される（{len(_canon)}件・要手動検証含む）"
+                               + ("" if _t684 else " ← Canon 未登録")})
+
+    # #685: Nikon が registry に存在
+    _nikon = [x for x in _reg if x.get('source') == 'src_nikon_direct']
+    _t685 = len(_nikon) >= 1
+    results.append({"level": "ok" if _t685 else "warning", "check": "official_nikon_registered",
+                    "message": f"#685 Nikon が registry に登録される（{len(_nikon)}件）"
+                               + ("" if _t685 else " ← Nikon 未登録")})
+
+    # #686: Sony が registry に存在（型番 ILCE/ILME で同定）
+    _sony = [x for x in _reg if x.get('source') == 'src_sony_store']
+    _t686 = len(_sony) >= 1
+    results.append({"level": "ok" if _t686 else "warning", "check": "official_sony_registered",
+                    "message": f"#686 Sony が registry に登録される（{len(_sony)}件・要手動検証）"
+                               + ("" if _t686 else " ← Sony 未登録")})
+
+    # #687: source config に verified / last_verified_at が存在する
+    _has_verified_fields = any(('verified' in x and (x.get('verified') is not None)) for x in _reg)
+    _matrix = _osa.get('source_matrix', {}) if _osa_ok else {}
+    _has_lva = any((v.get('sources', {}).get('official') or {}).get('last_verified_at')
+                   for v in _matrix.values())
+    _t687 = _has_verified_fields and _has_lva
+    results.append({"level": "ok" if _t687 else "error", "check": "official_config_verified_fields",
+                    "message": "#687 source config に verified/last_verified_at が存在する"
+                               + ("" if _t687 else " ← verified/last_verified_at が不足")})
+
     return results
 
 

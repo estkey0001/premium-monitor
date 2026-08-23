@@ -1,13 +1,13 @@
 # Profit Health Dashboard
 
-生成: 2026-08-22 13:43 JST
+生成: 2026-08-23 13:51 JST
 
-## Health Score: **60.7 / 100**
+## Health Score: **45.7 / 100**
 
 | 観点 | 配点 | スコア |
 |---|---|---|
 | Data Quality | 35 | 16.6 |
-| Profit Discovery | 25 | 20.0 |
+| Profit Discovery | 25 | 5.0 |
 | Source Health | 20 | 14.1 |
 | Link Quality | 10 | 4.8 |
 | Freshness | 10 | 5.2 |
@@ -21,21 +21,22 @@
 
 ## Profit KPI
 
-- main route **2** / reference 2
-- 最大利益 +¥16,101 / 平均利益 +¥16,101 / 平均ROI 10.4%
+- main route **0** / reference 2
+- 最大利益 +¥0 / 平均利益 +¥0 / 平均ROI 0.0%
 
 ## 前日比較
 
-- main route: 1 → 2
+- main route: 2 → 0
 - reference: 2 → 2
 - stale率: 48% → 48%
-- 0円率: 15% → 13%
-- item_url率: 46% → 48%
-- モバイル一番 取得成功率 38%→100%（+62pt）
+- 0円率: 13% → 13%
+- item_url率: 48% → 48%
+- ⚠️ 消失main: prod_ps5_pro
 
 ## 異常検知
 
 ### 🔴 Critical
+- main route 半減 2→0
 - 取得成功率 0%: ゲオモバイル
 - 取得成功率 0%: セカンドストリート
 
@@ -43,7 +44,7 @@
 - item_url率 48% (<50%)
 
 ### ℹ️ Info
-- 検証済み利益ルート 2件 / 最大 +¥16,101
+- なし
 
 ## ソース別品質
 
@@ -80,7 +81,7 @@
 
 | 優先 | 施策 | 効果 | 工数 |
 |---|---|---|---|
-| ★★★★★ | EBAY_APP_ID 設定 | +¥93,809（参考2→main昇格） | 1時間 |
+| ★★★★★ | EBAY_APP_ID 設定 | +¥93,503（参考2→main昇格） | 1時間 |
 | ★★★★☆ | 取得失敗修正: ゲオモバイル | 0円4件の解消でsell候補復活 | 4時間 |
 | ★★★★☆ | 取得失敗修正: セカンドストリート | 0円4件の解消でsell候補復活 | 4時間 |
 | ★★★★☆ | Mercari/Yahoo sold 手動CSV追加 | 国内買取ルートの裾拡大 | 1時間 |

@@ -1,6 +1,6 @@
 # Normalized Price Observations
 
-生成: 2026-08-22 13:43 JST
+生成: 2026-08-23 13:51 JST
 
 全価格（買取/販売/出品/落札/海外/下取/公式）を単一スキーマに正規化。
 `price_role`（buy/sell/official/trade_in）を必ず付与し、
@@ -87,7 +87,7 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 | RICOH GR IV | sell | buyback_price | ¥151,000 | new_unopened | 0.0d | フジヤカメラ |
 | RICOH GR IV HDF | sell | buyback_price | ¥213,400 | new_unopened | 0.0d | フジヤカメラ |
 | RICOH GR IV Monochrome | sell | buyback_price | ¥213,400 | new_unopened | 0.0d | フジヤカメラ |
-| SONY α1 II | sell | buyback_price | ¥590,700 | new_unopened | 0.0d | フジヤカメラ |
+| SONY α1 II | sell | buyback_price | ¥592,900 | new_unopened | 0.0d | フジヤカメラ |
 | SONY α7CR | sell | buyback_price | ¥265,100 | new_unopened | 0.0d | フジヤカメラ |
 | SONY FX3 | sell | buyback_price | ¥332,000 | new_unopened | 0.0d | フジヤカメラ |
 | Nikon Z8 | sell | buyback_price | ¥317,900 | new_unopened | 0.0d | フジヤカメラ |
@@ -109,4 +109,4 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 | iPhone 17 Pro Max 512G | sell | buyback_price | ¥227,500 | new_unopened_simfree | 0.0d | 買取一丁目 |
 | iPhone 17 Pro Max 512G | sell | buyback_price | ¥213,150 | new_unopened_simfree | 0.0d | ネットオフ |
 | Nintendo Switch 2 | sell | buyback_price | ¥35,000 | new_unopened | 0.0d | ゲオ |
-| Nintendo Switch 2 | sell | buyback_price | ¥51,400 | new_unopened | 0.0d | 買取商店 |
+| Nintendo Switch 2 | sell | buyback_price | ¥51,000 | new_unopened | 0.0d | 買取商店 |

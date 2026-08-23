@@ -6544,6 +6544,61 @@ def check() -> list[dict]:
                     "message": "#687 source config に verified/last_verified_at が存在する"
                                + ("" if _t687 else " ← verified/last_verified_at が不足")})
 
+    # ── Retail & Buyback Automation ガード #688-#694 ──
+    _rb = _load_json_safe('exports/retail_buyback_audit/latest.json') or {}
+    _rb_ok = isinstance(_rb, dict) and ('category_summary' in _rb) and ('main_promotion' in _rb)
+
+    # #688: retail_buyback_audit が生成される
+    _t688 = _rb_ok and ('duplicate_price_pattern' in _rb) and ('identity_audit' in _rb)
+    results.append({"level": "ok" if _t688 else "error", "check": "retail_buyback_audit",
+                    "message": f"#688 retail_buyback_audit が生成される（Main昇格 {(_rb.get('main_promotion') or {}).get('total','?')}件）"
+                               + ("" if _t688 else " ← retail_buyback_audit が見つかりません")})
+
+    # #689: 価格品質ゲート（price_quality）が実装される
+    _pq_src = _read_src("src", "market", "price_quality.py")
+    _t689 = all(k in _pq_src for k in ("is_main_promotable", "detect_duplicate_price_pattern",
+                                       "capacity_consistent", "identity_strict_ok", "effective_confidence"))
+    results.append({"level": "ok" if _t689 else "error", "check": "price_quality_impl",
+                    "message": "#689 価格品質ゲート（Main昇格/同一性/duplicate検出）が実装される"
+                               + ("" if _t689 else " ← price_quality 実装が不足")})
+
+    # #690: Main昇格ゲート = high confidence + fresh + exact match（実装に3条件が揃う）
+    _t690 = all(k in _pq_src for k in ("is_fresh", "is_exact_product_match")) \
+        and ("high" in _pq_src) and ("effective_confidence(obs) != \"high\"" in _pq_src or "!= \"high\"" in _pq_src)
+    results.append({"level": "ok" if _t690 else "error", "check": "main_promotion_gate",
+                    "message": "#690 Main昇格ゲートが high+fresh+exact の3条件で実装される"
+                               + ("" if _t690 else " ← Main昇格ゲートの条件が不足")})
+
+    # #691: duplicate_price_pattern が監査に含まれる（同一SKU同額の警告・弾かない）
+    _dup = _rb.get('duplicate_price_pattern', []) if _rb_ok else None
+    _t691 = isinstance(_dup, list)
+    results.append({"level": "ok" if _t691 else "error", "check": "duplicate_price_pattern",
+                    "message": f"#691 duplicate_price_pattern 警告が生成される（{len(_dup) if isinstance(_dup,list) else '?'}件）"
+                               + ("" if _t691 else " ← duplicate_price_pattern が不足")})
+
+    # #692: 商品同一性監査（容量/型番/アクセサリー/本体）
+    _ia = _rb.get('identity_audit', {}) if _rb_ok else {}
+    _t692 = isinstance(_ia, dict) and all(k in _ia for k in
+            ("capacity_mismatch", "wrong_model", "accessory", "not_body_only"))
+    results.append({"level": "ok" if _t692 else "error", "check": "retail_identity_audit",
+                    "message": "#692 商品同一性監査（容量/型番/アクセサリー/本体）が生成される"
+                               + ("" if _t692 else " ← 同一性監査が不足")})
+
+    # #693: 正規化監査（税込/送料/ポイント/買取/下取 の別項目）
+    _na = _rb.get('normalization_audit', {}) if _rb_ok else {}
+    _t693 = isinstance(_na, dict) and all(k in _na for k in
+            ("has_price_type", "shipping_separated", "points_separated", "tradein_excluded"))
+    results.append({"level": "ok" if _t693 else "error", "check": "retail_normalization_audit",
+                    "message": "#693 正規化監査（税込/送料/ポイント/買取/下取の別項目）が生成される"
+                               + ("" if _t693 else " ← 正規化監査が不足")})
+
+    # #694: Freshness 遵守（取得失敗で古い値の時刻だけを更新していない）
+    _fc = _rb.get('freshness_compliance', {}) if _rb_ok else {}
+    _t694 = isinstance(_fc, dict) and _fc.get('ok') is True
+    results.append({"level": "ok" if _t694 else "warning", "check": "retail_freshness_compliance",
+                    "message": f"#694 Freshness 遵守（時刻だけ更新の疑い {len((_fc or {}).get('violations', []))}件）"
+                               + ("" if _t694 else " ← Freshness 違反の疑い")})
+
     return results
 
 

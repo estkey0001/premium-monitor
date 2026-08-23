@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-23 13:51 JST",
+  "generated_at": "2026-08-23 14:45 JST",
   "date": "2026-08-23",
   "is_baseline": false,
   "channels": [
@@ -10,23 +10,146 @@
     "discord": "pending(未設定)",
     "telegram": "pending(未設定)"
   },
-  "event_count": 1,
+  "event_count": 8,
   "suppressed_count": 0,
   "events": [
     {
-      "type": "HEALTH_ALERT",
-      "product_id": "_health",
+      "type": "WATCH_TO_BUY",
+      "product_id": "prod_x100vi",
       "data": {
-        "prev": 60.7,
-        "cur": 45.7
+        "product": "FUJIFILM X100VI",
+        "buy_price": 283562,
+        "net_profit": 144267,
+        "roi": 0.5088
       },
       "priority": "Critical",
-      "message": "⚠️ データ品質低下\nHealth Score 60.7 → 45.7",
+      "message": "🎉 BUYチャンス\nFUJIFILM X100VI\n現在価格 ¥283,562\n利益 ¥144,267\nROI 51%\n今すぐ確認",
       "channels": [
         "discord",
         "telegram"
       ],
-      "created_at": "2026-08-23 13:51 JST",
+      "created_at": "2026-08-23 14:45 JST",
+      "suppressed": false
+    },
+    {
+      "type": "NEW_MAIN",
+      "product_id": "prod_iphone17pm_256",
+      "data": {
+        "product": "prod_iphone17pm_256",
+        "net_profit": 0,
+        "roi": 0
+      },
+      "priority": "High",
+      "message": "🆕 新しい利益ルート成立\nprod_iphone17pm_256\n利益 ¥0 / ROI 0%",
+      "channels": [
+        "discord",
+        "telegram"
+      ],
+      "created_at": "2026-08-23 14:45 JST",
+      "suppressed": false
+    },
+    {
+      "type": "NEW_MAIN",
+      "product_id": "prod_ps5_pro",
+      "data": {
+        "product": "prod_ps5_pro",
+        "net_profit": 0,
+        "roi": 0
+      },
+      "priority": "High",
+      "message": "🆕 新しい利益ルート成立\nprod_ps5_pro\n利益 ¥0 / ROI 0%",
+      "channels": [
+        "discord",
+        "telegram"
+      ],
+      "created_at": "2026-08-23 14:45 JST",
+      "suppressed": false
+    },
+    {
+      "type": "NEW_MAIN",
+      "product_id": "prod_switch2",
+      "data": {
+        "product": "prod_switch2",
+        "net_profit": 0,
+        "roi": 0
+      },
+      "priority": "High",
+      "message": "🆕 新しい利益ルート成立\nprod_switch2\n利益 ¥0 / ROI 0%",
+      "channels": [
+        "discord",
+        "telegram"
+      ],
+      "created_at": "2026-08-23 14:45 JST",
+      "suppressed": false
+    },
+    {
+      "type": "NEW_MAIN",
+      "product_id": "prod_switch2_mk",
+      "data": {
+        "product": "prod_switch2_mk",
+        "net_profit": 0,
+        "roi": 0
+      },
+      "priority": "High",
+      "message": "🆕 新しい利益ルート成立\nprod_switch2_mk\n利益 ¥0 / ROI 0%",
+      "channels": [
+        "discord",
+        "telegram"
+      ],
+      "created_at": "2026-08-23 14:45 JST",
+      "suppressed": false
+    },
+    {
+      "type": "NEW_MAIN",
+      "product_id": "prod_x100vi",
+      "data": {
+        "product": "FUJIFILM X100VI",
+        "net_profit": 144267,
+        "roi": 0.5088
+      },
+      "priority": "High",
+      "message": "🆕 新しい利益ルート成立\nFUJIFILM X100VI\n利益 ¥144,267 / ROI 51%",
+      "channels": [
+        "discord",
+        "telegram"
+      ],
+      "created_at": "2026-08-23 14:45 JST",
+      "suppressed": false
+    },
+    {
+      "type": "PRICE_DROP",
+      "product_id": "prod_x100vi",
+      "data": {
+        "product": "FUJIFILM X100VI",
+        "buy_source": "src_bhphoto",
+        "prev_price": 361819,
+        "buy_price": 283562,
+        "delta": 78257
+      },
+      "priority": "High",
+      "message": "📉 価格下落\nFUJIFILM X100VI\nsrc_bhphoto ¥361,819 → ¥283,562（-¥78,257）",
+      "channels": [
+        "discord",
+        "telegram"
+      ],
+      "created_at": "2026-08-23 14:45 JST",
+      "suppressed": false
+    },
+    {
+      "type": "ROI_UP",
+      "product_id": "prod_x100vi",
+      "data": {
+        "product": "FUJIFILM X100VI",
+        "prev_roi": 0.2,
+        "roi": 0.5088
+      },
+      "priority": "Medium",
+      "message": "⬆️ ROI改善\nFUJIFILM X100VI\nROI 20% → 51%",
+      "channels": [
+        "discord",
+        "telegram"
+      ],
+      "created_at": "2026-08-23 14:45 JST",
       "suppressed": false
     }
   ]

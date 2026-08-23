@@ -2,31 +2,30 @@
   "date": "2026-08-23",
   "health_score": 45.7,
   "stale_rate": 0.4836,
-  "main_products": [],
+  "main_products": [
+    "prod_iphone17pm_256",
+    "prod_ps5_pro",
+    "prod_switch2",
+    "prod_switch2_mk",
+    "prod_x100vi"
+  ],
   "reference_products": [
+    "prod_gr3x",
+    "prod_gr4",
     "prod_iphone17pro_256",
+    "prod_switch2",
     "prod_x100vi"
   ],
   "ops": {
     "prod_x100vi": {
-      "action": "WAIT",
-      "buy_now": "WATCH",
-      "roi": 0.2,
-      "net_profit": 72372,
-      "buy_price": 361819,
+      "action": "BUY",
+      "buy_now": "BUY",
+      "roi": 0.5088,
+      "net_profit": 144267,
+      "buy_price": 283562,
       "product": "FUJIFILM X100VI",
-      "buy_source": "ヤフオク (新品/未使用落札)",
-      "kind": "reference"
-    },
-    "prod_iphone17pro_256": {
-      "action": "WAIT",
-      "buy_now": "WATCH",
-      "roi": 0.0954,
-      "net_profit": 21131,
-      "buy_price": 221529,
-      "product": "iPhone 17 Pro 256GB SIMフリー",
-      "buy_source": "ヤフオク (新品/未使用落札)",
-      "kind": "reference"
+      "buy_source": "src_bhphoto",
+      "kind": "main"
     }
   }
 }

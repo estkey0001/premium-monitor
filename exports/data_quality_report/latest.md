@@ -1,4 +1,4 @@
-# データ取得品質レポート（2026-08-23 13:51 JST）
+# データ取得品質レポート（2026-08-23 14:45 JST）
 
 ## 取得成功率
 - 全対象店舗数: 16
@@ -36,17 +36,17 @@
 - iphone17pm256: 50.0%
 
 ## 連続失敗店舗（2回以上）
-- 2ndstreet: 112回連続
-- bookoff: 112回連続
-- dosupara: 112回連続
-- geo_mobile: 112回連続
-- hardoff: 112回連続
-- janpara: 112回連続
-- pasoko: 112回連続
-- sofmap: 112回連続
-- surugaya: 112回連続
-- tsutaya: 112回連続
-- iosys: 45回連続
+- 2ndstreet: 113回連続
+- bookoff: 113回連続
+- dosupara: 113回連続
+- geo_mobile: 113回連続
+- hardoff: 113回連続
+- janpara: 113回連続
+- pasoko: 113回連続
+- sofmap: 113回連続
+- surugaya: 113回連続
+- tsutaya: 113回連続
+- iosys: 46回連続
 
 ## 改善優先順位（required店舗）
 1. iosys（失敗6 / http_403）
@@ -63,29 +63,30 @@
 - service_unavailable: 2件
 
 ## 有効データ量（新品・未使用 / 14日以内 / price>0）
-- 有効買取データを持つ商品数: 26
-  - prod_iphone17pro_256: 4店舗
-  - prod_iphone17pm_256: 4店舗
+- 有効買取データを持つ商品数: 28
+  - prod_x100vi: 6店舗
+  - prod_gr4: 6店舗
+  - prod_iphone17_256: 4店舗
+  - prod_iphone16pro_256: 4店舗
+  - prod_iphone16pm_256: 4店舗
+  - prod_gr4_hdf: 4店舗
+  - prod_gr4_mono: 4店舗
+  - prod_gr3x: 4店舗
+  - prod_macbook_air_m4_13: 3店舗
+  - prod_switch2_mk: 3店舗
+  - prod_ps5_de: 3店舗
+  - prod_iphone17pro_256: 3店舗
   - prod_iphone17pro_512: 3店舗
-  - prod_iphone17pm_512: 3店舗
-  - prod_switch2: 2店舗
-  - prod_ps5_pro: 2店舗
-  - prod_x100vi: 1店舗
-  - prod_gfx100rf: 1店舗
-  - prod_xt5: 1店舗
-  - prod_gr3: 1店舗
-  - prod_gr3x: 1店舗
-  - prod_gr4: 1店舗
-  - prod_gr4_hdf: 1店舗
-  - prod_gr4_mono: 1店舗
-  - prod_a7rv: 1店舗
+  - prod_switch2: 3店舗
+  - prod_macbook_air_m4_15: 2店舗
 
 ## ランキングに使えたデータ数
-- Beginner: 4 件
-- Pro: 2 件
+- Beginner: 3 件
+- Pro: 0 件
 
 ## せどりルートに使えたデータ数
-- ルート: 2 件
+- ルート: 0 件
+- ⚠️ reason_if_empty: calculate-sedori-routes 未実行 or DBにルートデータなし
 
 ## 海外価格の鮮度
 - fresh: 0 / stale: 4 / 計 4

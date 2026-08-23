@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-23 13:51 JST",
+  "generated_at": "2026-08-23 14:45 JST",
   "account_id": "default",
   "cash_reserve_ratio": 0.2,
   "concentration_caps": {
@@ -11,40 +11,192 @@
     {
       "product": "FUJIFILM X100VI",
       "product_id": "prod_x100vi",
-      "action": "WAIT",
-      "kind": "reference",
-      "buy_price": 361819,
-      "net_profit": 72372,
-      "roi": 0.2,
-      "success_probability": 30,
-      "opportunity_score": 41,
-      "reproducibility_score": 30,
-      "holding_period": "1ヶ月",
-      "expected_value": 21712,
-      "capital_efficiency": 0.06,
-      "risk_score": 59,
-      "liquidity_score": 25,
+      "action": "BUY",
+      "kind": "main",
+      "buy_price": 255000,
+      "net_profit": 183400,
+      "roi": 0.7192,
+      "success_probability": 95,
+      "opportunity_score": 87,
+      "reproducibility_score": 100,
+      "holding_period": "数日",
+      "expected_value": 174230,
+      "capital_efficiency": 0.6833,
+      "risk_score": 26,
+      "liquidity_score": 85,
       "category": "camera",
       "maker": "FUJIFILM"
     },
     {
-      "product": "iPhone 17 Pro 256GB SIMフリー",
-      "product_id": "prod_iphone17pro_256",
-      "action": "WAIT",
-      "kind": "reference",
-      "buy_price": 221529,
-      "net_profit": 21131,
-      "roi": 0.0954,
-      "success_probability": 30,
-      "opportunity_score": 34,
-      "reproducibility_score": 30,
-      "holding_period": "1ヶ月",
-      "expected_value": 6339,
-      "capital_efficiency": 0.0286,
-      "risk_score": 59,
-      "liquidity_score": 25,
-      "category": "iphone",
-      "maker": "Apple"
+      "product": "FUJIFILM X100VI",
+      "product_id": "prod_x100vi",
+      "action": "BUY",
+      "kind": "main",
+      "buy_price": 255000,
+      "net_profit": 180400,
+      "roi": 0.7075,
+      "success_probability": 95,
+      "opportunity_score": 87,
+      "reproducibility_score": 100,
+      "holding_period": "数日",
+      "expected_value": 171380,
+      "capital_efficiency": 0.6721,
+      "risk_score": 26,
+      "liquidity_score": 85,
+      "category": "camera",
+      "maker": "FUJIFILM"
+    },
+    {
+      "product": "FUJIFILM X100VI",
+      "product_id": "prod_x100vi",
+      "action": "BUY",
+      "kind": "main",
+      "buy_price": 255000,
+      "net_profit": 178400,
+      "roi": 0.6996,
+      "success_probability": 95,
+      "opportunity_score": 87,
+      "reproducibility_score": 100,
+      "holding_period": "数日",
+      "expected_value": 169480,
+      "capital_efficiency": 0.6646,
+      "risk_score": 26,
+      "liquidity_score": 85,
+      "category": "camera",
+      "maker": "FUJIFILM"
+    },
+    {
+      "product": "FUJIFILM X100VI",
+      "product_id": "prod_x100vi",
+      "action": "BUY",
+      "kind": "main",
+      "buy_price": 255000,
+      "net_profit": 173400,
+      "roi": 0.68,
+      "success_probability": 95,
+      "opportunity_score": 87,
+      "reproducibility_score": 100,
+      "holding_period": "数日",
+      "expected_value": 164730,
+      "capital_efficiency": 0.646,
+      "risk_score": 26,
+      "liquidity_score": 85,
+      "category": "camera",
+      "maker": "FUJIFILM"
+    },
+    {
+      "product": "FUJIFILM X100VI",
+      "product_id": "prod_x100vi",
+      "action": "BUY",
+      "kind": "main",
+      "buy_price": 255000,
+      "net_profit": 168400,
+      "roi": 0.6604,
+      "success_probability": 95,
+      "opportunity_score": 87,
+      "reproducibility_score": 100,
+      "holding_period": "数日",
+      "expected_value": 159980,
+      "capital_efficiency": 0.6274,
+      "risk_score": 26,
+      "liquidity_score": 85,
+      "category": "camera",
+      "maker": "FUJIFILM"
+    },
+    {
+      "product": "FUJIFILM X100VI",
+      "product_id": "prod_x100vi",
+      "action": "BUY",
+      "kind": "main",
+      "buy_price": 255000,
+      "net_profit": 166400,
+      "roi": 0.6525,
+      "success_probability": 95,
+      "opportunity_score": 87,
+      "reproducibility_score": 100,
+      "holding_period": "数日",
+      "expected_value": 158080,
+      "capital_efficiency": 0.6199,
+      "risk_score": 26,
+      "liquidity_score": 85,
+      "category": "camera",
+      "maker": "FUJIFILM"
+    },
+    {
+      "product": "FUJIFILM X100VI",
+      "product_id": "prod_x100vi",
+      "action": "BUY",
+      "kind": "main",
+      "buy_price": 283562,
+      "net_profit": 154267,
+      "roi": 0.544,
+      "success_probability": 72,
+      "opportunity_score": 82,
+      "reproducibility_score": 80,
+      "holding_period": "数日",
+      "expected_value": 111072,
+      "capital_efficiency": 0.3917,
+      "risk_score": 13,
+      "liquidity_score": 85,
+      "category": "camera",
+      "maker": "FUJIFILM"
+    },
+    {
+      "product": "FUJIFILM X100VI",
+      "product_id": "prod_x100vi",
+      "action": "BUY",
+      "kind": "main",
+      "buy_price": 283562,
+      "net_profit": 151267,
+      "roi": 0.5335,
+      "success_probability": 72,
+      "opportunity_score": 82,
+      "reproducibility_score": 80,
+      "holding_period": "数日",
+      "expected_value": 108912,
+      "capital_efficiency": 0.3841,
+      "risk_score": 13,
+      "liquidity_score": 85,
+      "category": "camera",
+      "maker": "FUJIFILM"
+    },
+    {
+      "product": "FUJIFILM X100VI",
+      "product_id": "prod_x100vi",
+      "action": "BUY",
+      "kind": "main",
+      "buy_price": 283562,
+      "net_profit": 149267,
+      "roi": 0.5264,
+      "success_probability": 72,
+      "opportunity_score": 82,
+      "reproducibility_score": 80,
+      "holding_period": "数日",
+      "expected_value": 107472,
+      "capital_efficiency": 0.379,
+      "risk_score": 13,
+      "liquidity_score": 85,
+      "category": "camera",
+      "maker": "FUJIFILM"
+    },
+    {
+      "product": "FUJIFILM X100VI",
+      "product_id": "prod_x100vi",
+      "action": "BUY",
+      "kind": "main",
+      "buy_price": 283562,
+      "net_profit": 144267,
+      "roi": 0.5088,
+      "success_probability": 72,
+      "opportunity_score": 82,
+      "reproducibility_score": 80,
+      "holding_period": "数日",
+      "expected_value": 103872,
+      "capital_efficiency": 0.3663,
+      "risk_score": 13,
+      "liquidity_score": 85,
+      "category": "camera",
+      "maker": "FUJIFILM"
     }
   ],
   "default_budget": 3000000,
@@ -60,121 +212,385 @@
       "budget": 1000000,
       "investable": 800000,
       "cash_reserve_ratio": 0.2,
-      "allocations": [],
+      "allocations": [
+        {
+          "product": "FUJIFILM X100VI",
+          "product_id": "prod_x100vi",
+          "units": 1,
+          "unit_price": 255000,
+          "total": 255000,
+          "expected_profit": 183400,
+          "expected_value": 174230,
+          "category": "camera",
+          "maker": "FUJIFILM",
+          "holding_period": "数日",
+          "roi": 0.7192,
+          "risk_score": 26,
+          "liquidity_score": 85
+        }
+      ],
       "waiting": [
         {
           "product": "FUJIFILM X100VI",
-          "reason": "海外価格更新待ち（eBay sold）"
+          "reason": "予算/集中リスク制約で配分なし"
         },
         {
-          "product": "iPhone 17 Pro 256GB SIMフリー",
-          "reason": "海外価格更新待ち（eBay sold）"
+          "product": "FUJIFILM X100VI",
+          "reason": "予算/集中リスク制約で配分なし"
+        },
+        {
+          "product": "FUJIFILM X100VI",
+          "reason": "予算/集中リスク制約で配分なし"
+        },
+        {
+          "product": "FUJIFILM X100VI",
+          "reason": "予算/集中リスク制約で配分なし"
+        },
+        {
+          "product": "FUJIFILM X100VI",
+          "reason": "予算/集中リスク制約で配分なし"
+        },
+        {
+          "product": "FUJIFILM X100VI",
+          "reason": "予算/集中リスク制約で配分なし"
+        },
+        {
+          "product": "FUJIFILM X100VI",
+          "reason": "予算/集中リスク制約で配分なし"
+        },
+        {
+          "product": "FUJIFILM X100VI",
+          "reason": "予算/集中リスク制約で配分なし"
+        },
+        {
+          "product": "FUJIFILM X100VI",
+          "reason": "予算/集中リスク制約で配分なし"
         }
       ],
-      "allocated": 0,
-      "cash": 1000000,
-      "cash_ratio": 1.0,
-      "expected_profit": 0,
-      "expected_roi": 0.0,
-      "avg_risk_score": 0,
-      "diversification_score": 0,
-      "max_concentration": 0.0
+      "allocated": 255000,
+      "cash": 745000,
+      "cash_ratio": 0.745,
+      "expected_profit": 183400,
+      "expected_roi": 0.7192,
+      "avg_risk_score": 26,
+      "diversification_score": 30,
+      "max_concentration": 0.255
     },
     "3000000": {
       "budget": 3000000,
       "investable": 2400000,
       "cash_reserve_ratio": 0.2,
-      "allocations": [],
+      "allocations": [
+        {
+          "product": "FUJIFILM X100VI",
+          "product_id": "prod_x100vi",
+          "units": 3,
+          "unit_price": 255000,
+          "total": 765000,
+          "expected_profit": 550200,
+          "expected_value": 522690,
+          "category": "camera",
+          "maker": "FUJIFILM",
+          "holding_period": "数日",
+          "roi": 0.7192,
+          "risk_score": 26,
+          "liquidity_score": 85
+        },
+        {
+          "product": "FUJIFILM X100VI",
+          "product_id": "prod_x100vi",
+          "units": 2,
+          "unit_price": 255000,
+          "total": 510000,
+          "expected_profit": 360800,
+          "expected_value": 342760,
+          "category": "camera",
+          "maker": "FUJIFILM",
+          "holding_period": "数日",
+          "roi": 0.7075,
+          "risk_score": 26,
+          "liquidity_score": 85
+        }
+      ],
       "waiting": [
         {
           "product": "FUJIFILM X100VI",
-          "reason": "海外価格更新待ち（eBay sold）"
+          "reason": "予算/集中リスク制約で配分なし"
         },
         {
-          "product": "iPhone 17 Pro 256GB SIMフリー",
-          "reason": "海外価格更新待ち（eBay sold）"
+          "product": "FUJIFILM X100VI",
+          "reason": "予算/集中リスク制約で配分なし"
+        },
+        {
+          "product": "FUJIFILM X100VI",
+          "reason": "予算/集中リスク制約で配分なし"
+        },
+        {
+          "product": "FUJIFILM X100VI",
+          "reason": "予算/集中リスク制約で配分なし"
+        },
+        {
+          "product": "FUJIFILM X100VI",
+          "reason": "予算/集中リスク制約で配分なし"
+        },
+        {
+          "product": "FUJIFILM X100VI",
+          "reason": "予算/集中リスク制約で配分なし"
+        },
+        {
+          "product": "FUJIFILM X100VI",
+          "reason": "予算/集中リスク制約で配分なし"
+        },
+        {
+          "product": "FUJIFILM X100VI",
+          "reason": "予算/集中リスク制約で配分なし"
         }
       ],
-      "allocated": 0,
-      "cash": 3000000,
-      "cash_ratio": 1.0,
-      "expected_profit": 0,
-      "expected_roi": 0.0,
-      "avg_risk_score": 0,
-      "diversification_score": 0,
-      "max_concentration": 0.0
+      "allocated": 1275000,
+      "cash": 1725000,
+      "cash_ratio": 0.575,
+      "expected_profit": 911000,
+      "expected_roi": 0.7145,
+      "avg_risk_score": 26,
+      "diversification_score": 55,
+      "max_concentration": 0.255
     },
     "5000000": {
       "budget": 5000000,
       "investable": 4000000,
       "cash_reserve_ratio": 0.2,
-      "allocations": [],
+      "allocations": [
+        {
+          "product": "FUJIFILM X100VI",
+          "product_id": "prod_x100vi",
+          "units": 5,
+          "unit_price": 255000,
+          "total": 1275000,
+          "expected_profit": 917000,
+          "expected_value": 871150,
+          "category": "camera",
+          "maker": "FUJIFILM",
+          "holding_period": "数日",
+          "roi": 0.7192,
+          "risk_score": 26,
+          "liquidity_score": 85
+        },
+        {
+          "product": "FUJIFILM X100VI",
+          "product_id": "prod_x100vi",
+          "units": 4,
+          "unit_price": 255000,
+          "total": 1020000,
+          "expected_profit": 721600,
+          "expected_value": 685520,
+          "category": "camera",
+          "maker": "FUJIFILM",
+          "holding_period": "数日",
+          "roi": 0.7075,
+          "risk_score": 26,
+          "liquidity_score": 85
+        }
+      ],
       "waiting": [
         {
           "product": "FUJIFILM X100VI",
-          "reason": "海外価格更新待ち（eBay sold）"
+          "reason": "予算/集中リスク制約で配分なし"
         },
         {
-          "product": "iPhone 17 Pro 256GB SIMフリー",
-          "reason": "海外価格更新待ち（eBay sold）"
+          "product": "FUJIFILM X100VI",
+          "reason": "予算/集中リスク制約で配分なし"
+        },
+        {
+          "product": "FUJIFILM X100VI",
+          "reason": "予算/集中リスク制約で配分なし"
+        },
+        {
+          "product": "FUJIFILM X100VI",
+          "reason": "予算/集中リスク制約で配分なし"
+        },
+        {
+          "product": "FUJIFILM X100VI",
+          "reason": "予算/集中リスク制約で配分なし"
+        },
+        {
+          "product": "FUJIFILM X100VI",
+          "reason": "予算/集中リスク制約で配分なし"
+        },
+        {
+          "product": "FUJIFILM X100VI",
+          "reason": "予算/集中リスク制約で配分なし"
+        },
+        {
+          "product": "FUJIFILM X100VI",
+          "reason": "予算/集中リスク制約で配分なし"
         }
       ],
-      "allocated": 0,
-      "cash": 5000000,
-      "cash_ratio": 1.0,
-      "expected_profit": 0,
-      "expected_roi": 0.0,
-      "avg_risk_score": 0,
-      "diversification_score": 0,
-      "max_concentration": 0.0
+      "allocated": 2295000,
+      "cash": 2705000,
+      "cash_ratio": 0.541,
+      "expected_profit": 1638600,
+      "expected_roi": 0.714,
+      "avg_risk_score": 26,
+      "diversification_score": 55,
+      "max_concentration": 0.255
     },
     "10000000": {
       "budget": 10000000,
       "investable": 8000000,
       "cash_reserve_ratio": 0.2,
-      "allocations": [],
+      "allocations": [
+        {
+          "product": "FUJIFILM X100VI",
+          "product_id": "prod_x100vi",
+          "units": 11,
+          "unit_price": 255000,
+          "total": 2805000,
+          "expected_profit": 2017400,
+          "expected_value": 1916530,
+          "category": "camera",
+          "maker": "FUJIFILM",
+          "holding_period": "数日",
+          "roi": 0.7192,
+          "risk_score": 26,
+          "liquidity_score": 85
+        },
+        {
+          "product": "FUJIFILM X100VI",
+          "product_id": "prod_x100vi",
+          "units": 7,
+          "unit_price": 255000,
+          "total": 1785000,
+          "expected_profit": 1262800,
+          "expected_value": 1199660,
+          "category": "camera",
+          "maker": "FUJIFILM",
+          "holding_period": "数日",
+          "roi": 0.7075,
+          "risk_score": 26,
+          "liquidity_score": 85
+        }
+      ],
       "waiting": [
         {
           "product": "FUJIFILM X100VI",
-          "reason": "海外価格更新待ち（eBay sold）"
+          "reason": "予算/集中リスク制約で配分なし"
         },
         {
-          "product": "iPhone 17 Pro 256GB SIMフリー",
-          "reason": "海外価格更新待ち（eBay sold）"
+          "product": "FUJIFILM X100VI",
+          "reason": "予算/集中リスク制約で配分なし"
+        },
+        {
+          "product": "FUJIFILM X100VI",
+          "reason": "予算/集中リスク制約で配分なし"
+        },
+        {
+          "product": "FUJIFILM X100VI",
+          "reason": "予算/集中リスク制約で配分なし"
+        },
+        {
+          "product": "FUJIFILM X100VI",
+          "reason": "予算/集中リスク制約で配分なし"
+        },
+        {
+          "product": "FUJIFILM X100VI",
+          "reason": "予算/集中リスク制約で配分なし"
+        },
+        {
+          "product": "FUJIFILM X100VI",
+          "reason": "予算/集中リスク制約で配分なし"
+        },
+        {
+          "product": "FUJIFILM X100VI",
+          "reason": "予算/集中リスク制約で配分なし"
         }
       ],
-      "allocated": 0,
-      "cash": 10000000,
-      "cash_ratio": 1.0,
-      "expected_profit": 0,
-      "expected_roi": 0.0,
-      "avg_risk_score": 0,
-      "diversification_score": 0,
-      "max_concentration": 0.0
+      "allocated": 4590000,
+      "cash": 5410000,
+      "cash_ratio": 0.541,
+      "expected_profit": 3280200,
+      "expected_roi": 0.7146,
+      "avg_risk_score": 26,
+      "diversification_score": 54,
+      "max_concentration": 0.2805
     },
     "30000000": {
       "budget": 30000000,
       "investable": 24000000,
       "cash_reserve_ratio": 0.2,
-      "allocations": [],
+      "allocations": [
+        {
+          "product": "FUJIFILM X100VI",
+          "product_id": "prod_x100vi",
+          "units": 35,
+          "unit_price": 255000,
+          "total": 8925000,
+          "expected_profit": 6419000,
+          "expected_value": 6098050,
+          "category": "camera",
+          "maker": "FUJIFILM",
+          "holding_period": "数日",
+          "roi": 0.7192,
+          "risk_score": 26,
+          "liquidity_score": 85
+        },
+        {
+          "product": "FUJIFILM X100VI",
+          "product_id": "prod_x100vi",
+          "units": 21,
+          "unit_price": 255000,
+          "total": 5355000,
+          "expected_profit": 3788400,
+          "expected_value": 3598980,
+          "category": "camera",
+          "maker": "FUJIFILM",
+          "holding_period": "数日",
+          "roi": 0.7075,
+          "risk_score": 26,
+          "liquidity_score": 85
+        }
+      ],
       "waiting": [
         {
           "product": "FUJIFILM X100VI",
-          "reason": "海外価格更新待ち（eBay sold）"
+          "reason": "予算/集中リスク制約で配分なし"
         },
         {
-          "product": "iPhone 17 Pro 256GB SIMフリー",
-          "reason": "海外価格更新待ち（eBay sold）"
+          "product": "FUJIFILM X100VI",
+          "reason": "予算/集中リスク制約で配分なし"
+        },
+        {
+          "product": "FUJIFILM X100VI",
+          "reason": "予算/集中リスク制約で配分なし"
+        },
+        {
+          "product": "FUJIFILM X100VI",
+          "reason": "予算/集中リスク制約で配分なし"
+        },
+        {
+          "product": "FUJIFILM X100VI",
+          "reason": "予算/集中リスク制約で配分なし"
+        },
+        {
+          "product": "FUJIFILM X100VI",
+          "reason": "予算/集中リスク制約で配分なし"
+        },
+        {
+          "product": "FUJIFILM X100VI",
+          "reason": "予算/集中リスク制約で配分なし"
+        },
+        {
+          "product": "FUJIFILM X100VI",
+          "reason": "予算/集中リスク制約で配分なし"
         }
       ],
-      "allocated": 0,
-      "cash": 30000000,
-      "cash_ratio": 1.0,
-      "expected_profit": 0,
-      "expected_roi": 0.0,
-      "avg_risk_score": 0,
-      "diversification_score": 0,
-      "max_concentration": 0.0
+      "allocated": 14280000,
+      "cash": 15720000,
+      "cash_ratio": 0.524,
+      "expected_profit": 10207400,
+      "expected_roi": 0.7148,
+      "avg_risk_score": 26,
+      "diversification_score": 53,
+      "max_concentration": 0.2975
     }
   }
 }

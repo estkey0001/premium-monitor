@@ -1,0 +1,8 @@
+{
+  "api": "yahoo",
+  "status": "PENDING_USER_CONFIGURATION",
+  "configured": "not_configured",
+  "rollout_state": "NOT_CONFIGURED",
+  "real_api_called": false,
+  "note": "APIキー未設定のため実行しない（架空成功を報告しない）"
+}

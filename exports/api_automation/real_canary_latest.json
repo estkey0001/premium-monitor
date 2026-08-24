@@ -1,0 +1,65 @@
+{
+  "generated_at": "2026-08-24 13:15 JST",
+  "scope": "実APIキーがある場合のみ実Canary。未設定はPENDING（架空の実行なし）。",
+  "priority_order": [
+    "ebay",
+    "rakuten",
+    "yahoo"
+  ],
+  "per_api": {
+    "ebay": {
+      "api": "ebay",
+      "status": "PENDING_USER_CONFIGURATION",
+      "configured": "not_configured",
+      "rollout_state": "NOT_CONFIGURED",
+      "real_api_called": false,
+      "note": "APIキー未設定のため実行しない（架空成功を報告しない）"
+    },
+    "rakuten": {
+      "api": "rakuten",
+      "status": "PENDING_USER_CONFIGURATION",
+      "configured": "not_configured",
+      "rollout_state": "NOT_CONFIGURED",
+      "real_api_called": false,
+      "note": "APIキー未設定のため実行しない（架空成功を報告しない）"
+    },
+    "yahoo": {
+      "api": "yahoo",
+      "status": "PENDING_USER_CONFIGURATION",
+      "configured": "not_configured",
+      "rollout_state": "NOT_CONFIGURED",
+      "real_api_called": false,
+      "note": "APIキー未設定のため実行しない（架空成功を報告しない）"
+    }
+  },
+  "rollout_state": {
+    "ebay": "NOT_CONFIGURED",
+    "rakuten": "NOT_CONFIGURED",
+    "yahoo": "NOT_CONFIGURED"
+  },
+  "stages": {
+    "ebay": "0",
+    "rakuten": "0",
+    "yahoo": "0"
+  },
+  "summary": {
+    "configured": [],
+    "canary_pass": [],
+    "rollout_blocked": [],
+    "pending_user_configuration": [
+      "ebay",
+      "rakuten",
+      "yahoo"
+    ]
+  },
+  "overall": "REAL API AUTOMATION PENDING KEYS",
+  "final_recommendation": "APIキー(EBAY_APP_ID→RAKUTEN_APP_ID→YAHOO_SHOPPING_APP_ID の順)を Secret 登録し、ENABLE_<API>_API=true / API_DRY_RUN=true / <API>_STAGE=0 で実Canary→段階展開。",
+  "safety": {
+    "quality_gate": "全 item が ProductIdentityResolver + price_quality + Main Gate を通過",
+    "cross_product_protection": "matched != expected は cross_product → main 不可・manual_review",
+    "dry_run": "実Canary は Dry Run 相当（Main DB を書かない）",
+    "stage_control": "EBAY/RAKUTEN/YAHOO_API_STAGE(0/5/10/25/all) 以上を取得しない",
+    "rollback": "ENABLE_*_API=false で即停止（fallback/manual を壊さない）",
+    "no_fake": "未設定APIを架空成功として報告しない・モックを実API結果としない"
+  }
+}

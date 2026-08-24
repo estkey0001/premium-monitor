@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-24 12:31 JST",
+  "generated_at": "2026-08-24 13:15 JST",
   "scope": "商品同一性マッチング精度（利益/AI/UI/SaaS/DQ思想は不変）",
   "accuracy": {
     "product_match_accuracy": 1.0,
@@ -397,8 +397,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 91.4,
-      "last_seen": 91.4,
+      "first_seen": 92.0,
+      "last_seen": 92.0,
       "risk_level": "high",
       "possible_reason": [
         "different_capacity_same_price",
@@ -430,8 +430,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 90.2,
-      "last_seen": 90.2,
+      "first_seen": 90.9,
+      "last_seen": 90.9,
       "risk_level": "high",
       "possible_reason": [
         "different_capacity_same_price",
@@ -463,8 +463,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 90.2,
-      "last_seen": 90.2,
+      "first_seen": 90.8,
+      "last_seen": 90.8,
       "risk_level": "high",
       "possible_reason": [
         "different_capacity_same_price",
@@ -526,8 +526,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 95.4,
-      "last_seen": 13.4,
+      "first_seen": 96.0,
+      "last_seen": 14.0,
       "risk_level": "high",
       "possible_reason": [
         "different_model_same_price",
@@ -558,8 +558,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 95.4,
-      "last_seen": 1.0,
+      "first_seen": 96.0,
+      "last_seen": 1.7,
       "risk_level": "high",
       "possible_reason": [
         "different_model_same_price",
@@ -589,8 +589,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 83.0,
-      "last_seen": 83.0,
+      "first_seen": 83.7,
+      "last_seen": 83.7,
       "risk_level": "high",
       "possible_reason": [
         "different_model_same_price",
@@ -620,8 +620,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 83.0,
-      "last_seen": 83.0,
+      "first_seen": 83.7,
+      "last_seen": 83.7,
       "risk_level": "high",
       "possible_reason": [
         "different_model_same_price",
@@ -745,8 +745,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 95.4,
-      "last_seen": 13.4,
+      "first_seen": 96.0,
+      "last_seen": 14.0,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -776,8 +776,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 95.4,
-      "last_seen": 13.4,
+      "first_seen": 96.0,
+      "last_seen": 14.0,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -806,8 +806,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 95.4,
-      "last_seen": 13.4,
+      "first_seen": 96.0,
+      "last_seen": 14.0,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -836,8 +836,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 95.4,
-      "last_seen": 13.4,
+      "first_seen": 96.0,
+      "last_seen": 14.0,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -866,8 +866,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 91.0,
-      "last_seen": 91.0,
+      "first_seen": 91.7,
+      "last_seen": 91.6,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -896,8 +896,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 32.2,
-      "last_seen": 32.2,
+      "first_seen": 32.9,
+      "last_seen": 32.9,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -916,7 +916,7 @@
       "capacity": 1.0,
       "model": 1.0,
       "condition": 1.0,
-      "freshness": 0.116,
+      "freshness": 0.055,
       "main_eligible": 6
     },
     {
@@ -927,7 +927,7 @@
       "capacity": 1.0,
       "model": 1.0,
       "condition": 1.0,
-      "freshness": 0.115,
+      "freshness": 0.058,
       "main_eligible": 5
     },
     {
@@ -1004,29 +1004,18 @@
       "capacity": 1.0,
       "model": 1.0,
       "condition": 1.0,
-      "freshness": 0.104,
+      "freshness": 0.091,
       "main_eligible": 1
     },
     {
       "source": "フジヤカメラ",
       "observations": 52,
-      "score": 73,
+      "score": 72,
       "identity": 0.173,
       "capacity": 1.0,
       "model": 0.981,
       "condition": 1.0,
-      "freshness": 0.154,
-      "main_eligible": 0
-    },
-    {
-      "source": "じゃんぱら",
-      "observations": 242,
-      "score": 71,
-      "identity": 0.0,
-      "capacity": 1.0,
-      "model": 1.0,
-      "condition": 1.0,
-      "freshness": 0.141,
+      "freshness": 0.115,
       "main_eligible": 0
     },
     {
@@ -1037,7 +1026,7 @@
       "capacity": 1.0,
       "model": 1.0,
       "condition": 1.0,
-      "freshness": 0.143,
+      "freshness": 0.129,
       "main_eligible": 0
     },
     {
@@ -1092,7 +1081,7 @@
       "capacity": 1.0,
       "model": 1.0,
       "condition": 1.0,
-      "freshness": 0.089,
+      "freshness": 0.056,
       "main_eligible": 0
     },
     {
@@ -1104,6 +1093,17 @@
       "model": 1.0,
       "condition": 1.0,
       "freshness": 0.059,
+      "main_eligible": 0
+    },
+    {
+      "source": "じゃんぱら",
+      "observations": 242,
+      "score": 70,
+      "identity": 0.0,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 0.066,
       "main_eligible": 0
     },
     {
@@ -1213,7 +1213,7 @@
       "capacity": 1.0,
       "model": 1.0,
       "condition": 1.0,
-      "freshness": 0.225,
+      "freshness": 0.15,
       "main_eligible": 0
     },
     {
@@ -1224,7 +1224,7 @@
       "capacity": 1.0,
       "model": 1.0,
       "condition": 1.0,
-      "freshness": 0.225,
+      "freshness": 0.15,
       "main_eligible": 0
     },
     {

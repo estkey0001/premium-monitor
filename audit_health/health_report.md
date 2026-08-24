@@ -1,6 +1,6 @@
 # Profit Health Dashboard
 
-生成: 2026-08-24 12:31 JST
+生成: 2026-08-24 13:15 JST
 
 ## Health Score: **50.1 / 100**
 
@@ -26,12 +26,11 @@
 
 ## 前日比較
 
-- main route: 26 → 22
+- main route: 22 → 22
 - reference: 13 → 13
-- stale率: 84% → 88%
+- stale率: 88% → 88%
 - 0円率: 37% → 37%
 - item_url率: 51% → 51%
-- ⚠️ 消失main: prod_switch2_mk
 
 ## 異常検知
 
@@ -51,7 +50,7 @@
 - 取得成功率 0%: パソコン工房
 
 ### 🟡 Warning
-- main route 減少 26→22
+- なし
 
 ### ℹ️ Info
 - 検証済み利益ルート 22件 / 最大 +¥183,400

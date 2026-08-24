@@ -1,6 +1,6 @@
 # Pro 利益ルート（normalized_price_observations 由来・検証済み）
 
-生成: 2026-08-24 12:31 JST
+生成: 2026-08-24 13:15 JST
 
 - **main 利益ルート: 22件**（route_confidence high/medium のみ）
 - 参考ルート(海外sold stale・要fresh化): 13件

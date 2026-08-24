@@ -270,6 +270,25 @@ jobs:
         env:
           PYTHONPATH: .
 
+      # Real API Canary & Progressive Rollout（設定済みAPIのみ実行・未設定はPENDING）
+      # stage 制御: <API>_API_STAGE(0/5/10/25/all) 既定0（Canaryのみ・安全側）
+      - name: Real API canary & rollout
+        run: python scripts/real_canary_api.py
+        continue-on-error: true
+        env:
+          PYTHONPATH: .
+          EBAY_APP_ID: ${{ secrets.EBAY_APP_ID }}
+          RAKUTEN_APP_ID: ${{ secrets.RAKUTEN_APP_ID }}
+          RAKUTEN_AFFILIATE_ID: ${{ secrets.RAKUTEN_AFFILIATE_ID }}
+          YAHOO_SHOPPING_APP_ID: ${{ secrets.YAHOO_SHOPPING_APP_ID }}
+          ENABLE_EBAY_API: ${{ vars.ENABLE_EBAY_API || 'false' }}
+          ENABLE_RAKUTEN_API: ${{ vars.ENABLE_RAKUTEN_API || 'false' }}
+          ENABLE_YAHOO_API: ${{ vars.ENABLE_YAHOO_API || 'false' }}
+          API_DRY_RUN: ${{ vars.API_DRY_RUN || 'true' }}
+          EBAY_API_STAGE: ${{ vars.EBAY_API_STAGE || '0' }}
+          RAKUTEN_API_STAGE: ${{ vars.RAKUTEN_API_STAGE || '0' }}
+          YAHOO_API_STAGE: ${{ vars.YAHOO_API_STAGE || '0' }}
+
       - name: API automation audit
         run: python scripts/audit_api_automation.py
         continue-on-error: true

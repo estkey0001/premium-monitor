@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-24 12:31 JST",
+  "generated_at": "2026-08-24 13:15 JST",
   "scope": "販売/買取/二次流通の取得品質・正規化・同一性（利益/AI/UI/SaaSロジックは不変）",
   "rules": {
     "identity": "容量・型番・カラー・新品/中古 を厳格一致",
@@ -13,16 +13,16 @@
       "with_price": 705,
       "exact_match": 168,
       "high_confidence": 168,
-      "fresh": 123,
+      "fresh": 76,
       "main_promotable": 14,
       "zero": 248,
-      "stale": 830,
-      "rejected": 857,
+      "stale": 877,
+      "rejected": 896,
       "failure_reasons": {
-        "stale_over_14d": 596,
+        "stale_over_14d": 643,
         "price_zero": 248,
-        "duplicate_price_collision": 9,
-        "accessory_or_wrong_product": 4
+        "accessory_or_wrong_product": 4,
+        "duplicate_price_collision": 1
       }
     },
     "resale": {
@@ -96,13 +96,13 @@
       "with_price": 40,
       "exact_match": 0,
       "high_confidence": 0,
-      "fresh": 9,
+      "fresh": 6,
       "main_promotable": 0,
       "zero": 0,
-      "stale": 31,
-      "rejected": 32,
+      "stale": 34,
+      "rejected": 35,
       "failure_reasons": {
-        "stale_over_14d": 31,
+        "stale_over_14d": 34,
         "accessory_or_wrong_product": 1
       }
     },
@@ -111,13 +111,13 @@
       "with_price": 52,
       "exact_match": 9,
       "high_confidence": 9,
-      "fresh": 8,
+      "fresh": 6,
       "main_promotable": 0,
       "zero": 0,
-      "stale": 44,
-      "rejected": 45,
+      "stale": 46,
+      "rejected": 47,
       "failure_reasons": {
-        "stale_over_14d": 44,
+        "stale_over_14d": 46,
         "accessory_or_wrong_product": 1
       }
     },
@@ -126,15 +126,14 @@
       "with_price": 146,
       "exact_match": 0,
       "high_confidence": 0,
-      "fresh": 34,
+      "fresh": 16,
       "main_promotable": 0,
       "zero": 96,
-      "stale": 208,
-      "rejected": 220,
+      "stale": 226,
+      "rejected": 232,
       "failure_reasons": {
-        "stale_over_14d": 118,
-        "price_zero": 96,
-        "duplicate_price_collision": 6
+        "stale_over_14d": 136,
+        "price_zero": 96
       }
     },
     "イオシス": {
@@ -142,15 +141,15 @@
       "with_price": 144,
       "exact_match": 55,
       "high_confidence": 55,
-      "fresh": 20,
+      "fresh": 10,
       "main_promotable": 5,
       "zero": 30,
-      "stale": 154,
-      "rejected": 157,
+      "stale": 164,
+      "rejected": 165,
       "failure_reasons": {
-        "stale_over_14d": 124,
+        "stale_over_14d": 134,
         "price_zero": 30,
-        "duplicate_price_collision": 3
+        "duplicate_price_collision": 1
       }
     },
     "カメラのキタムラ": {
@@ -158,13 +157,13 @@
       "with_price": 40,
       "exact_match": 0,
       "high_confidence": 0,
-      "fresh": 9,
+      "fresh": 6,
       "main_promotable": 0,
       "zero": 0,
-      "stale": 31,
-      "rejected": 32,
+      "stale": 34,
+      "rejected": 35,
       "failure_reasons": {
-        "stale_over_14d": 31,
+        "stale_over_14d": 34,
         "accessory_or_wrong_product": 1
       }
     },
@@ -173,13 +172,13 @@
       "with_price": 44,
       "exact_match": 0,
       "high_confidence": 0,
-      "fresh": 10,
+      "fresh": 9,
       "main_promotable": 0,
       "zero": 26,
-      "stale": 60,
-      "rejected": 62,
+      "stale": 61,
+      "rejected": 63,
       "failure_reasons": {
-        "stale_over_14d": 36,
+        "stale_over_14d": 37,
         "price_zero": 26
       }
     },
@@ -188,13 +187,13 @@
       "with_price": 128,
       "exact_match": 78,
       "high_confidence": 78,
-      "fresh": 17,
+      "fresh": 8,
       "main_promotable": 6,
       "zero": 18,
-      "stale": 129,
-      "rejected": 129,
+      "stale": 138,
+      "rejected": 138,
       "failure_reasons": {
-        "stale_over_14d": 111,
+        "stale_over_14d": 120,
         "price_zero": 18
       }
     },
@@ -203,13 +202,13 @@
       "with_price": 69,
       "exact_match": 12,
       "high_confidence": 12,
-      "fresh": 8,
+      "fresh": 7,
       "main_promotable": 1,
       "zero": 8,
-      "stale": 69,
-      "rejected": 70,
+      "stale": 70,
+      "rejected": 71,
       "failure_reasons": {
-        "stale_over_14d": 61,
+        "stale_over_14d": 62,
         "price_zero": 8,
         "accessory_or_wrong_product": 1
       }
@@ -337,15 +336,14 @@
       "with_price": 146,
       "exact_match": 0,
       "high_confidence": 0,
-      "fresh": 34,
+      "fresh": 16,
       "main_promotable": 0,
       "zero": 96,
-      "stale": 208,
-      "rejected": 220,
+      "stale": 226,
+      "rejected": 232,
       "failure_reasons": {
-        "stale_over_14d": 118,
-        "price_zero": 96,
-        "duplicate_price_collision": 6
+        "stale_over_14d": 136,
+        "price_zero": 96
       }
     },
     "イオシス": {
@@ -353,15 +351,15 @@
       "with_price": 144,
       "exact_match": 55,
       "high_confidence": 55,
-      "fresh": 20,
+      "fresh": 10,
       "main_promotable": 5,
       "zero": 30,
-      "stale": 154,
-      "rejected": 157,
+      "stale": 164,
+      "rejected": 165,
       "failure_reasons": {
-        "stale_over_14d": 124,
+        "stale_over_14d": 134,
         "price_zero": 30,
-        "duplicate_price_collision": 3
+        "duplicate_price_collision": 1
       }
     },
     "買取商店": {
@@ -369,13 +367,13 @@
       "with_price": 128,
       "exact_match": 78,
       "high_confidence": 78,
-      "fresh": 17,
+      "fresh": 8,
       "main_promotable": 6,
       "zero": 18,
-      "stale": 129,
-      "rejected": 129,
+      "stale": 138,
+      "rejected": 138,
       "failure_reasons": {
-        "stale_over_14d": 111,
+        "stale_over_14d": 120,
         "price_zero": 18
       }
     },
@@ -384,13 +382,13 @@
       "with_price": 69,
       "exact_match": 12,
       "high_confidence": 12,
-      "fresh": 8,
+      "fresh": 7,
       "main_promotable": 1,
       "zero": 8,
-      "stale": 69,
-      "rejected": 70,
+      "stale": 70,
+      "rejected": 71,
       "failure_reasons": {
-        "stale_over_14d": 61,
+        "stale_over_14d": 62,
         "price_zero": 8,
         "accessory_or_wrong_product": 1
       }
@@ -400,13 +398,13 @@
       "with_price": 44,
       "exact_match": 0,
       "high_confidence": 0,
-      "fresh": 10,
+      "fresh": 9,
       "main_promotable": 0,
       "zero": 26,
-      "stale": 60,
-      "rejected": 62,
+      "stale": 61,
+      "rejected": 63,
       "failure_reasons": {
-        "stale_over_14d": 36,
+        "stale_over_14d": 37,
         "price_zero": 26
       }
     },
@@ -430,13 +428,13 @@
       "with_price": 52,
       "exact_match": 9,
       "high_confidence": 9,
-      "fresh": 8,
+      "fresh": 6,
       "main_promotable": 0,
       "zero": 0,
-      "stale": 44,
-      "rejected": 45,
+      "stale": 46,
+      "rejected": 47,
       "failure_reasons": {
-        "stale_over_14d": 44,
+        "stale_over_14d": 46,
         "accessory_or_wrong_product": 1
       }
     },
@@ -460,13 +458,13 @@
       "with_price": 40,
       "exact_match": 0,
       "high_confidence": 0,
-      "fresh": 9,
+      "fresh": 6,
       "main_promotable": 0,
       "zero": 0,
-      "stale": 31,
-      "rejected": 32,
+      "stale": 34,
+      "rejected": 35,
       "failure_reasons": {
-        "stale_over_14d": 31,
+        "stale_over_14d": 34,
         "accessory_or_wrong_product": 1
       }
     },
@@ -475,13 +473,13 @@
       "with_price": 40,
       "exact_match": 0,
       "high_confidence": 0,
-      "fresh": 9,
+      "fresh": 6,
       "main_promotable": 0,
       "zero": 0,
-      "stale": 31,
-      "rejected": 32,
+      "stale": 34,
+      "rejected": 35,
       "failure_reasons": {
-        "stale_over_14d": 31,
+        "stale_over_14d": 34,
         "accessory_or_wrong_product": 1
       }
     },
@@ -629,8 +627,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 91.4,
-      "last_seen": 91.4,
+      "first_seen": 92.0,
+      "last_seen": 92.0,
       "risk_level": "high",
       "possible_reason": [
         "different_capacity_same_price",
@@ -662,8 +660,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 90.2,
-      "last_seen": 90.2,
+      "first_seen": 90.9,
+      "last_seen": 90.9,
       "risk_level": "high",
       "possible_reason": [
         "different_capacity_same_price",
@@ -695,8 +693,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 90.2,
-      "last_seen": 90.2,
+      "first_seen": 90.8,
+      "last_seen": 90.8,
       "risk_level": "high",
       "possible_reason": [
         "different_capacity_same_price",
@@ -758,8 +756,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 95.4,
-      "last_seen": 13.4,
+      "first_seen": 96.0,
+      "last_seen": 14.0,
       "risk_level": "high",
       "possible_reason": [
         "different_model_same_price",
@@ -790,8 +788,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 95.4,
-      "last_seen": 1.0,
+      "first_seen": 96.0,
+      "last_seen": 1.7,
       "risk_level": "high",
       "possible_reason": [
         "different_model_same_price",
@@ -821,8 +819,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 83.0,
-      "last_seen": 83.0,
+      "first_seen": 83.7,
+      "last_seen": 83.7,
       "risk_level": "high",
       "possible_reason": [
         "different_model_same_price",
@@ -852,8 +850,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 83.0,
-      "last_seen": 83.0,
+      "first_seen": 83.7,
+      "last_seen": 83.7,
       "risk_level": "high",
       "possible_reason": [
         "different_model_same_price",
@@ -977,8 +975,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 95.4,
-      "last_seen": 13.4,
+      "first_seen": 96.0,
+      "last_seen": 14.0,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -1008,8 +1006,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 95.4,
-      "last_seen": 13.4,
+      "first_seen": 96.0,
+      "last_seen": 14.0,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -1038,8 +1036,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 95.4,
-      "last_seen": 13.4,
+      "first_seen": 96.0,
+      "last_seen": 14.0,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -1068,8 +1066,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 95.4,
-      "last_seen": 13.4,
+      "first_seen": 96.0,
+      "last_seen": 14.0,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -1098,8 +1096,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 91.0,
-      "last_seen": 91.0,
+      "first_seen": 91.7,
+      "last_seen": 91.6,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -1128,8 +1126,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 32.2,
-      "last_seen": 32.2,
+      "first_seen": 32.9,
+      "last_seen": 32.9,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"

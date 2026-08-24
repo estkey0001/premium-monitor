@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-23 20:48 JST",
+  "generated_at": "2026-08-24 12:31 JST",
   "account_id": "default",
   "cash_reserve_ratio": 0.2,
   "concentration_caps": {
@@ -136,7 +136,7 @@
       "holding_period": "数日",
       "expected_value": 111072,
       "capital_efficiency": 0.3917,
-      "risk_score": 13,
+      "risk_score": 14,
       "liquidity_score": 85,
       "category": "camera",
       "maker": "FUJIFILM"
@@ -155,7 +155,7 @@
       "holding_period": "数日",
       "expected_value": 108912,
       "capital_efficiency": 0.3841,
-      "risk_score": 13,
+      "risk_score": 14,
       "liquidity_score": 85,
       "category": "camera",
       "maker": "FUJIFILM"
@@ -174,7 +174,7 @@
       "holding_period": "数日",
       "expected_value": 107472,
       "capital_efficiency": 0.379,
-      "risk_score": 13,
+      "risk_score": 14,
       "liquidity_score": 85,
       "category": "camera",
       "maker": "FUJIFILM"
@@ -193,7 +193,7 @@
       "holding_period": "数日",
       "expected_value": 103872,
       "capital_efficiency": 0.3663,
-      "risk_score": 13,
+      "risk_score": 14,
       "liquidity_score": 85,
       "category": "camera",
       "maker": "FUJIFILM"

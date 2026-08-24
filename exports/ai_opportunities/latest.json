@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-08-23 20:48 JST",
-  "health_score": 51.6,
+  "generated_at": "2026-08-24 12:31 JST",
+  "health_score": 51.4,
   "health_note": "現在データ品質低下中",
-  "main_route_count": 26,
+  "main_route_count": 22,
   "reference_route_count": 5,
   "today_tasks": [
     "✅ FUJIFILM X100VI を仕入れる（Yahoo Auction sold ≤¥405,925）",
@@ -64,7 +64,7 @@
       "why": [
         "main route 成立（国内完結で利益）",
         "ROIが8%以上（72%）",
-        "価格 2日前（比較的新鮮）",
+        "価格 3日前（比較的新鮮）",
         "再現性スコア 100（中〜高）",
         "route confidence high"
       ],
@@ -80,7 +80,7 @@
       "buy_price": 255000,
       "sell_source": "マップカメラ",
       "sell_price": 445000,
-      "age_days": 2.0,
+      "age_days": 2.7,
       "priority": 1
     },
     {
@@ -129,7 +129,7 @@
       "why": [
         "main route 成立（国内完結で利益）",
         "ROIが8%以上（71%）",
-        "価格 2日前（比較的新鮮）",
+        "価格 3日前（比較的新鮮）",
         "再現性スコア 100（中〜高）",
         "route confidence high"
       ],
@@ -145,7 +145,7 @@
       "buy_price": 255000,
       "sell_source": "カメラのキタムラ",
       "sell_price": 442000,
-      "age_days": 2.0,
+      "age_days": 2.7,
       "priority": 2
     },
     {
@@ -194,7 +194,7 @@
       "why": [
         "main route 成立（国内完結で利益）",
         "ROIが8%以上（70%）",
-        "価格 2日前（比較的新鮮）",
+        "価格 3日前（比較的新鮮）",
         "再現性スコア 100（中〜高）",
         "route confidence high"
       ],
@@ -210,7 +210,7 @@
       "buy_price": 255000,
       "sell_source": "フジヤカメラ",
       "sell_price": 440000,
-      "age_days": 2.0,
+      "age_days": 2.7,
       "priority": 3
     },
     {
@@ -259,7 +259,7 @@
       "why": [
         "main route 成立（国内完結で利益）",
         "ROIが8%以上（68%）",
-        "価格 2日前（比較的新鮮）",
+        "価格 3日前（比較的新鮮）",
         "再現性スコア 100（中〜高）",
         "route confidence high"
       ],
@@ -275,7 +275,7 @@
       "buy_price": 255000,
       "sell_source": "ソフマップ",
       "sell_price": 435000,
-      "age_days": 2.0,
+      "age_days": 2.7,
       "priority": 4
     },
     {
@@ -324,7 +324,7 @@
       "why": [
         "main route 成立（国内完結で利益）",
         "ROIが8%以上（66%）",
-        "価格 2日前（比較的新鮮）",
+        "価格 3日前（比較的新鮮）",
         "再現性スコア 100（中〜高）",
         "route confidence high"
       ],
@@ -340,7 +340,7 @@
       "buy_price": 255000,
       "sell_source": "じゃんぱら",
       "sell_price": 430000,
-      "age_days": 2.0,
+      "age_days": 2.7,
       "priority": 5
     },
     {
@@ -389,7 +389,7 @@
       "why": [
         "main route 成立（国内完結で利益）",
         "ROIが8%以上（65%）",
-        "価格 2日前（比較的新鮮）",
+        "価格 3日前（比較的新鮮）",
         "再現性スコア 100（中〜高）",
         "route confidence high"
       ],
@@ -405,7 +405,7 @@
       "buy_price": 255000,
       "sell_source": "買取商店",
       "sell_price": 428000,
-      "age_days": 2.0,
+      "age_days": 2.7,
       "priority": 6
     },
     {
@@ -469,7 +469,7 @@
       "buy_price": 283562,
       "sell_source": "マップカメラ",
       "sell_price": 445000,
-      "age_days": 9.5,
+      "age_days": 10.1,
       "priority": 7
     },
     {
@@ -533,7 +533,7 @@
       "buy_price": 283562,
       "sell_source": "カメラのキタムラ",
       "sell_price": 442000,
-      "age_days": 9.5,
+      "age_days": 10.1,
       "priority": 8
     },
     {
@@ -597,7 +597,7 @@
       "buy_price": 283562,
       "sell_source": "フジヤカメラ",
       "sell_price": 440000,
-      "age_days": 9.5,
+      "age_days": 10.1,
       "priority": 9
     },
     {
@@ -661,7 +661,7 @@
       "buy_price": 283562,
       "sell_source": "ソフマップ",
       "sell_price": 435000,
-      "age_days": 9.5,
+      "age_days": 10.1,
       "priority": 10
     }
   ]

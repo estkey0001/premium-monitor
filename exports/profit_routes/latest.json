@@ -1,25 +1,24 @@
 {
-  "generated_at": "2026-08-23 20:48 JST",
+  "generated_at": "2026-08-24 12:31 JST",
   "ebay_api_configured": false,
   "overseas_source_mode": "manual",
   "summary": {
-    "main_route_count": 26,
+    "main_route_count": 22,
     "reference_route_count": 13,
     "by_product": {
       "FUJIFILM X100VI": 12,
       "PlayStation 5 Pro": 4,
       "Nintendo Switch 2": 3,
-      "iPhone 17 Pro Max 256GB SIMフリー": 3,
-      "Nintendo Switch 2 マリオカートセット": 4
+      "iPhone 17 Pro Max 256GB SIMフリー": 3
     },
     "by_confidence": {
       "high": 6,
-      "medium": 20
+      "medium": 16
     },
     "by_route_type": {
       "flea_to_buyback": 6,
       "domestic_to_buyback": 6,
-      "shop_to_buyback": 14
+      "shop_to_buyback": 10
     },
     "max_profit": {
       "product_id": "prod_x100vi",
@@ -50,8 +49,8 @@
       "route_confidence": "high",
       "buy_observed_at": "2026-08-21T20:00:00+09:00",
       "sell_observed_at": "2026-08-22T12:00:00+09:00",
-      "buy_observed_age_days": 2.0,
-      "sell_observed_age_days": 1.4,
+      "buy_observed_age_days": 2.7,
+      "sell_observed_age_days": 2.0,
       "sell_collector_method": "",
       "route_type": "flea_to_buyback",
       "reference_route": false,
@@ -91,8 +90,8 @@
       "route_confidence": "medium",
       "buy_observed_at": "2026-08-12T12:00:00+09:00",
       "sell_observed_at": "2026-08-22T20:39:41+09:00",
-      "buy_observed_age_days": 11.4,
-      "sell_observed_age_days": 1.0,
+      "buy_observed_age_days": 12.0,
+      "sell_observed_age_days": 1.7,
       "sell_collector_method": "",
       "route_type": "shop_to_buyback",
       "reference_route": false,
@@ -103,15 +102,15 @@
       "reproducibility_score": 80,
       "reproducibility_level": "高"
     },
-    "zero_route_products": 40
+    "zero_route_products": 41
   },
   "missing_data_priority": [
     {
       "rank": 1,
       "key": "flea_sold",
       "label": "メルカリsold / ヤフオク落札（より安い仕入れ）",
-      "potential_profit": 255143,
-      "product_count": 5,
+      "potential_profit": 248643,
+      "product_count": 4,
       "priority": "high"
     },
     {
@@ -127,7 +126,7 @@
       "key": "shop_item_url",
       "label": "店舗販売価格 item_url 付き取得",
       "potential_profit": 0,
-      "product_count": 22,
+      "product_count": 18,
       "priority": "low"
     }
   ],
@@ -161,8 +160,8 @@
       "route_confidence": "high",
       "buy_observed_at": "2026-08-21T20:00:00+09:00",
       "sell_observed_at": "2026-08-22T12:00:00+09:00",
-      "buy_observed_age_days": 2.0,
-      "sell_observed_age_days": 1.4,
+      "buy_observed_age_days": 2.7,
+      "sell_observed_age_days": 2.0,
       "sell_collector_method": "",
       "route_type": "flea_to_buyback",
       "reference_route": false,
@@ -202,8 +201,8 @@
       "route_confidence": "high",
       "buy_observed_at": "2026-08-21T20:00:00+09:00",
       "sell_observed_at": "2026-08-22T12:00:00+09:00",
-      "buy_observed_age_days": 2.0,
-      "sell_observed_age_days": 1.4,
+      "buy_observed_age_days": 2.7,
+      "sell_observed_age_days": 2.0,
       "sell_collector_method": "",
       "route_type": "flea_to_buyback",
       "reference_route": false,
@@ -243,8 +242,8 @@
       "route_confidence": "high",
       "buy_observed_at": "2026-08-21T20:00:00+09:00",
       "sell_observed_at": "2026-08-22T12:00:00+09:00",
-      "buy_observed_age_days": 2.0,
-      "sell_observed_age_days": 1.4,
+      "buy_observed_age_days": 2.7,
+      "sell_observed_age_days": 2.0,
       "sell_collector_method": "",
       "route_type": "flea_to_buyback",
       "reference_route": false,
@@ -284,8 +283,8 @@
       "route_confidence": "high",
       "buy_observed_at": "2026-08-21T20:00:00+09:00",
       "sell_observed_at": "2026-08-22T12:00:00+09:00",
-      "buy_observed_age_days": 2.0,
-      "sell_observed_age_days": 1.4,
+      "buy_observed_age_days": 2.7,
+      "sell_observed_age_days": 2.0,
       "sell_collector_method": "",
       "route_type": "flea_to_buyback",
       "reference_route": false,
@@ -325,8 +324,8 @@
       "route_confidence": "high",
       "buy_observed_at": "2026-08-21T20:00:00+09:00",
       "sell_observed_at": "2026-08-22T12:00:00+09:00",
-      "buy_observed_age_days": 2.0,
-      "sell_observed_age_days": 1.4,
+      "buy_observed_age_days": 2.7,
+      "sell_observed_age_days": 2.0,
       "sell_collector_method": "",
       "route_type": "flea_to_buyback",
       "reference_route": false,
@@ -366,8 +365,8 @@
       "route_confidence": "high",
       "buy_observed_at": "2026-08-21T20:00:00+09:00",
       "sell_observed_at": "2026-08-22T12:00:00+09:00",
-      "buy_observed_age_days": 2.0,
-      "sell_observed_age_days": 1.4,
+      "buy_observed_age_days": 2.7,
+      "sell_observed_age_days": 2.0,
       "sell_collector_method": "",
       "route_type": "flea_to_buyback",
       "reference_route": false,
@@ -407,8 +406,8 @@
       "route_confidence": "medium",
       "buy_observed_at": "2026-08-14T10:00:00+09:00",
       "sell_observed_at": "2026-08-22T12:00:00+09:00",
-      "buy_observed_age_days": 9.5,
-      "sell_observed_age_days": 1.4,
+      "buy_observed_age_days": 10.1,
+      "sell_observed_age_days": 2.0,
       "sell_collector_method": "",
       "route_type": "domestic_to_buyback",
       "reference_route": false,
@@ -448,8 +447,8 @@
       "route_confidence": "medium",
       "buy_observed_at": "2026-08-14T10:00:00+09:00",
       "sell_observed_at": "2026-08-22T12:00:00+09:00",
-      "buy_observed_age_days": 9.5,
-      "sell_observed_age_days": 1.4,
+      "buy_observed_age_days": 10.1,
+      "sell_observed_age_days": 2.0,
       "sell_collector_method": "",
       "route_type": "domestic_to_buyback",
       "reference_route": false,
@@ -489,8 +488,8 @@
       "route_confidence": "medium",
       "buy_observed_at": "2026-08-14T10:00:00+09:00",
       "sell_observed_at": "2026-08-22T12:00:00+09:00",
-      "buy_observed_age_days": 9.5,
-      "sell_observed_age_days": 1.4,
+      "buy_observed_age_days": 10.1,
+      "sell_observed_age_days": 2.0,
       "sell_collector_method": "",
       "route_type": "domestic_to_buyback",
       "reference_route": false,
@@ -530,8 +529,8 @@
       "route_confidence": "medium",
       "buy_observed_at": "2026-08-14T10:00:00+09:00",
       "sell_observed_at": "2026-08-22T12:00:00+09:00",
-      "buy_observed_age_days": 9.5,
-      "sell_observed_age_days": 1.4,
+      "buy_observed_age_days": 10.1,
+      "sell_observed_age_days": 2.0,
       "sell_collector_method": "",
       "route_type": "domestic_to_buyback",
       "reference_route": false,
@@ -571,8 +570,8 @@
       "route_confidence": "medium",
       "buy_observed_at": "2026-08-14T10:00:00+09:00",
       "sell_observed_at": "2026-08-22T12:00:00+09:00",
-      "buy_observed_age_days": 9.5,
-      "sell_observed_age_days": 1.4,
+      "buy_observed_age_days": 10.1,
+      "sell_observed_age_days": 2.0,
       "sell_collector_method": "",
       "route_type": "domestic_to_buyback",
       "reference_route": false,
@@ -612,8 +611,8 @@
       "route_confidence": "medium",
       "buy_observed_at": "2026-08-14T10:00:00+09:00",
       "sell_observed_at": "2026-08-22T12:00:00+09:00",
-      "buy_observed_age_days": 9.5,
-      "sell_observed_age_days": 1.4,
+      "buy_observed_age_days": 10.1,
+      "sell_observed_age_days": 2.0,
       "sell_collector_method": "",
       "route_type": "domestic_to_buyback",
       "reference_route": false,
@@ -653,8 +652,8 @@
       "route_confidence": "medium",
       "buy_observed_at": "2026-08-12T12:00:00+09:00",
       "sell_observed_at": "2026-08-22T20:39:41+09:00",
-      "buy_observed_age_days": 11.4,
-      "sell_observed_age_days": 1.0,
+      "buy_observed_age_days": 12.0,
+      "sell_observed_age_days": 1.7,
       "sell_collector_method": "",
       "route_type": "shop_to_buyback",
       "reference_route": false,
@@ -694,8 +693,8 @@
       "route_confidence": "medium",
       "buy_observed_at": "2026-08-12T12:00:00+09:00",
       "sell_observed_at": "2026-08-22T20:39:41+09:00",
-      "buy_observed_age_days": 11.4,
-      "sell_observed_age_days": 1.0,
+      "buy_observed_age_days": 12.0,
+      "sell_observed_age_days": 1.7,
       "sell_collector_method": "",
       "route_type": "shop_to_buyback",
       "reference_route": false,
@@ -735,8 +734,8 @@
       "route_confidence": "medium",
       "buy_observed_at": "2026-08-12T12:00:00+09:00",
       "sell_observed_at": "2026-08-22T20:39:38+09:00",
-      "buy_observed_age_days": 11.4,
-      "sell_observed_age_days": 1.0,
+      "buy_observed_age_days": 12.0,
+      "sell_observed_age_days": 1.7,
       "sell_collector_method": "",
       "route_type": "shop_to_buyback",
       "reference_route": false,
@@ -776,8 +775,8 @@
       "route_confidence": "medium",
       "buy_observed_at": "2026-08-12T12:00:00+09:00",
       "sell_observed_at": "2026-08-22T20:39:38+09:00",
-      "buy_observed_age_days": 11.4,
-      "sell_observed_age_days": 1.0,
+      "buy_observed_age_days": 12.0,
+      "sell_observed_age_days": 1.7,
       "sell_collector_method": "",
       "route_type": "shop_to_buyback",
       "reference_route": false,
@@ -817,8 +816,8 @@
       "route_confidence": "medium",
       "buy_observed_at": "2026-08-12T12:00:00+09:00",
       "sell_observed_at": "2026-08-22T20:39:19+09:00",
-      "buy_observed_age_days": 11.4,
-      "sell_observed_age_days": 1.0,
+      "buy_observed_age_days": 12.0,
+      "sell_observed_age_days": 1.7,
       "sell_collector_method": "",
       "route_type": "shop_to_buyback",
       "reference_route": false,
@@ -858,8 +857,8 @@
       "route_confidence": "medium",
       "buy_observed_at": "2026-08-12T12:00:00+09:00",
       "sell_observed_at": "2026-08-22T20:39:19+09:00",
-      "buy_observed_age_days": 11.4,
-      "sell_observed_age_days": 1.0,
+      "buy_observed_age_days": 12.0,
+      "sell_observed_age_days": 1.7,
       "sell_collector_method": "",
       "route_type": "shop_to_buyback",
       "reference_route": false,
@@ -899,8 +898,8 @@
       "route_confidence": "medium",
       "buy_observed_at": "2026-08-12T12:00:00+09:00",
       "sell_observed_at": "2026-08-22T20:39:19+09:00",
-      "buy_observed_age_days": 11.4,
-      "sell_observed_age_days": 1.0,
+      "buy_observed_age_days": 12.0,
+      "sell_observed_age_days": 1.7,
       "sell_collector_method": "",
       "route_type": "shop_to_buyback",
       "reference_route": false,
@@ -940,8 +939,8 @@
       "route_confidence": "medium",
       "buy_observed_at": "2026-08-12T12:00:00+09:00",
       "sell_observed_at": "2026-08-22T20:38:31+09:00",
-      "buy_observed_age_days": 11.4,
-      "sell_observed_age_days": 1.0,
+      "buy_observed_age_days": 12.0,
+      "sell_observed_age_days": 1.7,
       "sell_collector_method": "",
       "route_type": "shop_to_buyback",
       "reference_route": false,
@@ -981,8 +980,8 @@
       "route_confidence": "medium",
       "buy_observed_at": "2026-08-12T12:00:00+09:00",
       "sell_observed_at": "2026-08-22T20:38:31+09:00",
-      "buy_observed_age_days": 11.4,
-      "sell_observed_age_days": 1.0,
+      "buy_observed_age_days": 12.0,
+      "sell_observed_age_days": 1.7,
       "sell_collector_method": "",
       "route_type": "shop_to_buyback",
       "reference_route": false,
@@ -1022,8 +1021,8 @@
       "route_confidence": "medium",
       "buy_observed_at": "2026-08-12T12:00:00+09:00",
       "sell_observed_at": "2026-08-22T20:38:31+09:00",
-      "buy_observed_age_days": 11.4,
-      "sell_observed_age_days": 1.0,
+      "buy_observed_age_days": 12.0,
+      "sell_observed_age_days": 1.7,
       "sell_collector_method": "",
       "route_type": "shop_to_buyback",
       "reference_route": false,
@@ -1033,170 +1032,6 @@
       "is_manual_curated": true,
       "reproducibility_score": 60,
       "reproducibility_level": "中"
-    },
-    {
-      "product_id": "prod_switch2_mk",
-      "product_name": "Nintendo Switch 2 マリオカートセット",
-      "buy_source": "ゲオ",
-      "buy_price": 53000,
-      "buy_price_type": "shop_sale_price",
-      "buy_price_role": "buy",
-      "buy_condition": "new_unopened",
-      "buy_url": "",
-      "buy_link_type": "none",
-      "sell_source": "買取商店",
-      "sell_price": 67000,
-      "sell_price_type": "buyback_price",
-      "sell_price_role": "sell",
-      "sell_condition": "new_unopened",
-      "sell_url": "https://www.kaitorishouten-co.jp/keitai",
-      "sell_link_type": "unknown",
-      "gross_profit": 14000,
-      "estimated_fee": 0,
-      "platform_fee": 0,
-      "payment_fee": 0,
-      "fx_buffer": 0,
-      "shipping_cost": 1500,
-      "safety_margin": 3000,
-      "net_profit": 9500,
-      "roi": 0.1792,
-      "route_confidence": "medium",
-      "buy_observed_at": "2026-08-12T12:00:00+09:00",
-      "sell_observed_at": "2026-08-10T12:00:00+09:00",
-      "buy_observed_age_days": 11.4,
-      "sell_observed_age_days": 13.4,
-      "sell_collector_method": "",
-      "route_type": "shop_to_buyback",
-      "reference_route": false,
-      "rejection_reason": "",
-      "source_count": 4,
-      "same_condition_count": 2,
-      "is_manual_curated": true,
-      "reproducibility_score": 60,
-      "reproducibility_level": "中"
-    },
-    {
-      "product_id": "prod_switch2_mk",
-      "product_name": "Nintendo Switch 2 マリオカートセット",
-      "buy_source": "じゃんぱら",
-      "buy_price": 54800,
-      "buy_price_type": "shop_sale_price",
-      "buy_price_role": "buy",
-      "buy_condition": "new_unopened",
-      "buy_url": "",
-      "buy_link_type": "none",
-      "sell_source": "買取商店",
-      "sell_price": 67000,
-      "sell_price_type": "buyback_price",
-      "sell_price_role": "sell",
-      "sell_condition": "new_unopened",
-      "sell_url": "https://www.kaitorishouten-co.jp/keitai",
-      "sell_link_type": "unknown",
-      "gross_profit": 12200,
-      "estimated_fee": 0,
-      "platform_fee": 0,
-      "payment_fee": 0,
-      "fx_buffer": 0,
-      "shipping_cost": 1500,
-      "safety_margin": 3000,
-      "net_profit": 7700,
-      "roi": 0.1405,
-      "route_confidence": "medium",
-      "buy_observed_at": "2026-08-12T12:00:00+09:00",
-      "sell_observed_at": "2026-08-10T12:00:00+09:00",
-      "buy_observed_age_days": 11.4,
-      "sell_observed_age_days": 13.4,
-      "sell_collector_method": "",
-      "route_type": "shop_to_buyback",
-      "reference_route": false,
-      "rejection_reason": "",
-      "source_count": 4,
-      "same_condition_count": 2,
-      "is_manual_curated": true,
-      "reproducibility_score": 60,
-      "reproducibility_level": "中"
-    },
-    {
-      "product_id": "prod_switch2_mk",
-      "product_name": "Nintendo Switch 2 マリオカートセット",
-      "buy_source": "ゲオ",
-      "buy_price": 53000,
-      "buy_price_type": "shop_sale_price",
-      "buy_price_role": "buy",
-      "buy_condition": "new_unopened",
-      "buy_url": "",
-      "buy_link_type": "none",
-      "sell_source": "イオシス",
-      "sell_price": 63500,
-      "sell_price_type": "buyback_price",
-      "sell_price_role": "sell",
-      "sell_condition": "new_unopened",
-      "sell_url": "https://iosys.co.jp/",
-      "sell_link_type": "shop_home",
-      "gross_profit": 10500,
-      "estimated_fee": 0,
-      "platform_fee": 0,
-      "payment_fee": 0,
-      "fx_buffer": 0,
-      "shipping_cost": 1500,
-      "safety_margin": 3000,
-      "net_profit": 6000,
-      "roi": 0.1132,
-      "route_confidence": "medium",
-      "buy_observed_at": "2026-08-12T12:00:00+09:00",
-      "sell_observed_at": "2026-08-10T12:00:00+09:00",
-      "buy_observed_age_days": 11.4,
-      "sell_observed_age_days": 13.4,
-      "sell_collector_method": "",
-      "route_type": "shop_to_buyback",
-      "reference_route": false,
-      "rejection_reason": "",
-      "source_count": 4,
-      "same_condition_count": 2,
-      "is_manual_curated": true,
-      "reproducibility_score": 60,
-      "reproducibility_level": "中"
-    },
-    {
-      "product_id": "prod_switch2_mk",
-      "product_name": "Nintendo Switch 2 マリオカートセット",
-      "buy_source": "じゃんぱら",
-      "buy_price": 54800,
-      "buy_price_type": "shop_sale_price",
-      "buy_price_role": "buy",
-      "buy_condition": "new_unopened",
-      "buy_url": "",
-      "buy_link_type": "none",
-      "sell_source": "イオシス",
-      "sell_price": 63500,
-      "sell_price_type": "buyback_price",
-      "sell_price_role": "sell",
-      "sell_condition": "new_unopened",
-      "sell_url": "https://iosys.co.jp/",
-      "sell_link_type": "shop_home",
-      "gross_profit": 8700,
-      "estimated_fee": 0,
-      "platform_fee": 0,
-      "payment_fee": 0,
-      "fx_buffer": 0,
-      "shipping_cost": 1500,
-      "safety_margin": 3000,
-      "net_profit": 4200,
-      "roi": 0.0766,
-      "route_confidence": "medium",
-      "buy_observed_at": "2026-08-12T12:00:00+09:00",
-      "sell_observed_at": "2026-08-10T12:00:00+09:00",
-      "buy_observed_age_days": 11.4,
-      "sell_observed_age_days": 13.4,
-      "sell_collector_method": "",
-      "route_type": "shop_to_buyback",
-      "reference_route": false,
-      "rejection_reason": "",
-      "source_count": 4,
-      "same_condition_count": 2,
-      "is_manual_curated": true,
-      "reproducibility_score": 45,
-      "reproducibility_level": "低"
     }
   ],
   "reference_routes": [
@@ -1229,12 +1064,12 @@
       "route_confidence": "high",
       "buy_observed_at": "2026-08-21T20:00:00+09:00",
       "sell_observed_at": "2026-08-22T10:00:00+09:00",
-      "buy_observed_age_days": 2.0,
-      "sell_observed_age_days": 1.5,
+      "buy_observed_age_days": 2.7,
+      "sell_observed_age_days": 2.1,
       "sell_collector_method": "manual",
       "route_type": "flea_to_overseas",
       "reference_route": true,
-      "rejection_reason": "overseas_sold_stale(1.5d)"
+      "rejection_reason": "overseas_sold_stale(2.1d)"
     },
     {
       "product_id": "prod_x100vi",
@@ -1265,12 +1100,12 @@
       "route_confidence": "medium",
       "buy_observed_at": "2026-08-14T10:00:00+09:00",
       "sell_observed_at": "2026-08-22T10:00:00+09:00",
-      "buy_observed_age_days": 9.5,
-      "sell_observed_age_days": 1.5,
+      "buy_observed_age_days": 10.1,
+      "sell_observed_age_days": 2.1,
       "sell_collector_method": "manual",
       "route_type": "domestic_to_overseas",
       "reference_route": true,
-      "rejection_reason": "overseas_sold_stale(1.5d)"
+      "rejection_reason": "overseas_sold_stale(2.1d)"
     },
     {
       "product_id": "prod_iphone17pro_256",
@@ -1301,12 +1136,12 @@
       "route_confidence": "medium",
       "buy_observed_at": "2026-08-12T12:00:00+09:00",
       "sell_observed_at": "2026-08-22T10:00:00+09:00",
-      "buy_observed_age_days": 11.4,
-      "sell_observed_age_days": 1.5,
+      "buy_observed_age_days": 12.0,
+      "sell_observed_age_days": 2.1,
       "sell_collector_method": "",
       "route_type": "shop_to_overseas",
       "reference_route": true,
-      "rejection_reason": "overseas_sold_stale(1.5d)"
+      "rejection_reason": "overseas_sold_stale(2.1d)"
     },
     {
       "product_id": "prod_iphone17pro_256",
@@ -1337,12 +1172,12 @@
       "route_confidence": "medium",
       "buy_observed_at": "2026-08-12T12:00:00+09:00",
       "sell_observed_at": "2026-08-22T10:00:00+09:00",
-      "buy_observed_age_days": 11.4,
-      "sell_observed_age_days": 1.5,
+      "buy_observed_age_days": 12.0,
+      "sell_observed_age_days": 2.1,
       "sell_collector_method": "",
       "route_type": "shop_to_overseas",
       "reference_route": true,
-      "rejection_reason": "overseas_sold_stale(1.5d)"
+      "rejection_reason": "overseas_sold_stale(2.1d)"
     },
     {
       "product_id": "prod_iphone17pro_256",
@@ -1373,12 +1208,12 @@
       "route_confidence": "medium",
       "buy_observed_at": "2026-08-12T12:00:00+09:00",
       "sell_observed_at": "2026-08-22T10:00:00+09:00",
-      "buy_observed_age_days": 11.4,
-      "sell_observed_age_days": 1.5,
+      "buy_observed_age_days": 12.0,
+      "sell_observed_age_days": 2.1,
       "sell_collector_method": "",
       "route_type": "shop_to_overseas",
       "reference_route": true,
-      "rejection_reason": "overseas_sold_stale(1.5d)"
+      "rejection_reason": "overseas_sold_stale(2.1d)"
     },
     {
       "product_id": "prod_iphone17pro_256",
@@ -1409,12 +1244,12 @@
       "route_confidence": "medium",
       "buy_observed_at": "2026-08-12T12:00:00+09:00",
       "sell_observed_at": "2026-08-22T10:00:00+09:00",
-      "buy_observed_age_days": 11.4,
-      "sell_observed_age_days": 1.5,
+      "buy_observed_age_days": 12.0,
+      "sell_observed_age_days": 2.1,
       "sell_collector_method": "",
       "route_type": "shop_to_overseas",
       "reference_route": true,
-      "rejection_reason": "overseas_sold_stale(1.5d)"
+      "rejection_reason": "overseas_sold_stale(2.1d)"
     },
     {
       "product_id": "prod_gr4",
@@ -1445,12 +1280,12 @@
       "route_confidence": "medium",
       "buy_observed_at": "2026-08-14T10:00:00+09:00",
       "sell_observed_at": "2026-08-22T10:00:00+09:00",
-      "buy_observed_age_days": 9.5,
-      "sell_observed_age_days": 1.5,
+      "buy_observed_age_days": 10.1,
+      "sell_observed_age_days": 2.1,
       "sell_collector_method": "manual",
       "route_type": "domestic_to_overseas",
       "reference_route": true,
-      "rejection_reason": "overseas_sold_stale(1.5d)"
+      "rejection_reason": "overseas_sold_stale(2.1d)"
     },
     {
       "product_id": "prod_gr3x",
@@ -1481,12 +1316,12 @@
       "route_confidence": "high",
       "buy_observed_at": "2026-08-20T15:00:00+09:00",
       "sell_observed_at": "2026-08-22T10:00:00+09:00",
-      "buy_observed_age_days": 3.2,
-      "sell_observed_age_days": 1.5,
+      "buy_observed_age_days": 3.9,
+      "sell_observed_age_days": 2.1,
       "sell_collector_method": "manual",
       "route_type": "flea_to_overseas",
       "reference_route": true,
-      "rejection_reason": "overseas_sold_stale(1.5d)"
+      "rejection_reason": "overseas_sold_stale(2.1d)"
     },
     {
       "product_id": "prod_switch2",
@@ -1517,12 +1352,12 @@
       "route_confidence": "medium",
       "buy_observed_at": "2026-08-12T12:00:00+09:00",
       "sell_observed_at": "2026-08-22T10:00:00+09:00",
-      "buy_observed_age_days": 11.4,
-      "sell_observed_age_days": 1.5,
+      "buy_observed_age_days": 12.0,
+      "sell_observed_age_days": 2.1,
       "sell_collector_method": "manual",
       "route_type": "shop_to_overseas",
       "reference_route": true,
-      "rejection_reason": "overseas_sold_stale(1.5d)"
+      "rejection_reason": "overseas_sold_stale(2.1d)"
     },
     {
       "product_id": "prod_switch2",
@@ -1553,12 +1388,12 @@
       "route_confidence": "medium",
       "buy_observed_at": "2026-08-12T12:00:00+09:00",
       "sell_observed_at": "2026-08-22T10:00:00+09:00",
-      "buy_observed_age_days": 11.4,
-      "sell_observed_age_days": 1.5,
+      "buy_observed_age_days": 12.0,
+      "sell_observed_age_days": 2.1,
       "sell_collector_method": "manual",
       "route_type": "shop_to_overseas",
       "reference_route": true,
-      "rejection_reason": "overseas_sold_stale(1.5d)"
+      "rejection_reason": "overseas_sold_stale(2.1d)"
     },
     {
       "product_id": "prod_switch2",
@@ -1589,12 +1424,12 @@
       "route_confidence": "medium",
       "buy_observed_at": "2026-08-12T12:00:00+09:00",
       "sell_observed_at": "2026-08-22T10:00:00+09:00",
-      "buy_observed_age_days": 11.4,
-      "sell_observed_age_days": 1.5,
+      "buy_observed_age_days": 12.0,
+      "sell_observed_age_days": 2.1,
       "sell_collector_method": "manual",
       "route_type": "shop_to_overseas",
       "reference_route": true,
-      "rejection_reason": "overseas_sold_stale(1.5d)"
+      "rejection_reason": "overseas_sold_stale(2.1d)"
     },
     {
       "product_id": "prod_switch2",
@@ -1625,12 +1460,12 @@
       "route_confidence": "high",
       "buy_observed_at": "2026-08-21T12:00:00+09:00",
       "sell_observed_at": "2026-08-22T10:00:00+09:00",
-      "buy_observed_age_days": 2.4,
-      "sell_observed_age_days": 1.5,
+      "buy_observed_age_days": 3.0,
+      "sell_observed_age_days": 2.1,
       "sell_collector_method": "manual",
       "route_type": "flea_to_overseas",
       "reference_route": true,
-      "rejection_reason": "overseas_sold_stale(1.5d)"
+      "rejection_reason": "overseas_sold_stale(2.1d)"
     },
     {
       "product_id": "prod_switch2",
@@ -1661,12 +1496,12 @@
       "route_confidence": "high",
       "buy_observed_at": "2026-08-22T09:00:00+09:00",
       "sell_observed_at": "2026-08-22T10:00:00+09:00",
-      "buy_observed_age_days": 1.5,
-      "sell_observed_age_days": 1.5,
+      "buy_observed_age_days": 2.1,
+      "sell_observed_age_days": 2.1,
       "sell_collector_method": "manual",
       "route_type": "flea_to_overseas",
       "reference_route": true,
-      "rejection_reason": "overseas_sold_stale(1.5d)"
+      "rejection_reason": "overseas_sold_stale(2.1d)"
     }
   ],
   "zero_route_diagnostics": {
@@ -1784,23 +1619,23 @@
     "prod_iphone17_256": {
       "product_name": "iPhone 17 256GB SIMフリー",
       "buy_candidates": 0,
-      "sell_candidates": 4,
+      "sell_candidates": 0,
       "min_usable_buy": null,
       "min_usable_buy_source": "",
-      "max_usable_sell": 135000,
-      "max_usable_sell_source": "モバイル一番",
-      "target_buy_price": 134999,
+      "max_usable_sell": null,
+      "max_usable_sell_source": "",
+      "target_buy_price": null,
       "gross_gap": null,
       "net_domestic": null,
       "best_reference_net": null,
-      "main_blocked_reason": "有効な仕入(販売/出品/落札)候補なし",
+      "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
       "rejection_top5": [
         [
           "stale_over_14d",
-          12
+          16
         ]
       ],
-      "stale_excluded": 12,
+      "stale_excluded": 16,
       "overseas_stale": 0,
       "needed": [],
       "fresh_overseas_whatif_top5": []
@@ -1808,27 +1643,23 @@
     "prod_iphone16pro_256": {
       "product_name": "iPhone 16 Pro 256GB SIMフリー",
       "buy_candidates": 0,
-      "sell_candidates": 3,
+      "sell_candidates": 0,
       "min_usable_buy": null,
       "min_usable_buy_source": "",
-      "max_usable_sell": 152000,
-      "max_usable_sell_source": "モバイル一番",
-      "target_buy_price": 151999,
+      "max_usable_sell": null,
+      "max_usable_sell_source": "",
+      "target_buy_price": null,
       "gross_gap": null,
       "net_domestic": null,
       "best_reference_net": null,
-      "main_blocked_reason": "有効な仕入(販売/出品/落札)候補なし",
+      "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
       "rejection_top5": [
         [
           "stale_over_14d",
-          12
-        ],
-        [
-          "duplicate_price_collision",
-          1
+          16
         ]
       ],
-      "stale_excluded": 12,
+      "stale_excluded": 16,
       "overseas_stale": 0,
       "needed": [],
       "fresh_overseas_whatif_top5": []
@@ -1836,27 +1667,23 @@
     "prod_iphone16pm_256": {
       "product_name": "iPhone 16 Pro Max 256GB",
       "buy_candidates": 0,
-      "sell_candidates": 3,
+      "sell_candidates": 0,
       "min_usable_buy": null,
       "min_usable_buy_source": "",
-      "max_usable_sell": 175000,
-      "max_usable_sell_source": "買取商店",
-      "target_buy_price": 174999,
+      "max_usable_sell": null,
+      "max_usable_sell_source": "",
+      "target_buy_price": null,
       "gross_gap": null,
       "net_domestic": null,
       "best_reference_net": null,
-      "main_blocked_reason": "有効な仕入(販売/出品/落札)候補なし",
+      "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
       "rejection_top5": [
         [
           "stale_over_14d",
-          12
-        ],
-        [
-          "duplicate_price_collision",
-          1
+          16
         ]
       ],
-      "stale_excluded": 12,
+      "stale_excluded": 16,
       "overseas_stale": 0,
       "needed": [],
       "fresh_overseas_whatif_top5": []
@@ -1883,54 +1710,47 @@
     "prod_macbook_air_m4_13": {
       "product_name": "MacBook Air M4 13インチ",
       "buy_candidates": 2,
-      "sell_candidates": 3,
+      "sell_candidates": 0,
       "min_usable_buy": 145000,
       "min_usable_buy_source": "イオシス",
-      "max_usable_sell": 143000,
-      "max_usable_sell_source": "じゃんぱら",
-      "target_buy_price": 138499,
-      "gross_gap": -2000,
-      "net_domestic": -6500,
+      "max_usable_sell": null,
+      "max_usable_sell_source": "",
+      "target_buy_price": null,
+      "gross_gap": null,
+      "net_domestic": null,
       "best_reference_net": null,
-      "main_blocked_reason": "国内完結（販売≥買取）で赤字",
+      "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
       "rejection_top5": [
         [
           "stale_over_14d",
-          23
+          26
         ]
       ],
-      "stale_excluded": 23,
+      "stale_excluded": 26,
       "overseas_stale": 0,
-      "needed": [
-        "メルカリsold/ヤフオク落札 ≤ ¥138,499 取得で国内買取ルート成立",
-        "国内買取価格が +¥6,501 上昇すれば成立"
-      ],
+      "needed": [],
       "fresh_overseas_whatif_top5": []
     },
     "prod_macbook_air_m4_15": {
       "product_name": "MacBook Air M4 15インチ",
       "buy_candidates": 0,
-      "sell_candidates": 1,
+      "sell_candidates": 0,
       "min_usable_buy": null,
       "min_usable_buy_source": "",
-      "max_usable_sell": 175000,
-      "max_usable_sell_source": "じゃんぱら",
-      "target_buy_price": 174999,
+      "max_usable_sell": null,
+      "max_usable_sell_source": "",
+      "target_buy_price": null,
       "gross_gap": null,
       "net_domestic": null,
       "best_reference_net": null,
-      "main_blocked_reason": "有効な仕入(販売/出品/落札)候補なし",
+      "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
       "rejection_top5": [
         [
           "stale_over_14d",
-          6
-        ],
-        [
-          "duplicate_price_collision",
-          1
+          8
         ]
       ],
-      "stale_excluded": 6,
+      "stale_excluded": 8,
       "overseas_stale": 0,
       "needed": [],
       "fresh_overseas_whatif_top5": []
@@ -1938,27 +1758,23 @@
     "prod_macbook_pro_m4_14": {
       "product_name": "MacBook Pro M4 14インチ",
       "buy_candidates": 0,
-      "sell_candidates": 1,
+      "sell_candidates": 0,
       "min_usable_buy": null,
       "min_usable_buy_source": "",
-      "max_usable_sell": 220000,
-      "max_usable_sell_source": "じゃんぱら",
-      "target_buy_price": 219999,
+      "max_usable_sell": null,
+      "max_usable_sell_source": "",
+      "target_buy_price": null,
       "gross_gap": null,
       "net_domestic": null,
       "best_reference_net": null,
-      "main_blocked_reason": "有効な仕入(販売/出品/落札)候補なし",
+      "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
       "rejection_top5": [
         [
           "stale_over_14d",
-          6
-        ],
-        [
-          "duplicate_price_collision",
-          1
+          8
         ]
       ],
-      "stale_excluded": 6,
+      "stale_excluded": 8,
       "overseas_stale": 0,
       "needed": [],
       "fresh_overseas_whatif_top5": []
@@ -1966,27 +1782,23 @@
     "prod_mac_mini_m4": {
       "product_name": "Mac mini M4",
       "buy_candidates": 0,
-      "sell_candidates": 1,
+      "sell_candidates": 0,
       "min_usable_buy": null,
       "min_usable_buy_source": "",
-      "max_usable_sell": 75000,
-      "max_usable_sell_source": "イオシス",
-      "target_buy_price": 74999,
+      "max_usable_sell": null,
+      "max_usable_sell_source": "",
+      "target_buy_price": null,
       "gross_gap": null,
       "net_domestic": null,
       "best_reference_net": null,
-      "main_blocked_reason": "有効な仕入(販売/出品/落札)候補なし",
+      "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
       "rejection_top5": [
         [
           "stale_over_14d",
-          6
-        ],
-        [
-          "duplicate_price_collision",
-          1
+          8
         ]
       ],
-      "stale_excluded": 6,
+      "stale_excluded": 8,
       "overseas_stale": 0,
       "needed": [],
       "fresh_overseas_whatif_top5": []
@@ -2007,14 +1819,10 @@
       "rejection_top5": [
         [
           "stale_over_14d",
-          3
-        ],
-        [
-          "duplicate_price_collision",
-          1
+          4
         ]
       ],
-      "stale_excluded": 3,
+      "stale_excluded": 4,
       "overseas_stale": 0,
       "needed": [],
       "fresh_overseas_whatif_top5": []
@@ -2022,23 +1830,23 @@
     "prod_ipad_pro_m4_13": {
       "product_name": "iPad Pro M4 13インチ",
       "buy_candidates": 0,
-      "sell_candidates": 1,
+      "sell_candidates": 0,
       "min_usable_buy": null,
       "min_usable_buy_source": "",
-      "max_usable_sell": 192000,
-      "max_usable_sell_source": "じゃんぱら",
-      "target_buy_price": 191999,
+      "max_usable_sell": null,
+      "max_usable_sell_source": "",
+      "target_buy_price": null,
       "gross_gap": null,
       "net_domestic": null,
       "best_reference_net": null,
-      "main_blocked_reason": "有効な仕入(販売/出品/落札)候補なし",
+      "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
       "rejection_top5": [
         [
           "stale_over_14d",
-          3
+          4
         ]
       ],
-      "stale_excluded": 3,
+      "stale_excluded": 4,
       "overseas_stale": 0,
       "needed": [],
       "fresh_overseas_whatif_top5": []
@@ -2059,14 +1867,10 @@
       "rejection_top5": [
         [
           "stale_over_14d",
-          3
-        ],
-        [
-          "duplicate_price_collision",
-          1
+          4
         ]
       ],
-      "stale_excluded": 3,
+      "stale_excluded": 4,
       "overseas_stale": 0,
       "needed": [],
       "fresh_overseas_whatif_top5": []
@@ -2074,23 +1878,23 @@
     "prod_apple_watch_s11": {
       "product_name": "Apple Watch Series 11",
       "buy_candidates": 0,
-      "sell_candidates": 2,
+      "sell_candidates": 0,
       "min_usable_buy": null,
       "min_usable_buy_source": "",
-      "max_usable_sell": 48000,
-      "max_usable_sell_source": "買取商店",
-      "target_buy_price": 47999,
+      "max_usable_sell": null,
+      "max_usable_sell_source": "",
+      "target_buy_price": null,
       "gross_gap": null,
       "net_domestic": null,
       "best_reference_net": null,
-      "main_blocked_reason": "有効な仕入(販売/出品/落札)候補なし",
+      "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
       "rejection_top5": [
         [
           "stale_over_14d",
-          6
+          8
         ]
       ],
-      "stale_excluded": 6,
+      "stale_excluded": 8,
       "overseas_stale": 0,
       "needed": [],
       "fresh_overseas_whatif_top5": []
@@ -2098,23 +1902,23 @@
     "prod_apple_watch_ultra3": {
       "product_name": "Apple Watch Ultra 3",
       "buy_candidates": 0,
-      "sell_candidates": 2,
+      "sell_candidates": 0,
       "min_usable_buy": null,
       "min_usable_buy_source": "",
-      "max_usable_sell": 105000,
-      "max_usable_sell_source": "買取商店",
-      "target_buy_price": 104999,
+      "max_usable_sell": null,
+      "max_usable_sell_source": "",
+      "target_buy_price": null,
       "gross_gap": null,
       "net_domestic": null,
       "best_reference_net": null,
-      "main_blocked_reason": "有効な仕入(販売/出品/落札)候補なし",
+      "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
       "rejection_top5": [
         [
           "stale_over_14d",
-          6
+          8
         ]
       ],
-      "stale_excluded": 6,
+      "stale_excluded": 8,
       "overseas_stale": 0,
       "needed": [],
       "fresh_overseas_whatif_top5": []
@@ -2122,23 +1926,23 @@
     "prod_airpods_pro3": {
       "product_name": "AirPods Pro 3",
       "buy_candidates": 0,
-      "sell_candidates": 2,
+      "sell_candidates": 0,
       "min_usable_buy": null,
       "min_usable_buy_source": "",
-      "max_usable_sell": 32000,
-      "max_usable_sell_source": "買取商店",
-      "target_buy_price": 31999,
+      "max_usable_sell": null,
+      "max_usable_sell_source": "",
+      "target_buy_price": null,
       "gross_gap": null,
       "net_domestic": null,
       "best_reference_net": null,
-      "main_blocked_reason": "有効な仕入(販売/出品/落札)候補なし",
+      "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
       "rejection_top5": [
         [
           "stale_over_14d",
-          6
+          8
         ]
       ],
-      "stale_excluded": 6,
+      "stale_excluded": 8,
       "overseas_stale": 0,
       "needed": [],
       "fresh_overseas_whatif_top5": []
@@ -2146,27 +1950,47 @@
     "prod_airpods_max": {
       "product_name": "AirPods Max",
       "buy_candidates": 0,
-      "sell_candidates": 1,
+      "sell_candidates": 0,
       "min_usable_buy": null,
       "min_usable_buy_source": "",
-      "max_usable_sell": 68000,
-      "max_usable_sell_source": "買取商店",
-      "target_buy_price": 67999,
+      "max_usable_sell": null,
+      "max_usable_sell_source": "",
+      "target_buy_price": null,
       "gross_gap": null,
       "net_domestic": null,
       "best_reference_net": null,
-      "main_blocked_reason": "有効な仕入(販売/出品/落札)候補なし",
+      "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
       "rejection_top5": [
         [
           "stale_over_14d",
-          6
-        ],
-        [
-          "duplicate_price_collision",
-          1
+          8
         ]
       ],
-      "stale_excluded": 6,
+      "stale_excluded": 8,
+      "overseas_stale": 0,
+      "needed": [],
+      "fresh_overseas_whatif_top5": []
+    },
+    "prod_switch2_mk": {
+      "product_name": "Nintendo Switch 2 マリオカートセット",
+      "buy_candidates": 2,
+      "sell_candidates": 0,
+      "min_usable_buy": 53000,
+      "min_usable_buy_source": "ゲオ",
+      "max_usable_sell": null,
+      "max_usable_sell_source": "",
+      "target_buy_price": null,
+      "gross_gap": null,
+      "net_domestic": null,
+      "best_reference_net": null,
+      "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
+      "rejection_top5": [
+        [
+          "stale_over_14d",
+          26
+        ]
+      ],
+      "stale_excluded": 26,
       "overseas_stale": 0,
       "needed": [],
       "fresh_overseas_whatif_top5": []
@@ -2174,23 +1998,23 @@
     "prod_ps5_de": {
       "product_name": "PlayStation 5 Digital Edition",
       "buy_candidates": 0,
-      "sell_candidates": 3,
+      "sell_candidates": 0,
       "min_usable_buy": null,
       "min_usable_buy_source": "",
-      "max_usable_sell": 65000,
-      "max_usable_sell_source": "イオシス",
-      "target_buy_price": 64999,
+      "max_usable_sell": null,
+      "max_usable_sell_source": "",
+      "target_buy_price": null,
       "gross_gap": null,
       "net_domestic": null,
       "best_reference_net": null,
-      "main_blocked_reason": "有効な仕入(販売/出品/落札)候補なし",
+      "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
       "rejection_top5": [
         [
           "stale_over_14d",
-          9
+          12
         ]
       ],
-      "stale_excluded": 9,
+      "stale_excluded": 12,
       "overseas_stale": 0,
       "needed": [],
       "fresh_overseas_whatif_top5": []
@@ -2198,23 +2022,23 @@
     "prod_xbox_sx": {
       "product_name": "Xbox Series X",
       "buy_candidates": 0,
-      "sell_candidates": 2,
+      "sell_candidates": 0,
       "min_usable_buy": null,
       "min_usable_buy_source": "",
-      "max_usable_sell": 50000,
-      "max_usable_sell_source": "イオシス",
-      "target_buy_price": 49999,
+      "max_usable_sell": null,
+      "max_usable_sell_source": "",
+      "target_buy_price": null,
       "gross_gap": null,
       "net_domestic": null,
       "best_reference_net": null,
-      "main_blocked_reason": "有効な仕入(販売/出品/落札)候補なし",
+      "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
       "rejection_top5": [
         [
           "stale_over_14d",
-          6
+          8
         ]
       ],
-      "stale_excluded": 6,
+      "stale_excluded": 8,
       "overseas_stale": 0,
       "needed": [],
       "fresh_overseas_whatif_top5": []
@@ -2222,7 +2046,7 @@
     "prod_gr4": {
       "product_name": "RICOH GR IV",
       "buy_candidates": 5,
-      "sell_candidates": 10,
+      "sell_candidates": 6,
       "min_usable_buy": 195925,
       "min_usable_buy_source": "src_bhphoto",
       "max_usable_sell": 198000,
@@ -2231,14 +2055,14 @@
       "gross_gap": 2075,
       "net_domestic": -3343,
       "best_reference_net": 55242,
-      "main_blocked_reason": "eBay sold が1.5日前のため main 除外（国内完結は赤字）",
+      "main_blocked_reason": "eBay sold が2.1日前のため main 除外（国内完結は赤字）",
       "rejection_top5": [
         [
           "stale_over_14d",
-          52
+          56
         ]
       ],
-      "stale_excluded": 52,
+      "stale_excluded": 56,
       "overseas_stale": 0,
       "needed": [
         "eBay sold fresh化で main化（参考 +¥55,242 / ROI 28%）",
@@ -2311,7 +2135,7 @@
     "prod_gr3x": {
       "product_name": "RICOH GR IIIx",
       "buy_candidates": 4,
-      "sell_candidates": 7,
+      "sell_candidates": 4,
       "min_usable_buy": 150000,
       "min_usable_buy_source": "Mercari sold",
       "max_usable_sell": 145000,
@@ -2320,14 +2144,14 @@
       "gross_gap": -5000,
       "net_domestic": -9500,
       "best_reference_net": 38947,
-      "main_blocked_reason": "eBay sold が1.5日前のため main 除外（国内完結は赤字）",
+      "main_blocked_reason": "eBay sold が2.1日前のため main 除外（国内完結は赤字）",
       "rejection_top5": [
         [
           "stale_over_14d",
-          39
+          42
         ]
       ],
-      "stale_excluded": 39,
+      "stale_excluded": 42,
       "overseas_stale": 0,
       "needed": [
         "eBay sold fresh化で main化（参考 +¥38,947 / ROI 26%）",

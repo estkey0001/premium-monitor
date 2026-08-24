@@ -248,6 +248,34 @@ jobs:
         env:
           PYTHONPATH: .
 
+      # 13.10b API 自動化（eBay/楽天/Yahoo）— キー未設定は NOT_CONFIGURED で graceful skip。
+      # 安全側デフォルト: kill-switch=false（無効）/ dry-run=true（DB Main を書かない）。
+      - name: API price collection (dry-run safe)
+        run: python scripts/collect_api_prices.py
+        continue-on-error: true
+        env:
+          PYTHONPATH: .
+          EBAY_APP_ID: ${{ secrets.EBAY_APP_ID }}
+          RAKUTEN_APP_ID: ${{ secrets.RAKUTEN_APP_ID }}
+          RAKUTEN_AFFILIATE_ID: ${{ secrets.RAKUTEN_AFFILIATE_ID }}
+          YAHOO_SHOPPING_APP_ID: ${{ secrets.YAHOO_SHOPPING_APP_ID }}
+          ENABLE_EBAY_API: ${{ vars.ENABLE_EBAY_API || 'false' }}
+          ENABLE_RAKUTEN_API: ${{ vars.ENABLE_RAKUTEN_API || 'false' }}
+          ENABLE_YAHOO_API: ${{ vars.ENABLE_YAHOO_API || 'false' }}
+          API_DRY_RUN: ${{ vars.API_DRY_RUN || 'true' }}
+
+      - name: API canary (simulated)
+        run: python scripts/canary_api.py
+        continue-on-error: true
+        env:
+          PYTHONPATH: .
+
+      - name: API automation audit
+        run: python scripts/audit_api_automation.py
+        continue-on-error: true
+        env:
+          PYTHONPATH: .
+
       # 13.11a Source Matching 精度監査（商品同一性 resolver・誤マッチ・False Main）
       - name: Source matching audit
         run: python scripts/audit_source_matching.py
@@ -369,7 +397,7 @@ jobs:
                   audit_health/ \
                   exports/data_quality_report/ exports/data_quality/ exports/beta/ docs/beta/ \
                   exports/official_source_audit/ exports/retail_buyback_audit/ \
-                  exports/source_matching/ \
+                  exports/source_matching/ exports/api_automation/ \
                   exports/camera_buyback_status.json \
                   data/alerts.csv data/lottery_events.csv \
                   data/overseas_price_history.csv \

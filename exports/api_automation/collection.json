@@ -1,0 +1,83 @@
+{
+  "generated_at": "2026-08-24 12:31 JST",
+  "dry_run": false,
+  "target_mode": "canary",
+  "targets": [
+    "prod_iphone17pro_256",
+    "prod_iphone17pm_256",
+    "prod_gr3x",
+    "prod_x100vi"
+  ],
+  "results": {
+    "ebay": {
+      "api": "ebay",
+      "status": "NOT_CONFIGURED",
+      "configured": "not_configured",
+      "observations": [],
+      "health": {
+        "api": "ebay",
+        "requests": 0,
+        "success": 0,
+        "failed": 0,
+        "rate_limited": 0,
+        "timeout": 0,
+        "retries": 0,
+        "items_received": 0,
+        "exact_matches": 0,
+        "rejected": 0,
+        "main_eligible": 0,
+        "average_latency_ms": 0,
+        "success_rate": 0.0,
+        "last_success": null,
+        "error_kinds": {}
+      }
+    },
+    "rakuten": {
+      "api": "rakuten",
+      "status": "NOT_CONFIGURED",
+      "configured": "not_configured",
+      "observations": [],
+      "health": {
+        "api": "rakuten",
+        "requests": 0,
+        "success": 0,
+        "failed": 0,
+        "rate_limited": 0,
+        "timeout": 0,
+        "retries": 0,
+        "items_received": 0,
+        "exact_matches": 0,
+        "rejected": 0,
+        "main_eligible": 0,
+        "average_latency_ms": 0,
+        "success_rate": 0.0,
+        "last_success": null,
+        "error_kinds": {}
+      }
+    },
+    "yahoo": {
+      "api": "yahoo",
+      "status": "NOT_CONFIGURED",
+      "configured": "not_configured",
+      "observations": [],
+      "health": {
+        "api": "yahoo",
+        "requests": 0,
+        "success": 0,
+        "failed": 0,
+        "rate_limited": 0,
+        "timeout": 0,
+        "retries": 0,
+        "items_received": 0,
+        "exact_matches": 0,
+        "rejected": 0,
+        "main_eligible": 0,
+        "average_latency_ms": 0,
+        "success_rate": 0.0,
+        "last_success": null,
+        "error_kinds": {}
+      }
+    }
+  },
+  "note": "APIキー未設定は NOT_CONFIGURED（graceful skip・エラーではない）。全 item は ProductIdentityResolver + price_quality + Main Gate を通過。"
+}

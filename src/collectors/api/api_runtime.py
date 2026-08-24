@@ -57,6 +57,44 @@ def is_dry_run() -> bool:
     return (os.environ.get("API_DRY_RUN", "") or "").strip().lower() in ("1", "true", "yes", "on")
 
 
+# ── Progressive Rollout: stage 制御（Task43/44）──
+STAGE_ENV = {"ebay": "EBAY_API_STAGE", "rakuten": "RAKUTEN_API_STAGE", "yahoo": "YAHOO_API_STAGE"}
+VALID_STAGES = ("0", "5", "10", "25", "all")
+
+
+def api_stage(api: str) -> str:
+    """rollout stage を返す（0/5/10/25/all）。既定は 0（Canary のみ）。安全側。"""
+    raw = (os.environ.get(STAGE_ENV.get(api, ""), "") or "").strip().lower()
+    return raw if raw in VALID_STAGES else "0"
+
+
+def stage_product_limit(stage: str):
+    """stage → 取得を許可する商品数上限。'all'→None（無制限）、'0'→0（Canaryのみ）。"""
+    if stage == "all":
+        return None
+    try:
+        return int(stage)
+    except (TypeError, ValueError):
+        return 0
+
+
+def rollout_state(api: str) -> str:
+    """API の現在の rollout 状態を返す（Task43）。
+
+    NOT_CONFIGURED / DISABLED / DRY_RUN / CANARY / STAGE_5 / STAGE_10 / STAGE_25 / FULL
+    （ROLLOUT_BLOCKED は Canary 失敗時に上位ロジックが付与する）
+    """
+    if not is_configured(api):
+        return "NOT_CONFIGURED"
+    if kill_switch_on(api):
+        return "DISABLED"
+    if is_dry_run():
+        return "DRY_RUN"
+    stage = api_stage(api)
+    return {"0": "CANARY", "5": "STAGE_5", "10": "STAGE_10",
+            "25": "STAGE_25", "all": "FULL"}.get(stage, "CANARY")
+
+
 def ttl_seconds(api: str) -> int:
     return API_DEFS.get(api, {}).get("ttl_sec", 3600)
 

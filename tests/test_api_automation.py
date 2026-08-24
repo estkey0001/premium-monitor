@@ -228,6 +228,49 @@ def test_fallback_not_fresh_api():
     assert not (obs_fb["data_origin"] == rt.ORIGIN_API)
 
 
+# ── Progressive Rollout stage 制御（Task44/45）──
+def test_stage_default_safe(monkeypatch):
+    monkeypatch.delenv("EBAY_API_STAGE", raising=False)
+    assert rt.api_stage("ebay") == "0"                 # 既定は Canary のみ
+    assert rt.stage_product_limit("0") == 0
+
+
+def test_stage_limits():
+    assert rt.stage_product_limit("5") == 5
+    assert rt.stage_product_limit("25") == 25
+    assert rt.stage_product_limit("all") is None
+    assert rt.stage_product_limit("0") == 0
+
+
+def test_rollout_state_not_configured(monkeypatch):
+    for k in ("EBAY_APP_ID", "EBAY_CLIENT_ID"):
+        monkeypatch.delenv(k, raising=False)
+    assert rt.rollout_state("ebay") == "NOT_CONFIGURED"
+
+
+def test_rollout_state_disabled(monkeypatch):
+    monkeypatch.setenv("EBAY_APP_ID", "dummy")
+    monkeypatch.setenv("ENABLE_EBAY_API", "false")
+    assert rt.rollout_state("ebay") == "DISABLED"      # kill switch = rollback
+
+
+def test_rollout_state_stages(monkeypatch):
+    monkeypatch.setenv("EBAY_APP_ID", "dummy")
+    monkeypatch.setenv("ENABLE_EBAY_API", "true")
+    monkeypatch.setenv("API_DRY_RUN", "false")
+    monkeypatch.setenv("EBAY_API_STAGE", "5")
+    assert rt.rollout_state("ebay") == "STAGE_5"
+    monkeypatch.setenv("EBAY_API_STAGE", "all")
+    assert rt.rollout_state("ebay") == "FULL"
+
+
+def test_rollback_kill_switch(monkeypatch):
+    # Rollback: ENABLE=false にすれば configured でも叩かない
+    monkeypatch.setenv("EBAY_APP_ID", "dummy")
+    monkeypatch.setenv("ENABLE_EBAY_API", "false")
+    assert rt.api_enabled("ebay") is False
+
+
 def _run_all():
     import types
     class _MP:

@@ -6817,6 +6817,78 @@ def check() -> list[dict]:
                     "message": "#722 API regression tests（tests/test_api_automation.py）が存在する"
                                + ("" if _t722 else " ← API テストが不足")})
 
+    # ── Real API Canary & Progressive Rollout ガード #723-#731 ──
+    _rc = _load_json_safe('exports/api_automation/real_canary_latest.json') or {}
+    _rc_ok = isinstance(_rc, dict) and ('per_api' in _rc) and ('overall' in _rc)
+
+    # #723: Real Canary Master Report が存在
+    results.append({"level": "ok" if _rc_ok else "error", "check": "real_canary_report",
+                    "message": f"#723 Real Canary Master Report が存在（overall={_rc.get('overall','?')}）"
+                               + ("" if _rc_ok else " ← Real Canary Report が不足")})
+
+    # #724: API rollout state が有効値
+    _valid_states = {"NOT_CONFIGURED", "DISABLED", "DRY_RUN", "CANARY", "STAGE_5",
+                     "STAGE_10", "STAGE_25", "FULL", "ROLLOUT_BLOCKED"}
+    _states = (_rc.get("rollout_state", {}) or {}).values() if _rc_ok else []
+    _t724 = _rc_ok and all(s in _valid_states for s in _states)
+    results.append({"level": "ok" if _t724 else "error", "check": "api_rollout_state_valid",
+                    "message": f"#724 API rollout state が有効（{_rc.get('rollout_state', {})}）"
+                               + ("" if _t724 else " ← rollout state 不正")})
+
+    # #725: 各API Canary の判定が有効（PASS / ROLLOUT_BLOCKED / PENDING）
+    _valid_status = {"CANARY_PASS", "ROLLOUT_BLOCKED", "PENDING_USER_CONFIGURATION", "DISABLED"}
+    _t725 = _rc_ok and all(p.get("status") in _valid_status for p in (_rc.get("per_api", {}) or {}).values())
+    results.append({"level": "ok" if _t725 else "error", "check": "api_canary_gate_valid",
+                    "message": "#725 eBay/Rakuten/Yahoo Canary Gate 判定が有効"
+                               + ("" if _t725 else " ← Canary Gate 判定が不正")})
+
+    # #726: Cross Product Main = 0（設定済みAPIの canary で cross_product が main 昇格していない）
+    _cpm = 0
+    for p in (_rc.get("per_api", {}) or {}).values():
+        _cpm += (p.get("gate", {}) or {}).get("cross_product_main", 0)
+    _t726 = _cpm == 0
+    results.append({"level": "ok" if _t726 else "error", "check": "api_cross_product_main_zero",
+                    "message": f"#726 Cross Product Main = {_cpm}（目標0）"
+                               + ("" if _t726 else " ← cross product が main 昇格")})
+
+    # #727: ROLLOUT_BLOCKED の API が誤って FULL 状態でない
+    _bad_rollout = [a for a, p in (_rc.get("per_api", {}) or {}).items()
+                    if p.get("status") == "ROLLOUT_BLOCKED" and p.get("rollout_state") == "FULL"]
+    _t727 = len(_bad_rollout) == 0
+    results.append({"level": "ok" if _t727 else "error", "check": "api_blocked_not_full",
+                    "message": "#727 ROLLOUT_BLOCKED の API が FULL 展開していない"
+                               + ("" if _t727 else f" ← {_bad_rollout} が block なのに FULL")})
+
+    # #728: stage 制御が実装される（api_runtime）
+    _t728 = all(k in _rt_src for k in ("def api_stage", "def stage_product_limit",
+                                       "def rollout_state", "EBAY_API_STAGE"))
+    results.append({"level": "ok" if _t728 else "error", "check": "api_stage_control",
+                    "message": "#728 stage 制御（0/5/10/25/all）が実装される"
+                               + ("" if _t728 else " ← stage 制御が不足")})
+
+    # #729: workflow に stage 制御が配線される
+    _t729 = all(k in _wf for k in ("EBAY_API_STAGE", "real_canary_api.py"))
+    results.append({"level": "ok" if _t729 else "error", "check": "api_stage_workflow",
+                    "message": "#729 workflow に stage 制御 / real canary が配線される"
+                               + ("" if _t729 else " ← workflow の stage 配線が不足")})
+
+    # #730: 未設定APIが PENDING_USER_CONFIGURATION（架空成功でない）
+    _pending_ok = all(p.get("real_api_called") is False
+                      for p in (_rc.get("per_api", {}) or {}).values()
+                      if p.get("status") == "PENDING_USER_CONFIGURATION")
+    _t730 = _rc_ok and _pending_ok
+    results.append({"level": "ok" if _t730 else "error", "check": "api_pending_no_fake",
+                    "message": "#730 未設定APIは PENDING（real_api_called=false・架空成功なし）"
+                               + ("" if _t730 else " ← 未設定APIを架空成功として報告")})
+
+    # #731: Data Quality Accuracy が維持（>=90 を目安）
+    _dq2 = _load_json_safe('exports/data_quality/latest.json') or {}
+    _dq_acc = (_dq2.get("quality_score", {}) or {}).get("dimensions", {}).get("accuracy", 0)
+    _t731 = _dq_acc >= 90
+    results.append({"level": "ok" if _t731 else "warning", "check": "api_data_quality_accuracy",
+                    "message": f"#731 Data Quality Accuracy 維持（{_dq_acc}/100）"
+                               + ("" if _t731 else " ← Accuracy 低下")})
+
     return results
 
 

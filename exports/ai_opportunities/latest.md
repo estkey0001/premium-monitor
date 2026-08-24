@@ -1,7 +1,7 @@
 # AI Opportunities Engine — Today's Opportunities
 
-生成: 2026-08-23 20:48 JST
-Health Score: 51.6（現在データ品質低下中） / main 26 / reference 5
+生成: 2026-08-24 12:31 JST
+Health Score: 51.4（現在データ品質低下中） / main 22 / reference 5
 
 ## 今日やること
 
@@ -31,7 +31,7 @@ Health Score: 51.6（現在データ品質低下中） / main 26 / reference 5
 - タイムライン: 候補 → 監視 → **成立** → 通知
 - 期待: 利益 ¥183,400 / ROI 71.9% / confidence high
 - 保有期間: 数日
-- Why: main route 成立（国内完結で利益）; ROIが8%以上（72%）; 価格 2日前（比較的新鮮）; 再現性スコア 100（中〜高）; route confidence high
+- Why: main route 成立（国内完結で利益）; ROIが8%以上（72%）; 価格 3日前（比較的新鮮）; 再現性スコア 100（中〜高）; route confidence high
 - Risk: manualデータ由来（購入可否・状態要確認） / アクセサリー混在に注意（本体判定要確認）
 
 ### #2 FUJIFILM X100VI — 🟢 BUY（Score 87/100・成立確率 95%）
@@ -45,7 +45,7 @@ Health Score: 51.6（現在データ品質低下中） / main 26 / reference 5
 - タイムライン: 候補 → 監視 → **成立** → 通知
 - 期待: 利益 ¥180,400 / ROI 70.8% / confidence high
 - 保有期間: 数日
-- Why: main route 成立（国内完結で利益）; ROIが8%以上（71%）; 価格 2日前（比較的新鮮）; 再現性スコア 100（中〜高）; route confidence high
+- Why: main route 成立（国内完結で利益）; ROIが8%以上（71%）; 価格 3日前（比較的新鮮）; 再現性スコア 100（中〜高）; route confidence high
 - Risk: manualデータ由来（購入可否・状態要確認） / アクセサリー混在に注意（本体判定要確認）
 
 ### #3 FUJIFILM X100VI — 🟢 BUY（Score 87/100・成立確率 95%）
@@ -59,7 +59,7 @@ Health Score: 51.6（現在データ品質低下中） / main 26 / reference 5
 - タイムライン: 候補 → 監視 → **成立** → 通知
 - 期待: 利益 ¥178,400 / ROI 70.0% / confidence high
 - 保有期間: 数日
-- Why: main route 成立（国内完結で利益）; ROIが8%以上（70%）; 価格 2日前（比較的新鮮）; 再現性スコア 100（中〜高）; route confidence high
+- Why: main route 成立（国内完結で利益）; ROIが8%以上（70%）; 価格 3日前（比較的新鮮）; 再現性スコア 100（中〜高）; route confidence high
 - Risk: manualデータ由来（購入可否・状態要確認） / アクセサリー混在に注意（本体判定要確認）
 
 ### #4 FUJIFILM X100VI — 🟢 BUY（Score 87/100・成立確率 95%）
@@ -73,7 +73,7 @@ Health Score: 51.6（現在データ品質低下中） / main 26 / reference 5
 - タイムライン: 候補 → 監視 → **成立** → 通知
 - 期待: 利益 ¥173,400 / ROI 68.0% / confidence high
 - 保有期間: 数日
-- Why: main route 成立（国内完結で利益）; ROIが8%以上（68%）; 価格 2日前（比較的新鮮）; 再現性スコア 100（中〜高）; route confidence high
+- Why: main route 成立（国内完結で利益）; ROIが8%以上（68%）; 価格 3日前（比較的新鮮）; 再現性スコア 100（中〜高）; route confidence high
 - Risk: manualデータ由来（購入可否・状態要確認） / アクセサリー混在に注意（本体判定要確認）
 
 ### #5 FUJIFILM X100VI — 🟢 BUY（Score 87/100・成立確率 95%）
@@ -87,7 +87,7 @@ Health Score: 51.6（現在データ品質低下中） / main 26 / reference 5
 - タイムライン: 候補 → 監視 → **成立** → 通知
 - 期待: 利益 ¥168,400 / ROI 66.0% / confidence high
 - 保有期間: 数日
-- Why: main route 成立（国内完結で利益）; ROIが8%以上（66%）; 価格 2日前（比較的新鮮）; 再現性スコア 100（中〜高）; route confidence high
+- Why: main route 成立（国内完結で利益）; ROIが8%以上（66%）; 価格 3日前（比較的新鮮）; 再現性スコア 100（中〜高）; route confidence high
 - Risk: manualデータ由来（購入可否・状態要確認） / アクセサリー混在に注意（本体判定要確認）
 
 ### #6 FUJIFILM X100VI — 🟢 BUY（Score 87/100・成立確率 95%）
@@ -101,7 +101,7 @@ Health Score: 51.6（現在データ品質低下中） / main 26 / reference 5
 - タイムライン: 候補 → 監視 → **成立** → 通知
 - 期待: 利益 ¥166,400 / ROI 65.2% / confidence high
 - 保有期間: 数日
-- Why: main route 成立（国内完結で利益）; ROIが8%以上（65%）; 価格 2日前（比較的新鮮）; 再現性スコア 100（中〜高）; route confidence high
+- Why: main route 成立（国内完結で利益）; ROIが8%以上（65%）; 価格 3日前（比較的新鮮）; 再現性スコア 100（中〜高）; route confidence high
 - Risk: manualデータ由来（購入可否・状態要確認） / アクセサリー混在に注意（本体判定要確認）
 
 ### #7 FUJIFILM X100VI — 🟢 BUY（Score 82/100・成立確率 72%）

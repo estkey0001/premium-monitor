@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-23 20:48 JST",
+  "generated_at": "2026-08-24 12:31 JST",
   "route_type_beginner": "primary_to_secondary",
   "top_camera_buyback_opportunities": [],
   "route_type_pro": "secondary_to_secondary",
@@ -39,24 +39,6 @@
       "route_type": "primary_to_secondary",
       "source_label": "任天堂公式 / PlayStation Direct / Xbox Store",
       "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
-    },
-    {
-      "product_name": "Nintendo Switch 2 マリオカートセット",
-      "category": "game_console",
-      "user_level": "beginner_easy",
-      "official_price_jpy": 59980,
-      "reference_source": "retail_concept",
-      "best_buyback_price": 67000,
-      "best_buyback_shop": "買取商店",
-      "buy_price": null,
-      "buy_shop_name": "",
-      "buy_price_type": "",
-      "sell_price_type": "buyback_price",
-      "net_profit_jpy": 5720,
-      "net_profit_rate": 0.0954,
-      "route_type": "primary_to_secondary",
-      "source_label": "任天堂公式 / PlayStation Direct / Xbox Store",
-      "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
     }
   ],
   "pro_top10": [],
@@ -76,24 +58,6 @@
         "sell_price_type": "buyback_price",
         "net_profit_jpy": 13220,
         "net_profit_rate": 0.1102,
-        "route_type": "primary_to_secondary",
-        "source_label": "任天堂公式 / PlayStation Direct / Xbox Store",
-        "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
-      },
-      {
-        "product_name": "Nintendo Switch 2 マリオカートセット",
-        "category": "game_console",
-        "user_level": "beginner_easy",
-        "official_price_jpy": 59980,
-        "reference_source": "retail_concept",
-        "best_buyback_price": 67000,
-        "best_buyback_shop": "買取商店",
-        "buy_price": null,
-        "buy_shop_name": "",
-        "buy_price_type": "",
-        "sell_price_type": "buyback_price",
-        "net_profit_jpy": 5720,
-        "net_profit_rate": 0.0954,
         "route_type": "primary_to_secondary",
         "source_label": "任天堂公式 / PlayStation Direct / Xbox Store",
         "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
@@ -121,12 +85,12 @@
     ]
   },
   "pro_by_category": {},
-  "excluded_items": 23,
-  "total_deals": 26,
+  "excluded_items": 9,
+  "total_deals": 11,
   "confidence_summary": {
-    "total": 26,
-    "profitable": 3,
-    "negative": 23
+    "total": 11,
+    "profitable": 2,
+    "negative": 9
   },
   "stale_data_count": 0
 }

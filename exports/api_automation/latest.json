@@ -1,0 +1,95 @@
+{
+  "generated_at": "2026-08-24 12:31 JST",
+  "scope": "API自動化（eBay/楽天/Yahoo）の統合状態と品質。利益/AI/DQ思想は不変",
+  "dry_run": false,
+  "target_mode": "canary",
+  "any_api_configured": false,
+  "per_api": {
+    "ebay": {
+      "configured": "not_configured",
+      "status": "NOT_CONFIGURED",
+      "kill_switch_off": true,
+      "healthy": false,
+      "requests": 0,
+      "success_rate": 0.0,
+      "items": 0,
+      "exact_match": 0,
+      "rejected": 0,
+      "main_eligible": 0,
+      "average_latency_ms": 0,
+      "rate_limited": 0,
+      "last_success": null,
+      "ttl_sec": 3600,
+      "canary": {
+        "evaluated": 0,
+        "product_match": null,
+        "capacity_match": null,
+        "false_main": 0,
+        "passed": null,
+        "note": "観測なし（未設定/未取得）"
+      }
+    },
+    "rakuten": {
+      "configured": "not_configured",
+      "status": "NOT_CONFIGURED",
+      "kill_switch_off": true,
+      "healthy": false,
+      "requests": 0,
+      "success_rate": 0.0,
+      "items": 0,
+      "exact_match": 0,
+      "rejected": 0,
+      "main_eligible": 0,
+      "average_latency_ms": 0,
+      "rate_limited": 0,
+      "last_success": null,
+      "ttl_sec": 3600,
+      "canary": {
+        "evaluated": 0,
+        "product_match": null,
+        "capacity_match": null,
+        "false_main": 0,
+        "passed": null,
+        "note": "観測なし（未設定/未取得）"
+      }
+    },
+    "yahoo": {
+      "configured": "not_configured",
+      "status": "NOT_CONFIGURED",
+      "kill_switch_off": true,
+      "healthy": false,
+      "requests": 0,
+      "success_rate": 0.0,
+      "items": 0,
+      "exact_match": 0,
+      "rejected": 0,
+      "main_eligible": 0,
+      "average_latency_ms": 0,
+      "rate_limited": 0,
+      "last_success": null,
+      "ttl_sec": 3600,
+      "canary": {
+        "evaluated": 0,
+        "product_match": null,
+        "capacity_match": null,
+        "false_main": 0,
+        "passed": null,
+        "note": "観測なし（未設定/未取得）"
+      }
+    }
+  },
+  "before_after": {
+    "before_api_observations": 0,
+    "after_api_observations": 0,
+    "before_api_main_eligible": 0,
+    "after_api_main_eligible": 0,
+    "note": "APIキー未設定のため API 由来観測は 0（before==after）。キー投入で自動起動する（Canaryゲート通過が全商品展開の条件）。"
+  },
+  "safety": {
+    "kill_switch": "ENABLE_EBAY_API / ENABLE_RAKUTEN_API / ENABLE_YAHOO_API=false で即停止",
+    "dry_run": "API_DRY_RUN=true で DB Main を書き換えず取得・検証のみ",
+    "quality_gate": "全 item が ProductIdentityResolver + price_quality + Main Gate を通過",
+    "data_origin": "api / fallback / manual を必ず区別（fallback を fresh API 扱いしない）",
+    "not_configured_handling": "未設定は NOT_CONFIGURED（graceful skip・架空成功を報告しない）"
+  }
+}

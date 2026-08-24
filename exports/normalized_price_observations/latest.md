@@ -1,6 +1,6 @@
 # Normalized Price Observations
 
-生成: 2026-08-23 20:48 JST
+生成: 2026-08-24 12:31 JST
 
 全価格（買取/販売/出品/落札/海外/下取/公式）を単一スキーマに正規化。
 `price_role`（buy/sell/official/trade_in）を必ず付与し、
@@ -10,8 +10,8 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 ## サマリ
 
 - 総観測数: **1427**
-- Beginner 利用可: 124 / Pro 利用可: 127
-- fresh(≤14日): 223
+- Beginner 利用可: 83 / Pro 利用可: 86
+- fresh(≤14日): 173
 
 ### price_role 別
 
@@ -38,9 +38,9 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 | reason | 件数 |
 |---|---|
 | accessory_or_wrong_product | 4 |
-| duplicate_price_collision | 10 |
+| duplicate_price_collision | 1 |
 | price_zero | 521 |
-| stale_over_14d | 720 |
+| stale_over_14d | 770 |
 
 ## Beginner 利用可（official_price / buyback_price のみ）
 
@@ -81,33 +81,33 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 
 | product | role | type | price | cond | age | source |
 |---|---|---|---|---|---|---|
-| iPhone 17 256GB SIMフリー | sell | buyback_price | ¥135,000 | new_unopened_simfree | 13.4d | モバイル一番 |
-| iPhone 17 256GB SIMフリー | sell | buyback_price | ¥133,000 | new_unopened_simfree | 13.4d | 買取商店 |
-| iPhone 17 256GB SIMフリー | sell | buyback_price | ¥131,000 | new_unopened_simfree | 13.4d | じゃんぱら |
-| iPhone 17 256GB SIMフリー | sell | buyback_price | ¥129,000 | new_unopened_simfree | 13.4d | イオシス |
-| iPhone 16 Pro 256GB SI | sell | buyback_price | ¥152,000 | new_unopened_simfree | 13.4d | モバイル一番 |
-| iPhone 16 Pro 256GB SI | sell | buyback_price | ¥150,000 | new_unopened_simfree | 13.4d | 買取商店 |
-| iPhone 16 Pro 256GB SI | sell | buyback_price | ¥145,000 | new_unopened_simfree | 13.4d | イオシス |
-| iPhone 16 Pro Max 256G | sell | buyback_price | ¥175,000 | new_unopened_simfree | 13.4d | 買取商店 |
-| iPhone 16 Pro Max 256G | sell | buyback_price | ¥172,000 | new_unopened_simfree | 13.4d | じゃんぱら |
-| iPhone 16 Pro Max 256G | sell | buyback_price | ¥169,000 | new_unopened_simfree | 13.4d | イオシス |
-| MacBook Air M4 13インチ | sell | buyback_price | ¥143,000 | new_unopened | 13.4d | じゃんぱら |
-| MacBook Air M4 13インチ | sell | buyback_price | ¥140,000 | new_unopened | 13.4d | イオシス |
-| MacBook Air M4 13インチ | sell | buyback_price | ¥138,000 | new_unopened | 13.4d | ソフマップ |
-| MacBook Air M4 15インチ | sell | buyback_price | ¥175,000 | new_unopened | 13.4d | じゃんぱら |
-| MacBook Pro M4 14インチ | sell | buyback_price | ¥220,000 | new_unopened | 13.4d | じゃんぱら |
-| Mac mini M4 | sell | buyback_price | ¥75,000 | new_unopened | 13.4d | イオシス |
-| iPad Pro M4 13インチ | sell | buyback_price | ¥192,000 | new_unopened | 13.4d | じゃんぱら |
-| Apple Watch Series 11 | sell | buyback_price | ¥48,000 | new_unopened | 13.4d | 買取商店 |
-| Apple Watch Series 11 | sell | buyback_price | ¥46,000 | new_unopened | 13.4d | じゃんぱら |
-| Apple Watch Ultra 3 | sell | buyback_price | ¥105,000 | new_unopened | 13.4d | 買取商店 |
-| Apple Watch Ultra 3 | sell | buyback_price | ¥102,000 | new_unopened | 13.4d | じゃんぱら |
-| AirPods Pro 3 | sell | buyback_price | ¥32,000 | new_unopened | 13.4d | 買取商店 |
-| AirPods Pro 3 | sell | buyback_price | ¥30,000 | new_unopened | 13.4d | じゃんぱら |
-| AirPods Max | sell | buyback_price | ¥68,000 | new_unopened | 13.4d | 買取商店 |
-| Nintendo Switch 2 マリオカ | sell | buyback_price | ¥67,000 | new_unopened | 13.4d | 買取商店 |
-| Nintendo Switch 2 マリオカ | sell | buyback_price | ¥63,500 | new_unopened | 13.4d | イオシス |
-| PlayStation 5 Digital  | sell | buyback_price | ¥65,000 | new_unopened | 13.4d | イオシス |
-| PlayStation 5 Digital  | sell | buyback_price | ¥63,000 | new_unopened | 13.4d | じゃんぱら |
-| PlayStation 5 Digital  | sell | buyback_price | ¥61,000 | new_unopened | 13.4d | 買取商店 |
-| Xbox Series X | sell | buyback_price | ¥50,000 | new_unopened | 13.4d | イオシス |
+| FUJIFILM X100VI | sell | buyback_price | ¥445,000 | new_unopened | 2.0d | マップカメラ |
+| FUJIFILM X100VI | sell | buyback_price | ¥442,000 | new_unopened | 2.0d | カメラのキタムラ |
+| FUJIFILM X100VI | sell | buyback_price | ¥440,000 | new_unopened | 2.0d | フジヤカメラ |
+| FUJIFILM X100VI | sell | buyback_price | ¥435,000 | new_unopened | 2.0d | ソフマップ |
+| FUJIFILM X100VI | sell | buyback_price | ¥430,000 | new_unopened | 2.0d | じゃんぱら |
+| FUJIFILM X100VI | sell | buyback_price | ¥428,000 | new_unopened | 2.0d | 買取商店 |
+| RICOH GR IV | sell | buyback_price | ¥198,000 | new_unopened | 2.0d | マップカメラ |
+| RICOH GR IV | sell | buyback_price | ¥196,000 | new_unopened | 2.0d | カメラのキタムラ |
+| RICOH GR IV | sell | buyback_price | ¥194,000 | new_unopened | 2.0d | フジヤカメラ |
+| RICOH GR IV | sell | buyback_price | ¥190,000 | new_unopened | 2.0d | ソフマップ |
+| RICOH GR IV | sell | buyback_price | ¥188,000 | new_unopened | 2.0d | じゃんぱら |
+| RICOH GR IV | sell | buyback_price | ¥185,000 | new_unopened | 2.0d | 買取商店 |
+| RICOH GR IV HDF | sell | buyback_price | ¥205,000 | new_unopened | 2.0d | マップカメラ |
+| RICOH GR IV HDF | sell | buyback_price | ¥203,000 | new_unopened | 2.0d | カメラのキタムラ |
+| RICOH GR IV HDF | sell | buyback_price | ¥200,000 | new_unopened | 2.0d | フジヤカメラ |
+| RICOH GR IV HDF | sell | buyback_price | ¥196,000 | new_unopened | 2.0d | ソフマップ |
+| RICOH GR IV Monochrome | sell | buyback_price | ¥215,000 | new_unopened | 2.0d | マップカメラ |
+| RICOH GR IV Monochrome | sell | buyback_price | ¥212,000 | new_unopened | 2.0d | カメラのキタムラ |
+| RICOH GR IV Monochrome | sell | buyback_price | ¥210,000 | new_unopened | 2.0d | フジヤカメラ |
+| RICOH GR IV Monochrome | sell | buyback_price | ¥205,000 | new_unopened | 2.0d | ソフマップ |
+| RICOH GR IIIx | sell | buyback_price | ¥145,000 | new_unopened | 2.0d | マップカメラ |
+| RICOH GR IIIx | sell | buyback_price | ¥143,000 | new_unopened | 2.0d | カメラのキタムラ |
+| RICOH GR IIIx | sell | buyback_price | ¥140,000 | new_unopened | 2.0d | フジヤカメラ |
+| RICOH GR IIIx | sell | buyback_price | ¥138,000 | new_unopened | 2.0d | じゃんぱら |
+| iPhone 17 Pro 256GB SI | sell | buyback_price | ¥178,000 | new_unopened_simfree | 1.7d | 買取商店 |
+| iPhone 17 Pro 256GB SI | sell | buyback_price | ¥157,000 | new_unopened_simfree | 1.7d | イオシス |
+| iPhone 17 Pro 256GB SI | sell | buyback_price | ¥159,600 | new_unopened_simfree | 1.7d | ネットオフ |
+| iPhone 17 Pro 512GB SI | sell | buyback_price | ¥214,000 | new_unopened_simfree | 1.7d | 買取商店 |
+| iPhone 17 Pro 512GB SI | sell | buyback_price | ¥187,000 | new_unopened_simfree | 1.7d | イオシス |
+| iPhone 17 Pro 512GB SI | sell | buyback_price | ¥190,050 | new_unopened_simfree | 1.7d | ネットオフ |

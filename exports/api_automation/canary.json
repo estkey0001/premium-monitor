@@ -1,0 +1,88 @@
+{
+  "generated_at": "2026-08-24 12:31 JST",
+  "scope": "API Canary（品質ゲートの機能検証）。利益/AI/DQ思想は不変",
+  "mode": "simulated",
+  "real_api_called": false,
+  "note": "APIキー未設定のため fixture による simulated 実行。実API取得は collect_api_prices が担い、キー投入後に実Canaryへ移行する。架空の実API成功としては報告しない。",
+  "targets": [
+    "prod_iphone17pro_256",
+    "prod_iphone17pm_256",
+    "prod_gr3x",
+    "prod_x100vi"
+  ],
+  "canary_gate": {
+    "product_match": ">=0.99",
+    "capacity_match": "=1.0",
+    "model_match": "=1.0",
+    "false_main_promotion": 0
+  },
+  "per_api": {
+    "ebay": {
+      "configured": "not_configured",
+      "enabled": false,
+      "mode": "simulated",
+      "real_api_called": false,
+      "metrics": {
+        "evaluated": 11,
+        "accepted": 5,
+        "rejected": 6,
+        "rejected_accessory": 2,
+        "rejected_parts": 1,
+        "rejected_model_mismatch": 3,
+        "rejected_capacity_mismatch": 0,
+        "false_main_promotion": 0,
+        "wrong_sku_accepted": 0,
+        "product_match_accuracy": 1.0,
+        "capacity_match_accuracy": 1.0,
+        "model_match_accuracy": 1.0,
+        "gate_passed": true
+      },
+      "rollout": "READY"
+    },
+    "rakuten": {
+      "configured": "not_configured",
+      "enabled": false,
+      "mode": "simulated",
+      "real_api_called": false,
+      "metrics": {
+        "evaluated": 11,
+        "accepted": 5,
+        "rejected": 6,
+        "rejected_accessory": 2,
+        "rejected_parts": 1,
+        "rejected_model_mismatch": 3,
+        "rejected_capacity_mismatch": 0,
+        "false_main_promotion": 0,
+        "wrong_sku_accepted": 0,
+        "product_match_accuracy": 1.0,
+        "capacity_match_accuracy": 1.0,
+        "model_match_accuracy": 1.0,
+        "gate_passed": true
+      },
+      "rollout": "READY"
+    },
+    "yahoo": {
+      "configured": "not_configured",
+      "enabled": false,
+      "mode": "simulated",
+      "real_api_called": false,
+      "metrics": {
+        "evaluated": 11,
+        "accepted": 5,
+        "rejected": 6,
+        "rejected_accessory": 2,
+        "rejected_parts": 1,
+        "rejected_model_mismatch": 3,
+        "rejected_capacity_mismatch": 0,
+        "false_main_promotion": 0,
+        "wrong_sku_accepted": 0,
+        "product_match_accuracy": 1.0,
+        "capacity_match_accuracy": 1.0,
+        "model_match_accuracy": 1.0,
+        "gate_passed": true
+      },
+      "rollout": "READY"
+    }
+  },
+  "all_pass": true
+}

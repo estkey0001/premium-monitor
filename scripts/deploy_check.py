@@ -6693,6 +6693,130 @@ def check() -> list[dict]:
                     "message": f"#707 Source Matching 精度（product {_pma:.1%}/cap {_cma:.0%}/model {_mma:.0%}）"
                                + ("" if _t707 else " ← 精度目標未達")})
 
+    # ── API Automation Foundation ガード #708-#722 ──
+    _apiauto = _load_json_safe('exports/api_automation/latest.json') or {}
+    _apicol = _load_json_safe('exports/api_automation/collection.json') or {}
+    _apican = _load_json_safe('exports/api_automation/canary.json') or {}
+    _api_ok = isinstance(_apiauto, dict) and ('per_api' in _apiauto)
+
+    # #708: API automation report が存在
+    _t708 = _api_ok and ('safety' in _apiauto)
+    results.append({"level": "ok" if _t708 else "error", "check": "api_automation_report",
+                    "message": "#708 API automation report が存在する"
+                               + ("" if _t708 else " ← API automation report が不足")})
+
+    # #709: API canary report が存在し simulated を明示
+    _t709 = isinstance(_apican, dict) and ('per_api' in _apican) and (_apican.get('real_api_called') is False
+            or _apican.get('mode') is not None)
+    results.append({"level": "ok" if _t709 else "error", "check": "api_canary_report",
+                    "message": f"#709 API canary report が存在（mode={_apican.get('mode','?')}/real_api={_apican.get('real_api_called')}）"
+                               + ("" if _t709 else " ← canary report が不足")})
+
+    # #710: NOT_CONFIGURED が graceful（未設定APIが error でなく status で表現）
+    _statuses = {a: p.get("status") for a, p in (_apiauto.get("per_api", {}) or {}).items()}
+    _t710 = _api_ok and all(s in ("NOT_CONFIGURED", "collected", "disabled_kill_switch", None)
+                            for s in _statuses.values())
+    results.append({"level": "ok" if _t710 else "error", "check": "api_not_configured_graceful",
+                    "message": f"#710 NOT_CONFIGURED graceful（statuses={_statuses}）"
+                               + ("" if _t710 else " ← 未設定APIの扱いが不正")})
+
+    # #711: kill switch / dry-run が実装（api_runtime）
+    _rt_src = _read_src("src", "collectors", "api", "api_runtime.py")
+    _t711 = all(k in _rt_src for k in ("def kill_switch_on", "def is_dry_run", "def api_enabled",
+                                       "ENABLE_EBAY_API"))
+    results.append({"level": "ok" if _t711 else "error", "check": "api_kill_switch_dry_run",
+                    "message": "#711 Kill Switch / Dry Run が実装される"
+                               + ("" if _t711 else " ← Kill Switch/Dry Run 実装が不足")})
+
+    # #712: Retry / Circuit Breaker / error 分類 が実装
+    _t712 = all(k in _rt_src for k in ("def retry_with_backoff", "class CircuitBreaker",
+                                       "def classify_error", "PERMANENT_STATUS", "TRANSIENT_STATUS"))
+    results.append({"level": "ok" if _t712 else "error", "check": "api_retry_circuit_breaker",
+                    "message": "#712 Retry / Circuit Breaker / error 分類 が実装される"
+                               + ("" if _t712 else " ← Retry/Circuit Breaker 実装が不足")})
+
+    # #713: ProductIdentityResolver + price_quality が API 経路に適用
+    _col_src = _read_src("scripts", "collect_api_prices.py")
+    _t713 = ("ProductIdentityResolver" in _col_src) and ("is_main_promotable" in _col_src) \
+        and ("resolver.resolve" in _col_src)
+    results.append({"level": "ok" if _t713 else "error", "check": "api_quality_gate_applied",
+                    "message": "#713 API経路に ProductIdentityResolver + Main Gate が適用される"
+                               + ("" if _t713 else " ← API品質ゲート未適用")})
+
+    # #714: data_origin が追跡される
+    _t714 = ("data_origin" in _col_src) and ("ORIGIN_API" in _col_src or "origin" in _col_src)
+    results.append({"level": "ok" if _t714 else "error", "check": "api_origin_tracked",
+                    "message": "#714 data_origin（api/fallback/manual）が追跡される"
+                               + ("" if _t714 else " ← data_origin 未追跡")})
+
+    # #715: 再マッチ(別商品)を除外している（Pro→Pro Max 等の混入防止）
+    _t715 = "matched_product_id != pid" in _col_src or "cross_product" in _col_src
+    results.append({"level": "ok" if _t715 else "error", "check": "api_cross_product_reject",
+                    "message": "#715 別商品への再マッチ（Pro/Pro Max等）を除外する"
+                               + ("" if _t715 else " ← 再マッチ除外が未実装")})
+
+    # #716: Canary Gate（全API READY もしくは未設定でも simulated PASS）
+    _canary_pass = _apican.get("all_pass") if isinstance(_apican, dict) else None
+    _t716 = _canary_pass is True
+    results.append({"level": "ok" if _t716 else "warning", "check": "api_canary_gate",
+                    "message": f"#716 Canary Gate 判定（all_pass={_canary_pass}）"
+                               + ("" if _t716 else " ← Canary 未通過")})
+
+    # #717: API 由来の False Main Promotion = 0（canary の各API false_main）
+    _api_fm = 0
+    for p in (_apican.get("per_api", {}) or {}).values():
+        _api_fm += (p.get("metrics", {}) or {}).get("false_main_promotion", 0)
+    _t717 = _api_fm == 0
+    results.append({"level": "ok" if _t717 else "error", "check": "api_false_main_zero",
+                    "message": f"#717 API由来 False Main Promotion = {_api_fm}（目標0）"
+                               + ("" if _t717 else " ← API由来の False Main が残存")})
+
+    # #718: eBay/Rakuten/Yahoo が env-gated（未設定でも落ちない設計）
+    _mk_src = _read_src("src", "collectors", "api", "market_apis.py")
+    _t718 = all(k in _mk_src for k in ("EBAY_APP_ID", "RAKUTEN_APP_ID", "YAHOO_SHOPPING_APP_ID")) \
+        and ("return None" in _mk_src)
+    results.append({"level": "ok" if _t718 else "error", "check": "api_env_gated",
+                    "message": "#718 eBay/Rakuten/Yahoo collector が env-gated（未設定で graceful）"
+                               + ("" if _t718 else " ← env gating が不足")})
+
+    # #719: workflow に API 環境変数が配線（Secret未設定でも落ちない）
+    _wf = ""
+    try:
+        _wf = (PROJECT_ROOT / ".github" / "workflows" / "daily_lp.yml").read_text(encoding="utf-8")
+    except Exception:
+        pass
+    _t719 = all(k in _wf for k in ("ENABLE_EBAY_API", "API_DRY_RUN", "collect_api_prices.py"))
+    results.append({"level": "ok" if _t719 else "error", "check": "api_workflow_wired",
+                    "message": "#719 workflow に API 環境変数/ステップが配線される"
+                               + ("" if _t719 else " ← workflow 配線が不足")})
+
+    # #720: Secret leak = 0（API automation の exports にキー実値が無い）
+    import re as _re720
+    _leak = 0
+    for _rel in ("exports/api_automation/latest.json", "exports/api_automation/collection.json",
+                 "exports/api_automation/canary.json"):
+        _p = PROJECT_ROOT / _rel
+        if _p.exists():
+            _txt = _p.read_text(encoding="utf-8", errors="ignore")
+            _leak += len(_re720.findall(
+                r"(sk_(?:live|test)_[A-Za-z0-9]{16,}|AKIA[0-9A-Z]{16}|ghp_[A-Za-z0-9]{20,})", _txt))
+    _t720 = _leak == 0
+    results.append({"level": "ok" if _t720 else "error", "check": "api_secret_leak_zero",
+                    "message": "#720 API automation exports に Secret 実値の混入なし"
+                               + ("" if _t720 else " ← Secret 混入の疑い")})
+
+    # #721: Dry Run が既定安全（workflow の API_DRY_RUN 既定 true）
+    _t721 = "API_DRY_RUN: ${{ vars.API_DRY_RUN || 'true' }}" in _wf
+    results.append({"level": "ok" if _t721 else "warning", "check": "api_dry_run_default_safe",
+                    "message": "#721 Dry Run が既定安全（API_DRY_RUN 既定 true）"
+                               + ("" if _t721 else " ← Dry Run 既定が安全側でない")})
+
+    # #722: API regression tests が存在する
+    _t722 = (PROJECT_ROOT / "tests" / "test_api_automation.py").exists()
+    results.append({"level": "ok" if _t722 else "error", "check": "api_regression_tests",
+                    "message": "#722 API regression tests（tests/test_api_automation.py）が存在する"
+                               + ("" if _t722 else " ← API テストが不足")})
+
     return results
 
 

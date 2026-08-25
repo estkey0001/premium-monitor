@@ -1,4 +1,4 @@
-# データ取得品質レポート（2026-08-24 13:15 JST）
+# データ取得品質レポート（2026-08-25 13:49 JST）
 
 ## 取得成功率
 - 全対象店舗数: 16
@@ -10,7 +10,7 @@
 - 前回成功率: 32.7%
 - 今回成功率: 32.7%
 - 変化: 0.0pt（横ばい）
-- 7日移動平均: 31.9%
+- 7日移動平均: 32.7%
 - 主要失敗理由 TOP5: rate_limited_429 6, http_403 6, site_blocked 6, product_not_listed 5, price_not_found 4
 
 ## 店舗別成功率（低い順）
@@ -36,17 +36,17 @@
 - iphone17pm256: 50.0%
 
 ## 連続失敗店舗（2回以上）
-- 2ndstreet: 116回連続
-- bookoff: 116回連続
-- dosupara: 116回連続
-- geo_mobile: 116回連続
-- hardoff: 116回連続
-- janpara: 116回連続
-- pasoko: 116回連続
-- sofmap: 116回連続
-- surugaya: 116回連続
-- tsutaya: 116回連続
-- iosys: 49回連続
+- 2ndstreet: 117回連続
+- bookoff: 117回連続
+- dosupara: 117回連続
+- geo_mobile: 117回連続
+- hardoff: 117回連続
+- janpara: 117回連続
+- pasoko: 117回連続
+- sofmap: 117回連続
+- surugaya: 117回連続
+- tsutaya: 117回連続
+- iosys: 50回連続
 
 ## 改善優先順位（required店舗）
 1. iosys（失敗6 / http_403）
@@ -63,26 +63,29 @@
 - service_unavailable: 2件
 
 ## 有効データ量（新品・未使用 / 14日以内 / price>0）
-- 有効買取データを持つ商品数: 11
-  - prod_x100vi: 6店舗
-  - prod_gr4: 6店舗
-  - prod_gr4_hdf: 4店舗
-  - prod_gr4_mono: 4店舗
-  - prod_gr3x: 4店舗
-  - prod_iphone17pro_256: 3店舗
+- 有効買取データを持つ商品数: 26
+  - prod_x100vi: 7店舗
+  - prod_gr4: 7店舗
+  - prod_gr3x: 5店舗
+  - prod_gr4_hdf: 5店舗
+  - prod_gr4_mono: 5店舗
+  - prod_iphone17pro_256: 4店舗
+  - prod_iphone17pm_256: 4店舗
   - prod_iphone17pro_512: 3店舗
-  - prod_switch2: 3店舗
-  - prod_iphone17pm_256: 2店舗
-  - prod_iphone17pm_512: 2店舗
+  - prod_iphone17pm_512: 3店舗
+  - prod_switch2: 2店舗
   - prod_ps5_pro: 2店舗
+  - prod_gfx100rf: 1店舗
+  - prod_xt5: 1店舗
+  - prod_gr3: 1店舗
+  - prod_a7rv: 1店舗
 
 ## ランキングに使えたデータ数
-- Beginner: 2 件
-- Pro: 0 件
+- Beginner: 3 件
+- Pro: 10 件
 
 ## せどりルートに使えたデータ数
-- ルート: 0 件
-- ⚠️ reason_if_empty: calculate-sedori-routes 未実行 or DBにルートデータなし
+- ルート: 19 件
 
 ## 海外価格の鮮度
 - fresh: 0 / stale: 4 / 計 4

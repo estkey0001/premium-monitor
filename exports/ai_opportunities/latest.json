@@ -1,56 +1,56 @@
 {
-  "generated_at": "2026-08-24 13:15 JST",
-  "health_score": 50.1,
-  "health_note": "現在データ品質低下中",
-  "main_route_count": 22,
-  "reference_route_count": 5,
+  "generated_at": "2026-08-25 13:49 JST",
+  "health_score": 75.9,
+  "health_note": "データ品質は標準的です",
+  "main_route_count": 21,
+  "reference_route_count": 4,
   "today_tasks": [
-    "✅ FUJIFILM X100VI を仕入れる（Yahoo Auction sold ≤¥405,925）",
-    "✅ FUJIFILM X100VI を仕入れる（Yahoo Auction sold ≤¥403,148）",
-    "✅ FUJIFILM X100VI を仕入れる（Yahoo Auction sold ≤¥401,296）",
-    "✅ FUJIFILM X100VI を仕入れる（Yahoo Auction sold ≤¥396,666）",
-    "✅ FUJIFILM X100VI を仕入れる（Yahoo Auction sold ≤¥392,037）"
+    "🔔 PlayStation 5 Pro を監視（¥159,259以下で通知）",
+    "🔔 PlayStation 5 Pro を監視（¥159,259以下で通知）",
+    "🔔 PlayStation 5 Pro を監視（¥159,259以下で通知）",
+    "🔔 PlayStation 5 Pro を監視（¥159,259以下で通知）",
+    "⏳ RICOH GR IIIx は待機（eBay sold 更新（EBAY_APP_ID 設定）後に BUY 候補へ昇格します。海外価格の更新待ちです。）"
   ],
   "daily_recommendation": {
-    "product": "FUJIFILM X100VI",
-    "buy_now": "BUY",
-    "opportunity_score": 87,
-    "reason": "FUJIFILM X100VI: BUY。国内成立 利益¥183,400/ROI72%/Score87"
+    "product": "PlayStation 5 Pro",
+    "buy_now": "WATCH",
+    "opportunity_score": 77,
+    "reason": "PlayStation 5 Pro: WATCH。国内成立 利益¥44,000/ROI34%/Score77"
   },
   "todays_opportunities": [
     {
-      "product": "FUJIFILM X100VI",
-      "product_id": "prod_x100vi",
+      "product": "PlayStation 5 Pro",
+      "product_id": "prod_ps5_pro",
       "kind": "main",
-      "opportunity_score": 87,
+      "opportunity_score": 77,
       "score_breakdown": {
         "利益": 30,
         "ROI": 20,
-        "鮮度": 12,
-        "再現性": 15,
+        "鮮度": 8,
+        "再現性": 9,
         "データ品質": 10,
         "confidence": 10,
         "減点(manual/stale)": -10
       },
-      "buy_now": "BUY",
+      "buy_now": "WATCH",
       "confidence": "high",
-      "action": "BUY",
-      "action_reason": "成立条件を満たしています。仕入れ→売却を実行できます。",
-      "alert_threshold": null,
-      "expected_buy_price": 405925,
-      "expected_sell_price": 445000,
+      "action": "ALERT",
+      "action_reason": "価格が ¥159,259 以下になったら通知（BUY化を狙う）。",
+      "alert_threshold": 159259,
+      "expected_buy_price": 159259,
+      "expected_sell_price": 176500,
       "buy_conditions": {
-        "buy": "Yahoo Auction sold ≤ ¥405,925",
-        "sell": "マップカメラ ≥ ¥445,000",
+        "buy": "Yahoo Auction sold ≤ ¥159,259",
+        "sell": "買取商店 ≥ ¥176,500",
         "roi": "ROI ≥ 8%"
       },
       "next_update": "次回自動更新: 明日 12:00頃（通常24時間以内）",
       "price_trend": {
-        "7d": "↑",
+        "7d": "→",
         "30d": "→",
-        "90d": "↑"
+        "90d": "→"
       },
-      "success_probability": 95,
+      "success_probability": 64,
       "timeline": {
         "stages": [
           "候補",
@@ -58,64 +58,64 @@
           "成立",
           "通知"
         ],
-        "current": "成立"
+        "current": "監視"
       },
-      "summary": "★★★★★\n現在もっとも有望な国内利益ルートです。\n利益 ¥183,400 / ROI 72%。\nマップカメラ買取が高水準です。",
+      "summary": "★★★★☆\n現在もっとも有望な国内利益ルートです。\n利益 ¥44,000 / ROI 34%。\n買取商店買取が高水準です。",
       "why": [
         "main route 成立（国内完結で利益）",
-        "ROIが8%以上（72%）",
-        "価格 3日前（比較的新鮮）",
-        "再現性スコア 100（中〜高）",
+        "ROIが8%以上（34%）",
+        "価格 4日前（比較的新鮮）",
+        "再現性スコア 60（中〜高）",
         "route confidence high"
       ],
       "risks": [
         "manualデータ由来（購入可否・状態要確認）",
-        "アクセサリー混在に注意（本体判定要確認）"
+        "同条件件数不足（再現性低）"
       ],
       "holding_period": "数日",
-      "net_profit": 183400,
-      "roi": 0.7192,
-      "reproducibility_score": 100,
+      "net_profit": 44000,
+      "roi": 0.3438,
+      "reproducibility_score": 60,
       "buy_source": "Yahoo Auction sold",
-      "buy_price": 255000,
-      "sell_source": "マップカメラ",
-      "sell_price": 445000,
-      "age_days": 2.7,
+      "buy_price": 128000,
+      "sell_source": "買取商店",
+      "sell_price": 176500,
+      "age_days": 3.8,
       "priority": 1
     },
     {
-      "product": "FUJIFILM X100VI",
-      "product_id": "prod_x100vi",
+      "product": "PlayStation 5 Pro",
+      "product_id": "prod_ps5_pro",
       "kind": "main",
-      "opportunity_score": 87,
+      "opportunity_score": 77,
       "score_breakdown": {
         "利益": 30,
         "ROI": 20,
-        "鮮度": 12,
-        "再現性": 15,
+        "鮮度": 8,
+        "再現性": 9,
         "データ品質": 10,
         "confidence": 10,
         "減点(manual/stale)": -10
       },
-      "buy_now": "BUY",
+      "buy_now": "WATCH",
       "confidence": "high",
-      "action": "BUY",
-      "action_reason": "成立条件を満たしています。仕入れ→売却を実行できます。",
-      "alert_threshold": null,
-      "expected_buy_price": 403148,
-      "expected_sell_price": 442000,
+      "action": "ALERT",
+      "action_reason": "価格が ¥159,259 以下になったら通知（BUY化を狙う）。",
+      "alert_threshold": 159259,
+      "expected_buy_price": 159259,
+      "expected_sell_price": 176500,
       "buy_conditions": {
-        "buy": "Yahoo Auction sold ≤ ¥403,148",
-        "sell": "カメラのキタムラ ≥ ¥442,000",
+        "buy": "Yahoo Auction sold ≤ ¥159,259",
+        "sell": "モバイル一番 ≥ ¥176,500",
         "roi": "ROI ≥ 8%"
       },
       "next_update": "次回自動更新: 明日 12:00頃（通常24時間以内）",
       "price_trend": {
-        "7d": "↑",
+        "7d": "→",
         "30d": "→",
-        "90d": "↑"
+        "90d": "→"
       },
-      "success_probability": 95,
+      "success_probability": 64,
       "timeline": {
         "stages": [
           "候補",
@@ -123,64 +123,64 @@
           "成立",
           "通知"
         ],
-        "current": "成立"
+        "current": "監視"
       },
-      "summary": "★★★★★\n現在もっとも有望な国内利益ルートです。\n利益 ¥180,400 / ROI 71%。\nカメラのキタムラ買取が高水準です。",
+      "summary": "★★★★☆\n現在もっとも有望な国内利益ルートです。\n利益 ¥44,000 / ROI 34%。\nモバイル一番買取が高水準です。",
       "why": [
         "main route 成立（国内完結で利益）",
-        "ROIが8%以上（71%）",
-        "価格 3日前（比較的新鮮）",
-        "再現性スコア 100（中〜高）",
+        "ROIが8%以上（34%）",
+        "価格 4日前（比較的新鮮）",
+        "再現性スコア 60（中〜高）",
         "route confidence high"
       ],
       "risks": [
         "manualデータ由来（購入可否・状態要確認）",
-        "アクセサリー混在に注意（本体判定要確認）"
+        "同条件件数不足（再現性低）"
       ],
       "holding_period": "数日",
-      "net_profit": 180400,
-      "roi": 0.7075,
-      "reproducibility_score": 100,
+      "net_profit": 44000,
+      "roi": 0.3438,
+      "reproducibility_score": 60,
       "buy_source": "Yahoo Auction sold",
-      "buy_price": 255000,
-      "sell_source": "カメラのキタムラ",
-      "sell_price": 442000,
-      "age_days": 2.7,
+      "buy_price": 128000,
+      "sell_source": "モバイル一番",
+      "sell_price": 176500,
+      "age_days": 3.8,
       "priority": 2
     },
     {
-      "product": "FUJIFILM X100VI",
-      "product_id": "prod_x100vi",
+      "product": "PlayStation 5 Pro",
+      "product_id": "prod_ps5_pro",
       "kind": "main",
-      "opportunity_score": 87,
+      "opportunity_score": 77,
       "score_breakdown": {
         "利益": 30,
         "ROI": 20,
-        "鮮度": 12,
-        "再現性": 15,
+        "鮮度": 8,
+        "再現性": 9,
         "データ品質": 10,
         "confidence": 10,
         "減点(manual/stale)": -10
       },
-      "buy_now": "BUY",
+      "buy_now": "WATCH",
       "confidence": "high",
-      "action": "BUY",
-      "action_reason": "成立条件を満たしています。仕入れ→売却を実行できます。",
-      "alert_threshold": null,
-      "expected_buy_price": 401296,
-      "expected_sell_price": 440000,
+      "action": "ALERT",
+      "action_reason": "価格が ¥159,259 以下になったら通知（BUY化を狙う）。",
+      "alert_threshold": 159259,
+      "expected_buy_price": 159259,
+      "expected_sell_price": 176500,
       "buy_conditions": {
-        "buy": "Yahoo Auction sold ≤ ¥401,296",
-        "sell": "フジヤカメラ ≥ ¥440,000",
+        "buy": "Mercari sold ≤ ¥159,259",
+        "sell": "買取商店 ≥ ¥176,500",
         "roi": "ROI ≥ 8%"
       },
       "next_update": "次回自動更新: 明日 12:00頃（通常24時間以内）",
       "price_trend": {
-        "7d": "↑",
+        "7d": "→",
         "30d": "→",
-        "90d": "↑"
+        "90d": "→"
       },
-      "success_probability": 95,
+      "success_probability": 64,
       "timeline": {
         "stages": [
           "候補",
@@ -188,64 +188,64 @@
           "成立",
           "通知"
         ],
-        "current": "成立"
+        "current": "監視"
       },
-      "summary": "★★★★★\n現在もっとも有望な国内利益ルートです。\n利益 ¥178,400 / ROI 70%。\nフジヤカメラ買取が高水準です。",
+      "summary": "★★★★☆\n現在もっとも有望な国内利益ルートです。\n利益 ¥43,000 / ROI 33%。\n買取商店買取が高水準です。",
       "why": [
         "main route 成立（国内完結で利益）",
-        "ROIが8%以上（70%）",
+        "ROIが8%以上（33%）",
         "価格 3日前（比較的新鮮）",
-        "再現性スコア 100（中〜高）",
+        "再現性スコア 60（中〜高）",
         "route confidence high"
       ],
       "risks": [
         "manualデータ由来（購入可否・状態要確認）",
-        "アクセサリー混在に注意（本体判定要確認）"
+        "同条件件数不足（再現性低）"
       ],
       "holding_period": "数日",
-      "net_profit": 178400,
-      "roi": 0.6996,
-      "reproducibility_score": 100,
-      "buy_source": "Yahoo Auction sold",
-      "buy_price": 255000,
-      "sell_source": "フジヤカメラ",
-      "sell_price": 440000,
-      "age_days": 2.7,
+      "net_profit": 43000,
+      "roi": 0.3333,
+      "reproducibility_score": 60,
+      "buy_source": "Mercari sold",
+      "buy_price": 129000,
+      "sell_source": "買取商店",
+      "sell_price": 176500,
+      "age_days": 3.2,
       "priority": 3
     },
     {
-      "product": "FUJIFILM X100VI",
-      "product_id": "prod_x100vi",
+      "product": "PlayStation 5 Pro",
+      "product_id": "prod_ps5_pro",
       "kind": "main",
-      "opportunity_score": 87,
+      "opportunity_score": 77,
       "score_breakdown": {
         "利益": 30,
         "ROI": 20,
-        "鮮度": 12,
-        "再現性": 15,
+        "鮮度": 8,
+        "再現性": 9,
         "データ品質": 10,
         "confidence": 10,
         "減点(manual/stale)": -10
       },
-      "buy_now": "BUY",
+      "buy_now": "WATCH",
       "confidence": "high",
-      "action": "BUY",
-      "action_reason": "成立条件を満たしています。仕入れ→売却を実行できます。",
-      "alert_threshold": null,
-      "expected_buy_price": 396666,
-      "expected_sell_price": 435000,
+      "action": "ALERT",
+      "action_reason": "価格が ¥159,259 以下になったら通知（BUY化を狙う）。",
+      "alert_threshold": 159259,
+      "expected_buy_price": 159259,
+      "expected_sell_price": 176500,
       "buy_conditions": {
-        "buy": "Yahoo Auction sold ≤ ¥396,666",
-        "sell": "ソフマップ ≥ ¥435,000",
+        "buy": "Mercari sold ≤ ¥159,259",
+        "sell": "モバイル一番 ≥ ¥176,500",
         "roi": "ROI ≥ 8%"
       },
       "next_update": "次回自動更新: 明日 12:00頃（通常24時間以内）",
       "price_trend": {
-        "7d": "↑",
+        "7d": "→",
         "30d": "→",
-        "90d": "↑"
+        "90d": "→"
       },
-      "success_probability": 95,
+      "success_probability": 64,
       "timeline": {
         "stages": [
           "候補",
@@ -253,64 +253,64 @@
           "成立",
           "通知"
         ],
-        "current": "成立"
+        "current": "監視"
       },
-      "summary": "★★★★★\n現在もっとも有望な国内利益ルートです。\n利益 ¥173,400 / ROI 68%。\nソフマップ買取が高水準です。",
+      "summary": "★★★★☆\n現在もっとも有望な国内利益ルートです。\n利益 ¥43,000 / ROI 33%。\nモバイル一番買取が高水準です。",
       "why": [
         "main route 成立（国内完結で利益）",
-        "ROIが8%以上（68%）",
+        "ROIが8%以上（33%）",
         "価格 3日前（比較的新鮮）",
-        "再現性スコア 100（中〜高）",
+        "再現性スコア 60（中〜高）",
         "route confidence high"
       ],
       "risks": [
         "manualデータ由来（購入可否・状態要確認）",
-        "アクセサリー混在に注意（本体判定要確認）"
+        "同条件件数不足（再現性低）"
       ],
       "holding_period": "数日",
-      "net_profit": 173400,
-      "roi": 0.68,
-      "reproducibility_score": 100,
-      "buy_source": "Yahoo Auction sold",
-      "buy_price": 255000,
-      "sell_source": "ソフマップ",
-      "sell_price": 435000,
-      "age_days": 2.7,
+      "net_profit": 43000,
+      "roi": 0.3333,
+      "reproducibility_score": 60,
+      "buy_source": "Mercari sold",
+      "buy_price": 129000,
+      "sell_source": "モバイル一番",
+      "sell_price": 176500,
+      "age_days": 3.2,
       "priority": 4
     },
     {
-      "product": "FUJIFILM X100VI",
-      "product_id": "prod_x100vi",
-      "kind": "main",
-      "opportunity_score": 87,
+      "product": "RICOH GR IIIx",
+      "product_id": "prod_gr3x",
+      "kind": "reference",
+      "opportunity_score": 77,
       "score_breakdown": {
         "利益": 30,
         "ROI": 20,
-        "鮮度": 12,
-        "再現性": 15,
-        "データ品質": 10,
+        "鮮度": 8,
+        "再現性": 4,
+        "データ品質": 5,
         "confidence": 10,
-        "減点(manual/stale)": -10
+        "減点(manual/stale)": 0
       },
-      "buy_now": "BUY",
-      "confidence": "high",
-      "action": "BUY",
-      "action_reason": "成立条件を満たしています。仕入れ→売却を実行できます。",
-      "alert_threshold": null,
-      "expected_buy_price": 392037,
-      "expected_sell_price": 430000,
+      "buy_now": "WATCH",
+      "confidence": "medium",
+      "action": "WAIT",
+      "action_reason": "eBay sold 更新（EBAY_APP_ID 設定）後に BUY 候補へ昇格します。海外価格の更新待ちです。",
+      "alert_threshold": 225796,
+      "expected_buy_price": 225796,
+      "expected_sell_price": 248360,
       "buy_conditions": {
-        "buy": "Yahoo Auction sold ≤ ¥392,037",
-        "sell": "じゃんぱら ≥ ¥430,000",
+        "buy": "Mercari sold ≤ ¥225,796",
+        "sell": "src_ebay ≥ ¥248,360",
         "roi": "ROI ≥ 8%"
       },
       "next_update": "次回自動更新: 明日 12:00頃（通常24時間以内）",
       "price_trend": {
         "7d": "↑",
         "30d": "→",
-        "90d": "↑"
+        "90d": "→"
       },
-      "success_probability": 95,
+      "success_probability": 30,
       "timeline": {
         "stages": [
           "候補",
@@ -318,64 +318,65 @@
           "成立",
           "通知"
         ],
-        "current": "成立"
+        "current": "監視"
       },
-      "summary": "★★★★★\n現在もっとも有望な国内利益ルートです。\n利益 ¥168,400 / ROI 66%。\nじゃんぱら買取が高水準です。",
+      "summary": "★★★★☆\n海外売却で成立見込みの参考ルートです。\neBay更新後の想定利益 ¥38,688 / ROI 26%。\n現在は海外価格の更新待ちです。",
       "why": [
-        "main route 成立（国内完結で利益）",
-        "ROIが8%以上（66%）",
+        "reference route（海外sold更新で成立見込み）",
+        "ROIが8%以上（26%）",
         "価格 3日前（比較的新鮮）",
-        "再現性スコア 100（中〜高）",
         "route confidence high"
       ],
       "risks": [
-        "manualデータ由来（購入可否・状態要確認）",
+        "海外依存（為替・関税・輸送）",
+        "送料・決済手数料が大きい",
+        "同条件件数不足（再現性低）",
         "アクセサリー混在に注意（本体判定要確認）"
       ],
-      "holding_period": "数日",
-      "net_profit": 168400,
-      "roi": 0.6604,
-      "reproducibility_score": 100,
-      "buy_source": "Yahoo Auction sold",
-      "buy_price": 255000,
-      "sell_source": "じゃんぱら",
-      "sell_price": 430000,
-      "age_days": 2.7,
+      "holding_period": "1ヶ月",
+      "net_profit": 38688,
+      "roi": 0.2579,
+      "reproducibility_score": 30,
+      "buy_source": "Mercari sold",
+      "buy_price": 150000,
+      "sell_source": "src_ebay",
+      "sell_price": 248360,
+      "age_days": 3.2,
       "priority": 5
     },
     {
       "product": "FUJIFILM X100VI",
       "product_id": "prod_x100vi",
-      "kind": "main",
-      "opportunity_score": 87,
+      "kind": "reference",
+      "opportunity_score": 73,
       "score_breakdown": {
         "利益": 30,
         "ROI": 20,
-        "鮮度": 12,
-        "再現性": 15,
-        "データ品質": 10,
-        "confidence": 10,
-        "減点(manual/stale)": -10
+        "鮮度": 8,
+        "再現性": 4,
+        "データ品質": 5,
+        "confidence": 6,
+        "減点(manual/stale)": 0
       },
-      "buy_now": "BUY",
-      "confidence": "high",
-      "action": "BUY",
-      "action_reason": "成立条件を満たしています。仕入れ→売却を実行できます。",
-      "alert_threshold": null,
-      "expected_buy_price": 390185,
-      "expected_sell_price": 428000,
+      "buy_now": "WATCH",
+      "confidence": "medium",
+      "action": "WAIT",
+      "action_reason": "eBay sold 更新（EBAY_APP_ID 設定）後に BUY 候補へ昇格します。海外価格の更新待ちです。",
+      "alert_threshold": 517071,
+      "expected_buy_price": 517071,
+      "expected_sell_price": 563437,
       "buy_conditions": {
-        "buy": "Yahoo Auction sold ≤ ¥390,185",
-        "sell": "買取商店 ≥ ¥428,000",
+        "buy": "フジヤカメラ ≤ ¥517,071",
+        "sell": "src_ebay ≥ ¥563,437",
         "roi": "ROI ≥ 8%"
       },
       "next_update": "次回自動更新: 明日 12:00頃（通常24時間以内）",
       "price_trend": {
         "7d": "↑",
         "30d": "→",
-        "90d": "↑"
+        "90d": "→"
       },
-      "success_probability": 95,
+      "success_probability": 30,
       "timeline": {
         "stages": [
           "候補",
@@ -383,64 +384,64 @@
           "成立",
           "通知"
         ],
-        "current": "成立"
+        "current": "監視"
       },
-      "summary": "★★★★★\n現在もっとも有望な国内利益ルートです。\n利益 ¥166,400 / ROI 65%。\n買取商店買取が高水準です。",
+      "summary": "★★★★☆\n海外売却で成立見込みの参考ルートです。\neBay更新後の想定利益 ¥265,500 / ROI 152%。\n現在は海外価格の更新待ちです。",
       "why": [
-        "main route 成立（国内完結で利益）",
-        "ROIが8%以上（65%）",
-        "価格 3日前（比較的新鮮）",
-        "再現性スコア 100（中〜高）",
-        "route confidence high"
+        "reference route（海外sold更新で成立見込み）",
+        "ROIが8%以上（152%）",
+        "価格 3日前（比較的新鮮）"
       ],
       "risks": [
-        "manualデータ由来（購入可否・状態要確認）",
+        "海外依存（為替・関税・輸送）",
+        "送料・決済手数料が大きい",
+        "同条件件数不足（再現性低）",
         "アクセサリー混在に注意（本体判定要確認）"
       ],
-      "holding_period": "数日",
-      "net_profit": 166400,
-      "roi": 0.6525,
-      "reproducibility_score": 100,
-      "buy_source": "Yahoo Auction sold",
-      "buy_price": 255000,
-      "sell_source": "買取商店",
-      "sell_price": 428000,
-      "age_days": 2.7,
+      "holding_period": "1ヶ月",
+      "net_profit": 265500,
+      "roi": 1.5171,
+      "reproducibility_score": 30,
+      "buy_source": "フジヤカメラ",
+      "buy_price": 175000,
+      "sell_source": "src_ebay",
+      "sell_price": 563437,
+      "age_days": 3.2,
       "priority": 6
     },
     {
-      "product": "FUJIFILM X100VI",
-      "product_id": "prod_x100vi",
-      "kind": "main",
-      "opportunity_score": 82,
+      "product": "iPhone 17 Pro 256GB SIMフリー",
+      "product_id": "prod_iphone17pro_256",
+      "kind": "reference",
+      "opportunity_score": 73,
       "score_breakdown": {
         "利益": 30,
         "ROI": 20,
-        "鮮度": 4,
-        "再現性": 12,
-        "データ品質": 10,
+        "鮮度": 8,
+        "再現性": 4,
+        "データ品質": 5,
         "confidence": 6,
         "減点(manual/stale)": 0
       },
-      "buy_now": "BUY",
-      "confidence": "high",
-      "action": "BUY",
-      "action_reason": "成立条件を満たしています。仕入れ→売却を実行できます。",
-      "alert_threshold": null,
-      "expected_buy_price": 405397,
-      "expected_sell_price": 445000,
+      "buy_now": "WATCH",
+      "confidence": "medium",
+      "action": "WAIT",
+      "action_reason": "eBay sold 更新（EBAY_APP_ID 設定）後に BUY 候補へ昇格します。海外価格の更新待ちです。",
+      "alert_threshold": 290260,
+      "expected_buy_price": 290260,
+      "expected_sell_price": 318377,
       "buy_conditions": {
-        "buy": "src_bhphoto ≤ ¥405,397",
-        "sell": "マップカメラ ≥ ¥445,000",
+        "buy": "ゲオ ≤ ¥290,260",
+        "sell": "src_ebay ≥ ¥318,377",
         "roi": "ROI ≥ 8%"
       },
       "next_update": "次回自動更新: 明日 12:00頃（通常24時間以内）",
       "price_trend": {
-        "7d": "↑",
+        "7d": "→",
         "30d": "→",
-        "90d": "↑"
+        "90d": "→"
       },
-      "success_probability": 72,
+      "success_probability": 30,
       "timeline": {
         "stages": [
           "候補",
@@ -448,63 +449,63 @@
           "成立",
           "通知"
         ],
-        "current": "成立"
+        "current": "監視"
       },
-      "summary": "★★★★☆\n現在もっとも有望な国内利益ルートです。\n利益 ¥154,267 / ROI 54%。\nマップカメラ買取が高水準です。",
+      "summary": "★★★★☆\n海外売却で成立見込みの参考ルートです。\neBay更新後の想定利益 ¥74,808 / ROI 44%。\n現在は海外価格の更新待ちです。",
       "why": [
-        "main route 成立（国内完結で利益）",
-        "ROIが8%以上（54%）",
-        "価格 10日前（要更新）",
-        "再現性スコア 80（中〜高）"
+        "reference route（海外sold更新で成立見込み）",
+        "ROIが8%以上（44%）",
+        "価格 3日前（比較的新鮮）"
       ],
       "risks": [
-        "鮮度低（10日前）",
-        "アクセサリー混在に注意（本体判定要確認）"
+        "海外依存（為替・関税・輸送）",
+        "送料・決済手数料が大きい",
+        "同条件件数不足（再現性低）"
       ],
-      "holding_period": "数日",
-      "net_profit": 154267,
-      "roi": 0.544,
-      "reproducibility_score": 80,
-      "buy_source": "src_bhphoto",
-      "buy_price": 283562,
-      "sell_source": "マップカメラ",
-      "sell_price": 445000,
-      "age_days": 10.1,
+      "holding_period": "1ヶ月",
+      "net_profit": 74808,
+      "roi": 0.4406,
+      "reproducibility_score": 30,
+      "buy_source": "ゲオ",
+      "buy_price": 169800,
+      "sell_source": "src_ebay",
+      "sell_price": 318377,
+      "age_days": 3.2,
       "priority": 7
     },
     {
-      "product": "FUJIFILM X100VI",
-      "product_id": "prod_x100vi",
-      "kind": "main",
-      "opportunity_score": 82,
+      "product": "Nintendo Switch 2",
+      "product_id": "prod_switch2",
+      "kind": "reference",
+      "opportunity_score": 71,
       "score_breakdown": {
-        "利益": 30,
+        "利益": 28,
         "ROI": 20,
-        "鮮度": 4,
-        "再現性": 12,
-        "データ品質": 10,
+        "鮮度": 8,
+        "再現性": 4,
+        "データ品質": 5,
         "confidence": 6,
         "減点(manual/stale)": 0
       },
-      "buy_now": "BUY",
-      "confidence": "high",
-      "action": "BUY",
-      "action_reason": "成立条件を満たしています。仕入れ→売却を実行できます。",
-      "alert_threshold": null,
-      "expected_buy_price": 402619,
-      "expected_sell_price": 442000,
+      "buy_now": "WATCH",
+      "confidence": "medium",
+      "action": "WAIT",
+      "action_reason": "eBay sold 更新（EBAY_APP_ID 設定）後に BUY 候補へ昇格します。海外価格の更新待ちです。",
+      "alert_threshold": 76685,
+      "expected_buy_price": 76685,
+      "expected_sell_price": 87320,
       "buy_conditions": {
-        "buy": "src_bhphoto ≤ ¥402,619",
-        "sell": "カメラのキタムラ ≥ ¥442,000",
+        "buy": "ゲオ ≤ ¥76,685",
+        "sell": "src_ebay ≥ ¥87,320",
         "roi": "ROI ≥ 8%"
       },
       "next_update": "次回自動更新: 明日 12:00頃（通常24時間以内）",
       "price_trend": {
-        "7d": "↑",
+        "7d": "→",
         "30d": "→",
-        "90d": "↑"
+        "90d": "→"
       },
-      "success_probability": 72,
+      "success_probability": 30,
       "timeline": {
         "stages": [
           "候補",
@@ -512,63 +513,63 @@
           "成立",
           "通知"
         ],
-        "current": "成立"
+        "current": "監視"
       },
-      "summary": "★★★★☆\n現在もっとも有望な国内利益ルートです。\n利益 ¥151,267 / ROI 53%。\nカメラのキタムラ買取が高水準です。",
+      "summary": "★★★★☆\n海外売却で成立見込みの参考ルートです。\neBay更新後の想定利益 ¥18,355 / ROI 44%。\n現在は海外価格の更新待ちです。",
       "why": [
-        "main route 成立（国内完結で利益）",
-        "ROIが8%以上（53%）",
-        "価格 10日前（要更新）",
-        "再現性スコア 80（中〜高）"
+        "reference route（海外sold更新で成立見込み）",
+        "ROIが8%以上（44%）",
+        "価格 3日前（比較的新鮮）"
       ],
       "risks": [
-        "鮮度低（10日前）",
-        "アクセサリー混在に注意（本体判定要確認）"
+        "海外依存（為替・関税・輸送）",
+        "送料・決済手数料が大きい",
+        "同条件件数不足（再現性低）"
       ],
-      "holding_period": "数日",
-      "net_profit": 151267,
-      "roi": 0.5335,
-      "reproducibility_score": 80,
-      "buy_source": "src_bhphoto",
-      "buy_price": 283562,
-      "sell_source": "カメラのキタムラ",
-      "sell_price": 442000,
-      "age_days": 10.1,
+      "holding_period": "1ヶ月",
+      "net_profit": 18355,
+      "roi": 0.4423,
+      "reproducibility_score": 30,
+      "buy_source": "ゲオ",
+      "buy_price": 41500,
+      "sell_source": "src_ebay",
+      "sell_price": 87320,
+      "age_days": 3.2,
       "priority": 8
     },
     {
-      "product": "FUJIFILM X100VI",
-      "product_id": "prod_x100vi",
+      "product": "iPhone 17 Pro Max 256GB SIMフリー",
+      "product_id": "prod_iphone17pm_256",
       "kind": "main",
-      "opportunity_score": 82,
+      "opportunity_score": 69,
       "score_breakdown": {
         "利益": 30,
         "ROI": 20,
         "鮮度": 4,
-        "再現性": 12,
+        "再現性": 9,
         "データ品質": 10,
         "confidence": 6,
-        "減点(manual/stale)": 0
+        "減点(manual/stale)": -10
       },
-      "buy_now": "BUY",
-      "confidence": "high",
-      "action": "BUY",
-      "action_reason": "成立条件を満たしています。仕入れ→売却を実行できます。",
-      "alert_threshold": null,
-      "expected_buy_price": 400767,
-      "expected_sell_price": 440000,
+      "buy_now": "WATCH",
+      "confidence": "medium",
+      "action": "ALERT",
+      "action_reason": "価格が ¥177,688 以下になったら通知（BUY化を狙う）。",
+      "alert_threshold": 177688,
+      "expected_buy_price": 177688,
+      "expected_sell_price": 196500,
       "buy_conditions": {
-        "buy": "src_bhphoto ≤ ¥400,767",
-        "sell": "フジヤカメラ ≥ ¥440,000",
+        "buy": "ゲオ ≤ ¥177,688",
+        "sell": "モバイル一番 ≥ ¥196,500",
         "roi": "ROI ≥ 8%"
       },
       "next_update": "次回自動更新: 明日 12:00頃（通常24時間以内）",
       "price_trend": {
-        "7d": "↑",
+        "7d": "→",
         "30d": "→",
-        "90d": "↑"
+        "90d": "→"
       },
-      "success_probability": 72,
+      "success_probability": 54,
       "timeline": {
         "stages": [
           "候補",
@@ -576,63 +577,64 @@
           "成立",
           "通知"
         ],
-        "current": "成立"
+        "current": "監視"
       },
-      "summary": "★★★★☆\n現在もっとも有望な国内利益ルートです。\n利益 ¥149,267 / ROI 53%。\nフジヤカメラ買取が高水準です。",
+      "summary": "★★★☆☆\n国内で成立している利益ルートです。\n利益 ¥37,104 / ROI 24%。\nモバイル一番買取が高水準です。",
       "why": [
         "main route 成立（国内完結で利益）",
-        "ROIが8%以上（53%）",
-        "価格 10日前（要更新）",
-        "再現性スコア 80（中〜高）"
+        "ROIが8%以上（24%）",
+        "価格 13日前（要更新）",
+        "再現性スコア 60（中〜高）"
       ],
       "risks": [
-        "鮮度低（10日前）",
-        "アクセサリー混在に注意（本体判定要確認）"
+        "manualデータ由来（購入可否・状態要確認）",
+        "鮮度低（13日前）",
+        "同条件件数不足（再現性低）"
       ],
       "holding_period": "数日",
-      "net_profit": 149267,
-      "roi": 0.5264,
-      "reproducibility_score": 80,
-      "buy_source": "src_bhphoto",
-      "buy_price": 283562,
-      "sell_source": "フジヤカメラ",
-      "sell_price": 440000,
-      "age_days": 10.1,
+      "net_profit": 37104,
+      "roi": 0.2397,
+      "reproducibility_score": 60,
+      "buy_source": "ゲオ",
+      "buy_price": 154800,
+      "sell_source": "モバイル一番",
+      "sell_price": 196500,
+      "age_days": 13.1,
       "priority": 9
     },
     {
-      "product": "FUJIFILM X100VI",
-      "product_id": "prod_x100vi",
+      "product": "iPhone 17 Pro Max 256GB SIMフリー",
+      "product_id": "prod_iphone17pm_256",
       "kind": "main",
-      "opportunity_score": 82,
+      "opportunity_score": 69,
       "score_breakdown": {
         "利益": 30,
         "ROI": 20,
         "鮮度": 4,
-        "再現性": 12,
+        "再現性": 9,
         "データ品質": 10,
         "confidence": 6,
-        "減点(manual/stale)": 0
+        "減点(manual/stale)": -10
       },
-      "buy_now": "BUY",
-      "confidence": "high",
-      "action": "BUY",
-      "action_reason": "成立条件を満たしています。仕入れ→売却を実行できます。",
-      "alert_threshold": null,
-      "expected_buy_price": 396137,
-      "expected_sell_price": 435000,
+      "buy_now": "WATCH",
+      "confidence": "medium",
+      "action": "ALERT",
+      "action_reason": "価格が ¥177,688 以下になったら通知（BUY化を狙う）。",
+      "alert_threshold": 177688,
+      "expected_buy_price": 177688,
+      "expected_sell_price": 196500,
       "buy_conditions": {
-        "buy": "src_bhphoto ≤ ¥396,137",
-        "sell": "ソフマップ ≥ ¥435,000",
+        "buy": "ゲオ ≤ ¥177,688",
+        "sell": "買取商店 ≥ ¥196,500",
         "roi": "ROI ≥ 8%"
       },
       "next_update": "次回自動更新: 明日 12:00頃（通常24時間以内）",
       "price_trend": {
-        "7d": "↑",
+        "7d": "→",
         "30d": "→",
-        "90d": "↑"
+        "90d": "→"
       },
-      "success_probability": 72,
+      "success_probability": 54,
       "timeline": {
         "stages": [
           "候補",
@@ -640,28 +642,29 @@
           "成立",
           "通知"
         ],
-        "current": "成立"
+        "current": "監視"
       },
-      "summary": "★★★★☆\n現在もっとも有望な国内利益ルートです。\n利益 ¥144,267 / ROI 51%。\nソフマップ買取が高水準です。",
+      "summary": "★★★☆☆\n国内で成立している利益ルートです。\n利益 ¥37,104 / ROI 24%。\n買取商店買取が高水準です。",
       "why": [
         "main route 成立（国内完結で利益）",
-        "ROIが8%以上（51%）",
-        "価格 10日前（要更新）",
-        "再現性スコア 80（中〜高）"
+        "ROIが8%以上（24%）",
+        "価格 13日前（要更新）",
+        "再現性スコア 60（中〜高）"
       ],
       "risks": [
-        "鮮度低（10日前）",
-        "アクセサリー混在に注意（本体判定要確認）"
+        "manualデータ由来（購入可否・状態要確認）",
+        "鮮度低（13日前）",
+        "同条件件数不足（再現性低）"
       ],
       "holding_period": "数日",
-      "net_profit": 144267,
-      "roi": 0.5088,
-      "reproducibility_score": 80,
-      "buy_source": "src_bhphoto",
-      "buy_price": 283562,
-      "sell_source": "ソフマップ",
-      "sell_price": 435000,
-      "age_days": 10.1,
+      "net_profit": 37104,
+      "roi": 0.2397,
+      "reproducibility_score": 60,
+      "buy_source": "ゲオ",
+      "buy_price": 154800,
+      "sell_source": "買取商店",
+      "sell_price": 196500,
+      "age_days": 13.1,
       "priority": 10
     }
   ]

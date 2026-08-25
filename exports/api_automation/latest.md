@@ -1,15 +1,15 @@
 # API Automation Quality Dashboard
 
-> 生成: 2026-08-24 13:15 JST / API自動化（eBay/楽天/Yahoo）の統合状態と品質。利益/AI/DQ思想は不変
+> 生成: 2026-08-25 13:49 JST / API自動化（eBay/楽天/Yahoo）の統合状態と品質。利益/AI/DQ思想は不変
 
-- dry_run: False / target: canary / いずれか設定済: False
+- dry_run: True / target: canary / いずれか設定済: False
 
 ## API 別ステータス
 | API | Configured | Status | Requests | Success | Items | Exact | Rejected | Main | Latency | LastSuccess |
 |---|---|---|--:|--:|--:|--:|--:|--:|--:|---|
-| ebay | not_configured | NOT_CONFIGURED | 0 | 0% | 0 | 0 | 0 | 0 | 0ms | – |
-| rakuten | not_configured | NOT_CONFIGURED | 0 | 0% | 0 | 0 | 0 | 0 | 0ms | – |
-| yahoo | not_configured | NOT_CONFIGURED | 0 | 0% | 0 | 0 | 0 | 0 | 0ms | – |
+| ebay | not_configured | disabled_kill_switch | 0 | 0% | 0 | 0 | 0 | 0 | 0ms | – |
+| rakuten | not_configured | disabled_kill_switch | 0 | 0% | 0 | 0 | 0 | 0 | 0ms | – |
+| yahoo | not_configured | disabled_kill_switch | 0 | 0% | 0 | 0 | 0 | 0 | 0ms | – |
 
 ## Canary ゲート（Product≥99% / Capacity=100% / False Main=0）
 | API | evaluated | product | capacity | false_main | passed |

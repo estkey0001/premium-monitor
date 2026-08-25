@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-08-24 13:15 JST",
+  "generated_at": "2026-08-25 13:49 JST",
   "scope": "API自動化（eBay/楽天/Yahoo）の統合状態と品質。利益/AI/DQ思想は不変",
-  "dry_run": false,
+  "dry_run": true,
   "target_mode": "canary",
   "any_api_configured": false,
   "per_api": {
     "ebay": {
       "configured": "not_configured",
-      "status": "NOT_CONFIGURED",
+      "status": "disabled_kill_switch",
       "kill_switch_off": true,
       "healthy": false,
       "requests": 0,
@@ -31,7 +31,7 @@
     },
     "rakuten": {
       "configured": "not_configured",
-      "status": "NOT_CONFIGURED",
+      "status": "disabled_kill_switch",
       "kill_switch_off": true,
       "healthy": false,
       "requests": 0,
@@ -55,7 +55,7 @@
     },
     "yahoo": {
       "configured": "not_configured",
-      "status": "NOT_CONFIGURED",
+      "status": "disabled_kill_switch",
       "kill_switch_off": true,
       "healthy": false,
       "requests": 0,

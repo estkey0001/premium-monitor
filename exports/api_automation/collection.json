@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-08-24 13:15 JST",
-  "dry_run": false,
+  "generated_at": "2026-08-25 13:49 JST",
+  "dry_run": true,
   "target_mode": "canary",
   "targets": [
     "prod_iphone17pro_256",
@@ -11,7 +11,7 @@
   "results": {
     "ebay": {
       "api": "ebay",
-      "status": "NOT_CONFIGURED",
+      "status": "disabled_kill_switch",
       "configured": "not_configured",
       "observations": [],
       "health": {
@@ -34,7 +34,7 @@
     },
     "rakuten": {
       "api": "rakuten",
-      "status": "NOT_CONFIGURED",
+      "status": "disabled_kill_switch",
       "configured": "not_configured",
       "observations": [],
       "health": {
@@ -57,7 +57,7 @@
     },
     "yahoo": {
       "api": "yahoo",
-      "status": "NOT_CONFIGURED",
+      "status": "disabled_kill_switch",
       "configured": "not_configured",
       "observations": [],
       "health": {

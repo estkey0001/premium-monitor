@@ -1,29 +1,78 @@
 {
-  "date": "2026-08-24",
-  "health_score": 50.1,
-  "stale_rate": 0.8788,
+  "date": "2026-08-25",
+  "health_score": 75.9,
+  "stale_rate": 0.1992,
   "main_products": [
     "prod_iphone17pm_256",
+    "prod_iphone17pro_256",
     "prod_ps5_pro",
-    "prod_switch2",
-    "prod_x100vi"
+    "prod_switch2"
   ],
   "reference_products": [
     "prod_gr3x",
-    "prod_gr4",
     "prod_iphone17pro_256",
     "prod_switch2",
     "prod_x100vi"
   ],
   "ops": {
+    "prod_ps5_pro": {
+      "action": "ALERT",
+      "buy_now": "WATCH",
+      "roi": 0.3333,
+      "net_profit": 43000,
+      "buy_price": 129000,
+      "product": "PlayStation 5 Pro",
+      "buy_source": "Mercari sold",
+      "kind": "main"
+    },
+    "prod_gr3x": {
+      "action": "WAIT",
+      "buy_now": "WATCH",
+      "roi": 0.2579,
+      "net_profit": 38688,
+      "buy_price": 150000,
+      "product": "RICOH GR IIIx",
+      "buy_source": "Mercari sold",
+      "kind": "reference"
+    },
     "prod_x100vi": {
-      "action": "BUY",
-      "buy_now": "BUY",
-      "roi": 0.5088,
-      "net_profit": 144267,
-      "buy_price": 283562,
+      "action": "WAIT",
+      "buy_now": "WATCH",
+      "roi": 1.5171,
+      "net_profit": 265500,
+      "buy_price": 175000,
       "product": "FUJIFILM X100VI",
-      "buy_source": "src_bhphoto",
+      "buy_source": "フジヤカメラ",
+      "kind": "reference"
+    },
+    "prod_iphone17pro_256": {
+      "action": "WAIT",
+      "buy_now": "WATCH",
+      "roi": 0.4406,
+      "net_profit": 74808,
+      "buy_price": 169800,
+      "product": "iPhone 17 Pro 256GB SIMフリー",
+      "buy_source": "ゲオ",
+      "kind": "reference"
+    },
+    "prod_switch2": {
+      "action": "WAIT",
+      "buy_now": "WATCH",
+      "roi": 0.4423,
+      "net_profit": 18355,
+      "buy_price": 41500,
+      "product": "Nintendo Switch 2",
+      "buy_source": "ゲオ",
+      "kind": "reference"
+    },
+    "prod_iphone17pm_256": {
+      "action": "ALERT",
+      "buy_now": "WATCH",
+      "roi": 0.2397,
+      "net_profit": 37104,
+      "buy_price": 154800,
+      "product": "iPhone 17 Pro Max 256GB SIMフリー",
+      "buy_source": "ゲオ",
       "kind": "main"
     }
   }

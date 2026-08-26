@@ -1,6 +1,6 @@
 # Beta Launch Preparation — Beta Report
 
-> 生成: 2026-08-25 13:49 JST / 初回体験最適化・運用準備・βテスト計測・フィードバック（AI/利益/DataQualityロジックは不変）
+> 生成: 2026-08-26 13:54 JST / 初回体験最適化・運用準備・βテスト計測・フィードバック（AI/利益/DataQualityロジックは不変）
 
 ## Beta Ready Score: **85 / 100** — 判定: **READY (closed beta)**
 
@@ -11,7 +11,7 @@
 | Notification | 86 |
 | Dashboard | 84 |
 | Performance | 92 |
-| Data Quality | 85 |
+| Data Quality | 80 |
 | Documentation | 90 |
 | Support | 82 |
 | Operations | 82 |
@@ -67,8 +67,8 @@
 - line: プレビュー生成済み
 
 ## Admin Beta Dashboard
-- 登録者数: 3 / 通知数: 53 / Opportunity数: 10
-- Execution成功率: 30.7 / Feedback件数: 0
+- 登録者数: 3 / 通知数: 59 / Opportunity数: 9
+- Execution成功率: 30.8 / Feedback件数: 0
 - 利用率/Feedback件数はβ運用開始後に Analytics(匿名集計) から投入する器。
 
 ## βリリース後KPI

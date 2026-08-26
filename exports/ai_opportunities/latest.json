@@ -1,56 +1,56 @@
 {
-  "generated_at": "2026-08-25 13:49 JST",
-  "health_score": 75.9,
+  "generated_at": "2026-08-26 13:54 JST",
+  "health_score": 72.5,
   "health_note": "データ品質は標準的です",
-  "main_route_count": 21,
-  "reference_route_count": 4,
+  "main_route_count": 6,
+  "reference_route_count": 3,
   "today_tasks": [
-    "🔔 PlayStation 5 Pro を監視（¥159,259以下で通知）",
-    "🔔 PlayStation 5 Pro を監視（¥159,259以下で通知）",
-    "🔔 PlayStation 5 Pro を監視（¥159,259以下で通知）",
-    "🔔 PlayStation 5 Pro を監視（¥159,259以下で通知）",
-    "⏳ RICOH GR IIIx は待機（eBay sold 更新（EBAY_APP_ID 設定）後に BUY 候補へ昇格します。海外価格の更新待ちです。）"
+    "⏳ FUJIFILM X100VI は待機（eBay sold 更新（EBAY_APP_ID 設定）後に BUY 候補へ昇格します。海外価格の更新待ちです。）",
+    "🔔 PlayStation 5 Pro を監視（¥159,907以下で通知）",
+    "🔔 PlayStation 5 Pro を監視（¥159,907以下で通知）",
+    "🔔 PlayStation 5 Pro を監視（¥159,907以下で通知）",
+    "🔔 PlayStation 5 Pro を監視（¥159,907以下で通知）"
   ],
   "daily_recommendation": {
-    "product": "PlayStation 5 Pro",
+    "product": "FUJIFILM X100VI",
     "buy_now": "WATCH",
     "opportunity_score": 77,
-    "reason": "PlayStation 5 Pro: WATCH。国内成立 利益¥44,000/ROI34%/Score77"
+    "reason": "FUJIFILM X100VI: WATCH。海外更新後見込み 利益¥183,438/ROI72%/Score77"
   },
   "todays_opportunities": [
     {
-      "product": "PlayStation 5 Pro",
-      "product_id": "prod_ps5_pro",
-      "kind": "main",
+      "product": "FUJIFILM X100VI",
+      "product_id": "prod_x100vi",
+      "kind": "reference",
       "opportunity_score": 77,
       "score_breakdown": {
         "利益": 30,
         "ROI": 20,
         "鮮度": 8,
-        "再現性": 9,
-        "データ品質": 10,
+        "再現性": 4,
+        "データ品質": 5,
         "confidence": 10,
-        "減点(manual/stale)": -10
+        "減点(manual/stale)": 0
       },
       "buy_now": "WATCH",
-      "confidence": "high",
-      "action": "ALERT",
-      "action_reason": "価格が ¥159,259 以下になったら通知（BUY化を狙う）。",
-      "alert_threshold": 159259,
-      "expected_buy_price": 159259,
-      "expected_sell_price": 176500,
+      "confidence": "medium",
+      "action": "WAIT",
+      "action_reason": "eBay sold 更新（EBAY_APP_ID 設定）後に BUY 候補へ昇格します。海外価格の更新待ちです。",
+      "alert_threshold": 515981,
+      "expected_buy_price": 515981,
+      "expected_sell_price": 563860,
       "buy_conditions": {
-        "buy": "Yahoo Auction sold ≤ ¥159,259",
-        "sell": "買取商店 ≥ ¥176,500",
+        "buy": "Yahoo Auction sold ≤ ¥515,981",
+        "sell": "src_ebay ≥ ¥563,860",
         "roi": "ROI ≥ 8%"
       },
       "next_update": "次回自動更新: 明日 12:00頃（通常24時間以内）",
       "price_trend": {
-        "7d": "→",
+        "7d": "↑",
         "30d": "→",
         "90d": "→"
       },
-      "success_probability": 64,
+      "success_probability": 30,
       "timeline": {
         "stages": [
           "候補",
@@ -60,27 +60,28 @@
         ],
         "current": "監視"
       },
-      "summary": "★★★★☆\n現在もっとも有望な国内利益ルートです。\n利益 ¥44,000 / ROI 34%。\n買取商店買取が高水準です。",
+      "summary": "★★★★☆\n海外売却で成立見込みの参考ルートです。\neBay更新後の想定利益 ¥183,438 / ROI 72%。\n現在は海外価格の更新待ちです。",
       "why": [
-        "main route 成立（国内完結で利益）",
-        "ROIが8%以上（34%）",
+        "reference route（海外sold更新で成立見込み）",
+        "ROIが8%以上（72%）",
         "価格 4日前（比較的新鮮）",
-        "再現性スコア 60（中〜高）",
         "route confidence high"
       ],
       "risks": [
-        "manualデータ由来（購入可否・状態要確認）",
-        "同条件件数不足（再現性低）"
+        "海外依存（為替・関税・輸送）",
+        "送料・決済手数料が大きい",
+        "同条件件数不足（再現性低）",
+        "アクセサリー混在に注意（本体判定要確認）"
       ],
-      "holding_period": "数日",
-      "net_profit": 44000,
-      "roi": 0.3438,
-      "reproducibility_score": 60,
+      "holding_period": "1ヶ月",
+      "net_profit": 183438,
+      "roi": 0.7194,
+      "reproducibility_score": 30,
       "buy_source": "Yahoo Auction sold",
-      "buy_price": 128000,
-      "sell_source": "買取商店",
-      "sell_price": 176500,
-      "age_days": 3.8,
+      "buy_price": 255000,
+      "sell_source": "src_ebay",
+      "sell_price": 563860,
+      "age_days": 4.2,
       "priority": 1
     },
     {
@@ -100,13 +101,13 @@
       "buy_now": "WATCH",
       "confidence": "high",
       "action": "ALERT",
-      "action_reason": "価格が ¥159,259 以下になったら通知（BUY化を狙う）。",
-      "alert_threshold": 159259,
-      "expected_buy_price": 159259,
-      "expected_sell_price": 176500,
+      "action_reason": "価格が ¥159,907 以下になったら通知（BUY化を狙う）。",
+      "alert_threshold": 159907,
+      "expected_buy_price": 159907,
+      "expected_sell_price": 177200,
       "buy_conditions": {
-        "buy": "Yahoo Auction sold ≤ ¥159,259",
-        "sell": "モバイル一番 ≥ ¥176,500",
+        "buy": "Yahoo Auction sold ≤ ¥159,907",
+        "sell": "買取商店 ≥ ¥177,200",
         "roi": "ROI ≥ 8%"
       },
       "next_update": "次回自動更新: 明日 12:00頃（通常24時間以内）",
@@ -125,11 +126,11 @@
         ],
         "current": "監視"
       },
-      "summary": "★★★★☆\n現在もっとも有望な国内利益ルートです。\n利益 ¥44,000 / ROI 34%。\nモバイル一番買取が高水準です。",
+      "summary": "★★★★☆\n現在もっとも有望な国内利益ルートです。\n利益 ¥44,700 / ROI 35%。\n買取商店買取が高水準です。",
       "why": [
         "main route 成立（国内完結で利益）",
-        "ROIが8%以上（34%）",
-        "価格 4日前（比較的新鮮）",
+        "ROIが8%以上（35%）",
+        "価格 5日前（比較的新鮮）",
         "再現性スコア 60（中〜高）",
         "route confidence high"
       ],
@@ -138,14 +139,14 @@
         "同条件件数不足（再現性低）"
       ],
       "holding_period": "数日",
-      "net_profit": 44000,
-      "roi": 0.3438,
+      "net_profit": 44700,
+      "roi": 0.3492,
       "reproducibility_score": 60,
       "buy_source": "Yahoo Auction sold",
       "buy_price": 128000,
-      "sell_source": "モバイル一番",
-      "sell_price": 176500,
-      "age_days": 3.8,
+      "sell_source": "買取商店",
+      "sell_price": 177200,
+      "age_days": 4.8,
       "priority": 2
     },
     {
@@ -165,13 +166,13 @@
       "buy_now": "WATCH",
       "confidence": "high",
       "action": "ALERT",
-      "action_reason": "価格が ¥159,259 以下になったら通知（BUY化を狙う）。",
-      "alert_threshold": 159259,
-      "expected_buy_price": 159259,
-      "expected_sell_price": 176500,
+      "action_reason": "価格が ¥159,907 以下になったら通知（BUY化を狙う）。",
+      "alert_threshold": 159907,
+      "expected_buy_price": 159907,
+      "expected_sell_price": 177200,
       "buy_conditions": {
-        "buy": "Mercari sold ≤ ¥159,259",
-        "sell": "買取商店 ≥ ¥176,500",
+        "buy": "Yahoo Auction sold ≤ ¥159,907",
+        "sell": "モバイル一番 ≥ ¥177,200",
         "roi": "ROI ≥ 8%"
       },
       "next_update": "次回自動更新: 明日 12:00頃（通常24時間以内）",
@@ -190,11 +191,11 @@
         ],
         "current": "監視"
       },
-      "summary": "★★★★☆\n現在もっとも有望な国内利益ルートです。\n利益 ¥43,000 / ROI 33%。\n買取商店買取が高水準です。",
+      "summary": "★★★★☆\n現在もっとも有望な国内利益ルートです。\n利益 ¥44,700 / ROI 35%。\nモバイル一番買取が高水準です。",
       "why": [
         "main route 成立（国内完結で利益）",
-        "ROIが8%以上（33%）",
-        "価格 3日前（比較的新鮮）",
+        "ROIが8%以上（35%）",
+        "価格 5日前（比較的新鮮）",
         "再現性スコア 60（中〜高）",
         "route confidence high"
       ],
@@ -203,14 +204,14 @@
         "同条件件数不足（再現性低）"
       ],
       "holding_period": "数日",
-      "net_profit": 43000,
-      "roi": 0.3333,
+      "net_profit": 44700,
+      "roi": 0.3492,
       "reproducibility_score": 60,
-      "buy_source": "Mercari sold",
-      "buy_price": 129000,
-      "sell_source": "買取商店",
-      "sell_price": 176500,
-      "age_days": 3.2,
+      "buy_source": "Yahoo Auction sold",
+      "buy_price": 128000,
+      "sell_source": "モバイル一番",
+      "sell_price": 177200,
+      "age_days": 4.8,
       "priority": 3
     },
     {
@@ -230,13 +231,13 @@
       "buy_now": "WATCH",
       "confidence": "high",
       "action": "ALERT",
-      "action_reason": "価格が ¥159,259 以下になったら通知（BUY化を狙う）。",
-      "alert_threshold": 159259,
-      "expected_buy_price": 159259,
-      "expected_sell_price": 176500,
+      "action_reason": "価格が ¥159,907 以下になったら通知（BUY化を狙う）。",
+      "alert_threshold": 159907,
+      "expected_buy_price": 159907,
+      "expected_sell_price": 177200,
       "buy_conditions": {
-        "buy": "Mercari sold ≤ ¥159,259",
-        "sell": "モバイル一番 ≥ ¥176,500",
+        "buy": "Mercari sold ≤ ¥159,907",
+        "sell": "買取商店 ≥ ¥177,200",
         "roi": "ROI ≥ 8%"
       },
       "next_update": "次回自動更新: 明日 12:00頃（通常24時間以内）",
@@ -255,11 +256,11 @@
         ],
         "current": "監視"
       },
-      "summary": "★★★★☆\n現在もっとも有望な国内利益ルートです。\n利益 ¥43,000 / ROI 33%。\nモバイル一番買取が高水準です。",
+      "summary": "★★★★☆\n現在もっとも有望な国内利益ルートです。\n利益 ¥43,700 / ROI 34%。\n買取商店買取が高水準です。",
       "why": [
         "main route 成立（国内完結で利益）",
-        "ROIが8%以上（33%）",
-        "価格 3日前（比較的新鮮）",
+        "ROIが8%以上（34%）",
+        "価格 4日前（比較的新鮮）",
         "再現性スコア 60（中〜高）",
         "route confidence high"
       ],
@@ -268,15 +269,80 @@
         "同条件件数不足（再現性低）"
       ],
       "holding_period": "数日",
-      "net_profit": 43000,
-      "roi": 0.3333,
+      "net_profit": 43700,
+      "roi": 0.3388,
+      "reproducibility_score": 60,
+      "buy_source": "Mercari sold",
+      "buy_price": 129000,
+      "sell_source": "買取商店",
+      "sell_price": 177200,
+      "age_days": 4.2,
+      "priority": 4
+    },
+    {
+      "product": "PlayStation 5 Pro",
+      "product_id": "prod_ps5_pro",
+      "kind": "main",
+      "opportunity_score": 77,
+      "score_breakdown": {
+        "利益": 30,
+        "ROI": 20,
+        "鮮度": 8,
+        "再現性": 9,
+        "データ品質": 10,
+        "confidence": 10,
+        "減点(manual/stale)": -10
+      },
+      "buy_now": "WATCH",
+      "confidence": "high",
+      "action": "ALERT",
+      "action_reason": "価格が ¥159,907 以下になったら通知（BUY化を狙う）。",
+      "alert_threshold": 159907,
+      "expected_buy_price": 159907,
+      "expected_sell_price": 177200,
+      "buy_conditions": {
+        "buy": "Mercari sold ≤ ¥159,907",
+        "sell": "モバイル一番 ≥ ¥177,200",
+        "roi": "ROI ≥ 8%"
+      },
+      "next_update": "次回自動更新: 明日 12:00頃（通常24時間以内）",
+      "price_trend": {
+        "7d": "→",
+        "30d": "→",
+        "90d": "→"
+      },
+      "success_probability": 64,
+      "timeline": {
+        "stages": [
+          "候補",
+          "監視",
+          "成立",
+          "通知"
+        ],
+        "current": "監視"
+      },
+      "summary": "★★★★☆\n現在もっとも有望な国内利益ルートです。\n利益 ¥43,700 / ROI 34%。\nモバイル一番買取が高水準です。",
+      "why": [
+        "main route 成立（国内完結で利益）",
+        "ROIが8%以上（34%）",
+        "価格 4日前（比較的新鮮）",
+        "再現性スコア 60（中〜高）",
+        "route confidence high"
+      ],
+      "risks": [
+        "manualデータ由来（購入可否・状態要確認）",
+        "同条件件数不足（再現性低）"
+      ],
+      "holding_period": "数日",
+      "net_profit": 43700,
+      "roi": 0.3388,
       "reproducibility_score": 60,
       "buy_source": "Mercari sold",
       "buy_price": 129000,
       "sell_source": "モバイル一番",
-      "sell_price": 176500,
-      "age_days": 3.2,
-      "priority": 4
+      "sell_price": 177200,
+      "age_days": 4.2,
+      "priority": 5
     },
     {
       "product": "RICOH GR IIIx",
@@ -296,12 +362,12 @@
       "confidence": "medium",
       "action": "WAIT",
       "action_reason": "eBay sold 更新（EBAY_APP_ID 設定）後に BUY 候補へ昇格します。海外価格の更新待ちです。",
-      "alert_threshold": 225796,
-      "expected_buy_price": 225796,
-      "expected_sell_price": 248360,
+      "alert_threshold": 225967,
+      "expected_buy_price": 225967,
+      "expected_sell_price": 248545,
       "buy_conditions": {
-        "buy": "Mercari sold ≤ ¥225,796",
-        "sell": "src_ebay ≥ ¥248,360",
+        "buy": "Mercari sold ≤ ¥225,967",
+        "sell": "src_ebay ≥ ¥248,545",
         "roi": "ROI ≥ 8%"
       },
       "next_update": "次回自動更新: 明日 12:00頃（通常24時間以内）",
@@ -320,11 +386,11 @@
         ],
         "current": "監視"
       },
-      "summary": "★★★★☆\n海外売却で成立見込みの参考ルートです。\neBay更新後の想定利益 ¥38,688 / ROI 26%。\n現在は海外価格の更新待ちです。",
+      "summary": "★★★★☆\n海外売却で成立見込みの参考ルートです。\neBay更新後の想定利益 ¥38,836 / ROI 26%。\n現在は海外価格の更新待ちです。",
       "why": [
         "reference route（海外sold更新で成立見込み）",
         "ROIが8%以上（26%）",
-        "価格 3日前（比較的新鮮）",
+        "価格 4日前（比較的新鮮）",
         "route confidence high"
       ],
       "risks": [
@@ -334,169 +400,40 @@
         "アクセサリー混在に注意（本体判定要確認）"
       ],
       "holding_period": "1ヶ月",
-      "net_profit": 38688,
-      "roi": 0.2579,
+      "net_profit": 38836,
+      "roi": 0.2589,
       "reproducibility_score": 30,
       "buy_source": "Mercari sold",
       "buy_price": 150000,
       "sell_source": "src_ebay",
-      "sell_price": 248360,
-      "age_days": 3.2,
-      "priority": 5
-    },
-    {
-      "product": "FUJIFILM X100VI",
-      "product_id": "prod_x100vi",
-      "kind": "reference",
-      "opportunity_score": 73,
-      "score_breakdown": {
-        "利益": 30,
-        "ROI": 20,
-        "鮮度": 8,
-        "再現性": 4,
-        "データ品質": 5,
-        "confidence": 6,
-        "減点(manual/stale)": 0
-      },
-      "buy_now": "WATCH",
-      "confidence": "medium",
-      "action": "WAIT",
-      "action_reason": "eBay sold 更新（EBAY_APP_ID 設定）後に BUY 候補へ昇格します。海外価格の更新待ちです。",
-      "alert_threshold": 517071,
-      "expected_buy_price": 517071,
-      "expected_sell_price": 563437,
-      "buy_conditions": {
-        "buy": "フジヤカメラ ≤ ¥517,071",
-        "sell": "src_ebay ≥ ¥563,437",
-        "roi": "ROI ≥ 8%"
-      },
-      "next_update": "次回自動更新: 明日 12:00頃（通常24時間以内）",
-      "price_trend": {
-        "7d": "↑",
-        "30d": "→",
-        "90d": "→"
-      },
-      "success_probability": 30,
-      "timeline": {
-        "stages": [
-          "候補",
-          "監視",
-          "成立",
-          "通知"
-        ],
-        "current": "監視"
-      },
-      "summary": "★★★★☆\n海外売却で成立見込みの参考ルートです。\neBay更新後の想定利益 ¥265,500 / ROI 152%。\n現在は海外価格の更新待ちです。",
-      "why": [
-        "reference route（海外sold更新で成立見込み）",
-        "ROIが8%以上（152%）",
-        "価格 3日前（比較的新鮮）"
-      ],
-      "risks": [
-        "海外依存（為替・関税・輸送）",
-        "送料・決済手数料が大きい",
-        "同条件件数不足（再現性低）",
-        "アクセサリー混在に注意（本体判定要確認）"
-      ],
-      "holding_period": "1ヶ月",
-      "net_profit": 265500,
-      "roi": 1.5171,
-      "reproducibility_score": 30,
-      "buy_source": "フジヤカメラ",
-      "buy_price": 175000,
-      "sell_source": "src_ebay",
-      "sell_price": 563437,
-      "age_days": 3.2,
+      "sell_price": 248545,
+      "age_days": 4.2,
       "priority": 6
-    },
-    {
-      "product": "iPhone 17 Pro 256GB SIMフリー",
-      "product_id": "prod_iphone17pro_256",
-      "kind": "reference",
-      "opportunity_score": 73,
-      "score_breakdown": {
-        "利益": 30,
-        "ROI": 20,
-        "鮮度": 8,
-        "再現性": 4,
-        "データ品質": 5,
-        "confidence": 6,
-        "減点(manual/stale)": 0
-      },
-      "buy_now": "WATCH",
-      "confidence": "medium",
-      "action": "WAIT",
-      "action_reason": "eBay sold 更新（EBAY_APP_ID 設定）後に BUY 候補へ昇格します。海外価格の更新待ちです。",
-      "alert_threshold": 290260,
-      "expected_buy_price": 290260,
-      "expected_sell_price": 318377,
-      "buy_conditions": {
-        "buy": "ゲオ ≤ ¥290,260",
-        "sell": "src_ebay ≥ ¥318,377",
-        "roi": "ROI ≥ 8%"
-      },
-      "next_update": "次回自動更新: 明日 12:00頃（通常24時間以内）",
-      "price_trend": {
-        "7d": "→",
-        "30d": "→",
-        "90d": "→"
-      },
-      "success_probability": 30,
-      "timeline": {
-        "stages": [
-          "候補",
-          "監視",
-          "成立",
-          "通知"
-        ],
-        "current": "監視"
-      },
-      "summary": "★★★★☆\n海外売却で成立見込みの参考ルートです。\neBay更新後の想定利益 ¥74,808 / ROI 44%。\n現在は海外価格の更新待ちです。",
-      "why": [
-        "reference route（海外sold更新で成立見込み）",
-        "ROIが8%以上（44%）",
-        "価格 3日前（比較的新鮮）"
-      ],
-      "risks": [
-        "海外依存（為替・関税・輸送）",
-        "送料・決済手数料が大きい",
-        "同条件件数不足（再現性低）"
-      ],
-      "holding_period": "1ヶ月",
-      "net_profit": 74808,
-      "roi": 0.4406,
-      "reproducibility_score": 30,
-      "buy_source": "ゲオ",
-      "buy_price": 169800,
-      "sell_source": "src_ebay",
-      "sell_price": 318377,
-      "age_days": 3.2,
-      "priority": 7
     },
     {
       "product": "Nintendo Switch 2",
       "product_id": "prod_switch2",
       "kind": "reference",
-      "opportunity_score": 71,
+      "opportunity_score": 68,
       "score_breakdown": {
-        "利益": 28,
+        "利益": 21,
         "ROI": 20,
         "鮮度": 8,
         "再現性": 4,
         "データ品質": 5,
-        "confidence": 6,
+        "confidence": 10,
         "減点(manual/stale)": 0
       },
       "buy_now": "WATCH",
       "confidence": "medium",
       "action": "WAIT",
       "action_reason": "eBay sold 更新（EBAY_APP_ID 設定）後に BUY 候補へ昇格します。海外価格の更新待ちです。",
-      "alert_threshold": 76685,
-      "expected_buy_price": 76685,
-      "expected_sell_price": 87320,
+      "alert_threshold": 76744,
+      "expected_buy_price": 76744,
+      "expected_sell_price": 87384,
       "buy_conditions": {
-        "buy": "ゲオ ≤ ¥76,685",
-        "sell": "src_ebay ≥ ¥87,320",
+        "buy": "Yahoo Auction sold ≤ ¥76,744",
+        "sell": "src_ebay ≥ ¥87,384",
         "roi": "ROI ≥ 8%"
       },
       "next_update": "次回自動更新: 明日 12:00頃（通常24時間以内）",
@@ -515,11 +452,12 @@
         ],
         "current": "監視"
       },
-      "summary": "★★★★☆\n海外売却で成立見込みの参考ルートです。\neBay更新後の想定利益 ¥18,355 / ROI 44%。\n現在は海外価格の更新待ちです。",
+      "summary": "★★★☆☆\n海外売却で成立見込みの参考ルートです。\neBay更新後の想定利益 ¥13,907 / ROI 30%。\n現在は海外価格の更新待ちです。",
       "why": [
         "reference route（海外sold更新で成立見込み）",
-        "ROIが8%以上（44%）",
-        "価格 3日前（比較的新鮮）"
+        "ROIが8%以上（30%）",
+        "価格 4日前（比較的新鮮）",
+        "route confidence high"
       ],
       "risks": [
         "海外依存（為替・関税・輸送）",
@@ -527,40 +465,106 @@
         "同条件件数不足（再現性低）"
       ],
       "holding_period": "1ヶ月",
-      "net_profit": 18355,
-      "roi": 0.4423,
+      "net_profit": 13907,
+      "roi": 0.3023,
       "reproducibility_score": 30,
-      "buy_source": "ゲオ",
-      "buy_price": 41500,
+      "buy_source": "Yahoo Auction sold",
+      "buy_price": 46000,
       "sell_source": "src_ebay",
-      "sell_price": 87320,
-      "age_days": 3.2,
+      "sell_price": 87384,
+      "age_days": 4.2,
+      "priority": 7
+    },
+    {
+      "product": "PlayStation 5 Pro",
+      "product_id": "prod_ps5_pro",
+      "kind": "main",
+      "opportunity_score": 40,
+      "score_breakdown": {
+        "利益": 26,
+        "ROI": 15,
+        "鮮度": 0,
+        "再現性": 9,
+        "データ品質": 10,
+        "confidence": 10,
+        "減点(manual/stale)": -30
+      },
+      "buy_now": "PASS",
+      "confidence": "low",
+      "action": "SKIP",
+      "action_reason": "現時点では利益条件を満たしません。見送り推奨。",
+      "alert_threshold": null,
+      "expected_buy_price": 159814,
+      "expected_sell_price": 177200,
+      "buy_conditions": {
+        "buy": "ヤフオク (新品/未使用落札) ≤ ¥159,814",
+        "sell": "買取商店 ≥ ¥177,200",
+        "roi": "ROI ≥ 8%"
+      },
+      "next_update": "次回自動更新: 明日 12:00頃（通常24時間以内）",
+      "price_trend": {
+        "7d": "→",
+        "30d": "→",
+        "90d": "→"
+      },
+      "success_probability": 54,
+      "timeline": {
+        "stages": [
+          "候補",
+          "監視",
+          "成立",
+          "通知"
+        ],
+        "current": "候補"
+      },
+      "summary": "★★☆☆☆\n国内で成立している利益ルートです。\n利益 ¥17,601 / ROI 11%。\n買取商店買取が高水準です。",
+      "why": [
+        "main route 成立（国内完結で利益）",
+        "ROIが8%以上（11%）",
+        "価格 99日前（要更新）",
+        "再現性スコア 60（中〜高）",
+        "route confidence high"
+      ],
+      "risks": [
+        "manualデータ由来（購入可否・状態要確認）",
+        "stale（99日前・main計算除外水準）",
+        "同条件件数不足（再現性低）"
+      ],
+      "holding_period": "数日",
+      "net_profit": 17601,
+      "roi": 0.1136,
+      "reproducibility_score": 60,
+      "buy_source": "ヤフオク (新品/未使用落札)",
+      "buy_price": 154999,
+      "sell_source": "買取商店",
+      "sell_price": 177200,
+      "age_days": 0,
       "priority": 8
     },
     {
-      "product": "iPhone 17 Pro Max 256GB SIMフリー",
-      "product_id": "prod_iphone17pm_256",
+      "product": "PlayStation 5 Pro",
+      "product_id": "prod_ps5_pro",
       "kind": "main",
-      "opportunity_score": 69,
+      "opportunity_score": 40,
       "score_breakdown": {
-        "利益": 30,
-        "ROI": 20,
-        "鮮度": 4,
+        "利益": 26,
+        "ROI": 15,
+        "鮮度": 0,
         "再現性": 9,
         "データ品質": 10,
-        "confidence": 6,
-        "減点(manual/stale)": -10
+        "confidence": 10,
+        "減点(manual/stale)": -30
       },
-      "buy_now": "WATCH",
-      "confidence": "medium",
-      "action": "ALERT",
-      "action_reason": "価格が ¥177,688 以下になったら通知（BUY化を狙う）。",
-      "alert_threshold": 177688,
-      "expected_buy_price": 177688,
-      "expected_sell_price": 196500,
+      "buy_now": "PASS",
+      "confidence": "low",
+      "action": "SKIP",
+      "action_reason": "現時点では利益条件を満たしません。見送り推奨。",
+      "alert_threshold": null,
+      "expected_buy_price": 159814,
+      "expected_sell_price": 177200,
       "buy_conditions": {
-        "buy": "ゲオ ≤ ¥177,688",
-        "sell": "モバイル一番 ≥ ¥196,500",
+        "buy": "ヤフオク (新品/未使用落札) ≤ ¥159,814",
+        "sell": "モバイル一番 ≥ ¥177,200",
         "roi": "ROI ≥ 8%"
       },
       "next_update": "次回自動更新: 明日 12:00頃（通常24時間以内）",
@@ -577,95 +581,31 @@
           "成立",
           "通知"
         ],
-        "current": "監視"
+        "current": "候補"
       },
-      "summary": "★★★☆☆\n国内で成立している利益ルートです。\n利益 ¥37,104 / ROI 24%。\nモバイル一番買取が高水準です。",
+      "summary": "★★☆☆☆\n国内で成立している利益ルートです。\n利益 ¥17,601 / ROI 11%。\nモバイル一番買取が高水準です。",
       "why": [
         "main route 成立（国内完結で利益）",
-        "ROIが8%以上（24%）",
-        "価格 13日前（要更新）",
-        "再現性スコア 60（中〜高）"
+        "ROIが8%以上（11%）",
+        "価格 99日前（要更新）",
+        "再現性スコア 60（中〜高）",
+        "route confidence high"
       ],
       "risks": [
         "manualデータ由来（購入可否・状態要確認）",
-        "鮮度低（13日前）",
+        "stale（99日前・main計算除外水準）",
         "同条件件数不足（再現性低）"
       ],
       "holding_period": "数日",
-      "net_profit": 37104,
-      "roi": 0.2397,
+      "net_profit": 17601,
+      "roi": 0.1136,
       "reproducibility_score": 60,
-      "buy_source": "ゲオ",
-      "buy_price": 154800,
+      "buy_source": "ヤフオク (新品/未使用落札)",
+      "buy_price": 154999,
       "sell_source": "モバイル一番",
-      "sell_price": 196500,
-      "age_days": 13.1,
+      "sell_price": 177200,
+      "age_days": 0,
       "priority": 9
-    },
-    {
-      "product": "iPhone 17 Pro Max 256GB SIMフリー",
-      "product_id": "prod_iphone17pm_256",
-      "kind": "main",
-      "opportunity_score": 69,
-      "score_breakdown": {
-        "利益": 30,
-        "ROI": 20,
-        "鮮度": 4,
-        "再現性": 9,
-        "データ品質": 10,
-        "confidence": 6,
-        "減点(manual/stale)": -10
-      },
-      "buy_now": "WATCH",
-      "confidence": "medium",
-      "action": "ALERT",
-      "action_reason": "価格が ¥177,688 以下になったら通知（BUY化を狙う）。",
-      "alert_threshold": 177688,
-      "expected_buy_price": 177688,
-      "expected_sell_price": 196500,
-      "buy_conditions": {
-        "buy": "ゲオ ≤ ¥177,688",
-        "sell": "買取商店 ≥ ¥196,500",
-        "roi": "ROI ≥ 8%"
-      },
-      "next_update": "次回自動更新: 明日 12:00頃（通常24時間以内）",
-      "price_trend": {
-        "7d": "→",
-        "30d": "→",
-        "90d": "→"
-      },
-      "success_probability": 54,
-      "timeline": {
-        "stages": [
-          "候補",
-          "監視",
-          "成立",
-          "通知"
-        ],
-        "current": "監視"
-      },
-      "summary": "★★★☆☆\n国内で成立している利益ルートです。\n利益 ¥37,104 / ROI 24%。\n買取商店買取が高水準です。",
-      "why": [
-        "main route 成立（国内完結で利益）",
-        "ROIが8%以上（24%）",
-        "価格 13日前（要更新）",
-        "再現性スコア 60（中〜高）"
-      ],
-      "risks": [
-        "manualデータ由来（購入可否・状態要確認）",
-        "鮮度低（13日前）",
-        "同条件件数不足（再現性低）"
-      ],
-      "holding_period": "数日",
-      "net_profit": 37104,
-      "roi": 0.2397,
-      "reproducibility_score": 60,
-      "buy_source": "ゲオ",
-      "buy_price": 154800,
-      "sell_source": "買取商店",
-      "sell_price": 196500,
-      "age_days": 13.1,
-      "priority": 10
     }
   ]
 }

@@ -1,65 +1,48 @@
 # Pro 利益ルート（normalized_price_observations 由来・検証済み）
 
-生成: 2026-08-25 13:49 JST
+生成: 2026-08-26 13:54 JST
 
-- **main 利益ルート: 21件**（route_confidence high/medium のみ）
-- 参考ルート(海外sold stale・要fresh化): 15件
-- confidence別: {'high': 4, 'medium': 17} / route_type別: {'flea_to_buyback': 4, 'shop_to_buyback': 17}
+- **main 利益ルート: 6件**（route_confidence high/medium のみ）
+- 参考ルート(海外sold stale・要fresh化): 5件
+- confidence別: {'high': 6} / route_type別: {'flea_to_buyback': 6}
 
-- 最大利益: PlayStation 5 Pro +¥44,000（Yahoo Auction sold→買取商店, ROI 34%）
-- 最大ROI: PlayStation 5 Pro ROI 34%（+¥44,000）
+- 最大利益: PlayStation 5 Pro +¥44,700（Yahoo Auction sold→買取商店, ROI 35%）
+- 最大ROI: PlayStation 5 Pro ROI 35%（+¥44,700）
 
 ## main 利益ルート
 
 | product | buy | buy¥ | sell | sell¥ | net | ROI | conf | type |
 |---|---|---|---|---|---|---|---|---|
-| PlayStation 5 Pr | flea_sold_price | ¥128,000 | buyback_price | ¥176,500 | **+¥44,000** | 34% | high | flea_to_buyback |
-| PlayStation 5 Pr | flea_sold_price | ¥128,000 | buyback_price | ¥176,500 | **+¥44,000** | 34% | high | flea_to_buyback |
-| PlayStation 5 Pr | flea_sold_price | ¥129,000 | buyback_price | ¥176,500 | **+¥43,000** | 33% | high | flea_to_buyback |
-| PlayStation 5 Pr | flea_sold_price | ¥129,000 | buyback_price | ¥176,500 | **+¥43,000** | 33% | high | flea_to_buyback |
-| Nintendo Switch  | shop_sale_price | ¥41,500 | buyback_price | ¥51,500 | **+¥5,500** | 13% | medium | shop_to_buyback |
-| Nintendo Switch  | shop_sale_price | ¥42,800 | buyback_price | ¥51,500 | **+¥4,200** | 10% | medium | shop_to_buyback |
-| Nintendo Switch  | shop_sale_price | ¥43,500 | buyback_price | ¥51,500 | **+¥3,500** | 8% | medium | shop_to_buyback |
-| iPhone 17 Pro Ma | shop_sale_price | ¥154,800 | buyback_price | ¥196,500 | **+¥37,104** | 24% | medium | shop_to_buyback |
-| iPhone 17 Pro Ma | shop_sale_price | ¥154,800 | buyback_price | ¥196,500 | **+¥37,104** | 24% | medium | shop_to_buyback |
-| iPhone 17 Pro Ma | shop_sale_price | ¥154,800 | buyback_price | ¥196,500 | **+¥37,104** | 24% | medium | shop_to_buyback |
-| iPhone 17 Pro Ma | shop_sale_price | ¥157,800 | buyback_price | ¥196,500 | **+¥34,044** | 22% | medium | shop_to_buyback |
-| iPhone 17 Pro Ma | shop_sale_price | ¥157,800 | buyback_price | ¥196,500 | **+¥34,044** | 22% | medium | shop_to_buyback |
-| iPhone 17 Pro Ma | shop_sale_price | ¥157,800 | buyback_price | ¥196,500 | **+¥34,044** | 22% | medium | shop_to_buyback |
-| iPhone 17 Pro Ma | shop_sale_price | ¥159,800 | buyback_price | ¥196,500 | **+¥32,004** | 20% | medium | shop_to_buyback |
-| iPhone 17 Pro Ma | shop_sale_price | ¥159,800 | buyback_price | ¥196,500 | **+¥32,004** | 20% | medium | shop_to_buyback |
-| iPhone 17 Pro Ma | shop_sale_price | ¥159,800 | buyback_price | ¥196,500 | **+¥32,004** | 20% | medium | shop_to_buyback |
-| iPhone 17 Pro Ma | shop_sale_price | ¥154,800 | buyback_price | ¥184,800 | **+¥25,404** | 16% | medium | shop_to_buyback |
-| iPhone 17 Pro Ma | shop_sale_price | ¥157,800 | buyback_price | ¥184,800 | **+¥22,344** | 14% | medium | shop_to_buyback |
-| iPhone 17 Pro Ma | shop_sale_price | ¥159,800 | buyback_price | ¥184,800 | **+¥20,304** | 13% | medium | shop_to_buyback |
-| iPhone 17 Pro 25 | shop_sale_price | ¥169,800 | buyback_price | ¥184,500 | **+¥9,804** | 6% | medium | shop_to_buyback |
-| iPhone 17 Pro 25 | shop_sale_price | ¥169,800 | buyback_price | ¥184,500 | **+¥9,804** | 6% | medium | shop_to_buyback |
+| PlayStation 5 Pr | flea_sold_price | ¥128,000 | buyback_price | ¥177,200 | **+¥44,700** | 35% | high | flea_to_buyback |
+| PlayStation 5 Pr | flea_sold_price | ¥128,000 | buyback_price | ¥177,200 | **+¥44,700** | 35% | high | flea_to_buyback |
+| PlayStation 5 Pr | flea_sold_price | ¥129,000 | buyback_price | ¥177,200 | **+¥43,700** | 34% | high | flea_to_buyback |
+| PlayStation 5 Pr | flea_sold_price | ¥129,000 | buyback_price | ¥177,200 | **+¥43,700** | 34% | high | flea_to_buyback |
+| PlayStation 5 Pr | flea_sold_price | ¥154,999 | buyback_price | ¥177,200 | **+¥17,601** | 11% | high | flea_to_buyback |
+| PlayStation 5 Pr | flea_sold_price | ¥154,999 | buyback_price | ¥177,200 | **+¥17,601** | 11% | high | flea_to_buyback |
 
 ## 参考ルート（海外sold が stale・fresh化すれば成立）
 
 | product | buy¥ | sell(海外sold)¥ | 潜在net | ROI | stale |
 |---|---|---|---|---|---|
-| FUJIFILM X100VI | ¥175,000 | ¥563,437 | +¥265,500 | 152% | overseas_sold_stale(3.2d) |
-| FUJIFILM X100VI | ¥178,000 | ¥563,437 | +¥262,410 | 147% | overseas_sold_stale(3.2d) |
-| FUJIFILM X100VI | ¥180,000 | ¥563,437 | +¥260,350 | 145% | overseas_sold_stale(3.2d) |
-| FUJIFILM X100VI | ¥255,000 | ¥563,437 | +¥183,100 | 72% | overseas_sold_stale(3.2d) |
-| iPhone 17 Pro 25 | ¥169,800 | ¥318,377 | +¥74,808 | 44% | overseas_sold_stale(3.2d) |
-| FUJIFILM X100VI | ¥361,819 | ¥563,437 | +¥73,076 | 20% | overseas_sold_stale(3.2d) |
-| iPhone 17 Pro 25 | ¥172,800 | ¥318,377 | +¥71,718 | 42% | overseas_sold_stale(3.2d) |
-| iPhone 17 Pro 25 | ¥174,800 | ¥318,377 | +¥69,658 | 40% | overseas_sold_stale(3.2d) |
-| iPhone 17 Pro 25 | ¥176,800 | ¥318,377 | +¥67,598 | 38% | overseas_sold_stale(3.2d) |
-| RICOH GR IIIx | ¥150,000 | ¥248,360 | +¥38,688 | 26% | overseas_sold_stale(3.2d) |
-| Nintendo Switch  | ¥41,500 | ¥87,320 | +¥18,355 | 44% | overseas_sold_stale(3.2d) |
-| Nintendo Switch  | ¥42,800 | ¥87,320 | +¥17,055 | 40% | overseas_sold_stale(3.2d) |
-| Nintendo Switch  | ¥43,500 | ¥87,320 | +¥16,355 | 38% | overseas_sold_stale(3.2d) |
-| Nintendo Switch  | ¥46,000 | ¥87,320 | +¥13,855 | 30% | overseas_sold_stale(3.2d) |
-| Nintendo Switch  | ¥46,500 | ¥87,320 | +¥13,355 | 29% | overseas_sold_stale(3.2d) |
+| FUJIFILM X100VI | ¥255,000 | ¥563,860 | +¥183,438 | 72% | overseas_sold_stale(4.2d) |
+| FUJIFILM X100VI | ¥361,819 | ¥563,860 | +¥73,414 | 20% | overseas_sold_stale(4.2d) |
+| RICOH GR IIIx | ¥150,000 | ¥248,545 | +¥38,836 | 26% | overseas_sold_stale(4.2d) |
+| Nintendo Switch  | ¥46,000 | ¥87,384 | +¥13,907 | 30% | overseas_sold_stale(4.2d) |
+| Nintendo Switch  | ¥46,500 | ¥87,384 | +¥13,407 | 29% | overseas_sold_stale(4.2d) |
 
 ## 0件商品の診断
 
+### iPhone 17 Pro 256GB SIMフリー
+- buy候補 0 / sell候補 4 / stale除外 4 / 海外sold stale 0
+- 除外理由TOP5: [('price_zero', 4), ('stale_over_14d', 4), ('duplicate_price_collision', 1)]
+
 ### iPhone 17 Pro 512GB SIMフリー
-- buy候補 3 / sell候補 3 / stale除外 0 / 海外sold stale 0
-- 除外理由TOP5: [('price_zero', 4), ('duplicate_price_collision', 1)]
+- buy候補 0 / sell候補 3 / stale除外 3 / 海外sold stale 0
+- 除外理由TOP5: [('price_zero', 4), ('stale_over_14d', 3), ('duplicate_price_collision', 1)]
+
+### iPhone 17 Pro Max 256GB SIMフリー
+- buy候補 0 / sell候補 4 / stale除外 3 / 海外sold stale 0
+- 除外理由TOP5: [('price_zero', 4), ('stale_over_14d', 3), ('duplicate_price_collision', 1)]
 
 ### iPhone 17 Pro Max 512GB SIMフリー
 - buy候補 0 / sell候補 3 / stale除外 0 / 海外sold stale 0
@@ -82,8 +65,8 @@
 - 除外理由TOP5: []
 
 ### MacBook Air M4 13インチ
-- buy候補 2 / sell候補 0 / stale除外 3 / 海外sold stale 0
-- 除外理由TOP5: [('stale_over_14d', 3)]
+- buy候補 0 / sell候補 0 / stale除外 5 / 海外sold stale 0
+- 除外理由TOP5: [('stale_over_14d', 5)]
 
 ### MacBook Air M4 15インチ
 - buy候補 0 / sell候補 0 / stale除外 2 / 海外sold stale 0
@@ -125,9 +108,16 @@
 - buy候補 0 / sell候補 0 / stale除外 2 / 海外sold stale 0
 - 除外理由TOP5: [('stale_over_14d', 2)]
 
+### Nintendo Switch 2
+- buy候補 3 / sell候補 2 / stale除外 3 / 海外sold stale 0
+- 除外理由TOP5: [('price_zero', 8), ('stale_over_14d', 3)]
+- eBay sold を fresh化すると成立する候補:
+  - src_ebay ¥87,384 → 潜在 +¥13,907（ROI 30%）
+  - src_ebay ¥87,384 → 潜在 +¥13,407（ROI 29%）
+
 ### Nintendo Switch 2 マリオカートセット
-- buy候補 2 / sell候補 0 / stale除外 3 / 海外sold stale 0
-- 除外理由TOP5: [('stale_over_14d', 3)]
+- buy候補 0 / sell候補 0 / stale除外 5 / 海外sold stale 0
+- 除外理由TOP5: [('stale_over_14d', 5)]
 
 ### PlayStation 5 Digital Edition
 - buy候補 0 / sell候補 0 / stale除外 3 / 海外sold stale 0
@@ -151,9 +141,9 @@
 
 ### RICOH GR IIIx
 - buy候補 5 / sell候補 4 / stale除外 3 / 海外sold stale 0
-- 除外理由TOP5: [('stale_over_14d', 3), ('model_mismatch', 1), ('accessory_or_wrong_product', 1)]
+- 除外理由TOP5: [('stale_over_14d', 3), ('model_mismatch', 1)]
 - eBay sold を fresh化すると成立する候補:
-  - src_ebay ¥248,360 → 潜在 +¥38,688（ROI 26%）
+  - src_ebay ¥248,545 → 潜在 +¥38,836（ROI 26%）
 
 ### RICOH GR III HDF
 - buy候補 0 / sell候補 0 / stale除外 0 / 海外sold stale 0
@@ -164,14 +154,11 @@
 - 除外理由TOP5: []
 
 ### FUJIFILM X100VI
-- buy候補 9 / sell候補 0 / stale除外 3 / 海外sold stale 0
-- 除外理由TOP5: [('manual_over_auto_high', 6), ('stale_over_14d', 3), ('duplicate_price_collision', 1)]
+- buy候補 6 / sell候補 0 / stale除外 6 / 海外sold stale 0
+- 除外理由TOP5: [('stale_over_14d', 6), ('manual_over_auto_high', 6), ('duplicate_price_collision', 1)]
 - eBay sold を fresh化すると成立する候補:
-  - src_ebay ¥563,437 → 潜在 +¥265,500（ROI 152%）
-  - src_ebay ¥563,437 → 潜在 +¥262,410（ROI 147%）
-  - src_ebay ¥563,437 → 潜在 +¥260,350（ROI 145%）
-  - src_ebay ¥563,437 → 潜在 +¥183,100（ROI 72%）
-  - src_ebay ¥563,437 → 潜在 +¥73,076（ROI 20%）
+  - src_ebay ¥563,860 → 潜在 +¥183,438（ROI 72%）
+  - src_ebay ¥563,860 → 潜在 +¥73,414（ROI 20%）
 
 ### FUJIFILM GFX100RF
 - buy候補 0 / sell候補 1 / stale除外 0 / 海外sold stale 0

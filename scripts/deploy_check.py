@@ -6889,6 +6889,61 @@ def check() -> list[dict]:
                     "message": f"#731 Data Quality Accuracy 維持（{_dq_acc}/100）"
                                + ("" if _t731 else " ← Accuracy 低下")})
 
+    # ── eBay Real Canary ガード #732-#738 ──
+    _erc = _load_json_safe('exports/api_automation/ebay_real_canary.json') or {}
+    _erc_ok = isinstance(_erc, dict) and ('verdict' in _erc) and ('configuration' in _erc)
+    _erc_configured = (_erc.get("configuration", {}) or {}).get("EBAY_APP_ID") == "CONFIGURED"
+
+    # #732: eBay real canary report が存在
+    results.append({"level": "ok" if _erc_ok else "error", "check": "ebay_real_canary_report",
+                    "message": f"#732 eBay real canary report が存在（verdict={_erc.get('verdict','?')}）"
+                               + ("" if _erc_ok else " ← eBay real canary report が不足")})
+
+    # #733: verdict が有効値
+    _valid_v = {"EBAY_REAL_CANARY_PASS", "EBAY_ROLLOUT_BLOCKED",
+                "EBAY_CONFIGURATION_ERROR", "EBAY_PENDING_CONFIGURATION"}
+    _t733 = _erc_ok and _erc.get("verdict") in _valid_v
+    results.append({"level": "ok" if _t733 else "error", "check": "ebay_canary_verdict_valid",
+                    "message": f"#733 eBay Canary Verdict が有効（{_erc.get('verdict','?')}）"
+                               + ("" if _t733 else " ← verdict 不正")})
+
+    # #734: 架空PASS禁止 — 未設定/未呼出しで PASS を出していない
+    _t734 = _erc_ok and not (_erc.get("verdict") == "EBAY_REAL_CANARY_PASS"
+                             and _erc.get("real_api_called") is not True)
+    results.append({"level": "ok" if _t734 else "error", "check": "ebay_no_fake_pass",
+                    "message": "#734 未設定/未呼出しで EBAY_REAL_CANARY_PASS を出していない"
+                               + ("" if _t734 else " ← 架空PASSの疑い")})
+
+    # #735: real_api_called が configured と整合（未設定なら false）
+    _t735 = _erc_ok and (_erc_configured or _erc.get("real_api_called") is False)
+    results.append({"level": "ok" if _t735 else "error", "check": "ebay_real_api_called_consistent",
+                    "message": f"#735 real_api_called={_erc.get('real_api_called')} が設定状態と整合"
+                               + ("" if _t735 else " ← real_api_called が不整合")})
+
+    # #736: Dry Run Main Mutation = 0
+    _t736 = _erc_ok and _erc.get("dry_run_main_mutation", 1) == 0
+    results.append({"level": "ok" if _t736 else "error", "check": "ebay_dry_run_no_mutation",
+                    "message": f"#736 Dry Run Main Mutation = {_erc.get('dry_run_main_mutation','?')}（目標0）"
+                               + ("" if _t736 else " ← Dry Run で Main 変化")})
+
+    # #737: PASS の場合は精度条件を満たす（未達で PASS していない）
+    _em = _erc.get("metrics", {}) if _erc_ok else {}
+    if _erc.get("verdict") == "EBAY_REAL_CANARY_PASS":
+        _t737 = (_em.get("product_match_accuracy", 0) >= 0.99 and _em.get("capacity_match_accuracy") == 1.0
+                 and _em.get("model_match_accuracy") == 1.0 and _em.get("cross_product_main", 1) == 0)
+    else:
+        _t737 = True   # 非PASSは対象外
+    results.append({"level": "ok" if _t737 else "error", "check": "ebay_pass_meets_gate",
+                    "message": "#737 EBAY_REAL_CANARY_PASS は精度条件(Product>=99/Cap100/Model100)を満たす"
+                               + ("" if _t737 else " ← 精度未達で PASS")})
+
+    # #738: Stage 5 推奨は PASS 時のみ（非PASSで自動 stage 変更を推奨しない）
+    _t738 = _erc_ok and (_erc.get("verdict") == "EBAY_REAL_CANARY_PASS"
+                         or _erc.get("recommended_next_action") in (None, {}))
+    results.append({"level": "ok" if _t738 else "error", "check": "ebay_stage_recommend_gated",
+                    "message": "#738 Stage 5 推奨は Canary PASS 時のみ"
+                               + ("" if _t738 else " ← 非PASSで stage 変更を推奨")})
+
     return results
 
 

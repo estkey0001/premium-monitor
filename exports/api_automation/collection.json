@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-26 13:54 JST",
+  "generated_at": "2026-08-27 20:21 JST",
   "dry_run": true,
   "target_mode": "canary",
   "targets": [
@@ -11,7 +11,7 @@
   "results": {
     "ebay": {
       "api": "ebay",
-      "status": "disabled_kill_switch",
+      "status": "NOT_CONFIGURED",
       "configured": "not_configured",
       "observations": [],
       "health": {
@@ -34,7 +34,7 @@
     },
     "rakuten": {
       "api": "rakuten",
-      "status": "disabled_kill_switch",
+      "status": "NOT_CONFIGURED",
       "configured": "not_configured",
       "observations": [],
       "health": {
@@ -57,7 +57,7 @@
     },
     "yahoo": {
       "api": "yahoo",
-      "status": "disabled_kill_switch",
+      "status": "NOT_CONFIGURED",
       "configured": "not_configured",
       "observations": [],
       "health": {

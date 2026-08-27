@@ -2,9 +2,9 @@
   "api": "ebay",
   "configuration": {
     "EBAY_APP_ID": "NOT_CONFIGURED",
-    "ENABLE_EBAY_API": "true_or_default",
+    "ENABLE_EBAY_API": "false",
     "EBAY_API_STAGE": "0",
-    "API_DRY_RUN": "true(default)"
+    "API_DRY_RUN": true
   },
   "rollout_state": "NOT_CONFIGURED",
   "queries": [
@@ -107,16 +107,16 @@
   "dry_run_main_mutation": 0,
   "db_snapshot": {
     "before": {
-      "observations": 205,
-      "buyback_prices": 1210,
+      "observations": 23,
+      "buyback_prices": 141,
       "official_sum": 2474000
     },
     "after": {
-      "observations": 205,
-      "buyback_prices": 1210,
+      "observations": 23,
+      "buyback_prices": 141,
       "official_sum": 2474000
     }
   },
   "recommended_next_action": null,
-  "generated_at": "2026-08-27 20:21 JST"
+  "generated_at": "2026-08-27 23:31 JST"
 }

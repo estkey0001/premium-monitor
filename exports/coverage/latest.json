@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-26 13:54 JST",
+  "generated_at": "2026-08-27 23:31 JST",
   "total_products": 45,
   "covered_categories": 7,
   "coverage_score": 78,
@@ -29,10 +29,10 @@
     {
       "category": "game_console",
       "products": 5,
-      "main": 6,
+      "main": 2,
       "reference": 2,
-      "avg_profit": 35334,
-      "avg_roi": 0.2672
+      "avg_profit": 45300,
+      "avg_roi": 0.3526
     },
     {
       "category": "pc",

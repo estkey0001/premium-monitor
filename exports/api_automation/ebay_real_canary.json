@@ -1,0 +1,122 @@
+{
+  "api": "ebay",
+  "configuration": {
+    "EBAY_APP_ID": "NOT_CONFIGURED",
+    "ENABLE_EBAY_API": "true_or_default",
+    "EBAY_API_STAGE": "0",
+    "API_DRY_RUN": "true(default)"
+  },
+  "rollout_state": "NOT_CONFIGURED",
+  "queries": [
+    {
+      "expected_product_id": "prod_iphone17pro_256",
+      "brand": "Apple",
+      "model": "iPhone 17 Pro 256GB SIMフリー",
+      "query": "iPhone 17 Pro",
+      "excluded_terms": [
+        "case",
+        "cover",
+        "box only",
+        "for parts",
+        "replacement",
+        "screen protector",
+        "battery",
+        "charger",
+        "dummy",
+        "broken",
+        "repair",
+        "lens only",
+        "strap",
+        "bundle"
+      ]
+    },
+    {
+      "expected_product_id": "prod_iphone17pm_256",
+      "brand": "Apple",
+      "model": "iPhone 17 Pro Max 256GB SIMフリー",
+      "query": "iPhone 17 Pro Max",
+      "excluded_terms": [
+        "case",
+        "cover",
+        "box only",
+        "for parts",
+        "replacement",
+        "screen protector",
+        "battery",
+        "charger",
+        "dummy",
+        "broken",
+        "repair",
+        "lens only",
+        "strap",
+        "bundle"
+      ]
+    },
+    {
+      "expected_product_id": "prod_gr3x",
+      "brand": "RICOH",
+      "model": "RICOH GR IIIx",
+      "query": "GR IIIx",
+      "excluded_terms": [
+        "case",
+        "cover",
+        "box only",
+        "for parts",
+        "replacement",
+        "screen protector",
+        "battery",
+        "charger",
+        "dummy",
+        "broken",
+        "repair",
+        "lens only",
+        "strap",
+        "bundle"
+      ]
+    },
+    {
+      "expected_product_id": "prod_x100vi",
+      "brand": "FUJIFILM",
+      "model": "FUJIFILM X100VI",
+      "query": "X100VI",
+      "excluded_terms": [
+        "case",
+        "cover",
+        "box only",
+        "for parts",
+        "replacement",
+        "screen protector",
+        "battery",
+        "charger",
+        "dummy",
+        "broken",
+        "repair",
+        "lens only",
+        "strap",
+        "bundle"
+      ]
+    }
+  ],
+  "products_tested": 4,
+  "verdict": "EBAY_PENDING_CONFIGURATION",
+  "real_api_called": false,
+  "mode": "not_executed",
+  "note": "EBAY_APP_ID 未設定。実APIを呼ばず PENDING。PASS を偽らない。",
+  "listings_received": 0,
+  "metrics": {},
+  "dry_run_main_mutation": 0,
+  "db_snapshot": {
+    "before": {
+      "observations": 205,
+      "buyback_prices": 1210,
+      "official_sum": 2474000
+    },
+    "after": {
+      "observations": 205,
+      "buyback_prices": 1210,
+      "official_sum": 2474000
+    }
+  },
+  "recommended_next_action": null,
+  "generated_at": "2026-08-27 20:20 JST"
+}

@@ -289,6 +289,17 @@ jobs:
           RAKUTEN_API_STAGE: ${{ vars.RAKUTEN_API_STAGE || '0' }}
           YAHOO_API_STAGE: ${{ vars.YAHOO_API_STAGE || '0' }}
 
+      # eBay 専用 実Canary（EBAY_APP_ID 設定時のみ実API・未設定は PENDING）
+      - name: eBay real API canary
+        run: python scripts/ebay_real_canary.py
+        continue-on-error: true
+        env:
+          PYTHONPATH: .
+          EBAY_APP_ID: ${{ secrets.EBAY_APP_ID }}
+          ENABLE_EBAY_API: ${{ vars.ENABLE_EBAY_API || 'false' }}
+          API_DRY_RUN: ${{ vars.API_DRY_RUN || 'true' }}
+          EBAY_API_STAGE: ${{ vars.EBAY_API_STAGE || '0' }}
+
       - name: API automation audit
         run: python scripts/audit_api_automation.py
         continue-on-error: true

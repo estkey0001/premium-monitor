@@ -1,22 +1,9 @@
 # AI Notification Engine
 
-生成: 2026-08-27 23:31 JST
-イベント 2件 / 抑制 0件
-配信チャネル: ['discord', 'telegram'] / 状態: {'discord': 'pending(未設定)', 'telegram': 'pending(未設定)'}
+生成: 2026-08-29 00:53 JST
+イベント 0件 / 抑制 0件
+配信チャネル: ['discord', 'telegram'] / 状態: {'discord': 'no_events', 'telegram': 'no_events'}
 
 ## 通知イベント（優先度順）
 
-### [High] PRICE_DROP
-```
-📉 価格下落
-PlayStation 5 Pro
-Mercari sold ¥154,999 → ¥129,000（-¥25,999）
-```
-
-### [Medium] ROI_UP
-```
-⬆️ ROI改善
-PlayStation 5 Pro
-ROI 11% → 35%
-```
-
+（本日は新規通知なし）

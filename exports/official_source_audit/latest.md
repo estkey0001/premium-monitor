@@ -1,6 +1,6 @@
 # Official Source Registry & Validation
 
-> 生成: 2026-08-29 00:21 JST / 公式ソース登録・検証（利益/AI/Opportunity/Notification/Capital/Execution は不変）
+> 生成: 2026-08-29 19:12 JST / 公式ソース登録・検証（利益/AI/Opportunity/Notification/Capital/Execution は不変）
 
 ## メーカー別サマリ
 | Maker | Products | URL verified | HTTP200 | exact match | price auto | high conf | failed |

@@ -1,17 +1,17 @@
-# データ取得品質レポート（2026-08-29 00:53 JST）
+# データ取得品質レポート（2026-08-29 19:44 JST）
 
 ## 取得成功率
 - 全対象店舗数: 16
-- 成功店舗数: 4
-- 全失敗店舗数: 10
-- ジョブ成功率: 27.3%（OK 15 / 失敗 36 / SKIP 4 / 計 55）
+- 成功店舗数: 5
+- 全失敗店舗数: 9
+- ジョブ成功率: 30.9%（OK 17 / 失敗 34 / SKIP 4 / 計 55）
 
 ## 前回比較
 - 前回成功率: 27.3%
-- 今回成功率: 27.3%
-- 変化: 0.0pt（横ばい）
-- 7日移動平均: 31.2%
-- 主要失敗理由 TOP5: product_not_listed 8, rate_limited_429 6, http_403 6, site_blocked 6, price_not_found 4
+- 今回成功率: 30.9%
+- 変化: +3.6pt（改善）
+- 7日移動平均: 30.9%
+- 主要失敗理由 TOP5: product_not_listed 6, rate_limited_429 6, http_403 6, site_blocked 6, price_not_found 4
 
 ## 店舗別成功率（低い順）
 - 2ndstreet（optional）: 0%（OK 0/失敗 4・price_not_found）
@@ -21,40 +21,39 @@
 - hardoff（optional）: 0%（OK 0/失敗 2・http_404）
 - iosys: 0%（OK 0/失敗 6・http_403）
 - janpara（optional）: 0%（OK 0/失敗 6・rate_limited_429）
-- mobile_ichiban: 0%（OK 0/失敗 5・product_not_listed）
 - pasoko（optional）: 0%（OK 0/失敗 2・product_not_listed）
 - sofmap（optional）: 0%（OK 0/失敗 2・service_unavailable）
 - surugaya（optional）: 0%（OK 0/失敗 2・site_blocked）
 - tsutaya（optional）: 0%（OK 0/失敗 0・not_supported）
+- mobile_ichiban: 40%（OK 2/失敗 3・product_not_listed）
 
 ## 商品別成功率
-- ps5_pro: 10.0%
+- ps5_pro: 20.0%
 - switch2: 22.2%
 - iphone17pro256: 37.5%
 - iphone17pro512: 37.5%
-- iphone17pm256: 37.5%
 - iphone17pm512: 37.5%
+- iphone17pm256: 50.0%
 
 ## 連続失敗店舗（2回以上）
-- 2ndstreet: 120回連続
-- bookoff: 120回連続
-- dosupara: 120回連続
-- geo_mobile: 120回連続
-- hardoff: 120回連続
-- janpara: 120回連続
-- pasoko: 120回連続
-- sofmap: 120回連続
-- surugaya: 120回連続
-- tsutaya: 120回連続
-- iosys: 53回連続
-- mobile_ichiban: 2回連続
+- 2ndstreet: 121回連続
+- bookoff: 121回連続
+- dosupara: 121回連続
+- geo_mobile: 121回連続
+- hardoff: 121回連続
+- janpara: 121回連続
+- pasoko: 121回連続
+- sofmap: 121回連続
+- surugaya: 121回連続
+- tsutaya: 121回連続
+- iosys: 54回連続
 
 ## 改善優先順位（required店舗）
 1. iosys（失敗6 / http_403）
-2. mobile_ichiban（失敗5 / product_not_listed）
+2. mobile_ichiban（失敗3 / product_not_listed）
 
 ## 失敗理由（内訳）
-- product_not_listed: 8件
+- product_not_listed: 6件
 - rate_limited_429: 6件
 - http_403: 6件
 - site_blocked: 6件
@@ -70,16 +69,16 @@
   - prod_gr3x: 5店舗
   - prod_gr4_hdf: 5店舗
   - prod_gr4_mono: 5店舗
+  - prod_iphone17pm_256: 4店舗
   - prod_iphone17pro_256: 3店舗
   - prod_iphone17pro_512: 3店舗
-  - prod_iphone17pm_256: 3店舗
   - prod_iphone17pm_512: 3店舗
   - prod_switch2: 2店舗
+  - prod_ps5_pro: 2店舗
   - prod_gfx100rf: 1店舗
   - prod_xt5: 1店舗
   - prod_gr3: 1店舗
   - prod_a7rv: 1店舗
-  - prod_a1ii: 1店舗
 
 ## ランキングに使えたデータ数
 - Beginner: 3 件

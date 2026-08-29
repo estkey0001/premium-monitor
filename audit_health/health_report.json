@@ -1,33 +1,33 @@
 {
-  "generated_at": "2026-08-29 00:53 JST",
+  "generated_at": "2026-08-29 19:44 JST",
   "date": "2026-08-29",
   "health_score": {
-    "data_quality": 20.8,
+    "data_quality": 21.0,
     "profit_discovery": 25,
     "source_health": 14.5,
-    "link_quality": 4.8,
+    "link_quality": 4.9,
     "freshness": 7.1,
-    "total": 72.2
+    "total": 72.5
   },
   "data_quality": {
-    "total_obs": 248,
-    "usable_obs": 117,
+    "total_obs": 249,
+    "usable_obs": 119,
     "stale_count": 73,
-    "stale_rate": 0.2944,
+    "stale_rate": 0.2932,
     "zero_count": 32,
-    "zero_rate": 0.129,
-    "item_url_rate": 0.4798,
-    "search_url_rate": 0.2258,
-    "manual_rate": 0.5161,
+    "zero_rate": 0.1285,
+    "item_url_rate": 0.4859,
+    "search_url_rate": 0.2249,
+    "manual_rate": 0.51,
     "api_rate": 0.0,
-    "html_rate": 0.0081
+    "html_rate": 0.008
   },
   "profit": {
-    "main_route_count": 2,
+    "main_route_count": 4,
     "reference_route_count": 5,
-    "max_profit": 46000,
-    "avg_profit": 45500,
-    "avg_roi": 0.3541,
+    "max_profit": 46200,
+    "avg_profit": 45650,
+    "avg_roi": 0.3553,
     "main_route_products": [
       "prod_ps5_pro"
     ]
@@ -173,6 +173,18 @@
       },
       "n": 6
     },
+    "モバイル一番": {
+      "success_count": 5,
+      "stale_count": 3,
+      "zero_count": 0,
+      "item_url_rate": 1.0,
+      "freshness": 0.4,
+      "success_rate": 1.0,
+      "confidence": {
+        "high": 5
+      },
+      "n": 5
+    },
     "eBay sold(新品)": {
       "success_count": 5,
       "stale_count": 0,
@@ -244,18 +256,6 @@
         "high": 4
       },
       "n": 4
-    },
-    "モバイル一番": {
-      "success_count": 3,
-      "stale_count": 3,
-      "zero_count": 0,
-      "item_url_rate": 1.0,
-      "freshness": 0.0,
-      "success_rate": 1.0,
-      "confidence": {
-        "high": 3
-      },
-      "n": 3
     },
     "Amazon新品出品": {
       "success_count": 3,
@@ -366,35 +366,35 @@
       "n": 2
     },
     "Amazon JP (新品出品)": {
-      "success_count": 2,
+      "success_count": 1,
       "stale_count": 0,
       "zero_count": 0,
       "item_url_rate": 0.0,
       "freshness": 1.0,
       "success_rate": 1.0,
       "confidence": {
-        "medium": 2
+        "medium": 1
       },
-      "n": 2
+      "n": 1
     }
   },
   "diff_vs_prev": {
     "available": true,
     "stale_rate": {
-      "prev": 0.2967,
-      "cur": 0.2944
+      "prev": 0.2944,
+      "cur": 0.2932
     },
     "zero_rate": {
-      "prev": 0.1301,
-      "cur": 0.129
+      "prev": 0.129,
+      "cur": 0.1285
     },
     "item_url_rate": {
-      "prev": 0.4837,
-      "cur": 0.4798
+      "prev": 0.4798,
+      "cur": 0.4859
     },
     "main_route_count": {
       "prev": 2,
-      "cur": 2
+      "cur": 4
     },
     "reference_route_count": {
       "prev": 5,
@@ -410,18 +410,17 @@
       "取得成功率 0%: セカンドストリート"
     ],
     "warning": [
-      "item_url率 低下",
-      "item_url率 48% (<50%)"
+      "item_url率 49% (<50%)"
     ],
     "info": [
-      "検証済み利益ルート 2件 / 最大 +¥46,000"
+      "検証済み利益ルート 4件 / 最大 +¥46,200"
     ]
   },
   "improvements_top10": [
     {
       "stars": 5,
       "action": "EBAY_APP_ID 設定",
-      "effect": "+¥323,616（参考5→main昇格）",
+      "effect": "+¥328,162（参考5→main昇格）",
       "effort": "1時間"
     },
     {

@@ -1,6 +1,6 @@
 # Execution Intelligence Engine
 
-生成: 2026-08-29 00:53 JST
+生成: 2026-08-29 19:44 JST
 
 ## Execution Dashboard
 
@@ -8,7 +8,7 @@
 - Execution Success Rate: **31.0%**
 - Prediction Accuracy: 予測 38.6667% vs 実績 31.0%（誤差 7.7pt）
 - Notification Accuracy: 通知61 / BUY通知1 / WATCH→BUY 1 / 偽陽性率 20%
-- Capital Allocation: 期待 ¥500,000 → 実 ¥0（精度 0.0）
+- Capital Allocation: 期待 ¥507,800 → 実 ¥0（精度 0.0）
 
 ## 補正係数（学習・利益ロジックには不適用）
 

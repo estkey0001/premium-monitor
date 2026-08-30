@@ -1,28 +1,28 @@
 # Execution Intelligence Engine
 
-生成: 2026-08-29 19:44 JST
+生成: 2026-08-30 18:51 JST
 
 ## Execution Dashboard
 
-- OPEN 73 / CLOSED 84（成功 26）
+- OPEN 74 / CLOSED 87（成功 27）
 - Execution Success Rate: **31.0%**
-- Prediction Accuracy: 予測 38.6667% vs 実績 31.0%（誤差 7.7pt）
-- Notification Accuracy: 通知61 / BUY通知1 / WATCH→BUY 1 / 偽陽性率 20%
+- Prediction Accuracy: 予測 38.6897% vs 実績 31.0%（誤差 7.7pt）
+- Notification Accuracy: 通知61 / BUY通知1 / WATCH→BUY 1 / 偽陽性率 21%
 - Capital Allocation: 期待 ¥507,800 → 実 ¥0（精度 0.0）
 
 ## 補正係数（学習・利益ロジックには不適用）
 
-- Opportunity Score 係数: 1.035
-- Success Probability 係数: 0.802
+- Opportunity Score 係数: 1.036
+- Success Probability 係数: 0.801
 - Risk Score 係数: 1.0
-- サンプル数 84（信頼度 high）
+- サンプル数 87（信頼度 high）
 
 ## Execution Metrics（カテゴリ別）
 
 | カテゴリ | 件数 | 成功率 | 平均利益 | 平均ROI | 平均保有日数 |
 |---|---|---|---|---|---|
-| camera | 67 | 39% | ¥4,928 | 3.3% | 1.1642日 |
-| game_console | 17 | 0% | ¥-1,500 | -3.0% | 5.0日 |
+| camera | 69 | 39% | ¥4,970 | 3.3% | 1.1739日 |
+| game_console | 18 | 0% | ¥-1,500 | -3.0% | 5.0日 |
 
 ## Insights — 今週学んだこと TOP10
 

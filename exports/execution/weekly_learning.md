@@ -1,8 +1,8 @@
-# Weekly Learning Report — 2026-08-29
+# Weekly Learning Report — 2026-08-30
 
-- 実行成功率: 31.0%（CLOSED 84 / 成功 26）
-- 予測精度: 予測 38.6667% vs 実績 31.0%（誤差 7.7pt）
-- 学習: prob係数 0.802 / score係数 1.035（信頼度 high）
+- 実行成功率: 31.0%（CLOSED 87 / 成功 27）
+- 予測精度: 予測 38.6897% vs 実績 31.0%（誤差 7.7pt）
+- 学習: prob係数 0.801 / score係数 1.036（信頼度 high）
 
 ## 今週学んだこと TOP10
 

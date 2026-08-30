@@ -1,22 +1,22 @@
 {
-  "generated_at": "2026-08-29 19:44 JST",
-  "open_count": 73,
-  "closed_count": 84,
-  "success_count": 26,
+  "generated_at": "2026-08-30 18:51 JST",
+  "open_count": 74,
+  "closed_count": 87,
+  "success_count": 27,
   "execution_success_rate": 31.0,
   "prediction_accuracy": {
-    "closed_count": 84,
-    "predicted_success_prob_avg": 38.6667,
+    "closed_count": 87,
+    "predicted_success_prob_avg": 38.6897,
     "realized_success_rate": 31.0,
     "error_points": 7.7,
-    "opportunity_score_avg": 60.4881
+    "opportunity_score_avg": 60.6782
   },
   "notification_accuracy": {
     "total_notifications": 61,
     "buy_notifications": 1,
     "watch_to_buy": 1,
-    "notification_success_rate": 0.426,
-    "false_positive_rate": 0.202
+    "notification_success_rate": 0.443,
+    "false_positive_rate": 0.207
   },
   "allocation_accuracy": {
     "budget": 3000000,
@@ -27,15 +27,15 @@
   "execution_metrics": {
     "by_product": {
       "RICOH GR IIIx": {
-        "count": 26,
-        "success": 26,
+        "count": 27,
+        "success": 27,
         "success_rate": 1.0,
         "avg_profit": 12700,
         "avg_roi": 0.085,
         "avg_hold_days": 3.0
       },
       "FUJIFILM X100VI": {
-        "count": 41,
+        "count": 42,
         "success": 0,
         "success_rate": 0.0,
         "avg_profit": 0,
@@ -43,7 +43,7 @@
         "avg_hold_days": 0.0
       },
       "Nintendo Switch 2": {
-        "count": 17,
+        "count": 18,
         "success": 0,
         "success_rate": 0.0,
         "avg_profit": -1500,
@@ -53,15 +53,15 @@
     },
     "by_category": {
       "camera": {
-        "count": 67,
-        "success": 26,
-        "success_rate": 0.388,
-        "avg_profit": 4928,
-        "avg_roi": 0.033,
-        "avg_hold_days": 1.1642
+        "count": 69,
+        "success": 27,
+        "success_rate": 0.391,
+        "avg_profit": 4970,
+        "avg_roi": 0.0333,
+        "avg_hold_days": 1.1739
       },
       "game_console": {
-        "count": 17,
+        "count": 18,
         "success": 0,
         "success_rate": 0.0,
         "avg_profit": -1500,
@@ -71,15 +71,15 @@
     },
     "by_maker": {
       "RICOH": {
-        "count": 26,
-        "success": 26,
+        "count": 27,
+        "success": 27,
         "success_rate": 1.0,
         "avg_profit": 12700,
         "avg_roi": 0.085,
         "avg_hold_days": 3.0
       },
       "FUJIFILM": {
-        "count": 41,
+        "count": 42,
         "success": 0,
         "success_rate": 0.0,
         "avg_profit": 0,
@@ -87,7 +87,7 @@
         "avg_hold_days": 0.0
       },
       "Nintendo": {
-        "count": 17,
+        "count": 18,
         "success": 0,
         "success_rate": 0.0,
         "avg_profit": -1500,
@@ -97,11 +97,11 @@
     }
   },
   "learning_coefficients": {
-    "opportunity_score_coeff": 1.035,
-    "success_probability_coeff": 0.802,
+    "opportunity_score_coeff": 1.036,
+    "success_probability_coeff": 0.801,
     "risk_score_coeff": 1.0,
     "note": "補正係数のみ学習。利益判定ロジックには適用しない（表示・将来の予測校正用）。",
-    "sample_size": 84,
+    "sample_size": 87,
     "confidence": "high"
   },
   "insights_top10": [

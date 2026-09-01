@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-31 19:12 JST",
+  "generated_at": "2026-09-01 18:17 JST",
   "scope": "販売/買取/二次流通の取得品質・正規化・同一性（利益/AI/UI/SaaSロジックは不変）",
   "rules": {
     "identity": "容量・型番・カラー・新品/中古 を厳格一致",
@@ -28,18 +28,18 @@
       }
     },
     "resale": {
-      "observations": 29,
-      "with_price": 29,
+      "observations": 28,
+      "with_price": 28,
       "exact_match": 0,
       "high_confidence": 0,
-      "fresh": 29,
+      "fresh": 28,
       "main_promotable": 0,
       "zero": 0,
       "stale": 0,
-      "rejected": 7,
+      "rejected": 5,
       "failure_reasons": {
         "duplicate_price_collision": 4,
-        "accessory_or_wrong_product": 3
+        "accessory_or_wrong_product": 1
       }
     },
     "retail": {
@@ -281,11 +281,11 @@
       "failure_reasons": {}
     },
     "ヤフオク (新品/未使用落札)": {
-      "observations": 10,
-      "with_price": 10,
+      "observations": 11,
+      "with_price": 11,
       "exact_match": 0,
       "high_confidence": 0,
-      "fresh": 10,
+      "fresh": 11,
       "main_promotable": 0,
       "zero": 0,
       "stale": 0,
@@ -307,17 +307,17 @@
       "failure_reasons": {}
     },
     "Amazon JP (新品出品)": {
-      "observations": 3,
-      "with_price": 3,
+      "observations": 1,
+      "with_price": 1,
       "exact_match": 0,
       "high_confidence": 0,
-      "fresh": 3,
+      "fresh": 1,
       "main_promotable": 0,
       "zero": 0,
       "stale": 0,
-      "rejected": 3,
+      "rejected": 1,
       "failure_reasons": {
-        "accessory_or_wrong_product": 3
+        "accessory_or_wrong_product": 1
       }
     }
   },
@@ -386,6 +386,20 @@
         "manual_over_auto_high": 1
       }
     },
+    "ヤフオク (新品/未使用落札)": {
+      "observations": 11,
+      "with_price": 11,
+      "exact_match": 0,
+      "high_confidence": 0,
+      "fresh": 11,
+      "main_promotable": 0,
+      "zero": 0,
+      "stale": 0,
+      "rejected": 4,
+      "failure_reasons": {
+        "duplicate_price_collision": 4
+      }
+    },
     "ソフマップ": {
       "observations": 10,
       "with_price": 8,
@@ -400,20 +414,6 @@
         "stale_over_14d": 4,
         "price_zero": 2,
         "manual_over_auto_high": 1
-      }
-    },
-    "ヤフオク (新品/未使用落札)": {
-      "observations": 10,
-      "with_price": 10,
-      "exact_match": 0,
-      "high_confidence": 0,
-      "fresh": 10,
-      "main_promotable": 0,
-      "zero": 0,
-      "stale": 0,
-      "rejected": 4,
-      "failure_reasons": {
-        "duplicate_price_collision": 4
       }
     },
     "マップカメラ": {
@@ -508,20 +508,6 @@
       "rejected": 0,
       "failure_reasons": {}
     },
-    "Amazon JP (新品出品)": {
-      "observations": 3,
-      "with_price": 3,
-      "exact_match": 0,
-      "high_confidence": 0,
-      "fresh": 3,
-      "main_promotable": 0,
-      "zero": 0,
-      "stale": 0,
-      "rejected": 3,
-      "failure_reasons": {
-        "accessory_or_wrong_product": 3
-      }
-    },
     "Yahoo Auction sold": {
       "observations": 3,
       "with_price": 3,
@@ -557,16 +543,30 @@
       "stale": 0,
       "rejected": 0,
       "failure_reasons": {}
+    },
+    "Amazon JP (新品出品)": {
+      "observations": 1,
+      "with_price": 1,
+      "exact_match": 0,
+      "high_confidence": 0,
+      "fresh": 1,
+      "main_promotable": 0,
+      "zero": 0,
+      "stale": 0,
+      "rejected": 1,
+      "failure_reasons": {
+        "accessory_or_wrong_product": 1
+      }
     }
   },
   "identity_audit": {
-    "checked": 251,
+    "checked": 250,
     "capacity_mismatch": 0,
     "wrong_model": 0,
-    "accessory": 12,
-    "not_body_only": 12,
+    "accessory": 10,
+    "not_body_only": 10,
     "condition_dist": {
-      "new": 226,
+      "new": 225,
       "used": 25
     }
   },
@@ -574,14 +574,14 @@
     "has_price_type": 1.0,
     "shipping_separated": 1.0,
     "points_separated": 1.0,
-    "tradein_excluded": 0.8851,
+    "tradein_excluded": 0.8844,
     "buyback_labeled": 120,
     "price_type_dist": {
       "buyback_price": 120,
-      "shop_sale_price": 28,
+      "shop_sale_price": 26,
       "overseas_listing_price": 5,
       "flea_listing_price": 5,
-      "flea_sold_price": 16
+      "flea_sold_price": 17
     },
     "note": "格納価格は税込本体。送料/ポイント/下取は price_context に混入させず別扱い"
   },
@@ -793,7 +793,7 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 9.3,
+      "first_seen": 10.3,
       "last_seen": 0.0,
       "risk_level": "medium",
       "possible_reason": [
@@ -854,8 +854,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 21.3,
-      "last_seen": 21.3,
+      "first_seen": 22.3,
+      "last_seen": 22.3,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -884,8 +884,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 21.3,
-      "last_seen": 21.3,
+      "first_seen": 22.3,
+      "last_seen": 22.3,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -914,8 +914,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 21.3,
-      "last_seen": 21.3,
+      "first_seen": 22.3,
+      "last_seen": 22.3,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"

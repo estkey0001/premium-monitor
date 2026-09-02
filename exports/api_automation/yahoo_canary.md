@@ -1,6 +1,6 @@
 # yahoo Real Canary
 
-> 生成: 2026-09-01 18:17 JST
+> 生成: 2026-09-02 17:36 JST
 
 - status: **PENDING_USER_CONFIGURATION** / rollout_state: NOT_CONFIGURED / real_api_called: False
 

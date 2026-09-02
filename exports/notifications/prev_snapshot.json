@@ -1,8 +1,10 @@
 {
-  "date": "2026-09-01",
-  "health_score": 72.4,
-  "stale_rate": 0.292,
+  "date": "2026-09-02",
+  "health_score": 72.5,
+  "stale_rate": 0.2897,
   "main_products": [
+    "prod_gr3x",
+    "prod_gr4_mono",
     "prod_ps5_pro"
   ],
   "reference_products": [
@@ -11,43 +13,33 @@
     "prod_x100vi"
   ],
   "ops": {
-    "prod_x100vi": {
-      "action": "WAIT",
-      "buy_now": "WATCH",
-      "roi": 0.7253,
-      "net_profit": 184958,
-      "buy_price": 255000,
-      "product": "FUJIFILM X100VI",
-      "buy_source": "Yahoo Auction sold",
-      "kind": "reference"
-    },
-    "prod_ps5_pro": {
-      "action": "ALERT",
-      "buy_now": "WATCH",
-      "roi": 0.3581,
-      "net_profit": 46200,
-      "buy_price": 129000,
-      "product": "PlayStation 5 Pro",
-      "buy_source": "Mercari sold",
+    "prod_gr4_mono": {
+      "action": "BUY",
+      "buy_now": "BUY",
+      "roi": 0.3313,
+      "net_profit": 49888,
+      "buy_price": 150600,
+      "product": "RICOH GR IV Monochrome",
+      "buy_source": "Amazon JP (新品出品)",
       "kind": "main"
     },
     "prod_gr3x": {
       "action": "WAIT",
       "buy_now": "WATCH",
-      "roi": 0.2633,
-      "net_profit": 39501,
-      "buy_price": 150000,
+      "roi": 0.735,
+      "net_profit": 80446,
+      "buy_price": 109449,
       "product": "RICOH GR IIIx",
-      "buy_source": "Mercari sold",
+      "buy_source": "Amazon JP (新品出品)",
       "kind": "reference"
     },
-    "prod_switch2": {
+    "prod_x100vi": {
       "action": "WAIT",
       "buy_now": "WATCH",
-      "roi": 0.3073,
-      "net_profit": 14134,
-      "buy_price": 46000,
-      "product": "Nintendo Switch 2",
+      "roi": 0.7289,
+      "net_profit": 185860,
+      "buy_price": 255000,
+      "product": "FUJIFILM X100VI",
       "buy_source": "Yahoo Auction sold",
       "kind": "reference"
     }

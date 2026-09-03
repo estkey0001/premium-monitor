@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-02 17:36 JST",
+  "generated_at": "2026-09-03 17:39 JST",
   "schema_version": 1,
   "engine": "beta",
   "scope": "初回体験最適化・運用準備・βテスト計測・フィードバック（AI/利益/DataQualityロジックは不変）",
@@ -108,7 +108,7 @@
               "description": "銘柄: RICOH GR IV Monochrome\n判定: BUY（Opportunity Score 82/100）\n根拠: RICOH GR IV Monochrome: BUY。国内成立 利益¥59,888/ROI40%/Score82\n※ 参考情報です。購入・応募の自動実行は行いません。最終判断はご自身で。",
               "color": 5814783,
               "footer": {
-                "text": "2026-09-02 17:36 JST / closed beta"
+                "text": "2026-09-03 17:39 JST / closed beta"
               }
             }
           ]
@@ -169,7 +169,7 @@
     "notification_count": 65,
     "opportunity_count": 10,
     "capital_usage_rate": null,
-    "execution_usage_rate": 32.3,
+    "execution_usage_rate": 31.6,
     "feedback_count": 0,
     "note": "利用率/Feedback件数はβ運用開始後に Analytics(匿名集計) から投入する器。"
   },

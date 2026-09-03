@@ -1,14 +1,12 @@
 {
-  "date": "2026-09-02",
-  "health_score": 72.5,
-  "stale_rate": 0.2897,
+  "date": "2026-09-03",
+  "health_score": 72.4,
+  "stale_rate": 0.292,
   "main_products": [
-    "prod_gr3x",
     "prod_gr4_mono",
     "prod_ps5_pro"
   ],
   "reference_products": [
-    "prod_gr3x",
     "prod_switch2",
     "prod_x100vi"
   ],
@@ -23,23 +21,33 @@
       "buy_source": "Amazon JP (新品出品)",
       "kind": "main"
     },
-    "prod_gr3x": {
-      "action": "WAIT",
-      "buy_now": "WATCH",
-      "roi": 0.735,
-      "net_profit": 80446,
-      "buy_price": 109449,
-      "product": "RICOH GR IIIx",
-      "buy_source": "Amazon JP (新品出品)",
-      "kind": "reference"
-    },
     "prod_x100vi": {
       "action": "WAIT",
       "buy_now": "WATCH",
-      "roi": 0.7289,
-      "net_profit": 185860,
+      "roi": 0.7176,
+      "net_profit": 182987,
       "buy_price": 255000,
       "product": "FUJIFILM X100VI",
+      "buy_source": "Yahoo Auction sold",
+      "kind": "reference"
+    },
+    "prod_ps5_pro": {
+      "action": "ALERT",
+      "buy_now": "WATCH",
+      "roi": 0.362,
+      "net_profit": 46700,
+      "buy_price": 129000,
+      "product": "PlayStation 5 Pro",
+      "buy_source": "Mercari sold",
+      "kind": "main"
+    },
+    "prod_switch2": {
+      "action": "WAIT",
+      "buy_now": "WATCH",
+      "roi": 0.3008,
+      "net_profit": 13839,
+      "buy_price": 46000,
+      "product": "Nintendo Switch 2",
       "buy_source": "Yahoo Auction sold",
       "kind": "reference"
     }

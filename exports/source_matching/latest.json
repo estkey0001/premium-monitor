@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-02 17:36 JST",
+  "generated_at": "2026-09-03 17:39 JST",
   "scope": "商品同一性マッチング精度（利益/AI/UI/SaaS/DQ思想は不変）",
   "accuracy": {
     "product_match_accuracy": 1.0,
@@ -10,7 +10,7 @@
     "detected_mismatches_total": 3,
     "detected_mismatches_rejected": 3,
     "independently_verified_exact": 11,
-    "unverifiable_trusted": 233,
+    "unverifiable_trusted": 231,
     "accessory_misclassification": 0,
     "false_main_promotion": 0,
     "duplicate_patterns": 11,
@@ -26,10 +26,10 @@
     "false_main_promotion": 0
   },
   "totals": {
-    "total": 252,
-    "product_mismatch_or_unverified": 241,
-    "model_unverifiable": 233,
-    "main_rejected": 241,
+    "total": 250,
+    "product_mismatch_or_unverified": 239,
+    "model_unverifiable": 231,
+    "main_rejected": 239,
     "model_match": 16,
     "accessory_detected": 10,
     "manual_review_required": 85,
@@ -297,11 +297,11 @@
       "main_eligible": 0
     },
     "Amazon JP (新品出品)": {
-      "total": 3,
-      "product_mismatch_or_unverified": 3,
-      "model_unverifiable": 3,
+      "total": 2,
+      "product_mismatch_or_unverified": 2,
+      "model_unverifiable": 2,
       "accessory_detected": 1,
-      "main_rejected": 3,
+      "main_rejected": 2,
       "exact_product_match": 0,
       "capacity_mismatch": 0,
       "model_mismatch": 0,
@@ -318,10 +318,10 @@
       "main_eligible": 0
     },
     "Mercari sold": {
-      "total": 3,
-      "product_mismatch_or_unverified": 3,
-      "model_unverifiable": 3,
-      "main_rejected": 3,
+      "total": 2,
+      "product_mismatch_or_unverified": 2,
+      "model_unverifiable": 2,
+      "main_rejected": 2,
       "exact_product_match": 0,
       "capacity_mismatch": 0,
       "model_mismatch": 0,
@@ -582,7 +582,7 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 11.2,
+      "first_seen": 12.2,
       "last_seen": 0.0,
       "risk_level": "medium",
       "possible_reason": [
@@ -643,8 +643,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 23.2,
-      "last_seen": 23.2,
+      "first_seen": 24.2,
+      "last_seen": 24.2,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -673,8 +673,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 23.2,
-      "last_seen": 23.2,
+      "first_seen": 24.2,
+      "last_seen": 24.2,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -703,8 +703,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 23.2,
-      "last_seen": 23.2,
+      "first_seen": 24.2,
+      "last_seen": 24.2,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -904,7 +904,7 @@
     },
     {
       "source": "Mercari sold",
-      "observations": 3,
+      "observations": 2,
       "score": 75,
       "identity": 0.0,
       "capacity": 1.0,
@@ -991,17 +991,6 @@
       "main_eligible": 1
     },
     {
-      "source": "Amazon JP (新品出品)",
-      "observations": 3,
-      "score": 72,
-      "identity": 0.0,
-      "capacity": 1.0,
-      "model": 1.0,
-      "condition": 1.0,
-      "freshness": 1.0,
-      "main_eligible": 0
-    },
-    {
       "source": "じゃんぱら",
       "observations": 34,
       "score": 71,
@@ -1021,6 +1010,17 @@
       "model": 0.893,
       "condition": 1.0,
       "freshness": 0.893,
+      "main_eligible": 0
+    },
+    {
+      "source": "Amazon JP (新品出品)",
+      "observations": 2,
+      "score": 70,
+      "identity": 0.0,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 1.0,
       "main_eligible": 0
     }
   ],

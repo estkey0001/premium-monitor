@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-02 17:36 JST",
+  "generated_at": "2026-09-03 17:39 JST",
   "accounts": {
     "total": 3,
     "by_tier": {
@@ -51,13 +51,13 @@
     ]
   },
   "metrics": {
-    "main_route_count": 12,
-    "reference_route_count": 6,
+    "main_route_count": 8,
+    "reference_route_count": 4,
     "opportunities": 10,
-    "notifications_today": 4,
+    "notifications_today": 0,
     "notifications_total": 65,
-    "health_score": 72.5,
-    "execution_success_rate": 32.3,
-    "prediction_error_pt": 6.7
+    "health_score": 72.4,
+    "execution_success_rate": 31.6,
+    "prediction_error_pt": 7.3
   }
 }

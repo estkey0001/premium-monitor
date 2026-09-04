@@ -1,35 +1,30 @@
 # Pro 利益ルート（normalized_price_observations 由来・検証済み）
 
-生成: 2026-09-03 17:39 JST
+生成: 2026-09-04 17:42 JST
 
-- **main 利益ルート: 8件**（route_confidence high/medium のみ）
-- 参考ルート(海外sold stale・要fresh化): 4件
-- confidence別: {'medium': 8} / route_type別: {'shop_to_buyback': 4, 'flea_to_buyback': 4}
+- **main 利益ルート: 4件**（route_confidence high/medium のみ）
+- 参考ルート(海外sold stale・要fresh化): 3件
+- confidence別: {'medium': 4} / route_type別: {'flea_to_buyback': 4}
 
-- 最大利益: RICOH GR IV Monochrome +¥59,888（Amazon JP (新品出品)→マップカメラ, ROI 40%）
-- 最大ROI: RICOH GR IV Monochrome ROI 40%（+¥59,888）
+- 最大利益: PlayStation 5 Pro +¥47,800（Yahoo Auction sold→買取商店, ROI 37%）
+- 最大ROI: PlayStation 5 Pro ROI 37%（+¥47,800）
 
 ## main 利益ルート
 
 | product | buy | buy¥ | sell | sell¥ | net | ROI | conf | type |
 |---|---|---|---|---|---|---|---|---|
-| RICOH GR IV Mono | shop_sale_price | ¥150,600 | buyback_price | ¥215,000 | **+¥59,888** | 40% | medium | shop_to_buyback |
-| RICOH GR IV Mono | shop_sale_price | ¥150,600 | buyback_price | ¥212,000 | **+¥56,888** | 38% | medium | shop_to_buyback |
-| RICOH GR IV Mono | shop_sale_price | ¥150,600 | buyback_price | ¥210,000 | **+¥54,888** | 36% | medium | shop_to_buyback |
-| RICOH GR IV Mono | shop_sale_price | ¥150,600 | buyback_price | ¥205,000 | **+¥49,888** | 33% | medium | shop_to_buyback |
 | PlayStation 5 Pr | flea_sold_price | ¥128,000 | buyback_price | ¥180,300 | **+¥47,800** | 37% | medium | flea_to_buyback |
-| PlayStation 5 Pr | flea_sold_price | ¥128,000 | buyback_price | ¥180,200 | **+¥47,700** | 37% | medium | flea_to_buyback |
+| PlayStation 5 Pr | flea_sold_price | ¥128,000 | buyback_price | ¥180,300 | **+¥47,800** | 37% | medium | flea_to_buyback |
 | PlayStation 5 Pr | flea_sold_price | ¥129,000 | buyback_price | ¥180,300 | **+¥46,800** | 36% | medium | flea_to_buyback |
-| PlayStation 5 Pr | flea_sold_price | ¥129,000 | buyback_price | ¥180,200 | **+¥46,700** | 36% | medium | flea_to_buyback |
+| PlayStation 5 Pr | flea_sold_price | ¥129,000 | buyback_price | ¥180,300 | **+¥46,800** | 36% | medium | flea_to_buyback |
 
 ## 参考ルート（海外sold が stale・fresh化すれば成立）
 
 | product | buy¥ | sell(海外sold)¥ | 潜在net | ROI | stale |
 |---|---|---|---|---|---|
-| FUJIFILM X100VI | ¥255,000 | ¥563,296 | +¥182,987 | 72% | overseas_sold_stale(12.3d) |
-| FUJIFILM X100VI | ¥361,819 | ¥563,296 | +¥72,963 | 20% | overseas_sold_stale(12.3d) |
-| Nintendo Switch  | ¥46,000 | ¥87,299 | +¥13,839 | 30% | overseas_sold_stale(12.3d) |
-| Nintendo Switch  | ¥46,500 | ¥87,299 | +¥13,339 | 29% | overseas_sold_stale(12.3d) |
+| FUJIFILM X100VI | ¥255,000 | ¥552,490 | +¥174,341 | 68% | overseas_sold_stale(13.3d) |
+| FUJIFILM X100VI | ¥361,819 | ¥552,490 | +¥64,317 | 18% | overseas_sold_stale(13.3d) |
+| Nintendo Switch  | ¥46,500 | ¥85,677 | +¥12,042 | 26% | overseas_sold_stale(13.3d) |
 
 ## 0件商品の診断
 
@@ -110,11 +105,10 @@
 - 除外理由TOP5: [('stale_over_14d', 2)]
 
 ### Nintendo Switch 2
-- buy候補 3 / sell候補 2 / stale除外 3 / 海外sold stale 0
+- buy候補 2 / sell候補 2 / stale除外 3 / 海外sold stale 0
 - 除外理由TOP5: [('price_zero', 8), ('stale_over_14d', 3)]
 - eBay sold を fresh化すると成立する候補:
-  - src_ebay ¥87,299 → 潜在 +¥13,839（ROI 30%）
-  - src_ebay ¥87,299 → 潜在 +¥13,339（ROI 29%）
+  - src_ebay ¥85,677 → 潜在 +¥12,042（ROI 26%）
 
 ### Nintendo Switch 2 マリオカートセット
 - buy候補 0 / sell候補 0 / stale除外 5 / 海外sold stale 0
@@ -133,8 +127,12 @@
 - 除外理由TOP5: [('stale_over_14d', 4), ('manual_over_auto_high', 1)]
 
 ### RICOH GR IV HDF
-- buy候補 3 / sell候補 3 / stale除外 0 / 海外sold stale 0
-- 除外理由TOP5: [('duplicate_price_collision', 2), ('accessory_or_wrong_product', 1)]
+- buy候補 2 / sell候補 3 / stale除外 0 / 海外sold stale 0
+- 除外理由TOP5: [('duplicate_price_collision', 2)]
+
+### RICOH GR IV Monochrome
+- buy候補 3 / sell候補 4 / stale除外 0 / 海外sold stale 0
+- 除外理由TOP5: [('duplicate_price_collision', 1)]
 
 ### RICOH GR IIIx
 - buy候補 4 / sell候補 4 / stale除外 3 / 海外sold stale 0
@@ -152,8 +150,8 @@
 - buy候補 6 / sell候補 0 / stale除外 6 / 海外sold stale 0
 - 除外理由TOP5: [('stale_over_14d', 6), ('manual_over_auto_high', 6), ('duplicate_price_collision', 1)]
 - eBay sold を fresh化すると成立する候補:
-  - src_ebay ¥563,296 → 潜在 +¥182,987（ROI 72%）
-  - src_ebay ¥563,296 → 潜在 +¥72,963（ROI 20%）
+  - src_ebay ¥552,490 → 潜在 +¥174,341（ROI 68%）
+  - src_ebay ¥552,490 → 潜在 +¥64,317（ROI 18%）
 
 ### FUJIFILM GFX100RF
 - buy候補 0 / sell候補 1 / stale除外 0 / 海外sold stale 0

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-04 17:42 JST",
+  "generated_at": "2026-09-05 17:22 JST",
   "scope": "商品同一性マッチング精度（利益/AI/UI/SaaS/DQ思想は不変）",
   "accuracy": {
     "product_match_accuracy": 1.0,
@@ -9,14 +9,14 @@
     "confirmed_mismatches_active": 0,
     "detected_mismatches_total": 3,
     "detected_mismatches_rejected": 3,
-    "independently_verified_exact": 11,
+    "independently_verified_exact": 5,
     "unverifiable_trusted": 227,
     "accessory_misclassification": 0,
     "false_main_promotion": 0,
     "duplicate_patterns": 11,
     "high_risk_duplicates": 3,
     "duplicate_reviewed_pct": 0.3636,
-    "manual_review_queue": 84
+    "manual_review_queue": 85
   },
   "targets": {
     "product_match": ">=0.99",
@@ -27,15 +27,15 @@
   },
   "totals": {
     "total": 246,
-    "product_mismatch_or_unverified": 235,
+    "product_mismatch_or_unverified": 241,
     "model_unverifiable": 227,
-    "main_rejected": 235,
+    "main_rejected": 241,
     "model_match": 16,
-    "accessory_detected": 9,
-    "manual_review_required": 84,
+    "accessory_detected": 12,
+    "manual_review_required": 85,
     "model_mismatch": 3,
-    "exact_product_match": 11,
-    "main_eligible": 11
+    "exact_product_match": 5,
+    "main_eligible": 5
   },
   "by_source": {
     "メーカー公式/定価": {
@@ -74,14 +74,14 @@
     },
     "買取商店": {
       "total": 17,
-      "product_mismatch_or_unverified": 11,
+      "product_mismatch_or_unverified": 17,
       "model_unverifiable": 17,
-      "main_rejected": 11,
+      "main_rejected": 17,
       "manual_review_required": 2,
-      "exact_product_match": 6,
-      "main_eligible": 6,
+      "exact_product_match": 0,
       "capacity_mismatch": 0,
-      "model_mismatch": 0
+      "model_mismatch": 0,
+      "main_eligible": 0
     },
     "じゃんぱら": {
       "total": 34,
@@ -286,31 +286,22 @@
       "main_eligible": 0
     },
     "ヤフオク (新品/未使用落札)": {
-      "total": 10,
-      "product_mismatch_or_unverified": 10,
-      "model_unverifiable": 10,
-      "main_rejected": 10,
-      "manual_review_required": 10,
+      "total": 11,
+      "product_mismatch_or_unverified": 11,
+      "model_unverifiable": 11,
+      "main_rejected": 11,
+      "manual_review_required": 11,
       "exact_product_match": 0,
       "capacity_mismatch": 0,
       "model_mismatch": 0,
       "main_eligible": 0
     },
-    "Mercari sold": {
-      "total": 2,
-      "product_mismatch_or_unverified": 2,
-      "model_unverifiable": 2,
-      "main_rejected": 2,
-      "exact_product_match": 0,
-      "capacity_mismatch": 0,
-      "model_mismatch": 0,
-      "main_eligible": 0
-    },
-    "Yahoo Auction sold": {
-      "total": 2,
-      "product_mismatch_or_unverified": 2,
-      "model_unverifiable": 2,
-      "main_rejected": 2,
+    "Amazon JP (新品出品)": {
+      "total": 3,
+      "product_mismatch_or_unverified": 3,
+      "model_unverifiable": 3,
+      "accessory_detected": 3,
+      "main_rejected": 3,
       "exact_product_match": 0,
       "capacity_mismatch": 0,
       "model_mismatch": 0,
@@ -571,7 +562,7 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 13.2,
+      "first_seen": 14.2,
       "last_seen": 0.0,
       "risk_level": "medium",
       "possible_reason": [
@@ -632,8 +623,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 25.2,
-      "last_seen": 25.2,
+      "first_seen": 26.2,
+      "last_seen": 26.2,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -662,8 +653,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 25.2,
-      "last_seen": 25.2,
+      "first_seen": 26.2,
+      "last_seen": 26.2,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -692,8 +683,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 25.2,
-      "last_seen": 25.2,
+      "first_seen": 26.2,
+      "last_seen": 26.2,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -714,17 +705,6 @@
       "condition": 1.0,
       "freshness": 1.0,
       "main_eligible": 4
-    },
-    {
-      "source": "買取商店",
-      "observations": 17,
-      "score": 81,
-      "identity": 0.353,
-      "capacity": 1.0,
-      "model": 1.0,
-      "condition": 1.0,
-      "freshness": 0.471,
-      "main_eligible": 6
     },
     {
       "source": "メーカー公式/定価",
@@ -826,113 +806,14 @@
       "main_eligible": 0
     },
     {
-      "source": "eBay sold(新品)",
-      "observations": 5,
-      "score": 75,
-      "identity": 0.0,
-      "capacity": 1.0,
-      "model": 1.0,
-      "condition": 1.0,
-      "freshness": 1.0,
-      "main_eligible": 0
-    },
-    {
-      "source": "メルカリ未使用",
-      "observations": 5,
-      "score": 75,
-      "identity": 0.0,
-      "capacity": 1.0,
-      "model": 1.0,
-      "condition": 1.0,
-      "freshness": 1.0,
-      "main_eligible": 0
-    },
-    {
-      "source": "Amazon新品出品",
-      "observations": 3,
-      "score": 75,
-      "identity": 0.0,
-      "capacity": 1.0,
-      "model": 1.0,
-      "condition": 1.0,
-      "freshness": 1.0,
-      "main_eligible": 0
-    },
-    {
-      "source": "楽天市場新品",
-      "observations": 2,
-      "score": 75,
-      "identity": 0.0,
-      "capacity": 1.0,
-      "model": 1.0,
-      "condition": 1.0,
-      "freshness": 1.0,
-      "main_eligible": 0
-    },
-    {
       "source": "ヤフオク (新品/未使用落札)",
-      "observations": 10,
+      "observations": 11,
       "score": 75,
       "identity": 0.0,
       "capacity": 1.0,
       "model": 1.0,
       "condition": 1.0,
       "freshness": 1.0,
-      "main_eligible": 0
-    },
-    {
-      "source": "Mercari sold",
-      "observations": 2,
-      "score": 75,
-      "identity": 0.0,
-      "capacity": 1.0,
-      "model": 1.0,
-      "condition": 1.0,
-      "freshness": 1.0,
-      "main_eligible": 0
-    },
-    {
-      "source": "Yahoo Auction sold",
-      "observations": 2,
-      "score": 75,
-      "identity": 0.0,
-      "capacity": 1.0,
-      "model": 1.0,
-      "condition": 1.0,
-      "freshness": 1.0,
-      "main_eligible": 0
-    },
-    {
-      "source": "src_ebay",
-      "observations": 6,
-      "score": 75,
-      "identity": 0.0,
-      "capacity": 1.0,
-      "model": 1.0,
-      "condition": 1.0,
-      "freshness": 1.0,
-      "main_eligible": 0
-    },
-    {
-      "source": "マップカメラ",
-      "observations": 9,
-      "score": 73,
-      "identity": 0.0,
-      "capacity": 1.0,
-      "model": 1.0,
-      "condition": 1.0,
-      "freshness": 0.556,
-      "main_eligible": 0
-    },
-    {
-      "source": "カメラのキタムラ",
-      "observations": 9,
-      "score": 73,
-      "identity": 0.0,
-      "capacity": 1.0,
-      "model": 1.0,
-      "condition": 1.0,
-      "freshness": 0.556,
       "main_eligible": 0
     },
     {
@@ -947,6 +828,17 @@
       "main_eligible": 0
     },
     {
+      "source": "買取商店",
+      "observations": 17,
+      "score": 72,
+      "identity": 0.0,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 0.353,
+      "main_eligible": 0
+    },
+    {
       "source": "イオシス",
       "observations": 20,
       "score": 72,
@@ -955,17 +847,6 @@
       "model": 1.0,
       "condition": 1.0,
       "freshness": 0.3,
-      "main_eligible": 0
-    },
-    {
-      "source": "ソフマップ",
-      "observations": 10,
-      "score": 72,
-      "identity": 0.0,
-      "capacity": 1.0,
-      "model": 1.0,
-      "condition": 1.0,
-      "freshness": 0.6,
       "main_eligible": 0
     },
     {
@@ -987,18 +868,117 @@
       "capacity": 1.0,
       "model": 1.0,
       "condition": 1.0,
-      "freshness": 0.265,
+      "freshness": 0.176,
+      "main_eligible": 0
+    },
+    {
+      "source": "ソフマップ",
+      "observations": 10,
+      "score": 70,
+      "identity": 0.0,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 0.2,
+      "main_eligible": 0
+    },
+    {
+      "source": "マップカメラ",
+      "observations": 9,
+      "score": 70,
+      "identity": 0.0,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 0.0,
+      "main_eligible": 0
+    },
+    {
+      "source": "カメラのキタムラ",
+      "observations": 9,
+      "score": 70,
+      "identity": 0.0,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 0.0,
+      "main_eligible": 0
+    },
+    {
+      "source": "eBay sold(新品)",
+      "observations": 5,
+      "score": 70,
+      "identity": 0.0,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 0.0,
+      "main_eligible": 0
+    },
+    {
+      "source": "メルカリ未使用",
+      "observations": 5,
+      "score": 70,
+      "identity": 0.0,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 0.0,
+      "main_eligible": 0
+    },
+    {
+      "source": "Amazon新品出品",
+      "observations": 3,
+      "score": 70,
+      "identity": 0.0,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 0.0,
+      "main_eligible": 0
+    },
+    {
+      "source": "楽天市場新品",
+      "observations": 2,
+      "score": 70,
+      "identity": 0.0,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 0.0,
+      "main_eligible": 0
+    },
+    {
+      "source": "src_ebay",
+      "observations": 6,
+      "score": 70,
+      "identity": 0.0,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 0.0,
       "main_eligible": 0
     },
     {
       "source": "フジヤカメラ",
       "observations": 28,
-      "score": 70,
+      "score": 69,
       "identity": 0.0,
       "capacity": 1.0,
       "model": 0.893,
       "condition": 1.0,
-      "freshness": 0.893,
+      "freshness": 0.714,
+      "main_eligible": 0
+    },
+    {
+      "source": "Amazon JP (新品出品)",
+      "observations": 3,
+      "score": 65,
+      "identity": 0.0,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 1.0,
       "main_eligible": 0
     }
   ],

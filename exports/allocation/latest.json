@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-04 17:42 JST",
+  "generated_at": "2026-09-05 17:22 JST",
   "account_id": "default",
   "cash_reserve_ratio": 0.2,
   "concentration_caps": {
@@ -13,114 +13,19 @@
       "product_id": "prod_x100vi",
       "action": "WAIT",
       "kind": "reference",
-      "buy_price": 255000,
-      "net_profit": 174341,
-      "roi": 0.6837,
+      "buy_price": 361819,
+      "net_profit": 64713,
+      "roi": 0.1789,
       "success_probability": 30,
-      "opportunity_score": 69,
+      "opportunity_score": 41,
       "reproducibility_score": 30,
       "holding_period": "1ヶ月",
-      "expected_value": 52302,
-      "capital_efficiency": 0.2051,
-      "risk_score": 47,
+      "expected_value": 19414,
+      "capital_efficiency": 0.0537,
+      "risk_score": 48,
       "liquidity_score": 25,
       "category": "camera",
       "maker": "FUJIFILM"
-    },
-    {
-      "product": "PlayStation 5 Pro",
-      "product_id": "prod_ps5_pro",
-      "action": "ALERT",
-      "kind": "main",
-      "buy_price": 128000,
-      "net_profit": 47800,
-      "roi": 0.3734,
-      "success_probability": 54,
-      "opportunity_score": 69,
-      "reproducibility_score": 60,
-      "holding_period": "数日",
-      "expected_value": 25812,
-      "capital_efficiency": 0.2017,
-      "risk_score": 47,
-      "liquidity_score": 85,
-      "category": "game_console",
-      "maker": "Sony"
-    },
-    {
-      "product": "PlayStation 5 Pro",
-      "product_id": "prod_ps5_pro",
-      "action": "ALERT",
-      "kind": "main",
-      "buy_price": 128000,
-      "net_profit": 47800,
-      "roi": 0.3734,
-      "success_probability": 54,
-      "opportunity_score": 69,
-      "reproducibility_score": 60,
-      "holding_period": "数日",
-      "expected_value": 25812,
-      "capital_efficiency": 0.2017,
-      "risk_score": 47,
-      "liquidity_score": 85,
-      "category": "game_console",
-      "maker": "Sony"
-    },
-    {
-      "product": "PlayStation 5 Pro",
-      "product_id": "prod_ps5_pro",
-      "action": "ALERT",
-      "kind": "main",
-      "buy_price": 129000,
-      "net_profit": 46800,
-      "roi": 0.3628,
-      "success_probability": 54,
-      "opportunity_score": 69,
-      "reproducibility_score": 60,
-      "holding_period": "数日",
-      "expected_value": 25272,
-      "capital_efficiency": 0.1959,
-      "risk_score": 46,
-      "liquidity_score": 85,
-      "category": "game_console",
-      "maker": "Sony"
-    },
-    {
-      "product": "PlayStation 5 Pro",
-      "product_id": "prod_ps5_pro",
-      "action": "ALERT",
-      "kind": "main",
-      "buy_price": 129000,
-      "net_profit": 46800,
-      "roi": 0.3628,
-      "success_probability": 54,
-      "opportunity_score": 69,
-      "reproducibility_score": 60,
-      "holding_period": "数日",
-      "expected_value": 25272,
-      "capital_efficiency": 0.1959,
-      "risk_score": 46,
-      "liquidity_score": 85,
-      "category": "game_console",
-      "maker": "Sony"
-    },
-    {
-      "product": "Nintendo Switch 2",
-      "product_id": "prod_switch2",
-      "action": "WAIT",
-      "kind": "reference",
-      "buy_price": 46500,
-      "net_profit": 12042,
-      "roi": 0.259,
-      "success_probability": 30,
-      "opportunity_score": 57,
-      "reproducibility_score": 30,
-      "holding_period": "1ヶ月",
-      "expected_value": 3613,
-      "capital_efficiency": 0.0777,
-      "risk_score": 47,
-      "liquidity_score": 25,
-      "category": "game_console",
-      "maker": "Nintendo"
     }
   ],
   "default_budget": 3000000,
@@ -136,316 +41,101 @@
       "budget": 1000000,
       "investable": 800000,
       "cash_reserve_ratio": 0.2,
-      "allocations": [
-        {
-          "product": "PlayStation 5 Pro",
-          "product_id": "prod_ps5_pro",
-          "units": 2,
-          "unit_price": 128000,
-          "total": 256000,
-          "expected_profit": 95600,
-          "expected_value": 51624,
-          "category": "game_console",
-          "maker": "Sony",
-          "holding_period": "数日",
-          "roi": 0.3734,
-          "risk_score": 47,
-          "liquidity_score": 85
-        },
-        {
-          "product": "PlayStation 5 Pro",
-          "product_id": "prod_ps5_pro",
-          "units": 1,
-          "unit_price": 128000,
-          "total": 128000,
-          "expected_profit": 47800,
-          "expected_value": 25812,
-          "category": "game_console",
-          "maker": "Sony",
-          "holding_period": "数日",
-          "roi": 0.3734,
-          "risk_score": 47,
-          "liquidity_score": 85
-        }
-      ],
+      "allocations": [],
       "waiting": [
         {
           "product": "FUJIFILM X100VI",
           "reason": "海外価格更新待ち（eBay sold）"
-        },
-        {
-          "product": "Nintendo Switch 2",
-          "reason": "海外価格更新待ち（eBay sold）"
-        },
-        {
-          "product": "PlayStation 5 Pro",
-          "reason": "予算/集中リスク制約で配分なし"
-        },
-        {
-          "product": "PlayStation 5 Pro",
-          "reason": "予算/集中リスク制約で配分なし"
         }
       ],
-      "allocated": 384000,
-      "cash": 616000,
-      "cash_ratio": 0.616,
-      "expected_profit": 143400,
-      "expected_roi": 0.3734,
-      "avg_risk_score": 47,
-      "diversification_score": 55,
-      "max_concentration": 0.256
+      "allocated": 0,
+      "cash": 1000000,
+      "cash_ratio": 1.0,
+      "expected_profit": 0,
+      "expected_roi": 0.0,
+      "avg_risk_score": 0,
+      "diversification_score": 0,
+      "max_concentration": 0.0
     },
     "3000000": {
       "budget": 3000000,
       "investable": 2400000,
       "cash_reserve_ratio": 0.2,
-      "allocations": [
-        {
-          "product": "PlayStation 5 Pro",
-          "product_id": "prod_ps5_pro",
-          "units": 7,
-          "unit_price": 128000,
-          "total": 896000,
-          "expected_profit": 334600,
-          "expected_value": 180684,
-          "category": "game_console",
-          "maker": "Sony",
-          "holding_period": "数日",
-          "roi": 0.3734,
-          "risk_score": 47,
-          "liquidity_score": 85
-        },
-        {
-          "product": "PlayStation 5 Pro",
-          "product_id": "prod_ps5_pro",
-          "units": 4,
-          "unit_price": 128000,
-          "total": 512000,
-          "expected_profit": 191200,
-          "expected_value": 103248,
-          "category": "game_console",
-          "maker": "Sony",
-          "holding_period": "数日",
-          "roi": 0.3734,
-          "risk_score": 47,
-          "liquidity_score": 85
-        }
-      ],
+      "allocations": [],
       "waiting": [
         {
           "product": "FUJIFILM X100VI",
           "reason": "海外価格更新待ち（eBay sold）"
-        },
-        {
-          "product": "Nintendo Switch 2",
-          "reason": "海外価格更新待ち（eBay sold）"
-        },
-        {
-          "product": "PlayStation 5 Pro",
-          "reason": "予算/集中リスク制約で配分なし"
-        },
-        {
-          "product": "PlayStation 5 Pro",
-          "reason": "予算/集中リスク制約で配分なし"
         }
       ],
-      "allocated": 1408000,
-      "cash": 1592000,
-      "cash_ratio": 0.5307,
-      "expected_profit": 525800,
-      "expected_roi": 0.3734,
-      "avg_risk_score": 47,
-      "diversification_score": 53,
-      "max_concentration": 0.2987
+      "allocated": 0,
+      "cash": 3000000,
+      "cash_ratio": 1.0,
+      "expected_profit": 0,
+      "expected_roi": 0.0,
+      "avg_risk_score": 0,
+      "diversification_score": 0,
+      "max_concentration": 0.0
     },
     "5000000": {
       "budget": 5000000,
       "investable": 4000000,
       "cash_reserve_ratio": 0.2,
-      "allocations": [
-        {
-          "product": "PlayStation 5 Pro",
-          "product_id": "prod_ps5_pro",
-          "units": 11,
-          "unit_price": 128000,
-          "total": 1408000,
-          "expected_profit": 525800,
-          "expected_value": 283932,
-          "category": "game_console",
-          "maker": "Sony",
-          "holding_period": "数日",
-          "roi": 0.3734,
-          "risk_score": 47,
-          "liquidity_score": 85
-        },
-        {
-          "product": "PlayStation 5 Pro",
-          "product_id": "prod_ps5_pro",
-          "units": 7,
-          "unit_price": 128000,
-          "total": 896000,
-          "expected_profit": 334600,
-          "expected_value": 180684,
-          "category": "game_console",
-          "maker": "Sony",
-          "holding_period": "数日",
-          "roi": 0.3734,
-          "risk_score": 47,
-          "liquidity_score": 85
-        }
-      ],
+      "allocations": [],
       "waiting": [
         {
           "product": "FUJIFILM X100VI",
           "reason": "海外価格更新待ち（eBay sold）"
-        },
-        {
-          "product": "Nintendo Switch 2",
-          "reason": "海外価格更新待ち（eBay sold）"
-        },
-        {
-          "product": "PlayStation 5 Pro",
-          "reason": "予算/集中リスク制約で配分なし"
-        },
-        {
-          "product": "PlayStation 5 Pro",
-          "reason": "予算/集中リスク制約で配分なし"
         }
       ],
-      "allocated": 2304000,
-      "cash": 2696000,
-      "cash_ratio": 0.5392,
-      "expected_profit": 860400,
-      "expected_roi": 0.3734,
-      "avg_risk_score": 47,
-      "diversification_score": 54,
-      "max_concentration": 0.2816
+      "allocated": 0,
+      "cash": 5000000,
+      "cash_ratio": 1.0,
+      "expected_profit": 0,
+      "expected_roi": 0.0,
+      "avg_risk_score": 0,
+      "diversification_score": 0,
+      "max_concentration": 0.0
     },
     "10000000": {
       "budget": 10000000,
       "investable": 8000000,
       "cash_reserve_ratio": 0.2,
-      "allocations": [
-        {
-          "product": "PlayStation 5 Pro",
-          "product_id": "prod_ps5_pro",
-          "units": 23,
-          "unit_price": 128000,
-          "total": 2944000,
-          "expected_profit": 1099400,
-          "expected_value": 593676,
-          "category": "game_console",
-          "maker": "Sony",
-          "holding_period": "数日",
-          "roi": 0.3734,
-          "risk_score": 47,
-          "liquidity_score": 85
-        },
-        {
-          "product": "PlayStation 5 Pro",
-          "product_id": "prod_ps5_pro",
-          "units": 14,
-          "unit_price": 128000,
-          "total": 1792000,
-          "expected_profit": 669200,
-          "expected_value": 361368,
-          "category": "game_console",
-          "maker": "Sony",
-          "holding_period": "数日",
-          "roi": 0.3734,
-          "risk_score": 47,
-          "liquidity_score": 85
-        }
-      ],
+      "allocations": [],
       "waiting": [
         {
           "product": "FUJIFILM X100VI",
           "reason": "海外価格更新待ち（eBay sold）"
-        },
-        {
-          "product": "Nintendo Switch 2",
-          "reason": "海外価格更新待ち（eBay sold）"
-        },
-        {
-          "product": "PlayStation 5 Pro",
-          "reason": "予算/集中リスク制約で配分なし"
-        },
-        {
-          "product": "PlayStation 5 Pro",
-          "reason": "予算/集中リスク制約で配分なし"
         }
       ],
-      "allocated": 4736000,
-      "cash": 5264000,
-      "cash_ratio": 0.5264,
-      "expected_profit": 1768600,
-      "expected_roi": 0.3734,
-      "avg_risk_score": 47,
-      "diversification_score": 53,
-      "max_concentration": 0.2944
+      "allocated": 0,
+      "cash": 10000000,
+      "cash_ratio": 1.0,
+      "expected_profit": 0,
+      "expected_roi": 0.0,
+      "avg_risk_score": 0,
+      "diversification_score": 0,
+      "max_concentration": 0.0
     },
     "30000000": {
       "budget": 30000000,
       "investable": 24000000,
       "cash_reserve_ratio": 0.2,
-      "allocations": [
-        {
-          "product": "PlayStation 5 Pro",
-          "product_id": "prod_ps5_pro",
-          "units": 70,
-          "unit_price": 128000,
-          "total": 8960000,
-          "expected_profit": 3346000,
-          "expected_value": 1806840,
-          "category": "game_console",
-          "maker": "Sony",
-          "holding_period": "数日",
-          "roi": 0.3734,
-          "risk_score": 47,
-          "liquidity_score": 85
-        },
-        {
-          "product": "PlayStation 5 Pro",
-          "product_id": "prod_ps5_pro",
-          "units": 42,
-          "unit_price": 128000,
-          "total": 5376000,
-          "expected_profit": 2007600,
-          "expected_value": 1084104,
-          "category": "game_console",
-          "maker": "Sony",
-          "holding_period": "数日",
-          "roi": 0.3734,
-          "risk_score": 47,
-          "liquidity_score": 85
-        }
-      ],
+      "allocations": [],
       "waiting": [
         {
           "product": "FUJIFILM X100VI",
           "reason": "海外価格更新待ち（eBay sold）"
-        },
-        {
-          "product": "Nintendo Switch 2",
-          "reason": "海外価格更新待ち（eBay sold）"
-        },
-        {
-          "product": "PlayStation 5 Pro",
-          "reason": "予算/集中リスク制約で配分なし"
-        },
-        {
-          "product": "PlayStation 5 Pro",
-          "reason": "予算/集中リスク制約で配分なし"
         }
       ],
-      "allocated": 14336000,
-      "cash": 15664000,
-      "cash_ratio": 0.5221,
-      "expected_profit": 5353600,
-      "expected_roi": 0.3734,
-      "avg_risk_score": 47,
-      "diversification_score": 53,
-      "max_concentration": 0.2987
+      "allocated": 0,
+      "cash": 30000000,
+      "cash_ratio": 1.0,
+      "expected_profit": 0,
+      "expected_roi": 0.0,
+      "avg_risk_score": 0,
+      "diversification_score": 0,
+      "max_concentration": 0.0
     }
   }
 }

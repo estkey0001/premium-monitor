@@ -1,22 +1,26 @@
 {
-  "generated_at": "2026-09-04T17:42:31+09:00",
+  "generated_at": "2026-09-05T17:22:30+09:00",
   "collection": {
     "total_shops": 16,
-    "shops_with_success": 5,
-    "shops_all_failed": 9,
+    "shops_with_success": 4,
+    "shops_all_failed": 10,
     "total_jobs": 55,
-    "ok_jobs": 17,
-    "failed_jobs": 34,
+    "ok_jobs": 11,
+    "failed_jobs": 40,
     "skip_jobs": 4,
-    "success_rate_pct": 30.9
+    "success_rate_pct": 20.0
   },
   "comparison": {
     "prev_success_rate_pct": 30.9,
-    "current_success_rate_pct": 30.9,
-    "delta_pct": 0.0,
-    "trend": "横ばい",
-    "moving_avg_7d_pct": 30.9,
+    "current_success_rate_pct": 20.0,
+    "delta_pct": -10.9,
+    "trend": "悪化",
+    "moving_avg_7d_pct": 29.3,
     "top5_failure_reasons": [
+      {
+        "reason": "price_not_found",
+        "count": 10
+      },
       {
         "reason": "product_not_listed",
         "count": 6
@@ -32,14 +36,14 @@
       {
         "reason": "site_blocked",
         "count": 6
-      },
-      {
-        "reason": "price_not_found",
-        "count": 4
       }
     ]
   },
   "failure_reasons": [
+    {
+      "reason": "price_not_found",
+      "count": 10
+    },
     {
       "reason": "product_not_listed",
       "count": 6
@@ -57,10 +61,6 @@
       "count": 6
     },
     {
-      "reason": "price_not_found",
-      "count": 4
-    },
-    {
       "reason": "http_404",
       "count": 4
     },
@@ -76,14 +76,14 @@
   "effective_data": {
     "products_with_valid_buyback": 26,
     "valid_buyback_by_product": {
-      "prod_x100vi": 7,
+      "prod_x100vi": 1,
       "prod_gfx100rf": 1,
       "prod_xt5": 1,
       "prod_gr3": 1,
-      "prod_gr3x": 5,
-      "prod_gr4": 7,
-      "prod_gr4_hdf": 5,
-      "prod_gr4_mono": 5,
+      "prod_gr3x": 1,
+      "prod_gr4": 1,
+      "prod_gr4_hdf": 1,
+      "prod_gr4_mono": 1,
       "prod_a7rv": 1,
       "prod_a1ii": 1,
       "prod_a7cr": 1,
@@ -96,21 +96,21 @@
       "prod_z9": 1,
       "prod_q3": 1,
       "prod_m11": 1,
-      "prod_iphone17pro_256": 3,
-      "prod_iphone17pro_512": 3,
-      "prod_iphone17pm_256": 4,
-      "prod_iphone17pm_512": 3,
-      "prod_switch2": 2,
-      "prod_ps5_pro": 2
+      "prod_iphone17pro_256": 2,
+      "prod_iphone17pro_512": 2,
+      "prod_iphone17pm_256": 3,
+      "prod_iphone17pm_512": 2,
+      "prod_switch2": 1,
+      "prod_ps5_pro": 1
     }
   },
   "ranking_usable": {
-    "beginner": 3,
-    "pro": 10,
+    "beginner": 2,
+    "pro": 1,
     "reason_if_empty": null
   },
   "sedori_usable": {
-    "routes": 13,
+    "routes": 1,
     "reason_if_empty": null
   },
   "overseas": {
@@ -178,6 +178,14 @@
       "optional": true
     },
     {
+      "shop_id": "kaitori_shouten",
+      "ok": 0,
+      "failed": 6,
+      "success_rate_pct": 0,
+      "top_reason": "price_not_found",
+      "optional": false
+    },
+    {
       "shop_id": "pasoko",
       "ok": 0,
       "failed": 2,
@@ -234,14 +242,6 @@
       "optional": false
     },
     {
-      "shop_id": "kaitori_shouten",
-      "ok": 6,
-      "failed": 0,
-      "success_rate_pct": 100,
-      "top_reason": "—",
-      "optional": false
-    },
-    {
       "shop_id": "netoff",
       "ok": 4,
       "failed": 0,
@@ -251,57 +251,57 @@
     }
   ],
   "product_success_rates": {
-    "iphone17pro256": 37.5,
-    "iphone17pro512": 37.5,
-    "iphone17pm256": 50.0,
-    "iphone17pm512": 37.5,
-    "switch2": 22.2,
-    "ps5_pro": 20.0
+    "iphone17pro256": 25.0,
+    "iphone17pro512": 25.0,
+    "iphone17pm256": 37.5,
+    "iphone17pm512": 25.0,
+    "switch2": 11.1,
+    "ps5_pro": 10.0
   },
   "consecutive_failed_shops": [
     {
       "shop_id": "2ndstreet",
-      "consecutive_failures": 127
+      "consecutive_failures": 128
     },
     {
       "shop_id": "bookoff",
-      "consecutive_failures": 127
+      "consecutive_failures": 128
     },
     {
       "shop_id": "dosupara",
-      "consecutive_failures": 127
+      "consecutive_failures": 128
     },
     {
       "shop_id": "geo_mobile",
-      "consecutive_failures": 127
+      "consecutive_failures": 128
     },
     {
       "shop_id": "hardoff",
-      "consecutive_failures": 127
+      "consecutive_failures": 128
     },
     {
       "shop_id": "janpara",
-      "consecutive_failures": 127
+      "consecutive_failures": 128
     },
     {
       "shop_id": "pasoko",
-      "consecutive_failures": 127
+      "consecutive_failures": 128
     },
     {
       "shop_id": "sofmap",
-      "consecutive_failures": 127
+      "consecutive_failures": 128
     },
     {
       "shop_id": "surugaya",
-      "consecutive_failures": 127
+      "consecutive_failures": 128
     },
     {
       "shop_id": "tsutaya",
-      "consecutive_failures": 127
+      "consecutive_failures": 128
     },
     {
       "shop_id": "iosys",
-      "consecutive_failures": 60
+      "consecutive_failures": 61
     }
   ],
   "improvement_priority": [
@@ -309,6 +309,12 @@
       "shop_id": "iosys",
       "failed": 6,
       "top_reason": "http_403",
+      "priority": "required"
+    },
+    {
+      "shop_id": "kaitori_shouten",
+      "failed": 6,
+      "top_reason": "price_not_found",
       "priority": "required"
     },
     {

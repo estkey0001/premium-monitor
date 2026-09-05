@@ -1,5 +1,5 @@
 {
-  "collected_at": "2026-09-04T17:15:30.654281+09:00",
+  "collected_at": "2026-09-05T16:55:08.228071+09:00",
   "platforms": {
     "ebay": {
       "status": "blocked_cloud_ip",
@@ -7,8 +7,8 @@
       "needs_ebay_app_id": true
     },
     "amazon": {
-      "status": "blocked_cloud_ip",
-      "label_jp": "Cloud IP制限中（EBAY_APP_ID推奨）"
+      "status": "ok_html",
+      "label_jp": "自動取得済（HTML）"
     },
     "mercari": {
       "status": "blocked_cloud_ip",
@@ -28,8 +28,8 @@
     }
   },
   "summary": {
-    "saved": 10,
-    "skipped": 39,
+    "saved": 14,
+    "skipped": 35,
     "errors": []
   },
   "products": {
@@ -45,13 +45,13 @@
       "ebay": "blocked_cloud_ip",
       "amazon": "blocked_cloud_ip",
       "mercari": "blocked_cloud_ip",
-      "yahoo": "no_data",
+      "yahoo": "ok_html",
       "rakuten": "html_failed",
       "rakuma": "blocked_cloud_ip"
     },
     "gr4_mono": {
       "ebay": "blocked_cloud_ip",
-      "amazon": "blocked_cloud_ip",
+      "amazon": "ok_html",
       "mercari": "blocked_cloud_ip",
       "yahoo": "ok_html",
       "rakuten": "html_failed",
@@ -59,7 +59,7 @@
     },
     "gr3x": {
       "ebay": "blocked_cloud_ip",
-      "amazon": "blocked_cloud_ip",
+      "amazon": "ok_html",
       "mercari": "blocked_cloud_ip",
       "yahoo": "ok_html",
       "rakuten": "html_failed",
@@ -67,7 +67,7 @@
     },
     "x100vi": {
       "ebay": "blocked_cloud_ip",
-      "amazon": "blocked_cloud_ip",
+      "amazon": "ok_html",
       "mercari": "blocked_cloud_ip",
       "yahoo": "ok_html",
       "rakuten": "html_failed",

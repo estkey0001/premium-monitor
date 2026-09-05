@@ -1,20 +1,20 @@
 # データ品質エンジン（Data Quality Engine）
 
-> 生成: 2026-09-04 17:42 JST / 対象: データ取得・正規化・品質管理のみ（利益/AI/UI/SaaSロジックは不変）
+> 生成: 2026-09-05 17:22 JST / 対象: データ取得・正規化・品質管理のみ（利益/AI/UI/SaaSロジックは不変）
 
-## 総合 Data Quality Score: **80 / 100** — 判定: **CONDITIONAL_GO**
+## 総合 Data Quality Score: **71 / 100** — 判定: **CONDITIONAL_GO**
 
 | 次元 | スコア |
 |------|-------|
-| Freshness 鮮度 | 68 |
+| Freshness 鮮度 | 47 |
 | Completeness 完全性 | 62 |
-| Accuracy 正確性 | 95 |
+| Accuracy 正確性 | 96 |
 | Coverage 網羅 | 100 |
-| Reliability 信頼性 | 68 |
+| Reliability 信頼性 | 47 |
 | Consistency 一貫性 | 100 |
 
 ### 判定理由
-- 総合スコア 80 ≥ 80。国内データ品質は本番水準
+- 総合スコア 71。国内は良好だが海外(EBAY_APP_ID)ギャップが残る
 - EBAY_APP_ID 未設定 → 海外売却ルートは stale（改善計画①で+25pt見込み）
 
 ## ダッシュボード（現況ビュー）
@@ -24,34 +24,36 @@
 ### カテゴリ別
 | カテゴリ | 総数 | 正常 | ¥0(非対応) | ¥0(実失敗) | stale | 更新成功率 |
 |---|--:|--:|--:|--:|--:|--:|
-| prod | 231 | 136 | 32 | 0 | 63 | 68% |
+| prod | 231 | 90 | 38 | 0 | 103 | 47% |
 
 ## 自動化カバレッジ（透明性）
-- 手段内訳: {'other': 13, 'official_concept': 32, 'auto_scraped': 37, 'manual_curated': 111, 'fetch_failed': 32, 'overseas_history': 6}
-- 自動スクレイプ率: 16% / 手動キュレーション率: 48%
-- fresh のうち手動由来: 29% / 自動+定価由来: 41%
+- 手段内訳: {'other': 13, 'official_concept': 32, 'auto_scraped': 31, 'manual_curated': 111, 'fetch_failed': 38, 'overseas_history': 6}
+- 自動スクレイプ率: 13% / 手動キュレーション率: 48%
+- fresh のうち手動由来: 11% / 自動+定価由来: 49%
 > 鮮度の相当部分が手動キュレーション由来（ToS遵守の意図的設計）。自動化カバレッジ拡大（特に eBay API=EBAY_APP_ID）が主要な改善レバー。
 
 ## ソース品質ランキング（100点）
 | # | ソース | スコア | 成功率 | 鮮度 | 更新頻度 | 安定性 |
 |--:|---|--:|--:|--:|--:|--:|
-| 1 | Yahoo | 90 | 100% | 100% | 1.2 | 0.92 |
+| 1 | Yahoo | 90 | 100% | 100% | 1.0 | 1.00 |
 | 2 | フジヤカメラ | 88 | 95% | 95% | 1.33 | 0.96 |
-| 3 | eBay | 83 | 100% | 100% | 1.0 | 0.53 |
-| 4 | Mercari | 83 | 100% | 100% | 1.0 | 0.52 |
-| 5 | マップカメラ | 73 | 83% | 83% | 1.5 | 0.47 |
+| 3 | マップカメラ | 14 | 0% | 0% | 1.5 | 0.43 |
+| 4 | eBay | 12 | 0% | 0% | 1.0 | 0.49 |
+| 5 | Mercari | 12 | 0% | 0% | 1.0 | 0.49 |
 | 6 | 価格.com | – | 未統合/データなし | | | |
 | 7 | ヨドバシ | – | 未統合/データなし | | | |
 | 8 | ビックカメラ | – | 未統合/データなし | | | |
 | 9 | ラクマ | – | 未統合/データなし | | | |
 
 ## Stale 分析
-- scraper_or_site_change: 63
+- scraper_or_site_change: 84
+- api_limit_or_unconfigured: 15
+- manual_not_refreshed: 4
 
 > stale の主因は海外/二次流通ソースの API 依存（EBAY_APP_ID 未設定）。国内買取・公式・カメラ専門店のキュレーションデータは鮮度良好。
 
 ## ¥0 分析
-- unsupported_online_quote: 32
+- unsupported_online_quote: 38
 - 実取得失敗: 0 件
 
 ## EBAY Readiness

@@ -1,43 +1,20 @@
 {
-  "date": "2026-09-04",
-  "health_score": 69.5,
-  "stale_rate": 0.2967,
-  "main_products": [
-    "prod_ps5_pro"
-  ],
+  "date": "2026-09-05",
+  "health_score": 41.1,
+  "stale_rate": 0.4797,
+  "main_products": [],
   "reference_products": [
-    "prod_switch2",
     "prod_x100vi"
   ],
   "ops": {
     "prod_x100vi": {
       "action": "WAIT",
       "buy_now": "WATCH",
-      "roi": 0.6837,
-      "net_profit": 174341,
-      "buy_price": 255000,
+      "roi": 0.1789,
+      "net_profit": 64713,
+      "buy_price": 361819,
       "product": "FUJIFILM X100VI",
-      "buy_source": "Yahoo Auction sold",
-      "kind": "reference"
-    },
-    "prod_ps5_pro": {
-      "action": "ALERT",
-      "buy_now": "WATCH",
-      "roi": 0.3628,
-      "net_profit": 46800,
-      "buy_price": 129000,
-      "product": "PlayStation 5 Pro",
-      "buy_source": "Mercari sold",
-      "kind": "main"
-    },
-    "prod_switch2": {
-      "action": "WAIT",
-      "buy_now": "WATCH",
-      "roi": 0.259,
-      "net_profit": 12042,
-      "buy_price": 46500,
-      "product": "Nintendo Switch 2",
-      "buy_source": "Mercari sold",
+      "buy_source": "ヤフオク (新品/未使用落札)",
       "kind": "reference"
     }
   }

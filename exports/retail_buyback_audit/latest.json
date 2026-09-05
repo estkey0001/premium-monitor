@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-04 17:42 JST",
+  "generated_at": "2026-09-05 17:22 JST",
   "scope": "販売/買取/二次流通の取得品質・正規化・同一性（利益/AI/UI/SaaSロジックは不変）",
   "rules": {
     "identity": "容量・型番・カラー・新品/中古 を厳格一致",
@@ -10,20 +10,19 @@
   "category_summary": {
     "buyback": {
       "observations": 143,
-      "with_price": 129,
-      "exact_match": 11,
-      "high_confidence": 11,
-      "fresh": 73,
-      "main_promotable": 11,
-      "zero": 14,
-      "stale": 70,
-      "rejected": 104,
+      "with_price": 123,
+      "exact_match": 5,
+      "high_confidence": 5,
+      "fresh": 49,
+      "main_promotable": 5,
+      "zero": 20,
+      "stale": 94,
+      "rejected": 126,
       "failure_reasons": {
-        "stale_over_14d": 70,
-        "price_zero": 14,
-        "manual_over_auto_high": 7,
+        "stale_over_14d": 94,
+        "price_zero": 20,
         "accessory_or_wrong_product": 6,
-        "duplicate_price_collision": 4,
+        "duplicate_price_collision": 3,
         "model_mismatch": 3
       }
     },
@@ -32,13 +31,15 @@
       "with_price": 24,
       "exact_match": 0,
       "high_confidence": 0,
-      "fresh": 24,
+      "fresh": 14,
       "main_promotable": 0,
       "zero": 0,
-      "stale": 0,
-      "rejected": 4,
+      "stale": 10,
+      "rejected": 17,
       "failure_reasons": {
-        "duplicate_price_collision": 4
+        "stale_over_14d": 10,
+        "duplicate_price_collision": 4,
+        "accessory_or_wrong_product": 3
       }
     },
     "retail": {
@@ -46,12 +47,14 @@
       "with_price": 2,
       "exact_match": 0,
       "high_confidence": 0,
-      "fresh": 2,
+      "fresh": 0,
       "main_promotable": 0,
       "zero": 0,
-      "stale": 0,
-      "rejected": 0,
-      "failure_reasons": {}
+      "stale": 2,
+      "rejected": 2,
+      "failure_reasons": {
+        "stale_over_14d": 2
+      }
     }
   },
   "retail_coverage": {
@@ -80,12 +83,14 @@
       "with_price": 2,
       "exact_match": 0,
       "high_confidence": 0,
-      "fresh": 2,
+      "fresh": 0,
       "main_promotable": 0,
       "zero": 0,
-      "stale": 0,
-      "rejected": 0,
-      "failure_reasons": {}
+      "stale": 2,
+      "rejected": 2,
+      "failure_reasons": {
+        "stale_over_14d": 2
+      }
     }
   },
   "buyback_coverage": {
@@ -94,14 +99,13 @@
       "with_price": 9,
       "exact_match": 0,
       "high_confidence": 0,
-      "fresh": 5,
+      "fresh": 0,
       "main_promotable": 0,
       "zero": 0,
-      "stale": 4,
-      "rejected": 6,
+      "stale": 9,
+      "rejected": 9,
       "failure_reasons": {
-        "stale_over_14d": 4,
-        "manual_over_auto_high": 2
+        "stale_over_14d": 9
       }
     },
     "フジヤカメラ": {
@@ -109,17 +113,16 @@
       "with_price": 28,
       "exact_match": 0,
       "high_confidence": 0,
-      "fresh": 25,
+      "fresh": 20,
       "main_promotable": 0,
       "zero": 0,
-      "stale": 3,
-      "rejected": 17,
+      "stale": 8,
+      "rejected": 20,
       "failure_reasons": {
+        "stale_over_14d": 8,
         "accessory_or_wrong_product": 6,
-        "duplicate_price_collision": 4,
-        "model_mismatch": 3,
-        "stale_over_14d": 3,
-        "manual_over_auto_high": 1
+        "duplicate_price_collision": 3,
+        "model_mismatch": 3
       }
     },
     "じゃんぱら": {
@@ -127,15 +130,14 @@
       "with_price": 28,
       "exact_match": 0,
       "high_confidence": 0,
-      "fresh": 9,
+      "fresh": 6,
       "main_promotable": 0,
       "zero": 6,
-      "stale": 25,
-      "rejected": 32,
+      "stale": 28,
+      "rejected": 34,
       "failure_reasons": {
-        "stale_over_14d": 25,
-        "price_zero": 6,
-        "manual_over_auto_high": 1
+        "stale_over_14d": 28,
+        "price_zero": 6
       }
     },
     "イオシス": {
@@ -158,14 +160,13 @@
       "with_price": 9,
       "exact_match": 0,
       "high_confidence": 0,
-      "fresh": 5,
+      "fresh": 0,
       "main_promotable": 0,
       "zero": 0,
-      "stale": 4,
-      "rejected": 5,
+      "stale": 9,
+      "rejected": 9,
       "failure_reasons": {
-        "stale_over_14d": 4,
-        "manual_over_auto_high": 1
+        "stale_over_14d": 9
       }
     },
     "ソフマップ": {
@@ -173,30 +174,29 @@
       "with_price": 8,
       "exact_match": 0,
       "high_confidence": 0,
-      "fresh": 6,
+      "fresh": 2,
       "main_promotable": 0,
       "zero": 2,
-      "stale": 4,
-      "rejected": 7,
+      "stale": 8,
+      "rejected": 10,
       "failure_reasons": {
-        "stale_over_14d": 4,
-        "price_zero": 2,
-        "manual_over_auto_high": 1
+        "stale_over_14d": 8,
+        "price_zero": 2
       }
     },
     "買取商店": {
       "observations": 17,
-      "with_price": 17,
-      "exact_match": 6,
-      "high_confidence": 6,
-      "fresh": 8,
-      "main_promotable": 6,
-      "zero": 0,
-      "stale": 9,
-      "rejected": 10,
+      "with_price": 11,
+      "exact_match": 0,
+      "high_confidence": 0,
+      "fresh": 6,
+      "main_promotable": 0,
+      "zero": 6,
+      "stale": 11,
+      "rejected": 17,
       "failure_reasons": {
-        "stale_over_14d": 9,
-        "manual_over_auto_high": 1
+        "stale_over_14d": 11,
+        "price_zero": 6
       }
     },
     "ゲオ": {
@@ -244,12 +244,14 @@
       "with_price": 5,
       "exact_match": 0,
       "high_confidence": 0,
-      "fresh": 5,
+      "fresh": 0,
       "main_promotable": 0,
       "zero": 0,
-      "stale": 0,
-      "rejected": 0,
-      "failure_reasons": {}
+      "stale": 5,
+      "rejected": 5,
+      "failure_reasons": {
+        "stale_over_14d": 5
+      }
     },
     "eBay": {
       "observations": 0,
@@ -260,31 +262,25 @@
       "with_price": 5,
       "exact_match": 0,
       "high_confidence": 0,
-      "fresh": 5,
+      "fresh": 0,
       "main_promotable": 0,
       "zero": 0,
-      "stale": 0,
-      "rejected": 0,
-      "failure_reasons": {}
+      "stale": 5,
+      "rejected": 5,
+      "failure_reasons": {
+        "stale_over_14d": 5
+      }
     },
     "Mercari sold": {
-      "observations": 2,
-      "with_price": 2,
-      "exact_match": 0,
-      "high_confidence": 0,
-      "fresh": 2,
-      "main_promotable": 0,
-      "zero": 0,
-      "stale": 0,
-      "rejected": 0,
-      "failure_reasons": {}
+      "observations": 0,
+      "status": "no_data"
     },
     "ヤフオク (新品/未使用落札)": {
-      "observations": 10,
-      "with_price": 10,
+      "observations": 11,
+      "with_price": 11,
       "exact_match": 0,
       "high_confidence": 0,
-      "fresh": 10,
+      "fresh": 11,
       "main_promotable": 0,
       "zero": 0,
       "stale": 0,
@@ -294,20 +290,22 @@
       }
     },
     "Yahoo Auction sold": {
-      "observations": 2,
-      "with_price": 2,
+      "observations": 0,
+      "status": "no_data"
+    },
+    "Amazon JP (新品出品)": {
+      "observations": 3,
+      "with_price": 3,
       "exact_match": 0,
       "high_confidence": 0,
-      "fresh": 2,
+      "fresh": 3,
       "main_promotable": 0,
       "zero": 0,
       "stale": 0,
-      "rejected": 0,
-      "failure_reasons": {}
-    },
-    "Amazon JP (新品出品)": {
-      "observations": 0,
-      "status": "no_data"
+      "rejected": 3,
+      "failure_reasons": {
+        "accessory_or_wrong_product": 3
+      }
     }
   },
   "source_summary": {
@@ -316,15 +314,14 @@
       "with_price": 28,
       "exact_match": 0,
       "high_confidence": 0,
-      "fresh": 9,
+      "fresh": 6,
       "main_promotable": 0,
       "zero": 6,
-      "stale": 25,
-      "rejected": 32,
+      "stale": 28,
+      "rejected": 34,
       "failure_reasons": {
-        "stale_over_14d": 25,
-        "price_zero": 6,
-        "manual_over_auto_high": 1
+        "stale_over_14d": 28,
+        "price_zero": 6
       }
     },
     "フジヤカメラ": {
@@ -332,17 +329,16 @@
       "with_price": 28,
       "exact_match": 0,
       "high_confidence": 0,
-      "fresh": 25,
+      "fresh": 20,
       "main_promotable": 0,
       "zero": 0,
-      "stale": 3,
-      "rejected": 17,
+      "stale": 8,
+      "rejected": 20,
       "failure_reasons": {
+        "stale_over_14d": 8,
         "accessory_or_wrong_product": 6,
-        "duplicate_price_collision": 4,
-        "model_mismatch": 3,
-        "stale_over_14d": 3,
-        "manual_over_auto_high": 1
+        "duplicate_price_collision": 3,
+        "model_mismatch": 3
       }
     },
     "イオシス": {
@@ -362,41 +358,25 @@
     },
     "買取商店": {
       "observations": 17,
-      "with_price": 17,
-      "exact_match": 6,
-      "high_confidence": 6,
-      "fresh": 8,
-      "main_promotable": 6,
-      "zero": 0,
-      "stale": 9,
-      "rejected": 10,
-      "failure_reasons": {
-        "stale_over_14d": 9,
-        "manual_over_auto_high": 1
-      }
-    },
-    "ソフマップ": {
-      "observations": 10,
-      "with_price": 8,
+      "with_price": 11,
       "exact_match": 0,
       "high_confidence": 0,
       "fresh": 6,
       "main_promotable": 0,
-      "zero": 2,
-      "stale": 4,
-      "rejected": 7,
+      "zero": 6,
+      "stale": 11,
+      "rejected": 17,
       "failure_reasons": {
-        "stale_over_14d": 4,
-        "price_zero": 2,
-        "manual_over_auto_high": 1
+        "stale_over_14d": 11,
+        "price_zero": 6
       }
     },
     "ヤフオク (新品/未使用落札)": {
-      "observations": 10,
-      "with_price": 10,
+      "observations": 11,
+      "with_price": 11,
       "exact_match": 0,
       "high_confidence": 0,
-      "fresh": 10,
+      "fresh": 11,
       "main_promotable": 0,
       "zero": 0,
       "stale": 0,
@@ -405,19 +385,33 @@
         "duplicate_price_collision": 4
       }
     },
+    "ソフマップ": {
+      "observations": 10,
+      "with_price": 8,
+      "exact_match": 0,
+      "high_confidence": 0,
+      "fresh": 2,
+      "main_promotable": 0,
+      "zero": 2,
+      "stale": 8,
+      "rejected": 10,
+      "failure_reasons": {
+        "stale_over_14d": 8,
+        "price_zero": 2
+      }
+    },
     "マップカメラ": {
       "observations": 9,
       "with_price": 9,
       "exact_match": 0,
       "high_confidence": 0,
-      "fresh": 5,
+      "fresh": 0,
       "main_promotable": 0,
       "zero": 0,
-      "stale": 4,
-      "rejected": 6,
+      "stale": 9,
+      "rejected": 9,
       "failure_reasons": {
-        "stale_over_14d": 4,
-        "manual_over_auto_high": 2
+        "stale_over_14d": 9
       }
     },
     "カメラのキタムラ": {
@@ -425,14 +419,13 @@
       "with_price": 9,
       "exact_match": 0,
       "high_confidence": 0,
-      "fresh": 5,
+      "fresh": 0,
       "main_promotable": 0,
       "zero": 0,
-      "stale": 4,
-      "rejected": 5,
+      "stale": 9,
+      "rejected": 9,
       "failure_reasons": {
-        "stale_over_14d": 4,
-        "manual_over_auto_high": 1
+        "stale_over_14d": 9
       }
     },
     "ゲオ": {
@@ -454,24 +447,28 @@
       "with_price": 5,
       "exact_match": 0,
       "high_confidence": 0,
-      "fresh": 5,
+      "fresh": 0,
       "main_promotable": 0,
       "zero": 0,
-      "stale": 0,
-      "rejected": 0,
-      "failure_reasons": {}
+      "stale": 5,
+      "rejected": 5,
+      "failure_reasons": {
+        "stale_over_14d": 5
+      }
     },
     "メルカリ未使用": {
       "observations": 5,
       "with_price": 5,
       "exact_match": 0,
       "high_confidence": 0,
-      "fresh": 5,
+      "fresh": 0,
       "main_promotable": 0,
       "zero": 0,
-      "stale": 0,
-      "rejected": 0,
-      "failure_reasons": {}
+      "stale": 5,
+      "rejected": 5,
+      "failure_reasons": {
+        "stale_over_14d": 5
+      }
     },
     "買取一丁目": {
       "observations": 4,
@@ -497,49 +494,41 @@
       "rejected": 0,
       "failure_reasons": {}
     },
+    "Amazon JP (新品出品)": {
+      "observations": 3,
+      "with_price": 3,
+      "exact_match": 0,
+      "high_confidence": 0,
+      "fresh": 3,
+      "main_promotable": 0,
+      "zero": 0,
+      "stale": 0,
+      "rejected": 3,
+      "failure_reasons": {
+        "accessory_or_wrong_product": 3
+      }
+    },
     "楽天市場新品": {
       "observations": 2,
       "with_price": 2,
       "exact_match": 0,
       "high_confidence": 0,
-      "fresh": 2,
+      "fresh": 0,
       "main_promotable": 0,
       "zero": 0,
-      "stale": 0,
-      "rejected": 0,
-      "failure_reasons": {}
-    },
-    "Mercari sold": {
-      "observations": 2,
-      "with_price": 2,
-      "exact_match": 0,
-      "high_confidence": 0,
-      "fresh": 2,
-      "main_promotable": 0,
-      "zero": 0,
-      "stale": 0,
-      "rejected": 0,
-      "failure_reasons": {}
-    },
-    "Yahoo Auction sold": {
-      "observations": 2,
-      "with_price": 2,
-      "exact_match": 0,
-      "high_confidence": 0,
-      "fresh": 2,
-      "main_promotable": 0,
-      "zero": 0,
-      "stale": 0,
-      "rejected": 0,
-      "failure_reasons": {}
+      "stale": 2,
+      "rejected": 2,
+      "failure_reasons": {
+        "stale_over_14d": 2
+      }
     }
   },
   "identity_audit": {
     "checked": 246,
     "capacity_mismatch": 0,
     "wrong_model": 0,
-    "accessory": 9,
-    "not_body_only": 9,
+    "accessory": 12,
+    "not_body_only": 12,
     "condition_dist": {
       "new": 221,
       "used": 25
@@ -553,10 +542,10 @@
     "buyback_labeled": 120,
     "price_type_dist": {
       "buyback_price": 120,
-      "shop_sale_price": 25,
+      "shop_sale_price": 28,
       "overseas_listing_price": 5,
       "flea_listing_price": 5,
-      "flea_sold_price": 14
+      "flea_sold_price": 11
     },
     "note": "格納価格は税込本体。送料/ポイント/下取は price_context に混入させず別扱い"
   },
@@ -768,7 +757,7 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 13.2,
+      "first_seen": 14.2,
       "last_seen": 0.0,
       "risk_level": "medium",
       "possible_reason": [
@@ -829,8 +818,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 25.2,
-      "last_seen": 25.2,
+      "first_seen": 26.2,
+      "last_seen": 26.2,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -859,8 +848,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 25.2,
-      "last_seen": 25.2,
+      "first_seen": 26.2,
+      "last_seen": 26.2,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -889,8 +878,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 25.2,
-      "last_seen": 25.2,
+      "first_seen": 26.2,
+      "last_seen": 26.2,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -902,11 +891,11 @@
   ],
   "main_promotion": {
     "by_category": {
-      "buyback": 11,
+      "buyback": 5,
       "resale": 0,
       "retail": 0
     },
-    "total": 11
+    "total": 5
   },
   "freshness_compliance": {
     "violations": [],

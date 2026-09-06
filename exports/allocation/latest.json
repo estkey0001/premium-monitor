@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-05 17:22 JST",
+  "generated_at": "2026-09-06 17:34 JST",
   "account_id": "default",
   "cash_reserve_ratio": 0.2,
   "concentration_caps": {
@@ -14,15 +14,15 @@
       "action": "WAIT",
       "kind": "reference",
       "buy_price": 361819,
-      "net_profit": 64713,
+      "net_profit": 64739,
       "roi": 0.1789,
       "success_probability": 30,
       "opportunity_score": 41,
       "reproducibility_score": 30,
       "holding_period": "1ヶ月",
-      "expected_value": 19414,
+      "expected_value": 19422,
       "capital_efficiency": 0.0537,
-      "risk_score": 48,
+      "risk_score": 49,
       "liquidity_score": 25,
       "category": "camera",
       "maker": "FUJIFILM"

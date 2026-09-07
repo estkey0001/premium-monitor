@@ -1,6 +1,6 @@
 # Admin Dashboard
 
-生成: 2026-09-06 17:34 JST
+生成: 2026-09-07 17:51 JST
 
 ## 登録者
 
@@ -16,4 +16,4 @@
 
 - 利益ルート(main): **0** / reference: 1
 - Opportunities: 1 / 通知(本日): 0 / 通知(累計): 69
-- Health Score: 41.1 / 実行成功率: 30.4% / 予測誤差: 8.1pt
+- Health Score: 41.2 / 実行成功率: 30.1% / 予測誤差: 8.3pt

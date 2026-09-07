@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-09-06 17:34 JST",
-  "health_score": 41.1,
+  "generated_at": "2026-09-07 17:50 JST",
+  "health_score": 41.2,
   "health_note": "現在データ品質低下中",
   "main_route_count": 0,
   "reference_route_count": 1,
@@ -11,7 +11,7 @@
     "product": "FUJIFILM X100VI",
     "buy_now": "WATCH",
     "opportunity_score": 41,
-    "reason": "FUJIFILM X100VI: WATCH。海外更新後見込み 利益¥64,739/ROI18%/Score41"
+    "reason": "FUJIFILM X100VI: WATCH。海外更新後見込み 利益¥64,768/ROI18%/Score41"
   },
   "todays_opportunities": [
     {
@@ -32,12 +32,12 @@
       "confidence": "low",
       "action": "WAIT",
       "action_reason": "eBay sold 更新（EBAY_APP_ID 設定）後に BUY 候補へ昇格します。海外価格の更新待ちです。",
-      "alert_threshold": 503963,
-      "expected_buy_price": 503963,
-      "expected_sell_price": 553017,
+      "alert_threshold": 503997,
+      "expected_buy_price": 503997,
+      "expected_sell_price": 553053,
       "buy_conditions": {
-        "buy": "ヤフオク (新品/未使用落札) ≤ ¥503,963",
-        "sell": "src_ebay ≥ ¥553,017",
+        "buy": "ヤフオク (新品/未使用落札) ≤ ¥503,997",
+        "sell": "src_ebay ≥ ¥553,053",
         "roi": "ROI ≥ 8%"
       },
       "next_update": "次回自動更新: 明日 12:00頃（通常24時間以内）",
@@ -56,28 +56,28 @@
         ],
         "current": "監視"
       },
-      "summary": "★★☆☆☆\n海外売却で成立見込みの参考ルートです。\neBay更新後の想定利益 ¥64,739 / ROI 18%。\n現在は海外価格の更新待ちです。",
+      "summary": "★★☆☆☆\n海外売却で成立見込みの参考ルートです。\neBay更新後の想定利益 ¥64,768 / ROI 18%。\n現在は海外価格の更新待ちです。",
       "why": [
         "reference route（海外sold更新で成立見込み）",
         "ROIが8%以上（18%）",
-        "価格 15日前（要更新）"
+        "価格 16日前（要更新）"
       ],
       "risks": [
-        "stale（15日前・main計算除外水準）",
+        "stale（16日前・main計算除外水準）",
         "海外依存（為替・関税・輸送）",
         "送料・決済手数料が大きい",
         "同条件件数不足（再現性低）",
         "アクセサリー混在に注意（本体判定要確認）"
       ],
       "holding_period": "1ヶ月",
-      "net_profit": 64739,
-      "roi": 0.1789,
+      "net_profit": 64768,
+      "roi": 0.179,
       "reproducibility_score": 30,
       "buy_source": "ヤフオク (新品/未使用落札)",
       "buy_price": 361819,
       "sell_source": "src_ebay",
-      "sell_price": 553017,
-      "age_days": 15.3,
+      "sell_price": 553053,
+      "age_days": 16.3,
       "priority": 1
     }
   ]

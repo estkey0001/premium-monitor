@@ -1,9 +1,9 @@
 # Pro 利益ルート（normalized_price_observations 由来・検証済み）
 
-生成: 2026-09-07 17:50 JST
+生成: 2026-09-08 17:44 JST
 
 - **main 利益ルート: 0件**（route_confidence high/medium のみ）
-- 参考ルート(海外sold stale・要fresh化): 1件
+- 参考ルート(海外sold stale・要fresh化): 2件
 - confidence別: {} / route_type別: {}
 
 
@@ -17,7 +17,8 @@
 
 | product | buy¥ | sell(海外sold)¥ | 潜在net | ROI | stale |
 |---|---|---|---|---|---|
-| FUJIFILM X100VI | ¥361,819 | ¥553,053 | +¥64,768 | 18% | overseas_sold_stale(16.3d) |
+| FUJIFILM X100VI | ¥261,800 | ¥546,823 | +¥162,804 | 62% | overseas_sold_stale(17.3d) |
+| FUJIFILM X100VI | ¥361,819 | ¥546,823 | +¥59,784 | 17% | overseas_sold_stale(17.3d) |
 
 ## 0件商品の診断
 
@@ -142,10 +143,11 @@
 - 除外理由TOP5: []
 
 ### FUJIFILM X100VI
-- buy候補 1 / sell候補 0 / stale除外 17 / 海外sold stale 1
+- buy候補 2 / sell候補 0 / stale除外 17 / 海外sold stale 1
 - 除外理由TOP5: [('stale_over_14d', 17), ('duplicate_price_collision', 1)]
 - eBay sold を fresh化すると成立する候補:
-  - src_ebay ¥553,053 → 潜在 +¥64,768（ROI 18%）
+  - src_ebay ¥546,823 → 潜在 +¥162,804（ROI 62%）
+  - src_ebay ¥546,823 → 潜在 +¥59,784（ROI 17%）
 
 ### FUJIFILM GFX100RF
 - buy候補 0 / sell候補 1 / stale除外 0 / 海外sold stale 0

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-08 17:44 JST",
+  "generated_at": "2026-09-09 17:50 JST",
   "scope": "商品同一性マッチング精度（利益/AI/UI/SaaS/DQ思想は不変）",
   "accuracy": {
     "product_match_accuracy": 1.0,
@@ -7,10 +7,10 @@
     "model_match_accuracy": 1.0,
     "condition_match_accuracy": 1.0,
     "confirmed_mismatches_active": 0,
-    "detected_mismatches_total": 3,
-    "detected_mismatches_rejected": 3,
+    "detected_mismatches_total": 2,
+    "detected_mismatches_rejected": 2,
     "independently_verified_exact": 5,
-    "unverifiable_trusted": 226,
+    "unverifiable_trusted": 225,
     "accessory_misclassification": 0,
     "false_main_promotion": 0,
     "duplicate_patterns": 11,
@@ -26,14 +26,14 @@
     "false_main_promotion": 0
   },
   "totals": {
-    "total": 245,
-    "product_mismatch_or_unverified": 240,
-    "model_unverifiable": 226,
-    "main_rejected": 240,
-    "model_match": 16,
-    "accessory_detected": 10,
+    "total": 244,
+    "product_mismatch_or_unverified": 239,
+    "model_unverifiable": 225,
+    "main_rejected": 239,
+    "model_match": 17,
+    "accessory_detected": 9,
     "manual_review_required": 85,
-    "model_mismatch": 3,
+    "model_mismatch": 2,
     "exact_product_match": 5,
     "main_eligible": 5
   },
@@ -51,12 +51,12 @@
     "フジヤカメラ": {
       "total": 28,
       "product_mismatch_or_unverified": 28,
-      "model_match": 16,
+      "model_match": 17,
       "main_rejected": 28,
       "accessory_detected": 6,
       "manual_review_required": 12,
       "model_unverifiable": 9,
-      "model_mismatch": 3,
+      "model_mismatch": 2,
       "exact_product_match": 0,
       "capacity_mismatch": 0,
       "main_eligible": 0
@@ -297,11 +297,10 @@
       "main_eligible": 0
     },
     "Amazon JP (新品出品)": {
-      "total": 2,
-      "product_mismatch_or_unverified": 2,
-      "model_unverifiable": 2,
-      "accessory_detected": 1,
-      "main_rejected": 2,
+      "total": 1,
+      "product_mismatch_or_unverified": 1,
+      "model_unverifiable": 1,
+      "main_rejected": 1,
       "exact_product_match": 0,
       "capacity_mismatch": 0,
       "model_mismatch": 0,
@@ -329,17 +328,6 @@
       ],
       "rejected": true,
       "rejection_reason": "accessory_or_wrong_product",
-      "usable_pro": false
-    },
-    {
-      "product_id": "prod_q3",
-      "source": "フジヤカメラ",
-      "title": "ライカ Q3 モノクローム 19201 Leica 買取金額 新品同様 ￥869,000 良品 ￥868,000 下取は10%UP 新品同様 ￥955,900 ",
-      "kinds": [
-        "model"
-      ],
-      "rejected": true,
-      "rejection_reason": "model_mismatch",
       "usable_pro": false
     },
     {
@@ -562,7 +550,7 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 17.2,
+      "first_seen": 18.2,
       "last_seen": 0.0,
       "risk_level": "medium",
       "possible_reason": [
@@ -623,8 +611,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 29.2,
-      "last_seen": 29.2,
+      "first_seen": 30.2,
+      "last_seen": 30.2,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -653,8 +641,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 29.2,
-      "last_seen": 29.2,
+      "first_seen": 30.2,
+      "last_seen": 30.2,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -683,8 +671,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 29.2,
-      "last_seen": 29.2,
+      "first_seen": 30.2,
+      "last_seen": 30.2,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -817,6 +805,17 @@
       "main_eligible": 0
     },
     {
+      "source": "Amazon JP (新品出品)",
+      "observations": 1,
+      "score": 75,
+      "identity": 0.0,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 1.0,
+      "main_eligible": 0
+    },
+    {
       "source": "モバイル一番",
       "observations": 5,
       "score": 72,
@@ -869,6 +868,17 @@
       "model": 1.0,
       "condition": 1.0,
       "freshness": 0.176,
+      "main_eligible": 0
+    },
+    {
+      "source": "フジヤカメラ",
+      "observations": 28,
+      "score": 70,
+      "identity": 0.0,
+      "capacity": 1.0,
+      "model": 0.929,
+      "condition": 1.0,
+      "freshness": 0.714,
       "main_eligible": 0
     },
     {
@@ -949,17 +959,6 @@
       "main_eligible": 0
     },
     {
-      "source": "Amazon JP (新品出品)",
-      "observations": 2,
-      "score": 70,
-      "identity": 0.0,
-      "capacity": 1.0,
-      "model": 1.0,
-      "condition": 1.0,
-      "freshness": 1.0,
-      "main_eligible": 0
-    },
-    {
       "source": "src_ebay",
       "observations": 6,
       "score": 70,
@@ -968,17 +967,6 @@
       "model": 1.0,
       "condition": 1.0,
       "freshness": 0.0,
-      "main_eligible": 0
-    },
-    {
-      "source": "フジヤカメラ",
-      "observations": 28,
-      "score": 69,
-      "identity": 0.0,
-      "capacity": 1.0,
-      "model": 0.893,
-      "condition": 1.0,
-      "freshness": 0.714,
       "main_eligible": 0
     }
   ],

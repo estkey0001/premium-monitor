@@ -1,20 +1,31 @@
 {
-  "date": "2026-09-08",
-  "health_score": 43.7,
-  "stale_rate": 0.4816,
+  "date": "2026-09-09",
+  "health_score": 43.9,
+  "stale_rate": 0.4836,
   "main_products": [],
   "reference_products": [
+    "prod_gr3x",
     "prod_x100vi"
   ],
   "ops": {
+    "prod_gr3x": {
+      "action": "WAIT",
+      "buy_now": "WATCH",
+      "roi": 0.6299,
+      "net_profit": 70396,
+      "buy_price": 111750,
+      "product": "RICOH GR IIIx",
+      "buy_source": "Amazon JP (新品出品)",
+      "kind": "reference"
+    },
     "prod_x100vi": {
       "action": "WAIT",
       "buy_now": "WATCH",
-      "roi": 0.6219,
-      "net_profit": 162804,
-      "buy_price": 261800,
+      "roi": 0.1606,
+      "net_profit": 58123,
+      "buy_price": 361819,
       "product": "FUJIFILM X100VI",
-      "buy_source": "Amazon JP (新品出品)",
+      "buy_source": "ヤフオク (新品/未使用落札)",
       "kind": "reference"
     }
   }

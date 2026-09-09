@@ -1,23 +1,23 @@
 # Profit Health Dashboard
 
-生成: 2026-09-08 17:44 JST
+生成: 2026-09-09 17:50 JST
 
-## Health Score: **43.7 / 100**
+## Health Score: **43.9 / 100**
 
 | 観点 | 配点 | スコア |
 |---|---|---|
-| Data Quality | 35 | 15.3 |
+| Data Quality | 35 | 15.4 |
 | Profit Discovery | 25 | 5.0 |
 | Source Health | 20 | 13.8 |
-| Link Quality | 10 | 4.4 |
+| Link Quality | 10 | 4.5 |
 | Freshness | 10 | 5.2 |
 
 ## Data Quality KPI
 
-- 総観測 245 / usable 72
+- 総観測 244 / usable 73
 - stale 118（48%） / 0円 38（16%）
-- item_url率 44% / search 23%
-- manual 53% / API 0% / HTML 1%
+- item_url率 45% / search 23%
+- manual 52% / API 0% / HTML 1%
 
 ## Profit KPI
 
@@ -27,10 +27,10 @@
 ## 前日比較
 
 - main route: 0 → 0
-- reference: 1 → 2
+- reference: 2 → 2
 - stale率: 48% → 48%
 - 0円率: 16% → 16%
-- item_url率: 45% → 44%
+- item_url率: 44% → 45%
 
 ## 異常検知
 
@@ -39,9 +39,7 @@
 - 取得成功率 0%: セカンドストリート
 
 ### 🟡 Warning
-- reference 急増 1→2
-- item_url率 低下
-- item_url率 44% (<50%)
+- item_url率 45% (<50%)
 
 ### ℹ️ Info
 - なし
@@ -75,13 +73,13 @@
 | 駿河屋 | 2 | 0% | 0 | 2 | 0% | 100% |
 | TSUTAYA | 2 | 0% | 0 | 2 | 0% | 100% |
 | 楽天市場新品 | 2 | 100% | 2 | 0 | 100% | 0% |
-| Amazon JP (新品出品) | 2 | 100% | 0 | 0 | 0% | 100% |
+| Amazon JP (新品出品) | 1 | 100% | 0 | 0 | 0% | 100% |
 
 ## 改善提案 TOP10
 
 | 優先 | 施策 | 効果 | 工数 |
 |---|---|---|---|
-| ★★★★★ | EBAY_APP_ID 設定 | +¥222,588（参考2→main昇格） | 1時間 |
+| ★★★★★ | EBAY_APP_ID 設定 | +¥128,519（参考2→main昇格） | 1時間 |
 | ★★★★☆ | 取得失敗修正: ゲオモバイル | 0円4件の解消でsell候補復活 | 4時間 |
 | ★★★★☆ | 取得失敗修正: セカンドストリート | 0円4件の解消でsell候補復活 | 4時間 |
 | ★★★★☆ | Mercari/Yahoo sold 手動CSV追加 | 国内買取ルートの裾拡大 | 1時間 |

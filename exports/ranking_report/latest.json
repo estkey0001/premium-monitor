@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-08 17:44 JST",
+  "generated_at": "2026-09-09 17:50 JST",
   "route_type_beginner": "primary_to_secondary",
   "top_camera_buyback_opportunities": [
     {
@@ -31,20 +31,6 @@
       "age_days": 0.0
     },
     {
-      "product_id": "prod_q3",
-      "product_name": "Leica Q3",
-      "shop_name": "フジヤカメラ",
-      "buyback_price": 869000,
-      "official_price": 880000,
-      "reference_price": 880000,
-      "reference_source": "retail_concept",
-      "diff_vs_official": -11000,
-      "matched_item": "ライカ Q3 モノクローム 19201 Leica 買取金額 新品同様 ￥869,000 良品 ￥868,000 下取は10%UP 新品同様 ￥955,900 良品 ￥954,800 買取申し込み 買取検討リストへ",
-      "confidence": "high",
-      "source": "auto_scraped",
-      "age_days": 0.0
-    },
-    {
       "product_id": "prod_m11",
       "product_name": "Leica M11",
       "shop_name": "フジヤカメラ",
@@ -54,6 +40,20 @@
       "reference_source": "retail_concept",
       "diff_vs_official": -19000,
       "matched_item": "ライカ M11-P Safari 20236 Leica 買取金額 新品同様 ￥1,161,000 良品 ￥1,160,000 下取は10%UP 新品同様 ￥1,277,100 良品 ￥1,276,000 買取申し込み 買取検討リストへ",
+      "confidence": "high",
+      "source": "auto_scraped",
+      "age_days": 0.0
+    },
+    {
+      "product_id": "prod_q3",
+      "product_name": "Leica Q3",
+      "shop_name": "フジヤカメラ",
+      "buyback_price": 860000,
+      "official_price": 880000,
+      "reference_price": 880000,
+      "reference_source": "retail_concept",
+      "diff_vs_official": -20000,
+      "matched_item": "ライカ Q3 43 19085 Leica 買取金額 新品同様 ￥860,000 良品 ￥859,000 下取は10%UP 新品同様 ￥946,000 良品 ￥944,900 買取申し込み 買取検討リストへ",
       "confidence": "high",
       "source": "auto_scraped",
       "age_days": 0.0
@@ -291,14 +291,14 @@
       "user_level": "beginner_easy",
       "official_price_jpy": 119980,
       "reference_source": "retail_concept",
-      "best_buyback_price": 181200,
+      "best_buyback_price": 181700,
       "best_buyback_shop": "モバイル一番",
       "buy_price": null,
       "buy_shop_name": "",
       "buy_price_type": "",
       "sell_price_type": "buyback_price",
-      "net_profit_jpy": 59920,
-      "net_profit_rate": 0.4994,
+      "net_profit_jpy": 60420,
+      "net_profit_rate": 0.5036,
       "route_type": "primary_to_secondary",
       "source_label": "任天堂公式 / PlayStation Direct / Xbox Store",
       "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
@@ -329,14 +329,14 @@
       "user_level": "pro",
       "official_price_jpy": null,
       "reference_source": null,
-      "best_buyback_price": 181200,
+      "best_buyback_price": 181700,
       "best_buyback_shop": "モバイル一番",
       "buy_price": 177999,
       "buy_shop_name": "ヤフオク (新品/未使用落札)",
       "buy_price_type": "flea_sold_price",
       "sell_price_type": "buyback_price",
-      "net_profit_jpy": 1401,
-      "net_profit_rate": 0.0079,
+      "net_profit_jpy": 1901,
+      "net_profit_rate": 0.0107,
       "route_type": "secondary_to_secondary",
       "source_label": "中古市場 / フリマ / 買取店",
       "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
@@ -350,14 +350,14 @@
         "user_level": "beginner_easy",
         "official_price_jpy": 119980,
         "reference_source": "retail_concept",
-        "best_buyback_price": 181200,
+        "best_buyback_price": 181700,
         "best_buyback_shop": "モバイル一番",
         "buy_price": null,
         "buy_shop_name": "",
         "buy_price_type": "",
         "sell_price_type": "buyback_price",
-        "net_profit_jpy": 59920,
-        "net_profit_rate": 0.4994,
+        "net_profit_jpy": 60420,
+        "net_profit_rate": 0.5036,
         "route_type": "primary_to_secondary",
         "source_label": "任天堂公式 / PlayStation Direct / Xbox Store",
         "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
@@ -392,26 +392,26 @@
         "user_level": "pro",
         "official_price_jpy": null,
         "reference_source": null,
-        "best_buyback_price": 181200,
+        "best_buyback_price": 181700,
         "best_buyback_shop": "モバイル一番",
         "buy_price": 177999,
         "buy_shop_name": "ヤフオク (新品/未使用落札)",
         "buy_price_type": "flea_sold_price",
         "sell_price_type": "buyback_price",
-        "net_profit_jpy": 1401,
-        "net_profit_rate": 0.0079,
+        "net_profit_jpy": 1901,
+        "net_profit_rate": 0.0107,
         "route_type": "secondary_to_secondary",
         "source_label": "中古市場 / フリマ / 買取店",
         "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
       }
     ]
   },
-  "excluded_items": 12,
-  "total_deals": 14,
+  "excluded_items": 13,
+  "total_deals": 15,
   "confidence_summary": {
-    "total": 14,
+    "total": 15,
     "profitable": 2,
-    "negative": 12
+    "negative": 13
   },
   "stale_data_count": 0
 }

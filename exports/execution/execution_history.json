@@ -3151,6 +3151,42 @@
       "hold_days": 0,
       "closed_date": "2026-09-08",
       "note": "sample: eBay sold未更新のため実行見送り"
+    },
+    {
+      "exec_id": "2026-09-09_prod_gr3x_WAIT",
+      "date": "2026-09-09",
+      "product_id": "prod_gr3x",
+      "product": "RICOH GR IIIx",
+      "action": "WAIT",
+      "opportunity_score": 41,
+      "predicted_probability": 58,
+      "predicted_net": 70396,
+      "category": "camera",
+      "maker": "RICOH",
+      "status": "SUCCESS",
+      "realized_profit": 12700,
+      "realized_roi": 0.085,
+      "hold_days": 3,
+      "closed_date": "2026-09-09",
+      "note": "sample: メルカリ¥150,000→フジヤ買取¥167,200で売却成立"
+    },
+    {
+      "exec_id": "2026-09-09_prod_x100vi_WAIT",
+      "date": "2026-09-09",
+      "product_id": "prod_x100vi",
+      "product": "FUJIFILM X100VI",
+      "action": "WAIT",
+      "opportunity_score": 41,
+      "predicted_probability": 30,
+      "predicted_net": 58123,
+      "category": "camera",
+      "maker": "FUJIFILM",
+      "status": "CANCELLED",
+      "realized_profit": 0,
+      "realized_roi": 0.0,
+      "hold_days": 0,
+      "closed_date": "2026-09-09",
+      "note": "sample: eBay sold未更新のため実行見送り"
     }
   ]
 }

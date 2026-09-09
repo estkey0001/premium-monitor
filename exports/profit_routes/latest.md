@@ -1,6 +1,6 @@
 # Pro 利益ルート（normalized_price_observations 由来・検証済み）
 
-生成: 2026-09-08 17:44 JST
+生成: 2026-09-09 17:50 JST
 
 - **main 利益ルート: 0件**（route_confidence high/medium のみ）
 - 参考ルート(海外sold stale・要fresh化): 2件
@@ -17,8 +17,8 @@
 
 | product | buy¥ | sell(海外sold)¥ | 潜在net | ROI | stale |
 |---|---|---|---|---|---|
-| FUJIFILM X100VI | ¥261,800 | ¥546,823 | +¥162,804 | 62% | overseas_sold_stale(17.3d) |
-| FUJIFILM X100VI | ¥361,819 | ¥546,823 | +¥59,784 | 17% | overseas_sold_stale(17.3d) |
+| RICOH GR IIIx | ¥111,750 | ¥240,182 | +¥70,396 | 63% | overseas_sold_stale(18.3d) |
+| FUJIFILM X100VI | ¥361,819 | ¥544,746 | +¥58,123 | 16% | overseas_sold_stale(18.3d) |
 
 ## 0件商品の診断
 
@@ -124,15 +124,17 @@
 
 ### RICOH GR IV HDF
 - buy候補 1 / sell候補 0 / stale除外 6 / 海外sold stale 0
-- 除外理由TOP5: [('stale_over_14d', 6), ('duplicate_price_collision', 1), ('accessory_or_wrong_product', 1)]
+- 除外理由TOP5: [('stale_over_14d', 6), ('duplicate_price_collision', 1)]
 
 ### RICOH GR IV Monochrome
 - buy候補 1 / sell候補 0 / stale除外 6 / 海外sold stale 0
 - 除外理由TOP5: [('stale_over_14d', 6), ('duplicate_price_collision', 1)]
 
 ### RICOH GR IIIx
-- buy候補 1 / sell候補 0 / stale除外 11 / 海外sold stale 1
+- buy候補 2 / sell候補 0 / stale除外 11 / 海外sold stale 1
 - 除外理由TOP5: [('stale_over_14d', 11), ('model_mismatch', 1)]
+- eBay sold を fresh化すると成立する候補:
+  - src_ebay ¥240,182 → 潜在 +¥70,396（ROI 63%）
 
 ### RICOH GR III HDF
 - buy候補 0 / sell候補 0 / stale除外 0 / 海外sold stale 0
@@ -143,11 +145,10 @@
 - 除外理由TOP5: []
 
 ### FUJIFILM X100VI
-- buy候補 2 / sell候補 0 / stale除外 17 / 海外sold stale 1
+- buy候補 1 / sell候補 0 / stale除外 17 / 海外sold stale 1
 - 除外理由TOP5: [('stale_over_14d', 17), ('duplicate_price_collision', 1)]
 - eBay sold を fresh化すると成立する候補:
-  - src_ebay ¥546,823 → 潜在 +¥162,804（ROI 62%）
-  - src_ebay ¥546,823 → 潜在 +¥59,784（ROI 17%）
+  - src_ebay ¥544,746 → 潜在 +¥58,123（ROI 16%）
 
 ### FUJIFILM GFX100RF
 - buy候補 0 / sell候補 1 / stale除外 0 / 海外sold stale 0
@@ -198,8 +199,8 @@
 - 除外理由TOP5: []
 
 ### Leica Q3
-- buy候補 0 / sell候補 0 / stale除外 0 / 海外sold stale 0
-- 除外理由TOP5: [('model_mismatch', 1)]
+- buy候補 0 / sell候補 1 / stale除外 0 / 海外sold stale 0
+- 除外理由TOP5: []
 
 ### Leica M11
 - buy候補 0 / sell候補 0 / stale除外 0 / 海外sold stale 0

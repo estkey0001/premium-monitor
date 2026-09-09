@@ -1,19 +1,86 @@
 {
-  "generated_at": "2026-09-08 17:44 JST",
-  "health_score": 43.7,
+  "generated_at": "2026-09-09 17:50 JST",
+  "health_score": 43.9,
   "health_note": "現在データ品質低下中",
   "main_route_count": 0,
-  "reference_route_count": 1,
+  "reference_route_count": 2,
   "today_tasks": [
+    "⏳ RICOH GR IIIx は待機（eBay sold 更新（EBAY_APP_ID 設定）後に BUY 候補へ昇格します。海外価格の更新待ちです。）",
     "⏳ FUJIFILM X100VI は待機（eBay sold 更新（EBAY_APP_ID 設定）後に BUY 候補へ昇格します。海外価格の更新待ちです。）"
   ],
   "daily_recommendation": {
-    "product": "FUJIFILM X100VI",
+    "product": "RICOH GR IIIx",
     "buy_now": "WATCH",
     "opportunity_score": 41,
-    "reason": "FUJIFILM X100VI: WATCH。海外更新後見込み 利益¥162,804/ROI62%/Score41"
+    "reason": "RICOH GR IIIx: WATCH。海外更新後見込み 利益¥70,396/ROI63%/Score41"
   },
   "todays_opportunities": [
+    {
+      "product": "RICOH GR IIIx",
+      "product_id": "prod_gr3x",
+      "kind": "reference",
+      "opportunity_score": 41,
+      "score_breakdown": {
+        "利益": 30,
+        "ROI": 20,
+        "鮮度": 0,
+        "再現性": 4,
+        "データ品質": 5,
+        "confidence": 2,
+        "減点(manual/stale)": -20
+      },
+      "buy_now": "WATCH",
+      "confidence": "low",
+      "action": "WAIT",
+      "action_reason": "eBay sold 更新（EBAY_APP_ID 設定）後に BUY 候補へ昇格します。海外価格の更新待ちです。",
+      "alert_threshold": 218224,
+      "expected_buy_price": 218224,
+      "expected_sell_price": 240182,
+      "buy_conditions": {
+        "buy": "Amazon JP (新品出品) ≤ ¥218,224",
+        "sell": "src_ebay ≥ ¥240,182",
+        "roi": "ROI ≥ 8%"
+      },
+      "next_update": "次回自動更新: 明日 12:00頃（通常24時間以内）",
+      "price_trend": {
+        "7d": "↑",
+        "30d": "↑",
+        "90d": "→"
+      },
+      "success_probability": 30,
+      "timeline": {
+        "stages": [
+          "候補",
+          "監視",
+          "成立",
+          "通知"
+        ],
+        "current": "監視"
+      },
+      "summary": "★★☆☆☆\n海外売却で成立見込みの参考ルートです。\neBay更新後の想定利益 ¥70,396 / ROI 63%。\n現在は海外価格の更新待ちです。",
+      "why": [
+        "reference route（海外sold更新で成立見込み）",
+        "ROIが8%以上（63%）",
+        "価格 18日前（要更新）"
+      ],
+      "risks": [
+        "stale（18日前・main計算除外水準）",
+        "海外依存（為替・関税・輸送）",
+        "送料・決済手数料が大きい",
+        "同条件件数不足（再現性低）",
+        "アクセサリー混在に注意（本体判定要確認）"
+      ],
+      "holding_period": "1ヶ月",
+      "net_profit": 70396,
+      "roi": 0.6299,
+      "reproducibility_score": 30,
+      "buy_source": "Amazon JP (新品出品)",
+      "buy_price": 111750,
+      "sell_source": "src_ebay",
+      "sell_price": 240182,
+      "age_days": 18.3,
+      "priority": 1
+    },
     {
       "product": "FUJIFILM X100VI",
       "product_id": "prod_x100vi",
@@ -32,18 +99,18 @@
       "confidence": "low",
       "action": "WAIT",
       "action_reason": "eBay sold 更新（EBAY_APP_ID 設定）後に BUY 候補へ昇格します。海外価格の更新待ちです。",
-      "alert_threshold": 500080,
-      "expected_buy_price": 500080,
-      "expected_sell_price": 546823,
+      "alert_threshold": 496305,
+      "expected_buy_price": 496305,
+      "expected_sell_price": 544746,
       "buy_conditions": {
-        "buy": "Amazon JP (新品出品) ≤ ¥500,080",
-        "sell": "src_ebay ≥ ¥546,823",
+        "buy": "ヤフオク (新品/未使用落札) ≤ ¥496,305",
+        "sell": "src_ebay ≥ ¥544,746",
         "roi": "ROI ≥ 8%"
       },
       "next_update": "次回自動更新: 明日 12:00頃（通常24時間以内）",
       "price_trend": {
         "7d": "↓",
-        "30d": "→",
+        "30d": "↑",
         "90d": "→"
       },
       "success_probability": 30,
@@ -56,29 +123,29 @@
         ],
         "current": "監視"
       },
-      "summary": "★★☆☆☆\n海外売却で成立見込みの参考ルートです。\neBay更新後の想定利益 ¥162,804 / ROI 62%。\n現在は海外価格の更新待ちです。",
+      "summary": "★★☆☆☆\n海外売却で成立見込みの参考ルートです。\neBay更新後の想定利益 ¥58,123 / ROI 16%。\n現在は海外価格の更新待ちです。",
       "why": [
         "reference route（海外sold更新で成立見込み）",
-        "ROIが8%以上（62%）",
-        "価格 17日前（要更新）"
+        "ROIが8%以上（16%）",
+        "価格 18日前（要更新）"
       ],
       "risks": [
-        "stale（17日前・main計算除外水準）",
+        "stale（18日前・main計算除外水準）",
         "海外依存（為替・関税・輸送）",
         "送料・決済手数料が大きい",
         "同条件件数不足（再現性低）",
         "アクセサリー混在に注意（本体判定要確認）"
       ],
       "holding_period": "1ヶ月",
-      "net_profit": 162804,
-      "roi": 0.6219,
+      "net_profit": 58123,
+      "roi": 0.1606,
       "reproducibility_score": 30,
-      "buy_source": "Amazon JP (新品出品)",
-      "buy_price": 261800,
+      "buy_source": "ヤフオク (新品/未使用落札)",
+      "buy_price": 361819,
       "sell_source": "src_ebay",
-      "sell_price": 546823,
-      "age_days": 17.3,
-      "priority": 1
+      "sell_price": 544746,
+      "age_days": 18.3,
+      "priority": 2
     }
   ]
 }

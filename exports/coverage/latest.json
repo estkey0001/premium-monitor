@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-09-09 17:50 JST",
+  "generated_at": "2026-09-10 17:49 JST",
   "total_products": 45,
   "covered_categories": 7,
-  "coverage_score": 47,
+  "coverage_score": 45,
   "coverage_score_breakdown": {
     "breadth": 21,
     "depth": 17,
-    "profitability": 4,
+    "profitability": 2,
     "freshness": 5
   },
   "current_coverage": [
@@ -14,7 +14,7 @@
       "category": "camera",
       "products": 21,
       "main": 0,
-      "reference": 2,
+      "reference": 1,
       "avg_profit": 0,
       "avg_roi": 0
     },

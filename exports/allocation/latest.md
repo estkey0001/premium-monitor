@@ -1,14 +1,13 @@
 # Capital Allocation Engine
 
-生成: 2026-09-09 17:50 JST / account_id: default
+生成: 2026-09-10 17:49 JST / account_id: default
 現金留保 20% / 集中上限 商品30%・カテゴリ50%・メーカー60%
 
 ## Opportunity 指標
 
 | 商品 | action | 買値 | 期待値(EV) | 資本効率 | Risk | Liquidity |
 |---|---|---|---|---|---|---|
-| RICOH GR IIIx | WAIT | ¥111,750 | ¥21,119 | 0.189 | 52 | 25 |
-| FUJIFILM X100VI | WAIT | ¥361,819 | ¥17,437 | 0.0482 | 52 | 25 |
+| FUJIFILM X100VI | WAIT | ¥361,819 | ¥17,242 | 0.0477 | 53 | 25 |
 
 ## 予算 ¥1,000,000 の配分プラン
 
@@ -17,7 +16,6 @@
 
 （配分対象なし）
 
-- 待機: RICOH GR IIIx — 海外価格更新待ち（eBay sold）
 - 待機: FUJIFILM X100VI — 海外価格更新待ち（eBay sold）
 - 現金 ¥1,000,000（推奨留保20%: 急なBUY通知対応）
 
@@ -28,7 +26,6 @@
 
 （配分対象なし）
 
-- 待機: RICOH GR IIIx — 海外価格更新待ち（eBay sold）
 - 待機: FUJIFILM X100VI — 海外価格更新待ち（eBay sold）
 - 現金 ¥3,000,000（推奨留保20%: 急なBUY通知対応）
 
@@ -39,7 +36,6 @@
 
 （配分対象なし）
 
-- 待機: RICOH GR IIIx — 海外価格更新待ち（eBay sold）
 - 待機: FUJIFILM X100VI — 海外価格更新待ち（eBay sold）
 - 現金 ¥5,000,000（推奨留保20%: 急なBUY通知対応）
 
@@ -50,7 +46,6 @@
 
 （配分対象なし）
 
-- 待機: RICOH GR IIIx — 海外価格更新待ち（eBay sold）
 - 待機: FUJIFILM X100VI — 海外価格更新待ち（eBay sold）
 - 現金 ¥10,000,000（推奨留保20%: 急なBUY通知対応）
 
@@ -61,6 +56,5 @@
 
 （配分対象なし）
 
-- 待機: RICOH GR IIIx — 海外価格更新待ち（eBay sold）
 - 待機: FUJIFILM X100VI — 海外価格更新待ち（eBay sold）
 - 現金 ¥30,000,000（推奨留保20%: 急なBUY通知対応）

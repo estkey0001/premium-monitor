@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-09 17:50 JST",
+  "generated_at": "2026-09-10 17:49 JST",
   "account_id": "default",
   "cash_reserve_ratio": 0.2,
   "concentration_caps": {
@@ -9,39 +9,20 @@
   },
   "opportunity_metrics": [
     {
-      "product": "RICOH GR IIIx",
-      "product_id": "prod_gr3x",
-      "action": "WAIT",
-      "kind": "reference",
-      "buy_price": 111750,
-      "net_profit": 70396,
-      "roi": 0.6299,
-      "success_probability": 30,
-      "opportunity_score": 41,
-      "reproducibility_score": 30,
-      "holding_period": "1ヶ月",
-      "expected_value": 21119,
-      "capital_efficiency": 0.189,
-      "risk_score": 52,
-      "liquidity_score": 25,
-      "category": "camera",
-      "maker": "RICOH"
-    },
-    {
       "product": "FUJIFILM X100VI",
       "product_id": "prod_x100vi",
       "action": "WAIT",
       "kind": "reference",
       "buy_price": 361819,
-      "net_profit": 58123,
-      "roi": 0.1606,
+      "net_profit": 57475,
+      "roi": 0.1589,
       "success_probability": 30,
       "opportunity_score": 41,
       "reproducibility_score": 30,
       "holding_period": "1ヶ月",
-      "expected_value": 17437,
-      "capital_efficiency": 0.0482,
-      "risk_score": 52,
+      "expected_value": 17242,
+      "capital_efficiency": 0.0477,
+      "risk_score": 53,
       "liquidity_score": 25,
       "category": "camera",
       "maker": "FUJIFILM"
@@ -63,10 +44,6 @@
       "allocations": [],
       "waiting": [
         {
-          "product": "RICOH GR IIIx",
-          "reason": "海外価格更新待ち（eBay sold）"
-        },
-        {
           "product": "FUJIFILM X100VI",
           "reason": "海外価格更新待ち（eBay sold）"
         }
@@ -86,10 +63,6 @@
       "cash_reserve_ratio": 0.2,
       "allocations": [],
       "waiting": [
-        {
-          "product": "RICOH GR IIIx",
-          "reason": "海外価格更新待ち（eBay sold）"
-        },
         {
           "product": "FUJIFILM X100VI",
           "reason": "海外価格更新待ち（eBay sold）"
@@ -111,10 +84,6 @@
       "allocations": [],
       "waiting": [
         {
-          "product": "RICOH GR IIIx",
-          "reason": "海外価格更新待ち（eBay sold）"
-        },
-        {
           "product": "FUJIFILM X100VI",
           "reason": "海外価格更新待ち（eBay sold）"
         }
@@ -135,10 +104,6 @@
       "allocations": [],
       "waiting": [
         {
-          "product": "RICOH GR IIIx",
-          "reason": "海外価格更新待ち（eBay sold）"
-        },
-        {
           "product": "FUJIFILM X100VI",
           "reason": "海外価格更新待ち（eBay sold）"
         }
@@ -158,10 +123,6 @@
       "cash_reserve_ratio": 0.2,
       "allocations": [],
       "waiting": [
-        {
-          "product": "RICOH GR IIIx",
-          "reason": "海外価格更新待ち（eBay sold）"
-        },
         {
           "product": "FUJIFILM X100VI",
           "reason": "海外価格更新待ち（eBay sold）"

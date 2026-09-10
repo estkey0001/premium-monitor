@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-09 17:50 JST",
+  "generated_at": "2026-09-10 17:49 JST",
   "scope": "商品同一性マッチング精度（利益/AI/UI/SaaS/DQ思想は不変）",
   "accuracy": {
     "product_match_accuracy": 1.0,
@@ -10,13 +10,13 @@
     "detected_mismatches_total": 2,
     "detected_mismatches_rejected": 2,
     "independently_verified_exact": 5,
-    "unverifiable_trusted": 225,
+    "unverifiable_trusted": 223,
     "accessory_misclassification": 0,
     "false_main_promotion": 0,
     "duplicate_patterns": 11,
     "high_risk_duplicates": 3,
     "duplicate_reviewed_pct": 0.3636,
-    "manual_review_queue": 85
+    "manual_review_queue": 84
   },
   "targets": {
     "product_match": ">=0.99",
@@ -26,13 +26,13 @@
     "false_main_promotion": 0
   },
   "totals": {
-    "total": 244,
-    "product_mismatch_or_unverified": 239,
-    "model_unverifiable": 225,
-    "main_rejected": 239,
+    "total": 242,
+    "product_mismatch_or_unverified": 237,
+    "model_unverifiable": 223,
+    "main_rejected": 237,
     "model_match": 17,
     "accessory_detected": 9,
-    "manual_review_required": 85,
+    "manual_review_required": 84,
     "model_mismatch": 2,
     "exact_product_match": 5,
     "main_eligible": 5
@@ -286,21 +286,11 @@
       "main_eligible": 0
     },
     "ヤフオク (新品/未使用落札)": {
-      "total": 11,
-      "product_mismatch_or_unverified": 11,
-      "model_unverifiable": 11,
-      "main_rejected": 11,
-      "manual_review_required": 11,
-      "exact_product_match": 0,
-      "capacity_mismatch": 0,
-      "model_mismatch": 0,
-      "main_eligible": 0
-    },
-    "Amazon JP (新品出品)": {
-      "total": 1,
-      "product_mismatch_or_unverified": 1,
-      "model_unverifiable": 1,
-      "main_rejected": 1,
+      "total": 10,
+      "product_mismatch_or_unverified": 10,
+      "model_unverifiable": 10,
+      "main_rejected": 10,
+      "manual_review_required": 10,
       "exact_product_match": 0,
       "capacity_mismatch": 0,
       "model_mismatch": 0,
@@ -322,7 +312,7 @@
     {
       "product_id": "prod_zf",
       "source": "フジヤカメラ",
-      "title": "Zf 40mm f/2 (SE) レンズキット ブラック Nikon 買取金額 新品同様 ￥158,000 良品 ￥157,000 下取は10%UP 新品同様 ",
+      "title": "Zf 40mm f/2 (SE) レンズキット ブラック Nikon 買取金額 新品同様 ￥155,000 良品 ￥154,000 下取は10%UP 新品同様 ",
       "kinds": [
         "model"
       ],
@@ -550,7 +540,7 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 18.2,
+      "first_seen": 19.2,
       "last_seen": 0.0,
       "risk_level": "medium",
       "possible_reason": [
@@ -611,8 +601,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 30.2,
-      "last_seen": 30.2,
+      "first_seen": 31.2,
+      "last_seen": 31.2,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -641,8 +631,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 30.2,
-      "last_seen": 30.2,
+      "first_seen": 31.2,
+      "last_seen": 31.2,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -671,8 +661,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 30.2,
-      "last_seen": 30.2,
+      "first_seen": 31.2,
+      "last_seen": 31.2,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -795,18 +785,7 @@
     },
     {
       "source": "ヤフオク (新品/未使用落札)",
-      "observations": 11,
-      "score": 75,
-      "identity": 0.0,
-      "capacity": 1.0,
-      "model": 1.0,
-      "condition": 1.0,
-      "freshness": 1.0,
-      "main_eligible": 0
-    },
-    {
-      "source": "Amazon JP (新品出品)",
-      "observations": 1,
+      "observations": 10,
       "score": 75,
       "identity": 0.0,
       "capacity": 1.0,

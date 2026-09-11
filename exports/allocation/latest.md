@@ -1,13 +1,13 @@
 # Capital Allocation Engine
 
-生成: 2026-09-10 17:49 JST / account_id: default
+生成: 2026-09-11 17:46 JST / account_id: default
 現金留保 20% / 集中上限 商品30%・カテゴリ50%・メーカー60%
 
 ## Opportunity 指標
 
 | 商品 | action | 買値 | 期待値(EV) | 資本効率 | Risk | Liquidity |
 |---|---|---|---|---|---|---|
-| FUJIFILM X100VI | WAIT | ¥361,819 | ¥17,242 | 0.0477 | 53 | 25 |
+| FUJIFILM X100VI | WAIT | ¥361,819 | ¥17,800 | 0.0492 | 54 | 25 |
 
 ## 予算 ¥1,000,000 の配分プラン
 

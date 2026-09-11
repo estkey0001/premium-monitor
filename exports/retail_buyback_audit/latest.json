@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-10 17:49 JST",
+  "generated_at": "2026-09-11 17:46 JST",
   "scope": "販売/買取/二次流通の取得品質・正規化・同一性（利益/AI/UI/SaaSロジックは不変）",
   "rules": {
     "identity": "容量・型番・カラー・新品/中古 を厳格一致",
@@ -732,7 +732,7 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 19.2,
+      "first_seen": 20.2,
       "last_seen": 0.0,
       "risk_level": "medium",
       "possible_reason": [
@@ -793,8 +793,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 31.2,
-      "last_seen": 31.2,
+      "first_seen": 32.2,
+      "last_seen": 32.2,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -823,8 +823,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 31.2,
-      "last_seen": 31.2,
+      "first_seen": 32.2,
+      "last_seen": 32.2,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -853,8 +853,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 31.2,
-      "last_seen": 31.2,
+      "first_seen": 32.2,
+      "last_seen": 32.2,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"

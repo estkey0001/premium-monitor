@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-11 17:46 JST",
+  "generated_at": "2026-09-12 17:37 JST",
   "route_type_beginner": "primary_to_secondary",
   "top_camera_buyback_opportunities": [
     {
@@ -291,14 +291,14 @@
       "user_level": "beginner_easy",
       "official_price_jpy": 119980,
       "reference_source": "retail_concept",
-      "best_buyback_price": 182500,
+      "best_buyback_price": 182700,
       "best_buyback_shop": "モバイル一番",
       "buy_price": null,
       "buy_shop_name": "",
       "buy_price_type": "",
       "sell_price_type": "buyback_price",
-      "net_profit_jpy": 61220,
-      "net_profit_rate": 0.5103,
+      "net_profit_jpy": 61420,
+      "net_profit_rate": 0.5119,
       "route_type": "primary_to_secondary",
       "source_label": "任天堂公式 / PlayStation Direct / Xbox Store",
       "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
@@ -322,26 +322,7 @@
       "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
     }
   ],
-  "pro_top10": [
-    {
-      "product_name": "PlayStation 5 Pro",
-      "category": "game_console",
-      "user_level": "pro",
-      "official_price_jpy": null,
-      "reference_source": null,
-      "best_buyback_price": 182500,
-      "best_buyback_shop": "モバイル一番",
-      "buy_price": 178000,
-      "buy_shop_name": "ヤフオク (新品/未使用落札)",
-      "buy_price_type": "flea_sold_price",
-      "sell_price_type": "buyback_price",
-      "net_profit_jpy": 2700,
-      "net_profit_rate": 0.0152,
-      "route_type": "secondary_to_secondary",
-      "source_label": "中古市場 / フリマ / 買取店",
-      "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
-    }
-  ],
+  "pro_top10": [],
   "beginner_by_category": {
     "game_console": [
       {
@@ -350,14 +331,14 @@
         "user_level": "beginner_easy",
         "official_price_jpy": 119980,
         "reference_source": "retail_concept",
-        "best_buyback_price": 182500,
+        "best_buyback_price": 182700,
         "best_buyback_shop": "モバイル一番",
         "buy_price": null,
         "buy_shop_name": "",
         "buy_price_type": "",
         "sell_price_type": "buyback_price",
-        "net_profit_jpy": 61220,
-        "net_profit_rate": 0.5103,
+        "net_profit_jpy": 61420,
+        "net_profit_rate": 0.5119,
         "route_type": "primary_to_secondary",
         "source_label": "任天堂公式 / PlayStation Direct / Xbox Store",
         "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
@@ -384,28 +365,7 @@
       }
     ]
   },
-  "pro_by_category": {
-    "game_console": [
-      {
-        "product_name": "PlayStation 5 Pro",
-        "category": "game_console",
-        "user_level": "pro",
-        "official_price_jpy": null,
-        "reference_source": null,
-        "best_buyback_price": 182500,
-        "best_buyback_shop": "モバイル一番",
-        "buy_price": 178000,
-        "buy_shop_name": "ヤフオク (新品/未使用落札)",
-        "buy_price_type": "flea_sold_price",
-        "sell_price_type": "buyback_price",
-        "net_profit_jpy": 2700,
-        "net_profit_rate": 0.0152,
-        "route_type": "secondary_to_secondary",
-        "source_label": "中古市場 / フリマ / 買取店",
-        "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
-      }
-    ]
-  },
+  "pro_by_category": {},
   "excluded_items": 13,
   "total_deals": 15,
   "confidence_summary": {

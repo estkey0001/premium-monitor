@@ -1,7 +1,7 @@
 {
-  "date": "2026-09-11",
-  "health_score": 40.9,
-  "stale_rate": 0.4876,
+  "date": "2026-09-12",
+  "health_score": 41.2,
+  "stale_rate": 0.4777,
   "main_products": [],
   "reference_products": [
     "prod_x100vi"
@@ -10,8 +10,8 @@
     "prod_x100vi": {
       "action": "WAIT",
       "buy_now": "WATCH",
-      "roi": 0.164,
-      "net_profit": 59334,
+      "roi": 0.1602,
+      "net_profit": 57954,
       "buy_price": 361819,
       "product": "FUJIFILM X100VI",
       "buy_source": "ヤフオク (新品/未使用落札)",

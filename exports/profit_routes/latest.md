@@ -1,6 +1,6 @@
 # Pro 利益ルート（normalized_price_observations 由来・検証済み）
 
-生成: 2026-09-11 17:46 JST
+生成: 2026-09-12 17:37 JST
 
 - **main 利益ルート: 0件**（route_confidence high/medium のみ）
 - 参考ルート(海外sold stale・要fresh化): 1件
@@ -17,7 +17,7 @@
 
 | product | buy¥ | sell(海外sold)¥ | 潜在net | ROI | stale |
 |---|---|---|---|---|---|
-| FUJIFILM X100VI | ¥361,819 | ¥546,260 | +¥59,334 | 16% | overseas_sold_stale(20.3d) |
+| FUJIFILM X100VI | ¥361,819 | ¥544,535 | +¥57,954 | 16% | overseas_sold_stale(21.3d) |
 
 ## 0件商品の診断
 
@@ -119,15 +119,15 @@
 
 ### RICOH GR IV
 - buy候補 1 / sell候補 1 / stale除外 15 / 海外sold stale 1
-- 除外理由TOP5: [('stale_over_14d', 15)]
+- 除外理由TOP5: [('stale_over_14d', 15), ('accessory_or_wrong_product', 1)]
 
 ### RICOH GR IV HDF
-- buy候補 0 / sell候補 0 / stale除外 6 / 海外sold stale 0
-- 除外理由TOP5: [('stale_over_14d', 6), ('duplicate_price_collision', 1)]
+- buy候補 1 / sell候補 0 / stale除外 6 / 海外sold stale 0
+- 除外理由TOP5: [('stale_over_14d', 6), ('duplicate_price_collision', 1), ('accessory_or_wrong_product', 1)]
 
 ### RICOH GR IV Monochrome
 - buy候補 1 / sell候補 0 / stale除外 6 / 海外sold stale 0
-- 除外理由TOP5: [('stale_over_14d', 6), ('duplicate_price_collision', 1)]
+- 除外理由TOP5: [('stale_over_14d', 6), ('duplicate_price_collision', 1), ('accessory_or_wrong_product', 1)]
 
 ### RICOH GR IIIx
 - buy候補 1 / sell候補 0 / stale除外 11 / 海外sold stale 1
@@ -143,9 +143,9 @@
 
 ### FUJIFILM X100VI
 - buy候補 1 / sell候補 0 / stale除外 17 / 海外sold stale 1
-- 除外理由TOP5: [('stale_over_14d', 17), ('duplicate_price_collision', 1)]
+- 除外理由TOP5: [('stale_over_14d', 17), ('duplicate_price_collision', 1), ('accessory_or_wrong_product', 1)]
 - eBay sold を fresh化すると成立する候補:
-  - src_ebay ¥546,260 → 潜在 +¥59,334（ROI 16%）
+  - src_ebay ¥544,535 → 潜在 +¥57,954（ROI 16%）
 
 ### FUJIFILM GFX100RF
 - buy候補 0 / sell候補 1 / stale除外 0 / 海外sold stale 0

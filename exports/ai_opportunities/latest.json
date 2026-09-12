@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-09-11 17:46 JST",
-  "health_score": 40.9,
+  "generated_at": "2026-09-12 17:37 JST",
+  "health_score": 41.2,
   "health_note": "現在データ品質低下中",
   "main_route_count": 0,
   "reference_route_count": 1,
@@ -11,7 +11,7 @@
     "product": "FUJIFILM X100VI",
     "buy_now": "WATCH",
     "opportunity_score": 41,
-    "reason": "FUJIFILM X100VI: WATCH。海外更新後見込み 利益¥59,334/ROI16%/Score41"
+    "reason": "FUJIFILM X100VI: WATCH。海外更新後見込み 利益¥57,954/ROI16%/Score41"
   },
   "todays_opportunities": [
     {
@@ -32,17 +32,17 @@
       "confidence": "low",
       "action": "WAIT",
       "action_reason": "eBay sold 更新（EBAY_APP_ID 設定）後に BUY 候補へ昇格します。海外価格の更新待ちです。",
-      "alert_threshold": 497707,
-      "expected_buy_price": 497707,
-      "expected_sell_price": 546260,
+      "alert_threshold": 496110,
+      "expected_buy_price": 496110,
+      "expected_sell_price": 544535,
       "buy_conditions": {
-        "buy": "ヤフオク (新品/未使用落札) ≤ ¥497,707",
-        "sell": "src_ebay ≥ ¥546,260",
+        "buy": "ヤフオク (新品/未使用落札) ≤ ¥496,110",
+        "sell": "src_ebay ≥ ¥544,535",
         "roi": "ROI ≥ 8%"
       },
       "next_update": "次回自動更新: 明日 12:00頃（通常24時間以内）",
       "price_trend": {
-        "7d": "↓",
+        "7d": "→",
         "30d": "↑",
         "90d": "→"
       },
@@ -56,28 +56,28 @@
         ],
         "current": "監視"
       },
-      "summary": "★★☆☆☆\n海外売却で成立見込みの参考ルートです。\neBay更新後の想定利益 ¥59,334 / ROI 16%。\n現在は海外価格の更新待ちです。",
+      "summary": "★★☆☆☆\n海外売却で成立見込みの参考ルートです。\neBay更新後の想定利益 ¥57,954 / ROI 16%。\n現在は海外価格の更新待ちです。",
       "why": [
         "reference route（海外sold更新で成立見込み）",
         "ROIが8%以上（16%）",
-        "価格 20日前（要更新）"
+        "価格 21日前（要更新）"
       ],
       "risks": [
-        "stale（20日前・main計算除外水準）",
+        "stale（21日前・main計算除外水準）",
         "海外依存（為替・関税・輸送）",
         "送料・決済手数料が大きい",
         "同条件件数不足（再現性低）",
         "アクセサリー混在に注意（本体判定要確認）"
       ],
       "holding_period": "1ヶ月",
-      "net_profit": 59334,
-      "roi": 0.164,
+      "net_profit": 57954,
+      "roi": 0.1602,
       "reproducibility_score": 30,
       "buy_source": "ヤフオク (新品/未使用落札)",
       "buy_price": 361819,
       "sell_source": "src_ebay",
-      "sell_price": 546260,
-      "age_days": 20.3,
+      "sell_price": 544535,
+      "age_days": 21.3,
       "priority": 1
     }
   ]

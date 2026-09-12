@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-11T17:46:35+09:00",
+  "generated_at": "2026-09-12T17:37:10+09:00",
   "collection": {
     "total_shops": 16,
     "shops_with_success": 4,
@@ -19,7 +19,7 @@
     "top5_failure_reasons": [
       {
         "reason": "price_not_found",
-        "count": 9
+        "count": 10
       },
       {
         "reason": "product_not_listed",
@@ -42,7 +42,7 @@
   "failure_reasons": [
     {
       "reason": "price_not_found",
-      "count": 9
+      "count": 10
     },
     {
       "reason": "product_not_listed",
@@ -62,7 +62,7 @@
     },
     {
       "reason": "http_404",
-      "count": 5
+      "count": 4
     },
     {
       "reason": "not_supported",
@@ -106,12 +106,12 @@
   },
   "ranking_usable": {
     "beginner": 2,
-    "pro": 1,
+    "pro": 0,
     "reason_if_empty": null
   },
   "sedori_usable": {
-    "routes": 1,
-    "reason_if_empty": null
+    "routes": 0,
+    "reason_if_empty": "calculate-sedori-routes 未実行 or DBにルートデータなし"
   },
   "overseas": {
     "total": 4,
@@ -261,51 +261,51 @@
   "consecutive_failed_shops": [
     {
       "shop_id": "2ndstreet",
-      "consecutive_failures": 134
+      "consecutive_failures": 135
     },
     {
       "shop_id": "bookoff",
-      "consecutive_failures": 134
+      "consecutive_failures": 135
     },
     {
       "shop_id": "dosupara",
-      "consecutive_failures": 134
+      "consecutive_failures": 135
     },
     {
       "shop_id": "geo_mobile",
-      "consecutive_failures": 134
+      "consecutive_failures": 135
     },
     {
       "shop_id": "hardoff",
-      "consecutive_failures": 134
+      "consecutive_failures": 135
     },
     {
       "shop_id": "janpara",
-      "consecutive_failures": 134
+      "consecutive_failures": 135
     },
     {
       "shop_id": "pasoko",
-      "consecutive_failures": 134
+      "consecutive_failures": 135
     },
     {
       "shop_id": "sofmap",
-      "consecutive_failures": 134
+      "consecutive_failures": 135
     },
     {
       "shop_id": "surugaya",
-      "consecutive_failures": 134
+      "consecutive_failures": 135
     },
     {
       "shop_id": "tsutaya",
-      "consecutive_failures": 134
+      "consecutive_failures": 135
     },
     {
       "shop_id": "iosys",
-      "consecutive_failures": 67
+      "consecutive_failures": 68
     },
     {
       "shop_id": "kaitori_shouten",
-      "consecutive_failures": 7
+      "consecutive_failures": 8
     }
   ],
   "improvement_priority": [

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-11 17:46 JST",
+  "generated_at": "2026-09-12 17:37 JST",
   "scope": "商品同一性マッチング精度（利益/AI/UI/SaaS/DQ思想は不変）",
   "accuracy": {
     "product_match_accuracy": 1.0,
@@ -10,13 +10,13 @@
     "detected_mismatches_total": 2,
     "detected_mismatches_rejected": 2,
     "independently_verified_exact": 5,
-    "unverifiable_trusted": 223,
+    "unverifiable_trusted": 228,
     "accessory_misclassification": 0,
     "false_main_promotion": 0,
     "duplicate_patterns": 11,
     "high_risk_duplicates": 3,
     "duplicate_reviewed_pct": 0.3636,
-    "manual_review_queue": 84
+    "manual_review_queue": 85
   },
   "targets": {
     "product_match": ">=0.99",
@@ -26,13 +26,13 @@
     "false_main_promotion": 0
   },
   "totals": {
-    "total": 242,
-    "product_mismatch_or_unverified": 237,
-    "model_unverifiable": 223,
-    "main_rejected": 237,
+    "total": 247,
+    "product_mismatch_or_unverified": 242,
+    "model_unverifiable": 228,
+    "main_rejected": 242,
     "model_match": 17,
-    "accessory_detected": 9,
-    "manual_review_required": 84,
+    "accessory_detected": 13,
+    "manual_review_required": 85,
     "model_mismatch": 2,
     "exact_product_match": 5,
     "main_eligible": 5
@@ -285,12 +285,23 @@
       "model_mismatch": 0,
       "main_eligible": 0
     },
+    "Amazon JP (新品出品)": {
+      "total": 4,
+      "product_mismatch_or_unverified": 4,
+      "model_unverifiable": 4,
+      "accessory_detected": 4,
+      "main_rejected": 4,
+      "exact_product_match": 0,
+      "capacity_mismatch": 0,
+      "model_mismatch": 0,
+      "main_eligible": 0
+    },
     "ヤフオク (新品/未使用落札)": {
-      "total": 10,
-      "product_mismatch_or_unverified": 10,
-      "model_unverifiable": 10,
-      "main_rejected": 10,
-      "manual_review_required": 10,
+      "total": 11,
+      "product_mismatch_or_unverified": 11,
+      "model_unverifiable": 11,
+      "main_rejected": 11,
+      "manual_review_required": 11,
       "exact_product_match": 0,
       "capacity_mismatch": 0,
       "model_mismatch": 0,
@@ -369,7 +380,7 @@
       "source_name": "ヤフオク (新品/未使用落札)",
       "price_role": "buy",
       "price_type": "flea_sold_price",
-      "price": 221529,
+      "price": 227304,
       "product_ids": [
         "prod_iphone17pm_256",
         "prod_iphone17pro_256"
@@ -400,7 +411,7 @@
       "source_name": "ヤフオク (新品/未使用落札)",
       "price_role": "buy",
       "price_type": "flea_sold_price",
-      "price": 245080,
+      "price": 250580,
       "product_ids": [
         "prod_iphone17pm_512",
         "prod_iphone17pro_512"
@@ -540,7 +551,7 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 20.2,
+      "first_seen": 21.2,
       "last_seen": 0.0,
       "risk_level": "medium",
       "possible_reason": [
@@ -601,8 +612,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 32.2,
-      "last_seen": 32.2,
+      "first_seen": 33.2,
+      "last_seen": 33.2,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -631,8 +642,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 32.2,
-      "last_seen": 32.2,
+      "first_seen": 33.2,
+      "last_seen": 33.2,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -661,8 +672,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 32.2,
-      "last_seen": 32.2,
+      "first_seen": 33.2,
+      "last_seen": 33.2,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -785,7 +796,7 @@
     },
     {
       "source": "ヤフオク (新品/未使用落札)",
-      "observations": 10,
+      "observations": 11,
       "score": 75,
       "identity": 0.0,
       "capacity": 1.0,
@@ -946,6 +957,17 @@
       "model": 1.0,
       "condition": 1.0,
       "freshness": 0.0,
+      "main_eligible": 0
+    },
+    {
+      "source": "Amazon JP (新品出品)",
+      "observations": 4,
+      "score": 65,
+      "identity": 0.0,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 1.0,
       "main_eligible": 0
     }
   ],

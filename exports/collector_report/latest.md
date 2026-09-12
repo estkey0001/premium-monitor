@@ -1,6 +1,6 @@
 # Collector Quality Report
 
-生成日時: 2026-09-11 16:37:20 UTC+09:00
+生成日時: 2026-09-12 16:28:55 UTC+09:00
 
 ## サマリ
 
@@ -44,11 +44,11 @@
 
 | 商品 | 成功店舗数 | 目標 | 達成 | 平均価格 | 最低価格 | 最高価格 | suspicious |
 |------|-----------|------|------|---------|---------|---------|-----------|
-| iphone17pm256 | 3 | 3 | ✅ | ¥188,467 | ¥176,400 | ¥194,500 | — |
-| iphone17pm512 | 2 | 3 | ❌ | ¥211,025 | ¥200,550 | ¥221,500 | — |
-| iphone17pro256 | 2 | 3 | ❌ | ¥169,875 | ¥162,750 | ¥177,000 | — |
-| iphone17pro512 | 2 | 3 | ❌ | ¥197,250 | ¥189,000 | ¥205,500 | — |
-| ps5_pro | 1 | 2 | ❌ | ¥182,500 | ¥182,500 | ¥182,500 | — |
+| iphone17pm256 | 3 | 3 | ✅ | ¥184,967 | ¥165,900 | ¥194,500 | — |
+| iphone17pm512 | 2 | 3 | ❌ | ¥205,275 | ¥190,050 | ¥220,500 | — |
+| iphone17pro256 | 2 | 3 | ❌ | ¥167,275 | ¥158,550 | ¥176,000 | — |
+| iphone17pro512 | 2 | 3 | ❌ | ¥191,250 | ¥178,500 | ¥204,000 | — |
+| ps5_pro | 1 | 2 | ❌ | ¥182,700 | ¥182,700 | ¥182,700 | — |
 | switch2 | 1 | 2 | ❌ | ¥35,000 | ¥35,000 | ¥35,000 | ⚠️ |
 
 | 商品 | 成功店舗 |
@@ -101,12 +101,12 @@
 
 | 理由 | 件数 |
 |------|------|
-| price_not_found | 9 |
+| price_not_found | 10 |
 | product_not_listed | 6 |
 | rate_limited_429 | 6 |
 | http_403 | 6 |
 | site_blocked | 6 |
-| http_404 | 5 |
+| http_404 | 4 |
 | not_supported | 4 |
 | service_unavailable | 2 |
 
@@ -126,7 +126,7 @@
 | iphone17pro512 | iosys | FAILED | http_403 |
 | iphone17pro512 | geo_mobile | FAILED | site_blocked |
 | iphone17pro512 | 2ndstreet | FAILED | price_not_found |
-| iphone17pm256 | kaitori_shouten | FAILED | http_404 |
+| iphone17pm256 | kaitori_shouten | FAILED | price_not_found |
 | iphone17pm256 | janpara | FAILED | rate_limited_429 |
 | iphone17pm256 | iosys | FAILED | http_403 |
 | iphone17pm256 | geo_mobile | FAILED | site_blocked |
@@ -164,8 +164,8 @@
 | 商品 | 店舗 | 前回 | 今回 | 変化率 |
 |------|------|------|------|--------|
 | switch2 | geo | ¥45,000 | ¥35,000 | ↓22.2% |
-| iphone17pro256 | netoff | ¥159,600 | ¥162,750 | ↑2.0% |
-| iphone17pro512 | netoff | ¥190,050 | ¥189,000 | ↓0.6% |
+| iphone17pro512 | netoff | ¥190,050 | ¥178,500 | ↓6.1% |
+| iphone17pro256 | netoff | ¥159,600 | ¥158,550 | ↓0.7% |
 
 ## ⚠️ suspicious_price 一覧 (1件)
 

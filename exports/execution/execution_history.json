@@ -3241,6 +3241,24 @@
       "hold_days": 0,
       "closed_date": "2026-09-12",
       "note": "sample: eBay sold未更新のため実行見送り"
+    },
+    {
+      "exec_id": "2026-09-13_prod_x100vi_WAIT",
+      "date": "2026-09-13",
+      "product_id": "prod_x100vi",
+      "product": "FUJIFILM X100VI",
+      "action": "WAIT",
+      "opportunity_score": 41,
+      "predicted_probability": 30,
+      "predicted_net": 58067,
+      "category": "camera",
+      "maker": "FUJIFILM",
+      "status": "CANCELLED",
+      "realized_profit": 0,
+      "realized_roi": 0.0,
+      "hold_days": 0,
+      "closed_date": "2026-09-13",
+      "note": "sample: eBay sold未更新のため実行見送り"
     }
   ]
 }

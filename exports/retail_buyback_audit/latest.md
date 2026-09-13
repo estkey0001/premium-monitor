@@ -1,12 +1,12 @@
 # Retail & Buyback Automation — 品質監査
 
-> 生成: 2026-09-12 17:37 JST / 販売/買取/二次流通の取得品質・正規化・同一性（利益/AI/UI/SaaSロジックは不変）
+> 生成: 2026-09-13 17:57 JST / 販売/買取/二次流通の取得品質・正規化・同一性（利益/AI/UI/SaaSロジックは不変）
 
 ## カテゴリ別サマリ
 | カテゴリ | 観測 | 価格有 | exact | high | fresh | Main昇格可 | 失敗(0円/stale/rejected) |
 |---|--:|--:|--:|--:|--:|--:|--:|
 | buyback | 143 | 123 | 5 | 5 | 49 | 5 | 20/94/125 |
-| resale | 25 | 25 | 0 | 0 | 15 | 0 | 0/10/18 |
+| resale | 21 | 21 | 0 | 0 | 11 | 0 | 0/10/14 |
 | retail | 2 | 2 | 0 | 0 | 0 | 0 | 0/2/2 |
 
 ## Main 昇格（high conf + fresh + exact）: 合計 **5** 件
@@ -45,15 +45,15 @@
 | Mercari sold | 0 | – | – | no_data |
 | ヤフオク (新品/未使用落札) | 11 | 11 | 11 | 0 |
 | Yahoo Auction sold | 0 | – | – | no_data |
-| Amazon JP (新品出品) | 4 | 4 | 4 | 0 |
+| Amazon JP (新品出品) | 0 | – | – | no_data |
 
 ## 商品同一性 監査
-- 容量不一致: 0 / 別型番: 0 / アクセサリー: 13 / 非本体: 13
-- condition分布: {'new': 222, 'used': 25}
+- 容量不一致: 0 / 別型番: 0 / アクセサリー: 9 / 非本体: 9
+- condition分布: {'new': 218, 'used': 25}
 
 ## 正規化 監査
 - price_type付与率: 100% / 送料分離: 100% / ポイント分離: 100% / 下取除外: 88%
-- price_type分布: {'buyback_price': 120, 'shop_sale_price': 29, 'overseas_listing_price': 5, 'flea_listing_price': 5, 'flea_sold_price': 11}
+- price_type分布: {'buyback_price': 120, 'shop_sale_price': 25, 'overseas_listing_price': 5, 'flea_listing_price': 5, 'flea_sold_price': 11}
 
 ## duplicate_price_pattern（同一ソースで複数SKU同額・要確認）
 | source | role | price | SKU数 | product_ids |

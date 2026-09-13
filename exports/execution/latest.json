@@ -1,22 +1,22 @@
 {
-  "generated_at": "2026-09-12 17:37 JST",
+  "generated_at": "2026-09-13 17:57 JST",
   "open_count": 80,
-  "closed_count": 109,
+  "closed_count": 110,
   "success_count": 32,
-  "execution_success_rate": 29.4,
+  "execution_success_rate": 29.1,
   "prediction_accuracy": {
-    "closed_count": 109,
-    "predicted_success_prob_avg": 38.2202,
-    "realized_success_rate": 29.4,
-    "error_points": 8.8,
-    "opportunity_score_avg": 59.8073
+    "closed_count": 110,
+    "predicted_success_prob_avg": 38.1455,
+    "realized_success_rate": 29.1,
+    "error_points": 9.0,
+    "opportunity_score_avg": 59.6364
   },
   "notification_accuracy": {
     "total_notifications": 73,
     "buy_notifications": 1,
     "watch_to_buy": 1,
     "notification_success_rate": 0.438,
-    "false_positive_rate": 0.202
+    "false_positive_rate": 0.2
   },
   "allocation_accuracy": {
     "budget": 3000000,
@@ -35,7 +35,7 @@
         "avg_hold_days": 3.0
       },
       "FUJIFILM X100VI": {
-        "count": 55,
+        "count": 56,
         "success": 0,
         "success_rate": 0.0,
         "avg_profit": 0,
@@ -53,12 +53,12 @@
     },
     "by_category": {
       "camera": {
-        "count": 87,
+        "count": 88,
         "success": 32,
-        "success_rate": 0.368,
-        "avg_profit": 4671,
-        "avg_roi": 0.0313,
-        "avg_hold_days": 1.1034
+        "success_rate": 0.364,
+        "avg_profit": 4618,
+        "avg_roi": 0.0309,
+        "avg_hold_days": 1.0909
       },
       "game_console": {
         "count": 22,
@@ -79,7 +79,7 @@
         "avg_hold_days": 3.0
       },
       "FUJIFILM": {
-        "count": 55,
+        "count": 56,
         "success": 0,
         "success_rate": 0.0,
         "avg_profit": 0,
@@ -97,17 +97,17 @@
     }
   },
   "learning_coefficients": {
-    "opportunity_score_coeff": 1.059,
-    "success_probability_coeff": 0.769,
+    "opportunity_score_coeff": 1.062,
+    "success_probability_coeff": 0.763,
     "risk_score_coeff": 1.0,
     "note": "補正係数のみ学習。利益判定ロジックには適用しない（表示・将来の予測校正用）。",
-    "sample_size": 109,
+    "sample_size": 110,
     "confidence": "high"
   },
   "insights_top10": [
-    "カテゴリ「camera」の成功率が最も高い（37%）",
+    "カテゴリ「camera」の成功率が最も高い（36%）",
     "RICOH GR IIIx は約3日で売却成立（回転が速い）",
-    "成立確率の予測誤差は 8.8pt（概ね良好）",
+    "成立確率の予測誤差は 9.0pt（概ね良好）",
     "Nintendo Switch 2 は薄利/送料負けで失敗（国内薄利ルートは要注意）",
     "Fujiya 買取は日次で更新され鮮度が高い（sell側の信頼性◎）",
     "海外sold（eBay）は EBAY_APP_ID 未設定で stale・main昇格の最大ボトルネック",

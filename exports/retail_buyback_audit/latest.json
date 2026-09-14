@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-13 17:57 JST",
+  "generated_at": "2026-09-14 18:34 JST",
   "scope": "販売/買取/二次流通の取得品質・正規化・同一性（利益/AI/UI/SaaSロジックは不変）",
   "rules": {
     "identity": "容量・型番・カラー・新品/中古 を厳格一致",
@@ -27,18 +27,19 @@
       }
     },
     "resale": {
-      "observations": 21,
-      "with_price": 21,
+      "observations": 22,
+      "with_price": 22,
       "exact_match": 0,
       "high_confidence": 0,
-      "fresh": 11,
+      "fresh": 12,
       "main_promotable": 0,
       "zero": 0,
       "stale": 10,
-      "rejected": 14,
+      "rejected": 15,
       "failure_reasons": {
         "stale_over_14d": 10,
-        "duplicate_price_collision": 4
+        "duplicate_price_collision": 4,
+        "accessory_or_wrong_product": 1
       }
     },
     "retail": {
@@ -293,8 +294,18 @@
       "status": "no_data"
     },
     "Amazon JP (新品出品)": {
-      "observations": 0,
-      "status": "no_data"
+      "observations": 1,
+      "with_price": 1,
+      "exact_match": 0,
+      "high_confidence": 0,
+      "fresh": 1,
+      "main_promotable": 0,
+      "zero": 0,
+      "stale": 0,
+      "rejected": 1,
+      "failure_reasons": {
+        "accessory_or_wrong_product": 1
+      }
     }
   },
   "source_summary": {
@@ -496,16 +507,30 @@
       "failure_reasons": {
         "stale_over_14d": 2
       }
+    },
+    "Amazon JP (新品出品)": {
+      "observations": 1,
+      "with_price": 1,
+      "exact_match": 0,
+      "high_confidence": 0,
+      "fresh": 1,
+      "main_promotable": 0,
+      "zero": 0,
+      "stale": 0,
+      "rejected": 1,
+      "failure_reasons": {
+        "accessory_or_wrong_product": 1
+      }
     }
   },
   "identity_audit": {
-    "checked": 243,
+    "checked": 247,
     "capacity_mismatch": 0,
     "wrong_model": 0,
-    "accessory": 9,
-    "not_body_only": 9,
+    "accessory": 7,
+    "not_body_only": 7,
     "condition_dist": {
-      "new": 218,
+      "new": 222,
       "used": 25
     }
   },
@@ -513,11 +538,11 @@
     "has_price_type": 1.0,
     "shipping_separated": 1.0,
     "points_separated": 1.0,
-    "tradein_excluded": 0.8795,
+    "tradein_excluded": 0.8802,
     "buyback_labeled": 120,
     "price_type_dist": {
       "buyback_price": 120,
-      "shop_sale_price": 25,
+      "shop_sale_price": 26,
       "overseas_listing_price": 5,
       "flea_listing_price": 5,
       "flea_sold_price": 11
@@ -732,7 +757,7 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 22.2,
+      "first_seen": 23.3,
       "last_seen": 0.0,
       "risk_level": "medium",
       "possible_reason": [
@@ -793,8 +818,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 34.2,
-      "last_seen": 34.2,
+      "first_seen": 35.3,
+      "last_seen": 35.3,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -823,8 +848,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 34.2,
-      "last_seen": 34.2,
+      "first_seen": 35.3,
+      "last_seen": 35.3,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -853,8 +878,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 34.2,
-      "last_seen": 34.2,
+      "first_seen": 35.3,
+      "last_seen": 35.3,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"

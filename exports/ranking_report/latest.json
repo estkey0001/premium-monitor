@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-14 18:34 JST",
+  "generated_at": "2026-09-15 18:20 JST",
   "route_type_beginner": "primary_to_secondary",
   "top_camera_buyback_opportunities": [
     {
@@ -59,20 +59,6 @@
       "age_days": 0.0
     },
     {
-      "product_id": "prod_xt5",
-      "product_name": "FUJIFILM X-T5",
-      "shop_name": "フジヤカメラ",
-      "buyback_price": 213000,
-      "official_price": 280000,
-      "reference_price": 280000,
-      "reference_source": "retail_concept",
-      "diff_vs_official": -67000,
-      "matched_item": "FUJIFILM X-T5 XF16-50mmレンズキット ブラック 日本語・英語版 富士フイルム 買取金額 新品同様 ￥213,000 良品 ￥209,000 下取は10%UP 新品同様 ￥234,300 良品 ￥229,900 買取申し",
-      "confidence": "high",
-      "source": "auto_scraped",
-      "age_days": 0.0
-    },
-    {
       "product_id": "prod_x100vi",
       "product_name": "FUJIFILM X100VI",
       "shop_name": "フジヤカメラ",
@@ -82,6 +68,20 @@
       "reference_source": "retail_concept",
       "diff_vs_official": -69500,
       "matched_item": "FUJIFILM X100VI Limited Edition 富士フイルム 買取金額 新品同様 ￥200,000 良品 ￥199,000 下取は10%UP 新品同様 ￥220,000 良品 ￥218,900 買取申し込み 買取検討リストへ",
+      "confidence": "high",
+      "source": "auto_scraped",
+      "age_days": 0.0
+    },
+    {
+      "product_id": "prod_xt5",
+      "product_name": "FUJIFILM X-T5",
+      "shop_name": "フジヤカメラ",
+      "buyback_price": 209000,
+      "official_price": 280000,
+      "reference_price": 280000,
+      "reference_source": "retail_concept",
+      "diff_vs_official": -71000,
+      "matched_item": "FUJIFILM X-T5 XF16-50mmレンズキット ブラック 日本語・英語版 富士フイルム 買取金額 新品同様 ￥209,000 良品 ￥208,000 下取は10%UP 新品同様 ￥229,900 良品 ￥228,800 買取申し",
       "confidence": "high",
       "source": "auto_scraped",
       "age_days": 0.0
@@ -286,6 +286,24 @@
   "route_type_pro": "secondary_to_secondary",
   "beginner_top10": [
     {
+      "product_name": "PlayStation 5 Pro",
+      "category": "game_console",
+      "user_level": "beginner_easy",
+      "official_price_jpy": 119980,
+      "reference_source": "retail_concept",
+      "best_buyback_price": 185000,
+      "best_buyback_shop": "モバイル一番",
+      "buy_price": null,
+      "buy_shop_name": "",
+      "buy_price_type": "",
+      "sell_price_type": "buyback_price",
+      "net_profit_jpy": 63720,
+      "net_profit_rate": 0.5311,
+      "route_type": "primary_to_secondary",
+      "source_label": "任天堂公式 / PlayStation Direct / Xbox Store",
+      "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
+    },
+    {
       "product_name": "RICOH GR III",
       "category": "camera",
       "user_level": "beginner_easy",
@@ -304,8 +322,47 @@
       "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
     }
   ],
-  "pro_top10": [],
+  "pro_top10": [
+    {
+      "product_name": "PlayStation 5 Pro",
+      "category": "game_console",
+      "user_level": "pro",
+      "official_price_jpy": null,
+      "reference_source": null,
+      "best_buyback_price": 185000,
+      "best_buyback_shop": "モバイル一番",
+      "buy_price": 177999,
+      "buy_shop_name": "ヤフオク (新品/未使用落札)",
+      "buy_price_type": "flea_sold_price",
+      "sell_price_type": "buyback_price",
+      "net_profit_jpy": 5201,
+      "net_profit_rate": 0.0292,
+      "route_type": "secondary_to_secondary",
+      "source_label": "中古市場 / フリマ / 買取店",
+      "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
+    }
+  ],
   "beginner_by_category": {
+    "game_console": [
+      {
+        "product_name": "PlayStation 5 Pro",
+        "category": "game_console",
+        "user_level": "beginner_easy",
+        "official_price_jpy": 119980,
+        "reference_source": "retail_concept",
+        "best_buyback_price": 185000,
+        "best_buyback_shop": "モバイル一番",
+        "buy_price": null,
+        "buy_shop_name": "",
+        "buy_price_type": "",
+        "sell_price_type": "buyback_price",
+        "net_profit_jpy": 63720,
+        "net_profit_rate": 0.5311,
+        "route_type": "primary_to_secondary",
+        "source_label": "任天堂公式 / PlayStation Direct / Xbox Store",
+        "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
+      }
+    ],
     "camera": [
       {
         "product_name": "RICOH GR III",
@@ -327,12 +384,33 @@
       }
     ]
   },
-  "pro_by_category": {},
+  "pro_by_category": {
+    "game_console": [
+      {
+        "product_name": "PlayStation 5 Pro",
+        "category": "game_console",
+        "user_level": "pro",
+        "official_price_jpy": null,
+        "reference_source": null,
+        "best_buyback_price": 185000,
+        "best_buyback_shop": "モバイル一番",
+        "buy_price": 177999,
+        "buy_shop_name": "ヤフオク (新品/未使用落札)",
+        "buy_price_type": "flea_sold_price",
+        "sell_price_type": "buyback_price",
+        "net_profit_jpy": 5201,
+        "net_profit_rate": 0.0292,
+        "route_type": "secondary_to_secondary",
+        "source_label": "中古市場 / フリマ / 買取店",
+        "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
+      }
+    ]
+  },
   "excluded_items": 13,
-  "total_deals": 14,
+  "total_deals": 15,
   "confidence_summary": {
-    "total": 14,
-    "profitable": 1,
+    "total": 15,
+    "profitable": 2,
     "negative": 13
   },
   "stale_data_count": 0

@@ -1,6 +1,6 @@
 # Normalized Price Observations
 
-生成: 2026-09-15 18:20 JST
+生成: 2026-09-16 18:20 JST
 
 全価格（買取/販売/出品/落札/海外/下取/公式）を単一スキーマに正規化。
 `price_role`（buy/sell/official/trade_in）を必ず付与し、
@@ -9,38 +9,38 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 
 ## サマリ
 
-- 総観測数: **244**
-- Beginner 利用可: 64 / Pro 利用可: 26
-- fresh(≤14日): 126
+- 総観測数: **245**
+- Beginner 利用可: 63 / Pro 利用可: 24
+- fresh(≤14日): 127
 
 ### price_role 別
 
 | role | 件数 |
 |---|---|
-| buy | 50 |
+| buy | 48 |
 | official | 45 |
-| sell | 149 |
+| sell | 152 |
 
 ### price_type 別
 
 | type | 件数 |
 |---|---|
-| buyback_price | 143 |
+| buyback_price | 146 |
 | flea_listing_price | 5 |
-| flea_sold_price | 11 |
+| flea_sold_price | 10 |
 | official_price | 45 |
 | overseas_listing_price | 5 |
 | overseas_sold_price | 6 |
-| shop_sale_price | 29 |
+| shop_sale_price | 28 |
 
 ### rejection_reason 別（main calc 除外）
 
 | reason | 件数 |
 |---|---|
-| accessory_or_wrong_product | 7 |
+| accessory_or_wrong_product | 6 |
 | duplicate_price_collision | 7 |
 | model_mismatch | 2 |
-| price_zero | 39 |
+| price_zero | 43 |
 | stale_over_14d | 118 |
 
 ## Beginner 利用可（official_price / buyback_price のみ）
@@ -71,9 +71,9 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 | PlayStation 5 Pro | official | official_price | ¥119,980 | medium | 0.0d | メーカー公式/定価 |
 | PlayStation 5 Digital  | official | official_price | ¥72,980 | medium | 0.0d | メーカー公式/定価 |
 | Xbox Series X | official | official_price | ¥59,978 | medium | 0.0d | メーカー公式/定価 |
-| RICOH GR IV | official | official_price | ¥299,800 | high | 0.0d | メーカー公式/定価 |
-| RICOH GR IV HDF | official | official_price | ¥299,800 | high | 0.0d | メーカー公式/定価 |
-| RICOH GR IV Monochrome | official | official_price | ¥299,800 | high | 0.0d | メーカー公式/定価 |
+| RICOH GR IV | official | official_price | ¥259,800 | high | 0.0d | メーカー公式/定価 |
+| RICOH GR IV HDF | official | official_price | ¥259,800 | high | 0.0d | メーカー公式/定価 |
+| RICOH GR IV Monochrome | official | official_price | ¥259,800 | high | 0.0d | メーカー公式/定価 |
 | RICOH GR IIIx | official | official_price | ¥155,400 | high | 0.0d | メーカー公式/定価 |
 | RICOH GR III HDF | official | official_price | ¥147,400 | medium | 0.0d | メーカー公式/定価 |
 | RICOH GR III | official | official_price | ¥129,800 | medium | 0.0d | メーカー公式/定価 |
@@ -91,20 +91,18 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 | Nikon Z8 | sell | buyback_price | ¥317,900 | new_unopened | 0.0d | フジヤカメラ |
 | Nikon Z9 | sell | buyback_price | ¥369,600 | new_unopened | 0.0d | フジヤカメラ |
 | Leica Q3 | sell | buyback_price | ¥860,000 | new_unopened | 0.0d | フジヤカメラ |
-| iPhone 17 Pro 256GB SI | sell | buyback_price | ¥178,500 | new_unopened_simfree | 0.0d | 買取一丁目 |
+| iPhone 17 Pro 256GB SI | sell | buyback_price | ¥179,000 | new_unopened_simfree | 0.1d | 買取一丁目 |
 | iPhone 17 Pro 256GB SI | sell | buyback_price | ¥158,550 | new_unopened_simfree | 0.0d | ネットオフ |
 | iPhone 17 Pro 512GB SI | sell | buyback_price | ¥206,000 | new_unopened_simfree | 0.0d | 買取一丁目 |
 | iPhone 17 Pro 512GB SI | sell | buyback_price | ¥178,500 | new_unopened_simfree | 0.0d | ネットオフ |
-| iPhone 17 Pro Max 256G | sell | buyback_price | ¥196,500 | new_unopened_simfree | 0.0d | モバイル一番 |
-| iPhone 17 Pro Max 256G | sell | buyback_price | ¥196,500 | new_unopened_simfree | 0.0d | 買取一丁目 |
+| iPhone 17 Pro Max 256G | sell | buyback_price | ¥197,000 | new_unopened_simfree | 0.0d | 買取一丁目 |
 | iPhone 17 Pro Max 256G | sell | buyback_price | ¥165,900 | new_unopened_simfree | 0.0d | ネットオフ |
+| iPhone 17 Pro Max 512G | sell | buyback_price | ¥223,000 | new_unopened_simfree | 0.0d | 買取一丁目 |
 | iPhone 17 Pro Max 512G | sell | buyback_price | ¥190,050 | new_unopened_simfree | 0.0d | ネットオフ |
 | Nintendo Switch 2 | sell | buyback_price | ¥35,000 | new_unopened | 0.0d | ゲオ |
-| PlayStation 5 Pro | sell | buyback_price | ¥185,000 | new_unopened | 0.0d | モバイル一番 |
 | RICOH GR IV | buy | flea_sold_price | ¥324,222 | new_unopened | 0.0d | ヤフオク (新品/未使用落札) |
-| RICOH GR IV HDF | buy | flea_sold_price | ¥298,800 | new_unopened | 0.0d | ヤフオク (新品/未使用落札) |
 | RICOH GR IV Monochrome | buy | flea_sold_price | ¥258,000 | new_unopened | 0.0d | ヤフオク (新品/未使用落札) |
-| RICOH GR IIIx | buy | flea_sold_price | ¥235,400 | new_unopened | 0.0d | ヤフオク (新品/未使用落札) |
+| RICOH GR IIIx | buy | flea_sold_price | ¥236,322 | new_unopened | 0.0d | ヤフオク (新品/未使用落札) |
 | FUJIFILM X100VI | buy | flea_sold_price | ¥361,819 | new_unopened | 0.0d | ヤフオク (新品/未使用落札) |
-| Nintendo Switch 2 | buy | flea_sold_price | ¥79,300 | new_unopened | 0.0d | ヤフオク (新品/未使用落札) |
+| Nintendo Switch 2 | buy | flea_sold_price | ¥73,700 | new_unopened | 0.0d | ヤフオク (新品/未使用落札) |
 | PlayStation 5 Pro | buy | flea_sold_price | ¥177,999 | new_unopened | 0.0d | ヤフオク (新品/未使用落札) |

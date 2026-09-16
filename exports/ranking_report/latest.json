@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-15 18:20 JST",
+  "generated_at": "2026-09-16 18:20 JST",
   "route_type_beginner": "primary_to_secondary",
   "top_camera_buyback_opportunities": [
     {
@@ -59,6 +59,34 @@
       "age_days": 0.0
     },
     {
+      "product_id": "prod_gr4_hdf",
+      "product_name": "RICOH GR IV HDF",
+      "shop_name": "フジヤカメラ",
+      "buyback_price": 213400,
+      "official_price": 259800,
+      "reference_price": 259800,
+      "reference_source": "official",
+      "diff_vs_official": -46400,
+      "matched_item": "RICOH GR IV HDF RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新品同様 ￥213,400 良品 ￥212,300 買取申し込み 買取検討リストへ",
+      "confidence": "high",
+      "source": "auto_scraped",
+      "age_days": 0.0
+    },
+    {
+      "product_id": "prod_gr4_mono",
+      "product_name": "RICOH GR IV Monochrome",
+      "shop_name": "フジヤカメラ",
+      "buyback_price": 213400,
+      "official_price": 259800,
+      "reference_price": 259800,
+      "reference_source": "official",
+      "diff_vs_official": -46400,
+      "matched_item": "RICOH GR IV Monochrome RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新品同様 ￥213,400 良品 ￥212,300 買取申し込み 買取検討リストへ",
+      "confidence": "high",
+      "source": "auto_scraped",
+      "age_days": 0.0
+    },
+    {
       "product_id": "prod_x100vi",
       "product_name": "FUJIFILM X100VI",
       "shop_name": "フジヤカメラ",
@@ -104,40 +132,12 @@
       "product_id": "prod_r5ii",
       "product_name": "Canon EOS R5 Mark II",
       "shop_name": "フジヤカメラ",
-      "buyback_price": 540100,
+      "buyback_price": 529100,
       "official_price": 620000,
       "reference_price": 620000,
       "reference_source": "retail_concept",
-      "diff_vs_official": -79900,
-      "matched_item": "EOS R5 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥491,000 良品 ￥490,000 下取は10%UP 新品同様 ￥540,100 良品 ￥539,000 買取申し込み 買取",
-      "confidence": "high",
-      "source": "auto_scraped",
-      "age_days": 0.0
-    },
-    {
-      "product_id": "prod_gr4_hdf",
-      "product_name": "RICOH GR IV HDF",
-      "shop_name": "フジヤカメラ",
-      "buyback_price": 213400,
-      "official_price": 299800,
-      "reference_price": 299800,
-      "reference_source": "official",
-      "diff_vs_official": -86400,
-      "matched_item": "RICOH GR IV HDF RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新品同様 ￥213,400 良品 ￥212,300 買取申し込み 買取検討リストへ",
-      "confidence": "high",
-      "source": "auto_scraped",
-      "age_days": 0.0
-    },
-    {
-      "product_id": "prod_gr4_mono",
-      "product_name": "RICOH GR IV Monochrome",
-      "shop_name": "フジヤカメラ",
-      "buyback_price": 213400,
-      "official_price": 299800,
-      "reference_price": 299800,
-      "reference_source": "official",
-      "diff_vs_official": -86400,
-      "matched_item": "RICOH GR IV Monochrome RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新品同様 ￥213,400 良品 ￥212,300 買取申し込み 買取検討リストへ",
+      "diff_vs_official": -90900,
+      "matched_item": "EOS R5 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥481,000 良品 ￥480,000 下取は10%UP 新品同様 ￥529,100 良品 ￥528,000 買取申し込み 買取",
       "confidence": "high",
       "source": "auto_scraped",
       "age_days": 0.0
@@ -146,12 +146,26 @@
       "product_id": "prod_r6ii",
       "product_name": "Canon EOS R6 Mark II",
       "shop_name": "フジヤカメラ",
-      "buyback_price": 295000,
+      "buyback_price": 298000,
       "official_price": 390000,
       "reference_price": 390000,
       "reference_source": "retail_concept",
-      "diff_vs_official": -95000,
-      "matched_item": "EOS R6 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥295,000 良品 ￥294,000 下取は10%UP 新品同様 ￥324,500 良品 ￥323,400 買取申し込み 買取",
+      "diff_vs_official": -92000,
+      "matched_item": "EOS R6 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥298,000 良品 ￥297,000 下取は10%UP 新品同様 ￥327,800 良品 ￥326,700 買取申し込み 買取",
+      "confidence": "high",
+      "source": "auto_scraped",
+      "age_days": 0.0
+    },
+    {
+      "product_id": "prod_gr4",
+      "product_name": "RICOH GR IV",
+      "shop_name": "フジヤカメラ",
+      "buyback_price": 151000,
+      "official_price": 259800,
+      "reference_price": 259800,
+      "reference_source": "official",
+      "diff_vs_official": -108800,
+      "matched_item": "RICOH GR IV RICOH 買取金額 新品同様 ￥151,000 良品 ￥150,000 下取は10%UP 新品同様 ￥166,100 良品 ￥165,000 買取申し込み 買取検討リストへ",
       "confidence": "high",
       "source": "auto_scraped",
       "age_days": 0.0
@@ -166,20 +180,6 @@
       "reference_source": "retail_concept",
       "diff_vs_official": -135000,
       "matched_item": "Zf 40mm f/2 (SE) レンズキット ブラック Nikon 買取金額 新品同様 ￥155,000 良品 ￥154,000 下取は10%UP 新品同様 ￥170,500 良品 ￥169,400 買取申し込み 買取検討リストへ",
-      "confidence": "high",
-      "source": "auto_scraped",
-      "age_days": 0.0
-    },
-    {
-      "product_id": "prod_gr4",
-      "product_name": "RICOH GR IV",
-      "shop_name": "フジヤカメラ",
-      "buyback_price": 151000,
-      "official_price": 299800,
-      "reference_price": 299800,
-      "reference_source": "official",
-      "diff_vs_official": -148800,
-      "matched_item": "RICOH GR IV RICOH 買取金額 新品同様 ￥151,000 良品 ￥150,000 下取は10%UP 新品同様 ￥166,100 良品 ￥165,000 買取申し込み 買取検討リストへ",
       "confidence": "high",
       "source": "auto_scraped",
       "age_days": 0.0
@@ -286,24 +286,6 @@
   "route_type_pro": "secondary_to_secondary",
   "beginner_top10": [
     {
-      "product_name": "PlayStation 5 Pro",
-      "category": "game_console",
-      "user_level": "beginner_easy",
-      "official_price_jpy": 119980,
-      "reference_source": "retail_concept",
-      "best_buyback_price": 185000,
-      "best_buyback_shop": "モバイル一番",
-      "buy_price": null,
-      "buy_shop_name": "",
-      "buy_price_type": "",
-      "sell_price_type": "buyback_price",
-      "net_profit_jpy": 63720,
-      "net_profit_rate": 0.5311,
-      "route_type": "primary_to_secondary",
-      "source_label": "任天堂公式 / PlayStation Direct / Xbox Store",
-      "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
-    },
-    {
       "product_name": "RICOH GR III",
       "category": "camera",
       "user_level": "beginner_easy",
@@ -322,47 +304,8 @@
       "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
     }
   ],
-  "pro_top10": [
-    {
-      "product_name": "PlayStation 5 Pro",
-      "category": "game_console",
-      "user_level": "pro",
-      "official_price_jpy": null,
-      "reference_source": null,
-      "best_buyback_price": 185000,
-      "best_buyback_shop": "モバイル一番",
-      "buy_price": 177999,
-      "buy_shop_name": "ヤフオク (新品/未使用落札)",
-      "buy_price_type": "flea_sold_price",
-      "sell_price_type": "buyback_price",
-      "net_profit_jpy": 5201,
-      "net_profit_rate": 0.0292,
-      "route_type": "secondary_to_secondary",
-      "source_label": "中古市場 / フリマ / 買取店",
-      "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
-    }
-  ],
+  "pro_top10": [],
   "beginner_by_category": {
-    "game_console": [
-      {
-        "product_name": "PlayStation 5 Pro",
-        "category": "game_console",
-        "user_level": "beginner_easy",
-        "official_price_jpy": 119980,
-        "reference_source": "retail_concept",
-        "best_buyback_price": 185000,
-        "best_buyback_shop": "モバイル一番",
-        "buy_price": null,
-        "buy_shop_name": "",
-        "buy_price_type": "",
-        "sell_price_type": "buyback_price",
-        "net_profit_jpy": 63720,
-        "net_profit_rate": 0.5311,
-        "route_type": "primary_to_secondary",
-        "source_label": "任天堂公式 / PlayStation Direct / Xbox Store",
-        "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
-      }
-    ],
     "camera": [
       {
         "product_name": "RICOH GR III",
@@ -384,33 +327,12 @@
       }
     ]
   },
-  "pro_by_category": {
-    "game_console": [
-      {
-        "product_name": "PlayStation 5 Pro",
-        "category": "game_console",
-        "user_level": "pro",
-        "official_price_jpy": null,
-        "reference_source": null,
-        "best_buyback_price": 185000,
-        "best_buyback_shop": "モバイル一番",
-        "buy_price": 177999,
-        "buy_shop_name": "ヤフオク (新品/未使用落札)",
-        "buy_price_type": "flea_sold_price",
-        "sell_price_type": "buyback_price",
-        "net_profit_jpy": 5201,
-        "net_profit_rate": 0.0292,
-        "route_type": "secondary_to_secondary",
-        "source_label": "中古市場 / フリマ / 買取店",
-        "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
-      }
-    ]
-  },
+  "pro_by_category": {},
   "excluded_items": 13,
-  "total_deals": 15,
+  "total_deals": 14,
   "confidence_summary": {
-    "total": 15,
-    "profitable": 2,
+    "total": 14,
+    "profitable": 1,
     "negative": 13
   },
   "stale_data_count": 0

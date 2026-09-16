@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-15 18:20 JST",
+  "generated_at": "2026-09-16 18:20 JST",
   "scores": {
     "Security": 90,
     "Reliability": 85,
@@ -8,12 +8,12 @@
     "Scalability": 66,
     "Operations": 82,
     "Deployment": 70,
-    "Data Quality": 71,
+    "Data Quality": 70,
     "Monitoring": 84,
     "Recovery": 76,
     "Documentation": 86
   },
-  "overall_score": 80.5,
+  "overall_score": 80.4,
   "issues": {
     "Critical": [],
     "High": [
@@ -49,11 +49,11 @@
     "auth_billing_env_gated": true
   },
   "data_quality": {
-    "stale_rate": 0.4836,
-    "zero_rate": 0.1598,
-    "item_url_rate": 0.4426,
-    "usable": 71,
-    "total": 244,
+    "stale_rate": 0.4816,
+    "zero_rate": 0.1755,
+    "item_url_rate": 0.4367,
+    "usable": 69,
+    "total": 245,
     "ebay_configured": false,
     "coverage_score": 45,
     "main_routes": 0,

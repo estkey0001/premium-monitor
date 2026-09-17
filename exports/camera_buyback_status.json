@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-16T17:26:27+09:00",
+  "generated_at": "2026-09-17T17:26:01+09:00",
   "summary": {
     "total": 60,
     "ok": 20,
@@ -76,7 +76,7 @@
       "rendered_html_size": 302,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.2f4e4317.1789547187.344c2ec3\n\nhttps://errors.edgesuite.net/18.2f4e4317.1789547187.344c2ec3",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.ad813217.1789633562.ed67dbf7\n\nhttps://errors.edgesuite.net/18.ad813217.1789633562.ed67dbf7",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -90,7 +90,7 @@
       "buyback_link_candidates": [],
       "buyback_page_url": null,
       "buyback_page_html_size": 302,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.2f4e4317.1789547187.344c2ec3\n\nhttps://errors.edgesuite.net/18.2f4e4317.1789547187.344c2ec3",
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.ad813217.1789633562.ed67dbf7\n\nhttps://errors.edgesuite.net/18.ad813217.1789633562.ed67dbf7",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -107,7 +107,7 @@
       "price": 200000,
       "reason": "",
       "html_saved": true,
-      "html_size": 216427,
+      "html_size": 213970,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -115,7 +115,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 216427,
+      "rendered_html_size": 213970,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -367,7 +367,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=X100VI&search=検索",
-      "buyback_page_html_size": 216427,
+      "buyback_page_html_size": 213970,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -650,7 +650,7 @@
       "rendered_html_size": 302,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.2f4e4317.1789547236.344d072f\n\nhttps://errors.edgesuite.net/18.2f4e4317.1789547236.344d072f",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.956bdc17.1789633611.1f8b1907\n\nhttps://errors.edgesuite.net/18.956bdc17.1789633611.1f8b1907",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -664,7 +664,7 @@
       "buyback_link_candidates": [],
       "buyback_page_url": null,
       "buyback_page_html_size": 302,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.2f4e4317.1789547236.344d072f\n\nhttps://errors.edgesuite.net/18.2f4e4317.1789547236.344d072f",
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.956bdc17.1789633611.1f8b1907\n\nhttps://errors.edgesuite.net/18.956bdc17.1789633611.1f8b1907",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -681,7 +681,7 @@
       "price": 521400,
       "reason": "",
       "html_saved": true,
-      "html_size": 201517,
+      "html_size": 344604,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -689,7 +689,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 201517,
+      "rendered_html_size": 344604,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -849,7 +849,7 @@
         }
       ],
       "iframe_count": 1,
-      "shadow_dom_detected": false,
+      "shadow_dom_detected": true,
       "dom_ready_state": "interactive",
       "hit_count": 2,
       "keyword_hit_counts": {
@@ -941,7 +941,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=GFX100RF&search=検索",
-      "buyback_page_html_size": 201517,
+      "buyback_page_html_size": 344604,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -1207,7 +1207,7 @@
       "rendered_html_size": 302,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.e7f12417.1789547284.ac726953\n\nhttps://errors.edgesuite.net/18.e7f12417.1789547284.ac726953",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.90c83017.1789633660.d06ba741\n\nhttps://errors.edgesuite.net/18.90c83017.1789633660.d06ba741",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -1221,7 +1221,7 @@
       "buyback_link_candidates": [],
       "buyback_page_url": null,
       "buyback_page_html_size": 302,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.e7f12417.1789547284.ac726953\n\nhttps://errors.edgesuite.net/18.e7f12417.1789547284.ac726953",
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.90c83017.1789633660.d06ba741\n\nhttps://errors.edgesuite.net/18.90c83017.1789633660.d06ba741",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -1238,7 +1238,7 @@
       "price": 209000,
       "reason": "",
       "html_saved": true,
-      "html_size": 229633,
+      "html_size": 229720,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -1246,7 +1246,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 229633,
+      "rendered_html_size": 229720,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -1406,7 +1406,7 @@
         }
       ],
       "iframe_count": 1,
-      "shadow_dom_detected": false,
+      "shadow_dom_detected": true,
       "dom_ready_state": "interactive",
       "hit_count": 14,
       "keyword_hit_counts": {
@@ -1498,7 +1498,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=X-T5&search=検索",
-      "buyback_page_html_size": 229633,
+      "buyback_page_html_size": 229720,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -1781,7 +1781,7 @@
       "rendered_html_size": 302,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.f0f12417.1789547333.11040610\n\nhttps://errors.edgesuite.net/18.f0f12417.1789547333.11040610",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.90c83017.1789633710.d06ee0f7\n\nhttps://errors.edgesuite.net/18.90c83017.1789633710.d06ee0f7",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -1795,7 +1795,7 @@
       "buyback_link_candidates": [],
       "buyback_page_url": null,
       "buyback_page_html_size": 302,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.f0f12417.1789547333.11040610\n\nhttps://errors.edgesuite.net/18.f0f12417.1789547333.11040610",
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.90c83017.1789633710.d06ee0f7\n\nhttps://errors.edgesuite.net/18.90c83017.1789633710.d06ee0f7",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -1812,7 +1812,7 @@
       "price": 144000,
       "reason": "",
       "html_saved": true,
-      "html_size": 226879,
+      "html_size": 229230,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -1820,7 +1820,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 226879,
+      "rendered_html_size": 229230,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -1980,7 +1980,7 @@
         }
       ],
       "iframe_count": 1,
-      "shadow_dom_detected": false,
+      "shadow_dom_detected": true,
       "dom_ready_state": "interactive",
       "hit_count": 14,
       "keyword_hit_counts": {
@@ -2072,7 +2072,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=RICOH%20GR%20III&search=検索",
-      "buyback_page_html_size": 226879,
+      "buyback_page_html_size": 229230,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -2392,7 +2392,7 @@
       "rendered_html_size": 302,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.e7f12417.1789547381.ac77a082\n\nhttps://errors.edgesuite.net/18.e7f12417.1789547381.ac77a082",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.8a6bdc17.1789633760.4daf50f6\n\nhttps://errors.edgesuite.net/18.8a6bdc17.1789633760.4daf50f6",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -2406,7 +2406,7 @@
       "buyback_link_candidates": [],
       "buyback_page_url": null,
       "buyback_page_html_size": 302,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.e7f12417.1789547381.ac77a082\n\nhttps://errors.edgesuite.net/18.e7f12417.1789547381.ac77a082",
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.8a6bdc17.1789633760.4daf50f6\n\nhttps://errors.edgesuite.net/18.8a6bdc17.1789633760.4daf50f6",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -2423,7 +2423,7 @@
       "price": 167200,
       "reason": "",
       "html_saved": true,
-      "html_size": 201297,
+      "html_size": 205925,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -2431,7 +2431,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 201297,
+      "rendered_html_size": 205925,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -2591,7 +2591,7 @@
         }
       ],
       "iframe_count": 1,
-      "shadow_dom_detected": false,
+      "shadow_dom_detected": true,
       "dom_ready_state": "interactive",
       "hit_count": 3,
       "keyword_hit_counts": {
@@ -2683,7 +2683,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=RICOH%20GR%20IIIx&search=検索",
-      "buyback_page_html_size": 201297,
+      "buyback_page_html_size": 205925,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -2958,7 +2958,7 @@
       "rendered_html_size": 302,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.e7f12417.1789547430.ac7a32c3\n\nhttps://errors.edgesuite.net/18.e7f12417.1789547430.ac7a32c3",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.8a6bdc17.1789633809.4db05866\n\nhttps://errors.edgesuite.net/18.8a6bdc17.1789633809.4db05866",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -2972,7 +2972,7 @@
       "buyback_link_candidates": [],
       "buyback_page_url": null,
       "buyback_page_html_size": 302,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.e7f12417.1789547430.ac7a32c3\n\nhttps://errors.edgesuite.net/18.e7f12417.1789547430.ac7a32c3",
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.8a6bdc17.1789633809.4db05866\n\nhttps://errors.edgesuite.net/18.8a6bdc17.1789633809.4db05866",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -2989,7 +2989,7 @@
       "price": 151000,
       "reason": "",
       "html_saved": true,
-      "html_size": 212132,
+      "html_size": 211880,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -2997,7 +2997,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 212132,
+      "rendered_html_size": 211880,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -3249,7 +3249,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=RICOH%20GR%20IV&search=検索",
-      "buyback_page_html_size": 212132,
+      "buyback_page_html_size": 211880,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -3605,7 +3605,7 @@
       "rendered_html_size": 302,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.f0f12417.1789547479.1109a88a\n\nhttps://errors.edgesuite.net/18.f0f12417.1789547479.1109a88a",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.91813217.1789633858.2f178ad9\n\nhttps://errors.edgesuite.net/18.91813217.1789633858.2f178ad9",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -3619,7 +3619,7 @@
       "buyback_link_candidates": [],
       "buyback_page_url": null,
       "buyback_page_html_size": 302,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.f0f12417.1789547479.1109a88a\n\nhttps://errors.edgesuite.net/18.f0f12417.1789547479.1109a88a",
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.91813217.1789633858.2f178ad9\n\nhttps://errors.edgesuite.net/18.91813217.1789633858.2f178ad9",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -3636,7 +3636,7 @@
       "price": 213400,
       "reason": "",
       "html_saved": true,
-      "html_size": 199513,
+      "html_size": 201699,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -3644,7 +3644,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 199513,
+      "rendered_html_size": 201699,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -3804,7 +3804,7 @@
         }
       ],
       "iframe_count": 1,
-      "shadow_dom_detected": false,
+      "shadow_dom_detected": true,
       "dom_ready_state": "interactive",
       "hit_count": 1,
       "keyword_hit_counts": {
@@ -3896,7 +3896,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=RICOH%20GR%20IV%20HDF&search=検索",
-      "buyback_page_html_size": 199513,
+      "buyback_page_html_size": 201699,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -4156,7 +4156,7 @@
       "rendered_html_size": 302,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.f0f12417.1789547528.110b6871\n\nhttps://errors.edgesuite.net/18.f0f12417.1789547528.110b6871",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.87813217.1789633909.9a043ea5\n\nhttps://errors.edgesuite.net/18.87813217.1789633909.9a043ea5",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -4170,7 +4170,7 @@
       "buyback_link_candidates": [],
       "buyback_page_url": null,
       "buyback_page_html_size": 302,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.f0f12417.1789547528.110b6871\n\nhttps://errors.edgesuite.net/18.f0f12417.1789547528.110b6871",
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.87813217.1789633909.9a043ea5\n\nhttps://errors.edgesuite.net/18.87813217.1789633909.9a043ea5",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -4187,7 +4187,7 @@
       "price": 213400,
       "reason": "",
       "html_saved": true,
-      "html_size": 199654,
+      "html_size": 201819,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -4195,7 +4195,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 199654,
+      "rendered_html_size": 201819,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -4355,7 +4355,7 @@
         }
       ],
       "iframe_count": 1,
-      "shadow_dom_detected": false,
+      "shadow_dom_detected": true,
       "dom_ready_state": "interactive",
       "hit_count": 1,
       "keyword_hit_counts": {
@@ -4447,7 +4447,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=RICOH%20GR%20IV%20Monochrome&search=検索",
-      "buyback_page_html_size": 199654,
+      "buyback_page_html_size": 201819,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -4707,7 +4707,7 @@
       "rendered_html_size": 302,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.e7f12417.1789547576.ac81b398\n\nhttps://errors.edgesuite.net/18.e7f12417.1789547576.ac81b398",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.ad813217.1789633959.ed8a09fc\n\nhttps://errors.edgesuite.net/18.ad813217.1789633959.ed8a09fc",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -4721,7 +4721,7 @@
       "buyback_link_candidates": [],
       "buyback_page_url": null,
       "buyback_page_html_size": 302,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.e7f12417.1789547576.ac81b398\n\nhttps://errors.edgesuite.net/18.e7f12417.1789547576.ac81b398",
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.ad813217.1789633959.ed8a09fc\n\nhttps://errors.edgesuite.net/18.ad813217.1789633959.ed8a09fc",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -4738,7 +4738,7 @@
       "price": 201000,
       "reason": "",
       "html_saved": true,
-      "html_size": 205802,
+      "html_size": 208201,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -4746,7 +4746,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 205802,
+      "rendered_html_size": 208201,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -4998,7 +4998,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=SONY%20%CE%B17R%20V&search=検索",
-      "buyback_page_html_size": 205802,
+      "buyback_page_html_size": 208201,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -5336,7 +5336,7 @@
       "rendered_html_size": 302,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.f0f12417.1789547625.110ed8cd\n\nhttps://errors.edgesuite.net/18.f0f12417.1789547625.110ed8cd",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.91813217.1789634010.2f24d83a\n\nhttps://errors.edgesuite.net/18.91813217.1789634010.2f24d83a",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -5350,7 +5350,7 @@
       "buyback_link_candidates": [],
       "buyback_page_url": null,
       "buyback_page_html_size": 302,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.f0f12417.1789547625.110ed8cd\n\nhttps://errors.edgesuite.net/18.f0f12417.1789547625.110ed8cd",
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.91813217.1789634010.2f24d83a\n\nhttps://errors.edgesuite.net/18.91813217.1789634010.2f24d83a",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -5367,7 +5367,7 @@
       "price": 592900,
       "reason": "",
       "html_saved": true,
-      "html_size": 199538,
+      "html_size": 201730,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -5375,7 +5375,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 199538,
+      "rendered_html_size": 201730,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -5535,7 +5535,7 @@
         }
       ],
       "iframe_count": 1,
-      "shadow_dom_detected": false,
+      "shadow_dom_detected": true,
       "dom_ready_state": "interactive",
       "hit_count": 1,
       "keyword_hit_counts": {
@@ -5627,7 +5627,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=SONY%20%CE%B11%20II&search=検索",
-      "buyback_page_html_size": 199538,
+      "buyback_page_html_size": 201730,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -5887,7 +5887,7 @@
       "rendered_html_size": 302,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.f0f12417.1789547673.1110e916\n\nhttps://errors.edgesuite.net/18.f0f12417.1789547673.1110e916",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.84c83017.1789634060.6fd3a9cd\n\nhttps://errors.edgesuite.net/18.84c83017.1789634060.6fd3a9cd",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -5901,7 +5901,7 @@
       "buyback_link_candidates": [],
       "buyback_page_url": null,
       "buyback_page_html_size": 302,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.f0f12417.1789547673.1110e916\n\nhttps://errors.edgesuite.net/18.f0f12417.1789547673.1110e916",
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.84c83017.1789634060.6fd3a9cd\n\nhttps://errors.edgesuite.net/18.84c83017.1789634060.6fd3a9cd",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -5918,7 +5918,7 @@
       "price": 257400,
       "reason": "",
       "html_saved": true,
-      "html_size": 201523,
+      "html_size": 203871,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -5926,7 +5926,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 201523,
+      "rendered_html_size": 203871,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -6178,7 +6178,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=SONY%20%CE%B17CR&search=検索",
-      "buyback_page_html_size": 201523,
+      "buyback_page_html_size": 203871,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -6447,7 +6447,7 @@
       "rendered_html_size": 302,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.e7f12417.1789547722.ac89f03f\n\nhttps://errors.edgesuite.net/18.e7f12417.1789547722.ac89f03f",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.91813217.1789634110.2f2e6c9d\n\nhttps://errors.edgesuite.net/18.91813217.1789634110.2f2e6c9d",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -6461,7 +6461,7 @@
       "buyback_link_candidates": [],
       "buyback_page_url": null,
       "buyback_page_html_size": 302,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.e7f12417.1789547722.ac89f03f\n\nhttps://errors.edgesuite.net/18.e7f12417.1789547722.ac89f03f",
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.91813217.1789634110.2f2e6c9d\n\nhttps://errors.edgesuite.net/18.91813217.1789634110.2f2e6c9d",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -6475,18 +6475,18 @@
       "shop_id": "src_fujiya",
       "status": "OK",
       "brand": "SONY",
-      "price": 332000,
+      "price": 354000,
       "reason": "",
       "html_saved": true,
-      "html_size": 216718,
+      "html_size": 216734,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
-      "extracted_price": 332000,
+      "extracted_price": 354000,
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 216718,
+      "rendered_html_size": 216734,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -6512,56 +6512,56 @@
         {
           "selector": "[class*='assess']",
           "text": "FX3A ボディ ILME-FX3A\n\t\t\t\n\t\t\t\tSONY\n\t\t\t\n\t\t\t\n\t\t\n\t\t\n\t\t\n\t\t\t\n\t\t\t\n\t\t\t",
-          "price": 339000,
+          "price": 363000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "FX3A ボディ ILME-FX3A SONY 買取金額 新品同様 ￥339,000 良品 ￥335,000 下取は10%UP 新品同様 ￥372,900 良品 ￥368,500 買取申し込み 買取検討リストへ"
+          "item_text": "FX3A ボディ ILME-FX3A SONY 買取金額 新品同様 ￥363,000 良品 ￥360,000 下取は10%UP 新品同様 ￥399,300 良品 ￥396,000 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥339,000\n\t\t\t\t\t\t\n",
-          "price": 339000,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥363,000\n\t\t\t\t\t\t\n",
+          "price": 363000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "FX3A ボディ ILME-FX3A SONY 買取金額 新品同様 ￥339,000 良品 ￥335,000 下取は10%UP 新品同様 ￥372,900 良品 ￥368,500 買取申し込み 買取検討リストへ"
+          "item_text": "FX3A ボディ ILME-FX3A SONY 買取金額 新品同様 ￥363,000 良品 ￥360,000 下取は10%UP 新品同様 ￥399,300 良品 ￥396,000 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥339,000\n\t\t\t\t\t\t\n",
-          "price": 339000,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥363,000\n\t\t\t\t\t\t\n",
+          "price": 363000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "FX3A ボディ ILME-FX3A SONY 買取金額 新品同様 ￥339,000 良品 ￥335,000 下取は10%UP 新品同様 ￥372,900 良品 ￥368,500 買取申し込み 買取検討リストへ"
+          "item_text": "FX3A ボディ ILME-FX3A SONY 買取金額 新品同様 ￥363,000 良品 ￥360,000 下取は10%UP 新品同様 ￥399,300 良品 ￥396,000 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
           "text": "FX3 ボディ ILME-FX3\n\t\t\t\n\t\t\t\tSONY\n\t\t\t\n\t\t\t\n\t\t\n\t\t\n\t\t\n\t\t\t\n\t\t\t\n\t\t\t\t\n",
-          "price": 332000,
+          "price": 354000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "FX3 ボディ ILME-FX3 SONY 買取金額 新品同様 ￥332,000 良品 ￥328,000 下取は10%UP 新品同様 ￥365,200 良品 ￥360,800 買取申し込み 買取検討リストへ"
+          "item_text": "FX3 ボディ ILME-FX3 SONY 買取金額 新品同様 ￥354,000 良品 ￥351,000 下取は10%UP 新品同様 ￥389,400 良品 ￥386,100 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥332,000\n\t\t\t\t\t\t\n",
-          "price": 332000,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥354,000\n\t\t\t\t\t\t\n",
+          "price": 354000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "FX3 ボディ ILME-FX3 SONY 買取金額 新品同様 ￥332,000 良品 ￥328,000 下取は10%UP 新品同様 ￥365,200 良品 ￥360,800 買取申し込み 買取検討リストへ"
+          "item_text": "FX3 ボディ ILME-FX3 SONY 買取金額 新品同様 ￥354,000 良品 ￥351,000 下取は10%UP 新品同様 ￥389,400 良品 ￥386,100 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥332,000\n\t\t\t\t\t\t\n",
-          "price": 332000,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥354,000\n\t\t\t\t\t\t\n",
+          "price": 354000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "FX3 ボディ ILME-FX3 SONY 買取金額 新品同様 ￥332,000 良品 ￥328,000 下取は10%UP 新品同様 ￥365,200 良品 ￥360,800 買取申し込み 買取検討リストへ"
+          "item_text": "FX3 ボディ ILME-FX3 SONY 買取金額 新品同様 ￥354,000 良品 ￥351,000 下取は10%UP 新品同様 ￥389,400 良品 ￥386,100 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
@@ -6646,7 +6646,7 @@
         }
       ],
       "iframe_count": 1,
-      "shadow_dom_detected": false,
+      "shadow_dom_detected": true,
       "dom_ready_state": "interactive",
       "hit_count": 8,
       "keyword_hit_counts": {
@@ -6654,7 +6654,7 @@
       },
       "best_keyword": "SONY FX3",
       "has_buyback_context": true,
-      "sales_price_sample": 339000,
+      "sales_price_sample": 363000,
       "buyback_link_candidates": [
         {
           "text": "買取金額を調べる",
@@ -6738,62 +6738,62 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=SONY%20FX3&search=検索",
-      "buyback_page_html_size": 216718,
+      "buyback_page_html_size": 216734,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
           "selector": "[class*='assess']",
           "text": "FX3A ボディ ILME-FX3A\n\t\t\t\n\t\t\t\tSONY\n\t\t\t\n\t\t\t\n\t\t\n\t\t\n\t\t\n\t\t\t\n\t\t\t\n\t\t\t",
-          "price": 339000,
+          "price": 363000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "FX3A ボディ ILME-FX3A SONY 買取金額 新品同様 ￥339,000 良品 ￥335,000 下取は10%UP 新品同様 ￥372,900 良品 ￥368,500 買取申し込み 買取検討リストへ"
+          "item_text": "FX3A ボディ ILME-FX3A SONY 買取金額 新品同様 ￥363,000 良品 ￥360,000 下取は10%UP 新品同様 ￥399,300 良品 ￥396,000 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥339,000\n\t\t\t\t\t\t\n",
-          "price": 339000,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥363,000\n\t\t\t\t\t\t\n",
+          "price": 363000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "FX3A ボディ ILME-FX3A SONY 買取金額 新品同様 ￥339,000 良品 ￥335,000 下取は10%UP 新品同様 ￥372,900 良品 ￥368,500 買取申し込み 買取検討リストへ"
+          "item_text": "FX3A ボディ ILME-FX3A SONY 買取金額 新品同様 ￥363,000 良品 ￥360,000 下取は10%UP 新品同様 ￥399,300 良品 ￥396,000 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥339,000\n\t\t\t\t\t\t\n",
-          "price": 339000,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥363,000\n\t\t\t\t\t\t\n",
+          "price": 363000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "FX3A ボディ ILME-FX3A SONY 買取金額 新品同様 ￥339,000 良品 ￥335,000 下取は10%UP 新品同様 ￥372,900 良品 ￥368,500 買取申し込み 買取検討リストへ"
+          "item_text": "FX3A ボディ ILME-FX3A SONY 買取金額 新品同様 ￥363,000 良品 ￥360,000 下取は10%UP 新品同様 ￥399,300 良品 ￥396,000 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
           "text": "FX3 ボディ ILME-FX3\n\t\t\t\n\t\t\t\tSONY\n\t\t\t\n\t\t\t\n\t\t\n\t\t\n\t\t\n\t\t\t\n\t\t\t\n\t\t\t\t\n",
-          "price": 332000,
+          "price": 354000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "FX3 ボディ ILME-FX3 SONY 買取金額 新品同様 ￥332,000 良品 ￥328,000 下取は10%UP 新品同様 ￥365,200 良品 ￥360,800 買取申し込み 買取検討リストへ"
+          "item_text": "FX3 ボディ ILME-FX3 SONY 買取金額 新品同様 ￥354,000 良品 ￥351,000 下取は10%UP 新品同様 ￥389,400 良品 ￥386,100 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥332,000\n\t\t\t\t\t\t\n",
-          "price": 332000,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥354,000\n\t\t\t\t\t\t\n",
+          "price": 354000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "FX3 ボディ ILME-FX3 SONY 買取金額 新品同様 ￥332,000 良品 ￥328,000 下取は10%UP 新品同様 ￥365,200 良品 ￥360,800 買取申し込み 買取検討リストへ"
+          "item_text": "FX3 ボディ ILME-FX3 SONY 買取金額 新品同様 ￥354,000 良品 ￥351,000 下取は10%UP 新品同様 ￥389,400 良品 ￥386,100 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥332,000\n\t\t\t\t\t\t\n",
-          "price": 332000,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥354,000\n\t\t\t\t\t\t\n",
+          "price": 354000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "FX3 ボディ ILME-FX3 SONY 買取金額 新品同様 ￥332,000 良品 ￥328,000 下取は10%UP 新品同様 ￥365,200 良品 ￥360,800 買取申し込み 買取検討リストへ"
+          "item_text": "FX3 ボディ ILME-FX3 SONY 買取金額 新品同様 ￥354,000 良品 ￥351,000 下取は10%UP 新品同様 ￥389,400 良品 ￥386,100 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
@@ -6877,38 +6877,38 @@
           "item_text": "XLR-H1 XLRハンドルユニット SONY 買取金額 新品同様 ￥19,000 良品 ￥18,000 下取は10%UP 新品同様 ￥20,900 良品 ￥19,800 買取申し込み 買取検討リストへ"
         }
       ],
-      "buyback_extracted_price": 372900,
+      "buyback_extracted_price": 399300,
       "confidence": "high",
-      "matched_item": "FX3 ボディ ILME-FX3 SONY 買取金額 新品同様 ￥332,000 良品 ￥328,000 下取は10%UP 新品同様 ￥365,200 良品 ￥360,800 買取申し込み 買取検討リストへ",
+      "matched_item": "FX3 ボディ ILME-FX3 SONY 買取金額 新品同様 ￥354,000 良品 ￥351,000 下取は10%UP 新品同様 ￥389,400 良品 ￥386,100 買取申し込み 買取検討リストへ",
       "all_price_candidates": [
         {
-          "price": 339000,
-          "item": "FX3A ボディ ILME-FX3A SONY 買取金額 新品同様 ￥339,000 良品 ￥335,000 下取は10%UP 新品同様 ￥",
+          "price": 363000,
+          "item": "FX3A ボディ ILME-FX3A SONY 買取金額 新品同様 ￥363,000 良品 ￥360,000 下取は10%UP 新品同様 ￥",
           "near_buyback": true
         },
         {
-          "price": 339000,
-          "item": "FX3A ボディ ILME-FX3A SONY 買取金額 新品同様 ￥339,000 良品 ￥335,000 下取は10%UP 新品同様 ￥",
+          "price": 363000,
+          "item": "FX3A ボディ ILME-FX3A SONY 買取金額 新品同様 ￥363,000 良品 ￥360,000 下取は10%UP 新品同様 ￥",
           "near_buyback": true
         },
         {
-          "price": 339000,
-          "item": "FX3A ボディ ILME-FX3A SONY 買取金額 新品同様 ￥339,000 良品 ￥335,000 下取は10%UP 新品同様 ￥",
+          "price": 363000,
+          "item": "FX3A ボディ ILME-FX3A SONY 買取金額 新品同様 ￥363,000 良品 ￥360,000 下取は10%UP 新品同様 ￥",
           "near_buyback": true
         },
         {
-          "price": 332000,
-          "item": "FX3 ボディ ILME-FX3 SONY 買取金額 新品同様 ￥332,000 良品 ￥328,000 下取は10%UP 新品同様 ￥36",
+          "price": 354000,
+          "item": "FX3 ボディ ILME-FX3 SONY 買取金額 新品同様 ￥354,000 良品 ￥351,000 下取は10%UP 新品同様 ￥38",
           "near_buyback": true
         },
         {
-          "price": 332000,
-          "item": "FX3 ボディ ILME-FX3 SONY 買取金額 新品同様 ￥332,000 良品 ￥328,000 下取は10%UP 新品同様 ￥36",
+          "price": 354000,
+          "item": "FX3 ボディ ILME-FX3 SONY 買取金額 新品同様 ￥354,000 良品 ￥351,000 下取は10%UP 新品同様 ￥38",
           "near_buyback": true
         },
         {
-          "price": 332000,
-          "item": "FX3 ボディ ILME-FX3 SONY 買取金額 新品同様 ￥332,000 良品 ￥328,000 下取は10%UP 新品同様 ￥36",
+          "price": 354000,
+          "item": "FX3 ボディ ILME-FX3 SONY 買取金額 新品同様 ￥354,000 良品 ￥351,000 下取は10%UP 新品同様 ￥38",
           "near_buyback": true
         },
         {
@@ -6959,20 +6959,20 @@
       ],
       "rejected_candidates": [
         {
-          "price": 339000,
-          "item": "FX3A ボディ ILME-FX3A SONY 買取金額 新品同様 ￥339,000 良品 ￥335,000 下取は10%UP 新品同様 ￥",
+          "price": 363000,
+          "item": "FX3A ボディ ILME-FX3A SONY 買取金額 新品同様 ￥363,000 良品 ￥360,000 下取は10%UP 新品同様 ￥",
           "near_buyback": true,
           "rejection_reason": "model_mismatch"
         },
         {
-          "price": 339000,
-          "item": "FX3A ボディ ILME-FX3A SONY 買取金額 新品同様 ￥339,000 良品 ￥335,000 下取は10%UP 新品同様 ￥",
+          "price": 363000,
+          "item": "FX3A ボディ ILME-FX3A SONY 買取金額 新品同様 ￥363,000 良品 ￥360,000 下取は10%UP 新品同様 ￥",
           "near_buyback": true,
           "rejection_reason": "model_mismatch"
         },
         {
-          "price": 339000,
-          "item": "FX3A ボディ ILME-FX3A SONY 買取金額 新品同様 ￥339,000 良品 ￥335,000 下取は10%UP 新品同様 ￥",
+          "price": 363000,
+          "item": "FX3A ボディ ILME-FX3A SONY 買取金額 新品同様 ￥363,000 良品 ￥360,000 下取は10%UP 新品同様 ￥",
           "near_buyback": true,
           "rejection_reason": "model_mismatch"
         },
@@ -7058,7 +7058,7 @@
       "rendered_html_size": 302,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.f0f12417.1789547771.1114bd84\n\nhttps://errors.edgesuite.net/18.f0f12417.1789547771.1114bd84",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.87813217.1789634159.9a1d0119\n\nhttps://errors.edgesuite.net/18.87813217.1789634159.9a1d0119",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -7072,7 +7072,7 @@
       "buyback_link_candidates": [],
       "buyback_page_url": null,
       "buyback_page_html_size": 302,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.f0f12417.1789547771.1114bd84\n\nhttps://errors.edgesuite.net/18.f0f12417.1789547771.1114bd84",
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.87813217.1789634159.9a1d0119\n\nhttps://errors.edgesuite.net/18.87813217.1789634159.9a1d0119",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -7086,18 +7086,18 @@
       "shop_id": "src_fujiya",
       "status": "OK",
       "brand": "CANON",
-      "price": 529100,
+      "price": 519200,
       "reason": "",
       "html_saved": true,
-      "html_size": 203920,
+      "html_size": 206092,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
-      "extracted_price": 529100,
+      "extracted_price": 519200,
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 203920,
+      "rendered_html_size": 206092,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -7123,29 +7123,29 @@
         {
           "selector": "[class*='assess']",
           "text": "EOS R5 Mark II RF24-105L IS USM レンズキット\n\t\t\t\n\t\t\t\tCanon\n\t\t\t\n\t\t\t",
-          "price": 481000,
+          "price": 472000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "EOS R5 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥481,000 良品 ￥480,000 下取は10%UP 新品同様 ￥529,100 良品 ￥528,000 買取申し込み 買取検討リストへ"
+          "item_text": "EOS R5 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥472,000 良品 ￥471,000 下取は10%UP 新品同様 ￥519,200 良品 ￥518,100 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥481,000\n\t\t\t\t\t\t\n",
-          "price": 481000,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥472,000\n\t\t\t\t\t\t\n",
+          "price": 472000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "EOS R5 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥481,000 良品 ￥480,000 下取は10%UP 新品同様 ￥529,100 良品 ￥528,000 買取申し込み 買取検討リストへ"
+          "item_text": "EOS R5 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥472,000 良品 ￥471,000 下取は10%UP 新品同様 ￥519,200 良品 ￥518,100 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥481,000\n\t\t\t\t\t\t\n",
-          "price": 481000,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥472,000\n\t\t\t\t\t\t\n",
+          "price": 472000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "EOS R5 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥481,000 良品 ￥480,000 下取は10%UP 新品同様 ￥529,100 良品 ￥528,000 買取申し込み 買取検討リストへ"
+          "item_text": "EOS R5 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥472,000 良品 ￥471,000 下取は10%UP 新品同様 ￥519,200 良品 ￥518,100 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
@@ -7203,61 +7203,61 @@
         },
         {
           "selector": "table td",
-          "text": "￥529,100",
-          "price": 529100,
+          "text": "￥519,200",
+          "price": 519200,
           "near_kw": false,
           "near_buyback": true,
           "is_tradein": false,
-          "item_text": "EOS R5 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥481,000 良品 ￥480,000 下取は10%UP 新品同様 ￥529,100 良品 ￥528,000 買取申し込み 買取検討リストへ"
+          "item_text": "EOS R5 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥472,000 良品 ￥471,000 下取は10%UP 新品同様 ￥519,200 良品 ￥518,100 買取申し込み 買取検討リストへ"
         },
         {
           "selector": ".price",
-          "text": "￥529,100",
-          "price": 529100,
+          "text": "￥519,200",
+          "price": 519200,
           "near_kw": false,
           "near_buyback": false,
           "is_tradein": false,
-          "item_text": "￥529,100"
+          "item_text": "￥519,200"
         },
         {
           "selector": "[class*='price']",
-          "text": "￥529,100",
-          "price": 529100,
+          "text": "￥519,200",
+          "price": 519200,
           "near_kw": false,
           "near_buyback": false,
           "is_tradein": false,
-          "item_text": "￥529,100"
+          "item_text": "￥519,200"
         },
         {
           "selector": "[class*='assess']",
-          "text": "新品同様\n\t\t\t\t\t\t\t￥529,100\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t良品\n\t",
-          "price": 529100,
+          "text": "新品同様\n\t\t\t\t\t\t\t￥519,200\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t良品\n\t",
+          "price": 519200,
           "near_kw": false,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "EOS R5 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥481,000 良品 ￥480,000 下取は10%UP 新品同様 ￥529,100 良品 ￥528,000 買取申し込み 買取検討リストへ"
+          "item_text": "EOS R5 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥472,000 良品 ￥471,000 下取は10%UP 新品同様 ￥519,200 良品 ￥518,100 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "￥529,100",
-          "price": 529100,
+          "text": "￥519,200",
+          "price": 519200,
           "near_kw": false,
           "near_buyback": false,
           "is_tradein": false,
-          "item_text": "￥529,100"
+          "item_text": "￥519,200"
         },
         {
           "selector": "table td",
-          "text": "￥528,000",
-          "price": 528000,
+          "text": "￥518,100",
+          "price": 518100,
           "near_kw": false,
           "near_buyback": true,
           "is_tradein": false,
-          "item_text": "EOS R5 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥481,000 良品 ￥480,000 下取は10%UP 新品同様 ￥529,100 良品 ￥528,000 買取申し込み 買取検討リストへ"
+          "item_text": "EOS R5 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥472,000 良品 ￥471,000 下取は10%UP 新品同様 ￥519,200 良品 ￥518,100 買取申し込み 買取検討リストへ"
         }
       ],
       "iframe_count": 1,
-      "shadow_dom_detected": false,
+      "shadow_dom_detected": true,
       "dom_ready_state": "interactive",
       "hit_count": 3,
       "keyword_hit_counts": {
@@ -7265,7 +7265,7 @@
       },
       "best_keyword": "Canon EOS R5 Mark II",
       "has_buyback_context": true,
-      "sales_price_sample": 481000,
+      "sales_price_sample": 472000,
       "buyback_link_candidates": [
         {
           "text": "買取金額を調べる",
@@ -7349,35 +7349,35 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=Canon%20EOS%20R5%20Mark%20II&search=検索",
-      "buyback_page_html_size": 203920,
+      "buyback_page_html_size": 206092,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
           "selector": "[class*='assess']",
           "text": "EOS R5 Mark II RF24-105L IS USM レンズキット\n\t\t\t\n\t\t\t\tCanon\n\t\t\t\n\t\t\t",
-          "price": 481000,
+          "price": 472000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "EOS R5 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥481,000 良品 ￥480,000 下取は10%UP 新品同様 ￥529,100 良品 ￥528,000 買取申し込み 買取検討リストへ"
+          "item_text": "EOS R5 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥472,000 良品 ￥471,000 下取は10%UP 新品同様 ￥519,200 良品 ￥518,100 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥481,000\n\t\t\t\t\t\t\n",
-          "price": 481000,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥472,000\n\t\t\t\t\t\t\n",
+          "price": 472000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "EOS R5 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥481,000 良品 ￥480,000 下取は10%UP 新品同様 ￥529,100 良品 ￥528,000 買取申し込み 買取検討リストへ"
+          "item_text": "EOS R5 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥472,000 良品 ￥471,000 下取は10%UP 新品同様 ￥519,200 良品 ￥518,100 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥481,000\n\t\t\t\t\t\t\n",
-          "price": 481000,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥472,000\n\t\t\t\t\t\t\n",
+          "price": 472000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "EOS R5 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥481,000 良品 ￥480,000 下取は10%UP 新品同様 ￥529,100 良品 ￥528,000 買取申し込み 買取検討リストへ"
+          "item_text": "EOS R5 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥472,000 良品 ￥471,000 下取は10%UP 新品同様 ￥519,200 良品 ￥518,100 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
@@ -7435,49 +7435,49 @@
         },
         {
           "selector": "table td",
-          "text": "￥529,100",
-          "price": 529100,
+          "text": "￥519,200",
+          "price": 519200,
           "near_kw": false,
           "near_buyback": true,
           "is_tradein": false,
-          "item_text": "EOS R5 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥481,000 良品 ￥480,000 下取は10%UP 新品同様 ￥529,100 良品 ￥528,000 買取申し込み 買取検討リストへ"
+          "item_text": "EOS R5 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥472,000 良品 ￥471,000 下取は10%UP 新品同様 ￥519,200 良品 ￥518,100 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "新品同様\n\t\t\t\t\t\t\t￥529,100\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t良品\n\t",
-          "price": 529100,
+          "text": "新品同様\n\t\t\t\t\t\t\t￥519,200\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t良品\n\t",
+          "price": 519200,
           "near_kw": false,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "EOS R5 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥481,000 良品 ￥480,000 下取は10%UP 新品同様 ￥529,100 良品 ￥528,000 買取申し込み 買取検討リストへ"
+          "item_text": "EOS R5 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥472,000 良品 ￥471,000 下取は10%UP 新品同様 ￥519,200 良品 ￥518,100 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "table td",
-          "text": "￥528,000",
-          "price": 528000,
+          "text": "￥518,100",
+          "price": 518100,
           "near_kw": false,
           "near_buyback": true,
           "is_tradein": false,
-          "item_text": "EOS R5 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥481,000 良品 ￥480,000 下取は10%UP 新品同様 ￥529,100 良品 ￥528,000 買取申し込み 買取検討リストへ"
+          "item_text": "EOS R5 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥472,000 良品 ￥471,000 下取は10%UP 新品同様 ￥519,200 良品 ￥518,100 買取申し込み 買取検討リストへ"
         }
       ],
-      "buyback_extracted_price": 529100,
+      "buyback_extracted_price": 519200,
       "confidence": "high",
-      "matched_item": "EOS R5 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥481,000 良品 ￥480,000 下取は10%UP 新品同様 ￥529,100 良品 ￥528,000 買取申し込み 買取検討リストへ",
+      "matched_item": "EOS R5 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥472,000 良品 ￥471,000 下取は10%UP 新品同様 ￥519,200 良品 ￥518,100 買取申し込み 買取検討リストへ",
       "all_price_candidates": [
         {
-          "price": 481000,
-          "item": "EOS R5 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥481,000 良品 ￥48",
+          "price": 472000,
+          "item": "EOS R5 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥472,000 良品 ￥47",
           "near_buyback": true
         },
         {
-          "price": 481000,
-          "item": "EOS R5 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥481,000 良品 ￥48",
+          "price": 472000,
+          "item": "EOS R5 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥472,000 良品 ￥47",
           "near_buyback": true
         },
         {
-          "price": 481000,
-          "item": "EOS R5 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥481,000 良品 ￥48",
+          "price": 472000,
+          "item": "EOS R5 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥472,000 良品 ￥47",
           "near_buyback": true
         },
         {
@@ -7511,52 +7511,52 @@
           "near_buyback": true
         },
         {
-          "price": 529100,
-          "item": "EOS R5 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥481,000 良品 ￥48",
+          "price": 519200,
+          "item": "EOS R5 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥472,000 良品 ￥47",
           "near_buyback": true
         },
         {
-          "price": 529100,
-          "item": "￥529,100",
+          "price": 519200,
+          "item": "￥519,200",
           "near_buyback": false
         },
         {
-          "price": 529100,
-          "item": "￥529,100",
+          "price": 519200,
+          "item": "￥519,200",
           "near_buyback": false
         },
         {
-          "price": 529100,
-          "item": "EOS R5 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥481,000 良品 ￥48",
+          "price": 519200,
+          "item": "EOS R5 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥472,000 良品 ￥47",
           "near_buyback": true
         },
         {
-          "price": 529100,
-          "item": "￥529,100",
+          "price": 519200,
+          "item": "￥519,200",
           "near_buyback": false
         },
         {
-          "price": 528000,
-          "item": "EOS R5 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥481,000 良品 ￥48",
+          "price": 518100,
+          "item": "EOS R5 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥472,000 良品 ￥47",
           "near_buyback": true
         }
       ],
       "rejected_candidates": [
         {
-          "price": 529100,
-          "item": "￥529,100",
+          "price": 519200,
+          "item": "￥519,200",
           "near_buyback": false,
           "rejection_reason": "not_buyback_context"
         },
         {
-          "price": 529100,
-          "item": "￥529,100",
+          "price": 519200,
+          "item": "￥519,200",
           "near_buyback": false,
           "rejection_reason": "not_buyback_context"
         },
         {
-          "price": 529100,
-          "item": "￥529,100",
+          "price": 519200,
+          "item": "￥519,200",
           "near_buyback": false,
           "rejection_reason": "not_buyback_context"
         }
@@ -7624,7 +7624,7 @@
       "rendered_html_size": 302,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.f0f12417.1789547821.1116a27a\n\nhttps://errors.edgesuite.net/18.f0f12417.1789547821.1116a27a",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.956bdc17.1789634209.1f96c3bd\n\nhttps://errors.edgesuite.net/18.956bdc17.1789634209.1f96c3bd",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -7638,7 +7638,7 @@
       "buyback_link_candidates": [],
       "buyback_page_url": null,
       "buyback_page_html_size": 302,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.f0f12417.1789547821.1116a27a\n\nhttps://errors.edgesuite.net/18.f0f12417.1789547821.1116a27a",
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.956bdc17.1789634209.1f96c3bd\n\nhttps://errors.edgesuite.net/18.956bdc17.1789634209.1f96c3bd",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -7652,18 +7652,18 @@
       "shop_id": "src_fujiya",
       "status": "OK",
       "brand": "CANON",
-      "price": 298000,
+      "price": 289000,
       "reason": "",
       "html_saved": true,
-      "html_size": 211896,
+      "html_size": 215312,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
-      "extracted_price": 298000,
+      "extracted_price": 289000,
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 211896,
+      "rendered_html_size": 215312,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -7689,83 +7689,83 @@
         {
           "selector": "[class*='assess']",
           "text": "EOS R6 Mark III RF24-105L IS USM レンズキット\n\t\t\t\n\t\t\t\tCanon\n\t\t\t\n\t\t",
-          "price": 388000,
+          "price": 379000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "EOS R6 Mark III RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥388,000 良品 ￥387,000 下取は10%UP 新品同様 ￥426,800 良品 ￥425,700 買取申し込み 買取検討リストへ"
+          "item_text": "EOS R6 Mark III RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥379,000 良品 ￥378,000 下取は10%UP 新品同様 ￥416,900 良品 ￥415,800 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥388,000\n\t\t\t\t\t\t\n",
-          "price": 388000,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥379,000\n\t\t\t\t\t\t\n",
+          "price": 379000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "EOS R6 Mark III RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥388,000 良品 ￥387,000 下取は10%UP 新品同様 ￥426,800 良品 ￥425,700 買取申し込み 買取検討リストへ"
+          "item_text": "EOS R6 Mark III RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥379,000 良品 ￥378,000 下取は10%UP 新品同様 ￥416,900 良品 ￥415,800 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥388,000\n\t\t\t\t\t\t\n",
-          "price": 388000,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥379,000\n\t\t\t\t\t\t\n",
+          "price": 379000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "EOS R6 Mark III RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥388,000 良品 ￥387,000 下取は10%UP 新品同様 ￥426,800 良品 ￥425,700 買取申し込み 買取検討リストへ"
+          "item_text": "EOS R6 Mark III RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥379,000 良品 ￥378,000 下取は10%UP 新品同様 ￥416,900 良品 ￥415,800 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
           "text": "EOS R6 Mark III RF24-105 IS STM レンズキット\n\t\t\t\n\t\t\t\tCanon\n\t\t\t\n\t\t\t",
-          "price": 310000,
+          "price": 306000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "EOS R6 Mark III RF24-105 IS STM レンズキット Canon 買取金額 新品同様 ￥310,000 良品 ￥309,000 下取は10%UP 新品同様 ￥341,000 良品 ￥339,900 買取申し込み 買取検討リストへ"
+          "item_text": "EOS R6 Mark III RF24-105 IS STM レンズキット Canon 買取金額 新品同様 ￥306,000 良品 ￥305,000 下取は10%UP 新品同様 ￥336,600 良品 ￥335,500 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥310,000\n\t\t\t\t\t\t\n",
-          "price": 310000,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥306,000\n\t\t\t\t\t\t\n",
+          "price": 306000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "EOS R6 Mark III RF24-105 IS STM レンズキット Canon 買取金額 新品同様 ￥310,000 良品 ￥309,000 下取は10%UP 新品同様 ￥341,000 良品 ￥339,900 買取申し込み 買取検討リストへ"
+          "item_text": "EOS R6 Mark III RF24-105 IS STM レンズキット Canon 買取金額 新品同様 ￥306,000 良品 ￥305,000 下取は10%UP 新品同様 ￥336,600 良品 ￥335,500 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥310,000\n\t\t\t\t\t\t\n",
-          "price": 310000,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥306,000\n\t\t\t\t\t\t\n",
+          "price": 306000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "EOS R6 Mark III RF24-105 IS STM レンズキット Canon 買取金額 新品同様 ￥310,000 良品 ￥309,000 下取は10%UP 新品同様 ￥341,000 良品 ￥339,900 買取申し込み 買取検討リストへ"
+          "item_text": "EOS R6 Mark III RF24-105 IS STM レンズキット Canon 買取金額 新品同様 ￥306,000 良品 ￥305,000 下取は10%UP 新品同様 ￥336,600 良品 ￥335,500 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
           "text": "EOS R6 Mark II RF24-105L IS USM レンズキット\n\t\t\t\n\t\t\t\tCanon\n\t\t\t\n\t\t\t",
-          "price": 298000,
+          "price": 289000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "EOS R6 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥298,000 良品 ￥297,000 下取は10%UP 新品同様 ￥327,800 良品 ￥326,700 買取申し込み 買取検討リストへ"
+          "item_text": "EOS R6 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥289,000 良品 ￥288,000 下取は10%UP 新品同様 ￥317,900 良品 ￥316,800 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥298,000\n\t\t\t\t\t\t\n",
-          "price": 298000,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥289,000\n\t\t\t\t\t\t\n",
+          "price": 289000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "EOS R6 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥298,000 良品 ￥297,000 下取は10%UP 新品同様 ￥327,800 良品 ￥326,700 買取申し込み 買取検討リストへ"
+          "item_text": "EOS R6 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥289,000 良品 ￥288,000 下取は10%UP 新品同様 ￥317,900 良品 ￥316,800 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥298,000\n\t\t\t\t\t\t\n",
-          "price": 298000,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥289,000\n\t\t\t\t\t\t\n",
+          "price": 289000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "EOS R6 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥298,000 良品 ￥297,000 下取は10%UP 新品同様 ￥327,800 良品 ￥326,700 買取申し込み 買取検討リストへ"
+          "item_text": "EOS R6 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥289,000 良品 ￥288,000 下取は10%UP 新品同様 ￥317,900 良品 ￥316,800 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
@@ -7797,33 +7797,33 @@
         {
           "selector": "[class*='assess']",
           "text": "EOS R6 Mark II RF24-105 IS STM レンズキット\n\t\t\t\n\t\t\t\tCanon\n\t\t\t\n\t\t\t\n",
-          "price": 220000,
+          "price": 216000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "EOS R6 Mark II RF24-105 IS STM レンズキット Canon 買取金額 新品同様 ￥220,000 良品 ￥219,000 下取は10%UP 新品同様 ￥242,000 良品 ￥240,900 買取申し込み 買取検討リストへ"
+          "item_text": "EOS R6 Mark II RF24-105 IS STM レンズキット Canon 買取金額 新品同様 ￥216,000 良品 ￥215,000 下取は10%UP 新品同様 ￥237,600 良品 ￥236,500 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥220,000\n\t\t\t\t\t\t\n",
-          "price": 220000,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥216,000\n\t\t\t\t\t\t\n",
+          "price": 216000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "EOS R6 Mark II RF24-105 IS STM レンズキット Canon 買取金額 新品同様 ￥220,000 良品 ￥219,000 下取は10%UP 新品同様 ￥242,000 良品 ￥240,900 買取申し込み 買取検討リストへ"
+          "item_text": "EOS R6 Mark II RF24-105 IS STM レンズキット Canon 買取金額 新品同様 ￥216,000 良品 ￥215,000 下取は10%UP 新品同様 ￥237,600 良品 ￥236,500 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥220,000\n\t\t\t\t\t\t\n",
-          "price": 220000,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥216,000\n\t\t\t\t\t\t\n",
+          "price": 216000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "EOS R6 Mark II RF24-105 IS STM レンズキット Canon 買取金額 新品同様 ￥220,000 良品 ￥219,000 下取は10%UP 新品同様 ￥242,000 良品 ￥240,900 買取申し込み 買取検討リストへ"
+          "item_text": "EOS R6 Mark II RF24-105 IS STM レンズキット Canon 買取金額 新品同様 ￥216,000 良品 ￥215,000 下取は10%UP 新品同様 ￥237,600 良品 ￥236,500 買取申し込み 買取検討リストへ"
         }
       ],
       "iframe_count": 1,
-      "shadow_dom_detected": false,
+      "shadow_dom_detected": true,
       "dom_ready_state": "interactive",
       "hit_count": 7,
       "keyword_hit_counts": {
@@ -7831,7 +7831,7 @@
       },
       "best_keyword": "Canon EOS R6 Mark II",
       "has_buyback_context": true,
-      "sales_price_sample": 388000,
+      "sales_price_sample": 379000,
       "buyback_link_candidates": [
         {
           "text": "買取金額を調べる",
@@ -7915,89 +7915,89 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=Canon%20EOS%20R6%20Mark%20II&search=検索",
-      "buyback_page_html_size": 211896,
+      "buyback_page_html_size": 215312,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
           "selector": "[class*='assess']",
           "text": "EOS R6 Mark III RF24-105L IS USM レンズキット\n\t\t\t\n\t\t\t\tCanon\n\t\t\t\n\t\t",
-          "price": 388000,
+          "price": 379000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "EOS R6 Mark III RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥388,000 良品 ￥387,000 下取は10%UP 新品同様 ￥426,800 良品 ￥425,700 買取申し込み 買取検討リストへ"
+          "item_text": "EOS R6 Mark III RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥379,000 良品 ￥378,000 下取は10%UP 新品同様 ￥416,900 良品 ￥415,800 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥388,000\n\t\t\t\t\t\t\n",
-          "price": 388000,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥379,000\n\t\t\t\t\t\t\n",
+          "price": 379000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "EOS R6 Mark III RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥388,000 良品 ￥387,000 下取は10%UP 新品同様 ￥426,800 良品 ￥425,700 買取申し込み 買取検討リストへ"
+          "item_text": "EOS R6 Mark III RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥379,000 良品 ￥378,000 下取は10%UP 新品同様 ￥416,900 良品 ￥415,800 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥388,000\n\t\t\t\t\t\t\n",
-          "price": 388000,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥379,000\n\t\t\t\t\t\t\n",
+          "price": 379000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "EOS R6 Mark III RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥388,000 良品 ￥387,000 下取は10%UP 新品同様 ￥426,800 良品 ￥425,700 買取申し込み 買取検討リストへ"
+          "item_text": "EOS R6 Mark III RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥379,000 良品 ￥378,000 下取は10%UP 新品同様 ￥416,900 良品 ￥415,800 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
           "text": "EOS R6 Mark III RF24-105 IS STM レンズキット\n\t\t\t\n\t\t\t\tCanon\n\t\t\t\n\t\t\t",
-          "price": 310000,
+          "price": 306000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "EOS R6 Mark III RF24-105 IS STM レンズキット Canon 買取金額 新品同様 ￥310,000 良品 ￥309,000 下取は10%UP 新品同様 ￥341,000 良品 ￥339,900 買取申し込み 買取検討リストへ"
+          "item_text": "EOS R6 Mark III RF24-105 IS STM レンズキット Canon 買取金額 新品同様 ￥306,000 良品 ￥305,000 下取は10%UP 新品同様 ￥336,600 良品 ￥335,500 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥310,000\n\t\t\t\t\t\t\n",
-          "price": 310000,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥306,000\n\t\t\t\t\t\t\n",
+          "price": 306000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "EOS R6 Mark III RF24-105 IS STM レンズキット Canon 買取金額 新品同様 ￥310,000 良品 ￥309,000 下取は10%UP 新品同様 ￥341,000 良品 ￥339,900 買取申し込み 買取検討リストへ"
+          "item_text": "EOS R6 Mark III RF24-105 IS STM レンズキット Canon 買取金額 新品同様 ￥306,000 良品 ￥305,000 下取は10%UP 新品同様 ￥336,600 良品 ￥335,500 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥310,000\n\t\t\t\t\t\t\n",
-          "price": 310000,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥306,000\n\t\t\t\t\t\t\n",
+          "price": 306000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "EOS R6 Mark III RF24-105 IS STM レンズキット Canon 買取金額 新品同様 ￥310,000 良品 ￥309,000 下取は10%UP 新品同様 ￥341,000 良品 ￥339,900 買取申し込み 買取検討リストへ"
+          "item_text": "EOS R6 Mark III RF24-105 IS STM レンズキット Canon 買取金額 新品同様 ￥306,000 良品 ￥305,000 下取は10%UP 新品同様 ￥336,600 良品 ￥335,500 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
           "text": "EOS R6 Mark II RF24-105L IS USM レンズキット\n\t\t\t\n\t\t\t\tCanon\n\t\t\t\n\t\t\t",
-          "price": 298000,
+          "price": 289000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "EOS R6 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥298,000 良品 ￥297,000 下取は10%UP 新品同様 ￥327,800 良品 ￥326,700 買取申し込み 買取検討リストへ"
+          "item_text": "EOS R6 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥289,000 良品 ￥288,000 下取は10%UP 新品同様 ￥317,900 良品 ￥316,800 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥298,000\n\t\t\t\t\t\t\n",
-          "price": 298000,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥289,000\n\t\t\t\t\t\t\n",
+          "price": 289000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "EOS R6 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥298,000 良品 ￥297,000 下取は10%UP 新品同様 ￥327,800 良品 ￥326,700 買取申し込み 買取検討リストへ"
+          "item_text": "EOS R6 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥289,000 良品 ￥288,000 下取は10%UP 新品同様 ￥317,900 良品 ￥316,800 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥298,000\n\t\t\t\t\t\t\n",
-          "price": 298000,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥289,000\n\t\t\t\t\t\t\n",
+          "price": 289000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "EOS R6 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥298,000 良品 ￥297,000 下取は10%UP 新品同様 ￥327,800 良品 ￥326,700 買取申し込み 買取検討リストへ"
+          "item_text": "EOS R6 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥289,000 良品 ￥288,000 下取は10%UP 新品同様 ￥317,900 良品 ￥316,800 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
@@ -8029,83 +8029,78 @@
         {
           "selector": "[class*='assess']",
           "text": "EOS R6 Mark II RF24-105 IS STM レンズキット\n\t\t\t\n\t\t\t\tCanon\n\t\t\t\n\t\t\t\n",
-          "price": 220000,
+          "price": 216000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "EOS R6 Mark II RF24-105 IS STM レンズキット Canon 買取金額 新品同様 ￥220,000 良品 ￥219,000 下取は10%UP 新品同様 ￥242,000 良品 ￥240,900 買取申し込み 買取検討リストへ"
+          "item_text": "EOS R6 Mark II RF24-105 IS STM レンズキット Canon 買取金額 新品同様 ￥216,000 良品 ￥215,000 下取は10%UP 新品同様 ￥237,600 良品 ￥236,500 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥220,000\n\t\t\t\t\t\t\n",
-          "price": 220000,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥216,000\n\t\t\t\t\t\t\n",
+          "price": 216000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "EOS R6 Mark II RF24-105 IS STM レンズキット Canon 買取金額 新品同様 ￥220,000 良品 ￥219,000 下取は10%UP 新品同様 ￥242,000 良品 ￥240,900 買取申し込み 買取検討リストへ"
+          "item_text": "EOS R6 Mark II RF24-105 IS STM レンズキット Canon 買取金額 新品同様 ￥216,000 良品 ￥215,000 下取は10%UP 新品同様 ￥237,600 良品 ￥236,500 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥220,000\n\t\t\t\t\t\t\n",
-          "price": 220000,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥216,000\n\t\t\t\t\t\t\n",
+          "price": 216000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "EOS R6 Mark II RF24-105 IS STM レンズキット Canon 買取金額 新品同様 ￥220,000 良品 ￥219,000 下取は10%UP 新品同様 ￥242,000 良品 ￥240,900 買取申し込み 買取検討リストへ"
+          "item_text": "EOS R6 Mark II RF24-105 IS STM レンズキット Canon 買取金額 新品同様 ￥216,000 良品 ￥215,000 下取は10%UP 新品同様 ￥237,600 良品 ￥236,500 買取申し込み 買取検討リストへ"
         }
       ],
-      "buyback_extracted_price": 426800,
+      "buyback_extracted_price": 416900,
       "confidence": "high",
-      "matched_item": "EOS R6 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥298,000 良品 ￥297,000 下取は10%UP 新品同様 ￥327,800 良品 ￥326,700 買取申し込み 買取検討リストへ",
+      "matched_item": "EOS R6 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥289,000 良品 ￥288,000 下取は10%UP 新品同様 ￥317,900 良品 ￥316,800 買取申し込み 買取検討リストへ",
       "all_price_candidates": [
         {
-          "price": 388000,
-          "item": "EOS R6 Mark III RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥388,000 良品 ￥3",
+          "price": 379000,
+          "item": "EOS R6 Mark III RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥379,000 良品 ￥3",
           "near_buyback": true
         },
         {
-          "price": 388000,
-          "item": "EOS R6 Mark III RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥388,000 良品 ￥3",
+          "price": 379000,
+          "item": "EOS R6 Mark III RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥379,000 良品 ￥3",
           "near_buyback": true
         },
         {
-          "price": 388000,
-          "item": "EOS R6 Mark III RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥388,000 良品 ￥3",
+          "price": 379000,
+          "item": "EOS R6 Mark III RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥379,000 良品 ￥3",
           "near_buyback": true
         },
         {
-          "price": 310000,
-          "item": "EOS R6 Mark III RF24-105 IS STM レンズキット Canon 買取金額 新品同様 ￥310,000 良品 ￥30",
+          "price": 306000,
+          "item": "EOS R6 Mark III RF24-105 IS STM レンズキット Canon 買取金額 新品同様 ￥306,000 良品 ￥30",
           "near_buyback": true
         },
         {
-          "price": 310000,
-          "item": "EOS R6 Mark III RF24-105 IS STM レンズキット Canon 買取金額 新品同様 ￥310,000 良品 ￥30",
+          "price": 306000,
+          "item": "EOS R6 Mark III RF24-105 IS STM レンズキット Canon 買取金額 新品同様 ￥306,000 良品 ￥30",
           "near_buyback": true
         },
         {
-          "price": 310000,
-          "item": "EOS R6 Mark III RF24-105 IS STM レンズキット Canon 買取金額 新品同様 ￥310,000 良品 ￥30",
+          "price": 306000,
+          "item": "EOS R6 Mark III RF24-105 IS STM レンズキット Canon 買取金額 新品同様 ￥306,000 良品 ￥30",
           "near_buyback": true
         },
         {
-          "price": 298000,
-          "item": "EOS R6 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥298,000 良品 ￥29",
+          "price": 289000,
+          "item": "EOS R6 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥289,000 良品 ￥28",
           "near_buyback": true
         },
         {
-          "price": 298000,
-          "item": "EOS R6 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥298,000 良品 ￥29",
+          "price": 289000,
+          "item": "EOS R6 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥289,000 良品 ￥28",
           "near_buyback": true
         },
         {
-          "price": 298000,
-          "item": "EOS R6 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥298,000 良品 ￥29",
-          "near_buyback": true
-        },
-        {
-          "price": 279000,
-          "item": "EOS R6 Mark III ボディー Canon 買取金額 新品同様 ￥279,000 良品 ￥278,000 下取は10%UP 新品同",
+          "price": 289000,
+          "item": "EOS R6 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥289,000 良品 ￥28",
           "near_buyback": true
         },
         {
@@ -8119,55 +8114,60 @@
           "near_buyback": true
         },
         {
-          "price": 220000,
-          "item": "EOS R6 Mark II RF24-105 IS STM レンズキット Canon 買取金額 新品同様 ￥220,000 良品 ￥219",
+          "price": 279000,
+          "item": "EOS R6 Mark III ボディー Canon 買取金額 新品同様 ￥279,000 良品 ￥278,000 下取は10%UP 新品同",
           "near_buyback": true
         },
         {
-          "price": 220000,
-          "item": "EOS R6 Mark II RF24-105 IS STM レンズキット Canon 買取金額 新品同様 ￥220,000 良品 ￥219",
+          "price": 216000,
+          "item": "EOS R6 Mark II RF24-105 IS STM レンズキット Canon 買取金額 新品同様 ￥216,000 良品 ￥215",
           "near_buyback": true
         },
         {
-          "price": 220000,
-          "item": "EOS R6 Mark II RF24-105 IS STM レンズキット Canon 買取金額 新品同様 ￥220,000 良品 ￥219",
+          "price": 216000,
+          "item": "EOS R6 Mark II RF24-105 IS STM レンズキット Canon 買取金額 新品同様 ￥216,000 良品 ￥215",
+          "near_buyback": true
+        },
+        {
+          "price": 216000,
+          "item": "EOS R6 Mark II RF24-105 IS STM レンズキット Canon 買取金額 新品同様 ￥216,000 良品 ￥215",
           "near_buyback": true
         }
       ],
       "rejected_candidates": [
         {
-          "price": 388000,
-          "item": "EOS R6 Mark III RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥388,000 良品 ￥3",
+          "price": 379000,
+          "item": "EOS R6 Mark III RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥379,000 良品 ￥3",
           "near_buyback": true,
           "rejection_reason": "model_mismatch"
         },
         {
-          "price": 388000,
-          "item": "EOS R6 Mark III RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥388,000 良品 ￥3",
+          "price": 379000,
+          "item": "EOS R6 Mark III RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥379,000 良品 ￥3",
           "near_buyback": true,
           "rejection_reason": "model_mismatch"
         },
         {
-          "price": 388000,
-          "item": "EOS R6 Mark III RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥388,000 良品 ￥3",
+          "price": 379000,
+          "item": "EOS R6 Mark III RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥379,000 良品 ￥3",
           "near_buyback": true,
           "rejection_reason": "model_mismatch"
         },
         {
-          "price": 310000,
-          "item": "EOS R6 Mark III RF24-105 IS STM レンズキット Canon 買取金額 新品同様 ￥310,000 良品 ￥30",
+          "price": 306000,
+          "item": "EOS R6 Mark III RF24-105 IS STM レンズキット Canon 買取金額 新品同様 ￥306,000 良品 ￥30",
           "near_buyback": true,
           "rejection_reason": "model_mismatch"
         },
         {
-          "price": 310000,
-          "item": "EOS R6 Mark III RF24-105 IS STM レンズキット Canon 買取金額 新品同様 ￥310,000 良品 ￥30",
+          "price": 306000,
+          "item": "EOS R6 Mark III RF24-105 IS STM レンズキット Canon 買取金額 新品同様 ￥306,000 良品 ￥30",
           "near_buyback": true,
           "rejection_reason": "model_mismatch"
         },
         {
-          "price": 310000,
-          "item": "EOS R6 Mark III RF24-105 IS STM レンズキット Canon 買取金額 新品同様 ￥310,000 良品 ￥30",
+          "price": 306000,
+          "item": "EOS R6 Mark III RF24-105 IS STM レンズキット Canon 買取金額 新品同様 ￥306,000 良品 ￥30",
           "near_buyback": true,
           "rejection_reason": "model_mismatch"
         },
@@ -8253,7 +8253,7 @@
       "rendered_html_size": 302,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.e7f12417.1789547869.ac925cb3\n\nhttps://errors.edgesuite.net/18.e7f12417.1789547869.ac925cb3",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.87813217.1789634259.9a27a1d2\n\nhttps://errors.edgesuite.net/18.87813217.1789634259.9a27a1d2",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -8267,7 +8267,7 @@
       "buyback_link_candidates": [],
       "buyback_page_url": null,
       "buyback_page_html_size": 302,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.e7f12417.1789547869.ac925cb3\n\nhttps://errors.edgesuite.net/18.e7f12417.1789547869.ac925cb3",
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.87813217.1789634259.9a27a1d2\n\nhttps://errors.edgesuite.net/18.87813217.1789634259.9a27a1d2",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -8284,7 +8284,7 @@
       "price": 305800,
       "reason": "",
       "html_saved": true,
-      "html_size": 199489,
+      "html_size": 201703,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -8292,7 +8292,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 199489,
+      "rendered_html_size": 201703,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -8452,7 +8452,7 @@
         }
       ],
       "iframe_count": 1,
-      "shadow_dom_detected": false,
+      "shadow_dom_detected": true,
       "dom_ready_state": "interactive",
       "hit_count": 1,
       "keyword_hit_counts": {
@@ -8544,7 +8544,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=Canon%20EOS%20R3&search=検索",
-      "buyback_page_html_size": 199489,
+      "buyback_page_html_size": 201703,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -8804,7 +8804,7 @@
       "rendered_html_size": 302,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.2f4e4317.1789547918.3458aad2\n\nhttps://errors.edgesuite.net/18.2f4e4317.1789547918.3458aad2",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.91813217.1789634309.2f4051b3\n\nhttps://errors.edgesuite.net/18.91813217.1789634309.2f4051b3",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -8818,7 +8818,7 @@
       "buyback_link_candidates": [],
       "buyback_page_url": null,
       "buyback_page_html_size": 302,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.2f4e4317.1789547918.3458aad2\n\nhttps://errors.edgesuite.net/18.2f4e4317.1789547918.3458aad2",
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.91813217.1789634309.2f4051b3\n\nhttps://errors.edgesuite.net/18.91813217.1789634309.2f4051b3",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -8835,7 +8835,7 @@
       "price": 317900,
       "reason": "",
       "html_saved": true,
-      "html_size": 199403,
+      "html_size": 201590,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -8843,7 +8843,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 199403,
+      "rendered_html_size": 201590,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -9095,7 +9095,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=Nikon%20Z8&search=検索",
-      "buyback_page_html_size": 199403,
+      "buyback_page_html_size": 201590,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -9355,7 +9355,7 @@
       "rendered_html_size": 302,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.f0f12417.1789547966.111bdcdb\n\nhttps://errors.edgesuite.net/18.f0f12417.1789547966.111bdcdb",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.87813217.1789634360.9a335a1e\n\nhttps://errors.edgesuite.net/18.87813217.1789634360.9a335a1e",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -9369,7 +9369,7 @@
       "buyback_link_candidates": [],
       "buyback_page_url": null,
       "buyback_page_html_size": 302,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.f0f12417.1789547966.111bdcdb\n\nhttps://errors.edgesuite.net/18.f0f12417.1789547966.111bdcdb",
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.87813217.1789634360.9a335a1e\n\nhttps://errors.edgesuite.net/18.87813217.1789634360.9a335a1e",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -9386,7 +9386,7 @@
       "price": 155000,
       "reason": "",
       "html_saved": true,
-      "html_size": 305388,
+      "html_size": 306702,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -9394,7 +9394,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 305388,
+      "rendered_html_size": 306702,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -9554,7 +9554,7 @@
         }
       ],
       "iframe_count": 1,
-      "shadow_dom_detected": false,
+      "shadow_dom_detected": true,
       "dom_ready_state": "interactive",
       "hit_count": 51,
       "keyword_hit_counts": {
@@ -9646,7 +9646,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=Nikon%20Zf&search=検索",
-      "buyback_page_html_size": 305388,
+      "buyback_page_html_size": 306702,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -9966,7 +9966,7 @@
       "rendered_html_size": 302,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.2f4e4317.1789548016.345bff9a\n\nhttps://errors.edgesuite.net/18.2f4e4317.1789548016.345bff9a",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.956bdc17.1789634409.1f99270b\n\nhttps://errors.edgesuite.net/18.956bdc17.1789634409.1f99270b",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -9980,7 +9980,7 @@
       "buyback_link_candidates": [],
       "buyback_page_url": null,
       "buyback_page_html_size": 302,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.2f4e4317.1789548016.345bff9a\n\nhttps://errors.edgesuite.net/18.2f4e4317.1789548016.345bff9a",
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.956bdc17.1789634409.1f99270b\n\nhttps://errors.edgesuite.net/18.956bdc17.1789634409.1f99270b",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -9997,7 +9997,7 @@
       "price": 369600,
       "reason": "",
       "html_saved": true,
-      "html_size": 201405,
+      "html_size": 201406,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -10005,7 +10005,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 201405,
+      "rendered_html_size": 201406,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -10165,7 +10165,7 @@
         }
       ],
       "iframe_count": 1,
-      "shadow_dom_detected": true,
+      "shadow_dom_detected": false,
       "dom_ready_state": "interactive",
       "hit_count": 2,
       "keyword_hit_counts": {
@@ -10257,7 +10257,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=Nikon%20Z9&search=検索",
-      "buyback_page_html_size": 201405,
+      "buyback_page_html_size": 201406,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -10517,7 +10517,7 @@
       "rendered_html_size": 302,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.f0f12417.1789548064.111fe5ef\n\nhttps://errors.edgesuite.net/18.f0f12417.1789548064.111fe5ef",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.956bdc17.1789634458.1f99ef8b\n\nhttps://errors.edgesuite.net/18.956bdc17.1789634458.1f99ef8b",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -10531,7 +10531,7 @@
       "buyback_link_candidates": [],
       "buyback_page_url": null,
       "buyback_page_html_size": 302,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.f0f12417.1789548064.111fe5ef\n\nhttps://errors.edgesuite.net/18.f0f12417.1789548064.111fe5ef",
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.956bdc17.1789634458.1f99ef8b\n\nhttps://errors.edgesuite.net/18.956bdc17.1789634458.1f99ef8b",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -10548,7 +10548,7 @@
       "price": 860000,
       "reason": "",
       "html_saved": true,
-      "html_size": 220649,
+      "html_size": 222843,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -10556,7 +10556,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 220649,
+      "rendered_html_size": 222843,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -10716,7 +10716,7 @@
         }
       ],
       "iframe_count": 1,
-      "shadow_dom_detected": false,
+      "shadow_dom_detected": true,
       "dom_ready_state": "interactive",
       "hit_count": 11,
       "keyword_hit_counts": {
@@ -10808,7 +10808,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=Leica%20Q3&search=検索",
-      "buyback_page_html_size": 220649,
+      "buyback_page_html_size": 222843,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -11088,10 +11088,10 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 298,
+      "rendered_html_size": 302,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.44e4317.1789548113.6c3b957\n\nhttps://errors.edgesuite.net/18.44e4317.1789548113.6c3b957",
+      "body_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.91813217.1789634509.2f5524bc\n\nhttps://errors.edgesuite.net/18.91813217.1789634509.2f5524bc",
       "matched_selectors": [],
       "selector_candidates": [],
       "iframe_count": 0,
@@ -11104,8 +11104,8 @@
       "sales_price_sample": null,
       "buyback_link_candidates": [],
       "buyback_page_url": null,
-      "buyback_page_html_size": 298,
-      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.44e4317.1789548113.6c3b957\n\nhttps://errors.edgesuite.net/18.44e4317.1789548113.6c3b957",
+      "buyback_page_html_size": 302,
+      "buyback_page_text_preview": "Access Denied\nYou don't have permission to access \"http://www.mapcamera.com/search?\" on this server.\n\nReference #18.91813217.1789634509.2f5524bc\n\nhttps://errors.edgesuite.net/18.91813217.1789634509.2f5524bc",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -11122,7 +11122,7 @@
       "price": 1161000,
       "reason": "",
       "html_saved": true,
-      "html_size": 235952,
+      "html_size": 238095,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -11130,7 +11130,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 235952,
+      "rendered_html_size": 238095,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -11290,7 +11290,7 @@
         }
       ],
       "iframe_count": 1,
-      "shadow_dom_detected": false,
+      "shadow_dom_detected": true,
       "dom_ready_state": "interactive",
       "hit_count": 18,
       "keyword_hit_counts": {
@@ -11382,7 +11382,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=Leica%20M11&search=検索",
-      "buyback_page_html_size": 235952,
+      "buyback_page_html_size": 238095,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {

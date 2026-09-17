@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-16 18:20 JST",
+  "generated_at": "2026-09-17 18:20 JST",
   "scope": "商品同一性マッチング精度（利益/AI/UI/SaaS/DQ思想は不変）",
   "accuracy": {
     "product_match_accuracy": 1.0,
@@ -10,13 +10,13 @@
     "detected_mismatches_total": 2,
     "detected_mismatches_rejected": 2,
     "independently_verified_exact": 5,
-    "unverifiable_trusted": 226,
+    "unverifiable_trusted": 223,
     "accessory_misclassification": 0,
     "false_main_promotion": 0,
     "duplicate_patterns": 11,
     "high_risk_duplicates": 3,
     "duplicate_reviewed_pct": 0.3636,
-    "manual_review_queue": 87
+    "manual_review_queue": 84
   },
   "targets": {
     "product_match": ">=0.99",
@@ -26,13 +26,13 @@
     "false_main_promotion": 0
   },
   "totals": {
-    "total": 245,
-    "product_mismatch_or_unverified": 240,
-    "model_unverifiable": 226,
-    "main_rejected": 240,
+    "total": 242,
+    "product_mismatch_or_unverified": 237,
+    "model_unverifiable": 223,
+    "main_rejected": 237,
     "model_match": 17,
-    "accessory_detected": 6,
-    "manual_review_required": 87,
+    "accessory_detected": 9,
+    "manual_review_required": 84,
     "model_mismatch": 2,
     "exact_product_match": 5,
     "main_eligible": 5
@@ -62,11 +62,11 @@
       "main_eligible": 0
     },
     "モバイル一番": {
-      "total": 8,
-      "product_mismatch_or_unverified": 8,
-      "model_unverifiable": 8,
-      "main_rejected": 8,
-      "manual_review_required": 8,
+      "total": 5,
+      "product_mismatch_or_unverified": 5,
+      "model_unverifiable": 5,
+      "main_rejected": 5,
+      "manual_review_required": 5,
       "exact_product_match": 0,
       "capacity_mismatch": 0,
       "model_mismatch": 0,
@@ -89,6 +89,7 @@
       "model_unverifiable": 34,
       "main_rejected": 34,
       "manual_review_required": 4,
+      "accessory_detected": 1,
       "exact_product_match": 0,
       "capacity_mismatch": 0,
       "model_mismatch": 0,
@@ -111,6 +112,7 @@
       "model_unverifiable": 10,
       "main_rejected": 10,
       "manual_review_required": 8,
+      "accessory_detected": 1,
       "exact_product_match": 0,
       "capacity_mismatch": 0,
       "model_mismatch": 0,
@@ -124,6 +126,7 @@
       "manual_review_required": 4,
       "exact_product_match": 1,
       "main_eligible": 1,
+      "accessory_detected": 1,
       "capacity_mismatch": 0,
       "model_mismatch": 0
     },
@@ -537,7 +540,7 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 25.3,
+      "first_seen": 26.3,
       "last_seen": 0.0,
       "risk_level": "medium",
       "possible_reason": [
@@ -598,8 +601,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 37.3,
-      "last_seen": 37.3,
+      "first_seen": 38.3,
+      "last_seen": 38.3,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -628,8 +631,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 37.3,
-      "last_seen": 37.3,
+      "first_seen": 38.3,
+      "last_seen": 38.3,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -658,8 +661,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 37.3,
-      "last_seen": 37.3,
+      "first_seen": 38.3,
+      "last_seen": 38.3,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -792,25 +795,14 @@
       "main_eligible": 0
     },
     {
-      "source": "ゲオ",
-      "observations": 8,
-      "score": 74,
-      "identity": 0.125,
-      "capacity": 1.0,
-      "model": 1.0,
-      "condition": 1.0,
-      "freshness": 0.125,
-      "main_eligible": 1
-    },
-    {
       "source": "モバイル一番",
-      "observations": 8,
-      "score": 73,
+      "observations": 5,
+      "score": 72,
       "identity": 0.0,
       "capacity": 1.0,
       "model": 1.0,
       "condition": 1.0,
-      "freshness": 0.625,
+      "freshness": 0.4,
       "main_eligible": 0
     },
     {
@@ -836,6 +828,17 @@
       "main_eligible": 0
     },
     {
+      "source": "ゲオ",
+      "observations": 8,
+      "score": 72,
+      "identity": 0.125,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 0.125,
+      "main_eligible": 1
+    },
+    {
       "source": "じゃんぱら",
       "observations": 34,
       "score": 71,
@@ -847,17 +850,6 @@
       "main_eligible": 0
     },
     {
-      "source": "ソフマップ",
-      "observations": 10,
-      "score": 71,
-      "identity": 0.0,
-      "capacity": 1.0,
-      "model": 1.0,
-      "condition": 1.0,
-      "freshness": 0.2,
-      "main_eligible": 0
-    },
-    {
       "source": "フジヤカメラ",
       "observations": 28,
       "score": 70,
@@ -866,6 +858,17 @@
       "model": 0.929,
       "condition": 1.0,
       "freshness": 0.714,
+      "main_eligible": 0
+    },
+    {
+      "source": "ソフマップ",
+      "observations": 10,
+      "score": 70,
+      "identity": 0.0,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 0.2,
       "main_eligible": 0
     },
     {

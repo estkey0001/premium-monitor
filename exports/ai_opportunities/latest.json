@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-09-17 18:20 JST",
-  "health_score": 40.9,
+  "generated_at": "2026-09-18 17:54 JST",
+  "health_score": 39.8,
   "health_note": "現在データ品質低下中",
   "main_route_count": 0,
   "reference_route_count": 1,
@@ -11,7 +11,7 @@
     "product": "FUJIFILM X100VI",
     "buy_now": "WATCH",
     "opportunity_score": 41,
-    "reason": "FUJIFILM X100VI: WATCH。海外更新後見込み 利益¥63,079/ROI17%/Score41"
+    "reason": "FUJIFILM X100VI: WATCH。海外更新後見込み 利益¥63,811/ROI18%/Score41"
   },
   "todays_opportunities": [
     {
@@ -32,12 +32,12 @@
       "confidence": "low",
       "action": "WAIT",
       "action_reason": "eBay sold 更新（EBAY_APP_ID 設定）後に BUY 候補へ昇格します。海外価格の更新待ちです。",
-      "alert_threshold": 502041,
-      "expected_buy_price": 502041,
-      "expected_sell_price": 550941,
+      "alert_threshold": 502888,
+      "expected_buy_price": 502888,
+      "expected_sell_price": 551856,
       "buy_conditions": {
-        "buy": "ヤフオク (新品/未使用落札) ≤ ¥502,041",
-        "sell": "src_ebay ≥ ¥550,941",
+        "buy": "ヤフオク (新品/未使用落札) ≤ ¥502,888",
+        "sell": "src_ebay ≥ ¥551,856",
         "roi": "ROI ≥ 8%"
       },
       "next_update": "次回自動更新: 明日 12:00頃（通常24時間以内）",
@@ -56,28 +56,28 @@
         ],
         "current": "監視"
       },
-      "summary": "★★☆☆☆\n海外売却で成立見込みの参考ルートです。\neBay更新後の想定利益 ¥63,079 / ROI 17%。\n現在は海外価格の更新待ちです。",
+      "summary": "★★☆☆☆\n海外売却で成立見込みの参考ルートです。\neBay更新後の想定利益 ¥63,811 / ROI 18%。\n現在は海外価格の更新待ちです。",
       "why": [
         "reference route（海外sold更新で成立見込み）",
-        "ROIが8%以上（17%）",
-        "価格 26日前（要更新）"
+        "ROIが8%以上（18%）",
+        "価格 27日前（要更新）"
       ],
       "risks": [
-        "stale（26日前・main計算除外水準）",
+        "stale（27日前・main計算除外水準）",
         "海外依存（為替・関税・輸送）",
         "送料・決済手数料が大きい",
         "同条件件数不足（再現性低）",
         "アクセサリー混在に注意（本体判定要確認）"
       ],
       "holding_period": "1ヶ月",
-      "net_profit": 63079,
-      "roi": 0.1743,
+      "net_profit": 63811,
+      "roi": 0.1764,
       "reproducibility_score": 30,
       "buy_source": "ヤフオク (新品/未使用落札)",
       "buy_price": 361819,
       "sell_source": "src_ebay",
-      "sell_price": 550941,
-      "age_days": 26.3,
+      "sell_price": 551856,
+      "age_days": 27.3,
       "priority": 1
     }
   ]

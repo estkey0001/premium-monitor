@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-17 18:20 JST",
+  "generated_at": "2026-09-18 17:54 JST",
   "scope": "商品同一性マッチング精度（利益/AI/UI/SaaS/DQ思想は不変）",
   "accuracy": {
     "product_match_accuracy": 1.0,
@@ -9,12 +9,12 @@
     "confirmed_mismatches_active": 0,
     "detected_mismatches_total": 2,
     "detected_mismatches_rejected": 2,
-    "independently_verified_exact": 5,
-    "unverifiable_trusted": 223,
+    "independently_verified_exact": 1,
+    "unverifiable_trusted": 224,
     "accessory_misclassification": 0,
     "false_main_promotion": 0,
     "duplicate_patterns": 11,
-    "high_risk_duplicates": 3,
+    "high_risk_duplicates": 4,
     "duplicate_reviewed_pct": 0.3636,
     "manual_review_queue": 84
   },
@@ -26,16 +26,16 @@
     "false_main_promotion": 0
   },
   "totals": {
-    "total": 242,
-    "product_mismatch_or_unverified": 237,
-    "model_unverifiable": 223,
-    "main_rejected": 237,
+    "total": 243,
+    "product_mismatch_or_unverified": 242,
+    "model_unverifiable": 224,
+    "main_rejected": 242,
     "model_match": 17,
-    "accessory_detected": 9,
+    "accessory_detected": 10,
     "manual_review_required": 84,
     "model_mismatch": 2,
-    "exact_product_match": 5,
-    "main_eligible": 5
+    "exact_product_match": 1,
+    "main_eligible": 1
   },
   "by_source": {
     "メーカー公式/定価": {
@@ -185,11 +185,13 @@
     },
     "ネットオフ": {
       "total": 4,
-      "exact_product_match": 4,
+      "product_mismatch_or_unverified": 4,
       "model_unverifiable": 4,
-      "main_eligible": 4,
+      "main_rejected": 4,
+      "exact_product_match": 0,
       "capacity_mismatch": 0,
-      "model_mismatch": 0
+      "model_mismatch": 0,
+      "main_eligible": 0
     },
     "ハードオフ": {
       "total": 2,
@@ -296,6 +298,17 @@
       "model_mismatch": 0,
       "main_eligible": 0
     },
+    "Amazon JP (新品出品)": {
+      "total": 1,
+      "product_mismatch_or_unverified": 1,
+      "model_unverifiable": 1,
+      "accessory_detected": 1,
+      "main_rejected": 1,
+      "exact_product_match": 0,
+      "capacity_mismatch": 0,
+      "model_mismatch": 0,
+      "main_eligible": 0
+    },
     "src_ebay": {
       "total": 6,
       "product_mismatch_or_unverified": 6,
@@ -333,6 +346,38 @@
     }
   ],
   "duplicate_price_pattern": [
+    {
+      "source_name": "フジヤカメラ",
+      "price_role": "sell",
+      "price_type": "buyback_price",
+      "price": 200000,
+      "product_ids": [
+        "prod_a7rv",
+        "prod_gr4_hdf",
+        "prod_x100vi"
+      ],
+      "count": 3,
+      "models": [
+        "fujifilm x100vi",
+        "gr hdf iv ricoh",
+        "sony v α7r"
+      ],
+      "capacities": [
+        "None"
+      ],
+      "conditions": [
+        "new"
+      ],
+      "first_seen": 27.2,
+      "last_seen": 0.0,
+      "risk_level": "high",
+      "possible_reason": [
+        "body_vs_accessory_same_price"
+      ],
+      "is_official": false,
+      "review_status": "pending",
+      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認（弾かない）"
+    },
     {
       "source_name": "メーカー公式/定価",
       "price_role": "official",
@@ -524,36 +569,6 @@
       "source_name": "フジヤカメラ",
       "price_role": "sell",
       "price_type": "buyback_price",
-      "price": 200000,
-      "product_ids": [
-        "prod_gr4_hdf",
-        "prod_x100vi"
-      ],
-      "count": 2,
-      "models": [
-        "fujifilm x100vi",
-        "gr hdf iv ricoh"
-      ],
-      "capacities": [
-        "None"
-      ],
-      "conditions": [
-        "new"
-      ],
-      "first_seen": 26.3,
-      "last_seen": 0.0,
-      "risk_level": "medium",
-      "possible_reason": [
-        "different_model_same_price"
-      ],
-      "is_official": false,
-      "review_status": "pending",
-      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認（弾かない）"
-    },
-    {
-      "source_name": "フジヤカメラ",
-      "price_role": "sell",
-      "price_type": "buyback_price",
       "price": 213400,
       "product_ids": [
         "prod_gr4_hdf",
@@ -601,8 +616,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 38.3,
-      "last_seen": 38.3,
+      "first_seen": 39.2,
+      "last_seen": 39.2,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -631,8 +646,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 38.3,
-      "last_seen": 38.3,
+      "first_seen": 39.2,
+      "last_seen": 39.2,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -661,8 +676,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 38.3,
-      "last_seen": 38.3,
+      "first_seen": 39.2,
+      "last_seen": 39.2,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -673,17 +688,6 @@
     }
   ],
   "source_accuracy_ranking": [
-    {
-      "source": "ネットオフ",
-      "observations": 4,
-      "score": 100,
-      "identity": 1.0,
-      "capacity": 1.0,
-      "model": 1.0,
-      "condition": 1.0,
-      "freshness": 1.0,
-      "main_eligible": 4
-    },
     {
       "source": "メーカー公式/定価",
       "observations": 45,
@@ -719,6 +723,17 @@
     },
     {
       "source": "セカンドストリート",
+      "observations": 4,
+      "score": 75,
+      "identity": 0.0,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 1.0,
+      "main_eligible": 0
+    },
+    {
+      "source": "ネットオフ",
       "observations": 4,
       "score": 75,
       "identity": 0.0,
@@ -946,6 +961,17 @@
       "model": 1.0,
       "condition": 1.0,
       "freshness": 0.0,
+      "main_eligible": 0
+    },
+    {
+      "source": "Amazon JP (新品出品)",
+      "observations": 1,
+      "score": 65,
+      "identity": 0.0,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 1.0,
       "main_eligible": 0
     }
   ],

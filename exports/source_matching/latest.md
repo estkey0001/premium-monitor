@@ -1,6 +1,6 @@
 # Source Matching Accuracy 監査
 
-> 生成: 2026-09-17 18:20 JST / 商品同一性マッチング精度（利益/AI/UI/SaaS/DQ思想は不変）
+> 生成: 2026-09-18 17:54 JST / 商品同一性マッチング精度（利益/AI/UI/SaaS/DQ思想は不変）
 
 ## 精度サマリ（目標対比）
 | 指標 | 実績 | 目標 |
@@ -10,17 +10,17 @@
 | Model Match Accuracy | 100.0% | 100% |
 | Condition Match Accuracy | 100.0% | 100% |
 | False Main Promotion | 0 | 0 |
-| High Risk Duplicates | 3 | (要レビュー) |
+| High Risk Duplicates | 4 | (要レビュー) |
 | Manual Review Queue | 84 | – |
 
 ## ソース精度ランキング（100点）
 | # | source | 観測 | score | identity | capacity | model | fresh | main |
 |--:|---|--:|--:|--:|--:|--:|--:|--:|
-| 1 | ネットオフ | 4 | 100 | 1.00 | 1.00 | 1.00 | 1.00 | 4 |
-| 2 | メーカー公式/定価 | 45 | 75 | 0.00 | 1.00 | 1.00 | 1.00 | 0 |
-| 3 | 買取一丁目 | 4 | 75 | 0.00 | 1.00 | 1.00 | 1.00 | 0 |
-| 4 | ゲオモバイル | 4 | 75 | 0.00 | 1.00 | 1.00 | 1.00 | 0 |
-| 5 | セカンドストリート | 4 | 75 | 0.00 | 1.00 | 1.00 | 1.00 | 0 |
+| 1 | メーカー公式/定価 | 45 | 75 | 0.00 | 1.00 | 1.00 | 1.00 | 0 |
+| 2 | 買取一丁目 | 4 | 75 | 0.00 | 1.00 | 1.00 | 1.00 | 0 |
+| 3 | ゲオモバイル | 4 | 75 | 0.00 | 1.00 | 1.00 | 1.00 | 0 |
+| 4 | セカンドストリート | 4 | 75 | 0.00 | 1.00 | 1.00 | 1.00 | 0 |
+| 5 | ネットオフ | 4 | 75 | 0.00 | 1.00 | 1.00 | 1.00 | 0 |
 | 6 | ハードオフ | 2 | 75 | 0.00 | 1.00 | 1.00 | 1.00 | 0 |
 | 7 | ドスパラ | 2 | 75 | 0.00 | 1.00 | 1.00 | 1.00 | 0 |
 | 8 | ブックオフ | 2 | 75 | 0.00 | 1.00 | 1.00 | 1.00 | 0 |
@@ -41,6 +41,7 @@
 | 23 | Amazon新品出品 | 3 | 70 | 0.00 | 1.00 | 1.00 | 0.00 | 0 |
 | 24 | 楽天市場新品 | 2 | 70 | 0.00 | 1.00 | 1.00 | 0.00 | 0 |
 | 25 | src_ebay | 6 | 70 | 0.00 | 1.00 | 1.00 | 0.00 | 0 |
+| 26 | Amazon JP (新品出品) | 1 | 65 | 0.00 | 1.00 | 1.00 | 1.00 | 0 |
 
 ## False Main Promotion 監査（目標 0）
 - ✅ False Main Promotion = 0
@@ -54,13 +55,13 @@
 ## Duplicate Price Pattern（risk別・弾かず要確認）
 | risk | source | role | price | SKU数 | 理由 | review |
 |---|---|---|--:|--:|---|---|
+| high | フジヤカメラ | sell | ¥200,000 | 3 | body_vs_accessory_same_price | pending |
 | high | メーカー公式/定価 | official | ¥214,800 | 2 | different_capacity_same_price, pro_vs_promax_same_price | manual_review_required |
 | high | ヤフオク (新品/未使用落札) | buy | ¥227,304 | 2 | different_model_same_price, pro_vs_promax_same_price | pending |
 | high | ヤフオク (新品/未使用落札) | buy | ¥250,580 | 2 | different_model_same_price, pro_vs_promax_same_price | pending |
 | medium | メーカー公式/定価 | official | ¥259,800 | 3 | different_model_same_price | reviewed_true_same_price |
 | medium | メーカー公式/定価 | official | ¥142,800 | 2 | different_model_same_price | reviewed_true_same_price |
 | medium | メーカー公式/定価 | official | ¥129,800 | 2 | different_model_same_price | reviewed_true_same_price |
-| medium | フジヤカメラ | sell | ¥200,000 | 2 | different_model_same_price | pending |
 | medium | フジヤカメラ | sell | ¥213,400 | 2 | different_model_same_price | pending |
 | medium | じゃんぱら | sell | ¥148,000 | 2 | different_model_same_price | pending |
 | medium | じゃんぱら | sell | ¥78,000 | 2 | different_model_same_price | pending |

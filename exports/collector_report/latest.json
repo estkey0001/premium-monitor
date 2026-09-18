@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-09-17T17:12:27+09:00",
+  "generated_at": "2026-09-18T16:47:02+09:00",
   "summary": {
     "total": 55,
-    "ok": 11,
-    "failed": 40,
+    "ok": 7,
+    "failed": 44,
     "skip": 4,
     "low_confidence_count": 0
   },
@@ -45,8 +45,8 @@
       "skip": 0
     },
     "netoff": {
-      "ok": 4,
-      "failed": 0,
+      "ok": 0,
+      "failed": 4,
       "skip": 0
     },
     "geo": {
@@ -92,23 +92,23 @@
   },
   "by_product": {
     "iphone17pro256": {
-      "ok": 2,
-      "failed": 6,
+      "ok": 1,
+      "failed": 7,
       "skip": 0
     },
     "iphone17pro512": {
-      "ok": 2,
-      "failed": 6,
+      "ok": 1,
+      "failed": 7,
       "skip": 0
     },
     "iphone17pm256": {
-      "ok": 3,
-      "failed": 5,
+      "ok": 2,
+      "failed": 6,
       "skip": 0
     },
     "iphone17pm512": {
-      "ok": 2,
-      "failed": 6,
+      "ok": 1,
+      "failed": 7,
       "skip": 0
     },
     "switch2": {
@@ -125,8 +125,7 @@
   "product_shop_detail": {
     "iphone17pro256": {
       "success_shops": [
-        "kaitori_itchome",
-        "netoff"
+        "kaitori_itchome"
       ],
       "not_listed_shops": [
         "mobile_ichiban"
@@ -136,14 +135,14 @@
         "janpara",
         "iosys",
         "geo_mobile",
-        "2ndstreet"
+        "2ndstreet",
+        "netoff"
       ],
       "skip_shops": []
     },
     "iphone17pro512": {
       "success_shops": [
-        "kaitori_itchome",
-        "netoff"
+        "kaitori_itchome"
       ],
       "not_listed_shops": [
         "mobile_ichiban"
@@ -153,15 +152,15 @@
         "janpara",
         "iosys",
         "geo_mobile",
-        "2ndstreet"
+        "2ndstreet",
+        "netoff"
       ],
       "skip_shops": []
     },
     "iphone17pm256": {
       "success_shops": [
         "mobile_ichiban",
-        "kaitori_itchome",
-        "netoff"
+        "kaitori_itchome"
       ],
       "not_listed_shops": [],
       "failed_shops": [
@@ -169,14 +168,14 @@
         "janpara",
         "iosys",
         "geo_mobile",
-        "2ndstreet"
+        "2ndstreet",
+        "netoff"
       ],
       "skip_shops": []
     },
     "iphone17pm512": {
       "success_shops": [
-        "kaitori_itchome",
-        "netoff"
+        "kaitori_itchome"
       ],
       "not_listed_shops": [
         "mobile_ichiban"
@@ -186,7 +185,8 @@
         "janpara",
         "iosys",
         "geo_mobile",
-        "2ndstreet"
+        "2ndstreet",
+        "netoff"
       ],
       "skip_shops": []
     },
@@ -237,43 +237,39 @@
   "product_price_stats": {
     "iphone17pro256": {
       "prices": [
-        178000,
-        158550
+        177000
       ],
-      "avg": 168275,
-      "min": 158550,
-      "max": 178000,
+      "avg": 177000,
+      "min": 177000,
+      "max": 177000,
       "suspicious": false
     },
     "iphone17pro512": {
       "prices": [
-        205000,
-        178500
+        204000
       ],
-      "avg": 191750,
-      "min": 178500,
-      "max": 205000,
+      "avg": 204000,
+      "min": 204000,
+      "max": 204000,
       "suspicious": false
     },
     "iphone17pm256": {
       "prices": [
-        196000,
-        196000,
-        165900
+        195000,
+        195000
       ],
-      "avg": 185967,
-      "min": 165900,
-      "max": 196000,
+      "avg": 195000,
+      "min": 195000,
+      "max": 195000,
       "suspicious": false
     },
     "iphone17pm512": {
       "prices": [
-        222000,
-        190050
+        221000
       ],
-      "avg": 206025,
-      "min": 190050,
-      "max": 222000,
+      "avg": 221000,
+      "min": 221000,
+      "max": 221000,
       "suspicious": false
     },
     "switch2": {
@@ -287,11 +283,11 @@
     },
     "ps5_pro": {
       "prices": [
-        186000
+        186500
       ],
-      "avg": 186000,
-      "min": 186000,
-      "max": 186000,
+      "avg": 186500,
+      "min": 186500,
+      "max": 186500,
       "suspicious": false
     }
   },
@@ -409,12 +405,12 @@
     {
       "shop_id": "netoff",
       "total": 4,
-      "ok": 4,
-      "failed": 0,
-      "success_rate_pct": 100,
+      "ok": 0,
+      "failed": 4,
+      "success_rate_pct": 0,
       "rate_429_count": 0,
       "blocked_count": 0,
-      "top_reason": "—"
+      "top_reason": "price_not_found"
     },
     {
       "shop_id": "pasoko",
@@ -460,7 +456,7 @@
   "failure_reason_ranking": [
     {
       "reason": "price_not_found",
-      "count": 10
+      "count": 14
     },
     {
       "reason": "product_not_listed",
@@ -492,9 +488,10 @@
     }
   ],
   "priority_fixes": [
-    "iphone17pro256: 成功2店舗 (目標3) — あと1店舗必要",
-    "iphone17pro512: 成功2店舗 (目標3) — あと1店舗必要",
-    "iphone17pm512: 成功2店舗 (目標3) — あと1店舗必要",
+    "iphone17pro256: 成功1店舗 (目標3) — あと2店舗必要",
+    "iphone17pro512: 成功1店舗 (目標3) — あと2店舗必要",
+    "iphone17pm256: 成功2店舗 (目標3) — あと1店舗必要",
+    "iphone17pm512: 成功1店舗 (目標3) — あと2店舗必要",
     "switch2: 成功1店舗 (目標2) — あと1店舗必要",
     "ps5_pro: 成功1店舗 (目標2) — あと1店舗必要"
   ],
@@ -513,12 +510,12 @@
       "reason": "product_not_listed",
       "url": "https://www.mobile-ichiban.com/",
       "final_url": "https://www.mobile-ichiban.com/",
-      "html_length": 262587,
+      "html_length": 264960,
       "http_status": 200,
-      "text_length": 7105,
-      "elapsed_seconds": 3.3002869809999993,
+      "text_length": 7158,
+      "elapsed_seconds": 2.847837769000023,
       "error_type": "",
-      "observed_at": "2026-09-17T17:12:27+09:00"
+      "observed_at": "2026-09-18T16:47:02+09:00"
     },
     {
       "product_alias": "iphone17pro256",
@@ -527,12 +524,12 @@
       "reason": "price_not_found",
       "url": "https://www.kaitorishouten-co.jp/keitai",
       "final_url": "https://www.kaitorishouten-co.jp/keitai",
-      "html_length": 5597,
+      "html_length": 5879,
       "http_status": 200,
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-17T17:12:27+09:00"
+      "observed_at": "2026-09-18T16:47:02+09:00"
     },
     {
       "product_alias": "iphone17pro256",
@@ -546,7 +543,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-17T17:12:27+09:00"
+      "observed_at": "2026-09-18T16:47:02+09:00"
     },
     {
       "product_alias": "iphone17pro256",
@@ -560,7 +557,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-17T17:12:27+09:00"
+      "observed_at": "2026-09-18T16:47:02+09:00"
     },
     {
       "product_alias": "iphone17pro256",
@@ -574,7 +571,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-17T17:12:27+09:00"
+      "observed_at": "2026-09-18T16:47:02+09:00"
     },
     {
       "product_alias": "iphone17pro256",
@@ -583,12 +580,26 @@
       "reason": "price_not_found",
       "url": "https://www.2ndstreet.jp/sell/",
       "final_url": "https://www.2ndstreet.jp/sell/?keyword=iPhone%2017%20Pro%20256GB",
-      "html_length": 185865,
+      "html_length": 185868,
       "http_status": 200,
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-17T17:12:27+09:00"
+      "observed_at": "2026-09-18T16:47:02+09:00"
+    },
+    {
+      "product_alias": "iphone17pro256",
+      "shop": "netoff",
+      "status": "FAILED",
+      "reason": "price_not_found",
+      "url": "https://www.netoff.co.jp/sell/",
+      "final_url": "",
+      "html_length": 0,
+      "http_status": 0,
+      "text_length": 0,
+      "elapsed_seconds": 0.0,
+      "error_type": "",
+      "observed_at": "2026-09-18T16:47:02+09:00"
     },
     {
       "product_alias": "iphone17pro512",
@@ -597,12 +608,12 @@
       "reason": "product_not_listed",
       "url": "https://www.mobile-ichiban.com/",
       "final_url": "https://www.mobile-ichiban.com/",
-      "html_length": 262587,
+      "html_length": 264960,
       "http_status": 200,
-      "text_length": 7105,
-      "elapsed_seconds": 3.153203187999992,
+      "text_length": 7158,
+      "elapsed_seconds": 2.7389782760000116,
       "error_type": "",
-      "observed_at": "2026-09-17T17:12:27+09:00"
+      "observed_at": "2026-09-18T16:47:02+09:00"
     },
     {
       "product_alias": "iphone17pro512",
@@ -611,12 +622,12 @@
       "reason": "price_not_found",
       "url": "https://www.kaitorishouten-co.jp/keitai",
       "final_url": "https://www.kaitorishouten-co.jp/keitai",
-      "html_length": 5597,
+      "html_length": 5879,
       "http_status": 200,
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-17T17:12:27+09:00"
+      "observed_at": "2026-09-18T16:47:02+09:00"
     },
     {
       "product_alias": "iphone17pro512",
@@ -630,7 +641,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-17T17:12:27+09:00"
+      "observed_at": "2026-09-18T16:47:02+09:00"
     },
     {
       "product_alias": "iphone17pro512",
@@ -644,7 +655,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-17T17:12:27+09:00"
+      "observed_at": "2026-09-18T16:47:02+09:00"
     },
     {
       "product_alias": "iphone17pro512",
@@ -658,7 +669,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-17T17:12:27+09:00"
+      "observed_at": "2026-09-18T16:47:02+09:00"
     },
     {
       "product_alias": "iphone17pro512",
@@ -667,12 +678,26 @@
       "reason": "price_not_found",
       "url": "https://www.2ndstreet.jp/sell/",
       "final_url": "https://www.2ndstreet.jp/sell/?keyword=iPhone%2017%20Pro%20512GB",
-      "html_length": 185865,
+      "html_length": 185868,
       "http_status": 200,
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-17T17:12:27+09:00"
+      "observed_at": "2026-09-18T16:47:02+09:00"
+    },
+    {
+      "product_alias": "iphone17pro512",
+      "shop": "netoff",
+      "status": "FAILED",
+      "reason": "price_not_found",
+      "url": "https://www.netoff.co.jp/sell/",
+      "final_url": "",
+      "html_length": 0,
+      "http_status": 0,
+      "text_length": 0,
+      "elapsed_seconds": 0.0,
+      "error_type": "",
+      "observed_at": "2026-09-18T16:47:02+09:00"
     },
     {
       "product_alias": "iphone17pm256",
@@ -681,12 +706,12 @@
       "reason": "price_not_found",
       "url": "https://www.kaitorishouten-co.jp/keitai",
       "final_url": "https://www.kaitorishouten-co.jp/keitai",
-      "html_length": 5597,
+      "html_length": 5879,
       "http_status": 200,
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-17T17:12:27+09:00"
+      "observed_at": "2026-09-18T16:47:02+09:00"
     },
     {
       "product_alias": "iphone17pm256",
@@ -700,7 +725,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-17T17:12:27+09:00"
+      "observed_at": "2026-09-18T16:47:02+09:00"
     },
     {
       "product_alias": "iphone17pm256",
@@ -714,7 +739,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-17T17:12:27+09:00"
+      "observed_at": "2026-09-18T16:47:02+09:00"
     },
     {
       "product_alias": "iphone17pm256",
@@ -728,7 +753,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-17T17:12:27+09:00"
+      "observed_at": "2026-09-18T16:47:02+09:00"
     },
     {
       "product_alias": "iphone17pm256",
@@ -737,12 +762,26 @@
       "reason": "price_not_found",
       "url": "https://www.2ndstreet.jp/sell/",
       "final_url": "https://www.2ndstreet.jp/sell/?keyword=iPhone%2017%20Pro%20Max%20256GB",
-      "html_length": 185877,
+      "html_length": 185880,
       "http_status": 200,
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-17T17:12:27+09:00"
+      "observed_at": "2026-09-18T16:47:02+09:00"
+    },
+    {
+      "product_alias": "iphone17pm256",
+      "shop": "netoff",
+      "status": "FAILED",
+      "reason": "price_not_found",
+      "url": "https://www.netoff.co.jp/sell/",
+      "final_url": "",
+      "html_length": 0,
+      "http_status": 0,
+      "text_length": 0,
+      "elapsed_seconds": 0.0,
+      "error_type": "",
+      "observed_at": "2026-09-18T16:47:02+09:00"
     },
     {
       "product_alias": "iphone17pm512",
@@ -751,12 +790,12 @@
       "reason": "product_not_listed",
       "url": "https://www.mobile-ichiban.com/",
       "final_url": "https://www.mobile-ichiban.com/",
-      "html_length": 262587,
+      "html_length": 264960,
       "http_status": 200,
-      "text_length": 7105,
-      "elapsed_seconds": 3.232671167000035,
+      "text_length": 7158,
+      "elapsed_seconds": 2.7854901090000794,
       "error_type": "",
-      "observed_at": "2026-09-17T17:12:27+09:00"
+      "observed_at": "2026-09-18T16:47:02+09:00"
     },
     {
       "product_alias": "iphone17pm512",
@@ -765,12 +804,12 @@
       "reason": "price_not_found",
       "url": "https://www.kaitorishouten-co.jp/keitai",
       "final_url": "https://www.kaitorishouten-co.jp/keitai",
-      "html_length": 5597,
+      "html_length": 5879,
       "http_status": 200,
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-17T17:12:27+09:00"
+      "observed_at": "2026-09-18T16:47:02+09:00"
     },
     {
       "product_alias": "iphone17pm512",
@@ -784,7 +823,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-17T17:12:27+09:00"
+      "observed_at": "2026-09-18T16:47:02+09:00"
     },
     {
       "product_alias": "iphone17pm512",
@@ -798,7 +837,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-17T17:12:27+09:00"
+      "observed_at": "2026-09-18T16:47:02+09:00"
     },
     {
       "product_alias": "iphone17pm512",
@@ -812,7 +851,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-17T17:12:27+09:00"
+      "observed_at": "2026-09-18T16:47:02+09:00"
     },
     {
       "product_alias": "iphone17pm512",
@@ -821,12 +860,26 @@
       "reason": "price_not_found",
       "url": "https://www.2ndstreet.jp/sell/",
       "final_url": "https://www.2ndstreet.jp/sell/?keyword=iPhone%2017%20Pro%20Max%20512GB",
-      "html_length": 185877,
+      "html_length": 185880,
       "http_status": 200,
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-17T17:12:27+09:00"
+      "observed_at": "2026-09-18T16:47:02+09:00"
+    },
+    {
+      "product_alias": "iphone17pm512",
+      "shop": "netoff",
+      "status": "FAILED",
+      "reason": "price_not_found",
+      "url": "https://www.netoff.co.jp/sell/",
+      "final_url": "",
+      "html_length": 0,
+      "http_status": 0,
+      "text_length": 0,
+      "elapsed_seconds": 0.0,
+      "error_type": "",
+      "observed_at": "2026-09-18T16:47:02+09:00"
     },
     {
       "product_alias": "switch2",
@@ -840,7 +893,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-17T17:12:27+09:00"
+      "observed_at": "2026-09-18T16:47:02+09:00"
     },
     {
       "product_alias": "switch2",
@@ -849,12 +902,12 @@
       "reason": "price_not_found",
       "url": "https://www.kaitorishouten-co.jp/keitai",
       "final_url": "https://www.kaitorishouten-co.jp/kaden",
-      "html_length": 6342,
+      "html_length": 6624,
       "http_status": 200,
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-17T17:12:27+09:00"
+      "observed_at": "2026-09-18T16:47:02+09:00"
     },
     {
       "product_alias": "switch2",
@@ -868,7 +921,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-17T17:12:27+09:00"
+      "observed_at": "2026-09-18T16:47:02+09:00"
     },
     {
       "product_alias": "switch2",
@@ -882,7 +935,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-17T17:12:27+09:00"
+      "observed_at": "2026-09-18T16:47:02+09:00"
     },
     {
       "product_alias": "switch2",
@@ -896,7 +949,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-17T17:12:27+09:00"
+      "observed_at": "2026-09-18T16:47:02+09:00"
     },
     {
       "product_alias": "switch2",
@@ -910,7 +963,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-17T17:12:27+09:00"
+      "observed_at": "2026-09-18T16:47:02+09:00"
     },
     {
       "product_alias": "switch2",
@@ -924,7 +977,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-17T17:12:27+09:00"
+      "observed_at": "2026-09-18T16:47:02+09:00"
     },
     {
       "product_alias": "switch2",
@@ -938,7 +991,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-17T17:12:27+09:00"
+      "observed_at": "2026-09-18T16:47:02+09:00"
     },
     {
       "product_alias": "switch2",
@@ -952,7 +1005,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-17T17:12:27+09:00"
+      "observed_at": "2026-09-18T16:47:02+09:00"
     },
     {
       "product_alias": "switch2",
@@ -966,7 +1019,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-17T17:12:27+09:00"
+      "observed_at": "2026-09-18T16:47:02+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -975,12 +1028,12 @@
       "reason": "product_not_listed",
       "url": "https://www.geo-online.co.jp/store_info/buy/",
       "final_url": "https://www.geo-online.co.jp/store_info/buy/",
-      "html_length": 126828,
+      "html_length": 126836,
       "http_status": 200,
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-17T17:12:27+09:00"
+      "observed_at": "2026-09-18T16:47:02+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -994,7 +1047,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-17T17:12:27+09:00"
+      "observed_at": "2026-09-18T16:47:02+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -1003,12 +1056,12 @@
       "reason": "price_not_found",
       "url": "https://www.kaitorishouten-co.jp/keitai",
       "final_url": "https://www.kaitorishouten-co.jp/kaden",
-      "html_length": 6342,
+      "html_length": 6624,
       "http_status": 200,
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-17T17:12:27+09:00"
+      "observed_at": "2026-09-18T16:47:02+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -1022,7 +1075,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-17T17:12:27+09:00"
+      "observed_at": "2026-09-18T16:47:02+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -1036,7 +1089,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-17T17:12:27+09:00"
+      "observed_at": "2026-09-18T16:47:02+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -1050,7 +1103,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-17T17:12:27+09:00"
+      "observed_at": "2026-09-18T16:47:02+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -1064,7 +1117,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-17T17:12:27+09:00"
+      "observed_at": "2026-09-18T16:47:02+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -1078,7 +1131,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-17T17:12:27+09:00"
+      "observed_at": "2026-09-18T16:47:02+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -1092,7 +1145,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-17T17:12:27+09:00"
+      "observed_at": "2026-09-18T16:47:02+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -1106,7 +1159,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-17T17:12:27+09:00"
+      "observed_at": "2026-09-18T16:47:02+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -1120,26 +1173,10 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-17T17:12:27+09:00"
+      "observed_at": "2026-09-18T16:47:02+09:00"
     }
   ],
   "price_changes": [
-    {
-      "product_alias": "iphone17pro256",
-      "shop": "netoff",
-      "prev_price": 159600,
-      "new_price": 158550,
-      "change_pct": -0.7,
-      "direction": "down"
-    },
-    {
-      "product_alias": "iphone17pro512",
-      "shop": "netoff",
-      "prev_price": 190050,
-      "new_price": 178500,
-      "change_pct": -6.1,
-      "direction": "down"
-    },
     {
       "product_alias": "switch2",
       "shop": "geo",

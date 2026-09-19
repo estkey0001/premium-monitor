@@ -1,16 +1,16 @@
 # Retail & Buyback Automation — 品質監査
 
-> 生成: 2026-09-18 17:54 JST / 販売/買取/二次流通の取得品質・正規化・同一性（利益/AI/UI/SaaSロジックは不変）
+> 生成: 2026-09-19 17:26 JST / 販売/買取/二次流通の取得品質・正規化・同一性（利益/AI/UI/SaaSロジックは不変）
 
 ## カテゴリ別サマリ
 | カテゴリ | 観測 | 価格有 | exact | high | fresh | Main昇格可 | 失敗(0円/stale/rejected) |
 |---|--:|--:|--:|--:|--:|--:|--:|
-| buyback | 143 | 119 | 1 | 1 | 49 | 1 | 24/94/129 |
-| resale | 21 | 21 | 0 | 0 | 11 | 0 | 0/10/15 |
+| buyback | 143 | 125 | 0 | 0 | 49 | 0 | 18/94/132 |
+| resale | 21 | 21 | 0 | 0 | 11 | 0 | 0/10/17 |
 | retail | 2 | 2 | 0 | 0 | 0 | 0 | 0/2/2 |
 
-## Main 昇格（high conf + fresh + exact）: 合計 **1** 件
-- カテゴリ別: {'buyback': 1, 'resale': 0, 'retail': 0}
+## Main 昇格（high conf + fresh + exact）: 合計 **0** 件
+- カテゴリ別: {'buyback': 0, 'resale': 0, 'retail': 0}
 
 ## 販売価格 ソース網羅
 | source | 観測 | 価格有 | fresh | Main昇格可 |
@@ -31,8 +31,8 @@
 | イオシス | 20 | 14 | 6 | 0 |
 | カメラのキタムラ | 9 | 9 | 0 | 0 |
 | ソフマップ | 10 | 8 | 2 | 0 |
-| 買取商店 | 17 | 11 | 6 | 0 |
-| ゲオ | 8 | 8 | 1 | 1 |
+| 買取商店 | 17 | 17 | 6 | 0 |
+| ゲオ | 8 | 8 | 1 | 0 |
 | 買取一丁目 | 4 | 4 | 4 | 0 |
 | ネットオフ | 4 | 0 | 4 | 0 |
 
@@ -48,7 +48,7 @@
 | Amazon JP (新品出品) | 1 | 1 | 1 | 0 |
 
 ## 商品同一性 監査
-- 容量不一致: 0 / 別型番: 0 / アクセサリー: 10 / 非本体: 10
+- 容量不一致: 0 / 別型番: 0 / アクセサリー: 31 / 非本体: 31
 - condition分布: {'new': 218, 'used': 25}
 
 ## 正規化 監査
@@ -58,6 +58,7 @@
 ## duplicate_price_pattern（同一ソースで複数SKU同額・要確認）
 | source | role | price | SKU数 | product_ids |
 |---|---|--:|--:|---|
+| 買取商店 | sell | ¥436,000 | 4 | prod_iphone17pm_256, prod_iphone17pm_512, prod_iphone17pro_256, prod_iphone17pro_512 |
 | フジヤカメラ | sell | ¥200,000 | 3 | prod_a7rv, prod_gr4_hdf, prod_x100vi |
 | メーカー公式/定価 | official | ¥214,800 | 2 | prod_iphone17pm_256, prod_iphone17pro_512 |
 | ヤフオク (新品/未使用落札) | buy | ¥227,304 | 2 | prod_iphone17pm_256, prod_iphone17pro_256 |
@@ -69,6 +70,7 @@
 | じゃんぱら | sell | ¥148,000 | 2 | prod_ipad_pro_m4_11, prod_iphone16pro_256 |
 | じゃんぱら | sell | ¥78,000 | 2 | prod_ipad_air_m3, prod_mac_mini_m4 |
 | じゃんぱら | sell | ¥65,000 | 2 | prod_airpods_max, prod_switch2_mk |
+| 買取商店 | sell | ¥900,000 | 2 | prod_ps5_pro, prod_switch2 |
 
 ## Freshness 遵守: ✅ OK
 - 取得失敗で時刻だけ更新した疑い: 0 件

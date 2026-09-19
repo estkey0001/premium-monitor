@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-18 17:54 JST",
+  "generated_at": "2026-09-19 17:26 JST",
   "scope": "商品同一性マッチング精度（利益/AI/UI/SaaS/DQ思想は不変）",
   "accuracy": {
     "product_match_accuracy": 1.0,
@@ -9,13 +9,13 @@
     "confirmed_mismatches_active": 0,
     "detected_mismatches_total": 2,
     "detected_mismatches_rejected": 2,
-    "independently_verified_exact": 1,
+    "independently_verified_exact": 0,
     "unverifiable_trusted": 224,
     "accessory_misclassification": 0,
     "false_main_promotion": 0,
-    "duplicate_patterns": 11,
-    "high_risk_duplicates": 4,
-    "duplicate_reviewed_pct": 0.3636,
+    "duplicate_patterns": 13,
+    "high_risk_duplicates": 5,
+    "duplicate_reviewed_pct": 0.3077,
     "manual_review_queue": 84
   },
   "targets": {
@@ -27,21 +27,21 @@
   },
   "totals": {
     "total": 243,
-    "product_mismatch_or_unverified": 242,
+    "product_mismatch_or_unverified": 243,
     "model_unverifiable": 224,
-    "main_rejected": 242,
+    "accessory_detected": 31,
+    "main_rejected": 243,
     "model_match": 17,
-    "accessory_detected": 10,
     "manual_review_required": 84,
     "model_mismatch": 2,
-    "exact_product_match": 1,
-    "main_eligible": 1
+    "exact_product_match": 0
   },
   "by_source": {
     "メーカー公式/定価": {
       "total": 45,
       "product_mismatch_or_unverified": 45,
       "model_unverifiable": 45,
+      "accessory_detected": 4,
       "main_rejected": 45,
       "exact_product_match": 0,
       "capacity_mismatch": 0,
@@ -67,6 +67,7 @@
       "model_unverifiable": 5,
       "main_rejected": 5,
       "manual_review_required": 5,
+      "accessory_detected": 1,
       "exact_product_match": 0,
       "capacity_mismatch": 0,
       "model_mismatch": 0,
@@ -88,8 +89,8 @@
       "product_mismatch_or_unverified": 34,
       "model_unverifiable": 34,
       "main_rejected": 34,
+      "accessory_detected": 4,
       "manual_review_required": 4,
-      "accessory_detected": 1,
       "exact_product_match": 0,
       "capacity_mismatch": 0,
       "model_mismatch": 0,
@@ -101,6 +102,7 @@
       "model_unverifiable": 20,
       "main_rejected": 20,
       "manual_review_required": 10,
+      "accessory_detected": 2,
       "exact_product_match": 0,
       "capacity_mismatch": 0,
       "model_mismatch": 0,
@@ -112,7 +114,7 @@
       "model_unverifiable": 10,
       "main_rejected": 10,
       "manual_review_required": 8,
-      "accessory_detected": 1,
+      "accessory_detected": 3,
       "exact_product_match": 0,
       "capacity_mismatch": 0,
       "model_mismatch": 0,
@@ -120,15 +122,15 @@
     },
     "ゲオ": {
       "total": 8,
-      "product_mismatch_or_unverified": 7,
+      "product_mismatch_or_unverified": 8,
       "model_unverifiable": 8,
-      "main_rejected": 7,
+      "main_rejected": 8,
       "manual_review_required": 4,
-      "exact_product_match": 1,
-      "main_eligible": 1,
-      "accessory_detected": 1,
+      "accessory_detected": 5,
+      "exact_product_match": 0,
       "capacity_mismatch": 0,
-      "model_mismatch": 0
+      "model_mismatch": 0,
+      "main_eligible": 0
     },
     "マップカメラ": {
       "total": 9,
@@ -156,6 +158,7 @@
       "total": 4,
       "product_mismatch_or_unverified": 4,
       "model_unverifiable": 4,
+      "accessory_detected": 2,
       "main_rejected": 4,
       "manual_review_required": 4,
       "exact_product_match": 0,
@@ -293,6 +296,7 @@
       "model_unverifiable": 10,
       "main_rejected": 10,
       "manual_review_required": 10,
+      "accessory_detected": 2,
       "exact_product_match": 0,
       "capacity_mismatch": 0,
       "model_mismatch": 0,
@@ -314,6 +318,7 @@
       "product_mismatch_or_unverified": 6,
       "model_unverifiable": 6,
       "main_rejected": 6,
+      "accessory_detected": 1,
       "exact_product_match": 0,
       "capacity_mismatch": 0,
       "model_mismatch": 0,
@@ -347,6 +352,40 @@
   ],
   "duplicate_price_pattern": [
     {
+      "source_name": "買取商店",
+      "price_role": "sell",
+      "price_type": "buyback_price",
+      "price": 436000,
+      "product_ids": [
+        "prod_iphone17pm_256",
+        "prod_iphone17pm_512",
+        "prod_iphone17pro_256",
+        "prod_iphone17pro_512"
+      ],
+      "count": 4,
+      "models": [
+        "17 iphone max pro",
+        "17 iphone pro"
+      ],
+      "capacities": [
+        "256",
+        "512"
+      ],
+      "conditions": [
+        "new"
+      ],
+      "first_seen": 0.0,
+      "last_seen": 0.0,
+      "risk_level": "high",
+      "possible_reason": [
+        "different_capacity_same_price",
+        "pro_vs_promax_same_price"
+      ],
+      "is_official": false,
+      "review_status": "pending",
+      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認（弾かない）"
+    },
+    {
       "source_name": "フジヤカメラ",
       "price_role": "sell",
       "price_type": "buyback_price",
@@ -368,7 +407,7 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 27.2,
+      "first_seen": 28.2,
       "last_seen": 0.0,
       "risk_level": "high",
       "possible_reason": [
@@ -404,6 +443,7 @@
       "risk_level": "high",
       "possible_reason": [
         "different_capacity_same_price",
+        "body_vs_accessory_same_price",
         "pro_vs_promax_same_price"
       ],
       "is_official": true,
@@ -616,8 +656,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 39.2,
-      "last_seen": 39.2,
+      "first_seen": 40.2,
+      "last_seen": 40.2,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -646,8 +686,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 39.2,
-      "last_seen": 39.2,
+      "first_seen": 40.2,
+      "last_seen": 40.2,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -676,8 +716,38 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 39.2,
-      "last_seen": 39.2,
+      "first_seen": 40.2,
+      "last_seen": 40.2,
+      "risk_level": "medium",
+      "possible_reason": [
+        "different_model_same_price"
+      ],
+      "is_official": false,
+      "review_status": "pending",
+      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認（弾かない）"
+    },
+    {
+      "source_name": "買取商店",
+      "price_role": "sell",
+      "price_type": "buyback_price",
+      "price": 900000,
+      "product_ids": [
+        "prod_ps5_pro",
+        "prod_switch2"
+      ],
+      "count": 2,
+      "models": [
+        "2 nintendo switch",
+        "5 playstation pro"
+      ],
+      "capacities": [
+        "None"
+      ],
+      "conditions": [
+        "new"
+      ],
+      "first_seen": 0.0,
+      "last_seen": 0.0,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -688,28 +758,6 @@
     }
   ],
   "source_accuracy_ranking": [
-    {
-      "source": "メーカー公式/定価",
-      "observations": 45,
-      "score": 75,
-      "identity": 0.0,
-      "capacity": 1.0,
-      "model": 1.0,
-      "condition": 1.0,
-      "freshness": 1.0,
-      "main_eligible": 0
-    },
-    {
-      "source": "買取一丁目",
-      "observations": 4,
-      "score": 75,
-      "identity": 0.0,
-      "capacity": 1.0,
-      "model": 1.0,
-      "condition": 1.0,
-      "freshness": 1.0,
-      "main_eligible": 0
-    },
     {
       "source": "ゲオモバイル",
       "observations": 4,
@@ -799,9 +847,9 @@
       "main_eligible": 0
     },
     {
-      "source": "ヤフオク (新品/未使用落札)",
-      "observations": 10,
-      "score": 75,
+      "source": "メーカー公式/定価",
+      "observations": 45,
+      "score": 74,
       "identity": 0.0,
       "capacity": 1.0,
       "model": 1.0,
@@ -810,14 +858,14 @@
       "main_eligible": 0
     },
     {
-      "source": "モバイル一番",
-      "observations": 5,
-      "score": 72,
+      "source": "ヤフオク (新品/未使用落札)",
+      "observations": 10,
+      "score": 73,
       "identity": 0.0,
       "capacity": 1.0,
       "model": 1.0,
       "condition": 1.0,
-      "freshness": 0.4,
+      "freshness": 1.0,
       "main_eligible": 0
     },
     {
@@ -832,39 +880,6 @@
       "main_eligible": 0
     },
     {
-      "source": "イオシス",
-      "observations": 20,
-      "score": 72,
-      "identity": 0.0,
-      "capacity": 1.0,
-      "model": 1.0,
-      "condition": 1.0,
-      "freshness": 0.3,
-      "main_eligible": 0
-    },
-    {
-      "source": "ゲオ",
-      "observations": 8,
-      "score": 72,
-      "identity": 0.125,
-      "capacity": 1.0,
-      "model": 1.0,
-      "condition": 1.0,
-      "freshness": 0.125,
-      "main_eligible": 1
-    },
-    {
-      "source": "じゃんぱら",
-      "observations": 34,
-      "score": 71,
-      "identity": 0.0,
-      "capacity": 1.0,
-      "model": 1.0,
-      "condition": 1.0,
-      "freshness": 0.176,
-      "main_eligible": 0
-    },
-    {
       "source": "フジヤカメラ",
       "observations": 28,
       "score": 70,
@@ -876,14 +891,36 @@
       "main_eligible": 0
     },
     {
-      "source": "ソフマップ",
-      "observations": 10,
+      "source": "モバイル一番",
+      "observations": 5,
       "score": 70,
       "identity": 0.0,
       "capacity": 1.0,
       "model": 1.0,
       "condition": 1.0,
-      "freshness": 0.2,
+      "freshness": 0.4,
+      "main_eligible": 0
+    },
+    {
+      "source": "じゃんぱら",
+      "observations": 34,
+      "score": 70,
+      "identity": 0.0,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 0.176,
+      "main_eligible": 0
+    },
+    {
+      "source": "イオシス",
+      "observations": 20,
+      "score": 70,
+      "identity": 0.0,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 0.3,
       "main_eligible": 0
     },
     {
@@ -906,6 +943,17 @@
       "model": 1.0,
       "condition": 1.0,
       "freshness": 0.0,
+      "main_eligible": 0
+    },
+    {
+      "source": "買取一丁目",
+      "observations": 4,
+      "score": 70,
+      "identity": 0.0,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 1.0,
       "main_eligible": 0
     },
     {
@@ -953,9 +1001,20 @@
       "main_eligible": 0
     },
     {
+      "source": "ソフマップ",
+      "observations": 10,
+      "score": 68,
+      "identity": 0.0,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 0.2,
+      "main_eligible": 0
+    },
+    {
       "source": "src_ebay",
       "observations": 6,
-      "score": 70,
+      "score": 68,
       "identity": 0.0,
       "capacity": 1.0,
       "model": 1.0,
@@ -972,6 +1031,17 @@
       "model": 1.0,
       "condition": 1.0,
       "freshness": 1.0,
+      "main_eligible": 0
+    },
+    {
+      "source": "ゲオ",
+      "observations": 8,
+      "score": 64,
+      "identity": 0.0,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 0.125,
       "main_eligible": 0
     }
   ],

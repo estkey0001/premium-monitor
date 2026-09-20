@@ -1,6 +1,6 @@
 # Source Matching Accuracy 監査
 
-> 生成: 2026-09-19 17:26 JST / 商品同一性マッチング精度（利益/AI/UI/SaaS/DQ思想は不変）
+> 生成: 2026-09-20 18:14 JST / 商品同一性マッチング精度（利益/AI/UI/SaaS/DQ思想は不変）
 
 ## 精度サマリ（目標対比）
 | 指標 | 実績 | 目標 |
@@ -10,8 +10,8 @@
 | Model Match Accuracy | 100.0% | 100% |
 | Condition Match Accuracy | 100.0% | 100% |
 | False Main Promotion | 0 | 0 |
-| High Risk Duplicates | 5 | (要レビュー) |
-| Manual Review Queue | 84 | – |
+| High Risk Duplicates | 4 | (要レビュー) |
+| Manual Review Queue | 85 | – |
 
 ## ソース精度ランキング（100点）
 | # | source | 観測 | score | identity | capacity | model | fresh | main |
@@ -25,7 +25,7 @@
 | 7 | 駿河屋 | 2 | 75 | 0.00 | 1.00 | 1.00 | 1.00 | 0 |
 | 8 | TSUTAYA | 2 | 75 | 0.00 | 1.00 | 1.00 | 1.00 | 0 |
 | 9 | メーカー公式/定価 | 45 | 74 | 0.00 | 1.00 | 1.00 | 1.00 | 0 |
-| 10 | ヤフオク (新品/未使用落札) | 10 | 73 | 0.00 | 1.00 | 1.00 | 1.00 | 0 |
+| 10 | ヤフオク (新品/未使用落札) | 11 | 73 | 0.00 | 1.00 | 1.00 | 1.00 | 0 |
 | 11 | 買取商店 | 17 | 72 | 0.00 | 1.00 | 1.00 | 0.35 | 0 |
 | 12 | フジヤカメラ | 28 | 70 | 0.00 | 1.00 | 0.93 | 0.71 | 0 |
 | 13 | モバイル一番 | 5 | 70 | 0.00 | 1.00 | 1.00 | 0.40 | 0 |
@@ -40,7 +40,7 @@
 | 22 | 楽天市場新品 | 2 | 70 | 0.00 | 1.00 | 1.00 | 0.00 | 0 |
 | 23 | ソフマップ | 10 | 68 | 0.00 | 1.00 | 1.00 | 0.20 | 0 |
 | 24 | src_ebay | 6 | 68 | 0.00 | 1.00 | 1.00 | 0.00 | 0 |
-| 25 | Amazon JP (新品出品) | 1 | 65 | 0.00 | 1.00 | 1.00 | 1.00 | 0 |
+| 25 | Amazon JP (新品出品) | 2 | 65 | 0.00 | 1.00 | 1.00 | 1.00 | 0 |
 | 26 | ゲオ | 8 | 64 | 0.00 | 1.00 | 1.00 | 0.12 | 0 |
 
 ## False Main Promotion 監査（目標 0）
@@ -59,7 +59,6 @@
 | high | フジヤカメラ | sell | ¥200,000 | 3 | body_vs_accessory_same_price | pending |
 | high | メーカー公式/定価 | official | ¥214,800 | 2 | different_capacity_same_price, body_vs_accessory_same_price, pro_vs_promax_same_price | manual_review_required |
 | high | ヤフオク (新品/未使用落札) | buy | ¥227,304 | 2 | different_model_same_price, pro_vs_promax_same_price | pending |
-| high | ヤフオク (新品/未使用落札) | buy | ¥250,580 | 2 | different_model_same_price, pro_vs_promax_same_price | pending |
 | medium | メーカー公式/定価 | official | ¥259,800 | 3 | different_model_same_price | reviewed_true_same_price |
 | medium | メーカー公式/定価 | official | ¥142,800 | 2 | different_model_same_price | reviewed_true_same_price |
 | medium | メーカー公式/定価 | official | ¥129,800 | 2 | different_model_same_price | reviewed_true_same_price |

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-20 18:14 JST",
+  "generated_at": "2026-09-21 18:37 JST",
   "route_type_beginner": "primary_to_secondary",
   "top_camera_buyback_opportunities": [
     {
@@ -129,6 +129,20 @@
       "age_days": 0.0
     },
     {
+      "product_id": "prod_gr4",
+      "product_name": "RICOH GR IV",
+      "shop_name": "フジヤカメラ",
+      "buyback_price": 171000,
+      "official_price": 259800,
+      "reference_price": 259800,
+      "reference_source": "official",
+      "diff_vs_official": -88800,
+      "matched_item": "GR IV 30th Anniversary Edition Kit（2026年10月21日発売予定） RICOH 買取金額 新品同様 ￥171,000 良品 ￥162,000 下取は10%UP 新品同様 ￥188,100 良品 ￥178,",
+      "confidence": "high",
+      "source": "auto_scraped",
+      "age_days": 0.0
+    },
+    {
       "product_id": "prod_r5ii",
       "product_name": "Canon EOS R5 Mark II",
       "shop_name": "フジヤカメラ",
@@ -152,20 +166,6 @@
       "reference_source": "retail_concept",
       "diff_vs_official": -101000,
       "matched_item": "EOS R6 Mark II RF24-105L IS USM レンズキット Canon 買取金額 新品同様 ￥289,000 良品 ￥288,000 下取は10%UP 新品同様 ￥317,900 良品 ￥316,800 買取申し込み 買取",
-      "confidence": "high",
-      "source": "auto_scraped",
-      "age_days": 0.0
-    },
-    {
-      "product_id": "prod_gr4",
-      "product_name": "RICOH GR IV",
-      "shop_name": "フジヤカメラ",
-      "buyback_price": 151000,
-      "official_price": 259800,
-      "reference_price": 259800,
-      "reference_source": "official",
-      "diff_vs_official": -108800,
-      "matched_item": "RICOH GR IV RICOH 買取金額 新品同様 ￥151,000 良品 ￥150,000 下取は10%UP 新品同様 ￥166,100 良品 ￥165,000 買取申し込み 買取検討リストへ",
       "confidence": "high",
       "source": "auto_scraped",
       "age_days": 0.0
@@ -328,12 +328,12 @@
     ]
   },
   "pro_by_category": {},
-  "excluded_items": 10,
-  "total_deals": 11,
+  "excluded_items": 8,
+  "total_deals": 9,
   "confidence_summary": {
-    "total": 11,
+    "total": 9,
     "profitable": 1,
-    "negative": 10
+    "negative": 8
   },
   "stale_data_count": 0
 }

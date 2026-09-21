@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-20 18:14 JST",
+  "generated_at": "2026-09-21 18:37 JST",
   "scope": "販売/買取/二次流通の取得品質・正規化・同一性（利益/AI/UI/SaaSロジックは不変）",
   "rules": {
     "identity": "容量・型番・カラー・新品/中古 を厳格一致",
@@ -17,29 +17,29 @@
       "main_promotable": 0,
       "zero": 18,
       "stale": 94,
-      "rejected": 132,
+      "rejected": 134,
       "failure_reasons": {
         "stale_over_14d": 94,
         "price_zero": 18,
+        "accessory_or_wrong_product": 11,
         "duplicate_price_collision": 9,
-        "accessory_or_wrong_product": 9,
         "model_mismatch": 2
       }
     },
     "resale": {
-      "observations": 23,
-      "with_price": 23,
+      "observations": 22,
+      "with_price": 22,
       "exact_match": 0,
       "high_confidence": 0,
-      "fresh": 13,
+      "fresh": 12,
       "main_promotable": 0,
       "zero": 0,
       "stale": 10,
-      "rejected": 16,
+      "rejected": 17,
       "failure_reasons": {
         "stale_over_14d": 10,
-        "accessory_or_wrong_product": 4,
-        "duplicate_price_collision": 2
+        "duplicate_price_collision": 4,
+        "accessory_or_wrong_product": 3
       }
     },
     "retail": {
@@ -223,9 +223,9 @@
       "main_promotable": 0,
       "zero": 0,
       "stale": 0,
-      "rejected": 2,
+      "rejected": 4,
       "failure_reasons": {
-        "accessory_or_wrong_product": 2
+        "accessory_or_wrong_product": 4
       }
     },
     "ネットオフ": {
@@ -289,9 +289,9 @@
       "main_promotable": 0,
       "zero": 0,
       "stale": 0,
-      "rejected": 4,
+      "rejected": 6,
       "failure_reasons": {
-        "duplicate_price_collision": 2,
+        "duplicate_price_collision": 4,
         "accessory_or_wrong_product": 2
       }
     },
@@ -300,17 +300,17 @@
       "status": "no_data"
     },
     "Amazon JP (新品出品)": {
-      "observations": 2,
-      "with_price": 2,
+      "observations": 1,
+      "with_price": 1,
       "exact_match": 0,
       "high_confidence": 0,
-      "fresh": 2,
+      "fresh": 1,
       "main_promotable": 0,
       "zero": 0,
       "stale": 0,
-      "rejected": 2,
+      "rejected": 1,
       "failure_reasons": {
-        "accessory_or_wrong_product": 2
+        "accessory_or_wrong_product": 1
       }
     }
   },
@@ -386,9 +386,9 @@
       "main_promotable": 0,
       "zero": 0,
       "stale": 0,
-      "rejected": 4,
+      "rejected": 6,
       "failure_reasons": {
-        "duplicate_price_collision": 2,
+        "duplicate_price_collision": 4,
         "accessory_or_wrong_product": 2
       }
     },
@@ -487,9 +487,9 @@
       "main_promotable": 0,
       "zero": 0,
       "stale": 0,
-      "rejected": 2,
+      "rejected": 4,
       "failure_reasons": {
-        "accessory_or_wrong_product": 2
+        "accessory_or_wrong_product": 4
       }
     },
     "ネットオフ": {
@@ -521,28 +521,28 @@
       }
     },
     "Amazon JP (新品出品)": {
-      "observations": 2,
-      "with_price": 2,
+      "observations": 1,
+      "with_price": 1,
       "exact_match": 0,
       "high_confidence": 0,
-      "fresh": 2,
+      "fresh": 1,
       "main_promotable": 0,
       "zero": 0,
       "stale": 0,
-      "rejected": 2,
+      "rejected": 1,
       "failure_reasons": {
-        "accessory_or_wrong_product": 2
+        "accessory_or_wrong_product": 1
       }
     }
   },
   "identity_audit": {
-    "checked": 245,
+    "checked": 247,
     "capacity_mismatch": 0,
     "wrong_model": 0,
-    "accessory": 32,
-    "not_body_only": 32,
+    "accessory": 36,
+    "not_body_only": 36,
     "condition_dist": {
-      "new": 220,
+      "new": 222,
       "used": 25
     }
   },
@@ -550,11 +550,11 @@
     "has_price_type": 1.0,
     "shipping_separated": 1.0,
     "points_separated": 1.0,
-    "tradein_excluded": 0.881,
+    "tradein_excluded": 0.8802,
     "buyback_labeled": 120,
     "price_type_dist": {
       "buyback_price": 120,
-      "shop_sale_price": 27,
+      "shop_sale_price": 26,
       "overseas_listing_price": 5,
       "flea_listing_price": 5,
       "flea_sold_price": 11
@@ -566,7 +566,7 @@
       "source_name": "買取商店",
       "price_role": "sell",
       "price_type": "buyback_price",
-      "price": 436000,
+      "price": 438000,
       "product_ids": [
         "prod_iphone17pm_256",
         "prod_iphone17pm_512",
@@ -585,7 +585,7 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 0.0,
+      "first_seen": 0.1,
       "last_seen": 0.0,
       "risk_level": "high",
       "possible_reason": [
@@ -618,7 +618,7 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 29.3,
+      "first_seen": 30.3,
       "last_seen": 0.0,
       "risk_level": "high",
       "possible_reason": [
@@ -654,7 +654,6 @@
       "risk_level": "high",
       "possible_reason": [
         "different_capacity_same_price",
-        "body_vs_accessory_same_price",
         "pro_vs_promax_same_price"
       ],
       "is_official": true,
@@ -677,6 +676,37 @@
       ],
       "capacities": [
         "256"
+      ],
+      "conditions": [
+        "new"
+      ],
+      "first_seen": 0.0,
+      "last_seen": 0.0,
+      "risk_level": "high",
+      "possible_reason": [
+        "different_model_same_price",
+        "pro_vs_promax_same_price"
+      ],
+      "is_official": false,
+      "review_status": "pending",
+      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認（弾かない）"
+    },
+    {
+      "source_name": "ヤフオク (新品/未使用落札)",
+      "price_role": "buy",
+      "price_type": "flea_sold_price",
+      "price": 250580,
+      "product_ids": [
+        "prod_iphone17pm_512",
+        "prod_iphone17pro_512"
+      ],
+      "count": 2,
+      "models": [
+        "17 iphone max pro",
+        "17 iphone pro"
+      ],
+      "capacities": [
+        "512"
       ],
       "conditions": [
         "new"
@@ -836,8 +866,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 41.3,
-      "last_seen": 41.3,
+      "first_seen": 42.3,
+      "last_seen": 42.3,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -866,8 +896,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 41.3,
-      "last_seen": 41.3,
+      "first_seen": 42.3,
+      "last_seen": 42.3,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -896,8 +926,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 41.3,
-      "last_seen": 41.3,
+      "first_seen": 42.3,
+      "last_seen": 42.3,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"

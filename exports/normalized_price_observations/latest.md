@@ -1,6 +1,6 @@
 # Normalized Price Observations
 
-生成: 2026-09-20 18:14 JST
+生成: 2026-09-21 18:37 JST
 
 全価格（買取/販売/出品/落札/海外/下取/公式）を単一スキーマに正規化。
 `price_role`（buy/sell/official/trade_in）を必ず付与し、
@@ -9,45 +9,44 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 
 ## サマリ
 
-- 総観測数: **245**
-- Beginner 利用可: 53 / Pro 利用可: 19
-- fresh(≤14日): 127
+- 総観測数: **247**
+- Beginner 利用可: 49 / Pro 利用可: 14
+- fresh(≤14日): 129
 
 ### price_role 別
 
 | role | 件数 |
 |---|---|
-| buy | 51 |
+| buy | 50 |
 | official | 45 |
-| sell | 149 |
+| sell | 152 |
 
 ### price_type 別
 
 | type | 件数 |
 |---|---|
-| buyback_price | 143 |
+| buyback_price | 146 |
 | flea_listing_price | 5 |
 | flea_sold_price | 11 |
 | official_price | 45 |
 | overseas_listing_price | 5 |
 | overseas_sold_price | 6 |
-| shop_sale_price | 30 |
+| shop_sale_price | 29 |
 
 ### rejection_reason 別（main calc 除外）
 
 | reason | 件数 |
 |---|---|
-| accessory_or_wrong_product | 18 |
-| duplicate_price_collision | 11 |
+| accessory_or_wrong_product | 19 |
+| duplicate_price_collision | 13 |
 | model_mismatch | 2 |
-| price_zero | 36 |
+| price_zero | 41 |
 | stale_over_14d | 118 |
 
 ## Beginner 利用可（official_price / buyback_price のみ）
 
 | product | role | type | price | conf | age | source |
 |---|---|---|---|---|---|---|
-| iPhone 17 Pro Max 256G | official | official_price | ¥214,800 | high | 0.0d | メーカー公式/定価 |
 | iPhone 17 Pro Max 512G | official | official_price | ¥254,800 | medium | 0.0d | メーカー公式/定価 |
 | iPhone 17 256GB SIMフリー | official | official_price | ¥142,800 | high | 0.0d | メーカー公式/定価 |
 | iPhone 16 Pro 256GB SI | official | official_price | ¥159,800 | medium | 0.0d | メーカー公式/定価 |
@@ -77,6 +76,7 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 | FUJIFILM GFX100RF | official | official_price | ¥750,000 | medium | 0.0d | メーカー公式/定価 |
 | FUJIFILM X-T5 | official | official_price | ¥280,000 | medium | 0.0d | メーカー公式/定価 |
 | SONY α7R V | official | official_price | ¥440,000 | medium | 0.0d | メーカー公式/定価 |
+| SONY α1 II | official | official_price | ¥990,000 | medium | 0.0d | メーカー公式/定価 |
 
 ## Pro 利用可（buy=販売/出品/落札/海外出品, sell=買取/海外落札）
 
@@ -84,20 +84,15 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 |---|---|---|---|---|---|---|
 | FUJIFILM GFX100RF | sell | buyback_price | ¥521,400 | new_unopened | 0.0d | フジヤカメラ |
 | RICOH GR III | sell | buyback_price | ¥144,000 | new_unopened | 0.0d | フジヤカメラ |
-| RICOH GR IV | sell | buyback_price | ¥151,000 | new_unopened | 0.0d | フジヤカメラ |
+| RICOH GR IV | sell | buyback_price | ¥171,000 | new_unopened | 0.0d | フジヤカメラ |
 | SONY α1 II | sell | buyback_price | ¥592,900 | new_unopened | 0.0d | フジヤカメラ |
 | SONY α7CR | sell | buyback_price | ¥255,200 | new_unopened | 0.0d | フジヤカメラ |
 | SONY FX3 | sell | buyback_price | ¥354,000 | new_unopened | 0.0d | フジヤカメラ |
 | Nikon Z8 | sell | buyback_price | ¥317,900 | new_unopened | 0.0d | フジヤカメラ |
 | Nikon Z9 | sell | buyback_price | ¥369,600 | new_unopened | 0.0d | フジヤカメラ |
 | Leica Q3 | sell | buyback_price | ¥860,000 | new_unopened | 0.0d | フジヤカメラ |
-| iPhone 17 Pro Max 256G | sell | buyback_price | ¥190,000 | new_unopened_simfree | 0.0d | モバイル一番 |
-| iPhone 17 Pro Max 256G | sell | buyback_price | ¥190,000 | new_unopened_simfree | 0.0d | 買取一丁目 |
-| iPhone 17 Pro Max 512G | sell | buyback_price | ¥218,000 | new_unopened_simfree | 0.0d | 買取一丁目 |
 | RICOH GR IV | buy | flea_sold_price | ¥324,222 | new_unopened | 0.0d | ヤフオク (新品/未使用落札) |
 | RICOH GR IV HDF | buy | flea_sold_price | ¥298,800 | new_unopened | 0.0d | ヤフオク (新品/未使用落札) |
 | RICOH GR IV Monochrome | buy | flea_sold_price | ¥249,800 | new_unopened | 0.0d | ヤフオク (新品/未使用落札) |
-| RICOH GR IIIx | buy | flea_sold_price | ¥236,322 | new_unopened | 0.0d | ヤフオク (新品/未使用落札) |
-| FUJIFILM X100VI | buy | flea_sold_price | ¥359,091 | new_unopened | 0.0d | ヤフオク (新品/未使用落札) |
-| iPhone 17 Pro 512GB SI | buy | flea_sold_price | ¥260,842 | new_unopened | 0.0d | ヤフオク (新品/未使用落札) |
-| iPhone 17 Pro Max 512G | buy | flea_sold_price | ¥250,580 | new_unopened | 0.0d | ヤフオク (新品/未使用落札) |
+| RICOH GR IIIx | buy | flea_sold_price | ¥235,400 | new_unopened | 0.0d | ヤフオク (新品/未使用落札) |
+| FUJIFILM X100VI | buy | flea_sold_price | ¥343,637 | new_unopened | 0.0d | ヤフオク (新品/未使用落札) |

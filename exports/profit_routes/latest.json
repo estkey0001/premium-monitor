@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-21 18:37 JST",
+  "generated_at": "2026-09-22 18:13 JST",
   "ebay_api_configured": false,
   "overseas_source_mode": "manual",
   "summary": {
@@ -25,7 +25,7 @@
       "rank": 2,
       "key": "ebay_sold_fresh",
       "label": "eBay sold（海外成約相場）の最新化",
-      "potential_profit": 85580,
+      "potential_profit": 86792,
       "product_count": 1,
       "priority": "medium"
     },
@@ -51,30 +51,30 @@
       "buy_url": "https://auctions.yahoo.co.jp/search/search?p=%E5%AF%8C%E5%A3%AB%E3%83%95%E3%82%A4%E3%83%AB%E3%83%A0%20X100VI&va=%E5%AF%8C%E5%A3%AB%E3%83%95%E3%82%A4%E3%83%AB%E3%83%A0%20X100VI&istatus=2&n=20&s1=cbids&o1=d&ei=utf-8&auccat=&tab_ex=commerce&item_condition=1",
       "buy_link_type": "search",
       "sell_source": "src_ebay",
-      "sell_price": 555657,
+      "sell_price": 557172,
       "sell_price_type": "overseas_sold_price",
       "sell_price_role": "sell",
       "sell_condition": "new_unopened",
       "sell_url": "",
       "sell_link_type": "none",
-      "gross_profit": 212020,
-      "estimated_fee": 111131,
-      "platform_fee": 72235,
-      "payment_fee": 22226,
-      "fx_buffer": 16670,
+      "gross_profit": 213535,
+      "estimated_fee": 111434,
+      "platform_fee": 72432,
+      "payment_fee": 22287,
+      "fx_buffer": 16715,
       "shipping_cost": 5000,
       "safety_margin": 10309,
-      "net_profit": 85580,
-      "roi": 0.249,
+      "net_profit": 86792,
+      "roi": 0.2526,
       "route_confidence": "low",
-      "buy_observed_at": "2026-09-21T18:10:49.226615+09:00",
+      "buy_observed_at": "2026-09-22T17:46:50.963221+09:00",
       "sell_observed_at": "2026-08-22T10:00:00+09:00",
       "buy_observed_age_days": 0.0,
-      "sell_observed_age_days": 30.4,
+      "sell_observed_age_days": 31.3,
       "sell_collector_method": "manual",
       "route_type": "flea_to_overseas",
       "reference_route": true,
-      "rejection_reason": "overseas_sold_stale(30.4d)"
+      "rejection_reason": "overseas_sold_stale(31.3d)"
     }
   ],
   "zero_route_diagnostics": {
@@ -94,7 +94,7 @@
       "rejection_top5": [
         [
           "price_zero",
-          6
+          5
         ],
         [
           "stale_over_14d",
@@ -130,7 +130,7 @@
       "rejection_top5": [
         [
           "price_zero",
-          6
+          5
         ],
         [
           "stale_over_14d",
@@ -153,28 +153,24 @@
     "prod_iphone17pm_256": {
       "product_name": "iPhone 17 Pro Max 256GB SIMフリー",
       "buy_candidates": 0,
-      "sell_candidates": 0,
+      "sell_candidates": 2,
       "min_usable_buy": null,
       "min_usable_buy_source": "",
-      "max_usable_sell": null,
-      "max_usable_sell_source": "",
-      "target_buy_price": null,
+      "max_usable_sell": 192000,
+      "max_usable_sell_source": "モバイル一番",
+      "target_buy_price": 191999,
       "gross_gap": null,
       "net_domestic": null,
       "best_reference_net": null,
-      "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
+      "main_blocked_reason": "有効な仕入(販売/出品/落札)候補なし",
       "rejection_top5": [
         [
           "price_zero",
-          6
+          5
         ],
         [
           "stale_over_14d",
           3
-        ],
-        [
-          "accessory_or_wrong_product",
-          2
         ],
         [
           "duplicate_price_collision",
@@ -202,7 +198,7 @@
       "rejection_top5": [
         [
           "price_zero",
-          6
+          5
         ],
         [
           "duplicate_price_collision",
@@ -649,15 +645,15 @@
       "rejection_top5": [
         [
           "price_zero",
-          9
+          8
+        ],
+        [
+          "accessory_or_wrong_product",
+          3
         ],
         [
           "stale_over_14d",
           3
-        ],
-        [
-          "accessory_or_wrong_product",
-          2
         ],
         [
           "duplicate_price_collision",
@@ -877,8 +873,8 @@
       "target_buy_price": null,
       "gross_gap": null,
       "net_domestic": null,
-      "best_reference_net": 85580,
-      "main_blocked_reason": "eBay sold が30.4日前のため main 除外（国内完結は赤字）",
+      "best_reference_net": 86792,
+      "main_blocked_reason": "eBay sold が31.3日前のため main 除外（国内完結は赤字）",
       "rejection_top5": [
         [
           "stale_over_14d",
@@ -896,14 +892,14 @@
       "stale_excluded": 17,
       "overseas_stale": 1,
       "needed": [
-        "eBay sold fresh化で main化（参考 +¥85,580 / ROI 25%）"
+        "eBay sold fresh化で main化（参考 +¥86,792 / ROI 25%）"
       ],
       "fresh_overseas_whatif_top5": [
         {
           "sell": "src_ebay",
-          "sell_price": 555657,
-          "net_if_fresh": 85580,
-          "roi": 0.249
+          "sell_price": 557172,
+          "net_if_fresh": 86792,
+          "roi": 0.2526
         }
       ]
     },

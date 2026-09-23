@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-22 18:13 JST",
+  "generated_at": "2026-09-23 18:15 JST",
   "ebay_api_configured": false,
   "overseas_source_mode": "manual",
   "summary": {
@@ -25,7 +25,7 @@
       "rank": 2,
       "key": "ebay_sold_fresh",
       "label": "eBay sold（海外成約相場）の最新化",
-      "potential_profit": 86792,
+      "potential_profit": 86987,
       "product_count": 1,
       "priority": "medium"
     },
@@ -51,30 +51,30 @@
       "buy_url": "https://auctions.yahoo.co.jp/search/search?p=%E5%AF%8C%E5%A3%AB%E3%83%95%E3%82%A4%E3%83%AB%E3%83%A0%20X100VI&va=%E5%AF%8C%E5%A3%AB%E3%83%95%E3%82%A4%E3%83%AB%E3%83%A0%20X100VI&istatus=2&n=20&s1=cbids&o1=d&ei=utf-8&auccat=&tab_ex=commerce&item_condition=1",
       "buy_link_type": "search",
       "sell_source": "src_ebay",
-      "sell_price": 557172,
+      "sell_price": 557417,
       "sell_price_type": "overseas_sold_price",
       "sell_price_role": "sell",
       "sell_condition": "new_unopened",
       "sell_url": "",
       "sell_link_type": "none",
-      "gross_profit": 213535,
-      "estimated_fee": 111434,
-      "platform_fee": 72432,
-      "payment_fee": 22287,
-      "fx_buffer": 16715,
+      "gross_profit": 213780,
+      "estimated_fee": 111484,
+      "platform_fee": 72464,
+      "payment_fee": 22297,
+      "fx_buffer": 16723,
       "shipping_cost": 5000,
       "safety_margin": 10309,
-      "net_profit": 86792,
-      "roi": 0.2526,
+      "net_profit": 86987,
+      "roi": 0.2531,
       "route_confidence": "low",
-      "buy_observed_at": "2026-09-22T17:46:50.963221+09:00",
+      "buy_observed_at": "2026-09-23T17:48:28.376662+09:00",
       "sell_observed_at": "2026-08-22T10:00:00+09:00",
       "buy_observed_age_days": 0.0,
-      "sell_observed_age_days": 31.3,
+      "sell_observed_age_days": 32.3,
       "sell_collector_method": "manual",
       "route_type": "flea_to_overseas",
       "reference_route": true,
-      "rejection_reason": "overseas_sold_stale(31.3d)"
+      "rejection_reason": "overseas_sold_stale(32.3d)"
     }
   ],
   "zero_route_diagnostics": {
@@ -761,6 +761,10 @@
         [
           "duplicate_price_collision",
           1
+        ],
+        [
+          "accessory_or_wrong_product",
+          1
         ]
       ],
       "stale_excluded": 6,
@@ -873,8 +877,8 @@
       "target_buy_price": null,
       "gross_gap": null,
       "net_domestic": null,
-      "best_reference_net": 86792,
-      "main_blocked_reason": "eBay sold が31.3日前のため main 除外（国内完結は赤字）",
+      "best_reference_net": 86987,
+      "main_blocked_reason": "eBay sold が32.3日前のため main 除外（国内完結は赤字）",
       "rejection_top5": [
         [
           "stale_over_14d",
@@ -892,14 +896,14 @@
       "stale_excluded": 17,
       "overseas_stale": 1,
       "needed": [
-        "eBay sold fresh化で main化（参考 +¥86,792 / ROI 25%）"
+        "eBay sold fresh化で main化（参考 +¥86,987 / ROI 25%）"
       ],
       "fresh_overseas_whatif_top5": [
         {
           "sell": "src_ebay",
-          "sell_price": 557172,
-          "net_if_fresh": 86792,
-          "roi": 0.2526
+          "sell_price": 557417,
+          "net_if_fresh": 86987,
+          "roi": 0.2531
         }
       ]
     },

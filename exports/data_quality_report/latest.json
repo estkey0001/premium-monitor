@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-22T18:13:39+09:00",
+  "generated_at": "2026-09-23T18:15:16+09:00",
   "collection": {
     "total_shops": 16,
     "shops_with_success": 4,
@@ -11,11 +11,11 @@
     "success_rate_pct": 23.6
   },
   "comparison": {
-    "prev_success_rate_pct": 20.0,
+    "prev_success_rate_pct": 23.6,
     "current_success_rate_pct": 23.6,
-    "delta_pct": 3.6,
-    "trend": "改善",
-    "moving_avg_7d_pct": 20.0,
+    "delta_pct": 0.0,
+    "trend": "横ばい",
+    "moving_avg_7d_pct": 21.0,
     "top5_failure_reasons": [
       {
         "reason": "price_not_found",
@@ -261,51 +261,51 @@
   "consecutive_failed_shops": [
     {
       "shop_id": "2ndstreet",
-      "consecutive_failures": 145
+      "consecutive_failures": 146
     },
     {
       "shop_id": "bookoff",
-      "consecutive_failures": 145
+      "consecutive_failures": 146
     },
     {
       "shop_id": "dosupara",
-      "consecutive_failures": 145
+      "consecutive_failures": 146
     },
     {
       "shop_id": "geo_mobile",
-      "consecutive_failures": 145
+      "consecutive_failures": 146
     },
     {
       "shop_id": "hardoff",
-      "consecutive_failures": 145
+      "consecutive_failures": 146
     },
     {
       "shop_id": "janpara",
-      "consecutive_failures": 145
+      "consecutive_failures": 146
     },
     {
       "shop_id": "pasoko",
-      "consecutive_failures": 145
+      "consecutive_failures": 146
     },
     {
       "shop_id": "sofmap",
-      "consecutive_failures": 145
+      "consecutive_failures": 146
     },
     {
       "shop_id": "surugaya",
-      "consecutive_failures": 145
+      "consecutive_failures": 146
     },
     {
       "shop_id": "tsutaya",
-      "consecutive_failures": 145
+      "consecutive_failures": 146
     },
     {
       "shop_id": "iosys",
-      "consecutive_failures": 78
+      "consecutive_failures": 79
     },
     {
       "shop_id": "netoff",
-      "consecutive_failures": 5
+      "consecutive_failures": 6
     }
   ],
   "improvement_priority": [

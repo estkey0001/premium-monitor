@@ -1,6 +1,6 @@
 # Pro 利益ルート（normalized_price_observations 由来・検証済み）
 
-生成: 2026-09-22 18:13 JST
+生成: 2026-09-23 18:15 JST
 
 - **main 利益ルート: 0件**（route_confidence high/medium のみ）
 - 参考ルート(海外sold stale・要fresh化): 1件
@@ -17,7 +17,7 @@
 
 | product | buy¥ | sell(海外sold)¥ | 潜在net | ROI | stale |
 |---|---|---|---|---|---|
-| FUJIFILM X100VI | ¥343,637 | ¥557,172 | +¥86,792 | 25% | overseas_sold_stale(31.3d) |
+| FUJIFILM X100VI | ¥343,637 | ¥557,417 | +¥86,987 | 25% | overseas_sold_stale(32.3d) |
 
 ## 0件商品の診断
 
@@ -123,7 +123,7 @@
 
 ### RICOH GR IV HDF
 - buy候補 1 / sell候補 0 / stale除外 6 / 海外sold stale 0
-- 除外理由TOP5: [('stale_over_14d', 6), ('duplicate_price_collision', 1)]
+- 除外理由TOP5: [('stale_over_14d', 6), ('duplicate_price_collision', 1), ('accessory_or_wrong_product', 1)]
 
 ### RICOH GR IV Monochrome
 - buy候補 1 / sell候補 0 / stale除外 6 / 海外sold stale 0
@@ -145,7 +145,7 @@
 - buy候補 1 / sell候補 0 / stale除外 17 / 海外sold stale 1
 - 除外理由TOP5: [('stale_over_14d', 17), ('duplicate_price_collision', 1), ('accessory_or_wrong_product', 1)]
 - eBay sold を fresh化すると成立する候補:
-  - src_ebay ¥557,172 → 潜在 +¥86,792（ROI 25%）
+  - src_ebay ¥557,417 → 潜在 +¥86,987（ROI 25%）
 
 ### FUJIFILM GFX100RF
 - buy候補 0 / sell候補 1 / stale除外 0 / 海外sold stale 0

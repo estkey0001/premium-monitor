@@ -1,5 +1,5 @@
 {
-  "collected_at": "2026-09-23T17:48:28.376662+09:00",
+  "collected_at": "2026-09-24T17:41:53.012462+09:00",
   "platforms": {
     "ebay": {
       "status": "blocked_cloud_ip",
@@ -28,8 +28,8 @@
     }
   },
   "summary": {
-    "saved": 13,
-    "skipped": 36,
+    "saved": 12,
+    "skipped": 37,
     "errors": []
   },
   "products": {
@@ -45,13 +45,13 @@
       "ebay": "blocked_cloud_ip",
       "amazon": "ok_html",
       "mercari": "blocked_cloud_ip",
-      "yahoo": "ok_html",
+      "yahoo": "no_data",
       "rakuten": "html_failed",
       "rakuma": "blocked_cloud_ip"
     },
     "gr4_mono": {
       "ebay": "blocked_cloud_ip",
-      "amazon": "blocked_cloud_ip",
+      "amazon": "ok_html",
       "mercari": "blocked_cloud_ip",
       "yahoo": "ok_html",
       "rakuten": "html_failed",
@@ -67,7 +67,7 @@
     },
     "x100vi": {
       "ebay": "blocked_cloud_ip",
-      "amazon": "ok_html",
+      "amazon": "blocked_cloud_ip",
       "mercari": "blocked_cloud_ip",
       "yahoo": "ok_html",
       "rakuten": "html_failed",

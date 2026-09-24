@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-23 18:15 JST",
+  "generated_at": "2026-09-24 18:08 JST",
   "scope": "商品同一性マッチング精度（利益/AI/UI/SaaS/DQ思想は不変）",
   "accuracy": {
     "product_match_accuracy": 1.0,
@@ -10,13 +10,13 @@
     "detected_mismatches_total": 2,
     "detected_mismatches_rejected": 2,
     "independently_verified_exact": 0,
-    "unverifiable_trusted": 227,
+    "unverifiable_trusted": 226,
     "accessory_misclassification": 0,
     "false_main_promotion": 0,
     "duplicate_patterns": 13,
     "high_risk_duplicates": 4,
     "duplicate_reviewed_pct": 0.3077,
-    "manual_review_queue": 85
+    "manual_review_queue": 84
   },
   "targets": {
     "product_match": ">=0.99",
@@ -26,13 +26,13 @@
     "false_main_promotion": 0
   },
   "totals": {
-    "total": 245,
-    "product_mismatch_or_unverified": 245,
-    "model_unverifiable": 227,
+    "total": 244,
+    "product_mismatch_or_unverified": 244,
+    "model_unverifiable": 226,
     "accessory_detected": 33,
-    "main_rejected": 245,
+    "main_rejected": 244,
     "model_match": 16,
-    "manual_review_required": 85,
+    "manual_review_required": 84,
     "model_mismatch": 2,
     "exact_product_match": 0
   },
@@ -291,11 +291,11 @@
       "main_eligible": 0
     },
     "ヤフオク (新品/未使用落札)": {
-      "total": 11,
-      "product_mismatch_or_unverified": 11,
-      "model_unverifiable": 11,
-      "main_rejected": 11,
-      "manual_review_required": 11,
+      "total": 10,
+      "product_mismatch_or_unverified": 10,
+      "model_unverifiable": 10,
+      "main_rejected": 10,
+      "manual_review_required": 10,
       "accessory_detected": 2,
       "exact_product_match": 0,
       "capacity_mismatch": 0,
@@ -593,7 +593,7 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 32.3,
+      "first_seen": 33.3,
       "last_seen": 0.0,
       "risk_level": "medium",
       "possible_reason": [
@@ -654,8 +654,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 44.3,
-      "last_seen": 44.3,
+      "first_seen": 45.3,
+      "last_seen": 45.3,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -684,8 +684,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 44.3,
-      "last_seen": 44.3,
+      "first_seen": 45.3,
+      "last_seen": 45.3,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -714,8 +714,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 44.3,
-      "last_seen": 44.3,
+      "first_seen": 45.3,
+      "last_seen": 45.3,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -857,7 +857,7 @@
     },
     {
       "source": "ヤフオク (新品/未使用落札)",
-      "observations": 11,
+      "observations": 10,
       "score": 73,
       "identity": 0.0,
       "capacity": 1.0,

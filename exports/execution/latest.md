@@ -1,34 +1,34 @@
 # Execution Intelligence Engine
 
-生成: 2026-09-23 18:15 JST
+生成: 2026-09-24 18:08 JST
 
 ## Execution Dashboard
 
-- OPEN 80 / CLOSED 120（成功 32）
-- Execution Success Rate: **26.7%**
-- Prediction Accuracy: 予測 37.4667% vs 実績 26.7%（誤差 10.8pt）
+- OPEN 80 / CLOSED 121（成功 32）
+- Execution Success Rate: **26.4%**
+- Prediction Accuracy: 予測 37.405% vs 実績 26.4%（誤差 11.0pt）
 - Notification Accuracy: 通知75 / BUY通知1 / WATCH→BUY 1 / 偽陽性率 18%
 - Capital Allocation: 期待 ¥0（実績データ蓄積待ち）
 
 ## 補正係数（学習・利益ロジックには不適用）
 
-- Opportunity Score 係数: 1.091
-- Success Probability 係数: 0.713
+- Opportunity Score 係数: 1.093
+- Success Probability 係数: 0.706
 - Risk Score 係数: 1.0
-- サンプル数 120（信頼度 high）
+- サンプル数 121（信頼度 high）
 
 ## Execution Metrics（カテゴリ別）
 
 | カテゴリ | 件数 | 成功率 | 平均利益 | 平均ROI | 平均保有日数 |
 |---|---|---|---|---|---|
-| camera | 98 | 33% | ¥4,147 | 2.8% | 0.9796日 |
+| camera | 99 | 32% | ¥4,105 | 2.8% | 0.9697日 |
 | game_console | 22 | 0% | ¥-1,500 | -3.0% | 5.0日 |
 
 ## Insights — 今週学んだこと TOP10
 
-1. カテゴリ「camera」の成功率が最も高い（33%）
+1. カテゴリ「camera」の成功率が最も高い（32%）
 2. RICOH GR IIIx は約3日で売却成立（回転が速い）
-3. 成立確率の予測誤差が 10.8pt（予測がやや強気→補正係数で校正）
+3. 成立確率の予測誤差が 11.0pt（予測がやや強気→補正係数で校正）
 4. Nintendo Switch 2 は薄利/送料負けで失敗（国内薄利ルートは要注意）
 5. Fujiya 買取は日次で更新され鮮度が高い（sell側の信頼性◎）
 6. 海外sold（eBay）は EBAY_APP_ID 未設定で stale・main昇格の最大ボトルネック

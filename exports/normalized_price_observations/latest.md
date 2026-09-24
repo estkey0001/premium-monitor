@@ -1,6 +1,6 @@
 # Normalized Price Observations
 
-生成: 2026-09-23 18:15 JST
+生成: 2026-09-24 18:08 JST
 
 全価格（買取/販売/出品/落札/海外/下取/公式）を単一スキーマに正規化。
 `price_role`（buy/sell/official/trade_in）を必ず付与し、
@@ -9,15 +9,15 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 
 ## サマリ
 
-- 総観測数: **245**
-- Beginner 利用可: 52 / Pro 利用可: 16
-- fresh(≤14日): 127
+- 総観測数: **244**
+- Beginner 利用可: 52 / Pro 利用可: 15
+- fresh(≤14日): 126
 
 ### price_role 別
 
 | role | 件数 |
 |---|---|
-| buy | 51 |
+| buy | 50 |
 | official | 45 |
 | sell | 149 |
 
@@ -27,7 +27,7 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 |---|---|
 | buyback_price | 143 |
 | flea_listing_price | 5 |
-| flea_sold_price | 11 |
+| flea_sold_price | 10 |
 | official_price | 45 |
 | overseas_listing_price | 5 |
 | overseas_sold_price | 6 |
@@ -94,7 +94,6 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 | iPhone 17 Pro Max 256G | sell | buyback_price | ¥192,000 | new_unopened_simfree | 0.0d | モバイル一番 |
 | iPhone 17 Pro Max 256G | sell | buyback_price | ¥192,000 | new_unopened_simfree | 0.0d | 買取一丁目 |
 | RICOH GR IV | buy | flea_sold_price | ¥324,222 | new_unopened | 0.0d | ヤフオク (新品/未使用落札) |
-| RICOH GR IV HDF | buy | flea_sold_price | ¥298,800 | new_unopened | 0.0d | ヤフオク (新品/未使用落札) |
 | RICOH GR IV Monochrome | buy | flea_sold_price | ¥249,800 | new_unopened | 0.0d | ヤフオク (新品/未使用落札) |
 | RICOH GR IIIx | buy | flea_sold_price | ¥235,400 | new_unopened | 0.0d | ヤフオク (新品/未使用落札) |
 | FUJIFILM X100VI | buy | flea_sold_price | ¥343,637 | new_unopened | 0.0d | ヤフオク (新品/未使用落札) |

@@ -21,6 +21,11 @@ import yaml
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 PUBLIC_DIR = PROJECT_ROOT / "docs"
 
+# `python3 scripts/deploy_check.py` のように直接実行された場合でも
+# src パッケージを import できるようにする（CI と手元で結果を一致させる）。
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
 # 禁止表現リスト
 FORBIDDEN = [
     "確実に儲かる", "絶対利益", "誰でも稼げる", "今すぐ買え",
@@ -6944,7 +6949,135 @@ def check() -> list[dict]:
                     "message": "#738 Stage 5 推奨は Canary PASS 時のみ"
                                + ("" if _t738 else " ← 非PASSで stage 変更を推奨")})
 
+    # ══════════════════════════════════════════════════════════════════
+    # #739-#750: TCG（ポケモンカード / ONE PIECEカードゲーム）監視レイヤー
+    # ══════════════════════════════════════════════════════════════════
+    results.extend(_check_tcg_layer())
+
     return results
+
+
+def _check_tcg_layer() -> list[dict]:
+    """TCG 入荷・抽選・プレミア監視レイヤーの健全性チェック（#739-#750）。"""
+    out: list[dict] = []
+
+    def _add(no, key, ok, msg, ng=""):
+        out.append({"level": "ok" if ok else "error", "check": key,
+                    "message": f"#{no} {msg}" + ("" if ok else f" ← {ng}")})
+
+    try:
+        from src.tcg import classify, dedupe, freshness, premium, shrink
+        from src.tcg.models import (
+            EVENT_CONVENIENCE_STORE, EVENT_FIRST_COME, EVENT_LOTTERY,
+            EVENT_RESTOCK, EVENT_TYPES, SHRINK_STATUSES, SHRINK_UNKNOWN,
+            now_jst,
+        )
+        from src.tcg.sources import sources_for
+        from src.collectors.tcg import ALL_COLLECTORS
+    except Exception as exc:  # noqa: BLE001
+        for no, key in ((739, "tcg_pokemon_source"), (740, "tcg_onepiece_source"),
+                        (741, "tcg_lottery_parser"), (742, "tcg_first_come_parser"),
+                        (743, "tcg_convenience_event"), (744, "tcg_restock_event"),
+                        (745, "tcg_shrink_status"), (746, "tcg_premium_calc"),
+                        (747, "tcg_stale_not_available"), (748, "tcg_source_priority"),
+                        (749, "tcg_duplicate_prevention"), (750, "tcg_report_exists")):
+            out.append({"level": "error", "check": key,
+                        "message": f"#{no} TCG レイヤーの読み込みに失敗: {exc}"})
+        return out
+
+    from datetime import timedelta
+
+    # #739: Pokemon source exists
+    _add(739, "tcg_pokemon_source", bool(sources_for("POKEMON")),
+         "Pokemon の監視 source が登録されている", "source 未登録")
+
+    # #740: ONE PIECE source exists
+    _add(740, "tcg_onepiece_source", bool(sources_for("ONE_PIECE")),
+         "ONE PIECE の監視 source が登録されている", "source 未登録")
+
+    # #741: Lottery parser valid（抽選を抽選として判定できる）
+    _add(741, "tcg_lottery_parser",
+         classify.classify_event_type("抽選販売の応募受付を開始します") == EVENT_LOTTERY,
+         "抽選告知を LOTTERY として判定できる", "抽選の判定に失敗")
+
+    # #742: First-come parser valid（先着を抽選と混同しない）
+    _add(742, "tcg_first_come_parser",
+         classify.classify_event_type("店頭にて先着販売", store="YODOBASHI") == EVENT_FIRST_COME,
+         "店頭先着を FIRST_COME として判定できる", "先着の判定に失敗")
+
+    # #743: Convenience-store event supported
+    _add(743, "tcg_convenience_event",
+         (EVENT_CONVENIENCE_STORE in EVENT_TYPES
+          and classify.classify_event_type("ローソン店頭にて先着販売", store="LAWSON")
+          == EVENT_CONVENIENCE_STORE),
+         "コンビニ販売イベントを扱える", "コンビニ販売が未対応")
+
+    # #744: Restock event supported
+    _add(744, "tcg_restock_event",
+         (EVENT_RESTOCK in EVENT_TYPES
+          and classify.classify_event_type("本日再入荷しました") == EVENT_RESTOCK),
+         "再入荷イベントを扱える", "再入荷が未対応")
+
+    # #745: Shrink status supported（BOX=シュリンク付きと仮定しない）
+    _add(745, "tcg_shrink_status",
+         (len(SHRINK_STATUSES) >= 6
+          and shrink.detect_shrink_status("BOX販売あり") == SHRINK_UNKNOWN
+          and shrink.assume_shrink_from_box(True) == SHRINK_UNKNOWN),
+         "シュリンク状態を管理し BOX=シュリンク付きと仮定しない",
+         "BOX からシュリンクを推定している")
+
+    # #746: Premium calculation valid（異常値1件を採用しない）
+    _p = premium.compute_premium(7200, 12500)
+    _add(746, "tcg_premium_calc",
+         (_p["premium_yen"] == 5300 and abs(_p["premium_percent"] - 73.6) < 0.1
+          and premium.market_median([12000, 12500, 12800, 250000]) == 12500
+          and premium.market_median([99000]) is None),
+         "プレミア計算が正しく、異常値1件を市場価格に採用しない",
+         "プレミア計算または外れ値除外が不正")
+
+    # #747: Stale restock not shown as available
+    _stale = {"event_type": EVENT_RESTOCK, "source_type": "RETAILER_OFFICIAL",
+              "reported_at": (now_jst() - timedelta(hours=5)).isoformat()}
+    _add(747, "tcg_stale_not_available",
+         freshness.is_stale(_stale) and not freshness.available_now(_stale),
+         "鮮度切れの入荷報告を「今買える」と表示しない",
+         "古い入荷報告が購入可能として扱われている")
+
+    # #748: Unverified source cannot override official
+    _add(748, "tcg_source_priority",
+         (dedupe.can_override("OFFICIAL", "SOCIAL_REPORT") is False
+          and classify.confidence_for("SOCIAL_REPORT", 1) == "low"
+          and classify.verification_label("SOCIAL_REPORT", "low", 1) != "Confirmed"),
+         "未確認 source が公式情報を上書きしない",
+         "下位 source が公式を上書きできる状態")
+
+    # #749: Duplicate event prevention works
+    _base = {"tcg": "POKEMON", "product_id": "a", "store": "LAWSON",
+             "event_type": EVENT_RESTOCK, "observed_at": now_jst().isoformat()}
+    _merged = dedupe.dedupe_events([
+        dict(_base, source_type="SOCIAL_REPORT", confidence="low", source_url="x"),
+        dict(_base, source_type="RETAILER_OFFICIAL", confidence="high", source_url="y"),
+    ])
+    _add(749, "tcg_duplicate_prevention",
+         len(_merged) == 1 and _merged[0]["source_type"] == "RETAILER_OFFICIAL",
+         "重複イベントを排除し上位 source を残す", "重複排除が機能していない")
+
+    # #750: TCG report exists
+    import json as _json_tcg
+    _rep = {}
+    _rep_path = PROJECT_ROOT / "exports" / "tcg" / "latest.json"
+    if _rep_path.exists():
+        try:
+            _rep = _json_tcg.loads(_rep_path.read_text(encoding="utf-8")) or {}
+        except Exception:  # noqa: BLE001 - 破損時は未生成扱い
+            _rep = {}
+    _md = (PROJECT_ROOT / "exports" / "tcg" / "latest.md")
+    _ok750 = bool(_rep.get("generated_at")) and _md.exists() and bool(ALL_COLLECTORS)
+    # TCG は追加レイヤーのため、未生成でも既存 LP の公開は止めない（warning）。
+    out.append({"level": "ok" if _ok750 else "warning", "check": "tcg_report_exists",
+                "message": "#750 TCG レポート(exports/tcg/latest.json / latest.md)が生成されている"
+                           + ("" if _ok750 else " ← TCG レポートが未生成（追加レイヤーのため warning）")})
+    return out
 
 
 def _load_products_for_ref():

@@ -3859,6 +3859,20 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 .cat-maker-chip:hover {{ background: var(--violet); color: #fff; }}
 
 /* Lottery */
+.tcg-chips {{ display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }}
+.tcg-chip {{ background: var(--card-bg); border: 1.5px solid var(--card-border); border-radius: 99px; padding: 5px 12px; font-size: 0.82rem; font-weight: 700; }}
+.tcg-card {{ border-left: 4px solid #7C3AED; }}
+.tcg-tag {{ background: #F5F3FF; color: #6D28D9; border: 1px solid #C4B5FD; border-radius: 6px; padding: 2px 8px; font-size: 0.72rem; font-weight: 800; }}
+.tcg-buynow {{ background: #DCFCE7; color: #15803D; border: 1px solid #86EFAC; border-radius: 6px; padding: 2px 8px; font-size: 0.72rem; font-weight: 800; }}
+.tcg-rows {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 4px 14px; margin: 8px 0; }}
+.tcg-row {{ display: flex; justify-content: space-between; gap: 8px; font-size: 0.84rem; border-bottom: 1px dotted var(--card-border); padding: 3px 0; }}
+.tcg-row span {{ color: var(--text-2); }}
+.tcg-verify {{ font-size: 0.78rem; color: var(--text-2); margin-top: 6px; }}
+.tcg-notes {{ margin: 6px 0 0 18px; font-size: 0.78rem; color: var(--text-2); }}
+.tcg-link {{ display: inline-block; margin-top: 8px; font-size: 0.82rem; font-weight: 700; }}
+.tcg-health {{ margin: 12px 0; font-size: 0.82rem; }}
+.tcg-health-table {{ width: 100%; border-collapse: collapse; margin-top: 8px; }}
+.tcg-health-table th, .tcg-health-table td {{ border: 1px solid var(--card-border); padding: 4px 8px; text-align: left; font-size: 0.78rem; }}
 .lottery-card {{ background: var(--card-bg); border: 1.5px solid var(--card-border); border-radius: 14px; padding: 16px; margin: 8px 0; }}
 .lottery-card-header {{ display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }}
 .lottery-name {{ font-weight: 700; font-size: 1rem; }}
@@ -4051,7 +4065,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
   var currentLabel = document.getElementById("mobile-tab-current-label");
 
   var drawerTabLabels = {{
-    "lottery": "&#127915; 抽選情報",
+    "lottery": "&#127915; 抽選・店頭販売",
     "ranking": "&#127942; ランキング",
     "sedori": "&#9636; せどりルート",
     "beginner": "&#128100; 初心者",
@@ -4213,7 +4227,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
       <h1 class="hero-title">最新<span class="accent">価格差</span>を<br>すぐに把握。</h1>
       <p class="hero-subtitle">新品・未使用品の公式価格と買取・海外相場を毎日チェック。iPhone・カメラ・ゲーム機の差益を一枚で確認できます。公式サイトで最新価格を必ずご確認ください。</p>
       <div class="hero-cta-row">
-        <a href="#tab-lottery" class="hero-btn primary" data-track="hero_lottery_click">&#127915; 抽選情報を見る</a>
+        <a href="#tab-lottery" class="hero-btn primary" data-track="hero_lottery_click">&#127915; 抽選・店頭販売を見る</a>
         <a href="#tab-beginner" class="hero-btn secondary" data-track="hero_beginner_click">{_hero_btn_label}</a>
         <a href="#tab-advanced" class="hero-btn violet" data-track="hero_pro_click">&#9997; Pro向け相場を見る</a>
         <a href="#tab-sedori" class="hero-btn secondary" data-track="hero_sedori_click">&#9636; せどりルートを見る</a>
@@ -4257,7 +4271,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
       <button class="cat-genre-btn" data-genre="pc" data-target-tab="beginner" data-target-id="category-beginner-pc">&#128187; PC / Mac</button>
       <button class="cat-genre-btn" data-genre="camera" data-target-tab="beginner" data-target-id="category-beginner-camera">&#128247; カメラ</button>
       <button class="cat-genre-btn" data-genre="game" data-target-tab="beginner" data-target-id="category-beginner-game">&#127918; ゲーム機</button>
-      <button class="cat-genre-btn" data-genre="lottery" data-target-tab="lottery" data-target-id="category-lottery">&#127915; 抽選情報{lottery_badge}</button>
+      <button class="cat-genre-btn" data-genre="lottery" data-target-tab="lottery" data-target-id="category-lottery">&#127915; 抽選・店頭販売{lottery_badge}</button>
     </div>
     <div class="cat-maker-bar">
       <div class="cat-maker-group active" data-genre-panel="smartphone">
@@ -4396,6 +4410,185 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             return "active"
 
         return ev.get("status", "unknown") or "unknown"
+
+    # ── TCG（ポケモンカード / ONE PIECEカードゲーム）入荷・抽選 ──────────
+    _TCG_LABELS = {"POKEMON": "POKEMON", "ONE_PIECE": "ONE PIECE CARD GAME"}
+    _TCG_METHOD_LABELS = {
+        "LOTTERY": "抽選", "PREORDER": "予約", "FIRST_COME": "店頭先着",
+        "CONVENIENCE_STORE": "コンビニ販売", "RESTOCK": "再入荷",
+        "GUERRILLA_SALE": "突発店頭販売", "ONLINE_RESTOCK": "EC在庫復活",
+        "RESERVATION_REOPEN": "予約キャンセル分", "GENERAL_SALE": "通常販売",
+        "OFFICIAL_STORE": "公式ストア販売", "SECONDARY_MARKET": "二次流通",
+    }
+    _TCG_STATUS_LABELS = {
+        "OPEN": "受付中", "STARTING_SOON": "まもなく開始",
+        "AVAILABLE_NOW": "今買える", "ENDING_SOON": "締切間近",
+        "ENDED": "終了", "SOLD_OUT": "SOLD OUT",
+        "RESULT_PENDING": "当選発表待ち", "PURCHASE_PERIOD": "購入期間中",
+        "UNVERIFIED": "未確認",
+    }
+    _TCG_SHRINK_LABELS = {
+        "SEALED_SHRINK": "シュリンク付き", "SHRINK_REMOVED": "シュリンクなし",
+        "TAPE_CUT": "テープカット", "OPENED_BOX": "開封済み",
+        "PACK_ONLY": "パック販売", "UNKNOWN": "未確認",
+    }
+
+    @staticmethod
+    def _load_tcg_report() -> dict:
+        """exports/tcg/latest.json を読み込む。無ければ空 dict。"""
+        path = (Path(__file__).resolve().parent.parent.parent
+                / "exports" / "tcg" / "latest.json")
+        if not path.exists():
+            return {}
+        try:
+            import json as _json
+            return _json.loads(path.read_text(encoding="utf-8")) or {}
+        except Exception:
+            return {}
+
+    def _section_tcg(self) -> str:
+        """TCG 入荷・抽選セクション（Task17-19）。
+
+        古い入荷報告は「今買える」に含めない。未確認情報は必ずその旨を表示する。
+        """
+        report = self._load_tcg_report()
+        events = report.get("events") or []
+        if not report:
+            return ""
+
+        def _is(ev, *statuses):
+            return ev.get("status") in statuses and not ev.get("stale")
+
+        buckets = [
+            ("&#128293; 今買える", [e for e in events if _is(e, "AVAILABLE_NOW")]),
+            ("&#9200; 締切間近", [e for e in events if _is(e, "ENDING_SOON")]),
+            ("&#127919; 抽選受付中", [e for e in events
+                                      if e.get("event_type") == "LOTTERY"
+                                      and _is(e, "OPEN", "ENDING_SOON")]),
+            ("&#127978; コンビニ販売", [e for e in events
+                                        if e.get("event_type") == "CONVENIENCE_STORE"]),
+            ("&#128260; 再販", [e for e in events
+                                if e.get("event_type") in ("RESTOCK", "ONLINE_RESTOCK",
+                                                           "RESERVATION_REOPEN")]),
+            ("&#128230; シュリンクBOX", [e for e in events
+                                         if e.get("shrink_status") == "SEALED_SHRINK"]),
+            ("&#128200; プレミアBOX", [e for e in events
+                                       if (e.get("premium") or {}).get("premium_percent")]),
+        ]
+
+        parts = [
+            '<div id="category-tcg" class="info-banner violet">'
+            '<div class="ib-title">&#127183; TCG 入荷・抽選（ポケモンカード / ONE PIECE）</div>'
+            '抽選・予約・店頭先着・コンビニ販売・再入荷を分けて表示します。'
+            '&#9888; 入荷報告は在庫を保証しません。購入条件は必ず公式サイトでご確認ください。</div>'
+        ]
+        chips = "".join(
+            f'<span class="tcg-chip">{label} <b>{len(items)}</b></span>'
+            for label, items in buckets)
+        parts.append(f'<div class="tcg-chips">{chips}</div>')
+
+        shown = [e for e in events if e.get("status") != "ENDED"]
+        if not shown:
+            parts.append('<div class="lottery-card"><div class="lottery-meta">'
+                         '現在お知らせできる TCG の販売情報はありません。'
+                         '（鮮度切れの入荷報告は表示していません）</div></div>')
+        else:
+            parts.extend(self._tcg_card(e) for e in shown[:30])
+
+        # Source Health（Task27）
+        health = report.get("source_health") or []
+        if health:
+            rows = "".join(
+                '<tr><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>'.format(
+                    _esc(str(h.get("source_name") or h.get("source") or "")),
+                    _esc(str((h.get("last_checked") or "—")[:16].replace("T", " "))),
+                    h.get("events_found", 0), h.get("errors", 0),
+                    "YES" if h.get("blocked") else "no")
+                for h in health)
+            parts.append(
+                '<details class="tcg-health"><summary>TCG 監視元の取得状況</summary>'
+                '<table class="tcg-health-table"><thead><tr>'
+                '<th>Source</th><th>最終確認</th><th>件数</th><th>エラー</th><th>Blocked</th>'
+                f'</tr></thead><tbody>{rows}</tbody></table></details>')
+        return "".join(parts)
+
+    @staticmethod
+    def _tcg_store_label(ev: dict) -> str:
+        """店舗キーを表示名に変換する（未登録キーはそのまま）。"""
+        key = str(ev.get("store") or "")
+        try:
+            from src.tcg.sources import SOURCE_BY_KEY
+        except Exception:  # noqa: BLE001
+            return key or "—"
+        entry = SOURCE_BY_KEY.get(key.upper())
+        return (entry["name"] if entry else key) or "—"
+
+    def _tcg_card(self, ev: dict) -> str:
+        """TCG 商品カード（Task18 / Task19）。"""
+        prem = ev.get("premium") or {}
+        tcg = self._TCG_LABELS.get(ev.get("tcg"), ev.get("tcg") or "")
+        method = self._TCG_METHOD_LABELS.get(ev.get("event_type"), ev.get("event_type") or "—")
+        status = self._TCG_STATUS_LABELS.get(ev.get("status"), ev.get("status") or "—")
+        # 抽選以外の OPEN は「受付中」ではなく「発売前」（意味の取り違えを防ぐ）
+        if ev.get("status") == "OPEN" and ev.get("event_type") != "LOTTERY":
+            status = "発売前"
+        shrink = self._TCG_SHRINK_LABELS.get(ev.get("shrink_status"), "未確認")
+        verification = ev.get("verification") or "Unverified"
+
+        rows = [("販売", _esc(self._tcg_store_label(ev))),
+                ("方式", _esc(method))]
+        start = ev.get("sale_start") or ev.get("application_start")
+        if start:
+            rows.append(("開始", _esc(str(start)[:16].replace("T", " "))))
+        elif ev.get("release_date"):
+            rows.append(("発売", _esc(str(ev["release_date"]))))
+        end = ev.get("application_end") or ev.get("sale_end")
+        if end:
+            rows.append(("締切", _esc(str(end)[:16].replace("T", " "))))
+        if prem.get("retail_price"):
+            rows.append(("定価", f"&yen;{int(prem['retail_price']):,}"))
+        if ev.get("price"):
+            # ページ記載の金額。パック単価か BOX 価格かは区別できないため
+            # 「定価」とは書かない。
+            rows.append(("参考価格（ページ記載）", f"&yen;{int(ev['price']):,}"))
+        if prem.get("market_median"):
+            rows.append(("シュリンク市場", f"&yen;{int(prem['market_median']):,}"))
+        if prem.get("premium_percent") is not None:
+            rows.append(("Premium",
+                         f"{prem['premium_percent']:+.1f}%"
+                         + (f"（{prem['premium_yen']:+,}円）"
+                            if prem.get("premium_yen") is not None else "")))
+        else:
+            rows.append(("Premium", "二次流通のサンプル不足のため未算出"))
+        rows.append(("購入制限", _esc(str(ev.get("purchase_limit") or "未公表"))))
+        rows.append(("シュリンク", _esc(shrink)))
+        if ev.get("opportunity_score") is not None:
+            rows.append(("TCG Score", f"{ev['opportunity_score']} / 100"))
+
+        meta = "".join(f'<div class="tcg-row"><span>{k}</span><b>{v}</b></div>'
+                       for k, v in rows)
+        notes = "".join(f'<li>{_esc(str(n))}</li>'
+                        for n in (ev.get("buy_now_notes") or []) + (ev.get("notes") or []))
+        notes_html = f'<ul class="tcg-notes">{notes}</ul>' if notes else ""
+        url = ev.get("source_url") or ""
+        link = (f'<a class="tcg-link" href="{_esc(url)}" target="_blank" '
+                f'rel="noopener nofollow">公式ページで確認</a>') if url else ""
+        badge_cls = "open" if ev.get("status") in ("AVAILABLE_NOW", "OPEN",
+                                                   "PURCHASE_PERIOD") else "closed"
+        buy = ('<span class="tcg-buynow">BUY NOW 候補</span>'
+               if ev.get("buy_now") else "")
+        return (
+            f'<div class="lottery-card tcg-card">'
+            f'<div class="lottery-card-header">'
+            f'<span class="tcg-tag">{_esc(tcg)}</span>'
+            f'<span class="lottery-name">{_esc(str(ev.get("product_name") or ""))}</span>'
+            f'<span class="lottery-status-badge lottery-status-{badge_cls}">{_esc(status)}</span>'
+            f'{buy}</div>'
+            f'<div class="tcg-rows">{meta}</div>'
+            f'<div class="tcg-verify">情報の確度: {_esc(verification)}'
+            f'（{_esc(str(ev.get("source_type") or ""))}）</div>'
+            f'{notes_html}{link}</div>'
+        )
 
     def _section_lottery(self, lottery_events: list) -> str:
         """抽選情報セクション（4分類: 受付中 / 近日開始 / 受付終了 / 参考リンク）。
@@ -4683,7 +4876,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
     <button class="mobile-drawer-close" id="mobile-drawer-close" aria-label="閉じる">&times;</button>
   </div>
   <div class="mobile-drawer-nav">
-    <button class="mobile-drawer-nav-btn active" data-drawer-tab="lottery">&#127915; 抽選情報{lottery_badge}</button>
+    <button class="mobile-drawer-nav-btn active" data-drawer-tab="lottery">&#127915; 抽選・店頭販売{lottery_badge}</button>
     <button class="mobile-drawer-nav-btn" data-drawer-tab="ranking">&#127942; ランキング</button>
     <button class="mobile-drawer-nav-btn" data-drawer-tab="sedori">&#9636; せどりルート</button>
     <button class="mobile-drawer-nav-btn" data-drawer-tab="beginner">&#128100; 初心者 <span class="tab-count">{beginner_count}</span></button>
@@ -4692,11 +4885,11 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 </div>
 <div class="mobile-tab-topbar" id="mobile-tab-topbar">
   <button class="mobile-hamburger" id="mobile-hamburger" aria-label="メニューを開く">&#9776;</button>
-  <span class="mobile-tab-current-label" id="mobile-tab-current-label">&#127915; 抽選情報</span>
+  <span class="mobile-tab-current-label" id="mobile-tab-current-label">&#127915; 抽選・店頭販売</span>
 </div>
 <div class="tab-wrap" id="main-tab-nav">
 <nav class="tab-nav" role="tablist">
-  <button class="tab-btn active" data-tab="lottery" role="tab" aria-selected="true">&#127915; 抽選情報{lottery_badge}</button>
+  <button class="tab-btn active" data-tab="lottery" role="tab" aria-selected="true">&#127915; 抽選・店頭販売{lottery_badge}</button>
   <button class="tab-btn" data-tab="ranking" role="tab" aria-selected="false">&#127942; ランキング</button>
   <button class="tab-btn" data-tab="sedori" role="tab" aria-selected="false">&#9636; せどりルート</button>
   <button class="tab-btn" data-tab="beginner" role="tab" aria-selected="false">&#128100; 初心者 <span class="tab-count">{beginner_count}</span></button>
@@ -4802,7 +4995,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         profit_html      = self._profit_routes_section()
         health_html      = self._tab_health()
         sedori_html      = profit_html + self._tab_sedori(sedori_routes or [], beginner_deals=_all_beginner_for_sedori)
-        lottery_html     = self._section_lottery(lottery_events)
+        lottery_html     = self._section_tcg() + self._section_lottery(lottery_events)
 
         # 件数整合: 外部から渡された表示件数を優先（_render_page で整合済み）
         # beginner: カメラ除外後の件数。未渡しの場合はフォールバックとして自前計算
@@ -6621,7 +6814,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             if genre_key == 'game_console':
                 parts.append('<div class="caution" style="margin-top:16px;font-size:0.82rem;">'
                              '&#128204; <strong>限定・抽選モデル</strong>（Nintendo Switch 2 抽選など）は '
-                             '<a href="#tab-lottery" class="inline-link">抽選情報タブ</a> または '
+                             '<a href="#tab-lottery" class="inline-link">抽選・店頭販売タブ</a> または '
                              '<a href="#tab-advanced" class="inline-link">Pro向けタブ</a> をご確認ください。</div>')
 
             parts.append('</div>')  # genre block end
@@ -8891,7 +9084,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
     <div class="footer-live"><span class="live-dot"></span>毎日更新</div>
   </div>
   <div class="footer-links">
-    <a href="#tab-lottery" class="footer-link">抽選情報</a>
+    <a href="#tab-lottery" class="footer-link">抽選・店頭販売</a>
     <a href="#tab-ranking" class="footer-link">ランキング</a>
     <a href="#tab-sedori" class="footer-link">せどりルート</a>
     <a href="#tab-beginner" class="footer-link">初心者向け</a>

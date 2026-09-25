@@ -1,0 +1,18 @@
+# TCG 商品の定価（メーカー希望小売価格）。
+#
+# 重要:
+#   - ここに載せるのは公式サイトで確認した価格だけ。
+#   - verified: true が無い項目はプレミア計算に採用しない（推測値を混ぜないため）。
+#   - product_id は collect_tcg_events.py が生成するスラッグと一致させる。
+#
+# 例:
+# products:
+#   ポケモンカードゲーム-拡張パック-xxxx:
+#     name: "ポケモンカードゲーム 拡張パック XXXX BOX"
+#     tcg: POKEMON
+#     retail_price: 7200
+#     verified: true
+#     source_url: "https://www.pokemon-card.com/products/..."
+#     verified_at: "2026-09-25"
+
+products: {}

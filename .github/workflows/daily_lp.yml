@@ -95,6 +95,14 @@ jobs:
         env:
           PYTHONPATH: .
 
+      # 5.5 TCG（ポケモンカード / ONE PIECEカードゲーム）入荷・抽選・プレミア監視
+      #     既存レイヤーとは独立。取得失敗してもワークフローを止めない。
+      - name: Collect TCG events
+        run: python scripts/collect_tcg_events.py
+        continue-on-error: true
+        env:
+          PYTHONPATH: .
+
       # 6. Update alerts（アラート生成）
       - name: Update alerts
         run: python scripts/update_alerts.py
@@ -428,6 +436,7 @@ jobs:
                   exports/data_quality_report/ exports/data_quality/ exports/beta/ docs/beta/ \
                   exports/official_source_audit/ exports/retail_buyback_audit/ \
                   exports/source_matching/ exports/api_automation/ \
+                  exports/tcg/ \
                   exports/camera_buyback_status.json \
                   data/alerts.csv data/lottery_events.csv \
                   data/overseas_price_history.csv \

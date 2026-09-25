@@ -1,12 +1,12 @@
 # Retail & Buyback Automation — 品質監査
 
-> 生成: 2026-09-24 18:08 JST / 販売/買取/二次流通の取得品質・正規化・同一性（利益/AI/UI/SaaSロジックは不変）
+> 生成: 2026-09-25 17:24 JST / 販売/買取/二次流通の取得品質・正規化・同一性（利益/AI/UI/SaaSロジックは不変）
 
 ## カテゴリ別サマリ
 | カテゴリ | 観測 | 価格有 | exact | high | fresh | Main昇格可 | 失敗(0円/stale/rejected) |
 |---|--:|--:|--:|--:|--:|--:|--:|
 | buyback | 143 | 125 | 0 | 0 | 49 | 0 | 18/94/133 |
-| resale | 22 | 22 | 0 | 0 | 12 | 0 | 0/10/18 |
+| resale | 22 | 22 | 0 | 0 | 12 | 0 | 0/10/16 |
 | retail | 2 | 2 | 0 | 0 | 0 | 0 | 0/2/2 |
 
 ## Main 昇格（high conf + fresh + exact）: 合計 **0** 件
@@ -43,22 +43,22 @@
 | eBay | 0 | – | – | no_data |
 | メルカリ未使用 | 5 | 5 | 0 | 0 |
 | Mercari sold | 0 | – | – | no_data |
-| ヤフオク (新品/未使用落札) | 10 | 10 | 10 | 0 |
+| ヤフオク (新品/未使用落札) | 11 | 11 | 11 | 0 |
 | Yahoo Auction sold | 0 | – | – | no_data |
-| Amazon JP (新品出品) | 2 | 2 | 2 | 0 |
+| Amazon JP (新品出品) | 1 | 1 | 1 | 0 |
 
 ## 商品同一性 監査
-- 容量不一致: 0 / 別型番: 0 / アクセサリー: 33 / 非本体: 33
+- 容量不一致: 0 / 別型番: 0 / アクセサリー: 31 / 非本体: 31
 - condition分布: {'new': 219, 'used': 25}
 
 ## 正規化 監査
 - price_type付与率: 100% / 送料分離: 100% / ポイント分離: 100% / 下取除外: 88%
-- price_type分布: {'buyback_price': 120, 'shop_sale_price': 27, 'overseas_listing_price': 5, 'flea_listing_price': 5, 'flea_sold_price': 10}
+- price_type分布: {'buyback_price': 120, 'shop_sale_price': 26, 'overseas_listing_price': 5, 'flea_listing_price': 5, 'flea_sold_price': 11}
 
 ## duplicate_price_pattern（同一ソースで複数SKU同額・要確認）
 | source | role | price | SKU数 | product_ids |
 |---|---|--:|--:|---|
-| 買取商店 | sell | ¥437,000 | 4 | prod_iphone17pm_256, prod_iphone17pm_512, prod_iphone17pro_256, prod_iphone17pro_512 |
+| 買取商店 | sell | ¥438,000 | 4 | prod_iphone17pm_256, prod_iphone17pm_512, prod_iphone17pro_256, prod_iphone17pro_512 |
 | メーカー公式/定価 | official | ¥214,800 | 2 | prod_iphone17pm_256, prod_iphone17pro_512 |
 | ヤフオク (新品/未使用落札) | buy | ¥227,304 | 2 | prod_iphone17pm_256, prod_iphone17pro_256 |
 | ヤフオク (新品/未使用落札) | buy | ¥250,580 | 2 | prod_iphone17pm_512, prod_iphone17pro_512 |

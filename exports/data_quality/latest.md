@@ -1,6 +1,6 @@
 # データ品質エンジン（Data Quality Engine）
 
-> 生成: 2026-09-24 18:08 JST / 対象: データ取得・正規化・品質管理のみ（利益/AI/UI/SaaSロジックは不変）
+> 生成: 2026-09-25 17:24 JST / 対象: データ取得・正規化・品質管理のみ（利益/AI/UI/SaaSロジックは不変）
 
 ## 総合 Data Quality Score: **70 / 100** — 判定: **CONDITIONAL_GO**
 
@@ -8,7 +8,7 @@
 |------|-------|
 | Freshness 鮮度 | 47 |
 | Completeness 完全性 | 62 |
-| Accuracy 正確性 | 92 |
+| Accuracy 正確性 | 93 |
 | Coverage 網羅 | 100 |
 | Reliability 信頼性 | 47 |
 | Consistency 一貫性 | 100 |

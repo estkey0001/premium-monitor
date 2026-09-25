@@ -1,6 +1,6 @@
 
 ============================================================
- Deploy Check (741 items)
+ Deploy Check (753 items)
 ============================================================
   ✅ [index_exists] docs/index.html 存在
   ✅ [forbidden_phrases] 禁止表現なし
@@ -9,7 +9,7 @@
   ✅ [line_cta_off] LINE CTA非表示（正常）
   ✅ [telegram_cta_off] Telegram CTA非表示（正常）
   ✅ [analytics_empty] GA ID未設定 → GAスニペット非出力（正常）
-  ✅ [today_date] 今日の日付 2026-09-24 あり
+  ✅ [today_date] 今日の日付 2026-09-25 あり
   ✅ [price_exists] 価格表記あり
   ✅ [disclaimer] 免責事項あり
   ✅ [data_track] data-track属性あり
@@ -154,7 +154,7 @@
   ✅ [freshness_yoko_format] 古い価格に「要更新 / N日前」形式が使われている
   ✅ [deal_card_no_saishin_label] updated-row に旧「最終更新：」表記なし（価格確認：に統一済み）
   ✅ [stale_banner_date_mismatch] #144 「本日の価格データ未更新」が HTML に存在しない（OK: トップ警告抑制済み）
-  ✅ [csv_today_observed_at] manual_buyback_prices.csv に本日(2026-09-24)の observed_at あり
+  ✅ [csv_today_observed_at] manual_buyback_prices.csv に本日(2026-09-25)の observed_at あり
   ✅ [iphone17_price_fetched] iPhone 17 Pro 系の買取価格が1件以上取得されている
   ✅ [mobile_ichiban_price] モバイル一番の買取価格（price > 0）が存在する
   ✅ [fetch_failed_display] fetch_failed 行があり、LP上に「取得失敗 / 要確認」表示がある
@@ -185,13 +185,13 @@
   ✅ [ipad_not_in_other] iPad は「その他」欄に混入していない
   ✅ [airpods_not_in_smartphone] AirPods はスマートフォン欄に混入していない
   ⚠️ [applewatch_in_wearable_section] Apple Watch がウェアラブル欄に見つからない（データなし or genre設定を確認）
-  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-09-24T17:00:49+09:00）
+  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-09-25T16:14:26+09:00）
   ⚠️ [suspicious_price_format] suspicious_prices 形式OK（suspicious_price 18件あり — 確認推奨）
   ✅ [fetch_failed_has_reason] fetch_failed 42件すべてに reason あり
   ✅ [collector_report_html_exists] docs/collector_report.html 存在
   ✅ [collector_report_link_in_lp] LP内に collector_report.html へのリンクがある
   ✅ [fetch_failed_report_link] 取得失敗38件 / suspicious18件 → 警告バーが表示されている
-  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 9件存在する: ['iphone17pro512', 'iphone17pm512', 'iphone17pm256', 'iphone17pro256']
+  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 9件存在する: ['iphone17pm256', 'iphone17pm512', 'iphone17pro256', 'iphone17pro512']
   ✅ [beginner_page_auto_scraped_exists] 自動取得 OK 13件 / total 55件
   ✅ [shop_name_no_vertical_wrap] shop-name-col に word-break:keep-all が設定されている
   ✅ [iphone17pro256_price_scraped] iPhone 17 Pro 256GB の価格取得成功: ['kaitori_shouten', 'kaitori_itchome']
@@ -246,8 +246,8 @@
   ✅ [lottery_quality_script_exists] scripts/check_lottery_quality.py が存在する
   ✅ [lottery_quality_in_workflow] daily_lp.yml に Lottery quality gate ステップが存在する
   ✅ [lottery_report_exists] exports/lottery_report/latest.json が生成されている
-  ⚠️ [lottery_active_count_gte3] lottery_report active_count = 0（受付中の抽選なし — 抽選なし期間は正常）
-  ⚠️ [ricoh_gr4_in_active_items] RICOH GR IV 系が active_items に 0 件のみ（期待値: 3）
+  ✅ [lottery_active_count_gte3] lottery_report active_count = 3（>= 3）
+  ✅ [ricoh_gr4_in_active_items] RICOH GR IV 系 3 件が active_items に存在
   ✅ [reference_only_excluded_from_active] reference_only アイテムが active count に混入していない
   ✅ [no_stale_in_active_section] 「次回未定」「抽選情報未確認」等の古い文言が active section にない
   ✅ [lottery_quality_no_failure] lottery_quality_gate: FAILURE 項目なし
@@ -280,10 +280,10 @@
   ✅ [alert_popup_container] #273 アラートポップアップコンテナあり（alert-popup-container）
   ✅ [alerts_csv_exists] #274 data/alerts.csv 存在
   ✅ [lottery_no_forbidden_notes] #275 抽選 active section 禁止文言なし
-  ✅ [ricoh_date_consistency] #276 RICOH GR IV: debug text に5月29日なし → entry_end_at='2026-08-26 12:00' で OK
-  ✅ [lottery_conflict_warning_in_lp] #277 status_conflict=true の active 商品なし（LP conflict warning 不要）
-  ✅ [lottery_conflict_active_preserved] #278 status_conflict=true の商品なし
-  ✅ [lottery_source_text_excerpt] #279 source_text_excerpt あり active item なし（conflict なし）
+  ✅ [ricoh_date_consistency] #276 RICOH GR IV: debug text に5月29日なし → entry_end_at='2026-09-28 12:00' で OK
+  ✅ [lottery_conflict_warning_in_lp] #277 status_conflict active 商品 ['RICOH GR IV Monochrome', 'RICOH GR IV HDF', 'RICOH GR IV'] → LP に conflict warning あり ✅
+  ✅ [lottery_conflict_active_preserved] #278 status_conflict かつ entry_end_at が未来 → active card として保持: ['RICOH GR IV Monochrome', 'RICOH GR IV HDF', 'RICOH GR IV']
+  ✅ [lottery_source_text_excerpt] #279 source_text_excerpt が 3件の active item に保存されている
   ✅ [tab_order] #280 タブ順: 抽選情報→ランキング→せどりルート→初心者→Pro
   ✅ [no_surge_tab] #281 速報タブ（surge）がタブナビに存在しない
   ✅ [lottery_tab_active] #282 抽選情報タブ（lottery）がデフォルトアクティブ
@@ -599,13 +599,13 @@
   ✅ [lp_zero_stale_reason] #592 eBay sold stale が未成立理由として表示される
   ✅ [lp_missing_data_ranking] #593 次に取得すべきデータランキングが表示される
   ✅ [profit_zero_rich_diagnostics] #594 profit_routes に missing_data_priority と商品別詳細診断がある
-  ✅ [npo_has_flea_sold] #595 normalized_price_observations に flea_sold_price がある（10件）
-  ✅ [flea_sold_pro_buy] #596 flea_sold_price が Pro buy 候補として使われる（usable 4件）
+  ✅ [npo_has_flea_sold] #595 normalized_price_observations に flea_sold_price がある（11件）
+  ✅ [flea_sold_pro_buy] #596 flea_sold_price が Pro buy 候補として使われる（usable 5件）
   ✅ [flea_sold_no_accessory] #597 flea_sold の accessory/wrong_model が main calc に使われない
   ✅ [flea_sold_url_present] #598 flea_sold に item_url または search_url が存在する
   ✅ [flea_sold_target_only] #599 target_buy_price 超の flea_sold が main route に使われない
   ✅ [lp_main_routes_shown] #600 main route（0件）が LP に表示される
-  ❌ [lp_flea_sold_section] #601 LP にフリマsold仕入れ候補セクションが表示される ← フリマsold表示が見つかりません
+  ✅ [lp_flea_sold_section] #601 LP にフリマsold仕入れ候補セクションが表示される
   ✅ [lp_main_route_card] #602 main route が Pro タブに表示される
   ✅ [lp_main_route_product_shown] #603 main route 商品（GR IIIx等）が LP に表示される
   ✅ [profit_route_age_fields] #604 main route に buy_age_days / sell_age_days が含まれる
@@ -614,7 +614,7 @@
   ✅ [lp_main_reference_separated2] #607 reference route が main route と分離表示される
   ✅ [lp_pro_summary] #608 main route がある場合 Pro サマリーが表示される
   ✅ [health_page_exists] #609 Health レポートと LP の Health タブが存在する
-  ✅ [health_score_shown] #610 Health Score が表示される（39.5/100）
+  ✅ [health_score_shown] #610 Health Score が表示される（39.7/100）
   ✅ [health_anomalies_shown] #611 異常一覧（Critical/Warning/Info）が表示される
   ✅ [health_improvements_shown] #612 改善TOP10 が表示される（9件）
   ✅ [health_diff_shown] #613 前日比較が表示される
@@ -633,7 +633,7 @@
   ✅ [ai_today_tasks] #626 今日やること（Today Tasks）が表示される（1件）
   ✅ [ai_probability_forecast_trend] #627 成立確率/次回更新予測/価格トレンドが付与される
   ✅ [notification_events_exists] #628 notifications/latest.json が存在する（events 0）
-  ✅ [notification_history] #629 notifications/history/ に履歴が保存される（64日分）
+  ✅ [notification_history] #629 notifications/history/ に履歴が保存される（65日分）
   ✅ [notification_suppression] #630 通知抑制（24h再送禁止・ROI+5%例外）が実装される
   ✅ [notification_priority] #631 通知に priority（Critical/High/Medium/Low）が付与される
   ✅ [lp_latest_notifications] #632 最新通知が LP（AI Dashboard）に表示される
@@ -649,7 +649,7 @@
   ✅ [capital_expected_profit] #642 Expected Profit / Expected ROI が表示される
   ✅ [capital_concentration_caps] #643 集中リスク上限（商品30%等）が守られ account_id 構造で保存される
   ✅ [execution_dashboard] #644 Execution Dashboard と execution_history.json が存在する
-  ✅ [execution_accuracy] #645 予測/通知/配分の精度が算出される（予測誤差 11.0pt）
+  ✅ [execution_accuracy] #645 予測/通知/配分の精度が算出される（予測誤差 11.1pt）
   ✅ [execution_learning_coeff] #646 補正係数（score/probability/risk）が学習される（利益ロジック不変）
   ✅ [execution_insights] #647 Insights（今週学んだこと TOP10）が表示される
   ✅ [execution_weekly_report] #648 週次 Learning Report（weekly_learning.md）が生成される
@@ -735,7 +735,7 @@
   ✅ [api_stage_control] #728 stage 制御（0/5/10/25/all）が実装される
   ✅ [api_stage_workflow] #729 workflow に stage 制御 / real canary が配線される
   ✅ [api_pending_no_fake] #730 未設定APIは PENDING（real_api_called=false・架空成功なし）
-  ✅ [api_data_quality_accuracy] #731 Data Quality Accuracy 維持（92/100）
+  ✅ [api_data_quality_accuracy] #731 Data Quality Accuracy 維持（93/100）
   ✅ [ebay_real_canary_report] #732 eBay real canary report が存在（verdict=EBAY_PENDING_CONFIGURATION）
   ✅ [ebay_canary_verdict_valid] #733 eBay Canary Verdict が有効（EBAY_PENDING_CONFIGURATION）
   ✅ [ebay_no_fake_pass] #734 未設定/未呼出しで EBAY_REAL_CANARY_PASS を出していない
@@ -743,9 +743,21 @@
   ✅ [ebay_dry_run_no_mutation] #736 Dry Run Main Mutation = 0（目標0）
   ✅ [ebay_pass_meets_gate] #737 EBAY_REAL_CANARY_PASS は精度条件(Product>=99/Cap100/Model100)を満たす
   ✅ [ebay_stage_recommend_gated] #738 Stage 5 推奨は Canary PASS 時のみ
+  ✅ [tcg_pokemon_source] #739 Pokemon の監視 source が登録されている
+  ✅ [tcg_onepiece_source] #740 ONE PIECE の監視 source が登録されている
+  ✅ [tcg_lottery_parser] #741 抽選告知を LOTTERY として判定できる
+  ✅ [tcg_first_come_parser] #742 店頭先着を FIRST_COME として判定できる
+  ✅ [tcg_convenience_event] #743 コンビニ販売イベントを扱える
+  ✅ [tcg_restock_event] #744 再入荷イベントを扱える
+  ✅ [tcg_shrink_status] #745 シュリンク状態を管理し BOX=シュリンク付きと仮定しない
+  ✅ [tcg_premium_calc] #746 プレミア計算が正しく、異常値1件を市場価格に採用しない
+  ✅ [tcg_stale_not_available] #747 鮮度切れの入荷報告を「今買える」と表示しない
+  ✅ [tcg_source_priority] #748 未確認 source が公式情報を上書きしない
+  ✅ [tcg_duplicate_prevention] #749 重複イベントを排除し上位 source を残す
+  ✅ [tcg_report_exists] #750 TCG レポート(exports/tcg/latest.json / latest.md)が生成されている
 
-  Errors: 1 | Warnings: 20 | OK: 720
+  Errors: 0 | Warnings: 18 | OK: 735
 
-  ❌ Deploy check FAILED
+  ✅ Deploy check PASSED
 ============================================================
 

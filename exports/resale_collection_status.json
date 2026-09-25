@@ -1,5 +1,5 @@
 {
-  "collected_at": "2026-09-24T17:41:53.012462+09:00",
+  "collected_at": "2026-09-25T16:58:05.735515+09:00",
   "platforms": {
     "ebay": {
       "status": "blocked_cloud_ip",
@@ -43,9 +43,9 @@
     },
     "gr4_hdf": {
       "ebay": "blocked_cloud_ip",
-      "amazon": "ok_html",
+      "amazon": "blocked_cloud_ip",
       "mercari": "blocked_cloud_ip",
-      "yahoo": "no_data",
+      "yahoo": "ok_html",
       "rakuten": "html_failed",
       "rakuma": "blocked_cloud_ip"
     },

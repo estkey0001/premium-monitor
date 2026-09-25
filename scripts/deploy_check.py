@@ -5844,8 +5844,15 @@ def check() -> list[dict]:
                     "message": f"#600 main route（{len(_pr_main)}件）が LP に表示される"
                                + ("" if _t600 else " ← main route 見出しが LP にありません")})
 
-    # #601: LP にフリマsold仕入れ候補セクションがある（収集物がある場合）
-    _t601 = (not _flea_present) or ('新規取得したフリマsold価格' in _lp_html)
+    # #601: LP にフリマsold仕入れ候補セクションがある（表示対象がある場合）
+    #   LP 側は rejection_reason 付き（stale 等）の item を描画しないため、
+    #   「products が存在する」だけを条件にすると全件 rejected のときに
+    #   誤検知になる。表示対象が1件以上ある場合のみを対象にする。
+    _flea_renderable = any(
+        it for d in _flea_data if isinstance(d, dict)
+        for _p in (d.get('products') or {}).values()
+        for it in (_p.get('items') or []) if not it.get('rejection_reason'))
+    _t601 = (not _flea_renderable) or ('新規取得したフリマsold価格' in _lp_html)
     results.append({"level": "ok" if _t601 else "error", "check": "lp_flea_sold_section",
                     "message": "#601 LP にフリマsold仕入れ候補セクションが表示される"
                                + ("" if _t601 else " ← フリマsold表示が見つかりません")})

@@ -1,4 +1,4 @@
-# データ取得品質レポート（2026-09-24 18:08 JST）
+# データ取得品質レポート（2026-09-25 17:24 JST）
 
 ## 取得成功率
 - 全対象店舗数: 16
@@ -10,7 +10,7 @@
 - 前回成功率: 23.6%
 - 今回成功率: 23.6%
 - 変化: 0.0pt（横ばい）
-- 7日移動平均: 21.5%
+- 7日移動平均: 23.1%
 - 主要失敗理由 TOP5: price_not_found 8, product_not_listed 6, rate_limited_429 6, http_403 6, site_blocked 6
 
 ## 店舗別成功率（低い順）
@@ -36,18 +36,18 @@
 - iphone17pm256: 37.5%
 
 ## 連続失敗店舗（2回以上）
-- 2ndstreet: 147回連続
-- bookoff: 147回連続
-- dosupara: 147回連続
-- geo_mobile: 147回連続
-- hardoff: 147回連続
-- janpara: 147回連続
-- pasoko: 147回連続
-- sofmap: 147回連続
-- surugaya: 147回連続
-- tsutaya: 147回連続
-- iosys: 80回連続
-- netoff: 7回連続
+- 2ndstreet: 148回連続
+- bookoff: 148回連続
+- dosupara: 148回連続
+- geo_mobile: 148回連続
+- hardoff: 148回連続
+- janpara: 148回連続
+- pasoko: 148回連続
+- sofmap: 148回連続
+- surugaya: 148回連続
+- tsutaya: 148回連続
+- iosys: 81回連続
+- netoff: 8回連続
 
 ## 改善優先順位（required店舗）
 1. iosys（失敗6 / http_403）

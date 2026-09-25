@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-24 18:08 JST",
+  "generated_at": "2026-09-25 17:24 JST",
   "scope": "販売/買取/二次流通の取得品質・正規化・同一性（利益/AI/UI/SaaSロジックは不変）",
   "rules": {
     "identity": "容量・型番・カラー・新品/中古 を厳格一致",
@@ -35,11 +35,11 @@
       "main_promotable": 0,
       "zero": 0,
       "stale": 10,
-      "rejected": 18,
+      "rejected": 16,
       "failure_reasons": {
         "stale_over_14d": 10,
-        "accessory_or_wrong_product": 4,
-        "duplicate_price_collision": 4
+        "duplicate_price_collision": 4,
+        "accessory_or_wrong_product": 2
       }
     },
     "retail": {
@@ -281,11 +281,11 @@
       "status": "no_data"
     },
     "ヤフオク (新品/未使用落札)": {
-      "observations": 10,
-      "with_price": 10,
+      "observations": 11,
+      "with_price": 11,
       "exact_match": 0,
       "high_confidence": 0,
-      "fresh": 10,
+      "fresh": 11,
       "main_promotable": 0,
       "zero": 0,
       "stale": 0,
@@ -300,18 +300,16 @@
       "status": "no_data"
     },
     "Amazon JP (新品出品)": {
-      "observations": 2,
-      "with_price": 2,
+      "observations": 1,
+      "with_price": 1,
       "exact_match": 0,
       "high_confidence": 0,
-      "fresh": 2,
+      "fresh": 1,
       "main_promotable": 0,
       "zero": 0,
       "stale": 0,
-      "rejected": 2,
-      "failure_reasons": {
-        "accessory_or_wrong_product": 2
-      }
+      "rejected": 0,
+      "failure_reasons": {}
     }
   },
   "source_summary": {
@@ -377,6 +375,21 @@
         "duplicate_price_collision": 6
       }
     },
+    "ヤフオク (新品/未使用落札)": {
+      "observations": 11,
+      "with_price": 11,
+      "exact_match": 0,
+      "high_confidence": 0,
+      "fresh": 11,
+      "main_promotable": 0,
+      "zero": 0,
+      "stale": 0,
+      "rejected": 6,
+      "failure_reasons": {
+        "duplicate_price_collision": 4,
+        "accessory_or_wrong_product": 2
+      }
+    },
     "ソフマップ": {
       "observations": 10,
       "with_price": 8,
@@ -390,21 +403,6 @@
       "failure_reasons": {
         "stale_over_14d": 8,
         "price_zero": 2
-      }
-    },
-    "ヤフオク (新品/未使用落札)": {
-      "observations": 10,
-      "with_price": 10,
-      "exact_match": 0,
-      "high_confidence": 0,
-      "fresh": 10,
-      "main_promotable": 0,
-      "zero": 0,
-      "stale": 0,
-      "rejected": 6,
-      "failure_reasons": {
-        "duplicate_price_collision": 4,
-        "accessory_or_wrong_product": 2
       }
     },
     "マップカメラ": {
@@ -521,26 +519,24 @@
       }
     },
     "Amazon JP (新品出品)": {
-      "observations": 2,
-      "with_price": 2,
+      "observations": 1,
+      "with_price": 1,
       "exact_match": 0,
       "high_confidence": 0,
-      "fresh": 2,
+      "fresh": 1,
       "main_promotable": 0,
       "zero": 0,
       "stale": 0,
-      "rejected": 2,
-      "failure_reasons": {
-        "accessory_or_wrong_product": 2
-      }
+      "rejected": 0,
+      "failure_reasons": {}
     }
   },
   "identity_audit": {
     "checked": 244,
     "capacity_mismatch": 0,
     "wrong_model": 0,
-    "accessory": 33,
-    "not_body_only": 33,
+    "accessory": 31,
+    "not_body_only": 31,
     "condition_dist": {
       "new": 219,
       "used": 25
@@ -554,10 +550,10 @@
     "buyback_labeled": 120,
     "price_type_dist": {
       "buyback_price": 120,
-      "shop_sale_price": 27,
+      "shop_sale_price": 26,
       "overseas_listing_price": 5,
       "flea_listing_price": 5,
-      "flea_sold_price": 10
+      "flea_sold_price": 11
     },
     "note": "格納価格は税込本体。送料/ポイント/下取は price_context に混入させず別扱い"
   },
@@ -566,7 +562,7 @@
       "source_name": "買取商店",
       "price_role": "sell",
       "price_type": "buyback_price",
-      "price": 437000,
+      "price": 438000,
       "product_ids": [
         "prod_iphone17pm_256",
         "prod_iphone17pm_512",
@@ -804,7 +800,7 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 33.3,
+      "first_seen": 34.2,
       "last_seen": 0.0,
       "risk_level": "medium",
       "possible_reason": [
@@ -865,8 +861,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 45.3,
-      "last_seen": 45.3,
+      "first_seen": 46.2,
+      "last_seen": 46.2,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -895,8 +891,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 45.3,
-      "last_seen": 45.3,
+      "first_seen": 46.2,
+      "last_seen": 46.2,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -925,8 +921,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 45.3,
-      "last_seen": 45.3,
+      "first_seen": 46.2,
+      "last_seen": 46.2,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"

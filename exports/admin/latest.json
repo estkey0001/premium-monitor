@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-25 17:24 JST",
+  "generated_at": "2026-09-26 18:18 JST",
   "accounts": {
     "total": 3,
     "by_tier": {
@@ -57,7 +57,7 @@
     "notifications_today": 0,
     "notifications_total": 75,
     "health_score": 39.7,
-    "execution_success_rate": 26.2,
-    "prediction_error_pt": 11.1
+    "execution_success_rate": 26.0,
+    "prediction_error_pt": 11.3
   }
 }

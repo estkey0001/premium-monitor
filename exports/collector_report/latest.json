@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-25T16:14:26+09:00",
+  "generated_at": "2026-09-26T17:08:25+09:00",
   "summary": {
     "total": 55,
     "ok": 13,
@@ -237,43 +237,43 @@
   "product_price_stats": {
     "iphone17pro256": {
       "prices": [
-        438000,
+        435000,
         174000
       ],
-      "avg": 306000,
+      "avg": 304500,
       "min": 174000,
-      "max": 438000,
+      "max": 435000,
       "suspicious": true
     },
     "iphone17pro512": {
       "prices": [
-        438000,
+        435000,
         201000
       ],
-      "avg": 319500,
+      "avg": 318000,
       "min": 201000,
-      "max": 438000,
+      "max": 435000,
       "suspicious": true
     },
     "iphone17pm256": {
       "prices": [
-        192000,
-        438000,
+        194000,
+        435000,
         192000
       ],
-      "avg": 274000,
+      "avg": 273667,
       "min": 192000,
-      "max": 438000,
+      "max": 435000,
       "suspicious": true
     },
     "iphone17pm512": {
       "prices": [
-        438000,
+        435000,
         218000
       ],
-      "avg": 328000,
+      "avg": 326500,
       "min": 218000,
-      "max": 438000,
+      "max": 435000,
       "suspicious": true
     },
     "switch2": {
@@ -289,10 +289,10 @@
     "ps5_pro": {
       "prices": [
         900000,
-        189200
+        189700
       ],
-      "avg": 544600,
-      "min": 189200,
+      "avg": 544850,
+      "min": 189700,
       "max": 900000,
       "suspicious": true
     }
@@ -513,12 +513,12 @@
       "reason": "product_not_listed",
       "url": "https://www.mobile-ichiban.com/",
       "final_url": "https://www.mobile-ichiban.com/",
-      "html_length": 259101,
+      "html_length": 259753,
       "http_status": 200,
-      "text_length": 6321,
-      "elapsed_seconds": 3.320997750999993,
+      "text_length": 6337,
+      "elapsed_seconds": 3.289104090999956,
       "error_type": "",
-      "observed_at": "2026-09-25T16:14:26+09:00"
+      "observed_at": "2026-09-26T17:08:25+09:00"
     },
     {
       "product_alias": "iphone17pro256",
@@ -532,7 +532,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-25T16:14:26+09:00"
+      "observed_at": "2026-09-26T17:08:25+09:00"
     },
     {
       "product_alias": "iphone17pro256",
@@ -546,7 +546,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-25T16:14:26+09:00"
+      "observed_at": "2026-09-26T17:08:25+09:00"
     },
     {
       "product_alias": "iphone17pro256",
@@ -560,7 +560,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-25T16:14:26+09:00"
+      "observed_at": "2026-09-26T17:08:25+09:00"
     },
     {
       "product_alias": "iphone17pro256",
@@ -569,12 +569,12 @@
       "reason": "price_not_found",
       "url": "https://www.2ndstreet.jp/sell/",
       "final_url": "https://www.2ndstreet.jp/sell/?keyword=iPhone%2017%20Pro%20256GB",
-      "html_length": 185870,
+      "html_length": 185862,
       "http_status": 200,
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-25T16:14:26+09:00"
+      "observed_at": "2026-09-26T17:08:25+09:00"
     },
     {
       "product_alias": "iphone17pro256",
@@ -588,7 +588,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-25T16:14:26+09:00"
+      "observed_at": "2026-09-26T17:08:25+09:00"
     },
     {
       "product_alias": "iphone17pro512",
@@ -597,12 +597,12 @@
       "reason": "product_not_listed",
       "url": "https://www.mobile-ichiban.com/",
       "final_url": "https://www.mobile-ichiban.com/",
-      "html_length": 259101,
+      "html_length": 259753,
       "http_status": 200,
-      "text_length": 6321,
-      "elapsed_seconds": 3.3195697809999842,
+      "text_length": 6337,
+      "elapsed_seconds": 3.104192964000049,
       "error_type": "",
-      "observed_at": "2026-09-25T16:14:26+09:00"
+      "observed_at": "2026-09-26T17:08:25+09:00"
     },
     {
       "product_alias": "iphone17pro512",
@@ -616,7 +616,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-25T16:14:26+09:00"
+      "observed_at": "2026-09-26T17:08:25+09:00"
     },
     {
       "product_alias": "iphone17pro512",
@@ -630,7 +630,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-25T16:14:26+09:00"
+      "observed_at": "2026-09-26T17:08:25+09:00"
     },
     {
       "product_alias": "iphone17pro512",
@@ -644,7 +644,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-25T16:14:26+09:00"
+      "observed_at": "2026-09-26T17:08:25+09:00"
     },
     {
       "product_alias": "iphone17pro512",
@@ -653,12 +653,12 @@
       "reason": "price_not_found",
       "url": "https://www.2ndstreet.jp/sell/",
       "final_url": "https://www.2ndstreet.jp/sell/?keyword=iPhone%2017%20Pro%20512GB",
-      "html_length": 185870,
+      "html_length": 185862,
       "http_status": 200,
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-25T16:14:26+09:00"
+      "observed_at": "2026-09-26T17:08:25+09:00"
     },
     {
       "product_alias": "iphone17pro512",
@@ -672,7 +672,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-25T16:14:26+09:00"
+      "observed_at": "2026-09-26T17:08:25+09:00"
     },
     {
       "product_alias": "iphone17pm256",
@@ -686,7 +686,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-25T16:14:26+09:00"
+      "observed_at": "2026-09-26T17:08:25+09:00"
     },
     {
       "product_alias": "iphone17pm256",
@@ -700,7 +700,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-25T16:14:26+09:00"
+      "observed_at": "2026-09-26T17:08:25+09:00"
     },
     {
       "product_alias": "iphone17pm256",
@@ -714,7 +714,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-25T16:14:26+09:00"
+      "observed_at": "2026-09-26T17:08:25+09:00"
     },
     {
       "product_alias": "iphone17pm256",
@@ -723,12 +723,12 @@
       "reason": "price_not_found",
       "url": "https://www.2ndstreet.jp/sell/",
       "final_url": "https://www.2ndstreet.jp/sell/?keyword=iPhone%2017%20Pro%20Max%20256GB",
-      "html_length": 185882,
+      "html_length": 185874,
       "http_status": 200,
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-25T16:14:26+09:00"
+      "observed_at": "2026-09-26T17:08:25+09:00"
     },
     {
       "product_alias": "iphone17pm256",
@@ -742,7 +742,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-25T16:14:26+09:00"
+      "observed_at": "2026-09-26T17:08:25+09:00"
     },
     {
       "product_alias": "iphone17pm512",
@@ -751,12 +751,12 @@
       "reason": "product_not_listed",
       "url": "https://www.mobile-ichiban.com/",
       "final_url": "https://www.mobile-ichiban.com/",
-      "html_length": 259101,
+      "html_length": 259753,
       "http_status": 200,
-      "text_length": 6321,
-      "elapsed_seconds": 3.189569534000043,
+      "text_length": 6337,
+      "elapsed_seconds": 3.1500475020000067,
       "error_type": "",
-      "observed_at": "2026-09-25T16:14:26+09:00"
+      "observed_at": "2026-09-26T17:08:25+09:00"
     },
     {
       "product_alias": "iphone17pm512",
@@ -770,7 +770,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-25T16:14:26+09:00"
+      "observed_at": "2026-09-26T17:08:25+09:00"
     },
     {
       "product_alias": "iphone17pm512",
@@ -784,7 +784,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-25T16:14:26+09:00"
+      "observed_at": "2026-09-26T17:08:25+09:00"
     },
     {
       "product_alias": "iphone17pm512",
@@ -798,7 +798,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-25T16:14:26+09:00"
+      "observed_at": "2026-09-26T17:08:25+09:00"
     },
     {
       "product_alias": "iphone17pm512",
@@ -807,12 +807,12 @@
       "reason": "price_not_found",
       "url": "https://www.2ndstreet.jp/sell/",
       "final_url": "https://www.2ndstreet.jp/sell/?keyword=iPhone%2017%20Pro%20Max%20512GB",
-      "html_length": 185882,
+      "html_length": 185874,
       "http_status": 200,
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-25T16:14:26+09:00"
+      "observed_at": "2026-09-26T17:08:25+09:00"
     },
     {
       "product_alias": "iphone17pm512",
@@ -826,7 +826,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-25T16:14:26+09:00"
+      "observed_at": "2026-09-26T17:08:25+09:00"
     },
     {
       "product_alias": "switch2",
@@ -840,7 +840,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-25T16:14:26+09:00"
+      "observed_at": "2026-09-26T17:08:25+09:00"
     },
     {
       "product_alias": "switch2",
@@ -854,7 +854,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-25T16:14:26+09:00"
+      "observed_at": "2026-09-26T17:08:25+09:00"
     },
     {
       "product_alias": "switch2",
@@ -868,7 +868,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-25T16:14:26+09:00"
+      "observed_at": "2026-09-26T17:08:25+09:00"
     },
     {
       "product_alias": "switch2",
@@ -882,7 +882,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-25T16:14:26+09:00"
+      "observed_at": "2026-09-26T17:08:25+09:00"
     },
     {
       "product_alias": "switch2",
@@ -896,7 +896,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-25T16:14:26+09:00"
+      "observed_at": "2026-09-26T17:08:25+09:00"
     },
     {
       "product_alias": "switch2",
@@ -910,7 +910,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-25T16:14:26+09:00"
+      "observed_at": "2026-09-26T17:08:25+09:00"
     },
     {
       "product_alias": "switch2",
@@ -924,7 +924,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-25T16:14:26+09:00"
+      "observed_at": "2026-09-26T17:08:25+09:00"
     },
     {
       "product_alias": "switch2",
@@ -938,7 +938,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-25T16:14:26+09:00"
+      "observed_at": "2026-09-26T17:08:25+09:00"
     },
     {
       "product_alias": "switch2",
@@ -952,7 +952,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-25T16:14:26+09:00"
+      "observed_at": "2026-09-26T17:08:25+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -961,12 +961,12 @@
       "reason": "product_not_listed",
       "url": "https://www.geo-online.co.jp/store_info/buy/",
       "final_url": "https://www.geo-online.co.jp/store_info/buy/",
-      "html_length": 126805,
+      "html_length": 126800,
       "http_status": 200,
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-25T16:14:26+09:00"
+      "observed_at": "2026-09-26T17:08:25+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -980,7 +980,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-25T16:14:26+09:00"
+      "observed_at": "2026-09-26T17:08:25+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -994,7 +994,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-25T16:14:26+09:00"
+      "observed_at": "2026-09-26T17:08:25+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -1008,7 +1008,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-25T16:14:26+09:00"
+      "observed_at": "2026-09-26T17:08:25+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -1022,7 +1022,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-25T16:14:26+09:00"
+      "observed_at": "2026-09-26T17:08:25+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -1036,7 +1036,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-25T16:14:26+09:00"
+      "observed_at": "2026-09-26T17:08:25+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -1050,7 +1050,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-25T16:14:26+09:00"
+      "observed_at": "2026-09-26T17:08:25+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -1064,7 +1064,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-25T16:14:26+09:00"
+      "observed_at": "2026-09-26T17:08:25+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -1078,7 +1078,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-25T16:14:26+09:00"
+      "observed_at": "2026-09-26T17:08:25+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -1092,7 +1092,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-09-25T16:14:26+09:00"
+      "observed_at": "2026-09-26T17:08:25+09:00"
     }
   ],
   "price_changes": [
@@ -1100,32 +1100,32 @@
       "product_alias": "iphone17pro256",
       "shop": "kaitori_shouten",
       "prev_price": 178000,
-      "new_price": 438000,
-      "change_pct": 146.1,
+      "new_price": 435000,
+      "change_pct": 144.4,
       "direction": "up"
     },
     {
       "product_alias": "iphone17pro512",
       "shop": "kaitori_shouten",
       "prev_price": 214000,
-      "new_price": 438000,
-      "change_pct": 104.7,
+      "new_price": 435000,
+      "change_pct": 103.3,
       "direction": "up"
     },
     {
       "product_alias": "iphone17pm256",
       "shop": "kaitori_shouten",
       "prev_price": 192000,
-      "new_price": 438000,
-      "change_pct": 128.1,
+      "new_price": 435000,
+      "change_pct": 126.6,
       "direction": "up"
     },
     {
       "product_alias": "iphone17pm512",
       "shop": "kaitori_shouten",
       "prev_price": 226000,
-      "new_price": 438000,
-      "change_pct": 93.8,
+      "new_price": 435000,
+      "change_pct": 92.5,
       "direction": "up"
     },
     {
@@ -1157,74 +1157,74 @@
     {
       "product_alias": "iphone17pro256",
       "shop": "kaitori_shouten",
-      "price": 438000,
+      "price": 435000,
       "official_price": 179800,
       "reason": "price_change_over_20pct",
-      "details": "前回¥178,000 → 今回¥438,000（+146.1% 上昇）"
+      "details": "前回¥178,000 → 今回¥435,000（+144.4% 上昇）"
     },
     {
       "product_alias": "iphone17pro256",
       "shop": "kaitori_shouten",
-      "price": 438000,
+      "price": 435000,
       "official_price": 179800,
       "reason": "above_genre_max",
-      "details": "iphone正常帯¥30,000〜¥400,000の上限超過（¥438,000）"
+      "details": "iphone正常帯¥30,000〜¥400,000の上限超過（¥435,000）"
     },
     {
       "product_alias": "iphone17pro512",
       "shop": "kaitori_shouten",
-      "price": 438000,
+      "price": 435000,
       "official_price": 214800,
       "reason": "price_change_over_20pct",
-      "details": "前回¥214,000 → 今回¥438,000（+104.7% 上昇）"
+      "details": "前回¥214,000 → 今回¥435,000（+103.3% 上昇）"
     },
     {
       "product_alias": "iphone17pro512",
       "shop": "kaitori_shouten",
-      "price": 438000,
+      "price": 435000,
       "official_price": 214800,
       "reason": "above_genre_max",
-      "details": "iphone正常帯¥30,000〜¥400,000の上限超過（¥438,000）"
+      "details": "iphone正常帯¥30,000〜¥400,000の上限超過（¥435,000）"
     },
     {
       "product_alias": "iphone17pm256",
       "shop": "kaitori_shouten",
-      "price": 438000,
+      "price": 435000,
       "official_price": 219800,
       "reason": "price_change_over_20pct",
-      "details": "前回¥192,000 → 今回¥438,000（+128.1% 上昇）"
+      "details": "前回¥192,000 → 今回¥435,000（+126.6% 上昇）"
     },
     {
       "product_alias": "iphone17pm256",
       "shop": "kaitori_shouten",
-      "price": 438000,
+      "price": 435000,
       "official_price": 219800,
       "reason": "outlier_vs_peer_shops",
-      "details": "他店平均¥192,000から128%乖離（¥438,000）"
+      "details": "他店平均¥193,000から125%乖離（¥435,000）"
     },
     {
       "product_alias": "iphone17pm256",
       "shop": "kaitori_shouten",
-      "price": 438000,
+      "price": 435000,
       "official_price": 219800,
       "reason": "above_genre_max",
-      "details": "iphone正常帯¥30,000〜¥400,000の上限超過（¥438,000）"
+      "details": "iphone正常帯¥30,000〜¥400,000の上限超過（¥435,000）"
     },
     {
       "product_alias": "iphone17pm512",
       "shop": "kaitori_shouten",
-      "price": 438000,
+      "price": 435000,
       "official_price": 254800,
       "reason": "price_change_over_20pct",
-      "details": "前回¥226,000 → 今回¥438,000（+93.8% 上昇）"
+      "details": "前回¥226,000 → 今回¥435,000（+92.5% 上昇）"
     },
     {
       "product_alias": "iphone17pm512",
       "shop": "kaitori_shouten",
-      "price": 438000,
+      "price": 435000,
       "official_price": 254800,
       "reason": "above_genre_max",
-      "details": "iphone正常帯¥30,000〜¥400,000の上限超過（¥438,000）"
+      "details": "iphone正常帯¥30,000〜¥400,000の上限超過（¥435,000）"
     },
     {
       "product_alias": "switch2",

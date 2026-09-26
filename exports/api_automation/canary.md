@@ -1,6 +1,6 @@
 # API Canary（simulated）
 
-> 生成: 2026-09-25 17:24 JST / API Canary（品質ゲートの機能検証）。利益/AI/DQ思想は不変
+> 生成: 2026-09-26 18:18 JST / API Canary（品質ゲートの機能検証）。利益/AI/DQ思想は不変
 
 - mode: **simulated** / real_api_called: **False**
 

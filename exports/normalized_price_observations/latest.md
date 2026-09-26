@@ -1,6 +1,6 @@
 # Normalized Price Observations
 
-生成: 2026-09-25 17:24 JST
+生成: 2026-09-26 18:18 JST
 
 全価格（買取/販売/出品/落札/海外/下取/公式）を単一スキーマに正規化。
 `price_role`（buy/sell/official/trade_in）を必ず付与し、
@@ -9,15 +9,15 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 
 ## サマリ
 
-- 総観測数: **244**
-- Beginner 利用可: 52 / Pro 利用可: 17
-- fresh(≤14日): 126
+- 総観測数: **245**
+- Beginner 利用可: 53 / Pro 利用可: 17
+- fresh(≤14日): 127
 
 ### price_role 別
 
 | role | 件数 |
 |---|---|
-| buy | 50 |
+| buy | 51 |
 | official | 45 |
 | sell | 149 |
 
@@ -31,13 +31,13 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 | official_price | 45 |
 | overseas_listing_price | 5 |
 | overseas_sold_price | 6 |
-| shop_sale_price | 29 |
+| shop_sale_price | 30 |
 
 ### rejection_reason 別（main calc 除外）
 
 | reason | 件数 |
 |---|---|
-| accessory_or_wrong_product | 17 |
+| accessory_or_wrong_product | 18 |
 | duplicate_price_collision | 13 |
 | model_mismatch | 2 |
 | price_zero | 36 |
@@ -91,11 +91,11 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 | Nikon Z8 | sell | buyback_price | ¥317,900 | new_unopened | 0.0d | フジヤカメラ |
 | Nikon Z9 | sell | buyback_price | ¥369,600 | new_unopened | 0.0d | フジヤカメラ |
 | Leica Q3 | sell | buyback_price | ¥860,000 | new_unopened | 0.0d | フジヤカメラ |
-| iPhone 17 Pro Max 256G | sell | buyback_price | ¥192,000 | new_unopened_simfree | 0.0d | モバイル一番 |
+| iPhone 17 Pro Max 256G | sell | buyback_price | ¥194,000 | new_unopened_simfree | 0.0d | モバイル一番 |
 | iPhone 17 Pro Max 256G | sell | buyback_price | ¥192,000 | new_unopened_simfree | 0.0d | 買取一丁目 |
+| iPhone 17 Pro Max 512G | sell | buyback_price | ¥218,000 | new_unopened_simfree | 0.0d | 買取一丁目 |
 | RICOH GR IV | buy | flea_sold_price | ¥324,222 | new_unopened | 0.0d | ヤフオク (新品/未使用落札) |
 | RICOH GR IV HDF | buy | flea_sold_price | ¥314,900 | new_unopened | 0.0d | ヤフオク (新品/未使用落札) |
-| RICOH GR IV Monochrome | buy | shop_sale_price | ¥924,812 | new_unopened | 0.0d | Amazon JP (新品出品) |
 | RICOH GR IV Monochrome | buy | flea_sold_price | ¥249,800 | new_unopened | 0.0d | ヤフオク (新品/未使用落札) |
 | RICOH GR IIIx | buy | flea_sold_price | ¥235,400 | new_unopened | 0.0d | ヤフオク (新品/未使用落札) |
 | FUJIFILM X100VI | buy | flea_sold_price | ¥343,637 | new_unopened | 0.0d | ヤフオク (新品/未使用落札) |

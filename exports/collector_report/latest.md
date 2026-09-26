@@ -1,6 +1,6 @@
 # Collector Quality Report
 
-生成日時: 2026-09-25 16:14:26 UTC+09:00
+生成日時: 2026-09-26 17:08:25 UTC+09:00
 
 ## サマリ
 
@@ -44,11 +44,11 @@
 
 | 商品 | 成功店舗数 | 目標 | 達成 | 平均価格 | 最低価格 | 最高価格 | suspicious |
 |------|-----------|------|------|---------|---------|---------|-----------|
-| iphone17pm256 | 3 | 3 | ✅ | ¥274,000 | ¥192,000 | ¥438,000 | ⚠️ |
-| iphone17pm512 | 2 | 3 | ❌ | ¥328,000 | ¥218,000 | ¥438,000 | ⚠️ |
-| iphone17pro256 | 2 | 3 | ❌ | ¥306,000 | ¥174,000 | ¥438,000 | ⚠️ |
-| iphone17pro512 | 2 | 3 | ❌ | ¥319,500 | ¥201,000 | ¥438,000 | ⚠️ |
-| ps5_pro | 2 | 2 | ✅ | ¥544,600 | ¥189,200 | ¥900,000 | ⚠️ |
+| iphone17pm256 | 3 | 3 | ✅ | ¥273,667 | ¥192,000 | ¥435,000 | ⚠️ |
+| iphone17pm512 | 2 | 3 | ❌ | ¥326,500 | ¥218,000 | ¥435,000 | ⚠️ |
+| iphone17pro256 | 2 | 3 | ❌ | ¥304,500 | ¥174,000 | ¥435,000 | ⚠️ |
+| iphone17pro512 | 2 | 3 | ❌ | ¥318,000 | ¥201,000 | ¥435,000 | ⚠️ |
+| ps5_pro | 2 | 2 | ✅ | ¥544,850 | ¥189,700 | ¥900,000 | ⚠️ |
 | switch2 | 2 | 2 | ✅ | ¥467,500 | ¥35,000 | ¥900,000 | ⚠️ |
 
 | 商品 | 成功店舗 |
@@ -161,25 +161,25 @@
 |------|------|------|------|--------|
 | switch2 | kaitori_shouten | ¥50,800 | ¥900,000 | ↑1671.7% |
 | ps5_pro | kaitori_shouten | ¥134,500 | ¥900,000 | ↑569.1% |
-| iphone17pro256 | kaitori_shouten | ¥178,000 | ¥438,000 | ↑146.1% |
-| iphone17pm256 | kaitori_shouten | ¥192,000 | ¥438,000 | ↑128.1% |
-| iphone17pro512 | kaitori_shouten | ¥214,000 | ¥438,000 | ↑104.7% |
-| iphone17pm512 | kaitori_shouten | ¥226,000 | ¥438,000 | ↑93.8% |
+| iphone17pro256 | kaitori_shouten | ¥178,000 | ¥435,000 | ↑144.4% |
+| iphone17pm256 | kaitori_shouten | ¥192,000 | ¥435,000 | ↑126.6% |
+| iphone17pro512 | kaitori_shouten | ¥214,000 | ¥435,000 | ↑103.3% |
+| iphone17pm512 | kaitori_shouten | ¥226,000 | ¥435,000 | ↑92.5% |
 | switch2 | geo | ¥45,000 | ¥35,000 | ↓22.2% |
 
 ## ⚠️ suspicious_price 一覧 (18件)
 
 | 商品 | 店舗 | 価格 | 理由 | 詳細 |
 |------|------|------|------|------|
-| iphone17pro256 | kaitori_shouten | ¥438,000 | price_change_over_20pct | 前回¥178,000 → 今回¥438,000（+146.1% 上昇） |
-| iphone17pro256 | kaitori_shouten | ¥438,000 | above_genre_max | iphone正常帯¥30,000〜¥400,000の上限超過（¥438,000） |
-| iphone17pro512 | kaitori_shouten | ¥438,000 | price_change_over_20pct | 前回¥214,000 → 今回¥438,000（+104.7% 上昇） |
-| iphone17pro512 | kaitori_shouten | ¥438,000 | above_genre_max | iphone正常帯¥30,000〜¥400,000の上限超過（¥438,000） |
-| iphone17pm256 | kaitori_shouten | ¥438,000 | price_change_over_20pct | 前回¥192,000 → 今回¥438,000（+128.1% 上昇） |
-| iphone17pm256 | kaitori_shouten | ¥438,000 | outlier_vs_peer_shops | 他店平均¥192,000から128%乖離（¥438,000） |
-| iphone17pm256 | kaitori_shouten | ¥438,000 | above_genre_max | iphone正常帯¥30,000〜¥400,000の上限超過（¥438,000） |
-| iphone17pm512 | kaitori_shouten | ¥438,000 | price_change_over_20pct | 前回¥226,000 → 今回¥438,000（+93.8% 上昇） |
-| iphone17pm512 | kaitori_shouten | ¥438,000 | above_genre_max | iphone正常帯¥30,000〜¥400,000の上限超過（¥438,000） |
+| iphone17pro256 | kaitori_shouten | ¥435,000 | price_change_over_20pct | 前回¥178,000 → 今回¥435,000（+144.4% 上昇） |
+| iphone17pro256 | kaitori_shouten | ¥435,000 | above_genre_max | iphone正常帯¥30,000〜¥400,000の上限超過（¥435,000） |
+| iphone17pro512 | kaitori_shouten | ¥435,000 | price_change_over_20pct | 前回¥214,000 → 今回¥435,000（+103.3% 上昇） |
+| iphone17pro512 | kaitori_shouten | ¥435,000 | above_genre_max | iphone正常帯¥30,000〜¥400,000の上限超過（¥435,000） |
+| iphone17pm256 | kaitori_shouten | ¥435,000 | price_change_over_20pct | 前回¥192,000 → 今回¥435,000（+126.6% 上昇） |
+| iphone17pm256 | kaitori_shouten | ¥435,000 | outlier_vs_peer_shops | 他店平均¥193,000から125%乖離（¥435,000） |
+| iphone17pm256 | kaitori_shouten | ¥435,000 | above_genre_max | iphone正常帯¥30,000〜¥400,000の上限超過（¥435,000） |
+| iphone17pm512 | kaitori_shouten | ¥435,000 | price_change_over_20pct | 前回¥226,000 → 今回¥435,000（+92.5% 上昇） |
+| iphone17pm512 | kaitori_shouten | ¥435,000 | above_genre_max | iphone正常帯¥30,000〜¥400,000の上限超過（¥435,000） |
 | switch2 | geo | ¥35,000 | price_change_over_20pct | 前回¥45,000 → 今回¥35,000（-22.2% 下落） |
 | switch2 | kaitori_shouten | ¥900,000 | price_change_over_20pct | 前回¥50,800 → 今回¥900,000（+1671.7% 上昇） |
 | switch2 | kaitori_shouten | ¥900,000 | over_3x_official | 公式¥49,980の18.0倍（¥900,000） |

@@ -1,9 +1,10 @@
-# TCG 入荷・抽選・プレミア レポート（2026-09-25 16:54 JST）
+# TCG 入荷・抽選・プレミア レポート（2026-09-26 17:48 JST）
 
 ## Current Active
 
 | TCG | Product | Store | Method | Start/Deadline | Price | Premium | Confidence |
 |---|---|---|---|---|---|---|---|
+| ONE PIECEカードゲーム | ブースターパック 神の支配【OP-18】 | ONEPIECE_CARD_OFFICIAL | 通常販売 | 11/21 00:00 | ¥240 | — | high / Confirmed |
 | ONE PIECEカードゲーム | エクストラブースター ONE PIECE Heroines Edition vol.2【EB-05】 | ONEPIECE_CARD_OFFICIAL | 通常販売 | — | ¥240 | — | high / Confirmed |
 | ONE PIECEカードゲーム | ONE PIECEカードゲーム BASE SHOPリミテッドバインダー vol.1 | ONEPIECE_CARD_OFFICIAL | 通常販売 | 10/09 00:00 | ¥1,650 | — | high / Confirmed |
 | ONE PIECEカードゲーム | ONE PIECEカードゲーム BASE SHOPカードケース vol.1 -ボア・ハンコック | ONEPIECE_CARD_OFFICIAL | 通常販売 | 09/04 00:00 | ¥2,970 | — | high / Confirmed |
@@ -28,13 +29,13 @@
 
 | Source | TCG | Last checked | Last success | Events | Errors | Blocked |
 |---|---|---|---|---|---|---|
-| ポケモンセンターオンライン | POKEMON | 2026-09-25 16:52 | 2026-09-25 16:52 | 0 | 0 | no |
-| ポケモンカードゲーム公式 | POKEMON | 2026-09-25 16:52 | 2026-09-25 16:52 | 0 | 0 | no |
-| ポケモンカードゲーム公式（商品情報） | POKEMON | 2026-09-25 16:52 | 2026-09-25 16:53 | 0 | 0 | no |
-| ローソン | POKEMON | 2026-09-25 16:53 | 2026-09-25 16:53 | 0 | 0 | no |
-| ONE PIECEカードゲーム公式（ニュース） | ONE_PIECE | 2026-09-25 16:53 | 2026-09-25 16:53 | 0 | 0 | no |
-| ONE PIECEカードゲーム公式（商品情報） | ONE_PIECE | 2026-09-25 16:53 | 2026-09-25 16:54 | 3 | 0 | no |
-| プレミアムバンダイ | ONE_PIECE | 2026-09-25 16:54 | 2026-09-25 16:54 | 0 | 0 | no |
+| ポケモンセンターオンライン | POKEMON | 2026-09-26 17:46 | 2026-09-26 17:46 | 0 | 0 | no |
+| ポケモンカードゲーム公式 | POKEMON | 2026-09-26 17:46 | 2026-09-26 17:46 | 0 | 0 | no |
+| ポケモンカードゲーム公式（商品情報） | POKEMON | 2026-09-26 17:46 | 2026-09-26 17:47 | 0 | 0 | no |
+| ローソン | POKEMON | 2026-09-26 17:47 | 2026-09-26 17:47 | 0 | 0 | no |
+| ONE PIECEカードゲーム公式（ニュース） | ONE_PIECE | 2026-09-26 17:47 | 2026-09-26 17:47 | 0 | 0 | no |
+| ONE PIECEカードゲーム公式（商品情報） | ONE_PIECE | 2026-09-26 17:47 | 2026-09-26 17:48 | 4 | 0 | no |
+| プレミアムバンダイ | ONE_PIECE | 2026-09-26 17:48 | 2026-09-26 17:48 | 0 | 0 | no |
 
 監視登録 source 数: 27
 

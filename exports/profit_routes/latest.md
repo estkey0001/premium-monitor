@@ -1,9 +1,9 @@
 # Pro 利益ルート（normalized_price_observations 由来・検証済み）
 
-生成: 2026-09-27 19:00 JST
+生成: 2026-09-28 19:19 JST
 
 - **main 利益ルート: 0件**（route_confidence high/medium のみ）
-- 参考ルート(海外sold stale・要fresh化): 0件
+- 参考ルート(海外sold stale・要fresh化): 1件
 - confidence別: {} / route_type別: {}
 
 
@@ -17,24 +17,25 @@
 
 | product | buy¥ | sell(海外sold)¥ | 潜在net | ROI | stale |
 |---|---|---|---|---|---|
+| FUJIFILM X100VI | ¥343,637 | ¥557,664 | +¥87,185 | 25% | overseas_sold_stale(37.4d) |
 
 ## 0件商品の診断
 
 ### iPhone 17 Pro 256GB SIMフリー
 - buy候補 0 / sell候補 0 / stale除外 5 / 海外sold stale 1
-- 除外理由TOP5: [('price_zero', 6), ('stale_over_14d', 5), ('accessory_or_wrong_product', 2), ('duplicate_price_collision', 1)]
+- 除外理由TOP5: [('price_zero', 5), ('stale_over_14d', 5), ('accessory_or_wrong_product', 2), ('duplicate_price_collision', 2)]
 
 ### iPhone 17 Pro 512GB SIMフリー
 - buy候補 0 / sell候補 0 / stale除外 3 / 海外sold stale 0
-- 除外理由TOP5: [('price_zero', 6), ('stale_over_14d', 3), ('accessory_or_wrong_product', 2), ('duplicate_price_collision', 1)]
+- 除外理由TOP5: [('price_zero', 5), ('stale_over_14d', 3), ('accessory_or_wrong_product', 2), ('duplicate_price_collision', 2)]
 
 ### iPhone 17 Pro Max 256GB SIMフリー
-- buy候補 0 / sell候補 0 / stale除外 3 / 海外sold stale 0
-- 除外理由TOP5: [('price_zero', 6), ('stale_over_14d', 3), ('accessory_or_wrong_product', 2), ('duplicate_price_collision', 1)]
+- buy候補 0 / sell候補 2 / stale除外 3 / 海外sold stale 0
+- 除外理由TOP5: [('price_zero', 5), ('stale_over_14d', 3), ('duplicate_price_collision', 2)]
 
 ### iPhone 17 Pro Max 512GB SIMフリー
 - buy候補 0 / sell候補 1 / stale除外 0 / 海外sold stale 0
-- 除外理由TOP5: [('price_zero', 6), ('duplicate_price_collision', 1)]
+- 除外理由TOP5: [('price_zero', 5), ('duplicate_price_collision', 2)]
 
 ### iPhone 17 256GB SIMフリー
 - buy候補 0 / sell候補 0 / stale除外 4 / 海外sold stale 0
@@ -98,7 +99,7 @@
 
 ### Nintendo Switch 2
 - buy候補 0 / sell候補 0 / stale除外 4 / 海外sold stale 1
-- 除外理由TOP5: [('price_zero', 8), ('stale_over_14d', 4), ('accessory_or_wrong_product', 2), ('duplicate_price_collision', 1)]
+- 除外理由TOP5: [('price_zero', 8), ('stale_over_14d', 4), ('accessory_or_wrong_product', 3), ('duplicate_price_collision', 1)]
 
 ### Nintendo Switch 2 マリオカートセット
 - buy候補 0 / sell候補 0 / stale除外 5 / 海外sold stale 0
@@ -106,7 +107,7 @@
 
 ### PlayStation 5 Pro
 - buy候補 0 / sell候補 0 / stale除外 3 / 海外sold stale 0
-- 除外理由TOP5: [('price_zero', 9), ('stale_over_14d', 3), ('accessory_or_wrong_product', 1), ('duplicate_price_collision', 1)]
+- 除外理由TOP5: [('price_zero', 8), ('accessory_or_wrong_product', 3), ('stale_over_14d', 3), ('duplicate_price_collision', 1)]
 
 ### PlayStation 5 Digital Edition
 - buy候補 0 / sell候補 0 / stale除外 3 / 海外sold stale 0
@@ -117,19 +118,19 @@
 - 除外理由TOP5: [('stale_over_14d', 2)]
 
 ### RICOH GR IV
-- buy候補 0 / sell候補 1 / stale除外 15 / 海外sold stale 1
-- 除外理由TOP5: [('stale_over_14d', 15)]
+- buy候補 1 / sell候補 1 / stale除外 15 / 海外sold stale 1
+- 除外理由TOP5: [('stale_over_14d', 15), ('accessory_or_wrong_product', 1)]
 
 ### RICOH GR IV HDF
-- buy候補 0 / sell候補 0 / stale除外 6 / 海外sold stale 0
-- 除外理由TOP5: [('stale_over_14d', 6), ('duplicate_price_collision', 1), ('accessory_or_wrong_product', 1)]
+- buy候補 1 / sell候補 0 / stale除外 6 / 海外sold stale 0
+- 除外理由TOP5: [('stale_over_14d', 6), ('duplicate_price_collision', 1)]
 
 ### RICOH GR IV Monochrome
-- buy候補 0 / sell候補 0 / stale除外 6 / 海外sold stale 0
+- buy候補 1 / sell候補 0 / stale除外 6 / 海外sold stale 0
 - 除外理由TOP5: [('stale_over_14d', 6), ('duplicate_price_collision', 1)]
 
 ### RICOH GR IIIx
-- buy候補 0 / sell候補 0 / stale除外 11 / 海外sold stale 1
+- buy候補 1 / sell候補 0 / stale除外 11 / 海外sold stale 1
 - 除外理由TOP5: [('stale_over_14d', 11), ('model_mismatch', 1), ('accessory_or_wrong_product', 1)]
 
 ### RICOH GR III HDF
@@ -141,8 +142,10 @@
 - 除外理由TOP5: []
 
 ### FUJIFILM X100VI
-- buy候補 0 / sell候補 0 / stale除外 17 / 海外sold stale 1
+- buy候補 1 / sell候補 0 / stale除外 17 / 海外sold stale 1
 - 除外理由TOP5: [('stale_over_14d', 17), ('duplicate_price_collision', 1)]
+- eBay sold を fresh化すると成立する候補:
+  - src_ebay ¥557,664 → 潜在 +¥87,185（ROI 25%）
 
 ### FUJIFILM GFX100RF
 - buy候補 0 / sell候補 1 / stale除外 0 / 海外sold stale 0

@@ -1,12 +1,84 @@
 {
-  "generated_at": "2026-09-27 19:00 JST",
-  "health_score": 35.6,
+  "generated_at": "2026-09-28 19:19 JST",
+  "health_score": 39.7,
   "health_note": "現在データ品質低下中",
   "main_route_count": 0,
-  "reference_route_count": 0,
+  "reference_route_count": 1,
   "today_tasks": [
-    "本日の対象なし（データ取得状況を Health タブで確認）"
+    "⏳ FUJIFILM X100VI は待機（eBay sold 更新（EBAY_APP_ID 設定）後に BUY 候補へ昇格します。海外価格の更新待ちです。）"
   ],
-  "daily_recommendation": null,
-  "todays_opportunities": []
+  "daily_recommendation": {
+    "product": "FUJIFILM X100VI",
+    "buy_now": "WATCH",
+    "opportunity_score": 41,
+    "reason": "FUJIFILM X100VI: WATCH。海外更新後見込み 利益¥87,185/ROI25%/Score41"
+  },
+  "todays_opportunities": [
+    {
+      "product": "FUJIFILM X100VI",
+      "product_id": "prod_x100vi",
+      "kind": "reference",
+      "opportunity_score": 41,
+      "score_breakdown": {
+        "利益": 30,
+        "ROI": 20,
+        "鮮度": 0,
+        "再現性": 4,
+        "データ品質": 5,
+        "confidence": 2,
+        "減点(manual/stale)": -20
+      },
+      "buy_now": "WATCH",
+      "confidence": "low",
+      "action": "WAIT",
+      "action_reason": "eBay sold 更新（EBAY_APP_ID 設定）後に BUY 候補へ昇格します。海外価格の更新待ちです。",
+      "alert_threshold": 508602,
+      "expected_buy_price": 508602,
+      "expected_sell_price": 557664,
+      "buy_conditions": {
+        "buy": "ヤフオク (新品/未使用落札) ≤ ¥508,602",
+        "sell": "src_ebay ≥ ¥557,664",
+        "roi": "ROI ≥ 8%"
+      },
+      "next_update": "次回自動更新: 明日 12:00頃（通常24時間以内）",
+      "price_trend": {
+        "7d": "→",
+        "30d": "↓",
+        "90d": "→"
+      },
+      "success_probability": 30,
+      "timeline": {
+        "stages": [
+          "候補",
+          "監視",
+          "成立",
+          "通知"
+        ],
+        "current": "監視"
+      },
+      "summary": "★★☆☆☆\n海外売却で成立見込みの参考ルートです。\neBay更新後の想定利益 ¥87,185 / ROI 25%。\n現在は海外価格の更新待ちです。",
+      "why": [
+        "reference route（海外sold更新で成立見込み）",
+        "ROIが8%以上（25%）",
+        "価格 37日前（要更新）"
+      ],
+      "risks": [
+        "stale（37日前・main計算除外水準）",
+        "海外依存（為替・関税・輸送）",
+        "送料・決済手数料が大きい",
+        "同条件件数不足（再現性低）",
+        "アクセサリー混在に注意（本体判定要確認）"
+      ],
+      "holding_period": "1ヶ月",
+      "net_profit": 87185,
+      "roi": 0.2537,
+      "reproducibility_score": 30,
+      "buy_source": "ヤフオク (新品/未使用落札)",
+      "buy_price": 343637,
+      "sell_source": "src_ebay",
+      "sell_price": 557664,
+      "age_days": 37.4,
+      "priority": 1
+    }
+  ]
 }

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-27 19:00 JST",
+  "generated_at": "2026-09-28 19:19 JST",
   "account_id": "default",
   "cash_reserve_ratio": 0.2,
   "concentration_caps": {
@@ -7,7 +7,27 @@
     "category": 0.5,
     "maker": 0.6
   },
-  "opportunity_metrics": [],
+  "opportunity_metrics": [
+    {
+      "product": "FUJIFILM X100VI",
+      "product_id": "prod_x100vi",
+      "action": "WAIT",
+      "kind": "reference",
+      "buy_price": 343637,
+      "net_profit": 87185,
+      "roi": 0.2537,
+      "success_probability": 30,
+      "opportunity_score": 41,
+      "reproducibility_score": 30,
+      "holding_period": "1ヶ月",
+      "expected_value": 26156,
+      "capital_efficiency": 0.0761,
+      "risk_score": 59,
+      "liquidity_score": 25,
+      "category": "camera",
+      "maker": "FUJIFILM"
+    }
+  ],
   "default_budget": 3000000,
   "budgets": [
     1000000,
@@ -22,7 +42,12 @@
       "investable": 800000,
       "cash_reserve_ratio": 0.2,
       "allocations": [],
-      "waiting": [],
+      "waiting": [
+        {
+          "product": "FUJIFILM X100VI",
+          "reason": "海外価格更新待ち（eBay sold）"
+        }
+      ],
       "allocated": 0,
       "cash": 1000000,
       "cash_ratio": 1.0,
@@ -37,7 +62,12 @@
       "investable": 2400000,
       "cash_reserve_ratio": 0.2,
       "allocations": [],
-      "waiting": [],
+      "waiting": [
+        {
+          "product": "FUJIFILM X100VI",
+          "reason": "海外価格更新待ち（eBay sold）"
+        }
+      ],
       "allocated": 0,
       "cash": 3000000,
       "cash_ratio": 1.0,
@@ -52,7 +82,12 @@
       "investable": 4000000,
       "cash_reserve_ratio": 0.2,
       "allocations": [],
-      "waiting": [],
+      "waiting": [
+        {
+          "product": "FUJIFILM X100VI",
+          "reason": "海外価格更新待ち（eBay sold）"
+        }
+      ],
       "allocated": 0,
       "cash": 5000000,
       "cash_ratio": 1.0,
@@ -67,7 +102,12 @@
       "investable": 8000000,
       "cash_reserve_ratio": 0.2,
       "allocations": [],
-      "waiting": [],
+      "waiting": [
+        {
+          "product": "FUJIFILM X100VI",
+          "reason": "海外価格更新待ち（eBay sold）"
+        }
+      ],
       "allocated": 0,
       "cash": 10000000,
       "cash_ratio": 1.0,
@@ -82,7 +122,12 @@
       "investable": 24000000,
       "cash_reserve_ratio": 0.2,
       "allocations": [],
-      "waiting": [],
+      "waiting": [
+        {
+          "product": "FUJIFILM X100VI",
+          "reason": "海外価格更新待ち（eBay sold）"
+        }
+      ],
       "allocated": 0,
       "cash": 30000000,
       "cash_ratio": 1.0,

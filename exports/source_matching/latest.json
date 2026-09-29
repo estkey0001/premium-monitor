@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-28 19:19 JST",
+  "generated_at": "2026-09-29 19:29 JST",
   "scope": "商品同一性マッチング精度（利益/AI/UI/SaaS/DQ思想は不変）",
   "accuracy": {
     "product_match_accuracy": 1.0,
@@ -10,7 +10,7 @@
     "detected_mismatches_total": 2,
     "detected_mismatches_rejected": 2,
     "independently_verified_exact": 0,
-    "unverifiable_trusted": 227,
+    "unverifiable_trusted": 226,
     "accessory_misclassification": 0,
     "false_main_promotion": 0,
     "duplicate_patterns": 13,
@@ -26,11 +26,11 @@
     "false_main_promotion": 0
   },
   "totals": {
-    "total": 245,
-    "product_mismatch_or_unverified": 245,
-    "model_unverifiable": 227,
-    "accessory_detected": 32,
-    "main_rejected": 245,
+    "total": 244,
+    "product_mismatch_or_unverified": 244,
+    "model_unverifiable": 226,
+    "accessory_detected": 31,
+    "main_rejected": 244,
     "model_match": 16,
     "manual_review_required": 85,
     "model_mismatch": 2,
@@ -290,17 +290,6 @@
       "model_mismatch": 0,
       "main_eligible": 0
     },
-    "Amazon JP (新品出品)": {
-      "total": 2,
-      "product_mismatch_or_unverified": 2,
-      "model_unverifiable": 2,
-      "accessory_detected": 2,
-      "main_rejected": 2,
-      "exact_product_match": 0,
-      "capacity_mismatch": 0,
-      "model_mismatch": 0,
-      "main_eligible": 0
-    },
     "ヤフオク (新品/未使用落札)": {
       "total": 11,
       "product_mismatch_or_unverified": 11,
@@ -308,6 +297,17 @@
       "main_rejected": 11,
       "manual_review_required": 11,
       "accessory_detected": 2,
+      "exact_product_match": 0,
+      "capacity_mismatch": 0,
+      "model_mismatch": 0,
+      "main_eligible": 0
+    },
+    "Amazon JP (新品出品)": {
+      "total": 1,
+      "product_mismatch_or_unverified": 1,
+      "model_unverifiable": 1,
+      "accessory_detected": 1,
+      "main_rejected": 1,
       "exact_product_match": 0,
       "capacity_mismatch": 0,
       "model_mismatch": 0,
@@ -593,7 +593,7 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 37.3,
+      "first_seen": 38.3,
       "last_seen": 0.0,
       "risk_level": "medium",
       "possible_reason": [
@@ -654,8 +654,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 49.3,
-      "last_seen": 49.3,
+      "first_seen": 50.3,
+      "last_seen": 50.3,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -684,8 +684,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 49.3,
-      "last_seen": 49.3,
+      "first_seen": 50.3,
+      "last_seen": 50.3,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -714,8 +714,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 49.3,
-      "last_seen": 49.3,
+      "first_seen": 50.3,
+      "last_seen": 50.3,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -1022,7 +1022,7 @@
     },
     {
       "source": "Amazon JP (新品出品)",
-      "observations": 2,
+      "observations": 1,
       "score": 65,
       "identity": 0.0,
       "capacity": 1.0,

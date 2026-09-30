@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-09-30 22:09 JST",
-  "health_score": 39.3,
+  "generated_at": "2026-09-30 23:29 JST",
+  "health_score": 39.1,
   "health_note": "現在データ品質低下中",
   "main_route_count": 0,
   "reference_route_count": 1,
@@ -11,7 +11,7 @@
     "product": "FUJIFILM X100VI",
     "buy_now": "WATCH",
     "opportunity_score": 41,
-    "reason": "FUJIFILM X100VI: WATCH。海外更新後見込み 利益¥86,904/ROI25%/Score41"
+    "reason": "FUJIFILM X100VI: WATCH。海外更新後見込み 利益¥119,490/ROI38%/Score41"
   },
   "todays_opportunities": [
     {
@@ -32,11 +32,11 @@
       "confidence": "low",
       "action": "WAIT",
       "action_reason": "eBay sold 更新（EBAY_APP_ID 設定）後に BUY 候補へ昇格します。海外価格の更新待ちです。",
-      "alert_threshold": 508275,
-      "expected_buy_price": 508275,
+      "alert_threshold": 508862,
+      "expected_buy_price": 508862,
       "expected_sell_price": 557311,
       "buy_conditions": {
-        "buy": "ヤフオク (新品/未使用落札) ≤ ¥508,275",
+        "buy": "ヤフオク (新品/未使用落札) ≤ ¥508,862",
         "sell": "src_ebay ≥ ¥557,311",
         "roi": "ROI ≥ 8%"
       },
@@ -56,10 +56,10 @@
         ],
         "current": "監視"
       },
-      "summary": "★★☆☆☆\n海外売却で成立見込みの参考ルートです。\neBay更新後の想定利益 ¥86,904 / ROI 25%。\n現在は海外価格の更新待ちです。",
+      "summary": "★★☆☆☆\n海外売却で成立見込みの参考ルートです。\neBay更新後の想定利益 ¥119,490 / ROI 38%。\n現在は海外価格の更新待ちです。",
       "why": [
         "reference route（海外sold更新で成立見込み）",
-        "ROIが8%以上（25%）",
+        "ROIが8%以上（38%）",
         "価格 40日前（要更新）"
       ],
       "risks": [
@@ -70,14 +70,14 @@
         "アクセサリー混在に注意（本体判定要確認）"
       ],
       "holding_period": "1ヶ月",
-      "net_profit": 86904,
-      "roi": 0.2529,
+      "net_profit": 119490,
+      "roi": 0.383,
       "reproducibility_score": 30,
       "buy_source": "ヤフオク (新品/未使用落札)",
-      "buy_price": 343637,
+      "buy_price": 312000,
       "sell_source": "src_ebay",
       "sell_price": 557311,
-      "age_days": 39.5,
+      "age_days": 39.6,
       "priority": 1
     }
   ]

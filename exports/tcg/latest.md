@@ -1,4 +1,4 @@
-# TCG 入荷・抽選・プレミア レポート（2026-09-30 21:38 JST）
+# TCG 入荷・抽選・プレミア レポート（2026-09-30 22:58 JST）
 
 ## Current Active
 
@@ -78,13 +78,13 @@
 
 | Source | TCG | Status | Last checked | Last success | Events | Errors | Blocked | robots |
 |---|---|---|---|---|---|---|---|---|
-| ポケモンカードゲーム公式（商品API） | POKEMON | HEALTHY | 2026-09-30 21:32 | 2026-09-30 21:34 | 9 | 0 | no | not_found |
-| ポケモンカードゲーム公式（ニュース） | POKEMON | OK_NO_EVENTS | 2026-09-30 21:34 | 2026-09-30 21:34 | 0 | 0 | no | not_found |
-| ポケモンセンターオンライン | POKEMON | BLOCKED | 2026-09-30 21:36 | — | 0 | 1 | YES | allowed |
-| ローソン（ポケモンカード告知） | POKEMON | OK_NO_EVENTS | 2026-09-30 21:36 | 2026-09-30 21:37 | 0 | 0 | no | allowed |
-| ONE PIECEカードゲーム公式（ニュース） | ONE_PIECE | OK_NO_EVENTS | 2026-09-30 21:37 | 2026-09-30 21:37 | 0 | 0 | no | not_found |
-| ONE PIECEカードゲーム公式（商品情報） | ONE_PIECE | HEALTHY | 2026-09-30 21:37 | 2026-09-30 21:38 | 4 | 0 | no | not_found |
-| プレミアムバンダイ | ONE_PIECE | OK_NO_EVENTS | 2026-09-30 21:38 | 2026-09-30 21:38 | 0 | 0 | no | allowed |
+| ポケモンカードゲーム公式（商品API） | POKEMON | HEALTHY | 2026-09-30 22:52 | 2026-09-30 22:54 | 9 | 0 | no | not_found |
+| ポケモンカードゲーム公式（ニュース） | POKEMON | OK_NO_EVENTS | 2026-09-30 22:54 | 2026-09-30 22:54 | 0 | 0 | no | not_found |
+| ポケモンセンターオンライン | POKEMON | BLOCKED | 2026-09-30 22:56 | — | 0 | 1 | YES | allowed |
+| ローソン（ポケモンカード告知） | POKEMON | OK_NO_EVENTS | 2026-09-30 22:56 | 2026-09-30 22:57 | 0 | 0 | no | allowed |
+| ONE PIECEカードゲーム公式（ニュース） | ONE_PIECE | OK_NO_EVENTS | 2026-09-30 22:57 | 2026-09-30 22:57 | 0 | 0 | no | not_found |
+| ONE PIECEカードゲーム公式（商品情報） | ONE_PIECE | HEALTHY | 2026-09-30 22:57 | 2026-09-30 22:58 | 4 | 0 | no | not_found |
+| プレミアムバンダイ | ONE_PIECE | OK_NO_EVENTS | 2026-09-30 22:58 | 2026-09-30 22:58 | 0 | 0 | no | allowed |
 
 監視登録 source 数: 27
 

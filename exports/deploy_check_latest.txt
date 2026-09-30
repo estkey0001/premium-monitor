@@ -185,13 +185,13 @@
   ✅ [ipad_not_in_other] iPad は「その他」欄に混入していない
   ✅ [airpods_not_in_smartphone] AirPods はスマートフォン欄に混入していない
   ⚠️ [applewatch_in_wearable_section] Apple Watch がウェアラブル欄に見つからない（データなし or genre設定を確認）
-  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-09-30T20:55:03+09:00）
+  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-09-30T22:15:30+09:00）
   ⚠️ [suspicious_price_format] suspicious_prices 形式OK（suspicious_price 17件あり — 確認推奨）
   ✅ [fetch_failed_has_reason] fetch_failed 44件すべてに reason あり
   ✅ [collector_report_html_exists] docs/collector_report.html 存在
   ✅ [collector_report_link_in_lp] LP内に collector_report.html へのリンクがある
   ✅ [fetch_failed_report_link] 取得失敗40件 / suspicious17件 → 警告バーが表示されている
-  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 8件存在する: ['iphone17pro256', 'iphone17pro512', 'iphone17pm512', 'iphone17pm256']
+  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 8件存在する: ['iphone17pro512', 'iphone17pm256', 'iphone17pro256', 'iphone17pm512']
   ✅ [beginner_page_auto_scraped_exists] 自動取得 OK 11件 / total 55件
   ✅ [shop_name_no_vertical_wrap] shop-name-col に word-break:keep-all が設定されている
   ✅ [iphone17pro256_price_scraped] iPhone 17 Pro 256GB の価格取得成功: ['kaitori_shouten', 'kaitori_itchome']
@@ -549,7 +549,7 @@
   ✅ [camera_tradein_exclude] #542 カメラ買取が下取(15%UP等)価格を現金買取価格から分離・除外している
   ✅ [sedori_overseas_sell] #543 せどり計算の売却先が「買取価格＋海外販売価格」になっている（NPO PRO_SELL_TYPES）
   ✅ [top_camera_reference_guard] #544 Top Camera Buyback が参照価格(公式/定価)未取得の商品を除外している
-  ✅ [npo_exists] #545 normalized_price_observations/latest.json が存在する（242観測）
+  ✅ [npo_exists] #545 normalized_price_observations/latest.json が存在する（241観測）
   ✅ [npo_price_role_required] #546 全観測に price_role が付与されている
   ✅ [npo_tradein_not_main] #547 trade_in_price が main calculation（最高買取等）に使われない
   ✅ [npo_pro_buy_no_buyback] #548 Pro route の buy 側に buyback_price が使われない
@@ -614,7 +614,7 @@
   ✅ [lp_main_reference_separated2] #607 reference route が main route と分離表示される
   ✅ [lp_pro_summary] #608 main route がある場合 Pro サマリーが表示される
   ✅ [health_page_exists] #609 Health レポートと LP の Health タブが存在する
-  ✅ [health_score_shown] #610 Health Score が表示される（39.3/100）
+  ✅ [health_score_shown] #610 Health Score が表示される（39.1/100）
   ✅ [health_anomalies_shown] #611 異常一覧（Critical/Warning/Info）が表示される
   ✅ [health_improvements_shown] #612 改善TOP10 が表示される（9件）
   ✅ [health_diff_shown] #613 前日比較が表示される
@@ -632,7 +632,7 @@
   ✅ [ai_expected_prices] #625 Expected Buy/Sell Price が付与・表示される
   ✅ [ai_today_tasks] #626 今日やること（Today Tasks）が表示される（1件）
   ✅ [ai_probability_forecast_trend] #627 成立確率/次回更新予測/価格トレンドが付与される
-  ✅ [notification_events_exists] #628 notifications/latest.json が存在する（events 0）
+  ✅ [notification_events_exists] #628 notifications/latest.json が存在する（events 2）
   ✅ [notification_history] #629 notifications/history/ に履歴が保存される（70日分）
   ✅ [notification_suppression] #630 通知抑制（24h再送禁止・ROI+5%例外）が実装される
   ✅ [notification_priority] #631 通知に priority（Critical/High/Medium/Low）が付与される

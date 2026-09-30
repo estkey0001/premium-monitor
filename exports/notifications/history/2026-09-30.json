@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-30 22:09 JST",
+  "generated_at": "2026-09-30 23:29 JST",
   "date": "2026-09-30",
   "is_baseline": false,
   "channels": [
@@ -7,10 +7,47 @@
     "telegram"
   ],
   "delivery_status": {
-    "discord": "no_events",
-    "telegram": "no_events"
+    "discord": "pending(未設定)",
+    "telegram": "pending(未設定)"
   },
-  "event_count": 0,
+  "event_count": 2,
   "suppressed_count": 0,
-  "events": []
+  "events": [
+    {
+      "type": "PRICE_DROP",
+      "product_id": "prod_x100vi",
+      "data": {
+        "product": "FUJIFILM X100VI",
+        "buy_source": "ヤフオク (新品/未使用落札)",
+        "prev_price": 343637,
+        "buy_price": 312000,
+        "delta": 31637
+      },
+      "priority": "High",
+      "message": "📉 価格下落\nFUJIFILM X100VI\nヤフオク (新品/未使用落札) ¥343,637 → ¥312,000（-¥31,637）",
+      "channels": [
+        "discord",
+        "telegram"
+      ],
+      "created_at": "2026-09-30 23:29 JST",
+      "suppressed": false
+    },
+    {
+      "type": "ROI_UP",
+      "product_id": "prod_x100vi",
+      "data": {
+        "product": "FUJIFILM X100VI",
+        "prev_roi": 0.2529,
+        "roi": 0.383
+      },
+      "priority": "Medium",
+      "message": "⬆️ ROI改善\nFUJIFILM X100VI\nROI 25% → 38%",
+      "channels": [
+        "discord",
+        "telegram"
+      ],
+      "created_at": "2026-09-30 23:29 JST",
+      "suppressed": false
+    }
+  ]
 }

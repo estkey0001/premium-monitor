@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-30 22:09 JST",
+  "generated_at": "2026-09-30 23:29 JST",
   "ebay_api_configured": false,
   "overseas_source_mode": "manual",
   "summary": {
@@ -25,9 +25,9 @@
       "rank": 2,
       "key": "ebay_sold_fresh",
       "label": "eBay sold（海外成約相場）の最新化",
-      "potential_profit": 86904,
+      "potential_profit": 119490,
       "product_count": 1,
-      "priority": "medium"
+      "priority": "high"
     },
     {
       "rank": 3,
@@ -44,7 +44,7 @@
       "product_id": "prod_x100vi",
       "product_name": "FUJIFILM X100VI",
       "buy_source": "ヤフオク (新品/未使用落札)",
-      "buy_price": 343637,
+      "buy_price": 312000,
       "buy_price_type": "flea_sold_price",
       "buy_price_role": "buy",
       "buy_condition": "new_unopened",
@@ -57,24 +57,24 @@
       "sell_condition": "new_unopened",
       "sell_url": "",
       "sell_link_type": "none",
-      "gross_profit": 213674,
+      "gross_profit": 245311,
       "estimated_fee": 111461,
       "platform_fee": 72450,
       "payment_fee": 22292,
       "fx_buffer": 16719,
       "shipping_cost": 5000,
-      "safety_margin": 10309,
-      "net_profit": 86904,
-      "roi": 0.2529,
+      "safety_margin": 9360,
+      "net_profit": 119490,
+      "roi": 0.383,
       "route_confidence": "low",
-      "buy_observed_at": "2026-09-30T21:42:37.886159+09:00",
+      "buy_observed_at": "2026-09-30T23:02:40.418277+09:00",
       "sell_observed_at": "2026-08-22T10:00:00+09:00",
       "buy_observed_age_days": 0.0,
-      "sell_observed_age_days": 39.5,
+      "sell_observed_age_days": 39.6,
       "sell_collector_method": "manual",
       "route_type": "flea_to_overseas",
       "reference_route": true,
-      "rejection_reason": "overseas_sold_stale(39.5d)"
+      "rejection_reason": "overseas_sold_stale(39.6d)"
     }
   ],
   "zero_route_diagnostics": {
@@ -761,10 +761,6 @@
         [
           "duplicate_price_collision",
           1
-        ],
-        [
-          "accessory_or_wrong_product",
-          1
         ]
       ],
       "stale_excluded": 6,
@@ -870,15 +866,15 @@
       "product_name": "FUJIFILM X100VI",
       "buy_candidates": 1,
       "sell_candidates": 0,
-      "min_usable_buy": 343637,
+      "min_usable_buy": 312000,
       "min_usable_buy_source": "ヤフオク (新品/未使用落札)",
       "max_usable_sell": null,
       "max_usable_sell_source": "",
       "target_buy_price": null,
       "gross_gap": null,
       "net_domestic": null,
-      "best_reference_net": 86904,
-      "main_blocked_reason": "eBay sold が39.5日前のため main 除外（国内完結は赤字）",
+      "best_reference_net": 119490,
+      "main_blocked_reason": "eBay sold が39.6日前のため main 除外（国内完結は赤字）",
       "rejection_top5": [
         [
           "stale_over_14d",
@@ -892,14 +888,14 @@
       "stale_excluded": 17,
       "overseas_stale": 1,
       "needed": [
-        "eBay sold fresh化で main化（参考 +¥86,904 / ROI 25%）"
+        "eBay sold fresh化で main化（参考 +¥119,490 / ROI 38%）"
       ],
       "fresh_overseas_whatif_top5": [
         {
           "sell": "src_ebay",
           "sell_price": 557311,
-          "net_if_fresh": 86904,
-          "roi": 0.2529
+          "net_if_fresh": 119490,
+          "roi": 0.383
         }
       ]
     },

@@ -1,6 +1,6 @@
 # Normalized Price Observations
 
-生成: 2026-09-29 19:29 JST
+生成: 2026-09-30 19:26 JST
 
 全価格（買取/販売/出品/落札/海外/下取/公式）を単一スキーマに正規化。
 `price_role`（buy/sell/official/trade_in）を必ず付与し、
@@ -9,29 +9,29 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 
 ## サマリ
 
-- 総観測数: **244**
-- Beginner 利用可: 53 / Pro 利用可: 17
-- fresh(≤14日): 126
+- 総観測数: **246**
+- Beginner 利用可: 50 / Pro 利用可: 15
+- fresh(≤14日): 128
 
 ### price_role 別
 
 | role | 件数 |
 |---|---|
-| buy | 50 |
+| buy | 49 |
 | official | 45 |
-| sell | 149 |
+| sell | 152 |
 
 ### price_type 別
 
 | type | 件数 |
 |---|---|
-| buyback_price | 143 |
+| buyback_price | 146 |
 | flea_listing_price | 5 |
 | flea_sold_price | 11 |
 | official_price | 45 |
 | overseas_listing_price | 5 |
 | overseas_sold_price | 6 |
-| shop_sale_price | 29 |
+| shop_sale_price | 28 |
 
 ### rejection_reason 別（main calc 除外）
 
@@ -40,14 +40,13 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 | accessory_or_wrong_product | 17 |
 | duplicate_price_collision | 13 |
 | model_mismatch | 2 |
-| price_zero | 36 |
+| price_zero | 41 |
 | stale_over_14d | 118 |
 
 ## Beginner 利用可（official_price / buyback_price のみ）
 
 | product | role | type | price | conf | age | source |
 |---|---|---|---|---|---|---|
-| iPhone 17 Pro Max 256G | official | official_price | ¥214,800 | high | 0.0d | メーカー公式/定価 |
 | iPhone 17 Pro Max 512G | official | official_price | ¥254,800 | medium | 0.0d | メーカー公式/定価 |
 | iPhone 17 256GB SIMフリー | official | official_price | ¥142,800 | high | 0.0d | メーカー公式/定価 |
 | iPhone 16 Pro 256GB SI | official | official_price | ¥159,800 | medium | 0.0d | メーカー公式/定価 |
@@ -77,6 +76,7 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 | FUJIFILM GFX100RF | official | official_price | ¥750,000 | medium | 0.0d | メーカー公式/定価 |
 | FUJIFILM X-T5 | official | official_price | ¥280,000 | medium | 0.0d | メーカー公式/定価 |
 | SONY α7R V | official | official_price | ¥440,000 | medium | 0.0d | メーカー公式/定価 |
+| SONY α1 II | official | official_price | ¥990,000 | medium | 0.0d | メーカー公式/定価 |
 
 ## Pro 利用可（buy=販売/出品/落札/海外出品, sell=買取/海外落札）
 
@@ -89,10 +89,8 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 | SONY α7CR | sell | buyback_price | ¥255,200 | new_unopened | 0.0d | フジヤカメラ |
 | SONY FX3 | sell | buyback_price | ¥354,000 | new_unopened | 0.0d | フジヤカメラ |
 | Nikon Z8 | sell | buyback_price | ¥317,900 | new_unopened | 0.0d | フジヤカメラ |
-| Nikon Z9 | sell | buyback_price | ¥369,600 | new_unopened | 0.0d | フジヤカメラ |
+| Nikon Z9 | sell | buyback_price | ¥366,300 | new_unopened | 0.0d | フジヤカメラ |
 | Leica Q3 | sell | buyback_price | ¥860,000 | new_unopened | 0.0d | フジヤカメラ |
-| iPhone 17 Pro Max 256G | sell | buyback_price | ¥194,000 | new_unopened_simfree | 0.0d | モバイル一番 |
-| iPhone 17 Pro Max 256G | sell | buyback_price | ¥192,000 | new_unopened_simfree | 0.0d | 買取一丁目 |
 | iPhone 17 Pro Max 512G | sell | buyback_price | ¥218,000 | new_unopened_simfree | 0.0d | 買取一丁目 |
 | RICOH GR IV | buy | flea_sold_price | ¥324,222 | new_unopened | 0.0d | ヤフオク (新品/未使用落札) |
 | RICOH GR IV HDF | buy | flea_sold_price | ¥314,900 | new_unopened | 0.0d | ヤフオク (新品/未使用落札) |

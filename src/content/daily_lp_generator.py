@@ -4424,9 +4424,19 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         "OPEN": "受付中", "STARTING_SOON": "まもなく開始",
         "AVAILABLE_NOW": "今買える", "ENDING_SOON": "締切間近",
         "ENDED": "終了", "SOLD_OUT": "SOLD OUT",
-        "RESULT_PENDING": "当選発表待ち", "PURCHASE_PERIOD": "購入期間中",
+        "RESULT_PENDING": "当選発表待ち",
+        # 当選者だけが購入できる期間（一般販売ではない）
+        "WINNER_PURCHASE_PERIOD": "当選者購入期間",
+        "COMING_SOON": "発売予定",
         "UNVERIFIED": "未確認",
     }
+    # 健全性ステータスの表示名（Source Health）
+    _TCG_HEALTH_LABELS = {
+        "HEALTHY": "正常", "OK_NO_EVENTS": "正常（該当なし）",
+        "DEGRADED": "要確認", "BLOCKED": "アクセス拒否", "FAILED": "取得失敗",
+    }
+    _TCG_BOX_TYPES = ("BOOSTER_BOX", "ENHANCED_BOOSTER", "SPECIAL_SET",
+                      "PREMIUM_COLLECTION")
     _TCG_SHRINK_LABELS = {
         "SEALED_SHRINK": "シュリンク付き", "SHRINK_REMOVED": "シュリンクなし",
         "TAPE_CUT": "テープカット", "OPENED_BOX": "開封済み",
@@ -4459,6 +4469,10 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         def _is(ev, *statuses):
             return ev.get("status") in statuses and not ev.get("stale")
 
+        def _current(ev):
+            # 終了・鮮度切れのイベントはどのバケットにも数えない
+            return ev.get("status") != "ENDED" and not ev.get("stale")
+
         buckets = [
             ("&#128293; 今買える", [e for e in events if _is(e, "AVAILABLE_NOW")]),
             ("&#9200; 締切間近", [e for e in events if _is(e, "ENDING_SOON")]),
@@ -4466,14 +4480,22 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                                       if e.get("event_type") == "LOTTERY"
                                       and _is(e, "OPEN", "ENDING_SOON")]),
             ("&#127978; コンビニ販売", [e for e in events
-                                        if e.get("event_type") == "CONVENIENCE_STORE"]),
+                                        if e.get("event_type") == "CONVENIENCE_STORE"
+                                        and _current(e)]),
             ("&#128260; 再販", [e for e in events
                                 if e.get("event_type") in ("RESTOCK", "ONLINE_RESTOCK",
-                                                           "RESERVATION_REOPEN")]),
+                                                           "RESERVATION_REOPEN")
+                                and _current(e)]),
+            ("&#128467; 発売予定", [e for e in events if _is(e, "COMING_SOON", "STARTING_SOON")]),
+            ("&#128230; BOX商品", [e for e in events
+                                   if e.get("product_type") in self._TCG_BOX_TYPES
+                                   and _current(e)]),
             ("&#128230; シュリンクBOX", [e for e in events
-                                         if e.get("shrink_status") == "SEALED_SHRINK"]),
+                                         if e.get("shrink_status") == "SEALED_SHRINK"
+                                         and _current(e)]),
             ("&#128200; プレミアBOX", [e for e in events
-                                       if (e.get("premium") or {}).get("premium_percent")]),
+                                       if (e.get("premium") or {}).get("premium_percent")
+                                       and _current(e)]),
         ]
 
         parts = [
@@ -4495,20 +4517,28 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         else:
             parts.extend(self._tcg_card(e) for e in shown[:30])
 
-        # Source Health（Task27）
+        # Source Health（Task27 / Task33: 0件のときも原因が分かるよう状態と理由を出す）
         health = report.get("source_health") or []
         if health:
-            rows = "".join(
-                '<tr><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>'.format(
+            def _row(h):
+                f = h.get("funnel") or {}
+                status = h.get("status") or ""
+                return (
+                    '<tr><td>{}</td><td>{}</td><td>{}</td><td>{}/{}</td><td>{}</td>'
+                    '<td>{}</td><td>{}</td><td>{}</td></tr>').format(
                     _esc(str(h.get("source_name") or h.get("source") or "")),
-                    _esc(str((h.get("last_checked") or "—")[:16].replace("T", " "))),
+                    _esc(self._TCG_HEALTH_LABELS.get(status, status or "—")),
+                    _esc(str(h.get("status_reason") or "—")),
+                    f.get("pages_loaded", 0), f.get("pages_requested", 0),
+                    f.get("product_pages_discovered", 0),
                     h.get("events_found", 0), h.get("errors", 0),
-                    "YES" if h.get("blocked") else "no")
-                for h in health)
+                    _esc(str((h.get("last_checked") or "—")[:16].replace("T", " "))))
+            rows = "".join(_row(h) for h in health)
             parts.append(
                 '<details class="tcg-health"><summary>TCG 監視元の取得状況</summary>'
                 '<table class="tcg-health-table"><thead><tr>'
-                '<th>Source</th><th>最終確認</th><th>件数</th><th>エラー</th><th>Blocked</th>'
+                '<th>Source</th><th>状態</th><th>理由</th><th>ページ</th><th>商品ページ</th>'
+                '<th>件数</th><th>エラー</th><th>最終確認</th>'
                 f'</tr></thead><tbody>{rows}</tbody></table></details>')
         return "".join(parts)
 
@@ -4573,8 +4603,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         url = ev.get("source_url") or ""
         link = (f'<a class="tcg-link" href="{_esc(url)}" target="_blank" '
                 f'rel="noopener nofollow">公式ページで確認</a>') if url else ""
-        badge_cls = "open" if ev.get("status") in ("AVAILABLE_NOW", "OPEN",
-                                                   "PURCHASE_PERIOD") else "closed"
+        badge_cls = "open" if ev.get("status") in ("AVAILABLE_NOW", "OPEN") else "closed"
         buy = ('<span class="tcg-buynow">BUY NOW 候補</span>'
                if ev.get("buy_now") else "")
         return (

@@ -23,12 +23,18 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
-from src.collectors.tcg import ALL_COLLECTORS                      # noqa: E402
+from src.collectors.tcg import ALL_COLLECTORS, POKEMON_COLLECTORS  # noqa: E402
+from src.collectors.tcg.pokemon_products import secondary_mapping    # noqa: E402
 from src.tcg.alerts import (                                        # noqa: E402
     build_premium_message, build_restock_signal_message,
     instant_sale_alerts, lottery_deadline_alerts,
 )
-from src.tcg.classify import confidence_for, verification_label     # noqa: E402
+from src.tcg.alerts import notification_kind                         # noqa: E402
+from src.tcg.classify import (                                       # noqa: E402
+    confidence_for, restock_class, verification_label,
+)
+from src.tcg.funnel import HEALTH_FAILED                             # noqa: E402
+from src.tcg.product_types import PT_ACCESSORY                       # noqa: E402
 from src.tcg.cluster import detect_restock_signals                  # noqa: E402
 from src.tcg.dedupe import dedupe_events                            # noqa: E402
 from src.tcg.freshness import compute_status, is_stale, ttl_for     # noqa: E402
@@ -77,10 +83,12 @@ def _load_retail_prices() -> dict[str, int]:
     return out
 
 
-def collect() -> tuple[list[dict], list[dict]]:
-    """全コレクターを実行し、(events, health) を返す。"""
+def collect() -> tuple[list[dict], list[dict], list[dict]]:
+    """全コレクターを実行し、(events, health, pokemon_registry) を返す。"""
     events: list[dict] = []
     health: list[dict] = []
+    registry: list[dict] = []
+    pokemon_classes = set(POKEMON_COLLECTORS)
     for cls in ALL_COLLECTORS:
         collector = cls()
         print(f"  → {collector.source_name} ({collector.source_key})")
@@ -89,17 +97,44 @@ def collect() -> tuple[list[dict], list[dict]]:
         except Exception as exc:  # noqa: BLE001 - 1コレクターの失敗で止めない
             collector.health["errors"] += 1
             collector.health["error_messages"].append(str(exc))
-            found = []
+            collector.funnel.errors += 1
+            found = collector._finish([])
+            # 例外で中断したものは取得状況に関わらず FAILED と明示する
+            collector.health["status"] = HEALTH_FAILED
+            collector.health["status_reason"] = f"コレクター例外: {type(exc).__name__}"
+        collector.health["collector"] = cls.__name__
+        collector.health["is_pokemon"] = cls in pokemon_classes
         events.extend(found)
         health.append(collector.health)
-        print(f"     events={len(found)} errors={collector.health['errors']}"
-              f" blocked={collector.health['blocked']}")
-    return events, health
+        registry.extend(getattr(collector, "registry", []) or [])
+        f = collector.health.get("funnel") or {}
+        print(f"     status={collector.health.get('status')} events={len(found)}"
+              f" pages={f.get('pages_loaded', 0)}/{f.get('pages_requested', 0)}"
+              f" product_pages={f.get('product_pages_discovered', 0)}"
+              f" rejected={f.get('rejected_events', 0)}"
+              f" errors={collector.health['errors']} blocked={collector.health['blocked']}")
+    return events, health, registry
 
 
-def enrich(events: list[dict], retail_prices: dict[str, int]) -> tuple[list[dict], list[dict]]:
+def registry_retail_prices(registry: list[dict]) -> dict[str, int]:
+    """公式商品 API で「商品1個の希望小売価格」と明示されたものだけを定価候補にする。
+
+    拡張パック系の「1パック価格」は含めない（パック価格 × 入数で BOX 価格を作らない）。
+    BOX Opportunity の対象外（アクセサリー・デッキ等）も含めない。
+    """
+    out: dict[str, int] = {}
+    for rec in registry or []:
+        if (rec.get("box_opportunity_eligible") and rec.get("retail_price")
+                and rec.get("retail_price_basis") == "product_unit"):
+            out[rec["product_id"]] = int(rec["retail_price"])
+    return out
+
+
+def enrich(events: list[dict], retail_prices: dict[str, int],
+           registry_prices: dict[str, int] | None = None) -> tuple[list[dict], list[dict]]:
     """重複排除・鮮度・信頼度・プレミア・スコアを付与し、(events, signals) を返す。"""
     now = now_jst()
+    registry_prices = registry_prices or {}
     observations = load_secondary_observations()
     merged = dedupe_events(events)
 
@@ -127,9 +162,17 @@ def enrich(events: list[dict], retail_prices: dict[str, int]) -> tuple[list[dict
         # 定価は config/tcg_retail_prices.yaml で verified: true のものだけを採用する。
         # ページ内の最初の金額はパック単価と BOX 価格の区別がつかないため、
         # 定価として扱わない（ev["price"] は「ページ記載の参考価格」のまま）。
-        retail = retail_prices.get(ev.get("product_id", ""))
-        ev["premium"] = premium_for_product(ev.get("product_id", ""), retail,
-                                            observations)
+        # 優先順: config の手動検証済み定価 > 公式 API の商品単価（BOX 対象種別のみ）
+        pid = ev.get("product_id", "")
+        retail = retail_prices.get(pid)
+        if retail is None:
+            retail = registry_prices.get(pid)
+        if ev.get("product_type") == PT_ACCESSORY:
+            retail = None   # アクセサリーは BOX Opportunity に入れない
+        ev["premium"] = premium_for_product(pid, retail, observations)
+        # Task15: 再販の出どころ
+        ev["restock_class"] = restock_class(ev.get("event_type", ""),
+                                            ev.get("source_type", ""))
 
     signals = detect_restock_signals(merged, now)
     chains = {s.get("chain") for s in signals}
@@ -144,22 +187,59 @@ def enrich(events: list[dict], retail_prices: dict[str, int]) -> tuple[list[dict
         ev["buy_now_blocked_reasons"] = buy["blocked_reasons"]
         ev["buy_now_notes"] = buy["notes"]
         ev["priority"] = notification_priority(ev, signals=sig)
+        # Task24: 通知候補の種類（候補にしないものは None）
+        ev["notification_kind"] = notification_kind(ev)
     return merged, signals
 
 
+def pokemon_funnel_summary(health: list[dict], events: list[dict]) -> dict:
+    """Task17 / Task32: ポケモン系コレクターのファネルを集計する。"""
+    rows = []
+    total = {k: 0 for k in (
+        "pages_discovered", "pages_requested", "pages_loaded",
+        "product_links_discovered", "product_pages_discovered",
+        "product_pages_loaded", "news_pages_discovered", "news_pages_loaded",
+        "candidate_events", "accepted_sales_events", "rejected_events", "errors")}
+    reasons: dict[str, int] = {}
+    for h in health:
+        if not h.get("is_pokemon"):
+            continue
+        f = h.get("funnel") or {}
+        rows.append({"source": h.get("source_name") or h.get("source"),
+                     "collector": h.get("collector"),
+                     "status": h.get("status"),
+                     "status_reason": h.get("status_reason"),
+                     **{k: f.get(k, 0) for k in total},
+                     "rejection_reasons": f.get("rejection_reasons", {}),
+                     "notes": f.get("notes", [])})
+        for k in total:
+            total[k] += int(f.get(k, 0) or 0)
+        for r, n in (f.get("rejection_reasons") or {}).items():
+            reasons[r] = reasons.get(r, 0) + int(n)
+    current = [e for e in events if e.get("tcg") == TCG_POKEMON
+               and e.get("status") != "ENDED"]
+    return {"sources": rows, "total": total, "rejection_reasons": reasons,
+            "current_events": len(current)}
+
+
 def build_exports(events: list[dict], signals: list[dict],
-                  health: list[dict]) -> dict:
+                  health: list[dict], registry: list[dict] | None = None) -> dict:
     """Task28: exports を生成する。"""
     EXPORT_DIR.mkdir(parents=True, exist_ok=True)
     now = now_jst()
+    registry = registry or []
+    funnel = pokemon_funnel_summary(health, events)
 
     lotteries = [e for e in events if e.get("event_type") == EVENT_LOTTERY]
     restocks = [e for e in events if e.get("event_type") in INSTANT_SALE_EVENTS]
     available = [e for e in events
                  if e.get("status") == ST_AVAILABLE_NOW and not e.get("stale")]
+    # アクセサリーは BOX Opportunity に入れない（Task5）
     opportunities = sorted(
-        [e for e in events if e.get("opportunity_score") is not None],
+        [e for e in events if e.get("opportunity_score") is not None
+         and e.get("product_type") != PT_ACCESSORY],
         key=lambda e: e["opportunity_score"], reverse=True)
+    coming_soon = [e for e in events if e.get("status") == "COMING_SOON"]
 
     notifications = instant_sale_alerts(events, signals, now)
     for ev in lotteries:
@@ -178,6 +258,9 @@ def build_exports(events: list[dict], signals: list[dict],
             "available_now": len(available),
             "signals": len(signals),
             "notifications": len(notifications),
+            "coming_soon": len(coming_soon),
+            "pokemon_events": sum(1 for e in events if e.get("tcg") == TCG_POKEMON),
+            "pokemon_registry": len(registry),
         },
         "events": events,
         "signals": signals,
@@ -186,6 +269,7 @@ def build_exports(events: list[dict], signals: list[dict],
         "signal_messages": signal_messages,
         "source_health": health,
         "source_registry_count": len(SOURCES),
+        "pokemon_funnel": funnel,
     }
 
     (EXPORT_DIR / "latest.json").write_text(
@@ -199,6 +283,16 @@ def build_exports(events: list[dict], signals: list[dict],
         encoding="utf-8")
     (EXPORT_DIR / "lotteries.json").write_text(
         json.dumps({"generated_at": now.isoformat(), "items": lotteries},
+                   ensure_ascii=False, indent=2), encoding="utf-8")
+    (EXPORT_DIR / "pokemon_funnel.json").write_text(
+        json.dumps({"generated_at": now.isoformat(), **funnel},
+                   ensure_ascii=False, indent=2), encoding="utf-8")
+    (EXPORT_DIR / "pokemon_registry.json").write_text(
+        json.dumps({"generated_at": now.isoformat(),
+                    "source": "https://www.pokemon-card.com/products/resultAPI.php",
+                    "products": registry,
+                    # Task20: 二次流通価格を投入するための mapping（BOX 対象のみ）
+                    "secondary_mapping": [m for m in (secondary_mapping(r) for r in registry) if m]},
                    ensure_ascii=False, indent=2), encoding="utf-8")
     (EXPORT_DIR / "latest.md").write_text(_render_md(payload, available,
                                                      opportunities),
@@ -282,17 +376,69 @@ def _render_md(payload: dict, available: list[dict],
                  "（推定値は表示しません）")
     L.append("")
 
+    # ── Task35: Pokemon Funnel ─────────────────────────────────────────
+    pf = payload.get("pokemon_funnel") or {}
+    L.append("## Pokemon Funnel")
+    L.append("")
+    L.append("| Source | Pages | Product Links | Products | Candidate Events | Accepted | Errors | Health |")
+    L.append("|---|---|---|---|---|---|---|---|")
+    for r in pf.get("sources", []):
+        L.append("| {} | {}/{} | {} | {} | {} | {} | {} | {} |".format(
+            r["source"], r["pages_loaded"], r["pages_requested"],
+            r["product_links_discovered"], r["product_pages_discovered"],
+            r["candidate_events"], r["accepted_sales_events"], r["errors"],
+            r["status"]))
+    L.append("")
+    for r in pf.get("sources", []):
+        L.append(f"- {r['source']}: {r['status_reason']}")
+        for n in r.get("notes") or []:
+            L.append(f"  - {n}")
+    L.append("")
+    L.append("### Active Pokemon Events")
+    L.append("")
+    L.append("| Product | Store | Method | Start/End | Price | Status | Confidence |")
+    L.append("|---|---|---|---|---|---|---|")
+    pk = [e for e in payload["events"] if e.get("tcg") == TCG_POKEMON
+          and e.get("status") != "ENDED"]
+    if not pk:
+        L.append("| — | 現在のポケモン販売イベントはありません | — | — | — | — | — |")
+    for e in pk[:50]:
+        price = e.get("price")
+        basis = "（1パック）" if e.get("retail_price_basis") == "pack" else ""
+        L.append("| {} | {} | {} | {} | {} | {} | {} |".format(
+            e.get("product_name", "—"), e.get("store", "—"),
+            _ET_LABEL.get(e.get("event_type"), e.get("event_type")),
+            f"{_fmt_dt(e.get('sale_start') or e.get('application_start'))}"
+            f" / {_fmt_dt(e.get('sale_end') or e.get('application_end'))}",
+            f"¥{price:,}{basis}" if price else "—",
+            e.get("status"), f"{e.get('confidence')} / {e.get('verification')}"))
+    L.append("")
+    L.append("### Rejected（理由別件数）")
+    L.append("")
+    reasons = pf.get("rejection_reasons") or {}
+    if reasons:
+        L.append("| 理由 | 件数 |")
+        L.append("|---|---|")
+        for k, v in sorted(reasons.items(), key=lambda kv: -kv[1]):
+            L.append(f"| {k} | {v} |")
+    else:
+        L.append("- 棄却なし")
+    L.append("")
+
     L.append("## Source Health（各監視元の取得状況）")
     L.append("")
-    L.append("| Source | TCG | Last checked | Last success | Events | Errors | Blocked |")
-    L.append("|---|---|---|---|---|---|---|")
+    L.append("| Source | TCG | Status | Last checked | Last success | Events | Errors | Blocked | robots |")
+    L.append("|---|---|---|---|---|---|---|---|---|")
     for h in payload["source_health"]:
-        L.append("| {} | {} | {} | {} | {} | {} | {} |".format(
+        pages = (h.get("funnel") or {}).get("pages") or []
+        robots = sorted({p.get("robots_status") or "unknown" for p in pages}) or ["—"]
+        L.append("| {} | {} | {} | {} | {} | {} | {} | {} | {} |".format(
             h.get("source_name") or h.get("source"), h.get("tcg", "—"),
+            h.get("status", "—"),
             (h.get("last_checked") or "—")[:16].replace("T", " "),
             (h.get("last_success") or "—")[:16].replace("T", " "),
             h.get("events_found", 0), h.get("errors", 0),
-            "YES" if h.get("blocked") else "no"))
+            "YES" if h.get("blocked") else "no", "/".join(robots)))
     L.append("")
     L.append(f"監視登録 source 数: {payload['source_registry_count']}")
     L.append("")
@@ -313,6 +459,7 @@ def _write_empty_payload(reason: str) -> None:
         "events": [], "signals": [], "notifications": [],
         "premium_alerts": [], "signal_messages": [],
         "source_health": [], "source_registry_count": len(SOURCES),
+        "pokemon_funnel": pokemon_funnel_summary([], []),
         "error": reason,
     }
     (EXPORT_DIR / "latest.json").write_text(
@@ -320,12 +467,21 @@ def _write_empty_payload(reason: str) -> None:
     (EXPORT_DIR / "latest.md").write_text(
         f"# TCG 入荷・抽選・プレミア レポート\n\n収集に失敗しました: {reason}\n",
         encoding="utf-8")
-    for name in ("opportunities.json", "restocks.json", "lotteries.json"):
-        body = {"generated_at": now.isoformat(), "items": []}
-        if name == "restocks.json":
-            body["signals"] = []      # 正常系と同じスキーマにそろえる
+    empty_funnel = pokemon_funnel_summary([], [])
+    bodies = {
+        "opportunities.json": {"items": []},
+        "restocks.json": {"items": [], "signals": []},
+        "lotteries.json": {"items": []},
+        # 正常系と同じキーを空の値で出す（読み手側で KeyError にしない）
+        "pokemon_funnel.json": empty_funnel,
+        "pokemon_registry.json": {
+            "source": "https://www.pokemon-card.com/products/resultAPI.php",
+            "products": [], "secondary_mapping": []},
+    }
+    for name, body in bodies.items():
         (EXPORT_DIR / name).write_text(
-            json.dumps(body, ensure_ascii=False, indent=2), encoding="utf-8")
+            json.dumps({"generated_at": now.isoformat(), **body},
+                       ensure_ascii=False, indent=2), encoding="utf-8")
 
 
 def main() -> int:
@@ -343,15 +499,21 @@ def _run() -> int:
     print("=" * 60)
     retail_prices = _load_retail_prices()
     print(f"  検証済み定価: {len(retail_prices)}件")
-    raw, health = collect()
+    raw, health, registry = collect()
     # Task6: 入荷報告（コミュニティ / SNS）を CSV 経由で取り込む
     reports = load_reports()
     print(f"  入荷報告の取り込み: {len(reports)}件")
     raw = raw + reports
     print(f"  収集イベント（重複排除前）: {len(raw)}件")
-    events, signals = enrich(raw, retail_prices)
+    events, signals = enrich(raw, retail_prices, registry_retail_prices(registry))
     print(f"  重複排除後: {len(events)}件 / シグナル: {len(signals)}件")
-    payload = build_exports(events, signals, health)
+    payload = build_exports(events, signals, health, registry)
+    pf = payload["pokemon_funnel"]["total"]
+    print(f"  Pokemon funnel: pages={pf['pages_loaded']}/{pf['pages_requested']}"
+          f" product_links={pf['product_links_discovered']}"
+          f" product_pages={pf['product_pages_discovered']}"
+          f" candidate={pf['candidate_events']} accepted={pf['accepted_sales_events']}"
+          f" rejected={pf['rejected_events']} errors={pf['errors']}")
     print(f"  ✅ exports/tcg/ へ出力: {payload['counts']}")
     return 0
 

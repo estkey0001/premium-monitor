@@ -15,7 +15,8 @@ from .models import (
     EVENT_PREORDER, EVENT_GENERAL_SALE, EVENT_OFFICIAL_STORE,
     EVENT_RESERVATION_REOPEN, EVENT_SECONDARY_MARKET,
     ST_OPEN, ST_STARTING_SOON, ST_AVAILABLE_NOW, ST_ENDING_SOON, ST_ENDED,
-    ST_SOLD_OUT, ST_RESULT_PENDING, ST_PURCHASE_PERIOD, ST_UNVERIFIED,
+    ST_SOLD_OUT, ST_RESULT_PENDING, ST_WINNER_PURCHASE_PERIOD, ST_COMING_SOON,
+    ST_UNVERIFIED, UNCONFIRMED_AVAILABILITY_BASES,
     now_jst, parse_dt,
 )
 
@@ -77,7 +78,18 @@ def compute_status(event: dict, now: Optional[datetime] = None) -> str:
     """Task16: 画面表示用ステータスを算出する。
 
     stale な入荷報告は AVAILABLE_NOW にしない（ENDED 扱い）。
+    発売日・記事公開日だけを根拠にしたイベントも AVAILABLE_NOW にしない
+    （発売日を過ぎた = 今買える、とは限らないため）。
     """
+    status = _compute_status(event, now)
+    if (status == ST_AVAILABLE_NOW
+            and event.get("availability_basis") in UNCONFIRMED_AVAILABILITY_BASES):
+        return ST_UNVERIFIED
+    return status
+
+
+def _compute_status(event: dict, now: Optional[datetime] = None) -> str:
+    """compute_status の本体（根拠による格下げ前）。"""
     now = now or now_jst()
     et = event.get("event_type", "")
     stale = is_stale(event, now)
@@ -93,7 +105,8 @@ def compute_status(event: dict, now: Optional[datetime] = None) -> str:
         p_start = parse_dt(event.get("purchase_start"))
         p_end = parse_dt(event.get("purchase_end"))
         if p_start and p_end and p_start <= now <= p_end:
-            return ST_PURCHASE_PERIOD
+            # 当選者だけが購入できる期間。一般には買えないので AVAILABLE_NOW にしない
+            return ST_WINNER_PURCHASE_PERIOD
         if a_end and now > a_end:
             if p_end and now > p_end:
                 return ST_ENDED
@@ -103,7 +116,8 @@ def compute_status(event: dict, now: Optional[datetime] = None) -> str:
                 return ST_RESULT_PENDING
             return ST_RESULT_PENDING if (result or p_start) else ST_ENDED
         if a_start and now < a_start:
-            return ST_STARTING_SOON if (a_start - now) <= STARTING_SOON_WINDOW else ST_OPEN
+            # 応募開始前は「受付中」ではない
+            return ST_STARTING_SOON if (a_start - now) <= STARTING_SOON_WINDOW else ST_COMING_SOON
         if a_start and a_end and a_start <= now <= a_end:
             return ST_ENDING_SOON if (a_end - now) <= ENDING_SOON_WINDOW else ST_OPEN
         if a_end and now <= a_end:
@@ -114,7 +128,8 @@ def compute_status(event: dict, now: Optional[datetime] = None) -> str:
     s_start = parse_dt(event.get("sale_start"))
     s_end = parse_dt(event.get("sale_end"))
     if s_start and now < s_start:
-        return ST_STARTING_SOON if (s_start - now) <= STARTING_SOON_WINDOW else ST_OPEN
+        # 発売前。COMING_SOON は AVAILABLE_NOW ではない（BUY NOW も出さない）
+        return ST_STARTING_SOON if (s_start - now) <= STARTING_SOON_WINDOW else ST_COMING_SOON
     if s_end and now > s_end:
         return ST_ENDED
 

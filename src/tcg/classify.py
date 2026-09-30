@@ -25,19 +25,21 @@ _RULES: list[tuple[str, tuple[str, ...]]] = [
     # 予約キャンセル分の再開（「再販」より先に判定する）
     (EVENT_RESERVATION_REOPEN, ("キャンセル分", "予約再開", "予約受付を再開", "キャンセル発生分")),
     # 抽選（応募 → 当落 → 購入 のフロー）
-    (EVENT_LOTTERY, ("抽選", "応募", "エントリー", "当選", "抽選販売", "lottery")),
+    (EVENT_LOTTERY, ("抽選", "応募", "エントリー", "当選", "抽選販売", "購入権", "lottery")),
     # 予約
     (EVENT_PREORDER, ("予約受付", "予約開始", "事前予約", "ご予約", "preorder", "pre-order")),
     # EC在庫復活
     (EVENT_ONLINE_RESTOCK, ("在庫復活", "オンライン再入荷", "カート復活", "販売再開（オンライン）")),
     # 再入荷・再販
-    (EVENT_RESTOCK, ("再入荷", "再販", "入荷しました", "入荷情報", "restock")),
+    (EVENT_RESTOCK, ("再入荷", "再販", "入荷しました", "入荷情報", "追加販売", "追加生産",
+                     "restock")),
     # 時間非公開の突発販売
     (EVENT_GUERRILLA_SALE, ("ゲリラ", "突発販売", "неожид", "時間未定で販売")),
     # 店頭先着
-    (EVENT_FIRST_COME, ("先着", "店頭販売", "並び", "開店同時", "数量限定販売", "first come")),
+    (EVENT_FIRST_COME, ("先着", "店頭販売", "店頭にて販売", "店頭での販売", "並び", "開店同時",
+                        "数量限定販売", "first come")),
     # 通常販売
-    (EVENT_GENERAL_SALE, ("発売日", "通常販売", "発売中", "販売中")),
+    (EVENT_GENERAL_SALE, ("発売日", "通常販売", "発売中", "販売中", "販売開始", "発売開始")),
 ]
 
 _CONVENIENCE_WORDS = ("ローソン", "セブン", "ファミリーマート", "ファミマ", "ミニストップ",
@@ -180,3 +182,23 @@ def scope_label(source_type: str, corroborations: int, store_count: int) -> str:
     if corroborations >= 2:
         return "複数報告（在庫保証ではありません）"
     return "単一店舗の報告（在庫保証ではありません）"
+
+
+# ── Task15: 再販情報の分類 ──────────────────────────────────────────────
+RESTOCK_OFFICIAL = "OFFICIAL_RESTOCK"
+RESTOCK_STORE_OFFICIAL = "STORE_OFFICIAL_RESTOCK"
+RESTOCK_COMMUNITY = "COMMUNITY_RESTOCK_REPORT"
+
+
+def restock_class(event_type: str, source_type: str) -> Optional[str]:
+    """再販イベントの出どころを分類する。再販以外は None。
+
+    COMMUNITY_RESTOCK_REPORT は「報告」であり、販売の確定情報ではない。
+    """
+    if event_type not in (EVENT_RESTOCK, EVENT_ONLINE_RESTOCK):
+        return None
+    if source_type in (SRC_OFFICIAL, SRC_RETAILER_OFFICIAL):
+        return RESTOCK_OFFICIAL
+    if source_type == SRC_STORE_OFFICIAL:
+        return RESTOCK_STORE_OFFICIAL
+    return RESTOCK_COMMUNITY

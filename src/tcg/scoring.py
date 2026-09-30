@@ -15,7 +15,7 @@ from .models import (
     SHRINK_SEALED, SHRINK_UNKNOWN, SHRINK_TAPE_CUT, SHRINK_REMOVED,
     SHRINK_OPENED_BOX, SHRINK_PACK_ONLY,
     OFFICIAL_SOURCE_TYPES, CONF_HIGH, CONF_MEDIUM,
-    ST_AVAILABLE_NOW, ST_OPEN, ST_ENDING_SOON, ST_PURCHASE_PERIOD,
+    ST_AVAILABLE_NOW, ST_OPEN, ST_ENDING_SOON, ST_WINNER_PURCHASE_PERIOD,
     PRIO_CRITICAL, PRIO_HIGH, PRIO_MEDIUM, PRIO_LOW,
 )
 
@@ -53,7 +53,8 @@ def _liquidity_points(sample_count: int) -> float:
 def _availability_points(status: str) -> float:
     return {
         ST_AVAILABLE_NOW: WEIGHTS["availability"],
-        ST_PURCHASE_PERIOD: WEIGHTS["availability"] * 0.9,
+        # 当選者のみの購入期間は一般には買えないため加点しない
+        ST_WINNER_PURCHASE_PERIOD: 0.0,
         ST_ENDING_SOON: WEIGHTS["availability"] * 0.6,
         ST_OPEN: WEIGHTS["availability"] * 0.5,
     }.get(status, 0.0)
@@ -149,7 +150,8 @@ def buy_now_signal(event: dict, premium: Optional[dict] = None) -> dict:
     notes: list[str] = []
 
     official = src in OFFICIAL_SOURCE_TYPES
-    purchasable = status in (ST_AVAILABLE_NOW, ST_PURCHASE_PERIOD)
+    # 当選者のみの購入期間・発売前（COMING_SOON）は一般購入できないので対象外
+    purchasable = status == ST_AVAILABLE_NOW
     enough_premium = pct is not None and pct >= BUY_NOW_MIN_PREMIUM_PERCENT
     fresh = not event.get("stale", False)
 
@@ -200,7 +202,7 @@ def notification_priority(event: dict, signals: int = 0) -> str:
         if event.get("confidence") == CONF_MEDIUM:
             return PRIO_MEDIUM        # 単一店舗SNS報告
         return PRIO_LOW               # 未確認情報
-    if et == EVENT_LOTTERY and status in (ST_ENDING_SOON, ST_PURCHASE_PERIOD):
+    if et == EVENT_LOTTERY and status in (ST_ENDING_SOON, ST_WINNER_PURCHASE_PERIOD):
         return PRIO_HIGH
     if official:
         return PRIO_MEDIUM

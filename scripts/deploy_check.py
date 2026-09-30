@@ -7084,6 +7084,113 @@ def _check_tcg_layer() -> list[dict]:
     out.append({"level": "ok" if _ok750 else "warning", "check": "tcg_report_exists",
                 "message": "#750 TCG レポート(exports/tcg/latest.json / latest.md)が生成されている"
                            + ("" if _ok750 else " ← TCG レポートが未生成（追加レイヤーのため warning）")})
+
+    out.extend(_check_pokemon_coverage(_rep))
+    return out
+
+
+def _check_pokemon_coverage(report: dict) -> list[dict]:
+    """ポケモン商品単位監視・CI fail-closed の健全性チェック（#751-#758）。"""
+    out: list[dict] = []
+
+    def _add(no, key, ok, msg, ng="", level_ng="error"):
+        out.append({"level": "ok" if ok else level_ng, "check": key,
+                    "message": f"#{no} {msg}" + ("" if ok else f" ← {ng}")})
+
+    from datetime import timedelta
+    from urllib.parse import urlparse
+    from src.tcg import freshness, scoring
+    from src.tcg.models import EVENT_LOTTERY, EVENT_GENERAL_SALE, now_jst
+    from src.tcg.product_types import (
+        PT_ACCESSORY, is_box_opportunity_eligible, split_prices,
+    )
+
+    now = now_jst()
+
+    # #751: 当選者のみの購入期間は一般購入可能（AVAILABLE_NOW / BUY NOW）にしない
+    _lot = {"event_type": EVENT_LOTTERY, "source_type": "OFFICIAL",
+            "application_start": (now - timedelta(days=10)).isoformat(),
+            "application_end": (now - timedelta(days=5)).isoformat(),
+            "purchase_start": (now - timedelta(days=1)).isoformat(),
+            "purchase_end": (now + timedelta(days=2)).isoformat()}
+    _lot["status"] = freshness.compute_status(_lot, now)
+    _buy = scoring.buy_now_signal(_lot, {"premium_percent": 90.0, "premium_yen": 5000})
+    _add(751, "tcg_winner_period_not_general_sale",
+         _lot["status"] == "WINNER_PURCHASE_PERIOD" and not _buy["buy_now"],
+         "当選者のみの購入期間を一般販売・BUY NOW と区別する",
+         f"status={_lot['status']} buy_now={_buy['buy_now']}")
+
+    # #752: 発売予定（COMING_SOON）は AVAILABLE_NOW にせず BUY NOW も出さない
+    _fut = {"event_type": EVENT_GENERAL_SALE, "source_type": "OFFICIAL",
+            "sale_start": (now + timedelta(days=10)).isoformat()}
+    _fut["status"] = freshness.compute_status(_fut, now)
+    _fb = scoring.buy_now_signal(_fut, {"premium_percent": 90.0, "premium_yen": 5000})
+    _add(752, "tcg_coming_soon_not_available",
+         _fut["status"] == "COMING_SOON" and not _fb["buy_now"],
+         "発売予定商品を AVAILABLE_NOW / BUY NOW にしない",
+         f"status={_fut['status']} buy_now={_fb['buy_now']}")
+
+    # #753: パック価格を BOX 定価に自動昇格しない
+    _sp = split_prices("BOOSTER_BOX", "200円（税込）", api_type="拡張パック")
+    _add(753, "tcg_pack_price_not_box_retail",
+         _sp["pack_price"] == 200 and _sp["retail_price"] is None,
+         "1パックの希望小売価格を BOX 定価として扱わない", str(_sp))
+
+    # #754: アクセサリーを BOX Opportunity に入れない
+    _add(754, "tcg_accessory_not_box_opportunity",
+         not is_box_opportunity_eligible(PT_ACCESSORY),
+         "周辺グッズを BOX Opportunity の対象にしない", "アクセサリーが対象になっている")
+
+    # #755: CI の deploy-check が fail-closed（pipefail + CLI の非ゼロ終了）
+    _wf = (PROJECT_ROOT / ".github" / "workflows" / "daily_lp.yml")
+    _cli = (PROJECT_ROOT / "src" / "cli.py")
+    _wf_ok = False
+    try:
+        import yaml as _yaml_wf
+        _steps = _yaml_wf.safe_load(_wf.read_text(encoding="utf-8"))["jobs"]["update-lp"]["steps"]
+        _dc = [st for st in _steps if st.get("name") == "Deploy check"]
+        _run = (_dc[0].get("run") or "") if _dc else ""
+        _wf_ok = bool(_dc) and "pipefail" in _run and not _dc[0].get("continue-on-error")
+    except Exception:  # noqa: BLE001 - 読めなければ NG として扱う
+        _wf_ok = False
+    _cli_src = _cli.read_text(encoding="utf-8") if _cli.exists() else ""
+    _i = _cli_src.find('def deploy_check_lp')
+    _cli_ok = _i >= 0 and "sys.exit(1)" in _cli_src[_i:_i + 2500]
+    _add(755, "ci_deploy_check_fail_closed", _wf_ok and _cli_ok,
+         "CI の deploy-check が失敗時にジョブを失敗させる（pipefail + 非ゼロ終了）",
+         f"workflow_pipefail={_wf_ok} cli_exit={_cli_ok}")
+
+    # #756: 本番表示のイベントは実取得データのみ（fixture / テスト用ホストを出さない）
+    _bad = []
+    _official = ("OFFICIAL", "RETAILER_OFFICIAL", "STORE_OFFICIAL")
+    for e in (report.get("events") or []):
+        url = e.get("source_url") or ""
+        host = (urlparse(url).hostname or "").lower()
+        # コミュニティ / SNS 報告は URL が無いのが正常なので対象外。
+        # 公式系で URL が無いもの、または明確なテスト用ホストだけを fixture とみなす。
+        if not host:
+            if e.get("source_type") in _official:
+                _bad.append(e.get("product_name"))
+            continue
+        if (host in ("example.com", "example.org", "localhost", "127.0.0.1")
+                or host.endswith((".example.com", ".example.org", ".test", ".localhost"))):
+            _bad.append(e.get("product_name"))
+    _add(756, "tcg_no_fixture_in_production", not _bad,
+         "TCG 表示イベントは実 source の URL を持つ（fixture を表示しない）",
+         f"不正な source_url: {_bad[:3]}")
+
+    # #757: ポケモン系のファネルが出力されている（外部サイト依存のため warning）
+    _pf = report.get("pokemon_funnel") or {}
+    _add(757, "pokemon_funnel_report", bool(_pf.get("sources")),
+         "Pokemon collector のファネル（pages / product links / accepted / rejected）が出力されている",
+         "ファネル未出力", level_ng="warning")
+
+    # #758: ポケモン商品ページを1件以上発見している（外部サイト依存のため warning）
+    _tot = _pf.get("total") or {}
+    _add(758, "pokemon_product_pages_discovered",
+         int(_tot.get("product_pages_discovered") or 0) > 0,
+         f"Pokemon 商品ページを発見している（{_tot.get('product_pages_discovered', 0)}件）",
+         "商品ページ 0 件（DEGRADED）", level_ng="warning")
     return out
 
 

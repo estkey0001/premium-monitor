@@ -2381,6 +2381,10 @@ def deploy_check_lp():
     else:
         click.echo(f"\n  ✅ Deploy check PASSED")
     click.echo(f"{'='*60}\n")
+    # Task25: エラーがあれば必ず非ゼロで終了する（CI を fail-closed にする）。
+    #   以前は FAILED と表示するだけで exit 0 だったため、CI が成功扱いになっていた。
+    if errors:
+        sys.exit(1)
 
 
 # ---- Phase 12: 計測テスト ----

@@ -109,11 +109,17 @@ ST_ENDING_SOON = "ENDING_SOON"
 ST_ENDED = "ENDED"
 ST_SOLD_OUT = "SOLD_OUT"
 ST_RESULT_PENDING = "RESULT_PENDING"
-ST_PURCHASE_PERIOD = "PURCHASE_PERIOD"
+# Task10: 抽選の「当選者のみ購入できる期間」。一般販売ではないため
+#   AVAILABLE_NOW とも BUY NOW とも区別する。
+ST_WINNER_PURCHASE_PERIOD = "WINNER_PURCHASE_PERIOD"
+ST_PURCHASE_PERIOD = ST_WINNER_PURCHASE_PERIOD   # 旧名（互換用エイリアス）
+# Task23: 発売予定（販売開始まで24時間超）。AVAILABLE_NOW ではない。
+ST_COMING_SOON = "COMING_SOON"
 ST_UNVERIFIED = "UNVERIFIED"
 STATUSES: tuple[str, ...] = (
     ST_OPEN, ST_STARTING_SOON, ST_AVAILABLE_NOW, ST_ENDING_SOON, ST_ENDED,
-    ST_SOLD_OUT, ST_RESULT_PENDING, ST_PURCHASE_PERIOD, ST_UNVERIFIED,
+    ST_SOLD_OUT, ST_RESULT_PENDING, ST_WINNER_PURCHASE_PERIOD, ST_COMING_SOON,
+    ST_UNVERIFIED,
 )
 
 # ── 通知優先度 (Task14) ───────────────────────────────────────────────────
@@ -122,6 +128,13 @@ PRIO_HIGH = "HIGH"
 PRIO_MEDIUM = "MEDIUM"
 PRIO_LOW = "LOW"
 PRIORITIES: tuple[str, ...] = (PRIO_CRITICAL, PRIO_HIGH, PRIO_MEDIUM, PRIO_LOW)
+
+# ── 販売状況の根拠（在庫を確認していないもの） ────────────────────────────
+BASIS_RELEASE_DATE_ONLY = "release_date_only"
+BASIS_ARTICLE_DATE_ONLY = "article_date_only"
+UNCONFIRMED_AVAILABILITY_BASES: frozenset[str] = frozenset({
+    BASIS_RELEASE_DATE_ONLY, BASIS_ARTICLE_DATE_ONLY,
+})
 
 # ── 販売チャネル ──────────────────────────────────────────────────────────
 CHANNEL_STORE = "STORE"
@@ -204,6 +217,35 @@ class TcgEvent:
     sale_start_time: Optional[str] = None
     note: Optional[str] = None
     notes: list[str] = field(default_factory=list)
+
+    # ── 商品情報（Task4 / Task11。記載が無い項目は None のまま） ──
+    product_type: Optional[str] = None
+    series_name: Optional[str] = None
+    product_code: Optional[str] = None
+    pack_price: Optional[int] = None           # 1パックの希望小売価格
+    retail_price_basis: Optional[str] = None   # "pack" / "product_unit"
+    box_configuration: Optional[str] = None    # 「内容物」の原文
+    packs_per_box: Optional[int] = None        # 公式に明示された場合のみ
+    official_image_url: Optional[str] = None
+    canonical_url: Optional[str] = None
+    stores_available: Optional[str] = None     # 公式が記載する取扱店
+    shipping_date: Optional[str] = None        # 抽選の発送時期
+
+    # ── ニュース記事（Task7） ──
+    article_title: Optional[str] = None
+    article_category: Optional[str] = None     # 公式カテゴリ（商品 / イベント / その他）
+    published_at: Optional[str] = None
+
+    # ── 分類（Task15 / Task24） ──
+    restock_class: Optional[str] = None
+    notification_kind: Optional[str] = None
+
+    # 販売状況の根拠。在庫・販売中を確認していない根拠の場合は
+    # AVAILABLE_NOW にしない（freshness.compute_status を参照）。
+    #   None                : 販売告知・在庫報告そのもの
+    #   "release_date_only" : 公式の発売日だけ（在庫は未確認）
+    #   "article_date_only" : ニュース記事の公開日だけ（販売時刻は不明）
+    availability_basis: Optional[str] = None
 
     # ── 派生（計算後に埋まる） ──
     verification: str = VERIFY_UNVERIFIED

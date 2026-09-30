@@ -19,6 +19,9 @@ from src.tcg.classify import classify_event_type, classify_source_type
 from src.tcg.models import (
     TcgEvent, now_jst, CHANNEL_UNKNOWN,
 )
+from src.tcg.funnel import (
+    CollectorFunnel, PageDiagnostic, PAGE_OTHER,
+)
 from src.tcg.shrink import detect_shrink_status, shrink_policy_note
 
 logger = logging.getLogger(__name__)
@@ -26,9 +29,15 @@ logger = logging.getLogger(__name__)
 USER_AGENT = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
               "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0 Safari/537.36")
 FETCH_TIMEOUT = 30
-MIN_INTERVAL_SEC = 20
+# 同一ドメインへのアクセス間隔（秒）。
+# src/collectors/rate_limiter.py の RateLimiter が「安全のため最低60秒」を
+# 強制するため、ここで 60 未満を指定しても実際には 60 秒になる（Task28 監査）。
+# サイト負荷と ToS を優先し、アクセス頻度を上げる方向には変えない。
+MIN_INTERVAL_SEC = 60
 
 _TAG_RE = re.compile(r"<(script|style)[^>]*>.*?</\1>", re.S | re.I)
+_TITLE_RE = re.compile(r"<title[^>]*>(.*?)</title>", re.S | re.I)
+_HREF_RE = re.compile(r"""<a\b[^>]*\bhref\s*=\s*["']([^"']+)["']""", re.I)
 _ANY_TAG_RE = re.compile(r"<[^>]+>")
 _WS_RE = re.compile(r"[ \t　]+")
 
@@ -64,6 +73,8 @@ _DT_LABELS: tuple[tuple[str, tuple[str, ...]], ...] = (
                          "申込締切", "締切", "エントリー終了")),
     ("result_date", ("当選発表", "抽選結果", "結果発表")),
     ("purchase_period", ("購入期間", "購入手続き期間")),
+    ("purchase_end", ("購入期限", "購入手続き期限", "お支払い期限")),
+    ("shipping_date", ("発送時期", "発送予定", "お届け時期", "お届け予定")),
     ("sale_period", ("販売期間", "受注期間")),
     # 「発売」は「発売中」「発売済」に部分一致して無関係な日付を拾うため入れない
     ("sale_start", ("発売日", "販売開始", "発売開始", "販売日")),
@@ -96,6 +107,11 @@ class BaseTcgCollector:
     # 商品一覧を JavaScript で描画するページは Playwright で取得する。
     # （Playwright 未導入の環境では取得をスキップし health に記録する）
     requires_js: bool = False
+    # Task31: 商品ページ / ニュース記事を発見できなければ DEGRADED とするか
+    requires_product_pages: bool = False
+    requires_news_pages: bool = False
+    # collect() の既定ループで記録するページ種別
+    default_page_type: str = PAGE_OTHER
 
     def __init__(self) -> None:
         self._robots = RobotsChecker(user_agent=USER_AGENT)
@@ -111,39 +127,113 @@ class BaseTcgCollector:
             "blocked": False,
             "error_messages": [],
         }
+        self.funnel = CollectorFunnel(
+            source=self.source_key,
+            requires_product_pages=self.requires_product_pages,
+            requires_news_pages=self.requires_news_pages,
+        )
 
     # ── 取得 ────────────────────────────────────────────────────────────
-    def _fetch(self, url: str) -> Optional[str]:
-        """URL を取得して HTML を返す。失敗・拒否時は None。"""
-        if self.respect_robots and not self._robots.is_allowed(url):
+    def _record_error(self, diag: PageDiagnostic, message: str) -> None:
+        self.health["errors"] += 1
+        self.health["error_messages"].append(message)
+        self.funnel.errors += 1
+        diag.error = message
+
+    def _fetch(self, url: str, page_type: str = PAGE_OTHER,
+               referer: Optional[str] = None) -> Optional[str]:
+        """URL を取得して HTML を返す。失敗・拒否時は None。
+
+        Task3: 1ページごとに HTTP status / 最終 URL / タイトル / 本文長 /
+        発見リンク数 / robots 判定根拠 を funnel に記録する。
+        """
+        diag = self.funnel.add_page(PageDiagnostic(url=url, page_type=page_type))
+        self.funnel.pages_requested += 1
+
+        # Task27: robots.txt の判定根拠を記録する（取得失敗 = 許可 と誤解させない）
+        try:
+            diag.robots_status = self._robots.robots_status(url)
+        except Exception:  # noqa: BLE001 - 判定根拠の取得失敗は致命的でない
+            diag.robots_status = "unknown"
+        if self.respect_robots and diag.robots_status == "disallowed":
             self.health["blocked"] = True
-            self.health["error_messages"].append(f"robots.txt disallow: {url}")
+            self.funnel.blocked_pages += 1
+            self._record_error(diag, f"robots.txt disallow: {url}")
             logger.warning("robots.txt により取得をスキップ: %s", url)
             return None
+
         delay = None
         try:
             delay = self._robots.get_crawl_delay(url)
         except Exception:  # noqa: BLE001 - crawl-delay 取得失敗は致命的でない
             delay = None
         self._rate.wait_if_needed(url, min_interval_sec=max(MIN_INTERVAL_SEC, delay or 0))
+
         if self.requires_js:
-            return self._fetch_with_playwright(url)
+            html = self._fetch_with_playwright(url)
+            if html:
+                self._fill_page_diag(diag, html, status=200, final_url=url)
+            else:
+                diag.error = diag.error or "playwright fetch failed"
+            return html
+
         try:
             import requests
-            resp = requests.get(url, headers={"User-Agent": USER_AGENT,
-                                              "Accept-Language": "ja,en;q=0.8"},
-                                timeout=FETCH_TIMEOUT)
-            if resp.status_code != 200:
-                self.health["errors"] += 1
-                self.health["error_messages"].append(f"HTTP {resp.status_code}: {url}")
-                return None
-            resp.encoding = resp.apparent_encoding or resp.encoding
-            return resp.text
+            headers = {"User-Agent": USER_AGENT, "Accept-Language": "ja,en;q=0.8"}
+            if referer:
+                headers["Referer"] = referer
+            resp = requests.get(url, headers=headers, timeout=FETCH_TIMEOUT)
         except Exception as exc:  # noqa: BLE001 - ネットワーク失敗を health に集約
-            self.health["errors"] += 1
-            self.health["error_messages"].append(f"{type(exc).__name__}: {url}")
+            self._record_error(diag, f"{type(exc).__name__}: {url}")
             logger.warning("取得失敗 %s: %s", url, exc)
             return None
+
+        diag.http_status = resp.status_code
+        diag.final_url = resp.url
+        if resp.status_code != 200:
+            if resp.status_code in (401, 403, 429):
+                # bot 対策・アクセス制限。回避はせず BLOCKED として記録する
+                self.health["blocked"] = True
+                self.funnel.blocked_pages += 1
+            self._record_error(diag, f"HTTP {resp.status_code}: {url}")
+            return None
+        resp.encoding = resp.apparent_encoding or resp.encoding
+        self._fill_page_diag(diag, resp.text, status=200, final_url=resp.url)
+        return resp.text
+
+    def _fetch_json(self, url: str, page_type: str = PAGE_OTHER,
+                    referer: Optional[str] = None) -> Optional[dict]:
+        """JSON を返す URL（公式サイト自身が使う API 等）を取得する。"""
+        text = self._fetch(url, page_type=page_type, referer=referer)
+        if text is None:
+            return None
+        diag = self.funnel.pages[-1]
+        try:
+            import json
+            data = json.loads(text)
+        except ValueError as exc:
+            self._record_error(diag, f"JSON parse error {url}: {exc}")
+            self.funnel.pages_loaded -= 1   # 読めなかったので loaded から外す
+            return None
+        return data
+
+    def _fill_page_diag(self, diag: PageDiagnostic, html: str, *, status: int,
+                        final_url: str) -> None:
+        """取得できたページの診断値を埋める。"""
+        diag.http_status = diag.http_status or status
+        diag.final_url = diag.final_url or final_url
+        diag.html_length = len(html or "")
+        m = _TITLE_RE.search(html or "")
+        diag.page_title = self.to_text(m.group(1))[:120] if m else None
+        diag.text_length = len(self.to_text(html))
+        diag.links_discovered = len(_HREF_RE.findall(html or ""))
+        self.funnel.links_discovered += diag.links_discovered
+        self.funnel.pages_loaded += 1
+
+    @staticmethod
+    def extract_links(html: str) -> list[str]:
+        """HTML 内の a[href] を列挙する。"""
+        return _HREF_RE.findall(html or "")
 
     def _fetch_with_playwright(self, url: str) -> Optional[str]:
         """JavaScript 描画ページを Playwright で取得する。
@@ -155,6 +245,7 @@ class BaseTcgCollector:
             from playwright.sync_api import sync_playwright
         except ImportError:
             self.health["errors"] += 1
+            self.funnel.errors += 1
             self.health["error_messages"].append(
                 f"playwright 未導入のため取得をスキップ: {url}")
             logger.warning("playwright 未導入のため取得をスキップ: %s", url)
@@ -174,6 +265,7 @@ class BaseTcgCollector:
             return html
         except Exception as exc:  # noqa: BLE001 - 描画失敗を health に集約
             self.health["errors"] += 1
+            self.funnel.errors += 1
             self.health["error_messages"].append(
                 f"playwright {type(exc).__name__}: {url}")
             logger.warning("Playwright 取得失敗 %s: %s", url, exc)
@@ -345,8 +437,9 @@ class BaseTcgCollector:
         """URL を巡回してイベントを収集する。失敗しても例外を投げない。"""
         self.health["last_checked"] = now_jst().isoformat()
         events: list[dict] = []
+        self.funnel.pages_discovered += len(self.urls)
         for url in self.urls:
-            html = self._fetch(url)
+            html = self._fetch(url, page_type=self.default_page_type)
             if not html:
                 continue
             try:
@@ -354,11 +447,20 @@ class BaseTcgCollector:
             except Exception as exc:  # noqa: BLE001 - 1URLの失敗で全体を止めない
                 self.health["errors"] += 1
                 self.health["error_messages"].append(f"parse error {url}: {exc}")
+                self.funnel.errors += 1
                 logger.exception("parse 失敗: %s", url)
                 continue
             self.health["last_success"] = now_jst().isoformat()
             events.extend(e.to_dict() if isinstance(e, TcgEvent) else e for e in parsed)
+        return self._finish(events)
+
+    def _finish(self, events: list[dict]) -> list[dict]:
+        """health と funnel を確定させる。"""
         self.health["events_found"] = len(events)
+        self.funnel.current_events = len(events)
+        self.health["status"] = self.funnel.status()
+        self.health["status_reason"] = self.funnel.status_reason()
+        self.health["funnel"] = self.funnel.to_dict()
         return events
 
     def parse(self, text: str, url: str, html: str = "") -> list:

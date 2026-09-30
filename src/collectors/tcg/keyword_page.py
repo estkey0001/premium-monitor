@@ -13,7 +13,15 @@ import unicodedata
 from src.tcg.classify import classify_event_type
 from src.tcg.freshness import TTL_SECONDS
 from src.tcg.models import EVENT_LOTTERY, TcgEvent, now_jst, parse_dt
-from src.tcg.sales_context import is_product_lottery, is_sales_block
+from src.tcg.funnel import (
+    REJECT_DUPLICATE, REJECT_NO_ARTICLE_DATE, REJECT_NO_PRODUCT_CONTEXT,
+    REJECT_NO_PRODUCT_NAME, REJECT_NO_SALE_CONTEXT, REJECT_NON_SALE,
+    REJECT_NOT_PRODUCT_LOTTERY, REJECT_UNKNOWN_METHOD,
+)
+from src.tcg.sales_context import (
+    has_product_context, has_sale_context, is_non_sale_announcement,
+    is_product_lottery,
+)
 
 from .base import BaseTcgCollector
 
@@ -108,27 +116,53 @@ class KeywordPageCollector(BaseTcgCollector):
     def parse(self, text: str, url: str, html: str = "") -> list[TcgEvent]:
         events: list[TcgEvent] = []
         seen: set[tuple] = set()
+        funnel = getattr(self, "funnel", None)
+        page = funnel.pages[-1] if funnel and funnel.pages else None
+
+        def _reject(reason: str) -> None:
+            if funnel is not None:
+                funnel.reject(reason)
+            if page is not None:
+                page.rejected += 1
+
         for block, window in self._windows(text):
             kw = self._match_product(window)
             if not kw:
                 continue
+            # 商品キーワードを含むブロック = 販売イベントの候補
+            if funnel is not None:
+                funnel.candidate_events += 1
+            if page is not None:
+                page.candidate_blocks += 1
+
             # 大会・イベント告知や、商品が特定できないブロックは取り込まない
-            if not is_sales_block(block):
+            if is_non_sale_announcement(block):
+                _reject(REJECT_NON_SALE)
+                continue
+            if not has_sale_context(block):
+                _reject(REJECT_NO_SALE_CONTEXT)
+                continue
+            if not has_product_context(block):
+                _reject(REJECT_NO_PRODUCT_CONTEXT)
                 continue
             et = self.default_event_type or classify_event_type(
                 block, store=self.source_key, channel=self.channel)
             if et is None:
-                continue   # 販売方式が読み取れないブロックはイベント化しない
+                _reject(REJECT_UNKNOWN_METHOD)   # 販売方式が読み取れない
+                continue
             # 「エントリー」「応募」だけを根拠に抽選販売としない
             if et == EVENT_LOTTERY and not is_product_lottery(block):
+                _reject(REJECT_NOT_PRODUCT_LOTTERY)
                 continue
 
             dates = self.extract_labeled_datetimes(block)
             product_name = self._product_name(kw, window)
             if not product_name:
+                _reject(REJECT_NO_PRODUCT_NAME)
                 continue
             key = (_norm_name(product_name), et)
             if key in seen:
+                _reject(REJECT_DUPLICATE)
                 continue
 
             kwargs: dict = {}
@@ -151,6 +185,7 @@ class KeywordPageCollector(BaseTcgCollector):
                 future_sale = ("sale_start" in (dates.get("_labels") or [])
                                and _is_future(kwargs.get("sale_start")))
                 if not reported and not future_sale:
+                    _reject(REJECT_NO_ARTICLE_DATE)
                     continue
                 if reported:
                     kwargs["reported_at"] = reported
@@ -172,6 +207,10 @@ class KeywordPageCollector(BaseTcgCollector):
             )
             if ev:
                 events.append(ev)
+                if funnel is not None:
+                    funnel.accept()
+                if page is not None:
+                    page.accepted += 1
         return events
 
     def _product_name(self, keyword: str, window: list[str]) -> str:

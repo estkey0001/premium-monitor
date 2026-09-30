@@ -16,8 +16,54 @@ from .models import (
     PRIO_CRITICAL, PRIO_HIGH, PRIO_MEDIUM, PRIO_LOW,
     VERIFY_CONFIRMED, now_jst, parse_dt,
 )
-from .classify import scope_label
+from .classify import (
+    RESTOCK_COMMUNITY, restock_class, scope_label,
+)
 from .scoring import notification_priority
+
+# ── Task24: 通知候補にしてよい種類 ────────────────────────────────────────
+KIND_LOTTERY_OPEN = "LOTTERY_OPEN"
+KIND_LOTTERY_ENDING = "LOTTERY_ENDING"
+KIND_FIRST_COME_START = "FIRST_COME_START"
+KIND_OFFICIAL_RESTOCK = "OFFICIAL_RESTOCK"
+KIND_ONLINE_RESTOCK = "ONLINE_RESTOCK"
+KIND_CONVENIENCE_OFFICIAL = "CONVENIENCE_OFFICIAL"
+NOTIFICATION_KINDS: tuple[str, ...] = (
+    KIND_LOTTERY_OPEN, KIND_LOTTERY_ENDING, KIND_FIRST_COME_START,
+    KIND_OFFICIAL_RESTOCK, KIND_ONLINE_RESTOCK, KIND_CONVENIENCE_OFFICIAL,
+)
+
+
+def notification_kind(event: dict) -> Optional[str]:
+    """通知候補の種類を返す。候補にしないものは None。
+
+    コミュニティ / SNS の報告、鮮度切れ、発売前（COMING_SOON）は候補にしない。
+    """
+    if event.get("stale"):
+        return None
+    et = event.get("event_type", "")
+    st = event.get("status", "")
+    official = event.get("source_type") in OFFICIAL_SOURCE_TYPES
+
+    if et == EVENT_LOTTERY and official:
+        if st == "OPEN":
+            return KIND_LOTTERY_OPEN
+        if st == "ENDING_SOON":
+            return KIND_LOTTERY_ENDING
+        return None
+    if not official:
+        return None   # 未確認の報告は通知候補にしない
+    if et == "FIRST_COME" and st in ("AVAILABLE_NOW", "STARTING_SOON"):
+        return KIND_FIRST_COME_START
+    if et == "ONLINE_RESTOCK" and st == "AVAILABLE_NOW":
+        return KIND_ONLINE_RESTOCK
+    if et == "RESTOCK" and st == "AVAILABLE_NOW":
+        if restock_class(et, event.get("source_type", "")) == RESTOCK_COMMUNITY:
+            return None
+        return KIND_OFFICIAL_RESTOCK
+    if et == "CONVENIENCE_STORE" and st in ("AVAILABLE_NOW", "STARTING_SOON"):
+        return KIND_CONVENIENCE_OFFICIAL
+    return None
 
 # Task13: 抽選のマイルストーン
 LOTTERY_MILESTONES: tuple[tuple[str, str], ...] = (
@@ -88,12 +134,16 @@ def instant_sale_alerts(events: list[dict], signals: Optional[list[dict]] = None
             continue
         if ev.get("stale"):
             continue   # 古い入荷報告を「今買える」として通知しない
+        kind = notification_kind(ev)
+        if kind is None:
+            continue   # Task24: 許可された種類以外は通知候補にしない
         chain = (ev.get("store_chain") or ev.get("store") or "").upper()
         sig = 1 if chain in chains_with_signal else 0
         prio = notification_priority(ev, signals=sig)
         if prio == PRIO_LOW:
             continue
         out.append({
+            "kind": kind,
             "priority": prio,
             "tcg": ev.get("tcg"),
             "product_name": ev.get("product_name"),

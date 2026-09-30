@@ -34,6 +34,10 @@ class PokemonProductsCollector(KeywordPageCollector):
     """ポケモンカードゲーム公式の商品情報（JavaScript 描画ページ）。
 
     静的取得では本文が得られないため Playwright で描画してから解析する。
+
+    NOTE: /products/index.html はカテゴリ紹介ページで個別商品を含まないため、
+      2026-09-30 以降は ALL_COLLECTORS から外した（PokemonProductRegistryCollector
+      が公式商品 API から商品単位で取得する）。JS 描画の取得経路として残している。
     """
 
     source_key = "POKEMON_CARD_OFFICIAL"

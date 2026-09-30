@@ -3871,7 +3871,8 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 .tcg-notes {{ margin: 6px 0 0 18px; font-size: 0.78rem; color: var(--text-2); }}
 .tcg-link {{ display: inline-block; margin-top: 8px; font-size: 0.82rem; font-weight: 700; }}
 .tcg-health {{ margin: 12px 0; font-size: 0.82rem; }}
-.tcg-health-table {{ width: 100%; border-collapse: collapse; margin-top: 8px; }}
+.tcg-health-scroll {{ max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }}
+.tcg-health-table {{ width: 100%; min-width: 560px; border-collapse: collapse; margin-top: 8px; }}
 .tcg-health-table th, .tcg-health-table td {{ border: 1px solid var(--card-border); padding: 4px 8px; text-align: left; font-size: 0.78rem; }}
 .lottery-card {{ background: var(--card-bg); border: 1.5px solid var(--card-border); border-radius: 14px; padding: 16px; margin: 8px 0; }}
 .lottery-card-header {{ display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }}
@@ -4536,10 +4537,12 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             rows = "".join(_row(h) for h in health)
             parts.append(
                 '<details class="tcg-health"><summary>TCG 監視元の取得状況</summary>'
+                # 列が多いためスマホでは表だけを横スクロールさせる（ページ幅を広げない）
+                '<div class="tcg-health-scroll">'
                 '<table class="tcg-health-table"><thead><tr>'
                 '<th>Source</th><th>状態</th><th>理由</th><th>ページ</th><th>商品ページ</th>'
                 '<th>件数</th><th>エラー</th><th>最終確認</th>'
-                f'</tr></thead><tbody>{rows}</tbody></table></details>')
+                f'</tr></thead><tbody>{rows}</tbody></table></div></details>')
         return "".join(parts)
 
     @staticmethod

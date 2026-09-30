@@ -937,3 +937,21 @@ def test_campaign_only_block_is_rejected():
 def test_lawson_partial_store_condition_is_not_asserted():
     got = extract_store_conditions("BOX販売は、店舗によっては行っておりません")
     assert got["box_sale"] is None
+
+
+def test_source_health_table_scrolls_inside_container():
+    """Source Health 表は横スクロール枠の中に置き、スマホでページ幅を広げない。"""
+    from src.content.daily_lp_generator import DailyLPGenerator
+    g = DailyLPGenerator.__new__(DailyLPGenerator)
+    orig = DailyLPGenerator._load_tcg_report
+    DailyLPGenerator._load_tcg_report = staticmethod(lambda: {
+        "events": [], "source_health": [{"source_name": "X", "status": "BLOCKED",
+                                         "status_reason": "HTTP 403", "funnel": {}}]})
+    try:
+        html = DailyLPGenerator._section_tcg(g)
+    finally:
+        DailyLPGenerator._load_tcg_report = orig
+    i_scroll = html.find('class="tcg-health-scroll"')
+    i_table = html.find('class="tcg-health-table"')
+    assert 0 <= i_scroll < i_table
+    assert "アクセス拒否" in html     # 0件でも原因が表示される

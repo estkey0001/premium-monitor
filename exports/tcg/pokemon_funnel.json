@@ -1,0 +1,118 @@
+{
+  "generated_at": "2026-09-30T21:38:53.507379+09:00",
+  "sources": [
+    {
+      "source": "ポケモンカードゲーム公式（商品API）",
+      "collector": "PokemonProductRegistryCollector",
+      "status": "HEALTHY",
+      "status_reason": "正常（採用 9件）",
+      "pages_discovered": 4,
+      "pages_requested": 4,
+      "pages_loaded": 4,
+      "product_links_discovered": 16,
+      "product_pages_discovered": 6,
+      "product_pages_loaded": 1,
+      "news_pages_discovered": 0,
+      "news_pages_loaded": 0,
+      "candidate_events": 17,
+      "accepted_sales_events": 9,
+      "rejected_events": 8,
+      "errors": 0,
+      "rejection_reasons": {
+        "past_release": 8
+      },
+      "notes": []
+    },
+    {
+      "source": "ポケモンカードゲーム公式（ニュース）",
+      "collector": "PokemonNewsCollector",
+      "status": "OK_NO_EVENTS",
+      "status_reason": "正常に取得。現在の販売イベントは0件（棄却: event_category=75, article_too_old=13, non_sale_announcement=12）",
+      "pages_discovered": 2,
+      "pages_requested": 2,
+      "pages_loaded": 2,
+      "product_links_discovered": 0,
+      "product_pages_discovered": 0,
+      "product_pages_loaded": 0,
+      "news_pages_discovered": 105,
+      "news_pages_loaded": 1,
+      "candidate_events": 105,
+      "accepted_sales_events": 0,
+      "rejected_events": 105,
+      "errors": 0,
+      "rejection_reasons": {
+        "event_category": 75,
+        "no_sale_context": 4,
+        "non_sale_announcement": 12,
+        "article_too_old": 13,
+        "non_card_product": 1
+      },
+      "notes": []
+    },
+    {
+      "source": "ポケモンセンターオンライン",
+      "collector": "PokemonCenterOnlineCollector",
+      "status": "BLOCKED",
+      "status_reason": "アクセス拒否（HTTP 403 / robots 等）: 1ページ",
+      "pages_discovered": 1,
+      "pages_requested": 1,
+      "pages_loaded": 0,
+      "product_links_discovered": 0,
+      "product_pages_discovered": 0,
+      "product_pages_loaded": 0,
+      "news_pages_discovered": 0,
+      "news_pages_loaded": 0,
+      "candidate_events": 0,
+      "accepted_sales_events": 0,
+      "rejected_events": 0,
+      "errors": 1,
+      "rejection_reasons": {},
+      "notes": []
+    },
+    {
+      "source": "ローソン（ポケモンカード告知）",
+      "collector": "LawsonPokemonDiscoveryCollector",
+      "status": "OK_NO_EVENTS",
+      "status_reason": "正常に取得。現在の販売イベントは0件",
+      "pages_discovered": 2,
+      "pages_requested": 2,
+      "pages_loaded": 2,
+      "product_links_discovered": 0,
+      "product_pages_discovered": 0,
+      "product_pages_loaded": 0,
+      "news_pages_discovered": 0,
+      "news_pages_loaded": 0,
+      "candidate_events": 0,
+      "accepted_sales_events": 0,
+      "rejected_events": 0,
+      "errors": 0,
+      "rejection_reasons": {},
+      "notes": [
+        "ローソン公式の一覧にポケモンカード関連ページが見つかりませんでした（現在告知が無い可能性。推測 URL は取得しません）"
+      ]
+    }
+  ],
+  "total": {
+    "pages_discovered": 9,
+    "pages_requested": 9,
+    "pages_loaded": 8,
+    "product_links_discovered": 16,
+    "product_pages_discovered": 6,
+    "product_pages_loaded": 1,
+    "news_pages_discovered": 105,
+    "news_pages_loaded": 1,
+    "candidate_events": 122,
+    "accepted_sales_events": 9,
+    "rejected_events": 113,
+    "errors": 1
+  },
+  "rejection_reasons": {
+    "past_release": 8,
+    "event_category": 75,
+    "no_sale_context": 4,
+    "non_sale_announcement": 12,
+    "article_too_old": 13,
+    "non_card_product": 1
+  },
+  "current_events": 9
+}

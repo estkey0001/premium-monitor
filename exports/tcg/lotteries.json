@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-10-01T20:51:59.853512+09:00",
-  "evaluated_at": "2026-10-01T20:51:59.851413+09:00",
+  "generated_at": "2026-10-01T22:25:29.118608+09:00",
+  "evaluated_at": "2026-10-01T22:25:29.116247+09:00",
   "items": [
     {
       "tcg": "POKEMON",
@@ -67,24 +67,24 @@
       "merged_count": 1,
       "deadline_countdown": {
         "remaining_days": 3,
-        "remaining_hours": 20,
-        "remaining_minutes": 7,
-        "remaining_seconds": 331620,
-        "label": "3日20時間"
+        "remaining_hours": 18,
+        "remaining_minutes": 33,
+        "remaining_seconds": 326010,
+        "label": "3日18時間"
       },
       "start_countdown": {
         "remaining_days": 0,
-        "remaining_hours": 15,
-        "remaining_minutes": 8,
-        "remaining_seconds": 54480,
-        "label": "15時間8分"
+        "remaining_hours": 13,
+        "remaining_minutes": 34,
+        "remaining_seconds": 48870,
+        "label": "13時間34分"
       },
       "purchase_countdown": {
         "remaining_days": 18,
-        "remaining_hours": 20,
-        "remaining_minutes": 7,
-        "remaining_seconds": 1627620,
-        "label": "18日20時間"
+        "remaining_hours": 18,
+        "remaining_minutes": 33,
+        "remaining_seconds": 1622010,
+        "label": "18日18時間"
       }
     },
     {
@@ -152,24 +152,24 @@
       "merged_count": 1,
       "deadline_countdown": {
         "remaining_days": 3,
-        "remaining_hours": 20,
-        "remaining_minutes": 7,
-        "remaining_seconds": 331620,
-        "label": "3日20時間"
+        "remaining_hours": 18,
+        "remaining_minutes": 33,
+        "remaining_seconds": 326010,
+        "label": "3日18時間"
       },
       "start_countdown": {
         "remaining_days": 0,
-        "remaining_hours": 15,
-        "remaining_minutes": 8,
-        "remaining_seconds": 54480,
-        "label": "15時間8分"
+        "remaining_hours": 13,
+        "remaining_minutes": 34,
+        "remaining_seconds": 48870,
+        "label": "13時間34分"
       },
       "purchase_countdown": {
         "remaining_days": 18,
-        "remaining_hours": 20,
-        "remaining_minutes": 7,
-        "remaining_seconds": 1627620,
-        "label": "18日20時間"
+        "remaining_hours": 18,
+        "remaining_minutes": 33,
+        "remaining_seconds": 1622010,
+        "label": "18日18時間"
       }
     },
     {
@@ -209,7 +209,7 @@
       "purchase_history_required": null,
       "identity_verification_required": true,
       "store_pickup_required": null,
-      "payment_method_requirement": "お支払い方法について",
+      "payment_method_requirement": null,
       "entry_url": "https://draw.geo-online.co.jp/lottery/",
       "result_url": "https://draw.geo-online.co.jp/lottery/",
       "purchase_url": null,
@@ -223,8 +223,8 @@
       "verified": true,
       "verified_by": null,
       "published_at": "2026-09-18T00:00:00+09:00",
-      "observed_at": "2026-10-01T20:46:08.597881+09:00",
-      "last_verified_at": "2026-10-01T20:46:08.597885+09:00",
+      "observed_at": "2026-10-01T22:19:39.761484+09:00",
+      "last_verified_at": "2026-10-01T22:19:39.761490+09:00",
       "collection_method": "HTML",
       "status": "CLOSED",
       "conflict": false,
@@ -273,7 +273,7 @@
       "purchase_history_required": null,
       "identity_verification_required": true,
       "store_pickup_required": null,
-      "payment_method_requirement": "お支払い方法について",
+      "payment_method_requirement": null,
       "entry_url": "https://draw.geo-online.co.jp/lottery/",
       "result_url": "https://draw.geo-online.co.jp/lottery/",
       "purchase_url": null,
@@ -287,8 +287,8 @@
       "verified": true,
       "verified_by": null,
       "published_at": "2026-09-18T00:00:00+09:00",
-      "observed_at": "2026-10-01T20:47:08.560954+09:00",
-      "last_verified_at": "2026-10-01T20:47:08.560958+09:00",
+      "observed_at": "2026-10-01T22:20:39.950779+09:00",
+      "last_verified_at": "2026-10-01T22:20:39.950784+09:00",
       "collection_method": "HTML",
       "status": "CLOSED",
       "conflict": false,
@@ -337,7 +337,7 @@
       "purchase_history_required": null,
       "identity_verification_required": true,
       "store_pickup_required": null,
-      "payment_method_requirement": "お支払い方法について",
+      "payment_method_requirement": null,
       "entry_url": "https://draw.geo-online.co.jp/lottery/",
       "result_url": "https://draw.geo-online.co.jp/lottery/",
       "purchase_url": null,
@@ -351,8 +351,8 @@
       "verified": true,
       "verified_by": null,
       "published_at": "2026-09-18T00:00:00+09:00",
-      "observed_at": "2026-10-01T20:48:08.399072+09:00",
-      "last_verified_at": "2026-10-01T20:48:08.399076+09:00",
+      "observed_at": "2026-10-01T22:21:39.902083+09:00",
+      "last_verified_at": "2026-10-01T22:21:39.902087+09:00",
       "collection_method": "HTML",
       "status": "CLOSED",
       "conflict": false,
@@ -401,7 +401,7 @@
       "purchase_history_required": null,
       "identity_verification_required": true,
       "store_pickup_required": null,
-      "payment_method_requirement": "お支払い方法について",
+      "payment_method_requirement": null,
       "entry_url": "https://draw.geo-online.co.jp/lottery/",
       "result_url": "https://draw.geo-online.co.jp/lottery/",
       "purchase_url": null,
@@ -415,8 +415,8 @@
       "verified": true,
       "verified_by": null,
       "published_at": "2026-09-18T00:00:00+09:00",
-      "observed_at": "2026-10-01T20:48:08.399314+09:00",
-      "last_verified_at": "2026-10-01T20:48:08.399318+09:00",
+      "observed_at": "2026-10-01T22:21:39.902300+09:00",
+      "last_verified_at": "2026-10-01T22:21:39.902303+09:00",
       "collection_method": "HTML",
       "status": "CLOSED",
       "conflict": false,

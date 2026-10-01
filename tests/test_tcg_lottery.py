@@ -1068,3 +1068,12 @@ def test_conflicted_lottery_is_shown_as_needs_review():
     assert "日程要確認" in html                         # 矛盾した抽選も LP から消さない
     assert "応募締切の公式情報が食い違っています" in html
     assert 'class="tcg-entry-btn"' not in html          # 要確認の抽選に応募ボタンは出さない
+
+
+def test_payment_link_text_is_not_a_payment_requirement():
+    """ナビゲーションの「お支払い方法について」を支払条件として表示しない。"""
+    got = extract_eligibility("お支払い方法について\nよくあるご質問\n"
+                              "当選の場合の支払方法は、クレジットカード決済のみご利用いただけます。")
+    assert got["payment_method_requirement"] == \
+        "当選の場合の支払方法は、クレジットカード決済のみご利用いただけます。"
+    assert extract_eligibility("お支払い方法について")["payment_method_requirement"] is None

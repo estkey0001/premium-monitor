@@ -266,8 +266,12 @@ _ELIGIBILITY_RULES: tuple[tuple[str, tuple[str, ...]], ...] = (
                                "ご来店", "レジにて")),
 )
 _ELIG_HEAD = re.compile(r"応募条件|応募資格|当選資格|ご応募いただける方|対象となるお客様")
-# 支払方法の記載がある行（原文のまま保持する。単純化しない）
+# 支払方法の記載がある行（原文のまま保持する。単純化しない）。
+# 「お支払い方法について」のようなリンク・見出しだけの行は採らず、
+# 具体的な決済手段が書かれている行だけを採る。
 _PAYMENT_LINE = re.compile(r"支払方法|支払い方法|お支払い方法|決済")
+_PAYMENT_METHOD = re.compile(r"クレジット|コンビニ|代金引換|代引|現金|電子マネー|"
+                             r"QRコード|PayPay|銀行振込|キャリア決済|後払い")
 
 
 # 応募条件を述べている行の目印（条件を述べていない行のキーワードで判定しない）
@@ -317,7 +321,8 @@ def extract_eligibility(text: str) -> dict:
         if out.get("membership_required") and "プレイヤーズクラブ" in ctx and not any(
                 w in ctx for w in ("会員登録", "会員の方", "会員証", "GEO ID", "Ponta")):
             out["membership_required"] = None
-    pay_lines = [ln for ln in lines if _PAYMENT_LINE.search(ln) and len(ln) <= 160]
+    pay_lines = [ln for ln in lines if _PAYMENT_LINE.search(ln)
+                 and _PAYMENT_METHOD.search(ln) and len(ln) <= 160]
     out["payment_method_requirement"] = " / ".join(dict.fromkeys(pay_lines))[:400] or None
     seen: set[str] = set()
     uniq = [x for x in ctx_lines if not (x in seen or seen.add(x))]

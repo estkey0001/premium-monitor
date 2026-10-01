@@ -1,6 +1,6 @@
 # Normalized Price Observations
 
-生成: 2026-09-30 23:29 JST
+生成: 2026-10-01 21:22 JST
 
 全価格（買取/販売/出品/落札/海外/下取/公式）を単一スキーマに正規化。
 `price_role`（buy/sell/official/trade_in）を必ず付与し、
@@ -9,15 +9,15 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 
 ## サマリ
 
-- 総観測数: **241**
+- 総観測数: **243**
 - Beginner 利用可: 50 / Pro 利用可: 15
-- fresh(≤14日): 123
+- fresh(≤14日): 125
 
 ### price_role 別
 
 | role | 件数 |
 |---|---|
-| buy | 49 |
+| buy | 51 |
 | official | 45 |
 | sell | 147 |
 
@@ -31,13 +31,13 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 | official_price | 45 |
 | overseas_listing_price | 5 |
 | overseas_sold_price | 6 |
-| shop_sale_price | 28 |
+| shop_sale_price | 30 |
 
 ### rejection_reason 別（main calc 除外）
 
 | reason | 件数 |
 |---|---|
-| accessory_or_wrong_product | 17 |
+| accessory_or_wrong_product | 19 |
 | duplicate_price_collision | 13 |
 | model_mismatch | 2 |
 | price_zero | 36 |
@@ -91,9 +91,9 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 | Nikon Z8 | sell | buyback_price | ¥317,900 | new_unopened | 0.0d | フジヤカメラ |
 | Nikon Z9 | sell | buyback_price | ¥366,300 | new_unopened | 0.0d | フジヤカメラ |
 | Leica Q3 | sell | buyback_price | ¥860,000 | new_unopened | 0.0d | フジヤカメラ |
-| iPhone 17 Pro Max 512G | sell | buyback_price | ¥218,000 | new_unopened_simfree | 0.0d | 買取一丁目 |
-| RICOH GR IV | buy | flea_sold_price | ¥324,222 | new_unopened | 0.0d | ヤフオク (新品/未使用落札) |
+| iPhone 17 Pro Max 512G | sell | buyback_price | ¥218,000 | new_unopened_simfree | 0.1d | 買取一丁目 |
+| RICOH GR IV | buy | flea_sold_price | ¥308,000 | new_unopened | 0.0d | ヤフオク (新品/未使用落札) |
 | RICOH GR IV HDF | buy | flea_sold_price | ¥314,900 | new_unopened | 0.0d | ヤフオク (新品/未使用落札) |
 | RICOH GR IV Monochrome | buy | flea_sold_price | ¥249,800 | new_unopened | 0.0d | ヤフオク (新品/未使用落札) |
 | RICOH GR IIIx | buy | flea_sold_price | ¥235,400 | new_unopened | 0.0d | ヤフオク (新品/未使用落札) |
-| FUJIFILM X100VI | buy | flea_sold_price | ¥312,000 | new_unopened | 0.0d | ヤフオク (新品/未使用落札) |
+| FUJIFILM X100VI | buy | flea_sold_price | ¥343,637 | new_unopened | 0.0d | ヤフオク (新品/未使用落札) |

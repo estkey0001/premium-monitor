@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-09-30 23:29 JST",
-  "health_score": 39.1,
+  "generated_at": "2026-10-01 21:22 JST",
+  "health_score": 39.3,
   "health_note": "現在データ品質低下中",
   "main_route_count": 0,
   "reference_route_count": 1,
@@ -11,7 +11,7 @@
     "product": "FUJIFILM X100VI",
     "buy_now": "WATCH",
     "opportunity_score": 41,
-    "reason": "FUJIFILM X100VI: WATCH。海外更新後見込み 利益¥119,490/ROI38%/Score41"
+    "reason": "FUJIFILM X100VI: WATCH。海外更新後見込み 利益¥86,651/ROI25%/Score41"
   },
   "todays_opportunities": [
     {
@@ -32,12 +32,12 @@
       "confidence": "low",
       "action": "WAIT",
       "action_reason": "eBay sold 更新（EBAY_APP_ID 設定）後に BUY 候補へ昇格します。海外価格の更新待ちです。",
-      "alert_threshold": 508862,
-      "expected_buy_price": 508862,
-      "expected_sell_price": 557311,
+      "alert_threshold": 507984,
+      "expected_buy_price": 507984,
+      "expected_sell_price": 556996,
       "buy_conditions": {
-        "buy": "ヤフオク (新品/未使用落札) ≤ ¥508,862",
-        "sell": "src_ebay ≥ ¥557,311",
+        "buy": "ヤフオク (新品/未使用落札) ≤ ¥507,984",
+        "sell": "src_ebay ≥ ¥556,996",
         "roi": "ROI ≥ 8%"
       },
       "next_update": "次回自動更新: 明日 12:00頃（通常24時間以内）",
@@ -56,10 +56,10 @@
         ],
         "current": "監視"
       },
-      "summary": "★★☆☆☆\n海外売却で成立見込みの参考ルートです。\neBay更新後の想定利益 ¥119,490 / ROI 38%。\n現在は海外価格の更新待ちです。",
+      "summary": "★★☆☆☆\n海外売却で成立見込みの参考ルートです。\neBay更新後の想定利益 ¥86,651 / ROI 25%。\n現在は海外価格の更新待ちです。",
       "why": [
         "reference route（海外sold更新で成立見込み）",
-        "ROIが8%以上（38%）",
+        "ROIが8%以上（25%）",
         "価格 40日前（要更新）"
       ],
       "risks": [
@@ -70,14 +70,14 @@
         "アクセサリー混在に注意（本体判定要確認）"
       ],
       "holding_period": "1ヶ月",
-      "net_profit": 119490,
-      "roi": 0.383,
+      "net_profit": 86651,
+      "roi": 0.2522,
       "reproducibility_score": 30,
       "buy_source": "ヤフオク (新品/未使用落札)",
-      "buy_price": 312000,
+      "buy_price": 343637,
       "sell_source": "src_ebay",
-      "sell_price": 557311,
-      "age_days": 39.6,
+      "sell_price": 556996,
+      "age_days": 40.5,
       "priority": 1
     }
   ]

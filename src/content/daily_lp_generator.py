@@ -506,6 +506,10 @@ class DailyLPGenerator:
         _all_lottery_for_count = list(lottery_events) + list(self._LOTTERY_REFERENCE_ITEMS)
         _lottery_active_count = sum(1 for it in _all_lottery_for_count if _count_as_active(it))
 
+        # 新UI（?ui=new のときだけ表示する追加レイヤー）。旧UIの DOM には触れない。
+        # 旧UIが実際に描画した件数と照合するため、ページを組み立てたあとで差し込む
+        new_ui_head, new_ui_root = self._NU_HEAD_MARK, self._NU_ROOT_MARK
+
         # セクション生成
         hero_html    = self._section_hero(date_str, time_str, latest_buyback_at, lp_generated_at,
                                            all_deals=all_deals, iphone_deals=iphone_deals,
@@ -602,7 +606,7 @@ class DailyLPGenerator:
                 '本日の自動取得 0件 / 前回・手動データで表示中（公式サイトで必ずご確認ください）'
             )
 
-        return f"""<!DOCTYPE html>
+        page = f"""<!DOCTYPE html>
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -610,6 +614,7 @@ class DailyLPGenerator:
 <title>{site_title}</title>
 <meta name="description" content="{_esc(self.settings.get('site_description', ''))}">
 {analytics_head}
+{new_ui_head}
 <style>
 /* ============================================================
    SOUBA デザインシステム — プレ値速報
@@ -3915,6 +3920,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 
 </head>
 <body>
+{new_ui_root}
 {alert_popup_html}{_collector_warn_html}<header class="topbar">
   <a href="/" class="topbar-brand">
     <div class="brand-icon">S</div>
@@ -4162,6 +4168,107 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 <noscript><style>.tab-nav{{display:none;}}.tab-panel{{display:block!important;}}</style></noscript>
 </body>
 </html>"""
+        head, root = self._new_ui_parts(
+            lottery_items=_all_lottery_for_count, lp_generated_at=lp_generated_at,
+            collection_stats=collection_stats,
+            site_title=self.settings.get("site_title", "プレ値速報"), old_html=page,
+            old_count_as_active=_count_as_active)
+        return page.replace(self._NU_HEAD_MARK, head, 1).replace(self._NU_ROOT_MARK, root, 1)
+
+    # ----- 新UI（?ui=new） -----
+
+    @staticmethod
+    def _nu_now(lp_generated_at):
+        """新UIの判定に使う生成時刻（JST）。
+
+        lp_generated_at は datetime.now()（タイムゾーン無し・実行環境のローカル時刻。CI は UTC）
+        なので、ローカル時刻として解釈してから JST に直す（JST とみなすと CI で9時間ずれる）。
+        """
+        from src.tcg.models import JST as _JST
+        from src.tcg.models import now_jst as _now_jst
+        if not isinstance(lp_generated_at, datetime):
+            return _now_jst()
+        return lp_generated_at.astimezone(_JST)
+
+    @staticmethod
+    def _nu_old_counts(old_html, lottery_items, count_as_active):
+        """照合用に、旧UIが描画した件数と、旧来の抽選ごとの旧UIの判定（受付中か）を集める。"""
+        if not old_html:
+            return None
+        from src.content.ui import parity as _ui_parity
+        from src.content.ui import runtime as _ui_rt
+        counts = _ui_parity.old_ui_counts_from_html(old_html)
+        if count_as_active is not None:
+            by_id = {}
+            for i, raw in enumerate(lottery_items):
+                it = raw if isinstance(raw, dict) else dict(raw)
+                if not it.get("reference_only"):
+                    # 「日付だけの値か」は照合の側で元データから判定する（VM の値は使わない）
+                    by_id[_ui_rt.legacy_id(it, i)] = {
+                        "active": bool(count_as_active(it)),
+                        "start": str(it.get("entry_start_at") or it.get("entry_start") or ""),
+                        "end": str(it.get("entry_end_at") or it.get("entry_end") or ""),
+                        "name": str(it.get("product_name") or ""),
+                        "result": str(it.get("result_announcement_at") or ""),
+                        "apply": str(it.get("entry_form_url") or ""),
+                        "info": str(it.get("url") or ""),
+                    }
+            counts["legacy_active_by_id"] = by_id
+        return counts
+
+    _NU_HEAD_MARK = "<!--nu-head-->"
+    _NU_ROOT_MARK = "<!--nu-root-->"
+
+    @staticmethod
+    def _load_export_json(*parts: str) -> dict:
+        """exports/ 以下の JSON を読む。無い・壊れているときは空 dict（新UIは空状態を出す）。"""
+        path = Path(__file__).resolve().parent.parent.parent / "exports"
+        for part in parts:
+            path = path / part
+        if not path.exists():
+            return {}
+        try:
+            import json as _json
+            data = _json.loads(path.read_text(encoding="utf-8"))
+        except Exception:
+            return {}
+        return data if isinstance(data, dict) else {}
+
+    def _new_ui_parts(self, *, lottery_items, lp_generated_at, collection_stats, site_title,
+                      old_html: str = "", old_count_as_active=None) -> tuple[str, str]:
+        """新UIの <head> 部分と #new-ui-root を返す。失敗しても旧UIの生成は止めない。"""
+        try:
+            from src.content.ui import shell as _ui_shell
+        except Exception as exc:  # noqa: BLE001
+            logger.warning("new UI import failed: %s", exc)
+            return "", ""
+        try:
+            report = self._load_tcg_report()
+            report = report if isinstance(report, dict) else {}
+            cov = report.get("lottery_coverage")
+            cov = cov if isinstance(cov, dict) else {}
+            health = report.get("source_health")
+            health = health if isinstance(health, list) else []
+            source_issue = bool(
+                (cov.get("blocked_sources") or 0) or (cov.get("unreachable_sources") or 0)
+                or any(isinstance(h, dict) and h.get("errors") for h in health)
+                or (collection_stats or {}).get("failed", 0))
+            ctx = _ui_shell.ShellContext(
+                tcg_report=report,
+                opportunities=self._load_export_json("ai_opportunities", "latest.json"),
+                profit_routes=self._load_export_json("profit_routes", "latest.json"),
+                # 旧来の抽選（カメラ・ゲーム機）。状態は新UI側で TCG と同じ判定に通す
+                legacy_lotteries=[it if isinstance(it, dict) else dict(it) for it in lottery_items],
+                updated_text=self._nu_now(lp_generated_at).strftime("%m/%d %H:%M"),
+                source_issue=source_issue,
+                site_title=str(site_title or "プレ値速報"),
+                old_ui_counts=self._nu_old_counts(old_html, lottery_items, old_count_as_active),
+                now=self._nu_now(lp_generated_at),
+            )
+            return _ui_shell.render_head(), _ui_shell.render_root(ctx)
+        except Exception as exc:  # noqa: BLE001
+            logger.warning("new UI render failed: %s", exc)
+            return "", ""
 
     # ----- Hero -----
 

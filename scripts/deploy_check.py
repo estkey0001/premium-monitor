@@ -6961,7 +6961,93 @@ def check() -> list[dict]:
     # ══════════════════════════════════════════════════════════════════
     results.extend(_check_tcg_layer())
 
+    # ══════════════════════════════════════════════════════════════════
+    # #800-#810: 新UI（?ui=new のときだけ表示する追加レイヤー）
+    # ══════════════════════════════════════════════════════════════════
+    results.extend(_check_new_ui(html))
+
     return results
+
+
+def _check_new_ui(html: str) -> list[dict]:
+    """新UI（UI/UX 再構成 段階B）のチェック（#800-#810）。
+
+    新UIは ?ui=new のときだけ表示する。新UIの生成に失敗しても旧UIは公開できるよう、
+    新UIが無いことは warning に留める。新UIがあるのに旧UIを壊す・誤った値を出す場合は error。
+
+    #800 旧UIのタブ id が残っている（新UIの有無に関係なく検査）
+    #801 新UIの root が1つあり、終わりの目印がある
+    #802 ?ui=new が無いとき新UIを隠す（CSS と hidden 属性）
+    #803 新UIは ?ui=new のときだけ有効（cookie / localStorage で既定化しない）
+    #804 ボトムナビが5項目
+    #805 状態の対応表に不整合がない
+    #806 閲覧時の状態判定（runtime）のデータと JS がある
+    #807 新UIに ¥0 を表示していない
+    #808 新UIに運営者向けの内部情報を出していない
+    #809 新UIのリンクは https: かサイト内の相対パスだけ（javascript: 等が無い）
+    #810 新旧の件数照合に説明できない差が無い
+    """
+    import re as _re
+    out: list[dict] = []
+
+    def _add(no, key, ok, msg, ng="", level_ng="error"):
+        out.append({"level": "ok" if ok else level_ng, "check": key,
+                    "message": f"#{no} {msg}" + ("" if ok else f" ← {ng}")})
+
+    missing = [k for k in ("tab-lottery", "tab-ranking", "tab-sedori", "tab-beginner",
+                           "tab-advanced", "tab-health", "main-tab-nav")
+               if html.count(f'id="{k}"') != 1]
+    _add(800, "new_ui_old_dom_kept", not missing, "旧UIのタブ id が残っている",
+         f"欠落・重複: {missing}")
+
+    n_root = html.count('<div id="new-ui-root"')
+    start = html.find('<div id="new-ui-root"')
+    end = html.find("<!-- /new-ui-root -->", start) if start >= 0 else -1
+    _add(801, "new_ui_root", n_root == 1 and end > 0,
+         "新UIの root（#new-ui-root）が1つあり、終わりの目印がある",
+         f"root {n_root}個・目印 {'あり' if end > 0 else 'なし'}（新UIの生成に失敗した可能性）",
+         level_ng="warning")
+    if n_root != 1 or end < 0:
+        return out
+    root = html[start:end]
+
+    _add(802, "new_ui_hidden_by_default",
+         "html:not(.ui-new) #new-ui-root{display:none!important}" in html
+         and root.startswith('<div id="new-ui-root" hidden'),
+         "?ui=new が無いとき新UIを隠す（CSS と hidden 属性）", "通常URLで新UIが見える")
+    _add(803, "new_ui_flag_only",
+         "get('ui')==='new'" in html and "localStorage" not in root and "document.cookie" not in root,
+         "新UIは ?ui=new のときだけ有効（cookie / localStorage で既定化しない）",
+         "フラグ以外で新UIが有効になる")
+    n_nav = root.count('class="nu-bottomnav__link"')
+    _add(804, "new_ui_bottom_nav", n_nav == 5, "ボトムナビが5項目", f"{n_nav}項目")
+    try:
+        from src.content.ui import status as _ui_status
+        problems = _ui_status.validate()
+    except Exception as exc:  # noqa: BLE001
+        problems = [f"import 失敗: {exc}"]
+    _add(805, "new_ui_status_registry", not problems, "状態の対応表に不整合がない", str(problems))
+    _add(806, "new_ui_runtime_present",
+         'id="nu-lot-data"' in root and "deriveLotteryRuntimeState" in root
+         and "NuLotteryRuntime.apply" in root,
+         "閲覧時の状態判定（runtime）のデータと JS がある", "閲覧時に締切を過ぎても受付中に見える")
+    _add(807, "new_ui_no_zero_price", not _re.search(r"¥0(?![0-9,])", root),
+         "新UIに ¥0 を表示していない", "¥0 が表示されている")
+    leaked = [w for w in ("取得失敗", "EBAY_APP_ID", "Health Score", "suspicious_price",
+                          "HTTP 403", "HTTP403", "SOURCE_BLOCKED", "timeout")
+              if w in root.split('<script type="application/json"', 1)[0]]
+    _add(808, "new_ui_no_internal_info", not leaked, "新UIに運営者向けの内部情報を出していない",
+         f"表示されている: {leaked}")
+    bad = [h for h in _re.findall(r'href="([^"]*)"', root)
+           if not (h.startswith(("https://", "?", "./", "#")) or _re.match(r"^[A-Za-z0-9_\-]+/", h))]
+    _add(809, "new_ui_safe_links", not bad,
+         "新UIのリンクは https: かサイト内の相対パスだけ", f"安全でないリンク: {bad[:3]}")
+    rows = _re.findall(r'data-parity="([^"]+)" data-match="([01])"', root)
+    mismatch = [k for k, ok in rows if ok == "0"]
+    _add(810, "new_ui_parity", len(rows) >= 9 and not mismatch,
+         f"新旧の件数照合に説明できない差が無い（{len(rows)}項目）",
+         f"不一致: {mismatch}" if rows else "照合表が無い")
+    return out
 
 
 def _check_tcg_layer() -> list[dict]:

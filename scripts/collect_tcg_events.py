@@ -192,6 +192,28 @@ def enrich(events: list[dict], retail_prices: dict[str, int],
     return merged, signals
 
 
+def empty_lottery_payload(error: str | None = None) -> dict:
+    """抽選パイプラインが動かなかった場合の空ペイロード（正常系と同じキー）。"""
+    from src.tcg.lottery.registry import coverage_summary
+    return {"lotteries": [], "sources": [], "coverage": coverage_summary([]),
+            "history": [], "frequency": {}, "notifications": [],
+            "ledger": {"sent": {}}, "manual_errors": [error] if error else [],
+            "rejection_reasons": {}, "announcements": [], "pipeline_ok": False}
+
+
+def run_lottery(registry: list[dict], events: list[dict]) -> dict:
+    """抽選インテリジェンスを実行する。失敗しても TCG 全体は止めない。"""
+    from src.tcg.lottery.pipeline import run_lottery_pipeline
+    onepiece = [{"product_id": e.get("product_id"), "name": e.get("product_name")}
+                for e in events if e.get("tcg") == TCG_ONE_PIECE and e.get("product_id")]
+    try:
+        # 既存コレクターの抽選（TcgEvent）も抽選セクションに統合する
+        return run_lottery_pipeline(registry, onepiece, legacy_events=events)
+    except Exception as exc:  # noqa: BLE001 - 既存の TCG 出力を止めない
+        print(f"  ❌ 抽選パイプラインに失敗: {type(exc).__name__}: {exc}")
+        return empty_lottery_payload(f"{type(exc).__name__}: {exc}")
+
+
 def pokemon_funnel_summary(health: list[dict], events: list[dict]) -> dict:
     """Task17 / Task32: ポケモン系コレクターのファネルを集計する。"""
     rows = []
@@ -223,12 +245,14 @@ def pokemon_funnel_summary(health: list[dict], events: list[dict]) -> dict:
 
 
 def build_exports(events: list[dict], signals: list[dict],
-                  health: list[dict], registry: list[dict] | None = None) -> dict:
+                  health: list[dict], registry: list[dict] | None = None,
+                  lottery: dict | None = None) -> dict:
     """Task28: exports を生成する。"""
     EXPORT_DIR.mkdir(parents=True, exist_ok=True)
     now = now_jst()
     registry = registry or []
     funnel = pokemon_funnel_summary(health, events)
+    lottery = lottery or empty_lottery_payload()
 
     lotteries = [e for e in events if e.get("event_type") == EVENT_LOTTERY]
     restocks = [e for e in events if e.get("event_type") in INSTANT_SALE_EVENTS]
@@ -259,6 +283,8 @@ def build_exports(events: list[dict], signals: list[dict],
             "signals": len(signals),
             "notifications": len(notifications),
             "coming_soon": len(coming_soon),
+            # 抽選インテリジェンスの件数（counts.lotteries は従来の TcgEvent の抽選件数）
+            "lottery_intel": len(lottery["lotteries"]),
             "pokemon_events": sum(1 for e in events if e.get("tcg") == TCG_POKEMON),
             "pokemon_registry": len(registry),
         },
@@ -270,6 +296,14 @@ def build_exports(events: list[dict], signals: list[dict],
         "source_health": health,
         "source_registry_count": len(SOURCES),
         "pokemon_funnel": funnel,
+        "lotteries": lottery["lotteries"],
+        "lottery_sources": lottery["sources"],
+        "lottery_coverage": lottery["coverage"],
+        "lottery_notifications": lottery["notifications"],
+        "lottery_rejection_reasons": lottery["rejection_reasons"],
+        "lottery_manual_errors": lottery["manual_errors"],
+        # 抽選の状態を判定した時刻（deploy-check はこの時刻で整合を検証する）
+        "lottery_evaluated_at": lottery.get("evaluated_at"),
     }
 
     (EXPORT_DIR / "latest.json").write_text(
@@ -281,9 +315,30 @@ def build_exports(events: list[dict], signals: list[dict],
         json.dumps({"generated_at": now.isoformat(), "items": restocks,
                     "signals": signals}, ensure_ascii=False, indent=2),
         encoding="utf-8")
+    # 抽選インテリジェンス（抽選・予約・購入権の横断監視）
     (EXPORT_DIR / "lotteries.json").write_text(
-        json.dumps({"generated_at": now.isoformat(), "items": lotteries},
+        json.dumps({"generated_at": now.isoformat(),
+                    "evaluated_at": lottery.get("evaluated_at"),
+                    "items": lottery["lotteries"],
+                    "coverage": lottery["coverage"],
+                    "announcements": lottery["announcements"]},
                    ensure_ascii=False, indent=2), encoding="utf-8")
+    (EXPORT_DIR / "lottery_sources.json").write_text(
+        json.dumps({"generated_at": now.isoformat(), "sources": lottery["sources"],
+                    "coverage": lottery["coverage"],
+                    "rejection_reasons": lottery["rejection_reasons"]},
+                   ensure_ascii=False, indent=2), encoding="utf-8")
+    # 履歴と通知台帳は実行をまたいで蓄積する状態なので、抽選パイプラインが
+    # 正常に終わった場合だけ書き込む（失敗時に空で上書きして履歴を消さない）
+    if lottery.get("pipeline_ok"):
+        (EXPORT_DIR / "lottery_history.json").write_text(
+            json.dumps({"generated_at": now.isoformat(), "items": lottery["history"],
+                        "frequency_by_retailer": lottery["frequency"]},
+                       ensure_ascii=False, indent=2), encoding="utf-8")
+        (EXPORT_DIR / "lottery_notifications.json").write_text(
+            json.dumps({"generated_at": now.isoformat(), **lottery["ledger"],
+                        "candidates": lottery["notifications"]},
+                       ensure_ascii=False, indent=2), encoding="utf-8")
     (EXPORT_DIR / "pokemon_funnel.json").write_text(
         json.dumps({"generated_at": now.isoformat(), **funnel},
                    ensure_ascii=False, indent=2), encoding="utf-8")
@@ -376,6 +431,76 @@ def _render_md(payload: dict, available: list[dict],
                  "（推定値は表示しません）")
     L.append("")
 
+    # ── 抽選インテリジェンス（最上位） ─────────────────────────────────
+    lots = payload.get("lotteries") or []
+    L.append("## Lottery Sources")
+    L.append("")
+    L.append("| Retailer | Collector | Reachable | Health | Last Check | Active Lotteries |")
+    L.append("|---|---|---|---|---|---|")
+    for r in payload.get("lottery_sources") or []:
+        L.append("| {} ({}) | {} | {} | {} | {} | {} |".format(
+            r["retailer"], r["priority"], r.get("adapter") or "未実装",
+            {True: "yes", False: "no", None: "—"}[r.get("reachable")],
+            r.get("state_label"), (r.get("last_checked") or "—")[:16].replace("T", " "),
+            r.get("active_lotteries", 0)))
+    L.append("")
+
+    def _lot_rows(items):
+        rows = []
+        for e in items:
+            purchase = (f"{_fmt_dt(e.get('purchase_start'))}〜{_fmt_dt(e.get('purchase_end'))}"
+                        if e.get("purchase_start") or e.get("purchase_end") else "—")
+            rows.append("| {} | {} | {} | {} | {} | {} | {} |".format(
+                _TCG_LABEL.get(e.get("tcg"), e.get("tcg")), e.get("product_name", "—"),
+                e.get("retailer_name") or e.get("retailer"),
+                _fmt_dt(e.get("application_start")), _fmt_dt(e.get("application_end")),
+                purchase, f"{e.get('source_type')} / {e.get('confidence')}"))
+        return rows or ["| — | 該当なし | — | — | — | — | — |"]
+
+    head = ("| TCG | Product | Retailer | Start | Deadline | Purchase Period | Confidence |",
+            "|---|---|---|---|---|---|---|")
+    L.append("## Active（受付中・締切間近）")
+    L.extend(["", *head, *_lot_rows([e for e in lots if e.get("status") in ("OPEN", "ENDING_SOON")]), ""])
+    L.append("## Upcoming（まもなく抽選開始）")
+    L.extend(["", *head, *_lot_rows([e for e in lots if e.get("status") == "UPCOMING"]), ""])
+    L.append("## 結果発表待ち・当選者購入期間")
+    L.extend(["", *head, *_lot_rows([e for e in lots if e.get("status") in (
+        "CLOSED", "RESULT_PENDING", "WINNER_ANNOUNCED", "WINNER_PURCHASE_PERIOD")]), ""])
+    ann = [e for e in lots if e.get("announcement_only")]
+    if ann:
+        L.append("### 抽選告知あり（日程未取得）")
+        L.append("")
+        for e in ann:
+            L.append(f"- {e.get('product_name')}（{e.get('retailer_name')}）: {e.get('source_url')}")
+        L.append("")
+    L.append("## Blocked")
+    L.append("")
+    blocked = [r for r in payload.get("lottery_sources") or []
+               if r.get("state") in ("SOURCE_BLOCKED", "SOURCE_UNREACHABLE")]
+    for r in blocked:
+        L.append(f"- {r['retailer']}: {r.get('state_label')}（{r.get('error') or r.get('note') or '—'}）")
+    if not blocked:
+        L.append("- なし")
+    L.append("")
+    cov = payload.get("lottery_coverage") or {}
+    L.append("## Coverage")
+    L.append("")
+    L.append(f"- Configured: {cov.get('configured_sources', 0)} / Implemented: "
+             f"{cov.get('implemented_collectors', 0)} / Healthy: {cov.get('healthy_sources', 0)}"
+             f" / Blocked: {cov.get('blocked_sources', 0)} / Unreachable: "
+             f"{cov.get('unreachable_sources', 0)} / Not Implemented: "
+             f"{cov.get('not_implemented_sources', 0)} / Lottery events: "
+             f"{cov.get('lottery_events_found', 0)}")
+    L.append("")
+    L.append("### Rejected（抽選・理由別件数）")
+    L.append("")
+    lrej = payload.get("lottery_rejection_reasons") or {}
+    for k, v in sorted(lrej.items(), key=lambda kv: -kv[1]):
+        L.append(f"- {k}: {v}")
+    if not lrej:
+        L.append("- なし")
+    L.append("")
+
     # ── Task35: Pokemon Funnel ─────────────────────────────────────────
     pf = payload.get("pokemon_funnel") or {}
     L.append("## Pokemon Funnel")
@@ -460,6 +585,10 @@ def _write_empty_payload(reason: str) -> None:
         "premium_alerts": [], "signal_messages": [],
         "source_health": [], "source_registry_count": len(SOURCES),
         "pokemon_funnel": pokemon_funnel_summary([], []),
+        "lotteries": [], "lottery_sources": [],
+        "lottery_coverage": empty_lottery_payload()["coverage"],
+        "lottery_notifications": [], "lottery_rejection_reasons": {},
+        "lottery_manual_errors": [],
         "error": reason,
     }
     (EXPORT_DIR / "latest.json").write_text(
@@ -471,7 +600,10 @@ def _write_empty_payload(reason: str) -> None:
     bodies = {
         "opportunities.json": {"items": []},
         "restocks.json": {"items": [], "signals": []},
-        "lotteries.json": {"items": []},
+        "lotteries.json": {"items": [], "coverage": empty_lottery_payload()["coverage"],
+                           "announcements": []},
+        "lottery_sources.json": {"sources": [], "coverage": empty_lottery_payload()["coverage"],
+                                 "rejection_reasons": {}},
         # 正常系と同じキーを空の値で出す（読み手側で KeyError にしない）
         "pokemon_funnel.json": empty_funnel,
         "pokemon_registry.json": {
@@ -507,7 +639,12 @@ def _run() -> int:
     print(f"  収集イベント（重複排除前）: {len(raw)}件")
     events, signals = enrich(raw, retail_prices, registry_retail_prices(registry))
     print(f"  重複排除後: {len(events)}件 / シグナル: {len(signals)}件")
-    payload = build_exports(events, signals, health, registry)
+    lottery = run_lottery(registry, events)
+    lc = lottery["coverage"]
+    print(f"  抽選: {len(lottery['lotteries'])}件 / sources configured={lc['configured_sources']}"
+          f" implemented={lc['implemented_collectors']} healthy={lc['healthy_sources']}"
+          f" blocked={lc['blocked_sources']} unreachable={lc['unreachable_sources']}")
+    payload = build_exports(events, signals, health, registry, lottery)
     pf = payload["pokemon_funnel"]["total"]
     print(f"  Pokemon funnel: pages={pf['pages_loaded']}/{pf['pages_requested']}"
           f" product_links={pf['product_links_discovered']}"

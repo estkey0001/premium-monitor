@@ -7086,6 +7086,103 @@ def _check_tcg_layer() -> list[dict]:
                            + ("" if _ok750 else " ← TCG レポートが未生成（追加レイヤーのため warning）")})
 
     out.extend(_check_pokemon_coverage(_rep))
+    out.extend(_check_tcg_lottery(_rep))
+    return out
+
+
+def _check_tcg_lottery(report: dict) -> list[dict]:
+    """TCG 抽選インテリジェンスの健全性チェック（#759-#766）。"""
+    out: list[dict] = []
+
+    def _add(no, key, ok, msg, ng="", level_ng="error"):
+        out.append({"level": "ok" if ok else level_ng, "check": key,
+                    "message": f"#{no} {msg}" + ("" if ok else f" ← {ng}")})
+
+    from src.collectors.tcg.lottery.base import TOURNAMENT_TERMS, LotteryAdapter
+    from src.tcg.lottery.manual import is_official_url
+    from src.tcg.lottery.registry import ST_SOURCE_BLOCKED
+    from src.tcg.lottery.schema import compute_lottery_status
+    from src.tcg.models import parse_dt
+    from src.tcg.sales_context import _GIVEAWAY_RE
+
+    lots = report.get("lotteries") or []
+    # 状態を判定した時刻で検証する（生成時刻との数分のずれで誤検知しない）
+    gen = parse_dt(report.get("lottery_evaluated_at") or report.get("generated_at"))
+
+    # #759: 大会抽選・プレゼント抽選を抽選販売にしない（ロジック + 出力の両方）
+    _a = LotteryAdapter()
+    _logic = (not _a.build_from_article(
+                  title="「シティリーグ2027」事前抽選のエントリー", body="大会の事前抽選。応募期間 10/2(金) 12:00 ～ 10/5(月) 16:59",
+                  url="https://www.pokemon-card.com/info/1.html", published_at="2026-09-18T00:00:00+09:00")
+              and not LotteryAdapter.is_lottery_sale("購入すると抽選でプロモカードが当たる"))
+    # 「抽選告知あり」（タイトルのみ）も含めて検査する
+    _bad = [e.get("product_name") for e in lots
+            if any(w in (e.get("product_name") or "") for w in TOURNAMENT_TERMS)
+            or _GIVEAWAY_RE.search(e.get("product_name") or "")
+            or (e.get("announcement_only") and _a.screen_announcement_title(
+                e.get("product_name") or ""))]
+    _add(759, "tcg_no_tournament_or_giveaway_lottery", _logic,
+         "大会抽選・プレゼント抽選を抽選販売として扱わない（判定ロジック）",
+         "判定ロジックが大会・プレゼント抽選を通している")
+    # 出力の商品名は外部の告知本文から作られるため、日次公開を止めない warning にする
+    _add(767, "tcg_lottery_output_no_tournament_or_giveaway", not _bad,
+         "出力された抽選に大会・プレゼント抽選が含まれていない",
+         f"該当: {_bad[:3]}", level_ng="warning")
+
+    # #760: 終了済みの抽選を受付中・開始前として出さない（生成時刻で状態を再計算して一致）
+    _mismatch = []
+    for e in lots:
+        if e.get("announcement_only") or gen is None:
+            continue
+        if compute_lottery_status(e, gen) != e.get("status"):
+            _mismatch.append(e.get("product_name"))
+    _add(760, "tcg_lottery_status_consistent", not _mismatch,
+         "抽選の状態が日程と一致している（終了済みを受付中にしない）", f"不一致: {_mismatch[:3]}")
+
+    # #761: 手動確認データを読み込み時刻で fresh 化しない
+    _manual = [e for e in lots if e.get("collection_method") == "MANUAL_VERIFIED"]
+    _fresh = [e.get("product_name") for e in _manual
+              if e.get("observed_at") != e.get("last_verified_at")]
+    _add(761, "tcg_manual_lottery_not_refreshed", not _fresh,
+         f"手動確認の抽選（{len(_manual)}件）の観測時刻を確認日時のまま保持している",
+         f"fresh 化: {_fresh[:3]}")
+
+    # #762: アクセス拒否の source を正常と偽らない
+    _fake = []
+    for r in report.get("lottery_sources") or []:
+        if any(p.get("http_status") in (401, 403, 429) for p in (r.get("pages") or [])) \
+                and r.get("state") != ST_SOURCE_BLOCKED and not r.get("reachable"):
+            _fake.append(r.get("source_id"))
+    _add(762, "tcg_blocked_source_not_healthy", not _fake,
+         "アクセス拒否（HTTP 403 等）の監視元を正常扱いしない", f"偽装: {_fake}")
+
+    # #763: 応募ボタンは公式の応募 URL のみ
+    _bad_links = [e.get("entry_url") for e in lots
+                  if e.get("entry_url") and not is_official_url(e["entry_url"])]
+    _add(763, "tcg_entry_url_official_only", not _bad_links,
+         "応募ページへのリンクは公式サイトの URL のみ", f"非公式: {_bad_links[:3]}")
+
+    # #764: 抽選カバレッジ（監視状況）が出力されている（外部依存のため warning）
+    _cov = report.get("lottery_coverage") or {}
+    _add(764, "tcg_lottery_coverage_report", bool(_cov.get("configured_sources")),
+         "抽選の監視状況（登録 / 実装 / 正常 / 拒否 / 未実装）が出力されている",
+         "カバレッジ未出力", level_ng="warning")
+
+    # #765: 1つ以上の監視元から抽選を実データ取得できている（外部依存のため warning）
+    _real = [e for e in lots if not e.get("announcement_only")]
+    _add(765, "tcg_lottery_real_data", bool(_real) or any(
+        h.get("retailer") for h in (report.get("lottery_sources") or [])
+        if h.get("state") == "NO_ACTIVE_LOTTERY"),
+         f"抽選を実データで取得している（{len(_real)}件）、または監視元が正常に0件を返している",
+         "抽選も正常取得の監視元も無い", level_ng="warning")
+
+    # #766: LP で抽選が最上位に表示されている
+    _lp = PUBLIC_DIR / "index.html"
+    _html = _lp.read_text(encoding="utf-8") if _lp.exists() else ""
+    _i, _j = _html.find('id="category-tcg-lottery"'), _html.find("販売・入荷・プレミア")
+    _add(766, "tcg_lp_lottery_first", (_i >= 0 and _j > _i) or not lots,
+         "TCG タブで抽選が在庫・販売情報より上に表示されている",
+         "抽選セクションが最上位にない", level_ng="warning")
     return out
 
 

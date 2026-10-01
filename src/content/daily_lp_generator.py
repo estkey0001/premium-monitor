@@ -3872,6 +3872,20 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 .tcg-link {{ display: inline-block; margin-top: 8px; font-size: 0.82rem; font-weight: 700; }}
 .tcg-health {{ margin: 12px 0; font-size: 0.82rem; }}
 .tcg-health-scroll {{ max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }}
+.tcg-subhead {{ font-weight: 800; font-size: 0.95rem; margin: 14px 0 4px; }}
+.tcg-lottery {{ margin-bottom: 18px; }}
+.tcg-lot-group {{ font-weight: 800; margin: 14px 0 4px; font-size: 0.9rem; }}
+.tcg-lot-card {{ border-left-color: #DB2777; }}
+.tcg-lot-retailer {{ font-size: 0.82rem; color: var(--text-2); margin: -2px 0 6px; }}
+.tcg-countdown {{ display: inline-block; background: #FDF2F8; color: #9D174D; border: 1px solid #F9A8D4; border-radius: 8px; padding: 4px 10px; font-size: 0.88rem; margin: 4px 0 6px; }}
+.tcg-coverage {{ font-size: 0.8rem; color: var(--text-2); background: var(--card-bg); border: 1px dashed var(--card-border); border-radius: 8px; padding: 6px 10px; margin: 6px 0 10px; }}
+.tcg-coverage-note {{ font-size: 0.76rem; }}
+.tcg-elig {{ font-size: 0.8rem; margin: 6px 0; }}
+.tcg-elig div {{ margin-top: 4px; color: var(--text-2); word-break: break-word; }}
+.tcg-lot-links {{ display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 8px; }}
+.tcg-countdown-over {{ background: #F1F5F9; color: #64748B; border-color: #CBD5E1; }}
+.tcg-lot-expired .tcg-entry-btn {{ display: none; }}
+.tcg-entry-btn {{ display: inline-block; background: #DB2777; color: #fff !important; border-radius: 8px; padding: 6px 14px; font-weight: 800; font-size: 0.85rem; text-decoration: none; }}
 .tcg-health-table {{ width: 100%; min-width: 560px; border-collapse: collapse; margin-top: 8px; }}
 .tcg-health-table th, .tcg-health-table td {{ border: 1px solid var(--card-border); padding: 4px 8px; text-align: left; font-size: 0.78rem; }}
 .lottery-card {{ background: var(--card-bg); border: 1.5px solid var(--card-border); border-radius: 14px; padding: 16px; margin: 8px 0; }}
@@ -3920,6 +3934,35 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 {cta_html}
 {footer_html}
 </div>
+<script>
+(function(){{
+  // ── TCG 抽選のカウントダウン ──
+  // ページは1日1回生成されるため、閲覧時刻で残り時間を計算し直す。
+  // 期限を過ぎたものは「受付中」に見せない（次回の更新で状態が反映される）。
+  function tcgCountdown(){{
+    var now = Date.now();
+    document.querySelectorAll(".tcg-countdown[data-target]").forEach(function(el){{
+      var t = Date.parse(el.getAttribute("data-target"));
+      if (isNaN(t)) return;
+      var s = Math.floor((t - now) / 1000);
+      var b = el.querySelector("b");
+      var prefix = el.getAttribute("data-prefix") || "";
+      if (s <= 0) {{
+        el.classList.add("tcg-countdown-over");
+        el.textContent = "期限を過ぎました（次回の更新で反映されます）";
+        var card = el.closest(".tcg-lot-card");
+        if (card) card.classList.add("tcg-lot-expired");
+        return;
+      }}
+      var d = Math.floor(s / 86400), h = Math.floor(s % 86400 / 3600), m = Math.floor(s % 3600 / 60);
+      var label = d >= 1 ? (d + "日" + (h ? h + "時間" : "")) : (h >= 1 ? (h + "時間" + (m ? m + "分" : "")) : (Math.max(m, 1) + "分"));
+      if (b) b.textContent = label;
+    }});
+  }}
+  tcgCountdown();
+  setInterval(tcgCountdown, 60000);
+}})();
+</script>
 <script>
 (function(){{
   // ── メインタブ切り替え ──
@@ -4505,12 +4548,23 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             '抽選・予約・店頭先着・コンビニ販売・再入荷を分けて表示します。'
             '&#9888; 入荷報告は在庫を保証しません。購入条件は必ず公式サイトでご確認ください。</div>'
         ]
+        # 抽選を最上位に表示する（TCG では在庫より抽選情報が重要）
+        parts.append(self._section_tcg_lottery(report))
+        # 抽選は抽選セクションで扱う。ここでは抽選以外（予約締切・販売終了間近など）を数える
+        buckets = [b for b in buckets
+                   if not b[0].startswith(("&#9200;", "&#127919;"))]
+        buckets.insert(1, ("&#9200; 締切間近（予約・販売）",
+                           [e for e in events if _is(e, "ENDING_SOON")
+                            and e.get("event_type") != "LOTTERY"]))
         chips = "".join(
             f'<span class="tcg-chip">{label} <b>{len(items)}</b></span>'
             for label, items in buckets)
+        parts.append('<div class="tcg-subhead">販売・入荷・プレミア</div>')
         parts.append(f'<div class="tcg-chips">{chips}</div>')
 
-        shown = [e for e in events if e.get("status") != "ENDED"]
+        # 抽選は上の抽選セクションに集約する（二重表示・内容の食い違いを避ける）
+        shown = [e for e in events if e.get("status") != "ENDED"
+                 and e.get("event_type") != "LOTTERY"]
         if not shown:
             parts.append('<div class="lottery-card"><div class="lottery-meta">'
                          '現在お知らせできる TCG の販売情報はありません。'
@@ -4544,6 +4598,217 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 '<th>件数</th><th>エラー</th><th>最終確認</th>'
                 f'</tr></thead><tbody>{rows}</tbody></table></div></details>')
         return "".join(parts)
+
+    # ── 抽選インテリジェンス（Task25-28） ────────────────────────────────
+    _LOT_STATUS_LABELS = {
+        "UPCOMING": "まもなく抽選開始", "OPEN": "抽選受付中", "ENDING_SOON": "締切間近",
+        "CLOSED": "受付終了（結果発表日は未公表）", "RESULT_PENDING": "当選発表待ち",
+        "WINNER_ANNOUNCED": "当選発表済み", "WINNER_PURCHASE_PERIOD": "当選者購入期間",
+        "ENDED": "終了", "UNKNOWN": "日程未確認",
+    }
+    _LOT_GROUPS = (
+        ("&#127919; 抽選受付中", ("OPEN",)),
+        ("&#9200; 締切間近", ("ENDING_SOON",)),
+        ("&#128197; まもなく抽選開始", ("UPCOMING",)),
+        ("&#127942; 当選発表・購入期間", ("CLOSED", "RESULT_PENDING", "WINNER_ANNOUNCED",
+                                         "WINNER_PURCHASE_PERIOD")),
+    )
+    _WEEK = "月火水木金土日"
+
+    @classmethod
+    def _lot_date(cls, ymd) -> str:
+        from datetime import date as _date
+        try:
+            d = _date.fromisoformat(str(ymd)[:10])
+        except (TypeError, ValueError):
+            return ""
+        return f"{d.month}/{d.day}({cls._WEEK[d.weekday()]})"
+
+    @classmethod
+    def _lot_dt(cls, iso) -> str:
+        from datetime import datetime as _dt
+        try:
+            d = _dt.fromisoformat(str(iso))
+        except (TypeError, ValueError):
+            return ""
+        return f"{d.month}/{d.day}({cls._WEEK[d.weekday()]}) {d.hour:02d}:{d.minute:02d}"
+
+    def _section_tcg_lottery(self, report: dict) -> str:
+        """抽選・購入権の横断表示。0件でも「本当に0件か / 監視不足か」を明示する。"""
+        lots = [e for e in (report.get("lotteries") or []) if e.get("status") != "ENDED"]
+        cov = report.get("lottery_coverage") or {}
+        parts = ['<div id="category-tcg-lottery" class="tcg-lottery">',
+                 '<div class="tcg-subhead">&#127919; 抽選・購入権（ポケモンカード / ONE PIECE）</div>']
+        chips = []
+        for label, sts in self._LOT_GROUPS:
+            n = sum(1 for e in lots if e.get("status") in sts and not e.get("announcement_only"))
+            chips.append(f'<span class="tcg-chip tcg-chip-lot">{label} <b>{n}</b></span>')
+        parts.append(f'<div class="tcg-chips">{"".join(chips)}</div>')
+
+        # Task34: 0件の理由（本当に0件か / 監視不足か / アクセス拒否か）
+        if cov:
+            parts.append(
+                '<div class="tcg-coverage">監視状況: 登録 {c} ・解析実装 {i} ・正常取得 {h} ・'
+                'アクセス拒否 {b} ・接続不可 {u} ・未実装 {n}<br>'
+                '<span class="tcg-coverage-note">抽選が0件でも、アクセス拒否・未実装の店舗の抽選は'
+                '把握できていません（下の「抽選の監視元」をご確認ください）。</span></div>'.format(
+                    c=cov.get("configured_sources", 0), i=cov.get("implemented_collectors", 0),
+                    h=cov.get("healthy_sources", 0), b=cov.get("blocked_sources", 0),
+                    u=cov.get("unreachable_sources", 0), n=cov.get("not_implemented_sources", 0)))
+
+        shown = False
+        # 公式情報どうしで日程・価格が食い違う抽選は、どちらかを採用せず「要確認」で出す
+        conflicted = [e for e in lots if e.get("conflict")]
+        if conflicted:
+            shown = True
+            parts.append('<div class="tcg-lot-group">&#9888;&#65039; 日程要確認'
+                         '（公式情報が食い違っています）</div>')
+            parts.extend(self._tcg_lottery_card(e) for e in conflicted[:10])
+        lots = [e for e in lots if not e.get("conflict")]
+        for label, sts in self._LOT_GROUPS:
+            items = [e for e in lots if e.get("status") in sts and not e.get("announcement_only")]
+            if not items:
+                continue
+            shown = True
+            parts.append(f'<div class="tcg-lot-group">{label}</div>')
+            parts.extend(self._tcg_lottery_card(e) for e in items[:20])
+        ann = [e for e in lots if e.get("announcement_only")]
+        if ann:
+            shown = True
+            parts.append('<div class="tcg-lot-group">&#128227; 抽選告知あり（日程は公式ページでご確認ください）</div>')
+            parts.extend(self._tcg_lottery_card(e) for e in ann[:10])
+        if not shown:
+            parts.append('<div class="lottery-card"><div class="lottery-meta">'
+                         '現在お知らせできる抽選はありません。</div></div>')
+        parts.append(self._tcg_lottery_sources_table(report.get("lottery_sources") or []))
+        parts.append("</div>")
+        return "".join(parts)
+
+    def _tcg_lottery_card(self, ev: dict) -> str:
+        """抽選カード（Task26）。応募ボタンは公式の応募 URL のみ（Task27）。"""
+        tcg = self._TCG_LABELS.get(ev.get("tcg"), ev.get("tcg") or "")
+        status = ev.get("status") or "UNKNOWN"
+        st_label = self._LOT_STATUS_LABELS.get(status, status)
+        retailer = ev.get("retailer_name") or ev.get("retailer") or ""
+        if ev.get("store_specific") and ev.get("store_name"):
+            retailer += f" {ev['store_name']}"
+        rows = []
+
+        def _when(key: str, date_key: str, missing: str) -> str:
+            if ev.get(key):
+                return self._lot_dt(ev[key])
+            if ev.get(date_key):
+                return self._lot_date(ev[date_key]) + "（時刻未公表）"
+            return missing
+
+        if any(ev.get(k) for k in ("application_start", "application_end",
+                                   "application_start_date", "application_end_date")):
+            rows.append(("応募", _esc(_when("application_start", "application_start_date",
+                                            "開始日時未公表"))
+                         + " → " + _esc(_when("application_end", "application_end_date", "締切未公表"))))
+        cd_html = ""
+        if status in ("OPEN", "ENDING_SOON", "UPCOMING", "WINNER_PURCHASE_PERIOD"):
+            target, prefix = {
+                "OPEN": (ev.get("application_end"), "締切まで"),
+                "ENDING_SOON": (ev.get("application_end"), "締切まで"),
+                "UPCOMING": (ev.get("application_start"), "開始まで"),
+                "WINNER_PURCHASE_PERIOD": (ev.get("purchase_end"), "購入期限まで"),
+            }[status]
+            cd = (ev.get("deadline_countdown") if status in ("OPEN", "ENDING_SOON")
+                  else ev.get("start_countdown") if status == "UPCOMING"
+                  else ev.get("purchase_countdown")) or {}
+            if target:
+                cd_html = (f'<div class="tcg-countdown" data-target="{_esc(str(target))}" '
+                           f'data-prefix="{_esc(prefix)}">{_esc(prefix)} '
+                           f'<b>{_esc(cd.get("label") or "")}</b></div>')
+        if ev.get("winner_announcement_at") or ev.get("winner_announcement_date"):
+            rows.append(("当選発表", _esc(_when("winner_announcement_at",
+                                                "winner_announcement_date", ""))))
+        if any(ev.get(k) for k in ("purchase_start", "purchase_end",
+                                   "purchase_start_date", "purchase_end_date")):
+            rows.append(("購入期間", _esc(_when("purchase_start", "purchase_start_date", "未公表"))
+                         + " 〜 " + _esc(_when("purchase_end", "purchase_end_date", "未公表"))))
+        if ev.get("shipping_period"):
+            rows.append(("お届け", _esc(str(ev["shipping_period"]))))
+        conds = [label for key, label in (
+            ("membership_required", "会員登録"), ("app_required", "アプリ"),
+            ("identity_verification_required", "本人確認"),
+            ("purchase_history_required", "購入実績"),
+            ("store_pickup_required", "店頭受取")) if ev.get(key) is True]
+        if conds:
+            rows.append(("応募条件", _esc("・".join(conds))))
+        rows.append(("価格", f"&yen;{int(ev['retail_price']):,}" if ev.get("retail_price")
+                     else "告知に記載なし"))
+        shrink = ev.get("shrink_status")
+        if shrink:
+            rows.append(("受け渡し", _esc(self._TCG_SHRINK_LABELS.get(shrink, shrink))))
+        meta = "".join(f'<div class="tcg-row"><span>{k}</span><b>{v}</b></div>' for k, v in rows)
+        elig = ev.get("eligibility_text")
+        elig_html = (f'<details class="tcg-elig"><summary>応募条件の原文</summary>'
+                     f'<div>{_esc(str(elig)).replace(chr(10), "<br>")}</div></details>') if elig else ""
+        pay = ev.get("payment_method_requirement")
+        if pay:
+            elig_html += f'<div class="tcg-verify">支払方法: {_esc(str(pay))}</div>'
+        notes = "".join(f"<li>{_esc(str(n))}</li>" for n in (ev.get("notes") or []))
+        if ev.get("conflict"):
+            field_names = {"application_start": "応募開始", "application_end": "応募締切",
+                           "retail_price": "価格"}
+            for f, vals in (ev.get("conflict_fields") or {}).items():
+                notes += (f"<li>{_esc(field_names.get(f, f))}の公式情報が食い違っています: "
+                          f"{_esc(' / '.join(str(v).replace('T', ' ') for v in vals))}"
+                          "（必ず公式ページでご確認ください）</li>")
+        if ev.get("product_match") == "ambiguous":
+            notes += "<li>商品の特定が曖昧なため、商品一覧とは紐付けていません</li>"
+        notes_html = f'<ul class="tcg-notes">{notes}</ul>' if notes else ""
+        links = ""
+        if ev.get("entry_url") and status in ("OPEN", "ENDING_SOON", "UPCOMING"):
+            links += (f'<a class="tcg-entry-btn" href="{_esc(ev["entry_url"])}" target="_blank" '
+                      f'rel="noopener nofollow">応募ページ（公式）</a>')
+        elif ev.get("result_url") and status in ("CLOSED", "RESULT_PENDING", "WINNER_ANNOUNCED",
+                                                  "WINNER_PURCHASE_PERIOD"):
+            links += (f'<a class="tcg-link tcg-result-link" href="{_esc(ev["result_url"])}" '
+                      f'target="_blank" rel="noopener nofollow">抽選結果の確認ページ（公式）</a>')
+        if ev.get("source_url"):
+            links += (f'<a class="tcg-link" href="{_esc(ev["source_url"])}" target="_blank" '
+                      f'rel="noopener nofollow">公式の告知を見る</a>')
+        conf = {"high": "High", "medium": "Medium", "low": "Low"}.get(ev.get("confidence"), "")
+        src_label = {"MANUFACTURER_OFFICIAL": "メーカー公式", "RETAILER_OFFICIAL": "小売公式",
+                     "STORE_OFFICIAL": "店舗公式",
+                     "MANUAL_VERIFIED_OFFICIAL": "公式告知（手動確認）"}.get(
+                         ev.get("source_type"), "未確認")
+        if ev.get("collection_method") == "MANUAL_VERIFIED" and not ev.get("verified"):
+            src_label = ("公式告知の転記（人による確認待ち）"
+                         if (ev.get("source_url") or "").startswith("https://") else "未確認")
+        badge = "open" if status in ("OPEN", "ENDING_SOON") else "closed"
+        return (
+            f'<div class="lottery-card tcg-card tcg-lot-card" data-status="{_esc(status)}">'
+            f'<div class="lottery-card-header"><span class="tcg-tag">{_esc(tcg)}</span>'
+            f'<span class="lottery-name">{_esc(str(ev.get("product_name") or ""))}</span>'
+            f'<span class="lottery-status-badge lottery-status-{badge}">{_esc(st_label)}</span></div>'
+            f'<div class="tcg-lot-retailer">{_esc(retailer)}</div>'
+            f'{cd_html}<div class="tcg-rows">{meta}</div>{elig_html}'
+            f'<div class="tcg-verify">情報の確度: {_esc(src_label)} / {_esc(conf)}</div>'
+            f'{notes_html}<div class="tcg-lot-links">{links}</div></div>'
+        )
+
+    def _tcg_lottery_sources_table(self, sources: list) -> str:
+        """Task32: 抽選の監視元ごとの状態。"""
+        if not sources:
+            return ""
+        rows = "".join(
+            "<tr><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>".format(
+                _esc(f"{r.get('retailer')}（{r.get('priority')}）"),
+                _esc(str(r.get("state_label") or "")),
+                {True: "可", False: "不可", None: "—"}.get(r.get("reachable"), "—"),
+                r.get("candidate_articles", 0), r.get("accepted_lotteries", 0),
+                r.get("active_lotteries", 0),
+                _esc(str((r.get("last_checked") or "—")[:16].replace("T", " "))))
+            for r in sources)
+        return ('<details class="tcg-health"><summary>抽選の監視元（取得状況）</summary>'
+                '<div class="tcg-health-scroll"><table class="tcg-health-table"><thead><tr>'
+                '<th>監視元</th><th>状態</th><th>到達</th><th>候補記事</th><th>採用</th>'
+                '<th>進行中の抽選</th><th>最終確認</th>'
+                f'</tr></thead><tbody>{rows}</tbody></table></div></details>')
 
     @staticmethod
     def _tcg_store_label(ev: dict) -> str:

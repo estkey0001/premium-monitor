@@ -24,15 +24,28 @@ STORE_SHRINK_POLICY: dict[str, dict] = {
 }
 
 _PATTERNS: tuple[tuple[str, tuple[str, ...]], ...] = (
+    # 受け渡し時の最終状態（「1BOX分のパックのみでのお渡し」等）を最優先する。
+    # 開封・テープカットの記載があっても、手元に渡るのはパックだけのため。
+    (SHRINK_PACK_ONLY, ("パックのみでのお渡し", "パックのみのお渡し", "パックのみでお渡し",
+                        "1BOX分のパックのみ", "外箱（BOX）は店舗にて回収")),
     # テープカットは「シュリンクあり」より先に判定する
-    (SHRINK_TAPE_CUT, ("テープカット", "テープ開封", "tape cut", "テープをカット")),
+    (SHRINK_TAPE_CUT, ("テープカット", "テープ開封", "tape cut", "テープをカット",
+                       "封入テープのカット", "テープのカット")),
     (SHRINK_REMOVED, ("シュリンクなし", "シュリンク無し", "シュリンク剥がし",
-                      "シュリンク開封", "シュリンク除去", "シュリンクレス")),
+                      "シュリンク開封", "シュリンク除去", "シュリンクレス",
+                      "シュリンク（外装ビニール）の開封", "シュリンクの開封")),
     (SHRINK_OPENED_BOX, ("開封済", "開封済み", "中身確認済", "opened box")),
     (SHRINK_SEALED, ("シュリンク付", "シュリンク付き", "未開封シュリンク",
                      "シュリンク有り", "sealed shrink")),
     (SHRINK_PACK_ONLY, ("パック販売", "パックのみ", "ばら売り", "バラ売り", "pack only")),
 )
+
+
+# 直後に続くと否定になる表現（「シュリンク付きでの販売は行いません」等）
+import re as _re  # noqa: E402
+_NEGATED_AFTER = _re.compile(
+    r"^[^。\n]{0,15}?(での販売は行いません|は行いません|はできません|はございません|"
+    r"不可|では販売しません|での販売はしておりません)")
 
 
 def detect_shrink_status(text: str = "", store_key: str = "") -> str:
@@ -43,8 +56,19 @@ def detect_shrink_status(text: str = "", store_key: str = "") -> str:
     raw = text or ""
     low = raw.lower()
     for status, words in _PATTERNS:
-        if any((w in raw) or (w.lower() in low) for w in words):
-            return status
+        for w in words:
+            for hay, needle in ((raw, w), (low, w.lower())):
+                start = 0
+                while True:
+                    i = hay.find(needle, start)
+                    if i < 0:
+                        break
+                    # 「シュリンク付き・BOX入り）での販売は行いません」
+                    # 「テープのカットは行いません」のような否定は除外
+                    if _NEGATED_AFTER.match(hay[i + len(needle):]):
+                        start = i + len(needle)
+                        continue
+                    return status
 
     policy = STORE_SHRINK_POLICY.get((store_key or "").upper())
     if policy:

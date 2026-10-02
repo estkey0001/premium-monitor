@@ -1,4 +1,4 @@
-# TCG 入荷・抽選・プレミア レポート（2026-10-02 17:19 JST）
+# TCG 入荷・抽選・プレミア レポート（2026-10-02 19:09 JST）
 
 ## Current Active
 
@@ -14,7 +14,8 @@
 | ポケモンカード | 「30th CELEBRATION カードセット チコリータ・ヒノアラシ・ワニノコ」 | POKEMON_CARD_OFFICIAL | 通常販売 | 10/16 00:00 | ¥1,200 | — | high / Confirmed |
 | ポケモンカード | 「30th CELEBRATION カードセット フシギダネ・ヒトカゲ・ゼニガメ」 | POKEMON_CARD_OFFICIAL | 通常販売 | 10/16 00:00 | ¥1,200 | — | high / Confirmed |
 | ONE PIECEカードゲーム | ブースターパック 神の支配【OP-18】 | ONEPIECE_CARD_OFFICIAL | 通常販売 | 11/21 00:00 | ¥240 | — | high / Confirmed |
-| ONE PIECEカードゲーム | エクストラブースター ONE PIECE Heroines Edition vol.2【EB-05】 | ONEPIECE_CARD_OFFICIAL | 通常販売 | — | ¥240 | — | high / Confirmed |
+| ONE PIECEカードゲーム | エクストラブースター ONE PIECE Heroines Edition vol.2【EB-05】 | ONEPIECE_CARD_OFFICIAL | 通常販売 | 10/31 00:00 | ¥240 | — | high / Confirmed |
+| ONE PIECEカードゲーム | ONE PIECEカードゲーム ONE PIECE HEROINES PRECIOUS BOX | ONEPIECE_CARD_OFFICIAL | 通常販売 | 10/31 00:00 | ¥8,470 | — | high / Confirmed |
 | ONE PIECEカードゲーム | ONE PIECEカードゲーム BASE SHOPリミテッドバインダー vol.1 | ONEPIECE_CARD_OFFICIAL | 通常販売 | 10/09 00:00 | ¥1,650 | — | high / Confirmed |
 | ONE PIECEカードゲーム | ONE PIECEカードゲーム BASE SHOPカードケース vol.1 -ボア・ハンコック | ONEPIECE_CARD_OFFICIAL | 通常販売 | 09/04 00:00 | ¥2,970 | — | high / Confirmed |
 
@@ -38,23 +39,23 @@
 
 | Retailer | Collector | Reachable | Health | Last Check | Active Lotteries |
 |---|---|---|---|---|---|
-| ポケモンセンターオンライン (P0) | pco_lottery | yes | アクセス拒否 | 2026-10-02 17:11 | 2 |
-| ポケモンカードゲーム公式（ニュース） (P0) | pokemon_news_lottery | yes | 現在の抽選なし | 2026-10-02 17:12 | 0 |
-| ゲオ (P1) | geo_lottery | yes | 抽選あり | 2026-10-02 17:12 | 4 |
-| トイザらス (P1) | 未実装 | no | アクセス拒否 | 2026-10-02 17:15 | 0 |
-| Joshin (P1) | 未実装 | no | アクセス拒否 | 2026-10-02 17:15 | 0 |
-| エディオン (P1) | 未実装 | yes | 未監視（未実装） | 2026-10-02 17:15 | 0 |
-| ヤマダデンキ (P1) | 未実装 | no | 接続できない | 2026-10-02 17:15 | 0 |
-| TSUTAYA (P1) | 未実装 | yes | 未監視（未実装） | 2026-10-02 17:16 | 0 |
-| ビックカメラ (P1) | 未実装 | no | 接続できない | 2026-10-02 17:16 | 0 |
-| ヨドバシカメラ (P1) | 未実装 | no | アクセス拒否 | 2026-10-02 17:16 | 0 |
-| Amazon (P2) | 未実装 | yes | 未監視（未実装） | 2026-10-02 17:16 | 0 |
-| 楽天ブックス (P2) | 未実装 | yes | 未監視（未実装） | 2026-10-02 17:16 | 0 |
-| セブンネットショッピング (P2) | 未実装 | yes | 未監視（未実装） | 2026-10-02 17:17 | 0 |
-| ローソン (P2) | lawson_lottery | yes | 現在の抽選なし | 2026-10-02 17:17 | 0 |
-| ONE PIECEカードゲーム公式 (P0) | onepiece_news_lottery | yes | 現在の抽選なし | 2026-10-02 17:18 | 0 |
+| ポケモンセンターオンライン (P0) | pco_lottery | yes | アクセス拒否 | 2026-10-02 19:01 | 2 |
+| ポケモンカードゲーム公式（ニュース） (P0) | pokemon_news_lottery | yes | 現在の抽選なし | 2026-10-02 19:03 | 0 |
+| ゲオ (P1) | geo_lottery | yes | 抽選あり | 2026-10-02 19:03 | 4 |
+| トイザらス (P1) | 未実装 | no | アクセス拒否 | 2026-10-02 19:06 | 0 |
+| Joshin (P1) | 未実装 | no | アクセス拒否 | 2026-10-02 19:06 | 0 |
+| エディオン (P1) | 未実装 | yes | 未監視（未実装） | 2026-10-02 19:06 | 0 |
+| ヤマダデンキ (P1) | 未実装 | no | 接続できない | 2026-10-02 19:06 | 0 |
+| TSUTAYA (P1) | 未実装 | yes | 未監視（未実装） | 2026-10-02 19:06 | 0 |
+| ビックカメラ (P1) | 未実装 | no | 接続できない | 2026-10-02 19:06 | 0 |
+| ヨドバシカメラ (P1) | 未実装 | no | アクセス拒否 | 2026-10-02 19:07 | 0 |
+| Amazon (P2) | 未実装 | yes | 未監視（未実装） | 2026-10-02 19:07 | 0 |
+| 楽天ブックス (P2) | 未実装 | yes | 未監視（未実装） | 2026-10-02 19:07 | 0 |
+| セブンネットショッピング (P2) | 未実装 | yes | 未監視（未実装） | 2026-10-02 19:07 | 0 |
+| ローソン (P2) | lawson_lottery | yes | 現在の抽選なし | 2026-10-02 19:07 | 0 |
+| ONE PIECEカードゲーム公式 (P0) | onepiece_news_lottery | yes | 現在の抽選なし | 2026-10-02 19:08 | 0 |
 | ONE PIECEカードゲーム公式ショップ (P0) | 未実装 | no | 未監視（未実装） | — | 0 |
-| プレミアムバンダイ (P0) | premium_bandai_lottery | yes | 現在の抽選なし | 2026-10-02 17:18 | 0 |
+| プレミアムバンダイ (P0) | premium_bandai_lottery | yes | 現在の抽選なし | 2026-10-02 19:08 | 0 |
 
 ## Active（受付中・締切間近）
 
@@ -141,13 +142,13 @@
 
 | Source | TCG | Status | Last checked | Last success | Events | Errors | Blocked | robots |
 |---|---|---|---|---|---|---|---|---|
-| ポケモンカードゲーム公式（商品API） | POKEMON | HEALTHY | 2026-10-02 17:05 | 2026-10-02 17:07 | 9 | 0 | no | not_found |
-| ポケモンカードゲーム公式（ニュース） | POKEMON | OK_NO_EVENTS | 2026-10-02 17:07 | 2026-10-02 17:07 | 0 | 0 | no | not_found |
-| ポケモンセンターオンライン | POKEMON | BLOCKED | 2026-10-02 17:09 | — | 0 | 1 | YES | allowed |
-| ローソン（ポケモンカード告知） | POKEMON | OK_NO_EVENTS | 2026-10-02 17:09 | 2026-10-02 17:10 | 0 | 0 | no | allowed |
-| ONE PIECEカードゲーム公式（ニュース） | ONE_PIECE | OK_NO_EVENTS | 2026-10-02 17:10 | 2026-10-02 17:10 | 0 | 0 | no | not_found |
-| ONE PIECEカードゲーム公式（商品情報） | ONE_PIECE | HEALTHY | 2026-10-02 17:10 | 2026-10-02 17:11 | 4 | 0 | no | not_found |
-| プレミアムバンダイ | ONE_PIECE | OK_NO_EVENTS | 2026-10-02 17:11 | 2026-10-02 17:11 | 0 | 0 | no | allowed |
+| ポケモンカードゲーム公式（商品API） | POKEMON | HEALTHY | 2026-10-02 18:55 | 2026-10-02 18:57 | 9 | 0 | no | not_found |
+| ポケモンカードゲーム公式（ニュース） | POKEMON | OK_NO_EVENTS | 2026-10-02 18:57 | 2026-10-02 18:57 | 0 | 0 | no | not_found |
+| ポケモンセンターオンライン | POKEMON | BLOCKED | 2026-10-02 18:59 | — | 0 | 1 | YES | allowed |
+| ローソン（ポケモンカード告知） | POKEMON | OK_NO_EVENTS | 2026-10-02 18:59 | 2026-10-02 19:00 | 0 | 0 | no | allowed |
+| ONE PIECEカードゲーム公式（ニュース） | ONE_PIECE | OK_NO_EVENTS | 2026-10-02 19:00 | 2026-10-02 19:00 | 0 | 0 | no | not_found |
+| ONE PIECEカードゲーム公式（商品情報） | ONE_PIECE | HEALTHY | 2026-10-02 19:00 | 2026-10-02 19:01 | 5 | 0 | no | not_found |
+| プレミアムバンダイ | ONE_PIECE | OK_NO_EVENTS | 2026-10-02 19:01 | 2026-10-02 19:01 | 0 | 0 | no | allowed |
 
 監視登録 source 数: 27
 

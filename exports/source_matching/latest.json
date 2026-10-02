@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-02 17:49 JST",
+  "generated_at": "2026-10-02 19:40 JST",
   "scope": "商品同一性マッチング精度（利益/AI/UI/SaaS/DQ思想は不変）",
   "accuracy": {
     "product_match_accuracy": 1.0,
@@ -286,23 +286,23 @@
       "model_mismatch": 0,
       "main_eligible": 0
     },
-    "Amazon JP (新品出品)": {
-      "total": 1,
-      "product_mismatch_or_unverified": 1,
-      "model_unverifiable": 1,
-      "accessory_detected": 1,
-      "main_rejected": 1,
-      "exact_product_match": 0,
-      "capacity_mismatch": 0,
-      "model_mismatch": 0,
-      "main_eligible": 0
-    },
     "ヤフオク (新品/未使用落札)": {
       "total": 11,
       "product_mismatch_or_unverified": 11,
       "model_unverifiable": 11,
       "main_rejected": 11,
       "manual_review_required": 11,
+      "exact_product_match": 0,
+      "capacity_mismatch": 0,
+      "model_mismatch": 0,
+      "main_eligible": 0
+    },
+    "Amazon JP (新品出品)": {
+      "total": 1,
+      "product_mismatch_or_unverified": 1,
+      "model_unverifiable": 1,
+      "accessory_detected": 1,
+      "main_rejected": 1,
       "exact_product_match": 0,
       "capacity_mismatch": 0,
       "model_mismatch": 0,
@@ -346,7 +346,7 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 41.2,
+      "first_seen": 41.3,
       "last_seen": 0.0,
       "risk_level": "high",
       "possible_reason": [
@@ -378,7 +378,7 @@
         "new"
       ],
       "first_seen": 9999.0,
-      "last_seen": 40.7,
+      "last_seen": 40.8,
       "risk_level": "high",
       "possible_reason": [
         "different_capacity_same_price",
@@ -471,8 +471,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 40.7,
-      "last_seen": 40.7,
+      "first_seen": 40.8,
+      "last_seen": 40.8,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -502,7 +502,7 @@
         "new"
       ],
       "first_seen": 9999.0,
-      "last_seen": 40.7,
+      "last_seen": 40.8,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -532,8 +532,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 53.2,
-      "last_seen": 53.2,
+      "first_seen": 53.3,
+      "last_seen": 53.3,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -562,8 +562,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 53.2,
-      "last_seen": 53.2,
+      "first_seen": 53.3,
+      "last_seen": 53.3,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -592,8 +592,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 53.2,
-      "last_seen": 53.2,
+      "first_seen": 53.3,
+      "last_seen": 53.3,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"

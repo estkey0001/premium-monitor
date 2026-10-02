@@ -1,6 +1,6 @@
 # Pro 利益ルート（normalized_price_observations 由来・検証済み）
 
-生成: 2026-10-02 17:49 JST
+生成: 2026-10-02 19:40 JST
 
 - **main 利益ルート: 0件**（route_confidence high/medium のみ）
 - 参考ルート(海外sold stale・要fresh化): 1件
@@ -17,7 +17,7 @@
 
 | product | buy¥ | sell(海外sold)¥ | 潜在net | ROI | stale |
 |---|---|---|---|---|---|
-| FUJIFILM X100VI | ¥343,637 | ¥559,177 | +¥88,396 | 26% | overseas_sold_stale(41.3d) |
+| FUJIFILM X100VI | ¥343,637 | ¥559,177 | +¥88,396 | 26% | overseas_sold_stale(41.4d) |
 
 ## 0件商品の診断
 
@@ -119,11 +119,11 @@
 
 ### RICOH GR IV
 - buy候補 1 / sell候補 1 / stale除外 15 / 海外sold stale 1
-- 除外理由TOP5: [('stale_over_14d', 15), ('accessory_or_wrong_product', 1)]
+- 除外理由TOP5: [('stale_over_14d', 15)]
 
 ### RICOH GR IV HDF
 - buy候補 1 / sell候補 0 / stale除外 6 / 海外sold stale 0
-- 除外理由TOP5: [('stale_over_14d', 6), ('duplicate_price_collision', 1)]
+- 除外理由TOP5: [('stale_over_14d', 6), ('duplicate_price_collision', 1), ('accessory_or_wrong_product', 1)]
 
 ### RICOH GR IV Monochrome
 - buy候補 1 / sell候補 0 / stale除外 6 / 海外sold stale 0

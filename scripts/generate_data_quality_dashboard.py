@@ -64,7 +64,7 @@ SOURCE_ALIASES = {
     "フジヤカメラ": ["フジヤカメラ"],
     "eBay": ["eBay sold(新品)", "src_ebay", "eBay"],
     "Mercari": ["Mercari sold", "メルカリ未使用", "メルカリ"],
-    "Yahoo": ["Yahoo Auction sold", "ヤフオク (新品/未使用落札)", "ヤフオク"],
+    "Yahoo": ["Yahoo Auction sold", "ヤフオク (出品中・新品/未使用)", "ヤフオク (新品/未使用落札)", "ヤフオク"],
     "ラクマ": ["ラクマ", "Rakuma"],
     "価格.com": ["価格.com", "kakaku"],
     "ヨドバシ": ["ヨドバシ", "ヨドバシカメラ"],

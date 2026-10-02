@@ -3,7 +3,7 @@
 ## 今の状態
 - Phase 0（データの正確さ）・0.1（表示の信頼性）はコミット・CI・本番で受け入れ済み。
 - Phase 0.2（二次流通の価格の意味）を実装。「ヤフオク (新品/未使用落札)」は実際には**出品中の一覧**（`/search/search`）で、ページ全体からカテゴリ ID なども数字として拾っていた。出品価格（LISTING）として出品ごとの属性だけを読むように直した。価格の種別の正本 `src/market/price_types.py` を作り、sale_prices に種別を保存する（migration 019、既存の行は UNKNOWN）。根拠（商品ページの URL と成約日時）の無い値を成約として使わない。確定利益の売値は買取か、条件を満たした成約中央値（3件以上・期間つき）だけ。
-- テスト 572 件 PASS（Phase 0.2 は 49件）。
+- テスト 573 件 PASS（Phase 0.2 は 50件）。
 
 ## 未解決・保留
 - **data/tcg_verified_lotteries.csv の PCO 2件は AI（Claude）が公式告知画像を目視で転記したもの**。人が公式ページで確認したら human_confirmed を true にする（それまで confidence=medium・通知しない・公式扱いにしない）。

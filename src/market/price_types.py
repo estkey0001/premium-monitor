@@ -241,3 +241,18 @@ def basis_display(basis, *, has_evidence: bool = False) -> str:
     if b and is_sold_label(b) and not has_evidence:
         return f"{b}（根拠未確認）"
     return b
+
+
+# 過去のデータ・通知履歴に残っている誤った表記 → 正しい表記（表示するときだけ置き換える。履歴は書き換えない）
+LEGACY_SOURCE_NAMES = {
+    # 実際には出品中の一覧の価格だった（2026-10-03 に確認。Phase 0.2）
+    "ヤフオク (新品/未使用落札)": "ヤフオク (出品中・新品/未使用)",
+}
+
+
+def relabel_legacy(text) -> str:
+    """過去の表記のうち、成約と誤って名乗っていたものを正しい表記にして返す。"""
+    s = str(text or "")
+    for old, new in LEGACY_SOURCE_NAMES.items():
+        s = s.replace(old, new)
+    return s

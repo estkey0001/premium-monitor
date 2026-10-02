@@ -472,3 +472,11 @@ def test_ebay_aggregate_is_not_saved_as_sold_median():
 def test_future_sold_at_is_not_evidence():
     future = (datetime.now(JST) + timedelta(days=10)).isoformat()
     assert "sold_at_in_future" in pt.sold_evidence_reasons(ITEM, future)
+
+
+def test_legacy_sold_label_is_relabelled_for_display():
+    msg = "📉 価格下落 / FUJIFILM X100VI / ヤフオク (新品/未使用落札) ¥343,637 → ¥312,000"
+    out = pt.relabel_legacy(msg)
+    assert "落札" not in out and "ヤフオク (出品中・新品/未使用)" in out
+    src = (ROOT / "src/content/daily_lp_generator.py").read_text(encoding="utf-8")
+    assert "_pt.relabel_legacy(e.get(\"message\")" in src        # 最新通知の表示で使う

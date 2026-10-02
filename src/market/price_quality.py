@@ -43,7 +43,7 @@ RETAIL_SOURCES = ["価格.com", "ヨドバシ", "ビックカメラ", "楽天市
 BUYBACK_SOURCES = ["マップカメラ", "フジヤカメラ", "じゃんぱら", "イオシス", "カメラのキタムラ",
                    "ソフマップ", "買取商店", "ゲオ", "買取一丁目", "ネットオフ"]
 RESALE_SOURCES = ["eBay sold(新品)", "eBay", "メルカリ未使用", "Mercari sold",
-                  "ヤフオク (新品/未使用落札)", "Yahoo Auction sold", "Amazon JP (新品出品)"]
+                  "ヤフオク (出品中・新品/未使用)", "Yahoo Auction sold", "Amazon JP (新品出品)"]
 
 _CAP_RE = re.compile(r"(\d{1,4})\s*(gb|tb|ｇｂ)", re.I)
 _COLORS = ("ブラック", "ホワイト", "シルバー", "ゴールド", "ブルー", "グリーン", "レッド",

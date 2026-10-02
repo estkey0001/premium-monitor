@@ -5817,7 +5817,8 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                          '新規通知はありません（条件成立で自動通知されます）。</div>')
         for e in events:
             col = pcol.get(e.get("priority"), "#64748b")
-            msg = _esc((e.get("message") or "").replace("\n", " / "))
+            # 過去の通知に残る誤った表記（出品を「落札」と呼んでいた）は、表示するときに正しい表記にする
+            msg = _esc(_pt.relabel_legacy(e.get("message") or "").replace("\n", " / "))
             parts.append(
                 f'<div style="background:#fff;border:1px solid #e2e8f0;border-left:3px solid {col};'
                 f'border-radius:6px;padding:6px 10px;margin:4px 0;font-size:0.82rem">'

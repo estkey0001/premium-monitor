@@ -43,10 +43,17 @@ from src.market.official_price_validator import validate_official_price, is_offi
 
 # ─────────────────────────────────────────────────────────────
 # 実検証済み公式URL（WebFetch で HTTP200 + 公式ドメイン + canonical + 商品一致を確認）
-# verified_at = 実際に検証した日（TODAY）。price は検証時に確認できた本体価格（税込）。
+# 確認日は VERIFIED_URLS_CHECKED_ON（実行日の TODAY ではない）。price は検証時に確認できた本体価格（税込）。
 # link_type: item=個別商品/購入ページ, category=カテゴリ購入ページ（個別URLなし）
 # confidence: high/medium/low（official_price_validator の基準）
 # ─────────────────────────────────────────────────────────────
+# VERIFIED_URLS の価格・URL を人（WebFetch）が実際に確認した日。
+# この辞書は固定値なので、スクリプトを毎日実行しても「今日確認した」ことにはならない。
+# 価格を公式ページで再確認したときだけ、確認した証拠（URL・価格）と一緒にこの日付を更新する。
+# 値を確認していないのに日付だけ新しくしてはいけない（鮮度の偽装になる）。
+# 2026-08-23: git の記録上、VERIFIED_URLS を最後に確認・更新した日
+VERIFIED_URLS_CHECKED_ON = "2026-08-23"
+
 VERIFIED_URLS = {
     # ---- Apple（公式直販・価格実在）----
     "prod_iphone17_256":    {"source": "src_apple_jp", "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17",         "link_type": "item",     "price": 142800, "conf": "high"},
@@ -176,7 +183,9 @@ def register_verified(c, products):
             else:
                 conf = vr.confidence
         extra = {
-            "link_type": v["link_type"], "verified": True, "last_verified_at": TODAY,
+            "link_type": v["link_type"], "verified": True,
+            # 確認した日（固定値の確認日）。毎回の実行日（TODAY）にしない
+            "last_verified_at": v.get("checked_on", VERIFIED_URLS_CHECKED_ON),
             "extraction_method": "webfetch_verified",
             "confidence": conf, "official_price": price,
             "open_price": v.get("open_price", False),
@@ -184,11 +193,12 @@ def register_verified(c, products):
         }
         _upsert_config(c, pid, v["source"], v["url"], extra)
         # high/medium confidence の検証済み価格のみ products.official_price に反映
-        # （low は main 利用禁止。observed_at=TODAY は本日 WebFetch で実検証済みのため正当）
+        # （low は main 利用禁止）。official_price_updated_at には「その価格を確認した日」を入れる。
+        # スクリプトの実行時刻（NOW）は入れない: 固定値を毎日「今確認した」ように見せないため
         if price and conf in ("high", "medium"):
             c.execute("UPDATE products SET official_price=?, official_price_source=?, "
                       "official_price_updated_at=? WHERE id=?",
-                      (price, v["source"], NOW.isoformat(), pid))
+                      (price, v["source"], v.get("checked_on", VERIFIED_URLS_CHECKED_ON), pid))
         registered.append({"product_id": pid, "source": v["source"], "url": v["url"],
                            "link_type": v["link_type"], "confidence": conf,
                            "official_price": price, "verified": True})

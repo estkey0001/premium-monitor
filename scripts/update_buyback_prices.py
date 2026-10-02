@@ -372,6 +372,19 @@ def run(dry_run: bool = False, no_scrape: bool = False) -> int:
         print("\n  [DRY RUN] CSV/レポート書き込みをスキップしました。")
         return 0
 
+    # 明らかに誤りの価格は CSV に書く前に隔離する（LP・利益計算へ流さない）
+    suspicious_prices = compute_suspicious(new_rows, existing_rows)
+    new_rows = quarantine_suspicious(new_rows, suspicious_prices)
+    rejected = sum(1 for s in suspicious_prices if s.get("action") == "rejected")
+    # 隔離した行は「取得成功」として数えない（失敗理由 suspicious_rejected）
+    _rej = {(s["product_alias"], s["shop"]) for s in suspicious_prices if s.get("action") == "rejected"}
+    results_summary = [(a, sh, ("FAILED" if (a, sh) in _rej else st), (0 if (a, sh) in _rej else pr))
+                       for a, sh, st, pr in results_summary]
+    for key in _rej:
+        failure_reasons[key] = "suspicious_rejected"
+    if rejected:
+        print(f"\n  ⚠️  誤りと判断した価格 {rejected}件を隔離しました（suspicious_rejected）")
+
     # CSV書き込み
     final_rows = preserved_rows + new_rows
     _write_csv(final_rows)
@@ -386,8 +399,11 @@ def run(dry_run: bool = False, no_scrape: bool = False) -> int:
         existing_rows=existing_rows,
         failure_reasons=failure_reasons,
         collector_debug=collector_debug,
+        suspicious_prices=suspicious_prices,
     )
 
+    # 隔離した行も失敗として数えた結果で戻り値を決める
+    fail_count = sum(1 for _, _, st, _ in results_summary if st in ("FAILED", "ERROR"))
     return 1 if fail_count > 0 else 0
 
 
@@ -416,97 +432,21 @@ def _save_debug_txt(shop_id: str, alias: str, collector, reason: str) -> None:
         logger.debug("debug_txt save failed: %s", e)
 
 
-def _generate_collector_report(
-    new_rows: list[dict],
-    results_summary: list,
-    now_jst,
-    existing_rows: list[dict],
-    failure_reasons: dict,
-    collector_debug: dict | None = None,
-) -> None:
-    """コレクターレポートを exports/collector_report/latest.{json,md} に出力する。"""
-    REPORT_DIR.mkdir(parents=True, exist_ok=True)
-
-    # ── 集計 ──────────────────────────────────────────────────────────────
-    by_shop:    dict[str, dict] = {}
-    by_product: dict[str, dict] = {}
-
-    for alias, shop_id, status, _price in results_summary:
-        # shop集計
-        if shop_id not in by_shop:
-            by_shop[shop_id] = {"ok": 0, "failed": 0, "skip": 0}
-        key = "ok" if status == "OK" else ("skip" if status == "SKIP" else "failed")
-        by_shop[shop_id][key] += 1
-
-        # product集計
-        if alias not in by_product:
-            by_product[alias] = {"ok": 0, "failed": 0, "skip": 0}
-        by_product[alias][key] += 1
-
-    ok_count   = sum(1 for _, _, s, _ in results_summary if s == "OK")
-    fail_count = sum(1 for _, _, s, _ in results_summary if s in ("FAILED", "ERROR"))
-    skip_count = sum(1 for _, _, s, _ in results_summary if s == "SKIP")
-
-    # ── 取得失敗一覧 ───────────────────────────────────────────────────────
-    _dbg = collector_debug or {}
-    fetch_failed_list = []
-    for alias, shop_id, status, _price in results_summary:
-        if status != "OK":
-            reason = failure_reasons.get((alias, shop_id), "unknown")
-            row_match = next(
-                (r for r in new_rows
-                 if r.get("product_alias") == alias and r.get("buyback_shop") == shop_id),
-                {}
-            )
-            dbg = _dbg.get((alias, shop_id), {})
-            fetch_failed_list.append({
-                "product_alias": alias,
-                "shop": shop_id,
-                "status": status,
-                "reason": reason,
-                "url": row_match.get("url", ""),
-                "final_url":        dbg.get("final_url", ""),
-                "html_length":      dbg.get("html_length", 0),
-                "http_status":      dbg.get("http_status", 0),
-                "text_length":      dbg.get("text_length", 0),
-                "elapsed_seconds":  dbg.get("elapsed_seconds", 0.0),
-                "error_type":       dbg.get("error_type", ""),
-                "observed_at": row_match.get("observed_at", ""),
-            })
-
-    # ── 前回価格との差分 ───────────────────────────────────────────────────
-    prev_price_map: dict[tuple, int] = {}
+def _prev_price_map(existing_rows: list[dict]) -> dict[tuple, int]:
+    prev: dict[tuple, int] = {}
     for r in existing_rows:
         try:
             p = int(r.get("buyback_price", 0) or 0)
         except (ValueError, TypeError):
             p = 0
         if p > 0:
-            prev_price_map[(r.get("product_alias", ""), r.get("buyback_shop", ""))] = p
+            prev[(r.get("product_alias", ""), r.get("buyback_shop", ""))] = p
+    return prev
 
-    price_changes = []
-    for row in new_rows:
-        alias   = row.get("product_alias", "")
-        shop_id = row.get("buyback_shop", "")
-        try:
-            new_price = int(row.get("buyback_price", 0) or 0)
-        except (ValueError, TypeError):
-            new_price = 0
-        if new_price <= 0:
-            continue
-        prev_price = prev_price_map.get((alias, shop_id))
-        if prev_price and prev_price != new_price:
-            change_pct = round((new_price - prev_price) / prev_price * 100, 1)
-            price_changes.append({
-                "product_alias": alias,
-                "shop": shop_id,
-                "prev_price": prev_price,
-                "new_price": new_price,
-                "change_pct": change_pct,
-                "direction": "up" if change_pct > 0 else "down",
-            })
 
-    # ── suspicious_price 検出 ─────────────────────────────────────────────
+def compute_suspicious(new_rows: list[dict], existing_rows: list[dict]) -> list[dict]:
+    """取得した買取価格の異常を検出する（価格は変えない。判定だけ）。"""
+    prev_price_map = _prev_price_map(existing_rows)
     # カテゴリ別 正常価格帯（Task 3-A）
     GENRE_PRICE_RANGES: dict[str, tuple[int, int]] = {
         "iphone":       (30_000,  400_000),
@@ -654,6 +594,151 @@ def _generate_collector_report(
                 "details":        flag["details"],
             })
 
+
+    # ⑧ 同じ店で、別の商品（機種・容量違い）に同じ価格が付いている
+    #    （ページの見出し・最高値などを複数の商品に割り当てた誤取得の典型。2026-10-02 の ¥435,000）
+    by_shop_price: dict[tuple, list[str]] = {}
+    for row in new_rows:
+        try:
+            price = int(row.get("buyback_price", 0) or 0)
+        except (ValueError, TypeError):
+            price = 0
+        if price > 0:
+            by_shop_price.setdefault((row.get("buyback_shop", ""), price), []).append(row.get("product_alias", ""))
+    for (shop_id, price), aliases in by_shop_price.items():
+        if len(set(aliases)) >= 2:
+            for alias in sorted(set(aliases)):
+                suspicious_prices.append({
+                    "product_alias": alias, "shop": shop_id, "price": price,
+                    "official_price": OFFICIAL_PRICES.get(alias),
+                    "reason": "cross_product_same_price",
+                    "details": f"{shop_id}: {', '.join(sorted(set(aliases)))} が同じ¥{price:,}（別商品の価格の取り違えの可能性）",
+                })
+    return suspicious_prices
+
+
+# 価格そのものが誤りと判断できる理由（この理由が1つでもあれば、その価格は保存しない）。
+# 前回比の変動（price_change_over_20pct）や他店との差（outlier_vs_peer_shops）は、相場の実際の
+# 変動もありうるので隔離の理由にしない（レポートでの警告に留める）。
+from src.market.price_quality import HARD_REJECT_REASONS  # noqa: E402（一覧は1か所で管理する）
+
+
+def quarantine_suspicious(new_rows: list[dict], suspicious: list[dict]) -> list[dict]:
+    """明らかに誤りの価格を、CSV に書く前に隔離する。
+
+    隔離した行は price=0・data_source=suspicious_rejected として残す（取得はしたが採用しない）。
+    元の価格と理由は suspicious の一覧（collector_report）に残るので、証拠は消えない。
+    観測時刻は取得を試みた時刻のままで、成功した観測としては扱わない（価格 0 の行は最終更新に数えない）。
+    """
+    bad = {(s["product_alias"], s["shop"]) for s in suspicious if s.get("reason") in HARD_REJECT_REASONS}
+    out = []
+    for row in new_rows:
+        key = (row.get("product_alias", ""), row.get("buyback_shop", ""))
+        if key in bad and int(row.get("buyback_price", 0) or 0) > 0:
+            row = {**row, "buyback_price": "0", "data_source": "suspicious_rejected",
+                   "link_verified": "false", "confidence": "low"}
+        out.append(row)
+    for s in suspicious:
+        if (s["product_alias"], s["shop"]) in bad:
+            s["action"] = "rejected"
+    return out
+
+
+def _generate_collector_report(
+    new_rows: list[dict],
+    results_summary: list,
+    now_jst,
+    existing_rows: list[dict],
+    failure_reasons: dict,
+    collector_debug: dict | None = None,
+    suspicious_prices: list[dict] | None = None,
+) -> None:
+    """コレクターレポートを exports/collector_report/latest.{json,md} に出力する。"""
+    REPORT_DIR.mkdir(parents=True, exist_ok=True)
+
+    # ── 集計 ──────────────────────────────────────────────────────────────
+    by_shop:    dict[str, dict] = {}
+    by_product: dict[str, dict] = {}
+
+    for alias, shop_id, status, _price in results_summary:
+        # shop集計
+        if shop_id not in by_shop:
+            by_shop[shop_id] = {"ok": 0, "failed": 0, "skip": 0}
+        key = "ok" if status == "OK" else ("skip" if status == "SKIP" else "failed")
+        by_shop[shop_id][key] += 1
+
+        # product集計
+        if alias not in by_product:
+            by_product[alias] = {"ok": 0, "failed": 0, "skip": 0}
+        by_product[alias][key] += 1
+
+    ok_count   = sum(1 for _, _, s, _ in results_summary if s == "OK")
+    fail_count = sum(1 for _, _, s, _ in results_summary if s in ("FAILED", "ERROR"))
+    skip_count = sum(1 for _, _, s, _ in results_summary if s == "SKIP")
+
+    # ── 取得失敗一覧 ───────────────────────────────────────────────────────
+    _dbg = collector_debug or {}
+    fetch_failed_list = []
+    for alias, shop_id, status, _price in results_summary:
+        if status != "OK":
+            reason = failure_reasons.get((alias, shop_id), "unknown")
+            row_match = next(
+                (r for r in new_rows
+                 if r.get("product_alias") == alias and r.get("buyback_shop") == shop_id),
+                {}
+            )
+            dbg = _dbg.get((alias, shop_id), {})
+            fetch_failed_list.append({
+                "product_alias": alias,
+                "shop": shop_id,
+                "status": status,
+                "reason": reason,
+                "url": row_match.get("url", ""),
+                "final_url":        dbg.get("final_url", ""),
+                "html_length":      dbg.get("html_length", 0),
+                "http_status":      dbg.get("http_status", 0),
+                "text_length":      dbg.get("text_length", 0),
+                "elapsed_seconds":  dbg.get("elapsed_seconds", 0.0),
+                "error_type":       dbg.get("error_type", ""),
+                "observed_at": row_match.get("observed_at", ""),
+            })
+
+    # ── 前回価格との差分 ───────────────────────────────────────────────────
+    prev_price_map: dict[tuple, int] = {}
+    for r in existing_rows:
+        try:
+            p = int(r.get("buyback_price", 0) or 0)
+        except (ValueError, TypeError):
+            p = 0
+        if p > 0:
+            prev_price_map[(r.get("product_alias", ""), r.get("buyback_shop", ""))] = p
+
+    price_changes = []
+    for row in new_rows:
+        alias   = row.get("product_alias", "")
+        shop_id = row.get("buyback_shop", "")
+        try:
+            new_price = int(row.get("buyback_price", 0) or 0)
+        except (ValueError, TypeError):
+            new_price = 0
+        if new_price <= 0:
+            continue
+        prev_price = prev_price_map.get((alias, shop_id))
+        if prev_price and prev_price != new_price:
+            change_pct = round((new_price - prev_price) / prev_price * 100, 1)
+            price_changes.append({
+                "product_alias": alias,
+                "shop": shop_id,
+                "prev_price": prev_price,
+                "new_price": new_price,
+                "change_pct": change_pct,
+                "direction": "up" if change_pct > 0 else "down",
+            })
+
+    # ── suspicious_price 検出（CSV 書き込み前に compute_suspicious で計算済み）──
+    if suspicious_prices is None:
+        suspicious_prices = compute_suspicious(new_rows, existing_rows)
+
     # ── 商品別 成功/未掲載/失敗/スキップ店舗の内訳 ───────────────────────────
     product_shop_detail: dict[str, dict] = {}
     for alias, shop_id, status, _price in results_summary:
@@ -696,6 +781,24 @@ def _generate_collector_report(
             r = failure_reasons.get((alias, shop_id), "unknown")
             shop_stats[shop_id]["reasons"].append(r)
 
+    # 店ごとの「最後に試した時刻」と「最後に成功した時刻」を分けて持つ。
+    # 取得に失敗した回は last_success_at / last_observed_at を更新しない（前回のレポートの値を引き継ぐ）
+    _prev_detail: dict[str, dict] = {}
+    try:
+        _prev = json.loads((REPORT_DIR / "latest.json").read_text(encoding="utf-8"))
+        _prev_detail = {d.get("shop_id"): d for d in _prev.get("shop_detail") or [] if isinstance(d, dict)}
+    except Exception:  # noqa: BLE001
+        _prev_detail = {}
+    _success_obs: dict[str, str] = {}
+    for row in new_rows:
+        try:
+            _p = int(row.get("buyback_price", 0) or 0)
+        except (ValueError, TypeError):
+            _p = 0
+        if _p > 0 and row.get("data_source") == "auto_scraped":
+            sid = row.get("buyback_shop", "")
+            _success_obs[sid] = max(_success_obs.get(sid, ""), row.get("observed_at", "") or "")
+
     shop_detail_list = []
     for shop_id, st in sorted(shop_stats.items()):
         total = st["ok"] + st["failed"] + st["skip"]
@@ -713,6 +816,12 @@ def _generate_collector_report(
             "rate_429_count": rate_429,
             "blocked_count": blocked,
             "top_reason": top_reason,
+            "last_attempt_at": now_jst.isoformat(timespec="seconds"),
+            # 成功した時刻 = 価格を取得できた観測の時刻（実行開始の時刻ではない）
+            "last_success_at": (_success_obs.get(shop_id)
+                                or (_prev_detail.get(shop_id) or {}).get("last_success_at")),
+            "last_observed_at": (_success_obs.get(shop_id)
+                                 or (_prev_detail.get(shop_id) or {}).get("last_observed_at")),
         })
 
     # ── 商品別価格統計（Task 4）────────────────────────────────────────────

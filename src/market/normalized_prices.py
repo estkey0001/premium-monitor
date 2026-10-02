@@ -18,6 +18,9 @@ from datetime import datetime, timedelta, timezone
 JST = timezone(timedelta(hours=9))
 
 STALE_DAYS = 14  # これを超えると stale（main calculation から除外）
+# 公式定価（メーカー・公式ストアで確認した価格）の有効期間。定価は相場ほど速く変わらないので
+# 買取・二次流通とは別のしきい値にする（確認日から数える。生成時刻を観測時刻にしない）
+OFFICIAL_STALE_DAYS = 180
 # 同一商品で auto_scraped high 買取がある場合、これを超える倍率の manual 買取は
 # 異常値（手動入力ミス/相場転記ミス）として main calculation から除外する。
 MANUAL_OVER_AUTO_RATIO = 1.3  # auto_scraped high の 1.3倍（+30%）超の manual を除外
@@ -147,7 +150,20 @@ def make_observation(now: datetime, **kw) -> dict:
     observed_at = kw.get("observed_at", "") or ""
 
     age = _age_days(observed_at, now)
-    is_fresh = age <= STALE_DAYS
+    if price_role == "official":
+        # 公式定価: 確認日があれば OFFICIAL_STALE_DAYS で判定（freshness_basis=verified）。
+        # 設定値（config/products.yaml の定価）は確認日を持たないので observed_at は空のまま。
+        # 「確認済みで新しい」とは言わず freshness_basis=config_unknown_date と明記したうえで、
+        # 従来どおり定価の参考値として使う（使うことを選んでいる。鮮度を偽らない）
+        if observed_at:
+            is_fresh = age <= OFFICIAL_STALE_DAYS
+            freshness_basis = "verified" if is_fresh else "verified_stale"
+        else:
+            is_fresh = kw.get("extraction_method") == "retail_concept"
+            freshness_basis = "config_unknown_date"
+    else:
+        is_fresh = age <= STALE_DAYS
+        freshness_basis = "observed" if is_fresh else "observed_stale"
     unknown_cond = condition in UNKNOWN_CONDITIONS
     is_ti = price_type == "trade_in_price"
 
@@ -186,7 +202,7 @@ def make_observation(now: datetime, **kw) -> dict:
     if price <= 0:
         rejection_reason = "price_zero"
     elif not is_fresh:
-        rejection_reason = "stale_over_14d"
+        rejection_reason = ("official_stale_over_180d" if price_role == "official" else "stale_over_14d")
     elif accessory_flag:
         rejection_reason = "accessory_or_wrong_product"
 
@@ -254,6 +270,7 @@ def make_observation(now: datetime, **kw) -> dict:
         "age_days": round(age, 1),
         "observed_age_days": round(age, 1),
         "is_fresh": is_fresh,
+        "freshness_basis": freshness_basis,
         "is_usable_for_beginner": is_usable_for_beginner,
         "is_usable_for_pro": is_usable_for_pro,
         "rejection_reason": rejection_reason,
@@ -274,7 +291,8 @@ def build_observations(con, now: datetime | None = None) -> list[dict]:
     rows: list[dict] = []
 
     products = {r["id"]: r for r in con.execute(
-        "SELECT id, name, official_price, retail_price FROM products WHERE is_active=1"
+        "SELECT id, name, official_price, retail_price, official_price_updated_at "
+        "FROM products WHERE is_active=1"
     ).fetchall()}
 
     # 1) official_price（公式 / 概算定価）
@@ -288,11 +306,14 @@ def build_observations(con, now: datetime | None = None) -> list[dict]:
             now, product_id=pid, product_name=p["name"],
             source_id="official", source_name="メーカー公式/定価",
             market_type="official", price_role="official", price_type="official_price",
-            condition="new_unopened", price=ref, observed_at=now.isoformat(),
+            # 観測時刻は「その価格を確認した日時」（official_price_updated_at）。設定値の定価は確認日が無いので空。
+            # 生成時刻（now）を入れない: 固定値・設定値を毎日「今確認した」ように見せないため
+            condition="new_unopened", price=ref,
+            observed_at=(p["official_price_updated_at"] or "") if official > 0 else "",
             confidence="high" if official > 0 else "medium",
             source_url="", item_url="", link_type="official_top",
             extraction_method="official" if official > 0 else "retail_concept",
-            price_context="公式価格" if official > 0 else "概算定価（要確認）",
+            price_context="公式価格" if official > 0 else "概算定価（設定値・確認日不明）",
         ))
 
     # 2) buyback_prices（買取 = sell / 下取は trade_in）

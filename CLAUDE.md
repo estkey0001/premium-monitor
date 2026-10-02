@@ -185,3 +185,10 @@ python scripts/update_overseas_prices.py --verbose
 
 ## 絶対禁止
 - 自動購入・自動応募・CAPTCHA突破・ログイン突破・複数アカウント運用・高頻度アクセス・規約違反行為
+
+## データの鮮度（偽装しない）
+
+- 価格・在庫・成約・抽選等のデータについて、データ値または実際の source evidence が変わっていないのに、timestamp だけ更新して freshness を改善してはならない。
+- collection failure 時刻を successful observation として保存してはならない。
+- 人が再確認したときは、`observed_at` を書き換えずに確認日（`verified_at` や `VERIFIED_URLS_CHECKED_ON`）を更新し、確認した証拠（URL・価格）を残す。固定値・設定値の定価に、実行日の日時を付けない。
+- 手動 CSV をコミットする前に、`python scripts/audit_timestamp_only_updates.py --worktree` で「値は同じで日時だけ新しい」行が無いことを確かめる（deploy-check #822 も直近のコミットを検査する）。

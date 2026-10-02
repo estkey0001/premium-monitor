@@ -35,13 +35,23 @@ JST = timezone(timedelta(hours=9))
 NOW = datetime.now(tz=JST)
 OUT = ROOT / "exports" / "data_quality"
 
-# オンライン見積り非対応 / サイト制限で ¥0 になりやすい店（CLAUDE.md OPTIONAL_SHOPS と同期）。
-# ここ由来の ¥0 は「取得失敗」ではなく not_applicable（対象外）として扱う。
-UNSUPPORTED_SHOPS = {
-    "セカンドストリート", "ブックオフ", "ゲオ", "ゲオモバイル", "ハードオフ",
-    "じゃんぱら", "ソフマップ", "駿河屋", "TSUTAYA", "ドスパラ", "パソコン工房",
-    "ネットオフ", "モバイル一番", "買取一丁目", "買取商店", "イオシス",
-}
+# オンライン見積り非対応 / サイト制限で ¥0 になりやすい店。ここ由来の ¥0 は「取得失敗」ではなく
+# not_applicable（対象外）として扱う。
+# 正本は scripts/check_collector_quality.py の OPTIONAL_SHOPS（CLAUDE.md と同期）。ここで店を足さない:
+# required の店（モバイル一番・買取一丁目・買取商店・イオシス・ネットオフ）を対象外にすると、
+# 本当の取得失敗が品質スコアから消える（2026-10-02 まで 5店がここに入っていた）
+def _optional_shop_names() -> set[str]:
+    from scripts.check_collector_quality import OPTIONAL_SHOPS
+    from src.models.buyback_price import BUYBACK_SHOPS
+    names = set()
+    for shop_id in OPTIONAL_SHOPS:
+        info = BUYBACK_SHOPS.get(f"src_{shop_id}")
+        if info:
+            names.add(info["name"])
+    return names
+
+
+UNSUPPORTED_SHOPS = _optional_shop_names()
 
 # Task2 で必ず評価するソース（未統合でも honest に「データなし」を表示）
 RANKED_SOURCES = [

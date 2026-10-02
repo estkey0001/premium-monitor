@@ -1,25 +1,34 @@
 # HANDOFF（最終更新: 2026-10-02）
 
 ## 今の状態
-- UI/UX 再構成の段階B（`?ui=new` のときだけ出る新UIの外枠・HOME・ナビ・デザイントークン、src/content/ui/）を実装。前回レビュー FAIL（HIGH 1）を受けて、抽選の閲覧時の状態を runtime（runtime.py の `derive_runtime_state` と、それを移した lottery_runtime.js の `deriveLotteryRuntimeState`）に一本化した。締切・開始の時刻を過ぎるとページを再読み込みしなくても、CTA・件数・並び順がその場で変わる。
-- 新旧の件数照合（parity.py）は、旧UIが実際に描画した HTML から数えた件数と比べる。差は理由ごとに分けて数える（時刻＝閲覧時刻での判定し直し、上限＝旧UIの表示件数の上限、ガード＝新UIの表示ガード）。理由を説明できない差だけを deploy-check #810 で error にする。
-- テスト 436 件 PASS（新UI 133件。うち3件はヘッドレス Chrome で DOM を動かす tests/test_new_ui_dom.py で、Chrome が無い環境では skip）。独立レビュー5回（FAIL→FAIL→PASS WITH WARNINGS×2→PASS）。抽選の機能（src/tcg/lottery/ など）は変更なし。
+- Phase 0（データの正確さ）を実装、未コミット。公開 LP の誤価格（買取商店の ¥435,000 / ¥900,000、フジヤの下取り価格・限定版・キット、RICOH の共通値 ¥259,800、Leica の別 SKU）と、鮮度の偽装（Apple 固定値の毎日の日時、公式価格・設定値の生成時刻、失敗時刻の「最終更新」、品質集計の required 店の除外）を止めた。deploy-check #820〜#825 で再発を検出する。
+- 段階B（新UIの外枠・HOME・runtime・照合）は本番で受け入れ済み（UI_PHASE_B_REVIEW_PASS）。
+- テスト 496 件 PASS（Phase 0 は 60件）。独立レビューは FAIL → PASS WITH WARNINGS（残りは LOW のみ）。
 
 ## 未解決・保留
 - **data/tcg_verified_lotteries.csv の PCO 2件は AI（Claude）が公式告知画像を目視で転記したもの**。人が公式ページで確認したら human_confirmed を true にする（それまで confidence=medium・通知しない・公式扱いにしない）。
 - トイザらス / Joshin は HTTP 403（ローカルからも）、ヤマダ / ビック / ヨドバシは接続タイムアウト。解析器は未実装で、監視状況に SOURCE_BLOCKED / SOURCE_UNREACHABLE として表示している。エディオン / TSUTAYA / Amazon / 楽天ブックス / セブンネットは到達できるが TCG 抽選の告知一覧を発見できず未実装。
 - fail-closed の運用判断（外部データ依存の error 項目を warning に下げるか）は引き続きユーザー判断待ち。
+- Phase 0 の残り（LOW）:
+  - #821 は「3件以上が同じ時刻」の形しか検出しない
+  - 設定値の定価は確認日不明（freshness_basis=config_unknown_date）のまま参考値として使っている
+  - is_tradein は文字列で判定していて甘い（price_kind は status JSON にだけ記録）
+- Leica M11 の通常版の商品コードは公式資料で未確認（2026-10-02 は leica-camera.com が 502）。`scripts/update_camera_buyback.py` の m11 は require_code_any=[]（UNVERIFIED）で、どの行とも結びつけない。公式テクニカルデータ（日本語版 pm-65457）で確認できたらコードを入れる。
+- 手動 CSV の時刻だけの書き換えは、過去に15回のコミット・483行あった（`python scripts/audit_timestamp_only_updates.py`）。履歴は書き換えていない。
 - ローカルの deploy-check は Errors 11（初心者ページ系 #349・#432〜#467）。Phase B を外しても同じ11件で、ローカルの DB の状態が原因（CI では通る）。
 - CI（daily_lp.yml）は pytest を実行していない。テストはローカルで実行すること。
 - 既存の問題: pytest を実行すると追跡対象の exports/api_automation/collection.json が書き換わる。コミット前に `git checkout -- exports/api_automation/collection.json` で戻すこと（テストの出力先修正は別タスク）。
 
 ## 次にやること
-0. 段階C: 抽選・販売を新UIへ移す（[MIGRATION_PLAN.md](../internal/uiux/MIGRATION_PLAN.md)）。抽選カードは lottery_card.py、状態は runtime.py をそのまま使う（別の判定を作らない）。
-1. PCO の手動転記データを人が確認して human_confirmed=true にする。
-2. 到達可能な未実装 source（エディオン / TSUTAYA / 楽天ブックス / セブンネット）で TCG 抽選の告知一覧の URL を実ページから発見し、解析器を追加する。
-3. 二次流通価格の投入（pokemon_registry.json の secondary_mapping）。
+0. Phase 0 をコミットして CI で確かめる（ユーザーの指示を待つ）。CI の deploy-check で #820〜#825 が ok、公開 LP に ¥435,000 / ¥900,000 / +¥848,220 / 下取りの値 / ¥259,800 が無いことを確認する。
+1. 利益計算の8系統の統一（internal/uiux/UI_VIEW_MODEL_SPEC.md §2）と、成約データの取得方法（internal/uiux/IMPLEMENTATION_PLAN_V2.md）。
+2. 新UI Phase 1（HOME とナビ。internal/uiux/IMPLEMENTATION_PLAN_V2.md）。
 
 ## 注意（次の人へ）
+- **価格は「商品行」と照合して取る**。ページの見出し（「最高¥…」）やページ内の最初の価格で代用しない。一致する行が無ければ未掲載・未取得にする。明らかな異常値は `update_buyback_prices.quarantine_suspicious` で CSV に書く前に隔離される（data_source=suspicious_rejected）。
+- Leica Q3 の通常版（黒・日本向け）は商品コード 19081（Leica 公式テクニカルデータ pm-19539-JP: 黒 19 080 EU/US/CN・19 081 JP・19 082 ROW、メタリックグレー 19 21x）。価格の水準からコードを推測しない。
+- フジヤの買取ページは「買取金額」（現金）と「下取は10%UP」（下取）を併記する。現金の段だけを使い、下取の段しか読めない候補は採用しない。監視対象はボディ単体の通常版なので、限定版・キット・海外版・アクセサリー・別の型番（Leica は商品コードで判定）は使わない。
+- 固定値・設定値の定価に実行日の日時を付けない。Apple の固定値の確認日は `scripts/audit_official_sources.py` の `VERIFIED_URLS_CHECKED_ON`（値を公式で再確認したときだけ更新する）。
 - 新UIは**追加レイヤー**。旧UIの DOM・id・クラス・JS は段階F まで触らない。新UIは `#new-ui-root` の中だけで、`html.ui-new` のとき旧UIを CSS で隠すだけ（DOM は残す）。新UIの生成が失敗しても旧UIは出る（deploy-check #801 は warning）。
 - **抽選の状態は runtime だけで決める**。Python の `derive_runtime_state`（既存の compute_lottery_status を使用）と JS の `deriveLotteryRuntimeState` は同じ結果を返すこと。tests/test_new_ui_runtime.py が node で両方を実行し、多数の時刻で一致を確かめている。片方を変えたら必ずもう片方も変える。
 - 「応募する」は、次の条件をすべて満たすときだけ出す。

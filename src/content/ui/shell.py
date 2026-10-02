@@ -305,7 +305,7 @@ def render_root(ctx: ShellContext) -> str:
         profit_routes=ctx.profit_routes, legacy_lotteries=ctx.legacy_lotteries, now=ctx.now)
     rows = (parity.build(model, ctx.tcg_report, ctx.old_ui_counts)
             if ctx.old_ui_counts is not None else [])
-    updated = f'<span class="nu-header__meta">更新 {esc(ctx.updated_text)}</span>' if ctx.updated_text else ""
+    updated = f'<span class="nu-header__meta">情報確認 {esc(ctx.updated_text)}</span>' if ctx.updated_text else ""
     pages = (
         home.render_home(model, source_issue=ctx.source_issue)
         + parity.render(rows, hidden_prices=model.hidden_prices)

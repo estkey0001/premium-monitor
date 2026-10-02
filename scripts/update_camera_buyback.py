@@ -63,7 +63,7 @@ CAMERA_MODELS = {
                  "exclude_raw": ["Monochrome", "モノクローム"]},
     "gr3x":     {"brand": "RICOH", "name": "RICOH GR IIIx", "retail": 130000,
                  "variants": ["RICOH GR IIIx", "GR IIIx", "GR3x"],
-                 "require_any": ["GRIIIX", "GR3X", "IIIX"]},
+                 "require_any": ["GRIIIX", "GR3X", "IIIX"], "exclude": ["HDF"]},
     "gr4":      {"brand": "RICOH", "name": "RICOH GR IV", "retail": 195000,
                  "variants": ["RICOH GR IV", "GR IV", "GR4"],
                  "require_any": ["GRIV", "GR4"], "exclude": ["HDF", "IIIX", "3X", "MONOCHROME"],
@@ -113,10 +113,18 @@ CAMERA_MODELS = {
     "q3":       {"brand": "LEICA", "name": "Leica Q3", "retail": 880000,
                  "variants": ["Leica Q3", "LEICA Q3", "ライカ Q3"],
                  "require_any": ["LEICAQ3", "ライカQ3", "Q3"],
-                 "exclude": ["Q30", "Q3X"]},
+                 "exclude": ["Q30", "Q3X", "Q343"], "exclude_raw": ["モノクローム", "Monochrom"],
+                 # 通常版（黒・日本向け）の商品コード。Leica 公式テクニカルデータ（pm-19539-JP、2023年5月版）:
+                 # 「商品コード 黒: 19 080 EU/US/CN, 19 081 JP, 19 082 ROW」。メタリックグレー（19 21x）・
+                 # 43・モノクローム・海外向け（19080/19082）は別 SKU
+                 "require_code_any": ["19081"]},
     "m11":      {"brand": "LEICA", "name": "Leica M11", "retail": 1180000,
                  "variants": ["Leica M11", "LEICA M11"],
-                 "require_any": ["LEICAM11", "M11"]},
+                 "require_any": ["LEICAM11", "M11"],
+                 "exclude": ["M11P", "M11D", "M11MONOCHROM", "M11V"], "exclude_raw": ["モノクローム", "Monochrom"],
+                 # 通常版の商品コードは公式資料で未確認（2026-10-02 時点で取得できず）。確認できるまで
+                 # どの行とも結びつけない（推測したコードで価格を割り当てない）。空のリスト = UNVERIFIED
+                 "require_code_any": []},
 }
 
 # 派生リスト（既存コードとの互換用）
@@ -130,14 +138,38 @@ FUJIYA_KEYWORD_VARIANTS = {a: (m.get("variants") or [m["name"]])[:3] for a, m in
 PRIORITY_SHOPS = {"src_mapcamera", "src_fujiya", "src_kitamura"}
 
 
+# 全機種共通で「別の商品」とみなす表記（限定版・記念版・キット・発売前の予約品）。
+# 監視対象はすべてボディ単体の通常版（config/products.yaml）なので、これらの価格は使わない。
+# 2026-10-02: GR IV 30th Anniversary Edition Kit・GR III Street Edition・X100VI Limited Edition・
+#             レンズキット（X-T5 / EOS R5 II / R6 II / Zf）を通常版として採用していた
+GLOBAL_EXCLUDE_UPPER = ("EDITION", "LIMITED", "ANNIVERSARY", "SAFARI", "KIT", "キット",
+                        "限定", "周年", "記念", "EU/US/CN", "海外",
+                        # アクセサリー（本体ではない）
+                        "グリップ", "ケース", "チャージャー", "ストラップ", "バッテリー", "フード")
+GLOBAL_EXCLUDE_RAW = ("発売予定", "予約受付", "用 ")
+
+
 def _strict_model_match(item_text: str, alias: str) -> bool:
     """商品名テキストが対象機種に厳密一致するか（データ駆動・全機種対応）。
     require_any / include_all / include_raw_any / exclude / exclude_raw で判定。
+    限定版・キット・発売前の予約品（GLOBAL_EXCLUDE_*）は全機種で一致としない。
     """
     m = CAMERA_MODELS.get(alias)
     if not m:
         return False
     raw = item_text or ""
+    # 価格・段の表記より前（商品名の部分）だけで判定する（「買取金額」などの語で誤判定しない）
+    name_part = re.split(r"買取金額|基準査定額|新品同様|[¥￥]", raw, maxsplit=1)[0]
+    up = name_part.upper().replace(" ", "").replace("　", "")
+    if any(x in up for x in GLOBAL_EXCLUDE_UPPER) or any(x in name_part for x in GLOBAL_EXCLUDE_RAW):
+        return False
+    # 通常版の商品コードが決まっている機種は、コードが一致する行だけを使う
+    if "require_code_any" in m:
+        codes = m["require_code_any"]
+        if not codes:
+            return False          # 商品コードが未確認の機種（UNVERIFIED）は結びつけない
+        if not any(re.search(rf"(?<!\d){c}(?!\d)", name_part) for c in codes):
+            return False
     # Sony の「α」(ギリシャ文字/全角) を A に正規化してから判定
     t = (raw.replace("α", "A").replace("Α", "A").replace("ａ", "A")
          .upper().replace(" ", "").replace("　", "").replace("-", ""))
@@ -198,9 +230,11 @@ import re as _re_tier  # noqa: E402
 # 富士屋等の段階表示「(段) 新品同様 ￥X 良品 ￥Y」から段ラベルと新品同様価格を抽出。
 # 段ラベル例: 基準査定額 / 買取のみ10%UP / 下取は15%UP
 _TIER_RE = _re_tier.compile(
-    r"(基準査定額|買取のみ[0-9]+%UP|下取は?[0-9]*%?UP|下取り?|トレードイン)"
-    r"[^¥￥]{0,12}新品同様[^¥￥\d]{0,4}[¥￥]\s?([0-9]{2,3}(?:,[0-9]{3})+)"
+    r"(買取金額|基準査定額|買取のみ\s?[0-9]+%UP|下取は?\s?[0-9]*%?UP|下取り?|トレードイン)"
+    r"[^¥￥]{0,12}新品同様[^¥￥\d]{0,4}[¥￥]\s?([0-9]{1,3}(?:,[0-9]{3})+)"
 )
+# 現金買取の段のラベル（これ以外の段は下取・条件付きとして扱う）
+_CASH_TIER_LABELS = ("買取金額", "基準査定額", "買取のみ")
 
 
 def _select_cash_buyback_price(item_text: str):
@@ -217,13 +251,24 @@ def _select_cash_buyback_price(item_text: str):
         return None
     cash = []
     for label, price in tiers:
-        if ("下取" in label) or ("トレードイン" in label):
-            continue  # 下取(trade-in)段は現金買取ではないため除外
+        if not label.startswith(_CASH_TIER_LABELS):
+            continue  # 下取(trade-in)・条件付きの段は現金買取ではないため除外
         try:
             cash.append(int(price.replace(",", "")))
         except ValueError:
             continue
     return max(cash) if cash else None
+
+
+def classify_tier_text(item_text: str) -> str:
+    """段階表示の有無と種類を返す: "CASH_TIERS"（現金買取の段あり）/ "TRADE_IN_ONLY"（下取・条件付きの段だけ）/
+    "NO_TIERS"（段の表示なし）。"""
+    tiers = _TIER_RE.findall(item_text or "")
+    if not tiers:
+        return "NO_TIERS"
+    if any(label.startswith(_CASH_TIER_LABELS) for label, _ in tiers):
+        return "CASH_TIERS"
+    return "TRADE_IN_ONLY"
 
 
 def _select_camera_buyback(candidates: list, alias: str) -> dict:
@@ -246,18 +291,29 @@ def _select_camera_buyback(candidates: list, alias: str) -> dict:
         elif not _strict_model_match(it, alias):
             out["rejected_candidates"].append({**rec, "rejection_reason": "model_mismatch"})
     strict = [c for c in cands if c.get("near_buyback") and _strict_model_match(c.get("item_text", ""), alias)]
-    if strict:
-        best = max(strict, key=lambda c: c.get("price", 0))
+    # 段階表示（買取金額/基準査定額/買取のみ%UP/下取は%UP）がある候補は、現金買取の段の価格だけを使う。
+    # 下取・条件付きの段しか読めない候補は採用しない（最高値で代用しない: 下取価格を現金買取にしないため）。
+    priced = []
+    for c in strict:
+        item_text = c.get("item_text", "") or ""
+        kind = classify_tier_text(item_text)
+        if kind == "CASH_TIERS":
+            cash_price = _select_cash_buyback_price(item_text)
+            if cash_price:
+                priced.append((cash_price, c, "BUYBACK_CASH", c.get("price") != cash_price))
+            continue
+        if kind == "TRADE_IN_ONLY":
+            out["rejected_candidates"].append({"price": c.get("price"), "item": item_text[:70],
+                                               "rejection_reason": "trade_in_or_conditional_only"})
+            continue
+        priced.append((c.get("price", 0), c, "BUYBACK_CASH", False))
+    if priced:
+        price, best, kind, excluded = max(priced, key=lambda t: t[0])
         item_text = best.get("item_text", "") or ""
-        price = best["price"]
-        # 段階表示（基準査定額/買取のみ%UP/下取は%UP）がある場合は、
-        # 下取(trade-in)段を除いた現金買取の最高値を採用する。
-        cash_price = _select_cash_buyback_price(item_text)
-        if cash_price and cash_price != price:
+        if excluded:
             out["tradein_tier_excluded"] = True
-            out["raw_max_price"] = price  # 参考: 段込みの最高値（下取段の可能性）
-            price = cash_price
-        out.update(price=price, confidence="high",
+            out["raw_max_price"] = best.get("price")  # 参考: 段込みの最高値（下取段の可能性）
+        out.update(price=price, confidence="high", price_kind=kind,
                    matched_item=item_text[:140], used_for_save=True)
     return out
 
@@ -675,7 +731,11 @@ def main() -> int:
                     _saved = True
                 except Exception:
                     pass
-            price = _parse_buyback_price(html, alias, shop_id) if html else None
+            # requests で拾った金額は「ページで最初に見つかった金額」で、機種の照合・現金買取の段の判定・
+            # 限定版の除外を通っていない。採用せず参考として記録だけ残し、照合を通る経路（Playwright の
+            # 候補 → _select_camera_buyback）でのみ価格を決める
+            _requests_raw_price = _parse_buyback_price(html, alias, shop_id) if html else None
+            price = None
             _strategy = "requests"
             _pw = {}
 
@@ -734,7 +794,8 @@ def main() -> int:
                    or (0 < _size < 3000 and "<script" in _low))
             _pw_attempted = bool(_pw)
             _pw_success = bool(_pw.get("html")) if _pw else False
-            _pw_kw = dict(playwright_attempted=_pw_attempted,
+            _pw_kw = dict(requests_raw_price=_requests_raw_price,  # 参考のみ（採用しない）
+                          playwright_attempted=_pw_attempted,
                           playwright_success=_pw_success,
                           screenshot_saved=_pw.get("screenshot_saved", False) if _pw else False,
                           rendered_html_size=_pw.get("rendered_html_size", 0) if _pw else 0,

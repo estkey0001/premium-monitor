@@ -6966,6 +6966,11 @@ def check() -> list[dict]:
     # ══════════════════════════════════════════════════════════════════
     results.extend(_check_new_ui(html))
 
+    # ══════════════════════════════════════════════════════════════════
+    # #820-#825: データの正確さ・鮮度の偽装（Phase 0）
+    # ══════════════════════════════════════════════════════════════════
+    results.extend(_check_data_correctness())
+
     return results
 
 
@@ -7047,6 +7052,167 @@ def _check_new_ui(html: str) -> list[dict]:
     _add(810, "new_ui_parity", len(rows) >= 9 and not mismatch,
          f"新旧の件数照合に説明できない差が無い（{len(rows)}項目）",
          f"不一致: {mismatch}" if rows else "照合表が無い")
+    return out
+
+
+def _check_data_correctness() -> list[dict]:
+    """誤価格・鮮度の偽装を公開前に止めるチェック（#820-#825）。
+
+    #820 明らかに誤りの買取価格（HARD_REJECT_REASONS）が CSV に残っていない（LP・利益計算に流れない）
+    #821 公式定価の観測時刻が、生成時刻（毎回の実行時刻）になっていない
+    #822 直近のコミットで、手動 CSV の「値は同じで日時だけ新しい」更新をしていない
+    #823 品質の集計で「対象外」にしている店は、CLAUDE.md の OPTIONAL_SHOPS だけ
+    #824 カメラの採用価格は、現金買取の段で、限定版・キット・発売前の品ではない
+    #825 公式定価で、同じ一覧ページの別商品に同じ価格を割り当てていない（RICOH の first_on_page 対策）
+    """
+    import csv as _csv
+    import importlib.util as _ilu
+    import json as _json
+    import subprocess as _sp
+    from datetime import datetime as _dt
+
+    out: list[dict] = []
+
+    def _add(no, key, ok, msg, ng="", level_ng="error"):
+        out.append({"level": "ok" if ok else level_ng, "check": key,
+                    "message": f"#{no} {msg}" + ("" if ok else f" ← {ng}")})
+
+    def _load(name):
+        spec = _ilu.spec_from_file_location(name, PROJECT_ROOT / "scripts" / f"{name}.py")
+        mod = _ilu.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        return mod
+
+    # #820
+    def _int(v):
+        try:
+            return int(str(v or "0").replace(",", ""))
+        except ValueError:
+            return 0
+    rep_p = PROJECT_ROOT / "exports" / "collector_report" / "latest.json"
+    if rep_p.exists():
+        rep = _json.loads(rep_p.read_text(encoding="utf-8"))
+        hard = _load("update_buyback_prices").HARD_REJECT_REASONS
+        # (商品, 店, 価格) で照合する（同じ店・商品で別の実行の正しい価格を誤検出しないため）
+        bad = {(x["product_alias"], x["shop"], _int(x.get("price"))) for x in rep.get("suspicious_prices") or []
+               if x.get("reason") in hard}
+        with open(PROJECT_ROOT / "data" / "manual_buyback_prices.csv", encoding="utf-8") as f:
+            leaked = [f"{r['product_alias']}/{r['buyback_shop']}=¥{_int(r['buyback_price']):,}"
+                      for r in _csv.DictReader(f)
+                      if (r["product_alias"], r["buyback_shop"], _int(r["buyback_price"])) in bad
+                      and _int(r["buyback_price"]) > 0]
+        _add(820, "no_rejected_price_published", not leaked,
+             "明らかに誤りの買取価格が CSV（LP・利益計算の入力）に残っていない", f"残っている: {leaked[:5]}")
+    else:
+        _add(820, "no_rejected_price_published", False,
+             "明らかに誤りの買取価格が CSV（LP・利益計算の入力）に残っていない",
+             "collector_report が無く判定できない", level_ng="warning")
+
+    # #821
+    def _ts(v):
+        """ISO・「YYYY-MM-DD HH:MM JST」・タイムゾーン無し（JST とみなす）を読む。"""
+        from datetime import timedelta as _td
+        from datetime import timezone as _tz
+        jst = _tz(_td(hours=9))
+        s_ = str(v or "").strip().replace(" JST", "")
+        try:
+            d = _dt.fromisoformat(s_)
+        except ValueError:
+            return None
+        return (d if d.tzinfo else d.replace(tzinfo=jst)).astimezone(jst)
+    npo_p = PROJECT_ROOT / "exports" / "normalized_price_observations" / "latest.json"
+    if npo_p.exists():
+        npo = _json.loads(npo_p.read_text(encoding="utf-8"))
+        obs = npo.get("observations") or []
+        g = _ts(npo.get("generated_at"))
+        # 偽装の形: 複数の公式価格が「まったく同じ観測時刻」を持ち、それが生成時刻と重なる
+        # （実際に取得した公式価格は、取得の間隔を空けて1件ずつ取るので同じ時刻にならない）
+        same: dict = {}
+        for o in obs:
+            if o.get("price_role") == "official" and o.get("observed_at"):
+                same.setdefault(str(o["observed_at"]), []).append(o.get("product_id"))
+        fake = []
+        for ts_str, pids in same.items():
+            t = _ts(ts_str)
+            if len(pids) >= 3 and t is not None and g is not None and abs((g - t).total_seconds()) < 600:
+                fake.extend(pids)
+        _add(821, "official_price_not_generation_time", not fake,
+             "公式定価の観測時刻が生成時刻になっていない（確認日・実際の取得時刻を保持）",
+             f"生成時刻と同じ時刻の公式価格 {len(fake)}件: {fake[:5]}")
+    else:
+        _add(821, "official_price_not_generation_time", True, "正規化データが無い（判定対象なし）")
+
+    # #822（公開する作業ツリーと、直近のコミットの両方を見る）
+    aud = _load("audit_timestamp_only_updates")
+    found = aud.audit_worktree()
+    rr = _sp.run(["git", "rev-parse", "--verify", "HEAD~1"], cwd=PROJECT_ROOT, capture_output=True, text=True)
+    if rr.returncode == 0:
+        found += aud.audit_commits("HEAD~1..HEAD")
+    _add(822, "no_timestamp_only_update", not found,
+         "手動 CSV で「値は同じで日時だけ新しい」更新をしていない（作業ツリーと直近のコミット）",
+         f"{[(c, p, n) for c, p, n, _ in found][:3]}")
+
+    # #823
+    dq = _load("generate_data_quality_dashboard")
+    opt = _load("check_collector_quality").OPTIONAL_SHOPS
+    from src.models.buyback_price import BUYBACK_SHOPS as _BS
+    allowed = {(_BS.get(f"src_{k}") or {}).get("name") for k in opt}
+    extra = sorted(set(dq.UNSUPPORTED_SHOPS) - allowed)
+    _add(823, "dq_required_sources_counted", not extra,
+         "品質の集計で対象外にしている店は OPTIONAL_SHOPS だけ", f"required なのに対象外: {extra}")
+
+    # #824
+    cam_p = PROJECT_ROOT / "exports" / "camera_buyback_status.json"
+    cam = _json.loads(cam_p.read_text(encoding="utf-8")) if cam_p.exists() else None
+    cam_at = _ts(cam.get("generated_at")) if cam else None
+    _now = _dt.now(cam_at.tzinfo) if cam_at else None
+    if cam is not None and (cam_at is None or (_now - cam_at).total_seconds() > 6 * 3600):
+        # カメラの取得が今回の実行で失敗し、前回コミットした古い状態ファイルが残っている場合。
+        # 今の DB に無い古い値で公開を止めないよう、判定対象なし（warning）にする
+        _add(824, "camera_cash_buyback_only", False, "カメラの採用価格は現金買取の段・通常版のみ",
+             f"camera_buyback_status.json が古い（generated_at={cam.get('generated_at')}）ため判定できない",
+             level_ng="warning")
+    elif cam is not None:
+        ucb = _load("update_camera_buyback")
+        bad_cam = []
+        for r in cam.get("detail") or []:
+            if r.get("status") != "OK":
+                continue
+            item = r.get("matched_item") or ""
+            kind = ucb.classify_tier_text(item)
+            if not ucb._strict_model_match(item, r.get("product_alias", "")) or kind == "TRADE_IN_ONLY":
+                bad_cam.append(f"{r.get('product_alias')}/{r.get('shop_id')}")
+            elif kind == "CASH_TIERS" and ucb._select_cash_buyback_price(item) != r.get("price"):
+                bad_cam.append(f"{r.get('product_alias')}/{r.get('shop_id')}=下取の可能性")
+        _add(824, "camera_cash_buyback_only", not bad_cam,
+             "カメラの採用価格は現金買取の段・通常版のみ", f"不正: {bad_cam[:5]}")
+    else:
+        _add(824, "camera_cash_buyback_only", True, "カメラの取得結果が無い（判定対象なし）")
+
+    # #825
+    if npo_p.exists():
+        groups: dict = {}
+        for o in (npo.get("observations") or []):
+            if o.get("price_role") == "official" and o.get("extraction_method") == "official" and o.get("price"):
+                groups.setdefault(o["price"], []).append(o.get("product_id"))
+        try:
+            import yaml as _yaml
+            cfg = _yaml.safe_load((PROJECT_ROOT / "config" / "product_source_configs.yaml").read_text(encoding="utf-8"))
+            page_of = {}
+            for c in (cfg.get("configs") or cfg.get("product_source_configs") or []):
+                if c.get("target_url"):
+                    page_of.setdefault(c["product_id"], set()).add(c["target_url"])
+        except Exception:  # noqa: BLE001
+            page_of = {}
+        shared = []
+        for price, pids in groups.items():
+            pids = sorted(set(pids))
+            for i, a in enumerate(pids):
+                for b in pids[i + 1:]:
+                    if page_of.get(a, set()) & page_of.get(b, set()):
+                        shared.append(f"{a}/{b}=¥{price:,}")
+        _add(825, "official_price_not_shared_across_products", not shared,
+             "同じ一覧ページの別商品に同じ公式定価を割り当てていない", f"同額: {shared[:5]}")
     return out
 
 

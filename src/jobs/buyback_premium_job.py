@@ -144,8 +144,18 @@ class BuybackPremiumJob:
         )
         return results
 
+    # 旧 collector（src/collectors/buyback/ の mobile_ichiban / kaitori_shouten / iosys_buyback）は、
+    # ページ内の最初の価格を拾う古いパーサーで DB に直接書き込み、商品行の照合・異常値の隔離
+    # （scripts/update_buyback_prices.py の ROW_RULES / quarantine_suspicious）を通らない。
+    # 同じ店の価格は update_buyback_prices.py → CSV → import-buyback-csv の経路で取得しているので、
+    # ここでは取得しない（2026-10-02: 旧パーサーは買取商店で iPhone 17 Pro=¥238,500・PS5 Pro=¥900,000 を返した）
+    LEGACY_REFRESH_ENABLED = False
+
     def _refresh_buyback_prices(self) -> int:
-        """Collectorで買取価格を取得する（失敗はスキップ）。"""
+        """Collectorで買取価格を取得する（失敗はスキップ）。旧 collector の経路は無効（上記）。"""
+        if not self.LEGACY_REFRESH_ENABLED:
+            logger.info("buyback refresh: 旧 collector の直接書き込みは無効（update_buyback_prices.py の経路を使用）")
+            return 0
         count = 0
         products = self.repo.list_products()
 

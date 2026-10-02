@@ -4216,6 +4216,22 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             counts["legacy_active_by_id"] = by_id
         return counts
 
+    @staticmethod
+    def _nu_data_checked_text(report: dict) -> str:
+        """新UIのヘッダーに出す「情報確認」の時刻。
+
+        TCG の取得元（source_health）のうち、取得に成功した最新の時刻（last_success）を使う。
+        generated_at は収集を実行した時刻で、全部の取得元が失敗しても更新されるので使わない。
+        どこも成功していなければ空（時刻を出さない）。
+        """
+        from src.tcg.models import JST as _JST
+        from src.tcg.models import parse_dt as _parse_dt
+        health = (report or {}).get("source_health")
+        times = [_parse_dt(h.get("last_success")) for h in (health if isinstance(health, list) else [])
+                 if isinstance(h, dict) and h.get("last_success")]
+        times = [t for t in times if t]
+        return max(times).astimezone(_JST).strftime("%m/%d %H:%M") if times else ""
+
     _NU_HEAD_MARK = "<!--nu-head-->"
     _NU_ROOT_MARK = "<!--nu-root-->"
 
@@ -4259,7 +4275,8 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 profit_routes=self._load_export_json("profit_routes", "latest.json"),
                 # 旧来の抽選（カメラ・ゲーム機）。状態は新UI側で TCG と同じ判定に通す
                 legacy_lotteries=[it if isinstance(it, dict) else dict(it) for it in lottery_items],
-                updated_text=self._nu_now(lp_generated_at).strftime("%m/%d %H:%M"),
+                # ヘッダーの時刻は「データを確認した時刻」（TCG の収集時刻）。ページの生成時刻にしない
+                updated_text=self._nu_data_checked_text(report),
                 source_issue=source_issue,
                 site_title=str(site_title or "プレ値速報"),
                 old_ui_counts=self._nu_old_counts(old_html, lottery_items, old_count_as_active),
@@ -6684,7 +6701,8 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         - 実際に取得した価格ではない場合は「最新」と表示しない
         """
         is_not_listed = (str(data_source) == "product_not_listed")
-        is_failed = (str(data_source) == "fetch_failed")
+        # suspicious_rejected（誤りと判断して隔離した価格）も取得失敗として扱う（「最新」にしない）
+        is_failed = (str(data_source) in ("fetch_failed", "suspicious_rejected"))
         is_auto   = (str(data_source) == "auto_scraped")   # 自動スクレイピング成功
         is_resale = (str(data_source) == "resale_market")  # 二次流通参考価格
         is_manual = bool(data_source and (str(data_source).startswith("manual") or is_resale))  # 手動CSV由来 or 二次流通
@@ -9382,7 +9400,15 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             return ""
         try:
             _data = _json.loads(_report_path.read_text(encoding="utf-8"))
-            _suspicious = len(_data.get("suspicious_prices", []))
+            # 隔離した価格（action=rejected）は LP・利益計算に出していないので「価格精度に問題」とは数えない
+            _sus_all = _data.get("suspicious_prices", []) or []
+            _rejected = len({(x.get("product_alias"), x.get("shop")) for x in _sus_all if x.get("action") == "rejected"})
+            # 強警告は「価格そのものが誤りの可能性が高い」もの（隔離の理由と同じ種類）だけを数える。
+            # 前回比の変動・他店との差だけ（相場の実際の変動もありうる）は、控えめな警告にする
+            from src.market.price_quality import HARD_REJECT_REASONS as _hard
+            _suspicious = sum(1 for x in _sus_all if x.get("action") != "rejected" and x.get("reason") in _hard)
+            _moves = len({(x.get("product_alias"), x.get("shop")) for x in _sus_all
+                          if x.get("action") != "rejected" and x.get("reason") not in _hard})
             _low_conf = _data.get("summary", {}).get("low_confidence_count", 0)
 
             # shop_detail から required / optional の失敗数を集計
@@ -9412,6 +9438,22 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             return (
                 f'<div class="collector-warn-bar collector-warn-strong" id="collector-warn-bar">'
                 f'⚠️ 価格精度に問題があります（{_esc(_detail)}） — {_link}'
+                f'</div>\n'
+            )
+
+        # 価格の急な変動（前回比 20% 以上など）。誤りとは限らないので控えめに知らせる
+        if _moves > 0:
+            return (
+                f'<div class="collector-warn-bar collector-warn-soft" id="collector-warn-bar">'
+                f'ℹ️ 前回から大きく変わった買取価格が {_moves}件あります（公式サイトでご確認ください） — {_link}'
+                f'</div>\n'
+            )
+
+        # 誤りと判断して隔離した価格だけがある場合（公開はしていない）
+        if _rejected > 0:
+            return (
+                f'<div class="collector-warn-bar collector-warn-soft" id="collector-warn-bar">'
+                f'ℹ️ 誤りと判断した買取価格 {_rejected}件は掲載していません — {_link}'
                 f'</div>\n'
             )
 

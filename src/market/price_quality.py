@@ -292,3 +292,11 @@ def normalization_flags(obs) -> dict:
         "is_tradein_excluded": ("下取" not in ctx),
         "role": obs.get("price_role"),
     }
+
+
+# 買取価格そのものが誤りと判断できる理由（scripts/update_buyback_prices.py が CSV に書く前に隔離し、
+# LP の強警告もこの種類だけを数える）。前回比の変動・他店との差は相場の変動もありうるので含めない
+HARD_REJECT_REASONS = frozenset({
+    "over_3x_official", "below_30pct_official", "game_console_smartphone_price",
+    "above_genre_max", "below_genre_min", "capacity_price_reversal", "cross_product_same_price",
+})

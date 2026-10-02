@@ -1144,10 +1144,16 @@ class Repository:
     # =========================================
 
     def get_latest_buyback_observed_at(self) -> "Optional[datetime]":
-        """buyback_prices の最新 observed_at を返す。"""
+        """買取価格を「取得できた」最新の observed_at を返す。
+
+        取得に失敗した行（price=0 / fetch_failed / product_not_listed / suspicious_rejected）の
+        observed_at は「取得を試みた時刻」なので、最終更新・鮮度の判定に使わない。
+        """
         try:
             row = self.db.connection.execute(
-                "SELECT MAX(observed_at) AS ts FROM buyback_prices WHERE is_active = 1"
+                "SELECT MAX(observed_at) AS ts FROM buyback_prices WHERE is_active = 1 "
+                "AND buyback_price > 0 AND COALESCE(data_source, '') NOT IN "
+                "('fetch_failed', 'product_not_listed', 'suspicious_rejected')"
             ).fetchone()
             val = row["ts"] if row else None
             return datetime.fromisoformat(val) if val else None

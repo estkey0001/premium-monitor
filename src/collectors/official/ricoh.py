@@ -149,10 +149,6 @@ class RicohOfficialCollector(BaseCollector):
         # RICOH Imaging Storeのリストページは複数商品を含む
         # span.product__price--numeric, span.product__status-text, span.product__icon--9
 
-        price_elements = soup.select("span.product__price--numeric")
-        status_elements = soup.select("span.product__status-text")
-        lottery_elements = soup.select("span.product__icon--9")
-        product_names = soup.select("a[class*='product__name'], h2, h3")
 
         # 全商品カードのテキストを取得し、キーワードマッチで対象を特定
         # ページ全体からパースする（リストページの場合）
@@ -161,47 +157,54 @@ class RicohOfficialCollector(BaseCollector):
 
         target_card = None
         # バリエーション区別キーワード（これがproduct.keywordsに含まれていないなら除外対象）
-        variant_markers = ["HDF", "Monochrome", "Mono", "Urban", "Limited", "Edition"]
+        variant_markers = ["HDF", "Monochrome", "Mono", "Urban", "Limited", "Edition", "Anniversary", "Kit",
+                           "Package", "Bundle", "Set",
+                           "限定", "セット", "キット", "記念", "パッケージ", "同梱"]
         product_kw_lower = [kw.lower() for kw in product.keywords]
         has_variant = any(
             vm.lower() in kw for kw in product_kw_lower for vm in variant_markers
         )
-
-        for card in cards:
-            text = card.get("text", "")
-            text_lower = text.lower()
-            # アクセサリー除外
-            if re.search(r"ケース|ストラップ|バッテリー|アダプター|フード", text):
-                continue
-            # キーワードマッチ
-            if not any(kw.lower() in text_lower for kw in product.keywords):
-                continue
-            # バリエーション除外: 「GR IV」で検索したとき「GR IV HDF」「GR IV Monochrome」にマッチしないようにする
-            if not has_variant:
-                if any(vm.lower() in text_lower for vm in variant_markers):
+        # 1) 商品コード（keywords に S0001566 のような形で登録）で一致するカード
+        codes = {kw for kw in product.keywords if re.fullmatch(r"S\d{7}", kw)}
+        candidates = [c for c in cards if c.get("product_code") and c["product_code"] in codes]
+        if not candidates:
+            # 2) 商品名のキーワードで一致するカード（バリエーション違い・アクセサリーを除く）
+            name_kws = [kw.lower() for kw in product.keywords if not re.fullmatch(r"S\d{7}", kw)]
+            for card in cards:
+                # 説明文（「セットアップが簡単」など）に当たらないよう、商品名だけで照合する
+                text = card.get("name") or card.get("text", "")
+                text_lower = text.lower()
+                if re.search(r"ケース|ストラップ|バッテリー|アダプター|フード", text):
                     continue
-            target_card = card
-            break
+                # 単語として一致させる（「GR III」が「GR IIIx」に部分一致しないように）
+                if not any(re.search(r"(?<![a-z0-9])" + re.escape(kw) + r"(?![a-z0-9])", text_lower)
+                           for kw in name_kws):
+                    continue
+                # バリエーション除外: 「GR IV」で検索したとき「GR IV HDF」「GR IV Monochrome」にマッチしないようにする
+                # 英語の語は単語として一致させる（説明文の「settings」などで誤除外しない）。日本語は部分一致
+                if not has_variant and any(
+                        (re.search(r"(?<![a-z])" + vm.lower() + r"(?![a-z])", text_lower) if vm.isascii()
+                         else vm in text) for vm in variant_markers):
+                    continue
+                candidates.append(card)
+        if len(candidates) == 1:
+            target_card = candidates[0]
+        elif len(candidates) > 1:
+            # 複数の商品に一致した場合は、どれか1つを選ばない（別商品の価格を割り当てないため）
+            result["raw"]["price_method"] = "ambiguous_cards"
+            result["raw"]["ambiguous_codes"] = [c.get("product_code") for c in candidates]
 
         if target_card:
             result["price"] = target_card.get("price")
             result["is_in_stock"] = target_card.get("is_in_stock")
             result["lottery_status"] = target_card.get("lottery_status")
+            result["raw"]["price_method"] = "matched_card"
             result["raw"]["matched_card"] = {
                 k: v for k, v in target_card.items() if k != "element"
             }
         else:
-            # フォールバック: ページ全体から最初の価格を取得
-            if price_elements:
-                result["price"] = Normalizer.parse_price(price_elements[0].get_text())
-                result["raw"]["price_method"] = "first_on_page"
-            if status_elements:
-                status_text = status_elements[0].get_text().strip()
-                result["is_in_stock"] = status_text != "SOLD OUT"
-                result["raw"]["status_text"] = status_text
-            if lottery_elements:
-                result["lottery_status"] = "closed"  # デフォルトclosed
-                result["raw"]["has_lottery_label"] = True
+            # 一致するカードが無ければ価格を取らない（ページ先頭の価格で代用しない）
+            result["raw"].setdefault("price_method", "no_matching_card")
 
         # 抽選状態の詳細判定
         page_text = soup.get_text()
@@ -225,57 +228,37 @@ class RicohOfficialCollector(BaseCollector):
     def _extract_cards(self, soup) -> list[dict]:
         """ページ内の商品カードを全て抽出する。
 
-        戦略: 商品名リンクを起点に、直後の価格・状態要素をペアリングする。
-        リンクのhrefにProductDetailを含む <a> タグを商品名として使う。
+        価格要素（span.product__price--numeric）ごとに、それを含む商品ブロック
+        （div.product__item--detail。無ければ商品詳細リンクを含む最も近い祖先）から、
+        商品名・商品コード（pid=S0001551 など）・在庫状態を読む。
+        価格と商品名を「並び順」や「前方の文字列」で推測して結びつけない
+        （2026-10-02: 商品名が取れず first_on_page で GR IV 系3商品が同じ ¥259,800 になった）。
         """
         cards = []
-
-        # 商品名リンク（hrefパターンを複数対応）
-        all_names = soup.select("a[href*='ProductDetail']")
-        if not all_names:
-            all_names = soup.select("a[href*='productdetail']")
-        if not all_names:
-            all_names = soup.select("a[href*='Product/']")
-
-        # 価格と状態の全要素
-        all_prices = soup.select("span.product__price--numeric")
-        all_statuses = soup.select("span.product__status-text")
-
-        if all_names and len(all_names) == len(all_prices):
-            # 名前と価格の数が一致 → インデックスでペアリング
-            for i, name_el in enumerate(all_names):
-                card = {"text": name_el.get_text().strip()}
-                card["price"] = Normalizer.parse_price(all_prices[i].get_text())
-                if i < len(all_statuses):
-                    status = all_statuses[i].get_text().strip()
-                    card["is_in_stock"] = status != "SOLD OUT"
-                    card["status_text"] = status
-                card["lottery_status"] = None
-                cards.append(card)
-        elif all_prices:
-            # フォールバック: 価格要素の前方テキストを使ってカードを組み立てる
-            # HTMLを文字列として分割し、各価格の前のテキストを商品名として扱う
-            html_str = str(soup)
-            for i, price_el in enumerate(all_prices):
-                price_html = str(price_el)
-                idx = html_str.find(price_html)
-                if idx < 0:
-                    continue
-                # 価格の前200文字から商品名を探す
-                before = html_str[max(0, idx - 500):idx]
-                # <a>タグのテキストを抽出
-                name_match = re.findall(r"<a[^>]*>([^<]+)</a>", before)
-                card_text = name_match[-1].strip() if name_match else ""
-
-                card = {
-                    "text": card_text,
-                    "price": Normalizer.parse_price(price_el.get_text()),
-                }
-                if i < len(all_statuses):
-                    status = all_statuses[i].get_text().strip()
-                    card["is_in_stock"] = status != "SOLD OUT"
-                    card["status_text"] = status
-                card["lottery_status"] = None
-                cards.append(card)
-
+        for price_el in soup.select("span.product__price--numeric"):
+            block = price_el.find_parent("div", class_="product__item--detail")
+            if block is None:
+                block = price_el
+                for _ in range(8):
+                    block = block.parent
+                    if block is None or block.find("a", href=re.compile("ProductDetail", re.I)):
+                        break
+            if block is None:
+                continue
+            link = block.find("a", href=re.compile("ProductDetail", re.I))
+            href = link.get("href", "") if link else ""
+            m = re.search(r"pid=([A-Za-z0-9]+)", href)
+            status_el = block.select_one("span.product__status-text")
+            status = status_el.get_text().strip() if status_el else None
+            cards.append({
+                "text": block.get_text(" ", strip=True),
+                # 商品名（リンクの文字列）。照合は説明文ではなく商品名で行う
+                "name": link.get_text(" ", strip=True) if link else "",
+                "product_code": m.group(1) if m else "",
+                "href": href,
+                "price": Normalizer.parse_price(price_el.get_text()),
+                "is_in_stock": (status != "SOLD OUT") if status else None,
+                "status_text": status,
+                "lottery_status": None,
+            })
         return cards

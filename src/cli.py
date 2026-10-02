@@ -1943,6 +1943,15 @@ def refresh_buyback_prices(product):
             pid = _resolve_product_id(product)
             products = [p for p in products if p.id == pid]
 
+        # 旧 collector は商品行の照合・異常値の隔離を通らずに DB へ直接書くので使わない
+        # （BuybackPremiumJob.LEGACY_REFRESH_ENABLED と同じ扱い）。買取価格の取得は
+        # `python scripts/update_buyback_prices.py` → `import-buyback-csv` の経路で行う
+        from src.jobs.buyback_premium_job import BuybackPremiumJob
+        if not BuybackPremiumJob.LEGACY_REFRESH_ENABLED:
+            click.echo("refresh-buyback-prices は無効です。scripts/update_buyback_prices.py と "
+                       "import-buyback-csv を使ってください。")
+            return
+
         # Collectorで取得を試みる
         from src.collectors.buyback.mobile_ichiban import MobileIchibanCollector
         from src.collectors.buyback.kaitori_shouten import KaitoriShoutenCollector

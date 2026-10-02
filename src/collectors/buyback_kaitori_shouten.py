@@ -7,47 +7,92 @@ import re
 from typing import Optional
 from src.collectors.buyback_base_csv import BaseCsvBuybackCollector
 
+# iPhone はカテゴリページ（全容量・全色の表）を使う。まとめページ /keitai は各機種3件しか載せないため
+# 512GB が常に「未掲載」になる（2026-10-02 確認: /category/1/710 = iPhone17 Pro、711 = Pro Max）
 PRODUCT_URLS = {
-    "iphone17pro256":  "https://www.kaitorishouten-co.jp/keitai",
-    "iphone17pro512":  "https://www.kaitorishouten-co.jp/keitai",
-    "iphone17pm256":   "https://www.kaitorishouten-co.jp/keitai",
-    "iphone17pm512":   "https://www.kaitorishouten-co.jp/keitai",
+    "iphone17pro256":  "https://www.kaitorishouten-co.jp/category/1/710",
+    "iphone17pro512":  "https://www.kaitorishouten-co.jp/category/1/710",
+    "iphone17pm256":   "https://www.kaitorishouten-co.jp/category/1/711",
+    "iphone17pm512":   "https://www.kaitorishouten-co.jp/category/1/711",
     "switch2":         "https://www.kaitorishouten-co.jp/kaden",
     "ps5_pro":         "https://www.kaitorishouten-co.jp/kaden",
 }
 
-# 商品を特定するための検索キーワード
-# iPhone: "Pro Max" が含まれると Pro Max と区別できないため "Pro 256" のような形式を使用
-SEARCH_KEYWORDS = {
-    "iphone17pro256": ["iPhone 17 Pro 256", "iPhone17 Pro 256"],
-    "iphone17pro512": ["iPhone 17 Pro 512", "iPhone17 Pro 512"],
-    "iphone17pm256":  ["iPhone 17 Pro Max 256", "iPhone17 Pro Max 256"],
-    "iphone17pm512":  ["iPhone 17 Pro Max 512", "iPhone17 Pro Max 512"],
-    "switch2":        ["Switch 2", "スイッチ ２", "スイッチ2"],
-    "ps5_pro":        ["PS5 Pro", "プレイステーション5 Pro", "CFI-7"],
+# 商品行（<li><a>商品名</a> <span class="num">¥価格</span></li>）の商品名に対する照合ルール。
+# 機種・Pro / Pro Max・容量・SIMフリー・セット品の違いを区別する（部分一致で別商品を拾わない）。
+# 一覧ページに無い商品（例: 512GB がまとめページに載っていない日）は「未掲載」とし、
+# 見出しの「最高¥…」やページ全体の価格では代用しない（2026-10-02 の ¥435,000 / ¥900,000 誤取得の原因）。
+ROW_RULES = {
+    "iphone17pro256": {"pattern": r"^iPhone\s?17\s?Pro\s+256GB\b", "require": ["SIMフリー"],
+                       "exclude": ["Max", "au", "docomo", "ドコモ", "softbank", "ソフトバンク", "楽天"]},
+    "iphone17pro512": {"pattern": r"^iPhone\s?17\s?Pro\s+512GB\b", "require": ["SIMフリー"],
+                       "exclude": ["Max", "au", "docomo", "ドコモ", "softbank", "ソフトバンク", "楽天"]},
+    "iphone17pm256":  {"pattern": r"^iPhone\s?17\s?Pro\s?Max\s+256GB\b", "require": ["SIMフリー"],
+                       "exclude": ["au", "docomo", "ドコモ", "softbank", "ソフトバンク", "楽天"]},
+    "iphone17pm512":  {"pattern": r"^iPhone\s?17\s?Pro\s?Max\s+512GB\b", "require": ["SIMフリー"],
+                       "exclude": ["au", "docomo", "ドコモ", "softbank", "ソフトバンク", "楽天"]},
+    # 本体のみ（セット品・ソフトを除く）
+    "switch2":        {"pattern": r"^Nintendo\s?Switch\s?2\s*日本語・国内専用$", "require": [],
+                       "exclude": ["セット", "Edition", "/Switch 2"]},
+    # 型番 CFI-7000 / CFI-7100 系（デジタル・エディション等を除く）
+    "ps5_pro":        {"pattern": r"^プレイステーション5\s?Pro\s*\[CFI-7[01]00B01\]", "require": [],
+                       "exclude": ["デジタル", "セット"]},
 }
 
-# 商品を直接特定する正規表現パターン（テキスト全体に適用）
-# 買取商店のページは改行なしの一続きテキストのため、直接regexで抽出
-DIRECT_PATTERNS = {
-    # {0,400} に拡大: 商品名から価格までのHTMLが長い場合に対応
-    "iphone17pro256": r'iPhone 17 Pro 256.{0,400}?(\d{2,3},\d{3})円',
-    "iphone17pro512": r'iPhone 17 Pro 512.{0,400}?(\d{2,3},\d{3})円',
-    "iphone17pm256":  r'iPhone 17 Pro Max 256.{0,400}?(\d{2,3},\d{3})円',
-    "iphone17pm512":  r'iPhone 17 Pro Max 512.{0,400}?(\d{2,3},\d{3})円',
-    "switch2":        r'(?:Nintendo Switch 2|Switch 2|スイッチ\s*２).{0,400}?(\d{2},\d{3})円',
-    "ps5_pro":        r'(?:PS5 Pro|プレイステーション5 Pro|CFI-7[01]).{0,400}?(\d{2,3},\d{3})円',
-}
+_PRICE_RE = re.compile(r"[¥￥]\s?([0-9]{1,3}(?:,[0-9]{3})+)")
 
-# 二段階検索: 商品セクション(anchor)を特定してからその近傍で価格を探す
-ANCHOR_KEYWORDS = {
-    "iphone17pro256": ["iPhone 17 Pro", "256"],
-    "iphone17pro512": ["iPhone 17 Pro", "512"],
-    "iphone17pm256":  ["iPhone 17 Pro Max", "256"],
-    "iphone17pm512":  ["iPhone 17 Pro Max", "512"],
-    "switch2":        ["Switch 2", None],
-    "ps5_pro":        ["PS5 Pro", None],
-}
+
+def parse_rows(html: str) -> list[tuple[str, int, str]]:
+    """一覧ページの商品行を (商品名, 新品買取価格, 詳細URL) の一覧にする。
+
+    2つの形式に対応する:
+    - まとめページ: <li><a>商品名</a> <span class="num">¥価格</span></li>
+    - カテゴリページ: <table> の見出し「品目 / 新品買取 / 中古買取」と <tr><td><a>商品名</a></td><td class="num">…
+      「新品買取」の列だけを読む（中古買取の価格を新品として扱わない）
+    """
+    from bs4 import BeautifulSoup
+    soup = BeautifulSoup(html, "html.parser")
+    rows = []
+    for table in soup.find_all("table"):
+        heads = [th.get_text(strip=True) for th in table.find_all("th")]
+        if "新品買取" not in heads:
+            continue
+        col = heads.index("新品買取")          # 0 列目が品目
+        for tr in table.find_all("tr"):
+            tds = tr.find_all("td")
+            a = tr.find("a", href=True)
+            if not a or len(tds) <= col:
+                continue
+            m = _PRICE_RE.search(tds[col].get_text(" ", strip=True))
+            if m:
+                rows.append((a.get_text(" ", strip=True), int(m.group(1).replace(",", "")), a["href"]))
+    for li in soup.select("li"):
+        a = li.find("a", href=True)
+        num = li.select_one("span.num")
+        if not a or not num:
+            continue
+        m = _PRICE_RE.search(num.get_text(" ", strip=True))
+        if not m:
+            continue
+        rows.append((a.get_text(" ", strip=True), int(m.group(1).replace(",", "")), a["href"]))
+    return rows
+
+
+def match_rows(rows: list[tuple[str, int, str]], product_alias: str) -> list[tuple[str, int, str]]:
+    """照合ルールに一致する商品行だけを返す（色違いは同じ商品として複数返る）。"""
+    rule = ROW_RULES.get(product_alias)
+    if not rule:
+        return []
+    out = []
+    for name, price, href in rows:
+        if not re.search(rule["pattern"], name):
+            continue
+        if any(r not in name for r in rule["require"]):
+            continue
+        if any(re.search(r"(?<![A-Za-z])" + re.escape(x) + r"(?![A-Za-z])", name) for x in rule["exclude"]):
+            continue
+        out.append((name, price, href))
+    return out
 
 
 class KaitoriShoutenCsvCollector(BaseCsvBuybackCollector):
@@ -60,56 +105,18 @@ class KaitoriShoutenCsvCollector(BaseCsvBuybackCollector):
         return PRODUCT_URLS.get(product_alias, "")
 
     def _parse_price(self, html: str, product_alias: str, product_name: str) -> Optional[int]:
-        from bs4 import BeautifulSoup
-        soup = BeautifulSoup(html, "html.parser")
-        text = soup.get_text(" ", strip=True)
+        """商品行の照合だけで価格を決める。一致する行が無ければ未掲載（None）。
 
-        # ── Step1: 直接正規表現マッチング（拡張コンテキスト {0,400}）──
-        pat = DIRECT_PATTERNS.get(product_alias)
-        if pat:
-            m = re.search(pat, text, re.DOTALL)
-            if m:
-                try:
-                    price = int(m.group(1).replace(",", ""))
-                    if 10000 <= price <= 5_000_000:
-                        return price
-                except ValueError:
-                    pass
-
-        # ── Step2: アンカーキーワードで商品ブロックを特定してから価格抽出 ──
-        anchor_info = ANCHOR_KEYWORDS.get(product_alias)
-        if anchor_info:
-            model_kw, cap_kw = anchor_info
-            idx = text.find(model_kw)
-            if idx >= 0:
-                block = text[idx:idx + 600]
-                if cap_kw is None or cap_kw in block:
-                    for near_pat in [
-                        r'買取価格\s*([\d,]{5,})円',
-                        r'買取上限\s*([\d,]{5,})円',
-                        r'(\d{2,3},\d{3})円',
-                    ]:
-                        m2 = re.search(near_pat, block)
-                        if m2:
-                            try:
-                                price = int(m2.group(1).replace(",", ""))
-                                if 10000 <= price <= 5_000_000:
-                                    return price
-                            except ValueError:
-                                pass
-
-        # ── Step3: 汎用フォールバック ──
-        for fallback_pat in [
-            r'買取価格[^¥￥\d]{0,20}[¥￥]([\d,]{5,})',
-            r'買取上限[^¥￥\d]{0,20}[¥￥]([\d,]{5,})',
-        ]:
-            m = re.search(fallback_pat, text)
-            if m:
-                try:
-                    price = int(m.group(1).replace(",", ""))
-                    if 10000 <= price <= 5_000_000:
-                        return price
-                except ValueError:
-                    pass
-
-        return self.extract_price(text)
+        汎用のフォールバック（見出しの「最高¥…」・ページ全体の最初の価格）は使わない。
+        色違いが複数あるときは、同じ機種・容量の中の最高値（その商品の最高買取）を採用する。
+        """
+        matched = match_rows(parse_rows(html), product_alias)
+        self.last_matched_rows = matched
+        if not matched:
+            self.last_failure_reason = "product_not_listed"
+            return None
+        price = max(p for _n, p, _h in matched)
+        if not (10000 <= price <= 5_000_000):
+            self.last_failure_reason = "price_out_of_range"
+            return None
+        return price

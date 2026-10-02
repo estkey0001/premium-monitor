@@ -1,16 +1,16 @@
 # Retail & Buyback Automation — 品質監査
 
-> 生成: 2026-10-02 22:35 JST / 販売/買取/二次流通の取得品質・正規化・同一性（利益/AI/UI/SaaSロジックは不変）
+> 生成: 2026-10-03 03:10 JST / 販売/買取/二次流通の取得品質・正規化・同一性（利益/AI/UI/SaaSロジックは不変）
 
 ## カテゴリ別サマリ
 | カテゴリ | 観測 | 価格有 | exact | high | fresh | Main昇格可 | 失敗(0円/stale/rejected) |
 |---|--:|--:|--:|--:|--:|--:|--:|
-| buyback | 140 | 122 | 7 | 7 | 46 | 7 | 18/94/119 |
-| resale | 22 | 22 | 0 | 0 | 12 | 0 | 0/10/15 |
+| buyback | 140 | 121 | 6 | 6 | 46 | 6 | 19/94/120 |
+| resale | 11 | 11 | 0 | 0 | 1 | 0 | 0/10/11 |
 | retail | 2 | 2 | 0 | 0 | 0 | 0 | 0/2/2 |
 
-## Main 昇格（high conf + fresh + exact）: 合計 **7** 件
-- カテゴリ別: {'buyback': 7, 'resale': 0, 'retail': 0}
+## Main 昇格（high conf + fresh + exact）: 合計 **6** 件
+- カテゴリ別: {'buyback': 6, 'resale': 0, 'retail': 0}
 
 ## 販売価格 ソース網羅
 | source | 観測 | 価格有 | fresh | Main昇格可 |
@@ -32,7 +32,7 @@
 | カメラのキタムラ | 9 | 9 | 0 | 0 |
 | ソフマップ | 10 | 8 | 2 | 0 |
 | 買取商店 | 17 | 17 | 6 | 6 |
-| ゲオ | 8 | 8 | 1 | 1 |
+| ゲオ | 8 | 7 | 1 | 0 |
 | 買取一丁目 | 4 | 4 | 4 | 0 |
 | ネットオフ | 4 | 0 | 4 | 0 |
 
@@ -43,25 +43,23 @@
 | eBay | 0 | – | – | no_data |
 | メルカリ未使用 | 5 | 5 | 0 | 0 |
 | Mercari sold | 0 | – | – | no_data |
-| ヤフオク (新品/未使用落札) | 11 | 11 | 11 | 0 |
+| ヤフオク (新品/未使用落札) | 0 | – | – | no_data |
 | Yahoo Auction sold | 0 | – | – | no_data |
 | Amazon JP (新品出品) | 1 | 1 | 1 | 0 |
 
 ## 商品同一性 監査
 - 容量不一致: 0 / 別型番: 0 / アクセサリー: 9 / 非本体: 9
-- condition分布: {'new': 214, 'used': 25}
+- condition分布: {'new': 203, 'used': 25}
 
 ## 正規化 監査
-- price_type付与率: 100% / 送料分離: 100% / ポイント分離: 100% / 下取除外: 90%
-- price_type分布: {'buyback_price': 117, 'shop_sale_price': 26, 'overseas_listing_price': 5, 'flea_listing_price': 5, 'flea_sold_price': 11}
+- price_type付与率: 100% / 送料分離: 100% / ポイント分離: 100% / 下取除外: 89%
+- price_type分布: {'buyback_price': 117, 'shop_sale_price': 26, 'overseas_listing_price': 5, 'flea_listing_price': 5}
 
 ## duplicate_price_pattern（同一ソースで複数SKU同額・要確認）
 | source | role | price | SKU数 | product_ids |
 |---|---|--:|--:|---|
 | フジヤカメラ | sell | ¥194,000 | 4 | prod_a7rv, prod_gr4, prod_gr4_hdf, prod_gr4_mono |
 | メーカー公式/定価 | official | ¥214,800 | 2 | prod_iphone17pm_256, prod_iphone17pro_512 |
-| ヤフオク (新品/未使用落札) | buy | ¥224,994 | 2 | prod_iphone17pm_256, prod_iphone17pro_256 |
-| ヤフオク (新品/未使用落札) | buy | ¥245,080 | 2 | prod_iphone17pm_512, prod_iphone17pro_512 |
 | メーカー公式/定価 | official | ¥142,800 | 2 | prod_apple_watch_ultra3, prod_iphone17_256 |
 | メーカー公式/定価 | official | ¥129,800 | 2 | prod_gr3, prod_ipad_air_m3 |
 | じゃんぱら | sell | ¥148,000 | 2 | prod_ipad_pro_m4_11, prod_iphone16pro_256 |

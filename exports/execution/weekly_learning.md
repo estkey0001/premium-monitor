@@ -1,4 +1,4 @@
-# Weekly Learning Report — 2026-10-02
+# Weekly Learning Report — 2026-10-03
 
 - 実行成功率: 25.0%（CLOSED 128 / 成功 32）
 - 予測精度: 予測 37.0% vs 実績 25.0%（誤差 12.0pt）

@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-10-02 19:40 JST",
-  "health_score": 41.1,
+  "generated_at": "2026-10-02 22:35 JST",
+  "health_score": 40.9,
   "health_note": "現在データ品質低下中",
   "main_route_count": 0,
   "reference_route_count": 1,
@@ -60,10 +60,10 @@
       "why": [
         "reference route（海外sold更新で成立見込み）",
         "ROIが8%以上（26%）",
-        "価格 41日前（要更新）"
+        "価格 42日前（要更新）"
       ],
       "risks": [
-        "stale（41日前・main計算除外水準）",
+        "stale（42日前・main計算除外水準）",
         "海外依存（為替・関税・輸送）",
         "送料・決済手数料が大きい",
         "同条件件数不足（再現性低）",
@@ -77,7 +77,9 @@
       "buy_price": 343637,
       "sell_source": "src_ebay",
       "sell_price": 559177,
-      "age_days": 41.4,
+      "age_days": 41.5,
+      "buy_price_evidence": "VERIFIED_CURRENT",
+      "sell_price_evidence": "STALE",
       "priority": 1
     }
   ]

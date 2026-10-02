@@ -1,7 +1,7 @@
 # AI Opportunities Engine — Today's Opportunities
 
-生成: 2026-10-02 19:40 JST
-Health Score: 41.1（現在データ品質低下中） / main 0 / reference 1
+生成: 2026-10-02 22:35 JST
+Health Score: 40.9（現在データ品質低下中） / main 0 / reference 1
 
 ## 今日やること
 
@@ -27,6 +27,6 @@ Health Score: 41.1（現在データ品質低下中） / main 0 / reference 1
 - タイムライン: 候補 → **監視** → 成立 → 通知
 - 期待: 利益 ¥88,396 / ROI 25.7% / confidence low
 - 保有期間: 1ヶ月
-- Why: reference route（海外sold更新で成立見込み）; ROIが8%以上（26%）; 価格 41日前（要更新）
-- Risk: stale（41日前・main計算除外水準） / 海外依存（為替・関税・輸送） / 送料・決済手数料が大きい / 同条件件数不足（再現性低） / アクセサリー混在に注意（本体判定要確認）
+- Why: reference route（海外sold更新で成立見込み）; ROIが8%以上（26%）; 価格 42日前（要更新）
+- Risk: stale（42日前・main計算除外水準） / 海外依存（為替・関税・輸送） / 送料・決済手数料が大きい / 同条件件数不足（再現性低） / アクセサリー混在に注意（本体判定要確認）
 

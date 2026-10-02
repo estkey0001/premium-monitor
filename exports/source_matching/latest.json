@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-02 19:40 JST",
+  "generated_at": "2026-10-02 22:35 JST",
   "scope": "商品同一性マッチング精度（利益/AI/UI/SaaS/DQ思想は不変）",
   "accuracy": {
     "product_match_accuracy": 1.0,
@@ -10,13 +10,13 @@
     "detected_mismatches_total": 0,
     "detected_mismatches_rejected": 0,
     "independently_verified_exact": 7,
-    "unverifiable_trusted": 224,
+    "unverifiable_trusted": 222,
     "accessory_misclassification": 0,
     "false_main_promotion": 0,
     "duplicate_patterns": 9,
     "high_risk_duplicates": 4,
     "duplicate_reviewed_pct": 0.3333,
-    "manual_review_queue": 84
+    "manual_review_queue": 82
   },
   "targets": {
     "product_match": ">=0.99",
@@ -26,12 +26,12 @@
     "false_main_promotion": 0
   },
   "totals": {
-    "total": 241,
-    "product_mismatch_or_unverified": 234,
-    "model_unverifiable": 224,
-    "main_rejected": 234,
+    "total": 239,
+    "product_mismatch_or_unverified": 232,
+    "model_unverifiable": 222,
+    "main_rejected": 232,
     "model_match": 17,
-    "manual_review_required": 84,
+    "manual_review_required": 82,
     "accessory_detected": 9,
     "exact_product_match": 7,
     "main_eligible": 7
@@ -61,11 +61,11 @@
       "main_eligible": 0
     },
     "モバイル一番": {
-      "total": 5,
-      "product_mismatch_or_unverified": 5,
-      "model_unverifiable": 5,
-      "main_rejected": 5,
-      "manual_review_required": 5,
+      "total": 3,
+      "product_mismatch_or_unverified": 3,
+      "model_unverifiable": 3,
+      "main_rejected": 3,
+      "manual_review_required": 3,
       "exact_product_match": 0,
       "capacity_mismatch": 0,
       "model_mismatch": 0,
@@ -346,7 +346,7 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 41.3,
+      "first_seen": 41.4,
       "last_seen": 0.0,
       "risk_level": "high",
       "possible_reason": [
@@ -378,7 +378,7 @@
         "new"
       ],
       "first_seen": 9999.0,
-      "last_seen": 40.8,
+      "last_seen": 40.9,
       "risk_level": "high",
       "possible_reason": [
         "different_capacity_same_price",
@@ -471,8 +471,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 40.8,
-      "last_seen": 40.8,
+      "first_seen": 40.9,
+      "last_seen": 40.9,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -502,7 +502,7 @@
         "new"
       ],
       "first_seen": 9999.0,
-      "last_seen": 40.8,
+      "last_seen": 40.9,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -532,8 +532,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 53.3,
-      "last_seen": 53.3,
+      "first_seen": 53.4,
+      "last_seen": 53.4,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -562,8 +562,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 53.3,
-      "last_seen": 53.3,
+      "first_seen": 53.4,
+      "last_seen": 53.4,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -592,8 +592,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 53.3,
-      "last_seen": 53.3,
+      "first_seen": 53.4,
+      "last_seen": 53.4,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -737,17 +737,6 @@
       "main_eligible": 0
     },
     {
-      "source": "モバイル一番",
-      "observations": 5,
-      "score": 72,
-      "identity": 0.0,
-      "capacity": 1.0,
-      "model": 1.0,
-      "condition": 1.0,
-      "freshness": 0.4,
-      "main_eligible": 0
-    },
-    {
       "source": "イオシス",
       "observations": 20,
       "score": 72,
@@ -789,6 +778,17 @@
       "model": 1.0,
       "condition": 1.0,
       "freshness": 0.176,
+      "main_eligible": 0
+    },
+    {
+      "source": "モバイル一番",
+      "observations": 3,
+      "score": 70,
+      "identity": 0.0,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 0.0,
       "main_eligible": 0
     },
     {

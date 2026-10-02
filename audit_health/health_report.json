@@ -1,26 +1,26 @@
 {
-  "generated_at": "2026-10-02 19:40 JST",
+  "generated_at": "2026-10-02 22:35 JST",
   "date": "2026-10-02",
   "health_score": {
-    "data_quality": 15.6,
+    "data_quality": 15.4,
     "profit_discovery": 2.5,
     "source_health": 13.3,
     "link_quality": 4.6,
     "freshness": 5.1,
-    "total": 41.1
+    "total": 40.9
   },
   "data_quality": {
-    "total_obs": 241,
-    "usable_obs": 75,
+    "total_obs": 239,
+    "usable_obs": 73,
     "stale_count": 118,
-    "stale_rate": 0.4896,
+    "stale_rate": 0.4937,
     "zero_count": 36,
-    "zero_rate": 0.1494,
-    "item_url_rate": 0.4606,
-    "search_url_rate": 0.2241,
-    "manual_rate": 0.5311,
+    "zero_rate": 0.1506,
+    "item_url_rate": 0.4561,
+    "search_url_rate": 0.2259,
+    "manual_rate": 0.5356,
     "api_rate": 0.0,
-    "html_rate": 0.0083
+    "html_rate": 0.0084
   },
   "profit": {
     "main_route_count": 0,
@@ -171,18 +171,6 @@
       },
       "n": 6
     },
-    "モバイル一番": {
-      "success_count": 5,
-      "stale_count": 3,
-      "zero_count": 0,
-      "item_url_rate": 1.0,
-      "freshness": 0.4,
-      "success_rate": 1.0,
-      "confidence": {
-        "high": 5
-      },
-      "n": 5
-    },
     "eBay sold(新品)": {
       "success_count": 5,
       "stale_count": 5,
@@ -254,6 +242,18 @@
         "high": 4
       },
       "n": 4
+    },
+    "モバイル一番": {
+      "success_count": 3,
+      "stale_count": 3,
+      "zero_count": 0,
+      "item_url_rate": 1.0,
+      "freshness": 0.0,
+      "success_rate": 1.0,
+      "confidence": {
+        "high": 3
+      },
+      "n": 3
     },
     "Amazon新品出品": {
       "success_count": 3,
@@ -356,15 +356,15 @@
     "available": true,
     "stale_rate": {
       "prev": 0.4896,
-      "cur": 0.4896
+      "cur": 0.4937
     },
     "zero_rate": {
       "prev": 0.1494,
-      "cur": 0.1494
+      "cur": 0.1506
     },
     "item_url_rate": {
       "prev": 0.4606,
-      "cur": 0.4606
+      "cur": 0.4561
     },
     "main_route_count": {
       "prev": 0,
@@ -385,6 +385,7 @@
       "取得成功率 0%: ネットオフ"
     ],
     "warning": [
+      "item_url率 低下",
       "item_url率 46% (<50%)"
     ],
     "info": []

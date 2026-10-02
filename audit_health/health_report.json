@@ -1,26 +1,26 @@
 {
-  "generated_at": "2026-10-02 11:37 JST",
+  "generated_at": "2026-10-02 17:49 JST",
   "date": "2026-10-02",
   "health_score": {
-    "data_quality": 14.1,
+    "data_quality": 15.6,
     "profit_discovery": 2.5,
     "source_health": 13.3,
-    "link_quality": 4.5,
-    "freshness": 5.2,
-    "total": 39.6
+    "link_quality": 4.6,
+    "freshness": 5.1,
+    "total": 41.1
   },
   "data_quality": {
-    "total_obs": 245,
-    "usable_obs": 57,
+    "total_obs": 241,
+    "usable_obs": 75,
     "stale_count": 118,
-    "stale_rate": 0.4816,
+    "stale_rate": 0.4896,
     "zero_count": 36,
-    "zero_rate": 0.1469,
-    "item_url_rate": 0.4531,
-    "search_url_rate": 0.2327,
-    "manual_rate": 0.5265,
+    "zero_rate": 0.1494,
+    "item_url_rate": 0.4606,
+    "search_url_rate": 0.2241,
+    "manual_rate": 0.5311,
     "api_rate": 0.0,
-    "html_rate": 0.0082
+    "html_rate": 0.0083
   },
   "profit": {
     "main_route_count": 0,
@@ -39,8 +39,8 @@
       "freshness": 1.0,
       "success_rate": 1.0,
       "confidence": {
-        "high": 13,
-        "medium": 32
+        "high": 12,
+        "medium": 33
       },
       "n": 45
     },
@@ -58,17 +58,17 @@
       "n": 34
     },
     "フジヤカメラ": {
-      "success_count": 28,
+      "success_count": 25,
       "stale_count": 8,
       "zero_count": 0,
-      "item_url_rate": 0.2857,
-      "freshness": 0.7143,
+      "item_url_rate": 0.32,
+      "freshness": 0.68,
       "success_rate": 1.0,
       "confidence": {
-        "high": 27,
+        "high": 24,
         "medium": 1
       },
-      "n": 28
+      "n": 25
     },
     "イオシス": {
       "success_count": 14,
@@ -340,31 +340,31 @@
       "n": 2
     },
     "Amazon JP (新品出品)": {
-      "success_count": 2,
+      "success_count": 1,
       "stale_count": 0,
       "zero_count": 0,
       "item_url_rate": 0.0,
       "freshness": 1.0,
       "success_rate": 1.0,
       "confidence": {
-        "medium": 2
+        "medium": 1
       },
-      "n": 2
+      "n": 1
     }
   },
   "diff_vs_prev": {
     "available": true,
     "stale_rate": {
-      "prev": 0.4777,
-      "cur": 0.4816
+      "prev": 0.4816,
+      "cur": 0.4896
     },
     "zero_rate": {
-      "prev": 0.166,
-      "cur": 0.1469
+      "prev": 0.1469,
+      "cur": 0.1494
     },
     "item_url_rate": {
-      "prev": 0.4413,
-      "cur": 0.4531
+      "prev": 0.4531,
+      "cur": 0.4606
     },
     "main_route_count": {
       "prev": 0,
@@ -376,14 +376,7 @@
     },
     "new_main": [],
     "lost_main": [],
-    "source_success_changes": [
-      {
-        "source": "モバイル一番",
-        "prev": 0.375,
-        "cur": 1.0,
-        "delta": 0.625
-      }
-    ]
+    "source_success_changes": []
   },
   "anomalies": {
     "critical": [
@@ -392,7 +385,7 @@
       "取得成功率 0%: ネットオフ"
     ],
     "warning": [
-      "item_url率 45% (<50%)"
+      "item_url率 46% (<50%)"
     ],
     "info": []
   },

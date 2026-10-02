@@ -1,6 +1,6 @@
 # Official Source Registry & Validation
 
-> 生成: 2026-10-02 10:51 JST / 公式ソース登録・検証（利益/AI/Opportunity/Notification/Capital/Execution は不変）
+> 生成: 2026-10-02 17:04 JST / 公式ソース登録・検証（利益/AI/Opportunity/Notification/Capital/Execution は不変）
 
 ## メーカー別サマリ
 | Maker | Products | URL verified | HTTP200 | exact match | price auto | high conf | failed |
@@ -12,7 +12,7 @@
 | Sony | 4 | 0 | 0 | 0 | 0 | 0 | 4 |
 
 ## 自動取得率 Before → After
-- Before: 公式定価あり商品 4 / 公式config 7
+- Before: 公式定価あり商品 3 / 公式config 7
 - After: URL検証済 16 / 価格取得 9 （検証対象 16 / 検証不能 9）
 
 ## Apple Source Audit（旧URL検出）

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-02 11:37 JST",
+  "generated_at": "2026-10-02 17:49 JST",
   "scope": "商品同一性マッチング精度（利益/AI/UI/SaaS/DQ思想は不変）",
   "accuracy": {
     "product_match_accuracy": 1.0,
@@ -7,16 +7,16 @@
     "model_match_accuracy": 1.0,
     "condition_match_accuracy": 1.0,
     "confirmed_mismatches_active": 0,
-    "detected_mismatches_total": 2,
-    "detected_mismatches_rejected": 2,
-    "independently_verified_exact": 0,
-    "unverifiable_trusted": 227,
+    "detected_mismatches_total": 0,
+    "detected_mismatches_rejected": 0,
+    "independently_verified_exact": 7,
+    "unverifiable_trusted": 224,
     "accessory_misclassification": 0,
     "false_main_promotion": 0,
-    "duplicate_patterns": 13,
+    "duplicate_patterns": 9,
     "high_risk_duplicates": 4,
-    "duplicate_reviewed_pct": 0.3077,
-    "manual_review_queue": 85
+    "duplicate_reviewed_pct": 0.3333,
+    "manual_review_queue": 84
   },
   "targets": {
     "product_match": ">=0.99",
@@ -26,22 +26,21 @@
     "false_main_promotion": 0
   },
   "totals": {
-    "total": 245,
-    "product_mismatch_or_unverified": 245,
-    "model_unverifiable": 227,
-    "accessory_detected": 33,
-    "main_rejected": 245,
-    "model_match": 16,
-    "manual_review_required": 85,
-    "model_mismatch": 2,
-    "exact_product_match": 0
+    "total": 241,
+    "product_mismatch_or_unverified": 234,
+    "model_unverifiable": 224,
+    "main_rejected": 234,
+    "model_match": 17,
+    "manual_review_required": 84,
+    "accessory_detected": 9,
+    "exact_product_match": 7,
+    "main_eligible": 7
   },
   "by_source": {
     "メーカー公式/定価": {
       "total": 45,
       "product_mismatch_or_unverified": 45,
       "model_unverifiable": 45,
-      "accessory_detected": 4,
       "main_rejected": 45,
       "exact_product_match": 0,
       "capacity_mismatch": 0,
@@ -49,16 +48,16 @@
       "main_eligible": 0
     },
     "フジヤカメラ": {
-      "total": 28,
-      "product_mismatch_or_unverified": 28,
-      "model_match": 16,
-      "main_rejected": 28,
-      "accessory_detected": 6,
-      "manual_review_required": 12,
-      "model_unverifiable": 10,
-      "model_mismatch": 2,
+      "total": 25,
+      "product_mismatch_or_unverified": 25,
+      "model_match": 17,
+      "main_rejected": 25,
+      "manual_review_required": 11,
+      "accessory_detected": 5,
+      "model_unverifiable": 8,
       "exact_product_match": 0,
       "capacity_mismatch": 0,
+      "model_mismatch": 0,
       "main_eligible": 0
     },
     "モバイル一番": {
@@ -67,7 +66,6 @@
       "model_unverifiable": 5,
       "main_rejected": 5,
       "manual_review_required": 5,
-      "accessory_detected": 1,
       "exact_product_match": 0,
       "capacity_mismatch": 0,
       "model_mismatch": 0,
@@ -75,22 +73,22 @@
     },
     "買取商店": {
       "total": 17,
-      "product_mismatch_or_unverified": 17,
+      "product_mismatch_or_unverified": 11,
       "model_unverifiable": 17,
-      "main_rejected": 17,
+      "main_rejected": 11,
       "manual_review_required": 2,
-      "exact_product_match": 0,
+      "exact_product_match": 6,
+      "main_eligible": 6,
       "capacity_mismatch": 0,
-      "model_mismatch": 0,
-      "main_eligible": 0
+      "model_mismatch": 0
     },
     "じゃんぱら": {
       "total": 34,
       "product_mismatch_or_unverified": 34,
       "model_unverifiable": 34,
       "main_rejected": 34,
-      "accessory_detected": 4,
       "manual_review_required": 4,
+      "accessory_detected": 1,
       "exact_product_match": 0,
       "capacity_mismatch": 0,
       "model_mismatch": 0,
@@ -102,7 +100,6 @@
       "model_unverifiable": 20,
       "main_rejected": 20,
       "manual_review_required": 10,
-      "accessory_detected": 2,
       "exact_product_match": 0,
       "capacity_mismatch": 0,
       "model_mismatch": 0,
@@ -114,7 +111,7 @@
       "model_unverifiable": 10,
       "main_rejected": 10,
       "manual_review_required": 8,
-      "accessory_detected": 3,
+      "accessory_detected": 1,
       "exact_product_match": 0,
       "capacity_mismatch": 0,
       "model_mismatch": 0,
@@ -122,15 +119,15 @@
     },
     "ゲオ": {
       "total": 8,
-      "product_mismatch_or_unverified": 8,
+      "product_mismatch_or_unverified": 7,
       "model_unverifiable": 8,
-      "main_rejected": 8,
+      "main_rejected": 7,
       "manual_review_required": 4,
-      "accessory_detected": 5,
-      "exact_product_match": 0,
+      "exact_product_match": 1,
+      "main_eligible": 1,
+      "accessory_detected": 1,
       "capacity_mismatch": 0,
-      "model_mismatch": 0,
-      "main_eligible": 0
+      "model_mismatch": 0
     },
     "マップカメラ": {
       "total": 9,
@@ -158,7 +155,6 @@
       "total": 4,
       "product_mismatch_or_unverified": 4,
       "model_unverifiable": 4,
-      "accessory_detected": 3,
       "main_rejected": 4,
       "manual_review_required": 4,
       "exact_product_match": 0,
@@ -291,11 +287,11 @@
       "main_eligible": 0
     },
     "Amazon JP (新品出品)": {
-      "total": 2,
-      "product_mismatch_or_unverified": 2,
-      "model_unverifiable": 2,
-      "accessory_detected": 2,
-      "main_rejected": 2,
+      "total": 1,
+      "product_mismatch_or_unverified": 1,
+      "model_unverifiable": 1,
+      "accessory_detected": 1,
+      "main_rejected": 1,
       "exact_product_match": 0,
       "capacity_mismatch": 0,
       "model_mismatch": 0,
@@ -307,7 +303,6 @@
       "model_unverifiable": 11,
       "main_rejected": 11,
       "manual_review_required": 11,
-      "accessory_detected": 2,
       "exact_product_match": 0,
       "capacity_mismatch": 0,
       "model_mismatch": 0,
@@ -318,7 +313,6 @@
       "product_mismatch_or_unverified": 6,
       "model_unverifiable": 6,
       "main_rejected": 6,
-      "accessory_detected": 1,
       "exact_product_match": 0,
       "capacity_mismatch": 0,
       "model_mismatch": 0,
@@ -326,60 +320,37 @@
     }
   },
   "false_main_promotion": [],
-  "detected_mismatches": [
-    {
-      "product_id": "prod_zf",
-      "source": "フジヤカメラ",
-      "title": "Zf 40mm f/2 (SE) レンズキット ブラック Nikon 買取金額 新品同様 ￥155,000 良品 ￥154,000 下取は10%UP 新品同様 ",
-      "kinds": [
-        "model"
-      ],
-      "rejected": true,
-      "rejection_reason": "accessory_or_wrong_product",
-      "usable_pro": false
-    },
-    {
-      "product_id": "prod_m11",
-      "source": "フジヤカメラ",
-      "title": "ライカ M11-P Safari 20236 Leica 買取金額 新品同様 ￥1,161,000 良品 ￥1,160,000 下取は10%UP 新品同様 ￥1",
-      "kinds": [
-        "model"
-      ],
-      "rejected": true,
-      "rejection_reason": "model_mismatch",
-      "usable_pro": false
-    }
-  ],
+  "detected_mismatches": [],
   "duplicate_price_pattern": [
     {
-      "source_name": "買取商店",
+      "source_name": "フジヤカメラ",
       "price_role": "sell",
       "price_type": "buyback_price",
-      "price": 435000,
+      "price": 194000,
       "product_ids": [
-        "prod_iphone17pm_256",
-        "prod_iphone17pm_512",
-        "prod_iphone17pro_256",
-        "prod_iphone17pro_512"
+        "prod_a7rv",
+        "prod_gr4",
+        "prod_gr4_hdf",
+        "prod_gr4_mono"
       ],
       "count": 4,
       "models": [
-        "17 iphone max pro",
-        "17 iphone pro"
+        "gr hdf iv ricoh",
+        "gr iv monochrome ricoh",
+        "gr iv ricoh",
+        "sony v α7r"
       ],
       "capacities": [
-        "256",
-        "512"
+        "None"
       ],
       "conditions": [
         "new"
       ],
-      "first_seen": 0.1,
-      "last_seen": 0.1,
+      "first_seen": 41.2,
+      "last_seen": 0.0,
       "risk_level": "high",
       "possible_reason": [
-        "different_capacity_same_price",
-        "pro_vs_promax_same_price"
+        "body_vs_accessory_same_price"
       ],
       "is_official": false,
       "review_status": "pending",
@@ -406,12 +377,11 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 0.0,
-      "last_seen": 0.0,
+      "first_seen": 9999.0,
+      "last_seen": 40.7,
       "risk_level": "high",
       "possible_reason": [
         "different_capacity_same_price",
-        "body_vs_accessory_same_price",
         "pro_vs_promax_same_price"
       ],
       "is_official": true,
@@ -484,38 +454,6 @@
       "source_name": "メーカー公式/定価",
       "price_role": "official",
       "price_type": "official_price",
-      "price": 259800,
-      "product_ids": [
-        "prod_gr4",
-        "prod_gr4_hdf",
-        "prod_gr4_mono"
-      ],
-      "count": 3,
-      "models": [
-        "gr hdf iv ricoh",
-        "gr iv monochrome ricoh",
-        "gr iv ricoh"
-      ],
-      "capacities": [
-        "None"
-      ],
-      "conditions": [
-        "new"
-      ],
-      "first_seen": 0.0,
-      "last_seen": 0.0,
-      "risk_level": "medium",
-      "possible_reason": [
-        "different_model_same_price"
-      ],
-      "is_official": true,
-      "review_status": "reviewed_true_same_price",
-      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認（弾かない）"
-    },
-    {
-      "source_name": "メーカー公式/定価",
-      "price_role": "official",
-      "price_type": "official_price",
       "price": 142800,
       "product_ids": [
         "prod_apple_watch_ultra3",
@@ -533,8 +471,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 0.0,
-      "last_seen": 0.0,
+      "first_seen": 40.7,
+      "last_seen": 40.7,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -563,74 +501,14 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 0.0,
-      "last_seen": 0.0,
+      "first_seen": 9999.0,
+      "last_seen": 40.7,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
       ],
       "is_official": true,
       "review_status": "reviewed_true_same_price",
-      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認（弾かない）"
-    },
-    {
-      "source_name": "フジヤカメラ",
-      "price_role": "sell",
-      "price_type": "buyback_price",
-      "price": 200000,
-      "product_ids": [
-        "prod_gr4_hdf",
-        "prod_x100vi"
-      ],
-      "count": 2,
-      "models": [
-        "fujifilm x100vi",
-        "gr hdf iv ricoh"
-      ],
-      "capacities": [
-        "None"
-      ],
-      "conditions": [
-        "new"
-      ],
-      "first_seen": 41.0,
-      "last_seen": 0.0,
-      "risk_level": "medium",
-      "possible_reason": [
-        "different_model_same_price"
-      ],
-      "is_official": false,
-      "review_status": "pending",
-      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認（弾かない）"
-    },
-    {
-      "source_name": "フジヤカメラ",
-      "price_role": "sell",
-      "price_type": "buyback_price",
-      "price": 213400,
-      "product_ids": [
-        "prod_gr4_hdf",
-        "prod_gr4_mono"
-      ],
-      "count": 2,
-      "models": [
-        "gr hdf iv ricoh",
-        "gr iv monochrome ricoh"
-      ],
-      "capacities": [
-        "None"
-      ],
-      "conditions": [
-        "new"
-      ],
-      "first_seen": 0.0,
-      "last_seen": 0.0,
-      "risk_level": "medium",
-      "possible_reason": [
-        "different_model_same_price"
-      ],
-      "is_official": false,
-      "review_status": "pending",
       "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認（弾かない）"
     },
     {
@@ -654,8 +532,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 53.0,
-      "last_seen": 53.0,
+      "first_seen": 53.2,
+      "last_seen": 53.2,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -684,8 +562,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 53.0,
-      "last_seen": 53.0,
+      "first_seen": 53.2,
+      "last_seen": 53.2,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -714,38 +592,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 53.0,
-      "last_seen": 53.0,
-      "risk_level": "medium",
-      "possible_reason": [
-        "different_model_same_price"
-      ],
-      "is_official": false,
-      "review_status": "pending",
-      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認（弾かない）"
-    },
-    {
-      "source_name": "買取商店",
-      "price_role": "sell",
-      "price_type": "buyback_price",
-      "price": 900000,
-      "product_ids": [
-        "prod_ps5_pro",
-        "prod_switch2"
-      ],
-      "count": 2,
-      "models": [
-        "2 nintendo switch",
-        "5 playstation pro"
-      ],
-      "capacities": [
-        "None"
-      ],
-      "conditions": [
-        "new"
-      ],
-      "first_seen": 0.1,
-      "last_seen": 0.0,
+      "first_seen": 53.2,
+      "last_seen": 53.2,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -756,6 +604,39 @@
     }
   ],
   "source_accuracy_ranking": [
+    {
+      "source": "買取商店",
+      "observations": 17,
+      "score": 81,
+      "identity": 0.353,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 0.353,
+      "main_eligible": 6
+    },
+    {
+      "source": "メーカー公式/定価",
+      "observations": 45,
+      "score": 75,
+      "identity": 0.0,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 1.0,
+      "main_eligible": 0
+    },
+    {
+      "source": "買取一丁目",
+      "observations": 4,
+      "score": 75,
+      "identity": 0.0,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 1.0,
+      "main_eligible": 0
+    },
     {
       "source": "ゲオモバイル",
       "observations": 4,
@@ -845,53 +726,20 @@
       "main_eligible": 0
     },
     {
-      "source": "メーカー公式/定価",
-      "observations": 45,
-      "score": 74,
-      "identity": 0.0,
-      "capacity": 1.0,
-      "model": 1.0,
-      "condition": 1.0,
-      "freshness": 1.0,
-      "main_eligible": 0
-    },
-    {
       "source": "ヤフオク (新品/未使用落札)",
       "observations": 11,
-      "score": 73,
+      "score": 75,
       "identity": 0.0,
       "capacity": 1.0,
       "model": 1.0,
       "condition": 1.0,
       "freshness": 1.0,
-      "main_eligible": 0
-    },
-    {
-      "source": "買取商店",
-      "observations": 17,
-      "score": 72,
-      "identity": 0.0,
-      "capacity": 1.0,
-      "model": 1.0,
-      "condition": 1.0,
-      "freshness": 0.353,
-      "main_eligible": 0
-    },
-    {
-      "source": "フジヤカメラ",
-      "observations": 28,
-      "score": 70,
-      "identity": 0.0,
-      "capacity": 1.0,
-      "model": 0.929,
-      "condition": 1.0,
-      "freshness": 0.714,
       "main_eligible": 0
     },
     {
       "source": "モバイル一番",
       "observations": 5,
-      "score": 70,
+      "score": 72,
       "identity": 0.0,
       "capacity": 1.0,
       "model": 1.0,
@@ -900,9 +748,42 @@
       "main_eligible": 0
     },
     {
+      "source": "イオシス",
+      "observations": 20,
+      "score": 72,
+      "identity": 0.0,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 0.3,
+      "main_eligible": 0
+    },
+    {
+      "source": "ゲオ",
+      "observations": 8,
+      "score": 72,
+      "identity": 0.125,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 0.125,
+      "main_eligible": 1
+    },
+    {
+      "source": "フジヤカメラ",
+      "observations": 25,
+      "score": 71,
+      "identity": 0.0,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 0.68,
+      "main_eligible": 0
+    },
+    {
       "source": "じゃんぱら",
       "observations": 34,
-      "score": 70,
+      "score": 71,
       "identity": 0.0,
       "capacity": 1.0,
       "model": 1.0,
@@ -911,14 +792,14 @@
       "main_eligible": 0
     },
     {
-      "source": "イオシス",
-      "observations": 20,
+      "source": "ソフマップ",
+      "observations": 10,
       "score": 70,
       "identity": 0.0,
       "capacity": 1.0,
       "model": 1.0,
       "condition": 1.0,
-      "freshness": 0.3,
+      "freshness": 0.2,
       "main_eligible": 0
     },
     {
@@ -988,31 +869,9 @@
       "main_eligible": 0
     },
     {
-      "source": "ソフマップ",
-      "observations": 10,
-      "score": 68,
-      "identity": 0.0,
-      "capacity": 1.0,
-      "model": 1.0,
-      "condition": 1.0,
-      "freshness": 0.2,
-      "main_eligible": 0
-    },
-    {
-      "source": "買取一丁目",
-      "observations": 4,
-      "score": 68,
-      "identity": 0.0,
-      "capacity": 1.0,
-      "model": 1.0,
-      "condition": 1.0,
-      "freshness": 1.0,
-      "main_eligible": 0
-    },
-    {
       "source": "src_ebay",
       "observations": 6,
-      "score": 68,
+      "score": 70,
       "identity": 0.0,
       "capacity": 1.0,
       "model": 1.0,
@@ -1022,24 +881,13 @@
     },
     {
       "source": "Amazon JP (新品出品)",
-      "observations": 2,
+      "observations": 1,
       "score": 65,
       "identity": 0.0,
       "capacity": 1.0,
       "model": 1.0,
       "condition": 1.0,
       "freshness": 1.0,
-      "main_eligible": 0
-    },
-    {
-      "source": "ゲオ",
-      "observations": 8,
-      "score": 64,
-      "identity": 0.0,
-      "capacity": 1.0,
-      "model": 1.0,
-      "condition": 1.0,
-      "freshness": 0.125,
       "main_eligible": 0
     }
   ],

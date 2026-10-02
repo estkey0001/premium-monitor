@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-10-02 11:37 JST",
-  "health_score": 39.6,
+  "generated_at": "2026-10-02 17:49 JST",
+  "health_score": 41.1,
   "health_note": "現在データ品質低下中",
   "main_route_count": 0,
   "reference_route_count": 1,
@@ -40,7 +40,7 @@
         "sell": "src_ebay ≥ ¥559,177",
         "roi": "ROI ≥ 8%"
       },
-      "next_update": "次回自動更新: 本日 12:00頃（買取/価格 日次取得）",
+      "next_update": "次回自動更新: 明日 12:00頃（通常24時間以内）",
       "price_trend": {
         "7d": "→",
         "30d": "↓",
@@ -77,7 +77,7 @@
       "buy_price": 343637,
       "sell_source": "src_ebay",
       "sell_price": 559177,
-      "age_days": 41.1,
+      "age_days": 41.3,
       "priority": 1
     }
   ]

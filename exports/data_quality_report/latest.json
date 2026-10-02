@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-02T11:37:29+09:00",
+  "generated_at": "2026-10-02T17:49:38+09:00",
   "collection": {
     "total_shops": 16,
     "shops_with_success": 4,
@@ -11,10 +11,10 @@
     "success_rate_pct": 23.6
   },
   "comparison": {
-    "prev_success_rate_pct": 20.0,
+    "prev_success_rate_pct": 23.6,
     "current_success_rate_pct": 23.6,
-    "delta_pct": 3.6,
-    "trend": "改善",
+    "delta_pct": 0.0,
+    "trend": "横ばい",
     "moving_avg_7d_pct": 21.0,
     "top5_failure_reasons": [
       {
@@ -74,12 +74,11 @@
     }
   ],
   "effective_data": {
-    "products_with_valid_buyback": 26,
+    "products_with_valid_buyback": 23,
     "valid_buyback_by_product": {
       "prod_x100vi": 1,
       "prod_gfx100rf": 1,
       "prod_xt5": 1,
-      "prod_gr3": 1,
       "prod_gr3x": 1,
       "prod_gr4": 1,
       "prod_gr4_hdf": 1,
@@ -89,13 +88,11 @@
       "prod_a7cr": 1,
       "prod_fx3": 1,
       "prod_r5ii": 1,
-      "prod_r6ii": 1,
       "prod_r3": 1,
       "prod_z8": 1,
       "prod_zf": 1,
       "prod_z9": 1,
       "prod_q3": 1,
-      "prod_m11": 1,
       "prod_iphone17pro_256": 2,
       "prod_iphone17pro_512": 2,
       "prod_iphone17pm_256": 3,
@@ -105,7 +102,7 @@
     }
   },
   "ranking_usable": {
-    "beginner": 1,
+    "beginner": 2,
     "pro": 0,
     "reason_if_empty": null
   },
@@ -261,51 +258,51 @@
   "consecutive_failed_shops": [
     {
       "shop_id": "2ndstreet",
-      "consecutive_failures": 158
+      "consecutive_failures": 159
     },
     {
       "shop_id": "bookoff",
-      "consecutive_failures": 158
+      "consecutive_failures": 159
     },
     {
       "shop_id": "dosupara",
-      "consecutive_failures": 158
+      "consecutive_failures": 159
     },
     {
       "shop_id": "geo_mobile",
-      "consecutive_failures": 158
+      "consecutive_failures": 159
     },
     {
       "shop_id": "hardoff",
-      "consecutive_failures": 158
+      "consecutive_failures": 159
     },
     {
       "shop_id": "janpara",
-      "consecutive_failures": 158
+      "consecutive_failures": 159
     },
     {
       "shop_id": "pasoko",
-      "consecutive_failures": 158
+      "consecutive_failures": 159
     },
     {
       "shop_id": "sofmap",
-      "consecutive_failures": 158
+      "consecutive_failures": 159
     },
     {
       "shop_id": "surugaya",
-      "consecutive_failures": 158
+      "consecutive_failures": 159
     },
     {
       "shop_id": "tsutaya",
-      "consecutive_failures": 158
+      "consecutive_failures": 159
     },
     {
       "shop_id": "iosys",
-      "consecutive_failures": 91
+      "consecutive_failures": 92
     },
     {
       "shop_id": "netoff",
-      "consecutive_failures": 18
+      "consecutive_failures": 19
     }
   ],
   "improvement_priority": [
@@ -323,14 +320,14 @@
     }
   ],
   "camera_reliability": {
-    "camera_auto_scraped_count": 20,
-    "camera_auto_high_confidence_count": 20,
+    "camera_auto_scraped_count": 17,
+    "camera_auto_high_confidence_count": 17,
     "camera_auto_low_confidence_count": 0,
-    "camera_manual_fallback_count": 40,
-    "camera_rejected_candidate_count": 114,
+    "camera_manual_fallback_count": 43,
+    "camera_rejected_candidate_count": 195,
     "camera_rejection_reasons": {
-      "not_buyback_context": 67,
-      "model_mismatch": 47
+      "model_mismatch": 128,
+      "not_buyback_context": 67
     },
     "per_brand_success_rates": {
       "FUJIFILM": {
@@ -340,8 +337,8 @@
       },
       "RICOH": {
         "models": 5,
-        "auto_scraped": 5,
-        "success_rate_pct": 100.0
+        "auto_scraped": 4,
+        "success_rate_pct": 80.0
       },
       "SONY": {
         "models": 4,
@@ -350,8 +347,8 @@
       },
       "CANON": {
         "models": 3,
-        "auto_scraped": 3,
-        "success_rate_pct": 100.0
+        "auto_scraped": 2,
+        "success_rate_pct": 66.7
       },
       "NIKON": {
         "models": 3,
@@ -360,8 +357,8 @@
       },
       "LEICA": {
         "models": 2,
-        "auto_scraped": 2,
-        "success_rate_pct": 100.0
+        "auto_scraped": 1,
+        "success_rate_pct": 50.0
       }
     }
   }

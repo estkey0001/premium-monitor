@@ -1,6 +1,6 @@
 # Collector Quality Report
 
-生成日時: 2026-10-02 10:13:55 UTC+09:00
+生成日時: 2026-10-02 16:25:50 UTC+09:00
 
 ## サマリ
 
@@ -44,12 +44,12 @@
 
 | 商品 | 成功店舗数 | 目標 | 達成 | 平均価格 | 最低価格 | 最高価格 | suspicious |
 |------|-----------|------|------|---------|---------|---------|-----------|
-| iphone17pm256 | 3 | 3 | ✅ | ¥272,333 | ¥190,000 | ¥435,000 | ⚠️ |
-| iphone17pm512 | 2 | 3 | ❌ | ¥325,500 | ¥216,000 | ¥435,000 | ⚠️ |
-| iphone17pro256 | 2 | 3 | ❌ | ¥303,500 | ¥172,000 | ¥435,000 | ⚠️ |
-| iphone17pro512 | 2 | 3 | ❌ | ¥317,000 | ¥199,000 | ¥435,000 | ⚠️ |
-| ps5_pro | 2 | 2 | ✅ | ¥545,500 | ¥191,000 | ¥900,000 | ⚠️ |
-| switch2 | 2 | 2 | ✅ | ¥467,500 | ¥35,000 | ¥900,000 | ⚠️ |
+| iphone17pm256 | 3 | 3 | ✅ | ¥190,667 | ¥190,000 | ¥192,000 | — |
+| iphone17pm512 | 2 | 3 | ❌ | ¥218,000 | ¥216,000 | ¥220,000 | — |
+| iphone17pro256 | 2 | 3 | ❌ | ¥173,000 | ¥172,000 | ¥174,000 | — |
+| iphone17pro512 | 2 | 3 | ❌ | ¥200,000 | ¥199,000 | ¥201,000 | — |
+| ps5_pro | 2 | 2 | ✅ | ¥191,850 | ¥191,700 | ¥192,000 | ⚠️ |
+| switch2 | 2 | 2 | ✅ | ¥44,150 | ¥35,000 | ¥53,300 | ⚠️ |
 
 | 商品 | 成功店舗 |
 |------|---------|
@@ -155,37 +155,20 @@
 | ps5_pro | surugaya | FAILED | site_blocked |
 | ps5_pro | tsutaya | SKIP | not_supported |
 
-## 価格変動一覧 (7件)
+## 価格変動一覧 (6件)
 
 | 商品 | 店舗 | 前回 | 今回 | 変化率 |
 |------|------|------|------|--------|
-| switch2 | kaitori_shouten | ¥50,800 | ¥900,000 | ↑1671.7% |
-| ps5_pro | kaitori_shouten | ¥134,500 | ¥900,000 | ↑569.1% |
-| iphone17pro256 | kaitori_shouten | ¥178,000 | ¥435,000 | ↑144.4% |
-| iphone17pm256 | kaitori_shouten | ¥192,000 | ¥435,000 | ↑126.6% |
-| iphone17pro512 | kaitori_shouten | ¥214,000 | ¥435,000 | ↑103.3% |
-| iphone17pm512 | kaitori_shouten | ¥226,000 | ¥435,000 | ↑92.5% |
+| ps5_pro | kaitori_shouten | ¥134,500 | ¥191,700 | ↑42.5% |
 | switch2 | geo | ¥45,000 | ¥35,000 | ↓22.2% |
+| iphone17pro512 | kaitori_shouten | ¥214,000 | ¥201,000 | ↓6.1% |
+| switch2 | kaitori_shouten | ¥50,800 | ¥53,300 | ↑4.9% |
+| iphone17pm512 | kaitori_shouten | ¥226,000 | ¥220,000 | ↓2.7% |
+| iphone17pro256 | kaitori_shouten | ¥178,000 | ¥174,000 | ↓2.2% |
 
-## ⚠️ suspicious_price 一覧 (18件)
+## ⚠️ suspicious_price 一覧 (2件)
 
 | 商品 | 店舗 | 価格 | 理由 | 詳細 |
 |------|------|------|------|------|
-| iphone17pro256 | kaitori_shouten | ¥435,000 | price_change_over_20pct | 前回¥178,000 → 今回¥435,000（+144.4% 上昇） |
-| iphone17pro256 | kaitori_shouten | ¥435,000 | above_genre_max | iphone正常帯¥30,000〜¥400,000の上限超過（¥435,000） |
-| iphone17pro512 | kaitori_shouten | ¥435,000 | price_change_over_20pct | 前回¥214,000 → 今回¥435,000（+103.3% 上昇） |
-| iphone17pro512 | kaitori_shouten | ¥435,000 | above_genre_max | iphone正常帯¥30,000〜¥400,000の上限超過（¥435,000） |
-| iphone17pm256 | kaitori_shouten | ¥435,000 | price_change_over_20pct | 前回¥192,000 → 今回¥435,000（+126.6% 上昇） |
-| iphone17pm256 | kaitori_shouten | ¥435,000 | outlier_vs_peer_shops | 他店平均¥191,000から128%乖離（¥435,000） |
-| iphone17pm256 | kaitori_shouten | ¥435,000 | above_genre_max | iphone正常帯¥30,000〜¥400,000の上限超過（¥435,000） |
-| iphone17pm512 | kaitori_shouten | ¥435,000 | price_change_over_20pct | 前回¥226,000 → 今回¥435,000（+92.5% 上昇） |
-| iphone17pm512 | kaitori_shouten | ¥435,000 | above_genre_max | iphone正常帯¥30,000〜¥400,000の上限超過（¥435,000） |
 | switch2 | geo | ¥35,000 | price_change_over_20pct | 前回¥45,000 → 今回¥35,000（-22.2% 下落） |
-| switch2 | kaitori_shouten | ¥900,000 | price_change_over_20pct | 前回¥50,800 → 今回¥900,000（+1671.7% 上昇） |
-| switch2 | kaitori_shouten | ¥900,000 | over_3x_official | 公式¥49,980の18.0倍（¥900,000） |
-| switch2 | kaitori_shouten | ¥900,000 | game_console_smartphone_price | ゲーム機(switch2)なのに¥900,000（閾値¥124,950超 / スマホ価格帯の可能性） |
-| switch2 | kaitori_shouten | ¥900,000 | above_genre_max | game_console正常帯¥10,000〜¥200,000の上限超過（¥900,000） |
-| ps5_pro | kaitori_shouten | ¥900,000 | price_change_over_20pct | 前回¥134,500 → 今回¥900,000（+569.1% 上昇） |
-| ps5_pro | kaitori_shouten | ¥900,000 | over_3x_official | 公式¥119,980の7.5倍（¥900,000） |
-| ps5_pro | kaitori_shouten | ¥900,000 | game_console_smartphone_price | ゲーム機(ps5_pro)なのに¥900,000（閾値¥299,950超 / スマホ価格帯の可能性） |
-| ps5_pro | kaitori_shouten | ¥900,000 | above_genre_max | game_console正常帯¥10,000〜¥200,000の上限超過（¥900,000） |
+| ps5_pro | kaitori_shouten | ¥191,700 | price_change_over_20pct | 前回¥134,500 → 今回¥191,700（+42.5% 上昇） |

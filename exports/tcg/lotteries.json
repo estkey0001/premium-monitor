@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-10-01T22:25:29.118608+09:00",
-  "evaluated_at": "2026-10-01T22:25:29.116247+09:00",
+  "generated_at": "2026-10-02T11:06:44.337656+09:00",
+  "evaluated_at": "2026-10-02T11:06:44.335385+09:00",
   "items": [
     {
       "tcg": "POKEMON",
@@ -67,24 +67,24 @@
       "merged_count": 1,
       "deadline_countdown": {
         "remaining_days": 3,
-        "remaining_hours": 18,
-        "remaining_minutes": 33,
-        "remaining_seconds": 326010,
-        "label": "3日18時間"
+        "remaining_hours": 5,
+        "remaining_minutes": 52,
+        "remaining_seconds": 280335,
+        "label": "3日5時間"
       },
       "start_countdown": {
         "remaining_days": 0,
-        "remaining_hours": 13,
-        "remaining_minutes": 34,
-        "remaining_seconds": 48870,
-        "label": "13時間34分"
+        "remaining_hours": 0,
+        "remaining_minutes": 53,
+        "remaining_seconds": 3195,
+        "label": "53分"
       },
       "purchase_countdown": {
         "remaining_days": 18,
-        "remaining_hours": 18,
-        "remaining_minutes": 33,
-        "remaining_seconds": 1622010,
-        "label": "18日18時間"
+        "remaining_hours": 5,
+        "remaining_minutes": 52,
+        "remaining_seconds": 1576335,
+        "label": "18日5時間"
       }
     },
     {
@@ -152,24 +152,24 @@
       "merged_count": 1,
       "deadline_countdown": {
         "remaining_days": 3,
-        "remaining_hours": 18,
-        "remaining_minutes": 33,
-        "remaining_seconds": 326010,
-        "label": "3日18時間"
+        "remaining_hours": 5,
+        "remaining_minutes": 52,
+        "remaining_seconds": 280335,
+        "label": "3日5時間"
       },
       "start_countdown": {
         "remaining_days": 0,
-        "remaining_hours": 13,
-        "remaining_minutes": 34,
-        "remaining_seconds": 48870,
-        "label": "13時間34分"
+        "remaining_hours": 0,
+        "remaining_minutes": 53,
+        "remaining_seconds": 3195,
+        "label": "53分"
       },
       "purchase_countdown": {
         "remaining_days": 18,
-        "remaining_hours": 18,
-        "remaining_minutes": 33,
-        "remaining_seconds": 1622010,
-        "label": "18日18時間"
+        "remaining_hours": 5,
+        "remaining_minutes": 52,
+        "remaining_seconds": 1576335,
+        "label": "18日5時間"
       }
     },
     {
@@ -223,8 +223,8 @@
       "verified": true,
       "verified_by": null,
       "published_at": "2026-09-18T00:00:00+09:00",
-      "observed_at": "2026-10-01T22:19:39.761484+09:00",
-      "last_verified_at": "2026-10-01T22:19:39.761490+09:00",
+      "observed_at": "2026-10-02T11:00:51.785216+09:00",
+      "last_verified_at": "2026-10-02T11:00:51.785220+09:00",
       "collection_method": "HTML",
       "status": "CLOSED",
       "conflict": false,
@@ -287,8 +287,8 @@
       "verified": true,
       "verified_by": null,
       "published_at": "2026-09-18T00:00:00+09:00",
-      "observed_at": "2026-10-01T22:20:39.950779+09:00",
-      "last_verified_at": "2026-10-01T22:20:39.950784+09:00",
+      "observed_at": "2026-10-02T11:01:51.449068+09:00",
+      "last_verified_at": "2026-10-02T11:01:51.449073+09:00",
       "collection_method": "HTML",
       "status": "CLOSED",
       "conflict": false,
@@ -351,8 +351,8 @@
       "verified": true,
       "verified_by": null,
       "published_at": "2026-09-18T00:00:00+09:00",
-      "observed_at": "2026-10-01T22:21:39.902083+09:00",
-      "last_verified_at": "2026-10-01T22:21:39.902087+09:00",
+      "observed_at": "2026-10-02T11:02:51.415526+09:00",
+      "last_verified_at": "2026-10-02T11:02:51.415531+09:00",
       "collection_method": "HTML",
       "status": "CLOSED",
       "conflict": false,
@@ -415,8 +415,8 @@
       "verified": true,
       "verified_by": null,
       "published_at": "2026-09-18T00:00:00+09:00",
-      "observed_at": "2026-10-01T22:21:39.902300+09:00",
-      "last_verified_at": "2026-10-01T22:21:39.902303+09:00",
+      "observed_at": "2026-10-02T11:02:51.415746+09:00",
+      "last_verified_at": "2026-10-02T11:02:51.415748+09:00",
       "collection_method": "HTML",
       "status": "CLOSED",
       "conflict": false,

@@ -6,7 +6,8 @@ exports/collector_report/latest.json を読み込んで品質を評価する。
 
 Exit codes:
   0: 正常 — failure/warning 条件なし
-  1: FAILURE — 誤価格リスクあり（suspicious_price, low_confidence, 主要商品店舗不足）
+  1: FAILURE（ERROR）— 誤価格リスクあり（誤りの可能性が高い suspicious_price, low_confidence）。
+     前回から大きく動いただけの価格は WARNING（exit 0）
   2: WARNING — 取得率低下（50%超失敗, 3日連続失敗, レポートなし）
 
 GitHub Actions Summary ($GITHUB_STEP_SUMMARY) にマークダウン表を出力する。
@@ -23,6 +24,8 @@ from pathlib import Path
 # パス設定
 # ──────────────────────────────────────────────
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
+if str(PROJECT_ROOT) not in sys.path:  # src を import するため（PYTHONPATH 無しで実行しても動くように）
+    sys.path.insert(0, str(PROJECT_ROOT))
 REPORT_PATH  = PROJECT_ROOT / "exports" / "collector_report" / "latest.json"
 HISTORY_PATH = PROJECT_ROOT / "exports" / "collector_report" / "failure_history.json"
 
@@ -227,8 +230,16 @@ def evaluate(report: dict) -> dict:
     # 取得数がローカルより少なくなるのは想定内。
     # 「成功店舗数不足」は WARNING に移し、誤価格データだけを FAILURE とする。
 
-    if len(suspicious) > 0:
-        failures.append(f"suspicious_price {len(suspicious)}件（誤価格リスク — LP公開前に要確認）")
+    # 重大度を分ける。
+    #   ERROR   : 価格そのものが誤り（定価の3倍超・別SKUと同額・容量の逆転など。HARD_REJECT_REASONS）
+    #   WARNING : 前回から大きく動いた・他店と離れているだけ（相場の実際の変動もありうる。公開は止めない）
+    from src.market.price_quality import HARD_REJECT_REASONS
+    wrong_prices = [s for s in suspicious if s.get("reason") in HARD_REJECT_REASONS]
+    price_moves = [s for s in suspicious if s.get("reason") not in HARD_REJECT_REASONS]
+    if wrong_prices:
+        failures.append(f"誤りの可能性が高い価格 {len(wrong_prices)}件（suspicious_price・誤価格リスク — 要確認）")
+    if price_moves:
+        warnings.append(f"前回から大きく変動した価格 {len(price_moves)}件（誤りとは限らない・公開は継続）")
 
     if low_conf > 0:
         failures.append(f"low_confidence_count {low_conf}件（信頼度低価格がLPに表示される可能性）")
@@ -284,6 +295,8 @@ def evaluate(report: dict) -> dict:
         "total":             total,
         "low_conf":          low_conf,
         "suspicious":        suspicious,
+        "wrong_prices":      wrong_prices,
+        "price_moves":       price_moves,
         "shop_p5":           shop_p5,
         "prod_stats":        prod_stats,
         "fail_rank":         fail_rank,
@@ -354,7 +367,8 @@ def build_summary_md(result: dict) -> str:
     lines.append(f"| ❌ 失敗 | {failed} |")
     lines.append(f"| ⏭️ スキップ | {skip} |")
     lines.append(f"| 🔴 low confidence | {result['low_conf']} |")
-    lines.append(f"| ⚠️ suspicious_price | {len(result['suspicious'])} |")
+    lines.append(f"| ❌ 誤りの可能性が高い価格（ERROR） | {len(result.get('wrong_prices', []))} |")
+    lines.append(f"| ⚠️ 大きく変動した価格（WARNING） | {len(result.get('price_moves', []))} |")
     lines.append("")
 
     # 商品別成功状況（成功 / 未掲載 / 取得失敗 の3列）
@@ -437,12 +451,15 @@ def build_summary_md(result: dict) -> str:
     # suspicious_prices 詳細
     suspicious = result["suspicious"]
     if suspicious:
-        lines.append("### ⚠️ 疑わしい価格（要確認）")
+        lines.append("### 疑わしい価格（要確認）")
         lines.append("")
-        lines.append("| 商品 | 店舗 | 価格 | 理由 |")
-        lines.append("|------|------|------|------|")
+        lines.append("| 重大度 | 商品 | 店舗 | 価格 | 理由 |")
+        lines.append("|------|------|------|------|------|")
+        _wrong = {id(x) for x in result.get("wrong_prices", [])}
         for sp in suspicious[:10]:
+            sev = "❌ ERROR" if id(sp) in _wrong else "⚠️ WARNING"
             lines.append(
+                f"| {sev} "
                 f"| {sp.get('product_alias','—')} "
                 f"| {sp.get('shop','—')} "
                 f"| ¥{sp.get('price', 0):,} "

@@ -7,7 +7,7 @@ beginner_easy / beginner_watch を判定してbeginner_dealsに保存する。
 import json
 import logging
 import statistics
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from typing import Optional
 
 import ulid
@@ -18,6 +18,10 @@ from src.models.buyback_price import BuybackPriceModel, BUYBACK_SHOPS, CONDITION
 from src.models.product import ProductModel
 
 logger = logging.getLogger(__name__)
+
+# スキャン時刻はタイムゾーン付き（JST）で保存する。タイムゾーン無しの datetime.now() は
+# CI では UTC になり、表示側で JST とみなされて9時間ずれる
+JST = timezone(timedelta(hours=9))
 
 
 class BeginnerDealScanner:
@@ -159,7 +163,7 @@ class BeginnerDealScanner:
                 user_level="fetch_failed",
                 recommended_action="取得失敗 / 要確認",
                 is_active=True,
-                scanned_at=datetime.now(),
+                scanned_at=datetime.now(tz=JST),
                 notes="全店舗価格取得失敗",
             )
         # 買取店全滅でも二次流通価格あり → valid_buybacks を二次流通で代替して処理続行
@@ -318,7 +322,7 @@ class BeginnerDealScanner:
             difficulty_score=difficulty,
             user_level=user_level,
             recommended_action=action,
-            scanned_at=datetime.now(),
+            scanned_at=datetime.now(tz=JST),
         )
 
     def compare_buyback(self, product: ProductModel) -> list[dict]:

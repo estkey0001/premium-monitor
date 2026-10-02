@@ -3653,7 +3653,8 @@ def check() -> list[dict]:
 
     # #349: ランキングで利益ありの商品があるなら初心者ページの利益ありが0件にならない
     import re as _re349
-    _ranking_profits = _re349.findall(r'class="rank-profit[^"]*">\+¥([\d,]+)', html)
+    # 定価が確認日不明の行は「参考差額 +¥…」と出る（Phase 0.1）。それも数える
+    _ranking_profits = _re349.findall(r'class="rank-profit[^"]*">(?:参考差額 )?\+¥([\d,]+)', html)
     _beginner_easy_cards = html.count('data-user-level="beginner_easy"') + html.count('data-user-level="beginner_watch"')
     if _ranking_profits and _beginner_easy_cards == 0:
         results.append({"level": "error", "check": "ranking_beginner_consistency",
@@ -4085,7 +4086,8 @@ def check() -> list[dict]:
                                + ("" if _t393 else " ← 「買取店比較」が見つかりません（買取店データ未取得の可能性）")})
 
     # #394: Beginner タブに「差益（定価購入→最高買取）」が出る（ラベル変更確認）
-    _t394 = '差益（定価購入→最高買取）' in _beg_html388
+    # 定価が確認日不明の案件は「参考差額（定価の確認日不明）」と出す（Phase 0.1）。どちらも新しい形式
+    _t394 = ('差益（定価購入→最高買取）' in _beg_html388) or ('参考差額（定価の確認日不明）' in _beg_html388)
     results.append({"level": "ok" if _t394 else "warning", "check": "beginner_profit_label_updated",
                     "message": "#394 Beginner タブの差益ラベルが「最高買取」表記に更新済み"
                                + ("" if _t394 else " ← 「差益（定価購入→最高買取）」が見つかりません")})
@@ -4580,8 +4582,9 @@ def check() -> list[dict]:
 
     # #458: 小幅利益カードに「小幅利益」と表示される（Task 1 / 段階バッジ）
     #   利益あり/小幅利益/微益 のいずれかのバッジが利益サブセクションに存在する。
+    # 「参考差額」は定価が確認日不明の案件のバッジ（Phase 0.1。確定利益と区別する）
     _has_tier_badge = any(
-        ('>小幅利益<' in s) or ('>利益あり<' in s) or ('>微益<' in s)
+        ('>小幅利益<' in s) or ('>利益あり<' in s) or ('>微益<' in s) or ('>参考差額<' in s)
         for s in _profit_subsections
     )
     _t458 = (not _profit_subsections) or _has_tier_badge

@@ -24,6 +24,8 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
+from src.market import price_evidence as _pe  # noqa: E402
+
 JST = timezone(timedelta(hours=9))
 NPO_PATH = PROJECT_ROOT / "exports" / "normalized_price_observations" / "latest.json"
 OUT_DIR = PROJECT_ROOT / "exports" / "profit_routes"
@@ -177,6 +179,9 @@ def _make_route(buy: dict, sell: dict, now: datetime, reference: bool = False) -
         "net_profit": net, "roi": round(roi, 4),
         "route_confidence": _route_confidence(buy, sell, now),
         "buy_observed_at": buy["observed_at"], "sell_observed_at": sell["observed_at"],
+        # 価格の根拠（VERIFIED_CURRENT 等）。確認済みでない価格の利益は HOME の BUY・高利益に出さない
+        "buy_price_evidence": _pe.from_freshness_basis(buy.get("freshness_basis")),
+        "sell_price_evidence": _pe.from_freshness_basis(sell.get("freshness_basis")),
         "buy_observed_age_days": buy.get("observed_age_days", buy.get("age_days")),
         "sell_observed_age_days": sell.get("observed_age_days", sell.get("age_days")),
         "sell_collector_method": sell.get("collector_method", ""),

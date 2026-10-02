@@ -17,6 +17,10 @@ permissions:
 jobs:
   update-lp:
     runs-on: ubuntu-latest
+    env:
+      # このプロジェクトはタイムゾーン無しの日時を JST として読む。ランナーの既定（UTC）のままだと
+      # datetime.now() が UTC になり、画面に「08:49 JST」（実際は 17:49 JST）のように9時間ずれて出る
+      TZ: Asia/Tokyo
 
     steps:
       - name: Checkout

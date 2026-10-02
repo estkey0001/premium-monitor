@@ -17,7 +17,7 @@ Chrome調査結果 (2026-05-17):
 import json
 import logging
 import re
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from typing import Optional
 
 import ulid
@@ -75,7 +75,11 @@ class RicohOfficialCollector(BaseCollector):
                                 error_message=f"official_price_rejected:{vr.rejection_reason}")
             return None
 
-        now = datetime.now()
+        # 取得時刻はタイムゾーン付きで保存する（表示時に JST へ変換）。
+        # タイムゾーン無しの datetime.now() は CI では UTC で、JST とみなされると9時間古く見える。
+        # オフセットは +09:00 にする（observations などはタイムゾーン無しの JST の値と文字列で並べ替えるため、
+        # +00:00 だと最大9時間ずれた順になる）
+        now = datetime.now(timezone(timedelta(hours=9)))
         obs = ObservationModel(
             id=str(ulid.new()),
             product_id=product.id,
@@ -112,6 +116,7 @@ class RicohOfficialCollector(BaseCollector):
                 stock_status=stock_status,
                 is_lottery=result.get("lottery_status") in ("open", "closed"),
                 is_discontinued=result.get("is_discontinued", False),
+                observed_at=now,
             )
 
         # 公式価格更新候補をログ

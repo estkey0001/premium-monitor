@@ -2,7 +2,7 @@
 
 import json
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Optional
 
 from src.db.database import Database
@@ -140,9 +140,19 @@ class Repository:
         self, product_id: str, price: int, source_id: str,
         stock_status: str = "", is_lottery: bool = False,
         is_discontinued: bool = False,
+        observed_at: "datetime | None" = None,
     ) -> None:
-        """公式価格情報を更新候補として記録する（retail_priceは変更しない）。"""
+        """公式価格情報を更新候補として記録する（retail_priceは変更しない）。
+
+        official_price_updated_at（その価格を取得した日時）はタイムゾーン付きで保存する。
+        observed_at を渡さなければ現在時刻（例: 2026-10-02T17:49:00+09:00。08:49 UTC と同じ時刻）。
+        タイムゾーン無しの datetime.now() は CI では UTC になり、表示側で JST とみなされてずれる。
+        """
         now = datetime.now().isoformat()
+        obs = observed_at or datetime.now(timezone(timedelta(hours=9)))
+        if obs.tzinfo is None:
+            raise ValueError("observed_at はタイムゾーン付きで渡す")
+        observed_iso = obs.isoformat(timespec="seconds")
         self.db.connection.execute(
             """
             UPDATE products SET
@@ -157,7 +167,7 @@ class Repository:
                 updated_at = ?
             WHERE id = ?
             """,
-            (price, source_id, now, stock_status,
+            (price, source_id, observed_iso, stock_status,
              int(is_lottery), int(is_discontinued),
              price, price, now, product_id),
         )

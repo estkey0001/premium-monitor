@@ -218,6 +218,8 @@ def build_candidates(pr: dict) -> list[dict]:
             "is_manual_curated": r.get("is_manual_curated", False),
             "same_condition_count": r.get("same_condition_count", 0),
             "age_days": round(max(r.get("buy_observed_age_days") or 0, r.get("sell_observed_age_days") or 0), 1),
+            "buy_price_evidence": r.get("buy_price_evidence", "UNKNOWN"),
+            "sell_price_evidence": r.get("sell_price_evidence", "UNKNOWN"),
         })
     seen = {}
     for r in pr.get("reference_routes", []):
@@ -233,6 +235,8 @@ def build_candidates(pr: dict) -> list[dict]:
             "reproducibility_score": r.get("reproducibility_score", 30),
             "is_manual_curated": False, "same_condition_count": 0,
             "age_days": round(r.get("sell_observed_age_days") or 99, 1),
+            "buy_price_evidence": r.get("buy_price_evidence", "UNKNOWN"),
+            "sell_price_evidence": r.get("sell_price_evidence", "UNKNOWN"),
         })
     return cands
 
@@ -306,6 +310,9 @@ def main() -> int:
             "buy_source": c["buy_source"], "buy_price": c["buy_price"],
             "sell_source": c["sell_source"], "sell_price": c["sell_price"],
             "age_days": c.get("age_days"),
+            # 価格の根拠。確認済み（VERIFIED_*）でなければ新UIは BUY として出さない
+            "buy_price_evidence": c.get("buy_price_evidence", "UNKNOWN"),
+            "sell_price_evidence": c.get("sell_price_evidence", "UNKNOWN"),
         })
     # Task9 ランキング: Opportunity → 利益 → ROI → 再現性（決定論的）
     ops.sort(key=lambda x: (x["opportunity_score"], x["net_profit"], x["roi"],

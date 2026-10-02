@@ -268,7 +268,9 @@ class Scorer:
         sw = self.config["source_weights"]
         source_w = sw.get(source.source_type, 0.5)
 
-        age = datetime.now() - obs.observed_at
+        # 観測時刻はタイムゾーン付き（RICOH など）と無し（従来の値）が混ざる。揃えてから引く
+        obs_at = obs.observed_at
+        age = (datetime.now(obs_at.tzinfo) if obs_at.tzinfo else datetime.now()) - obs_at
         if age < timedelta(minutes=5):
             freshness = 1.0
         elif age < timedelta(minutes=30):

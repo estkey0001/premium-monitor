@@ -1,26 +1,27 @@
 # HANDOFF（最終更新: 2026-10-02）
 
 ## 今の状態
-- Phase 0（データの正確さ）を実装、未コミット。公開 LP の誤価格（買取商店の ¥435,000 / ¥900,000、フジヤの下取り価格・限定版・キット、RICOH の共通値 ¥259,800、Leica の別 SKU）と、鮮度の偽装（Apple 固定値の毎日の日時、公式価格・設定値の生成時刻、失敗時刻の「最終更新」、品質集計の required 店の除外）を止めた。deploy-check #820〜#825 で再発を検出する。
-- 段階B（新UIの外枠・HOME・runtime・照合）は本番で受け入れ済み（UI_PHASE_B_REVIEW_PASS）。
-- テスト 496 件 PASS（Phase 0 は 60件）。独立レビューは FAIL → PASS WITH WARNINGS（残りは LOW のみ）。
+- Phase 0（データの正確さ）はコミット・CI・本番で受け入れ済み（55d928fe、PHASE_0_DATA_CORRECTNESS_PASS）。
+- Phase 0.1（表示の信頼性）を実装。確認日不明の設定値の定価で出した差額を「最高利益」「ランキング1位」「利益あり」にせず「参考差額」「参考定価（確認日不明）」と出す。CI の UTC 時刻に「JST」と付けていた誤りを直し（ワークフローに TZ=Asia/Tokyo、生成時刻・スキャン時刻を JST 付きで保存）、公式価格の取得時刻をタイムゾーン付きで保存する。品質ゲートは誤価格＝ERROR、価格の変動だけ＝WARNING に分けた。
+- テスト 523 件 PASS（Phase 0.1 は 24件）。
 
 ## 未解決・保留
 - **data/tcg_verified_lotteries.csv の PCO 2件は AI（Claude）が公式告知画像を目視で転記したもの**。人が公式ページで確認したら human_confirmed を true にする（それまで confidence=medium・通知しない・公式扱いにしない）。
 - トイザらス / Joshin は HTTP 403（ローカルからも）、ヤマダ / ビック / ヨドバシは接続タイムアウト。解析器は未実装で、監視状況に SOURCE_BLOCKED / SOURCE_UNREACHABLE として表示している。エディオン / TSUTAYA / Amazon / 楽天ブックス / セブンネットは到達できるが TCG 抽選の告知一覧を発見できず未実装。
 - fail-closed の運用判断（外部データ依存の error 項目を warning に下げるか）は引き続きユーザー判断待ち。
-- Phase 0 の残り（LOW）:
-  - #821 は「3件以上が同じ時刻」の形しか検出しない
-  - 設定値の定価は確認日不明（freshness_basis=config_unknown_date）のまま参考値として使っている
-  - is_tradein は文字列で判定していて甘い（price_kind は status JSON にだけ記録）
+- 既知の LOW（Phase 0.1 では対応しない。backlog）:
+  - #821 は「3件以上が同じ時刻」の形しか検出しない（検知範囲の拡張）
+  - 価格の種別（price_kind: 現金買取 / 下取）を DB に保存していない（status JSON にだけ記録。is_tradein は文字列判定）
+  - Leica M11 の商品コードが未確認（下記）
+- 設定値の定価（PS5 Pro ¥119,980 など、config/products.yaml）は確認日が無い。公式で確認したら確認日付きで入れ直すまで「参考差額」のまま。
 - Leica M11 の通常版の商品コードは公式資料で未確認（2026-10-02 は leica-camera.com が 502）。`scripts/update_camera_buyback.py` の m11 は require_code_any=[]（UNVERIFIED）で、どの行とも結びつけない。公式テクニカルデータ（日本語版 pm-65457）で確認できたらコードを入れる。
 - 手動 CSV の時刻だけの書き換えは、過去に15回のコミット・483行あった（`python scripts/audit_timestamp_only_updates.py`）。履歴は書き換えていない。
-- ローカルの deploy-check は Errors 11（初心者ページ系 #349・#432〜#467）。Phase B を外しても同じ11件で、ローカルの DB の状態が原因（CI では通る）。
+- ネットワークを使わない手元の再現（init-db → seed → 手動 CSV 取り込み → 生成 → deploy-check）は Errors 18（初心者ページ系 #349・#432〜#467・#589〜#625 など、取得データが無いため）。修正前の HEAD でも同じ18件なので、変更前後の比較に使う。
 - CI（daily_lp.yml）は pytest を実行していない。テストはローカルで実行すること。
 - 既存の問題: pytest を実行すると追跡対象の exports/api_automation/collection.json が書き換わる。コミット前に `git checkout -- exports/api_automation/collection.json` で戻すこと（テストの出力先修正は別タスク）。
 
 ## 次にやること
-0. Phase 0 をコミットして CI で確かめる（ユーザーの指示を待つ）。CI の deploy-check で #820〜#825 が ok、公開 LP に ¥435,000 / ¥900,000 / +¥848,220 / 下取りの値 / ¥259,800 が無いことを確認する。
+0. 新UI Phase 1 はユーザーの指示を待ってから始める。
 1. 利益計算の8系統の統一（internal/uiux/UI_VIEW_MODEL_SPEC.md §2）と、成約データの取得方法（internal/uiux/IMPLEMENTATION_PLAN_V2.md）。
 2. 新UI Phase 1（HOME とナビ。internal/uiux/IMPLEMENTATION_PLAN_V2.md）。
 
@@ -36,7 +37,11 @@
   - 開始時刻を過ぎている
   - 締切前だと言い切れる（日付だけの締切は、締切日の 0 時まで）
   - SOURCE_CONFLICT ではない
-- 新UIの判定時刻は LP の生成時刻（`_nu_now`）。`datetime.now()` はタイムゾーンを持たず、CI は UTC で動くので、ローカル時刻として JST に変換している（JST とみなすと9時間ずれる）。
+- 新UIの判定時刻は LP の生成時刻（`_nu_now`）。生成時刻は `_generation_time()`（実行環境のローカル時刻を JST に変換）。
+- **時刻は保存時にタイムゾーンを付け、表示時に Asia/Tokyo へ変換してから「JST」と付ける。** タイムゾーン無しの値はこのプロジェクトでは JST として読むので、CI は `TZ: Asia/Tokyo` で動かす（daily_lp.yml）。公式価格の取得時刻（official_price_updated_at、RICOH の観測）とスキャン時刻は `+09:00` 付き（observations などはタイムゾーン無しの JST の値と文字列で並べ替えるので、`+00:00` にすると並び順が最大9時間ずれる）。根拠の無い古いタイムゾーン無しの値は補正しない。
+- 「情報確認」に出してよいのは observed_at / verified_at / last_success_at だけ。generated_at（生成時刻）と last_attempt_at（失敗も含む試行時刻）は出さない。
+- **価格の根拠は `src/market/price_evidence.py` の5区分**（VERIFIED_CURRENT / VERIFIED_DATED / CONFIGURED_REFERENCE / STALE / UNKNOWN）。利益を「今狙える利益」として強く出せる（最高利益・BUY・TOP10・高利益・ランキング👑）のは、仕入れ・売却とも VERIFIED_* のときだけ。旧UIは `_msrp_is_reference`、新UIは `home.evidence_reject_reason`。利益ルート・AI Opportunities は `buy_price_evidence` / `sell_price_evidence` を持つ。ルールは internal/uiux/UI_VIEW_MODEL_SPEC.md（未追跡のファイル）にも書いた。
+- 品質ゲート（check_collector_quality.py）: 誤りの可能性が高い価格（HARD_REJECT_REASONS）と low_confidence は ERROR（exit 1）、前回からの大きな変動・他店との差は WARNING（exit 0、公開を止めない）、optional 店の失敗は INFO。一般の画面には内部のチェック番号・理由コードを出さない。
 - HOME の表示ガード（home.py の `opportunity_reject_reason` / `route_reject_reason` / `premium_ok`）は表示だけで、元の値は変えない。
   - 「おすすめ」「高利益」「高プレミア」に出さないもの: 0円、非有限の値、ROI が 0 以下または 200% 超、プレミア率が 0 以下または 500% 超、サンプル不足、reference、confidence low
 - アーカイブ（/archive/）では、`?ui=new` を付けても新UIを有効にしない（相対リンクが合わないため）。

@@ -28,6 +28,7 @@ from src.content.safety import (
     DISCLAIMER_SHORT, DISCLAIMER_FULL,
 )
 from src.db.repository import Repository
+from src.market import price_evidence as _pe
 import urllib.parse as _urllib_parse
 
 try:
@@ -57,6 +58,15 @@ def _jst_str(dt: Optional[datetime]) -> str:
     else:
         dt = dt.astimezone(JST)
     return dt.strftime("%Y-%m-%d %H:%M JST")
+
+
+def _generation_time() -> datetime:
+    """LP の生成時刻（JST の aware datetime）。
+
+    実行環境のローカル時刻（CI のランナーは既定で UTC）を JST に変換する。
+    タイムゾーン無しの datetime.now() に「JST」と付けると、CI では9時間ずれる（08:49 UTC → 「08:49 JST」）。
+    """
+    return datetime.now().astimezone(JST)
 
 
 def _hours_ago(dt: Optional[datetime]) -> float:
@@ -156,7 +166,7 @@ class DailyLPGenerator:
 
     def generate(self, date_str: Optional[str] = None, variant: Optional[str] = None) -> dict:
         """LP HTMLを生成して保存する。"""
-        now = datetime.now()
+        now = _generation_time()
         date_str = date_str or now.strftime("%Y-%m-%d")
         time_str = now.strftime("%H:%M")
 
@@ -190,6 +200,8 @@ class DailyLPGenerator:
         # 商品別買取店一覧（複数店舗比較用）- product_id → [buyback_rows]
         buyback_by_product: dict = {}
         _all_products = self.repo.list_products()
+        # 商品ごとの定価の根拠（確認日不明の設定値で「確定利益」を強調しないため）
+        self._msrp_evidence = {_p.id: _pe.classify_product_msrp(_p, now) for _p in _all_products}
         for _p in _all_products:
             _rows = self.repo.list_buyback_prices_by_product(_p.id, limit=10)
             if _rows:
@@ -2845,6 +2857,11 @@ details[open] > .fetch-failed-summary::before {{ transform: rotate(90deg); }}
 
 .rank-row.rank-1 .rank-rate {{ color: #B45309; }}
 
+/* 定価が確認日不明の参考差額（確定利益と区別して控えめに出す） */
+.rank-row.rank-ref .rank-num {{ font-size: 0.68rem; color: var(--ink4); font-family: inherit; }}
+.rank-row.rank-ref .rank-profit {{ font-size: 0.9rem; color: var(--ink3); }}
+.rank-row.rank-ref .rank-rate {{ color: var(--ink4); }}
+
 /* ============================================================
    SURGE/DROP カード
    ============================================================ */
@@ -4181,8 +4198,8 @@ tr.sc-route-review {{ background: #FFFBEB; }}
     def _nu_now(lp_generated_at):
         """新UIの判定に使う生成時刻（JST）。
 
-        lp_generated_at は datetime.now()（タイムゾーン無し・実行環境のローカル時刻。CI は UTC）
-        なので、ローカル時刻として解釈してから JST に直す（JST とみなすと CI で9時間ずれる）。
+        generate() は JST の aware datetime を渡す。タイムゾーン無しで渡された場合は
+        実行環境のローカル時刻（CI は UTC）として解釈してから JST に直す（JST とみなすと CI で9時間ずれる）。
         """
         from src.tcg.models import JST as _JST
         from src.tcg.models import now_jst as _now_jst
@@ -4287,6 +4304,18 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             logger.warning("new UI render failed: %s", exc)
             return "", ""
 
+    # ----- 定価の根拠 -----
+
+    def _msrp_is_reference(self, d) -> bool:
+        """案件の仕入れ値（定価）が、確定利益の計算に使えない値か（設定値で確認日不明・古い・不明）。
+
+        True の案件は「最高利益」「利益あり」「ランキング1位」などの強い表示に使わず、
+        「参考差額」「参考定価（確認日不明）」として確定利益と区別して出す。
+        """
+        ev_map = getattr(self, "_msrp_evidence", None) or {}
+        ev = ev_map.get(getattr(d, "product_id", "") or "", _pe.UNKNOWN)
+        return not _pe.is_profit_eligible(ev)
+
     # ----- Hero -----
 
     def _section_hero(self, date_str, time_str, latest_buyback_at, lp_generated_at,
@@ -4317,26 +4346,45 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 
         game_count   = len(game_deals)   if game_deals   else 0
 
-        max_profit   = max((d.net_profit_jpy or 0) for d in all_deals) if all_deals else 0
+        # 「最高利益参考」は定価を確認済みの案件だけで出す。確認日不明の設定値の定価を使った差額は
+        # 確定利益と区別して「参考差額」として出す（強い利益表示にしない）
+        _verified_deals = [d for d in (all_deals or []) if not self._msrp_is_reference(d)]
+        _reference_deals = [d for d in (all_deals or []) if self._msrp_is_reference(d)]
+        max_profit   = max((d.net_profit_jpy or 0) for d in _verified_deals) if _verified_deals else 0
+        max_ref_diff = max((d.net_profit_jpy or 0) for d in _reference_deals) if _reference_deals else 0
 
         max_profit_str = f'+¥{max_profit:,}' if max_profit > 0 else '—'
+        max_ref_str = f'+¥{max_ref_diff:,}' if max_ref_diff > 0 else '—'
+        _ref_social_html = (
+            f"参考差額 {_esc(max_ref_str)} — 定価が確認日不明の設定値のため、確定利益ではありません"
+        )
 
         # Hero ボタン / social proof テキスト: 件数は鮮度に応じて出し分け
         _all_deals_total = len(all_deals) if all_deals else 0
         _buyback_fresh = _hours_ago(latest_buyback_at) <= 24  # 24h以内 = 新鮮
         if all_count > 0 and _buyback_fresh:
             _hero_btn_label     = f"&#128100; 初心者向け案件を見る ({all_count}件)"
-            _hero_social_html   = (
-                f"最高利益参考 <strong>{_esc(max_profit_str)}</strong>"
-                f" — 公式定価 vs 最高買取店"
-            )
+            if max_profit > 0:
+                _hero_social_html = (
+                    f"最高利益参考 <strong>{_esc(max_profit_str)}</strong>"
+                    f" — 公式定価 vs 最高買取店"
+                )
+            elif max_ref_diff > 0:
+                _hero_social_html = _ref_social_html
+            else:
+                _hero_social_html = "公式定価 vs 最高買取店の差益を毎日チェック"
         elif all_count > 0:
             # データあるが鮮度が古い（48h〜168h）: 件数は出さず利益のみ
             _hero_btn_label   = "&#128100; 初心者向け案件を見る"
-            _hero_social_html = (
-                f"最高利益参考 <strong>{_esc(max_profit_str)}</strong>"
-                f" — 公式定価 vs 最高買取店（参考データ）"
-            )
+            if max_profit > 0:
+                _hero_social_html = (
+                    f"最高利益参考 <strong>{_esc(max_profit_str)}</strong>"
+                    f" — 公式定価 vs 最高買取店（参考データ）"
+                )
+            elif max_ref_diff > 0:
+                _hero_social_html = _ref_social_html
+            else:
+                _hero_social_html = "公式定価 vs 最高買取店の差益を毎日チェック"
         elif _all_deals_total > 0:
             # 監視中・前回データのみ（利益案件なし）
             _hero_btn_label   = "&#128100; 初心者向け案件を見る"
@@ -4355,7 +4403,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         _seen_products_hero = set()
         _candidates = sorted(
             [d for d in (all_deals or []) if (d.net_profit_jpy or 0) > 0],
-            key=lambda d: d.net_profit_jpy or 0, reverse=True
+            key=lambda d: (self._msrp_is_reference(d), -(d.net_profit_jpy or 0))
         )
         for _d in _candidates:
             if _d.product_id in _seen_products_hero:
@@ -6230,11 +6278,13 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                     'net_profit': _net,
                     'profit_rate': _rate,
                     'is_synth': True,  # 合成ルートフラグ
+                    # 定価が確認日不明の設定値（確定利益ではなく参考差額）
+                    'msrp_reference': self._msrp_is_reference(d),
                     'buy_url': getattr(d, 'official_url', '') or '',
                     'sell_url': getattr(d, 'best_buyback_url', '') or '',
                 })
-            # 実質利益降順でソート
-            _synth_routes.sort(key=lambda r: r['net_profit'], reverse=True)
+            # 定価を確認済みのルートを先に、その中で実質利益降順
+            _synth_routes.sort(key=lambda r: (r['msrp_reference'], -r['net_profit']))
 
         parts = []
 
@@ -6513,7 +6563,11 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 </div>''')
             # 合成ルートをテーブル形式で表示
             _synth_rows = []
-            for i, r in enumerate(_synth_routes[:15], 1):
+            _rank = 0
+            for r in _synth_routes[:15]:
+                _is_ref = r.get('msrp_reference')
+                if not _is_ref:
+                    _rank += 1
                 _buy_a = (f'<a href="{_esc(r["buy_url"])}" target="_blank" rel="noopener noreferrer" '
                           f'class="sc-mini-link" data-track="sedori_buy_click">{_esc(r["buy_shop_name"])}</a>'
                           if r.get("buy_url") else _esc(r["buy_shop_name"]))
@@ -6522,15 +6576,20 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                            if r.get("sell_url") else _esc(r["sell_shop_name"]))
                 _cat_badge = f'<span style="font-size:0.65rem;color:#6b7280;margin-left:4px">[{_esc(r["category"])}]</span>' if r.get("category") else ''
                 _synth_rows.append(
-                    f'<tr class="sc-route-row">'
-                    f'<td class="sc-rank-cell">#{i}</td>'
-                    f'<td class="sc-prod-cell">{_esc(r["product_name"])}{_cat_badge}</td>'
+                    '<tr class="sc-route-row">'
+                    + ('<td class="sc-rank-cell">参考</td>' if _is_ref else f'<td class="sc-rank-cell">#{_rank}</td>')
+                    + f'<td class="sc-prod-cell">{_esc(r["product_name"])}{_cat_badge}</td>'
                     f'<td class="sc-shop-cell">{_buy_a}</td>'
-                    f'<td class="sc-price-cell sc-col-red">¥{r["buy_price"]:,}</td>'
-                    f'<td class="sc-shop-cell">{_sell_a}</td>'
+                    + (f'<td class="sc-price-cell">¥{r["buy_price"]:,}'
+                       f'<div style="font-size:0.65rem;color:#6b7280">参考定価・確認日不明</div></td>'
+                       if _is_ref else
+                       f'<td class="sc-price-cell sc-col-red">¥{r["buy_price"]:,}</td>')
+                    + f'<td class="sc-shop-cell">{_sell_a}</td>'
                     f'<td class="sc-price-cell sc-col-green">¥{r["sell_price"]:,}</td>'
-                    f'<td class="sc-profit-cell sc-col-green">+¥{r["net_profit"]:,}</td>'
-                    f'<td class="sc-rate-cell"><span class="sc-rate-badge sc-rate-pos">+{r["profit_rate"]:.1%}</span></td>'
+                    + (f'<td class="sc-profit-cell">参考差額 +¥{r["net_profit"]:,}</td>'
+                       if _is_ref else
+                       f'<td class="sc-profit-cell sc-col-green">+¥{r["net_profit"]:,}</td>')
+                    + f'<td class="sc-rate-cell"><span class="sc-rate-badge sc-rate-pos">+{r["profit_rate"]:.1%}</span></td>'
                     f'</tr>'
                 )
             if _synth_rows:
@@ -7090,9 +7149,14 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         _profit_deals_all  = [d for d in deduped_all if (d.net_profit_jpy or 0) > 0]
         _monitor_deals_all = [d for d in deduped_all if getattr(d, 'user_level', '') == 'monitoring']
         _failed_deals_all  = [d for d in deduped_all if getattr(d, 'user_level', '') == 'fetch_failed']
+        # 定価が確認日不明の設定値の案件は「利益あり」に数えず「参考差額」として別に数える
+        _ref_deals_all = [d for d in _profit_deals_all if self._msrp_is_reference(d)]
+        _ref_summary = (f'参考差額: <strong>{len(_ref_deals_all)}</strong>件 ／ '
+                        if _ref_deals_all else '')
         parts.append(
             f'<div class="beginner-summary-bar">'
-            f'利益あり: <strong>{len(_profit_deals_all)}</strong>件 ／ '
+            f'利益あり: <strong>{len(_profit_deals_all) - len(_ref_deals_all)}</strong>件 ／ '
+            + _ref_summary +
             f'監視中: <strong>{len(_monitor_deals_all)}</strong>件 ／ '
             f'取得失敗: <strong>{len(_failed_deals_all)}</strong>件'
             f'</div>'
@@ -7145,9 +7209,11 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 
             # ジャンルヘッダー（件数・内訳付き）
             total_in_genre = len(genre_deals)
+            _ref_in_genre = sum(1 for d in profit_deals if self._msrp_is_reference(d))
             summary_text = (
-                f'利益あり {len(profit_deals)} / '
-                f'監視中 {len(monitoring_genre)} / '
+                f'利益あり {len(profit_deals) - _ref_in_genre} / '
+                + (f'参考差額 {_ref_in_genre} / ' if _ref_in_genre else '')
+                + f'監視中 {len(monitoring_genre)} / '
                 f'取得失敗 {len(ff_genre)}'
             )
 
@@ -7163,13 +7229,21 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 
             # 利益あり
             if profit_deals:
-                parts.append('<div class="status-subsection"><div class="status-subhead status-profit">利益あり</div><div class="cards-grid">')
+                # 定価を確認済みの案件を先に並べる。全部が確認日不明の定価なら見出しも「参考差額」にする
+                profit_deals = sorted(profit_deals, key=lambda d: self._msrp_is_reference(d))
+                _subhead = ('参考差額あり（定価の確認日不明）' if _ref_in_genre == len(profit_deals)
+                            else '利益あり')
+                parts.append('<div class="status-subsection"><div class="status-subhead status-profit">'
+                             f'{_subhead}</div><div class="cards-grid">')
                 for d in profit_deals:
                     rows = bybp.get(d.product_id, [])
                     # 利益額に応じてバッジを段階化（Task 1）。
                     # profit>0 のカードでは「様子見」を出さない。
                     _np = d.net_profit_jpy or 0
                     badge_cls, label = self._profit_badge(_np)
+                    if self._msrp_is_reference(d):
+                        # 確認日不明の定価では「利益あり」と言い切らない
+                        badge_cls, label = 'badge-watch', '参考差額'
                     _ovs_p, _ovs_s, _ovs_obs, _ovs_method = _get_overseas(d)
                     parts.append(self._deal_card(d, badge_cls, label, buyback_rows=rows,
                                                  overseas_price_jpy=_ovs_p, overseas_source=_ovs_s,
@@ -7794,6 +7868,9 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                             if r.get('data_source') == 'auto_scraped') if any(
                             r.get('data_source') == 'auto_scraped' for r in _normal_rows) else 0
 
+            # 定価が確認日不明の案件は、店ごとの差も「参考差額」と出す（確定利益と区別する）
+            _diff_word = '参考差額' if self._msrp_is_reference(d) else '差益'
+
             def _render_shop_row(r, rank_counter):
                 """1店舗ぶんの shop-row HTML を返す。rank_counter=None なら取得失敗行。"""
                 bp = r.get('buyback_price', 0)
@@ -7912,7 +7989,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                     f'<div class="shop-name-col">{sname}</div></div>'
                     f'<div class="shop-card-mid">'
                     f'<div class="shop-price-col">¥{bp:,}</div>'
-                    f'<div class="shop-diff-col{diff_cls}">差益 {_esc(profit_str)}</div></div>'
+                    f'<div class="shop-diff-col{diff_cls}">{_diff_word} {_esc(profit_str)}</div></div>'
                     f'{_auto_annot}'
                     f'<div class="shop-link-col">{link_col}</div>'
                     f'</div>'
@@ -8045,6 +8122,12 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             profit_main_lbl = '差益（定価購入→最高買取）'
             pro_mode_note = ''
             buyback_compare_hd = '買取店比較'
+            if self._msrp_is_reference(d):
+                # 定価が設定値で確認日不明: 確定利益と区別して「参考定価」「参考差額」と出す
+                official_price_lbl = '参考定価（確認日不明）'
+                profit_main_lbl = '参考差額（定価の確認日不明）'
+                if (d.net_profit_jpy or 0) > 0:
+                    profit_note_text = '確定利益ではありません（定価は設定値・確認日不明）'
 
         # 買取店テーブルのヘッダーラベルを再構築（Pro向けは「参考」表記）
         if compare_html and pro_mode:
@@ -9206,11 +9289,18 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                                     key=lambda d: d.net_profit_jpy, reverse=True)
 
         def _rank_rows_html(deals, show_cat=False):
+            # 定価を確認済みの案件だけに順位（👑）を付ける。確認日不明の設定値の定価を使った案件は
+            # 順位を付けず「参考」として後ろに並べ、差額も「参考差額」として出す
+            deals = sorted(deals, key=lambda d: self._msrp_is_reference(d))
             rows = []
-            for i, d in enumerate(deals, 1):
-                row_cls = ' rank-1' if i == 1 else ''
-                rank_cls = 'r1' if i == 1 else ('r2' if i == 2 else ('r3' if i == 3 else ''))
-                crown = '&#128081;' if i == 1 else str(i)
+            i = 0
+            for d in deals:
+                is_ref = self._msrp_is_reference(d)
+                if not is_ref:
+                    i += 1
+                row_cls = ' rank-1' if (i == 1 and not is_ref) else (' rank-ref' if is_ref else '')
+                rank_cls = '' if is_ref else ('r1' if i == 1 else ('r2' if i == 2 else ('r3' if i == 3 else '')))
+                crown = '参考' if is_ref else ('&#128081;' if i == 1 else str(i))
                 cat_td = f'<td style="font-size:0.75rem;color:var(--ink3)">{_esc(d.category)}</td>' if show_cat else ''
                 # user_level が beginner_easy/watch → beginnerタブ、それ以外はcategoryで判定
                 _ul = getattr(d, 'user_level', '') or ''
@@ -9229,9 +9319,12 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                     f'<div class="rank-info"><div class="rank-name rank-name-link">{_esc(d.product_name)}</div>'
                     f'<div class="rank-meta">{_esc(d.best_buyback_shop or "—")} → 最高買取店'
                     + (f' &nbsp;|&nbsp; {_esc(d.category)}' if show_cat else '')
-                    + f'</div></div>'
-                    f'<div><div class="rank-profit">{_esc(fmt_profit(d.net_profit_jpy))}</div>'
-                    f'<div class="rank-rate">{_esc(fmt_rate(d.net_profit_rate))}</div></div>'
+                    + (' &nbsp;|&nbsp; 定価は確認日不明' if is_ref else '')
+                    + '</div></div>'
+                    + (f'<div><div class="rank-profit rank-profit-ref">参考差額 {_esc(fmt_profit(d.net_profit_jpy))}</div>'
+                       if is_ref else
+                       f'<div><div class="rank-profit">{_esc(fmt_profit(d.net_profit_jpy))}</div>')
+                    + f'<div class="rank-rate">{_esc(fmt_rate(d.net_profit_rate))}</div></div>'
                     f'</div>'
                 )
             if not rows:
@@ -9441,11 +9534,12 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 f'</div>\n'
             )
 
-        # 価格の急な変動（前回比 20% 以上など）。誤りとは限らないので控えめに知らせる
+        # 価格の急な変動（前回比 20% 以上など）。誤りとは限らないので WARNING として控えめに知らせる
+        # （取得失敗・誤価格と同じ見え方にしない。公開も止めない）
         if _moves > 0:
             return (
                 f'<div class="collector-warn-bar collector-warn-soft" id="collector-warn-bar">'
-                f'ℹ️ 前回から大きく変わった買取価格が {_moves}件あります（公式サイトでご確認ください） — {_link}'
+                f'⚠ 前回から大きく変動した買取価格が {_moves}件あります（公式サイトでご確認ください） — {_link}'
                 f'</div>\n'
             )
 

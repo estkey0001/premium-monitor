@@ -3,7 +3,8 @@
 新しい判定は作らない。抽選の状態は runtime.derive_runtime_state（既存の
 compute_lottery_status）だけで決め、AI Opportunities・利益ルートは既存の出力をそのまま数える。
 
-表示段階のガード: 0円・非有限・極端な利益率・参考扱い・低い確かさの値は
+表示段階のガード: 0円・非有限・極端な利益率・参考扱い・低い確かさの値、
+根拠が確認済みでない価格（確認日不明の設定値・古い・不明）を使った利益は
 「おすすめ」「高利益」「高プレミア」として出さない。値の補正はしない（出さないだけ）。
 """
 
@@ -17,6 +18,7 @@ from src.content.ui import components as c
 from src.content.ui import lottery_card
 from src.content.ui import runtime as rt
 from src.content.ui.navigation import page_href
+from src.market import price_evidence as pe
 from src.tcg.models import JST
 
 # 利益率がこれを超える値は異常値の可能性が高いので「おすすめ」に出さない（表示だけのガード）
@@ -40,12 +42,27 @@ def price_ok(value) -> bool:
     return v is not None and math.isfinite(v) and v > 0
 
 
+def evidence_reject_reason(item: dict) -> str:
+    """仕入れ・売却の価格の根拠が確認済みでない理由。確認済みなら空文字。
+
+    CONFIGURED_REFERENCE（設定値で確認日不明）・STALE・UNKNOWN（根拠が無い）の価格を使った利益は、
+    BUY・TOP・高利益（「今狙える利益」）に昇格させない。根拠の項目が無い値も UNKNOWN として扱う。
+    """
+    for side in ("buy", "sell"):
+        ev = str(item.get(f"{side}_price_evidence") or pe.UNKNOWN)
+        if not pe.is_profit_eligible(ev):
+            return f"{side}_{ev.lower()}"
+    return ""
+
+
 def opportunity_reject_reason(o: dict) -> str:
     """AI Opportunity を「買う」として出せない理由。出せるなら空文字。"""
     if str(o.get("action") or "") != "BUY":
         return "not_buy"
     if str(o.get("kind") or "") != "main":
         return "reference"
+    if evidence_reject_reason(o):
+        return "unverified_price"
     if o.get("rejection_reason") or o.get("suspicious") or o.get("invalid"):
         return "flagged"
     if str(o.get("confidence") or "").lower() == "low":
@@ -81,6 +98,8 @@ def route_reject_reason(r: dict) -> str:
     """検証済み利益ルートを「高利益」として数えられない理由。数えられるなら空文字。"""
     if r.get("reference_route") or r.get("rejection_reason"):
         return "flagged"
+    if evidence_reject_reason(r):
+        return "unverified_price"
     if str(r.get("route_confidence") or "").lower() == "low":
         return "low_confidence"
     if not (price_ok(r.get("buy_price")) and price_ok(r.get("sell_price"))

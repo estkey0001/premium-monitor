@@ -6,7 +6,7 @@
   - eBay completed listings (新品) — Finding API → HTML fallback
   - Amazon JP 新品出品 — HTML scraping (Cloud IP ブロック時は site_blocked)
   - メルカリ 新品/未使用 — Playwright SPA scraping
-  - ヤフオク 落札済み 未使用 — HTML scraping
+  - ヤフオク 出品中 新品/未使用 — HTML scraping（出品価格。落札済みではない）
   - 楽天市場 新品出品 — HTML scraping
   - ラクマ 新品/未使用 — HTML scraping (fril.jp)
 
@@ -573,31 +573,49 @@ class MercariResaleCollector:
 
 
 class YahooAuctionResaleCollector:
-    """ヤフオク 落札済み（未使用/新品）価格コレクター。
+    """ヤフオク 出品中（新品/未使用）価格コレクター。
 
-    公開の落札済みオークション検索ページを使用。ログイン不要。
+    取得しているのは**現在出品中の一覧**（/search/search）で、落札済みの結果ではない。
+    2026-10-03 に実ページで確認した: タイトル「…の中古品・新品・未使用品一覧」、
+    各商品の価格は「現在 …円」「即決 …円」、残り日数（「01日」）と未来の終了時刻（data-cl-params の end）が付く。
+    落札相場は /closedsearch/closedsearch（別ページ）で、このコレクターは使っていない。
+    そのため保存する種別は LISTING（出品価格）。sold / 落札 / 成約 と呼ばない。
+
+    価格は商品ごとの属性（data-auction-price / data-auction-title）だけから読む。
+    ページ全体から数字を拾うと、カテゴリ ID などの無関係な数字が混ざる。
+    中古・新品同様（使用済み）と、別の型（Monochrome・HDF・Max など）の出品は除く。
     """
 
     SHOP_ID = "yahoo_auction_new"
-    SHOP_NAME = "ヤフオク (新品/未使用落札)"
+    SHOP_NAME = "ヤフオク (出品中・新品/未使用)"
+    PRICE_TYPE = "LISTING"
 
-    # va=除外キーワード（中古を除外）, istatus=2: 落札済み
-    # condition_type=1: 未使用
+    # 出品中の一覧の検索。istatus・item_condition の絞り込みは実際には効いていない
+    # （中古の出品も返る）ので、タイトルで改めて判定する
     SEARCH_URL = (
         "https://auctions.yahoo.co.jp/search/search"
         "?p={keyword}"
         "&va={keyword}"
-        "&istatus=2"          # 落札済み
+        "&istatus=2"
         "&n=20"               # 20件
         "&s1=cbids&o1=d"      # 入札数降順
         "&ei=utf-8"
         "&auccat="
         "&tab_ex=commerce"
-        "&item_condition=1"   # 未使用
+        "&item_condition=1"
     )
 
+    # 新品・未使用を示す語（どれかが必要）と、使用済みを示す語（あれば除く）
+    _NEW_WORDS = ("新品", "未使用", "未開封")
+    _USED_WORDS = ("中古", "美品", "良品", "極上", "ジャンク", "難あり", "訳あり", "シャッター数",
+                   "ショット数", "新品同様", "ほぼ新品", "開封済", "展示品", "used")
+    # 型の違いを示す語。検索語に無いのにタイトルにあれば別の商品とみなす
+    _VARIANT_WORDS = ("monochrome", "モノクローム", "hdf", "max", "mini", "plus", "pro", "air",
+                      "digital edition", "有機el", "oled", "lite", "セット", "ケース", "レンズ", "フィルター",
+                      "バッテリー", "充電", "フード", "ストラップ", "カバー", "フィルム")
+
     def collect(self, product_alias: str, keywords: list[str]) -> Optional[dict]:
-        """ヤフオク落札価格を取得する。"""
+        """ヤフオクの出品中の価格（新品/未使用・同じ型）を集計する。"""
         keyword = keywords[0] if keywords else ""
         if not keyword:
             return None
@@ -605,12 +623,14 @@ class YahooAuctionResaleCollector:
         url = self.SEARCH_URL.format(keyword=urllib.parse.quote(keyword))
         html = _fetch_html(url)
         if not html:
+            # 取得失敗。前回の値を新しい時刻で保存し直さない（何も保存しない）
             logger.info("[YahooAuction:%s] HTML取得失敗 → スキップ", product_alias)
             return None
 
-        prices = self._parse_prices(html)
+        items = self._parse_items(html)
+        prices = [it["price"] for it in items if self._matches(it["title"], keyword)]
         if not prices:
-            logger.info("[YahooAuction:%s] 価格なし", product_alias)
+            logger.info("[YahooAuction:%s] 条件に合う出品なし（出品 %d件）", product_alias, len(items))
             return None
 
         prices = _remove_outliers(prices)
@@ -619,7 +639,7 @@ class YahooAuctionResaleCollector:
 
         median_jpy = int(statistics.median(prices))
         logger.info(
-            "[YahooAuction:%s] ¥%s (median of %d listings)",
+            "[YahooAuction:%s] 出品価格の中央値 ¥%s（新品/未使用の出品 %d件）",
             product_alias, f"{median_jpy:,}", len(prices),
         )
         return {
@@ -627,40 +647,66 @@ class YahooAuctionResaleCollector:
             "listing_count": len(prices),
             "url": url,
             "collector_method": "html",
+            "price_type": self.PRICE_TYPE,
         }
 
-    def _parse_prices(self, html: str) -> list[int]:
-        """ヤフオク検索結果から落札価格を抽出する。"""
-        prices: list[int] = []
-
+    @staticmethod
+    def _parse_items(html: str) -> list[dict]:
+        """一覧の各出品（タイトル・現在価格・出品 ID）を読む。価格は商品の属性からだけ取る。"""
+        items: list[dict] = []
         try:
             from bs4 import BeautifulSoup
-            soup = BeautifulSoup(html, "lxml")
-
-            # 落札価格セレクタ
-            for el in soup.select(".Product__price, .rb_mrkp span, .bb_price"):
-                txt = el.get_text(strip=True).replace("¥", "").replace(",", "").strip()
-                try:
-                    p = int(txt)
-                    if PRICE_MIN_JPY <= p <= PRICE_MAX_JPY:
-                        prices.append(p)
-                except ValueError:
-                    pass
-
         except ImportError:
-            pass
+            return items
+        soup = BeautifulSoup(html, "lxml")
+        for a in soup.select("li.Product a.Product__imageLink[data-auction-id]"):
+            try:
+                price = int(str(a.get("data-auction-price") or "").replace(",", ""))
+            except ValueError:
+                continue
+            if not (PRICE_MIN_JPY <= price <= PRICE_MAX_JPY):
+                continue
+            items.append({"id": a.get("data-auction-id"), "title": a.get("data-auction-title") or "",
+                          "price": price})
+        return items[:30]
 
-        # フォールバック
-        if not prices:
-            for m in re.finditer(r'[¥￥"]([\d,]{4,9})', html):
-                try:
-                    p = int(m.group(1).replace(",", ""))
-                    if PRICE_MIN_JPY <= p <= PRICE_MAX_JPY:
-                        prices.append(p)
-                except ValueError:
-                    pass
+    @staticmethod
+    def _words(text: str) -> list[str]:
+        """照合用に語へ分ける（小文字化・記号を区切り・英字と数字の境目で区切る）。
+        「Switch2」「iPhone17」「[256GB]」も「switch 2」「iphone 17」「256 gb」として比べる。"""
+        t = str(text or "").lower()
+        t = re.sub(r"[^0-9a-z\u3040-\u30ff\u4e00-\u9fff]+", " ", t)
+        t = re.sub(r"(?<=[a-z])(?=[0-9])|(?<=[0-9])(?=[a-z])", " ", t)
+        # 日本語と英数字の境目でも区切る（「富士フイルムX100VI」「新品未開封RICOH」）
+        t = re.sub(r"(?<=[\u3040-\u30ff\u4e00-\u9fff])(?=[0-9a-z])|(?<=[0-9a-z])(?=[\u3040-\u30ff\u4e00-\u9fff])",
+                   " ", t)
+        return t.split()
 
-        return prices[:30]
+    @classmethod
+    def _matches(cls, title: str, keyword: str) -> bool:
+        """同じ商品（検索語の語をすべて語として含み、別の型の語を含まない）の新品・未使用の出品か。
+
+        英数字の語は語の単位で比べる（「2」が「2024」に、「used」が「unused」に一致しないように）。
+        """
+        tw, kw = cls._words(title), cls._words(keyword)
+        tset, kset = set(tw), set(kw)
+        t_join = " ".join(tw)
+
+        def has(word: str) -> bool:
+            w = " ".join(cls._words(word))
+            if not w:
+                return False
+            if re.fullmatch(r"[0-9a-z ]+", w):          # 英数字は語の単位で
+                return f" {w} " in f" {t_join} "
+            return w in t_join                          # 日本語は部分一致
+
+        if not all(tok in tset for tok in kw):
+            return False
+        if any(has(w) and not set(cls._words(w)) <= kset for w in cls._VARIANT_WORDS):
+            return False
+        if any(has(w) for w in cls._USED_WORDS):
+            return False
+        return any(has(w) for w in cls._NEW_WORDS)
 
 
 # ─────────────────────────────────────────────────────────────
@@ -921,8 +967,13 @@ def _save_sale_price(
     now: datetime,
     condition: Optional[str] = None,
     title: Optional[str] = None,
+    price_type: str = "UNKNOWN",
+    sample_count: Optional[int] = None,
 ) -> None:
     """sale_prices テーブルに保存する（INSERT OR REPLACE）。
+
+    price_type は src/market/price_types.py の正本の値（出品の中央値なら LISTING）。
+    取得に成功したときだけ呼ぶ（失敗時に前回の値を新しい時刻で保存し直さない）。
 
     condition を明示しない場合は title から推定する（Task 1: condition 推定）。
     どちらも無ければ new_unopened（クエリが新品/未使用フィルタ済みのため）。
@@ -945,6 +996,8 @@ def _save_sale_price(
         observed_at=now,
         data_source="resale_market",
         is_active=True,
+        price_type=price_type,
+        sample_count=sample_count,
     )
     repo.insert_sale_price(sp)
     logger.debug("保存: %s / %s ¥%s [%s]", product_alias, shop_name, f"{price_jpy:,}", _cond)
@@ -1050,6 +1103,10 @@ def run_collection(
                             price_jpy=result["price_jpy"],
                             url=result["url"],
                             now=now,
+                            # 成約の集計値だが、1件ごとの成約日時・集計期間を持たないので SOLD_MEDIAN を名乗らない。
+                            # 正本の種別に当てはまらないので UNKNOWN（件数は sample_count に残す）
+                            price_type="UNKNOWN",
+                            sample_count=result.get("listing_count"),
                         )
                         stats["saved"] += 1
                         # 1件でも成功したらステータスを更新
@@ -1093,6 +1150,8 @@ def run_collection(
                             price_jpy=result["price_jpy"],
                             url=result["url"],
                             now=now,
+                            price_type="LISTING",
+                            sample_count=result.get("listing_count"),
                         )
                         stats["saved"] += 1
                         if platform_status["amazon"] not in ("ok_api", "ok_html"):
@@ -1132,6 +1191,8 @@ def run_collection(
                             price_jpy=result["price_jpy"],
                             url=result["url"],
                             now=now,
+                            price_type="LISTING",
+                            sample_count=result.get("listing_count"),
                         )
                         stats["saved"] += 1
                         if platform_status["mercari"] not in ("ok_api", "ok_html"):
@@ -1171,6 +1232,8 @@ def run_collection(
                             price_jpy=result["price_jpy"],
                             url=result["url"],
                             now=now,
+                            price_type="LISTING",
+                            sample_count=result.get("listing_count"),
                         )
                         stats["saved"] += 1
                         if platform_status["yahoo"] not in ("ok_api", "ok_html"):
@@ -1211,6 +1274,8 @@ def run_collection(
                             price_jpy=result["price_jpy"],
                             url=result["url"],
                             now=now,
+                            price_type="LISTING",
+                            sample_count=result.get("listing_count"),
                         )
                         stats["saved"] += 1
                         if platform_status["rakuten"] not in ("ok_api", "ok_html"):
@@ -1251,6 +1316,8 @@ def run_collection(
                             price_jpy=result["price_jpy"],
                             url=result["url"],
                             now=now,
+                            price_type="LISTING",
+                            sample_count=result.get("listing_count"),
                         )
                         stats["saved"] += 1
                         if platform_status["rakuma_direct"] not in ("ok_api", "ok_html"):

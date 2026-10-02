@@ -124,7 +124,8 @@ def test_unknown_date_msrp_cannot_enter_buy_top_list():
 
 def _route(**kw):
     r = {"buy_price": 119980, "sell_price": 192000, "net_profit": 70220, "roi": 0.585,
-         "buy_price_evidence": "CONFIGURED_REFERENCE", "sell_price_evidence": "VERIFIED_CURRENT"}
+         "buy_price_evidence": "CONFIGURED_REFERENCE", "sell_price_evidence": "VERIFIED_CURRENT",
+         "sell_canonical_type": "BUYBACK_CASH"}
     r.update(kw)
     return r
 

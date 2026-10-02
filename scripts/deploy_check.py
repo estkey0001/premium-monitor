@@ -5765,7 +5765,10 @@ def check() -> list[dict]:
                                + ("" if _t591 else " ← 最安buy/最高sell がありません")})
 
     # #592: eBay sold stale が理由として表示される
-    _t592 = (not _zero_mode) or ('main 除外' in _lp_html or 'main除外' in _lp_html or '日前のため' in _lp_html)
+    # 参考ルート（古い海外 sold で成立するルート）が無い日は、説明する stale 理由も無い
+    _ref_routes_592 = (_pr.get('reference_routes') or []) if isinstance(_pr, dict) else []
+    _t592 = (not _zero_mode) or (not _ref_routes_592) \
+        or ('main 除外' in _lp_html or 'main除外' in _lp_html or '日前のため' in _lp_html)
     results.append({"level": "ok" if _t592 else "error", "check": "lp_zero_stale_reason",
                     "message": "#592 eBay sold stale が未成立理由として表示される"
                                + ("" if _t592 else " ← stale理由が見つかりません")})
@@ -5789,10 +5792,12 @@ def check() -> list[dict]:
     _flea_obs = [r for r in _obs if r.get('price_type') == 'flea_sold_price']
 
     # #595: flea_sold_price が NPO に存在
+    # 成約（flea_sold_price）は根拠（商品ページの URL と成約日時）のあるものだけ（#826）。
+    # 根拠のある成約が0件なのはデータが無いだけなので warning（出品価格で埋めて ok にしない。Phase 0.2）
     _t595 = len(_flea_obs) > 0
-    results.append({"level": "ok" if _t595 else "error", "check": "npo_has_flea_sold",
+    results.append({"level": "ok" if _t595 else "warning", "check": "npo_has_flea_sold",
                     "message": f"#595 normalized_price_observations に flea_sold_price がある（{len(_flea_obs)}件）"
-                               + ("" if _t595 else " ← flea_sold_price が見つかりません")})
+                               + ("" if _t595 else " ← 根拠のある成約データが0件（成約価格 未取得）")})
 
     # #596: flea_sold_price が Pro buy 側として使われる（usable な flea_sold buy が存在）
     _flea_usable = [r for r in _flea_obs if r.get('price_role') == 'buy' and r.get('is_usable_for_pro')]
@@ -5956,6 +5961,8 @@ def check() -> list[dict]:
     _ai = _load_json_safe('exports/ai_opportunities/latest.json') or {}
     _ai_ok = isinstance(_ai, dict) and ('todays_opportunities' in _ai)
     _ai_ops = _ai.get('todays_opportunities', []) if _ai_ok else []
+    # 候補が0件の日は、空の状態（成約価格 未取得 / 想定利益 算出前）が表示されていればよい（Phase 0.2）
+    _ai_empty_shown = '本日は候補がありません' in _lp_html
 
     # #615: ai_opportunities.json が存在し AI Dashboard が LP にある
     _t615 = _ai_ok and ('ai-dashboard' in _lp_html) and ('AI Dashboard' in _lp_html)
@@ -6010,7 +6017,7 @@ def check() -> list[dict]:
     # #622: Action（WAIT/BUY/SKIP/ALERT）が全候補に付与
     _valid_act = {"BUY", "WAIT", "SKIP", "ALERT"}
     _t622 = _ai_ok and (len(_ai_ops) == 0 or all(o.get("action") in _valid_act for o in _ai_ops)) \
-        and ('Action:' in _lp_html)
+        and (('Action:' in _lp_html) if _ai_ops else _ai_empty_shown)
     results.append({"level": "ok" if _t622 else "error", "check": "ai_action",
                     "message": "#622 Action（WAIT/BUY/SKIP/ALERT）が付与・表示される"
                                + ("" if _t622 else " ← Action が不正/未表示")})
@@ -6025,7 +6032,7 @@ def check() -> list[dict]:
     # #624: Timeline（現在→監視→成立→通知）が付与・表示される
     _t624 = _ai_ok and (len(_ai_ops) == 0 or all(
         isinstance(o.get("timeline"), dict) and o["timeline"].get("current") for o in _ai_ops)) \
-        and ('タイムライン' in _lp_html)
+        and (('タイムライン' in _lp_html) if _ai_ops else _ai_empty_shown)
     results.append({"level": "ok" if _t624 else "error", "check": "ai_timeline",
                     "message": "#624 Opportunity Timeline が付与・表示される"
                                + ("" if _t624 else " ← Timeline が不正/未表示")})
@@ -6033,7 +6040,7 @@ def check() -> list[dict]:
     # #625: Expected Buy Price / Expected Sell Price が付与される
     _t625 = _ai_ok and (len(_ai_ops) == 0 or all(
         ("expected_buy_price" in o and "expected_sell_price" in o) for o in _ai_ops)) \
-        and ('想定仕入' in _lp_html)
+        and (('想定仕入' in _lp_html) if _ai_ops else _ai_empty_shown)
     results.append({"level": "ok" if _t625 else "error", "check": "ai_expected_prices",
                     "message": "#625 Expected Buy/Sell Price が付与・表示される"
                                + ("" if _t625 else " ← 想定価格が見つかりません")})
@@ -7067,6 +7074,9 @@ def _check_data_correctness() -> list[dict]:
     #823 品質の集計で「対象外」にしている店は、CLAUDE.md の OPTIONAL_SHOPS だけ
     #824 カメラの採用価格は、現金買取の段で、限定版・キット・発売前の品ではない
     #825 公式定価で、同じ一覧ページの別商品に同じ価格を割り当てていない（RICOH の first_on_page 対策）
+    #826 成約価格として使う値は、商品ページの URL と成約日時の根拠を持つ
+    #827 成約を名乗るのに根拠の無い値を、利益計算に使っていない
+    #828 確定利益（main route）の売値は BUYBACK_CASH か SOLD_MEDIAN だけ
     """
     import csv as _csv
     import importlib.util as _ilu
@@ -7216,6 +7226,36 @@ def _check_data_correctness() -> list[dict]:
                         shared.append(f"{a}/{b}=¥{price:,}")
         _add(825, "official_price_not_shared_across_products", not shared,
              "同じ一覧ページの別商品に同じ公式定価を割り当てていない", f"同額: {shared[:5]}")
+
+    # #826〜#828: 出品価格（LISTING）と成約価格（SOLD）を取り違えていない（Phase 0.2）
+    from src.market import price_types as _ptypes
+    if npo_p.exists():
+        obs = npo.get("observations") or []
+        # #826 成約（flea_sold_price / canonical SOLD の仕入れ値）は、商品ページの URL と成約日時の根拠を持つ
+        bad_sold = [f"{o.get('product_id')}/{o.get('source_name')}" for o in obs
+                    if o.get("price_role") == "buy"
+                    and (o.get("price_type") == "flea_sold_price" or o.get("canonical_price_type") == _ptypes.SOLD)
+                    and not _ptypes.has_sold_evidence(o.get("item_url") or o.get("source_url"), o.get("sold_at"))]
+        _add(826, "sold_price_has_evidence", not bad_sold,
+             "成約価格として使う値は、商品ページの URL と成約日時の根拠を持つ（出品・ダミー URL を成約にしない）",
+             f"根拠の無い成約: {bad_sold[:5]}")
+        # #827 「落札」「sold」などを名乗るのに根拠の無い値が、利益計算に使える状態になっていない
+        leaked = [f"{o.get('product_id')}/{o.get('source_name')}" for o in obs
+                  if o.get("price_role") == "buy" and _ptypes.is_sold_label(o.get("source_name"))
+                  and o.get("canonical_price_type") != _ptypes.SOLD
+                  and (o.get("is_usable_for_pro") or o.get("is_usable_for_beginner"))]
+        _add(827, "sold_label_without_evidence_unused", not leaked,
+             "成約を名乗るのに根拠の無い値（出品・種別不明）を利益計算に使っていない", f"使用中: {leaked[:5]}")
+    pr_p = PROJECT_ROOT / "exports" / "profit_routes" / "latest.json"
+    if pr_p.exists():
+        pr = _json.loads(pr_p.read_text(encoding="utf-8"))
+        # #828 確定利益（main route）の売値は買取（BUYBACK_CASH）か、条件を満たした成約中央値（SOLD_MEDIAN）だけ
+        bad_sell = [f"{r.get('product_id')}/{r.get('sell_source')}={r.get('sell_canonical_type')}"
+                    for r in (pr.get("main_routes") or [])
+                    if not _ptypes.is_confirmed_sell_type(r.get("sell_canonical_type"))]
+        _add(828, "main_route_sell_type_confirmed", not bad_sell,
+             "確定利益の売値は買取価格か、条件を満たした成約中央値だけ（出品価格を売値にしない）",
+             f"対象外の売値: {bad_sell[:5]}")
     return out
 
 

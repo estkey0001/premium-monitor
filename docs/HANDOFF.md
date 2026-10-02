@@ -1,9 +1,9 @@
-# HANDOFF（最終更新: 2026-10-02）
+# HANDOFF（最終更新: 2026-10-03）
 
 ## 今の状態
-- Phase 0（データの正確さ）はコミット・CI・本番で受け入れ済み（55d928fe、PHASE_0_DATA_CORRECTNESS_PASS）。
-- Phase 0.1（表示の信頼性）を実装。確認日不明の設定値の定価で出した差額を「最高利益」「ランキング1位」「利益あり」にせず「参考差額」「参考定価（確認日不明）」と出す。CI の UTC 時刻に「JST」と付けていた誤りを直し（ワークフローに TZ=Asia/Tokyo、生成時刻・スキャン時刻を JST 付きで保存）、公式価格の取得時刻をタイムゾーン付きで保存する。品質ゲートは誤価格＝ERROR、価格の変動だけ＝WARNING に分けた。
-- テスト 523 件 PASS（Phase 0.1 は 24件）。
+- Phase 0（データの正確さ）・0.1（表示の信頼性）はコミット・CI・本番で受け入れ済み。
+- Phase 0.2（二次流通の価格の意味）を実装。「ヤフオク (新品/未使用落札)」は実際には**出品中の一覧**（`/search/search`）で、ページ全体からカテゴリ ID なども数字として拾っていた。出品価格（LISTING）として出品ごとの属性だけを読むように直した。価格の種別の正本 `src/market/price_types.py` を作り、sale_prices に種別を保存する（migration 019、既存の行は UNKNOWN）。根拠（商品ページの URL と成約日時）の無い値を成約として使わない。確定利益の売値は買取か、条件を満たした成約中央値（3件以上・期間つき）だけ。
+- テスト 572 件 PASS（Phase 0.2 は 49件）。
 
 ## 未解決・保留
 - **data/tcg_verified_lotteries.csv の PCO 2件は AI（Claude）が公式告知画像を目視で転記したもの**。人が公式ページで確認したら human_confirmed を true にする（それまで confidence=medium・通知しない・公式扱いにしない）。
@@ -11,8 +11,11 @@
 - fail-closed の運用判断（外部データ依存の error 項目を warning に下げるか）は引き続きユーザー判断待ち。
 - 既知の LOW（Phase 0.1 では対応しない。backlog）:
   - #821 は「3件以上が同じ時刻」の形しか検出しない（検知範囲の拡張）
-  - 価格の種別（price_kind: 現金買取 / 下取）を DB に保存していない（status JSON にだけ記録。is_tradein は文字列判定）
+  - 買取の価格の種別（現金買取 / 下取）は DB に保存していない（status JSON にだけ記録。is_tradein は文字列判定）。sale_prices の種別は Phase 0.2 で保存するようにした
   - Leica M11 の商品コードが未確認（下記）
+- **成約（sold）データは今は0件**。ヤフオク（自動）は出品価格、手動の成約 CSV（data/manual_flea_sold_prices.csv）は URL がダミーで成約日時が無い、eBay は API 未設定（CI では HTML もブロック）、メルカリ・ラクマの成約は NOT_IMPLEMENTED。成約中央値を使うには、規約に沿って1件ごとの商品ページの URL と成約日時を取れる経路が必要（eBay API を設定する場合も、1件ごとの成約日時を保存するように collector を直す必要がある）。
+- 過去の誤分類（git の履歴で数えた）: NPO にヤフオクの出品を「落札」として入れたコミットが144（1,491行、2026-06-04〜10-02）。そのうち利益ルートの main（確定利益）の仕入れ値に使ったものが32行。ダミー URL の手動「成約」を使ったルートが39コミット・269行（06-15〜09-04）。履歴は書き換えていない。
+- 旧UI は横に少しはみ出す（.tab-wrap の `margin: 0 -24px`。1440px で 24px、375px で 16px）。Phase 0.1 より前からある。Phase 1 の UI 再設計で直す（Phase 0.2 では触らない）。
 - 設定値の定価（PS5 Pro ¥119,980 など、config/products.yaml）は確認日が無い。公式で確認したら確認日付きで入れ直すまで「参考差額」のまま。
 - Leica M11 の通常版の商品コードは公式資料で未確認（2026-10-02 は leica-camera.com が 502）。`scripts/update_camera_buyback.py` の m11 は require_code_any=[]（UNVERIFIED）で、どの行とも結びつけない。公式テクニカルデータ（日本語版 pm-65457）で確認できたらコードを入れる。
 - 手動 CSV の時刻だけの書き換えは、過去に15回のコミット・483行あった（`python scripts/audit_timestamp_only_updates.py`）。履歴は書き換えていない。
@@ -40,7 +43,9 @@
 - 新UIの判定時刻は LP の生成時刻（`_nu_now`）。生成時刻は `_generation_time()`（実行環境のローカル時刻を JST に変換）。
 - **時刻は保存時にタイムゾーンを付け、表示時に Asia/Tokyo へ変換してから「JST」と付ける。** タイムゾーン無しの値はこのプロジェクトでは JST として読むので、CI は `TZ: Asia/Tokyo` で動かす（daily_lp.yml）。公式価格の取得時刻（official_price_updated_at、RICOH の観測）とスキャン時刻は `+09:00` 付き（observations などはタイムゾーン無しの JST の値と文字列で並べ替えるので、`+00:00` にすると並び順が最大9時間ずれる）。根拠の無い古いタイムゾーン無しの値は補正しない。
 - 「情報確認」に出してよいのは observed_at / verified_at / last_success_at だけ。generated_at（生成時刻）と last_attempt_at（失敗も含む試行時刻）は出さない。
-- **価格の根拠は `src/market/price_evidence.py` の5区分**（VERIFIED_CURRENT / VERIFIED_DATED / CONFIGURED_REFERENCE / STALE / UNKNOWN）。利益を「今狙える利益」として強く出せる（最高利益・BUY・TOP10・高利益・ランキング👑）のは、仕入れ・売却とも VERIFIED_* のときだけ。旧UIは `_msrp_is_reference`、新UIは `home.evidence_reject_reason`。利益ルート・AI Opportunities は `buy_price_evidence` / `sell_price_evidence` を持つ。ルールは internal/uiux/UI_VIEW_MODEL_SPEC.md（未追跡のファイル）にも書いた。
+- **価格の根拠は `src/market/price_evidence.py` の5区分**（VERIFIED_CURRENT / VERIFIED_DATED / CONFIGURED_REFERENCE / STALE / UNKNOWN）。利益を「今狙える利益」として強く出せる（最高利益・BUY・TOP10・高利益・ランキング👑）のは、仕入れ・売却とも VERIFIED_* のときだけ。旧UIは `_msrp_is_reference`、新UIは `home.evidence_reject_reason`。利益ルート・AI Opportunities は `buy_price_evidence` / `sell_price_evidence` を持つ。ルールは internal/uiux/UI_VIEW_MODEL_SPEC.md にも書いた。
+- **価格の種別は `src/market/price_types.py` だけで決める**（RETAIL / BUYBACK_CASH / TRADE_IN / LISTING / SOLD / SOLD_MEDIAN / CONFIGURED_REFERENCE / UNKNOWN）。出品価格を「sold」「落札」「成約」と呼ばない。店名の文字列から成約を推測しない。sale_prices に保存する collector は必ず `price_type` と `sample_count` を渡す。成約（SOLD）は `has_sold_evidence`（1件の商品ページの URL と成約日時。ダミー・検索結果の URL は不可）を満たすものだけ。成約中央値は `sold_median`（同じ商品・3件以上・期間）。deploy-check #826〜#828 が取り違えを検出する。
+- internal/uiux の5文書（UI_VIEW_MODEL_SPEC / IMPLEMENTATION_PLAN_V2 / DATA_SOURCE_MATRIX / DATA_CAPABILITY_AUDIT / AGREED_DESIGN_GAP_ANALYSIS）は Phase 0.2 で管理対象にした。UI_VIEW_MODEL_SPEC.md が新UIの仕様の正本、監査の2文書は 2026-10-02 時点のスナップショット（冒頭に位置づけを書いた）。
 - 品質ゲート（check_collector_quality.py）: 誤りの可能性が高い価格（HARD_REJECT_REASONS）と low_confidence は ERROR（exit 1）、前回からの大きな変動・他店との差は WARNING（exit 0、公開を止めない）、optional 店の失敗は INFO。一般の画面には内部のチェック番号・理由コードを出さない。
 - HOME の表示ガード（home.py の `opportunity_reject_reason` / `route_reject_reason` / `premium_ok`）は表示だけで、元の値は変えない。
   - 「おすすめ」「高利益」「高プレミア」に出さないもの: 0円、非有限の値、ROI が 0 以下または 200% 超、プレミア率が 0 以下または 500% 超、サンプル不足、reference、confidence low

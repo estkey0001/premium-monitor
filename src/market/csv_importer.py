@@ -54,7 +54,8 @@ SOURCE_MAP = {
 # CSV に price_basis 列がない / 空欄の場合に使用する
 SOURCE_DEFAULT_BASIS: dict = {
     "mercari":         "出品価格",
-    "yahoo_auction":   "成約価格",
+    # 種別を書いていないヤフオクの行を「成約価格」と決めつけない（出品か成約かは CSV に明記する）
+    "yahoo_auction":   "",
     "rakuten_flea":    "出品価格",
     "map_camera":      "中古販売価格",
     "kitamura":        "中古販売価格",

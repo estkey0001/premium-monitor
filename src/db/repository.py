@@ -6,6 +6,7 @@ from datetime import datetime, timedelta, timezone
 from typing import Optional
 
 from src.db.database import Database
+from src.market import price_types as _price_types
 from src.models.product import ProductModel
 from src.models.source import SourceModel
 from src.models.observation import ObservationModel, CollectorLogModel, PriceHistoryModel
@@ -1488,11 +1489,13 @@ class Repository:
         self.db.connection.execute(
             """INSERT OR REPLACE INTO sale_prices
                (id, product_id, product_alias, shop_name, shop_id, sale_price,
-                condition, url, link_verified, observed_at, data_source, is_active)
-               VALUES (?,?,?,?,?,?,?,?,?,?,?,?)""",
+                condition, url, link_verified, observed_at, data_source, is_active,
+                price_type, sample_count, sold_at)
+               VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
             (sp.id, sp.product_id, sp.product_alias, sp.shop_name, sp.shop_id,
              sp.sale_price, sp.condition, sp.url, int(sp.link_verified),
-             sp.observed_at.isoformat(), sp.data_source, int(sp.is_active)),
+             sp.observed_at.isoformat(), sp.data_source, int(sp.is_active),
+             _price_types.canonical(sp.price_type), sp.sample_count, sp.sold_at or ""),
         )
         self.db.connection.commit()
 
@@ -1538,6 +1541,9 @@ class Repository:
                     observed_at=datetime.fromisoformat(d["observed_at"]),
                     data_source=d.get("data_source", "manual"),
                     is_active=bool(d.get("is_active", 1)),
+                    price_type=_price_types.canonical(d.get("price_type")),
+                    sample_count=d.get("sample_count"),
+                    sold_at=d.get("sold_at") or "",
                 ))
             except Exception:
                 continue

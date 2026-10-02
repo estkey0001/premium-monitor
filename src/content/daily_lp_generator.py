@@ -29,6 +29,7 @@ from src.content.safety import (
 )
 from src.db.repository import Repository
 from src.market import price_evidence as _pe
+from src.market import price_types as _pt
 import urllib.parse as _urllib_parse
 
 try:
@@ -5604,7 +5605,8 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                  'border:1px solid #a5f3fc;border-radius:8px;padding:10px 12px">',
                  '<div style="font-weight:700;color:#0e7490">&#128722; 新規取得したフリマsold価格（仕入れ候補）</div>',
                  '<div style="font-size:0.78rem;color:#155e75;margin:3px 0 6px">'
-                 'メルカリ/ヤフオク/ラクマの成約価格（手動確認・規約遵守）。target_buy_price 以下なら国内買取ルート候補。</div>',
+                 'メルカリ/ヤフオク/ラクマの成約価格（手動確認・規約遵守）。商品ページの URL と成約日時を確認できたものだけ。'
+                 'target_buy_price 以下なら国内買取ルート候補。</div>',
                  '<table style="width:100%;font-size:0.82rem;border-collapse:collapse">'
                  '<tr style="color:#64748b;text-align:left"><th>商品</th><th>ソース</th><th>sold価格</th>'
                  '<th>target上限</th><th>差</th><th>状態</th></tr>']
@@ -5681,7 +5683,9 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         parts.append('<div class="ai-opportunities" style="margin-top:8px">'
                      '<div style="font-weight:700;color:#334155">&#128200; Today\'s Opportunities（期待度順 TOP10）</div>')
         if not ops:
+            # 成約価格が無い商品の利益は出品価格で埋めない（成約価格 未取得 / 想定利益 算出前）
             parts.append('<div style="font-size:0.85rem;color:#94a3b8;margin-top:4px">本日は候補がありません。'
+                         '成約価格が未取得の商品は、想定利益を算出前としています（出品価格では計算しません）。'
                          'Health タブでデータ取得状況をご確認ください。</div>')
         _acol = {"BUY": "#059669", "ALERT": "#2563eb", "WAIT": "#d97706", "SKIP": "#94a3b8"}
         for c in ops:
@@ -6060,10 +6064,18 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                     f'<div style="font-size:0.78rem;color:#b45309;margin-top:3px">'
                     f'状態: eBay API未設定 / fresh化待ち（main routeではありません）<br>'
                     f'理由: 海外sold が {_esc(r.get("rejection_reason",""))}。'
-                    f'API設定後に observed_at≤14日 & API取得になれば <b>main 利益ルートに昇格</b>します。</div>')
-            sell_line = (f'売却参考: {_esc(r["sell_source"])}（{_esc(r["sell_price_type"])}） '
+                    f'API で取得し（14日以内）、同じ商品の成約 {_pt.MIN_SOLD_SAMPLES}件以上を成約日時つきで集計できれば '
+                    f'<b>main 利益ルートに昇格</b>します。</div>')
+            # 種別は内部名（overseas_sold_price 等）でなく一般向けの名前で出す。
+            # 手動記録の海外の成約は、1件ごとの成約日時・件数が無いので「根拠未確認」と付ける
+            _sell_lbl = _pt.label(r.get("sell_canonical_type") or r["sell_price_type"])
+            if _pt.is_sold_label(_sell_lbl) and r.get("sell_canonical_type") != _pt.SOLD_MEDIAN:
+                # 海外の成約は集計値で、1件ごとの成約日時・集計期間が無い（成約中央値の条件を満たさない）
+                _sell_lbl += ("・手動記録・根拠未確認" if r.get("sell_collector_method") in ("manual", "")
+                              else "・集計値（成約日時なし）・根拠未確認")
+            sell_line = (f'売却参考: {_esc(r["sell_source"])}（{_esc(_sell_lbl)}） '
                          f'<b>¥{r["sell_price"]:,}</b> {age_note}') if reference else \
-                        (f'売却: {_esc(r["sell_source"])}（{_esc(r["sell_price_type"])}） <b>¥{r["sell_price"]:,}</b>')
+                        (f'売却: {_esc(r["sell_source"])}（{_esc(_sell_lbl)}） <b>¥{r["sell_price"]:,}</b>')
             profit_lbl = "参考利益" if reference else "概算利益"
             # Task4: main=緑系 / reference=青紫系 で視覚分離（CSSクラス + 左ボーダー色）
             card_cls = "pr-reference-card" if reference else "pr-main-card"
@@ -6102,7 +6114,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 f'<div class="{card_cls}" style="{card_style}border-radius:8px;padding:10px 12px;margin:8px 0">'
                 f'<div style="font-weight:700">{_esc(r["product_name"])} {badge}</div>'
                 f'<div style="font-size:0.85rem;margin-top:4px">'
-                f'仕入: {_esc(r["buy_source"])}（{_esc(r["buy_price_type"])}） <b>¥{r["buy_price"]:,}</b> ／ '
+                f'仕入: {_esc(r["buy_source"])}（{_esc(_pt.label(r.get("buy_canonical_type") or r["buy_price_type"]))}） <b>¥{r["buy_price"]:,}</b> ／ '
                 f'{sell_line}</div>'
                 f'<div style="font-size:0.78rem;color:#64748b;margin-top:2px">コスト: {" / ".join(fees)}</div>'
                 f'<div style="margin-top:4px">{profit_lbl}: <b style="color:#059669">+¥{r["net_profit"]:,}</b> '
@@ -6220,10 +6232,12 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 '<details class="pr-admin-setup" style="margin-top:14px;font-size:0.8rem;color:#475569">'
                 '<summary style="cursor:pointer;color:#64748b">管理者向け: 海外相場（eBay API）の有効化方法</summary>'
                 '<div style="margin-top:6px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:10px 12px">'
-                'eBay API を有効化すると参考ルートが main 利益ルートへ自動昇格します。<br>'
+                'eBay API を有効化すると、条件を満たした参考ルートが main 利益ルートへ昇格します。<br>'
                 '<b>GitHub Secrets</b> に <code>EBAY_APP_ID</code> を登録 → '
                 '<code>gh workflow run daily_lp.yml</code> で再生成。<br>'
-                '昇格条件: eBay API で 14日以内の sold 価格を取得（collector_method=api）。'
+                '昇格条件: eBay API で 14日以内の sold 価格を取得（collector_method=api）し、'
+                f'同じ商品の成約を {_pt.MIN_SOLD_SAMPLES}件以上・成約日時つきで集計できること'
+                '（今の eBay の取得は1件ごとの成約日時を保存していないので、この条件はまだ満たせない）。'
                 '</div></details>')
 
         parts.append('</div>')
@@ -8599,8 +8613,9 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                     db_row.get("recorded_at") or db_row.get("observed_at", ""),
                     db_row.get("data_source", "")
                 )
+                # 成約を名乗る手動の値（URL・成約日時なし）は「（根拠未確認）」と出す
                 basis_cell = (
-                    f'<span class="pro-price-basis">{_esc(pbasis)}</span>'
+                    f'<span class="pro-price-basis">{_esc(_pt.basis_display(pbasis))}</span>'
                     if pbasis else '<span class="pro-price-basis pro-price-basis-unknown">—</span>'
                 )
                 dtrows.append(
@@ -8795,8 +8810,9 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                     db_row.get("recorded_at") or db_row.get("observed_at", ""),
                     db_row.get("data_source", "")
                 )
+                # 成約を名乗る手動の値（URL・成約日時なし）は「（根拠未確認）」と出す
                 basis_cell = (
-                    f'<span class="pro-price-basis">{_esc(pbasis)}</span>'
+                    f'<span class="pro-price-basis">{_esc(_pt.basis_display(pbasis))}</span>'
                     if pbasis else '<span class="pro-price-basis pro-price-basis-unknown">—</span>'
                 )
                 # collector_method バッジ（overseas_prices/latest.json から）

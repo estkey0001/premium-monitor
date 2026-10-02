@@ -25,6 +25,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
 from src.market import price_evidence as _pe  # noqa: E402
+from src.market import price_types as _pt  # noqa: E402
 
 JST = timezone(timedelta(hours=9))
 NPO_PATH = PROJECT_ROOT / "exports" / "normalized_price_observations" / "latest.json"
@@ -69,8 +70,12 @@ def _sell_ok(o: dict) -> bool:
     # Task4: 海外sold を main に昇格するには API 取得（collector_method=api or source_mode=api）が必須。
     # 手動/HTML フォールバックの海外価格は stale 化しやすいため main では使わず参考扱い。
     if o["price_type"] == "overseas_sold_price":
-        return (o.get("collector_method") == "api" or o.get("source_mode") == "api")
-    return True
+        # 成約価格を確定利益の売値に使うには SOLD_MEDIAN の条件（同じ商品の成約が
+        # MIN_SOLD_SAMPLES 件以上・成約日時・集計期間）も必要（price_types.CONFIRMED_SELL_TYPES）
+        return ((o.get("collector_method") == "api" or o.get("source_mode") == "api")
+                and bool(o.get("sold_median_eligible")))
+    # 売値に使える種別は買取（BUYBACK_CASH）と成約中央値（SOLD_MEDIAN）だけ。出品価格は使わない
+    return _pt.canonical(o.get("canonical_price_type") or o["price_type"]) in _pt.CONFIRMED_SELL_TYPES
 
 
 def _reference_sell_ok(o: dict) -> bool:
@@ -85,8 +90,8 @@ def _reference_sell_ok(o: dict) -> bool:
     if o.get("rejection_reason") not in ("", "stale_over_14d"):
         return False
     is_api = (o.get("collector_method") == "api" or o.get("source_mode") == "api")
-    # main に行けない（stale or 非API）= 参考
-    return (not o["is_fresh"]) or (not is_api)
+    # main に行けない（stale or 非API or 成約中央値の条件を満たさない）= 参考
+    return (not o["is_fresh"]) or (not is_api) or (not o.get("sold_median_eligible"))
 
 
 def _has_link(o: dict) -> bool:
@@ -180,6 +185,10 @@ def _make_route(buy: dict, sell: dict, now: datetime, reference: bool = False) -
         "route_confidence": _route_confidence(buy, sell, now),
         "buy_observed_at": buy["observed_at"], "sell_observed_at": sell["observed_at"],
         # 価格の根拠（VERIFIED_CURRENT 等）。確認済みでない価格の利益は HOME の BUY・高利益に出さない
+        # 価格の種別（price_types の正本。出品 LISTING・成約 SOLD 等）
+        "buy_canonical_type": _pt.canonical(buy.get("canonical_price_type") or buy["price_type"]),
+        "sell_canonical_type": (_pt.SOLD_MEDIAN if sell.get("sold_median_eligible")
+                                else _pt.canonical(sell.get("canonical_price_type") or sell["price_type"])),
         "buy_price_evidence": _pe.from_freshness_basis(buy.get("freshness_basis")),
         "sell_price_evidence": _pe.from_freshness_basis(sell.get("freshness_basis")),
         "buy_observed_age_days": buy.get("observed_age_days", buy.get("age_days")),
@@ -274,7 +283,7 @@ def main() -> int:
                 # 国内買取ルート成立に必要な buy 上限（sell - 手数料 - 1）
                 need_buy_max = ms - dom_fee - 1
                 if need_buy_max > 0 and mb > need_buy_max:
-                    needed.append(f"メルカリsold/ヤフオク落札 ≤ ¥{need_buy_max:,} 取得で国内買取ルート成立")
+                    needed.append(f"仕入れ価格（出品・販売）≤ ¥{need_buy_max:,} が見つかれば国内買取ルート成立")
                 # 国内買取が何円上がれば成立するか
                 need_sell_up = (mb + dom_fee + 1) - ms
                 if need_sell_up > 0:
@@ -334,7 +343,8 @@ def main() -> int:
     # 不足データ別に、解放される潜在利益 / 該当商品数 / 優先度 を集計。
     md_prio = {
         "ebay_sold_fresh": {"label": "eBay sold（海外成約相場）の最新化", "potential": 0, "products": 0},
-        "flea_sold": {"label": "メルカリsold / ヤフオク落札（より安い仕入れ）", "potential": 0, "products": 0},
+        "flea_sold": {"label": "メルカリ / ヤフオクの成約価格（成約日時と商品ページの根拠つき・より安い仕入れ）",
+                      "potential": 0, "products": 0},
         "shop_item_url": {"label": "店舗販売価格 item_url 付き取得", "potential": 0, "products": 0},
     }
     for pid, z in zero_diag.items():

@@ -20,6 +20,10 @@ class SalePriceModel(BaseModel):
     observed_at: datetime = Field(default_factory=datetime.now)
     data_source: str = Field(default="manual", description="データソース")
     is_active: bool = Field(default=True)
+    # 価格の種別（src/market/price_types.py の正本の値）。記録が無ければ UNKNOWN（SOLD と推測しない）
+    price_type: str = Field(default="UNKNOWN", description="RETAIL / LISTING / SOLD など")
+    sample_count: Optional[int] = Field(default=None, description="集計値の元にした件数")
+    sold_at: str = Field(default="", description="SOLD のときの成約日時")
 
 
 # 販売条件ラベル

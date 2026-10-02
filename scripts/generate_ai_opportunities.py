@@ -220,6 +220,8 @@ def build_candidates(pr: dict) -> list[dict]:
             "age_days": round(max(r.get("buy_observed_age_days") or 0, r.get("sell_observed_age_days") or 0), 1),
             "buy_price_evidence": r.get("buy_price_evidence", "UNKNOWN"),
             "sell_price_evidence": r.get("sell_price_evidence", "UNKNOWN"),
+            "buy_canonical_type": r.get("buy_canonical_type", "UNKNOWN"),
+            "sell_canonical_type": r.get("sell_canonical_type", "UNKNOWN"),
         })
     seen = {}
     for r in pr.get("reference_routes", []):
@@ -237,6 +239,8 @@ def build_candidates(pr: dict) -> list[dict]:
             "age_days": round(r.get("sell_observed_age_days") or 99, 1),
             "buy_price_evidence": r.get("buy_price_evidence", "UNKNOWN"),
             "sell_price_evidence": r.get("sell_price_evidence", "UNKNOWN"),
+            "buy_canonical_type": r.get("buy_canonical_type", "UNKNOWN"),
+            "sell_canonical_type": r.get("sell_canonical_type", "UNKNOWN"),
         })
     return cands
 
@@ -313,6 +317,9 @@ def main() -> int:
             # 価格の根拠。確認済み（VERIFIED_*）でなければ新UIは BUY として出さない
             "buy_price_evidence": c.get("buy_price_evidence", "UNKNOWN"),
             "sell_price_evidence": c.get("sell_price_evidence", "UNKNOWN"),
+            # 価格の種別。売値が BUYBACK_CASH / SOLD_MEDIAN でなければ新UIは BUY に出さない
+            "buy_canonical_type": c.get("buy_canonical_type", "UNKNOWN"),
+            "sell_canonical_type": c.get("sell_canonical_type", "UNKNOWN"),
         })
     # Task9 ランキング: Opportunity → 利益 → ROI → 再現性（決定論的）
     ops.sort(key=lambda x: (x["opportunity_score"], x["net_profit"], x["roi"],

@@ -456,7 +456,7 @@ def test_legacy_same_product_different_store_kept():
 def test_infinite_values_do_not_break_home():
     o = {"product": "X", "action": "BUY", "kind": "main", "confidence": "high", "priority": 1,
          "buy_price": 100, "sell_price": float("inf"), "net_profit": float("inf"), "roi": 0.5,
-         "buy_price_evidence": "VERIFIED_CURRENT", "sell_price_evidence": "VERIFIED_CURRENT"}
+         "buy_price_evidence": "VERIFIED_CURRENT", "sell_price_evidence": "VERIFIED_CURRENT", "sell_canonical_type": "BUYBACK_CASH"}
     m = home.build_home_model(tcg_report={}, opportunities={"todays_opportunities": [o]},
                               profit_routes={}, legacy_lotteries=[], now=NOW)
     assert m.hidden_prices == 1

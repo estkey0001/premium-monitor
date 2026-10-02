@@ -15,6 +15,8 @@ from __future__ import annotations
 
 from datetime import datetime, timedelta, timezone
 
+from src.market import price_types as _pt
+
 JST = timezone(timedelta(hours=9))
 
 STALE_DAYS = 14  # これを超えると stale（main calculation から除外）
@@ -95,21 +97,36 @@ def classify_link_type(url: str, link_verified: bool, price_role: str) -> str:
     return "unknown"
 
 
-def classify_sale_price_type(shop_name: str, condition: str) -> tuple[str, str]:
-    """販売系（sale_prices）の shop_name から (price_type, market_type) を分類する。"""
+def classify_sale_price_type(shop_name: str, condition: str, stored_type: str = _pt.UNKNOWN,
+                             item_url: str = "", sold_at: str = "") -> tuple[str, str, str]:
+    """販売系（sale_prices）を (price_type, market_type, 使えない理由) に分類する。
+
+    成約（flea_sold_price）にするのは、保存された種別が SOLD で、成約の根拠
+    （1件の商品ページの URL と成約日時）があるときだけ。店名に「落札」「sold」とあっても、
+    種別が記録されていない（UNKNOWN）・根拠が無い値は成約にしない（出品として扱い、利益計算に使わない）。
+    """
     s = (shop_name or "")
     sl = s.lower()
+    stored = _pt.canonical(stored_type)
+    _sold_label = ("落札" in s) or ("sold" in sl) or ("完売" in s) or ("成約" in s)
+    if stored == _pt.SOLD_MEDIAN:
+        # 成約価格の集計値（eBay の成約の中央値など）は仕入れ値ではない
+        reject = "sold_aggregate_not_buy_price"
+    elif stored == _pt.SOLD and not _pt.has_sold_evidence(item_url, sold_at):
+        reject = "sold_without_evidence"
+    elif stored != _pt.SOLD and _sold_label:
+        reject = "sold_label_without_evidence"
+    else:
+        reject = ""
     if any(k in sl for k in ("ebay", "stockx", "amazon.com")) or "海外" in s:
-        return "overseas_listing_price", "overseas"
-    # sold/完売/落札 を含むフリマは成約価格(flea_sold_price)、それ以外は出品価格(flea_listing_price)
-    _is_sold = ("落札" in s) or ("sold" in sl) or ("完売" in s) or ("成約" in s)
-    if "メルカリ" in s or "mercari" in sl:
-        return ("flea_sold_price" if _is_sold else "flea_listing_price"), "flea_market"
-    if "ヤフオク" in s or "yahoo" in sl or "ヤフー" in s:
-        return ("flea_sold_price" if _is_sold else "flea_listing_price"), "flea_market"
-    if "ラクマ" in s or "rakuma" in sl or "paypay" in sl:
-        return ("flea_sold_price" if _is_sold else "flea_listing_price"), "flea_market"
-    return "shop_sale_price", "domestic_retail"
+        return "overseas_listing_price", "overseas", reject
+    is_flea = (("メルカリ" in s or "mercari" in sl) or ("ヤフオク" in s or "yahoo" in sl or "ヤフー" in s)
+               or ("ラクマ" in s or "rakuma" in sl or "paypay" in sl))
+    if is_flea:
+        if stored == _pt.SOLD and not reject:
+            return "flea_sold_price", "flea_market", ""
+        return "flea_listing_price", "flea_market", reject
+    return "shop_sale_price", "domestic_retail", reject
 
 
 def is_tradein(shop_name: str, notes: str) -> bool:
@@ -230,6 +247,13 @@ def make_observation(now: datetime, **kw) -> dict:
         and identity_ok
     )
 
+    # 価格の種別の取り違え（根拠の無い成約・成約の集計値を仕入れ値に使う等）は、利益計算に使わない
+    semantic_rejection = kw.get("semantic_rejection") or ""
+    if semantic_rejection:
+        is_usable_for_beginner = False
+        is_usable_for_pro = False
+        rejection_reason = semantic_rejection
+
     if not rejection_reason and not is_usable_for_beginner and not is_usable_for_pro:
         if is_ti:
             rejection_reason = "trade_in_excluded"
@@ -256,6 +280,12 @@ def make_observation(now: datetime, **kw) -> dict:
         "market_type": kw.get("market_type", ""),
         "price_role": price_role,
         "price_type": price_type,
+        # 正本の価格の種別（src/market/price_types.py）。根拠の無い成約は SOLD にしない
+        "canonical_price_type": kw.get("canonical_price_type") or _pt.canonical(price_type),
+        "sample_count": kw.get("sample_count"),
+        # 確定利益の売値に使える成約中央値か（SOLD_MEDIAN の条件: 件数 MIN_SOLD_SAMPLES 以上・期間・成約日時）
+        "sold_median_eligible": bool(kw.get("sold_median_eligible", False)),
+        "sold_at": kw.get("sold_at", "") or "",
         "condition": condition,
         "price": price,
         "observed_at": observed_at,
@@ -346,8 +376,12 @@ def build_observations(con, now: datetime | None = None) -> list[dict]:
         "LEFT JOIN products p ON p.id=s.product_id WHERE s.is_active=1"
     ).fetchall()
     for r in sp:
-        ptype, mtype = classify_sale_price_type(r["shop_name"], r["condition"])
+        _keys = r.keys()
         url = r["url"] or ""
+        ptype, mtype, _sem_reject = classify_sale_price_type(
+            r["shop_name"], r["condition"],
+            r["price_type"] if "price_type" in _keys else _pt.UNKNOWN,
+            item_url=url, sold_at=(r["sold_at"] if "sold_at" in _keys else "") or "")
         rows.append(make_observation(
             now, product_id=r["product_id"], product_name=r["pname"] or "",
             source_id=r["shop_id"] or "", source_name=r["shop_name"] or "",
@@ -360,15 +394,21 @@ def build_observations(con, now: datetime | None = None) -> list[dict]:
             price_context={
                 "shop_sale_price": "店頭/EC販売価格",
                 "flea_listing_price": "フリマ出品価格",
-                "flea_sold_price": "フリマ落札価格",
+                "flea_sold_price": "フリマ成約価格",
                 "overseas_listing_price": "海外出品価格",
             }.get(ptype, "販売価格"),
+            sample_count=(r["sample_count"] if "sample_count" in _keys else None),
+            sold_at=(r["sold_at"] if "sold_at" in _keys else "") or "",
+            semantic_rejection=_sem_reject,
+            # 保存された種別をそのまま使う。種別の記録が無い過去の行は UNKNOWN（推測で SOLD にしない）
+            canonical_price_type=(_pt.canonical(r["price_type"]) if "price_type" in _keys else _pt.UNKNOWN),
         ))
 
     # 4) price_history overseas（海外: sold=sell / listing=buy）
     # 海外価格の collector_method / source_mode を overseas_prices/latest.json から取得
     # （price_history にはこの情報が無いため）。EBAY_APP_ID 未設定なら source_mode=manual。
     _ov_meta = {}
+    _ov_count = {}  # 海外価格の元にした件数（成約の集計なら成約の件数）
     _ov_source_mode = ""
     try:
         import json as _json_ov
@@ -380,6 +420,7 @@ def build_observations(con, now: datetime | None = None) -> list[dict]:
             for _e in _ovd.get("prices", []):
                 _sid = "src_" + str(_e.get("source", "")).lower()
                 _ov_meta[(_e.get("product_id"), _sid)] = _e.get("collector_method", "")
+                _ov_count[(_e.get("product_id"), _sid)] = _e.get("listing_count")
     except Exception:
         pass
 
@@ -410,6 +451,10 @@ def build_observations(con, now: datetime | None = None) -> list[dict]:
             source_url="", item_url="", link_type="none",
             extraction_method="overseas_history", price_context=ctx,
             collector_method=_cm, source_mode=_ov_source_mode,
+            sample_count=_ov_count.get((r["product_id"], r["source_id"])),
+            # 海外の成約は集計値で、1件ごとの成約日時と集計期間を保存していない。
+            # そのため SOLD_MEDIAN（確定利益の売値に使える成約中央値）の条件は満たさない
+            sold_median_eligible=False,
         ))
 
     # ── 異常 manual 買取の除外（auto_scraped high 基準の +30% 超）──
@@ -527,9 +572,15 @@ def pro_buy_options(obs: list[dict], product_id: str) -> list[dict]:
 
 
 def pro_sell_options(obs: list[dict], product_id: str) -> list[dict]:
-    """Pro 売却候補（role=sell, is_usable_for_pro）。高い順。"""
+    """Pro 売却候補（role=sell, is_usable_for_pro）。高い順。
+
+    確定利益の売値に使えるのは買取（BUYBACK_CASH）と、条件を満たした成約中央値（SOLD_MEDIAN）だけ。
+    件数・期間・成約日時の無い海外の成約の集計値などは、せどりルートの売値にしない。
+    """
     cand = [o for o in obs if o["product_id"] == product_id
-            and o["price_role"] == "sell" and o["is_usable_for_pro"]]
+            and o["price_role"] == "sell" and o["is_usable_for_pro"]
+            and (o.get("sold_median_eligible")
+                 or _pt.canonical(o.get("canonical_price_type") or o["price_type"]) in _pt.CONFIRMED_SELL_TYPES)]
     return sorted(cand, key=lambda o: o["price"], reverse=True)
 
 

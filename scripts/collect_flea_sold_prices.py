@@ -29,6 +29,8 @@ from urllib.parse import quote
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
+from src.market import price_types as _price_types  # noqa: E402
+
 JST = timezone(timedelta(hours=9))
 DB_PATH = PROJECT_ROOT / "data" / "premium_monitor.db"
 CSV_PATH = PROJECT_ROOT / "data" / "manual_flea_sold_prices.csv"
@@ -93,7 +95,9 @@ def _load_products():
     return out
 
 
-def _save_sale_price(con, alias, product_id, source_name, price, condition, item_url, search_url, observed_at):
+def _save_sale_price(con, alias, product_id, source_name, price, condition, item_url, search_url, observed_at,
+                     sold_at=""):
+    """成約の根拠（商品ページの URL と成約日時）を確かめた行だけを、種別 SOLD で保存する。"""
     import sqlite3  # noqa
     cols = [c[1] for c in con.execute("PRAGMA table_info(sale_prices)").fetchall()]
     sid = "src_flea_" + source_name.split()[0].lower()
@@ -103,6 +107,7 @@ def _save_sale_price(con, alias, product_id, source_name, price, condition, item
         "condition": condition or "new_unopened", "url": item_url or search_url,
         "link_verified": 1 if item_url else 0, "observed_at": observed_at,
         "data_source": "flea_sold", "is_active": 1,
+        "price_type": "SOLD", "sold_at": sold_at,
     }
     present = {k: v for k, v in vals.items() if k in cols}
     con.execute(f"INSERT OR REPLACE INTO sale_prices ({','.join(present)}) VALUES "
@@ -156,10 +161,18 @@ def main() -> int:
         condition = (r.get("condition") or "").strip()
         item_url = (r.get("item_url") or "").strip()
         observed_at = (r.get("observed_at") or "").strip()
-        age = _age_days(observed_at, now)
-        # フィルタ: 新品/未使用 / 非アクセサリー / price>0 / 14日以内 / URLあり
+        # 成約日時（sold_at 列）。observed_at は「記録した日時」で、成約した日時ではない
+        sold_at = (r.get("sold_at") or "").strip()
+        # 鮮度は成約した日時で判定する（記録した日時が新しくても、古い成約は古い）
+        age = _age_days(sold_at or observed_at, now)
+        # 成約（SOLD）として扱うには、1件の商品ページの URL と成約日時が必要。
+        # ダミーの URL（x000000001 など）・検索結果の URL・成約日時の無い行は SOLD にしない
+        _no_evidence = _price_types.sold_evidence_reasons(item_url, sold_at)
+        # フィルタ: 成約の根拠 / 新品/未使用 / 非アクセサリー / price>0 / 14日以内
         reject = ""
-        if price <= 0:
+        if _no_evidence:
+            reject = "no_sold_evidence:" + ",".join(_no_evidence)
+        elif price <= 0:
             reject = "price_zero"
         elif condition not in NEW_CONDITIONS:
             reject = "not_new_unused"
@@ -177,13 +190,14 @@ def main() -> int:
             "product_id": prod["product_id"], "product_alias": alias, "product_name": prod["name"],
             "price": price, "condition": condition, "title": title[:80],
             "item_url": item_url, "search_url": search_url, "observed_at": observed_at,
+            "sold_at": sold_at, "price_type": "SOLD" if not _no_evidence else "UNKNOWN",
             "age_days": round(age, 1), "target_buy_price": target,
             "within_target": bool(within_target), "rejection_reason": reject,
         }
         by_source[source][alias].append(rec)
         if not reject:
             _save_sale_price(con, alias, prod["product_id"], SOURCE_META[source]["name"],
-                             price, condition, item_url, search_url, observed_at)
+                             price, condition, item_url, search_url, observed_at, sold_at)
             saved += 1
             if within_target:
                 adopted += 1

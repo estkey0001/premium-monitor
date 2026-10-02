@@ -52,7 +52,7 @@ def _opp(action="BUY", kind="main", **kw):
          "buy_price": 100000, "sell_price": 120000, "net_profit": 12000, "roi": 0.12,
          "buy_source": "公式", "sell_source": "買取A", "priority": 1,
          # 生成側（generate_profit_routes / generate_ai_opportunities）が付ける価格の根拠
-         "buy_price_evidence": "VERIFIED_CURRENT", "sell_price_evidence": "VERIFIED_CURRENT"}
+         "buy_price_evidence": "VERIFIED_CURRENT", "sell_price_evidence": "VERIFIED_CURRENT", "sell_canonical_type": "BUYBACK_CASH"}
     o.update(kw)
     return o
 
@@ -316,7 +316,7 @@ def test_home_counts_from_runtime_state():
         ])
     routes = {"summary": {"main_route_count": 1},
               "main_routes": [{"buy_price": 100000, "sell_price": 120000, "net_profit": 12000,
-                               "roi": 0.12, "buy_price_evidence": "VERIFIED_CURRENT", "sell_price_evidence": "VERIFIED_CURRENT"}]}
+                               "roi": 0.12, "buy_price_evidence": "VERIFIED_CURRENT", "sell_price_evidence": "VERIFIED_CURRENT", "sell_canonical_type": "BUYBACK_CASH"}]}
     legacy = [{"product_name": "カメラ", "brand": "RICOH",
                "entry_start_at": (NOW - timedelta(days=1)).strftime("%Y-%m-%d %H:%M"),
                "entry_end_at": (NOW + timedelta(hours=2)).strftime("%Y-%m-%d %H:%M")}]
@@ -405,11 +405,11 @@ def test_suspicious_extreme_price_not_recommended():
     assert not _buy_cards(m)
     assert "848,220" not in html and "1697" not in html
     route = {"buy_price": 49980, "sell_price": 900000, "net_profit": 848220, "roi": 16.97,
-             "buy_price_evidence": "VERIFIED_CURRENT", "sell_price_evidence": "VERIFIED_CURRENT"}
+             "buy_price_evidence": "VERIFIED_CURRENT", "sell_price_evidence": "VERIFIED_CURRENT", "sell_canonical_type": "BUYBACK_CASH"}
     m = _model(profit_routes={"main_routes": [route], "summary": {"main_route_count": 1}})
     assert m.counts["high_profit"] == 0
     low = {"buy_price": 1000, "sell_price": 2000, "net_profit": 500, "roi": 0.5,
-           "route_confidence": "low", "buy_price_evidence": "VERIFIED_CURRENT", "sell_price_evidence": "VERIFIED_CURRENT"}
+           "route_confidence": "low", "buy_price_evidence": "VERIFIED_CURRENT", "sell_price_evidence": "VERIFIED_CURRENT", "sell_canonical_type": "BUYBACK_CASH"}
     m = _model(profit_routes={"main_routes": [low]})
     assert m.counts["high_profit"] == 0
 

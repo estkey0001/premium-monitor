@@ -19,6 +19,7 @@ from src.content.ui import lottery_card
 from src.content.ui import runtime as rt
 from src.content.ui.navigation import page_href
 from src.market import price_evidence as pe
+from src.market import price_types as pt
 from src.tcg.models import JST
 
 # 利益率がこれを超える値は異常値の可能性が高いので「おすすめ」に出さない（表示だけのガード）
@@ -55,6 +56,16 @@ def evidence_reject_reason(item: dict) -> str:
     return ""
 
 
+def sell_type_reject_reason(item: dict) -> str:
+    """売値の種別が確定利益に使えない理由。使えるなら空文字。
+
+    使えるのは買取（BUYBACK_CASH）と、条件を満たした成約中央値（SOLD_MEDIAN）だけ。
+    出品価格（LISTING）・根拠の無い成約・種別の記録が無い値（UNKNOWN）の利益は BUY・高利益に出さない。
+    """
+    t = pt.canonical(item.get("sell_canonical_type"))
+    return "" if t in pt.CONFIRMED_SELL_TYPES else f"sell_{t.lower()}"
+
+
 def opportunity_reject_reason(o: dict) -> str:
     """AI Opportunity を「買う」として出せない理由。出せるなら空文字。"""
     if str(o.get("action") or "") != "BUY":
@@ -63,6 +74,8 @@ def opportunity_reject_reason(o: dict) -> str:
         return "reference"
     if evidence_reject_reason(o):
         return "unverified_price"
+    if sell_type_reject_reason(o):
+        return "sell_type_not_confirmed"
     if o.get("rejection_reason") or o.get("suspicious") or o.get("invalid"):
         return "flagged"
     if str(o.get("confidence") or "").lower() == "low":
@@ -100,6 +113,8 @@ def route_reject_reason(r: dict) -> str:
         return "flagged"
     if evidence_reject_reason(r):
         return "unverified_price"
+    if sell_type_reject_reason(r):
+        return "sell_type_not_confirmed"
     if str(r.get("route_confidence") or "").lower() == "low":
         return "low_confidence"
     if not (price_ok(r.get("buy_price")) and price_ok(r.get("sell_price"))

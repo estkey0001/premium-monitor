@@ -1,5 +1,5 @@
 {
-  "collected_at": "2026-10-03T10:46:52.810821+09:00",
+  "collected_at": "2026-10-03T14:13:20.935068+09:00",
   "platforms": {
     "ebay": {
       "status": "blocked_cloud_ip",
@@ -28,8 +28,8 @@
     }
   },
   "summary": {
-    "saved": 1,
-    "skipped": 48,
+    "saved": 2,
+    "skipped": 47,
     "errors": []
   },
   "products": {
@@ -51,7 +51,7 @@
     },
     "gr4_mono": {
       "ebay": "blocked_cloud_ip",
-      "amazon": "blocked_cloud_ip",
+      "amazon": "ok_html",
       "mercari": "blocked_cloud_ip",
       "yahoo": "no_data",
       "rakuten": "html_failed",

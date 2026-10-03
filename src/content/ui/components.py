@@ -66,6 +66,7 @@ class Card:
     cta_label: str = ""
     cta_href: str = ""
     cta_external: bool = True
+    cta_kind: str = "primary"           # primary / secondary（現行版への導線などは secondary）
     cta_track: str = ""
     details: list[tuple[str, str]] = field(default_factory=list)  # (項目名, 値)
     details_summary: str = "詳しく見る"
@@ -98,8 +99,8 @@ class Card:
                       f' data-nu-prefix="{esc(self.deadline_prefix)}"')
             parts.append(f'<p class="nu-card__meta"{cd}>{esc(self.secondary_metric)}</p>')
         if self.cta_label and safe_href(self.cta_href):
-            parts.append(button(self.cta_label, self.cta_href, external=self.cta_external,
-                                track=self.cta_track))
+            parts.append(button(self.cta_label, self.cta_href, kind=self.cta_kind,
+                                external=self.cta_external, track=self.cta_track))
         if self.details:
             rows = "".join(f"<dt>{esc(k)}</dt><dd>{esc(v)}</dd>" for k, v in self.details if v)
             if rows:
@@ -120,22 +121,6 @@ def empty_state(kind: str, message: str, hint: str = "") -> str:
     hint_html = f'<p class="nu-empty__hint">{esc(hint)}</p>' if hint else ""
     return (f'<div class="nu-empty" data-empty="{esc(kind)}" role="status">'
             f'<p class="nu-empty__msg">{esc(message)}</p>{hint_html}</div>')
-
-
-def tile(*, key: str, icon: str, label: str, count: int, tone: str, href: str,
-         note: str = "", runtime: bool = False) -> str:
-    """HOME の「今日のチャンス」タイル。0件は灰色にする（消さない）。
-
-    runtime=True のタイルは、閲覧時にブラウザ側（lottery_runtime.js）が抽選の
-    runtime state から件数を数え直す。data-nu-tone は件数が戻ったときの色。
-    """
-    tone_cls = tone if count > 0 else "neutral"
-    rt_attr = f' data-nu-runtime data-nu-tone="{esc(tone)}"' if runtime else ""
-    note_html = f'<span class="nu-tile__note">{esc(note)}</span>' if note else ""
-    return (f'<a class="nu-tile nu-tone-{esc(tone_cls)}" href="{esc(href)}" data-tile="{esc(key)}"'
-            f' data-count="{count}"{rt_attr} aria-label="{esc(label)} {count}件">'
-            f'<span class="nu-tile__label"><span aria-hidden="true">{esc(icon)}</span> {esc(label)}</span>'
-            f'<span class="nu-tile__count">{count}</span>{note_html}</a>')
 
 
 def notice(message: str, *, href: str = "", link_label: str = "詳しく") -> str:

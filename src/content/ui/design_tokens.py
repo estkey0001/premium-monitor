@@ -24,9 +24,11 @@ BASE_COLORS: dict[str, str] = {
     "text": "#0f172a",
     "muted": "#475569",
     "subtle": "#64748b",
-    "primary": "#4338ca",
+    # アクセントは青系1色（UI Phase 1）。白背景との文字コントラスト 5.2:1
+    "primary": "#2563eb",
     "primary-contrast": "#ffffff",
-    "focus": "#2563eb",
+    "primary-soft": "#eff6ff",
+    "focus": "#1d4ed8",
 }
 
 # 文字サイズ（px）。この6種類以外は使わない
@@ -44,12 +46,15 @@ SHADOW = "0 1px 2px rgba(15,23,42,.06), 0 1px 3px rgba(15,23,42,.08)"
 # タップ対象の最小サイズ（px）
 TAP_MIN = 44
 
-# ブレークポイント（px）。モバイル < 640 ≦ タブレット < 900 ≦ デスクトップ
+# ブレークポイント（px）。モバイル < 640 ≦ タブレット < 900 ≦ デスクトップ（1024 以上でジャンルを6列）
 BP_MOBILE = 640
 BP_DESKTOP = 900
+BP_WIDE = 1024
+# 上部ナビに切り替える幅（これ未満はボトムナビ。640〜767px では上部ナビの5項目がヘッダーに収まらない）
+BP_TOPNAV = 768
 
-# 中身の最大幅（現行UIと同じ）
-MAX_WIDTH = 1120
+# 中身の最大幅（中央寄せ）
+MAX_WIDTH = 1240
 
 # ボトムナビの高さ（px）
 BOTTOM_NAV_HEIGHT = 56

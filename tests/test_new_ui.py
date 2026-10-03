@@ -1,4 +1,4 @@
-"""新UI（?ui=new）の土台のテスト（UI/UX 再構成 段階B）。"""
+"""新UI（?ui=new）の土台のテスト（段階B の土台と、UI Phase 1 のジャンル起点の構成）。"""
 
 from __future__ import annotations
 
@@ -62,6 +62,21 @@ def _model(**kw):
             "legacy_lotteries": [], "now": NOW}
     args.update(kw)
     return home.build_home_model(**args)
+
+
+def _root(**kw) -> str:
+    """_model と同じ引数で新UI全体を描画する。"""
+    args = {"tcg_report": _report(), "opportunities": {}, "profit_routes": {}, "legacy_lotteries": [],
+            "now": NOW}
+    args.update(kw)
+    return shell.render_root(shell.ShellContext(**args))
+
+
+def _page(html: str, page: str) -> str:
+    """新UIの1ページ分（data-nu-page）の HTML。"""
+    start = html.index(f'data-nu-page="{page}"')
+    end = html.find("</section>", start)
+    return html[start:end]
 
 
 def _ctx(**kw):
@@ -136,11 +151,16 @@ def test_old_dom_ids_preserved(monkeypatch):
 # ── ナビゲーション・ルーティング ────────────────────────────────────
 
 def test_navigation_routes():
-    assert navigation.PAGES == ("home", "lottery", "profit", "search", "account")
+    assert navigation.PAGES == ("home", "opportunities", "lottery", "restock", "routes", "more",
+                                "search", "account")
     root = shell.render_root(_ctx())
     for page in navigation.PAGES:
-        assert f'href="?ui=new&amp;page={page}"' in root
         assert f'data-nu-page="{page}"' in root
+    for i in navigation.NAV_ITEMS + navigation.BOTTOM_ITEMS:
+        href = "?ui=new" if i.page == "home" else f"?ui=new&amp;page={i.page}"
+        assert f'href="{href}"' in root
+    # 段階B の URL（?page=profit）は利益商品へ読み替える
+    assert navigation.PAGE_ALIASES == {"profit": "opportunities"}
     # 管理者向けの画面は一般ナビに出さない
     assert "admin" not in "".join(i.page for i in navigation.NAV_ITEMS)
     # 戻る・進むに対応している
@@ -148,22 +168,24 @@ def test_navigation_routes():
     assert "aria-current" in root
 
 
-@pytest.mark.parametrize("hash_value, page, mode", [
-    ("#tab-lottery", "lottery", None),
-    ("#tab-ranking", "profit", None),
-    ("#tab-sedori", "profit", None),
-    ("#tab-pro", "profit", "pro"),
-    ("#tab-advanced", "profit", "pro"),
-    ("#tab-beginner", "profit", "easy"),
-    ("#tab-health", "account", None),
-    ("#category-tcg-lottery", "lottery", None),
-    ("#category-pro-camera", "search", None),
-    ("#product-x100vi", "search", None),
+@pytest.mark.parametrize("hash_value, page, mode, category", [
+    ("#tab-lottery", "lottery", None, None),
+    ("#tab-ranking", "opportunities", None, None),
+    ("#tab-sedori", "routes", None, None),
+    ("#tab-pro", "opportunities", "pro", None),
+    ("#tab-advanced", "opportunities", "pro", None),
+    ("#tab-beginner", "opportunities", "easy", None),
+    ("#tab-health", "account", None, None),
+    ("#category-tcg-lottery", "lottery", None, "tcg"),
+    ("#category-pro-camera", "opportunities", None, "camera"),
+    ("#category-beginner-iphone", "opportunities", None, "smartphone"),
+    ("#product-x100vi", "search", None, None),
 ])
-def test_legacy_hash_mapping(hash_value, page, mode):
+def test_legacy_hash_mapping(hash_value, page, mode, category):
     target = navigation.resolve_legacy_hash(hash_value)
     assert target["page"] == page
     assert target.get("mode") == mode
+    assert target.get("category") == category
 
 
 def test_unknown_hash_not_mapped():
@@ -174,42 +196,54 @@ def test_unknown_hash_not_mapped():
 def test_mobile_bottom_nav_exists():
     root = shell.render_root(_ctx())
     assert root.count('class="nu-bottomnav__link"') == 5
-    for label in ("HOME", "抽選", "利益", "検索", "マイ"):
+    for label in ("HOME", "利益", "抽選", "在庫", "メニュー"):
         assert f'<span class="nu-bottomnav__label">{label}</span>' in root
     css = shell.render_head()
     assert ".nu-bottomnav{position:fixed" in css
-    assert f"@media (min-width:{t.BP_MOBILE}px){{.nu-topnav{{display:flex" in css
+    assert f"@media (min-width:{t.BP_TOPNAV}px){{.nu-topnav{{display:flex" in css
 
 
 def test_accessibility_landmarks():
     root = shell.render_root(_ctx())
     assert '<main id="nu-main"' in root
-    assert root.count("<nav ") == 2 and 'aria-label="メインメニュー"' in root
+    for label in ("メインメニュー", "メインメニュー（下部）", "現在地", "ジャンルで絞り込む"):
+        assert f'aria-label="{label}"' in root
     assert '<h1 id="nu-home-title"' in root
+    # どのページにも h1 が1つ
+    for page in navigation.PAGES:
+        assert _page(root, page).count("<h1 ") == 1, page
     assert "focus-visible" in shell.render_head()
 
 
 # ── タップ領域・はみ出し（CSS の決まりごと） ─────────────────────────
 
 def _css_rule(css: str, selector: str) -> str:
-    m = re.search(re.escape(selector) + r"\{([^}]*)\}", css)
+    # 規則の先頭にあるセレクタだけを探す（「.nu-list>li>.nu-card{」のような子孫セレクタに一致させない）
+    m = re.search(r"(?:^|[{}])" + re.escape(selector) + r"\{([^}]*)\}", css)
     assert m, selector
     return m.group(1)
 
 
 def test_touch_targets_at_least_44px():
     css = shell.render_head()
-    for sel in (".nu-btn", ".nu-topnav__link", ".nu-brand", ".nu-details summary", ".nu-sumrow"):
-        assert "min-height:44px" in _css_rule(css, sel), sel
+    for sel in (".nu-btn", ".nu-topnav__link", ".nu-brand", ".nu-details summary", ".nu-chip",
+                ".nu-quick", ".nu-cat", ".nu-purpose", ".nu-filter__search", ".nu-ctx__clear"):
+        px = int(re.search(r"min-height:(\d+)px", _css_rule(css, sel)).group(1))
+        assert px >= 44, sel
+    assert "width:44px;height:44px" in _css_rule(css, ".nu-iconbtn")
     assert "min-height:var(--bottom-nav-h)" in _css_rule(css, ".nu-bottomnav__link")
     assert t.BOTTOM_NAV_HEIGHT >= 44
-    assert "min-height:76px" in _css_rule(css, ".nu-tile")
 
 
 def test_no_horizontal_overflow_rules():
     css = shell.render_head()
     # グリッドの列は minmax(0,1fr) で縮められる（長い商品名で横にはみ出さない）
-    assert "repeat(3,minmax(0,1fr))" in _css_rule(css, ".nu-tiles")
+    assert "repeat(2,minmax(0,1fr))" in _css_rule(css, ".nu-cats")
+    assert "minmax(0,1fr)" in _css_rule(css, ".nu-purposes") and "minmax(0,1fr)" in _css_rule(css, ".nu-list")
+    # ジャンルの切り替えは、その要素の中だけで横スクロールする（ページは横にはみ出さない）
+    assert "overflow-x:auto" in _css_rule(css, ".nu-chips")
+    # 旧UIの .tab-wrap のような負のマージンを使わない
+    assert not re.search(r"margin[a-z-]*:(?:[^;}]*\s)?-\d", css)
     assert "overflow-wrap:anywhere" in _css_rule(css, ".nu-card__title")
     assert "min-width:0" in _css_rule(css, ".nu-card")
     # 新UIは表を使わない（開発用の照合表だけは横スクロールの枠の中）
@@ -275,13 +309,11 @@ def test_card_density_and_single_cta():
 
 
 def test_empty_states_distinguish_no_data_and_no_active():
-    no_data = _model(tcg_report={}, opportunities={}, profit_routes={})
-    html = home.render_home(no_data)
-    assert 'data-empty="NO_DATA"' in html
-    no_active = _model(tcg_report=_report(lotteries=[_lot("CLOSED")]))
-    html = home.render_home(no_active)
+    html = _page(_root(tcg_report={}, opportunities={}, profit_routes={}), "lottery")
+    assert 'data-empty="NO_DATA"' in html and "まだ情報がありません" in html
+    html = _page(_root(tcg_report=_report(lotteries=[_lot("CLOSED")])), "lottery")
     assert 'data-empty="NO_ACTIVE"' in html
-    assert "次の抽選情報" in html
+    assert "新しい抽選の情報" in html
 
 
 def test_internal_failure_counts_not_shown():
@@ -353,11 +385,11 @@ def test_top_actions_order_and_labels():
                                      _opp("SKIP")]}
     m = _model(tcg_report=report, opportunities=opps)
     assert [x[1] for x in _shown(m)] == ["ENDING_SOON", "OPEN", "BUY", "UPCOMING", "WAIT"]
-    html = home.render_home(m)
-    assert "応募する" in html and "買う" in html and "待つ" in html
     assert len(m.actions) <= home.TOP_ACTIONS_LIMIT
-    # 6件目以降は DOM に残すが hidden（閲覧時に並べ替えるため）
-    assert html.count("<article hidden") + html.count('" hidden>') >= 2
+    # 抽選・予約のページは同じ並び（締切間近 → 受付中 → まもなく開始）
+    html = _page(_root(tcg_report=report, opportunities=opps), "lottery")
+    order = [html.index(f'data-nu-status="{k}"') for k in ("ENDING_SOON", "OPEN", "UPCOMING")]
+    assert order == sorted(order) and "応募する" in html
 
 
 def test_upcoming_lottery_not_shown_as_apply():
@@ -366,15 +398,14 @@ def test_upcoming_lottery_not_shown_as_apply():
     m = _model(tcg_report=_report(lotteries=[lot]))
     stt = m.states[m.vms[0]["id"]]
     assert stt["status"] == "UPCOMING" and stt["cta"]["kind"] == "info"
-    assert "応募する" not in home.render_home(m)
+    assert "応募する" not in _page(_root(tcg_report=_report(lotteries=[lot])), "lottery")
 
 
 def test_manual_unconfirmed_lottery_labeled():
     lot = _lot("UPCOMING", collection_method="MANUAL_VERIFIED", verified=False,
                confidence="medium", application_start=_iso(timedelta(hours=3)),
                application_end=_iso(timedelta(days=2)))
-    m = _model(tcg_report=_report(lotteries=[lot]))
-    html = home.render_home(m)
+    html = _page(_root(tcg_report=_report(lotteries=[lot])), "lottery")
     assert "確認待ち" in html and "公式確認済み" not in html
     assert "medium" not in html.split("<details", 1)[0]
 
@@ -393,21 +424,23 @@ def test_invalid_price_or_roi_not_shown_as_opportunity(override):
     m = _model(opportunities={"todays_opportunities": [_opp("BUY", **override)]})
     assert not _buy_cards(m)
     assert m.hidden_prices == 1
-    html = home.render_home(m)
-    assert "¥0" not in html and "nan%" not in html.lower() and "inf" not in html.lower()
+    html = _root(opportunities={"todays_opportunities": [_opp("BUY", **override)]})
+    assert not re.search(r"¥0(?![0-9,])", html)
+    assert not re.search(r"(?i)(nan|inf|infinity)\s*%", html)
 
 
 def test_suspicious_extreme_price_not_recommended():
     # 異常値（+1697% や 定価比 +780% の ¥900,000 のような値）は「おすすめ」に出さない
     extreme = _opp("BUY", buy_price=49980, sell_price=900000, net_profit=848220, roi=16.97)
     m = _model(opportunities={"todays_opportunities": [extreme]})
-    html = home.render_home(m)
     assert not _buy_cards(m)
-    assert "848,220" not in html and "1697" not in html
     route = {"buy_price": 49980, "sell_price": 900000, "net_profit": 848220, "roi": 16.97,
              "buy_price_evidence": "VERIFIED_CURRENT", "sell_price_evidence": "VERIFIED_CURRENT", "sell_canonical_type": "BUYBACK_CASH"}
     m = _model(profit_routes={"main_routes": [route], "summary": {"main_route_count": 1}})
     assert m.counts["high_profit"] == 0
+    html = _root(opportunities={"todays_opportunities": [extreme]},
+                 profit_routes={"main_routes": [route], "summary": {"main_route_count": 1}})
+    assert "848,220" not in html and "1697" not in html
     low = {"buy_price": 1000, "sell_price": 2000, "net_profit": 500, "roi": 0.5,
            "route_confidence": "low", "buy_price_evidence": "VERIFIED_CURRENT", "sell_price_evidence": "VERIFIED_CURRENT", "sell_canonical_type": "BUYBACK_CASH"}
     m = _model(profit_routes={"main_routes": [low]})
@@ -437,9 +470,8 @@ def test_reference_or_flagged_not_recommended(override):
 def test_wait_reference_hides_amount_and_internal_terms():
     o = _opp("WAIT", "reference", net_profit=86651,
              action_reason="eBay sold 更新（EBAY_APP_ID 設定）後に BUY 候補へ昇格")
-    html = home.render_home(_model(opportunities={"todays_opportunities": [o]}))
+    html = _root(opportunities={"todays_opportunities": [o]})
     assert "86,651" not in html and "EBAY_APP_ID" not in html
-    assert "参考情報（未検証）" in html
 
 
 def test_guard_does_not_change_source_values():

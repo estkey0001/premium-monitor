@@ -1,0 +1,254 @@
+"""新UIの画面（UI Phase 1: ジャンル起点の HOME と、目的別のページの枠）。
+
+HOME はジャンル → 目的 → 補助リンクの順だけで作り、長いページにしない。
+目的のページ（利益商品・抽選・予約・在庫再開・せどりルート）は、現在地・ジャンルの切り替え・
+絞り込みの枠・一覧（実データ）・空状態を持つ。並べ替え・キーワード検索は Phase 2 以降（準備中と明記）。
+
+件数・一覧は catalog.py の定義だけを使う。ジャンル（category）は URL に持ち、ページを移っても保つ。
+"""
+
+from __future__ import annotations
+
+from src.content.ui import catalog as cl
+from src.content.ui import categories as cats
+from src.content.ui import components as c
+from src.content.ui import lottery_card
+from src.content.ui.components import esc
+from src.content.ui.icons import icon
+from src.content.ui.navigation import page_href
+
+# 目的（HOME の入口・ページの見出し）
+PURPOSE_INFO: dict[str, dict[str, str]] = {
+    "opportunities": {"label": "利益商品", "icon": "trend",
+                      "desc": "定価で買って買取店に売ると、利益が出る商品"},
+    "lottery": {"label": "抽選・予約", "icon": "ticket",
+                "desc": "受付中・まもなく始まる抽選と予約"},
+    "restock": {"label": "在庫再開", "icon": "package",
+                "desc": "今買える再入荷・販売の情報"},
+    "routes": {"label": "せどりルート", "icon": "route",
+               "desc": "定価以外（店・フリマ）で仕入れて、買取店に売るルート"},
+}
+
+# 空状態（一般向けの言葉だけ。技術的な理由は出さない）
+EMPTY: dict[str, tuple[str, str]] = {
+    "opportunities": ("条件を満たす利益商品は、今はありません",
+                      "定価と買取価格を確認できた商品だけを掲載しています。毎日 12:00 に更新します。"),
+    "lottery": ("受付中・まもなく始まる抽選は、今はありません",
+                "新しい抽選の情報が入りしだい表示します。"),
+    "restock": ("在庫再開の情報は、今はありません",
+                "再入荷・販売開始の情報が入りしだい表示します。"),
+    "routes": ("成約価格を確認できる利益ルートは、今はありません",
+               "データ準備中です。売れた価格（成約価格）を確認できしだい表示します。"),
+}
+
+# ページの下に出す、掲載の決まり（誤解を防ぐための1行）
+RULES: dict[str, str] = {
+    "opportunities": "定価の確認日が分からない商品・出品価格で計算した利益は掲載していません。",
+    "lottery": "受付期間・締切は閲覧時の時刻で判定しています。応募の前に必ず公式ページでご確認ください。",
+    "restock": "在庫は取得時点の情報です。購入の前に必ず販売ページでご確認ください。",
+    "routes": "売値には買取価格か、確認できた成約価格だけを使います（出品価格では計算しません）。",
+}
+
+# 今の並び順（変更は Phase 2 以降）
+SORT_LABEL: dict[str, str] = {
+    "opportunities": "利益が大きい順", "lottery": "締切間近 → 受付中 → まもなく開始",
+    "restock": "取得した順", "routes": "利益が大きい順",
+}
+
+# 似た目的への1行（利益商品とせどりルートの違いを示す）
+RELATED: dict[str, tuple[str, str]] = {
+    "opportunities": ("店・フリマで仕入れる場合は", "routes"),
+    "routes": ("定価で買える場合は", "opportunities"),
+}
+
+DISCLAIMER = "掲載情報は取得時点の参考です。購入・応募の前に必ず公式サイトでご確認ください。"
+
+
+def _count_text(n: int) -> str:
+    return f"{n}件"
+
+
+# ── HOME ──────────────────────────────────────────────────────────
+
+def _category_card(cat: cats.Category, n: int) -> str:
+    return (f'<li><a class="nu-cat" href="{esc(page_href("home", category=cat.key))}" data-nu-cat-link="{cat.key}"'
+            f' aria-label="{esc(cat.label)} {n}件">'
+            f'<span class="nu-cat__icon">{icon(cat.icon, size=22)}</span>'
+            f'<span class="nu-cat__label">{esc(cat.label)}</span>'
+            f'<span class="nu-cat__count" data-nu-catcount="{cat.key}">{_count_text(n)}</span></a></li>')
+
+
+def _purpose_card(purpose: str, n: int) -> str:
+    info = PURPOSE_INFO[purpose]
+    return (f'<li><a class="nu-purpose" href="{esc(page_href(purpose))}" data-nu-keepcat'
+            f' data-nu-purpose-link="{purpose}">'
+            f'<span class="nu-purpose__icon">{icon(info["icon"], size=22)}</span>'
+            f'<span class="nu-purpose__body"><span class="nu-purpose__label">{esc(info["label"])}</span>'
+            f'<span class="nu-purpose__desc">{esc(info["desc"])}</span></span>'
+            f'<span class="nu-purpose__count" data-nu-count="{purpose}">{_count_text(n)}</span>'
+            f'<span class="nu-purpose__chev">{icon("chevron", size=18)}</span></a></li>')
+
+
+def _quick_links() -> str:
+    # 「今すぐ狙う TOP10」は利益商品を利益が大きい順に上位10件だけ出す（top=10）
+    live = (f'<a class="nu-quick" href="{esc(page_href("opportunities") + "&top=10")}" data-nu-keepcat>'
+            f'{icon("target", size=16)}今すぐ狙う TOP10</a>')
+    soon = "".join(
+        f'<span class="nu-quick nu-quick--soon" aria-disabled="true">{icon(ic, size=16)}{esc(lbl)}'
+        f'<span class="nu-quick__tag">準備中</span></span>'
+        for ic, lbl in (("flame", "買取急騰"), ("sparkle", "新着商品")))
+    return f'<div class="nu-quicks" aria-label="よく使うリンク">{live}{soon}</div>'
+
+
+def render_home(catalog: cl.Catalog, *, source_issue: bool = False, debug_html: str = "") -> str:
+    """HOME（ジャンル → 目的 → 補助リンクの順だけ）。"""
+    cat_cards = "".join(_category_card(cat, catalog.category_total(cat.key)) for cat in cats.CATEGORIES)
+    purpose_cards = "".join(_purpose_card(p, catalog.count(p)) for p in cl.PURPOSES)
+    issue = (c.notice("一部の情報源を取得できていません。必ず公式サイトでもご確認ください。")
+             if source_issue else "")
+    return (
+        '<section class="nu-page nu-home" data-nu-page="home" aria-labelledby="nu-home-title">'
+        '<h1 id="nu-home-title" class="nu-home__title">利益が出る商品と抽選を、ジャンルから探す</h1>'
+        '<p class="nu-lead nu-lead--home">定価・買取価格・抽選・在庫を毎日チェックしています（毎日 12:00 更新）。</p>'
+        f'{issue}'
+        '<h2 class="nu-h2" id="nu-genres">ジャンルから探す</h2>'
+        f'<ul class="nu-cats" role="list">{cat_cards}</ul>'
+        '<div class="nu-h2row"><h2 class="nu-h2">目的から探す</h2>'
+        '<p class="nu-ctx" data-nu-home-ctx hidden><span data-nu-catlabel></span>で絞り込み中'
+        f'<a class="nu-ctx__clear" href="{esc(page_href("home"))}">すべてのジャンル</a></p></div>'
+        f'<ul class="nu-purposes" role="list">{purpose_cards}</ul>'
+        f'{_quick_links()}'
+        f'{debug_html}'
+        '</section>'
+    )
+
+
+# ── 目的のページ ────────────────────────────────────────────────────
+
+def _crumbs(purpose: str) -> str:
+    return ('<nav class="nu-crumbs" aria-label="現在地"><ol>'
+            f'<li><a href="{esc(page_href("home"))}">HOME</a></li>'
+            f'<li data-nu-crumb-cat hidden><a href="{esc(page_href("home"))}" data-nu-crumb-catlink>'
+            '<span data-nu-catlabel></span></a></li>'
+            f'<li><span aria-current="page">{esc(PURPOSE_INFO[purpose]["label"])}</span></li></ol></nav>')
+
+
+def _cat_switch(purpose: str) -> str:
+    chips = [f'<a class="nu-chip" href="{esc(page_href(purpose))}" data-nu-switch="{cats.ALL}">すべて</a>']
+    chips += [f'<a class="nu-chip" href="{esc(page_href(purpose, category=cat.key))}" data-nu-switch="{cat.key}">'
+              f'{esc(cat.label)}</a>' for cat in cats.CATEGORIES]
+    return f'<nav class="nu-chips" aria-label="ジャンルで絞り込む">{"".join(chips)}</nav>'
+
+
+def _filter_bar(purpose: str, n: int) -> str:
+    """絞り込みの枠。キーワード検索は Phase 2 以降（押せないことを明記する）。並び順は今の並びを文字で示す。"""
+    return (
+        '<div class="nu-filter">'
+        f'<label class="nu-filter__search">{icon("search", size=16)}'
+        f'<span class="nu-sr">キーワードで絞り込む（準備中）</span>'
+        '<input type="search" placeholder="キーワードで絞り込む（準備中）" disabled aria-disabled="true"></label>'
+        f'<span class="nu-filter__sort">並び: {esc(SORT_LABEL[purpose])}</span>'
+        f'<span class="nu-filter__count"><span data-nu-count="{purpose}">{_count_text(n)}</span></span>'
+        '</div>'
+    )
+
+
+def _items_html(purpose: str, catalog: cl.Catalog, model) -> str:
+    if purpose == "lottery":
+        rows = []
+        for kind, _bucket, _sort, idx, vm in model.ordered_cards():
+            if kind != "lot" or vm["id"] not in catalog.lottery_cats:
+                continue
+            st = model.states[vm["id"]]
+            hide = not catalog.lottery_active.get(vm["id"])
+            rows.append(f'<li data-nu-item data-nu-cat="{esc(catalog.lottery_cats[vm["id"]])}"'
+                        f'{" hidden" if hide else ""}>{lottery_card.render(vm, st, idx)}</li>')
+        return "".join(rows)
+    items = sorted(catalog.items[purpose], key=lambda it: it.sort_key)
+    return "".join(f'<li data-nu-item data-nu-cat="{esc(it.category)}">{it.card.render()}</li>'
+                   for it in items)
+
+
+def _related(purpose: str) -> str:
+    if purpose not in RELATED:
+        return ""
+    lead, target = RELATED[purpose]
+    return (f'<p class="nu-related">{esc(lead)} '
+            f'<a href="{esc(page_href(target))}" data-nu-keepcat>{esc(PURPOSE_INFO[target]["label"])}を見る</a></p>')
+
+
+def render_purpose(purpose: str, catalog: cl.Catalog, model, *, has_data: bool = True) -> str:
+    """目的のページ。has_data=False（最初の取得前など、情報そのものが無い）なら NO_DATA の空状態。"""
+    info = PURPOSE_INFO[purpose]
+    n = catalog.count(purpose)
+    if has_data:
+        kind, (msg, hint) = "NO_ACTIVE", EMPTY[purpose]
+    else:
+        kind, msg, hint = "NO_DATA", "まだ情報がありません", "最初の取得が終わると、ここに表示されます。"
+    empty = c.empty_state(kind, msg, hint).replace(
+        "<div ", f'<div data-nu-empty-for="{purpose}"{" hidden" if n else ""} ', 1)
+    return (
+        f'<section class="nu-page" data-nu-page="{purpose}" aria-labelledby="nu-{purpose}-title" hidden>'
+        f'{_crumbs(purpose)}'
+        f'<div class="nu-pagehead"><span class="nu-pagehead__icon">{icon(info["icon"], size=22)}</span>'
+        f'<div><h1 id="nu-{purpose}-title" class="nu-page__title">{esc(info["label"])}</h1>'
+        f'<p class="nu-lead">{esc(info["desc"])}</p></div></div>'
+        f'{_related(purpose)}'
+        f'{_cat_switch(purpose)}'
+        f'{_filter_bar(purpose, n)}'
+        + (f'<p class="nu-topnote" data-nu-topnote hidden>利益が大きい順に上位10件を表示しています'
+           f'<a href="{esc(page_href(purpose))}" data-nu-keepcat>すべて表示</a></p>' if purpose == "opportunities" else "")
+        + f'<h2 class="nu-sr">{esc(info["label"])}の一覧</h2>'
+        f'<ul class="nu-list" data-nu-list="{purpose}" role="list">{_items_html(purpose, catalog, model)}</ul>'
+        f'{empty}'
+        f'<p class="nu-rule">{esc(RULES[purpose])}</p>'
+        '</section>'
+    )
+
+
+# ── その他・検索 ────────────────────────────────────────────────────
+
+def render_more(catalog: cl.Catalog) -> str:
+    rows = [
+        (page_href("routes"), "route", "せどりルート", PURPOSE_INFO["routes"]["desc"],
+         f'<span class="nu-purpose__count" data-nu-count="routes">{_count_text(catalog.count("routes"))}</span>', True),
+        (page_href("home") + "#nu-genres", "box", "ジャンルから探す", "スマホ・TCG・カメラ・ゲーム・PC・その他", "", False),
+        (page_href("search"), "search", "商品を検索", "キーワード検索は準備中です", "", False),
+        ("./", "home", "現行版の表示", "これまでの一覧ページ（すべての情報）", "", False),
+    ]
+    links = "".join(
+        f'<li><a class="nu-purpose" href="{esc(href)}"{" data-nu-keepcat" if keep else ""}>'
+        f'<span class="nu-purpose__icon">{icon(ic, size=22)}</span>'
+        f'<span class="nu-purpose__body"><span class="nu-purpose__label">{esc(label)}</span>'
+        f'<span class="nu-purpose__desc">{esc(desc)}</span></span>{count}'
+        f'<span class="nu-purpose__chev">{icon("chevron", size=18)}</span></a></li>'
+        for href, ic, label, desc, count, keep in rows)
+    return (
+        '<section class="nu-page" data-nu-page="more" aria-labelledby="nu-more-title" hidden>'
+        '<h1 id="nu-more-title" class="nu-page__title">メニュー</h1>'
+        f'<ul class="nu-purposes nu-purposes--list" role="list">{links}</ul>'
+        '</section>'
+    )
+
+
+def render_footer(brand: str) -> str:
+    """全ページ共通のフッター（注意書きはここに1回だけ）。"""
+    return ('<footer class="nu-footer"><div class="nu-footer__inner">'
+            f'<span class="nu-footer__brand">{esc(brand)} Premium Monitor</span>'
+            '<a href="./">現行版の表示</a><a href="beta/">はじめかた</a>'
+            f'<p class="nu-footer__note">{esc(DISCLAIMER)}</p></div></footer>')
+
+
+def render_search() -> str:
+    chips = "".join(f'<a class="nu-chip" href="{esc(page_href("home", category=cat.key))}">{esc(cat.label)}</a>'
+                    for cat in cats.CATEGORIES)
+    return (
+        '<section class="nu-page" data-nu-page="search" aria-labelledby="nu-search-title" hidden>'
+        '<h1 id="nu-search-title" class="nu-page__title">商品を検索</h1>'
+        f'<label class="nu-filter__search nu-filter__search--wide">{icon("search", size=16)}'
+        '<span class="nu-sr">キーワード（準備中）</span>'
+        '<input type="search" placeholder="キーワード検索は準備中です" disabled aria-disabled="true"></label>'
+        '<p class="nu-lead">キーワード検索は準備中です。今はジャンルから探せます。</p>'
+        f'<nav class="nu-chips" aria-label="ジャンルから探す">{chips}</nav>'
+        '</section>'
+    )

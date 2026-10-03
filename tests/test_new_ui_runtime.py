@@ -475,8 +475,13 @@ def test_conflict_shown_in_home():
     m = home.build_home_model(tcg_report=report, opportunities={}, profit_routes={},
                               legacy_lotteries=[], now=NOW)
     assert [r[4]["id"] for r in m.actions] == ["c"] and m.counts["lottery_open"] == 0
-    html = home.render_home(m)
-    assert "日程要確認" in html and "応募する" not in html
+    # 抽選・予約のページに「日程要確認」として出す（受付中には数えない。応募ボタンは出さない）
+    from src.content.ui import shell
+    html = shell.render_root(shell.ShellContext(tcg_report=report, opportunities={}, profit_routes={},
+                                                legacy_lotteries=[], now=NOW))
+    page = html[html.index('data-nu-page="lottery"'):]
+    page = page[:page.index("</section>")]
+    assert "日程要確認" in page and "応募する" not in page and 'data-nu-lot="c"' in page
 
 
 @pytest.mark.parametrize("mutate", [

@@ -74,16 +74,16 @@ def _run(tmp_path, page: str) -> dict:
 _SNAP = """
 function snap(){
   var r=document.getElementById('new-ui-root');
-  var t=function(k){return +r.querySelector('[data-tile="'+k+'"] .nu-tile__count').textContent;};
-  return {open:t('lottery_open'), ending:t('ending_today'), start24:t('starting_24h'),
-    shown:[].slice.call(r.querySelectorAll('[data-nu-actions] > article')).filter(function(a){return !a.hidden;})
-      .map(function(a){var c=a.querySelector('a[data-nu-cta]');
+  var list=r.querySelector('[data-nu-list="lottery"]');
+  return {count:+r.querySelector('.nu-purposes [data-nu-count="lottery"]').textContent.replace('件',''),
+    shown:[].slice.call(list.querySelectorAll(':scope > li')).filter(function(li){return !li.hidden;})
+      .map(function(li){var a=li.querySelector('article'), c=a.querySelector('a[data-nu-cta]');
         return [a.getAttribute('data-nu-lot'), a.getAttribute('data-nu-status'), c?c.getAttribute('data-nu-cta'):null,
                 a.querySelector('.nu-badge').textContent.trim(), a.querySelector('.nu-cd').textContent];}),
-    actionsAttr:r.querySelector('[data-nu-actions]').getAttribute('data-nu-actions'),
-    emptyHidden:r.querySelector('[data-nu-empty-home]').hidden};
+    emptyHidden:r.querySelector('[data-nu-empty-for="lottery"]').hidden};
 }
-function at(ms){ window.__now = %d + ms; return NuLotteryRuntime.apply(document.getElementById('new-ui-root'), window.__now); }
+// 時計を進めて、ページの更新（runtime の判定 → 件数・一覧の数え直し）を走らせる
+function at(ms){ window.__now = %d + ms; window.dispatchEvent(new Event('pageshow')); }
 """ % int(NOW.timestamp() * 1000)
 
 
@@ -104,16 +104,15 @@ def test_dom_expiry_and_reorder(tmp_path):
     """
     o = _run(tmp_path, _page(report, js))
     assert [x[:3] for x in o["t0"]["shown"]] == [["t1", "ENDING_SOON", "apply"], ["t2", "UPCOMING", "info"]]
-    assert (o["t0"]["open"], o["t0"]["ending"], o["t0"]["start24"]) == (1, 1, 1)
+    assert o["t0"]["count"] == 2
     assert o["t0"]["shown"][0][4] == "締切まで あと30分"
     # t2 が受付開始（UPCOMING → OPEN）
     assert [x[:3] for x in o["t10"]["shown"]] == [["t1", "ENDING_SOON", "apply"], ["t2", "OPEN", "apply"]]
-    assert (o["t10"]["open"], o["t10"]["start24"]) == (2, 0)
-    # t1 が締切（CTA 消失・件数更新・HOME から外れる）
+    # t1 が締切（CTA 消失・一覧から外れる・件数が減る）
     assert [x[:3] for x in o["t30"]["shown"]] == [["t2", "OPEN", "apply"]]
-    assert (o["t30"]["open"], o["t30"]["ending"], o["t30"]["actionsAttr"]) == (1, 0, "1")
+    assert o["t30"]["count"] == 1
     # どちらも終わると空状態
-    assert o["later"]["shown"] == [] and o["later"]["open"] == 0 and o["later"]["emptyHidden"] is False
+    assert o["later"]["shown"] == [] and o["later"]["count"] == 0 and o["later"]["emptyHidden"] is False
 
 
 def test_dom_click_guard(tmp_path):

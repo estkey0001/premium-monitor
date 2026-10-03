@@ -1,4 +1,7 @@
-"""新UIの HOME（今日のチャンス・おすすめアクション TOP5）。
+"""新UIの HOME の集計（抽選の runtime 状態・件数）と、価格の表示ガード。
+
+HOME の画面そのものは pages.py（UI Phase 1: ジャンル起点）。ここの HomeModel は
+件数の照合（parity）と抽選の一覧に使う。
 
 新しい判定は作らない。抽選の状態は runtime.derive_runtime_state（既存の
 compute_lottery_status）だけで決め、AI Opportunities・利益ルートは既存の出力をそのまま数える。
@@ -15,7 +18,6 @@ from dataclasses import dataclass, field
 from datetime import datetime
 
 from src.content.ui import components as c
-from src.content.ui import lottery_card
 from src.content.ui import runtime as rt
 from src.content.ui.navigation import page_href
 from src.market import price_evidence as pe
@@ -233,74 +235,21 @@ def build_home_model(*, tcg_report: dict | None, opportunities: dict | None,
                 subtitle=f"{o.get('buy_source') or ''} → {o.get('sell_source') or ''}".strip(" →"),
                 primary=f"利益 +¥{int(float(o['net_profit'])):,}（{roi * 100:.0f}%）",
                 secondary="手数料込みの見込み",
-                cta_label="詳しく見る", cta_href=page_href("profit"),
+                cta_label="詳しく見る", cta_href=page_href("opportunities"),
                 bucket=rt.BUCKET_BUY, idx=idx))
         elif act == "WAIT":
             # 参考扱いの値は金額を出さない（内部の設定名なども一般向けには出さない）
             m.opp_cards.append(Action(
                 action="WAIT", title=name, subtitle="参考情報（未検証）",
                 secondary="価格の更新を待っています",
-                cta_label="詳しく見る", cta_href=page_href("profit"),
+                cta_label="詳しく見る", cta_href=page_href("opportunities"),
                 bucket=rt.BUCKET_WAIT, idx=idx))
         elif act == "SKIP":
             m.opp_cards.append(Action(
                 action="SKIP", title=name, subtitle="利益が確認できません",
-                cta_label="詳しく見る", cta_href=page_href("profit"),
+                cta_label="詳しく見る", cta_href=page_href("opportunities"),
                 bucket=rt.BUCKET_HIDDEN if skip_seen else rt.BUCKET_SKIP, idx=idx))
             skip_seen = True
         elif act == "ALERT":
             m.alert_count += 1
     return m
-
-
-# ── 表示 ──────────────────────────────────────────────────────────
-
-TILES = (
-    # key, icon, label, tone, 行き先
-    ("lottery_open", "🎯", "抽選受付中", "success", "lottery"),
-    ("ending_today", "⏰", "今日締切", "danger", "lottery"),
-    ("starting_24h", "📅", "24時間以内に開始", "warning", "lottery"),
-    ("available_now", "🔥", "今買える", "success", "lottery"),
-    ("high_profit", "💰", "高利益", "success", "profit"),
-    ("high_premium", "📈", "高プレミア", "info", "lottery"),
-)
-# 閲覧時に件数を数え直すタイル（抽選の runtime state から決まるもの）
-RUNTIME_TILES = ("lottery_open", "ending_today", "starting_24h")
-
-
-def render_home(m: HomeModel, *, source_issue: bool = False) -> str:
-    tiles = "".join(
-        c.tile(key=key, icon=icon, label=label, count=m.counts.get(key, 0), tone=tone,
-               href=page_href(dest), runtime=key in RUNTIME_TILES,
-               note=(m.next_lottery_text if key == "lottery_open" else ""))
-        for key, icon, label, tone, dest in TILES)
-    shown = 0
-    cards = []
-    for kind, bucket, _sort, idx, obj in m.ordered_cards():
-        hide = bucket >= rt.BUCKET_HIDDEN or shown >= TOP_ACTIONS_LIMIT
-        if not hide:
-            shown += 1
-        if kind == "lot":
-            cards.append(lottery_card.render(obj, m.states[obj["id"]], idx, hidden=hide))
-        else:
-            cards.append(obj.render(hidden=hide))
-    if not m.has_data:
-        empty = c.empty_state("NO_DATA", "まだ情報がありません",
-                              "最初の取得が終わると、ここに今日やることが表示されます")
-    else:
-        empty = c.empty_state("NO_ACTIVE", "今すぐやることはありません",
-                              "次の抽選情報・価格の変化を監視しています")
-    empty = empty.replace("<div ", f'<div data-nu-empty-home{" hidden" if shown else ""} ', 1)
-    issue = (c.notice("一部の情報源を取得できていません。必ず公式サイトでもご確認ください。")
-             if source_issue else "")
-    return (
-        '<section class="nu-page" data-nu-page="home" aria-labelledby="nu-home-title">'
-        '<div class="nu-hero"><h1 id="nu-home-title" class="nu-hero__title">今日のチャンス</h1></div>'
-        f'<div class="nu-tiles">{tiles}</div>'
-        f'{issue}'
-        '<h2 class="nu-h2">おすすめアクション TOP5</h2>'
-        f'<div class="nu-cards" data-nu-actions="{shown}" data-nu-limit="{TOP_ACTIONS_LIMIT}">'
-        f'{"".join(cards)}{empty}</div>'
-        '<p class="nu-disclaimer">掲載情報は取得時点の参考です。購入・応募の前に必ず公式サイトでご確認ください。</p>'
-        '</section>'
-    )

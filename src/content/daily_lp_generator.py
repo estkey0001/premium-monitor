@@ -203,6 +203,8 @@ class DailyLPGenerator:
         _all_products = self.repo.list_products()
         # 商品ごとの定価の根拠（確認日不明の設定値で「確定利益」を強調しないため）
         self._msrp_evidence = {_p.id: _pe.classify_product_msrp(_p, now) for _p in _all_products}
+        # 新UIのジャンル（スマホ・カメラ…）の判定に使う
+        self._product_genres = {_p.id: (getattr(_p, "genre", "") or "") for _p in _all_products}
         for _p in _all_products:
             _rows = self.repo.list_buyback_prices_by_product(_p.id, limit=10)
             if _rows:
@@ -4190,7 +4192,8 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             lottery_items=_all_lottery_for_count, lp_generated_at=lp_generated_at,
             collection_stats=collection_stats,
             site_title=self.settings.get("site_title", "プレ値速報"), old_html=page,
-            old_count_as_active=_count_as_active)
+            old_count_as_active=_count_as_active, all_deals=all_deals,
+            buyback_by_product=buyback_by_product)
         return page.replace(self._NU_HEAD_MARK, head, 1).replace(self._NU_ROOT_MARK, root, 1)
 
     # ----- 新UI（?ui=new） -----
@@ -4268,8 +4271,62 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             return {}
         return data if isinstance(data, dict) else {}
 
+    # 新UIの「利益商品」に載せる買取価格の鮮度（初心者タブの 14日超の降格と同じ線）
+    _NU_BUYBACK_MAX_AGE_DAYS = 14
+
+    def _nu_profit_deals(self, all_deals, buyback_by_product: dict | None = None) -> list[dict]:
+        """新UIの「利益商品」に掲載する案件（定価で買って買取店に売る）。
+
+        定価を確認済み（_msrp_is_reference でない）・売り先が買取店（フリマ・二次流通の店ではない）・
+        監視中や取得失敗でない・買取価格を確認した日時が14日以内・見込み利益が0より大きいものだけ。
+        買取価格の確認日時が分からない案件は載せない。同じ商品は利益の大きい1件にする。
+        """
+        now = datetime.now(tz=JST)
+        bybp = buyback_by_product or {}
+
+        def _checked_at(d):
+            """最高買取店の行（店名・価格が一致する行）の観測日時。"""
+            shop = getattr(d, "best_buyback_shop", "") or ""
+            price = getattr(d, "best_buyback_price", 0) or 0
+            for r in bybp.get(getattr(d, "product_id", "") or "", []) or []:
+                if (r.get("shop_name") or "") == shop and int(r.get("buyback_price") or 0) == int(price):
+                    try:
+                        t = datetime.fromisoformat(str(r.get("observed_at") or ""))
+                    except ValueError:
+                        return None
+                    return (t if t.tzinfo else t.replace(tzinfo=JST)).astimezone(JST)
+            return None
+
+        best: dict = {}
+        for d in all_deals or []:
+            net = getattr(d, "net_profit_jpy", 0) or 0
+            sell = getattr(d, "best_buyback_price", 0) or 0
+            shop = getattr(d, "best_buyback_shop", "") or ""
+            if net <= 0 or sell <= 0 or not shop:
+                continue
+            if getattr(d, "user_level", "") in ("monitoring", "fetch_failed"):
+                continue
+            if self._msrp_is_reference(d) or self._is_resale_shop(shop):
+                continue
+            checked = _checked_at(d)
+            if checked is None or (now - checked).total_seconds() > self._NU_BUYBACK_MAX_AGE_DAYS * 86400:
+                continue
+            pid = getattr(d, "product_id", "") or ""
+            if pid in best and best[pid]["net_profit"] >= net:
+                continue
+            alias = pid[len("prod_"):] if pid.startswith("prod_") else pid
+            best[pid] = {
+                "title": getattr(d, "product_name", "") or "", "genre": getattr(d, "category", "") or "",
+                "official_price": getattr(d, "official_price_jpy", 0) or 0, "sell_shop": shop,
+                "sell_price": sell, "net_profit": net, "profit_rate": getattr(d, "net_profit_rate", None),
+                "href": f"./?from=new#product-{alias}" if alias else "",
+                "checked": checked.strftime("%m/%d"),
+            }
+        return list(best.values())
+
     def _new_ui_parts(self, *, lottery_items, lp_generated_at, collection_stats, site_title,
-                      old_html: str = "", old_count_as_active=None) -> tuple[str, str]:
+                      old_html: str = "", old_count_as_active=None, all_deals=None,
+                      buyback_by_product=None) -> tuple[str, str]:
         """新UIの <head> 部分と #new-ui-root を返す。失敗しても旧UIの生成は止めない。"""
         try:
             from src.content.ui import shell as _ui_shell
@@ -4299,6 +4356,8 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 site_title=str(site_title or "プレ値速報"),
                 old_ui_counts=self._nu_old_counts(old_html, lottery_items, old_count_as_active),
                 now=self._nu_now(lp_generated_at),
+                profit_deals=self._nu_profit_deals(all_deals, buyback_by_product),
+                product_genres=getattr(self, "_product_genres", None) or {},
             )
             return _ui_shell.render_head(), _ui_shell.render_root(ctx)
         except Exception as exc:  # noqa: BLE001

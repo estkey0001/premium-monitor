@@ -74,13 +74,14 @@ def _run(tmp_path, page: str) -> dict:
 _SNAP = """
 function snap(){
   var r=document.getElementById('new-ui-root');
-  var list=r.querySelector('[data-nu-list="lottery"]');
+  // 抽選・予約のページ（UI Phase 3）: 1件1要素の一覧と、0件の空状態
+  var list=r.querySelector('[data-nu-lot-list]');
   return {count:+r.querySelector('.nu-purposes [data-nu-count="lottery"]').textContent.replace('件',''),
-    shown:[].slice.call(list.querySelectorAll(':scope > li')).filter(function(li){return !li.hidden;})
-      .map(function(li){var a=li.querySelector('article'), c=a.querySelector('a[data-nu-cta]');
+    shown:[].slice.call(list.querySelectorAll(':scope > [data-nu-lot]')).filter(function(a){return !a.hidden;})
+      .map(function(a){var c=a.querySelector('a[data-nu-cta]');
         return [a.getAttribute('data-nu-lot'), a.getAttribute('data-nu-status'), c?c.getAttribute('data-nu-cta'):null,
                 a.querySelector('.nu-badge').textContent.trim(), a.querySelector('.nu-cd').textContent];}),
-    emptyHidden:r.querySelector('[data-nu-empty-for="lottery"]').hidden};
+    emptyHidden:r.querySelector('[data-nu-lempty="none"]').hidden};
 }
 // 時計を進めて、ページの更新（runtime の判定 → 件数・一覧の数え直し）を走らせる
 function at(ms){ window.__now = %d + ms; window.dispatchEvent(new Event('pageshow')); }

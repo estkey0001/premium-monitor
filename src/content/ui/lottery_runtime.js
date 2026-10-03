@@ -69,16 +69,33 @@ var NuLotteryRuntime = (function () {
       url: vm.info, style: style || 'secondary', track: 'lottery_info_click' };
   }
 
+  // 発売待ち（runtime._release_state と同じ）。発売日の 0 時を過ぎたら一覧から外す
+  function releaseState(vm, now, C) {
+    var d0 = day(vm.rd), waiting = d0 !== null && now < d0;
+    var status = waiting ? 'RELEASE_WAIT' : (d0 !== null ? 'ENDED' : 'UNKNOWN');
+    var meta = C.statuses[status] || C.statuses.UNKNOWN;
+    var rest = waiting ? countdownText(d0, now) : '';
+    return {
+      status: status, label: meta.label, icon: meta.icon, tone: meta.tone,
+      when: waiting ? fmtDay(vm.rd) + ' 発売予定' : (d0 !== null ? '発売日を過ぎました' : '日程は未公表です'),
+      cd_text: rest ? '発売まで あと' + rest : '', cta: infoCta(vm),
+      bucket: waiting ? 5 : 99, sort: waiting ? d0 : 0,
+      open: false, ending_today: false, starting_24h: false, upcoming: false
+    };
+  }
+
   function deriveLotteryRuntimeState(vm, now, C) {
+    if (vm.k === 'release') return releaseState(vm, now, C);
+    var preorder = vm.k === 'preorder';
     var base = computeStatus(vm, now, C);
     var status = vm.conflict ? 'SOURCE_CONFLICT' : base;
     var s = bound(vm, 'as', 'asd'), e = bound(vm, 'ae', 'aed');
     var isOpen = !!OPEN[status], cta = null;
     if (isOpen) {
       if (vm.apply && !vm.unv && s[0] !== null && now >= s[0] && e[1] !== null && now < e[1]) {
-        cta = { kind: 'apply', label: '応募する', url: vm.apply, style: 'primary', track: 'lottery_apply_click' };
+        cta = { kind: 'apply', label: preorder ? '予約する' : '応募する', url: vm.apply, style: 'primary', track: 'lottery_apply_click' };
       } else {
-        cta = infoCta(vm, 'primary');
+        cta = infoCta(vm, vm.unv ? 'secondary' : 'primary');
       }
     } else if (status === 'WINNER_PURCHASE_PERIOD') {
       if (vm.purchase) cta = { kind: 'purchase', label: '購入ページ（当選者のみ）', url: vm.purchase, style: 'primary', track: 'lottery_purchase_click' };
@@ -112,15 +129,20 @@ var NuLotteryRuntime = (function () {
     else if (counted && status === 'OPEN') { bucket = 1; sort = e[0] || 0; }
     else if (counted && status === 'UPCOMING') { bucket = 3; sort = s[1] || 0; }
     else if (counted && status === 'SOURCE_CONFLICT') { bucket = 4; sort = 0; }
+    else if (counted && status === 'WINNER_PURCHASE_PERIOD') { bucket = 2; sort = bound(vm, 'pe', 'ped')[0] || 0; }
+    else if (counted && (status === 'RESULT_PENDING' || status === 'WINNER_ANNOUNCED')) { bucket = 5; sort = e[0] || 0; }
     var meta = C.statuses[status] || C.statuses.UNKNOWN;
+    var label = preorder && (C.preorder_labels || {})[status] ? C.preorder_labels[status] : meta.label;
+    var tone = meta.tone, unconfirmed = !!vm.unv && isOpen;
+    if (unconfirmed) { label = label + '（確認待ち）'; tone = 'warning'; }
     return {
-      status: status, label: meta.label, icon: meta.icon, tone: meta.tone,
+      status: status, label: label, icon: meta.icon, tone: tone,
       when: w, cd_text: cd, cta: cta, bucket: bucket, sort: sort,
-      open: counted && isOpen,
+      open: counted && isOpen && !preorder && !unconfirmed,
       ending_today: counted && isOpen && aeDay === today,
-      starting_24h: counted && status === 'UPCOMING' &&
+      starting_24h: counted && !preorder && status === 'UPCOMING' &&
         ((asMs !== null && asMs - now <= DAY) || (asMs === null && vm.asd === today)),
-      upcoming: counted && status === 'UPCOMING'
+      upcoming: counted && !preorder && status === 'UPCOMING'
     };
   }
 
@@ -128,7 +150,7 @@ var NuLotteryRuntime = (function () {
   function nextChange(vms, now, C) {
     var best = null;
     vms.forEach(function (vm) {
-      [['as', 'asd'], ['ae', 'aed'], ['wa', 'wad'], ['ps', 'psd'], ['pe', 'ped']].forEach(function (k) {
+      [['as', 'asd'], ['ae', 'aed'], ['wa', 'wad'], ['ps', 'psd'], ['pe', 'ped'], ['', 'rd']].forEach(function (k) {
         var e = exact(vm[k[0]]), d = day(vm[k[1]]);
         [e, e === null ? null : e - C.ending_soon_ms, d, d === null ? null : d + DAY,
          d === null ? null : d - C.ending_soon_ms].forEach(function (t) {
@@ -168,8 +190,10 @@ var NuLotteryRuntime = (function () {
     if (!cta || !/^https:\/\//.test(cta.url)) { if (a) a.remove(); return; }
     if (!a) {
       a = document.createElement('a');
-      var det = card.querySelector('details');
-      if (det) card.insertBefore(a, det); else card.appendChild(a);
+      // 一覧の行（抽選・予約のページ）はボタンの置き場所が決まっている
+      var slot = card.querySelector('[data-nu-cta-slot]'), det = card.querySelector('details');
+      if (slot) slot.appendChild(a);
+      else if (det) card.insertBefore(a, det); else card.appendChild(a);
     }
     a.className = 'nu-btn nu-btn--' + cta.style;
     a.href = cta.url;
@@ -183,6 +207,8 @@ var NuLotteryRuntime = (function () {
     card.setAttribute('data-nu-status', st.status);
     card.setAttribute('data-nu-bucket', String(st.bucket));
     card.setAttribute('data-nu-sort', String(st.sort));
+    // 抽選・予約のページの絞り込み（今日締切）に使う
+    card.setAttribute('data-nu-today', st.ending_today ? '1' : '0');
     var badge = card.querySelector('.nu-badge');
     if (badge) setBadge(badge, st, st.status);
     var w = card.querySelector('.nu-when');

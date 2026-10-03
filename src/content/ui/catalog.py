@@ -9,8 +9,9 @@ HOME のジャンル・目的の件数と、各目的ページの一覧は、す
 |---|---|
 | 利益商品 opportunities | OpportunityView のうち opportunity.eligibility を通るもの（定価で買って買取店に売る案件と、
 |                        | 定価以外で仕入れるルートの両方）。判定の内容は opportunity.py の docstring が正本 |
-| 抽選・予約 lottery | 抽選の runtime の状態で、受付中・締切間近・まもなく開始・日程要確認のもの（bucket < 99）。
-|                    | 閲覧時にブラウザで数え直す（締切を過ぎたものは外れる） |
+| 抽選・予約 lottery | 抽選・予約・発売待ちの runtime の状態で、受付中・締切間近・まもなく開始・日程要確認・
+|                    | 当選者購入期間・結果待ち・当選発表・発売待ちのもの（bucket < 99。runtime.COUNTED_STATUSES）。
+|                    | 受付終了（結果発表日不明）・終了・日程不明は数えない。閲覧時にブラウザで数え直す |
 | 在庫再開 restock | TCG の販売・入荷の情報で、今買える（AVAILABLE_NOW）かつ古くないもの |
 | せどりルート routes | 利益商品のうち、定価以外（店・フリマ）で仕入れるもの（利益ルート由来）。
 |                     | 売値は買取か条件を満たした成約中央値だけなので、成約データが無い今は0件になりうる |
@@ -54,6 +55,7 @@ class Catalog:
     lottery_cats: dict[str, str] = field(default_factory=dict)      # 抽選の VM の id → ジャンル
     lottery_active: dict[str, bool] = field(default_factory=dict)   # 生成時点で掲載中か
     opportunity_set: opp.OpportunitySet | None = None
+    lottery_views: list = field(default_factory=list)                # 抽選・予約の表示モデル（lottery_view）
 
     def count(self, purpose: str, category: str = cats.ALL) -> int:
         """生成時点の件数（抽選は閲覧時にブラウザで数え直す）。"""
@@ -166,7 +168,11 @@ def build(*, model: home.HomeModel, tcg_report: dict | None, profit_routes: dict
     for vm in model.vms:
         if vm.get("ann"):
             continue
-        cat = "tcg" if vm.get("src") == "tcg" else legacy_cat.get(vm["id"], "other")
+        # TCG の抽選と、TCG の公式の発売予定は TCG。旧来の抽選は商品のジャンル
+        cat = "tcg" if vm.get("src") in ("tcg", "release") else legacy_cat.get(vm["id"], "other")
         cg.lottery_cats[vm["id"]] = cat
         cg.lottery_active[vm["id"]] = model.states[vm["id"]]["bucket"] < rt.BUCKET_HIDDEN
+    from src.content.ui import lottery_view as lv
+    cg.lottery_views = lv.build(vms=model.vms, tcg_report=tcg_report, legacy_items=legacy_lotteries,
+                                lottery_cats=cg.lottery_cats, opportunity_set=cg.opportunity_set)
     return cg

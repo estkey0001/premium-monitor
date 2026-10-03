@@ -34,6 +34,8 @@ _ALL: tuple[Status, ...] = (
     # 販売
     Status("AVAILABLE", "販売中", "success", "🔥", 25),
     Status("COMING_SOON", "発売予定", "info", "🗓", 45),
+    # 発売待ち（公式に発売日だけが出ているもの。予約の受付期間・在庫は確認していない）
+    Status("RELEASE_WAIT", "発売待ち", "info", "🗓", 46),
     # アクション（内部値はそのまま、文言だけ日本語にする）
     Status("APPLY", "応募する", "success", "🎯", 1),
     Status("BUY", "買う", "success", "💰", 2),

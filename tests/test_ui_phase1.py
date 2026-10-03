@@ -157,6 +157,9 @@ def test_purpose_navigation_keeps_category_links():
         assert 'aria-label="現在地"' in sec and sec.count("data-nu-switch=") == 7
         if p == "opportunities":
             assert "data-nu-opp-table" in sec and "data-nu-opp-cards" in sec and 'data-nu-oempty="none"' in sec
+        elif p == "lottery":
+            # 抽選・予約（UI Phase 3）は1件1要素の一覧と、0件・条件に合うもの無しの空状態
+            assert "data-nu-lot-list" in sec and 'data-nu-lempty="none"' in sec and 'data-nu-lempty="nomatch"' in sec
         else:
             assert f'data-nu-list="{p}"' in sec and f'data-nu-empty-for="{p}"' in sec
 
@@ -173,11 +176,13 @@ def test_no_inactive_fake_cta():
     # 押せない部品（準備中）は aria-disabled と「準備中」の文言を持つ
     for el in re.findall(r"<(?:span|input)[^>]*aria-disabled=\"true\"[^>]*>", body):
         assert "<a " not in el
-    # 入力欄は、利益商品の一覧内の検索（動く）以外は準備中で押せない
+    # 入力欄は、一覧内の検索（利益商品・抽選・予約。動く）以外は準備中で押せない
     inputs = re.findall(r"<input[^>]*>", body)
     assert body.count("準備中") >= 6
     assert all("disabled" in i or "data-nu-search-input" in i for i in inputs)
-    assert sum("data-nu-search-input" in i for i in inputs) == 1
+    assert sum("data-nu-search-input" in i for i in inputs) == 2
+    for p in ("opportunities", "lottery"):
+        assert _section(root, p).count("data-nu-search-input") == 1
 
 
 def test_empty_states_without_sold_data():
@@ -317,7 +322,7 @@ def test_dom_category_persists_and_back_forward(tmp_path):
     o.opp = click('a[data-nu-purpose-link="opportunities"]');
     o.oppItems = [].slice.call(R.querySelectorAll('tr.nu-orow')).filter(function(r){return !r.hidden;}).length;
     o.lottery = click('.nu-topnav a[data-nu-nav="lottery"]');
-    o.lotItems = [].slice.call(R.querySelectorAll('[data-nu-list="lottery"] > li')).filter(function(li){return !li.hidden;})
+    o.lotItems = [].slice.call(R.querySelectorAll('[data-nu-lot-list] > [data-nu-lot]')).filter(function(li){return !li.hidden;})
                   .map(function(li){return li.getAttribute('data-nu-cat');});
     o.tcg = click('[data-nu-page="lottery"] a[data-nu-switch="tcg"]');
     o.restock = click('.nu-topnav a[data-nu-nav="restock"]');
@@ -420,8 +425,8 @@ def test_dom_top10_and_lottery_order(tmp_path):
     o.all = click('[data-nu-topnote] a');
     o.allCount = [].slice.call(R.querySelectorAll('tr.nu-orow')).filter(function(r){return !r.hidden;}).length;
     o.lot = click('.nu-topnav a[data-nu-nav="lottery"]');
-    o.order = [].slice.call(R.querySelectorAll('[data-nu-list="lottery"] > li')).filter(function(li){return !li.hidden;})
-                .map(function(li){return li.querySelector('article').getAttribute('data-nu-lot');});
+    o.order = [].slice.call(R.querySelectorAll('[data-nu-lot-list] > [data-nu-lot]')).filter(function(li){return !li.hidden;})
+                .map(function(li){return li.getAttribute('data-nu-lot');});
     done(o);
     """
     o = _run(tmp_path, js, query="?ui=new&page=opportunities&top=10", profit_deals=many,

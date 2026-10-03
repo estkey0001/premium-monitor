@@ -1,6 +1,7 @@
 # HANDOFF（最終更新: 2026-10-03）
 
 ## 今の状態
+- UI Phase 3: 新UIの「抽選・予約」（`?ui=new&page=lottery`）を本番用の一覧にした。表示モデルは `lottery_view.py`（LotteryReservationView）、ページは `lottery_page.py`。状態の絞り込み（抽選受付中・今日締切・予約・発売待ち・当選・購入期限）・並べ替え（おすすめ・締切・開始・更新・想定利益）・検索・20件ごとのページ・ジャンル保持。1件1要素で、PC（1024px 以上）は行、モバイルはカード。予約（PREORDER）と発売待ち（公式の発売日のある COMING_SOON）を runtime に足した。
 - Phase 0 / 0.1 / 0.2（データの正確さ・表示の信頼性・二次流通の価格の意味）はコミット・CI・本番で受け入れ済み。
 - UI Phase 1 を実装（`?ui=new` だけ。通常の URL は旧UIのまま）。ジャンル起点の HOME（ジャンル6 → 目的4 → 小さな補助リンク）と、目的のページ4つ（利益商品・抽選・予約・在庫再開・せどりルート）の枠、ジャンルの URL 保持（`category=`）、上部ナビ／ボトムナビ5項目、SVG アイコン、デザイントークンの更新（アクセント青）。データのロジックは変えていない。
 - Phase 2.1: 利益商品が0件だった原因を `exports/opportunity_diagnostics/latest.json`（内部用・理由別の件数）で出すようにした。主因は「定価が確認日不明の設定値」と「買取が定価を下回る（実際に利益が無い）」。公式で価格を確認し、PS5 Pro（Sony Store ¥137,980）・Switch 2（任天堂 ¥59,980）を確認済みにした。改定前の設定値で出ていた Switch 2 の黒字は偽物だった。在庫は根拠があるときだけ在庫あり／品切れにし、確認日時を価格と別に持つ（migration 020）。
@@ -17,7 +18,8 @@
 - **成約（sold）データは今は0件**。ヤフオク（自動）は出品価格、手動の成約 CSV（data/manual_flea_sold_prices.csv）は URL がダミーで成約日時が無い、eBay は API 未設定（CI では HTML もブロック）、メルカリ・ラクマの成約は NOT_IMPLEMENTED。成約中央値を使うには、規約に沿って1件ごとの商品ページの URL と成約日時を取れる経路が必要（eBay API を設定する場合も、1件ごとの成約日時を保存するように collector を直す必要がある）。
 - 過去の誤分類（git の履歴で数えた）: NPO にヤフオクの出品を「落札」として入れたコミットが144（1,491行、2026-06-04〜10-02）。そのうち利益ルートの main（確定利益）の仕入れ値に使ったものが32行。ダミー URL の手動「成約」を使ったルートが39コミット・269行（06-15〜09-04）。履歴は書き換えていない。
 - 旧UI は横に少しはみ出す（.tab-wrap の `margin: 0 -24px`。1440px で 24px、375px で 16px）。Phase 0.1 より前からある。旧UI は直していない（新UI は負のマージンを使わず、320〜1440px ではみ出し0をテストで確認）。旧UI を外すときに一緒に消える。
-- **まだ作っていない画面**: 商品詳細、サイト全体のキーワード検索（枠だけ）、絞り込みの「在庫復活」「買取急騰」「新着」（準備中。判定できるデータが無い）、かんたん/詳細の切り替え、抽選・予約の本格画面（Phase 3）。
+- **まだ作っていない画面**: 商品詳細、サイト全体のキーワード検索（枠だけ）、絞り込みの「在庫復活」「買取急騰」「新着」（準備中。判定できるデータが無い）、かんたん/詳細の切り替え、在庫再開の本格画面（Phase 4）。
+- 抽選・予約の取得元: スマホ・PC は NOT_IMPLEMENTED。TCG は17件中5件が正常（PCO は 403 で手動補完）。頻度は1日1回で、新しい抽選の発見には遅い（推奨は internal/uiux/DATA_SOURCE_MATRIX.md §4）。
 - **利益商品は本番データでは0件になりやすい**（確認済みの定価・14日以内の買取価格・費用が揃う案件が少ない）。0件のときは空状態を出し、件数を水増ししない。
 - 成約中央値のルートは、正規化データに集計期間（sold_period）が無いので今は掲載されない（件数3以上かつ期間ありが条件）。期間を保存するようにすれば自動で出る。
 - 公式の在庫表示は official_stock_observed_at（在庫の根拠があった取得の時刻。価格の時刻とは別）から7日を過ぎると「在庫未確認」にする。在庫の表示が取れる collector が少ないので、ほぼ全件が在庫未確認（利益あり・在庫未確認）。
@@ -31,7 +33,7 @@
 - 既存の問題: pytest を実行すると追跡対象の exports/api_automation/collection.json が書き換わる。コミット前に `git checkout -- exports/api_automation/collection.json` で戻すこと（テストの出力先修正は別タスク）。
 
 ## 次にやること
-0. Phase 3（抽選・予約の本格画面）はユーザーの指示を待ってから始める。
+0. Phase 4（在庫再開）はユーザーの指示を待ってから始める。
 1. 利益商品の件数を増やすには、データ側を直す（設定値の定価の確認・カメラの買取の鮮度・成約の集計期間）。UI 側で条件を緩めない。
 2. 買取・在庫の更新頻度（今は日次1回）。推奨は diagnostics の frequency。本番のスケジュール変更はユーザー判断。
 2. 利益計算の8系統の統一（internal/uiux/UI_VIEW_MODEL_SPEC.md §2）と、成約データの取得方法（internal/uiux/IMPLEMENTATION_PLAN_V2.md）。
@@ -42,6 +44,8 @@
 - フジヤの買取ページは「買取金額」（現金）と「下取は10%UP」（下取）を併記する。現金の段だけを使い、下取の段しか読めない候補は採用しない。監視対象はボディ単体の通常版なので、限定版・キット・海外版・アクセサリー・別の型番（Leica は商品コードで判定）は使わない。
 - 固定値・設定値の定価に実行日の日時を付けない。Apple の固定値の確認日は `scripts/audit_official_sources.py` の `VERIFIED_URLS_CHECKED_ON`（値を公式で再確認したときだけ更新する）。
 - **新UI（UI Phase 1）の構成**: ナビは `navigation.py`（NAV_ITEMS・BOTTOM_ITEMS・PAGES・旧ハッシュの読み替え）、ジャンルは `categories.py`（products.genre などの読み替えはここだけ）、件数と一覧は `catalog.py`（件数の定義は docstring が正本。Fake count 禁止）、画面は `pages.py`、CSS は `styles.py`、アイコンは `icons.py`。ジャンルは URL の `category=` に持ち、`data-nu-keepcat` のリンクは表示のたびに今のジャンルを付けた href に書き換える（新しいタブで開いても同じ）。抽選の件数は runtime が書き換えるカードの `data-nu-bucket` から数え直す。設計の正本は internal/uiux/NEW_INFORMATION_ARCHITECTURE.md §0.1・WIREFRAMES.md §0・DESIGN_SYSTEM.md の冒頭。
+- **抽選・予約の状態は runtime だけで決める**（Python の `derive_runtime_state` と JS の `deriveLotteryRuntimeState` は同じ結果を返すこと。tests/test_new_ui_runtime.py・test_ui_phase3.py が node で照合）。VM の `k`（lottery / preorder / release）と `rd`（発売日）を足した。件数に数える状態は `runtime.COUNTED_STATUSES`（受付終了・終了・日程不明は数えない）。HOME の抽選の件数は `[data-nu-lot-list]` の行の bucket から数える。
+- 抽選・予約の価格: TCG は公式の retail_price、発売待ちは `retail_price_basis=product_unit` のときだけ。旧来の抽選（公式ストア）の CSV の価格は読み取りの誤りがあるので使わず、利益商品の確認済み定価があるときだけ出す。想定利益は利益商品（掲載可）と同じ商品で、販売価格と仕入れ値が一致するときだけ。それ以外は「算出前」。
 - **定価・在庫は公式の一次情報で確認する**。価格改定（PS5 Pro 2026-04-02、Switch 2 2026-05-25、iPhone 17 2026-09）や世代交代は collector では拾えないことが多い。確認した日は VERIFIED_URLS の各行の checked_on に書く（実行日にしない）。
 - 在庫を推測しない: 公式 collector は「在庫あり」等の明示があるときだけ在庫あり、品切れの表示があれば在庫なし、それ以外は空（`_generic.stock_from_text` / `ricoh.ricoh_stock_from_status`）。「購入」「ご注文」「カートに入れる」は根拠にしない。
 - **利益商品（UI Phase 2）**: 値は既存の純利益をそのまま使い、HTML/JS で計算し直さない。ROI = 純利益 ÷ 取得原価。費用の内訳は既存の純利益と合うときだけ出す。売値は BUYBACK_CASH か、条件を満たした SOLD_MEDIAN だけ。LISTING・UNKNOWN・設定値の参考価格・14日より古い価格は掲載しない。並べ替え・絞り込み・ページは shell.py の router（renderOpp）が data-* 属性で行う。HOME の件数は catalog.py の同じ一覧から数える（せどりルートは利益商品の一部なのでジャンル合計に重ねない）。見た目の確認用 DEMO は build/nu_preview/（gitignore）にだけ出す。

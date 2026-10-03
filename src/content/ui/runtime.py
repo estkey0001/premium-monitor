@@ -43,10 +43,17 @@ TIME_KEYS = (
 )
 
 OPEN_STATUSES = ("OPEN", "ENDING_SOON")
+# 種類（VM の k）。抽選・予約（受付期間のあるもの）と、発売日だけが公式に出ている発売待ち
+KIND_LOTTERY, KIND_PREORDER, KIND_RELEASE = "lottery", "preorder", "release"
+# 予約の受付は、抽選と同じ状態コードのまま文言だけ変える（予約を在庫ありとは扱わない）
+PREORDER_LABELS = {"OPEN": "予約受付中", "ENDING_SOON": "予約締切間近", "UPCOMING": "予約開始待ち"}
 # HOME の並び順（小さいほど上）。99 は HOME に出さない
 BUCKET_ENDING, BUCKET_OPEN, BUCKET_BUY, BUCKET_UPCOMING, BUCKET_CONFLICT = 0, 1, 2, 3, 4
 BUCKET_WAIT, BUCKET_SKIP = 5, 6
 BUCKET_HIDDEN = 99
+# 抽選・予約の件数に数える状態（「今ユーザーが確認する価値のある」もの。受付終了・終了・日程不明は数えない）
+COUNTED_STATUSES = ("ENDING_SOON", "OPEN", "UPCOMING", "SOURCE_CONFLICT", "WINNER_PURCHASE_PERIOD",
+                    "RESULT_PENDING", "WINNER_ANNOUNCED", "RELEASE_WAIT")
 
 
 # ── URL ─────────────────────────────────────────────────────────
@@ -169,6 +176,8 @@ def tcg_vm(ev: dict, idx: int) -> dict:
         "conf": conf,
         # 人による確認待ちの転記・確かさが低いものには「応募する」を出さない（manual.py の方針）
         "unv": conf in ("確認待ち", "参考情報"),
+        "k": KIND_PREORDER if str(ev.get("event_type") or "").upper() == "PREORDER" else KIND_LOTTERY,
+        "rd": "",
     }
     for i in range(0, len(TIME_KEYS), 2):
         (s_exact, k_exact), (s_day, k_day) = TIME_KEYS[i], TIME_KEYS[i + 1]
@@ -200,6 +209,38 @@ def legacy_vm(it: dict, idx: int) -> dict:
         "result": "", "purchase": "", "conf": "公式情報", "unv": False,
         "as": as_, "asd": asd, "ae": ae, "aed": aed, "wa": wa, "wad": wad,
         "ps": "", "psd": "", "pe": "", "ped": "",
+        "k": KIND_LOTTERY, "rd": "",
+    }
+
+
+def release_id(ev: dict) -> str:
+    import hashlib
+    key = f'{ev.get("product_name") or ""}|{ev.get("store") or ""}|{ev.get("release_date") or ""}'
+    return "rel-" + hashlib.md5(key.encode("utf-8")).hexdigest()[:10]
+
+
+def release_vm(ev: dict) -> dict | None:
+    """公式に発売日が出ている発売予定（exports/tcg/latest.json の events の COMING_SOON）→ VM。
+
+    使うのは、公式ドメインの https のページで、発売日（年月日）が読めるものだけ。日付に時刻を足さない。
+    予約の受付期間は公式に出ていないので、予約受付中とは言わない（発売待ちとだけ出す）。
+    """
+    from src.tcg.product_types import parse_release_date
+    if ev.get("status") != "COMING_SOON" or ev.get("stale"):
+        return None
+    info = official_url(ev.get("canonical_url")) or official_url(ev.get("source_url"))
+    rd = parse_release_date(str(ev.get("release_date") or ""))
+    if not info or not rd:
+        return None
+    return {
+        "id": release_id(ev), "src": "release", "cat": "",
+        "t": str(ev.get("product_name") or ""), "sub": "",
+        "price": "", "conflict": False, "ann": False,
+        "apply": "", "info": info, "info_official": True,
+        "result": "", "purchase": "", "conf": "公式情報", "unv": False,
+        "as": "", "asd": "", "ae": "", "aed": "", "wa": "", "wad": "",
+        "ps": "", "psd": "", "pe": "", "ped": "",
+        "k": KIND_RELEASE, "rd": rd[:10],
     }
 
 
@@ -228,6 +269,14 @@ def build_vms(tcg_report: dict | None, legacy_items: list | None) -> list[dict]:
             continue
         seen_ids.add(vm["id"])
         vms.append(vm)
+    # 発売予定（公式の発売日があるもの）。同じ商品・店・発売日は1件にする
+    for ev in (tcg_report or {}).get("events") or []:
+        if not isinstance(ev, dict):
+            continue
+        vm = release_vm(ev)
+        if vm and vm["id"] not in seen_ids:
+            seen_ids.add(vm["id"])
+            vms.append(vm)
     return vms
 
 
@@ -278,10 +327,32 @@ def _info_cta(vm: dict, style: str = "secondary") -> dict | None:
             "url": vm["info"], "style": style, "track": "lottery_info_click"}
 
 
+def _release_state(vm: dict, now: datetime) -> dict:
+    """発売待ち（発売日だけが公式に出ているもの）。発売日の 0 時を過ぎたら一覧から外す（在庫は確認していない）。"""
+    now_ms = _ms(now)
+    rd = vm.get("rd") or ""
+    day0 = datetime.fromisoformat(rd + "T00:00:00+09:00") if rd else None
+    waiting = day0 is not None and now < day0
+    status = "RELEASE_WAIT" if waiting else ("ENDED" if day0 is not None else "UNKNOWN")
+    s = st.get(status)
+    rest = countdown_text(_ms(day0), now_ms) if waiting else ""
+    return {
+        "status": status, "label": s.label, "icon": s.icon, "tone": s.tone,
+        "when": f"{_fmt_day(rd)} 発売予定" if waiting else ("発売日を過ぎました" if day0 else "日程は未公表です"),
+        "cd_text": f"発売まで あと{rest}" if rest else "",
+        "cta": _info_cta(vm),
+        "bucket": BUCKET_WAIT if waiting else BUCKET_HIDDEN, "sort": _ms(day0) if waiting else 0,
+        "open": False, "ending_today": False, "starting_24h": False, "upcoming": False,
+    }
+
+
 def derive_runtime_state(vm: dict, now: datetime) -> dict:
     """抽選1件の閲覧時の状態。状態・残り時間・ボタン・件数・並び順はこの結果だけで決める。"""
     now = now.astimezone(JST)
+    if vm.get("k") == KIND_RELEASE:
+        return _release_state(vm, now)
     now_ms = _ms(now)
+    preorder = vm.get("k") == KIND_PREORDER
     ev = _as_event(vm)
     base = ls.compute_lottery_status(ev, now)
     # 公式情報が食い違うものは、時刻が進んでも受付中にしない
@@ -297,10 +368,11 @@ def derive_runtime_state(vm: dict, now: datetime) -> dict:
         # 締切日の 0 時まで）・日程の食い違いが無い、をすべて満たすときだけ
         if (vm.get("apply") and not vm.get("unv") and s_passed is not None and now >= s_passed
                 and e_not_yet is not None and now < e_not_yet):
-            cta = {"kind": "apply", "label": "応募する", "url": vm["apply"], "style": "primary",
-                   "track": "lottery_apply_click"}
+            cta = {"kind": "apply", "label": "予約する" if preorder else "応募する", "url": vm["apply"],
+                   "style": "primary", "track": "lottery_apply_click"}
         else:
-            cta = _info_cta(vm, "primary")
+            # 確認待ちは「応募する」と見間違えないよう控えめなボタンにする
+            cta = _info_cta(vm, "secondary" if vm.get("unv") else "primary")
     elif status == "WINNER_PURCHASE_PERIOD":
         if vm.get("purchase"):
             cta = {"kind": "purchase", "label": "購入ページ（当選者のみ）", "url": vm["purchase"],
@@ -348,7 +420,8 @@ def derive_runtime_state(vm: dict, now: datetime) -> dict:
     as_ms = _ms(parse_dt(vm["as"])) if vm.get("as") else None
     counted = not vm.get("ann")
     ending_today = counted and is_open and ae_day == today
-    starting_24h = counted and status == "UPCOMING" and (
+    # 「まもなく開始」は抽選だけ（予約開始待ちは数えない）
+    starting_24h = counted and not preorder and status == "UPCOMING" and (
         (as_ms is not None and as_ms - now_ms <= 86_400_000)
         or (as_ms is None and vm.get("asd") == today))
     if not counted:
@@ -362,15 +435,27 @@ def derive_runtime_state(vm: dict, now: datetime) -> dict:
     elif status == "SOURCE_CONFLICT":
         # 日程要確認は受付中には数えないが、存在に気づけるよう HOME に出す（ボタンは公式情報だけ）
         bucket, sort = BUCKET_CONFLICT, 0
+    elif status == "WINNER_PURCHASE_PERIOD":
+        # 当選者の購入期限が残っているもの（購入期限が近い順）
+        bucket, sort = BUCKET_BUY, _ms(ls._bound(ev, "purchase_end", "purchase_end_date")[0]) or 0
+    elif status in ("RESULT_PENDING", "WINNER_ANNOUNCED"):
+        bucket, sort = BUCKET_WAIT, _ms(e_passed) or 0
     else:
         bucket, sort = BUCKET_HIDDEN, 0
     s = st.get(status)
+    label = PREORDER_LABELS.get(status, s.label) if preorder else s.label
+    tone = s.tone
+    unconfirmed = bool(vm.get("unv")) and is_open
+    if unconfirmed:
+        # 人の確認がまだの告知は「受付中」と言い切らない（応募ボタンも出さない）
+        label, tone = f"{label}（確認待ち）", "warning"
     return {
-        "status": status, "label": s.label, "icon": s.icon, "tone": s.tone,
+        "status": status, "label": label, "icon": s.icon, "tone": tone,
         "when": when, "cd_text": cd_text, "cta": cta,
         "bucket": bucket, "sort": sort,
-        "open": counted and is_open, "ending_today": ending_today,
-        "starting_24h": starting_24h, "upcoming": counted and status == "UPCOMING",
+        # 「抽選受付中」の件数は抽選だけ（予約の受付は数えない）
+        "open": counted and is_open and not preorder and not unconfirmed, "ending_today": ending_today,
+        "starting_24h": starting_24h, "upcoming": counted and not preorder and status == "UPCOMING",
     }
 
 
@@ -393,6 +478,7 @@ def config() -> dict:
         "ending_soon_ms": int(ls.ENDING_SOON_WINDOW / timedelta(milliseconds=1)),
         "closed_ms": int(ls.CLOSED_RETENTION / timedelta(milliseconds=1)),
         "start_only_ms": int(ls.START_ONLY_RETENTION / timedelta(milliseconds=1)),
+        "preorder_labels": PREORDER_LABELS,
         "statuses": {k: {"label": s.label, "icon": s.icon, "tone": s.tone}
                      for k, s in st.STATUSES.items()},
     }

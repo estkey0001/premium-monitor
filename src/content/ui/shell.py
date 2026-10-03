@@ -12,7 +12,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from src.content.ui import account, home, navigation, opportunities_page, pages, parity
+from src.content.ui import account, home, lottery_page, navigation, opportunities_page, pages, parity
 from src.content.ui import catalog as cl
 from src.content.ui import categories as cats
 from src.content.ui import runtime as rt
@@ -130,7 +130,7 @@ def _router_script() -> str:
   // 抽選はカードの閲覧時の状態（data-nu-bucket。runtime が書き換える）から数える
   function lotteryCounts() {
     var out = {};
-    root.querySelectorAll('[data-nu-list="lottery"] [data-nu-lot]').forEach(function(card){
+    root.querySelectorAll('[data-nu-lot-list] [data-nu-lot]').forEach(function(card){
       var cat = (DATA.lot || {})[card.getAttribute('data-nu-lot')];
       if (cat && +card.getAttribute('data-nu-bucket') < 99) out[cat] = (out[cat] || 0) + 1;
     });
@@ -271,6 +271,119 @@ def _router_script() -> str:
     var note = sec.querySelector('[data-nu-topnote]');
     if (note) note.hidden = !top;
   }
+
+  // ── 抽選・予約（UI Phase 3）: 状態の絞り込み・並べ替え・検索・ページ切り替え ──
+  // 状態（data-nu-status / data-nu-bucket / data-nu-today）は NuLotteryRuntime が閲覧時の時刻で書き換えた値だけを使う
+  var LOT_TABS = ['open', 'today', 'wait', 'result'], LOT_SORTS = ['rec', 'deadline', 'start', 'updated', 'profit'];
+  var LOT_SIZE = 20;
+  function lotHref(name, value) {
+    var cur = new URLSearchParams(location.search), u = new URLSearchParams();
+    u.set('ui', 'new'); u.set('page', 'lottery');
+    cur.forEach(function(v, k){ if (k !== 'ui' && k !== 'page') u.set(k, v); });
+    if (value) u.set(name, value); else u.delete(name);
+    if (name !== 'page_num') u.delete('page_num');
+    return '?' + u.toString();
+  }
+  function numAttr(el, name) { var v = el.getAttribute(name); return v === null || v === '' ? null : +v; }
+  function renderLot(q, cat) {
+    var sec = root.querySelector('[data-nu-page="lottery"]');
+    if (!sec) return;
+    var tab = LOT_TABS.indexOf(q.get('st')) >= 0 ? q.get('st') : '';
+    var sort = LOT_SORTS.indexOf(q.get('sort')) >= 0 ? q.get('sort') : 'rec';
+    var term = (q.get('q') || '').trim().toLowerCase();
+    var pageNum = Math.max(1, parseInt(q.get('page_num') || '1', 10) || 1), now = Date.now();
+    var box = sec.querySelector('[data-nu-lot-list]');
+    var items = Array.prototype.slice.call(box.querySelectorAll(':scope > [data-nu-lot]')).map(function(el){
+      return {el: el, cat: el.getAttribute('data-nu-cat'), kind: el.getAttribute('data-nu-kind'),
+              status: el.getAttribute('data-nu-status'), bucket: +el.getAttribute('data-nu-bucket'),
+              sort: +el.getAttribute('data-nu-sort'), idx: +el.getAttribute('data-nu-idx'),
+              today: el.getAttribute('data-nu-today') === '1', unv: el.getAttribute('data-nu-unv') === '1',
+              ae: numAttr(el, 'data-ae'), as: numAttr(el, 'data-as'),
+              upd: +el.getAttribute('data-upd') || 0, profit: numAttr(el, 'data-profit'),
+              text: el.getAttribute('data-search') || ''};
+    });
+    // 掲載中（bucket < 99。HOME の件数と同じ定義）
+    var inCat = items.filter(function(it){ return it.bucket < 99 && (cat === 'all' || it.cat === cat); });
+    var match = {
+      '': function(){ return true; },
+      // 抽選受付中: 抽選で受付中・締切間近（予約の受付は「予約・発売待ち」）
+      // 人の確認待ちの告知は「抽選受付中」に入れない（HOME の「受付中」の件数と同じ）
+      open: function(it){ return it.kind === 'lottery' && !it.unv && (it.status === 'OPEN' || it.status === 'ENDING_SOON'); },
+      today: function(it){ return it.today; },
+      wait: function(it){ return it.kind === 'preorder' || it.kind === 'release'; },
+      result: function(it){ return ['RESULT_PENDING', 'WINNER_ANNOUNCED', 'WINNER_PURCHASE_PERIOD'].indexOf(it.status) >= 0; }
+    }[tab];
+    var list = inCat.filter(function(it){ return match(it) && (!term || it.text.indexOf(term) >= 0); });
+    function rec(a, b){ return a.bucket - b.bucket || a.sort - b.sort || a.idx - b.idx; }
+    // 値の無いもの（締切未公表・利益算出前など）は後ろに回す（上位に混ぜない）
+    function nullsLast(key, dir){ return function(a, b){
+      var x = a[key], y = b[key];
+      if (x === null && y === null) return rec(a, b);
+      if (x === null) return 1;
+      if (y === null) return -1;
+      return (dir * (x - y)) || rec(a, b);
+    }; }
+    var by = {rec: rec,
+              deadline: function(a, b){ return nullsLast('ae', 1)(
+                {ae: a.ae !== null && a.ae > now ? a.ae : null, bucket: a.bucket, sort: a.sort, idx: a.idx},
+                {ae: b.ae !== null && b.ae > now ? b.ae : null, bucket: b.bucket, sort: b.sort, idx: b.idx}); },
+              start: function(a, b){ return nullsLast('as', 1)(
+                {as: a.as !== null && a.as > now ? a.as : null, bucket: a.bucket, sort: a.sort, idx: a.idx},
+                {as: b.as !== null && b.as > now ? b.as : null, bucket: b.bucket, sort: b.sort, idx: b.idx}); },
+              updated: function(a, b){ return b.upd - a.upd || rec(a, b); },
+              profit: nullsLast('profit', -1)}[sort];
+    list.sort(by);
+    var total = list.length, pages = Math.max(1, Math.ceil(total / LOT_SIZE));
+    if (pageNum > pages) pageNum = pages;
+    var start = (pageNum - 1) * LOT_SIZE, shown = list.slice(start, start + LOT_SIZE), on = {};
+    shown.forEach(function(it){ on[it.idx] = true; });
+    // 並び順が変わったときだけ並べ直す（毎分の更新でキーボードのフォーカスを外さない）
+    var order = list.concat(items.filter(function(it){ return list.indexOf(it) < 0; }));
+    var same = order.every(function(it, i){ return box.children[i] === it.el; });
+    order.forEach(function(it){
+      if (!same) box.appendChild(it.el);
+      it.el.hidden = !on[it.idx];
+    });
+    var res = sec.querySelector('[data-nu-lresult]');
+    if (res) res.textContent = total === 0 ? '0件' : total + '件中 ' + (start + 1) + '〜' + (start + shown.length) + '件';
+    sec.querySelectorAll('[data-nu-lot-hide-empty]').forEach(function(el){ el.hidden = inCat.length === 0; });
+    sec.querySelectorAll('[data-nu-lempty]').forEach(function(el){
+      var kind = el.getAttribute('data-nu-lempty');
+      el.hidden = !(kind === 'none' ? inCat.length === 0 : (inCat.length > 0 && total === 0));
+    });
+    sec.querySelectorAll('[data-nu-lparam]').forEach(function(a){
+      var name = a.getAttribute('data-nu-lparam'), val = a.getAttribute('data-nu-lvalue');
+      setCurrent(a, name === 'sort' ? val === sort : val === tab, 'true');
+      a.setAttribute('href', lotHref(name, name === 'sort' && val === 'rec' ? '' : val));
+    });
+    sec.querySelectorAll('[data-nu-switch]').forEach(function(a){
+      var k = a.getAttribute('data-nu-switch');
+      a.setAttribute('href', lotHref('category', k === 'all' ? '' : k));
+    });
+    var pager = sec.querySelector('[data-nu-lpager]');
+    if (pager) {
+      pager.hidden = pages <= 1;
+      while (pager.firstChild) pager.removeChild(pager.firstChild);
+      var link = function(n, label, cur){
+        var a = document.createElement('a');
+        a.className = 'nu-pager__link';
+        a.setAttribute('href', lotHref('page_num', n > 1 ? String(n) : ''));
+        a.setAttribute('data-nu-scrolltop', '');
+        if (cur) a.setAttribute('aria-current', 'page');
+        a.textContent = label;
+        pager.appendChild(a);
+      };
+      if (pages > 1) {
+        if (pageNum > 1) link(pageNum - 1, '前へ', false);
+        for (var n = 1; n <= pages; n++) link(n, String(n), n === pageNum);
+        if (pageNum < pages) link(pageNum + 1, '次へ', false);
+      }
+    }
+    var form = sec.querySelector('[data-nu-search-form]'), input = sec.querySelector('[data-nu-search-input]');
+    var tog = sec.querySelector('[data-nu-search-toggle]');
+    if (term && form && form.hidden) { form.hidden = false; if (tog) tog.setAttribute('aria-expanded', 'true'); }
+    if (input && document.activeElement !== input) input.value = q.get('q') || '';
+  }
   function render(moveFocus) {
     var page = currentPage(), cat = currentCat(), lot = lotteryCounts();
     var q = new URLSearchParams(location.search);
@@ -316,6 +429,7 @@ def _router_script() -> str:
     root.querySelectorAll('a[data-nu-crumb-catlink]').forEach(function(a){ a.setAttribute('href', withCat('?ui=new', cat)); });
     // 一覧: ジャンルで絞り込み、抽選は閲覧時に掲載中のもの（bucket < 99）だけを出す
     renderOpp(q, cat);
+    renderLot(q, cat);
     renderTimes();
     root.querySelectorAll('[data-nu-list]').forEach(function(list){
       var p = list.getAttribute('data-nu-list'), shown = 0;
@@ -392,7 +506,8 @@ def _router_script() -> str:
     }
     var s = e.target.closest('[data-nu-search-toggle]');
     if (s) {
-      var f = root.querySelector('[data-nu-search-form]'), show = s.getAttribute('aria-expanded') !== 'true';
+      // 検索欄はページごとにある（利益商品・抽選・予約）。ボタンの aria-controls で開く欄を決める
+      var f = document.getElementById(s.getAttribute('aria-controls')), show = s.getAttribute('aria-expanded') !== 'true';
       s.setAttribute('aria-expanded', show ? 'true' : 'false');
       if (f) { f.hidden = !show; if (show) { var i = f.querySelector('input'); if (i) i.focus(); } }
     }
@@ -484,8 +599,9 @@ def render_root(ctx: ShellContext) -> str:
         pages.render_home(catalog, source_issue=ctx.source_issue,
                           debug_html=parity.render(rows, hidden_prices=model.hidden_prices))
         + opportunities_page.render(catalog, has_data=has_data)
+        + lottery_page.render(catalog, model, has_data=has_data)
         + "".join(pages.render_purpose(p, catalog, model, has_data=has_data)
-                  for p in cl.PURPOSES if p != "opportunities")
+                  for p in cl.PURPOSES if p not in ("opportunities", "lottery"))
         + pages.render_more(catalog)
         + pages.render_search()
         + account.render()

@@ -1,26 +1,26 @@
 {
-  "generated_at": "2026-10-03 16:54 JST",
+  "generated_at": "2026-10-03 19:12 JST",
   "date": "2026-10-03",
   "health_score": {
-    "data_quality": 14.6,
+    "data_quality": 14.9,
     "profit_discovery": 0.0,
-    "source_health": 12.1,
-    "link_quality": 4.7,
+    "source_health": 13.0,
+    "link_quality": 4.8,
     "freshness": 4.9,
-    "total": 36.3
+    "total": 37.6
   },
   "data_quality": {
-    "total_obs": 232,
-    "usable_obs": 65,
+    "total_obs": 231,
+    "usable_obs": 67,
     "stale_count": 118,
-    "stale_rate": 0.5086,
-    "zero_count": 42,
-    "zero_rate": 0.181,
-    "item_url_rate": 0.4655,
-    "search_url_rate": 0.1853,
-    "manual_rate": 0.5,
+    "stale_rate": 0.5108,
+    "zero_count": 37,
+    "zero_rate": 0.1602,
+    "item_url_rate": 0.4762,
+    "search_url_rate": 0.1861,
+    "manual_rate": 0.5108,
     "api_rate": 0.0,
-    "html_rate": 0.0086
+    "html_rate": 0.0087
   },
   "profit": {
     "main_route_count": 0,
@@ -134,18 +134,6 @@
       },
       "n": 9
     },
-    "モバイル一番": {
-      "success_count": 3,
-      "stale_count": 3,
-      "zero_count": 5,
-      "item_url_rate": 0.375,
-      "freshness": 0.625,
-      "success_rate": 0.375,
-      "confidence": {
-        "high": 8
-      },
-      "n": 8
-    },
     "ゲオ": {
       "success_count": 7,
       "stale_count": 7,
@@ -170,6 +158,18 @@
         "medium": 6
       },
       "n": 6
+    },
+    "モバイル一番": {
+      "success_count": 5,
+      "stale_count": 3,
+      "zero_count": 0,
+      "item_url_rate": 1.0,
+      "freshness": 0.4,
+      "success_rate": 1.0,
+      "confidence": {
+        "high": 5
+      },
+      "n": 5
     },
     "eBay sold(新品)": {
       "success_count": 5,
@@ -326,21 +326,33 @@
         "medium": 2
       },
       "n": 2
+    },
+    "Amazon JP (新品出品)": {
+      "success_count": 2,
+      "stale_count": 0,
+      "zero_count": 0,
+      "item_url_rate": 0.0,
+      "freshness": 1.0,
+      "success_rate": 1.0,
+      "confidence": {
+        "medium": 2
+      },
+      "n": 2
     }
   },
   "diff_vs_prev": {
     "available": true,
     "stale_rate": {
-      "prev": 0.5108,
-      "cur": 0.5086
+      "prev": 0.5086,
+      "cur": 0.5108
     },
     "zero_rate": {
-      "prev": 0.1602,
-      "cur": 0.181
+      "prev": 0.181,
+      "cur": 0.1602
     },
     "item_url_rate": {
-      "prev": 0.4762,
-      "cur": 0.4655
+      "prev": 0.4655,
+      "cur": 0.4762
     },
     "main_route_count": {
       "prev": 0,
@@ -355,24 +367,21 @@
     "source_success_changes": [
       {
         "source": "モバイル一番",
-        "prev": 1.0,
-        "cur": 0.375,
-        "delta": -0.625
+        "prev": 0.375,
+        "cur": 1.0,
+        "delta": 0.625
       }
     ]
   },
   "anomalies": {
     "critical": [
       "stale率 51% (>=50%)",
-      "取得成功率 38%: モバイル一番",
       "取得成功率 0%: ゲオモバイル",
       "取得成功率 0%: セカンドストリート",
       "取得成功率 0%: ネットオフ"
     ],
     "warning": [
-      "item_url率 低下",
-      "item_url率 47% (<50%)",
-      "モバイル一番 取得成功率 100%→38%"
+      "item_url率 48% (<50%)"
     ],
     "info": []
   },
@@ -382,12 +391,6 @@
       "action": "EBAY_APP_ID 設定",
       "effect": "+¥0（参考0→main昇格）",
       "effort": "1時間"
-    },
-    {
-      "stars": 4,
-      "action": "取得失敗修正: モバイル一番",
-      "effect": "0円5件の解消でsell候補復活",
-      "effort": "4時間"
     },
     {
       "stars": 4,

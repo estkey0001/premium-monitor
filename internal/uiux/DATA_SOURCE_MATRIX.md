@@ -78,3 +78,31 @@ Frequency の「1日1回」は GitHub Actions の 12:00 JST の定時実行を�
 | 予約開始・条件の変更 | 30〜60分ごと | 1日1回 | 足りない（collector の実行が必要） |
 | 発売情報 | 数時間〜1日 | 1日1回 | 足りる（発売日は既知） |
 | 在庫の開始（店頭・EC） | 15〜30分ごと | 1日1回 | 足りない（Phase 4 の在庫再開で扱う） |
+
+## 5. 在庫再開（UI Phase 4。2026-10-03 時点）
+
+在庫の状態の正本は `src/market/stock_state.py`（IN_STOCK / OUT_OF_STOCK / UNKNOWN / RESERVATION / LOTTERY / PREORDER /
+RELEASE_WAIT）。状態の変化は `src/market/stock_history.py` が `exports/stock_history/latest.json` に残す（CI の DB は毎回
+作り直されるため）。新UIは `restock_view.py` / `restock_page.py`。
+
+| Source | Category | Method | Frequency | Stock field | Coverage |
+|---|---|---|---|---|---|
+| 公式ストア（RICOH / Apple / 汎用） | カメラ・スマホ・ゲーム | 商品ページの在庫表示（明示があるときだけ） | 1日1回 | `official_stock_status` + `official_stock_observed_at`（価格の時刻とは別） | 在庫ありを確認できる商品は今0件。RICOH は抽選・SOLD OUT の表示 |
+| 人が公式ページで確認した在庫 | ゲーム（PS5 Pro） | `audit_official_sources.VERIFIED_URLS` の stock / stock_checked_at | 確認したとき | 同上 | 1件（入荷待ち） |
+| TCG の販売・入荷情報 | TCG | 公式・販売店のニュース・商品ページ（AVAILABLE_NOW / SOLD_OUT） | 1日1回 | events の status・observed_at | 今買える 0件。発売予定 13件（抽選・予約のページで扱う） |
+| 量販店の在庫（ヨドバシ / ビック） | 全般 | collector はあるが CI では動いていない | — | — | **NOT_IMPLEMENTED（本番）** |
+
+購入可能の条件: 在庫あり・確認から `stock_state.freshness_seconds`（公式ストア・人の確認 3時間 / TCG は既存の TTL:
+EC 在庫復活 15分・店頭 2時間ほか）以内・公式（承認済み）の https の販売ページ・商品の特定。ブラウザでも閲覧時の時刻で判定し直す。
+
+### 更新頻度（推奨。本番のスケジュールは変えていない）
+
+| 用途 | 推奨 | 今 |
+|---|---|---|
+| 高需要の在庫（TCG の EC・人気のゲーム機） | 15〜30分ごと | 1日1回 |
+| 一般の EC（公式ストア） | 30〜120分ごと | 1日1回 |
+| TCG の入荷・先着 | 15〜30分ごと | 1日1回 |
+| 公式定価 | 1日〜週 | 1日1回 |
+
+抽選と違い、**新しい在庫の復活はブラウザの runtime では検出できない**（collector が取得するまで分からない）。
+runtime ができるのは、既知の在庫ありの観測を期限で「更新待ち」に落とすことだけ。

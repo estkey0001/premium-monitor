@@ -1,6 +1,7 @@
 # HANDOFF（最終更新: 2026-10-03）
 
 ## 今の状態
+- UI Phase 4: 新UIの「在庫再開」（`?ui=new&page=restock`）を本番用にした。タブは「購入可能」（既定）と「再開履歴すべて」。在庫の状態の変化を `exports/stock_history/latest.json` に残す（`scripts/update_stock_history.py`。CI の LP 生成の直前）。再入荷（在庫切れ→在庫あり）と、初めての在庫確認を区別する。購入可能は確認から3時間（TCG は既存の TTL）で「在庫未確認（更新待ち）」に落とす。HOME の件数は今購入可能なものだけ。
 - UI Phase 3: 新UIの「抽選・予約」（`?ui=new&page=lottery`）を本番用の一覧にした。表示モデルは `lottery_view.py`（LotteryReservationView）、ページは `lottery_page.py`。状態の絞り込み（抽選受付中・今日締切・予約・発売待ち・当選・購入期限）・並べ替え（おすすめ・締切・開始・更新・想定利益）・検索・20件ごとのページ・ジャンル保持。1件1要素で、PC（1024px 以上）は行、モバイルはカード。予約（PREORDER）と発売待ち（公式の発売日のある COMING_SOON）を runtime に足した。
 - Phase 0 / 0.1 / 0.2（データの正確さ・表示の信頼性・二次流通の価格の意味）はコミット・CI・本番で受け入れ済み。
 - UI Phase 1 を実装（`?ui=new` だけ。通常の URL は旧UIのまま）。ジャンル起点の HOME（ジャンル6 → 目的4 → 小さな補助リンク）と、目的のページ4つ（利益商品・抽選・予約・在庫再開・せどりルート）の枠、ジャンルの URL 保持（`category=`）、上部ナビ／ボトムナビ5項目、SVG アイコン、デザイントークンの更新（アクセント青）。データのロジックは変えていない。
@@ -33,7 +34,7 @@
 - 既存の問題: pytest を実行すると追跡対象の exports/api_automation/collection.json が書き換わる。コミット前に `git checkout -- exports/api_automation/collection.json` で戻すこと（テストの出力先修正は別タスク）。
 
 ## 次にやること
-0. Phase 4（在庫再開）はユーザーの指示を待ってから始める。
+0. Phase 5（せどりルート）はユーザーの指示を待ってから始める。
 1. 利益商品の件数を増やすには、データ側を直す（設定値の定価の確認・カメラの買取の鮮度・成約の集計期間）。UI 側で条件を緩めない。
 2. 買取・在庫の更新頻度（今は日次1回）。推奨は diagnostics の frequency。本番のスケジュール変更はユーザー判断。
 2. 利益計算の8系統の統一（internal/uiux/UI_VIEW_MODEL_SPEC.md §2）と、成約データの取得方法（internal/uiux/IMPLEMENTATION_PLAN_V2.md）。
@@ -44,6 +45,7 @@
 - フジヤの買取ページは「買取金額」（現金）と「下取は10%UP」（下取）を併記する。現金の段だけを使い、下取の段しか読めない候補は採用しない。監視対象はボディ単体の通常版なので、限定版・キット・海外版・アクセサリー・別の型番（Leica は商品コードで判定）は使わない。
 - 固定値・設定値の定価に実行日の日時を付けない。Apple の固定値の確認日は `scripts/audit_official_sources.py` の `VERIFIED_URLS_CHECKED_ON`（値を公式で再確認したときだけ更新する）。
 - **新UI（UI Phase 1）の構成**: ナビは `navigation.py`（NAV_ITEMS・BOTTOM_ITEMS・PAGES・旧ハッシュの読み替え）、ジャンルは `categories.py`（products.genre などの読み替えはここだけ）、件数と一覧は `catalog.py`（件数の定義は docstring が正本。Fake count 禁止）、画面は `pages.py`、CSS は `styles.py`、アイコンは `icons.py`。ジャンルは URL の `category=` に持ち、`data-nu-keepcat` のリンクは表示のたびに今のジャンルを付けた href に書き換える（新しいタブで開いても同じ）。抽選の件数は runtime が書き換えるカードの `data-nu-bucket` から数え直す。設計の正本は internal/uiux/NEW_INFORMATION_ARCHITECTURE.md §0.1・WIREFRAMES.md §0・DESIGN_SYSTEM.md の冒頭。
+- **在庫は restocked_at（再入荷）・last_checked_at（最終確認）・state（今の在庫）を混同しない**。履歴の更新は観測（取得に成功した在庫の状態）だけで行い、前回より新しくない観測は無視する（時刻だけ進めない）。取得に失敗した商品は観測に入れない。在庫あり→未確認→在庫ありは再入荷にしない（last_definite_state で判定）。購入可能の判定は Python（`RestockView.available`）とブラウザ（shell の `stockRuntime`）で同じ条件。
 - **抽選・予約の状態は runtime だけで決める**（Python の `derive_runtime_state` と JS の `deriveLotteryRuntimeState` は同じ結果を返すこと。tests/test_new_ui_runtime.py・test_ui_phase3.py が node で照合）。VM の `k`（lottery / preorder / release）と `rd`（発売日）を足した。件数に数える状態は `runtime.COUNTED_STATUSES`（受付終了・終了・日程不明は数えない）。HOME の抽選の件数は `[data-nu-lot-list]` の行の bucket から数える。
 - 抽選・予約の価格: TCG は公式の retail_price、発売待ちは `retail_price_basis=product_unit` のときだけ。旧来の抽選（公式ストア）の CSV の価格は読み取りの誤りがあるので使わず、利益商品の確認済み定価があるときだけ出す。想定利益は利益商品（掲載可）と同じ商品で、販売価格と仕入れ値が一致するときだけ。それ以外は「算出前」。
 - **定価・在庫は公式の一次情報で確認する**。価格改定（PS5 Pro 2026-04-02、Switch 2 2026-05-25、iPhone 17 2026-09）や世代交代は collector では拾えないことが多い。確認した日は VERIFIED_URLS の各行の checked_on に書く（実行日にしない）。

@@ -355,6 +355,14 @@ jobs:
         env:
           PYTHONPATH: .
 
+      # 13.9 在庫の状態の履歴（在庫再開）。取得に成功した在庫の観測だけを前回の履歴に反映する
+      - name: Update stock history
+        # 初回でも exports/stock_history/ が存在するようにする（後の git add がまとめて失敗しないように）
+        run: mkdir -p exports/stock_history && python scripts/update_stock_history.py
+        continue-on-error: true
+        env:
+          PYTHONPATH: .
+
       # 14. Generate daily LP
       - name: Generate daily LP Variant A
         run: python -m src.cli generate-daily-lp --variant A
@@ -439,6 +447,7 @@ jobs:
                   exports/normalized_price_observations/ \
                   exports/profit_routes/ \
                   exports/opportunity_diagnostics/ \
+                  exports/stock_history/ \
                   exports/flea_sold_prices/ \
                   exports/ai_opportunities/ \
                   exports/notifications/ \

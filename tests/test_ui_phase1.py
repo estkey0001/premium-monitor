@@ -57,15 +57,28 @@ LEGACY = [{"id": "L1", "product_name": "RICOH GR IV 限定", "brand": "RICOH",
            "entry_end_at": (NOW + timedelta(days=1)).strftime("%Y-%m-%d %H:%M"),
            "url": "https://www.ricoh-imaging.co.jp/", "entry_form_url": "https://www.ricoh-imaging.co.jp/form"}]
 # exports/tcg/latest.json の events と同じ項目名（store / price / canonical_url / source_url / observed_at）
-EVENTS = [{"status": "AVAILABLE_NOW", "product_name": "ポケカ新弾BOX", "store": "POKEMON_CENTER_ONLINE",
-           "price": 5400, "canonical_url": f"{PCO}/product/9", "source_url": f"{PCO}/news/9",
-           "observed_at": "2026-10-03T11:00:00+09:00", "tcg": "POKEMON"},
+EVENTS = [{"status": "AVAILABLE_NOW", "event_type": "RESTOCK", "product_name": "ポケカ新弾BOX",
+           "store": "POKEMON_CENTER_ONLINE", "price": 5400, "canonical_url": f"{PCO}/product/9",
+           "source_url": f"{PCO}/news/9", "observed_at": "2026-10-03T11:55:00+09:00",
+           "reported_at": "2026-10-03T11:00:00+09:00", "tcg": "POKEMON"},
           {"status": "AVAILABLE_NOW", "stale": True, "product_name": "古い情報"},
           {"status": "COMING_SOON", "product_name": "発売予定"}]
 
 
+def _stock_history(events):
+    """在庫の状態の履歴（CI の scripts/update_stock_history.py と同じ手順で、TCG のイベントから作る）。"""
+    import importlib.util
+    from src.market import stock_history as sh
+    spec = importlib.util.spec_from_file_location(
+        "ush_p1", Path(__file__).resolve().parents[1] / "scripts" / "update_stock_history.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return sh.apply(sh.empty(), mod.tcg_observations({"events": events}), now=NOW)
+
+
 def _ctx(**kw):
     args = dict(tcg_report={"lotteries": [_lot(1), _lot(2, status="ENDED")], "events": EVENTS},
+                stock_history=_stock_history(EVENTS),
                 opportunities={}, profit_routes={"main_routes": [ROUTE]}, legacy_lotteries=LEGACY,
                 updated_text="10/03 12:00", now=NOW, profit_deals=[DEAL],
                 product_genres={"prod_switch2": "game_console"})
@@ -79,7 +92,7 @@ def _catalog(ctx):
                                   now=ctx.now)
     return cl.build(model=model, tcg_report=ctx.tcg_report, profit_routes=ctx.profit_routes,
                     legacy_lotteries=ctx.legacy_lotteries, profit_deals=ctx.profit_deals,
-                    product_genres=ctx.product_genres)
+                    product_genres=ctx.product_genres, stock_history=ctx.stock_history)
 
 
 def _section(root: str, page: str) -> str:
@@ -111,7 +124,7 @@ def test_category_counts_follow_the_definitions():
     assert cg.count("opportunities") == 2 and cg.count("opportunities", "camera") == 1
     assert cg.count("opportunities", "game") == 1
     assert cg.count("routes") == 1 and cg.count("routes", "game") == 1
-    # 在庫再開: 今買える・古くない TCG だけ（古い・発売予定は数えない）
+    # 在庫再開: 在庫の履歴で今購入可能なもの（古い・発売予定は数えない）
     assert cg.count("restock") == 1 and cg.count("restock", "tcg") == 1
     # 抽選: 掲載中（ENDED は除く）。旧来の抽選はブランドからカメラ
     assert cg.count("lottery") == 2 and cg.count("lottery", "tcg") == 1 and cg.count("lottery", "camera") == 1
@@ -160,6 +173,9 @@ def test_purpose_navigation_keeps_category_links():
         elif p == "lottery":
             # 抽選・予約（UI Phase 3）は1件1要素の一覧と、0件・条件に合うもの無しの空状態
             assert "data-nu-lot-list" in sec and 'data-nu-lempty="none"' in sec and 'data-nu-lempty="nomatch"' in sec
+        elif p == "restock":
+            # 在庫再開（UI Phase 4）は購入可能・履歴の空状態と、条件に合うもの無し
+            assert "data-nu-rs-list" in sec and 'data-nu-rempty="avail"' in sec and 'data-nu-rempty="history"' in sec
         else:
             assert f'data-nu-list="{p}"' in sec and f'data-nu-empty-for="{p}"' in sec
 
@@ -176,12 +192,12 @@ def test_no_inactive_fake_cta():
     # 押せない部品（準備中）は aria-disabled と「準備中」の文言を持つ
     for el in re.findall(r"<(?:span|input)[^>]*aria-disabled=\"true\"[^>]*>", body):
         assert "<a " not in el
-    # 入力欄は、一覧内の検索（利益商品・抽選・予約。動く）以外は準備中で押せない
+    # 入力欄は、一覧内の検索（利益商品・抽選・予約・在庫再開。動く）以外は準備中で押せない
     inputs = re.findall(r"<input[^>]*>", body)
     assert body.count("準備中") >= 6
     assert all("disabled" in i or "data-nu-search-input" in i for i in inputs)
-    assert sum("data-nu-search-input" in i for i in inputs) == 2
-    for p in ("opportunities", "lottery"):
+    assert sum("data-nu-search-input" in i for i in inputs) == 3
+    for p in ("opportunities", "lottery", "restock"):
         assert _section(root, p).count("data-nu-search-input") == 1
 
 
@@ -326,7 +342,7 @@ def test_dom_category_persists_and_back_forward(tmp_path):
                   .map(function(li){return li.getAttribute('data-nu-cat');});
     o.tcg = click('[data-nu-page="lottery"] a[data-nu-switch="tcg"]');
     o.restock = click('.nu-topnav a[data-nu-nav="restock"]');
-    o.restockEmpty = R.querySelector('[data-nu-empty-for="restock"]').hidden;
+    o.restockEmpty = R.querySelector('[data-nu-rempty="avail"]').hidden;
     history.back();
     setTimeout(function(){ o.back = state(); history.back();
       setTimeout(function(){ o.back2 = state(); history.forward();
@@ -397,7 +413,9 @@ def test_dom_no_horizontal_overflow(tmp_path, width):
 def test_restock_card_uses_real_event_fields():
     root = shell.render_root(_ctx())
     sec = _section(root, "restock")
-    assert "ポケカ新弾BOX" in sec and "参考価格（ページ記載）¥5,400" in sec and "10/03 確認" in sec
+    # 価格は商品1点の価格と明示されたものだけ（ページの金額がパックか BOX か分からないものは「価格未取得」）
+    assert "ポケカ新弾BOX" in sec and "価格未取得" in sec and "¥5,400" not in sec and "10/03 11:00 確認" in sec
+    assert "購入可能" in sec and "購入する" in sec
     assert f'href="{PCO}/product/9"' in sec and "古い情報" not in sec and "発売予定" not in sec
 
 

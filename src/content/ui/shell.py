@@ -12,7 +12,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from src.content.ui import account, home, lottery_page, navigation, opportunities_page, pages, parity
+from src.content.ui import account, home, lottery_page, navigation, opportunities_page, pages, parity, restock_page
 from src.content.ui import catalog as cl
 from src.content.ui import categories as cats
 from src.content.ui import runtime as rt
@@ -38,6 +38,7 @@ class ShellContext:
     # 利益商品（定価を確認済みで、定価で買って買取店に売る案件。daily_lp_generator が絞り込む）
     profit_deals: list | None = None
     product_genres: dict | None = None  # product_id → products.genre（ジャンルの判定に使う）
+    stock_history: dict | None = None   # 在庫の状態の履歴（exports/stock_history/latest.json）
 
 
 def _css() -> str:
@@ -136,8 +137,9 @@ def _router_script() -> str:
     });
     return out;
   }
-  function count(p, cat, lot) {
-    var src = p === 'lottery' ? lot : ((DATA['static'] || {})[p] || {});
+  function count(p, cat, lot, rs) {
+    // 抽選・予約と在庫再開は、閲覧時の状態（runtime）から数える
+    var src = p === 'lottery' ? lot : p === 'restock' ? (rs || {}) : ((DATA['static'] || {})[p] || {});
     return cat === 'all' ? sum(src) : (+src[cat] || 0);
   }
   function setCurrent(el, on, value) {
@@ -384,8 +386,158 @@ def _router_script() -> str:
     if (term && form && form.hidden) { form.hidden = false; if (tog) tog.setAttribute('aria-expanded', 'true'); }
     if (input && document.activeElement !== input) input.value = q.get('q') || '';
   }
+
+  // ── 在庫再開（UI Phase 4）: 購入可能の判定（閲覧時の時刻）・タブ・絞り込み・並べ替え・検索・ページ ──
+  // 購入可能 = 在庫あり（data-state=IN_STOCK）・確認の期限前（data-fresh-until）・販売ページあり（data-has-url）。
+  // restock_view.RestockView.available と同じ条件。期限を過ぎた在庫ありは「在庫未確認（更新待ち）」に落とす
+  var RS_VIEWS = ['history'], RS_WHENS = ['today', '24h'], RS_SORTS = ['rec', 'checked', 'profit', 'price'], RS_SIZE = 20;
+  function rsRows() { return Array.prototype.slice.call(root.querySelectorAll('[data-nu-rs-list] > [data-nu-rs]')); }
+  function stockRuntime(now) {
+    var next = null;
+    rsRows().forEach(function(el){
+      var until = numAttr(el, 'data-fresh-until'), url = el.getAttribute('data-has-url') === '1';
+      var inStock = el.getAttribute('data-state') === 'IN_STOCK';
+      var avail = inStock && until !== null && now < until && url;
+      if (inStock && until !== null && until > now && (next === null || until < next)) next = until;
+      el.setAttribute('data-avail', avail ? '1' : '0');
+      var fresh = until !== null && now < until;
+      if (inStock) {
+        // 期限を過ぎたら販売ページの有無に関係なく「更新待ち」（restock_view.RestockView.label と同じ）
+        var label = avail ? '購入可能' : (!fresh ? '在庫未確認（更新待ち）' : '在庫あり（販売ページ未確認）');
+        var badge = el.querySelector('[data-nu-rbadge]'), detail = el.querySelector('[data-nu-rstate]');
+        if (badge) { badge.textContent = label; badge.className = 'nu-badge nu-tone-' + (avail ? 'success' : 'neutral'); }
+        if (detail) detail.textContent = label;
+      }
+      var a = el.querySelector('a[data-nu-rcta]');
+      if (a) {
+        a.textContent = avail ? '購入する' : '販売ページを見る';
+        a.className = 'nu-btn nu-btn--' + (avail ? 'primary' : 'secondary');
+        a.setAttribute('data-nu-rcta', avail ? 'buy' : 'page');
+      }
+    });
+    return next;
+  }
+  function restockCounts() {
+    var out = {};
+    rsRows().forEach(function(el){
+      if (el.getAttribute('data-avail') === '1') { var c = el.getAttribute('data-nu-cat'); out[c] = (out[c] || 0) + 1; }
+    });
+    return out;
+  }
+  function rsHref(name, value) {
+    var cur = new URLSearchParams(location.search), u = new URLSearchParams();
+    u.set('ui', 'new'); u.set('page', 'restock');
+    cur.forEach(function(v, k){ if (k !== 'ui' && k !== 'page') u.set(k, v); });
+    if (value) u.set(name, value); else u.delete(name);
+    if (name !== 'page_num') u.delete('page_num');
+    return '?' + u.toString();
+  }
+  function renderRTimes(now) {
+    root.querySelectorAll('[data-nu-rtime]').forEach(function(el){
+      var iso = el.getAttribute('data-nu-rtime'), suffix = el.getAttribute('data-nu-suffix') || '';
+      if (suffix === '確認') { var t = relTime(iso, now); if (t) el.textContent = t; return; }
+      var ms = Date.parse(iso);
+      if (isNaN(ms) || !FMT) return;
+      var a = parts(ms), b = parts(now), hm = a.hour + ':' + a.minute;
+      var same = a.year === b.year && a.month === b.month && a.day === b.day;
+      el.textContent = (same ? '本日 ' + hm : a.month + '/' + a.day + ' ' + hm) + ' ' + suffix;
+    });
+  }
+  function renderRestock(q, cat) {
+    var sec = root.querySelector('[data-nu-page="restock"]');
+    if (!sec) return;
+    var view = RS_VIEWS.indexOf(q.get('view')) >= 0 ? q.get('view') : '';
+    var when = RS_WHENS.indexOf(q.get('when')) >= 0 ? q.get('when') : '';
+    var sort = RS_SORTS.indexOf(q.get('sort')) >= 0 ? q.get('sort') : 'rec';
+    var term = (q.get('q') || '').trim().toLowerCase(), now = Date.now();
+    var pageNum = Math.max(1, parseInt(q.get('page_num') || '1', 10) || 1);
+    var box = sec.querySelector('[data-nu-rs-list]');
+    var items = rsRows().map(function(el){
+      // r: 再入荷の時刻（在庫切れ → 在庫あり）。t: 並べ替え用（再入荷、無ければ初めての在庫確認）
+      var r = numAttr(el, 'data-restock'), t = r !== null ? r : numAttr(el, 'data-first');
+      return {el: el, cat: el.getAttribute('data-nu-cat'), avail: el.getAttribute('data-avail') === '1', t: t, r: r,
+              checked: numAttr(el, 'data-checked') || 0, profit: numAttr(el, 'data-profit'),
+              price: numAttr(el, 'data-price'), idx: +el.getAttribute('data-idx'), text: el.getAttribute('data-search') || ''};
+    });
+    // 購入可能タブは今買えるものだけ。履歴タブは再入荷・在庫確認の時刻があるもの（今の在庫は状態の欄で示す）
+    var universe = items.filter(function(it){
+      return (cat === 'all' || it.cat === cat) && (view === 'history' ? it.t !== null : it.avail);
+    });
+    var b = parts(now);
+    var list = universe.filter(function(it){
+      if (term && it.text.indexOf(term) < 0) return false;
+      if (!when) return true;
+      // 「本日再開」「24時間以内に再開」は再入荷だけ（初めての在庫確認は再開ではない）
+      if (it.r === null) return false;
+      if (when === '24h') return now - it.r <= 86400000 && it.r <= now;
+      var a = parts(it.r);
+      return a.year === b.year && a.month === b.month && a.day === b.day;
+    });
+    function nl(key, dir){ return function(x, y){
+      var p = x[key], r = y[key];
+      if (p === null && r === null) return x.idx - y.idx;
+      if (p === null) return 1;
+      if (r === null) return -1;
+      return dir * (p - r) || x.idx - y.idx;
+    }; }
+    var by = {rec: function(x, y){ return nl('t', -1)(x, y) || y.checked - x.checked; },
+              checked: function(x, y){ return y.checked - x.checked || x.idx - y.idx; },
+              profit: nl('profit', -1), price: nl('price', 1)}[sort];
+    list.sort(by);
+    var total = list.length, pages = Math.max(1, Math.ceil(total / RS_SIZE));
+    if (pageNum > pages) pageNum = pages;
+    var start = (pageNum - 1) * RS_SIZE, shown = list.slice(start, start + RS_SIZE), on = {};
+    shown.forEach(function(it){ on[it.idx] = true; });
+    var order = list.concat(items.filter(function(it){ return list.indexOf(it) < 0; }));
+    var same = order.every(function(it, i){ return box.children[i] === it.el; });
+    order.forEach(function(it){ if (!same) box.appendChild(it.el); it.el.hidden = !on[it.idx]; });
+    var res = sec.querySelector('[data-nu-rresult]');
+    if (res) res.textContent = total === 0 ? '0件' : total + '件中 ' + (start + 1) + '〜' + (start + shown.length) + '件';
+    var head = sec.querySelector('[data-nu-rs-head]');
+    if (head) head.hidden = total === 0;
+    // 表示するものが無いときは、絞り込み・並べ替え・検索を出さない（タブだけ残す）
+    sec.querySelectorAll('[data-nu-rs-hide-empty]').forEach(function(el){ el.hidden = universe.length === 0; });
+    // 履歴も0件なら、空状態のリンクは「抽選・予約」へ（行き止まりにしない）
+    var anyHistory = items.some(function(it){ return it.t !== null && (cat === 'all' || it.cat === cat); });
+    var toHist = sec.querySelector('[data-nu-rs-tohist]'), toLot = sec.querySelector('[data-nu-rs-tolot]');
+    if (toHist) toHist.hidden = !anyHistory;
+    if (toLot) toLot.hidden = anyHistory;
+    sec.querySelectorAll('[data-nu-rempty]').forEach(function(el){
+      var k = el.getAttribute('data-nu-rempty');
+      el.hidden = !(universe.length === 0 ? k === (view === 'history' ? 'history' : 'avail') : (total === 0 && k === 'nomatch'));
+    });
+    sec.querySelectorAll('[data-nu-rparam]').forEach(function(a){
+      var name = a.getAttribute('data-nu-rparam'), val = a.getAttribute('data-nu-rvalue');
+      var cur = {view: view, when: when, sort: sort}[name];
+      setCurrent(a, val === cur || (name === 'sort' && val === 'rec' && cur === 'rec'), 'true');
+      a.setAttribute('href', rsHref(name, name === 'sort' && val === 'rec' ? '' : val));
+    });
+    sec.querySelectorAll('[data-nu-switch]').forEach(function(a){
+      var k = a.getAttribute('data-nu-switch');
+      a.setAttribute('href', rsHref('category', k === 'all' ? '' : k));
+    });
+    var pager = sec.querySelector('[data-nu-rpager]');
+    if (pager) {
+      pager.hidden = pages <= 1;
+      while (pager.firstChild) pager.removeChild(pager.firstChild);
+      for (var n = 1; pages > 1 && n <= pages; n++) {
+        var a = document.createElement('a');
+        a.className = 'nu-pager__link';
+        a.setAttribute('href', rsHref('page_num', n > 1 ? String(n) : ''));
+        a.setAttribute('data-nu-scrolltop', '');
+        if (n === pageNum) a.setAttribute('aria-current', 'page');
+        a.textContent = String(n);
+        pager.appendChild(a);
+      }
+    }
+    var form = sec.querySelector('[data-nu-search-form]'), input = sec.querySelector('[data-nu-search-input]');
+    var tog = sec.querySelector('[data-nu-search-toggle]');
+    if (term && form && form.hidden) { form.hidden = false; if (tog) tog.setAttribute('aria-expanded', 'true'); }
+    if (input && document.activeElement !== input) input.value = q.get('q') || '';
+  }
   function render(moveFocus) {
-    var page = currentPage(), cat = currentCat(), lot = lotteryCounts();
+    var stockNext = stockRuntime(Date.now());
+    var page = currentPage(), cat = currentCat(), lot = lotteryCounts(), rs = restockCounts();
     var q = new URLSearchParams(location.search);
     root.querySelectorAll('[data-nu-page]').forEach(function(el){
       el.hidden = el.getAttribute('data-nu-page') !== page;
@@ -409,14 +561,14 @@ def _router_script() -> str:
       setCurrent(a, a.getAttribute('data-nu-switch') === cat, 'true');
     });
     root.querySelectorAll('[data-nu-count]').forEach(function(el){
-      var n = count(el.getAttribute('data-nu-count'), cat, lot);
+      var n = count(el.getAttribute('data-nu-count'), cat, lot, rs);
       el.textContent = n + '件';
       if (n) el.removeAttribute('data-zero'); else el.setAttribute('data-zero', '');
     });
     root.querySelectorAll('[data-nu-catcount]').forEach(function(el){
       // ジャンルの件数: ほかの目的の一部（せどりルート）は重ねて数えない（catalog.OVERLAPPING と同じ）
       var k = el.getAttribute('data-nu-catcount'), n = 0, overlap = DATA.overlap || [];
-      PURPOSES.forEach(function(p){ if (overlap.indexOf(p) < 0) n += count(p, k, lot); });
+      PURPOSES.forEach(function(p){ if (overlap.indexOf(p) < 0) n += count(p, k, lot, rs); });
       el.textContent = n + '件';
       var a = el.closest('a');
       if (a) {
@@ -430,7 +582,10 @@ def _router_script() -> str:
     // 一覧: ジャンルで絞り込み、抽選は閲覧時に掲載中のもの（bucket < 99）だけを出す
     renderOpp(q, cat);
     renderLot(q, cat);
+    renderRestock(q, cat);
     renderTimes();
+    renderRTimes(Date.now());
+    STOCK_NEXT = stockNext;
     root.querySelectorAll('[data-nu-list]').forEach(function(list){
       var p = list.getAttribute('data-nu-list'), shown = 0;
       // 抽選は閲覧時の状態の順（締切間近 → 受付中 → まもなく開始 → 日程要確認）に並べ直す
@@ -532,7 +687,7 @@ def _router_script() -> str:
   // 抽選の閲覧時の状態（状態・残り時間・ボタン）。判定は NuLotteryRuntime だけ。
   // 残り時間は分単位なので毎分の頭に更新し、状態が変わる時刻（締切など）にはその時刻ちょうどに更新する。
   // 状態が変わったら、件数と一覧の表示も数え直す
-  var timer = null;
+  var timer = null, STOCK_NEXT = null;
   function refresh() {
     var res = null;
     try { res = NuLotteryRuntime.apply(root, Date.now()); } catch (e) { /* 失敗しても生成時点の表示のまま */ }
@@ -540,6 +695,8 @@ def _router_script() -> str:
     if (timer) clearTimeout(timer);
     var now = Date.now(), wait = 60000 - (now % 60000) + 50;
     if (res && res.next !== null && res.next - now + 20 < wait) wait = Math.max(res.next - now + 20, 20);
+    // 在庫ありの確認の期限（購入可能 → 更新待ち）にもちょうど更新する
+    if (STOCK_NEXT !== null && STOCK_NEXT - now + 20 < wait) wait = Math.max(STOCK_NEXT - now + 20, 20);
     timer = setTimeout(refresh, wait);
   }
   // 戻る・タブの切り替えで戻ってきたときも判定し直す
@@ -547,6 +704,23 @@ def _router_script() -> str:
   document.addEventListener('visibilitychange', function(){ if (!document.hidden) refresh(); });
   // 「応募する」を押した瞬間にもう一度判定し、締切を過ぎていたら開かない
   function guardApply(e){
+    // 「購入する」も押した瞬間に在庫の確認の期限を判定し直し、期限切れなら開かない
+    var b = e.target.closest('a[data-nu-rcta]');
+    if (b && b.getAttribute('data-nu-rcta') === 'buy') {
+      refresh();
+      if (!b.isConnected || b.getAttribute('data-nu-rcta') !== 'buy') {
+        e.preventDefault();
+        // 開かなかった理由を、ページの通知欄に出す（読み上げにも伝える。行は購入可能から外れて隠れるため）
+        var row = b.closest('[data-nu-rs]'), notice = root.querySelector('[data-nu-rnotice]');
+        if (notice) {
+          var name = row ? (row.querySelector('h3') || {}).textContent || '' : '';
+          notice.textContent = (name ? '「' + name + '」は' : '') + '在庫の確認から時間が経ったため、購入可能から外しました。'
+            + '販売ページで在庫をご確認ください（「再開履歴すべて」に残っています）。';
+          notice.hidden = false;
+        }
+      }
+      return;
+    }
     var a = e.target.closest('a[data-nu-cta]');
     if (!a || a.getAttribute('data-nu-cta') !== 'apply') return;
     refresh();
@@ -581,7 +755,7 @@ def build_catalog(ctx: ShellContext):
         profit_routes=ctx.profit_routes, legacy_lotteries=ctx.legacy_lotteries, now=ctx.now)
     catalog = cl.build(model=model, tcg_report=ctx.tcg_report, profit_routes=ctx.profit_routes,
                        legacy_lotteries=ctx.legacy_lotteries, profit_deals=ctx.profit_deals,
-                       product_genres=ctx.product_genres)
+                       product_genres=ctx.product_genres, stock_history=ctx.stock_history)
     return model, catalog
 
 
@@ -600,8 +774,9 @@ def render_root(ctx: ShellContext) -> str:
                           debug_html=parity.render(rows, hidden_prices=model.hidden_prices))
         + opportunities_page.render(catalog, has_data=has_data)
         + lottery_page.render(catalog, model, has_data=has_data)
+        + restock_page.render(catalog, now=model.now)
         + "".join(pages.render_purpose(p, catalog, model, has_data=has_data)
-                  for p in cl.PURPOSES if p not in ("opportunities", "lottery"))
+                  for p in cl.PURPOSES if p not in ("opportunities", "lottery", "restock"))
         + pages.render_more(catalog)
         + pages.render_search()
         + account.render()

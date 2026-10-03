@@ -362,6 +362,11 @@ def css() -> str:
         ".nu-lrow__when .nu-when{font-size:var(--font-sm);font-weight:700;font-variant-numeric:tabular-nums}"
         ".nu-lrow__upd{font-size:var(--font-xs);color:var(--color-subtle)}"
         ".nu-lrow__sub{font-size:var(--font-xs);font-weight:700;color:var(--color-muted)}"
+        # 在庫再開: 長い状態（「在庫未確認（更新待ち）」）は折り返す。最終確認は読みやすい濃さ
+        ".nu-lrow__status .nu-badge{white-space:normal;max-width:100%}"
+        ".nu-rrow .nu-lrow__upd{font-size:var(--font-sm);font-weight:700;color:var(--color-muted)}"
+        ".nu-rmsg{margin:var(--space-1) 0 0;font-size:var(--font-xs);font-weight:700;color:var(--tone-warning-fg)}"
+        "[data-nu-rs-hide-empty][hidden]{display:none!important}"
         ".nu-lrow__cta{grid-area:cta;min-width:0}.nu-lrow__cta:empty{display:none}"
         ".nu-lrow__cta .nu-btn{width:100%;min-height:44px;margin:0}"
         ".nu-ldetail{grid-area:det;min-width:0;border-top:1px solid var(--color-border);padding-top:var(--space-1)}"

@@ -12,7 +12,9 @@ HOME のジャンル・目的の件数と、各目的ページの一覧は、す
 | 抽選・予約 lottery | 抽選・予約・発売待ちの runtime の状態で、受付中・締切間近・まもなく開始・日程要確認・
 |                    | 当選者購入期間・結果待ち・当選発表・発売待ちのもの（bucket < 99。runtime.COUNTED_STATUSES）。
 |                    | 受付終了（結果発表日不明）・終了・日程不明は数えない。閲覧時にブラウザで数え直す |
-| 在庫再開 restock | TCG の販売・入荷の情報で、今買える（AVAILABLE_NOW）かつ古くないもの |
+| 在庫再開 restock | 在庫の状態の履歴（exports/stock_history）で、今「購入可能」なもの（在庫あり・確認から
+|                  | stock_state.freshness_seconds 以内・公式の https の販売ページあり）。過去の再入荷は数えない。
+|                  | 閲覧時にブラウザで期限を判定し直す |
 | せどりルート routes | 利益商品のうち、定価以外（店・フリマ）で仕入れるもの（利益ルート由来）。
 |                     | 売値は買取か条件を満たした成約中央値だけなので、成約データが無い今は0件になりうる |
 
@@ -56,6 +58,7 @@ class Catalog:
     lottery_active: dict[str, bool] = field(default_factory=dict)   # 生成時点で掲載中か
     opportunity_set: opp.OpportunitySet | None = None
     lottery_views: list = field(default_factory=list)                # 抽選・予約の表示モデル（lottery_view）
+    restock_views: list = field(default_factory=list)                # 在庫再開の表示モデル（restock_view）
 
     def count(self, purpose: str, category: str = cats.ALL) -> int:
         """生成時点の件数（抽選は閲覧時にブラウザで数え直す）。"""
@@ -121,7 +124,7 @@ def _yen(v) -> str:
 
 def build(*, model: home.HomeModel, tcg_report: dict | None, profit_routes: dict | None,
           legacy_lotteries: list | None, profit_deals: list[dict] | None,
-          product_genres: dict[str, str] | None) -> Catalog:
+          product_genres: dict[str, str] | None, stock_history: dict | None = None) -> Catalog:
     genres = product_genres or {}
     cg = Catalog()
 
@@ -134,26 +137,14 @@ def build(*, model: home.HomeModel, tcg_report: dict | None, profit_routes: dict
             # せどりルート（定価以外で仕入れるルート）は利益商品の一部。同じ案件を2回数えないよう印を付ける
             cg.items["routes"].append(Item("routes", v.category, _route_card(v), (-(v.net_profit or 0),), v))
 
-    # ── 在庫再開: 今買える TCG の販売・入荷（古いものは除く） ──
-    # 項目は exports/tcg/latest.json の events の形（store / price / canonical_url / source_url / observed_at）
-    for e in ((tcg_report or {}).get("events") or []):
-        if not isinstance(e, dict) or e.get("status") != "AVAILABLE_NOW" or e.get("stale"):
-            continue
-        # 販売ページは公式ストアだけでなく小売店のページもあるので、公式ドメインに限らず https の URL を使う
-        # （safe_url: https で書き方が正しいものだけ。収集元は src/tcg/sources の登録済みの店舗）
-        url = rt.safe_url(e.get("canonical_url")) or rt.safe_url(e.get("source_url"))
-        price = rt.price_text(e.get("price"))
-        checked = _md(e.get("observed_at"))
-        card = c.Card(
-            title=str(e.get("product_name") or ""),
-            subtitle=_store_label(e.get("store")),
-            status="AVAILABLE",
-            # ページに書かれた金額（パック単価か BOX 価格かは区別できないので「定価」とは書かない）
-            primary_metric=f"参考価格（ページ記載）{price}" if price.startswith("¥") else "",
-            secondary_metric=f"{checked} 確認" if checked else "",
-            cta_label="販売ページで確認する" if url else "", cta_href=url or "", cta_external=True,
-            cta_kind="secondary", cta_track="restock_click")
-        cg.items["restock"].append(Item("restock", "tcg", card))
+    # ── 在庫再開: 在庫の状態の履歴（exports/stock_history）から。件数は「今購入可能」なものだけ
+    #    （過去の再入荷は数えない。閲覧時にブラウザで期限を判定し直す） ──
+    from src.content.ui import restock_view as rv
+    now = model.now or datetime.now(tz=JST)
+    cg.restock_views = rv.build(stock_history, opportunity_set=cg.opportunity_set, now=now)
+    for v in cg.restock_views:
+        if v.available(now):
+            cg.items["restock"].append(Item("restock", v.category, None))
 
     # ── 抽選・予約: runtime の状態（閲覧時に数え直す） ──
     legacy_cat = {}

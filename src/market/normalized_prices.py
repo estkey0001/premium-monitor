@@ -157,6 +157,14 @@ def _extraction_method(data_source: str) -> str:
     }.get(data_source or "", data_source or "unknown")
 
 
+def _sold_median_ok(kw: dict) -> bool:
+    """成約中央値として使える観測か（呼び出し側の指定に加え、期間の両端と件数があること）。"""
+    n = kw.get("sample_count")
+    return (bool(kw.get("sold_median_eligible", False))
+            and bool(kw.get("sold_period_start")) and bool(kw.get("sold_period_end"))
+            and isinstance(n, int) and n >= _pt.MIN_SOLD_SAMPLES)
+
+
 def make_observation(now: datetime, **kw) -> dict:
     """1観測を正規化スキーマにまとめ、利用可否フラグと rejection_reason を計算する。"""
     price = int(kw.get("price") or 0)
@@ -283,8 +291,15 @@ def make_observation(now: datetime, **kw) -> dict:
         # 正本の価格の種別（src/market/price_types.py）。根拠の無い成約は SOLD にしない
         "canonical_price_type": kw.get("canonical_price_type") or _pt.canonical(price_type),
         "sample_count": kw.get("sample_count"),
-        # 確定利益の売値に使える成約中央値か（SOLD_MEDIAN の条件: 件数 MIN_SOLD_SAMPLES 以上・期間・成約日時）
-        "sold_median_eligible": bool(kw.get("sold_median_eligible", False)),
+        # 確定利益の売値に使える成約中央値か（SOLD_MEDIAN の条件: 件数 MIN_SOLD_SAMPLES 以上・期間・成約日時）。
+        # 集計期間（開始・終了）と件数が揃っていなければ、呼び出し側が True と言っても使わない
+        "sold_median_eligible": _sold_median_ok(kw),
+        # 成約中央値の集計期間・件数・最小/最大（price_types.sold_median の結果をそのまま。無ければ空。
+        # 成約日時の無いデータに「過去30日」などの期間を推測で付けない）
+        "sold_period_start": str(kw.get("sold_period_start") or ""),
+        "sold_period_end": str(kw.get("sold_period_end") or ""),
+        "sold_median_min": kw.get("sold_median_min"),
+        "sold_median_max": kw.get("sold_median_max"),
         "sold_at": kw.get("sold_at", "") or "",
         "condition": condition,
         "price": price,

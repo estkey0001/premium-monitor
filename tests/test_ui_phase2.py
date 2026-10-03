@@ -39,7 +39,8 @@ def _iso(**kw) -> str:
 def deal(pid, name, genre="camera", off=200000, sell=230000, *, net=None, stock="在庫あり", checked=None,
          ev="VERIFIED_DATED", level="beginner_easy", resale=False):
     return {"product_id": pid, "title": name, "genre": genre, "official_price": off,
-            "official_checked_at": _iso(days=2), "msrp_evidence": ev, "stock_status": stock, "sale_method": "normal",
+            "official_checked_at": _iso(days=30), "stock_checked_at": _iso(days=2) if stock else "",
+            "msrp_evidence": ev, "stock_status": stock, "sale_method": "normal",
             "sell_shop": "買取店A", "sell_price": sell, "sell_checked_at": checked or _iso(hours=1),
             "net_profit": (sell - off - 1800) if net is None else net, "user_level": level, "resale_sell": resale,
             "official_url": "https://www.apple.com/jp/shop/", "sell_url": "https://kaitori.example.jp/item/1"}
@@ -282,7 +283,7 @@ def test_dom_opportunities_no_overflow_and_layout(tmp_path, width):
 
 def test_stock_older_than_7_days_is_unconfirmed():
     """公式の在庫表示は確認から7日を過ぎたら「在庫未確認」（古い「在庫あり」を出さない）。"""
-    old = dict(deal("prod_a", "古い在庫表示"), official_checked_at=_iso(days=8))
+    old = dict(deal("prod_a", "古い在庫表示"), stock_checked_at=_iso(days=8))
     new = deal("prod_b", "新しい在庫表示")
     s = {v.product_id: v for v in _set([old, new]).eligible}
     assert s["prod_a"].stock_label == "在庫未確認" and s["prod_b"].stock_label == "在庫あり"

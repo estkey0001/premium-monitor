@@ -27,6 +27,21 @@ from src.pipeline.normalizer import Normalizer
 logger = logging.getLogger(__name__)
 
 
+# 在庫の表示（公式ストアのページ本文）。品切れを先に判定する
+OUT_OF_STOCK_WORDS = ("SOLD OUT", "在庫なし", "在庫切れ", "販売を終了", "販売終了", "入荷待ち", "品切れ", "売り切れ")
+IN_STOCK_WORDS = ("在庫あり",)
+
+
+def stock_from_text(text: str):
+    """ページ本文の在庫表示から True（在庫あり）/ False（品切れ）/ None（表示なし・不明）を返す。"""
+    t = text or ""
+    if any(k in t for k in OUT_OF_STOCK_WORDS):
+        return False
+    if any(k in t for k in IN_STOCK_WORDS):
+        return True
+    return None
+
+
 class GenericOfficialCollector(BaseCollector):
     """SSR 公式ストア向けの汎用 Collector。
 
@@ -107,7 +122,8 @@ class GenericOfficialCollector(BaseCollector):
                 price=result["price"],
                 recorded_at=now,
             ))
-            stock_status = "在庫あり" if result["is_in_stock"] else "在庫なし"
+            # 在庫はページに根拠があるときだけ（不明 None は空 = 在庫未確認。価格が取れた＝在庫ありにしない）
+            stock_status = {True: "在庫あり", False: "在庫なし"}.get(result["is_in_stock"], "")
             self.repository.mark_official_price_candidate(
                 product.id, result["price"], self.source.id, stock_status=stock_status,
             )
@@ -184,12 +200,10 @@ class GenericOfficialCollector(BaseCollector):
                 result["raw"]["price_method"] = "page_scan"
                 result["raw"]["all_prices_found"] = sorted(set(ranged))[:10]
 
-        # --- 在庫判定 ---
+        # --- 在庫判定（ページに在庫の表示があるときだけ。分からなければ None のまま）---
+        # 「ご注文」「購入手続き」「カートに入れる」は在庫の無いページにも出る（案内文・無効なボタン）ので根拠にしない。
+        # 品切れの表示を先に見る（「入荷待ち」と案内文が同じページにあるとき在庫ありにしない）
         if result["is_in_stock"] is None:
-            text = soup.get_text()
-            if any(k in text for k in ("カートに入れる", "カートに追加", "購入手続き", "ご注文", "在庫あり")):
-                result["is_in_stock"] = True
-            elif any(k in text for k in ("SOLD OUT", "在庫なし", "販売を終了", "入荷待ち", "予約受付終了")):
-                result["is_in_stock"] = False
+            result["is_in_stock"] = stock_from_text(soup.get_text())
 
         return result

@@ -459,14 +459,20 @@ PAGE_TITLES = {"home": "HOME", "opportunities": "利益商品", "lottery": "抽�
                "routes": "せどりルート", "more": "メニュー", "search": "商品を検索", "account": "運営者向け"}
 
 
-def render_root(ctx: ShellContext) -> str:
-    import json
+def build_catalog(ctx: ShellContext):
+    """HOME のモデルと掲載データ（件数・一覧）。画面と内部の診断（opportunity_diagnostics）が同じものを使う。"""
     model = home.build_home_model(
         tcg_report=ctx.tcg_report, opportunities=ctx.opportunities,
         profit_routes=ctx.profit_routes, legacy_lotteries=ctx.legacy_lotteries, now=ctx.now)
     catalog = cl.build(model=model, tcg_report=ctx.tcg_report, profit_routes=ctx.profit_routes,
                        legacy_lotteries=ctx.legacy_lotteries, profit_deals=ctx.profit_deals,
                        product_genres=ctx.product_genres)
+    return model, catalog
+
+
+def render_root(ctx: ShellContext) -> str:
+    import json
+    model, catalog = build_catalog(ctx)
     # 情報そのものがあるか（無ければ「まだ情報がありません」。あるが対象が無ければ「今はありません」）
     has_data = bool(model.has_data or ctx.profit_deals)
     rows = (parity.build(model, ctx.tcg_report, ctx.old_ui_counts)

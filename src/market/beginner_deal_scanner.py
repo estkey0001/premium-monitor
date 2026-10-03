@@ -16,6 +16,8 @@ from src.db.repository import Repository
 from src.models.beginner_deal import BeginnerDealModel, DEFAULT_COSTS
 from src.models.buyback_price import BuybackPriceModel, BUYBACK_SHOPS, CONDITION_LABELS
 from src.models.product import ProductModel
+from src.market.stock_state import is_explicit_in_stock as _is_explicit_in_stock
+from src.market.stock_state import sale_method_of as _sale_method_of
 
 logger = logging.getLogger(__name__)
 
@@ -273,11 +275,7 @@ class BeginnerDealScanner:
 
         # beginner判定
         stock_status = product.official_stock_status or ""
-        sale_method = "lottery" if product.is_lottery else (
-            "discontinued" if product.is_discontinued else (
-                "soldout" if "SOLD" in stock_status.upper() else "normal"
-            )
-        )
+        sale_method = _sale_method_of(product)
         difficulty = self._calc_difficulty(product, sale_method, stock_status)
         beginner_score = self._calc_beginner_score(
             official, best.buyback_price, sale_method, stock_status, product, net_profit
@@ -413,7 +411,7 @@ class BeginnerDealScanner:
             score += 0.15
         if sale_method == "normal":
             score += 0.25
-            if not stock_status or "SOLD" not in stock_status.upper():
+            if _is_explicit_in_stock(stock_status):   # 在庫ありが明示されているときだけ加点
                 score += 0.10
         if buyback and buyback > official:
             score += 0.15
@@ -427,7 +425,8 @@ class BeginnerDealScanner:
 
     def _classify(self, sale_method, stock_status, difficulty, net_profit, gross_profit) -> tuple[str, str]:
         is_normal = sale_method == "normal"
-        is_in_stock = "SOLD" not in (stock_status or "").upper()
+        # 在庫ありが明示されているときだけ（空・不明は在庫ありにしない。「入荷待ち」「在庫なし」は品切れ）
+        is_in_stock = _is_explicit_in_stock(stock_status)
 
         if is_normal and is_in_stock and net_profit >= 5000 and difficulty <= 0.35:
             return "beginner_easy", "check_official"

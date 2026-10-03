@@ -99,7 +99,8 @@ class AppleOfficialCollector(BaseCollector):
             ))
 
         if result["price"]:
-            stock_status = "在庫あり" if result["is_in_stock"] else "在庫なし"
+            # 在庫はページに根拠があるときだけ（不明 None は空 = 在庫未確認。価格が取れた＝在庫ありにしない）
+            stock_status = {True: "在庫あり", False: "在庫なし"}.get(result["is_in_stock"], "")
             self.repository.mark_official_price_candidate(
                 product.id, result["price"], self.source.id,
                 stock_status=stock_status,
@@ -177,11 +178,11 @@ class AppleOfficialCollector(BaseCollector):
                 result["raw"]["all_prices_found"] = sorted(set(apple_range))[:10]
 
         # --- 在庫判定 ---
+        # 「購入」「注文」「カートに追加」は購入ページに常に出る文字なので在庫の根拠にしない。
+        # 品切れの明示だけを見る（在庫ありは JSON-LD の availability など明示があるときだけ）
         if result["is_in_stock"] is None:
             page_text = soup.get_text()
-            if "購入" in page_text or "カートに追加" in page_text or "注文" in page_text:
-                result["is_in_stock"] = True
-            elif "在庫なし" in page_text or "現在ご利用いただけません" in page_text:
+            if "在庫なし" in page_text or "現在ご利用いただけません" in page_text:
                 result["is_in_stock"] = False
 
         return result

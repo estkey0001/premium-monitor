@@ -30,6 +30,7 @@ from src.content.safety import (
 from src.db.repository import Repository
 from src.market import price_evidence as _pe
 from src.market import price_types as _pt
+from src.market import stock_state as _stock
 import urllib.parse as _urllib_parse
 
 try:
@@ -203,6 +204,17 @@ class DailyLPGenerator:
         _all_products = self.repo.list_products()
         # 商品ごとの定価の根拠（確認日不明の設定値で「確定利益」を強調しないため）
         self._msrp_evidence = {_p.id: _pe.classify_product_msrp(_p, now) for _p in _all_products}
+        # 利益商品の内部診断（exports/opportunity_diagnostics）に渡す商品の値
+        self._diag_products = [{
+            "id": _p.id, "name": _p.name, "genre": getattr(_p, "genre", "") or "",
+            "official_price": getattr(_p, "official_price", None), "retail_price": getattr(_p, "retail_price", None),
+            "official_price_source": getattr(_p, "official_price_source", "") or "",
+            "official_price_updated_at": (_p.official_price_updated_at.isoformat()
+                                          if getattr(_p, "official_price_updated_at", None) else ""),
+            "official_stock_status": getattr(_p, "official_stock_status", "") or "",
+            "official_stock_observed_at": getattr(_p, "official_stock_observed_at", "") or "",
+            "is_lottery": bool(getattr(_p, "is_lottery", False)),
+        } for _p in _all_products if getattr(_p, "is_active", True)]
         # 新UIのジャンル（スマホ・カメラ…）の判定に使う
         self._product_genres = {_p.id: (getattr(_p, "genre", "") or "") for _p in _all_products}
         # 新UIの利益商品の表示に使う商品の情報（型番・定価を確認した日時）
@@ -210,7 +222,9 @@ class DailyLPGenerator:
             _p.id: {"genre": getattr(_p, "genre", "") or "", "model": getattr(_p, "model_number", "") or "",
                     "brand": getattr(_p, "brand", "") or "",
                     "official_checked_at": (_p.official_price_updated_at.isoformat()
-                                            if getattr(_p, "official_price_updated_at", None) else "")}
+                                            if getattr(_p, "official_price_updated_at", None) else ""),
+                    # 公式の在庫表示を確認した日時（価格の確認日時とは別。根拠が無ければ空）
+                    "stock_checked_at": getattr(_p, "official_stock_observed_at", "") or ""}
             for _p in _all_products}
         for _p in _all_products:
             _rows = self.repo.list_buyback_prices_by_product(_p.id, limit=10)
@@ -4316,6 +4330,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 "msrp_evidence": ev_map.get(pid, _pe.UNKNOWN),
                 "official_url": getattr(d, "official_url", "") or "",
                 "stock_status": getattr(d, "stock_status", "") or "",
+                "stock_checked_at": p.get("stock_checked_at", ""),
                 "sale_method": getattr(d, "sale_method", "") or "",
                 "sell_shop": shop, "sell_price": getattr(d, "best_buyback_price", 0) or 0,
                 "sell_checked_at": _checked_at(d), "sell_url": getattr(d, "best_buyback_url", "") or "",
@@ -4360,12 +4375,74 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 profit_deals=self._nu_profit_deals(all_deals, buyback_by_product),
                 product_genres=getattr(self, "_product_genres", None) or {},
             )
-            return _ui_shell.render_head(), _ui_shell.render_root(ctx)
+            root = _ui_shell.render_root(ctx)
+            self._write_opportunity_diagnostics(ctx)
+            return _ui_shell.render_head(), root
         except Exception as exc:  # noqa: BLE001
             logger.warning("new UI render failed: %s", exc)
             return "", ""
 
+    def _official_meta(self) -> dict:
+        """公式の定価の登録（product_source_config の extra_config）。商品ID → URL・確認・販売終了などの情報。"""
+        import json as _json
+        out: dict = {}
+        try:
+            rows = self.repo.db.connection.execute(
+                "SELECT product_id, source_id, target_url, extra_config FROM product_source_config").fetchall()
+        except Exception:  # noqa: BLE001
+            return out
+        from src.market.official_price_validator import OFFICIAL_DOMAINS
+        for r in rows:
+            if r["source_id"] not in OFFICIAL_DOMAINS and r["source_id"] != "src_nintendo_store":
+                continue
+            try:
+                extra = _json.loads(r["extra_config"] or "{}")
+            except (TypeError, ValueError):
+                extra = {}
+            cur = out.get(r["product_id"], {})
+            # 確認済み（verified）の登録を優先して残す
+            if cur.get("verified") and not extra.get("verified"):
+                continue
+            out[r["product_id"]] = {"source_id": r["source_id"], "url": r["target_url"] or "", **extra}
+        return out
+
+    def _write_opportunity_diagnostics(self, ctx) -> None:
+        """利益商品が何件・なぜ除外されたかを exports/opportunity_diagnostics/latest.json に書く（内部用）。"""
+        try:
+            from src.content.ui import shell as _ui_shell
+            from src.market import opportunity_diagnostics as _diag
+            _model, catalog = _ui_shell.build_catalog(ctx)
+            npo = self._load_export_json("normalized_price_observations", "latest.json")
+            sold = {n: self._load_export_json("flea_sold_prices", f"{n}_sold.json")
+                    for n in ("yahoo", "mercari", "rakuma")}
+            report = _diag.build(
+                products=getattr(self, "_diag_products", None) or [],
+                msrp_evidence=getattr(self, "_msrp_evidence", None) or {},
+                official_meta=self._official_meta(),
+                observations=npo.get("observations") or [],
+                opportunity_set=catalog.opportunity_set,
+                home_count=catalog.count("opportunities"),
+                list_count=len(catalog.items["opportunities"]),
+                sold_exports=sold, now=ctx.now)
+            # 出力先は環境変数で変えられる（テストは一時フォルダに向け、リポジトリの exports/ を上書きしない）
+            import os as _os
+            out = Path(_os.environ.get("OPPORTUNITY_DIAGNOSTICS_DIR")
+                       or Path(__file__).resolve().parent.parent.parent / "exports" / "opportunity_diagnostics")
+            out.mkdir(parents=True, exist_ok=True)
+            import json as _json
+            (out / "latest.json").write_text(_json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
+        except Exception as exc:  # noqa: BLE001
+            logger.warning("opportunity diagnostics failed: %s", exc)
+
     # ----- 定価の根拠 -----
+
+    def _official_price_label(self, d) -> str:
+        """仕入れ値（定価）の見出し。確認済みなら「公式価格」、設定値なら「参考定価」（公式で販売終了なら明記）。"""
+        if not self._msrp_is_reference(d):
+            return "公式価格"
+        if (getattr(d, "sale_method", "") or "") == "discontinued":
+            return "参考定価（公式販売終了）"
+        return "参考定価（確認日不明）"
 
     def _msrp_is_reference(self, d) -> bool:
         """案件の仕入れ値（定価）が、確定利益の計算に使えない値か（設定値で確認日不明・古い・不明）。
@@ -7022,7 +7099,8 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                     difficulty = 0.0
                 difficulty = min(1.0, difficulty)
             is_normal = sale_method == 'normal'
-            stock_ok = 'SOLD' not in stock_status.upper()
+            # 在庫ありが明示されているときだけ（空・不明・入荷待ちは在庫ありにしない）
+            stock_ok = _stock.is_explicit_in_stock(stock_status)
             if is_normal and stock_ok and net >= 5000 and difficulty <= 0.35:
                 new_level = 'beginner_easy'
             elif is_normal and net >= 3000 and difficulty <= 0.50:
@@ -7626,7 +7704,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
   </div>
   {_stale14_banner}
   <div class="monitoring-compact-row">
-    <div class="mon-cell"><span class="mon-lbl">公式価格</span><span class="mon-val">{"¥{:,}".format(official) if official > 0 else "未取得"}</span></div>
+    <div class="mon-cell"><span class="mon-lbl">{_esc(self._official_price_label(d))}</span><span class="mon-val">{"¥{:,}".format(official) if official > 0 else "未取得"}</span></div>
     <div class="mon-cell"><span class="mon-lbl">最高買取価格</span><span class="mon-val mon-val-muted">{_bp_cell}</span></div>
     <div class="mon-cell"><span class="mon-lbl">ステータス</span><span class="mon-status-badge">{_mon_status}</span></div>
   </div>
@@ -7797,7 +7875,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             f'<div class="fetch-failed-section">'
             f'<div class="fetch-failed-label">価格取得失敗 / 要確認</div>'
             f'<div class="fetch-failed-note">一部ショップはアクセス制限等により価格取得できません。公式サイトで最新価格をご確認ください。</div>'
-            f'<div>公式価格: ¥{official:,}</div>'
+            f'<div>{_esc(self._official_price_label(d))}: ¥{official:,}</div>'
             f'<div>買取価格: —（全店舗取得失敗）</div>'
             f'{last_attempt_html}'
             f'</div>'
@@ -8199,7 +8277,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             buyback_compare_hd = '買取店比較'
             if self._msrp_is_reference(d):
                 # 定価が設定値で確認日不明: 確定利益と区別して「参考定価」「参考差額」と出す
-                official_price_lbl = '参考定価（確認日不明）'
+                official_price_lbl = self._official_price_label(d)
                 profit_main_lbl = '参考差額（定価の確認日不明）'
                 if (d.net_profit_jpy or 0) > 0:
                     profit_note_text = '確定利益ではありません（定価は設定値・確認日不明）'
@@ -9325,7 +9403,8 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 difficulty = 0.0
             difficulty = min(1.0, difficulty)
         is_normal = sale_method == 'normal'
-        stock_ok = 'SOLD' not in stock_status.upper()
+        # 在庫ありが明示されているときだけ（空・不明・入荷待ちは在庫ありにしない）
+        stock_ok = _stock.is_explicit_in_stock(stock_status)
         if is_normal and stock_ok and net >= 5000 and difficulty <= 0.35:
             new_level = 'beginner_easy'
         elif is_normal and net >= 3000 and difficulty <= 0.50:

@@ -12,6 +12,7 @@ from typing import Optional
 import ulid
 import yaml
 
+from src.market import stock_state as _stock
 from src.db.repository import Repository
 from src.models.market_snapshot import MarketSnapshotModel
 from src.models.product import ProductModel
@@ -76,7 +77,7 @@ class MarketComparator:
         stock_status = product.official_stock_status or ""
         sale_method = "lottery" if product.is_lottery else (
             "discontinued" if product.is_discontinued else (
-                "soldout" if "SOLD" in stock_status.upper() else "normal"
+                "soldout" if _stock.is_out_of_stock(stock_status) else "normal"
             )
         )
 
@@ -387,10 +388,8 @@ class MarketComparator:
         """
         # beginner_easy: 公式で買えて、買取が定価を上回り、利益5000円以上、difficulty低
         is_normal_sale = sale_method == "normal"
-        is_in_stock = (
-            "在庫あり" in stock_status or stock_status in ("", "in_stock")
-            or "SOLD" not in stock_status.upper()
-        ) if stock_status is not None else True
+        # 在庫ありが明示されているときだけ（空・不明・入荷待ちは在庫ありにしない）
+        is_in_stock = _stock.is_explicit_in_stock(stock_status or "") or stock_status == "in_stock"
         has_buyback_profit = (
             official and domestic_buyback
             and domestic_buyback > official

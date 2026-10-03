@@ -157,6 +157,12 @@ def _fees(buy_price: int, sell_price: int, is_overseas: bool) -> dict:
                 "shipping_cost": shipping, "safety_margin": safety, "total_cost": shipping + safety}
 
 
+def _sold_period_text(sell: dict) -> str:
+    """成約中央値の集計期間（「2026-09-03〜2026-10-02」）。開始・終了の両方が無ければ空。"""
+    a, b = str(sell.get("sold_period_start") or ""), str(sell.get("sold_period_end") or "")
+    return f"{a[:10]}〜{b[:10]}" if a and b else ""
+
+
 def _make_route(buy: dict, sell: dict, now: datetime, reference: bool = False) -> dict | None:
     if buy["source_name"] == sell["source_name"] and buy["source_id"] == sell["source_id"]:
         return None
@@ -195,9 +201,10 @@ def _make_route(buy: dict, sell: dict, now: datetime, reference: bool = False) -
         "sell_observed_age_days": sell.get("observed_age_days", sell.get("age_days")),
         "sell_collector_method": sell.get("collector_method", ""),
         # 売値が成約中央値のときの件数・集計期間（正規化データの値をそのまま渡す。計算は変えない）
-        # 集計期間は正規化データにまだ無い。無ければ空のままで、新UIの利益商品は成約中央値のルートを掲載しない
+        # 集計期間は成約日時のある標本から求めた開始・終了があるときだけ。無ければ空のままで、
+        # 新UIの利益商品は成約中央値のルートを掲載しない（期間を推測で付けない）
         "sell_sample_count": sell.get("sample_count"),
-        "sell_period": sell.get("sold_period", "") or "",
+        "sell_period": _sold_period_text(sell),
         "route_type": _route_type(buy["price_type"], sell["price_type"]),
         "reference_route": reference, "rejection_reason": "",
     }

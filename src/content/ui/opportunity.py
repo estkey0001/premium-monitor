@@ -31,6 +31,11 @@ from src.tcg.models import JST, parse_dt
 MAX_AGE_DAYS = 14
 
 # 在庫・販売の状態（推測しない。分からなければ UNKNOWN）
+# 在庫の状態 → 利益案件の種類
+AVAILABILITY_OF = {"IN_STOCK": "BUY_NOW", "OUT_OF_STOCK": "OUT_OF_STOCK", "UNKNOWN": "PROFIT_STOCK_UNKNOWN",
+                   "RESERVATION": "RESERVATION", "LOTTERY": "LOTTERY"}
+AVAILABILITY_LABELS = {"BUY_NOW": "今買える", "PROFIT_STOCK_UNKNOWN": "利益あり・在庫未確認",
+                       "RESERVATION": "予約", "LOTTERY": "抽選", "OUT_OF_STOCK": "在庫切れ"}
 STOCK_LABELS = {"IN_STOCK": "在庫あり", "OUT_OF_STOCK": "在庫切れ", "UNKNOWN": "在庫未確認",
                 "RESERVATION": "予約", "LOTTERY": "抽選"}
 
@@ -96,6 +101,19 @@ class OpportunityView:
     def stock_label(self) -> str:
         return STOCK_LABELS.get(self.buy_stock, "在庫未確認")
 
+    @property
+    def availability(self) -> str:
+        """利益案件の種類（今買える / 利益あり・在庫未確認 / 予約 / 抽選 / 在庫切れ）。
+
+        「今買える」（BUY_NOW）は、公式の在庫表示が確認から7日以内の「在庫あり」のときだけ。
+        在庫が分からない案件は利益の情報としては出せるが、今買えるとは言わない（PROFIT_STOCK_UNKNOWN）。
+        """
+        return AVAILABILITY_OF.get(self.buy_stock, "PROFIT_STOCK_UNKNOWN")
+
+    @property
+    def availability_label(self) -> str:
+        return AVAILABILITY_LABELS[self.availability]
+
 
 # ── 値の読み取り ────────────────────────────────────────────────────
 
@@ -133,20 +151,9 @@ def _capacity(name: str) -> str:
 
 
 def stock_from(stock_status: str, sale_method: str) -> str:
-    """公式の在庫表示・販売方式から在庫の状態を決める（推測しない）。予約・抽選は在庫ありにしない。"""
-    sm = str(sale_method or "").lower()
-    if sm in ("lottery", "抽選"):
-        return "LOTTERY"
-    if sm in ("reservation", "preorder", "予約"):
-        return "RESERVATION"
-    s = str(stock_status or "").strip().upper()
-    if not s:
-        return "UNKNOWN"
-    if "SOLD OUT" in s or "在庫切れ" in s or "在庫なし" in s:
-        return "OUT_OF_STOCK"
-    if "在庫あり" in s or s == "IN STOCK":
-        return "IN_STOCK"
-    return "UNKNOWN"
+    """公式の在庫表示・販売方式から在庫の状態を決める（推測しない。規則は src/market/stock_state.py）。"""
+    from src.market.stock_state import stock_state
+    return stock_state(stock_status, sale_method)
 
 
 def _buy_label(r: dict) -> str:
@@ -185,8 +192,8 @@ def from_deal(d: dict) -> OpportunityView:
         buy_source=str(d.get("buy_source") or (f"{d['brand']} 公式ストア" if d.get("brand") else "公式ストア")),
         buy_price=buy, buy_price_label="定価",
         buy_stock=stock_from(d.get("stock_status"), d.get("sale_method")),
-        # 公式の在庫表示は定価と同じ時に取得している（official_price_updated_at）
-        stock_checked_at=_iso(d.get("official_checked_at")),
+        # 在庫の確認日時は価格の確認日時とは別（在庫の根拠があった取得の時刻。無ければ空 = 在庫未確認）
+        stock_checked_at=_iso(d.get("stock_checked_at")),
         buy_checked_at=_iso(d.get("official_checked_at")), buy_url=str(d.get("official_url") or ""),
         buy_evidence=str(d.get("msrp_evidence") or pe.UNKNOWN),
         sell_source=str(d.get("sell_shop") or ""), sell_price_type=pt.BUYBACK_CASH, sell_price=sell,

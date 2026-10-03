@@ -56,20 +56,24 @@ VERIFIED_URLS_CHECKED_ON = "2026-08-23"
 
 VERIFIED_URLS = {
     # ---- Apple（公式直販・価格実在）----
-    "prod_iphone17_256":    {"source": "src_apple_jp", "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17",         "link_type": "item",     "price": 142800, "conf": "high"},
-    "prod_iphone17pro_256": {"source": "src_apple_jp", "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17-pro",     "link_type": "item",     "price": 194800, "conf": "high"},
-    "prod_iphone17pro_512": {"source": "src_apple_jp", "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17-pro",     "link_type": "item",     "price": None,   "conf": "medium"},
-    "prod_iphone17pm_256":  {"source": "src_apple_jp", "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17-pro",     "link_type": "item",     "price": 214800, "conf": "medium"},
-    "prod_iphone17pm_512":  {"source": "src_apple_jp", "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17-pro",     "link_type": "item",     "price": None,   "conf": "medium"},
-    "prod_ipad_pro_m4_11":  {"source": "src_apple_jp", "url": "https://www.apple.com/jp/shop/buy-ipad/ipad-pro",           "link_type": "item",     "price": 209800, "conf": "high"},
-    "prod_ipad_pro_m4_13":  {"source": "src_apple_jp", "url": "https://www.apple.com/jp/shop/buy-ipad/ipad-pro",           "link_type": "item",     "price": 269800, "conf": "medium"},
-    "prod_ipad_air_m3":     {"source": "src_apple_jp", "url": "https://www.apple.com/jp/shop/buy-ipad/ipad-air",           "link_type": "item",     "price": 129800, "conf": "high"},
+    # 2026-10-03: 公式の購入ページ（ブラウザで表示）で「256GB 159,800円から」を確認（08/23 の 142,800円から改定）
+    "prod_iphone17_256":    {"source": "src_apple_jp", "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17",         "link_type": "item",     "price": 159800, "conf": "high", "checked_on": "2026-10-03"},
     "prod_macbook_air_m4_13": {"source": "src_apple_jp", "url": "https://www.apple.com/jp/shop/buy-mac/macbook-air",       "link_type": "category", "price": None,   "conf": "medium", "note": "現行はM5世代（M4は旧世代の可能性）"},
     "prod_macbook_air_m4_15": {"source": "src_apple_jp", "url": "https://www.apple.com/jp/shop/buy-mac/macbook-air",       "link_type": "category", "price": None,   "conf": "medium", "note": "現行はM5世代"},
     "prod_macbook_pro_m4_14": {"source": "src_apple_jp", "url": "https://www.apple.com/jp/shop/buy-mac/macbook-pro",       "link_type": "category", "price": None,   "conf": "medium", "note": "現行はM5世代"},
-    "prod_apple_watch_s11": {"source": "src_apple_jp", "url": "https://www.apple.com/jp/shop/buy-watch/apple-watch",       "link_type": "category", "price": 71800,  "conf": "medium"},
-    "prod_apple_watch_ultra3": {"source": "src_apple_jp", "url": "https://www.apple.com/jp/shop/buy-watch/apple-watch",    "link_type": "category", "price": 142800, "conf": "medium"},
-    "prod_airpods_pro3":    {"source": "src_apple_jp", "url": "https://www.apple.com/jp/shop/buy-airpods/airpods-pro-3",   "link_type": "item",     "price": 42800,  "conf": "high"},
+    # 2026-10-03: 公式の購入ページで「AirPods Pro 3 42,800円」を再確認
+    "prod_airpods_pro3":    {"source": "src_apple_jp", "url": "https://www.apple.com/jp/shop/buy-airpods/airpods-pro-3",   "link_type": "item",     "price": 42800,  "conf": "high", "checked_on": "2026-10-03"},
+    # ---- ゲーム機（公式ストア・公式ラインナップ）----
+    # 2026-10-03: Sony Store の購入ページで「PlayStation®5 Pro CFI-7100B01 入荷待ち 137,980 円(税込)」を確認
+    # （2026-04-02 の価格改定後の価格。設定値の 119,980円 は改定前）。
+    # 在庫の表示（入荷待ち）も同じページで確認した時刻つきで記録する（7日を過ぎれば在庫未確認に戻る）
+    "prod_ps5_pro": {"source": "src_sony_store", "url": "https://pur.store.sony.jp/ps5/products/ps5/CFI-7100B01_purchase/",
+                     "link_type": "item", "price": 137980, "conf": "high", "checked_on": "2026-10-03",
+                     "stock": "入荷待ち", "stock_checked_at": "2026-10-03T15:14:13+09:00"},
+    # 2026-10-03: 任天堂公式の商品ラインナップで「Nintendo Switch 2 本体 日本語・国内専用 希望小売価格： 59,980 円（税込）」
+    # を確認（2026-05-25 の価格改定後。設定値の 49,980円 は改定前）
+    "prod_switch2": {"source": "src_nintendo_store", "url": "https://www.nintendo.com/jp/hardware/switch2/lineup/index.html",
+                     "link_type": "category", "price": 59980, "conf": "high", "checked_on": "2026-10-03"},
     # ---- Nikon（オープン価格・URLは検証済みだが公式定価なし → category/価格null）----
     "prod_z8": {"source": "src_nikon_direct", "url": "https://nij.nikon.com/products/lineup/mirrorless/z8/", "link_type": "category", "price": None, "conf": "medium", "open_price": True},
     # ---- Fujifilm（オープン価格）----
@@ -90,6 +94,32 @@ UNVERIFIED = {
     "prod_fx3":   {"source": "src_sony_store",     "model": "ILME-FX3",        "reason": "store.sony.jp が当環境からDNS解決不可（要手動検証）"},
 }
 
+# 公式ストアで今は売っていない（販売終了・後継機に交代）と確認した商品。
+# 過去に確認した定価は「今その値段で公式から買える」根拠にならないので、確認済みの定価として使わない
+# （products.official_price を消し、設定値の参考価格に戻す。確定利益には使わない）。
+OFFICIAL_NOT_SOLD = {
+    "prod_iphone17pro_256": {"source": "src_apple_jp", "checked_on": "2026-10-03",
+                             "reason": "iPhone 17 Pro の購入ページが /buy-iphone へ移動。公式は iPhone 18 Pro を販売中"},
+    "prod_iphone17pro_512": {"source": "src_apple_jp", "checked_on": "2026-10-03",
+                             "reason": "iPhone 17 Pro の購入ページが /buy-iphone へ移動。公式は iPhone 18 Pro を販売中"},
+    "prod_iphone17pm_256":  {"source": "src_apple_jp", "checked_on": "2026-10-03",
+                             "reason": "iPhone 17 Pro Max の購入ページが /buy-iphone へ移動。公式は iPhone 18 Pro Max を販売中"},
+    "prod_iphone17pm_512":  {"source": "src_apple_jp", "checked_on": "2026-10-03",
+                             "reason": "iPhone 17 Pro Max の購入ページが /buy-iphone へ移動。公式は iPhone 18 Pro Max を販売中"},
+    "prod_ipad_pro_m4_11":  {"source": "src_apple_jp", "checked_on": "2026-10-03",
+                             "reason": "公式の iPad Pro は M5 チップ（M4 は販売していない）"},
+    "prod_ipad_pro_m4_13":  {"source": "src_apple_jp", "checked_on": "2026-10-03",
+                             "reason": "公式の iPad Pro は M5 チップ（M4 は販売していない）"},
+    "prod_ipad_air_m3":     {"source": "src_apple_jp", "checked_on": "2026-10-03",
+                             "reason": "公式の iPad Air は M4 チップ（M3 は販売していない）"},
+    "prod_apple_watch_s11": {"source": "src_apple_jp", "checked_on": "2026-10-03",
+                             "reason": "公式は Apple Watch Series 12 を販売中（Series 11 は販売していない）"},
+    "prod_apple_watch_ultra3": {"source": "src_apple_jp", "checked_on": "2026-10-03",
+                                "reason": "公式は Apple Watch Ultra 4 を販売中（Ultra 3 は販売していない）"},
+    "prod_switch2_mk":      {"source": "src_nintendo_store", "checked_on": "2026-10-03",
+                             "reason": "任天堂公式のラインナップでマリオカート ワールド セットは「生産終了」"},
+}
+
 # 旧世代/404 として検出・要注意（Task1）。実際に 404 を確認したもの。
 KNOWN_STALE = {
     "iphone-16-pro-max": "iPhone 16 世代の購入ページ。iphone-17-pro ページに統合/404",
@@ -98,6 +128,7 @@ KNOWN_STALE = {
 MAKER_OF = {
     "src_apple_jp": "Apple", "src_ricoh_imaging": "RICOH", "src_fujifilm_official": "FUJIFILM",
     "src_canon_official": "Canon", "src_nikon_direct": "Nikon", "src_sony_store": "Sony",
+    "src_nintendo_store": "Nintendo",
 }
 RETAILER_SOURCES = ["src_kakaku", "src_yodobashi", "src_biccamera", "src_map_camera",
                     "src_fujiya", "src_rakuten", "src_yahoo", "src_ebay"]
@@ -199,6 +230,13 @@ def register_verified(c, products):
             c.execute("UPDATE products SET official_price=?, official_price_source=?, "
                       "official_price_updated_at=? WHERE id=?",
                       (price, v["source"], v.get("checked_on", VERIFIED_URLS_CHECKED_ON), pid))
+        # 人が公式ページで在庫の表示も確認したときだけ、確認した時刻つきで在庫を記録する
+        # collector がそれより新しい在庫の表示を取っていれば、古い確認で上書きしない
+        if v.get("stock") and v.get("stock_checked_at"):
+            c.execute("UPDATE products SET official_stock_status=?, official_stock_observed_at=? WHERE id=? "
+                      "AND (official_stock_observed_at IS NULL OR official_stock_observed_at = '' "
+                      "OR official_stock_observed_at < ?)",
+                      (v["stock"], v["stock_checked_at"], pid, v["stock_checked_at"]))
         registered.append({"product_id": pid, "source": v["source"], "url": v["url"],
                            "link_type": v["link_type"], "confidence": conf,
                            "official_price": price, "verified": True})
@@ -213,6 +251,20 @@ def register_verified(c, products):
         _upsert_config(c, pid, u["source"], "", extra)
         registered.append({"product_id": pid, "source": u["source"], "url": None,
                            "verified": False, "reason": u["reason"]})
+    # 公式で今は売っていない商品: 以前の確認済み定価を外す（設定値の参考価格に戻る）
+    for pid, u in OFFICIAL_NOT_SOLD.items():
+        if not products.get(pid):
+            continue
+        extra = {"link_type": None, "verified": False, "last_verified_at": u["checked_on"],
+                 "extraction_method": None, "confidence": "low", "official_price": None,
+                 "official_not_sold": True, "reason": u["reason"]}
+        _upsert_config(c, pid, u["source"], "", extra)
+        # official_price_source は文字列の列（ProductModel が str を要求する）なので NULL でなく空にする
+        # 公式で販売終了なので is_discontinued も立てる（旧UIの表示・案件の分類が「販売終了」として扱う）
+        c.execute("UPDATE products SET official_price=NULL, official_price_source='', "
+                  "official_price_updated_at=NULL, is_discontinued=1 WHERE id=?", (pid,))
+        registered.append({"product_id": pid, "source": u["source"], "url": None, "verified": False,
+                           "official_not_sold": True, "reason": u["reason"]})
     c.commit()
     return registered
 

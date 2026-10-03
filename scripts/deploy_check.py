@@ -3655,10 +3655,13 @@ def check() -> list[dict]:
     import re as _re349
     # 定価が確認日不明の行は「参考差額 +¥…」と出る（Phase 0.1）。それも数える
     _ranking_profits = _re349.findall(r'class="rank-profit[^"]*">(?:参考差額 )?\+¥([\d,]+)', html)
-    _beginner_easy_cards = html.count('data-user-level="beginner_easy"') + html.count('data-user-level="beginner_watch"')
+    # 利益ありのカードは初心者向け（easy / watch）と、在庫切れ・抽選などで上級者向けに分けた高利益（advanced_high_profit）。
+    # 公式の在庫が「入荷待ち」の商品は初心者向けに出さない（在庫の根拠を推測しない。Phase 2.1）ので、両方を数える
+    _beginner_easy_cards = (html.count('data-user-level="beginner_easy"') + html.count('data-user-level="beginner_watch"')
+                            + html.count('data-user-level="advanced_high_profit"'))
     if _ranking_profits and _beginner_easy_cards == 0:
         results.append({"level": "error", "check": "ranking_beginner_consistency",
-                        "message": f"#349 ランキングに利益あり({len(_ranking_profits)}件)なのに初心者ページの利益ありカードが0件 ← 不整合"})
+                        "message": f"#349 ランキングに利益あり({len(_ranking_profits)}件)なのに利益ありカード（初心者・上級者）が0件 ← 不整合"})
     elif _ranking_profits:
         results.append({"level": "ok", "check": "ranking_beginner_consistency",
                         "message": f"#349 ランキング利益あり({len(_ranking_profits)}件) / 初心者ページカード({_beginner_easy_cards}件) — 整合"})

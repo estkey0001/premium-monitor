@@ -103,12 +103,13 @@ class Repository:
             is_active=bool(d["is_active"]),
             memo=d.get("memo", ""),
             official_price=d.get("official_price"),
-            official_price_source=d.get("official_price_source", ""),
+            official_price_source=d.get("official_price_source") or "",
             official_price_updated_at=(
                 datetime.fromisoformat(d["official_price_updated_at"])
                 if d.get("official_price_updated_at") else None
             ),
             official_stock_status=d.get("official_stock_status", ""),
+            official_stock_observed_at=d.get("official_stock_observed_at", "") or "",
             is_lottery=bool(d.get("is_lottery", 0)),
             is_discontinued=bool(d.get("is_discontinued", 0)),
             is_production_ended=bool(d.get("is_production_ended", 0)),
@@ -161,6 +162,7 @@ class Repository:
                 official_price_source = ?,
                 official_price_updated_at = ?,
                 official_stock_status = ?,
+                official_stock_observed_at = ?,
                 is_lottery = ?,
                 is_discontinued = ?,
                 retail_price_update_candidate = CASE
@@ -168,7 +170,8 @@ class Repository:
                 updated_at = ?
             WHERE id = ?
             """,
-            (price, source_id, observed_iso, stock_status,
+            # 在庫の確認日時は、在庫の根拠があったとき（stock_status が空でない）だけ入れる
+            (price, source_id, observed_iso, stock_status, observed_iso if stock_status else "",
              int(is_lottery), int(is_discontinued),
              price, price, now, product_id),
         )

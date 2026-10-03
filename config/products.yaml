@@ -161,7 +161,9 @@ products:
     genre: "game_console"
     name: "Nintendo Switch 2"
     brand: "Nintendo"
-    retail_price: 49980
+    # 参考価格（設定値）。2026-05-25 の改定後の希望小売価格。確認済みの定価は
+    # scripts/audit_official_sources.py の VERIFIED_URLS（確認日・URL 付き）が正本
+    retail_price: 59980
     keywords: ["Switch 2", "Switch2", "ニンテンドースイッチ2", "SW2", "Nintendo Switch2", "スイッチ2", "NintendoSwitch2"]
 
   - id: "prod_switch2_mk"
@@ -175,9 +177,11 @@ products:
     genre: "game_console"
     name: "PlayStation 5 Pro"
     brand: "Sony"
-    model_number: "CFI-7000A01"
-    retail_price: 119980
-    keywords: ["PS5 Pro", "PlayStation5Pro", "CFI-7000", "PlayStation 5 Pro", "CFI-7000A01", "PS5Pro"]
+    # 公式（Sony Store）で今販売している型番。CFI-7000B01 は 2025版の前の型番
+    model_number: "CFI-7100B01"
+    # 参考価格（設定値）。2026-04-02 の改定後の価格。確認済みの定価は VERIFIED_URLS が正本
+    retail_price: 137980
+    keywords: ["PS5 Pro", "PlayStation5Pro", "CFI-7000", "CFI-7100", "PlayStation 5 Pro", "CFI-7000A01", "PS5Pro"]
 
   - id: "prod_ps5_de"
     genre: "game_console"

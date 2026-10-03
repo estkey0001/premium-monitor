@@ -36,6 +36,7 @@ OFFICIAL_DOMAINS = {
     "src_canon_official": ("canon.jp", "cweb.canon.jp", "store.canon.jp"),
     "src_nikon_direct": ("nikon-image.com", "nij.nikon.com", "shop.nikon-image.com", "nikon.com"),
     "src_sony_store": ("sony.jp", "store.sony.jp"),
+    "src_nintendo_store": ("nintendo.com", "nintendo.co.jp"),
 }
 
 # アクセサリー語（本体でない）
@@ -83,7 +84,8 @@ def _domain_of(url: str) -> str:
 def is_official_domain(source_id: str, url: str) -> bool:
     dom = _domain_of(url)
     allowed = OFFICIAL_DOMAINS.get(source_id, ())
-    return any(dom == d or dom.endswith("." + d) or d in dom for d in allowed)
+    # 完全一致かサブドメインだけ（「evilnintendo.com」のような部分一致を公式にしない）
+    return any(dom == d or dom.endswith("." + d) for d in allowed)
 
 
 def detect_open_price(text: str) -> bool:

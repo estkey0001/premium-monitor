@@ -20,6 +20,7 @@ from typing import Optional
 import ulid
 
 from src.db.repository import Repository
+from src.market import stock_state as _stock
 from src.models.beginner_deal import BeginnerDealModel
 from src.models.product import ProductModel
 
@@ -162,8 +163,9 @@ class PrimaryToSecondaryScanner:
             brand=getattr(product, "brand", "") or "",
             official_price_jpy=official,
             official_url=self._get_official_url(product),
-            stock_status="",
-            sale_method="normal",
+            # 公式の在庫表示・販売方式は商品のものを引き継ぐ（空で上書きすると在庫・抽選・販売終了の情報が消える）
+            stock_status=product.official_stock_status or "",
+            sale_method=_stock.sale_method_of(product),
             best_buyback_price=ovs_price_jpy,     # 海外売却価格をbest_buybackとして保存
             best_buyback_shop=ovs.get("market", "eBay"),
             best_buyback_url=ovs.get("url", ""),
@@ -209,8 +211,9 @@ class PrimaryToSecondaryScanner:
             brand=getattr(product, "brand", "") or "",
             official_price_jpy=official,
             official_url=self._get_official_url(product),
-            stock_status="",
-            sale_method="normal",
+            # 公式の在庫表示・販売方式は商品のものを引き継ぐ（空で上書きすると在庫・抽選・販売終了の情報が消える）
+            stock_status=product.official_stock_status or "",
+            sale_method=_stock.sale_method_of(product),
             best_buyback_price=overseas_jpy,
             best_buyback_shop="eBay",
             best_buyback_url="",

@@ -236,16 +236,31 @@ class _FakeConn:
         pass
 
 
-def test_fixed_msrp_does_not_refresh_observed_at():
+def test_fixed_msrp_does_not_refresh_observed_at(monkeypatch):
+    m = _load_script("audit_official_sources")
+    # 実行日を遠い未来にしても、確認日は表に書いた日のまま（実行日から作らない）
+    from datetime import datetime as _dt
+    monkeypatch.setattr(m, "NOW", _dt(2099, 1, 1, tzinfo=m.JST))
+    monkeypatch.setattr(m, "TODAY", "2099-01-01")
+    c = _FakeConn()
+    products = {"prod_iphone17_256": {"name": "iPhone 17 256GB SIMフリー", "model_number": "",
+                                      "retail_price": 159800}}
+    m.register_verified(c, products)
+    assert c.updates, "固定値の価格が反映されていない"
+    for price, source, updated_at, pid in c.updates:
+        assert updated_at == m.VERIFIED_URLS[pid].get("checked_on", m.VERIFIED_URLS_CHECKED_ON)   # 確認した日
+        assert "2099" not in updated_at                                                          # 実行日ではない
+
+
+def test_official_not_sold_drops_verified_price():
+    """公式で販売終了・後継機に交代した商品は、過去の確認済み定価を外す（設定値の参考価格に戻る）。"""
     m = _load_script("audit_official_sources")
     c = _FakeConn()
     products = {"prod_iphone17pro_256": {"name": "iPhone 17 Pro 256GB SIMフリー", "model_number": "",
                                          "retail_price": 179800}}
     m.register_verified(c, products)
-    assert c.updates, "固定値の価格が反映されていない"
-    for price, source, updated_at, pid in c.updates:
-        assert updated_at == m.VERIFIED_URLS_CHECKED_ON          # 確認した日
-        assert updated_at != m.NOW.isoformat() and updated_at != m.TODAY   # 実行日ではない
+    assert "prod_iphone17pro_256" not in m.VERIFIED_URLS and "prod_iphone17pro_256" in m.OFFICIAL_NOT_SOLD
+    assert c.updates == [("prod_iphone17pro_256",)]          # official_price を NULL にする UPDATE だけ
 
 
 def _npo_db(tmp_path, official_updated_at):

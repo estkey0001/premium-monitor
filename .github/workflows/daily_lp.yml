@@ -438,6 +438,7 @@ jobs:
                   exports/overseas_prices/ \
                   exports/normalized_price_observations/ \
                   exports/profit_routes/ \
+                  exports/opportunity_diagnostics/ \
                   exports/flea_sold_prices/ \
                   exports/ai_opportunities/ \
                   exports/notifications/ \

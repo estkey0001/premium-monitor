@@ -31,6 +31,18 @@ from src.pipeline.normalizer import Normalizer
 logger = logging.getLogger(__name__)
 
 
+def ricoh_stock_from_status(status):
+    """RICOH 公式ストアの商品カードの状態表示 → True / False / None。"""
+    s = (status or "").strip()
+    if not s:
+        return None
+    if any(k in s.upper() for k in ("SOLD OUT", "売り切れ", "在庫なし", "在庫切れ", "品切れ")):
+        return False
+    if any(k in s for k in ("在庫あり", "残りわずか", "在庫僅少", "在庫少")):
+        return True
+    return None
+
+
 class RicohOfficialCollector(BaseCollector):
     """RICOH Imaging Store Collector。"""
 
@@ -108,7 +120,8 @@ class RicohOfficialCollector(BaseCollector):
 
         # productsテーブルの公式価格フィールドを更新
         if result["price"]:
-            stock_status = "SOLD OUT" if result["is_in_stock"] is False else "在庫あり"
+            # 在庫はページに根拠があるときだけ（不明 None は空 = 在庫未確認。価格が取れた＝在庫ありにしない）
+            stock_status = {True: "在庫あり", False: "SOLD OUT"}.get(result["is_in_stock"], "")
             self.repository.mark_official_price_candidate(
                 product.id,
                 result["price"],
@@ -262,7 +275,9 @@ class RicohOfficialCollector(BaseCollector):
                 "product_code": m.group(1) if m else "",
                 "href": href,
                 "price": Normalizer.parse_price(price_el.get_text()),
-                "is_in_stock": (status != "SOLD OUT") if status else None,
+                # 在庫は商品カードの状態表示から。SOLD OUT は品切れ、「在庫あり」等の明示だけ在庫あり、
+                # それ以外（予約受付中・抽選受付中など）や表示なしは不明 None（在庫ありと推測しない）
+                "is_in_stock": ricoh_stock_from_status(status),
                 "status_text": status,
                 "lottery_status": None,
             })

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-03 04:44 JST",
+  "generated_at": "2026-10-03 11:13 JST",
   "ebay_api_configured": false,
   "overseas_source_mode": "manual",
   "summary": {
@@ -57,7 +57,7 @@
       "rejection_top5": [
         [
           "price_zero",
-          6
+          5
         ],
         [
           "stale_over_14d",
@@ -85,7 +85,7 @@
       "rejection_top5": [
         [
           "price_zero",
-          6
+          5
         ],
         [
           "stale_over_14d",
@@ -113,7 +113,7 @@
       "rejection_top5": [
         [
           "price_zero",
-          6
+          5
         ],
         [
           "stale_over_14d",
@@ -131,9 +131,9 @@
       "sell_candidates": 2,
       "min_usable_buy": null,
       "min_usable_buy_source": "",
-      "max_usable_sell": 217000,
+      "max_usable_sell": 216000,
       "max_usable_sell_source": "買取商店",
-      "target_buy_price": 216999,
+      "target_buy_price": 215999,
       "gross_gap": null,
       "net_domestic": null,
       "best_reference_net": null,
@@ -141,7 +141,7 @@
       "rejection_top5": [
         [
           "price_zero",
-          6
+          5
         ]
       ],
       "stale_excluded": 0,
@@ -559,7 +559,7 @@
     "prod_ps5_pro": {
       "product_name": "PlayStation 5 Pro",
       "buy_candidates": 0,
-      "sell_candidates": 1,
+      "sell_candidates": 2,
       "min_usable_buy": null,
       "min_usable_buy_source": "",
       "max_usable_sell": 192000,
@@ -572,7 +572,7 @@
       "rejection_top5": [
         [
           "price_zero",
-          9
+          8
         ],
         [
           "stale_over_14d",
@@ -814,10 +814,6 @@
         ],
         [
           "sold_label_without_evidence",
-          1
-        ],
-        [
-          "accessory_or_wrong_product",
           1
         ]
       ],

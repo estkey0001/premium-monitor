@@ -1,26 +1,26 @@
 {
-  "generated_at": "2026-10-03 19:12 JST",
+  "generated_at": "2026-10-03 20:39 JST",
   "date": "2026-10-03",
   "health_score": {
-    "data_quality": 14.9,
+    "data_quality": 14.7,
     "profit_discovery": 0.0,
     "source_health": 13.0,
-    "link_quality": 4.8,
-    "freshness": 4.9,
-    "total": 37.6
+    "link_quality": 4.7,
+    "freshness": 4.8,
+    "total": 37.2
   },
   "data_quality": {
-    "total_obs": 231,
-    "usable_obs": 67,
+    "total_obs": 228,
+    "usable_obs": 65,
     "stale_count": 118,
-    "stale_rate": 0.5108,
+    "stale_rate": 0.5175,
     "zero_count": 37,
-    "zero_rate": 0.1602,
-    "item_url_rate": 0.4762,
-    "search_url_rate": 0.1861,
-    "manual_rate": 0.5108,
+    "zero_rate": 0.1623,
+    "item_url_rate": 0.4737,
+    "search_url_rate": 0.1886,
+    "manual_rate": 0.5132,
     "api_rate": 0.0,
-    "html_rate": 0.0087
+    "html_rate": 0.0088
   },
   "profit": {
     "main_route_count": 0,
@@ -159,18 +159,6 @@
       },
       "n": 6
     },
-    "モバイル一番": {
-      "success_count": 5,
-      "stale_count": 3,
-      "zero_count": 0,
-      "item_url_rate": 1.0,
-      "freshness": 0.4,
-      "success_rate": 1.0,
-      "confidence": {
-        "high": 5
-      },
-      "n": 5
-    },
     "eBay sold(新品)": {
       "success_count": 5,
       "stale_count": 5,
@@ -242,6 +230,18 @@
         "high": 4
       },
       "n": 4
+    },
+    "モバイル一番": {
+      "success_count": 3,
+      "stale_count": 3,
+      "zero_count": 0,
+      "item_url_rate": 1.0,
+      "freshness": 0.0,
+      "success_rate": 1.0,
+      "confidence": {
+        "high": 3
+      },
+      "n": 3
     },
     "Amazon新品出品": {
       "success_count": 3,
@@ -328,31 +328,31 @@
       "n": 2
     },
     "Amazon JP (新品出品)": {
-      "success_count": 2,
+      "success_count": 1,
       "stale_count": 0,
       "zero_count": 0,
       "item_url_rate": 0.0,
       "freshness": 1.0,
       "success_rate": 1.0,
       "confidence": {
-        "medium": 2
+        "medium": 1
       },
-      "n": 2
+      "n": 1
     }
   },
   "diff_vs_prev": {
     "available": true,
     "stale_rate": {
-      "prev": 0.5086,
-      "cur": 0.5108
+      "prev": 0.5108,
+      "cur": 0.5175
     },
     "zero_rate": {
-      "prev": 0.181,
-      "cur": 0.1602
+      "prev": 0.1602,
+      "cur": 0.1623
     },
     "item_url_rate": {
-      "prev": 0.4655,
-      "cur": 0.4762
+      "prev": 0.4762,
+      "cur": 0.4737
     },
     "main_route_count": {
       "prev": 0,
@@ -364,24 +364,18 @@
     },
     "new_main": [],
     "lost_main": [],
-    "source_success_changes": [
-      {
-        "source": "モバイル一番",
-        "prev": 0.375,
-        "cur": 1.0,
-        "delta": 0.625
-      }
-    ]
+    "source_success_changes": []
   },
   "anomalies": {
     "critical": [
-      "stale率 51% (>=50%)",
+      "stale率 52% (>=50%)",
       "取得成功率 0%: ゲオモバイル",
       "取得成功率 0%: セカンドストリート",
       "取得成功率 0%: ネットオフ"
     ],
     "warning": [
-      "item_url率 48% (<50%)"
+      "item_url率 低下",
+      "item_url率 47% (<50%)"
     ],
     "info": []
   },

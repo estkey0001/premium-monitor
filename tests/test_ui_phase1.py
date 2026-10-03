@@ -40,12 +40,18 @@ def _lot(i, **kw):
     return e
 
 
-DEAL = {"title": "RICOH GR IV", "genre": "camera", "official_price": 211800, "sell_shop": "フジヤカメラ",
-        "sell_price": 240000, "net_profit": 26400, "profit_rate": 0.125, "href": "./?from=new#product-gr4"}
+# daily_lp_generator._nu_profit_deals が渡す形（掲載の判定は opportunity.eligibility）
+DEAL = {"product_id": "prod_gr4", "title": "RICOH GR IV", "genre": "camera", "official_price": 211800,
+        "official_checked_at": "2026-09-01T10:00:00+09:00", "msrp_evidence": "VERIFIED_DATED",
+        "stock_status": "在庫あり", "sale_method": "normal", "sell_shop": "フジヤカメラ", "sell_price": 240000,
+        "sell_checked_at": "2026-10-02T12:00:00+09:00", "net_profit": 26400, "user_level": "beginner_easy",
+        "resale_sell": False, "href": "./?from=new#product-gr4"}
 ROUTE = {"product_id": "prod_switch2", "product_name": "Nintendo Switch 2", "buy_source": "店A",
-         "sell_source": "買取B", "buy_price": 49980, "sell_price": 60000, "net_profit": 6000, "roi": 0.12,
+         "sell_source": "買取B", "buy_price": 49980, "sell_price": 60000, "net_profit": 5520, "roi": 0.11,
+         "shipping_cost": 1500, "safety_margin": 3000, "platform_fee": 0, "payment_fee": 0, "fx_buffer": 0,
          "route_confidence": "high", "buy_price_evidence": "VERIFIED_CURRENT",
-         "sell_price_evidence": "VERIFIED_CURRENT", "sell_canonical_type": "BUYBACK_CASH"}
+         "sell_price_evidence": "VERIFIED_CURRENT", "sell_canonical_type": "BUYBACK_CASH", "buy_canonical_type": "RETAIL",
+         "buy_observed_at": "2026-10-03T09:00:00+09:00", "sell_observed_at": "2026-10-03T09:00:00+09:00"}
 LEGACY = [{"id": "L1", "product_name": "RICOH GR IV 限定", "brand": "RICOH",
            "entry_start_at": (NOW - timedelta(days=1)).strftime("%Y-%m-%d %H:%M"),
            "entry_end_at": (NOW + timedelta(days=1)).strftime("%Y-%m-%d %H:%M"),
@@ -101,13 +107,15 @@ def test_new_home_renders_categories_purposes_and_quick_links():
 
 def test_category_counts_follow_the_definitions():
     cg = _catalog(_ctx())
-    # 利益商品: 確認済みの定価の案件（カメラ1）。せどりルート: ガードを通る main（ゲーム1）
-    assert cg.count("opportunities") == 1 and cg.count("opportunities", "camera") == 1
+    # 利益商品: 確認済みの定価の案件（カメラ1）と、ガードを通るルート（ゲーム1）。せどりルートはそのうちのルート
+    assert cg.count("opportunities") == 2 and cg.count("opportunities", "camera") == 1
+    assert cg.count("opportunities", "game") == 1
     assert cg.count("routes") == 1 and cg.count("routes", "game") == 1
     # 在庫再開: 今買える・古くない TCG だけ（古い・発売予定は数えない）
     assert cg.count("restock") == 1 and cg.count("restock", "tcg") == 1
     # 抽選: 掲載中（ENDED は除く）。旧来の抽選はブランドからカメラ
     assert cg.count("lottery") == 2 and cg.count("lottery", "tcg") == 1 and cg.count("lottery", "camera") == 1
+    # ジャンルの件数: せどりルートは利益商品の一部なので重ねて数えない
     assert cg.category_total("camera") == 2 and cg.category_total("tcg") == 2 and cg.category_total("game") == 1
     assert cg.category_total("smartphone") == 0
     data = json.loads(cg.data_json())
@@ -147,7 +155,10 @@ def test_purpose_navigation_keeps_category_links():
     for p in cl.PURPOSES:
         sec = _section(root, p)
         assert 'aria-label="現在地"' in sec and sec.count("data-nu-switch=") == 7
-        assert f'data-nu-list="{p}"' in sec and f'data-nu-empty-for="{p}"' in sec
+        if p == "opportunities":
+            assert "data-nu-opp-table" in sec and "data-nu-opp-cards" in sec and 'data-nu-oempty="none"' in sec
+        else:
+            assert f'data-nu-list="{p}"' in sec and f'data-nu-empty-for="{p}"' in sec
 
 
 def test_no_inactive_fake_cta():
@@ -156,11 +167,17 @@ def test_no_inactive_fake_cta():
     # リンクは必ず行き先を持つ（href="#" や空の href・押しても何も起きない button は無い）
     hrefs = re.findall(r'<a [^>]*?href="([^"]*)"', body)
     assert hrefs and all(h and h != "#" for h in hrefs)
-    assert "<button" not in body
+    # button は開閉（詳細・検索）だけで、必ず type="button" と aria-expanded・aria-controls を持つ
+    for b in re.findall(r"<button[^>]*>", body):
+        assert 'type="button"' in b and "aria-expanded=" in b and "aria-controls=" in b, b
     # 押せない部品（準備中）は aria-disabled と「準備中」の文言を持つ
     for el in re.findall(r"<(?:span|input)[^>]*aria-disabled=\"true\"[^>]*>", body):
         assert "<a " not in el
-    assert body.count("準備中") >= 6 and all("disabled" in i for i in re.findall(r"<input[^>]*>", body))
+    # 入力欄は、利益商品の一覧内の検索（動く）以外は準備中で押せない
+    inputs = re.findall(r"<input[^>]*>", body)
+    assert body.count("準備中") >= 6
+    assert all("disabled" in i or "data-nu-search-input" in i for i in inputs)
+    assert sum("data-nu-search-input" in i for i in inputs) == 1
 
 
 def test_empty_states_without_sold_data():
@@ -185,39 +202,47 @@ def test_listing_or_unconfirmed_sell_route_not_listed():
     assert 'data-nu-count="routes">0件' in root
 
 
-def test_profit_deals_exclude_unverified_msrp_and_resale(monkeypatch):
-    """利益商品に出すのは、定価を確認済み・売り先が買取店の案件だけ（daily_lp_generator 側の絞り込み）。"""
+def test_profit_deals_exclude_unverified_msrp_and_resale():
+    """利益商品に出すのは、定価を確認済み・売り先が買取店・買取価格の確認が14日以内の案件だけ。
+    生成側（_nu_profit_deals）は値を集めるだけで、判定は opportunity.eligibility。"""
     from types import SimpleNamespace
 
     from src.content.daily_lp_generator import DailyLPGenerator
+    from src.content.ui import opportunity as opp
     from src.market import price_evidence as pe
     g = DailyLPGenerator.__new__(DailyLPGenerator)
     g._msrp_evidence = {"prod_gr4": pe.VERIFIED_CURRENT, "prod_ps5_pro": pe.CONFIGURED_REFERENCE,
-                        "prod_x": pe.VERIFIED_DATED, "prod_y": pe.VERIFIED_DATED}
+                        "prod_x": pe.VERIFIED_DATED, "prod_y": pe.VERIFIED_DATED, "prod_old": pe.VERIFIED_DATED,
+                        "prod_nodate": pe.VERIFIED_DATED}
+    g._product_info = {}
 
     def deal(pid, net, shop="フジヤカメラ", level="beginner_easy", sell=240000):
         return SimpleNamespace(product_id=pid, product_name=pid, category="camera", net_profit_jpy=net,
                                best_buyback_price=sell, best_buyback_shop=shop, user_level=level,
-                               official_price_jpy=200000, net_profit_rate=0.1)
-    fresh = (datetime.now(JST) - timedelta(days=2)).isoformat()
-    old = (datetime.now(JST) - timedelta(days=20)).isoformat()
+                               official_price_jpy=200000, net_profit_rate=0.1, stock_status="", sale_method="normal",
+                               official_url="", best_buyback_url="", buyback_condition="new_unopened")
+    fresh = (NOW - timedelta(days=2)).isoformat()
+    old = (NOW - timedelta(days=20)).isoformat()
 
     def row(shop, price, at):
         return {"shop_name": shop, "buyback_price": price, "observed_at": at}
     bybp = {"prod_gr4": [row("フジヤカメラ", 240000, fresh)], "prod_ps5_pro": [row("フジヤカメラ", 240000, fresh)],
             "prod_x": [row("メルカリ", 240000, fresh)], "prod_y": [row("フジヤカメラ", 240000, fresh)],
             "prod_old": [row("フジヤカメラ", 240000, old)]}
-    g._msrp_evidence["prod_old"] = pe.VERIFIED_DATED
-    g._msrp_evidence["prod_nodate"] = pe.VERIFIED_DATED
-    got = g._nu_profit_deals([deal("prod_gr4", 26400), deal("prod_gr4", 10000),
-                              deal("prod_ps5_pro", 70220),                      # 確認日不明の定価
-                              deal("prod_x", 5000, shop="メルカリ"),             # 二次流通の売り先
-                              deal("prod_y", 5000, level="monitoring"),        # 監視中
-                              deal("prod_old", 9000),                          # 買取価格が14日より古い
-                              deal("prod_nodate", 9000),                       # 買取価格の確認日が分からない
+    raw = g._nu_profit_deals([deal("prod_gr4", 38200), deal("prod_gr4", 10000),
+                              deal("prod_ps5_pro", 38200),                      # 確認日不明の定価
+                              deal("prod_x", 38200, shop="メルカリ"),             # 二次流通の売り先
+                              deal("prod_y", 38200, level="monitoring"),       # 監視中
+                              deal("prod_old", 38200),                         # 買取価格が14日より古い
+                              deal("prod_nodate", 38200),                      # 買取価格の確認日が分からない
                               deal("prod_x", -100)], bybp)
-    assert [(d["title"], d["net_profit"]) for d in got] == [("prod_gr4", 26400)]
-    assert got[0]["href"] == "./?from=new#product-gr4" and got[0]["checked"]
+    assert len(raw) == 7                                                       # 生成側は絞り込まない（利益0以下だけ除く）
+    s = opp.build(deals=raw, routes=[], product_genres={}, now=NOW)
+    assert [(v.product_name, v.net_profit) for v in s.eligible] == [("prod_gr4", 38200)]
+    why = {v.product_name: v.reasons for v in s.ineligible}
+    assert "buy_configured_reference" in why["prod_ps5_pro"] and "resale_sell" in why["prod_x"]
+    assert "monitoring" in why["prod_y"] and "stale_sell_price" in why["prod_old"]
+    assert "stale_sell_price" in why["prod_nodate"]
 
 
 def test_no_internal_terms_and_safe_links():
@@ -290,7 +315,7 @@ def test_dom_category_persists_and_back_forward(tmp_path):
     o.campurposeHref = R.querySelector('a[data-nu-purpose-link="opportunities"]').getAttribute('href');
     o.campurposeCount = R.querySelector('.nu-purposes [data-nu-count="lottery"]').textContent;
     o.opp = click('a[data-nu-purpose-link="opportunities"]');
-    o.oppItems = [].slice.call(R.querySelectorAll('[data-nu-list="opportunities"] > li')).filter(function(li){return !li.hidden;}).length;
+    o.oppItems = [].slice.call(R.querySelectorAll('tr.nu-orow')).filter(function(r){return !r.hidden;}).length;
     o.lottery = click('.nu-topnav a[data-nu-nav="lottery"]');
     o.lotItems = [].slice.call(R.querySelectorAll('[data-nu-list="lottery"] > li')).filter(function(li){return !li.hidden;})
                   .map(function(li){return li.getAttribute('data-nu-cat');});
@@ -382,17 +407,18 @@ def test_footer_and_related_links():
 
 @pytest.mark.skipif(CHROME is None, reason="Chrome が無い")
 def test_dom_top10_and_lottery_order(tmp_path):
-    many = [dict(DEAL, title=f"商品{i:02d}", net_profit=100000 - i * 1000) for i in range(12)]
+    many = [dict(DEAL, product_id=f"prod_m{i}", title=f"商品{i:02d}", net_profit=26400 - i * 1000,
+                 sell_price=240000 - i * 1000 + 1800 - 1800) for i in range(12)]
     lots = [_lot(1, application_start=_iso(timedelta(hours=3)), application_end=_iso(timedelta(days=3))),
             _lot(2, application_end=_iso(timedelta(hours=1))),
             _lot(3, application_end=_iso(timedelta(days=2)))]
     js = _HELPERS + """
     var o = {};
-    o.top = [].slice.call(R.querySelectorAll('[data-nu-list="opportunities"] > li')).filter(function(li){return !li.hidden;})
-              .map(function(li){return li.querySelector('h3').textContent;});
+    o.top = [].slice.call(R.querySelectorAll('tr.nu-orow')).filter(function(r){return !r.hidden;})
+              .map(function(r){return r.querySelector('.nu-oname').textContent;});
     o.note = !R.querySelector('[data-nu-topnote]').hidden;
     o.all = click('[data-nu-topnote] a');
-    o.allCount = [].slice.call(R.querySelectorAll('[data-nu-list="opportunities"] > li')).filter(function(li){return !li.hidden;}).length;
+    o.allCount = [].slice.call(R.querySelectorAll('tr.nu-orow')).filter(function(r){return !r.hidden;}).length;
     o.lot = click('.nu-topnav a[data-nu-nav="lottery"]');
     o.order = [].slice.call(R.querySelectorAll('[data-nu-list="lottery"] > li')).filter(function(li){return !li.hidden;})
                 .map(function(li){return li.querySelector('article').getAttribute('data-nu-lot');});
@@ -401,6 +427,6 @@ def test_dom_top10_and_lottery_order(tmp_path):
     o = _run(tmp_path, js, query="?ui=new&page=opportunities&top=10", profit_deals=many,
              tcg_report={"lotteries": lots, "events": []}, legacy_lotteries=[])
     assert o["top"] == [f"商品{i:02d}" for i in range(10)] and o["note"] is True
-    assert o["all"]["q"] == "?ui=new&page=opportunities" and o["allCount"] == 12
+    assert o["all"]["q"] == "?ui=new&page=opportunities" and o["allCount"] == 13   # 12件＋ルート1件
     # 抽選は締切間近 → 受付中 → まもなく開始の順
     assert o["order"] == ["t2", "t3", "t1"]

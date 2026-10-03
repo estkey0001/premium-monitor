@@ -205,6 +205,13 @@ class DailyLPGenerator:
         self._msrp_evidence = {_p.id: _pe.classify_product_msrp(_p, now) for _p in _all_products}
         # 新UIのジャンル（スマホ・カメラ…）の判定に使う
         self._product_genres = {_p.id: (getattr(_p, "genre", "") or "") for _p in _all_products}
+        # 新UIの利益商品の表示に使う商品の情報（型番・定価を確認した日時）
+        self._product_info = {
+            _p.id: {"genre": getattr(_p, "genre", "") or "", "model": getattr(_p, "model_number", "") or "",
+                    "brand": getattr(_p, "brand", "") or "",
+                    "official_checked_at": (_p.official_price_updated_at.isoformat()
+                                            if getattr(_p, "official_price_updated_at", None) else "")}
+            for _p in _all_products}
         for _p in _all_products:
             _rows = self.repo.list_buyback_prices_by_product(_p.id, limit=10)
             if _rows:
@@ -4271,58 +4278,52 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             return {}
         return data if isinstance(data, dict) else {}
 
-    # 新UIの「利益商品」に載せる買取価格の鮮度（初心者タブの 14日超の降格と同じ線）
-    _NU_BUYBACK_MAX_AGE_DAYS = 14
-
     def _nu_profit_deals(self, all_deals, buyback_by_product: dict | None = None) -> list[dict]:
-        """新UIの「利益商品」に掲載する案件（定価で買って買取店に売る）。
+        """新UIの「利益商品」の候補（定価で買って買取店に売る案件）を、判定に必要な元の値ごと渡す。
 
-        定価を確認済み（_msrp_is_reference でない）・売り先が買取店（フリマ・二次流通の店ではない）・
-        監視中や取得失敗でない・買取価格を確認した日時が14日以内・見込み利益が0より大きいものだけ。
-        買取価格の確認日時が分からない案件は載せない。同じ商品は利益の大きい1件にする。
+        掲載してよいかの判定は src/content/ui/opportunity.py の eligibility だけで行う
+        （定価の根拠・売り先・鮮度・費用・ROI など）。ここでは値を集めるだけで、利益は計算し直さない。
+        買取価格の確認日時は、最高買取店の行（店名・価格が一致する行）の observed_at。分からなければ空。
         """
-        now = datetime.now(tz=JST)
         bybp = buyback_by_product or {}
+        info = getattr(self, "_product_info", None) or {}
+        ev_map = getattr(self, "_msrp_evidence", None) or {}
 
         def _checked_at(d):
-            """最高買取店の行（店名・価格が一致する行）の観測日時。"""
             shop = getattr(d, "best_buyback_shop", "") or ""
             price = getattr(d, "best_buyback_price", 0) or 0
             for r in bybp.get(getattr(d, "product_id", "") or "", []) or []:
                 if (r.get("shop_name") or "") == shop and int(r.get("buyback_price") or 0) == int(price):
-                    try:
-                        t = datetime.fromisoformat(str(r.get("observed_at") or ""))
-                    except ValueError:
-                        return None
-                    return (t if t.tzinfo else t.replace(tzinfo=JST)).astimezone(JST)
-            return None
+                    return str(r.get("observed_at") or "")
+            return ""
 
-        best: dict = {}
+        out: list[dict] = []
         for d in all_deals or []:
             net = getattr(d, "net_profit_jpy", 0) or 0
-            sell = getattr(d, "best_buyback_price", 0) or 0
-            shop = getattr(d, "best_buyback_shop", "") or ""
-            if net <= 0 or sell <= 0 or not shop:
-                continue
-            if getattr(d, "user_level", "") in ("monitoring", "fetch_failed"):
-                continue
-            if self._msrp_is_reference(d) or self._is_resale_shop(shop):
-                continue
-            checked = _checked_at(d)
-            if checked is None or (now - checked).total_seconds() > self._NU_BUYBACK_MAX_AGE_DAYS * 86400:
+            if net <= 0:
                 continue
             pid = getattr(d, "product_id", "") or ""
-            if pid in best and best[pid]["net_profit"] >= net:
-                continue
+            shop = getattr(d, "best_buyback_shop", "") or ""
             alias = pid[len("prod_"):] if pid.startswith("prod_") else pid
-            best[pid] = {
-                "title": getattr(d, "product_name", "") or "", "genre": getattr(d, "category", "") or "",
-                "official_price": getattr(d, "official_price_jpy", 0) or 0, "sell_shop": shop,
-                "sell_price": sell, "net_profit": net, "profit_rate": getattr(d, "net_profit_rate", None),
+            p = info.get(pid, {})
+            out.append({
+                "product_id": pid, "title": getattr(d, "product_name", "") or "",
+                "genre": p.get("genre") or getattr(d, "category", "") or "", "model": p.get("model", ""),
+                "brand": p.get("brand") or getattr(d, "brand", "") or "",
+                "condition": getattr(d, "buyback_condition", "") or "",
+                "official_price": getattr(d, "official_price_jpy", 0) or 0,
+                "official_checked_at": p.get("official_checked_at", ""),
+                "msrp_evidence": ev_map.get(pid, _pe.UNKNOWN),
+                "official_url": getattr(d, "official_url", "") or "",
+                "stock_status": getattr(d, "stock_status", "") or "",
+                "sale_method": getattr(d, "sale_method", "") or "",
+                "sell_shop": shop, "sell_price": getattr(d, "best_buyback_price", 0) or 0,
+                "sell_checked_at": _checked_at(d), "sell_url": getattr(d, "best_buyback_url", "") or "",
+                "net_profit": net, "user_level": getattr(d, "user_level", "") or "",
+                "resale_sell": bool(shop) and self._is_resale_shop(shop),
                 "href": f"./?from=new#product-{alias}" if alias else "",
-                "checked": checked.strftime("%m/%d"),
-            }
-        return list(best.values())
+            })
+        return out
 
     def _new_ui_parts(self, *, lottery_items, lp_generated_at, collection_stats, site_title,
                       old_html: str = "", old_count_as_active=None, all_deals=None,

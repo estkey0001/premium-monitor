@@ -12,7 +12,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from src.content.ui import account, home, navigation, pages, parity
+from src.content.ui import account, home, navigation, opportunities_page, pages, parity
 from src.content.ui import catalog as cl
 from src.content.ui import categories as cats
 from src.content.ui import runtime as rt
@@ -143,6 +143,134 @@ def _router_script() -> str:
   function setCurrent(el, on, value) {
     if (on) el.setAttribute('aria-current', value || 'page'); else el.removeAttribute('aria-current');
   }
+
+  // ── 利益商品（UI Phase 2）: 並べ替え・絞り込み・検索・ページ切り替え。値は data-* の確定値だけを使う ──
+  var OPP_SORTS = ['rec', 'profit', 'roi', 'updated'], OPP_SIZE = 20, OPP_MAX_AGE = 14 * 86400000;
+  function oppHref(name, value) {
+    var cur = new URLSearchParams(location.search), u = new URLSearchParams();
+    u.set('ui', 'new'); u.set('page', 'opportunities');
+    cur.forEach(function(v, k){ if (k !== 'ui' && k !== 'page') u.set(k, v); });
+    if (value) u.set(name, value); else u.delete(name);
+    if (name !== 'page_num') { u.delete('page_num'); u.delete('top'); }
+    return '?' + u.toString();
+  }
+  var FMT = null;
+  try { FMT = new Intl.DateTimeFormat('ja-JP', {timeZone: 'Asia/Tokyo', year: 'numeric', month: '2-digit',
+          day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23'}); } catch (e) { FMT = null; }
+  function parts(ms) {
+    var o = {};
+    if (FMT) FMT.formatToParts(new Date(ms)).forEach(function(p){ o[p.type] = p.value; });
+    return o;
+  }
+  // 確認時刻の表示（Phase 0.1 の表記: 3分前確認 / 本日 11:42確認 / 10/02 18:30確認 / 更新遅延）
+  function relTime(iso, now) {
+    var t = Date.parse(iso);
+    if (isNaN(t) || !FMT) return null;
+    var a = parts(t), b = parts(now), diff = now - t, hm = a.hour + ':' + a.minute;
+    if (diff > OPP_MAX_AGE) return '更新遅延 最終確認 ' + a.month + '/' + a.day + ' ' + hm;
+    if (diff >= 0 && diff < 3600000) return Math.max(1, Math.round(diff / 60000)) + '分前確認';
+    if (a.year === b.year && a.month === b.month && a.day === b.day) return '本日 ' + hm + '確認';
+    return a.month + '/' + a.day + ' ' + hm + '確認';
+  }
+  function renderTimes() {
+    var now = Date.now();
+    root.querySelectorAll('[data-nu-time]').forEach(function(el){
+      var txt = relTime(el.getAttribute('data-nu-time'), now);
+      if (txt) el.textContent = txt;
+    });
+  }
+  function renderOpp(q, cat) {
+    var sec = root.querySelector('[data-nu-page="opportunities"]');
+    if (!sec) return;
+    var top = q.get('top') === '10';
+    var sort = top ? 'profit' : (OPP_SORTS.indexOf(q.get('sort')) >= 0 ? q.get('sort') : 'rec');
+    var filter = q.get('filter') === 'instock' ? 'instock' : '';
+    var term = (q.get('q') || '').trim().toLowerCase();
+    var pageNum = Math.max(1, parseInt(q.get('page_num') || '1', 10) || 1);
+    var rows = {}, cards = {};
+    sec.querySelectorAll('tr.nu-orow').forEach(function(r){ rows[r.getAttribute('data-nu-oid')] = r; });
+    sec.querySelectorAll('li.nu-ocard').forEach(function(c){ cards[c.getAttribute('data-nu-oid')] = c; });
+    var items = Object.keys(rows).map(function(id){
+      var r = rows[id];
+      return {id: id, cat: r.getAttribute('data-nu-cat'), profit: +r.getAttribute('data-profit'),
+              roi: +r.getAttribute('data-roi'), upd: +r.getAttribute('data-updated'), rec: +r.getAttribute('data-rec'),
+              stock: r.getAttribute('data-stock'), text: r.getAttribute('data-search') || ''};
+    });
+    var inCat = items.filter(function(it){ return cat === 'all' || it.cat === cat; });
+    var list = inCat.filter(function(it){
+      // 「今すぐ狙う TOP10」は今買えないもの（在庫切れ・抽選・予約）を除く
+      if (top && ['OUT_OF_STOCK', 'LOTTERY', 'RESERVATION'].indexOf(it.stock) >= 0) return false;
+      return (!filter || it.stock === 'IN_STOCK') && (!term || it.text.indexOf(term) >= 0);
+    });
+    var by = {rec: function(a, b){ return a.rec - b.rec; },
+              profit: function(a, b){ return b.profit - a.profit || a.rec - b.rec; },
+              roi: function(a, b){ return b.roi - a.roi || a.rec - b.rec; },
+              updated: function(a, b){ return b.upd - a.upd || a.rec - b.rec; }}[sort];
+    list.sort(by);
+    var total = list.length, pages = top ? 1 : Math.max(1, Math.ceil(total / OPP_SIZE));
+    if (pageNum > pages) pageNum = pages;
+    var start = top ? 0 : (pageNum - 1) * OPP_SIZE;
+    var shown = list.slice(start, start + (top ? 10 : OPP_SIZE)), on = {};
+    shown.forEach(function(it){ on[it.id] = true; });
+    var tbody = sec.querySelector('[data-nu-opp-table] tbody'), ul = sec.querySelector('[data-nu-opp-cards]');
+    list.concat(items.filter(function(it){ return list.indexOf(it) < 0; })).forEach(function(it){
+      var r = rows[it.id], d = r.nextElementSibling;
+      tbody.appendChild(r);
+      if (d && d.getAttribute('data-nu-detail-of') === it.id) tbody.appendChild(d);
+      r.hidden = !on[it.id];
+      if (d && !on[it.id]) {
+        d.hidden = true;
+        var b = r.querySelector('[data-nu-toggle]');
+        if (b) b.setAttribute('aria-expanded', 'false');
+      }
+      if (cards[it.id]) { ul.appendChild(cards[it.id]); cards[it.id].hidden = !on[it.id]; }
+    });
+    var res = sec.querySelector('[data-nu-oresult]');
+    if (res) res.textContent = total === 0 ? '0件' : top ? '上位' + shown.length + '件（利益が高い順）'
+      : total + '件中 ' + (start + 1) + '〜' + (start + shown.length) + '件';
+    // 選んだジャンルに掲載が無いときは、空の表・並べ替え・絞り込みを出さず空状態だけにする
+    sec.querySelectorAll('[data-nu-opp-hide-empty]').forEach(function(el){ el.hidden = inCat.length === 0; });
+    sec.querySelectorAll('[data-nu-oempty]').forEach(function(el){
+      var kind = el.getAttribute('data-nu-oempty');
+      el.hidden = !(kind === 'none' ? inCat.length === 0 : (inCat.length > 0 && total === 0));
+    });
+    sec.querySelectorAll('[data-nu-oparam]').forEach(function(a){
+      var name = a.getAttribute('data-nu-oparam'), val = a.getAttribute('data-nu-ovalue');
+      var active = name === 'sort' ? val === sort : val === filter;
+      setCurrent(a, active, 'true');
+      a.setAttribute('href', oppHref(name, name === 'filter' && active ? '' : val));
+    });
+    // ジャンルの切り替えは、並べ替え・絞り込み・検索を保つ（ページ番号だけ1に戻す）
+    sec.querySelectorAll('[data-nu-switch]').forEach(function(a){
+      var k = a.getAttribute('data-nu-switch');
+      a.setAttribute('href', oppHref('category', k === 'all' ? '' : k));
+    });
+    var pager = sec.querySelector('[data-nu-pager]');
+    if (pager) {
+      pager.hidden = pages <= 1;
+      while (pager.firstChild) pager.removeChild(pager.firstChild);
+      var link = function(n, label, cur){
+        var a = document.createElement('a');
+        a.className = 'nu-pager__link';
+        a.setAttribute('href', oppHref('page_num', n > 1 ? String(n) : ''));
+        a.setAttribute('data-nu-scrolltop', '');
+        if (cur) a.setAttribute('aria-current', 'page');
+        a.textContent = label;
+        pager.appendChild(a);
+      };
+      if (pages > 1) {
+        if (pageNum > 1) link(pageNum - 1, '前へ', false);
+        for (var n = 1; n <= pages; n++) link(n, String(n), n === pageNum);
+        if (pageNum < pages) link(pageNum + 1, '次へ', false);
+      }
+    }
+    var form = sec.querySelector('[data-nu-search-form]'), input = sec.querySelector('[data-nu-search-input]');
+    var tog = sec.querySelector('[data-nu-search-toggle]');
+    if (term && form && form.hidden) { form.hidden = false; if (tog) tog.setAttribute('aria-expanded', 'true'); }
+    if (input && document.activeElement !== input) input.value = q.get('q') || '';
+    var note = sec.querySelector('[data-nu-topnote]');
+    if (note) note.hidden = !top;
+  }
   function render(moveFocus) {
     var page = currentPage(), cat = currentCat(), lot = lotteryCounts();
     var q = new URLSearchParams(location.search);
@@ -173,8 +301,9 @@ def _router_script() -> str:
       if (n) el.removeAttribute('data-zero'); else el.setAttribute('data-zero', '');
     });
     root.querySelectorAll('[data-nu-catcount]').forEach(function(el){
-      var k = el.getAttribute('data-nu-catcount'), n = 0;
-      PURPOSES.forEach(function(p){ n += count(p, k, lot); });
+      // ジャンルの件数: ほかの目的の一部（せどりルート）は重ねて数えない（catalog.OVERLAPPING と同じ）
+      var k = el.getAttribute('data-nu-catcount'), n = 0, overlap = DATA.overlap || [];
+      PURPOSES.forEach(function(p){ if (overlap.indexOf(p) < 0) n += count(p, k, lot); });
       el.textContent = n + '件';
       var a = el.closest('a');
       if (a) {
@@ -186,8 +315,8 @@ def _router_script() -> str:
     root.querySelectorAll('[data-nu-home-ctx],[data-nu-crumb-cat]').forEach(function(el){ el.hidden = cat === 'all'; });
     root.querySelectorAll('a[data-nu-crumb-catlink]').forEach(function(a){ a.setAttribute('href', withCat('?ui=new', cat)); });
     // 一覧: ジャンルで絞り込み、抽選は閲覧時に掲載中のもの（bucket < 99）だけを出す
-    var top = page === 'opportunities' && q.get('top') === '10' ? 10 : 0;
-    root.querySelectorAll('[data-nu-topnote]').forEach(function(el){ el.hidden = !top; });
+    renderOpp(q, cat);
+    renderTimes();
     root.querySelectorAll('[data-nu-list]').forEach(function(list){
       var p = list.getAttribute('data-nu-list'), shown = 0;
       // 抽選は閲覧時の状態の順（締切間近 → 受付中 → まもなく開始 → 日程要確認）に並べ直す
@@ -205,8 +334,6 @@ def _router_script() -> str:
           var card = li.querySelector('[data-nu-bucket]');
           ok = !!card && +card.getAttribute('data-nu-bucket') < 99;
         }
-        // 「今すぐ狙う TOP10」: 利益が大きい順（生成時の並び）の上位10件だけ
-        if (ok && p === 'opportunities' && top && shown >= top) ok = false;
         li.hidden = !ok;
         if (ok) shown++;
       });
@@ -249,7 +376,41 @@ def _router_script() -> str:
     var after = render(before !== currentPage());
     if (i >= 0) scrollToHash();
     else if (before !== after) window.scrollTo(0, 0);
+    else if (a.hasAttribute('data-nu-scrolltop')) {
+      var sec = root.querySelector('[data-nu-page="' + after + '"]');
+      if (sec) sec.scrollIntoView({block: 'start'});
+    }
   });
+  // 詳細を1段だけ開く・閉じる（aria-expanded）
+  root.addEventListener('click', function(e){
+    var b = e.target.closest('[data-nu-toggle]');
+    if (b) {
+      var t = document.getElementById(b.getAttribute('aria-controls')), open = b.getAttribute('aria-expanded') !== 'true';
+      b.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if (t) t.hidden = !open;
+      return;
+    }
+    var s = e.target.closest('[data-nu-search-toggle]');
+    if (s) {
+      var f = root.querySelector('[data-nu-search-form]'), show = s.getAttribute('aria-expanded') !== 'true';
+      s.setAttribute('aria-expanded', show ? 'true' : 'false');
+      if (f) { f.hidden = !show; if (show) { var i = f.querySelector('input'); if (i) i.focus(); } }
+    }
+  });
+  // 一覧内の検索（商品名・型番。選んだジャンルの中）。入力のたびに URL の q= を更新する
+  var searchTimer = null;
+  root.addEventListener('input', function(e){
+    if (!e.target.matches('[data-nu-search-input]')) return;
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(function(){
+      var u = new URLSearchParams(location.search), v = e.target.value.trim();
+      if (v) u.set('q', v); else u.delete('q');
+      u.delete('page_num'); u.delete('top');
+      history.replaceState(null, '', location.pathname + '?' + u.toString());
+      render(false);
+    }, 200);
+  });
+  root.addEventListener('submit', function(e){ if (e.target.matches('[data-nu-search-form]')) e.preventDefault(); });
   window.addEventListener('popstate', function(){ render(true); });
   window.addEventListener('hashchange', function(){ if (applyLegacyHash()) render(true); });
 
@@ -316,7 +477,9 @@ def render_root(ctx: ShellContext) -> str:
     body = (
         pages.render_home(catalog, source_issue=ctx.source_issue,
                           debug_html=parity.render(rows, hidden_prices=model.hidden_prices))
-        + "".join(pages.render_purpose(p, catalog, model, has_data=has_data) for p in cl.PURPOSES)
+        + opportunities_page.render(catalog, has_data=has_data)
+        + "".join(pages.render_purpose(p, catalog, model, has_data=has_data)
+                  for p in cl.PURPOSES if p != "opportunities")
         + pages.render_more(catalog)
         + pages.render_search()
         + account.render()

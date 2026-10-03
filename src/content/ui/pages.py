@@ -20,7 +20,7 @@ from src.content.ui.navigation import page_href
 # 目的（HOME の入口・ページの見出し）
 PURPOSE_INFO: dict[str, dict[str, str]] = {
     "opportunities": {"label": "利益商品", "icon": "trend",
-                      "desc": "定価で買って買取店に売ると、利益が出る商品"},
+                      "desc": "仕入れ値と費用を引いても、売却で利益が出る商品（買取価格・成約中央値で確認できたものだけ）"},
     "lottery": {"label": "抽選・予約", "icon": "ticket",
                 "desc": "受付中・まもなく始まる抽選と予約"},
     "restock": {"label": "在庫再開", "icon": "package",
@@ -43,7 +43,8 @@ EMPTY: dict[str, tuple[str, str]] = {
 
 # ページの下に出す、掲載の決まり（誤解を防ぐための1行）
 RULES: dict[str, str] = {
-    "opportunities": "定価の確認日が分からない商品・出品価格で計算した利益は掲載していません。",
+    "opportunities": ("定価の確認日が分からない商品・出品価格や種別不明の価格・14日より古い価格で計算した利益は"
+                      "掲載していません。純利益は送料・手数料などの必要な費用を差し引いた見込みです。"),
     "lottery": "受付期間・締切は閲覧時の時刻で判定しています。応募の前に必ず公式ページでご確認ください。",
     "restock": "在庫は取得時点の情報です。購入の前に必ず販売ページでご確認ください。",
     "routes": "売値には買取価格か、確認できた成約価格だけを使います（出品価格では計算しません）。",
@@ -57,7 +58,7 @@ SORT_LABEL: dict[str, str] = {
 
 # 似た目的への1行（利益商品とせどりルートの違いを示す）
 RELATED: dict[str, tuple[str, str]] = {
-    "opportunities": ("店・フリマで仕入れる場合は", "routes"),
+    "opportunities": ("店・フリマで仕入れるルートだけを見るなら", "routes"),
     "routes": ("定価で買える場合は", "opportunities"),
 }
 

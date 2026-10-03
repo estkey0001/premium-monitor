@@ -7,37 +7,45 @@ HOME のジャンル・目的の件数と、各目的ページの一覧は、す
 
 | 目的 | 数えるもの |
 |---|---|
-| 利益商品 opportunities | 定価で買って買取店に売る案件のうち、定価を確認済み（price_evidence が VERIFIED_*）で、
-|                        | 売り先が買取店（出品・成約の推測値ではない）・買取価格の確認が14日以内・見込み利益が0より大きいもの |
+| 利益商品 opportunities | OpportunityView のうち opportunity.eligibility を通るもの（定価で買って買取店に売る案件と、
+|                        | 定価以外で仕入れるルートの両方）。判定の内容は opportunity.py の docstring が正本 |
 | 抽選・予約 lottery | 抽選の runtime の状態で、受付中・締切間近・まもなく開始・日程要確認のもの（bucket < 99）。
 |                    | 閲覧時にブラウザで数え直す（締切を過ぎたものは外れる） |
 | 在庫再開 restock | TCG の販売・入荷の情報で、今買える（AVAILABLE_NOW）かつ古くないもの |
-| せどりルート routes | 利益ルート（main）のうち表示ガード（home.route_reject_reason）を通るもの。
+| せどりルート routes | 利益商品のうち、定価以外（店・フリマ）で仕入れるもの（利益ルート由来）。
 |                     | 売値は買取か条件を満たした成約中央値だけなので、成約データが無い今は0件になりうる |
 
-ジャンルの件数は、そのジャンルの4つの目的の件数の合計。
+ジャンルの件数は、そのジャンルで掲載中の件数（利益商品・抽選・予約・在庫再開の合計。
+せどりルートは利益商品の一部なので重ねて数えない）。
 """
 
 from __future__ import annotations
 
 import json
 from dataclasses import dataclass, field
+from datetime import datetime
+from urllib.parse import urlencode
 
 from src.content.ui import categories as cats
 from src.content.ui import components as c
 from src.content.ui import home
+from src.content.ui import opportunity as opp
 from src.content.ui import runtime as rt
+from src.tcg.models import JST
 
 PURPOSES = ("opportunities", "lottery", "restock", "routes")
+# ほかの目的の一部（ジャンルの件数で重ねて数えない）。せどりルートは利益商品の中の「定価以外で仕入れる」もの
+OVERLAPPING = ("routes",)
 
 
 @dataclass
 class Item:
-    """一覧の1件（Card に渡す値と、ジャンル）。"""
+    """一覧の1件（Card に渡す値と、ジャンル）。利益商品・せどりルートは view（OpportunityView）を持つ。"""
     purpose: str
     category: str
-    card: c.Card
+    card: c.Card | None
     sort_key: tuple = ()
+    view: opp.OpportunityView | None = None
 
 
 @dataclass
@@ -45,6 +53,7 @@ class Catalog:
     items: dict[str, list[Item]] = field(default_factory=lambda: {p: [] for p in PURPOSES})
     lottery_cats: dict[str, str] = field(default_factory=dict)      # 抽選の VM の id → ジャンル
     lottery_active: dict[str, bool] = field(default_factory=dict)   # 生成時点で掲載中か
+    opportunity_set: opp.OpportunitySet | None = None
 
     def count(self, purpose: str, category: str = cats.ALL) -> int:
         """生成時点の件数（抽選は閲覧時にブラウザで数え直す）。"""
@@ -54,7 +63,8 @@ class Catalog:
         return sum(1 for it in self.items[purpose] if category in (cats.ALL, it.category))
 
     def category_total(self, category: str) -> int:
-        return sum(self.count(p, category) for p in PURPOSES)
+        """そのジャンルで掲載中の件数（せどりルートは利益商品の一部なので重ねて数えない）。"""
+        return sum(self.count(p, category) for p in PURPOSES if p not in OVERLAPPING)
 
     def static_counts(self) -> dict[str, dict[str, int]]:
         """ブラウザで件数を数え直すときの土台（抽選以外。抽選は runtime の状態から数える）。"""
@@ -66,7 +76,7 @@ class Catalog:
         return out
 
     def data_json(self) -> str:
-        return json.dumps({"static": self.static_counts(), "lot": self.lottery_cats},
+        return json.dumps({"static": self.static_counts(), "lot": self.lottery_cats, "overlap": list(OVERLAPPING)},
                           ensure_ascii=False, separators=(",", ":"))
 
 
@@ -88,6 +98,18 @@ def _store_label(key) -> str:
     return (entry["name"] if entry else k) or ""
 
 
+def _route_card(v: opp.OpportunityView) -> c.Card:
+    """せどりルートのページのカード（値は OpportunityView のまま。計算し直さない）。"""
+    roi = f"（ROI {v.roi * 100:.1f}%）" if v.roi is not None else ""
+    return c.Card(
+        title=v.product_name, subtitle=f"{v.buy_source} → {v.sell_source}",
+        primary_metric=f"想定純利益 +{_yen(v.net_profit)}{roi}",
+        secondary_metric=f"仕入れ {_yen(v.buy_price)} ／ 売却 {_yen(v.sell_price)}（{v.sell_type_label}）",
+        cta_label="利益商品で詳しく見る",
+        cta_href="?" + urlencode({"ui": "new", "page": "opportunities", "q": v.product_name[:40]}),
+        cta_external=False, cta_kind="secondary")
+
+
 def _yen(v) -> str:
     try:
         return f"¥{int(float(v)):,}"
@@ -99,40 +121,16 @@ def build(*, model: home.HomeModel, tcg_report: dict | None, profit_routes: dict
           legacy_lotteries: list | None, profit_deals: list[dict] | None,
           product_genres: dict[str, str] | None) -> Catalog:
     genres = product_genres or {}
-    cat_of_pid = lambda pid: cats.from_genre(genres.get(str(pid or ""), ""))  # noqa: E731
     cg = Catalog()
 
-    # ── 利益商品: 定価（確認済み）で買って買取店に売る案件（生成側で絞り込み済み） ──
-    for d in profit_deals or []:
-        net = d.get("net_profit")
-        if not (home.price_ok(d.get("official_price")) and home.price_ok(d.get("sell_price"))
-                and home.price_ok(net)):
-            continue
-        rate = d.get("profit_rate")
-        rate_txt = f"（{float(rate) * 100:.0f}%）" if isinstance(rate, (int, float)) else ""
-        card = c.Card(
-            title=str(d.get("title") or ""),
-            subtitle=f"定価で購入 → {d.get('sell_shop') or '買取店'}",
-            primary_metric=f"見込み利益 +{_yen(net)}{rate_txt}",
-            secondary_metric=(f"定価 {_yen(d.get('official_price'))} ／ 買取 {_yen(d.get('sell_price'))}"
-                              + (f"（{d['checked']} 確認）" if d.get("checked") else "")),
-            cta_label="現行版で詳しく見る", cta_href=str(d.get("href") or ""), cta_external=False,
-            cta_kind="secondary", cta_track="product_click")
-        cg.items["opportunities"].append(Item("opportunities", cats.from_genre(d.get("genre")), card,
-                                              (-float(net),)))
-
-    # ── せどりルート: 表示ガードを通る main ルート ──
-    for r in ((profit_routes or {}).get("main_routes") or []):
-        if not isinstance(r, dict) or home.route_reject_reason(r):
-            continue
-        roi = home._num(r.get("roi")) or 0.0
-        card = c.Card(
-            title=str(r.get("product_name") or ""),
-            subtitle=f"{r.get('buy_source') or ''} → {r.get('sell_source') or ''}".strip(" →"),
-            primary_metric=f"見込み利益 +{_yen(r.get('net_profit'))}（{roi * 100:.0f}%）",
-            secondary_metric=f"仕入れ {_yen(r.get('buy_price'))} ／ 売却 {_yen(r.get('sell_price'))}")
-        cg.items["routes"].append(Item("routes", cat_of_pid(r.get("product_id")), card,
-                                       (-float(r.get("net_profit") or 0),)))
+    # ── 利益商品・せどりルート: OpportunityView（掲載の判定は opportunity.eligibility だけ） ──
+    cg.opportunity_set = opp.build(deals=profit_deals, routes=(profit_routes or {}).get("main_routes"),
+                                   product_genres=genres, now=model.now or datetime.now(tz=JST))
+    for v in cg.opportunity_set.eligible:
+        cg.items["opportunities"].append(Item("opportunities", v.category, None, (), v))
+        if v.kind != "official_to_buyback":
+            # せどりルート（定価以外で仕入れるルート）は利益商品の一部。同じ案件を2回数えないよう印を付ける
+            cg.items["routes"].append(Item("routes", v.category, _route_card(v), (-(v.net_profit or 0),), v))
 
     # ── 在庫再開: 今買える TCG の販売・入荷（古いものは除く） ──
     # 項目は exports/tcg/latest.json の events の形（store / price / canonical_url / source_url / observed_at）

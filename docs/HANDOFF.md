@@ -3,7 +3,7 @@
 ## 今の状態
 - Phase 0 / 0.1 / 0.2（データの正確さ・表示の信頼性・二次流通の価格の意味）はコミット・CI・本番で受け入れ済み。
 - UI Phase 1 を実装（`?ui=new` だけ。通常の URL は旧UIのまま）。ジャンル起点の HOME（ジャンル6 → 目的4 → 小さな補助リンク）と、目的のページ4つ（利益商品・抽選・予約・在庫再開・せどりルート）の枠、ジャンルの URL 保持（`category=`）、上部ナビ／ボトムナビ5項目、SVG アイコン、デザイントークンの更新（アクセント青）。データのロジックは変えていない。
-- テスト 596 件 PASS（UI Phase 1 は tests/test_ui_phase1.py 22件。ジャンル保持・戻る/進む・TOP10・抽選の並び・横はみ出し（320〜1440px）はヘッドレス Chrome で、時計をテストの時刻に固定して確認）。
+- UI Phase 2 を実装（`?ui=new&page=opportunities`）。利益商品の一覧を OpportunityView（`src/content/ui/opportunity.py`）に一本化し、掲載の判定は `eligibility()` だけ。PC は比較テーブル（1200px 以上）、それ未満はカード（640px 以上は2列）。並べ替え4種・在庫ありの絞り込み・一覧内の検索・20件ごとのページ・TOP10・URL の状態保持。テスト 636 件 PASS（tests/test_ui_phase2.py 40件）。
 
 ## 未解決・保留
 - **data/tcg_verified_lotteries.csv の PCO 2件は AI（Claude）が公式告知画像を目視で転記したもの**。人が公式ページで確認したら human_confirmed を true にする（それまで confidence=medium・通知しない・公式扱いにしない）。
@@ -16,7 +16,10 @@
 - **成約（sold）データは今は0件**。ヤフオク（自動）は出品価格、手動の成約 CSV（data/manual_flea_sold_prices.csv）は URL がダミーで成約日時が無い、eBay は API 未設定（CI では HTML もブロック）、メルカリ・ラクマの成約は NOT_IMPLEMENTED。成約中央値を使うには、規約に沿って1件ごとの商品ページの URL と成約日時を取れる経路が必要（eBay API を設定する場合も、1件ごとの成約日時を保存するように collector を直す必要がある）。
 - 過去の誤分類（git の履歴で数えた）: NPO にヤフオクの出品を「落札」として入れたコミットが144（1,491行、2026-06-04〜10-02）。そのうち利益ルートの main（確定利益）の仕入れ値に使ったものが32行。ダミー URL の手動「成約」を使ったルートが39コミット・269行（06-15〜09-04）。履歴は書き換えていない。
 - 旧UI は横に少しはみ出す（.tab-wrap の `margin: 0 -24px`。1440px で 24px、375px で 16px）。Phase 0.1 より前からある。旧UI は直していない（新UI は負のマージンを使わず、320〜1440px ではみ出し0をテストで確認）。旧UI を外すときに一緒に消える。
-- **UI Phase 1 で作っていない画面**: 商品詳細、キーワード検索（枠だけ・準備中）、並べ替えの変更（準備中）、補助リンクの「買取急騰」「新着商品」（準備中）、かんたん/詳細の切り替え。利益商品・せどりルートは実データの一覧だが、確認済みの定価・成約データが少ないので多くのジャンルで0件になる（件数を水増ししない）。
+- **まだ作っていない画面**: 商品詳細、サイト全体のキーワード検索（枠だけ）、絞り込みの「在庫復活」「買取急騰」「新着」（準備中。判定できるデータが無い）、かんたん/詳細の切り替え、抽選・予約の本格画面（Phase 3）。
+- **利益商品は本番データでは0件になりやすい**（確認済みの定価・14日以内の買取価格・費用が揃う案件が少ない）。0件のときは空状態を出し、件数を水増ししない。
+- 成約中央値のルートは、正規化データに集計期間（sold_period）が無いので今は掲載されない（件数3以上かつ期間ありが条件）。期間を保存するようにすれば自動で出る。
+- 公式の在庫表示は official_price_updated_at（定価と同時に更新）から7日を過ぎると「在庫未確認」にする。手元の DB では 08/24 前後の値なので、ほぼ全件が在庫未確認になる。
 - 設定値の定価（PS5 Pro ¥119,980 など、config/products.yaml）は確認日が無い。公式で確認したら確認日付きで入れ直すまで「参考差額」のまま。
 - Leica M11 の通常版の商品コードは公式資料で未確認（2026-10-02 は leica-camera.com が 502）。`scripts/update_camera_buyback.py` の m11 は require_code_any=[]（UNVERIFIED）で、どの行とも結びつけない。公式テクニカルデータ（日本語版 pm-65457）で確認できたらコードを入れる。
 - 手動 CSV の時刻だけの書き換えは、過去に15回のコミット・483行あった（`python scripts/audit_timestamp_only_updates.py`）。履歴は書き換えていない。
@@ -25,8 +28,8 @@
 - 既存の問題: pytest を実行すると追跡対象の exports/api_automation/collection.json が書き換わる。コミット前に `git checkout -- exports/api_automation/collection.json` で戻すこと（テストの出力先修正は別タスク）。
 
 ## 次にやること
-0. Phase 2（利益商品の本格画面）はユーザーの指示を待ってから始める。
-1. Phase 2 以降: 利益商品・抽選・予約・在庫再開・せどりルートの本格画面（並べ替え・キーワード検索・商品詳細・かんたん/詳細）。
+0. Phase 3（抽選・予約の本格画面）はユーザーの指示を待ってから始める。
+1. 利益商品の件数を増やすには、データ側（公式定価の確認日・買取価格の鮮度・成約の集計期間）を直す。UI 側で条件を緩めない。
 2. 利益計算の8系統の統一（internal/uiux/UI_VIEW_MODEL_SPEC.md §2）と、成約データの取得方法（internal/uiux/IMPLEMENTATION_PLAN_V2.md）。
 
 ## 注意（次の人へ）
@@ -35,6 +38,7 @@
 - フジヤの買取ページは「買取金額」（現金）と「下取は10%UP」（下取）を併記する。現金の段だけを使い、下取の段しか読めない候補は採用しない。監視対象はボディ単体の通常版なので、限定版・キット・海外版・アクセサリー・別の型番（Leica は商品コードで判定）は使わない。
 - 固定値・設定値の定価に実行日の日時を付けない。Apple の固定値の確認日は `scripts/audit_official_sources.py` の `VERIFIED_URLS_CHECKED_ON`（値を公式で再確認したときだけ更新する）。
 - **新UI（UI Phase 1）の構成**: ナビは `navigation.py`（NAV_ITEMS・BOTTOM_ITEMS・PAGES・旧ハッシュの読み替え）、ジャンルは `categories.py`（products.genre などの読み替えはここだけ）、件数と一覧は `catalog.py`（件数の定義は docstring が正本。Fake count 禁止）、画面は `pages.py`、CSS は `styles.py`、アイコンは `icons.py`。ジャンルは URL の `category=` に持ち、`data-nu-keepcat` のリンクは表示のたびに今のジャンルを付けた href に書き換える（新しいタブで開いても同じ）。抽選の件数は runtime が書き換えるカードの `data-nu-bucket` から数え直す。設計の正本は internal/uiux/NEW_INFORMATION_ARCHITECTURE.md §0.1・WIREFRAMES.md §0・DESIGN_SYSTEM.md の冒頭。
+- **利益商品（UI Phase 2）**: 値は既存の純利益をそのまま使い、HTML/JS で計算し直さない。ROI = 純利益 ÷ 取得原価。費用の内訳は既存の純利益と合うときだけ出す。売値は BUYBACK_CASH か、条件を満たした SOLD_MEDIAN だけ。LISTING・UNKNOWN・設定値の参考価格・14日より古い価格は掲載しない。並べ替え・絞り込み・ページは shell.py の router（renderOpp）が data-* 属性で行う。HOME の件数は catalog.py の同じ一覧から数える（せどりルートは利益商品の一部なのでジャンル合計に重ねない）。見た目の確認用 DEMO は build/nu_preview/（gitignore）にだけ出す。
 - 新UIは**追加レイヤー**。旧UIの DOM・id・クラス・JS は段階F まで触らない。新UIは `#new-ui-root` の中だけで、`html.ui-new` のとき旧UIを CSS で隠すだけ（DOM は残す）。新UIの生成が失敗しても旧UIは出る（deploy-check #801 は warning）。
 - **抽選の状態は runtime だけで決める**。Python の `derive_runtime_state`（既存の compute_lottery_status を使用）と JS の `deriveLotteryRuntimeState` は同じ結果を返すこと。tests/test_new_ui_runtime.py が node で両方を実行し、多数の時刻で一致を確かめている。片方を変えたら必ずもう片方も変える。
 - 「応募する」は、次の条件をすべて満たすときだけ出す。

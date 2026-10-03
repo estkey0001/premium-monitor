@@ -246,10 +246,13 @@ def test_no_horizontal_overflow_rules():
     assert not re.search(r"margin[a-z-]*:(?:[^;}]*\s)?-\d", css)
     assert "overflow-wrap:anywhere" in _css_rule(css, ".nu-card__title")
     assert "min-width:0" in _css_rule(css, ".nu-card")
-    # 新UIは表を使わない（開発用の照合表だけは横スクロールの枠の中）
+    # 表は2つだけ: 開発用の照合表（横スクロールの枠の中）と、利益商品の比較テーブル（1200px 以上だけ。
+    # それ未満はカードに切り替え、テーブルを横スクロールさせない）
     root = shell.render_root(_ctx())
     tables = root.count("<table")
-    assert tables == 1 and 'class="nu-debug__scroll"' in root
+    assert tables == 2 and 'class="nu-debug__scroll"' in root and 'class="nu-otable"' in root
+    assert "display:none" in _css_rule(css, ".nu-otable-wrap")
+    assert f"@media (min-width:{t.BP_OPP_TABLE}px){{.nu-otable-wrap{{display:block}}.nu-ocards{{display:none}}}}" in css
 
 
 # ── デザイントークン・状態 ──────────────────────────────────────────

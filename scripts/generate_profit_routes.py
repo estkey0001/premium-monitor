@@ -194,6 +194,10 @@ def _make_route(buy: dict, sell: dict, now: datetime, reference: bool = False) -
         "buy_observed_age_days": buy.get("observed_age_days", buy.get("age_days")),
         "sell_observed_age_days": sell.get("observed_age_days", sell.get("age_days")),
         "sell_collector_method": sell.get("collector_method", ""),
+        # 売値が成約中央値のときの件数・集計期間（正規化データの値をそのまま渡す。計算は変えない）
+        # 集計期間は正規化データにまだ無い。無ければ空のままで、新UIの利益商品は成約中央値のルートを掲載しない
+        "sell_sample_count": sell.get("sample_count"),
+        "sell_period": sell.get("sold_period", "") or "",
         "route_type": _route_type(buy["price_type"], sell["price_type"]),
         "reference_route": reference, "rejection_reason": "",
     }

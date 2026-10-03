@@ -3583,6 +3583,38 @@
       "hold_days": 0,
       "closed_date": "2026-10-02",
       "note": "sample: eBay sold未更新のため実行見送り"
+    },
+    {
+      "exec_id": "2026-10-04_prod_gr4_ALERT",
+      "date": "2026-10-04",
+      "product_id": "prod_gr4",
+      "product": "RICOH GR IV",
+      "action": "ALERT",
+      "opportunity_score": 54,
+      "predicted_probability": 30,
+      "predicted_net": 39009,
+      "category": "camera",
+      "maker": "RICOH",
+      "status": "OPEN",
+      "realized_profit": null,
+      "realized_roi": null,
+      "hold_days": null
+    },
+    {
+      "exec_id": "2026-10-04_prod_gr4_WAIT",
+      "date": "2026-10-04",
+      "product_id": "prod_gr4",
+      "product": "RICOH GR IV",
+      "action": "WAIT",
+      "opportunity_score": 41,
+      "predicted_probability": 30,
+      "predicted_net": 142079,
+      "category": "camera",
+      "maker": "RICOH",
+      "status": "OPEN",
+      "realized_profit": null,
+      "realized_roi": null,
+      "hold_days": null
     }
   ]
 }

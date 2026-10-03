@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-03 20:38 JST",
+  "generated_at": "2026-10-04 01:37 JST",
   "route_type_beginner": "primary_to_secondary",
   "top_camera_buyback_opportunities": [
     {
@@ -262,7 +262,26 @@
       "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
     }
   ],
-  "pro_top10": [],
+  "pro_top10": [
+    {
+      "product_name": "RICOH GR IV",
+      "category": "camera",
+      "user_level": "pro",
+      "official_price_jpy": null,
+      "reference_source": null,
+      "best_buyback_price": 151000,
+      "best_buyback_shop": "フジヤカメラ",
+      "buy_price": 107491,
+      "buy_shop_name": "Amazon JP (新品出品)",
+      "buy_price_type": "shop_sale_price",
+      "sell_price_type": "buyback_price",
+      "net_profit_jpy": 41709,
+      "net_profit_rate": 0.388,
+      "route_type": "secondary_to_secondary",
+      "source_label": "中古市場 / フリマ / 買取店",
+      "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
+    }
+  ],
   "beginner_by_category": {
     "game_console": [
       {
@@ -285,7 +304,28 @@
       }
     ]
   },
-  "pro_by_category": {},
+  "pro_by_category": {
+    "camera": [
+      {
+        "product_name": "RICOH GR IV",
+        "category": "camera",
+        "user_level": "pro",
+        "official_price_jpy": null,
+        "reference_source": null,
+        "best_buyback_price": 151000,
+        "best_buyback_shop": "フジヤカメラ",
+        "buy_price": 107491,
+        "buy_shop_name": "Amazon JP (新品出品)",
+        "buy_price_type": "shop_sale_price",
+        "sell_price_type": "buyback_price",
+        "net_profit_jpy": 41709,
+        "net_profit_rate": 0.388,
+        "route_type": "secondary_to_secondary",
+        "source_label": "中古市場 / フリマ / 買取店",
+        "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
+      }
+    ]
+  },
   "excluded_items": 15,
   "total_deals": 16,
   "confidence_summary": {

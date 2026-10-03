@@ -1,12 +1,158 @@
 {
-  "generated_at": "2026-10-03 20:39 JST",
-  "health_score": 37.2,
+  "generated_at": "2026-10-04 01:37 JST",
+  "health_score": 54.8,
   "health_note": "現在データ品質低下中",
-  "main_route_count": 0,
-  "reference_route_count": 0,
+  "main_route_count": 1,
+  "reference_route_count": 1,
   "today_tasks": [
-    "本日の対象なし（データ取得状況を Health タブで確認）"
+    "🔔 RICOH GR IV を監視（¥135,648以下で通知）",
+    "⏳ RICOH GR IV は待機（eBay sold 更新（EBAY_APP_ID 設定）後に BUY 候補へ昇格します。海外価格の更新待ちです。）"
   ],
-  "daily_recommendation": null,
-  "todays_opportunities": []
+  "daily_recommendation": {
+    "product": "RICOH GR IV",
+    "buy_now": "WATCH",
+    "opportunity_score": 54,
+    "reason": "RICOH GR IV: WATCH。国内成立 利益¥39,009/ROI36%/Score54"
+  },
+  "todays_opportunities": [
+    {
+      "product": "RICOH GR IV",
+      "product_id": "prod_gr4",
+      "kind": "main",
+      "opportunity_score": 54,
+      "score_breakdown": {
+        "利益": 30,
+        "ROI": 20,
+        "鮮度": 0,
+        "再現性": 4,
+        "データ品質": 10,
+        "confidence": 10,
+        "減点(manual/stale)": -20
+      },
+      "buy_now": "WATCH",
+      "confidence": "medium",
+      "action": "ALERT",
+      "action_reason": "価格が ¥135,648 以下になったら通知（BUY化を狙う）。",
+      "alert_threshold": 135648,
+      "expected_buy_price": 135648,
+      "expected_sell_price": 151000,
+      "buy_conditions": {
+        "buy": "Amazon JP (新品出品) ≤ ¥135,648",
+        "sell": "フジヤカメラ ≥ ¥151,000",
+        "roi": "ROI ≥ 8%"
+      },
+      "next_update": "次回自動更新: 本日 12:00頃（買取/価格 日次取得）",
+      "price_trend": {
+        "7d": "→",
+        "30d": "↓",
+        "90d": "→"
+      },
+      "success_probability": 30,
+      "timeline": {
+        "stages": [
+          "候補",
+          "監視",
+          "成立",
+          "通知"
+        ],
+        "current": "監視"
+      },
+      "summary": "★★☆☆☆\n国内で成立している利益ルートです。\n利益 ¥39,009 / ROI 36%。\nフジヤカメラ買取が高水準です。",
+      "why": [
+        "main route 成立（国内完結で利益）",
+        "ROIが8%以上（36%）",
+        "価格 99日前（要更新）",
+        "route confidence high"
+      ],
+      "risks": [
+        "stale（99日前・main計算除外水準）",
+        "同条件件数不足（再現性低）",
+        "アクセサリー混在に注意（本体判定要確認）"
+      ],
+      "holding_period": "数日",
+      "net_profit": 39009,
+      "roi": 0.3629,
+      "reproducibility_score": 30,
+      "buy_source": "Amazon JP (新品出品)",
+      "buy_price": 107491,
+      "sell_source": "フジヤカメラ",
+      "sell_price": 151000,
+      "age_days": 0,
+      "buy_price_evidence": "VERIFIED_CURRENT",
+      "sell_price_evidence": "VERIFIED_CURRENT",
+      "buy_canonical_type": "LISTING",
+      "sell_canonical_type": "BUYBACK_CASH",
+      "priority": 1
+    },
+    {
+      "product": "RICOH GR IV",
+      "product_id": "prod_gr4",
+      "kind": "reference",
+      "opportunity_score": 41,
+      "score_breakdown": {
+        "利益": 30,
+        "ROI": 20,
+        "鮮度": 0,
+        "再現性": 4,
+        "データ品質": 5,
+        "confidence": 2,
+        "減点(manual/stale)": -20
+      },
+      "buy_now": "WATCH",
+      "confidence": "low",
+      "action": "WAIT",
+      "action_reason": "eBay sold 更新（EBAY_APP_ID 設定）後に BUY 候補へ昇格します。海外価格の更新待ちです。",
+      "alert_threshold": 296262,
+      "expected_buy_price": 296262,
+      "expected_sell_price": 324463,
+      "buy_conditions": {
+        "buy": "Amazon JP (新品出品) ≤ ¥296,262",
+        "sell": "src_ebay ≥ ¥324,463",
+        "roi": "ROI ≥ 8%"
+      },
+      "next_update": "次回自動更新: 本日 12:00頃（買取/価格 日次取得）",
+      "price_trend": {
+        "7d": "→",
+        "30d": "↓",
+        "90d": "→"
+      },
+      "success_probability": 30,
+      "timeline": {
+        "stages": [
+          "候補",
+          "監視",
+          "成立",
+          "通知"
+        ],
+        "current": "監視"
+      },
+      "summary": "★★☆☆☆\n海外売却で成立見込みの参考ルートです。\neBay更新後の想定利益 ¥142,079 / ROI 132%。\n現在は海外価格の更新待ちです。",
+      "why": [
+        "reference route（海外sold更新で成立見込み）",
+        "ROIが8%以上（132%）",
+        "価格 43日前（要更新）"
+      ],
+      "risks": [
+        "stale（43日前・main計算除外水準）",
+        "海外依存（為替・関税・輸送）",
+        "送料・決済手数料が大きい",
+        "同条件件数不足（再現性低）",
+        "アクセサリー混在に注意（本体判定要確認）"
+      ],
+      "holding_period": "1ヶ月",
+      "net_profit": 142079,
+      "roi": 1.3218,
+      "reproducibility_score": 30,
+      "buy_source": "Amazon JP (新品出品)",
+      "buy_price": 107491,
+      "sell_source": "src_ebay",
+      "sell_price": 324463,
+      "age_days": 42.7,
+      "buy_price_evidence": "VERIFIED_CURRENT",
+      "sell_price_evidence": "STALE",
+      "buy_canonical_type": "LISTING",
+      "sell_canonical_type": "SOLD",
+      "priority": 2
+    }
+  ]
 }

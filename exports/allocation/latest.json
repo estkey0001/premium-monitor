@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-03 20:39 JST",
+  "generated_at": "2026-10-04 01:37 JST",
   "account_id": "default",
   "cash_reserve_ratio": 0.2,
   "concentration_caps": {
@@ -7,7 +7,46 @@
     "category": 0.5,
     "maker": 0.6
   },
-  "opportunity_metrics": [],
+  "opportunity_metrics": [
+    {
+      "product": "RICOH GR IV",
+      "product_id": "prod_gr4",
+      "action": "ALERT",
+      "kind": "main",
+      "buy_price": 107491,
+      "net_profit": 39009,
+      "roi": 0.3629,
+      "success_probability": 30,
+      "opportunity_score": 54,
+      "reproducibility_score": 30,
+      "holding_period": "数日",
+      "expected_value": 11703,
+      "capital_efficiency": 0.1089,
+      "risk_score": 14,
+      "liquidity_score": 85,
+      "category": "camera",
+      "maker": "RICOH"
+    },
+    {
+      "product": "RICOH GR IV",
+      "product_id": "prod_gr4",
+      "action": "WAIT",
+      "kind": "reference",
+      "buy_price": 107491,
+      "net_profit": 142079,
+      "roi": 1.3218,
+      "success_probability": 30,
+      "opportunity_score": 41,
+      "reproducibility_score": 30,
+      "holding_period": "1ヶ月",
+      "expected_value": 42624,
+      "capital_efficiency": 0.3965,
+      "risk_score": 59,
+      "liquidity_score": 25,
+      "category": "camera",
+      "maker": "RICOH"
+    }
+  ],
   "default_budget": 3000000,
   "budgets": [
     1000000,
@@ -21,76 +60,181 @@
       "budget": 1000000,
       "investable": 800000,
       "cash_reserve_ratio": 0.2,
-      "allocations": [],
-      "waiting": [],
-      "allocated": 0,
-      "cash": 1000000,
-      "cash_ratio": 1.0,
-      "expected_profit": 0,
-      "expected_roi": 0.0,
-      "avg_risk_score": 0,
-      "diversification_score": 0,
-      "max_concentration": 0.0
+      "allocations": [
+        {
+          "product": "RICOH GR IV",
+          "product_id": "prod_gr4",
+          "units": 2,
+          "unit_price": 107491,
+          "total": 214982,
+          "expected_profit": 78018,
+          "expected_value": 23406,
+          "category": "camera",
+          "maker": "RICOH",
+          "holding_period": "数日",
+          "roi": 0.3629,
+          "risk_score": 14,
+          "liquidity_score": 85
+        }
+      ],
+      "waiting": [
+        {
+          "product": "RICOH GR IV",
+          "reason": "海外価格更新待ち（eBay sold）"
+        }
+      ],
+      "allocated": 214982,
+      "cash": 785018,
+      "cash_ratio": 0.785,
+      "expected_profit": 78018,
+      "expected_roi": 0.3629,
+      "avg_risk_score": 14,
+      "diversification_score": 31,
+      "max_concentration": 0.215
     },
     "3000000": {
       "budget": 3000000,
       "investable": 2400000,
       "cash_reserve_ratio": 0.2,
-      "allocations": [],
-      "waiting": [],
-      "allocated": 0,
-      "cash": 3000000,
-      "cash_ratio": 1.0,
-      "expected_profit": 0,
-      "expected_roi": 0.0,
-      "avg_risk_score": 0,
-      "diversification_score": 0,
-      "max_concentration": 0.0
+      "allocations": [
+        {
+          "product": "RICOH GR IV",
+          "product_id": "prod_gr4",
+          "units": 8,
+          "unit_price": 107491,
+          "total": 859928,
+          "expected_profit": 312072,
+          "expected_value": 93624,
+          "category": "camera",
+          "maker": "RICOH",
+          "holding_period": "数日",
+          "roi": 0.3629,
+          "risk_score": 14,
+          "liquidity_score": 85
+        }
+      ],
+      "waiting": [
+        {
+          "product": "RICOH GR IV",
+          "reason": "海外価格更新待ち（eBay sold）"
+        }
+      ],
+      "allocated": 859928,
+      "cash": 2140072,
+      "cash_ratio": 0.7134,
+      "expected_profit": 312072,
+      "expected_roi": 0.3629,
+      "avg_risk_score": 14,
+      "diversification_score": 29,
+      "max_concentration": 0.2866
     },
     "5000000": {
       "budget": 5000000,
       "investable": 4000000,
       "cash_reserve_ratio": 0.2,
-      "allocations": [],
-      "waiting": [],
-      "allocated": 0,
-      "cash": 5000000,
-      "cash_ratio": 1.0,
-      "expected_profit": 0,
-      "expected_roi": 0.0,
-      "avg_risk_score": 0,
-      "diversification_score": 0,
-      "max_concentration": 0.0
+      "allocations": [
+        {
+          "product": "RICOH GR IV",
+          "product_id": "prod_gr4",
+          "units": 13,
+          "unit_price": 107491,
+          "total": 1397383,
+          "expected_profit": 507117,
+          "expected_value": 152139,
+          "category": "camera",
+          "maker": "RICOH",
+          "holding_period": "数日",
+          "roi": 0.3629,
+          "risk_score": 14,
+          "liquidity_score": 85
+        }
+      ],
+      "waiting": [
+        {
+          "product": "RICOH GR IV",
+          "reason": "海外価格更新待ち（eBay sold）"
+        }
+      ],
+      "allocated": 1397383,
+      "cash": 3602617,
+      "cash_ratio": 0.7205,
+      "expected_profit": 507117,
+      "expected_roi": 0.3629,
+      "avg_risk_score": 14,
+      "diversification_score": 29,
+      "max_concentration": 0.2795
     },
     "10000000": {
       "budget": 10000000,
       "investable": 8000000,
       "cash_reserve_ratio": 0.2,
-      "allocations": [],
-      "waiting": [],
-      "allocated": 0,
-      "cash": 10000000,
-      "cash_ratio": 1.0,
-      "expected_profit": 0,
-      "expected_roi": 0.0,
-      "avg_risk_score": 0,
-      "diversification_score": 0,
-      "max_concentration": 0.0
+      "allocations": [
+        {
+          "product": "RICOH GR IV",
+          "product_id": "prod_gr4",
+          "units": 27,
+          "unit_price": 107491,
+          "total": 2902257,
+          "expected_profit": 1053243,
+          "expected_value": 315981,
+          "category": "camera",
+          "maker": "RICOH",
+          "holding_period": "数日",
+          "roi": 0.3629,
+          "risk_score": 14,
+          "liquidity_score": 85
+        }
+      ],
+      "waiting": [
+        {
+          "product": "RICOH GR IV",
+          "reason": "海外価格更新待ち（eBay sold）"
+        }
+      ],
+      "allocated": 2902257,
+      "cash": 7097743,
+      "cash_ratio": 0.7098,
+      "expected_profit": 1053243,
+      "expected_roi": 0.3629,
+      "avg_risk_score": 14,
+      "diversification_score": 28,
+      "max_concentration": 0.2902
     },
     "30000000": {
       "budget": 30000000,
       "investable": 24000000,
       "cash_reserve_ratio": 0.2,
-      "allocations": [],
-      "waiting": [],
-      "allocated": 0,
-      "cash": 30000000,
-      "cash_ratio": 1.0,
-      "expected_profit": 0,
-      "expected_roi": 0.0,
-      "avg_risk_score": 0,
-      "diversification_score": 0,
-      "max_concentration": 0.0
+      "allocations": [
+        {
+          "product": "RICOH GR IV",
+          "product_id": "prod_gr4",
+          "units": 83,
+          "unit_price": 107491,
+          "total": 8921753,
+          "expected_profit": 3237747,
+          "expected_value": 971349,
+          "category": "camera",
+          "maker": "RICOH",
+          "holding_period": "数日",
+          "roi": 0.3629,
+          "risk_score": 14,
+          "liquidity_score": 85
+        }
+      ],
+      "waiting": [
+        {
+          "product": "RICOH GR IV",
+          "reason": "海外価格更新待ち（eBay sold）"
+        }
+      ],
+      "allocated": 8921753,
+      "cash": 21078247,
+      "cash_ratio": 0.7026,
+      "expected_profit": 3237747,
+      "expected_roi": 0.3629,
+      "avg_risk_score": 14,
+      "diversification_score": 28,
+      "max_concentration": 0.2974
     }
   }
 }

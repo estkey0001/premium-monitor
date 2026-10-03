@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-03T20:39:00+09:00",
+  "generated_at": "2026-10-04T01:37:11+09:00",
   "collection": {
     "total_shops": 16,
     "shops_with_success": 2,
@@ -11,18 +11,18 @@
     "success_rate_pct": 18.2
   },
   "comparison": {
-    "prev_success_rate_pct": 21.8,
+    "prev_success_rate_pct": 18.2,
     "current_success_rate_pct": 18.2,
-    "delta_pct": -3.6,
-    "trend": "悪化",
+    "delta_pct": 0.0,
+    "trend": "横ばい",
     "moving_avg_7d_pct": 19.5,
     "top5_failure_reasons": [
       {
-        "reason": "price_not_found",
-        "count": 9
+        "reason": "product_not_listed",
+        "count": 8
       },
       {
-        "reason": "product_not_listed",
+        "reason": "price_not_found",
         "count": 8
       },
       {
@@ -41,11 +41,11 @@
   },
   "failure_reasons": [
     {
-      "reason": "price_not_found",
-      "count": 9
+      "reason": "product_not_listed",
+      "count": 8
     },
     {
-      "reason": "product_not_listed",
+      "reason": "price_not_found",
       "count": 8
     },
     {
@@ -71,6 +71,10 @@
     {
       "reason": "service_unavailable",
       "count": 2
+    },
+    {
+      "reason": "connection_error",
+      "count": 1
     }
   ],
   "effective_data": {
@@ -103,12 +107,12 @@
   },
   "ranking_usable": {
     "beginner": 1,
-    "pro": 0,
+    "pro": 1,
     "reason_if_empty": null
   },
   "sedori_usable": {
-    "routes": 0,
-    "reason_if_empty": "calculate-sedori-routes 未実行 or DBにルートデータなし"
+    "routes": 1,
+    "reason_if_empty": null
   },
   "overseas": {
     "total": 4,
@@ -147,7 +151,7 @@
       "ok": 0,
       "failed": 2,
       "success_rate_pct": 0,
-      "top_reason": "price_not_found",
+      "top_reason": "connection_error",
       "optional": true
     },
     {
@@ -258,55 +262,59 @@
   "consecutive_failed_shops": [
     {
       "shop_id": "2ndstreet",
-      "consecutive_failures": 168
+      "consecutive_failures": 169
     },
     {
       "shop_id": "bookoff",
-      "consecutive_failures": 168
+      "consecutive_failures": 169
     },
     {
       "shop_id": "dosupara",
-      "consecutive_failures": 168
+      "consecutive_failures": 169
     },
     {
       "shop_id": "geo_mobile",
-      "consecutive_failures": 168
+      "consecutive_failures": 169
     },
     {
       "shop_id": "hardoff",
-      "consecutive_failures": 168
+      "consecutive_failures": 169
     },
     {
       "shop_id": "janpara",
-      "consecutive_failures": 168
+      "consecutive_failures": 169
     },
     {
       "shop_id": "pasoko",
-      "consecutive_failures": 168
+      "consecutive_failures": 169
     },
     {
       "shop_id": "sofmap",
-      "consecutive_failures": 168
+      "consecutive_failures": 169
     },
     {
       "shop_id": "surugaya",
-      "consecutive_failures": 168
+      "consecutive_failures": 169
     },
     {
       "shop_id": "tsutaya",
-      "consecutive_failures": 168
+      "consecutive_failures": 169
     },
     {
       "shop_id": "iosys",
-      "consecutive_failures": 101
+      "consecutive_failures": 102
     },
     {
       "shop_id": "netoff",
-      "consecutive_failures": 28
+      "consecutive_failures": 29
     },
     {
       "shop_id": "geo",
-      "consecutive_failures": 7
+      "consecutive_failures": 8
+    },
+    {
+      "shop_id": "mobile_ichiban",
+      "consecutive_failures": 2
     }
   ],
   "improvement_priority": [

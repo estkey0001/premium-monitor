@@ -1,4 +1,4 @@
-# データ取得品質レポート（2026-10-03 20:39 JST）
+# データ取得品質レポート（2026-10-04 01:37 JST）
 
 ## 取得成功率
 - 全対象店舗数: 16
@@ -7,17 +7,17 @@
 - ジョブ成功率: 18.2%（OK 10 / 失敗 41 / SKIP 4 / 計 55）
 
 ## 前回比較
-- 前回成功率: 21.8%
+- 前回成功率: 18.2%
 - 今回成功率: 18.2%
-- 変化: -3.6pt（悪化）
+- 変化: 0.0pt（横ばい）
 - 7日移動平均: 19.5%
-- 主要失敗理由 TOP5: price_not_found 9, product_not_listed 8, rate_limited_429 6, http_403 6, site_blocked 6
+- 主要失敗理由 TOP5: product_not_listed 8, price_not_found 8, rate_limited_429 6, http_403 6, site_blocked 6
 
 ## 店舗別成功率（低い順）
 - 2ndstreet（optional）: 0%（OK 0/失敗 4・price_not_found）
 - bookoff（optional）: 0%（OK 0/失敗 0・not_supported）
 - dosupara（optional）: 0%（OK 0/失敗 2・http_404）
-- geo（optional）: 0%（OK 0/失敗 2・price_not_found）
+- geo（optional）: 0%（OK 0/失敗 2・connection_error）
 - geo_mobile（optional）: 0%（OK 0/失敗 4・site_blocked）
 - hardoff（optional）: 0%（OK 0/失敗 2・http_404）
 - iosys: 0%（OK 0/失敗 6・http_403）
@@ -36,33 +36,35 @@
 - iphone17pm512: 25.0%
 
 ## 連続失敗店舗（2回以上）
-- 2ndstreet: 168回連続
-- bookoff: 168回連続
-- dosupara: 168回連続
-- geo_mobile: 168回連続
-- hardoff: 168回連続
-- janpara: 168回連続
-- pasoko: 168回連続
-- sofmap: 168回連続
-- surugaya: 168回連続
-- tsutaya: 168回連続
-- iosys: 101回連続
-- netoff: 28回連続
-- geo: 7回連続
+- 2ndstreet: 169回連続
+- bookoff: 169回連続
+- dosupara: 169回連続
+- geo_mobile: 169回連続
+- hardoff: 169回連続
+- janpara: 169回連続
+- pasoko: 169回連続
+- sofmap: 169回連続
+- surugaya: 169回連続
+- tsutaya: 169回連続
+- iosys: 102回連続
+- netoff: 29回連続
+- geo: 8回連続
+- mobile_ichiban: 2回連続
 
 ## 改善優先順位（required店舗）
 1. iosys（失敗6 / http_403）
 2. mobile_ichiban（失敗5 / product_not_listed）
 
 ## 失敗理由（内訳）
-- price_not_found: 9件
 - product_not_listed: 8件
+- price_not_found: 8件
 - rate_limited_429: 6件
 - http_403: 6件
 - site_blocked: 6件
 - http_404: 4件
 - not_supported: 4件
 - service_unavailable: 2件
+- connection_error: 1件
 
 ## 有効データ量（新品・未使用 / 14日以内 / price>0）
 - 有効買取データを持つ商品数: 23
@@ -84,11 +86,10 @@
 
 ## ランキングに使えたデータ数
 - Beginner: 1 件
-- Pro: 0 件
+- Pro: 1 件
 
 ## せどりルートに使えたデータ数
-- ルート: 0 件
-- ⚠️ reason_if_empty: calculate-sedori-routes 未実行 or DBにルートデータなし
+- ルート: 1 件
 
 ## 海外価格の鮮度
 - fresh: 0 / stale: 4 / 計 4

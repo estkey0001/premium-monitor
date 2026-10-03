@@ -1,6 +1,6 @@
 # Collector Quality Report
 
-生成日時: 2026-10-03 19:15:14 UTC+09:00
+生成日時: 2026-10-04 00:14:05 UTC+09:00
 
 ## サマリ
 
@@ -67,7 +67,7 @@
 | 2ndstreet | 0% | 0 | 4 | — | — | price_not_found |
 | bookoff | 0% | 0 | 0 | — | — | not_supported |
 | dosupara | 0% | 0 | 2 | — | — | http_404 |
-| geo | 0% | 0 | 2 | — | — | price_not_found |
+| geo | 0% | 0 | 2 | — | — | connection_error |
 | geo_mobile | 0% | 0 | 4 | — | 4/4 | site_blocked |
 | hardoff | 0% | 0 | 2 | — | — | http_404 |
 | iosys | 0% | 0 | 6 | — | 6/6 | http_403 |
@@ -95,21 +95,22 @@
 1. 2ndstreet (price_not_found 4件)
 2. bookoff (not_supported 2件)
 3. dosupara (http_404 2件)
-4. geo (price_not_found 2件)
+4. geo (connection_error 2件)
 5. geo_mobile (site_blocked 4件)
 
 ## 取得不可理由ランキング
 
 | 理由 | 件数 |
 |------|------|
-| price_not_found | 9 |
 | product_not_listed | 8 |
+| price_not_found | 8 |
 | rate_limited_429 | 6 |
 | http_403 | 6 |
 | site_blocked | 6 |
 | http_404 | 4 |
 | not_supported | 4 |
 | service_unavailable | 2 |
+| connection_error | 1 |
 
 ## 取得失敗一覧 (45件)
 
@@ -139,7 +140,7 @@
 | iphone17pm512 | geo_mobile | FAILED | site_blocked |
 | iphone17pm512 | 2ndstreet | FAILED | price_not_found |
 | iphone17pm512 | netoff | FAILED | price_not_found |
-| switch2 | geo | FAILED | price_not_found |
+| switch2 | geo | FAILED | connection_error |
 | switch2 | iosys | FAILED | http_403 |
 | switch2 | janpara | FAILED | rate_limited_429 |
 | switch2 | hardoff | FAILED | http_404 |

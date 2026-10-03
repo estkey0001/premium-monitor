@@ -1,6 +1,6 @@
 # Beta Launch Preparation — Beta Report
 
-> 生成: 2026-10-03 16:54 JST / 初回体験最適化・運用準備・βテスト計測・フィードバック（AI/利益/DataQualityロジックは不変）
+> 生成: 2026-10-03 19:12 JST / 初回体験最適化・運用準備・βテスト計測・フィードバック（AI/利益/DataQualityロジックは不変）
 
 ## Beta Ready Score: **83 / 100** — 判定: **READY (closed beta)**
 
@@ -11,7 +11,7 @@
 | Notification | 86 |
 | Dashboard | 84 |
 | Performance | 92 |
-| Data Quality | 67 |
+| Data Quality | 68 |
 | Documentation | 90 |
 | Support | 82 |
 | Operations | 82 |
@@ -29,7 +29,7 @@
 - SaaS 実稼働（実OAuth/Stripe/常時API/マネージドDB）は外部基盤が必要（ROADMAP記載）
 ### Medium（3件）
 - stale率 51%（サンプル/手動データ鮮度・日次運用で改善）
-- item_url率 47%（確認導線/再現性の改善余地）
+- item_url率 48%（確認導線/再現性の改善余地）
 - Coverage 7カテゴリ（Apple/GPU等の拡充で候補増）
 ### Low（0件）
 - なし

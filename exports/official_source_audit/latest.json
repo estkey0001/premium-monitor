@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-03 13:54 JST",
+  "generated_at": "2026-10-03 16:09 JST",
   "scope": "公式ソース登録・検証（利益/AI/Opportunity/Notification/Capital/Execution は不変）",
   "methodology": {
     "verification": "WebFetch で HTTP200/公式ドメイン/canonical/商品一致を実確認したURLのみ verified",
@@ -38,70 +38,7 @@
       "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17",
       "link_type": "item",
       "confidence": "high",
-      "official_price": 142800,
-      "verified": true
-    },
-    {
-      "product_id": "prod_iphone17pro_256",
-      "source": "src_apple_jp",
-      "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17-pro",
-      "link_type": "item",
-      "confidence": "high",
-      "official_price": 194800,
-      "verified": true
-    },
-    {
-      "product_id": "prod_iphone17pro_512",
-      "source": "src_apple_jp",
-      "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17-pro",
-      "link_type": "item",
-      "confidence": "medium",
-      "official_price": null,
-      "verified": true
-    },
-    {
-      "product_id": "prod_iphone17pm_256",
-      "source": "src_apple_jp",
-      "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17-pro",
-      "link_type": "item",
-      "confidence": "high",
-      "official_price": 214800,
-      "verified": true
-    },
-    {
-      "product_id": "prod_iphone17pm_512",
-      "source": "src_apple_jp",
-      "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17-pro",
-      "link_type": "item",
-      "confidence": "medium",
-      "official_price": null,
-      "verified": true
-    },
-    {
-      "product_id": "prod_ipad_pro_m4_11",
-      "source": "src_apple_jp",
-      "url": "https://www.apple.com/jp/shop/buy-ipad/ipad-pro",
-      "link_type": "item",
-      "confidence": "high",
-      "official_price": 209800,
-      "verified": true
-    },
-    {
-      "product_id": "prod_ipad_pro_m4_13",
-      "source": "src_apple_jp",
-      "url": "https://www.apple.com/jp/shop/buy-ipad/ipad-pro",
-      "link_type": "item",
-      "confidence": "high",
-      "official_price": 269800,
-      "verified": true
-    },
-    {
-      "product_id": "prod_ipad_air_m3",
-      "source": "src_apple_jp",
-      "url": "https://www.apple.com/jp/shop/buy-ipad/ipad-air",
-      "link_type": "item",
-      "confidence": "high",
-      "official_price": 129800,
+      "official_price": 159800,
       "verified": true
     },
     {
@@ -132,30 +69,30 @@
       "verified": true
     },
     {
-      "product_id": "prod_apple_watch_s11",
-      "source": "src_apple_jp",
-      "url": "https://www.apple.com/jp/shop/buy-watch/apple-watch",
-      "link_type": "category",
-      "confidence": "medium",
-      "official_price": 71800,
-      "verified": true
-    },
-    {
-      "product_id": "prod_apple_watch_ultra3",
-      "source": "src_apple_jp",
-      "url": "https://www.apple.com/jp/shop/buy-watch/apple-watch",
-      "link_type": "category",
-      "confidence": "medium",
-      "official_price": 142800,
-      "verified": true
-    },
-    {
       "product_id": "prod_airpods_pro3",
       "source": "src_apple_jp",
       "url": "https://www.apple.com/jp/shop/buy-airpods/airpods-pro-3",
       "link_type": "item",
       "confidence": "high",
       "official_price": 42800,
+      "verified": true
+    },
+    {
+      "product_id": "prod_ps5_pro",
+      "source": "src_sony_store",
+      "url": "https://pur.store.sony.jp/ps5/products/ps5/CFI-7100B01_purchase/",
+      "link_type": "item",
+      "confidence": "high",
+      "official_price": 137980,
+      "verified": true
+    },
+    {
+      "product_id": "prod_switch2",
+      "source": "src_nintendo_store",
+      "url": "https://www.nintendo.com/jp/hardware/switch2/lineup/index.html",
+      "link_type": "category",
+      "confidence": "medium",
+      "official_price": 59980,
       "verified": true
     },
     {
@@ -238,6 +175,86 @@
       "url": null,
       "verified": false,
       "reason": "store.sony.jp が当環境からDNS解決不可（要手動検証）"
+    },
+    {
+      "product_id": "prod_iphone17pro_256",
+      "source": "src_apple_jp",
+      "url": null,
+      "verified": false,
+      "official_not_sold": true,
+      "reason": "iPhone 17 Pro の購入ページが /buy-iphone へ移動。公式は iPhone 18 Pro を販売中"
+    },
+    {
+      "product_id": "prod_iphone17pro_512",
+      "source": "src_apple_jp",
+      "url": null,
+      "verified": false,
+      "official_not_sold": true,
+      "reason": "iPhone 17 Pro の購入ページが /buy-iphone へ移動。公式は iPhone 18 Pro を販売中"
+    },
+    {
+      "product_id": "prod_iphone17pm_256",
+      "source": "src_apple_jp",
+      "url": null,
+      "verified": false,
+      "official_not_sold": true,
+      "reason": "iPhone 17 Pro Max の購入ページが /buy-iphone へ移動。公式は iPhone 18 Pro Max を販売中"
+    },
+    {
+      "product_id": "prod_iphone17pm_512",
+      "source": "src_apple_jp",
+      "url": null,
+      "verified": false,
+      "official_not_sold": true,
+      "reason": "iPhone 17 Pro Max の購入ページが /buy-iphone へ移動。公式は iPhone 18 Pro Max を販売中"
+    },
+    {
+      "product_id": "prod_ipad_pro_m4_11",
+      "source": "src_apple_jp",
+      "url": null,
+      "verified": false,
+      "official_not_sold": true,
+      "reason": "公式の iPad Pro は M5 チップ（M4 は販売していない）"
+    },
+    {
+      "product_id": "prod_ipad_pro_m4_13",
+      "source": "src_apple_jp",
+      "url": null,
+      "verified": false,
+      "official_not_sold": true,
+      "reason": "公式の iPad Pro は M5 チップ（M4 は販売していない）"
+    },
+    {
+      "product_id": "prod_ipad_air_m3",
+      "source": "src_apple_jp",
+      "url": null,
+      "verified": false,
+      "official_not_sold": true,
+      "reason": "公式の iPad Air は M4 チップ（M3 は販売していない）"
+    },
+    {
+      "product_id": "prod_apple_watch_s11",
+      "source": "src_apple_jp",
+      "url": null,
+      "verified": false,
+      "official_not_sold": true,
+      "reason": "公式は Apple Watch Series 12 を販売中（Series 11 は販売していない）"
+    },
+    {
+      "product_id": "prod_apple_watch_ultra3",
+      "source": "src_apple_jp",
+      "url": null,
+      "verified": false,
+      "official_not_sold": true,
+      "reason": "公式は Apple Watch Ultra 4 を販売中（Ultra 3 は販売していない）"
+    },
+    {
+      "product_id": "prod_switch2_mk",
+      "source": "src_nintendo_store",
+      "url": null,
+      "verified": false,
+      "official_not_sold": true,
+      "reason": "任天堂公式のラインナップでマリオカート ワールド セットは「生産終了」"
     }
   ],
   "source_matrix": {
@@ -246,15 +263,15 @@
       "brand": "Apple",
       "sources": {
         "official": {
-          "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17-pro",
-          "link_type": "item",
-          "verified": true,
-          "last_verified_at": "2026-08-23",
-          "extraction_method": "webfetch_verified",
-          "confidence": "high",
-          "official_price": 194800,
+          "url": null,
+          "link_type": null,
+          "verified": false,
+          "last_verified_at": "2026-10-03",
+          "extraction_method": null,
+          "confidence": "low",
+          "official_price": null,
           "enabled": true,
-          "reason_if_disabled": null
+          "reason_if_disabled": "iPhone 17 Pro の購入ページが /buy-iphone へ移動。公式は iPhone 18 Pro を販売中"
         },
         "pricecom": null,
         "yodobashi": null,
@@ -271,15 +288,15 @@
       "brand": "Apple",
       "sources": {
         "official": {
-          "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17-pro",
-          "link_type": "item",
-          "verified": true,
-          "last_verified_at": "2026-08-23",
-          "extraction_method": "webfetch_verified",
-          "confidence": "medium",
+          "url": null,
+          "link_type": null,
+          "verified": false,
+          "last_verified_at": "2026-10-03",
+          "extraction_method": null,
+          "confidence": "low",
           "official_price": null,
           "enabled": true,
-          "reason_if_disabled": null
+          "reason_if_disabled": "iPhone 17 Pro の購入ページが /buy-iphone へ移動。公式は iPhone 18 Pro を販売中"
         },
         "pricecom": null,
         "yodobashi": null,
@@ -296,15 +313,15 @@
       "brand": "Apple",
       "sources": {
         "official": {
-          "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17-pro",
-          "link_type": "item",
-          "verified": true,
-          "last_verified_at": "2026-08-23",
-          "extraction_method": "webfetch_verified",
-          "confidence": "high",
-          "official_price": 214800,
+          "url": null,
+          "link_type": null,
+          "verified": false,
+          "last_verified_at": "2026-10-03",
+          "extraction_method": null,
+          "confidence": "low",
+          "official_price": null,
           "enabled": true,
-          "reason_if_disabled": null
+          "reason_if_disabled": "iPhone 17 Pro Max の購入ページが /buy-iphone へ移動。公式は iPhone 18 Pro Max を販売中"
         },
         "pricecom": null,
         "yodobashi": null,
@@ -321,15 +338,15 @@
       "brand": "Apple",
       "sources": {
         "official": {
-          "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17-pro",
-          "link_type": "item",
-          "verified": true,
-          "last_verified_at": "2026-08-23",
-          "extraction_method": "webfetch_verified",
-          "confidence": "medium",
+          "url": null,
+          "link_type": null,
+          "verified": false,
+          "last_verified_at": "2026-10-03",
+          "extraction_method": null,
+          "confidence": "low",
           "official_price": null,
           "enabled": true,
-          "reason_if_disabled": null
+          "reason_if_disabled": "iPhone 17 Pro Max の購入ページが /buy-iphone へ移動。公式は iPhone 18 Pro Max を販売中"
         },
         "pricecom": null,
         "yodobashi": null,
@@ -349,10 +366,10 @@
           "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17",
           "link_type": "item",
           "verified": true,
-          "last_verified_at": "2026-08-23",
+          "last_verified_at": "2026-10-03",
           "extraction_method": "webfetch_verified",
           "confidence": "high",
-          "official_price": 142800,
+          "official_price": 159800,
           "enabled": true,
           "reason_if_disabled": null
         },
@@ -531,15 +548,15 @@
       "brand": "Apple",
       "sources": {
         "official": {
-          "url": "https://www.apple.com/jp/shop/buy-ipad/ipad-pro",
-          "link_type": "item",
-          "verified": true,
-          "last_verified_at": "2026-08-23",
-          "extraction_method": "webfetch_verified",
-          "confidence": "high",
-          "official_price": 209800,
+          "url": null,
+          "link_type": null,
+          "verified": false,
+          "last_verified_at": "2026-10-03",
+          "extraction_method": null,
+          "confidence": "low",
+          "official_price": null,
           "enabled": true,
-          "reason_if_disabled": null
+          "reason_if_disabled": "公式の iPad Pro は M5 チップ（M4 は販売していない）"
         },
         "pricecom": null,
         "yodobashi": null,
@@ -556,15 +573,15 @@
       "brand": "Apple",
       "sources": {
         "official": {
-          "url": "https://www.apple.com/jp/shop/buy-ipad/ipad-pro",
-          "link_type": "item",
-          "verified": true,
-          "last_verified_at": "2026-08-23",
-          "extraction_method": "webfetch_verified",
-          "confidence": "high",
-          "official_price": 269800,
+          "url": null,
+          "link_type": null,
+          "verified": false,
+          "last_verified_at": "2026-10-03",
+          "extraction_method": null,
+          "confidence": "low",
+          "official_price": null,
           "enabled": true,
-          "reason_if_disabled": null
+          "reason_if_disabled": "公式の iPad Pro は M5 チップ（M4 は販売していない）"
         },
         "pricecom": null,
         "yodobashi": null,
@@ -581,15 +598,15 @@
       "brand": "Apple",
       "sources": {
         "official": {
-          "url": "https://www.apple.com/jp/shop/buy-ipad/ipad-air",
-          "link_type": "item",
-          "verified": true,
-          "last_verified_at": "2026-08-23",
-          "extraction_method": "webfetch_verified",
-          "confidence": "high",
-          "official_price": 129800,
+          "url": null,
+          "link_type": null,
+          "verified": false,
+          "last_verified_at": "2026-10-03",
+          "extraction_method": null,
+          "confidence": "low",
+          "official_price": null,
           "enabled": true,
-          "reason_if_disabled": null
+          "reason_if_disabled": "公式の iPad Air は M4 チップ（M3 は販売していない）"
         },
         "pricecom": null,
         "yodobashi": null,
@@ -606,15 +623,15 @@
       "brand": "Apple",
       "sources": {
         "official": {
-          "url": "https://www.apple.com/jp/shop/buy-watch/apple-watch",
-          "link_type": "category",
-          "verified": true,
-          "last_verified_at": "2026-08-23",
-          "extraction_method": "webfetch_verified",
-          "confidence": "medium",
-          "official_price": 71800,
+          "url": null,
+          "link_type": null,
+          "verified": false,
+          "last_verified_at": "2026-10-03",
+          "extraction_method": null,
+          "confidence": "low",
+          "official_price": null,
           "enabled": true,
-          "reason_if_disabled": null
+          "reason_if_disabled": "公式は Apple Watch Series 12 を販売中（Series 11 は販売していない）"
         },
         "pricecom": null,
         "yodobashi": null,
@@ -631,15 +648,15 @@
       "brand": "Apple",
       "sources": {
         "official": {
-          "url": "https://www.apple.com/jp/shop/buy-watch/apple-watch",
-          "link_type": "category",
-          "verified": true,
-          "last_verified_at": "2026-08-23",
-          "extraction_method": "webfetch_verified",
-          "confidence": "medium",
-          "official_price": 142800,
+          "url": null,
+          "link_type": null,
+          "verified": false,
+          "last_verified_at": "2026-10-03",
+          "extraction_method": null,
+          "confidence": "low",
+          "official_price": null,
           "enabled": true,
-          "reason_if_disabled": null
+          "reason_if_disabled": "公式は Apple Watch Ultra 4 を販売中（Ultra 3 は販売していない）"
         },
         "pricecom": null,
         "yodobashi": null,
@@ -659,7 +676,7 @@
           "url": "https://www.apple.com/jp/shop/buy-airpods/airpods-pro-3",
           "link_type": "item",
           "verified": true,
-          "last_verified_at": "2026-08-23",
+          "last_verified_at": "2026-10-03",
           "extraction_method": "webfetch_verified",
           "confidence": "high",
           "official_price": 42800,
@@ -725,7 +742,17 @@
       "product_name": "PlayStation 5 Pro",
       "brand": "Sony",
       "sources": {
-        "official": null,
+        "official": {
+          "url": "https://pur.store.sony.jp/ps5/products/ps5/CFI-7100B01_purchase/",
+          "link_type": "item",
+          "verified": true,
+          "last_verified_at": "2026-10-03",
+          "extraction_method": "webfetch_verified",
+          "confidence": "high",
+          "official_price": 137980,
+          "enabled": true,
+          "reason_if_disabled": null
+        },
         "pricecom": null,
         "yodobashi": null,
         "biccamera": null,
@@ -1280,13 +1307,92 @@
   "maker_report": {
     "Apple": {
       "products": 14,
-      "url_verified": 14,
-      "http_200": 14,
-      "exact_match": 7,
-      "price_ok": 9,
-      "high_conf": 7,
-      "failed": 0,
-      "failures": []
+      "url_verified": 5,
+      "http_200": 5,
+      "exact_match": 2,
+      "price_ok": 2,
+      "high_conf": 2,
+      "failed": 9,
+      "failures": [
+        {
+          "product_id": "prod_iphone17pro_256",
+          "reason": "iPhone 17 Pro の購入ページが /buy-iphone へ移動。公式は iPhone 18 Pro を販売中"
+        },
+        {
+          "product_id": "prod_iphone17pro_512",
+          "reason": "iPhone 17 Pro の購入ページが /buy-iphone へ移動。公式は iPhone 18 Pro を販売中"
+        },
+        {
+          "product_id": "prod_iphone17pm_256",
+          "reason": "iPhone 17 Pro Max の購入ページが /buy-iphone へ移動。公式は iPhone 18 Pro Max を販売中"
+        },
+        {
+          "product_id": "prod_iphone17pm_512",
+          "reason": "iPhone 17 Pro Max の購入ページが /buy-iphone へ移動。公式は iPhone 18 Pro Max を販売中"
+        },
+        {
+          "product_id": "prod_ipad_pro_m4_11",
+          "reason": "公式の iPad Pro は M5 チップ（M4 は販売していない）"
+        },
+        {
+          "product_id": "prod_ipad_pro_m4_13",
+          "reason": "公式の iPad Pro は M5 チップ（M4 は販売していない）"
+        },
+        {
+          "product_id": "prod_ipad_air_m3",
+          "reason": "公式の iPad Air は M4 チップ（M3 は販売していない）"
+        },
+        {
+          "product_id": "prod_apple_watch_s11",
+          "reason": "公式は Apple Watch Series 12 を販売中（Series 11 は販売していない）"
+        },
+        {
+          "product_id": "prod_apple_watch_ultra3",
+          "reason": "公式は Apple Watch Ultra 4 を販売中（Ultra 3 は販売していない）"
+        }
+      ]
+    },
+    "Sony": {
+      "products": 5,
+      "url_verified": 1,
+      "http_200": 1,
+      "exact_match": 1,
+      "price_ok": 1,
+      "high_conf": 1,
+      "failed": 4,
+      "failures": [
+        {
+          "product_id": "prod_a1ii",
+          "reason": "store.sony.jp が当環境からDNS解決不可（要手動検証）"
+        },
+        {
+          "product_id": "prod_a7rv",
+          "reason": "store.sony.jp が当環境からDNS解決不可（要手動検証）"
+        },
+        {
+          "product_id": "prod_a7cr",
+          "reason": "store.sony.jp が当環境からDNS解決不可（要手動検証）"
+        },
+        {
+          "product_id": "prod_fx3",
+          "reason": "store.sony.jp が当環境からDNS解決不可（要手動検証）"
+        }
+      ]
+    },
+    "Nintendo": {
+      "products": 2,
+      "url_verified": 1,
+      "http_200": 1,
+      "exact_match": 0,
+      "price_ok": 1,
+      "high_conf": 0,
+      "failed": 1,
+      "failures": [
+        {
+          "product_id": "prod_switch2_mk",
+          "reason": "任天堂公式のラインナップでマリオカート ワールド セットは「生産終了」"
+        }
+      ]
     },
     "Nikon": {
       "products": 3,
@@ -1339,33 +1445,6 @@
           "reason": "canon.jp が当環境からDNS解決不可（要手動検証）"
         }
       ]
-    },
-    "Sony": {
-      "products": 4,
-      "url_verified": 0,
-      "http_200": 0,
-      "exact_match": 0,
-      "price_ok": 0,
-      "high_conf": 0,
-      "failed": 4,
-      "failures": [
-        {
-          "product_id": "prod_a1ii",
-          "reason": "store.sony.jp が当環境からDNS解決不可（要手動検証）"
-        },
-        {
-          "product_id": "prod_a7rv",
-          "reason": "store.sony.jp が当環境からDNS解決不可（要手動検証）"
-        },
-        {
-          "product_id": "prod_a7cr",
-          "reason": "store.sony.jp が当環境からDNS解決不可（要手動検証）"
-        },
-        {
-          "product_id": "prod_fx3",
-          "reason": "store.sony.jp が当環境からDNS解決不可（要手動検証）"
-        }
-      ]
     }
   },
   "success_rate": {
@@ -1374,9 +1453,9 @@
       "official_configs": 7
     },
     "after": {
-      "url_verified": 16,
-      "price_captured": 9,
-      "verified_targets": 16,
+      "url_verified": 9,
+      "price_captured": 4,
+      "verified_targets": 9,
       "unverified_targets": 9
     }
   }

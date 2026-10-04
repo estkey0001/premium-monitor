@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-04 01:37 JST",
+  "generated_at": "2026-10-04 14:35 JST",
   "date": "2026-10-04",
   "is_baseline": false,
   "channels": [
@@ -7,28 +7,10 @@
     "telegram"
   ],
   "delivery_status": {
-    "discord": "pending(未設定)",
-    "telegram": "pending(未設定)"
+    "discord": "no_events",
+    "telegram": "no_events"
   },
-  "event_count": 1,
+  "event_count": 0,
   "suppressed_count": 0,
-  "events": [
-    {
-      "type": "NEW_MAIN",
-      "product_id": "prod_gr4",
-      "data": {
-        "product": "RICOH GR IV",
-        "net_profit": 142079,
-        "roi": 1.3218
-      },
-      "priority": "High",
-      "message": "🆕 新しい利益ルート成立\nRICOH GR IV\n利益 ¥142,079 / ROI 132%",
-      "channels": [
-        "discord",
-        "telegram"
-      ],
-      "created_at": "2026-10-04 01:37 JST",
-      "suppressed": false
-    }
-  ]
+  "events": []
 }

@@ -1,14 +1,14 @@
 # データ品質エンジン（Data Quality Engine）
 
-> 生成: 2026-10-04 01:37 JST / 対象: データ取得・正規化・品質管理のみ（利益/AI/UI/SaaSロジックは不変）
+> 生成: 2026-10-04 14:35 JST / 対象: データ取得・正規化・品質管理のみ（利益/AI/UI/SaaSロジックは不変）
 
 ## 総合 Data Quality Score: **68 / 100** — 判定: **CONDITIONAL_GO**
 
 | 次元 | スコア |
 |------|-------|
 | Freshness 鮮度 | 45 |
-| Completeness 完全性 | 52 |
-| Accuracy 正確性 | 97 |
+| Completeness 完全性 | 50 |
+| Accuracy 正確性 | 98 |
 | Coverage 網羅 | 100 |
 | Reliability 信頼性 | 40 |
 | Consistency 一貫性 | 100 |
@@ -27,9 +27,9 @@
 | prod | 214 | 74 | 27 | 10 | 103 | 40% |
 
 ## 自動化カバレッジ（透明性）
-- 手段内訳: {'official_concept': 38, 'other': 7, 'auto_scraped': 27, 'manual_curated': 99, 'fetch_failed': 37, 'overseas_history': 6}
-- 自動スクレイプ率: 13% / 手動キュレーション率: 46%
-- fresh のうち手動由来: 2% / 自動+定価由来: 59%
+- 手段内訳: {'official_concept': 38, 'other': 7, 'auto_scraped': 29, 'manual_curated': 97, 'fetch_failed': 37, 'overseas_history': 6}
+- 自動スクレイプ率: 14% / 手動キュレーション率: 45%
+- fresh のうち手動由来: 0% / 自動+定価由来: 60%
 > 鮮度の相当部分が手動キュレーション由来（ToS遵守の意図的設計）。自動化カバレッジ拡大（特に eBay API=EBAY_APP_ID）が主要な改善レバー。
 
 ## ソース品質ランキング（100点）

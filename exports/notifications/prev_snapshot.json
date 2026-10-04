@@ -1,23 +1,8 @@
 {
   "date": "2026-10-04",
-  "health_score": 54.8,
+  "health_score": 37.2,
   "stale_rate": 0.5153,
-  "main_products": [
-    "prod_gr4"
-  ],
-  "reference_products": [
-    "prod_gr4"
-  ],
-  "ops": {
-    "prod_gr4": {
-      "action": "WAIT",
-      "buy_now": "WATCH",
-      "roi": 1.3218,
-      "net_profit": 142079,
-      "buy_price": 107491,
-      "product": "RICOH GR IV",
-      "buy_source": "Amazon JP (新品出品)",
-      "kind": "reference"
-    }
-  }
+  "main_products": [],
+  "reference_products": [],
+  "ops": {}
 }

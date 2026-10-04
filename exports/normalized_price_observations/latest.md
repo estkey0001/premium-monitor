@@ -1,6 +1,6 @@
 # Normalized Price Observations
 
-生成: 2026-10-04 01:37 JST
+生成: 2026-10-04 14:35 JST
 
 全価格（買取/販売/出品/落札/海外/下取/公式）を単一スキーマに正規化。
 `price_role`（buy/sell/official/trade_in）を必ず付与し、
@@ -10,33 +10,33 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 ## サマリ
 
 - 総観測数: **229**
-- Beginner 利用可: 65 / Pro 利用可: 21
+- Beginner 利用可: 67 / Pro 利用可: 22
 - fresh(≤14日): 111
 
 ### price_role 別
 
 | role | 件数 |
 |---|---|
-| buy | 40 |
+| buy | 38 |
 | official | 45 |
-| sell | 144 |
+| sell | 146 |
 
 ### price_type 別
 
 | type | 件数 |
 |---|---|
-| buyback_price | 138 |
+| buyback_price | 140 |
 | flea_listing_price | 5 |
 | official_price | 45 |
 | overseas_listing_price | 5 |
 | overseas_sold_price | 6 |
-| shop_sale_price | 30 |
+| shop_sale_price | 28 |
 
 ### rejection_reason 別（main calc 除外）
 
 | reason | 件数 |
 |---|---|
-| accessory_or_wrong_product | 6 |
+| accessory_or_wrong_product | 5 |
 | duplicate_price_collision | 2 |
 | price_zero | 37 |
 | sold_label_without_evidence | 5 |
@@ -50,7 +50,7 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 | iPhone 17 Pro 512GB SI | official | official_price | ¥214,800 | medium | 9999.0d | メーカー公式/定価 |
 | iPhone 17 Pro Max 256G | official | official_price | ¥219,800 | medium | 9999.0d | メーカー公式/定価 |
 | iPhone 17 Pro Max 512G | official | official_price | ¥254,800 | medium | 9999.0d | メーカー公式/定価 |
-| iPhone 17 256GB SIMフリー | official | official_price | ¥159,800 | high | 1.1d | メーカー公式/定価 |
+| iPhone 17 256GB SIMフリー | official | official_price | ¥159,800 | high | 1.6d | メーカー公式/定価 |
 | iPhone 16 Pro 256GB SI | official | official_price | ¥159,800 | medium | 9999.0d | メーカー公式/定価 |
 | iPhone 16 Pro Max 256G | official | official_price | ¥189,800 | medium | 9999.0d | メーカー公式/定価 |
 | iPhone 16 Pro Max 512G | official | official_price | ¥224,800 | medium | 9999.0d | メーカー公式/定価 |
@@ -63,11 +63,11 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 | iPad Air M3 | official | official_price | ¥98,800 | medium | 9999.0d | メーカー公式/定価 |
 | Apple Watch Series 11 | official | official_price | ¥59,800 | medium | 9999.0d | メーカー公式/定価 |
 | Apple Watch Ultra 3 | official | official_price | ¥128,800 | medium | 9999.0d | メーカー公式/定価 |
-| AirPods Pro 3 | official | official_price | ¥42,800 | high | 1.1d | メーカー公式/定価 |
+| AirPods Pro 3 | official | official_price | ¥42,800 | high | 1.6d | メーカー公式/定価 |
 | AirPods Max | official | official_price | ¥84,800 | medium | 9999.0d | メーカー公式/定価 |
-| Nintendo Switch 2 | official | official_price | ¥59,980 | high | 1.1d | メーカー公式/定価 |
+| Nintendo Switch 2 | official | official_price | ¥59,980 | high | 1.6d | メーカー公式/定価 |
 | Nintendo Switch 2 マリオカ | official | official_price | ¥59,980 | medium | 9999.0d | メーカー公式/定価 |
-| PlayStation 5 Pro | official | official_price | ¥137,980 | high | 1.1d | メーカー公式/定価 |
+| PlayStation 5 Pro | official | official_price | ¥137,980 | high | 1.6d | メーカー公式/定価 |
 | PlayStation 5 Digital  | official | official_price | ¥72,980 | medium | 9999.0d | メーカー公式/定価 |
 | Xbox Series X | official | official_price | ¥59,978 | medium | 9999.0d | メーカー公式/定価 |
 | RICOH GR IV | official | official_price | ¥211,800 | high | 0.0d | メーカー公式/定価 |
@@ -95,10 +95,11 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 | iPhone 17 Pro 256GB SI | sell | buyback_price | ¥172,000 | new_unopened_simfree | 0.1d | 買取一丁目 |
 | iPhone 17 Pro 512GB SI | sell | buyback_price | ¥199,000 | new_unopened_simfree | 0.1d | 買取商店 |
 | iPhone 17 Pro 512GB SI | sell | buyback_price | ¥199,000 | new_unopened_simfree | 0.1d | 買取一丁目 |
+| iPhone 17 Pro Max 256G | sell | buyback_price | ¥190,000 | new_unopened_simfree | 0.1d | モバイル一番 |
 | iPhone 17 Pro Max 256G | sell | buyback_price | ¥190,000 | new_unopened_simfree | 0.1d | 買取商店 |
 | iPhone 17 Pro Max 256G | sell | buyback_price | ¥190,000 | new_unopened_simfree | 0.1d | 買取一丁目 |
 | iPhone 17 Pro Max 512G | sell | buyback_price | ¥216,000 | new_unopened_simfree | 0.1d | 買取商店 |
 | iPhone 17 Pro Max 512G | sell | buyback_price | ¥216,000 | new_unopened_simfree | 0.1d | 買取一丁目 |
 | Nintendo Switch 2 | sell | buyback_price | ¥53,000 | new_unopened | 0.1d | 買取商店 |
 | PlayStation 5 Pro | sell | buyback_price | ¥192,000 | new_unopened | 0.0d | 買取商店 |
-| RICOH GR IV | buy | shop_sale_price | ¥107,491 | new_unopened | 0.0d | Amazon JP (新品出品) |
+| PlayStation 5 Pro | sell | buyback_price | ¥192,000 | new_unopened | 0.0d | モバイル一番 |

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-04 01:37 JST",
+  "generated_at": "2026-10-04 14:35 JST",
   "scope": "販売/買取/二次流通の取得品質・正規化・同一性（利益/AI/UI/SaaSロジックは不変）",
   "rules": {
     "identity": "容量・型番・カラー・新品/中古 を厳格一致",
@@ -26,19 +26,18 @@
       }
     },
     "resale": {
-      "observations": 12,
-      "with_price": 12,
+      "observations": 10,
+      "with_price": 10,
       "exact_match": 0,
       "high_confidence": 0,
-      "fresh": 2,
+      "fresh": 0,
       "main_promotable": 0,
       "zero": 0,
       "stale": 10,
-      "rejected": 11,
+      "rejected": 10,
       "failure_reasons": {
         "sold_label_without_evidence": 5,
-        "stale_over_14d": 5,
-        "accessory_or_wrong_product": 1
+        "stale_over_14d": 5
       }
     },
     "retail": {
@@ -284,18 +283,8 @@
       "status": "no_data"
     },
     "Amazon JP (新品出品)": {
-      "observations": 2,
-      "with_price": 2,
-      "exact_match": 0,
-      "high_confidence": 0,
-      "fresh": 2,
-      "main_promotable": 0,
-      "zero": 0,
-      "stale": 0,
-      "rejected": 1,
-      "failure_reasons": {
-        "accessory_or_wrong_product": 1
-      }
+      "observations": 0,
+      "status": "no_data"
     }
   },
   "source_summary": {
@@ -484,28 +473,14 @@
       "failure_reasons": {
         "stale_over_14d": 2
       }
-    },
-    "Amazon JP (新品出品)": {
-      "observations": 2,
-      "with_price": 2,
-      "exact_match": 0,
-      "high_confidence": 0,
-      "fresh": 2,
-      "main_promotable": 0,
-      "zero": 0,
-      "stale": 0,
-      "rejected": 1,
-      "failure_reasons": {
-        "accessory_or_wrong_product": 1
-      }
     }
   },
   "identity_audit": {
     "checked": 229,
     "capacity_mismatch": 0,
     "wrong_model": 0,
-    "accessory": 9,
-    "not_body_only": 9,
+    "accessory": 8,
+    "not_body_only": 8,
     "condition_dist": {
       "new": 204,
       "used": 25
@@ -515,11 +490,11 @@
     "has_price_type": 1.0,
     "shipping_separated": 1.0,
     "points_separated": 1.0,
-    "tradein_excluded": 0.8896,
+    "tradein_excluded": 0.8882,
     "buyback_labeled": 117,
     "price_type_dist": {
       "buyback_price": 117,
-      "shop_sale_price": 27,
+      "shop_sale_price": 25,
       "overseas_listing_price": 5,
       "flea_listing_price": 5
     },
@@ -532,17 +507,15 @@
       "price_type": "buyback_price",
       "price": 194000,
       "product_ids": [
-        "prod_a7rv",
         "prod_gr4",
         "prod_gr4_hdf",
         "prod_gr4_mono"
       ],
-      "count": 4,
+      "count": 3,
       "models": [
         "gr hdf iv ricoh",
         "gr iv monochrome ricoh",
-        "gr iv ricoh",
-        "sony v α7r"
+        "gr iv ricoh"
       ],
       "capacities": [
         "None"
@@ -550,11 +523,11 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 42.6,
+      "first_seen": 43.1,
       "last_seen": 0.0,
-      "risk_level": "high",
+      "risk_level": "medium",
       "possible_reason": [
-        "body_vs_accessory_same_price"
+        "different_model_same_price"
       ],
       "is_official": false,
       "review_status": "pending",
@@ -581,7 +554,7 @@
         "new"
       ],
       "first_seen": 9999.0,
-      "last_seen": 1.1,
+      "last_seen": 1.6,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -611,8 +584,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 54.6,
-      "last_seen": 54.6,
+      "first_seen": 55.1,
+      "last_seen": 55.1,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -641,8 +614,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 54.6,
-      "last_seen": 54.6,
+      "first_seen": 55.1,
+      "last_seen": 55.1,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -671,8 +644,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 54.6,
-      "last_seen": 54.6,
+      "first_seen": 55.1,
+      "last_seen": 55.1,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -701,7 +674,7 @@
         "new"
       ],
       "first_seen": 9999.0,
-      "last_seen": 1.1,
+      "last_seen": 1.6,
       "risk_level": "low",
       "possible_reason": [
         "same_price_multiple_skus"

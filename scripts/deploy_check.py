@@ -4478,7 +4478,10 @@ def check() -> list[dict]:
     # #446: 初期表示に最高買取店ブロック（best-buyback-hero）と2位差額が出る
     #   全カードの初期表示に best-buyback-hero があり、少なくとも一部に『2位との差額』が出る。
     _all_hero = bool(_compact_cards) and all('best-buyback-hero' in _initial_view(c) for c in _compact_cards)
-    _any_runnerup = ('2位との差額' in _beg_html388)
+    #   2位が同額のカードは「2位との差額」の代わりに「他N店舗と比較済み」を出す（生成側の仕様）。
+    #   どのカードも2位と同額なら、全カードの初期表示にそのどちらかの注記があればよい
+    _any_runnerup = ('2位との差額' in _beg_html388) or (bool(_compact_cards) and all(
+        ('bb-runnerup-note' in _initial_view(c) or 'bb-compared-note' in _initial_view(c)) for c in _compact_cards))
     _t446 = _all_hero and _any_runnerup
     results.append({"level": "ok" if _t446 else "error", "check": "beginner_hero_and_runnerup_diff",
                     "message": "#446 初期表示に最高買取店ブロックと『2位との差額』が表示される"
@@ -4633,6 +4636,12 @@ def check() -> list[dict]:
     _REASON_LABELS = ('中古価格のみ取得', '新品買取価格なし', 'サイト制限中', '商品未掲載',
                       '取得失敗', '買取価格取得待ち', '価格変動を監視中',
                       '手動確認データが14日以上前')
+    # Phase 5.1: 新UIと同じ判定で確定にできず監視中へ降格した案件の理由（正本は daily_lp_generator._UNCONFIRMED_LABELS）
+    try:
+        from src.content.daily_lp_generator import DailyLPGenerator as _DLG464
+        _REASON_LABELS += tuple(lbl for _k, lbl in _DLG464._UNCONFIRMED_LABELS) + ("確定の条件を満たさない",)
+    except Exception:  # noqa: BLE001
+        pass
     _mon_badges = _re437.findall(r'mon-status-badge">([^<]+)<', _beg_html388)
     _t464 = all(b.strip() in _REASON_LABELS for b in _mon_badges)
     results.append({"level": "ok" if _t464 else "error", "check": "beginner_missing_reason_shown",
@@ -4665,9 +4674,18 @@ def check() -> list[dict]:
         _beg_html388, _re437.DOTALL
     )
     _t467 = any('best-buyback-hero' in c for c in _camera_profit_cards)
-    results.append({"level": "ok" if _t467 else "error", "check": "beginner_camera_new_unused_buyback_shown",
+    #   Phase 5.1: カメラの案件がすべて新UIと同じ判定で確定にできず（買取価格が古いなど）、理由つきの監視中カードに
+    #   なっている日は、利益カードが無いのが正しい（古い買取価格を利益カードに出さない）。warning で知らせる
+    _cam_mon = _re437.findall(
+        r'<div class="deal-card deal-card-compact deal-card-monitoring[^"]*stripe-camera[^"]*"[^>]*>.*?'
+        r'mon-status-badge">([^<]+)<', _beg_html388, _re437.DOTALL)
+    _cam_gated = bool(_cam_mon) and not _t467 and all(b.strip() in _REASON_LABELS for b in _cam_mon)
+    results.append({"level": "ok" if _t467 else ("warning" if _cam_gated else "error"),
+                    "check": "beginner_camera_new_unused_buyback_shown",
                     "message": f"#467 カメラ（X100VI/GR IV/GR IIIx 等）に新品・未使用の買取価格が表示される（利益カード{len(_camera_profit_cards)}枚）"
-                               + ("" if _t467 else " ← カメラの新品・未使用買取価格が表示されていません")})
+                               + ("" if _t467 else
+                                  f" ← カメラの案件はどれも確定の条件を満たさず監視中（理由: {sorted(set(b.strip() for b in _cam_mon))[:3]}）"
+                                  if _cam_gated else " ← カメラの新品・未使用買取価格が表示されていません")})
 
     # #468: manual_buyback_prices.csv に camera 商品の new/unused 行がある
     import os as _os468
@@ -7259,6 +7277,20 @@ def _check_data_correctness() -> list[dict]:
         _add(828, "main_route_sell_type_confirmed", not bad_sell,
              "確定利益の売値は買取価格か、条件を満たした成約中央値だけ（出品価格を売値にしない）",
              f"対象外の売値: {bad_sell[:5]}")
+        # #829 確定ルート（main_routes）は、新UIと同じ判定（opportunity.route_reasons）を生成時刻で通っている。
+        #   旧UI・AI Opportunities・通知はこの main_routes を使うので、ここが崩れると旧UIだけに偽ルートが出る
+        from src.content.ui import opportunity as _opp829
+        from src.tcg.models import JST as _JST829
+        try:
+            _gen_at = _dt.strptime(str(pr.get("generated_at") or "")[:16], "%Y-%m-%d %H:%M").replace(tzinfo=_JST829)
+        except ValueError:
+            _gen_at = None
+        unsafe = [f"{r.get('product_id')}/{r.get('buy_source')}→{r.get('sell_source')}:"
+                  f"{','.join(_opp829.route_reasons(r, _gen_at))}"
+                  for r in (pr.get("main_routes") or []) if _gen_at and _opp829.route_reasons(r, _gen_at)]
+        _add(829, "main_routes_pass_canonical_gate", _gen_at is not None and not unsafe,
+             "確定ルートは新UIと同じ判定（商品の照合・状態・URL・費用・内訳）を通っている（旧UIと新UIの安全基準が一致）",
+             f"判定を通らない確定ルート: {unsafe[:3]}" if unsafe else "profit_routes の generated_at が読めない")
     return out
 
 

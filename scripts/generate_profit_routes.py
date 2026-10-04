@@ -26,6 +26,8 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 from src.market import price_evidence as _pe  # noqa: E402
 from src.market import price_types as _pt  # noqa: E402
+# 確定・参考として出してよいかの判定は新UIの正本（src/content/ui/opportunity.py）をそのまま使う（二重に書かない）
+from src.content.ui import opportunity as _opp  # noqa: E402
 
 JST = timezone(timedelta(hours=9))
 NPO_PATH = PROJECT_ROOT / "exports" / "normalized_price_observations" / "latest.json"
@@ -34,6 +36,20 @@ OUT_DIR = PROJECT_ROOT / "exports" / "profit_routes"
 BUY_TYPES = {"shop_sale_price", "flea_listing_price", "flea_sold_price", "overseas_listing_price"}
 SELL_TYPES = {"buyback_price", "overseas_sold_price"}
 ROI_MIN = 0.05
+
+# 確定の条件を満たさなかった理由の一般向けの言葉（0件診断の「未成立理由」に出す。判定そのものは opportunity.py）
+_EXCLUSION_LABELS = {
+    "buy_identity_unverified": "仕入れ側の商品の照合が未了",
+    "sell_identity_unverified": "売却側の商品の照合が未了",
+    "buy_not_item_level": "仕入れ先が商品ページ単位でない（検索結果など）",
+    "buy_url_not_item_level": "仕入れ先が商品ページ単位でない（検索結果など）",
+    "condition_mismatch": "仕入れと売却で商品の状態が違う・不明",
+    "costs_unknown": "費用（購入送料など）が分からない",
+    "breakdown_mismatch": "利益の内訳が合わない",
+    "roi_out_of_range": "利益率を算出できない・範囲外",
+    "stale_buy_price": "仕入れ価格が古い",
+    "stale_sell_price": "売却価格が古い",
+}
 
 
 def _age_days(observed_at: str, now: datetime) -> float:
@@ -235,6 +251,8 @@ def main() -> int:
         by_pid[o["product_id"]].append(o)
 
     main_routes, ref_routes = [], []
+    # 確定・参考の条件（商品の照合・状態・URL・費用・内訳など）を満たさず外したルート（理由つき・表示には使わない）
+    excluded_routes = []
     zero_diag = {}  # 利益ルート0件商品の診断
 
     for pid, rows in by_pid.items():
@@ -265,6 +283,16 @@ def main() -> int:
                                               or b.get("extraction_method") in ("flea_sold", "manual"))
                     r["reproducibility_score"], r["reproducibility_level"] = _reproducibility(r, b, s, same_cond)
                     prod_routes.append(r)
+        # 確定ルートは新UIと同じ判定を通ったものだけ（旧UI・AI Opportunities・通知もこの main_routes を使う）
+        prod_excluded = []
+        for r in prod_routes:
+            why = _opp.route_reasons(r, now)
+            if why:
+                r["exclusion_reasons"] = list(why)
+                r["excluded_kind"] = "main"
+                prod_excluded.append(r)
+        prod_routes = [r for r in prod_routes if "exclusion_reasons" not in r]
+        excluded_routes.extend(prod_excluded)
         main_routes.extend(prod_routes)
 
         # 参考ルート: stale な overseas_sold（fresh化すれば成立）
@@ -275,7 +303,14 @@ def main() -> int:
                 r = _make_route(b, s, now, reference=True)
                 if r:
                     r["rejection_reason"] = f"overseas_sold_stale({s['age_days']}d)"
-                    ref_routes.append(r)
+                    # 参考ルートも、売却側の古さ以外（商品の照合・状態・URL・費用など）は確定と同じ条件
+                    why = _opp.reference_route_reasons(r, now)
+                    if why:
+                        r["exclusion_reasons"] = list(why)
+                        r["excluded_kind"] = "reference"
+                        excluded_routes.append(r)
+                    else:
+                        ref_routes.append(r)
 
         # 0件診断
         if not prod_routes:
@@ -313,7 +348,12 @@ def main() -> int:
                 if need_sell_up > 0:
                     needed.append(f"国内買取価格が +¥{need_sell_up:,} 上昇すれば成立")
             # 主な未成立理由
-            if best_ref and (net_dom is None or net_dom <= 0):
+            if prod_excluded:
+                _ex = Counter(x for r in prod_excluded for x in r["exclusion_reasons"])
+                reason = ("候補はあるが確定の条件（商品の照合・状態・URL・費用など）を満たさない: "
+                          + "、".join(dict.fromkeys(_EXCLUSION_LABELS.get(k, "その他の条件")
+                                                    for k, _n in _ex.most_common(5))))
+            elif best_ref and (net_dom is None or net_dom <= 0):
                 reason = f"eBay sold が{best_ref.get('sell_observed_age_days')}日前のため main 除外（国内完結は赤字）"
             elif ms is None:
                 reason = "有効な売却(買取/海外sold)候補なし"
@@ -325,6 +365,10 @@ def main() -> int:
                 reason = reasons.most_common(1)[0][0] if reasons else "候補不足"
             # target_buy_price: この価格以下の仕入れなら国内買取ルートが成立
             target_buy_price = (ms - dom_fee - 1) if ms else None
+            # 確定の条件を満たさず外した候補がある商品は、その仕入れ値・粗利・国内完結の利益を診断にも出さない
+            # （商品の照合が未了の価格などから作った利益を、別の欄で見せない）
+            if prod_excluded:
+                mb, gross, net_dom, min_buy = None, None, None, None
             zero_diag[pid] = {
                 "product_name": rows[0]["product_name"] if rows else pid,
                 "buy_candidates": len(buys), "sell_candidates": len(sells),
@@ -334,6 +378,7 @@ def main() -> int:
                 "gross_gap": gross, "net_domestic": net_dom,
                 "best_reference_net": (best_ref["net_profit"] if best_ref else None),
                 "main_blocked_reason": reason,
+                "excluded_route_count": len(prod_excluded),
                 "rejection_top5": reasons.most_common(5),
                 "stale_excluded": sum(1 for o in rows if not o["is_fresh"]),
                 "overseas_stale": len(ovs_stale),
@@ -402,6 +447,7 @@ def main() -> int:
         "summary": {
             "main_route_count": len(main_routes),
             "reference_route_count": len(ref_routes),
+            "excluded_route_count": len(excluded_routes),
             "by_product": dict(by_product),
             "by_confidence": dict(by_conf),
             "by_route_type": dict(by_rtype),
@@ -412,13 +458,14 @@ def main() -> int:
         "missing_data_priority": missing_data_priority,
         "main_routes": main_routes,
         "reference_routes": ref_routes,
+        "excluded_routes": excluded_routes,
         "zero_route_diagnostics": zero_diag,
     }
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     (OUT_DIR / "latest.json").write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
     _write_md(OUT_DIR / "latest.md", payload, now)
     print(f"  main利益ルート: {len(main_routes)} / 参考ルート(海外sold stale): {len(ref_routes)} "
-          f"/ 0件商品: {len(zero_diag)}")
+          f"/ 条件未達で除外: {len(excluded_routes)} / 0件商品: {len(zero_diag)}")
     print(f"  → {OUT_DIR / 'latest.json'}")
     return 0
 

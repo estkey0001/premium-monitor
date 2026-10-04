@@ -16,6 +16,9 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+# 判定の正本（src/content/ui/opportunity.py）を読むため
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 JST = timezone(timedelta(hours=9))
 NOW = datetime.now(tz=JST)
 OUT = ROOT / "exports" / "ai_opportunities"
@@ -206,9 +209,13 @@ def _why(c: dict) -> list[str]:
     return w
 
 
-def build_candidates(pr: dict) -> list[dict]:
+def build_candidates(pr: dict, now: datetime | None = None) -> list[dict]:
+    """利益ルートから候補を作る。確定（main）・参考（reference）とも、新UIと同じ判定
+    （src/content/ui/opportunity.py の route_reasons / reference_route_reasons）を通ったものだけ。"""
+    from src.content.ui import opportunity as _opp
+    now = now or NOW
     cands = []
-    for r in pr.get("main_routes", []):
+    for r in _opp.confirmed_routes(pr.get("main_routes", []), now):
         cands.append({
             "kind": "main", "product_id": r["product_id"], "product_name": r["product_name"],
             "buy_source": r["buy_source"], "buy_price": r["buy_price"], "sell_source": r["sell_source"],
@@ -224,7 +231,7 @@ def build_candidates(pr: dict) -> list[dict]:
             "sell_canonical_type": r.get("sell_canonical_type", "UNKNOWN"),
         })
     seen = {}
-    for r in pr.get("reference_routes", []):
+    for r in _opp.reference_routes(pr.get("reference_routes", []), now):
         pid = r["product_id"]
         if pid not in seen or r["net_profit"] > seen[pid]["net_profit"]:
             seen[pid] = r

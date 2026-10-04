@@ -56,7 +56,8 @@ def route(pid, name, sell_type="BUYBACK_CASH", *, samples=None, period="", buy=6
          # 商品の同一性は両側とも確認済み・状態は新品どうし（UI Phase 5 で必須にした項目）
          "buy_exact_match": True, "sell_exact_match": True, "buy_condition": "new_unopened",
          "sell_condition": "new_unopened", "buy_shipping": 0, "buy_required_cost": 0,
-         "buy_item_url": "https://shop.example.jp/item/1"}
+         # 仕入れ先のリンクは商品ページ単位（Phase 5.1）。中古で買う場合は is_item_url が認める商品ページ
+         "buy_link_type": "item", "buy_item_url": "https://jp.mercari.com/item/m48213579146"}
     r.update(kw)
     return r
 
@@ -326,7 +327,7 @@ def test_real_make_route_output_sold_median_without_period_is_hidden():
     base = dict(product_id="prod_sw", product_name="Switch 2", condition="used", observed_at=NOW.isoformat(),
                 freshness_basis="observed", confidence="high", is_exact_product_match=True)
     buy = dict(base, source_name="中古店X", source_id="x", price=40000, price_type="used_sale_price",
-               canonical_price_type="RETAIL", item_url="https://shop.example.jp/1", shipping=0,
+               canonical_price_type="RETAIL", item_url="https://jp.mercari.com/item/m48213579146", shipping=0,
                required_cost=0, link_type="item")
     sell = dict(base, source_name="フリマ", source_id="m", price=60000, price_type="sold_price",
                 sold_median_eligible=True, sample_count=12)

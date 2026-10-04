@@ -23,6 +23,9 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+# 判定の正本（src/content/ui/opportunity.py）を読むため
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 JST = timezone(timedelta(hours=9))
 NOW = datetime.now(tz=JST)
 OUT = ROOT / "exports" / "notifications"
@@ -51,12 +54,21 @@ def _load(p, default=None):
 
 
 def _snapshot(ai, health, pr) -> dict:
-    ops = {o["product_id"]: o for o in ai.get("todays_opportunities", [])}
+    """通知の比較用スナップショット。
+
+    利益ルートに由来する通知（BUY・新規・価格・ROI）は、確定ルート（新UIと同じ判定
+    src/content/ui/opportunity.route_reasons を通った main）の商品だけから作る。参考ルート・条件未達のルートは使わない。
+    """
+    from src.content.ui import opportunity as _opp
+    main = _opp.confirmed_routes(pr.get("main_routes", []), NOW)
+    main_pids = {r["product_id"] for r in main}
+    ops = {o["product_id"]: o for o in ai.get("todays_opportunities", [])
+           if o.get("kind") == "main" and o.get("product_id") in main_pids}
     return {
         "date": NOW.strftime("%Y-%m-%d"),
         "health_score": (health.get("health_score", {}) or {}).get("total"),
         "stale_rate": (health.get("data_quality", {}) or {}).get("stale_rate"),
-        "main_products": sorted({r["product_id"] for r in pr.get("main_routes", [])}),
+        "main_products": sorted(main_pids),
         "reference_products": sorted({r["product_id"] for r in pr.get("reference_routes", [])}),
         "ops": {pid: {"action": o.get("action"), "buy_now": o.get("buy_now"),
                       "roi": o.get("roi"), "net_profit": o.get("net_profit"),
@@ -202,6 +214,8 @@ def main() -> int:
         ev["message"] = _template(ev)
         ev["channels"] = CHANNELS
         ev["created_at"] = NOW.strftime("%Y-%m-%d %H:%M JST")
+        # 確定ルートの判定を通った商品から作った通知の印（印の無い過去の利益ルート通知は LP に出さない）
+        ev["route_checked"] = True
     sent, supp = apply_suppression(raw_events, supp)
     # 優先度順（Critical>High>Medium>Low）
     _prank = {"Critical": 3, "High": 2, "Medium": 1, "Low": 0}

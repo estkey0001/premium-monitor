@@ -330,17 +330,27 @@ def eligibility(v: OpportunityView, now: datetime) -> tuple[str, ...]:
 
 # 商品の状態の系統（新品と中古を混ぜない）
 # 新品と未使用（中古店の未使用品など）は別の系統として扱う（新品の価格と組み合わせない）
-_NEW_CONDITIONS = ("new", "new_unopened", "新品")
+# SIM フリーの新品未開封も新品（キャリアの違いは商品 ID の側で分けている）
+_NEW_CONDITIONS = ("new", "new_unopened", "new_unopened_simfree", "新品")
 _UNUSED_CONDITIONS = ("unused", "未使用")
 _USED_CONDITIONS = ("used", "used_a", "used_b", "used_c", "used_s", "中古")
+# 開封済み（新品として扱わない）
+_OPENED_CONDITIONS = ("new_opened", "opened", "開封済み", "開封済")
+# TCG の状態は1つずつ別の系統（シュリンク付き・シュリンクなし・テープカット・開封済み BOX・パックのみを混ぜない）
+_TCG_CONDITIONS = ("sealed_shrink", "shrink_removed", "tape_cut", "opened_box", "pack_only")
 
 
 def _cond_family(c) -> str:
+    """状態の系統。分からない状態（付属品のみ・キットなどの記録も含む）は空文字（＝組み合わせない）。"""
     s = str(c or "").strip().lower()
     if s in _NEW_CONDITIONS:
         return "new"
     if s in _UNUSED_CONDITIONS:
         return "unused"
+    if s in _OPENED_CONDITIONS:
+        return "opened"
+    if s in _TCG_CONDITIONS:
+        return f"tcg_{s}"
     if s in _USED_CONDITIONS or s.startswith("used"):
         return "used"
     return ""
@@ -350,8 +360,10 @@ def route_identity_reasons(r: dict) -> list[str]:
     """利益ルート（定価以外で仕入れる）の商品の同一性・状態の理由（空なら問題なし）。
 
     - 仕入れ・売却の両方で商品の同一性が確認済み（正規化データの is_exact_product_match）。無い・False は未確認
-    - 二次流通（出品）で仕入れる場合は、商品ページ単位の URL がある（検索結果の価格は実際に買える同じ商品と言えない）
-    - 仕入れと売却の商品の状態の系統（新品・中古）が分かっていて、同じ
+    - 二次流通（出品）で仕入れる場合は、商品ページ単位の URL がある（検索結果・カテゴリ・店のトップの価格は、
+      実際に買える同じ商品と言えない）。URL の判定は price_types.is_item_url（既存の判定）を使う
+    - 正規店で新品を買う場合も、仕入れ先のリンクが商品ページ単位（link_type=item）である
+    - 仕入れと売却の商品の状態の系統（新品・未使用・開封済み・中古・TCG の各状態）が分かっていて、同じ
     """
     out = []
     if r.get("buy_exact_match") is not True:
@@ -364,12 +376,67 @@ def route_identity_reasons(r: dict) -> list[str]:
         out.append("buy_type_sold")
     # 二次流通（正規店の新品以外）で仕入れる場合は、実際に買える商品ページ単位の URL があること
     secondary = not (buy_type == pt.RETAIL and _cond_family(r.get("buy_condition")) == "new")
-    if secondary and not str(r.get("buy_item_url") or "").startswith("https://"):
+    if secondary and not pt.is_item_url(r.get("buy_item_url")):
         out.append("buy_not_item_level")
+    # 正規店の新品でも、検索結果・カテゴリ・トップ・種別不明のリンクの価格では確定にしない
+    if not secondary and str(r.get("buy_link_type") or "") != "item":
+        out.append("buy_url_not_item_level")
     bf, sf = _cond_family(r.get("buy_condition")), _cond_family(r.get("sell_condition"))
     if not bf or not sf or bf != sf:
         out.append("condition_mismatch")
     return out
+
+
+# ── 旧UI・生成スクリプト・通知から使う入口（判定の正本は上の eligibility の1か所） ──────────
+
+def deal_reasons(d: dict, now: datetime) -> tuple[str, ...]:
+    """定価で買って買取店に売る案件（daily_lp_generator の dict）を確定として出せない理由。空なら出せる。"""
+    v = from_deal(d)
+    _apply_stock_freshness(v, now)
+    return eligibility(v, now)
+
+
+def route_reasons(r: dict, now: datetime) -> tuple[str, ...]:
+    """利益ルート（profit_routes の1件）を確定として出せない理由。空なら出せる。新UIの一覧と同じ判定。"""
+    v = from_route(r)
+    _apply_stock_freshness(v, now)
+    return eligibility(v, now)
+
+
+# 定価の根拠が未確認（設定値・古い・不明）なだけの案件。旧UIは「参考差額」として出してよいが、
+# ランキング・Hero・ルート一覧・確定利益には使わない
+MSRP_REFERENCE_REASONS = frozenset(f"buy_{e.lower()}" for e in pe.ALL_EVIDENCE if not pe.is_profit_eligible(e))
+
+
+def is_msrp_reference_only(reasons) -> bool:
+    return bool(reasons) and set(reasons) <= MSRP_REFERENCE_REASONS
+
+
+# 参考ルートで許すのは、売却側の成約価格だけが未達の理由（古い・件数不足・集計値で成約中央値の条件を満たさない・
+# 参考扱い）。売値が出品価格（LISTING）・種別不明（UNKNOWN）などのものは参考ルートにもしない。
+# 仕入れ側・商品の同一性・状態・URL・費用・内訳は確定と同じ条件（出品の価格を参考ルートに昇格させない）
+_REFERENCE_SELL_REASONS = frozenset({"stale_sell_price", "insufficient_sold_samples", "route_flagged",
+                                     "route_unverified_price", "route_sell_type_not_confirmed",
+                                     f"sell_type_{pt.SOLD.lower()}"})
+
+
+def reference_route_reasons(r: dict, now: datetime) -> tuple[str, ...]:
+    """利益ルートを「参考ルート」として出せない理由。空なら参考としてだけ出せる。"""
+    return tuple(x for x in route_reasons(r, now) if x not in _REFERENCE_SELL_REASONS)
+
+
+def confirmed_routes(routes, now: datetime) -> list[dict]:
+    """確定として出せる利益ルートだけ（旧UI・AI Opportunities・通知の入口）。"""
+    return [r for r in routes or [] if isinstance(r, dict) and not route_reasons(r, now)]
+
+
+def reference_routes(routes, now: datetime) -> list[dict]:
+    """参考ルートとして出せるものだけ。"""
+    return [r for r in routes or [] if isinstance(r, dict) and not reference_route_reasons(r, now)]
+
+
+# 通知のうち利益ルートに由来する種類（確定ルートの判定を通ったものだけを出す）
+ROUTE_EVENT_TYPES = frozenset({"WATCH_TO_BUY", "NEW_MAIN", "PRICE_DROP", "PRICE_RISE", "ROI_UP", "ROI_DOWN"})
 
 
 # 在庫の表示を「在庫あり／在庫切れ」と言ってよいのは、確認から CURRENT_DAYS（7日）以内のときだけ

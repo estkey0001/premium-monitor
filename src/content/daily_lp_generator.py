@@ -31,6 +31,8 @@ from src.db.repository import Repository
 from src.market import price_evidence as _pe
 from src.market import price_types as _pt
 from src.market import stock_state as _stock
+# 確定利益・利益ルートを出してよいかの判定の正本（新UIと同じ。旧UI用に二重に書かない）
+from src.content.ui import opportunity as _ui_opp
 import urllib.parse as _urllib_parse
 
 try:
@@ -171,6 +173,8 @@ class DailyLPGenerator:
         now = _generation_time()
         date_str = date_str or now.strftime("%Y-%m-%d")
         time_str = now.strftime("%H:%M")
+        # 旧UIの確定判定に使う時刻（新UIの判定と同じ時刻）
+        self._gate_now = self._nu_now(now)
 
         # A/Bバリアント上書き
         orig_variant = self.settings.get("headline_variant", "A")
@@ -316,20 +320,10 @@ class DailyLPGenerator:
         beginner_watch   = _enrich_list(beginner_watch)
         monitoring_deals = _enrich_list(monitoring_deals)
 
-        # enrich により DB では monitoring（赤字）だったが net>0 に昇格した商品も
-        # ランキング・せどりへ反映するため、全リストを product_id で統合する。
-        # （初心者タブは昇格 deal を表示するが、ランキング/せどりが DB クエリ由来の
-        #   別リストを見ているため伝播せず空になる不整合を解消）
-        _union = {}
-        for _src in (all_deals, beginner_easy, beginner_watch, monitoring_deals):
-            for _d in (_src or []):
-                _pid = getattr(_d, 'product_id', None)
-                if _pid is None:
-                    continue
-                _ex = _union.get(_pid)
-                if _ex is None or (getattr(_d, 'net_profit_jpy', 0) or 0) > (getattr(_ex, 'net_profit_jpy', 0) or 0):
-                    _union[_pid] = _d
-        all_deals = list(_union.values())
+        # 新UIと同じ判定を通らない案件の降格と、一覧の統合（_gate_and_merge_deals）
+        (all_deals, beginner_easy, beginner_watch, monitoring_deals,
+         advanced_deals) = self._gate_and_merge_deals(all_deals, beginner_easy, beginner_watch,
+                                                      monitoring_deals, advanced_deals, buyback_by_product)
 
         iphone_deals = [d for d in all_deals if d.category == "iphone"]
         game_deals   = [d for d in all_deals if d.category == "game_console"]
@@ -347,6 +341,9 @@ class DailyLPGenerator:
             sedori_routes = self.repo.list_sedori_routes(min_net_profit=0, limit=20)
         except Exception:
             sedori_routes = []
+        # 利益ルートとして出すのは、新UIと同じ判定（opportunity.route_reasons）を通ったものだけ
+        sedori_routes = [r for r in sedori_routes
+                         if not _ui_opp.route_reasons(self._sedori_route_dict(r), self._gate_now)]
 
         # 商品別市場価格（国内中古＋海外相場）— Pro向けカード用
         market_prices_by_product: dict = {}
@@ -4213,7 +4210,10 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             lottery_items=_all_lottery_for_count, lp_generated_at=lp_generated_at,
             collection_stats=collection_stats,
             site_title=self.settings.get("site_title", "プレ値速報"), old_html=page,
-            old_count_as_active=_count_as_active, all_deals=all_deals,
+            old_count_as_active=_count_as_active,
+            # 新UIには判定前の案件（生成の最初に保存）を渡す。新UIは同じ判定を自分でかける
+            all_deals=(self._nu_source_deals if getattr(self, "_nu_source_deals", None) is not None
+                       else all_deals),
             buyback_by_product=buyback_by_product)
         return page.replace(self._NU_HEAD_MARK, head, 1).replace(self._NU_ROOT_MARK, root, 1)
 
@@ -4339,6 +4339,98 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 "href": f"./?from=new#product-{alias}" if alias else "",
             })
         return out
+
+    @staticmethod
+    def _merge_by_product(*lists) -> list:
+        """product_id ごとに純利益の大きい案件を1件残す。"""
+        union: dict = {}
+        for src in lists:
+            for d in (src or []):
+                pid = getattr(d, 'product_id', None)
+                if pid is None:
+                    continue
+                ex = union.get(pid)
+                if ex is None or (getattr(d, 'net_profit_jpy', 0) or 0) > (getattr(ex, 'net_profit_jpy', 0) or 0):
+                    union[pid] = d
+        return list(union.values())
+
+    def _gate_and_merge_deals(self, all_deals, beginner_easy, beginner_watch, monitoring_deals,
+                              advanced_deals, buyback_by_product: dict | None = None):
+        """補完済みの案件の一覧に新UIと同じ判定をかけ、ランキング・せどり用に統合する。
+
+        - 新UIには判定前の統合を渡す（self._nu_source_deals。新UIは自分で同じ判定をかけ、外した理由を診断に残す）
+        - 判定（opportunity.deal_reasons）を通らない案件は確定利益として出さず監視中へ降格する。定価の根拠だけが
+          未確認の案件は「参考差額」として残す（ランキング・Hero・ルート一覧には使わない）
+        - 補完で利益ありに戻った監視中の案件も含め、統合の前にすべての一覧にかける
+          （統合は純利益の大きい方を残すので、判定前の版が判定後の版に勝たないようにする）
+        - Pro向け確定案件は確定だけ（参考差額・降格した案件は「確定案件」に出さない）
+        - enrich により DB では monitoring（赤字）だったが net>0 に昇格した商品もランキング・せどりへ反映するため、
+          全リストを product_id で統合する（初心者タブとランキング/せどりの不整合を解消）
+        """
+        self._nu_source_deals = self._merge_by_product(all_deals, beginner_easy, beginner_watch, monitoring_deals)
+
+        def _gate_list(lst):
+            return [self._canonical_deal_gate(d, buyback_by_product) for d in (lst or [])]
+        all_deals = _gate_list(all_deals)
+        beginner_easy = _gate_list(beginner_easy)
+        beginner_watch = _gate_list(beginner_watch)
+        monitoring_deals = _gate_list(monitoring_deals)
+        advanced_deals = [d for d in _gate_list(advanced_deals)
+                          if (d.net_profit_jpy or 0) > 0 and not self._msrp_is_reference(d)]
+        all_deals = self._merge_by_product(all_deals, beginner_easy, beginner_watch, monitoring_deals)
+        return all_deals, beginner_easy, beginner_watch, monitoring_deals, advanced_deals
+
+    # 降格した理由（監視中カードに出す一般向けの言葉。内部の理由名は出さない）
+    _UNCONFIRMED_LABELS = (
+        ("stale_sell_price", "買取価格の確認が14日より前か、確認時刻が不明"),
+        ("resale_sell", "売り先が二次流通（買取店ではない）"),
+        ("costs_unknown", "費用が分からない"),
+        ("breakdown_mismatch", "利益の内訳が合わない"),
+        ("roi_out_of_range", "利益率が表示できる範囲の外"),
+    )
+
+    def _canonical_deal_gate(self, d, buyback_by_product: dict | None = None):
+        """定価→買取の案件を、新UIと同じ判定（src/content/ui/opportunity.deal_reasons）に通す。
+
+        - 確定として出せる: そのまま
+        - 定価の根拠だけが未確認: そのまま（旧UIは「参考差額」として出す。ランキング・Hero・ルート一覧には使わない）
+        - それ以外（買取価格が古い・費用・ROI・売り先など）: 監視中へ降格する（利益・差額は出さない）
+        """
+        rows = self._nu_profit_deals([d], buyback_by_product)
+        if not rows:            # 利益が無い案件はそのまま（もともと利益を出さない）
+            return d
+        why = _ui_opp.deal_reasons(rows[0], getattr(self, "_gate_now", None) or self._nu_now(None))
+        if not why or _ui_opp.is_msrp_reference_only(why):
+            return d
+        label = next((lbl for key, lbl in self._UNCONFIRMED_LABELS if key in why), "確定の条件を満たさない")
+        return d.model_copy(update={
+            'best_buyback_price': 0,
+            'best_buyback_shop': '—',
+            'best_buyback_url': '',
+            'net_profit_jpy': 0,
+            'gross_profit_jpy': 0,
+            'net_profit_rate': 0.0,
+            'user_level': 'monitoring',
+            'notes': ((getattr(d, 'notes', '') or '') + f'||UNCONFIRMED:{label}'),
+        })
+
+    @staticmethod
+    def _sedori_route_dict(m) -> dict:
+        """DB のせどりルート（SedoriRouteModel）を、判定の正本が読む利益ルートの形にする（値の写しだけ）。
+
+        DB には商品の照合結果・価格の根拠・確認時刻・手数料の内訳が保存されていないので、該当の項目は空のまま渡す
+        （分からない値を推測で埋めない。判定は「未確認」として外す）。
+        """
+        g = (lambda k: getattr(m, k, None)) if not isinstance(m, dict) else m.get
+        return {
+            "product_id": g("product_id") or "", "product_name": g("product_name") or "",
+            "buy_source": g("buy_shop_name") or "", "buy_price": g("buy_price"),
+            "buy_canonical_type": _pt.NPO_TO_CANONICAL.get(str(g("buy_price_type") or ""), _pt.UNKNOWN),
+            "buy_condition": g("buy_condition") or "", "buy_url": g("buy_url") or "",
+            "sell_source": g("sell_shop_name") or "", "sell_price": g("sell_price"),
+            "sell_canonical_type": _pt.NPO_TO_CANONICAL.get(str(g("sell_price_type") or ""), _pt.UNKNOWN),
+            "sell_url": g("sell_url") or "", "net_profit": g("net_profit"),
+        }
 
     def _new_ui_parts(self, *, lottery_items, lp_generated_at, collection_stats, site_title,
                       old_html: str = "", old_count_as_active=None, all_deals=None,
@@ -4487,18 +4579,12 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 
         game_count   = len(game_deals)   if game_deals   else 0
 
-        # 「最高利益参考」は定価を確認済みの案件だけで出す。確認日不明の設定値の定価を使った差額は
-        # 確定利益と区別して「参考差額」として出す（強い利益表示にしない）
+        # Hero の「最高利益」は新UIと同じ判定を通った確定の案件だけ（確定以外は生成の最初に降格済み）。
+        # 参考差額（定価の根拠が未確認）は Hero に出さない（初心者タブに参考として出す）
         _verified_deals = [d for d in (all_deals or []) if not self._msrp_is_reference(d)]
-        _reference_deals = [d for d in (all_deals or []) if self._msrp_is_reference(d)]
         max_profit   = max((d.net_profit_jpy or 0) for d in _verified_deals) if _verified_deals else 0
-        max_ref_diff = max((d.net_profit_jpy or 0) for d in _reference_deals) if _reference_deals else 0
 
         max_profit_str = f'+¥{max_profit:,}' if max_profit > 0 else '—'
-        max_ref_str = f'+¥{max_ref_diff:,}' if max_ref_diff > 0 else '—'
-        _ref_social_html = (
-            f"参考差額 {_esc(max_ref_str)} — 定価が確認日不明の設定値のため、確定利益ではありません"
-        )
 
         # Hero ボタン / social proof テキスト: 件数は鮮度に応じて出し分け
         _all_deals_total = len(all_deals) if all_deals else 0
@@ -4510,8 +4596,6 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                     f"最高利益参考 <strong>{_esc(max_profit_str)}</strong>"
                     f" — 公式定価 vs 最高買取店"
                 )
-            elif max_ref_diff > 0:
-                _hero_social_html = _ref_social_html
             else:
                 _hero_social_html = "公式定価 vs 最高買取店の差益を毎日チェック"
         elif all_count > 0:
@@ -4522,8 +4606,6 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                     f"最高利益参考 <strong>{_esc(max_profit_str)}</strong>"
                     f" — 公式定価 vs 最高買取店（参考データ）"
                 )
-            elif max_ref_diff > 0:
-                _hero_social_html = _ref_social_html
             else:
                 _hero_social_html = "公式定価 vs 最高買取店の差益を毎日チェック"
         elif _all_deals_total > 0:
@@ -4543,7 +4625,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         _hero_deal_items = []
         _seen_products_hero = set()
         _candidates = sorted(
-            [d for d in (all_deals or []) if (d.net_profit_jpy or 0) > 0],
+            [d for d in (all_deals or []) if (d.net_profit_jpy or 0) > 0 and not self._msrp_is_reference(d)],
             key=lambda d: (self._msrp_is_reference(d), -(d.net_profit_jpy or 0))
         )
         for _d in _candidates:
@@ -5767,22 +5849,46 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         parts.append('</table></div>')
         return "".join(parts)
 
-    def _ai_dashboard_section(self) -> str:
-        """AI Dashboard（Proタブ最上部）: 今日のおすすめ / Today's Opportunities / Health / Main・Reference。"""
+    def _ai_dashboard_section(self, d: dict | None = None, routes: dict | None = None) -> str:
+        """AI Dashboard（Proタブ最上部）: 今日のおすすめ / Today's Opportunities / Health / Main・Reference。
+        d・routes を渡したときはファイルを読まずにそれを使う（テスト用）。"""
         import json as _json_ai
         from html import escape as _esc
-        p = Path(__file__).resolve().parent.parent.parent / "exports" / "ai_opportunities" / "latest.json"
-        if not p.exists():
-            return ""
-        try:
-            d = _json_ai.loads(p.read_text(encoding="utf-8"))
-        except Exception:
-            return ""
+        base = Path(__file__).resolve().parent.parent.parent / "exports"
+        if d is None:
+            p = base / "ai_opportunities" / "latest.json"
+            if not p.exists():
+                return ""
+            try:
+                d = _json_ai.loads(p.read_text(encoding="utf-8"))
+            except Exception:
+                return ""
+        if routes is None:
+            try:
+                routes = _json_ai.loads((base / "profit_routes" / "latest.json").read_text(encoding="utf-8"))
+            except Exception:
+                routes = {}
         ops = d.get("todays_opportunities", [])
         daily = d.get("daily_recommendation")
         hs = d.get("health_score")
         note = d.get("health_note", "")
         tasks = d.get("today_tasks", [])
+        # 描画時にも、今の利益ルートのうち確定・参考の判定（新UIと同じ）を通った商品の候補だけを出す
+        # （AI の生成が失敗して古いファイルが残った場合などに、判定を通らないルートの BUY・利益を出さない）
+        _now = getattr(self, "_gate_now", None) or self._nu_now(None)
+        _ok_main = {r.get("product_id") for r in _ui_opp.confirmed_routes((routes or {}).get("main_routes"), _now)}
+        _ok_ref = {r.get("product_id") for r in _ui_opp.reference_routes((routes or {}).get("reference_routes"), _now)}
+        _kept = [o for o in ops if (o.get("product_id") in _ok_main if o.get("kind") == "main"
+                                    else o.get("product_id") in _ok_ref)]
+        if len(_kept) != len(ops):
+            # 今日のおすすめは1位、今日やることは上位5件の順（generate_ai_opportunities.py）。位置で対応させる
+            _kept_ids = {id(o) for o in _kept}
+            daily = daily if (ops and id(ops[0]) in _kept_ids) else None
+            tasks = [t for i, t in enumerate(tasks) if i < len(ops) and id(ops[i]) in _kept_ids] or [
+                "本日の対象なし（データ取得状況を Health タブで確認）"]
+            ops = _kept
+        d = dict(d, main_route_count=sum(1 for o in ops if o.get("kind") == "main"),
+                 reference_route_count=sum(1 for o in ops if o.get("kind") == "reference"))
         parts = ['<div class="ai-dashboard" style="margin:8px 0 18px;border:1px solid #c7d2fe;'
                  'background:linear-gradient(180deg,#eef2ff,#f8fafc);border-radius:10px;padding:14px 16px">',
                  '<div style="font-weight:800;color:#4338ca;font-size:1.1rem">&#129302; AI Dashboard</div>']
@@ -5921,11 +6027,11 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         parts.append('</div>')
         return "".join(parts)
 
-    def _notifications_html(self) -> str:
-        """最新通知10件（exports/notifications/latest.json + 直近history）。"""
+    def _notifications_html(self, base: Path | None = None) -> str:
+        """最新通知10件（exports/notifications/latest.json + 直近history）。base はテスト用の置き場所。"""
         import json as _json_n
         from html import escape as _esc
-        base = Path(__file__).resolve().parent.parent.parent / "exports" / "notifications"
+        base = base or Path(__file__).resolve().parent.parent.parent / "exports" / "notifications"
         latest = base / "latest.json"
         if not latest.exists():
             return ""
@@ -5946,6 +6052,10 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                         events.append(e)
         except Exception:
             pass
+        # 利益ルート由来の通知（BUY・新規・価格・ROI）は、確定ルートの判定を通った商品から作ったもの
+        # （route_checked の印あり）だけを出す。印の無い過去の通知は参考ルート・条件未達のルート由来のことがある
+        events = [e for e in events
+                  if e.get("type") not in _ui_opp.ROUTE_EVENT_TYPES or e.get("route_checked") is True]
         events = events[:10]
         pcol = {"Critical": "#dc2626", "High": "#ea580c", "Medium": "#d97706", "Low": "#64748b"}
         parts = ['<div class="ai-notifications" style="margin-top:10px">',
@@ -6135,21 +6245,25 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         parts.append('</div>')
         return "".join(parts)
 
-    def _profit_routes_section(self) -> str:
+    def _profit_routes_section(self, data: dict | None = None) -> str:
         """検証済み Pro 利益ルート（exports/profit_routes/latest.json）をカード表示する。
-        0件でも理由・候補数・参考ルート（海外sold fresh化で成立）を表示する。"""
+        0件でも理由・候補数・参考ルート（海外sold fresh化で成立）を表示する。
+        data を渡したときはファイルを読まずにそれを使う（テスト用）。"""
         import json as _json_pr
         from html import escape as _esc
-        p = Path(__file__).resolve().parent.parent.parent / "exports" / "profit_routes" / "latest.json"
-        if not p.exists():
-            return ""
-        try:
-            data = _json_pr.loads(p.read_text(encoding="utf-8"))
-        except Exception:
-            return ""
-        s = data.get("summary", {})
-        main = data.get("main_routes", [])
-        refs = data.get("reference_routes", [])
+        if data is None:
+            p = Path(__file__).resolve().parent.parent.parent / "exports" / "profit_routes" / "latest.json"
+            if not p.exists():
+                return ""
+            try:
+                data = _json_pr.loads(p.read_text(encoding="utf-8"))
+            except Exception:
+                return ""
+        # 確定・参考とも新UIと同じ判定（opportunity.route_reasons / reference_route_reasons）で描画時にも確かめる
+        # （生成の段階でも外しているが、古い出力や時間の経過で条件を満たさなくなったものを出さない）
+        _now = getattr(self, "_gate_now", None) or self._nu_now(None)
+        main = _ui_opp.confirmed_routes(data.get("main_routes", []), _now)
+        refs = _ui_opp.reference_routes(data.get("reference_routes", []), _now)
         diag = data.get("zero_route_diagnostics", {})
         ebay_api = bool(data.get("ebay_api_configured"))
         parts = ['<div class="profit-routes-section" style="margin:16px 0 24px;border-left:4px solid #2563eb;'
@@ -6159,15 +6273,16 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                  '正規化価格から本体一致・非stale・非0円・confidence≥medium の価格のみで算出。'
                  'アクセサリー/異常値/下取は除外済み。</div>']
         # Task5: Pro サマリー（main 1件でも表示）
-        _max_p = s.get("max_profit") or {}
-        _max_r = s.get("max_roi") or {}
+        # 件数・最大利益・最大ROIは、上の判定を通ったルートから数える（生成時の集計値は使わない）
+        _max_p = max(main, key=lambda r: r.get("net_profit") or 0) if main else {}
+        _max_r = max(main, key=lambda r: r.get("roi") or 0) if main else {}
         parts.append(
             '<div class="pr-summary" style="background:#fff;border:1px solid #bfdbfe;border-radius:6px;'
             'padding:8px 12px;margin-bottom:10px;font-size:0.86rem;color:#1e3a8a">'
-            f'検証済み利益ルート: <b>{s.get("main_route_count", 0)}件</b>'
+            f'検証済み利益ルート: <b>{len(main)}件</b>'
             + (f' ／ 最大利益: <b>+¥{_max_p.get("net_profit", 0):,}</b>' if _max_p else '')
             + (f' ／ 最大ROI: <b>{(_max_r.get("roi", 0) or 0)*100:.0f}%</b>' if _max_r else '')
-            + f' ／ 参考ルート: <b>{s.get("reference_route_count", 0)}件</b>'
+            + f' ／ 参考ルート: <b>{len(refs)}件</b>'
             + '</div>')
         # Task2: eBay API 未設定の明示
         if not ebay_api:
@@ -6415,6 +6530,9 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                     continue
                 if self._is_resale_shop(_shop):
                     continue  # resale_market 由来のショップはスキップ
+                # ルート一覧に出すのは新UIと同じ判定を通った確定の案件だけ（参考差額は出さない）
+                if self._msrp_is_reference(d):
+                    continue
                 _gross = _bp - _op
                 _net = _gross - _COSTS
                 if _net <= 0:
@@ -7300,6 +7418,8 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         deduped_all = [d for d in deduped_all if not _is_used_cond(d)]
         # 14日超の手動価格は enrich 後に監視中へ降格（再昇格を防ぐため最後に適用）。
         deduped_all = [_apply_stale_downgrade(d) for d in deduped_all]
+        # 新UIと同じ判定を通らない案件は「利益あり」にせず監視中へ（補完で再昇格しないよう最後に適用）
+        deduped_all = [self._canonical_deal_gate(d, bybp) for d in deduped_all]
 
         # ── サマリバー（利益あり件数 / 監視中件数 / 取得失敗件数）──
         _profit_deals_all  = [d for d in deduped_all if (d.net_profit_jpy or 0) > 0]
@@ -7521,7 +7641,10 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         # 新品・未使用買取価格が無い理由は、フィルタ前の生データから判定する（Task 3）
         # 14日超で監視中へ降格された商品（notes に '||STALE14'）は鮮度理由を優先表示。
         _is_stale14 = 'STALE14' in (getattr(d, 'notes', '') or '')
+        # 新UIと同じ判定で確定にできず降格した案件（notes に '||UNCONFIRMED:<理由>'）は、その理由を出す
+        _unconf = (getattr(d, 'notes', '') or '').split('||UNCONFIRMED:', 1)
         _missing_reason = ('手動確認データが14日以上前' if _is_stale14
+                           else _unconf[1].split('||', 1)[0] if len(_unconf) == 2
                            else self._buyback_missing_reason(buyback_rows))
         # 中古(used)・二次流通(resale_market/フリマ・海外店名)行は買取店比較から完全除外
         if buyback_rows:
@@ -9433,10 +9556,13 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 
     def _tab_ranking(self, all_deals, iphone_deals, game_deals, sedori_routes=None) -> str:
         # 各カテゴリのデータ準備（resale_market 売却先を除外して買取店のみランキング）
+        # 順位を付けるのは、新UIと同じ判定を通った確定の案件だけ（生成の最初に _canonical_deal_gate で
+        # 確定以外は降格済み）。定価の根拠が未確認の「参考差額」はランキングに入れない（初心者タブに参考として出す）
         def _buyback_only(deals):
             return [d for d in deals
                     if d.net_profit_jpy > 0
-                    and not self._is_resale_shop(getattr(d, 'best_buyback_shop', '') or '')]
+                    and not self._is_resale_shop(getattr(d, 'best_buyback_shop', '') or '')
+                    and not self._msrp_is_reference(d)]
 
         profitable = sorted(_buyback_only(all_deals),
                             key=lambda d: d.net_profit_jpy, reverse=True)

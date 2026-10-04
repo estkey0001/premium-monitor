@@ -22,6 +22,16 @@ JST = timezone(timedelta(hours=9))
 NOW = datetime(2026, 10, 2, 17, 49, tzinfo=JST)
 
 
+def _route_fixtures():
+    """確定として出してよいルートの雛形（tests/route_fixtures.py）。"""
+    import importlib.util as _ilu
+    from pathlib import Path as _P
+    spec = _ilu.spec_from_file_location("route_fixtures", _P(__file__).with_name("route_fixtures.py"))
+    mod = _ilu.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
 def _load_script(name: str):
     spec = importlib.util.spec_from_file_location(name, ROOT / "scripts" / f"{name}.py")
     mod = importlib.util.module_from_spec(spec)
@@ -92,7 +102,8 @@ def test_unknown_date_msrp_cannot_become_strong_profit_opportunity():
     deals = [_deal("prod_ps5_pro", 70220, "PlayStation 5 Pro")]
     html = g._section_hero("2026-10-02", "17:49", NOW, NOW, all_deals=deals, beginner_display_count=1)
     assert "最高利益参考" not in html
-    assert "参考差額 +¥70,220" in html and "確定利益ではありません" in html
+    # Phase 5.1: 参考差額も Hero には出さない（初心者タブに参考として出す）
+    assert "70,220" not in html and "参考差額" not in html
 
 
 def test_verified_msrp_may_calculate_profit():
@@ -111,15 +122,13 @@ def test_unknown_date_msrp_cannot_enter_buy_top_list():
              _deal("prod_gr4", 12000, "RICOH GR IV", category="camera")]
     html = g._tab_ranking(deals, [], [d for d in deals if d.category == "game_console"])
     panel = html.split('id="rtab-all">', 1)[1].split("</div>\n", 1)[0]
-    gr_pos, ps_pos = panel.find("RICOH GR IV"), panel.find("PlayStation 5 Pro")
-    assert 0 <= gr_pos < ps_pos                       # 確認済みが先
+    # Phase 5.1: 定価が確認日不明の案件はランキングに入れない（参考の行としても出さない）
+    assert "RICOH GR IV" in panel and "PlayStation 5 Pro" not in panel and "70,220" not in html
     first_row = panel.split('<div class="rank-row', 2)[1]
     assert "RICOH GR IV" in first_row and "&#128081;" in first_row   # 👑 は確認済みに
-    ps_row = panel[panel.rfind('<div class="rank-row', 0, ps_pos):]
-    assert "rank-ref" in ps_row and "&#128081;" not in ps_row and "参考差額 +¥70,220" in ps_row
-    # ゲーム機タブ（確認済みが無い）でも 👑・順位を付けない
+    # ゲーム機タブ（確認済みが無い）は順位も参考の行も出さない
     game = html.split('id="rtab-game">', 1)[1].split("</div>\n", 1)[0]
-    assert "&#128081;" not in game and "rank-ref" in game
+    assert "&#128081;" not in game and "rank-ref" not in game and "データなし" in game
 
 
 def _route(**kw):
@@ -134,16 +143,17 @@ def test_new_ui_unknown_date_price_not_promoted_to_buy_or_high_profit():
     from src.content.ui import home
     o = {"product": "PS5 Pro", "action": "BUY", "kind": "main", "confidence": "high", "priority": 1,
          "buy_source": "公式", "sell_source": "モバイル一番", **_route()}
+    safe = _route_fixtures().safe_route
     for ev in ("CONFIGURED_REFERENCE", "STALE", "UNKNOWN", None):
         m = home.build_home_model(tcg_report={}, opportunities={"todays_opportunities": [dict(o, buy_price_evidence=ev)]},
-                                  profit_routes={"main_routes": [_route(buy_price_evidence=ev)]},
+                                  profit_routes={"main_routes": [safe(NOW, buy_price_evidence=ev)]},
                                   legacy_lotteries=[], now=NOW)
         assert m.counts["high_profit"] == 0
         assert not [a for a in m.opp_cards if a.action == "BUY"] and m.hidden_prices == 1
     # 否定対照: 仕入れ・売却とも確認済みなら BUY・高利益に出る
     m = home.build_home_model(tcg_report={}, opportunities={"todays_opportunities": [
         dict(o, buy_price_evidence="VERIFIED_DATED", roi=0.5)]},
-        profit_routes={"main_routes": [_route(buy_price_evidence="VERIFIED_DATED", roi=0.5)]},
+        profit_routes={"main_routes": [safe(NOW, buy_price_evidence="VERIFIED_DATED")]},
         legacy_lotteries=[], now=NOW)
     assert m.counts["high_profit"] == 1 and [a for a in m.opp_cards if a.action == "BUY"]
 
@@ -303,17 +313,12 @@ def test_scorer_handles_timezone_aware_observation():
 
 def test_ai_opportunities_carry_price_evidence():
     gao = _load_script("generate_ai_opportunities")
-    route = {"product_id": "p", "product_name": "P", "buy_source": "店A", "buy_price": 100000,
-             "sell_source": "店B", "sell_price": 130000, "net_profit": 20000, "roi": 0.2,
-             "route_type": "shop_to_buyback", "route_confidence": "high",
-             "buy_observed_age_days": 1, "sell_observed_age_days": 1,
-             "buy_price_evidence": "VERIFIED_CURRENT", "sell_price_evidence": "VERIFIED_DATED"}
-    main, = gao.build_candidates({"main_routes": [route], "reference_routes": []})
+    route = _route_fixtures().safe_route(NOW, "p", sell_price_evidence="VERIFIED_DATED")
+    main, = gao.build_candidates({"main_routes": [route], "reference_routes": []}, NOW)
     assert main["buy_price_evidence"] == "VERIFIED_CURRENT" and main["sell_price_evidence"] == "VERIFIED_DATED"
-    # 根拠の項目が無いルートは UNKNOWN（新UIは BUY に出さない）
+    # 根拠の項目が無いルートは確定ルートの判定で外れる（AI Opportunities の候補にも BUY にもならない）
     route.pop("buy_price_evidence")
-    main, = gao.build_candidates({"main_routes": [route], "reference_routes": []})
-    assert main["buy_price_evidence"] == "UNKNOWN"
+    assert gao.build_candidates({"main_routes": [route], "reference_routes": []}, NOW) == []
 
 
 # ── 表示する時刻の意味（生成時刻・試行時刻を「情報確認」にしない） ─────────────────

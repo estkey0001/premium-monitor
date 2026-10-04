@@ -202,7 +202,9 @@ def build_home_model(*, tcg_report: dict | None, opportunities: dict | None,
     premium = [e for e in events if premium_ok(e.get("premium"))
                and e.get("status") != "ENDED" and not e.get("stale")]
     main_routes = [r for r in (routes.get("main_routes") or []) if isinstance(r, dict)]
-    ok_routes = [r for r in main_routes if not route_reject_reason(r)]
+    # 高利益の件数も確定ルートの正本の判定（opportunity.route_reasons）で数える（循環 import を避けて関数内で読む）
+    from src.content.ui import opportunity as _opp
+    ok_routes = _opp.confirmed_routes(main_routes, now)
     sts = m.states.values()
     m.counts = {
         "lottery_open": sum(1 for s in sts if s["open"]),

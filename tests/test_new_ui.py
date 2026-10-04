@@ -17,6 +17,16 @@ JST = home.JST
 NOW = datetime(2026, 10, 2, 10, 0, tzinfo=JST)
 
 
+def _route_fixtures():
+    """確定として出してよいルートの雛形（tests/route_fixtures.py）。"""
+    import importlib.util as _ilu
+    from pathlib import Path as _P
+    spec = _ilu.spec_from_file_location("route_fixtures", _P(__file__).with_name("route_fixtures.py"))
+    mod = _ilu.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
 # ── テスト用データ ─────────────────────────────────────────────────
 
 PCO = "https://www.pokemoncenter-online.com"
@@ -349,9 +359,10 @@ def test_home_counts_from_runtime_state():
             {"status": "COMING_SOON", "premium": {"premium_percent": 35.0}},
             {"status": "ENDED", "premium": {"premium_percent": 50.0}},
         ])
-    routes = {"summary": {"main_route_count": 1},
-              "main_routes": [{"buy_price": 100000, "sell_price": 120000, "net_profit": 12000,
-                               "roi": 0.12, "buy_price_evidence": "VERIFIED_CURRENT", "sell_price_evidence": "VERIFIED_CURRENT", "sell_canonical_type": "BUYBACK_CASH"}]}
+    # 高利益の件数は確定ルートの判定（商品の照合・状態・URL・費用など）を通ったものだけ数える
+    routes = {"summary": {"main_route_count": 2},
+              "main_routes": [_route_fixtures().safe_route(NOW),
+                              _route_fixtures().safe_route(NOW, "prod_x", sell_exact_match=False)]}
     legacy = [{"product_name": "カメラ", "brand": "RICOH",
                "entry_start_at": (NOW - timedelta(days=1)).strftime("%Y-%m-%d %H:%M"),
                "entry_end_at": (NOW + timedelta(hours=2)).strftime("%Y-%m-%d %H:%M")}]

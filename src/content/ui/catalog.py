@@ -133,7 +133,11 @@ def build(*, model: home.HomeModel, tcg_report: dict | None, profit_routes: dict
     cg = Catalog()
 
     # ── 利益商品・せどりルート: OpportunityView（掲載の判定は opportunity.eligibility だけ） ──
-    cg.opportunity_set = opp.build(deals=profit_deals, routes=(profit_routes or {}).get("main_routes"),
+    # 生成の段階で外したルート（excluded_routes の確定候補）も渡し、ここでも同じ判定で外す（除外理由の診断に残すため）
+    pr = profit_routes if isinstance(profit_routes, dict) else {}
+    routes = list(pr.get("main_routes") or []) + [
+        r for r in (pr.get("excluded_routes") or []) if isinstance(r, dict) and r.get("excluded_kind") == "main"]
+    cg.opportunity_set = opp.build(deals=profit_deals, routes=routes,
                                    product_genres=genres, now=model.now or datetime.now(tz=JST))
     for v in cg.opportunity_set.eligible:
         cg.items["opportunities"].append(Item("opportunities", v.category, None, (), v))

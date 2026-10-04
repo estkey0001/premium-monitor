@@ -53,7 +53,7 @@ ROUTE = {"product_id": "prod_switch2", "product_name": "Nintendo Switch 2", "buy
          "sell_price_evidence": "VERIFIED_CURRENT", "sell_canonical_type": "BUYBACK_CASH", "buy_canonical_type": "RETAIL",
          "buy_observed_at": "2026-10-03T09:00:00+09:00", "sell_observed_at": "2026-10-03T09:00:00+09:00",
          "buy_exact_match": True, "sell_exact_match": True, "buy_condition": "new_unopened",
-         "sell_condition": "new_unopened", "buy_shipping": 0, "buy_required_cost": 0}
+         "sell_condition": "new_unopened", "buy_shipping": 0, "buy_required_cost": 0, "buy_link_type": "item"}
 LEGACY = [{"id": "L1", "product_name": "RICOH GR IV 限定", "brand": "RICOH",
            "entry_start_at": (NOW - timedelta(days=1)).strftime("%Y-%m-%d %H:%M"),
            "entry_end_at": (NOW + timedelta(days=1)).strftime("%Y-%m-%d %H:%M"),

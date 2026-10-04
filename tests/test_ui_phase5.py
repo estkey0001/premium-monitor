@@ -46,7 +46,8 @@ def route(pid, sell_type="SOLD_MEDIAN", buy=100000, sell=150000, **kw):
          "sell_sample_count": 14, "sell_period": "09/03〜10/02", "sell_period_start": _t(days=-30),
          "sell_period_end": _t(hours=-2), "sell_min": sell - 10000, "sell_max": sell + 12000,
          "buy_observed_at": _t(hours=-3), "sell_observed_at": _t(hours=-2), "buy_url": "https://www.example-store.jp/i/1",
-         "buy_item_url": "https://www.example-store.jp/i/1", "sell_url": "https://jp.mercari.com/search?keyword=x"}
+         "buy_item_url": "https://www.example-store.jp/i/1", "sell_url": "https://jp.mercari.com/search?keyword=x",
+         "buy_link_type": "item"}
     r.update(kw)
     return r
 
@@ -66,7 +67,8 @@ def test_retail_to_sold_median_eligible():
 
 
 def test_secondary_to_sold_median_eligible():
-    r = route("b", buy_canonical_type="LISTING", buy_condition="used_a", sell_condition="used_a")
+    r = route("b", buy_canonical_type="LISTING", buy_condition="used_a", sell_condition="used_a",
+              buy_item_url="https://jp.mercari.com/item/m48213579146")
     assert _types(r) == [rtv.SECONDARY_TO_SOLD_MEDIAN]
 
 
@@ -180,7 +182,7 @@ def _many():
     for i in range(21):
         rs.append(route(f"c{i:02d}", buy=100000, sell=150000 + i * 1000, sell_sample_count=3 + i))
     rs.append(route("g1", buy_canonical_type="LISTING", buy_condition="used_a", sell_condition="used_a", buy=40000,
-                    sell=70000, buy_source="フリマY"))
+                    sell=70000, buy_source="フリマY", buy_item_url="https://jp.mercari.com/item/m48213579146"))
     rs.append(route("o1", "BUYBACK_CASH", buy=50000, sell=60000, sell_sample_count=None, sell_period="",
                     sell_source="買取店Z", platform_fee=0, net_profit=5500, roi=0.11))
     return rs

@@ -83,10 +83,11 @@ def classify_link_type(url: str, link_verified: bool, price_role: str) -> str:
         return "official_top"
     if not u:
         return "none"
-    if any(k in u for k in ("/detail", "/item", "/products/", "/dp/", "itemid", "goods/")):
-        return "item" if link_verified else "item_unverified"
+    # 検索結果・一覧の印を先に見る（/items/search/?q=… のような検索結果を商品ページにしない）
     if any(k in u for k in ("search", "list.aspx", "keyword=", "/sch/", "itemlist")):
         return "search"
+    if any(k in u for k in ("/detail", "/item", "/products/", "/dp/", "itemid", "goods/")):
+        return "item" if link_verified else "item_unverified"
     try:
         from urllib.parse import urlparse
         p = urlparse(u)

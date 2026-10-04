@@ -1,6 +1,7 @@
-# HANDOFF（最終更新: 2026-10-03）
+# HANDOFF（最終更新: 2026-10-04）
 
 ## 今の状態
+- Phase 5.1: 旧UI（通常の URL）の利益ルート・ランキング・Hero・初心者ルート一覧・AI Opportunities（今日のおすすめ・BUY）・通知に、新UIと同じ確定の判定（`src/content/ui/opportunity.py` の `route_reasons` / `deal_reasons`）を使うようにした。`profit_routes` の `main_routes` は判定を通ったものだけ（外したものは `excluded_routes` に理由つき）。GR IV の偽ルートは旧UIの「検証済み利益ルート」「今日のおすすめ」「TOP10」「NEW_MAIN 通知」にも出ていた。
 - UI Phase 5: 新UIの「せどりルート」（`?ui=new&page=routes`）を本番用にした（RouteView・確定ルートの一覧・出品価格の参考の別欄）。**本番に出ていた偽のルート（RICOH GR IV: Amazon の検索結果の出品 ¥107,491 → 買取、+¥39,009）を確定から外した**。ルートは両側の商品の同一性・状態・費用（購入送料を含む）がそろったものだけ確定にする。
 - UI Phase 4: 新UIの「在庫再開」（`?ui=new&page=restock`）を本番用にした。タブは「購入可能」（既定）と「再開履歴すべて」。在庫の状態の変化を `exports/stock_history/latest.json` に残す（`scripts/update_stock_history.py`。CI の LP 生成の直前）。再入荷（在庫切れ→在庫あり）と、初めての在庫確認を区別する。購入可能は確認から3時間（TCG は既存の TTL）で「在庫未確認（更新待ち）」に落とす。HOME の件数は今購入可能なものだけ。
 - UI Phase 3: 新UIの「抽選・予約」（`?ui=new&page=lottery`）を本番用の一覧にした。表示モデルは `lottery_view.py`（LotteryReservationView）、ページは `lottery_page.py`。状態の絞り込み（抽選受付中・今日締切・予約・発売待ち・当選・購入期限）・並べ替え（おすすめ・締切・開始・更新・想定利益）・検索・20件ごとのページ・ジャンル保持。1件1要素で、PC（1024px 以上）は行、モバイルはカード。予約（PREORDER）と発売待ち（公式の発売日のある COMING_SOON）を runtime に足した。
@@ -19,7 +20,9 @@
   - Leica M11 の商品コードが未確認（下記）
 - **成約（sold）データは今は0件**。ヤフオク（自動）は出品価格、手動の成約 CSV（data/manual_flea_sold_prices.csv）は URL がダミーで成約日時が無い、eBay は API 未設定（CI では HTML もブロック）、メルカリ・ラクマの成約は NOT_IMPLEMENTED。成約中央値を使うには、規約に沿って1件ごとの商品ページの URL と成約日時を取れる経路が必要（eBay API を設定する場合も、1件ごとの成約日時を保存するように collector を直す必要がある）。
 - 過去の誤分類（git の履歴で数えた）: NPO にヤフオクの出品を「落札」として入れたコミットが144（1,491行、2026-06-04〜10-02）。そのうち利益ルートの main（確定利益）の仕入れ値に使ったものが32行。ダミー URL の手動「成約」を使ったルートが39コミット・269行（06-15〜09-04）。履歴は書き換えていない。
-- 旧UI は横に少しはみ出す（.tab-wrap の `margin: 0 -24px`。1440px で 24px、375px で 16px）。Phase 0.1 より前からある。旧UI は直していない（新UI は負のマージンを使わず、320〜1440px ではみ出し0をテストで確認）。旧UI を外すときに一緒に消える。
+- 旧UI は横に少しはみ出す（.tab-wrap の `margin: 0 -24px`。1440px で 24px、375px で 16px）。Phase 0.1 より前からある。旧UI は直していない（Phase 5.1 でも対象外。新UI は負のマージンを使わず、320〜1440px ではみ出し0をテストで確認）。旧UI を外すときに一緒に消える。
+- 既知の LOW（Phase 5.1 で確認）: `normalized_prices._url_confirms_sku` は link_type が unknown（カテゴリページなど）でも商品の照合済みとする。仕入れ側は確定の判定の URL 条件（二次流通は `is_item_url`、正規店は link_type=item）で塞いだ。売却側の買取価格はカテゴリ・検索ページで collector が型番を厳密に照合したものを照合済みとして使っている（新UI・旧UIとも同じ）。
+- 既知（Phase 5.1 で再評価）: 定価→買取の案件は購入送料・購入時の費用を 0 円としている（`OpportunityView` の既定値。公式ストアの送料を確認したデータは無い）。旧UI・新UIとも同じ判定なので食い違いは無い。直すなら公式ストアごとの送料を根拠つきで持たせる。
 - **まだ作っていない画面**: 商品詳細、サイト全体のキーワード検索（枠だけ）、絞り込みの「在庫復活」「買取急騰」「新着」（準備中。判定できるデータが無い）、かんたん/詳細の切り替え、在庫再開の本格画面（Phase 4）。
 - 抽選・予約の取得元: スマホ・PC は NOT_IMPLEMENTED。TCG は17件中5件が正常（PCO は 403 で手動補完）。頻度は1日1回で、新しい抽選の発見には遅い（推奨は internal/uiux/DATA_SOURCE_MATRIX.md §4）。
 - **利益商品は本番データでは0件になりやすい**（確認済みの定価・14日以内の買取価格・費用が揃う案件が少ない）。0件のときは空状態を出し、件数を水増ししない。
@@ -35,7 +38,7 @@
 - 既存の問題: pytest を実行すると追跡対象の exports/api_automation/collection.json が書き換わる。コミット前に `git checkout -- exports/api_automation/collection.json` で戻すこと（テストの出力先修正は別タスク）。
 
 ## 次にやること
-0. Phase 6（商品詳細）はユーザーの指示を待ってから始める。
+0. Phase 6（商品詳細）はユーザーの指示を待ってから始める（Phase 5.1 の後も同じ）。
 1. 利益商品の件数を増やすには、データ側を直す（設定値の定価の確認・カメラの買取の鮮度・成約の集計期間）。UI 側で条件を緩めない。
 2. 買取・在庫の更新頻度（今は日次1回）。推奨は diagnostics の frequency。本番のスケジュール変更はユーザー判断。
 2. 利益計算の8系統の統一（internal/uiux/UI_VIEW_MODEL_SPEC.md §2）と、成約データの取得方法（internal/uiux/IMPLEMENTATION_PLAN_V2.md）。
@@ -46,7 +49,8 @@
 - フジヤの買取ページは「買取金額」（現金）と「下取は10%UP」（下取）を併記する。現金の段だけを使い、下取の段しか読めない候補は採用しない。監視対象はボディ単体の通常版なので、限定版・キット・海外版・アクセサリー・別の型番（Leica は商品コードで判定）は使わない。
 - 固定値・設定値の定価に実行日の日時を付けない。Apple の固定値の確認日は `scripts/audit_official_sources.py` の `VERIFIED_URLS_CHECKED_ON`（値を公式で再確認したときだけ更新する）。
 - **新UI（UI Phase 1）の構成**: ナビは `navigation.py`（NAV_ITEMS・BOTTOM_ITEMS・PAGES・旧ハッシュの読み替え）、ジャンルは `categories.py`（products.genre などの読み替えはここだけ）、件数と一覧は `catalog.py`（件数の定義は docstring が正本。Fake count 禁止）、画面は `pages.py`、CSS は `styles.py`、アイコンは `icons.py`。ジャンルは URL の `category=` に持ち、`data-nu-keepcat` のリンクは表示のたびに今のジャンルを付けた href に書き換える（新しいタブで開いても同じ）。抽選の件数は runtime が書き換えるカードの `data-nu-bucket` から数え直す。設計の正本は internal/uiux/NEW_INFORMATION_ARCHITECTURE.md §0.1・WIREFRAMES.md §0・DESIGN_SYSTEM.md の冒頭。
-- **せどりルートの確定条件**（`opportunity.route_identity_reasons`）: 仕入れ・売却とも商品の同一性が確認済み（is_exact_product_match）、二次流通で買う場合は商品ページ単位の URL、状態の系統（新品・中古）が同じ、購入送料を含む費用がすべて分かる。今の生成データには購入送料の項目が無いので、ルートは確定にならない（0円とみなさない）。出品価格は参考欄だけ（利益・ROI なし・件数に数えない）。
+- **せどりルートの確定条件**（`opportunity.route_identity_reasons`）: 仕入れ・売却とも商品の同一性が確認済み（is_exact_product_match）、二次流通で買う場合は商品ページ単位の URL（`price_types.is_item_url`）、正規店の新品も link_type=item、状態の系統（新品・未使用・開封済み・中古・TCG の各状態）が同じ、購入送料を含む費用がすべて分かる。今の生成データには購入送料の項目が無いので、ルートは確定にならない（0円とみなさない）。出品価格は参考欄だけ（利益・ROI なし・件数に数えない）。
+- **旧UIと新UIで確定の判定を分けない**（Phase 5.1）。旧UI・AI Opportunities・通知・HOME は `opportunity.confirmed_routes` / `reference_routes` / `deal_reasons` を呼ぶ。旧UI側に同じ条件を書かない（tests/test_phase5_1_legacy_routes.py が検査）。参考ルートは「売却側の古さ・件数不足」以外は確定と同じ条件。通知は確定ルートの商品から作ったものに `route_checked: true` を付け、印の無い過去の利益ルート通知は旧UIに出さない。
 - **在庫は restocked_at（再入荷）・last_checked_at（最終確認）・state（今の在庫）を混同しない**。履歴の更新は観測（取得に成功した在庫の状態）だけで行い、前回より新しくない観測は無視する（時刻だけ進めない）。取得に失敗した商品は観測に入れない。在庫あり→未確認→在庫ありは再入荷にしない（last_definite_state で判定）。購入可能の判定は Python（`RestockView.available`）とブラウザ（shell の `stockRuntime`）で同じ条件。
 - **抽選・予約の状態は runtime だけで決める**（Python の `derive_runtime_state` と JS の `deriveLotteryRuntimeState` は同じ結果を返すこと。tests/test_new_ui_runtime.py・test_ui_phase3.py が node で照合）。VM の `k`（lottery / preorder / release）と `rd`（発売日）を足した。件数に数える状態は `runtime.COUNTED_STATUSES`（受付終了・終了・日程不明は数えない）。HOME の抽選の件数は `[data-nu-lot-list]` の行の bucket から数える。
 - 抽選・予約の価格: TCG は公式の retail_price、発売待ちは `retail_price_basis=product_unit` のときだけ。旧来の抽選（公式ストア）の CSV の価格は読み取りの誤りがあるので使わず、利益商品の確認済み定価があるときだけ出す。想定利益は利益商品（掲載可）と同じ商品で、販売価格と仕入れ値が一致するときだけ。それ以外は「算出前」。

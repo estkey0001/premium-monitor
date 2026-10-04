@@ -21,6 +21,16 @@ NOW = datetime(2026, 10, 3, 12, 0, tzinfo=JST)
 ITEM = "https://auctions.yahoo.co.jp/jp/auction/k1234567890"
 
 
+def _route_fixtures():
+    """確定として出してよいルートの雛形（tests/route_fixtures.py）。"""
+    import importlib.util as _ilu
+    from pathlib import Path as _P
+    spec = _ilu.spec_from_file_location("route_fixtures", _P(__file__).with_name("route_fixtures.py"))
+    mod = _ilu.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
 def _load_script(name: str):
     spec = importlib.util.spec_from_file_location(name, ROOT / "scripts" / f"{name}.py")
     mod = importlib.util.module_from_spec(spec)
@@ -274,15 +284,18 @@ def test_listing_data_cannot_produce_sold_based_buy():
             "buy_price": 100000, "sell_price": 140000, "net_profit": 30000, "roi": 0.3,
             "buy_source": "店A", "sell_source": "店B",
             "buy_price_evidence": "VERIFIED_CURRENT", "sell_price_evidence": "VERIFIED_CURRENT"}
+    safe = _route_fixtures().safe_route
     for sell_type in (pt.LISTING, pt.SOLD, pt.UNKNOWN, None):
         o = dict(base, sell_canonical_type=sell_type)
         m = home.build_home_model(tcg_report={}, opportunities={"todays_opportunities": [o]},
-                                  profit_routes={"main_routes": [o]}, legacy_lotteries=[], now=NOW)
+                                  profit_routes={"main_routes": [safe(NOW, sell_canonical_type=sell_type)]},
+                                  legacy_lotteries=[], now=NOW)
         assert m.counts["high_profit"] == 0 and not [a for a in m.opp_cards if a.action == "BUY"]
-    for sell_type in (pt.BUYBACK_CASH, pt.SOLD_MEDIAN):     # 否定対照
+    for sell_type in (pt.BUYBACK_CASH, pt.SOLD_MEDIAN):     # 否定対照（確定の条件をすべて満たすルート）
         o = dict(base, sell_canonical_type=sell_type)
         m = home.build_home_model(tcg_report={}, opportunities={"todays_opportunities": [o]},
-                                  profit_routes={"main_routes": [o]}, legacy_lotteries=[], now=NOW)
+                                  profit_routes={"main_routes": [safe(NOW, sell_type=sell_type)]},
+                                  legacy_lotteries=[], now=NOW)
         assert m.counts["high_profit"] == 1 and [a for a in m.opp_cards if a.action == "BUY"]
 
 

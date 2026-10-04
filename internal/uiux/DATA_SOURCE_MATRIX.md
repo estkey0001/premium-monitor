@@ -115,14 +115,21 @@ runtime ができるのは、既知の在庫ありの観測を期限で「更新
 | 条件 | 内容 |
 |---|---|
 | 売値 | 買取価格か、成約中央値（件数3以上・集計期間の開始と終了あり） |
-| 商品の同一性 | 仕入れ・売却とも `is_exact_product_match`（正規化データの照合）が True。二次流通で買う場合は商品ページ単位の URL |
-| 状態 | 新品・中古の系統が同じ |
+| 商品の同一性 | 仕入れ・売却とも `is_exact_product_match`（正規化データの照合）が True |
+| 仕入れ先の URL | 二次流通で買う場合は商品ページ単位の URL（`price_types.is_item_url`。検索結果・カテゴリ・トップ・ダミーは不可）。正規店の新品は link_type=item |
+| 状態 | 系統が同じ（新品・未使用・開封済み・中古・TCG の各状態を混ぜない。不明は不可） |
 | 費用 | 購入送料・販売手数料・発送・その他がすべて分かる（項目が無ければ算出前。0円とみなさない） |
 | 鮮度 | 仕入れ・売却とも確認から14日以内 |
 
 2026-10-04 時点の生成物: 候補1件（RICOH GR IV: Amazon の検索結果の出品 ¥107,491 → フジヤ買取）。
 商品の照合が未了（`unverified_title_price_band_pending`）・検索結果の価格で、Phase 2 の判定では確定になり本番に出ていた。
 Phase 5 で確定から外した。成約データ（Yahoo / eBay / メルカリ / ラクマ）は有効0件のまま。
+
+**Phase 5.1（2026-10-04）**: 旧UI（通常の URL）も同じ判定を使う。入口は `opportunity.route_reasons` /
+`reference_route_reasons` / `confirmed_routes` / `deal_reasons`。`generate_profit_routes.py` は判定を通らないルートを
+`main_routes` に入れず `excluded_routes`（理由つき）に分ける。旧UIのせどりタブ・AI Opportunities・通知・HOME の件数も同じ入口を通す。
+定価→買取の案件は旧UIの生成時に `deal_reasons` を通し、確定以外は監視中へ降格（定価の根拠だけ未確認のものは「参考差額」として残すが、
+ランキング・Hero・初心者ルート一覧には出さない）。
 
 出品価格の参考（`ListingRef`）は、価格の種別が出品のもの（`*_listing_price` / LISTING）を商品×市場ごとに最新1件。
 最安・最高は保存していないので「未取得」。利益・ROI は出さず、件数にも数えない。

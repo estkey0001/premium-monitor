@@ -1,10 +1,11 @@
 {
-  "generated_at": "2026-10-04 14:35 JST",
+  "generated_at": "2026-10-04 18:24 JST",
   "ebay_api_configured": false,
   "overseas_source_mode": "manual",
   "summary": {
     "main_route_count": 0,
     "reference_route_count": 0,
+    "excluded_route_count": 0,
     "by_product": {},
     "by_confidence": {},
     "by_route_type": {},
@@ -40,6 +41,7 @@
   ],
   "main_routes": [],
   "reference_routes": [],
+  "excluded_routes": [],
   "zero_route_diagnostics": {
     "prod_iphone17pro_256": {
       "product_name": "iPhone 17 Pro 256GB SIMフリー",
@@ -54,6 +56,7 @@
       "net_domestic": null,
       "best_reference_net": null,
       "main_blocked_reason": "有効な仕入(販売/出品/落札)候補なし",
+      "excluded_route_count": 0,
       "rejection_top5": [
         [
           "price_zero",
@@ -82,6 +85,7 @@
       "net_domestic": null,
       "best_reference_net": null,
       "main_blocked_reason": "有効な仕入(販売/出品/落札)候補なし",
+      "excluded_route_count": 0,
       "rejection_top5": [
         [
           "price_zero",
@@ -110,6 +114,7 @@
       "net_domestic": null,
       "best_reference_net": null,
       "main_blocked_reason": "有効な仕入(販売/出品/落札)候補なし",
+      "excluded_route_count": 0,
       "rejection_top5": [
         [
           "price_zero",
@@ -138,6 +143,7 @@
       "net_domestic": null,
       "best_reference_net": null,
       "main_blocked_reason": "有効な仕入(販売/出品/落札)候補なし",
+      "excluded_route_count": 0,
       "rejection_top5": [
         [
           "price_zero",
@@ -162,6 +168,7 @@
       "net_domestic": null,
       "best_reference_net": null,
       "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
+      "excluded_route_count": 0,
       "rejection_top5": [
         [
           "stale_over_14d",
@@ -186,6 +193,7 @@
       "net_domestic": null,
       "best_reference_net": null,
       "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
+      "excluded_route_count": 0,
       "rejection_top5": [
         [
           "stale_over_14d",
@@ -210,6 +218,7 @@
       "net_domestic": null,
       "best_reference_net": null,
       "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
+      "excluded_route_count": 0,
       "rejection_top5": [
         [
           "stale_over_14d",
@@ -234,6 +243,7 @@
       "net_domestic": null,
       "best_reference_net": null,
       "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
+      "excluded_route_count": 0,
       "rejection_top5": [],
       "stale_excluded": 0,
       "overseas_stale": 0,
@@ -253,6 +263,7 @@
       "net_domestic": null,
       "best_reference_net": null,
       "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
+      "excluded_route_count": 0,
       "rejection_top5": [
         [
           "stale_over_14d",
@@ -277,6 +288,7 @@
       "net_domestic": null,
       "best_reference_net": null,
       "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
+      "excluded_route_count": 0,
       "rejection_top5": [
         [
           "stale_over_14d",
@@ -301,6 +313,7 @@
       "net_domestic": null,
       "best_reference_net": null,
       "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
+      "excluded_route_count": 0,
       "rejection_top5": [
         [
           "stale_over_14d",
@@ -325,6 +338,7 @@
       "net_domestic": null,
       "best_reference_net": null,
       "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
+      "excluded_route_count": 0,
       "rejection_top5": [
         [
           "stale_over_14d",
@@ -349,6 +363,7 @@
       "net_domestic": null,
       "best_reference_net": null,
       "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
+      "excluded_route_count": 0,
       "rejection_top5": [
         [
           "stale_over_14d",
@@ -373,6 +388,7 @@
       "net_domestic": null,
       "best_reference_net": null,
       "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
+      "excluded_route_count": 0,
       "rejection_top5": [
         [
           "stale_over_14d",
@@ -397,6 +413,7 @@
       "net_domestic": null,
       "best_reference_net": null,
       "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
+      "excluded_route_count": 0,
       "rejection_top5": [
         [
           "stale_over_14d",
@@ -421,6 +438,7 @@
       "net_domestic": null,
       "best_reference_net": null,
       "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
+      "excluded_route_count": 0,
       "rejection_top5": [
         [
           "stale_over_14d",
@@ -445,6 +463,7 @@
       "net_domestic": null,
       "best_reference_net": null,
       "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
+      "excluded_route_count": 0,
       "rejection_top5": [
         [
           "stale_over_14d",
@@ -469,6 +488,7 @@
       "net_domestic": null,
       "best_reference_net": null,
       "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
+      "excluded_route_count": 0,
       "rejection_top5": [
         [
           "stale_over_14d",
@@ -493,6 +513,7 @@
       "net_domestic": null,
       "best_reference_net": null,
       "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
+      "excluded_route_count": 0,
       "rejection_top5": [
         [
           "stale_over_14d",
@@ -517,6 +538,7 @@
       "net_domestic": null,
       "best_reference_net": null,
       "main_blocked_reason": "有効な仕入(販売/出品/落札)候補なし",
+      "excluded_route_count": 0,
       "rejection_top5": [
         [
           "price_zero",
@@ -545,6 +567,7 @@
       "net_domestic": null,
       "best_reference_net": null,
       "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
+      "excluded_route_count": 0,
       "rejection_top5": [
         [
           "stale_over_14d",
@@ -569,6 +592,7 @@
       "net_domestic": null,
       "best_reference_net": null,
       "main_blocked_reason": "有効な仕入(販売/出品/落札)候補なし",
+      "excluded_route_count": 0,
       "rejection_top5": [
         [
           "price_zero",
@@ -597,6 +621,7 @@
       "net_domestic": null,
       "best_reference_net": null,
       "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
+      "excluded_route_count": 0,
       "rejection_top5": [
         [
           "stale_over_14d",
@@ -621,6 +646,7 @@
       "net_domestic": null,
       "best_reference_net": null,
       "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
+      "excluded_route_count": 0,
       "rejection_top5": [
         [
           "stale_over_14d",
@@ -645,6 +671,7 @@
       "net_domestic": null,
       "best_reference_net": null,
       "main_blocked_reason": "有効な仕入(販売/出品/落札)候補なし",
+      "excluded_route_count": 0,
       "rejection_top5": [
         [
           "stale_over_14d",
@@ -673,6 +700,7 @@
       "net_domestic": null,
       "best_reference_net": null,
       "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
+      "excluded_route_count": 0,
       "rejection_top5": [
         [
           "stale_over_14d",
@@ -705,6 +733,7 @@
       "net_domestic": null,
       "best_reference_net": null,
       "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
+      "excluded_route_count": 0,
       "rejection_top5": [
         [
           "stale_over_14d",
@@ -716,6 +745,10 @@
         ],
         [
           "sold_label_without_evidence",
+          1
+        ],
+        [
+          "accessory_or_wrong_product",
           1
         ]
       ],
@@ -737,6 +770,7 @@
       "net_domestic": null,
       "best_reference_net": null,
       "main_blocked_reason": "有効な仕入(販売/出品/落札)候補なし",
+      "excluded_route_count": 0,
       "rejection_top5": [
         [
           "stale_over_14d",
@@ -765,6 +799,7 @@
       "net_domestic": null,
       "best_reference_net": null,
       "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
+      "excluded_route_count": 0,
       "rejection_top5": [],
       "stale_excluded": 0,
       "overseas_stale": 0,
@@ -784,6 +819,7 @@
       "net_domestic": null,
       "best_reference_net": null,
       "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
+      "excluded_route_count": 0,
       "rejection_top5": [],
       "stale_excluded": 0,
       "overseas_stale": 0,
@@ -803,6 +839,7 @@
       "net_domestic": null,
       "best_reference_net": null,
       "main_blocked_reason": "有効な仕入(販売/出品/落札)候補なし",
+      "excluded_route_count": 0,
       "rejection_top5": [
         [
           "stale_over_14d",
@@ -831,6 +868,7 @@
       "net_domestic": null,
       "best_reference_net": null,
       "main_blocked_reason": "有効な仕入(販売/出品/落札)候補なし",
+      "excluded_route_count": 0,
       "rejection_top5": [],
       "stale_excluded": 0,
       "overseas_stale": 0,
@@ -850,6 +888,7 @@
       "net_domestic": null,
       "best_reference_net": null,
       "main_blocked_reason": "有効な仕入(販売/出品/落札)候補なし",
+      "excluded_route_count": 0,
       "rejection_top5": [],
       "stale_excluded": 0,
       "overseas_stale": 0,
@@ -869,6 +908,7 @@
       "net_domestic": null,
       "best_reference_net": null,
       "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
+      "excluded_route_count": 0,
       "rejection_top5": [
         [
           "accessory_or_wrong_product",
@@ -893,6 +933,7 @@
       "net_domestic": null,
       "best_reference_net": null,
       "main_blocked_reason": "有効な仕入(販売/出品/落札)候補なし",
+      "excluded_route_count": 0,
       "rejection_top5": [],
       "stale_excluded": 0,
       "overseas_stale": 0,
@@ -912,6 +953,7 @@
       "net_domestic": null,
       "best_reference_net": null,
       "main_blocked_reason": "有効な仕入(販売/出品/落札)候補なし",
+      "excluded_route_count": 0,
       "rejection_top5": [],
       "stale_excluded": 0,
       "overseas_stale": 0,
@@ -931,6 +973,7 @@
       "net_domestic": null,
       "best_reference_net": null,
       "main_blocked_reason": "有効な仕入(販売/出品/落札)候補なし",
+      "excluded_route_count": 0,
       "rejection_top5": [],
       "stale_excluded": 0,
       "overseas_stale": 0,
@@ -950,6 +993,7 @@
       "net_domestic": null,
       "best_reference_net": null,
       "main_blocked_reason": "有効な仕入(販売/出品/落札)候補なし",
+      "excluded_route_count": 0,
       "rejection_top5": [],
       "stale_excluded": 0,
       "overseas_stale": 0,
@@ -969,6 +1013,7 @@
       "net_domestic": null,
       "best_reference_net": null,
       "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
+      "excluded_route_count": 0,
       "rejection_top5": [],
       "stale_excluded": 0,
       "overseas_stale": 0,
@@ -988,6 +1033,7 @@
       "net_domestic": null,
       "best_reference_net": null,
       "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
+      "excluded_route_count": 0,
       "rejection_top5": [
         [
           "accessory_or_wrong_product",
@@ -1012,6 +1058,7 @@
       "net_domestic": null,
       "best_reference_net": null,
       "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
+      "excluded_route_count": 0,
       "rejection_top5": [
         [
           "accessory_or_wrong_product",
@@ -1036,6 +1083,7 @@
       "net_domestic": null,
       "best_reference_net": null,
       "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
+      "excluded_route_count": 0,
       "rejection_top5": [
         [
           "accessory_or_wrong_product",
@@ -1060,6 +1108,7 @@
       "net_domestic": null,
       "best_reference_net": null,
       "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
+      "excluded_route_count": 0,
       "rejection_top5": [
         [
           "accessory_or_wrong_product",
@@ -1084,6 +1133,7 @@
       "net_domestic": null,
       "best_reference_net": null,
       "main_blocked_reason": "有効な仕入(販売/出品/落札)候補なし",
+      "excluded_route_count": 0,
       "rejection_top5": [],
       "stale_excluded": 0,
       "overseas_stale": 0,
@@ -1103,6 +1153,7 @@
       "net_domestic": null,
       "best_reference_net": null,
       "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
+      "excluded_route_count": 0,
       "rejection_top5": [],
       "stale_excluded": 0,
       "overseas_stale": 0,

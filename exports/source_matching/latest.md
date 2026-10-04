@@ -1,6 +1,6 @@
 # Source Matching Accuracy 監査
 
-> 生成: 2026-10-04 14:35 JST / 商品同一性マッチング精度（利益/AI/UI/SaaS/DQ思想は不変）
+> 生成: 2026-10-04 18:24 JST / 商品同一性マッチング精度（利益/AI/UI/SaaS/DQ思想は不変）
 
 ## 精度サマリ（目標対比）
 | 指標 | 実績 | 目標 |
@@ -11,7 +11,7 @@
 | Condition Match Accuracy | 100.0% | 100% |
 | False Main Promotion | 0 | 0 |
 | High Risk Duplicates | 0 | (要レビュー) |
-| Manual Review Queue | 73 | – |
+| Manual Review Queue | 77 | – |
 
 ## ソース精度ランキング（100点）
 | # | source | 観測 | score | identity | capacity | model | fresh | main |
@@ -40,6 +40,7 @@
 | 22 | 楽天市場新品 | 2 | 70 | 0.00 | 1.00 | 1.00 | 0.00 | 0 |
 | 23 | src_ebay | 6 | 70 | 0.00 | 1.00 | 1.00 | 0.00 | 0 |
 | 24 | ゲオ | 8 | 69 | 0.00 | 1.00 | 1.00 | 0.12 | 0 |
+| 25 | Amazon JP (新品出品) | 1 | 65 | 0.00 | 1.00 | 1.00 | 1.00 | 0 |
 
 ## False Main Promotion 監査（目標 0）
 - ✅ False Main Promotion = 0

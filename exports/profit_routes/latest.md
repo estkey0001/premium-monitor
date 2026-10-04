@@ -1,6 +1,6 @@
 # Pro 利益ルート（normalized_price_observations 由来・検証済み）
 
-生成: 2026-10-04 14:35 JST
+生成: 2026-10-04 18:24 JST
 
 - **main 利益ルート: 0件**（route_confidence high/medium のみ）
 - 参考ルート(海外sold stale・要fresh化): 0件
@@ -126,7 +126,7 @@
 
 ### RICOH GR IV Monochrome
 - buy候補 0 / sell候補 0 / stale除外 6 / 海外sold stale 0
-- 除外理由TOP5: [('stale_over_14d', 5), ('duplicate_price_collision', 1), ('sold_label_without_evidence', 1)]
+- 除外理由TOP5: [('stale_over_14d', 5), ('duplicate_price_collision', 1), ('sold_label_without_evidence', 1), ('accessory_or_wrong_product', 1)]
 
 ### RICOH GR IIIx
 - buy候補 0 / sell候補 1 / stale除外 11 / 海外sold stale 1

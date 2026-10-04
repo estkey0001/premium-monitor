@@ -1,24 +1,24 @@
 {
-  "generated_at": "2026-10-04 14:35 JST",
+  "generated_at": "2026-10-04 18:24 JST",
   "date": "2026-10-04",
   "health_score": {
     "data_quality": 14.9,
     "profit_discovery": 0.0,
-    "source_health": 12.7,
+    "source_health": 13.0,
     "link_quality": 4.8,
-    "freshness": 4.8,
-    "total": 37.2
+    "freshness": 4.9,
+    "total": 37.6
   },
   "data_quality": {
-    "total_obs": 229,
+    "total_obs": 230,
     "usable_obs": 67,
     "stale_count": 118,
-    "stale_rate": 0.5153,
+    "stale_rate": 0.513,
     "zero_count": 37,
-    "zero_rate": 0.1616,
-    "item_url_rate": 0.4803,
-    "search_url_rate": 0.1878,
-    "manual_rate": 0.5066,
+    "zero_rate": 0.1609,
+    "item_url_rate": 0.4783,
+    "search_url_rate": 0.2043,
+    "manual_rate": 0.5087,
     "api_rate": 0.0,
     "html_rate": 0.0087
   },
@@ -326,45 +326,55 @@
         "medium": 2
       },
       "n": 2
+    },
+    "Amazon JP (新品出品)": {
+      "success_count": 1,
+      "stale_count": 0,
+      "zero_count": 0,
+      "item_url_rate": 0.0,
+      "freshness": 1.0,
+      "success_rate": 1.0,
+      "confidence": {
+        "medium": 1
+      },
+      "n": 1
     }
   },
   "diff_vs_prev": {
     "available": true,
     "stale_rate": {
       "prev": 0.5153,
-      "cur": 0.5153
+      "cur": 0.513
     },
     "zero_rate": {
       "prev": 0.1616,
-      "cur": 0.1616
+      "cur": 0.1609
     },
     "item_url_rate": {
-      "prev": 0.4716,
-      "cur": 0.4803
+      "prev": 0.4803,
+      "cur": 0.4783
     },
     "main_route_count": {
-      "prev": 1,
+      "prev": 0,
       "cur": 0
     },
     "reference_route_count": {
-      "prev": 1,
+      "prev": 0,
       "cur": 0
     },
     "new_main": [],
-    "lost_main": [
-      "prod_gr4"
-    ],
+    "lost_main": [],
     "source_success_changes": []
   },
   "anomalies": {
     "critical": [
-      "stale率 52% (>=50%)",
+      "stale率 51% (>=50%)",
       "取得成功率 0%: ゲオモバイル",
       "取得成功率 0%: セカンドストリート",
       "取得成功率 0%: ネットオフ"
     ],
     "warning": [
-      "main route 減少 1→0",
+      "item_url率 低下",
       "item_url率 48% (<50%)"
     ],
     "info": []

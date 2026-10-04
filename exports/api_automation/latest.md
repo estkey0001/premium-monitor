@@ -1,6 +1,6 @@
 # API Automation Quality Dashboard
 
-> 生成: 2026-10-04 14:35 JST / API自動化（eBay/楽天/Yahoo）の統合状態と品質。利益/AI/DQ思想は不変
+> 生成: 2026-10-04 18:24 JST / API自動化（eBay/楽天/Yahoo）の統合状態と品質。利益/AI/DQ思想は不変
 
 - dry_run: True / target: canary / いずれか設定済: False
 

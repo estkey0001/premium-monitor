@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-04 14:35 JST",
+  "generated_at": "2026-10-04 18:24 JST",
   "source": "Mercari sold",
   "policy": "no_live_scraping_tos_safe_manual_curation_plus_search_url",
   "fresh_days": 14,
@@ -26,7 +26,7 @@
           "observed_at": "2026-08-22T09:00:00+09:00",
           "sold_at": "",
           "price_type": "UNKNOWN",
-          "age_days": 43.2,
+          "age_days": 43.4,
           "target_buy_price": 52999,
           "within_target": true,
           "rejection_reason": "no_sold_evidence:dummy_url,no_sold_at"
@@ -55,7 +55,7 @@
           "observed_at": "2026-08-22T10:00:00+09:00",
           "sold_at": "",
           "price_type": "UNKNOWN",
-          "age_days": 43.2,
+          "age_days": 43.4,
           "target_buy_price": 191999,
           "within_target": true,
           "rejection_reason": "no_sold_evidence:dummy_url,no_sold_at"
@@ -84,7 +84,7 @@
           "observed_at": "2026-08-20T15:00:00+09:00",
           "sold_at": "",
           "price_type": "UNKNOWN",
-          "age_days": 45.0,
+          "age_days": 45.1,
           "target_buy_price": 123999,
           "within_target": false,
           "rejection_reason": "no_sold_evidence:dummy_url,no_sold_at"
@@ -96,7 +96,7 @@
       "count_recent": 0,
       "median_price": null,
       "min_price": null,
-      "target_buy_price": null,
+      "target_buy_price": 150999,
       "within_target_count": 0,
       "search_url": "https://jp.mercari.com/search?keyword=%5B%22GR%20IV%22%2C%20%22GR4%22%2C%20%22GRIV%22%2C%20%22GR%204%22%5D&status=sold_out",
       "item_urls": [],
@@ -113,8 +113,8 @@
           "observed_at": "2026-08-22T11:00:00+09:00",
           "sold_at": "",
           "price_type": "UNKNOWN",
-          "age_days": 43.1,
-          "target_buy_price": null,
+          "age_days": 43.3,
+          "target_buy_price": 150999,
           "within_target": false,
           "rejection_reason": "no_sold_evidence:dummy_url,no_sold_at"
         }

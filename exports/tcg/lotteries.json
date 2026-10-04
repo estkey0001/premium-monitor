@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-10-04T14:05:24.529231+09:00",
-  "evaluated_at": "2026-10-04T14:05:24.526829+09:00",
+  "generated_at": "2026-10-04T17:53:50.037689+09:00",
+  "evaluated_at": "2026-10-04T17:53:50.035884+09:00",
   "items": [
     {
       "tcg": "POKEMON",
@@ -56,7 +56,7 @@
       "observed_at": "2026-10-01T18:51:40+09:00",
       "last_verified_at": "2026-10-01T18:51:40+09:00",
       "collection_method": "MANUAL_VERIFIED",
-      "status": "OPEN",
+      "status": "ENDING_SOON",
       "conflict": false,
       "conflict_fields": {},
       "notes": [
@@ -66,19 +66,19 @@
       "lottery_id": "lot-2edf02720a36",
       "merged_count": 1,
       "deadline_countdown": {
-        "remaining_days": 1,
-        "remaining_hours": 2,
-        "remaining_minutes": 53,
-        "remaining_seconds": 96815,
-        "label": "1日2時間"
+        "remaining_days": 0,
+        "remaining_hours": 23,
+        "remaining_minutes": 5,
+        "remaining_seconds": 83109,
+        "label": "23時間5分"
       },
       "start_countdown": null,
       "purchase_countdown": {
-        "remaining_days": 16,
-        "remaining_hours": 2,
-        "remaining_minutes": 53,
-        "remaining_seconds": 1392815,
-        "label": "16日2時間"
+        "remaining_days": 15,
+        "remaining_hours": 23,
+        "remaining_minutes": 5,
+        "remaining_seconds": 1379109,
+        "label": "15日23時間"
       }
     },
     {
@@ -135,7 +135,7 @@
       "observed_at": "2026-10-01T18:51:40+09:00",
       "last_verified_at": "2026-10-01T18:51:40+09:00",
       "collection_method": "MANUAL_VERIFIED",
-      "status": "OPEN",
+      "status": "ENDING_SOON",
       "conflict": false,
       "conflict_fields": {},
       "notes": [
@@ -145,19 +145,19 @@
       "lottery_id": "lot-da7bc68e6346",
       "merged_count": 1,
       "deadline_countdown": {
-        "remaining_days": 1,
-        "remaining_hours": 2,
-        "remaining_minutes": 53,
-        "remaining_seconds": 96815,
-        "label": "1日2時間"
+        "remaining_days": 0,
+        "remaining_hours": 23,
+        "remaining_minutes": 5,
+        "remaining_seconds": 83109,
+        "label": "23時間5分"
       },
       "start_countdown": null,
       "purchase_countdown": {
-        "remaining_days": 16,
-        "remaining_hours": 2,
-        "remaining_minutes": 53,
-        "remaining_seconds": 1392815,
-        "label": "16日2時間"
+        "remaining_days": 15,
+        "remaining_hours": 23,
+        "remaining_minutes": 5,
+        "remaining_seconds": 1379109,
+        "label": "15日23時間"
       }
     },
     {
@@ -211,8 +211,8 @@
       "verified": true,
       "verified_by": null,
       "published_at": "2026-09-18T00:00:00+09:00",
-      "observed_at": "2026-10-04T13:59:35.116583+09:00",
-      "last_verified_at": "2026-10-04T13:59:35.116588+09:00",
+      "observed_at": "2026-10-04T17:48:00.213396+09:00",
+      "last_verified_at": "2026-10-04T17:48:00.213401+09:00",
       "collection_method": "HTML",
       "status": "CLOSED",
       "conflict": false,
@@ -275,8 +275,8 @@
       "verified": true,
       "verified_by": null,
       "published_at": "2026-09-18T00:00:00+09:00",
-      "observed_at": "2026-10-04T14:00:35.487388+09:00",
-      "last_verified_at": "2026-10-04T14:00:35.487393+09:00",
+      "observed_at": "2026-10-04T17:49:00.152847+09:00",
+      "last_verified_at": "2026-10-04T17:49:00.152852+09:00",
       "collection_method": "HTML",
       "status": "CLOSED",
       "conflict": false,
@@ -339,8 +339,8 @@
       "verified": true,
       "verified_by": null,
       "published_at": "2026-09-18T00:00:00+09:00",
-      "observed_at": "2026-10-04T14:01:35.094884+09:00",
-      "last_verified_at": "2026-10-04T14:01:35.094889+09:00",
+      "observed_at": "2026-10-04T17:50:00.121596+09:00",
+      "last_verified_at": "2026-10-04T17:50:00.121601+09:00",
       "collection_method": "HTML",
       "status": "CLOSED",
       "conflict": false,
@@ -403,8 +403,8 @@
       "verified": true,
       "verified_by": null,
       "published_at": "2026-09-18T00:00:00+09:00",
-      "observed_at": "2026-10-04T14:01:35.095106+09:00",
-      "last_verified_at": "2026-10-04T14:01:35.095109+09:00",
+      "observed_at": "2026-10-04T17:50:00.121787+09:00",
+      "last_verified_at": "2026-10-04T17:50:00.121789+09:00",
       "collection_method": "HTML",
       "status": "CLOSED",
       "conflict": false,

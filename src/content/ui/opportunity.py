@@ -236,8 +236,12 @@ def from_route(r: dict, product_genres: dict | None = None) -> OpportunityView:
         net_profit=_num(r.get("net_profit")),
         flags={"route": r, "sell_evidence": str(r.get("sell_price_evidence") or pe.UNKNOWN)},
     )
-    fee = sum(_num(r.get(k)) or 0 for k in ("platform_fee", "payment_fee", "fx_buffer"))
-    v.sell_fee = fee
+    # 手数料が分からない（項目が無い）ときは 0 円とみなさない（算出前）。為替の余裕は海外以外は 0 が正しい値
+    fees = [_num(r.get(k)) for k in ("platform_fee", "payment_fee")]
+    v.sell_fee = (sum(fees) + (_num(r.get("fx_buffer")) or 0)) if all(f is not None for f in fees) else None
+    # 仕入れ側の送料（購入送料）・購入時の費用は、ルートのデータに項目があるときだけ（無ければ不明 = 算出前。0円とみなさない）
+    v.buy_shipping = _num(r.get("buy_shipping"))
+    v.buy_required_cost = _num(r.get("buy_required_cost"))
     v.sell_shipping = _num(r.get("shipping_cost"))
     v.sell_required_cost = _num(r.get("safety_margin"))
     v.cost_lines = [(lbl, a) for lbl, a in (
@@ -315,7 +319,57 @@ def eligibility(v: OpportunityView, now: datetime) -> tuple[str, ...]:
         why = home.route_reject_reason(r)
         if why:
             reasons.append(f"route_{why}")
+        reasons.extend(route_identity_reasons(r))
+        # 費用がすべて分かっているのに、内訳（売値 − 取得原価 − 費用）と純利益が合わないものは出さない
+        # （購入送料などが純利益に入っていないと、利益が実際より大きく出るため）
+        if (v.acquisition_cost is not None and not v.breakdown_ok
+                and all(c is not None for c in (v.sell_fee, v.sell_shipping, v.sell_required_cost))):
+            reasons.append("breakdown_mismatch")
     return tuple(dict.fromkeys(reasons))
+
+
+# 商品の状態の系統（新品と中古を混ぜない）
+# 新品と未使用（中古店の未使用品など）は別の系統として扱う（新品の価格と組み合わせない）
+_NEW_CONDITIONS = ("new", "new_unopened", "新品")
+_UNUSED_CONDITIONS = ("unused", "未使用")
+_USED_CONDITIONS = ("used", "used_a", "used_b", "used_c", "used_s", "中古")
+
+
+def _cond_family(c) -> str:
+    s = str(c or "").strip().lower()
+    if s in _NEW_CONDITIONS:
+        return "new"
+    if s in _UNUSED_CONDITIONS:
+        return "unused"
+    if s in _USED_CONDITIONS or s.startswith("used"):
+        return "used"
+    return ""
+
+
+def route_identity_reasons(r: dict) -> list[str]:
+    """利益ルート（定価以外で仕入れる）の商品の同一性・状態の理由（空なら問題なし）。
+
+    - 仕入れ・売却の両方で商品の同一性が確認済み（正規化データの is_exact_product_match）。無い・False は未確認
+    - 二次流通（出品）で仕入れる場合は、商品ページ単位の URL がある（検索結果の価格は実際に買える同じ商品と言えない）
+    - 仕入れと売却の商品の状態の系統（新品・中古）が分かっていて、同じ
+    """
+    out = []
+    if r.get("buy_exact_match") is not True:
+        out.append("buy_identity_unverified")
+    if r.get("sell_exact_match") is not True:
+        out.append("sell_identity_unverified")
+    buy_type = pt.canonical(r.get("buy_canonical_type"))
+    # 成約価格（売れた価格）では仕入れられない
+    if buy_type in (pt.SOLD, pt.SOLD_MEDIAN):
+        out.append("buy_type_sold")
+    # 二次流通（正規店の新品以外）で仕入れる場合は、実際に買える商品ページ単位の URL があること
+    secondary = not (buy_type == pt.RETAIL and _cond_family(r.get("buy_condition")) == "new")
+    if secondary and not str(r.get("buy_item_url") or "").startswith("https://"):
+        out.append("buy_not_item_level")
+    bf, sf = _cond_family(r.get("buy_condition")), _cond_family(r.get("sell_condition"))
+    if not bf or not sf or bf != sf:
+        out.append("condition_mismatch")
+    return out
 
 
 # 在庫の表示を「在庫あり／在庫切れ」と言ってよいのは、確認から CURRENT_DAYS（7日）以内のときだけ

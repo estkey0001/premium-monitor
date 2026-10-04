@@ -205,6 +205,19 @@ def _make_route(buy: dict, sell: dict, now: datetime, reference: bool = False) -
         # 新UIの利益商品は成約中央値のルートを掲載しない（期間を推測で付けない）
         "sell_sample_count": sell.get("sample_count"),
         "sell_period": _sold_period_text(sell),
+        "sell_period_start": str(sell.get("sold_period_start") or ""),
+        "sell_period_end": str(sell.get("sold_period_end") or ""),
+        "sell_min": sell.get("sold_median_min"), "sell_max": sell.get("sold_median_max"),
+        # 商品の同一性（正規化データの照合結果をそのまま渡す。新UIは両側が確認済みのルートだけ掲載する）
+        # 仕入れ側の送料（観測に送料があるときだけ。無ければ None = 不明。0円とみなさない）
+        "buy_shipping": buy.get("shipping") if isinstance(buy.get("shipping"), (int, float)) else None,
+        # 購入時の費用（手数料など）も観測にあるときだけ（無ければ不明）
+        "buy_required_cost": buy.get("required_cost") if isinstance(buy.get("required_cost"), (int, float)) else None,
+        "buy_exact_match": bool(buy.get("is_exact_product_match")),
+        "buy_match_reason": str(buy.get("product_match_reason") or ""),
+        "buy_item_url": str(buy.get("item_url") or "") if buy.get("link_type") in ("item", "item_unverified") else "",
+        "sell_exact_match": bool(sell.get("is_exact_product_match")),
+        "sell_match_reason": str(sell.get("product_match_reason") or ""),
         "route_type": _route_type(buy["price_type"], sell["price_type"]),
         "reference_route": reference, "rejection_reason": "",
     }

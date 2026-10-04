@@ -12,7 +12,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from src.content.ui import account, home, lottery_page, navigation, opportunities_page, pages, parity, restock_page
+from src.content.ui import account, home, lottery_page, navigation, opportunities_page, pages, parity, restock_page, routes_page
 from src.content.ui import catalog as cl
 from src.content.ui import categories as cats
 from src.content.ui import runtime as rt
@@ -39,6 +39,7 @@ class ShellContext:
     profit_deals: list | None = None
     product_genres: dict | None = None  # product_id → products.genre（ジャンルの判定に使う）
     stock_history: dict | None = None   # 在庫の状態の履歴（exports/stock_history/latest.json）
+    price_observations: list | None = None  # 正規化した価格の観測（出品価格の参考に使う）
 
 
 def _css() -> str:
@@ -535,6 +536,95 @@ def _router_script() -> str:
     if (term && form && form.hidden) { form.hidden = false; if (tog) tog.setAttribute('aria-expanded', 'true'); }
     if (input && document.activeElement !== input) input.value = q.get('q') || '';
   }
+
+  // ── せどりルート（UI Phase 5）: ルートの種類・絞り込み・並べ替え・検索・ページ（値は data-* の確定値だけ） ──
+  var RT_TABS = ['retail', 'secondary', 'other'], RT_FILTERS = ['highroi'];
+  var RT_SORTS = ['profit', 'roi', 'updated', 'samples'], RT_SIZE = 20, RT_HIGH_ROI = 0.2;
+  function rtHref(name, value) {
+    var cur = new URLSearchParams(location.search), u = new URLSearchParams();
+    u.set('ui', 'new'); u.set('page', 'routes');
+    cur.forEach(function(v, k){ if (k !== 'ui' && k !== 'page') u.set(k, v); });
+    if (value) u.set(name, value); else u.delete(name);
+    if (name !== 'page_num') u.delete('page_num');
+    return '?' + u.toString();
+  }
+  function renderRoutes(q, cat) {
+    var sec = root.querySelector('[data-nu-page="routes"]');
+    if (!sec) return;
+    var tab = RT_TABS.indexOf(q.get('tab')) >= 0 ? q.get('tab') : '';
+    var filter = RT_FILTERS.indexOf(q.get('filter')) >= 0 ? q.get('filter') : '';
+    var sort = RT_SORTS.indexOf(q.get('sort')) >= 0 ? q.get('sort') : 'profit';
+    var term = (q.get('q') || '').trim().toLowerCase();
+    var pageNum = Math.max(1, parseInt(q.get('page_num') || '1', 10) || 1);
+    var box = sec.querySelector('[data-nu-route-list]');
+    var items = Array.prototype.slice.call(box.querySelectorAll(':scope > [data-nu-route]')).map(function(el){
+      return {el: el, cat: el.getAttribute('data-nu-cat'), tab: el.getAttribute('data-rt-tab'),
+              profit: +el.getAttribute('data-profit'), roi: +el.getAttribute('data-roi'), upd: +el.getAttribute('data-upd'),
+              samples: +el.getAttribute('data-samples'), stock: el.getAttribute('data-stock'),
+              idx: +el.getAttribute('data-idx'), text: el.getAttribute('data-search') || ''};
+    });
+    var inCat = items.filter(function(it){ return cat === 'all' || it.cat === cat; });
+    var list = inCat.filter(function(it){
+      if (tab && it.tab !== tab) return false;
+      if (filter === 'highroi' && !(it.roi >= RT_HIGH_ROI)) return false;
+      return !term || it.text.indexOf(term) >= 0;
+    });
+    var by = {profit: function(a, b){ return b.profit - a.profit || a.idx - b.idx; },
+              roi: function(a, b){ return b.roi - a.roi || a.idx - b.idx; },
+              updated: function(a, b){ return b.upd - a.upd || a.idx - b.idx; },
+              samples: function(a, b){ return b.samples - a.samples || a.idx - b.idx; }}[sort];
+    list.sort(by);
+    var total = list.length, pages = Math.max(1, Math.ceil(total / RT_SIZE));
+    if (pageNum > pages) pageNum = pages;
+    var start = (pageNum - 1) * RT_SIZE, shown = list.slice(start, start + RT_SIZE), on = {};
+    shown.forEach(function(it){ on[it.idx] = true; });
+    var order = list.concat(items.filter(function(it){ return list.indexOf(it) < 0; }));
+    var same = order.every(function(it, i){ return box.children[i] === it.el; });
+    order.forEach(function(it){ if (!same) box.appendChild(it.el); it.el.hidden = !on[it.idx]; });
+    var res = sec.querySelector('[data-nu-tresult]');
+    if (res) res.textContent = total === 0 ? '0件' : total + '件中 ' + (start + 1) + '〜' + (start + shown.length) + '件';
+    sec.querySelectorAll('[data-nu-rt-hide-empty]').forEach(function(el){ el.hidden = inCat.length === 0; });
+    sec.querySelectorAll('[data-nu-tempty]').forEach(function(el){
+      var k = el.getAttribute('data-nu-tempty');
+      el.hidden = !(k === 'none' ? inCat.length === 0 : (inCat.length > 0 && total === 0));
+    });
+    sec.querySelectorAll('[data-nu-tparam]').forEach(function(a){
+      var name = a.getAttribute('data-nu-tparam'), val = a.getAttribute('data-nu-tvalue');
+      var cur = {tab: tab, filter: filter, sort: sort}[name], on2 = val === cur;
+      setCurrent(a, on2, 'true');
+      a.setAttribute('href', rtHref(name, (name === 'filter' && on2) || (name === 'sort' && val === 'profit') ? '' : val));
+    });
+    sec.querySelectorAll('[data-nu-switch]').forEach(function(a){
+      var k = a.getAttribute('data-nu-switch');
+      a.setAttribute('href', rtHref('category', k === 'all' ? '' : k));
+    });
+    // 出品価格の参考もジャンルで絞る（件数・利益には使わない）
+    var refShown = 0;
+    sec.querySelectorAll('[data-nu-ref]').forEach(function(li){
+      var ok = cat === 'all' || li.getAttribute('data-nu-cat') === cat;
+      li.hidden = !ok; if (ok) refShown++;
+    });
+    var refEmpty = sec.querySelector('[data-nu-ref-empty]');
+    if (refEmpty) refEmpty.hidden = refShown > 0;
+    var pager = sec.querySelector('[data-nu-tpager]');
+    if (pager) {
+      pager.hidden = pages <= 1;
+      while (pager.firstChild) pager.removeChild(pager.firstChild);
+      for (var n = 1; pages > 1 && n <= pages; n++) {
+        var a = document.createElement('a');
+        a.className = 'nu-pager__link';
+        a.setAttribute('href', rtHref('page_num', n > 1 ? String(n) : ''));
+        a.setAttribute('data-nu-scrolltop', '');
+        if (n === pageNum) a.setAttribute('aria-current', 'page');
+        a.textContent = String(n);
+        pager.appendChild(a);
+      }
+    }
+    var form = sec.querySelector('[data-nu-search-form]'), input = sec.querySelector('[data-nu-search-input]');
+    var tog = sec.querySelector('[data-nu-search-toggle]');
+    if (term && form && form.hidden) { form.hidden = false; if (tog) tog.setAttribute('aria-expanded', 'true'); }
+    if (input && document.activeElement !== input) input.value = q.get('q') || '';
+  }
   function render(moveFocus) {
     var stockNext = stockRuntime(Date.now());
     var page = currentPage(), cat = currentCat(), lot = lotteryCounts(), rs = restockCounts();
@@ -583,6 +673,7 @@ def _router_script() -> str:
     renderOpp(q, cat);
     renderLot(q, cat);
     renderRestock(q, cat);
+    renderRoutes(q, cat);
     renderTimes();
     renderRTimes(Date.now());
     STOCK_NEXT = stockNext;
@@ -755,7 +846,8 @@ def build_catalog(ctx: ShellContext):
         profit_routes=ctx.profit_routes, legacy_lotteries=ctx.legacy_lotteries, now=ctx.now)
     catalog = cl.build(model=model, tcg_report=ctx.tcg_report, profit_routes=ctx.profit_routes,
                        legacy_lotteries=ctx.legacy_lotteries, profit_deals=ctx.profit_deals,
-                       product_genres=ctx.product_genres, stock_history=ctx.stock_history)
+                       product_genres=ctx.product_genres, stock_history=ctx.stock_history,
+                       price_observations=ctx.price_observations)
     return model, catalog
 
 
@@ -775,8 +867,7 @@ def render_root(ctx: ShellContext) -> str:
         + opportunities_page.render(catalog, has_data=has_data)
         + lottery_page.render(catalog, model, has_data=has_data)
         + restock_page.render(catalog, now=model.now)
-        + "".join(pages.render_purpose(p, catalog, model, has_data=has_data)
-                  for p in cl.PURPOSES if p not in ("opportunities", "lottery", "restock"))
+        + routes_page.render(catalog)
         + pages.render_more(catalog)
         + pages.render_search()
         + account.render()

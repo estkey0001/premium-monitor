@@ -4375,6 +4375,8 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 profit_deals=self._nu_profit_deals(all_deals, buyback_by_product),
                 product_genres=getattr(self, "_product_genres", None) or {},
                 stock_history=self._load_export_json("stock_history", "latest.json"),
+                price_observations=self._load_export_json("normalized_price_observations", "latest.json").get(
+                    "observations") or [],
             )
             root = _ui_shell.render_root(ctx)
             self._write_opportunity_diagnostics(ctx)

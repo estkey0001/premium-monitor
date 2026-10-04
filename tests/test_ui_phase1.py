@@ -51,7 +51,9 @@ ROUTE = {"product_id": "prod_switch2", "product_name": "Nintendo Switch 2", "buy
          "shipping_cost": 1500, "safety_margin": 3000, "platform_fee": 0, "payment_fee": 0, "fx_buffer": 0,
          "route_confidence": "high", "buy_price_evidence": "VERIFIED_CURRENT",
          "sell_price_evidence": "VERIFIED_CURRENT", "sell_canonical_type": "BUYBACK_CASH", "buy_canonical_type": "RETAIL",
-         "buy_observed_at": "2026-10-03T09:00:00+09:00", "sell_observed_at": "2026-10-03T09:00:00+09:00"}
+         "buy_observed_at": "2026-10-03T09:00:00+09:00", "sell_observed_at": "2026-10-03T09:00:00+09:00",
+         "buy_exact_match": True, "sell_exact_match": True, "buy_condition": "new_unopened",
+         "sell_condition": "new_unopened", "buy_shipping": 0, "buy_required_cost": 0}
 LEGACY = [{"id": "L1", "product_name": "RICOH GR IV 限定", "brand": "RICOH",
            "entry_start_at": (NOW - timedelta(days=1)).strftime("%Y-%m-%d %H:%M"),
            "entry_end_at": (NOW + timedelta(days=1)).strftime("%Y-%m-%d %H:%M"),
@@ -173,6 +175,9 @@ def test_purpose_navigation_keeps_category_links():
         elif p == "lottery":
             # 抽選・予約（UI Phase 3）は1件1要素の一覧と、0件・条件に合うもの無しの空状態
             assert "data-nu-lot-list" in sec and 'data-nu-lempty="none"' in sec and 'data-nu-lempty="nomatch"' in sec
+        elif p == "routes":
+            # せどりルート（UI Phase 5）は確定ルートの一覧・空状態と、出品価格の参考
+            assert "data-nu-route-list" in sec and 'data-nu-tempty="none"' in sec and "data-nu-ref-list" in sec
         elif p == "restock":
             # 在庫再開（UI Phase 4）は購入可能・履歴の空状態と、条件に合うもの無し
             assert "data-nu-rs-list" in sec and 'data-nu-rempty="avail"' in sec and 'data-nu-rempty="history"' in sec
@@ -196,16 +201,18 @@ def test_no_inactive_fake_cta():
     inputs = re.findall(r"<input[^>]*>", body)
     assert body.count("準備中") >= 6
     assert all("disabled" in i or "data-nu-search-input" in i for i in inputs)
-    assert sum("data-nu-search-input" in i for i in inputs) == 3
-    for p in ("opportunities", "lottery", "restock"):
+    assert sum("data-nu-search-input" in i for i in inputs) == 4
+    for p in ("opportunities", "lottery", "restock", "routes"):
         assert _section(root, p).count("data-nu-search-input") == 1
 
 
 def test_empty_states_without_sold_data():
     root = shell.render_root(_ctx(profit_routes={"main_routes": []}, profit_deals=[]))
     routes = _section(root, "routes")
-    assert "成約価格を確認できる利益ルートは、今はありません" in routes and "データ準備中" in routes
-    assert re.search(r'<div data-nu-empty-for="routes" class="nu-empty" data-empty="NO_ACTIVE"', routes)
+    # UI Phase 5: 確定ルートの空状態と、出品価格の参考（別欄）
+    assert "現在、成約価格を確認できる利益ルートはありません" in routes and "出品価格ではなく" in routes
+    assert re.search(r'<div class="nu-empty" data-nu-tempty="none" role="status">', routes)
+    assert "出品価格の参考" in routes
     assert 'data-nu-count="routes">0件' in root
     # 技術的な理由（API・collector など）は出さない
     assert not re.search(r"API|collector|EBAY|HTTP", routes)

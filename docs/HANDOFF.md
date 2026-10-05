@@ -1,6 +1,7 @@
 # HANDOFF（最終更新: 2026-10-05）
 
 ## 今の状態
+- Phase 6.1: 定価で買って買取店に売る案件（利益商品・ランキング・Hero・初心者・Pro・商品詳細）は、売却価格に商品の照合が済んだ買取価格だけを使う。正本は `src/market/normalized_prices.sell_confirmation_reasons`（BUYBACK_CASH・is_exact_product_match・店のトップ／検索結果でない・取得失敗や疑わしい値でない・14日以内・新品の系統）。スキャナー（`beginner_deal_scanner`）と LP の補完（`_enrich_deal`）は照合済みの中の最高値を選び、判定（`opportunity.eligibility`）も `sell_identity_unverified` で塞ぐ。PS5 Pro はモバイル一番 ¥192,700（トップページの価格・照合未了）から買取商店 ¥192,300 に変わる（純利益 52,370 → 51,970）。deploy-check #833。
 - UI Phase 6: 新UIの「商品詳細」（`?ui=new&page=product&product_id=…&tab=history|changes`）と「商品を検索」（`?ui=new&page=search&q=…&category=…`）を作った。表示モデルは `src/content/ui/product_detail.py`（ProductDetailView）、画面は `product_page.py`。利益商品・抽選・予約・在庫再開・せどりルート・検索の各行に「商品詳細を見る」を足した（既存のボタンはそのまま）。価格の履歴は `exports/price_history/latest.json`（`scripts/update_price_history.py`。CI の「Update price history」）に、実際に観測した値だけを 2026-10-05 から積み上げる（それより前の履歴は無い）。
 - Phase 5.2: 無効になったルートが別の成果物経由で復活しないようにした。ルートの識別子 `route_id`（`opportunity.route_key`）を利益ルート → AI Opportunities → 資金配分 → 実行履歴 → 通知に引き継ぎ、AI Dashboard・Capital・Health・通知・フリマ成約欄・β の通知プレビューは描画・生成のときに今の確定・参考ルートとルート単位で照合する（商品単位で照合しない）。実行履歴の OPEN のうち今のルートで確かめられない82件（GR IV の偽ルート 39,009 を含む）は `INVALIDATED`（履歴は残し、値は書き換えない）。公式の購入送料を根拠つきで持つようにした（`src/market/official_shipping.py`。PS5 Pro は 550円 → 純利益 51,670）。
 - Phase 5.1: 旧UI（通常の URL）の利益ルート・ランキング・Hero・初心者ルート一覧・AI Opportunities（今日のおすすめ・BUY）・通知に、新UIと同じ確定の判定（`src/content/ui/opportunity.py` の `route_reasons` / `deal_reasons`）を使うようにした。`profit_routes` の `main_routes` は判定を通ったものだけ（外したものは `excluded_routes` に理由つき）。GR IV の偽ルートは旧UIの「検証済み利益ルート」「今日のおすすめ」「TOP10」「NEW_MAIN 通知」にも出ていた。
@@ -23,6 +24,8 @@
 - **成約（sold）データは今は0件**。ヤフオク（自動）は出品価格、手動の成約 CSV（data/manual_flea_sold_prices.csv）は URL がダミーで成約日時が無い、eBay は API 未設定（CI では HTML もブロック）、メルカリ・ラクマの成約は NOT_IMPLEMENTED。成約中央値を使うには、規約に沿って1件ごとの商品ページの URL と成約日時を取れる経路が必要（eBay API を設定する場合も、1件ごとの成約日時を保存するように collector を直す必要がある）。
 - 過去の誤分類（git の履歴で数えた）: NPO にヤフオクの出品を「落札」として入れたコミットが144（1,491行、2026-06-04〜10-02）。そのうち利益ルートの main（確定利益）の仕入れ値に使ったものが32行。ダミー URL の手動「成約」を使ったルートが39コミット・269行（06-15〜09-04）。履歴は書き換えていない。
 - 旧UI は横に少しはみ出す（.tab-wrap の `margin: 0 -24px`。1440px で 24px、375px で 16px）。Phase 0.1 より前からある。旧UI は直していない（Phase 5.1 でも対象外。新UI は負のマージンを使わず、320〜1440px ではみ出し0をテストで確認）。旧UI を外すときに一緒に消える。
+- 既知の LOW（Phase 6.1）: せどりルートの計算（`sedori_route_calculator`）は店ごとの最高値を選ぶので、その値が未照合だとルートごと外れる（同じ店の照合済みの低い値に戻らない。確定には入らない安全側）。案件の売値の照合は「商品ID・店名・価格」の一致なので、正規化データと DB で店名の表記が変わると照合済みでも未照合になる（安全側。利益が黙って消えるので、件数の急減に注意）。
+- 手入力（manual_today）の買取価格は商品の照合済みにならない（`is_exact_product_match` は auto_scraped だけ。ルートと同じ）ので、確定利益の売値に使わない。手入力の価格を使いたいときは、照合の根拠（商品ページの URL など）を記録する仕組みが別に必要。
 - 既知の LOW（Phase 5.1・5.2 で確認、変えていない）: `normalized_prices._url_confirms_sku` は link_type が unknown（カテゴリページなど）でも商品の照合済みとする。仕入れ側は確定の判定の URL 条件（二次流通は `is_item_url`、正規店は link_type=item）で塞いだ。売却側は、買取商店のカテゴリページ（6行）を collector が型番の厳密一致で照合したものを照合済みとして使っている。商品ごとに価格が違い、トップページの1価格を複数商品に割り当てる誤り（shop_home は対策済み）とは別物で、確定ルートをすり抜けた証拠は無いので変えない。
 - 既知の LOW（Phase 5.2）: 購入時の費用（カード手数料など）は公式でも 0 円のまま（`_deal_cost_lines` の buy_required 0.0）。SaaS API（src/saas/api.py、127.0.0.1 のみ）は成果物をそのまま返す（公開ページではない）。Execution Dashboard の「今週学んだこと」の後半は固定文。
 - **まだ作っていない画面**: 商品詳細、サイト全体のキーワード検索（枠だけ）、絞り込みの「在庫復活」「買取急騰」「新着」（準備中。判定できるデータが無い）、かんたん/詳細の切り替え、在庫再開の本格画面（Phase 4）。

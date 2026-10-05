@@ -607,9 +607,62 @@ def beginner_official(obs: list[dict], product_id: str):
     return cand[0] if cand else None
 
 
+# ── 確定利益の売値に使える観測（売却側の正本。案件・ランキング・旧UI・新UIが共通で使う） ──
+# 商品の同一性は make_observation / build_observations の is_exact_product_match（収集元が型番で厳密に照合し、
+# 店のトップ・検索結果の価格ではなく、付属品・別の型番・複数 SKU への同額の割り当てでないもの）だけを根拠にする。
+# 種別が買取（BUYBACK_CASH）というだけでは確定にしない。
+_SELL_URL_NOT_ITEM = ("shop_home", "search")
+
+
+def sell_confirmation_reasons(o: dict, *, buy_condition: str = "new") -> list[str]:
+    """観測1件を確定利益の売値（買取価格）に使えない理由（空なら使える）。
+
+    - 売却の買取価格（BUYBACK_CASH）で、価格が正
+    - 商品の同一性が確認済み（is_exact_product_match が True）。店のトップ・検索結果の価格は使わない
+    - 付属品・別の型番の疑いがなく、取得失敗・古い・疑わしいなどで外れていない（rejection_reason が空）
+    - 確認から14日以内（is_fresh）
+    - 状態の系統が仕入れ（定価で買う新品）と同じ
+    """
+    from src.content.ui.opportunity import _cond_family
+    out = []
+    if o.get("price_role") != "sell":
+        out.append("not_sell")
+    if _pt.canonical(o.get("canonical_price_type") or o.get("price_type")) != _pt.BUYBACK_CASH:
+        out.append("sell_type_not_buyback")
+    price = o.get("price")
+    if not isinstance(price, (int, float)) or price <= 0:
+        out.append("invalid_sell_price")
+    if o.get("is_exact_product_match") is not True:
+        out.append("sell_identity_unverified")
+    if str(o.get("link_type") or "") in _SELL_URL_NOT_ITEM:
+        out.append("sell_url_not_item_level")
+    if o.get("accessory_flag") or o.get("wrong_model_flag"):
+        out.append("sell_wrong_product")
+    if o.get("rejection_reason"):
+        out.append(f"sell_rejected_{o.get('rejection_reason')}")
+    if o.get("is_fresh") is not True:
+        out.append("stale_sell_price")
+    if not _cond_family(o.get("condition")) or _cond_family(o.get("condition")) != _cond_family(buy_condition):
+        out.append("condition_mismatch")
+    return list(dict.fromkeys(out))
+
+
+def confirmed_sells(obs: list[dict], product_id: str) -> list[dict]:
+    """確定利益の売値に使える買取価格の観測（高い順）。単純な最高値ではなく、この中の最高値を使う。"""
+    cand = [o for o in obs or [] if isinstance(o, dict) and o.get("product_id") == product_id
+            and not sell_confirmation_reasons(o)]
+    return sorted(cand, key=lambda o: o["price"], reverse=True)
+
+
+def confirmed_sell_keys(obs: list[dict]) -> set[tuple[str, str, int]]:
+    """確定利益の売値に使える買取価格の (商品ID, 店名, 価格)。案件の売値がこの中にあるかで照合する
+    （商品名では照合しない）。"""
+    return {(str(o["product_id"]), str(o.get("source_name") or ""), int(o["price"]))
+            for o in obs or [] if isinstance(o, dict) and o.get("product_id") and not sell_confirmation_reasons(o)}
+
+
 def beginner_sell(obs: list[dict], product_id: str) -> list[dict]:
-    """初心者の売却候補（買取, role=sell, usable_for_beginner）。高い順。"""
-    cand = [o for o in obs if o["product_id"] == product_id
-            and o["price_role"] == "sell" and o["is_usable_for_beginner"]
-            and o["price_type"] == "buyback_price"]
+    """初心者の売却候補（確定利益の売値に使える買取価格だけ。sell_confirmation_reasons）。高い順。"""
+    cand = [o for o in confirmed_sells(obs, product_id)
+            if o["is_usable_for_beginner"] and o["price_type"] == "buyback_price"]
     return sorted(cand, key=lambda o: o["price"], reverse=True)

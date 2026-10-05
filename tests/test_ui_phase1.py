@@ -43,7 +43,7 @@ def _lot(i, **kw):
 # daily_lp_generator._nu_profit_deals が渡す形（掲載の判定は opportunity.eligibility）
 DEAL = {"product_id": "prod_gr4", "title": "RICOH GR IV", "genre": "camera", "official_price": 211800,
         "official_checked_at": "2026-09-01T10:00:00+09:00", "msrp_evidence": "VERIFIED_DATED",
-        "stock_status": "在庫あり", "sale_method": "normal", "sell_shop": "フジヤカメラ", "sell_price": 240000,
+        "stock_status": "在庫あり", "sale_method": "normal", "sell_shop": "フジヤカメラ", "sell_identity_verified": True, "sell_price": 240000,
         "sell_checked_at": "2026-10-02T12:00:00+09:00", "net_profit": 26400, "user_level": "beginner_easy",
         "resale_sell": False, "href": "./?from=new#product-gr4",
         # 購入送料は確認済み（Phase 5.2。分からなければ確定にしない）
@@ -246,6 +246,8 @@ def test_profit_deals_exclude_unverified_msrp_and_resale(monkeypatch):
     from src.content.ui import opportunity as opp
     from src.market import price_evidence as pe
     g = DailyLPGenerator.__new__(DailyLPGenerator)
+    g._sell_keys_cache = {(p, s, 240000) for p in ("prod_gr4", "prod_ps5_pro", "prod_x", "prod_y", "prod_old",
+                                                   "prod_nodate") for s in ("フジヤカメラ", "メルカリ")}   # 照合済み
     g._msrp_evidence = {"prod_gr4": pe.VERIFIED_CURRENT, "prod_ps5_pro": pe.CONFIGURED_REFERENCE,
                         "prod_x": pe.VERIFIED_DATED, "prod_y": pe.VERIFIED_DATED, "prod_old": pe.VERIFIED_DATED,
                         "prod_nodate": pe.VERIFIED_DATED}

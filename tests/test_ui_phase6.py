@@ -48,7 +48,7 @@ PRODUCTS = [
 ]
 DEAL = {"product_id": "prod_tcam", "title": "テストカメラ 本体", "genre": "camera", "model": "TC-1", "brand": "TEST",
         "official_price": 200000, "official_checked_at": _t(days=5), "msrp_evidence": "VERIFIED_DATED",
-        "stock_status": "在庫あり", "stock_checked_at": _t(minutes=20), "sale_method": "normal", "sell_shop": "買取店A",
+        "stock_status": "在庫あり", "stock_checked_at": _t(minutes=20), "sale_method": "normal", "sell_shop": "買取店A", "sell_identity_verified": True,
         "sell_price": 232000, "sell_checked_at": _t(hours=2), "net_profit": 232000 - 200000 - 1800,
         "user_level": "beginner_easy", "resale_sell": False, "official_url": "https://www.apple.com/jp/shop/buy-test",
         "sell_url": "https://kaitori.example.jp/item/1", "purchase_shipping": 0, "purchase_shipping_status": "FREE_VERIFIED"}

@@ -44,6 +44,7 @@ def _gen(now):
     g._msrp_evidence = {}
     g._product_info = {}
     g._gate_now = now
+    g._sell_keys_cache = RF.AllSellsVerified()      # テストの買取価格は照合済み
     return g
 
 
@@ -442,7 +443,7 @@ def test_unknown_purchase_shipping_is_not_confirmed_but_may_stay_reference():
     now = datetime.now(tz=JST)
     base = {"product_id": "prod_x", "title": "X", "genre": "camera", "official_price": 100000,
             "official_checked_at": (now - timedelta(days=3)).isoformat(), "msrp_evidence": "VERIFIED_DATED",
-            "sell_shop": "買取店A", "sell_price": 130000, "sell_checked_at": (now - timedelta(hours=1)).isoformat(),
+            "sell_shop": "買取店A", "sell_identity_verified": True, "sell_price": 130000, "sell_checked_at": (now - timedelta(hours=1)).isoformat(),
             "net_profit": 28200, "user_level": "beginner_easy", "purchase_shipping": None}
     why = opp.deal_reasons(base, now)
     assert why == ("purchase_shipping_unknown",) and not opp.is_msrp_reference_only(why)   # 確定にも参考にもしない

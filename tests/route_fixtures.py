@@ -48,3 +48,12 @@ def secondary(r: dict) -> dict:
     return dict(r, buy_canonical_type="LISTING", buy_price_type="flea_listing_price",
                 buy_condition="used_a", sell_condition="used_a",
                 buy_link_type="item", buy_url=ITEM_URL, buy_item_url=ITEM_URL, buy_source="メルカリ（出品）")
+
+
+class AllSellsVerified(set):
+    """テストの買取価格の行はすべて商品照合済みとする（生成器の _sell_keys_cache に入れる）。
+    生成器はふだん正規化データ（exports/normalized_price_observations）から照合済みの集合を作るが、テストでは
+    リポジトリの実データを読まないようにする。照合未了の扱いは Phase 6.1 のテストで個別の集合を渡して確かめる。"""
+
+    def __contains__(self, key) -> bool:
+        return True

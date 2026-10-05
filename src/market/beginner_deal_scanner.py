@@ -32,6 +32,27 @@ class BeginnerDealScanner:
 
     def __init__(self, repository: Repository):
         self.repo = repository
+        self._sell_keys: set | None = None
+
+    def _confirmed_sell_keys(self) -> set:
+        """確定利益の売値に使える買取価格の (商品ID, 店名, 価格)（正本は normalized_prices.sell_confirmation_reasons）。
+
+        商品の同一性（店のトップ・検索結果の価格でない、型番で厳密に照合した、など）は正規化の観測と同じ判定。
+        読めないときは空（＝どの買取価格も確定の売値にしない。未照合の価格で利益を出さない）。
+        """
+        if self._sell_keys is None:
+            try:
+                import sqlite3
+                from src.market.normalized_prices import build_observations, confirmed_sell_keys
+                con = sqlite3.connect(str(self.repo.db.db_path))
+                try:
+                    self._sell_keys = confirmed_sell_keys(build_observations(con))
+                finally:
+                    con.close()
+            except Exception as e:                     # noqa: BLE001
+                logger.warning("売却価格の照合を読めないため、確定の売値は無しとして扱う: %s", e)
+                self._sell_keys = set()
+        return self._sell_keys
 
     def scan_all(self, category: Optional[str] = None) -> list[BeginnerDealModel]:
         """全商品（またはカテゴリ）の初心者向け案件をスキャンする。"""
@@ -239,8 +260,27 @@ class BeginnerDealScanner:
                 elif b_time > e_time:
                     shop_best[sid] = b
         deduped = sorted(shop_best.values(), key=lambda b: b.buyback_price, reverse=True)
+        # 確定利益の売値に使えるのは、商品の同一性が確認済みの買取価格だけ（単純な最高値にしない）。
+        # 店のトップ・検索結果の価格（例: 型番を照合していない一覧の価格）は、より高くても使わない
+        keys = self._confirmed_sell_keys()
+        confirmed = [b for b in deduped
+                     if (product.id, b.shop_name or "", int(b.buyback_price or 0)) in keys]
+        if not confirmed:
+            # 照合済みの買取価格が無い → 売却価格未確認（利益は算出しない）
+            return BeginnerDealModel(
+                id=str(ulid.new()), product_id=product.id, product_name=product.name,
+                category=product.genre or "", brand=getattr(product, 'brand', '') or "",
+                official_price_jpy=official, official_url=self._get_official_url(product),
+                stock_status=product.official_stock_status or "", sale_method=_sale_method_of(product),
+                best_buyback_price=0, best_buyback_shop="", best_buyback_url="", buyback_condition="",
+                gross_profit_jpy=0, estimated_costs_jpy=0, net_profit_jpy=0, net_profit_rate=0.0,
+                beginner_score=0.0, difficulty_score=100.0, user_level="monitoring",
+                recommended_action="売却価格未確認（商品照合が済んだ買取価格なし）", is_active=True,
+                scanned_at=datetime.now(tz=JST), notes="売却価格の商品照合が未完了",
+            )
+        deduped = confirmed
 
-        # 最高買取を選択
+        # 最高買取を選択（照合済みの中の最高値）
         best = deduped[0]
         # ※ 買取 <= 定価（赤字）でも monitoring として表示するため None にしない
 

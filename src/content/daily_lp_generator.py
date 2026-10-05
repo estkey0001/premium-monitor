@@ -4296,6 +4296,17 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             return {}
         return data if isinstance(data, dict) else {}
 
+    def _confirmed_sell_keys(self) -> set:
+        """確定利益の売値に使える買取価格の (商品ID, 店名, 価格)。正規化の観測（exports/normalized_price_observations）
+        に normalized_prices.confirmed_sell_keys をかけたもの（商品詳細・新UIの判定と同じデータ・同じ判定）。
+        読めないときは空（未照合の価格で利益を出さない）。"""
+        keys = getattr(self, "_sell_keys_cache", None)
+        if keys is None:
+            from src.market.normalized_prices import confirmed_sell_keys
+            obs = self._load_export_json("normalized_price_observations", "latest.json").get("observations") or []
+            keys = self._sell_keys_cache = confirmed_sell_keys(obs)
+        return keys
+
     def _nu_profit_deals(self, all_deals, buyback_by_product: dict | None = None) -> list[dict]:
         """新UIの「利益商品」の候補（定価で買って買取店に売る案件）を、判定に必要な元の値ごと渡す。
 
@@ -4340,6 +4351,9 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 "sale_method": getattr(d, "sale_method", "") or "",
                 "sell_shop": shop, "sell_price": getattr(d, "best_buyback_price", 0) or 0,
                 "sell_checked_at": _checked_at(d), "sell_url": getattr(d, "best_buyback_url", "") or "",
+                # 売却価格の商品の同一性（normalized_prices.sell_confirmation_reasons。商品ID・店名・価格で照合）
+                "sell_identity_verified": (pid, shop, int(getattr(d, "best_buyback_price", 0) or 0))
+                in self._confirmed_sell_keys(),
                 # 購入送料（公式の一次情報で確認したものだけ。分からなければ None）
                 "purchase_shipping": ship["fee"], "purchase_shipping_status": ship["status"],
                 "net_profit": net, "user_level": getattr(d, "user_level", "") or "",
@@ -4390,6 +4404,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 
     # 降格した理由（監視中カードに出す一般向けの言葉。内部の理由名は出さない）
     _UNCONFIRMED_LABELS = (
+        ("sell_identity_unverified", "買取価格の商品照合が未完了（店のトップ・一覧の価格など）"),
         ("stale_sell_price", "買取価格の確認が14日より前か、確認時刻が不明"),
         ("resale_sell", "売り先が二次流通（買取店ではない）"),
         ("purchase_shipping_unknown", "購入送料が分からない（公式で未確認）"),
@@ -9572,9 +9587,14 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 
         stored_shop = deal.best_buyback_shop or ''
         stored_cond = getattr(deal, 'buyback_condition', '') or ''
-        # 既存値が中古条件 or resale 店名由来なら「汚染」とみなし、強制的に再評価
-        _tainted = self._is_resale_shop(stored_shop) or self._cond_is_used(stored_cond)
+        keys = self._confirmed_sell_keys()
+        # 既存値が中古条件 or resale 店名由来、または商品の照合が済んでいない買取価格なら「汚染」とみなし、強制的に再評価
+        _stored_unverified = bool(stored_shop) and stored_shop != '—' and (
+            (deal.product_id, stored_shop, int(deal.best_buyback_price or 0)) not in keys)
+        _tainted = self._is_resale_shop(stored_shop) or self._cond_is_used(stored_cond) or _stored_unverified
 
+        # 候補は、商品の同一性が確認済みの買取価格だけ（normalized_prices.sell_confirmation_reasons。
+        # 店のトップ・検索結果の価格は、より高くても使わない）
         valid_rows = [
             r for r in (rows or [])
             if r.get('buyback_price', 0) > 0
@@ -9582,6 +9602,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             and r.get('confidence', 'high') != 'low'
             and not self._cond_is_used(r.get('condition', ''))
             and not self._is_resale_shop(r.get('shop_name', ''))
+            and (deal.product_id, r.get('shop_name', '') or '', int(r.get('buyback_price', 0) or 0)) in keys
         ]
         if not valid_rows:
             return _clear(deal) if _tainted else deal

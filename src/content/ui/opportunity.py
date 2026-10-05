@@ -200,7 +200,10 @@ def from_deal(d: dict) -> OpportunityView:
         sell_checked_at=_iso(d.get("sell_checked_at")), sell_url=str(d.get("sell_url") or ""),
         net_profit=net,
         flags={"resale_sell": bool(d.get("resale_sell")), "user_level": str(d.get("user_level") or ""),
-               "href": str(d.get("href") or "")},
+               "href": str(d.get("href") or ""),
+               # 売却価格の商品の同一性（生成側が normalized_prices.sell_confirmation_reasons で照合した結果）。
+               # 無い・False は未照合（確定にしない）
+               "sell_identity_verified": d.get("sell_identity_verified") is True},
     )
     lines = _deal_cost_lines()
     # 購入送料は公式の一次情報で確認したものだけ（src/market/official_shipping.py）。分からなければ None
@@ -329,6 +332,9 @@ def eligibility(v: OpportunityView, now: datetime) -> tuple[str, ...]:
     # 案件ごとの除外（二次流通の売り先・監視中・疑わしい・参考扱いのルート）
     if v.flags.get("resale_sell"):
         reasons.append("resale_sell")
+    # 定価で買って買取店に売る案件は、売却価格の商品の同一性が確認済みであること（ルートの sell_exact_match と同じ根拠）
+    if v.kind == "official_to_buyback" and v.flags.get("sell_identity_verified") is not True:
+        reasons.append("sell_identity_unverified")
     if v.flags.get("user_level") in ("monitoring", "fetch_failed"):
         reasons.append("monitoring")
     r = v.flags.get("route")

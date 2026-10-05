@@ -461,6 +461,8 @@ def test_existing_beginner_deploy_checks_pass_with_reference_cards(tmp_path, mon
                 "data_source": "auto_scraped", "link_verified": True, "confidence": "high"}
     bybp = {d.product_id: [row(d.best_buyback_shop, d.best_buyback_price), row("他店", d.best_buyback_price - 300)]
             for d in deals}
+    # テストの買取価格は照合済み（Phase 6.1。リポジトリの実データの照合結果を読まない）
+    g._sell_keys_cache = {(d.product_id, r["shop_name"], r["buyback_price"]) for d in deals for r in bybp[d.product_id]}
     beg = g._tab_beginner(deals, [], buyback_by_product=bybp, latest_buyback_at=now,
                           monitoring_deals=[], fetch_failed_deals=[])
     rank = g._tab_ranking(deals, [], [d for d in deals if d.category == "game_console"])

@@ -7361,6 +7361,36 @@ def _check_data_correctness() -> list[dict]:
         _add(832, "product_detail_safe", _i >= 0 and not issues,
              "公開ページの商品詳細に DEMO・危ない URL・除外したルートの利益が出ていない",
              f"問題: {issues[:5]}" if issues else "商品詳細のページが見つからない")
+        # #833 利益に使った売却価格は、商品の照合が済んだ買取価格（normalized_prices.sell_confirmation_reasons）だけ。
+        # 商品詳細の「利益の計算に使った売却先」は、表の確認済みの行（参考の折りたたみの中ではない）と同じ店・同じ価格
+        import html as _html833
+        from src.market.normalized_prices import confirmed_sell_keys as _csk833
+        _npo833 = PROJECT_ROOT / "exports" / "normalized_price_observations" / "latest.json"
+        try:
+            _obs833 = (_json.loads(_npo833.read_text(encoding="utf-8")) or {}).get("observations") or []
+        except (OSError, ValueError):
+            _obs833 = []
+        _keys833 = _csk833(_obs833)
+        bad833, n833 = [], 0
+        for _m in _re832.finditer(r'<article class="nu-pd" data-nu-pd="([^"]+)"', _sec):
+            _pid = _html833.unescape(_m.group(1))
+            _end = _sec.find('<article class="nu-pd" ', _m.end())
+            _art = _sec[_m.start():_end if _end >= 0 else len(_sec)]
+            # 店名に括弧があっても読めるように、種別の括弧は「に ¥」の直前の最後の括弧として読む
+            _sm = _re832.search(r'で買い、([^<]+)（[^（）<]*）に ¥([\d,]+) で売る場合', _html833.unescape(_art))
+            if not _sm:
+                continue
+            n833 += 1
+            _shop, _price = _sm.group(1), int(_sm.group(2).replace(",", ""))
+            if (_pid, _shop, _price) not in _keys833:
+                bad833.append(f"{_pid}:{_shop} ¥{_price:,}（商品照合未完了）")
+            _main = _art.split('class="nu-pd-morerows"')[0]
+            _row = _main.find("利益の計算に使った売却先")
+            if _row < 0 or "確認済み" not in _main[_row:_main.find("</tr>", _row)]:
+                bad833.append(f"{_pid}: 表の確認済みの行に利益の売却先が無い")
+        _add(833, "opportunity_sell_identity_verified", bool(_obs833) and not bad833,
+             f"利益に使った売却価格はすべて商品照合済みの買取価格で、商品詳細の表の確認済みの行と一致（{n833}件）",
+             f"問題: {bad833[:5]}" if bad833 else "正規化の観測が読めない")
     return out
 
 

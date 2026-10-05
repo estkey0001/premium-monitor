@@ -58,6 +58,7 @@ def _gen(**attrs):
     g._msrp_evidence = {}
     g._product_info = {}
     g._gate_now = NOW
+    g._sell_keys_cache = RF.AllSellsVerified()      # テストの買取価格は照合済み
     for k, v in attrs.items():
         setattr(g, k, v)
     return g

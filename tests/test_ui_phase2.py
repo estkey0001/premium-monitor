@@ -41,7 +41,7 @@ def deal(pid, name, genre="camera", off=200000, sell=230000, *, net=None, stock=
     return {"product_id": pid, "title": name, "genre": genre, "official_price": off,
             "official_checked_at": _iso(days=30), "stock_checked_at": _iso(days=2) if stock else "",
             "msrp_evidence": ev, "stock_status": stock, "sale_method": "normal",
-            "sell_shop": "買取店A", "sell_price": sell, "sell_checked_at": checked or _iso(hours=1),
+            "sell_shop": "買取店A", "sell_identity_verified": True, "sell_price": sell, "sell_checked_at": checked or _iso(hours=1),
             "net_profit": (sell - off - 1800) if net is None else net, "user_level": level, "resale_sell": resale,
             "official_url": "https://www.apple.com/jp/shop/", "sell_url": "https://kaitori.example.jp/item/1",
             # 購入送料は確認済み（Phase 5.2。分からなければ確定にしない）

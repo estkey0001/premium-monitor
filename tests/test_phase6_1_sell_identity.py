@@ -340,4 +340,100 @@ def test_legacy_monitoring_card_compare_does_not_rank_unverified():
     rows_html = html[html.index('class="shop-row'):]
     j, i = rows_html.index("買取商店"), rows_html.index("モバイル一番")
     assert j < i and "参考" in rows_html[i - 120:i] and "商品照合未完了" in rows_html[i:i + 200]
-    assert 'shop-rank gold">1<' in rows_html[:j]
+    # 照合済みは買取商店の1店舗だけ（single）: 順位・金色の印を付けない
+    assert 'shop-rank other">照合済み<' in rows_html[:j] and "gold" not in rows_html[:j]
+    # 否定対照: 照合済み2店舗（multi）なら順位を付ける
+    g2 = _gen(npx.confirmed_sell_keys([sell_obs("買取商店", 150000), sell_obs("買取一丁目", 149000)]))
+    html2 = g2._deal_card_monitoring(d, [_row("買取商店", 150000), _row("買取一丁目", 149000)])
+    assert 'shop-rank gold">1<' in html2
+
+
+# ── 買取店比較の状態（照合済みの店の数。single = 比較できていない） ───────────────────────────
+
+def _cmp(obs, rows):
+    return _gen(npx.confirmed_sell_keys(obs))._buyback_comparison("prod_ps5_pro", rows)
+
+
+@pytest.mark.parametrize("obs, rows, state, n_conf", [
+    ([sell_obs("A", 190000)], [_row("A", 190000)], "single", 1),                                   # 1店舗
+    ([sell_obs("A", 190000), sell_obs("B", 189000)], [_row("A", 190000), _row("B", 189000)], "multi", 2),
+    ([sell_obs("A", 190000), sell_obs("B", 189000), sell_obs("C", 188000)],
+     [_row("A", 190000), _row("B", 189000), _row("C", 188000)], "multi", 3),                       # 3店舗
+    ([], [], "none", 0),                                                                           # 0店舗
+    ([sell_obs("A", 190000), sell_obs("U", 192000, exact=False, link="shop_home")],
+     [_row("U", 192000), _row("A", 190000)], "single", 1),                                          # 1照合済み+1未照合
+    ([sell_obs("A", 190000), sell_obs("S", 191000, fresh=False)],
+     [_row("S", 191000), _row("A", 190000)], "single", 1),                                          # 1照合済み+古い
+    ([sell_obs("A", 190000), sell_obs("I", 191000, exact=False)],
+     [_row("I", 191000), _row("A", 190000)], "single", 1),                                          # 1照合済み+照合false
+    ([sell_obs("U1", 192000, exact=False, link="shop_home"), sell_obs("U2", 191000, link="search")],
+     [_row("U1", 192000), _row("U2", 191000)], "none", 0),                                          # 全部未照合
+])
+def test_comparison_state(obs, rows, state, n_conf):
+    st, conf, ref = _cmp(obs, rows)
+    assert st == state and len(conf) == n_conf and len(ref) == len(rows) - n_conf
+
+
+def _beginner_page(card_html: str) -> str:
+    return (f'<html><body><div id="tab-ranking"></div><div id="tab-beginner">{card_html}</div>'
+            '<div id="tab-advanced"></div><div id="tab-lottery"></div></body></html>')
+
+
+def test_ps5_pro_single_state_card_and_446(tmp_path, monkeypatch):
+    """PS5 Pro と同じ形（照合済みは買取商店だけ・モバイル一番は参考）: 比較の状態は single。
+    「最高」「比較済み」と言わず、モバイル一番に順位・差益・確かさ high を付けない。#446 は single の注記で通る。"""
+    g = _gen(npx.confirmed_sell_keys([MOBILE, SHOUTEN]))
+    rows = [dict(_row("モバイル一番", 192700), shop_id="mobile_ichiban"),
+            dict(_row("買取商店", 192300), shop_id="kaitori_shouten")]
+    deal = g._enrich_deal(_ps5_deal(), rows)
+    html = g._deal_card(deal, "badge-easy", "利益あり", buyback_rows=rows)
+    hero = html[html.index("best-buyback-hero"):html.index("shop-compare-fold")]
+    assert 'data-buyback-comparison-state="single"' in html and "bb-single-note" in hero
+    assert "比較済み" not in hero and "2位" not in hero and "最高買取店" not in hero
+    # カード全体（価格欄・差益の見出し・注記・比較の折りたたみ）でも「最高」と言わない
+    import re as _re
+    text = _re.sub(r"<[^>]+>", " ", html)
+    assert "最高" not in text and "買取価格（比較できたのは1店舗）" in text and "差益（定価購入→買取）" in text
+    assert "全2店舗・うち参考1店舗" in text and "1位" not in text and "照合済み" in text
+    rows_html = html[html.index('class="shop-row'):]
+    i = rows_html.index("モバイル一番")
+    seg = rows_html[i - 200:rows_html.index("</a>", i) if "</a>" in rows_html[i:] else i + 800]
+    assert "位" not in rows_html[i - 120:i] and "+¥54,720" not in html and " / high" not in seg
+    assert "+¥54,320" in rows_html[:i]                                       # 照合済みの店にだけ差益
+    root = tmp_path / "root"
+    (root / "docs").mkdir(parents=True)
+    (root / "docs/index.html").write_text(_beginner_page(html), encoding="utf-8")
+    for n in ("config", "data", "exports", "src", "scripts"):
+        (root / n).symlink_to(ROOT / n)
+    dc = _load("deploy_check_p61b", ROOT / "scripts" / "deploy_check.py")
+    monkeypatch.setattr(dc, "PROJECT_ROOT", root)
+    monkeypatch.setattr(dc, "PUBLIC_DIR", root / "docs")
+    lv = {r["check"]: r["level"] for r in dc.check()}
+    assert lv["beginner_hero_and_runnerup_diff"] == "ok"
+    # 状態の印と注記が食い違う（single なのに「比較済み」・印なし）なら ERROR
+    for bad in (html.replace("bb-single-note", "bb-compared-note"),
+                html.replace('data-buyback-comparison-state="single" ', "")):
+        (root / "docs/index.html").write_text(_beginner_page(bad), encoding="utf-8")
+        lv = {r["check"]: r["level"] for r in dc.check()}
+        assert lv["beginner_hero_and_runnerup_diff"] == "error"
+
+
+def test_multi_state_card_keeps_existing_notes():
+    obs = [sell_obs("買取商店", 192300), sell_obs("買取一丁目", 190000)]
+    g = _gen(npx.confirmed_sell_keys(obs))
+    rows = [_row("買取商店", 192300), _row("買取一丁目", 190000)]
+    deal = g._enrich_deal(_ps5_deal("買取商店", 192300), rows)
+    html = g._deal_card(deal, "badge-easy", "利益あり", buyback_rows=rows)
+    hero = html[html.index("best-buyback-hero"):html.index("shop-compare-fold")]
+    assert 'data-buyback-comparison-state="multi"' in html and "2位との差額" in hero and "他1店舗と比較済み" in hero
+    assert "最高買取店" in hero
+
+
+def test_same_shop_two_rows_is_single_and_deal_sell_counts():
+    """同じ店の照合済みの行が2つでも1店舗（multi にしない）。案件の売値が照合済みなら、行に無くても single。"""
+    obs = [sell_obs("買取商店", 192300), sell_obs("買取商店", 190000, cond="new_unopened_simfree")]
+    st, conf, ref = _cmp(obs, [_row("買取商店", 192300), _row("買取商店", 190000)])
+    assert st == "single" and len(conf) == 2 and ref == []
+    g = _gen(npx.confirmed_sell_keys([SHOUTEN]))
+    assert g._buyback_comparison("prod_ps5_pro", [], ("買取商店", 192300))[0] == "single"
+    assert g._buyback_comparison("prod_ps5_pro", [], ("モバイル一番", 192700))[0] == "none"

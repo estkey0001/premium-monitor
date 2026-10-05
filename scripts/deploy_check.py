@@ -4478,14 +4478,24 @@ def check() -> list[dict]:
     # #446: 初期表示に最高買取店ブロック（best-buyback-hero）と2位差額が出る
     #   全カードの初期表示に best-buyback-hero があり、少なくとも一部に『2位との差額』が出る。
     _all_hero = bool(_compact_cards) and all('best-buyback-hero' in _initial_view(c) for c in _compact_cards)
-    #   2位が同額のカードは「2位との差額」の代わりに「他N店舗と比較済み」を出す（生成側の仕様）。
-    #   どのカードも2位と同額なら、全カードの初期表示にそのどちらかの注記があればよい
-    _any_runnerup = ('2位との差額' in _beg_html388) or (bool(_compact_cards) and all(
-        ('bb-runnerup-note' in _initial_view(c) or 'bb-compared-note' in _initial_view(c)) for c in _compact_cards))
+    #   買取店比較の状態（data-buyback-comparison-state。生成側の _buyback_comparison）ごとに、その状態の注記があること:
+    #   multi（照合済み2店舗以上）= 「2位との差額」か「他N店舗と比較済み」、single（1店舗）= 1店舗だけの注記、
+    #   none（0店舗）= 比較なしの注記。状態の印が無いカード・状態と注記が食い違うカードは不可
+    _NOTE446 = {"multi": ("bb-runnerup-note", "bb-compared-note"), "single": ("bb-single-note",),
+                "none": ("bb-none-note",)}
+    _bad446 = []
+    for _c in _compact_cards:
+        _iv = _initial_view(_c)
+        _st = _re437.search(r'data-buyback-comparison-state="(multi|single|none)"', _iv)
+        if not _st or not any(n in _iv for n in _NOTE446[_st.group(1)]):
+            _bad446.append(_st.group(1) if _st else "状態なし")
+        elif _st.group(1) != "multi" and ("bb-runnerup-note" in _iv or "bb-compared-note" in _iv):
+            _bad446.append(f"{_st.group(1)}なのに比較済みの注記")
+    _any_runnerup = bool(_compact_cards) and not _bad446
     _t446 = _all_hero and _any_runnerup
     results.append({"level": "ok" if _t446 else "error", "check": "beginner_hero_and_runnerup_diff",
-                    "message": "#446 初期表示に最高買取店ブロックと『2位との差額』が表示される"
-                               + ("" if _t446 else " ← 最高買取店ブロックまたは2位差額が初期表示にありません")})
+                    "message": "#446 初期表示に最高買取店ブロックと、比較の状態に合った注記（2位との差額・比較済み／1店舗のみ／比較なし）が表示される"
+                               + ("" if _t446 else f" ← 最高買取店ブロックが無いか、比較の状態の注記が合わない: {_bad446[:3]}")})
 
     # #447: 監視中セクションが折りたたみ（details）になっている
     _t447 = ('monitoring-global-section' in _beg_html388) and ('監視中の商品を見る' in _beg_html388)

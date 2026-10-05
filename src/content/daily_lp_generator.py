@@ -1884,7 +1884,7 @@ a[href], button, [role="tab"], [role="button"],
   font-size: 1.85rem; font-weight: 900; color: #00A37A;
   font-variant-numeric: tabular-nums; letter-spacing: -0.01em;
 }}
-.best-buyback-hero .bb-compared-note {{
+.best-buyback-hero .bb-compared-note, .best-buyback-hero .bb-single-note, .best-buyback-hero .bb-none-note {{
   margin-top: 4px; font-size: 0.7rem; color: var(--ink3); font-weight: 600;
 }}
 .best-buyback-hero .bb-runnerup-note {{
@@ -4306,6 +4306,37 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             obs = self._load_export_json("normalized_price_observations", "latest.json").get("observations") or []
             keys = self._sell_keys_cache = confirmed_sell_keys(obs)
         return keys
+
+    # 買取店比較の状態（旧UIの案件カード・監視中カードの共通の正本）
+    COMPARISON_MULTI, COMPARISON_SINGLE, COMPARISON_NONE = "multi", "single", "none"
+
+    def _buyback_comparison(self, product_id: str, rows: list,
+                            deal_sell: tuple[str, int] | None = None) -> tuple[str, list, list]:
+        """価格のある買取店の行を、照合済み（比較に数える）と参考（照合未了）に分け、比較の状態を返す。
+
+        - 照合済みかどうかは利益の売値と同じ正本（_confirmed_sell_keys = normalized_prices.sell_confirmation_reasons）
+        - 状態は照合済みの「店」の数で決める（同じ店の行が2つあっても1店舗）:
+          2店舗以上 = multi、1店舗 = single（比較できていない）、0店舗 = none
+        - 案件の売値（deal_sell = (店名, 価格)）が照合済みなら、行に無くても少なくとも single
+        - 参考の店は比較の店舗数に数えない（順位・差益・確かさを付けない）
+        戻り値: (状態, 照合済みの行（元の順）, 参考の行（元の順）)
+        """
+        keys = self._confirmed_sell_keys()
+        conf, ref, seen = [], [], set()
+        for r in rows or []:
+            shop = r.get('shop_name', '') or ''
+            if (product_id, shop, int(r.get('buyback_price', 0) or 0)) in keys:
+                seen.add(shop)
+                conf.append(r)
+            else:
+                ref.append(r)
+        n = len(seen)
+        if (n == 0 and deal_sell and deal_sell[0]
+                and (product_id, deal_sell[0], int(deal_sell[1] or 0)) in keys):
+            n = 1
+        state = (self.COMPARISON_MULTI if n >= 2 else
+                 self.COMPARISON_SINGLE if n == 1 else self.COMPARISON_NONE)
+        return state, conf, ref
 
     def _nu_profit_deals(self, all_deals, buyback_by_product: dict | None = None) -> list[dict]:
         """新UIの「利益商品」の候補（定価で買って買取店に売る案件）を、判定に必要な元の値ごと渡す。
@@ -7851,12 +7882,9 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             _normal_rows  = [r for r in buyback_rows if r.get('buyback_price', 0) > 0 and r.get('confidence', 'high') != 'low'][:5]
             _failed_rows_r = [r for r in buyback_rows if r.get('data_source') == 'fetch_failed']
             # 商品の照合が済んでいない買取価格は順位を付けず「参考」として後ろに出す（案件カードと同じ正本）
-            _sell_keys_m = self._confirmed_sell_keys()
-            _ref_m = {id(r) for r in _normal_rows
-                      if (d.product_id, r.get('shop_name', '') or '', int(r.get('buyback_price', 0) or 0))
-                      not in _sell_keys_m}
-            _normal_rows = ([r for r in _normal_rows if id(r) not in _ref_m]
-                            + [r for r in _normal_rows if id(r) in _ref_m])
+            _st_m, _conf_m, _refs_m = self._buyback_comparison(d.product_id, _normal_rows)
+            _ref_m = {id(r) for r in _refs_m}
+            _normal_rows = _conf_m + _refs_m
             rank = 1
             for r in _normal_rows:
                 r_price = r.get('buyback_price', 0)
@@ -7878,9 +7906,13 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                     if (r_url and r_link_verified)
                     else '<span class="shop-check-btn normal" style="opacity:0.5;cursor:default;">公式で確認</span>'
                 )
+                # 比較できたのが1店舗なら順位を付けない（案件カードと同じ。_buyback_comparison の状態）
+                _rank_txt = rank if _st_m == self.COMPARISON_MULTI else '照合済み'
+                if _st_m != self.COMPARISON_MULTI:
+                    rank_cls = 'other'
                 rows_html.append(
                     f'<div class="shop-row">'
-                    f'<div class="shop-rank {rank_cls}">{rank}</div>'
+                    f'<div class="shop-rank {rank_cls}">{_rank_txt}</div>'
                     f'<div class="shop-name-col">{r_name}</div>'
                     f'<div class="shop-price-col">¥{r_price:,}</div>'
                     f'<div class="shop-diff-col"></div>'
@@ -8264,8 +8296,9 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             updated_str = f'<div class="updated-row"><span>&#128336;</span>スキャン：{_esc(_jst_str(d.scanned_at))}</div>'
         # Shop compare
         compare_html = ''
-        _compare_shop_count = 0  # 比較対象の有効買取店数（「他N店舗と比較済み」表示用）
+        _compare_shop_count = 0  # 比較対象の有効買取店数（「他N店舗と比較済み」表示用。照合済みの店だけ）
         _runnerup_diff = None    # 最高買取店と2位の差額（初心者ヒーローに表示）
+        _cmp_state = self.COMPARISON_NONE   # 買取店比較の状態（_buyback_comparison。multi / single / none）
         # 初心者モード（non-pro）では resale_market（フリマ・オークション）行を除外
         if not pro_mode and buyback_rows:
             buyback_rows = [r for r in buyback_rows if r.get('data_source') != 'resale_market']
@@ -8276,14 +8309,12 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             _failed_rows  = [r for r in buyback_rows if r.get('data_source') == 'fetch_failed']
             # 商品の照合が済んでいない買取価格（店のトップ・一覧の価格など）は順位・差益を付けず「参考」として後ろに出す
             # （正本は normalized_prices.sell_confirmation_reasons。利益の売値に使う価格と同じ判定）
-            _sell_keys = self._confirmed_sell_keys()
-            _ref_ids = {id(r) for r in _normal_rows
-                        if (d.product_id, r.get('shop_name', '') or '', int(r.get('buyback_price', 0) or 0))
-                        not in _sell_keys}
-            _normal_rows = ([r for r in _normal_rows if id(r) not in _ref_ids]
-                            + [r for r in _normal_rows if id(r) in _ref_ids])
+            _cmp_state, _cmp_conf, _cmp_refs = self._buyback_comparison(
+                d.product_id, _normal_rows, (d.best_buyback_shop or '', d.best_buyback_price or 0))
+            _ref_ids = {id(r) for r in _cmp_refs}
+            _normal_rows = _cmp_conf + _cmp_refs
             n_shops = len(_normal_rows) + len(_failed_rows)
-            _compare_shop_count = len(_normal_rows)
+            _compare_shop_count = len({r.get('shop_name', '') or '' for r in _cmp_conf})   # 照合済みの店の数
             # auto_scraped の最高買取価格（手動価格の過大検出に使用：Task 2）
             _auto_max = max((r.get('buyback_price', 0) or 0) for r in _normal_rows
                             if r.get('data_source') == 'auto_scraped') if any(
@@ -8343,6 +8374,9 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 if id(r) in _ref_ids:
                     # 照合未了の価格: 順位・差益を出さない（参考の価格としてだけ）
                     rank_counter, profit, profit_str = '参考', 0, '商品照合未完了'
+                elif _cmp_state != self.COMPARISON_MULTI:
+                    # 比較できたのが1店舗: 順位（1位）を付けない
+                    rank_counter = '照合済み'
                 btn_cls = 'best' if rank_counter == 1 else 'normal'
                 link_col = (
                     f'<a href="{_esc(url_val)}" target="_blank" rel="noopener noreferrer" '
@@ -8412,7 +8446,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 return (
                     f'<div class="shop-row shop-card">'
                     f'<div class="shop-card-top">'
-                    f'<div class="shop-rank {rank_cls}">{rank_counter}{"" if id(r) in _ref_ids else "位"}</div>'
+                    f'<div class="shop-rank {rank_cls}">{rank_counter}{"位" if isinstance(rank_counter, int) else ""}</div>'
                     f'<div class="shop-name-col">{sname}</div></div>'
                     f'<div class="shop-card-mid">'
                     f'<div class="shop-price-col">¥{bp:,}</div>'
@@ -8423,7 +8457,12 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 )
 
             # 2位との差額（最高買取店ヒーローに小さく添える）
-            _ranked_rows = [r for r in _normal_rows if id(r) not in _ref_ids]
+            # 2位との差額は照合済みの「別の店」どうし（同じ店の2行の差にしない）
+            _ranked_rows, _seen_shops = [], set()
+            for r in _normal_rows:
+                if id(r) not in _ref_ids and (r.get('shop_name', '') or '') not in _seen_shops:
+                    _seen_shops.add(r.get('shop_name', '') or '')
+                    _ranked_rows.append(r)
             if len(_ranked_rows) >= 2:
                 _runnerup_diff = (_ranked_rows[0].get('buyback_price', 0)
                                   - _ranked_rows[1].get('buyback_price', 0))
@@ -8471,9 +8510,10 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                     )
                 compare_html = (
                     f'<details class="card-detail-fold shop-compare-fold">'
-                    f'<summary class="card-detail-summary">買取店比較を見る（全{n_shops}店舗）</summary>'
-                    f'<div class="card-detail-body">'
-                    f'<div class="shop-table buyback-shop-table buyback-table">'
+                    f'<summary class="card-detail-summary">買取店比較を見る（全{n_shops}店舗'
+                    + (f'・うち参考{len(_cmp_refs)}店舗' if _cmp_refs else '') + '）</summary>'
+                    '<div class="card-detail-body">'
+                    '<div class="shop-table buyback-shop-table buyback-table">'
                     + _priced_cards + _failed_sub
                     + '</div></div></details>'
                 )
@@ -8548,6 +8588,12 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             buyback_price_lbl = '最高買取価格'
             buyback_price_val_cls = 'price-cell-val green'
             profit_main_lbl = '差益（定価購入→最高買取）'
+            if _cmp_state != self.COMPARISON_MULTI:
+                # 比較できたのが1店舗以下: 「最高」と言わない（比較できていない）
+                buyback_price_lbl = ('買取価格（比較できたのは1店舗）' if _cmp_state == self.COMPARISON_SINGLE
+                                     else '買取価格')
+                profit_main_lbl = '差益（定価購入→買取）'
+                profit_note_text = profit_note_text.replace('最高買取', '買取')
             pro_mode_note = ''
             buyback_compare_hd = '買取店比較'
             if self._msrp_is_reference(d):
@@ -8589,22 +8635,30 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         # ── 最高買取店を一番目立つブロックで表示（Task 5）──
         _best_shop_disp = _esc(d.best_buyback_shop or '—')
         _best_price_disp = _esc(fmt_price(d.best_buyback_price))
-        # 「他◯店舗と比較済み」（最高買取店以外の比較対象数）
+        # 「他◯店舗と比較済み」（最高買取店以外の比較対象数。照合済みの店だけ）
         _other_shops = max(0, _compare_shop_count - 1)
-        # 2位との差額（初期表示はこれだけ。詳細比較は「買取店比較を見る」に格納）
-        if _runnerup_diff is not None and _runnerup_diff > 0:
-            _runnerup_note = (
-                f'<div class="bb-runnerup-note">2位との差額 '
-                f'<strong>+¥{_runnerup_diff:,}</strong>'
-                f'<span class="bb-compared-sub">（他{_other_shops}店舗と比較済み）</span></div>'
-            )
-        elif _other_shops > 0:
-            _runnerup_note = f'<div class="bb-compared-note">他{_other_shops}店舗と比較済み</div>'
+        _shop_lbl = '最高買取店'
+        if _cmp_state == self.COMPARISON_MULTI:
+            # 2位との差額（初期表示はこれだけ。詳細比較は「買取店比較を見る」に格納）
+            if _runnerup_diff is not None and _runnerup_diff > 0:
+                _runnerup_note = (
+                    f'<div class="bb-runnerup-note">2位との差額 '
+                    f'<strong>+¥{_runnerup_diff:,}</strong>'
+                    f'<span class="bb-compared-sub">（他{_other_shops}店舗と比較済み）</span></div>'
+                )
+            else:
+                _runnerup_note = f'<div class="bb-compared-note">他{_other_shops}店舗と比較済み</div>'
+        elif _cmp_state == self.COMPARISON_SINGLE:
+            # 比較できたのは1店舗だけ（他の店は取得失敗・未掲載・商品照合未完了）。「最高」「比較済み」と言わない
+            _shop_lbl = '買取店（比較できたのは1店舗）'
+            _runnerup_note = ('<div class="bb-single-note">比較できる買取店は1店舗のみ'
+                              '（他の買取店は価格未取得または商品照合未完了）</div>')
         else:
-            _runnerup_note = ''
+            _shop_lbl = '買取店'
+            _runnerup_note = '<div class="bb-none-note">照合済みの買取価格がありません（比較なし）</div>'
         best_buyback_block_html = (
-            f'<div class="best-buyback-block best-buyback-hero">'
-            f'<div class="bb-shop-lbl">&#127978; 最高買取店</div>'
+            f'<div data-buyback-comparison-state="{_cmp_state}" class="best-buyback-block best-buyback-hero">'
+            f'<div class="bb-shop-lbl">&#127978; {_shop_lbl}</div>'
             f'<div class="bb-shop-val"><strong>{_best_shop_disp}</strong></div>'
             f'<div class="bb-shop-price">{_best_price_disp}</div>'
             f'{_runnerup_note}'

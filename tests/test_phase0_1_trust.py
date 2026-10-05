@@ -422,7 +422,8 @@ def test_beginner_card_labels_unknown_date_msrp_as_reference():
     # 否定対照: 定価を確認済みなら従来どおりの表示
     g = _generator({"prod_ps5_pro": pe.VERIFIED_DATED})
     html = g._deal_card(d, "badge-easy", "利益あり", buyback_rows=[])
-    assert "公式価格（定価）" in html and "差益（定価購入→最高買取）" in html and "確認日不明" not in html
+    # （Phase 6.1: 比較できた買取店が無い・1店舗のときは「最高」と言わないので、見出しは「差益（定価購入→…）」で確かめる）
+    assert "公式価格（定価）" in html and "差益（定価購入→" in html and "確認日不明" not in html
 
 
 @pytest.mark.parametrize("verified_ids", [{"prod_gr4"}, set()])

@@ -1,0 +1,149 @@
+{
+  "schema_version": 1,
+  "updated_at": "2026-10-05T17:17:10+09:00",
+  "series": {
+    "prod_iphone17_256|retail|メーカー公式/定価": {
+      "product_id": "prod_iphone17_256",
+      "kind": "retail",
+      "source": "メーカー公式/定価",
+      "points": [
+        {
+          "at": "2026-10-03",
+          "price": 159800
+        }
+      ]
+    },
+    "prod_airpods_pro3|retail|メーカー公式/定価": {
+      "product_id": "prod_airpods_pro3",
+      "kind": "retail",
+      "source": "メーカー公式/定価",
+      "points": [
+        {
+          "at": "2026-10-03",
+          "price": 42800
+        }
+      ]
+    },
+    "prod_switch2|retail|メーカー公式/定価": {
+      "product_id": "prod_switch2",
+      "kind": "retail",
+      "source": "メーカー公式/定価",
+      "points": [
+        {
+          "at": "2026-10-03",
+          "price": 59980
+        }
+      ]
+    },
+    "prod_ps5_pro|retail|メーカー公式/定価": {
+      "product_id": "prod_ps5_pro",
+      "kind": "retail",
+      "source": "メーカー公式/定価",
+      "points": [
+        {
+          "at": "2026-10-03",
+          "price": 137980
+        }
+      ]
+    },
+    "prod_gr4|retail|メーカー公式/定価": {
+      "product_id": "prod_gr4",
+      "kind": "retail",
+      "source": "メーカー公式/定価",
+      "points": [
+        {
+          "at": "2026-10-05T16:48:18+09:00",
+          "price": 211800
+        }
+      ]
+    },
+    "prod_gr4_hdf|retail|メーカー公式/定価": {
+      "product_id": "prod_gr4_hdf",
+      "kind": "retail",
+      "source": "メーカー公式/定価",
+      "points": [
+        {
+          "at": "2026-10-05T16:52:19+09:00",
+          "price": 222000
+        }
+      ]
+    },
+    "prod_gr4_mono|retail|メーカー公式/定価": {
+      "product_id": "prod_gr4_mono",
+      "kind": "retail",
+      "source": "メーカー公式/定価",
+      "points": [
+        {
+          "at": "2026-10-05T16:54:18+09:00",
+          "price": 299800
+        }
+      ]
+    },
+    "prod_iphone17pro_256|buyback|買取商店": {
+      "product_id": "prod_iphone17pro_256",
+      "kind": "buyback",
+      "source": "買取商店",
+      "points": [
+        {
+          "at": "2026-10-05T16:16:33+09:00",
+          "price": 172000
+        }
+      ]
+    },
+    "prod_iphone17pro_512|buyback|買取商店": {
+      "product_id": "prod_iphone17pro_512",
+      "kind": "buyback",
+      "source": "買取商店",
+      "points": [
+        {
+          "at": "2026-10-05T16:19:03+09:00",
+          "price": 199000
+        }
+      ]
+    },
+    "prod_iphone17pm_256|buyback|買取商店": {
+      "product_id": "prod_iphone17pm_256",
+      "kind": "buyback",
+      "source": "買取商店",
+      "points": [
+        {
+          "at": "2026-10-05T16:21:29+09:00",
+          "price": 190000
+        }
+      ]
+    },
+    "prod_iphone17pm_512|buyback|買取商店": {
+      "product_id": "prod_iphone17pm_512",
+      "kind": "buyback",
+      "source": "買取商店",
+      "points": [
+        {
+          "at": "2026-10-05T16:23:56+09:00",
+          "price": 216000
+        }
+      ]
+    },
+    "prod_switch2|buyback|買取商店": {
+      "product_id": "prod_switch2",
+      "kind": "buyback",
+      "source": "買取商店",
+      "points": [
+        {
+          "at": "2026-10-05T16:26:24+09:00",
+          "price": 52800
+        }
+      ]
+    },
+    "prod_ps5_pro|buyback|買取商店": {
+      "product_id": "prod_ps5_pro",
+      "kind": "buyback",
+      "source": "買取商店",
+      "points": [
+        {
+          "at": "2026-10-05T16:28:17+09:00",
+          "price": 192300
+        }
+      ]
+    }
+  }
+}

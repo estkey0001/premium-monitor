@@ -1,4 +1,4 @@
-# TCG 入荷・抽選・プレミア レポート（2026-10-05 13:47 JST）
+# TCG 入荷・抽選・プレミア レポート（2026-10-05 17:09 JST）
 
 ## Current Active
 
@@ -39,30 +39,29 @@
 
 | Retailer | Collector | Reachable | Health | Last Check | Active Lotteries |
 |---|---|---|---|---|---|
-| ポケモンセンターオンライン (P0) | pco_lottery | yes | アクセス拒否 | 2026-10-05 13:40 | 2 |
-| ポケモンカードゲーム公式（ニュース） (P0) | pokemon_news_lottery | yes | 現在の抽選なし | 2026-10-05 13:41 | 0 |
-| ゲオ (P1) | geo_lottery | yes | 抽選あり | 2026-10-05 13:41 | 4 |
-| トイザらス (P1) | 未実装 | no | アクセス拒否 | 2026-10-05 13:44 | 0 |
-| Joshin (P1) | 未実装 | no | アクセス拒否 | 2026-10-05 13:44 | 0 |
-| エディオン (P1) | 未実装 | yes | 未監視（未実装） | 2026-10-05 13:44 | 0 |
-| ヤマダデンキ (P1) | 未実装 | no | 接続できない | 2026-10-05 13:44 | 0 |
-| TSUTAYA (P1) | 未実装 | yes | 未監視（未実装） | 2026-10-05 13:44 | 0 |
-| ビックカメラ (P1) | 未実装 | no | 接続できない | 2026-10-05 13:44 | 0 |
-| ヨドバシカメラ (P1) | 未実装 | no | アクセス拒否 | 2026-10-05 13:45 | 0 |
-| Amazon (P2) | 未実装 | yes | 未監視（未実装） | 2026-10-05 13:45 | 0 |
-| 楽天ブックス (P2) | 未実装 | yes | 未監視（未実装） | 2026-10-05 13:45 | 0 |
-| セブンネットショッピング (P2) | 未実装 | yes | 未監視（未実装） | 2026-10-05 13:45 | 0 |
-| ローソン (P2) | lawson_lottery | yes | 現在の抽選なし | 2026-10-05 13:45 | 0 |
-| ONE PIECEカードゲーム公式 (P0) | onepiece_news_lottery | yes | 現在の抽選なし | 2026-10-05 13:46 | 0 |
+| ポケモンセンターオンライン (P0) | pco_lottery | yes | アクセス拒否 | 2026-10-05 17:00 | 2 |
+| ポケモンカードゲーム公式（ニュース） (P0) | pokemon_news_lottery | yes | 現在の抽選なし | 2026-10-05 17:01 | 0 |
+| ゲオ (P1) | geo_lottery | yes | 抽選あり | 2026-10-05 17:01 | 4 |
+| トイザらス (P1) | 未実装 | no | アクセス拒否 | 2026-10-05 17:04 | 0 |
+| Joshin (P1) | 未実装 | no | アクセス拒否 | 2026-10-05 17:04 | 0 |
+| エディオン (P1) | 未実装 | yes | 未監視（未実装） | 2026-10-05 17:04 | 0 |
+| ヤマダデンキ (P1) | 未実装 | no | 接続できない | 2026-10-05 17:04 | 0 |
+| TSUTAYA (P1) | 未実装 | yes | 未監視（未実装） | 2026-10-05 17:05 | 0 |
+| ビックカメラ (P1) | 未実装 | no | 接続できない | 2026-10-05 17:05 | 0 |
+| ヨドバシカメラ (P1) | 未実装 | no | 接続できない | 2026-10-05 17:05 | 0 |
+| Amazon (P2) | 未実装 | no | アクセス拒否 | 2026-10-05 17:06 | 0 |
+| 楽天ブックス (P2) | 未実装 | yes | 未監視（未実装） | 2026-10-05 17:06 | 0 |
+| セブンネットショッピング (P2) | 未実装 | yes | 未監視（未実装） | 2026-10-05 17:06 | 0 |
+| ローソン (P2) | lawson_lottery | yes | 現在の抽選なし | 2026-10-05 17:06 | 0 |
+| ONE PIECEカードゲーム公式 (P0) | onepiece_news_lottery | yes | 現在の抽選なし | 2026-10-05 17:07 | 0 |
 | ONE PIECEカードゲーム公式ショップ (P0) | 未実装 | no | 未監視（未実装） | — | 0 |
-| プレミアムバンダイ (P0) | premium_bandai_lottery | yes | 現在の抽選なし | 2026-10-05 13:46 | 0 |
+| プレミアムバンダイ (P0) | premium_bandai_lottery | yes | 現在の抽選なし | 2026-10-05 17:08 | 0 |
 
 ## Active（受付中・締切間近）
 
 | TCG | Product | Retailer | Start | Deadline | Purchase Period | Confidence |
 |---|---|---|---|---|---|---|
-| ポケモンカード | ポケモンカードゲーム MEGA 拡張パック「インフェルノX」BOX | ポケモンセンターオンライン | 10/02 12:00 | 10/05 16:59 | 10/14 15:00〜10/20 16:59 | MANUAL_VERIFIED / medium |
-| ポケモンカード | ポケモンカードゲーム MEGA 拡張パック「ストームエメラルダ」BOX | ポケモンセンターオンライン | 10/02 12:00 | 10/05 16:59 | 10/14 17:00〜10/20 16:59 | MANUAL_VERIFIED / medium |
+| — | 該当なし | — | — | — | — | — |
 
 ## Upcoming（まもなく抽選開始）
 
@@ -74,6 +73,8 @@
 
 | TCG | Product | Retailer | Start | Deadline | Purchase Period | Confidence |
 |---|---|---|---|---|---|---|
+| ポケモンカード | ポケモンカードゲーム MEGA 拡張パック「インフェルノX」BOX | ポケモンセンターオンライン | 10/02 12:00 | 10/05 16:59 | 10/14 15:00〜10/20 16:59 | MANUAL_VERIFIED / medium |
+| ポケモンカード | ポケモンカードゲーム MEGA 拡張パック「ストームエメラルダ」BOX | ポケモンセンターオンライン | 10/02 12:00 | 10/05 16:59 | 10/14 17:00〜10/20 16:59 | MANUAL_VERIFIED / medium |
 | ポケモンカード | ポケモンカードゲーム MEGA「30th CELEBRATION カードセット」（9種セット） | ゲオ | 09/28 11:00 | 10/01 17:59 | — | RETAILER_OFFICIAL / high |
 | ONE PIECEカードゲーム | ONE PIECEカードゲーム エクストラブースター ONE PIECE Heroines Edition vol.2 | ゲオ | 09/28 11:00 | 10/01 17:59 | — | RETAILER_OFFICIAL / high |
 | ポケモンカード | ポケモンカードゲーム MEGA 拡張パック「30th CELEBRATION」 | ゲオ | 09/28 11:00 | 10/01 17:59 | — | RETAILER_OFFICIAL / high |
@@ -86,11 +87,12 @@
 - Joshin: アクセス拒否（HTTP 403: https://joshinweb.jp/）
 - ヤマダデンキ: 接続できない（ReadTimeout: https://www.yamada-denkiweb.com/）
 - ビックカメラ: 接続できない（ReadTimeout: https://www.biccamera.com/）
-- ヨドバシカメラ: アクセス拒否（HTTP 403: https://www.yodobashi.com/）
+- ヨドバシカメラ: 接続できない（ReadTimeout: https://www.yodobashi.com/）
+- Amazon: アクセス拒否（HTTP 202: https://www.amazon.co.jp/）
 
 ## Coverage
 
-- Configured: 17 / Implemented: 6 / Healthy: 5 / Blocked: 4 / Unreachable: 2 / Not Implemented: 11 / Lottery events: 6
+- Configured: 17 / Implemented: 6 / Healthy: 5 / Blocked: 4 / Unreachable: 3 / Not Implemented: 11 / Lottery events: 6
 
 ### Rejected（抽選・理由別件数）
 
@@ -141,13 +143,13 @@
 
 | Source | TCG | Status | Last checked | Last success | Events | Errors | Blocked | robots |
 |---|---|---|---|---|---|---|---|---|
-| ポケモンカードゲーム公式（商品API） | POKEMON | HEALTHY | 2026-10-05 13:35 | 2026-10-05 13:37 | 9 | 0 | no | not_found |
-| ポケモンカードゲーム公式（ニュース） | POKEMON | OK_NO_EVENTS | 2026-10-05 13:37 | 2026-10-05 13:37 | 0 | 0 | no | not_found |
-| ポケモンセンターオンライン | POKEMON | BLOCKED | 2026-10-05 13:38 | — | 0 | 1 | YES | allowed |
-| ローソン（ポケモンカード告知） | POKEMON | OK_NO_EVENTS | 2026-10-05 13:38 | 2026-10-05 13:39 | 0 | 0 | no | allowed |
-| ONE PIECEカードゲーム公式（ニュース） | ONE_PIECE | OK_NO_EVENTS | 2026-10-05 13:39 | 2026-10-05 13:39 | 0 | 0 | no | not_found |
-| ONE PIECEカードゲーム公式（商品情報） | ONE_PIECE | HEALTHY | 2026-10-05 13:39 | 2026-10-05 13:40 | 5 | 0 | no | not_found |
-| プレミアムバンダイ | ONE_PIECE | OK_NO_EVENTS | 2026-10-05 13:40 | 2026-10-05 13:40 | 0 | 0 | no | allowed |
+| ポケモンカードゲーム公式（商品API） | POKEMON | HEALTHY | 2026-10-05 16:55 | 2026-10-05 16:57 | 9 | 0 | no | not_found |
+| ポケモンカードゲーム公式（ニュース） | POKEMON | OK_NO_EVENTS | 2026-10-05 16:57 | 2026-10-05 16:57 | 0 | 0 | no | not_found |
+| ポケモンセンターオンライン | POKEMON | BLOCKED | 2026-10-05 16:58 | — | 0 | 1 | YES | allowed |
+| ローソン（ポケモンカード告知） | POKEMON | OK_NO_EVENTS | 2026-10-05 16:58 | 2026-10-05 16:59 | 0 | 0 | no | allowed |
+| ONE PIECEカードゲーム公式（ニュース） | ONE_PIECE | OK_NO_EVENTS | 2026-10-05 16:59 | 2026-10-05 16:59 | 0 | 0 | no | not_found |
+| ONE PIECEカードゲーム公式（商品情報） | ONE_PIECE | HEALTHY | 2026-10-05 16:59 | 2026-10-05 17:00 | 5 | 0 | no | not_found |
+| プレミアムバンダイ | ONE_PIECE | OK_NO_EVENTS | 2026-10-05 17:00 | 2026-10-05 17:00 | 0 | 0 | no | allowed |
 
 監視登録 source 数: 27
 

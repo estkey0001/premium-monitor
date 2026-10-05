@@ -1,6 +1,6 @@
 # Pro 利益ルート（normalized_price_observations 由来・検証済み）
 
-生成: 2026-10-05 14:18 JST
+生成: 2026-10-05 17:17 JST
 
 - **main 利益ルート: 0件**（route_confidence high/medium のみ）
 - 参考ルート(海外sold stale・要fresh化): 0件
@@ -130,7 +130,7 @@
 
 ### RICOH GR IIIx
 - buy候補 0 / sell候補 1 / stale除外 11 / 海外sold stale 1
-- 除外理由TOP5: [('stale_over_14d', 10), ('sold_label_without_evidence', 1), ('accessory_or_wrong_product', 1)]
+- 除外理由TOP5: [('stale_over_14d', 10), ('sold_label_without_evidence', 1)]
 
 ### RICOH GR III HDF
 - buy候補 0 / sell候補 0 / stale除外 0 / 海外sold stale 0
@@ -142,7 +142,7 @@
 
 ### FUJIFILM X100VI
 - buy候補 0 / sell候補 1 / stale除外 17 / 海外sold stale 1
-- 除外理由TOP5: [('stale_over_14d', 16), ('sold_label_without_evidence', 1), ('accessory_or_wrong_product', 1)]
+- 除外理由TOP5: [('stale_over_14d', 16), ('sold_label_without_evidence', 1)]
 
 ### FUJIFILM GFX100RF
 - buy候補 0 / sell候補 1 / stale除外 0 / 海外sold stale 0

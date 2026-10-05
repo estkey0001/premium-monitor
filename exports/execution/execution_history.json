@@ -83,10 +83,13 @@
       "predicted_net": 75140,
       "category": "iphone",
       "maker": "Apple",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-07-23_prod_gr4_WAIT",
@@ -99,10 +102,13 @@
       "predicted_net": 55242,
       "category": "camera",
       "maker": "RICOH",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-07-23_prod_ps5_pro_ALERT",
@@ -115,10 +121,13 @@
       "predicted_net": 62000,
       "category": "game_console",
       "maker": "Sony",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-07-23_prod_x100vi_ALERT",
@@ -167,10 +176,13 @@
       "predicted_net": 31500,
       "category": "game_console",
       "maker": "Sony",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-07-24_prod_x100vi_WAIT",
@@ -201,10 +213,13 @@
       "predicted_net": 82031,
       "category": "iphone",
       "maker": "Apple",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-07-24_prod_switch2_WAIT",
@@ -271,10 +286,13 @@
       "predicted_net": 32000,
       "category": "game_console",
       "maker": "Sony",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-07-25_prod_x100vi_WAIT",
@@ -305,10 +323,13 @@
       "predicted_net": 82236,
       "category": "iphone",
       "maker": "Apple",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-07-25_prod_switch2_WAIT",
@@ -357,10 +378,13 @@
       "predicted_net": 38604,
       "category": "iphone",
       "maker": "Apple",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-07-26_prod_x100vi_WAIT",
@@ -391,10 +415,13 @@
       "predicted_net": 56264,
       "category": "iphone",
       "maker": "Apple",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-07-26_prod_gr3x_WAIT",
@@ -425,10 +452,13 @@
       "predicted_net": 33200,
       "category": "game_console",
       "maker": "Sony",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-07-26_prod_switch2_WAIT",
@@ -495,10 +525,13 @@
       "predicted_net": 39600,
       "category": "iphone",
       "maker": "Apple",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-07-27_prod_ps5_pro_ALERT",
@@ -511,10 +544,13 @@
       "predicted_net": 33500,
       "category": "game_console",
       "maker": "Sony",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-07-27_prod_gr3x_WAIT",
@@ -599,10 +635,13 @@
       "predicted_net": 39663,
       "category": "iphone",
       "maker": "Apple",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-07-28_prod_ps5_pro_ALERT",
@@ -615,10 +654,13 @@
       "predicted_net": 35000,
       "category": "game_console",
       "maker": "Sony",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-07-28_prod_gr3x_WAIT",
@@ -685,10 +727,13 @@
       "predicted_net": 7900,
       "category": "game_console",
       "maker": "Sony",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-07-29_prod_x100vi_WAIT",
@@ -737,10 +782,13 @@
       "predicted_net": 35500,
       "category": "game_console",
       "maker": "Sony",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-07-29_prod_iphone17pro_256_WAIT",
@@ -753,10 +801,13 @@
       "predicted_net": 28972,
       "category": "iphone",
       "maker": "Apple",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-07-29_prod_switch2_WAIT",
@@ -841,10 +892,13 @@
       "predicted_net": 36100,
       "category": "game_console",
       "maker": "Sony",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-07-30_prod_iphone17pro_256_WAIT",
@@ -857,10 +911,13 @@
       "predicted_net": 28495,
       "category": "iphone",
       "maker": "Apple",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-07-30_prod_switch2_WAIT",
@@ -945,10 +1002,13 @@
       "predicted_net": 36800,
       "category": "game_console",
       "maker": "Sony",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-07-31_prod_iphone17pro_256_WAIT",
@@ -961,10 +1021,13 @@
       "predicted_net": 23807,
       "category": "iphone",
       "maker": "Apple",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-07-31_prod_switch2_WAIT",
@@ -1013,10 +1076,13 @@
       "predicted_net": 9701,
       "category": "game_console",
       "maker": "Sony",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-08-01_prod_x100vi_WAIT",
@@ -1065,10 +1131,13 @@
       "predicted_net": 36800,
       "category": "game_console",
       "maker": "Sony",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-08-01_prod_iphone17pro_256_WAIT",
@@ -1081,10 +1150,13 @@
       "predicted_net": 20593,
       "category": "iphone",
       "maker": "Apple",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-08-01_prod_switch2_WAIT",
@@ -1133,10 +1205,13 @@
       "predicted_net": 9701,
       "category": "game_console",
       "maker": "Sony",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-08-02_prod_x100vi_WAIT",
@@ -1185,10 +1260,13 @@
       "predicted_net": 36800,
       "category": "game_console",
       "maker": "Sony",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-08-02_prod_iphone17pro_256_WAIT",
@@ -1201,10 +1279,13 @@
       "predicted_net": 20292,
       "category": "iphone",
       "maker": "Apple",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-08-02_prod_switch2_WAIT",
@@ -1271,10 +1352,13 @@
       "predicted_net": 36800,
       "category": "game_console",
       "maker": "Sony",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-08-03_prod_iphone17pro_256_WAIT",
@@ -1287,10 +1371,13 @@
       "predicted_net": 19769,
       "category": "iphone",
       "maker": "Apple",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-08-03_prod_switch2_WAIT",
@@ -1339,10 +1426,13 @@
       "predicted_net": 37300,
       "category": "game_console",
       "maker": "Sony",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-08-04_prod_iphone17pro_256_WAIT",
@@ -1355,10 +1445,13 @@
       "predicted_net": 18422,
       "category": "iphone",
       "maker": "Apple",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-08-04_prod_switch2_WAIT",
@@ -1443,10 +1536,13 @@
       "predicted_net": 19135,
       "category": "iphone",
       "maker": "Apple",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-08-05_prod_ps5_pro_SKIP",
@@ -1459,10 +1555,13 @@
       "predicted_net": 11401,
       "category": "game_console",
       "maker": "Sony",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-08-06_prod_x100vi_WAIT",
@@ -1493,10 +1592,13 @@
       "predicted_net": 19118,
       "category": "iphone",
       "maker": "Apple",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-08-06_prod_ps5_pro_SKIP",
@@ -1509,10 +1611,13 @@
       "predicted_net": 13101,
       "category": "game_console",
       "maker": "Sony",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-08-07_prod_x100vi_WAIT",
@@ -1543,10 +1648,13 @@
       "predicted_net": 20069,
       "category": "iphone",
       "maker": "Apple",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-08-07_prod_ps5_pro_SKIP",
@@ -1559,10 +1667,13 @@
       "predicted_net": 13101,
       "category": "game_console",
       "maker": "Sony",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-08-08_prod_x100vi_WAIT",
@@ -1593,10 +1704,13 @@
       "predicted_net": 19515,
       "category": "iphone",
       "maker": "Apple",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-08-08_prod_ps5_pro_SKIP",
@@ -1609,10 +1723,13 @@
       "predicted_net": 13101,
       "category": "game_console",
       "maker": "Sony",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-08-09_prod_x100vi_WAIT",
@@ -1643,10 +1760,13 @@
       "predicted_net": 19626,
       "category": "iphone",
       "maker": "Apple",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-08-09_prod_ps5_pro_SKIP",
@@ -1659,10 +1779,13 @@
       "predicted_net": 13101,
       "category": "game_console",
       "maker": "Sony",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-08-10_prod_x100vi_WAIT",
@@ -1693,10 +1816,13 @@
       "predicted_net": 19547,
       "category": "iphone",
       "maker": "Apple",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-08-11_prod_x100vi_WAIT",
@@ -1727,10 +1853,13 @@
       "predicted_net": 21241,
       "category": "iphone",
       "maker": "Apple",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-08-12_prod_x100vi_WAIT",
@@ -1761,10 +1890,13 @@
       "predicted_net": 21780,
       "category": "iphone",
       "maker": "Apple",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-08-12_prod_ps5_pro_SKIP",
@@ -1777,10 +1909,13 @@
       "predicted_net": 13401,
       "category": "game_console",
       "maker": "Sony",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-08-13_prod_x100vi_WAIT",
@@ -1811,10 +1946,13 @@
       "predicted_net": 21780,
       "category": "iphone",
       "maker": "Apple",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-08-13_prod_ps5_pro_SKIP",
@@ -1827,10 +1965,13 @@
       "predicted_net": 13401,
       "category": "game_console",
       "maker": "Sony",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-08-14_prod_x100vi_WAIT",
@@ -1861,10 +2002,13 @@
       "predicted_net": 21938,
       "category": "iphone",
       "maker": "Apple",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-08-14_prod_ps5_pro_SKIP",
@@ -1877,10 +2021,13 @@
       "predicted_net": 13900,
       "category": "game_console",
       "maker": "Sony",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-08-15_prod_x100vi_WAIT",
@@ -1911,10 +2058,13 @@
       "predicted_net": 21701,
       "category": "iphone",
       "maker": "Apple",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-08-15_prod_ps5_pro_SKIP",
@@ -1927,10 +2077,13 @@
       "predicted_net": 13900,
       "category": "game_console",
       "maker": "Sony",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-08-16_prod_x100vi_WAIT",
@@ -1961,10 +2114,13 @@
       "predicted_net": 21685,
       "category": "iphone",
       "maker": "Apple",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-08-16_prod_ps5_pro_SKIP",
@@ -1977,10 +2133,13 @@
       "predicted_net": 13901,
       "category": "game_console",
       "maker": "Sony",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-08-17_prod_x100vi_WAIT",
@@ -2011,10 +2170,13 @@
       "predicted_net": 21638,
       "category": "iphone",
       "maker": "Apple",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-08-17_prod_ps5_pro_SKIP",
@@ -2027,10 +2189,13 @@
       "predicted_net": 13901,
       "category": "game_console",
       "maker": "Sony",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-08-18_prod_x100vi_WAIT",
@@ -2061,10 +2226,13 @@
       "predicted_net": 21812,
       "category": "iphone",
       "maker": "Apple",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-08-18_prod_ps5_pro_SKIP",
@@ -2077,10 +2245,13 @@
       "predicted_net": 14401,
       "category": "game_console",
       "maker": "Sony",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-08-19_prod_x100vi_WAIT",
@@ -2111,10 +2282,13 @@
       "predicted_net": 22255,
       "category": "iphone",
       "maker": "Apple",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-08-19_prod_ps5_pro_SKIP",
@@ -2127,10 +2301,13 @@
       "predicted_net": 14701,
       "category": "game_console",
       "maker": "Sony",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-08-20_prod_x100vi_WAIT",
@@ -2161,10 +2338,13 @@
       "predicted_net": 20608,
       "category": "iphone",
       "maker": "Apple",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-08-20_prod_ps5_pro_SKIP",
@@ -2177,10 +2357,13 @@
       "predicted_net": 15401,
       "category": "game_console",
       "maker": "Sony",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-08-21_prod_x100vi_WAIT",
@@ -2211,10 +2394,13 @@
       "predicted_net": 16101,
       "category": "game_console",
       "maker": "Sony",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-08-21_prod_iphone17pro_256_WAIT",
@@ -2227,10 +2413,13 @@
       "predicted_net": 21052,
       "category": "iphone",
       "maker": "Apple",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-08-22_prod_x100vi_WAIT",
@@ -2261,10 +2450,13 @@
       "predicted_net": 16101,
       "category": "game_console",
       "maker": "Sony",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-08-22_prod_iphone17pro_256_WAIT",
@@ -2277,10 +2469,13 @@
       "predicted_net": 21241,
       "category": "iphone",
       "maker": "Apple",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-08-23_prod_x100vi_WAIT",
@@ -2311,10 +2506,13 @@
       "predicted_net": 21131,
       "category": "iphone",
       "maker": "Apple",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-08-23_prod_x100vi_BUY",
@@ -2363,10 +2561,13 @@
       "predicted_net": 44000,
       "category": "game_console",
       "maker": "Sony",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-08-25_prod_gr3x_WAIT",
@@ -2415,10 +2616,13 @@
       "predicted_net": 74808,
       "category": "iphone",
       "maker": "Apple",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-08-25_prod_switch2_WAIT",
@@ -2449,10 +2653,13 @@
       "predicted_net": 37104,
       "category": "iphone",
       "maker": "Apple",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-08-26_prod_x100vi_WAIT",
@@ -2483,10 +2690,13 @@
       "predicted_net": 44700,
       "category": "game_console",
       "maker": "Sony",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-08-26_prod_gr3x_WAIT",
@@ -2535,10 +2745,13 @@
       "predicted_net": 17601,
       "category": "game_console",
       "maker": "Sony",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-08-27_prod_x100vi_WAIT",
@@ -2569,10 +2782,13 @@
       "predicted_net": 45800,
       "category": "game_console",
       "maker": "Sony",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-08-27_prod_gr3x_WAIT",
@@ -2621,10 +2837,13 @@
       "predicted_net": 45000,
       "category": "game_console",
       "maker": "Sony",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-08-29_prod_x100vi_WAIT",
@@ -2709,10 +2928,13 @@
       "predicted_net": 46200,
       "category": "game_console",
       "maker": "Sony",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-08-30_prod_gr3x_WAIT",
@@ -2779,10 +3001,13 @@
       "predicted_net": 46500,
       "category": "game_console",
       "maker": "Sony",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-08-31_prod_gr3x_WAIT",
@@ -2849,10 +3074,13 @@
       "predicted_net": 47200,
       "category": "game_console",
       "maker": "Sony",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-09-01_prod_gr3x_WAIT",
@@ -2901,10 +3129,13 @@
       "predicted_net": 59888,
       "category": "camera",
       "maker": "RICOH",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-09-02_prod_gr3x_BUY",
@@ -2971,10 +3202,13 @@
       "predicted_net": 59888,
       "category": "camera",
       "maker": "RICOH",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-09-03_prod_x100vi_WAIT",
@@ -3005,10 +3239,13 @@
       "predicted_net": 47800,
       "category": "game_console",
       "maker": "Sony",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-09-03_prod_switch2_WAIT",
@@ -3057,10 +3294,13 @@
       "predicted_net": 47800,
       "category": "game_console",
       "maker": "Sony",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-09-04_prod_switch2_WAIT",
@@ -3595,10 +3835,13 @@
       "predicted_net": 39009,
       "category": "camera",
       "maker": "RICOH",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     },
     {
       "exec_id": "2026-10-04_prod_gr4_WAIT",
@@ -3611,10 +3854,13 @@
       "predicted_net": 142079,
       "category": "camera",
       "maker": "RICOH",
-      "status": "OPEN",
+      "status": "INVALIDATED",
       "realized_profit": null,
       "realized_roi": null,
-      "hold_days": null
+      "hold_days": null,
+      "invalidated_at": "2026-10-05T14:18:26+09:00",
+      "invalidated_reason": "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）",
+      "validation_version": "phase5.2-route-id"
     }
   ]
 }

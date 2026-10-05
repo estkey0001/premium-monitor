@@ -1,6 +1,6 @@
 # Profit Health Dashboard
 
-生成: 2026-10-04 18:24 JST
+生成: 2026-10-05 14:18 JST
 
 ## Health Score: **37.6 / 100**
 
@@ -14,7 +14,7 @@
 
 ## Data Quality KPI
 
-- 総観測 230 / usable 67
+- 総観測 231 / usable 67
 - stale 118（51%） / 0円 37（16%）
 - item_url率 48% / search 20%
 - manual 51% / API 0% / HTML 1%
@@ -28,7 +28,7 @@
 
 - main route: 0 → 0
 - reference: 0 → 0
-- stale率: 52% → 51%
+- stale率: 51% → 51%
 - 0円率: 16% → 16%
 - item_url率: 48% → 48%
 
@@ -75,7 +75,7 @@
 | 駿河屋 | 2 | 0% | 0 | 2 | 0% | 100% |
 | TSUTAYA | 2 | 0% | 0 | 2 | 0% | 100% |
 | 楽天市場新品 | 2 | 100% | 2 | 0 | 100% | 0% |
-| Amazon JP (新品出品) | 1 | 100% | 0 | 0 | 0% | 100% |
+| Amazon JP (新品出品) | 2 | 100% | 0 | 0 | 0% | 100% |
 
 ## 改善提案 TOP10
 

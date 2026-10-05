@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-04 18:24 JST",
+  "generated_at": "2026-10-05 14:18 JST",
   "scores": {
     "Security": 90,
     "Reliability": 85,
@@ -50,11 +50,11 @@
     "auth_billing_env_gated": true
   },
   "data_quality": {
-    "stale_rate": 0.513,
-    "zero_rate": 0.1609,
-    "item_url_rate": 0.4783,
+    "stale_rate": 0.5108,
+    "zero_rate": 0.1602,
+    "item_url_rate": 0.4762,
     "usable": 67,
-    "total": 230,
+    "total": 231,
     "ebay_configured": false,
     "coverage_score": 43,
     "main_routes": 0,

@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-10-04T17:53:50.037689+09:00",
-  "evaluated_at": "2026-10-04T17:53:50.035884+09:00",
+  "generated_at": "2026-10-05T13:47:57.588031+09:00",
+  "evaluated_at": "2026-10-05T13:47:57.585571+09:00",
   "items": [
     {
       "tcg": "POKEMON",
@@ -67,18 +67,18 @@
       "merged_count": 1,
       "deadline_countdown": {
         "remaining_days": 0,
-        "remaining_hours": 23,
-        "remaining_minutes": 5,
-        "remaining_seconds": 83109,
-        "label": "23時間5分"
+        "remaining_hours": 3,
+        "remaining_minutes": 11,
+        "remaining_seconds": 11462,
+        "label": "3時間11分"
       },
       "start_countdown": null,
       "purchase_countdown": {
         "remaining_days": 15,
-        "remaining_hours": 23,
-        "remaining_minutes": 5,
-        "remaining_seconds": 1379109,
-        "label": "15日23時間"
+        "remaining_hours": 3,
+        "remaining_minutes": 11,
+        "remaining_seconds": 1307462,
+        "label": "15日3時間"
       }
     },
     {
@@ -146,18 +146,18 @@
       "merged_count": 1,
       "deadline_countdown": {
         "remaining_days": 0,
-        "remaining_hours": 23,
-        "remaining_minutes": 5,
-        "remaining_seconds": 83109,
-        "label": "23時間5分"
+        "remaining_hours": 3,
+        "remaining_minutes": 11,
+        "remaining_seconds": 11462,
+        "label": "3時間11分"
       },
       "start_countdown": null,
       "purchase_countdown": {
         "remaining_days": 15,
-        "remaining_hours": 23,
-        "remaining_minutes": 5,
-        "remaining_seconds": 1379109,
-        "label": "15日23時間"
+        "remaining_hours": 3,
+        "remaining_minutes": 11,
+        "remaining_seconds": 1307462,
+        "label": "15日3時間"
       }
     },
     {
@@ -211,8 +211,8 @@
       "verified": true,
       "verified_by": null,
       "published_at": "2026-09-18T00:00:00+09:00",
-      "observed_at": "2026-10-04T17:48:00.213396+09:00",
-      "last_verified_at": "2026-10-04T17:48:00.213401+09:00",
+      "observed_at": "2026-10-05T13:42:08.566839+09:00",
+      "last_verified_at": "2026-10-05T13:42:08.566844+09:00",
       "collection_method": "HTML",
       "status": "CLOSED",
       "conflict": false,
@@ -275,8 +275,8 @@
       "verified": true,
       "verified_by": null,
       "published_at": "2026-09-18T00:00:00+09:00",
-      "observed_at": "2026-10-04T17:49:00.152847+09:00",
-      "last_verified_at": "2026-10-04T17:49:00.152852+09:00",
+      "observed_at": "2026-10-05T13:43:08.626948+09:00",
+      "last_verified_at": "2026-10-05T13:43:08.626952+09:00",
       "collection_method": "HTML",
       "status": "CLOSED",
       "conflict": false,
@@ -339,8 +339,8 @@
       "verified": true,
       "verified_by": null,
       "published_at": "2026-09-18T00:00:00+09:00",
-      "observed_at": "2026-10-04T17:50:00.121596+09:00",
-      "last_verified_at": "2026-10-04T17:50:00.121601+09:00",
+      "observed_at": "2026-10-05T13:44:08.577405+09:00",
+      "last_verified_at": "2026-10-05T13:44:08.577410+09:00",
       "collection_method": "HTML",
       "status": "CLOSED",
       "conflict": false,
@@ -403,8 +403,8 @@
       "verified": true,
       "verified_by": null,
       "published_at": "2026-09-18T00:00:00+09:00",
-      "observed_at": "2026-10-04T17:50:00.121787+09:00",
-      "last_verified_at": "2026-10-04T17:50:00.121789+09:00",
+      "observed_at": "2026-10-05T13:44:08.577713+09:00",
+      "last_verified_at": "2026-10-05T13:44:08.577716+09:00",
       "collection_method": "HTML",
       "status": "CLOSED",
       "conflict": false,

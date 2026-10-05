@@ -313,3 +313,31 @@ def test_deploy_check_833(tmp_path, monkeypatch):
     paren = sell_obs("ドラゴンスター（秋葉原）", 192500)
     ok2 = _dc_run(tmp_path / "c", monkeypatch, _pd_html("ドラゴンスター（秋葉原）", 192500), [paren])
     assert ok2["opportunity_sell_identity_verified"]["level"] == "ok"
+
+
+def test_legacy_deal_card_compare_does_not_rank_unverified():
+    """旧UIの案件カードの買取店比較: 照合未了の店は順位・差益を付けず「参考・商品照合未完了」。"""
+    g = _gen(npx.confirmed_sell_keys([sell_obs("モバイル一番", 192900, exact=False, link="shop_home"),
+                                      sell_obs("買取商店", 192300)]))
+    rows = [dict(_row("モバイル一番", 192900), shop_id="mobile_ichiban"),
+            dict(_row("買取商店", 192300), shop_id="kaitori_shouten")]
+    deal = g._enrich_deal(_ps5_deal(), rows)
+    for pro in (False, True):
+        html = g._deal_card(deal, "badge-easy", "利益あり", buyback_rows=rows, pro_mode=pro)
+        assert "+¥54,920" not in html                                  # 未照合の価格の差益（192,900 − 137,980）
+        rows_html = html[html.index('class="shop-row'):]                # 買取店比較の行
+        i = rows_html.index("モバイル一番")
+        assert "商品照合未完了" in rows_html[i:i + 600] and "1位" not in rows_html[i - 200:i]
+        j = rows_html.index("買取商店")
+        assert "+¥54,320" in rows_html[j:j + 400] and j < i            # 照合済みが先で、差益つき
+
+
+def test_legacy_monitoring_card_compare_does_not_rank_unverified():
+    g = _gen(npx.confirmed_sell_keys([sell_obs("買取商店", 150000)]))
+    d = _ps5_deal("買取商店", 150000).model_copy(update={"net_profit_jpy": 0, "user_level": "monitoring"})
+    rows = [_row("モバイル一番", 152000), _row("買取商店", 150000)]
+    html = g._deal_card_monitoring(d, rows)
+    rows_html = html[html.index('class="shop-row'):]
+    j, i = rows_html.index("買取商店"), rows_html.index("モバイル一番")
+    assert j < i and "参考" in rows_html[i - 120:i] and "商品照合未完了" in rows_html[i:i + 200]
+    assert 'shop-rank gold">1<' in rows_html[:j]

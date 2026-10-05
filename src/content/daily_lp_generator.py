@@ -7850,10 +7850,26 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         if buyback_rows:
             _normal_rows  = [r for r in buyback_rows if r.get('buyback_price', 0) > 0 and r.get('confidence', 'high') != 'low'][:5]
             _failed_rows_r = [r for r in buyback_rows if r.get('data_source') == 'fetch_failed']
+            # 商品の照合が済んでいない買取価格は順位を付けず「参考」として後ろに出す（案件カードと同じ正本）
+            _sell_keys_m = self._confirmed_sell_keys()
+            _ref_m = {id(r) for r in _normal_rows
+                      if (d.product_id, r.get('shop_name', '') or '', int(r.get('buyback_price', 0) or 0))
+                      not in _sell_keys_m}
+            _normal_rows = ([r for r in _normal_rows if id(r) not in _ref_m]
+                            + [r for r in _normal_rows if id(r) in _ref_m])
             rank = 1
             for r in _normal_rows:
                 r_price = r.get('buyback_price', 0)
                 r_name  = _esc(r.get('shop_name') or r.get('shop_id') or '—')
+                if id(r) in _ref_m:
+                    rows_html.append(
+                        '<div class="shop-row"><div class="shop-rank other">参考</div>'
+                        f'<div class="shop-name-col">{r_name}</div>'
+                        f'<div class="shop-price-col">¥{r_price:,}</div>'
+                        '<div class="shop-diff-col">商品照合未完了</div>'
+                        '<div class="shop-source-col"></div><div class="shop-link-col"></div></div>'
+                    )
+                    continue
                 rank_cls = {1:'gold', 2:'silver', 3:'bronze'}.get(rank, 'other')
                 r_url   = r.get('buyback_url', '') or ''
                 r_link_verified = bool(r.get('link_verified', False))
@@ -8258,6 +8274,14 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             # confidence=low は誤価格防止のためLPから除外（Task 7）
             _normal_rows  = [r for r in buyback_rows if r.get('buyback_price', 0) > 0 and r.get('confidence', 'high') != 'low']
             _failed_rows  = [r for r in buyback_rows if r.get('data_source') == 'fetch_failed']
+            # 商品の照合が済んでいない買取価格（店のトップ・一覧の価格など）は順位・差益を付けず「参考」として後ろに出す
+            # （正本は normalized_prices.sell_confirmation_reasons。利益の売値に使う価格と同じ判定）
+            _sell_keys = self._confirmed_sell_keys()
+            _ref_ids = {id(r) for r in _normal_rows
+                        if (d.product_id, r.get('shop_name', '') or '', int(r.get('buyback_price', 0) or 0))
+                        not in _sell_keys}
+            _normal_rows = ([r for r in _normal_rows if id(r) not in _ref_ids]
+                            + [r for r in _normal_rows if id(r) in _ref_ids])
             n_shops = len(_normal_rows) + len(_failed_rows)
             _compare_shop_count = len(_normal_rows)
             # auto_scraped の最高買取価格（手動価格の過大検出に使用：Task 2）
@@ -8316,6 +8340,9 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                     )
                 profit = bp - official_price
                 profit_str = f'+¥{profit:,}' if profit >= 0 else f'-¥{abs(profit):,}'
+                if id(r) in _ref_ids:
+                    # 照合未了の価格: 順位・差益を出さない（参考の価格としてだけ）
+                    rank_counter, profit, profit_str = '参考', 0, '商品照合未完了'
                 btn_cls = 'best' if rank_counter == 1 else 'normal'
                 link_col = (
                     f'<a href="{_esc(url_val)}" target="_blank" rel="noopener noreferrer" '
@@ -8372,7 +8399,10 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                     except Exception:
                         _obs_d = _esc(str(_obs)[:10])
                     _auto_annot = (
-                        f'<div class="shop-auto-annot">&#129302; 自動取得 / {_conf}'
+                        ('<div class="shop-auto-annot">参考・商品照合未完了（店のトップ・一覧の価格など）</div>'
+                         if id(r) in _ref_ids else '')
+                        + '<div class="shop-auto-annot">&#129302; 自動取得'
+                        + ('' if id(r) in _ref_ids else f' / {_conf}')
                         + (f' / 最終取得: {_obs_d}' if _obs_d else '')
                         + (f'<br><span class="shop-auto-item">{_matched}</span>' if _matched else '')
                         + _tradein_note
@@ -8382,20 +8412,21 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 return (
                     f'<div class="shop-row shop-card">'
                     f'<div class="shop-card-top">'
-                    f'<div class="shop-rank {rank_cls}">{rank_counter}位</div>'
+                    f'<div class="shop-rank {rank_cls}">{rank_counter}{"" if id(r) in _ref_ids else "位"}</div>'
                     f'<div class="shop-name-col">{sname}</div></div>'
                     f'<div class="shop-card-mid">'
                     f'<div class="shop-price-col">¥{bp:,}</div>'
-                    f'<div class="shop-diff-col{diff_cls}">{_diff_word} {_esc(profit_str)}</div></div>'
+                    f'<div class="shop-diff-col{diff_cls}">{"" if id(r) in _ref_ids else _diff_word + " "}{_esc(profit_str)}</div></div>'
                     f'{_auto_annot}'
                     f'<div class="shop-link-col">{link_col}</div>'
                     f'</div>'
                 )
 
             # 2位との差額（最高買取店ヒーローに小さく添える）
-            if len(_normal_rows) >= 2:
-                _runnerup_diff = (_normal_rows[0].get('buyback_price', 0)
-                                  - _normal_rows[1].get('buyback_price', 0))
+            _ranked_rows = [r for r in _normal_rows if id(r) not in _ref_ids]
+            if len(_ranked_rows) >= 2:
+                _runnerup_diff = (_ranked_rows[0].get('buyback_price', 0)
+                                  - _ranked_rows[1].get('buyback_price', 0))
 
             if pro_mode:
                 # Pro：従来どおり上位3店舗を常時表示 + 4位以降/失敗を details に折りたたみ

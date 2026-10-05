@@ -1,6 +1,6 @@
 # Beta Launch Preparation — Beta Report
 
-> 生成: 2026-10-06 00:38 JST / 初回体験最適化・運用準備・βテスト計測・フィードバック（AI/利益/DataQualityロジックは不変）
+> 生成: 2026-10-06 03:43 JST / 初回体験最適化・運用準備・βテスト計測・フィードバック（AI/利益/DataQualityロジックは不変）
 
 ## Beta Ready Score: **83 / 100** — 判定: **READY (closed beta)**
 
@@ -11,7 +11,7 @@
 | Notification | 86 |
 | Dashboard | 84 |
 | Performance | 92 |
-| Data Quality | 67 |
+| Data Quality | 68 |
 | Documentation | 90 |
 | Support | 82 |
 | Operations | 82 |

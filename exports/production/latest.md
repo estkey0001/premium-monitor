@@ -1,8 +1,8 @@
 # Production Readiness Report
 
-生成: 2026-10-06 00:38 JST
+生成: 2026-10-06 03:43 JST
 
-## Overall Score: **80.1 / 100**
+## Overall Score: **80.2 / 100**
 
 | 観点 | 点 |
 |---|---|
@@ -13,7 +13,7 @@
 | Scalability | 66 |
 | Operations | 82 |
 | Deployment | 70 |
-| Data Quality | 67 |
+| Data Quality | 68 |
 | Monitoring | 84 |
 | Recovery | 76 |
 | Documentation | 86 |

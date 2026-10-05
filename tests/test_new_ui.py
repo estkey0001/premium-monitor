@@ -162,7 +162,7 @@ def test_old_dom_ids_preserved(monkeypatch):
 
 def test_navigation_routes():
     assert navigation.PAGES == ("home", "opportunities", "lottery", "restock", "routes", "more",
-                                "search", "account")
+                                "search", "account", "product")       # product は UI Phase 6（商品詳細）
     root = shell.render_root(_ctx())
     for page in navigation.PAGES:
         assert f'data-nu-page="{page}"' in root

@@ -39,7 +39,8 @@ BOTTOM_ITEMS: tuple[NavItem, ...] = (
 )
 
 # ページの一覧（ナビに無いページも含む）。account は旧ハッシュ（#tab-health）からだけ開く
-PAGES: tuple[str, ...] = ("home", "opportunities", "lottery", "restock", "routes", "more", "search", "account")
+PAGES: tuple[str, ...] = ("home", "opportunities", "lottery", "restock", "routes", "more", "search", "account",
+                          "product")
 DEFAULT_PAGE = "home"
 # 段階B の URL（?page=profit）を新しいページへ読み替える
 PAGE_ALIASES: dict[str, str] = {"profit": "opportunities"}

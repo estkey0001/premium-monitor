@@ -63,7 +63,7 @@ def _restock_text(v: RestockView) -> str:
     return '<span class="nu-lrow__val--muted">—</span>'
 
 
-def _details(v: RestockView, state_label: str) -> str:
+def _details(v: RestockView, state_label: str, pd_ids: set | None = None) -> str:
     rows = [
         ("今の状態", "\0STATE"),
         ("前回の状態", ss.STATE_LABELS.get(v.previous_stock_state, "") if v.previous_stock_state else ""),
@@ -83,12 +83,15 @@ def _details(v: RestockView, state_label: str) -> str:
     if v.source_url and v.source_url != v.purchase_url:
         link = (f'<a class="nu-btn nu-btn--secondary nu-lrow__src" href="{esc(v.source_url)}" target="_blank"'
                 f' rel="noopener nofollow" data-track="restock_info_click">情報元を開く</a>')
+    if pd_ids and v.product_id in pd_ids:
+        from src.content.ui import product_page
+        link += product_page.link(v.product_id)
     return (f'<details class="nu-ldetail" data-track="restock_detail_open"><summary>詳細'
             f'<span class="nu-sr">（{esc(v.product_name)}）</span></summary>'
             f'<dl class="nu-ldetail__dl">{body}</dl>{link}</details>')
 
 
-def _row(v: RestockView, idx: int, now: datetime) -> str:
+def _row(v: RestockView, idx: int, now: datetime, pd_ids: set | None = None) -> str:
     avail = v.available(now)
     label = ss.STATE_LABELS[ss.IN_STOCK] if avail else v.label(now)
     tone = TONE["available"] if avail else (TONE["stale"] if v.stock_state == ss.IN_STOCK
@@ -119,7 +122,7 @@ def _row(v: RestockView, idx: int, now: datetime) -> str:
         f'<div class="nu-lrow__when"><span class="nu-when">{_restock_text(v)}</span>'
         f'<span class="nu-lrow__upd">{_time(v.last_checked_at, "確認")}</span></div>'
         f'<div class="nu-lrow__cta" data-nu-rcta-slot>{_cta(v, avail)}</div>'
-        f'{_details(v, label)}'
+        f'{_details(v, label, pd_ids)}'
         '</article>'
     )
 
@@ -154,7 +157,8 @@ def _toolbar(n: int) -> str:
 def render(catalog, *, now: datetime, has_data: bool = True) -> str:
     from src.content.ui import pages
     views = catalog.restock_views
-    rows = "".join(_row(v, i, now) for i, v in enumerate(views))
+    ids = getattr(catalog, "product_ids", None) or set()
+    rows = "".join(_row(v, i, now, ids) for i, v in enumerate(views))
     n = sum(1 for v in views if v.available(now))
     info = pages.PURPOSE_INFO["restock"]
     empty = (

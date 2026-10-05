@@ -226,6 +226,9 @@ class DailyLPGenerator:
         self._product_info = {
             _p.id: {"genre": getattr(_p, "genre", "") or "", "model": getattr(_p, "model_number", "") or "",
                     "brand": getattr(_p, "brand", "") or "",
+                    # 商品詳細（UI Phase 6）に使う。商品の一覧の正本は products（新しい ID は作らない）
+                    "name": getattr(_p, "name", "") or "", "jan": getattr(_p, "jan_code", "") or "",
+                    "official_price": getattr(_p, "official_price", None) or getattr(_p, "retail_price", 0) or 0,
                     "official_checked_at": (_p.official_price_updated_at.isoformat()
                                             if getattr(_p, "official_price_updated_at", None) else ""),
                     # 公式の在庫表示を確認した日時（価格の確認日時とは別。根拠が無ければ空）
@@ -4475,6 +4478,8 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 stock_history=self._load_export_json("stock_history", "latest.json"),
                 price_observations=self._load_export_json("normalized_price_observations", "latest.json").get(
                     "observations") or [],
+                products=self._nu_products(),
+                price_history=self._load_export_json("price_history", "latest.json"),
             )
             root = _ui_shell.render_root(ctx)
             self._write_opportunity_diagnostics(ctx)
@@ -4482,6 +4487,15 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         except Exception as exc:  # noqa: BLE001
             logger.warning("new UI render failed: %s", exc)
             return "", ""
+
+    def _nu_products(self) -> list[dict]:
+        """商品詳細の対象（products の登録順）。公式の URL は product_source_config の登録（_official_meta）。"""
+        meta = self._official_meta()
+        return [{"product_id": pid, "name": p.get("name") or pid, "genre": p.get("genre", ""),
+                 "brand": p.get("brand", ""), "model": p.get("model", ""), "jan": p.get("jan", ""),
+                 "official_price": p.get("official_price") or 0,
+                 "official_url": (meta.get(pid) or {}).get("url", "")}
+                for pid, p in (getattr(self, "_product_info", None) or {}).items()]
 
     def _official_meta(self) -> dict:
         """公式の定価の登録（product_source_config の extra_config）。商品ID → URL・確認・販売終了などの情報。"""

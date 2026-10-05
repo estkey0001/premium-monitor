@@ -101,7 +101,7 @@ def _profit(v: LotteryReservationView) -> str:
     return f'<span class="nu-lrow__lbl">想定利益</span>{val}{ref}'
 
 
-def _details(v: LotteryReservationView, cta_kind: str = "") -> str:
+def _details(v: LotteryReservationView, cta_kind: str = "", pd_ids: set | None = None) -> str:
     rows: list[tuple[str, str]] = []
     if v.source_conflict:
         # 公式情報どうしで日程が食い違うときは、どちらかの日程を確定値のように出さない
@@ -136,6 +136,9 @@ def _details(v: LotteryReservationView, cta_kind: str = "") -> str:
     if v.source_url and cta_kind not in ("", "info") and v.source_url != v.official_url:
         link = (f'<a class="nu-btn nu-btn--secondary nu-lrow__src" href="{esc(v.source_url)}" target="_blank"'
                 f' rel="noopener nofollow" data-track="lottery_info_click">情報元を開く</a>')
+    if pd_ids and v.product_id in pd_ids:
+        from src.content.ui import product_page
+        link += product_page.link(v.product_id)
     return (f'<details class="nu-ldetail" data-track="lottery_detail_open"><summary>詳細'
             f'<span class="nu-sr">（{esc(v.product_name)}）</span></summary>'
             f'<dl class="nu-ldetail__dl">{body}</dl>{link}</details>')
@@ -149,7 +152,7 @@ def _sub_line(v: LotteryReservationView, status: str) -> str:
     return f'<span class="nu-lrow__sub">当選発表 {esc(_when_abs(v.winner_announcement_at))}</span>'
 
 
-def _row(v: LotteryReservationView, state: dict, idx: int) -> str:
+def _row(v: LotteryReservationView, state: dict, idx: int, pd_ids: set | None = None) -> str:
     vm = v.vm
     search = " ".join(x for x in (v.product_name, v.retailer, v.store, v.variant) if x).lower()
     start = vm.get("as") or vm.get("asd") or (vm.get("rd") if v.kind == rt.KIND_RELEASE else "")
@@ -182,7 +185,7 @@ def _row(v: LotteryReservationView, state: dict, idx: int) -> str:
         f'{_sub_line(v, state["status"])}'
         f'<span class="nu-lrow__upd">{_time(v.last_verified_at)}</span></div>'
         f'<div class="nu-lrow__cta" data-nu-cta-slot>{cta_html(state["cta"])}</div>'
-        f'{_details(v, (state.get("cta") or {}).get("kind", ""))}'
+        f'{_details(v, (state.get("cta") or {}).get("kind", ""), pd_ids)}'
         '</article>'
     )
 
@@ -219,7 +222,8 @@ def render(catalog, model, *, has_data: bool = True) -> str:
     views = sorted((v for v in catalog.lottery_views if v.event_id in model.states),
                    key=lambda v: (model.states[v.event_id]["bucket"], model.states[v.event_id]["sort"],
                                   idx_of.get(v.event_id, 0)))
-    rows = "".join(_row(v, model.states[v.event_id], idx_of.get(v.event_id, 0)) for v in views)
+    ids = getattr(catalog, "product_ids", None) or set()
+    rows = "".join(_row(v, model.states[v.event_id], idx_of.get(v.event_id, 0), ids) for v in views)
     n = catalog.count("lottery")
     if has_data:
         msg, hint = pages.EMPTY["lottery"]

@@ -194,17 +194,22 @@ def test_no_inactive_fake_cta():
     hrefs = re.findall(r'<a [^>]*?href="([^"]*)"', body)
     assert hrefs and all(h and h != "#" for h in hrefs)
     # button は開閉（詳細・検索）だけで、必ず type="button" と aria-expanded・aria-controls を持つ
+    # 商品詳細のタブ（UI Phase 6）は role="tab" で、aria-selected と aria-controls を持つ
     for b in re.findall(r"<button[^>]*>", body):
+        if 'role="tab"' in b:
+            assert 'type="button"' in b and "aria-selected=" in b and "aria-controls=" in b, b
+            continue
         assert 'type="button"' in b and "aria-expanded=" in b and "aria-controls=" in b, b
     # 押せない部品（準備中）は aria-disabled と「準備中」の文言を持つ
     for el in re.findall(r"<(?:span|input)[^>]*aria-disabled=\"true\"[^>]*>", body):
         assert "<a " not in el
     # 入力欄は、一覧内の検索（利益商品・抽選・予約・在庫再開。動く）以外は準備中で押せない
     inputs = re.findall(r"<input[^>]*>", body)
-    assert body.count("準備中") >= 6
+    # 商品の検索（UI Phase 6）は動く。それ以外の準備中の部品は残る
+    assert body.count("準備中") >= 5
     assert all("disabled" in i or "data-nu-search-input" in i for i in inputs)
-    assert sum("data-nu-search-input" in i for i in inputs) == 4
-    for p in ("opportunities", "lottery", "restock", "routes"):
+    assert sum("data-nu-search-input" in i for i in inputs) == 5
+    for p in ("opportunities", "lottery", "restock", "routes", "search"):
         assert _section(root, p).count("data-nu-search-input") == 1
 
 

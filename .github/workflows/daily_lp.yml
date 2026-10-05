@@ -363,6 +363,13 @@ jobs:
         env:
           PYTHONPATH: .
 
+      # 13.95 価格の履歴（商品詳細）。実際に観測した値だけを前回の履歴に足す（補間しない・時刻を書き換えない）
+      - name: Update price history
+        run: mkdir -p exports/price_history && python scripts/update_price_history.py
+        continue-on-error: true
+        env:
+          PYTHONPATH: .
+
       # 14. Generate daily LP
       - name: Generate daily LP Variant A
         run: python -m src.cli generate-daily-lp --variant A
@@ -448,6 +455,7 @@ jobs:
                   exports/profit_routes/ \
                   exports/opportunity_diagnostics/ \
                   exports/stock_history/ \
+                  exports/price_history/ \
                   exports/flea_sold_prices/ \
                   exports/ai_opportunities/ \
                   exports/notifications/ \

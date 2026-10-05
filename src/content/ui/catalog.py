@@ -62,6 +62,7 @@ class Catalog:
     restock_views: list = field(default_factory=list)                # 在庫再開の表示モデル（restock_view）
     route_views: list = field(default_factory=list)                  # せどりルートの確定ルート（route_view）
     listing_refs: list = field(default_factory=list)                 # 出品価格の参考（確定ルートには使わない）
+    product_ids: set = field(default_factory=set)                    # 商品詳細のある product_id（一覧からのリンクに使う）
 
     def count(self, purpose: str, category: str = cats.ALL) -> int:
         """生成時点の件数（抽選は閲覧時にブラウザで数え直す）。"""

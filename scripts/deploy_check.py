@@ -7321,6 +7321,46 @@ def _check_data_correctness() -> list[dict]:
             _add(830, "artifacts_follow_current_routes", not stale,
                  "AI の候補・資金配分・実行の OPEN・通知は、今の確定・参考ルート（route_id）から作られている"
                  "（無効になったルートを復活させていない）", f"今のルートと照合できない: {stale[:5]}")
+    # #831 価格の履歴（商品詳細）は、実際に観測した点だけ（読める観測時刻・未来でない・同じ系列で時刻が重ならない・正の価格）
+    _ph_p = PROJECT_ROOT / "exports" / "price_history" / "latest.json"
+    if _ph_p.exists():
+        from src.market import price_history as _ph831
+        from src.tcg.models import JST as _J831
+        _now831 = _dt.now(tz=_J831)
+        try:
+            _ph = _json.loads(_ph_p.read_text(encoding="utf-8"))
+        except ValueError:
+            _ph = {}
+        bad_pts = []
+        for _k, _s in ((_ph.get("series") or {}).items()):
+            _ats = [str(p.get("at") or "") for p in (_s.get("points") or [])]
+            if len(_ats) != len(set(_ats)):
+                bad_pts.append(f"{_k}:重複")
+            for p in (_s.get("points") or []):
+                if not isinstance(p.get("price"), int) or p["price"] <= 0 or _ph831._future(str(p.get("at") or ""), _now831):
+                    bad_pts.append(f"{_k}:{p.get('at')}")
+        _add(831, "price_history_real_points", bool(_ph.get("series") is not None) and not bad_pts,
+             "価格の履歴は実際に観測した点だけ（観測時刻あり・未来でない・重複なし・正の価格）",
+             f"不正な点: {bad_pts[:5]}")
+    # #832 公開ページの商品詳細に、DEMO・危ない URL・除外したルートの利益が出ていない
+    _idx = PUBLIC_DIR / "index.html"
+    if _idx.exists():
+        _h = _idx.read_text(encoding="utf-8")
+        _i = _h.find('data-nu-page="product"')
+        _sec = _h[_i:_h.find('<script type="application/json"', _i)] if _i >= 0 else ""
+        issues = []
+        if "DEMO（見た目" in _h or "data-nu-pd=\"prod_demo" in _h:
+            issues.append("DEMO の表示")
+        import re as _re832
+        if _re832.search(r'href="\s*(?:javascript|data|vbscript):', _sec, _re832.I):
+            issues.append("危ない URL")
+        for r in ((pr or {}).get("excluded_routes") or []) if pr_p.exists() else []:
+            _n = r.get("net_profit")
+            if isinstance(_n, (int, float)) and _n > 0 and f"+¥{int(_n):,}" in _sec:
+                issues.append(f"除外したルートの利益 +¥{int(_n):,}")
+        _add(832, "product_detail_safe", _i >= 0 and not issues,
+             "公開ページの商品詳細に DEMO・危ない URL・除外したルートの利益が出ていない",
+             f"問題: {issues[:5]}" if issues else "商品詳細のページが見つからない")
     return out
 
 

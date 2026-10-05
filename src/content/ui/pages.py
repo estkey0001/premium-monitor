@@ -243,16 +243,34 @@ def render_footer(brand: str) -> str:
             f'<p class="nu-footer__note">{esc(DISCLAIMER)}</p></div></footer>')
 
 
-def render_search() -> str:
-    chips = "".join(f'<a class="nu-chip" href="{esc(page_href("home", category=cat.key))}">{esc(cat.label)}</a>'
-                    for cat in cats.CATEGORIES)
+def render_search(details: dict | None = None) -> str:
+    """商品を検索（商品名・型番・ジャンルで絞り込む商品の一覧。各商品から商品詳細へ）。
+
+    絞り込みはブラウザ側（shell の router の renderSearch）が URL の q（キーワード）と category（ジャンル）で行う。
+    """
+    from src.content.ui import product_page
+    chips = (f'<a class="nu-chip" href="{esc(page_href("search"))}" data-nu-switch="all">すべて</a>'
+             + "".join(f'<a class="nu-chip" href="{esc(page_href("search", category=cat.key))}"'
+                       f' data-nu-switch="{esc(cat.key)}">{esc(cat.label)}</a>' for cat in cats.CATEGORIES))
+    items = []
+    for v in (details or {}).values():
+        search = " ".join(x for x in (v.product_name, v.model, v.brand, v.category_label, v.capacity) if x).lower()
+        items.append(
+            f'<li class="nu-srow" data-nu-srow data-nu-cat="{esc(v.category)}" data-search="{esc(search)}">'
+            f'<span class="nu-srow__main"><span class="nu-srow__name">{esc(v.product_name)}</span>'
+            f'<span class="nu-osub">{esc(" ・ ".join(x for x in (v.model, v.category_label) if x))}</span></span>'
+            f'{product_page.link(v.product_id)}</li>')
     return (
         '<section class="nu-page" data-nu-page="search" aria-labelledby="nu-search-title" hidden>'
         '<h1 id="nu-search-title" class="nu-page__title">商品を検索</h1>'
-        f'<label class="nu-filter__search nu-filter__search--wide">{icon("search", size=16)}'
-        '<span class="nu-sr">キーワード（準備中）</span>'
-        '<input type="search" placeholder="キーワード検索は準備中です" disabled aria-disabled="true"></label>'
-        '<p class="nu-lead">キーワード検索は準備中です。今はジャンルから探せます。</p>'
-        f'<nav class="nu-chips" aria-label="ジャンルから探す">{chips}</nav>'
+        '<form class="nu-osearch" role="search" data-nu-search-form>'
+        f'<label class="nu-filter__search nu-filter__search--wide nu-filter__search--live">{icon("search", size=16)}'
+        '<span class="nu-sr">商品名・型番で探す</span>'
+        '<input type="search" name="q" placeholder="商品名・型番（例: PS5 Pro）" autocomplete="off"'
+        ' data-nu-search-input data-nu-search-page="search"></label></form>'
+        f'<nav class="nu-chips" aria-label="ジャンルで絞り込む">{chips}</nav>'
+        f'<p class="nu-oresult" aria-live="polite"><span data-nu-sresult>{len(items)}件</span></p>'
+        f'<ul class="nu-slist" data-nu-slist>{"".join(items)}</ul>'
+        '<p class="nu-lead" data-nu-sempty hidden>条件に一致する商品がありません。ジャンルや検索語を変更してください。</p>'
         '</section>'
     )

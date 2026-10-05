@@ -65,7 +65,7 @@ def _sell_note(v: opp.OpportunityView) -> str:
     return note
 
 
-def _detail(v: opp.OpportunityView) -> str:
+def _detail(v: opp.OpportunityView, pd_ids: set | None = None) -> str:
     """1段だけの詳細（価格の内訳・情報元・確認日時・在庫・価格種別・費用）。入れ子にしない。"""
     # 売る値段から、仕入れ値と費用を引いた残りが純利益（上から順に読めば計算が追える並び）
     rows = [f'<li><span>売却価格（{esc(_sell_note(v))}）</span><b>{_yen(v.sell_price)}</b></li>',
@@ -92,6 +92,9 @@ def _detail(v: opp.OpportunityView) -> str:
             links.append(c.button(label, href, kind="secondary", external=True, track="opportunity_link"))
     if v.flags.get("href"):
         links.append(c.button("現行版で詳しく見る", v.flags["href"], kind="secondary"))
+    if pd_ids and v.product_id in pd_ids:
+        from src.content.ui import product_page
+        links.append(product_page.link(v.product_id))
     return (f'<div class="nu-odetail__grid"><div><h4 class="nu-odetail__h">価格の内訳</h4>'
             f'<ul class="nu-break">{"".join(rows)}</ul><ul class="nu-break nu-break--sub">{acq}</ul></div>'
             f'<div><h4 class="nu-odetail__h">情報元</h4><ul class="nu-break">{src}</ul>'
@@ -106,7 +109,7 @@ def _attrs(v: opp.OpportunityView, idx: int) -> str:
             f' data-rec="{idx}" data-stock="{esc(v.buy_stock)}" data-search="{esc(search)}"')
 
 
-def _row(v: opp.OpportunityView, idx: int) -> str:
+def _row(v: opp.OpportunityView, idx: int, pd_ids: set | None = None) -> str:
     did = f"nu-od-{idx}"
     cat = cats.LABELS.get(v.category, "その他")
     return (
@@ -126,11 +129,11 @@ def _row(v: opp.OpportunityView, idx: int) -> str:
         f'<td><button type="button" class="nu-rowbtn" aria-expanded="false" aria-controls="{did}"'
         f' data-nu-toggle>詳細<span class="nu-sr">（{esc(v.product_name)}）</span></button></td></tr>'
         f'<tr class="nu-odetail-row" id="{did}" data-nu-detail-of="{esc(v.id)}" hidden>'
-        f'<td colspan="11">{_detail(v)}</td></tr>'
+        f'<td colspan="11">{_detail(v, pd_ids)}</td></tr>'
     )
 
 
-def _card(v: opp.OpportunityView, idx: int) -> str:
+def _card(v: opp.OpportunityView, idx: int, pd_ids: set | None = None) -> str:
     did = f"nu-oc-{idx}"
     return (
         f'<li class="nu-ocard"{_attrs(v, idx)}>'
@@ -148,7 +151,7 @@ def _card(v: opp.OpportunityView, idx: int) -> str:
         f'<div><span class="nu-ocard__lbl">ROI</span><span class="nu-roi nu-ocard__roi">{esc(_roi(v))}</span></div>'
         f'<button type="button" class="nu-rowbtn nu-ocard__btn" aria-expanded="false" aria-controls="{did}" data-nu-toggle>'
         f'詳細<span class="nu-sr">（{esc(v.product_name)}）</span></button></div>'
-        f'<div class="nu-odetail" id="{did}" hidden>{_detail(v)}</div></li>'
+        f'<div class="nu-odetail" id="{did}" hidden>{_detail(v, pd_ids)}</div></li>'
     )
 
 
@@ -183,8 +186,9 @@ def render(catalog, *, has_data: bool = True) -> str:
     from src.content.ui import pages
     views = [it.view for it in catalog.items["opportunities"] if it.view is not None]
     n = len(views)
-    rows = "".join(_row(v, i) for i, v in enumerate(views))
-    cards = "".join(_card(v, i) for i, v in enumerate(views))
+    ids = getattr(catalog, "product_ids", None) or set()
+    rows = "".join(_row(v, i, ids) for i, v in enumerate(views))
+    cards = "".join(_card(v, i, ids) for i, v in enumerate(views))
     if has_data:
         msg, hint = "現在、条件を満たす利益商品はありません", "価格・在庫・売却条件を確認できた商品だけを表示します。"
         kind = "NO_ACTIVE"

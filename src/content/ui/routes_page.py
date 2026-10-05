@@ -71,7 +71,7 @@ def _evidence(v: RouteView) -> str:
     return v.sell_type_label
 
 
-def _details(v: RouteView) -> str:
+def _details(v: RouteView, pd_ids: set | None = None) -> str:
     """利益の内訳（売値から順に引く）と、根拠・確認時刻。"""
     lines = [("想定売値", _yen(v.sell_price)), ("売値の根拠", _evidence(v)),
              ("− 仕入価格", "−" + _yen(v.buy_price)), ("仕入れ値の種類", v.buy_price_label),
@@ -90,12 +90,15 @@ def _details(v: RouteView) -> str:
         links = (f'<a class="nu-btn nu-btn--secondary nu-lrow__src" href="{esc(v.sell_url)}" target="_blank"'
                  f' rel="noopener nofollow" data-track="route_market_click">'
                  '売却先を見る</a>')
+    if pd_ids and v.product_id in pd_ids:
+        from src.content.ui import product_page
+        links += product_page.link(v.product_id)
     return (f'<details class="nu-ldetail" data-track="route_detail_open"><summary>詳細（内訳・根拠）'
             f'<span class="nu-sr">（{esc(v.product_name)}）</span></summary>'
             f'<dl class="nu-ldetail__dl">{body}</dl>{links}</details>')
 
 
-def _row(v: RouteView, idx: int) -> str:
+def _row(v: RouteView, idx: int, pd_ids: set | None = None) -> str:
     search = " ".join(x for x in (v.product_name, v.model, v.buy_source, v.sell_source) if x).lower()
     # 「更新が新しい」は古い方の確認時刻で並べる（ルートの鮮度は古い側で決まる）
     upd = min(_ms(v.buy_last_verified_at), _ms(v.sell_last_verified_at))
@@ -127,7 +130,7 @@ def _row(v: RouteView, idx: int) -> str:
         f'<span class="nu-lrow__val nu-profit">+{_yen(v.net_profit)}</span>'
         f'<span class="nu-lrow__sub">ROI {v.roi * 100:.1f}%</span></div>'
         f'<div class="nu-lrow__cta">{cta}</div>'
-        f'{_details(v)}'
+        f'{_details(v, pd_ids)}'
         '</article>'
     )
 
@@ -183,7 +186,8 @@ def render(catalog) -> str:
     refs = catalog.listing_refs
     n = len(routes)
     info = pages.PURPOSE_INFO["routes"]
-    rows = "".join(_row(v, i) for i, v in enumerate(routes))
+    ids = getattr(catalog, "product_ids", None) or set()
+    rows = "".join(_row(v, i, ids) for i, v in enumerate(routes))
     empty = (
         f'<div class="nu-empty" data-nu-tempty="none" role="status"{"" if not n else " hidden"}>'
         '<p class="nu-empty__msg">現在、成約価格を確認できる利益ルートはありません</p>'

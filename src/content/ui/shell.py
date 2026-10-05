@@ -13,6 +13,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from src.content.ui import account, home, lottery_page, navigation, opportunities_page, pages, parity, restock_page, routes_page
+from src.content.ui import product_detail, product_page
 from src.content.ui import catalog as cl
 from src.content.ui import categories as cats
 from src.content.ui import runtime as rt
@@ -40,6 +41,8 @@ class ShellContext:
     product_genres: dict | None = None  # product_id → products.genre（ジャンルの判定に使う）
     stock_history: dict | None = None   # 在庫の状態の履歴（exports/stock_history/latest.json）
     price_observations: list | None = None  # 正規化した価格の観測（出品価格の参考に使う）
+    products: list | None = None        # 商品の一覧（商品詳細。product_id・名前・ジャンル・メーカー・型番・公式の URL）
+    price_history: dict | None = None   # 実際に観測した価格の履歴（exports/price_history/latest.json）
 
 
 def _css() -> str:
@@ -91,6 +94,7 @@ def _router_script() -> str:
   // 「その他」から開くページでは、ボトムナビの「その他」を現在地にする
   var MORE_PAGES = ['more', 'routes', 'search', 'account'];
   var SITE = root.getAttribute('data-nu-site') || '';
+  var PD_ALIAS = jsonAttr('data-nu-pd-alias'), PD_TABS = ['buy', 'history', 'changes'];
   var DATA = {};
   try { DATA = JSON.parse((document.getElementById('nu-catalog') || {}).textContent || '{}'); } catch (e) { DATA = {}; }
 
@@ -179,6 +183,12 @@ def _router_script() -> str:
     var now = Date.now();
     root.querySelectorAll('[data-nu-time]').forEach(function(el){
       var txt = relTime(el.getAttribute('data-nu-time'), now);
+      // 商品詳細は相対の時刻に絶対の時刻を添える（例: 21分前確認（本日 13:32））
+      if (txt && el.hasAttribute('data-nu-time-both') && /分前確認$/.test(txt)) {
+        var p = parts(Date.parse(el.getAttribute('data-nu-time'))), n = parts(now);
+        var same = p.year === n.year && p.month === n.month && p.day === n.day;
+        txt += '（' + (same ? '本日 ' : p.month + '/' + p.day + ' ') + p.hour + ':' + p.minute + '）';
+      }
       if (txt) el.textContent = txt;
     });
   }
@@ -625,6 +635,86 @@ def _router_script() -> str:
     if (term && form && form.hidden) { form.hidden = false; if (tog) tog.setAttribute('aria-expanded', 'true'); }
     if (input && document.activeElement !== input) input.value = q.get('q') || '';
   }
+  // 商品詳細: URL の product_id（旧来の別名 ps5_pro なども受け付ける）の1件だけを出す。タブは URL の tab
+  function productId(q) {
+    var p = (q.get('product_id') || '').trim();
+    return PD_ALIAS[p] || PD_ALIAS[p.replace(/^prod_/, '')] || p;
+  }
+  function renderProduct(q) {
+    var sec = root.querySelector('[data-nu-page="product"]');
+    if (!sec) return null;
+    var pid = productId(q), found = null, now = Date.now();
+    sec.querySelectorAll('[data-nu-pd]').forEach(function(a){
+      var on = !!pid && a.getAttribute('data-nu-pd') === pid;
+      a.hidden = !on;
+      if (on) found = a;
+    });
+    var miss = sec.querySelector('[data-nu-pd-missing]');
+    if (miss) miss.hidden = !!found;
+    if (!found) return null;
+    var tab = PD_TABS.indexOf(q.get('tab')) >= 0 ? q.get('tab') : 'buy';
+    found.querySelectorAll('[data-nu-pdtab]').forEach(function(b){
+      var on = b.getAttribute('data-nu-pdtab') === tab, panel = document.getElementById(b.getAttribute('aria-controls'));
+      b.setAttribute('aria-selected', on ? 'true' : 'false');
+      b.tabIndex = on ? 0 : -1;
+      if (panel) panel.hidden = !on;
+    });
+    // 在庫ありと言える期限（確認から一定時間）を過ぎたら、「購入可能」「購入する」と言わない
+    found.querySelectorAll('[data-nu-pd-until]').forEach(function(el){
+      if (now < +el.getAttribute('data-nu-pd-until')) return;
+      el.textContent = el.getAttribute('data-nu-pd-stale-text') || '';
+      var cls = el.getAttribute('data-nu-pd-stale-class');
+      if (cls) el.className = cls;
+      if (el.hasAttribute('data-nu-pd-status')) {
+        el.setAttribute('data-nu-pd-status', 'STOCK_UNKNOWN');
+        el.className = 'nu-badge nu-tone-neutral';
+      }
+      el.removeAttribute('data-nu-pd-until');
+    });
+    // 今の状態: 購入可能でなければ、受付中などの抽選・予約（閲覧時の判定 NuLotteryRuntime）を出す
+    var st = found.querySelector('[data-nu-pd-status]');
+    if (st && st.getAttribute('data-nu-pd-status') !== 'AVAILABLE') {
+      var lots = Array.prototype.slice.call(found.querySelectorAll('[data-nu-lot]')).filter(function(c){
+        return +c.getAttribute('data-nu-bucket') < 99; });
+      lots.sort(function(a, b){ return +a.getAttribute('data-nu-bucket') - +b.getAttribute('data-nu-bucket')
+        || +a.getAttribute('data-nu-sort') - +b.getAttribute('data-nu-sort'); });
+      if (lots.length) {
+        if (!st.hasAttribute('data-nu-pd-base')) st.setAttribute('data-nu-pd-base', st.textContent);
+        var badge = lots[0].querySelector('.nu-badge');
+        st.textContent = badge ? badge.textContent.trim() : st.textContent;
+        st.className = badge ? badge.className : st.className;
+      } else {
+        // 受付中などの抽選・予約が無い（締め切られた）ときは、在庫などから決めた状態に戻す
+        st.textContent = st.getAttribute('data-nu-pd-fallback') || st.textContent;
+        st.className = 'nu-badge nu-tone-' + (st.getAttribute('data-nu-pd-fallback-tone') || 'neutral');
+      }
+    }
+    return found;
+  }
+  // 商品を検索: キーワード（q）とジャンル（category）で商品の一覧を絞り込む
+  function renderSearch(q, cat) {
+    var sec = root.querySelector('[data-nu-page="search"]');
+    if (!sec) return;
+    var term = (q.get('q') || '').trim().toLowerCase(), shown = 0;
+    var inp = sec.querySelector('[data-nu-search-input]');
+    if (inp && document.activeElement !== inp) inp.value = q.get('q') || '';
+    sec.querySelectorAll('[data-nu-srow]').forEach(function(li){
+      var ok = (cat === 'all' || li.getAttribute('data-nu-cat') === cat)
+        && (!term || (li.getAttribute('data-search') || '').indexOf(term) >= 0);
+      li.hidden = !ok;
+      if (ok) shown++;
+    });
+    var res = sec.querySelector('[data-nu-sresult]');
+    if (res) res.textContent = shown + '件';
+    var empty = sec.querySelector('[data-nu-sempty]');
+    if (empty) empty.hidden = shown > 0;
+    // ジャンルを切り替えても検索語を保つ
+    sec.querySelectorAll('a[data-nu-switch]').forEach(function(a){
+      if (!a.hasAttribute('data-nu-sbase')) a.setAttribute('data-nu-sbase', a.getAttribute('href'));
+      var base = a.getAttribute('data-nu-sbase'), raw = (q.get('q') || '').trim();
+      a.setAttribute('href', raw ? base + (base.indexOf('?') >= 0 ? '&' : '?') + 'q=' + encodeURIComponent(raw) : base);
+    });
+  }
   function render(moveFocus) {
     var stockNext = stockRuntime(Date.now());
     var page = currentPage(), cat = currentCat(), lot = lotteryCounts(), rs = restockCounts();
@@ -674,6 +764,8 @@ def _router_script() -> str:
     renderLot(q, cat);
     renderRestock(q, cat);
     renderRoutes(q, cat);
+    var pdShown = renderProduct(q);
+    renderSearch(q, cat);
     renderTimes();
     renderRTimes(Date.now());
     STOCK_NEXT = stockNext;
@@ -705,10 +797,13 @@ def _router_script() -> str:
     var mode = q.get('mode') === 'pro' ? '詳細' : 'かんたん';
     root.querySelectorAll('[data-nu-mode-label]').forEach(function(el){ el.textContent = mode; });
     var label = page === 'home' ? (cat === 'all' ? (TITLES.home || 'HOME') : (CATS[cat] || ''))
+              : page === 'product' ? (pdShown ? pdShown.getAttribute('data-nu-pd-name') : '商品が見つかりません')
               : (cat === 'all' ? '' : (CATS[cat] || '') + 'の') + (TITLES[page] || '');
     document.title = label + ' | ' + SITE;
     var focusId = q.get('focus') === 'operator' ? 'nu-operator' : '';
     var target = focusId ? document.getElementById(focusId)
+               : page === 'product' ? (pdShown ? pdShown.querySelector('h1')
+                                       : root.querySelector('[data-nu-pd-missing] h1'))
                : root.querySelector('[data-nu-page="' + page + '"] h1');
     if (moveFocus && target) {
       if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
@@ -725,6 +820,8 @@ def _router_script() -> str:
     var a = e.target.closest('a[href^="?ui=new"]');
     if (!a || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
     e.preventDefault();
+    // 商品詳細の「戻る」: 一覧から来たときは履歴を戻る（ジャンル・絞り込み・並べ替え・ページを URL ごと戻す）
+    if (a.hasAttribute('data-nu-back') && history.state && history.state.nuFrom) { history.back(); return; }
     var href = a.getAttribute('href'), i = href.indexOf('#');
     var next = new URLSearchParams((i >= 0 ? href.slice(0, i) : href).slice(1));
     var cur = new URLSearchParams(location.search);
@@ -732,7 +829,9 @@ def _router_script() -> str:
     if (cur.get('mode') && !next.get('mode')) next.set('mode', cur.get('mode'));
     var before = currentPage();
     var url = location.pathname + '?' + next.toString() + (i >= 0 ? href.slice(i) : '');
-    if (url !== location.pathname + location.search + location.hash) history.pushState(null, '', url);
+    // 商品詳細へ入るときは、戻り先があることを履歴に残す（「戻る」で一覧の状態に戻すため）
+    var state = (next.get('page') === 'product' && before !== 'product') ? {nuFrom: before} : null;
+    if (url !== location.pathname + location.search + location.hash) history.pushState(state, '', url);
     var after = render(before !== currentPage());
     if (i >= 0) scrollToHash();
     else if (before !== after) window.scrollTo(0, 0);
@@ -740,6 +839,27 @@ def _router_script() -> str:
       var sec = root.querySelector('[data-nu-page="' + after + '"]');
       if (sec) sec.scrollIntoView({block: 'start'});
     }
+  });
+  // 商品詳細のタブ（URL の tab を書き換える。履歴は増やさない）。左右の矢印キーで隣のタブへ
+  function selectPdTab(btn, focus) {
+    var u = new URLSearchParams(location.search), k = btn.getAttribute('data-nu-pdtab');
+    if (k === 'buy') u.delete('tab'); else u.set('tab', k);
+    history.replaceState(history.state, '', location.pathname + '?' + u.toString());
+    render(false);
+    if (focus) btn.focus();
+  }
+  root.addEventListener('click', function(e){
+    var b = e.target.closest('[data-nu-pdtab]');
+    if (b) selectPdTab(b, false);
+  });
+  root.addEventListener('keydown', function(e){
+    var b = e.target.closest('[data-nu-pdtab]');
+    if (!b || ['ArrowLeft', 'ArrowRight', 'Home', 'End'].indexOf(e.key) < 0) return;
+    var tabs = Array.prototype.slice.call(b.parentNode.querySelectorAll('[data-nu-pdtab]')), i = tabs.indexOf(b);
+    var j = e.key === 'Home' ? 0 : e.key === 'End' ? tabs.length - 1
+          : (i + (e.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length;
+    e.preventDefault();
+    selectPdTab(tabs[j], true);
   });
   // 詳細を1段だけ開く・閉じる（aria-expanded）
   root.addEventListener('click', function(e){
@@ -818,6 +938,25 @@ def _router_script() -> str:
     if (!a.isConnected || a.getAttribute('data-nu-cta') !== 'apply') e.preventDefault();
   }
   root.addEventListener('click', guardApply, true);
+  // 商品詳細の「購入する」も、押した瞬間に在庫ありと言える期限を確かめ直す（過ぎていれば開かずに表示を落とす）
+  function guardPdBuy(e){
+    var a = e.target.closest('a[data-nu-pd-until]');
+    if (!a || Date.now() < +a.getAttribute('data-nu-pd-until')) return;
+    e.preventDefault();
+    render(false);
+  }
+  root.addEventListener('click', guardPdBuy, true);
+  // 主要な数値から利益の根拠へ（同じページの中。URL は変えない。買う・売るのタブに切り替えてから移る）
+  root.addEventListener('click', function(e){
+    var j = e.target.closest('[data-nu-pd-jump]');
+    if (!j) return;
+    e.preventDefault();
+    var art = j.closest('[data-nu-pd]'), b = art && art.querySelector('[data-nu-pdtab="buy"]');
+    if (b && b.getAttribute('aria-selected') !== 'true') selectPdTab(b, false);
+    var t = document.getElementById(j.getAttribute('data-nu-pd-jump'));
+    if (t) { t.scrollIntoView({block: 'start'}); t.focus({preventScroll: true}); }
+  });
+  root.addEventListener('auxclick', guardPdBuy, true);
   root.addEventListener('auxclick', guardApply, true);   // 中クリック（新しいタブで開く）
   applyLegacyHash();
   render(false);
@@ -836,7 +975,8 @@ def _brand(title: str) -> str:
 
 
 PAGE_TITLES = {"home": "HOME", "opportunities": "利益商品", "lottery": "抽選・予約", "restock": "在庫再開",
-               "routes": "せどりルート", "more": "メニュー", "search": "商品を検索", "account": "運営者向け"}
+               "routes": "せどりルート", "more": "メニュー", "search": "商品を検索", "account": "運営者向け",
+               "product": "商品詳細"}
 
 
 def build_catalog(ctx: ShellContext):
@@ -854,6 +994,11 @@ def build_catalog(ctx: ShellContext):
 def render_root(ctx: ShellContext) -> str:
     import json
     model, catalog = build_catalog(ctx)
+    # 商品詳細（product_id ごと）。一覧からのリンクは、詳細のある商品にだけ付ける
+    details = product_detail.build(products=ctx.products, catalog=catalog, observations=ctx.price_observations,
+                                   price_history=ctx.price_history, stock_history=ctx.stock_history, now=model.now)
+    catalog.product_ids = set(details)
+    pd_alias = {v.alias: pid for pid, v in details.items()}
     # 情報そのものがあるか（無ければ「まだ情報がありません」。あるが対象が無ければ「今はありません」）
     has_data = bool(model.has_data or ctx.profit_deals)
     rows = (parity.build(model, ctx.tcg_report, ctx.old_ui_counts)
@@ -869,8 +1014,9 @@ def render_root(ctx: ShellContext) -> str:
         + restock_page.render(catalog, now=model.now)
         + routes_page.render(catalog)
         + pages.render_more(catalog)
-        + pages.render_search()
+        + pages.render_search(details)
         + account.render()
+        + product_page.render(details)
     )
     brand = esc(_brand(ctx.site_title))
     cats_json = json.dumps({c.key: c.label for c in cats.CATEGORIES}, ensure_ascii=False)
@@ -878,7 +1024,8 @@ def render_root(ctx: ShellContext) -> str:
         # hidden: CSS を使わない読み手にも、旧UIより先に新UIの本文を見せない（?ui=new のとき JS で外す）
         f'<div id="{ROOT_ID}" hidden data-nu-site="{brand}" '
         f"data-nu-map='{esc(navigation.legacy_map_json())}' "
-        f"data-nu-cats='{esc(cats_json)}' data-nu-titles='{esc(json.dumps(PAGE_TITLES, ensure_ascii=False))}'>"
+        f"data-nu-cats='{esc(cats_json)}' data-nu-titles='{esc(json.dumps(PAGE_TITLES, ensure_ascii=False))}' "
+        f"data-nu-pd-alias='{esc(json.dumps(pd_alias, ensure_ascii=False))}'>"
         '<a class="nu-skip" href="#nu-main">本文へ移動</a>'
         '<header class="nu-header"><div class="nu-header__inner">'
         f'<a class="nu-brand" href="{esc(navigation.page_href("home"))}" data-nu-nav-brand aria-label="{brand} HOME">'

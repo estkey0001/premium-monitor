@@ -28,6 +28,7 @@ from src.market import price_evidence as _pe  # noqa: E402
 from src.market import price_types as _pt  # noqa: E402
 # 確定・参考として出してよいかの判定は新UIの正本（src/content/ui/opportunity.py）をそのまま使う（二重に書かない）
 from src.content.ui import opportunity as _opp  # noqa: E402
+from src.utils.atomic_write import write_json_atomic  # noqa: E402
 
 JST = timezone(timedelta(hours=9))
 NPO_PATH = PROJECT_ROOT / "exports" / "normalized_price_observations" / "latest.json"
@@ -374,6 +375,9 @@ def main() -> int:
                 "buy_candidates": len(buys), "sell_candidates": len(sells),
                 "min_usable_buy": mb, "min_usable_buy_source": (min_buy["source_name"] if min_buy else ""),
                 "max_usable_sell": ms, "max_usable_sell_source": (max_sell["source_name"] if max_sell else ""),
+                # 商品の照合が済んでいる価格か（済んでいなければ表示で「参考・商品照合未完了」と書く）
+                "min_usable_buy_identity_verified": bool(min_buy and min_buy.get("is_exact_product_match") is True),
+                "max_usable_sell_identity_verified": bool(max_sell and max_sell.get("is_exact_product_match") is True),
                 "target_buy_price": target_buy_price,
                 "gross_gap": gross, "net_domestic": net_dom,
                 "best_reference_net": (best_ref["net_profit"] if best_ref else None),
@@ -437,6 +441,10 @@ def main() -> int:
         for i, (k, v) in enumerate(_prio_rank)
     ]
 
+    # ルートの識別子（AI・資金配分・実行の記録・通知で同じルートかを照合する。正本は opportunity.route_key）
+    for r in main_routes + ref_routes + excluded_routes:
+        r["route_id"] = _opp.route_key(r)
+
     by_product = Counter(r["product_name"] for r in main_routes)
     by_conf = Counter(r["route_confidence"] for r in main_routes)
     by_rtype = Counter(r["route_type"] for r in main_routes)
@@ -462,7 +470,8 @@ def main() -> int:
         "zero_route_diagnostics": zero_diag,
     }
     OUT_DIR.mkdir(parents=True, exist_ok=True)
-    (OUT_DIR / "latest.json").write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+    # 一時ファイルに書いてから置き換える（書き込みの途中で失敗しても前回のファイルを壊さない）
+    write_json_atomic(OUT_DIR / "latest.json", payload)
     _write_md(OUT_DIR / "latest.md", payload, now)
     print(f"  main利益ルート: {len(main_routes)} / 参考ルート(海外sold stale): {len(ref_routes)} "
           f"/ 条件未達で除外: {len(excluded_routes)} / 0件商品: {len(zero_diag)}")

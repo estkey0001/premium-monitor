@@ -16,6 +16,7 @@ from src.db.repository import Repository
 from src.models.beginner_deal import BeginnerDealModel, DEFAULT_COSTS
 from src.models.buyback_price import BuybackPriceModel, BUYBACK_SHOPS, CONDITION_LABELS
 from src.models.product import ProductModel
+from src.market import official_shipping as _official_shipping
 from src.market.stock_state import is_explicit_in_stock as _is_explicit_in_stock
 from src.market.stock_state import sale_method_of as _sale_method_of
 
@@ -381,6 +382,8 @@ class BeginnerDealScanner:
             + c["insurance_jpy"]
             + int(official_price * c["cc_fee_rate"])
         )
+        # 公式の購入送料（一次情報で確認したものだけ。分からない購入元は足さず、確定の判定で外す）
+        total += _official_shipping.known_fee(product.id, self._get_official_url(product), official_price)
         return total
 
     # ===== スコア計算 =====

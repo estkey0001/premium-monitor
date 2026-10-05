@@ -18,6 +18,11 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+# 判定の正本（src/content/ui/opportunity.py）を読むため
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+from src.content.ui import opportunity as _opp  # noqa: E402
+from src.utils.atomic_write import write_json_atomic  # noqa: E402
 JST = timezone(timedelta(hours=9))
 NOW = datetime.now(tz=JST)
 OUT = ROOT / "exports" / "allocation"
@@ -75,9 +80,13 @@ def _liquidity_score(o: dict) -> int:
     return max(0, min(100, base))
 
 
-def build_opportunity_metrics(ai: dict, meta: dict) -> list[dict]:
+def build_opportunity_metrics(ai: dict, meta: dict, route_keys: dict | None = None) -> list[dict]:
+    """AI の候補から資金配分の指標を作る。route_keys を渡したときは、今のルート（新UIと同じ判定を通った確定・参考）
+    から作られた候補だけを使う（route_id で照合。古い AI のファイルの候補を配分に使わない）。"""
     ops = []
     for o in ai.get("todays_opportunities", []):
+        if route_keys is not None and not _opp.record_route_ok(o, route_keys):
+            continue
         net = o.get("net_profit", 0)
         prob = (o.get("success_probability", 0) or 0) / 100
         buy = o.get("buy_price", 0) or 0
@@ -86,6 +95,7 @@ def build_opportunity_metrics(ai: dict, meta: dict) -> list[dict]:
         genre, brand = meta.get(o.get("product_id", ""), ("other", "other"))
         ops.append({
             "product": o.get("product"), "product_id": o.get("product_id"),
+            "route_id": o.get("route_id", ""),
             "action": o.get("action"), "kind": o.get("kind"),
             "buy_price": buy, "net_profit": net, "roi": o.get("roi", 0),
             "success_probability": o.get("success_probability", 0),
@@ -107,7 +117,7 @@ def allocate(budget: int, ops: list[dict]) -> dict:
     # 実行可能=国内で今買える main（net>0、action BUY/ALERT/WAITだが価格が現存）。
     # reference（海外更新待ち）や PASS は「待機」。
     actionable = [o for o in ops if o["kind"] == "main" and o["net_profit"] > 0 and o["buy_price"] > 0]
-    waiting = [{"product": o["product"], "reason": (
+    waiting = [{"product": o["product"], "route_id": o.get("route_id", ""), "kind": o.get("kind"), "reason": (
         "海外価格更新待ち（eBay sold）" if o["kind"] == "reference"
         else "利益条件未達（PASS）" if o["action"] == "SKIP" else "実行可能価格なし")}
         for o in ops if o not in actionable]
@@ -132,11 +142,13 @@ def allocate(budget: int, ops: list[dict]) -> dict:
         max_units = min(rem_invest, rem_prod, rem_cat, rem_maker, rem_hold) // price
         units = int(max(0, max_units))
         if units <= 0:
-            waiting.append({"product": o["product"], "reason": "予算/集中リスク制約で配分なし"})
+            waiting.append({"product": o["product"], "route_id": o.get("route_id", ""), "kind": o.get("kind"),
+                            "reason": "予算/集中リスク制約で配分なし"})
             continue
         total = units * price
         allocations.append({
-            "product": o["product"], "product_id": o["product_id"], "units": units,
+            "product": o["product"], "product_id": o["product_id"], "route_id": o.get("route_id", ""),
+            "units": units,
             "unit_price": price, "total": total,
             "expected_profit": units * o["net_profit"],
             "expected_value": units * o["expected_value"],
@@ -177,7 +189,9 @@ def main() -> int:
 
     ai = _load("exports/ai_opportunities/latest.json")
     meta = _meta()
-    ops = build_opportunity_metrics(ai, meta)
+    # 今の利益ルート（新UIと同じ判定）と route_id で照合した候補だけを配分に使う
+    keys = _opp.current_route_keys(_load("exports/profit_routes/latest.json"), NOW)
+    ops = build_opportunity_metrics(ai, meta, keys)
 
     budgets = list(DEFAULT_BUDGETS)
     if args.budget and args.budget not in budgets:
@@ -196,7 +210,7 @@ def main() -> int:
         "plans": plans,                       # What-If: 予算別に即時参照可能
     }
     OUT.mkdir(parents=True, exist_ok=True)
-    (OUT / "latest.json").write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+    write_json_atomic(OUT / "latest.json", payload)    # 書き込みの途中で失敗しても前回のファイルを壊さない
     _write_md(payload)
     dp = plans[str(payload["default_budget"])]
     print(f"  予算¥{payload['default_budget']:,}: 配分 {len(dp['allocations'])}商品 / "

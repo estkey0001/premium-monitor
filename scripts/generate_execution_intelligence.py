@@ -11,6 +11,7 @@
 """
 from __future__ import annotations
 
+import hashlib
 import json
 import sqlite3
 from collections import defaultdict
@@ -18,6 +19,18 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+# 判定の正本（src/content/ui/opportunity.py）を読むため
+import sys  # noqa: E402
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+from src.content.ui import opportunity as _opp  # noqa: E402
+from src.utils.atomic_write import write_json_atomic  # noqa: E402
+
+# 記録の状態。INVALIDATED は「当時の値で作られたが、今のルートの判定で確かめられない（無効と分かった）」記録。
+# 履歴として残し、成功率・件数・期待利益などの集計には入れない（CANCELLED は見送りの結果で、成功率の分母に入る）
+INVALIDATED = "INVALIDATED"
+CLOSED_STATUSES = ("SUCCESS", "FAILED", "CANCELLED")
+VALIDATION_VERSION = "phase5.2-route-id"
 JST = timezone(timedelta(hours=9))
 NOW = datetime.now(tz=JST)
 OUT = ROOT / "exports" / "execution"
@@ -59,8 +72,16 @@ def main() -> int:
     # ── Task1: execution_history（予測を記録・実績台帳で close）──
     hist = _load("exports/execution/execution_history.json", default={"executions": []})
     existing = {e["exec_id"]: e for e in hist.get("executions", [])}
+    # 今の利益ルート（新UIと同じ判定を通った確定・参考）の識別子。記録はルート単位（route_id）で照合する
+    keys = _opp.current_route_keys(_load("exports/profit_routes/latest.json"), NOW)
     for o in ai.get("todays_opportunities", []):
-        exid = f"{NOW.strftime('%Y-%m-%d')}_{o.get('product_id')}_{o.get('action')}"
+        # 古い AI のファイルに残った候補（今のルートと照合できないもの）から新しい記録を作らない
+        if not _opp.record_route_ok(o, keys):
+            continue
+        # 記録の ID はルート単位（同じ日・同じ商品・同じ action でも、仕入れ先・売却先が違えば別の記録）
+        ident = _opp.identity_of_route_id(o.get("route_id", ""))
+        exid = (f"{NOW.strftime('%Y-%m-%d')}_{o.get('product_id')}_{o.get('action')}_"
+                f"{hashlib.sha1(ident.encode('utf-8')).hexdigest()[:8]}")
         g, b = meta.get(o.get("product_id", ""), ("other", "other"))
         if exid not in existing:
             existing[exid] = {
@@ -70,17 +91,25 @@ def main() -> int:
                 "predicted_probability": o.get("success_probability"),
                 "predicted_net": o.get("net_profit"), "category": g, "maker": b,
                 "status": "OPEN", "realized_profit": None, "realized_roi": None, "hold_days": None,
+                "route_id": o.get("route_id", ""), "route_identity": ident, "kind": o.get("kind", ""),
             }
-    # 台帳の実績を最新の該当 execution に反映（product_id + action 一致、無ければ product_id）
-    outcome_by_pid = {}
-    for oc in ledger:
-        outcome_by_pid.setdefault(oc["product_id"], []).append(oc)
+    # 台帳の実績は、記録の ID（exec_id）が一致する1件にだけ反映する（1件の実績を複数の記録に当てない）。
+    # 商品単位・ルート単位では当てない（同じ商品・同じルートの別の日の記録に結果を流用しない）。
+    # サンプルの結果（note が "sample" で始まる）は実際の取引ではないので反映しない。
+    # 無効にした記録（INVALIDATED）でも、その記録の実績が台帳にあれば反映する（取引した事実を残す）
+    real_ledger = {oc["exec_id"]: oc for oc in ledger
+                   if oc.get("exec_id") and not str(oc.get("note") or "").startswith("sample")}
+    _no_id = [oc for oc in ledger if not oc.get("exec_id") and not str(oc.get("note") or "").startswith("sample")]
+    if _no_id:
+        print(f"  [WARN] 台帳に exec_id の無い実績が {len(_no_id)} 行あり、反映していません"
+              f"（data/manual_execution_outcomes.json。exec_id が必須）")
     for exid, e in existing.items():
-        if e["status"] != "OPEN":
+        if e["status"] not in ("OPEN", INVALIDATED):
             continue
-        cands = outcome_by_pid.get(e["product_id"], [])
-        match = next((c for c in cands if c.get("action") == e["action"]), cands[0] if cands else None)
+        match = real_ledger.get(exid)
         if match:
+            if e["status"] == INVALIDATED:
+                e["closed_after_invalidated"] = True
             e["status"] = match["status"]
             e["realized_profit"] = match.get("realized_profit")
             e["realized_roi"] = match.get("realized_roi")
@@ -89,8 +118,24 @@ def main() -> int:
                 e["predicted_probability"] = match["predicted_probability"]
             e["closed_date"] = NOW.strftime("%Y-%m-%d")
             e["note"] = match.get("note", "")
+    # 今のルート（価格を含めない同一性）で確かめられない OPEN の記録は INVALIDATED にする
+    # （削除しない。予想利益などの値も書き換えない）。価格が動いただけなら同じルートなので OPEN のまま。
+    # route_identity の無い記録（判定の導入前に作られた記録）は、どのルートから作られたかを確かめられないので無効にする
+    for e in existing.values():
+        if e.get("status") != "OPEN" or _opp.record_route_alive(e, keys):
+            continue
+        e["status"] = INVALIDATED
+        e["invalidated_at"] = NOW.isoformat(timespec="seconds")
+        e["invalidated_reason"] = ("route_not_current（記録のルートが今の確定・参考ルートにない）"
+                                   if e.get("route_identity")
+                                   else "route_identity_missing（判定の導入前の記録。どのルートから作られたか確かめられない）")
+        e["validation_version"] = VALIDATION_VERSION
     executions = list(existing.values())
-    closed = [e for e in executions if e["status"] in ("SUCCESS", "FAILED", "CANCELLED")]
+    # 集計に入れるのは実際の結果だけ（無効にした記録・サンプルの結果を当てた過去の記録は入れない）
+    sample_closed = [e for e in executions
+                     if e["status"] in CLOSED_STATUSES and str(e.get("note") or "").startswith("sample")]
+    closed = [e for e in executions
+              if e["status"] in CLOSED_STATUSES and not str(e.get("note") or "").startswith("sample")]
     succeeded = [e for e in closed if e["status"] == "SUCCESS"]
 
     # ── Task2: Execution Metrics（商品/カテゴリ/メーカー）──
@@ -129,6 +174,9 @@ def main() -> int:
         try:
             hd = json.loads(hp.read_text(encoding="utf-8"))
             for ev in hd.get("events", []):
+                # 確定ルートの判定を通った通知だけを数える（印の無い過去の通知は参考・条件未達のルート由来のことがある）
+                if not ev.get("route_checked"):
+                    continue
                 total_notif += 1
                 if ev.get("type") == "WATCH_TO_BUY":
                     w2b += 1; buy_notif += 1
@@ -145,8 +193,9 @@ def main() -> int:
     dbg = str(alloc.get("default_budget"))
     dplan = (alloc.get("plans", {}) or {}).get(dbg, {})
     alloc_expected = dplan.get("expected_profit", 0)
-    alloc_products = {a["product"] for a in dplan.get("allocations", [])}
-    alloc_realized = sum(e.get("realized_profit") or 0 for e in closed if e["product"] in alloc_products)
+    # 配分した記録との照合はルート単位（route_id）。商品名では照合しない
+    alloc_routes = {a.get("route_id") for a in dplan.get("allocations", []) if a.get("route_id")}
+    alloc_realized = sum(e.get("realized_profit") or 0 for e in closed if e.get("route_id") in alloc_routes)
     alloc_accuracy = {
         "budget": alloc.get("default_budget"), "allocated_expected_profit": alloc_expected,
         "realized_profit_of_allocated": alloc_realized,
@@ -179,6 +228,9 @@ def main() -> int:
         "generated_at": NOW.strftime("%Y-%m-%d %H:%M JST"),
         "open_count": sum(1 for e in executions if e["status"] == "OPEN"),
         "closed_count": len(closed), "success_count": len(succeeded),
+        "invalidated_count": sum(1 for e in executions if e["status"] == INVALIDATED),
+        "sample_excluded_count": len(sample_closed),
+        "validation_version": VALIDATION_VERSION,
         "execution_success_rate": real_rate,
         "prediction_accuracy": pred_accuracy,
         "notification_accuracy": notif_accuracy,
@@ -188,9 +240,9 @@ def main() -> int:
         "insights_top10": insights,
     }
     OUT.mkdir(parents=True, exist_ok=True)
-    (OUT / "execution_history.json").write_text(
-        json.dumps({"executions": executions}, ensure_ascii=False, indent=2), encoding="utf-8")
-    (OUT / "latest.json").write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+    # 一時ファイルに書いてから置き換える（書き込みの途中で失敗しても前回のファイルを壊さない）
+    write_json_atomic(OUT / "execution_history.json", {"executions": executions})
+    write_json_atomic(OUT / "latest.json", payload)
     _write_md(payload)
     _write_weekly(payload)
     print(f"  実行: OPEN {payload['open_count']} / CLOSED {len(closed)}（成功{len(succeeded)}）")

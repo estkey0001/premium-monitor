@@ -7291,6 +7291,36 @@ def _check_data_correctness() -> list[dict]:
         _add(829, "main_routes_pass_canonical_gate", _gen_at is not None and not unsafe,
              "確定ルートは新UIと同じ判定（商品の照合・状態・URL・費用・内訳）を通っている（旧UIと新UIの安全基準が一致）",
              f"判定を通らない確定ルート: {unsafe[:3]}" if unsafe else "profit_routes の generated_at が読めない")
+        # #830 利益ルートから作った成果物（AI の候補・資金配分・実行履歴の OPEN・通知）が、今の確定・参考ルート
+        #   （route_id・新UIと同じ判定）から作られている。無効になったルートが別の成果物経由で復活していない
+        if _gen_at is not None:
+            _keys = _opp829.current_route_keys(pr, _gen_at)
+
+            def _art(rel):
+                p = PROJECT_ROOT / rel
+                try:
+                    return _json.loads(p.read_text(encoding="utf-8")) if p.exists() else {}
+                except ValueError:
+                    return {}
+            _ai = _art("exports/ai_opportunities/latest.json")
+            _al = _art("exports/allocation/latest.json")
+            _ex = _art("exports/execution/execution_history.json")
+            _nt = _art("exports/notifications/latest.json")
+            stale = []
+            stale += [f"AI:{o.get('product_id')}" for o in (_ai.get("todays_opportunities") or [])
+                      if not _opp829.record_route_ok(o, _keys)]
+            for _b, _pl in ((_al.get("plans") or {}).items()):
+                stale += [f"資金配分{_b}:{a.get('product_id')}" for a in (_pl.get("allocations") or [])
+                          if not _opp829.record_route_ok(a, _keys)]
+            stale += [f"実行OPEN:{e.get('exec_id')}" for e in (_ex.get("executions") or [])
+                      if e.get("status") == "OPEN" and not _opp829.record_route_alive(e, _keys)]
+            stale += [f"通知:{e.get('type')}/{e.get('product_id')}" for e in (_nt.get("events") or [])
+                      if e.get("type") in _opp829.ROUTE_EVENT_TYPES
+                      and not (e.get("route_checked") and _opp829.record_route_ok(
+                          {"route_id": e.get("route_id"), "kind": "main"}, _keys))]
+            _add(830, "artifacts_follow_current_routes", not stale,
+                 "AI の候補・資金配分・実行の OPEN・通知は、今の確定・参考ルート（route_id）から作られている"
+                 "（無効になったルートを復活させていない）", f"今のルートと照合できない: {stale[:5]}")
     return out
 
 

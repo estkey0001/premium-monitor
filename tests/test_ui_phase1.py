@@ -45,7 +45,9 @@ DEAL = {"product_id": "prod_gr4", "title": "RICOH GR IV", "genre": "camera", "of
         "official_checked_at": "2026-09-01T10:00:00+09:00", "msrp_evidence": "VERIFIED_DATED",
         "stock_status": "在庫あり", "sale_method": "normal", "sell_shop": "フジヤカメラ", "sell_price": 240000,
         "sell_checked_at": "2026-10-02T12:00:00+09:00", "net_profit": 26400, "user_level": "beginner_easy",
-        "resale_sell": False, "href": "./?from=new#product-gr4"}
+        "resale_sell": False, "href": "./?from=new#product-gr4",
+        # 購入送料は確認済み（Phase 5.2。分からなければ確定にしない）
+        "purchase_shipping": 0, "purchase_shipping_status": "FREE_VERIFIED"}
 ROUTE = {"product_id": "prod_switch2", "product_name": "Nintendo Switch 2", "buy_source": "店A",
          "sell_source": "買取B", "buy_price": 49980, "sell_price": 60000, "net_profit": 5520, "roi": 0.11,
          "shipping_cost": 1500, "safety_margin": 3000, "platform_fee": 0, "payment_fee": 0, "fx_buffer": 0,
@@ -230,7 +232,7 @@ def test_listing_or_unconfirmed_sell_route_not_listed():
     assert 'data-nu-count="routes">0件' in root
 
 
-def test_profit_deals_exclude_unverified_msrp_and_resale():
+def test_profit_deals_exclude_unverified_msrp_and_resale(monkeypatch):
     """利益商品に出すのは、定価を確認済み・売り先が買取店・買取価格の確認が14日以内の案件だけ。
     生成側（_nu_profit_deals）は値を集めるだけで、判定は opportunity.eligibility。"""
     from types import SimpleNamespace
@@ -243,6 +245,11 @@ def test_profit_deals_exclude_unverified_msrp_and_resale():
                         "prod_x": pe.VERIFIED_DATED, "prod_y": pe.VERIFIED_DATED, "prod_old": pe.VERIFIED_DATED,
                         "prod_nodate": pe.VERIFIED_DATED}
     g._product_info = {}
+    # 購入送料は確認済みとする（Phase 5.2。テスト用の記録）
+    from src.market import official_shipping as osh
+    _ship = {"source": "test", "fee": 0, "status": osh.FREE_VERIFIED, "url": "https://example.com/s",
+             "checked_on": "2026-10-05"}
+    monkeypatch.setattr(osh, "PRODUCT_SHIPPING", {k: _ship for k in g._msrp_evidence})
 
     def deal(pid, net, shop="フジヤカメラ", level="beginner_easy", sell=240000):
         return SimpleNamespace(product_id=pid, product_name=pid, category="camera", net_profit_jpy=net,

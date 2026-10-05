@@ -150,7 +150,7 @@ def test_view_availability_types():
     base = {"product_id": "p", "title": "X", "genre": "camera", "official_price": 100000,
             "official_checked_at": _iso(days=30), "msrp_evidence": "VERIFIED_DATED", "sale_method": "normal",
             "sell_shop": "買取店A", "sell_price": 120000, "sell_checked_at": _iso(hours=1), "net_profit": 18200,
-            "user_level": "beginner_easy"}
+            "user_level": "beginner_easy", "purchase_shipping": 0, "purchase_shipping_status": "FREE_VERIFIED"}
     cases = [({"stock_status": "在庫あり", "stock_checked_at": _iso(days=1)}, "BUY_NOW"),
              ({"stock_status": "在庫あり", "stock_checked_at": ""}, "PROFIT_STOCK_UNKNOWN"),
              ({"stock_status": ""}, "PROFIT_STOCK_UNKNOWN"),
@@ -204,7 +204,7 @@ def _deal(pid, name, genre, off, sell, **kw):
     d = {"product_id": pid, "title": name, "genre": genre, "official_price": off,
          "official_checked_at": _iso(days=1), "msrp_evidence": "VERIFIED_DATED", "stock_status": "",
          "sale_method": "normal", "sell_shop": "買取店A", "sell_price": sell, "sell_checked_at": _iso(hours=1),
-         "net_profit": sell - off - 1800, "user_level": "beginner_easy"}
+         "net_profit": sell - off - 1800, "user_level": "beginner_easy", "purchase_shipping": 0, "purchase_shipping_status": "FREE_VERIFIED"}
     d.update(kw)
     return d
 

@@ -203,6 +203,13 @@ def from_deal(d: dict) -> OpportunityView:
                "href": str(d.get("href") or "")},
     )
     lines = _deal_cost_lines()
+    # 購入送料は公式の一次情報で確認したものだけ（src/market/official_shipping.py）。分からなければ None
+    # （0円とみなさない。費用が分からないので確定にしない＝せどりルートと同じ）
+    ship = d.get("purchase_shipping")
+    v.buy_shipping = _num(ship) if ship is not None else None
+    v.flags["purchase_shipping_status"] = str(d.get("purchase_shipping_status") or "UNKNOWN")
+    if v.buy_shipping:
+        lines = [("buy_shipping", "購入送料", v.buy_shipping)] + lines
     v.buy_required_cost = sum(a for k, _l, a in lines if k == "buy_required")
     v.sell_shipping = sum(a for k, _l, a in lines if k == "sell_shipping")
     v.sell_required_cost = sum(a for k, _l, a in lines if k == "sell_required")
@@ -304,11 +311,21 @@ def eligibility(v: OpportunityView, now: datetime) -> tuple[str, ...]:
         buy_age = _age_days(v.buy_checked_at, now)
         if buy_age is None or buy_age > MAX_AGE_DAYS or buy_age < -1:
             reasons.append("stale_buy_price")
-    # 費用が分からなければ純利益は「算出前」（0円とみなさない）
+    # 費用が分からなければ純利益は「算出前」（0円とみなさない）。
+    # 公式で定価で買う案件で、分からないのが購入送料だけのときは理由を分ける（参考差額の扱いを決めるため）
     if v.acquisition_cost is None or any(c is None for c in (v.sell_fee, v.sell_shipping, v.sell_required_cost)):
-        reasons.append("costs_unknown")
-    if not home.roi_ok(v.roi):
+        only_shipping = (v.kind == "official_to_buyback" and v.buy_shipping is None
+                         and v.buy_required_cost is not None
+                         and all(c is not None for c in (v.sell_fee, v.sell_shipping, v.sell_required_cost)))
+        reasons.append("purchase_shipping_unknown" if only_shipping else "costs_unknown")
+    # ROI の範囲は取得原価が分かるときだけ見る（分からないときは上の費用の理由で外れる。理由を重ねない）
+    if v.acquisition_cost is not None and not home.roi_ok(v.roi):
         reasons.append("roi_out_of_range")
+    # 費用がすべて分かっているのに、内訳（売値 − 取得原価 − 費用）と純利益が合わないものは出さない
+    # （購入送料などが純利益に入っていないと、利益が実際より大きく出るため。案件・ルートとも同じ）
+    if (v.acquisition_cost is not None and not v.breakdown_ok
+            and all(c is not None for c in (v.sell_fee, v.sell_shipping, v.sell_required_cost))):
+        reasons.append("breakdown_mismatch")
     # 案件ごとの除外（二次流通の売り先・監視中・疑わしい・参考扱いのルート）
     if v.flags.get("resale_sell"):
         reasons.append("resale_sell")
@@ -320,11 +337,6 @@ def eligibility(v: OpportunityView, now: datetime) -> tuple[str, ...]:
         if why:
             reasons.append(f"route_{why}")
         reasons.extend(route_identity_reasons(r))
-        # 費用がすべて分かっているのに、内訳（売値 − 取得原価 − 費用）と純利益が合わないものは出さない
-        # （購入送料などが純利益に入っていないと、利益が実際より大きく出るため）
-        if (v.acquisition_cost is not None and not v.breakdown_ok
-                and all(c is not None for c in (v.sell_fee, v.sell_shipping, v.sell_required_cost))):
-            reasons.append("breakdown_mismatch")
     return tuple(dict.fromkeys(reasons))
 
 
@@ -408,8 +420,14 @@ def route_reasons(r: dict, now: datetime) -> tuple[str, ...]:
 MSRP_REFERENCE_REASONS = frozenset(f"buy_{e.lower()}" for e in pe.ALL_EVIDENCE if not pe.is_profit_eligible(e))
 
 
+# 参考差額では、購入送料が分からないことも許す（確定利益ではないと明示して出すため）。
+# ただし定価の根拠が未確認の理由を少なくとも1つ含むときだけ（定価が確認済みで送料だけ不明の案件は参考差額にしない）
+_REFERENCE_DEAL_TOLERATED = MSRP_REFERENCE_REASONS | {"purchase_shipping_unknown"}
+
+
 def is_msrp_reference_only(reasons) -> bool:
-    return bool(reasons) and set(reasons) <= MSRP_REFERENCE_REASONS
+    rs = set(reasons or ())
+    return bool(rs & MSRP_REFERENCE_REASONS) and rs <= _REFERENCE_DEAL_TOLERATED
 
 
 # 参考ルートで許すのは、売却側の成約価格だけが未達の理由（古い・件数不足・集計値で成約中央値の条件を満たさない・
@@ -433,6 +451,72 @@ def confirmed_routes(routes, now: datetime) -> list[dict]:
 def reference_routes(routes, now: datetime) -> list[dict]:
     """参考ルートとして出せるものだけ。"""
     return [r for r in routes or [] if isinstance(r, dict) and not reference_route_reasons(r, now)]
+
+
+# ── ルートの識別子（成果物をまたいで同じルートかを照合する。商品名・商品 ID だけで照合しない） ──
+
+def route_key(r: dict) -> str:
+    """利益ルート（と、そこから作った AI の候補・資金配分・実行の記録）の識別子。
+
+    商品 ID・仕入れ先・売却先・仕入れ値と売値の種別・仕入れ値・売値が同じときだけ同じルートとする。
+    同じ商品に別の仕入れ先・売却先・価格のルートがあっても混同しない。項目が欠けていれば空文字（照合できない）。
+    """
+    if not isinstance(r, dict):
+        return ""
+    pid, bs, ss = (str(r.get(k) or "").strip() for k in ("product_id", "buy_source", "sell_source"))
+    bp, sp = _num(r.get("buy_price")), _num(r.get("sell_price"))
+    if not (pid and bs and ss and bp and sp):
+        return ""
+    return "|".join([pid, bs, ss, pt.canonical(r.get("buy_canonical_type")), pt.canonical(r.get("sell_canonical_type")),
+                     str(int(bp)), str(int(sp))])
+
+
+def route_identity(r: dict) -> str:
+    """ルートの同一性（価格を含めない）。商品 ID・仕入れ先・売却先・仕入れ値と売値の種別が同じなら同じルート。
+
+    価格が動いても同じルートとして扱う（実行の記録を無効にするか・結果をどの記録に当てるかに使う）。
+    表示する利益・価格が今のものかの照合には、価格を含む route_key を使う。
+    """
+    if not isinstance(r, dict):
+        return ""
+    pid, bs, ss = (str(r.get(k) or "").strip() for k in ("product_id", "buy_source", "sell_source"))
+    if not (pid and bs and ss):
+        return ""
+    return "|".join([pid, bs, ss, pt.canonical(r.get("buy_canonical_type")), pt.canonical(r.get("sell_canonical_type"))])
+
+
+def identity_of_route_id(route_id: str) -> str:
+    """route_key（価格つき）から価格を除いた同一性（route_identity と同じ形）。項目が足りなければ空文字。"""
+    parts = str(route_id or "").split("|")
+    return "|".join(parts[:5]) if len(parts) == 7 else ""
+
+
+def current_route_keys(profit_routes: dict | None, now: datetime) -> dict[str, set[str]]:
+    """今の利益ルートのうち、確定（main）・参考（reference）として出せるものの識別子（価格つき）と同一性（価格なし）。"""
+    pr = profit_routes if isinstance(profit_routes, dict) else {}
+    main = confirmed_routes(pr.get("main_routes"), now)
+    ref = reference_routes(pr.get("reference_routes"), now)
+    return {"main": {route_key(r) for r in main} - {""}, "reference": {route_key(r) for r in ref} - {""},
+            "main_identity": {route_identity(r) for r in main} - {""},
+            "reference_identity": {route_identity(r) for r in ref} - {""}}
+
+
+def record_route_ok(rec: dict, keys: dict[str, set[str]]) -> bool:
+    """成果物の1件（AI の候補・資金配分・通知など）が、今も出せるルートから作られたものか（route_id で照合）。"""
+    if not isinstance(rec, dict):
+        return False
+    rid = str(rec.get("route_id") or "")
+    kind = "reference" if rec.get("kind") == "reference" else "main"
+    return bool(rid) and rid in keys.get(kind, set())
+
+
+def record_route_alive(rec: dict, keys: dict[str, set[str]]) -> bool:
+    """実行の記録のルート（価格を含めない同一性）が、今も確定・参考ルートとしてあるか。"""
+    if not isinstance(rec, dict):
+        return False
+    ident = str(rec.get("route_identity") or "")
+    kind = "reference" if rec.get("kind") == "reference" else "main"
+    return bool(ident) and ident in keys.get(f"{kind}_identity", set())
 
 
 # 通知のうち利益ルートに由来する種類（確定ルートの判定を通ったものだけを出す）

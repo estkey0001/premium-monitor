@@ -43,7 +43,9 @@ def deal(pid, name, genre="camera", off=200000, sell=230000, *, net=None, stock=
             "msrp_evidence": ev, "stock_status": stock, "sale_method": "normal",
             "sell_shop": "買取店A", "sell_price": sell, "sell_checked_at": checked or _iso(hours=1),
             "net_profit": (sell - off - 1800) if net is None else net, "user_level": level, "resale_sell": resale,
-            "official_url": "https://www.apple.com/jp/shop/", "sell_url": "https://kaitori.example.jp/item/1"}
+            "official_url": "https://www.apple.com/jp/shop/", "sell_url": "https://kaitori.example.jp/item/1",
+            # 購入送料は確認済み（Phase 5.2。分からなければ確定にしない）
+            "purchase_shipping": 0, "purchase_shipping_status": "FREE_VERIFIED"}
 
 
 def route(pid, name, sell_type="BUYBACK_CASH", *, samples=None, period="", buy=60000, sell=78000, **kw):
@@ -125,12 +127,14 @@ def test_costs_unknown_is_not_zero():
     assert not s.eligible and "costs_unknown" in s.ineligible[0].reasons
 
 
-def test_breakdown_mismatch_shows_total_only():
+def test_breakdown_mismatch_is_not_listed():
+    """内訳（売値 − 仕入れ − 費用）と合わない純利益の案件は掲載しない（Phase 5.2: ルートと同じ。
+    以前は合計だけを出していた。購入送料などが純利益に入っていないと利益が実際より大きく出るため）。"""
     d = deal("prod_a", "合計だけ", net=20000)                 # 内訳の合計（1,800）と合わない純利益
-    v, = _set([d]).eligible
-    assert not v.breakdown_ok
+    s = _set([d])
+    assert not s.eligible and "breakdown_mismatch" in s.ineligible[0].reasons
     html = _section(shell.render_root(_ctx(deals=[d])), "opportunities")
-    assert "費用の内訳は算出前です" in html and "+¥20,000" in html
+    assert "+¥20,000" not in html
 
 
 def test_one_view_per_product_keeps_best_eligible():

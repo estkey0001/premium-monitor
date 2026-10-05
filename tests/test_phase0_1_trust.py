@@ -449,6 +449,11 @@ def test_existing_beginner_deploy_checks_pass_with_reference_cards(tmp_path, mon
              deal("prod_gr4", "RICOH GR IV", "camera", 211800, 240000, "フジヤカメラ")]
     g._msrp_evidence = {d.product_id: (pe.VERIFIED_CURRENT if d.product_id in verified_ids
                                        else pe.CONFIGURED_REFERENCE) for d in deals}
+    # Phase 5.2: 確定にするには購入送料も分かっている必要がある（テスト用の記録。送料0円・確認済み）
+    from src.market import official_shipping as osh
+    monkeypatch.setattr(osh, "PRODUCT_SHIPPING", {pid: {"source": "test", "fee": 0, "status": osh.FREE_VERIFIED,
+                                                        "url": "https://example.com/ship", "checked_on": "2026-10-05"}
+                                                  for pid in verified_ids})
 
     def row(shop, price):
         return {"shop_id": "src_x", "shop_name": shop, "buyback_price": price, "condition": "new_unopened",

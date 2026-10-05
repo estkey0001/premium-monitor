@@ -54,10 +54,17 @@ def _exists(rel: str) -> bool:
 def notification_previews() -> dict:
     ops = _load("exports/ai_opportunities/latest.json")
     rec = ops.get("daily_recommendation", {}) or {}
-    product = rec.get("product", "RICOH GR IIIx")
-    score = rec.get("opportunity_score", 81)
-    reason = rec.get("reason", f"{product}: WATCH。見込み 利益¥38,947/ROI26%/Score{score}")
-    buy = rec.get("buy_now", "WATCH")
+    # 今日のおすすめは、もとの候補（1位）のルートが今も確定・参考ルートのときだけ使う（route_id で照合）。
+    # おすすめが無い日は、実在の商品・金額を出さない例の文面にする（架空の利益を出さない）
+    from src.content.ui import opportunity as _opp
+    top = (ops.get("todays_opportunities") or [None])[0]
+    keys = _opp.current_route_keys(_load("exports/profit_routes/latest.json"), NOW)
+    if not (rec and isinstance(top, dict) and _opp.record_route_ok(top, keys)):
+        rec = {}
+    product = rec.get("product", "（例）商品名")
+    score = rec.get("opportunity_score", "—")
+    reason = rec.get("reason", "（本日のおすすめがある日は、ここに商品・判定・根拠が入ります。今日は対象がありません）")
+    buy = rec.get("buy_now", "—")
     title = f"【AI Profit Assistant】本日の注目: {product}"
     body_lines = [
         f"銘柄: {product}",

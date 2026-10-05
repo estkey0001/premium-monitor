@@ -229,6 +229,8 @@ def build_candidates(pr: dict, now: datetime | None = None) -> list[dict]:
             "sell_price_evidence": r.get("sell_price_evidence", "UNKNOWN"),
             "buy_canonical_type": r.get("buy_canonical_type", "UNKNOWN"),
             "sell_canonical_type": r.get("sell_canonical_type", "UNKNOWN"),
+            # ルートの識別子（表示する側が今のルートと照合する。正本は opportunity.route_key）
+            "route_id": _opp.route_key(r),
         })
     seen = {}
     for r in _opp.reference_routes(pr.get("reference_routes", []), now):
@@ -248,6 +250,8 @@ def build_candidates(pr: dict, now: datetime | None = None) -> list[dict]:
             "sell_price_evidence": r.get("sell_price_evidence", "UNKNOWN"),
             "buy_canonical_type": r.get("buy_canonical_type", "UNKNOWN"),
             "sell_canonical_type": r.get("sell_canonical_type", "UNKNOWN"),
+            # ルートの識別子（表示する側が今のルートと照合する。正本は opportunity.route_key）
+            "route_id": _opp.route_key(r),
         })
     return cands
 
@@ -327,6 +331,7 @@ def main() -> int:
             # 価格の種別。売値が BUYBACK_CASH / SOLD_MEDIAN でなければ新UIは BUY に出さない
             "buy_canonical_type": c.get("buy_canonical_type", "UNKNOWN"),
             "sell_canonical_type": c.get("sell_canonical_type", "UNKNOWN"),
+            "route_id": c.get("route_id", ""),
         })
     # Task9 ランキング: Opportunity → 利益 → ROI → 再現性（決定論的）
     ops.sort(key=lambda x: (x["opportunity_score"], x["net_profit"], x["roi"],
@@ -376,7 +381,8 @@ def main() -> int:
         "todays_opportunities": top10,
     }
     OUT.mkdir(parents=True, exist_ok=True)
-    (OUT / "latest.json").write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+    from src.utils.atomic_write import write_json_atomic
+    write_json_atomic(OUT / "latest.json", payload)    # 書き込みの途中で失敗しても前回のファイルを壊さない
     _write_md(payload)
     _c = {"BUY": 0, "WATCH": 0, "PASS": 0}
     for o in top10:

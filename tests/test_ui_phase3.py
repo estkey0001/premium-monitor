@@ -215,7 +215,7 @@ def test_profit_only_with_verified_price_and_eligible_sell():
     deal = {"product_id": "prod_cam", "title": "カメラX", "genre": "camera", "official_price": 199800,
             "official_checked_at": _iso(days=-1), "msrp_evidence": "VERIFIED_DATED", "stock_status": "",
             "sale_method": "normal", "sell_shop": "買取店A", "sell_price": 228000, "sell_checked_at": _iso(hours=-1),
-            "net_profit": 26400, "user_level": "beginner_easy"}
+            "net_profit": 26400, "user_level": "beginner_easy", "purchase_shipping": 0, "purchase_shipping_status": "FREE_VERIFIED"}
     legacy = [{"id": "lg1", "product_id": "prod_cam", "product_name": "カメラX 抽選", "brand": "メーカー",
                "entry_start_at": (NOW - timedelta(days=1)).strftime("%Y-%m-%d %H:%M"),
                "entry_end_at": (NOW + timedelta(days=2)).strftime("%Y-%m-%d %H:%M"),

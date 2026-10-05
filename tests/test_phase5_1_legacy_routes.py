@@ -41,6 +41,15 @@ GAO = _load("gao_p51", ROOT / "scripts" / "generate_ai_opportunities.py")
 GNO = _load("gno_p51", ROOT / "scripts" / "generate_notifications.py")
 
 
+@pytest.fixture(autouse=True)
+def _known_purchase_shipping(monkeypatch):
+    """テストの架空の商品は、公式の購入送料を確認済み（0円）とする（Phase 5.2: 分からなければ確定にしない）。"""
+    from src.market import official_shipping as osh
+    ship = {"source": "test", "fee": 0, "status": osh.FREE_VERIFIED, "url": "https://example.com/ship",
+            "checked_on": "2026-10-05"}
+    monkeypatch.setattr(osh, "PRODUCT_SHIPPING", {pid: ship for pid in ("p_ok", "p_ref", "p_stale", "p_mon")})
+
+
 def _gen(**attrs):
     """LP 生成器（DB を使わない部分だけを呼ぶ）。"""
     from src.content.daily_lp_generator import DailyLPGenerator
@@ -65,7 +74,8 @@ def _surfaces(r: dict, now: datetime = NOW) -> dict:
     gno_now, GNO.NOW = GNO.NOW, now
     try:
         snap = GNO._snapshot({"todays_opportunities": [{"product_id": r["product_id"], "kind": "main",
-                                                         "action": "BUY", "buy_now": "BUY"}]}, {}, pr)
+                                                         "action": "BUY", "buy_now": "BUY",
+                                                         "route_id": opp.route_key(r)}]}, {}, pr)
     finally:
         GNO.NOW = gno_now
     m = home.build_home_model(tcg_report={}, opportunities={}, profit_routes=pr, legacy_lotteries=[], now=now)
@@ -309,7 +319,7 @@ def test_db_sedori_routes_use_the_canonical_gate():
 
 def _deal(pid, net, *, official=100000, shop="買取店A", **kw):
     return BeginnerDeal(id=pid, product_id=pid, product_name=f"商品{pid}", category="camera",
-                        official_price_jpy=official, best_buyback_price=official + net + 4500,
+                        official_price_jpy=official, best_buyback_price=official + net + 1800,
                         best_buyback_shop=shop, net_profit_jpy=net, net_profit_rate=net / official,
                         buyback_condition="新品未開封", user_level="beginner_easy", **kw)
 
@@ -366,14 +376,18 @@ def test_legacy_notifications_hide_unchecked_route_events(tmp_path):
     (base / "history").mkdir(parents=True)
     old = {"type": "ROI_UP", "priority": "Medium", "created_at": "2026-09-30 23:29 JST",
            "message": "⬆️ ROI改善\nFUJIFILM X100VI\nROI 25% → 38%"}
+    safe = RF.safe_route(NOW, "p_a")
     checked = {"type": "NEW_MAIN", "priority": "High", "created_at": "2026-10-04 12:00 JST",
-               "message": "🆕 新しい利益ルート成立\n商品A", "route_checked": True}
+               "message": "🆕 新しい利益ルート成立\n商品A", "route_checked": True, "route_id": opp.route_key(safe)}
     health = {"type": "HEALTH_ALERT", "priority": "Critical", "created_at": "2026-10-04 12:00 JST",
               "message": "⚠️ データ品質低下"}
     (base / "latest.json").write_text(json.dumps({"events": [checked, health], "channels": []}), encoding="utf-8")
     (base / "history" / "2026-09-30.json").write_text(json.dumps({"events": [old]}), encoding="utf-8")
-    html = _gen()._notifications_html(base)
+    html = _gen()._notifications_html(base, {"main_routes": [safe]})
     assert "商品A" in html and "データ品質低下" in html and "X100VI" not in html and "38%" not in html
+    # Phase 5.2: 印があっても、そのルートが今は確定ルートでなければ出さない
+    html2 = _gen()._notifications_html(base, {"main_routes": [dict(safe, sell_exact_match=False)]})
+    assert "商品A" not in html2 and "データ品質低下" in html2
 
 
 def test_new_notifications_are_marked_route_checked(tmp_path, monkeypatch):
@@ -384,6 +398,7 @@ def test_new_notifications_are_marked_route_checked(tmp_path, monkeypatch):
     (tmp_path / "exports/profit_routes/latest.json").write_text(json.dumps({"main_routes": [safe]}), "utf-8")
     (tmp_path / "exports/ai_opportunities/latest.json").write_text(json.dumps({"todays_opportunities": [
         {"product_id": "p_new", "kind": "main", "action": "BUY", "buy_now": "BUY", "product": "商品p_new",
+         "route_id": opp.route_key(safe),
          "net_profit": safe["net_profit"], "roi": safe["roi"], "buy_price": safe["buy_price"]}]}), "utf-8")
     (tmp_path / "exports/notifications/prev_snapshot.json").write_text(json.dumps(
         {"main_products": [], "ops": {}}), "utf-8")
@@ -404,7 +419,7 @@ def test_new_notifications_are_marked_route_checked(tmp_path, monkeypatch):
     ("scripts/generate_profit_routes.py", "_opp.reference_route_reasons("),
     ("scripts/generate_ai_opportunities.py", "_opp.confirmed_routes("),
     ("scripts/generate_ai_opportunities.py", "_opp.reference_routes("),
-    ("scripts/generate_notifications.py", "_opp.confirmed_routes("),
+    ("scripts/generate_notifications.py", "_opp.current_route_keys("),
     ("src/content/daily_lp_generator.py", "_ui_opp.confirmed_routes("),
     ("src/content/daily_lp_generator.py", "_ui_opp.reference_routes("),
     ("src/content/daily_lp_generator.py", "_ui_opp.deal_reasons("),

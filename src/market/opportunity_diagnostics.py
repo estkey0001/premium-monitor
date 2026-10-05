@@ -36,6 +36,7 @@ REASON_OF = {
     "invalid_sell_price": "no_sell_price",
     "stale_sell_price": "stale_buyback",
     "costs_unknown": "missing_costs",
+    "purchase_shipping_unknown": "missing_costs",     # 公式の購入送料を一次情報で確認していない
     "no_profit": "no_profit",
 }
 

@@ -30,6 +30,7 @@ from src.content.safety import (
 from src.db.repository import Repository
 from src.market import price_evidence as _pe
 from src.market import price_types as _pt
+from src.market import official_shipping as _official_shipping
 from src.market import stock_state as _stock
 # 確定利益・利益ルートを出してよいかの判定の正本（新UIと同じ。旧UI用に二重に書かない）
 from src.content.ui import opportunity as _ui_opp
@@ -4320,6 +4321,8 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             shop = getattr(d, "best_buyback_shop", "") or ""
             alias = pid[len("prod_"):] if pid.startswith("prod_") else pid
             p = info.get(pid, {})
+            ship = _official_shipping.purchase_shipping(pid, getattr(d, "official_url", "") or "",
+                                                        getattr(d, "official_price_jpy", 0) or 0)
             out.append({
                 "product_id": pid, "title": getattr(d, "product_name", "") or "",
                 "genre": p.get("genre") or getattr(d, "category", "") or "", "model": p.get("model", ""),
@@ -4334,6 +4337,8 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 "sale_method": getattr(d, "sale_method", "") or "",
                 "sell_shop": shop, "sell_price": getattr(d, "best_buyback_price", 0) or 0,
                 "sell_checked_at": _checked_at(d), "sell_url": getattr(d, "best_buyback_url", "") or "",
+                # 購入送料（公式の一次情報で確認したものだけ。分からなければ None）
+                "purchase_shipping": ship["fee"], "purchase_shipping_status": ship["status"],
                 "net_profit": net, "user_level": getattr(d, "user_level", "") or "",
                 "resale_sell": bool(shop) and self._is_resale_shop(shop),
                 "href": f"./?from=new#product-{alias}" if alias else "",
@@ -4384,6 +4389,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
     _UNCONFIRMED_LABELS = (
         ("stale_sell_price", "買取価格の確認が14日より前か、確認時刻が不明"),
         ("resale_sell", "売り先が二次流通（買取店ではない）"),
+        ("purchase_shipping_unknown", "購入送料が分からない（公式で未確認）"),
         ("costs_unknown", "費用が分からない"),
         ("breakdown_mismatch", "利益の内訳が合わない"),
         ("roi_out_of_range", "利益率が表示できる範囲の外"),
@@ -5786,13 +5792,15 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         base = Path(__file__).resolve().parent.parent.parent / "exports" / "flea_sold_prices"
         if not base.exists():
             return ""
-        # main route 化された (product_id) を取得
+        # 確定ルート（新UIと同じ判定を通ったもの）になった (product_id, 仕入れ値) を取得（商品単位で判定しない）。
+        # 成約価格（売れた価格）での仕入れは判定で外れる（buy_type_sold）ので、今の規則では route 化は出ない
         routed = set()
         try:
             _pr = _json_fs.loads((base.parent / "profit_routes" / "latest.json").read_text(encoding="utf-8"))
-            for r in _pr.get("main_routes", []):
+            _now = getattr(self, "_gate_now", None) or self._nu_now(None)
+            for r in _ui_opp.confirmed_routes(_pr.get("main_routes", []), _now):
                 if r.get("buy_price_type") == "flea_sold_price":
-                    routed.add(r.get("product_id"))
+                    routed.add((r.get("product_id"), r.get("buy_price")))
         except Exception:
             pass
         rows = []
@@ -5813,7 +5821,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                     diff = (tgt - it["price"]) if tgt else None
                     pid = it.get("product_id")
                     # main_routes に flea_sold buy として採用されていれば route化（targetは採用後に消えるため within は条件にしない）
-                    is_routed = pid in routed
+                    is_routed = (pid, it.get("price")) in routed
                     rows.append({
                         "product": it.get("product_name", alias), "source": src,
                         "price": it["price"], "target": tgt, "diff": diff,
@@ -5873,13 +5881,12 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         hs = d.get("health_score")
         note = d.get("health_note", "")
         tasks = d.get("today_tasks", [])
-        # 描画時にも、今の利益ルートのうち確定・参考の判定（新UIと同じ）を通った商品の候補だけを出す
+        # 描画時にも、今の利益ルートのうち確定・参考の判定（新UIと同じ）を通ったルートから作られた候補だけを出す。
+        # 照合はルート単位（route_id）。同じ商品の別のルートが今も有効でも、古い候補は出さない
         # （AI の生成が失敗して古いファイルが残った場合などに、判定を通らないルートの BUY・利益を出さない）
         _now = getattr(self, "_gate_now", None) or self._nu_now(None)
-        _ok_main = {r.get("product_id") for r in _ui_opp.confirmed_routes((routes or {}).get("main_routes"), _now)}
-        _ok_ref = {r.get("product_id") for r in _ui_opp.reference_routes((routes or {}).get("reference_routes"), _now)}
-        _kept = [o for o in ops if (o.get("product_id") in _ok_main if o.get("kind") == "main"
-                                    else o.get("product_id") in _ok_ref)]
+        _keys = _ui_opp.current_route_keys(routes, _now)
+        _kept = [o for o in ops if _ui_opp.record_route_ok(o, _keys)]
         if len(_kept) != len(ops):
             # 今日のおすすめは1位、今日やることは上位5件の順（generate_ai_opportunities.py）。位置で対応させる
             _kept_ids = {id(o) for o in _kept}
@@ -5889,9 +5896,17 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             ops = _kept
         d = dict(d, main_route_count=sum(1 for o in ops if o.get("kind") == "main"),
                  reference_route_count=sum(1 for o in ops if o.get("kind") == "reference"))
+        # AI の集計が利益ルートより古い（AI の生成が失敗した日など）ときは、前回の集計だと書く（時刻は書き換えない）
+        _ai_at = str(d.get("generated_at") or "")
+        _pr_at = str((routes or {}).get("generated_at") or "")
+        _stale_note = (f'<div class="ai-stale-note" style="font-size:0.78rem;color:#b45309;margin:4px 0">'
+                       f'&#9888;&#65039; AI の集計は前回の生成（{_esc(_ai_at or "時刻不明")}）のままです。'
+                       f'今の利益ルートと一致する候補だけを表示しています。</div>'
+                       if (_pr_at and (not _ai_at or _ai_at[:16] < _pr_at[:16])) else "")
         parts = ['<div class="ai-dashboard" style="margin:8px 0 18px;border:1px solid #c7d2fe;'
                  'background:linear-gradient(180deg,#eef2ff,#f8fafc);border-radius:10px;padding:14px 16px">',
-                 '<div style="font-weight:800;color:#4338ca;font-size:1.1rem">&#129302; AI Dashboard</div>']
+                 '<div style="font-weight:800;color:#4338ca;font-size:1.1rem">&#129302; AI Dashboard</div>',
+                 _stale_note]
         # 今日やること（最上部）
         if tasks:
             parts.append('<div class="ai-today-tasks" style="background:#fff;border:1px solid #c7d2fe;'
@@ -5979,21 +5994,41 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         parts.append('</div>')
         return "".join(parts)
 
-    def _capital_dashboard_html(self) -> str:
-        """Capital Dashboard（exports/allocation/latest.json・既定予算のプランを表示）。"""
+    def _capital_dashboard_html(self, d: dict | None = None, routes: dict | None = None) -> str:
+        """Capital Dashboard（exports/allocation/latest.json・既定予算のプランを表示）。
+        d・routes を渡したときはファイルを読まずにそれを使う（テスト用）。"""
         import json as _json_cap
         from html import escape as _esc
-        p = Path(__file__).resolve().parent.parent.parent / "exports" / "allocation" / "latest.json"
-        if not p.exists():
-            return ""
-        try:
-            d = _json_cap.loads(p.read_text(encoding="utf-8"))
-        except Exception:
-            return ""
+        base = Path(__file__).resolve().parent.parent.parent / "exports"
+        if d is None:
+            p = base / "allocation" / "latest.json"
+            if not p.exists():
+                return ""
+            try:
+                d = _json_cap.loads(p.read_text(encoding="utf-8"))
+            except Exception:
+                return ""
+        if routes is None:
+            try:
+                routes = _json_cap.loads((base / "profit_routes" / "latest.json").read_text(encoding="utf-8"))
+            except Exception:
+                routes = {}
         budget = d.get("default_budget")
         pl = (d.get("plans", {}) or {}).get(str(budget))
         if not pl:
             return ""
+        # 描画時にも、配分のもとになったルートが今も確定ルートか（route_id・新UIと同じ判定）を確かめる。
+        # 確かめられない配分は外し、金額は残った配分から数え直す（古いファイルの配分・期待利益を出さない）
+        _keys = _ui_opp.current_route_keys(routes, getattr(self, "_gate_now", None) or self._nu_now(None))
+        _allocs = [a for a in (pl.get("allocations") or []) if _ui_opp.record_route_ok(a, _keys)]
+        if len(_allocs) != len(pl.get("allocations") or []):
+            _spent = sum(a["total"] for a in _allocs)
+            _exp = sum(a["expected_profit"] for a in _allocs)
+            pl = dict(pl, allocations=_allocs, allocated=_spent, cash=budget - _spent,
+                      cash_ratio=((budget - _spent) / budget) if budget else 0,
+                      expected_profit=_exp, expected_roi=(_exp / _spent) if _spent else 0.0,
+                      avg_risk_score="—", diversification_score="—")
+        pl = dict(pl, waiting=[w for w in (pl.get("waiting") or []) if _ui_opp.record_route_ok(w, _keys)])
         parts = ['<div class="capital-dashboard" style="margin-top:10px;background:#fff;'
                  'border:1px solid #c7d2fe;border-radius:8px;padding:10px 12px">',
                  f'<div style="font-weight:700;color:#4338ca">&#128176; Capital Dashboard '
@@ -6027,8 +6062,8 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         parts.append('</div>')
         return "".join(parts)
 
-    def _notifications_html(self, base: Path | None = None) -> str:
-        """最新通知10件（exports/notifications/latest.json + 直近history）。base はテスト用の置き場所。"""
+    def _notifications_html(self, base: Path | None = None, routes: dict | None = None) -> str:
+        """最新通知10件（exports/notifications/latest.json + 直近history）。base・routes はテスト用。"""
         import json as _json_n
         from html import escape as _esc
         base = base or Path(__file__).resolve().parent.parent.parent / "exports" / "notifications"
@@ -6052,10 +6087,19 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                         events.append(e)
         except Exception:
             pass
-        # 利益ルート由来の通知（BUY・新規・価格・ROI）は、確定ルートの判定を通った商品から作ったもの
-        # （route_checked の印あり）だけを出す。印の無い過去の通知は参考ルート・条件未達のルート由来のことがある
+        # 利益ルート由来の通知（BUY・新規・価格・ROI）は、確定ルートの判定を通ったルートから作ったもの
+        # （route_checked の印あり）で、そのルート（route_id）が今も確定ルートのものだけを出す。
+        # 印の無い過去の通知は参考ルート・条件未達のルート由来のことがある。後で無効になったルートの通知も出さない
+        if routes is None:
+            try:
+                routes = _json_n.loads((base.parent / "profit_routes" / "latest.json").read_text(encoding="utf-8"))
+            except Exception:
+                routes = {}
+        _keys = _ui_opp.current_route_keys(routes, getattr(self, "_gate_now", None) or self._nu_now(None))
         events = [e for e in events
-                  if e.get("type") not in _ui_opp.ROUTE_EVENT_TYPES or e.get("route_checked") is True]
+                  if e.get("type") not in _ui_opp.ROUTE_EVENT_TYPES
+                  or (e.get("route_checked") is True
+                      and _ui_opp.record_route_ok({"route_id": e.get("route_id"), "kind": "main"}, _keys))]
         events = events[:10]
         pcol = {"Critical": "#dc2626", "High": "#ea580c", "Medium": "#d97706", "Low": "#64748b"}
         parts = ['<div class="ai-notifications" style="margin-top:10px">',
@@ -6077,20 +6121,46 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         parts.append('</div>')
         return "".join(parts)
 
-    def _tab_health(self) -> str:
-        """管理者向け Health タブ（audit_health/health_report.json）。"""
+    def _tab_health(self, h: dict | None = None, routes: dict | None = None) -> str:
+        """管理者向け Health タブ（audit_health/health_report.json）。h・routes を渡したときはファイルを読まない（テスト用）。"""
         import json as _json_h
         from html import escape as _esc
-        p = Path(__file__).resolve().parent.parent.parent / "audit_health" / "health_report.json"
-        if not p.exists():
-            return ('<div class="health-dashboard" style="padding:14px">'
-                    '<div style="color:#64748b">Health レポート未生成（generate_health_report.py を実行してください）。</div></div>')
-        try:
-            h = _json_h.loads(p.read_text(encoding="utf-8"))
-        except Exception:
-            return ''
+        _root = Path(__file__).resolve().parent.parent.parent
+        if h is None:
+            p = _root / "audit_health" / "health_report.json"
+            if not p.exists():
+                return ('<div class="health-dashboard" style="padding:14px">'
+                        '<div style="color:#64748b">Health レポート未生成（generate_health_report.py を実行してください）。</div></div>')
+            try:
+                h = _json_h.loads(p.read_text(encoding="utf-8"))
+            except Exception:
+                return ''
+        if routes is None:
+            try:
+                routes = _json_h.loads((_root / "exports" / "profit_routes" / "latest.json").read_text(encoding="utf-8"))
+            except Exception:
+                routes = {}
         s = h.get("health_score", {}); dq = h.get("data_quality", {}); pf = h.get("profit", {})
         a = h.get("anomalies", {}); d = h.get("diff_vs_prev", {})
+        # 利益ルート由来の値（件数・最大利益・新規 main・参考ルートの金額）は、今の利益ルートのうち新UIと同じ判定を
+        # 通ったものから描画時に数え直す（レポートが古いまま残っても、無効になったルートの利益を出さない）
+        _now = getattr(self, "_gate_now", None) or self._nu_now(None)
+        _mains = _ui_opp.confirmed_routes((routes or {}).get("main_routes"), _now)
+        _refs = _ui_opp.reference_routes((routes or {}).get("reference_routes"), _now)
+        _main_pids = {r.get("product_id") for r in _mains}
+        pf = dict(pf, main_route_count=len(_mains), reference_route_count=len(_refs))
+        _info = [x for x in (a.get("info") or []) if not str(x).startswith("検証済み利益ルート")]
+        if _mains:
+            _info.insert(0, f"検証済み利益ルート {len(_mains)}件 / 最大 +¥{max(r.get('net_profit') or 0 for r in _mains):,}")
+        a = dict(a, info=_info)
+        if d.get("available"):
+            d = dict(d, new_main=[x for x in (d.get("new_main") or []) if x in _main_pids])
+            if isinstance(d.get("main_route_count"), dict):
+                d["main_route_count"] = dict(d["main_route_count"], cur=len(_mains))
+        _ref_pot = sum(r.get("net_profit") or 0 for r in _refs)
+        h = dict(h, improvements_top10=[
+            (dict(i, effect=f"+¥{_ref_pot:,}（参考{len(_refs)}→main昇格）") if i.get("action") == "EBAY_APP_ID 設定" else i)
+            for i in (h.get("improvements_top10") or [])])
         total = s.get("total", 0)
         sc_color = "#059669" if total >= 80 else "#d97706" if total >= 50 else "#dc2626"
         parts = ['<div class="health-dashboard" style="padding:8px 4px">',
@@ -6168,33 +6238,42 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         parts.append('</div>')
         return "".join(parts)
 
-    def _execution_html(self) -> str:
-        """Execution Dashboard（exports/execution/latest.json）を Health タブに表示。"""
+    def _execution_html(self, d: dict | None = None) -> str:
+        """Execution Dashboard（exports/execution/latest.json）を Health タブに表示。d はテスト用。"""
         import json as _json_e
         from html import escape as _esc
-        p = Path(__file__).resolve().parent.parent.parent / "exports" / "execution" / "latest.json"
-        if not p.exists():
-            return ""
-        try:
-            d = _json_e.loads(p.read_text(encoding="utf-8"))
-        except Exception:
-            return ""
+        if d is None:
+            p = Path(__file__).resolve().parent.parent.parent / "exports" / "execution" / "latest.json"
+            if not p.exists():
+                return ""
+            try:
+                d = _json_e.loads(p.read_text(encoding="utf-8"))
+            except Exception:
+                return ""
         pa = d.get("prediction_accuracy", {}); na = d.get("notification_accuracy", {})
         lc = d.get("learning_coefficients", {})
         parts = ['<div class="execution-dashboard" style="margin-top:14px;border-top:1px dashed #cbd5e1;padding-top:10px">',
                  '<div style="font-weight:700;color:#334155">&#129504; Execution Intelligence</div>',
                  '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:6px;margin:6px 0">']
+        # 実際の取引の結果（台帳）が無いときは、成功率・予測精度を 0% と出さない（実績が無いことを出す）
+        _no_real = not d.get("closed_count")
+        _nr = "—（実績の記録なし）"
         for lbl, val, col in [
-            ("Execution Success", f"{d.get('execution_success_rate',0)}%", "#059669"),
-            ("Prediction Accuracy", f"誤差{pa.get('error_points','?')}pt", "#2563eb"),
-            ("予測/実績", f"{pa.get('predicted_success_prob_avg','?')}% / {pa.get('realized_success_rate','?')}%", "#7c3aed"),
-            ("Notif Success", f"{na.get('notification_success_rate',0)*100:.0f}%", "#0e7490"),
+            ("Execution Success", _nr if _no_real else f"{d.get('execution_success_rate',0)}%", "#059669"),
+            ("Prediction Accuracy", _nr if _no_real else f"誤差{pa.get('error_points','?')}pt", "#2563eb"),
+            ("予測/実績", _nr if _no_real else
+             f"{pa.get('predicted_success_prob_avg','?')}% / {pa.get('realized_success_rate','?')}%", "#7c3aed"),
+            ("Notif Success", _nr if _no_real else f"{na.get('notification_success_rate',0)*100:.0f}%", "#0e7490"),
             ("CLOSED", f"{d.get('closed_count',0)}（成功{d.get('success_count',0)}）", "#334155"),
         ]:
             parts.append(f'<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:6px 8px">'
                          f'<div style="font-size:0.7rem;color:#64748b">{lbl}</div>'
                          f'<div style="font-size:0.95rem;font-weight:700;color:{col}">{val}</div></div>')
         parts.append('</div>')
+        if d.get("invalidated_count") or d.get("sample_excluded_count"):
+            parts.append(f'<div style="font-size:0.76rem;color:#64748b">集計に入れていない記録: '
+                         f'無効（今のルートで確かめられない）{d.get("invalidated_count", 0)}件 ／ '
+                         f'サンプルの結果 {d.get("sample_excluded_count", 0)}件（履歴には残しています）</div>')
         parts.append(f'<div style="font-size:0.78rem;color:#64748b">補正係数（学習・利益ロジック不適用）: '
                      f'prob {lc.get("success_probability_coeff","?")} / score {lc.get("opportunity_score_coeff","?")} / '
                      f'risk {lc.get("risk_score_coeff","?")}（信頼度 {_esc(str(lc.get("confidence","?")))}）</div>')
@@ -6420,19 +6499,25 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 for z in _diag_show:
                     mb = z.get("min_usable_buy"); ms = z.get("max_usable_sell")
                     nd = z.get("net_domestic"); bref = z.get("best_reference_net")
+                    # 確定ルートにならなかった候補から、黒字の「国内完結」の利益は出さない（赤字の説明だけ出す）
+                    if nd is not None and nd > 0:
+                        nd = None
+                    # 商品の照合が済んでいない価格は、確定の最安・最高に見えないように「参考・商品照合未完了」と書く
+                    _mb_lbl = "最安" if z.get("min_usable_buy_identity_verified") else "参考・商品照合未完了"
+                    _ms_lbl = "最高" if z.get("max_usable_sell_identity_verified") else "参考・商品照合未完了"
                     parts.append(
                         '<div class="pr-zero-card" style="background:#fff;border:1px solid #e2e8f0;'
                         'border-left:4px solid #94a3b8;border-radius:8px;padding:9px 12px;margin:7px 0">'
                         f'<div style="font-weight:700">{_esc(z.get("product_name",""))}</div>'
                         f'<div style="font-size:0.83rem;margin-top:3px">'
                         f'buy候補: <b>{z.get("buy_candidates",0)}件</b>'
-                        + (f'（最安 {_esc(z.get("min_usable_buy_source",""))} ¥{mb:,}）' if mb else '（有効なし）')
+                        + (f'（{_mb_lbl} {_esc(z.get("min_usable_buy_source",""))} ¥{mb:,}）' if mb else '（有効なし）')
                         + f' ／ sell候補: <b>{z.get("sell_candidates",0)}件</b>'
-                        + (f'（最高 {_esc(z.get("max_usable_sell_source",""))} ¥{ms:,}）' if ms else '（有効なし）')
+                        + (f'（{_ms_lbl} {_esc(z.get("max_usable_sell_source",""))} ¥{ms:,}）' if ms else '（有効なし）')
                         + '</div>'
                         + (f'<div style="font-size:0.83rem;margin-top:2px">国内完結: '
                            f'<b style="color:{"#dc2626" if (nd or 0)<=0 else "#059669"}">{nd:+,}円</b>' if nd is not None else '')
-                        + (f' ／ 海外sold参考: <b style="color:#059669">+¥{bref:,}</b>' if bref else '')
+                        + (f' ／ 海外sold参考: <b style="color:#059669">+¥{bref:,}</b>' if (bref and nd is not None) else '')
                         + ('</div>' if nd is not None else '')
                         + f'<div style="font-size:0.8rem;color:#b45309;margin-top:3px">未成立理由: {_esc(z.get("main_blocked_reason",""))}</div>'
                         + (('<div style="font-size:0.8rem;color:#475569;margin-top:3px">あと何が必要か:<ul style="margin:3px 0 0 18px;padding:0">'
@@ -6534,7 +6619,9 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 if self._msrp_is_reference(d):
                     continue
                 _gross = _bp - _op
-                _net = _gross - _COSTS
+                # 公式の購入送料（一次情報で確認したもの）も費用に入れる（新UIの内訳・案件の純利益と同じ金額）
+                _net = _gross - _COSTS - _official_shipping.known_fee(
+                    getattr(d, 'product_id', '') or '', getattr(d, 'official_url', '') or '', _op)
                 if _net <= 0:
                     continue
                 _rate = _net / _op if _op > 0 else 0.0
@@ -7196,6 +7283,8 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             # DB の値より buyback_rows の方が高い → 補完
             official = deal.official_price_jpy or 0
             costs = 1800  # 固定: 送料+振込手数料+移動コスト
+            # 公式の購入送料（一次情報で確認したものだけ。src/market/official_shipping.py）
+            costs += _official_shipping.known_fee(deal.product_id, getattr(deal, 'official_url', '') or '', official)
             gross = best_price - official
             net = gross - costs
             # user_level 再評価
@@ -9506,6 +9595,8 @@ tr.sc-route-review {{ background: #FFFBEB; }}
 
         official = deal.official_price_jpy or 0
         costs = 1800  # 送料+振込手数料+移動コスト（固定）
+        # 公式の購入送料（一次情報で確認したものだけ。src/market/official_shipping.py）
+        costs += _official_shipping.known_fee(deal.product_id, getattr(deal, 'official_url', '') or '', official)
         gross = best_price - official
         net = gross - costs
 

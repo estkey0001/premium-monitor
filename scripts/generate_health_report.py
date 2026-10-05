@@ -53,13 +53,15 @@ def _data_quality(obs):
 
 
 def _profit(pr):
-    s = pr.get("summary", {})
-    mains = pr.get("main_routes", [])
+    # 利益の指標は、新UIと同じ判定（src/content/ui/opportunity.py）を通った確定・参考ルートだけから数える
+    from src.content.ui import opportunity as _opp
+    mains = _opp.confirmed_routes(pr.get("main_routes", []), NOW)
+    refs = _opp.reference_routes(pr.get("reference_routes", []), NOW)
     profits = [r.get("net_profit", 0) for r in mains]
     rois = [r.get("roi", 0) for r in mains]
     return {
-        "main_route_count": s.get("main_route_count", 0),
-        "reference_route_count": s.get("reference_route_count", 0),
+        "main_route_count": len(mains),
+        "reference_route_count": len(refs),
         "max_profit": (max(profits) if profits else 0),
         "avg_profit": (round(sum(profits) / len(profits)) if profits else 0),
         "avg_roi": (round(sum(rois) / len(rois), 4) if rois else 0),
@@ -188,8 +190,9 @@ def _anomalies(cur, diff):
 
 
 def _improvements(pr, cur):
+    from src.content.ui import opportunity as _opp
     imp = []
-    refs = pr.get("reference_routes", [])
+    refs = _opp.reference_routes(pr.get("reference_routes", []), NOW)
     ref_pot = sum(r.get("net_profit", 0) for r in refs)
     if not _load("exports/overseas_prices/latest.json").get("ebay_app_id_configured"):
         imp.append({"stars": 5, "action": "EBAY_APP_ID 設定", "effect": f"+¥{ref_pot:,}（参考{len(refs)}→main昇格）", "effort": "1時間"})
@@ -237,9 +240,10 @@ def main() -> int:
         "anomalies": anomalies,
         "improvements_top10": improvements,
     }
-    (OUT / "health_report.json").write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
+    from src.utils.atomic_write import write_json_atomic
+    write_json_atomic(OUT / "health_report.json", report)    # 書き込みの途中で失敗しても前回のファイルを壊さない
     HIST.mkdir(exist_ok=True)
-    (HIST / f"{report['date']}.json").write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
+    write_json_atomic(HIST / f"{report['date']}.json", report)
     _write_md(report)
     print(f"  Health Score: {score['total']}/100 / main {pf['main_route_count']} / "
           f"stale {dq['stale_rate']*100:.0f}% / 0円 {dq['zero_rate']*100:.0f}%")

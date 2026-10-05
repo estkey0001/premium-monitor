@@ -60,10 +60,11 @@ def _snapshot(ai, health, pr) -> dict:
     src/content/ui/opportunity.route_reasons を通った main）の商品だけから作る。参考ルート・条件未達のルートは使わない。
     """
     from src.content.ui import opportunity as _opp
-    main = _opp.confirmed_routes(pr.get("main_routes", []), NOW)
-    main_pids = {r["product_id"] for r in main}
+    # AI の候補は、今の確定ルートと route_id で照合できたものだけ（商品単位で照合しない）
+    keys = _opp.current_route_keys(pr, NOW)
     ops = {o["product_id"]: o for o in ai.get("todays_opportunities", [])
-           if o.get("kind") == "main" and o.get("product_id") in main_pids}
+           if o.get("kind") == "main" and _opp.record_route_ok(o, keys)}
+    main_pids = set(ops)
     return {
         "date": NOW.strftime("%Y-%m-%d"),
         "health_score": (health.get("health_score", {}) or {}).get("total"),
@@ -73,7 +74,8 @@ def _snapshot(ai, health, pr) -> dict:
         "ops": {pid: {"action": o.get("action"), "buy_now": o.get("buy_now"),
                       "roi": o.get("roi"), "net_profit": o.get("net_profit"),
                       "buy_price": o.get("buy_price"), "product": o.get("product"),
-                      "buy_source": o.get("buy_source"), "kind": o.get("kind")}
+                      "buy_source": o.get("buy_source"), "sell_source": o.get("sell_source"),
+                      "kind": o.get("kind"), "route_id": o.get("route_id", "")}
                 for pid, o in ops.items()},
     }
 
@@ -113,7 +115,7 @@ def detect(prev: dict, cur: dict) -> list[dict]:
     for pid in cur["main_products"]:
         if pid not in prev.get("main_products", []):
             o = cops.get(pid, {})
-            events.append({"type": "NEW_MAIN", "product_id": pid,
+            events.append({"type": "NEW_MAIN", "product_id": pid, "route_id": o.get("route_id", ""),
                            "data": {"product": o.get("product", pid), "net_profit": o.get("net_profit", 0),
                                     "roi": o.get("roi", 0)}})
     # 商品ごとの状態遷移
@@ -121,25 +123,29 @@ def detect(prev: dict, cur: dict) -> list[dict]:
         po = pops.get(pid)
         if not po:
             continue
+        # 前回と同じルート（同じ仕入れ先・売却先）のときだけ比べる（同じ商品の別のルートと比べない）
+        same_route = (po.get("buy_source") == co.get("buy_source") and po.get("sell_source") == co.get("sell_source"))
         # WATCH/ALERT/WAIT → BUY
         if po.get("buy_now") != "BUY" and co.get("buy_now") == "BUY":
-            events.append({"type": "WATCH_TO_BUY", "product_id": pid,
+            events.append({"type": "WATCH_TO_BUY", "product_id": pid, "route_id": co.get("route_id", ""),
                            "data": {"product": co.get("product", pid), "buy_price": co.get("buy_price", 0),
                                     "net_profit": co.get("net_profit", 0), "roi": co.get("roi", 0)}})
         # 価格変動
+        if not same_route:
+            continue
         pbp = po.get("buy_price") or 0; cbp = co.get("buy_price") or 0
         if pbp and cbp and abs(cbp - pbp) >= PRICE_DROP_MIN:
             typ = "PRICE_DROP" if cbp < pbp else "PRICE_RISE"
-            events.append({"type": typ, "product_id": pid,
+            events.append({"type": typ, "product_id": pid, "route_id": co.get("route_id", ""),
                            "data": {"product": co.get("product", pid), "buy_source": co.get("buy_source", ""),
                                     "prev_price": pbp, "buy_price": cbp, "delta": abs(cbp - pbp)}})
         # ROI 変動
         proi = po.get("roi") or 0; croi = co.get("roi") or 0
         if croi - proi >= ROI_DELTA:
-            events.append({"type": "ROI_UP", "product_id": pid,
+            events.append({"type": "ROI_UP", "product_id": pid, "route_id": co.get("route_id", ""),
                            "data": {"product": co.get("product", pid), "prev_roi": proi, "roi": croi}})
         elif proi - croi >= ROI_DELTA:
-            events.append({"type": "ROI_DOWN", "product_id": pid,
+            events.append({"type": "ROI_DOWN", "product_id": pid, "route_id": co.get("route_id", ""),
                            "data": {"product": co.get("product", pid), "prev_roi": proi, "roi": croi}})
     # Health
     ph = prev.get("health_score"); ch = cur.get("health_score")
@@ -234,10 +240,12 @@ def main() -> int:
         "suppressed_count": sum(1 for e in raw_events if e.get("suppressed")),
         "events": sent,
     }
-    (OUT / "latest.json").write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
-    (HIST / f"{cur_snap['date']}.json").write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
-    (OUT / "prev_snapshot.json").write_text(json.dumps(cur_snap, ensure_ascii=False, indent=2), encoding="utf-8")
-    (OUT / "suppression.json").write_text(json.dumps(supp, ensure_ascii=False, indent=2), encoding="utf-8")
+    # 一時ファイルに書いてから置き換える（書き込みの途中で失敗しても前回のファイルを壊さない）
+    from src.utils.atomic_write import write_json_atomic
+    write_json_atomic(OUT / "latest.json", payload)
+    write_json_atomic(HIST / f"{cur_snap['date']}.json", payload)
+    write_json_atomic(OUT / "prev_snapshot.json", cur_snap)
+    write_json_atomic(OUT / "suppression.json", supp)
     _write_md(payload)
     print(f"  通知イベント: {len(sent)}件（抑制 {payload['suppressed_count']}）"
           f"{' / 基準日（初回）' if payload['is_baseline'] else ''}")

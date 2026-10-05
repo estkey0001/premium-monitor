@@ -1,4 +1,4 @@
-# Weekly Learning Report — 2026-10-05
+# Weekly Learning Report — 2026-10-06
 
 - 実行成功率: 0%（CLOSED 0 / 成功 0）
 - 予測精度: 予測 0% vs 実績 0%（誤差 0pt）

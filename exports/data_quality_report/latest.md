@@ -1,17 +1,17 @@
-# データ取得品質レポート（2026-10-05 19:38 JST）
+# データ取得品質レポート（2026-10-06 00:38 JST）
 
 ## 取得成功率
 - 全対象店舗数: 16
-- 成功店舗数: 3
-- 全失敗店舗数: 11
-- ジョブ成功率: 21.8%（OK 12 / 失敗 39 / SKIP 4 / 計 55）
+- 成功店舗数: 2
+- 全失敗店舗数: 12
+- ジョブ成功率: 18.2%（OK 10 / 失敗 41 / SKIP 4 / 計 55）
 
 ## 前回比較
 - 前回成功率: 21.8%
-- 今回成功率: 21.8%
-- 変化: 0.0pt（横ばい）
+- 今回成功率: 18.2%
+- 変化: -3.6pt（悪化）
 - 7日移動平均: 20.8%
-- 主要失敗理由 TOP5: price_not_found 9, product_not_listed 6, rate_limited_429 6, http_403 6, site_blocked 6
+- 主要失敗理由 TOP5: price_not_found 9, product_not_listed 8, rate_limited_429 6, http_403 6, site_blocked 6
 
 ## 店舗別成功率（低い順）
 - 2ndstreet（optional）: 0%（OK 0/失敗 4・price_not_found）
@@ -22,41 +22,41 @@
 - hardoff（optional）: 0%（OK 0/失敗 2・http_404）
 - iosys: 0%（OK 0/失敗 6・http_403）
 - janpara（optional）: 0%（OK 0/失敗 6・rate_limited_429）
+- mobile_ichiban: 0%（OK 0/失敗 5・product_not_listed）
 - netoff（optional）: 0%（OK 0/失敗 4・price_not_found）
 - pasoko（optional）: 0%（OK 0/失敗 2・product_not_listed）
 - sofmap（optional）: 0%（OK 0/失敗 2・service_unavailable）
-- surugaya（optional）: 0%（OK 0/失敗 2・site_blocked）
 
 ## 商品別成功率
+- ps5_pro: 10.0%
 - switch2: 11.1%
-- ps5_pro: 20.0%
 - iphone17pro256: 25.0%
 - iphone17pro512: 25.0%
+- iphone17pm256: 25.0%
 - iphone17pm512: 25.0%
-- iphone17pm256: 37.5%
 
 ## 連続失敗店舗（2回以上）
-- 2ndstreet: 174回連続
-- bookoff: 174回連続
-- dosupara: 174回連続
-- geo_mobile: 174回連続
-- hardoff: 174回連続
-- janpara: 174回連続
-- pasoko: 174回連続
-- sofmap: 174回連続
-- surugaya: 174回連続
-- tsutaya: 174回連続
-- iosys: 107回連続
-- netoff: 34回連続
-- geo: 13回連続
+- 2ndstreet: 175回連続
+- bookoff: 175回連続
+- dosupara: 175回連続
+- geo_mobile: 175回連続
+- hardoff: 175回連続
+- janpara: 175回連続
+- pasoko: 175回連続
+- sofmap: 175回連続
+- surugaya: 175回連続
+- tsutaya: 175回連続
+- iosys: 108回連続
+- netoff: 35回連続
+- geo: 14回連続
 
 ## 改善優先順位（required店舗）
 1. iosys（失敗6 / http_403）
-2. mobile_ichiban（失敗3 / product_not_listed）
+2. mobile_ichiban（失敗5 / product_not_listed）
 
 ## 失敗理由（内訳）
 - price_not_found: 9件
-- product_not_listed: 6件
+- product_not_listed: 8件
 - rate_limited_429: 6件
 - http_403: 6件
 - site_blocked: 6件
@@ -66,11 +66,10 @@
 
 ## 有効データ量（新品・未使用 / 14日以内 / price>0）
 - 有効買取データを持つ商品数: 23
-  - prod_iphone17pm_256: 3店舗
   - prod_iphone17pro_256: 2店舗
   - prod_iphone17pro_512: 2店舗
+  - prod_iphone17pm_256: 2店舗
   - prod_iphone17pm_512: 2店舗
-  - prod_ps5_pro: 2店舗
   - prod_x100vi: 1店舗
   - prod_gfx100rf: 1店舗
   - prod_xt5: 1店舗
@@ -81,6 +80,7 @@
   - prod_a7rv: 1店舗
   - prod_a1ii: 1店舗
   - prod_a7cr: 1店舗
+  - prod_fx3: 1店舗
 
 ## ランキングに使えたデータ数
 - Beginner: 1 件

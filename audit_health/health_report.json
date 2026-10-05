@@ -1,26 +1,26 @@
 {
-  "generated_at": "2026-10-05 17:17 JST",
+  "generated_at": "2026-10-05 19:38 JST",
   "date": "2026-10-05",
   "health_score": {
     "data_quality": 14.9,
     "profit_discovery": 0.0,
-    "source_health": 12.7,
-    "link_quality": 4.8,
-    "freshness": 4.8,
-    "total": 37.2
+    "source_health": 13.0,
+    "link_quality": 4.7,
+    "freshness": 4.9,
+    "total": 37.5
   },
   "data_quality": {
-    "total_obs": 229,
+    "total_obs": 232,
     "usable_obs": 67,
     "stale_count": 118,
-    "stale_rate": 0.5153,
+    "stale_rate": 0.5086,
     "zero_count": 37,
-    "zero_rate": 0.1616,
-    "item_url_rate": 0.4803,
-    "search_url_rate": 0.2052,
-    "manual_rate": 0.5066,
+    "zero_rate": 0.1595,
+    "item_url_rate": 0.4741,
+    "search_url_rate": 0.2026,
+    "manual_rate": 0.5129,
     "api_rate": 0.0,
-    "html_rate": 0.0087
+    "html_rate": 0.0086
   },
   "profit": {
     "main_route_count": 0,
@@ -255,6 +255,18 @@
       },
       "n": 3
     },
+    "Amazon JP (新品出品)": {
+      "success_count": 3,
+      "stale_count": 0,
+      "zero_count": 0,
+      "item_url_rate": 0.0,
+      "freshness": 1.0,
+      "success_rate": 1.0,
+      "confidence": {
+        "medium": 3
+      },
+      "n": 3
+    },
     "ハードオフ": {
       "success_count": 0,
       "stale_count": 0,
@@ -331,16 +343,16 @@
   "diff_vs_prev": {
     "available": true,
     "stale_rate": {
-      "prev": 0.5108,
-      "cur": 0.5153
+      "prev": 0.5153,
+      "cur": 0.5086
     },
     "zero_rate": {
-      "prev": 0.1602,
-      "cur": 0.1616
+      "prev": 0.1616,
+      "cur": 0.1595
     },
     "item_url_rate": {
-      "prev": 0.4762,
-      "cur": 0.4803
+      "prev": 0.4803,
+      "cur": 0.4741
     },
     "main_route_count": {
       "prev": 0,
@@ -356,13 +368,14 @@
   },
   "anomalies": {
     "critical": [
-      "stale率 52% (>=50%)",
+      "stale率 51% (>=50%)",
       "取得成功率 0%: ゲオモバイル",
       "取得成功率 0%: セカンドストリート",
       "取得成功率 0%: ネットオフ"
     ],
     "warning": [
-      "item_url率 48% (<50%)"
+      "item_url率 低下",
+      "item_url率 47% (<50%)"
     ],
     "info": []
   },

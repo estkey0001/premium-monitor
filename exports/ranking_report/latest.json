@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-05 17:17 JST",
+  "generated_at": "2026-10-05 19:38 JST",
   "route_type_beginner": "primary_to_secondary",
   "top_camera_buyback_opportunities": [
     {
@@ -250,7 +250,7 @@
       "official_price_jpy": 137980,
       "reference_source": "official",
       "best_buyback_price": 192700,
-      "best_buyback_shop": "モバイル一番",
+      "best_buyback_shop": "買取商店",
       "buy_price": null,
       "buy_shop_name": "",
       "buy_price_type": "",
@@ -272,7 +272,7 @@
         "official_price_jpy": 137980,
         "reference_source": "official",
         "best_buyback_price": 192700,
-        "best_buyback_shop": "モバイル一番",
+        "best_buyback_shop": "買取商店",
         "buy_price": null,
         "buy_shop_name": "",
         "buy_price_type": "",
@@ -286,12 +286,12 @@
     ]
   },
   "pro_by_category": {},
-  "excluded_items": 15,
-  "total_deals": 16,
+  "excluded_items": 5,
+  "total_deals": 6,
   "confidence_summary": {
-    "total": 16,
+    "total": 6,
     "profitable": 1,
-    "negative": 15
+    "negative": 5
   },
   "stale_data_count": 0
 }

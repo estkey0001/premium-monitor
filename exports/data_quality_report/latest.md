@@ -1,4 +1,4 @@
-# データ取得品質レポート（2026-10-05 17:17 JST）
+# データ取得品質レポート（2026-10-05 19:38 JST）
 
 ## 取得成功率
 - 全対象店舗数: 16
@@ -36,19 +36,19 @@
 - iphone17pm256: 37.5%
 
 ## 連続失敗店舗（2回以上）
-- 2ndstreet: 173回連続
-- bookoff: 173回連続
-- dosupara: 173回連続
-- geo_mobile: 173回連続
-- hardoff: 173回連続
-- janpara: 173回連続
-- pasoko: 173回連続
-- sofmap: 173回連続
-- surugaya: 173回連続
-- tsutaya: 173回連続
-- iosys: 106回連続
-- netoff: 33回連続
-- geo: 12回連続
+- 2ndstreet: 174回連続
+- bookoff: 174回連続
+- dosupara: 174回連続
+- geo_mobile: 174回連続
+- hardoff: 174回連続
+- janpara: 174回連続
+- pasoko: 174回連続
+- sofmap: 174回連続
+- surugaya: 174回連続
+- tsutaya: 174回連続
+- iosys: 107回連続
+- netoff: 34回連続
+- geo: 13回連続
 
 ## 改善優先順位（required店舗）
 1. iosys（失敗6 / http_403）

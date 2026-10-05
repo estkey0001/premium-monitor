@@ -1,6 +1,7 @@
-# HANDOFF（最終更新: 2026-10-05）
+# HANDOFF（最終更新: 2026-10-06）
 
 ## 今の状態
+- 開発環境を `~/Desktop/AI/ClaudeCode/premium-monitor`（ブランチ `tcg-push` = `origin/main`）の1か所に統一した。古いローカルの `main`・`broken-design-backup`・`.claude/worktrees/` の作業ツリーは削除（中身は origin/main に同等のものがあることを確認済み）。
 - Phase 6.1: 定価で買って買取店に売る案件（利益商品・ランキング・Hero・初心者・Pro・商品詳細）は、売却価格に商品の照合が済んだ買取価格だけを使う。正本は `src/market/normalized_prices.sell_confirmation_reasons`（BUYBACK_CASH・is_exact_product_match・店のトップ／検索結果でない・取得失敗や疑わしい値でない・14日以内・新品の系統）。スキャナー（`beginner_deal_scanner`）と LP の補完（`_enrich_deal`）は照合済みの中の最高値を選び、判定（`opportunity.eligibility`）も `sell_identity_unverified` で塞ぐ。PS5 Pro はモバイル一番 ¥192,700（トップページの価格・照合未了）から買取商店 ¥192,300 に変わる（純利益 52,370 → 51,970）。deploy-check #833。旧UIの買取店比較は `DailyLPGenerator._buyback_comparison`（照合済みの店の数で multi / single / none。案件カードと監視中カードの共通の正本）で状態を決め、`data-buyback-comparison-state` を付ける。single（1店舗）・none では「最高」「1位」「比較済み」と言わない。#446 は状態ごとの注記を検査する（取得できた店が1店舗の日に Daily LP Update が止まっていた）。
 - UI Phase 6: 新UIの「商品詳細」（`?ui=new&page=product&product_id=…&tab=history|changes`）と「商品を検索」（`?ui=new&page=search&q=…&category=…`）を作った。表示モデルは `src/content/ui/product_detail.py`（ProductDetailView）、画面は `product_page.py`。利益商品・抽選・予約・在庫再開・せどりルート・検索の各行に「商品詳細を見る」を足した（既存のボタンはそのまま）。価格の履歴は `exports/price_history/latest.json`（`scripts/update_price_history.py`。CI の「Update price history」）に、実際に観測した値だけを 2026-10-05 から積み上げる（それより前の履歴は無い）。
 - Phase 5.2: 無効になったルートが別の成果物経由で復活しないようにした。ルートの識別子 `route_id`（`opportunity.route_key`）を利益ルート → AI Opportunities → 資金配分 → 実行履歴 → 通知に引き継ぎ、AI Dashboard・Capital・Health・通知・フリマ成約欄・β の通知プレビューは描画・生成のときに今の確定・参考ルートとルート単位で照合する（商品単位で照合しない）。実行履歴の OPEN のうち今のルートで確かめられない82件（GR IV の偽ルート 39,009 を含む）は `INVALIDATED`（履歴は残し、値は書き換えない）。公式の購入送料を根拠つきで持つようにした（`src/market/official_shipping.py`。PS5 Pro は 550円 → 純利益 51,670）。
@@ -14,6 +15,8 @@
 - UI Phase 2 を実装（`?ui=new&page=opportunities`）。利益商品の一覧を OpportunityView（`src/content/ui/opportunity.py`）に一本化し、掲載の判定は `eligibility()` だけ。PC は比較テーブル（1200px 以上）、それ未満はカード（640px 以上は2列）。並べ替え4種・在庫ありの絞り込み・一覧内の検索・20件ごとのページ・TOP10・URL の状態保持。テスト 636 件 PASS（tests/test_ui_phase2.py 40件）。
 
 ## 未解決・保留
+- pytest の全体実行の途中で、空の `data/premium_monitor.db`（0バイト）が作られることがある。残ったまま再実行すると `test_api_automation.py::test_dry_run_no_main_mutation` が「no such table」で落ちることがある（消せば通る）。作っているテストは未特定（原因は未調査）。
+- フジヤカメラの買取価格（カメラ）は検索結果ページ由来（link_type=search）なので、Phase 6.1 以降は商品照合未了として確定利益の売値に使わない（2026-10-05 時点ではカメラは全部定価割れで、利益案件の件数は変わらない）。使うには collector が商品ページ単位の URL を取れるようにする必要がある。
 - **data/tcg_verified_lotteries.csv の PCO 2件は AI（Claude）が公式告知画像を目視で転記したもの**。人が公式ページで確認したら human_confirmed を true にする（それまで confidence=medium・通知しない・公式扱いにしない）。
 - トイザらス / Joshin は HTTP 403（ローカルからも）、ヤマダ / ビック / ヨドバシは接続タイムアウト。解析器は未実装で、監視状況に SOURCE_BLOCKED / SOURCE_UNREACHABLE として表示している。エディオン / TSUTAYA / Amazon / 楽天ブックス / セブンネットは到達できるが TCG 抽選の告知一覧を発見できず未実装。
 - fail-closed の運用判断（外部データ依存の error 項目を warning に下げるか）は引き続きユーザー判断待ち。

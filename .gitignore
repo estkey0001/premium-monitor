@@ -44,3 +44,7 @@ exports/debug_camera_screenshots/
 playwright-report/
 test-results/
 venv/
+
+# Claude Code のローカル専用（作業ツリー・プレビューの設定。.claude/ 全体は無視しない）
+.claude/worktrees/
+.claude/launch.json

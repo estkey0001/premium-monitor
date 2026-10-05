@@ -1,5 +1,11 @@
 # プレ値商品監視・速報システム
 
+## 言語ルール（最優先）
+
+プロンプトが英語でも必ず日本語で回答する。コード説明・エラー解説・提案・質問への回答、すべて日本語。
+コード内のコメントも日本語で書く。`AGENTS.md` は Next.js が自動生成する英語ファイルであり、
+回答の言語とは無関係。英語で書かれていても日本語で答える。
+
 ## プロジェクト概要
 iPhone / Apple製品 / カメラ / ゲーム機を対象に、公式価格・中古価格・買取価格・海外価格を横断監視し、プレ値候補を検出するシステム。自動購入は一切行わない。情報の収集・比較・通知・LP生成のみ。
 
@@ -192,3 +198,55 @@ python scripts/update_overseas_prices.py --verbose
 - collection failure 時刻を successful observation として保存してはならない。
 - 人が再確認したときは、`observed_at` を書き換えずに確認日（`verified_at` や `VERIFIED_URLS_CHECKED_ON`）を更新し、確認した証拠（URL・価格）を残す。固定値・設定値の定価に、実行日の日時を付けない。
 - 手動 CSV をコミットする前に、`python scripts/audit_timestamp_only_updates.py --worktree` で「値は同じで日時だけ新しい」行が無いことを確かめる（deploy-check #822 も直近のコミットを検査する）。
+
+## 開発場所（重要）
+
+Premium Monitor の実装は `~/Desktop/AI/ClaudeCode/premium-monitor` の1か所だけで行う。
+
+| 項目 | 値 |
+|---|---|
+| ローカルのブランチ | `tcg-push`（常に `origin/main` と一致させて運用する） |
+| リモート | `origin/main` |
+
+push 先は必ず `tcg-push:main`（fast-forward のみ）。
+
+```bash
+git push origin tcg-push:main
+```
+
+2026-10-06 に、古いローカルの `main`（2026-09-08 の著者書き換えで、共通の祖先 `ec0d9cf4` から分岐した別履歴）・
+`broken-design-backup`・`.claude/worktrees/` の作業ツリーを削除した（中身はすべて `origin/main` に同等のものがあることを確認済み）。
+
+### 禁止
+
+- `.claude/worktrees/` で実装しない
+- 新しい worktree・clone を勝手に作らない
+- 同じ Phase を別のセッションで並行して実装しない
+- force push しない
+- CI（Daily LP Update）の実行中に追加で push しない
+
+### 作業開始時の確認（毎回）
+
+```bash
+pwd
+git branch --show-current
+git rev-parse HEAD
+git fetch origin
+git rev-parse origin/main
+git status --short
+git log origin/main -5
+gh run list --limit 5
+```
+
+- `pwd` が上の場所でなければ実装しない
+- ブランチが `tcg-push` でなければ実装しない
+- HEAD と `origin/main` が違うときは、原因を確かめるまで実装しない
+
+## 公開範囲
+
+GitHub 上で **PUBLIC**。`estkey0001.github.io/premium-monitor/` で
+「プレ値速報」のLP 274ページを公開しており、`Daily LP Update` ワークフローが毎日12:00 JSTに更新する。
+
+コミットする前に、本名・個人メール・絶対パスが混ざっていないか確認すること
+（`exports/` 配下の自動生成物と `docs/HANDOFF.md` が過去に該当した）。
+経緯は `_アーカイブ/個人情報対応の記録-2026-10-02.md`。

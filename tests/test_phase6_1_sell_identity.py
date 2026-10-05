@@ -437,3 +437,9 @@ def test_same_shop_two_rows_is_single_and_deal_sell_counts():
     g = _gen(npx.confirmed_sell_keys([SHOUTEN]))
     assert g._buyback_comparison("prod_ps5_pro", [], ("買取商店", 192300))[0] == "single"
     assert g._buyback_comparison("prod_ps5_pro", [], ("モバイル一番", 192700))[0] == "none"
+
+
+def test_diagnostics_reason_for_unverified_sell():
+    """利益商品の診断（opportunity_diagnostics）でも、売却側の照合未了は「商品の照合」の理由に数える（other にしない）。"""
+    from src.market import opportunity_diagnostics as od
+    assert od._reason("sell_identity_unverified") == "invalid_identity"

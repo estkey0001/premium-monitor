@@ -34,6 +34,7 @@ REASON_OF = {
     "buy_configured_reference": "unverified_buy_price", "buy_unknown": "unverified_buy_price",
     "buy_stale": "unverified_buy_price", "stale_buy_price": "unverified_buy_price",
     "invalid_sell_price": "no_sell_price",
+    "sell_identity_unverified": "invalid_identity",   # 売却側の買取価格の商品照合が未了（Phase 6.1）
     "stale_sell_price": "stale_buyback",
     "costs_unknown": "missing_costs",
     "purchase_shipping_unknown": "missing_costs",     # 公式の購入送料を一次情報で確認していない

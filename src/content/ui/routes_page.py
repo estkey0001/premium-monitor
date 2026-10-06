@@ -92,7 +92,7 @@ def _details(v: RouteView, pd_ids: set | None = None) -> str:
                  '売却先を見る</a>')
     if pd_ids and v.product_id in pd_ids:
         from src.content.ui import product_page
-        links += product_page.link(v.product_id)
+        links += product_page.link(v.product_id) + product_page.watch_button(v.product_id, v.product_name)
     return (f'<details class="nu-ldetail" data-track="route_detail_open"><summary>詳細（内訳・根拠）'
             f'<span class="nu-sr">（{esc(v.product_name)}）</span></summary>'
             f'<dl class="nu-ldetail__dl">{body}</dl>{links}</details>')

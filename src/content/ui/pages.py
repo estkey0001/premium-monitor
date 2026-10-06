@@ -217,7 +217,8 @@ def render_more(catalog: cl.Catalog) -> str:
         (page_href("routes"), "route", "せどりルート", PURPOSE_INFO["routes"]["desc"],
          f'<span class="nu-purpose__count" data-nu-count="routes">{_count_text(catalog.count("routes"))}</span>', True),
         (page_href("home") + "#nu-genres", "box", "ジャンルから探す", "スマホ・TCG・カメラ・ゲーム・PC・その他", "", False),
-        (page_href("search"), "search", "商品を検索", "キーワード検索は準備中です", "", False),
+        (page_href("mypage"), "star", "マイページ", "ウォッチ中の商品・締切・通知の条件（このブラウザに保存）", "", False),
+        (page_href("search"), "search", "商品を検索", "商品名・型番・ジャンルで探す", "", False),
         ("./", "home", "現行版の表示", "これまでの一覧ページ（すべての情報）", "", False),
     ]
     links = "".join(
@@ -259,7 +260,8 @@ def render_search(details: dict | None = None) -> str:
             f'<li class="nu-srow" data-nu-srow data-nu-cat="{esc(v.category)}" data-search="{esc(search)}">'
             f'<span class="nu-srow__main"><span class="nu-srow__name">{esc(v.product_name)}</span>'
             f'<span class="nu-osub">{esc(" ・ ".join(x for x in (v.model, v.category_label) if x))}</span></span>'
-            f'{product_page.link(v.product_id)}</li>')
+            f'<span class="nu-srow__acts">{product_page.link(v.product_id)}'
+            f'{product_page.watch_button(v.product_id, v.product_name)}</span></li>')
     return (
         '<section class="nu-page" data-nu-page="search" aria-labelledby="nu-search-title" hidden>'
         '<h1 id="nu-search-title" class="nu-page__title">商品を検索</h1>'

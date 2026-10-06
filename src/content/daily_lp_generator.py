@@ -4526,6 +4526,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                     "observations") or [],
                 products=self._nu_products(),
                 price_history=self._load_export_json("price_history", "latest.json"),
+                notifications=self._nu_notifications(),
             )
             root = _ui_shell.render_root(ctx)
             self._write_opportunity_diagnostics(ctx)
@@ -4533,6 +4534,26 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         except Exception as exc:  # noqa: BLE001
             logger.warning("new UI render failed: %s", exc)
             return "", ""
+
+    def _nu_notifications(self) -> list[dict]:
+        """マイページの通知の履歴（exports/notifications の latest と直近7日の history。読むだけで書き換えない）。
+        どれを出すか（利用者向けの種類・今も確定のルートか）はマイページ（mypage.build_events）が決める。"""
+        import json as _json_nn
+        base = Path(__file__).resolve().parent.parent.parent / "exports" / "notifications"
+        events: list[dict] = []
+        try:
+            files = [base / "latest.json"] + sorted((base / "history").glob("*.json"), reverse=True)[:7]
+        except OSError:
+            return events
+        for f in files:
+            try:
+                d = _json_nn.loads(f.read_text(encoding="utf-8"))
+            except (OSError, ValueError):
+                continue
+            for e in (d.get("events") or []) if isinstance(d, dict) else []:
+                if isinstance(e, dict) and e not in events:
+                    events.append(e)
+        return events
 
     def _nu_products(self) -> list[dict]:
         """商品詳細の対象（products の登録順）。公式の URL は product_source_config の登録（_official_meta）。"""

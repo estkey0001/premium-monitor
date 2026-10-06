@@ -199,6 +199,10 @@ def test_no_inactive_fake_cta():
         if 'role="tab"' in b:
             assert 'type="button"' in b and "aria-selected=" in b and "aria-controls=" in b, b
             continue
+        # マイページ（UI Phase 7）: ウォッチ・ジャンルの切り替え（aria-pressed）と、既読・リセットの操作（動く）
+        if "aria-pressed=" in b or "data-nu-mp-" in b:
+            assert 'type="button"' in b and ("aria-pressed=" in b or "data-nu-mp-" in b), b
+            continue
         assert 'type="button"' in b and "aria-expanded=" in b and "aria-controls=" in b, b
     # 押せない部品（準備中）は aria-disabled と「準備中」の文言を持つ
     for el in re.findall(r"<(?:span|input)[^>]*aria-disabled=\"true\"[^>]*>", body):
@@ -207,7 +211,8 @@ def test_no_inactive_fake_cta():
     inputs = re.findall(r"<input[^>]*>", body)
     # 商品の検索（UI Phase 6）は動く。それ以外の準備中の部品は残る
     assert body.count("準備中") >= 5
-    assert all("disabled" in i or "data-nu-search-input" in i for i in inputs)
+    # マイページの設定（UI Phase 7。このブラウザに保存する。動く）も除く
+    assert all("disabled" in i or "data-nu-search-input" in i or "data-nu-mp-" in i for i in inputs)
     assert sum("data-nu-search-input" in i for i in inputs) == 5
     for p in ("opportunities", "lottery", "restock", "routes", "search"):
         assert _section(root, p).count("data-nu-search-input") == 1

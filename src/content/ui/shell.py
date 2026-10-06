@@ -12,7 +12,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from src.content.ui import account, home, lottery_page, navigation, opportunities_page, pages, parity, restock_page, routes_page
+from src.content.ui import (account, home, lottery_page, mypage, navigation, opportunities_page, pages, parity,
+                            restock_page, routes_page)
 from src.content.ui import product_detail, product_page
 from src.content.ui import catalog as cl
 from src.content.ui import categories as cats
@@ -43,6 +44,7 @@ class ShellContext:
     price_observations: list | None = None  # 正規化した価格の観測（出品価格の参考に使う）
     products: list | None = None        # 商品の一覧（商品詳細。product_id・名前・ジャンル・メーカー・型番・公式の URL）
     price_history: dict | None = None   # 実際に観測した価格の履歴（exports/price_history/latest.json）
+    notifications: list | None = None   # 通知のイベント（exports/notifications の latest と直近の history。マイページの履歴）
 
 
 def _css() -> str:
@@ -92,7 +94,7 @@ def _router_script() -> str:
   var PAGES = MAP.pages || ['home'], ALIASES = MAP.aliases || {};
   var PURPOSES = ['opportunities', 'lottery', 'restock', 'routes'];
   // 「その他」から開くページでは、ボトムナビの「その他」を現在地にする
-  var MORE_PAGES = ['more', 'routes', 'search', 'account'];
+  var MORE_PAGES = ['more', 'routes', 'search', 'account', 'mypage'];
   var SITE = root.getAttribute('data-nu-site') || '';
   var PD_ALIAS = jsonAttr('data-nu-pd-alias'), PD_TABS = ['buy', 'history', 'changes'];
   var DATA = {};
@@ -798,6 +800,7 @@ def _router_script() -> str:
     root.querySelectorAll('[data-nu-mode-label]').forEach(function(el){ el.textContent = mode; });
     var label = page === 'home' ? (cat === 'all' ? (TITLES.home || 'HOME') : (CATS[cat] || ''))
               : page === 'product' ? (pdShown ? pdShown.getAttribute('data-nu-pd-name') : '商品が見つかりません')
+              : page === 'mypage' ? (TITLES.mypage || '')
               : (cat === 'all' ? '' : (CATS[cat] || '') + 'の') + (TITLES[page] || '');
     document.title = label + ' | ' + SITE;
     var focusId = q.get('focus') === 'operator' ? 'nu-operator' : '';
@@ -810,6 +813,8 @@ def _router_script() -> str:
       target.focus({preventScroll: true});
     }
     if (moveFocus && focusId && target) target.scrollIntoView({block: 'start'});
+    // マイページ・ウォッチのボタン（mypage.py のスクリプト）に、表示が変わったことを知らせる
+    root.dispatchEvent(new CustomEvent('nu:render', {detail: {page: page}}));
     return page;
   }
   function scrollToHash() {
@@ -976,7 +981,7 @@ def _brand(title: str) -> str:
 
 PAGE_TITLES = {"home": "HOME", "opportunities": "利益商品", "lottery": "抽選・予約", "restock": "在庫再開",
                "routes": "せどりルート", "more": "メニュー", "search": "商品を検索", "account": "運営者向け",
-               "product": "商品詳細"}
+               "product": "商品詳細", "mypage": "マイページ"}
 
 
 def build_catalog(ctx: ShellContext):
@@ -1017,6 +1022,8 @@ def render_root(ctx: ShellContext) -> str:
         + pages.render_search(details)
         + account.render()
         + product_page.render(details)
+        + mypage.render(details, mypage.build_events(details, ctx.notifications, ctx.profit_routes, model.now),
+                        model.now)
     )
     brand = esc(_brand(ctx.site_title))
     cats_json = json.dumps({c.key: c.label for c in cats.CATEGORIES}, ensure_ascii=False)
@@ -1034,13 +1041,16 @@ def render_root(ctx: ShellContext) -> str:
         f'{navigation.top_nav()}'
         f'<div class="nu-header__tools">{updated}'
         f'<a class="nu-iconbtn" href="{esc(navigation.page_href("search"))}" data-nu-nav="search" aria-label="商品を検索">'
-        f'{icon("search", size=20)}</a></div></div></header>'
+        f'{icon("search", size=20)}</a>'
+        f'<a class="nu-iconbtn" href="{esc(navigation.page_href("mypage"))}" data-nu-nav="mypage" aria-label="マイページ">'
+        f'{icon("star", size=20)}</a></div></div></header>'
         f'<main id="nu-main" class="nu-main" tabindex="-1">{body}</main>'
         f'{pages.render_footer(_brand(ctx.site_title))}'
         f'{navigation.bottom_nav()}'
         f'<script type="application/json" id="nu-lot-data">{rt.data_json(model.vms)}</script>'
         f'<script type="application/json" id="nu-catalog">{esc_json(catalog.data_json())}</script>'
         f'<script>{rt.runtime_js()}</script>'
+        f'{mypage.script(details)}'
         f'{_router_script()}'
         f'</div>{ROOT_END_MARK}'
     )

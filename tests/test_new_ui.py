@@ -148,7 +148,11 @@ def test_new_ui_only_with_flag():
     assert "html:not(.ui-new) #new-ui-root{display:none!important}" in head
     assert "html.ui-new body>*:not(#new-ui-root){display:none!important}" in head
     root = shell.render_root(_ctx())
-    assert "localStorage" not in root and "document.cookie" not in root
+    # localStorage を使うのはマイページ（UI Phase 7）の保存の入口（NuStore）だけ。新UIの既定化・cookie には使わない
+    i = root.index("var KEY = 'premium-monitor.mypage'")
+    j = root.index("window.NuStore = NuStore;")
+    assert "localStorage" not in root[:i] + root[j:] and "document.cookie" not in root
+    assert "premium-monitor.mypage" in root[i:j] and "'ui'" not in root[i:j]
 
 
 def test_old_dom_ids_preserved(monkeypatch):
@@ -162,7 +166,8 @@ def test_old_dom_ids_preserved(monkeypatch):
 
 def test_navigation_routes():
     assert navigation.PAGES == ("home", "opportunities", "lottery", "restock", "routes", "more",
-                                "search", "account", "product")       # product は UI Phase 6（商品詳細）
+                                "search", "account", "product",       # product は UI Phase 6（商品詳細）
+                                "mypage")                              # mypage は UI Phase 7（マイページ）
     root = shell.render_root(_ctx())
     for page in navigation.PAGES:
         assert f'data-nu-page="{page}"' in root

@@ -138,7 +138,7 @@ def _details(v: LotteryReservationView, cta_kind: str = "", pd_ids: set | None =
                 f' rel="noopener nofollow" data-track="lottery_info_click">情報元を開く</a>')
     if pd_ids and v.product_id in pd_ids:
         from src.content.ui import product_page
-        link += product_page.link(v.product_id)
+        link += product_page.link(v.product_id) + product_page.watch_button(v.product_id, v.product_name)
     return (f'<details class="nu-ldetail" data-track="lottery_detail_open"><summary>詳細'
             f'<span class="nu-sr">（{esc(v.product_name)}）</span></summary>'
             f'<dl class="nu-ldetail__dl">{body}</dl>{link}</details>')

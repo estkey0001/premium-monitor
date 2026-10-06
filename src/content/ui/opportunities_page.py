@@ -95,6 +95,7 @@ def _detail(v: opp.OpportunityView, pd_ids: set | None = None) -> str:
     if pd_ids and v.product_id in pd_ids:
         from src.content.ui import product_page
         links.append(product_page.link(v.product_id))
+        links.append(product_page.watch_button(v.product_id, v.product_name))
     return (f'<div class="nu-odetail__grid"><div><h4 class="nu-odetail__h">価格の内訳</h4>'
             f'<ul class="nu-break">{"".join(rows)}</ul><ul class="nu-break nu-break--sub">{acq}</ul></div>'
             f'<div><h4 class="nu-odetail__h">情報元</h4><ul class="nu-break">{src}</ul>'

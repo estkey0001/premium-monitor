@@ -7061,8 +7061,13 @@ def _check_new_ui(html: str) -> list[dict]:
          "html:not(.ui-new) #new-ui-root{display:none!important}" in html
          and root.startswith('<div id="new-ui-root" hidden'),
          "?ui=new が無いとき新UIを隠す（CSS と hidden 属性）", "通常URLで新UIが見える")
+    # localStorage を使ってよいのはマイページ（UI Phase 7）の保存の入口（NuStore）だけ。新UIの既定化には使わない
+    _ks, _ke = root.find("var KEY = 'premium-monitor.mypage'"), root.find("window.NuStore = NuStore;")
+    _store = root[_ks:_ke] if 0 <= _ks < _ke else ""
+    _rest = root.replace(_store, "") if _store else root
     _add(803, "new_ui_flag_only",
-         "get('ui')==='new'" in html and "localStorage" not in root and "document.cookie" not in root,
+         "get('ui')==='new'" in html and "localStorage" not in _rest and "document.cookie" not in root
+         and "'ui'" not in _store,
          "新UIは ?ui=new のときだけ有効（cookie / localStorage で既定化しない）",
          "フラグ以外で新UIが有効になる")
     n_nav = root.count('class="nu-bottomnav__link"')
@@ -7401,6 +7406,40 @@ def _check_data_correctness() -> list[dict]:
         _add(833, "opportunity_sell_identity_verified", bool(_obs833) and not bad833,
              f"利益に使った売却価格はすべて商品照合済みの買取価格で、商品詳細の表の確認済みの行と一致（{n833}件）",
              f"問題: {bad833[:5]}" if bad833 else "正規化の観測が読めない")
+
+        # #834 マイページ（UI Phase 7）: DEMO・架空のアカウント表示が無い、ウォッチのボタンは登録済みの商品だけ、
+        # カードの想定純利益は商品詳細と同じ値（マイページで計算し直していない）、危ないリンク・抽選の外の応募ボタンが無い
+        _mi = _h.find('data-nu-page="mypage"')
+        _mp = _h[_mi:_h.find('</main>', _mi)] if _mi >= 0 else ""          # マイページは本文の最後のページ
+        bad834 = []
+        _mp_text = _re832.sub(r"<[^>]+>", " ", _mp)
+        if "DEMO" in _mp_text or 'data-nu-mp-card="prod_demo' in _mp:
+            bad834.append("DEMO")
+        for _w in ("ログイン済み", "ログイン中", "同期済み", "クラウドに保存", "通知登録完了", "会員ランク", "契約プラン", "プラン契約"):
+            if _w in _mp_text:
+                bad834.append(f"架空の状態: {_w}")
+        if _re832.search(r"[\w.+-]+@[\w-]+\.[\w.]+", _mp_text):
+            bad834.append("メールアドレス")
+        _pd_ids = set(_re832.findall(r'<article class="nu-pd" data-nu-pd="([^"]+)"', _sec))
+        _w_ids = set(_re832.findall(r'data-nu-watch="([^"]+)"', _h))
+        if _w_ids - _pd_ids:
+            bad834.append(f"登録の無い商品のウォッチ: {sorted(_w_ids - _pd_ids)[:3]}")
+        if _re832.search(r'href="\s*(?:javascript|data|vbscript):', _mp, _re832.I):
+            bad834.append("危ない URL")
+        _outside = _re832.sub(r'<article class="nu-mp-lot".*?</article>', "", _mp, flags=_re832.S)
+        if "data-nu-cta=" in _outside:
+            bad834.append("抽選の一覧の外の応募ボタン")
+        for _pid, _net in _re832.findall(r'data-nu-mp-card="([^"]+)"[^>]*?data-net="(\d*)"', _mp):
+            _ai = _sec.find(f'<article class="nu-pd" data-nu-pd="{_pid}"')
+            _ae = _sec.find('<article class="nu-pd" ', _ai + 10)
+            _pm = _re832.search(r'nu-pd-metric--main nu-pd-metric--profit"><dt>想定純利益</dt><dd><span class="nu-pd-val">'
+                                r'\+¥([\d,]+)', _sec[_ai:_ae if _ae >= 0 else len(_sec)]) if _ai >= 0 else None
+            _pd_net = _pm.group(1).replace(",", "") if _pm else ""
+            if _pd_net != _net:
+                bad834.append(f"{_pid}: マイページ {_net or '算出前'} / 商品詳細 {_pd_net or '算出前'}")
+        _add(834, "mypage_safe", _mi >= 0 and not bad834,
+             "マイページに DEMO・架空のアカウント表示・危ないリンクが無く、ウォッチは登録済みの商品だけ、想定純利益は商品詳細と同じ",
+             f"問題: {bad834[:5]}" if bad834 else "マイページが見つからない")
     return out
 
 

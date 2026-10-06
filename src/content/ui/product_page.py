@@ -496,7 +496,8 @@ def _article(v: pd.ProductDetailView) -> str:
         f'<p class="nu-pd-state"><span class="nu-badge nu-tone-{tone}" data-nu-pd-status="{esc(v.status)}"{until}'
         f' data-nu-pd-fallback="{esc(v.fallback_label)}"'
         f' data-nu-pd-fallback-tone="{STATUS_TONE.get(v.fallback_status, "neutral")}">'
-        f'{esc(v.status_label)}</span>{state_bits}</p>{head_cta}</header>'
+        f'{esc(v.status_label)}</span>{state_bits}</p>'
+        f'<div class="nu-pd-headacts">{head_cta}{watch_button(v.product_id, v.product_name, compact=False)}</div></header>'
         f'{_summary(v)}'
         f'<div class="nu-pd-tabs" role="tablist" aria-label="{esc(v.product_name)}の情報">{tabs}</div>{body}'
         '</article>'
@@ -514,6 +515,21 @@ def render(views: dict) -> str:
         f'<a class="nu-btn nu-btn--primary" href="{esc(page_href("search"))}">商品一覧へ戻る</a></div>'
         f'{arts}</section>'
     )
+
+
+def quote_id(product_id: str) -> str:
+    from urllib.parse import quote
+    return quote(product_id, safe="")
+
+
+def watch_button(product_id: str, name: str, *, compact: bool = True) -> str:
+    """ウォッチの切り替え（マイページ。product_id で保存し、商品名では照合しない）。押した状態はブラウザ側で付け直す。
+    主なボタン（購入・応募・商品詳細）より目立たせない。"""
+    cls = "nu-watch nu-watch--sm" if compact else "nu-watch"
+    return (f'<button type="button" class="{cls}" data-nu-watch="{esc(product_id)}" aria-pressed="false"'
+            f' aria-label="{esc(name)}をウォッチ" data-nu-watch-name="{esc(name)}">'
+            '<span class="nu-watch__icon" aria-hidden="true">☆</span>'
+            '<span class="nu-watch__text">ウォッチ</span></button>')
 
 
 def link(product_id: str, label: str = "商品詳細を見る") -> str:

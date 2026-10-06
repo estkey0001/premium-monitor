@@ -1,6 +1,6 @@
 
 ============================================================
- Deploy Check (795 items)
+ Deploy Check (796 items)
 ============================================================
   ✅ [index_exists] docs/index.html 存在
   ✅ [forbidden_phrases] 禁止表現なし
@@ -161,7 +161,7 @@
   ⚠️ [no_price_zero_shown] LP上に¥0の価格表記が9件存在する（fetch_failed以外の0価格行が表示されている可能性）
   ✅ [auto_scraped_badge] 「自動取得」バッジ（badge-auto-scraped）が表示されている
   ✅ [fetch_failed_badge] 「取得失敗」バッジ（badge-fetch-failed）が表示されている
-  ✅ [fetch_failed_has_link] 取得失敗行（shop-row-failed）に確認リンクがある（19行）
+  ✅ [fetch_failed_has_link] 取得失敗行（shop-row-failed）に確認リンクがある（20行）
   ✅ [collection_stats_shown] ページ上部に取得統計（自動取得N件/取得失敗N件）が表示されている
   ✅ [hero_deals_dynamic] 参考DEALSに固定ハードコード商品なし（パネル削除済み = 正常）
   ✅ [fetch_failed_no_price_calc] fetch_failed 行の価格欄が「—」（価格計算に使われていない）
@@ -185,13 +185,13 @@
   ✅ [ipad_not_in_other] iPad は「その他」欄に混入していない
   ✅ [airpods_not_in_smartphone] AirPods はスマートフォン欄に混入していない
   ⚠️ [applewatch_in_wearable_section] Apple Watch がウェアラブル欄に見つからない（データなし or genre設定を確認）
-  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-10-06T02:19:35+09:00）
+  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-10-06T11:24:09+09:00）
   ⚠️ [suspicious_price_format] suspicious_prices 形式OK（suspicious_price 1件あり — 確認推奨）
   ✅ [fetch_failed_has_reason] fetch_failed 45件すべてに reason あり
   ✅ [collector_report_html_exists] docs/collector_report.html 存在
   ✅ [collector_report_link_in_lp] LP内に collector_report.html へのリンクがある
   ✅ [fetch_failed_report_link] 取得失敗41件 / suspicious1件 → 警告バーが表示されている
-  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 8件存在する: ['iphone17pro256', 'iphone17pm512', 'iphone17pm256', 'iphone17pro512']
+  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 8件存在する: ['iphone17pm256', 'iphone17pm512', 'iphone17pro512', 'iphone17pro256']
   ✅ [beginner_page_auto_scraped_exists] 自動取得 OK 10件 / total 55件
   ✅ [shop_name_no_vertical_wrap] shop-name-col に word-break:keep-all が設定されている
   ✅ [iphone17pro256_price_scraped] iPhone 17 Pro 256GB の価格取得成功: ['kaitori_shouten', 'kaitori_itchome']
@@ -206,7 +206,7 @@
   ✅ [debug_files_saved] exports/debug/ に診断ファイル 67件あり
   ✅ [low_confidence_not_in_lp] confidence=low 価格がLPに含まれていない（low=0件）
   ✅ [suspicious_price_not_in_lp] suspicious_price がLPに含まれていない（要疑い価格=1件）
-  ✅ [fetch_failed_collapse_ui_exists] fetch_failed店舗 21件で「さらに表示」UIが存在
+  ✅ [fetch_failed_collapse_ui_exists] fetch_failed店舗 22件で「さらに表示」UIが存在
   ✅ [monitoring_description_exists] monitoring カードに監視中メッセージが存在
   ✅ [fetch_failed_description_exists] fetch_failed セクションに説明文が存在
   ✅ [quality_gate_script_exists] scripts/check_collector_quality.py が存在
@@ -233,7 +233,7 @@
   ✅ [report_has_not_listed_reason] collector_report の failure_reason_ranking に product_not_listed が存在する（未掲載/失敗が別集計）
   ✅ [lp_not_listed_display] LP が product_not_listed を「現在未掲載」バッジで表示する実装が存在する
   ✅ [base_collector_no_reason_overwrite] buyback_base_csv.py が last_failure_reason を上書きしない（None チェック実装済み）
-  ✅ [mobile_ichiban_512_not_listed] mobile_ichiban の 512GB 系が product_not_listed として正しく分類されている
+  ⚠️ [mobile_ichiban_512_not_listed] mobile_ichiban の 512GB 系が product_not_listed でなく failed_shops に入っている — 分類の修正が必要
   ✅ [not_listed_badge_not_green] badge-not-listed / freshness-not-listed が green 系色を使っていない（自動取得成功と区別）
   ✅ [ricoh_monochrome_single] RICOH GR IV Monochrome が lottery_events.csv に定義済み
   ✅ [ricoh_hdf_single] RICOH GR IV HDF が lottery_events.csv に定義済み
@@ -447,7 +447,7 @@
   ✅ [beginner_source_in_confirm_line] #440 Beginner の取得方法は confirm-line（最終確認行）にだけ表示されている
   ✅ [pro_buyback_candidates_present] #441 Pro に買取店価格候補（買取価格）が残っている
   ✅ [pro_domestic_candidates_present] #442 Pro に国内新品/未使用価格候補（国内候補テーブル）が残っている
-  ✅ [beginner_row_has_core_cols] #443 Beginner の各店舗カードに 店舗名・価格・差益・確認リンクが揃っている（店名82/リンク82）
+  ✅ [beginner_row_has_core_cols] #443 Beginner の各店舗カードに 店舗名・価格・差益・確認リンクが揃っている（店名83/リンク83）
   ✅ [beginner_source_only_in_details_or_confirm] #444 取得方法（自動取得/手動確認）は details / confirm-line にだけ表示される
   ✅ [beginner_compare_folded_initial_hero_only] #445 初期表示は最高買取店＋2位差額のみ・買取店比較は details 内（初期表示の shop-row max=0）
   ✅ [beginner_hero_and_runnerup_diff] #446 初期表示に最高買取店ブロックと、比較の状態に合った注記（2位との差額・比較済み／1店舗のみ／比較なし）が表示される
@@ -549,7 +549,7 @@
   ✅ [camera_tradein_exclude] #542 カメラ買取が下取(15%UP等)価格を現金買取価格から分離・除外している
   ✅ [sedori_overseas_sell] #543 せどり計算の売却先が「買取価格＋海外販売価格」になっている（NPO PRO_SELL_TYPES）
   ✅ [top_camera_reference_guard] #544 Top Camera Buyback が参照価格(公式/定価)未取得の商品を除外している
-  ✅ [npo_exists] #545 normalized_price_observations/latest.json が存在する（229観測）
+  ✅ [npo_exists] #545 normalized_price_observations/latest.json が存在する（232観測）
   ✅ [npo_price_role_required] #546 全観測に price_role が付与されている
   ✅ [npo_tradein_not_main] #547 trade_in_price が main calculation（最高買取等）に使われない
   ✅ [npo_pro_buy_no_buyback] #548 Pro route の buy 側に buyback_price が使われない
@@ -614,11 +614,11 @@
   ✅ [lp_main_reference_separated2] #607 reference route が main route と分離表示される
   ✅ [lp_pro_summary] #608 main route がある場合 Pro サマリーが表示される
   ✅ [health_page_exists] #609 Health レポートと LP の Health タブが存在する
-  ✅ [health_score_shown] #610 Health Score が表示される（37.3/100）
+  ✅ [health_score_shown] #610 Health Score が表示される（36.3/100）
   ✅ [health_anomalies_shown] #611 異常一覧（Critical/Warning/Info）が表示される
-  ✅ [health_improvements_shown] #612 改善TOP10 が表示される（9件）
+  ✅ [health_improvements_shown] #612 改善TOP10 が表示される（10件）
   ✅ [health_diff_shown] #613 前日比較が表示される
-  ✅ [health_critical_classification] #614 異常が Critical/Warning/Info に分類される（C4/W2/I0）
+  ✅ [health_critical_classification] #614 異常が Critical/Warning/Info に分類される（C5/W3/I0）
   ✅ [ai_dashboard_exists] #615 ai_opportunities.json と LP の AI Dashboard が存在する（0件）
   ✅ [ai_opportunity_score] #616 Opportunity Score（0-100）が全候補に付与される
   ✅ [ai_buy_decision] #617 BUY/WATCH/PASS 判定が付与される
@@ -660,20 +660,20 @@
   ✅ [saas_auth_billing_gated] #653 認証(email/google/apple)・課金(Stripe/Trial)が env gating で実装される
   ✅ [saas_admin_dashboard] #654 Admin Dashboard が生成される（登録者 3）
   ✅ [saas_roadmap] #655 ROADMAP.md（運用/障害/デプロイ/課金/バックアップ）が存在する
-  ✅ [production_report] #656 Production Report が存在する（Overall 80.2/100）
+  ✅ [production_report] #656 Production Report が存在する（Overall 80.1/100）
   ✅ [production_security] #657 Security 監査（Secret0/パストラバーサル対策/API hardening）合格
   ✅ [production_operations] #658 Operations 監査（Runbook/Health/Monitoring/Rollback）合格
   ✅ [production_deployment] #659 Deployment 監査（Pages/CI・本番構成案）合格
   ✅ [production_business] #660 Business Readiness（3プラン/Admin/Watchlist）合格
   ✅ [production_no_critical] #661 Critical 課題ゼロ（残 0件）
-  ✅ [production_overall_score] #662 Overall Score 80.2/100（>=70 でリリース水準）
-  ✅ [data_quality_report] #663 Data Quality Report が存在する（Overall 68/100）
+  ✅ [production_overall_score] #662 Overall Score 80.1/100（>=70 でリリース水準）
+  ✅ [data_quality_report] #663 Data Quality Report が存在する（Overall 67/100）
   ✅ [data_quality_source_ranking] #664 Source Quality Ranking が生成される（9ソース）
   ✅ [data_quality_stale_analysis] #665 Stale 分析が生成される（stale 103キー・原因分類あり）
-  ✅ [data_quality_zero_price] #666 ¥0 分析が生成される（実取得失敗 10件）
+  ✅ [data_quality_zero_price] #666 ¥0 分析が生成される（実取得失敗 15件）
   ✅ [data_quality_coverage] #667 Coverage Validation が生成される（45/45商品）
   ✅ [data_quality_normalization] #668 Normalization 監査 + 自動化カバレッジ透明性が生成される
-  ⚠️ [data_quality_overall_score] #669 Data Quality Overall 68/100（>=70 でデータ品質水準） ← データ品質スコアが基準未満
+  ⚠️ [data_quality_overall_score] #669 Data Quality Overall 67/100（>=70 でデータ品質水準） ← データ品質スコアが基準未満
   ✅ [beta_report] #670 Beta Report が存在する（Ready 83/100・READY (closed beta)）
   ✅ [beta_onboarding] #671 初回オンボーディング（5ステップ）がβ体験ページに出力される
   ✅ [beta_demo_account] #672 Demo Account が存在する（watchlist 5件・execution/history有）
@@ -735,7 +735,7 @@
   ✅ [api_stage_control] #728 stage 制御（0/5/10/25/all）が実装される
   ✅ [api_stage_workflow] #729 workflow に stage 制御 / real canary が配線される
   ✅ [api_pending_no_fake] #730 未設定APIは PENDING（real_api_called=false・架空成功なし）
-  ✅ [api_data_quality_accuracy] #731 Data Quality Accuracy 維持（97/100）
+  ✅ [api_data_quality_accuracy] #731 Data Quality Accuracy 維持（98/100）
   ✅ [ebay_real_canary_report] #732 eBay real canary report が存在（verdict=EBAY_PENDING_CONFIGURATION）
   ✅ [ebay_canary_verdict_valid] #733 eBay Canary Verdict が有効（EBAY_PENDING_CONFIGURATION）
   ✅ [ebay_no_fake_pass] #734 未設定/未呼出しで EBAY_REAL_CANARY_PASS を出していない
@@ -770,7 +770,7 @@
   ✅ [tcg_blocked_source_not_healthy] #762 アクセス拒否（HTTP 403 等）の監視元を正常扱いしない
   ✅ [tcg_entry_url_official_only] #763 応募ページへのリンクは公式サイトの URL のみ
   ✅ [tcg_lottery_coverage_report] #764 抽選の監視状況（登録 / 実装 / 正常 / 拒否 / 未実装）が出力されている
-  ✅ [tcg_lottery_real_data] #765 抽選を実データで取得している（8件）、または監視元が正常に0件を返している
+  ✅ [tcg_lottery_real_data] #765 抽選を実データで取得している（6件）、または監視元が正常に0件を返している
   ✅ [tcg_lp_lottery_first] #766 TCG タブで抽選が在庫・販売情報より上に表示されている
   ✅ [new_ui_old_dom_kept] #800 旧UIのタブ id が残っている
   ✅ [new_ui_root] #801 新UIの root（#new-ui-root）が1つあり、終わりの目印がある
@@ -797,8 +797,9 @@
   ✅ [price_history_real_points] #831 価格の履歴は実際に観測した点だけ（観測時刻あり・未来でない・重複なし・正の価格）
   ✅ [product_detail_safe] #832 公開ページの商品詳細に DEMO・危ない URL・除外したルートの利益が出ていない
   ✅ [opportunity_sell_identity_verified] #833 利益に使った売却価格はすべて商品照合済みの買取価格で、商品詳細の表の確認済みの行と一致（1件）
+  ✅ [mypage_safe] #834 マイページに DEMO・架空のアカウント表示・危ないリンクが無く、ウォッチは登録済みの商品だけ、想定純利益は商品詳細と同じ
 
-  Errors: 0 | Warnings: 32 | OK: 763
+  Errors: 0 | Warnings: 33 | OK: 763
 
   ✅ Deploy check PASSED
 ============================================================

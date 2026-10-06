@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-06 03:43 JST",
+  "generated_at": "2026-10-06 12:53 JST",
   "ebay_api_configured": false,
   "overseas_source_mode": "manual",
   "summary": {
@@ -49,11 +49,11 @@
       "sell_candidates": 2,
       "min_usable_buy": null,
       "min_usable_buy_source": "",
-      "max_usable_sell": 171500,
-      "max_usable_sell_source": "買取一丁目",
+      "max_usable_sell": 171000,
+      "max_usable_sell_source": "買取商店",
       "min_usable_buy_identity_verified": false,
-      "max_usable_sell_identity_verified": false,
-      "target_buy_price": 171499,
+      "max_usable_sell_identity_verified": true,
+      "target_buy_price": 170999,
       "gross_gap": null,
       "net_domestic": null,
       "best_reference_net": null,
@@ -62,7 +62,7 @@
       "rejection_top5": [
         [
           "price_zero",
-          5
+          6
         ],
         [
           "stale_over_14d",
@@ -93,7 +93,7 @@
       "rejection_top5": [
         [
           "price_zero",
-          5
+          6
         ],
         [
           "stale_over_14d",
@@ -111,11 +111,11 @@
       "sell_candidates": 2,
       "min_usable_buy": null,
       "min_usable_buy_source": "",
-      "max_usable_sell": 189500,
-      "max_usable_sell_source": "買取一丁目",
+      "max_usable_sell": 187000,
+      "max_usable_sell_source": "買取商店",
       "min_usable_buy_identity_verified": false,
-      "max_usable_sell_identity_verified": false,
-      "target_buy_price": 189499,
+      "max_usable_sell_identity_verified": true,
+      "target_buy_price": 186999,
       "gross_gap": null,
       "net_domestic": null,
       "best_reference_net": null,
@@ -124,7 +124,7 @@
       "rejection_top5": [
         [
           "price_zero",
-          5
+          6
         ],
         [
           "stale_over_14d",
@@ -142,11 +142,11 @@
       "sell_candidates": 2,
       "min_usable_buy": null,
       "min_usable_buy_source": "",
-      "max_usable_sell": 215500,
-      "max_usable_sell_source": "買取一丁目",
+      "max_usable_sell": 215000,
+      "max_usable_sell_source": "買取商店",
       "min_usable_buy_identity_verified": false,
-      "max_usable_sell_identity_verified": false,
-      "target_buy_price": 215499,
+      "max_usable_sell_identity_verified": true,
+      "target_buy_price": 214999,
       "gross_gap": null,
       "net_domestic": null,
       "best_reference_net": null,
@@ -155,7 +155,7 @@
       "rejection_top5": [
         [
           "price_zero",
-          5
+          6
         ]
       ],
       "stale_excluded": 0,
@@ -569,11 +569,11 @@
       "sell_candidates": 1,
       "min_usable_buy": null,
       "min_usable_buy_source": "",
-      "max_usable_sell": 52800,
+      "max_usable_sell": 52500,
       "max_usable_sell_source": "買取商店",
       "min_usable_buy_identity_verified": false,
       "max_usable_sell_identity_verified": true,
-      "target_buy_price": 52799,
+      "target_buy_price": 52499,
       "gross_gap": null,
       "net_domestic": null,
       "best_reference_net": null,
@@ -640,7 +640,7 @@
       "rejection_top5": [
         [
           "price_zero",
-          8
+          9
         ],
         [
           "stale_over_14d",
@@ -774,10 +774,10 @@
     },
     "prod_gr4_mono": {
       "product_name": "RICOH GR IV Monochrome",
-      "buy_candidates": 1,
+      "buy_candidates": 0,
       "sell_candidates": 0,
-      "min_usable_buy": 174101,
-      "min_usable_buy_source": "Amazon JP (新品出品)",
+      "min_usable_buy": null,
+      "min_usable_buy_source": "",
       "max_usable_sell": null,
       "max_usable_sell_source": "",
       "min_usable_buy_identity_verified": false,
@@ -905,10 +905,6 @@
         ],
         [
           "sold_label_without_evidence",
-          1
-        ],
-        [
-          "accessory_or_wrong_product",
           1
         ]
       ],

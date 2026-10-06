@@ -940,18 +940,14 @@ def test_lawson_partial_store_condition_is_not_asserted():
 
 
 def test_source_health_table_scrolls_inside_container():
-    """Source Health 表は横スクロール枠の中に置き、スマホでページ幅を広げない。"""
-    from src.content.daily_lp_generator import DailyLPGenerator
-    g = DailyLPGenerator.__new__(DailyLPGenerator)
-    orig = DailyLPGenerator._load_tcg_report
-    DailyLPGenerator._load_tcg_report = staticmethod(lambda: {
-        "events": [], "source_health": [{"source_name": "X", "status": "BLOCKED",
-                                         "status_reason": "HTTP 403", "funnel": {}}]})
-    try:
-        html = DailyLPGenerator._section_tcg(g)
-    finally:
-        DailyLPGenerator._load_tcg_report = orig
-    i_scroll = html.find('class="tcg-health-scroll"')
-    i_table = html.find('class="tcg-health-table"')
-    assert 0 <= i_scroll < i_table
-    assert "アクセス拒否" in html     # 0件でも原因が表示される
+    """Source Health（取得元の状態）の表は、スマホでページ幅を広げない（UI Phase 10: 旧UIの TCG セクションの後継は
+    運営者向けのページの「取得元」。表は 1024px 未満でカードに切り替わる）。0件でも原因（アクセス拒否）を出す。"""
+    from src.content.ui import admin, shell
+    rows = admin.build_tcg({"source_health": [{"source_name": "X", "status": "BLOCKED", "status_reason": "HTTP 403",
+                                               "funnel": {}}]})
+    html = admin._sources({"overview": {"warn": admin.collector_warn({}, set(), 5)}, "shops": [], "tcg": rows,
+                           "lot_sources": [], "lot_coverage": {}, "resale": [], "flea": [], "resale_collected": None,
+                           "collector_generated": None})
+    assert 'class="nu-ad-table"' in html and "アクセス拒否" in html and "HTTP 403" in html
+    css = shell.render_head()
+    assert "@media (max-width:1023px)" in css and ".nu-ad-table" in css

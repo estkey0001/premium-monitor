@@ -285,14 +285,20 @@ def test_old_ui_does_not_treat_unknown_stock_as_in_stock():
     assert level == "beginner_easy"
 
 
-def test_old_ui_labels_discontinued_reference_price():
-    from src.content.daily_lp_generator import DailyLPGenerator
-    g = DailyLPGenerator.__new__(DailyLPGenerator)
-    g._msrp_evidence = {"a": pe.CONFIGURED_REFERENCE, "b": pe.CONFIGURED_REFERENCE, "c": pe.VERIFIED_DATED}
-    assert g._official_price_label(SimpleNamespace(product_id="a", sale_method="discontinued")) \
-        == "参考定価（公式販売終了）"
-    assert g._official_price_label(SimpleNamespace(product_id="b", sale_method="normal")) == "参考定価（確認日不明）"
-    assert g._official_price_label(SimpleNamespace(product_id="c", sale_method="normal")) == "公式価格"
+def test_product_detail_labels_discontinued_reference_price():
+    """旧UIの「参考定価（公式販売終了）」の後継: 商品詳細の公式ストアの行で、販売終了の商品の定価は参考と書く。"""
+    from datetime import datetime as _dt
+    from src.content.ui import product_detail as pd
+    from src.tcg.models import JST as _JST
+    now = _dt(2026, 10, 5, 12, 0, tzinfo=_JST)
+    off = {"price_role": "official", "price": 50000, "freshness_basis": "config_unknown_date", "observed_at": ""}
+    row = lambda sale, basis="config_unknown_date", at="": pd._official_row(   # noqa: E731
+        "a", {"brand": "X", "official_price": 50000, "official_url": "", "sale_method": sale},
+        [dict(off, freshness_basis=basis, observed_at=at)], None, now, None)
+    assert row("discontinued").note == "公式の販売は終了（定価は参考）" and row("discontinued").quality == pd.REFERENCE
+    assert row("normal").note == "定価の確認日が分からない設定値（参考）"
+    ok = row("normal", "verified", "2026-10-01")
+    assert ok.note == "" and ok.type_label == "定価" and ok.quality == pd.VERIFIED
 
 
 def test_official_domain_is_not_substring_match():

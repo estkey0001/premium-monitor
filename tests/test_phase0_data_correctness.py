@@ -472,19 +472,16 @@ def test_header_time_uses_last_success_not_generation():
                                                     "source_health": [{"last_success": None}]}) == ""
 
 
-def test_warn_bar_rejected_only_is_not_price_problem(tmp_path, monkeypatch):
-    import json
-    from src.content import daily_lp_generator as mod
-    rep = tmp_path / "exports" / "collector_report"
-    rep.mkdir(parents=True)
-    (rep / "latest.json").write_text(json.dumps({"summary": {}, "shop_detail": [], "suspicious_prices": [
-        {"product_alias": "a", "shop": "s", "price": 1, "reason": "above_genre_max", "action": "rejected"}]}),
-        encoding="utf-8")
-    monkeypatch.setattr(mod, "__file__", str(tmp_path / "src" / "content" / "daily_lp_generator.py"))
-    g = mod.DailyLPGenerator.__new__(mod.DailyLPGenerator)
-    html = g._collector_warn_bar_html()
-    assert "collector-warn-bar" in html and "collector-warn-strong" not in html
-    assert "掲載していません" in html
+def test_warn_bar_rejected_only_is_not_price_problem():
+    """隔離した価格（rejected）だけのときは「価格の精度に問題」にしない（公開していないので）。
+    （旧UIの取得の警告バーの後継は運営者向けの取得の警告 admin.collector_warn。分類・順序は同じ）"""
+    from src.content.ui import admin
+    w = admin.collector_warn({"summary": {}, "shop_detail": [], "suspicious_prices": [
+        {"product_alias": "a", "shop": "s", "price": 1, "reason": "above_genre_max", "action": "rejected"}]}, set(), 5)
+    assert w["level"] == "rejected" and w["status"] == admin.INFO and w["suspicious"] == 0
+    assert "公開していない" in admin._sources({"overview": {"warn": w}, "shops": [], "tcg": [], "lot_sources": [],
+                                           "lot_coverage": {}, "resale": [], "flea": [], "resale_collected": None,
+                                           "collector_generated": None})
 
 
 # ── deploy-check #820〜#825 そのもの（否定対照つき） ─────────────────────────
@@ -577,21 +574,16 @@ def test_last_success_is_observation_time_not_run_start(tmp_path, monkeypatch):
     assert d["kaitori_shouten"]["last_success_at"] == "2026-10-02T15:49:42+09:00"
 
 
-def test_warn_bar_price_move_only_is_soft(tmp_path, monkeypatch):
-    import json
-    from src.content import daily_lp_generator as mod
-    rep = tmp_path / "exports" / "collector_report"
-    rep.mkdir(parents=True)
-    (rep / "latest.json").write_text(json.dumps({"summary": {}, "shop_detail": [], "suspicious_prices": [
-        {"product_alias": "ps5_pro", "shop": "kaitori_shouten", "price": 191700, "reason": "price_change_over_20pct"}]}),
-        encoding="utf-8")
-    monkeypatch.setattr(mod, "__file__", str(tmp_path / "src" / "content" / "daily_lp_generator.py"))
-    html = mod.DailyLPGenerator.__new__(mod.DailyLPGenerator)._collector_warn_bar_html()
-    assert "collector-warn-soft" in html and "collector-warn-strong" not in html
-    # 対照: 誤りの可能性が高い理由（隔離されていない）なら強警告
-    (rep / "latest.json").write_text(json.dumps({"summary": {}, "shop_detail": [], "suspicious_prices": [
-        {"product_alias": "switch2", "shop": "x", "price": 900000, "reason": "above_genre_max"}]}), encoding="utf-8")
-    assert "collector-warn-strong" in mod.DailyLPGenerator.__new__(mod.DailyLPGenerator)._collector_warn_bar_html()
+def test_warn_bar_price_move_only_is_soft():
+    from src.content.ui import admin
+    w = admin.collector_warn({"summary": {}, "shop_detail": [], "suspicious_prices": [
+        {"product_alias": "ps5_pro", "shop": "kaitori_shouten", "price": 191700,
+         "reason": "price_change_over_20pct"}]}, set(), 5)
+    assert w["level"] == "moves" and w["status"] == admin.WARN
+    # 対照: 誤りの可能性が高い理由（隔離されていない）なら強い警告
+    w2 = admin.collector_warn({"summary": {}, "shop_detail": [], "suspicious_prices": [
+        {"product_alias": "switch2", "shop": "x", "price": 900000, "reason": "above_genre_max"}]}, set(), 5)
+    assert w2["level"] == "strong" and w2["status"] == admin.FAIL
 
 
 def test_ricoh_english_bundle_not_bound():

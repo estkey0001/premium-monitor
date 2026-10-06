@@ -1,7 +1,7 @@
 """新UIの HOME の集計（抽選の runtime 状態・件数）と、価格の表示ガード。
 
 HOME の画面そのものは pages.py（UI Phase 1: ジャンル起点）。ここの HomeModel は
-件数の照合（parity）と抽選の一覧に使う。
+抽選の一覧に使う。
 
 新しい判定は作らない。抽選の状態は runtime.derive_runtime_state（既存の
 compute_lottery_status）だけで決め、AI Opportunities・利益ルートは既存の出力をそのまま数える。
@@ -162,7 +162,6 @@ class HomeModel:
     opp_cards: list[Action] = field(default_factory=list)
     has_data: bool = False
     next_lottery_text: str = ""
-    parity: list[dict] = field(default_factory=list)        # ?debug=1 と deploy-check #810
     hidden_prices: int = 0                                   # 表示ガードで外した BUY
     alert_count: int = 0                                     # HOME に出さない ALERT
     opp_total: int = 0

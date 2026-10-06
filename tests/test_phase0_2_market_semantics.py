@@ -416,8 +416,9 @@ def test_repository_persists_price_type(tmp_path):
 
 @pytest.mark.parametrize("empty_shown", [True, False])
 def test_deploy_check_accepts_zero_candidates_only_with_empty_state(tmp_path, monkeypatch, empty_shown):
-    """成約データが0件で候補が無い日は、空の状態（成約価格 未取得 / 想定利益 算出前）が出ていれば ok。
-    出ていなければ従来どおり error（#622 #624 #625）。成約0件は #595 warning（出品で埋めない）。"""
+    """成約データが0件で候補が無い日は、空の状態が出る。成約0件は #595 warning（出品で埋めない）。
+    （UI Phase 10: 旧UIの AI Dashboard の検査 #622 #624 #625 は削除した。後継の運営者向けの AI 候補は、候補が無い日に
+    「今の AI の候補はありません。」と空の状態を出し、架空の候補で埋めない。）"""
     root = tmp_path / "root"
     (root / "docs").mkdir(parents=True)
     (root / "exports").mkdir()
@@ -439,10 +440,12 @@ def test_deploy_check_accepts_zero_candidates_only_with_empty_state(tmp_path, mo
     monkeypatch.setattr(dc, "PUBLIC_DIR", root / "docs")
     monkeypatch.setattr(dc, "__file__", str(root / "scripts" / "deploy_check.py"))   # 一部の検査は __file__ から root を決める
     lv = {r["check"]: r["level"] for r in dc.check()}
-    want = "ok" if empty_shown else "error"
-    assert (lv["ai_action"], lv["ai_timeline"], lv["ai_expected_prices"]) == (want, want, want)
+    assert not {"ai_action", "ai_timeline", "ai_expected_prices"} & set(lv)       # 旧UIの検査は削除した
+    from src.content.ui import admin
+    ai_html = admin._ai({"ai": admin.build_ai({"todays_opportunities": [], "generated_at": "x"}, {}, None)})
+    assert "今の AI の候補はありません。" in ai_html and "BUY" not in ai_html.replace("BUY・WAIT", "")
     assert lv["npo_has_flea_sold"] == "warning"
-    assert lv["lp_zero_stale_reason"] == "ok"                   # 参考ルートが無ければ説明する stale も無い
+    assert "lp_zero_stale_reason" not in lv                     # 旧UIの未成立の理由の検査（#592）は UI Phase 10 で削除
 
 
 @pytest.mark.parametrize("title, keyword, ok", [
@@ -491,5 +494,8 @@ def test_legacy_sold_label_is_relabelled_for_display():
     msg = "📉 価格下落 / FUJIFILM X100VI / ヤフオク (新品/未使用落札) ¥343,637 → ¥312,000"
     out = pt.relabel_legacy(msg)
     assert "落札" not in out and "ヤフオク (出品中・新品/未使用)" in out
-    src = (ROOT / "src/content/daily_lp_generator.py").read_text(encoding="utf-8")
-    assert "_pt.relabel_legacy(e.get(\"message\")" in src        # 最新通知の表示で使う
+    # 通知の表示（旧UIの「最新通知」の後継の運営者向けの通知）で使う
+    from src.content.ui import admin
+    n = admin.build_notifications([{"type": "HEALTH_ALERT", "created_at": "2026-10-01 10:00 JST", "message": msg}],
+                                  {}, {})
+    assert "落札" not in n["system"][0]["message"] and "出品中・新品/未使用" in n["system"][0]["message"]

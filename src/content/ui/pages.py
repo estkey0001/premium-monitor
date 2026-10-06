@@ -104,7 +104,7 @@ def _quick_links() -> str:
     return f'<div class="nu-quicks" aria-label="よく使うリンク">{live}{soon}</div>'
 
 
-def render_home(catalog: cl.Catalog, *, source_issue: bool = False, debug_html: str = "") -> str:
+def render_home(catalog: cl.Catalog, *, source_issue: bool = False) -> str:
     """HOME（ジャンル → 目的 → 補助リンクの順だけ）。"""
     cat_cards = "".join(_category_card(cat, catalog.category_total(cat.key)) for cat in cats.CATEGORIES)
     purpose_cards = "".join(_purpose_card(p, catalog.count(p)) for p in cl.PURPOSES)
@@ -122,7 +122,6 @@ def render_home(catalog: cl.Catalog, *, source_issue: bool = False, debug_html: 
         f'<a class="nu-ctx__clear" href="{esc(page_href("home"))}">すべてのジャンル</a></p></div>'
         f'<ul class="nu-purposes" role="list">{purpose_cards}</ul>'
         f'{_quick_links()}'
-        f'{debug_html}'
         '</section>'
     )
 
@@ -220,7 +219,6 @@ def render_more(catalog: cl.Catalog) -> str:
         (page_href("mypage"), "star", "マイページ", "ウォッチ中の商品・締切・通知の条件（このブラウザに保存）", "", False),
         (page_href("search"), "search", "商品を検索", "商品名・型番・ジャンルで探す", "", False),
         (page_href("admin"), "more", "運営の管理画面", "取得状況・データ品質・AI 候補・資金配分・実行履歴（読むだけ）", "", False),
-        ("./?ui=legacy", "home", "旧表示", "これまでの一覧ページ（確認・比較用に残しています）", "", False),
     ]
     links = "".join(
         f'<li><a class="nu-purpose" href="{esc(href)}"{" data-nu-keepcat" if keep else ""}>'
@@ -256,7 +254,7 @@ def render_footer(brand: str, cta_links: list | None = None) -> str:
     cautions = "".join(f"<li>{esc(t)}</li>" for t in CAUTIONS)
     return ('<footer class="nu-footer"><div class="nu-footer__inner">'
             f'<span class="nu-footer__brand">{esc(brand)} Premium Monitor</span>'
-            '<a href="./?ui=legacy">旧表示</a><a href="beta/">はじめかた</a>' + cta
+            '<a href="beta/">はじめかた</a>' + cta
             + f'<p class="nu-footer__note">{esc(DISCLAIMER)}</p>'
             f'<ul class="nu-footer__cautions">{cautions}</ul></div></footer>')
 

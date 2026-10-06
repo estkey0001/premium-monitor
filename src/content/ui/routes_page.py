@@ -28,6 +28,13 @@ def _yen(v) -> str:
     return f"¥{int(round(v)):,}" if v is not None else "—"
 
 
+def _minus(v, zero: str = "0円") -> str:
+    """内訳の差し引く額。0 は「−¥0」にせず言葉で書く（取得失敗の ¥0 と紛れないように。購入送料は「無料」）。"""
+    if v is not None and int(round(v)) == 0:
+        return zero
+    return "−" + _yen(v)
+
+
 def _ms(iso: str) -> int:
     d = parse_dt(iso) if iso else None
     return int(d.timestamp() * 1000) if d else 0
@@ -75,9 +82,9 @@ def _details(v: RouteView, pd_ids: set | None = None) -> str:
     """利益の内訳（売値から順に引く）と、根拠・確認時刻。"""
     lines = [("想定売値", _yen(v.sell_price)), ("売値の根拠", _evidence(v)),
              ("− 仕入価格", "−" + _yen(v.buy_price)), ("仕入れ値の種類", v.buy_price_label),
-             ("− 購入送料", "−" + _yen(v.buy_shipping)), ("− 購入時の費用", "−" + _yen(v.buy_required_cost))]
+             ("− 購入送料", _minus(v.buy_shipping, "無料")), ("− 購入時の費用", _minus(v.buy_required_cost))]
     for label, amount in v.cost_lines:
-        lines.append((f"− {label}", "−" + _yen(amount)))
+        lines.append((f"− {label}", _minus(amount)))
     lines.append(("＝ 想定純利益", "+" + _yen(v.net_profit)))
     lines.append(("必要な仕入れ資金（取得原価）", _yen(v.acquisition_cost)))
     lines.append(("ROI（純利益 ÷ 取得原価）", f"{v.roi * 100:.1f}%" if v.roi is not None else "算出前"))

@@ -6,7 +6,6 @@
 from __future__ import annotations
 
 import importlib.util
-import json
 import os
 import time
 from datetime import datetime, timedelta, timezone
@@ -97,38 +96,65 @@ def test_profit_display_eligibility_conditions():
 
 # ── 確認日不明の定価は「最高利益」「TOP」「BUY」に出さない ─────────────────────────
 
-def test_unknown_date_msrp_cannot_become_strong_profit_opportunity():
-    g = _generator({"prod_ps5_pro": pe.CONFIGURED_REFERENCE})
-    deals = [_deal("prod_ps5_pro", 70220, "PlayStation 5 Pro")]
-    html = g._section_hero("2026-10-02", "17:49", NOW, NOW, all_deals=deals, beginner_display_count=1)
-    assert "最高利益参考" not in html
-    # Phase 5.1: 参考差額も Hero には出さない（初心者タブに参考として出す）
-    assert "70,220" not in html and "参考差額" not in html
+# UI Phase 10 で旧UIの Hero・ランキング・案件カードを削除した。同じ意図を新UIの利益商品（TOP10 の順位も同じ一覧）・
+# 商品詳細で確かめる。
+
+def _bdeal(pid, name, cat, off, bb, shop="モバイル一番"):
+    from src.models.beginner_deal import BeginnerDealModel
+    net = bb - off - 1800
+    return BeginnerDealModel(id=pid, product_id=pid, product_name=name, category=cat, official_price_jpy=off,
+                             best_buyback_price=bb, best_buyback_shop=shop, gross_profit_jpy=bb - off,
+                             net_profit_jpy=net, net_profit_rate=net / off, user_level="beginner_easy",
+                             sale_method="normal")
 
 
-def test_verified_msrp_may_calculate_profit():
-    """否定対照: 定価を確認済みなら、これまでどおり「最高利益参考」として出す。"""
-    g = _generator({"prod_ps5_pro": pe.CONFIGURED_REFERENCE, "prod_gr4": pe.VERIFIED_CURRENT})
-    deals = [_deal("prod_ps5_pro", 70220), _deal("prod_gr4", 12000, category="camera")]
-    html = g._section_hero("2026-10-02", "17:49", NOW, NOW, all_deals=deals, beginner_display_count=2)
-    # 確認日不明の +¥70,220 の方が大きいが、「最高利益」は確認済みの +¥12,000 で出す
-    assert "最高利益参考 <strong>+¥12,000</strong>" in html
-    assert "70,220" not in html
+def _nu_gen(evidence: dict, deals: list):
+    """生成器（DB を使わない部分）。買取価格は照合済み・1時間前。"""
+    g = _generator(evidence)
+    g._product_info, g._gate_now = {}, NOW
+    at = (NOW - timedelta(hours=1)).isoformat()
+    bybp = {d.product_id: [{"shop_name": d.best_buyback_shop, "buyback_price": d.best_buyback_price,
+                            "observed_at": at}] for d in deals}
+    g._sell_keys_cache = {(d.product_id, d.best_buyback_shop, d.best_buyback_price) for d in deals}
+    return g, bybp
 
 
-def test_unknown_date_msrp_cannot_enter_buy_top_list():
-    g = _generator({"prod_ps5_pro": pe.CONFIGURED_REFERENCE, "prod_gr4": pe.VERIFIED_CURRENT})
-    deals = [_deal("prod_ps5_pro", 70220, "PlayStation 5 Pro"),
-             _deal("prod_gr4", 12000, "RICOH GR IV", category="camera")]
-    html = g._tab_ranking(deals, [], [d for d in deals if d.category == "game_console"])
-    panel = html.split('id="rtab-all">', 1)[1].split("</div>\n", 1)[0]
-    # Phase 5.1: 定価が確認日不明の案件はランキングに入れない（参考の行としても出さない）
-    assert "RICOH GR IV" in panel and "PlayStation 5 Pro" not in panel and "70,220" not in html
-    first_row = panel.split('<div class="rank-row', 2)[1]
-    assert "RICOH GR IV" in first_row and "&#128081;" in first_row   # 👑 は確認済みに
-    # ゲーム機タブ（確認済みが無い）は順位も参考の行も出さない
-    game = html.split('id="rtab-game">', 1)[1].split("</div>\n", 1)[0]
-    assert "&#128081;" not in game and "rank-ref" not in game and "データなし" in game
+def _new_ui_set(evidence: dict, deals: list, monkeypatch, *, shipping_known=()):
+    """生成側の案件 → 新UIの利益商品（opportunity.build）。購入送料は shipping_known だけ確認済み。"""
+    from src.market import official_shipping as osh
+    from src.content.ui import opportunity as opp
+    monkeypatch.setattr(osh, "PRODUCT_SHIPPING", {pid: {"source": "test", "fee": 0, "status": osh.FREE_VERIFIED,
+                                                        "url": "https://example.com/ship", "checked_on": "2026-10-01"}
+                                                  for pid in shipping_known})
+    g, bybp = _nu_gen(evidence, deals)
+    return opp.build(deals=g._nu_profit_deals(deals, bybp), routes=[], product_genres={}, now=NOW)
+
+
+def test_unknown_date_msrp_cannot_become_strong_profit_opportunity(monkeypatch):
+    """確認日不明の定価（設定値）の案件は、利益商品（HOME の「最高利益」・TOP10）に出さない。理由つきで外す。"""
+    s = _new_ui_set({"prod_ps5_pro": pe.CONFIGURED_REFERENCE},
+                    [_bdeal("prod_ps5_pro", "PlayStation 5 Pro", "game_console", 119980, 192000)], monkeypatch,
+                    shipping_known=("prod_ps5_pro",))
+    assert s.eligible == [] and "buy_configured_reference" in s.ineligible[0].reasons
+
+
+def test_verified_msrp_may_calculate_profit(monkeypatch):
+    """否定対照: 定価を確認済みなら利益商品に出す。確認日不明の方が利益が大きくても、確認済みだけで並べる。"""
+    deals = [_bdeal("prod_ps5_pro", "PlayStation 5 Pro", "game_console", 119980, 192000),
+             _bdeal("prod_gr4", "RICOH GR IV", "camera", 211800, 225600)]
+    s = _new_ui_set({"prod_ps5_pro": pe.CONFIGURED_REFERENCE, "prod_gr4": pe.VERIFIED_CURRENT}, deals,
+                    monkeypatch, shipping_known=("prod_ps5_pro", "prod_gr4"))
+    assert [(v.product_id, v.net_profit) for v in s.eligible] == [("prod_gr4", 12000)]
+
+
+def test_unknown_date_msrp_cannot_enter_buy_top_list(monkeypatch):
+    """TOP10（利益商品の一覧から作る）・ジャンル別にも、確認日不明の定価の案件を入れない（参考の行としても出さない）。"""
+    deals = [_bdeal("prod_ps5_pro", "PlayStation 5 Pro", "game_console", 119980, 192000),
+             _bdeal("prod_gr4", "RICOH GR IV", "camera", 211800, 225600)]
+    s = _new_ui_set({"prod_ps5_pro": pe.CONFIGURED_REFERENCE, "prod_gr4": pe.VERIFIED_CURRENT}, deals,
+                    monkeypatch, shipping_known=("prod_ps5_pro", "prod_gr4"))
+    assert [v.product_name for v in s.eligible] == ["RICOH GR IV"]
+    assert not [v for v in s.eligible if v.category == "game"]                 # ゲーム機は確定が無い
 
 
 def _route(**kw):
@@ -365,18 +391,18 @@ def test_wrong_product_price_is_error(tmp_path, monkeypatch):
     assert not any("大きく変動" in w for w in r["warnings"])
 
 
-def test_lp_warn_bar_price_movement_is_soft_warning(tmp_path, monkeypatch):
-    import src.content.daily_lp_generator as mod
-    (tmp_path / "exports/collector_report").mkdir(parents=True)
-    (tmp_path / "exports/collector_report/latest.json").write_text(json.dumps({"suspicious_prices": [
-        {"product_alias": "switch2", "shop": "geo", "price": 35000, "reason": "price_change_over_20pct"}]}),
-        encoding="utf-8")
-    monkeypatch.setattr(mod, "__file__", str(tmp_path / "src" / "content" / "daily_lp_generator.py"))
-    html = mod.DailyLPGenerator.__new__(mod.DailyLPGenerator)._collector_warn_bar_html()
-    assert "collector-warn-soft" in html and "collector-warn-strong" not in html
-    assert "⚠ 前回から大きく変動した買取価格が 1件" in html
-    # 一般向けの表示に内部の理由コード・チェック番号を出さない
-    assert "price_change_over_20pct" not in html and "#8" not in html
+def test_lp_warn_bar_price_movement_is_soft_warning():
+    """旧UIの取得の警告バーの後継（運営者向けの取得の警告）: 前回から大きく変動した価格は「注意」（強い警告にしない）。
+    表示に内部の理由コード（price_change_over_20pct）は出さない。"""
+    from src.content.ui import admin
+    col = {"suspicious_prices": [{"product_alias": "switch2", "shop": "geo", "price": 35000,
+                                  "reason": "price_change_over_20pct"}], "summary": {}, "shop_detail": []}
+    w = admin.collector_warn(col, set(), 5)
+    assert w["level"] == "moves" and w["status"] == admin.WARN and w["moves"] == 1
+    assert admin._warn_value(w) == "前回から大きく変動 1件"
+    html = admin._sources({"overview": {"warn": w}, "shops": [], "tcg": [], "lot_sources": [], "lot_coverage": {},
+                           "resale": [], "flea": [], "resale_collected": None, "collector_generated": None})
+    assert "price_change_over_20pct" not in html and "注意（前回から大きく変動した価格）" in html
 
 
 def test_false_freshness_is_error(tmp_path, monkeypatch):
@@ -410,78 +436,39 @@ def test_false_freshness_is_error(tmp_path, monkeypatch):
 
 
 def test_beginner_card_labels_unknown_date_msrp_as_reference():
-    from src.models.beginner_deal import BeginnerDealModel
-    d = BeginnerDealModel(id="x", product_id="prod_ps5_pro", product_name="PlayStation 5 Pro",
-                          category="game_console", official_price_jpy=119980, best_buyback_price=192000,
-                          best_buyback_shop="モバイル一番", gross_profit_jpy=72020, net_profit_jpy=70220,
-                          net_profit_rate=0.585, user_level="beginner_easy", sale_method="normal")
-    g = _generator({"prod_ps5_pro": pe.CONFIGURED_REFERENCE})
-    html = g._deal_card(d, "badge-watch", "参考差額", buyback_rows=[])
-    assert "参考定価（確認日不明）" in html and "参考差額（定価の確認日不明）" in html
-    assert "確定利益ではありません" in html and "公式価格（定価）" not in html
-    # 否定対照: 定価を確認済みなら従来どおりの表示
-    g = _generator({"prod_ps5_pro": pe.VERIFIED_DATED})
-    html = g._deal_card(d, "badge-easy", "利益あり", buyback_rows=[])
-    # （Phase 6.1: 比較できた買取店が無い・1店舗のときは「最高」と言わないので、見出しは「差益（定価購入→…）」で確かめる）
-    assert "公式価格（定価）" in html and "差益（定価購入→" in html and "確認日不明" not in html
+    """旧UIの案件カードの後継（商品詳細の公式ストアの行）: 確認日不明の定価は「参考」と明記し、確定の定価と呼ばない。"""
+    from src.content.ui import product_detail as pd
+    off = {"product_id": "prod_ps5_pro", "price_role": "official", "price": 119980,
+           "freshness_basis": "config_unknown_date", "observed_at": ""}
+    meta = {"brand": "Sony", "official_price": 119980, "official_url": ""}
+    row = pd._official_row("prod_ps5_pro", meta, [off], None, NOW, None)
+    assert row.quality == pd.REFERENCE and row.note == "定価の確認日が分からない設定値（参考）" and row.type_label != "定価"
+    # 否定対照: 確認済みの定価は「定価」で、確定に使える
+    ok = pd._official_row("prod_ps5_pro", meta, [dict(off, freshness_basis="verified", observed_at="2026-10-01")],
+                          None, NOW, None)
+    assert ok.quality == pd.VERIFIED and ok.type_label == "定価" and ok.note == ""
 
 
 @pytest.mark.parametrize("verified_ids", [{"prod_gr4"}, set()])
-def test_existing_beginner_deploy_checks_pass_with_reference_cards(tmp_path, monkeypatch, verified_ids):
-    """確認済みと参考差額の案件が混ざっても、全部が参考差額でも、旧UIの初心者タブ・ランキングの
-    deploy-check（#349 #394 #448 #454 #458 #462）が通る（表示の区別で既存の検査を壊していない）。"""
-    from src.db.database import Database
-    from src.db.repository import Repository
-    from src.content.daily_lp_generator import DailyLPGenerator
-    from src.models.beginner_deal import BeginnerDealModel
-    now = datetime.now(JST)
-    db = Database(str(tmp_path / "t.db"))
-    db.init_schema()
-    g = DailyLPGenerator(Repository(db))
-
-    def deal(pid, name, cat, off, bb, shop):
-        net = bb - off - 1800
-        return BeginnerDealModel(id=pid, product_id=pid, product_name=name, category=cat, official_price_jpy=off,
-                                 best_buyback_price=bb, best_buyback_shop=shop, gross_profit_jpy=bb - off,
-                                 net_profit_jpy=net, net_profit_rate=net / off, user_level="beginner_easy",
-                                 sale_method="normal", scanned_at=now)
-    deals = [deal("prod_ps5_pro", "PlayStation 5 Pro", "game_console", 119980, 192000, "モバイル一番"),
-             deal("prod_switch2", "Nintendo Switch 2", "game_console", 49980, 55300, "買取商店"),
-             deal("prod_gr4", "RICOH GR IV", "camera", 211800, 240000, "フジヤカメラ")]
-    g._msrp_evidence = {d.product_id: (pe.VERIFIED_CURRENT if d.product_id in verified_ids
-                                       else pe.CONFIGURED_REFERENCE) for d in deals}
-    # Phase 5.2: 確定にするには購入送料も分かっている必要がある（テスト用の記録。送料0円・確認済み）
-    from src.market import official_shipping as osh
-    monkeypatch.setattr(osh, "PRODUCT_SHIPPING", {pid: {"source": "test", "fee": 0, "status": osh.FREE_VERIFIED,
-                                                        "url": "https://example.com/ship", "checked_on": "2026-10-05"}
-                                                  for pid in verified_ids})
-
-    def row(shop, price):
-        return {"shop_id": "src_x", "shop_name": shop, "buyback_price": price, "condition": "new_unopened",
-                "buyback_url": "https://example.com/", "observed_at": now.isoformat(),
-                "data_source": "auto_scraped", "link_verified": True, "confidence": "high"}
-    bybp = {d.product_id: [row(d.best_buyback_shop, d.best_buyback_price), row("他店", d.best_buyback_price - 300)]
-            for d in deals}
-    # テストの買取価格は照合済み（Phase 6.1。リポジトリの実データの照合結果を読まない）
-    g._sell_keys_cache = {(d.product_id, r["shop_name"], r["buyback_price"]) for d in deals for r in bybp[d.product_id]}
-    beg = g._tab_beginner(deals, [], buyback_by_product=bybp, latest_buyback_at=now,
-                          monitoring_deals=[], fetch_failed_deals=[])
-    rank = g._tab_ranking(deals, [], [d for d in deals if d.category == "game_console"])
-    root = tmp_path / "root"
-    (root / "docs").mkdir(parents=True)
-    (root / "docs/index.html").write_text(
-        f'<html><body><div id="tab-ranking">{rank}</div><div id="tab-beginner">{beg}</div>'
-        f'<div id="tab-advanced"></div></body></html>', encoding="utf-8")
-    for n in ("config", "data", "exports", "src", "scripts"):  # deploy-check は読むだけ（書き込まない）
-        (root / n).symlink_to(ROOT / n)
+def test_existing_beginner_deploy_checks_pass_with_reference_cards(monkeypatch, verified_ids):
+    """確認済みと参考差額の案件が混ざっても、全部が参考差額でも、新UIの deploy-check（ページだけで決まるもの）が通る。
+    利益商品は確認済みの案件だけ（旧UIの初心者タブ・ランキングの検査の後継）。"""
+    from src.content.ui import shell
+    deals = [_bdeal("prod_ps5_pro", "PlayStation 5 Pro", "game_console", 119980, 192000),
+             _bdeal("prod_switch2", "Nintendo Switch 2", "game_console", 49980, 55300, "買取商店"),
+             _bdeal("prod_gr4", "RICOH GR IV", "camera", 211800, 240000, "フジヤカメラ")]
+    ev = {d.product_id: (pe.VERIFIED_CURRENT if d.product_id in verified_ids else pe.CONFIGURED_REFERENCE)
+          for d in deals}
+    s = _new_ui_set(ev, deals, monkeypatch, shipping_known=verified_ids)
+    assert {v.product_id for v in s.eligible} == set(verified_ids)
+    g, bybp = _nu_gen(ev, deals)
+    ctx = shell.ShellContext(tcg_report={}, opportunities={}, profit_routes={}, legacy_lotteries=[], now=NOW,
+                             profit_deals=g._nu_profit_deals(deals, bybp))
+    page = "<html><head>" + shell.render_head() + "</head><body>" + shell.render_root(ctx) + "</body></html>"
     dc = _load_script("deploy_check")
-    monkeypatch.setattr(dc, "PROJECT_ROOT", root)
-    monkeypatch.setattr(dc, "PUBLIC_DIR", root / "docs")
-    lv = {r["check"]: r["level"] for r in dc.check()}
-    for k in ("ranking_beginner_consistency", "beginner_profit_label_updated", "beginner_profit_above_monitoring",
-              "beginner_no_watch_badge_on_profit", "beginner_profit_tier_badges", "beginner_kohaba_note_wording"):
-        assert lv.get(k) == "ok", (k, lv.get(k))
-    # 表示の区別そのもの
-    assert ("参考差額あり（定価の確認日不明）" in beg) and ("参考差額 +¥72,020" in beg)
-    assert ("利益あり: <strong>1</strong>件" in beg) == bool(verified_ids)
-    assert ("&#128081;" in rank) == bool(verified_ids)
+    # アーカイブの転送（ファイル）・運営者向けの情報（生成物）に依存する検査は除く
+    errors = [r for r in dc._check_new_ui(page) if r["level"] == "error"
+              and r["check"] not in ("archive_new_ui", "admin_has_legacy_operator_info")]
+    assert errors == [], errors
+    opp_page = page[page.index('data-nu-page="opportunities"'):page.index('data-nu-page="lottery"')]
+    assert "70,220" not in opp_page and ("RICOH GR IV" in opp_page) == bool(verified_ids)

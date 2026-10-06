@@ -90,8 +90,6 @@ def _detail(v: opp.OpportunityView, pd_ids: set | None = None) -> str:
                         ("売却先を開く", v.sell_url)):
         if c.safe_href(href).startswith("https://"):
             links.append(c.button(label, href, kind="secondary", external=True, track="opportunity_link"))
-    if v.flags.get("href"):
-        links.append(c.button("旧表示で詳しく見る", v.flags["href"], kind="secondary"))
     if pd_ids and v.product_id in pd_ids:
         from src.content.ui import product_page
         links.append(product_page.link(v.product_id))

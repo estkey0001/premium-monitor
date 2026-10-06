@@ -200,7 +200,6 @@ def from_deal(d: dict) -> OpportunityView:
         sell_checked_at=_iso(d.get("sell_checked_at")), sell_url=str(d.get("sell_url") or ""),
         net_profit=net,
         flags={"resale_sell": bool(d.get("resale_sell")), "user_level": str(d.get("user_level") or ""),
-               "href": str(d.get("href") or ""),
                # 売却価格の商品の同一性（生成側が normalized_prices.sell_confirmation_reasons で照合した結果）。
                # 無い・False は未照合（確定にしない）
                "sell_identity_verified": d.get("sell_identity_verified") is True},

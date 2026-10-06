@@ -22,7 +22,6 @@ from __future__ import annotations
 
 import json
 import os
-import re
 import sys
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
@@ -34,7 +33,6 @@ PROJECT_ROOT  = Path(__file__).resolve().parent.parent
 REPORT_DIR    = PROJECT_ROOT / "exports" / "lottery_report"
 REPORT_JSON   = REPORT_DIR / "latest.json"
 REPORT_MD     = REPORT_DIR / "latest.md"
-LP_HTML_PATH  = PROJECT_ROOT / "exports" / "lp" / "daily" / "index_A.html"
 
 JST = timezone(timedelta(hours=9))
 
@@ -213,35 +211,7 @@ def run_checks(ref_items: list[dict], db_items: list[dict], now: datetime) -> di
         issues_failure.append(
             f"【reference_only が active に混入】{names}")
 
-    # ── Check 7: active count が受付中件数と一致するか確認（LP HTML から） ──────
-    lp_count: int | None = None
-    if LP_HTML_PATH.exists():
-        try:
-            lp_html = LP_HTML_PATH.read_text(encoding="utf-8")
-            # タブナビからカウントを取得 — lottery ボタン要素のみを対象とする
-            # lottery ボタン: data-tab="lottery"... の button タグ内にある tab-count を探す
-            nav_m = re.search(r'class="tab-nav"[^>]*>(.*?)</nav>', lp_html, re.DOTALL)
-            if nav_m:
-                nav_html = nav_m.group(1)
-                # lottery ボタン要素 (button ... data-tab="lottery" ...) の内容だけ取り出す
-                lottery_btn_m = re.search(
-                    r'<button[^>]*data-tab="lottery"[^>]*>(.*?)</button>',
-                    nav_html,
-                    re.DOTALL,
-                )
-                if lottery_btn_m:
-                    btn_content = lottery_btn_m.group(1)
-                    cnt_m = re.search(r'tab-count[^>]*>(\d+)', btn_content)
-                    lp_count = int(cnt_m.group(1)) if cnt_m else None
-                    # tab-count がないのは 0 件表示（バッジなし）
-                    if lp_count is None:
-                        lp_count = 0
-        except Exception:
-            pass
-    expected_count = len(active_items)
-    if lp_count is not None and lp_count != expected_count:
-        issues_failure.append(
-            f"【カウント不一致】LP タブバッジ={lp_count} vs 実 active 件数={expected_count}")
+    # Check 7（旧UIのタブのバッジの件数と受付中の件数の一致）は UI Phase 10 で旧UIと一緒に削除した
 
     # ── Check 8: RICOH GR IV 3件が同じ受付期間 ──────────────────────────────
     ricoh_actives = [it for it in active_items
@@ -295,7 +265,7 @@ def run_checks(ref_items: list[dict], db_items: list[dict], now: datetime) -> di
         "upcoming_count":        len(upcoming_items),
         "closed_count":          len(closed_items),
         "reference_count":       len(reference_items),
-        "lp_badge_count":        lp_count,
+        "lp_badge_count":        None,            # 旧UIのタブのバッジ（UI Phase 10 で削除。項目は互換のため残す）
         "duplicate_count":       duplicate_codes,
         "stale_phrase_count":    stale_count,
         "missing_form_url_count": missing_form_count,

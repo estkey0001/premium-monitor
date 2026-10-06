@@ -27,11 +27,6 @@ def css() -> str:
         # ── 表示の切り替え（旧UIは DOM を残したまま隠す） ──
         f"html:not(.ui-new) {r}{{display:none!important}}"
         f"html.ui-new body>*:not({r}){{display:none!important}}"
-        # 旧UI（?ui=legacy）のときだけ、上に小さく「旧表示」と出す（新UIへの戻り道つき）
-        ".nu-legacy-note{display:none}"
-        f"html.ui-legacy .nu-legacy-note{{display:block;padding:6px 12px;background:{t.TONES['warning']['bg']};"
-        f"color:{t.TONES['warning']['fg']};border-bottom:1px solid {t.TONES['warning']['bd']};font-size:smaller}}"
-        f".nu-legacy-note a{{color:{t.TONES['warning']['fg']};font-weight:700}}"
         f"html.ui-new body{{background:{t.BASE_COLORS['bg']};margin:0}}"
         # 最小限のリセット（旧UIの全体のリセットから移した。:where で詳細度 0 にして、新UIの個別の指定を上書きしない）
         f":where({r}) *,:where({r}) *::before,:where({r}) *::after{{margin:0;padding:0;box-sizing:border-box}}"
@@ -42,16 +37,18 @@ def css() -> str:
         "html{scroll-behavior:smooth}html.ui-new body{-webkit-font-smoothing:antialiased}"
         # 静的な案内（#nu-fallback）: JS が無い（クラスが付かない）・ルーターが動かなかった（ui-fallback）ときだけ出す
         "#nu-fallback{display:none}"
-        "html:not(.ui-new):not(.ui-legacy) #nu-fallback,html.ui-fallback #nu-fallback{display:block}"
-        "html:not(.ui-new):not(.ui-legacy) body>*:not(#nu-fallback),"
+        "html:not(.ui-new) #nu-fallback,html.ui-fallback #nu-fallback{display:block}"
+        "html:not(.ui-new) body>*:not(#nu-fallback),"
         "html.ui-fallback body>*:not(#nu-fallback){display:none!important}"
-        f"html:not(.ui-new):not(.ui-legacy) body,html.ui-fallback body{{margin:0;background:{t.BASE_COLORS['bg']}}}"
+        f"html:not(.ui-new) body,html.ui-fallback body{{margin:0;background:{t.BASE_COLORS['bg']}}}"
         f".nu-fallback{{box-sizing:border-box;max-width:720px;margin:0 auto;padding:16px;color:{t.BASE_COLORS['text']};"
         "font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans','Noto Sans JP',sans-serif;line-height:1.7;"
         "overflow-wrap:anywhere}"
         f".nu-fallback h1{{font-size:x-large;margin:8px 0}}.nu-fallback h2{{font-size:large;margin:20px 0 8px}}"
         f".nu-fallback a{{color:{t.BASE_COLORS['primary']}}}.nu-fallback ul{{padding-left:1.4em;margin:0}}"
         f".nu-fallback li{{margin:6px 0}}.nu-fallback__brand{{font-weight:800;margin:0}}"
+        # 読み上げだけの補足（「外部サイト」）は、案内（新UIの root の外）でも見た目には出さない
+        ".nu-fallback .nu-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}"
         f".nu-fallback__note{{font-size:small;color:{t.BASE_COLORS['subtle']};margin-top:20px}}"
         f"{r}{{{t.css_variables()}"
         "font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans','Noto Sans JP',sans-serif;"
@@ -458,12 +455,6 @@ def css() -> str:
         "font-variant-numeric:tabular-nums}"
         ".nu-pager__link[aria-current=page]{background:var(--color-primary);border-color:var(--color-primary);"
         "color:var(--color-primary-contrast)}"
-        # 開発用の照合表（?debug=1 のときだけ表示。表は横スクロールの枠の中だけ）
-        ".nu-debug{margin-top:var(--space-5);padding:var(--space-3);border:1px solid var(--color-border);"
-        "border-radius:var(--radius-md);background:var(--color-surface);font-size:var(--font-xs)}"
-        ".nu-debug__scroll{overflow-x:auto}.nu-debug table{border-collapse:collapse}"
-        ".nu-debug th,.nu-debug td{border:1px solid var(--color-border);padding:var(--space-1) var(--space-2);text-align:left}"
-        ".nu-debug tr[data-match='0'] td{background:var(--tone-warning-bg)}"
         + _product_css(m, d, w)
         + _mypage_css(m, d, w)
         + _admin_css(m, d, w)
@@ -496,7 +487,9 @@ def _admin_css(m: int, d: int, w: int) -> str:
         ".nu-ad-ov__label{font-size:var(--font-xs);color:var(--color-muted);font-weight:700}"
         ".nu-ad-ov__val{font-size:var(--font-md);font-weight:800;overflow-wrap:anywhere}"
         ".nu-ad-ov .nu-badge{justify-self:start}.nu-ad-ov .nu-osub{overflow-wrap:anywhere}"
-        ".nu-ad-box{display:grid;gap:var(--space-2);min-width:0;padding:var(--space-3);border:1px solid var(--color-border);"
+        # 列は minmax(0,1fr)（表・長い英字の理由コードで箱が広がり、320px で横にはみ出さないように）
+        ".nu-ad-box{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--space-2);min-width:0;padding:var(--space-3);"
+        "border:1px solid var(--color-border);"
         "border-radius:var(--radius-md);background:var(--color-surface)}"
         ".nu-ad-h{margin:0;font-size:var(--font-md)}.nu-ad-h3{margin:var(--space-2) 0 0;font-size:var(--font-sm)}"
         ".nu-ad-box p{margin:0}.nu-ad-empty{color:var(--color-muted)}.nu-ad-gen{font-size:var(--font-xs);color:var(--color-muted)}"
@@ -518,6 +511,8 @@ def _admin_css(m: int, d: int, w: int) -> str:
         "vertical-align:top;overflow-wrap:anywhere}"
         ".nu-ad-table thead th{font-size:var(--font-xs);color:var(--color-muted)}"
         ".nu-ad-table .nu-osub{display:block}"
+        # 状態のバッジは文が長い（「アクセス拒否（人の確認が必要。回避はしない）」など）ので、狭い画面では折り返す
+        ".nu-ad .nu-badge{white-space:normal;overflow-wrap:anywhere;max-width:100%;height:auto}"
         f"@media (max-width:{w - 1}px){{"
         ".nu-ad-table thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}"
         ".nu-ad-table,.nu-ad-table tbody,.nu-ad-table tr,.nu-ad-table th,.nu-ad-table td{display:block;width:auto}"

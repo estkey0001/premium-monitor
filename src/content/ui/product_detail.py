@@ -211,7 +211,9 @@ def _official_row(pid: str, meta: dict, obs: list[dict], stock, now: datetime, d
                    shipping=ship["fee"], required_cost=req, condition="新品",
                    shipping_label=(osh.STATUS_LABELS.get(ship["status"], "送料未確認")
                                    + (f'（{ship["checked_on"]} 確認）' if ship.get("checked_on") else "")),
-                   url=url, note="" if verified else "定価の確認日が分からない設定値（参考）", official=True)
+                   url=url, note="" if verified else (
+                       "公式の販売は終了（定価は参考）" if meta.get("sale_method") == "discontinued"
+                       else "定価の確認日が分からない設定値（参考）"), official=True)
     if deal_view is not None and deal_view.buy_price == price and deal_view.acquisition_cost is not None:
         row.acquisition = int(deal_view.acquisition_cost)     # 利益の計算と同じ取得原価（計算し直さない）
     elif verified and ship["fee"] is not None:

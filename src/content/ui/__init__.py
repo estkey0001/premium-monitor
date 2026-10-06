@@ -1,4 +1,4 @@
-"""新UI（UI Phase 8 から正式の表示。旧UIは ?ui=legacy のときだけ）。
+"""新UI（公開するページは新UIだけ。UI Phase 10 で旧UIを削除した）。
 
 旧UIの DOM・id・クラス・JS には触れない。#new-ui-root の中だけを組み立てる。
 """

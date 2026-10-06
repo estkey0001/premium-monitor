@@ -15,6 +15,7 @@ from pathlib import Path
 
 import pytest
 
+from src.content.ui import admin
 from src.content.ui import opportunity as opp
 from src.market import official_shipping as osh
 from src.tcg.models import JST
@@ -96,6 +97,8 @@ def test_route_key_distinguishes_routes_of_the_same_product():
 
 
 # ── AI Dashboard（古いファイル・同じ商品の有効なルートと無効なルート） ─────────────────────────
+# UI Phase 10 で旧UIの AI Dashboard・Capital・Health・Execution を削除した。後継は運営者向けのページ（admin）。
+# 同じ意図（今の確定ルートと route_id で照合して残ったものだけを出す）を admin で確かめる。
 
 def test_ai_dashboard_hides_invalid_route_of_same_product(tmp_path, monkeypatch):
     now = datetime.now(tz=JST)
@@ -107,21 +110,21 @@ def test_ai_dashboard_hides_invalid_route_of_same_product(tmp_path, monkeypatch)
     assert len(d["todays_opportunities"]) == 2 and all(o["route_id"] for o in d["todays_opportunities"])
     # その後 B は照合未了と分かった（AI のファイルは古いまま）。同じ商品の A は今も確定
     b_now = dict(gen_ok, buy_exact_match=False)
-    later = (now + timedelta(hours=1)).strftime("%Y-%m-%d %H:%M JST")     # 利益ルートは AI より後に作り直された
-    html = _gen(now)._ai_dashboard_section(d, {"generated_at": later,
-                                               "main_routes": [a, b_now], "reference_routes": []})
+    later = (now + timedelta(hours=1)).isoformat()                       # 利益ルートは AI より後に作り直された
+    pr = {"generated_at": later, "main_routes": [a, b_now], "reference_routes": []}
+    ai = admin.build_ai(d, opp.current_route_keys(pr, now), later)
+    html = admin._ai({"ai": ai})
     net_a = next(o["net_profit"] for o in d["todays_opportunities"] if o["route_id"] == opp.route_key(a))
     net_b = next(o["net_profit"] for o in d["todays_opportunities"] if o["route_id"] == opp.route_key(gen_ok))
-    assert "カメラ店A" in html and f"{net_a:,}" in html                     # 同じ商品の有効なルート A は出る
+    assert [o["route_id"] for o in ai["ops"]] == [opp.route_key(a)] and ai["dropped"] == 1
+    assert f"{net_a:,}" in html                                              # 同じ商品の有効なルート A は出る
     assert "Amazon" not in html and f"{net_b:,}" not in html and "107,491" not in html   # 無効になった B は出ない
-    assert re.search(r"Main Routes: <b[^>]*>1</b>", html)
-    # AI の集計が利益ルートより古いことを、元の生成時刻のまま出す（時刻は書き換えない）
-    assert f"AI の集計は前回の生成（{d['generated_at']}）のまま" in html
-    # 今日のおすすめ（1位）が B なら出さない
-    b_first = sorted(d["todays_opportunities"], key=lambda o: o["buy_price"] != 107491)
-    d2 = dict(d, todays_opportunities=b_first, daily_recommendation={"product": "商品prod_cam", "buy_now": "BUY",
-                                                                       "opportunity_score": 99, "reason": "x 利益¥42,009"})
-    html2 = _gen(now)._ai_dashboard_section(d2, {"main_routes": [a, b_now], "reference_routes": []})
+    # AI の集計が利益ルートより古いことを「前回の生成」と出し、生成の時刻は元のまま（書き換えない）
+    assert ai["previous"] and "前回の生成" in html and ai["generated"] == d["generated_at"]
+    # 今日のおすすめ（1位が B）は運営者向けのページに出さない（AI の候補の表だけ）
+    d2 = dict(d, daily_recommendation={"product": "商品prod_cam", "buy_now": "BUY", "opportunity_score": 99,
+                                       "reason": "x 利益¥42,009"})
+    html2 = admin._ai({"ai": admin.build_ai(d2, opp.current_route_keys(pr, now), later)})
     assert "今日のおすすめ" not in html2 and "42,009" not in html2
 
 
@@ -130,10 +133,11 @@ def test_ai_dashboard_rejects_records_without_route_id():
     a, _b = _routes(now)
     op = {"product": "商品prod_cam", "product_id": "prod_cam", "kind": "main", "buy_now": "BUY", "action": "BUY",
           "net_profit": 39009, "roi": 0.36, "buy_price": 107491, "sell_price": 151000}
-    html = _gen(now)._ai_dashboard_section({"todays_opportunities": [op], "today_tasks": ["✅ 商品prod_cam を仕入れる"],
-                                            "daily_recommendation": {"product": "商品prod_cam", "buy_now": "BUY",
-                                                                     "opportunity_score": 90, "reason": "r"}},
-                                           {"main_routes": [a], "reference_routes": []})
+    d = {"todays_opportunities": [op], "today_tasks": ["✅ 商品prod_cam を仕入れる"],
+         "daily_recommendation": {"product": "商品prod_cam", "buy_now": "BUY", "opportunity_score": 90, "reason": "r"}}
+    ai = admin.build_ai(d, opp.current_route_keys({"main_routes": [a], "reference_routes": []}, now), None)
+    html = admin._ai({"ai": ai})
+    assert ai["ops"] == [] and ai["tasks"] == []
     assert "39,009" not in html and "商品prod_cam" not in html     # 商品は同じでも route_id が無ければ出さない
 
 
@@ -153,11 +157,14 @@ def test_capital_dashboard_drops_invalid_allocation(tmp_path, monkeypatch):
     assert {x["route_id"] for x in plan["allocations"]} == {opp.route_key(a), opp.route_key(gen_ok)}
     alloc = {"default_budget": 3_000_000, "plans": {"3000000": plan}}
     b_now = dict(gen_ok, sell_exact_match=False)
-    html = _gen(now)._capital_dashboard_html(alloc, {"main_routes": [a, b_now]})
+    cap = admin.build_capital(alloc, opp.current_route_keys({"main_routes": [a, b_now]}, now))
+    html = admin._capital({"capital": cap})
     kept = [x for x in plan["allocations"] if x["route_id"] == opp.route_key(a)][0]
-    assert f"+¥{kept['expected_profit']:,}" in html and f"¥{kept['total']:,}" in html
+    assert f"¥{kept['expected_profit']:,}" in html and f"¥{kept['total']:,}" in html
     bad = [x for x in plan["allocations"] if x["route_id"] == opp.route_key(gen_ok)][0]
     assert f"{bad['expected_profit']:,}" not in html
+    # 外した行があるときは、生成時の合計（外した行を含む）を出さない（計算し直さない）
+    assert cap[0]["totals"] is None and f"{plan['expected_profit']:,}" not in html
     # 生成時も、今のルートで照合できない候補は配分に使わない
     keys_now = opp.current_route_keys({"main_routes": [a, b_now]}, now)
     assert {o["route_id"] for o in GAP.build_opportunity_metrics(d, {}, keys_now)} == {opp.route_key(a)}
@@ -177,11 +184,15 @@ def test_health_profit_metrics_use_current_routes():
                                      "item_url_rate": {"prev": 0, "cur": 0}},
                     "improvements_top10": [{"stars": 5, "action": "EBAY_APP_ID 設定", "effect": "+¥142,079（参考1→main昇格）",
                                             "effort": "1時間"}]}
-    g = _gen(now)
-    g._coverage_html = lambda: ""
-    g._execution_html = lambda: ""
-    html = g._tab_health(stale_report, {"main_routes": [b], "reference_routes": []})
+    h = admin.current_health(stale_report, {"main_routes": [b], "reference_routes": []}, now)
+    html = admin._system({"health": h, "api": [], "api_dry_run": False, "api_generated": None, "coverage": {},
+                          "dq_report": {}, "camera": {}, "camera_generated": None, "min_sold": 3})
     assert "39,009" not in html and "142,079" not in html and "prod_cam" not in html
+    assert h["anomalies"]["info"] == [] and h["diff_vs_prev"]["main_route_count"]["cur"] == 0
+    # 否定対照: 今も確定のルートなら、その件数・最大利益で数え直して出す
+    a, _b = _routes(now)
+    h2 = admin.current_health(stale_report, {"main_routes": [a], "reference_routes": []}, now)
+    assert h2["anomalies"]["info"] == [f"検証済み利益ルート 1件 / 最大 +¥{a['net_profit']:,}"]
     # 生成側も判定を通ったルートだけから数える
     pf = GHR._profit({"main_routes": [b], "reference_routes": [b]})
     assert pf["main_route_count"] == 0 and pf["max_profit"] == 0 and pf["reference_route_count"] == 0
@@ -305,11 +316,13 @@ def test_invalidated_record_can_still_get_its_real_outcome(tmp_path, monkeypatch
 
 
 def test_execution_dashboard_without_real_outcomes_shows_no_rate():
-    html = _gen(datetime.now(tz=JST))._execution_html(
-        {"closed_count": 0, "success_count": 0, "execution_success_rate": 0, "invalidated_count": 82,
-         "sample_excluded_count": 128, "prediction_accuracy": {}, "notification_accuracy": {}, "insights_top10": []})
-    assert "実績の記録なし" in html and "Execution Success" in html and ">0%<" not in html
-    assert "無効（今のルートで確かめられない）82件" in html and "サンプルの結果 128件" in html
+    """実績（成功・失敗）の記録が無ければ、成功率を 0% と出さない（運営者向けの実行履歴）。"""
+    ex = admin.build_execution({"closed_count": 0, "success_count": 0, "execution_success_rate": 0,
+                                "invalidated_count": 82, "sample_excluded_count": 128, "prediction_accuracy": {},
+                                "notification_accuracy": {}, "insights_top10": []}, {"executions": []}, {})
+    html = admin._execution({"execution": ex})
+    assert ex["rate"] is None and "成功率 —（実績の記録なし）" in html and ">0%<" not in html and "0.0%" not in html
+    assert "無効 82件・サンプル 128件" in html
 
 
 # ── 通知 ───────────────────────────────────────────────────────────
@@ -373,14 +386,18 @@ def test_zero_diagnostics_do_not_show_unverified_price_as_confirmed():
          "min_usable_buy_source": "Amazon JP", "max_usable_sell": 151000, "max_usable_sell_source": "フジヤカメラ",
          "min_usable_buy_identity_verified": False, "max_usable_sell_identity_verified": False,
          "net_domestic": 39009, "best_reference_net": 142079, "main_blocked_reason": "x", "needed": []}
-    html = _gen(now)._profit_routes_section({"main_routes": [], "reference_routes": [],
-                                             "zero_route_diagnostics": {"prod_gr4": z}})
-    assert "参考・商品照合未完了 フジヤカメラ ¥151,000" in html and "最高 フジヤカメラ" not in html
-    assert "39,009" not in html and "国内完結: <b" not in html
-    z2 = dict(z, max_usable_sell_identity_verified=True, net_domestic=-5000)
-    html2 = _gen(now)._profit_routes_section({"main_routes": [], "reference_routes": [],
-                                              "zero_route_diagnostics": {"prod_gr4": z2}})
-    assert "最高 フジヤカメラ ¥151,000" in html2 and "-5,000円" in html2       # 否定対照: 照合済み・赤字の説明
+    def _zero_html(zz):
+        v = admin.build({}, catalog=None, details={}, profit_routes={"main_routes": [], "reference_routes": [],
+                                                                    "zero_route_diagnostics": {"prod_gr4": zz}},
+                        tcg_report={}, now=now)
+        return admin._zero_groups(v["zero_routes"])
+    html = _zero_html(z)
+    assert "最高の売却 フジヤカメラ ¥151,000（参考・照合未了）" in html
+    assert "39,009" not in html and "142,079" not in html and "国内完結" not in html   # 確定でない利益は出さない
+    html2 = _zero_html(dict(z, max_usable_sell_identity_verified=True, net_domestic=-5000))
+    assert "最高の売却 フジヤカメラ ¥151,000" in html2
+    assert "最高の売却 フジヤカメラ ¥151,000（参考" not in html2                     # 否定対照: 照合済みなら参考と書かない
+    assert "最安の仕入れ Amazon JP ¥107,491（参考・照合未了）" in html2               # 仕入れ側は照合未了のまま
 
 
 def test_beta_preview_has_no_fabricated_profit(tmp_path, monkeypatch):

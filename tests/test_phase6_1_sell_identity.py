@@ -1,4 +1,7 @@
-"""Phase 6.1: 商品の照合が済んでいない売却価格を、確定利益（案件・ランキング・Hero・新UI・商品詳細）に使わない。
+"""Phase 6.1: 商品の照合が済んでいない売却価格を、確定利益（案件・新UIの利益商品・商品詳細）に使わない。
+
+（UI Phase 10 で旧UIのランキング・Hero・案件カード・買取店比較を削除した。同じ意図を新UIの利益商品・商品詳細と、
+旧UIの買取店比較が使っていた正本（normalized_prices.confirmed_sell_keys）で確かめる。）
 
 売却側の正本は src/market/normalized_prices.sell_confirmation_reasons（商品の同一性は正規化の観測の
 is_exact_product_match。店のトップ・検索結果の価格は使わない）。データはすべて架空。
@@ -159,24 +162,23 @@ def test_all_unverified_removes_profit_everywhere():
     assert deal.net_profit_jpy == 0 and deal.user_level == "monitoring"
     all_d, easy, watch, mon, adv = g._gate_and_merge_deals([deal], [deal], [], [], [deal], {"prod_ps5_pro": rows})
     assert all(d.net_profit_jpy == 0 for d in all_d) and adv == []
-    rank = g._tab_ranking(all_d, [], [d for d in all_d if d.category == "game_console"])
-    hero = g._section_hero("2026-10-05", "12:00", NOW, NOW, all_deals=all_d, beginner_display_count=0)
-    for html in (rank, hero):
-        assert "192,700" not in html and "52,370" not in html
+    assert all(d.best_buyback_price != 192700 for d in all_d + easy)          # 未照合の価格を案件に残さない
     s = opp.build(deals=g._nu_profit_deals(g._nu_source_deals, {"prod_ps5_pro": rows}), routes=[],
                   product_genres={}, now=NOW)
     assert s.eligible == []
 
 
-def test_legacy_ranking_and_hero_use_the_verified_sell():
+def test_new_ui_profit_uses_the_verified_sell():
+    """旧UIのランキング・Hero の後継（新UIの利益商品・TOP10）: 照合済みの買取商店の値で利益を出す。"""
     g = _gen(npx.confirmed_sell_keys([MOBILE, SHOUTEN]))
     rows = [_row("モバイル一番", 192700), _row("買取商店", 192300)]
     deal = g._enrich_deal(_ps5_deal(), rows)
     all_d, *_ = g._gate_and_merge_deals([deal], [deal], [], [], [], {"prod_ps5_pro": rows})
-    rank = g._tab_ranking(all_d, [], [d for d in all_d if d.category == "game_console"])
-    hero = g._section_hero("2026-10-05", "12:00", NOW, NOW, all_deals=all_d, beginner_display_count=1)
-    assert "買取商店" in rank and "モバイル一番" not in rank and "52,370" not in rank
-    assert "51,970" in hero and "52,370" not in hero
+    assert [(d.best_buyback_shop, d.net_profit_jpy) for d in all_d] == [("買取商店", 51970)]
+    s = opp.build(deals=g._nu_profit_deals(g._nu_source_deals, {"prod_ps5_pro": rows}), routes=[],
+                  product_genres={}, now=NOW)
+    v, = s.eligible
+    assert v.sell_source == "買取商店" and v.sell_price == 192300 and v.net_profit == 51970
 
 
 # ── 生成元（スキャナー）も照合済みの中の最高値 ──────────────────────────────────────
@@ -315,43 +317,68 @@ def test_deploy_check_833(tmp_path, monkeypatch):
     assert ok2["opportunity_sell_identity_verified"]["level"] == "ok"
 
 
-def test_legacy_deal_card_compare_does_not_rank_unverified():
-    """旧UIの案件カードの買取店比較: 照合未了の店は順位・差益を付けず「参考・商品照合未完了」。"""
-    g = _gen(npx.confirmed_sell_keys([sell_obs("モバイル一番", 192900, exact=False, link="shop_home"),
-                                      sell_obs("買取商店", 192300)]))
-    rows = [dict(_row("モバイル一番", 192900), shop_id="mobile_ichiban"),
-            dict(_row("買取商店", 192300), shop_id="kaitori_shouten")]
+def _pd_ps5(obs_sell: list[dict], keys_obs: list[dict] | None = None):
+    """PS5 Pro の商品詳細（新UI）を、買取の観測 obs_sell で作る。利益の案件は keys_obs の照合で決める。"""
+    from src.content.ui import product_detail as pd
+    from src.content.ui import product_page
+    from src.content.ui import shell
+    P1 = _load("p1_p61b", ROOT / "tests" / "test_ui_phase1.py")
+    t0 = P1.NOW
+    at = (t0 - timedelta(hours=1)).isoformat()
+    g = _gen(npx.confirmed_sell_keys(keys_obs if keys_obs is not None else obs_sell))
+    rows = [_row(o["source_name"], o["price"]) for o in obs_sell]
     deal = g._enrich_deal(_ps5_deal(), rows)
-    for pro in (False, True):
-        html = g._deal_card(deal, "badge-easy", "利益あり", buyback_rows=rows, pro_mode=pro)
-        assert "+¥54,920" not in html                                  # 未照合の価格の差益（192,900 − 137,980）
-        rows_html = html[html.index('class="shop-row'):]                # 買取店比較の行
-        i = rows_html.index("モバイル一番")
-        assert "商品照合未完了" in rows_html[i:i + 600] and "1位" not in rows_html[i - 200:i]
-        j = rows_html.index("買取商店")
-        assert "+¥54,320" in rows_html[j:j + 400] and j < i            # 照合済みが先で、差益つき
+    deals = g._nu_profit_deals([deal], {"prod_ps5_pro": rows})
+    for d in deals:
+        d.update(genre="game_console", sell_checked_at=at)
+    off = {"product_id": "prod_ps5_pro", "price_role": "official", "price_type": "official_price",
+           "canonical_price_type": "RETAIL", "source_name": "メーカー公式/定価", "price": 137980,
+           "observed_at": t0.strftime("%Y-%m-%d"), "freshness_basis": "verified", "is_exact_product_match": False,
+           "rejection_reason": "", "condition": "new_unopened", "link_type": "official_top"}
+    obs = [off] + [dict(o, observed_at=at, item_url="https://kaitori.example.jp/" + str(i))
+                   for i, o in enumerate(obs_sell)]
+    ctx = P1._ctx(products=[{"product_id": "prod_ps5_pro", "name": "PlayStation 5 Pro", "genre": "game_console",
+                             "brand": "Sony", "model": "CFI-7100B01", "official_price": 137980,
+                             "official_url": "https://pur.store.sony.jp/ps5/products/ps5/CFI-7100B01_purchase/"}],
+                  profit_deals=deals, price_observations=obs, product_genres={"prod_ps5_pro": "game_console"})
+    model, catalog = shell.build_catalog(ctx)
+    v = pd.build(products=ctx.products, catalog=catalog, observations=obs, price_history=None,
+                 stock_history=None, now=model.now)["prod_ps5_pro"]
+    return v, product_page._article(v)
 
 
-def test_legacy_monitoring_card_compare_does_not_rank_unverified():
-    g = _gen(npx.confirmed_sell_keys([sell_obs("買取商店", 150000)]))
-    d = _ps5_deal("買取商店", 150000).model_copy(update={"net_profit_jpy": 0, "user_level": "monitoring"})
-    rows = [_row("モバイル一番", 152000), _row("買取商店", 150000)]
-    html = g._deal_card_monitoring(d, rows)
-    rows_html = html[html.index('class="shop-row'):]
-    j, i = rows_html.index("買取商店"), rows_html.index("モバイル一番")
-    assert j < i and "参考" in rows_html[i - 120:i] and "商品照合未完了" in rows_html[i:i + 200]
-    # 照合済みは買取商店の1店舗だけ（single）: 順位・金色の印を付けない
-    assert 'shop-rank other">照合済み<' in rows_html[:j] and "gold" not in rows_html[:j]
-    # 否定対照: 照合済み2店舗（multi）なら順位を付ける
-    g2 = _gen(npx.confirmed_sell_keys([sell_obs("買取商店", 150000), sell_obs("買取一丁目", 149000)]))
-    html2 = g2._deal_card_monitoring(d, [_row("買取商店", 150000), _row("買取一丁目", 149000)])
-    assert 'shop-rank gold">1<' in html2
+def test_product_detail_does_not_rank_unverified_sell():
+    """旧UIの案件カードの買取店比較の後継（商品詳細の売却の表）: 照合未了の店は利益の計算に使わず、
+    購入・売却の誘導（ボタン）も付けず「参考」。順位（1位）は付けない。照合済みの店に利益を付ける。"""
+    unv = sell_obs("モバイル一番", 192900, exact=False, link="shop_home")
+    v, html = _pd_ps5([unv, sell_obs("買取商店", 192300)])
+    mob = next(r for r in v.sell_rows if r.source == "モバイル一番")
+    assert not mob.usable and not mob.cta_label and v.best_sell.source == "買取商店"
+    assert "+¥54,920" not in html and "1位" not in html                      # 未照合の価格の差益（192,900 − 137,980）
+    assert v.opportunity is not None and v.opportunity.sell_source == "買取商店"
 
 
-# ── 買取店比較の状態（照合済みの店の数。single = 比較できていない） ───────────────────────────
+def test_product_detail_does_not_use_higher_unverified_sell():
+    """旧UIの監視中カードの後継: 照合未了の店の高い値（¥152,000）を「最高」の売却・利益の売却先にしない。
+    照合済みの買取商店（¥150,000）だけで利益を計算する。照合済みが無ければ利益を出さない。"""
+    v, html = _pd_ps5([sell_obs("モバイル一番", 152000, exact=False), sell_obs("買取商店", 150000)],
+                      keys_obs=[sell_obs("買取商店", 150000)])
+    assert v.best_sell.source == "買取商店" and v.opportunity.sell_source == "買取商店"
+    assert not next(r for r in v.sell_rows if r.source == "モバイル一番").usable
+    assert "1位" not in html and "+¥11,670" not in html                      # 未照合の価格の利益（152,000 基準）
+    v2, _h = _pd_ps5([sell_obs("モバイル一番", 152000, exact=False)], keys_obs=[])
+    assert v2.opportunity is None and v2.best_sell is None
+
+
+# ── 買取店比較の状態（照合済みの店の数。旧UIの _buyback_comparison が使っていた正本で確かめる） ─────────
 
 def _cmp(obs, rows):
-    return _gen(npx.confirmed_sell_keys(obs))._buyback_comparison("prod_ps5_pro", rows)
+    """照合済みの店の数から比較の状態（none / single / multi）。旧UIの _buyback_comparison と同じ正本
+    （normalized_prices.confirmed_sell_keys）。新UIの利益の売却先（sell_identity_verified）も同じ正本を使う。"""
+    keys = {k for k in npx.confirmed_sell_keys(obs) if k[0] == "prod_ps5_pro"}
+    shops = {k[1] for k in keys}
+    state = "none" if not shops else ("single" if len(shops) == 1 else "multi")
+    return state, sorted(keys), [o for o in obs if (o["product_id"], o["source_name"], o["price"]) not in keys]
 
 
 @pytest.mark.parametrize("obs, rows, state, n_conf", [
@@ -374,69 +401,36 @@ def test_comparison_state(obs, rows, state, n_conf):
     assert st == state and len(conf) == n_conf and len(ref) == len(rows) - n_conf
 
 
-def _beginner_page(card_html: str) -> str:
-    return (f'<html><body><div id="tab-ranking"></div><div id="tab-beginner">{card_html}</div>'
-            '<div id="tab-advanced"></div><div id="tab-lottery"></div></body></html>')
-
-
-def test_ps5_pro_single_state_card_and_446(tmp_path, monkeypatch):
+def test_ps5_pro_single_state_profit_and_833(tmp_path, monkeypatch):
     """PS5 Pro と同じ形（照合済みは買取商店だけ・モバイル一番は参考）: 比較の状態は single。
-    「最高」「比較済み」と言わず、モバイル一番に順位・差益・確かさ high を付けない。#446 は single の注記で通る。"""
-    g = _gen(npx.confirmed_sell_keys([MOBILE, SHOUTEN]))
-    rows = [dict(_row("モバイル一番", 192700), shop_id="mobile_ichiban"),
-            dict(_row("買取商店", 192300), shop_id="kaitori_shouten")]
-    deal = g._enrich_deal(_ps5_deal(), rows)
-    html = g._deal_card(deal, "badge-easy", "利益あり", buyback_rows=rows)
-    hero = html[html.index("best-buyback-hero"):html.index("shop-compare-fold")]
-    assert 'data-buyback-comparison-state="single"' in html and "bb-single-note" in hero
-    assert "比較済み" not in hero and "2位" not in hero and "最高買取店" not in hero
-    # カード全体（価格欄・差益の見出し・注記・比較の折りたたみ）でも「最高」と言わない
-    import re as _re
-    text = _re.sub(r"<[^>]+>", " ", html)
-    assert "最高" not in text and "買取価格（比較できたのは1店舗）" in text and "差益（定価購入→買取）" in text
-    assert "全2店舗・うち参考1店舗" in text and "1位" not in text and "照合済み" in text
-    rows_html = html[html.index('class="shop-row'):]
-    i = rows_html.index("モバイル一番")
-    seg = rows_html[i - 200:rows_html.index("</a>", i) if "</a>" in rows_html[i:] else i + 800]
-    assert "位" not in rows_html[i - 120:i] and "+¥54,720" not in html and " / high" not in seg
-    assert "+¥54,320" in rows_html[:i]                                       # 照合済みの店にだけ差益
-    root = tmp_path / "root"
-    (root / "docs").mkdir(parents=True)
-    (root / "docs/index.html").write_text(_beginner_page(html), encoding="utf-8")
-    for n in ("config", "data", "exports", "src", "scripts"):
-        (root / n).symlink_to(ROOT / n)
-    dc = _load("deploy_check_p61b", ROOT / "scripts" / "deploy_check.py")
-    monkeypatch.setattr(dc, "PROJECT_ROOT", root)
-    monkeypatch.setattr(dc, "PUBLIC_DIR", root / "docs")
-    lv = {r["check"]: r["level"] for r in dc.check()}
-    assert lv["beginner_hero_and_runnerup_diff"] == "ok"
-    # 状態の印と注記が食い違う（single なのに「比較済み」・印なし）なら ERROR
-    for bad in (html.replace("bb-single-note", "bb-compared-note"),
-                html.replace('data-buyback-comparison-state="single" ', "")):
-        (root / "docs/index.html").write_text(_beginner_page(bad), encoding="utf-8")
-        lv = {r["check"]: r["level"] for r in dc.check()}
-        assert lv["beginner_hero_and_runnerup_diff"] == "error"
+    新UIの利益は買取商店（¥192,300・純利益 ¥51,970）で、モバイル一番の差益（+¥54,720）は出さない。
+    deploy-check #833（旧 #446 の後継の検査）は買取商店なら ok、モバイル一番を売却先にすると ERROR。"""
+    assert _cmp([MOBILE, SHOUTEN], [])[0] == "single"
+    v, html = _pd_ps5([MOBILE, SHOUTEN])
+    assert v.opportunity.sell_source == "買取商店" and "+¥51,970" in html and "+¥54,720" not in html
+    assert "比較済み" not in html and "1位" not in html and "2位" not in html
+    ok = _dc_run(tmp_path / "a", monkeypatch, _pd_html("買取商店", 192300), [MOBILE, SHOUTEN])
+    ng = _dc_run(tmp_path / "b", monkeypatch, _pd_html("モバイル一番", 192700), [MOBILE, SHOUTEN])
+    assert ok["opportunity_sell_identity_verified"]["level"] == "ok"
+    assert ng["opportunity_sell_identity_verified"]["level"] == "error"
 
 
-def test_multi_state_card_keeps_existing_notes():
+def test_multi_state_uses_highest_verified_sell():
     obs = [sell_obs("買取商店", 192300), sell_obs("買取一丁目", 190000)]
-    g = _gen(npx.confirmed_sell_keys(obs))
-    rows = [_row("買取商店", 192300), _row("買取一丁目", 190000)]
-    deal = g._enrich_deal(_ps5_deal("買取商店", 192300), rows)
-    html = g._deal_card(deal, "badge-easy", "利益あり", buyback_rows=rows)
-    hero = html[html.index("best-buyback-hero"):html.index("shop-compare-fold")]
-    assert 'data-buyback-comparison-state="multi"' in html and "2位との差額" in hero and "他1店舗と比較済み" in hero
-    assert "最高買取店" in hero
+    assert _cmp(obs, [])[0] == "multi"
+    v, _html = _pd_ps5(obs)
+    assert v.best_sell.source == "買取商店" and v.opportunity.sell_source == "買取商店"
+    assert sum(1 for r in v.sell_rows if r.usable) == 2
 
 
 def test_same_shop_two_rows_is_single_and_deal_sell_counts():
-    """同じ店の照合済みの行が2つでも1店舗（multi にしない）。案件の売値が照合済みなら、行に無くても single。"""
+    """同じ店の照合済みの行が2つでも1店舗（multi にしない）。"""
     obs = [sell_obs("買取商店", 192300), sell_obs("買取商店", 190000, cond="new_unopened_simfree")]
     st, conf, ref = _cmp(obs, [_row("買取商店", 192300), _row("買取商店", 190000)])
     assert st == "single" and len(conf) == 2 and ref == []
-    g = _gen(npx.confirmed_sell_keys([SHOUTEN]))
-    assert g._buyback_comparison("prod_ps5_pro", [], ("買取商店", 192300))[0] == "single"
-    assert g._buyback_comparison("prod_ps5_pro", [], ("モバイル一番", 192700))[0] == "none"
+    # 案件の売値（店名・価格）が照合済みなら確定、照合未了の店なら確定にしない（新UIの判定）
+    keys = npx.confirmed_sell_keys([SHOUTEN])
+    assert ("prod_ps5_pro", "買取商店", 192300) in keys and ("prod_ps5_pro", "モバイル一番", 192700) not in keys
 
 
 def test_diagnostics_reason_for_unverified_sell():

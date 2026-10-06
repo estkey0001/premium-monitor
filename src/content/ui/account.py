@@ -15,7 +15,6 @@ def render() -> str:
         '<h2 class="nu-h2">使い方</h2>'
         '<ul class="nu-linklist">'
         f'<li>{c.button("はじめかた・ヘルプ", "beta/", kind="secondary", external=False)}</li>'
-        f'<li>{c.button("旧表示（これまでの一覧ページ）を見る", "./?ui=legacy", kind="secondary", external=False)}</li>'
         '</ul>'
         '<h2 class="nu-h2" id="nu-operator" tabindex="-1">運営者向けの情報</h2>'
         '<p class="nu-lead">データの取得状況などの運営者向け情報は、運営の管理画面にまとめています（読むだけ）。</p>'

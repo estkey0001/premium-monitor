@@ -739,19 +739,25 @@ def test_dedupe_key_matches_dedupe_module():
 
 
 def test_open_label_differs_for_sale_and_lottery():
-    """発売前の販売情報を「受付中」と表示しない。"""
-    from src.content.daily_lp_generator import DailyLPGenerator
-    g = DailyLPGenerator.__new__(DailyLPGenerator)
-    sale = DailyLPGenerator._tcg_card(g, {
-        "tcg": "ONE_PIECE", "product_name": "商品", "event_type": "GENERAL_SALE",
-        "status": "OPEN", "store": "ONEPIECE_CARD_OFFICIAL", "source_type": "OFFICIAL",
-        "shrink_status": "UNKNOWN", "verification": "Confirmed"})
-    assert "発売前" in sale and "受付中" not in sale
-    lot = DailyLPGenerator._tcg_card(g, {
-        "tcg": "POKEMON", "product_name": "商品", "event_type": "LOTTERY",
-        "status": "OPEN", "store": "POKEMON_CENTER_ONLINE", "source_type": "OFFICIAL",
-        "shrink_status": "UNKNOWN", "verification": "Confirmed"})
-    assert "受付中" in lot
+    """発売前の販売情報を「受付中」と表示しない（UI Phase 10: 旧UIの TCG カードの後継は新UIの抽選・予約）。
+    販売の情報は「発売待ち」（公式の発売日があるものだけ）、抽選は「受付中」。"""
+    from datetime import timedelta as _td
+    from src.content.ui import runtime as rt
+    from src.tcg.models import now_jst as _now
+    n = _now()
+    sale_open = {"tcg": "ONE_PIECE", "product_name": "販売の商品", "event_type": "GENERAL_SALE", "status": "OPEN",
+                 "store": "ONEPIECE_CARD_OFFICIAL", "source_type": "OFFICIAL", "shrink_status": "UNKNOWN",
+                 "verification": "Confirmed", "source_url": "https://www.onepiece-cardgame.com/products/x.html"}
+    assert rt.release_vm(sale_open) is None                       # 発売日の無い販売の情報は抽選・予約に出さない
+    d = n + _td(days=10)
+    coming = dict(sale_open, status="COMING_SOON", release_date=f"{d.year}年{d.month}月{d.day}日")
+    vm = rt.release_vm(coming)
+    st_ = rt.derive_runtime_state(vm, n)
+    assert st_["status"] == "RELEASE_WAIT" and "受付中" not in st_["label"] and "発売予定" in st_["when"]
+    lot = {"lottery_id": "l1", "tcg": "POKEMON", "product_name": "抽選の商品", "event_type": "LOTTERY",
+           "application_start": (n - _td(days=1)).isoformat(), "application_end": (n + _td(days=2)).isoformat(),
+           "source_url": "https://www.pokemoncenter-online.com/news/1", "confidence": "high"}
+    assert "受付中" in rt.derive_runtime_state(rt.tcg_vm(lot, 0), n)["label"]
 
 
 # ── 再レビュー指摘の回帰固定 ──────────────────────────────────────────────

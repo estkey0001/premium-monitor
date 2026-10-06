@@ -96,8 +96,6 @@ def page_href(page: str, *, category: str | None = None) -> str:
     return "?" + urlencode(q) if q else "./"
 
 
-# 旧UI（監査・比較用に残している表示）への入口。新UIが既定なので、旧UIは ?ui=legacy のときだけ
-LEGACY_HREF = "./?ui=legacy"
 
 
 def _icon(name: str, size: int) -> str:

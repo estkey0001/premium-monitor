@@ -15,7 +15,7 @@ from pathlib import Path
 
 import pytest
 
-from src.content.ui import home, parity
+from src.content.ui import home, vm_check
 from src.content.ui import runtime as rt
 from src.tcg.lottery.schema import compute_lottery_status
 from src.tcg.models import JST
@@ -306,7 +306,9 @@ def test_derive_matches_export_status_at_export_time():
         assert compute_lottery_status(e, at) == e["status"]
 
 
-# ── 新旧の件数照合 ─────────────────────────────────────────────────
+# ── 抽選の VM と元データの突き合わせ（vm_check。deploy-check #810） ─────────────────────────
+# UI Phase 10 で旧UIを削除した。以前は旧UIが描画した件数と照合していた（parity）。VM への変換の誤りを
+# 見つける部分（元データとの1件ずつの突き合わせ）は、旧UIに依存しない vm_check として残した。
 
 def _render_lp(monkeypatch, report, *, legacy=None, lp_time=None):
     import yaml
@@ -323,17 +325,19 @@ def _render_lp(monkeypatch, report, *, legacy=None, lp_time=None):
     with open(ROOT / "config" / "lp_settings.yaml", encoding="utf-8") as f:
         g.settings = yaml.safe_load(f) or {}
     g.repo = Repo()
-    return g._render_page(
-        date_str="2026-10-02", time_str="10:00", latest_buyback_at=None, latest_deals_at=None,
-        lp_generated_at=lp_time or datetime(2026, 10, 2, 10, 0), beginner_easy=[], beginner_watch=[],
-        advanced_deals=[], advanced_snaps=[], watch_candidates=[], buyback_alerts=[],
-        all_deals=[], iphone_deals=[], game_deals=[])
+    return g._render_page(lp_generated_at=lp_time or datetime(2026, 10, 2, 10, 0), all_deals=[])
 
 
-def _parity_rows(html):
+def _vm_rows(html):
+    """生成した LP の突き合わせの結果（食い違いの件数）。parity の行の形（"1"=一致・"0"=不一致）で返す。"""
     import re
     root = html[html.index('<div id="new-ui-root"'):html.index("<!-- /new-ui-root -->")]
-    return dict(re.findall(r'data-parity="([^"]+)" data-match="([01])"', root))
+    m = re.search(r'data-nu-vmcheck="tcg:(\d+);legacy:(\d+);n:(\d+)"', root)
+    assert m, "突き合わせの結果が無い"
+    return {"vm_fields": "1" if m.group(1) == "0" else "0", "legacy_open": "1" if m.group(2) == "0" else "0"}
+
+
+_parity_rows = _vm_rows
 
 
 def _fixture_report(at: datetime) -> dict:
@@ -352,47 +356,39 @@ def _fixture_report(at: datetime) -> dict:
     ]}
 
 
-def test_parity_with_old_ui_rendered_counts(monkeypatch):
-    # LP 生成（10:00）より前に exports が作られた場合。AI Opportunities は新旧とも実ファイル
+def test_vm_check_ok_and_states_at_generation(monkeypatch):
+    """exports（8:30）より後に LP を生成（10:00）: VM は元データと一致し、状態は生成時刻で計算し直す。"""
     report = _fixture_report(datetime(2026, 10, 2, 8, 30, tzinfo=JST))
-    html = _render_lp(monkeypatch, report)
-    rows = _parity_rows(html)
-    assert set(rows) == {"lottery_total", "OPEN", "ENDING_SOON", "UPCOMING", "SOURCE_CONFLICT",
-                         "vm_fields", "legacy_open", "buy", "opportunities"}
-    assert all(v == "1" for v in rows.values()), rows
-    old = parity.old_ui_counts_from_html(html)
-    assert old["found_lottery_section"] == 1
-    assert (old["OPEN"], old["ENDING_SOON"], old["UPCOMING"], old["SOURCE_CONFLICT"],
-            old["AFTER"], old["ANNOUNCEMENT"]) == (1, 1, 1, 1, 1, 1)
+    rows = _vm_rows(_render_lp(monkeypatch, report))
+    assert rows == {"vm_fields": "1", "legacy_open": "1"}
+    vms = rt.build_vms(report, [])
+    states = {v["t"]: rt.derive_runtime_state(v, datetime(2026, 10, 2, 10, 0, tzinfo=JST))["status"] for v in vms}
+    assert states["商品1"] == "OPEN" and states["商品3"] == "OPEN"         # 9:30 に受付開始（exports では開始前）
+    assert vm_check.check(vms, report, []) == {"tcg": 0, "legacy": 0, "n": 6}
 
 
-def test_parity_runtime_difference_is_explained(monkeypatch):
-    """exports の後に受付が始まった抽選は「時刻」の差として説明され、不一致にならない。"""
+def test_vm_runtime_difference_is_not_a_mismatch(monkeypatch):
+    """exports の後に受付が始まった抽選は、状態が変わっても VM の値は元データと同じ（食い違いにしない）。"""
     at = datetime(2026, 10, 2, 8, 30, tzinfo=JST)
     report = {"generated_at": at.isoformat(), "lotteries": [
         _ev(lottery_id="a", product_name="A", status="UPCOMING",
             application_start=_iso(timedelta(minutes=30), at), application_end=_iso(timedelta(days=3), at))]}
-    html = _render_lp(monkeypatch, report)     # LP は 10:00（受付開始後）
-    import re
-    root = html[html.index('<div id="new-ui-root"'):html.index("<!-- /new-ui-root -->")]
-    row = re.search(r'data-parity="OPEN" data-match="1"><td>[^<]*</td><td>0</td><td>1</td><td>\+1</td>', root)
-    assert row, "OPEN: 旧UI 0 / 新UI 1 / 時刻 +1 で一致扱い"
+    rows = _vm_rows(_render_lp(monkeypatch, report))     # LP は 10:00（受付開始後）
+    assert rows["vm_fields"] == "1"
+    vm, = rt.build_vms(report, [])
+    assert rt.derive_runtime_state(vm, datetime(2026, 10, 2, 10, 0, tzinfo=JST))["status"] == "OPEN"
 
 
-def test_parity_guard_difference_is_explained():
-    class M:
-        vms, states = [], {}
-        opp_cards = [home.Action(action="BUY", title="A"), home.Action(action="WAIT", title="C")]
-        hidden_prices, alert_count = 1, 1
-    rows = {r["key"]: r for r in parity.build(M, {}, {"buy": 2, "opportunities": 4})}
-    assert rows["buy"]["unexplained"] == 0 and rows["buy"]["guard"] == -1
-    assert rows["opportunities"]["unexplained"] == 0
-    rows = {r["key"]: r for r in parity.build(M, {}, {"buy": 3, "opportunities": 4})}
-    assert rows["buy"]["unexplained"] != 0
+def test_vm_check_counts_dropped_or_extra_tcg_items():
+    """VM が足りない・多い（変換で落ちた・増えた）ときは件数の差を食い違いに数える。"""
+    report = _fixture_report(datetime(2026, 10, 2, 9, 0, tzinfo=JST))
+    vms = rt.build_vms(report, [])
+    assert vm_check.check(vms[:-1], report, [])["tcg"] == 1
+    assert vm_check.check(vms + [dict(vms[0], id="x")], report, [])["tcg"] == 1
 
 
 def test_parity_detects_conversion_bug(monkeypatch):
-    """VM への変換で締切が落ちるような誤りがあると、照合が不一致になる。"""
+    """VM への変換で締切が落ちるような誤りがあると、突き合わせが不一致になる。"""
     report = _fixture_report(datetime(2026, 10, 2, 9, 0, tzinfo=JST))
     orig = rt.tcg_vm
 
@@ -402,7 +398,7 @@ def test_parity_detects_conversion_bug(monkeypatch):
         return vm
     monkeypatch.setattr(rt, "tcg_vm", broken)
     rows = _parity_rows(_render_lp(monkeypatch, report))
-    assert "0" in rows.values()
+    assert rows["vm_fields"] == "0"
 
 
 def test_generation_time_naive_is_local_time(monkeypatch):
@@ -517,7 +513,7 @@ def test_js_next_change_is_nearest_boundary():
 
 
 
-# ── N-1: 日付だけの値・重複で照合が誤って不一致にならない ─────────────────
+# ── N-1: 日付だけの値・重複で突き合わせが誤って不一致にならない ─────────────────
 
 def _real_now():
     return datetime.now(JST).replace(microsecond=0)
@@ -532,10 +528,10 @@ def _fmt(d):
     lambda n: {"id": "a", "product_name": "GR A", "status": "active",
                "entry_start_at": _fmt(n - timedelta(days=1)),
                "entry_end_at": (n + timedelta(days=3)).strftime("%Y-%m-%d")},
-    # 開始が日付だけ（今日）: 旧UIは受付中、新UIは開始前
+    # 開始が日付だけ（今日）: 時刻を作らない（日付として扱う）
     lambda n: {"id": "b", "product_name": "GR B", "status": "active",
                "entry_start_at": n.strftime("%Y-%m-%d"), "entry_end_at": _fmt(n + timedelta(days=3))},
-    # 締切が日付だけ（今日）: 旧UIは締切後、新UIは締切間近
+    # 締切が日付だけ（今日）: 時刻を作らない（日付として扱う）
     lambda n: {"id": "c", "product_name": "GR C", "status": "active",
                "entry_start_at": _fmt(n - timedelta(days=2)), "entry_end_at": n.strftime("%Y-%m-%d")},
     # 時刻つき（差が出ない）
@@ -591,7 +587,7 @@ def test_parity_detects_unv_mutation(monkeypatch):
     assert _parity_rows(_render_lp(monkeypatch, report)).get("vm_fields") == "0"
 
 
-# ── N-4: 旧来の抽選の照合が、変換の誤りを「ガード」に逃がさない ─────────────
+# ── N-4: 旧来の抽選の突き合わせが、変換の誤り（日時・URL・結果発表・落ちた項目）を見逃さない ─────────────
 
 def _legacy_items(n):
     return [{"id": "x", "product_name": "GR X", "status": "active",

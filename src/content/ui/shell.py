@@ -3,20 +3,21 @@
 - `render_head()` は <head> に入れる CSS と、表示（新UI / 旧UI）を URL で判定する小さなスクリプト
 - `render_root(...)` は <body> の先頭に入れる #new-ui-root と、ページ切り替えのスクリプト
 
-UI Phase 8 から新UIが正式の表示（クエリなし・?ui=new・?ui=それ以外 は新UI）。旧UIは ?ui=legacy のときだけ
-（監査・比較用に1フェーズ残す。DOM は同じ HTML の中にあり、新UIのときは CSS の display:none で隠す）。
-どちらを出すかは URL だけで決める（cookie・localStorage・過去の設定では切り替えない）。
-アーカイブ（過去の LP）は旧UIのまま。
+UI Phase 10 で旧UIを削除した。公開するページは新UIだけ（クエリなし・?ui=new・?ui=legacy・?ui=それ以外）。
+?ui=legacy（旧表示の古いブックマーク）は新UIで開き、「旧表示は終了しました」と小さく知らせて URL から ui を外す。
+旧UIのハッシュ（#tab-… / #product-…）は新UIのページへの読み替えとして残す（navigation.LEGACY_HASH_MAP）。
+JS が無い・ルーターが動かないときは静的な案内（#nu-fallback）。アーカイブ（UI Phase 10 以降の生成物）も新UI。
 """
 
 from __future__ import annotations
 
 from dataclasses import dataclass
 
-from src.content.ui import (account, admin, home, lottery_page, mypage, navigation, opportunities_page, pages, parity,
+from src.content.ui import (account, admin, home, lottery_page, mypage, navigation, opportunities_page, pages,
                             restock_page, routes_page)
 from src.content.ui import product_detail, product_page
 from src.content.ui import catalog as cl
+from src.content.ui import vm_check
 from src.content.ui import categories as cats
 from src.content.ui import runtime as rt
 from src.content.ui.components import esc
@@ -36,7 +37,6 @@ class ShellContext:
     updated_text: str = ""
     source_issue: bool = False
     site_title: str = "プレ値速報"
-    old_ui_counts: dict | None = None   # 旧UIが実際に出力した件数（照合用）
     now: object = None                  # 生成時刻（JST）。閲覧時はブラウザで計算し直す
     # 利益商品（定価を確認済みで、定価で買って買取店に売る案件。daily_lp_generator が絞り込む）
     profit_deals: list | None = None
@@ -55,16 +55,14 @@ def _css() -> str:
     return styles.css()
 
 
-# 新UIが正式の表示（UI Phase 8）。旧UIは ?ui=legacy のときだけ（監査・比較用の退避）。
-# 判定は URL だけ（cookie・localStorage・過去の設定では切り替えない）。最初に判定してクラスを付ける（旧UIが一瞬見えるのを防ぐ）
+# 新UIだけ（UI Phase 10 で旧UIを削除した。?ui=legacy も新UI）。cookie・localStorage・過去の設定では切り替えない。
 # アーカイブ（docs/archive/ の過去の LP。UI Phase 10 以降の生成物）も新UIで出す（その日の記録として。HOME は今のサイトへ）。
-# JS が無い・このスクリプトが失敗した・ルーターが本文を出せなかったときは、静的な案内（#nu-fallback）を出す（旧UIに戻さない）
+# JS が無い・このスクリプトが失敗した・ルーターが本文を出せなかったときは、静的な案内（#nu-fallback）を出す
 _HEAD_SCRIPT = (
     "<script>(function(){try{var d=document.documentElement;"
-    "if(new URLSearchParams(location.search).get('ui')==='legacy'){d.classList.add('ui-legacy');}"
-    "else{d.classList.add('ui-new');"
+    "d.classList.add('ui-new');"
     "window.addEventListener('load',function(){var r=document.getElementById('new-ui-root');"
-    "if(!r||r.hidden){d.classList.remove('ui-new');d.classList.add('ui-fallback');}});}"
+    "if(!r||r.hidden){d.classList.remove('ui-new');d.classList.add('ui-fallback');}});"
     "}catch(e){}})();</script>"
 )
 
@@ -78,21 +76,13 @@ def _router_script() -> str:
 (function(){
   'use strict';
   var params = new URLSearchParams(location.search);
-  // 旧UI（?ui=legacy）: 新UIから来たときだけ、ハッシュのタブを開く。新UIのルーターは動かさない
-  if (params.get('ui') === 'legacy') {
-    if (params.get('from') !== 'new' || !location.hash) return;
-    var go = function(){
-      var id = location.hash.slice(1), btn = null, el = document.getElementById(id);
-      if (/^tab-/.test(id)) btn = document.querySelector('[data-tab="' + id.slice(4) + '"]');
-      if (!btn && el) {
-        var panel = el.closest('[id^="tab-"]');
-        if (panel) btn = document.querySelector('[data-tab="' + panel.id.slice(4) + '"]');
-      }
-      if (btn) btn.click();
-      if (el) setTimeout(function(){ el.scrollIntoView({block: 'start'}); }, 150);
-    };
-    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
-    return;
+  // ?ui=…（旧表示 ?ui=legacy・古い ?ui=new のブックマーク）: 新UIで開き、URL から ui・from を外す（旧UIは削除済み）。
+  // ?ui=legacy のときだけ「旧表示は終了しました」と小さく知らせる。旧UIのハッシュ（#tab-…・#product-…）は下で読み替える
+  var LEGACY_URL = params.get('ui') === 'legacy';
+  if (params.has('ui') || params.get('from') === 'new') {
+    params.delete('ui'); params.delete('from');
+    var qs = params.toString();
+    history.replaceState(history.state, '', location.pathname + (qs ? '?' + qs : '') + location.hash);
   }
   var root = document.getElementById('""" + ROOT_ID + """');
   if (!root || !document.documentElement.classList.contains('ui-new')) return;
@@ -113,6 +103,10 @@ def _router_script() -> str:
       note.querySelector('[data-nu-archive-date]').textContent = ARCH[1];
       note.hidden = false;
     }
+  }
+  if (LEGACY_URL) {
+    var ln = document.getElementById('nu-legacy-ended');
+    if (ln) ln.hidden = false;
   }
   root.hidden = false;
   // クリックの計測（data-track。GA・Meta Pixel を設定したときだけ送る。設定が無ければ何もしない）
@@ -838,8 +832,6 @@ def _router_script() -> str:
       var empty = root.querySelector('[data-nu-empty-for="' + p + '"]');
       if (empty) empty.hidden = shown > 0;
     });
-    var dbg = root.querySelector('[data-nu-debug]');
-    if (dbg) dbg.hidden = q.get('debug') !== '1';
     var mode = q.get('mode') === 'pro' ? '詳細' : 'かんたん';
     root.querySelectorAll('[data-nu-mode-label]').forEach(function(el){ el.textContent = mode; });
     var label = page === 'home' ? (cat === 'all' ? (TITLES.home || 'HOME') : (CATS[cat] || ''))
@@ -875,7 +867,6 @@ def _router_script() -> str:
     var next = new URLSearchParams((i >= 0 ? href.slice(0, i) : href).replace(/^\\?/, ''));
     next.delete('ui');                                   // 新UIが既定。旧UIへはこのルーターでは行かない
     var cur = new URLSearchParams(location.search);
-    if (cur.get('debug') === '1') next.set('debug', '1');
     if (cur.get('mode') && !next.get('mode')) next.set('mode', cur.get('mode'));
     var before = currentPage();
     var nq = next.toString();
@@ -883,6 +874,7 @@ def _router_script() -> str:
     // 商品詳細へ入るときは、戻り先があることを履歴に残す（「戻る」で一覧の状態に戻すため）
     var state = (next.get('page') === 'product' && before !== 'product') ? {nuFrom: before} : null;
     if (url !== location.pathname + location.search + location.hash) history.pushState(state, '', url);
+    hideLegacyEnded();
     var after = render(before !== currentPage());
     if (i >= 0) scrollToHash();
     else if (before !== after) window.scrollTo(0, 0);
@@ -943,7 +935,12 @@ def _router_script() -> str:
     }, 200);
   });
   root.addEventListener('submit', function(e){ if (e.target.matches('[data-nu-search-form]')) e.preventDefault(); });
-  window.addEventListener('popstate', function(){ render(true); });
+  // 「旧表示は終了しました」は最初に開いたページだけ（サイトの中で移ったら閉じる）
+  function hideLegacyEnded() {
+    var ln = document.getElementById('nu-legacy-ended');
+    if (ln) ln.hidden = true;
+  }
+  window.addEventListener('popstate', function(){ hideLegacyEnded(); render(true); });
   window.addEventListener('hashchange', function(){ if (applyLegacyHash()) render(true); });
 
   // 抽選の閲覧時の状態（状態・残り時間・ボタン）。判定は NuLotteryRuntime だけ。
@@ -1052,14 +1049,11 @@ def render_root(ctx: ShellContext) -> str:
     pd_alias = {v.alias: pid for pid, v in details.items()}
     # 情報そのものがあるか（無ければ「まだ情報がありません」。あるが対象が無ければ「今はありません」）
     has_data = bool(model.has_data or ctx.profit_deals)
-    rows = (parity.build(model, ctx.tcg_report, ctx.old_ui_counts)
-            if ctx.old_ui_counts is not None else [])
     updated = (f'<span class="nu-header__meta" title="取得に成功した最新の時刻">'
                f'<span class="nu-header__metalabel">情報確認 </span>{esc(ctx.updated_text)}</span>'
                if ctx.updated_text else "")
     body = (
-        pages.render_home(catalog, source_issue=ctx.source_issue,
-                          debug_html=parity.render(rows, hidden_prices=model.hidden_prices))
+        pages.render_home(catalog, source_issue=ctx.source_issue)
         + opportunities_page.render(catalog, has_data=has_data)
         + lottery_page.render(catalog, model, has_data=has_data)
         + restock_page.render(catalog, now=model.now)
@@ -1076,18 +1070,18 @@ def render_root(ctx: ShellContext) -> str:
                         model.now)
     )
     brand = esc(_brand(ctx.site_title))
+    # 抽選の VM と元データの突き合わせ（食い違いの件数だけ。deploy-check #810 が読む）
+    vmc = vm_check.check(model.vms, ctx.tcg_report, ctx.legacy_lotteries)
     cats_json = json.dumps({c.key: c.label for c in cats.CATEGORIES}, ensure_ascii=False)
     return (
         # JS が無い・ルーターが動かなかったときの静的な案内（旧UIには戻さない）
-        render_fallback(ctx, catalog, model.now.strftime("%m/%d %H:%M") if model.now else "")
+        render_fallback(ctx, catalog, model.now.strftime("%m/%d %H:%M") if model.now else "", model.now)
         # hidden: CSS を使わない読み手にも、JS が表示を決めるまで新UIの本文を見せない（新UIのとき JS で外す）
-        # 旧UI（?ui=legacy）のときだけ見える小さな案内（新UIのときは body 直下の要素なので CSS で隠れる）
-        + '<div class="nu-legacy-note" role="note">旧表示（確認・比較用に残しています）・'
-        '<a href="./">新しい表示に戻る</a></div>'
-        f'<div id="{ROOT_ID}" hidden data-nu-site="{brand}" '
+        + f'<div id="{ROOT_ID}" hidden data-nu-site="{brand}" '
         f"data-nu-map='{esc(navigation.legacy_map_json())}' "
         f"data-nu-cats='{esc(cats_json)}' data-nu-titles='{esc(json.dumps(PAGE_TITLES, ensure_ascii=False))}' "
-        f"data-nu-pd-alias='{esc(json.dumps(pd_alias, ensure_ascii=False))}'>"
+        f"data-nu-pd-alias='{esc(json.dumps(pd_alias, ensure_ascii=False))}' "
+        f'data-nu-vmcheck="tcg:{vmc["tcg"]};legacy:{vmc["legacy"]};n:{vmc["n"]}">'
         '<a class="nu-skip" href="#nu-main">本文へ移動</a>'
         '<header class="nu-header"><div class="nu-header__inner">'
         f'<a class="nu-brand" href="{esc(navigation.page_href("home"))}" data-nu-nav-brand aria-label="{brand} HOME">'
@@ -1104,6 +1098,9 @@ def render_root(ctx: ShellContext) -> str:
         '<b data-nu-archive-date></b> に生成した記録です（価格・件数は当時の値。今の値ではありません。'
         '抽選・在庫の受付の状態は、見ている時刻で判定し直します）。'
         '<a href="./" data-nu-root>最新の表示へ</a></div>'
+        # ?ui=legacy（旧表示の古いブックマーク）で開いたときだけ出す小さな案内（ルーターが出す）
+        '<div id="nu-legacy-ended" class="nu-archive-note" role="note" hidden>'
+        '旧表示は終了しました。新しい表示でご覧ください。</div>'
         f'<main id="nu-main" class="nu-main" tabindex="-1">{body}</main>'
         f'{pages.render_footer(_brand(ctx.site_title), ctx.cta_links)}'
         f'{navigation.bottom_nav()}'
@@ -1116,19 +1113,50 @@ def render_root(ctx: ShellContext) -> str:
     )
 
 
-def render_fallback(ctx: ShellContext, catalog, generated: str) -> str:
+def render_fallback(ctx: ShellContext, catalog, generated: str, now=None) -> str:
     """JS が無い・ルーターが動かなかったときの静的な案内（旧UIの代わり）。新UIのときは CSS で隠す。
 
-    件数・商品名は**生成時点の値**（閲覧時に数え直さない。そう明記する）。値は新UIの一覧と同じ catalog から取る。
+    件数・一覧は**生成時点の値**（閲覧時に数え直さない。締切を過ぎたなどの変化は反映されないと明記する）。
+    値は新UIの一覧と同じ catalog・runtime から取る（計算し直さない）。外部へのリンクは公式などの https だけ。
     """
+    from src.content.ui.components import safe_href
     brand = esc(_brand(ctx.site_title))
-    rows = [("opportunities", "利益商品"), ("lottery", "抽選・予約（受付中）"), ("restock", "在庫再開（購入可能）"),
+    rows = [("opportunities", "利益商品"), ("lottery", "抽選・予約（終了したものを除く）"), ("restock", "在庫再開（購入可能）"),
             ("routes", "せどりルート")]
     counts = "".join(f'<li><a href="{esc(navigation.page_href(k))}">{esc(lbl)}</a> {catalog.count(k)}件</li>'
                      for k, lbl in rows)
-    names = [v.product_name for v in (catalog.opportunity_set.eligible if catalog.opportunity_set else [])][:10]
-    opp_list = (('<h2>利益商品（生成時点）</h2><ul>' + "".join(f"<li>{esc(n)}</li>" for n in names) + "</ul>")
-                if names else "")
+
+    def _ext(url: str, label: str) -> str:
+        u = safe_href(url)
+        return (f' <a href="{esc(u)}" target="_blank" rel="noopener noreferrer">{esc(label)}'
+                '<span class="nu-sr">（外部サイト）</span></a>') if u.startswith("https://") else ""
+
+    def _more(total: int, shown: int) -> str:
+        return (f'<li>ほか {total - shown}件（JavaScript を有効にすると全件を見られます）</li>'
+                if total > shown else "")
+
+    all_opps = catalog.opportunity_set.eligible if catalog.opportunity_set else []
+    opps = all_opps[:10]
+    opp_list = (('<h2>利益商品（生成時点）</h2><ul>' + "".join(
+        f'<li><b>{esc(v.product_name)}</b>：想定純利益 +¥{int(v.net_profit):,}'
+        f'（{esc(v.buy_source)}で買い、{esc(v.sell_source)}に売る場合）</li>' for v in opps)
+                 + _more(len(all_opps), len(opps)) + "</ul>") if opps else "")
+    lots = []
+    for lv in getattr(catalog, "lottery_views", []) or []:
+        if not lv.vm or now is None:
+            continue
+        stt = rt.derive_runtime_state(lv.vm, now)
+        if stt.get("bucket") == rt.BUCKET_HIDDEN or stt.get("status") in ("ENDED", "CLOSED", "UNKNOWN"):
+            continue
+        lots.append(f'<li><b>{esc(lv.product_name)}</b>：{esc(stt.get("label") or "")}・{esc(stt.get("when") or "")}'
+                    + _ext(lv.official_url or lv.source_url, "公式") + "</li>")
+    lot_list = (('<h2>抽選・予約（生成時点の状態）</h2><ul>' + "".join(lots[:10]) + _more(len(lots), min(len(lots), 10))
+                 + "</ul>") if lots else "")
+    all_rs = [r for r in getattr(catalog, "restock_views", []) or [] if now is not None and r.available(now)]
+    rs = all_rs[:10]
+    rs_list = (('<h2>在庫再開（生成時点で購入可能）</h2><ul>' + "".join(
+        f'<li><b>{esc(r.product_name)}</b>：{esc(r.retailer)}' + _ext(r.purchase_url or r.source_url, "販売ページ")
+        + "</li>" for r in rs) + _more(len(all_rs), len(rs)) + "</ul>") if rs else "")
     return (
         '<div id="nu-fallback" class="nu-fallback">'
         f'<header><p class="nu-fallback__brand">{brand}</p></header>'
@@ -1138,11 +1166,12 @@ def render_fallback(ctx: ShellContext, catalog, generated: str) -> str:
         '<p>この簡易表示は、JavaScript が無効か、表示の準備に失敗したときに出ます。'
         'JavaScript を有効にすると、絞り込み・並べ替え・商品詳細・マイページなどの詳細機能を使えます'
         '（下のページへのリンクも JavaScript が必要です。有効にして再読み込みしてください）。</p>'
-        + (f'<p>このページの生成: {esc(generated)}（下の件数・商品名は生成時点の値です。今の値ではありません）</p>'
-           if generated else '<p>下の件数・商品名は生成時点の値です。</p>')
+        + (f'<p>このページの生成: {esc(generated)}（下の件数・一覧は生成時点の値です。今の値ではなく、'
+           'その後に締切を過ぎた・在庫が無くなったなどの変化は反映されません）</p>'
+           if generated else '<p>下の件数・一覧は生成時点の値です。</p>')
         + f'<h2>ページ</h2><ul><li><a href="./">HOME</a></li>{counts}'
         f'<li><a href="{esc(navigation.page_href("search"))}">商品を検索</a></li></ul>'
-        + opp_list
+        + opp_list + lot_list + rs_list
         + f'<p class="nu-fallback__note">{esc(pages.DISCLAIMER)}</p>'
         # 注意書き（フッターと同じ。JS が無い読み手・クローラーにも、利益商品と一緒に出す）
         + '<ul class="nu-fallback__cautions">' + "".join(f"<li>{esc(t)}</li>" for t in pages.CAUTIONS) + "</ul>"

@@ -102,9 +102,9 @@ class _FakeRepo:
         return lambda *a, **k: []
 
 
-def _render_lp(monkeypatch, *, new_ui: bool) -> tuple[str, tuple[str, str]]:
-    """DB を使わずに LP 全体を組み立てる（新UIの有無だけを切り替える）。
-    戻り値は (HTML, 新UIとして差し込んだ (head, root))。"""
+def _render_lp(monkeypatch, *, new_ui: bool = True) -> tuple[str, tuple[str, str]]:
+    """DB を使わずに LP 全体を組み立てる。戻り値は (HTML, 新UIとして差し込んだ (head, root))。
+    UI Phase 10 で旧UIを削除したので、ページは新UIだけ（new_ui=False は新UIの部分を空にした形）。"""
     from src.content.daily_lp_generator import DailyLPGenerator
     g = DailyLPGenerator.__new__(DailyLPGenerator)
     with open("config/lp_settings.yaml", encoding="utf-8") as f:
@@ -118,34 +118,37 @@ def _render_lp(monkeypatch, *, new_ui: bool) -> tuple[str, tuple[str, str]]:
         captured.append(parts)
         return parts
     monkeypatch.setattr(DailyLPGenerator, "_new_ui_parts", fake)
-    html = g._render_page(
-        date_str="2026-10-02", time_str="10:00", latest_buyback_at=None, latest_deals_at=None,
-        lp_generated_at=datetime(2026, 10, 2, 10, 0), beginner_easy=[], beginner_watch=[],
-        advanced_deals=[], advanced_snaps=[], watch_candidates=[], buyback_alerts=[],
-        all_deals=[], iphone_deals=[], game_deals=[])
+    html = g._render_page(lp_generated_at=datetime(2026, 10, 2, 10, 0), all_deals=[])
     monkeypatch.undo()
     return html, captured[0]
 
 
-# ── 旧UIを壊さない ─────────────────────────────────────────────────
+# ── ページは新UIだけ（UI Phase 10 で旧UIを削除した） ───────────────────────────────
 
-def test_old_ui_unchanged_without_flag(monkeypatch):
-    """新UIを足しても、旧UIの部分は1文字も変わらない（追加されるのは新UIの部分だけ）。"""
+def test_page_is_new_ui_only(monkeypatch):
+    """公開するページは、head（新UIの CSS・判定）と body（静的な案内・新UIの root）だけ。旧UIの DOM・CSS・JS は無い。"""
     without, _ = _render_lp(monkeypatch, new_ui=False)
     with_ui, (head, root) = _render_lp(monkeypatch, new_ui=True)
     assert head and root
     assert with_ui.count(head) == 1 and with_ui.count(root) == 1
-    assert with_ui.replace(head, "", 1).replace(root, "", 1) == without
-    # 新UIは <body> の直後、旧UIより前にある
-    assert with_ui.index('<div id="new-ui-root"') < with_ui.index('<header class="topbar">')
+    # 新UIの部分を除くと、ページの外枠（title・description・計測）だけが残る
+    rest = with_ui.replace(head, "", 1).replace(root, "", 1)
+    assert rest == without and re.sub(r"\s+", "", re.sub(r"<title>.*?</title>|<meta[^>]*>", "", rest)) == \
+        "<!DOCTYPEhtml><htmllang=\"ja\"><head></head><body></body></html>"
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("deploy_check_nu", "scripts/deploy_check.py")
+    _dc = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(_dc)
+    assert not [m for m in _dc.LEGACY_UI_MARKERS if m in with_ui]
+    assert with_ui.index('<div id="nu-fallback"') < with_ui.index('<div id="new-ui-root"')
 
 
 def test_new_ui_only_with_flag():
     head = shell.render_head()
-    # UI Phase 8: 新UIが既定。旧UIは ?ui=legacy のときだけ。cookie / localStorage では切り替えない
-    assert "get('ui')==='legacy'" in head and "ui-legacy" in head and "classList.add('ui-new')" in head
+    # UI Phase 10: 新UIだけ（?ui=legacy も新UI）。cookie / localStorage では切り替えない
+    assert "legacy" not in head and "classList.add('ui-new')" in head
     assert "localStorage" not in head and "cookie" not in head
-    # 旧UIは ui-new クラスがあるときだけ隠す。新UIは無いとき隠す
+    # 新UIは ui-new クラスが無いとき隠す（JS が無い・失敗したときは静的な案内）
     assert "html:not(.ui-new) #new-ui-root{display:none!important}" in head
     assert "html.ui-new body>*:not(#new-ui-root){display:none!important}" in head
     root = shell.render_root(_ctx())
@@ -156,11 +159,15 @@ def test_new_ui_only_with_flag():
     assert "premium-monitor.mypage" in root[i:j] and "'ui'" not in root[i:j]
 
 
-def test_old_dom_ids_preserved(monkeypatch):
+def test_old_dom_ids_removed_but_old_hashes_mapped(monkeypatch):
+    """旧UIのタブの id は無い（UI Phase 10）。外部・通知・ブックマークの旧URL（#tab-…）は新UIのページへ読み替える。"""
     html, _ = _render_lp(monkeypatch, new_ui=True)
-    for key in ('id="tab-lottery"', 'id="tab-beginner"', 'id="tab-advanced"', 'id="tab-sedori"',
-                'id="tab-health"', 'id="main-tab-nav"', 'id="genre-dropdown"'):
-        assert html.count(key) == 1, key
+    for key in ('tab-lottery', 'tab-beginner', 'tab-advanced', 'tab-sedori', 'tab-health', 'main-tab-nav',
+                'genre-dropdown'):
+        assert f'id="{key}"' not in html, key
+    for key in ('tab-lottery', 'tab-beginner', 'tab-advanced', 'tab-sedori', 'tab-health'):
+        assert navigation.resolve_legacy_hash(key), key
+    assert navigation.resolve_legacy_hash("tab-health")["page"] == "admin"
 
 
 # ── ナビゲーション・ルーティング ────────────────────────────────────
@@ -263,11 +270,11 @@ def test_no_horizontal_overflow_rules():
     assert not re.search(r"margin[a-z-]*:(?:[^;}]*\s)?-\d", css)
     assert "overflow-wrap:anywhere" in _css_rule(css, ".nu-card__title")
     assert "min-width:0" in _css_rule(css, ".nu-card")
-    # 表は2つだけ: 開発用の照合表（横スクロールの枠の中）と、利益商品の比較テーブル（1200px 以上だけ。
-    # それ未満はカードに切り替え、テーブルを横スクロールさせない）
+    # 表は利益商品の比較テーブルだけ（1200px 以上だけ。それ未満はカードに切り替え、テーブルを横スクロールさせない）。
+    # 開発用の照合表（旧UIとの件数照合）は UI Phase 10 で削除した
     root = shell.render_root(_ctx())
     tables = root.count("<table")
-    assert tables == 2 and 'class="nu-debug__scroll"' in root and 'class="nu-otable"' in root
+    assert tables == 1 and "nu-debug" not in root and 'class="nu-otable"' in root
     assert "display:none" in _css_rule(css, ".nu-otable-wrap")
     assert f"@media (min-width:{t.BP_OPP_TABLE}px){{.nu-otable-wrap{{display:block}}.nu-ocards{{display:none}}}}" in css
 
@@ -524,15 +531,15 @@ def _gen():
     return g
 
 
-def test_new_ui_failure_does_not_break_old_ui(monkeypatch):
+def test_new_ui_failure_stops_generation(monkeypatch):
+    """新UIの生成に失敗したら例外にする（UI Phase 10 で旧UIの受け皿を削除した。空のページを公開しない）。"""
     from src.content.ui import shell as ui_shell
 
     def boom(ctx):
         raise RuntimeError("x")
     monkeypatch.setattr(ui_shell, "render_root", boom)
-    head, root = _gen()._new_ui_parts(lottery_items=[], lp_generated_at=None,
-                                      collection_stats={}, site_title="x")
-    assert (head, root) == ("", "")
+    with pytest.raises(RuntimeError):
+        _gen()._new_ui_parts(lottery_items=[], lp_generated_at=None, collection_stats={}, site_title="x")
 
 
 @pytest.mark.parametrize("report", [

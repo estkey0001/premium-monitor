@@ -1,8 +1,10 @@
-"""Phase 5.1: 旧UI（通常の URL）の利益ルート・利益案件にも、新UIと同じ確定の判定を使うことのテスト。
+"""Phase 5.1: 利益ルート・利益案件のすべての面に、同じ確定の判定を使うことのテスト。
 
 判定の正本は src/content/ui/opportunity.py（eligibility / route_reasons / deal_reasons）の1か所。
-旧UIのせどりタブ・ランキング・Hero・初心者・AI Opportunities（BUY）・通知・新UIの HOME と一覧が、
+新UIの利益商品・せどりルート・HOME・運営者向けの AI 候補・AI Opportunities（BUY）・通知が、
 同じルート・同じ案件について同じ答えを出すことを確かめる。
+（UI Phase 10 で旧UIを削除した。旧UIのせどりタブ・ランキング・Hero・初心者・AI Dashboard・通知の欄で確かめていた
+ことは、同じ意図を新UIの面（運営者向けの AI 候補・通知、利益商品の外した理由）で確かめる。）
 
 GR IV の観測2件は、本番の生成物（2026-10-04 01:37 の自動更新）にあった値と同じ形（公開の価格・URL）。
 それ以外のデータはテスト用の架空のもの。
@@ -12,13 +14,12 @@ from __future__ import annotations
 
 import importlib.util
 import json
-import re
 from datetime import datetime, timedelta
 from pathlib import Path
 
 import pytest
 
-from src.content.ui import home
+from src.content.ui import admin, home
 from src.content.ui import opportunity as opp
 from src.content.ui import route_view as rtv
 from src.models.beginner_deal import BeginnerDealModel as BeginnerDeal
@@ -67,11 +68,14 @@ def _gen(**attrs):
 # ── 各面の答え（同じルートについて） ──────────────────────────────────────────
 
 def _surfaces(r: dict, now: datetime = NOW) -> dict:
-    """1件のルートを、新UI・旧UI・AI・通知・HOME に通したときに「確定として出たか」。"""
+    """1件のルートを、新UI・運営者向けの AI 候補・AI・通知・HOME に通したときに「確定として出たか」。"""
     pr = {"main_routes": [r], "reference_routes": [], "zero_route_diagnostics": {}}
     s = opp.build(deals=[], routes=[r], product_genres={}, now=now)
-    legacy_html = _gen(_gate_now=now)._profit_routes_section(pr)
     ai = GAO.build_candidates(pr, now)
+    # 運営者向けの AI 候補（旧UIの AI Dashboard の後継）。生成物の候補を、今の確定ルートと照合して残すか
+    keys = opp.current_route_keys(pr, now)
+    admin_ai = admin.build_ai({"todays_opportunities": [{"product_id": r["product_id"], "kind": "main",
+                                                          "route_id": opp.route_key(r)}]}, keys, None)
     gno_now, GNO.NOW = GNO.NOW, now
     try:
         snap = GNO._snapshot({"todays_opportunities": [{"product_id": r["product_id"], "kind": "main",
@@ -84,8 +88,7 @@ def _surfaces(r: dict, now: datetime = NOW) -> dict:
         "new_ui": bool(s.eligible),
         "new_ui_routes": bool(rtv.build(s)),
         "canonical": not opp.route_reasons(r, now),
-        "legacy_sedori": f"¥{r['buy_price']:,}" in legacy_html,
-        "legacy_count": "検証済み利益ルート: <b>1件</b>" in legacy_html,
+        "admin_ai": bool(admin_ai["ops"]),
         "ai": bool(ai),
         "notify": bool(snap["ops"]) and bool(snap["main_products"]),
         "home": m.counts["high_profit"] == 1,
@@ -96,7 +99,7 @@ def _all_same(d: dict) -> bool:
     return len(set(d.values())) == 1
 
 
-BUY = 123457    # 旧UIの HTML で見分けるための仕入れ値
+BUY = 123457    # 画面で見分けるための仕入れ値
 
 
 def _safe(**kw):
@@ -111,12 +114,12 @@ def _safe(**kw):
     RF.secondary(_safe()),
     RF.secondary(_safe(sell_type="SOLD_MEDIAN")),
 ], ids=["retail_buyback", "retail_sold_median", "secondary_buyback", "secondary_sold_median"])
-def test_legacy_accepts_same_safe_route_as_new_ui(r):
+def test_every_surface_accepts_the_same_safe_route(r):
     got = _surfaces(r)
     assert all(got.values()), got
 
 
-# ── 条件を1つずつ崩すと、どの面でも同じく外れる（旧UI・新UIの乖離が無い） ──────────────────
+# ── 条件を1つずつ崩すと、どの面でも同じく外れる（面ごとの乖離が無い） ──────────────────
 
 _SEARCH = "https://www.amazon.co.jp/s?k=RICOH%20GR%20IV"
 MUTATIONS = [
@@ -189,8 +192,8 @@ def test_sold_median_three_samples_is_accepted_everywhere():
     assert all(got.values()), got
 
 
-def test_legacy_new_ui_parity_over_all_mutations():
-    """全部の変異について、新UIの掲載可否と旧UI・AI・通知・HOME の可否が一致する（安全基準の乖離が無い）。"""
+def test_surface_parity_over_all_mutations():
+    """全部の変異について、新UIの掲載可否と運営者向けの AI 候補・AI・通知・HOME の可否が一致する（安全基準の乖離が無い）。"""
     cases = [_safe(), RF.secondary(_safe())] + [_safe(**m) for _i, m, _r in MUTATIONS] + \
         [_safe(sell_type="SOLD_MEDIAN", **m) for _i, m, _r in SOLD_MUTATIONS]
     for r in cases:
@@ -242,12 +245,10 @@ def test_gr4_false_route_is_excluded_everywhere(tmp_path, monkeypatch):
     assert {"buy_identity_unverified", "sell_identity_unverified", "buy_not_item_level"} <= set(
         ex["exclusion_reasons"])
     assert pr["zero_route_diagnostics"]["prod_gr4"]["main_blocked_reason"].startswith("候補はあるが確定の条件")
-    # 旧UI（せどりタブの利益ルート欄）に ¥107,491・+¥39,009 が出ない
-    html = _gen(_gate_now=now)._profit_routes_section(pr)
-    assert "107,491" not in html and "39,009" not in html and "検証済み利益ルート: <b>0件</b>" in html
-    # 生成物を古い形（除外の記録が無く main に入ったまま）で渡しても、描画時の判定で出さない
-    html_old = _gen(_gate_now=now)._profit_routes_section({"main_routes": [ex], "reference_routes": [ex]})
-    assert "107,491" not in html_old and "39,009" not in html_old
+    # 生成物を古い形（除外の記録が無く main に入ったまま）で渡しても、確定ルートとして数えない（描画時の判定）
+    assert opp.confirmed_routes([ex], now) == [] and opp.reference_routes([ex], now) == []
+    old_keys = opp.current_route_keys({"main_routes": [ex], "reference_routes": [ex]}, now)
+    assert not old_keys["main"] and not old_keys["reference"]
     # 新UI（利益商品・せどりルート）・HOME の件数
     s = opp.build(deals=[], routes=[ex], product_genres={}, now=now)
     assert not s.eligible and not rtv.build(s)
@@ -273,7 +274,9 @@ def test_safe_observations_still_make_a_route_at_generation(tmp_path, monkeypatc
     pr = _generate(tmp_path, monkeypatch, [buy, sell])
     r, = pr["main_routes"]
     assert pr["excluded_routes"] == [] and not opp.route_reasons(r, now)
-    assert f"¥{r['buy_price']:,}" in _gen(_gate_now=now)._profit_routes_section(pr)
+    # 新UIのせどりルートに確定ルートとして出る
+    rv, = rtv.build(opp.build(deals=[], routes=[r], product_genres={}, now=now))
+    assert rv.buy_price == r["buy_price"]
 
 
 # ── 参考ルート: 売却側の古さだけが理由のもの。ランキング・BUY には使わない ─────────────────────
@@ -293,30 +296,27 @@ def test_reference_route_needs_same_identity_and_cost_rules():
     assert c["kind"] == "reference" and GAO._buy_decision(c, 100) != "BUY"
     assert GNO._snapshot({"todays_opportunities": [{"product_id": ref["product_id"], "kind": "reference"}]},
                          {}, pr)["ops"] == {}
-    # 旧UIでは「参考利益ルート」として出し、確定の件数には数えない
-    html = _gen()._profit_routes_section(pr)
-    assert "検証済み利益ルート: <b>0件</b>" in html and "参考ルート: <b>1件</b>" in html
-    assert "pr-main-card" not in html
+    # 参考ルートとして数え、確定の件数（HOME・せどりルート）には数えない
+    keys = opp.current_route_keys(pr, NOW)
+    assert not keys["main"] and len(keys["reference"]) == 1
+    assert home.build_home_model(tcg_report={}, opportunities={}, profit_routes=pr, legacy_lotteries=[],
+                                 now=NOW).counts["high_profit"] == 0
 
 
-# ── DB のせどりルート（旧UIの Pro ルート）も同じ判定 ─────────────────────────────────────
+# ── DB のせどりルート（旧UIの Pro ルート）は公開ページに使わない ─────────────────────────────
 
-def test_db_sedori_routes_use_the_canonical_gate():
-    from src.models.sale_price import SedoriRouteModel
-    m = SedoriRouteModel(id="r1", product_id="prod_gr4", product_name="RICOH GR IV", buy_shop_name="メルカリ",
-                         buy_price=107491, buy_url="https://jp.mercari.com/search?keyword=gr4",
-                         buy_condition="new_unopened", buy_price_type="flea_sold_price",
-                         sell_shop_name="フジヤカメラ", sell_price=151000, sell_price_type="buyback_price",
-                         net_profit=39009)
-    d = _gen()._sedori_route_dict(m)
-    assert d["buy_canonical_type"] == "SOLD" and d["sell_canonical_type"] == "BUYBACK_CASH"
-    why = opp.route_reasons(d, NOW)
-    # DB には照合結果・確認時刻・手数料の内訳が無い → 推測で埋めず、確定にしない
-    assert {"buy_type_sold", "buy_identity_unverified", "sell_identity_unverified", "stale_buy_price",
-            "costs_unknown"} <= set(why)
+def test_db_sedori_routes_are_not_used_by_the_public_page():
+    """旧UIは DB のせどりルート（照合結果・確認時刻・手数料の内訳が無い）を判定にかけて出していた。
+    UI Phase 10 で旧UIを削除したので、公開ページは生成物の利益ルート（exports/profit_routes。判定済み）だけを使う。"""
+    src = (ROOT / "src" / "content" / "daily_lp_generator.py").read_text(encoding="utf-8")
+    assert "list_sedori_routes" not in src and "_sedori_route_dict" not in src
+    # 生成物のルートも、照合が無い・確認時刻が無いものは確定にしない（DB の行と同じ形の値）
+    d = _safe(buy_exact_match=None, sell_exact_match=None, buy_observed_at="", buy_shipping=None)
+    assert {"buy_identity_unverified", "sell_identity_unverified", "stale_buy_price",
+            "costs_unknown"} <= set(opp.route_reasons(d, NOW))
 
 
-# ── 定価→買取の案件（ランキング・Hero・初心者ルート一覧・利益あり） ────────────────────────────
+# ── 定価→買取の案件（利益商品・HOME・初心者ルート一覧・利益あり） ────────────────────────────
 
 def _deal(pid, net, *, official=100000, shop="買取店A", **kw):
     return BeginnerDeal(id=pid, product_id=pid, product_name=f"商品{pid}", category="camera",
@@ -345,50 +345,55 @@ def test_deal_gate_matches_new_ui():
     st = gated["p_stale"]                                                            # 監視中へ降格
     assert st.net_profit_jpy == 0 and st.user_level == "monitoring" and st.best_buyback_price == 0
     assert "UNCONFIRMED:買取価格の確認が14日より前か、確認時刻が不明" in st.notes
-    # ランキング: 確定だけに順位。参考差額・降格した案件は出さない
-    deals = list(gated.values())
-    rank = g._tab_ranking(deals, [], [])
-    panel = rank.split('id="rtab-all">', 1)[1].split("</div>\n", 1)[0]
-    assert "商品p_ok" in panel and "商品p_ref" not in panel and "商品p_stale" not in panel
-    # Hero: 最高利益は確定の +¥20,000（参考の +¥30,000・降格した +¥40,000 は使わない）
-    hero = g._section_hero("2026-10-04", "01:30", NOW, NOW, all_deals=deals, beginner_display_count=1)
-    assert "+¥20,000" in hero and "30,000" not in hero and "40,000" not in hero
+    # 利益商品の一覧（TOP10 の順位も同じ一覧から作る）: 確定だけ。参考差額・降格した案件は外した理由つき
+    assert [v.net_profit for v in new_ui.eligible] == [20000]
+    why = {v.product_id: v.reasons for v in new_ui.ineligible}
+    assert "buy_configured_reference" in why["p_ref"] and "stale_sell_price" in why["p_stale"]
 
 
 def test_beginner_route_list_excludes_reference_and_unconfirmed():
+    """旧UIの初心者ルート一覧の後継は新UIの利益商品。参考差額（定価が設定値）の案件は確定に出さない。"""
     ok, ref = _deal("p_ok", 20000), _deal("p_ref", 30000)
     g = _gen(_msrp_evidence={"p_ok": "VERIFIED_DATED", "p_ref": "CONFIGURED_REFERENCE"})
-    html = g._tab_sedori([], beginner_deals=[ok, ref])
-    assert "商品p_ok" in html and "商品p_ref" not in html
+    s = opp.build(deals=g._nu_profit_deals([ok, ref], _bybp(ok, ref)), routes=[], product_genres={}, now=NOW)
+    assert [v.product_name for v in s.eligible] == ["商品p_ok"]
+    assert [v.product_name for v in s.ineligible] == ["商品p_ref"]
 
 
 def test_monitoring_card_shows_unconfirmed_reason():
+    """旧UIの監視中カードの後継: 新UIは外した理由を言葉で出し、当時の利益（40,000）を確定として出さない。"""
+    from src.content.ui import product_detail as pd
     g = _gen(_msrp_evidence={"p_stale": "VERIFIED_DATED"})
     d = _deal("p_stale", 40000)
     gated = g._canonical_deal_gate(d, _bybp(d, age_h=24 * 20))
-    html = g._deal_card_monitoring(gated, [])
-    assert "買取価格の確認が14日より前か、確認時刻が不明" in html and "40,000" not in html
+    assert gated.net_profit_jpy == 0 and gated.user_level == "monitoring"
+    s = opp.build(deals=g._nu_profit_deals([d], _bybp(d, age_h=24 * 20)), routes=[], product_genres={}, now=NOW)
+    v, = s.ineligible
+    assert not s.eligible and "stale_sell_price" in v.reasons
+    assert pd.REASON_LABELS["stale_sell_price"] == "買取価格の確認が14日より前か、確認時刻が不明"
 
 
-# ── 通知: 確定ルートの判定を通っていない過去の利益ルート通知は LP に出さない ────────────────────────
+# ── 通知: 確定ルートの判定を通っていない過去の利益ルート通知は、当時の内容を出さない ──────────────────
 
-def test_legacy_notifications_hide_unchecked_route_events(tmp_path):
-    base = tmp_path / "notifications"
-    (base / "history").mkdir(parents=True)
+def test_notifications_hide_unchecked_route_events():
+    """旧UIの「最新通知」の後継は運営者向けの通知（admin.build_notifications）。印（route_checked）が無い・
+    今は確定ルートでない通知は、当時の内容（金額・ROI）を出さない。システムの通知は出す。"""
     old = {"type": "ROI_UP", "priority": "Medium", "created_at": "2026-09-30 23:29 JST",
-           "message": "⬆️ ROI改善\nFUJIFILM X100VI\nROI 25% → 38%"}
+           "message": "⬆️ ROI改善\nFUJIFILM X100VI\nROI 25% → 38%", "product_id": "p_x100"}
     safe = RF.safe_route(NOW, "p_a")
-    checked = {"type": "NEW_MAIN", "priority": "High", "created_at": "2026-10-04 12:00 JST",
+    checked = {"type": "NEW_MAIN", "priority": "High", "created_at": "2026-10-04 12:00 JST", "product_id": "p_a",
                "message": "🆕 新しい利益ルート成立\n商品A", "route_checked": True, "route_id": opp.route_key(safe)}
     health = {"type": "HEALTH_ALERT", "priority": "Critical", "created_at": "2026-10-04 12:00 JST",
               "message": "⚠️ データ品質低下"}
-    (base / "latest.json").write_text(json.dumps({"events": [checked, health], "channels": []}), encoding="utf-8")
-    (base / "history" / "2026-09-30.json").write_text(json.dumps({"events": [old]}), encoding="utf-8")
-    html = _gen()._notifications_html(base, {"main_routes": [safe]})
-    assert "商品A" in html and "データ品質低下" in html and "X100VI" not in html and "38%" not in html
+    n = admin.build_notifications([checked, health, old], opp.current_route_keys({"main_routes": [safe]}, NOW), {})
+    by = {u["pid"]: u for u in n["user"]}
+    assert by["p_a"]["alive"] and "商品A" in by["p_a"]["message"]
+    assert not by["p_x100"]["alive"] and by["p_x100"]["message"] == ""                  # 38% を出さない
+    assert [x["label"] for x in n["system"]] == ["データ品質の低下"]
     # Phase 5.2: 印があっても、そのルートが今は確定ルートでなければ出さない
-    html2 = _gen()._notifications_html(base, {"main_routes": [dict(safe, sell_exact_match=False)]})
-    assert "商品A" not in html2 and "データ品質低下" in html2
+    keys2 = opp.current_route_keys({"main_routes": [dict(safe, sell_exact_match=False)]}, NOW)
+    n2 = admin.build_notifications([checked, health], keys2, {})
+    assert n2["user"][0]["message"] == "" and n2["system"]
 
 
 def test_new_notifications_are_marked_route_checked(tmp_path, monkeypatch):
@@ -421,11 +426,12 @@ def test_new_notifications_are_marked_route_checked(tmp_path, monkeypatch):
     ("scripts/generate_ai_opportunities.py", "_opp.confirmed_routes("),
     ("scripts/generate_ai_opportunities.py", "_opp.reference_routes("),
     ("scripts/generate_notifications.py", "_opp.current_route_keys("),
-    ("src/content/daily_lp_generator.py", "_ui_opp.confirmed_routes("),
-    ("src/content/daily_lp_generator.py", "_ui_opp.reference_routes("),
     ("src/content/daily_lp_generator.py", "_ui_opp.deal_reasons("),
-    ("src/content/daily_lp_generator.py", "_ui_opp.route_reasons("),
     ("src/content/ui/home.py", "_opp.confirmed_routes("),
+    # 旧UIの AI Dashboard・資金配分・通知の欄の後継（運営者向けのページ）も、今の確定ルートと照合する
+    ("src/content/ui/admin.py", "opp.current_route_keys("),
+    ("src/content/ui/admin.py", "opp.record_route_ok("),
+    ("src/content/ui/mypage.py", "current_route_keys("),
 ])
 def test_legacy_entrypoints_call_the_canonical_gate(path, needle):
     assert needle in (ROOT / path).read_text(encoding="utf-8")
@@ -453,11 +459,7 @@ def test_monitoring_deal_revived_by_enrich_is_gated_before_merge():
     by = {d.product_id: d for d in all_d}
     assert by["p_mon"].net_profit_jpy == 0 and by["p_mon"].user_level == "monitoring"
     assert by["p_ok"].net_profit_jpy == 20000
-    rank = g._tab_ranking(all_d, [], [])
-    hero = g._section_hero("2026-10-04", "01:30", NOW, NOW, all_deals=all_d, beginner_display_count=1)
-    sedori = g._tab_sedori([], beginner_deals=all_d)
-    for html in (rank, hero, sedori):
-        assert "38,200" not in html
+    assert all(d.net_profit_jpy != 38200 for d in all_d + easy + watch + mon + adv)   # 判定後の一覧に当時の値が戻らない
     # 新UIには判定前の版を渡す（新UIが同じ判定で外し、理由を診断に残す）
     assert {d.product_id: d.net_profit_jpy for d in g._nu_source_deals}["p_mon"] == 38200
     s = opp.build(deals=g._nu_profit_deals(g._nu_source_deals, bybp), routes=[], product_genres={}, now=NOW)
@@ -466,7 +468,7 @@ def test_monitoring_deal_revived_by_enrich_is_gated_before_merge():
 
 
 def test_pro_confirmed_deals_are_gated():
-    """Pro タブの「Pro向け確定案件」も同じ判定。確定だけ（参考差額・古い買取の案件は出さない）。"""
+    """上級者向けの案件（latest.md と生成の件数に使う）も同じ判定。確定だけ（参考差額・古い買取の案件は出さない）。"""
     ev = {"p_ok": "VERIFIED_DATED", "p_ref": "CONFIGURED_REFERENCE", "p_stale": "VERIFIED_DATED"}
     g = _gen(_msrp_evidence=ev)
     deals = [_deal("p_ok", 20000), _deal("p_ref", 30000), _deal("p_stale", 40000)]
@@ -499,7 +501,8 @@ def test_simfree_new_is_new_condition():
 
 
 def test_ai_dashboard_rechecks_routes_at_render(tmp_path, monkeypatch):
-    """AI の生成物が古いまま残っても、描画時に判定を通らないルートの候補・おすすめ・今日やることを出さない。"""
+    """AI の生成物が古いまま残っても、描画時に判定を通らないルートの候補を出さない
+    （旧UIの AI Dashboard の後継は運営者向けの AI 候補。admin.build_ai が今の確定ルートと照合する）。"""
     now = datetime.now(tz=JST)
     gr4 = RF.safe_route(now, "prod_gr4", buy=107491, sell=151000)
     safe = RF.safe_route(now, "p_safe", buy=BUY, sell=160000)
@@ -516,10 +519,15 @@ def test_ai_dashboard_rechecks_routes_at_render(tmp_path, monkeypatch):
     assert "107,491" in "".join(d["today_tasks"]) or d["daily_recommendation"]["product"] == "商品prod_gr4"
     # その後、GR IV のルートは照合未了で確定から外れた（AI のファイルは古いまま残った）
     gr4_now = dict(gr4, buy_exact_match=False)
-    html = _gen(_gate_now=now)._ai_dashboard_section(d, {"main_routes": [gr4_now, safe], "reference_routes": []})
+    pr_now = {"main_routes": [gr4_now, safe], "reference_routes": [], "generated_at": now.isoformat()}
+    a = admin.build_ai(d, opp.current_route_keys(pr_now, now), pr_now["generated_at"])
+    assert {o["product_id"] for o in a["ops"]} == {"p_safe"} and a["dropped"] == 1
+    html = admin._ai(dict(ai=a))
     assert "商品prod_gr4" not in html and "107,491" not in html and f"{gr4['net_profit']:,}" not in html
     assert "商品p_safe" in html
-    assert re.search(r"Main Routes: <b[^>]*>1</b>", html)
-    # 否定対照: ルートが確定のままなら両方出る
-    html_ok = _gen(_gate_now=now)._ai_dashboard_section(d, {"main_routes": [gr4, safe], "reference_routes": []})
-    assert "商品prod_gr4" in html_ok and re.search(r"Main Routes: <b[^>]*>2</b>", html_ok)
+    assert "今の確定ルートと照合できない候補 1件は出していない" in html
+    # 否定対照: ルートが確定のままなら両方出る（今日やることも）
+    pr_ok = {"main_routes": [gr4, safe], "reference_routes": [], "generated_at": now.isoformat()}
+    a_ok = admin.build_ai(d, opp.current_route_keys(pr_ok, now), pr_ok["generated_at"])
+    html_ok = admin._ai(dict(ai=a_ok))
+    assert {o["product_id"] for o in a_ok["ops"]} == {"prod_gr4", "p_safe"} and "商品prod_gr4" in html_ok

@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import json
 import math
+import re
 from datetime import date, datetime, timedelta
 from pathlib import Path
 from urllib.parse import urlparse
@@ -219,17 +220,38 @@ def release_id(ev: dict) -> str:
     return "rel-" + hashlib.md5(key.encode("utf-8")).hexdigest()[:10]
 
 
+_DOT_DATE_RE = re.compile(r"(?<!\d)(20\d{2})[./-](\d{1,2})[./-](\d{1,2})(?!\d)")
+
+
+def release_date_iso(text) -> str:
+    """公式の発売日の文字列 → 「YYYY-MM-DD」。読めなければ空。
+
+    「2026年10月16日（金）」（ポケモン）と「2026.11.21」（ONE PIECE）の両方を読む。時刻は付けない（推測しない）。
+    """
+    from src.tcg.product_types import parse_release_date
+    t = str(text or "")
+    iso = parse_release_date(t)
+    if iso:
+        return iso[:10]
+    m = _DOT_DATE_RE.search(t)
+    if not m:
+        return ""
+    try:
+        return datetime(int(m.group(1)), int(m.group(2)), int(m.group(3))).strftime("%Y-%m-%d")
+    except ValueError:
+        return ""
+
+
 def release_vm(ev: dict) -> dict | None:
     """公式に発売日が出ている発売予定（exports/tcg/latest.json の events の COMING_SOON）→ VM。
 
     使うのは、公式ドメインの https のページで、発売日（年月日）が読めるものだけ。日付に時刻を足さない。
     予約の受付期間は公式に出ていないので、予約受付中とは言わない（発売待ちとだけ出す）。
     """
-    from src.tcg.product_types import parse_release_date
     if ev.get("status") != "COMING_SOON" or ev.get("stale"):
         return None
     info = official_url(ev.get("canonical_url")) or official_url(ev.get("source_url"))
-    rd = parse_release_date(str(ev.get("release_date") or ""))
+    rd = release_date_iso(ev.get("release_date"))
     if not info or not rd:
         return None
     return {

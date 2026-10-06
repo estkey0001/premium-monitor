@@ -329,10 +329,18 @@ def _is_older(a, b) -> bool:
 
 
 def build_ai(ai: dict, keys: dict, routes_generated) -> dict:
-    ops = [o for o in (ai or {}).get("todays_opportunities") or []
-           if isinstance(o, dict) and opp.record_route_ok(o, keys)]
-    return {"ops": ops, "dropped": len((ai or {}).get("todays_opportunities") or []) - len(ops),
-            "tasks": [str(t) for t in (ai or {}).get("today_tasks") or []][:10],
+    allops = [o for o in (ai or {}).get("todays_opportunities") or [] if isinstance(o, dict)]
+    ops = [o for o in allops if opp.record_route_ok(o, keys)]
+    # 今の確定ルートと照合できない候補の「今日やること」（商品名・商品 ID を含む行）は出さない（当時の値を復活させない）
+    gone = {str(x) for o in allops if o not in ops for x in (o.get("product"), o.get("product_id")) if x}
+    kept = {str(x) for o in ops for x in (o.get("product"), o.get("product_id")) if x}
+
+    def _mentions_gone(t: str) -> bool:
+        # 外した商品の名前を含む行。ただし、その名前を含む別の（残した）商品の行は残す（GR IV と GR IV HDF など）
+        return any(g in t and not any(g in k and k != g and k in t for k in kept) for g in gone)
+    tasks = [str(t) for t in (ai or {}).get("today_tasks") or [] if not _mentions_gone(str(t))]
+    return {"ops": ops, "dropped": len(allops) - len(ops),
+            "tasks": tasks[:10],
             "generated": (ai or {}).get("generated_at"), "previous": _is_older((ai or {}).get("generated_at"), routes_generated),
             "health_note": str((ai or {}).get("health_note") or "")}
 
@@ -380,6 +388,12 @@ def build_execution(execution: dict, history: dict, keys: dict) -> dict:
             "generated": (execution or {}).get("generated_at")}
 
 
+def _notice_text(msg) -> str:
+    """通知の文。過去の通知の「落札」（実際は出品の価格）を、今の呼び方（出品中）に読み替える（price_types.relabel_legacy）。"""
+    from src.market import price_types as pt
+    return _safe_text(pt.relabel_legacy(msg or "")).replace("\n", " / ")
+
+
 def build_notifications(events: list | None, keys: dict, latest: dict) -> dict:
     seen, user, system, other = set(), [], [], []
     for e in events or []:
@@ -397,10 +411,10 @@ def build_notifications(events: list | None, keys: dict, latest: dict) -> dict:
                          "product": str((e.get("data") or {}).get("product") or e.get("product_id") or ""),
                          "at": e.get("created_at"), "alive": alive,
                          # 今は確定ルートでない通知は、当時の金額を出さない（無効になったルートの値を復活させない）
-                         "message": _safe_text(e.get("message") or "").replace("\n", " / ") if alive else ""})
+                         "message": _notice_text(e.get("message")) if alive else ""})
         elif typ in SYSTEM_NOTICE_LABELS:
             system.append({"label": SYSTEM_NOTICE_LABELS[typ], "at": e.get("created_at"),
-                           "message": _safe_text(e.get("message") or "").replace("\n", " / ")})
+                           "message": _notice_text(e.get("message"))})
         else:
             other.append({"label": typ or "不明", "at": e.get("created_at")})
     return {"user": user, "system": system, "other": other,
@@ -415,6 +429,34 @@ def check_text(full: str, tail: int = 4000) -> str:
     t = str(full or "")
     m = re.search(r"^\s*実行日時:.*$", t, re.M)
     return ((m.group(0).strip() + "\n") if m else "") + t[-tail:]
+
+
+def current_health(health: dict | None, profit_routes: dict | None, now: datetime) -> dict:
+    """健康度の報告のうち、利益ルート由来の値（検証済みのルートの件数・最大利益・新しく確定になったルート・
+    eBay を設定したときの見込み）を、今の利益ルートで判定を通ったものから数え直す（旧UIの Health タブと同じ扱い）。
+    報告が古いまま残っても、無効になったルートの利益を出さない。健康度の点数そのものは報告の値のまま。"""
+    h = dict(health or {})
+    mains = opp.confirmed_routes((profit_routes or {}).get("main_routes"), now)
+    refs = opp.reference_routes((profit_routes or {}).get("reference_routes"), now)
+    main_pids = {r.get("product_id") for r in mains}
+    an = dict(h.get("anomalies") or {})
+    info = [x for x in (an.get("info") or []) if not str(x).startswith("検証済み利益ルート")]
+    if mains:
+        info.insert(0, f"検証済み利益ルート {len(mains)}件 / 最大 +¥{max(r.get('net_profit') or 0 for r in mains):,}")
+    an["info"] = info
+    h["anomalies"] = an
+    dv = dict(h.get("diff_vs_prev") or {})
+    if dv.get("available"):
+        dv["new_main"] = [x for x in (dv.get("new_main") or []) if x in main_pids]
+        for k, n in (("main_route_count", len(mains)), ("reference_route_count", len(refs))):
+            if isinstance(dv.get(k), dict):
+                dv[k] = dict(dv[k], cur=n)
+        h["diff_vs_prev"] = dv
+    pot = sum(r.get("net_profit") or 0 for r in refs)
+    h["improvements_top10"] = [
+        (dict(i, effect=f"+¥{pot:,}（参考{len(refs)}→main昇格）") if isinstance(i, dict)
+         and i.get("action") == "EBAY_APP_ID 設定" else i) for i in (h.get("improvements_top10") or [])]
+    return h
 
 
 def _check_summary(text: str) -> dict:
@@ -432,6 +474,8 @@ def _check_summary(text: str) -> dict:
 def build(data: dict | None, *, catalog, details: dict, profit_routes: dict | None, tcg_report: dict | None,
           now: datetime, lp_generated: str = "") -> dict:
     d = data or {}
+    # 健康度の報告の利益ルート由来の値は、今の利益ルートで数え直す（古い報告で無効なルートの利益を出さない）
+    d = dict(d, health=current_health(d.get("health"), profit_routes, now)) if d.get("health") else d
     keys = opp.current_route_keys(profit_routes, now)
     shops = build_shops(d.get("collector"), d.get("dq_report"), set(d.get("optional_shops") or ()), now)
     tcg = build_tcg(tcg_report)
@@ -887,7 +931,6 @@ def _system(v: dict) -> str:
                        + "</ul>") if cov.get("category_candidates_ranked") else ""))
             + _box("ほかのページ", '<ul class="nu-ad-list">'
                    '<li><a href="./collector_report.html">取得レポート（詳しい表）</a></li>'
-                   '<li><a href="./?ui=legacy">旧表示</a><span class="nu-osub">確認・比較用に残しているページ</span></li>'
                    '<li><a href="beta/">はじめかた（beta）</a><span class="nu-osub">別ページ。削除の候補</span></li></ul>'))
 
 

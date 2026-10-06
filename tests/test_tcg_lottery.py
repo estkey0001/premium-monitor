@@ -564,44 +564,56 @@ def test_failed_pipeline_does_not_wipe_history(tmp_path, monkeypatch):
 # ══════════════════════════════════════════════════════════════════════════
 # LP（Task25-27）
 # ══════════════════════════════════════════════════════════════════════════
-def _render(report):
-    from src.content.daily_lp_generator import DailyLPGenerator
-    g = DailyLPGenerator.__new__(DailyLPGenerator)
-    orig = DailyLPGenerator._load_tcg_report
-    DailyLPGenerator._load_tcg_report = staticmethod(lambda: report)
-    try:
-        return DailyLPGenerator._section_tcg(g)
-    finally:
-        DailyLPGenerator._load_tcg_report = orig
+# UI Phase 10 で旧UIの TCG セクション（_section_tcg）を削除した。LP の表示の検査は、新UIの抽選・予約のページと、
+# 閲覧時の状態の判定（runtime.derive_runtime_state。ボタンを決める正本）で同じ意図を確かめる。
+
+def _render(report, now=None):
+    """新UIの抽選・予約のページ（HTML）。"""
+    from src.content.ui import shell
+    ctx = shell.ShellContext(tcg_report=report, opportunities={}, profit_routes={}, legacy_lotteries=[],
+                             now=now or now_jst())
+    root = shell.render_root(ctx)
+    return root[root.index('data-nu-page="lottery"'):root.index('data-nu-page="restock"')]
+
+
+def _state(ev, now=None):
+    """抽選1件の閲覧時の状態（新UIのボタン・日時の文言）。"""
+    from src.content.ui import runtime as rt
+    return rt.derive_runtime_state(rt.tcg_vm(ev, 0), now or now_jst())
 
 
 def test_lp_shows_lottery_first_and_only_official_entry_links():
+    """応募ボタンは公式の応募ページだけ（コミュニティ発の情報・確かさの低い情報には出さない）。締切までの残りを出す。
+    監視元のアクセス拒否（0件の理由）は運営者向けのページに出す。"""
+    from src.content.ui import admin
     n = now_jst()
-    lot = _lot(application_start=_iso(n - timedelta(days=1)),
-               application_end=_iso(n + timedelta(days=2)),
-               entry_url="https://draw.geo-online.co.jp/lottery/")
+    lot = _lot(application_start=_iso(n - timedelta(days=1)), application_end=_iso(n + timedelta(days=2)),
+               entry_url="https://draw.geo-online.co.jp/lottery/", confidence="high")
     lot["status"] = "OPEN"
-    lot["deadline_countdown"] = countdown(lot["application_end"], n)
-    bad = _lot(product_name="拡張パック「Y」BOX", source_type="COMMUNITY",
-               source_url="https://x.com/a", entry_url=None)
+    bad = _lot(product_name="拡張パック「Y」BOX", source_type="COMMUNITY", source_url="https://x.com/a",
+               entry_url=None, application_start=_iso(n - timedelta(days=1)), application_end=_iso(n + timedelta(days=2)))
     bad["status"] = "OPEN"
-    html = _render({"events": [], "lotteries": [lot, bad], "source_health": [],
-                    "lottery_sources": [], "lottery_coverage": {"configured_sources": 17}})
-    i_lot = html.find("tcg-lottery")
-    i_stock = html.find("販売・入荷・プレミア")
-    assert 0 <= i_lot < i_stock                         # 抽選が最上位
-    assert "応募ページ（公式）" in html
-    assert html.count('class="tcg-entry-btn"') == 1      # 未確認情報には応募ボタンを出さない
-    assert 'data-target="' in html and "締切まで" in html
-    assert "アクセス拒否" in html                         # 0件の理由（監視状況）を出す
+    html = _render({"events": [], "lotteries": [lot, bad], "source_health": [], "lottery_sources": [],
+                    "lottery_coverage": {"configured_sources": 17}}, n)
+    assert html.count('data-nu-cta="apply"') == 1 and 'href="https://draw.geo-online.co.jp/lottery/"' in html
+    ok, ng = _state(lot, n), _state(bad, n)
+    assert ok["cta"]["kind"] == "apply" and ok["cd_text"].startswith("締切まで")
+    assert ng["cta"] is None or ng["cta"]["kind"] != "apply"
+    src = admin.build_lottery_sources({"lottery_sources": [{"retailer": "ポケモンセンターオンライン", "priority": "P0",
+                                                           "state": "SOURCE_BLOCKED", "adapter": "pco"}]})
+    assert "アクセス拒否" in src[0]["text"]
 
 
 def test_lp_empty_lottery_state_is_explicit():
-    html = _render({"events": [], "lotteries": [], "source_health": [],
-                    "lottery_sources": [],
+    """抽選が0件の日は、空の状態を言葉で出す（0件と黙らない）。監視できていない取得元の数は運営者向けに出す。"""
+    from src.content.ui import admin
+    html = _render({"events": [], "lotteries": [], "source_health": [], "lottery_sources": [],
                     "lottery_coverage": {"configured_sources": 17, "blocked_sources": 4}})
-    assert "現在お知らせできる抽選はありません" in html
-    assert "把握できていません" in html
+    assert "現在、このジャンルで受付中・予定中の抽選や予約はありません" in html
+    v = {"lot_coverage": {"configured_sources": 17, "blocked_sources": 4}, "lot_sources": [], "shops": [], "tcg": [],
+         "resale": [], "flea": [], "resale_collected": None, "collector_generated": None,
+         "overview": {"warn": admin.collector_warn({}, set(), 5)}}
+    assert "登録 17・" in admin._sources(v) and "アクセス拒否 4" in admin._sources(v)
 
 
 def test_no_deadline_notification_after_deadline(tmp_path):
@@ -636,10 +648,17 @@ def test_entry_button_only_while_applicable():
                   entry_url="https://draw.geo-online.co.jp/lottery/",
                   result_url="https://draw.geo-online.co.jp/lottery/")
     closed["status"] = "CLOSED"
+    closed["confidence"] = "high"
     html = _render({"events": [], "lotteries": [closed], "source_health": [],
-                    "lottery_sources": [], "lottery_coverage": {}})
-    assert 'class="tcg-entry-btn"' not in html
-    assert "抽選結果の確認ページ（公式）" in html
+                    "lottery_sources": [], "lottery_coverage": {}}, n)
+    assert 'data-nu-cta="apply"' not in html
+    st_ = _state(closed, n)
+    assert st_["cta"] is None or st_["cta"]["kind"] != "apply"
+    # 当選発表を待つ間（結果の確認ページがあるとき）は「結果を確認」
+    waiting = dict(closed, winner_announcement_at=_iso(n + timedelta(days=1)))
+    got = _state(waiting, n)
+    assert got["status"] == "RESULT_PENDING" and got["cta"]["kind"] == "result"
+    assert got["cta"]["url"] == "https://draw.geo-online.co.jp/lottery/"
 
 
 # ══════════════════════════════════════════════════════════════════════════
@@ -711,10 +730,13 @@ def test_lp_shows_time_not_announced():
               application_start_date=(n - timedelta(days=1)).date().isoformat(),
               application_end_date=(n + timedelta(days=2)).date().isoformat())
     ev["status"] = "OPEN"
-    html = _render({"events": [], "lotteries": [ev], "source_health": [],
-                    "lottery_sources": [], "lottery_coverage": {}})
-    assert "時刻未公表" in html
-    assert "00:00" not in html.split('id="category-tcg-lottery"')[1][:3000]
+    st_ = _state(ev, n)
+    # 日付だけの締切に時刻を作らない（00:00 と出さない）
+    assert st_["status"] == "OPEN" and "時刻未公表" in st_["when"] and "00:00" not in st_["when"]
+    html = _render({"events": [], "lotteries": [ev], "source_health": [], "lottery_sources": [],
+                    "lottery_coverage": {}}, n)
+    card = html[html.index("拡張パック「X」BOX"):]
+    assert "00:00" not in card[:3000]
 
 
 def test_eligibility_reads_lines_after_heading_not_before():
@@ -798,10 +820,12 @@ def test_legacy_lottery_events_are_not_duplicated_in_stock_section():
                 "status": "ENDING_SOON", "store": "X", "source_type": "OFFICIAL",
                 "shrink_status": "UNKNOWN", "verification": "Confirmed",
                 "sale_end": _iso(n + timedelta(hours=3))}
-    html = _render({"events": [legacy, preorder], "lotteries": [], "source_health": [],
-                    "lottery_sources": [], "lottery_coverage": {}})
-    assert "旧方式の抽選" not in html
-    assert "締切間近（予約・販売） <b>1</b>" in html
+    from src.content.ui import runtime as rt
+    report = {"events": [legacy, preorder], "lotteries": [], "source_health": [], "lottery_sources": [],
+              "lottery_coverage": {}}
+    # 抽選は lotteries からだけ作る（販売・入荷の events にある古い形の抽選を、抽選・予約に重ねて出さない）
+    assert "旧方式の抽選" not in [v["t"] for v in rt.build_vms(report, [])]
+    assert "旧方式の抽選" not in _render(report, n)
 
 
 def test_negated_tape_cut_is_not_tape_cut():
@@ -1065,9 +1089,10 @@ def test_conflicted_lottery_is_shown_as_needs_review():
     merged[0]["status"] = compute_lottery_status(merged[0])
     html = _render({"events": [], "lotteries": merged, "source_health": [],
                     "lottery_sources": [], "lottery_coverage": {}})
-    assert "日程要確認" in html                         # 矛盾した抽選も LP から消さない
-    assert "応募締切の公式情報が食い違っています" in html
-    assert 'class="tcg-entry-btn"' not in html          # 要確認の抽選に応募ボタンは出さない
+    assert "日程要確認" in html                         # 矛盾した抽選も消さない
+    st_ = _state(merged[0])
+    assert st_["status"] == "SOURCE_CONFLICT" and st_["when"] == "日程は公式情報でご確認ください"
+    assert 'data-nu-cta="apply"' not in html and (st_["cta"] is None or st_["cta"]["kind"] != "apply")
 
 
 def test_payment_link_text_is_not_a_payment_requirement():

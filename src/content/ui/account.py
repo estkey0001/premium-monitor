@@ -15,11 +15,11 @@ def render() -> str:
         '<h2 class="nu-h2">使い方</h2>'
         '<ul class="nu-linklist">'
         f'<li>{c.button("はじめかた・ヘルプ", "beta/", kind="secondary", external=False)}</li>'
-        f'<li>{c.button("現行版の表示に戻る", "./", kind="secondary", external=False)}</li>'
+        f'<li>{c.button("旧表示（これまでの一覧ページ）を見る", "./?ui=legacy", kind="secondary", external=False)}</li>'
         '</ul>'
         '<h2 class="nu-h2" id="nu-operator" tabindex="-1">運営者向けの情報</h2>'
-        '<p class="nu-lead">データの取得状況などの運営者向け情報は、今は現行版の Health に置いています。</p>'
-        + c.button("取得状況（現行版）を見る", "./?from=new#tab-health", kind="link", external=False)
+        '<p class="nu-lead">データの取得状況などの運営者向け情報は、今は旧表示の Health に置いています。</p>'
+        + c.button("取得状況（旧表示）を見る", "./?ui=legacy&from=new#tab-health", kind="link", external=False)
         + '<p class="nu-disclaimer">掲載情報は取得時点の参考です。購入・応募の前に必ず公式サイトでご確認ください。</p>'
         '</section>'
     )

@@ -7018,13 +7018,13 @@ def check() -> list[dict]:
 def _check_new_ui(html: str) -> list[dict]:
     """新UI（UI/UX 再構成 段階B）のチェック（#800-#810）。
 
-    新UIは ?ui=new のときだけ表示する。新UIの生成に失敗しても旧UIは公開できるよう、
+    UI Phase 8 から新UIが正式の表示（旧UIは ?ui=legacy のときだけ）。新UIの生成に失敗しても旧UIは公開できるよう、
     新UIが無いことは warning に留める。新UIがあるのに旧UIを壊す・誤った値を出す場合は error。
 
     #800 旧UIのタブ id が残っている（新UIの有無に関係なく検査）
     #801 新UIの root が1つあり、終わりの目印がある
-    #802 ?ui=new が無いとき新UIを隠す（CSS と hidden 属性）
-    #803 新UIは ?ui=new のときだけ有効（cookie / localStorage で既定化しない）
+    #802 新UIが既定（旧UIは ?ui=legacy のときだけ。CSS と hidden 属性で切り替える）
+    #803 表示の切り替えは URL だけ（cookie / localStorage で決めない。localStorage はマイページの保存だけ）
     #804 ボトムナビが5項目
     #805 状態の対応表に不整合がない
     #806 閲覧時の状態判定（runtime）のデータと JS がある
@@ -7032,6 +7032,8 @@ def _check_new_ui(html: str) -> list[dict]:
     #808 新UIに運営者向けの内部情報を出していない
     #809 新UIのリンクは https: かサイト内の相対パスだけ（javascript: 等が無い）
     #810 新旧の件数照合に説明できない差が無い
+    #835 UI Phase 8: ルーターは旧UIを ?ui=legacy だけで出す・作るリンクに ui=new を付けない・旧表示への入口がある・
+         新UIの利益商品が旧UIのランキングにも同じ売却先で出ている（新旧で確定の利益が食い違わない）
     """
     import re as _re
     out: list[dict] = []
@@ -7057,19 +7059,51 @@ def _check_new_ui(html: str) -> list[dict]:
         return out
     root = html[start:end]
 
-    _add(802, "new_ui_hidden_by_default",
-         "html:not(.ui-new) #new-ui-root{display:none!important}" in html
+    _head_ok = ("get('ui')==='legacy'){d.classList.add('ui-legacy');}" in html
+                and "else if(!/\\/archive\\//.test(location.pathname)){d.classList.add('ui-new');" in html)
+    _add(802, "new_ui_default",
+         _head_ok and "html:not(.ui-new) #new-ui-root{display:none!important}" in html
+         and "html.ui-new body>*:not(#new-ui-root){display:none!important}" in html
          and root.startswith('<div id="new-ui-root" hidden'),
-         "?ui=new が無いとき新UIを隠す（CSS と hidden 属性）", "通常URLで新UIが見える")
+         "新UIが既定（旧UIは ?ui=legacy のときだけ。旧UIは CSS で隠し、新UIは JS が表示を決めてから出す）",
+         "既定の表示の切り替えが想定と違う")
     # localStorage を使ってよいのはマイページ（UI Phase 7）の保存の入口（NuStore）だけ。新UIの既定化には使わない
     _ks, _ke = root.find("var KEY = 'premium-monitor.mypage'"), root.find("window.NuStore = NuStore;")
     _store = root[_ks:_ke] if 0 <= _ks < _ke else ""
     _rest = root.replace(_store, "") if _store else root
+    _hs = html.find("<script>(function(){try{var d=document.documentElement;")
+    _head_script = html[_hs:html.find("</script>", _hs)] if _hs >= 0 else ""
     _add(803, "new_ui_flag_only",
-         "get('ui')==='new'" in html and "localStorage" not in _rest and "document.cookie" not in root
-         and "'ui'" not in _store,
-         "新UIは ?ui=new のときだけ有効（cookie / localStorage で既定化しない）",
-         "フラグ以外で新UIが有効になる")
+         bool(_head_script) and not any(w in _head_script for w in ("localStorage", "sessionStorage", "cookie"))
+         and "localStorage" not in _rest and "document.cookie" not in root
+         and "'ui'" not in _store and "legacy" not in _store,
+         "表示の切り替えは URL だけ（cookie / localStorage で決めない。localStorage はマイページの保存だけ）",
+         "URL 以外で表示が切り替わる")
+    # #835 UI Phase 8: 既定の切り替え・URL の互換・旧表示の入口・新旧の利益の一致
+    bad835 = []
+    if "params.get('ui') === 'legacy'" not in root:
+        bad835.append("ルーターが ?ui=legacy 以外でも旧UIになる")
+    if _re.search(r'href="\?ui=new', root):
+        bad835.append("作るリンクに ui=new が残っている")
+    if 'class="nu-legacy-note"' not in html or 'href="./?ui=legacy' not in root:
+        bad835.append("旧表示への入口・旧表示の案内が無い")
+    if "q.set('page', 'product'); q.set('product_id', PD_ALIAS[alias])" not in root:
+        bad835.append("旧UIの商品カードのリンク（#product-…）が商品詳細に読み替わらない")
+    _legacy_html = html[:start] + html[end:]
+    _rank = _re.sub(r"<[^>]+>", " ", _legacy_html[_legacy_html.find('id="tab-ranking"'):] if 'id="tab-ranking"' in _legacy_html else "")
+    _rank = _re.sub(r"\s+", "", _rank)
+    import html as _html835
+    # 新旧の一致は、旧UIのランキングがあるときだけ見る（旧UIが無いことは #800 が見る）
+    for _m in (_re.finditer(r'<article class="nu-pd" data-nu-pd="([^"]+)" data-nu-cat="[^"]*" data-nu-pd-name="([^"]+)"', root)
+               if _rank else ()):
+        _e = root.find('<article class="nu-pd" ', _m.end())
+        _sm = _re.search(r'で買い、([^<]+)（[^（）<]*）に ¥([\d,]+) で売る場合',
+                         _html835.unescape(root[_m.start():_e if _e >= 0 else len(root)]))
+        if _sm and _re.sub(r"\s+", "", _html835.unescape(_m.group(2)) + _sm.group(1)) not in _rank:
+            bad835.append(f"{_m.group(1)}: 旧UIのランキングに {_sm.group(1)} の行が無い")
+    _add(835, "default_cutover_routing", not bad835,
+         "旧UIは ?ui=legacy のときだけ・作るリンクに ui=new なし・旧表示の入口あり・新旧で確定の利益の売却先が一致",
+         f"問題: {bad835[:5]}")
     n_nav = root.count('class="nu-bottomnav__link"')
     _add(804, "new_ui_bottom_nav", n_nav == 5, "ボトムナビが5項目", f"{n_nav}項目")
     try:

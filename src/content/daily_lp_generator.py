@@ -4389,7 +4389,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 "purchase_shipping": ship["fee"], "purchase_shipping_status": ship["status"],
                 "net_profit": net, "user_level": getattr(d, "user_level", "") or "",
                 "resale_sell": bool(shop) and self._is_resale_shop(shop),
-                "href": f"./?from=new#product-{alias}" if alias else "",
+                "href": f"./?ui=legacy&from=new#product-{alias}" if alias else "",
             })
         return out
 

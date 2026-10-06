@@ -301,7 +301,7 @@ def test_lottery_cta_requires_human_confirmation():
 
 def test_links_from_lists_and_search_preserve_ctas():
     root = shell.render_root(_ctx())
-    href = 'href="?ui=new&amp;page=product&amp;product_id=prod_tcam"'
+    href = 'href="?page=product&amp;product_id=prod_tcam"'          # UI Phase 8: ui=new を付けない
     assert href in _section(root, "opportunities")
     assert 'product_id=prod_tgame' in _section(root, "lottery")
     assert 'product_id=prod_tcam' in _section(root, "restock")

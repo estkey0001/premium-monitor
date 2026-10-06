@@ -86,13 +86,18 @@ def resolve_legacy_hash(hash_value: str) -> dict[str, str] | None:
 
 
 def page_href(page: str, *, category: str | None = None) -> str:
-    """新UIのページの URL（サイト内の相対パス）。HOME は page= を省く。"""
-    q = {"ui": "new"}
+    """新UIのページの URL（サイト内の相対パス）。新UIが既定（UI Phase 8）なので ui= は付けない。
+    HOME は page= を省き、クエリが空なら "./"。古い ?ui=new の URL もそのまま開ける。"""
+    q = {}
     if page != DEFAULT_PAGE:
         q["page"] = page
     if category and category != "all":
         q["category"] = category
-    return "?" + urlencode(q)
+    return "?" + urlencode(q) if q else "./"
+
+
+# 旧UI（監査・比較用に残している表示）への入口。新UIが既定なので、旧UIは ?ui=legacy のときだけ
+LEGACY_HREF = "./?ui=legacy"
 
 
 def _icon(name: str, size: int) -> str:

@@ -246,7 +246,7 @@ def test_dom_tabs_sort_search_pagination_history(tmp_path):
     assert o["availEmpty"] is True                               # ゲームで今買えるものは0件
     assert o["search"] == ["m07"]
     # 検索は履歴を積まない。戻ると「購入可能」に切り替えた直後（ジャンル: ゲーム）
-    assert o["back"]["q"] == "?ui=new&page=restock&sort=price&when=today&category=game"
+    assert o["back"]["q"] == "?page=restock&sort=price&when=today&category=game"
 
 
 @pytest.mark.skipif(CHROME is None, reason="Chrome が無い")

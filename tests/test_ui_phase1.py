@@ -153,9 +153,9 @@ def test_genre_mapping():
 # ── URL・ナビゲーション ─────────────────────────────────────────────
 
 def test_category_state_in_url():
-    assert navigation.page_href("opportunities", category="camera") == "?ui=new&page=opportunities&category=camera"
-    assert navigation.page_href("home", category="tcg") == "?ui=new&category=tcg"
-    assert navigation.page_href("lottery", category="all") == "?ui=new&page=lottery"
+    assert navigation.page_href("opportunities", category="camera") == "?page=opportunities&category=camera"
+    assert navigation.page_href("home", category="tcg") == "?category=tcg"
+    assert navigation.page_href("lottery", category="all") == "?page=lottery"
 
 
 def test_purpose_navigation_keeps_category_links():
@@ -378,21 +378,21 @@ def test_dom_category_persists_and_back_forward(tmp_path):
     """
     o = _run(tmp_path, js)
     assert o["home"]["page"] == "home" and o["home"]["top"] == "home"
-    assert o["camera"]["q"] == "?ui=new&category=camera" and o["camera"]["page"] == "home"
-    assert o["campurposeHref"] == "?ui=new&page=opportunities&category=camera"
+    assert o["camera"]["q"] == "?category=camera" and o["camera"]["page"] == "home"
+    assert o["campurposeHref"] == "?page=opportunities&category=camera"
     assert o["campurposeCount"] == "1件"                         # カメラの抽選（旧来の抽選）だけ
     # HOME → カメラ → 利益商品（2クリック）・ジャンルを保つ
-    assert o["opp"]["q"] == "?ui=new&page=opportunities&category=camera" and o["opp"]["top"] == "opportunities"
+    assert o["opp"]["q"] == "?page=opportunities&category=camera" and o["opp"]["top"] == "opportunities"
     assert o["oppItems"] == 1
-    assert o["lottery"]["q"] == "?ui=new&page=lottery&category=camera" and o["lotItems"] == ["camera"]
-    assert o["tcg"]["q"] == "?ui=new&page=lottery&category=tcg"
-    assert o["restock"]["q"] == "?ui=new&page=restock&category=tcg" and o["restockEmpty"] is True
+    assert o["lottery"]["q"] == "?page=lottery&category=camera" and o["lotItems"] == ["camera"]
+    assert o["tcg"]["q"] == "?page=lottery&category=tcg"
+    assert o["restock"]["q"] == "?page=restock&category=tcg" and o["restockEmpty"] is True
     # 戻る・進む
-    assert o["back"]["q"] == "?ui=new&page=lottery&category=tcg" and o["back"]["page"] == "lottery"
-    assert o["back2"]["q"] == "?ui=new&page=lottery&category=camera"
-    assert o["fwd"]["q"] == "?ui=new&page=lottery&category=tcg"
+    assert o["back"]["q"] == "?page=lottery&category=tcg" and o["back"]["page"] == "lottery"
+    assert o["back2"]["q"] == "?page=lottery&category=camera"
+    assert o["fwd"]["q"] == "?page=lottery&category=tcg"
     # HOME へ戻るとジャンルの絞り込みを外す
-    assert o["homeAgain"]["q"] == "?ui=new" and o["homeAgain"]["page"] == "home"
+    assert o["homeAgain"]["q"] == "" and o["homeAgain"]["page"] == "home"        # UI Phase 8: HOME は ./（クエリなし）
 
 
 @pytest.mark.skipif(CHROME is None, reason="Chrome が無い")
@@ -411,13 +411,14 @@ def test_dom_direct_url_and_mobile_nav(tmp_path):
     d = o["direct"]
     assert d["page"] == "lottery" and d["bottom"] == "lottery"
     assert o["crumb"] == "TCG" and o["chip"] == "tcg" and o["title"].startswith("TCGの抽選・予約")
-    assert d["bottomHrefs"] == ["?ui=new", "?ui=new&page=opportunities&category=tcg",
-                                "?ui=new&page=lottery&category=tcg", "?ui=new&page=restock&category=tcg",
-                                "?ui=new&page=more&category=tcg"]
+    # UI Phase 8: 新UIが既定なので、作るリンクに ui=new は付けない（HOME は ./）
+    assert d["bottomHrefs"] == ["./", "?page=opportunities&category=tcg",
+                                "?page=lottery&category=tcg", "?page=restock&category=tcg",
+                                "?page=more&category=tcg"]
     # 「その他」→ せどりルート（ボトムナビは「その他」を現在地にする）
     assert o["more"]["page"] == "more" and o["more"]["bottom"] == "more"
     assert o["routes"]["page"] == "routes" and o["routes"]["bottom"] == "more"
-    assert o["routes"]["q"] == "?ui=new&page=routes&category=tcg"
+    assert o["routes"]["q"] == "?page=routes&category=tcg"
 
 
 @pytest.mark.skipif(CHROME is None, reason="Chrome が無い")
@@ -451,7 +452,7 @@ def test_footer_and_related_links():
     opp, routes = _section(root, "opportunities"), _section(root, "routes")
     assert "せどりルートを見る" in opp and "利益商品を見る" in routes
     assert 'data-nu-topnote hidden' in opp                      # TOP10 の表示は top=10 のときだけ
-    assert 'href="?ui=new&amp;page=opportunities&amp;top=10" data-nu-keepcat' in root
+    assert 'href="?page=opportunities&amp;top=10" data-nu-keepcat' in root
 
 
 @pytest.mark.skipif(CHROME is None, reason="Chrome が無い")
@@ -476,6 +477,6 @@ def test_dom_top10_and_lottery_order(tmp_path):
     o = _run(tmp_path, js, query="?ui=new&page=opportunities&top=10", profit_deals=many,
              tcg_report={"lotteries": lots, "events": []}, legacy_lotteries=[])
     assert o["top"] == [f"商品{i:02d}" for i in range(10)] and o["note"] is True
-    assert o["all"]["q"] == "?ui=new&page=opportunities" and o["allCount"] == 13   # 12件＋ルート1件
+    assert o["all"]["q"] == "?page=opportunities" and o["allCount"] == 13   # 12件＋ルート1件
     # 抽選は締切間近 → 受付中 → まもなく開始の順
     assert o["order"] == ["t2", "t3", "t1"]

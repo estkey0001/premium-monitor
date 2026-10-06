@@ -219,7 +219,7 @@ def render_more(catalog: cl.Catalog) -> str:
         (page_href("home") + "#nu-genres", "box", "ジャンルから探す", "スマホ・TCG・カメラ・ゲーム・PC・その他", "", False),
         (page_href("mypage"), "star", "マイページ", "ウォッチ中の商品・締切・通知の条件（このブラウザに保存）", "", False),
         (page_href("search"), "search", "商品を検索", "商品名・型番・ジャンルで探す", "", False),
-        ("./", "home", "現行版の表示", "これまでの一覧ページ（すべての情報）", "", False),
+        ("./?ui=legacy", "home", "旧表示", "これまでの一覧ページ（確認・比較用に残しています）", "", False),
     ]
     links = "".join(
         f'<li><a class="nu-purpose" href="{esc(href)}"{" data-nu-keepcat" if keep else ""}>'
@@ -240,7 +240,7 @@ def render_footer(brand: str) -> str:
     """全ページ共通のフッター（注意書きはここに1回だけ）。"""
     return ('<footer class="nu-footer"><div class="nu-footer__inner">'
             f'<span class="nu-footer__brand">{esc(brand)} Premium Monitor</span>'
-            '<a href="./">現行版の表示</a><a href="beta/">はじめかた</a>'
+            '<a href="./?ui=legacy">旧表示</a><a href="beta/">はじめかた</a>'
             f'<p class="nu-footer__note">{esc(DISCLAIMER)}</p></div></footer>')
 
 

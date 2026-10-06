@@ -221,7 +221,7 @@ def test_dom_tabs_sort_filter_search_pagination_history(tmp_path):
     # 高ROI（20%以上）: 正規→二次の21件はどれも ROI 20% 以上。ゲームに切り替えると0件 → 条件に合うもの無しの空状態
     assert o["roiRes"] == "21件中 1〜20件" and o["emptyShown"] is True and o["soon"] is True   # 在庫確認済みは準備中
     assert o["search"] and all("c05" in x for x in o["search"])
-    assert o["back"]["q"].startswith("?ui=new&page=routes") and "category=camera" in o["back"]["q"]
+    assert o["back"]["q"].startswith("?page=routes") and "category=camera" in o["back"]["q"]
 
 
 @pytest.mark.skipif(CHROME is None, reason="Chrome が無い")

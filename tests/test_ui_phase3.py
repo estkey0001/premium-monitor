@@ -289,13 +289,13 @@ def test_dom_filters_sort_search_history(tmp_path):
     assert o["todayIds"] == ["L1"]
     assert "L4" in o["waitIds"] and len(o["waitIds"]) == 2      # 予約受付中＋発売待ち
     assert set(o["resultIds"]) == {"L5", "L6"}
-    assert o["open"]["q"] == "?ui=new&page=lottery&st=open"
-    assert o["dlIds"][0] == "L1" and o["dl"]["q"] == "?ui=new&page=lottery&sort=deadline"
+    assert o["open"]["q"] == "?page=lottery&st=open"
+    assert o["dlIds"][0] == "L1" and o["dl"]["q"] == "?page=lottery&sort=deadline"
     assert o["startIds"][0] == "L3"
     assert o["camRes"] == "0件" and o["emptyShown"] is True and o["toolsHidden"] is True
-    assert o["cat"]["q"] == "?ui=new&page=lottery&sort=start&category=camera"
+    assert o["cat"]["q"] == "?page=lottery&sort=start&category=camera"
     assert o["searchIds"] == ["L4"] and "q=" in o["search"]["q"]
-    assert o["back"]["q"] == "?ui=new&page=lottery&sort=start&category=camera"
+    assert o["back"]["q"] == "?page=lottery&sort=start&category=camera"
 
 
 @pytest.mark.skipif(CHROME is None, reason="Chrome が無い")
@@ -343,7 +343,7 @@ def test_dom_home_parity_and_direct_url(tmp_path):
              legacy_lotteries=[], profit_deals=[], profit_routes={"main_routes": []})
     # 直接 URL（category=tcg&st=wait）で開いても絞り込みが効く
     assert o["listTcg"] == 2
-    assert o["go"]["q"].startswith("?ui=new&page=lottery") and "category=camera" in o["go"]["q"]
+    assert o["go"]["q"].startswith("?page=lottery") and "category=camera" in o["go"]["q"]
     assert o["homeCam"] == "0件" and o["listCam"] == 0
 
 

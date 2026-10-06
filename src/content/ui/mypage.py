@@ -7,7 +7,7 @@
 - Python は全商品のカード・締切の一覧・通知と変化の履歴を作り（非表示）、JS がウォッチ中の商品だけを出す
 - 保存はブラウザ側の薄い入口（NuStore: ウォッチ・設定・既読）だけを通す。将来サーバーに移すときはここを差し替える
 
-URL: ?ui=new&page=mypage&section=watchlist|notifications|settings
+URL: ?page=mypage&section=watchlist|notifications|settings（古い ?ui=new&page=mypage も同じ）
 """
 
 from __future__ import annotations

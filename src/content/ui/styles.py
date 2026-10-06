@@ -27,6 +27,11 @@ def css() -> str:
         # ── 表示の切り替え（旧UIは DOM を残したまま隠す） ──
         f"html:not(.ui-new) {r}{{display:none!important}}"
         f"html.ui-new body>*:not({r}){{display:none!important}}"
+        # 旧UI（?ui=legacy）のときだけ、上に小さく「旧表示」と出す（新UIへの戻り道つき）
+        ".nu-legacy-note{display:none}"
+        f"html.ui-legacy .nu-legacy-note{{display:block;padding:6px 12px;background:{t.TONES['warning']['bg']};"
+        f"color:{t.TONES['warning']['fg']};border-bottom:1px solid {t.TONES['warning']['bd']};font-size:smaller}}"
+        f".nu-legacy-note a{{color:{t.TONES['warning']['fg']};font-weight:700}}"
         f"html.ui-new body{{background:{t.BASE_COLORS['bg']};margin:0}}"
         f"{r}{{{t.css_variables()}"
         "font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans','Noto Sans JP',sans-serif;"

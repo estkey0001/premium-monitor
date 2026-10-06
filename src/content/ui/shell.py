@@ -1,11 +1,12 @@
 """新UIの外枠（シェル）。
 
-- `render_head()` は <head> に入れる CSS と、?ui=new を判定する小さなスクリプト
+- `render_head()` は <head> に入れる CSS と、表示（新UI / 旧UI）を URL で判定する小さなスクリプト
 - `render_root(...)` は <body> の先頭に入れる #new-ui-root と、ページ切り替えのスクリプト
 
-?ui=new が無いときは #new-ui-root を CSS で隠すだけで、旧UIの DOM・見た目・JS は変わらない。
-?ui=new のときは旧UIの要素を CSS で隠す（DOM は残す）。cookie / localStorage で
-新UIを既定にすることはしない。
+UI Phase 8 から新UIが正式の表示（クエリなし・?ui=new・?ui=それ以外 は新UI）。旧UIは ?ui=legacy のときだけ
+（監査・比較用に1フェーズ残す。DOM は同じ HTML の中にあり、新UIのときは CSS の display:none で隠す）。
+どちらを出すかは URL だけで決める（cookie・localStorage・過去の設定では切り替えない）。
+アーカイブ（過去の LP）は旧UIのまま。
 """
 
 from __future__ import annotations
@@ -52,12 +53,17 @@ def _css() -> str:
     return styles.css()
 
 
-# ?ui=new を最初に判定してクラスを付ける（旧UIが一瞬見えるのを防ぐ）
+# 新UIが正式の表示（UI Phase 8）。旧UIは ?ui=legacy のときだけ（監査・比較用の退避）。
+# 判定は URL だけ（cookie・localStorage・過去の設定では切り替えない）。最初に判定してクラスを付ける（旧UIが一瞬見えるのを防ぐ）
 _HEAD_SCRIPT = (
-    "<script>(function(){try{if(new URLSearchParams(location.search).get('ui')==='new'"
+    "<script>(function(){try{var d=document.documentElement;"
+    "if(new URLSearchParams(location.search).get('ui')==='legacy'){d.classList.add('ui-legacy');}"
     # アーカイブ（過去のLP）では新UIを使わない（相対リンクが合わないため）
-    "&&!/\\/archive\\//.test(location.pathname))"
-    "{document.documentElement.classList.add('ui-new');}}catch(e){}})();</script>"
+    "else if(!/\\/archive\\//.test(location.pathname)){d.classList.add('ui-new');"
+    # 新UIのルーター（本文を表示する）が動かなかったときは、読み込みの終わりに旧UIへ戻す（白い画面にしない）
+    "window.addEventListener('load',function(){var r=document.getElementById('new-ui-root');"
+    "if(!r||r.hidden){d.classList.remove('ui-new');}});}"
+    "}catch(e){}})();</script>"
 )
 
 
@@ -70,8 +76,8 @@ def _router_script() -> str:
 (function(){
   'use strict';
   var params = new URLSearchParams(location.search);
-  // 新UIの仮ページから現行版へ来たときだけ、ハッシュのタブを開く（通常の URL では何もしない）
-  if (params.get('ui') !== 'new') {
+  // 旧UI（?ui=legacy・アーカイブ）: 新UIから来たときだけ、ハッシュのタブを開く。新UIのルーターは動かさない
+  if (params.get('ui') === 'legacy' || /\\/archive\\//.test(location.pathname)) {
     if (params.get('from') !== 'new' || !location.hash) return;
     var go = function(){
       var id = location.hash.slice(1), btn = null, el = document.getElementById(id);
@@ -113,9 +119,18 @@ def _router_script() -> str:
     var target = resolveHash(location.hash);
     if (!target) return false;
     var q = new URLSearchParams(location.search);
-    q.set('ui', 'new');
+    q.delete('ui');
     q.set('page', target.page);
     ['mode', 'focus', 'category'].forEach(function(k){ if (target[k]) q.set(k, target[k]); else q.delete(k); });
+    // 旧UIの商品カード（#product-<別名>）は商品詳細へ。詳細の無い商品は、その別名で検索する
+    var key = location.hash.replace(/^#/, '');
+    if (key.indexOf('product-') === 0) {
+      var alias = key.slice('product-'.length);
+      try { alias = decodeURIComponent(alias); } catch (e) { /* 読めない別名はそのまま */ }
+      q.delete('q'); q.delete('product_id');            // 元の URL の検索語・商品を持ち越さない
+      if (PD_ALIAS[alias]) { q.set('page', 'product'); q.set('product_id', PD_ALIAS[alias]); }
+      else if (alias) { q.set('page', 'search'); q.set('q', alias.replace(/_/g, ' ')); }
+    }
     history.replaceState(null, '', location.pathname + '?' + q.toString());
     return true;
   }
@@ -130,9 +145,10 @@ def _router_script() -> str:
   }
   function withCat(href, cat) {
     var i = href.indexOf('#'), hash = i >= 0 ? href.slice(i) : '', base = i >= 0 ? href.slice(0, i) : href;
-    var u = new URLSearchParams(base.slice(1));
+    var u = new URLSearchParams(base.replace(/^\\.\\//, '').replace(/^\\?/, ''));
     if (cat !== 'all') u.set('category', cat); else u.delete('category');
-    return '?' + u.toString() + hash;
+    var qs = u.toString();
+    return (qs ? '?' + qs : './') + hash;
   }
   function sum(o) { var n = 0; Object.keys(o || {}).forEach(function(k){ n += +o[k] || 0; }); return n; }
   // 抽選はカードの閲覧時の状態（data-nu-bucket。runtime が書き換える）から数える
@@ -157,7 +173,7 @@ def _router_script() -> str:
   var OPP_SORTS = ['rec', 'profit', 'roi', 'updated'], OPP_SIZE = 20, OPP_MAX_AGE = 14 * 86400000;
   function oppHref(name, value) {
     var cur = new URLSearchParams(location.search), u = new URLSearchParams();
-    u.set('ui', 'new'); u.set('page', 'opportunities');
+    u.set('page', 'opportunities');
     cur.forEach(function(v, k){ if (k !== 'ui' && k !== 'page') u.set(k, v); });
     if (value) u.set(name, value); else u.delete(name);
     if (name !== 'page_num') { u.delete('page_num'); u.delete('top'); }
@@ -293,7 +309,7 @@ def _router_script() -> str:
   var LOT_SIZE = 20;
   function lotHref(name, value) {
     var cur = new URLSearchParams(location.search), u = new URLSearchParams();
-    u.set('ui', 'new'); u.set('page', 'lottery');
+    u.set('page', 'lottery');
     cur.forEach(function(v, k){ if (k !== 'ui' && k !== 'page') u.set(k, v); });
     if (value) u.set(name, value); else u.delete(name);
     if (name !== 'page_num') u.delete('page_num');
@@ -439,7 +455,7 @@ def _router_script() -> str:
   }
   function rsHref(name, value) {
     var cur = new URLSearchParams(location.search), u = new URLSearchParams();
-    u.set('ui', 'new'); u.set('page', 'restock');
+    u.set('page', 'restock');
     cur.forEach(function(v, k){ if (k !== 'ui' && k !== 'page') u.set(k, v); });
     if (value) u.set(name, value); else u.delete(name);
     if (name !== 'page_num') u.delete('page_num');
@@ -554,7 +570,7 @@ def _router_script() -> str:
   var RT_SORTS = ['profit', 'roi', 'updated', 'samples'], RT_SIZE = 20, RT_HIGH_ROI = 0.2;
   function rtHref(name, value) {
     var cur = new URLSearchParams(location.search), u = new URLSearchParams();
-    u.set('ui', 'new'); u.set('page', 'routes');
+    u.set('page', 'routes');
     cur.forEach(function(v, k){ if (k !== 'ui' && k !== 'page') u.set(k, v); });
     if (value) u.set(name, value); else u.delete(name);
     if (name !== 'page_num') u.delete('page_num');
@@ -737,7 +753,7 @@ def _router_script() -> str:
     root.querySelectorAll('a[data-nu-cat-link]').forEach(function(a){
       var k = a.getAttribute('data-nu-cat-link'), on = k === cat;
       setCurrent(a, on, 'true');
-      a.setAttribute('href', withCat('?ui=new', on ? 'all' : k));
+      a.setAttribute('href', withCat('./', on ? 'all' : k));
     });
     root.querySelectorAll('[data-nu-switch]').forEach(function(a){
       setCurrent(a, a.getAttribute('data-nu-switch') === cat, 'true');
@@ -760,7 +776,7 @@ def _router_script() -> str:
     });
     root.querySelectorAll('[data-nu-catlabel]').forEach(function(el){ el.textContent = CATS[cat] || ''; });
     root.querySelectorAll('[data-nu-home-ctx],[data-nu-crumb-cat]').forEach(function(el){ el.hidden = cat === 'all'; });
-    root.querySelectorAll('a[data-nu-crumb-catlink]').forEach(function(a){ a.setAttribute('href', withCat('?ui=new', cat)); });
+    root.querySelectorAll('a[data-nu-crumb-catlink]').forEach(function(a){ a.setAttribute('href', withCat('./', cat)); });
     // 一覧: ジャンルで絞り込み、抽選は閲覧時に掲載中のもの（bucket < 99）だけを出す
     renderOpp(q, cat);
     renderLot(q, cat);
@@ -822,18 +838,20 @@ def _router_script() -> str:
     if (el) el.scrollIntoView({block: 'start'});
   }
   root.addEventListener('click', function(e){
-    var a = e.target.closest('a[href^="?ui=new"]');
+    var a = e.target.closest('a[href^="?"], a[href="./"], a[href^="./#"]');
     if (!a || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
     e.preventDefault();
     // 商品詳細の「戻る」: 一覧から来たときは履歴を戻る（ジャンル・絞り込み・並べ替え・ページを URL ごと戻す）
     if (a.hasAttribute('data-nu-back') && history.state && history.state.nuFrom) { history.back(); return; }
-    var href = a.getAttribute('href'), i = href.indexOf('#');
-    var next = new URLSearchParams((i >= 0 ? href.slice(0, i) : href).slice(1));
+    var href = a.getAttribute('href').replace(/^\\.\\//, ''), i = href.indexOf('#');
+    var next = new URLSearchParams((i >= 0 ? href.slice(0, i) : href).replace(/^\\?/, ''));
+    next.delete('ui');                                   // 新UIが既定。旧UIへはこのルーターでは行かない
     var cur = new URLSearchParams(location.search);
     if (cur.get('debug') === '1') next.set('debug', '1');
     if (cur.get('mode') && !next.get('mode')) next.set('mode', cur.get('mode'));
     var before = currentPage();
-    var url = location.pathname + '?' + next.toString() + (i >= 0 ? href.slice(i) : '');
+    var nq = next.toString();
+    var url = location.pathname + (nq ? '?' + nq : '') + (i >= 0 ? href.slice(i) : '');
     // 商品詳細へ入るときは、戻り先があることを履歴に残す（「戻る」で一覧の状態に戻すため）
     var state = (next.get('page') === 'product' && before !== 'product') ? {nuFrom: before} : null;
     if (url !== location.pathname + location.search + location.hash) history.pushState(state, '', url);
@@ -1028,7 +1046,10 @@ def render_root(ctx: ShellContext) -> str:
     brand = esc(_brand(ctx.site_title))
     cats_json = json.dumps({c.key: c.label for c in cats.CATEGORIES}, ensure_ascii=False)
     return (
-        # hidden: CSS を使わない読み手にも、旧UIより先に新UIの本文を見せない（?ui=new のとき JS で外す）
+        # hidden: CSS を使わない読み手にも、JS が表示を決めるまで新UIの本文を見せない（新UIのとき JS で外す）
+        # 旧UI（?ui=legacy）のときだけ見える小さな案内（新UIのときは body 直下の要素なので CSS で隠れる）
+        '<div class="nu-legacy-note" role="note">旧表示（確認・比較用に残しています）・'
+        '<a href="./">新しい表示に戻る</a></div>'
         f'<div id="{ROOT_ID}" hidden data-nu-site="{brand}" '
         f"data-nu-map='{esc(navigation.legacy_map_json())}' "
         f"data-nu-cats='{esc(cats_json)}' data-nu-titles='{esc(json.dumps(PAGE_TITLES, ensure_ascii=False))}' "

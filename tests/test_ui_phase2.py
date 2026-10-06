@@ -231,24 +231,24 @@ def test_dom_sort_filter_search_pagination_and_history(tmp_path):
              legacy_lotteries=[], tcg_report={"lotteries": [], "events": []})
     # おすすめ（在庫あり → 既存の確かさ → 利益）で 20件 / ページ、25件なら2ページ
     assert len(o["rec"]) == 20 and o["recRes"] == "25件中 1〜20件" and o["pagerLinks"] >= 3
-    assert o["page2"]["q"] == "?ui=new&page=opportunities&page_num=2" and len(o["p2"]) == 5
+    assert o["page2"]["q"] == "?page=opportunities&page_num=2" and len(o["p2"]) == 5
     assert o["p2Res"] == "25件中 21〜25件"
     # 利益が高い順・ROI が高い順・更新が新しい順
-    assert o["profitIds"][0] == "deal:prod_ip" and o["profit"]["q"] == "?ui=new&page=opportunities&sort=profit"
+    assert o["profitIds"][0] == "deal:prod_ip" and o["profit"]["q"] == "?page=opportunities&sort=profit"
     assert o["roiIds"][0] == "deal:prod_c22"
     assert o["updIds"][0] == "deal:prod_c0"
     # 在庫あり（公式の在庫表示が「在庫あり」のものだけ。在庫切れ・未確認は除く）
     assert "deal:prod_ip" not in o["instockIds"] and "deal:prod_mb" not in o["instockIds"] and len(o["instockIds"]) == 20
-    assert o["instock"]["q"] == "?ui=new&page=opportunities&sort=updated&filter=instock"
-    assert o["cam"]["q"] == "?ui=new&page=opportunities&sort=updated&filter=instock&category=camera"
+    assert o["instock"]["q"] == "?page=opportunities&sort=updated&filter=instock"
+    assert o["cam"]["q"] == "?page=opportunities&sort=updated&filter=instock&category=camera"
     assert o["camRes"].startswith("23件中")
     # 一覧内の検索（URL の q=・テーブルとカードの両方）
     assert o["formOpen"] is True and "q=%E3%82%AB" in o["search"]["q"]
     assert o["searchIds"] == ["deal:prod_c5"] and o["searchCards"] == ["deal:prod_c5"]
     # 戻る・進む（検索は同じ履歴の中で更新するので、戻るとジャンルを選ぶ前の状態）
-    assert o["back"]["q"] == "?ui=new&page=opportunities&sort=updated&filter=instock" and o["backIds"] == 20
-    assert o["back2"]["q"] == "?ui=new&page=opportunities&sort=updated"
-    assert o["fwd"]["q"] == "?ui=new&page=opportunities&sort=updated&filter=instock"
+    assert o["back"]["q"] == "?page=opportunities&sort=updated&filter=instock" and o["backIds"] == 20
+    assert o["back2"]["q"] == "?page=opportunities&sort=updated"
+    assert o["fwd"]["q"] == "?page=opportunities&sort=updated&filter=instock"
 
 
 @pytest.mark.skipif(CHROME is None, reason="Chrome が無い")
@@ -264,7 +264,7 @@ def test_dom_top10_from_home_and_category(tmp_path):
     """
     o = _run(tmp_path, js, profit_deals=MANY_DEALS, profit_routes={"main_routes": []}, legacy_lotteries=[],
              tcg_report={"lotteries": [], "events": []})
-    assert o["top"]["q"] == "?ui=new&page=opportunities&top=10&category=camera"
+    assert o["top"]["q"] == "?page=opportunities&top=10&category=camera"
     assert len(o["topIds"]) == 10 and o["topIds"][0] == "deal:prod_c22" and o["topRes"].startswith("上位10件")
     assert o["note"] is True and o["detail"] == ["true", True]
 

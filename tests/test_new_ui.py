@@ -141,8 +141,8 @@ def test_old_ui_unchanged_without_flag(monkeypatch):
 
 def test_new_ui_only_with_flag():
     head = shell.render_head()
-    # ?ui=new のときだけクラスを付ける。cookie / localStorage では既定化しない
-    assert "get('ui')==='new'" in head
+    # UI Phase 8: 新UIが既定。旧UIは ?ui=legacy のときだけ。cookie / localStorage では切り替えない
+    assert "get('ui')==='legacy'" in head and "ui-legacy" in head and "classList.add('ui-new')" in head
     assert "localStorage" not in head and "cookie" not in head
     # 旧UIは ui-new クラスがあるときだけ隠す。新UIは無いとき隠す
     assert "html:not(.ui-new) #new-ui-root{display:none!important}" in head
@@ -172,7 +172,7 @@ def test_navigation_routes():
     for page in navigation.PAGES:
         assert f'data-nu-page="{page}"' in root
     for i in navigation.NAV_ITEMS + navigation.BOTTOM_ITEMS:
-        href = "?ui=new" if i.page == "home" else f"?ui=new&amp;page={i.page}"
+        href = "./" if i.page == "home" else f"?page={i.page}"      # UI Phase 8: ui=new を付けない
         assert f'href="{href}"' in root
     # 段階B の URL（?page=profit）は利益商品へ読み替える
     assert navigation.PAGE_ALIASES == {"profit": "opportunities"}

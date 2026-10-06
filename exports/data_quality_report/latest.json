@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-06T12:53:25+09:00",
+  "generated_at": "2026-10-06T15:02:45+09:00",
   "collection": {
     "total_shops": 16,
     "shops_with_success": 2,
@@ -15,7 +15,7 @@
     "current_success_rate_pct": 18.2,
     "delta_pct": 0.0,
     "trend": "横ばい",
-    "moving_avg_7d_pct": 20.3,
+    "moving_avg_7d_pct": 19.7,
     "top5_failure_reasons": [
       {
         "reason": "price_not_found",
@@ -262,59 +262,59 @@
   "consecutive_failed_shops": [
     {
       "shop_id": "2ndstreet",
-      "consecutive_failures": 177
+      "consecutive_failures": 178
     },
     {
       "shop_id": "bookoff",
-      "consecutive_failures": 177
+      "consecutive_failures": 178
     },
     {
       "shop_id": "dosupara",
-      "consecutive_failures": 177
+      "consecutive_failures": 178
     },
     {
       "shop_id": "geo_mobile",
-      "consecutive_failures": 177
+      "consecutive_failures": 178
     },
     {
       "shop_id": "hardoff",
-      "consecutive_failures": 177
+      "consecutive_failures": 178
     },
     {
       "shop_id": "janpara",
-      "consecutive_failures": 177
+      "consecutive_failures": 178
     },
     {
       "shop_id": "pasoko",
-      "consecutive_failures": 177
+      "consecutive_failures": 178
     },
     {
       "shop_id": "sofmap",
-      "consecutive_failures": 177
+      "consecutive_failures": 178
     },
     {
       "shop_id": "surugaya",
-      "consecutive_failures": 177
+      "consecutive_failures": 178
     },
     {
       "shop_id": "tsutaya",
-      "consecutive_failures": 177
+      "consecutive_failures": 178
     },
     {
       "shop_id": "iosys",
-      "consecutive_failures": 110
+      "consecutive_failures": 111
     },
     {
       "shop_id": "netoff",
-      "consecutive_failures": 37
+      "consecutive_failures": 38
     },
     {
       "shop_id": "geo",
-      "consecutive_failures": 16
+      "consecutive_failures": 17
     },
     {
       "shop_id": "mobile_ichiban",
-      "consecutive_failures": 3
+      "consecutive_failures": 4
     }
   ],
   "improvement_priority": [

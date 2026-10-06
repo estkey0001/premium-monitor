@@ -1,23 +1,23 @@
 # Profit Health Dashboard
 
-生成: 2026-10-06 12:53 JST
+生成: 2026-10-06 15:02 JST
 
-## Health Score: **36.3 / 100**
+## Health Score: **36.7 / 100**
 
 | 観点 | 配点 | スコア |
 |---|---|---|
 | Data Quality | 35 | 14.6 |
 | Profit Discovery | 25 | 0.0 |
-| Source Health | 20 | 12.1 |
-| Link Quality | 10 | 4.7 |
-| Freshness | 10 | 4.9 |
+| Source Health | 20 | 12.5 |
+| Link Quality | 10 | 4.6 |
+| Freshness | 10 | 5.0 |
 
 ## Data Quality KPI
 
-- 総観測 232 / usable 65
-- stale 118（51%） / 0円 42（18%）
-- item_url率 47% / search 20%
-- manual 50% / API 0% / HTML 1%
+- 総観測 235 / usable 65
+- stale 118（50%） / 0円 42（18%）
+- item_url率 46% / search 20%
+- manual 51% / API 0% / HTML 1%
 
 ## Profit KPI
 
@@ -28,15 +28,14 @@
 
 - main route: 0 → 0
 - reference: 0 → 0
-- stale率: 52% → 51%
-- 0円率: 16% → 18%
-- item_url率: 47% → 47%
-- モバイル一番 取得成功率 100%→38%（-62pt）
+- stale率: 51% → 50%
+- 0円率: 18% → 18%
+- item_url率: 47% → 46%
 
 ## 異常検知
 
 ### 🔴 Critical
-- stale率 51% (>=50%)
+- stale率 50% (>=50%)
 - 取得成功率 38%: モバイル一番
 - 取得成功率 0%: ゲオモバイル
 - 取得成功率 0%: セカンドストリート
@@ -44,8 +43,7 @@
 
 ### 🟡 Warning
 - item_url率 低下
-- item_url率 47% (<50%)
-- モバイル一番 取得成功率 100%→38%
+- item_url率 46% (<50%)
 
 ### ℹ️ Info
 - なし
@@ -72,6 +70,7 @@
 | セカンドストリート | 4 | 0% | 0 | 4 | 0% | 100% |
 | ネットオフ | 4 | 0% | 0 | 4 | 0% | 100% |
 | Amazon新品出品 | 3 | 100% | 3 | 0 | 100% | 0% |
+| Amazon JP (新品出品) | 3 | 100% | 0 | 0 | 0% | 100% |
 | ハードオフ | 2 | 0% | 0 | 2 | 0% | 100% |
 | ドスパラ | 2 | 0% | 0 | 2 | 0% | 100% |
 | ブックオフ | 2 | 0% | 0 | 2 | 0% | 100% |

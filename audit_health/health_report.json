@@ -1,26 +1,26 @@
 {
-  "generated_at": "2026-10-06 12:53 JST",
+  "generated_at": "2026-10-06 15:02 JST",
   "date": "2026-10-06",
   "health_score": {
     "data_quality": 14.6,
     "profit_discovery": 0.0,
-    "source_health": 12.1,
-    "link_quality": 4.7,
-    "freshness": 4.9,
-    "total": 36.3
+    "source_health": 12.5,
+    "link_quality": 4.6,
+    "freshness": 5.0,
+    "total": 36.7
   },
   "data_quality": {
-    "total_obs": 232,
+    "total_obs": 235,
     "usable_obs": 65,
     "stale_count": 118,
-    "stale_rate": 0.5086,
+    "stale_rate": 0.5021,
     "zero_count": 42,
-    "zero_rate": 0.181,
-    "item_url_rate": 0.4655,
-    "search_url_rate": 0.2026,
-    "manual_rate": 0.5,
+    "zero_rate": 0.1787,
+    "item_url_rate": 0.4596,
+    "search_url_rate": 0.2,
+    "manual_rate": 0.5064,
     "api_rate": 0.0,
-    "html_rate": 0.0086
+    "html_rate": 0.0085
   },
   "profit": {
     "main_route_count": 0,
@@ -255,6 +255,18 @@
       },
       "n": 3
     },
+    "Amazon JP (新品出品)": {
+      "success_count": 3,
+      "stale_count": 0,
+      "zero_count": 0,
+      "item_url_rate": 0.0,
+      "freshness": 1.0,
+      "success_rate": 1.0,
+      "confidence": {
+        "medium": 3
+      },
+      "n": 3
+    },
     "ハードオフ": {
       "success_count": 0,
       "stale_count": 0,
@@ -331,16 +343,16 @@
   "diff_vs_prev": {
     "available": true,
     "stale_rate": {
-      "prev": 0.5153,
-      "cur": 0.5086
+      "prev": 0.5086,
+      "cur": 0.5021
     },
     "zero_rate": {
-      "prev": 0.1616,
-      "cur": 0.181
+      "prev": 0.181,
+      "cur": 0.1787
     },
     "item_url_rate": {
-      "prev": 0.4716,
-      "cur": 0.4655
+      "prev": 0.4655,
+      "cur": 0.4596
     },
     "main_route_count": {
       "prev": 0,
@@ -352,18 +364,11 @@
     },
     "new_main": [],
     "lost_main": [],
-    "source_success_changes": [
-      {
-        "source": "モバイル一番",
-        "prev": 1.0,
-        "cur": 0.375,
-        "delta": -0.625
-      }
-    ]
+    "source_success_changes": []
   },
   "anomalies": {
     "critical": [
-      "stale率 51% (>=50%)",
+      "stale率 50% (>=50%)",
       "取得成功率 38%: モバイル一番",
       "取得成功率 0%: ゲオモバイル",
       "取得成功率 0%: セカンドストリート",
@@ -371,8 +376,7 @@
     ],
     "warning": [
       "item_url率 低下",
-      "item_url率 47% (<50%)",
-      "モバイル一番 取得成功率 100%→38%"
+      "item_url率 46% (<50%)"
     ],
     "info": []
   },

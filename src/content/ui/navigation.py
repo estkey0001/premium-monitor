@@ -38,9 +38,9 @@ BOTTOM_ITEMS: tuple[NavItem, ...] = (
     NavItem("more", "メニュー", "メニュー", "more"),
 )
 
-# ページの一覧（ナビに無いページも含む）。account は旧ハッシュ（#tab-health）からだけ開く
+# ページの一覧（ナビに無いページも含む）。admin（運営者向け）はメニューと旧ハッシュ（#tab-health）から開く
 PAGES: tuple[str, ...] = ("home", "opportunities", "lottery", "restock", "routes", "more", "search", "account",
-                          "product", "mypage")
+                          "product", "mypage", "admin")
 DEFAULT_PAGE = "home"
 # 段階B の URL（?page=profit）を新しいページへ読み替える
 PAGE_ALIASES: dict[str, str] = {"profit": "opportunities"}
@@ -54,7 +54,7 @@ LEGACY_HASH_MAP: dict[str, dict[str, str]] = {
     "tab-advanced": {"page": "opportunities", "mode": "pro"},
     "tab-pro": {"page": "opportunities", "mode": "pro"},
     "tab-beginner": {"page": "opportunities", "mode": "easy"},
-    "tab-health": {"page": "account", "focus": "operator"},
+    "tab-health": {"page": "admin"},           # 旧UIの Health → 運営者向け（UI Phase 9）
 }
 
 # id の前方一致で読み替えるもの（category-* / product-*）

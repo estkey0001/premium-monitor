@@ -13,7 +13,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from src.content.ui import (account, home, lottery_page, mypage, navigation, opportunities_page, pages, parity,
+from src.content.ui import (account, admin, home, lottery_page, mypage, navigation, opportunities_page, pages, parity,
                             restock_page, routes_page)
 from src.content.ui import product_detail, product_page
 from src.content.ui import catalog as cl
@@ -46,6 +46,7 @@ class ShellContext:
     products: list | None = None        # 商品の一覧（商品詳細。product_id・名前・ジャンル・メーカー・型番・公式の URL）
     price_history: dict | None = None   # 実際に観測した価格の履歴（exports/price_history/latest.json）
     notifications: list | None = None   # 通知のイベント（exports/notifications の latest と直近の history。マイページの履歴）
+    admin_data: dict | None = None      # 運営者向けの生成物（表示する項目だけ。admin.build が読む。秘密の値は入れない）
 
 
 def _css() -> str:
@@ -100,7 +101,7 @@ def _router_script() -> str:
   var PAGES = MAP.pages || ['home'], ALIASES = MAP.aliases || {};
   var PURPOSES = ['opportunities', 'lottery', 'restock', 'routes'];
   // 「その他」から開くページでは、ボトムナビの「その他」を現在地にする
-  var MORE_PAGES = ['more', 'routes', 'search', 'account', 'mypage'];
+  var MORE_PAGES = ['more', 'routes', 'search', 'account', 'mypage', 'admin'];
   var SITE = root.getAttribute('data-nu-site') || '';
   var PD_ALIAS = jsonAttr('data-nu-pd-alias'), PD_TABS = ['buy', 'history', 'changes'];
   var DATA = {};
@@ -999,7 +1000,7 @@ def _brand(title: str) -> str:
 
 PAGE_TITLES = {"home": "HOME", "opportunities": "利益商品", "lottery": "抽選・予約", "restock": "在庫再開",
                "routes": "せどりルート", "more": "メニュー", "search": "商品を検索", "account": "運営者向け",
-               "product": "商品詳細", "mypage": "マイページ"}
+               "product": "商品詳細", "mypage": "マイページ", "admin": "運営"}
 
 
 def build_catalog(ctx: ShellContext):
@@ -1040,6 +1041,10 @@ def render_root(ctx: ShellContext) -> str:
         + pages.render_search(details)
         + account.render()
         + product_page.render(details)
+        # 運営者向け（UI Phase 9）。マイページより前に置く（マイページは本文の最後のページとして検査している）
+        + admin.render(admin.build(dict(ctx.admin_data or {}, notifications=ctx.notifications), catalog=catalog,
+                                   details=details, profit_routes=ctx.profit_routes, tcg_report=ctx.tcg_report,
+                                   now=model.now, lp_generated=ctx.updated_text or ""))
         + mypage.render(details, mypage.build_events(details, ctx.notifications, ctx.profit_routes, model.now),
                         model.now)
     )
@@ -1071,7 +1076,7 @@ def render_root(ctx: ShellContext) -> str:
         f'<script type="application/json" id="nu-lot-data">{rt.data_json(model.vms)}</script>'
         f'<script type="application/json" id="nu-catalog">{esc_json(catalog.data_json())}</script>'
         f'<script>{rt.runtime_js()}</script>'
-        f'{mypage.script(details)}'
+        f'{mypage.script(details)}{admin.script()}'
         f'{_router_script()}'
         f'</div>{ROOT_END_MARK}'
     )

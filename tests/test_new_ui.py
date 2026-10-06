@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 import pytest
 import yaml
 
+from src.content.ui import admin
 from src.content.ui import components as c
 from src.content.ui import design_tokens as t
 from src.content.ui import home, navigation, shell
@@ -167,7 +168,8 @@ def test_old_dom_ids_preserved(monkeypatch):
 def test_navigation_routes():
     assert navigation.PAGES == ("home", "opportunities", "lottery", "restock", "routes", "more",
                                 "search", "account", "product",       # product は UI Phase 6（商品詳細）
-                                "mypage")                              # mypage は UI Phase 7（マイページ）
+                                "mypage",                              # mypage は UI Phase 7（マイページ）
+                                "admin")                               # admin は UI Phase 9（運営者向け）
     root = shell.render_root(_ctx())
     for page in navigation.PAGES:
         assert f'data-nu-page="{page}"' in root
@@ -190,7 +192,7 @@ def test_navigation_routes():
     ("#tab-pro", "opportunities", "pro", None),
     ("#tab-advanced", "opportunities", "pro", None),
     ("#tab-beginner", "opportunities", "easy", None),
-    ("#tab-health", "account", None, None),
+    ("#tab-health", "admin", None, None),          # UI Phase 9: 旧UIの Health → 運営者向け
     ("#category-tcg-lottery", "lottery", None, "tcg"),
     ("#category-pro-camera", "opportunities", None, "camera"),
     ("#category-beginner-iphone", "opportunities", None, "smartphone"),
@@ -337,7 +339,9 @@ def test_empty_states_distinguish_no_data_and_no_active():
 def test_internal_failure_counts_not_shown():
     html = shell.render_root(_ctx(source_issue=True))
     assert "一部の情報源を取得できていません" in html
-    assert "取得失敗" not in html and "EBAY_APP_ID" not in html
+    # 一般のページには出さない（運営者向けのページ ?page=admin は別。UI Phase 9）
+    public = admin.without_admin(html)
+    assert "取得失敗" not in public and "EBAY_APP_ID" not in public
 
 
 # ── HOME の集計 ───────────────────────────────────────────────────
@@ -490,7 +494,8 @@ def test_wait_reference_hides_amount_and_internal_terms():
     o = _opp("WAIT", "reference", net_profit=86651,
              action_reason="eBay sold 更新（EBAY_APP_ID 設定）後に BUY 候補へ昇格")
     html = _root(opportunities={"todays_opportunities": [o]})
-    assert "86,651" not in html and "EBAY_APP_ID" not in html
+    assert "86,651" not in html                                      # 参考の金額は運営者向けのページにも出さない
+    assert "EBAY_APP_ID" not in admin.without_admin(html)            # 設定の名前は運営者向けのページだけ
 
 
 def test_guard_does_not_change_source_values():

@@ -237,8 +237,13 @@ def test_listing_or_unconfirmed_sell_route_not_listed():
     unknown = dict(ROUTE, sell_canonical_type="UNKNOWN", product_name="種別不明のルート")
     ref = dict(ROUTE, buy_price_evidence="CONFIGURED_REFERENCE", product_name="確認日不明の定価")
     root = shell.render_root(_ctx(profit_routes={"main_routes": [bad, unknown, ref]}))
+    from src.content.ui import admin
+    public = admin.without_admin(root)
     for name in ("出品で計算したルート", "種別不明のルート", "確認日不明の定価"):
-        assert name not in root
+        assert name not in public                     # 一般のページには出さない
+    # 運営者向けのページ（UI Phase 9）では、候補から外した理由つきで出す（データ品質の確認のため）
+    ad = root[root.find('data-nu-page="admin"'):root.find('<section class="nu-page nu-mp"')]
+    assert "出品で計算したルート" in ad and 'data-nu-ad-panel="data-quality"' in ad
     assert 'data-nu-count="routes">0件' in root
 
 
@@ -294,7 +299,9 @@ def test_profit_deals_exclude_unverified_msrp_and_resale(monkeypatch):
 
 def test_no_internal_terms_and_safe_links():
     root = shell.render_root(_ctx())
-    body = root.split('<script type="application/json"', 1)[0]
+    # 運営者向けのページ（UI Phase 9。?page=admin）は別。一般のページには内部の言葉を出さない
+    from src.content.ui import admin
+    body = admin.without_admin(root.split('<script type="application/json"', 1)[0])
     for w in ("EBAY_APP_ID", "Health Score", "suspicious_price", "collector", "HTTP 403"):
         assert w not in body
     for h in re.findall(r'href="([^"]*)"', body):

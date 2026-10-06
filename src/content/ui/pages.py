@@ -219,6 +219,7 @@ def render_more(catalog: cl.Catalog) -> str:
         (page_href("home") + "#nu-genres", "box", "ジャンルから探す", "スマホ・TCG・カメラ・ゲーム・PC・その他", "", False),
         (page_href("mypage"), "star", "マイページ", "ウォッチ中の商品・締切・通知の条件（このブラウザに保存）", "", False),
         (page_href("search"), "search", "商品を検索", "商品名・型番・ジャンルで探す", "", False),
+        (page_href("admin"), "more", "運営の管理画面", "取得状況・データ品質・AI 候補・資金配分・実行履歴（読むだけ）", "", False),
         ("./?ui=legacy", "home", "旧表示", "これまでの一覧ページ（確認・比較用に残しています）", "", False),
     ]
     links = "".join(

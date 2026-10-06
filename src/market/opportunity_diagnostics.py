@@ -256,6 +256,9 @@ def build(*, products: list[dict], msrp_evidence: dict, official_meta: dict, obs
         "eligible_count": eligible_n,
         "exclusion_reasons": dict(excl.most_common()),
         "primary_reasons": dict(primary.most_common()),
+        # 候補ごとの外した理由（運営者向けのページで商品ごとにたどるため。UI Phase 9）
+        "candidates": [{"product_id": c["product_id"], "route_type": c["route_type"], "reasons": c["reasons"],
+                        "primary": _primary(c["reasons"])} for c in candidates if not c["eligible"]],
         "stock_excluded": 0,   # 在庫は除外の理由にしない（利益あり・在庫未確認として出す）
         "category_counts": {k: {"candidates": v["candidates"], "eligible": v["eligible"],
                                 "primary_reasons": dict(v["reasons"].most_common())} for k, v in by_cat.items()},

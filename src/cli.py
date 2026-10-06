@@ -2380,6 +2380,9 @@ def deploy_check_lp():
 
     click.echo(f"\n{'='*60}")
     click.echo(f" Deploy Check ({len(results)} items)")
+    # 実行日時（運営者向けのページが「いつのチェックか」を出すため。CI はこのコマンドの出力を保存する）
+    from datetime import datetime as _dt_dc, timedelta as _td_dc, timezone as _tz_dc
+    click.echo(f" 実行日時: {_dt_dc.now(_tz_dc(_td_dc(hours=9))).isoformat(timespec='seconds')}")
     click.echo(f"{'='*60}")
     for r in results:
         icon = {"ok": "✅", "warning": "⚠️", "error": "❌"}[r["level"]]
@@ -2668,6 +2671,9 @@ def prelaunch_check():
 
         click.echo(f"\n{'='*70}")
         click.echo(f" 本番前チェックリスト ({s['total']} 項目)")
+        # 実行日時（運営者向けのページが「いつのチェックか」を出すため）
+        from datetime import datetime as _dt_pc, timedelta as _td_pc, timezone as _tz_pc
+        click.echo(f" 実行日時: {_dt_pc.now(_tz_pc(_td_pc(hours=9))).isoformat(timespec='seconds')}")
         click.echo(f"{'='*70}")
 
         for r in results:

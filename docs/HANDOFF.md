@@ -1,6 +1,7 @@
 # HANDOFF（最終更新: 2026-10-06）
 
 ## 今の状態
+- UI Phase 9: 運営者向けのページ（`?page=admin&section=overview|sources|data-quality|ai|capital|execution|notifications|system`。`src/content/ui/admin.py`）を作り、旧UIにしかなかった運営の情報を移した。**読むだけ**（再取得・編集・再送などの操作は無い）・**ログインや権限の仕組みは無い**（公開ページの中にある静的な表示。画面に明記）。秘密の値は出さない（生成物から表示する項目だけを読む。API は設定の有無・状態・停止スイッチ・最後の成功だけ）。判定はやり直さない（AI・資金配分・実行・通知は `opportunity.record_route_ok` / `record_route_alive` で今の確定ルートと照合。古い AI は「前回の生成」）。取得元は試した・成功・観測の時刻を分け、観測が古ければ「要確認」。データ品質は候補の診断（opportunity_diagnostics。`candidates` に候補ごとの理由を足し、LP の生成で先に作って同じ生成のものを渡す）から商品詳細へたどれる。実行はサンプルを数えず、無効（INVALIDATED）は当時の値を出さずに履歴として残す。通知は利用者向け・システム・その他を分け、今は確定ルートでない通知の金額は出さない。取得の警告は旧表示の警告バーと同じ分類・順序（`admin.collector_warn`。強い警告→大きな変動→隔離だけ→必須の店の失敗→任意の店の失敗）。せどりルートの診断の合計（仕入れ・売却の候補・古くて外した価格・外した理由の上位5）と、商品ごとの観測した最安の仕入れ・最高の売却（照合未了は「参考・照合未了」）、eBay で確定ルートになる条件、取得の前回比・カメラの買取の取得状況も移した。見込みの利益・照合できない実行の予測額は出さない。CI のチェック（deploy-check・prelaunch）は出力に「実行日時」を出し、管理画面は「前回の CI の…」として実行日時つきで出す（`admin.check_text` が先頭の実行日時と末尾の件数だけを渡す）。入口はメニュー「運営の管理画面」（ボトムナビ・上部ナビには出さない）と運営者向けの案内（account）、旧UIの `#tab-health`。deploy-check #836（秘密の値・偽の操作・偽のログイン・DEMO・8区分）、#808 は運営者向けのページを除いて検査。
 - UI Phase 8: **新UIを正式の表示にした**。クエリなしの URL・`?ui=new`（古いブックマーク）・`?ui=` に知らない値 は新UI。旧UIは **`?ui=legacy`** のときだけ（上に小さく「旧表示（確認・比較用に残しています）・新しい表示に戻る」）。表示は URL だけで決める（head のスクリプト。cookie・localStorage・過去の設定では切り替えない）。作るリンクには `ui=new` を付けない（`?page=…`、HOME は `./`）。旧UIの DOM・旧チェックは**削除していない**（同じ HTML に入っていて、新UIのときは CSS の display:none で隠す）。旧表示への入口はメニュー・フッター・運営者向けページ。アーカイブ（過去の LP）は旧UIのまま。JS が無いブラウザでは旧UIが出る。deploy-check #802（新UIが既定）・#803（URL だけで切り替え）・#835（ルーター・ui=new の無いリンク・旧表示の入口・新旧の確定の利益の売却先の一致）。
 - UI Phase 7: 新UIの「マイページ」（`?ui=new&page=mypage&section=watchlist|notifications|settings`）を作った（`src/content/ui/mypage.py`）。ウォッチ中の商品のカード・締切（抽選・予約）・通知と変化の履歴・通知条件・表示の設定。**ログイン・アカウント・クラウド同期・Push 通知は無い**。保存は**このブラウザの localStorage だけ**（キー `premium-monitor.mypage`、`{v:1, watch:[{id, at}], prefs:{notify:{profit,lottery_open,lottery_deadline,restock,buyback,price}, min_profit, min_roi, deadline_hours, mode, cats}, read:[イベントID]}`）。画面にも「このブラウザに保存（ログインなし）」と出す。ウォッチは product_id だけで保存（商品名で照合しない。登録の無い ID・重複・壊れた JSON・違う版は捨てて初期値）。保存はブラウザ側の入口 `NuStore` だけを通す（将来アカウント・サーバーに移すときはここを差し替える）。ウォッチのボタンは商品詳細の見出し・検索・利益商品・抽選・予約・在庫再開・せどりルートの詳細の「商品詳細を見る」の隣。上部のアイコン（☆）とメニューからマイページへ（ボトムナビは増やしていない）。deploy-check #834（DEMO・架空のアカウント表示・登録の無い商品のウォッチ・危ないリンク・商品詳細との利益の食い違い）。#803 は localStorage を NuStore の中だけ認める。
 - 開発環境を `~/Desktop/AI/ClaudeCode/premium-monitor`（ブランチ `tcg-push` = `origin/main`）の1か所に統一した。古いローカルの `main`・`broken-design-backup`・`.claude/worktrees/` の作業ツリーは削除（中身は origin/main に同等のものがあることを確認済み）。
@@ -17,7 +18,8 @@
 - UI Phase 2 を実装（`?ui=new&page=opportunities`）。利益商品の一覧を OpportunityView（`src/content/ui/opportunity.py`）に一本化し、掲載の判定は `eligibility()` だけ。PC は比較テーブル（1200px 以上）、それ未満はカード（640px 以上は2列）。並べ替え4種・在庫ありの絞り込み・一覧内の検索・20件ごとのページ・TOP10・URL の状態保持。テスト 636 件 PASS（tests/test_ui_phase2.py 40件）。
 
 ## 未解決・保留
-- 旧UIの削除（Phase 9 候補）: 旧UIは `?ui=legacy` の監査用に残している。運営者向けの情報（Health・取得状況）はまだ旧表示にしかないので、旧UIを消す前に管理画面（`/admin/`、MIGRATION_PLAN の段階E）へ移す必要がある。`docs/beta/` は「はじめかた」の別ページ（新UIとは無関係）で、削除の候補として残している。
+- 旧UIの削除（Phase 10 候補）: 旧UIにしか無かった運営の情報（Health・前日比較・Market Coverage・Execution・AI Dashboard・Capital・最新通知・利益ルート未成立の理由と診断の合計・次に取得すべきデータ・eBay の有効化方法と昇格条件・フリマ sold・取得の警告バーの3段階・データ取得状況（前回比・カメラ）・TCG と抽選の監視元・再販の未取得理由）は、運営の管理画面（?page=admin）に移した。旧UIを消すときは、運営の情報以外の依存（アーカイブの過去の LP は旧UIのまま・JS が無いブラウザでは旧UIが出る・旧UIの DOM を前提にした deploy-check の項目）も合わせて扱う必要がある。旧UIは ?ui=legacy の確認・比較用として残している（削除は1件ずつ相談）。`docs/beta/` と `docs/collector_report.html` は別ページで、運営者向けのページからリンクしている。
+- せどりルートの内訳で、確定ルートの購入送料などが 0 のとき「−¥0」と出る（今の本番は確定ルート0件なので出ていない。出ると #807 が ERROR）。テストの架空ルートで気づいた。
 - テストの後片付けの不具合（既存）: tests/test_pokemon_coverage.py・tests/test_tcg_lottery.py は `DailyLPGenerator._load_tcg_report` をクラスから取り出して戻すので、staticmethod が外れたまま残る（後のテストで LP 全体を作ると TypeError）。test_ui_phase8 は自分で決め直して避けている。
 - マイページ（Phase 7）の通知条件は**表示の絞り込みだけ**（件数・履歴・締切の目印）。メール・スマホへの配信はしていない。通知の履歴は exports/notifications の利用者向けの種類（NEW_MAIN・WATCH_TO_BUY・PRICE_DROP・PRICE_RISE・ROI_UP・ROI_DOWN）のうち、判定の印（route_checked）があり今も確定・参考ルートのものと、商品詳細の「最近の変化」（価格・在庫・抽選の受付）だけ。今の本番の通知の artifact は0件なので、履歴はほぼ「変化」になる。マイページの中身は全商品ぶん HTML に入っていて（非表示）、ウォッチ中だけを表示する（個人のウォッチは HTML に入らない）。
 - pytest の全体実行の途中で、空の `data/premium_monitor.db`（0バイト）が作られることがある。残ったまま再実行すると `test_api_automation.py::test_dry_run_no_main_mutation` が「no such table」で落ちることがある（消せば通る）。作っているテストは未特定（原因は未調査）。
@@ -51,10 +53,10 @@
 - 既存の問題: pytest を実行すると追跡対象の exports/api_automation/collection.json が書き換わる。コミット前に `git checkout -- exports/api_automation/collection.json` で戻すこと（テストの出力先修正は別タスク）。
 
 ## 次にやること
-0. Phase 6（商品詳細）はユーザーの指示を待ってから始める（Phase 5.1 の後も同じ）。
+0. Phase 10（旧UIの削除）はユーザーの指示を待ってから始める。
 1. 利益商品の件数を増やすには、データ側を直す（設定値の定価の確認・カメラの買取の鮮度・成約の集計期間）。UI 側で条件を緩めない。
 2. 買取・在庫の更新頻度（今は日次1回）。推奨は diagnostics の frequency。本番のスケジュール変更はユーザー判断。
-2. 利益計算の8系統の統一（internal/uiux/UI_VIEW_MODEL_SPEC.md §2）と、成約データの取得方法（internal/uiux/IMPLEMENTATION_PLAN_V2.md）。
+3. 利益計算の8系統の統一（internal/uiux/UI_VIEW_MODEL_SPEC.md §2）と、成約データの取得方法（internal/uiux/IMPLEMENTATION_PLAN_V2.md）。
 
 ## 注意（次の人へ）
 - **価格は「商品行」と照合して取る**。ページの見出し（「最高¥…」）やページ内の最初の価格で代用しない。一致する行が無ければ未掲載・未取得にする。明らかな異常値は `update_buyback_prices.quarantine_suspicious` で CSV に書く前に隔離される（data_source=suspicious_rejected）。

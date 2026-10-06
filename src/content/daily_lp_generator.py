@@ -4527,13 +4527,60 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 products=self._nu_products(),
                 price_history=self._load_export_json("price_history", "latest.json"),
                 notifications=self._nu_notifications(),
+                admin_data=self._nu_admin_data(),
             )
+            # 候補の診断（内部用）を先に作り、運営者向けのページにも同じ生成のものを渡す（前回の生成を読まない）
+            diag = self._write_opportunity_diagnostics(ctx)
+            if diag is not None:
+                ctx.admin_data["diagnostics"] = diag
             root = _ui_shell.render_root(ctx)
-            self._write_opportunity_diagnostics(ctx)
             return _ui_shell.render_head(), root
         except Exception as exc:  # noqa: BLE001
             logger.warning("new UI render failed: %s", exc)
             return "", ""
+
+    def _nu_admin_data(self) -> dict:
+        """運営者向けのページ（UI Phase 9）に渡す生成物。どの項目を出すかは admin.build が決める（ここでは読むだけ）。
+        アカウントの集計（exports/admin）・秘密の値は渡さない。"""
+        root = Path(__file__).resolve().parent.parent.parent
+        data: dict = {}
+        for key, parts in (("collector", ("collector_report", "latest.json")),
+                           ("dq_report", ("data_quality_report", "latest.json")),
+                           ("diagnostics", ("opportunity_diagnostics", "latest.json")),
+                           ("ai", ("ai_opportunities", "latest.json")), ("allocation", ("allocation", "latest.json")),
+                           ("execution", ("execution", "latest.json")),
+                           ("execution_history", ("execution", "execution_history.json")),
+                           ("notifications_latest", ("notifications", "latest.json")),
+                           ("api", ("api_automation", "latest.json")), ("coverage", ("coverage", "latest.json")),
+                           ("resale_status", ("resale_collection_status.json",)),
+                           ("camera_status", ("camera_buyback_status.json",))):
+            data[key] = self._load_export_json(*parts)
+        try:
+            import json as _json_ad
+            data["health"] = _json_ad.loads((root / "audit_health" / "health_report.json").read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            data["health"] = {}
+        for key, name in (("deploy_check", "deploy_check_latest.txt"), ("prelaunch_check", "prelaunch_check_latest.txt")):
+            try:
+                from src.content.ui import admin as _ui_admin
+                data[key] = _ui_admin.check_text((root / "exports" / name).read_text(encoding="utf-8"))
+            except OSError:
+                data[key] = ""
+        data["flea_sold"] = {n: self._load_export_json("flea_sold_prices", f"{n}_sold.json")
+                             for n in ("mercari", "yahoo", "rakuma")}
+        # 旧表示の取得の警告バーと同じ閾値・成約の件数の下限（運営者向けページの説明に使う）
+        data["warn_threshold"] = self._COLLECTOR_WARN_THRESHOLD
+        data["min_sold_samples"] = _pt.MIN_SOLD_SAMPLES
+        # 任意の店（取得できなくても公開に影響しない）。正本は scripts/check_collector_quality.OPTIONAL_SHOPS
+        try:
+            import importlib.util as _iu_ad
+            _sp = _iu_ad.spec_from_file_location("_ccq_for_admin", root / "scripts" / "check_collector_quality.py")
+            _m = _iu_ad.module_from_spec(_sp)
+            _sp.loader.exec_module(_m)
+            data["optional_shops"] = sorted(getattr(_m, "OPTIONAL_SHOPS", {}) or {})
+        except Exception:                                   # noqa: BLE001
+            data["optional_shops"] = []
+        return data
 
     def _nu_notifications(self) -> list[dict]:
         """マイページの通知の履歴（exports/notifications の latest と直近7日の history。読むだけで書き換えない）。
@@ -4588,7 +4635,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             out[r["product_id"]] = {"source_id": r["source_id"], "url": r["target_url"] or "", **extra}
         return out
 
-    def _write_opportunity_diagnostics(self, ctx) -> None:
+    def _write_opportunity_diagnostics(self, ctx) -> dict | None:
         """利益商品が何件・なぜ除外されたかを exports/opportunity_diagnostics/latest.json に書く（内部用）。"""
         try:
             from src.content.ui import shell as _ui_shell
@@ -4613,8 +4660,10 @@ tr.sc-route-review {{ background: #FFFBEB; }}
             out.mkdir(parents=True, exist_ok=True)
             import json as _json
             (out / "latest.json").write_text(_json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
+            return report
         except Exception as exc:  # noqa: BLE001
             logger.warning("opportunity diagnostics failed: %s", exc)
+            return None
 
     # ----- 定価の根拠 -----
 

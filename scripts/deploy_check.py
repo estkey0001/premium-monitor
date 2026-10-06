@@ -7032,6 +7032,7 @@ def _check_new_ui(html: str) -> list[dict]:
     #808 新UIに運営者向けの内部情報を出していない
     #809 新UIのリンクは https: かサイト内の相対パスだけ（javascript: 等が無い）
     #810 新旧の件数照合に説明できない差が無い
+    #836 UI Phase 9: 運営者向けのページに秘密の値・偽の操作・偽のログイン表示・DEMO が無く、区分がそろっている
     #835 UI Phase 8: ルーターは旧UIを ?ui=legacy だけで出す・作るリンクに ui=new を付けない・旧表示への入口がある・
          新UIの利益商品が旧UIのランキングにも同じ売却先で出ている（新旧で確定の利益が食い違わない）
     """
@@ -7118,11 +7119,46 @@ def _check_new_ui(html: str) -> list[dict]:
          "閲覧時の状態判定（runtime）のデータと JS がある", "閲覧時に締切を過ぎても受付中に見える")
     _add(807, "new_ui_no_zero_price", not _re.search(r"¥0(?![0-9,])", root),
          "新UIに ¥0 を表示していない", "¥0 が表示されている")
+    # 運営者向けのページ（UI Phase 9。?page=admin）は別のページなので除く。一般のページには内部情報を出さない
+    _body808 = root.split('<script type="application/json"', 1)[0]
+    _ai808 = _body808.find('data-nu-page="admin"')
+    _ae808 = _body808.find('data-nu-page="mypage"', _ai808) if _ai808 >= 0 else -1
+    _admin808 = _body808[_ai808:_ae808] if 0 <= _ai808 < _ae808 else ""
+    _public808 = _body808.replace(_admin808, "") if _admin808 else _body808
     leaked = [w for w in ("取得失敗", "EBAY_APP_ID", "Health Score", "suspicious_price",
                           "HTTP 403", "HTTP403", "SOURCE_BLOCKED", "timeout")
-              if w in root.split('<script type="application/json"', 1)[0]]
-    _add(808, "new_ui_no_internal_info", not leaked, "新UIに運営者向けの内部情報を出していない",
-         f"表示されている: {leaked}")
+              if w in _public808]
+    _add(808, "new_ui_no_internal_info", not leaked,
+         "新UIの一般のページに運営者向けの内部情報を出していない（運営者向けのページは別）", f"表示されている: {leaked}")
+    # #836 運営者向けのページ（UI Phase 9）: 秘密の値・偽の操作・偽のログイン表示・DEMO が無く、必要な区分がそろっている
+    bad836 = []
+    if not _admin808:
+        bad836.append("運営者向けのページが無い")
+    else:
+        _t836 = _re.sub(r"<[^>]+>", " ", _admin808)
+        for _pat, _lbl in ((r"(?i)\bbearer\s+[a-z0-9._-]{12,}", "Bearer トークン"),
+                           (r"-----BEGIN [A-Z ]*PRIVATE KEY", "秘密鍵"),
+                           (r"(?i)(appid|token|secret|api[_-]?key|password)\s*[=:]\s*[A-Za-z0-9._-]{8,}", "キーの値"),
+                           (r"discord(?:app)?\.com/api/webhooks/", "Webhook の URL"),
+                           (r"api\.telegram\.org/bot\d", "Bot の URL"),
+                           (r"/Users/|/home/[a-z]", "絶対パス")):
+            if _re.search(_pat, _admin808):
+                bad836.append(_lbl)
+        if "<button" in _admin808 or "<form" in _admin808 or "<input" in _admin808:
+            bad836.append("操作の部品（読むだけのはず）")
+        for _w in ("ログイン済み", "ログイン中", "管理者としてログイン", "権限: 管理者"):
+            if _w in _t836:
+                bad836.append(f"偽の状態: {_w}")
+        if "DEMO" in _t836 or "SAMPLE" in _t836:
+            bad836.append("DEMO")
+        for _sec in ("overview", "sources", "data-quality", "ai", "capital", "execution", "notifications", "system"):
+            if f'data-nu-ad-panel="{_sec}"' not in _admin808:
+                bad836.append(f"区分が無い: {_sec}")
+        if "ログイン・権限の仕組みは無く" not in _t836 or "読むだけ" not in _t836:
+            bad836.append("認証が無い・読むだけであることの説明が無い")
+    _add(836, "admin_ui_safe", not bad836,
+         "運営者向けのページに秘密の値・偽の操作・偽のログイン表示・DEMO が無く、8つの区分がそろっている",
+         f"問題: {bad836[:5]}")
     bad = [h for h in _re.findall(r'href="([^"]*)"', root)
            if not (h.startswith(("https://", "?", "./", "#")) or _re.match(r"^[A-Za-z0-9_\-]+/", h))]
     _add(809, "new_ui_safe_links", not bad,
@@ -7824,6 +7860,9 @@ def main():
 
     print(f"\n{'='*60}")
     print(f" Deploy Check ({len(results)} items)")
+    # 実行日時（運営者向けのページが「いつのチェックか」を出すため。CI の出力ファイルに残る）
+    _jst = __import__("datetime").timezone(__import__("datetime").timedelta(hours=9))
+    print(f" 実行日時: {__import__('datetime').datetime.now(_jst).isoformat(timespec='seconds')}")
     print(f"{'='*60}")
 
     for r in results:

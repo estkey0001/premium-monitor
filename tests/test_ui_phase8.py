@@ -45,8 +45,9 @@ def _page():
 def test_head_defaults_to_new_ui_by_url_only():
     head = shell.render_head()
     assert "get('ui')==='legacy'" in head and "classList.add('ui-legacy')" in head
-    assert "else if(!/\\/archive\\//.test(location.pathname)){d.classList.add('ui-new');" in head
-    assert "if(!r||r.hidden){d.classList.remove('ui-new');}" in head          # ルーターが動かなければ旧UIへ
+    # UI Phase 10: アーカイブでも新UI。ルーターが動かなければ旧UIではなく静的な案内（#nu-fallback）へ
+    assert "else{d.classList.add('ui-new');" in head and "/archive/" not in head
+    assert "if(!r||r.hidden){d.classList.remove('ui-new');d.classList.add('ui-fallback');}" in head
     for w in ("localStorage", "sessionStorage", "cookie"):                     # URL 以外では決めない
         assert w not in head
 
@@ -205,8 +206,9 @@ def test_dom_legacy_hash_links(tmp_path, hash_, page, extra):
 
 
 @pytest.mark.skipif(CHROME is None, reason="Chrome が無い")
-def test_dom_router_failure_falls_back_to_legacy(tmp_path):
-    """新UIのルーター（本文を表示するスクリプト）だけが止まっても、読み込みの終わりに旧UIへ戻る（白い画面にしない）。"""
+def test_dom_router_failure_shows_static_fallback(tmp_path):
+    """新UIのルーター（本文を表示するスクリプト）だけが止まっても、読み込みの終わりに静的な案内を出す
+    （白い画面にしない。UI Phase 10 からは旧UIには戻さない）。"""
     import html as _h
     import json as _j
     import subprocess
@@ -216,7 +218,9 @@ def test_dom_router_failure_falls_back_to_legacy(tmp_path):
     head_, _, tail = root.rpartition(marker)                 # ルーター（最後のスクリプト）だけを止める
     broken = head_ + "throw new Error('router stopped');" + marker + tail
     js = ("var o={cls:document.documentElement.className,"
-          "old:getComputedStyle(document.querySelector('header.topbar')).display!=='none'};"
+          "old:getComputedStyle(document.querySelector('header.topbar')).display!=='none',"
+          "fb:getComputedStyle(document.getElementById('nu-fallback')).display!=='none',"
+          "fbText:document.getElementById('nu-fallback').innerText};"
           "document.getElementById('out').textContent=JSON.stringify(o);")
     page = ("<!doctype html><html lang='ja'><head><meta charset='utf-8'>" + shell.render_head() + "</head><body>"
             + broken + "<header class='topbar'>old</header><pre id='out'></pre>"
@@ -229,4 +233,5 @@ def test_dom_router_failure_falls_back_to_legacy(tmp_path):
                          capture_output=True, text=True, timeout=60)
     st = res.stdout.find('<pre id="out">')
     o = _j.loads(_h.unescape(res.stdout[st + len('<pre id="out">'):res.stdout.find("</pre>", st)]))
-    assert "ui-new" not in o["cls"] and o["old"] is True
+    assert "ui-new" not in o["cls"].split() and "ui-fallback" in o["cls"].split()
+    assert o["fb"] is True and o["old"] is False and "JavaScript を有効にすると" in o["fbText"]

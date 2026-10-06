@@ -47,6 +47,7 @@ class ShellContext:
     price_history: dict | None = None   # 実際に観測した価格の履歴（exports/price_history/latest.json）
     notifications: list | None = None   # 通知のイベント（exports/notifications の latest と直近の history。マイページの履歴）
     admin_data: dict | None = None      # 運営者向けの生成物（表示する項目だけ。admin.build が読む。秘密の値は入れない）
+    cta_links: list | None = None       # フッターの外部リンク（設定 lp_settings の note・LINE など。URL があるものだけ）
 
 
 def _css() -> str:
@@ -56,14 +57,14 @@ def _css() -> str:
 
 # 新UIが正式の表示（UI Phase 8）。旧UIは ?ui=legacy のときだけ（監査・比較用の退避）。
 # 判定は URL だけ（cookie・localStorage・過去の設定では切り替えない）。最初に判定してクラスを付ける（旧UIが一瞬見えるのを防ぐ）
+# アーカイブ（docs/archive/ の過去の LP。UI Phase 10 以降の生成物）も新UIで出す（その日の記録として。HOME は今のサイトへ）。
+# JS が無い・このスクリプトが失敗した・ルーターが本文を出せなかったときは、静的な案内（#nu-fallback）を出す（旧UIに戻さない）
 _HEAD_SCRIPT = (
     "<script>(function(){try{var d=document.documentElement;"
     "if(new URLSearchParams(location.search).get('ui')==='legacy'){d.classList.add('ui-legacy');}"
-    # アーカイブ（過去のLP）では新UIを使わない（相対リンクが合わないため）
-    "else if(!/\\/archive\\//.test(location.pathname)){d.classList.add('ui-new');"
-    # 新UIのルーター（本文を表示する）が動かなかったときは、読み込みの終わりに旧UIへ戻す（白い画面にしない）
+    "else{d.classList.add('ui-new');"
     "window.addEventListener('load',function(){var r=document.getElementById('new-ui-root');"
-    "if(!r||r.hidden){d.classList.remove('ui-new');}});}"
+    "if(!r||r.hidden){d.classList.remove('ui-new');d.classList.add('ui-fallback');}});}"
     "}catch(e){}})();</script>"
 )
 
@@ -77,8 +78,8 @@ def _router_script() -> str:
 (function(){
   'use strict';
   var params = new URLSearchParams(location.search);
-  // 旧UI（?ui=legacy・アーカイブ）: 新UIから来たときだけ、ハッシュのタブを開く。新UIのルーターは動かさない
-  if (params.get('ui') === 'legacy' || /\\/archive\\//.test(location.pathname)) {
+  // 旧UI（?ui=legacy）: 新UIから来たときだけ、ハッシュのタブを開く。新UIのルーターは動かさない
+  if (params.get('ui') === 'legacy') {
     if (params.get('from') !== 'new' || !location.hash) return;
     var go = function(){
       var id = location.hash.slice(1), btn = null, el = document.getElementById(id);
@@ -95,7 +96,33 @@ def _router_script() -> str:
   }
   var root = document.getElementById('""" + ROOT_ID + """');
   if (!root || !document.documentElement.classList.contains('ui-new')) return;
+  // アーカイブ（docs/archive/<日付>.html）: その日の記録として出す。今のサイトへのリンク（HOME・別ページ）は1つ上の階層へ
+  var ARCH = location.pathname.match(/\\/archive\\/(\\d{4}-\\d{2}-\\d{2})[^/]*$/);
+  if (ARCH) {
+    root.setAttribute('data-nu-archive', ARCH[1]);
+    // 別ファイルへの相対リンク（beta/・./collector_report.html など）と「最新の表示へ」（data-nu-root）は、
+    // アーカイブの1つ上（今のサイト）を指すようにする。?page=… と #… は、この記録の中で動く（ルーターが受ける）
+    root.querySelectorAll('a[href]').forEach(function(a){
+      var h = a.getAttribute('href');
+      if (a.hasAttribute('data-nu-root') || !/^(\\?|#|\\.\\/(\\?|#|$)|[a-z][a-z0-9+.-]*:|\\/|\\.\\.\\/)/i.test(h)) {
+        a.setAttribute('href', '../' + h.replace(/^\\.\\//, ''));
+      }
+    });
+    var note = document.getElementById('nu-archive-note');
+    if (note) {
+      note.querySelector('[data-nu-archive-date]').textContent = ARCH[1];
+      note.hidden = false;
+    }
+  }
   root.hidden = false;
+  // クリックの計測（data-track。GA・Meta Pixel を設定したときだけ送る。設定が無ければ何もしない）
+  document.addEventListener('click', function(e){
+    var el = e.target.closest ? e.target.closest('[data-track]') : null;
+    if (!el) return;
+    var ev = el.getAttribute('data-track'), pid = el.getAttribute('data-product-id') || '', shop = el.getAttribute('data-shop') || '';
+    if (typeof gtag === 'function') gtag('event', ev, {product_id: pid, shop: shop});
+    if (typeof fbq === 'function') fbq('trackCustom', ev, {product_id: pid, shop: shop});
+  });
   function jsonAttr(name) { try { return JSON.parse(root.getAttribute(name) || '{}'); } catch (e) { return {}; } }
   var MAP = jsonAttr('data-nu-map'), CATS = jsonAttr('data-nu-cats'), TITLES = jsonAttr('data-nu-titles');
   var PAGES = MAP.pages || ['home'], ALIASES = MAP.aliases || {};
@@ -1051,9 +1078,11 @@ def render_root(ctx: ShellContext) -> str:
     brand = esc(_brand(ctx.site_title))
     cats_json = json.dumps({c.key: c.label for c in cats.CATEGORIES}, ensure_ascii=False)
     return (
+        # JS が無い・ルーターが動かなかったときの静的な案内（旧UIには戻さない）
+        render_fallback(ctx, catalog, model.now.strftime("%m/%d %H:%M") if model.now else "")
         # hidden: CSS を使わない読み手にも、JS が表示を決めるまで新UIの本文を見せない（新UIのとき JS で外す）
         # 旧UI（?ui=legacy）のときだけ見える小さな案内（新UIのときは body 直下の要素なので CSS で隠れる）
-        '<div class="nu-legacy-note" role="note">旧表示（確認・比較用に残しています）・'
+        + '<div class="nu-legacy-note" role="note">旧表示（確認・比較用に残しています）・'
         '<a href="./">新しい表示に戻る</a></div>'
         f'<div id="{ROOT_ID}" hidden data-nu-site="{brand}" '
         f"data-nu-map='{esc(navigation.legacy_map_json())}' "
@@ -1070,8 +1099,13 @@ def render_root(ctx: ShellContext) -> str:
         f'{icon("search", size=20)}</a>'
         f'<a class="nu-iconbtn" href="{esc(navigation.page_href("mypage"))}" data-nu-nav="mypage" aria-label="マイページ">'
         f'{icon("star", size=20)}</a></div></div></header>'
+        # アーカイブ（過去の LP）のときだけ見える「その日の記録」の案内（ルーターが日付を入れて出す）
+        '<div id="nu-archive-note" class="nu-archive-note" role="note" hidden>この表示は '
+        '<b data-nu-archive-date></b> に生成した記録です（価格・件数は当時の値。今の値ではありません。'
+        '抽選・在庫の受付の状態は、見ている時刻で判定し直します）。'
+        '<a href="./" data-nu-root>最新の表示へ</a></div>'
         f'<main id="nu-main" class="nu-main" tabindex="-1">{body}</main>'
-        f'{pages.render_footer(_brand(ctx.site_title))}'
+        f'{pages.render_footer(_brand(ctx.site_title), ctx.cta_links)}'
         f'{navigation.bottom_nav()}'
         f'<script type="application/json" id="nu-lot-data">{rt.data_json(model.vms)}</script>'
         f'<script type="application/json" id="nu-catalog">{esc_json(catalog.data_json())}</script>'
@@ -1079,6 +1113,40 @@ def render_root(ctx: ShellContext) -> str:
         f'{mypage.script(details)}{admin.script()}'
         f'{_router_script()}'
         f'</div>{ROOT_END_MARK}'
+    )
+
+
+def render_fallback(ctx: ShellContext, catalog, generated: str) -> str:
+    """JS が無い・ルーターが動かなかったときの静的な案内（旧UIの代わり）。新UIのときは CSS で隠す。
+
+    件数・商品名は**生成時点の値**（閲覧時に数え直さない。そう明記する）。値は新UIの一覧と同じ catalog から取る。
+    """
+    brand = esc(_brand(ctx.site_title))
+    rows = [("opportunities", "利益商品"), ("lottery", "抽選・予約（受付中）"), ("restock", "在庫再開（購入可能）"),
+            ("routes", "せどりルート")]
+    counts = "".join(f'<li><a href="{esc(navigation.page_href(k))}">{esc(lbl)}</a> {catalog.count(k)}件</li>'
+                     for k, lbl in rows)
+    names = [v.product_name for v in (catalog.opportunity_set.eligible if catalog.opportunity_set else [])][:10]
+    opp_list = (('<h2>利益商品（生成時点）</h2><ul>' + "".join(f"<li>{esc(n)}</li>" for n in names) + "</ul>")
+                if names else "")
+    return (
+        '<div id="nu-fallback" class="nu-fallback">'
+        f'<header><p class="nu-fallback__brand">{brand}</p></header>'
+        # main は新UIの本文の1つだけにする（ここは div）
+        '<div class="nu-fallback__main">'
+        '<h1>プレ値速報（簡易表示）</h1>'
+        '<p>この簡易表示は、JavaScript が無効か、表示の準備に失敗したときに出ます。'
+        'JavaScript を有効にすると、絞り込み・並べ替え・商品詳細・マイページなどの詳細機能を使えます'
+        '（下のページへのリンクも JavaScript が必要です。有効にして再読み込みしてください）。</p>'
+        + (f'<p>このページの生成: {esc(generated)}（下の件数・商品名は生成時点の値です。今の値ではありません）</p>'
+           if generated else '<p>下の件数・商品名は生成時点の値です。</p>')
+        + f'<h2>ページ</h2><ul><li><a href="./">HOME</a></li>{counts}'
+        f'<li><a href="{esc(navigation.page_href("search"))}">商品を検索</a></li></ul>'
+        + opp_list
+        + f'<p class="nu-fallback__note">{esc(pages.DISCLAIMER)}</p>'
+        # 注意書き（フッターと同じ。JS が無い読み手・クローラーにも、利益商品と一緒に出す）
+        + '<ul class="nu-fallback__cautions">' + "".join(f"<li>{esc(t)}</li>" for t in pages.CAUTIONS) + "</ul>"
+        '</div></div>'
     )
 
 

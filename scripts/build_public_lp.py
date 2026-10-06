@@ -56,12 +56,15 @@ def build():
         shutil.copy2(html_file, dst)
         print(f"  ✅ {dst}")
 
+    # archive/index.html（archive/ を開いたとき・過去の LP の「./」リンクから、今のサイトへ転送する。過去の LP は書き換えない）
+    _write_archive_index(ARCHIVE_DIR)
+
     # sitemap.xml
     site_url = settings.get("site_url", "").rstrip("/")
     now = datetime.now().strftime("%Y-%m-%d")
 
     urls = [("", now, "daily", "1.0")]
-    for html_file in sorted(ARCHIVE_DIR.glob("*.html"), reverse=True)[:30]:
+    for html_file in sorted(ARCHIVE_DIR.glob("2*.html"), reverse=True)[:30]:          # 日付のファイルだけ（index.html は除く）
         urls.append((f"archive/{html_file.name}", html_file.stem, "never", "0.5"))
 
     sitemap_lines = ['<?xml version="1.0" encoding="UTF-8"?>',
@@ -92,6 +95,26 @@ def build():
     # ファイル数カウント
     total = sum(1 for _ in PUBLIC_DIR.rglob("*") if _.is_file())
     print(f"\n  Build complete: {total} files in docs/")
+
+
+ARCHIVE_INDEX_HTML = """<!doctype html>
+<html lang="ja"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<meta http-equiv="refresh" content="0; url=../">
+<title>プレ値速報</title>
+<script>try{location.replace('../'+location.search+location.hash);}catch(e){}</script>
+</head><body>
+<p>最新の表示へ移動します。移動しないときは <a href="../">こちら</a> を開いてください。</p>
+</body></html>
+"""
+
+
+def _write_archive_index(archive_dir: Path) -> None:
+    """docs/archive/index.html を書く（過去の LP は日付のファイルとしてそのまま残す。ここでは触らない）。"""
+    path = archive_dir / "index.html"
+    path.write_text(ARCHIVE_INDEX_HTML, encoding="utf-8")
+    print(f"  ✅ {path}")
 
 
 def _build_collector_report_html(public_dir: Path) -> None:

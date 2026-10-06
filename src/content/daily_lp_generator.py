@@ -4117,8 +4117,9 @@ tr.sc-route-review {{ background: #FFFBEB; }}
     }}
   }});
 
-  // ── トラッキング ──
+  // ── トラッキング ──（新UIのときは新UIのルーターが送る。二重に送らない）
   document.addEventListener("click", function(e){{
+    if (document.documentElement.classList.contains("ui-new")) return;
     var el = e.target.closest("[data-track]");
     if (!el) return;
     var ev = el.getAttribute("data-track"), pid = el.getAttribute("data-product-id")||"", shop = el.getAttribute("data-shop")||"";
@@ -4528,6 +4529,7 @@ tr.sc-route-review {{ background: #FFFBEB; }}
                 price_history=self._load_export_json("price_history", "latest.json"),
                 notifications=self._nu_notifications(),
                 admin_data=self._nu_admin_data(),
+                cta_links=self._nu_cta_links(),
             )
             # 候補の診断（内部用）を先に作り、運営者向けのページにも同じ生成のものを渡す（前回の生成を読まない）
             diag = self._write_opportunity_diagnostics(ctx)
@@ -4538,6 +4540,17 @@ tr.sc-route-review {{ background: #FFFBEB; }}
         except Exception as exc:  # noqa: BLE001
             logger.warning("new UI render failed: %s", exc)
             return "", ""
+
+    def _nu_cta_links(self) -> list:
+        """新UIのフッターの外部リンク（旧UIの _section_cta と同じ設定。URL が無いもの・「#」は出さない）。"""
+        out = []
+        for flag, key, label, track in (("enable_note_cta", "note_url", "詳細レポート（note）", "note_click"),
+                                        ("enable_line_cta", "line_url", "LINE速報", "line_click"),
+                                        ("enable_telegram_cta", "telegram_url", "Telegram速報", "telegram_click")):
+            url = str(self.settings.get(key) or "").strip()
+            if self.settings.get(flag) and url and url != "#":
+                out.append((label, url, track))
+        return out
 
     def _nu_admin_data(self) -> dict:
         """運営者向けのページ（UI Phase 9）に渡す生成物。どの項目を出すかは admin.build が決める（ここでは読むだけ）。

@@ -237,12 +237,28 @@ def render_more(catalog: cl.Catalog) -> str:
     )
 
 
-def render_footer(brand: str) -> str:
-    """全ページ共通のフッター（注意書きはここに1回だけ）。"""
+# ご確認ください（旧UIの注意書き _section_caution から移した。全ページ共通のフッターに1回だけ出す）
+CAUTIONS = (
+    "本ページは価格差の監視結果であり、購入を推奨するものではありません。",
+    "利益を保証するものではありません。条件が合えば利益が出る可能性がある情報です。",
+    "価格・在庫・買取条件は常に変動します。掲載価格は取得・入力時点の参考値です。",
+    "買取条件（新品未開封・SIMフリー等）を満たさない場合、買取価格が大幅に下がります。",
+    "海外販売には輸出規制・関税・送料・プラットフォーム手数料等が発生します。",
+)
+
+
+def render_footer(brand: str, cta_links: list | None = None) -> str:
+    """全ページ共通のフッター（注意書きはここに1回だけ）。外部リンク（note・LINE など）は設定に URL があるときだけ。"""
+    from src.content.ui.components import safe_href
+    cta = "".join(f'<a href="{esc(safe_href(url))}" target="_blank" rel="noopener noreferrer" data-track="{esc(track)}">'
+                  f'{esc(label)}<span class="nu-sr">（外部サイト）</span></a>'
+                  for label, url, track in (cta_links or []) if safe_href(url).startswith("https://"))
+    cautions = "".join(f"<li>{esc(t)}</li>" for t in CAUTIONS)
     return ('<footer class="nu-footer"><div class="nu-footer__inner">'
             f'<span class="nu-footer__brand">{esc(brand)} Premium Monitor</span>'
-            '<a href="./?ui=legacy">旧表示</a><a href="beta/">はじめかた</a>'
-            f'<p class="nu-footer__note">{esc(DISCLAIMER)}</p></div></footer>')
+            '<a href="./?ui=legacy">旧表示</a><a href="beta/">はじめかた</a>' + cta
+            + f'<p class="nu-footer__note">{esc(DISCLAIMER)}</p>'
+            f'<ul class="nu-footer__cautions">{cautions}</ul></div></footer>')
 
 
 def render_search(details: dict | None = None) -> str:

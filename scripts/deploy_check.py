@@ -7061,7 +7061,7 @@ def _check_new_ui(html: str) -> list[dict]:
     root = html[start:end]
 
     _head_ok = ("get('ui')==='legacy'){d.classList.add('ui-legacy');}" in html
-                and "else if(!/\\/archive\\//.test(location.pathname)){d.classList.add('ui-new');" in html)
+                and "else{d.classList.add('ui-new');" in html)
     _add(802, "new_ui_default",
          _head_ok and "html:not(.ui-new) #new-ui-root{display:none!important}" in html
          and "html.ui-new body>*:not(#new-ui-root){display:none!important}" in html
@@ -7084,7 +7084,8 @@ def _check_new_ui(html: str) -> list[dict]:
     bad835 = []
     if "params.get('ui') === 'legacy'" not in root:
         bad835.append("ルーターが ?ui=legacy 以外でも旧UIになる")
-    if _re.search(r'href="\?ui=new', root):
+    _fb835 = html.find('<div id="nu-fallback"')
+    if _re.search(r'href="\?ui=new', root + (html[_fb835:start] if 0 <= _fb835 < start else "")):   # 静的な案内のリンクも
         bad835.append("作るリンクに ui=new が残っている")
     if 'class="nu-legacy-note"' not in html or 'href="./?ui=legacy' not in root:
         bad835.append("旧表示への入口・旧表示の案内が無い")
@@ -7105,6 +7106,58 @@ def _check_new_ui(html: str) -> list[dict]:
     _add(835, "default_cutover_routing", not bad835,
          "旧UIは ?ui=legacy のときだけ・作るリンクに ui=new なし・旧表示の入口あり・新旧で確定の利益の売却先が一致",
          f"問題: {bad835[:5]}")
+    # #837 UI Phase 10: JS が無い・ルーターが動かなかったときは静的な案内（旧UIに戻さない）
+    bad837 = []
+    _fb_s = html.find('<div id="nu-fallback"')
+    _fb_e = html.find("</ul></div></div>", _fb_s) if _fb_s >= 0 else -1
+    _fb = html[_fb_s:_fb_e] if 0 <= _fb_s < _fb_e < start else ""        # 終わりが見つからない・root より後なら空（範囲を広げない）
+    if html.count('<div id="nu-fallback"') != 1 or not (0 <= _fb_s < start):
+        bad837.append("静的な案内（#nu-fallback）が1つ・新UIの root より前に無い")
+    for _need, _why in (("JavaScript を有効にすると", "JS を有効にする案内"), ("<h1>", "見出し"),
+                        ('href="./"', "HOME へのリンク"), ('href="?page=opportunities"', "利益商品へのリンク"),
+                        ('href="?page=lottery"', "抽選へのリンク"), ('href="?page=search"', "検索へのリンク"),
+                        ("生成時点の値", "生成時点の値である旨"),
+                        ("購入を推奨するものではありません", "注意書き（購入を推奨しない）"),
+                        ("利益を保証するものではありません", "注意書き（利益を保証しない）")):
+        if _need not in _fb:
+            bad837.append(f"案内に{_why}が無い")
+    if "d.classList.remove('ui-new');d.classList.add('ui-fallback');" not in html:
+        bad837.append("ルーターが動かなかったときに静的な案内へ切り替えない")
+    # JS が無い（クラスなし）・ルーターが動かない（ui-fallback）ときに、案内を出して他を隠す CSS（1つでも欠けると白い画面）
+    for _css, _why in (("html:not(.ui-new):not(.ui-legacy) #nu-fallback,html.ui-fallback #nu-fallback{display:block}",
+                        "案内を表示する"),
+                       ("html:not(.ui-new):not(.ui-legacy) body>*:not(#nu-fallback),", "JS が無いとき案内以外を隠す"),
+                       ("html.ui-fallback body>*:not(#nu-fallback){display:none!important}", "失敗のとき案内以外を隠す")):
+        if _css not in html:
+            bad837.append(f"静的な案内の CSS（{_why}）が無い")
+    if _re.search(r"¥0(?![0-9,])|DEMO", _fb):
+        bad837.append("案内に ¥0・DEMO がある")
+    _add(837, "static_fallback", not bad837,
+         "JS が無い・ルーターが動かないときは静的な案内（生成時点の値・主なページへのリンク）を出す",
+         f"問題: {bad837[:5]}")
+    # #838 UI Phase 10: アーカイブ（過去の LP）も新UIで出し、「その日の記録」と今のサイトへの戻り道を出す
+    bad838 = []
+    _hs838 = html.find("<script>(function(){try{var d=document.documentElement;")
+    if "archive" in (html[_hs838:html.find("</script>", _hs838)]
+                       if "<script>(function(){try{var d=document.documentElement;" in html else ""):
+        bad838.append("head のスクリプトがアーカイブで新UIを止めている（白い画面になる）")
+    for _js, _why in (("root.setAttribute('data-nu-archive', ARCH[1]);", "アーカイブの判定"),
+                      ("a.setAttribute('href', '../' + h.replace(", "別ファイルへのリンクを今のサイトへ書き換える"),
+                      ("note.hidden = false;", "その日の記録の案内を出す")):
+        if _js not in root:
+            bad838.append(f"ルーターに{_why}処理が無い")
+    if 'id="nu-archive-note"' not in root:
+        bad838.append("その日の記録の案内が無い")
+    _arch_idx = PUBLIC_DIR / "archive" / "index.html"
+    try:
+        _ai_txt = _arch_idx.read_text(encoding="utf-8") if _arch_idx.exists() else ""
+    except OSError:
+        _ai_txt = ""
+    if 'http-equiv="refresh"' not in _ai_txt or 'url=../' not in _ai_txt:
+        bad838.append("docs/archive/index.html（今のサイトへの転送）が無い")
+    _add(838, "archive_new_ui", not bad838,
+         "アーカイブも新UIで出す（その日の記録の案内・今のサイトへの戻り道・archive/ から今のサイトへの転送）",
+         f"問題: {bad838[:5]}")
     n_nav = root.count('class="nu-bottomnav__link"')
     _add(804, "new_ui_bottom_nav", n_nav == 5, "ボトムナビが5項目", f"{n_nav}項目")
     try:

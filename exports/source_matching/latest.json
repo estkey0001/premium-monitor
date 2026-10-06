@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-06 15:02 JST",
+  "generated_at": "2026-10-06 17:54 JST",
   "scope": "商品同一性マッチング精度（利益/AI/UI/SaaS/DQ思想は不変）",
   "accuracy": {
     "product_match_accuracy": 1.0,
@@ -10,13 +10,13 @@
     "detected_mismatches_total": 0,
     "detected_mismatches_rejected": 0,
     "independently_verified_exact": 6,
-    "unverifiable_trusted": 218,
+    "unverifiable_trusted": 212,
     "accessory_misclassification": 0,
     "false_main_promotion": 0,
     "duplicate_patterns": 6,
     "high_risk_duplicates": 0,
     "duplicate_reviewed_pct": 0.3333,
-    "manual_review_queue": 80
+    "manual_review_queue": 77
   },
   "targets": {
     "product_match": ">=0.99",
@@ -26,13 +26,13 @@
     "false_main_promotion": 0
   },
   "totals": {
-    "total": 235,
-    "product_mismatch_or_unverified": 229,
-    "model_unverifiable": 218,
-    "main_rejected": 229,
+    "total": 229,
+    "product_mismatch_or_unverified": 223,
+    "model_unverifiable": 212,
+    "main_rejected": 223,
     "model_match": 17,
-    "manual_review_required": 80,
-    "accessory_detected": 11,
+    "manual_review_required": 77,
+    "accessory_detected": 8,
     "exact_product_match": 6,
     "main_eligible": 6
   },
@@ -61,11 +61,11 @@
       "main_eligible": 0
     },
     "モバイル一番": {
-      "total": 8,
-      "product_mismatch_or_unverified": 8,
-      "model_unverifiable": 8,
-      "main_rejected": 8,
-      "manual_review_required": 8,
+      "total": 5,
+      "product_mismatch_or_unverified": 5,
+      "model_unverifiable": 5,
+      "main_rejected": 5,
+      "manual_review_required": 5,
       "exact_product_match": 0,
       "capacity_mismatch": 0,
       "model_mismatch": 0,
@@ -286,17 +286,6 @@
       "model_mismatch": 0,
       "main_eligible": 0
     },
-    "Amazon JP (新品出品)": {
-      "total": 3,
-      "product_mismatch_or_unverified": 3,
-      "model_unverifiable": 3,
-      "accessory_detected": 3,
-      "main_rejected": 3,
-      "exact_product_match": 0,
-      "capacity_mismatch": 0,
-      "model_mismatch": 0,
-      "main_eligible": 0
-    },
     "src_ebay": {
       "total": 6,
       "product_mismatch_or_unverified": 6,
@@ -333,7 +322,7 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 45.1,
+      "first_seen": 45.2,
       "last_seen": 0.0,
       "risk_level": "medium",
       "possible_reason": [
@@ -364,7 +353,7 @@
         "new"
       ],
       "first_seen": 9999.0,
-      "last_seen": 3.6,
+      "last_seen": 3.7,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -394,8 +383,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 57.1,
-      "last_seen": 57.1,
+      "first_seen": 57.2,
+      "last_seen": 57.2,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -424,8 +413,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 57.1,
-      "last_seen": 57.1,
+      "first_seen": 57.2,
+      "last_seen": 57.2,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -454,8 +443,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 57.1,
-      "last_seen": 57.1,
+      "first_seen": 57.2,
+      "last_seen": 57.2,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -484,7 +473,7 @@
         "new"
       ],
       "first_seen": 9999.0,
-      "last_seen": 3.6,
+      "last_seen": 3.7,
       "risk_level": "low",
       "possible_reason": [
         "same_price_multiple_skus"
@@ -618,13 +607,13 @@
     },
     {
       "source": "モバイル一番",
-      "observations": 8,
-      "score": 73,
+      "observations": 5,
+      "score": 72,
       "identity": 0.0,
       "capacity": 1.0,
       "model": 1.0,
       "condition": 1.0,
-      "freshness": 0.625,
+      "freshness": 0.4,
       "main_eligible": 0
     },
     {
@@ -757,17 +746,6 @@
       "model": 1.0,
       "condition": 1.0,
       "freshness": 0.125,
-      "main_eligible": 0
-    },
-    {
-      "source": "Amazon JP (新品出品)",
-      "observations": 3,
-      "score": 65,
-      "identity": 0.0,
-      "capacity": 1.0,
-      "model": 1.0,
-      "condition": 1.0,
-      "freshness": 1.0,
       "main_eligible": 0
     }
   ],

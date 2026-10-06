@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-06 15:02 JST",
+  "generated_at": "2026-10-06 17:54 JST",
   "scores": {
     "Security": 90,
     "Reliability": 85,
@@ -21,8 +21,8 @@
       "SaaS 実稼働（実OAuth/Stripe/常時API/マネージドDB）は外部基盤が必要（ROADMAP記載）"
     ],
     "Medium": [
-      "stale率 50%（サンプル/手動データ鮮度・日次運用で改善）",
-      "item_url率 46%（確認導線/再現性の改善余地）",
+      "stale率 52%（サンプル/手動データ鮮度・日次運用で改善）",
+      "item_url率 48%（確認導線/再現性の改善余地）",
       "Coverage 7カテゴリ（Apple/GPU等の拡充で候補増）"
     ],
     "Low": [
@@ -50,11 +50,11 @@
     "auth_billing_env_gated": true
   },
   "data_quality": {
-    "stale_rate": 0.5021,
-    "zero_rate": 0.1787,
-    "item_url_rate": 0.4596,
-    "usable": 65,
-    "total": 235,
+    "stale_rate": 0.5153,
+    "zero_rate": 0.1616,
+    "item_url_rate": 0.4803,
+    "usable": 67,
+    "total": 229,
     "ebay_configured": false,
     "coverage_score": 43,
     "main_routes": 0,

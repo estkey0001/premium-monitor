@@ -1,24 +1,24 @@
 {
-  "generated_at": "2026-10-06 21:33 JST",
+  "generated_at": "2026-10-06 23:29 JST",
   "date": "2026-10-06",
   "health_score": {
     "data_quality": 14.7,
     "profit_discovery": 0.0,
-    "source_health": 13.0,
-    "link_quality": 4.7,
+    "source_health": 12.7,
+    "link_quality": 4.8,
     "freshness": 4.8,
-    "total": 37.2
+    "total": 37.0
   },
   "data_quality": {
-    "total_obs": 228,
+    "total_obs": 227,
     "usable_obs": 65,
     "stale_count": 118,
-    "stale_rate": 0.5175,
+    "stale_rate": 0.5198,
     "zero_count": 37,
-    "zero_rate": 0.1623,
-    "item_url_rate": 0.4737,
-    "search_url_rate": 0.2061,
-    "manual_rate": 0.5132,
+    "zero_rate": 0.163,
+    "item_url_rate": 0.4758,
+    "search_url_rate": 0.207,
+    "manual_rate": 0.511,
     "api_rate": 0.0,
     "html_rate": 0.0088
   },
@@ -326,33 +326,21 @@
         "medium": 2
       },
       "n": 2
-    },
-    "Amazon JP (新品出品)": {
-      "success_count": 1,
-      "stale_count": 0,
-      "zero_count": 0,
-      "item_url_rate": 0.0,
-      "freshness": 1.0,
-      "success_rate": 1.0,
-      "confidence": {
-        "medium": 1
-      },
-      "n": 1
     }
   },
   "diff_vs_prev": {
     "available": true,
     "stale_rate": {
-      "prev": 0.5153,
-      "cur": 0.5175
+      "prev": 0.5175,
+      "cur": 0.5198
     },
     "zero_rate": {
-      "prev": 0.1616,
-      "cur": 0.1623
+      "prev": 0.1623,
+      "cur": 0.163
     },
     "item_url_rate": {
-      "prev": 0.4803,
-      "cur": 0.4737
+      "prev": 0.4737,
+      "cur": 0.4758
     },
     "main_route_count": {
       "prev": 0,
@@ -374,8 +362,7 @@
       "取得成功率 0%: ネットオフ"
     ],
     "warning": [
-      "item_url率 低下",
-      "item_url率 47% (<50%)"
+      "item_url率 48% (<50%)"
     ],
     "info": []
   },

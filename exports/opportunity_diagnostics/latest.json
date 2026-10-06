@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-06T21:33:26+09:00",
+  "generated_at": "2026-10-06T23:29:59+09:00",
   "note": "内部用（運営者向け）。一般の画面には出さない。掲載の判定は opportunity.eligibility が正本",
   "candidate_count": 45,
   "eligible_count": 1,
@@ -659,7 +659,7 @@
         "price": 211800,
         "price_type": "RETAIL",
         "source": "src_ricoh_imaging",
-        "verified_at": "2026-10-06T20:44:19+09:00",
+        "verified_at": "2026-10-06T22:38:59+09:00",
         "url": "https://ricohimagingstore.com/Form/Product/ProductList.aspx?shop=0&cat=002010",
         "note": ""
       },
@@ -671,7 +671,7 @@
         "price": 222000,
         "price_type": "RETAIL",
         "source": "src_ricoh_imaging",
-        "verified_at": "2026-10-06T20:46:20+09:00",
+        "verified_at": "2026-10-06T22:43:00+09:00",
         "url": "https://ricohimagingstore.com/Form/Product/ProductList.aspx?shop=0&cat=002010",
         "note": ""
       },
@@ -683,7 +683,7 @@
         "price": 299800,
         "price_type": "RETAIL",
         "source": "src_ricoh_imaging",
-        "verified_at": "2026-10-06T20:48:19+09:00",
+        "verified_at": "2026-10-06T22:44:59+09:00",
         "url": "https://ricohimagingstore.com/Form/Product/ProductList.aspx?shop=0&cat=002010",
         "note": ""
       },
@@ -1092,7 +1092,7 @@
         "rows": 24,
         "fresh": 17,
         "stale": 7,
-        "last_observed": "2026-10-06T20:24:15.815054+09:00"
+        "last_observed": "2026-10-06T22:20:55.067648+09:00"
       },
       {
         "source": "ブックオフ",
@@ -1116,14 +1116,14 @@
         "source": "買取一丁目",
         "rows": 4,
         "fresh": 4,
-        "last_observed": "2026-10-06T20:18:10+09:00"
+        "last_observed": "2026-10-06T22:14:49+09:00"
       },
       {
         "source": "買取商店",
         "rows": 17,
         "stale": 11,
         "fresh": 6,
-        "last_observed": "2026-10-06T20:22:23+09:00"
+        "last_observed": "2026-10-06T22:19:02+09:00"
       },
       {
         "source": "駿河屋",

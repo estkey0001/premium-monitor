@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-10-06T19:35:08.122869+09:00",
-  "evaluated_at": "2026-10-06T19:35:08.120542+09:00",
+  "generated_at": "2026-10-06T21:03:01.930680+09:00",
+  "evaluated_at": "2026-10-06T21:03:01.928331+09:00",
   "items": [
     {
       "tcg": "POKEMON",
@@ -69,10 +69,10 @@
       "start_countdown": null,
       "purchase_countdown": {
         "remaining_days": 13,
-        "remaining_hours": 21,
-        "remaining_minutes": 23,
-        "remaining_seconds": 1200231,
-        "label": "13日21時間"
+        "remaining_hours": 19,
+        "remaining_minutes": 55,
+        "remaining_seconds": 1194958,
+        "label": "13日19時間"
       }
     },
     {
@@ -142,10 +142,10 @@
       "start_countdown": null,
       "purchase_countdown": {
         "remaining_days": 13,
-        "remaining_hours": 21,
-        "remaining_minutes": 23,
-        "remaining_seconds": 1200231,
-        "label": "13日21時間"
+        "remaining_hours": 19,
+        "remaining_minutes": 55,
+        "remaining_seconds": 1194958,
+        "label": "13日19時間"
       }
     },
     {
@@ -199,8 +199,8 @@
       "verified": true,
       "verified_by": null,
       "published_at": "2026-09-18T00:00:00+09:00",
-      "observed_at": "2026-10-06T19:28:37.514850+09:00",
-      "last_verified_at": "2026-10-06T19:28:37.514854+09:00",
+      "observed_at": "2026-10-06T20:56:31.595933+09:00",
+      "last_verified_at": "2026-10-06T20:56:31.595938+09:00",
       "collection_method": "HTML",
       "status": "CLOSED",
       "conflict": false,
@@ -263,8 +263,8 @@
       "verified": true,
       "verified_by": null,
       "published_at": "2026-09-18T00:00:00+09:00",
-      "observed_at": "2026-10-06T19:29:37.469984+09:00",
-      "last_verified_at": "2026-10-06T19:29:37.469988+09:00",
+      "observed_at": "2026-10-06T20:57:31.600525+09:00",
+      "last_verified_at": "2026-10-06T20:57:31.600530+09:00",
       "collection_method": "HTML",
       "status": "CLOSED",
       "conflict": false,
@@ -327,8 +327,8 @@
       "verified": true,
       "verified_by": null,
       "published_at": "2026-09-18T00:00:00+09:00",
-      "observed_at": "2026-10-06T19:30:37.353556+09:00",
-      "last_verified_at": "2026-10-06T19:30:37.353561+09:00",
+      "observed_at": "2026-10-06T20:58:31.579620+09:00",
+      "last_verified_at": "2026-10-06T20:58:31.579624+09:00",
       "collection_method": "HTML",
       "status": "CLOSED",
       "conflict": false,
@@ -391,8 +391,8 @@
       "verified": true,
       "verified_by": null,
       "published_at": "2026-09-18T00:00:00+09:00",
-      "observed_at": "2026-10-06T19:30:37.353753+09:00",
-      "last_verified_at": "2026-10-06T19:30:37.353756+09:00",
+      "observed_at": "2026-10-06T20:58:31.579826+09:00",
+      "last_verified_at": "2026-10-06T20:58:31.579828+09:00",
       "collection_method": "HTML",
       "status": "CLOSED",
       "conflict": false,
@@ -455,8 +455,8 @@
       "verified": true,
       "verified_by": null,
       "published_at": "2026-08-21T00:00:00+09:00",
-      "observed_at": "2026-10-06T19:27:36.743125+09:00",
-      "last_verified_at": "2026-10-06T19:27:36.743129+09:00",
+      "observed_at": "2026-10-06T20:55:30.851816+09:00",
+      "last_verified_at": "2026-10-06T20:55:30.851820+09:00",
       "collection_method": "HTML",
       "status": "ENDED",
       "conflict": false,
@@ -519,8 +519,8 @@
       "verified": true,
       "verified_by": null,
       "published_at": "2026-08-21T00:00:00+09:00",
-      "observed_at": "2026-10-06T19:27:36.744768+09:00",
-      "last_verified_at": "2026-10-06T19:27:36.744771+09:00",
+      "observed_at": "2026-10-06T20:55:30.853501+09:00",
+      "last_verified_at": "2026-10-06T20:55:30.853504+09:00",
       "collection_method": "HTML",
       "status": "ENDED",
       "conflict": false,

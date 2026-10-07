@@ -1,21 +1,21 @@
 {
-  "generated_at": "2026-10-07T19:57:52+09:00",
+  "generated_at": "2026-10-08T00:27:00+09:00",
   "collection": {
     "total_shops": 16,
-    "shops_with_success": 3,
-    "shops_all_failed": 11,
+    "shops_with_success": 2,
+    "shops_all_failed": 12,
     "total_jobs": 58,
-    "ok_jobs": 15,
-    "failed_jobs": 39,
+    "ok_jobs": 13,
+    "failed_jobs": 41,
     "skip_jobs": 4,
-    "success_rate_pct": 25.9
+    "success_rate_pct": 22.4
   },
   "comparison": {
     "prev_success_rate_pct": 25.9,
-    "current_success_rate_pct": 25.9,
-    "delta_pct": 0.0,
-    "trend": "横ばい",
-    "moving_avg_7d_pct": 21.4,
+    "current_success_rate_pct": 22.4,
+    "delta_pct": -3.5,
+    "trend": "悪化",
+    "moving_avg_7d_pct": 22.0,
     "top5_failure_reasons": [
       {
         "reason": "price_not_found",
@@ -23,7 +23,7 @@
       },
       {
         "reason": "product_not_listed",
-        "count": 6
+        "count": 8
       },
       {
         "reason": "rate_limited_429",
@@ -46,7 +46,7 @@
     },
     {
       "reason": "product_not_listed",
-      "count": 6
+      "count": 8
     },
     {
       "reason": "rate_limited_429",
@@ -82,10 +82,10 @@
     "valid_buyback_by_product": {
       "prod_iphone17pro_256": 2,
       "prod_iphone17pro_512": 2,
-      "prod_iphone17pm_256": 3,
+      "prod_iphone17pm_256": 2,
       "prod_iphone17pm_512": 2,
       "prod_switch2": 1,
-      "prod_ps5_pro": 2,
+      "prod_ps5_pro": 1,
       "prod_iphone17_256": 1,
       "prod_iphone16pro_256": 1,
       "prod_airpods_pro3": 1
@@ -173,6 +173,14 @@
       "optional": true
     },
     {
+      "shop_id": "mobile_ichiban",
+      "ok": 0,
+      "failed": 5,
+      "success_rate_pct": 0,
+      "top_reason": "product_not_listed",
+      "optional": false
+    },
+    {
       "shop_id": "netoff",
       "ok": 0,
       "failed": 4,
@@ -213,14 +221,6 @@
       "optional": true
     },
     {
-      "shop_id": "mobile_ichiban",
-      "ok": 2,
-      "failed": 3,
-      "success_rate_pct": 40,
-      "top_reason": "product_not_listed",
-      "optional": false
-    },
-    {
       "shop_id": "kaitori_itchome",
       "ok": 4,
       "failed": 0,
@@ -240,10 +240,10 @@
   "product_success_rates": {
     "iphone17pro256": 25.0,
     "iphone17pro512": 25.0,
-    "iphone17pm256": 37.5,
+    "iphone17pm256": 25.0,
     "iphone17pm512": 25.0,
     "switch2": 11.1,
-    "ps5_pro": 20.0,
+    "ps5_pro": 10.0,
     "iphone17_256": 100.0,
     "iphone16pro256": 100.0,
     "airpods_pro3": 100.0
@@ -251,55 +251,55 @@
   "consecutive_failed_shops": [
     {
       "shop_id": "2ndstreet",
-      "consecutive_failures": 184
+      "consecutive_failures": 185
     },
     {
       "shop_id": "bookoff",
-      "consecutive_failures": 184
+      "consecutive_failures": 185
     },
     {
       "shop_id": "dosupara",
-      "consecutive_failures": 184
+      "consecutive_failures": 185
     },
     {
       "shop_id": "geo_mobile",
-      "consecutive_failures": 184
+      "consecutive_failures": 185
     },
     {
       "shop_id": "hardoff",
-      "consecutive_failures": 184
+      "consecutive_failures": 185
     },
     {
       "shop_id": "janpara",
-      "consecutive_failures": 184
+      "consecutive_failures": 185
     },
     {
       "shop_id": "pasoko",
-      "consecutive_failures": 184
+      "consecutive_failures": 185
     },
     {
       "shop_id": "sofmap",
-      "consecutive_failures": 184
+      "consecutive_failures": 185
     },
     {
       "shop_id": "surugaya",
-      "consecutive_failures": 184
+      "consecutive_failures": 185
     },
     {
       "shop_id": "tsutaya",
-      "consecutive_failures": 184
+      "consecutive_failures": 185
     },
     {
       "shop_id": "iosys",
-      "consecutive_failures": 117
+      "consecutive_failures": 118
     },
     {
       "shop_id": "netoff",
-      "consecutive_failures": 44
+      "consecutive_failures": 45
     },
     {
       "shop_id": "geo",
-      "consecutive_failures": 23
+      "consecutive_failures": 24
     }
   ],
   "improvement_priority": [
@@ -311,7 +311,7 @@
     },
     {
       "shop_id": "mobile_ichiban",
-      "failed": 3,
+      "failed": 5,
       "top_reason": "product_not_listed",
       "priority": "required"
     }
@@ -321,10 +321,10 @@
     "camera_auto_high_confidence_count": 17,
     "camera_auto_low_confidence_count": 0,
     "camera_manual_fallback_count": 43,
-    "camera_rejected_candidate_count": 195,
+    "camera_rejected_candidate_count": 203,
     "camera_rejection_reasons": {
-      "model_mismatch": 128,
-      "not_buyback_context": 67
+      "model_mismatch": 152,
+      "not_buyback_context": 51
     },
     "per_brand_success_rates": {
       "FUJIFILM": {

@@ -1,0 +1,1 @@
+{"generated_at": "2026-10-08T00:26:58+09:00", "status": "PENDING_USER_CONFIGURATION", "gates": {"credentials": false, "approval": false, "licence": false, "enabled": false, "dry_run": true}, "mode": "canary", "stage": "canary", "targets": ["prod_ps5_pro"], "network_used": false, "skipped": true}

@@ -1,6 +1,6 @@
 # Production Readiness Report
 
-生成: 2026-10-07 19:57 JST
+生成: 2026-10-08 00:27 JST
 
 ## Overall Score: **80.2 / 100**
 
@@ -30,7 +30,7 @@
 - SaaS 実稼働（実OAuth/Stripe/常時API/マネージドDB）は外部基盤が必要（ROADMAP記載）
 
 ### Medium
-- stale率 50%（サンプル/手動データ鮮度・日次運用で改善）
+- stale率 51%（サンプル/手動データ鮮度・日次運用で改善）
 - item_url率 48%（確認導線/再現性の改善余地）
 - Coverage 7カテゴリ（Apple/GPU等の拡充で候補増）
 
@@ -51,7 +51,7 @@
 
 ## Data Quality（改善優先順）
 
-- stale率 50% / item_url率 48% / EBAY設定 False / Coverage 43
+- stale率 51% / item_url率 48% / EBAY設定 False / Coverage 43
   1. EBAY_APP_ID設定（海外sold fresh化・最大効果）
   2. 買取/フリマ日次更新でstale率低下
   3. item_url個別化

@@ -1,12 +1,12 @@
 # データ品質エンジン（Data Quality Engine）
 
-> 生成: 2026-10-07 19:57 JST / 対象: データ取得・正規化・品質管理のみ（利益/AI/UI/SaaSロジックは不変）
+> 生成: 2026-10-08 00:27 JST / 対象: データ取得・正規化・品質管理のみ（利益/AI/UI/SaaSロジックは不変）
 
 ## 総合 Data Quality Score: **68 / 100** — 判定: **CONDITIONAL_GO**
 
 | 次元 | スコア |
 |------|-------|
-| Freshness 鮮度 | 47 |
+| Freshness 鮮度 | 46 |
 | Completeness 完全性 | 50 |
 | Accuracy 正確性 | 98 |
 | Coverage 網羅 | 100 |
@@ -18,17 +18,17 @@
 - EBAY_APP_ID 未設定 → 海外売却ルートは stale（改善計画①で+25pt見込み）
 
 ## ダッシュボード（現況ビュー）
-- 生観測: 229 件 / 現況ユニーク: 214 キー
+- 生観測: 227 件 / 現況ユニーク: 212 キー
 - 重複履歴: 15 件（6.6%）
 
 ### カテゴリ別
 | カテゴリ | 総数 | 正常 | ¥0(非対応) | ¥0(実失敗) | stale | 更新成功率 |
 |---|--:|--:|--:|--:|--:|--:|
-| prod | 214 | 77 | 27 | 10 | 100 | 41% |
+| prod | 212 | 75 | 27 | 10 | 100 | 41% |
 
 ## 自動化カバレッジ（透明性）
-- 手段内訳: {'official_concept': 38, 'other': 7, 'auto_scraped': 32, 'manual_curated': 94, 'fetch_failed': 37, 'overseas_history': 6}
-- 自動スクレイプ率: 15% / 手動キュレーション率: 44%
+- 手段内訳: {'official_concept': 38, 'other': 7, 'auto_scraped': 30, 'manual_curated': 94, 'fetch_failed': 37, 'overseas_history': 6}
+- 自動スクレイプ率: 14% / 手動キュレーション率: 44%
 - fresh のうち手動由来: 0% / 自動+定価由来: 61%
 > 鮮度の相当部分が手動キュレーション由来（ToS遵守の意図的設計）。自動化カバレッジ拡大（特に eBay API=EBAY_APP_ID）が主要な改善レバー。
 

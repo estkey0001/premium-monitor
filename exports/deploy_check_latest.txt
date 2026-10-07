@@ -1,7 +1,7 @@
 
 ============================================================
- Deploy Check (465 items)
- 実行日時: 2026-10-07T19:57:59+09:00
+ Deploy Check (467 items)
+ 実行日時: 2026-10-08T00:27:06+09:00
 ============================================================
   ✅ [index_exists] docs/index.html 存在
   ✅ [forbidden_phrases] 禁止表現なし
@@ -10,7 +10,7 @@
   ✅ [line_cta_off] LINE CTA非表示（正常）
   ✅ [telegram_cta_off] Telegram CTA非表示（正常）
   ✅ [analytics_empty] GA ID未設定 → GAスニペット非出力（正常）
-  ✅ [today_date] 今日の日付 2026-10-07 あり
+  ✅ [today_date] 今日の日付 2026-10-08 あり
   ✅ [price_exists] 価格表記あり
   ✅ [disclaimer] 免責事項あり
   ✅ [data_track] data-track属性あり
@@ -45,7 +45,7 @@
   ✅ [no_mainichi_koshin_text] 「毎日更新」表記は topbar/footer 内のみ（正常）
   ✅ [deal_card_no_saishin_label] updated-row に旧「最終更新：」表記なし（価格確認：に統一済み）
   ✅ [stale_banner_date_mismatch] #144 「本日の価格データ未更新」が HTML に存在しない（OK: トップ警告抑制済み）
-  ✅ [csv_today_observed_at] manual_buyback_prices.csv に本日(2026-10-07)の observed_at あり
+  ⚠️ [csv_today_observed_at] manual_buyback_prices.csv に本日(2026-10-08)の observed_at なし（手動更新が必要な可能性）
   ✅ [iphone17_price_fetched] iPhone 17 Pro 系の買取価格が1件以上取得されている
   ✅ [mobile_ichiban_price] モバイル一番の買取価格（price > 0）が存在する
   ✅ [no_price_zero_shown] LP上に¥0の価格表記なし（0価格行は非表示 or fetch_failed表示で正常）
@@ -53,30 +53,30 @@
   ✅ [fetch_failed_no_price_calc] fetch_failed 行の価格欄が「—」（価格計算に使われていない）
   ✅ [game_console_shops] ゲーム機向け店舗が表示されている: ['ゲオ', 'イオシス', 'ブックオフ', '駿河屋', 'ソフマップ', 'TSUTAYA', '買取商店']
   ✅ [switch2_game_shop_links] Switch 2 / ゲーム機向け確認リンク（ゲオ/ブックオフ/駿河屋/ソフマップ）が存在する
-  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-10-07T18:20:22+09:00）
+  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-10-07T23:29:19+09:00）
   ⚠️ [suspicious_price_format] suspicious_prices 形式OK（suspicious_price 1件あり — 確認推奨）
-  ✅ [fetch_failed_has_reason] fetch_failed 43件すべてに reason あり
+  ✅ [fetch_failed_has_reason] fetch_failed 45件すべてに reason あり
   ✅ [collector_report_html_exists] docs/collector_report.html 存在
   ✅ [collector_report_link_in_lp] LP内に collector_report.html へのリンクがある
-  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 11件存在する: ['iphone17pm512', 'iphone17_256', 'iphone17pro256', 'iphone17pm256']
-  ✅ [beginner_page_auto_scraped_exists] 自動取得 OK 15件 / total 58件
+  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 10件存在する: ['iphone17pro256', 'iphone17pm256', 'iphone17pm512', 'iphone17pro512']
+  ✅ [beginner_page_auto_scraped_exists] 自動取得 OK 13件 / total 58件
   ✅ [iphone17pro256_price_scraped] iPhone 17 Pro 256GB の価格取得成功: ['kaitori_shouten', 'kaitori_itchome']
-  ✅ [fetch_failed_has_reason_field] 全取得失敗エントリーに reason フィールドあり（43件）
+  ✅ [fetch_failed_has_reason_field] 全取得失敗エントリーに reason フィールドあり（45件）
   ✅ [auto_scraped_link_verified] auto_scraped行のlink_verifiedはすべてtrue（URL推測なし）
-  ⚠️ [iphone_min3_shops] iPhone商品の成功店舗数が3未満: iphone17pro256:2店舗, iphone17pro512:2店舗, iphone17pm512:2店舗
+  ⚠️ [iphone_min3_shops] iPhone商品の成功店舗数が3未満: iphone17pro256:2店舗, iphone17pro512:2店舗, iphone17pm256:2店舗, iphone17pm512:2店舗
   ⚠️ [switch2_min2_shops] Switch2の成功店舗数が2未満: 1店舗
-  ✅ [ps5pro_min2_shops] PS5 Pro 成功店舗≥2（2店舗）
+  ⚠️ [ps5pro_min2_shops] PS5 Proの成功店舗数が2未満: 1店舗
   ✅ [no_unknown_failure_reason] すべての取得失敗に reason が設定されている（unknown なし）
   ✅ [debug_files_saved] exports/debug/ に診断ファイル 62件あり
   ✅ [low_confidence_not_in_lp] confidence=low 価格がLPに含まれていない（low=0件）
   ✅ [suspicious_price_not_in_lp] suspicious_price がLPに含まれていない（要疑い価格=1件）
   ✅ [quality_gate_script_exists] scripts/check_collector_quality.py が存在
   ✅ [quality_gate_in_workflow] GitHub Actions に quality gate step がある
-  ✅ [collector_summary_in_report] latest.json summary OK: 15/58 (26%)
+  ✅ [collector_summary_in_report] latest.json summary OK: 13/58 (22%)
   ✅ [playwright_install_in_workflow] daily_lp.yml に playwright install --with-deps chromium が存在
   ✅ [workflow_concurrency_set] daily_lp.yml に concurrency: group=daily-lp-update が設定されている
   ✅ [workflow_concurrency_no_cancel] daily_lp.yml の concurrency が cancel-in-progress: false（後続を待機）
-  ✅ [workflow_pull_rebase_before_push] Commit and push ステップに git pull --rebase origin main がある
+  ✅ [workflow_pull_rebase_before_push] Commit and push ステップが、push を拒否されたら git pull --rebase --autostash で取り込み直す
   ✅ [no_collector_not_loaded] collector_not_loaded = 0（すべて not_supported または実装済み）
   ✅ [no_playwright_not_installed] playwright_not_installed = 0
   ✅ [github_actions_threshold_exists] check_collector_quality.py に IS_GITHUB_ACTIONS フラグが存在
@@ -133,8 +133,8 @@
   ✅ [sedori_report_exists] #292 exports/sedori_routes_report/latest.json が存在する
   ✅ [sedori_beginner_routes] #293 sedori_routes_report に beginner_routes フィールドがある
   ✅ [sedori_pro_routes] #294 sedori_routes_report に pro_routes フィールドがある
-  ✅ [ebay_api_primary] #296 eBay Finding API が primary method として実装されている
-  ✅ [ebay_api_key_handling] #297 EBAY_APP_ID 未設定時の html_blocked 分類が実装されている
+  ✅ [ebay_api_primary] #296 eBay の HTML の取得は停止・廃止された Finding API を呼ばない（成約は Marketplace Insights API）
+  ✅ [ebay_api_key_handling] #297 eBay を取得しないときの html_blocked 分類が実装されている
   ✅ [ebay_blocked_classified] #298 eBay アクセス拒否が site_blocked として正常分類される
   ✅ [overseas_history_csv_exists] #299 data/overseas_price_history.csv が存在する
   ✅ [overseas_alert_logic] #300 update_alerts.py に overseas_price_surge / overseas_price_drop ロジックが存在する
@@ -188,7 +188,7 @@
   ✅ [ranking_empty_reason] #482 beginner ランキングが0件なら理由が表示される（beginner=2）
   ✅ [sedori_empty_reason] #483 sedori ルートが0件なら理由が表示される（routes=0）
   ✅ [overseas_stale_excluded] #484 overseas stale は主計算から除外する方針が明示されている
-  ✅ [ebay_app_id_warning] #485 EBAY_APP_ID 未設定時に明確な warning を出す
+  ✅ [ebay_app_id_warning] #485 eBay を取らない理由（Finding API は廃止・成約は Marketplace Insights）を明示する
   ✅ [data_quality_report_present] #487 データ品質レポートに 成功率/失敗理由/有効データ数/ranking・sedori使用数 が出る
   ✅ [camera_buyback_collector_present] #488 カメラ買取コレクターが daily_lp.yml にあり camera_buyback_status.json を出力
   ✅ [ebay_app_id_documented] #489 EBAY_APP_ID の設定手順が README / CLAUDE.md に記載されている
@@ -242,7 +242,7 @@
   ✅ [camera_tradein_exclude] #542 カメラ買取が下取(15%UP等)価格を現金買取価格から分離・除外している
   ✅ [sedori_overseas_sell] #543 せどり計算の売却先が「買取価格＋海外販売価格」になっている（NPO PRO_SELL_TYPES）
   ✅ [top_camera_reference_guard] #544 Top Camera Buyback が参照価格(公式/定価)未取得の商品を除外している
-  ✅ [npo_exists] #545 normalized_price_observations/latest.json が存在する（229観測）
+  ✅ [npo_exists] #545 normalized_price_observations/latest.json が存在する（227観測）
   ✅ [npo_price_role_required] #546 全観測に price_role が付与されている
   ✅ [npo_tradein_not_main] #547 trade_in_price が main calculation（最高買取等）に使われない
   ✅ [npo_pro_buy_no_buyback] #548 Pro route の buy 側に buyback_price が使われない
@@ -292,7 +292,7 @@
   ✅ [profit_route_age_fields] #604 main route に buy_age_days / sell_age_days が含まれる
   ✅ [profit_route_reproducibility] #605 reproducibility_score がルートに付与される
   ✅ [health_diff_shown] #613 前日比較が表示される
-  ✅ [health_critical_classification] #614 異常が Critical/Warning/Info に分類される（C4/W1/I0）
+  ✅ [health_critical_classification] #614 異常が Critical/Warning/Info に分類される（C4/W2/I0）
   ✅ [ai_opportunity_score] #616 Opportunity Score（0-100）が全候補に付与される
   ✅ [ai_buy_decision] #617 BUY/WATCH/PASS 判定が付与される
   ✅ [ai_daily_recommendation] #618 今日のおすすめ（Daily Recommendation）が生成物に付与される
@@ -302,7 +302,7 @@
   ✅ [ai_today_tasks] #626 今日やること（Today Tasks）が表示される（1件）
   ✅ [ai_probability_forecast_trend] #627 成立確率/次回更新予測/価格トレンドが付与される
   ✅ [notification_events_exists] #628 notifications/latest.json が存在する（events 0）
-  ✅ [notification_history] #629 notifications/history/ に履歴が保存される（77日分）
+  ✅ [notification_history] #629 notifications/history/ に履歴が保存される（78日分）
   ✅ [notification_suppression] #630 通知抑制（24h再送禁止・ROI+5%例外）が実装される
   ✅ [notification_priority] #631 通知に priority（Critical/High/Medium/Low）が付与される
   ✅ [notification_channels] #633 通知チャネル（Discord/Telegram）が定義される
@@ -431,8 +431,8 @@
   ✅ [tcg_blocked_source_not_healthy] #762 アクセス拒否（HTTP 403 等）の監視元を正常扱いしない
   ✅ [tcg_entry_url_official_only] #763 応募ページへのリンクは公式サイトの URL のみ
   ✅ [tcg_lottery_coverage_report] #764 抽選の監視状況（登録 / 実装 / 正常 / 拒否 / 未実装）が出力されている
-  ✅ [tcg_lottery_real_data] #765 抽選を実データで取得している（6件）、または監視元が正常に0件を返している
-  ✅ [tcg_release_schedule_shown] #841 公式の発売予定（13件）が新UIの抽選・予約に出ている
+  ✅ [tcg_lottery_real_data] #765 抽選を実データで取得している（2件）、または監視元が正常に0件を返している
+  ✅ [tcg_release_schedule_shown] #841 公式の発売予定（12件）が新UIの抽選・予約に出ている
   ✅ [no_legacy_ui] #800 旧UIの DOM・CSS・JS が残っていない
   ✅ [new_ui_root] #801 新UIの root（#new-ui-root）が1つあり、終わりの目印がある
   ✅ [new_ui_default] #802 新UIが既定（?ui=legacy も新UI。新UIは JS が表示を決めてから出す）
@@ -447,12 +447,14 @@
   ✅ [new_ui_no_internal_info] #808 新UIの一般のページに運営者向けの内部情報を出していない（運営者向けのページは別）
   ✅ [admin_ui_safe] #836 運営者向けのページに秘密の値・偽の操作・偽のログイン表示・DEMO が無く、8つの区分がそろっている
   ✅ [new_ui_safe_links] #809 新UIのリンクは https: かサイト内の相対パスだけ
-  ✅ [new_ui_vm_fidelity] #810 抽選の表示モデル（VM）が元データと一致する（27件）
+  ✅ [new_ui_vm_fidelity] #810 抽選の表示モデル（VM）が元データと一致する（22件）
   ✅ [admin_has_legacy_operator_info] #839 旧UIにしか無かった運営の情報が運営者向けのページにある
   ✅ [legacy_intents_on_new_ui] #840 旧UIの検査の意図（14日より古い価格・0円・未照合・中古を確定に使わない、取得の警告の強さ）を新UIの判定で満たす
   ✅ [source_safety] #842 取得の安全性（robots.txt・ブロックで打ち切り・正直な User-Agent・規約上取らない取得元を取らない）
   ✅ [api_secret_safety] #843 API の安全性（公開する全ページ・成約の記録に秘密の値・認証の値が無い）
   ✅ [sold_semantics] #844 成約の意味（根拠のある成約だけ・成約中央値は3件以上と期間・出品を売値にしない）
+  ✅ [ebay_sold_gates] #845 eBay の成約（CI のステップは既定で取りに行かない・資格情報 / 承認 / ライセンス / 取得の明示が欠けたら通信0・token を伏せる）
+  ✅ [ebay_finding_api_removed] #846 廃止された eBay Finding API・eBay の検索結果の HTML を取るコードを呼んでいない
   ✅ [no_rejected_price_published] #820 明らかに誤りの買取価格が CSV（LP・利益計算の入力）に残っていない
   ✅ [official_price_not_generation_time] #821 公式定価の観測時刻が生成時刻になっていない（確認日・実際の取得時刻を保持）
   ✅ [no_timestamp_only_update] #822 手動 CSV で「値は同じで日時だけ新しい」更新をしていない（作業ツリーと直近のコミット）
@@ -469,7 +471,7 @@
   ✅ [opportunity_sell_identity_verified] #833 利益に使った売却価格はすべて商品照合済みの買取価格で、商品詳細の表の確認済みの行と一致（1件）
   ✅ [mypage_safe] #834 マイページに DEMO・架空のアカウント表示・危ないリンクが無く、ウォッチは登録済みの商品だけ、想定純利益は商品詳細と同じ
 
-  Errors: 0 | Warnings: 9 | OK: 456
+  Errors: 0 | Warnings: 11 | OK: 456
 
   ✅ Deploy check PASSED
 ============================================================

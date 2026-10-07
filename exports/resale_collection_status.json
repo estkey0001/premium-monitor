@@ -1,5 +1,5 @@
 {
-  "collected_at": "2026-10-07T19:57:49.665044+09:00",
+  "collected_at": "2026-10-08T00:26:57.018560+09:00",
   "platforms": {
     "ebay": {
       "status": "not_supported",
@@ -19,8 +19,8 @@
       "label_jp": "未対応"
     },
     "rakuten": {
-      "status": "html_failed",
-      "label_jp": "HTML取得失敗"
+      "status": "api_disabled",
+      "label_jp": "API未設定・停止（HTML取得は停止）"
     },
     "rakuma_direct": {
       "status": "not_supported",
@@ -72,7 +72,7 @@
       "amazon": "skipped",
       "mercari": "skipped",
       "yahoo": "skipped",
-      "rakuten": "html_failed",
+      "rakuten": "api_disabled",
       "rakuma": "skipped"
     },
     "gr4_hdf": {

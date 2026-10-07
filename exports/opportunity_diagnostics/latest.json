@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-07T19:57:54+09:00",
+  "generated_at": "2026-10-08T00:27:02+09:00",
   "note": "内部用（運営者向け）。一般の画面には出さない。掲載の判定は opportunity.eligibility が正本",
   "candidate_count": 45,
   "eligible_count": 1,
@@ -657,7 +657,7 @@
         "price": 211800,
         "price_type": "RETAIL",
         "source": "src_ricoh_imaging",
-        "verified_at": "2026-10-07T19:36:07+09:00",
+        "verified_at": "2026-10-08T00:05:44+09:00",
         "url": "https://ricohimagingstore.com/Form/Product/ProductList.aspx?shop=0&cat=002010",
         "note": ""
       },
@@ -669,7 +669,7 @@
         "price": 222000,
         "price_type": "RETAIL",
         "source": "src_ricoh_imaging",
-        "verified_at": "2026-10-07T19:38:07+09:00",
+        "verified_at": "2026-10-08T00:09:44+09:00",
         "url": "https://ricohimagingstore.com/Form/Product/ProductList.aspx?shop=0&cat=002010",
         "note": ""
       },
@@ -681,7 +681,7 @@
         "price": 299800,
         "price_type": "RETAIL",
         "source": "src_ricoh_imaging",
-        "verified_at": "2026-10-07T19:40:07+09:00",
+        "verified_at": "2026-10-08T00:11:44+09:00",
         "url": "https://ricohimagingstore.com/Form/Product/ProductList.aspx?shop=0&cat=002010",
         "note": ""
       },
@@ -1000,7 +1000,7 @@
     ]
   },
   "buyback": {
-    "fresh_rows": 32,
+    "fresh_rows": 30,
     "stale_rows": 71,
     "failed_rows": 37,
     "failed_sources": [
@@ -1090,7 +1090,7 @@
         "rows": 24,
         "fresh": 17,
         "stale": 7,
-        "last_observed": "2026-10-07T18:26:30.271416+09:00"
+        "last_observed": "2026-10-07T23:36:59.322134+09:00"
       },
       {
         "source": "ブックオフ",
@@ -1106,23 +1106,22 @@
       },
       {
         "source": "モバイル一番",
-        "rows": 5,
+        "rows": 3,
         "stale": 3,
-        "fresh": 2,
-        "last_observed": "2026-10-07T18:23:30+09:00"
+        "last_observed": "2026-08-10T12:00:00+09:00"
       },
       {
         "source": "買取一丁目",
         "rows": 4,
         "fresh": 4,
-        "last_observed": "2026-10-07T18:21:55+09:00"
+        "last_observed": "2026-10-07T23:32:25+09:00"
       },
       {
         "source": "買取商店",
         "rows": 17,
         "stale": 8,
         "fresh": 9,
-        "last_observed": "2026-10-07T18:26:30+09:00"
+        "last_observed": "2026-10-07T23:36:59+09:00"
       },
       {
         "source": "駿河屋",

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-07T18:26:30+09:00",
+  "generated_at": "2026-10-07T23:36:59+09:00",
   "summary": {
     "total": 60,
     "ok": 17,
@@ -156,7 +156,8 @@
       "all_price_candidates": [],
       "rejected_candidates": [],
       "used_for_save": false,
-      "requests_raw_price": null
+      "requests_raw_price": null,
+      "reused_page": false
     },
     {
       "product_alias": "x100vi",
@@ -166,7 +167,7 @@
       "price": 190000,
       "reason": "",
       "html_saved": false,
-      "html_size": 213287,
+      "html_size": 358290,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -174,7 +175,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 213287,
+      "rendered_html_size": 358290,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -334,8 +335,8 @@
         }
       ],
       "iframe_count": 1,
-      "shadow_dom_detected": false,
-      "dom_ready_state": "interactive",
+      "shadow_dom_detected": true,
+      "dom_ready_state": "complete",
       "hit_count": 8,
       "keyword_hit_counts": {
         "X100VI": 8
@@ -426,7 +427,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=X100VI&search=検索",
-      "buyback_page_html_size": 213287,
+      "buyback_page_html_size": 358290,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -666,7 +667,8 @@
         }
       ],
       "used_for_save": true,
-      "requests_raw_price": null
+      "requests_raw_price": null,
+      "reused_page": false
     },
     {
       "product_alias": "x100vi",
@@ -709,7 +711,8 @@
       "all_price_candidates": [],
       "rejected_candidates": [],
       "used_for_save": false,
-      "requests_raw_price": null
+      "requests_raw_price": null,
+      "reused_page": false
     },
     {
       "product_alias": "gfx100rf",
@@ -762,7 +765,7 @@
       "price": 474000,
       "reason": "",
       "html_saved": false,
-      "html_size": 201161,
+      "html_size": 345625,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -770,7 +773,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 201161,
+      "rendered_html_size": 345625,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -930,8 +933,8 @@
         }
       ],
       "iframe_count": 1,
-      "shadow_dom_detected": false,
-      "dom_ready_state": "interactive",
+      "shadow_dom_detected": true,
+      "dom_ready_state": "complete",
       "hit_count": 2,
       "keyword_hit_counts": {
         "GFX100RF": 2
@@ -1022,7 +1025,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=GFX100RF&search=検索",
-      "buyback_page_html_size": 201161,
+      "buyback_page_html_size": 345625,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -1226,7 +1229,8 @@
         }
       ],
       "used_for_save": true,
-      "requests_raw_price": null
+      "requests_raw_price": null,
+      "reused_page": false
     },
     {
       "product_alias": "gfx100rf",
@@ -1322,7 +1326,7 @@
       "price": 168000,
       "reason": "",
       "html_saved": false,
-      "html_size": 227042,
+      "html_size": 371552,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -1330,7 +1334,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 227042,
+      "rendered_html_size": 371552,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -1490,8 +1494,8 @@
         }
       ],
       "iframe_count": 1,
-      "shadow_dom_detected": false,
-      "dom_ready_state": "interactive",
+      "shadow_dom_detected": true,
+      "dom_ready_state": "complete",
       "hit_count": 14,
       "keyword_hit_counts": {
         "X-T5": 14
@@ -1582,7 +1586,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=X-T5&search=検索",
-      "buyback_page_html_size": 227042,
+      "buyback_page_html_size": 371552,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -1858,7 +1862,8 @@
         }
       ],
       "used_for_save": true,
-      "requests_raw_price": null
+      "requests_raw_price": null,
+      "reused_page": false
     },
     {
       "product_alias": "xt5",
@@ -1962,7 +1967,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 226683,
+      "rendered_html_size": 370974,
       "selector_waited": true,
       "extraction_strategy": "requests",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -2123,7 +2128,7 @@
       ],
       "iframe_count": 1,
       "shadow_dom_detected": true,
-      "dom_ready_state": "interactive",
+      "dom_ready_state": "complete",
       "hit_count": 14,
       "keyword_hit_counts": {
         "RICOH GR III": 14,
@@ -2215,7 +2220,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=RICOH%20GR%20III&search=検索",
-      "buyback_page_html_size": 226683,
+      "buyback_page_html_size": 370974,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -2527,7 +2532,8 @@
         }
       ],
       "used_for_save": false,
-      "requests_raw_price": null
+      "requests_raw_price": null,
+      "reused_page": false
     },
     {
       "product_alias": "gr3",
@@ -2623,7 +2629,7 @@
       "price": 124000,
       "reason": "",
       "html_saved": false,
-      "html_size": 203378,
+      "html_size": 347754,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -2631,7 +2637,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 203378,
+      "rendered_html_size": 347754,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -2791,8 +2797,8 @@
         }
       ],
       "iframe_count": 1,
-      "shadow_dom_detected": false,
-      "dom_ready_state": "interactive",
+      "shadow_dom_detected": true,
+      "dom_ready_state": "complete",
       "hit_count": 3,
       "keyword_hit_counts": {
         "RICOH GR IIIx": 3
@@ -2883,7 +2889,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=RICOH%20GR%20IIIx&search=検索",
-      "buyback_page_html_size": 203378,
+      "buyback_page_html_size": 347754,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -3150,7 +3156,8 @@
         }
       ],
       "used_for_save": true,
-      "requests_raw_price": null
+      "requests_raw_price": null,
+      "reused_page": false
     },
     {
       "product_alias": "gr3x",
@@ -3246,7 +3253,7 @@
       "price": 151000,
       "reason": "",
       "html_saved": false,
-      "html_size": 212150,
+      "html_size": 358216,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -3254,7 +3261,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 212150,
+      "rendered_html_size": 358216,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -3414,8 +3421,8 @@
         }
       ],
       "iframe_count": 1,
-      "shadow_dom_detected": false,
-      "dom_ready_state": "interactive",
+      "shadow_dom_detected": true,
+      "dom_ready_state": "complete",
       "hit_count": 8,
       "keyword_hit_counts": {
         "RICOH GR IV": 8
@@ -3506,7 +3513,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=RICOH%20GR%20IV&search=検索",
-      "buyback_page_html_size": 212150,
+      "buyback_page_html_size": 358216,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -3800,7 +3807,8 @@
         }
       ],
       "used_for_save": true,
-      "requests_raw_price": null
+      "requests_raw_price": null,
+      "reused_page": false
     },
     {
       "product_alias": "gr4",
@@ -3896,7 +3904,7 @@
       "price": 194000,
       "reason": "",
       "html_saved": false,
-      "html_size": 199100,
+      "html_size": 358216,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -3904,29 +3912,56 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 199100,
+      "rendered_html_size": 358216,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "matched_selectors": [
         {
           "selector": "table td",
-          "hits": 4
+          "hits": 24
         },
         {
           "selector": ".price",
-          "hits": 4
+          "hits": 24
         },
         {
           "selector": "[class*='price']",
-          "hits": 4
+          "hits": 24
         },
         {
           "selector": "[class*='assess']",
-          "hits": 9
+          "hits": 53
         }
       ],
       "selector_candidates": [
+        {
+          "selector": "[class*='assess']",
+          "text": "RICOH GR IV Monochrome\n\t\t\t\n\t\t\t\tRICOH\n\t\t\t\n\t\t\t\n\t\t\n\t\t\n\t\t\n\t\t\t\n\t\t",
+          "price": 194000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "RICOH GR IV Monochrome RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新品同様 ￥213,400 良品 ￥212,300 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥194,000\n\t\t\t\t\t\t\n",
+          "price": 194000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "RICOH GR IV Monochrome RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新品同様 ￥213,400 良品 ￥212,300 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥194,000\n\t\t\t\t\t\t\n",
+          "price": 194000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "RICOH GR IV Monochrome RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新品同様 ￥213,400 良品 ￥212,300 買取申し込み 買取検討リストへ"
+        },
         {
           "selector": "[class*='assess']",
           "text": "RICOH GR IV HDF\n\t\t\t\n\t\t\t\tRICOH\n\t\t\t\n\t\t\t\n\t\t\n\t\t\n\t\t\n\t\t\t\n\t\t\t\n\t\t\t\t\n",
@@ -3955,122 +3990,95 @@
           "item_text": "RICOH GR IV HDF RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新品同様 ￥213,400 良品 ￥212,300 買取申し込み 買取検討リストへ"
         },
         {
-          "selector": "table td",
-          "text": "￥213,400",
-          "price": 213400,
-          "near_kw": false,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "RICOH GR IV HDF RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新品同様 ￥213,400 良品 ￥212,300 買取申し込み 買取検討リストへ"
-        },
-        {
-          "selector": ".price",
-          "text": "￥213,400",
-          "price": 213400,
-          "near_kw": false,
-          "near_buyback": false,
-          "is_tradein": false,
-          "item_text": "￥213,400"
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "￥213,400",
-          "price": 213400,
-          "near_kw": false,
-          "near_buyback": false,
-          "is_tradein": false,
-          "item_text": "￥213,400"
-        },
-        {
           "selector": "[class*='assess']",
-          "text": "新品同様\n\t\t\t\t\t\t\t￥213,400\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t良品\n\t",
-          "price": 213400,
-          "near_kw": false,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥171,000\n\t\t\t\t\t\t\n",
+          "price": 171000,
+          "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "RICOH GR IV HDF RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新品同様 ￥213,400 良品 ￥212,300 買取申し込み 買取検討リストへ"
+          "item_text": "GR IV 30th Anniversary Edition Kit（2026年10月21日発売予定） RICOH 買取金額 新品同様 ￥171,000 良品 ￥162,000 下取は10%UP 新品同様 ￥188,100 良品 ￥178,200 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "￥213,400",
-          "price": 213400,
-          "near_kw": false,
-          "near_buyback": false,
-          "is_tradein": false,
-          "item_text": "￥213,400"
-        },
-        {
-          "selector": "table td",
-          "text": "￥212,300",
-          "price": 212300,
-          "near_kw": false,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥171,000\n\t\t\t\t\t\t\n",
+          "price": 171000,
+          "near_kw": true,
           "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "RICOH GR IV HDF RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新品同様 ￥213,400 良品 ￥212,300 買取申し込み 買取検討リストへ"
-        },
-        {
-          "selector": ".price",
-          "text": "￥212,300",
-          "price": 212300,
-          "near_kw": false,
-          "near_buyback": false,
-          "is_tradein": false,
-          "item_text": "￥212,300"
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "￥212,300",
-          "price": 212300,
-          "near_kw": false,
-          "near_buyback": false,
-          "is_tradein": false,
-          "item_text": "￥212,300"
+          "is_tradein": true,
+          "item_text": "GR IV 30th Anniversary Edition Kit（2026年10月21日発売予定） RICOH 買取金額 新品同様 ￥171,000 良品 ￥162,000 下取は10%UP 新品同様 ￥188,100 良品 ￥178,200 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "￥212,300",
-          "price": 212300,
-          "near_kw": false,
-          "near_buyback": false,
-          "is_tradein": false,
-          "item_text": "￥212,300"
-        },
-        {
-          "selector": "table td",
-          "text": "￥194,000",
-          "price": 194000,
-          "near_kw": false,
+          "text": "RICOH GR IV\n\t\t\t\n\t\t\t\tRICOH\n\t\t\t\n\t\t\t\n\t\t\n\t\t\n\t\t\n\t\t\t\n\t\t\t\n\t\t\t\t\n\t\t\t\t",
+          "price": 151000,
+          "near_kw": true,
           "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "RICOH GR IV HDF RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新品同様 ￥213,400 良品 ￥212,300 買取申し込み 買取検討リストへ"
+          "is_tradein": true,
+          "item_text": "RICOH GR IV RICOH 買取金額 新品同様 ￥151,000 良品 ￥150,000 下取は10%UP 新品同様 ￥166,100 良品 ￥165,000 買取申し込み 買取検討リストへ"
         },
         {
-          "selector": ".price",
-          "text": "￥194,000",
-          "price": 194000,
-          "near_kw": false,
-          "near_buyback": false,
-          "is_tradein": false,
-          "item_text": "￥194,000"
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥151,000\n\t\t\t\t\t\t\n",
+          "price": 151000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "RICOH GR IV RICOH 買取金額 新品同様 ￥151,000 良品 ￥150,000 下取は10%UP 新品同様 ￥166,100 良品 ￥165,000 買取申し込み 買取検討リストへ"
         },
         {
-          "selector": "[class*='price']",
-          "text": "￥194,000",
-          "price": 194000,
-          "near_kw": false,
-          "near_buyback": false,
-          "is_tradein": false,
-          "item_text": "￥194,000"
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥151,000\n\t\t\t\t\t\t\n",
+          "price": 151000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "RICOH GR IV RICOH 買取金額 新品同様 ￥151,000 良品 ￥150,000 下取は10%UP 新品同様 ￥166,100 良品 ￥165,000 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "GR Digital IV\n\t\t\t\n\t\t\t\tRICOH\n\t\t\t\n\t\t\t\n\t\t\n\t\t\n\t\t\n\t\t\t\n\t\t\t\n\t\t\t\t\n\t\t",
+          "price": 21000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "GR Digital IV RICOH 買取金額 新品同様 ￥21,000 良品 ￥20,000 下取は10%UP 新品同様 ￥23,100 良品 ￥22,000 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥21,000\n\t\t\t\t\t\t\n\t",
+          "price": 21000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "GR Digital IV RICOH 買取金額 新品同様 ￥21,000 良品 ￥20,000 下取は10%UP 新品同様 ￥23,100 良品 ￥22,000 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥21,000\n\t\t\t\t\t\t\n\t",
+          "price": 21000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "GR Digital IV RICOH 買取金額 新品同様 ￥21,000 良品 ￥20,000 下取は10%UP 新品同様 ￥23,100 良品 ￥22,000 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "GR Digital IV ホワイトエディション\n\t\t\t\n\t\t\t\tRICOH\n\t\t\t\n\t\t\t\n\t\t\n\t\t\n\t\t\n\t\t\t\n",
+          "price": 21000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "GR Digital IV ホワイトエディション RICOH 買取金額 新品同様 ￥21,000 良品 ￥20,000 下取は10%UP 新品同様 ￥23,100 良品 ￥22,000 買取申し込み 買取検討リストへ"
         }
       ],
       "iframe_count": 1,
-      "shadow_dom_detected": false,
-      "dom_ready_state": "interactive",
-      "hit_count": 1,
+      "shadow_dom_detected": true,
+      "dom_ready_state": "complete",
+      "hit_count": 8,
       "keyword_hit_counts": {
-        "RICOH GR IV HDF": 1
+        "RICOH GR IV": 8
       },
-      "best_keyword": "RICOH GR IV HDF",
+      "best_keyword": "RICOH GR IV",
       "has_buyback_context": true,
       "sales_price_sample": 194000,
       "buyback_link_candidates": [
@@ -4128,37 +4136,64 @@
         },
         {
           "text": "おすすめ順",
-          "href": "/shop/purchase/list.aspx?sort=0&search=%e6%a4%9c%e7%b4%a2&keyword=RICOH+GR+IV+HDF"
+          "href": "/shop/purchase/list.aspx?sort=0&search=%e6%a4%9c%e7%b4%a2&keyword=RICOH+GR+IV"
         },
         {
           "text": "新着順",
-          "href": "/shop/purchase/list.aspx?sort=1&search=%e6%a4%9c%e7%b4%a2&keyword=RICOH+GR+IV+HDF"
+          "href": "/shop/purchase/list.aspx?sort=1&search=%e6%a4%9c%e7%b4%a2&keyword=RICOH+GR+IV"
         },
         {
           "text": "商品名",
-          "href": "/shop/purchase/list.aspx?sort=2&search=%e6%a4%9c%e7%b4%a2&keyword=RICOH+GR+IV+HDF"
+          "href": "/shop/purchase/list.aspx?sort=2&search=%e6%a4%9c%e7%b4%a2&keyword=RICOH+GR+IV"
         },
         {
           "text": "発売日",
-          "href": "/shop/purchase/list.aspx?sort=3&search=%e6%a4%9c%e7%b4%a2&keyword=RICOH+GR+IV+HDF"
+          "href": "/shop/purchase/list.aspx?sort=3&search=%e6%a4%9c%e7%b4%a2&keyword=RICOH+GR+IV"
         },
         {
           "text": "価格(安い順)",
-          "href": "/shop/purchase/list.aspx?sort=4&search=%e6%a4%9c%e7%b4%a2&keyword=RICOH+GR+IV+HDF"
+          "href": "/shop/purchase/list.aspx?sort=4&search=%e6%a4%9c%e7%b4%a2&keyword=RICOH+GR+IV"
         },
         {
           "text": "価格(高い順)",
-          "href": "/shop/purchase/list.aspx?sort=5&search=%e6%a4%9c%e7%b4%a2&keyword=RICOH+GR+IV+HDF"
+          "href": "/shop/purchase/list.aspx?sort=5&search=%e6%a4%9c%e7%b4%a2&keyword=RICOH+GR+IV"
         },
         {
           "text": "新着順+商品名",
-          "href": "/shop/purchase/list.aspx?sort=6&search=%e6%a4%9c%e7%b4%a2&keyword=RICOH+GR+IV+HDF"
+          "href": "/shop/purchase/list.aspx?sort=6&search=%e6%a4%9c%e7%b4%a2&keyword=RICOH+GR+IV"
         }
       ],
-      "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=RICOH%20GR%20IV%20HDF&search=検索",
-      "buyback_page_html_size": 199100,
+      "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=RICOH%20GR%20IV&search=検索",
+      "buyback_page_html_size": 358216,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
+        {
+          "selector": "[class*='assess']",
+          "text": "RICOH GR IV Monochrome\n\t\t\t\n\t\t\t\tRICOH\n\t\t\t\n\t\t\t\n\t\t\n\t\t\n\t\t\n\t\t\t\n\t\t",
+          "price": 194000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "RICOH GR IV Monochrome RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新品同様 ￥213,400 良品 ￥212,300 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥194,000\n\t\t\t\t\t\t\n",
+          "price": 194000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "RICOH GR IV Monochrome RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新品同様 ￥213,400 良品 ￥212,300 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥194,000\n\t\t\t\t\t\t\n",
+          "price": 194000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "RICOH GR IV Monochrome RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新品同様 ￥213,400 良品 ￥212,300 買取申し込み 買取検討リストへ"
+        },
         {
           "selector": "[class*='assess']",
           "text": "RICOH GR IV HDF\n\t\t\t\n\t\t\t\tRICOH\n\t\t\t\n\t\t\t\n\t\t\n\t\t\n\t\t\n\t\t\t\n\t\t\t\n\t\t\t\t\n",
@@ -4187,40 +4222,85 @@
           "item_text": "RICOH GR IV HDF RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新品同様 ￥213,400 良品 ￥212,300 買取申し込み 買取検討リストへ"
         },
         {
-          "selector": "table td",
-          "text": "￥213,400",
-          "price": 213400,
-          "near_kw": false,
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥171,000\n\t\t\t\t\t\t\n",
+          "price": 171000,
+          "near_kw": true,
           "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "RICOH GR IV HDF RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新品同様 ￥213,400 良品 ￥212,300 買取申し込み 買取検討リストへ"
+          "is_tradein": true,
+          "item_text": "GR IV 30th Anniversary Edition Kit（2026年10月21日発売予定） RICOH 買取金額 新品同様 ￥171,000 良品 ￥162,000 下取は10%UP 新品同様 ￥188,100 良品 ￥178,200 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "新品同様\n\t\t\t\t\t\t\t￥213,400\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t良品\n\t",
-          "price": 213400,
-          "near_kw": false,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥171,000\n\t\t\t\t\t\t\n",
+          "price": 171000,
+          "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "RICOH GR IV HDF RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新品同様 ￥213,400 良品 ￥212,300 買取申し込み 買取検討リストへ"
+          "item_text": "GR IV 30th Anniversary Edition Kit（2026年10月21日発売予定） RICOH 買取金額 新品同様 ￥171,000 良品 ￥162,000 下取は10%UP 新品同様 ￥188,100 良品 ￥178,200 買取申し込み 買取検討リストへ"
         },
         {
-          "selector": "table td",
-          "text": "￥212,300",
-          "price": 212300,
-          "near_kw": false,
+          "selector": "[class*='assess']",
+          "text": "RICOH GR IV\n\t\t\t\n\t\t\t\tRICOH\n\t\t\t\n\t\t\t\n\t\t\n\t\t\n\t\t\n\t\t\t\n\t\t\t\n\t\t\t\t\n\t\t\t\t",
+          "price": 151000,
+          "near_kw": true,
           "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "RICOH GR IV HDF RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新品同様 ￥213,400 良品 ￥212,300 買取申し込み 買取検討リストへ"
+          "is_tradein": true,
+          "item_text": "RICOH GR IV RICOH 買取金額 新品同様 ￥151,000 良品 ￥150,000 下取は10%UP 新品同様 ￥166,100 良品 ￥165,000 買取申し込み 買取検討リストへ"
         },
         {
-          "selector": "table td",
-          "text": "￥194,000",
-          "price": 194000,
-          "near_kw": false,
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥151,000\n\t\t\t\t\t\t\n",
+          "price": 151000,
+          "near_kw": true,
           "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "RICOH GR IV HDF RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新品同様 ￥213,400 良品 ￥212,300 買取申し込み 買取検討リストへ"
+          "is_tradein": true,
+          "item_text": "RICOH GR IV RICOH 買取金額 新品同様 ￥151,000 良品 ￥150,000 下取は10%UP 新品同様 ￥166,100 良品 ￥165,000 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥151,000\n\t\t\t\t\t\t\n",
+          "price": 151000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "RICOH GR IV RICOH 買取金額 新品同様 ￥151,000 良品 ￥150,000 下取は10%UP 新品同様 ￥166,100 良品 ￥165,000 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "GR Digital IV\n\t\t\t\n\t\t\t\tRICOH\n\t\t\t\n\t\t\t\n\t\t\n\t\t\n\t\t\n\t\t\t\n\t\t\t\n\t\t\t\t\n\t\t",
+          "price": 21000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "GR Digital IV RICOH 買取金額 新品同様 ￥21,000 良品 ￥20,000 下取は10%UP 新品同様 ￥23,100 良品 ￥22,000 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥21,000\n\t\t\t\t\t\t\n\t",
+          "price": 21000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "GR Digital IV RICOH 買取金額 新品同様 ￥21,000 良品 ￥20,000 下取は10%UP 新品同様 ￥23,100 良品 ￥22,000 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥21,000\n\t\t\t\t\t\t\n\t",
+          "price": 21000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "GR Digital IV RICOH 買取金額 新品同様 ￥21,000 良品 ￥20,000 下取は10%UP 新品同様 ￥23,100 良品 ￥22,000 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "GR Digital IV ホワイトエディション\n\t\t\t\n\t\t\t\tRICOH\n\t\t\t\n\t\t\t\n\t\t\n\t\t\n\t\t\n\t\t\t\n",
+          "price": 21000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "GR Digital IV ホワイトエディション RICOH 買取金額 新品同様 ￥21,000 良品 ￥20,000 下取は10%UP 新品同様 ￥23,100 良品 ￥22,000 買取申し込み 買取検討リストへ"
         }
       ],
       "buyback_extracted_price": 213400,
@@ -4229,7 +4309,17 @@
       "all_price_candidates": [
         {
           "price": 194000,
-          "item": "RICOH GR IV HDF RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新品同様 ￥21",
+          "item": "RICOH GR IV Monochrome RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新",
+          "near_buyback": true
+        },
+        {
+          "price": 194000,
+          "item": "RICOH GR IV Monochrome RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新",
+          "near_buyback": true
+        },
+        {
+          "price": 194000,
+          "item": "RICOH GR IV Monochrome RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新",
           "near_buyback": true
         },
         {
@@ -4243,118 +4333,133 @@
           "near_buyback": true
         },
         {
-          "price": 213400,
-          "item": "RICOH GR IV HDF RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新品同様 ￥21",
-          "near_buyback": true
-        },
-        {
-          "price": 213400,
-          "item": "￥213,400",
-          "near_buyback": false
-        },
-        {
-          "price": 213400,
-          "item": "￥213,400",
-          "near_buyback": false
-        },
-        {
-          "price": 213400,
-          "item": "RICOH GR IV HDF RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新品同様 ￥21",
-          "near_buyback": true
-        },
-        {
-          "price": 213400,
-          "item": "￥213,400",
-          "near_buyback": false
-        },
-        {
-          "price": 212300,
-          "item": "RICOH GR IV HDF RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新品同様 ￥21",
-          "near_buyback": true
-        },
-        {
-          "price": 212300,
-          "item": "￥212,300",
-          "near_buyback": false
-        },
-        {
-          "price": 212300,
-          "item": "￥212,300",
-          "near_buyback": false
-        },
-        {
-          "price": 212300,
-          "item": "￥212,300",
-          "near_buyback": false
-        },
-        {
           "price": 194000,
           "item": "RICOH GR IV HDF RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新品同様 ￥21",
           "near_buyback": true
         },
         {
-          "price": 194000,
-          "item": "￥194,000",
-          "near_buyback": false
+          "price": 171000,
+          "item": "GR IV 30th Anniversary Edition Kit（2026年10月21日発売予定） RICOH 買取金額 新品同様 ￥1",
+          "near_buyback": true
         },
         {
-          "price": 194000,
-          "item": "￥194,000",
-          "near_buyback": false
+          "price": 171000,
+          "item": "GR IV 30th Anniversary Edition Kit（2026年10月21日発売予定） RICOH 買取金額 新品同様 ￥1",
+          "near_buyback": true
+        },
+        {
+          "price": 151000,
+          "item": "RICOH GR IV RICOH 買取金額 新品同様 ￥151,000 良品 ￥150,000 下取は10%UP 新品同様 ￥166,10",
+          "near_buyback": true
+        },
+        {
+          "price": 151000,
+          "item": "RICOH GR IV RICOH 買取金額 新品同様 ￥151,000 良品 ￥150,000 下取は10%UP 新品同様 ￥166,10",
+          "near_buyback": true
+        },
+        {
+          "price": 151000,
+          "item": "RICOH GR IV RICOH 買取金額 新品同様 ￥151,000 良品 ￥150,000 下取は10%UP 新品同様 ￥166,10",
+          "near_buyback": true
+        },
+        {
+          "price": 21000,
+          "item": "GR Digital IV RICOH 買取金額 新品同様 ￥21,000 良品 ￥20,000 下取は10%UP 新品同様 ￥23,100",
+          "near_buyback": true
+        },
+        {
+          "price": 21000,
+          "item": "GR Digital IV RICOH 買取金額 新品同様 ￥21,000 良品 ￥20,000 下取は10%UP 新品同様 ￥23,100",
+          "near_buyback": true
+        },
+        {
+          "price": 21000,
+          "item": "GR Digital IV RICOH 買取金額 新品同様 ￥21,000 良品 ￥20,000 下取は10%UP 新品同様 ￥23,100",
+          "near_buyback": true
+        },
+        {
+          "price": 21000,
+          "item": "GR Digital IV ホワイトエディション RICOH 買取金額 新品同様 ￥21,000 良品 ￥20,000 下取は10%UP 新",
+          "near_buyback": true
         }
       ],
       "rejected_candidates": [
         {
-          "price": 213400,
-          "item": "￥213,400",
-          "near_buyback": false,
-          "rejection_reason": "not_buyback_context"
-        },
-        {
-          "price": 213400,
-          "item": "￥213,400",
-          "near_buyback": false,
-          "rejection_reason": "not_buyback_context"
-        },
-        {
-          "price": 213400,
-          "item": "￥213,400",
-          "near_buyback": false,
-          "rejection_reason": "not_buyback_context"
-        },
-        {
-          "price": 212300,
-          "item": "￥212,300",
-          "near_buyback": false,
-          "rejection_reason": "not_buyback_context"
-        },
-        {
-          "price": 212300,
-          "item": "￥212,300",
-          "near_buyback": false,
-          "rejection_reason": "not_buyback_context"
-        },
-        {
-          "price": 212300,
-          "item": "￥212,300",
-          "near_buyback": false,
-          "rejection_reason": "not_buyback_context"
+          "price": 194000,
+          "item": "RICOH GR IV Monochrome RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新",
+          "near_buyback": true,
+          "rejection_reason": "model_mismatch"
         },
         {
           "price": 194000,
-          "item": "￥194,000",
-          "near_buyback": false,
-          "rejection_reason": "not_buyback_context"
+          "item": "RICOH GR IV Monochrome RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新",
+          "near_buyback": true,
+          "rejection_reason": "model_mismatch"
         },
         {
           "price": 194000,
-          "item": "￥194,000",
-          "near_buyback": false,
-          "rejection_reason": "not_buyback_context"
+          "item": "RICOH GR IV Monochrome RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新",
+          "near_buyback": true,
+          "rejection_reason": "model_mismatch"
+        },
+        {
+          "price": 171000,
+          "item": "GR IV 30th Anniversary Edition Kit（2026年10月21日発売予定） RICOH 買取金額 新品同様 ￥1",
+          "near_buyback": true,
+          "rejection_reason": "model_mismatch"
+        },
+        {
+          "price": 171000,
+          "item": "GR IV 30th Anniversary Edition Kit（2026年10月21日発売予定） RICOH 買取金額 新品同様 ￥1",
+          "near_buyback": true,
+          "rejection_reason": "model_mismatch"
+        },
+        {
+          "price": 151000,
+          "item": "RICOH GR IV RICOH 買取金額 新品同様 ￥151,000 良品 ￥150,000 下取は10%UP 新品同様 ￥166,10",
+          "near_buyback": true,
+          "rejection_reason": "model_mismatch"
+        },
+        {
+          "price": 151000,
+          "item": "RICOH GR IV RICOH 買取金額 新品同様 ￥151,000 良品 ￥150,000 下取は10%UP 新品同様 ￥166,10",
+          "near_buyback": true,
+          "rejection_reason": "model_mismatch"
+        },
+        {
+          "price": 151000,
+          "item": "RICOH GR IV RICOH 買取金額 新品同様 ￥151,000 良品 ￥150,000 下取は10%UP 新品同様 ￥166,10",
+          "near_buyback": true,
+          "rejection_reason": "model_mismatch"
+        },
+        {
+          "price": 21000,
+          "item": "GR Digital IV RICOH 買取金額 新品同様 ￥21,000 良品 ￥20,000 下取は10%UP 新品同様 ￥23,100",
+          "near_buyback": true,
+          "rejection_reason": "model_mismatch"
+        },
+        {
+          "price": 21000,
+          "item": "GR Digital IV RICOH 買取金額 新品同様 ￥21,000 良品 ￥20,000 下取は10%UP 新品同様 ￥23,100",
+          "near_buyback": true,
+          "rejection_reason": "model_mismatch"
+        },
+        {
+          "price": 21000,
+          "item": "GR Digital IV RICOH 買取金額 新品同様 ￥21,000 良品 ￥20,000 下取は10%UP 新品同様 ￥23,100",
+          "near_buyback": true,
+          "rejection_reason": "model_mismatch"
+        },
+        {
+          "price": 21000,
+          "item": "GR Digital IV ホワイトエディション RICOH 買取金額 新品同様 ￥21,000 良品 ￥20,000 下取は10%UP 新",
+          "near_buyback": true,
+          "rejection_reason": "model_mismatch"
         }
       ],
       "used_for_save": true,
-      "requests_raw_price": null
+      "requests_raw_price": null,
+      "reused_page": true
     },
     {
       "product_alias": "gr4_hdf",
@@ -4450,7 +4555,7 @@
       "price": 194000,
       "reason": "",
       "html_saved": false,
-      "html_size": 199026,
+      "html_size": 358216,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -4458,26 +4563,26 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 199026,
+      "rendered_html_size": 358216,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "matched_selectors": [
         {
           "selector": "table td",
-          "hits": 4
+          "hits": 24
         },
         {
           "selector": ".price",
-          "hits": 4
+          "hits": 24
         },
         {
           "selector": "[class*='price']",
-          "hits": 4
+          "hits": 24
         },
         {
           "selector": "[class*='assess']",
-          "hits": 9
+          "hits": 53
         }
       ],
       "selector_candidates": [
@@ -4509,122 +4614,122 @@
           "item_text": "RICOH GR IV Monochrome RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新品同様 ￥213,400 良品 ￥212,300 買取申し込み 買取検討リストへ"
         },
         {
-          "selector": "table td",
-          "text": "￥213,400",
-          "price": 213400,
-          "near_kw": false,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "RICOH GR IV Monochrome RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新品同様 ￥213,400 良品 ￥212,300 買取申し込み 買取検討リストへ"
-        },
-        {
-          "selector": ".price",
-          "text": "￥213,400",
-          "price": 213400,
-          "near_kw": false,
-          "near_buyback": false,
-          "is_tradein": false,
-          "item_text": "￥213,400"
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "￥213,400",
-          "price": 213400,
-          "near_kw": false,
-          "near_buyback": false,
-          "is_tradein": false,
-          "item_text": "￥213,400"
-        },
-        {
           "selector": "[class*='assess']",
-          "text": "新品同様\n\t\t\t\t\t\t\t￥213,400\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t良品\n\t",
-          "price": 213400,
-          "near_kw": false,
+          "text": "RICOH GR IV HDF\n\t\t\t\n\t\t\t\tRICOH\n\t\t\t\n\t\t\t\n\t\t\n\t\t\n\t\t\n\t\t\t\n\t\t\t\n\t\t\t\t\n",
+          "price": 194000,
+          "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "RICOH GR IV Monochrome RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新品同様 ￥213,400 良品 ￥212,300 買取申し込み 買取検討リストへ"
+          "item_text": "RICOH GR IV HDF RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新品同様 ￥213,400 良品 ￥212,300 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "￥213,400",
-          "price": 213400,
-          "near_kw": false,
-          "near_buyback": false,
-          "is_tradein": false,
-          "item_text": "￥213,400"
-        },
-        {
-          "selector": "table td",
-          "text": "￥212,300",
-          "price": 212300,
-          "near_kw": false,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥194,000\n\t\t\t\t\t\t\n",
+          "price": 194000,
+          "near_kw": true,
           "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "RICOH GR IV Monochrome RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新品同様 ￥213,400 良品 ￥212,300 買取申し込み 買取検討リストへ"
-        },
-        {
-          "selector": ".price",
-          "text": "￥212,300",
-          "price": 212300,
-          "near_kw": false,
-          "near_buyback": false,
-          "is_tradein": false,
-          "item_text": "￥212,300"
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "￥212,300",
-          "price": 212300,
-          "near_kw": false,
-          "near_buyback": false,
-          "is_tradein": false,
-          "item_text": "￥212,300"
+          "is_tradein": true,
+          "item_text": "RICOH GR IV HDF RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新品同様 ￥213,400 良品 ￥212,300 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "￥212,300",
-          "price": 212300,
-          "near_kw": false,
-          "near_buyback": false,
-          "is_tradein": false,
-          "item_text": "￥212,300"
-        },
-        {
-          "selector": "table td",
-          "text": "￥194,000",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥194,000\n\t\t\t\t\t\t\n",
           "price": 194000,
-          "near_kw": false,
+          "near_kw": true,
           "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "RICOH GR IV Monochrome RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新品同様 ￥213,400 良品 ￥212,300 買取申し込み 買取検討リストへ"
+          "is_tradein": true,
+          "item_text": "RICOH GR IV HDF RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新品同様 ￥213,400 良品 ￥212,300 買取申し込み 買取検討リストへ"
         },
         {
-          "selector": ".price",
-          "text": "￥194,000",
-          "price": 194000,
-          "near_kw": false,
-          "near_buyback": false,
-          "is_tradein": false,
-          "item_text": "￥194,000"
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥171,000\n\t\t\t\t\t\t\n",
+          "price": 171000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "GR IV 30th Anniversary Edition Kit（2026年10月21日発売予定） RICOH 買取金額 新品同様 ￥171,000 良品 ￥162,000 下取は10%UP 新品同様 ￥188,100 良品 ￥178,200 買取申し込み 買取検討リストへ"
         },
         {
-          "selector": "[class*='price']",
-          "text": "￥194,000",
-          "price": 194000,
-          "near_kw": false,
-          "near_buyback": false,
-          "is_tradein": false,
-          "item_text": "￥194,000"
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥171,000\n\t\t\t\t\t\t\n",
+          "price": 171000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "GR IV 30th Anniversary Edition Kit（2026年10月21日発売予定） RICOH 買取金額 新品同様 ￥171,000 良品 ￥162,000 下取は10%UP 新品同様 ￥188,100 良品 ￥178,200 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "RICOH GR IV\n\t\t\t\n\t\t\t\tRICOH\n\t\t\t\n\t\t\t\n\t\t\n\t\t\n\t\t\n\t\t\t\n\t\t\t\n\t\t\t\t\n\t\t\t\t",
+          "price": 151000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "RICOH GR IV RICOH 買取金額 新品同様 ￥151,000 良品 ￥150,000 下取は10%UP 新品同様 ￥166,100 良品 ￥165,000 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥151,000\n\t\t\t\t\t\t\n",
+          "price": 151000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "RICOH GR IV RICOH 買取金額 新品同様 ￥151,000 良品 ￥150,000 下取は10%UP 新品同様 ￥166,100 良品 ￥165,000 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥151,000\n\t\t\t\t\t\t\n",
+          "price": 151000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "RICOH GR IV RICOH 買取金額 新品同様 ￥151,000 良品 ￥150,000 下取は10%UP 新品同様 ￥166,100 良品 ￥165,000 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "GR Digital IV\n\t\t\t\n\t\t\t\tRICOH\n\t\t\t\n\t\t\t\n\t\t\n\t\t\n\t\t\n\t\t\t\n\t\t\t\n\t\t\t\t\n\t\t",
+          "price": 21000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "GR Digital IV RICOH 買取金額 新品同様 ￥21,000 良品 ￥20,000 下取は10%UP 新品同様 ￥23,100 良品 ￥22,000 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥21,000\n\t\t\t\t\t\t\n\t",
+          "price": 21000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "GR Digital IV RICOH 買取金額 新品同様 ￥21,000 良品 ￥20,000 下取は10%UP 新品同様 ￥23,100 良品 ￥22,000 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥21,000\n\t\t\t\t\t\t\n\t",
+          "price": 21000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "GR Digital IV RICOH 買取金額 新品同様 ￥21,000 良品 ￥20,000 下取は10%UP 新品同様 ￥23,100 良品 ￥22,000 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "GR Digital IV ホワイトエディション\n\t\t\t\n\t\t\t\tRICOH\n\t\t\t\n\t\t\t\n\t\t\n\t\t\n\t\t\n\t\t\t\n",
+          "price": 21000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "GR Digital IV ホワイトエディション RICOH 買取金額 新品同様 ￥21,000 良品 ￥20,000 下取は10%UP 新品同様 ￥23,100 良品 ￥22,000 買取申し込み 買取検討リストへ"
         }
       ],
       "iframe_count": 1,
-      "shadow_dom_detected": false,
-      "dom_ready_state": "interactive",
-      "hit_count": 1,
+      "shadow_dom_detected": true,
+      "dom_ready_state": "complete",
+      "hit_count": 8,
       "keyword_hit_counts": {
-        "RICOH GR IV Monochrome": 1
+        "RICOH GR IV": 8
       },
-      "best_keyword": "RICOH GR IV Monochrome",
+      "best_keyword": "RICOH GR IV",
       "has_buyback_context": true,
       "sales_price_sample": 194000,
       "buyback_link_candidates": [
@@ -4682,35 +4787,35 @@
         },
         {
           "text": "おすすめ順",
-          "href": "/shop/purchase/list.aspx?sort=0&search=%e6%a4%9c%e7%b4%a2&keyword=RICOH+GR+IV+Monochrome"
+          "href": "/shop/purchase/list.aspx?sort=0&search=%e6%a4%9c%e7%b4%a2&keyword=RICOH+GR+IV"
         },
         {
           "text": "新着順",
-          "href": "/shop/purchase/list.aspx?sort=1&search=%e6%a4%9c%e7%b4%a2&keyword=RICOH+GR+IV+Monochrome"
+          "href": "/shop/purchase/list.aspx?sort=1&search=%e6%a4%9c%e7%b4%a2&keyword=RICOH+GR+IV"
         },
         {
           "text": "商品名",
-          "href": "/shop/purchase/list.aspx?sort=2&search=%e6%a4%9c%e7%b4%a2&keyword=RICOH+GR+IV+Monochrome"
+          "href": "/shop/purchase/list.aspx?sort=2&search=%e6%a4%9c%e7%b4%a2&keyword=RICOH+GR+IV"
         },
         {
           "text": "発売日",
-          "href": "/shop/purchase/list.aspx?sort=3&search=%e6%a4%9c%e7%b4%a2&keyword=RICOH+GR+IV+Monochrome"
+          "href": "/shop/purchase/list.aspx?sort=3&search=%e6%a4%9c%e7%b4%a2&keyword=RICOH+GR+IV"
         },
         {
           "text": "価格(安い順)",
-          "href": "/shop/purchase/list.aspx?sort=4&search=%e6%a4%9c%e7%b4%a2&keyword=RICOH+GR+IV+Monochrome"
+          "href": "/shop/purchase/list.aspx?sort=4&search=%e6%a4%9c%e7%b4%a2&keyword=RICOH+GR+IV"
         },
         {
           "text": "価格(高い順)",
-          "href": "/shop/purchase/list.aspx?sort=5&search=%e6%a4%9c%e7%b4%a2&keyword=RICOH+GR+IV+Monochrome"
+          "href": "/shop/purchase/list.aspx?sort=5&search=%e6%a4%9c%e7%b4%a2&keyword=RICOH+GR+IV"
         },
         {
           "text": "新着順+商品名",
-          "href": "/shop/purchase/list.aspx?sort=6&search=%e6%a4%9c%e7%b4%a2&keyword=RICOH+GR+IV+Monochrome"
+          "href": "/shop/purchase/list.aspx?sort=6&search=%e6%a4%9c%e7%b4%a2&keyword=RICOH+GR+IV"
         }
       ],
-      "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=RICOH%20GR%20IV%20Monochrome&search=検索",
-      "buyback_page_html_size": 199026,
+      "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=RICOH%20GR%20IV&search=検索",
+      "buyback_page_html_size": 358216,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -4741,40 +4846,112 @@
           "item_text": "RICOH GR IV Monochrome RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新品同様 ￥213,400 良品 ￥212,300 買取申し込み 買取検討リストへ"
         },
         {
-          "selector": "table td",
-          "text": "￥213,400",
-          "price": 213400,
-          "near_kw": false,
+          "selector": "[class*='assess']",
+          "text": "RICOH GR IV HDF\n\t\t\t\n\t\t\t\tRICOH\n\t\t\t\n\t\t\t\n\t\t\n\t\t\n\t\t\n\t\t\t\n\t\t\t\n\t\t\t\t\n",
+          "price": 194000,
+          "near_kw": true,
           "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "RICOH GR IV Monochrome RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新品同様 ￥213,400 良品 ￥212,300 買取申し込み 買取検討リストへ"
+          "is_tradein": true,
+          "item_text": "RICOH GR IV HDF RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新品同様 ￥213,400 良品 ￥212,300 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "新品同様\n\t\t\t\t\t\t\t￥213,400\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t良品\n\t",
-          "price": 213400,
-          "near_kw": false,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥194,000\n\t\t\t\t\t\t\n",
+          "price": 194000,
+          "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "RICOH GR IV Monochrome RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新品同様 ￥213,400 良品 ￥212,300 買取申し込み 買取検討リストへ"
+          "item_text": "RICOH GR IV HDF RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新品同様 ￥213,400 良品 ￥212,300 買取申し込み 買取検討リストへ"
         },
         {
-          "selector": "table td",
-          "text": "￥212,300",
-          "price": 212300,
-          "near_kw": false,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "RICOH GR IV Monochrome RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新品同様 ￥213,400 良品 ￥212,300 買取申し込み 買取検討リストへ"
-        },
-        {
-          "selector": "table td",
-          "text": "￥194,000",
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥194,000\n\t\t\t\t\t\t\n",
           "price": 194000,
-          "near_kw": false,
+          "near_kw": true,
           "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "RICOH GR IV Monochrome RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新品同様 ￥213,400 良品 ￥212,300 買取申し込み 買取検討リストへ"
+          "is_tradein": true,
+          "item_text": "RICOH GR IV HDF RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新品同様 ￥213,400 良品 ￥212,300 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥171,000\n\t\t\t\t\t\t\n",
+          "price": 171000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "GR IV 30th Anniversary Edition Kit（2026年10月21日発売予定） RICOH 買取金額 新品同様 ￥171,000 良品 ￥162,000 下取は10%UP 新品同様 ￥188,100 良品 ￥178,200 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥171,000\n\t\t\t\t\t\t\n",
+          "price": 171000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "GR IV 30th Anniversary Edition Kit（2026年10月21日発売予定） RICOH 買取金額 新品同様 ￥171,000 良品 ￥162,000 下取は10%UP 新品同様 ￥188,100 良品 ￥178,200 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "RICOH GR IV\n\t\t\t\n\t\t\t\tRICOH\n\t\t\t\n\t\t\t\n\t\t\n\t\t\n\t\t\n\t\t\t\n\t\t\t\n\t\t\t\t\n\t\t\t\t",
+          "price": 151000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "RICOH GR IV RICOH 買取金額 新品同様 ￥151,000 良品 ￥150,000 下取は10%UP 新品同様 ￥166,100 良品 ￥165,000 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥151,000\n\t\t\t\t\t\t\n",
+          "price": 151000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "RICOH GR IV RICOH 買取金額 新品同様 ￥151,000 良品 ￥150,000 下取は10%UP 新品同様 ￥166,100 良品 ￥165,000 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥151,000\n\t\t\t\t\t\t\n",
+          "price": 151000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "RICOH GR IV RICOH 買取金額 新品同様 ￥151,000 良品 ￥150,000 下取は10%UP 新品同様 ￥166,100 良品 ￥165,000 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "GR Digital IV\n\t\t\t\n\t\t\t\tRICOH\n\t\t\t\n\t\t\t\n\t\t\n\t\t\n\t\t\n\t\t\t\n\t\t\t\n\t\t\t\t\n\t\t",
+          "price": 21000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "GR Digital IV RICOH 買取金額 新品同様 ￥21,000 良品 ￥20,000 下取は10%UP 新品同様 ￥23,100 良品 ￥22,000 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥21,000\n\t\t\t\t\t\t\n\t",
+          "price": 21000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "GR Digital IV RICOH 買取金額 新品同様 ￥21,000 良品 ￥20,000 下取は10%UP 新品同様 ￥23,100 良品 ￥22,000 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥21,000\n\t\t\t\t\t\t\n\t",
+          "price": 21000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "GR Digital IV RICOH 買取金額 新品同様 ￥21,000 良品 ￥20,000 下取は10%UP 新品同様 ￥23,100 良品 ￥22,000 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "GR Digital IV ホワイトエディション\n\t\t\t\n\t\t\t\tRICOH\n\t\t\t\n\t\t\t\n\t\t\n\t\t\n\t\t\n\t\t\t\n",
+          "price": 21000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "GR Digital IV ホワイトエディション RICOH 買取金額 新品同様 ￥21,000 良品 ￥20,000 下取は10%UP 新品同様 ￥23,100 良品 ￥22,000 買取申し込み 買取検討リストへ"
         }
       ],
       "buyback_extracted_price": 213400,
@@ -4797,118 +4974,143 @@
           "near_buyback": true
         },
         {
-          "price": 213400,
-          "item": "RICOH GR IV Monochrome RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新",
-          "near_buyback": true
-        },
-        {
-          "price": 213400,
-          "item": "￥213,400",
-          "near_buyback": false
-        },
-        {
-          "price": 213400,
-          "item": "￥213,400",
-          "near_buyback": false
-        },
-        {
-          "price": 213400,
-          "item": "RICOH GR IV Monochrome RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新",
-          "near_buyback": true
-        },
-        {
-          "price": 213400,
-          "item": "￥213,400",
-          "near_buyback": false
-        },
-        {
-          "price": 212300,
-          "item": "RICOH GR IV Monochrome RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新",
-          "near_buyback": true
-        },
-        {
-          "price": 212300,
-          "item": "￥212,300",
-          "near_buyback": false
-        },
-        {
-          "price": 212300,
-          "item": "￥212,300",
-          "near_buyback": false
-        },
-        {
-          "price": 212300,
-          "item": "￥212,300",
-          "near_buyback": false
-        },
-        {
           "price": 194000,
-          "item": "RICOH GR IV Monochrome RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新",
+          "item": "RICOH GR IV HDF RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新品同様 ￥21",
           "near_buyback": true
         },
         {
           "price": 194000,
-          "item": "￥194,000",
-          "near_buyback": false
+          "item": "RICOH GR IV HDF RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新品同様 ￥21",
+          "near_buyback": true
         },
         {
           "price": 194000,
-          "item": "￥194,000",
-          "near_buyback": false
+          "item": "RICOH GR IV HDF RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新品同様 ￥21",
+          "near_buyback": true
+        },
+        {
+          "price": 171000,
+          "item": "GR IV 30th Anniversary Edition Kit（2026年10月21日発売予定） RICOH 買取金額 新品同様 ￥1",
+          "near_buyback": true
+        },
+        {
+          "price": 171000,
+          "item": "GR IV 30th Anniversary Edition Kit（2026年10月21日発売予定） RICOH 買取金額 新品同様 ￥1",
+          "near_buyback": true
+        },
+        {
+          "price": 151000,
+          "item": "RICOH GR IV RICOH 買取金額 新品同様 ￥151,000 良品 ￥150,000 下取は10%UP 新品同様 ￥166,10",
+          "near_buyback": true
+        },
+        {
+          "price": 151000,
+          "item": "RICOH GR IV RICOH 買取金額 新品同様 ￥151,000 良品 ￥150,000 下取は10%UP 新品同様 ￥166,10",
+          "near_buyback": true
+        },
+        {
+          "price": 151000,
+          "item": "RICOH GR IV RICOH 買取金額 新品同様 ￥151,000 良品 ￥150,000 下取は10%UP 新品同様 ￥166,10",
+          "near_buyback": true
+        },
+        {
+          "price": 21000,
+          "item": "GR Digital IV RICOH 買取金額 新品同様 ￥21,000 良品 ￥20,000 下取は10%UP 新品同様 ￥23,100",
+          "near_buyback": true
+        },
+        {
+          "price": 21000,
+          "item": "GR Digital IV RICOH 買取金額 新品同様 ￥21,000 良品 ￥20,000 下取は10%UP 新品同様 ￥23,100",
+          "near_buyback": true
+        },
+        {
+          "price": 21000,
+          "item": "GR Digital IV RICOH 買取金額 新品同様 ￥21,000 良品 ￥20,000 下取は10%UP 新品同様 ￥23,100",
+          "near_buyback": true
+        },
+        {
+          "price": 21000,
+          "item": "GR Digital IV ホワイトエディション RICOH 買取金額 新品同様 ￥21,000 良品 ￥20,000 下取は10%UP 新",
+          "near_buyback": true
         }
       ],
       "rejected_candidates": [
         {
-          "price": 213400,
-          "item": "￥213,400",
-          "near_buyback": false,
-          "rejection_reason": "not_buyback_context"
-        },
-        {
-          "price": 213400,
-          "item": "￥213,400",
-          "near_buyback": false,
-          "rejection_reason": "not_buyback_context"
-        },
-        {
-          "price": 213400,
-          "item": "￥213,400",
-          "near_buyback": false,
-          "rejection_reason": "not_buyback_context"
-        },
-        {
-          "price": 212300,
-          "item": "￥212,300",
-          "near_buyback": false,
-          "rejection_reason": "not_buyback_context"
-        },
-        {
-          "price": 212300,
-          "item": "￥212,300",
-          "near_buyback": false,
-          "rejection_reason": "not_buyback_context"
-        },
-        {
-          "price": 212300,
-          "item": "￥212,300",
-          "near_buyback": false,
-          "rejection_reason": "not_buyback_context"
+          "price": 194000,
+          "item": "RICOH GR IV HDF RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新品同様 ￥21",
+          "near_buyback": true,
+          "rejection_reason": "model_mismatch"
         },
         {
           "price": 194000,
-          "item": "￥194,000",
-          "near_buyback": false,
-          "rejection_reason": "not_buyback_context"
+          "item": "RICOH GR IV HDF RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新品同様 ￥21",
+          "near_buyback": true,
+          "rejection_reason": "model_mismatch"
         },
         {
           "price": 194000,
-          "item": "￥194,000",
-          "near_buyback": false,
-          "rejection_reason": "not_buyback_context"
+          "item": "RICOH GR IV HDF RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新品同様 ￥21",
+          "near_buyback": true,
+          "rejection_reason": "model_mismatch"
+        },
+        {
+          "price": 171000,
+          "item": "GR IV 30th Anniversary Edition Kit（2026年10月21日発売予定） RICOH 買取金額 新品同様 ￥1",
+          "near_buyback": true,
+          "rejection_reason": "model_mismatch"
+        },
+        {
+          "price": 171000,
+          "item": "GR IV 30th Anniversary Edition Kit（2026年10月21日発売予定） RICOH 買取金額 新品同様 ￥1",
+          "near_buyback": true,
+          "rejection_reason": "model_mismatch"
+        },
+        {
+          "price": 151000,
+          "item": "RICOH GR IV RICOH 買取金額 新品同様 ￥151,000 良品 ￥150,000 下取は10%UP 新品同様 ￥166,10",
+          "near_buyback": true,
+          "rejection_reason": "model_mismatch"
+        },
+        {
+          "price": 151000,
+          "item": "RICOH GR IV RICOH 買取金額 新品同様 ￥151,000 良品 ￥150,000 下取は10%UP 新品同様 ￥166,10",
+          "near_buyback": true,
+          "rejection_reason": "model_mismatch"
+        },
+        {
+          "price": 151000,
+          "item": "RICOH GR IV RICOH 買取金額 新品同様 ￥151,000 良品 ￥150,000 下取は10%UP 新品同様 ￥166,10",
+          "near_buyback": true,
+          "rejection_reason": "model_mismatch"
+        },
+        {
+          "price": 21000,
+          "item": "GR Digital IV RICOH 買取金額 新品同様 ￥21,000 良品 ￥20,000 下取は10%UP 新品同様 ￥23,100",
+          "near_buyback": true,
+          "rejection_reason": "model_mismatch"
+        },
+        {
+          "price": 21000,
+          "item": "GR Digital IV RICOH 買取金額 新品同様 ￥21,000 良品 ￥20,000 下取は10%UP 新品同様 ￥23,100",
+          "near_buyback": true,
+          "rejection_reason": "model_mismatch"
+        },
+        {
+          "price": 21000,
+          "item": "GR Digital IV RICOH 買取金額 新品同様 ￥21,000 良品 ￥20,000 下取は10%UP 新品同様 ￥23,100",
+          "near_buyback": true,
+          "rejection_reason": "model_mismatch"
+        },
+        {
+          "price": 21000,
+          "item": "GR Digital IV ホワイトエディション RICOH 買取金額 新品同様 ￥21,000 良品 ￥20,000 下取は10%UP 新",
+          "near_buyback": true,
+          "rejection_reason": "model_mismatch"
         }
       ],
       "used_for_save": true,
-      "requests_raw_price": null
+      "requests_raw_price": null,
+      "reused_page": true
     },
     {
       "product_alias": "gr4_mono",
@@ -5004,7 +5206,7 @@
       "price": 193000,
       "reason": "",
       "html_saved": false,
-      "html_size": 204834,
+      "html_size": 350064,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -5012,7 +5214,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 204834,
+      "rendered_html_size": 350064,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -5172,8 +5374,8 @@
         }
       ],
       "iframe_count": 1,
-      "shadow_dom_detected": false,
-      "dom_ready_state": "interactive",
+      "shadow_dom_detected": true,
+      "dom_ready_state": "complete",
       "hit_count": 4,
       "keyword_hit_counts": {
         "SONY α7R V": 4
@@ -5264,7 +5466,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=SONY%20%CE%B17R%20V&search=検索",
-      "buyback_page_html_size": 204834,
+      "buyback_page_html_size": 350064,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -5540,7 +5742,8 @@
         }
       ],
       "used_for_save": true,
-      "requests_raw_price": null
+      "requests_raw_price": null,
+      "reused_page": false
     },
     {
       "product_alias": "a7rv",
@@ -5636,7 +5839,7 @@
       "price": 539000,
       "reason": "",
       "html_saved": false,
-      "html_size": 198193,
+      "html_size": 343674,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -5644,7 +5847,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 198193,
+      "rendered_html_size": 343674,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -5804,8 +6007,8 @@
         }
       ],
       "iframe_count": 1,
-      "shadow_dom_detected": false,
-      "dom_ready_state": "interactive",
+      "shadow_dom_detected": true,
+      "dom_ready_state": "complete",
       "hit_count": 1,
       "keyword_hit_counts": {
         "SONY α1 II": 1
@@ -5896,7 +6099,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=SONY%20%CE%B11%20II&search=検索",
-      "buyback_page_html_size": 198193,
+      "buyback_page_html_size": 343674,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -6094,7 +6297,8 @@
         }
       ],
       "used_for_save": true,
-      "requests_raw_price": null
+      "requests_raw_price": null,
+      "reused_page": false
     },
     {
       "product_alias": "a1ii",
@@ -6190,7 +6394,7 @@
       "price": 232000,
       "reason": "",
       "html_saved": false,
-      "html_size": 201233,
+      "html_size": 345642,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -6198,7 +6402,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 201233,
+      "rendered_html_size": 345642,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -6359,7 +6563,7 @@
       ],
       "iframe_count": 1,
       "shadow_dom_detected": true,
-      "dom_ready_state": "interactive",
+      "dom_ready_state": "complete",
       "hit_count": 2,
       "keyword_hit_counts": {
         "SONY α7CR": 2
@@ -6450,7 +6654,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=SONY%20%CE%B17CR&search=検索",
-      "buyback_page_html_size": 201233,
+      "buyback_page_html_size": 345642,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -6657,7 +6861,8 @@
         }
       ],
       "used_for_save": true,
-      "requests_raw_price": null
+      "requests_raw_price": null,
+      "reused_page": false
     },
     {
       "product_alias": "a7cr",
@@ -6753,7 +6958,7 @@
       "price": 354000,
       "reason": "",
       "html_saved": false,
-      "html_size": 213400,
+      "html_size": 358510,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -6761,7 +6966,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 213400,
+      "rendered_html_size": 358510,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -6921,8 +7126,8 @@
         }
       ],
       "iframe_count": 1,
-      "shadow_dom_detected": false,
-      "dom_ready_state": "interactive",
+      "shadow_dom_detected": true,
+      "dom_ready_state": "complete",
       "hit_count": 8,
       "keyword_hit_counts": {
         "SONY FX3": 8
@@ -7013,7 +7218,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=SONY%20FX3&search=検索",
-      "buyback_page_html_size": 213400,
+      "buyback_page_html_size": 358510,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -7271,7 +7476,8 @@
         }
       ],
       "used_for_save": true,
-      "requests_raw_price": null
+      "requests_raw_price": null,
+      "reused_page": false
     },
     {
       "product_alias": "fx3",
@@ -7367,7 +7573,7 @@
       "price": 372000,
       "reason": "",
       "html_saved": false,
-      "html_size": 204737,
+      "html_size": 347863,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -7375,7 +7581,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 204737,
+      "rendered_html_size": 347863,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -7535,8 +7741,8 @@
         }
       ],
       "iframe_count": 1,
-      "shadow_dom_detected": false,
-      "dom_ready_state": "interactive",
+      "shadow_dom_detected": true,
+      "dom_ready_state": "complete",
       "hit_count": 3,
       "keyword_hit_counts": {
         "Canon EOS R5 Mark II": 3
@@ -7627,7 +7833,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=Canon%20EOS%20R5%20Mark%20II&search=検索",
-      "buyback_page_html_size": 204737,
+      "buyback_page_html_size": 347863,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -7894,7 +8100,8 @@
         }
       ],
       "used_for_save": true,
-      "requests_raw_price": null
+      "requests_raw_price": null,
+      "reused_page": false
     },
     {
       "product_alias": "r5ii",
@@ -7998,7 +8205,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 212142,
+      "rendered_html_size": 356496,
       "selector_waited": true,
       "extraction_strategy": "requests",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -8158,8 +8365,8 @@
         }
       ],
       "iframe_count": 1,
-      "shadow_dom_detected": false,
-      "dom_ready_state": "interactive",
+      "shadow_dom_detected": true,
+      "dom_ready_state": "complete",
       "hit_count": 7,
       "keyword_hit_counts": {
         "Canon EOS R6 Mark II": 7,
@@ -8251,7 +8458,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=Canon%20EOS%20R6%20Mark%20II&search=検索",
-      "buyback_page_html_size": 212142,
+      "buyback_page_html_size": 356496,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -8563,7 +8770,8 @@
         }
       ],
       "used_for_save": false,
-      "requests_raw_price": null
+      "requests_raw_price": null,
+      "reused_page": false
     },
     {
       "product_alias": "r6ii",
@@ -8659,7 +8867,7 @@
       "price": 283000,
       "reason": "",
       "html_saved": false,
-      "html_size": 198803,
+      "html_size": 343550,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -8667,7 +8875,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 198803,
+      "rendered_html_size": 343550,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -8828,7 +9036,7 @@
       ],
       "iframe_count": 1,
       "shadow_dom_detected": true,
-      "dom_ready_state": "interactive",
+      "dom_ready_state": "complete",
       "hit_count": 1,
       "keyword_hit_counts": {
         "Canon EOS R3": 1
@@ -8919,7 +9127,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=Canon%20EOS%20R3&search=検索",
-      "buyback_page_html_size": 198803,
+      "buyback_page_html_size": 343550,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -9117,7 +9325,8 @@
         }
       ],
       "used_for_save": true,
-      "requests_raw_price": null
+      "requests_raw_price": null,
+      "reused_page": false
     },
     {
       "product_alias": "r3",
@@ -9213,7 +9422,7 @@
       "price": 289000,
       "reason": "",
       "html_saved": false,
-      "html_size": 198340,
+      "html_size": 343410,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -9221,7 +9430,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 198340,
+      "rendered_html_size": 343410,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -9381,8 +9590,8 @@
         }
       ],
       "iframe_count": 1,
-      "shadow_dom_detected": false,
-      "dom_ready_state": "interactive",
+      "shadow_dom_detected": true,
+      "dom_ready_state": "complete",
       "hit_count": 1,
       "keyword_hit_counts": {
         "Nikon Z8": 1
@@ -9473,7 +9682,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=Nikon%20Z8&search=検索",
-      "buyback_page_html_size": 198340,
+      "buyback_page_html_size": 343410,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -9671,7 +9880,8 @@
         }
       ],
       "used_for_save": true,
-      "requests_raw_price": null
+      "requests_raw_price": null,
+      "reused_page": false
     },
     {
       "product_alias": "z8",
@@ -9767,7 +9977,7 @@
       "price": 137000,
       "reason": "",
       "html_saved": false,
-      "html_size": 302833,
+      "html_size": 448521,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -9775,7 +9985,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 302833,
+      "rendered_html_size": 448521,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -9935,8 +10145,8 @@
         }
       ],
       "iframe_count": 1,
-      "shadow_dom_detected": false,
-      "dom_ready_state": "interactive",
+      "shadow_dom_detected": true,
+      "dom_ready_state": "complete",
       "hit_count": 51,
       "keyword_hit_counts": {
         "Nikon Zf": 51
@@ -10027,7 +10237,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=Nikon%20Zf&search=検索",
-      "buyback_page_html_size": 302833,
+      "buyback_page_html_size": 448521,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -10321,7 +10531,8 @@
         }
       ],
       "used_for_save": true,
-      "requests_raw_price": null
+      "requests_raw_price": null,
+      "reused_page": false
     },
     {
       "product_alias": "zf",
@@ -10417,7 +10628,7 @@
       "price": 333000,
       "reason": "",
       "html_saved": false,
-      "html_size": 201251,
+      "html_size": 345849,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -10425,7 +10636,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 201251,
+      "rendered_html_size": 345849,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -10585,8 +10796,8 @@
         }
       ],
       "iframe_count": 1,
-      "shadow_dom_detected": false,
-      "dom_ready_state": "interactive",
+      "shadow_dom_detected": true,
+      "dom_ready_state": "complete",
       "hit_count": 2,
       "keyword_hit_counts": {
         "Nikon Z9": 2
@@ -10677,7 +10888,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=Nikon%20Z9&search=検索",
-      "buyback_page_html_size": 201251,
+      "buyback_page_html_size": 345849,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -10875,7 +11086,8 @@
         }
       ],
       "used_for_save": true,
-      "requests_raw_price": null
+      "requests_raw_price": null,
+      "reused_page": false
     },
     {
       "product_alias": "z9",
@@ -10971,7 +11183,7 @@
       "price": 586000,
       "reason": "",
       "html_saved": false,
-      "html_size": 220043,
+      "html_size": 364586,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -10979,7 +11191,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 220043,
+      "rendered_html_size": 364586,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -11139,8 +11351,8 @@
         }
       ],
       "iframe_count": 1,
-      "shadow_dom_detected": false,
-      "dom_ready_state": "interactive",
+      "shadow_dom_detected": true,
+      "dom_ready_state": "complete",
       "hit_count": 11,
       "keyword_hit_counts": {
         "Leica Q3": 11
@@ -11231,7 +11443,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=Leica%20Q3&search=検索",
-      "buyback_page_html_size": 220043,
+      "buyback_page_html_size": 364586,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -11531,7 +11743,8 @@
         }
       ],
       "used_for_save": true,
-      "requests_raw_price": null
+      "requests_raw_price": null,
+      "reused_page": false
     },
     {
       "product_alias": "q3",
@@ -11635,7 +11848,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 235997,
+      "rendered_html_size": 379901,
       "selector_waited": true,
       "extraction_strategy": "requests",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -11795,12 +12008,11 @@
         }
       ],
       "iframe_count": 1,
-      "shadow_dom_detected": false,
-      "dom_ready_state": "interactive",
+      "shadow_dom_detected": true,
+      "dom_ready_state": "complete",
       "hit_count": 18,
       "keyword_hit_counts": {
-        "Leica M11": 18,
-        "LEICA M11": 18
+        "Leica M11": 18
       },
       "best_keyword": "Leica M11",
       "has_buyback_context": true,
@@ -11888,7 +12100,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=Leica%20M11&search=検索",
-      "buyback_page_html_size": 235997,
+      "buyback_page_html_size": 379901,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -12200,7 +12412,8 @@
         }
       ],
       "used_for_save": false,
-      "requests_raw_price": null
+      "requests_raw_price": null,
+      "reused_page": false
     },
     {
       "product_alias": "m11",

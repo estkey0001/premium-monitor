@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-08 00:11 JST",
+  "generated_at": "2026-10-08 03:52 JST",
   "scope": "公式ソース登録・検証（利益/AI/Opportunity/Notification/Capital/Execution は不変）",
   "methodology": {
     "verification": "WebFetch で HTTP200/公式ドメイン/canonical/商品一致を実確認したURLのみ verified",
@@ -62,9 +62,9 @@
     {
       "product_id": "prod_switch2",
       "source": "src_nintendo_store",
-      "url": "https://www.nintendo.com/jp/hardware/switch2/lineup/index.html",
-      "link_type": "category",
-      "confidence": "medium",
+      "url": "https://store-jp.nintendo.com/item/hardware-accessory/VM_BEE_S_KB6CA",
+      "link_type": "item",
+      "confidence": "high",
       "official_price": 59980,
       "verified": true
     },
@@ -292,6 +292,22 @@
       "verified": false,
       "official_not_sold": true,
       "reason": "公式の MacBook Pro は M5・M5 Pro・M5 Max チップ（M4 は販売していない）"
+    },
+    {
+      "product_id": "prod_ps5_de",
+      "source": "src_sony_store",
+      "url": null,
+      "verified": false,
+      "official_not_sold": true,
+      "reason": "公式の本体ラインナップのデジタル・エディションは日本語専用（55,000円）だけ。この商品の版は無い"
+    },
+    {
+      "product_id": "prod_gr3",
+      "source": "src_ricoh_imaging",
+      "url": null,
+      "verified": false,
+      "official_not_sold": true,
+      "reason": "RICOH の製品ページに「RICOH GRIII 生産終了」"
     }
   ],
   "source_matrix": {
@@ -733,7 +749,7 @@
           "url": "https://www.apple.com/jp/shop/buy-airpods/airpods-pro-3",
           "link_type": "item",
           "verified": true,
-          "last_verified_at": "2026-10-03",
+          "last_verified_at": "2026-10-08",
           "extraction_method": "webfetch_verified",
           "confidence": "high",
           "official_price": 42800,
@@ -813,7 +829,7 @@
           "url": "https://pur.store.sony.jp/ps5/products/ps5/CFI-7100B01_purchase/",
           "link_type": "item",
           "verified": true,
-          "last_verified_at": "2026-10-03",
+          "last_verified_at": "2026-10-08",
           "extraction_method": "webfetch_verified",
           "confidence": "high",
           "official_price": 137980,
@@ -834,7 +850,17 @@
       "product_name": "PlayStation 5 Digital Edition",
       "brand": "Sony",
       "sources": {
-        "official": null,
+        "official": {
+          "url": null,
+          "link_type": null,
+          "verified": false,
+          "last_verified_at": "2026-10-08",
+          "extraction_method": null,
+          "confidence": "low",
+          "official_price": null,
+          "enabled": true,
+          "reason_if_disabled": "公式の本体ラインナップのデジタル・エディションは日本語専用（55,000円）だけ。この商品の版は無い"
+        },
         "pricecom": null,
         "yodobashi": null,
         "biccamera": null,
@@ -1009,7 +1035,17 @@
       "product_name": "RICOH GR III",
       "brand": "RICOH",
       "sources": {
-        "official": null,
+        "official": {
+          "url": null,
+          "link_type": null,
+          "verified": false,
+          "last_verified_at": "2026-10-08",
+          "extraction_method": null,
+          "confidence": "low",
+          "official_price": null,
+          "enabled": true,
+          "reason_if_disabled": "RICOH の製品ページに「RICOH GRIII 生産終了」"
+        },
         "pricecom": null,
         "yodobashi": null,
         "biccamera": null,
@@ -1452,13 +1488,13 @@
       ]
     },
     "Sony": {
-      "products": 5,
+      "products": 6,
       "url_verified": 1,
       "http_200": 1,
       "exact_match": 1,
       "price_ok": 1,
       "high_conf": 1,
-      "failed": 4,
+      "failed": 5,
       "failures": [
         {
           "product_id": "prod_a1ii",
@@ -1475,6 +1511,10 @@
         {
           "product_id": "prod_fx3",
           "reason": "store.sony.jp が当環境からDNS解決不可（要手動検証）"
+        },
+        {
+          "product_id": "prod_ps5_de",
+          "reason": "公式の本体ラインナップのデジタル・エディションは日本語専用（55,000円）だけ。この商品の版は無い"
         }
       ]
     },
@@ -1482,9 +1522,9 @@
       "products": 2,
       "url_verified": 1,
       "http_200": 1,
-      "exact_match": 0,
+      "exact_match": 1,
       "price_ok": 1,
-      "high_conf": 0,
+      "high_conf": 1,
       "failed": 1,
       "failures": [
         {
@@ -1542,6 +1582,21 @@
         {
           "product_id": "prod_r3",
           "reason": "canon.jp が当環境からDNS解決不可（要手動検証）"
+        }
+      ]
+    },
+    "RICOH": {
+      "products": 1,
+      "url_verified": 0,
+      "http_200": 0,
+      "exact_match": 0,
+      "price_ok": 0,
+      "high_conf": 0,
+      "failed": 1,
+      "failures": [
+        {
+          "product_id": "prod_gr3",
+          "reason": "RICOH の製品ページに「RICOH GRIII 生産終了」"
         }
       ]
     }

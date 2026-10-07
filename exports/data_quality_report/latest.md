@@ -1,4 +1,4 @@
-# データ取得品質レポート（2026-10-08 00:27 JST）
+# データ取得品質レポート（2026-10-08 04:10 JST）
 
 ## 取得成功率
 - 全対象店舗数: 16
@@ -7,10 +7,10 @@
 - ジョブ成功率: 22.4%（OK 13 / 失敗 41 / SKIP 4 / 計 58）
 
 ## 前回比較
-- 前回成功率: 25.9%
+- 前回成功率: 22.4%
 - 今回成功率: 22.4%
-- 変化: -3.5pt（悪化）
-- 7日移動平均: 22.0%
+- 変化: 0.0pt（横ばい）
+- 7日移動平均: 22.1%
 - 主要失敗理由 TOP5: price_not_found 9, product_not_listed 8, rate_limited_429 6, http_403 6, robots_unreachable 4
 
 ## 店舗別成功率（低い順）
@@ -39,19 +39,20 @@
 - airpods_pro3: 100.0%
 
 ## 連続失敗店舗（2回以上）
-- 2ndstreet: 185回連続
-- bookoff: 185回連続
-- dosupara: 185回連続
-- geo_mobile: 185回連続
-- hardoff: 185回連続
-- janpara: 185回連続
-- pasoko: 185回連続
-- sofmap: 185回連続
-- surugaya: 185回連続
-- tsutaya: 185回連続
-- iosys: 118回連続
-- netoff: 45回連続
-- geo: 24回連続
+- 2ndstreet: 186回連続
+- bookoff: 186回連続
+- dosupara: 186回連続
+- geo_mobile: 186回連続
+- hardoff: 186回連続
+- janpara: 186回連続
+- pasoko: 186回連続
+- sofmap: 186回連続
+- surugaya: 186回連続
+- tsutaya: 186回連続
+- iosys: 119回連続
+- netoff: 46回連続
+- geo: 25回連続
+- mobile_ichiban: 2回連続
 
 ## 改善優先順位（required店舗）
 1. iosys（失敗6 / http_403）

@@ -1,16 +1,17 @@
 # Official Source Registry & Validation
 
-> 生成: 2026-10-08 00:11 JST / 公式ソース登録・検証（利益/AI/Opportunity/Notification/Capital/Execution は不変）
+> 生成: 2026-10-08 03:52 JST / 公式ソース登録・検証（利益/AI/Opportunity/Notification/Capital/Execution は不変）
 
 ## メーカー別サマリ
 | Maker | Products | URL verified | HTTP200 | exact match | price auto | high conf | failed |
 |---|--:|--:|--:|--:|--:|--:|--:|
 | Apple | 19 | 2 | 2 | 2 | 2 | 2 | 17 |
-| Sony | 5 | 1 | 1 | 1 | 1 | 1 | 4 |
-| Nintendo | 2 | 1 | 1 | 0 | 1 | 0 | 1 |
+| Sony | 6 | 1 | 1 | 1 | 1 | 1 | 5 |
+| Nintendo | 2 | 1 | 1 | 1 | 1 | 1 | 1 |
 | Nikon | 3 | 1 | 1 | 0 | 0 | 0 | 2 |
 | FUJIFILM | 1 | 1 | 1 | 0 | 0 | 0 | 0 |
 | Canon | 3 | 0 | 0 | 0 | 0 | 0 | 3 |
+| RICOH | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
 
 ## 自動取得率 Before → After
 - Before: 公式定価あり商品 3 / 公式config 7
@@ -28,7 +29,7 @@
 | prod_iphone17_256 | src_apple_jp | ¥159,800 | item | high |
 | prod_airpods_pro3 | src_apple_jp | ¥42,800 | item | high |
 | prod_ps5_pro | src_sony_store | ¥137,980 | item | high |
-| prod_switch2 | src_nintendo_store | ¥59,980 | category | medium |
+| prod_switch2 | src_nintendo_store | ¥59,980 | item | high |
 
 ## 検証不能（要手動検証・推測登録しない）
 | product | source | reason |
@@ -60,6 +61,8 @@
 | prod_macbook_air_m4_13 | src_apple_jp | 公式の MacBook Air は M5 チップ（M4 は販売していない） |
 | prod_macbook_air_m4_15 | src_apple_jp | 公式の MacBook Air は M5 チップ（M4 は販売していない） |
 | prod_macbook_pro_m4_14 | src_apple_jp | 公式の MacBook Pro は M5・M5 Pro・M5 Max チップ（M4 は販売していない） |
+| prod_ps5_de | src_sony_store | 公式の本体ラインナップのデジタル・エディションは日本語専用（55,000円）だけ。この商品の版は無い |
+| prod_gr3 | src_ricoh_imaging | RICOH の製品ページに「RICOH GRIII 生産終了」 |
 
 ## 次に改善すべきsource
 1. **EBAY_APP_ID 設定**（海外相場の自動fresh化・最優先）

@@ -1,7 +1,7 @@
 
 ============================================================
  Deploy Check (467 items)
- 実行日時: 2026-10-08T00:27:06+09:00
+ 実行日時: 2026-10-08T04:10:12+09:00
 ============================================================
   ✅ [index_exists] docs/index.html 存在
   ✅ [forbidden_phrases] 禁止表現なし
@@ -45,7 +45,7 @@
   ✅ [no_mainichi_koshin_text] 「毎日更新」表記は topbar/footer 内のみ（正常）
   ✅ [deal_card_no_saishin_label] updated-row に旧「最終更新：」表記なし（価格確認：に統一済み）
   ✅ [stale_banner_date_mismatch] #144 「本日の価格データ未更新」が HTML に存在しない（OK: トップ警告抑制済み）
-  ⚠️ [csv_today_observed_at] manual_buyback_prices.csv に本日(2026-10-08)の observed_at なし（手動更新が必要な可能性）
+  ✅ [csv_today_observed_at] manual_buyback_prices.csv に本日(2026-10-08)の observed_at あり
   ✅ [iphone17_price_fetched] iPhone 17 Pro 系の買取価格が1件以上取得されている
   ✅ [mobile_ichiban_price] モバイル一番の買取価格（price > 0）が存在する
   ✅ [no_price_zero_shown] LP上に¥0の価格表記なし（0価格行は非表示 or fetch_failed表示で正常）
@@ -53,12 +53,12 @@
   ✅ [fetch_failed_no_price_calc] fetch_failed 行の価格欄が「—」（価格計算に使われていない）
   ✅ [game_console_shops] ゲーム機向け店舗が表示されている: ['ゲオ', 'イオシス', 'ブックオフ', '駿河屋', 'ソフマップ', 'TSUTAYA', '買取商店']
   ✅ [switch2_game_shop_links] Switch 2 / ゲーム機向け確認リンク（ゲオ/ブックオフ/駿河屋/ソフマップ）が存在する
-  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-10-07T23:29:19+09:00）
+  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-10-08T03:09:43+09:00）
   ⚠️ [suspicious_price_format] suspicious_prices 形式OK（suspicious_price 1件あり — 確認推奨）
   ✅ [fetch_failed_has_reason] fetch_failed 45件すべてに reason あり
   ✅ [collector_report_html_exists] docs/collector_report.html 存在
   ✅ [collector_report_link_in_lp] LP内に collector_report.html へのリンクがある
-  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 10件存在する: ['iphone17pro256', 'iphone17pm256', 'iphone17pm512', 'iphone17pro512']
+  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 10件存在する: ['iphone17pm256', 'iphone17_256', 'iphone17pro512', 'iphone17pm512']
   ✅ [beginner_page_auto_scraped_exists] 自動取得 OK 13件 / total 58件
   ✅ [iphone17pro256_price_scraped] iPhone 17 Pro 256GB の価格取得成功: ['kaitori_shouten', 'kaitori_itchome']
   ✅ [fetch_failed_has_reason_field] 全取得失敗エントリーに reason フィールドあり（45件）
@@ -292,7 +292,7 @@
   ✅ [profit_route_age_fields] #604 main route に buy_age_days / sell_age_days が含まれる
   ✅ [profit_route_reproducibility] #605 reproducibility_score がルートに付与される
   ✅ [health_diff_shown] #613 前日比較が表示される
-  ✅ [health_critical_classification] #614 異常が Critical/Warning/Info に分類される（C4/W2/I0）
+  ✅ [health_critical_classification] #614 異常が Critical/Warning/Info に分類される（C4/W1/I0）
   ✅ [ai_opportunity_score] #616 Opportunity Score（0-100）が全候補に付与される
   ✅ [ai_buy_decision] #617 BUY/WATCH/PASS 判定が付与される
   ✅ [ai_daily_recommendation] #618 今日のおすすめ（Daily Recommendation）が生成物に付与される
@@ -351,7 +351,7 @@
   ✅ [official_collector_guarded] #683 公式コレクターが保存前検証を実施（mismatch/accessory を保存しない）
   ✅ [official_canon_registered] #684 Canon が registry に登録される（3件・要手動検証含む）
   ✅ [official_nikon_registered] #685 Nikon が registry に登録される（3件）
-  ✅ [official_sony_registered] #686 Sony が registry に登録される（5件・要手動検証）
+  ✅ [official_sony_registered] #686 Sony が registry に登録される（6件・要手動検証）
   ✅ [official_config_verified_fields] #687 source config に verified/last_verified_at が存在する
   ✅ [retail_buyback_audit] #688 retail_buyback_audit が生成される（Main昇格 9件）
   ✅ [price_quality_impl] #689 価格品質ゲート（Main昇格/同一性/duplicate検出）が実装される
@@ -431,7 +431,7 @@
   ✅ [tcg_blocked_source_not_healthy] #762 アクセス拒否（HTTP 403 等）の監視元を正常扱いしない
   ✅ [tcg_entry_url_official_only] #763 応募ページへのリンクは公式サイトの URL のみ
   ✅ [tcg_lottery_coverage_report] #764 抽選の監視状況（登録 / 実装 / 正常 / 拒否 / 未実装）が出力されている
-  ✅ [tcg_lottery_real_data] #765 抽選を実データで取得している（2件）、または監視元が正常に0件を返している
+  ✅ [tcg_lottery_real_data] #765 抽選を実データで取得している（6件）、または監視元が正常に0件を返している
   ✅ [tcg_release_schedule_shown] #841 公式の発売予定（12件）が新UIの抽選・予約に出ている
   ✅ [no_legacy_ui] #800 旧UIの DOM・CSS・JS が残っていない
   ✅ [new_ui_root] #801 新UIの root（#new-ui-root）が1つあり、終わりの目印がある
@@ -447,7 +447,7 @@
   ✅ [new_ui_no_internal_info] #808 新UIの一般のページに運営者向けの内部情報を出していない（運営者向けのページは別）
   ✅ [admin_ui_safe] #836 運営者向けのページに秘密の値・偽の操作・偽のログイン表示・DEMO が無く、8つの区分がそろっている
   ✅ [new_ui_safe_links] #809 新UIのリンクは https: かサイト内の相対パスだけ
-  ✅ [new_ui_vm_fidelity] #810 抽選の表示モデル（VM）が元データと一致する（22件）
+  ✅ [new_ui_vm_fidelity] #810 抽選の表示モデル（VM）が元データと一致する（26件）
   ✅ [admin_has_legacy_operator_info] #839 旧UIにしか無かった運営の情報が運営者向けのページにある
   ✅ [legacy_intents_on_new_ui] #840 旧UIの検査の意図（14日より古い価格・0円・未照合・中古を確定に使わない、取得の警告の強さ）を新UIの判定で満たす
   ✅ [source_safety] #842 取得の安全性（robots.txt・ブロックで打ち切り・正直な User-Agent・規約上取らない取得元を取らない）
@@ -471,7 +471,7 @@
   ✅ [opportunity_sell_identity_verified] #833 利益に使った売却価格はすべて商品照合済みの買取価格で、商品詳細の表の確認済みの行と一致（1件）
   ✅ [mypage_safe] #834 マイページに DEMO・架空のアカウント表示・危ないリンクが無く、ウォッチは登録済みの商品だけ、想定純利益は商品詳細と同じ
 
-  Errors: 0 | Warnings: 11 | OK: 456
+  Errors: 0 | Warnings: 10 | OK: 457
 
   ✅ Deploy check PASSED
 ============================================================

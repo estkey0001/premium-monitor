@@ -1,7 +1,8 @@
 # HANDOFF（最終更新: 2026-10-07）
 
 ## 今の状態
-- Phase 12（取得の安全性と売却データ）を実装。全取得経路が robots.txt・同じドメインの間隔・取得元単位の打ち切り・正直な User-Agent（`src/collectors/polite.py`）を通る。メルカリ・ラクマ・Amazon・ヤフオク・eBay の検索結果の HTML は取得しない（楽天は公式 API だけ）。成約の履歴と成約中央値（3件以上・14日）・eBay Marketplace Insights のアダプター（資格情報待ち）。記録は `internal/audits/PHASE_12_SOURCE_SAFETY.md`
+- Phase 13（成約の有効化の準備と CI の組み込み・カメラの取得時間）を実装。CI の「eBay SOLD (Marketplace Insights)」は資格情報・承認・ライセンス・取得の明示がそろったときだけ取りに行き（今は全部無いので通信0・PENDING_USER_CONFIGURATION）、最初は1商品の canary（履歴に書かない）→ 段階 1 → 3 → 10 商品。廃止された Finding API を呼ぶコードを削除。フジヤは1ページを1回だけ開き、取得済みのページを使い回す（間隔90秒は変えない）。記録は `internal/audits/PHASE_13_SOLD_ACTIVATION.md`
+- Phase 12（取得の安全性）: 全取得経路が `src/collectors/polite.py`（robots.txt・同じドメインの間隔・打ち切り・正直な User-Agent）を通る。メルカリ・ラクマ・Amazon・ヤフオク・eBay の検索結果の HTML は取得しない。記録は `internal/audits/PHASE_12_SOURCE_SAFETY.md`
 - 開発場所は `premium-monitor`（ブランチ `tcg-push` = `origin/main`）の1か所。push は `tcg-push:main` の fast-forward のみ
 - Phase ごとの詳細な実装記録と「踏んだ罠」は `internal/DEV_NOTES.md`（削らない・着手前に該当節を読む）
 
@@ -19,7 +20,9 @@
   - #821 は「3件以上が同じ時刻」の形しか検出しない（検知範囲の拡張）
   - 買取の価格の種別（現金買取 / 下取）は DB に保存していない（status JSON にだけ記録。is_tradein は文字列判定）。sale_prices の種別は Phase 0.2 で保存するようにした
   - Leica M11 の商品コードが未確認（下記）
-- **成約（sold）データは今は0件**。成約を取れる公式の経路は eBay Marketplace Insights API だけ（審査制。Finding API は 2025-02-05 に廃止）。受け皿（`src/market/sold_history.py`・`src/collectors/api/ebay_insights.py`・`scripts/collect_ebay_sold.py`）は作ったが、資格情報・ENABLE_EBAY_API=true・canary の合格が無いので動かない。ヤフオク・メルカリ・ラクマは取得しない（手動の成約 CSV は URL がダミーで成約日時が無いので使えない）。
+- **成約（sold）データは今は0件**。成約を取れる公式の経路は eBay Marketplace Insights API だけ（審査制。Finding API は 2025-02-05 に廃止され、呼ぶコードも Phase 13 で削除）。CI のステップは入っているが、資格情報・承認・ライセンスの確認が無いので通信0（状態は `exports/sold_history/collect_status.json`）。ヤフオク・メルカリ・ラクマは取得しない（手動の成約 CSV は URL がダミーで成約日時が無いので使えない）。
+- 使われていないコード（整理の候補。削除はユーザーの判断）: `src/collectors/price/mercari.py`・`src/collectors/price/ebay.py`・中古の取得の `MercariResaleCollector`・`RakumaResaleCollector`（Phase 13 の監査 §7）。
+- Phase 13 のカメラの短縮は実物の1ページとテストで確かめたが、CI の所要時間は実測で確かめる（CI で「開けない」が続くと開き直しが残る）。
 - 過去の誤分類（git の履歴で数えた）: NPO にヤフオクの出品を「落札」として入れたコミットが144（1,491行、2026-06-04〜10-02）。そのうち利益ルートの main（確定利益）の仕入れ値に使ったものが32行。ダミー URL の手動「成約」を使ったルートが39コミット・269行（06-15〜09-04）。履歴は書き換えていない。
 - 既知の LOW（Phase 6.1）: せどりルートの計算（`sedori_route_calculator`）は店ごとの最高値を選ぶので、その値が未照合だとルートごと外れる（同じ店の照合済みの低い値に戻らない。確定には入らない安全側）。案件の売値の照合は「商品ID・店名・価格」の一致なので、正規化データと DB で店名の表記が変わると照合済みでも未照合になる（安全側。利益が黙って消えるので、件数の急減に注意）。商品詳細の売却の表の「有効」は、照合フラグと鮮度だけで決めている（店のトップ・検索結果の URL かは見ていない。利益の売却先は `confirmed_sell_keys` で決めるので確定には影響しない）。
 - 手入力（manual_today）の買取価格は商品の照合済みにならない（`is_exact_product_match` は auto_scraped だけ。ルートと同じ）ので、確定利益の売値に使わない。手入力の価格を使いたいときは、照合の根拠（商品ページの URL など）を記録する仕組みが別に必要。
@@ -40,11 +43,10 @@
 - 既存の問題: pytest を実行すると追跡対象の exports/api_automation/collection.json が書き換わる。コミット前に `git checkout -- exports/api_automation/collection.json` で戻すこと（テストの出力先修正は別タスク）。
 
 ## 次にやること
-0. Phase 13 はユーザーの指示を待ってから始める（候補は Phase 12 の最終報告に書いた）。
-1. eBay の成約: Marketplace Insights の利用許可（審査）と Secrets（EBAY_CLIENT_ID・EBAY_CLIENT_SECRET）・ENABLE_EBAY_API=true はユーザーの設定待ち。設定後は `python scripts/collect_ebay_sold.py --dry-run` → canary（1商品）。eBay の API のデータを公開のリポジトリに残してよいかの確認も必要。楽天・Yahoo!ショッピングの API キーも設定待ち（`internal/audits/PHASE_11_SOURCE_AUDIT.md` §7）。カメラのオープン価格の定価の扱い（直販の販売価格を確認済みにするか）は判断待ち。
-2. 利益商品の件数を増やすには、データ側を直す（設定値の定価の確認・カメラの買取の鮮度・成約の集計期間）。UI 側で条件を緩めない。
-3. 買取・在庫の更新頻度（今は日次1回）。推奨は diagnostics の frequency。本番のスケジュール変更はユーザー判断。
-4. 利益計算の8系統の統一（internal/uiux/UI_VIEW_MODEL_SPEC.md §2）と、成約データの取得方法（internal/uiux/IMPLEMENTATION_PLAN_V2.md）。
+0. Phase 14 はユーザーの指示を待ってから始める（候補は Phase 13 の最終報告に書いた）。
+1. eBay の成約: ユーザーの設定待ち（Marketplace Insights の利用許可・Secrets の EBAY_CLIENT_ID / EBAY_CLIENT_SECRET・公開リポジトリに保存してよいかの確認・Variables の EBAY_INSIGHTS_APPROVED / EBAY_SOLD_LICENSE_CONFIRMED / ENABLE_EBAY_API / API_DRY_RUN）。手順は `ops/Secrets設定.md`。設定後は CI の canary（1商品）の報告 `exports/sold_history/canary.json` を人が見てから EBAY_SOLD_CANARY=false → EBAY_SOLD_STAGE 1 → 3 → 10。楽天・Yahoo!ショッピングの API キーも設定待ち。
+2. 利益商品の件数を増やすには、データ側を直す（設定値の定価の確認・カメラの買取の鮮度・成約）。UI 側で条件を緩めない。
+3. 買取・在庫の更新頻度（今は日次1回）。本番のスケジュール変更はユーザー判断。
 
 ## 注意（次の人へ）
 - **着手前に `internal/DEV_NOTES.md` の関係する節を読む**

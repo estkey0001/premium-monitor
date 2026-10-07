@@ -70,10 +70,13 @@ CAMERA_MODELS = {
                  "exclude_raw": ["モノクローム", "モノクロ"]},
     "gr4_hdf":  {"brand": "RICOH", "name": "RICOH GR IV HDF", "retail": 200000,
                  "variants": ["RICOH GR IV HDF", "GR IV HDF", "GR4 HDF"],
-                 "require_any": ["GRIV", "GR4"], "include_all": ["HDF"]},
+                 "require_any": ["GRIV", "GR4"], "include_all": ["HDF"],
+                 # Monochrome と互いに除外する（同じ検索結果のページの候補を使い回すので。Phase 13 レビュー L-7）
+                 "exclude": ["MONOCHROME"], "exclude_raw": ["モノクローム", "モノクロ"]},
     "gr4_mono": {"brand": "RICOH", "name": "RICOH GR IV Monochrome", "retail": 210000,
                  "variants": ["RICOH GR IV Monochrome", "GR IV Monochrome", "GR4 モノクローム"],
-                 "require_any": ["GRIV", "GR4"], "include_raw_any": ["Monochrome", "MONOCHROME", "モノクローム", "モノクロ"]},
+                 "require_any": ["GRIV", "GR4"], "include_raw_any": ["Monochrome", "MONOCHROME", "モノクローム", "モノクロ"],
+                 "exclude": ["HDF"]},
     # SONY
     # Sony は曖昧な α 表記（A7RV⊂A7RVI 等の連結誤一致）を避け、明確な ILCE/ILME 型番コードで判定。
     "a7rv":     {"brand": "SONY", "name": "SONY α7R V", "retail": 440000,
@@ -413,7 +416,29 @@ def _ordered_variants(alias: str, variants: list) -> list:
     except (OSError, ValueError):
         prev = ""
     ordered = ([prev] if prev in variants else []) + [v for v in variants if v != prev]
-    return ordered[:FUJIYA_MAX_VARIANTS]
+    # 大文字・小文字・空白だけが違う候補は同じ検索になる（例: Leica M11 / LEICA M11。CI で同じ件数を確認）ので
+    # 1つにする（Phase 13）
+    seen, uniq = set(), []
+    for v in ordered:
+        k = " ".join(str(v).lower().split())
+        if k not in seen:
+            seen.add(k)
+            uniq.append(v)
+    return uniq[:FUJIYA_MAX_VARIANTS]
+
+
+def _reuse_fujiya_page(alias: str, pages: list) -> Optional[tuple]:
+    """この実行で取得済みのフジヤの買取検索のページに、この機種の厳密一致の買取価格があれば (検索語, 取得結果, 選定結果)。
+
+    例: 「RICOH GR IV」の検索結果には GR IV HDF・GR IV Monochrome も載る。同じページの同じ候補から、機種の厳密一致
+    （_select_camera_buyback。照合の条件は自分の検索のときと同じ）で選べれば、同じ店にもう一度取りに行かない（Phase 13）。
+    選べなければ None（自分の検索語で取りに行く）。
+    """
+    for var, pw in pages:
+        sel = _select_camera_buyback(pw.get("selector_candidates", []), alias)
+        if sel.get("price"):
+            return var, pw, sel
+    return None
 
 
 def _source_id_for_url(url: str) -> str:
@@ -643,9 +668,16 @@ def _fetch_with_playwright(url: str, shop_id: str, alias: str, dbg_dir, shot_dir
             page = ctx.new_page()
             _resp = None
             try:
-                _resp = page.goto(url, wait_until="networkidle", timeout=timeout_ms)
+                # 1回だけ開く（Phase 13）。以前は networkidle で開き、静まらないと（広告・計測のタグの通信が続く。
+                # 2026-10 にフジヤで確認: ページは取れているのに25秒でタイムアウト）同じ URL をもう一度開いていた。
+                # 静まるのは、通信を増やさない範囲で少しだけ待つ
+                _resp = page.goto(url, wait_until="domcontentloaded", timeout=timeout_ms)
+                try:
+                    page.wait_for_load_state("networkidle", timeout=8000)
+                except Exception:  # noqa: BLE001 - 静まらなくても、開けたページはそのまま読む
+                    pass
             except Exception:
-                # 同じ URL をもう一度開くので、同じドメインの間隔をあける（Phase 12 監査 L5）
+                # 開けなかったときだけ、同じ URL をもう一度開く。同じドメインの間隔をあける（Phase 12 監査 L5）
                 polite.polite_wait(url, shop_id)
                 try:
                     _resp = page.goto(url, wait_until="domcontentloaded", timeout=timeout_ms)
@@ -806,6 +838,7 @@ def main() -> int:
     # 取得元ごとの打ち切り（ブロックは即、一時的な失敗・形の不一致は2回続いたら。この実行の中だけ。Phase 12）
     from src.collectors.polite import ShopCutoff
     cutoff = ShopCutoff()
+    _fujiya_pages: list = []   # この実行で取得したフジヤの買取検索のページ（検索語, 取得結果）。使い回す（Phase 13）
     for alias in CAMERA_ALIASES:
         kw = CAMERA_KEYWORDS.get(alias, alias)
         kw_enc = _up.quote(kw)
@@ -860,7 +893,12 @@ def main() -> int:
                 # フジヤ：複数キーワードを試し、機種厳密一致の買取価格が取れるものを採用
                 if shop_id == "src_fujiya" and alias in FUJIYA_KEYWORD_VARIANTS:
                     _best = None
-                    for _var in _ordered_variants(alias, FUJIYA_KEYWORD_VARIANTS[alias]):
+                    _reused = _reuse_fujiya_page(alias, _fujiya_pages)
+                    if _reused:
+                        _rv, _rpw, _rsel = _reused
+                        _best = ((1, _rpw.get("hit_count") or 0), _rv, {**_rpw, "reused_page": True}, _rsel)
+                        _kw_hit_counts[_rv] = _rpw.get("hit_count")
+                    for _var in ([] if _reused else _ordered_variants(alias, FUJIYA_KEYWORD_VARIANTS[alias])):
                         # 買取専用ページ /shop/purchase/list.aspx（search=検索 必須）
                         _vurl = ("https://www.fujiya-camera.co.jp/shop/purchase/list.aspx"
                                  f"?keyword={_up.quote(_var)}&search=検索")
@@ -871,6 +909,8 @@ def main() -> int:
                             _best = (( -1, 0), _var, _try, {})
                             break
                         _try["buyback_page_url"] = _vurl
+                        if _try.get("html"):
+                            _fujiya_pages.append((_var, _try))
                         _hc = _try.get("hit_count")
                         _kw_hit_counts[_var] = _hc
                         # 機種厳密一致の買取価格を選定（Task 1/2）
@@ -928,6 +968,8 @@ def main() -> int:
                           hit_count=_pw.get("hit_count") if _pw else None,
                           keyword_hit_counts=_kw_hit_counts,
                           best_keyword=_best_keyword,
+                          # この実行で取得済みの別の検索語のページから選んだか（Phase 13。証拠をたどれるように）
+                          reused_page=bool(_pw.get("reused_page")) if _pw else False,
                           has_buyback_context=_pw.get("has_buyback_context", False) if _pw else False,
                           sales_price_sample=_pw.get("sales_price_sample") if _pw else None,
                           buyback_link_candidates=_pw.get("buyback_link_candidates", []) if _pw else [],

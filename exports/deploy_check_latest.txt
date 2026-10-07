@@ -1,7 +1,7 @@
 
 ============================================================
- Deploy Check (462 items)
- 実行日時: 2026-10-07T13:41:06+09:00
+ Deploy Check (465 items)
+ 実行日時: 2026-10-07T19:57:59+09:00
 ============================================================
   ✅ [index_exists] docs/index.html 存在
   ✅ [forbidden_phrases] 禁止表現なし
@@ -53,12 +53,12 @@
   ✅ [fetch_failed_no_price_calc] fetch_failed 行の価格欄が「—」（価格計算に使われていない）
   ✅ [game_console_shops] ゲーム機向け店舗が表示されている: ['ゲオ', 'イオシス', 'ブックオフ', '駿河屋', 'ソフマップ', 'TSUTAYA', '買取商店']
   ✅ [switch2_game_shop_links] Switch 2 / ゲーム機向け確認リンク（ゲオ/ブックオフ/駿河屋/ソフマップ）が存在する
-  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-10-07T12:18:29+09:00）
+  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-10-07T18:20:22+09:00）
   ⚠️ [suspicious_price_format] suspicious_prices 形式OK（suspicious_price 1件あり — 確認推奨）
   ✅ [fetch_failed_has_reason] fetch_failed 43件すべてに reason あり
   ✅ [collector_report_html_exists] docs/collector_report.html 存在
   ✅ [collector_report_link_in_lp] LP内に collector_report.html へのリンクがある
-  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 11件存在する: ['iphone17pm512', 'iphone17pro512', 'iphone17pro256', 'iphone17_256']
+  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 11件存在する: ['iphone17pm512', 'iphone17_256', 'iphone17pro256', 'iphone17pm256']
   ✅ [beginner_page_auto_scraped_exists] 自動取得 OK 15件 / total 58件
   ✅ [iphone17pro256_price_scraped] iPhone 17 Pro 256GB の価格取得成功: ['kaitori_shouten', 'kaitori_itchome']
   ✅ [fetch_failed_has_reason_field] 全取得失敗エントリーに reason フィールドあり（43件）
@@ -67,7 +67,7 @@
   ⚠️ [switch2_min2_shops] Switch2の成功店舗数が2未満: 1店舗
   ✅ [ps5pro_min2_shops] PS5 Pro 成功店舗≥2（2店舗）
   ✅ [no_unknown_failure_reason] すべての取得失敗に reason が設定されている（unknown なし）
-  ✅ [debug_files_saved] exports/debug/ に診断ファイル 67件あり
+  ✅ [debug_files_saved] exports/debug/ に診断ファイル 62件あり
   ✅ [low_confidence_not_in_lp] confidence=low 価格がLPに含まれていない（low=0件）
   ✅ [suspicious_price_not_in_lp] suspicious_price がLPに含まれていない（要疑い価格=1件）
   ✅ [quality_gate_script_exists] scripts/check_collector_quality.py が存在
@@ -431,7 +431,7 @@
   ✅ [tcg_blocked_source_not_healthy] #762 アクセス拒否（HTTP 403 等）の監視元を正常扱いしない
   ✅ [tcg_entry_url_official_only] #763 応募ページへのリンクは公式サイトの URL のみ
   ✅ [tcg_lottery_coverage_report] #764 抽選の監視状況（登録 / 実装 / 正常 / 拒否 / 未実装）が出力されている
-  ✅ [tcg_lottery_real_data] #765 抽選を実データで取得している（8件）、または監視元が正常に0件を返している
+  ✅ [tcg_lottery_real_data] #765 抽選を実データで取得している（6件）、または監視元が正常に0件を返している
   ✅ [tcg_release_schedule_shown] #841 公式の発売予定（13件）が新UIの抽選・予約に出ている
   ✅ [no_legacy_ui] #800 旧UIの DOM・CSS・JS が残っていない
   ✅ [new_ui_root] #801 新UIの root（#new-ui-root）が1つあり、終わりの目印がある
@@ -450,6 +450,9 @@
   ✅ [new_ui_vm_fidelity] #810 抽選の表示モデル（VM）が元データと一致する（27件）
   ✅ [admin_has_legacy_operator_info] #839 旧UIにしか無かった運営の情報が運営者向けのページにある
   ✅ [legacy_intents_on_new_ui] #840 旧UIの検査の意図（14日より古い価格・0円・未照合・中古を確定に使わない、取得の警告の強さ）を新UIの判定で満たす
+  ✅ [source_safety] #842 取得の安全性（robots.txt・ブロックで打ち切り・正直な User-Agent・規約上取らない取得元を取らない）
+  ✅ [api_secret_safety] #843 API の安全性（公開する全ページ・成約の記録に秘密の値・認証の値が無い）
+  ✅ [sold_semantics] #844 成約の意味（根拠のある成約だけ・成約中央値は3件以上と期間・出品を売値にしない）
   ✅ [no_rejected_price_published] #820 明らかに誤りの買取価格が CSV（LP・利益計算の入力）に残っていない
   ✅ [official_price_not_generation_time] #821 公式定価の観測時刻が生成時刻になっていない（確認日・実際の取得時刻を保持）
   ✅ [no_timestamp_only_update] #822 手動 CSV で「値は同じで日時だけ新しい」更新をしていない（作業ツリーと直近のコミット）
@@ -466,7 +469,7 @@
   ✅ [opportunity_sell_identity_verified] #833 利益に使った売却価格はすべて商品照合済みの買取価格で、商品詳細の表の確認済みの行と一致（1件）
   ✅ [mypage_safe] #834 マイページに DEMO・架空のアカウント表示・危ないリンクが無く、ウォッチは登録済みの商品だけ、想定純利益は商品詳細と同じ
 
-  Errors: 0 | Warnings: 9 | OK: 453
+  Errors: 0 | Warnings: 9 | OK: 456
 
   ✅ Deploy check PASSED
 ============================================================

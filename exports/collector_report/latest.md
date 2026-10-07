@@ -1,6 +1,6 @@
 # Collector Quality Report
 
-生成日時: 2026-10-07 12:18:29 UTC+09:00
+生成日時: 2026-10-07 18:20:22 UTC+09:00
 
 ## サマリ
 
@@ -49,12 +49,12 @@
 |------|-----------|------|------|---------|---------|---------|-----------|
 | airpods_pro3 | 1 | - | - | ¥32,500 | ¥32,500 | ¥32,500 | — |
 | iphone16pro256 | 1 | - | - | ¥164,000 | ¥164,000 | ¥164,000 | — |
-| iphone17_256 | 1 | - | - | ¥139,000 | ¥139,000 | ¥139,000 | — |
-| iphone17pm256 | 3 | 3 | ✅ | ¥186,167 | ¥186,000 | ¥186,500 | — |
-| iphone17pm512 | 2 | 3 | ❌ | ¥215,000 | ¥215,000 | ¥215,000 | — |
-| iphone17pro256 | 2 | 3 | ❌ | ¥171,500 | ¥171,000 | ¥172,000 | — |
-| iphone17pro512 | 2 | 3 | ❌ | ¥198,000 | ¥198,000 | ¥198,000 | — |
-| ps5_pro | 2 | 2 | ✅ | ¥194,950 | ¥194,700 | ¥195,200 | ⚠️ |
+| iphone17_256 | 1 | - | - | ¥140,000 | ¥140,000 | ¥140,000 | — |
+| iphone17pm256 | 3 | 3 | ✅ | ¥186,000 | ¥186,000 | ¥186,000 | — |
+| iphone17pm512 | 2 | 3 | ❌ | ¥215,500 | ¥215,000 | ¥216,000 | — |
+| iphone17pro256 | 2 | 3 | ❌ | ¥172,000 | ¥171,000 | ¥173,000 | — |
+| iphone17pro512 | 2 | 3 | ❌ | ¥198,500 | ¥198,000 | ¥199,000 | — |
+| ps5_pro | 2 | 2 | ✅ | ¥195,200 | ¥195,200 | ¥195,200 | ⚠️ |
 | switch2 | 1 | 2 | ❌ | ¥52,500 | ¥52,500 | ¥52,500 | — |
 
 | 商品 | 成功店舗 |
@@ -77,7 +77,7 @@
 | bookoff | 0% | 0 | 0 | — | — | not_supported |
 | dosupara | 0% | 0 | 2 | — | — | http_404 |
 | geo | 0% | 0 | 2 | — | — | price_not_found |
-| geo_mobile | 0% | 0 | 4 | — | 4/4 | site_blocked |
+| geo_mobile | 0% | 0 | 4 | — | — | robots_unreachable |
 | hardoff | 0% | 0 | 2 | — | — | http_404 |
 | iosys | 0% | 0 | 6 | — | 6/6 | http_403 |
 | janpara | 0% | 0 | 6 | 6/6 | — | rate_limited_429 |
@@ -103,7 +103,7 @@
 2. bookoff (not_supported 2件)
 3. dosupara (http_404 2件)
 4. geo (price_not_found 2件)
-5. geo_mobile (site_blocked 4件)
+5. geo_mobile (robots_unreachable 4件)
 
 ## 取得不可理由ランキング
 
@@ -113,10 +113,11 @@
 | product_not_listed | 6 |
 | rate_limited_429 | 6 |
 | http_403 | 6 |
-| site_blocked | 6 |
+| robots_unreachable | 4 |
 | http_404 | 4 |
 | not_supported | 4 |
 | service_unavailable | 2 |
+| site_blocked | 2 |
 
 ## 取得失敗一覧 (43件)
 
@@ -125,24 +126,24 @@
 | iphone17pro256 | mobile_ichiban | FAILED | product_not_listed |
 | iphone17pro256 | janpara | FAILED | rate_limited_429 |
 | iphone17pro256 | iosys | FAILED | http_403 |
-| iphone17pro256 | geo_mobile | FAILED | site_blocked |
+| iphone17pro256 | geo_mobile | FAILED | robots_unreachable |
 | iphone17pro256 | 2ndstreet | FAILED | price_not_found |
 | iphone17pro256 | netoff | FAILED | price_not_found |
 | iphone17pro512 | mobile_ichiban | FAILED | product_not_listed |
 | iphone17pro512 | janpara | FAILED | rate_limited_429 |
 | iphone17pro512 | iosys | FAILED | http_403 |
-| iphone17pro512 | geo_mobile | FAILED | site_blocked |
+| iphone17pro512 | geo_mobile | FAILED | robots_unreachable |
 | iphone17pro512 | 2ndstreet | FAILED | price_not_found |
 | iphone17pro512 | netoff | FAILED | price_not_found |
 | iphone17pm256 | janpara | FAILED | rate_limited_429 |
 | iphone17pm256 | iosys | FAILED | http_403 |
-| iphone17pm256 | geo_mobile | FAILED | site_blocked |
+| iphone17pm256 | geo_mobile | FAILED | robots_unreachable |
 | iphone17pm256 | 2ndstreet | FAILED | price_not_found |
 | iphone17pm256 | netoff | FAILED | price_not_found |
 | iphone17pm512 | mobile_ichiban | FAILED | product_not_listed |
 | iphone17pm512 | janpara | FAILED | rate_limited_429 |
 | iphone17pm512 | iosys | FAILED | http_403 |
-| iphone17pm512 | geo_mobile | FAILED | site_blocked |
+| iphone17pm512 | geo_mobile | FAILED | robots_unreachable |
 | iphone17pm512 | 2ndstreet | FAILED | price_not_found |
 | iphone17pm512 | netoff | FAILED | price_not_found |
 | switch2 | geo | FAILED | price_not_found |
@@ -170,18 +171,18 @@
 
 | 商品 | 店舗 | 前回 | 今回 | 変化率 |
 |------|------|------|------|--------|
-| ps5_pro | kaitori_shouten | ¥134,500 | ¥194,700 | ↑44.8% |
+| ps5_pro | kaitori_shouten | ¥134,500 | ¥195,200 | ↑45.1% |
 | iphone16pro256 | kaitori_shouten | ¥150,000 | ¥164,000 | ↑9.3% |
-| iphone17pro512 | kaitori_shouten | ¥214,000 | ¥198,000 | ↓7.5% |
-| iphone17pm512 | kaitori_shouten | ¥226,000 | ¥215,000 | ↓4.9% |
-| iphone17_256 | kaitori_shouten | ¥133,000 | ¥139,000 | ↑4.5% |
-| iphone17pro256 | kaitori_shouten | ¥178,000 | ¥172,000 | ↓3.4% |
+| iphone17pro512 | kaitori_shouten | ¥214,000 | ¥199,000 | ↓7.0% |
+| iphone17_256 | kaitori_shouten | ¥133,000 | ¥140,000 | ↑5.3% |
+| iphone17pm512 | kaitori_shouten | ¥226,000 | ¥216,000 | ↓4.4% |
 | switch2 | kaitori_shouten | ¥50,800 | ¥52,500 | ↑3.3% |
-| iphone17pm256 | kaitori_shouten | ¥192,000 | ¥186,500 | ↓2.9% |
+| iphone17pm256 | kaitori_shouten | ¥192,000 | ¥186,000 | ↓3.1% |
+| iphone17pro256 | kaitori_shouten | ¥178,000 | ¥173,000 | ↓2.8% |
 | airpods_pro3 | kaitori_shouten | ¥32,000 | ¥32,500 | ↑1.6% |
 
 ## ⚠️ suspicious_price 一覧 (1件)
 
 | 商品 | 店舗 | 価格 | 理由 | 詳細 |
 |------|------|------|------|------|
-| ps5_pro | kaitori_shouten | ¥194,700 | price_change_over_20pct | 前回¥134,500 → 今回¥194,700（+44.8% 上昇） |
+| ps5_pro | kaitori_shouten | ¥195,200 | price_change_over_20pct | 前回¥134,500 → 今回¥195,200（+45.1% 上昇） |

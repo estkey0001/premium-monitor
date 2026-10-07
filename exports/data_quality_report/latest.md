@@ -1,4 +1,4 @@
-# データ取得品質レポート（2026-10-07 13:41 JST）
+# データ取得品質レポート（2026-10-07 19:57 JST）
 
 ## 取得成功率
 - 全対象店舗数: 16
@@ -7,18 +7,18 @@
 - ジョブ成功率: 25.9%（OK 15 / 失敗 39 / SKIP 4 / 計 58）
 
 ## 前回比較
-- 前回成功率: 18.2%
+- 前回成功率: 25.9%
 - 今回成功率: 25.9%
-- 変化: +7.7pt（改善）
-- 7日移動平均: 20.3%
-- 主要失敗理由 TOP5: price_not_found 9, product_not_listed 6, rate_limited_429 6, http_403 6, site_blocked 6
+- 変化: 0.0pt（横ばい）
+- 7日移動平均: 21.4%
+- 主要失敗理由 TOP5: price_not_found 9, product_not_listed 6, rate_limited_429 6, http_403 6, robots_unreachable 4
 
 ## 店舗別成功率（低い順）
 - 2ndstreet（optional）: 0%（OK 0/失敗 4・price_not_found）
 - bookoff（optional）: 0%（OK 0/失敗 0・not_supported）
 - dosupara（optional）: 0%（OK 0/失敗 2・http_404）
 - geo（optional）: 0%（OK 0/失敗 2・price_not_found）
-- geo_mobile（optional）: 0%（OK 0/失敗 4・site_blocked）
+- geo_mobile（optional）: 0%（OK 0/失敗 4・robots_unreachable）
 - hardoff（optional）: 0%（OK 0/失敗 2・http_404）
 - iosys: 0%（OK 0/失敗 6・http_403）
 - janpara（optional）: 0%（OK 0/失敗 6・rate_limited_429）
@@ -39,19 +39,19 @@
 - airpods_pro3: 100.0%
 
 ## 連続失敗店舗（2回以上）
-- 2ndstreet: 183回連続
-- bookoff: 183回連続
-- dosupara: 183回連続
-- geo_mobile: 183回連続
-- hardoff: 183回連続
-- janpara: 183回連続
-- pasoko: 183回連続
-- sofmap: 183回連続
-- surugaya: 183回連続
-- tsutaya: 183回連続
-- iosys: 116回連続
-- netoff: 43回連続
-- geo: 22回連続
+- 2ndstreet: 184回連続
+- bookoff: 184回連続
+- dosupara: 184回連続
+- geo_mobile: 184回連続
+- hardoff: 184回連続
+- janpara: 184回連続
+- pasoko: 184回連続
+- sofmap: 184回連続
+- surugaya: 184回連続
+- tsutaya: 184回連続
+- iosys: 117回連続
+- netoff: 44回連続
+- geo: 23回連続
 
 ## 改善優先順位（required店舗）
 1. iosys（失敗6 / http_403）
@@ -62,10 +62,11 @@
 - product_not_listed: 6件
 - rate_limited_429: 6件
 - http_403: 6件
-- site_blocked: 6件
+- robots_unreachable: 4件
 - http_404: 4件
 - not_supported: 4件
 - service_unavailable: 2件
+- site_blocked: 2件
 
 ## 有効データ量（新品・未使用 / 14日以内 / price>0）
 - 有効買取データを持つ商品数: 9

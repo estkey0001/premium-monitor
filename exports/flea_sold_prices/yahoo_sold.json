@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-07 13:41 JST",
+  "generated_at": "2026-10-07 19:57 JST",
   "source": "Yahoo Auction sold",
   "policy": "no_live_scraping_tos_safe_manual_curation_plus_search_url",
   "fresh_days": 14,
@@ -26,7 +26,7 @@
           "observed_at": "2026-08-21T12:00:00+09:00",
           "sold_at": "",
           "price_type": "UNKNOWN",
-          "age_days": 47.1,
+          "age_days": 47.3,
           "target_buy_price": 52499,
           "within_target": true,
           "rejection_reason": "no_sold_evidence:dummy_url,no_sold_at"
@@ -38,7 +38,7 @@
       "count_recent": 0,
       "median_price": null,
       "min_price": null,
-      "target_buy_price": 194699,
+      "target_buy_price": 195199,
       "within_target_count": 0,
       "search_url": "https://auctions.yahoo.co.jp/closedsearch/closedsearch?p=%5B%22PS5%20Pro%22%2C%20%22PlayStation5Pro%22%2C%20%22CFI-7000%22%2C%20%22CFI-7100%22%2C%20%22PlayStation%205%20Pro%22%2C%20%22CFI-7000A01%22%2C%20%22PS5Pro%22%5D&va=%5B%22PS5%20Pro%22%2C%20%22PlayStation5Pro%22%2C%20%22CFI-7000%22%2C%20%22CFI-7100%22%2C%20%22PlayStation%205%20Pro%22%2C%20%22CFI-7000A01%22%2C%20%22PS5Pro%22%5D",
       "item_urls": [],
@@ -55,8 +55,8 @@
           "observed_at": "2026-08-21T18:00:00+09:00",
           "sold_at": "",
           "price_type": "UNKNOWN",
-          "age_days": 46.8,
-          "target_buy_price": 194699,
+          "age_days": 47.1,
+          "target_buy_price": 195199,
           "within_target": true,
           "rejection_reason": "no_sold_evidence:dummy_url,no_sold_at"
         }
@@ -84,7 +84,7 @@
           "observed_at": "2026-08-21T20:00:00+09:00",
           "sold_at": "",
           "price_type": "UNKNOWN",
-          "age_days": 46.7,
+          "age_days": 47.0,
           "target_buy_price": 189999,
           "within_target": false,
           "rejection_reason": "no_sold_evidence:dummy_url,no_sold_at"

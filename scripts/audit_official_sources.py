@@ -42,7 +42,8 @@ OUT = ROOT / "exports" / "official_source_audit"
 from src.market.official_price_validator import validate_official_price, is_official_domain
 
 # ─────────────────────────────────────────────────────────────
-# 実検証済み公式URL（WebFetch で HTTP200 + 公式ドメイン + canonical + 商品一致を確認）
+# 実検証済み公式URL（WebFetch またはブラウザで公式ページを表示し、公式ドメイン + 商品一致を確認。
+# extraction_method の値は以前からの名前 webfetch_verified のまま。どちらで確認したかは各行のコメントに書く）
 # 確認日は VERIFIED_URLS_CHECKED_ON（実行日の TODAY ではない）。price は検証時に確認できた本体価格（税込）。
 # link_type: item=個別商品/購入ページ, category=カテゴリ購入ページ（個別URLなし）
 # confidence: high/medium/low（official_price_validator の基準）
@@ -59,18 +60,28 @@ VERIFIED_URLS = {
     # 2026-10-03: 公式の購入ページ（ブラウザで表示）で「256GB 159,800円から」を確認（08/23 の 142,800円から改定）
     "prod_iphone17_256":    {"source": "src_apple_jp", "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17",         "link_type": "item",     "price": 159800, "conf": "high", "checked_on": "2026-10-03"},
     # 2026-10-03: 公式の購入ページで「AirPods Pro 3 42,800円」を再確認
-    "prod_airpods_pro3":    {"source": "src_apple_jp", "url": "https://www.apple.com/jp/shop/buy-airpods/airpods-pro-3",   "link_type": "item",     "price": 42800,  "conf": "high", "checked_on": "2026-10-03"},
+    # 2026-10-08（Phase 14）: 同じ購入ページで 42,800円 を再確認（ブラウザ）。在庫・お届けの表示は、選択を進める前の
+    # ページには出ない（明示の証拠が無いので在庫は記録しない＝在庫未確認のまま）
+    "prod_airpods_pro3":    {"source": "src_apple_jp", "url": "https://www.apple.com/jp/shop/buy-airpods/airpods-pro-3",   "link_type": "item",     "price": 42800,  "conf": "high", "checked_on": "2026-10-08"},
     # ---- ゲーム機（公式ストア・公式ラインナップ）----
     # 2026-10-03: Sony Store の購入ページで「PlayStation®5 Pro CFI-7100B01 入荷待ち 137,980 円(税込)」を確認
     # （2026-04-02 の価格改定後の価格。設定値の 119,980円 は改定前）。
     # 在庫の表示（入荷待ち）も同じページで確認した時刻つきで記録する（7日を過ぎれば在庫未確認に戻る）
+    # 2026-10-08 02:34（Phase 14）: 同じ購入ページで「選択済み CFI-7100B01 入荷待ち 137,980円(税込)」を再確認（ブラウザ）。
+    # PlayStation 公式の本体ラインナップ（https://www.playstation.com/ja-jp/ps5/buy-now/）でも
+    # 「PS5 Pro 希望小売価格：137,980円（税込）」。「カートに入れる」のボタンはあるが「入荷待ち」なので在庫切れの扱い
     "prod_ps5_pro": {"source": "src_sony_store", "url": "https://pur.store.sony.jp/ps5/products/ps5/CFI-7100B01_purchase/",
-                     "link_type": "item", "price": 137980, "conf": "high", "checked_on": "2026-10-03",
-                     "stock": "入荷待ち", "stock_checked_at": "2026-10-03T15:14:13+09:00"},
+                     "link_type": "item", "price": 137980, "conf": "high", "checked_on": "2026-10-08",
+                     "stock": "入荷待ち", "stock_checked_at": "2026-10-08T02:34:48+09:00"},
     # 2026-10-03: 任天堂公式の商品ラインナップで「Nintendo Switch 2 本体 日本語・国内専用 希望小売価格： 59,980 円（税込）」
     # を確認（2026-05-25 の価格改定後。設定値の 49,980円 は改定前）
-    "prod_switch2": {"source": "src_nintendo_store", "url": "https://www.nintendo.com/jp/hardware/switch2/lineup/index.html",
-                     "link_type": "category", "price": 59980, "conf": "high", "checked_on": "2026-10-03"},
+    # 2026-10-08 02:32（Phase 14）: My Nintendo Store の商品ページ（Nintendo Switch 2（日本語・国内専用））で
+    # 「59,980 円 税込」「お届け予定日：通常2～6日後にお届け」「カートに入れる」（押せる状態）を確認（ブラウザ）。
+    # 購入できることの明示の表示なので、確認した時刻つきで在庫ありとして記録する（7日を過ぎれば在庫未確認に戻る）。
+    # ページの「品切れ」の表示は、おすすめに出ていた別の周辺機器（microSD Express カード）のもの
+    "prod_switch2": {"source": "src_nintendo_store", "url": "https://store-jp.nintendo.com/item/hardware-accessory/VM_BEE_S_KB6CA",
+                     "link_type": "item", "price": 59980, "conf": "high", "checked_on": "2026-10-08",
+                     "stock": "カートに入れる（お届け予定日：通常2～6日後）", "stock_checked_at": "2026-10-08T02:32:13+09:00"},
     # ---- Nikon（オープン価格・URLは検証済みだが公式定価なし → category/価格null）----
     "prod_z8": {"source": "src_nikon_direct", "url": "https://nij.nikon.com/products/lineup/mirrorless/z8/", "link_type": "category", "price": None, "conf": "medium", "open_price": True},
     # ---- Fujifilm（オープン価格）----
@@ -137,6 +148,17 @@ OFFICIAL_NOT_SOLD = {
                                "reason": "公式の MacBook Air は M5 チップ（M4 は販売していない）"},
     "prod_macbook_pro_m4_14": {"source": "src_apple_jp", "checked_on": "2026-10-07",
                                "reason": "公式の MacBook Pro は M5・M5 Pro・M5 Max チップ（M4 は販売していない）"},
+    # 2026-10-08（Phase 14）: ブラウザで公式ページを確認
+    # - PlayStation 公式の本体ラインナップ（https://www.playstation.com/ja-jp/ps5/buy-now/）で売っているデジタル・
+    #   エディションは「日本語専用」（希望小売価格 55,000円）だけ。この商品（型番の登録なし・設定の参考価格 72,980円。
+    #   多言語の版に当たる）はラインナップに無い。型番が無いので日本語専用の版と同じ商品とはみなさない
+    # - RICOH の製品ページ（https://www.ricoh-imaging.co.jp/japan/products/gr-3/）に「RICOH GRIII 生産終了」
+    # source は公式の取得元として読まれる src_sony_store（_official_meta は OFFICIAL_DOMAINS の source だけを読む）。
+    # 証拠のページは PlayStation 公式（playstation.com）の本体ラインナップ
+    "prod_ps5_de":          {"source": "src_sony_store", "checked_on": "2026-10-08",
+                             "reason": "公式の本体ラインナップのデジタル・エディションは日本語専用（55,000円）だけ。この商品の版は無い"},
+    "prod_gr3":             {"source": "src_ricoh_imaging", "checked_on": "2026-10-08",
+                             "reason": "RICOH の製品ページに「RICOH GRIII 生産終了」"},
 }
 
 # 旧世代/404 として検出・要注意（Task1）。実際に 404 を確認したもの。
@@ -251,7 +273,9 @@ def register_verified(c, products):
                       (price, v["source"], v.get("checked_on", VERIFIED_URLS_CHECKED_ON), pid))
         # 人が公式ページで在庫の表示も確認したときだけ、確認した時刻つきで在庫を記録する
         # collector がそれより新しい在庫の表示を取っていれば、古い確認で上書きしない
-        if v.get("stock") and v.get("stock_checked_at"):
+        # 確認から CURRENT_DAYS（7日）を過ぎた在庫の記録は書かない（Phase 14 監査 M-1）。CI は毎回 DB を作り直すので、
+        # 期限を見ない古い判定（初心者向けの分類・LINE の文面など）にも、古い「在庫あり」が残らない
+        if v.get("stock") and v.get("stock_checked_at") and _stock_record_is_current(v["stock_checked_at"]):
             c.execute("UPDATE products SET official_stock_status=?, official_stock_observed_at=? WHERE id=? "
                       "AND (official_stock_observed_at IS NULL OR official_stock_observed_at = '' "
                       "OR official_stock_observed_at < ?)",
@@ -286,6 +310,19 @@ def register_verified(c, products):
                            "official_not_sold": True, "reason": u["reason"]})
     c.commit()
     return registered
+
+
+def _stock_record_is_current(checked_at: str, now: datetime | None = None) -> bool:
+    """在庫の確認の記録が、確認から CURRENT_DAYS（7日）以内か（読めない・未来すぎる記録は使わない）。"""
+    from src.market import price_evidence as pe
+    try:
+        at = datetime.fromisoformat(str(checked_at))
+    except ValueError:
+        return False
+    if at.tzinfo is None:
+        at = at.replace(tzinfo=JST)
+    age = ((now or NOW) - at).total_seconds() / 86400
+    return -1 <= age <= pe.CURRENT_DAYS
 
 
 def _upsert_config(c, pid, sid, url, extra):

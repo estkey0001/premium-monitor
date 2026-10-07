@@ -8,7 +8,16 @@ from __future__ import annotations
 
 OUT_OF_STOCK_MARKS = ("SOLD OUT", "OUT OF STOCK", "NOT IN STOCK", "在庫切れ", "在庫なし", "在庫ありません",
                       "在庫がありません", "入荷待ち", "品切れ", "売り切れ", "販売終了")
-IN_STOCK_MARKS = ("在庫あり", "IN STOCK")
+# 購入できることの明示の表示（Phase 14: 「カートに入れる」も在庫ありの証拠。在庫切れの表示を先に見るので、
+# 「入荷待ち」と並んでいるページは在庫切れのまま。価格の表示・商品ページがあるだけでは在庫ありにしない）。
+# 注意: ここに渡すのは、人が確認した在庫の表示（audit_official_sources の VERIFIED_URLS）か、コレクターが判定した
+# 固定の値（在庫あり / 在庫なし）だけ。取得したページの本文をそのまま渡さない（ボタンの文字は在庫の無いページにも
+# 出ることがある。src/collectors/official/_generic.py のコメントのとおり、コレクターはボタンを根拠にしない）
+IN_STOCK_MARKS = ("在庫あり", "IN STOCK", "カートに入れる")
+# 「カートに入れる」だけを根拠にするとき、これらの語が並んでいれば在庫ありにしない（予約・抽選・発売前・否定。
+# 例: 「予約受付中 カートに入れる」「現在カートに入れることはできません」。Phase 14 監査 M-2）
+CART_BLOCKERS = ("予約", "抽選", "発売予定", "発売前", "できません", "不可", "受付前", "受付終了",
+                 "取り寄せ", "入荷次第", "近日発売", "発売日", "COMING SOON")
 
 
 def stock_state(stock_status: str, sale_method: str = "") -> str:
@@ -24,6 +33,9 @@ def stock_state(stock_status: str, sale_method: str = "") -> str:
     if any(k in s for k in OUT_OF_STOCK_MARKS):
         return "OUT_OF_STOCK"
     if any(k in s for k in IN_STOCK_MARKS):
+        only_cart = not any(k in s for k in IN_STOCK_MARKS if k != "カートに入れる")
+        if only_cart and any(k in s for k in CART_BLOCKERS):
+            return "UNKNOWN"
         return "IN_STOCK"
     return "UNKNOWN"
 

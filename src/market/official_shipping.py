@@ -52,6 +52,13 @@ PRODUCT_SHIPPING: dict[str, dict] = {
     "prod_ps5_pro": {"source": "src_sony_store", "fee": 550, "status": PAID,
                      "url": "https://pur.store.sony.jp/ps5/products/ps5/CFI-7100B01_purchase/",
                      "checked_on": "2026-10-05", "checked_by": "Claude"},
+    # 2026-10-08（Phase 14）: My Nintendo Store の商品ページで 59,980円（税込）を確認。ストアの送料の決まり
+    # （税込 5,500円以上は送料無料。SOURCE_RULES の src_nintendo_store・2026-10-05 確認）に当てはめて 0円。
+    # 商品ごとに記録するのは、利益の判定（公式 URL を引けない経路がある）と商品詳細の表示で同じ値を使うため。
+    # checked_on は定価（59,980円）を確認した日。送料の決まりそのものを確認したのは 2026-10-05（SOURCE_RULES）
+    "prod_switch2": {"source": "src_nintendo_store", "fee": 0, "status": CONDITIONAL,
+                     "url": "https://support-jp.nintendo.com/app/answers/detail/a_id/33907",
+                     "checked_on": "2026-10-08", "checked_by": "Claude"},
 }
 
 # 公式 URL の購入ページのホスト → 購入元（すべての注文で同じ決まりの購入元だけ）

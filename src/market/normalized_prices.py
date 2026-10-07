@@ -83,9 +83,16 @@ def classify_link_type(url: str, link_verified: bool, price_role: str) -> str:
         return "official_top"
     if not u:
         return "none"
+    # フリマ・オークション・eBay の1件の商品ページ（price_types.is_item_url の厳密な形。検索結果・ダミーは含まない）は
+    # 商品ページとして扱う（Phase 12: 以前は「unknown」になり、二次流通で仕入れるルートが確定できなかった）
+    if _pt.is_item_url(url):
+        return "item" if link_verified else "item_unverified"
     # 検索結果・一覧の印を先に見る（/items/search/?q=… のような検索結果を商品ページにしない）
     if any(k in u for k in ("search", "list.aspx", "keyword=", "/sch/", "itemlist")):
         return "search"
+    # ダミーの番号の URL（m00000000001 など）は商品ページにしない
+    if _pt.is_dummy_url(url):
+        return "unknown"
     if any(k in u for k in ("/detail", "/item", "/products/", "/dp/", "itemid", "goods/")):
         return "item" if link_verified else "item_unverified"
     try:
@@ -209,7 +216,13 @@ def make_observation(now: datetime, **kw) -> dict:
     # exact 扱いにしない（モバイル一番等の「トップページ価格を複数SKUへ同額割当」誤マッチ対策）。
     _link_type = kw.get("link_type", "")
     _url_confirms_sku = _link_type not in ("shop_home", "search")
-    is_exact_product_match = (extraction_method == "auto_scraped") and not accessory_flag and _url_confirms_sku
+    # 成約の集計（Phase 12。src/market/sold_history）は、標本の1件ごとに商品の同一性・商品ページ・成約日時を
+    # 確かめたものだけで作るので照合済みとする（集計した行に商品ページは無い）。確定の売値に使えるか
+    # （件数3以上・期間あり）は sold_median_eligible で別に判定する
+    _sold_median_verified = (kw.get("sold_median_identity_verified") is True
+                             and isinstance(kw.get("sample_count"), int) and kw.get("sample_count") >= 1)
+    is_exact_product_match = (((extraction_method == "auto_scraped") and _url_confirms_sku)
+                              or _sold_median_verified) and not accessory_flag
     is_body_only = not accessory_flag
     if accessory_flag:
         product_match_confidence = "low"
@@ -472,6 +485,18 @@ def build_observations(con, now: datetime | None = None) -> list[dict]:
             # そのため SOLD_MEDIAN（確定利益の売値に使える成約中央値）の条件は満たさない
             sold_median_eligible=False,
         ))
+
+    # 5) 成約の履歴（exports/sold_history）から作る成約中央値（Phase 12）。3件以上・期間ありのものだけが入る。
+    #    履歴が空なら何も足さない（今の本番は成約0件）
+    try:
+        from src.market import sold_history as _sh
+        _names = {x["id"]: x["name"] for x in con.execute("SELECT id, name FROM products").fetchall()}
+        for _o in _sh.median_observations(_sh.load(), now):
+            _o["product_name"] = _names.get(_o["product_id"], _o["product_id"])
+            rows.append(_o)
+    except Exception as _e:  # noqa: BLE001（成約の履歴が読めなくても、他の観測は作る）
+        import logging as _lg
+        _lg.getLogger(__name__).warning("成約の履歴を読めません: %s", _e)
 
     # ── 異常 manual 買取の除外（auto_scraped high 基準の +30% 超）──
     # 同一商品に auto_scraped high の買取があるのに、manual 買取がそれを大幅に上回る場合、

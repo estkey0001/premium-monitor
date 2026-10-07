@@ -124,6 +124,9 @@ def collect(now: datetime | None = None) -> dict:
         "valid_sold": valid_sold,
         "sold_rows": len(sold_rows),
         "eligible_sold_median": int((diag.get("sold_median") or {}).get("eligible") or 0),
+        # Phase 12: 成約の履歴（exports/sold_history）。根拠のある成約の件数・成約がある商品・
+        # 確定の売値に使える成約中央値の件数・その商品（同じ定義で前後を比べるため、上の指標は変えない）
+        **_sold_history_metrics(now),
         "listing_rows": len(listing_rows),
         "stock_in_stock": int(diag_stock.get("IN_STOCK") or 0),
         "stock_out_of_stock": int(diag_stock.get("OUT_OF_STOCK") or 0),
@@ -146,6 +149,16 @@ def collect(now: datetime | None = None) -> dict:
     }
     return {"metrics": metrics, "funnel": funnel(diag), "matrix": matrix(
         pids, products, obs, confirmed_keys, entries, routes, now)}
+
+
+def _sold_history_metrics(now: datetime) -> dict:
+    from src.market import price_types as _pt
+    from src.market import sold_history as _sh
+    recs = [r for r in _sh.load() if not _sh.record_reasons(r)]
+    stats = _sh.median_stats(recs, now) if recs else []
+    ok = [s for s in stats if _pt.is_sold_median_eligible(s)]
+    return {"sold_history_valid": len(recs), "sold_history_products": len({r.product_id for r in recs}),
+            "sold_median_eligible_groups": len(ok), "sold_median_products": len({s["product_id"] for s in ok})}
 
 
 def funnel(diag: dict) -> list[dict]:
@@ -206,15 +219,19 @@ def matrix(pids, products, obs, confirmed_keys, entries, routes, now) -> dict:
         else:
             buy = "MISSING"
         st = [e for e in stock_by.get(pid, [])]
-        stock_state = ("CONFIRMED" if any(e.get("state") in ("IN_STOCK", "OUT_OF_STOCK", "LOTTERY", "RESERVATION")
-                                          for e in st) else "MISSING")
+        # 在庫の CONFIRMED は在庫あり・品切れの根拠があるものだけ。抽選・予約の状態は在庫の確認ではないので
+        # REFERENCE（Phase 12: 表の言い方を実態に合わせた。指標の値は変えていない）
+        stock_state = ("CONFIRMED" if any(e.get("state") in ("IN_STOCK", "OUT_OF_STOCK") for e in st)
+                       else "REFERENCE" if any(e.get("state") in ("LOTTERY", "RESERVATION") for e in st)
+                       else "MISSING")
         listing = "REFERENCE" if any(o.get("canonical_price_type") == "LISTING" or
                                      (o.get("price_role") == "buy" and (o.get("price") or 0) > 0) for o in rows_o) \
             else "MISSING"
         sold_rows = [o for o in rows_o if o.get("canonical_price_type") in ("SOLD", "SOLD_MEDIAN")]
         sold = ("CONFIRMED" if any(o.get("sold_median_eligible") for o in sold_rows)
                 else "REFERENCE" if sold_rows else "NOT_IMPLEMENTED")
-        lot = "CONFIRMED" if names.get(pid) in lot_names else "MISSING"
+        # 抽選の CSV に商品名があるだけでは、今の抽選を確認したことにならない → REFERENCE（Phase 12）
+        lot = "REFERENCE" if names.get(pid) in lot_names else "MISSING"
         rows[pid] = {"name": names.get(pid, pid), "RETAIL": retail, "BUYBACK": buy, "STOCK": stock_state,
                      "LISTING": listing, "SOLD": sold, "LOTTERY": lot}
     totals = {t: dict(Counter(r[t] for r in rows.values())) for t in DATA_TYPES}

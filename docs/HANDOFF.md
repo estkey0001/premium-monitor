@@ -1,7 +1,7 @@
 # HANDOFF（最終更新: 2026-10-07）
 
 ## 今の状態
-- Phase 11（本番データの拡充）まで完了。UI Phase 10 で旧UIを削除し、公開ページは新UIのみ
+- Phase 12（取得の安全性と売却データ）を実装。全取得経路が robots.txt・同じドメインの間隔・取得元単位の打ち切り・正直な User-Agent（`src/collectors/polite.py`）を通る。メルカリ・ラクマ・Amazon・ヤフオク・eBay の検索結果の HTML は取得しない（楽天は公式 API だけ）。成約の履歴と成約中央値（3件以上・14日）・eBay Marketplace Insights のアダプター（資格情報待ち）。記録は `internal/audits/PHASE_12_SOURCE_SAFETY.md`
 - 開発場所は `premium-monitor`（ブランチ `tcg-push` = `origin/main`）の1か所。push は `tcg-push:main` の fast-forward のみ
 - Phase ごとの詳細な実装記録と「踏んだ罠」は `internal/DEV_NOTES.md`（削らない・着手前に該当節を読む）
 
@@ -19,7 +19,7 @@
   - #821 は「3件以上が同じ時刻」の形しか検出しない（検知範囲の拡張）
   - 買取の価格の種別（現金買取 / 下取）は DB に保存していない（status JSON にだけ記録。is_tradein は文字列判定）。sale_prices の種別は Phase 0.2 で保存するようにした
   - Leica M11 の商品コードが未確認（下記）
-- **成約（sold）データは今は0件**。ヤフオク（自動）は出品価格、手動の成約 CSV（data/manual_flea_sold_prices.csv）は URL がダミーで成約日時が無い、eBay は API 未設定（CI では HTML もブロック）、メルカリ・ラクマの成約は NOT_IMPLEMENTED。成約中央値を使うには、規約に沿って1件ごとの商品ページの URL と成約日時を取れる経路が必要（eBay API を設定する場合も、1件ごとの成約日時を保存するように collector を直す必要がある）。
+- **成約（sold）データは今は0件**。成約を取れる公式の経路は eBay Marketplace Insights API だけ（審査制。Finding API は 2025-02-05 に廃止）。受け皿（`src/market/sold_history.py`・`src/collectors/api/ebay_insights.py`・`scripts/collect_ebay_sold.py`）は作ったが、資格情報・ENABLE_EBAY_API=true・canary の合格が無いので動かない。ヤフオク・メルカリ・ラクマは取得しない（手動の成約 CSV は URL がダミーで成約日時が無いので使えない）。
 - 過去の誤分類（git の履歴で数えた）: NPO にヤフオクの出品を「落札」として入れたコミットが144（1,491行、2026-06-04〜10-02）。そのうち利益ルートの main（確定利益）の仕入れ値に使ったものが32行。ダミー URL の手動「成約」を使ったルートが39コミット・269行（06-15〜09-04）。履歴は書き換えていない。
 - 既知の LOW（Phase 6.1）: せどりルートの計算（`sedori_route_calculator`）は店ごとの最高値を選ぶので、その値が未照合だとルートごと外れる（同じ店の照合済みの低い値に戻らない。確定には入らない安全側）。案件の売値の照合は「商品ID・店名・価格」の一致なので、正規化データと DB で店名の表記が変わると照合済みでも未照合になる（安全側。利益が黙って消えるので、件数の急減に注意）。商品詳細の売却の表の「有効」は、照合フラグと鮮度だけで決めている（店のトップ・検索結果の URL かは見ていない。利益の売却先は `confirmed_sell_keys` で決めるので確定には影響しない）。
 - 手入力（manual_today）の買取価格は商品の照合済みにならない（`is_exact_product_match` は auto_scraped だけ。ルートと同じ）ので、確定利益の売値に使わない。手入力の価格を使いたいときは、照合の根拠（商品ページの URL など）を記録する仕組みが別に必要。
@@ -40,14 +40,15 @@
 - 既存の問題: pytest を実行すると追跡対象の exports/api_automation/collection.json が書き換わる。コミット前に `git checkout -- exports/api_automation/collection.json` で戻すこと（テストの出力先修正は別タスク）。
 
 ## 次にやること
-0. Phase 12 はユーザーの指示を待ってから始める（候補は Phase 11 の最終報告に書いた）。
-1. eBay / 楽天 / Yahoo!ショッピングの API キー（GitHub Secrets）はユーザーの設定待ち（PENDING_USER_CONFIGURATION）。買取の取得経路の robots.txt 確認・rate_limit_sec の適用・店単位の打ち切りは未対応（`internal/audits/PHASE_11_SOURCE_AUDIT.md` §7）。カメラのオープン価格の定価の扱い（直販の販売価格を確認済みにするか）は判断待ち。
+0. Phase 13 はユーザーの指示を待ってから始める（候補は Phase 12 の最終報告に書いた）。
+1. eBay の成約: Marketplace Insights の利用許可（審査）と Secrets（EBAY_CLIENT_ID・EBAY_CLIENT_SECRET）・ENABLE_EBAY_API=true はユーザーの設定待ち。設定後は `python scripts/collect_ebay_sold.py --dry-run` → canary（1商品）。eBay の API のデータを公開のリポジトリに残してよいかの確認も必要。楽天・Yahoo!ショッピングの API キーも設定待ち（`internal/audits/PHASE_11_SOURCE_AUDIT.md` §7）。カメラのオープン価格の定価の扱い（直販の販売価格を確認済みにするか）は判断待ち。
 2. 利益商品の件数を増やすには、データ側を直す（設定値の定価の確認・カメラの買取の鮮度・成約の集計期間）。UI 側で条件を緩めない。
 3. 買取・在庫の更新頻度（今は日次1回）。推奨は diagnostics の frequency。本番のスケジュール変更はユーザー判断。
 4. 利益計算の8系統の統一（internal/uiux/UI_VIEW_MODEL_SPEC.md §2）と、成約データの取得方法（internal/uiux/IMPLEMENTATION_PLAN_V2.md）。
 
 ## 注意（次の人へ）
-- **着手前に `internal/DEV_NOTES.md` の関係する節を読む**（価格の照合・時刻の扱い・runtime・route_id・deploy-check 番号など、過去に本番で踏んだ罠がすべてある）
+- **着手前に `internal/DEV_NOTES.md` の関係する節を読む**
+- **取得を足すときは必ず `src/collectors/polite.py` を通す**（robots_allowed → polite_wait → 取得、失敗は ShopCutoff に記録）。ブラウザを名乗る UA・ブロックの後の Playwright での取り直し・429 の再試行はしない（deploy-check #842 が検出する）。テストでは conftest が polite を差し替えるので、robots・間隔を確かめるテストには `@pytest.mark.real_polite` を付ける（価格の照合・時刻の扱い・runtime・route_id・deploy-check 番号など、過去に本番で踏んだ罠がすべてある）
 - 価格は「商品行」と照合して取る。見出しや最初の価格で代用しない
 - 固定値・設定値の定価に実行日の日時を付けない。時刻だけ更新して新しく見せない
 - 抽選の日時・在庫・定価は推測しない。根拠が無ければ未確認にする

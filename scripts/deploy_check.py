@@ -4098,6 +4098,7 @@ def check() -> list[dict]:
     # ══════════════════════════════════════════════════════════════════
     results.extend(_check_new_ui(html))
     results.extend(_check_legacy_intents())
+    results.extend(_check_phase12_sources_and_sold(html))
 
     # ══════════════════════════════════════════════════════════════════
     # #820-#825: データの正確さ・鮮度の偽装（Phase 0）
@@ -4156,6 +4157,141 @@ def _check_legacy_intents() -> list[dict]:
     out.append({"level": "ok" if not bad else "error", "check": "legacy_intents_on_new_ui",
                 "message": "#840 旧UIの検査の意図（14日より古い価格・0円・未照合・中古を確定に使わない、取得の警告の強さ）を"
                            "新UIの判定で満たす" + ("" if not bad else f" ← {bad[:4]}")})
+    return out
+
+
+def _check_phase12_sources_and_sold(html: str) -> list[dict]:
+    """Phase 12: 取得の安全性（#842）・API と秘密の値（#843）・成約の意味（#844）。動かして確かめる。"""
+    import json as _j12
+    import re as _re12
+    root = PROJECT_ROOT
+    out: list[dict] = []
+
+    # #842 取得の安全性: robots.txt の禁止を取りに行かない・ブロックで打ち切る・ブラウザを名乗らない・
+    #       メルカリ / ラクマをスクレイピングしない
+    bad = []
+    try:
+        from src.collectors import polite as _pl
+        from src.collectors.buyback_kaitori_shouten import KaitoriShoutenCsvCollector as _KS
+        _orig = _pl.robots_checker
+
+        class _Deny:
+            def is_allowed(self, url):
+                return False
+
+            def get_crawl_delay(self, url):
+                return None
+        _pl.robots_checker = lambda: _Deny()
+        try:
+            _c = _KS()
+            _hits = []
+            _c._fetch_html = lambda url: _hits.append(url) or "x"
+            if _c.fetch("airpods_pro3", "", "new_unopened") is not None or _hits \
+                    or _c.last_failure_reason != "robots_disallowed":
+                bad.append("robots.txt で禁止の URL を取りに行く")
+        finally:
+            _pl.robots_checker = _orig
+        for _rsn in ("http_403", "rate_limited_429", "robots_disallowed", "site_blocked", "http_401"):
+            _sc = _pl.ShopCutoff()
+            _sc.record("x", False, _rsn)
+            if not _sc.is_cut("x"):
+                bad.append(f"{_rsn} の店を打ち切らない")
+        _sc = _pl.ShopCutoff()
+        for _ in range(2):
+            _sc.record("x", False, "http_0")                     # 名前の分からない失敗の理由も数える
+        if not _sc.is_cut("x"):
+            bad.append("理由の名前が分からない失敗で打ち切らない")
+        if not _pl.HONEST_UA.startswith("PremiumMonitor/"):
+            bad.append("User-Agent が PremiumMonitor で始まらない")
+        # ブラウザ（Mozilla 互換・Chrome・Firefox・Edge・Safari・iPhone）を名乗る User-Agent の文字列
+        _ua = _re12.compile(r"Mozilla/5\.0|Chrome/\d|Firefox/\d|Edg/\d|Safari/\d|iPhone OS \d")
+        for _base in ("src", "scripts"):
+            for _f in (root / _base).rglob("*.py"):
+                if _f.name == "deploy_check.py":
+                    continue
+                if _ua.search(_f.read_text(encoding="utf-8", errors="ignore")):
+                    bad.append(f"ブラウザを名乗る User-Agent: {_f.relative_to(root)}")
+        _rs = (root / "scripts" / "collect_resale_prices.py").read_text(encoding="utf-8")
+        for _sk in ("skip_mercari", "skip_rakuma", "skip_amazon", "skip_yahoo"):
+            if f"    {_sk} = True" not in _rs:
+                bad.append(f"resale が {_sk} を外している（規約上取らない取得元を取る）")
+        _m12 = _re12.search(r"class RakutenResaleCollector.*?\n    def collect\(.*?(?=\n    def |\nclass )", _rs, _re12.S)
+        if not _m12 or "_fetch_html(" in _m12.group(0):
+            bad.append("楽天の公式 API の失敗で検索結果の HTML を取りに行く")
+    except Exception as exc:  # noqa: BLE001
+        bad.append(f"判定を動かせない: {exc}")
+    out.append({"level": "ok" if not bad else "error", "check": "source_safety",
+                "message": "#842 取得の安全性（robots.txt・ブロックで打ち切り・正直な User-Agent・規約上取らない取得元を取らない）"
+                           + ("" if not bad else f" ← {bad[:4]}")})
+
+    # #843 API と秘密の値: 公開するページ（docs/ の全 HTML）と成約の生成物に、秘密の値・認証の値が無い。
+    #       成約の API は資格情報が無いのに取りに行った記録が無い（監査 M2: 1ページだけ・eBay の token の形を見落としていた）
+    bad = []
+    try:
+        import os as _os12
+        _auth = _re12.compile(r"Bearer\s+[^\s\"'<,;}]{8,}|Basic\s+[A-Za-z0-9+/=]{12,}")
+        _names = _re12.compile(r"client_secret|access_token|refresh_token|EBAY_CLIENT_SECRET")
+        _sec = _os12.environ.get("EBAY_CLIENT_SECRET") or ""
+        _pages = [(PUBLIC_DIR / "index.html", html or "")]
+        for _f in sorted(PUBLIC_DIR.rglob("*.html")):
+            if _f.name != "index.html" or _f.parent != PUBLIC_DIR:
+                _pages.append((_f, None))
+        _sold_dir = root / "exports" / "sold_history"
+        if _sold_dir.exists():
+            _pages += [(_f, None) for _f in sorted(_sold_dir.glob("*.json"))]
+        for _f, _txt in _pages:
+            if _txt is None:
+                try:
+                    _txt = _f.read_text(encoding="utf-8", errors="ignore")
+                except OSError:
+                    continue
+            _why = ("認証の値" if _auth.search(_txt) else "秘密の値の名前" if _names.search(_txt)
+                    else "EBAY_CLIENT_SECRET の値" if len(_sec) >= 6 and _sec in _txt else "")
+            if _why:
+                bad.append(f"{_why}: {_f.relative_to(root) if root in _f.parents else _f.name}")
+                if len(bad) >= 4:
+                    break
+    except Exception as exc:  # noqa: BLE001
+        bad.append(f"判定を動かせない: {exc}")
+    out.append({"level": "ok" if not bad else "error", "check": "api_secret_safety",
+                "message": "#843 API の安全性（公開する全ページ・成約の記録に秘密の値・認証の値が無い）"
+                           + ("" if not bad else f" ← {bad[:4]}")})
+
+    # #844 成約の意味: 保存した成約はすべて根拠あり（商品ページ・成約日時・同一性・状態）。成約中央値は3件以上・期間あり。
+    #       確定の利益ルートの売値が成約中央値のときも同じ
+    bad = []
+    try:
+        from src.market import price_types as _pt12
+        from src.market import sold_history as _sh12
+        for _r in _sh12.load():
+            _why = _sh12.record_reasons(_r)
+            if _why:
+                bad.append(f"根拠の無い成約が履歴にある（{_r.item_url} {_why}）")
+                break
+        _npo = root / "exports" / "normalized_price_observations" / "latest.json"
+        if _npo.exists():
+            for _o in _j12.loads(_npo.read_text(encoding="utf-8")).get("observations") or []:
+                if _o.get("sold_median_eligible") and not (
+                        int(_o.get("sample_count") or 0) >= _pt12.MIN_SOLD_SAMPLES
+                        and _o.get("sold_period_start") and _o.get("sold_period_end")):
+                    bad.append(f"件数・期間の足りない成約中央値（{_o.get('product_id')}）")
+                    break
+        _pr = root / "exports" / "profit_routes" / "latest.json"
+        if _pr.exists():
+            for _r in _j12.loads(_pr.read_text(encoding="utf-8")).get("main_routes") or []:
+                if _pt12.canonical(_r.get("sell_canonical_type")) in (_pt12.SOLD_MEDIAN, _pt12.SOLD) and not (
+                        int(_r.get("sell_sample_count") or 0) >= _pt12.MIN_SOLD_SAMPLES
+                        and _r.get("sell_period_start") and _r.get("sell_period_end")):
+                    bad.append(f"件数・期間の足りない成約を売値にした確定ルート（{_r.get('product_id')}）")
+                    break
+                if _pt12.canonical(_r.get("sell_canonical_type")) == _pt12.LISTING:
+                    bad.append(f"出品価格を売値にした確定ルート（{_r.get('product_id')}）")
+                    break
+    except Exception as exc:  # noqa: BLE001
+        bad.append(f"判定を動かせない: {exc}")
+    out.append({"level": "ok" if not bad else "error", "check": "sold_semantics",
+                "message": "#844 成約の意味（根拠のある成約だけ・成約中央値は3件以上と期間・出品を売値にしない）"
+                           + ("" if not bad else f" ← {bad[:3]}")})
     return out
 
 

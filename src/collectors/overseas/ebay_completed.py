@@ -159,8 +159,12 @@ class EbayCompletedCollector:
         else:
             logger.debug("eBay: EBAY_APP_ID 未設定 → HTML fallback へ")
 
-        # --- 2. HTML scraping fallback ---
-        prices_usd, is_blocked = self._fetch_via_html(url, condition_filter)
+        # --- 2. HTML（検索結果のページ）からの取得はしない（Phase 12 監査 H5）---
+        # API が使えない・失敗したときに検索結果の HTML を取りに行くのは、API の失敗の回り道で、eBay の規約上も
+        # 許された取得の経路ではない。成約は Marketplace Insights API（src/collectors/api/ebay_insights.py）だけを使う。
+        # （_fetch_via_html は残すが呼ばない。ブロックと同じ扱いで、この実行では以後の eBay の取得をやめる）
+        self.last_block_reason = "html_scraping_disabled"
+        prices_usd, is_blocked = [], True
 
         if is_blocked:
             # GitHub Actions の Cloud IP がブロックされた場合 → 正常分類
@@ -394,16 +398,24 @@ class EbayCompletedCollector:
             (prices_usd, is_blocked)
             is_blocked=True の場合は site_blocked として扱う。
         """
-        # Playwright 試行
+        # Phase 12: robots.txt で禁止の URL は取得しない（ブロックと同じく、この実行では eBay の取得をやめる）。
+        # 同じドメインの間隔（sources.yaml の rate_limit_sec・Crawl-delay・最低60秒）をあける。
+        # 同じ URL を Playwright と requests で2回取らない（requests は Playwright が無い環境のときだけ）
+        from src.collectors import polite
+        self.last_block_reason = ""
+        if not polite.robots_allowed(url):
+            self.last_block_reason = polite.robots_block_reason(url)
+            logger.info("eBay: robots.txt で禁止されているため取得しない: %s", url[:80])
+            return [], True
+        polite.polite_wait(url)
+        try:
+            import playwright.sync_api  # noqa: F401
+        except ImportError:
+            prices, is_blocked = self._fetch_via_requests(url)
+            return ([], True) if is_blocked else (prices, False)
         prices, is_blocked = self._fetch_via_playwright(url, condition_filter)
         if is_blocked:
-            return [], True
-        if prices:
-            return prices, False
-
-        # requests フォールバック
-        prices, is_blocked = self._fetch_via_requests(url)
-        if is_blocked:
+            self.last_block_reason = self.last_block_reason or "site_blocked"
             return [], True
         return prices, False
 
@@ -433,15 +445,8 @@ class EbayCompletedCollector:
                     headless=True,
                     args=["--no-sandbox", "--disable-dev-shm-usage"],
                 )
-                ctx = browser.new_context(
-                    user_agent=(
-                        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-                        "AppleWebKit/537.36 (KHTML, like Gecko) "
-                        "Chrome/120.0.0.0 Safari/537.36"
-                    ),
-                    locale="en-US",
-                    viewport={"width": 1280, "height": 800},
-                )
+                from src.collectors.polite import HONEST_UA
+                ctx = browser.new_context(user_agent=HONEST_UA, locale="en-US")
                 page = ctx.new_page()
                 page.goto(url, wait_until="domcontentloaded", timeout=30000)
                 page.wait_for_timeout(2000)
@@ -467,12 +472,9 @@ class EbayCompletedCollector:
         """
         try:
             import requests
+            from src.collectors.polite import HONEST_UA
             headers = {
-                "User-Agent": (
-                    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-                    "AppleWebKit/537.36 (KHTML, like Gecko) "
-                    "Chrome/120.0.0.0 Safari/537.36"
-                ),
+                "User-Agent": HONEST_UA,
                 "Accept-Language": "en-US,en;q=0.9",
             }
             resp = requests.get(url, headers=headers, timeout=20)

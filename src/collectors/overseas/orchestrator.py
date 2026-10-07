@@ -51,6 +51,7 @@ class OverseasPriceOrchestrator:
         self.ebay = EbayCompletedCollector()
         self.manual = ManualFallbackCollector()
         self._last_ebay_request = 0.0
+        self.ebay_cutoff: dict = {}  # この実行で eBay の取得をやめた理由（Phase 12）
 
     def run_all(self, products: list) -> tuple[dict[str, OverseasPriceResult], dict[str, list[OverseasPriceResult]]]:
         """全商品の海外価格を収集する。
@@ -94,6 +95,13 @@ class OverseasPriceOrchestrator:
                 except Exception as e:
                     logger.warning("[%s] eBay collection error: %s", alias, e)
                     product_results.append(self._make_error_result(pid, alias, "ebay_completed", str(e)))
+                # ブロック・robots.txt の禁止が出たら、この実行では以後の eBay の取得をやめる（次の実行で再び試す。
+                # 残りの商品は手動 CSV の値だけになる。Phase 12）
+                _blk = getattr(self.ebay, "last_block_reason", "")
+                if _blk:
+                    self.skip_ebay = True
+                    self.ebay_cutoff = {"reason": _blk, "after_product": alias}
+                    logger.warning("eBay: %s のため、この実行では以後の商品の取得をやめる", _blk)
 
             # 2. 手動CSV補完
             manual_results = self.manual.collect_all(alias, pid)
@@ -228,6 +236,8 @@ class OverseasPriceOrchestrator:
             # Task 1: EBAY_APP_ID 設定状況と取得モードを明記
             "ebay_app_id_configured": _ebay_app_id_set,
             "source_mode": _source_mode,
+            # この実行で eBay の取得をやめた理由（robots.txt の禁止・ブロック・HTML の取得をしない設定。Phase 12）
+            "ebay_cutoff": self.ebay_cutoff,
             "method_counts": _method_counts,
             "prices": prices_list,
             "by_product": by_product,

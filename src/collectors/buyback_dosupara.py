@@ -58,6 +58,13 @@ class DosuparaCsvCollector(BaseCsvBuybackCollector):
                 None
             )
             if fallback and fallback != url:
+                # 予備の URL も robots.txt・同じドメインの間隔を守る（Phase 12 レビュー M2・監査 M4）
+                from src.collectors import polite
+                if not polite.robots_allowed(fallback):
+                    self.last_failure_reason = polite.robots_block_reason(fallback)
+                    return None
+                self.last_wait_seconds = polite.polite_wait(fallback, self.SHOP_ID)
+                self.request_count += 1
                 self.last_failure_reason = None
                 html = super()._fetch_html(fallback)
         return html

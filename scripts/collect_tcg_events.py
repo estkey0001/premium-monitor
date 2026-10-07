@@ -435,14 +435,14 @@ def _render_md(payload: dict, available: list[dict],
     lots = payload.get("lotteries") or []
     L.append("## Lottery Sources")
     L.append("")
-    L.append("| Retailer | Collector | Reachable | Health | Last Check | Active Lotteries |")
-    L.append("|---|---|---|---|---|---|")
+    L.append("| Retailer | Collector | Reachable | Health | Last Check | Active Lotteries | Active Preorders |")
+    L.append("|---|---|---|---|---|---|---|")
     for r in payload.get("lottery_sources") or []:
-        L.append("| {} ({}) | {} | {} | {} | {} | {} |".format(
+        L.append("| {} ({}) | {} | {} | {} | {} | {} | {} |".format(
             r["retailer"], r["priority"], r.get("adapter") or "未実装",
             {True: "yes", False: "no", None: "—"}[r.get("reachable")],
             r.get("state_label"), (r.get("last_checked") or "—")[:16].replace("T", " "),
-            r.get("active_lotteries", 0)))
+            r.get("active_lotteries", 0), r.get("active_preorders", 0)))
     L.append("")
 
     def _lot_rows(items):
@@ -459,6 +459,9 @@ def _render_md(payload: dict, available: list[dict],
 
     head = ("| TCG | Product | Retailer | Start | Deadline | Purchase Period | Confidence |",
             "|---|---|---|---|---|---|---|")
+    # 予約（PREORDER）は抽選の見出しに入れず、別の節にまとめる（予約に当選発表は無い。Phase 12）
+    pre = [e for e in lots if e.get("event_type") == "PREORDER"]
+    lots = [e for e in lots if e.get("event_type") != "PREORDER"]
     L.append("## Active（受付中・締切間近）")
     L.extend(["", *head, *_lot_rows([e for e in lots if e.get("status") in ("OPEN", "ENDING_SOON")]), ""])
     L.append("## Upcoming（まもなく抽選開始）")
@@ -466,6 +469,8 @@ def _render_md(payload: dict, available: list[dict],
     L.append("## 結果発表待ち・当選者購入期間")
     L.extend(["", *head, *_lot_rows([e for e in lots if e.get("status") in (
         "CLOSED", "RESULT_PENDING", "WINNER_ANNOUNCED", "WINNER_PURCHASE_PERIOD")]), ""])
+    L.append("## Preorder（予約。受付中・予約開始待ち・受付終了）")
+    L.extend(["", *head, *_lot_rows([e for e in pre if e.get("status") != "ENDED"]), ""])
     ann = [e for e in lots if e.get("announcement_only")]
     if ann:
         L.append("### 抽選告知あり（日程未取得）")

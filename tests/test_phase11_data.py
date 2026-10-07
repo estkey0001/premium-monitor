@@ -121,10 +121,16 @@ def test_kaitori_shouten_fetches_each_page_once(monkeypatch):
         return None if "fail" in url else KS_TABLE
 
     monkeypatch.setattr(BaseCsvBuybackCollector, "_fetch_html", fake)
+    # Phase 12: キャッシュは共通の _polite_fetch に移した（robots.txt・間隔の待ちはここでは止める）
+    from src.collectors import polite
+    from src.collectors.rate_limiter import RateLimiter
+    monkeypatch.setattr(polite, "robots_checker", lambda: type("R", (), {
+        "is_allowed": lambda self, u: True, "get_crawl_delay": lambda self, u: None})())
+    monkeypatch.setattr(RateLimiter, "wait_if_needed", lambda self, url, sec=60: None)
     c = _ks()
     for _ in range(3):
-        assert c._fetch_html("https://www.kaitorishouten-co.jp/kaden") == KS_TABLE
-        assert c._fetch_html("https://www.kaitorishouten-co.jp/fail") is None
+        assert c._polite_fetch("https://www.kaitorishouten-co.jp/kaden") == KS_TABLE
+        assert c._polite_fetch("https://www.kaitorishouten-co.jp/fail") is None
     assert calls.count("https://www.kaitorishouten-co.jp/kaden") == 1
     assert calls.count("https://www.kaitorishouten-co.jp/fail") == 3
 

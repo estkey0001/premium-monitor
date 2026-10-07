@@ -263,7 +263,7 @@ def main() -> int:
         _con = _sq.connect(str(PROJECT_ROOT / "data" / "premium_monitor.db"))
         _con.row_factory = _sq.Row
         _prices = _con.execute(
-            "SELECT b.product_id, b.shop_name, b.buyback_price, b.observed_at, b.notes, "
+            "SELECT b.product_id, b.shop_name, b.buyback_price, b.observed_at, b.notes, b.condition, "
             "       p.name AS product_name, p.official_price, p.retail_price "
             "FROM buyback_prices b LEFT JOIN products p ON p.id=b.product_id "
             "WHERE b.is_active=1 AND b.data_source='auto_scraped' AND b.confidence='high' "
@@ -291,17 +291,26 @@ def main() -> int:
                 continue
             reference_source = "official" if _official > 0 else "retail_concept"
             bp = d.get("buyback_price", 0) or 0
+            # 状態を明示する（フジヤの「新品同様」は中古 used_s）。新品以外の価格を新品の定価と比べた差は
+            # 意味が無いので出さない（None。並びは新品の差の大きい順 → 状態の違う価格。Phase 12）
+            from src.content.ui.opportunity import _cond_family
+            from src.models.buyback_price import CONDITION_LABELS as _BB_COND
+            _cond = str(d.get("condition") or "")
+            _is_new = _cond_family(_cond) == "new"
             top_camera_buyback.append({
                 "product_id": d.get("product_id"), "product_name": d.get("product_name", ""),
                 "shop_name": d.get("shop_name", ""), "buyback_price": bp,
                 # official_price は後方互換のため reference を入れる（公式が無い場合は概算定価）
                 "official_price": reference,
                 "reference_price": reference, "reference_source": reference_source,
-                "diff_vs_official": bp - reference,
+                "diff_vs_official": (bp - reference) if _is_new else None,
+                "condition": _cond, "condition_label": _BB_COND.get(_cond, _cond or "不明"),
+                "comparable_to_retail": _is_new,
                 "matched_item": d.get("notes", ""), "confidence": "high",
                 "source": "auto_scraped", "age_days": round(age_d, 1),
             })
-        top_camera_buyback.sort(key=lambda x: x["diff_vs_official"], reverse=True)
+        top_camera_buyback.sort(key=lambda x: (x["diff_vs_official"] is not None,
+                                               x["diff_vs_official"] or 0), reverse=True)
         top_camera_buyback = top_camera_buyback[:20]
     except Exception as e:
         print(f"[WARN] top_camera_buyback 生成失敗: {e}", file=sys.stderr)

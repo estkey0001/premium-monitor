@@ -260,8 +260,12 @@ def run_lottery_pipeline(pokemon_registry: list[dict], onepiece_products: list[d
     for src in LOTTERY_SOURCES:
         h = health.get(src["source_id"]) or {}
         f = h.get("funnel") or {}
-        active = sum(1 for ev in lotteries if ev.get("retailer") == src["source_id"]
-                     and ev.get("status") in ACTIVE_STATUSES)
+        _act = [ev for ev in lotteries if ev.get("retailer") == src["source_id"]
+                and ev.get("status") in ACTIVE_STATUSES]
+        # 取得元の状態の判定には抽選・予約の両方を数える（予約だけの取得元も「動いている」）。
+        # 報告の件数は抽選と予約を分ける（予約を抽選の件数に数えない。Phase 12）
+        active = len(_act)
+        active_preorders = sum(1 for ev in _act if ev.get("event_type") == LT_PREORDER)
         seen = [hst.get("first_seen_at") for hst in history
                 if hst.get("retailer") == src["source_id"] and hst.get("first_seen_at")]
         state = source_state(src, h, active)
@@ -279,7 +283,8 @@ def run_lottery_pipeline(pokemon_registry: list[dict], onepiece_products: list[d
             "rejection_reasons": f.get("rejection_reasons", {}),
             "blocked": bool(h.get("blocked")), "unreachable": bool(h.get("unreachable")),
             "error": (h.get("error_messages") or [None])[0],
-            "health": h.get("status"), "active_lotteries": active,
+            "health": h.get("status"), "active_lotteries": active - active_preorders,
+            "active_preorders": active_preorders,
             "announcements": len(h.get("announcements") or []),
             "pages": f.get("pages", []),
         })

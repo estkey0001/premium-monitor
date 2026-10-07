@@ -17,7 +17,7 @@ import re
 import urllib.parse
 from typing import Optional
 
-from src.collectors.buyback_base_csv import BaseCsvBuybackCollector
+from src.collectors.buyback_base_csv import HONEST_UA, BaseCsvBuybackCollector
 
 # キーワード検索URLを使用（URLスラッグ推測禁止）
 def _search_url(keyword: str) -> str:
@@ -61,12 +61,12 @@ class SurugayaCsvCollector(BaseCsvBuybackCollector):
 
     def _fetch_html(self, url: str) -> Optional[str]:
         """403 ブロックが確認済みのため、即座に site_blocked を設定して None を返す。"""
-        import requests as _req, time
-        time.sleep(0.5)
+        import requests as _req
+        # 同じドメインの間隔は共通の _polite_fetch が守る（Phase 12）
         try:
             sess = _req.Session()
             sess.headers.update({
-                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+                "User-Agent": HONEST_UA,
                 "Accept-Language": "ja,en;q=0.9",
             })
             resp = sess.get(url, timeout=10, allow_redirects=True)
@@ -76,11 +76,13 @@ class SurugayaCsvCollector(BaseCsvBuybackCollector):
             resp.raise_for_status()
             return resp.text
         except _req.HTTPError as e:
-            status = e.response.status_code if (hasattr(e, 'response') and e.response) else 0
-            self.last_failure_reason = "site_blocked" if status == 403 else f"http_{status}"
+            status = e.response.status_code if getattr(e, 'response', None) is not None else 0
+            from src.collectors.polite import status_reason
+            self.last_failure_reason = "site_blocked" if status == 403 else status_reason(status)
             return None
-        except Exception as e:
-            self.last_failure_reason = "site_blocked"
+        except Exception:
+            # 接続の失敗・時間切れはブロックと決めつけない（Phase 12 レビュー Low）
+            self.last_failure_reason = "connection_error"
             return None
 
     def _parse_price(self, html: str, product_alias: str, product_name: str) -> Optional[int]:

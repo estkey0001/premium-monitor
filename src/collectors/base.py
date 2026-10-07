@@ -106,8 +106,9 @@ class BaseCollector(ABC):
         Returns:
             HTMLテキスト。取得失敗時はNone。
         """
-        # robots.txtチェック
-        if not self.robots_checker.is_allowed(url):
+        # robots.txtチェック（robots.txt を取得できない unknown のときも取りに行かない。RFC 9309。Phase 12）
+        _st = self.robots_checker.robots_status(url) if hasattr(self.robots_checker, "robots_status") else ""
+        if _st == "unknown" or not self.robots_checker.is_allowed(url):
             self.logger.warning("Blocked by robots.txt: %s", url)
             return None
 

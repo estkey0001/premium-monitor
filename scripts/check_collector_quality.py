@@ -440,6 +440,8 @@ def build_summary_md(result: dict) -> str:
         "playwright_timeout":        "JS描画タイムアウト",
         "rate_limited_429":          "GitHub Actions IP がレートリミットでブロックされている",
         "service_unavailable":       "503サーバー障害 — 復旧待ち",
+        "robots_disallowed":         "robots.txt で禁止されているので取得しない（Phase 12）",
+        "robots_unreachable":        "robots.txt に到達できない（5xx・通信の失敗。一時的な障害の可能性）ので取得しない（Phase 12）",
     }
     for shop_id, cls in OPTIONAL_SHOPS.items():
         desc = CLASSIFICATION_DESC.get(cls, cls)
@@ -474,7 +476,7 @@ def build_summary_md(result: dict) -> str:
     lines.append("|------|---------|-----------|------------|")
     SHOP_NEXT_ACTIONS: dict[str, tuple[str, str, str]] = {
         # (失敗理由, ステータス, next_action)
-        "janpara":  ("rate_limited_429",    "⚠️ 調査中",   "sleep 8s+30s backoff適用済み — Actions IP制限の可能性。継続監視"),
+        "janpara":  ("rate_limited_429",    "⚠️ 調査中",   "429 は再試行せず、その実行では打ち切る（Phase 12）— Actions IP制限の可能性。継続監視"),
         "netoff":   ("price_not_found→修正済", "✅ 修正済み", "URL /sell/→/mobilebuy/ 修正 + regex修正 — 次回取得で確認"),
         "pasoko":   ("product_not_listed",  "✅ 分類変更",  "PC専門店でPS5/Switch非対応を確認 — product_not_listedに変更"),
         "sofmap":   ("service_unavailable", "🔴 復旧待ち", "503サーバー障害 — サイト側の問題。復旧を待って再確認"),

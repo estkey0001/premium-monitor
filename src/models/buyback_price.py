@@ -146,6 +146,7 @@ CONDITION_LABELS = {
     "new_unopened": "新品未開封",
     "new_unopened_simfree": "新品未開封 SIMフリー",
     "new_opened": "新品開封済",
+    "used": "中古",
     "used_s": "中古S（新品同様）",
     "used_a": "中古A（美品）",
     "used_b": "中古B（良品）",

@@ -20,16 +20,9 @@ DEBUG_DIR.mkdir(parents=True, exist_ok=True)
 TODAY = datetime.now().strftime("%Y%m%d")
 
 # ── User-Agent ──
-UA_DESKTOP = (
-    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-    "AppleWebKit/537.36 (KHTML, like Gecko) "
-    "Chrome/120.0.0.0 Safari/537.36"
-)
-UA_MOBILE = (
-    "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) "
-    "AppleWebKit/605.1.15 (KHTML, like Gecko) "
-    "Version/17.0 Mobile/15E148 Safari/604.1"
-)
+# ブラウザ・スマートフォンを名乗らない（正直な名前。src/collectors/polite.py と同じ値。Phase 12）
+UA_DESKTOP = "PremiumMonitor/1.0 (+https://github.com/estkey0001/premium-monitor)"
+UA_MOBILE = UA_DESKTOP
 
 
 def _save(name: str, content: str, ext: str = "html") -> Path:

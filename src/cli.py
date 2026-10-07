@@ -140,8 +140,8 @@ COLLECTOR_MAP = {
     # 量販店
     "src_biccamera": "src.collectors.stock.biccamera.BiccameraCollector",
     # 海外・フリマ・中古専門
-    "src_ebay": "src.collectors.price.ebay.EbayCollector",
-    "src_mercari": "src.collectors.price.mercari.MercariCollector",
+    # eBay の検索結果の HTML・メルカリは規約上スクレイピングで取らない（eBay の成約は Marketplace Insights API、
+    # メルカリは手動の確認だけ）ので、CLI からも呼べないようにした（Phase 12 監査 M8・H5）
     "src_kitamura": "src.collectors.price.kitamura.KitamuraCollector",
 }
 
@@ -2527,7 +2527,7 @@ def validate_price_links(fix_csv: bool, timeout: int, show_complement: bool):
             return "skip"
         try:
             resp = requests.head(url, timeout=timeout, allow_redirects=True,
-                                 headers={"User-Agent": "Mozilla/5.0"})
+                                 headers={"User-Agent": __import__("src.collectors.polite", fromlist=["HONEST_UA"]).HONEST_UA})
             if resp.status_code in (200, 301, 302, 403):
                 results["ok"].append({"url": url, "label": label, "status": resp.status_code})
                 return "ok"
@@ -2872,7 +2872,7 @@ def daily_lp_update(variant: str, skip_link_check: bool):
                             try:
                                 _r = requests.head(
                                     _url, timeout=8, allow_redirects=True,
-                                    headers={"User-Agent": "Mozilla/5.0"},
+                                    headers={"User-Agent": __import__("src.collectors.polite", fromlist=["HONEST_UA"]).HONEST_UA},
                                 )
                                 if _r.status_code in (200, 301, 302, 403):
                                     _ok_count += 1

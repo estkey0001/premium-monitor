@@ -13,7 +13,7 @@ import re
 import time
 from typing import Optional
 
-from src.collectors.buyback_base_csv import BaseCsvBuybackCollector
+from src.collectors.buyback_base_csv import HONEST_UA, BaseCsvBuybackCollector
 
 logger = logging.getLogger(__name__)
 
@@ -57,7 +57,7 @@ class KaitoriItchomeCsvCollector(BaseCsvBuybackCollector):
         wait_until="domcontentloaded" を使用（SPA では network-idle は永遠に完了しないため）。
         本文が短すぎる場合は追加で 5 秒待機して再取得（1 回のみ）。
         """
-        time.sleep(1.5)  # レートリミット遵守
+        # 同じドメインの間隔は共通の _polite_fetch が守る（Phase 12）
         try:
             from playwright.sync_api import sync_playwright
         except ImportError:
@@ -71,17 +71,20 @@ class KaitoriItchomeCsvCollector(BaseCsvBuybackCollector):
                     browser = p.chromium.launch(headless=True)
                     try:
                         context = browser.new_context(
-                            user_agent=(
-                                "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-                                "AppleWebKit/537.36 (KHTML, like Gecko) "
-                                "Chrome/120.0.0.0 Safari/537.36"
-                            ),
+                            user_agent=HONEST_UA,
                             locale="ja-JP",
                             extra_http_headers={"Accept-Language": "ja,en;q=0.9"},
                         )
                         page = context.new_page()
                         # SPA は network-idle に到達しないため domcontentloaded で十分
-                        page.goto(url, timeout=45000, wait_until="domcontentloaded")
+                        _resp = page.goto(url, timeout=45000, wait_until="domcontentloaded")
+                        if _resp is not None and _resp.status in (401, 403, 429):
+                            # 拒否の応答は本文として扱わない（Phase 12 監査 M5）
+                            from src.collectors.polite import status_reason
+                            self.last_http_status = _resp.status
+                            self.last_failure_reason = status_reason(_resp.status)
+                            browser.close()
+                            return None
 
                         # domcontentloaded 後に JS 描画を待つ
                         try:
@@ -114,7 +117,7 @@ class KaitoriItchomeCsvCollector(BaseCsvBuybackCollector):
                                    attempt + 1, len(text) if text else 0)
                     self.last_failure_reason = "empty_html"
                     if attempt < 1:
-                        time.sleep(5)  # リトライ前に少し待機
+                        __import__("src.collectors.polite", fromlist=["polite_wait"]).polite_wait(url, self.SHOP_ID)  # 再試行も同じドメインの間隔をあける
 
             except Exception as e:
                 err_str = str(e)
@@ -124,7 +127,7 @@ class KaitoriItchomeCsvCollector(BaseCsvBuybackCollector):
                 else:
                     self.last_failure_reason = "playwright_error"
                 if attempt < 1:
-                    time.sleep(10)
+                    __import__("src.collectors.polite", fromlist=["polite_wait"]).polite_wait(url, self.SHOP_ID)  # 再試行も同じドメインの間隔をあける
                     continue
                 return None
 

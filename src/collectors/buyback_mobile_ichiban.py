@@ -25,7 +25,7 @@ import re
 import time
 from typing import Optional
 
-from src.collectors.buyback_base_csv import BaseCsvBuybackCollector
+from src.collectors.buyback_base_csv import HONEST_UA, BaseCsvBuybackCollector
 
 logger = logging.getLogger(__name__)
 
@@ -119,7 +119,7 @@ class MobileIchibanCsvCollector(BaseCsvBuybackCollector):
         self.last_error_type = ""
 
         t0 = time.monotonic()
-        time.sleep(1.5)  # レートリミット遵守
+        # 同じドメインの間隔は共通の _polite_fetch が守る（Phase 12）
 
         # ── Step1: requests fast path ──────────────────────────────────────
         html_from_requests: Optional[str] = None
@@ -131,7 +131,13 @@ class MobileIchibanCsvCollector(BaseCsvBuybackCollector):
             html_from_requests = resp.text
             logger.debug("[モバイル一番] requests OK: %d chars", len(html_from_requests))
         except Exception as e:
-            logger.debug("[モバイル一番] requests failed (%s), fallback to Playwright", e)
+            logger.debug("[モバイル一番] requests failed (%s)", e)
+            # ブロック（401/403）・429・接続の失敗（切断はブロックのこともある）は Playwright で取り直さない
+            # （Phase 12 監査 M5・再監査 M-A）。Playwright は、ページは取れたが価格が JS で描画される場合だけ
+            from src.collectors.polite import status_reason
+            self.last_failure_reason = status_reason(self.last_http_status)
+            self.last_elapsed_seconds = time.monotonic() - t0
+            return None
 
         # requests で十分な本文が取れた場合: BS4 でプレーンテキストに変換し、
         # 実際に価格データ（新品＋円）が含まれている場合のみ fast path として使う。
@@ -158,6 +164,9 @@ class MobileIchibanCsvCollector(BaseCsvBuybackCollector):
                              self.last_text_length)
 
         # ── Step2: Playwright fallback ─────────────────────────────────────
+        # 同じ URL への2回目の取得なので、同じドメインの間隔をあける（Phase 12 レビュー Low）
+        from src.collectors.polite import polite_wait
+        polite_wait(url, self.SHOP_ID)
         text = self._fetch_with_playwright_optimized(url)
         self.last_elapsed_seconds = time.monotonic() - t0
 
@@ -188,17 +197,20 @@ class MobileIchibanCsvCollector(BaseCsvBuybackCollector):
                 browser = p.chromium.launch(headless=True)
                 try:
                     context = browser.new_context(
-                        user_agent=(
-                            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-                            "AppleWebKit/537.36 (KHTML, like Gecko) "
-                            "Chrome/120.0.0.0 Safari/537.36"
-                        ),
+                        user_agent=HONEST_UA,
                         locale="ja-JP",
                     )
                     page = context.new_page()
 
                     # goto: domcontentloaded で十分（networkidle はタイムアウトの原因）
-                    page.goto(url, timeout=_PW_GOTO_TIMEOUT_MS, wait_until="domcontentloaded")
+                    _resp = page.goto(url, timeout=_PW_GOTO_TIMEOUT_MS, wait_until="domcontentloaded")
+                    if _resp is not None and _resp.status in (401, 403, 429):
+                        # 拒否の応答は本文として扱わない（Phase 12 監査 M5）
+                        from src.collectors.polite import status_reason
+                        self.last_http_status = _resp.status
+                        self.last_failure_reason = status_reason(_resp.status)
+                        browser.close()
+                        return None
 
                     try:
                         page.wait_for_load_state("domcontentloaded", timeout=_PW_LOAD_TIMEOUT_MS)

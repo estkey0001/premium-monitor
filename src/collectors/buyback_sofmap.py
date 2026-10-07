@@ -15,7 +15,7 @@ import re
 import urllib.parse
 from typing import Optional
 
-from src.collectors.buyback_base_csv import BaseCsvBuybackCollector
+from src.collectors.buyback_base_csv import HONEST_UA, BaseCsvBuybackCollector
 
 
 def _search_url(keyword: str) -> str:
@@ -50,12 +50,12 @@ class SofmapCsvCollector(BaseCsvBuybackCollector):
 
     def _fetch_html(self, url: str) -> Optional[str]:
         """503 Service Unavailable の場合は service_unavailable を設定。"""
-        import requests as _req, time
-        time.sleep(1.5)
+        import requests as _req
+        # 同じドメインの間隔は共通の _polite_fetch が守る（Phase 12）
         try:
             sess = _req.Session()
             sess.headers.update({
-                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+                "User-Agent": HONEST_UA,
                 "Accept-Language": "ja,en;q=0.9",
             })
             resp = sess.get(url, timeout=15, allow_redirects=True)
@@ -78,8 +78,10 @@ class SofmapCsvCollector(BaseCsvBuybackCollector):
                 return None
             return resp.text
         except _req.HTTPError as e:
-            status = e.response.status_code if (hasattr(e, 'response') and e.response) else 0
-            self.last_failure_reason = "service_unavailable" if status == 503 else f"http_{status}"
+            status = e.response.status_code if getattr(e, 'response', None) is not None else 0
+            # 4xx の応答は真偽値が偽になるので is not None で見る（以前は 429 が http_0 になり打ち切られなかった）
+            from src.collectors.polite import status_reason
+            self.last_failure_reason = "service_unavailable" if status == 503 else status_reason(status)
             return None
         except Exception as e:
             self.last_failure_reason = "connection_error"

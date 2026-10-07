@@ -120,22 +120,11 @@ class KaitoriShoutenCsvCollector(BaseCsvBuybackCollector):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # 同じ一覧ページ（/kaden など）を商品ごとに取り直さない（1回の実行の中だけ使い回す。取得できたものだけ）
-        self._page_cache: dict[str, str] = {}
+        # 同じ一覧ページ（/kaden など）を商品ごとに取り直さないキャッシュは共通の _polite_fetch にある（Phase 12）
         self.last_matched_rows: list[tuple[str, int, str]] = []
 
     def _build_url(self, product_alias: str, product_name: str) -> str:
         return PRODUCT_URLS.get(product_alias, "")
-
-    def _fetch_html(self, url: str) -> Optional[str]:
-        if url in self._page_cache:
-            self.last_fetch_url = url
-            self.last_failure_reason = None
-            return self._page_cache[url]
-        html = super()._fetch_html(url)
-        if html:
-            self._page_cache[url] = html
-        return html
 
     def _parse_detail_url(self, html: str, fallback_url: str) -> str:
         """採用した価格の商品行の詳細ページ（/products/detail/…。JAN と状態別の価格が載る）の URL。

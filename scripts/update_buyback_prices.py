@@ -144,6 +144,15 @@ AUTO_ALIASES = {p["product_alias"] for p in TARGET_PRODUCTS}
 # （Phase 11: 買取商店だけ自動取得する商品で、他店の手入力の行を消さない）
 AUTO_PAIRS = {(p["product_alias"], shop) for p in TARGET_PRODUCTS for shop in p["shops"]}
 
+# ── 店（取得元）単位の打ち切り（Phase 12）: 共通の作法 src/collectors/polite.ShopCutoff を使う ──
+# ブロック・規約上の拒否は即、一時的な失敗・パーサーの不一致は2回続いたら、その店の残りの商品をこの実行では取りに行かない
+from src.collectors.polite import ShopCutoff  # noqa: E402
+
+
+# ── 商品行ごとに照合するコレクターの店（一覧の表の行と機種・容量・型番を照合し、採用した行の
+#    商品ページの URL を出典にする）。「別商品が同じ価格」の隔離を免除してよいのはこの店だけ（Phase 12） ──
+ROW_MATCHED_SHOPS = frozenset({"kaitori_shouten"})
+
 # ── コレクター未実装・実装予定なしのショップ ──
 # これらは "collector_not_loaded" ではなく "not_supported" として分類する
 NOT_SUPPORTED_SHOPS = {
@@ -282,6 +291,7 @@ def run(dry_run: bool = False, no_scrape: bool = False) -> int:
     failure_reasons : dict[tuple, str] = {}  # (alias, shop_id) -> reason
     collector_debug : dict[tuple, dict] = {}  # (alias, shop_id) -> {final_url, html_length, http_status}
 
+    cutoff = ShopCutoff()
     for product in TARGET_PRODUCTS:
         alias    = product["product_alias"]
         pname    = product["product_name"]
@@ -290,6 +300,22 @@ def run(dry_run: bool = False, no_scrape: bool = False) -> int:
 
         for shop_id in shops:
             collector = collectors.get(shop_id)
+
+            if collector is not None and cutoff.is_cut(shop_id):
+                # この実行では打ち切った店: リクエストを送らない。失敗の理由は打ち切りのきっかけと同じ
+                # （失敗率などの集計の意味を変えない）。打ち切ったことはレポートの shop_cutoffs に残す
+                reason = cutoff.skip(shop_id, alias)
+                new_rows.append({
+                    "product_alias": alias, "buyback_shop": shop_id, "buyback_price": "0",
+                    "condition": cond, "url": _fallback_url(shop_id, alias),
+                    "observed_at": now_jst.isoformat(timespec="seconds"),
+                    "data_source": "fetch_failed", "link_verified": "false",
+                })
+                results_summary.append((alias, shop_id, "FAILED", 0))
+                failure_reasons[(alias, shop_id)] = reason
+                collector_debug[(alias, shop_id)] = {"skipped_by_cutoff": True, "http_status": 0,
+                                                     "final_url": "", "html_length": 0}
+                continue
 
             if no_scrape or collector is None:
                 # not_supported: コレクター実装予定なし（bookoff/tsutayaなど）
@@ -332,6 +358,7 @@ def run(dry_run: bool = False, no_scrape: bool = False) -> int:
                     }
                     new_rows.append(row)
                     results_summary.append((alias, shop_id, "OK", result["buyback_price"]))
+                    cutoff.record(shop_id, True)
                 else:
                     # 取得失敗 → fetch_failed / product_not_listed として記録
                     reason = getattr(collector, "last_failure_reason", None) or "price_not_found"
@@ -350,6 +377,10 @@ def run(dry_run: bool = False, no_scrape: bool = False) -> int:
                     new_rows.append(row)
                     results_summary.append((alias, shop_id, "FAILED", 0))
                     failure_reasons[(alias, shop_id)] = reason
+                    # この実行で取得済みのページ（キャッシュ）での解析の失敗は、その商品の事情なので店の打ち切りに数えない
+                    # （同じページに載る他の商品の価格を消さない。リクエストも増えない。Phase 12 レビュー M1）
+                    if not getattr(collector, "last_from_cache", False):
+                        cutoff.record(shop_id, False, reason)
                     collector_debug[(alias, shop_id)] = {
                         "final_url":       getattr(collector, "last_fetch_url", ""),
                         "html_length":     getattr(collector, "last_html_length", 0),
@@ -375,6 +406,7 @@ def run(dry_run: bool = False, no_scrape: bool = False) -> int:
                 new_rows.append(row)
                 results_summary.append((alias, shop_id, "ERROR", 0))
                 failure_reasons[(alias, shop_id)] = reason
+                cutoff.record(shop_id, False, reason)
                 collector_debug[(alias, shop_id)] = {
                     "final_url":       getattr(collector, "last_fetch_url", ""),
                     "html_length":     getattr(collector, "last_html_length", 0),
@@ -420,7 +452,10 @@ def run(dry_run: bool = False, no_scrape: bool = False) -> int:
         print(f"\n  ⚠️  誤りと判断した価格 {rejected}件を隔離しました（suspicious_rejected）")
 
     # CSV書き込み
-    final_rows = preserved_rows + new_rows
+    # 取得に失敗した組で、前回の CSV がその組の手入力の行（価格あり）だったときは、手入力の行をそのまま残す
+    # （失敗の行で消さない。値・日時は変えない。手入力は照合済みにならないので確定には使われない。Phase 12）。
+    # 失敗したことは results_summary・failure_reasons・レポートに残る（レポートには失敗の行を渡す）
+    final_rows = preserved_rows + keep_manual_on_failure(new_rows, existing_rows)
     _write_csv(final_rows)
     print(f"\n  CSV更新完了: {len(final_rows)}行 -> {CSV_PATH}")
     print("="*60 + "\n")
@@ -434,11 +469,36 @@ def run(dry_run: bool = False, no_scrape: bool = False) -> int:
         failure_reasons=failure_reasons,
         collector_debug=collector_debug,
         suspicious_prices=suspicious_prices,
+        shop_cutoffs=cutoff.cut,
+        collector_metrics={sid: {"requests": getattr(c, "request_count", 0)} for sid, c in collectors.items()},
     )
 
     # 隔離した行も失敗として数えた結果で戻り値を決める
     fail_count = sum(1 for _, _, st, _ in results_summary if st in ("FAILED", "ERROR"))
     return 1 if fail_count > 0 else 0
+
+
+def keep_manual_on_failure(new_rows: list[dict], existing_rows: list[dict]) -> list[dict]:
+    """取得に失敗した（価格0の）行のうち、前回その組が手入力の行（manual_today・価格あり）だったものは、
+    前回の手入力の行に置き換える。成功した行・前回が自動取得や失敗の行はそのまま。"""
+    prev = {(r.get("product_alias", ""), r.get("buyback_shop", "")): r for r in existing_rows}
+    out = []
+    for row in new_rows:
+        try:
+            price = int(row.get("buyback_price", 0) or 0)
+        except (ValueError, TypeError):
+            price = 0
+        old = prev.get((row.get("product_alias", ""), row.get("buyback_shop", "")))
+        if price <= 0 and old and old.get("data_source") == "manual_today":
+            try:
+                old_price = int(old.get("buyback_price", 0) or 0)
+            except (ValueError, TypeError):
+                old_price = 0
+            if old_price > 0:
+                out.append(dict(old))
+                continue
+        out.append(row)
+    return out
 
 
 def _save_debug_txt(shop_id: str, alias: str, collector, reason: str) -> None:
@@ -631,8 +691,10 @@ def compute_suspicious(new_rows: list[dict], existing_rows: list[dict]) -> list[
 
     # ⑧ 同じ店で、別の商品（機種・容量違い）に同じ価格が付いている
     #    （ページの見出し・最高値などを複数の商品に割り当てた誤取得の典型。2026-10-02 の ¥435,000）
-    #    ただし、どの行も別々の商品ページ（link_type=item。採用した商品行の詳細ページ）から取ったときは、
-    #    別の商品にたまたま同じ価格が付いているだけなので隔離しない（Phase 11: 買取商店は1店で9商品）
+    #    ただし、商品行ごとに照合するコレクターの店（ROW_MATCHED_SHOPS）で、どの行も別々の商品ページ
+    #    （link_type=item。採用した商品行の詳細ページ）から取ったときは、別の商品にたまたま同じ価格が
+    #    付いているだけなので隔離しない（Phase 11: 買取商店は1店で9商品）。
+    #    店のトップ・検索結果・一般ページから取る店では、URL が別々でも免除しない（Phase 12）
     from src.market.normalized_prices import classify_link_type
     by_shop_price: dict[tuple, list[str]] = {}
     urls_by_shop_price: dict[tuple, list[str]] = {}
@@ -649,7 +711,7 @@ def compute_suspicious(new_rows: list[dict], existing_rows: list[dict]) -> list[
             urls_by_shop_price.setdefault(key, []).append(url if item else "")
     for (shop_id, price), aliases in by_shop_price.items():
         urls = urls_by_shop_price.get((shop_id, price), [])
-        if all(urls) and len(set(urls)) == len(urls):
+        if shop_id in ROW_MATCHED_SHOPS and all(urls) and len(set(urls)) == len(urls):
             continue
         if len(set(aliases)) >= 2:
             for alias in sorted(set(aliases)):
@@ -697,6 +759,8 @@ def _generate_collector_report(
     failure_reasons: dict,
     collector_debug: dict | None = None,
     suspicious_prices: list[dict] | None = None,
+    shop_cutoffs: dict | None = None,
+    collector_metrics: dict | None = None,
 ) -> None:
     """コレクターレポートを exports/collector_report/latest.{json,md} に出力する。"""
     REPORT_DIR.mkdir(parents=True, exist_ok=True)
@@ -930,6 +994,10 @@ def _generate_collector_report(
             "low_confidence_count": low_confidence_count,
         },
         "low_confidence_count": low_confidence_count,
+        # この実行で打ち切った店（理由・何回目の失敗で打ち切ったか・取りに行かなかった商品）と、
+        # 店ごとに実際に送ったリクエスト数（キャッシュを除く）。Phase 12
+        "shop_cutoffs":           shop_cutoffs or {},
+        "collector_metrics":      collector_metrics or {},
         "by_shop":                by_shop,
         "by_product":             by_product,
         "product_shop_detail":    product_shop_detail,

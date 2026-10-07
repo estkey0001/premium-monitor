@@ -397,13 +397,50 @@ def setup_logging(verbose: bool) -> None:
     )
 
 
-def _fetch_html(url: str, timeout: int = 15) -> tuple[Optional[str], str]:
-    """URL を取得して (html, reason) を返す。成功時 reason=''。"""
+# フジヤのキーワード候補は、前回の実行で当たった候補を先に試し、多くても2つまでにする
+# （同じドメインの間隔が90秒なので、候補を全部試すと CI が長くなる。Phase 12 レビュー M4）
+FUJIYA_MAX_VARIANTS = 2
+
+
+def _ordered_variants(alias: str, variants: list) -> list:
+    prev = ""
     try:
-        import urllib.request
+        d = json.loads((ROOT / "exports" / "camera_buyback_status.json").read_text(encoding="utf-8"))
+        for r in d.get("detail") or []:
+            if r.get("shop_id") == "src_fujiya" and (r.get("product_alias") or r.get("alias")) == alias \
+                    and r.get("status") == "OK" and r.get("best_keyword"):
+                prev = r["best_keyword"]
+    except (OSError, ValueError):
+        prev = ""
+    ordered = ([prev] if prev in variants else []) + [v for v in variants if v != prev]
+    return ordered[:FUJIYA_MAX_VARIANTS]
+
+
+def _source_id_for_url(url: str) -> str:
+    """URL から取得元の id（CAMERA_SHOPS の shop_id）。間隔の設定（sources.yaml）を引くために使う。"""
+    from urllib.parse import urlparse
+    host = urlparse(url).netloc
+    for sid, _name, tmpl in CAMERA_SHOPS:
+        if urlparse(tmpl).netloc == host:
+            return sid
+    return ""
+
+
+def _fetch_html(url: str, timeout: int = 15) -> tuple[Optional[str], str]:
+    """URL を取得して (html, reason) を返す。成功時 reason=''。
+
+    Phase 12: robots.txt で禁止の URL は取得しない（robots_disallowed）。同じドメインの間隔
+    （sources.yaml の rate_limit_sec・Crawl-delay・最低60秒）をあける。User-Agent は正直な名前。
+    """
+    from src.collectors import polite
+    if not polite.robots_allowed(url):
+        return None, polite.robots_block_reason(url)
+    polite.polite_wait(url, _source_id_for_url(url))
+    import urllib.error
+    import urllib.request
+    try:
         req = urllib.request.Request(url, headers={
-            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-                          "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36",
+            "User-Agent": polite.HONEST_UA,
             "Accept-Language": "ja,en;q=0.8",
         })
         with urllib.request.urlopen(req, timeout=timeout) as resp:
@@ -419,13 +456,16 @@ def _fetch_html(url: str, timeout: int = 15) -> tuple[Optional[str], str]:
             if any(k in html.lower() for k in ("captcha", "are you a robot", "cloudflare")):
                 return None, "site_blocked"
             return html, ""
+    except urllib.error.HTTPError as e:
+        # urllib は 4xx・5xx で例外を投げる。403 はブロック、429 はアクセス制限として打ち切りに使う（監査 H2）
+        if e.code == 404:
+            return None, "product_not_listed"
+        return None, ("site_blocked" if e.code == 403 else polite.status_reason(e.code))
     except Exception as e:  # noqa: BLE001
         name = type(e).__name__.lower()
         if "timeout" in name:
             return None, "timeout"
-        if "http" in name and "403" in str(e):
-            return None, "site_blocked"
-        return None, "http_error"
+        return None, "connection_error"
 
 
 # 店舗別 検索フォーム/結果セレクタ（Playwright 用）
@@ -579,6 +619,11 @@ def _fetch_with_playwright(url: str, shop_id: str, alias: str, dbg_dir, shot_dir
            "shadow_dom_detected": False, "dom_ready_state": "", "hit_count": None,
            "has_buyback_context": False, "sales_price_sample": None,
            "buyback_link_candidates": [], "buyback_page_url": None}
+    # Phase 12: robots.txt で禁止の URL は開かない（最初に判定する）。同じドメインの間隔をあける。ブラウザを名乗らない
+    from src.collectors import polite
+    if not polite.robots_allowed(url):
+        out["reason"] = polite.robots_block_reason(url)
+        return out
     try:
         from playwright.sync_api import sync_playwright
     except Exception:
@@ -587,26 +632,43 @@ def _fetch_with_playwright(url: str, shop_id: str, alias: str, dbg_dir, shot_dir
 
     cfg = _PW_SHOP_CONFIG.get(shop_id, {})
     out["strategy"] = cfg.get("strategy", "generic")
+    polite.polite_wait(url, shop_id)
     try:
         with sync_playwright() as p:
             browser = p.chromium.launch(headless=True, args=["--no-sandbox"])
             ctx = browser.new_context(
-                user_agent=("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
-                            "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"),
-                locale="ja-JP", timezone_id="Asia/Tokyo",
-                viewport={"width": 1366, "height": 900},
+                user_agent=polite.HONEST_UA, locale="ja-JP",
                 extra_http_headers={"Accept-Language": "ja,en-US;q=0.9,en;q=0.8"},
             )
             page = ctx.new_page()
+            _resp = None
             try:
-                page.goto(url, wait_until="networkidle", timeout=timeout_ms)
+                _resp = page.goto(url, wait_until="networkidle", timeout=timeout_ms)
             except Exception:
+                # 同じ URL をもう一度開くので、同じドメインの間隔をあける（Phase 12 監査 L5）
+                polite.polite_wait(url, shop_id)
                 try:
-                    page.goto(url, wait_until="domcontentloaded", timeout=timeout_ms)
+                    _resp = page.goto(url, wait_until="domcontentloaded", timeout=timeout_ms)
                 except Exception as e2:
                     out["reason"] = "timeout" if "imeout" in type(e2).__name__ else "nav_error"
                     browser.close()
                     return out
+            # ブロック（403・429・Access Denied など）は、価格が無いのではなく拒否として記録する（打ち切りに使う。
+            # Phase 12 レビュー H1）
+            _status = getattr(_resp, "status", None) if _resp is not None else None
+            if _status in (401, 403, 429):
+                out["reason"] = "site_blocked" if _status in (401, 403) else "rate_limited_429"
+                browser.close()
+                return out
+            try:
+                _head = (page.title() or "").lower() + " " + (page.inner_text("body") or "")[:400].lower()
+            except Exception:  # noqa: BLE001
+                _head = ""
+            if any(k in _head for k in ("access denied", "just a moment", "captcha", "are you a robot",
+                                        "ロボットではありません")):
+                out["reason"] = "site_blocked"
+                browser.close()
+                return out
             rw = cfg.get("result_wait")
             if rw:
                 try:
@@ -741,6 +803,9 @@ def main() -> int:
         d.update(kw)
         return d
 
+    # 取得元ごとの打ち切り（ブロックは即、一時的な失敗・形の不一致は2回続いたら。この実行の中だけ。Phase 12）
+    from src.collectors.polite import ShopCutoff
+    cutoff = ShopCutoff()
     for alias in CAMERA_ALIASES:
         kw = CAMERA_KEYWORDS.get(alias, alias)
         kw_enc = _up.quote(kw)
@@ -755,9 +820,17 @@ def main() -> int:
                 results.append(_diag(alias, shop_id, "FAILED", 0, "not_supported"))
                 continue
             url = url_tmpl.format(kw=kw_enc) if "{kw}" in url_tmpl else url_tmpl
+            if cutoff.is_cut(shop_id):
+                results.append(_diag(alias, shop_id, "FAILED", 0, cutoff.skip(shop_id, alias),
+                                     skipped_by_cutoff=True))
+                continue
 
-            # 1) requests 取得
-            html, reason = _fetch_html(url)
+            # 1) requests 取得。Playwright で取る店は、requests の金額を使わない（照合を通らない）ので取りに行かない
+            #    （同じ店へのリクエストを増やさない。Phase 12）
+            if args.playwright and shop_id in _PW_SHOP_CONFIG:
+                html, reason = None, ""
+            else:
+                html, reason = _fetch_html(url)
             _saved = False
             _size = len(html) if html else 0
             if html and (args.debug_html or shop_id in PRIORITY_SHOPS):
@@ -787,11 +860,16 @@ def main() -> int:
                 # フジヤ：複数キーワードを試し、機種厳密一致の買取価格が取れるものを採用
                 if shop_id == "src_fujiya" and alias in FUJIYA_KEYWORD_VARIANTS:
                     _best = None
-                    for _var in FUJIYA_KEYWORD_VARIANTS[alias]:
+                    for _var in _ordered_variants(alias, FUJIYA_KEYWORD_VARIANTS[alias]):
                         # 買取専用ページ /shop/purchase/list.aspx（search=検索 必須）
                         _vurl = ("https://www.fujiya-camera.co.jp/shop/purchase/list.aspx"
                                  f"?keyword={_up.quote(_var)}&search=検索")
                         _try = _fetch_with_playwright(_vurl, shop_id, alias, _dbg, shot_dir=_shot)
+                        # ブロック・robots の禁止なら残りの候補も取りに行かない（Phase 12 レビュー H1・監査 L5）
+                        if _try.get("reason") in ("site_blocked", "rate_limited_429", "robots_disallowed",
+                                                  "robots_unreachable"):
+                            _best = (( -1, 0), _var, _try, {})
+                            break
                         _try["buyback_page_url"] = _vurl
                         _hc = _try.get("hit_count")
                         _kw_hit_counts[_var] = _hc
@@ -828,7 +906,8 @@ def main() -> int:
 
             _low = (html or "").lower()
             _cf = any(k in _low for k in ("just a moment", "challenge-platform",
-                                          "cf-browser-verification", "captcha", "ロボットではありません"))
+                                          "cf-browser-verification", "captcha", "ロボットではありません",
+                                          "<title>access denied</title>"))
             _js = (("__next_data__" in _low) or ("window.__nuxt__" in _low)
                    or (0 < _size < 3000 and "<script" in _low))
             _pw_attempted = bool(_pw)
@@ -871,7 +950,7 @@ def main() -> int:
                     # 検索結果に価格はあるが「買取」文脈でない＝販売価格カタログ
                     _r = "sales_catalog_no_buyback"
                 elif html is None:
-                    _r = reason
+                    _r = reason or "price_not_found"
                 elif _cf:
                     _r = "site_blocked"
                 elif 0 < _size < 3000:
@@ -882,9 +961,11 @@ def main() -> int:
                                      html_saved=_saved, html_size=_size,
                                      cloudflare_detected=_cf, js_required=_js,
                                      selector_found=False, extracted_price=None, **_pw_kw))
+                cutoff.record(shop_id, False, _r)
                 continue
 
             # 取得成功 → auto_scraped で保存（manual_today より優先される）。状態は価格の直前の表示から決める
+            cutoff.record(shop_id, True)
             results.append(_diag(alias, shop_id, "OK", price, "",
                                  html_saved=_saved, html_size=_size,
                                  cloudflare_detected=_cf, js_required=_js,
@@ -953,6 +1034,8 @@ def main() -> int:
                     "success_rate_pct": round(100.0 * ok / total, 1) if total else 0.0,
                     "saved_to_db": saved},
         "failure_reasons": [{"reason": k, "count": v} for k, v in reasons.most_common()],
+        # この実行で打ち切った取得元（理由・何回目の失敗か・取りに行かなかった機種）。Phase 12
+        "shop_cutoffs": cutoff.cut,
         "shop_diagnostics": shop_diag,
         "detail": results,
         "fallback_note": ("HTMLから新品買取を確定できない店舗は manual_buyback_prices.csv の "

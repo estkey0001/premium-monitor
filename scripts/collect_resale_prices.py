@@ -28,7 +28,6 @@ import logging
 import re
 import statistics
 import sys
-import time
 import urllib.parse
 import urllib.request
 from datetime import datetime, timedelta, timezone
@@ -237,46 +236,41 @@ def _is_blocked(html: str) -> bool:
 
 
 def _fetch_html(url: str, headers: Optional[dict] = None, timeout: int = 20) -> Optional[str]:
-    """URL から HTML を取得する（requests → urllib フォールバック）。
+    """URL から HTML を取得する。ブロック / 接続エラー時は None を返す（理由は _LAST_FETCH["reason"]）。
 
-    ブロック / 接続エラー時は None を返す。
+    Phase 12: robots.txt で禁止の URL は取得しない。同じドメインの間隔（sources.yaml の rate_limit_sec・
+    Crawl-delay・最低60秒）をあける。正直な User-Agent。失敗した URL を urllib で取り直さない。
     """
-    default_ua = (
-        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-        "AppleWebKit/537.36 (KHTML, like Gecko) "
-        "Chrome/120.0.0.0 Safari/537.36"
-    )
-    hdrs = {"User-Agent": default_ua, "Accept-Language": "ja,en;q=0.9"}
+    from src.collectors import polite
+    _LAST_FETCH["reason"] = ""
+    if not polite.robots_allowed(url):
+        _LAST_FETCH["reason"] = polite.robots_block_reason(url)
+        return None
+    polite.polite_wait(url)
+    hdrs = {"User-Agent": polite.HONEST_UA, "Accept-Language": "ja,en;q=0.9"}
     if headers:
         hdrs.update(headers)
-
     try:
         import requests
         resp = requests.get(url, headers=hdrs, timeout=timeout)
-        if resp.status_code in (403, 429, 503):
-            logger.debug("HTTP %d → blocked: %s", resp.status_code, url[:80])
-            return None
         if resp.status_code != 200:
             logger.debug("HTTP %d: %s", resp.status_code, url[:80])
+            _LAST_FETCH["reason"] = ("service_unavailable" if resp.status_code == 503
+                                     else polite.status_reason(resp.status_code))
             return None
         if _is_blocked(resp.text):
             logger.debug("ブロック検出: %s", url[:80])
+            _LAST_FETCH["reason"] = "site_blocked"
             return None
         return resp.text
     except Exception as e:
         logger.debug("requests 失敗 (%s): %s", url[:80], e)
-
-    # urllib フォールバック
-    try:
-        req = urllib.request.Request(url, headers=hdrs)
-        with urllib.request.urlopen(req, timeout=timeout) as resp:
-            raw = resp.read().decode("utf-8", errors="replace")
-        if _is_blocked(raw):
-            return None
-        return raw
-    except Exception as e:
-        logger.debug("urllib 失敗 (%s): %s", url[:80], e)
+        _LAST_FETCH["reason"] = "timeout" if "timeout" in type(e).__name__.lower() else "connection_error"
         return None
+
+
+# 直前の _fetch_html の失敗の理由（取得元の打ち切りの判定に使う）
+_LAST_FETCH: dict = {"reason": ""}
 
 
 # ─────────────────────────────────────────────────────────────
@@ -312,8 +306,11 @@ class EbayResaleCollector:
             logger.warning("[eBay:%s] 収集エラー: %s", product_alias, e)
             return None
 
-        if result.failure_reason in ("site_blocked", "html_blocked"):
-            logger.info("[eBay:%s] サイトブロック → スキップ", product_alias)
+        # 打ち切りの判定に使う理由（eBay は _fetch_html を通らないので、ここで渡す。Phase 12 レビュー H2）
+        _blk = getattr(collector, "last_block_reason", "") or ""
+        if result.failure_reason in ("site_blocked", "html_blocked") or _blk:
+            _LAST_FETCH["reason"] = _blk or "site_blocked"
+            logger.info("[eBay:%s] 取得しない（%s）→ スキップ", product_alias, _LAST_FETCH["reason"])
             return None
 
         if result.price_jpy <= 0 or result.listing_count == 0:
@@ -506,15 +503,8 @@ class MercariResaleCollector:
                     headless=True,
                     args=["--no-sandbox", "--disable-dev-shm-usage"],
                 )
-                ctx = browser.new_context(
-                    user_agent=(
-                        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-                        "AppleWebKit/537.36 (KHTML, like Gecko) "
-                        "Chrome/120.0.0.0 Safari/537.36"
-                    ),
-                    locale="ja-JP",
-                    viewport={"width": 1280, "height": 800},
-                )
+                from src.collectors.polite import HONEST_UA
+                ctx = browser.new_context(user_agent=HONEST_UA, locale="ja-JP")
                 page = ctx.new_page()
                 page.goto(url, wait_until="domcontentloaded", timeout=30000)
                 # SPA レンダリング待機
@@ -733,48 +723,25 @@ class RakutenResaleCollector:
     def collect(self, product_alias: str, keywords: list[str]) -> Optional[dict]:
         """楽天市場の新品出品価格を取得する。
 
-        公式API（RAKUTEN_APP_ID 設定時）を優先し、未設定/失敗時は従来のHTMLへフォールバック。
+        公式 API（RAKUTEN_APP_ID 設定時）だけを使う。API の失敗・未設定のときに検索結果の HTML を取りに行かない
+        （API の失敗の回り道で、規約上も許された取得の経路ではない。Phase 12 再監査 H-A）。
         """
         keyword = keywords[0] if keywords else ""
         if not keyword:
             return None
-
-        # 公式API優先（キー設定時のみ有効・未設定なら None を返しHTMLへ）
         try:
             from src.collectors.api.official_apis import rakuten_ichiba_search
             api_res = rakuten_ichiba_search(keyword)
             if api_res:
                 logger.info("[Rakuten:%s] 公式API使用", product_alias)
                 return api_res
-        except Exception as e:
-            logger.info("[Rakuten:%s] API試行エラー→HTMLへ: %s", product_alias, e)
-
-        url = self.SEARCH_URL.format(keyword=urllib.parse.quote(keyword))
-        html = _fetch_html(url, headers={"Accept-Language": "ja"})
-        if not html:
-            logger.info("[Rakuten:%s] HTML取得失敗 → スキップ", product_alias)
-            return None
-
-        prices = self._parse_prices(html)
-        if not prices:
-            logger.info("[Rakuten:%s] 価格なし", product_alias)
-            return None
-
-        prices = _remove_outliers(prices)
-        if not prices:
-            return None
-
-        median_jpy = int(statistics.median(prices))
-        logger.info(
-            "[Rakuten:%s] ¥%s (median of %d listings)",
-            product_alias, f"{median_jpy:,}", len(prices),
-        )
-        return {
-            "price_jpy": median_jpy,
-            "listing_count": len(prices),
-            "url": url,
-            "collector_method": "html",
-        }
+        except Exception as e:  # noqa: BLE001
+            logger.info("[Rakuten:%s] API試行エラー: %s", product_alias, e)
+        # API が使えない（未設定・停止）なら、この実行では楽天を取らない（即打ち切り）。
+        # API が使えて結果が無いだけなら商品ごとの事情（2回続いたら打ち切り）
+        from src.collectors.api import api_runtime as _rt
+        _LAST_FETCH["reason"] = "no_data" if _rt.api_enabled("rakuten") else "html_scraping_disabled"
+        return None
 
     def _parse_prices(self, html: str) -> list[int]:
         """楽天市場検索結果から価格を抽出する。"""
@@ -1032,6 +999,16 @@ def run_collection(
     now = datetime.now(tz=JST)
     logger.info("収集開始: %s JST", now.strftime("%Y-%m-%d %H:%M"))
 
+    # メルカリ・ラクマは規約でスクレイピングが禁止され、公式の価格 API も無い（許された取得の経路が無い）ので
+    # 取得しない（手動の確認だけ。CLAUDE.md「自動化できない領域」。Phase 12）
+    skip_mercari = True
+    skip_rakuma = True
+    # Amazon の検索結果のページ（/s?k=）も規約上スクレイピングで取らない（公式 API は未接続。Phase 12 監査 H5）
+    skip_amazon = True
+    # ヤフオクの検索結果のページも、規約が自動の取得を許すか確認できていないので取らない（出品の参考の価格で、
+    # 確定の利益には使っていない。再開は規約の確認の後にユーザーが判断する。Phase 12 再監査 M-B）
+    skip_yahoo = True
+
     # コレクター初期化
     ebay_collector     = EbayResaleCollector()        if not skip_ebay     else None
     amazon_collector   = AmazonJpResaleCollector()    if not skip_amazon   else None
@@ -1053,12 +1030,34 @@ def run_collection(
     # | "html_failed" | "skipped" | "error" | "api_key_missing" | "not_supported"
     platform_status: dict[str, str] = {
         "ebay":         "skipped",
-        "amazon":       "skipped",
-        "mercari":      "skipped",
-        "yahoo":        "skipped",
-        "rakuten":      "skipped",
-        "rakuma_direct": "skipped",
+        "amazon":       "not_supported",      # 規約上スクレイピングしない（Phase 12）
+        "mercari":      "not_supported",      # 規約上スクレイピングしない（Phase 12）
+        "yahoo":        "not_supported",      # 規約の確認待ちのため取らない（Phase 12）
+        "rakuten":      "skipped",            # 公式 API だけ（HTML は取らない）
+        "rakuma_direct": "not_supported",     # 規約上スクレイピングしない（Phase 12）
     }
+
+    # 取得元ごとの打ち切り（ブロックは即、一時的な失敗・データ無しは2回続いたら。この実行の中だけ。Phase 12）
+    from src.collectors.polite import ShopCutoff
+    cutoff = ShopCutoff()
+
+    def _cut_skip(platform: str, alias: str) -> bool:
+        # 取得元ごとに直前の失敗の理由を空にする（別の取得元の理由で打ち切らない。Phase 12 レビュー H2）
+        _LAST_FETCH["reason"] = ""
+        if not cutoff.is_cut(platform):
+            return False
+        cutoff.skip(platform, alias)
+        product_results[alias][platform] = "skipped_cutoff"
+        return True
+
+    def _cut_record(platform: str, alias: str) -> None:
+        st = product_results[alias].get(platform)
+        # 公式 API だけで取る設定で API が使えないときは、表示が not_supported でも以後を取りに行かない
+        if st in ("not_supported", "skipped", "skipped_cutoff") \
+                and _LAST_FETCH.get("reason") != "html_scraping_disabled":
+            return
+        ok = st in ("ok_html", "ok_api")
+        cutoff.record(platform, ok, None if ok else (_LAST_FETCH.get("reason") or "no_data"))
 
     # 商品ごとのプラットフォーム収集結果を追跡する
     # alias -> {platform: status}
@@ -1082,7 +1081,7 @@ def run_collection(
         }
 
         # ──── eBay ────
-        if ebay_collector:
+        if ebay_collector and not _cut_skip("ebay", alias):
             kws = cfg.get("ebay_keywords", [])
             if not kws:
                 product_results[alias]["ebay"] = "not_supported"
@@ -1116,10 +1115,13 @@ def run_collection(
                             platform_status["ebay"] = _st
                         product_results[alias]["ebay"] = _st
                     else:
-                        # 取得なし（ブロックまたはデータ無し）
+                        # 取得なし。HTML を取らない設定（公式 API のみ）なら not_supported と表示する
+                        # （「Cloud IP制限中」は実態と違う。Phase 12 再レビュー Low）
+                        _est = ("not_supported" if _LAST_FETCH.get("reason") == "html_scraping_disabled"
+                                else "blocked_cloud_ip")
                         if platform_status["ebay"] == "skipped":
-                            platform_status["ebay"] = "blocked_cloud_ip"
-                        product_results[alias]["ebay"] = "blocked_cloud_ip"
+                            platform_status["ebay"] = _est
+                        product_results[alias]["ebay"] = _est
                         stats["skipped"] += 1
                 except Exception as e:
                     logger.warning("[eBay:%s] エラー: %s", alias, e)
@@ -1127,10 +1129,10 @@ def run_collection(
                     if platform_status["ebay"] == "skipped":
                         platform_status["ebay"] = "error"
                     product_results[alias]["ebay"] = "html_failed"
-            time.sleep(REQUEST_INTERVAL_SEC)
+            _cut_record("ebay", alias)  # 間隔は取得の共通の作法（polite）が守る
 
         # ──── Amazon JP ────
-        if amazon_collector:
+        if amazon_collector and not _cut_skip("amazon", alias):
             kws = cfg.get("amazon_keywords", [])
             if not kws:
                 product_results[alias]["amazon"] = "not_supported"
@@ -1168,10 +1170,10 @@ def run_collection(
                     if platform_status["amazon"] == "skipped":
                         platform_status["amazon"] = "error"
                     product_results[alias]["amazon"] = "html_failed"
-            time.sleep(REQUEST_INTERVAL_SEC)
+            _cut_record("amazon", alias)  # 間隔は取得の共通の作法（polite）が守る
 
         # ──── メルカリ ────
-        if mercari_collector:
+        if mercari_collector and not _cut_skip("mercari", alias):
             kws = cfg.get("mercari_keywords", [])
             if not kws:
                 product_results[alias]["mercari"] = "not_supported"
@@ -1209,10 +1211,10 @@ def run_collection(
                     if platform_status["mercari"] == "skipped":
                         platform_status["mercari"] = "error"
                     product_results[alias]["mercari"] = "html_failed"
-            time.sleep(REQUEST_INTERVAL_SEC)
+            _cut_record("mercari", alias)  # 間隔は取得の共通の作法（polite）が守る
 
         # ──── ヤフオク ────
-        if yahoo_collector:
+        if yahoo_collector and not _cut_skip("yahoo", alias):
             kws = cfg.get("yahoo_keywords", [])
             if not kws:
                 product_results[alias]["yahoo"] = "not_supported"
@@ -1250,10 +1252,10 @@ def run_collection(
                     if platform_status["yahoo"] == "skipped":
                         platform_status["yahoo"] = "error"
                     product_results[alias]["yahoo"] = "html_failed"
-            time.sleep(REQUEST_INTERVAL_SEC)
+            _cut_record("yahoo", alias)  # 間隔は取得の共通の作法（polite）が守る
 
         # ──── 楽天市場 ────
-        if rakuten_collector:
+        if rakuten_collector and not _cut_skip("rakuten", alias):
             # Amazon と同じキーワードを流用（空の場合はスキップ）
             kws = cfg.get("amazon_keywords", [])
             if not kws:
@@ -1292,10 +1294,10 @@ def run_collection(
                     if platform_status["rakuten"] == "skipped":
                         platform_status["rakuten"] = "error"
                     product_results[alias]["rakuten"] = "html_failed"
-            time.sleep(REQUEST_INTERVAL_SEC)
+            _cut_record("rakuten", alias)  # 間隔は取得の共通の作法（polite）が守る
 
         # ──── ラクマ ────
-        if rakuma_collector:
+        if rakuma_collector and not _cut_skip("rakuma", alias):
             # ヤフオクキーワードを流用（新品未開封系の検索語）
             kws = cfg.get("yahoo_keywords", [])
             if not kws:
@@ -1334,7 +1336,7 @@ def run_collection(
                     if platform_status["rakuma_direct"] == "skipped":
                         platform_status["rakuma_direct"] = "error"
                     product_results[alias]["rakuma"] = "html_failed"
-            time.sleep(REQUEST_INTERVAL_SEC)
+            _cut_record("rakuma", alias)  # 間隔は取得の共通の作法（polite）が守る
 
     logger.info(
         "収集完了: saved=%d / skipped=%d / errors=%d",
@@ -1345,6 +1347,7 @@ def run_collection(
             logger.warning("  ERROR: %s", err)
 
     # ── ステータスレポートを書き出す（LP生成側で参照） ──
+    stats["shop_cutoffs"] = cutoff.cut       # この実行で打ち切った取得元（Phase 12）
     _save_collection_status_report(platform_status, now, stats, product_results)
 
     return stats
@@ -1397,6 +1400,7 @@ def _save_collection_status_report(
             "saved": stats.get("saved", 0),
             "skipped": stats.get("skipped", 0),
             "errors": stats.get("errors", []),
+            "shop_cutoffs": stats.get("shop_cutoffs", {}),
         },
     }
 

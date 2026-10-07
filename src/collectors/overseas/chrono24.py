@@ -97,10 +97,16 @@ class Chrono24Collector:
 
     def _fetch_chrono24_prices(self, url: str) -> list[float]:
         """Chrono24検索ページから価格リストを取得する。"""
+        # Phase 12: robots.txt で禁止の URL は取得しない。同じドメインの間隔をあける。正直な User-Agent
+        from src.collectors import polite
+        if not polite.robots_allowed(url):
+            logger.info("Chrono24: robots.txt で禁止されているため取得しない: %s", url[:80])
+            return []
+        polite.polite_wait(url)
         try:
             import requests
             headers = {
-                "User-Agent": "Mozilla/5.0 (compatible; PremiumMonitor/1.0)",
+                "User-Agent": polite.HONEST_UA,
                 "Accept": "text/html,application/xhtml+xml",
                 "Accept-Language": "en-US,en;q=0.9",
             }

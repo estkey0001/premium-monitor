@@ -14,7 +14,7 @@ import re
 import time
 from typing import Optional
 
-from src.collectors.buyback_base_csv import BaseCsvBuybackCollector
+from src.collectors.buyback_base_csv import HONEST_UA, BaseCsvBuybackCollector
 
 logger = logging.getLogger(__name__)
 
@@ -41,23 +41,19 @@ class JanparaCsvCollector(BaseCsvBuybackCollector):
     def _fetch_html(self, url: str) -> Optional[str]:
         """Playwright + リトライ（429対策）。inner_text() または page.content() を返す。
 
-        レートリミット対策:
-          - 初回アクセス前に 8s スリープ（丁重なアクセス間隔）
-          - 429 検出時は 30s / 60s バックオフ後リトライ（最大3回）
-          - 連続 429 の場合は rate_limited_429 として記録し終了
+        レートリミット対策（Phase 12）:
+          - 同じドメインの間隔は共通の _polite_fetch（robots.txt・rate_limit_sec・最低60秒）が守る
+          - 429 は再試行しない（rate_limited_429 として記録して終わる。以後の商品は店ごと打ち切られる）
+          - 一時的な失敗（タイムアウトなど Playwright の例外）だけ1回再試行する
         """
-        time.sleep(8)  # レートリミット遵守（丁重なアクセス間隔）
-        for attempt in range(3):  # 最大3回試行
+        # 同じドメインの間隔は共通の _polite_fetch が守る（Phase 12）
+        for attempt in range(2):  # 一時的な失敗のときだけ1回再試行
             try:
                 from playwright.sync_api import sync_playwright
                 with sync_playwright() as p:
                     browser = p.chromium.launch(headless=True)
                     context = browser.new_context(
-                        user_agent=(
-                            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-                            "AppleWebKit/537.36 (KHTML, like Gecko) "
-                            "Chrome/120.0.0.0 Safari/537.36"
-                        ),
+                        user_agent=HONEST_UA,
                         extra_http_headers={
                             "Accept-Language": "ja,en;q=0.9",
                         },
@@ -67,20 +63,14 @@ class JanparaCsvCollector(BaseCsvBuybackCollector):
                     status = resp.status if resp else 0
 
                     # 429 検出: Playwright は例外を投げず status で判定
-                    if status == 429:
+                    if status in (401, 403, 429):
+                        # 拒否の応答は本文として扱わない・再試行しない（Phase 12 再監査 M-A）
+                        from src.collectors.polite import status_reason
                         browser.close()
-                        if attempt < 2:
-                            wait_sec = 30 * (attempt + 1)  # 30s, 60s
-                            logger.warning(
-                                "[じゃんぱら] 429 Rate Limit (attempt %d) — %ds後リトライ",
-                                attempt + 1, wait_sec,
-                            )
-                            time.sleep(wait_sec)
-                            continue
-                        else:
-                            self.last_failure_reason = "rate_limited_429"
-                            logger.warning("[じゃんぱら] 429 Rate Limit — リトライ上限到達(3回)")
-                            return None
+                        self.last_http_status = status
+                        self.last_failure_reason = status_reason(status)
+                        logger.warning("[じゃんぱら] HTTP %s — 再試行しない", status)
+                        return None
 
                     page.wait_for_timeout(3000)  # JS描画待機
                     # inner_text で plain text (パース処理を軽量化)
@@ -96,8 +86,8 @@ class JanparaCsvCollector(BaseCsvBuybackCollector):
             except Exception as e:
                 logger.warning("[じゃんぱら] Playwright error (attempt %d): %s", attempt + 1, e)
                 self.last_failure_reason = "playwright_error"
-                if attempt < 2:
-                    time.sleep(10)
+                if attempt < 1:
+                    __import__("src.collectors.polite", fromlist=["polite_wait"]).polite_wait(url, self.SHOP_ID)  # 再試行も同じ間隔
                     continue
                 return None
 

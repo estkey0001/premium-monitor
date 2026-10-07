@@ -12,10 +12,9 @@ URL: https://geomobile.jp/ (スマホ特化の買取)
 """
 import logging
 import re
-import time
 from typing import Optional
 
-from src.collectors.buyback_base_csv import BaseCsvBuybackCollector
+from src.collectors.buyback_base_csv import HONEST_UA, BaseCsvBuybackCollector
 
 logger = logging.getLogger(__name__)
 
@@ -74,24 +73,27 @@ class GeoMobileCsvCollector(BaseCsvBuybackCollector):
         2026-05-25 調査: ERR_CONNECTION_CLOSED が発生し完全ブロック。
         取得不可の場合は failure_reason = "site_blocked" を設定して None を返す。
         """
-        time.sleep(2)  # レートリミット遵守
+        # 同じドメインの間隔は共通の _polite_fetch が守る（Phase 12）
         try:
             from playwright.sync_api import sync_playwright
             with sync_playwright() as p:
                 browser = p.chromium.launch(headless=True)
                 context = browser.new_context(
-                    user_agent=(
-                        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-                        "AppleWebKit/537.36 (KHTML, like Gecko) "
-                        "Chrome/120.0.0.0 Safari/537.36"
-                    ),
+                    user_agent=HONEST_UA,
                     extra_http_headers={
                         "Accept-Language": "ja,en;q=0.9",
                         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
                     },
                 )
                 page = context.new_page()
-                page.goto(url, timeout=25000, wait_until="domcontentloaded")
+                _resp = page.goto(url, timeout=25000, wait_until="domcontentloaded")
+                if _resp is not None and _resp.status in (401, 403, 429):
+                    # 拒否の応答は本文として扱わない（Phase 12 監査 M5）
+                    from src.collectors.polite import status_reason
+                    self.last_http_status = _resp.status
+                    self.last_failure_reason = status_reason(_resp.status)
+                    browser.close()
+                    return None
                 page.wait_for_timeout(3000)
                 text = page.inner_text("body")
                 browser.close()
@@ -106,11 +108,12 @@ class GeoMobileCsvCollector(BaseCsvBuybackCollector):
             if "err_connection_closed" in err_str or "connection" in err_str:
                 self.last_failure_reason = "site_blocked"
             elif "timeout" in err_str:
-                self.last_failure_reason = "site_blocked"
+                # 時間切れはブロックと決めつけない（一時的な失敗として2回続いたら打ち切る。Phase 12 レビュー Low）
+                self.last_failure_reason = "timeout"
             elif "ssl" in err_str:
                 self.last_failure_reason = "ssl_error"
             else:
-                self.last_failure_reason = "site_blocked"
+                self.last_failure_reason = "playwright_error"
             logger.warning("[ゲオモバイル] Cloudflare block / connection error: %s", e)
             return None
 

@@ -91,35 +91,59 @@ class BaseLotteryCollector:
     # ======================================================================
 
     def _fetch_html(self, url: str) -> Optional[str]:
-        """requests で HTML を取得して返す。失敗時は None。"""
+        """requests で HTML を取得して返す。失敗時は None（理由は self.last_fetch_reason）。
+
+        Phase 12: robots.txt で禁止の URL は取得しない。同じドメインの間隔（sources.yaml の rate_limit_sec・
+        Crawl-delay・最低60秒）をあける。正直な User-Agent。
+        """
+        from src.collectors import polite
+        self.last_fetch_reason = ""
+        if not polite.robots_allowed(url):
+            self.last_fetch_reason = polite.robots_block_reason(url)
+            logger.warning("[%s] robots.txt で禁止されているため取得しない: %s", self.SHOP_ID, url)
+            return None
+        polite.polite_wait(url)
         try:
             import requests
             headers = {
-                "User-Agent": (
-                    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-                    "AppleWebKit/537.36 (KHTML, like Gecko) "
-                    "Chrome/124.0.0.0 Safari/537.36"
-                ),
+                "User-Agent": polite.HONEST_UA,
                 "Accept-Language": "ja-JP,ja;q=0.9,en-US;q=0.8,en;q=0.7",
                 "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
             }
             resp = requests.get(url, headers=headers, timeout=30)
             if resp.status_code == 200:
                 return resp.text
+            self.last_fetch_reason = polite.status_reason(resp.status_code)
             logger.warning("[%s] HTTP %s: %s", self.SHOP_ID, resp.status_code, url)
             return None
         except Exception as e:
+            self.last_fetch_reason = "connection_error"
             logger.warning("[%s] requests 失敗: %s — %s", self.SHOP_ID, url, e)
             return None
 
     def _fetch_with_playwright(self, url: str) -> Optional[str]:
-        """Playwright で本文テキストを取得して返す。失敗時は None。"""
+        """Playwright で本文テキストを取得して返す。失敗時は None。
+
+        Phase 12: robots.txt で禁止の URL は開かない。同じドメインの間隔をあける（直接呼ぶ collector もここで守る）。
+        403・429 の応答は本文として扱わない。
+        """
+        from src.collectors import polite
+        if not polite.robots_allowed(url):
+            self.last_fetch_reason = polite.robots_block_reason(url)
+            logger.warning("[%s] robots.txt で禁止されているため取得しない: %s", self.SHOP_ID, url)
+            return None
+        polite.polite_wait(url)
         try:
             from playwright.sync_api import sync_playwright
             with sync_playwright() as p:
+                from src.collectors.polite import HONEST_UA
                 browser = p.chromium.launch(headless=True)
-                page = browser.new_page()
-                page.goto(url, wait_until="domcontentloaded", timeout=60_000)
+                page = browser.new_page(user_agent=HONEST_UA)
+                resp = page.goto(url, wait_until="domcontentloaded", timeout=60_000)
+                if resp is not None and resp.status in (401, 403, 429):
+                    self.last_fetch_reason = polite.status_reason(resp.status)
+                    browser.close()
+                    return None
                 text = page.inner_text("body")
                 browser.close()
                 return text
@@ -141,8 +165,13 @@ class BaseLotteryCollector:
             if len(text) > 100:
                 return text
 
-        # requests が失敗 or テキストが短すぎる場合は Playwright にフォールバック
-        if self.REQUIRES_JS or not html:
+        # requests で取れなかった（robots.txt の禁止・ブロック・429・接続の失敗など）ときは Playwright で取り直さない
+        # （切断はブロックのこともあり、回り道になる。Phase 12 監査 M5・再監査 M-A）
+        if not html:
+            return None
+        # 本文が短く、JS で描画するサイトのときだけ Playwright で取り直す
+        # （同じ URL への2回目の取得。間隔は _fetch_with_playwright の中であける）
+        if self.REQUIRES_JS:
             logger.info("[%s] Playwright にフォールバック: %s", self.SHOP_ID, url)
             return self._fetch_with_playwright(url)
 

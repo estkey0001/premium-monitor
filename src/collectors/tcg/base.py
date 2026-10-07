@@ -26,8 +26,8 @@ from src.tcg.shrink import detect_shrink_status, shrink_policy_note
 
 logger = logging.getLogger(__name__)
 
-USER_AGENT = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-              "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0 Safari/537.36")
+# 正直な User-Agent（ブラウザを名乗らない。robots.txt の判定もこの名前で行う。Phase 12）
+from src.collectors.polite import HONEST_UA as USER_AGENT  # noqa: E402
 FETCH_TIMEOUT = 30
 # 同一ドメインへのアクセス間隔（秒）。
 # src/collectors/rate_limiter.py の RateLimiter が「安全のため最低60秒」を
@@ -114,7 +114,9 @@ class BaseTcgCollector:
     default_page_type: str = PAGE_OTHER
 
     def __init__(self) -> None:
-        self._robots = RobotsChecker(user_agent=USER_AGENT)
+        # robots.txt の照合は名前（PremiumMonitor/1.0）で行う（UA の全文だと Mozilla として判定される。監査 H3）
+        from src.collectors.polite import ROBOTS_AGENT
+        self._robots = RobotsChecker(user_agent=ROBOTS_AGENT)
         self._rate = RateLimiter()
         self.health: dict = {
             "source": self.source_key,
@@ -155,7 +157,8 @@ class BaseTcgCollector:
             diag.robots_status = self._robots.robots_status(url)
         except Exception:  # noqa: BLE001 - 判定根拠の取得失敗は致命的でない
             diag.robots_status = "unknown"
-        if self.respect_robots and diag.robots_status == "disallowed":
+        # robots.txt を取得できない（unknown）ときも取りに行かない（RFC 9309。監査 M7）
+        if self.respect_robots and diag.robots_status in ("disallowed", "unknown"):
             self.health["blocked"] = True
             self.funnel.blocked_pages += 1
             self._record_error(diag, f"robots.txt disallow: {url}")
@@ -257,8 +260,17 @@ class BaseTcgCollector:
                                         locale="ja-JP")
                 # networkidle は過去に他コレクターでタイムアウトしたため
                 # domcontentloaded + 明示待機にする。
-                page.goto(url, wait_until="domcontentloaded",
-                          timeout=FETCH_TIMEOUT * 2000)
+                resp = page.goto(url, wait_until="domcontentloaded",
+                                 timeout=FETCH_TIMEOUT * 2000)
+                # 拒否の応答（401/403/429）は本文として扱わない（Phase 12 再監査 M-A）
+                if resp is not None and resp.status in (401, 403, 429):
+                    browser.close()
+                    self.health["blocked"] = True
+                    self.health["errors"] += 1
+                    self.funnel.errors += 1
+                    self.health["error_messages"].append(f"playwright HTTP {resp.status}: {url}")
+                    logger.warning("Playwright 取得が拒否された %s: HTTP %s", url, resp.status)
+                    return None
                 page.wait_for_timeout(3000)
                 html = page.content()
                 browser.close()

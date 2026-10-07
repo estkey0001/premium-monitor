@@ -19,10 +19,9 @@ URL: https://www.netoff.co.jp/mobilebuy/
   → 新しい表記に合わせた修正はしない（"上限" の表記のときだけ取る。今は取得失敗のまま）
 """
 import re
-import time
 from typing import Optional
 
-from src.collectors.buyback_base_csv import BaseCsvBuybackCollector
+from src.collectors.buyback_base_csv import HONEST_UA, BaseCsvBuybackCollector
 
 MOBILEBUY_URL = "https://www.netoff.co.jp/mobilebuy/"
 
@@ -83,15 +82,11 @@ class NetoffCsvCollector(BaseCsvBuybackCollector):
             return NetoffCsvCollector._page_text_cache
 
         import requests as _req
-        time.sleep(1.5)
+        # 同じドメインの間隔は共通の _polite_fetch が守る（Phase 12）
         try:
             sess = _req.Session()
             sess.headers.update({
-                "User-Agent": (
-                    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-                    "AppleWebKit/537.36 (KHTML, like Gecko) "
-                    "Chrome/120.0.0.0 Safari/537.36"
-                ),
+                "User-Agent": HONEST_UA,
                 "Accept-Language": "ja,en;q=0.9",
             })
             resp = sess.get(url, timeout=15, allow_redirects=True)

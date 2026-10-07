@@ -49,7 +49,10 @@ EXEC_STATUSES = ("OPEN", "SUCCESS", "FAILED", "CANCELLED", "INVALIDATED")
 FAIL_REASON_LABELS = {"price_not_found": "ページは取れたが価格が無い", "product_not_listed": "サイトに掲載なし",
                       "rate_limited_429": "アクセス制限（429）", "site_blocked": "bot 対策でブロック",
                       "service_unavailable": "サーバー障害", "not_supported": "オンライン見積もり非対応",
-                      "timeout": "時間切れ", "http_403": "アクセス拒否（403）", "http_404": "ページが無い（404）"}
+                      "timeout": "時間切れ", "http_403": "アクセス拒否（403）", "http_404": "ページが無い（404）",
+                      "robots_disallowed": "robots.txt で禁止（取得しない）",
+                      "robots_unreachable": "robots.txt に到達できない（一時的な障害の可能性。取得しない）",
+                      "html_scraping_disabled": "公式 API だけで取得（HTML は取らない）"}
 # 価格を利益ルートの計算から外した理由（profit_routes の rejection_top5）
 PRICE_REJECT_LABELS = {"stale_over_14d": "14日より古い", "price_zero": "0円（取得失敗）",
                        "accessory_or_wrong_product": "付属品・別の商品", "sold_label_without_evidence": "成約の根拠が無い",
@@ -542,6 +545,10 @@ def build(data: dict | None, *, catalog, details: dict, profit_routes: dict | No
     return {"overview": overview, "shops": shops, "tcg": tcg, "lot_sources": lot_sources,
             "resale": resale, "flea": flea, "zero_routes": zero, "zero_totals": zero_totals, "missing": missing,
             "camera": (d.get("camera_status") or {}).get("summary") or {},
+            # 自動取得できたカメラの買取価格のうち、中古の「新品同様」の段の価格の件数（状態を明示する。Phase 12）
+            "camera_used": sum(1 for r in ((d.get("camera_status") or {}).get("detail") or [])
+                               if isinstance(r, dict) and r.get("status") == "OK"
+                               and "新品同様" in str(r.get("matched_item") or "")),
             "camera_generated": (d.get("camera_status") or {}).get("generated_at"),
             "min_sold": d.get("min_sold_samples"),
             "resale_collected": (d.get("resale_status") or {}).get("collected_at"),
@@ -892,7 +899,9 @@ def _system(v: dict) -> str:
     dqr = v["dq_report"].get("collection") or {}
     cmp = v["dq_report"].get("comparison") or {}
     cam = v["camera"]
-    cam_text = ((f'自動取得 {esc(str(cam.get("ok")))} / {esc(str(cam.get("total")))}件' if cam.get("ok") else
+    cam_used = (f'（うち中古「新品同様」の価格 {esc(str(v.get("camera_used")))}件・確定の売値には使わない）'
+                if v.get("camera_used") else "")
+    cam_text = ((f'自動取得 {esc(str(cam.get("ok")))} / {esc(str(cam.get("total")))}件{cam_used}' if cam.get("ok") else
                  "手動の確認で補っている（自動取得 0件）") + f'<span class="nu-osub">生成 {_when(v["camera_generated"])}</span>'
                 if cam else "記録なし")
     reasons = "".join(f'<li>{_reason(r.get("reason"))}<b>{esc(str(r.get("count")))}件</b></li>'

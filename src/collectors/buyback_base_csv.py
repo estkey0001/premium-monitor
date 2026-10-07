@@ -3,7 +3,6 @@ DB・Pydantic不要。requestsとBeautifulSoupのみ使用。
 """
 import logging
 import re
-import time
 from abc import abstractmethod
 from datetime import datetime, timezone, timedelta
 from typing import Optional
@@ -11,9 +10,13 @@ from typing import Optional
 import requests
 from bs4 import BeautifulSoup
 
+# robots.txt・同じドメインの間隔・正直な User-Agent は共通の作法（src/collectors/polite.py）を使う（Phase 12）。
+# HONEST_UA はサブクラスが import する
+from src.collectors import polite
+from src.collectors.polite import HONEST_UA  # noqa: F401
+
 JST = timezone(timedelta(hours=9))
 logger = logging.getLogger(__name__)
-
 
 class BaseCsvBuybackCollector:
     """CSVアップデート専用の軽量買取価格コレクター。"""
@@ -33,9 +36,15 @@ class BaseCsvBuybackCollector:
         self.last_elapsed_seconds: float = 0.0           # fetch所要時間（debug用）
         self.last_text_length: int = 0                   # inner_text の文字数（Playwright系）
         self.last_error_type: str = ""                   # 例外クラス名（debug用）
+        self.last_from_cache: bool = False               # 前回の取得がこの実行のキャッシュからか
+        self.last_wait_seconds: float = 0.0              # 同じドメインの間隔のために待った秒数
+        self.request_count: int = 0                      # この実行で実際に送ったリクエスト数（キャッシュを除く）
+        # 1回の実行の中だけ使う、取得できたページ（同じ URL を商品ごとに取り直さない）と、その時の HTTP 状態
+        self._page_cache: dict[str, str] = {}
+        self._page_status: dict[str, int] = {}
         self.session = requests.Session()
         self.session.headers.update({
-            "User-Agent": "Mozilla/5.0 (compatible; PremiumMonitor/1.0; +https://github.com/estkey0001/premium-monitor)",
+            "User-Agent": HONEST_UA,
             "Accept-Language": "ja,en;q=0.9",
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
         })
@@ -51,7 +60,7 @@ class BaseCsvBuybackCollector:
             return None
 
         try:
-            html = self._fetch_html(url)
+            html = self._polite_fetch(url)
             if not html:
                 logger.warning("[%s] Empty HTML for %s", self.SHOP_NAME, product_alias)
                 if self.last_failure_reason is None:
@@ -86,47 +95,73 @@ class BaseCsvBuybackCollector:
                 self.last_failure_reason = f"exception_{type(e).__name__}"
             return None
 
+    def _polite_fetch(self, url: str) -> Optional[str]:
+        """robots.txt・同じドメインの間隔を守って取得する（Phase 12）。
+
+        - この実行で取得できたページはキャッシュから返す（リクエストを送らない・待たない。HTTP 状態はその時の値）
+        - robots.txt で禁止されている URL は取得しない（last_failure_reason=robots_disallowed）
+        - 同じドメインへは rate_limit_sec（sources.yaml）・Crawl-delay・MIN_INTERVAL_SEC の最大の間隔をあける
+        """
+        if url in self._page_cache:
+            self.last_from_cache = True
+            self.last_fetch_url = url
+            self.last_http_status = self._page_status.get(url, 0)
+            self.last_html_length = len(self._page_cache[url])
+            self.last_wait_seconds = 0.0
+            return self._page_cache[url]
+        self.last_from_cache = False
+        if not polite.robots_allowed(url):
+            self.last_fetch_url = url
+            self.last_http_status = 0
+            self.last_failure_reason = polite.robots_block_reason(url)
+            logger.warning("[%s] robots.txt で禁止されているため取得しない: %s", self.SHOP_NAME, url)
+            return None
+        self.last_wait_seconds = polite.polite_wait(url, self.SHOP_ID)
+        self.request_count += 1
+        html = self._fetch_html(url)
+        if html:
+            self._page_cache[url] = html
+            self._page_status[url] = self.last_http_status
+        return html
+
     def _fetch_html(self, url: str) -> Optional[str]:
         self.last_fetch_url = url
         self.last_http_status = 0
         self.last_html_length = 0
         try:
-            time.sleep(1.5)  # レートリミット遵守
             resp = self.session.get(url, timeout=self.timeout)
             self.last_http_status = resp.status_code
             resp.raise_for_status()
             resp.encoding = resp.apparent_encoding or "utf-8"
             if self.REQUIRES_JS and len(resp.text) < 3000:
+                polite.polite_wait(url, self.SHOP_ID)      # 同じ URL への2回目の取得（Phase 12 監査 M5）
                 html = self._fetch_with_playwright(url)
                 self.last_html_length = len(html) if html else 0
                 return html
             self.last_html_length = len(resp.text)
             return resp.text
         except requests.HTTPError as e:
-            status = e.response.status_code if (hasattr(e, 'response') and e.response is not None) else 0
+            status = e.response.status_code if getattr(e, 'response', None) is not None else 0
             self.last_http_status = status
             self.last_failure_reason = f"http_{status}" if status else "http_error"
+            if status == 429:
+                self.last_failure_reason = "rate_limited_429"
             logger.warning("[%s] HTTP error %s: %s", self.SHOP_NAME, url, e)
-            if self.REQUIRES_JS:
+            # ブロック（401/403）・429 は Playwright に切り替えて取り直さない（拒否を回り道で越えない。Phase 12）
+            if self.REQUIRES_JS and status not in (401, 403, 429):
+                polite.polite_wait(url, self.SHOP_ID)
                 html = self._fetch_with_playwright(url)
                 self.last_html_length = len(html) if html else 0
                 return html
             return None
         except requests.exceptions.SSLError as e:
+            # 接続の失敗（切断はブロックのこともある）を Playwright で取り直さない（Phase 12 監査 M5）
             self.last_failure_reason = "ssl_error"
             logger.warning("[%s] SSL error %s: %s", self.SHOP_NAME, url, e)
-            if self.REQUIRES_JS:
-                html = self._fetch_with_playwright(url)
-                self.last_html_length = len(html) if html else 0
-                return html
             return None
         except requests.RequestException as e:
             self.last_failure_reason = "connection_error"
             logger.warning("[%s] HTTP error %s: %s", self.SHOP_NAME, url, e)
-            if self.REQUIRES_JS:
-                html = self._fetch_with_playwright(url)
-                self.last_html_length = len(html) if html else 0
-                return html
             return None
 
     def _fetch_with_playwright(self, url: str) -> Optional[str]:
@@ -134,10 +169,12 @@ class BaseCsvBuybackCollector:
             from playwright.sync_api import sync_playwright
             with sync_playwright() as p:
                 browser = p.chromium.launch(headless=True)
-                page = browser.new_page(
-                    user_agent="Mozilla/5.0 (compatible; PremiumMonitor/1.0)"
-                )
-                page.goto(url, timeout=25000)
+                page = browser.new_page(user_agent=HONEST_UA)
+                resp = page.goto(url, timeout=25000)
+                if resp is not None and resp.status in (401, 403, 429):
+                    self.last_failure_reason = polite.status_reason(resp.status)
+                    browser.close()
+                    return None
                 page.wait_for_load_state("networkidle", timeout=12000)
                 html = page.content()
                 browser.close()

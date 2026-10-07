@@ -48,10 +48,11 @@ STOCK_SOURCES = {
     "src_playstation_official",
 }
 
+# メルカリ・ヤフオク・eBay はここから取らない（規約上の取得の経路が無い・Finding API は廃止。Phase 12・13。
+# COLLECTOR_MAP にも無いので、以前から実行されていなかった名前を消した）
 PRICE_SOURCES = {
     "src_kakaku", "src_map_camera", "src_sofmap", "src_janpara",
-    "src_iosys", "src_mercari", "src_yahoo_auction", "src_ebay",
-    "src_stockx",
+    "src_iosys", "src_stockx",
 }
 
 OFFICIAL_SOURCES = {

@@ -1,13 +1,11 @@
 """eBay completed listings コレクター。
 
 取得優先順位:
-1. eBay Finding API (EBAY_APP_ID または EBAY_CLIENT_ID 環境変数が設定されている場合)
-2. HTML scraping フォールバック (ローカル実行時のみ有効)
-   - GitHub Actions の Cloud IP は eBay にブロックされるため site_blocked として正常分類
-3. 結果なし → listing_count=0 / failure_reason=site_blocked
+- 取得しない。Finding API は 2025-02-05 に廃止され（呼ぶコードは Phase 13 で削除）、検索結果の HTML の取得は
+  Phase 12 で停止した。結果は常に listing_count=0 / failure_reason=site_blocked（collector_method=html_blocked）
+- 成約は Marketplace Insights API（src/collectors/api/ebay_insights.py・scripts/collect_ebay_sold.py）だけで取る
 
 collector_method:
-  "api"          eBay Finding API 成功
   "html"         HTML scraping 成功
   "html_blocked" HTML scraping でアクセス拒否/ブロック検出
   "unknown"      未実行・エラー
@@ -22,8 +20,6 @@ import os
 import re
 import statistics
 import sys
-import urllib.parse
-import urllib.request
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Optional
@@ -38,11 +34,6 @@ from src.collectors.overseas.fx_fetcher import get_usd_jpy
 
 logger = logging.getLogger(__name__)
 JST = timezone(timedelta(hours=9))
-
-# eBay Finding API エンドポイント
-FINDING_API_URL = "https://svcs.ebay.com/services/search/FindingService/v1"
-FINDING_API_GLOBAL_ID = "EBAY-US"
-FINDING_API_VERSION = "1.0.0"
 
 # eBay sold URL テンプレート（HTML fallback 用）
 EBAY_SOLD_URL = (
@@ -99,7 +90,7 @@ def _calc_confidence_ebay(listing_count: int, spread: float) -> str:
 
 
 class EbayCompletedCollector:
-    """eBay成約価格コレクター（Finding API → HTML fallback → blocked分類）。"""
+    """eBay成約価格コレクター（取得しない。Finding API は廃止・HTML の取得は停止）。"""
 
     def __init__(self):
         self.fx_rates = load_fx_rates()
@@ -130,34 +121,9 @@ class EbayCompletedCollector:
         usd_jpy, fx_source = get_usd_jpy()
         now_str = datetime.now(tz=JST).isoformat()
 
-        app_id = _ebay_app_id()
-
-        # --- 1. eBay Finding API ---
-        if app_id:
-            prices_usd, api_url, api_error = self._fetch_via_api(
-                keyword=keyword,
-                app_id=app_id,
-                condition_filter=condition_filter,
-            )
-            if prices_usd:
-                logger.info(
-                    "eBay API [%s] keyword='%s' count=%d fx_src=%s",
-                    product_alias, keyword, len(prices_usd), fx_source,
-                )
-                return self._build_result(
-                    product_id=product_id,
-                    product_alias=product_alias,
-                    prices_usd=prices_usd,
-                    usd_jpy=usd_jpy,
-                    url=api_url or url,
-                    now_str=now_str,
-                    collector_method="api",
-                )
-            elif api_error:
-                logger.warning("eBay API [%s] error: %s", product_alias, api_error)
-                # API エラー時は HTML fallback へ
-        else:
-            logger.debug("eBay: EBAY_APP_ID 未設定 → HTML fallback へ")
+        # --- 1. Finding API は呼ばない（Phase 13）---
+        # Finding API は 2025-02-05 に廃止された。EBAY_CLIENT_ID（成約の Marketplace Insights API の資格情報）を
+        # 登録しても、ここから廃止された API へ client id を送らない。成約は src/collectors/api/ebay_insights.py だけ
 
         # --- 2. HTML（検索結果のページ）からの取得はしない（Phase 12 監査 H5）---
         # API が使えない・失敗したときに検索結果の HTML を取りに行くのは、API の失敗の回り道で、eBay の規約上も
@@ -167,10 +133,10 @@ class EbayCompletedCollector:
         prices_usd, is_blocked = [], True
 
         if is_blocked:
-            # GitHub Actions の Cloud IP がブロックされた場合 → 正常分類
+            # 取得しない（HTML の取得は停止・Finding API は廃止）。成約は Marketplace Insights API の別ステップ
             logger.info(
-                "eBay [%s] HTML blocked (site_blocked) — GitHub Actions cloud IP is blocked by eBay. "
-                "Set EBAY_APP_ID to use the Finding API instead.",
+                "eBay [%s] 取得しない（HTML の取得は停止・Finding API は廃止）。成約は Marketplace Insights API"
+                "（scripts/collect_ebay_sold.py）で取る",
                 product_alias,
             )
             return OverseasPriceResult(
@@ -282,108 +248,6 @@ class EbayCompletedCollector:
             raw_prices_json=json.dumps(sorted_prices[:20]),
             collector_method=collector_method,
         )
-
-    # ─────────────────────────────────────────────────────────────
-    # eBay Finding API
-    # ─────────────────────────────────────────────────────────────
-
-    def _fetch_via_api(
-        self,
-        keyword: str,
-        app_id: str,
-        condition_filter: str,
-    ) -> tuple[list[float], str, str]:
-        """eBay Finding API を呼び出して成約価格リストを返す。
-
-        Returns:
-            (prices_usd, api_url, error_message)
-            成功時: (prices, url, "")
-            失敗時: ([], "", error_message)
-        """
-        try:
-            params = {
-                "OPERATION-NAME": "findCompletedItems",
-                "SERVICE-VERSION": FINDING_API_VERSION,
-                "SECURITY-APPNAME": app_id,
-                "RESPONSE-DATA-FORMAT": "JSON",
-                "REST-PAYLOAD": "",
-                "keywords": keyword,
-                "GLOBAL-ID": FINDING_API_GLOBAL_ID,
-                "paginationInput.entriesPerPage": "100",
-                "sortOrder": "EndTimeSoonest",
-                # SoldItemsOnly フィルタ
-                "itemFilter(0).name": "SoldItemsOnly",
-                "itemFilter(0).value": "true",
-            }
-
-            # 新品・未使用フィルタ
-            if condition_filter == "new":
-                params["itemFilter(1).name"] = "Condition"
-                for i, cid in enumerate(CONDITION_IDS_NEW):
-                    params[f"itemFilter(1).value({i})"] = cid
-
-            query_string = urllib.parse.urlencode(params)
-            api_url = f"{FINDING_API_URL}?{query_string}"
-
-            req = urllib.request.Request(
-                api_url,
-                headers={"Accept": "application/json"},
-            )
-            with urllib.request.urlopen(req, timeout=20) as resp:
-                raw = resp.read().decode("utf-8")
-
-            data = json.loads(raw)
-            prices = self._parse_api_response(data)
-            return prices, api_url, ""
-
-        except urllib.error.HTTPError as e:
-            return [], "", f"http_{e.code}: {e.reason}"
-        except Exception as e:
-            return [], "", str(e)[:200]
-
-    def _parse_api_response(self, data: dict) -> list[float]:
-        """Finding API の JSON レスポンスから価格リストを取得する。"""
-        try:
-            # ネストされたレスポンス構造を展開
-            resp = data.get("findCompletedItemsResponse", [{}])
-            if isinstance(resp, list):
-                resp = resp[0]
-
-            ack = resp.get("ack", [""])[0]
-            if ack.lower() != "success":
-                logger.warning("eBay API ack=%s", ack)
-                return []
-
-            search_result = resp.get("searchResult", [{}])
-            if isinstance(search_result, list):
-                search_result = search_result[0]
-
-            items = search_result.get("item", [])
-            prices: list[float] = []
-
-            for item in items:
-                # sellingStatus.currentPrice[0].__value__
-                selling = item.get("sellingStatus", [{}])
-                if isinstance(selling, list):
-                    selling = selling[0]
-                current_price = selling.get("currentPrice", [{}])
-                if isinstance(current_price, list):
-                    current_price = current_price[0]
-                price_val = current_price.get("__value__") or current_price.get("value")
-                if price_val is not None:
-                    try:
-                        p = float(price_val)
-                        if PRICE_MIN_USD <= p <= PRICE_MAX_USD:
-                            prices.append(p)
-                    except (ValueError, TypeError):
-                        pass
-
-            logger.debug("eBay API parse: %d prices", len(prices))
-            return prices
-
-        except Exception as e:
-            logger.warning("eBay API parse error: %s", e)
-            return []
 
     # ─────────────────────────────────────────────────────────────
     # HTML scraping fallback

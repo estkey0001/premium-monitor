@@ -881,9 +881,14 @@ def check() -> list[dict]:
         results.append({"level": "ok" if _t206e2 else "warning", "check": "workflow_concurrency_no_cancel",
                         "message": "daily_lp.yml の concurrency が cancel-in-progress: false（後続を待機）"
                                    + ("" if _t206e2 else " ← cancel-in-progress: false を推奨")})
-        _t206e3 = "git pull --rebase origin main" in _workflow_text
+        # Phase 13: push の前の pull は未ステージの変更で失敗していた（2つの実行が重なった日に push も拒否された）。
+        # push が拒否されたときに、未ステージの変更を退避して取り込み直す形を確かめる
+        _t206e3 = ("git pull --rebase --autostash origin main" in _workflow_text
+                   and "if ! git push origin main" in _workflow_text
+                   and "-X theirs" not in _workflow_text and "git rebase --abort" in _workflow_text)
         results.append({"level": "ok" if _t206e3 else "warning", "check": "workflow_pull_rebase_before_push",
-                        "message": "Commit and push ステップに git pull --rebase origin main がある"
+                        "message": "Commit and push ステップが、push を拒否されたら git pull --rebase --autostash で"
+                                   "取り込み直す"
                                    + ("" if _t206e3 else " ← push競合の二重安全策が未設定")})
     else:
         for _ck in ("workflow_concurrency_set", "workflow_concurrency_no_cancel", "workflow_pull_rebase_before_push"):
@@ -1735,15 +1740,32 @@ def check() -> list[dict]:
     _ebay_collector_path = PROJECT_ROOT / "src" / "collectors" / "overseas" / "ebay_completed.py"
     _ebay_src = _ebay_collector_path.read_text(encoding="utf-8") if _ebay_collector_path.exists() else ""
 
-    # #296: eBay HTML scraping が primary method ではない
-    _t296 = "FINDING_API_URL" in _ebay_src and "_fetch_via_api" in _ebay_src
+    # #296: eBay の出品・成約の HTML（検索結果）を取らない・廃止された Finding API を呼ばない（Phase 12・13。
+    #       以前は「Finding API が主な取得の手段」を確かめていたが、Finding API は 2025-02-05 に廃止された）
+    _t296 = ("svcs.ebay.com" not in _ebay_src and "_fetch_via_api(" not in _ebay_src
+             and "html_scraping_disabled" in _ebay_src)
     results.append({"level": "ok" if _t296 else "error", "check": "ebay_api_primary",
-                    "message": "#296 eBay Finding API が primary method として実装されている" + ("" if _t296 else " ← HTML scraping が主軸になっている")})
+                    "message": "#296 eBay の HTML の取得は停止・廃止された Finding API を呼ばない（成約は Marketplace Insights API）"
+                               + ("" if _t296 else " ← HTML の取得・Finding API の呼び出しが残っている")})
 
-    # #297: EBAY_APP_ID なしの場合 manual fallback に移行する設計
-    _t297 = "_ebay_app_id" in _ebay_src and "html_blocked" in _ebay_src
+    # #297: 取得しないときは html_blocked（価格なし）として分類する。実際に collect を呼んで、通信せずに
+    #       html_blocked になることを確かめる（Phase 13 レビュー L-8: 文字列の有無だけでは検査にならない）
+    try:
+        import urllib.request as _ur297
+        from src.collectors.overseas import ebay_completed as _ec297
+        _calls297 = []
+        _o_open, _o_fx = _ur297.urlopen, _ec297.get_usd_jpy
+        _ur297.urlopen = lambda *a, **k: _calls297.append(a)
+        _ec297.get_usd_jpy = lambda: (150.0, "deploy_check")
+        try:
+            _r297 = _ec297.EbayCompletedCollector().collect("prod_ps5_pro", "ps5_pro", ["PlayStation 5 Pro"])
+        finally:
+            _ur297.urlopen, _ec297.get_usd_jpy = _o_open, _o_fx
+        _t297 = _r297.collector_method == "html_blocked" and _r297.price_jpy == 0 and not _calls297
+    except Exception:  # noqa: BLE001
+        _t297 = False
     results.append({"level": "ok" if _t297 else "error", "check": "ebay_api_key_handling",
-                    "message": "#297 EBAY_APP_ID 未設定時の html_blocked 分類が実装されている" + ("" if _t297 else " ← API key なし時の fallback 処理が不足")})
+                    "message": "#297 eBay を取得しないときの html_blocked 分類が実装されている" + ("" if _t297 else " ← 取得しないときの分類が不足")})
 
     # #298: access denied は site_blocked として正常分類される
     _t298 = "site_blocked" in _ebay_src and "html_blocked" in _ebay_src
@@ -2246,11 +2268,12 @@ def check() -> list[dict]:
                     "message": "#484 overseas stale は主計算から除外する方針が明示されている"
                                + ("" if _t484 else " ← stale 除外の明示が見つかりません")})
 
-    # #485: EBAY_APP_ID 未設定時に明確な warning を出す実装がある
-    _t485 = ('EBAY_APP_ID' in _ovs_src) and ('STRONG WARNING' in _ovs_src or 'api_not_configured' in _ovs_src)
+    # #485: eBay を取らない理由を明示する（Phase 13: 以前は「EBAY_APP_ID を設定すれば Finding API で取れる」と
+    #       警告していたが、Finding API は 2025-02-05 に廃止された。今は取らない理由と成約の取り方を示す）
+    _t485 = ('Finding API は廃止' in _ovs_src) and ('Marketplace Insights' in _ovs_src)
     results.append({"level": "ok" if _t485 else "error", "check": "ebay_app_id_warning",
-                    "message": "#485 EBAY_APP_ID 未設定時に明確な warning を出す"
-                               + ("" if _t485 else " ← EBAY_APP_ID 未設定警告が見つかりません")})
+                    "message": "#485 eBay を取らない理由（Finding API は廃止・成約は Marketplace Insights）を明示する"
+                               + ("" if _t485 else " ← eBay を取らない理由の明示が見つかりません")})
 
     # #486: 手動データ（camera 含む）が14日超なら利益判定から除外（LP・ranking 両方）
     _ranking_src = ''
@@ -3917,8 +3940,14 @@ def check() -> list[dict]:
 
     # #718: eBay/Rakuten/Yahoo が env-gated（未設定でも落ちない設計）
     _mk_src = _read_src("src", "collectors", "api", "market_apis.py")
-    _t718 = all(k in _mk_src for k in ("EBAY_APP_ID", "RAKUTEN_APP_ID", "YAHOO_SHOPPING_APP_ID")) \
-        and ("return None" in _mk_src)
+    # eBay は Finding API の廃止で取得しない（Phase 13。キーの有無にかかわらず None）ことを動かして確かめる
+    try:
+        from src.collectors.api.market_apis import ebay_fetch_items as _efi718
+        _ebay718 = _efi718("PlayStation 5 Pro") is None
+    except Exception:  # noqa: BLE001
+        _ebay718 = False
+    _t718 = all(k in _mk_src for k in ("RAKUTEN_APP_ID", "YAHOO_SHOPPING_APP_ID")) \
+        and ("return None" in _mk_src) and _ebay718
     results.append({"level": "ok" if _t718 else "error", "check": "api_env_gated",
                     "message": "#718 eBay/Rakuten/Yahoo collector が env-gated（未設定で graceful）"
                                + ("" if _t718 else " ← env gating が不足")})
@@ -4099,6 +4128,7 @@ def check() -> list[dict]:
     results.extend(_check_new_ui(html))
     results.extend(_check_legacy_intents())
     results.extend(_check_phase12_sources_and_sold(html))
+    results.extend(_check_phase13_ebay_sold())
 
     # ══════════════════════════════════════════════════════════════════
     # #820-#825: データの正確さ・鮮度の偽装（Phase 0）
@@ -4292,6 +4322,114 @@ def _check_phase12_sources_and_sold(html: str) -> list[dict]:
     out.append({"level": "ok" if not bad else "error", "check": "sold_semantics",
                 "message": "#844 成約の意味（根拠のある成約だけ・成約中央値は3件以上と期間・出品を売値にしない）"
                            + ("" if not bad else f" ← {bad[:3]}")})
+    return out
+
+
+def _check_phase13_ebay_sold() -> list[dict]:
+    """Phase 13: eBay の成約の CI の組み込みと関門（#845）・廃止された Finding API を呼ばない（#846）。動かして確かめる。"""
+    import os as _os13
+    import re as _re13
+    import tempfile as _tf13
+    root = PROJECT_ROOT
+    out: list[dict] = []
+
+    # #845 eBay の成約: CI のステップがあり、既定は取りに行かない（取得の明示・承認・ライセンスは false、canary は true）。
+    #       資格情報・承認・ライセンス・取得の明示のどれか1つでも欠けたら通信0（状態だけを書く）。token の形を伏せる
+    bad = []
+    try:
+        _wf = (root / ".github" / "workflows" / "daily_lp.yml").read_text(encoding="utf-8")
+        _m = _re13.search(r"- name: eBay SOLD \(Marketplace Insights\)\n(.*?)(?=\n      - name: )", _wf, _re13.S)
+        if not _m:
+            bad.append("CI に eBay SOLD のステップが無い")
+        else:
+            _st = _m.group(1)
+            for _need in ("scripts/collect_ebay_sold.py", "continue-on-error: true",
+                          "vars.ENABLE_EBAY_API || 'false'", "vars.EBAY_INSIGHTS_APPROVED || 'false'",
+                          "vars.EBAY_SOLD_LICENSE_CONFIRMED || 'false'", "vars.EBAY_SOLD_CANARY || 'true'",
+                          "vars.API_DRY_RUN || 'true'"):
+                if _need not in _st:
+                    bad.append(f"eBay SOLD のステップの既定が安全側でない（{_need} が無い）")
+            if _wf.index("- name: eBay SOLD (Marketplace Insights)") > _wf.index(
+                    "- name: Generate normalized price observations"):
+                bad.append("eBay SOLD のステップが正規化（成約の履歴を読む）より後にある")
+        if "exports/sold_history/" not in _wf.split("- name: Commit and push", 1)[-1]:
+            bad.append("成約の履歴（exports/sold_history/）を CI が保存しない")
+        from src.collectors.api import ebay_insights as _ei
+        _keys = ("EBAY_CLIENT_ID", "EBAY_CLIENT_SECRET", "EBAY_APP_ID", "ENABLE_EBAY_API", "API_DRY_RUN",
+                 _ei.APPROVAL_ENV, _ei.LICENSE_ENV, _ei.CANARY_ENV, _ei.STAGE_ENV)
+        _saved = {k: _os13.environ.get(k) for k in _keys}
+        try:
+            for k in _keys:
+                _os13.environ.pop(k, None)
+            _steps = [({}, _ei.ST_PENDING),
+                      ({"EBAY_CLIENT_ID": "dc-id-0000", "EBAY_CLIENT_SECRET": "dc-sec-0000"}, _ei.ST_PENDING_APPROVAL),
+                      ({_ei.APPROVAL_ENV: "true"}, _ei.ST_PENDING_LICENSE),
+                      ({_ei.LICENSE_ENV: "true"}, _ei.ST_DISABLED),
+                      ({"ENABLE_EBAY_API": "true", "API_DRY_RUN": "true"}, _ei.ST_DRY_RUN),
+                      ({"API_DRY_RUN": "false"}, _ei.ST_OK)]
+            for _env, _want in _steps:
+                _os13.environ.update(_env)
+                if _ei.status() != _want:
+                    bad.append(f"関門の順番が違う（{_want} のはずが {_ei.status()}）")
+                    break
+            # ライセンスの確認が無ければ、ほかが全部そろっていても取りに行かない（通信0・状態だけ）
+            _os13.environ[_ei.LICENSE_ENV] = "false"
+            import importlib.util as _iu13
+            import urllib.request as _ur13
+            _sp = _iu13.spec_from_file_location("dc13_collect_ebay_sold", root / "scripts" / "collect_ebay_sold.py")
+            _mod = _iu13.module_from_spec(_sp)
+            _sp.loader.exec_module(_mod)
+            _calls = []
+            _orig_open = _ur13.urlopen
+            _ur13.urlopen = lambda *a, **k: _calls.append(a) or (_ for _ in ()).throw(RuntimeError("no network"))
+            try:
+                with _tf13.TemporaryDirectory() as _td:
+                    _mod.STATUS_PATH = Path(_td) / "status.json"
+                    import contextlib as _cl13
+                    import io as _io13
+                    with _cl13.redirect_stdout(_io13.StringIO()):
+                        _mod.main([])
+                    import json as _j13
+                    _body = _j13.loads(_mod.STATUS_PATH.read_text(encoding="utf-8"))
+            finally:
+                _ur13.urlopen = _orig_open
+            if _calls or _body.get("status") != _ei.ST_PENDING_LICENSE or _body.get("network_used"):
+                bad.append("ライセンスの確認が無いのに取りに行く")
+        finally:
+            for k, v in _saved.items():
+                if v is None:
+                    _os13.environ.pop(k, None)
+                else:
+                    _os13.environ[k] = v
+        _tok = "v^1.1#i^1#p^3#r^0#I^3#f^0#t^Ul4xMF8xOjAwRkY="
+        if _tok in _ei.redact(f"token {_tok} and Bearer {_tok}"):
+            bad.append("eBay の token（v^1.1#...）を伏せない")
+    except Exception as exc:  # noqa: BLE001
+        bad.append(f"判定を動かせない: {exc}")
+    out.append({"level": "ok" if not bad else "error", "check": "ebay_sold_gates",
+                "message": "#845 eBay の成約（CI のステップは既定で取りに行かない・資格情報 / 承認 / ライセンス / "
+                           "取得の明示が欠けたら通信0・token を伏せる）" + ("" if not bad else f" ← {bad[:4]}")})
+
+    # #846 廃止された Finding API（2025-02-05）を呼ぶコードが無い（EBAY_CLIENT_ID を登録しても client id を送らない）
+    bad = []
+    _fd = _re13.compile(r"svcs\.ebay\.com|FindingService|findItemsByKeywords\"|findCompletedItems\"|SECURITY-APPNAME")
+    # eBay の検索結果の HTML を取るコード（呼ばれないまま残っている）を呼び戻していないか（監査 L-3）
+    _html_call = _re13.compile(r"(?<!def )\b_fetch_via_html\(|collectors\.price\.ebay\b|collectors\.price import ebay\b")
+    for _base in ("src", "scripts"):
+        for _f in (root / _base).rglob("*.py"):
+            if _f.name == "deploy_check.py":
+                continue
+            _txt = _f.read_text(encoding="utf-8", errors="ignore")
+            if _fd.search(_txt):
+                bad.append(str(_f.relative_to(root)))
+            for _ln in _txt.splitlines():
+                if _html_call.search(_ln) and not _ln.lstrip().startswith(("#", "def ")) \
+                        and "collector_module" not in _ln:
+                    bad.append(f"eBay の HTML の取得を呼んでいる: {_f.relative_to(root)}")
+                    break
+    out.append({"level": "ok" if not bad else "error", "check": "ebay_finding_api_removed",
+                "message": "#846 廃止された eBay Finding API・eBay の検索結果の HTML を取るコードを呼んでいない"
+                           + ("" if not bad else f" ← {bad[:4]}")})
     return out
 
 

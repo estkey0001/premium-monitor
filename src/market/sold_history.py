@@ -8,7 +8,9 @@
 - 成約日時（sold_at）の無い成約は使わない。観測した時刻（observed_at）で代用しない
 - 1件の商品ページの URL（検索結果・ダミーは不可）・商品の同一性の確認・状態がそろったものだけ
 - 出品（LISTING）は成約にしない（このモジュールは成約だけを受け付ける）
-- 同じ取得元・同じ商品ページ・同じ成約日時は1件（同じ成約を毎回足さない。再取得で observed_at を新しくしない）
+- 同じ取得元・同じ商品ページは1件（同じ出品を再取得で増やさない。Phase 13。数量の多い出品は売れるたびに成約日時が
+  変わるので、成約日時をキーにすると同じ出品が中央値の多くを占める）。成約日時が新しくなったときだけ置き換える
+  （件数は増やさない）。同じ成約日時なら何もしない（observed_at を新しくしない）
 - 成約中央値は3件以上（MIN_SOLD_SAMPLES）・集計期間の開始と終了があるものだけ。期間は売値の鮮度の基準
   （normalized_prices.STALE_DAYS = 14日）をそのまま使う（新しい期間を作らない）
 - 状態の系統（新品・未使用・中古・開封済み）を混ぜない
@@ -67,25 +69,28 @@ def record_reasons(r: SoldRecord) -> tuple[str, ...]:
     return tuple(out)
 
 
-def dedupe_key(r: SoldRecord) -> tuple[str, str, str]:
-    """同じ成約を表すキー（取得元・商品ページ・成約日時）。"""
+def dedupe_key(r: SoldRecord) -> tuple[str, str]:
+    """同じ出品を表すキー（取得元・商品ページ。eBay なら item ID）。"""
     url = str(r.item_url or "").split("?", 1)[0].split("#", 1)[0].rstrip("/")
-    return (r.source, url, str(r.sold_at)[:19])
+    return (r.source, url)
 
 
 def merge(history: Iterable[SoldRecord], new: Iterable[SoldRecord]) -> tuple[list[SoldRecord], dict]:
-    """履歴に新しい成約を足す（使えない成約は足さない。同じ成約は最初に見たものを残す）。
+    """履歴に新しい成約を足す（使えない成約は足さない。同じ出品は1件）。
 
-    戻り値: (履歴, {"added": n, "duplicate": n, "rejected": {理由: n}})
+    同じ出品で成約日時が新しいものは置き換える（updated。件数は増えない）。同じか古い成約日時なら何もしない。
+    戻り値: (履歴, {"added": n, "updated": n, "duplicate": n, "rejected": {理由: n}})
     """
     out: list[SoldRecord] = []
-    seen: set = set()
+    seen: dict = {}
     for r in history:
         k = dedupe_key(r)
         if k not in seen:
-            seen.add(k)
+            seen[k] = len(out)
             out.append(r)
-    stats = {"added": 0, "duplicate": 0, "rejected": {}}
+        elif _newer(r, out[seen[k]]):
+            out[seen[k]] = r
+    stats = {"added": 0, "updated": 0, "duplicate": 0, "rejected": {}}
     for r in new:
         why = record_reasons(r)
         if why:
@@ -94,12 +99,22 @@ def merge(history: Iterable[SoldRecord], new: Iterable[SoldRecord]) -> tuple[lis
             continue
         k = dedupe_key(r)
         if k in seen:
-            stats["duplicate"] += 1          # 同じ成約は足さない（observed_at も変えない）
+            if _newer(r, out[seen[k]]):
+                out[seen[k]] = r             # 同じ出品の新しい成約（件数は増やさない）
+                stats["updated"] += 1
+            else:
+                stats["duplicate"] += 1      # 同じ成約は足さない（observed_at も変えない）
             continue
-        seen.add(k)
+        seen[k] = len(out)
         out.append(r)
         stats["added"] += 1
     return out, stats
+
+
+def _newer(a: SoldRecord, b: SoldRecord) -> bool:
+    """a の成約日時が b より新しいか（読めなければ新しくない扱い）。"""
+    ta, tb = pt._parse_dt(a.sold_at), pt._parse_dt(b.sold_at)
+    return bool(ta and tb and ta > tb)
 
 
 def load(path: Path = HISTORY_PATH) -> list[SoldRecord]:

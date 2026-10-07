@@ -91,6 +91,7 @@ class CollectorFunnel:
     rejected_events: int = 0
     current_events: int = 0
     blocked_pages: int = 0
+    robots_unreachable_pages: int = 0   # robots.txt に到達できず取りに行かなかったページ（禁止とは別。Phase 13）
     errors: int = 0
     rejection_reasons: Counter = field(default_factory=Counter)
     pages: list[PageDiagnostic] = field(default_factory=list)
@@ -129,6 +130,9 @@ class CollectorFunnel:
         if st == HEALTH_BLOCKED:
             return f"アクセス拒否（HTTP 403 / robots 等）: {self.blocked_pages}ページ"
         if st == HEALTH_FAILED:
+            if self.robots_unreachable_pages and not self.pages_requested - self.robots_unreachable_pages:
+                return (f"robots.txt に到達できないため取得しない（一時的な障害の可能性。禁止ではない）: "
+                        f"{self.robots_unreachable_pages}ページ")
             return f"1ページも取得できませんでした（エラー {self.errors}件）"
         if st == HEALTH_DEGRADED:
             if self.requires_product_pages and self.product_pages_discovered == 0:
@@ -160,6 +164,7 @@ class CollectorFunnel:
             "rejection_reasons": dict(self.rejection_reasons),
             "current_events": self.current_events,
             "blocked_pages": self.blocked_pages,
+            "robots_unreachable_pages": self.robots_unreachable_pages,
             "errors": self.errors,
             "notes": list(self.notes),
             "pages": [p.to_dict() for p in self.pages],

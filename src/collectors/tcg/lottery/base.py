@@ -250,8 +250,8 @@ class LotteryAdapter(BaseTcgCollector):
         self.lottery_events = list(self.lottery_events)
         msgs = " ".join(self.health.get("error_messages") or [])
         self.health["unreachable"] = (self.funnel.pages_loaded == 0 and
-                                      bool(re.search(r"Timeout|ConnectionError|NameResolution",
-                                                     msgs)))
+                                      (bool(re.search(r"Timeout|ConnectionError|NameResolution", msgs))
+                                       or self.health.get("robots") == "robots_unreachable"))
         self.health["source_id"] = self.source_id
         self.health["announcements"] = self.announcements
         self._finish(self.lottery_events)

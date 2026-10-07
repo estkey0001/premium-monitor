@@ -739,8 +739,9 @@ class RakutenResaleCollector:
             logger.info("[Rakuten:%s] API試行エラー: %s", product_alias, e)
         # API が使えない（未設定・停止）なら、この実行では楽天を取らない（即打ち切り）。
         # API が使えて結果が無いだけなら商品ごとの事情（2回続いたら打ち切り）
-        from src.collectors.api import api_runtime as _rt
-        _LAST_FETCH["reason"] = "no_data" if _rt.api_enabled("rakuten") else "html_scraping_disabled"
+        # 取得の条件と同じ判定（キーあり・ENABLE_RAKUTEN_API=true の明示）で理由を決める（Phase 13 レビュー L-1）
+        from src.collectors.api.official_apis import rakuten_available
+        _LAST_FETCH["reason"] = "no_data" if rakuten_available() else "html_scraping_disabled"
         return None
 
     def _parse_prices(self, html: str) -> list[int]:
@@ -1027,7 +1028,7 @@ def run_collection(
     stats = {"saved": 0, "skipped": 0, "errors": []}
     # プラットフォームごとのステータス（LP表示用）
     # "ok_api" | "ok_html" | "blocked" | "blocked_cloud_ip" | "no_data"
-    # | "html_failed" | "skipped" | "error" | "api_key_missing" | "not_supported"
+    # | "html_failed" | "skipped" | "error" | "api_key_missing" | "not_supported" | "api_disabled"
     platform_status: dict[str, str] = {
         "ebay":         "skipped",
         "amazon":       "not_supported",      # 規約上スクレイピングしない（Phase 12）
@@ -1280,20 +1281,23 @@ def run_collection(
                             sample_count=result.get("listing_count"),
                         )
                         stats["saved"] += 1
-                        if platform_status["rakuten"] not in ("ok_api", "ok_html"):
-                            platform_status["rakuten"] = "ok_html"
-                        product_results[alias]["rakuten"] = "ok_html"
+                        # 楽天は公式 API だけで取る（HTML の取得は Phase 12 で削除）ので、取れたら API
+                        platform_status["rakuten"] = "ok_api"
+                        product_results[alias]["rakuten"] = "ok_api"
                     else:
+                        # API が未設定・停止（取得しない）か、API で該当なしか。HTML は取りに行っていない（Phase 13）
+                        _rk = ("api_disabled" if _LAST_FETCH.get("reason") == "html_scraping_disabled"
+                               else "no_data")
                         if platform_status["rakuten"] == "skipped":
-                            platform_status["rakuten"] = "html_failed"
-                        product_results[alias]["rakuten"] = "html_failed"
+                            platform_status["rakuten"] = _rk
+                        product_results[alias]["rakuten"] = _rk
                         stats["skipped"] += 1
                 except Exception as e:
                     logger.warning("[Rakuten:%s] エラー: %s", alias, e)
                     stats["errors"].append(f"rakuten:{alias}: {e}")
                     if platform_status["rakuten"] == "skipped":
                         platform_status["rakuten"] = "error"
-                    product_results[alias]["rakuten"] = "html_failed"
+                    product_results[alias]["rakuten"] = "error"
             _cut_record("rakuten", alias)  # 間隔は取得の共通の作法（polite）が守る
 
         # ──── ラクマ ────
@@ -1425,8 +1429,9 @@ def _platform_label_jp(status: str) -> str:
         "ok_api":           "自動取得済（API）",
         "ok_html":          "自動取得済（HTML）",
         "blocked":          "自動取得制限中（Cloud IP）",
-        "blocked_cloud_ip": "Cloud IP制限中（EBAY_APP_ID推奨）",
+        "blocked_cloud_ip": "Cloud IP制限中",
         "html_failed":      "HTML取得失敗",
+        "api_disabled":     "API未設定・停止（HTML取得は停止）",
         "no_data":          "該当商品なし",
         "skipped":          "実行スキップ",
         "error":            "取得エラー",

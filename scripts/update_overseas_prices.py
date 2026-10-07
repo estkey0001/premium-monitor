@@ -59,17 +59,13 @@ def main() -> int:
     now = datetime.now(tz=JST)
     logger.info("[update_overseas_prices] 開始: %s JST", now.strftime("%Y-%m-%d %H:%M"))
 
-    # ── EBAY_APP_ID 未設定の強警告（Task 3）──
-    # API未設定だと eBay は HTML フォールバック（不安定・stale 化しやすい）。
-    import os as _os_ebay
-    _ebay_app_id = _os_ebay.environ.get("EBAY_APP_ID") or _os_ebay.environ.get("EBAY_CLIENT_ID")
-    if not _ebay_app_id and not args.skip_ebay and not args.manual_only:
-        logger.warning("=" * 60)
-        logger.warning("STRONG WARNING: EBAY_APP_ID 未設定（理由: api_not_configured）")
-        logger.warning("  eBay Finding API が使えず HTML フォールバックのみ → 価格が stale 化しやすく、")
-        logger.warning("  ランキング/Pro/せどりの主計算からは stale 海外価格を除外します。")
-        logger.warning("  正確な海外相場には Settings→Secrets に EBAY_APP_ID を設定してください。")
-        logger.warning("=" * 60)
+    # ── eBay の取得の案内（Phase 13）──
+    # このステップは eBay を取りに行かない（Finding API は 2025-02-05 に廃止・検索結果の HTML の取得は停止）。
+    # eBay の成約は「eBay SOLD (Marketplace Insights)」のステップ（scripts/collect_ebay_sold.py）だけで取る
+    if not args.skip_ebay and not args.manual_only:
+        logger.info("eBay: このステップでは取得しない（Finding API は廃止・HTML の取得は停止）。"
+                    "成約は Marketplace Insights API のステップで取る（ops/Secrets設定.md）。"
+                    "stale（48時間超）の海外価格はランキング/Pro/せどりの主計算から除外する")
 
     # DB接続 + 商品一覧取得
     try:

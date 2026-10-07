@@ -18,36 +18,58 @@ Settings → Secrets and variables → Actions に以下のシークレットを
 - 通知スクリプト: `scripts/notify_workflow_result.py`（`--dry-run` オプションで動作確認可能）
 
 
-## 海外価格 API 設定（EBAY_APP_ID）
+## eBay の成約（Marketplace Insights API。Phase 13）
 
-eBay の正確な成約相場（Finding API）を使うには `EBAY_APP_ID` を設定してください。
-未設定の場合は HTML フォールバックのみとなり、価格が **stale 化しやすく**、
-ランキング/Pro/せどりの**主計算からは stale 海外価格が除外**されます
-（`scripts/update_overseas_prices.py` が起動時に強警告 `STRONG WARNING ... api_not_configured` を出力）。
+eBay の成約（売れた価格・成約日時）は **Marketplace Insights API** だけで取る。CI の「eBay SOLD (Marketplace Insights)」
+のステップ（`scripts/collect_ebay_sold.py`）が毎回呼ばれ、次の4つが**すべて**そろったときだけ取りに行く。
+1つでも欠けていれば通信0で、状態だけを `exports/sold_history/collect_status.json` に書く（CI は失敗にしない）。
 
-### 取得手順
-1. https://developer.ebay.com/ にサインイン（無料）
-2. 「Application Keys」から **Production** の App ID（Client ID）を発行
-3. GitHub: Settings → Secrets and variables → Actions に登録
+| 順 | 条件 | 設定する場所 | 欠けているときの状態 |
+|---|---|---|---|
+| 1 | 資格情報 | Secrets: `EBAY_CLIENT_ID`・`EBAY_CLIENT_SECRET` | `PENDING_USER_CONFIGURATION` |
+| 2 | Marketplace Insights API の利用許可（eBay の審査制・Limited Release）を人が確認した | Variables: `EBAY_INSIGHTS_APPROVED=true` | `PENDING_EBAY_APPROVAL` |
+| 3 | 成約のデータを**公開リポジトリ**（`exports/`）に保存してよいと、eBay の API の利用規約で人が確認した | Variables: `EBAY_SOLD_LICENSE_CONFIRMED=true` | `PENDING_LICENSE_CONFIRMATION` |
+| 4 | 取得の明示・dry-run でない | Variables: `ENABLE_EBAY_API=true`・`API_DRY_RUN=false` | `DISABLED` / `DRY_RUN` |
 
-| Secret 名 | 説明 | 必須 |
-|-----------|------|------|
-| `EBAY_APP_ID` | eBay Finding API の App ID（Client ID）| 任意（未設定でも動作・精度低下）|
-| `EBAY_CLIENT_ID` | `EBAY_APP_ID` の別名（どちらか一方でOK）| 任意 |
+- `ENABLE_EBAY_API=true` だけでは取りに行かない。`ENABLE_EBAY_API=false` にすれば、いつでも通信0に戻せる（停止スイッチ）。
+- `API_DRY_RUN=false` は楽天・Yahoo の API のステップにも効く。
+- 利用規約の解釈は推測しない。確認できるまで 3 を true にしない。
+- token の取得で 401 が返ったら `AUTH_FAILED`（資格情報の誤り）、400（invalid_scope）か 403 が返ったら `PENDING_EBAY_APPROVAL`（許可が無い）。
+- 429 は Retry-After（秒数・HTTP-date）に従う。120秒を超える待ちを求められたら、その実行では取りに行かない。
 
-### ローカル実行
+### 段階（勝手に広げない）
+
+1. **canary**（`EBAY_SOLD_CANARY=true` が既定）: 1商品（`EBAY_SOLD_CANARY_PRODUCT`。既定は `prod_ps5_pro`）だけを取る。
+   取得・変換・報告（`exports/sold_history/canary.json`）までで、**成約の履歴には書かない**（ルート・利益商品に入らない）。
+   報告の内容: 検索語・マーケット（EBAY_US）・返ってきた件数・使えた件数・使わなかった件数と理由・成約日時の範囲・
+   状態・価格の範囲・item ID・ライセンスの状態・関門の結果。
+   - PS5 Pro は eBay US では地域の型番（CFI-7000 / CFI-7100 / CFI-7014 など）が混ざる。canary の報告で使えた件数が
+     少なければ、`EBAY_SOLD_CANARY_PRODUCT` を段階の一覧の別の商品（`prod_x100vi` など、型番が世界共通の商品）に変える
+2. canary が合格（`passed: true`）したら、人が報告を見てから `EBAY_SOLD_CANARY=false` にする。
+   ここから成約の履歴（`exports/sold_history/latest.json`）に書く。段階は `EBAY_SOLD_STAGE`（1 → 3 → 10 商品）。
+3. 段階ごとの関門: 誤った成約・同一性の誤り・秘密の値・アクセス制限・重複・取得の失敗がすべて0で、使える成約が1件以上。
+   通らなければ履歴に書かない。前の段階を通っていなければ（`exports/sold_history/rollout.json`）、指定しても段階を上げない。
+   10商品より先には広げない（全商品への展開はしない）。
+
+### ローカルでの確認
+
 ```bash
-export EBAY_APP_ID="YourAppId-xxxx-xxxx-xxxx-xxxx"
-python scripts/update_overseas_prices.py --verbose
+python scripts/collect_ebay_sold.py --dry-run
 ```
-- 未設定でも `--manual-only` / `--skip-ebay` でローカル動作可能。
-- 設定すると eBay 成約相場が fresh 化し、Pro/せどりの海外売却候補の精度が向上します。
+
+送る予定のリクエストと、4つの条件の状態だけを出す（ネットワークに出ない・秘密の値は出さない）。
+
+### 使わなくなったもの
+
+- `EBAY_APP_ID` と Finding API（`findItemsByKeywords`・`findCompletedItems`）: 2025-02-05 に廃止された。呼ぶコードは
+  Phase 13 で削除した（`EBAY_CLIENT_ID` を登録しても、廃止された API へ client id を送らない）。
+- eBay の検索結果の HTML: Phase 12 で取得を停止した。`scripts/update_overseas_prices.py` は eBay を取らない。
 
 
 ## 自動取得の拡張（2026-07-23）— キー投入で自動起動
 
 「できるだけ自動取得」方針。以下は**Secret を登録するだけで自動化が起動**する設計。
-未設定でも動作（既存のHTMLフォールバック/手動キュレーションが働く）。
+未設定でも動作する（手動キュレーションが働く。HTML の取得には戻らない）。
 
 ### 公式定価コレクター（キー不要・実装済み）
 - `apple/ricoh/fujifilm` に加え `canon/nikon/sony` を追加（`src/collectors/official/`）。
@@ -57,16 +79,16 @@ python scripts/update_overseas_prices.py --verbose
 - robots.txt 準拠・`rate_limit_sec` 遵守で低頻度アクセス。
 
 ### 公式API統合（env-gated・キー投入で自動有効化）
-`src/collectors/api/official_apis.py`。GitHub Secrets に登録すると自動でAPI優先に切替:
+`src/collectors/api/official_apis.py`。GitHub Secrets にキーを登録し、Variables の `ENABLE_RAKUTEN_API` /
+`ENABLE_YAHOO_API` を true と明示したときだけ API を使う（CI の既定は false。キーが無い・true 以外なら通信0。Phase 13）:
 
 | Secret 名 | 用途 | 効果 |
 |-----------|------|------|
-| `EBAY_APP_ID` | eBay Finding API | 海外sold相場が fresh 化（Data Quality +25pt見込み・最優先）|
-| `RAKUTEN_APP_ID` | 楽天 Ichiba Item Search API | 楽天新品価格をHTMLでなくAPIで取得（IPブロック回避）|
+| `RAKUTEN_APP_ID` | 楽天 Ichiba Item Search API | 楽天の新品価格を API で取得（HTML の取得は停止）|
 | `RAKUTEN_AFFILIATE_ID` | 楽天アフィリ（任意）| 任意 |
 | `YAHOO_SHOPPING_APP_ID` | Yahoo!ショッピング API | 新品ショッピング価格（※落札soldとは別種・混在させない）|
 
 ### 自動化できない領域（ToS・正直な上限）
 - **メルカリ / ラクマ**: スクレイピング禁止・公式価格APIなし → **手動キュレーション継続**が正しい設計。
-- **クラウドIPブロック**: GitHub Actions のIPは多くの日本の小売サイトにブロックされる（成功率が上がらない主因）。回避はセルフホストRunner/プロキシ等のインフラ判断が必要（コードだけでは解決しない）。
+- **クラウドIPブロック**: GitHub Actions のIPは多くの日本の小売サイトにブロックされる（成功率が上がらない主因）。ブロックは回避しない（プロキシ・偽装はしない。取得元の判断を尊重して、その実行では打ち切る）。
 

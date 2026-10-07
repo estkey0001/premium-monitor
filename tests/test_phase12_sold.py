@@ -66,7 +66,7 @@ def test_sold_dedupe_and_idempotent_reimport():
     again = replace(a, observed_at=(NOW + timedelta(hours=5)).isoformat(),
                     item_url=a.item_url + "?hash=item123")
     h2, st2 = merge(h, [again])
-    assert st2 == {"added": 0, "duplicate": 1, "rejected": {}} and len(h2) == 3
+    assert st2 == {"added": 0, "updated": 0, "duplicate": 1, "rejected": {}} and len(h2) == 3
     assert h2[0].observed_at == a.observed_at
     # 使えない成約は履歴に入れない（理由を数える）
     h3, st3 = merge(h2, [replace(_rec(9), sold_at="")])
@@ -238,7 +238,8 @@ def test_build_observations_reads_sold_history(tmp_path, monkeypatch):
 @pytest.fixture
 def no_ebay_env(monkeypatch):
     for k in ("EBAY_CLIENT_ID", "EBAY_CLIENT_SECRET", "EBAY_APP_ID", "ENABLE_EBAY_API", "API_DRY_RUN",
-              "EBAY_API_STAGE"):
+              "EBAY_API_STAGE", "EBAY_INSIGHTS_APPROVED", "EBAY_SOLD_LICENSE_CONFIRMED", "EBAY_SOLD_CANARY",
+              "EBAY_SOLD_CANARY_PRODUCT", "EBAY_SOLD_STAGE"):
         monkeypatch.delenv(k, raising=False)
 
 
@@ -249,6 +250,11 @@ def test_ebay_not_configured_is_pending(no_ebay_env, monkeypatch):
     monkeypatch.setenv("EBAY_APP_ID", "app-only-123456")
     assert ei.status() == ei.ST_PENDING
     monkeypatch.setenv("EBAY_CLIENT_SECRET", "sec-123456789")
+    # Phase 13: 資格情報だけでは足りない（承認 → ライセンスの確認が要る）
+    assert ei.status() == ei.ST_PENDING_APPROVAL
+    monkeypatch.setenv("EBAY_INSIGHTS_APPROVED", "true")
+    assert ei.status() == ei.ST_PENDING_LICENSE
+    monkeypatch.setenv("EBAY_SOLD_LICENSE_CONFIRMED", "true")
     assert ei.status() == ei.ST_DISABLED                    # 有効にすると明示していなければ使わない
     monkeypatch.setenv("ENABLE_EBAY_API", "true")
     assert ei.status() == ei.ST_OK
@@ -260,15 +266,31 @@ def test_ebay_not_configured_is_pending(no_ebay_env, monkeypatch):
 
 
 def test_ebay_stage_needs_canary_pass(no_ebay_env, monkeypatch, tmp_path, capsys):
-    """段階を上げても、canary の合格の記録が無ければ1商品だけ。"""
+    """段階を上げても、canary の合格の記録が無ければ1商品だけ。
+
+    Phase 13: canary に合格しても一気に広げない。EBAY_SOLD_CANARY=false の明示と、前の段階の合格
+    （rollout.json）があって初めて 1 → 3 → 10 商品と上がる。10商品より先には広げない。
+    """
     m = _load_script("collect_ebay_sold")
     monkeypatch.setattr(m, "CANARY_PATH", tmp_path / "canary.json")
+    monkeypatch.setattr(m, "ROLLOUT_PATH", tmp_path / "rollout.json")
     monkeypatch.setenv("EBAY_API_STAGE", "all")
-    assert m.main(["--dry-run"]) == 0
-    assert [r["product_id"] for r in json.loads(capsys.readouterr().out)["requests"]] == ["prod_ps5_pro"]
-    (tmp_path / "canary.json").write_text(json.dumps({"passed": True}), encoding="utf-8")
-    assert m.main(["--dry-run"]) == 0
-    assert len(json.loads(capsys.readouterr().out)["requests"]) == len(m.STAGED)
+    monkeypatch.setenv("EBAY_SOLD_STAGE", "10")
+    monkeypatch.setenv("EBAY_SOLD_CANARY", "false")
+
+    def _plan():
+        assert m.main(["--dry-run"]) == 0
+        return [r["product_id"] for r in json.loads(capsys.readouterr().out)["requests"]]
+    assert _plan() == ["prod_ps5_pro"]                     # canary の合格なし → canary の1商品
+    (tmp_path / "canary.json").write_text(json.dumps({"passed": True, "product_id": "prod_ps5_pro"}), encoding="utf-8")
+    assert len(_plan()) == 1                               # 合格しても、段階1を通るまでは1商品
+    (tmp_path / "rollout.json").write_text(json.dumps({"stages": {"1": {"passed": True}}}), encoding="utf-8")
+    assert len(_plan()) == 3                               # 段階1を通った → 3商品まで
+    (tmp_path / "rollout.json").write_text(
+        json.dumps({"stages": {"1": {"passed": True}, "3": {"passed": True}}}), encoding="utf-8")
+    assert len(_plan()) == 10 == len(m.STAGED)             # 10商品が上限（全商品には広げない）
+    monkeypatch.setenv("EBAY_SOLD_STAGE", "all")
+    assert len(_plan()) == 1                               # 知らない段階は1商品
 
 
 def test_ebay_request_builder():

@@ -57,12 +57,19 @@ def _stats(prices: list[int]) -> Optional[dict]:
     }
 
 
+def _enabled_explicitly(name: str) -> bool:
+    return (os.environ.get(name, "") or "").strip().lower() in ("true", "1", "yes", "on")
+
+
 def rakuten_available() -> bool:
-    return bool(os.environ.get("RAKUTEN_APP_ID"))
+    """楽天の API を使ってよいか（キーがあり、ENABLE_RAKUTEN_API=true と明示した。Phase 13。
+    未設定・false 以外の値（disabled など）は使わない。監査 L-4）。"""
+    return bool(os.environ.get("RAKUTEN_APP_ID")) and _enabled_explicitly("ENABLE_RAKUTEN_API")
 
 
 def yahoo_shopping_available() -> bool:
-    return bool(os.environ.get("YAHOO_SHOPPING_APP_ID"))
+    """Yahoo!ショッピングの API を使ってよいか（キーがあり、ENABLE_YAHOO_API=true と明示した。Phase 13）。"""
+    return bool(os.environ.get("YAHOO_SHOPPING_APP_ID")) and _enabled_explicitly("ENABLE_YAHOO_API")
 
 
 def rakuten_ichiba_search(keyword: str, hits: int = 20, min_price: int = 5000) -> Optional[dict]:
@@ -71,7 +78,7 @@ def rakuten_ichiba_search(keyword: str, hits: int = 20, min_price: int = 5000) -
     Returns: {price_jpy, listing_count, url, collector_method='rakuten_api'} or None
     """
     app_id = os.environ.get("RAKUTEN_APP_ID")
-    if not app_id:
+    if not app_id or not rakuten_available():      # キーが無い・停止スイッチ → 通信0
         return None
     if not keyword:
         return None
@@ -118,7 +125,7 @@ def yahoo_shopping_search(keyword: str, hits: int = 20, condition: str = "new") 
     Returns: {price_jpy, listing_count, url, collector_method='yahoo_shopping_api'} or None
     """
     app_id = os.environ.get("YAHOO_SHOPPING_APP_ID")
-    if not app_id:
+    if not app_id or not yahoo_shopping_available():   # キーが無い・停止スイッチ → 通信0
         return None
     if not keyword:
         return None

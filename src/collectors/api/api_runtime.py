@@ -113,6 +113,33 @@ def classify_error(status: Optional[int], exc: Optional[Exception] = None) -> st
     return "unknown"
 
 
+# Retry-After がこれより長いときは待たずに止める（CI の時間を延ばさない・相手の制限が明けるまで取りに行かない）
+MAX_RETRY_AFTER_SEC = 120.0
+
+
+def parse_retry_after(value, now: Optional[float] = None) -> Optional[float]:
+    """Retry-After の値（秒数 または HTTP-date。RFC 9110）→ 待つ秒数（読めなければ None）。
+
+    HTTP-date が過去なら 0。now はテスト用（UNIX 時刻）。
+    """
+    if value is None:
+        return None
+    s = str(value).strip()
+    if not s:
+        return None
+    if s.isdigit():
+        return float(int(s))
+    try:
+        from email.utils import parsedate_to_datetime
+        dt = parsedate_to_datetime(s)
+    except (TypeError, ValueError, IndexError):
+        return None
+    if dt is None or dt.tzinfo is None:
+        return None
+    t = time.time() if now is None else now
+    return max(0.0, dt.timestamp() - t)
+
+
 @dataclass
 class RateLimitState:
     request_count: int = 0
@@ -257,9 +284,13 @@ def retry_with_backoff(fn: Callable, *, max_retries: int = 4, base_delay: float 
             breaker.record_failure(now_fn())
         if attempt > max_retries:
             break
-        # Retry-After 優先、無ければ指数バックオフ + jitter
-        ra = r.get("retry_after")
-        delay = float(ra) if ra else base_delay * (2 ** (attempt - 1))
+        # Retry-After 優先、無ければ指数バックオフ + jitter（秒数・HTTP-date のどちらも読む）
+        ra = parse_retry_after(r.get("retry_after"))
+        if ra is not None and ra > MAX_RETRY_AFTER_SEC:
+            # 長い待ちを求められたら、この実行では再試行しない（待って CI を延ばさない）
+            return {"ok": False, "data": None, "status": last_status, "attempts": attempt,
+                    "error_kind": "rate_limited_long_retry_after"}
+        delay = ra if ra else base_delay * (2 ** (attempt - 1))
         delay += random.uniform(0, min(1.0, delay * 0.25))
         if health:
             health.retries += 1

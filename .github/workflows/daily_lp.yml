@@ -143,10 +143,12 @@ jobs:
         env:
           PYTHONPATH: .
           EBAY_APP_ID: ${{ secrets.EBAY_APP_ID }}
-          # 公式API統合（キー設定時のみ自動有効化・未設定ならHTMLフォールバック）
+          # 公式 API（キーがあり、有効化のスイッチが true のときだけ。HTML の取得は停止。Phase 12・13）
           RAKUTEN_APP_ID: ${{ secrets.RAKUTEN_APP_ID }}
           RAKUTEN_AFFILIATE_ID: ${{ secrets.RAKUTEN_AFFILIATE_ID }}
           YAHOO_SHOPPING_APP_ID: ${{ secrets.YAHOO_SHOPPING_APP_ID }}
+          ENABLE_RAKUTEN_API: ${{ vars.ENABLE_RAKUTEN_API || 'false' }}
+          ENABLE_YAHOO_API: ${{ vars.ENABLE_YAHOO_API || 'false' }}
 
       # 10. Run buyback premium check（統合ジョブ）
       - name: Run buyback premium check
@@ -173,6 +175,26 @@ jobs:
         continue-on-error: true
         env:
           PYTHONPATH: .
+
+      # 11.45 eBay の成約（Marketplace Insights API。Phase 13）
+      # 資格情報・承認の確認・公開リポジトリに保存してよいことの確認・取得の明示がすべてそろい、dry-run でないときだけ
+      # 取りに行く。どれか欠けたら通信0で状態（PENDING_USER_CONFIGURATION / PENDING_EBAY_APPROVAL /
+      # PENDING_LICENSE_CONFIRMATION など）だけを exports/sold_history/collect_status.json に書く（CI を失敗にしない）。
+      # 最初は1商品の canary（履歴に書かない）。設定の手順は ops/Secrets設定.md
+      - name: eBay SOLD (Marketplace Insights)
+        run: python scripts/collect_ebay_sold.py
+        continue-on-error: true
+        env:
+          PYTHONPATH: .
+          EBAY_CLIENT_ID: ${{ secrets.EBAY_CLIENT_ID }}
+          EBAY_CLIENT_SECRET: ${{ secrets.EBAY_CLIENT_SECRET }}
+          ENABLE_EBAY_API: ${{ vars.ENABLE_EBAY_API || 'false' }}
+          EBAY_INSIGHTS_APPROVED: ${{ vars.EBAY_INSIGHTS_APPROVED || 'false' }}
+          EBAY_SOLD_LICENSE_CONFIRMED: ${{ vars.EBAY_SOLD_LICENSE_CONFIRMED || 'false' }}
+          EBAY_SOLD_CANARY: ${{ vars.EBAY_SOLD_CANARY || 'true' }}
+          EBAY_SOLD_CANARY_PRODUCT: ${{ vars.EBAY_SOLD_CANARY_PRODUCT || 'prod_ps5_pro' }}
+          EBAY_SOLD_STAGE: ${{ vars.EBAY_SOLD_STAGE || '1' }}
+          API_DRY_RUN: ${{ vars.API_DRY_RUN || 'true' }}
 
       # 11.5 Generate normalized price observations（ranking/sedori/LP 共通の価格定義）
       - name: Generate normalized price observations
@@ -445,9 +467,6 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          # 他Runが先にpushしていた場合に備えてrebase（concurrencyで通常不要だが二重安全策）
-          git pull --rebase origin main || true
-
           git add docs/ exports/lp/daily/ exports/collector_report/ exports/lottery_report/ \
                   exports/alerts_report/ exports/ranking_report/ exports/sedori_routes_report/ \
                   exports/overseas_prices/ \
@@ -470,6 +489,7 @@ jobs:
                   exports/official_source_audit/ exports/retail_buyback_audit/ \
                   exports/source_matching/ exports/api_automation/ \
                   exports/tcg/ \
+                  exports/sold_history/ \
                   exports/camera_buyback_status.json \
                   data/alerts.csv data/lottery_events.csv \
                   data/overseas_price_history.csv \
@@ -480,5 +500,28 @@ jobs:
             echo "No changes to commit"
           else
             git commit -m "Daily LP update $(TZ=Asia/Tokyo date +%Y-%m-%d_%H:%M) [auto update]"
-            git push origin main
+            # 別の実行（同じ時刻に予約された手動・定時の実行）が先に push していたら、取り込み直して push する
+            # （以前は push の前の pull が未ステージの変更で失敗し、push も拒否された。Phase 13）。
+            # 衝突したのが生成物（exports/・audit_health/・docs/ の自動生成のページ）だけなら、この実行の側を採る。
+            # それ以外（data/ の手書きの CSV など、人も変えるファイル）が衝突したら上書きせずに止める（監査 M-2）
+            if ! git push origin main; then
+              if ! git pull --rebase --autostash origin main; then
+                CONFLICTS=$(git diff --name-only --diff-filter=U)
+                if [ -z "$CONFLICTS" ]; then
+                  echo "pull に失敗した（衝突ではない。ネットワーク・認証など）"
+                  git rebase --abort || true
+                  exit 1
+                fi
+                OTHERS=$(echo "$CONFLICTS" | grep -vE '^(exports/|audit_health/|docs/index\.html$|docs/beta/|docs/archive/|docs/sitemap\.xml$|docs/latest\.md$|docs/collector_report\.html$)' || true)
+                if [ -n "$OTHERS" ]; then
+                  echo "生成物以外が衝突したので取り込みをやめる（人の変更を上書きしない）: $OTHERS"
+                  git rebase --abort
+                  exit 1
+                fi
+                echo "$CONFLICTS" | xargs git checkout --theirs --
+                echo "$CONFLICTS" | xargs git add --
+                GIT_EDITOR=true git rebase --continue
+              fi
+              git push origin main
+            fi
           fi

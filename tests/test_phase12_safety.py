@@ -872,12 +872,12 @@ def test_unreachable_robots_has_own_reason(monkeypatch):
 def test_rakuten_cut_reason_depends_on_api(monkeypatch):
     m = _load_script("collect_resale_prices")
     import src.collectors.api.official_apis as oa
-    from src.collectors.api import api_runtime as rt
     monkeypatch.setattr(oa, "rakuten_ichiba_search", lambda kw: None)
-    monkeypatch.setattr(rt, "api_enabled", lambda api: True)
+    # Phase 13: 理由は取得の条件と同じ判定（official_apis.rakuten_available。ENABLE_RAKUTEN_API=true の明示）で決める
+    monkeypatch.setattr(oa, "rakuten_available", lambda: True)
     m.RakutenResaleCollector().collect("x", ["kw"])
     assert m._LAST_FETCH["reason"] == "no_data"             # API が使えて結果が無いだけ（商品ごとの事情）
-    monkeypatch.setattr(rt, "api_enabled", lambda api: False)
+    monkeypatch.setattr(oa, "rakuten_available", lambda: False)
     m.RakutenResaleCollector().collect("x", ["kw"])
     assert m._LAST_FETCH["reason"] == "html_scraping_disabled"   # API が使えない → 以後取らない
 

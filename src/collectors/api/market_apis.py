@@ -21,7 +21,6 @@ from src.collectors.api.api_runtime import (
 _UA = "PremiumMonitor/1.0 (+market-api)"
 _TIMEOUT = 15
 
-EBAY_FINDING_ENDPOINT = "https://svcs.ebay.com/services/search/FindingService/v1"
 RAKUTEN_ENDPOINT = "https://app.rakuten.co.jp/services/api/IchibaItem/Search/20220601"
 YAHOO_SHOPPING_ENDPOINT = "https://shopping.yahooapis.jp/ShoppingWebService/V3/itemSearch"
 
@@ -34,11 +33,8 @@ def _http(url: str, headers: Optional[dict] = None) -> dict:
             body = resp.read().decode("utf-8")
             return {"status": resp.getcode(), "data": json.loads(body), "retry_after": None, "exc": None}
     except urllib.error.HTTPError as e:  # type: ignore
+        # 秒数・HTTP-date のどちらも retry_with_backoff（api_runtime.parse_retry_after）が読む
         ra = e.headers.get("Retry-After") if e.headers else None
-        try:
-            ra = int(ra) if ra else None
-        except ValueError:
-            ra = None
         return {"status": e.code, "data": None, "retry_after": ra, "exc": e}
     except Exception as e:  # noqa: BLE001
         return {"status": None, "data": None, "retry_after": None, "exc": e}
@@ -61,59 +57,17 @@ def load_fx_rate(currency: str) -> dict:
 
 
 # ─────────────────────────────────────────────────────────────
-# eBay Finding API（Task3-7）
+# eBay（出品の検索）: Finding API は 2025-02-05 に廃止された（Phase 13 で呼ぶコードを削除）
 # ─────────────────────────────────────────────────────────────
 def ebay_fetch_items(keyword: str, *, health: HealthTracker = None,
                      breaker: CircuitBreaker = None, sleep_fn=None) -> Optional[list]:
-    """eBay から exact-match 候補の listing 群を取得。未設定/失敗は None。
+    """eBay の出品の候補（今は取得しない。常に None）。
 
-    取得: title/price/currency/shipping/condition/item_location/item_id/url。
-    仕様上取れない項目は null（取得できるふりをしない）。
+    以前は Finding API（findItemsByKeywords）を呼んでいたが、2025-02-05 に廃止された。EBAY_CLIENT_ID
+    （成約の Marketplace Insights API の資格情報）を登録しても、廃止された API へ client id を送らない。
+    成約は src/collectors/api/ebay_insights.py（scripts/collect_ebay_sold.py）だけで取る。
     """
-    app_id = os.environ.get("EBAY_APP_ID") or os.environ.get("EBAY_CLIENT_ID")
-    if not app_id or not keyword:
-        return None
-    params = {
-        "OPERATION-NAME": "findItemsByKeywords",
-        "SERVICE-VERSION": "1.13.0",
-        "SECURITY-APPNAME": app_id,
-        "RESPONSE-DATA-FORMAT": "JSON",
-        "REST-PAYLOAD": "",
-        "keywords": keyword,
-        "paginationInput.entriesPerPage": "50",
-        "GLOBAL-ID": "EBAY-US",
-    }
-    url = EBAY_FINDING_ENDPOINT + "?" + urllib.parse.urlencode(params)
-    kw = {} if sleep_fn is None else {"sleep_fn": sleep_fn}
-    res = retry_with_backoff(lambda: _http(url), health=health, breaker=breaker, **kw)
-    if not res["ok"] or not res["data"]:
-        return None
-    items = []
-    try:
-        root = res["data"].get("findItemsByKeywordsResponse", [{}])[0]
-        arr = root.get("searchResult", [{}])[0].get("item", [])
-        for it in arr:
-            sp = (it.get("sellingStatus", [{}])[0].get("currentPrice", [{}])[0])
-            ship = (it.get("shippingInfo", [{}])[0].get("shippingServiceCost", [{}])[0]
-                    if it.get("shippingInfo") else {})
-            items.append({
-                "title": (it.get("title", [None])[0]),
-                "listing_price_original": _f(sp.get("__value__")),
-                "currency": sp.get("@currencyId"),
-                "shipping_original": _f(ship.get("__value__")) if ship else None,
-                "shipping_currency": ship.get("@currencyId") if ship else None,
-                "condition": (it.get("condition", [{}])[0].get("conditionDisplayName", [None])[0]
-                              if it.get("condition") else None),
-                "item_location": (it.get("location", [None])[0]),
-                "item_id": (it.get("itemId", [None])[0]),
-                "url": (it.get("viewItemURL", [None])[0]),
-                "seller": None,  # 取得可否がスコープ/権限依存 → null（ふりをしない）
-            })
-    except Exception:
-        return None
-    if health:
-        health.items_received += len(items)
-    return items
+    return None
 
 
 def _f(v):

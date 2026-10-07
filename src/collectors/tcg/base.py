@@ -158,11 +158,21 @@ class BaseTcgCollector:
         except Exception:  # noqa: BLE001 - 判定根拠の取得失敗は致命的でない
             diag.robots_status = "unknown"
         # robots.txt を取得できない（unknown）ときも取りに行かない（RFC 9309。監査 M7）
-        if self.respect_robots and diag.robots_status in ("disallowed", "unknown"):
+        if self.respect_robots and diag.robots_status == "disallowed":
             self.health["blocked"] = True
+            self.health["robots"] = "robots_disallowed"
             self.funnel.blocked_pages += 1
             self._record_error(diag, f"robots.txt disallow: {url}")
-            logger.warning("robots.txt により取得をスキップ: %s", url)
+            logger.warning("robots.txt で禁止のため取得をスキップ: %s", url)
+            return None
+        if self.respect_robots and diag.robots_status == "unknown":
+            # 到達できない（タイムアウト・5xx など）は禁止と混ぜない（Phase 13）。取りには行かない（RFC 9309）が、
+            # アクセス拒否ではなく「接続できない」として記録する
+            self.health["unreachable"] = True
+            self.health["robots"] = "robots_unreachable"
+            self.funnel.robots_unreachable_pages += 1
+            self._record_error(diag, f"robots.txt unreachable: {url}")
+            logger.warning("robots.txt に到達できないため取得をスキップ: %s", url)
             return None
 
         delay = None

@@ -282,6 +282,8 @@ def run_lottery_pipeline(pokemon_registry: list[dict], onepiece_products: list[d
             "rejected": f.get("rejected_events", 0),
             "rejection_reasons": f.get("rejection_reasons", {}),
             "blocked": bool(h.get("blocked")), "unreachable": bool(h.get("unreachable")),
+            # robots.txt の理由（robots_disallowed: 禁止 / robots_unreachable: 到達できない。混ぜない。Phase 13）
+            "robots": h.get("robots"),
             "error": (h.get("error_messages") or [None])[0],
             "health": h.get("status"), "active_lotteries": active - active_preorders,
             "active_preorders": active_preorders,

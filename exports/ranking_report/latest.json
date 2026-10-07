@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-06 23:29 JST",
+  "generated_at": "2026-10-07 13:41 JST",
   "route_type_beginner": "primary_to_secondary",
   "top_camera_buyback_opportunities": [
     {
@@ -260,10 +260,48 @@
       "route_type": "primary_to_secondary",
       "source_label": "任天堂公式 / PlayStation Direct / Xbox Store",
       "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
+    },
+    {
+      "product_name": "iPhone 16 Pro 256GB SIMフリー",
+      "category": "iphone",
+      "user_level": "beginner_easy",
+      "official_price_jpy": 159800,
+      "reference_source": "retail_concept",
+      "best_buyback_price": 164000,
+      "best_buyback_shop": "買取商店",
+      "buy_price": null,
+      "buy_shop_name": "",
+      "buy_price_type": "",
+      "sell_price_type": "buyback_price",
+      "net_profit_jpy": 2900,
+      "net_profit_rate": 0.0181,
+      "route_type": "primary_to_secondary",
+      "source_label": "Apple Store",
+      "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
     }
   ],
   "pro_top10": [],
   "beginner_by_category": {
+    "iphone": [
+      {
+        "product_name": "iPhone 16 Pro 256GB SIMフリー",
+        "category": "iphone",
+        "user_level": "beginner_easy",
+        "official_price_jpy": 159800,
+        "reference_source": "retail_concept",
+        "best_buyback_price": 164000,
+        "best_buyback_shop": "買取商店",
+        "buy_price": null,
+        "buy_shop_name": "",
+        "buy_price_type": "",
+        "sell_price_type": "buyback_price",
+        "net_profit_jpy": 2900,
+        "net_profit_rate": 0.0181,
+        "route_type": "primary_to_secondary",
+        "source_label": "Apple Store",
+        "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
+      }
+    ],
     "game_console": [
       {
         "product_name": "PlayStation 5 Pro",
@@ -286,12 +324,12 @@
     ]
   },
   "pro_by_category": {},
-  "excluded_items": 5,
-  "total_deals": 6,
+  "excluded_items": 7,
+  "total_deals": 9,
   "confidence_summary": {
-    "total": 6,
-    "profitable": 1,
-    "negative": 5
+    "total": 9,
+    "profitable": 2,
+    "negative": 7
   },
   "stale_data_count": 0
 }

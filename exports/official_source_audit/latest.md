@@ -1,11 +1,11 @@
 # Official Source Registry & Validation
 
-> 生成: 2026-10-06 22:44 JST / 公式ソース登録・検証（利益/AI/Opportunity/Notification/Capital/Execution は不変）
+> 生成: 2026-10-07 12:56 JST / 公式ソース登録・検証（利益/AI/Opportunity/Notification/Capital/Execution は不変）
 
 ## メーカー別サマリ
 | Maker | Products | URL verified | HTTP200 | exact match | price auto | high conf | failed |
 |---|--:|--:|--:|--:|--:|--:|--:|
-| Apple | 14 | 5 | 5 | 2 | 2 | 2 | 9 |
+| Apple | 19 | 2 | 2 | 2 | 2 | 2 | 17 |
 | Sony | 5 | 1 | 1 | 1 | 1 | 1 | 4 |
 | Nintendo | 2 | 1 | 1 | 0 | 1 | 0 | 1 |
 | Nikon | 3 | 1 | 1 | 0 | 0 | 0 | 2 |
@@ -14,7 +14,7 @@
 
 ## 自動取得率 Before → After
 - Before: 公式定価あり商品 3 / 公式config 7
-- After: URL検証済 9 / 価格取得 4 （検証対象 9 / 検証不能 9）
+- After: URL検証済 6 / 価格取得 4 （検証対象 6 / 検証不能 9）
 
 ## Apple Source Audit（旧URL検出）
 | product | current_url | http | action | note |
@@ -52,6 +52,14 @@
 | prod_apple_watch_s11 | src_apple_jp | 公式は Apple Watch Series 12 を販売中（Series 11 は販売していない） |
 | prod_apple_watch_ultra3 | src_apple_jp | 公式は Apple Watch Ultra 4 を販売中（Ultra 3 は販売していない） |
 | prod_switch2_mk | src_nintendo_store | 任天堂公式のラインナップでマリオカート ワールド セットは「生産終了」 |
+| prod_iphone16pro_256 | src_apple_jp | iPhone 16 Pro の購入ページが /jp/iphone へ移動。公式は iPhone 18 Pro を販売中 |
+| prod_iphone16pm_256 | src_apple_jp | iPhone 16 Pro Max は公式で販売していない（公式は iPhone 18 Pro Max を販売中） |
+| prod_iphone16pm_512 | src_apple_jp | iPhone 16 Pro Max は公式で販売していない（公式は iPhone 18 Pro Max を販売中） |
+| prod_airpods_max | src_apple_jp | AirPods Max の購入ページが AirPods Max 2 へ移動（初代は販売していない） |
+| prod_mac_mini_m4 | src_apple_jp | 公式の Mac mini は M6・M5 Pro チップ（M4 は販売していない） |
+| prod_macbook_air_m4_13 | src_apple_jp | 公式の MacBook Air は M5 チップ（M4 は販売していない） |
+| prod_macbook_air_m4_15 | src_apple_jp | 公式の MacBook Air は M5 チップ（M4 は販売していない） |
+| prod_macbook_pro_m4_14 | src_apple_jp | 公式の MacBook Pro は M5・M5 Pro・M5 Max チップ（M4 は販売していない） |
 
 ## 次に改善すべきsource
 1. **EBAY_APP_ID 設定**（海外相場の自動fresh化・最優先）

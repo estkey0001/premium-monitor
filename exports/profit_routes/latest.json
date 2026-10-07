@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-06 23:29 JST",
+  "generated_at": "2026-10-07 13:41 JST",
   "ebay_api_configured": false,
   "overseas_source_mode": "manual",
   "summary": {
@@ -108,7 +108,7 @@
     "prod_iphone17pm_256": {
       "product_name": "iPhone 17 Pro Max 256GB SIMフリー",
       "buy_candidates": 0,
-      "sell_candidates": 2,
+      "sell_candidates": 3,
       "min_usable_buy": null,
       "min_usable_buy_source": "",
       "max_usable_sell": 186500,
@@ -166,26 +166,26 @@
     "prod_iphone17_256": {
       "product_name": "iPhone 17 256GB SIMフリー",
       "buy_candidates": 0,
-      "sell_candidates": 0,
+      "sell_candidates": 1,
       "min_usable_buy": null,
       "min_usable_buy_source": "",
-      "max_usable_sell": null,
-      "max_usable_sell_source": "",
+      "max_usable_sell": 139000,
+      "max_usable_sell_source": "買取商店",
       "min_usable_buy_identity_verified": false,
-      "max_usable_sell_identity_verified": false,
-      "target_buy_price": null,
+      "max_usable_sell_identity_verified": true,
+      "target_buy_price": 138999,
       "gross_gap": null,
       "net_domestic": null,
       "best_reference_net": null,
-      "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
+      "main_blocked_reason": "有効な仕入(販売/出品/落札)候補なし",
       "excluded_route_count": 0,
       "rejection_top5": [
         [
           "stale_over_14d",
-          4
+          3
         ]
       ],
-      "stale_excluded": 4,
+      "stale_excluded": 3,
       "overseas_stale": 0,
       "needed": [],
       "fresh_overseas_whatif_top5": []
@@ -193,26 +193,26 @@
     "prod_iphone16pro_256": {
       "product_name": "iPhone 16 Pro 256GB SIMフリー",
       "buy_candidates": 0,
-      "sell_candidates": 0,
+      "sell_candidates": 1,
       "min_usable_buy": null,
       "min_usable_buy_source": "",
-      "max_usable_sell": null,
-      "max_usable_sell_source": "",
+      "max_usable_sell": 164000,
+      "max_usable_sell_source": "買取商店",
       "min_usable_buy_identity_verified": false,
-      "max_usable_sell_identity_verified": false,
-      "target_buy_price": null,
+      "max_usable_sell_identity_verified": true,
+      "target_buy_price": 163999,
       "gross_gap": null,
       "net_domestic": null,
       "best_reference_net": null,
-      "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
+      "main_blocked_reason": "有効な仕入(販売/出品/落札)候補なし",
       "excluded_route_count": 0,
       "rejection_top5": [
         [
           "stale_over_14d",
-          4
+          3
         ]
       ],
-      "stale_excluded": 4,
+      "stale_excluded": 3,
       "overseas_stale": 0,
       "needed": [],
       "fresh_overseas_whatif_top5": []
@@ -512,26 +512,26 @@
     "prod_airpods_pro3": {
       "product_name": "AirPods Pro 3",
       "buy_candidates": 0,
-      "sell_candidates": 0,
+      "sell_candidates": 1,
       "min_usable_buy": null,
       "min_usable_buy_source": "",
-      "max_usable_sell": null,
-      "max_usable_sell_source": "",
+      "max_usable_sell": 32500,
+      "max_usable_sell_source": "買取商店",
       "min_usable_buy_identity_verified": false,
-      "max_usable_sell_identity_verified": false,
-      "target_buy_price": null,
+      "max_usable_sell_identity_verified": true,
+      "target_buy_price": 32499,
       "gross_gap": null,
       "net_domestic": null,
       "best_reference_net": null,
-      "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
+      "main_blocked_reason": "有効な仕入(販売/出品/落札)候補なし",
       "excluded_route_count": 0,
       "rejection_top5": [
         [
           "stale_over_14d",
-          2
+          1
         ]
       ],
-      "stale_excluded": 2,
+      "stale_excluded": 1,
       "overseas_stale": 0,
       "needed": [],
       "fresh_overseas_whatif_top5": []
@@ -624,14 +624,14 @@
     "prod_ps5_pro": {
       "product_name": "PlayStation 5 Pro",
       "buy_candidates": 0,
-      "sell_candidates": 1,
+      "sell_candidates": 2,
       "min_usable_buy": null,
       "min_usable_buy_source": "",
-      "max_usable_sell": 194700,
-      "max_usable_sell_source": "買取商店",
+      "max_usable_sell": 195200,
+      "max_usable_sell_source": "モバイル一番",
       "min_usable_buy_identity_verified": false,
-      "max_usable_sell_identity_verified": true,
-      "target_buy_price": 194699,
+      "max_usable_sell_identity_verified": false,
+      "target_buy_price": 195199,
       "gross_gap": null,
       "net_domestic": null,
       "best_reference_net": null,

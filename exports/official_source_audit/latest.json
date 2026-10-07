@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-06 22:44 JST",
+  "generated_at": "2026-10-07 12:56 JST",
   "scope": "公式ソース登録・検証（利益/AI/Opportunity/Notification/Capital/Execution は不変）",
   "methodology": {
     "verification": "WebFetch で HTTP200/公式ドメイン/canonical/商品一致を実確認したURLのみ verified",
@@ -39,33 +39,6 @@
       "link_type": "item",
       "confidence": "high",
       "official_price": 159800,
-      "verified": true
-    },
-    {
-      "product_id": "prod_macbook_air_m4_13",
-      "source": "src_apple_jp",
-      "url": "https://www.apple.com/jp/shop/buy-mac/macbook-air",
-      "link_type": "category",
-      "confidence": "medium",
-      "official_price": null,
-      "verified": true
-    },
-    {
-      "product_id": "prod_macbook_air_m4_15",
-      "source": "src_apple_jp",
-      "url": "https://www.apple.com/jp/shop/buy-mac/macbook-air",
-      "link_type": "category",
-      "confidence": "medium",
-      "official_price": null,
-      "verified": true
-    },
-    {
-      "product_id": "prod_macbook_pro_m4_14",
-      "source": "src_apple_jp",
-      "url": "https://www.apple.com/jp/shop/buy-mac/macbook-pro",
-      "link_type": "category",
-      "confidence": "medium",
-      "official_price": null,
       "verified": true
     },
     {
@@ -255,6 +228,70 @@
       "verified": false,
       "official_not_sold": true,
       "reason": "任天堂公式のラインナップでマリオカート ワールド セットは「生産終了」"
+    },
+    {
+      "product_id": "prod_iphone16pro_256",
+      "source": "src_apple_jp",
+      "url": null,
+      "verified": false,
+      "official_not_sold": true,
+      "reason": "iPhone 16 Pro の購入ページが /jp/iphone へ移動。公式は iPhone 18 Pro を販売中"
+    },
+    {
+      "product_id": "prod_iphone16pm_256",
+      "source": "src_apple_jp",
+      "url": null,
+      "verified": false,
+      "official_not_sold": true,
+      "reason": "iPhone 16 Pro Max は公式で販売していない（公式は iPhone 18 Pro Max を販売中）"
+    },
+    {
+      "product_id": "prod_iphone16pm_512",
+      "source": "src_apple_jp",
+      "url": null,
+      "verified": false,
+      "official_not_sold": true,
+      "reason": "iPhone 16 Pro Max は公式で販売していない（公式は iPhone 18 Pro Max を販売中）"
+    },
+    {
+      "product_id": "prod_airpods_max",
+      "source": "src_apple_jp",
+      "url": null,
+      "verified": false,
+      "official_not_sold": true,
+      "reason": "AirPods Max の購入ページが AirPods Max 2 へ移動（初代は販売していない）"
+    },
+    {
+      "product_id": "prod_mac_mini_m4",
+      "source": "src_apple_jp",
+      "url": null,
+      "verified": false,
+      "official_not_sold": true,
+      "reason": "公式の Mac mini は M6・M5 Pro チップ（M4 は販売していない）"
+    },
+    {
+      "product_id": "prod_macbook_air_m4_13",
+      "source": "src_apple_jp",
+      "url": null,
+      "verified": false,
+      "official_not_sold": true,
+      "reason": "公式の MacBook Air は M5 チップ（M4 は販売していない）"
+    },
+    {
+      "product_id": "prod_macbook_air_m4_15",
+      "source": "src_apple_jp",
+      "url": null,
+      "verified": false,
+      "official_not_sold": true,
+      "reason": "公式の MacBook Air は M5 チップ（M4 は販売していない）"
+    },
+    {
+      "product_id": "prod_macbook_pro_m4_14",
+      "source": "src_apple_jp",
+      "url": null,
+      "verified": false,
+      "official_not_sold": true,
+      "reason": "公式の MacBook Pro は M5・M5 Pro・M5 Max チップ（M4 は販売していない）"
     }
   ],
   "source_matrix": {
@@ -387,7 +424,17 @@
       "product_name": "iPhone 16 Pro 256GB SIMフリー",
       "brand": "Apple",
       "sources": {
-        "official": null,
+        "official": {
+          "url": null,
+          "link_type": null,
+          "verified": false,
+          "last_verified_at": "2026-10-07",
+          "extraction_method": null,
+          "confidence": "low",
+          "official_price": null,
+          "enabled": true,
+          "reason_if_disabled": "iPhone 16 Pro の購入ページが /jp/iphone へ移動。公式は iPhone 18 Pro を販売中"
+        },
         "pricecom": null,
         "yodobashi": null,
         "biccamera": null,
@@ -403,15 +450,15 @@
       "brand": "Apple",
       "sources": {
         "official": {
-          "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-16-pro-max",
+          "url": null,
           "link_type": null,
           "verified": false,
-          "last_verified_at": null,
+          "last_verified_at": "2026-10-07",
           "extraction_method": null,
-          "confidence": null,
+          "confidence": "low",
           "official_price": null,
           "enabled": true,
-          "reason_if_disabled": null
+          "reason_if_disabled": "iPhone 16 Pro Max は公式で販売していない（公式は iPhone 18 Pro Max を販売中）"
         },
         "pricecom": null,
         "yodobashi": null,
@@ -433,15 +480,15 @@
       "brand": "Apple",
       "sources": {
         "official": {
-          "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-16-pro-max",
+          "url": null,
           "link_type": null,
           "verified": false,
-          "last_verified_at": null,
+          "last_verified_at": "2026-10-07",
           "extraction_method": null,
-          "confidence": null,
+          "confidence": "low",
           "official_price": null,
           "enabled": true,
-          "reason_if_disabled": null
+          "reason_if_disabled": "iPhone 16 Pro Max は公式で販売していない（公式は iPhone 18 Pro Max を販売中）"
         },
         "pricecom": null,
         "yodobashi": null,
@@ -458,15 +505,15 @@
       "brand": "Apple",
       "sources": {
         "official": {
-          "url": "https://www.apple.com/jp/shop/buy-mac/macbook-air",
-          "link_type": "category",
-          "verified": true,
-          "last_verified_at": "2026-08-23",
-          "extraction_method": "webfetch_verified",
-          "confidence": "medium",
+          "url": null,
+          "link_type": null,
+          "verified": false,
+          "last_verified_at": "2026-10-07",
+          "extraction_method": null,
+          "confidence": "low",
           "official_price": null,
           "enabled": true,
-          "reason_if_disabled": null
+          "reason_if_disabled": "公式の MacBook Air は M5 チップ（M4 は販売していない）"
         },
         "pricecom": null,
         "yodobashi": null,
@@ -483,15 +530,15 @@
       "brand": "Apple",
       "sources": {
         "official": {
-          "url": "https://www.apple.com/jp/shop/buy-mac/macbook-air",
-          "link_type": "category",
-          "verified": true,
-          "last_verified_at": "2026-08-23",
-          "extraction_method": "webfetch_verified",
-          "confidence": "medium",
+          "url": null,
+          "link_type": null,
+          "verified": false,
+          "last_verified_at": "2026-10-07",
+          "extraction_method": null,
+          "confidence": "low",
           "official_price": null,
           "enabled": true,
-          "reason_if_disabled": null
+          "reason_if_disabled": "公式の MacBook Air は M5 チップ（M4 は販売していない）"
         },
         "pricecom": null,
         "yodobashi": null,
@@ -508,15 +555,15 @@
       "brand": "Apple",
       "sources": {
         "official": {
-          "url": "https://www.apple.com/jp/shop/buy-mac/macbook-pro",
-          "link_type": "category",
-          "verified": true,
-          "last_verified_at": "2026-08-23",
-          "extraction_method": "webfetch_verified",
-          "confidence": "medium",
+          "url": null,
+          "link_type": null,
+          "verified": false,
+          "last_verified_at": "2026-10-07",
+          "extraction_method": null,
+          "confidence": "low",
           "official_price": null,
           "enabled": true,
-          "reason_if_disabled": null
+          "reason_if_disabled": "公式の MacBook Pro は M5・M5 Pro・M5 Max チップ（M4 は販売していない）"
         },
         "pricecom": null,
         "yodobashi": null,
@@ -532,7 +579,17 @@
       "product_name": "Mac mini M4",
       "brand": "Apple",
       "sources": {
-        "official": null,
+        "official": {
+          "url": null,
+          "link_type": null,
+          "verified": false,
+          "last_verified_at": "2026-10-07",
+          "extraction_method": null,
+          "confidence": "low",
+          "official_price": null,
+          "enabled": true,
+          "reason_if_disabled": "公式の Mac mini は M6・M5 Pro チップ（M4 は販売していない）"
+        },
         "pricecom": null,
         "yodobashi": null,
         "biccamera": null,
@@ -697,7 +754,17 @@
       "product_name": "AirPods Max",
       "brand": "Apple",
       "sources": {
-        "official": null,
+        "official": {
+          "url": null,
+          "link_type": null,
+          "verified": false,
+          "last_verified_at": "2026-10-07",
+          "extraction_method": null,
+          "confidence": "low",
+          "official_price": null,
+          "enabled": true,
+          "reason_if_disabled": "AirPods Max の購入ページが AirPods Max 2 へ移動（初代は販売していない）"
+        },
         "pricecom": null,
         "yodobashi": null,
         "biccamera": null,
@@ -1306,13 +1373,13 @@
   },
   "maker_report": {
     "Apple": {
-      "products": 14,
-      "url_verified": 5,
-      "http_200": 5,
+      "products": 19,
+      "url_verified": 2,
+      "http_200": 2,
       "exact_match": 2,
       "price_ok": 2,
       "high_conf": 2,
-      "failed": 9,
+      "failed": 17,
       "failures": [
         {
           "product_id": "prod_iphone17pro_256",
@@ -1349,6 +1416,38 @@
         {
           "product_id": "prod_apple_watch_ultra3",
           "reason": "公式は Apple Watch Ultra 4 を販売中（Ultra 3 は販売していない）"
+        },
+        {
+          "product_id": "prod_iphone16pro_256",
+          "reason": "iPhone 16 Pro の購入ページが /jp/iphone へ移動。公式は iPhone 18 Pro を販売中"
+        },
+        {
+          "product_id": "prod_iphone16pm_256",
+          "reason": "iPhone 16 Pro Max は公式で販売していない（公式は iPhone 18 Pro Max を販売中）"
+        },
+        {
+          "product_id": "prod_iphone16pm_512",
+          "reason": "iPhone 16 Pro Max は公式で販売していない（公式は iPhone 18 Pro Max を販売中）"
+        },
+        {
+          "product_id": "prod_airpods_max",
+          "reason": "AirPods Max の購入ページが AirPods Max 2 へ移動（初代は販売していない）"
+        },
+        {
+          "product_id": "prod_mac_mini_m4",
+          "reason": "公式の Mac mini は M6・M5 Pro チップ（M4 は販売していない）"
+        },
+        {
+          "product_id": "prod_macbook_air_m4_13",
+          "reason": "公式の MacBook Air は M5 チップ（M4 は販売していない）"
+        },
+        {
+          "product_id": "prod_macbook_air_m4_15",
+          "reason": "公式の MacBook Air は M5 チップ（M4 は販売していない）"
+        },
+        {
+          "product_id": "prod_macbook_pro_m4_14",
+          "reason": "公式の MacBook Pro は M5・M5 Pro・M5 Max チップ（M4 は販売していない）"
         }
       ]
     },
@@ -1453,9 +1552,9 @@
       "official_configs": 7
     },
     "after": {
-      "url_verified": 9,
+      "url_verified": 6,
       "price_captured": 4,
-      "verified_targets": 9,
+      "verified_targets": 6,
       "unverified_targets": 9
     }
   }

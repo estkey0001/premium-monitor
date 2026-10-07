@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-06 23:29 JST",
+  "generated_at": "2026-10-07 13:41 JST",
   "schema_version": 1,
   "engine": "data_quality",
   "scope": "データ取得・正規化・品質管理のみ（利益/AI/UI/SaaSロジックは不変）",
@@ -9,20 +9,20 @@
     "known_gap": "海外/二次流通の stale は EBAY_APP_ID 等の実運用ギャップ（改善計画で定量化）"
   },
   "dashboard": {
-    "raw_observations": 227,
-    "current_view_keys": 212,
+    "raw_observations": 229,
+    "current_view_keys": 214,
     "duplicate_history_rows": 15,
-    "duplicate_rate": 0.0661,
+    "duplicate_rate": 0.0655,
     "by_category": {
       "prod": {
-        "total": 212,
-        "normal": 72,
+        "total": 214,
+        "normal": 77,
         "zero_total": 37,
         "zero_unsupported": 27,
         "zero_real_failure": 10,
-        "stale": 103,
-        "applicable": 185,
-        "update_success_rate": 0.3892
+        "stale": 100,
+        "applicable": 187,
+        "update_success_rate": 0.4118
       }
     },
     "by_source": {
@@ -38,7 +38,7 @@
         "history_rows": 45,
         "duplicates": 0,
         "latest_age_days": 0.0,
-        "avg_age_days": 2.3,
+        "avg_age_days": 2.6,
         "unsupported_online_quote": false
       },
       "じゃんぱら": {
@@ -53,7 +53,7 @@
         "history_rows": 34,
         "duplicates": 2,
         "latest_age_days": 0.1,
-        "avg_age_days": 45.2,
+        "avg_age_days": 45.7,
         "unsupported_online_quote": true
       },
       "イオシス": {
@@ -68,7 +68,7 @@
         "history_rows": 20,
         "duplicates": 0,
         "latest_age_days": 0.1,
-        "avg_age_days": 39.9,
+        "avg_age_days": 40.3,
         "unsupported_online_quote": false
       },
       "フジヤカメラ": {
@@ -88,17 +88,17 @@
       },
       "買取商店": {
         "total": 17,
-        "normal": 6,
+        "normal": 9,
         "zero_total": 0,
         "zero_unsupported": 0,
         "zero_real_failure": 0,
-        "stale": 11,
+        "stale": 8,
         "applicable": 17,
-        "update_success_rate": 0.3529,
+        "update_success_rate": 0.5294,
         "history_rows": 17,
         "duplicates": 0,
         "latest_age_days": 0.0,
-        "avg_age_days": 35.8,
+        "avg_age_days": 26.0,
         "unsupported_online_quote": false
       },
       "ソフマップ": {
@@ -113,7 +113,7 @@
         "history_rows": 10,
         "duplicates": 0,
         "latest_age_days": 0.1,
-        "avg_age_days": 40.6,
+        "avg_age_days": 41.1,
         "unsupported_online_quote": true
       },
       "ゲオ": {
@@ -128,7 +128,7 @@
         "history_rows": 8,
         "duplicates": 0,
         "latest_age_days": 0.1,
-        "avg_age_days": 48.8,
+        "avg_age_days": 49.4,
         "unsupported_online_quote": true
       },
       "マップカメラ": {
@@ -142,8 +142,8 @@
         "update_success_rate": 0.0,
         "history_rows": 9,
         "duplicates": 3,
-        "latest_age_days": 45.5,
-        "avg_age_days": 47.2,
+        "latest_age_days": 46.1,
+        "avg_age_days": 47.8,
         "unsupported_online_quote": false
       },
       "カメラのキタムラ": {
@@ -157,8 +157,8 @@
         "update_success_rate": 0.0,
         "history_rows": 9,
         "duplicates": 3,
-        "latest_age_days": 45.5,
-        "avg_age_days": 47.2,
+        "latest_age_days": 46.1,
+        "avg_age_days": 47.8,
         "unsupported_online_quote": false
       },
       "src_ebay": {
@@ -172,8 +172,23 @@
         "update_success_rate": 0.0,
         "history_rows": 6,
         "duplicates": 0,
-        "latest_age_days": 45.6,
-        "avg_age_days": 45.6,
+        "latest_age_days": 46.2,
+        "avg_age_days": 46.2,
+        "unsupported_online_quote": false
+      },
+      "モバイル一番": {
+        "total": 5,
+        "normal": 2,
+        "zero_total": 0,
+        "zero_unsupported": 0,
+        "zero_real_failure": 0,
+        "stale": 3,
+        "applicable": 5,
+        "update_success_rate": 0.4,
+        "history_rows": 5,
+        "duplicates": 0,
+        "latest_age_days": 0.0,
+        "avg_age_days": 34.9,
         "unsupported_online_quote": false
       },
       "eBay sold(新品)": {
@@ -187,8 +202,8 @@
         "update_success_rate": 0.0,
         "history_rows": 5,
         "duplicates": 0,
-        "latest_age_days": 45.6,
-        "avg_age_days": 45.6,
+        "latest_age_days": 46.2,
+        "avg_age_days": 46.2,
         "unsupported_online_quote": false
       },
       "メルカリ未使用": {
@@ -202,8 +217,8 @@
         "update_success_rate": 0.0,
         "history_rows": 5,
         "duplicates": 0,
-        "latest_age_days": 45.6,
-        "avg_age_days": 45.6,
+        "latest_age_days": 46.2,
+        "avg_age_days": 46.2,
         "unsupported_online_quote": false
       },
       "買取一丁目": {
@@ -266,21 +281,6 @@
         "avg_age_days": 0.1,
         "unsupported_online_quote": false
       },
-      "モバイル一番": {
-        "total": 3,
-        "normal": 0,
-        "zero_total": 0,
-        "zero_unsupported": 0,
-        "zero_real_failure": 0,
-        "stale": 3,
-        "applicable": 3,
-        "update_success_rate": 0.0,
-        "history_rows": 3,
-        "duplicates": 0,
-        "latest_age_days": 57.5,
-        "avg_age_days": 57.5,
-        "unsupported_online_quote": false
-      },
       "Amazon新品出品": {
         "total": 3,
         "normal": 0,
@@ -292,8 +292,8 @@
         "update_success_rate": 0.0,
         "history_rows": 3,
         "duplicates": 0,
-        "latest_age_days": 45.6,
-        "avg_age_days": 45.6,
+        "latest_age_days": 46.2,
+        "avg_age_days": 46.2,
         "unsupported_online_quote": false
       },
       "ハードオフ": {
@@ -382,8 +382,8 @@
         "update_success_rate": 0.0,
         "history_rows": 2,
         "duplicates": 0,
-        "latest_age_days": 45.6,
-        "avg_age_days": 45.6,
+        "latest_age_days": 46.2,
+        "avg_age_days": 46.2,
         "unsupported_online_quote": false
       }
     }
@@ -392,15 +392,15 @@
     "by_method": {
       "official_concept": 38,
       "other": 7,
-      "auto_scraped": 27,
-      "manual_curated": 97,
+      "auto_scraped": 32,
+      "manual_curated": 94,
       "fetch_failed": 37,
       "overseas_history": 6
     },
-    "automation_rate": 0.1274,
-    "manual_rate": 0.4575,
+    "automation_rate": 0.1495,
+    "manual_rate": 0.4393,
     "fresh_manual_share": 0.0,
-    "fresh_automated_share": 0.5963,
+    "fresh_automated_share": 0.614,
     "note": "鮮度の相当部分が手動キュレーション由来（ToS遵守の意図的設計）。自動化カバレッジ拡大（特に eBay API=EBAY_APP_ID）が主要な改善レバー。"
   },
   "source_ranking": [
@@ -412,7 +412,7 @@
       "success_rate": 0.944,
       "freshness": 0.944,
       "update_frequency": 1.39,
-      "stability": 0.89,
+      "stability": 0.889,
       "manual_dependent": false,
       "note": null,
       "rank": 1
@@ -513,19 +513,19 @@
     }
   ],
   "stale_analysis": {
-    "stale_keys": 103,
+    "stale_keys": 100,
     "causes": {
-      "scraper_or_site_change": 84,
+      "scraper_or_site_change": 81,
       "api_limit_or_unconfigured": 15,
       "manual_not_refreshed": 4
     },
     "by_category": {
-      "prod": 103
+      "prod": 100
     },
     "by_source": {
       "じゃんぱら": 26,
       "イオシス": 14,
-      "買取商店": 11,
+      "買取商店": 8,
       "ソフマップ": 8,
       "ゲオ": 7,
       "マップカメラ": 6,
@@ -592,7 +592,7 @@
   "normalization_audit": {
     "price_type_dist": {
       "official_price": 45,
-      "buyback_price": 123,
+      "buyback_price": 125,
       "shop_sale_price": 28,
       "overseas_listing_price": 5,
       "flea_listing_price": 5,
@@ -600,19 +600,20 @@
     },
     "price_role_dist": {
       "official": 45,
-      "sell": 129,
+      "sell": 131,
       "buy": 38
     },
     "market_type_dist": {
       "official": 45,
-      "domestic_buyback": 123,
+      "domestic_buyback": 125,
       "domestic_retail": 28,
       "overseas": 11,
       "flea_market": 5
     },
     "condition_dist": {
-      "new_unopened": 157,
-      "new_unopened_simfree": 40,
+      "new_unopened": 141,
+      "used_s": 17,
+      "new_unopened_simfree": 41,
       "used_a": 12,
       "used_b": 3
     },
@@ -635,17 +636,17 @@
       {
         "source": "メーカー公式/定価",
         "recommended_interval": "24時間",
-        "current_avg_age_days": 2.3
+        "current_avg_age_days": 2.6
       },
       {
         "source": "じゃんぱら",
         "recommended_interval": "6時間",
-        "current_avg_age_days": 45.2
+        "current_avg_age_days": 45.7
       },
       {
         "source": "イオシス",
         "recommended_interval": "6時間",
-        "current_avg_age_days": 39.9
+        "current_avg_age_days": 40.3
       },
       {
         "source": "フジヤカメラ",
@@ -655,42 +656,47 @@
       {
         "source": "買取商店",
         "recommended_interval": "6時間",
-        "current_avg_age_days": 35.8
+        "current_avg_age_days": 26.0
       },
       {
         "source": "ソフマップ",
         "recommended_interval": "6時間",
-        "current_avg_age_days": 40.6
+        "current_avg_age_days": 41.1
       },
       {
         "source": "ゲオ",
         "recommended_interval": "6時間",
-        "current_avg_age_days": 48.8
+        "current_avg_age_days": 49.4
       },
       {
         "source": "マップカメラ",
         "recommended_interval": "6時間",
-        "current_avg_age_days": 47.2
+        "current_avg_age_days": 47.8
       },
       {
         "source": "カメラのキタムラ",
         "recommended_interval": "6時間",
-        "current_avg_age_days": 47.2
+        "current_avg_age_days": 47.8
       },
       {
         "source": "src_ebay",
         "recommended_interval": "6時間",
-        "current_avg_age_days": 45.6
+        "current_avg_age_days": 46.2
+      },
+      {
+        "source": "モバイル一番",
+        "recommended_interval": "6時間",
+        "current_avg_age_days": 34.9
       },
       {
         "source": "eBay sold(新品)",
         "recommended_interval": "1時間",
-        "current_avg_age_days": 45.6
+        "current_avg_age_days": 46.2
       },
       {
         "source": "メルカリ未使用",
         "recommended_interval": "6時間",
-        "current_avg_age_days": 45.6
+        "current_avg_age_days": 46.2
       },
       {
         "source": "買取一丁目",
@@ -713,14 +719,9 @@
         "current_avg_age_days": 0.1
       },
       {
-        "source": "モバイル一番",
-        "recommended_interval": "6時間",
-        "current_avg_age_days": 57.5
-      },
-      {
         "source": "Amazon新品出品",
         "recommended_interval": "1時間",
-        "current_avg_age_days": 45.6
+        "current_avg_age_days": 46.2
       },
       {
         "source": "ハードオフ",
@@ -750,7 +751,7 @@
       {
         "source": "楽天市場新品",
         "recommended_interval": "1時間",
-        "current_avg_age_days": 45.6
+        "current_avg_age_days": 46.2
       }
     ],
     "policy": "相場変動の大きい二次流通/海外は短周期、定価/専門店買取は中周期に最適化"
@@ -773,11 +774,11 @@
   },
   "quality_score": {
     "dimensions": {
-      "freshness": 44,
+      "freshness": 47,
       "completeness": 50,
       "accuracy": 98,
       "coverage": 100,
-      "reliability": 39,
+      "reliability": 41,
       "consistency": 100
     },
     "weights": {
@@ -788,8 +789,8 @@
       "reliability": 0.2,
       "consistency": 0.1
     },
-    "overall": 67,
-    "applicable_obs": 185,
+    "overall": 68,
+    "applicable_obs": 187,
     "note": "not_applicable(非対応店¥0)を分母から除外した現況ビューで算出"
   },
   "improvement_plan": [
@@ -820,13 +821,13 @@
   ],
   "production_recommendation": {
     "verdict": "CONDITIONAL_GO",
-    "overall": 67,
+    "overall": 68,
     "blockers": [
       "Freshness < 70",
       "Reliability < 70"
     ],
     "reasons": [
-      "総合スコア 67。国内は良好だが海外(EBAY_APP_ID)ギャップが残る",
+      "総合スコア 68。国内は良好だが海外(EBAY_APP_ID)ギャップが残る",
       "EBAY_APP_ID 未設定 → 海外売却ルートは stale（改善計画①で+25pt見込み）"
     ]
   }

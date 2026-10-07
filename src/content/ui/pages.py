@@ -270,7 +270,10 @@ def render_search(details: dict | None = None) -> str:
                        f' data-nu-switch="{esc(cat.key)}">{esc(cat.label)}</a>' for cat in cats.CATEGORIES))
     items = []
     for v in (details or {}).values():
-        search = " ".join(x for x in (v.product_name, v.model, v.brand, v.category_label, v.capacity) if x).lower()
+        # 商品名・型番・ブランド・ジャンル・容量に加えて、商品に登録済みの検索用キーワード（PS5 Pro・CFI-7000 など）も
+        # 検索の対象にする（「PS5」で PlayStation 5 Pro が見つからなかった。Phase 14。別名をここで新しく作らない）
+        search = " ".join(x for x in (v.product_name, v.model, v.brand, v.category_label, v.capacity,
+                                      *getattr(v, "keywords", ())) if x).lower()
         items.append(
             f'<li class="nu-srow" data-nu-srow data-nu-cat="{esc(v.category)}" data-search="{esc(search)}">'
             f'<span class="nu-srow__main"><span class="nu-srow__name">{esc(v.product_name)}</span>'

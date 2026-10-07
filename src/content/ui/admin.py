@@ -231,6 +231,38 @@ def build_shops(collector: dict, dq_report: dict, optional: set, now: datetime) 
     return sorted(out, key=lambda s: (order[s["status"]], s["name"]))
 
 
+def build_data_coverage(diag: dict | None, tcg_report: dict | None) -> dict:
+    """データの網羅（定価・在庫・買取・TCG）の件数（Phase 14）。判定はやり直さず、診断と TCG の報告の値をそのまま数える。
+
+    報告の形が壊れていても（辞書・リストでない値）落とさず、数えられない項目は0にする。
+    """
+    D = lambda x: x if isinstance(x, dict) else {}       # noqa: E731
+    L = lambda x: [e for e in x if isinstance(e, dict)] if isinstance(x, list) else []  # noqa: E731
+
+    def num(d, k):
+        try:
+            return int(d.get(k) or 0)
+        except (TypeError, ValueError):
+            return 0
+    diag, tcg = D(diag), D(tcg_report)
+    retail = D(D(diag.get("retail_prices")).get("summary"))
+    stock = D(D(diag.get("stock")).get("states"))
+    bb = D(diag.get("buyback"))
+    lots = L(tcg.get("lotteries"))
+    evs = L(tcg.get("events")) + lots
+    # 種類ごとに1回だけ数える（抽選情報には予約・購入権も入るので、抽選は LOTTERY・PURCHASE_RIGHT だけ）。
+    # 予約の再開（キャンセル分）は予約、再販は明示の再入荷（店頭・EC）だけ。AVAILABLE_NOW は状態なので数えない
+    kinds = {k: sum(1 for e in evs if str(e.get("event_type") or "").upper() in names)
+             for k, names in (("preorder", ("PREORDER", "RESERVATION_REOPEN")), ("first_come", ("FIRST_COME",)),
+                              ("restock", ("RESTOCK", "ONLINE_RESTOCK")))}
+    lottery_n = sum(1 for e in lots if str(e.get("event_type") or "LOTTERY").upper() in ("LOTTERY", "PURCHASE_RIGHT"))
+    return {"retail": {k: num(retail, k) for k in ("verified", "reference", "sale_ended", "stale", "unknown")},
+            "stock": {k: num(stock, k) for k in ("IN_STOCK", "OUT_OF_STOCK", "UNKNOWN", "LOTTERY",
+                                                 "RESERVATION", "PREORDER")},
+            "buyback": {k: num(bb, k) for k in ("usable_products", "fresh_rows", "stale_rows", "failed_rows")},
+            "tcg": {"lotteries": lottery_n, **kinds}}
+
+
 def build_tcg(tcg_report: dict) -> list[dict]:
     out = []
     for s in (tcg_report or {}).get("source_health") or []:
@@ -550,6 +582,7 @@ def build(data: dict | None, *, catalog, details: dict, profit_routes: dict | No
                                if isinstance(r, dict) and r.get("status") == "OK"
                                and "新品同様" in str(r.get("matched_item") or "")),
             "camera_generated": (d.get("camera_status") or {}).get("generated_at"),
+            "data_coverage": build_data_coverage(d.get("diagnostics"), tcg_report),
             "min_sold": d.get("min_sold_samples"),
             "resale_collected": (d.get("resale_status") or {}).get("collected_at"),
             "lot_coverage": (tcg_report or {}).get("lottery_coverage") or {}, "api": api,
@@ -883,6 +916,25 @@ def _diff(dv: dict) -> str:
     return _table(["指標", "前日", "今日"], rows, caption="前日比較") + f'<ul class="nu-ad-list">{extra}</ul>'
 
 
+def _data_coverage_html(c: dict) -> str:
+    r, s, b, g = (c.get(k) or {} for k in ("retail", "stock", "buyback", "tcg"))
+    if not (r or s or b or g):
+        return _empty("記録なし")
+    n = lambda d, k: esc(str(d.get(k, 0)))  # noqa: E731
+    return ('<dl class="nu-ad-dl">'
+            f'<dt>定価</dt><dd>確認済み {n(r, "verified")}・参考 {n(r, "reference")}（別に数えた公式の販売終了 '
+            f'{n(r, "sale_ended")}）</dd>'
+            f'<dt>在庫</dt><dd>在庫あり {n(s, "IN_STOCK")}・在庫切れ {n(s, "OUT_OF_STOCK")}・在庫未確認 '
+            f'{n(s, "UNKNOWN")}・抽選 {n(s, "LOTTERY")}</dd>'
+            f'<dt>買取</dt><dd>使える商品 {n(b, "usable_products")}・新しい {n(b, "fresh_rows")}行・古い '
+            f'{n(b, "stale_rows")}行・失敗 {n(b, "failed_rows")}行</dd>'
+            f'<dt>TCG</dt><dd>抽選 {n(g, "lotteries")}・予約 {n(g, "preorder")}・先着 {n(g, "first_come")}・'
+            f'再販 {n(g, "restock")}</dd></dl>'
+            '<p class="nu-osub">在庫ありは、公式などのページで購入できる表示（在庫あり・カートに入れる）を確認した'
+            '時刻つきのものだけ（この欄は利益の案件・診断の値。確認から7日を過ぎれば在庫未確認に戻る。'
+            '在庫再開・商品詳細の表示は確認から3時間で「更新待ち」になる）。</p>')
+
+
 def _system(v: dict) -> str:
     h = v["health"]
     hs = h.get("health_score") or {}
@@ -926,6 +978,7 @@ def _system(v: dict) -> str:
                       if cmp.get("delta_pct") is not None else "")
                    + f'<dt>カメラの買取</dt><dd>{cam_text}</dd></dl>'
                    + (f'<p class="nu-osub">主な失敗理由</p><ul class="nu-ad-counts" role="list">{reasons}</ul>' if reasons else ""))
+            + _box("データの網羅（定価・在庫・買取・TCG）", _data_coverage_html(v.get("data_coverage") or {}))
             + _box("カバー範囲", f'<dl class="nu-ad-dl"><dt>商品数</dt><dd>{esc(str(cov.get("total_products", "—")))}</dd>'
                    f'<dt>カバー率のスコア</dt><dd>{esc(str(cov.get("coverage_score", "—")))}</dd>'
                    + "".join(f'<dt>{esc(str(cc.get("category") or ""))}</dt><dd>{esc(str(cc.get("products", "—")))}商品'

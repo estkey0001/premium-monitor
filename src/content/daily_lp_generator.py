@@ -129,6 +129,8 @@ class DailyLPGenerator:
                     "brand": getattr(_p, "brand", "") or "",
                     # 商品詳細（UI Phase 6）に使う。商品の一覧の正本は products（新しい ID は作らない）
                     "name": getattr(_p, "name", "") or "", "jan": getattr(_p, "jan_code", "") or "",
+                    # 商品に登録済みの検索用キーワード（PS5 Pro・CFI-7000 など。商品検索に使う。Phase 14）
+                    "keywords": [str(k) for k in (getattr(_p, "keywords", None) or []) if k],
                     "official_price": getattr(_p, "official_price", None) or getattr(_p, "retail_price", 0) or 0,
                     "official_checked_at": (_p.official_price_updated_at.isoformat()
                                             if getattr(_p, "official_price_updated_at", None) else ""),
@@ -674,6 +676,7 @@ class DailyLPGenerator:
                 for d in (getattr(self, "_nu_source_deals", None) or [])}
         return [{"product_id": pid, "name": p.get("name") or pid, "genre": p.get("genre", ""),
                  "brand": p.get("brand", ""), "model": p.get("model", ""), "jan": p.get("jan", ""),
+                 "keywords": list(p.get("keywords") or []),
                  "official_price": p.get("official_price") or 0,
                  "official_url": (meta.get(pid) or {}).get("url", ""), "sale_method": sale.get(pid, "")}
                 for pid, p in (getattr(self, "_product_info", None) or {}).items()]

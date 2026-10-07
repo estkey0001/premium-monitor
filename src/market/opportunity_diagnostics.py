@@ -127,6 +127,10 @@ def _stock_state(p: dict, now: datetime) -> tuple[str, bool]:
     return raw, unsupported
 
 
+# 「今すぐ行動できる」に数える利益案件の種類（opportunity.AVAILABILITY_OF の値。抽選は受付中か分からないので数えない）
+ACTIONABLE_AVAILABILITY = frozenset({"BUY_NOW", "RESERVATION"})
+
+
 def build(*, products: list[dict], msrp_evidence: dict, official_meta: dict, observations: list[dict],
           opportunity_set, home_count: int, list_count: int, sold_exports: dict | None, now: datetime) -> dict:
     from src.content.ui import categories as cats
@@ -191,8 +195,11 @@ def build(*, products: list[dict], msrp_evidence: dict, official_meta: dict, obs
             action = "VERIFY_FROM_OFFICIAL"
         retail_summary[{"VERIFIED_CURRENT": "verified", "VERIFIED_DATED": "verified",
                         "CONFIGURED_REFERENCE": "reference", "STALE": "stale"}.get(ev, "unknown")] += 1
+        if meta.get("official_not_sold"):
+            retail_summary["sale_ended"] += 1        # 上の区分とは別に数える（公式で販売終了。Phase 14）
         retail_rows.append({
             "product_id": pid, "product": p.get("name", ""), "evidence": ev, "action": action,
+            "official_not_sold": bool(meta.get("official_not_sold")),
             "price": p.get("official_price") or p.get("retail_price"),
             "price_type": "RETAIL" if p.get("official_price") else "CONFIGURED_REFERENCE",
             "source": p.get("official_price_source") or meta.get("source_id") or "config/products.yaml",
@@ -249,6 +256,14 @@ def build(*, products: list[dict], msrp_evidence: dict, official_meta: dict, obs
             unsupported.append(p["id"])
 
     eligible_n = sum(1 for c in candidates if c["eligible"])
+    # 今すぐ行動できる確定の利益商品（Phase 14）: 掲載できる利益に加えて、今買える（在庫ありの明示・7日以内）か
+    # 予約の根拠があるものだけ。利益だけでは数えない（在庫未確認・在庫切れ・抽選は数えない）。掲載の判定は変えない
+    # 商品ごとに1件（1つの商品に確定の案件が複数あっても1と数える）
+    actionable, _seen_act = [], set()
+    for v in opportunity_set.eligible:
+        if getattr(v, "availability", "") in ACTIONABLE_AVAILABILITY and v.product_id not in _seen_act:
+            _seen_act.add(v.product_id)
+            actionable.append({"product_id": v.product_id, "availability": v.availability})
     return {
         "generated_at": now.isoformat(timespec="seconds"),
         "note": "内部用（運営者向け）。一般の画面には出さない。掲載の判定は opportunity.eligibility が正本",
@@ -273,5 +288,7 @@ def build(*, products: list[dict], msrp_evidence: dict, official_meta: dict, obs
                     "usable_products": len(usable_products), "sources": buyback_sources},
         "sold": sold, "sold_median": median,
         "stock": {"states": dict(stock), "in_stock_without_evidence": unsupported},
+        "actionable": {"count": len(actionable), "products": actionable,
+                       "note": "掲載できる利益 ＋ 今買える（在庫ありの明示）か予約の根拠があるものだけ"},
         "frequency": FREQUENCY,
     }

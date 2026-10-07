@@ -116,6 +116,7 @@ class ProductDetailView:
     jan: str = ""
     variant: str = ""
     capacity: str = ""
+    keywords: tuple = ()                           # 商品に登録済みの検索用キーワード（商品検索だけに使う。Phase 14）
     condition: str = "新品・未開封"
     identity_status: str = "商品ごとに照合（容量・型番・版の違いは別の商品）"
     status: str = "MONITORING"
@@ -428,7 +429,8 @@ def build(*, products: list[dict] | None, catalog, observations: list | None, pr
         name = str(meta.get("name") or pid)
         v = ProductDetailView(product_id=pid, category=cats.from_genre(meta.get("genre") or ""), product_name=name,
                               brand=str(meta.get("brand") or ""), model=str(meta.get("model") or ""),
-                              jan=str(meta.get("jan") or ""), capacity=opp._capacity(name))
+                              jan=str(meta.get("jan") or ""), capacity=opp._capacity(name),
+                              keywords=tuple(str(k) for k in (meta.get("keywords") or []) if k))
         obs = obs_by.get(pid, [])
         v.opportunity = next((x for x in eligible if x.product_id == pid), None)
         deal_view = next((x for x in eligible + ineligible

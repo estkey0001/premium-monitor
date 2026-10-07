@@ -106,6 +106,8 @@ def collect(now: datetime | None = None) -> dict:
                            "tcg": tcg.get("generated_at"), "health": health.get("generated_at")},
         "products": len(pids),
         "confirmed_opportunities": int(diag.get("eligible_count") or 0),
+        # Phase 14: 確定の利益商品のうち、今買える（在庫ありの明示）か予約の根拠があるもの（ファネルの定義は変えない）
+        "actionable_products": int((diag.get("actionable") or {}).get("count") or 0),
         "opportunity_candidates": int(diag.get("candidate_count") or 0),
         "confirmed_routes": len(main),
         "reference_routes": len(ref),

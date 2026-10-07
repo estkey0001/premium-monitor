@@ -12,7 +12,7 @@ from collections import defaultdict
 from typing import Iterable
 
 from .schema import (
-    LOTTERY_SOURCE_PRIORITY, OFFICIAL_LOTTERY_SOURCES, lottery_id_of, product_key,
+    LOTTERY_SOURCE_PRIORITY, LT_LOTTERY, OFFICIAL_LOTTERY_SOURCES, lottery_id_of, product_key,
 )
 
 CONFLICT_FIELDS = ("application_start", "application_end", "retail_price")
@@ -48,8 +48,12 @@ def _prio(ev: dict) -> int:
 
 
 def _group_key(ev: dict) -> tuple:
-    """矛盾検出のための「同じ抽選らしい」キー（期間を含めない）。"""
+    """矛盾検出のための「同じ抽選らしい」キー（期間を含めない）。
+
+    Phase 11: 種類（抽選・予約・購入権）が違うものは同じグループにしない（予約を抽選と混ぜない）。
+    """
     return (
+        ev.get("event_type") or LT_LOTTERY,
         ev.get("tcg") or "",
         ev.get("product_id") or product_key(ev.get("product_name") or ""),
         (ev.get("retailer") or "").upper(),

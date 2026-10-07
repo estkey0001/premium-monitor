@@ -20,7 +20,7 @@ from .registry import (
     LOTTERY_SOURCES, STATE_LABELS, coverage_summary, source_state,
 )
 from .schema import (
-    ACTIVE_STATUSES, L_UNKNOWN, OFFICIAL_LOTTERY_SOURCES, SRC_MANUFACTURER,
+    ACTIVE_STATUSES, L_UNKNOWN, LT_PREORDER, OFFICIAL_LOTTERY_SOURCES, SRC_MANUFACTURER,
     compute_lottery_status, countdown, lottery_id_of, sort_key,
 )
 
@@ -161,13 +161,17 @@ _LEGACY_SOURCE_MAP = {
 
 
 def from_tcg_events(events: list[dict]) -> list[dict]:
-    """既存コレクター（TcgEvent）の抽選イベントを抽選パイプラインの入力に変換する。
+    """既存コレクター（TcgEvent）の抽選・予約のイベントを抽選パイプラインの入力に変換する。
 
-    新しい抽選コレクターが監視していない source の抽選も、抽選セクションに統合して
+    新しい抽選コレクターが監視していない source の抽選・予約も、抽選・予約のページに統合して
     表示するため（二重表示も表示漏れも起こさない）。
     ページ内の最初の金額はパック価格か BOX 価格か分からないので定価にはしない。
+
+    予約（PREORDER。Phase 11）は抽選と混ぜない（event_type=PREORDER のまま）。期間は予約の受付期間
+    （application_start / application_end）だけを使い、発売日（sale_start）を受付期間とみなさない。
+    受付期間が無ければ日程不明のまま（受付中とは言わない）。在庫・在庫再開には入れない。
     """
-    from .schema import LotteryEvent, SRC_COMMUNITY
+    from .schema import LT_LOTTERY, LT_PREORDER, LotteryEvent, SRC_COMMUNITY
 
     def _split(value):
         """既存パーサーは時刻が無い日付を 00:00 にしている。00:00 は「日付のみ」に戻す。
@@ -183,7 +187,8 @@ def from_tcg_events(events: list[dict]) -> list[dict]:
 
     out: list[dict] = []
     for e in events or []:
-        if e.get("event_type") != "LOTTERY":
+        etype = e.get("event_type")
+        if etype not in (LT_LOTTERY, LT_PREORDER):
             continue
         st = _LEGACY_SOURCE_MAP.get(e.get("source_type") or "", SRC_COMMUNITY)
         a_s, a_s_d = _split(e.get("application_start"))
@@ -195,7 +200,7 @@ def from_tcg_events(events: list[dict]) -> list[dict]:
             ev = LotteryEvent(
                 tcg=e.get("tcg") or "POKEMON", product_name=e.get("product_name") or "",
                 retailer=(e.get("store") or "").upper(), retailer_name=e.get("store"),
-                event_type="LOTTERY",
+                event_type=etype,
                 application_start=a_s, application_start_date=a_s_d,
                 application_end=a_e, application_end_date=a_e_d,
                 winner_announcement_at=w, winner_announcement_date=w_d,
@@ -206,7 +211,8 @@ def from_tcg_events(events: list[dict]) -> list[dict]:
                 confidence=e.get("confidence") or "low",
                 verified=st != SRC_COMMUNITY, published_at=e.get("published_at"),
                 observed_at=e.get("observed_at"), collection_method="LEGACY_TCG_EVENT",
-                notes=["既存の TCG 監視（ニュース解析）から取得した抽選です"],
+                notes=[("既存の TCG 監視（ニュース解析）から取得した予約です" if etype == LT_PREORDER
+                        else "既存の TCG 監視（ニュース解析）から取得した抽選です")],
             )
         except ValueError:
             continue
@@ -243,9 +249,12 @@ def run_lottery_pipeline(pokemon_registry: list[dict], onepiece_products: list[d
     placeholders = _announcement_events(announcements, covered, now, placeholder_rejected)
     lotteries = sorted(merged + placeholders, key=sort_key)
 
-    history = update_history([e for e in merged], now)
+    # 抽選の履歴・店ごとの頻度には予約（PREORDER）を入れない（予約を抽選の回数に数えない。Phase 11）
+    history = update_history([e for e in merged if e.get("event_type") != LT_PREORDER], now)
     frequency = frequency_by_retailer(history, now)
-    notifications, ledger = notification_candidates(merged, now)
+    # 抽選の通知（抽選開始・締切・当選発表）にも予約を入れない（予約に当選発表は無い。Phase 11）
+    notifications, ledger = notification_candidates(
+        [e for e in merged if e.get("event_type") != LT_PREORDER], now)
 
     rows: list[dict] = []
     for src in LOTTERY_SOURCES:

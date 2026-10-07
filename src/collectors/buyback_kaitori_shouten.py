@@ -5,6 +5,8 @@ URL: https://www.kaitorishouten-co.jp/
 """
 import re
 from typing import Optional
+from urllib.parse import urljoin
+
 from src.collectors.buyback_base_csv import BaseCsvBuybackCollector
 
 # iPhone はカテゴリページ（全容量・全色の表）を使う。まとめページ /keitai は各機種3件しか載せないため
@@ -16,6 +18,11 @@ PRODUCT_URLS = {
     "iphone17pm512":   "https://www.kaitorishouten-co.jp/category/1/711",
     "switch2":         "https://www.kaitorishouten-co.jp/kaden",
     "ps5_pro":         "https://www.kaitorishouten-co.jp/kaden",
+    # Phase 11（2026-10-07 確認）: /category/1/708 = iPhone17、689 = iPhone16 Pro。
+    # AirPods Pro 第3世代（MFHP4J/A）は /kaden の表に載っている
+    "iphone17_256":    "https://www.kaitorishouten-co.jp/category/1/708",
+    "iphone16pro256":  "https://www.kaitorishouten-co.jp/category/1/689",
+    "airpods_pro3":    "https://www.kaitorishouten-co.jp/kaden",
 }
 
 # 商品行（<li><a>商品名</a> <span class="num">¥価格</span></li>）の商品名に対する照合ルール。
@@ -37,6 +44,14 @@ ROW_RULES = {
     # 型番 CFI-7000 / CFI-7100 系（デジタル・エディション等を除く）
     "ps5_pro":        {"pattern": r"^プレイステーション5\s?Pro\s*\[CFI-7[01]00B01\]", "require": [],
                        "exclude": ["デジタル", "セット"]},
+    # 無印 iPhone 17（Pro / Air / 17e を除く）。行の例: 「iPhone 17 256GB ブラック MG674J/A SIMフリー」
+    "iphone17_256":   {"pattern": r"^iPhone\s?17\s+256GB\b", "require": ["SIMフリー"],
+                       "exclude": ["Pro", "Max", "Air", "au", "docomo", "ドコモ", "softbank", "ソフトバンク", "楽天"]},
+    "iphone16pro256": {"pattern": r"^iPhone\s?16\s?Pro\s+256GB\b", "require": ["SIMフリー"],
+                       "exclude": ["Max", "au", "docomo", "ドコモ", "softbank", "ソフトバンク", "楽天"]},
+    # 型番まで一致するものだけ（第2世代・ケース単体などを拾わない）
+    "airpods_pro3":   {"pattern": r"^AirPods\s?Pro\s*(?:第3世代|3)\s+MFHP4J/A$", "require": [],
+                       "exclude": ["ケース", "イヤーチップ"]},
 }
 
 _PRICE_RE = re.compile(r"[¥￥]\s?([0-9]{1,3}(?:,[0-9]{3})+)")
@@ -89,7 +104,9 @@ def match_rows(rows: list[tuple[str, int, str]], product_alias: str) -> list[tup
             continue
         if any(r not in name for r in rule["require"]):
             continue
-        if any(re.search(r"(?<![A-Za-z])" + re.escape(x) + r"(?![A-Za-z])", name) for x in rule["exclude"]):
+        # 除外の語は大文字・小文字を区別しない（「AU版」なども除く。除く方向にだけ働く）
+        if any(re.search(r"(?<![A-Za-z])" + re.escape(x) + r"(?![A-Za-z])", name, re.IGNORECASE)
+               for x in rule["exclude"]):
             continue
         out.append((name, price, href))
     return out
@@ -101,8 +118,39 @@ class KaitoriShoutenCsvCollector(BaseCsvBuybackCollector):
     BASE_URL  = "https://www.kaitorishouten-co.jp/"
     REQUIRES_JS = False
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # 同じ一覧ページ（/kaden など）を商品ごとに取り直さない（1回の実行の中だけ使い回す。取得できたものだけ）
+        self._page_cache: dict[str, str] = {}
+        self.last_matched_rows: list[tuple[str, int, str]] = []
+
     def _build_url(self, product_alias: str, product_name: str) -> str:
         return PRODUCT_URLS.get(product_alias, "")
+
+    def _fetch_html(self, url: str) -> Optional[str]:
+        if url in self._page_cache:
+            self.last_fetch_url = url
+            self.last_failure_reason = None
+            return self._page_cache[url]
+        html = super()._fetch_html(url)
+        if html:
+            self._page_cache[url] = html
+        return html
+
+    def _parse_detail_url(self, html: str, fallback_url: str) -> str:
+        """採用した価格の商品行の詳細ページ（/products/detail/…。JAN と状態別の価格が載る）の URL。
+
+        一覧ページの URL ではなく商品ページの URL を出典にする（Phase 11）。
+        採用した価格の行が特定できないときは一覧ページの URL のまま。
+        """
+        rows = getattr(self, "last_matched_rows", None) or []
+        if not rows:
+            return fallback_url
+        best = max(p for _n, p, _h in rows)
+        href = next((h for _n, p, h in rows if p == best and h), "")
+        if not href.startswith(("/products/detail/", "https://www.kaitorishouten-co.jp/products/detail/")):
+            return fallback_url
+        return urljoin(self.BASE_URL, href)
 
     def _parse_price(self, html: str, product_alias: str, product_name: str) -> Optional[int]:
         """商品行の照合だけで価格を決める。一致する行が無ければ未掲載（None）。

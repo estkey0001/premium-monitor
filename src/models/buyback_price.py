@@ -13,7 +13,7 @@ class BuybackPriceModel(BaseModel):
     shop_id: str = Field(..., description="買取店ID (例: src_mobile_ichiban)")
     shop_name: str = Field(default="", description="買取店名")
     buyback_price: int = Field(..., description="買取価格（税込、円）")
-    condition: str = Field(default="new_unopened", description="買取条件 (new_unopened/new_opened/used_a/used_b)")
+    condition: str = Field(default="new_unopened", description="買取条件 (new_unopened/new_opened/used_s/used_a/used_b)")
     buyback_url: str = Field(default="", description="買取ページURL")
     observed_at: datetime = Field(default_factory=datetime.now)
     is_active: bool = Field(default=True)
@@ -146,6 +146,7 @@ CONDITION_LABELS = {
     "new_unopened": "新品未開封",
     "new_unopened_simfree": "新品未開封 SIMフリー",
     "new_opened": "新品開封済",
+    "used_s": "中古S（新品同様）",
     "used_a": "中古A（美品）",
     "used_b": "中古B（良品）",
 }

@@ -47,7 +47,10 @@ OPEN_STATUSES = ("OPEN", "ENDING_SOON")
 # 種類（VM の k）。抽選・予約（受付期間のあるもの）と、発売日だけが公式に出ている発売待ち
 KIND_LOTTERY, KIND_PREORDER, KIND_RELEASE = "lottery", "preorder", "release"
 # 予約の受付は、抽選と同じ状態コードのまま文言だけ変える（予約を在庫ありとは扱わない）
-PREORDER_LABELS = {"OPEN": "予約受付中", "ENDING_SOON": "予約締切間近", "UPCOMING": "予約開始待ち"}
+PREORDER_LABELS = {"OPEN": "予約受付中", "ENDING_SOON": "予約締切間近", "UPCOMING": "予約開始待ち",
+                   "CLOSED": "予約受付終了"}
+# 予約には当選発表・当選者の購入期間が無い。受付期間の後は「予約受付終了」として扱う（Phase 11）
+_PREORDER_AFTER_END = ("RESULT_PENDING", "WINNER_ANNOUNCED", "WINNER_PURCHASE_PERIOD")
 # HOME の並び順（小さいほど上）。99 は HOME に出さない
 BUCKET_ENDING, BUCKET_OPEN, BUCKET_BUY, BUCKET_UPCOMING, BUCKET_CONFLICT = 0, 1, 2, 3, 4
 BUCKET_WAIT, BUCKET_SKIP = 5, 6
@@ -292,6 +295,8 @@ def build_vms(tcg_report: dict | None, legacy_items: list | None) -> list[dict]:
         seen_ids.add(vm["id"])
         vms.append(vm)
     # 発売予定（公式の発売日があるもの）。同じ商品・店・発売日は1件にする
+    # 同じ商品の予約（PREORDER）があっても公式の発売日のカードは残す（発売日と予約の受付期間は別の情報。
+    # 予約が日程不明・受付終了でも発売日が消えないように。Phase 11）
     for ev in (tcg_report or {}).get("events") or []:
         if not isinstance(ev, dict):
             continue
@@ -377,6 +382,8 @@ def derive_runtime_state(vm: dict, now: datetime) -> dict:
     preorder = vm.get("k") == KIND_PREORDER
     ev = _as_event(vm)
     base = ls.compute_lottery_status(ev, now)
+    if preorder and base in _PREORDER_AFTER_END:
+        base = "CLOSED"
     # 公式情報が食い違うものは、時刻が進んでも受付中にしない
     status = "SOURCE_CONFLICT" if vm.get("conflict") else base
     s_passed, _s_not_yet = ls._bound(ev, "application_start", "application_start_date")

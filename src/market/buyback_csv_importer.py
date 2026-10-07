@@ -126,6 +126,10 @@ class BuybackCSVImporter:
         if price == 0 and data_source != "fetch_failed":
             raise ValueError(f"price=0 (non-fetch_failed, skip)")
 
+        # 観測日時の無い価格は取り込まない（取り込んだ時刻を観測日時にすると、古い価格が新しく見える。Phase 11）。
+        # 取得失敗の行（価格0。利益計算に使わない）だけは従来どおり取り込み時刻で記録する
+        if not observed_str and price > 0:
+            raise ValueError("observed_at が空（観測日時の無い価格は取り込まない）")
         observed_at = datetime.fromisoformat(observed_str) if observed_str else datetime.now()
 
         bp = BuybackPriceModel(

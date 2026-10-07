@@ -88,6 +88,10 @@ var NuLotteryRuntime = (function () {
     if (vm.k === 'release') return releaseState(vm, now, C);
     var preorder = vm.k === 'preorder';
     var base = computeStatus(vm, now, C);
+    // 予約には当選発表・当選者の購入期間が無い。受付期間の後は「予約受付終了」（runtime.py と同じ）
+    if (preorder && (base === 'RESULT_PENDING' || base === 'WINNER_ANNOUNCED' || base === 'WINNER_PURCHASE_PERIOD')) {
+      base = 'CLOSED';
+    }
     var status = vm.conflict ? 'SOURCE_CONFLICT' : base;
     var s = bound(vm, 'as', 'asd'), e = bound(vm, 'ae', 'aed');
     var isOpen = !!OPEN[status], cta = null;

@@ -58,9 +58,6 @@ VERIFIED_URLS = {
     # ---- Apple（公式直販・価格実在）----
     # 2026-10-03: 公式の購入ページ（ブラウザで表示）で「256GB 159,800円から」を確認（08/23 の 142,800円から改定）
     "prod_iphone17_256":    {"source": "src_apple_jp", "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17",         "link_type": "item",     "price": 159800, "conf": "high", "checked_on": "2026-10-03"},
-    "prod_macbook_air_m4_13": {"source": "src_apple_jp", "url": "https://www.apple.com/jp/shop/buy-mac/macbook-air",       "link_type": "category", "price": None,   "conf": "medium", "note": "現行はM5世代（M4は旧世代の可能性）"},
-    "prod_macbook_air_m4_15": {"source": "src_apple_jp", "url": "https://www.apple.com/jp/shop/buy-mac/macbook-air",       "link_type": "category", "price": None,   "conf": "medium", "note": "現行はM5世代"},
-    "prod_macbook_pro_m4_14": {"source": "src_apple_jp", "url": "https://www.apple.com/jp/shop/buy-mac/macbook-pro",       "link_type": "category", "price": None,   "conf": "medium", "note": "現行はM5世代"},
     # 2026-10-03: 公式の購入ページで「AirPods Pro 3 42,800円」を再確認
     "prod_airpods_pro3":    {"source": "src_apple_jp", "url": "https://www.apple.com/jp/shop/buy-airpods/airpods-pro-3",   "link_type": "item",     "price": 42800,  "conf": "high", "checked_on": "2026-10-03"},
     # ---- ゲーム機（公式ストア・公式ラインナップ）----
@@ -118,6 +115,28 @@ OFFICIAL_NOT_SOLD = {
                                 "reason": "公式は Apple Watch Ultra 4 を販売中（Ultra 3 は販売していない）"},
     "prod_switch2_mk":      {"source": "src_nintendo_store", "checked_on": "2026-10-03",
                              "reason": "任天堂公式のラインナップでマリオカート ワールド セットは「生産終了」"},
+    # 2026-10-07（Phase 11）: 公式の購入ページで確認
+    # - iPhone 16 Pro の購入ページ /shop/buy-iphone/iphone-16-pro は /jp/iphone へ移動（301）。
+    #   /jp/iphone の現行は iPhone 18 Pro・17・17e・16
+    # - AirPods Max の購入ページ /shop/buy-airpods/airpods-max は airpods-max-2 へ移動（301）
+    # - Mac の購入ページ: mac-mini は M6・M5 Pro、macbook-air は M5、macbook-pro は M5・M5 Pro・M5 Max のみ
+    #   （以前は VERIFIED_URLS に「現行はM5世代」の注記つき・価格なしで載せていた MacBook 3件もここへ移した）
+    "prod_iphone16pro_256": {"source": "src_apple_jp", "checked_on": "2026-10-07",
+                             "reason": "iPhone 16 Pro の購入ページが /jp/iphone へ移動。公式は iPhone 18 Pro を販売中"},
+    "prod_iphone16pm_256":  {"source": "src_apple_jp", "checked_on": "2026-10-07",
+                             "reason": "iPhone 16 Pro Max は公式で販売していない（公式は iPhone 18 Pro Max を販売中）"},
+    "prod_iphone16pm_512":  {"source": "src_apple_jp", "checked_on": "2026-10-07",
+                             "reason": "iPhone 16 Pro Max は公式で販売していない（公式は iPhone 18 Pro Max を販売中）"},
+    "prod_airpods_max":     {"source": "src_apple_jp", "checked_on": "2026-10-07",
+                             "reason": "AirPods Max の購入ページが AirPods Max 2 へ移動（初代は販売していない）"},
+    "prod_mac_mini_m4":     {"source": "src_apple_jp", "checked_on": "2026-10-07",
+                             "reason": "公式の Mac mini は M6・M5 Pro チップ（M4 は販売していない）"},
+    "prod_macbook_air_m4_13": {"source": "src_apple_jp", "checked_on": "2026-10-07",
+                               "reason": "公式の MacBook Air は M5 チップ（M4 は販売していない）"},
+    "prod_macbook_air_m4_15": {"source": "src_apple_jp", "checked_on": "2026-10-07",
+                               "reason": "公式の MacBook Air は M5 チップ（M4 は販売していない）"},
+    "prod_macbook_pro_m4_14": {"source": "src_apple_jp", "checked_on": "2026-10-07",
+                               "reason": "公式の MacBook Pro は M5・M5 Pro・M5 Max チップ（M4 は販売していない）"},
 }
 
 # 旧世代/404 として検出・要注意（Task1）。実際に 404 を確認したもの。

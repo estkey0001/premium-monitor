@@ -2,7 +2,7 @@
 """カメラ新品/未使用買取価格 取得コレクター（Task 2 / 次フェーズ）。
 
 対象カメラ × カメラ買取店から「新品・未使用・未開封」の買取価格を毎日取得する。
-取得できた店舗は auto_scraped（condition=new_unopened）として buyback_prices に保存。
+取得できた店舗は auto_scraped として buyback_prices に保存（状態は価格の直前の表示から決める。新品同様=used_s）。
 取得できない店舗は理由を記録し、manual_buyback_prices.csv の manual_today（手動確認）を
 フォールバックとして温存する（このスクリプトは manual 行を削除しない）。
 
@@ -195,6 +195,39 @@ def _strict_model_match(item_text: str, alias: str) -> bool:
     return True
 
 
+# 買取価格の直前の状態の表示 → 保存する状態（Phase 11）。
+# フジヤの買取一覧は「新品同様 ￥190,000 良品 ￥189,000」のように中古の等級ごとの価格で、
+# 「新品同様」は中古の最上位の等級（新品未開封ではない）。新品未開封として保存すると、
+# 新品の仕入れと同じ状態の売値に見えてしまう。
+_CONDITION_LABELS_TO_CODE = (
+    ("新品同様", "used_s"),
+    ("未開封", "new_unopened"),
+    ("新品", "new_unopened"),
+    ("美品", "used_a"),
+    ("良品", "used_b"),
+)
+
+
+# 中古・未使用の等級の表示（これがあるのに価格の状態を読めないときは、新品と決めつけない）
+_USED_HINT_RE = r"新品同様|未使用|美品|良品|並品|中古|難あり|ジャンク"
+
+
+def _condition_for_price(matched_item: str, price: int, default: str = "new_unopened") -> str:
+    """採用した価格のすぐ前に書かれた状態の表示から状態を決める。
+
+    表示が読めないとき、文字列に中古・未使用の等級の表示があれば unknown（新品と決めつけない）。
+    等級の表示も無ければ default のまま。
+    """
+    import re as _re
+    if not matched_item or not price:
+        return default
+    m = _re.search(r"(新品同様|未開封|新品|美品|良品)\s*[￥¥]\s*" + _re.escape(f"{price:,}") + r"(?![\d,])",
+                   matched_item)
+    if m:
+        return dict(_CONDITION_LABELS_TO_CODE)[m.group(1)]
+    return "unknown" if _re.search(_USED_HINT_RE, matched_item) else default
+
+
 def _pick_item_url(alias: str, item_link_candidates: list, base_url: str) -> tuple[Optional[str], bool]:
     """機種に厳密一致する商品個別ページURLを選ぶ。
 
@@ -313,8 +346,11 @@ def _select_camera_buyback(candidates: list, alias: str) -> dict:
         if excluded:
             out["tradein_tier_excluded"] = True
             out["raw_max_price"] = best.get("price")  # 参考: 段込みの最高値（下取段の可能性）
+        # 状態: 段階表示（_TIER_RE）の現金の段は「新品同様」の価格なので中古（used_s）。
+        # 段の無い候補は、切る前の文字列で価格の直前の表示から決める（140文字で切ると表示が落ちる）
+        _cond = "used_s" if classify_tier_text(item_text) == "CASH_TIERS" else _condition_for_price(item_text, price)
         out.update(price=price, confidence="high", price_kind=kind,
-                   matched_item=item_text[:140], used_for_save=True)
+                   matched_item=item_text[:140], used_for_save=True, condition=_cond)
     return out
 
 # 対象買取店（shop_id, 表示名, 買取検索URLテンプレート {kw}=URLエンコード済キーワード）
@@ -743,6 +779,7 @@ def main() -> int:
             _best_keyword = None
             _confidence = "medium"   # auto_scraped の confidence（strict一致でhigh）
             _matched_item = ""
+            _condition = None        # 採用した価格の状態（_select_camera_buyback が決める）
             _sel = {}                # _select_camera_buyback の追跡結果（all/rejected）
             # 2) requests で価格が取れない/失敗 → Playwright fallback（--playwright 時）
             if (not price) and args.playwright and shop_id in _PW_SHOP_CONFIG:
@@ -772,6 +809,7 @@ def main() -> int:
                         if _sel.get("price"):
                             price = _sel["price"]; _confidence = _sel.get("confidence") or "high"
                             _matched_item = _sel.get("matched_item", "")
+                            _condition = _sel.get("condition")
                             html = _pw.get("html") or html
                             _size = _pw.get("rendered_html_size", _size)
                             _strategy = _pw.get("strategy", "playwright")
@@ -783,6 +821,7 @@ def main() -> int:
                         if _sel.get("price"):
                             price = _sel["price"]; _confidence = _sel.get("confidence") or "high"
                             _matched_item = _sel.get("matched_item", "")
+                            _condition = _sel.get("condition")
                             html = _pw["html"]
                             _size = _pw.get("rendered_html_size", len(html))
                             _strategy = _pw.get("strategy", "playwright")
@@ -845,7 +884,7 @@ def main() -> int:
                                      selector_found=False, extracted_price=None, **_pw_kw))
                 continue
 
-            # 取得成功 → auto_scraped（新品未開封）で保存（manual_today より優先される）
+            # 取得成功 → auto_scraped で保存（manual_today より優先される）。状態は価格の直前の表示から決める
             results.append(_diag(alias, shop_id, "OK", price, "",
                                  html_saved=_saved, html_size=_size,
                                  cloudflare_detected=_cf, js_required=_js,
@@ -861,7 +900,8 @@ def main() -> int:
                     bp = BuybackPriceModel(
                         id=f"camera_auto_{alias}_{shop_id}",  # 決定論的ID（再実行で同一行を更新）
                         product_id=pid, shop_id=shop_id, shop_name=shop_name,
-                        buyback_price=price, condition="new_unopened", buyback_url=_save_url,
+                        buyback_price=price, condition=_condition or _condition_for_price(_matched_item or "", price),
+                        buyback_url=_save_url,
                         observed_at=now, data_source="auto_scraped",
                         link_verified=_url_verified, confidence=_confidence,
                         notes=(_matched_item or "")[:120],  # matched_item を notes に保存（LP表示用）

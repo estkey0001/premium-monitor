@@ -159,7 +159,12 @@ def product_key(name: str) -> str:
 
 
 def lottery_key(d: dict) -> tuple:
-    """Task22: 同一抽選の判定キー。店舗別抽選と全国抽選は別物として扱う。"""
+    """Task22: 同一抽選の判定キー。店舗別抽選と全国抽選は別物として扱う。
+
+    Phase 11: 予約（PREORDER）・購入権は抽選と別物として扱う（同じ商品・店・期間でも混ぜない）。
+    既存の抽選の lottery_id を変えないため、LOTTERY 以外のときだけ種類をキーに加える。
+    """
+    etype = d.get("event_type") or LT_LOTTERY
     return (
         d.get("tcg") or "",
         d.get("product_id") or product_key(d.get("product_name") or ""),
@@ -167,7 +172,7 @@ def lottery_key(d: dict) -> tuple:
         (d.get("store_name") or "") if d.get("store_specific") else "",
         (d.get("application_start") or d.get("application_start_date") or "")[:16],
         (d.get("application_end") or d.get("application_end_date") or "")[:16],
-    )
+    ) + (() if etype == LT_LOTTERY else (etype,))
 
 
 def lottery_id_of(d: dict) -> str:

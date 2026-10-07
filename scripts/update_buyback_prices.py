@@ -43,6 +43,12 @@ OFFICIAL_PRICES: dict[str, int] = {
     "iphone17pm512":  254_800,
     "switch2":         49_980,
     "ps5_pro":        119_980,
+    # Phase 11 で自動取得に加えた商品。異常値の判定だけに使う（利益計算には使わない）。
+    # iphone17_256 / airpods_pro3 は scripts/audit_official_sources.py の確認値（2026-10-03）、
+    # iphone16pro256 は config/products.yaml の値
+    "iphone17_256":   159_800,
+    "iphone16pro256": 159_800,
+    "airpods_pro3":    42_800,
 }
 
 PRODUCT_GENRES: dict[str, str] = {
@@ -52,6 +58,9 @@ PRODUCT_GENRES: dict[str, str] = {
     "iphone17pm512":  "iphone",
     "switch2":         "game_console",
     "ps5_pro":         "game_console",
+    "iphone17_256":    "iphone",
+    "iphone16pro256":  "iphone",
+    "airpods_pro3":    "audio",
 }
 
 # ゲーム機でスマホ価格帯（10万円超）を拾った場合はsuspicious
@@ -105,10 +114,35 @@ TARGET_PRODUCTS = [
                            "hardoff", "dosupara", "pasoko",
                            "sofmap", "bookoff", "surugaya", "tsutaya"],
     },
+    # ── Phase 11（2026-10-07）: 買取商店の一覧の表で、機種・容量・SIMフリー（AirPods は型番）まで
+    # 照合できる商品だけを加えた。他店は CI で取得できない（IP ブロック等）ので加えない（アクセスを増やさない）。
+    # iPhone 16 Pro Max は登録の型番（MYW23J/A 等）が店の SIM フリー版の型番と一致しないため、
+    # Switch 2 マリオカートセットは登録の定価が日本語・国内専用版と合わず版が特定できないため、加えていない。
+    {
+        "product_alias":  "iphone17_256",
+        "product_name":   "iPhone 17 256GB SIMフリー",
+        "condition":      "new_unopened_simfree",
+        "shops":          ["kaitori_shouten"],
+    },
+    {
+        "product_alias":  "iphone16pro256",
+        "product_name":   "iPhone 16 Pro 256GB SIMフリー",
+        "condition":      "new_unopened_simfree",
+        "shops":          ["kaitori_shouten"],
+    },
+    {
+        "product_alias":  "airpods_pro3",
+        "product_name":   "AirPods Pro 3",
+        "condition":      "new_unopened",
+        "shops":          ["kaitori_shouten"],
+    },
 ]
 
 # ── 既存CSV内の他商品（自動取得対象外）は引き継ぐ ──
 AUTO_ALIASES = {p["product_alias"] for p in TARGET_PRODUCTS}
+# 自動取得する（商品, 店）の組。この組の行だけを今回の結果で置き換え、他店の手入力の行は引き継ぐ
+# （Phase 11: 買取商店だけ自動取得する商品で、他店の手入力の行を消さない）
+AUTO_PAIRS = {(p["product_alias"], shop) for p in TARGET_PRODUCTS for shop in p["shops"]}
 
 # ── コレクター未実装・実装予定なしのショップ ──
 # これらは "collector_not_loaded" ではなく "not_supported" として分類する
@@ -239,7 +273,7 @@ def run(dry_run: bool = False, no_scrape: bool = False) -> int:
     # 自動取得対象外の既存行を保持
     preserved_rows = [
         r for r in existing_rows
-        if r.get("product_alias", "") not in AUTO_ALIASES
+        if (r.get("product_alias", ""), r.get("buyback_shop", "")) not in AUTO_PAIRS
     ]
 
     now_jst = datetime.now(tz=JST)
@@ -597,15 +631,26 @@ def compute_suspicious(new_rows: list[dict], existing_rows: list[dict]) -> list[
 
     # ⑧ 同じ店で、別の商品（機種・容量違い）に同じ価格が付いている
     #    （ページの見出し・最高値などを複数の商品に割り当てた誤取得の典型。2026-10-02 の ¥435,000）
+    #    ただし、どの行も別々の商品ページ（link_type=item。採用した商品行の詳細ページ）から取ったときは、
+    #    別の商品にたまたま同じ価格が付いているだけなので隔離しない（Phase 11: 買取商店は1店で9商品）
+    from src.market.normalized_prices import classify_link_type
     by_shop_price: dict[tuple, list[str]] = {}
+    urls_by_shop_price: dict[tuple, list[str]] = {}
     for row in new_rows:
         try:
             price = int(row.get("buyback_price", 0) or 0)
         except (ValueError, TypeError):
             price = 0
         if price > 0:
-            by_shop_price.setdefault((row.get("buyback_shop", ""), price), []).append(row.get("product_alias", ""))
+            key = (row.get("buyback_shop", ""), price)
+            by_shop_price.setdefault(key, []).append(row.get("product_alias", ""))
+            url = str(row.get("url") or "")
+            item = classify_link_type(url, str(row.get("link_verified", "")).lower() == "true", "sell") == "item"
+            urls_by_shop_price.setdefault(key, []).append(url if item else "")
     for (shop_id, price), aliases in by_shop_price.items():
+        urls = urls_by_shop_price.get((shop_id, price), [])
+        if all(urls) and len(set(urls)) == len(urls):
+            continue
         if len(set(aliases)) >= 2:
             for alias in sorted(set(aliases)):
                 suspicious_prices.append({

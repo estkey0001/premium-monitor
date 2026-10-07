@@ -29,20 +29,16 @@ PRODUCT_URLS = {
 
 # 商品特定用の直接正規表現パターン (Playwright inner_text に適用)
 # テキスト例: "iPhone 17 Pro 256GB\n\n新品\n\n未開封\n¥178,000\n開封済未使用品\n¥168,000"
-# [\s\n]+ で空白/改行の表記揺れ（\xa0 含む）に対応
+# [\s\n]+ で空白/改行の表記揺れ（\xa0 含む）に対応。
+# 商品名から「未開封」までは 200 文字以内で、途中に別の商品名（iPhone）を挟まないものに限る
+# （未開封の価格が無い商品で、次の商品の未開封の価格を拾わない）。
+# Phase 11: 緩いフォールバック（商品名の後の最初の ¥…・ページ全体の最高値）は削除した。
+# 未開封以外（開封済未使用品）の価格や別商品の価格を新品の価格として保存しうるため。一致しなければ price_not_found。
 PRICE_PATTERNS = {
-    "iphone17pro256": r'iPhone 17 Pro 256GB.*?未開封[\s\n]+¥([\d,]+)',
-    "iphone17pro512": r'iPhone 17 Pro 512GB.*?未開封[\s\n]+¥([\d,]+)',
-    "iphone17pm256":  r'iPhone 17 Pro Max 256GB.*?未開封[\s\n]+¥([\d,]+)',
-    "iphone17pm512":  r'iPhone 17 Pro Max 512GB.*?未開封[\s\n]+¥([\d,]+)',
-}
-
-# 緩いフォールバックパターン: 商品名から500文字以内の ¥N,NNN
-FALLBACK_PATTERNS = {
-    "iphone17pro256": r'iPhone 17 Pro 256GB.{0,500}?¥([\d,]+)',
-    "iphone17pro512": r'iPhone 17 Pro 512GB.{0,500}?¥([\d,]+)',
-    "iphone17pm256":  r'iPhone 17 Pro Max 256GB.{0,500}?¥([\d,]+)',
-    "iphone17pm512":  r'iPhone 17 Pro Max 512GB.{0,500}?¥([\d,]+)',
+    "iphone17pro256": r'iPhone 17 Pro 256GB(?:(?!iPhone).){0,200}?未開封[\s\n]+¥([\d,]+)',
+    "iphone17pro512": r'iPhone 17 Pro 512GB(?:(?!iPhone).){0,200}?未開封[\s\n]+¥([\d,]+)',
+    "iphone17pm256":  r'iPhone 17 Pro Max 256GB(?:(?!iPhone).){0,200}?未開封[\s\n]+¥([\d,]+)',
+    "iphone17pm512":  r'iPhone 17 Pro Max 512GB(?:(?!iPhone).){0,200}?未開封[\s\n]+¥([\d,]+)',
 }
 
 
@@ -138,7 +134,7 @@ class KaitoriItchomeCsvCollector(BaseCsvBuybackCollector):
         """html は Playwright inner_text() の plain text (BS4 不使用)。"""
         text = html  # inner_text() をそのまま使用
 
-        # ── Step1: メインパターン（[\s\n]+ で空白表記揺れ吸収）──
+        # 商品名と「未開封」の価格の組だけを使う（フォールバックなし）
         pat = PRICE_PATTERNS.get(product_alias)
         if pat:
             m = re.search(pat, text, re.DOTALL)
@@ -149,29 +145,8 @@ class KaitoriItchomeCsvCollector(BaseCsvBuybackCollector):
                         return price
                 except ValueError:
                     pass
-
-        # ── Step2: 緩いフォールバックパターン ──
-        fb_pat = FALLBACK_PATTERNS.get(product_alias)
-        if fb_pat:
-            m = re.search(fb_pat, text, re.DOTALL)
-            if m:
-                try:
-                    price = int(m.group(1).replace(",", ""))
-                    if 10000 <= price <= 5_000_000:
-                        return price
-                except ValueError:
-                    pass
-
-        # ── Step3: ¥N,NNN 形式の最大価格 ──
-        prices = []
-        for m in re.finditer(r'¥([\d,]+)', text):
-            try:
-                p = int(m.group(1).replace(",", ""))
-                if 10000 <= p <= 5_000_000:
-                    prices.append(p)
-            except ValueError:
-                pass
-        return max(prices) if prices else None
+        self.last_failure_reason = "price_not_found"
+        return None
 
     def _parse_detail_url(self, html: str, fallback_url: str) -> str:
         return "https://www.1-chome.com/"

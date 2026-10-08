@@ -4134,6 +4134,7 @@ def check() -> list[dict]:
     results.extend(_check_phase17_camera_sell())
     results.extend(_check_phase18_actionability(html))
     results.extend(_check_phase19_actionable_notifications(html))
+    results.extend(_check_phase20_notification_outbox())
 
     # ══════════════════════════════════════════════════════════════════
     # #820-#825: データの正確さ・鮮度の偽装（Phase 0）
@@ -4855,6 +4856,8 @@ def _check_phase19_actionable_notifications(html: str) -> list[dict]:
     root = Path(__file__).resolve().parent.parent
     try:
         from src.notifiers import actionable as an
+        from src.notifiers import adapters as ad
+        from src.notifiers import outbox as ob
         now = _dt19(2026, 10, 9, 12, 0, tzinfo=_JST19)
         url = "https://pur.store.sony.jp/ps5/products/ps5/CFI-7100B01_purchase/"
 
@@ -4866,39 +4869,40 @@ def _check_phase19_actionable_notifications(html: str) -> list[dict]:
             r.update(kw)
             return {"actionability": {"products": [r]}}
 
-        rep, st = an.run(row("OUT_OF_STOCK", False), {}, now=now)
-        rep, st = an.run(row(), st, now=now)
-        if rep["notification_candidates"] != 1 or rep["dispatch_planned"] != 1:
-            bad.append("在庫切れ → 在庫ありを候補にしない")
-        rep, st = an.run(row(), st, now=now)
-        if rep["notification_candidates"] != 0 or rep["dedupe_suppressed"] != 1:
+        def run(d, st, baseline=False, **kw):
+            res = ob.cycle(st, d, now=now, mode=ob.MODE_DRY, baseline=baseline, **kw)
+            return res["observe"]["notification_candidates"], res["prepare"]["planned"], res
+
+        st = ob.empty_store()
+        run(row("OUT_OF_STOCK", False), st)
+        n, planned, _r = run(row(), st)
+        if (n, planned) != (1, 1):
+            bad.append("在庫切れ → 在庫ありを候補・配信の計画にしない")
+        n, planned, res = run(row(), st)
+        if n or res["observe"]["dedupe_suppressed"] != 1:
             bad.append("同じ状態（在庫ありのまま）で毎回候補にする")
-        rep, st = an.run(row("OUT_OF_STOCK", False), st, now=now)
-        rep, st = an.run(row(), st, now=now)
-        if rep["notification_candidates"] != 1:
+        run(row("OUT_OF_STOCK", False), st)
+        if run(row(), st)[0] != 1:
             bad.append("在庫切れ → 在庫ありに戻ったとき（re-arm）候補にしない")
-        rep, _st = an.run(row("STOCK_STALE", False), st, now=now)
-        rep, _st = an.run(row(), _st, now=now)
-        if rep["notification_candidates"] != 0:
+        run(row("STOCK_STALE", False), st)
+        if run(row(), st)[0] != 0:
             bad.append("更新待ち（確認できなかった）で re-arm して同じ通知を繰り返す")
-        rep, _st = an.run(row(), {}, now=now)
-        if rep["notification_candidates"] != 0:
-            bad.append("前回の状態を見ていない商品（利益だけが変わった）を候補にする")
+        if run(row(), ob.empty_store())[0] != 0 or run(row(), ob.empty_store(), baseline=True)[0] != 0:
+            bad.append("前回の状態を見ていない商品（利益だけが変わった）・基準日を候補にする")
         for label, kw in (("期限を過ぎた", {"until_ms": int((now - _td19(minutes=1)).timestamp() * 1000)}),
                           ("一般のページの URL", {"cta_url": "https://www.apple.com/jp/shop/"}),
                           ("参考の利益", {"confirmed": False}),
                           ("利益なし", {"net_profit": 0})):
-            rep, _st = an.run(row(**kw), {"p": {"availability": "OUT_OF_STOCK", "notified_key": ""}}, now=now)
-            if rep["dispatch_planned"] or rep["dispatch_sent"]:
+            st2 = ob.empty_store()
+            run(row("OUT_OF_STOCK", False), st2)
+            if run(row(**kw), st2)[1]:
                 bad.append(f"{label}の候補を配信の直前の確認で止めない")
-        called = []
-        an.dispatch([dict(an.detect(row()["actionability"]["products"], {"p": {"availability": "OUT_OF_STOCK"}},
-                                    now=now)[0][0])], now=now,
-                    dry_run=True, sender=lambda c, k: called.append(k))
-        if called:
-            bad.append("dry-run で送信の関数を呼ぶ")
+        if run(row(), st)[2]["counts"]["delivered"]:
+            bad.append("dry-run の計画を送信済み（DELIVERED）にする")
         if not an.is_dry_run({}):
             bad.append("既定が dry-run でない")
+        if any(a.configured for k, a in ad.default_adapters().items() if k != "log"):
+            bad.append("既定で Discord・Telegram の送信先が設定されている")
     except Exception as exc:  # noqa: BLE001
         bad.append(f"通知の候補を動かせない: {exc}")
     # ワークフロー: LP の生成のステップは dry-run 固定・送信先の Secrets を渡さない・dry-run を外すステップが無い
@@ -4938,10 +4942,11 @@ def _check_phase19_actionable_notifications(html: str) -> list[dict]:
                 warn.append("通知の出力が今回の診断から作られていない（前回の出力が残っている）")
         except (OSError, ValueError):
             warn.append("診断の出力が無い")
-        if rep.get("dispatch_sent"):
-            bad.append(f"外部へ送信した（{rep.get('dispatch_sent')}件）")
+        cnt = rep.get("counts") if isinstance(rep.get("counts"), dict) else {}
+        if rep.get("dispatch_sent") or cnt.get("delivered") or cnt.get("sending") or rep.get("external_calls"):
+            bad.append(f"外部へ送信した（{rep.get('dispatch_sent')}件・送信済み {cnt.get('delivered')}件）")
         for c in rep.get("candidates") or []:
-            if c.get("availability") not in ACTIONABLE_TYPES or not _official_url(c.get("cta_url") or "") \
+            if c.get("availability") not in ACTIONABLE_TYPES or not _official_url(c.get("action_url") or "") \
                     or c.get("confirmed") is not True:
                 bad.append(f"行動できない・公式の購入ページでない・確定でない候補: {c.get('product_id')}")
     except (OSError, ValueError):
@@ -4959,6 +4964,166 @@ def _check_phase19_actionable_notifications(html: str) -> list[dict]:
     return [{"level": level, "check": "actionable_notifications",
              "message": "#855 今すぐ行動の通知（行動できない → できる だけ・同じ状態では出さない・re-arm・配信の直前の確認・"
                         "dry-run で送らない・Secrets を渡さない・配信先の URL/トークンを出さない）"
+                        + ("" if not (bad or warn) else f" ← {(bad or warn)[:4]}")}]
+
+
+def _check_phase20_notification_outbox() -> list[dict]:
+    """Phase 20: 通知の outbox（#856）。冪等性のキーが作り直しても同じ・保存の前に送らない・送った後に保存できなければ
+    次の実行は送り直さない（届いたか不明）・dry-run の記録は本番の送信を止めない・台帳は atomic に書く・配信先の部品は
+    HTTP を import しない・ワークフローは手順ごとに台帳を保存し（always）、送信は保存した台帳と同じときだけ・台帳に
+    配信先の URL・トークンが無い。"""
+    import json as _json20
+    import re as _re20
+    from datetime import datetime as _dt20
+    from datetime import timedelta as _td20
+
+    from src.tcg.models import JST as _JST20
+    bad, warn = [], []
+    root = Path(__file__).resolve().parent.parent
+    try:
+        from src.notifiers import adapters as ad
+        from src.notifiers import outbox as ob
+        now = _dt20(2026, 10, 9, 12, 0, tzinfo=_JST20)
+        url = "https://pur.store.sony.jp/ps5/products/ps5/CFI-7100B01_purchase/"
+
+        def d(avail="IN_STOCK", ok=True):
+            return {"actionability": {"products": [{
+                "product_id": "p", "product": "P", "availability": avail, "actionable": ok, "reasons": [] if ok else ["x"],
+                "confirmed": True, "net_profit": 50000, "roi": 0.3, "cta_label": "購入する", "cta_url": url if ok else "",
+                "until_ms": int((now + _td20(hours=2)).timestamp() * 1000) if ok else None, "deadline": "",
+                "checked_at": (now - _td20(hours=1)).isoformat(), "event_key": ""}]}}
+
+        calls = []
+
+        class _T(ad.ProviderAdapter):
+            name = "fixture"
+
+            def build_payload(self, record):
+                return {"content": record.get("message") or ""}
+
+        ok_adapter = _T(lambda p, k: (calls.append(k), (200, {}, {}))[1])
+        # 同じ候補を作り直しても同じキー
+        k1 = ob.idempotency_key("p", "event", "p|2026-10-08T12:00+09:00")
+        if k1 != ob.idempotency_key("p", "event", "p|2026-10-08T12:00+09:00"):
+            bad.append("冪等性のキーが安定しない")
+        # 送った後に保存できずに止まった → 次の実行は送り直さない
+        st = ob.empty_store()
+        ob.observe(st, d("OUT_OF_STOCK", False)["actionability"]["products"], now=now, mode=ob.MODE_LIVE)
+        ob.observe(st, d()["actionability"]["products"], now=now, mode=ob.MODE_LIVE, channels=["fixture"])
+        ob.prepare(st, d()["actionability"]["products"], now=now, mode=ob.MODE_LIVE, attempt_id="a1",
+                   adapters={"fixture": ok_adapter})
+        persisted = _json20.loads(ob.dumps(st))                     # SENDING を保存した内容
+        ob.send(st, now=now, attempt_id="a1", adapters={"fixture": ok_adapter})   # 送った（保存されずに止まる）
+        ob.cycle(persisted, d(), now=now, mode=ob.MODE_LIVE, attempt_id="a2", adapters={"fixture": ok_adapter})
+        if len(calls) != 1:
+            bad.append(f"送った後に保存できなかった通知を次の実行で送り直す（{len(calls)}回）")
+        if ob.counts(persisted)["ambiguous_delivery"] != 1:
+            bad.append("送った後に止まった記録を「届いたか不明」にしない")
+        # 保存の前に送らない（send は保存した台帳のハッシュと今のファイルが同じときだけ）
+        import tempfile as _tf
+        with _tf.TemporaryDirectory() as tmp:
+            r = ob.run_send(Path(tmp), now=now, dry_run=False, attempt_id="a1", persisted_sha="",
+                            adapters={"fixture": ok_adapter})
+            if r.get("skipped") != "not_persisted":
+                bad.append("保存したことを確かめずに送る")
+        # dry-run の記録は本番の送信を止めない・dry-run は DELIVERED にしない
+        st = ob.empty_store()
+        ob.observe(st, d("OUT_OF_STOCK", False)["actionability"]["products"], now=now, mode=ob.MODE_DRY)
+        res = ob.cycle(st, d(), now=now, mode=ob.MODE_DRY)
+        if res["counts"]["delivered"] or res["counts"]["dry_run_planned"] != 1:
+            bad.append("dry-run の計画を送信済みにする")
+        res = ob.cycle(st, d(), now=now, mode=ob.MODE_LIVE, attempt_id="l1", adapters={"fixture": ok_adapter},
+                       channels=["fixture"])
+        if res["observe"]["notification_candidates"] != 0:
+            bad.append("dry-run で計画した古い変化を、本番に切り替えた時点で送る")
+        ob.cycle(st, d("OUT_OF_STOCK", False), now=now, mode=ob.MODE_LIVE, attempt_id="l2",
+                 adapters={"fixture": ok_adapter}, channels=["fixture"])
+        res = ob.cycle(st, d(), now=now, mode=ob.MODE_LIVE, attempt_id="l3", adapters={"fixture": ok_adapter},
+                       channels=["fixture"])
+        if res["observe"]["notification_candidates"] != 1:
+            bad.append("dry-run の記録が、本番に切り替えた後の新しい変化の送信を止める")
+        # 記録が消えても（prune）同じキーで送り直さない
+        st = ob.empty_store()
+        calls.clear()
+        ob.cycle(st, d("OUT_OF_STOCK", False), now=now, mode=ob.MODE_LIVE, channels=["fixture"])
+        ob.cycle(st, d(), now=now, mode=ob.MODE_LIVE, attempt_id="p1", adapters={"fixture": ok_adapter},
+                 channels=["fixture"])
+        ob.cycle(st, d("STOCK_STALE", False), now=now, mode=ob.MODE_LIVE, channels=["fixture"])
+        ob.prune(st, now + _td20(days=ob.RETENTION_DAYS + 2))
+        ob.cycle(st, d(), now=now, mode=ob.MODE_LIVE, attempt_id="p2", adapters={"fixture": ok_adapter},
+                 channels=["fixture"])
+        if len(calls) != 1:
+            bad.append("記録を消した後に同じ変化を送り直す")
+        # 台帳は atomic に書く
+        import inspect as _insp
+        if "write_text_atomic" not in _insp.getsource(ob.save):
+            bad.append("台帳を atomic に書いていない")
+        # 配信先の部品は HTTP を import しない（Phase 20 は外部への通信 0）
+        src_ad = (root / "src" / "notifiers" / "adapters.py").read_text(encoding="utf-8")
+        if _re20.search(r"^\s*(import|from)\s+(requests|urllib|http\.client|httpx|aiohttp|socket)\b", src_ad, _re20.M):
+            bad.append("配信先の部品が HTTP の部品を import している")
+    except Exception as exc:  # noqa: BLE001
+        bad.append(f"outbox を動かせない: {exc}")
+    # ワークフロー: 手順ごとの保存（always）・送信は保存した台帳と同じときだけ・dry-run 固定・Secrets を渡さない
+    try:
+        wf = (root / ".github" / "workflows" / "daily_lp.yml").read_text(encoding="utf-8")
+        steps = {m.group(1): m.group(2) for m in _re20.finditer(
+            r"- name: ([^\n]+)\n(.*?)(?=\n      - name:|\n      # |\Z)", wf, _re20.S)}
+        order = [n for n in ("Sync notification outbox", "Generate daily LP Variant A",
+                             "Persist notification outbox (candidates)",
+                             "Prepare notification dispatch", "Persist notification outbox (prepared)",
+                             "Send notifications", "Persist notification outbox (sent)", "Deploy check",
+                             "Commit and push")]
+        pos = [wf.find(f"- name: {n}") for n in order]
+        if any(p < 0 for p in pos) or pos != sorted(pos):
+            bad.append("通知の outbox の手順の順序が違う（生成 → 保存 → 確認 → 保存 → 送信 → 保存 → deploy-check）")
+        for n in ("Persist notification outbox (candidates)", "Persist notification outbox (prepared)",
+                  "Persist notification outbox (sent)"):
+            if "always()" not in steps.get(n, "") or "persist_notification_state.sh" not in steps.get(n, ""):
+                bad.append(f"{n} が always() で台帳を保存しない")
+        for n in ("Prepare notification dispatch", "Send notifications"):
+            if "!cancelled()" not in steps.get(n, "") or "steps.generate_lp.outcome == 'success'" not in steps.get(n, ""):
+                bad.append(f"{n} が、取り消し・生成の失敗のときにも動く")
+        if "':(exclude)exports/notifications/actionable/state.json'" not in steps.get("Commit and push", ""):
+            bad.append("最後のコミットが通知の台帳を含む（台帳の保存は persist だけにする）")
+        send = steps.get("Send notifications", "")
+        if "steps.persist_outbox_prepared.outcome == 'success'" not in send or \
+                "--persisted-sha \"${{ steps.persist_outbox_prepared.outputs.sha }}\"" not in send:
+            bad.append("送信の手順が、保存した台帳を確かめずに動く")
+        for n in ("Prepare notification dispatch", "Send notifications"):
+            if 'NOTIFICATION_DRY_RUN: "true"' not in steps.get(n, ""):
+                bad.append(f"{n} が dry-run に固定されていない")
+            if _re20.search(r"DISCORD_WEBHOOK_URL|TELEGRAM_BOT_TOKEN|TELEGRAM_CHAT_ID", steps.get(n, "")):
+                bad.append(f"{n} に通知の送信先の Secrets を渡している")
+        if "NOTIFICATION_OUTBOX_SYNCED: ${{ steps.sync_outbox.outcome == 'success' }}" not in steps.get(
+                "Generate daily LP Variant A", ""):
+            bad.append("台帳を main に合わせられなかったときに候補を作らない形になっていない")
+        sh = (root / "scripts" / "persist_notification_state.sh").read_text(encoding="utf-8")
+        if not all(x in sh for x in ('git worktree add', 'git -C "$WT" add -- "$STATE"', '"$REMOTE" != "$EXPECTED"',
+                                     "sha=")) or "--autostash" in sh or "checkout --theirs" in sh:
+            bad.append("台帳の保存が、作業ツリーに触れずに台帳だけを保存し、main の台帳が変わっていたら止める形になっていない")
+    except OSError as exc:
+        bad.append(f"ワークフローを読めない: {exc}")
+    # 今の台帳: 読める・形が今のもの・配信先の URL・トークンが無い・本番の送信の記録が無い（Phase 20 は dry-run）
+    sp = root / "exports" / "notifications" / "actionable" / "state.json"
+    try:
+        text = sp.read_text(encoding="utf-8")
+        st = _json20.loads(text)
+        if st.get("schema") != 2:
+            warn.append("台帳が前の形式のまま（次の生成で今の形になる）")
+        if any(_re20.search(p, text) for p in _SECRET_PATTERNS):
+            bad.append("通知の台帳に配信先の URL・トークンがある")
+        live = [r for r in (st.get("records") or {}).values() if isinstance(r, dict) and r.get("mode") == "live"]
+        if live:
+            bad.append(f"本番の送信の記録がある（Phase 20 は dry-run）: {len(live)}件")
+    except OSError:
+        warn.append("通知の台帳が無い（基準日の前）")
+    except ValueError:
+        bad.append("通知の台帳が壊れている")
+    level = "error" if bad else ("warning" if warn else "ok")
+    return [{"level": level, "check": "notification_outbox",
+             "message": "#856 通知の outbox（冪等性のキー・保存の前に送らない・送った後に止まったら送り直さない・dry-run は"
+                        "送信済みにしない・atomic・HTTP の部品なし・手順ごとの保存・Secrets を渡さない）"
                         + ("" if not (bad or warn) else f" ← {(bad or warn)[:4]}")}]
 
 

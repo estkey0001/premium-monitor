@@ -1,78 +1,22 @@
-"""Phase 19（今すぐ行動できるようになった商品の通知）のテスト。
+"""Phase 19（今すぐ行動できるようになった商品の通知）のテスト。Phase 20 で outbox（src/notifiers/outbox）の上に移した。
 
 行動できない → できる に変わった確定の利益商品だけを候補にする。同じ状態では出さない・できないと確かめた状態の後は
 再び通知できる・配信の直前にもう一度確かめる・dry-run では送らない。判定は Phase 18 の正本（actionability.evaluate）の
-結果を、診断（opportunity_diagnostics）と同じ形にして使う。各テストに否定の対照を付ける。
+結果を、診断（opportunity_diagnostics）と同じ形にして使う（tests/_notify_helpers）。各テストに否定の対照を付ける。
 """
 from __future__ import annotations
 
 import json
-from datetime import datetime, timedelta
-from types import SimpleNamespace
+from datetime import timedelta
 
 import pytest
 
 from src.market import actionability as act
-from src.market import opportunity_diagnostics as diag
 from src.notifiers import actionable as an
-from src.tcg.models import JST
-
-NOW = datetime(2026, 10, 9, 12, 0, tzinfo=JST)
-SONY = "https://pur.store.sony.jp/ps5/products/ps5/CFI-7100B01_purchase/"
-RICOH = "https://ricohimagingstore.com/Form/Product/ProductDetail.aspx?shop=0&pid=S0001567&cat=002010"
-
-
-# ── 判定の正本 → 診断の行 ───────────────────────────────────────────────
-
-def _view(pid, a, *, net=54870, roi=0.396, name=None):
-    return SimpleNamespace(product_id=pid, product_name=name or pid, net_profit=net, roi=roi, action=a,
-                           actionable=a.actionable)
-
-
-def _diag(*views, prev=None):
-    """診断の「今すぐ行動」（opportunity_diagnostics._actionability_summary）をそのまま作る。"""
-    s = SimpleNamespace(eligible=list(views))
-    acts = [{"product_id": v.product_id} for v in views if v.actionable]
-    return {"actionability": diag._actionability_summary(s, acts, prev)}
-
-
-def ps5(stock="IN_STOCK", checked=NOW - timedelta(minutes=30), url=SONY, now=NOW, profitable=True):
-    return _view("prod_ps5_pro", act.evaluate(profitable=profitable, identity_ok=True, stock=stock,
-                                              stock_checked_at=checked, buy_url=url, now=now),
-                 name="PlayStation 5 Pro")
-
-
-def lottery_event(start, end, *, status="active", checked=NOW - timedelta(hours=1), form=RICOH, **kw):
-    ev = {"product_id": "prod_gr4_hdf", "product_code": "S0001567", "sale_method": "抽選販売", "status": status,
-          "entry_start_at": start.isoformat(), "entry_end_at": end.isoformat() if end else "",
-          "checked_at": checked.isoformat(), "entry_form_url": form}
-    ev.update(kw)
-    return ev
-
-
-def gr4(event, now=NOW):
-    return _view("prod_gr4_hdf", act.evaluate(profitable=True, identity_ok=True, stock="LOTTERY", stock_checked_at=None,
-                                              sale_method="抽選販売", event=event, now=now),
-                 net=16200, roi=0.073, name="RICOH GR IV HDF")
-
-
-OPEN = lottery_event(NOW - timedelta(days=1), NOW + timedelta(days=2))
-CLOSED = lottery_event(datetime(2026, 9, 25, 12, tzinfo=JST), datetime(2026, 9, 28, 12, tzinfo=JST), status="closed")
-
-
-def run(d, ledger, now=NOW, **kw):
-    return an.run(d, ledger, now=now, **kw)
-
-
-def seq(*diags, ledger=None):
-    """続けて実行し、各回の報告を返す（最初の台帳は空 = 基準日ではない）。"""
-    st = {} if ledger is None else ledger
-    reps = []
-    for d in diags:
-        rep, st = run(d, st)
-        reps.append(rep)
-    return reps, st
-
+from src.notifiers import outbox as ob
+from _notify_helpers import (CLOSED, NOW, OPEN, RICOH, SONY, FixtureAdapter, SendFail, _diag, _view, gr4, lottery_event, ps5,
+                                   run, seq)
+from _notify_helpers import stock_gr4 as _stock_gr4
 
 # ── 候補（行動できない → できる だけ） ──────────────────────────────────
 
@@ -112,7 +56,8 @@ def test_baseline_has_no_candidates():
     assert rep2["notification_candidates"] == 0       # 基準日の状態は通知済みとして扱う
     rep3, _ = run(_diag(ps5()), {})                   # 台帳はあるが記録の無い商品も、その商品の基準日（監査 M-1）
     assert rep3["notification_candidates"] == 0 and not rep3["is_baseline"]
-    rep4, _ = run(_diag(ps5()), {"prod_ps5_pro": {"availability": "OUT_OF_STOCK", "notified_key": ""}})
+    _r, st4 = run(_diag(ps5("OUT_OF_STOCK")), {})
+    rep4, _ = run(_diag(ps5()), st4)
     assert rep4["notification_candidates"] == 1        # 否定の対照: 在庫切れを見ていた商品は候補
 
 
@@ -130,7 +75,7 @@ def test_ps5_restock_scenario():
     c = r1["candidates"][0]
     assert (c["product_id"], c["availability"], c["status"]) == ("prod_ps5_pro", "IN_STOCK", "購入可能になりました")
     assert c["net_profit"] == 54870 and c["roi"] == 0.396 and c["cta_url"] == SONY and c["cta_label"] == "購入する"
-    assert c["dispatch_status"] == an.PLANNED and c["dry_run"] is True
+    assert c["dispatch_status"] == ob.DRY_RUN_PLANNED and c["dry_run"] is True
     assert r2["notification_candidates"] == 0 and r3["notification_candidates"] == 0
     assert r4["notification_candidates"] == 1
 
@@ -171,7 +116,7 @@ def test_new_lottery_identity_renotifies():
     r2, st = run(_diag(gr4(nxt, now=later)), st, now=later)
     assert r1["notification_candidates"] == 1 and r2["notification_candidates"] == 1
     assert r1["candidates"][0]["event_id"] != r2["candidates"][0]["event_id"]
-    r3, _ = run(_diag(gr4(OPEN)), {"prod_gr4_hdf": {"notified_key": r1["candidates"][0]["dedupe_key"]}})
+    r3, _ = run(_diag(gr4(OPEN, now=later)), st, now=later)
     assert r3["notification_candidates"] == 0         # 否定の対照: 同じ受付は出さない
 
 
@@ -207,7 +152,7 @@ def _cand(**kw):
 
 
 def test_revalidation_passes_for_valid_candidate():
-    assert an.revalidate(_cand(), NOW) == []
+    assert an.revalidate_fields(_cand(), NOW) == []
 
 
 @pytest.mark.parametrize("kw,why", [
@@ -220,38 +165,66 @@ def test_revalidation_passes_for_valid_candidate():
     ({"reasons": ["stock_out"]}, "has_reasons"),
 ])
 def test_revalidation_blocks(kw, why):
-    assert why in an.revalidate(_cand(**kw), NOW)
-    assert an.dispatch([_cand(**kw)], now=NOW)[0]["status"] == an.BLOCKED
+    assert why in an.revalidate_fields(_cand(**kw), NOW)
+
+
+@pytest.mark.parametrize("field,value,status", [
+    ("until_ms", None, ob.EXPIRED),                                   # 期限が無い
+    ("cta_url", "https://www.apple.com/jp/shop/", ob.CANCELLED),      # 一般のページ
+    ("confirmed", False, ob.CANCELLED),                               # 参考の利益
+    ("net_profit", 0, ob.CANCELLED),                                  # 利益なし
+])
+def test_prepare_blocks_invalid_rows(field, value, status):
+    """配信の直前に、最新の診断の行で確かめ直す（行の値が変わったら送らない）。"""
+    _r, st = run(_diag(ps5("OUT_OF_STOCK")), {})
+    d = _diag(ps5())
+    st2 = ob.migrate(st)
+    ob.observe(st2, d["actionability"]["products"], now=NOW, mode=ob.MODE_DRY)
+    row = dict(d["actionability"]["products"][0], **{"cta_url" if field == "cta_url" else field: value})
+    out = ob.prepare(st2, [row], now=NOW, mode=ob.MODE_DRY, attempt_id="x")
+    assert out["planned"] == 0
+    assert {r["status"] for r in st2["records"].values()} == {status}
 
 
 def test_dispatch_time_expiry_blocks():
-    """候補を作ってから配信までに期限（3時間）を過ぎたら送らない。"""
-    c = _cand()
-    assert an.dispatch([c], now=NOW)[0]["status"] == an.PLANNED
-    late = datetime.fromtimestamp(c["until_ms"] / 1000, tz=JST) + timedelta(seconds=1)
-    assert an.dispatch([c], now=late)[0]["status"] == an.BLOCKED
+    """候補を作ってから配信までに期限（3時間）を過ぎたら送らない（EXPIRED）。"""
+    _r, st = run(_diag(ps5("OUT_OF_STOCK")), {})
+    late = NOW + timedelta(hours=3)
+    r, st = run(_diag(ps5()), st, dispatch_now=late)
+    assert r["dispatch_planned"] == 0 and r["dispatch_expired"] == 1
+    _r, st0 = run(_diag(ps5("OUT_OF_STOCK")), {})
+    r, _ = run(_diag(ps5()), st0)                                     # 否定の対照: 期限の内なら計画する
+    assert r["dispatch_planned"] == 1
 
 
 def test_lottery_deadline_revalidated():
-    (_r1, r2), _ = seq(_diag(gr4(CLOSED)), _diag(gr4(OPEN)))
+    (_r1, r2), st = seq(_diag(gr4(CLOSED)), _diag(gr4(OPEN)))
     c = r2["candidates"][0]
-    assert an.revalidate(c, NOW) == []
-    assert "deadline_invalid" in an.revalidate(dict(c, deadline=""), NOW)
-    after = NOW + timedelta(days=3)
-    assert an.dispatch([c], now=after)[0]["status"] == an.BLOCKED
+    assert an.revalidate_fields(c, NOW) == []
+    assert "deadline_invalid" in an.revalidate_fields(dict(c, deadline=""), NOW)
+    _r, st = run(_diag(gr4(CLOSED)), {})
+    r, _ = run(_diag(gr4(OPEN)), st, dispatch_now=NOW + timedelta(days=3))    # 締切の後
+    assert r["dispatch_planned"] == 0 and r["dispatch_expired"] == 1
 
 
 def test_dry_run_never_calls_sender():
     called = []
-    res = an.dispatch([_cand()], now=NOW, dry_run=True, sender=lambda c, k: called.append(k))
-    assert res[0]["status"] == an.PLANNED and called == []
-    res = an.dispatch([_cand()], now=NOW, dry_run=False, sender=lambda c, k: called.append(k))
-    assert res[0]["status"] == an.SENT and len(called) == 1       # 否定の対照: dry-run でなければ呼ぶ
+    _r, st = run(_diag(ps5("OUT_OF_STOCK")), {}, channels=["fixture"])
+    st2 = ob.migrate(st)
+    ob.cycle(st2, _diag(ps5()), now=NOW, mode=ob.MODE_DRY, channels=["fixture"],
+             adapters={"fixture": FixtureAdapter(
+                 lambda c, k: called.append(k))})
+    assert called == [] and ob.counts(st2)["dry_run_planned"] == 1
+    _r, st = run(_diag(ps5("OUT_OF_STOCK")), {}, dry_run=False, sender=lambda c, k: called.append(k))
+    r, _ = run(_diag(ps5()), st, dry_run=False, sender=lambda c, k: called.append(k))
+    assert r["dispatch_sent"] == 1 and len(called) == 1                # 否定の対照: 本番の方式なら呼ぶ
 
 
 def test_not_dry_run_without_sender_does_not_send():
-    res = an.dispatch([_cand()], now=NOW, dry_run=False, sender=None)
-    assert res[0]["status"] == an.NOT_CONFIGURED
+    _r, st = run(_diag(ps5("OUT_OF_STOCK")), {}, dry_run=False)
+    r, st = run(_diag(ps5()), st, dry_run=False)
+    assert r["dispatch_not_configured"] == 1 and r["dispatch_sent"] == 0
+    assert ob.counts(st)["outbox_pending"] == 1
 
 
 def test_is_dry_run_default():
@@ -259,17 +232,21 @@ def test_is_dry_run_default():
     assert not an.is_dry_run({"NOTIFICATION_DRY_RUN": "false"})
 
 
-@pytest.mark.parametrize("status,attempts,final", [(None, 3, an.FAILED), (429, 3, an.FAILED), (503, 3, an.FAILED),
-                                                    (400, 1, an.FAILED)])
-def test_retry_semantics(status, attempts, final):
+@pytest.mark.parametrize("status,final", [("connect", ob.FAILED_RETRYABLE), (429, ob.FAILED_RETRYABLE),
+                                          (503, ob.FAILED_RETRYABLE), (400, ob.FAILED_FINAL),
+                                          ("read", ob.UNKNOWN_DELIVERY)])
+def test_retry_semantics(status, final):
+    """1回の実行では1回だけ送る（再試行は次の実行）。接続できない・429・5xx は出し直す、400 は出し直さない、
+    送った後の切断は届いたか不明（自動では送り直さない）。"""
     keys = []
 
     def sender(c, k):
         keys.append(k)
-        raise an.SendError(status)
-    r = an.dispatch([_cand()], now=NOW, dry_run=False, sender=sender)[0]
-    assert (r["status"], r["attempts"]) == (final, attempts)
-    assert len(set(keys)) == 1                     # 再試行は同じ識別子（受け側で重ねない）
+        raise SendFail(status)
+    _r, st = run(_diag(ps5("OUT_OF_STOCK")), {}, dry_run=False, sender=sender)
+    r, st = run(_diag(ps5()), st, dry_run=False, sender=sender)
+    rec = next(iter(st["records"].values()))
+    assert rec["status"] == final and rec["channels"]["fixture"]["attempt_count"] == 1 and len(keys) == 1
 
 
 def test_retry_then_success():
@@ -278,34 +255,36 @@ def test_retry_then_success():
     def sender(c, k):
         n.append(k)
         if len(n) < 2:
-            raise an.SendError(429)
-    r = an.dispatch([_cand()], now=NOW, dry_run=False, sender=sender)[0]
-    assert r["status"] == an.SENT and r["attempts"] == 2
+            raise SendFail(429, {"Retry-After": "60"})
+    _r, st = run(_diag(ps5("OUT_OF_STOCK")), {}, dry_run=False, sender=sender)
+    r, st = run(_diag(ps5()), st, dry_run=False, sender=sender)
+    assert r["dispatch_failed"] == 1
+    later = NOW + timedelta(minutes=10)
+    r, st = run(_diag(ps5(checked=later - timedelta(minutes=5), now=later)), st, now=later, dry_run=False, sender=sender)
+    assert r["dispatch_sent"] == 1 and len(n) == 2 and len(set(n)) == 1   # 同じ冪等性のキーで出し直す
 
 
 def test_failure_keeps_candidate_and_does_not_mark_sent():
-    """送信の失敗は通知済みにしない（次の実行で出し直す）。成功した後は出さない（重複しない）。"""
-    st = {}
-    _r, st = an.run(_diag(ps5("OUT_OF_STOCK")), st, now=NOW)
-
+    """送信の失敗は送信済みにしない（次の実行で出し直す）。成功した後は出さない（重複しない）。"""
     def fail(c, k):
-        raise an.SendError(503)
-    r1, st = an.run(_diag(ps5()), st, now=NOW, dry_run=False, sender=fail)
-    assert r1["dispatch_failed"] == 1 and r1["candidates"] and st["prod_ps5_pro"]["notified_key"] == ""
+        raise SendFail(503)
+    _r, st = run(_diag(ps5("OUT_OF_STOCK")), {}, dry_run=False, sender=fail)
+    r1, st = run(_diag(ps5()), st, dry_run=False, sender=fail)
+    assert r1["dispatch_failed"] == 1 and ob.counts(st)["delivered"] == 0
     sent = []
-    r2, st = an.run(_diag(ps5()), st, now=NOW, dry_run=False, sender=lambda c, k: sent.append(k))
+    later = NOW + timedelta(minutes=10)
+    v = ps5(checked=later - timedelta(minutes=5), now=later)
+    r2, st = run(_diag(v), st, now=later, dry_run=False, sender=lambda c, k: sent.append(k))
     assert r2["dispatch_sent"] == 1 and len(sent) == 1
-    r3, st = an.run(_diag(ps5()), st, now=NOW, dry_run=False, sender=lambda c, k: sent.append(k))
+    r3, st = run(_diag(v), st, now=later, dry_run=False, sender=lambda c, k: sent.append(k))
     assert r3["notification_candidates"] == 0 and len(sent) == 1
 
 
 def test_blocked_candidate_is_not_marked():
-    st = {"prod_ps5_pro": {"availability": "OUT_OF_STOCK", "notified_key": ""}}
+    _r, st = run(_diag(ps5("OUT_OF_STOCK")), {})
     late = NOW + timedelta(hours=5)        # 判定は NOW、配信は期限の後
-    cands, _s, nxt = an.detect(_diag(ps5())["actionability"]["products"], st, now=NOW)
-    res = an.dispatch(cands, now=late)
-    assert res[0]["status"] == an.BLOCKED
-    assert an.apply_results(nxt, res, late)["prod_ps5_pro"]["notified_key"] == ""
+    r, st = run(_diag(ps5()), st, dispatch_now=late)
+    assert r["dispatch_expired"] == 1 and ob.counts(st)["dry_run_planned"] == 0 and ob.counts(st)["delivered"] == 0
 
 
 # ── 本文・配信先・秘密の値 ───────────────────────────────────────────────
@@ -353,6 +332,7 @@ def test_engine_registers_type():
 # ── LP の生成との接続・運営者向け ─────────────────────────────────────────
 
 def test_generator_writes_and_dedupes(tmp_path, monkeypatch):
+    """LP の生成は候補を outbox に PENDING で入れて保存するだけ（配信は次の手順）。同じ状態では新しい記録を作らない。"""
     from src.content.daily_lp_generator import DailyLPGenerator
     monkeypatch.setenv("ACTIONABLE_NOTIFICATIONS_DIR", str(tmp_path))
     monkeypatch.delenv("NOTIFICATION_DRY_RUN", raising=False)
@@ -363,18 +343,23 @@ def test_generator_writes_and_dedupes(tmp_path, monkeypatch):
     r2 = g._write_actionable_notifications(_diag(ps5()), NOW)
     assert (r1["notification_candidates"], r2["notification_candidates"]) == (1, 0)
     hist = json.loads((tmp_path / "history" / "2026-10-09.json").read_text(encoding="utf-8"))
-    assert len(hist["runs"]) == 3 and hist["runs"][1]["candidates"][0]["dispatch_status"] == an.PLANNED
+    assert len(hist["runs"]) == 3 and hist["runs"][1]["candidates"][0]["outbox_status"] == ob.PENDING
     st = json.loads((tmp_path / "state.json").read_text(encoding="utf-8"))
-    assert st["products"]["prod_ps5_pro"]["notified_key"]
+    assert st["schema"] == ob.SCHEMA and len(st["records"]) == 1
+    assert r2["counts"]["outbox_pending"] == 1 and r2["dispatch_planned"] == 0
 
 
-def test_admin_shows_counts_without_keys():
+def test_admin_shows_counts_without_keys(tmp_path):
     from src.content.ui import admin
-    (_r1, r2), _ = seq(_diag(ps5("OUT_OF_STOCK")), _diag(ps5()))
-    a = admin.build_actionable_notices(r2)
+    ob.run_observe(tmp_path, _diag(ps5("OUT_OF_STOCK")), now=NOW, dry_run=True)
+    d = dict(_diag(ps5()), generated_at=NOW.isoformat())
+    rep = ob.run_observe(tmp_path, d, now=NOW, dry_run=True)
+    rep = ob.run_prepare(tmp_path, d, now=NOW, dry_run=True, attempt_id="a")
+    a = admin.build_actionable_notices(rep)
     html = admin._act_notices(a)
     assert "dry-run" in html and "PlayStation 5 Pro" in html and "購入可能になりました" in html
-    assert "::" not in html and SONY not in html             # 重複の抑制の識別子・URL は出さない
+    assert a["dry_run_planned"] == 1 and a["outbox_pending"] == 0
+    assert "ACTIONABLE_NOW:" not in html and SONY not in html        # 冪等性のキー・URL は出さない
     empty = admin._act_notices(admin.build_actionable_notices(None))
     assert "記録がありません" in empty
 
@@ -416,7 +401,7 @@ def test_profit_return_while_in_stock_is_not_notified():
     other = _view("prod_other", act.evaluate(profitable=True, identity_ok=True, stock="OUT_OF_STOCK",
                                              stock_checked_at=NOW - timedelta(minutes=10), buy_url=SONY, now=NOW))
     _r, st = run(_diag(other), st)                              # 利益から外れた（ほかの商品だけが診断の行にある）
-    assert st["prod_ps5_pro"]["availability"] == an.NOT_CONFIRMED
+    assert st["products"]["prod_ps5_pro"]["availability"] == an.NOT_CONFIRMED
     r, st = run(_diag(ps5()), st)                                # 利益が戻った・在庫あり
     assert r["notification_candidates"] == 0 and r["baseline_recorded"] == 1
     r, st = run(_diag(ps5()), st)
@@ -436,16 +421,17 @@ def test_event_key_format_change_is_same_event():
 
 def test_dispatch_now_is_used_for_revalidation():
     """配信の直前の確認は、生成を始めた時刻より後の時刻で行う（監査 L-3）。"""
-    st = {"prod_ps5_pro": {"availability": "OUT_OF_STOCK", "notified_key": ""}}
+    _r, st = run(_diag(ps5("OUT_OF_STOCK")), {})
+    st_b = ob.migrate(json.loads(json.dumps(st)))
     r, st2 = run(_diag(ps5()), st, dispatch_now=NOW + timedelta(hours=3))
     assert r["notification_candidates"] == 1 and r["dispatch_blocked"] == 1 and r["dispatch_planned"] == 0
-    assert st2["prod_ps5_pro"]["notified_key"] == ""            # 止めたものは通知済みにしない
-    r, _ = run(_diag(ps5()), st, dispatch_now=NOW - timedelta(hours=1))   # 生成より前の時刻は使わない
+    assert ob.counts(st2)["dry_run_planned"] == 0                  # 止めたものは計画・送信済みにしない
+    r, _ = run(_diag(ps5()), st_b, dispatch_now=NOW - timedelta(hours=1))   # 生成より前の時刻は使わない
     assert r["dispatch_planned"] == 1
 
 
 def test_nan_profit_is_not_notified():
-    st = {"prod_ps5_pro": {"availability": "OUT_OF_STOCK", "notified_key": ""}}
+    _r, st = run(_diag(ps5("OUT_OF_STOCK")), {})
     v = ps5()
     v.net_profit = float("nan")
     r, _ = run(_diag(v), st)
@@ -462,16 +448,16 @@ def test_generator_records_failure(tmp_path, monkeypatch):
 
     def boom(*a, **k):
         raise RuntimeError("x")
-    monkeypatch.setattr(an, "run", boom)
+    monkeypatch.setattr(ob, "observe", boom)
     assert g._write_actionable_notifications(_diag(ps5()), NOW) is None
     latest = json.loads((tmp_path / "latest.json").read_text(encoding="utf-8"))
     assert latest["failed"] is True and latest["dispatch_sent"] == 0
     assert (tmp_path / "state.json").read_text(encoding="utf-8") == before
 
 
-def test_report_links_to_diagnostics():
+def test_report_links_to_diagnostics(tmp_path):
     d = dict(_diag(ps5()), generated_at="2026-10-09T12:00:00+09:00")
-    r, _ = run(d, None)
+    r = ob.run_observe(tmp_path, d, now=NOW, dry_run=True)
     assert r["diagnostics_generated_at"] == "2026-10-09T12:00:00+09:00"
 
 
@@ -524,10 +510,8 @@ def test_generate_notifications_only_when_enabled(tmp_path, monkeypatch):
 
 def test_undelivered_event_is_retried_after_previous_delivery():
     """前に別の組み合わせを通知済みでも、配信できなかった新しい受付は次の実行で出し直す（再監査 M-1）。"""
-    st = {"prod_gr4_hdf": {"availability": "OUT_OF_STOCK", "notified_key": ""}}
-    stock_view = _view("prod_gr4_hdf", act.evaluate(profitable=True, identity_ok=True, stock="IN_STOCK",
-                                                    stock_checked_at=NOW - timedelta(minutes=10), buy_url=RICOH,
-                                                    now=NOW))
+    _r, st = run(_diag(gr4(CLOSED)), {})
+    stock_view = _stock_gr4()
     r, st = run(_diag(stock_view), st)
     assert r["dispatch_planned"] == 1
     r, st = run(_diag(gr4(OPEN)), st, dispatch_now=NOW + timedelta(days=3))    # 新しい受付・配信の時点で期限切れ
@@ -539,18 +523,16 @@ def test_undelivered_event_is_retried_after_previous_delivery():
 
 
 def test_send_failure_retried_with_sender():
-    st = {"prod_gr4_hdf": {"availability": "OUT_OF_STOCK", "notified_key": ""}}
-    stock_view = _view("prod_gr4_hdf", act.evaluate(profitable=True, identity_ok=True, stock="IN_STOCK",
-                                                    stock_checked_at=NOW - timedelta(minutes=10), buy_url=RICOH,
-                                                    now=NOW))
     sent = []
-    r, st = run(_diag(stock_view), st, dry_run=False, sender=lambda c, k: sent.append(k))
+    _r, st = run(_diag(gr4(CLOSED)), {}, dry_run=False, sender=lambda c, k: sent.append(k))
+    r, st = run(_diag(_stock_gr4()), st, dry_run=False, sender=lambda c, k: sent.append(k))
 
     def fail(c, k):
-        raise an.SendError(503)
+        raise SendFail(503)
     r, st = run(_diag(gr4(OPEN)), st, dry_run=False, sender=fail)
     assert r["dispatch_failed"] == 1
-    r, st = run(_diag(gr4(OPEN)), st, dry_run=False, sender=lambda c, k: sent.append(k))
+    later = NOW + timedelta(minutes=10)
+    r, st = run(_diag(gr4(OPEN, now=later)), st, now=later, dry_run=False, sender=lambda c, k: sent.append(k))
     assert r["dispatch_sent"] == 1 and len(sent) == 2
 
 
@@ -591,34 +573,27 @@ def test_same_lottery_after_general_sale_is_not_renotified():
                                                     stock_checked_at=NOW - timedelta(minutes=10), buy_url=RICOH,
                                                     now=NOW))
     nxt = lottery_event(NOW - timedelta(hours=2), NOW + timedelta(days=5))
-    st = {"prod_gr4_hdf": {"availability": "OUT_OF_STOCK", "notified_key": ""}}
+    _r, st = run(_diag(gr4(CLOSED)), {})
     counts = []
     for d in (_diag(gr4(OPEN)), _diag(stock_view), _diag(gr4(OPEN)), _diag(gr4(nxt))):
         r, st = run(d, st)
         counts.append(r["notification_candidates"])
     assert counts == [1, 1, 0, 1]
-    assert len(st["prod_gr4_hdf"]["notified_events"]) == 2
+    assert sum(1 for r in st["records"].values() if r["kind"] == "event") == 2
 
 
-def test_notified_events_expire_after_deadline():
-    st = {"prod_gr4_hdf": {"availability": "OUT_OF_STOCK", "notified_key": ""}}
-    _r, st = run(_diag(gr4(OPEN)), st)
-    assert st["prod_gr4_hdf"]["notified_events"]
-    later = NOW + timedelta(days=5)                     # OPEN の締切の後
-    _r, st = run(_diag(ps5("OUT_OF_STOCK", now=later)), st, now=later)
+def test_known_events_expire_after_deadline():
+    """基準日に受付中だった受付の記録は、締切から保持日数を過ぎたら消す（締切の延長に備えて少し残す）。"""
+    _r, st = run(_diag(gr4(OPEN)), None)
+    assert st["products"]["prod_gr4_hdf"]["known_events"]
+    later = NOW + timedelta(days=5 + ob.RETENTION_DAYS)   # OPEN の締切から保持日数の後
     _r, st = run(_diag(gr4(CLOSED, now=later)), st, now=later)
-    assert st["prod_gr4_hdf"]["notified_events"] == []
-
-
-
-def _stock_gr4():
-    return _view("prod_gr4_hdf", act.evaluate(profitable=True, identity_ok=True, stock="IN_STOCK",
-                                              stock_checked_at=NOW - timedelta(minutes=10), buy_url=RICOH, now=NOW))
+    assert st["products"]["prod_gr4_hdf"]["known_events"] == {}
 
 
 def test_lottery_and_stock_flapping_does_not_repeat():
     """抽選 E1 と在庫ありを行き来しても、どちらも2回目は出さない（監査 M-1・レビュー H-1）。"""
-    st = {"prod_gr4_hdf": {"availability": "OUT_OF_STOCK", "notified_key": ""}}
+    _r, st = run(_diag(gr4(CLOSED)), {})
     counts = []
     for d in (_diag(gr4(OPEN)), _diag(_stock_gr4()), _diag(gr4(OPEN)), _diag(_stock_gr4()), _diag(gr4(OPEN))):
         r, st = run(d, st)
@@ -636,18 +611,25 @@ def test_baseline_records_open_event():
 
 
 def test_old_ledger_without_events():
-    """前の形式の台帳（notified_events が無い）でも、通知済みの受付をもう一度出さない（監査 L-2）。"""
-    r0, _ = run(_diag(gr4(OPEN)), {"prod_gr4_hdf": {"availability": "OUT_OF_STOCK", "notified_key": ""}})
+    """前の形式（Phase 19）の台帳でも、通知済みの受付をもう一度出さない。抽選だけを通知していたら、一般販売は通知する。"""
+    e1 = "prod_gr4_hdf|2026-10-08T12:00+09:00|2026-10-11T12:00+09:00"
     old = {"prod_gr4_hdf": {"availability": "LOTTERY_OPEN", "actionable": True,
-                            "notified_key": r0["candidates"][0]["dedupe_key"]}}
+                            "notified_key": f"prod_gr4_hdf::ACTIONABLE_NOW::LOTTERY_OPEN::{e1}",
+                            "notified_events": [e1]}}
     counts = []
     for d in (_diag(_stock_gr4()), _diag(gr4(OPEN))):
         r, old = run(d, old)
         counts.append(r["dispatch_planned"])
     assert counts == [1, 0]
+    direct = {"prod_ps5_pro": {"availability": "IN_STOCK", "actionable": True,
+                               "notified_key": "prod_ps5_pro::ACTIONABLE_NOW::IN_STOCK::"}}
+    r, _ = run(_diag(ps5()), direct)
+    assert r["notification_candidates"] == 0                 # 一般販売を通知済み → 同じ在庫ありは出さない
 
 
-def test_live_events_drops_malformed():
-    e1 = "prod_gr4_hdf|2026-10-08T12:00+09:00|2026-10-11T12:00+09:00"
-    assert an._live_events([e1, "p|x|", "junk", 5], NOW) == [e1]
-    assert an._live_events([e1], NOW + timedelta(days=5)) == []
+def test_known_events_drops_malformed():
+    e1 = "prod_gr4_hdf|2026-10-08T12:00+09:00"
+    known = {e1: "2026-10-11T12:00+09:00", "p|x|": "2026-10-11T12:00+09:00", "junk": "x", "q|s": ""}
+    assert ob._live_known(known, NOW) == {e1: "2026-10-11T12:00+09:00"}
+    assert ob._live_known({e1: "2026-10-11T12:00+09:00"}, NOW + timedelta(days=5)) != {}
+    assert ob._live_known({e1: "2026-10-11T12:00+09:00"}, NOW + timedelta(days=5 + ob.RETENTION_DAYS)) == {}

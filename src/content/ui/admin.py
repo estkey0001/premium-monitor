@@ -494,15 +494,19 @@ def build_notifications(events: list | None, keys: dict, latest: dict) -> dict:
 
 
 def build_actionable_notices(rep: dict | None) -> dict:
-    """今すぐ行動できるようになった商品の通知（Phase 19。src/notifiers/actionable の今回の生成の結果を数えて出すだけ）。
-    重複の抑制の識別子・配信先の URL・トークンは出さない。"""
+    """今すぐ行動できるようになった商品の通知（Phase 19・20。src/notifiers/outbox の今回の候補の記録と、outbox の状態ごとの件数）。
+    冪等性のキー・配信先の URL・トークンは出さない。配信の直前の確認・送信はこの画面の生成の後の手順なので、outbox の件数は
+    この画面の生成の時点（前の実行までの配信の結果を含む）。"""
     r = rep if isinstance(rep, dict) else {}
-    keys = ("notification_candidates", "dedupe_suppressed", "baseline_recorded", "dispatch_planned", "dispatch_sent",
-            "dispatch_failed", "dispatch_blocked")
+    keys = ("notification_candidates", "dedupe_suppressed", "baseline_recorded")
+    cnt = r.get("counts") if isinstance(r.get("counts"), dict) else {}
+    ckeys = ("outbox_pending", "dry_run_planned", "delivered", "retryable_failed", "final_failed", "expired",
+             "cancelled", "ambiguous_delivery")
     return {"available": bool(r), "dry_run": r.get("dry_run") is not False, "baseline": bool(r.get("is_baseline")),
             "at": r.get("generated_at") or "", **{k: int(r.get(k) or 0) for k in keys},
+            **{k: int(cnt.get(k) or 0) for k in ckeys},
             "items": [{"product": str(c.get("product") or c.get("product_id") or ""), "status": str(c.get("status") or ""),
-                       "transition": str(c.get("transition") or ""), "dispatch": str(c.get("dispatch_status") or "")}
+                       "transition": str(c.get("transition") or ""), "dispatch": str(c.get("outbox_status") or "")}
                       for c in (r.get("candidates") or []) if isinstance(c, dict)][:20]}
 
 
@@ -931,8 +935,11 @@ def _execution(v: dict) -> str:
             + _box("学んだこと・補正（実行の集計より）", _learn(e)))
 
 
-_DISPATCH_LABELS = {"dry_run_planned": "配信を計画（dry-run・送っていない）", "sent": "送信済み", "failed": "送信の失敗",
-                    "revalidation_failed": "配信の直前の確認で止めた", "not_configured": "送信先が無い（送っていない）"}
+_DISPATCH_LABELS = {"PENDING": "配信待ち（outbox に保存済み）", "DRY_RUN_PLANNED": "配信を計画（dry-run・送っていない）",
+                    "SENDING": "送信中", "DELIVERED": "送信済み", "FAILED_RETRYABLE": "送信の失敗（次の実行で出し直す）",
+                    "FAILED_FINAL": "送信の失敗（出し直さない）", "EXPIRED": "期限切れ（送っていない）",
+                    "CANCELLED": "取り消し（行動できなくなった・送っていない）",
+                    "UNKNOWN_DELIVERY": "届いたか不明（自動では送り直さない）"}
 
 
 def _act_notices(a: dict) -> str:
@@ -942,16 +949,19 @@ def _act_notices(a: dict) -> str:
     items = "".join(f'<li><b>{esc(i["status"])}</b>・{esc(i["product"])}<span class="nu-osub">{esc(i["transition"])}・'
                     f'{esc(_DISPATCH_LABELS.get(i["dispatch"], i["dispatch"]))}</span></li>' for i in a["items"])
     dl = "".join(f"<dt>{esc(lbl)}</dt><dd>{a[k]}件</dd>" for k, lbl in (
-        ("notification_candidates", "通知の候補（行動できない → できる）"), ("dedupe_suppressed", "同じ状態のため出さなかった"),
+        ("notification_candidates", "今回の通知の候補（行動できない → できる）"),
+        ("dedupe_suppressed", "同じ状態・同じ受付のため出さなかった"),
         ("baseline_recorded", "前回の状態を見ていないため記録だけ"),
-        ("dispatch_planned", "配信の計画（dry-run）"), ("dispatch_sent", "送信"), ("dispatch_failed", "送信の失敗"),
-        ("dispatch_blocked", "配信の直前の確認で止めた")))
+        ("outbox_pending", "outbox の配信待ち"), ("dry_run_planned", "配信を計画（dry-run）"), ("delivered", "送信済み"),
+        ("retryable_failed", "送信の失敗（出し直す）"), ("final_failed", "送信の失敗（出し直さない）"),
+        ("expired", "期限切れ"), ("cancelled", "取り消し"), ("ambiguous_delivery", "届いたか不明")))
     mode = "dry-run（外部へは送らない）" if a["dry_run"] else "送信あり"
     return _box("今すぐ行動の通知", f'<dl class="nu-ad-dl"><dt>方式</dt><dd>{esc(mode)}</dd>{dl}</dl>'
                 + (f'<ul class="nu-ad-list">{items}</ul>' if items else _empty(
                     "今回、行動できるようになった利益商品はありません" + ("（基準日）。" if a["baseline"] else "。")))
                 + _generated("今回", a["at"]),
-                sub="確定の利益があり、今すぐ行動できるようになった商品だけ（同じ状態では毎回出さない）。判定は「今すぐ行動」と同じ")
+                sub="確定の利益があり、今すぐ行動できるようになった商品だけ（同じ状態では毎回出さない）。判定は「今すぐ行動」と同じ。"
+                    "outbox の件数はこの画面の生成の時点（配信の直前の確認・送信はこの後の手順）")
 
 
 def _notices(v: dict) -> str:

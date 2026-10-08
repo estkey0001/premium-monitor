@@ -200,11 +200,16 @@ def _notification_metrics() -> dict:
     # 今回の診断から作った出力でなければ（失敗・前回の残り）件数を出さない（監査 L-4）
     current = bool(n) and not n.get("failed") and str(n.get("diagnostics_generated_at") or "") == str(
         d.get("generated_at") or "")
+    cnt = n.get("counts") if isinstance(n.get("counts"), dict) else {}
     return {"notification_current": current,
             **{k: (int(n.get(k) or 0) if current else None)
                for k in ("newly_actionable", "notification_candidates", "dedupe_suppressed",
                          "dispatch_planned", "dispatch_sent", "dispatch_failed", "dispatch_blocked",
-                         "dispatch_not_configured")}}
+                         "dispatch_not_configured")},
+            # Phase 20: outbox の状態ごとの件数（今回の出力のときだけ）
+            **{k: (int(cnt.get(k) or 0) if current else None)
+               for k in ("outbox_pending", "dry_run_planned", "delivered", "retryable_failed", "expired",
+                         "ambiguous_delivery")}}
 
 
 def _camera_metrics(obs: list[dict], confirmed_keys, diag: dict) -> dict:

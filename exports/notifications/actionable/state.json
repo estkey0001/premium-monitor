@@ -1,21 +1,24 @@
 {
-  "updated_at": "2026-10-09T00:19:40+09:00",
   "products": {
     "prod_gr4_hdf": {
-      "availability": "LOTTERY_CLOSED",
       "actionable": false,
-      "event_id": "",
-      "notified_key": "",
-      "notified_at": "",
-      "notified_events": []
+      "arm_seq": 0,
+      "arm_used": false,
+      "armed_by": "legacy:LOTTERY_CLOSED",
+      "availability": "LOTTERY_CLOSED",
+      "current_key": "",
+      "known_events": {}
     },
     "prod_ps5_pro": {
-      "availability": "OUT_OF_STOCK",
       "actionable": false,
-      "event_id": "",
-      "notified_key": "",
-      "notified_at": "",
-      "notified_events": []
+      "arm_seq": 0,
+      "arm_used": false,
+      "armed_by": "legacy:OUT_OF_STOCK",
+      "availability": "OUT_OF_STOCK",
+      "current_key": "",
+      "known_events": {}
     }
-  }
+  },
+  "records": {},
+  "schema": 2
 }

@@ -118,6 +118,8 @@ def collect(now: datetime | None = None) -> dict:
         # Phase 16: 確認済みの仕入れ値の内訳（定価 = 希望小売価格 / 公式直販価格）・公式直販で今すぐ行動できる商品・
         # 版が決められない商品（上の verified_retail の定義は変えない）
         **_price_kind_metrics(products, diag),
+        # Phase 17: カメラの売る側（新品の買取の新しい行・古い行・中古の参考・確定の売値）と、カメラの利益・行動できる商品
+        **_camera_metrics(obs, confirmed_keys, diag),
         "buyback_rows": len(buyback),
         "fresh_buyback": sum(1 for o in buyback if o.get("is_fresh")),
         "stale_buyback": sum(1 for o in buyback if not o.get("is_fresh")),
@@ -168,6 +170,34 @@ def _price_kind_metrics(products: list[dict], diag: dict) -> dict:
             "official_direct_verified": sum(1 for k in kind.values() if k == "official_direct"),
             "official_direct_actionable": sum(1 for pid in act_ids if reg.price_kind_of(pid) == "official_direct"),
             "ambiguous_variants": sum(1 for p in products if p.get("product_id") in reg.USER_DECISIONS)}
+
+
+def _camera_metrics(obs: list[dict], confirmed_keys, diag: dict) -> dict:
+    """カメラの買取（新品・中古）と確定の売値・利益・今すぐ行動できる商品の件数（読むだけ）。"""
+    import yaml
+
+    from src.content.ui.opportunity import _cond_family
+    try:
+        prods = (yaml.safe_load((ROOT / "config" / "products.yaml").read_text(encoding="utf-8")) or {}).get("products")
+    except (OSError, ValueError):
+        prods = []
+    cams = {p["id"] for p in prods or [] if p.get("genre") == "camera"}
+    rows = [o for o in obs if o.get("product_id") in cams and o.get("price_role") == "sell"
+            and o.get("canonical_price_type") == "BUYBACK_CASH" and (o.get("price") or 0) > 0]
+    new = [o for o in rows if _cond_family(o.get("condition")) == "new"]
+    act = {str(a.get("product_id") if isinstance(a, dict) else a)
+           for a in (diag.get("actionable") or {}).get("products") or []}
+    return {"camera_products": len(cams),
+            "fresh_new_camera_buyback": sum(1 for o in new if o.get("is_fresh")),
+            "stale_new_camera_buyback": sum(1 for o in new if not o.get("is_fresh")),
+            "used_camera_reference": len(rows) - len(new),
+            "confirmed_camera_sells": sum(1 for k in confirmed_keys if k[0] in cams),
+            # 診断（opportunity_diagnostics._camera_summary）と同じ定義（運営者向けの画面と件数をそろえる。レビュー L2）
+            "camera_profitable": int(((diag.get("camera") or {}).get("profitable")
+                                      if isinstance(diag.get("camera"), dict)
+                                      else ((diag.get("category_counts") or {}).get("camera") or {}).get("eligible"))
+                                     or 0),
+            "camera_actionable": len(act & cams)}
 
 
 def _identity_counts() -> dict:

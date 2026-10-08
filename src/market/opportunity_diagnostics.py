@@ -127,6 +127,33 @@ def _stock_state(p: dict, now: datetime) -> tuple[str, bool]:
     return raw, unsupported
 
 
+def _camera_summary(products: list[dict], observations: list[dict], candidates: list[dict],
+                    actionable: list[dict]) -> dict:
+    """カメラの買取の網羅（Phase 17。判定はやり直さない: 確定の売値は normalized_prices.sell_confirmation_reasons、
+    状態の系統は opportunity._cond_family、利益は候補の判定、行動できるかは actionable の結果）。"""
+    from src.content.ui.opportunity import _cond_family
+    from src.market.normalized_prices import sell_confirmation_reasons
+    cams = {p["id"] for p in products if p.get("genre") == "camera"}
+    rows = [o for o in observations if o.get("product_id") in cams and o.get("price_role") == "sell"
+            and o.get("canonical_price_type") == pt.BUYBACK_CASH and (o.get("price") or 0) > 0]
+    new = [o for o in rows if _cond_family(o.get("condition")) == "new"]
+    confirmed = [o for o in rows if not sell_confirmation_reasons(o)]
+    best: dict[str, dict] = {}
+    for o in confirmed:
+        if o["price"] > best.get(o["product_id"], {}).get("price", 0):
+            best[o["product_id"]] = {"product_id": o["product_id"], "price": o["price"],
+                                     "source": o.get("source_name") or "", "observed_at": o.get("observed_at") or "",
+                                     "condition": o.get("condition") or ""}
+    return {"products": len(cams),
+            "fresh_new": sum(1 for o in new if o.get("is_fresh")),
+            "stale_new": sum(1 for o in new if not o.get("is_fresh")),
+            "used_reference": len(rows) - len(new),
+            "confirmed_sells": len(confirmed),
+            "confirmed_products": sorted(best.values(), key=lambda r: r["product_id"]),
+            "profitable": sum(1 for c in candidates if c["product_id"] in cams and c["eligible"]),
+            "actionable": sum(1 for a in actionable if a.get("product_id") in cams)}
+
+
 # 「今すぐ行動できる」に数える利益案件の種類（opportunity.AVAILABILITY_OF の値。抽選は受付中か分からないので数えない）
 ACTIONABLE_AVAILABILITY = frozenset({"BUY_NOW", "RESERVATION"})
 
@@ -287,6 +314,8 @@ def build(*, products: list[dict], msrp_evidence: dict, official_meta: dict, obs
                     "failed_sources": sorted(s for s, c in src.items() if not c["fresh"] and not c["stale"]),
                     "usable_products": len(usable_products), "sources": buyback_sources},
         "sold": sold, "sold_median": median,
+        # Phase 17: カメラの売る側（新品の買取・中古の参考・確定の売値）と利益・今すぐ行動できる商品
+        "camera": _camera_summary(products, observations, candidates, actionable),
         "stock": {"states": dict(stock), "in_stock_without_evidence": unsupported},
         "actionable": {"count": len(actionable), "products": actionable,
                        "note": "掲載できる利益 ＋ 今買える（在庫ありの明示）か予約の根拠があるものだけ"},

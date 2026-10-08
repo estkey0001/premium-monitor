@@ -4131,6 +4131,7 @@ def check() -> list[dict]:
     results.extend(_check_phase13_ebay_sold())
     results.extend(_check_phase15_identity())
     results.extend(_check_phase16_official_direct())
+    results.extend(_check_phase17_camera_sell())
 
     # ══════════════════════════════════════════════════════════════════
     # #820-#825: データの正確さ・鮮度の偽装（Phase 0）
@@ -4682,6 +4683,79 @@ def _check_phase16_official_direct() -> list[dict]:
                 "message": "#852 quality_checker（存在しないテーブル名を引かない・公式の購入ページは案件と同じ判定）"
                            + ("" if not bad else f" ← {bad[:4]}")})
     return out
+
+
+def _check_phase17_camera_sell() -> list[dict]:
+    """Phase 17: カメラの新品の買取（#853）。JAN で1行だけ・新品と中古を混ぜない・失敗で時刻を進めない・抽選/在庫なしを
+    今すぐ行動できるに数えない。否定の対照を動かして確かめる。"""
+    import importlib.util as _iu17
+
+    import yaml as _y17
+    root = PROJECT_ROOT
+    bad = []
+    try:
+        from src.collectors import buyback_kaitori_shouten as ks
+        from src.content.ui.opportunity import AVAILABILITY_OF, _cond_family
+        from src.market import official_registry as _reg
+        from src.market.opportunity_diagnostics import ACTIONABLE_AVAILABILITY
+        prods = {p["id"]: p for p in (_y17.safe_load((root / "config" / "products.yaml").read_text(encoding="utf-8"))
+                                      or {}).get("products") or []}
+        # JAN は公式の証拠・登録の値と同じ（X100VI は公式のモールで買う色・版の JAN）
+        if ks.JAN_RULES["x100vi"]["jan"] not in (_reg.IDENTITY_EVIDENCE["prod_x100vi"].get("colors") or {}).values():
+            bad.append("X100VI の買取の JAN が公式で買う版と違う")
+        for a, pid in (("z8", "prod_z8"), ("r5ii", "prod_r5ii")):
+            if ks.JAN_RULES[a]["jan"] != prods.get(pid, {}).get("jan_code"):
+                bad.append(f"{a} の買取の JAN が登録と違う")
+        # 新品同様（used_s）・中古を新品の系統にしない
+        for c in ("used_s", "used_a", "used"):
+            if _cond_family(c) == "new":
+                bad.append(f"{c} を新品として扱う")
+        # 否定の対照: キット・別の版・同じ JAN の価格違いは使わない
+        def _ld(name, jan, price, n):
+            return ('<script type="application/ld+json">{"@type":"Product","name":"%s","gtin13":"%s",'
+                    '"offers":{"price":%d,"url":"https://www.kaitorishouten-co.jp/products/detail/%d"}}</script>'
+                    % (name, jan, price, n))
+        rows = ks.parse_jsonld_rows(_ld("ミラーレス一眼カメラ Canon EOS R5 Mark II RF24-105L IS USM レンズキット",
+                                        "4549292229141", 570000, 1))
+        if ks.match_jan_rows(rows, "r5ii"):
+            bad.append("レンズキットをボディーの買取にする")
+        rows = ks.parse_jsonld_rows(_ld("コンパクトデジタルカメラ RICOH GR IV 30th Anniversary Edition Kit",
+                                        "4549212311291", 259800, 2))
+        if ks.match_jan_rows(rows, "gr4"):
+            bad.append("30周年記念キットを GR IV の買取にする")
+        col = ks.KaitoriShoutenCsvCollector()
+        html = (_ld("Z 8 ボディ", "4960759909947", 420000, 3) + _ld("Z 8 ボディ", "4960759909947", 430000, 4))
+        if col._parse_price(html, "z8", "Nikon Z8") is not None:
+            bad.append("同じ JAN に違う価格が並んでもどれかを選ぶ")
+        if col._parse_price(_ld("Z 8 ボディ", "4960759909947", 420000, 3), "z8", "Nikon Z8") != 420000:
+            bad.append("正しい1行を読めない（照合の条件が誤っている）")       # 肯定の対照
+        # 取得に失敗しても、前回の行の時刻・価格を変えない
+        _sp = _iu17.spec_from_file_location("dc17_ubp", root / "scripts" / "update_buyback_prices.py")
+        _m = _iu17.module_from_spec(_sp)
+        _sp.loader.exec_module(_m)
+        prev = {"product_alias": "z8", "buyback_shop": "kaitori_shouten", "buyback_price": "420000",
+                "observed_at": "2026-10-08T16:00:00+09:00", "data_source": "auto_scraped"}
+        out = _m.keep_manual_on_failure([{"product_alias": "z8", "buyback_shop": "kaitori_shouten",
+                                          "buyback_price": "0", "observed_at": "2099-01-01T00:00:00+09:00",
+                                          "data_source": "fetch_failed"}], [prev],
+                                        {("z8", "kaitori_shouten"): "connection_error"})
+        if out != [prev]:
+            bad.append("取得に失敗したときに前回の行の時刻・価格を変える")
+        # 前回の価格を否定する失敗（掲載が無い・同じ JAN に違う価格）では前回の行を残さない
+        for _reason in ("product_not_listed", "ambiguous_rows"):
+            _f = {"product_alias": "z8", "buyback_shop": "kaitori_shouten", "buyback_price": "0",
+                  "observed_at": "2099-01-01T00:00:00+09:00", "data_source": "fetch_failed"}
+            if _m.keep_manual_on_failure([_f], [prev], {("z8", "kaitori_shouten"): _reason}) != [_f]:
+                bad.append(f"{_reason} なのに前回の価格を残す（古い価格を今の価格に見せる）")
+        # 抽選・在庫なし・在庫未確認は今すぐ行動できるに数えない
+        for st in ("LOTTERY", "OUT_OF_STOCK", "UNKNOWN"):
+            if AVAILABILITY_OF.get(st) in ACTIONABLE_AVAILABILITY:
+                bad.append(f"{st} を今すぐ行動できるに数える")
+    except Exception as exc:  # noqa: BLE001
+        bad.append(f"判定を動かせない: {exc}")
+    return [{"level": "ok" if not bad else "error", "check": "camera_sell_semantics",
+             "message": "#853 カメラの新品の買取（JAN で1行だけ・キット/版/限定を分ける・新品同様を新品にしない・"
+                        "失敗で時刻を進めない・抽選/在庫なしを行動できるに数えない）" + ("" if not bad else f" ← {bad[:4]}")}]
 
 
 def _check_new_ui(html: str) -> list[dict]:

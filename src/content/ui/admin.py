@@ -260,6 +260,10 @@ def build_data_coverage(diag: dict | None, tcg_report: dict | None) -> dict:
             "stock": {k: num(stock, k) for k in ("IN_STOCK", "OUT_OF_STOCK", "UNKNOWN", "LOTTERY",
                                                  "RESERVATION", "PREORDER")},
             "buyback": {k: num(bb, k) for k in ("usable_products", "fresh_rows", "stale_rows", "failed_rows")},
+            # 診断に camera が無い（Phase 17 より前）ときは空にして、行を出さない（0件と区別する。レビュー L1）
+            "camera": ({k: num(D(diag.get("camera")), k) for k in ("products", "fresh_new", "stale_new", "used_reference",
+                                                                  "confirmed_sells", "profitable", "actionable")}
+                       if isinstance(diag.get("camera"), dict) else {}),
             "tcg": {"lotteries": lottery_n, **kinds}}
 
 
@@ -943,6 +947,7 @@ def _diff(dv: dict) -> str:
 
 def _data_coverage_html(c: dict) -> str:
     r, s, b, g = (c.get(k) or {} for k in ("retail", "stock", "buyback", "tcg"))
+    cm = c.get("camera") or {}
     if not (r or s or b or g):
         return _empty("記録なし")
     n = lambda d, k: esc(str(d.get(k, 0)))  # noqa: E731
@@ -954,7 +959,11 @@ def _data_coverage_html(c: dict) -> str:
             f'<dt>買取</dt><dd>使える商品 {n(b, "usable_products")}・新しい {n(b, "fresh_rows")}行・古い '
             f'{n(b, "stale_rows")}行・失敗 {n(b, "failed_rows")}行</dd>'
             f'<dt>TCG</dt><dd>抽選 {n(g, "lotteries")}・予約 {n(g, "preorder")}・先着 {n(g, "first_come")}・'
-            f'再販 {n(g, "restock")}</dd></dl>'
+            f'再販 {n(g, "restock")}</dd>'
+            + (f'<dt>カメラの買取</dt><dd>新品の買取 新しい {n(cm, "fresh_new")}行・古い {n(cm, "stale_new")}行・'
+               f'中古の参考 {n(cm, "used_reference")}行（新品同様も中古）・確定の売値 {n(cm, "confirmed_sells")}行・'
+               f'利益 {n(cm, "profitable")}・今すぐ行動できる {n(cm, "actionable")}</dd>' if cm else "")
+            + '</dl>'
             '<p class="nu-osub">在庫ありは、公式などのページで購入できる表示（在庫あり・カートに入れる）を確認した'
             '時刻つきのものだけ（この欄は利益の案件・診断の値。確認から7日を過ぎれば在庫未確認に戻る。'
             '在庫再開・商品詳細の表示は確認から3時間で「更新待ち」になる）。</p>')

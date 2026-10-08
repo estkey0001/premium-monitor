@@ -426,7 +426,8 @@ def test_official_purchase_shipping_classification():
     assert nin["fee"] == 0 and nin["status"] == osh.CONDITIONAL
     assert osh.purchase_shipping("prod_sw", "https://store-jp.nintendo.com/item/x", 4980)["fee"] == 550
     # 確認していない購入元・ソニーストアでも購入ページを確認していない商品は「不明」（0円にしない）
-    for args in (("prod_gr4", "https://www.ricoh-imaging.co.jp/x", 194800), ("prod_x", "", 1),
+    # （Phase 17 で GR IV 系の送料を公式の商品ページで確認して記録したので、記録の無い GR IIIx で確かめる）
+    for args in (("prod_gr3x", "https://www.ricoh-imaging.co.jp/x", 139800), ("prod_x", "", 1),
                  ("prod_y", "https://store.sony.jp/item/y", 1), ("prod_z", "http://www.apple.com/jp/shop/x", 1)):
         assert osh.purchase_shipping(*args)["fee"] is None and osh.known_fee(*args) == 0, args
 

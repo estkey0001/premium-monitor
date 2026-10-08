@@ -1,6 +1,7 @@
 # HANDOFF（最終更新: 2026-10-08）
 
 ## 今の状態
+- Phase 17（カメラの新品の買取）: 買取商店のカメラの一覧（構造化データの JAN）から、X100VI（公式で買う版と同じ JAN）・Z8・R5 II（ボディー）・GR IV / HDF / Monochrome の新品の買取を1行ずつ取る（`buyback_kaitori_shouten.JAN_RULES`・リクエスト2回）。フジヤの新品同様は中古の参考のまま。取得に失敗したら前回の行を時刻を変えずに残す（カメラだけ）。GR IV 系の購入送料を記録。診断・運営者向け・集計にカメラの網羅。記録は `internal/audits/PHASE_17_CAMERA_BUYBACK.md`
 - Phase 16（判断待ちの商品と公式直販価格）: 定価（希望小売価格）と公式直販価格を分けた（`official_registry.price_kind_of`・`MSRP_OF`。カメラの希望小売価格はオープン価格のまま）。公式直販価格は `official_direct_gate`（同一性・容量・ボディー/キット・版・購入ページ・送料・販売の形・在庫の表し方・確認日）を通ったときだけ確定の仕入れ値。Z8・X100VI・R5 II を追加。GR IV 系の商品コード・Z8 / R5 II の JAN を登録（同一性の確認済み 3 → 9）。判断待ちの3商品は候補を更新して判断待ちのまま。quality_checker のテーブル名の不具合を修正。JAN 一致でもセット・版・限定品の食い違いは low。再確認に Canon・Nikon。記録は `internal/audits/PHASE_16_OFFICIAL_DIRECT.md`
 - Phase 15（商品の同一性と公式の確認）: 公式の確認の記録を `src/market/official_registry.py` に集めた（VERIFIED_URLS など。同一性の証拠・判断待ち・価格の意味 msrp / official_direct / open_price）。公式ページで確かめた JAN・型番を登録（PS5 Pro・Switch 2 の JAN、AirPods Pro 3 の型番）。公式 URL のテーブル名の不具合を直した（送料・利益は変わらない）。公式の価格・在庫の再確認（`scripts/recheck_official.py`。PS5 Pro・AirPods Pro 3）。記録は `internal/audits/PHASE_15_IDENTITY.md`
 - Phase 14（国内の定価・在庫・買取・TCG の網羅）: 公式ページの確認で Switch 2 の在庫あり（明示の表示・7日で期限切れ）・PS5 Pro の再確認・PS5 Digital Edition と GR III の販売終了を記録。在庫の判定に「カートに入れる」を加えた。検索に商品の登録済みキーワード（「PS5」で PS5 Pro）。運営者向けに網羅の欄、診断に今すぐ行動できる商品（actionable）。記録は `internal/audits/PHASE_14_COVERAGE.md`
@@ -47,9 +48,9 @@
 - 既存の問題: pytest を実行すると追跡対象の exports/api_automation/collection.json が書き換わる。コミット前に `git checkout -- exports/api_automation/collection.json` で戻すこと（テストの出力先修正は別タスク）。
 
 ## 次にやること
-0. Phase 17 はユーザーの指示を待ってから始める（候補は Phase 16 の最終報告に書いた）。
-1. 判断待ち（`src/market/official_registry.USER_DECISIONS`）: PS5 Digital Edition・Xbox Series X・Switch 2 マリオカートセットの版（候補は Phase 16 で更新）。決めたら config/products.yaml に型番・JAN、IDENTITY_EVIDENCE に証拠を書く。
-2. カメラの新品の買取は14日より古い行しか無い（X100VI は新品の買取 約44万円の行が 2026-08-22）。新品の買取を新しく取れれば、公式直販価格との比較で利益の判定に入る。
+0. Phase 18 はユーザーの指示を待ってから始める（候補は Phase 17 の最終報告に書いた）。
+1. 判断待ち（`src/market/official_registry.USER_DECISIONS`）: PS5 Digital Edition・Xbox Series X・Switch 2 マリオカートセットの版。
+2. フジヤの取得（約29分）はカメラの新品の確定の売値に寄与していない（中古の参考だけ）。止めるかはユーザーの判断。
 3. eBay の成約: ユーザーの設定待ち（`ops/Secrets設定.md`）。
 
 ## 注意（次の人へ）

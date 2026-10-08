@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-08 04:10 JST",
+  "generated_at": "2026-10-08 13:35 JST",
   "route_type_beginner": "primary_to_secondary",
   "top_camera_buyback_opportunities": [
     {
@@ -125,7 +125,7 @@
       "product_id": "prod_a7rv",
       "product_name": "SONY α7R V",
       "shop_name": "フジヤカメラ",
-      "buyback_price": 193000,
+      "buyback_price": 191000,
       "official_price": 440000,
       "reference_price": 440000,
       "reference_source": "retail_concept",
@@ -133,7 +133,7 @@
       "condition": "used_s",
       "condition_label": "中古S（新品同様）",
       "comparable_to_retail": false,
-      "matched_item": "α7R V ボディ ILCE-7RM5 SONY 買取金額 新品同様 ￥193,000 良品 ￥192,000 下取は10%UP 新品同様 ￥212,300 良品 ￥211,200 買取申し込み 買取検討リストへ",
+      "matched_item": "α7R V ボディ ILCE-7RM5 SONY 買取金額 新品同様 ￥191,000 良品 ￥190,000 下取は10%UP 新品同様 ￥210,100 良品 ￥209,000 買取申し込み 買取検討リストへ",
       "confidence": "high",
       "source": "auto_scraped",
       "age_days": 0.0
@@ -311,48 +311,10 @@
       "route_type": "primary_to_secondary",
       "source_label": "任天堂公式 / PlayStation Direct / Xbox Store",
       "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
-    },
-    {
-      "product_name": "iPhone 16 Pro 256GB SIMフリー",
-      "category": "iphone",
-      "user_level": "beginner_easy",
-      "official_price_jpy": 159800,
-      "reference_source": "retail_concept",
-      "best_buyback_price": 164000,
-      "best_buyback_shop": "買取商店",
-      "buy_price": null,
-      "buy_shop_name": "",
-      "buy_price_type": "",
-      "sell_price_type": "buyback_price",
-      "net_profit_jpy": 2900,
-      "net_profit_rate": 0.0181,
-      "route_type": "primary_to_secondary",
-      "source_label": "Apple Store",
-      "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
     }
   ],
   "pro_top10": [],
   "beginner_by_category": {
-    "iphone": [
-      {
-        "product_name": "iPhone 16 Pro 256GB SIMフリー",
-        "category": "iphone",
-        "user_level": "beginner_easy",
-        "official_price_jpy": 159800,
-        "reference_source": "retail_concept",
-        "best_buyback_price": 164000,
-        "best_buyback_shop": "買取商店",
-        "buy_price": null,
-        "buy_shop_name": "",
-        "buy_price_type": "",
-        "sell_price_type": "buyback_price",
-        "net_profit_jpy": 2900,
-        "net_profit_rate": 0.0181,
-        "route_type": "primary_to_secondary",
-        "source_label": "Apple Store",
-        "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
-      }
-    ],
     "game_console": [
       {
         "product_name": "PlayStation 5 Pro",
@@ -376,10 +338,10 @@
   },
   "pro_by_category": {},
   "excluded_items": 7,
-  "total_deals": 9,
+  "total_deals": 8,
   "confidence_summary": {
-    "total": 9,
-    "profitable": 2,
+    "total": 8,
+    "profitable": 1,
     "negative": 7
   },
   "stale_data_count": 0

@@ -1,0 +1,27 @@
+{
+ "note": "公式の再確認の結果の履歴（直近のみ）",
+ "results": [
+  {
+   "product_id": "prod_ps5_pro",
+   "url": "https://pur.store.sony.jp/ps5/products/ps5/CFI-7100B01_purchase/",
+   "model": "CFI-7100B01",
+   "recorded_price": 137980,
+   "observed_at": "2026-10-08T13:16:40+09:00",
+   "status": "unchanged",
+   "reason": "",
+   "price": 137980,
+   "stock": "入荷待ち"
+  },
+  {
+   "product_id": "prod_airpods_pro3",
+   "url": "https://www.apple.com/jp/shop/buy-airpods/airpods-pro-3",
+   "model": "MFHP4J/A",
+   "recorded_price": 42800,
+   "observed_at": "2026-10-08T13:17:38+09:00",
+   "status": "unchanged",
+   "reason": "",
+   "price": 42800,
+   "stock": ""
+  }
+ ]
+}

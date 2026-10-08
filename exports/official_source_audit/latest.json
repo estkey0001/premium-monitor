@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-08 03:52 JST",
+  "generated_at": "2026-10-08 13:17 JST",
   "scope": "公式ソース登録・検証（利益/AI/Opportunity/Notification/Capital/Execution は不変）",
   "methodology": {
     "verification": "WebFetch で HTTP200/公式ドメイン/canonical/商品一致を実確認したURLのみ verified",
@@ -1611,6 +1611,14 @@
       "price_captured": 4,
       "verified_targets": 6,
       "unverified_targets": 9
-    }
+    },
+    "recheck_applied": [
+      {
+        "product_id": "prod_ps5_pro",
+        "action": "stock_observed",
+        "stock": "入荷待ち",
+        "at": "2026-10-08T13:16:40+09:00"
+      }
+    ]
   }
 }

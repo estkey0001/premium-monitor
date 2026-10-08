@@ -1,0 +1,61 @@
+{
+  "generated_at": "2026-10-08T13:15:37+09:00",
+  "results": [
+    {
+      "product_id": "prod_ps5_pro",
+      "url": "https://pur.store.sony.jp/ps5/products/ps5/CFI-7100B01_purchase/",
+      "model": "CFI-7100B01",
+      "recorded_price": 137980,
+      "observed_at": "2026-10-08T13:16:40+09:00",
+      "status": "unchanged",
+      "reason": "",
+      "price": 137980,
+      "stock": "入荷待ち"
+    },
+    {
+      "product_id": "prod_airpods_pro3",
+      "url": "https://www.apple.com/jp/shop/buy-airpods/airpods-pro-3",
+      "model": "MFHP4J/A",
+      "recorded_price": 42800,
+      "observed_at": "2026-10-08T13:17:38+09:00",
+      "status": "unchanged",
+      "reason": "",
+      "price": 42800,
+      "stock": ""
+    }
+  ],
+  "plan": [
+    {
+      "product_id": "prod_iphone17_256",
+      "price_checked_on": "2026-10-03",
+      "price_due": "2026-10-10",
+      "stock_checked_at": "",
+      "stock_due": "",
+      "auto_recheck": false
+    },
+    {
+      "product_id": "prod_airpods_pro3",
+      "price_checked_on": "2026-10-08",
+      "price_due": "2026-10-15",
+      "stock_checked_at": "",
+      "stock_due": "",
+      "auto_recheck": true
+    },
+    {
+      "product_id": "prod_ps5_pro",
+      "price_checked_on": "2026-10-08",
+      "price_due": "2026-10-15",
+      "stock_checked_at": "2026-10-08T02:34:48+09:00",
+      "stock_due": "2026-10-15T02:34:48+09:00",
+      "auto_recheck": true
+    },
+    {
+      "product_id": "prod_switch2",
+      "price_checked_on": "2026-10-08",
+      "price_due": "2026-10-15",
+      "stock_checked_at": "2026-10-08T02:32:13+09:00",
+      "stock_due": "2026-10-15T02:32:13+09:00",
+      "auto_recheck": false
+    }
+  ]
+}

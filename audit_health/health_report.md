@@ -1,6 +1,6 @@
 # Profit Health Dashboard
 
-生成: 2026-10-08 13:35 JST
+生成: 2026-10-08 16:30 JST
 
 ## Health Score: **37.6 / 100**
 
@@ -14,7 +14,7 @@
 
 ## Data Quality KPI
 
-- 総観測 229 / usable 69
+- 総観測 229 / usable 70
 - stale 116（51%） / 0円 37（16%）
 - item_url率 48% / search 21%
 - manual 50% / API 0% / HTML 1%

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-08 13:17 JST",
+  "generated_at": "2026-10-08 16:12 JST",
   "scope": "公式ソース登録・検証（利益/AI/Opportunity/Notification/Capital/Execution は不変）",
   "methodology": {
     "verification": "WebFetch で HTTP200/公式ドメイン/canonical/商品一致を実確認したURLのみ verified",
@@ -39,7 +39,10 @@
       "link_type": "item",
       "confidence": "high",
       "official_price": 159800,
-      "verified": true
+      "verified": true,
+      "price_kind": "official_direct",
+      "official_direct_eligible": true,
+      "price_rejection": null
     },
     {
       "product_id": "prod_airpods_pro3",
@@ -48,7 +51,10 @@
       "link_type": "item",
       "confidence": "high",
       "official_price": 42800,
-      "verified": true
+      "verified": true,
+      "price_kind": "official_direct",
+      "official_direct_eligible": true,
+      "price_rejection": null
     },
     {
       "product_id": "prod_ps5_pro",
@@ -57,7 +63,10 @@
       "link_type": "item",
       "confidence": "high",
       "official_price": 137980,
-      "verified": true
+      "verified": true,
+      "price_kind": "msrp",
+      "official_direct_eligible": null,
+      "price_rejection": null
     },
     {
       "product_id": "prod_switch2",
@@ -66,32 +75,46 @@
       "link_type": "item",
       "confidence": "high",
       "official_price": 59980,
-      "verified": true
+      "verified": true,
+      "price_kind": "msrp",
+      "official_direct_eligible": null,
+      "price_rejection": null
     },
     {
       "product_id": "prod_z8",
       "source": "src_nikon_direct",
-      "url": "https://nij.nikon.com/products/lineup/mirrorless/z8/",
-      "link_type": "category",
-      "confidence": "medium",
-      "official_price": null,
-      "verified": true
+      "url": "https://nij.nikon.com/shop/g/g4960759909947/",
+      "link_type": "item",
+      "confidence": "high",
+      "official_price": 575300,
+      "verified": true,
+      "price_kind": "official_direct",
+      "official_direct_eligible": true,
+      "price_rejection": null
     },
     {
       "product_id": "prod_x100vi",
       "source": "src_fujifilm_official",
-      "url": "https://www.fujifilm-x.com/ja-jp/products/cameras/x100vi/",
-      "link_type": "category",
-      "confidence": "medium",
-      "official_price": null,
-      "verified": true
+      "url": "https://mall-jp.fujifilm.com/shop/g/g16941878/",
+      "link_type": "item",
+      "confidence": "high",
+      "official_price": 315700,
+      "verified": true,
+      "price_kind": "official_direct",
+      "official_direct_eligible": true,
+      "price_rejection": null
     },
     {
       "product_id": "prod_r5ii",
       "source": "src_canon_official",
-      "url": null,
-      "verified": false,
-      "reason": "canon.jp が当環境からDNS解決不可（要手動検証）"
+      "url": "https://store.canon.jp/online/g/g6536C001/",
+      "link_type": "item",
+      "confidence": "high",
+      "official_price": 654500,
+      "verified": true,
+      "price_kind": "official_direct",
+      "official_direct_eligible": true,
+      "price_rejection": null
     },
     {
       "product_id": "prod_r6ii",
@@ -419,7 +442,7 @@
           "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17",
           "link_type": "item",
           "verified": true,
-          "last_verified_at": "2026-10-03",
+          "last_verified_at": "2026-10-08",
           "extraction_method": "webfetch_verified",
           "confidence": "high",
           "official_price": 159800,
@@ -1061,13 +1084,13 @@
       "brand": "FUJIFILM",
       "sources": {
         "official": {
-          "url": "https://www.fujifilm-x.com/ja-jp/products/cameras/x100vi/",
-          "link_type": "category",
+          "url": "https://mall-jp.fujifilm.com/shop/g/g16941878/",
+          "link_type": "item",
           "verified": true,
-          "last_verified_at": "2026-08-23",
+          "last_verified_at": "2026-10-08",
           "extraction_method": "webfetch_verified",
-          "confidence": "medium",
-          "official_price": null,
+          "confidence": "high",
+          "official_price": 315700,
           "enabled": true,
           "reason_if_disabled": null
         },
@@ -1231,15 +1254,15 @@
       "brand": "CANON",
       "sources": {
         "official": {
-          "url": null,
-          "link_type": null,
-          "verified": false,
-          "last_verified_at": null,
-          "extraction_method": null,
-          "confidence": "low",
-          "official_price": null,
+          "url": "https://store.canon.jp/online/g/g6536C001/",
+          "link_type": "item",
+          "verified": true,
+          "last_verified_at": "2026-10-08",
+          "extraction_method": "webfetch_verified",
+          "confidence": "high",
+          "official_price": 654500,
           "enabled": true,
-          "reason_if_disabled": "canon.jp が当環境からDNS解決不可（要手動検証）"
+          "reason_if_disabled": null
         },
         "pricecom": null,
         "yodobashi": null,
@@ -1306,13 +1329,13 @@
       "brand": "NIKON",
       "sources": {
         "official": {
-          "url": "https://nij.nikon.com/products/lineup/mirrorless/z8/",
-          "link_type": "category",
+          "url": "https://nij.nikon.com/shop/g/g4960759909947/",
+          "link_type": "item",
           "verified": true,
-          "last_verified_at": "2026-08-23",
+          "last_verified_at": "2026-10-08",
           "extraction_method": "webfetch_verified",
-          "confidence": "medium",
-          "official_price": null,
+          "confidence": "high",
+          "official_price": 575300,
           "enabled": true,
           "reason_if_disabled": null
         },
@@ -1537,9 +1560,9 @@
       "products": 3,
       "url_verified": 1,
       "http_200": 1,
-      "exact_match": 0,
-      "price_ok": 0,
-      "high_conf": 0,
+      "exact_match": 1,
+      "price_ok": 1,
+      "high_conf": 1,
       "failed": 2,
       "failures": [
         {
@@ -1556,25 +1579,21 @@
       "products": 1,
       "url_verified": 1,
       "http_200": 1,
-      "exact_match": 0,
-      "price_ok": 0,
-      "high_conf": 0,
+      "exact_match": 1,
+      "price_ok": 1,
+      "high_conf": 1,
       "failed": 0,
       "failures": []
     },
     "Canon": {
       "products": 3,
-      "url_verified": 0,
-      "http_200": 0,
-      "exact_match": 0,
-      "price_ok": 0,
-      "high_conf": 0,
-      "failed": 3,
+      "url_verified": 1,
+      "http_200": 1,
+      "exact_match": 1,
+      "price_ok": 1,
+      "high_conf": 1,
+      "failed": 2,
       "failures": [
-        {
-          "product_id": "prod_r5ii",
-          "reason": "canon.jp が当環境からDNS解決不可（要手動検証）"
-        },
         {
           "product_id": "prod_r6ii",
           "reason": "canon.jp が当環境からDNS解決不可（要手動検証）"
@@ -1607,18 +1626,38 @@
       "official_configs": 7
     },
     "after": {
-      "url_verified": 6,
-      "price_captured": 4,
-      "verified_targets": 6,
-      "unverified_targets": 9
+      "url_verified": 7,
+      "price_captured": 7,
+      "verified_targets": 7,
+      "unverified_targets": 8
     },
     "recheck_applied": [
       {
         "product_id": "prod_ps5_pro",
         "action": "stock_observed",
         "stock": "入荷待ち",
-        "at": "2026-10-08T13:16:40+09:00"
+        "at": "2026-10-08T16:10:37+09:00"
+      },
+      {
+        "product_id": "prod_x100vi",
+        "action": "stock_observed",
+        "stock": "在庫なし（全色）",
+        "at": "2026-10-08T16:12:39+09:00"
       }
     ]
-  }
+  },
+  "recheck_applied": [
+    {
+      "product_id": "prod_ps5_pro",
+      "action": "stock_observed",
+      "stock": "入荷待ち",
+      "at": "2026-10-08T16:10:37+09:00"
+    },
+    {
+      "product_id": "prod_x100vi",
+      "action": "stock_observed",
+      "stock": "在庫なし（全色）",
+      "at": "2026-10-08T16:12:39+09:00"
+    }
+  ]
 }

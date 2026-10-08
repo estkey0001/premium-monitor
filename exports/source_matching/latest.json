@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-08 13:35 JST",
+  "generated_at": "2026-10-08 16:30 JST",
   "scope": "商品同一性マッチング精度（利益/AI/UI/SaaS/DQ思想は不変）",
   "accuracy": {
     "product_match_accuracy": 1.0,
@@ -32,7 +32,7 @@
     "main_rejected": 221,
     "model_match": 17,
     "manual_review_required": 77,
-    "accessory_detected": 8,
+    "accessory_detected": 7,
     "exact_product_match": 8,
     "main_eligible": 8
   },
@@ -53,7 +53,7 @@
       "model_match": 17,
       "main_rejected": 25,
       "manual_review_required": 11,
-      "accessory_detected": 5,
+      "accessory_detected": 4,
       "model_unverifiable": 8,
       "exact_product_match": 0,
       "capacity_mismatch": 0,
@@ -323,7 +323,7 @@
         "new",
         "used"
       ],
-      "first_seen": 47.1,
+      "first_seen": 47.2,
       "last_seen": 0.0,
       "risk_level": "high",
       "possible_reason": [
@@ -354,7 +354,7 @@
         "new"
       ],
       "first_seen": 9999.0,
-      "last_seen": 5.6,
+      "last_seen": 0.7,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -384,8 +384,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 59.1,
-      "last_seen": 59.1,
+      "first_seen": 59.2,
+      "last_seen": 59.2,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -414,8 +414,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 59.1,
-      "last_seen": 59.1,
+      "first_seen": 59.2,
+      "last_seen": 59.2,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -444,8 +444,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 59.1,
-      "last_seen": 59.1,
+      "first_seen": 59.2,
+      "last_seen": 59.2,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -474,7 +474,7 @@
         "new"
       ],
       "first_seen": 9999.0,
-      "last_seen": 0.6,
+      "last_seen": 0.7,
       "risk_level": "low",
       "possible_reason": [
         "same_price_multiple_skus"
@@ -607,6 +607,17 @@
       "main_eligible": 0
     },
     {
+      "source": "フジヤカメラ",
+      "observations": 25,
+      "score": 72,
+      "identity": 0.0,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 0.68,
+      "main_eligible": 0
+    },
+    {
       "source": "モバイル一番",
       "observations": 5,
       "score": 72,
@@ -626,17 +637,6 @@
       "model": 1.0,
       "condition": 1.0,
       "freshness": 0.3,
-      "main_eligible": 0
-    },
-    {
-      "source": "フジヤカメラ",
-      "observations": 25,
-      "score": 71,
-      "identity": 0.0,
-      "capacity": 1.0,
-      "model": 1.0,
-      "condition": 1.0,
-      "freshness": 0.68,
       "main_eligible": 0
     },
     {

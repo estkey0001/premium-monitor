@@ -1,7 +1,7 @@
 
 ============================================================
- Deploy Check (469 items)
- 実行日時: 2026-10-08T13:35:35+09:00
+ Deploy Check (473 items)
+ 実行日時: 2026-10-08T16:30:38+09:00
 ============================================================
   ✅ [index_exists] docs/index.html 存在
   ✅ [forbidden_phrases] 禁止表現なし
@@ -28,7 +28,7 @@
   ✅ [mobile_ichiban_link] モバイル一番の確認導線が存在する
   ✅ [kaitori_shouten_link] 買取商店の確認導線が存在する
   ✅ [kaitori_itchome_link] 買取一丁目の確認導線が存在する
-  ✅ [lottery_product_link] 抽選カードに製品/販売直リンクが含まれている
+  ⚠️ [lottery_product_link] 抽選カードの製品直リンクが見つからない
   ✅ [lottery_status_label] 抽選カードにステータスラベル（受付中/近日開始/終了済み/要確認）がある
   ✅ [no_bare_hash_href] href="#" なし
   ✅ [no_empty_href] 空href なし
@@ -53,12 +53,12 @@
   ✅ [fetch_failed_no_price_calc] fetch_failed 行の価格欄が「—」（価格計算に使われていない）
   ✅ [game_console_shops] ゲーム機向け店舗が表示されている: ['ゲオ', 'イオシス', 'ブックオフ', '駿河屋', 'ソフマップ', 'TSUTAYA', '買取商店']
   ✅ [switch2_game_shop_links] Switch 2 / ゲーム機向け確認リンク（ゲオ/ブックオフ/駿河屋/ソフマップ）が存在する
-  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-10-08T12:34:35+09:00）
+  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-10-08T15:27:41+09:00）
   ⚠️ [suspicious_price_format] suspicious_prices 形式OK（suspicious_price 1件あり — 確認推奨）
   ✅ [fetch_failed_has_reason] fetch_failed 44件すべてに reason あり
   ✅ [collector_report_html_exists] docs/collector_report.html 存在
   ✅ [collector_report_link_in_lp] LP内に collector_report.html へのリンクがある
-  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 10件存在する: ['iphone17_256', 'iphone17pro256', 'iphone17pm256', 'iphone17pro512']
+  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 10件存在する: ['iphone17pm256', 'iphone17_256', 'iphone17pm512', 'iphone17pro256']
   ✅ [beginner_page_auto_scraped_exists] 自動取得 OK 14件 / total 58件
   ✅ [iphone17pro256_price_scraped] iPhone 17 Pro 256GB の価格取得成功: ['kaitori_shouten', 'kaitori_itchome']
   ✅ [fetch_failed_has_reason_field] 全取得失敗エントリーに reason フィールドあり（44件）
@@ -342,7 +342,7 @@
   ✅ [beta_analytics] #674 Analytics（匿名集計・DAU/Watchlist/通知/各閲覧）構造が配置される
   ✅ [beta_admin_dashboard] #675 Admin Beta Dashboard が生成される（登録者 3）
   ✅ [beta_overall] #676 Beta Ready 83/100・Critical 0件（>=75かつCritical0でβ公開水準）
-  ✅ [official_source_audit] #677 official_source_audit が生成される（verified 6件）
+  ✅ [official_source_audit] #677 official_source_audit が生成される（verified 7件）
   ✅ [official_no_stale_apple_url] #678 Apple 旧404 URL(iphone-16-pro-max)を verified 登録していない
   ✅ [official_no_zero_price] #679 official price=0 を保存/main利用していない
   ✅ [official_price_sanity] #680 登録済み公式価格が sanity check を通過（アクセサリー/月額/1円等なし）
@@ -457,6 +457,10 @@
   ✅ [ebay_finding_api_removed] #846 廃止された eBay Finding API・eBay の検索結果の HTML を取るコードを呼んでいない
   ✅ [identity_semantics] #847 商品の同一性（確認済みは公式の証拠と一致する型番・JAN だけ・判断待ちを確定にしない）・価格の意味（オープン価格に架空の希望小売価格を作らない・販売終了を戻さない）
   ✅ [official_recheck_freshness] #848 公式の再確認（失敗・ブロックでは確認日を進めない・古い結果で戻さない・価格が変われば確定から外す）
+  ✅ [price_semantics] #849 価格の意味（オープン価格に希望小売価格を作らない・公式直販価格を定価と呼ばない）
+  ✅ [official_direct_safety] #850 公式直販価格（同一性・ボディー/キット・送料・販売の形・在庫の表し方・確認日がそろうものだけ）
+  ✅ [bundle_jan_safety] #851 JAN とセット（JAN が一致してもセット・版・限定品の食い違いは別の商品）
+  ✅ [quality_checker_official_url] #852 quality_checker（存在しないテーブル名を引かない・公式の購入ページは案件と同じ判定）
   ✅ [no_rejected_price_published] #820 明らかに誤りの買取価格が CSV（LP・利益計算の入力）に残っていない
   ✅ [official_price_not_generation_time] #821 公式定価の観測時刻が生成時刻になっていない（確認日・実際の取得時刻を保持）
   ✅ [no_timestamp_only_update] #822 手動 CSV で「値は同じで日時だけ新しい」更新をしていない（作業ツリーと直近のコミット）
@@ -473,7 +477,7 @@
   ✅ [opportunity_sell_identity_verified] #833 利益に使った売却価格はすべて商品照合済みの買取価格で、商品詳細の表の確認済みの行と一致（1件）
   ✅ [mypage_safe] #834 マイページに DEMO・架空のアカウント表示・危ないリンクが無く、ウォッチは登録済みの商品だけ、想定純利益は商品詳細と同じ
 
-  Errors: 0 | Warnings: 9 | OK: 460
+  Errors: 0 | Warnings: 10 | OK: 463
 
   ✅ Deploy check PASSED
 ============================================================

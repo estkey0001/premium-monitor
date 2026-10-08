@@ -1,18 +1,18 @@
 {
-  "generated_at": "2026-10-08T13:35:32+09:00",
+  "generated_at": "2026-10-08T16:30:33+09:00",
   "note": "内部用（運営者向け）。一般の画面には出さない。掲載の判定は opportunity.eligibility が正本",
   "candidate_count": 45,
   "eligible_count": 1,
   "exclusion_reasons": {
-    "unverified_buy_price": 38,
+    "unverified_buy_price": 35,
     "stale_buyback": 15,
-    "no_profit": 6,
-    "invalid_identity": 5,
-    "no_sell_price": 5
+    "no_profit": 9,
+    "no_sell_price": 5,
+    "invalid_identity": 4
   },
   "primary_reasons": {
-    "unverified_buy_price": 38,
-    "no_profit": 6
+    "unverified_buy_price": 35,
+    "no_profit": 9
   },
   "candidates": [
     {
@@ -45,9 +45,9 @@
       "product_id": "prod_r5ii",
       "route_type": "RETAIL_TO_BUYBACK",
       "reasons": [
-        "unverified_buy_price"
+        "no_profit"
       ],
-      "primary": "unverified_buy_price"
+      "primary": "no_profit"
     },
     {
       "product_id": "prod_r6ii",
@@ -78,9 +78,9 @@
       "product_id": "prod_x100vi",
       "route_type": "RETAIL_TO_BUYBACK",
       "reasons": [
-        "unverified_buy_price"
+        "no_profit"
       ],
-      "primary": "unverified_buy_price"
+      "primary": "no_profit"
     },
     {
       "product_id": "prod_m11",
@@ -103,10 +103,9 @@
       "product_id": "prod_z8",
       "route_type": "RETAIL_TO_BUYBACK",
       "reasons": [
-        "unverified_buy_price",
-        "invalid_identity"
+        "no_profit"
       ],
-      "primary": "unverified_buy_price"
+      "primary": "no_profit"
     },
     {
       "product_id": "prod_z9",
@@ -412,8 +411,8 @@
       "candidates": 21,
       "eligible": 0,
       "primary_reasons": {
-        "unverified_buy_price": 18,
-        "no_profit": 3
+        "unverified_buy_price": 15,
+        "no_profit": 6
       }
     },
     "game": {
@@ -454,9 +453,9 @@
   },
   "retail_prices": {
     "summary": {
-      "reference": 38,
+      "reference": 35,
       "sale_ended": 20,
-      "verified": 7
+      "verified": 10
     },
     "products": [
       {
@@ -501,15 +500,15 @@
       {
         "product_id": "prod_r5ii",
         "product": "Canon EOS R5 Mark II",
-        "evidence": "CONFIGURED_REFERENCE",
-        "action": "VERIFY_FROM_OFFICIAL",
+        "evidence": "VERIFIED_CURRENT",
+        "action": "VERIFIED",
         "official_not_sold": false,
-        "price": 620000,
-        "price_type": "CONFIGURED_REFERENCE",
+        "price": 654500,
+        "price_type": "RETAIL",
         "source": "src_canon_official",
-        "verified_at": "",
-        "url": "",
-        "note": "canon.jp が当環境からDNS解決不可（要手動検証）"
+        "verified_at": "2026-10-08T00:00:00",
+        "url": "https://store.canon.jp/online/g/g6536C001/",
+        "note": ""
       },
       {
         "product_id": "prod_r6ii",
@@ -553,14 +552,14 @@
       {
         "product_id": "prod_x100vi",
         "product": "FUJIFILM X100VI",
-        "evidence": "CONFIGURED_REFERENCE",
-        "action": "KEEP_AS_REFERENCE",
+        "evidence": "VERIFIED_CURRENT",
+        "action": "VERIFIED",
         "official_not_sold": false,
-        "price": 269500,
-        "price_type": "CONFIGURED_REFERENCE",
+        "price": 315700,
+        "price_type": "RETAIL",
         "source": "src_fujifilm_official",
-        "verified_at": "",
-        "url": "https://www.fujifilm-x.com/ja-jp/products/cameras/x100vi/",
+        "verified_at": "2026-10-08T00:00:00",
+        "url": "https://mall-jp.fujifilm.com/shop/g/g16941878/",
         "note": ""
       },
       {
@@ -592,14 +591,14 @@
       {
         "product_id": "prod_z8",
         "product": "Nikon Z8",
-        "evidence": "CONFIGURED_REFERENCE",
-        "action": "KEEP_AS_REFERENCE",
+        "evidence": "VERIFIED_CURRENT",
+        "action": "VERIFIED",
         "official_not_sold": false,
-        "price": 590000,
-        "price_type": "CONFIGURED_REFERENCE",
+        "price": 575300,
+        "price_type": "RETAIL",
         "source": "src_nikon_direct",
-        "verified_at": "",
-        "url": "https://nij.nikon.com/products/lineup/mirrorless/z8/",
+        "verified_at": "2026-10-08T00:00:00",
+        "url": "https://nij.nikon.com/shop/g/g4960759909947/",
         "note": ""
       },
       {
@@ -676,7 +675,7 @@
         "price": 211800,
         "price_type": "RETAIL",
         "source": "src_ricoh_imaging",
-        "verified_at": "2026-10-08T13:11:37+09:00",
+        "verified_at": "2026-10-08T16:02:36+09:00",
         "url": "https://ricohimagingstore.com/Form/Product/ProductList.aspx?shop=0&cat=002010",
         "note": ""
       },
@@ -689,7 +688,7 @@
         "price": 222000,
         "price_type": "RETAIL",
         "source": "src_ricoh_imaging",
-        "verified_at": "2026-10-08T13:13:37+09:00",
+        "verified_at": "2026-10-08T16:06:36+09:00",
         "url": "https://ricohimagingstore.com/Form/Product/ProductList.aspx?shop=0&cat=002010",
         "note": ""
       },
@@ -702,7 +701,7 @@
         "price": 299800,
         "price_type": "RETAIL",
         "source": "src_ricoh_imaging",
-        "verified_at": "2026-10-08T13:15:37+09:00",
+        "verified_at": "2026-10-08T16:08:36+09:00",
         "url": "https://ricohimagingstore.com/Form/Product/ProductList.aspx?shop=0&cat=002010",
         "note": ""
       },
@@ -871,7 +870,7 @@
         "price": 159800,
         "price_type": "RETAIL",
         "source": "src_apple_jp",
-        "verified_at": "2026-10-03T00:00:00",
+        "verified_at": "2026-10-08T00:00:00",
         "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17",
         "note": ""
       },
@@ -1137,7 +1136,7 @@
         "rows": 24,
         "fresh": 17,
         "stale": 7,
-        "last_observed": "2026-10-08T12:40:51.138570+09:00"
+        "last_observed": "2026-10-08T15:33:50.181028+09:00"
       },
       {
         "source": "ブックオフ",
@@ -1156,20 +1155,20 @@
         "rows": 5,
         "stale": 3,
         "fresh": 2,
-        "last_observed": "2026-10-08T12:37:50+09:00"
+        "last_observed": "2026-10-08T15:30:49+09:00"
       },
       {
         "source": "買取一丁目",
         "rows": 4,
         "fresh": 4,
-        "last_observed": "2026-10-08T12:36:13+09:00"
+        "last_observed": "2026-10-08T15:29:15+09:00"
       },
       {
         "source": "買取商店",
         "rows": 17,
         "stale": 9,
         "fresh": 8,
-        "last_observed": "2026-10-08T12:40:50+09:00"
+        "last_observed": "2026-10-08T15:33:50+09:00"
       },
       {
         "source": "駿河屋",
@@ -1207,10 +1206,10 @@
   },
   "stock": {
     "states": {
-      "UNKNOWN": 40,
-      "LOTTERY": 3,
-      "IN_STOCK": 1,
-      "OUT_OF_STOCK": 1
+      "UNKNOWN": 38,
+      "IN_STOCK": 2,
+      "OUT_OF_STOCK": 2,
+      "LOTTERY": 3
     },
     "in_stock_without_evidence": []
   },

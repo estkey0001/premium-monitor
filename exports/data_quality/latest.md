@@ -1,6 +1,6 @@
 # データ品質エンジン（Data Quality Engine）
 
-> 生成: 2026-10-08 13:35 JST / 対象: データ取得・正規化・品質管理のみ（利益/AI/UI/SaaSロジックは不変）
+> 生成: 2026-10-08 16:30 JST / 対象: データ取得・正規化・品質管理のみ（利益/AI/UI/SaaSロジックは不変）
 
 ## 総合 Data Quality Score: **68 / 100** — 判定: **CONDITIONAL_GO**
 
@@ -27,9 +27,9 @@
 | prod | 214 | 76 | 27 | 10 | 101 | 41% |
 
 ## 自動化カバレッジ（透明性）
-- 手段内訳: {'official_concept': 38, 'other': 7, 'auto_scraped': 31, 'manual_curated': 95, 'fetch_failed': 37, 'overseas_history': 6}
+- 手段内訳: {'official_concept': 35, 'other': 10, 'auto_scraped': 31, 'manual_curated': 95, 'fetch_failed': 37, 'overseas_history': 6}
 - 自動スクレイプ率: 14% / 手動キュレーション率: 44%
-- fresh のうち手動由来: 0% / 自動+定価由来: 61%
+- fresh のうち手動由来: 0% / 自動+定価由来: 58%
 > 鮮度の相当部分が手動キュレーション由来（ToS遵守の意図的設計）。自動化カバレッジ拡大（特に eBay API=EBAY_APP_ID）が主要な改善レバー。
 
 ## ソース品質ランキング（100点）

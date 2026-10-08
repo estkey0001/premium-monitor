@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-08 13:35 JST",
+  "generated_at": "2026-10-08 16:30 JST",
   "ebay_api_configured": false,
   "overseas_source_mode": "manual",
   "summary": {
@@ -1034,11 +1034,11 @@
       "sell_candidates": 1,
       "min_usable_buy": null,
       "min_usable_buy_source": "",
-      "max_usable_sell": 354000,
+      "max_usable_sell": 363000,
       "max_usable_sell_source": "フジヤカメラ",
       "min_usable_buy_identity_verified": false,
       "max_usable_sell_identity_verified": false,
-      "target_buy_price": 353999,
+      "target_buy_price": 362999,
       "gross_gap": null,
       "net_domestic": null,
       "best_reference_net": null,
@@ -1124,25 +1124,20 @@
     "prod_z8": {
       "product_name": "Nikon Z8",
       "buy_candidates": 0,
-      "sell_candidates": 0,
+      "sell_candidates": 1,
       "min_usable_buy": null,
       "min_usable_buy_source": "",
-      "max_usable_sell": null,
-      "max_usable_sell_source": "",
+      "max_usable_sell": 289000,
+      "max_usable_sell_source": "フジヤカメラ",
       "min_usable_buy_identity_verified": false,
       "max_usable_sell_identity_verified": false,
-      "target_buy_price": null,
+      "target_buy_price": 288999,
       "gross_gap": null,
       "net_domestic": null,
       "best_reference_net": null,
-      "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
+      "main_blocked_reason": "有効な仕入(販売/出品/落札)候補なし",
       "excluded_route_count": 0,
-      "rejection_top5": [
-        [
-          "accessory_or_wrong_product",
-          1
-        ]
-      ],
+      "rejection_top5": [],
       "stale_excluded": 0,
       "overseas_stale": 0,
       "needed": [],

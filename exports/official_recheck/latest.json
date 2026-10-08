@@ -1,12 +1,13 @@
 {
-  "generated_at": "2026-10-08T13:15:37+09:00",
+  "generated_at": "2026-10-08T16:08:36+09:00",
   "results": [
     {
       "product_id": "prod_ps5_pro",
       "url": "https://pur.store.sony.jp/ps5/products/ps5/CFI-7100B01_purchase/",
       "model": "CFI-7100B01",
+      "match": "CFI-7100B01",
       "recorded_price": 137980,
-      "observed_at": "2026-10-08T13:16:40+09:00",
+      "observed_at": "2026-10-08T16:10:37+09:00",
       "status": "unchanged",
       "reason": "",
       "price": 137980,
@@ -16,22 +17,71 @@
       "product_id": "prod_airpods_pro3",
       "url": "https://www.apple.com/jp/shop/buy-airpods/airpods-pro-3",
       "model": "MFHP4J/A",
+      "match": "MFHP4J/A",
       "recorded_price": 42800,
-      "observed_at": "2026-10-08T13:17:38+09:00",
+      "observed_at": "2026-10-08T16:10:40+09:00",
       "status": "unchanged",
       "reason": "",
       "price": 42800,
       "stock": ""
+    },
+    {
+      "product_id": "prod_r5ii",
+      "url": "https://store.canon.jp/online/g/g6536C001/",
+      "model": "EOS R5 Mark II",
+      "match": "6536C001",
+      "recorded_price": 654500,
+      "observed_at": "2026-10-08T16:10:43+09:00",
+      "status": "unchanged",
+      "reason": "",
+      "price": 654500,
+      "stock": ""
+    },
+    {
+      "product_id": "prod_z8",
+      "url": "https://nij.nikon.com/shop/g/g4960759909947/",
+      "model": "Z8",
+      "match": "4960759909947",
+      "recorded_price": 575300,
+      "observed_at": "2026-10-08T16:10:45+09:00",
+      "status": "unchanged",
+      "reason": "",
+      "price": 575300,
+      "stock": ""
+    },
+    {
+      "product_id": "prod_iphone17_256",
+      "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17",
+      "model": "",
+      "match": "MG674J/A,MG684J/A,MG694J/A,MG6A4J/A,MG6C4J/A",
+      "recorded_price": 159800,
+      "observed_at": "2026-10-08T16:12:37+09:00",
+      "status": "unchanged",
+      "reason": "",
+      "price": 159800,
+      "stock": ""
+    },
+    {
+      "product_id": "prod_x100vi",
+      "url": "https://mall-jp.fujifilm.com/shop/g/g16941878/",
+      "model": "X100VI",
+      "match": "4547410554281|X100VI",
+      "recorded_price": 315700,
+      "observed_at": "2026-10-08T16:12:39+09:00",
+      "status": "unchanged",
+      "reason": "",
+      "price": 315700,
+      "stock": "在庫なし（全色）"
     }
   ],
   "plan": [
     {
       "product_id": "prod_iphone17_256",
-      "price_checked_on": "2026-10-03",
-      "price_due": "2026-10-10",
+      "price_checked_on": "2026-10-08",
+      "price_due": "2026-10-15",
       "stock_checked_at": "",
       "stock_due": "",
-      "auto_recheck": false
+      "auto_recheck": true
     },
     {
       "product_id": "prod_airpods_pro3",
@@ -56,6 +106,30 @@
       "stock_checked_at": "2026-10-08T02:32:13+09:00",
       "stock_due": "2026-10-15T02:32:13+09:00",
       "auto_recheck": false
+    },
+    {
+      "product_id": "prod_z8",
+      "price_checked_on": "2026-10-08",
+      "price_due": "2026-10-15",
+      "stock_checked_at": "",
+      "stock_due": "",
+      "auto_recheck": true
+    },
+    {
+      "product_id": "prod_x100vi",
+      "price_checked_on": "2026-10-08",
+      "price_due": "2026-10-15",
+      "stock_checked_at": "2026-10-08T14:31:45+09:00",
+      "stock_due": "2026-10-15T14:31:45+09:00",
+      "auto_recheck": true
+    },
+    {
+      "product_id": "prod_r5ii",
+      "price_checked_on": "2026-10-08",
+      "price_due": "2026-10-15",
+      "stock_checked_at": "2026-10-08T14:15:00+09:00",
+      "stock_due": "2026-10-15T14:15:00+09:00",
+      "auto_recheck": true
     }
   ]
 }

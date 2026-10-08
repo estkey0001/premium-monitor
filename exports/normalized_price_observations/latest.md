@@ -1,6 +1,6 @@
 # Normalized Price Observations
 
-生成: 2026-10-08 13:35 JST
+生成: 2026-10-08 16:30 JST
 
 全価格（買取/販売/出品/落札/海外/下取/公式）を単一スキーマに正規化。
 `price_role`（buy/sell/official/trade_in）を必ず付与し、
@@ -10,7 +10,7 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 ## サマリ
 
 - 総観測数: **229**
-- Beginner 利用可: 69 / Pro 利用可: 24
+- Beginner 利用可: 70 / Pro 利用可: 25
 - fresh(≤14日): 113
 
 ### price_role 別
@@ -36,7 +36,7 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 
 | reason | 件数 |
 |---|---|
-| accessory_or_wrong_product | 5 |
+| accessory_or_wrong_product | 4 |
 | duplicate_price_collision | 2 |
 | price_zero | 37 |
 | sold_label_without_evidence | 5 |
@@ -50,7 +50,7 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 | iPhone 17 Pro 512GB SI | official | official_price | ¥214,800 | medium | 9999.0d | メーカー公式/定価 |
 | iPhone 17 Pro Max 256G | official | official_price | ¥219,800 | medium | 9999.0d | メーカー公式/定価 |
 | iPhone 17 Pro Max 512G | official | official_price | ¥254,800 | medium | 9999.0d | メーカー公式/定価 |
-| iPhone 17 256GB SIMフリー | official | official_price | ¥159,800 | high | 5.6d | メーカー公式/定価 |
+| iPhone 17 256GB SIMフリー | official | official_price | ¥159,800 | high | 0.7d | メーカー公式/定価 |
 | iPhone 16 Pro 256GB SI | official | official_price | ¥159,800 | medium | 9999.0d | メーカー公式/定価 |
 | iPhone 16 Pro Max 256G | official | official_price | ¥189,800 | medium | 9999.0d | メーカー公式/定価 |
 | iPhone 16 Pro Max 512G | official | official_price | ¥224,800 | medium | 9999.0d | メーカー公式/定価 |
@@ -63,11 +63,11 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 | iPad Air M3 | official | official_price | ¥98,800 | medium | 9999.0d | メーカー公式/定価 |
 | Apple Watch Series 11 | official | official_price | ¥59,800 | medium | 9999.0d | メーカー公式/定価 |
 | Apple Watch Ultra 3 | official | official_price | ¥128,800 | medium | 9999.0d | メーカー公式/定価 |
-| AirPods Pro 3 | official | official_price | ¥42,800 | high | 0.6d | メーカー公式/定価 |
+| AirPods Pro 3 | official | official_price | ¥42,800 | high | 0.7d | メーカー公式/定価 |
 | AirPods Max | official | official_price | ¥84,800 | medium | 9999.0d | メーカー公式/定価 |
-| Nintendo Switch 2 | official | official_price | ¥59,980 | high | 0.6d | メーカー公式/定価 |
+| Nintendo Switch 2 | official | official_price | ¥59,980 | high | 0.7d | メーカー公式/定価 |
 | Nintendo Switch 2 マリオカ | official | official_price | ¥59,980 | medium | 9999.0d | メーカー公式/定価 |
-| PlayStation 5 Pro | official | official_price | ¥137,980 | high | 0.6d | メーカー公式/定価 |
+| PlayStation 5 Pro | official | official_price | ¥137,980 | high | 0.7d | メーカー公式/定価 |
 | PlayStation 5 Digital  | official | official_price | ¥72,980 | medium | 9999.0d | メーカー公式/定価 |
 | Xbox Series X | official | official_price | ¥59,978 | medium | 9999.0d | メーカー公式/定価 |
 | RICOH GR IV | official | official_price | ¥211,800 | high | 0.0d | メーカー公式/定価 |
@@ -88,8 +88,9 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 | RICOH GR IV | sell | buyback_price | ¥151,000 | used_s | 0.0d | フジヤカメラ |
 | SONY α1 II | sell | buyback_price | ¥539,000 | used_s | 0.0d | フジヤカメラ |
 | SONY α7CR | sell | buyback_price | ¥232,000 | used_s | 0.0d | フジヤカメラ |
-| SONY FX3 | sell | buyback_price | ¥354,000 | used_s | 0.0d | フジヤカメラ |
+| SONY FX3 | sell | buyback_price | ¥363,000 | used_s | 0.0d | フジヤカメラ |
 | Canon EOS R5 Mark II | sell | buyback_price | ¥372,000 | used_s | 0.0d | フジヤカメラ |
+| Nikon Z8 | sell | buyback_price | ¥289,000 | used_s | 0.0d | フジヤカメラ |
 | Leica Q3 | sell | buyback_price | ¥586,000 | used_s | 0.0d | フジヤカメラ |
 | iPhone 17 Pro 256GB SI | sell | buyback_price | ¥173,000 | new_unopened_simfree | 0.0d | 買取商店 |
 | iPhone 17 Pro 256GB SI | sell | buyback_price | ¥171,000 | new_unopened_simfree | 0.0d | 買取一丁目 |

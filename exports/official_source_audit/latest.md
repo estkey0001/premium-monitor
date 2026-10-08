@@ -1,6 +1,6 @@
 # Official Source Registry & Validation
 
-> 生成: 2026-10-08 13:17 JST / 公式ソース登録・検証（利益/AI/Opportunity/Notification/Capital/Execution は不変）
+> 生成: 2026-10-08 16:12 JST / 公式ソース登録・検証（利益/AI/Opportunity/Notification/Capital/Execution は不変）
 
 ## メーカー別サマリ
 | Maker | Products | URL verified | HTTP200 | exact match | price auto | high conf | failed |
@@ -8,14 +8,14 @@
 | Apple | 19 | 2 | 2 | 2 | 2 | 2 | 17 |
 | Sony | 6 | 1 | 1 | 1 | 1 | 1 | 5 |
 | Nintendo | 2 | 1 | 1 | 1 | 1 | 1 | 1 |
-| Nikon | 3 | 1 | 1 | 0 | 0 | 0 | 2 |
-| FUJIFILM | 1 | 1 | 1 | 0 | 0 | 0 | 0 |
-| Canon | 3 | 0 | 0 | 0 | 0 | 0 | 3 |
+| Nikon | 3 | 1 | 1 | 1 | 1 | 1 | 2 |
+| FUJIFILM | 1 | 1 | 1 | 1 | 1 | 1 | 0 |
+| Canon | 3 | 1 | 1 | 1 | 1 | 1 | 2 |
 | RICOH | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
 
 ## 自動取得率 Before → After
 - Before: 公式定価あり商品 3 / 公式config 7
-- After: URL検証済 6 / 価格取得 4 （検証対象 6 / 検証不能 9）
+- After: URL検証済 7 / 価格取得 7 （検証対象 7 / 検証不能 8）
 
 ## Apple Source Audit（旧URL検出）
 | product | current_url | http | action | note |
@@ -30,11 +30,13 @@
 | prod_airpods_pro3 | src_apple_jp | ¥42,800 | item | high |
 | prod_ps5_pro | src_sony_store | ¥137,980 | item | high |
 | prod_switch2 | src_nintendo_store | ¥59,980 | item | high |
+| prod_z8 | src_nikon_direct | ¥575,300 | item | high |
+| prod_x100vi | src_fujifilm_official | ¥315,700 | item | high |
+| prod_r5ii | src_canon_official | ¥654,500 | item | high |
 
 ## 検証不能（要手動検証・推測登録しない）
 | product | source | reason |
 |---|---|---|
-| prod_r5ii | src_canon_official | canon.jp が当環境からDNS解決不可（要手動検証） |
 | prod_r6ii | src_canon_official | canon.jp が当環境からDNS解決不可（要手動検証） |
 | prod_r3 | src_canon_official | canon.jp が当環境からDNS解決不可（要手動検証） |
 | prod_z9 | src_nikon_direct | オープン価格の可能性・個別URL未検証 |

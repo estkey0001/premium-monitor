@@ -1,7 +1,7 @@
 
 ============================================================
- Deploy Check (476 items)
- 実行日時: 2026-10-09T00:19:45+09:00
+ Deploy Check (477 items)
+ 実行日時: 2026-10-09T04:36:14+09:00
 ============================================================
   ✅ [index_exists] docs/index.html 存在
   ✅ [forbidden_phrases] 禁止表現なし
@@ -45,7 +45,7 @@
   ✅ [no_mainichi_koshin_text] 「毎日更新」表記は topbar/footer 内のみ（正常）
   ✅ [deal_card_no_saishin_label] updated-row に旧「最終更新：」表記なし（価格確認：に統一済み）
   ✅ [stale_banner_date_mismatch] #144 「本日の価格データ未更新」が HTML に存在しない（OK: トップ警告抑制済み）
-  ⚠️ [csv_today_observed_at] manual_buyback_prices.csv に本日(2026-10-09)の observed_at なし（手動更新が必要な可能性）
+  ✅ [csv_today_observed_at] manual_buyback_prices.csv に本日(2026-10-09)の observed_at あり
   ✅ [iphone17_price_fetched] iPhone 17 Pro 系の買取価格が1件以上取得されている
   ✅ [mobile_ichiban_price] モバイル一番の買取価格（price > 0）が存在する
   ✅ [no_price_zero_shown] LP上に¥0の価格表記なし（0価格行は非表示 or fetch_failed表示で正常）
@@ -53,12 +53,12 @@
   ✅ [fetch_failed_no_price_calc] fetch_failed 行の価格欄が「—」（価格計算に使われていない）
   ✅ [game_console_shops] ゲーム機向け店舗が表示されている: ['ゲオ', 'イオシス', 'ブックオフ', '駿河屋', 'ソフマップ', 'TSUTAYA', '買取商店']
   ✅ [switch2_game_shop_links] Switch 2 / ゲーム機向け確認リンク（ゲオ/ブックオフ/駿河屋/ソフマップ）が存在する
-  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-10-08T23:12:14+09:00）
+  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-10-09T03:28:38+09:00）
   ⚠️ [suspicious_price_format] suspicious_prices 形式OK（suspicious_price 2件あり — 確認推奨）
   ✅ [fetch_failed_has_reason] fetch_failed 46件すべてに reason あり
   ✅ [collector_report_html_exists] docs/collector_report.html 存在
   ✅ [collector_report_link_in_lp] LP内に collector_report.html へのリンクがある
-  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 9件存在する: ['iphone17pro256', 'iphone17pm256', 'iphone17pm512', 'iphone17pro512']
+  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 9件存在する: ['iphone17pm512', 'iphone17_256', 'iphone17pro256', 'iphone17pro512']
   ✅ [beginner_page_auto_scraped_exists] 自動取得 OK 18件 / total 64件
   ✅ [iphone17pro256_price_scraped] iPhone 17 Pro 256GB の価格取得成功: ['kaitori_shouten', 'kaitori_itchome']
   ✅ [fetch_failed_has_reason_field] 全取得失敗エントリーに reason フィールドあり（46件）
@@ -464,6 +464,7 @@
   ✅ [camera_sell_semantics] #853 カメラの新品の買取（JAN で1行だけ・キット/版/限定を分ける・新品同様を新品にしない・失敗で時刻を進めない・抽選/在庫なしを行動できるに数えない）
   ✅ [actionability_semantics] #854 今すぐ行動できるか（利益だけで行動できるにしない・在庫切れ/未確認/3時間を過ぎた在庫あり/受付終了/日程不明/一般のページでは行動できない・行動できない商品にボタンを出さない）
   ✅ [actionable_notifications] #855 今すぐ行動の通知（行動できない → できる だけ・同じ状態では出さない・re-arm・配信の直前の確認・dry-run で送らない・Secrets を渡さない・配信先の URL/トークンを出さない）
+  ✅ [notification_outbox] #856 通知の outbox（冪等性のキー・保存の前に送らない・送った後に止まったら送り直さない・dry-run は送信済みにしない・atomic・HTTP の部品なし・手順ごとの保存・Secrets を渡さない）
   ✅ [no_rejected_price_published] #820 明らかに誤りの買取価格が CSV（LP・利益計算の入力）に残っていない
   ✅ [official_price_not_generation_time] #821 公式定価の観測時刻が生成時刻になっていない（確認日・実際の取得時刻を保持）
   ✅ [no_timestamp_only_update] #822 手動 CSV で「値は同じで日時だけ新しい」更新をしていない（作業ツリーと直近のコミット）
@@ -480,7 +481,7 @@
   ✅ [opportunity_sell_identity_verified] #833 利益に使った売却価格はすべて商品照合済みの買取価格で、商品詳細の表の確認済みの行と一致（2件）
   ✅ [mypage_safe] #834 マイページに DEMO・架空のアカウント表示・危ないリンクが無く、ウォッチは登録済みの商品だけ、想定純利益は商品詳細と同じ
 
-  Errors: 0 | Warnings: 12 | OK: 464
+  Errors: 0 | Warnings: 11 | OK: 466
 
   ✅ Deploy check PASSED
 ============================================================

@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-10-09T00:19:40+09:00",
-  "dispatched_at": "2026-10-09T00:19:40+09:00",
-  "diagnostics_generated_at": "2026-10-09T00:19:40+09:00",
+  "generated_at": "2026-10-09T04:36:05+09:00",
+  "step": "prepare",
+  "diagnostics_generated_at": "2026-10-09T04:36:05+09:00",
   "note": "内部用（運営者向け）。外部への送信はしない（dry-run）。配信先の URL・トークンは記録しない",
   "type": "ACTIONABLE_NOW",
   "dry_run": true,
-  "is_baseline": true,
+  "is_baseline": false,
   "channels": [
     "log",
     "discord",
@@ -15,11 +15,30 @@
   "notification_candidates": 0,
   "dedupe_suppressed": 0,
   "baseline_recorded": 0,
+  "pruned": 0,
   "dispatch_planned": 0,
   "dispatch_sent": 0,
   "dispatch_failed": 0,
   "dispatch_blocked": 0,
+  "dispatch_unknown": 0,
   "dispatch_not_configured": 0,
+  "external_calls": 0,
   "candidates": [],
-  "suppressed": []
+  "counts": {
+    "outbox_pending": 0,
+    "sending": 0,
+    "dry_run_planned": 0,
+    "delivered": 0,
+    "retryable_failed": 0,
+    "final_failed": 0,
+    "expired": 0,
+    "cancelled": 0,
+    "ambiguous_delivery": 0,
+    "records": 0
+  },
+  "prepared_at": "2026-10-09T04:36:09+09:00",
+  "attempt_id": "gh-37824448363-1",
+  "dispatch_expired": 0,
+  "dispatch_cancelled": 0,
+  "dispatch_sending": 0
 }

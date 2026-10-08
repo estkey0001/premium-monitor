@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-09T00:19:40+09:00",
+  "generated_at": "2026-10-09T04:36:05+09:00",
   "note": "内部用（運営者向け）。一般の画面には出さない。掲載の判定は opportunity.eligibility が正本",
   "candidate_count": 45,
   "eligible_count": 2,
@@ -472,7 +472,7 @@
         "price": 42800,
         "price_type": "RETAIL",
         "source": "src_apple_jp",
-        "verified_at": "2026-10-08T00:00:00",
+        "verified_at": "2026-10-09T00:00:00",
         "url": "https://www.apple.com/jp/shop/buy-airpods/airpods-pro-3",
         "note": ""
       },
@@ -498,7 +498,7 @@
         "price": 654500,
         "price_type": "RETAIL",
         "source": "src_canon_official",
-        "verified_at": "2026-10-08T00:00:00",
+        "verified_at": "2026-10-09T00:00:00",
         "url": "https://store.canon.jp/online/g/g6536C001/",
         "note": ""
       },
@@ -589,7 +589,7 @@
         "price": 575300,
         "price_type": "RETAIL",
         "source": "src_nikon_direct",
-        "verified_at": "2026-10-08T00:00:00",
+        "verified_at": "2026-10-09T00:00:00",
         "url": "https://nij.nikon.com/shop/g/g4960759909947/",
         "note": ""
       },
@@ -667,7 +667,7 @@
         "price": 211800,
         "price_type": "RETAIL",
         "source": "src_ricoh_imaging",
-        "verified_at": "2026-10-08T23:51:42+09:00",
+        "verified_at": "2026-10-09T04:08:04+09:00",
         "url": "https://ricohimagingstore.com/Form/Product/ProductList.aspx?shop=0&cat=002010",
         "note": ""
       },
@@ -680,7 +680,7 @@
         "price": 222000,
         "price_type": "RETAIL",
         "source": "src_ricoh_imaging",
-        "verified_at": "2026-10-08T23:55:42+09:00",
+        "verified_at": "2026-10-09T04:12:04+09:00",
         "url": "https://ricohimagingstore.com/Form/Product/ProductList.aspx?shop=0&cat=002010",
         "note": ""
       },
@@ -693,7 +693,7 @@
         "price": 299800,
         "price_type": "RETAIL",
         "source": "src_ricoh_imaging",
-        "verified_at": "2026-10-08T23:57:42+09:00",
+        "verified_at": "2026-10-09T04:14:04+09:00",
         "url": "https://ricohimagingstore.com/Form/Product/ProductList.aspx?shop=0&cat=002010",
         "note": ""
       },
@@ -797,7 +797,7 @@
         "price": 137980,
         "price_type": "RETAIL",
         "source": "src_sony_store",
-        "verified_at": "2026-10-08T00:00:00",
+        "verified_at": "2026-10-09T00:00:00",
         "url": "https://pur.store.sony.jp/ps5/products/ps5/CFI-7100B01_purchase/",
         "note": ""
       },
@@ -1128,7 +1128,7 @@
         "rows": 24,
         "fresh": 17,
         "stale": 7,
-        "last_observed": "2026-10-08T23:22:56.722553+09:00"
+        "last_observed": "2026-10-09T03:39:18.711750+09:00"
       },
       {
         "source": "ブックオフ",
@@ -1152,14 +1152,14 @@
         "source": "買取一丁目",
         "rows": 4,
         "fresh": 4,
-        "last_observed": "2026-10-08T23:15:20+09:00"
+        "last_observed": "2026-10-09T03:31:44+09:00"
       },
       {
         "source": "買取商店",
         "rows": 21,
         "stale": 7,
         "fresh": 14,
-        "last_observed": "2026-10-08T23:22:56+09:00"
+        "last_observed": "2026-10-09T03:39:18+09:00"
       },
       {
         "source": "駿河屋",
@@ -1206,42 +1206,42 @@
         "product_id": "prod_gr4",
         "price": 200000,
         "source": "買取商店",
-        "observed_at": "2026-10-08T23:21:26+09:00",
+        "observed_at": "2026-10-09T03:37:48+09:00",
         "condition": "new_unopened"
       },
       {
         "product_id": "prod_gr4_hdf",
         "price": 240000,
         "source": "買取商店",
-        "observed_at": "2026-10-08T23:21:26+09:00",
+        "observed_at": "2026-10-09T03:37:48+09:00",
         "condition": "new_unopened"
       },
       {
         "product_id": "prod_gr4_mono",
         "price": 227000,
         "source": "買取商店",
-        "observed_at": "2026-10-08T23:21:26+09:00",
+        "observed_at": "2026-10-09T03:37:48+09:00",
         "condition": "new_unopened"
       },
       {
         "product_id": "prod_r5ii",
         "price": 450000,
         "source": "買取商店",
-        "observed_at": "2026-10-08T23:22:56+09:00",
+        "observed_at": "2026-10-09T03:39:18+09:00",
         "condition": "new_unopened"
       },
       {
         "product_id": "prod_x100vi",
         "price": 260000,
         "source": "買取商店",
-        "observed_at": "2026-10-08T23:21:26+09:00",
+        "observed_at": "2026-10-09T03:37:48+09:00",
         "condition": "new_unopened"
       },
       {
         "product_id": "prod_z8",
         "price": 420000,
         "source": "買取商店",
-        "observed_at": "2026-10-08T23:22:56+09:00",
+        "observed_at": "2026-10-09T03:39:18+09:00",
         "condition": "new_unopened"
       }
     ],
@@ -1268,7 +1268,7 @@
           "lottery_closed"
         ],
         "deadline": "2026-09-28T12:00:00+09:00",
-        "checked_at": "2026-10-09T00:03:00+09:00",
+        "checked_at": "2026-10-09T04:20:00+09:00",
         "confirmed": true,
         "net_profit": 16200.0,
         "roi": 0.07297297297297298,
@@ -1287,7 +1287,7 @@
           "stock_out"
         ],
         "deadline": "",
-        "checked_at": "2026-10-08T23:59:45+09:00",
+        "checked_at": "2026-10-09T04:16:07+09:00",
         "confirmed": true,
         "net_profit": 54870.0,
         "roi": 0.3960874900743521,

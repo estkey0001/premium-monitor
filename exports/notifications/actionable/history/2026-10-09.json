@@ -1,0 +1,28 @@
+{
+  "date": "2026-10-09",
+  "runs": [
+    {
+      "generated_at": "2026-10-09T00:19:40+09:00",
+      "dispatched_at": "2026-10-09T00:19:40+09:00",
+      "diagnostics_generated_at": "2026-10-09T00:19:40+09:00",
+      "type": "ACTIONABLE_NOW",
+      "dry_run": true,
+      "is_baseline": true,
+      "channels": [
+        "log",
+        "discord",
+        "telegram"
+      ],
+      "newly_actionable": 0,
+      "notification_candidates": 0,
+      "dedupe_suppressed": 0,
+      "baseline_recorded": 0,
+      "dispatch_planned": 0,
+      "dispatch_sent": 0,
+      "dispatch_failed": 0,
+      "dispatch_blocked": 0,
+      "dispatch_not_configured": 0,
+      "candidates": []
+    }
+  ]
+}

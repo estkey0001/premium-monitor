@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-08 16:30 JST",
+  "generated_at": "2026-10-08 18:28 JST",
   "ebay_api_configured": false,
   "overseas_source_mode": "manual",
   "summary": {
@@ -62,7 +62,7 @@
       "rejection_top5": [
         [
           "price_zero",
-          5
+          6
         ],
         [
           "stale_over_14d",
@@ -93,7 +93,7 @@
       "rejection_top5": [
         [
           "price_zero",
-          5
+          6
         ],
         [
           "stale_over_14d",
@@ -108,13 +108,13 @@
     "prod_iphone17pm_256": {
       "product_name": "iPhone 17 Pro Max 256GB SIMフリー",
       "buy_candidates": 0,
-      "sell_candidates": 3,
+      "sell_candidates": 2,
       "min_usable_buy": null,
       "min_usable_buy_source": "",
       "max_usable_sell": 186000,
-      "max_usable_sell_source": "モバイル一番",
+      "max_usable_sell_source": "買取商店",
       "min_usable_buy_identity_verified": false,
-      "max_usable_sell_identity_verified": false,
+      "max_usable_sell_identity_verified": true,
       "target_buy_price": 185999,
       "gross_gap": null,
       "net_domestic": null,
@@ -124,7 +124,7 @@
       "rejection_top5": [
         [
           "price_zero",
-          5
+          6
         ],
         [
           "stale_over_14d",
@@ -155,7 +155,7 @@
       "rejection_top5": [
         [
           "price_zero",
-          5
+          6
         ]
       ],
       "stale_excluded": 0,
@@ -624,7 +624,7 @@
     "prod_ps5_pro": {
       "product_name": "PlayStation 5 Pro",
       "buy_candidates": 0,
-      "sell_candidates": 2,
+      "sell_candidates": 1,
       "min_usable_buy": null,
       "min_usable_buy_source": "",
       "max_usable_sell": 195200,
@@ -640,7 +640,7 @@
       "rejection_top5": [
         [
           "price_zero",
-          8
+          9
         ],
         [
           "stale_over_14d",
@@ -709,14 +709,14 @@
     "prod_gr4": {
       "product_name": "RICOH GR IV",
       "buy_candidates": 0,
-      "sell_candidates": 1,
+      "sell_candidates": 2,
       "min_usable_buy": null,
       "min_usable_buy_source": "",
-      "max_usable_sell": 151000,
-      "max_usable_sell_source": "フジヤカメラ",
+      "max_usable_sell": 200000,
+      "max_usable_sell_source": "買取商店",
       "min_usable_buy_identity_verified": false,
-      "max_usable_sell_identity_verified": false,
-      "target_buy_price": 150999,
+      "max_usable_sell_identity_verified": true,
+      "target_buy_price": 199999,
       "gross_gap": null,
       "net_domestic": null,
       "best_reference_net": null,
@@ -725,14 +725,14 @@
       "rejection_top5": [
         [
           "stale_over_14d",
-          14
+          13
         ],
         [
           "sold_label_without_evidence",
           1
         ]
       ],
-      "stale_excluded": 15,
+      "stale_excluded": 14,
       "overseas_stale": 1,
       "needed": [],
       "fresh_overseas_whatif_top5": []
@@ -740,18 +740,18 @@
     "prod_gr4_hdf": {
       "product_name": "RICOH GR IV HDF",
       "buy_candidates": 0,
-      "sell_candidates": 0,
+      "sell_candidates": 1,
       "min_usable_buy": null,
       "min_usable_buy_source": "",
-      "max_usable_sell": null,
-      "max_usable_sell_source": "",
+      "max_usable_sell": 240000,
+      "max_usable_sell_source": "買取商店",
       "min_usable_buy_identity_verified": false,
-      "max_usable_sell_identity_verified": false,
-      "target_buy_price": null,
+      "max_usable_sell_identity_verified": true,
+      "target_buy_price": 239999,
       "gross_gap": null,
       "net_domestic": null,
       "best_reference_net": null,
-      "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
+      "main_blocked_reason": "有効な仕入(販売/出品/落札)候補なし",
       "excluded_route_count": 0,
       "rejection_top5": [
         [
@@ -775,18 +775,18 @@
     "prod_gr4_mono": {
       "product_name": "RICOH GR IV Monochrome",
       "buy_candidates": 0,
-      "sell_candidates": 0,
+      "sell_candidates": 1,
       "min_usable_buy": null,
       "min_usable_buy_source": "",
-      "max_usable_sell": null,
-      "max_usable_sell_source": "",
+      "max_usable_sell": 227000,
+      "max_usable_sell_source": "買取商店",
       "min_usable_buy_identity_verified": false,
-      "max_usable_sell_identity_verified": false,
-      "target_buy_price": null,
+      "max_usable_sell_identity_verified": true,
+      "target_buy_price": 226999,
       "gross_gap": null,
       "net_domestic": null,
       "best_reference_net": null,
-      "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
+      "main_blocked_reason": "有効な仕入(販売/出品/落札)候補なし",
       "excluded_route_count": 0,
       "rejection_top5": [
         [
@@ -885,14 +885,14 @@
     "prod_x100vi": {
       "product_name": "FUJIFILM X100VI",
       "buy_candidates": 0,
-      "sell_candidates": 1,
+      "sell_candidates": 2,
       "min_usable_buy": null,
       "min_usable_buy_source": "",
-      "max_usable_sell": 190000,
-      "max_usable_sell_source": "フジヤカメラ",
+      "max_usable_sell": 260000,
+      "max_usable_sell_source": "買取商店",
       "min_usable_buy_identity_verified": false,
-      "max_usable_sell_identity_verified": false,
-      "target_buy_price": 189999,
+      "max_usable_sell_identity_verified": true,
+      "target_buy_price": 259999,
       "gross_gap": null,
       "net_domestic": null,
       "best_reference_net": null,
@@ -901,14 +901,14 @@
       "rejection_top5": [
         [
           "stale_over_14d",
-          16
+          15
         ],
         [
           "sold_label_without_evidence",
           1
         ]
       ],
-      "stale_excluded": 17,
+      "stale_excluded": 16,
       "overseas_stale": 1,
       "needed": [],
       "fresh_overseas_whatif_top5": []
@@ -1053,14 +1053,14 @@
     "prod_r5ii": {
       "product_name": "Canon EOS R5 Mark II",
       "buy_candidates": 0,
-      "sell_candidates": 1,
+      "sell_candidates": 2,
       "min_usable_buy": null,
       "min_usable_buy_source": "",
-      "max_usable_sell": 372000,
-      "max_usable_sell_source": "フジヤカメラ",
+      "max_usable_sell": 450000,
+      "max_usable_sell_source": "買取商店",
       "min_usable_buy_identity_verified": false,
-      "max_usable_sell_identity_verified": false,
-      "target_buy_price": 371999,
+      "max_usable_sell_identity_verified": true,
+      "target_buy_price": 449999,
       "gross_gap": null,
       "net_domestic": null,
       "best_reference_net": null,
@@ -1124,14 +1124,14 @@
     "prod_z8": {
       "product_name": "Nikon Z8",
       "buy_candidates": 0,
-      "sell_candidates": 1,
+      "sell_candidates": 2,
       "min_usable_buy": null,
       "min_usable_buy_source": "",
-      "max_usable_sell": 289000,
-      "max_usable_sell_source": "フジヤカメラ",
+      "max_usable_sell": 420000,
+      "max_usable_sell_source": "買取商店",
       "min_usable_buy_identity_verified": false,
-      "max_usable_sell_identity_verified": false,
-      "target_buy_price": 288999,
+      "max_usable_sell_identity_verified": true,
+      "target_buy_price": 419999,
       "gross_gap": null,
       "net_domestic": null,
       "best_reference_net": null,

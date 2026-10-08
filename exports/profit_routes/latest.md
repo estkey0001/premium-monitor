@@ -1,6 +1,6 @@
 # Pro 利益ルート（normalized_price_observations 由来・検証済み）
 
-生成: 2026-10-08 16:30 JST
+生成: 2026-10-08 18:28 JST
 
 - **main 利益ルート: 0件**（route_confidence high/medium のみ）
 - 参考ルート(海外sold stale・要fresh化): 0件
@@ -22,19 +22,19 @@
 
 ### iPhone 17 Pro 256GB SIMフリー
 - buy候補 0 / sell候補 2 / stale除外 5 / 海外sold stale 1
-- 除外理由TOP5: [('price_zero', 5), ('stale_over_14d', 5)]
+- 除外理由TOP5: [('price_zero', 6), ('stale_over_14d', 5)]
 
 ### iPhone 17 Pro 512GB SIMフリー
 - buy候補 0 / sell候補 2 / stale除外 3 / 海外sold stale 0
-- 除外理由TOP5: [('price_zero', 5), ('stale_over_14d', 3)]
+- 除外理由TOP5: [('price_zero', 6), ('stale_over_14d', 3)]
 
 ### iPhone 17 Pro Max 256GB SIMフリー
-- buy候補 0 / sell候補 3 / stale除外 3 / 海外sold stale 0
-- 除外理由TOP5: [('price_zero', 5), ('stale_over_14d', 3)]
+- buy候補 0 / sell候補 2 / stale除外 3 / 海外sold stale 0
+- 除外理由TOP5: [('price_zero', 6), ('stale_over_14d', 3)]
 
 ### iPhone 17 Pro Max 512GB SIMフリー
 - buy候補 0 / sell候補 2 / stale除外 0 / 海外sold stale 0
-- 除外理由TOP5: [('price_zero', 5)]
+- 除外理由TOP5: [('price_zero', 6)]
 
 ### iPhone 17 256GB SIMフリー
 - buy候補 0 / sell候補 1 / stale除外 3 / 海外sold stale 0
@@ -105,8 +105,8 @@
 - 除外理由TOP5: [('stale_over_14d', 5)]
 
 ### PlayStation 5 Pro
-- buy候補 0 / sell候補 2 / stale除外 3 / 海外sold stale 0
-- 除外理由TOP5: [('price_zero', 8), ('stale_over_14d', 3)]
+- buy候補 0 / sell候補 1 / stale除外 3 / 海外sold stale 0
+- 除外理由TOP5: [('price_zero', 9), ('stale_over_14d', 3)]
 
 ### PlayStation 5 Digital Edition
 - buy候補 0 / sell候補 0 / stale除外 3 / 海外sold stale 0
@@ -117,15 +117,15 @@
 - 除外理由TOP5: [('stale_over_14d', 2)]
 
 ### RICOH GR IV
-- buy候補 0 / sell候補 1 / stale除外 15 / 海外sold stale 1
-- 除外理由TOP5: [('stale_over_14d', 14), ('sold_label_without_evidence', 1)]
+- buy候補 0 / sell候補 2 / stale除外 14 / 海外sold stale 1
+- 除外理由TOP5: [('stale_over_14d', 13), ('sold_label_without_evidence', 1)]
 
 ### RICOH GR IV HDF
-- buy候補 0 / sell候補 0 / stale除外 6 / 海外sold stale 0
+- buy候補 0 / sell候補 1 / stale除外 6 / 海外sold stale 0
 - 除外理由TOP5: [('stale_over_14d', 5), ('duplicate_price_collision', 1), ('sold_label_without_evidence', 1)]
 
 ### RICOH GR IV Monochrome
-- buy候補 0 / sell候補 0 / stale除外 6 / 海外sold stale 0
+- buy候補 0 / sell候補 1 / stale除外 6 / 海外sold stale 0
 - 除外理由TOP5: [('stale_over_14d', 5), ('duplicate_price_collision', 1), ('sold_label_without_evidence', 1)]
 
 ### RICOH GR IIIx
@@ -141,8 +141,8 @@
 - 除外理由TOP5: []
 
 ### FUJIFILM X100VI
-- buy候補 0 / sell候補 1 / stale除外 17 / 海外sold stale 1
-- 除外理由TOP5: [('stale_over_14d', 16), ('sold_label_without_evidence', 1)]
+- buy候補 0 / sell候補 2 / stale除外 16 / 海外sold stale 1
+- 除外理由TOP5: [('stale_over_14d', 15), ('sold_label_without_evidence', 1)]
 
 ### FUJIFILM GFX100RF
 - buy候補 0 / sell候補 1 / stale除外 0 / 海外sold stale 0
@@ -169,7 +169,7 @@
 - 除外理由TOP5: []
 
 ### Canon EOS R5 Mark II
-- buy候補 0 / sell候補 1 / stale除外 0 / 海外sold stale 0
+- buy候補 0 / sell候補 2 / stale除外 0 / 海外sold stale 0
 - 除外理由TOP5: []
 
 ### Canon EOS R6 Mark II
@@ -181,7 +181,7 @@
 - 除外理由TOP5: [('accessory_or_wrong_product', 1)]
 
 ### Nikon Z8
-- buy候補 0 / sell候補 1 / stale除外 0 / 海外sold stale 0
+- buy候補 0 / sell候補 2 / stale除外 0 / 海外sold stale 0
 - 除外理由TOP5: []
 
 ### Nikon Zf

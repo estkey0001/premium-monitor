@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-08 16:30 JST",
+  "generated_at": "2026-10-08 18:28 JST",
   "source": "Yahoo Auction sold",
   "policy": "no_live_scraping_tos_safe_manual_curation_plus_search_url",
   "fresh_days": 14,
@@ -26,7 +26,7 @@
           "observed_at": "2026-08-21T12:00:00+09:00",
           "sold_at": "",
           "price_type": "UNKNOWN",
-          "age_days": 48.2,
+          "age_days": 48.3,
           "target_buy_price": 51999,
           "within_target": true,
           "rejection_reason": "no_sold_evidence:dummy_url,no_sold_at"
@@ -55,7 +55,7 @@
           "observed_at": "2026-08-21T18:00:00+09:00",
           "sold_at": "",
           "price_type": "UNKNOWN",
-          "age_days": 47.9,
+          "age_days": 48.0,
           "target_buy_price": 195199,
           "within_target": true,
           "rejection_reason": "no_sold_evidence:dummy_url,no_sold_at"

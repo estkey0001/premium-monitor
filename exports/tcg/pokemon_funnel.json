@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-08T16:30:26.103848+09:00",
+  "generated_at": "2026-10-08T18:28:41.177385+09:00",
   "sources": [
     {
       "source": "ポケモンカードゲーム公式（商品API）",
@@ -51,21 +51,26 @@
     {
       "source": "ポケモンセンターオンライン",
       "collector": "PokemonCenterOnlineCollector",
-      "status": "BLOCKED",
-      "status_reason": "アクセス拒否（HTTP 403 / robots 等）: 1ページ",
+      "status": "OK_NO_EVENTS",
+      "status_reason": "正常に取得。現在の販売イベントは0件（棄却: no_product_context=5, no_sale_context=5, unknown_sale_method=2）",
       "pages_discovered": 1,
       "pages_requested": 1,
-      "pages_loaded": 0,
+      "pages_loaded": 1,
       "product_links_discovered": 0,
       "product_pages_discovered": 0,
       "product_pages_loaded": 0,
       "news_pages_discovered": 0,
       "news_pages_loaded": 0,
-      "candidate_events": 0,
+      "candidate_events": 13,
       "accepted_sales_events": 0,
-      "rejected_events": 0,
-      "errors": 1,
-      "rejection_reasons": {},
+      "rejected_events": 13,
+      "errors": 0,
+      "rejection_reasons": {
+        "no_product_context": 5,
+        "no_sale_context": 5,
+        "unknown_sale_method": 2,
+        "non_sale_announcement": 1
+      },
       "notes": []
     },
     {
@@ -94,23 +99,25 @@
   "total": {
     "pages_discovered": 8,
     "pages_requested": 8,
-    "pages_loaded": 7,
+    "pages_loaded": 8,
     "product_links_discovered": 16,
     "product_pages_discovered": 6,
     "product_pages_loaded": 1,
     "news_pages_discovered": 105,
     "news_pages_loaded": 0,
-    "candidate_events": 122,
+    "candidate_events": 135,
     "accepted_sales_events": 9,
-    "rejected_events": 113,
-    "errors": 1
+    "rejected_events": 126,
+    "errors": 0
   },
   "rejection_reasons": {
     "past_release": 8,
     "event_category": 75,
-    "no_sale_context": 4,
-    "non_sale_announcement": 12,
-    "article_too_old": 14
+    "no_sale_context": 9,
+    "non_sale_announcement": 13,
+    "article_too_old": 14,
+    "no_product_context": 5,
+    "unknown_sale_method": 2
   },
   "current_events": 9
 }

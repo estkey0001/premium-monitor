@@ -1,7 +1,7 @@
 
 ============================================================
- Deploy Check (473 items)
- 実行日時: 2026-10-08T16:30:38+09:00
+ Deploy Check (474 items)
+ 実行日時: 2026-10-08T18:28:54+09:00
 ============================================================
   ✅ [index_exists] docs/index.html 存在
   ✅ [forbidden_phrases] 禁止表現なし
@@ -53,26 +53,26 @@
   ✅ [fetch_failed_no_price_calc] fetch_failed 行の価格欄が「—」（価格計算に使われていない）
   ✅ [game_console_shops] ゲーム機向け店舗が表示されている: ['ゲオ', 'イオシス', 'ブックオフ', '駿河屋', 'ソフマップ', 'TSUTAYA', '買取商店']
   ✅ [switch2_game_shop_links] Switch 2 / ゲーム機向け確認リンク（ゲオ/ブックオフ/駿河屋/ソフマップ）が存在する
-  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-10-08T15:27:41+09:00）
-  ⚠️ [suspicious_price_format] suspicious_prices 形式OK（suspicious_price 1件あり — 確認推奨）
-  ✅ [fetch_failed_has_reason] fetch_failed 44件すべてに reason あり
+  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-10-08T17:22:54+09:00）
+  ⚠️ [suspicious_price_format] suspicious_prices 形式OK（suspicious_price 2件あり — 確認推奨）
+  ✅ [fetch_failed_has_reason] fetch_failed 46件すべてに reason あり
   ✅ [collector_report_html_exists] docs/collector_report.html 存在
   ✅ [collector_report_link_in_lp] LP内に collector_report.html へのリンクがある
-  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 10件存在する: ['iphone17pm256', 'iphone17_256', 'iphone17pm512', 'iphone17pro256']
-  ✅ [beginner_page_auto_scraped_exists] 自動取得 OK 14件 / total 58件
+  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 9件存在する: ['iphone17pm256', 'iphone17pm512', 'iphone17_256', 'iphone17pro512']
+  ✅ [beginner_page_auto_scraped_exists] 自動取得 OK 18件 / total 64件
   ✅ [iphone17pro256_price_scraped] iPhone 17 Pro 256GB の価格取得成功: ['kaitori_shouten', 'kaitori_itchome']
-  ✅ [fetch_failed_has_reason_field] 全取得失敗エントリーに reason フィールドあり（44件）
+  ✅ [fetch_failed_has_reason_field] 全取得失敗エントリーに reason フィールドあり（46件）
   ✅ [auto_scraped_link_verified] auto_scraped行のlink_verifiedはすべてtrue（URL推測なし）
-  ⚠️ [iphone_min3_shops] iPhone商品の成功店舗数が3未満: iphone17pro256:2店舗, iphone17pro512:2店舗, iphone17pm512:2店舗
+  ⚠️ [iphone_min3_shops] iPhone商品の成功店舗数が3未満: iphone17pro256:2店舗, iphone17pro512:2店舗, iphone17pm256:2店舗, iphone17pm512:2店舗
   ⚠️ [switch2_min2_shops] Switch2の成功店舗数が2未満: 1店舗
-  ✅ [ps5pro_min2_shops] PS5 Pro 成功店舗≥2（2店舗）
+  ⚠️ [ps5pro_min2_shops] PS5 Proの成功店舗数が2未満: 1店舗
   ✅ [no_unknown_failure_reason] すべての取得失敗に reason が設定されている（unknown なし）
   ✅ [debug_files_saved] exports/debug/ に診断ファイル 63件あり
   ✅ [low_confidence_not_in_lp] confidence=low 価格がLPに含まれていない（low=0件）
-  ✅ [suspicious_price_not_in_lp] suspicious_price がLPに含まれていない（要疑い価格=1件）
+  ✅ [suspicious_price_not_in_lp] suspicious_price がLPに含まれていない（要疑い価格=2件）
   ✅ [quality_gate_script_exists] scripts/check_collector_quality.py が存在
   ✅ [quality_gate_in_workflow] GitHub Actions に quality gate step がある
-  ✅ [collector_summary_in_report] latest.json summary OK: 14/58 (24%)
+  ✅ [collector_summary_in_report] latest.json summary OK: 18/64 (28%)
   ✅ [playwright_install_in_workflow] daily_lp.yml に playwright install --with-deps chromium が存在
   ✅ [workflow_concurrency_set] daily_lp.yml に concurrency: group=daily-lp-update が設定されている
   ✅ [workflow_concurrency_no_cancel] daily_lp.yml の concurrency が cancel-in-progress: false（後続を待機）
@@ -90,7 +90,7 @@
   ✅ [mobile_ichiban_not_listed_classified] mobile_ichiban が product_not_listed を last_failure_reason に分類している
   ✅ [report_has_not_listed_reason] collector_report の failure_reason_ranking に product_not_listed が存在する（未掲載/失敗が別集計）
   ✅ [base_collector_no_reason_overwrite] buyback_base_csv.py が last_failure_reason を上書きしない（None チェック実装済み）
-  ✅ [mobile_ichiban_512_not_listed] mobile_ichiban の 512GB 系が product_not_listed として正しく分類されている
+  ⚠️ [mobile_ichiban_512_not_listed] mobile_ichiban の 512GB 系が product_not_listed でなく failed_shops に入っている — 分類の修正が必要
   ✅ [ricoh_monochrome_single] RICOH GR IV Monochrome が lottery_events.csv に定義済み
   ✅ [ricoh_hdf_single] RICOH GR IV HDF が lottery_events.csv に定義済み
   ✅ [reference_only_items_flagged] X100VI / PS5 / Switch2 に reference_only=True が設定済み
@@ -185,7 +185,7 @@
   ✅ [daily_workflow_has_all_steps] #475 daily_lp.yml に全取得・生成・push ステップがある
   ✅ [report_latest_files_present] #476 各レポートの latest.json / latest.md が存在する
   ✅ [lottery_daily_update] #480 抽選情報が毎日更新される（daily_lp.yml に update_lottery_events ステップ）
-  ✅ [ranking_empty_reason] #482 beginner ランキングが0件なら理由が表示される（beginner=1）
+  ✅ [ranking_empty_reason] #482 beginner ランキングが0件なら理由が表示される（beginner=2）
   ✅ [sedori_empty_reason] #483 sedori ルートが0件なら理由が表示される（routes=0）
   ✅ [overseas_stale_excluded] #484 overseas stale は主計算から除外する方針が明示されている
   ✅ [ebay_app_id_warning] #485 eBay を取らない理由（Finding API は廃止・成約は Marketplace Insights）を明示する
@@ -232,7 +232,7 @@
   ✅ [data_quality_camera_reliability] #532 data_quality_report に camera 信頼性メトリクスがある（auto=17）
   ✅ [camera_models_all_aliases] #533 全対象機種(20)に model alias / strict ルールが定義されている
   ✅ [strict_match_data_driven] #534 strict model match がデータ駆動（require_any/include_all/exclude）で有効
-  ✅ [top_camera_buyback_ranking] #535 Top Camera Buyback Opportunities（high/auto/fresh<=7d）がランキングにある（17件）
+  ✅ [top_camera_buyback_ranking] #535 Top Camera Buyback Opportunities（high/auto/fresh<=7d）がランキングにある（20件）
   ✅ [camera_brand_success_rates] #536 data_quality に ブランド別成功率 / low_confidence_count がある
   ✅ [expansion_products_seeded] #537 拡張カメラ製品（Sony/Canon/Nikon/Leica/GFX/X-T5）が products.yaml に定義されている
   ✅ [top_camera_buyback_camera_only] #538 Top Camera Buyback ランキングがカメラ製品（genre='camera'）のみに限定されている
@@ -242,7 +242,7 @@
   ✅ [camera_tradein_exclude] #542 カメラ買取が下取(15%UP等)価格を現金買取価格から分離・除外している
   ✅ [sedori_overseas_sell] #543 せどり計算の売却先が「買取価格＋海外販売価格」になっている（NPO PRO_SELL_TYPES）
   ✅ [top_camera_reference_guard] #544 Top Camera Buyback が参照価格(公式/定価)未取得の商品を除外している
-  ✅ [npo_exists] #545 normalized_price_observations/latest.json が存在する（229観測）
+  ✅ [npo_exists] #545 normalized_price_observations/latest.json が存在する（236観測）
   ✅ [npo_price_role_required] #546 全観測に price_role が付与されている
   ✅ [npo_tradein_not_main] #547 trade_in_price が main calculation（最高買取等）に使われない
   ✅ [npo_pro_buy_no_buyback] #548 Pro route の buy 側に buyback_price が使われない
@@ -292,7 +292,7 @@
   ✅ [profit_route_age_fields] #604 main route に buy_age_days / sell_age_days が含まれる
   ✅ [profit_route_reproducibility] #605 reproducibility_score がルートに付与される
   ✅ [health_diff_shown] #613 前日比較が表示される
-  ✅ [health_critical_classification] #614 異常が Critical/Warning/Info に分類される（C4/W1/I0）
+  ✅ [health_critical_classification] #614 異常が Critical/Warning/Info に分類される（C4/W3/I0）
   ✅ [ai_opportunity_score] #616 Opportunity Score（0-100）が全候補に付与される
   ✅ [ai_buy_decision] #617 BUY/WATCH/PASS 判定が付与される
   ✅ [ai_daily_recommendation] #618 今日のおすすめ（Daily Recommendation）が生成物に付与される
@@ -321,27 +321,27 @@
   ✅ [saas_auth_billing_gated] #653 認証(email/google/apple)・課金(Stripe/Trial)が env gating で実装される
   ✅ [saas_admin_dashboard] #654 Admin Dashboard が生成される（登録者 3）
   ✅ [saas_roadmap] #655 ROADMAP.md（運用/障害/デプロイ/課金/バックアップ）が存在する
-  ✅ [production_report] #656 Production Report が存在する（Overall 80.2/100）
+  ✅ [production_report] #656 Production Report が存在する（Overall 80.3/100）
   ✅ [production_security] #657 Security 監査（Secret0/パストラバーサル対策/API hardening）合格
   ✅ [production_operations] #658 Operations 監査（Runbook/Health/Monitoring/Rollback）合格
   ✅ [production_deployment] #659 Deployment 監査（Pages/CI・本番構成案）合格
   ✅ [production_business] #660 Business Readiness（3プラン/Admin/Watchlist）合格
   ✅ [production_no_critical] #661 Critical 課題ゼロ（残 0件）
-  ✅ [production_overall_score] #662 Overall Score 80.2/100（>=70 でリリース水準）
-  ✅ [data_quality_report] #663 Data Quality Report が存在する（Overall 68/100）
+  ✅ [production_overall_score] #662 Overall Score 80.3/100（>=70 でリリース水準）
+  ✅ [data_quality_report] #663 Data Quality Report が存在する（Overall 69/100）
   ✅ [data_quality_source_ranking] #664 Source Quality Ranking が生成される（9ソース）
-  ✅ [data_quality_stale_analysis] #665 Stale 分析が生成される（stale 101キー・原因分類あり）
-  ✅ [data_quality_zero_price] #666 ¥0 分析が生成される（実取得失敗 10件）
+  ✅ [data_quality_stale_analysis] #665 Stale 分析が生成される（stale 99キー・原因分類あり）
+  ✅ [data_quality_zero_price] #666 ¥0 分析が生成される（実取得失敗 15件）
   ✅ [data_quality_coverage] #667 Coverage Validation が生成される（45/45商品）
   ✅ [data_quality_normalization] #668 Normalization 監査 + 自動化カバレッジ透明性が生成される
-  ⚠️ [data_quality_overall_score] #669 Data Quality Overall 68/100（>=70 でデータ品質水準） ← データ品質スコアが基準未満
-  ✅ [beta_report] #670 Beta Report が存在する（Ready 83/100・READY (closed beta)）
+  ⚠️ [data_quality_overall_score] #669 Data Quality Overall 69/100（>=70 でデータ品質水準） ← データ品質スコアが基準未満
+  ✅ [beta_report] #670 Beta Report が存在する（Ready 84/100・READY (closed beta)）
   ✅ [beta_onboarding] #671 初回オンボーディング（5ステップ）がβ体験ページに出力される
   ✅ [beta_demo_account] #672 Demo Account が存在する（watchlist 5件・execution/history有）
   ✅ [beta_feedback] #673 Feedback（Bug Report/Feature Request）導線がある
   ✅ [beta_analytics] #674 Analytics（匿名集計・DAU/Watchlist/通知/各閲覧）構造が配置される
   ✅ [beta_admin_dashboard] #675 Admin Beta Dashboard が生成される（登録者 3）
-  ✅ [beta_overall] #676 Beta Ready 83/100・Critical 0件（>=75かつCritical0でβ公開水準）
+  ✅ [beta_overall] #676 Beta Ready 84/100・Critical 0件（>=75かつCritical0でβ公開水準）
   ✅ [official_source_audit] #677 official_source_audit が生成される（verified 7件）
   ✅ [official_no_stale_apple_url] #678 Apple 旧404 URL(iphone-16-pro-max)を verified 登録していない
   ✅ [official_no_zero_price] #679 official price=0 を保存/main利用していない
@@ -353,7 +353,7 @@
   ✅ [official_nikon_registered] #685 Nikon が registry に登録される（3件）
   ✅ [official_sony_registered] #686 Sony が registry に登録される（6件・要手動検証）
   ✅ [official_config_verified_fields] #687 source config に verified/last_verified_at が存在する
-  ✅ [retail_buyback_audit] #688 retail_buyback_audit が生成される（Main昇格 8件）
+  ✅ [retail_buyback_audit] #688 retail_buyback_audit が生成される（Main昇格 14件）
   ✅ [price_quality_impl] #689 価格品質ゲート（Main昇格/同一性/duplicate検出）が実装される
   ✅ [main_promotion_gate] #690 Main昇格ゲートが high+fresh+exact の3条件で実装される
   ✅ [duplicate_price_pattern] #691 duplicate_price_pattern 警告が生成される（6件）
@@ -431,7 +431,7 @@
   ✅ [tcg_blocked_source_not_healthy] #762 アクセス拒否（HTTP 403 等）の監視元を正常扱いしない
   ✅ [tcg_entry_url_official_only] #763 応募ページへのリンクは公式サイトの URL のみ
   ✅ [tcg_lottery_coverage_report] #764 抽選の監視状況（登録 / 実装 / 正常 / 拒否 / 未実装）が出力されている
-  ✅ [tcg_lottery_real_data] #765 抽選を実データで取得している（6件）、または監視元が正常に0件を返している
+  ✅ [tcg_lottery_real_data] #765 抽選を実データで取得している（8件）、または監視元が正常に0件を返している
   ✅ [tcg_release_schedule_shown] #841 公式の発売予定（12件）が新UIの抽選・予約に出ている
   ✅ [no_legacy_ui] #800 旧UIの DOM・CSS・JS が残っていない
   ✅ [new_ui_root] #801 新UIの root（#new-ui-root）が1つあり、終わりの目印がある
@@ -461,6 +461,7 @@
   ✅ [official_direct_safety] #850 公式直販価格（同一性・ボディー/キット・送料・販売の形・在庫の表し方・確認日がそろうものだけ）
   ✅ [bundle_jan_safety] #851 JAN とセット（JAN が一致してもセット・版・限定品の食い違いは別の商品）
   ✅ [quality_checker_official_url] #852 quality_checker（存在しないテーブル名を引かない・公式の購入ページは案件と同じ判定）
+  ✅ [camera_sell_semantics] #853 カメラの新品の買取（JAN で1行だけ・キット/版/限定を分ける・新品同様を新品にしない・失敗で時刻を進めない・抽選/在庫なしを行動できるに数えない）
   ✅ [no_rejected_price_published] #820 明らかに誤りの買取価格が CSV（LP・利益計算の入力）に残っていない
   ✅ [official_price_not_generation_time] #821 公式定価の観測時刻が生成時刻になっていない（確認日・実際の取得時刻を保持）
   ✅ [no_timestamp_only_update] #822 手動 CSV で「値は同じで日時だけ新しい」更新をしていない（作業ツリーと直近のコミット）
@@ -474,10 +475,10 @@
   ✅ [artifacts_follow_current_routes] #830 AI の候補・資金配分・実行の OPEN・通知は、今の確定・参考ルート（route_id）から作られている（無効になったルートを復活させていない）
   ✅ [price_history_real_points] #831 価格の履歴は実際に観測した点だけ（観測時刻あり・未来でない・重複なし・正の価格）
   ✅ [product_detail_safe] #832 公開ページの商品詳細に DEMO・危ない URL・除外したルートの利益が出ていない
-  ✅ [opportunity_sell_identity_verified] #833 利益に使った売却価格はすべて商品照合済みの買取価格で、商品詳細の表の確認済みの行と一致（1件）
+  ✅ [opportunity_sell_identity_verified] #833 利益に使った売却価格はすべて商品照合済みの買取価格で、商品詳細の表の確認済みの行と一致（2件）
   ✅ [mypage_safe] #834 マイページに DEMO・架空のアカウント表示・危ないリンクが無く、ウォッチは登録済みの商品だけ、想定純利益は商品詳細と同じ
 
-  Errors: 0 | Warnings: 10 | OK: 463
+  Errors: 0 | Warnings: 12 | OK: 462
 
   ✅ Deploy check PASSED
 ============================================================

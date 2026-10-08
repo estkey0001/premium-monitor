@@ -493,6 +493,19 @@ def build_notifications(events: list | None, keys: dict, latest: dict) -> dict:
             "suppressed": (latest or {}).get("suppressed_count")}
 
 
+def build_actionable_notices(rep: dict | None) -> dict:
+    """今すぐ行動できるようになった商品の通知（Phase 19。src/notifiers/actionable の今回の生成の結果を数えて出すだけ）。
+    重複の抑制の識別子・配信先の URL・トークンは出さない。"""
+    r = rep if isinstance(rep, dict) else {}
+    keys = ("notification_candidates", "dedupe_suppressed", "baseline_recorded", "dispatch_planned", "dispatch_sent",
+            "dispatch_failed", "dispatch_blocked")
+    return {"available": bool(r), "dry_run": r.get("dry_run") is not False, "baseline": bool(r.get("is_baseline")),
+            "at": r.get("generated_at") or "", **{k: int(r.get(k) or 0) for k in keys},
+            "items": [{"product": str(c.get("product") or c.get("product_id") or ""), "status": str(c.get("status") or ""),
+                       "transition": str(c.get("transition") or ""), "dispatch": str(c.get("dispatch_status") or "")}
+                      for c in (r.get("candidates") or []) if isinstance(c, dict)][:20]}
+
+
 def check_text(full: str, tail: int = 4000) -> str:
     """CI のチェックの出力（数万字）から、渡す部分だけを取り出す。実行日時はヘッダ（先頭）、件数は末尾にあるので、
     先頭の実行日時の行と末尾だけ（途中の項目の一覧は渡さない）。"""
@@ -624,6 +637,7 @@ def build(data: dict | None, *, catalog, details: dict, profit_routes: dict | No
             "lot_coverage": (tcg_report or {}).get("lottery_coverage") or {}, "api": api,
             "api_dry_run": (d.get("api") or {}).get("dry_run"), "api_generated": (d.get("api") or {}).get("generated_at"),
             "dq": dq, "ai": ai, "capital": capital, "execution": execution, "notices": notices,
+            "act_notices": build_actionable_notices(d.get("actionable_notifications")),
             "health": d.get("health") or {}, "coverage": d.get("coverage") or {},
             "collector_generated": (d.get("collector") or {}).get("generated_at"),
             "dq_report": d.get("dq_report") or {}, "now": now}
@@ -917,6 +931,29 @@ def _execution(v: dict) -> str:
             + _box("学んだこと・補正（実行の集計より）", _learn(e)))
 
 
+_DISPATCH_LABELS = {"dry_run_planned": "配信を計画（dry-run・送っていない）", "sent": "送信済み", "failed": "送信の失敗",
+                    "revalidation_failed": "配信の直前の確認で止めた", "not_configured": "送信先が無い（送っていない）"}
+
+
+def _act_notices(a: dict) -> str:
+    """今すぐ行動の通知（dry-run）の件数と候補。"""
+    if not a.get("available"):
+        return _box("今すぐ行動の通知", _empty("今回の生成の記録がありません。"))
+    items = "".join(f'<li><b>{esc(i["status"])}</b>・{esc(i["product"])}<span class="nu-osub">{esc(i["transition"])}・'
+                    f'{esc(_DISPATCH_LABELS.get(i["dispatch"], i["dispatch"]))}</span></li>' for i in a["items"])
+    dl = "".join(f"<dt>{esc(lbl)}</dt><dd>{a[k]}件</dd>" for k, lbl in (
+        ("notification_candidates", "通知の候補（行動できない → できる）"), ("dedupe_suppressed", "同じ状態のため出さなかった"),
+        ("baseline_recorded", "前回の状態を見ていないため記録だけ"),
+        ("dispatch_planned", "配信の計画（dry-run）"), ("dispatch_sent", "送信"), ("dispatch_failed", "送信の失敗"),
+        ("dispatch_blocked", "配信の直前の確認で止めた")))
+    mode = "dry-run（外部へは送らない）" if a["dry_run"] else "送信あり"
+    return _box("今すぐ行動の通知", f'<dl class="nu-ad-dl"><dt>方式</dt><dd>{esc(mode)}</dd>{dl}</dl>'
+                + (f'<ul class="nu-ad-list">{items}</ul>' if items else _empty(
+                    "今回、行動できるようになった利益商品はありません" + ("（基準日）。" if a["baseline"] else "。")))
+                + _generated("今回", a["at"]),
+                sub="確定の利益があり、今すぐ行動できるようになった商品だけ（同じ状態では毎回出さない）。判定は「今すぐ行動」と同じ")
+
+
 def _notices(v: dict) -> str:
     n = v["notices"]
     user = "".join(
@@ -927,7 +964,8 @@ def _notices(v: dict) -> str:
     system = "".join(f'<li><b>{esc(s["label"])}</b><span class="nu-osub">{_when(s["at"])}・'
                      f'{esc(s["message"])}</span></li>' for s in n["system"][:20])
     delivery = "・".join(f"{esc(k)}: {esc(v2)}" for k, v2 in n["delivery"].items()) or "記録なし"
-    return (_box("利用者向けの通知", f'<ul class="nu-ad-list">{user}</ul>' if user else _empty("利用者向けの通知はありません。"),
+    return (_act_notices(v.get("act_notices") or {})
+            + _box("利用者向けの通知", f'<ul class="nu-ad-list">{user}</ul>' if user else _empty("利用者向けの通知はありません。"),
                  sub="同じ通知は1回だけ。今の確定ルートでない通知は、当時の金額を出さない")
             + _box("システムの通知（データ品質）", f'<ul class="nu-ad-list">{system}</ul>' if system
                    else _empty("システムの通知はありません。"))

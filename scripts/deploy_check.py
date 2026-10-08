@@ -4133,6 +4133,7 @@ def check() -> list[dict]:
     results.extend(_check_phase16_official_direct())
     results.extend(_check_phase17_camera_sell())
     results.extend(_check_phase18_actionability(html))
+    results.extend(_check_phase19_actionable_notifications(html))
 
     # ══════════════════════════════════════════════════════════════════
     # #820-#825: データの正確さ・鮮度の偽装（Phase 0）
@@ -4833,6 +4834,132 @@ def _check_phase18_actionability(html: str) -> list[dict]:
              "message": "#854 今すぐ行動できるか（利益だけで行動できるにしない・在庫切れ/未確認/3時間を過ぎた在庫あり/"
                         "受付終了/日程不明/一般のページでは行動できない・行動できない商品にボタンを出さない）"
                         + ("" if not bad else f" ← {bad[:4]}")}]
+
+
+_SECRET_PATTERNS = (r"discord(?:app)?\.com/api(?:/v\d+)?/webhooks/\d+/[\w-]+", r"api\.telegram\.org/bot\d+:",
+                    r"\b\d{8,10}:[A-Za-z0-9_-]{35}\b", r"hooks\.slack\.com/services/[\w/]+",
+                    r"Authorization:\s*Bearer\s+[A-Za-z0-9._-]{30,}")
+
+
+def _check_phase19_actionable_notifications(html: str) -> list[dict]:
+    """Phase 19: 今すぐ行動の通知（#855）。行動できない → できる だけ候補・同じ状態では出さない・re-arm・期限切れ/一般の URL/
+    参考の利益は配信の直前に止める・dry-run では送信の関数を呼ばない・LP の生成のステップは dry-run 固定で送信先の
+    Secrets を渡さない・今回の出力に送信 0 と行動できる候補だけ・通知の出力と公開ページに配信先の URL・トークンが無い。"""
+    import json as _json19
+    import re as _re19
+    from datetime import datetime as _dt19
+    from datetime import timedelta as _td19
+
+    from src.tcg.models import JST as _JST19
+    bad, warn = [], []
+    root = Path(__file__).resolve().parent.parent
+    try:
+        from src.notifiers import actionable as an
+        now = _dt19(2026, 10, 9, 12, 0, tzinfo=_JST19)
+        url = "https://pur.store.sony.jp/ps5/products/ps5/CFI-7100B01_purchase/"
+
+        def row(avail="IN_STOCK", ok=True, **kw):
+            r = {"product_id": "p", "product": "P", "availability": avail, "actionable": ok, "reasons": [] if ok else ["x"],
+                 "confirmed": True, "net_profit": 50000, "roi": 0.3, "cta_label": "購入する", "cta_url": url if ok else "",
+                 "until_ms": int((now + _td19(hours=2)).timestamp() * 1000) if ok else None, "deadline": "",
+                 "checked_at": (now - _td19(hours=1)).isoformat(), "event_key": ""}
+            r.update(kw)
+            return {"actionability": {"products": [r]}}
+
+        rep, st = an.run(row("OUT_OF_STOCK", False), {}, now=now)
+        rep, st = an.run(row(), st, now=now)
+        if rep["notification_candidates"] != 1 or rep["dispatch_planned"] != 1:
+            bad.append("在庫切れ → 在庫ありを候補にしない")
+        rep, st = an.run(row(), st, now=now)
+        if rep["notification_candidates"] != 0 or rep["dedupe_suppressed"] != 1:
+            bad.append("同じ状態（在庫ありのまま）で毎回候補にする")
+        rep, st = an.run(row("OUT_OF_STOCK", False), st, now=now)
+        rep, st = an.run(row(), st, now=now)
+        if rep["notification_candidates"] != 1:
+            bad.append("在庫切れ → 在庫ありに戻ったとき（re-arm）候補にしない")
+        rep, _st = an.run(row("STOCK_STALE", False), st, now=now)
+        rep, _st = an.run(row(), _st, now=now)
+        if rep["notification_candidates"] != 0:
+            bad.append("更新待ち（確認できなかった）で re-arm して同じ通知を繰り返す")
+        rep, _st = an.run(row(), {}, now=now)
+        if rep["notification_candidates"] != 0:
+            bad.append("前回の状態を見ていない商品（利益だけが変わった）を候補にする")
+        for label, kw in (("期限を過ぎた", {"until_ms": int((now - _td19(minutes=1)).timestamp() * 1000)}),
+                          ("一般のページの URL", {"cta_url": "https://www.apple.com/jp/shop/"}),
+                          ("参考の利益", {"confirmed": False}),
+                          ("利益なし", {"net_profit": 0})):
+            rep, _st = an.run(row(**kw), {"p": {"availability": "OUT_OF_STOCK", "notified_key": ""}}, now=now)
+            if rep["dispatch_planned"] or rep["dispatch_sent"]:
+                bad.append(f"{label}の候補を配信の直前の確認で止めない")
+        called = []
+        an.dispatch([dict(an.detect(row()["actionability"]["products"], {"p": {"availability": "OUT_OF_STOCK"}},
+                                    now=now)[0][0])], now=now,
+                    dry_run=True, sender=lambda c, k: called.append(k))
+        if called:
+            bad.append("dry-run で送信の関数を呼ぶ")
+        if not an.is_dry_run({}):
+            bad.append("既定が dry-run でない")
+    except Exception as exc:  # noqa: BLE001
+        bad.append(f"通知の候補を動かせない: {exc}")
+    # ワークフロー: LP の生成のステップは dry-run 固定・送信先の Secrets を渡さない・dry-run を外すステップが無い
+    try:
+        wf = (root / ".github" / "workflows" / "daily_lp.yml").read_text(encoding="utf-8")
+        m = _re19.search(r"- name: Generate daily LP Variant A\n(.*?)(?=\n      - name:|\n      # )", wf, _re19.S)
+        step = m.group(1) if m else ""
+        if 'NOTIFICATION_DRY_RUN: "true"' not in step:
+            bad.append("LP の生成のステップが dry-run に固定されていない")
+        if _re19.search(r"DISCORD_WEBHOOK_URL|TELEGRAM_BOT_TOKEN|TELEGRAM_CHAT_ID", step):
+            bad.append("LP の生成のステップに通知の送信先の Secrets を渡している")
+        if _re19.search(r"NOTIFICATION_DRY_RUN:\s*[\"']?(false|0|no|off)", wf, _re19.I):
+            bad.append("dry-run を外すステップがある")
+        if wf.find("Generate daily LP Variant A") < wf.find("Generate notifications"):
+            bad.append("既存の通知の生成の順序が変わった")
+        # 台帳を読み書きするのは generate-daily-lp の生成だけ（買取のプレ値のジョブの途中の生成では判定しない。レビュー H-1）
+        cli_src = (root / "src" / "cli.py").read_text(encoding="utf-8")
+        job_src = (root / "src" / "jobs" / "buyback_premium_job.py").read_text(encoding="utf-8")
+        if cli_src.count("notifications=True") != 1 or "notifications=True" in job_src:
+            bad.append("generate-daily-lp 以外の LP の生成でも通知の台帳を更新する")
+    except OSError as exc:
+        bad.append(f"ワークフローを読めない: {exc}")
+    # 今回の出力（CI では LP の生成の後に必ずある）
+    lp = root / "exports" / "notifications" / "actionable" / "latest.json"
+    try:
+        rep = _json19.loads(lp.read_text(encoding="utf-8"))
+        from src.market.actionability import ACTIONABLE_TYPES, _official_url
+        if rep.get("failed"):
+            # 通知は内部用の dry-run なので、失敗で LP の公開は止めない（送信・dry-run でない・誤った候補は ERROR。レビュー L-2）
+            warn.append(f"今回の通知の生成に失敗した（{rep.get('error')}）")
+        if rep.get("dry_run") is not True:
+            bad.append("今回の通知が dry-run でない")
+        # 今回の診断から作った出力か（前回の出力を今回のものと取り違えない。監査 L-4）
+        try:
+            dg = _json19.loads((root / "exports" / "opportunity_diagnostics" / "latest.json").read_text(encoding="utf-8"))
+            if str(dg.get("generated_at") or "") != str(rep.get("diagnostics_generated_at") or ""):
+                warn.append("通知の出力が今回の診断から作られていない（前回の出力が残っている）")
+        except (OSError, ValueError):
+            warn.append("診断の出力が無い")
+        if rep.get("dispatch_sent"):
+            bad.append(f"外部へ送信した（{rep.get('dispatch_sent')}件）")
+        for c in rep.get("candidates") or []:
+            if c.get("availability") not in ACTIONABLE_TYPES or not _official_url(c.get("cta_url") or "") \
+                    or c.get("confirmed") is not True:
+                bad.append(f"行動できない・公式の購入ページでない・確定でない候補: {c.get('product_id')}")
+    except (OSError, ValueError):
+        warn.append("今回の通知の出力が無い（LP の生成の前）")
+    # 配信先の URL・トークンが通知の出力・公開ページに無い
+    texts = [html]
+    for f in (root / "exports" / "notifications").rglob("*.json"):
+        try:
+            texts.append(f.read_text(encoding="utf-8"))
+        except OSError:
+            pass
+    if any(_re19.search(p, t) for p in _SECRET_PATTERNS for t in texts):
+        bad.append("通知の出力か公開ページに配信先の URL・トークンがある")
+    level = "error" if bad else ("warning" if warn else "ok")
+    return [{"level": level, "check": "actionable_notifications",
+             "message": "#855 今すぐ行動の通知（行動できない → できる だけ・同じ状態では出さない・re-arm・配信の直前の確認・"
+                        "dry-run で送らない・Secrets を渡さない・配信先の URL/トークンを出さない）"
+                        + ("" if not (bad or warn) else f" ← {(bad or warn)[:4]}")}]
 
 
 def _check_new_ui(html: str) -> list[dict]:

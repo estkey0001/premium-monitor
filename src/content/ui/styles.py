@@ -668,6 +668,7 @@ def _product_css(m: int, d: int, w: int) -> str:
         ".nu-pd-meta{margin:0;color:var(--color-muted);font-size:var(--font-sm);overflow-wrap:anywhere}"
         ".nu-pd-state{margin:0;display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-1) var(--space-3)}"
         ".nu-pd-state .nu-osub{display:inline}"
+        ".nu-pd-state__lbl{font-size:var(--font-xs);color:var(--color-subtle)}"
         # 主要な数値（モバイルは2列、PC は5列）
         ".nu-pd-summary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--space-2);margin:0}"
         ".nu-pd-metric{min-width:0;padding:var(--space-2) var(--space-3);border:1px solid var(--color-border);"

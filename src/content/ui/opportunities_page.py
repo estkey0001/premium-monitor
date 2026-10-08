@@ -21,7 +21,8 @@ PAGE_SIZE = 20
 
 SORTS = (("rec", "おすすめ"), ("profit", "利益が高い"), ("roi", "ROIが高い"), ("updated", "更新が新しい"))
 # 絞り込み。実データで判定できるものだけ有効（在庫あり = 公式の在庫表示が「在庫あり」）
-FILTERS_LIVE = (("instock", "在庫あり"),)
+# Phase 19: 「今すぐ行動」（確認から3時間）と意味が違うので、7日以内の確認であることを文言に出す
+FILTERS_LIVE = (("instock", "在庫あり（7日以内に確認）"),)
 FILTERS_SOON = ("在庫復活", "買取急騰", "新着")   # データが揃うまで押せない（1つの「準備中」チップにまとめる）
 
 STOCK_TONE = {"IN_STOCK": "success", "OUT_OF_STOCK": "danger", "UNKNOWN": "neutral",
@@ -298,6 +299,7 @@ def render(catalog, *, has_data: bool = True) -> str:
         f'{pages._cat_switch("opportunities")}'
         f'{_toolbar(n)}'
         '<p class="nu-topnote" data-nu-topnote hidden>利益が高い順に上位10件を表示しています'
+        '（在庫切れ・抽選などを除く。在庫は7日以内の確認。購入・申込ができるかは各商品の「今すぐ行動」）'
         f'<a href="{esc(page_href("opportunities"))}" data-nu-keepcat>すべて表示</a></p>'
         '<h2 class="nu-sr">利益商品の一覧</h2>'
         f'<div class="nu-otable-wrap" data-nu-opp-hide-empty{hide}><table class="nu-otable" data-nu-opp-table>'

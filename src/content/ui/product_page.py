@@ -536,7 +536,9 @@ def _article(v: pd.ProductDetailView) -> str:
         '<header class="nu-pd-head">'
         f'<h1 class="nu-pd-title" tabindex="-1">{esc(v.product_name)}</h1>'
         f'<p class="nu-pd-meta">{esc(meta)}</p>'
-        f'<p class="nu-pd-state"><span class="nu-badge nu-tone-{tone}" data-nu-pd-status="{esc(v.status)}"{until}'
+        # 「商品の状態」（在庫の履歴・抽選の閲覧時の判定）は、利益の案件の「今すぐ行動」とは別の確認（Phase 19。統合しない）
+        f'<p class="nu-pd-state"><span class="nu-pd-state__lbl">商品の状態</span>'
+        f'<span class="nu-badge nu-tone-{tone}" data-nu-pd-status="{esc(v.status)}"{until}'
         f' data-nu-pd-fallback="{esc(v.fallback_label)}"'
         f' data-nu-pd-fallback-tone="{STATUS_TONE.get(v.fallback_status, "neutral")}">'
         f'{esc(v.status_label)}</span>{state_bits}</p>'

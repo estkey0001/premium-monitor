@@ -138,7 +138,9 @@ def _actionable_line(catalog: cl.Catalog) -> str:
     untils = ",".join(str(int(a.until_ms)) for a in acts if a.until_ms)
     n = sum(1 for a in acts if a.until_ms)
     return ('<p class="nu-ctx nu-home-act">今すぐ行動できる利益商品（購入可能・抽選受付中・予約受付中の確認がそろうもの）: '
-            f'<b data-nu-act-untils="{esc(untils)}">{n}件</b></p>')
+            f'<b data-nu-act-untils="{esc(untils)}">{n}件</b>'
+            # ページは生成時に判定する（閲覧時は期限を過ぎたものを除くだけ。新しく行動できるようになったものは次の生成まで出ない）
+            '<span class="nu-osub">（ページの生成時の判定。期限を過ぎたものは閲覧時に除く）</span></p>')
 
 
 # ── 目的のページ ────────────────────────────────────────────────────
@@ -215,6 +217,7 @@ def render_purpose(purpose: str, catalog: cl.Catalog, model, *, has_data: bool =
         f'{_cat_switch(purpose)}'
         f'{_filter_bar(purpose, n)}'
         + (f'<p class="nu-topnote" data-nu-topnote hidden>利益が大きい順に上位10件を表示しています'
+           '（在庫切れ・抽選などを除く。在庫は7日以内の確認。購入・申込ができるかは各商品の「今すぐ行動」）'
            f'<a href="{esc(page_href(purpose))}" data-nu-keepcat>すべて表示</a></p>' if purpose == "opportunities" else "")
         + f'<h2 class="nu-sr">{esc(info["label"])}の一覧</h2>'
         f'<ul class="nu-list" data-nu-list="{purpose}" role="list">{_items_html(purpose, catalog, model)}</ul>'

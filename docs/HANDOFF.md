@@ -1,6 +1,7 @@
 # HANDOFF（最終更新: 2026-10-08）
 
 ## 今の状態
+- Phase 19（今すぐ行動の通知・dry-run）: 種類 ACTIONABLE_NOW（`src/notifiers/actionable.py`）。LP の生成の中で、診断の直後に「行動できない → できる」の確定の利益商品だけを候補にする（台帳 `exports/notifications/actionable/state.json` の通知済みの組み合わせ = 商品・種類・状態・受付の識別。在庫切れ・受付終了で re-arm、更新待ち・未確認では re-arm しない）。配信の直前に期限・締切・公式のページ・確定の利益を確かめる。外部へは送らない（NOTIFICATION_DRY_RUN 固定・送信の関数を渡さない）。運営者向けの「通知」に件数。Low の文言（在庫ありの絞り込み・TOP10・HOME・商品詳細の「商品の状態」）。記録は `internal/audits/PHASE_19_ACTIONABLE_NOTIFICATION.md`
 - Phase 18（今すぐ行動できるか）: 判定の正本 `src/market/actionability.py`（確定の利益 ＋ 公式の具体的な購入・申込のページ ＋ 在庫ありの確認から3時間以内 / 抽選・予約・先着の受付中）。抽選は型番（= 商品コード）か商品 ID で利益商品に結び付ける。利益商品の一覧・商品詳細・HOME・運営者向けに状態・締切・理由、行動できるときだけボタン（期限を過ぎたら画面で消す）。診断に actionability（理由ごとの件数・前回から行動できるようになった商品）。記録は `internal/audits/PHASE_18_ACTIONABILITY.md`
 - Phase 17（カメラの新品の買取）: 買取商店のカメラの一覧（構造化データの JAN）から、X100VI（公式で買う版と同じ JAN）・Z8・R5 II（ボディー）・GR IV / HDF / Monochrome の新品の買取を1行ずつ取る（`buyback_kaitori_shouten.JAN_RULES`・リクエスト2回）。フジヤの新品同様は中古の参考のまま。取得に失敗したら前回の行を時刻を変えずに残す（カメラだけ）。GR IV 系の購入送料を記録。診断・運営者向け・集計にカメラの網羅。記録は `internal/audits/PHASE_17_CAMERA_BUYBACK.md`
 - Phase 16（判断待ちの商品と公式直販価格）: 定価（希望小売価格）と公式直販価格を分けた（`official_registry.price_kind_of`・`MSRP_OF`。カメラの希望小売価格はオープン価格のまま）。公式直販価格は `official_direct_gate`（同一性・容量・ボディー/キット・版・購入ページ・送料・販売の形・在庫の表し方・確認日）を通ったときだけ確定の仕入れ値。Z8・X100VI・R5 II を追加。GR IV 系の商品コード・Z8 / R5 II の JAN を登録（同一性の確認済み 3 → 9）。判断待ちの3商品は候補を更新して判断待ちのまま。quality_checker のテーブル名の不具合を修正。JAN 一致でもセット・版・限定品の食い違いは low。再確認に Canon・Nikon。記録は `internal/audits/PHASE_16_OFFICIAL_DIRECT.md`
@@ -16,6 +17,7 @@
 - アーカイブの過去の LP（UI Phase 10 より前）は旧UIのまま残している（書き換えない）。その中の HOME（`/`）のリンクはプロジェクトの外を指して壊れている（`./` は `archive/index.html` で今のサイトへ転送される）。直すなら過去の LP の書き換えになるので、ユーザーの判断。
 - せどりルートの内訳で、確定ルートの購入送料などが 0 のとき「−¥0」と出る（今の本番は確定ルート0件なので出ていない。出ると #807 が ERROR）。テストの架空ルートで気づいた。
 - テストの後片付けの不具合（既存）: tests/test_pokemon_coverage.py・tests/test_tcg_lottery.py は `DailyLPGenerator._load_tcg_report` をクラスから取り出して戻すので、staticmethod が外れたまま残る（後のテストで LP 全体を作ると TypeError）。test_ui_phase8 は自分で決め直して避けている。
+- 今すぐ行動の通知（Phase 19）は dry-run の計画まで。Discord・Telegram への送信の関数は接続していない（ユーザーの明示の許可が要る）。dry-run で計画したものも通知済みとして記録するので、送信を有効にした時点で行動できる商品は送らない。
 - マイページ（Phase 7）の通知条件は**表示の絞り込みだけ**（件数・履歴・締切の目印）。メール・スマホへの配信はしていない。通知の履歴は exports/notifications の利用者向けの種類（NEW_MAIN・WATCH_TO_BUY・PRICE_DROP・PRICE_RISE・ROI_UP・ROI_DOWN）のうち、判定の印（route_checked）があり今も確定・参考ルートのものと、商品詳細の「最近の変化」（価格・在庫・抽選の受付）だけ。今の本番の通知の artifact は0件なので、履歴はほぼ「変化」になる。マイページの中身は全商品ぶん HTML に入っていて（非表示）、ウォッチ中だけを表示する（個人のウォッチは HTML に入らない）。
 - pytest の全体実行の途中で、空の `data/premium_monitor.db`（0バイト）が作られることがある。残ったまま再実行すると `test_api_automation.py::test_dry_run_no_main_mutation` が「no such table」で落ちることがある（消せば通る）。作っているテストは未特定（原因は未調査）。
 - フジヤカメラの買取価格（カメラ）は検索結果ページ由来（link_type=search）なので、商品照合未了として確定利益の売値に使わない。価格は「新品同様」（中古の最上位の等級）で、Phase 11 から used_s として保存する（新品の仕入れと同じ状態にならない）。CI の取得結果に商品ページのリンク候補は0件。静的 HTML には商品が無く（JS で描画・AWS WAF のチャレンジあり）、商品ページの URL を取れるかは未確認。
@@ -49,9 +51,9 @@
 - 既存の問題: pytest を実行すると追跡対象の exports/api_automation/collection.json が書き換わる。コミット前に `git checkout -- exports/api_automation/collection.json` で戻すこと（テストの出力先修正は別タスク）。
 
 ## 次にやること
-0. Phase 19 はユーザーの指示を待ってから始める（候補は Phase 18 の最終報告に書いた）。
+0. Phase 20 はユーザーの指示を待ってから始める（候補は Phase 19 の最終報告に書いた）。
 1. 判断待ち（`src/market/official_registry.USER_DECISIONS`）: PS5 Digital Edition・Xbox Series X・Switch 2 マリオカートセットの版。
-2. 今すぐ行動できるようになった商品の通知（診断の `actionability.newly_actionable`）を、通知の配信に結び付ける。
+2. 今すぐ行動の通知の実際の送信（ユーザーの許可の後。`actionable.dispatch` に送信の関数を渡し、dry-run を外す）。
 3. eBay の成約: ユーザーの設定待ち（`ops/Secrets設定.md`）。
 
 ## 注意（次の人へ）

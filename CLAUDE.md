@@ -33,7 +33,7 @@ iPhone / Apple製品 / カメラ / ゲーム機を対象に、公式価格・中
 | コレクター・品質チェック・LP 警告バー | `ops/コレクター運用.md` |
 | 通知・eBay・楽天・Yahoo の Secrets | `ops/Secrets設定.md` |
 | 価格の照合・時刻・抽選 runtime・route_id・deploy-check 番号・踏んだ罠 | `internal/DEV_NOTES.md` |
-| Phase 11〜18 の監査（取得の安全性・成約・国内の網羅・商品の同一性・公式直販価格・カメラの買取・今すぐ行動） | `internal/audits/` |
+| Phase 11〜19 の監査（取得の安全性・成約・国内の網羅・商品の同一性・公式直販価格・カメラの買取・今すぐ行動・その通知） | `internal/audits/` |
 | 新UIの仕様の正本 | `internal/uiux/UI_VIEW_MODEL_SPEC.md` |
 
 ## 技術スタック

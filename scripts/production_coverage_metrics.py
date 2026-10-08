@@ -189,7 +189,22 @@ def _actionability_metrics(diag: dict) -> dict:
             "open_actionable_lottery": sum(1 for r in rows if r.get("actionable")
                                            and r.get("availability") == "LOTTERY_OPEN"),
             # 公式の再確認（scripts/recheck_official.py）で今回の実行で読めた在庫の表示の件数
-            "fresh_official_availability": fresh}
+            "fresh_official_availability": fresh,
+            **_notification_metrics()}
+
+
+def _notification_metrics() -> dict:
+    """今すぐ行動の通知（Phase 19。exports/notifications/actionable/latest.json。dry-run の計画・送信の件数）。"""
+    n = _load("exports/notifications/actionable/latest.json")
+    d = _load("exports/opportunity_diagnostics/latest.json")
+    # 今回の診断から作った出力でなければ（失敗・前回の残り）件数を出さない（監査 L-4）
+    current = bool(n) and not n.get("failed") and str(n.get("diagnostics_generated_at") or "") == str(
+        d.get("generated_at") or "")
+    return {"notification_current": current,
+            **{k: (int(n.get(k) or 0) if current else None)
+               for k in ("newly_actionable", "notification_candidates", "dedupe_suppressed",
+                         "dispatch_planned", "dispatch_sent", "dispatch_failed", "dispatch_blocked",
+                         "dispatch_not_configured")}}
 
 
 def _camera_metrics(obs: list[dict], confirmed_keys, diag: dict) -> dict:

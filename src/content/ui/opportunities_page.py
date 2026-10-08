@@ -53,9 +53,76 @@ def _time(iso: str, *, fixed: bool = False, label: str = "定価") -> str:
             f'{d.strftime("%m/%d %H:%M")}確認</time>')
 
 
+# 今すぐ行動できるかの状態（src/market/actionability の結果）→ 色。色だけで伝えない（文言も出す）
+AVAIL_TONE = {"IN_STOCK": "success", "OUT_OF_STOCK": "danger", "LOTTERY_OPEN": "info", "PREORDER_OPEN": "warning",
+              "FIRST_COME_OPEN": "warning", "SALE_ENDED": "danger"}
+
+
+def _until(a, stale_text: str, stale_class: str = "", hide: bool = False) -> str:
+    """生成時に決めた期限（a.until_ms）を過ぎたら、画面で表示を落とす印（判定はしない。shell の NuOpp が使う）。"""
+    if not a or not a.until_ms:
+        return ""
+    return (f' data-nu-pd-until="{int(a.until_ms)}" data-nu-pd-stale-text="{esc(stale_text)}"'
+            + (f' data-nu-pd-stale-class="{esc(stale_class)}"' if stale_class else "")
+            + (' data-nu-pd-stale-hide="1"' if hide else ""))
+
+
 def _stock(v: opp.OpportunityView) -> str:
-    tone = STOCK_TONE.get(v.buy_stock, "neutral")
-    return f'<span class="nu-badge nu-tone-{tone}">{esc(v.stock_label)}</span>'
+    """状態のバッジ。今すぐ行動できるかの状態（3時間・受付期間。actionability）を出す。
+
+    「在庫あり（○時点）」（7日。price_evidence.CURRENT_DAYS）の表示と一覧の「在庫あり」の絞り込みは、これまでどおり
+    在庫の表示（buy_stock）を使う（期限は2つのまま。目的が違う）。
+    """
+    a = v.action
+    if a is None:
+        tone = STOCK_TONE.get(v.buy_stock, "neutral")
+        return f'<span class="nu-badge nu-tone-{tone}">{esc(v.stock_label)}</span>'
+    tone = AVAIL_TONE.get(a.availability, "neutral") if a.actionable or a.availability in ("OUT_OF_STOCK",
+                                                                                          "SALE_ENDED") else "neutral"
+    badge = (f'<span class="nu-badge nu-tone-{tone}"'
+             + _until(a, a.expired_label, "nu-badge nu-tone-neutral") + f'>{esc(a.label)}</span>')
+    # 在庫ありを確認してから3時間を過ぎたもの: 「在庫あり（7日の表示）」と「更新待ち（今すぐ買えるかは未確認）」を並べる
+    if v.buy_stock == "IN_STOCK" and a.availability == "STOCK_STALE":
+        badge = f'<span class="nu-badge nu-tone-success">{esc(v.stock_label)}</span>' + badge
+    return badge + _deadline(a)
+
+
+def _deadline(a) -> str:
+    """締切（抽選・予約・先着）。受付が終わったものは「（終了）」を添える。"""
+    if not a or not a.deadline:
+        return ""
+    ended = "" if a.actionable else ("（終了）" if a.availability.endswith("CLOSED") else "")
+    return f'<span class="nu-osub">締切 {esc(_deadline_text(a.deadline))}{ended}</span>'
+
+
+def _deadline_text(deadline: str) -> str:
+    """締切の表示（時刻の無い締切は日付だけ。時刻を作らない）。"""
+    d = opp._dt(deadline)
+    if d is None:
+        return ""
+    from src.market.actionability import is_date_only
+    return d.strftime("%m/%d") if is_date_only(deadline) else d.strftime("%m/%d %H:%M")
+
+
+def _action_cta(v: opp.OpportunityView) -> str:
+    """今すぐ行動できるときだけの主ボタン（購入する・抽選に申し込む・予約する）。期限を過ぎたら画面で消す。"""
+    a = v.action
+    if not v.actionable or not c.safe_href(a.cta_url).startswith("https://"):
+        return ""
+    return (f'<a class="nu-btn nu-btn--primary nu-btn--sm" href="{esc(c.safe_href(a.cta_url))}" target="_blank"'
+            f' rel="noopener noreferrer" data-track="opportunity_action"{_until(a, "", hide=True)}>'
+            f'{esc(a.cta_label)}<span class="nu-sr">（{esc(v.product_name)}・外部サイト）</span></a>')
+
+
+def _checked(v: opp.OpportunityView) -> str:
+    """購入の可否を確認した時刻（抽選なら抽選の情報、通常販売なら在庫の表示）。"""
+    return (v.action.checked_at if v.action and v.action.checked_at else v.stock_checked_at) or ""
+
+
+def _reasons(v: opp.OpportunityView) -> str:
+    from src.market.actionability import REASONS
+    return "・".join(REASONS.get(r, r) for r in (v.action.reasons if v.action else ())
+                     if r not in ("not_profitable",))
 
 
 def _sell_note(v: opp.OpportunityView) -> str:
@@ -83,7 +150,15 @@ def _detail(v: opp.OpportunityView, pd_ids: set | None = None) -> str:
         f'<li><span>　確認</span><b>{_time(v.buy_checked_at, fixed=v.kind == "official_to_buyback", label=v.buy_price_label or "定価")}</b></li>'
         f'<li><span>　在庫</span><b>{esc(v.stock_label)}'
         + (f'（{opp._dt(v.stock_checked_at).strftime("%m/%d %H:%M")}時点）' if v.stock_checked_at else "") + '</b></li>'
-        f'<li><span>売る</span><b>{esc(v.sell_source)}（{esc(v.sell_type_label)}）</b></li>'
+        + (f'<li><span>　今すぐ行動</span><b{_until(v.action, "できない・" + v.action.expired_label)}>'
+           f'{"できる" if v.actionable else "できない"}・{esc(v.action.label)}'
+           + (f'（{opp._dt(_checked(v)).strftime("%m/%d %H:%M")}確認）' if _checked(v) else "") + '</b></li>'
+           if v.action else "")
+        + (f'<li><span>　締切</span><b>{esc(_deadline_text(v.action.deadline))}</b></li>'
+           if v.action and v.action.deadline and opp._dt(v.action.deadline) else "")
+        + (f'<li><span>　今すぐ行動できない理由</span><b>{esc(_reasons(v))}</b></li>'
+           if v.action and not v.actionable and _reasons(v) else "")
+        + f'<li><span>売る</span><b>{esc(v.sell_source)}（{esc(v.sell_type_label)}）</b></li>'
         f'<li><span>　確認</span><b>{_time(v.sell_checked_at)}</b></li>')
     links = []
     for label, href in (("公式ストアを開く" if v.kind == "official_to_buyback" else "仕入れ先を開く", v.buy_url),
@@ -105,7 +180,11 @@ def _attrs(v: opp.OpportunityView, idx: int) -> str:
     search = " ".join(x for x in (v.product_name, v.model, v.capacity, v.variant) if x).lower()
     return (f' data-nu-oid="{esc(v.id)}" data-nu-cat="{esc(v.category)}" data-profit="{int(v.net_profit or 0)}"'
             f' data-roi="{v.roi or 0:.6f}" data-updated="{int(updated.timestamp() * 1000) if updated else 0}"'
-            f' data-rec="{idx}" data-stock="{esc(v.buy_stock)}" data-search="{esc(search)}"')
+            f' data-rec="{idx}" data-stock="{esc(v.buy_stock)}" data-actionable="{1 if v.actionable else 0}"'
+            f' data-search="{esc(search)}"')
+
+
+
 
 
 def _row(v: opp.OpportunityView, idx: int, pd_ids: set | None = None) -> str:
@@ -123,7 +202,7 @@ def _row(v: opp.OpportunityView, idx: int, pd_ids: set | None = None) -> str:
         f'<td class="nu-num nu-profit"><span class="nu-sr">想定純利益 </span>+{_yen(v.net_profit)}'
         '<span class="nu-osub">費用差引後</span></td>'
         f'<td class="nu-num nu-roi">{esc(_roi(v))}</td>'
-        f'<td>{_stock(v)}</td>'
+        f'<td>{_stock(v)}{_action_cta(v)}</td>'
         f'<td class="nu-ocol-time">{_time(v.last_verified_at)}</td>'
         f'<td><button type="button" class="nu-rowbtn" aria-expanded="false" aria-controls="{did}"'
         f' data-nu-toggle>詳細<span class="nu-sr">（{esc(v.product_name)}）</span></button></td></tr>'
@@ -150,7 +229,8 @@ def _card(v: opp.OpportunityView, idx: int, pd_ids: set | None = None) -> str:
         f'<div><span class="nu-ocard__lbl">ROI</span><span class="nu-roi nu-ocard__roi">{esc(_roi(v))}</span></div>'
         f'<button type="button" class="nu-rowbtn nu-ocard__btn" aria-expanded="false" aria-controls="{did}" data-nu-toggle>'
         f'詳細<span class="nu-sr">（{esc(v.product_name)}）</span></button></div>'
-        f'<div class="nu-odetail" id="{did}" hidden>{_detail(v, pd_ids)}</div></li>'
+        + (f'<div class="nu-ocard__action">{_action_cta(v)}</div>' if v.actionable else "")
+        + f'<div class="nu-odetail" id="{did}" hidden>{_detail(v, pd_ids)}</div></li>'
     )
 
 

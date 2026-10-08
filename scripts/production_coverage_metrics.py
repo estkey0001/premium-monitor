@@ -120,6 +120,8 @@ def collect(now: datetime | None = None) -> dict:
         **_price_kind_metrics(products, diag),
         # Phase 17: カメラの売る側（新品の買取の新しい行・古い行・中古の参考・確定の売値）と、カメラの利益・行動できる商品
         **_camera_metrics(obs, confirmed_keys, diag),
+        # Phase 18: 今すぐ行動できるか（診断の actionability = src/market/actionability の結果を数えるだけ）
+        **_actionability_metrics(diag),
         "buyback_rows": len(buyback),
         "fresh_buyback": sum(1 for o in buyback if o.get("is_fresh")),
         "stale_buyback": sum(1 for o in buyback if not o.get("is_fresh")),
@@ -170,6 +172,24 @@ def _price_kind_metrics(products: list[dict], diag: dict) -> dict:
             "official_direct_verified": sum(1 for k in kind.values() if k == "official_direct"),
             "official_direct_actionable": sum(1 for pid in act_ids if reg.price_kind_of(pid) == "official_direct"),
             "ambiguous_variants": sum(1 for p in products if p.get("product_id") in reg.USER_DECISIONS)}
+
+
+def _actionability_metrics(diag: dict) -> dict:
+    ac = diag.get("actionability") if isinstance(diag.get("actionability"), dict) else {}
+    rows = [r for r in ac.get("products") or [] if isinstance(r, dict)]
+    rc = _load("exports/official_recheck/latest.json")
+    fresh = sum(1 for r in rc.get("results") or [] if isinstance(r, dict) and r.get("status") == "unchanged"
+                and r.get("stock"))
+    return {"profitable_stock_out": sum(1 for r in rows if not r.get("actionable")
+                                        and set(r.get("reasons") or []) & {"stock_out", "stock_unknown"}),
+            "profitable_closed_lottery": sum(1 for r in rows if not r.get("actionable")
+                                             and "lottery_closed" in (r.get("reasons") or [])),
+            "profitable_stale_availability": sum(1 for r in rows if not r.get("actionable")
+                                                 and "availability_stale" in (r.get("reasons") or [])),
+            "open_actionable_lottery": sum(1 for r in rows if r.get("actionable")
+                                           and r.get("availability") == "LOTTERY_OPEN"),
+            # 公式の再確認（scripts/recheck_official.py）で今回の実行で読めた在庫の表示の件数
+            "fresh_official_availability": fresh}
 
 
 def _camera_metrics(obs: list[dict], confirmed_keys, diag: dict) -> dict:

@@ -398,6 +398,45 @@ def _fee_text(v, label_zero: str) -> str:
     return label_zero if v == 0 else _yen(v) if v is not None else "未確認"
 
 
+def _action_item(o) -> tuple:
+    """「今すぐ行動」の欄（Phase 18。src/market/actionability の結果をそのまま出す。判定し直さない）。
+
+    利益があっても、在庫切れ・抽選の受付終了・更新待ちなどなら「できない」と理由を出す。行動できるときだけ、
+    購入・申込のページへのボタン（期限を過ぎたら画面で消す）。
+    """
+    from src.market.actionability import REASONS
+    a = o.action
+    bits = [a.label]
+    d = parse_dt(a.deadline) if a.deadline else None
+    if d is not None:
+        from src.market.actionability import is_date_only
+        dl = d.astimezone(JST).strftime("%m/%d" if is_date_only(a.deadline) else "%m/%d %H:%M")
+        bits.append(f'締切 {dl}' + ("" if a.actionable or
+                                                                           not a.availability.endswith("CLOSED")
+                                                                           else "（終了）"))
+    ck = parse_dt(a.checked_at) if a.checked_at else None
+    if ck is not None:
+        bits.append(f'{ck.astimezone(JST).strftime("%m/%d %H:%M")}確認')
+    if not a.actionable:
+        why = "・".join(REASONS.get(r, r) for r in a.reasons if r != "not_profitable")
+        if why:
+            bits.append(f"理由: {why}")
+    extra = ""
+    val, sub = ("できる" if a.actionable else "できない"), "・".join(bits)
+    if a.actionable and a.until_ms:
+        # 期限を過ぎたら「できない」「更新待ち・抽選終了など」に落とす（判定はし直さない。レビュー・監査 M）
+        val = (val, f' data-nu-pd-until="{int(a.until_ms)}" data-nu-pd-stale-text="できない"')
+        sub = (sub, f' data-nu-pd-until="{int(a.until_ms)}"'
+                    f' data-nu-pd-stale-text="期限を過ぎました（{esc(a.expired_label)}）"')
+    if a.actionable and c.safe_href(a.cta_url).startswith("https://"):
+        until = (f' data-nu-pd-until="{int(a.until_ms)}" data-nu-pd-stale-text="" data-nu-pd-stale-hide="1"'
+                 if a.until_ms else "")
+        extra = (f'<a class="nu-btn nu-btn--primary nu-btn--sm" href="{esc(c.safe_href(a.cta_url))}" target="_blank"'
+                 f' rel="noopener noreferrer" data-track="product_action_click"{until}>{esc(a.cta_label)}'
+                 '<span class="nu-sr">（外部サイト）</span></a>')
+    return ("今すぐ行動", val, sub, extra, "")
+
+
 def _summary(v: pd.ProductDetailView) -> str:
     """主要な数値（想定純利益を先頭に。値は ProductDetailView / OpportunityView の確定値だけ。計算しない）。"""
     o, bb, bs = v.opportunity, v.best_buy, v.best_sell
@@ -433,14 +472,18 @@ def _summary(v: pd.ProductDetailView) -> str:
             f'<a class="nu-pd-jump" href="#pd-{a}-pfbox" data-nu-pd-jump="pd-{a}-pfbox">理由を見る</a>')
     items = [
         ("想定純利益", prof_val, prof_sub, jump, " nu-pd-metric--main" + (" nu-pd-metric--profit" if o is not None else "")),
+        *([_action_item(o)] if (o is not None and getattr(o, "action", None) is not None) else []),
         ("最安仕入（取得原価）", (_yen(bb.acquisition) if bb else "未取得"), buy_sub, "", " nu-pd-metric--wide"),
         (sell_lbl, sell_val, sell_sub, "", " nu-pd-metric--wide"),
         ("ROI", roi, "純利益 ÷ 取得原価", "", ""),
         ("必要な仕入れ資金", (_yen(cap) if cap is not None else "算出前"), "仕入価格 + 購入送料 + 購入時の費用", "", ""),
     ]
+    def _txt(x):
+        # 値・補足は文字列か (文字列, 属性)。属性は期限を過ぎたら画面で文言を落とす印（data-nu-pd-until）など
+        return x if isinstance(x, tuple) else (x, "")
     cells = "".join(
-        f'<div class="nu-pd-metric{cls}"><dt>{esc(lbl)}</dt><dd><span class="nu-pd-val">{esc(val)}</span>'
-        f'<span class="nu-osub">{esc(sub)}</span>{extra}</dd></div>'
+        f'<div class="nu-pd-metric{cls}"><dt>{esc(lbl)}</dt><dd><span class="nu-pd-val"{_txt(val)[1]}>'
+        f'{esc(_txt(val)[0])}</span><span class="nu-osub"{_txt(sub)[1]}>{esc(_txt(sub)[0])}</span>{extra}</dd></div>'
         for lbl, val, sub, extra, cls in items)
     return f'<dl class="nu-pd-summary">{cells}</dl>'
 

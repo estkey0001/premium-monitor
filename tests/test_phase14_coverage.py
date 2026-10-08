@@ -294,8 +294,23 @@ def _diag(eligible):
 
 
 def _view(pid, availability):
-    return SimpleNamespace(product_id=pid, kind="official_to_buyback", eligible=True, reasons=(),
-                           category="game", availability=availability)
+    """Phase 18: 「今すぐ行動できる」の判定の正本（src/market/actionability）の結果を持つ案件。
+    availability は Phase 14 の種類の名前（BUY_NOW = 3時間以内の在庫あり・RESERVATION = 予約受付中 など）。"""
+    from src.market import actionability as act
+    url = "https://pur.store.sony.jp/ps5/products/ps5/CFI-7100B01_purchase/"
+    stock = {"BUY_NOW": "IN_STOCK", "PROFIT_STOCK_UNKNOWN": "UNKNOWN", "OUT_OF_STOCK": "OUT_OF_STOCK",
+             "LOTTERY": "LOTTERY", "RESERVATION": "RESERVATION"}[availability]
+    ev = None
+    if availability in ("LOTTERY", "RESERVATION"):
+        ev = {"product_id": pid, "sale_method": "抽選販売" if availability == "LOTTERY" else "予約",
+              "entry_start_at": (NOW - timedelta(days=2 if availability == "RESERVATION" else 20)).isoformat(),
+              "entry_end_at": (NOW + timedelta(days=2) if availability == "RESERVATION"
+                               else NOW - timedelta(days=10)).isoformat(),
+              "checked_at": (NOW - timedelta(hours=1)).isoformat(), "entry_form_url": url}
+    a = act.evaluate(profitable=True, identity_ok=True, stock=stock, stock_checked_at=NOW - timedelta(hours=1),
+                     buy_url=url, event=ev, now=NOW)
+    return SimpleNamespace(product_id=pid, kind="official_to_buyback", eligible=True, reasons=(), product_name=pid,
+                           category="game", availability=availability, action=a, actionable=a.actionable)
 
 
 def test_actionable_needs_stock_or_reservation_not_profit_alone():

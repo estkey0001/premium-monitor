@@ -121,9 +121,24 @@ def render_home(catalog: cl.Catalog, *, source_issue: bool = False) -> str:
         '<p class="nu-ctx" data-nu-home-ctx hidden><span data-nu-catlabel></span>で絞り込み中'
         f'<a class="nu-ctx__clear" href="{esc(page_href("home"))}">すべてのジャンル</a></p></div>'
         f'<ul class="nu-purposes" role="list">{purpose_cards}</ul>'
+        f'{_actionable_line(catalog)}'
         f'{_quick_links()}'
         '</section>'
     )
+
+
+def _actionable_line(catalog: cl.Catalog) -> str:
+    """今すぐ行動できる利益商品の件数（Phase 18。判定は src/market/actionability。利益があるだけでは数えない）。
+
+    ページは1日1回作るので、件数は各商品の「行動できると言える期限」（生成時に決めた値）のうち、閲覧時より後の
+    ものだけをブラウザで数える（期限の過ぎた在庫ありを数えない。判定はし直さない）。
+    """
+    os_ = getattr(catalog, "opportunity_set", None)
+    acts = [v.action for v in (getattr(os_, "eligible", None) or []) if getattr(v, "actionable", False)]
+    untils = ",".join(str(int(a.until_ms)) for a in acts if a.until_ms)
+    n = sum(1 for a in acts if a.until_ms)
+    return ('<p class="nu-ctx nu-home-act">今すぐ行動できる利益商品（購入可能・抽選受付中・予約受付中の確認がそろうもの）: '
+            f'<b data-nu-act-untils="{esc(untils)}">{n}件</b></p>')
 
 
 # ── 目的のページ ────────────────────────────────────────────────────

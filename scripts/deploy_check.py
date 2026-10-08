@@ -4132,6 +4132,7 @@ def check() -> list[dict]:
     results.extend(_check_phase15_identity())
     results.extend(_check_phase16_official_direct())
     results.extend(_check_phase17_camera_sell())
+    results.extend(_check_phase18_actionability(html))
 
     # ══════════════════════════════════════════════════════════════════
     # #820-#825: データの正確さ・鮮度の偽装（Phase 0）
@@ -4756,6 +4757,82 @@ def _check_phase17_camera_sell() -> list[dict]:
     return [{"level": "ok" if not bad else "error", "check": "camera_sell_semantics",
              "message": "#853 カメラの新品の買取（JAN で1行だけ・キット/版/限定を分ける・新品同様を新品にしない・"
                         "失敗で時刻を進めない・抽選/在庫なしを行動できるに数えない）" + ("" if not bad else f" ← {bad[:4]}")}]
+
+
+def _check_phase18_actionability(html: str) -> list[dict]:
+    """Phase 18: 今すぐ行動できるか（#854）。利益だけでは行動できるにしない・在庫切れ/未確認/3時間を過ぎた在庫あり/
+    受付終了/日程不明/一般のページの URL では行動できない・受付中と3時間以内の在庫ありだけ行動できる。
+    公開ページで、行動できる商品の数とボタンの数が合い、行動できない商品に「購入する」「申し込む」のボタンが無い。"""
+    import re as _re18
+    from datetime import datetime as _dt18
+    from datetime import timedelta as _td18
+
+    from src.tcg.models import JST as _JST18
+    bad = []
+    try:
+        from src.market import actionability as act
+        now = _dt18(2026, 10, 9, 12, 0, tzinfo=_JST18)
+        url = "https://pur.store.sony.jp/ps5/products/ps5/CFI-7100B01_purchase/"
+
+        def ev(start, end, status="active", checked=now - _td18(hours=1), form=url):
+            return {"product_id": "p", "sale_method": "抽選販売", "status": status, "entry_start_at": start.isoformat(),
+                    "entry_end_at": end.isoformat() if end else "", "checked_at": checked.isoformat(),
+                    "entry_form_url": form}
+
+        def run(**kw):
+            base = dict(profitable=True, identity_ok=True, stock="IN_STOCK", stock_checked_at=now - _td18(hours=1),
+                        buy_url=url, event=None, now=now)
+            base.update(kw)
+            return act.evaluate(**base)
+        if not run().actionable:
+            bad.append("3時間以内の在庫ありを行動できるにしない（判定の条件が誤っている）")
+        if not run(stock="LOTTERY", event=ev(now - _td18(days=1), now + _td18(days=1))).actionable:
+            bad.append("受付中の抽選を行動できるにしない（判定の条件が誤っている）")
+        for label, kw in (("利益なし", {"profitable": False}),
+                          ("在庫切れ", {"stock": "OUT_OF_STOCK"}),
+                          ("在庫未確認", {"stock": "UNKNOWN"}),
+                          ("3時間を過ぎた在庫あり", {"stock_checked_at": now - _td18(hours=4)}),
+                          ("一般のページの URL", {"buy_url": "https://www.apple.com/jp/shop/"}),
+                          ("受付終了の抽選", {"stock": "LOTTERY", "event": ev(now - _td18(days=5), now - _td18(days=1))}),
+                          ("締切が不明な抽選", {"stock": "LOTTERY", "event": ev(now - _td18(days=1), None)}),
+                          ("ページで終了の抽選", {"stock": "LOTTERY",
+                                             "event": ev(now - _td18(days=1), now + _td18(days=1), "closed")}),
+                          ("確認が古い抽選", {"stock": "LOTTERY", "event": ev(now - _td18(days=1), now + _td18(days=1),
+                                                                         checked=now - _td18(days=10))}),
+                          ("情報の無い抽選", {"stock": "LOTTERY"}),
+                          ("状態の矛盾のある抽選", {"stock": "LOTTERY",
+                                             "event": dict(ev(now - _td18(days=1), now + _td18(days=1)),
+                                                           status_conflict="true")}),
+                          ("開始が分からない抽選", {"stock": "LOTTERY",
+                                             "event": dict(ev(now - _td18(days=1), now + _td18(days=1)),
+                                                           entry_start_at="")}),
+                          ("一覧のページ", {"buy_url": "https://ricohimagingstore.com/Form/Product/ProductList.aspx"
+                                                "?shop=0&cat=002010"}),
+                          ("販売終了", {"sale_method": "discontinued"})):
+            if run(**kw).actionable:
+                bad.append(f"{label}を今すぐ行動できるにする")
+        # 公開ページ: 行動できる商品の数とボタンの数が一致（行動できない商品にボタンを出さない）
+        sec = html.split('data-nu-page="opportunities"', 1)[1] if 'data-nu-page="opportunities"' in html else ""
+        sec = sec.split('data-nu-page="', 1)[0] if sec else ""
+        # スマホのカード・PC の表の行の両方（レビュー L3）
+        cards_act = len(_re18.findall(r'<li class="nu-ocard"[^>]*data-actionable="1"', sec))
+        ctas = len(_re18.findall(r'<div class="nu-ocard__action"><a [^>]*data-track="opportunity_action"', sec))
+        rows_act = len(_re18.findall(r'<tr class="nu-orow"[^>]*data-actionable="1"', sec))
+        row_ctas = sum(1 for m in _re18.finditer(r'<tr class="nu-orow".*?</tr>', sec, flags=_re18.S)
+                       if 'data-track="opportunity_action"' in m.group(0))
+        if cards_act != ctas or rows_act != row_ctas or cards_act != rows_act:
+            bad.append(f"行動できる商品（カード {cards_act}・表 {rows_act}）とボタン（{ctas}・{row_ctas}）が合わない")
+        for pat in (r'<li class="nu-ocard"[^>]*data-actionable="0".*?</li>',
+                    r'<tr class="nu-orow"[^>]*data-actionable="0".*?</tr>'):
+            if any('data-track="opportunity_action"' in m.group(0) for m in _re18.finditer(pat, sec, flags=_re18.S)):
+                bad.append("行動できない商品に購入・申込のボタンがある")
+                break
+    except Exception as exc:  # noqa: BLE001
+        bad.append(f"判定を動かせない: {exc}")
+    return [{"level": "ok" if not bad else "error", "check": "actionability_semantics",
+             "message": "#854 今すぐ行動できるか（利益だけで行動できるにしない・在庫切れ/未確認/3時間を過ぎた在庫あり/"
+                        "受付終了/日程不明/一般のページでは行動できない・行動できない商品にボタンを出さない）"
+                        + ("" if not bad else f" ← {bad[:4]}")}]
 
 
 def _check_new_ui(html: str) -> list[dict]:

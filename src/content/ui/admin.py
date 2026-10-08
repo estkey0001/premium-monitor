@@ -260,6 +260,13 @@ def build_data_coverage(diag: dict | None, tcg_report: dict | None) -> dict:
             "stock": {k: num(stock, k) for k in ("IN_STOCK", "OUT_OF_STOCK", "UNKNOWN", "LOTTERY",
                                                  "RESERVATION", "PREORDER")},
             "buyback": {k: num(bb, k) for k in ("usable_products", "fresh_rows", "stale_rows", "failed_rows")},
+            # 今すぐ行動できるか（Phase 18。src/market/actionability の結果を数えたもの。診断に無ければ空）
+            "actionability": ({k: num(D(diag.get("actionability")), k) for k in (
+                "confirmed_profitable", "actionable", "blocked_by_stock", "blocked_by_closed_lottery",
+                "blocked_by_stale_availability", "blocked_by_unknown_schedule", "blocked_by_sale_ended",
+                "blocked_by_missing_url")} if isinstance(diag.get("actionability"), dict) else {}),
+            "actionability_products": [r for r in (D(diag.get("actionability")).get("products") or [])
+                                       if isinstance(r, dict)],
             # 診断に camera が無い（Phase 17 より前）ときは空にして、行を出さない（0件と区別する。レビュー L1）
             "camera": ({k: num(D(diag.get("camera")), k) for k in ("products", "fresh_new", "stale_new", "used_reference",
                                                                   "confirmed_sells", "profitable", "actionable")}
@@ -948,6 +955,8 @@ def _diff(dv: dict) -> str:
 def _data_coverage_html(c: dict) -> str:
     r, s, b, g = (c.get(k) or {} for k in ("retail", "stock", "buyback", "tcg"))
     cm = c.get("camera") or {}
+    ac = c.get("actionability") or {}
+    ap = c.get("actionability_products") or []
     if not (r or s or b or g):
         return _empty("記録なし")
     n = lambda d, k: esc(str(d.get(k, 0)))  # noqa: E731
@@ -963,10 +972,21 @@ def _data_coverage_html(c: dict) -> str:
             + (f'<dt>カメラの買取</dt><dd>新品の買取 新しい {n(cm, "fresh_new")}行・古い {n(cm, "stale_new")}行・'
                f'中古の参考 {n(cm, "used_reference")}行（新品同様も中古）・確定の売値 {n(cm, "confirmed_sells")}行・'
                f'利益 {n(cm, "profitable")}・今すぐ行動できる {n(cm, "actionable")}</dd>' if cm else "")
+            + (f'<dt>今すぐ行動</dt><dd>確定の利益 {n(ac, "confirmed_profitable")}・今すぐ行動できる {n(ac, "actionable")}'
+               f'（行動できない: 在庫切れ・未確認 {n(ac, "blocked_by_stock")}・抽選などの受付終了 '
+               f'{n(ac, "blocked_by_closed_lottery")}・確認が古い（更新待ち） {n(ac, "blocked_by_stale_availability")}・'
+               f'日程不明・受付前 {n(ac, "blocked_by_unknown_schedule")}・販売終了 {n(ac, "blocked_by_sale_ended")}・'
+               f'購入ページ不明 {n(ac, "blocked_by_missing_url")}）</dd>' if ac else "")
             + '</dl>'
-            '<p class="nu-osub">在庫ありは、公式などのページで購入できる表示（在庫あり・カートに入れる）を確認した'
+            + ('<ul class="nu-ad-list">' + "".join(
+                f'<li><b>{esc(str(r.get("product") or r.get("product_id") or ""))}</b><span class="nu-osub">'
+                f'{esc(str(r.get("label") or ""))}・{"今すぐ行動できる" if r.get("actionable") else "行動できない"}'
+                + (f'・締切 {esc(str(r.get("deadline"))[:16].replace("T", " "))}' if r.get("deadline") else "")
+                + (f'・{esc(str(r.get("checked_at"))[:16].replace("T", " "))} 確認' if r.get("checked_at") else "")
+                + '</span></li>' for r in ap[:50]) + '</ul>' if ap else "")
+            + '<p class="nu-osub">在庫ありは、公式などのページで購入できる表示（在庫あり・カートに入れる）を確認した'
             '時刻つきのものだけ（この欄は利益の案件・診断の値。確認から7日を過ぎれば在庫未確認に戻る。'
-            '在庫再開・商品詳細の表示は確認から3時間で「更新待ち」になる）。</p>')
+            '在庫再開・商品詳細の表示、今すぐ行動できるかは確認から3時間で「更新待ち」になる）。</p>')
 
 
 IDENTITY_LABELS = {"IDENTITY_CONFIRMED": "確認済み（公式ページで型番・JAN を確認）", "PARTIAL_IDENTITY": "一部だけ確認",

@@ -235,6 +235,21 @@ def _router_script() -> str:
   function renderOpp(q, cat) {
     var sec = root.querySelector('[data-nu-page="opportunities"]');
     if (!sec) return;
+    // 今すぐ行動できると言える期限（生成時に判定の正本 actionability が決めた値）を過ぎたら、状態の表示を落とし、
+    // 「購入する」「抽選に申し込む」などのボタンを消す。ここでは判定し直さない（期限と文言は data-* のまま使う）
+    var nowMs = Date.now();
+    sec.querySelectorAll('[data-nu-pd-until]').forEach(function(el){
+      if (nowMs < +el.getAttribute('data-nu-pd-until')) return;
+      if (el.hasAttribute('data-nu-pd-stale-hide')) { el.textContent = ''; el.hidden = true; }
+      else {
+        el.textContent = el.getAttribute('data-nu-pd-stale-text') || '';
+        var cls = el.getAttribute('data-nu-pd-stale-class');
+        if (cls) el.className = cls;
+      }
+      var row = el.closest('[data-actionable]');
+      if (row) row.setAttribute('data-actionable', '0');
+      el.removeAttribute('data-nu-pd-until');
+    });
     var top = q.get('top') === '10';
     var sort = top ? 'profit' : (OPP_SORTS.indexOf(q.get('sort')) >= 0 ? q.get('sort') : 'rec');
     var filter = q.get('filter') === 'instock' ? 'instock' : '';
@@ -702,6 +717,8 @@ def _router_script() -> str:
     // 在庫ありと言える期限（確認から一定時間）を過ぎたら、「購入可能」「購入する」と言わない
     found.querySelectorAll('[data-nu-pd-until]').forEach(function(el){
       if (now < +el.getAttribute('data-nu-pd-until')) return;
+      // 期限を過ぎた「購入する」「抽選に申し込む」などのボタンは消す（Phase 18）
+      if (el.hasAttribute('data-nu-pd-stale-hide')) { el.textContent = ''; el.hidden = true; el.removeAttribute('data-nu-pd-until'); return; }
       el.textContent = el.getAttribute('data-nu-pd-stale-text') || '';
       var cls = el.getAttribute('data-nu-pd-stale-class');
       if (cls) el.className = cls;
@@ -994,6 +1011,12 @@ def _router_script() -> str:
     render(false);
   }
   root.addEventListener('click', guardPdBuy, true);
+  // HOME の「今すぐ行動できる利益商品」の件数: 生成時に決めた期限のうち、今より後のものだけを数える（判定はし直さない）
+  root.querySelectorAll('[data-nu-act-untils]').forEach(function(el){
+    var now = Date.now();
+    var n = (el.getAttribute('data-nu-act-untils') || '').split(',').filter(function(x){ return x && +x > now; }).length;
+    el.textContent = n + '件';
+  });
   // 主要な数値から利益の根拠へ（同じページの中。URL は変えない。買う・売るのタブに切り替えてから移る）
   root.addEventListener('click', function(e){
     var j = e.target.closest('[data-nu-pd-jump]');

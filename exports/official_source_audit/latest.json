@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-08 19:38 JST",
+  "generated_at": "2026-10-08 20:51 JST",
   "scope": "公式ソース登録・検証（利益/AI/Opportunity/Notification/Capital/Execution は不変）",
   "methodology": {
     "verification": "WebFetch で HTTP200/公式ドメイン/canonical/商品一致を実確認したURLのみ verified",
@@ -1636,13 +1636,13 @@
         "product_id": "prod_ps5_pro",
         "action": "stock_observed",
         "stock": "入荷待ち",
-        "at": "2026-10-08T19:36:44+09:00"
+        "at": "2026-10-08T20:49:56+09:00"
       },
       {
         "product_id": "prod_x100vi",
         "action": "stock_observed",
         "stock": "在庫なし（全色）",
-        "at": "2026-10-08T19:38:46+09:00"
+        "at": "2026-10-08T20:51:59+09:00"
       }
     ]
   },
@@ -1651,13 +1651,13 @@
       "product_id": "prod_ps5_pro",
       "action": "stock_observed",
       "stock": "入荷待ち",
-      "at": "2026-10-08T19:36:44+09:00"
+      "at": "2026-10-08T20:49:56+09:00"
     },
     {
       "product_id": "prod_x100vi",
       "action": "stock_observed",
       "stock": "在庫なし（全色）",
-      "at": "2026-10-08T19:38:46+09:00"
+      "at": "2026-10-08T20:51:59+09:00"
     }
   ]
 }

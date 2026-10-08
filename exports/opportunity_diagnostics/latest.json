@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-08T19:56:36+09:00",
+  "generated_at": "2026-10-08T21:09:49+09:00",
   "note": "内部用（運営者向け）。一般の画面には出さない。掲載の判定は opportunity.eligibility が正本",
   "candidate_count": 45,
   "eligible_count": 2,
@@ -667,7 +667,7 @@
         "price": 211800,
         "price_type": "RETAIL",
         "source": "src_ricoh_imaging",
-        "verified_at": "2026-10-08T19:28:43+09:00",
+        "verified_at": "2026-10-08T20:45:54+09:00",
         "url": "https://ricohimagingstore.com/Form/Product/ProductList.aspx?shop=0&cat=002010",
         "note": ""
       },
@@ -680,7 +680,7 @@
         "price": 222000,
         "price_type": "RETAIL",
         "source": "src_ricoh_imaging",
-        "verified_at": "2026-10-08T19:32:43+09:00",
+        "verified_at": "2026-10-08T20:43:54+09:00",
         "url": "https://ricohimagingstore.com/Form/Product/ProductList.aspx?shop=0&cat=002010",
         "note": ""
       },
@@ -693,7 +693,7 @@
         "price": 299800,
         "price_type": "RETAIL",
         "source": "src_ricoh_imaging",
-        "verified_at": "2026-10-08T19:34:43+09:00",
+        "verified_at": "2026-10-08T20:47:55+09:00",
         "url": "https://ricohimagingstore.com/Form/Product/ProductList.aspx?shop=0&cat=002010",
         "note": ""
       },
@@ -1038,7 +1038,7 @@
     ]
   },
   "buyback": {
-    "fresh_rows": 37,
+    "fresh_rows": 35,
     "stale_rows": 70,
     "failed_rows": 37,
     "failed_sources": [
@@ -1128,7 +1128,7 @@
         "rows": 24,
         "fresh": 17,
         "stale": 7,
-        "last_observed": "2026-10-08T18:59:59.146815+09:00"
+        "last_observed": "2026-10-08T20:13:09.705323+09:00"
       },
       {
         "source": "ブックオフ",
@@ -1144,23 +1144,22 @@
       },
       {
         "source": "モバイル一番",
-        "rows": 5,
+        "rows": 3,
         "stale": 3,
-        "fresh": 2,
-        "last_observed": "2026-10-08T18:53:58+09:00"
+        "last_observed": "2026-08-10T12:00:00+09:00"
       },
       {
         "source": "買取一丁目",
         "rows": 4,
         "fresh": 4,
-        "last_observed": "2026-10-08T18:52:22+09:00"
+        "last_observed": "2026-10-08T20:05:34+09:00"
       },
       {
         "source": "買取商店",
         "rows": 21,
         "stale": 7,
         "fresh": 14,
-        "last_observed": "2026-10-08T18:59:59+09:00"
+        "last_observed": "2026-10-08T20:13:09+09:00"
       },
       {
         "source": "駿河屋",
@@ -1207,47 +1206,84 @@
         "product_id": "prod_gr4",
         "price": 200000,
         "source": "買取商店",
-        "observed_at": "2026-10-08T18:58:29+09:00",
+        "observed_at": "2026-10-08T20:11:39+09:00",
         "condition": "new_unopened"
       },
       {
         "product_id": "prod_gr4_hdf",
         "price": 240000,
         "source": "買取商店",
-        "observed_at": "2026-10-08T18:58:29+09:00",
+        "observed_at": "2026-10-08T20:11:39+09:00",
         "condition": "new_unopened"
       },
       {
         "product_id": "prod_gr4_mono",
         "price": 227000,
         "source": "買取商店",
-        "observed_at": "2026-10-08T18:58:29+09:00",
+        "observed_at": "2026-10-08T20:11:39+09:00",
         "condition": "new_unopened"
       },
       {
         "product_id": "prod_r5ii",
         "price": 450000,
         "source": "買取商店",
-        "observed_at": "2026-10-08T18:59:59+09:00",
+        "observed_at": "2026-10-08T20:13:09+09:00",
         "condition": "new_unopened"
       },
       {
         "product_id": "prod_x100vi",
         "price": 260000,
         "source": "買取商店",
-        "observed_at": "2026-10-08T18:58:29+09:00",
+        "observed_at": "2026-10-08T20:11:39+09:00",
         "condition": "new_unopened"
       },
       {
         "product_id": "prod_z8",
         "price": 420000,
         "source": "買取商店",
-        "observed_at": "2026-10-08T18:59:59+09:00",
+        "observed_at": "2026-10-08T20:13:09+09:00",
         "condition": "new_unopened"
       }
     ],
     "profitable": 1,
     "actionable": 0
+  },
+  "actionability": {
+    "confirmed_profitable": 2,
+    "actionable": 0,
+    "blocked_by_stock": 1,
+    "blocked_by_closed_lottery": 1,
+    "blocked_by_stale_availability": 0,
+    "blocked_by_unknown_schedule": 0,
+    "blocked_by_sale_ended": 0,
+    "blocked_by_missing_url": 0,
+    "products": [
+      {
+        "product_id": "prod_gr4_hdf",
+        "product": "RICOH GR IV HDF",
+        "availability": "LOTTERY_CLOSED",
+        "label": "抽選終了",
+        "actionable": false,
+        "reasons": [
+          "lottery_closed"
+        ],
+        "deadline": "2026-09-28T12:00:00+09:00",
+        "checked_at": "2026-10-08T20:54:00+09:00"
+      },
+      {
+        "product_id": "prod_ps5_pro",
+        "product": "PlayStation 5 Pro",
+        "availability": "OUT_OF_STOCK",
+        "label": "在庫切れ",
+        "actionable": false,
+        "reasons": [
+          "stock_out"
+        ],
+        "deadline": "",
+        "checked_at": "2026-10-08T20:49:56+09:00"
+      }
+    ],
+    "newly_actionable": []
   },
   "stock": {
     "states": {
@@ -1261,7 +1297,7 @@
   "actionable": {
     "count": 0,
     "products": [],
-    "note": "掲載できる利益 ＋ 今買える（在庫ありの明示）か予約の根拠があるものだけ"
+    "note": "確定の利益 ＋ 今の購入の経路（公式の購入・申込のページ）＋ 今の購入の可否の証拠（在庫ありの確認から3時間以内・抽選/予約/先着の受付中）がそろうものだけ（src/market/actionability）"
   },
   "frequency": {
     "retail": {

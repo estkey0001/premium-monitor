@@ -401,12 +401,59 @@ jobs:
           PYTHONPATH: .
 
       # 14. Generate daily LP
-      # 利益商品の診断（今すぐ行動できるか）の直後に、行動できるようになった商品の通知の候補・重複の抑制・配信の計画を作る
-      # （Phase 19）。外部へは送らない: dry-run に固定し、通知の送信先の Secrets はこのステップに渡さない
+      # 利益商品の診断（今すぐ行動できるか）の直後に、行動できるようになった商品を通知の outbox に PENDING で入れる
+      # （Phase 19・20）。外部へは送らない: dry-run に固定し、通知の送信先の Secrets はこのステップに渡さない
+      # 14.0 通知の台帳を main の最新に合わせる（待たされた実行・再実行が古い台帳から候補を作らない。Phase 20）
+      - name: Sync notification outbox
+        id: sync_outbox
+        continue-on-error: true
+        run: bash scripts/sync_notification_state.sh
+
       - name: Generate daily LP Variant A
+        id: generate_lp
         run: python -m src.cli generate-daily-lp --variant A
         env:
           NOTIFICATION_DRY_RUN: "true"
+          # 台帳を合わせられなかったら、通知の候補を作らない（古い台帳から作り直さない）
+          NOTIFICATION_OUTBOX_SYNCED: ${{ steps.sync_outbox.outcome == 'success' }}
+
+      # 14.1 通知の outbox（Phase 20）: 候補 → 保存 → 配信の直前の確認 → 保存 → 送信 → 保存。
+      # 台帳は生成物のコミット・deploy-check・Pages と切り離して、手順ごとに main に保存する（送った記録を失わない）。
+      # 送信の手順は、直前の保存で残した台帳（sha）と今のファイルが同じときだけ送る（保存より前に送らない）。
+      # dry-run に固定し、通知の送信先の Secrets はどの手順にも渡さない（外部への通信 0）
+      - name: Persist notification outbox (candidates)
+        id: persist_outbox_candidates
+        if: always()
+        continue-on-error: true
+        run: bash scripts/persist_notification_state.sh
+
+      - name: Prepare notification dispatch
+        # 取り消されたジョブでは動かさない・今回の生成（診断）が成功したときだけ（古い診断で確かめ直さない）
+        if: ${{ !cancelled() && steps.generate_lp.outcome == 'success' && steps.persist_outbox_candidates.outcome == 'success' }}
+        continue-on-error: true
+        run: python -m src.cli dispatch-notifications --step prepare
+        env:
+          PYTHONPATH: .
+          NOTIFICATION_DRY_RUN: "true"
+
+      - name: Persist notification outbox (prepared)
+        id: persist_outbox_prepared
+        if: always() && steps.persist_outbox_candidates.outcome == 'success'
+        continue-on-error: true
+        run: bash scripts/persist_notification_state.sh
+
+      - name: Send notifications
+        if: ${{ !cancelled() && steps.generate_lp.outcome == 'success' && steps.persist_outbox_prepared.outcome == 'success' }}
+        continue-on-error: true
+        run: python -m src.cli dispatch-notifications --step send --persisted-sha "${{ steps.persist_outbox_prepared.outputs.sha }}"
+        env:
+          PYTHONPATH: .
+          NOTIFICATION_DRY_RUN: "true"
+
+      - name: Persist notification outbox (sent)
+        if: always() && steps.persist_outbox_prepared.outcome == 'success'
+        continue-on-error: true
+        run: bash scripts/persist_notification_state.sh
 
       # 15. Lottery quality gate
       - name: Lottery quality gate
@@ -489,7 +536,7 @@ jobs:
                   exports/price_history/ \
                   exports/flea_sold_prices/ \
                   exports/ai_opportunities/ \
-                  exports/notifications/ \
+                  exports/notifications/ ':(exclude)exports/notifications/actionable/state.json' \
                   exports/coverage/ \
                   exports/allocation/ \
                   exports/execution/ \

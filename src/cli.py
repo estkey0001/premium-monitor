@@ -2364,6 +2364,42 @@ def preview_daily_lp():
 
 # ---- Phase 11: LP公開・デプロイ ----
 
+@cli.command("dispatch-notifications")
+@click.option("--step", type=click.Choice(["prepare", "send"]), required=True,
+              help="prepare: 配信の直前の確認（dry-run は計画・本番は SENDING を記録）/ send: 保存済みの SENDING を送る")
+@click.option("--persisted-sha", default="", help="send: SENDING を保存した台帳の SHA-256（保存の手順が出す）")
+@click.option("--attempt-id", default="", help="この実行の識別（既定は GITHUB_RUN_ID から）")
+def dispatch_notifications(step, persisted_sha, attempt_id):
+    """今すぐ行動の通知の outbox を配信の手順に進める（Phase 20。外部への送信は dry-run で止める）。"""
+    import json as _json
+    import os as _os
+    from datetime import datetime as _dt
+    from src.notifiers import actionable as _an
+    from src.notifiers import adapters as _ad
+    from src.notifiers import outbox as _ob
+    from src.tcg.models import JST as _JST
+    now = _dt.now(tz=_JST)
+    out = Path(_os.environ.get("ACTIONABLE_NOTIFICATIONS_DIR")
+               or PROJECT_ROOT / "exports" / "notifications" / "actionable")
+    diag_dir = Path(_os.environ.get("OPPORTUNITY_DIAGNOSTICS_DIR")
+                    or PROJECT_ROOT / "exports" / "opportunity_diagnostics")
+    try:
+        diag = _json.loads((diag_dir / "latest.json").read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        diag = {}
+    aid = attempt_id or _ob.attempt_id_from_env(now=now)
+    dry = _an.is_dry_run()
+    # 送信先の transport はつながない（Phase 20。Discord・Telegram は未設定のまま。内部のログだけ）
+    adapters = _ad.default_adapters()
+    if step == "prepare":
+        rep = _ob.run_prepare(out, diag, now=now, dry_run=dry, attempt_id=aid, adapters=adapters)
+    else:
+        rep = _ob.run_send(out, now=now, dry_run=dry, attempt_id=aid, persisted_sha=persisted_sha, adapters=adapters)
+    keys = ("step", "skipped", "dry_run", "dispatch_planned", "dispatch_sending", "dispatch_sent", "dispatch_failed",
+            "dispatch_blocked", "dispatch_unknown", "counts")
+    click.echo(_json.dumps({k: rep[k] for k in keys if k in rep}, ensure_ascii=False))
+
+
 @cli.command("build-public-lp")
 def build_public_lp():
     """docs/ にLP公開ファイルをビルドする。"""

@@ -9,8 +9,9 @@ HEALTH_ALERT / DATA_RECOVERED を検知。優先度付け・テンプレート�
 利益判定ロジックは変更しない。Discord/Telegram をまず対象（拡張しやすい構造）。
 
 ACTIONABLE_NOW（今すぐ行動できるようになった利益商品。Phase 19）は、この種類の表に足した1つの種類。判定の正本の結果
-（利益商品の診断）が LP の生成の中で作られるので、候補・重複の抑制・配信の計画は src/notifiers/actionable が
-診断の直後に行う（exports/notifications/actionable/。外部へは送らない dry-run）。
+（利益商品の診断）が LP の生成の中で作られるので、候補は LP の生成の中で診断の直後に outbox に入れ、配信の直前の
+確認・配信は dispatch-notifications の手順で行う（src/notifiers/outbox。exports/notifications/actionable/。
+外部へは送らない dry-run。Phase 20）。
 
 出力:
   exports/notifications/latest.json

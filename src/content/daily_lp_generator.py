@@ -749,38 +749,20 @@ class DailyLPGenerator:
                     or Path(__file__).resolve().parent.parent.parent / "exports" / "notifications" / "actionable")
 
     def _write_actionable_notifications(self, diag: dict, now) -> dict | None:
-        """今すぐ行動できるようになった商品の通知（src/notifiers/actionable）。外部へは送らない（dry-run・送信の関数を渡さない）。
+        """今すぐ行動できるようになった商品を通知の outbox に入れる（src/notifiers/outbox。Phase 20）。
 
-        台帳（state.json）は通知済みの組み合わせの記録。読めないときは基準日（候補を出さない）。
-        出力: latest.json（今回）・history/YYYY-MM-DD.json（その日の実行を足していく）・state.json（次の実行の比較用）。
+        ここでは候補を PENDING で記録して保存するだけ（配信しない）。配信の直前の確認・配信は、保存の後の
+        dispatch-notifications の手順で行う。台帳（state.json）が読めないときは基準日（候補を出さない）。
         """
-        import json as _json
+        import os as _os
         from src.notifiers import actionable as _an
-        from src.utils.atomic_write import write_json_atomic
-        out = self._actionable_notifications_dir()
+        from src.notifiers import outbox as _ob
+        # CI で台帳を main の最新に合わせられなかったら、候補を作らない（古い台帳から同じ通知を作り直さない）
+        if str(_os.environ.get("NOTIFICATION_OUTBOX_SYNCED", "true")).strip().lower() != "true":
+            self._write_notification_failure(now, diag, "OutboxNotSynced")
+            return None
         try:
-            try:
-                ledger = _json.loads((out / "state.json").read_text(encoding="utf-8"))
-                ledger = ledger.get("products") if isinstance(ledger, dict) else None
-                ledger = ledger if isinstance(ledger, dict) else None
-            except (OSError, ValueError):
-                ledger = None
-            from datetime import datetime as _dtm
-            # 配信の直前の確認は、生成を始めた時刻ではなく今の時刻で行う（監査 L-3）
-            report, nxt = _an.run(diag, ledger, now=now, dry_run=_an.is_dry_run(),
-                                  dispatch_now=_dtm.now(tz=now.tzinfo) if now.tzinfo else None)
-            (out / "history").mkdir(parents=True, exist_ok=True)
-            hist_path = out / "history" / f"{now.strftime('%Y-%m-%d')}.json"
-            try:
-                hist = _json.loads(hist_path.read_text(encoding="utf-8"))
-                runs = hist.get("runs") if isinstance(hist, dict) and isinstance(hist.get("runs"), list) else []
-            except (OSError, ValueError):
-                runs = []
-            runs.append({k: report[k] for k in report if k not in ("note", "suppressed")})
-            write_json_atomic(out / "latest.json", report)
-            write_json_atomic(hist_path, {"date": now.strftime("%Y-%m-%d"), "runs": runs})
-            write_json_atomic(out / "state.json", {"updated_at": report["generated_at"], "products": nxt})
-            return report
+            return _ob.run_observe(self._actionable_notifications_dir(), diag, now=now, dry_run=_an.is_dry_run())
         except Exception as exc:  # noqa: BLE001
             logger.warning("actionable notifications failed: %s", exc)
             self._write_notification_failure(now, diag, type(exc).__name__)

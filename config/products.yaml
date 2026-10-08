@@ -207,8 +207,9 @@ products:
     genre: "camera"
     name: "RICOH GR IV"
     brand: "RICOH"
+    model_number: "S0001551"   # リコーイメージングストアの商品コード（2026-10-08・Phase 16。30周年キット S0001522 とは別）
     retail_price: 194800
-    keywords: ["GR IV", "GR4", "GRIV", "GR 4"]
+    keywords: ["GR IV", "GR4", "GRIV", "GR 4", "S0001551"]
     memo: "最新GRシリーズ。抽選販売中。"
 
   - id: "prod_gr4_hdf"
@@ -321,6 +322,7 @@ products:
     name: "Canon EOS R5 Mark II"
     brand: "CANON"
     model_number: "EOS R5 Mark II"
+    jan_code: "4549292229141"   # キヤノンの製品ページ（ボディー・商品コード 6536C001。2026-10-08・Phase 16）
     retail_price: 620000
     keywords: ["R5 Mark II", "EOS R5 Mark II", "R5II"]
     memo: "概算定価（要確認）"
@@ -345,6 +347,7 @@ products:
     name: "Nikon Z8"
     brand: "NIKON"
     model_number: "Z8"
+    jan_code: "4960759909947"   # ニコンの製品ページ・ニコンダイレクトの購入ページ（ボディー。2026-10-08・Phase 16）
     retail_price: 590000
     keywords: ["Nikon Z8", "Z8"]
     memo: "概算定価（要確認）"

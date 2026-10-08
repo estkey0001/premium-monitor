@@ -39,7 +39,7 @@ def _roi(v: opp.OpportunityView) -> str:
     return f"{v.roi * 100:.1f}%" if v.roi is not None else "算出前"
 
 
-def _time(iso: str, *, fixed: bool = False) -> str:
+def _time(iso: str, *, fixed: bool = False, label: str = "定価") -> str:
     """確認時刻（閲覧時にブラウザが「3分前確認」などに書き換える。ここは生成時点の表示）。
 
     fixed=True は定価の確認日（固定値。最長180日まで有効）で、「更新遅延」と出さずに日付だけ出す。
@@ -48,7 +48,7 @@ def _time(iso: str, *, fixed: bool = False) -> str:
         return '<span class="nu-time">確認日時なし</span>'
     d = opp._dt(iso)
     if fixed:
-        return f'<time class="nu-time" datetime="{esc(iso)}">{d.strftime("%m/%d")}確認（定価）</time>'
+        return f'<time class="nu-time" datetime="{esc(iso)}">{d.strftime("%m/%d")}確認（{esc(label)}）</time>'
     return (f'<time class="nu-time" datetime="{esc(iso)}" data-nu-time="{esc(iso)}">'
             f'{d.strftime("%m/%d %H:%M")}確認</time>')
 
@@ -80,7 +80,7 @@ def _detail(v: opp.OpportunityView, pd_ids: set | None = None) -> str:
            f'<li><span>ROI（純利益 ÷ 取得原価）</span><b>{esc(_roi(v))}</b></li>')
     src = (
         f'<li><span>買う</span><b>{esc(v.buy_source)}</b></li>'
-        f'<li><span>　確認</span><b>{_time(v.buy_checked_at, fixed=v.kind == "official_to_buyback")}</b></li>'
+        f'<li><span>　確認</span><b>{_time(v.buy_checked_at, fixed=v.kind == "official_to_buyback", label=v.buy_price_label or "定価")}</b></li>'
         f'<li><span>　在庫</span><b>{esc(v.stock_label)}'
         + (f'（{opp._dt(v.stock_checked_at).strftime("%m/%d %H:%M")}時点）' if v.stock_checked_at else "") + '</b></li>'
         f'<li><span>売る</span><b>{esc(v.sell_source)}（{esc(v.sell_type_label)}）</b></li>'

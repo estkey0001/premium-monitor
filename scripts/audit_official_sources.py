@@ -44,7 +44,7 @@ from src.market.official_price_validator import validate_official_price, is_offi
 # 公式の確認の記録（VERIFIED_URLS・UNVERIFIED・OFFICIAL_NOT_SOLD・KNOWN_STALE）は src/market/official_registry.py が正本
 # （Phase 15 で移した。名前はここでも同じに使える）
 from src.market.official_registry import (  # noqa: E402,F401
-    KNOWN_STALE, OFFICIAL_NOT_SOLD, UNVERIFIED, VERIFIED_URLS, VERIFIED_URLS_CHECKED_ON,
+    KNOWN_STALE, OFFICIAL_NOT_SOLD, UNVERIFIED, VERIFIED_URLS, VERIFIED_URLS_CHECKED_ON, official_direct_gate,
 )
 
 MAKER_OF = {
@@ -67,7 +67,7 @@ def _conn():
 
 def _products(c):
     return {r["id"]: dict(r) for r in c.execute(
-        "SELECT id,name,brand,model_number,retail_price,official_price FROM products WHERE is_active=1")}
+        "SELECT id,name,brand,model_number,jan_code,retail_price,official_price FROM products WHERE is_active=1")}
 
 
 def _existing_configs(c):
@@ -122,6 +122,13 @@ def register_verified(c, products):
         conf = v["conf"]
         price = v.get("price")
         rejection = None
+        # 公式直販価格は、証拠（型番・JAN・容量・ボディー/キット・版・購入ページ・送料・販売の形・在庫の表し方・確認日）が
+        # そろったときだけ確定の仕入れ値に使う。1つでも欠ければ価格を書かない（参考。Phase 16 手順6・7）
+        direct_ok, direct_why = (official_direct_gate(pid, p, TODAY) if v.get("price_kind") == "official_direct"
+                                 else (None, ()))
+        if direct_ok is False:
+            rejection = "official_direct_gate:" + ",".join(direct_why)
+            price = None
         if price is not None:
             vr = validate_official_price(
                 source_id=v["source"], url=v["url"], http_status=200, canonical_url=v["url"],
@@ -143,11 +150,21 @@ def register_verified(c, products):
             "confidence": conf, "official_price": price,
             "open_price": v.get("open_price", False),
             "note": v.get("note"), "price_rejection": rejection,
+            "price_kind": v.get("price_kind") or ("open_price" if v.get("open_price") else "msrp"),
         }
+        if direct_ok is not None:
+            extra["official_direct_eligible"] = direct_ok
+        if direct_ok is False:
+            # 判定を通らない公式直販の行は、購入ページ（「買う」のリンク）・在庫の記録にも使わない（Phase 16 監査 L-7）
+            extra["verified"] = False
         _upsert_config(c, pid, v["source"], v["url"], extra)
         # high/medium confidence の検証済み価格のみ products.official_price に反映
         # （low は main 利用禁止）。official_price_updated_at には「その価格を確認した日」を入れる。
         # スクリプトの実行時刻（NOW）は入れない: 固定値を毎日「今確認した」ように見せないため
+        if direct_ok is False:
+            # 判定を通らなかった公式直販価格は、同じ取得元が先に書いた値があっても確定の定価に残さない
+            c.execute("UPDATE products SET official_price=NULL, official_price_source='', "
+                      "official_price_updated_at=NULL WHERE id=? AND official_price_source=?", (pid, v["source"]))
         if price and conf in ("high", "medium"):
             c.execute("UPDATE products SET official_price=?, official_price_source=?, "
                       "official_price_updated_at=? WHERE id=?",
@@ -156,14 +173,17 @@ def register_verified(c, products):
         # collector がそれより新しい在庫の表示を取っていれば、古い確認で上書きしない
         # 確認から CURRENT_DAYS（7日）を過ぎた在庫の記録は書かない（Phase 14 監査 M-1）。CI は毎回 DB を作り直すので、
         # 期限を見ない古い判定（初心者向けの分類・LINE の文面など）にも、古い「在庫あり」が残らない
-        if v.get("stock") and v.get("stock_checked_at") and _stock_record_is_current(v["stock_checked_at"]):
+        if v.get("stock") and v.get("stock_checked_at") and _stock_record_is_current(v["stock_checked_at"]) \
+                and direct_ok is not False:
             c.execute("UPDATE products SET official_stock_status=?, official_stock_observed_at=? WHERE id=? "
                       "AND (official_stock_observed_at IS NULL OR official_stock_observed_at = '' "
                       "OR official_stock_observed_at < ?)",
                       (v["stock"], v["stock_checked_at"], pid, v["stock_checked_at"]))
         registered.append({"product_id": pid, "source": v["source"], "url": v["url"],
                            "link_type": v["link_type"], "confidence": conf,
-                           "official_price": price, "verified": True})
+                           "official_price": price, "verified": extra["verified"],
+                           "price_kind": extra["price_kind"], "official_direct_eligible": direct_ok,
+                           "price_rejection": rejection})
     # 検証不能は verified=false で明示（推測URLは登録しない＝target_url空のまま記録）
     for pid, u in UNVERIFIED.items():
         p = products.get(pid)
@@ -230,24 +250,32 @@ def apply_recheck(c, products, path: Path | None = None) -> list[dict]:
                           (day, pid, v.get("price")))
                 # 設定の行の確認日も合わせる（監査の表の確認日と食い違わないように。L-4）
                 c.execute("UPDATE product_source_config SET extra_config = json_set(COALESCE(extra_config, '{}'), "
-                          "'$.last_verified_at', ?) WHERE product_id=? AND source_id=?", (day, pid, v["source"]))
+                          "'$.last_verified_at', ?) WHERE product_id=? AND source_id=? "
+                          "AND COALESCE(json_extract(extra_config, '$.verified'), 0) = 1", (day, pid, v["source"]))
                 applied.append({"product_id": pid, "action": "price_reconfirmed", "on": day})
         elif st in ("changed", "sale_ended"):
             c.execute("UPDATE products SET official_price=NULL, official_price_source='', "
                       "official_price_updated_at=NULL WHERE id=?", (pid,))
             # 公式の購入ページとしても使わない（確認済みの印を外す。人が確かめて VERIFIED_URLS を直すまで。M-3）
+            # 新しい価格を自動で確定にしない: 人の確認待ち（REVIEW_REQUIRED）にする（Phase 16 手順43）
             c.execute("UPDATE product_source_config SET extra_config = json_set(COALESCE(extra_config, '{}'), "
-                      "'$.verified', json('false'), '$.official_price', json('null'), '$.recheck_status', ?) "
-                      "WHERE product_id=? AND source_id=?",
+                      "'$.verified', json('false'), '$.official_price', json('null'), '$.recheck_status', ?, "
+                      "'$.review_status', 'REVIEW_REQUIRED') WHERE product_id=? AND source_id=?",
                       (st, pid, v["source"]))
-            applied.append({"product_id": pid, "action": f"price_{st}_needs_review", "observed": r.get("price")})
+            applied.append({"product_id": pid, "action": f"price_{st}_needs_review", "observed": r.get("price"),
+                            "review_status": "REVIEW_REQUIRED"})
         # 在庫は、価格まで記録と一致した（unchanged）読み取りのときだけ記録する（価格が食い違った読み取りの在庫は
         # 別の商品の行かもしれないので信用しない。監査 N-1）
         if st == "unchanged" and r.get("stock") and _stock_record_is_current(at) and at[:10] <= today:
-            c.execute("UPDATE products SET official_stock_status=?, official_stock_observed_at=? WHERE id=? "
-                      "AND (official_stock_observed_at IS NULL OR official_stock_observed_at = '' "
-                      "OR official_stock_observed_at < ?)", (r["stock"], at, pid, at))
-            applied.append({"product_id": pid, "action": "stock_observed", "stock": r["stock"], "at": at})
+            # 判定を通らず購入ページとして使わない行（verified が外れた行）の在庫は書かない（再監査 Low-2）
+            cur = c.execute("UPDATE products SET official_stock_status=?, official_stock_observed_at=? WHERE id=? "
+                            "AND (official_stock_observed_at IS NULL OR official_stock_observed_at = '' "
+                            "OR official_stock_observed_at < ?) AND EXISTS (SELECT 1 FROM product_source_config "
+                            "WHERE product_id=? AND source_id=? "
+                            "AND COALESCE(json_extract(extra_config, '$.verified'), 0) = 1)",
+                            (r["stock"], at, pid, at, pid, v["source"]))
+            if getattr(cur, "rowcount", 1) != 0:
+                applied.append({"product_id": pid, "action": "stock_observed", "stock": r["stock"], "at": at})
     c.commit()
     return applied
 
@@ -389,9 +417,12 @@ def main():
             "before": {"official_price_products": before_ok, "official_configs": before_total},
             "after": {"url_verified": after_verified, "price_captured": after_price,
                       "verified_targets": len(VERIFIED_URLS), "unverified_targets": len(UNVERIFIED)},
-        # 公式の再確認の結果を反映したもの（Phase 15。価格の再確認・価格の変化・在庫の観測）
-        "recheck_applied": rechecked,
+            # 互換のために残す（Phase 15 の置き場所。読むときは上の階層の recheck_applied を使う）
+            "recheck_applied": rechecked,
         },
+        # 公式の再確認の結果を反映したもの（価格の再確認・価格の変化・在庫の観測）。Phase 16 で success_rate の下から
+        # 出力の上の階層へ移した
+        "recheck_applied": rechecked,
     }
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / "latest.json").write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")

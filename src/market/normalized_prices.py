@@ -23,6 +23,15 @@ STALE_DAYS = 14  # これを超えると stale（main calculation から除外�
 # 公式定価（メーカー・公式ストアで確認した価格）の有効期間。定価は相場ほど速く変わらないので
 # 買取・二次流通とは別のしきい値にする（確認日から数える。生成時刻を観測時刻にしない）
 OFFICIAL_STALE_DAYS = 180
+# 公式直販価格（official_direct。公式ストアが実際に売っている価格で、値下げ・キャンペーンで変わる）は、固定の定価より
+# 短い期間だけ確認済みとして使う（Phase 16 レビュー M-2）。過ぎたら再確認（scripts/recheck_official.py）か人の確認が要る
+OFFICIAL_DIRECT_STALE_DAYS = 14
+
+
+def official_stale_days(product_id: str) -> int:
+    """その商品の公式の価格を確認済みとして使える日数（公式直販価格は短い）。"""
+    from src.market.official_registry import price_kind_of
+    return OFFICIAL_DIRECT_STALE_DAYS if price_kind_of(product_id) == "official_direct" else OFFICIAL_STALE_DAYS
 # 同一商品で auto_scraped high 買取がある場合、これを超える倍率の manual 買取は
 # 異常値（手動入力ミス/相場転記ミス）として main calculation から除外する。
 MANUAL_OVER_AUTO_RATIO = 1.3  # auto_scraped high の 1.3倍（+30%）超の manual を除外
@@ -189,7 +198,7 @@ def make_observation(now: datetime, **kw) -> dict:
         # 「確認済みで新しい」とは言わず freshness_basis=config_unknown_date と明記したうえで、
         # 従来どおり定価の参考値として使う（使うことを選んでいる。鮮度を偽らない）
         if observed_at:
-            is_fresh = age <= OFFICIAL_STALE_DAYS
+            is_fresh = age <= official_stale_days(kw.get("product_id", ""))
             freshness_basis = "verified" if is_fresh else "verified_stale"
         else:
             is_fresh = kw.get("extraction_method") == "retail_concept"

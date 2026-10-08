@@ -17,6 +17,8 @@ Retail / Buyback / Secondary Market の観測を、正しい product_id へ厳�
 
 重要ルール:
   - JAN/SKU/MPN/型番 が一致しない場合、商品名だけで high confidence にしない。
+  - JAN が一致しても、セット（同梱・キット）・版（国内/海外・多言語）・限定品の食い違いがあれば low（Phase 16。
+    JAN だけで他の条件を上書きしない。出品者が単体の JAN をセットの出品に付けることがある）。
   - 容量不一致・機種不一致は match=false（main 不可）。
   - 検索結果ページ/トップページ由来は confidence を medium 以下へ、
     型番・容量が確認できなければ low（main 不可）。
@@ -46,6 +48,7 @@ class ResolverResult:
     matched_tier: Optional[str] = None  # jan / sku / model_number / model_name / ...
     accessory_flag: bool = False
     details: dict = field(default_factory=dict)
+    variant_conflict: Optional[str] = None   # bundle_mismatch / edition_mismatch / limited_mismatch（Phase 16）
 
     def as_dict(self) -> dict:
         return {
@@ -55,7 +58,7 @@ class ResolverResult:
             "condition_match": self.condition_match,
             "identity_confidence": self.identity_confidence,
             "identity_reason": self.identity_reason, "matched_tier": self.matched_tier,
-            "accessory_flag": self.accessory_flag,
+            "accessory_flag": self.accessory_flag, "variant_conflict": self.variant_conflict,
         }
 
 
@@ -66,6 +69,59 @@ def _norm(s: str) -> str:
 def _is_accessory(text: str) -> bool:
     t = (text or "").lower()
     return any(k.lower() in t for k in ACCESSORY_KW)
+
+
+# セット・版・限定品の目印（Phase 16。JAN が一致しても、ここが食い違えば同じ商品にしない）
+_BUNDLE_MARKS = ("セット", "同梱", "バンドル", "bundle", "ダブルパック", "キット", "kit", "レンズ付", "ソフト付",
+                 "選べるソフト")
+_FOREIGN_MARKS = ("多言語", "海外版", "海外仕様", "並行輸入", "international", "北米版", "us版", "香港版", "中国版",
+                  "欧州版", "グローバル版")
+_DOMESTIC_MARKS = ("日本語・国内専用", "国内専用", "日本語専用")
+_LIMITED_MARKS = ("限定", "リミテッド", "limited", "anniversary", "記念", "30th")
+
+
+# 広告・付属品の言い回し（商品のセット・限定版ではない）。判定の前に取り除く（Phase 16 レビュー M-1）
+_AD_PHRASES = re.compile(
+    # 「数量限定モデル」「台数限定カラー」のような限定版の名前は取り除かない（監査 L-4）
+    r"(期間|数量|台数|先着|地域|ネット|店舗|会員)限定(?!\s*(モデル|版|カラー|色|エディション|edition|仕様))|"
+    r"限定(価格|特価|セール|クーポン|ポイント)|ポイント\s*\d*\s*倍|"
+    r"記念セール|記念価格|周年記念セール|セール|フルセット|付属品(完備|あり|付き|全て|すべて)?|箱・?付属品|"
+    r"送料無料|クーポン", re.I)
+
+
+def _strip_ads(text: str) -> str:
+    return _AD_PHRASES.sub(" ", text or "")
+
+
+def _has(text: str, marks) -> bool:
+    """目印があるか。英字の目印は単語として（kit が Kitty に当たらないように）、日本語は部分一致。"""
+    t = _strip_ads(text).lower()
+    for m in marks:
+        m = m.lower()
+        if m.isascii():
+            if re.search(r"(?<![a-z0-9])" + re.escape(m) + r"(?![a-z0-9])", t):
+                return True
+        elif m in t:
+            return True
+    return False
+
+
+def variant_conflict(source_text: str, product_name: str) -> Optional[str]:
+    """出品・買取の行と商品の、セット・版・限定品の食い違い（無ければ None）。
+
+    - bundle_mismatch: 片方だけがセット（同梱・キット・選べるソフトなど）
+    - edition_mismatch: 出品が海外版・多言語で、商品はそうでない（このシステムの商品は国内向け）。または逆
+    - limited_mismatch: 片方だけが限定・記念モデル
+    """
+    if _has(source_text, _BUNDLE_MARKS) != _has(product_name, _BUNDLE_MARKS):
+        return "bundle_mismatch"
+    if _has(source_text, _FOREIGN_MARKS) and not _has(product_name, _FOREIGN_MARKS):
+        return "edition_mismatch"
+    if _has(product_name, _FOREIGN_MARKS) and _has(source_text, _DOMESTIC_MARKS):
+        return "edition_mismatch"
+    if _has(source_text, _LIMITED_MARKS) != _has(product_name, _LIMITED_MARKS):
+        return "limited_mismatch"
+    return None
 
 
 class ProductIdentityResolver:
@@ -171,6 +227,10 @@ class ProductIdentityResolver:
 
         # confidence 決定（Task5/12）
         conf, reason = self._confidence(best_tier, cap_match, model_match, acc, link_type, cap_src, ix)
+        # JAN・型番が一致しても、セット・版・限定品が食い違えば low（JAN だけで他の条件を上書きしない。Phase 16）
+        conflict = variant_conflict(source_title or blob, ix["name"]) if ix else None
+        if conflict and not acc:
+            conf, reason = "low", conflict
 
         # expected と食い違う場合は mismatch を明示
         if expected_product_id and matched and expected_product_id != matched:
@@ -184,6 +244,7 @@ class ProductIdentityResolver:
             identity_confidence=conf, identity_reason=reason, matched_tier=best_tier,
             accessory_flag=acc,
             details={"capacity_src": cap_src, "model_key_src": model_key_src},
+            variant_conflict=conflict,
         )
 
     def _confidence(self, tier, cap_match, model_match, acc, link_type, cap_src, ix) -> tuple:

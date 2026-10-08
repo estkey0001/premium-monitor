@@ -21,6 +21,7 @@ from datetime import datetime, timedelta
 from src.content.ui import categories as cats
 from src.content.ui import opportunity as opp
 from src.content.ui import runtime as rt
+from src.market import official_registry as reg
 from src.market import official_shipping as osh
 from src.market import price_evidence as pe
 from src.market import price_history as ph
@@ -88,13 +89,15 @@ class PriceRow:
     cta_primary: bool = False
     note: str = ""
     condition: str = ""
-    official: bool = False          # 公式ストアの行（定価）
+    official: bool = False          # 公式ストアの行（定価・公式直販価格）
+    retail_kind: str = ""           # 公式の価格の意味（official_registry.price_kind_of: msrp / official_direct）
 
     @property
     def type_label(self) -> str:
-        # 公式ストアの販売価格は、利益の根拠と同じ「定価」と呼ぶ（同じ値の呼び方を揃える）
+        # 公式ストアの価格は、利益の根拠と同じ呼び方にそろえる。メーカーが希望小売価格・定価と明示したものは「定価」、
+        # 公式ストアが売っている価格（希望小売価格はオープン価格など）は「公式直販価格」（定価と呼ばない。Phase 16）
         if self.official and self.price_type == pt.RETAIL:
-            return "定価"
+            return "公式直販価格" if self.retail_kind == "official_direct" else "定価"
         return TYPE_LABELS.get(self.price_type, "未確認")
 
     @property
@@ -214,7 +217,8 @@ def _official_row(pid: str, meta: dict, obs: list[dict], stock, now: datetime, d
                                    + (f'（{ship["checked_on"]} 確認）' if ship.get("checked_on") else "")),
                    url=url, note="" if verified else (
                        "公式の販売は終了（定価は参考）" if meta.get("sale_method") == "discontinued"
-                       else "定価の確認日が分からない設定値（参考）"), official=True)
+                       else "定価の確認日が分からない設定値（参考）"), official=True,
+                   retail_kind=reg.price_kind_of(pid, str(meta.get("official_price_source") or "")))
     if deal_view is not None and deal_view.buy_price == price and deal_view.acquisition_cost is not None:
         row.acquisition = int(deal_view.acquisition_cost)     # 利益の計算と同じ取得原価（計算し直さない）
     elif verified and ship["fee"] is not None:
@@ -482,8 +486,8 @@ def build(*, products: list[dict] | None, catalog, observations: list | None, pr
                                     else ["今の価格では利益が出ない（買取価格が仕入れ値と費用を下回る）"])
             if (deal_view is not None and off is not None and isinstance(deal_view.buy_price, (int, float))
                     and deal_view.buy_price > 0 and deal_view.buy_price != off.price):
-                v.profit_reasons.insert(0, f"利益の判定は定価 ¥{int(deal_view.buy_price):,} で行った結果です"
-                                           f"（表の定価 ¥{off.price:,} とは異なる値です）")
+                v.profit_reasons.insert(0, f"利益の判定は{off.type_label} ¥{int(deal_view.buy_price):,} で行った結果です"
+                                           f"（表の{off.type_label} ¥{off.price:,} とは異なる値です）")
         # 価格の履歴（実際に観測した点だけ）・最近の変化
         v.history = [sr for sr in ((price_history or {}).get("series") or {}).values()
                      if sr.get("product_id") == pid and sr.get("points")]

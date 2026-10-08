@@ -12,6 +12,12 @@ from src.db.repository import Repository
 
 logger = logging.getLogger(__name__)
 
+
+def _official_label(product_id, price=None) -> str:
+    """公式の価格の呼び方（定価 / 公式直販価格 / 参考価格。official_registry.official_price_label）。"""
+    from src.market.official_registry import official_price_label
+    return official_price_label(product_id, price)
+
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 EXPORTS_DIR = PROJECT_ROOT / "exports" / "community_messages"
 
@@ -63,7 +69,7 @@ class CommunityMessageGenerator:
                 method_label = {"lottery": "抽選", "soldout": "SOLD OUT", "discontinued": "終了"}.get(s.sale_method, s.sale_method)
                 lines.extend([
                     f"**{s.product_name}**",
-                    f"  定価: {fmt_price(s.official_price_jpy)} | 中古: {fmt_price(s.domestic_used_price_jpy)} | 差: {fmt_profit(s.premium_gap_jpy)}",
+                    f"  {_official_label(s.product_id, s.official_price_jpy)}: {fmt_price(s.official_price_jpy)} | 中古: {fmt_price(s.domestic_used_price_jpy)} | 差: {fmt_profit(s.premium_gap_jpy)}",
                     f"  方式: {method_label} | 難易度: {s.difficulty_score:.2f} | score: {s.overall_score:.2f}",
                     "",
                 ])
@@ -80,7 +86,7 @@ class CommunityMessageGenerator:
             for s in expert:
                 lines.extend([
                     f"**{s.product_name}** — 難易度: {s.difficulty_score:.2f}",
-                    f"  定価: {fmt_price(s.official_price_jpy)} | 差: {fmt_profit(s.premium_gap_jpy)} | 方式: {s.sale_method}",
+                    f"  {_official_label(s.product_id, s.official_price_jpy)}: {fmt_price(s.official_price_jpy)} | 差: {fmt_profit(s.premium_gap_jpy)} | 方式: {s.sale_method}",
                     f"  ⚠️ 入手が非常に困難。情報収集・長期監視向け。",
                     "",
                 ])
@@ -99,7 +105,7 @@ class CommunityMessageGenerator:
             for s in overseas[:5]:
                 lines.extend([
                     f"**{s.product_name}**",
-                    f"  国内定価: {fmt_price(s.official_price_jpy)} | 海外(JPY): {fmt_price(s.overseas_price_jpy)}",
+                    f"  国内{_official_label(s.product_id, s.official_price_jpy)}: {fmt_price(s.official_price_jpy)} | 海外(JPY): {fmt_price(s.overseas_price_jpy)}",
                     f"  海外差: +{s.overseas_gap_percent}%（{fmt_profit(s.overseas_gap_jpy)}）",
                     "",
                 ])
@@ -116,7 +122,7 @@ class CommunityMessageGenerator:
             for s in lottery:
                 lines.extend([
                     f"**{s.product_name}** — 抽選販売中",
-                    f"  定価: {fmt_price(s.official_price_jpy)} | 中古: {fmt_price(s.domestic_used_price_jpy)} | 差: {fmt_profit(s.premium_gap_jpy)}",
+                    f"  {_official_label(s.product_id, s.official_price_jpy)}: {fmt_price(s.official_price_jpy)} | 中古: {fmt_price(s.domestic_used_price_jpy)} | 差: {fmt_profit(s.premium_gap_jpy)}",
                     "",
                 ])
         lines.extend(["応募方法は各メーカー公式サイトをご確認ください。", "", DISCLAIMER_SHORT])
@@ -133,7 +139,7 @@ class CommunityMessageGenerator:
                 label = "SOLD OUT" if s.sale_method == "soldout" else "販売終了"
                 lines.extend([
                     f"**{s.product_name}** — {label}",
-                    f"  定価: {fmt_price(s.official_price_jpy)} | 中古: {fmt_price(s.domestic_used_price_jpy)} | 差: {fmt_profit(s.premium_gap_jpy)}",
+                    f"  {_official_label(s.product_id, s.official_price_jpy)}: {fmt_price(s.official_price_jpy)} | 中古: {fmt_price(s.domestic_used_price_jpy)} | 差: {fmt_profit(s.premium_gap_jpy)}",
                     "",
                 ])
         lines.extend(["再販情報は各メーカー公式サイトをご確認ください。", "", DISCLAIMER_SHORT])

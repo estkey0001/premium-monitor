@@ -103,10 +103,11 @@ def collect_for_api(api: str, products: dict, resolver: ProductIdentityResolver,
                 brand=it.get("brand", "") or "", link_type="item",
                 expected_product_id=pid,
             )
-            # 誤認防止: accessory / 別機種 / 容量違い / 別商品への再マッチ を除外
+            # 誤認防止: accessory / 別機種 / 容量違い / 別商品への再マッチ / セット・版・限定品の食い違い を除外
+            # （JAN が一致してもセットの出品を単体の相場に入れない。Phase 16）
             cross_product = bool(res.matched_product_id) and res.matched_product_id != pid
             if (res.accessory_flag or res.model_match is False or res.capacity_match is False
-                    or cross_product):
+                    or cross_product or res.variant_conflict):
                 health.rejected += 1
                 continue
             # 価格 JPY 換算（eBay は通貨分離、他は JPY）

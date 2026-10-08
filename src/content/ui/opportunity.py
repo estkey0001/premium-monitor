@@ -150,6 +150,13 @@ def _capacity(name: str) -> str:
     return f"{m.group(1)}{m.group(2).upper()}" if m else ""
 
 
+def _deal_buy_label(pid: str, price, evidence) -> str:
+    from src.market.official_registry import official_price_label, price_kind_of
+    if price_kind_of(pid) == "official_direct" and not pe.is_profit_eligible(str(evidence or "")):
+        return "参考価格"
+    return official_price_label(pid, price)
+
+
 def stock_from(stock_status: str, sale_method: str) -> str:
     """公式の在庫表示・販売方式から在庫の状態を決める（推測しない。規則は src/market/stock_state.py）。"""
     from src.market.stock_state import stock_state
@@ -190,7 +197,9 @@ def from_deal(d: dict) -> OpportunityView:
         category=cats.from_genre(d.get("genre")), product_name=name,
         model=str(d.get("model") or ""), capacity=_capacity(name), condition=str(d.get("condition") or ""),
         buy_source=str(d.get("buy_source") or (f"{d['brand']} 公式ストア" if d.get("brand") else "公式ストア")),
-        buy_price=buy, buy_price_label="定価",
+        # 公式ストアの販売価格（希望小売価格はオープン価格など）は「公式直販価格」と呼び、定価と呼ばない（Phase 16）
+        # 確認済みの根拠が無い値（再確認で外れた後の設定値など）は「参考価格」と呼ぶ（Phase 16 監査 M-1）
+        buy_price=buy, buy_price_label=_deal_buy_label(pid, buy, d.get("msrp_evidence")),
         buy_stock=stock_from(d.get("stock_status"), d.get("sale_method")),
         # 在庫の確認日時は価格の確認日時とは別（在庫の根拠があった取得の時刻。無ければ空 = 在庫未確認）
         stock_checked_at=_iso(d.get("stock_checked_at")),

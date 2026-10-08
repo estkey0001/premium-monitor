@@ -30,6 +30,12 @@ from src.content.ui import opportunity as _ui_opp
 
 logger = logging.getLogger(__name__)
 
+
+def _official_label(product_id, price=None) -> str:
+    """公式の価格の呼び方（定価 / 公式直販価格 / 参考価格。official_registry.official_price_label）。"""
+    from src.market.official_registry import official_price_label
+    return official_price_label(product_id, price)
+
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 JST = timezone(timedelta(hours=9))
 
@@ -998,7 +1004,7 @@ class DailyLPGenerator:
         lines.extend(["", "## Pro向け候補", ""])
         for s in advanced_snaps:
             lines.append(
-                f"- **{s.product_name}**: 定価{fmt_price(s.official_price_jpy)} "
+                f"- **{s.product_name}**: {_official_label(s.product_id, s.official_price_jpy)}{fmt_price(s.official_price_jpy)} "
                 f"/ 中古{fmt_price(s.domestic_used_price_jpy)} "
                 f"/ 差{fmt_profit(s.premium_gap_jpy)} / {getattr(s,'sale_method','')}"
             )

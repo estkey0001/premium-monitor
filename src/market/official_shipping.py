@@ -59,6 +59,19 @@ PRODUCT_SHIPPING: dict[str, dict] = {
     "prod_switch2": {"source": "src_nintendo_store", "fee": 0, "status": CONDITIONAL,
                      "url": "https://support-jp.nintendo.com/app/answers/detail/a_id/33907",
                      "checked_on": "2026-10-08", "checked_by": "Claude"},
+    # ---- カメラのメーカー直販（Phase 16。2026-10-08 にブラウザで確認）----
+    # ニコンダイレクトの「送料・配送について」: 1注文 5,000円（税込）以上は会員（ログイン時）だけ当社負担、
+    # 非会員・ログインなしは 550円（税込）。会員になる前提を置かず、高いほう（550円）で計算する
+    "prod_z8": {"source": "src_nikon_direct", "fee": 550, "status": PAID,
+                "url": "https://nij.nikon.com/shop/u/guide/delivery_charge/", "checked_on": "2026-10-08",
+                "checked_by": "Claude"},
+    # キヤノンオンラインショップの購入ページ（EOS R5 Mark II・ボディー）に「送料無料」（税込 5,500円以上は送料無料）
+    "prod_r5ii": {"source": "src_canon_official", "fee": 0, "status": FREE_VERIFIED,
+                  "url": "https://store.canon.jp/online/g/g6536C001/", "checked_on": "2026-10-08", "checked_by": "Claude"},
+    # フジフイルムモールの購入ページ（X100VI シルバー）に「送料： 無料」（5,000円（税込）以上は送料無料）
+    "prod_x100vi": {"source": "src_fujifilm_official", "fee": 0, "status": FREE_VERIFIED,
+                    "url": "https://mall-jp.fujifilm.com/shop/g/g16941878/", "checked_on": "2026-10-08",
+                    "checked_by": "Claude"},
 }
 
 # 公式 URL の購入ページのホスト → 購入元（すべての注文で同じ決まりの購入元だけ）

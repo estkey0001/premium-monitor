@@ -16,6 +16,12 @@ from src.db.repository import Repository
 
 logger = logging.getLogger(__name__)
 
+
+def _official_label(product_id, price=None) -> str:
+    """公式の価格の呼び方（定価 / 公式直販価格 / 参考価格。official_registry.official_price_label）。"""
+    from src.market.official_registry import official_price_label
+    return official_price_label(product_id, price)
+
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 EXPORTS_DIR = PROJECT_ROOT / "exports" / "note_reports"
 
@@ -181,7 +187,7 @@ class NoteGenerator:
                     f"",
                     f"| 項目 | 内容 |",
                     f"|------|------|",
-                    f"| 公式定価 | {fmt_price(s.official_price_jpy)} |",
+                    f"| 公式の{_official_label(s.product_id, s.official_price_jpy)} | {fmt_price(s.official_price_jpy)} |",
                     f"| 国内中古 | {fmt_price(s.domestic_used_price_jpy)} |",
                     f"| 海外(JPY) | {fmt_price(s.overseas_price_jpy)} |",
                     f"| プレ値差 | {prem} |",

@@ -110,7 +110,10 @@ def classify_product_msrp(product, now: datetime | None = None) -> str:
     official = getattr(product, "official_price", None) or 0
     retail = getattr(product, "retail_price", None) or 0
     if official > 0:
-        return classify_dated_price(official, getattr(product, "official_price_updated_at", None), now)
+        # 公式直販価格は確認から OFFICIAL_DIRECT_STALE_DAYS（14日）を過ぎたら STALE（固定の定価は180日。Phase 16）
+        from src.market.normalized_prices import official_stale_days
+        return classify_dated_price(official, getattr(product, "official_price_updated_at", None), now,
+                                    stale_days=official_stale_days(getattr(product, "id", "") or ""))
     if retail > 0:
         return CONFIGURED_REFERENCE
     return UNKNOWN

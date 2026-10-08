@@ -107,7 +107,7 @@ def _profit(v: LotteryReservationView, views_by_pid: dict, *, adopt_msrp: bool =
         if not o.eligible or o.kind != "official_to_buyback":
             continue
         if adopt_msrp and v.retail_price is None and o.buy_price:
-            v.retail_price, v.retail_price_label = int(o.buy_price), "定価（公式で確認済み）"
+            v.retail_price, v.retail_price_label = int(o.buy_price), f"{o.buy_price_label or '定価'}（公式で確認済み）"
         v.market_reference_price = int(o.sell_price) if o.sell_price else None
         v.market_reference_type = {"BUYBACK_CASH": "買取参考", "SOLD_MEDIAN": "成約中央値"}.get(o.sell_price_type, "")
         if v.retail_price is not None and o.buy_price is not None and int(o.buy_price) == v.retail_price:

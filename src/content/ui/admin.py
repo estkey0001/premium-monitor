@@ -263,13 +263,28 @@ def build_data_coverage(diag: dict | None, tcg_report: dict | None) -> dict:
             "tcg": {"lotteries": lottery_n, **kinds}}
 
 
+def _recheck_results() -> list[dict]:
+    """公式の再確認の最新の結果（exports/official_recheck/latest.json。無ければ空）。"""
+    import json
+    from pathlib import Path
+    try:
+        d = json.loads((Path(__file__).resolve().parents[3] / "exports" / "official_recheck" / "latest.json")
+                       .read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return []
+    return [r for r in d.get("results") or [] if isinstance(r, dict)]
+
+
 def build_identity(details: dict | None) -> dict:
     """商品の同一性の監査（Phase 15）。判定は official_registry.identity_state（型番・JAN と公式の証拠）をそのまま使う。"""
     from src.market import official_registry as reg
     prods = [{"id": getattr(v, "product_id", ""), "name": getattr(v, "product_name", ""),
               "model_number": getattr(v, "model", ""), "jan_code": getattr(v, "jan", "")}
              for v in (details or {}).values()]
-    return reg.identity_audit(prods)
+    out = reg.identity_audit(prods)
+    # 公式直販価格の判定（Phase 16。official_direct_gate の結果をそのまま出す。判定し直さない）
+    out["official_direct"] = reg.official_direct_audit(prods, recheck=_recheck_results()) if prods else []
+    return out
 
 
 def build_tcg(tcg_report: dict) -> list[dict]:
@@ -965,7 +980,48 @@ def _identity_html(idn: dict) -> str:
     return (f'<dl class="nu-ad-dl">{dl}</dl>'
             + (f'<h3 class="nu-ad-h3">判断待ち・曖昧な商品</h3><ul class="nu-ad-list">{items}</ul>' if items else "")
             + '<p class="nu-osub">確認済みは、型番か JAN が登録され、その値を公式ページで確かめた証拠があるものだけ'
-              '（商品名・価格の一致だけで決めない）。</p>')
+              '（商品名・価格の一致だけで決めない）。</p>'
+            + _official_direct_html(idn.get("official_direct") or []))
+
+
+OFFICIAL_DIRECT_REASONS = {
+    "identity_not_confirmed": "同一性が未確認", "model_not_exact": "型番が一致しない", "model_mismatch": "型番が証拠と違う",
+    "jan_not_exact": "JAN が一致しない", "jan_mismatch": "JAN が証拠と違う", "capacity_mismatch": "容量が違う",
+    "body_kit_mismatch": "ボディー/キットが違う", "edition_unknown": "版が分からない", "not_official_shop": "公式ストアでない",
+    "not_purchase_page": "購入ページでない", "no_current_price": "表示中の価格が無い", "shipping_unknown": "送料が分からない",
+    "sale_mode_not_purchasable": "抽選・販売終了など", "stock_semantics_unknown": "在庫の表し方が分からない",
+    "no_verified_at": "確認日が無い", "verified_at_in_future": "確認日が未来", "verified_at_mismatch": "確認日が記録と違う",
+    "price_kind_not_official_direct": "公式直販価格でない", "no_official_direct_evidence": "証拠が無い",
+    "shipping_source_mismatch": "送料の記録が別の店", "recheck_changed": "再確認で価格が変わった（確認待ち）",
+    "recheck_sale_ended": "再確認で販売終了", "verified_at_stale": "確認から14日を過ぎた",
+}
+OFFICIAL_DIRECT_STOCK = {"IN_STOCK": "在庫あり（確認時）", "OUT_OF_STOCK": "在庫なし（確認時）", "UNKNOWN": "在庫未確認"}
+
+
+def _official_direct_html(rows: list[dict]) -> str:
+    """公式直販価格（Phase 16）: 確定の仕入れ値に使えるもの・参考のもの。希望小売価格（定価）ではないことを明記する。"""
+    rows = [r for r in rows if isinstance(r, dict)]
+    if not rows:
+        return ""
+    ok = [r for r in rows if r.get("eligible")]
+
+    def _li(r: dict) -> str:
+        fee = r.get("shipping_fee")
+        why = "・".join(OFFICIAL_DIRECT_REASONS.get(x.split(":")[0], "条件を満たさない") for x in r.get("reasons") or [])
+        msrp = "希望小売価格はオープン価格・" if r.get("msrp") == "open_price" else ""
+        price = f'¥{int(r["price"]):,}' if isinstance(r.get("price"), int) and r["price"] > 0 else "—"
+        return (f'<li><b>{esc(str(r.get("name") or r.get("product_id") or ""))}</b>'
+                f'<span class="nu-osub">{esc(str(r.get("shop") or ""))}・公式直販価格 {esc(price)}・{esc(msrp)}'
+                f'送料 {esc("—" if fee is None else "無料" if int(fee) == 0 else f"¥{int(fee):,}")}・'
+                f'{esc(OFFICIAL_DIRECT_STOCK.get(str(r.get("stock") or ""), "在庫未確認"))}・'
+                f'確認 {esc(str(r.get("verified_at") or "—"))}・'
+                f'{"確定の仕入れ値に使える" if r.get("eligible") else "参考（" + esc(why or "条件を満たさない") + "）"}'
+                f'</span> {product_page.link(str(r.get("product_id") or ""))}</li>')
+    return (f'<h3 class="nu-ad-h3">公式直販価格（使える {len(ok)} / 参考 {len(rows) - len(ok)}）</h3>'
+            f'<ul class="nu-ad-list">{"".join(_li(r) for r in rows)}</ul>'
+            '<p class="nu-osub">公式直販価格は、メーカーの公式ストアが実際に売っている価格で、希望小売価格（定価）ではない'
+            '（カメラの希望小売価格はオープン価格のまま）。型番・JAN・容量・ボディー/キット・版・購入ページ・送料・在庫の表し方・'
+            '確認日がそろったものだけを確定の仕入れ値に使う。今すぐ行動できる商品に数えるのは、在庫ありの明示があるときだけ。</p>')
 
 
 def _system(v: dict) -> str:

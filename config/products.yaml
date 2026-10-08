@@ -144,6 +144,7 @@ products:
     genre: "audio"
     name: "AirPods Pro 3"
     brand: "Apple"
+    model_number: "MFHP4J/A"   # Apple の購入ページの構造化データの sku（2026-10-08・Phase 15）
     retail_price: 39800
     keywords: ["AirPods Pro 3", "AirPods Pro"]
 
@@ -161,8 +162,9 @@ products:
     genre: "game_console"
     name: "Nintendo Switch 2"
     brand: "Nintendo"
+    jan_code: "4902370553024"   # My Nintendo Store の商品ページ（日本語・国内専用。2026-10-08・Phase 15）
     # 参考価格（設定値）。2026-05-25 の改定後の希望小売価格。確認済みの定価は
-    # scripts/audit_official_sources.py の VERIFIED_URLS（確認日・URL 付き）が正本
+    # src/market/official_registry.py の VERIFIED_URLS（確認日・URL 付き）が正本
     retail_price: 59980
     keywords: ["Switch 2", "Switch2", "ニンテンドースイッチ2", "SW2", "Nintendo Switch2", "スイッチ2", "NintendoSwitch2"]
 
@@ -179,6 +181,7 @@ products:
     brand: "Sony"
     # 公式（Sony Store）で今販売している型番。CFI-7000B01 は 2025版の前の型番
     model_number: "CFI-7100B01"
+    jan_code: "4948872417075"   # Sony Store の購入ページの商品データ（2026-10-08・Phase 15）
     # 参考価格（設定値）。2026-04-02 の改定後の価格。確認済みの定価は VERIFIED_URLS が正本
     retail_price: 137980
     keywords: ["PS5 Pro", "PlayStation5Pro", "CFI-7000", "CFI-7100", "PlayStation 5 Pro", "CFI-7000A01", "PS5Pro"]

@@ -10,7 +10,7 @@ OUT_OF_STOCK_MARKS = ("SOLD OUT", "OUT OF STOCK", "NOT IN STOCK", "在庫切れ"
                       "在庫がありません", "入荷待ち", "品切れ", "売り切れ", "販売終了")
 # 購入できることの明示の表示（Phase 14: 「カートに入れる」も在庫ありの証拠。在庫切れの表示を先に見るので、
 # 「入荷待ち」と並んでいるページは在庫切れのまま。価格の表示・商品ページがあるだけでは在庫ありにしない）。
-# 注意: ここに渡すのは、人が確認した在庫の表示（audit_official_sources の VERIFIED_URLS）か、コレクターが判定した
+# 注意: ここに渡すのは、人が確認した在庫の表示（official_registry の VERIFIED_URLS）か、コレクターが判定した
 # 固定の値（在庫あり / 在庫なし）だけ。取得したページの本文をそのまま渡さない（ボタンの文字は在庫の無いページにも
 # 出ることがある。src/collectors/official/_generic.py のコメントのとおり、コレクターはボタンを根拠にしない）
 IN_STOCK_MARKS = ("在庫あり", "IN STOCK", "カートに入れる")
@@ -78,6 +78,10 @@ STALE_LABEL = "在庫未確認（更新待ち）"   # 在庫ありだったが�
 # - 人が公式ページで確認した在庫: 3時間
 # - TCG の入荷情報: 既存の TTL（src/tcg/freshness.TTL_SECONDS。EC 在庫復活 15分・店頭 2時間 など）。
 #   TTL の無い種類は 2時間
+# 期限が2つある理由（Phase 15 で明記。目的が違うので統一しない）:
+# - ここ（3時間）は在庫再開・商品詳細の「購入可能」= 今まさに買える、と言う期限
+# - 利益の案件（opportunity._apply_stock_freshness・診断の actionable）は price_evidence.CURRENT_DAYS（7日）で、
+#   「在庫あり（○時点）」と確認の時刻を添えて出す。7日を過ぎれば在庫未確認に戻る
 STOCK_FRESH_SECONDS = {"official_store": 3 * 3600, "manual_verified": 3 * 3600, "retail_ec": 3 * 3600}
 TCG_DEFAULT_FRESH_SECONDS = 2 * 3600
 

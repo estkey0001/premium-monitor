@@ -108,6 +108,8 @@ def collect(now: datetime | None = None) -> dict:
         "confirmed_opportunities": int(diag.get("eligible_count") or 0),
         # Phase 14: 確定の利益商品のうち、今買える（在庫ありの明示）か予約の根拠があるもの（ファネルの定義は変えない）
         "actionable_products": int((diag.get("actionable") or {}).get("count") or 0),
+        # Phase 15: 商品の同一性（config/products.yaml の型番・JAN と、公式ページの証拠。official_registry）
+        "identity": _identity_counts(),
         "opportunity_candidates": int(diag.get("candidate_count") or 0),
         "confirmed_routes": len(main),
         "reference_routes": len(ref),
@@ -151,6 +153,17 @@ def collect(now: datetime | None = None) -> dict:
     }
     return {"metrics": metrics, "funnel": funnel(diag), "matrix": matrix(
         pids, products, obs, confirmed_keys, entries, routes, now)}
+
+
+def _identity_counts() -> dict:
+    import yaml
+
+    from src.market import official_registry as reg
+    try:
+        prods = (yaml.safe_load((ROOT / "config" / "products.yaml").read_text(encoding="utf-8")) or {}).get("products")
+    except (OSError, ValueError):
+        return {}
+    return reg.identity_audit(prods or [])["counts"]
 
 
 def _sold_history_metrics(now: datetime) -> dict:

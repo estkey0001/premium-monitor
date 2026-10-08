@@ -41,130 +41,11 @@ OUT = ROOT / "exports" / "official_source_audit"
 
 from src.market.official_price_validator import validate_official_price, is_official_domain
 
-# ─────────────────────────────────────────────────────────────
-# 実検証済み公式URL（WebFetch またはブラウザで公式ページを表示し、公式ドメイン + 商品一致を確認。
-# extraction_method の値は以前からの名前 webfetch_verified のまま。どちらで確認したかは各行のコメントに書く）
-# 確認日は VERIFIED_URLS_CHECKED_ON（実行日の TODAY ではない）。price は検証時に確認できた本体価格（税込）。
-# link_type: item=個別商品/購入ページ, category=カテゴリ購入ページ（個別URLなし）
-# confidence: high/medium/low（official_price_validator の基準）
-# ─────────────────────────────────────────────────────────────
-# VERIFIED_URLS の価格・URL を人（WebFetch）が実際に確認した日。
-# この辞書は固定値なので、スクリプトを毎日実行しても「今日確認した」ことにはならない。
-# 価格を公式ページで再確認したときだけ、確認した証拠（URL・価格）と一緒にこの日付を更新する。
-# 値を確認していないのに日付だけ新しくしてはいけない（鮮度の偽装になる）。
-# 2026-08-23: git の記録上、VERIFIED_URLS を最後に確認・更新した日
-VERIFIED_URLS_CHECKED_ON = "2026-08-23"
-
-VERIFIED_URLS = {
-    # ---- Apple（公式直販・価格実在）----
-    # 2026-10-03: 公式の購入ページ（ブラウザで表示）で「256GB 159,800円から」を確認（08/23 の 142,800円から改定）
-    "prod_iphone17_256":    {"source": "src_apple_jp", "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17",         "link_type": "item",     "price": 159800, "conf": "high", "checked_on": "2026-10-03"},
-    # 2026-10-03: 公式の購入ページで「AirPods Pro 3 42,800円」を再確認
-    # 2026-10-08（Phase 14）: 同じ購入ページで 42,800円 を再確認（ブラウザ）。在庫・お届けの表示は、選択を進める前の
-    # ページには出ない（明示の証拠が無いので在庫は記録しない＝在庫未確認のまま）
-    "prod_airpods_pro3":    {"source": "src_apple_jp", "url": "https://www.apple.com/jp/shop/buy-airpods/airpods-pro-3",   "link_type": "item",     "price": 42800,  "conf": "high", "checked_on": "2026-10-08"},
-    # ---- ゲーム機（公式ストア・公式ラインナップ）----
-    # 2026-10-03: Sony Store の購入ページで「PlayStation®5 Pro CFI-7100B01 入荷待ち 137,980 円(税込)」を確認
-    # （2026-04-02 の価格改定後の価格。設定値の 119,980円 は改定前）。
-    # 在庫の表示（入荷待ち）も同じページで確認した時刻つきで記録する（7日を過ぎれば在庫未確認に戻る）
-    # 2026-10-08 02:34（Phase 14）: 同じ購入ページで「選択済み CFI-7100B01 入荷待ち 137,980円(税込)」を再確認（ブラウザ）。
-    # PlayStation 公式の本体ラインナップ（https://www.playstation.com/ja-jp/ps5/buy-now/）でも
-    # 「PS5 Pro 希望小売価格：137,980円（税込）」。「カートに入れる」のボタンはあるが「入荷待ち」なので在庫切れの扱い
-    "prod_ps5_pro": {"source": "src_sony_store", "url": "https://pur.store.sony.jp/ps5/products/ps5/CFI-7100B01_purchase/",
-                     "link_type": "item", "price": 137980, "conf": "high", "checked_on": "2026-10-08",
-                     "stock": "入荷待ち", "stock_checked_at": "2026-10-08T02:34:48+09:00"},
-    # 2026-10-03: 任天堂公式の商品ラインナップで「Nintendo Switch 2 本体 日本語・国内専用 希望小売価格： 59,980 円（税込）」
-    # を確認（2026-05-25 の価格改定後。設定値の 49,980円 は改定前）
-    # 2026-10-08 02:32（Phase 14）: My Nintendo Store の商品ページ（Nintendo Switch 2（日本語・国内専用））で
-    # 「59,980 円 税込」「お届け予定日：通常2～6日後にお届け」「カートに入れる」（押せる状態）を確認（ブラウザ）。
-    # 購入できることの明示の表示なので、確認した時刻つきで在庫ありとして記録する（7日を過ぎれば在庫未確認に戻る）。
-    # ページの「品切れ」の表示は、おすすめに出ていた別の周辺機器（microSD Express カード）のもの
-    "prod_switch2": {"source": "src_nintendo_store", "url": "https://store-jp.nintendo.com/item/hardware-accessory/VM_BEE_S_KB6CA",
-                     "link_type": "item", "price": 59980, "conf": "high", "checked_on": "2026-10-08",
-                     "stock": "カートに入れる（お届け予定日：通常2～6日後）", "stock_checked_at": "2026-10-08T02:32:13+09:00"},
-    # ---- Nikon（オープン価格・URLは検証済みだが公式定価なし → category/価格null）----
-    "prod_z8": {"source": "src_nikon_direct", "url": "https://nij.nikon.com/products/lineup/mirrorless/z8/", "link_type": "category", "price": None, "conf": "medium", "open_price": True},
-    # ---- Fujifilm（オープン価格）----
-    "prod_x100vi": {"source": "src_fujifilm_official", "url": "https://www.fujifilm-x.com/ja-jp/products/cameras/x100vi/", "link_type": "category", "price": None, "conf": "medium", "open_price": True},
-}
-
-# 検証できなかった/公式定価が存在しないメーカー（推測URLで verified 扱いしない）
-# 実際の型番（同一性確認用）
-UNVERIFIED = {
-    "prod_r5ii":  {"source": "src_canon_official", "model": "EOS R5 Mark II",  "reason": "canon.jp が当環境からDNS解決不可（要手動検証）"},
-    "prod_r6ii":  {"source": "src_canon_official", "model": "EOS R6 Mark II",  "reason": "canon.jp が当環境からDNS解決不可（要手動検証）"},
-    "prod_r3":    {"source": "src_canon_official", "model": "EOS R3",          "reason": "canon.jp が当環境からDNS解決不可（要手動検証）"},
-    "prod_z9":    {"source": "src_nikon_direct",   "model": "Z9",              "reason": "オープン価格の可能性・個別URL未検証"},
-    "prod_zf":    {"source": "src_nikon_direct",   "model": "Zf",              "reason": "オープン価格の可能性・個別URL未検証"},
-    "prod_a1ii":  {"source": "src_sony_store",     "model": "ILCE-1M2",        "reason": "store.sony.jp が当環境からDNS解決不可（要手動検証）"},
-    "prod_a7rv":  {"source": "src_sony_store",     "model": "ILCE-7RM5",       "reason": "store.sony.jp が当環境からDNS解決不可（要手動検証）"},
-    "prod_a7cr":  {"source": "src_sony_store",     "model": "ILCE-7CR",        "reason": "store.sony.jp が当環境からDNS解決不可（要手動検証）"},
-    "prod_fx3":   {"source": "src_sony_store",     "model": "ILME-FX3",        "reason": "store.sony.jp が当環境からDNS解決不可（要手動検証）"},
-}
-
-# 公式ストアで今は売っていない（販売終了・後継機に交代）と確認した商品。
-# 過去に確認した定価は「今その値段で公式から買える」根拠にならないので、確認済みの定価として使わない
-# （products.official_price を消し、設定値の参考価格に戻す。確定利益には使わない）。
-OFFICIAL_NOT_SOLD = {
-    "prod_iphone17pro_256": {"source": "src_apple_jp", "checked_on": "2026-10-03",
-                             "reason": "iPhone 17 Pro の購入ページが /buy-iphone へ移動。公式は iPhone 18 Pro を販売中"},
-    "prod_iphone17pro_512": {"source": "src_apple_jp", "checked_on": "2026-10-03",
-                             "reason": "iPhone 17 Pro の購入ページが /buy-iphone へ移動。公式は iPhone 18 Pro を販売中"},
-    "prod_iphone17pm_256":  {"source": "src_apple_jp", "checked_on": "2026-10-03",
-                             "reason": "iPhone 17 Pro Max の購入ページが /buy-iphone へ移動。公式は iPhone 18 Pro Max を販売中"},
-    "prod_iphone17pm_512":  {"source": "src_apple_jp", "checked_on": "2026-10-03",
-                             "reason": "iPhone 17 Pro Max の購入ページが /buy-iphone へ移動。公式は iPhone 18 Pro Max を販売中"},
-    "prod_ipad_pro_m4_11":  {"source": "src_apple_jp", "checked_on": "2026-10-03",
-                             "reason": "公式の iPad Pro は M5 チップ（M4 は販売していない）"},
-    "prod_ipad_pro_m4_13":  {"source": "src_apple_jp", "checked_on": "2026-10-03",
-                             "reason": "公式の iPad Pro は M5 チップ（M4 は販売していない）"},
-    "prod_ipad_air_m3":     {"source": "src_apple_jp", "checked_on": "2026-10-03",
-                             "reason": "公式の iPad Air は M4 チップ（M3 は販売していない）"},
-    "prod_apple_watch_s11": {"source": "src_apple_jp", "checked_on": "2026-10-03",
-                             "reason": "公式は Apple Watch Series 12 を販売中（Series 11 は販売していない）"},
-    "prod_apple_watch_ultra3": {"source": "src_apple_jp", "checked_on": "2026-10-03",
-                                "reason": "公式は Apple Watch Ultra 4 を販売中（Ultra 3 は販売していない）"},
-    "prod_switch2_mk":      {"source": "src_nintendo_store", "checked_on": "2026-10-03",
-                             "reason": "任天堂公式のラインナップでマリオカート ワールド セットは「生産終了」"},
-    # 2026-10-07（Phase 11）: 公式の購入ページで確認
-    # - iPhone 16 Pro の購入ページ /shop/buy-iphone/iphone-16-pro は /jp/iphone へ移動（301）。
-    #   /jp/iphone の現行は iPhone 18 Pro・17・17e・16
-    # - AirPods Max の購入ページ /shop/buy-airpods/airpods-max は airpods-max-2 へ移動（301）
-    # - Mac の購入ページ: mac-mini は M6・M5 Pro、macbook-air は M5、macbook-pro は M5・M5 Pro・M5 Max のみ
-    #   （以前は VERIFIED_URLS に「現行はM5世代」の注記つき・価格なしで載せていた MacBook 3件もここへ移した）
-    "prod_iphone16pro_256": {"source": "src_apple_jp", "checked_on": "2026-10-07",
-                             "reason": "iPhone 16 Pro の購入ページが /jp/iphone へ移動。公式は iPhone 18 Pro を販売中"},
-    "prod_iphone16pm_256":  {"source": "src_apple_jp", "checked_on": "2026-10-07",
-                             "reason": "iPhone 16 Pro Max は公式で販売していない（公式は iPhone 18 Pro Max を販売中）"},
-    "prod_iphone16pm_512":  {"source": "src_apple_jp", "checked_on": "2026-10-07",
-                             "reason": "iPhone 16 Pro Max は公式で販売していない（公式は iPhone 18 Pro Max を販売中）"},
-    "prod_airpods_max":     {"source": "src_apple_jp", "checked_on": "2026-10-07",
-                             "reason": "AirPods Max の購入ページが AirPods Max 2 へ移動（初代は販売していない）"},
-    "prod_mac_mini_m4":     {"source": "src_apple_jp", "checked_on": "2026-10-07",
-                             "reason": "公式の Mac mini は M6・M5 Pro チップ（M4 は販売していない）"},
-    "prod_macbook_air_m4_13": {"source": "src_apple_jp", "checked_on": "2026-10-07",
-                               "reason": "公式の MacBook Air は M5 チップ（M4 は販売していない）"},
-    "prod_macbook_air_m4_15": {"source": "src_apple_jp", "checked_on": "2026-10-07",
-                               "reason": "公式の MacBook Air は M5 チップ（M4 は販売していない）"},
-    "prod_macbook_pro_m4_14": {"source": "src_apple_jp", "checked_on": "2026-10-07",
-                               "reason": "公式の MacBook Pro は M5・M5 Pro・M5 Max チップ（M4 は販売していない）"},
-    # 2026-10-08（Phase 14）: ブラウザで公式ページを確認
-    # - PlayStation 公式の本体ラインナップ（https://www.playstation.com/ja-jp/ps5/buy-now/）で売っているデジタル・
-    #   エディションは「日本語専用」（希望小売価格 55,000円）だけ。この商品（型番の登録なし・設定の参考価格 72,980円。
-    #   多言語の版に当たる）はラインナップに無い。型番が無いので日本語専用の版と同じ商品とはみなさない
-    # - RICOH の製品ページ（https://www.ricoh-imaging.co.jp/japan/products/gr-3/）に「RICOH GRIII 生産終了」
-    # source は公式の取得元として読まれる src_sony_store（_official_meta は OFFICIAL_DOMAINS の source だけを読む）。
-    # 証拠のページは PlayStation 公式（playstation.com）の本体ラインナップ
-    "prod_ps5_de":          {"source": "src_sony_store", "checked_on": "2026-10-08",
-                             "reason": "公式の本体ラインナップのデジタル・エディションは日本語専用（55,000円）だけ。この商品の版は無い"},
-    "prod_gr3":             {"source": "src_ricoh_imaging", "checked_on": "2026-10-08",
-                             "reason": "RICOH の製品ページに「RICOH GRIII 生産終了」"},
-}
-
-# 旧世代/404 として検出・要注意（Task1）。実際に 404 を確認したもの。
-KNOWN_STALE = {
-    "iphone-16-pro-max": "iPhone 16 世代の購入ページ。iphone-17-pro ページに統合/404",
-}
+# 公式の確認の記録（VERIFIED_URLS・UNVERIFIED・OFFICIAL_NOT_SOLD・KNOWN_STALE）は src/market/official_registry.py が正本
+# （Phase 15 で移した。名前はここでも同じに使える）
+from src.market.official_registry import (  # noqa: E402,F401
+    KNOWN_STALE, OFFICIAL_NOT_SOLD, UNVERIFIED, VERIFIED_URLS, VERIFIED_URLS_CHECKED_ON,
+)
 
 MAKER_OF = {
     "src_apple_jp": "Apple", "src_ricoh_imaging": "RICOH", "src_fujifilm_official": "FUJIFILM",
@@ -312,6 +193,65 @@ def register_verified(c, products):
     return registered
 
 
+RECHECK_PATH = ROOT / "exports" / "official_recheck" / "latest.json"
+
+
+def apply_recheck(c, products, path: Path | None = None) -> list[dict]:
+    """公式の再確認（scripts/recheck_official.py）の結果を DB に反映する（Phase 15）。
+
+    - unchanged（型番が一致し価格が記録と同じ）: 価格を確認した日を、実際に取得した日に進める（本当の観測。
+      記録の確認日より古い結果では戻さない）
+    - changed・sale_ended: 確認済みの定価を外す（人が確かめて VERIFIED_URLS を直すまで確定に使わない）
+    - 在庫: 明示の表示を読み取れたときだけ、取得した時刻つきで記録する（確認から7日以内・より新しいときだけ）
+    - failed・blocked: 何もしない（前回の価格は消さない。確認日も在庫の時刻も新しくしない）
+    """
+    try:
+        data = json.loads(Path(path or RECHECK_PATH).read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return []
+    applied = []
+    today = NOW.date().isoformat()
+    for r in data.get("results") or []:
+        pid, st, at = r.get("product_id"), r.get("status"), str(r.get("observed_at") or "")
+        v = VERIFIED_URLS.get(pid)
+        if not v or pid not in products or not at:
+            continue
+        # 結果が今の記録（URL・型番・記録の価格）と同じものに対する再確認か（記録を直した後の古い結果で
+        # 反映しない。Phase 15 監査 L-2）
+        model = str((products.get(pid) or {}).get("model_number") or "")
+        if r.get("url") != v["url"] or r.get("recorded_price") != v.get("price") \
+                or (model and r.get("model") and r.get("model") != model):
+            continue
+        if st == "unchanged" and r.get("price") == v.get("price"):
+            day = at[:10]
+            # 記録の確認日より新しく、今日より未来でない日だけ（壊れた結果・時計のずれで未来の日にしない。L-1）
+            if str(v.get("checked_on") or "") < day <= today:
+                c.execute("UPDATE products SET official_price_updated_at=? WHERE id=? AND official_price=?",
+                          (day, pid, v.get("price")))
+                # 設定の行の確認日も合わせる（監査の表の確認日と食い違わないように。L-4）
+                c.execute("UPDATE product_source_config SET extra_config = json_set(COALESCE(extra_config, '{}'), "
+                          "'$.last_verified_at', ?) WHERE product_id=? AND source_id=?", (day, pid, v["source"]))
+                applied.append({"product_id": pid, "action": "price_reconfirmed", "on": day})
+        elif st in ("changed", "sale_ended"):
+            c.execute("UPDATE products SET official_price=NULL, official_price_source='', "
+                      "official_price_updated_at=NULL WHERE id=?", (pid,))
+            # 公式の購入ページとしても使わない（確認済みの印を外す。人が確かめて VERIFIED_URLS を直すまで。M-3）
+            c.execute("UPDATE product_source_config SET extra_config = json_set(COALESCE(extra_config, '{}'), "
+                      "'$.verified', json('false'), '$.official_price', json('null'), '$.recheck_status', ?) "
+                      "WHERE product_id=? AND source_id=?",
+                      (st, pid, v["source"]))
+            applied.append({"product_id": pid, "action": f"price_{st}_needs_review", "observed": r.get("price")})
+        # 在庫は、価格まで記録と一致した（unchanged）読み取りのときだけ記録する（価格が食い違った読み取りの在庫は
+        # 別の商品の行かもしれないので信用しない。監査 N-1）
+        if st == "unchanged" and r.get("stock") and _stock_record_is_current(at) and at[:10] <= today:
+            c.execute("UPDATE products SET official_stock_status=?, official_stock_observed_at=? WHERE id=? "
+                      "AND (official_stock_observed_at IS NULL OR official_stock_observed_at = '' "
+                      "OR official_stock_observed_at < ?)", (r["stock"], at, pid, at))
+            applied.append({"product_id": pid, "action": "stock_observed", "stock": r["stock"], "at": at})
+    c.commit()
+    return applied
+
+
 def _stock_record_is_current(checked_at: str, now: datetime | None = None) -> bool:
     """在庫の確認の記録が、確認から CURRENT_DAYS（7日）以内か（読めない・未来すぎる記録は使わない）。"""
     from src.market import price_evidence as pe
@@ -419,6 +359,12 @@ def main():
 
     task1 = apple_audit(products, configs_before)
     registered = register_verified(c, products)
+    rechecked = apply_recheck(c, products)     # 公式の再確認の結果（Phase 15）
+    # 再確認で確認済みの印を外したもの（価格が変わった・販売終了）は、この監査の出力でも確認済みに数えない（N-3）
+    _unverified_now = {a["product_id"] for a in rechecked if str(a.get("action", "")).endswith("_needs_review")}
+    for r in registered:
+        if r.get("product_id") in _unverified_now:
+            r["verified"], r["official_price"] = False, None
     matrix = source_matrix(c, products)
     makers = maker_report(registered, products)
 
@@ -443,6 +389,8 @@ def main():
             "before": {"official_price_products": before_ok, "official_configs": before_total},
             "after": {"url_verified": after_verified, "price_captured": after_price,
                       "verified_targets": len(VERIFIED_URLS), "unverified_targets": len(UNVERIFIED)},
+        # 公式の再確認の結果を反映したもの（Phase 15。価格の再確認・価格の変化・在庫の観測）
+        "recheck_applied": rechecked,
         },
     }
     OUT.mkdir(parents=True, exist_ok=True)

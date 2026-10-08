@@ -484,17 +484,32 @@ class BeginnerDealScanner:
         return "", "watch_price"
 
     def _get_official_url(self, product: ProductModel) -> str:
-        """product_source_configsから公式URLを取得する。"""
+        """公式の購入ページの URL（product_source_config の、公式で確認済み（verified）で URL のある行）。
+
+        Phase 15: 以前は存在しないテーブル名（product_source_configs）を引いて例外を握りつぶし、Apple 以外は常に空、
+        Apple は既定のストアのトップだった。確認済みの行が無ければ、以前と同じ既定に戻る（販売終了などで
+        URL の無い行は使わない）。送料は official_shipping.purchase_shipping が商品ごとの記録を先に見るので、
+        URL が具体的になっても送料の判定は変わらない（影響の確認は internal/audits/PHASE_15_IDENTITY.md）。
+        """
+        import json as _json
         try:
             rows = self.repo.db.connection.execute(
-                """SELECT target_url FROM product_source_configs
-                   WHERE product_id = ? AND source_id LIKE 'src_apple%'
-                   LIMIT 1""",
+                """SELECT target_url, extra_config FROM product_source_config
+                   WHERE product_id = ? AND target_url IS NOT NULL AND target_url != ''
+                   ORDER BY source_id""",
                 (product.id,),
             ).fetchall()
-            if rows:
-                return rows[0]["target_url"]
-        except Exception:
+            for r in rows:
+                try:
+                    extra = _json.loads(r["extra_config"] or "{}")
+                except (TypeError, ValueError):
+                    extra = {}
+                # 確認済み・販売中・購入ページ（item）の行だけ（製品ページ（category）は「買う」に使わない。
+                # 再確認で価格が変わった・販売終了の行は verified が外れる。Phase 15 監査 M-3・L-5）
+                if (extra.get("verified") is True and not extra.get("official_not_sold")
+                        and extra.get("link_type") == "item"):
+                    return r["target_url"]
+        except Exception:  # noqa: BLE001 - DB の形が違う（テストの偽の DB など）ときは既定に戻る
             pass
 
         # Apple製品のデフォルト

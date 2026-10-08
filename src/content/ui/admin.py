@@ -263,6 +263,15 @@ def build_data_coverage(diag: dict | None, tcg_report: dict | None) -> dict:
             "tcg": {"lotteries": lottery_n, **kinds}}
 
 
+def build_identity(details: dict | None) -> dict:
+    """商品の同一性の監査（Phase 15）。判定は official_registry.identity_state（型番・JAN と公式の証拠）をそのまま使う。"""
+    from src.market import official_registry as reg
+    prods = [{"id": getattr(v, "product_id", ""), "name": getattr(v, "product_name", ""),
+              "model_number": getattr(v, "model", ""), "jan_code": getattr(v, "jan", "")}
+             for v in (details or {}).values()]
+    return reg.identity_audit(prods)
+
+
 def build_tcg(tcg_report: dict) -> list[dict]:
     out = []
     for s in (tcg_report or {}).get("source_health") or []:
@@ -583,6 +592,7 @@ def build(data: dict | None, *, catalog, details: dict, profit_routes: dict | No
                                and "新品同様" in str(r.get("matched_item") or "")),
             "camera_generated": (d.get("camera_status") or {}).get("generated_at"),
             "data_coverage": build_data_coverage(d.get("diagnostics"), tcg_report),
+            "identity": build_identity(details),
             "min_sold": d.get("min_sold_samples"),
             "resale_collected": (d.get("resale_status") or {}).get("collected_at"),
             "lot_coverage": (tcg_report or {}).get("lottery_coverage") or {}, "api": api,
@@ -935,6 +945,29 @@ def _data_coverage_html(c: dict) -> str:
             '在庫再開・商品詳細の表示は確認から3時間で「更新待ち」になる）。</p>')
 
 
+IDENTITY_LABELS = {"IDENTITY_CONFIRMED": "確認済み（公式ページで型番・JAN を確認）", "PARTIAL_IDENTITY": "一部だけ確認",
+                   "AMBIGUOUS": "曖昧（型番も JAN も無い）", "DISCONTINUED": "公式で販売終了",
+                   "NEEDS_USER_DECISION": "判断待ち（版が決められない）"}
+
+
+def _identity_html(idn: dict) -> str:
+    cnt, rows = idn.get("counts") or {}, [r for r in idn.get("products") or [] if isinstance(r, dict)]
+    if not rows:
+        return _empty("記録なし")
+    dl = "".join(f'<dt>{esc(label)}</dt><dd>{esc(str(cnt.get(k, 0)))}</dd>' for k, label in IDENTITY_LABELS.items())
+    dl += (f'<dt>型番なし / JAN なし</dt><dd>{esc(str(cnt.get("missing_model", 0)))} / '
+           f'{esc(str(cnt.get("missing_jan", 0)))}</dd>')
+    # 曖昧・判断待ちの商品から商品詳細へたどれるようにする（同一性の監査の理由つき）
+    items = "".join(f'<li><b>{esc(r.get("name") or r["product_id"])}</b>'
+                    f'<span class="nu-osub">{esc(IDENTITY_LABELS.get(r["state"], r["state"]))}・'
+                    f'{esc(_safe_text(r.get("reason") or ""))}</span> {product_page.link(r["product_id"])}</li>'
+                    for r in rows if r.get("state") in ("NEEDS_USER_DECISION", "AMBIGUOUS"))
+    return (f'<dl class="nu-ad-dl">{dl}</dl>'
+            + (f'<h3 class="nu-ad-h3">判断待ち・曖昧な商品</h3><ul class="nu-ad-list">{items}</ul>' if items else "")
+            + '<p class="nu-osub">確認済みは、型番か JAN が登録され、その値を公式ページで確かめた証拠があるものだけ'
+              '（商品名・価格の一致だけで決めない）。</p>')
+
+
 def _system(v: dict) -> str:
     h = v["health"]
     hs = h.get("health_score") or {}
@@ -979,6 +1012,7 @@ def _system(v: dict) -> str:
                    + f'<dt>カメラの買取</dt><dd>{cam_text}</dd></dl>'
                    + (f'<p class="nu-osub">主な失敗理由</p><ul class="nu-ad-counts" role="list">{reasons}</ul>' if reasons else ""))
             + _box("データの網羅（定価・在庫・買取・TCG）", _data_coverage_html(v.get("data_coverage") or {}))
+            + _box("商品の同一性（型番・JAN・版）", _identity_html(v.get("identity") or {}))
             + _box("カバー範囲", f'<dl class="nu-ad-dl"><dt>商品数</dt><dd>{esc(str(cov.get("total_products", "—")))}</dd>'
                    f'<dt>カバー率のスコア</dt><dd>{esc(str(cov.get("coverage_score", "—")))}</dd>'
                    + "".join(f'<dt>{esc(str(cc.get("category") or ""))}</dt><dd>{esc(str(cc.get("products", "—")))}商品'

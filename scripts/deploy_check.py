@@ -4129,6 +4129,7 @@ def check() -> list[dict]:
     results.extend(_check_legacy_intents())
     results.extend(_check_phase12_sources_and_sold(html))
     results.extend(_check_phase13_ebay_sold())
+    results.extend(_check_phase15_identity())
 
     # ══════════════════════════════════════════════════════════════════
     # #820-#825: データの正確さ・鮮度の偽装（Phase 0）
@@ -4429,6 +4430,108 @@ def _check_phase13_ebay_sold() -> list[dict]:
                     break
     out.append({"level": "ok" if not bad else "error", "check": "ebay_finding_api_removed",
                 "message": "#846 廃止された eBay Finding API・eBay の検索結果の HTML を取るコードを呼んでいない"
+                           + ("" if not bad else f" ← {bad[:4]}")})
+    return out
+
+
+def _check_phase15_identity() -> list[dict]:
+    """Phase 15: 商品の同一性と価格の意味（#847）・公式の再確認の鮮度（#848）。動かして確かめる。"""
+    import importlib.util as _iu15
+    import json as _j15
+    import tempfile as _tf15
+    from types import SimpleNamespace as _NS15
+
+    import yaml as _y15
+    root = PROJECT_ROOT
+    out: list[dict] = []
+
+    # #847 同一性と価格の意味: 確認済みは登録の型番・JAN と公式の証拠が一致するものだけ。判断待ちは確認済みにしない。
+    #       オープン価格に価格（架空の希望小売価格）を持たせない。販売終了の商品を確認済みの定価に戻さない
+    bad = []
+    try:
+        from src.market import official_registry as _reg
+        prods = (_y15.safe_load((root / "config" / "products.yaml").read_text(encoding="utf-8")) or {}).get("products") or []
+        for p in prods:
+            st, _ = _reg.identity_state(p)
+            ev = _reg.IDENTITY_EVIDENCE.get(p["id"]) or {}
+            if st == "IDENTITY_CONFIRMED" and not (
+                    (ev.get("model_number") and ev["model_number"] == p.get("model_number"))
+                    or (ev.get("jan_code") and ev["jan_code"] == p.get("jan_code"))):
+                bad.append(f"公式の証拠の無い確認済み（{p['id']}）")
+            if p["id"] in _reg.USER_DECISIONS and st == "IDENTITY_CONFIRMED":
+                bad.append(f"判断待ちを確認済みにしている（{p['id']}）")
+        # 同一性の証拠は、公式ページ（https・確認日あり）に限る
+        for pid, ev in _reg.IDENTITY_EVIDENCE.items():
+            if not str(ev.get("url") or "").startswith("https://") or not ev.get("checked_on"):
+                bad.append(f"同一性の証拠に公式ページの URL・確認日が無い（{pid}）")
+        for pid, v in _reg.VERIFIED_URLS.items():
+            kind = v.get("price_kind") or ("open_price" if v.get("open_price") else "msrp")
+            if kind not in _reg.PRICE_KINDS:
+                bad.append(f"価格の意味が不明（{pid}: {kind}）")
+            if kind == "open_price" and v.get("price"):
+                bad.append(f"オープン価格に価格がある（{pid}）")
+            if pid in _reg.OFFICIAL_NOT_SOLD:
+                bad.append(f"販売終了の商品が確認済みの定価にある（{pid}）")
+        # 否定対照: 証拠と食い違う型番は確認済みにならない
+        if _reg.identity_state({"id": "prod_ps5_pro", "model_number": "CFI-7000B01"})[0] == "IDENTITY_CONFIRMED":
+            bad.append("証拠と違う型番で確認済みになる")
+    except Exception as exc:  # noqa: BLE001
+        bad.append(f"判定を動かせない: {exc}")
+    out.append({"level": "ok" if not bad else "error", "check": "identity_semantics",
+                "message": "#847 商品の同一性（確認済みは公式の証拠と一致する型番・JAN だけ・判断待ちを確定にしない）・"
+                           "価格の意味（オープン価格に架空の希望小売価格を作らない・販売終了を戻さない）"
+                           + ("" if not bad else f" ← {bad[:4]}")})
+
+    # #848 公式の再確認の鮮度: 失敗・ブロックでは何も更新しない（確認日を進めない）。古い結果で確認日を戻さない。
+    #       価格が変わったら確認済みの定価から外す
+    bad = []
+    try:
+        _sp = _iu15.spec_from_file_location("dc15_audit", root / "scripts" / "audit_official_sources.py")
+        _m = _iu15.module_from_spec(_sp)
+        _sp.loader.exec_module(_m)
+        v = _m.VERIFIED_URLS["prod_ps5_pro"]
+
+        def _run(results):
+            calls = []
+
+            class _C:
+                def execute(self, sql, params=()):
+                    calls.append((sql, params))
+                    return _NS15(fetchone=lambda: None)
+
+                def commit(self):
+                    pass
+            with _tf15.TemporaryDirectory() as td:
+                pth = Path(td) / "latest.json"
+                pth.write_text(_j15.dumps({"results": results}), encoding="utf-8")
+                _m.apply_recheck(_C(), {"prod_ps5_pro": {"model_number": "CFI-7100B01"}}, pth)
+            return [c for c in calls if c[0].lstrip().upper().startswith("UPDATE")]
+        # 今の記録（URL・型番・記録の価格）に対する結果にする（照合で外れて何も確かめない検査にしない）
+        base = {"product_id": "prod_ps5_pro", "recorded_price": v["price"], "url": v["url"], "model": "CFI-7100B01"}
+        for st in ("failed", "blocked"):
+            if _run([dict(base, status=st, price=None, stock="", observed_at="2099-01-01T00:00:00+09:00")]):
+                bad.append(f"{st} で更新する（鮮度の偽装）")
+        if _run([dict(base, status="unchanged", price=v["price"], stock="",
+                      observed_at="2000-01-01T00:00:00+09:00")]):
+            bad.append("記録より古い再確認で確認日を変える")
+        if _run([dict(base, status="unchanged", price=v["price"], stock="",
+                      observed_at="2099-01-01T00:00:00+09:00")]):
+            bad.append("未来の日付の再確認で確認日を進める")
+        # 肯定の対照: 記録より新しく今日までの unchanged は確認日を進める（反映の経路が働いていること）
+        _today = _m.NOW.date().isoformat()
+        if str(v.get("checked_on") or "") < _today and not _run(
+                [dict(base, status="unchanged", price=v["price"], stock="", observed_at=_today + "T09:00:00+09:00")]):
+            bad.append("記録より新しい再確認を反映しない（照合の条件が誤っている）")
+        ch = _run([dict(base, status="changed", price=v["price"] + 1000, stock="",
+                        observed_at="2099-01-01T00:00:00+09:00")])
+        if not any("official_price=NULL" in s for s, _ in ch):
+            bad.append("価格が変わったのに確認済みの定価のまま")
+        if not any("product_source_config" in s for s, _ in ch):
+            bad.append("価格が変わったのに公式の購入ページの確認済みの印が残る")
+    except Exception as exc:  # noqa: BLE001
+        bad.append(f"判定を動かせない: {exc}")
+    out.append({"level": "ok" if not bad else "error", "check": "official_recheck_freshness",
+                "message": "#848 公式の再確認（失敗・ブロックでは確認日を進めない・古い結果で戻さない・価格が変われば確定から外す）"
                            + ("" if not bad else f" ← {bad[:4]}")})
     return out
 

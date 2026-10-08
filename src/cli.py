@@ -257,6 +257,8 @@ def seed():
             repo.upsert_product(ProductModel(
                 id=p["id"], genre=p["genre"], name=p["name"],
                 brand=p.get("brand", ""), model_number=p.get("model_number", ""),
+                # JAN（公式ページで確かめた値だけを登録する。src/market/official_registry.IDENTITY_EVIDENCE。Phase 15）
+                jan_code=p.get("jan_code") or None,
                 retail_price=p.get("retail_price", 0), keywords=p.get("keywords", []),
             ))
 

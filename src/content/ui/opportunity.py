@@ -528,7 +528,8 @@ def record_route_alive(rec: dict, keys: dict[str, set[str]]) -> bool:
 ROUTE_EVENT_TYPES = frozenset({"WATCH_TO_BUY", "NEW_MAIN", "PRICE_DROP", "PRICE_RISE", "ROI_UP", "ROI_DOWN"})
 
 
-# 在庫の表示を「在庫あり／在庫切れ」と言ってよいのは、確認から CURRENT_DAYS（7日）以内のときだけ
+# 在庫の表示を「在庫あり／在庫切れ」と言ってよいのは、確認から CURRENT_DAYS（7日）以内のときだけ。
+# 利益の案件は確認の時刻を添えて出す（在庫再開の「購入可能」は別の期限 3時間。stock_state.STOCK_FRESH_SECONDS）
 def _apply_stock_freshness(v: OpportunityView, now: datetime) -> None:
     if v.buy_stock not in ("IN_STOCK", "OUT_OF_STOCK"):
         return

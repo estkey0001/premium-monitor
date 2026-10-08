@@ -9,7 +9,7 @@ from __future__ import annotations
 import csv
 import json
 import sys
-from datetime import timedelta
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import pytest
@@ -1086,11 +1086,14 @@ def test_conflicted_lottery_is_shown_as_needs_review():
                  application_end="2026-10-05T17:00:00+09:00")
     merged = merge_lotteries([full, other])
     assert merged[0]["conflict"] is True
-    merged[0]["status"] = compute_lottery_status(merged[0])
+    # 描画の時刻は締切（10/05）の前日に固定する（実際の今の時刻だと、締切から日が経つと表示の対象から外れて
+    # 失敗する時限式のテストだった。2026-10-08 に発覚）
+    at = datetime(2026, 10, 4, 12, 0, tzinfo=timezone(timedelta(hours=9)))
+    merged[0]["status"] = compute_lottery_status(merged[0], at)
     html = _render({"events": [], "lotteries": merged, "source_health": [],
-                    "lottery_sources": [], "lottery_coverage": {}})
+                    "lottery_sources": [], "lottery_coverage": {}}, now=at)
     assert "日程要確認" in html                         # 矛盾した抽選も消さない
-    st_ = _state(merged[0])
+    st_ = _state(merged[0], now=at)
     assert st_["status"] == "SOURCE_CONFLICT" and st_["when"] == "日程は公式情報でご確認ください"
     assert 'data-nu-cta="apply"' not in html and (st_["cta"] is None or st_["cta"]["kind"] != "apply")
 

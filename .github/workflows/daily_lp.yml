@@ -67,6 +67,14 @@ jobs:
         env:
           PYTHONPATH: .
 
+      # 公式の価格・在庫の再確認（Phase 15）。確認済みの少数の商品だけを、公式ページの静的な HTML から取り直す
+      # （robots.txt・同じドメインの間隔・正直な User-Agent。失敗しても前回の価格は消さず、確認日も進めない）
+      - name: Official recheck
+        run: python scripts/recheck_official.py
+        continue-on-error: true
+        env:
+          PYTHONPATH: .
+
       # 3.6 公式ソース登録・検証監査（検証済みURL登録・sanity/confidence・レポート生成）
       - name: Official source audit
         run: python scripts/audit_official_sources.py
@@ -490,6 +498,7 @@ jobs:
                   exports/source_matching/ exports/api_automation/ \
                   exports/tcg/ \
                   exports/sold_history/ \
+                  exports/official_recheck/ \
                   exports/camera_buyback_status.json \
                   data/alerts.csv data/lottery_events.csv \
                   data/overseas_price_history.csv \

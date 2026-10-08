@@ -1,6 +1,7 @@
-# HANDOFF（最終更新: 2026-10-07）
+# HANDOFF（最終更新: 2026-10-08）
 
 ## 今の状態
+- Phase 15（商品の同一性と公式の確認）: 公式の確認の記録を `src/market/official_registry.py` に集めた（VERIFIED_URLS など。同一性の証拠・判断待ち・価格の意味 msrp / official_direct / open_price）。公式ページで確かめた JAN・型番を登録（PS5 Pro・Switch 2 の JAN、AirPods Pro 3 の型番）。公式 URL のテーブル名の不具合を直した（送料・利益は変わらない）。公式の価格・在庫の再確認（`scripts/recheck_official.py`。PS5 Pro・AirPods Pro 3）。記録は `internal/audits/PHASE_15_IDENTITY.md`
 - Phase 14（国内の定価・在庫・買取・TCG の網羅）: 公式ページの確認で Switch 2 の在庫あり（明示の表示・7日で期限切れ）・PS5 Pro の再確認・PS5 Digital Edition と GR III の販売終了を記録。在庫の判定に「カートに入れる」を加えた。検索に商品の登録済みキーワード（「PS5」で PS5 Pro）。運営者向けに網羅の欄、診断に今すぐ行動できる商品（actionable）。記録は `internal/audits/PHASE_14_COVERAGE.md`
 - Phase 13（成約の有効化の準備と CI の組み込み・カメラの取得時間）を実装。CI の「eBay SOLD (Marketplace Insights)」は資格情報・承認・ライセンス・取得の明示がそろったときだけ取りに行き（今は全部無いので通信0・PENDING_USER_CONFIGURATION）、最初は1商品の canary（履歴に書かない）→ 段階 1 → 3 → 10 商品。廃止された Finding API を呼ぶコードを削除。フジヤは1ページを1回だけ開き、取得済みのページを使い回す（間隔90秒は変えない）。記録は `internal/audits/PHASE_13_SOLD_ACTIVATION.md`
 - Phase 12（取得の安全性）: 全取得経路が `src/collectors/polite.py`（robots.txt・同じドメインの間隔・打ち切り・正直な User-Agent）を通る。メルカリ・ラクマ・Amazon・ヤフオク・eBay の検索結果の HTML は取得しない。記録は `internal/audits/PHASE_12_SOURCE_SAFETY.md`
@@ -44,10 +45,10 @@
 - 既存の問題: pytest を実行すると追跡対象の exports/api_automation/collection.json が書き換わる。コミット前に `git checkout -- exports/api_automation/collection.json` で戻すこと（テストの出力先修正は別タスク）。
 
 ## 次にやること
-0. Phase 15 はユーザーの指示を待ってから始める（候補は Phase 14 の最終報告に書いた）。
-1. eBay の成約: ユーザーの設定待ち（Marketplace Insights の利用許可・Secrets・公開リポジトリに保存してよいかの確認・Variables）。手順は `ops/Secrets設定.md`。
-2. 判断待ち: カメラのオープン価格で直販の販売価格を確認済みの定価にするか。PS5 Digital Edition・Xbox Series X・Switch 2 マリオカートセットの版（型番・JAN）を決めるか（決めれば買取商店の同じページで確定の買取に加えられる）。
-3. 公式の在庫・定価の確認は7日で期限が切れる（Switch 2 の在庫ありは 2026-10-15 まで）。続けるなら、確認の記録（`scripts/audit_official_sources.py` の VERIFIED_URLS）を証拠つきで更新する。
+0. Phase 16 はユーザーの指示を待ってから始める（候補は Phase 15 の最終報告に書いた）。
+1. 判断待ち（`src/market/official_registry.USER_DECISIONS`）: PS5 Digital Edition・Xbox Series X・Switch 2 マリオカートセットの版。決めたら config/products.yaml に型番・JAN、IDENTITY_EVIDENCE に証拠を書く（買取商店の同じページから確定の買取に加えられる）。カメラの公式ストアの販売価格を確定の仕入れ値に使うか（`CAMERA_DIRECT_SALE_AUDIT`）。
+2. eBay の成約: ユーザーの設定待ち（`ops/Secrets設定.md`）。
+3. 公式の再確認を広げるなら、静的な HTML で型番・価格を読み取れる公式ページから（My Nintendo Store は JavaScript）。在庫の確認の頻度（今は日次）はユーザーの判断。
 
 ## 注意（次の人へ）
 - **着手前に `internal/DEV_NOTES.md` の関係する節を読む**

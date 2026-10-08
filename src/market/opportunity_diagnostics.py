@@ -127,6 +127,41 @@ def _stock_state(p: dict, now: datetime) -> tuple[str, bool]:
     return raw, unsupported
 
 
+def _actionability_summary(opportunity_set, actionable: list[dict], prev_actionable: list | None) -> dict:
+    """確定の利益案件のうち、今すぐ行動できるもの・できない理由ごとの件数・前回から行動できるようになった商品（Phase 18）。
+
+    newly_actionable は前回の診断で行動できなかった商品だけ（同じ状態では毎回出さない。通知の候補）。
+    prev_actionable が None（前回の診断が無い・読めない）のときは基準日として空にする。
+    """
+    rows, seen = [], set()
+    # 商品ごとに1件（行動できる案件があればそれを、無ければ最初の案件を数える。actionable の数え方と揃える。レビュー L1）
+    for v in sorted(opportunity_set.eligible, key=lambda x: not getattr(x, "actionable", False)):
+        a = getattr(v, "action", None)
+        if a is None or v.product_id in seen:
+            continue
+        seen.add(v.product_id)
+        rows.append({"product_id": v.product_id, "product": getattr(v, "product_name", "") or v.product_id,
+                     "availability": a.availability,
+                     "label": a.label, "actionable": a.actionable, "reasons": list(a.reasons),
+                     "deadline": a.deadline, "checked_at": a.checked_at})
+    def _n(*rs):
+        return sum(1 for r in rows if not r["actionable"] and any(x in r["reasons"] for x in rs))
+    now_ids = {a["product_id"] for a in actionable}
+    prev_ids = None if prev_actionable is None else {
+        str(x.get("product_id") if isinstance(x, dict) else x) for x in prev_actionable}
+    return {"confirmed_profitable": len(rows), "actionable": len(now_ids),
+            "blocked_by_stock": _n("stock_out", "stock_unknown"),
+            "blocked_by_closed_lottery": _n("lottery_closed", "preorder_closed", "first_come_closed",
+                                            "winner_only_period"),
+            "blocked_by_stale_availability": _n("availability_stale"),
+            "blocked_by_unknown_schedule": _n("lottery_deadline_unknown", "lottery_not_open", "lottery_status_conflict",
+                                              "lottery_evidence_stale"),
+            "blocked_by_sale_ended": _n("sale_ended"),
+            "blocked_by_missing_url": _n("missing_action_url"),
+            "products": rows,
+            "newly_actionable": [] if prev_ids is None else sorted(now_ids - prev_ids)}
+
+
 def _camera_summary(products: list[dict], observations: list[dict], candidates: list[dict],
                     actionable: list[dict]) -> dict:
     """カメラの買取の網羅（Phase 17。判定はやり直さない: 確定の売値は normalized_prices.sell_confirmation_reasons、
@@ -155,11 +190,14 @@ def _camera_summary(products: list[dict], observations: list[dict], candidates: 
 
 
 # 「今すぐ行動できる」に数える利益案件の種類（opportunity.AVAILABILITY_OF の値。抽選は受付中か分からないので数えない）
+# 利益案件の種類（opportunity.AVAILABILITY_OF）のうち、行動できる候補の種類。Phase 18 から「今すぐ行動できる」の
+# 判定の正本は src/market/actionability（期限 3時間・抽選の受付期間・公式の URL も見る）。これは種類の目安として残す
 ACTIONABLE_AVAILABILITY = frozenset({"BUY_NOW", "RESERVATION"})
 
 
 def build(*, products: list[dict], msrp_evidence: dict, official_meta: dict, observations: list[dict],
-          opportunity_set, home_count: int, list_count: int, sold_exports: dict | None, now: datetime) -> dict:
+          opportunity_set, home_count: int, list_count: int, sold_exports: dict | None, now: datetime,
+          prev_actionable: list | None = None) -> dict:
     from src.content.ui import categories as cats
 
     views_by_pid: dict[str, list] = defaultdict(list)
@@ -286,11 +324,16 @@ def build(*, products: list[dict], msrp_evidence: dict, official_meta: dict, obs
     # 今すぐ行動できる確定の利益商品（Phase 14）: 掲載できる利益に加えて、今買える（在庫ありの明示・7日以内）か
     # 予約の根拠があるものだけ。利益だけでは数えない（在庫未確認・在庫切れ・抽選は数えない）。掲載の判定は変えない
     # 商品ごとに1件（1つの商品に確定の案件が複数あっても1と数える）
+    # Phase 18: 判定は src/market/actionability（opportunity.build が付けた v.action）だけ。通常販売は在庫ありを確認して
+    # から3時間以内・抽選/予約/先着は受付中（公式の確認が7日以内）・公式の購入/申込のページの URL がそろうものだけ
     actionable, _seen_act = [], set()
     for v in opportunity_set.eligible:
-        if getattr(v, "availability", "") in ACTIONABLE_AVAILABILITY and v.product_id not in _seen_act:
+        if getattr(v, "actionable", False) and v.product_id not in _seen_act:
             _seen_act.add(v.product_id)
-            actionable.append({"product_id": v.product_id, "availability": v.availability})
+            a = v.action
+            actionable.append({"product_id": v.product_id, "availability": a.availability,
+                               "deadline": a.deadline, "checked_at": a.checked_at, "cta_label": a.cta_label})
+    actionability = _actionability_summary(opportunity_set, actionable, prev_actionable)
     return {
         "generated_at": now.isoformat(timespec="seconds"),
         "note": "内部用（運営者向け）。一般の画面には出さない。掲載の判定は opportunity.eligibility が正本",
@@ -316,8 +359,11 @@ def build(*, products: list[dict], msrp_evidence: dict, official_meta: dict, obs
         "sold": sold, "sold_median": median,
         # Phase 17: カメラの売る側（新品の買取・中古の参考・確定の売値）と利益・今すぐ行動できる商品
         "camera": _camera_summary(products, observations, candidates, actionable),
+        "actionability": actionability,
         "stock": {"states": dict(stock), "in_stock_without_evidence": unsupported},
         "actionable": {"count": len(actionable), "products": actionable,
-                       "note": "掲載できる利益 ＋ 今買える（在庫ありの明示）か予約の根拠があるものだけ"},
+                       "note": "確定の利益 ＋ 今の購入の経路（公式の購入・申込のページ）＋ 今の購入の可否の証拠"
+                               "（在庫ありの確認から3時間以内・抽選/予約/先着の受付中）がそろうものだけ"
+                               "（src/market/actionability）"},
         "frequency": FREQUENCY,
     }

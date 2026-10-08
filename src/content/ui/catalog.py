@@ -139,7 +139,8 @@ def build(*, model: home.HomeModel, tcg_report: dict | None, profit_routes: dict
     routes = list(pr.get("main_routes") or []) + [
         r for r in (pr.get("excluded_routes") or []) if isinstance(r, dict) and r.get("excluded_kind") == "main"]
     cg.opportunity_set = opp.build(deals=profit_deals, routes=routes,
-                                   product_genres=genres, now=model.now or datetime.now(tz=JST))
+                                   product_genres=genres, now=model.now or datetime.now(tz=JST),
+                                   availability_events=[x for x in (legacy_lotteries or []) if isinstance(x, dict)])
     for v in cg.opportunity_set.eligible:
         cg.items["opportunities"].append(Item("opportunities", v.category, None, (), v))
     # せどりルート（定価で公式から買う以外の確定ルート）は利益商品の一部（ジャンルの件数では重ねて数えない）。

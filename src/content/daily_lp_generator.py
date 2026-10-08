@@ -711,6 +711,22 @@ class DailyLPGenerator:
             out[r["product_id"]] = {"source_id": r["source_id"], "url": r["target_url"] or "", **extra}
         return out
 
+    @staticmethod
+    def _diagnostics_dir() -> Path:
+        import os as _os
+        return Path(_os.environ.get("OPPORTUNITY_DIAGNOSTICS_DIR")
+                    or Path(__file__).resolve().parent.parent.parent / "exports" / "opportunity_diagnostics")
+
+    def _prev_actionable(self) -> list | None:
+        """前回の診断の「今すぐ行動できる」商品（読めなければ None = 基準日。Phase 18 の通知の候補の比較に使う）。"""
+        import json as _json
+        try:
+            d = _json.loads((self._diagnostics_dir() / "latest.json").read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            return None
+        act = (d.get("actionable") or {}).get("products") if isinstance(d, dict) else None
+        return act if isinstance(act, list) else None
+
     def _write_opportunity_diagnostics(self, ctx) -> dict | None:
         """利益商品が何件・なぜ除外されたかを exports/opportunity_diagnostics/latest.json に書く（内部用）。"""
         try:
@@ -728,11 +744,9 @@ class DailyLPGenerator:
                 opportunity_set=catalog.opportunity_set,
                 home_count=catalog.count("opportunities"),
                 list_count=len(catalog.items["opportunities"]),
-                sold_exports=sold, now=ctx.now)
+                sold_exports=sold, now=ctx.now, prev_actionable=self._prev_actionable())
             # 出力先は環境変数で変えられる（テストは一時フォルダに向け、リポジトリの exports/ を上書きしない）
-            import os as _os
-            out = Path(_os.environ.get("OPPORTUNITY_DIAGNOSTICS_DIR")
-                       or Path(__file__).resolve().parent.parent.parent / "exports" / "opportunity_diagnostics")
+            out = self._diagnostics_dir()
             out.mkdir(parents=True, exist_ok=True)
             import json as _json
             (out / "latest.json").write_text(_json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")

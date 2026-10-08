@@ -92,6 +92,12 @@ class OpportunityView:
     flags: dict = field(default_factory=dict)  # 判定に使う元の値（suspicious など）
     eligible: bool = False
     reasons: tuple[str, ...] = ()
+    # 今すぐ行動できるか（src/market/actionability.evaluate の結果。build で付ける。画面は判定し直さない）
+    action: object = None
+
+    @property
+    def actionable(self) -> bool:
+        return bool(self.action is not None and getattr(self.action, "actionable", False))
 
     @property
     def sell_type_label(self) -> str:
@@ -211,8 +217,11 @@ def from_deal(d: dict) -> OpportunityView:
         flags={"resale_sell": bool(d.get("resale_sell")), "user_level": str(d.get("user_level") or ""),
                # 売却価格の商品の同一性（生成側が normalized_prices.sell_confirmation_reasons で照合した結果）。
                # 無い・False は未照合（確定にしない）
-               "sell_identity_verified": d.get("sell_identity_verified") is True},
+               "sell_identity_verified": d.get("sell_identity_verified") is True,
+               # 今すぐ行動できるかの判定に使う（販売の方法・在庫の表示の元の値。7日の期限で書き換える前）
+               "sale_method": str(d.get("sale_method") or "")},
     )
+    v.flags["stock_raw"] = v.buy_stock
     lines = _deal_cost_lines()
     # 購入送料は公式の一次情報で確認したものだけ（src/market/official_shipping.py）。分からなければ None
     # （0円とみなさない。費用が分からないので確定にしない＝せどりルートと同じ）
@@ -556,8 +565,13 @@ class OpportunitySet:
 
 
 def build(*, deals: list[dict] | None, routes: list[dict] | None, product_genres: dict | None,
-          now: datetime) -> OpportunitySet:
-    """利益商品の候補を作り、掲載できるものとできないものに分ける。同じ商品・同じルートは1件にする。"""
+          now: datetime, availability_events: list | None = None) -> OpportunitySet:
+    """利益商品の候補を作り、掲載できるものとできないものに分ける。同じ商品・同じルートは1件にする。
+
+    availability_events: 抽選・予約・先着の情報（data/lottery_events.csv など）。今すぐ行動できるかの判定
+    （src/market/actionability）に使う。商品 ID か型番（= 商品コード）の完全一致でだけ結び付ける。
+    """
+    from src.market import actionability as act
     views = [from_deal(d) for d in deals or [] if isinstance(d, dict)]
     views += [from_route(r, product_genres) for r in routes or [] if isinstance(r, dict)]
     # 同じ商品の案件が複数あるときは、掲載できるもののうち純利益の大きい1件を残す
@@ -567,6 +581,11 @@ def build(*, deals: list[dict] | None, routes: list[dict] | None, product_genres
         _apply_stock_freshness(v, now)
         v.reasons = eligibility(v, now)
         v.eligible = not v.reasons
+        ev = (act.find_event(availability_events, v.product_id, v.model)
+              if v.kind == "official_to_buyback" else None)
+        v.action = act.evaluate(profitable=v.eligible, identity_ok=v.flags.get("sell_identity_verified", True) is not False,
+                                stock=str(v.flags.get("stock_raw") or v.buy_stock), stock_checked_at=v.stock_checked_at,
+                                sale_method=str(v.flags.get("sale_method") or ""), buy_url=v.buy_url, event=ev, now=now)
         age = _age_days(v.last_verified_at, now)
         v.freshness = "UNKNOWN" if age is None else ("FRESH" if age <= MAX_AGE_DAYS else "STALE")
         if v.eligible and v.id not in seen:

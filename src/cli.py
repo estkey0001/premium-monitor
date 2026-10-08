@@ -2312,7 +2312,8 @@ def generate_daily_lp(date_str, variant, open_file):
         if date_str == "today":
             date_str = None
 
-        result = gen.generate(date_str=date_str, variant=variant)
+        # 今すぐ行動の通知（dry-run）はこのコマンドの生成だけで作る（Phase 19。ほかの生成では台帳に触れない）
+        result = gen.generate(date_str=date_str, variant=variant, notifications=True)
 
         click.echo(f"\n{'='*60}")
         click.echo(f" 日次LP生成完了")

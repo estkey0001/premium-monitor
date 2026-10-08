@@ -401,8 +401,12 @@ jobs:
           PYTHONPATH: .
 
       # 14. Generate daily LP
+      # 利益商品の診断（今すぐ行動できるか）の直後に、行動できるようになった商品の通知の候補・重複の抑制・配信の計画を作る
+      # （Phase 19）。外部へは送らない: dry-run に固定し、通知の送信先の Secrets はこのステップに渡さない
       - name: Generate daily LP Variant A
         run: python -m src.cli generate-daily-lp --variant A
+        env:
+          NOTIFICATION_DRY_RUN: "true"
 
       # 15. Lottery quality gate
       - name: Lottery quality gate

@@ -80,8 +80,15 @@ class DailyLPGenerator:
         self.repo = repository
         self.settings = _load_lp_settings()
 
-    def generate(self, date_str: Optional[str] = None, variant: Optional[str] = None) -> dict:
-        """LP HTMLを生成して保存する。"""
+    def generate(self, date_str: Optional[str] = None, variant: Optional[str] = None,
+                 notifications: bool = False) -> dict:
+        """LP HTMLを生成して保存する。
+
+        notifications: 今すぐ行動の通知（候補・台帳・dry-run の計画）を作るか。CI の「Generate daily LP」の CLI
+        （generate-daily-lp）だけが True にする。ほかの呼び出し（買取のプレ値のジョブの途中の生成など）は台帳を
+        読み書きしない（1回の CI で2回判定して、後の判定の候補が消えないように。レビュー H-1）。
+        """
+        self._notifications_enabled = bool(notifications)
         now = _generation_time()
         date_str = date_str or now.strftime("%Y-%m-%d")
         time_str = now.strftime("%H:%M")
@@ -597,6 +604,14 @@ class DailyLPGenerator:
         diag = self._write_opportunity_diagnostics(ctx)
         if diag is not None:
             ctx.admin_data["diagnostics"] = diag
+            # 診断の直後に、行動できるようになった商品の通知の候補・重複の抑制・配信の計画（dry-run。Phase 19）
+            notif = (self._write_actionable_notifications(diag, ctx.now)
+                     if getattr(self, "_notifications_enabled", False) else None)
+            if notif is not None:
+                ctx.admin_data["actionable_notifications"] = notif
+        elif getattr(self, "_notifications_enabled", False):
+            # 診断に失敗したら、通知も今回は作れなかったと記録する（前回の件数を今回のものとして読ませない。監査 L-3）
+            self._write_notification_failure(ctx.now, None, "DiagnosticsFailed")
         root = _ui_shell.render_root(ctx)
         return _ui_shell.render_head(), root
 
@@ -726,6 +741,63 @@ class DailyLPGenerator:
             return None
         act = (d.get("actionable") or {}).get("products") if isinstance(d, dict) else None
         return act if isinstance(act, list) else None
+
+    @staticmethod
+    def _actionable_notifications_dir() -> Path:
+        import os as _os
+        return Path(_os.environ.get("ACTIONABLE_NOTIFICATIONS_DIR")
+                    or Path(__file__).resolve().parent.parent.parent / "exports" / "notifications" / "actionable")
+
+    def _write_actionable_notifications(self, diag: dict, now) -> dict | None:
+        """今すぐ行動できるようになった商品の通知（src/notifiers/actionable）。外部へは送らない（dry-run・送信の関数を渡さない）。
+
+        台帳（state.json）は通知済みの組み合わせの記録。読めないときは基準日（候補を出さない）。
+        出力: latest.json（今回）・history/YYYY-MM-DD.json（その日の実行を足していく）・state.json（次の実行の比較用）。
+        """
+        import json as _json
+        from src.notifiers import actionable as _an
+        from src.utils.atomic_write import write_json_atomic
+        out = self._actionable_notifications_dir()
+        try:
+            try:
+                ledger = _json.loads((out / "state.json").read_text(encoding="utf-8"))
+                ledger = ledger.get("products") if isinstance(ledger, dict) else None
+                ledger = ledger if isinstance(ledger, dict) else None
+            except (OSError, ValueError):
+                ledger = None
+            from datetime import datetime as _dtm
+            # 配信の直前の確認は、生成を始めた時刻ではなく今の時刻で行う（監査 L-3）
+            report, nxt = _an.run(diag, ledger, now=now, dry_run=_an.is_dry_run(),
+                                  dispatch_now=_dtm.now(tz=now.tzinfo) if now.tzinfo else None)
+            (out / "history").mkdir(parents=True, exist_ok=True)
+            hist_path = out / "history" / f"{now.strftime('%Y-%m-%d')}.json"
+            try:
+                hist = _json.loads(hist_path.read_text(encoding="utf-8"))
+                runs = hist.get("runs") if isinstance(hist, dict) and isinstance(hist.get("runs"), list) else []
+            except (OSError, ValueError):
+                runs = []
+            runs.append({k: report[k] for k in report if k not in ("note", "suppressed")})
+            write_json_atomic(out / "latest.json", report)
+            write_json_atomic(hist_path, {"date": now.strftime("%Y-%m-%d"), "runs": runs})
+            write_json_atomic(out / "state.json", {"updated_at": report["generated_at"], "products": nxt})
+            return report
+        except Exception as exc:  # noqa: BLE001
+            logger.warning("actionable notifications failed: %s", exc)
+            self._write_notification_failure(now, diag, type(exc).__name__)
+            return None
+
+    def _write_notification_failure(self, now, diag, error: str) -> None:
+        """失敗を latest.json に残す（前回の件数を今回のものとして読まれないように。台帳は変えない。監査 L-4）。"""
+        from src.utils.atomic_write import write_json_atomic
+        out = self._actionable_notifications_dir()
+        try:
+            out.mkdir(parents=True, exist_ok=True)
+            write_json_atomic(out / "latest.json", {
+                "generated_at": now.isoformat(timespec="seconds"), "failed": True, "error": error,
+                "dry_run": True, "diagnostics_generated_at": str((diag or {}).get("generated_at") or ""),
+                "notification_candidates": 0, "dispatch_planned": 0, "dispatch_sent": 0, "candidates": []})
+        except Exception:  # noqa: BLE001
+            pass
 
     def _write_opportunity_diagnostics(self, ctx) -> dict | None:
         """利益商品が何件・なぜ除外されたかを exports/opportunity_diagnostics/latest.json に書く（内部用）。"""

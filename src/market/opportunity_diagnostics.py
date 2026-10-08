@@ -127,6 +127,25 @@ def _stock_state(p: dict, now: datetime) -> tuple[str, bool]:
     return raw, unsupported
 
 
+def _event_key(a, product_id: str = "") -> str:
+    """抽選・予約・先着の受付の識別（商品 ID と、受付の開始・締切）。同じ商品の別の受付を別の通知にする。
+
+    受付期間は正本（actionability.event_availability）と同じ項目から読み、時刻に直してから並べる（書式の違い・
+    商品コードの有無だけで別の受付にしない。監査 L-1）。
+    """
+    from src.market.actionability import _dt
+    ev = getattr(a, "event", None) or {}
+    if not ev:
+        return ""
+
+    def _norm(v):
+        d = _dt(v)
+        return d.isoformat(timespec="minutes") if d is not None else str(v or "").strip()
+    return "|".join((str(product_id or ev.get("product_id") or "").strip(),
+                     _norm(ev.get("application_start") or ev.get("entry_start_at")),
+                     _norm(ev.get("application_end") or ev.get("entry_end_at"))))
+
+
 def _actionability_summary(opportunity_set, actionable: list[dict], prev_actionable: list | None) -> dict:
     """確定の利益案件のうち、今すぐ行動できるもの・できない理由ごとの件数・前回から行動できるようになった商品（Phase 18）。
 
@@ -143,7 +162,11 @@ def _actionability_summary(opportunity_set, actionable: list[dict], prev_actiona
         rows.append({"product_id": v.product_id, "product": getattr(v, "product_name", "") or v.product_id,
                      "availability": a.availability,
                      "label": a.label, "actionable": a.actionable, "reasons": list(a.reasons),
-                     "deadline": a.deadline, "checked_at": a.checked_at})
+                     "deadline": a.deadline, "checked_at": a.checked_at,
+                     # Phase 19: 通知の候補に使う値（判定・利益はここで作り直さず、案件と正本の結果のまま）
+                     "confirmed": True, "net_profit": getattr(v, "net_profit", None), "roi": getattr(v, "roi", None),
+                     "cta_label": a.cta_label, "cta_url": a.cta_url, "until_ms": a.until_ms,
+                     "event_key": _event_key(a, v.product_id)})
     def _n(*rs):
         return sum(1 for r in rows if not r["actionable"] and any(x in r["reasons"] for x in rs))
     now_ids = {a["product_id"] for a in actionable}

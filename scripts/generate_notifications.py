@@ -8,6 +8,10 @@ HEALTH_ALERT / DATA_RECOVERED を検知。優先度付け・テンプレート�
 抑制（同一通知24h再送禁止、ただしROI+5%以上改善で再送可）を行う。
 利益判定ロジックは変更しない。Discord/Telegram をまず対象（拡張しやすい構造）。
 
+ACTIONABLE_NOW（今すぐ行動できるようになった利益商品。Phase 19）は、この種類の表に足した1つの種類。判定の正本の結果
+（利益商品の診断）が LP の生成の中で作られるので、候補・重複の抑制・配信の計画は src/notifiers/actionable が
+診断の直後に行う（exports/notifications/actionable/。外部へは送らない dry-run）。
+
 出力:
   exports/notifications/latest.json
   exports/notifications/history/YYYY-MM-DD.json
@@ -43,6 +47,7 @@ PRIORITY = {
     "WATCH_TO_BUY": "Critical", "NEW_MAIN": "High", "PRICE_DROP": "High",
     "ROI_UP": "Medium", "PRICE_RISE": "Medium", "ROI_DOWN": "Low",
     "HEALTH_ALERT": "Critical", "DATA_RECOVERED": "Low",
+    "ACTIONABLE_NOW": "Critical",   # src/notifiers/actionable.PRIORITY と同じ
 }
 
 
@@ -99,6 +104,9 @@ def _template(ev: dict) -> str:
         return f"⬆️ ROI改善\n{p}\nROI {d.get('prev_roi',0)*100:.0f}% → {d.get('roi',0)*100:.0f}%"
     if t == "ROI_DOWN":
         return f"⬇️ ROI低下\n{p}\nROI {d.get('prev_roi',0)*100:.0f}% → {d.get('roi',0)*100:.0f}%"
+    if t == "ACTIONABLE_NOW":
+        from src.notifiers import actionable as _an
+        return _an.message(d)
     if t == "HEALTH_ALERT":
         return f"⚠️ データ品質低下\nHealth Score {d.get('prev',0)} → {d.get('cur',0)}"
     if t == "DATA_RECOVERED":

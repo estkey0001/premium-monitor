@@ -11,13 +11,18 @@ def _diagnostics_to_tmp(tmp_path_factory):
 
     module / class 単位の fixture で LP を生成するテストもあるので、セッションの最初に設定する。
     """
-    old = os.environ.get("OPPORTUNITY_DIAGNOSTICS_DIR")
-    os.environ["OPPORTUNITY_DIAGNOSTICS_DIR"] = str(tmp_path_factory.mktemp("opportunity_diagnostics"))
+    # Phase 19: 今すぐ行動の通知の台帳・候補（exports/notifications/actionable）も一時フォルダに書く
+    names = {"OPPORTUNITY_DIAGNOSTICS_DIR": "opportunity_diagnostics",
+             "ACTIONABLE_NOTIFICATIONS_DIR": "actionable_notifications"}
+    old = {k: os.environ.get(k) for k in names}
+    for k, d in names.items():
+        os.environ[k] = str(tmp_path_factory.mktemp(d))
     yield
-    if old is None:
-        os.environ.pop("OPPORTUNITY_DIAGNOSTICS_DIR", None)
-    else:
-        os.environ["OPPORTUNITY_DIAGNOSTICS_DIR"] = old
+    for k, v in old.items():
+        if v is None:
+            os.environ.pop(k, None)
+        else:
+            os.environ[k] = v
 
 
 class _AllowAllRobots:

@@ -115,6 +115,9 @@ def collect(now: datetime | None = None) -> dict:
         "reference_routes": len(ref),
         "verified_retail": int(retail.get("verified") or 0),
         "unverified_retail": int(retail.get("reference") or 0),
+        # Phase 16: 確認済みの仕入れ値の内訳（定価 = 希望小売価格 / 公式直販価格）・公式直販で今すぐ行動できる商品・
+        # 版が決められない商品（上の verified_retail の定義は変えない）
+        **_price_kind_metrics(products, diag),
         "buyback_rows": len(buyback),
         "fresh_buyback": sum(1 for o in buyback if o.get("is_fresh")),
         "stale_buyback": sum(1 for o in buyback if not o.get("is_fresh")),
@@ -153,6 +156,18 @@ def collect(now: datetime | None = None) -> dict:
     }
     return {"metrics": metrics, "funnel": funnel(diag), "matrix": matrix(
         pids, products, obs, confirmed_keys, entries, routes, now)}
+
+
+def _price_kind_metrics(products: list[dict], diag: dict) -> dict:
+    from src.market import official_registry as reg
+    verified = [p for p in products if str(p.get("evidence") or "").startswith("VERIFIED")]
+    kind = {p["product_id"]: reg.price_kind_of(p["product_id"], str(p.get("source") or "")) for p in verified}
+    act = (diag.get("actionable") or {}).get("products") or []
+    act_ids = {str(a.get("product_id") if isinstance(a, dict) else a) for a in act}
+    return {"verified_msrp": sum(1 for k in kind.values() if k == "msrp"),
+            "official_direct_verified": sum(1 for k in kind.values() if k == "official_direct"),
+            "official_direct_actionable": sum(1 for pid in act_ids if reg.price_kind_of(pid) == "official_direct"),
+            "ambiguous_variants": sum(1 for p in products if p.get("product_id") in reg.USER_DECISIONS)}
 
 
 def _identity_counts() -> dict:

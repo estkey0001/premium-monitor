@@ -311,18 +311,18 @@ class QualityChecker:
             else:
                 issues.append("利益計算不可（価格不足）")
 
-            # 公式購入URL確認（product経由）
+            # 公式購入URL確認（product経由）。Phase 16: 以前は存在しないテーブル名（product_source_configs）を引いて
+            # 例外を握りつぶし、この確認が一度も働いていなかった。初心者向けの案件の「買う」リンクと同じ判定
+            # （公式で確認済み・販売中・購入ページの URL。beginner_deal_scanner.verified_official_item_url）を使う。
+            # DB の形が違う（表が無いなど）で判定できないときは、これまでどおり問題に数えない（誤った降格をしない）
             if snap.product_id:
+                from src.market.beginner_deal_scanner import verified_official_item_url
                 try:
-                    psc_rows = self.db.connection.execute("""
-                        SELECT target_url FROM product_source_configs
-                        WHERE product_id = ? AND source_id LIKE 'src_%'
-                        LIMIT 1
-                    """, (snap.product_id,)).fetchall()
-                    if not psc_rows:
+                    if not verified_official_item_url(self.db.connection, snap.product_id):
                         issues.append("公式購入URLが未設定")
-                except Exception:
-                    pass  # product_source_configsテーブルが存在しない場合はスキップ
+                except Exception:  # noqa: BLE001
+                    logger.warning("公式購入URLを判定できない（product_source_config を読めない）: %s",
+                                   snap.product_id)
 
             if issues:
                 results.append({

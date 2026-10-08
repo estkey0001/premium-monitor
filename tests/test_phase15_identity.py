@@ -62,7 +62,8 @@ def test_name_only_product_is_ambiguous_not_confirmed():
     from src.market import official_registry as reg
     # 商品名に容量などがあっても、型番・JAN の証拠が無ければ確認済みにしない
     assert reg.identity_state({"id": "prod_x", "name": "iPhone 17 256GB SIMフリー"})[0] == "AMBIGUOUS"
-    assert reg.identity_state(PRODUCTS["prod_gr4"])[0] in ("AMBIGUOUS", "PARTIAL_IDENTITY")
+    # Phase 16 で GR IV に公式の商品コード（S0001551）の証拠を登録した。型番が無ければ商品名だけでは確認済みにしない
+    assert reg.identity_state(dict(PRODUCTS["prod_gr4"], model_number=""))[0] == "AMBIGUOUS"
 
 
 def test_target_products_need_user_decision():
@@ -128,13 +129,13 @@ def test_price_kinds():
     kinds = {pid: v.get("price_kind") for pid, v in reg.VERIFIED_URLS.items()}
     assert kinds["prod_ps5_pro"] == "msrp" and kinds["prod_switch2"] == "msrp"
     assert kinds["prod_iphone17_256"] == "official_direct" and kinds["prod_airpods_pro3"] == "official_direct"
-    for pid in ("prod_z8", "prod_x100vi"):
-        assert kinds[pid] == "open_price" and reg.VERIFIED_URLS[pid]["price"] is None   # 架空の希望小売価格なし
-    # カメラの直販の販売価格は記録だけ（確定の仕入れ値に入れない）
+    # Phase 16: カメラの希望小売価格はオープン価格のまま（架空の希望小売価格なし）。価格はメーカー直販の販売価格
+    # （official_direct）で、official_direct_gate を通ったときだけ確定の仕入れ値に使う（tests/test_phase16_official_direct.py）
+    for pid in ("prod_z8", "prod_x100vi", "prod_r5ii"):
+        assert reg.MSRP_OF[pid] == "open_price" and kinds[pid] == "official_direct"
+        assert pid in reg.OFFICIAL_DIRECT_OFFERS
     for sid, a in reg.CAMERA_DIRECT_SALE_AUDIT.items():
         assert a["url"].startswith("https://") and a["checked_on"]
-    assert not any(v.get("price") for pid, v in reg.VERIFIED_URLS.items()
-                   if pid in ("prod_x100vi", "prod_z8", "prod_r5ii"))
 
 
 def test_official_price_must_be_on_official_domain():
@@ -177,10 +178,14 @@ def test_official_url_reads_verified_product_source_config():
     assert get("prod_none", "Sony") == ""
     assert get("prod_z8", "Nikon") == ""                                    # 製品ページ（category）は「買う」にしない
     assert get("prod_ended", "Sony") == ""                                  # 再確認で販売終了になった行は使わない
-    # 以前の不具合（存在しないテーブル名）に戻すと、確認済みの URL を引けない（mutation の検出）
+    # 以前の不具合（存在しないテーブル名）に戻すと、確認済みの URL を引けない（mutation の検出）。
+    # Phase 16 で判定を verified_official_item_url（quality_checker と共通）へ移した
     import inspect
-    assert "FROM product_source_config\n" in inspect.getsource(S._get_official_url) \
-        or "FROM product_source_config " in inspect.getsource(S._get_official_url)
+
+    from src.market.beginner_deal_scanner import verified_official_item_url
+    src = inspect.getsource(verified_official_item_url)
+    assert "FROM product_source_config\n" in src or "FROM product_source_config " in src
+    assert "verified_official_item_url" in inspect.getsource(S._get_official_url)
 
 
 def test_official_url_fix_does_not_change_shipping():
@@ -390,7 +395,8 @@ def test_recheck_waits_host_interval_before_first_request(monkeypatch):
     monkeypatch.setattr(RECHECK, "_host_interval", lambda url: 120.0 if "apple" in url else 60.0)
     RECHECK.recheck(NOW, fetch=lambda url: (SONY_HTML if "sony" in url else APPLE_HTML, ""),
                     sleep=waits.append, wait_first=True)
-    assert len(waits) == 2 and 55 <= waits[0] <= 60 and 55 <= waits[1] <= 120   # 取得元ごとに1回
+    hosts = {t["url"].split("/")[2] for t in RECHECK._targets()}            # Phase 16 で Canon・Nikon を加えた
+    assert len(waits) == len(hosts) and 55 <= waits[0] <= 60 and all(55 <= w <= 120 for w in waits)  # 取得元ごとに1回
     # テスト（偽の取得）では既定で待たない
     waits.clear()
     RECHECK.recheck(NOW, fetch=lambda url: (SONY_HTML, ""), sleep=waits.append)

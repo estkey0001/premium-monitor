@@ -4130,6 +4130,7 @@ def check() -> list[dict]:
     results.extend(_check_phase12_sources_and_sold(html))
     results.extend(_check_phase13_ebay_sold())
     results.extend(_check_phase15_identity())
+    results.extend(_check_phase16_official_direct())
 
     # ══════════════════════════════════════════════════════════════════
     # #820-#825: データの正確さ・鮮度の偽装（Phase 0）
@@ -4454,9 +4455,11 @@ def _check_phase15_identity() -> list[dict]:
         for p in prods:
             st, _ = _reg.identity_state(p)
             ev = _reg.IDENTITY_EVIDENCE.get(p["id"]) or {}
+            # Phase 16: 色だけが違う部品番号の組（variant_skus・容量と価格がすべて同じ）も公式の証拠として認める
             if st == "IDENTITY_CONFIRMED" and not (
                     (ev.get("model_number") and ev["model_number"] == p.get("model_number"))
-                    or (ev.get("jan_code") and ev["jan_code"] == p.get("jan_code"))):
+                    or (ev.get("jan_code") and ev["jan_code"] == p.get("jan_code"))
+                    or _reg._variant_group_ok(p, ev)):
                 bad.append(f"公式の証拠の無い確認済み（{p['id']}）")
             if p["id"] in _reg.USER_DECISIONS and st == "IDENTITY_CONFIRMED":
                 bad.append(f"判断待ちを確認済みにしている（{p['id']}）")
@@ -4532,6 +4535,151 @@ def _check_phase15_identity() -> list[dict]:
         bad.append(f"判定を動かせない: {exc}")
     out.append({"level": "ok" if not bad else "error", "check": "official_recheck_freshness",
                 "message": "#848 公式の再確認（失敗・ブロックでは確認日を進めない・古い結果で戻さない・価格が変われば確定から外す）"
+                           + ("" if not bad else f" ← {bad[:4]}")})
+    return out
+
+
+def _check_phase16_official_direct() -> list[dict]:
+    """Phase 16: 価格の意味（#849）・公式直販価格の判定（#850）・JAN とセットの照合（#851）・quality_checker（#852）。"""
+    import copy as _cp16
+    import inspect as _in16
+    import sqlite3 as _sq16
+
+    import yaml as _y16
+    root = PROJECT_ROOT
+    out: list[dict] = []
+    try:
+        prods = {p["id"]: p for p in (_y16.safe_load((root / "config" / "products.yaml").read_text(encoding="utf-8"))
+                                      or {}).get("products") or []}
+    except Exception:  # noqa: BLE001
+        prods = {}
+
+    # #849 価格の意味: オープン価格の商品に希望小売価格（msrp）を作らない。公式直販価格を「定価」と呼ばない
+    bad = []
+    try:
+        from src.content.ui.product_detail import PriceRow
+        from src.market import official_registry as _reg
+        from src.market import price_types as _pt
+        for pid, kind in _reg.MSRP_OF.items():
+            if kind != "open_price":
+                bad.append(f"希望小売価格の記録がオープン価格でない（{pid}）")
+            if _reg.price_kind_of(pid) == "msrp":
+                bad.append(f"オープン価格の商品の価格を定価（msrp）にしている（{pid}）")
+        if "定価" in _reg.PRICE_KIND_LABELS["official_direct"]:
+            bad.append("公式直販価格の呼び方に「定価」が入っている")
+        row = PriceRow(role="buy", source="x", price=1, price_type=_pt.RETAIL, quality="VERIFIED", official=True,
+                       retail_kind="official_direct")
+        if row.type_label != "公式直販価格":
+            bad.append(f"商品詳細で公式直販価格を「{row.type_label}」と表示する")
+        row.retail_kind = "msrp"                     # 肯定の対照: 希望小売価格は「定価」
+        if row.type_label != "定価":
+            bad.append("希望小売価格を「定価」と表示しない")
+    except Exception as exc:  # noqa: BLE001
+        bad.append(f"判定を動かせない: {exc}")
+    out.append({"level": "ok" if not bad else "error", "check": "price_semantics",
+                "message": "#849 価格の意味（オープン価格に希望小売価格を作らない・公式直販価格を定価と呼ばない）"
+                           + ("" if not bad else f" ← {bad[:4]}")})
+
+    # #850 公式直販価格: 証拠（同一性・ボディー/キット・送料・販売の形・確認日）が欠ければ使わない。否定の対照を動かす
+    bad = []
+    try:
+        from src.market import official_registry as _reg
+        from src.market import official_shipping as _osh
+        ok_any = False
+        for pid, v in _reg.VERIFIED_URLS.items():
+            if v.get("price_kind") != "official_direct":
+                continue
+            ok, why = _reg.official_direct_gate(pid, prods.get(pid))
+            ok_any = ok_any or ok
+            if pid not in _reg.OFFICIAL_DIRECT_OFFERS:
+                bad.append(f"公式直販価格の証拠が無い（{pid}）")
+        if not ok_any:
+            bad.append("公式直販価格が1件も判定を通らない（判定の条件が誤っている）")
+        pid = "prod_r5ii"
+        if pid in _reg.OFFICIAL_DIRECT_OFFERS and pid in prods:
+            o0 = _cp16.deepcopy(_reg.OFFICIAL_DIRECT_OFFERS[pid])
+            s0 = _osh.PRODUCT_SHIPPING.get(pid)
+            try:
+                for change, label in (({"body_kit": "kit"}, "キットをボディーとして使う"),
+                                      ({"sale_mode": "LOTTERY"}, "抽選の価格を使う"),
+                                      ({"checked_on": "2099-01-01"}, "未来の確認日を使う"),
+                                      ({"stock_semantics": ""}, "在庫の表し方が分からないのに使う")):
+                    _reg.OFFICIAL_DIRECT_OFFERS[pid] = dict(o0, **change)
+                    if _reg.official_direct_gate(pid, prods[pid])[0]:
+                        bad.append(label)
+                _reg.OFFICIAL_DIRECT_OFFERS[pid] = o0
+                if _reg.official_direct_gate(pid, dict(prods[pid], jan_code="4549292000000"))[0]:
+                    bad.append("JAN が証拠と違うのに使う")
+                if _reg.official_direct_gate(pid, dict(prods[pid], name=prods[pid]["name"] + " レンズキット"))[0]:
+                    bad.append("キットの商品にボディーの価格を使う")
+                _osh.PRODUCT_SHIPPING.pop(pid, None)
+                if _reg.official_direct_gate(pid, prods[pid])[0]:
+                    bad.append("送料が分からないのに使う（0円とみなしている）")
+            finally:
+                _reg.OFFICIAL_DIRECT_OFFERS[pid] = o0
+                if s0 is not None:
+                    _osh.PRODUCT_SHIPPING[pid] = s0
+        # 説明文（JAN の代わり）だけで同一性を確定しない（型番も JAN も部品番号の組も無い商品は使わない）
+        if "prod_airpods_pro3" in prods and _reg.official_direct_gate(
+                "prod_airpods_pro3", dict(prods["prod_airpods_pro3"], model_number=""))[0]:
+            bad.append("説明文だけで同一性を確定する")
+        # 在庫未確認を在庫ありにしない（Z8 は在庫の記録が無い）
+        from src.content.ui import opportunity as _opp
+        if _opp.stock_from(_reg.VERIFIED_URLS.get("prod_z8", {}).get("stock") or "", "") == "IN_STOCK":
+            bad.append("在庫未確認を在庫ありにしている")
+    except Exception as exc:  # noqa: BLE001
+        bad.append(f"判定を動かせない: {exc}")
+    out.append({"level": "ok" if not bad else "error", "check": "official_direct_safety",
+                "message": "#850 公式直販価格（同一性・ボディー/キット・送料・販売の形・在庫の表し方・確認日がそろうものだけ）"
+                           + ("" if not bad else f" ← {bad[:4]}")})
+
+    # #851 JAN とセット: JAN が一致しても、セット・版・限定品が違えば同じ商品にしない（楽天・Yahoo を戻したとき用）
+    bad = []
+    try:
+        from src.market.product_identity_resolver import ProductIdentityResolver
+        _res = ProductIdentityResolver({"prod_switch2": {"name": "Nintendo Switch 2", "jan_code": "4902370553024"}})
+        for title in ("Nintendo Switch 2 マリオカート ワールド セット", "Nintendo Switch 2 多言語対応 海外版",
+                      "Nintendo Switch 2 限定エディション"):
+            r = _res.resolve(source_title=title, jan="4902370553024", link_type="item",
+                             expected_product_id="prod_switch2")
+            if r.identity_confidence == "high" or not r.variant_conflict:
+                bad.append(f"JAN 一致で「{title}」を同じ商品にする")
+        r = _res.resolve(source_title="Nintendo Switch 2 本体", jan="4902370553024", link_type="item",
+                         expected_product_id="prod_switch2")
+        if r.identity_confidence != "high":                   # 肯定の対照
+            bad.append("単体の JAN 一致を確定にしない（判定の条件が誤っている）")
+        if "res.variant_conflict" not in (root / "scripts" / "collect_api_prices.py").read_text(encoding="utf-8"):
+            bad.append("楽天・Yahoo の取得がセット・版の食い違いを外さない")
+    except Exception as exc:  # noqa: BLE001
+        bad.append(f"判定を動かせない: {exc}")
+    out.append({"level": "ok" if not bad else "error", "check": "bundle_jan_safety",
+                "message": "#851 JAN とセット（JAN が一致してもセット・版・限定品の食い違いは別の商品）"
+                           + ("" if not bad else f" ← {bad[:4]}")})
+
+    # #852 quality_checker: 存在しないテーブル名を引かない。公式の購入ページは初心者向けの案件と同じ判定
+    bad = []
+    try:
+        from src.market.beginner_deal_scanner import verified_official_item_url
+        from src.pipeline import quality_checker as _qc
+        src = _in16.getsource(_qc.QualityChecker.check_beginner_quality)
+        if "product_source_configs" in src.replace("product_source_configs）", ""):
+            bad.append("存在しないテーブル名（product_source_configs）を引いている")
+        if "verified_official_item_url" not in src:
+            bad.append("公式の購入ページの判定が初心者向けの案件と違う")
+        c = _sq16.connect(":memory:")
+        c.row_factory = _sq16.Row
+        c.execute("CREATE TABLE product_source_config (product_id TEXT, source_id TEXT, target_url TEXT, extra_config TEXT)")
+        c.executemany("INSERT INTO product_source_config VALUES (?,?,?,?)", [
+            ("a", "src_x", "https://example.jp/item", '{"verified": true, "link_type": "item"}'),
+            ("b", "src_x", "https://example.jp/cat", '{"verified": true, "link_type": "category"}'),
+            ("c", "src_x", "https://example.jp/item", '{"verified": false, "link_type": "item"}')])
+        if not verified_official_item_url(c, "a") or verified_official_item_url(c, "b") \
+                or verified_official_item_url(c, "c"):
+            bad.append("確認済みの購入ページの判定が誤っている")
+    except Exception as exc:  # noqa: BLE001
+        bad.append(f"判定を動かせない: {exc}")
+    out.append({"level": "ok" if not bad else "error", "check": "quality_checker_official_url",
+                "message": "#852 quality_checker（存在しないテーブル名を引かない・公式の購入ページは案件と同じ判定）"
                            + ("" if not bad else f" ← {bad[:4]}")})
     return out
 

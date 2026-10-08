@@ -41,10 +41,25 @@ OUT = ROOT / "exports" / "official_recheck"
 HISTORY_LIMIT = 300
 
 # 静的な HTML で読み取れる公式ページ（ホスト → 読み取りの種類）。My Nintendo Store は JavaScript で描画する
-# （静的な HTML に価格・在庫が無い）ので、ここには入れない
-PARSERS = {"pur.store.sony.jp": "sony_store", "www.apple.com": "apple_jsonld"}
-# 再確認する商品（すでに確認済みで、型番が登録され、上の読み取りで確かめられるもの）。少数から始める
-RECHECK_TARGETS = ("prod_ps5_pro", "prod_airpods_pro3")
+# （静的な HTML に価格・在庫が無い）ので、ここには入れない。Phase 16 でキヤノン・ニコン・フジフイルムモールの直販と
+# Apple の iPhone の購入ページを加えた（2026-10-08: store.canon.jp・nij.nikon.com・mall-jp.fujifilm.com の robots.txt に
+# 禁止なし。Apple は Phase 15 から同じホスト。静的な HTML に価格がある。Playwright は使わない。実行時も毎回
+# polite.robots_allowed で確かめる）
+PARSERS = {"pur.store.sony.jp": "sony_store", "www.apple.com": "apple_jsonld",
+           "store.canon.jp": "canon_store", "nij.nikon.com": "nikon_direct", "mall-jp.fujifilm.com": "fuji_mall"}
+# 同じホストでも読み方が違う商品（iPhone の購入ページは構造化データの offers が無く、商品データの部品番号で読む）
+PARSER_OVERRIDE = {"prod_iphone17_256": "apple_parts"}
+# 再確認する商品（すでに確認済みで、照合のキーが登録され、上の読み取りで確かめられるもの）。
+# 公式直販価格は確認から14日で確認済みでなくなる（normalized_prices.OFFICIAL_DIRECT_STALE_DAYS）ので、全部を対象にする
+RECHECK_TARGETS = ("prod_ps5_pro", "prod_airpods_pro3", "prod_r5ii", "prod_z8", "prod_iphone17_256", "prod_x100vi")
+# 読み取りごとの照合のキー（ページのどの値で「この商品」と確かめるか）。既定は型番（model_number）
+# - canon_store: 購入ページの URL の商品コード（6536C001 = ボディー。レンズキットは別のコード）
+# - nikon_direct: JAN（型番 Z8 は短く、ページの別の場所にも出る）
+# - apple_parts: 同じ容量の色違いの部品番号の組（official_registry.IDENTITY_EVIDENCE の variant_skus）
+# - fuji_mall: 公式の証拠の JAN（色ごとに別なので、購入ページの色の JAN）と型番
+UNMAPPED_INTERVAL_SEC = 120
+MATCH_KEYS = {"canon_store": "url_code", "nikon_direct": "jan_code", "apple_parts": "variant_skus",
+              "fuji_mall": "evidence_jan"}
 
 
 
@@ -106,6 +121,114 @@ def parse_apple_jsonld(h: str, model: str) -> dict:
     return {"model_found": False, "price": None, "stock": "", "ended": False}
 
 
+def _ld_blocks(h: str) -> list:
+    out = []
+    for block in re.findall(r'<script[^>]+application/ld\+json[^>]*>(.*?)</script>', h, flags=re.S):
+        try:
+            out.append(json.loads(block, strict=False))     # 説明文に改行がそのまま入っているページがある
+        except ValueError:
+            continue
+    return out
+
+
+def _products_ld(d) -> list:
+    if isinstance(d, list):
+        return [x for y in d for x in _products_ld(y)]
+    if not isinstance(d, dict):
+        return []
+    if isinstance(d.get("@graph"), list):
+        return _products_ld(d["@graph"])
+    return [d] if d.get("@type") == "Product" else []
+
+
+def parse_canon_store(h: str, code: str) -> dict:
+    """キヤノンオンラインショップの購入ページ: 構造化データの Product（offers の url に商品コード・商品名にボディー）の価格。
+
+    在庫は記録しない（構造化データに availability が無く、静的な HTML のカートのボタンは在庫の根拠にしない方針。
+    stock_state・collectors/official/_generic と同じ。Phase 16 監査 M-2）。在庫は人の確認の記録（7日）だけ。
+    """
+    for d in _ld_blocks(h):
+        for prod in _products_ld(d):
+            name = str(prod.get("name") or "")
+            for o in _offers(prod):
+                if f"/g{code}/" not in str(o.get("url") or "") or "ボディー" not in name:
+                    continue
+                try:
+                    price = int(str(o.get("price")))
+                except (TypeError, ValueError):
+                    return {"model_found": True, "price": None, "stock": "", "ended": False}
+                return {"model_found": True, "price": price, "stock": "", "ended": False}
+    return {"model_found": False, "price": None, "stock": "", "ended": False}
+
+
+def parse_nikon_direct(h: str, jan: str) -> dict:
+    """ニコンダイレクトの購入ページ: 「ニコンダイレクト販売価格 575,300円 523,000円 2023/05/26 発売 JANコード： <JAN>」の並び。
+
+    価格のすぐ後に（税抜きの価格・発売日をはさんで）この商品の JAN が続くときだけ読む（おすすめのレンズなど別の商品の
+    価格は拾わない）。在庫は在庫の欄（spec_stock_msg）が決まった語のときだけ記録する（空なら記録しない）。
+    """
+    t = _text(h)
+    ms = list(re.finditer(r"ニコンダイレクト販売価格\s*([\d,]{4,})\s*円\s*(?:[\d,]{4,}\s*円\s*)?"
+                          r"(?:\d{4}/\d{1,2}/\d{1,2}\s*発売\s*)?JANコード\s*[：:]\s*" + re.escape(jan) + r"(?!\d)", t))
+    if len({m.group(1) for m in ms}) != 1:
+        return {"model_found": jan in t, "price": None, "stock": "", "ended": False}
+    m = re.search(r'<dd[^>]*id="spec_stock_msg"[^>]*>(.*?)</dd>', h, flags=re.S)
+    msg = _text(m.group(1)).strip() if m else ""
+    ended = "販売終了" in msg
+    stock = msg if msg in ("在庫あり", "在庫なし", "在庫切れ", "入荷待ち", "品切れ") else ""
+    return {"model_found": True, "price": int(ms[0].group(1).replace(",", "")), "stock": stock, "ended": ended}
+
+
+def parse_apple_parts(h: str, skus: str) -> dict:
+    """Apple の購入ページの商品データ: 部品番号（partNumber）ごとの価格（fullPrice）。
+
+    組の部品番号がすべてページにあり、価格がすべて同じときだけ読む（容量・価格の違う番号が混ざれば読まない）。
+    """
+    prices = []
+    for sku in [x for x in skus.split(",") if x]:
+        ms = set(re.findall(r'"partNumber"\s*:\s*"' + re.escape(sku) + r'"\s*,\s*"price"\s*:\s*\{\s*"fullPrice"\s*:\s*'
+                            r'([\d.]+)', h))
+        if len(ms) != 1:
+            return {"model_found": False, "price": None, "stock": "", "ended": False}
+        prices.append(int(float(ms.pop())))
+    if not prices or len(set(prices)) != 1:
+        return {"model_found": bool(prices), "price": None, "stock": "", "ended": False}
+    return {"model_found": True, "price": prices[0], "stock": "", "ended": False}
+
+
+def parse_fuji_mall(h: str, match: str) -> dict:
+    """フジフイルムモールの購入ページ: meta の keywords に色の JAN があり、「<型番> <価格>円（税込）」の並びが1種類。
+
+    在庫は「カラーを選択」の欄の色ごとの表示が全色同じとき（全色 在庫なし / 全色 在庫あり）だけ記録する（色を区別
+    しない商品なので、色によって違うときは記録しない）。
+    """
+    jan, _, model = match.partition("|")
+    m = re.search(r'<meta[^>]+name="keywords"[^>]+content="([^"]*)"', h)
+    if not (jan and model and m and jan in m.group(1).split(",")):
+        return {"model_found": False, "price": None, "stock": "", "ended": False}
+    t = _text(h)
+    ps = {x.replace(",", "") for x in re.findall(re.escape(model) + r"\s+([\d,]{4,})\s*円\s*（税込）", t)}
+    if len(ps) != 1:
+        return {"model_found": True, "price": None, "stock": "", "ended": False}
+    # 「カラーを選択」の欄が「<色> <在庫の表示>」の組だけで（2色以上）、区切りの「フジフイルムモール購入者」まで続くときだけ
+    # 読む（区切りが無い・予約などほかの語がある・おすすめの商品まで読んでしまう形では記録しない。再監査の Medium）
+    stock = ""
+    # 「カラーを選択」が1回だけのページで、その位置から読む（別の商品の欄を読まない。再々監査 Low）
+    sel = (re.match(r"カラーを選択\s+((?:[^\s]+\s+(?:在庫なし|在庫あり)\s+){2,})フジフイルムモール購入者",
+                    t[t.find("カラーを選択"):]) if t.count("カラーを選択") == 1 else None)
+    if sel:
+        pairs = re.findall(r"([^\s]+)\s+(在庫なし|在庫あり)", sel.group(1))
+        states = {st for _c, st in pairs}
+        if len(pairs) >= 2 and len(states) == 1:
+            stock = states.pop() + "（全色）"
+    return {"model_found": True, "price": int(ps.pop()), "stock": stock, "ended": False}
+
+
+PARSE = {"sony_store": parse_sony_store, "apple_jsonld": parse_apple_jsonld,
+         "canon_store": parse_canon_store, "nikon_direct": parse_nikon_direct,
+         "apple_parts": parse_apple_parts, "fuji_mall": parse_fuji_mall}
+
+
 def classify(rec: dict, parsed: dict) -> str:
     if parsed.get("ended"):
         return "sale_ended"
@@ -117,7 +240,7 @@ def classify(rec: dict, parsed: dict) -> str:
 def _targets() -> list[dict]:
     import yaml
 
-    from src.market.official_registry import VERIFIED_URLS
+    from src.market.official_registry import IDENTITY_EVIDENCE, VERIFIED_URLS
     products = {p["id"]: p for p in (yaml.safe_load((ROOT / "config" / "products.yaml").read_text(encoding="utf-8"))
                                     or {}).get("products", [])}
     out = []
@@ -125,11 +248,31 @@ def _targets() -> list[dict]:
         v = VERIFIED_URLS.get(pid)
         model = str((products.get(pid) or {}).get("model_number") or "")
         host = re.sub(r"^https?://([^/]+)/.*$", r"\1", (v or {}).get("url", ""))
-        if v and model and host in PARSERS:
-            out.append({"product_id": pid, "url": v["url"], "model": model, "parser": PARSERS[host],
+        parser = PARSER_OVERRIDE.get(pid) or PARSERS.get(host)
+        if not (v and parser):
+            continue
+        key = MATCH_KEYS.get(parser, "model_number")
+        ev = IDENTITY_EVIDENCE.get(pid) or {}
+        if key == "url_code":
+            m = re.search(r"/g/g([0-9A-Za-z]+)/", v["url"])
+            match = m.group(1) if m else ""
+        elif key == "variant_skus":
+            match = ",".join(sorted(ev.get("variant_skus") or {}))
+        elif key == "evidence_jan":
+            jans = list((ev.get("colors") or {}).values())
+            match = f"{jans[0]}|{model}" if jans and model and v["url"].endswith(f"/g{_fuji_code(v['url'])}/") else ""
+        else:
+            match = str((products.get(pid) or {}).get(key) or "")
+        if match:
+            out.append({"product_id": pid, "url": v["url"], "model": model, "match": match, "parser": parser,
                         "price": v.get("price"), "price_checked_on": v.get("checked_on"),
                         "stock_checked_at": v.get("stock_checked_at") or ""})
     return out
+
+
+def _fuji_code(url: str) -> str:
+    m = re.search(r"/g/g(\d+)/$", url)
+    return m.group(1) if m else "-"
 
 
 def plan(now: datetime) -> dict:
@@ -169,7 +312,19 @@ def _fetch(url: str) -> tuple[str | None, str]:
         # ページへ移ったことがある。Phase 15 監査 L-3・N-2）。3xx は moved として読まない
         opener = urllib.request.build_opener(_NoRedirect)
         with opener.open(req, timeout=20) as r:
-            return r.read().decode("utf-8", "ignore"), ""
+            body = r.read()
+            # 文字コードはレスポンスの宣言かページの meta の charset（キヤノンは Shift_JIS）。無ければ UTF-8
+            cs = r.headers.get_content_charset() if hasattr(r, "headers") else None
+            if not cs:
+                m = re.search(rb'charset=["\']?([A-Za-z0-9_\-]+)', body[:4096])
+                cs = m.group(1).decode("ascii") if m else "utf-8"
+            # Shift_JIS と宣言したページは Windows の拡張文字を含むことがあるので cp932 で読む（レビュー L-3）
+            if cs.lower().replace("_", "-") in ("shift-jis", "sjis", "x-sjis", "ms-kanji", "windows-31j"):
+                cs = "cp932"
+            try:
+                return body.decode(cs, "ignore"), ""
+            except LookupError:
+                return body.decode("utf-8", "ignore"), ""
     except urllib.error.HTTPError as e:
         if 300 <= e.code < 400:
             return None, "moved"
@@ -183,7 +338,9 @@ def _host_interval(url: str) -> float:
     from src.collectors import polite
     try:
         sid = polite.source_id_for_url(url)
-        return float(max((polite.source_rate_limit_sec(sid) or 0) if sid else 0,
+        # sources.yaml の取得元に対応しないホスト（nij.nikon.com・mall-jp.fujifilm.com）は、公式ストアの取得元と同じ
+        # 120秒にする（最低の60秒に落とさない。Phase 16 監査 L-6）
+        return float(max((polite.source_rate_limit_sec(sid) or 0) if sid else UNMAPPED_INTERVAL_SEC,
                          polite.robots_checker().get_crawl_delay(url) or 0, polite.MIN_INTERVAL_SEC))
     except Exception:  # noqa: BLE001
         return 120.0
@@ -208,13 +365,13 @@ def recheck(now: datetime, fetch=_fetch, sleep=None, wait_first: bool | None = N
         h, why = fetch(t["url"])
         # 取得した時刻（実行の開始時刻ではない）。テストで now を渡したときは now
         at = datetime.now(tz=JST) if fetch is _fetch else now
-        base = {"product_id": t["product_id"], "url": t["url"], "model": t["model"],
+        base = {"product_id": t["product_id"], "url": t["url"], "model": t["model"], "match": t["match"],
                 "recorded_price": t["price"], "observed_at": at.isoformat(timespec="seconds")}
         if h is None:
             results.append({**base, "status": "blocked" if why in CUTOFF_IMMEDIATE else "failed", "reason": why,
                             "price": None, "stock": ""})
             continue
-        parsed = parse_sony_store(h, t["model"]) if t["parser"] == "sony_store" else parse_apple_jsonld(h, t["model"])
+        parsed = PARSE[t["parser"]](h, t["match"])
         st = classify(t, parsed)
         results.append({**base, "status": st, "reason": "", "price": parsed.get("price"),
                         "stock": parsed.get("stock") if st in ("unchanged", "changed") else ""})

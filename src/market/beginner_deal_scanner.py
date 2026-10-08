@@ -27,6 +27,32 @@ logger = logging.getLogger(__name__)
 JST = timezone(timedelta(hours=9))
 
 
+def verified_official_item_url(connection, product_id: str) -> str:
+    """公式で確認済み・販売中・購入ページ（item）の URL（無ければ空）。product_source_config から読む。
+
+    製品ページ（category）・再確認で価格が変わった/販売終了の行（verified が外れる）・URL の無い行は使わない。
+    DB の形が違うときは例外をそのまま上げる（呼び出し側で「分からない」と「無い」を分けるため）。
+    """
+    import json as _json
+    rows = connection.execute(
+        """SELECT target_url, extra_config FROM product_source_config
+           WHERE product_id = ? AND target_url IS NOT NULL AND target_url != ''
+           ORDER BY source_id""",
+        (product_id,),
+    ).fetchall()
+    for r in rows:
+        try:
+            extra = _json.loads(r["extra_config"] or "{}")
+        except (TypeError, ValueError):
+            extra = {}
+        # 確認済み・販売中・購入ページ（item）の行だけ（製品ページ（category）は「買う」に使わない。
+        # 再確認で価格が変わった・販売終了の行は verified が外れる。Phase 15 監査 M-3・L-5）
+        if (extra.get("verified") is True and not extra.get("official_not_sold")
+                and extra.get("link_type") == "item"):
+            return r["target_url"]
+    return ""
+
+
 class BeginnerDealScanner:
     """初心者向け案件のスキャン・利益計算を行う。"""
 
@@ -490,27 +516,14 @@ class BeginnerDealScanner:
         Apple は既定のストアのトップだった。確認済みの行が無ければ、以前と同じ既定に戻る（販売終了などで
         URL の無い行は使わない）。送料は official_shipping.purchase_shipping が商品ごとの記録を先に見るので、
         URL が具体的になっても送料の判定は変わらない（影響の確認は internal/audits/PHASE_15_IDENTITY.md）。
+        判定は verified_official_item_url（quality_checker と共通。Phase 16）。
         """
-        import json as _json
         try:
-            rows = self.repo.db.connection.execute(
-                """SELECT target_url, extra_config FROM product_source_config
-                   WHERE product_id = ? AND target_url IS NOT NULL AND target_url != ''
-                   ORDER BY source_id""",
-                (product.id,),
-            ).fetchall()
-            for r in rows:
-                try:
-                    extra = _json.loads(r["extra_config"] or "{}")
-                except (TypeError, ValueError):
-                    extra = {}
-                # 確認済み・販売中・購入ページ（item）の行だけ（製品ページ（category）は「買う」に使わない。
-                # 再確認で価格が変わった・販売終了の行は verified が外れる。Phase 15 監査 M-3・L-5）
-                if (extra.get("verified") is True and not extra.get("official_not_sold")
-                        and extra.get("link_type") == "item"):
-                    return r["target_url"]
+            url = verified_official_item_url(self.repo.db.connection, product.id)
         except Exception:  # noqa: BLE001 - DB の形が違う（テストの偽の DB など）ときは既定に戻る
-            pass
+            url = None
+        if url:
+            return url
 
         # Apple製品のデフォルト
         if product.brand == "Apple":

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-08 18:28 JST",
+  "generated_at": "2026-10-08 19:56 JST",
   "scope": "商品同一性マッチング精度（利益/AI/UI/SaaS/DQ思想は不変）",
   "accuracy": {
     "product_match_accuracy": 1.0,
@@ -10,13 +10,13 @@
     "detected_mismatches_total": 0,
     "detected_mismatches_rejected": 0,
     "independently_verified_exact": 14,
-    "unverifiable_trusted": 219,
+    "unverifiable_trusted": 216,
     "accessory_misclassification": 0,
     "false_main_promotion": 0,
     "duplicate_patterns": 6,
     "high_risk_duplicates": 1,
     "duplicate_reviewed_pct": 0.3333,
-    "manual_review_queue": 78
+    "manual_review_queue": 75
   },
   "targets": {
     "product_match": ">=0.99",
@@ -26,12 +26,12 @@
     "false_main_promotion": 0
   },
   "totals": {
-    "total": 236,
-    "product_mismatch_or_unverified": 222,
-    "model_unverifiable": 219,
-    "main_rejected": 222,
+    "total": 233,
+    "product_mismatch_or_unverified": 219,
+    "model_unverifiable": 216,
+    "main_rejected": 219,
     "model_match": 17,
-    "manual_review_required": 78,
+    "manual_review_required": 75,
     "accessory_detected": 7,
     "exact_product_match": 14,
     "main_eligible": 14
@@ -61,11 +61,11 @@
       "main_eligible": 0
     },
     "モバイル一番": {
-      "total": 8,
-      "product_mismatch_or_unverified": 8,
-      "model_unverifiable": 8,
-      "main_rejected": 8,
-      "manual_review_required": 8,
+      "total": 5,
+      "product_mismatch_or_unverified": 5,
+      "model_unverifiable": 5,
+      "main_rejected": 5,
+      "manual_review_required": 5,
       "exact_product_match": 0,
       "capacity_mismatch": 0,
       "model_mismatch": 0,
@@ -606,17 +606,6 @@
       "main_eligible": 0
     },
     {
-      "source": "モバイル一番",
-      "observations": 8,
-      "score": 73,
-      "identity": 0.0,
-      "capacity": 1.0,
-      "model": 1.0,
-      "condition": 1.0,
-      "freshness": 0.625,
-      "main_eligible": 0
-    },
-    {
       "source": "フジヤカメラ",
       "observations": 25,
       "score": 72,
@@ -625,6 +614,17 @@
       "model": 1.0,
       "condition": 1.0,
       "freshness": 0.68,
+      "main_eligible": 0
+    },
+    {
+      "source": "モバイル一番",
+      "observations": 5,
+      "score": 72,
+      "identity": 0.0,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 0.4,
       "main_eligible": 0
     },
     {

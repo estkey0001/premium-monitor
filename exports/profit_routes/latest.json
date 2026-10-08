@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-08 18:28 JST",
+  "generated_at": "2026-10-08 19:56 JST",
   "ebay_api_configured": false,
   "overseas_source_mode": "manual",
   "summary": {
@@ -62,7 +62,7 @@
       "rejection_top5": [
         [
           "price_zero",
-          6
+          5
         ],
         [
           "stale_over_14d",
@@ -93,7 +93,7 @@
       "rejection_top5": [
         [
           "price_zero",
-          6
+          5
         ],
         [
           "stale_over_14d",
@@ -108,13 +108,13 @@
     "prod_iphone17pm_256": {
       "product_name": "iPhone 17 Pro Max 256GB SIMフリー",
       "buy_candidates": 0,
-      "sell_candidates": 2,
+      "sell_candidates": 3,
       "min_usable_buy": null,
       "min_usable_buy_source": "",
       "max_usable_sell": 186000,
-      "max_usable_sell_source": "買取商店",
+      "max_usable_sell_source": "モバイル一番",
       "min_usable_buy_identity_verified": false,
-      "max_usable_sell_identity_verified": true,
+      "max_usable_sell_identity_verified": false,
       "target_buy_price": 185999,
       "gross_gap": null,
       "net_domestic": null,
@@ -124,7 +124,7 @@
       "rejection_top5": [
         [
           "price_zero",
-          6
+          5
         ],
         [
           "stale_over_14d",
@@ -155,7 +155,7 @@
       "rejection_top5": [
         [
           "price_zero",
-          6
+          5
         ]
       ],
       "stale_excluded": 0,
@@ -624,7 +624,7 @@
     "prod_ps5_pro": {
       "product_name": "PlayStation 5 Pro",
       "buy_candidates": 0,
-      "sell_candidates": 1,
+      "sell_candidates": 2,
       "min_usable_buy": null,
       "min_usable_buy_source": "",
       "max_usable_sell": 195200,
@@ -640,7 +640,7 @@
       "rejection_top5": [
         [
           "price_zero",
-          9
+          8
         ],
         [
           "stale_over_14d",

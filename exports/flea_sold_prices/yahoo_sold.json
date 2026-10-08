@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-08 18:28 JST",
+  "generated_at": "2026-10-08 19:56 JST",
   "source": "Yahoo Auction sold",
   "policy": "no_live_scraping_tos_safe_manual_curation_plus_search_url",
   "fresh_days": 14,
@@ -55,7 +55,7 @@
           "observed_at": "2026-08-21T18:00:00+09:00",
           "sold_at": "",
           "price_type": "UNKNOWN",
-          "age_days": 48.0,
+          "age_days": 48.1,
           "target_buy_price": 195199,
           "within_target": true,
           "rejection_reason": "no_sold_evidence:dummy_url,no_sold_at"
@@ -67,7 +67,7 @@
       "count_recent": 0,
       "median_price": null,
       "min_price": null,
-      "target_buy_price": 189999,
+      "target_buy_price": 259999,
       "within_target_count": 0,
       "search_url": "https://auctions.yahoo.co.jp/closedsearch/closedsearch?p=%5B%22X100VI%22%2C%20%22X100%20VI%22%2C%20%22%E5%AF%8C%E5%A3%AB%E3%83%95%E3%82%A4%E3%83%AB%E3%83%A0%20X100VI%22%5D&va=%5B%22X100VI%22%2C%20%22X100%20VI%22%2C%20%22%E5%AF%8C%E5%A3%AB%E3%83%95%E3%82%A4%E3%83%AB%E3%83%A0%20X100VI%22%5D",
       "item_urls": [],
@@ -84,9 +84,9 @@
           "observed_at": "2026-08-21T20:00:00+09:00",
           "sold_at": "",
           "price_type": "UNKNOWN",
-          "age_days": 47.9,
-          "target_buy_price": 189999,
-          "within_target": false,
+          "age_days": 48.0,
+          "target_buy_price": 259999,
+          "within_target": true,
           "rejection_reason": "no_sold_evidence:dummy_url,no_sold_at"
         }
       ]

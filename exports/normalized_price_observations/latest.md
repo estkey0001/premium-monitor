@@ -1,6 +1,6 @@
 # Normalized Price Observations
 
-生成: 2026-10-08 18:28 JST
+生成: 2026-10-08 19:56 JST
 
 全価格（買取/販売/出品/落札/海外/下取/公式）を単一スキーマに正規化。
 `price_role`（buy/sell/official/trade_in）を必ず付与し、
@@ -9,9 +9,9 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 
 ## サマリ
 
-- 総観測数: **236**
-- Beginner 利用可: 74 / Pro 利用可: 29
-- fresh(≤14日): 122
+- 総観測数: **233**
+- Beginner 利用可: 76 / Pro 利用可: 31
+- fresh(≤14日): 119
 
 ### price_role 別
 
@@ -19,13 +19,13 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 |---|---|
 | buy | 38 |
 | official | 45 |
-| sell | 153 |
+| sell | 150 |
 
 ### price_type 別
 
 | type | 件数 |
 |---|---|
-| buyback_price | 147 |
+| buyback_price | 144 |
 | flea_listing_price | 5 |
 | official_price | 45 |
 | overseas_listing_price | 5 |
@@ -38,7 +38,7 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 |---|---|
 | accessory_or_wrong_product | 4 |
 | duplicate_price_collision | 2 |
-| price_zero | 42 |
+| price_zero | 37 |
 | sold_label_without_evidence | 5 |
 | stale_over_14d | 109 |
 
@@ -96,12 +96,14 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 | iPhone 17 Pro 256GB SI | sell | buyback_price | ¥172,000 | new_unopened_simfree | 0.0d | 買取一丁目 |
 | iPhone 17 Pro 512GB SI | sell | buyback_price | ¥199,000 | new_unopened_simfree | 0.0d | 買取商店 |
 | iPhone 17 Pro 512GB SI | sell | buyback_price | ¥198,000 | new_unopened_simfree | 0.0d | 買取一丁目 |
+| iPhone 17 Pro Max 256G | sell | buyback_price | ¥186,000 | new_unopened_simfree | 0.0d | モバイル一番 |
 | iPhone 17 Pro Max 256G | sell | buyback_price | ¥186,000 | new_unopened_simfree | 0.0d | 買取商店 |
 | iPhone 17 Pro Max 256G | sell | buyback_price | ¥186,000 | new_unopened_simfree | 0.0d | 買取一丁目 |
 | iPhone 17 Pro Max 512G | sell | buyback_price | ¥216,000 | new_unopened_simfree | 0.0d | 買取商店 |
 | iPhone 17 Pro Max 512G | sell | buyback_price | ¥215,000 | new_unopened_simfree | 0.0d | 買取一丁目 |
 | Nintendo Switch 2 | sell | buyback_price | ¥52,000 | new_unopened | 0.0d | 買取商店 |
 | PlayStation 5 Pro | sell | buyback_price | ¥195,200 | new_unopened | 0.0d | 買取商店 |
+| PlayStation 5 Pro | sell | buyback_price | ¥195,200 | new_unopened | 0.0d | モバイル一番 |
 | iPhone 17 256GB SIMフリー | sell | buyback_price | ¥140,000 | new_unopened_simfree | 0.0d | 買取商店 |
 | AirPods Pro 3 | sell | buyback_price | ¥32,500 | new_unopened | 0.0d | 買取商店 |
 | FUJIFILM X100VI | sell | buyback_price | ¥260,000 | new_unopened | 0.0d | 買取商店 |
@@ -109,4 +111,3 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 | RICOH GR IV HDF | sell | buyback_price | ¥240,000 | new_unopened | 0.0d | 買取商店 |
 | RICOH GR IV Monochrome | sell | buyback_price | ¥227,000 | new_unopened | 0.0d | 買取商店 |
 | Nikon Z8 | sell | buyback_price | ¥420,000 | new_unopened | 0.0d | 買取商店 |
-| Canon EOS R5 Mark II | sell | buyback_price | ¥450,000 | new_unopened | 0.0d | 買取商店 |

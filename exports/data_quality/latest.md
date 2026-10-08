@@ -1,16 +1,16 @@
 # データ品質エンジン（Data Quality Engine）
 
-> 生成: 2026-10-08 18:28 JST / 対象: データ取得・正規化・品質管理のみ（利益/AI/UI/SaaSロジックは不変）
+> 生成: 2026-10-08 19:56 JST / 対象: データ取得・正規化・品質管理のみ（利益/AI/UI/SaaSロジックは不変）
 
 ## 総合 Data Quality Score: **69 / 100** — 判定: **CONDITIONAL_GO**
 
 | 次元 | スコア |
 |------|-------|
-| Freshness 鮮度 | 49 |
+| Freshness 鮮度 | 48 |
 | Completeness 完全性 | 50 |
 | Accuracy 正確性 | 98 |
 | Coverage 網羅 | 100 |
-| Reliability 信頼性 | 41 |
+| Reliability 信頼性 | 43 |
 | Consistency 一貫性 | 100 |
 
 ### 判定理由
@@ -18,18 +18,18 @@
 - EBAY_APP_ID 未設定 → 海外売却ルートは stale（改善計画①で+25pt見込み）
 
 ## ダッシュボード（現況ビュー）
-- 生観測: 236 件 / 現況ユニーク: 221 キー
+- 生観測: 233 件 / 現況ユニーク: 218 キー
 - 重複履歴: 15 件（6.4%）
 
 ### カテゴリ別
 | カテゴリ | 総数 | 正常 | ¥0(非対応) | ¥0(実失敗) | stale | 更新成功率 |
 |---|--:|--:|--:|--:|--:|--:|
-| prod | 221 | 80 | 27 | 15 | 99 | 41% |
+| prod | 218 | 82 | 27 | 10 | 99 | 43% |
 
 ## 自動化カバレッジ（透明性）
-- 手段内訳: {'official_concept': 35, 'other': 10, 'auto_scraped': 35, 'manual_curated': 93, 'fetch_failed': 42, 'overseas_history': 6}
-- 自動スクレイプ率: 16% / 手動キュレーション率: 42%
-- fresh のうち手動由来: 0% / 自動+定価由来: 57%
+- 手段内訳: {'official_concept': 35, 'other': 10, 'auto_scraped': 37, 'manual_curated': 93, 'fetch_failed': 37, 'overseas_history': 6}
+- 自動スクレイプ率: 17% / 手動キュレーション率: 43%
+- fresh のうち手動由来: 0% / 自動+定価由来: 60%
 > 鮮度の相当部分が手動キュレーション由来（ToS遵守の意図的設計）。自動化カバレッジ拡大（特に eBay API=EBAY_APP_ID）が主要な改善レバー。
 
 ## ソース品質ランキング（100点）
@@ -53,9 +53,9 @@
 > stale の主因は海外/二次流通ソースの API 依存（EBAY_APP_ID 未設定）。国内買取・公式・カメラ専門店のキュレーションデータは鮮度良好。
 
 ## ¥0 分析
-- fetch_failed_or_not_listed: 15
 - unsupported_online_quote: 27
-- 実取得失敗: 15 件
+- fetch_failed_or_not_listed: 10
+- 実取得失敗: 10 件
 
 ## EBAY Readiness
 - APP_ID 設定: ❌ 未設定

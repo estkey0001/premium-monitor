@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-08 18:28 JST",
+  "generated_at": "2026-10-08 19:56 JST",
   "source": "Mercari sold",
   "policy": "no_live_scraping_tos_safe_manual_curation_plus_search_url",
   "fresh_days": 14,
@@ -26,7 +26,7 @@
           "observed_at": "2026-08-22T09:00:00+09:00",
           "sold_at": "",
           "price_type": "UNKNOWN",
-          "age_days": 47.4,
+          "age_days": 47.5,
           "target_buy_price": 51999,
           "within_target": true,
           "rejection_reason": "no_sold_evidence:dummy_url,no_sold_at"
@@ -84,7 +84,7 @@
           "observed_at": "2026-08-20T15:00:00+09:00",
           "sold_at": "",
           "price_type": "UNKNOWN",
-          "age_days": 49.1,
+          "age_days": 49.2,
           "target_buy_price": 123999,
           "within_target": false,
           "rejection_reason": "no_sold_evidence:dummy_url,no_sold_at"
@@ -96,7 +96,7 @@
       "count_recent": 0,
       "median_price": null,
       "min_price": null,
-      "target_buy_price": 150999,
+      "target_buy_price": 199999,
       "within_target_count": 0,
       "search_url": "https://jp.mercari.com/search?keyword=%5B%22GR%20IV%22%2C%20%22GR4%22%2C%20%22GRIV%22%2C%20%22GR%204%22%2C%20%22S0001551%22%5D&status=sold_out",
       "item_urls": [],
@@ -113,8 +113,8 @@
           "observed_at": "2026-08-22T11:00:00+09:00",
           "sold_at": "",
           "price_type": "UNKNOWN",
-          "age_days": 47.3,
-          "target_buy_price": 150999,
+          "age_days": 47.4,
+          "target_buy_price": 199999,
           "within_target": false,
           "rejection_reason": "no_sold_evidence:dummy_url,no_sold_at"
         }

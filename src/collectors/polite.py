@@ -136,7 +136,9 @@ CUTOFF_COUNTED = frozenset({"price_not_found", "http_404", "service_unavailable"
 CUTOFF_IGNORED = frozenset({"product_not_listed", "no_url", "not_supported", "model_mismatch",
                             "not_buyback_context", "trade_in_or_conditional_only",
                             # 商品ごとの事情（その商品の価格が範囲外・検索結果が販売の一覧だった。Phase 12 再レビュー N-M1）
-                            "price_out_of_range", "sales_catalog_no_buyback"})
+                            "price_out_of_range", "sales_catalog_no_buyback",
+                            # 同じ JAN に違う価格が並んだ（その商品の事情。Phase 17 監査 L3）
+                            "ambiguous_rows"})
 
 
 class ShopCutoff:

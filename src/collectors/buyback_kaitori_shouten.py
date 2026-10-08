@@ -23,7 +23,39 @@ PRODUCT_URLS = {
     "iphone17_256":    "https://www.kaitorishouten-co.jp/category/1/708",
     "iphone16pro256":  "https://www.kaitorishouten-co.jp/category/1/689",
     "airpods_pro3":    "https://www.kaitorishouten-co.jp/kaden",
+    # Phase 17（2026-10-08 確認）: カメラの一覧（新品・未開封の買取価格表）。/category/2/368 = デジタルカメラ、
+    # /category/2/108 = デジタル一眼カメラ。どちらも1ページに全件（153件・228件）の構造化データ（商品名・JAN・
+    # 新品の価格・商品ページの URL）が載る（?pageno= を変えても同じ内容なので、1ページを1回だけ取る）
+    "x100vi":          "https://www.kaitorishouten-co.jp/category/2/368",
+    "gr4":             "https://www.kaitorishouten-co.jp/category/2/368",
+    "gr4_hdf":         "https://www.kaitorishouten-co.jp/category/2/368",
+    "gr4_mono":        "https://www.kaitorishouten-co.jp/category/2/368",
+    "z8":              "https://www.kaitorishouten-co.jp/category/2/108",
+    "r5ii":            "https://www.kaitorishouten-co.jp/category/2/108",
 }
+
+# カメラは構造化データ（schema.org の Product）の JAN（gtin13）で1行だけを照合する（Phase 17）。
+# 商品名の条件（機種・ボディー/キット・版・色）も満たし、JAN が同じ行が1つの価格だけのときに採用する。
+# - x100vi: 色・版で価格が違う（2026-10-08: シルバー 2025版 ¥260,000・シルバー ¥280,000・ブラック 2025版 ¥250,000・
+#   ブラック ¥256,000）。公式のフジフイルムモールで買う版（シルバー 2025版。official_registry の IDENTITY_EVIDENCE の
+#   colors の JAN）と同じ JAN の行だけを使う（色・版の違う行を同じ商品にしない）
+# - z8 / r5ii: ボディーだけ（R5 II のレンズキット 4549292229226 を除く）。JAN は公式の製品ページで確かめた値
+# - gr4 系: GR IV・HDF・Monochrome・30周年記念キットを分ける（JAN は店の構造化データの値。商品名でも確かめる）
+JAN_RULES = {
+    "x100vi":   {"jan": "4547410554281", "pattern": r"FUJIFILM\s?X100VI\s*\[シルバー\]\s*2025版$", "exclude": []},
+    # ボディーで終わる名前だけ（「ボディ（中古）」「ボディ FTZ II 同梱」などの状態・同梱の表記を通さない。レビュー M1）
+    "z8":       {"jan": "4960759909947", "pattern": r"(?:^|\s)Z\s?8\s*ボディ\s*$",
+                 "exclude": ["キット", "kit", "レンズ", "中古", "未使用", "同梱", "セット", "付き"]},
+    "r5ii":     {"jan": "4549292229141", "pattern": r"EOS\s?R5\s?Mark\s?II\s*ボディ\s*$",
+                 "exclude": ["キット", "kit", "RF", "中古", "未使用", "同梱", "セット", "付き"]},
+    "gr4":      {"jan": "4549212311291", "pattern": r"RICOH\s?GR\s?IV$",
+                 "exclude": ["HDF", "Monochrome", "Anniversary", "30th", "Kit", "キット", "Edition"]},
+    "gr4_hdf":  {"jan": "4549212311871", "pattern": r"RICOH\s?GR\s?IV\s?HDF$",
+                 "exclude": ["Monochrome", "Anniversary", "30th", "Kit", "キット", "Edition"]},
+    "gr4_mono": {"jan": "4549212311994", "pattern": r"RICOH\s?GR\s?IV\s?Monochrome$",
+                 "exclude": ["HDF", "Anniversary", "30th", "Kit", "キット", "Edition"]},
+}
+_DETAIL_URL = re.compile(r"^https://www\.kaitorishouten-co\.jp/products/detail/\d+$")
 
 # 商品行（<li><a>商品名</a> <span class="num">¥価格</span></li>）の商品名に対する照合ルール。
 # 機種・Pro / Pro Max・容量・SIMフリー・セット品の違いを区別する（部分一致で別商品を拾わない）。
@@ -93,6 +125,56 @@ def parse_rows(html: str) -> list[tuple[str, int, str]]:
     return rows
 
 
+def parse_jsonld_rows(html: str) -> list[dict]:
+    """一覧ページの構造化データ（<script type="application/ld+json"> の Product）を商品行にする。
+
+    返り値: [{"name", "jan", "price", "url"}]。価格は offers.price（新品・未開封の買取価格表の値。商品ページの「新品 ¥…」と
+    同じ値であることを 2026-10-08 に確認）。JAN・価格・商品ページの URL のどれかが無い行は使わない。
+    """
+    import json as _json
+    out = []
+    for block in re.findall(r'<script[^>]+application/ld\+json[^>]*>(.*?)</script>', html, flags=re.S):
+        try:
+            d = _json.loads(block, strict=False)
+        except ValueError:
+            continue
+        for item in (d if isinstance(d, list) else [d]):
+            if not isinstance(item, dict) or item.get("@type") != "Product":
+                continue
+            offers = item.get("offers") if isinstance(item.get("offers"), dict) else {}
+            # 新品でない（itemCondition が NewCondition でない）・円でない行は使わない（Phase 17 監査 M1）
+            cond = str(item.get("itemCondition") or offers.get("itemCondition") or "")
+            if cond and not cond.endswith("NewCondition"):
+                continue
+            if str(offers.get("priceCurrency") or "JPY") != "JPY":
+                continue
+            try:
+                price = int(str(offers.get("price")))
+            except (TypeError, ValueError):
+                continue
+            jan = str(item.get("gtin13") or "").strip()
+            url = str(offers.get("url") or item.get("url") or "").strip()
+            if re.fullmatch(r"\d{13}", jan) and price > 0 and _DETAIL_URL.match(url):
+                out.append({"name": str(item.get("name") or "").strip(), "jan": jan, "price": price, "url": url})
+    return out
+
+
+def match_jan_rows(rows: list[dict], product_alias: str) -> list[dict]:
+    """JAN と商品名の条件に合う行（JAN_RULES）。同じ JAN の行が複数あっても、価格が違えば呼び出し側で使わない。"""
+    rule = JAN_RULES.get(product_alias)
+    if not rule:
+        return []
+    out = []
+    for r in rows:
+        if r["jan"] != rule["jan"] or not re.search(rule["pattern"], r["name"]):
+            continue
+        if any(re.search(r"(?<![A-Za-z])" + re.escape(x) + r"(?![A-Za-z])", r["name"], re.IGNORECASE)
+               for x in rule["exclude"]):
+            continue
+        out.append(r)
+    return out
+
+
 def match_rows(rows: list[tuple[str, int, str]], product_alias: str) -> list[tuple[str, int, str]]:
     """照合ルールに一致する商品行だけを返す（色違いは同じ商品として複数返る）。"""
     rule = ROW_RULES.get(product_alias)
@@ -147,7 +229,16 @@ class KaitoriShoutenCsvCollector(BaseCsvBuybackCollector):
         汎用のフォールバック（見出しの「最高¥…」・ページ全体の最初の価格）は使わない。
         色違いが複数あるときは、同じ機種・容量の中の最高値（その商品の最高買取）を採用する。
         """
-        matched = match_rows(parse_rows(html), product_alias)
+        if product_alias in JAN_RULES:
+            # カメラ: JAN で1行だけ（同じ JAN に違う価格が並べば、どれか1つを選ばない）
+            hits = match_jan_rows(parse_jsonld_rows(html), product_alias)
+            if len({(h["url"], h["price"]) for h in hits}) != 1:
+                self.last_matched_rows = []
+                self.last_failure_reason = "product_not_listed" if not hits else "ambiguous_rows"
+                return None
+            matched = [(hits[0]["name"], hits[0]["price"], hits[0]["url"])]
+        else:
+            matched = match_rows(parse_rows(html), product_alias)
         self.last_matched_rows = matched
         if not matched:
             self.last_failure_reason = "product_not_listed"

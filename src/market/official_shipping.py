@@ -72,6 +72,17 @@ PRODUCT_SHIPPING: dict[str, dict] = {
     "prod_x100vi": {"source": "src_fujifilm_official", "fee": 0, "status": FREE_VERIFIED,
                     "url": "https://mall-jp.fujifilm.com/shop/g/g16941878/", "checked_on": "2026-10-08",
                     "checked_by": "Claude"},
+    # ---- RICOH GR IV 系（Phase 17。2026-10-08 にブラウザで確認）----
+    # リコーイメージングストアの商品ページに「定価 ¥… 税込 送料無料」（ストアは 3,300円（税込）以上で送料無料）
+    "prod_gr4": {"source": "src_ricoh_imaging", "fee": 0, "status": FREE_VERIFIED,
+                 "url": "https://ricohimagingstore.com/Form/Product/ProductDetail.aspx?shop=0&pid=S0001551",
+                 "checked_on": "2026-10-08", "checked_by": "Claude"},
+    "prod_gr4_hdf": {"source": "src_ricoh_imaging", "fee": 0, "status": FREE_VERIFIED,
+                     "url": "https://ricohimagingstore.com/Form/Product/ProductDetail.aspx?shop=0&pid=S0001566",
+                     "checked_on": "2026-10-08", "checked_by": "Claude"},
+    "prod_gr4_mono": {"source": "src_ricoh_imaging", "fee": 0, "status": FREE_VERIFIED,
+                      "url": "https://ricohimagingstore.com/Form/Product/ProductDetail.aspx?shop=0&pid=S0001580",
+                      "checked_on": "2026-10-08", "checked_by": "Claude"},
 }
 
 # 公式 URL の購入ページのホスト → 購入元（すべての注文で同じ決まりの購入元だけ）

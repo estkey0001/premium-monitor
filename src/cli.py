@@ -96,6 +96,8 @@ PRODUCT_ALIASES = {
     "gr3x": "prod_gr3x", "gr3_hdf": "prod_gr3_hdf", "gr3": "prod_gr3",
     # FUJIFILM
     "x100vi": "prod_x100vi",
+    # Nikon・Canon（Phase 17: 買取商店のカメラの新品の買取）
+    "z8": "prod_z8", "r5ii": "prod_r5ii",
     # iPhone 17
     "iphone17pro256": "prod_iphone17pro_256", "iphone17pro": "prod_iphone17pro_256",
     "iphone17pro512": "prod_iphone17pro_512",

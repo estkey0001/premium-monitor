@@ -49,6 +49,13 @@ OFFICIAL_PRICES: dict[str, int] = {
     "iphone17_256":   159_800,
     "iphone16pro256": 159_800,
     "airpods_pro3":    42_800,
+    # Phase 17: カメラ（official_registry の確認値。公式直販価格・RICOH の定価。異常値の判定だけに使う）
+    "x100vi":         315_700,
+    "z8":             575_300,
+    "r5ii":           654_500,
+    "gr4":            211_800,
+    "gr4_hdf":        222_000,
+    "gr4_mono":       299_800,
 }
 
 PRODUCT_GENRES: dict[str, str] = {
@@ -61,6 +68,12 @@ PRODUCT_GENRES: dict[str, str] = {
     "iphone17_256":    "iphone",
     "iphone16pro256":  "iphone",
     "airpods_pro3":    "audio",
+    "x100vi":          "camera",
+    "z8":              "camera",
+    "r5ii":            "camera",
+    "gr4":             "camera",
+    "gr4_hdf":         "camera",
+    "gr4_mono":        "camera",
 }
 
 # ゲーム機でスマホ価格帯（10万円超）を拾った場合はsuspicious
@@ -136,7 +149,22 @@ TARGET_PRODUCTS = [
         "condition":      "new_unopened",
         "shops":          ["kaitori_shouten"],
     },
+    # ── Phase 17（2026-10-08）: カメラの新品の買取。買取商店のカメラの一覧（構造化データの JAN で1行だけ照合。
+    # src/collectors/buyback_kaitori_shouten.JAN_RULES）。一覧は2ページ（デジタルカメラ・デジタル一眼）で、
+    # 同じ実行では取得済みのページを使い回すのでリクエストは2回だけ増える
+    *[{"product_alias": a, "product_name": n, "condition": "new_unopened", "shops": ["kaitori_shouten"]}
+      for a, n in (("x100vi", "FUJIFILM X100VI"), ("gr4", "RICOH GR IV"), ("gr4_hdf", "RICOH GR IV HDF"),
+                   ("gr4_mono", "RICOH GR IV Monochrome"), ("z8", "Nikon Z8"), ("r5ii", "Canon EOS R5 Mark II"))],
 ]
+
+# 取得に失敗したとき、前回の自動取得の行も（取得した時刻のまま）残す商品（Phase 17。カメラだけ）。
+# 時刻は変えないので、14日（normalized_prices.STALE_DAYS）を過ぎれば古い価格として確定から外れる
+KEEP_PREVIOUS_ON_FAILURE = frozenset({"x100vi", "gr4", "gr4_hdf", "gr4_mono", "z8", "r5ii"})
+# 前回の自動取得の行を残すのは、一時的な取得の失敗（通信・タイムアウト・HTTP 5xx・空のページ）だけ（Phase 17 レビュー・
+# 監査 H1）。前回の価格を否定する失敗（掲載が無い・同じ JAN に違う価格・異常値として隔離・価格が見つからない）や、
+# 取りに行けない状態が続く失敗（403・429・robots の禁止）では残さない（古い価格を今の価格に見せない）
+TRANSIENT_FAILURES = frozenset({"timeout", "connection_error", "ssl_error", "empty_html", "http_error",
+                                "http_500", "http_502", "http_503", "http_504"})
 
 # ── 既存CSV内の他商品（自動取得対象外）は引き継ぐ ──
 AUTO_ALIASES = {p["product_alias"] for p in TARGET_PRODUCTS}
@@ -455,7 +483,7 @@ def run(dry_run: bool = False, no_scrape: bool = False) -> int:
     # 取得に失敗した組で、前回の CSV がその組の手入力の行（価格あり）だったときは、手入力の行をそのまま残す
     # （失敗の行で消さない。値・日時は変えない。手入力は照合済みにならないので確定には使われない。Phase 12）。
     # 失敗したことは results_summary・failure_reasons・レポートに残る（レポートには失敗の行を渡す）
-    final_rows = preserved_rows + keep_manual_on_failure(new_rows, existing_rows)
+    final_rows = preserved_rows + keep_manual_on_failure(new_rows, existing_rows, failure_reasons)
     _write_csv(final_rows)
     print(f"\n  CSV更新完了: {len(final_rows)}行 -> {CSV_PATH}")
     print("="*60 + "\n")
@@ -478,9 +506,11 @@ def run(dry_run: bool = False, no_scrape: bool = False) -> int:
     return 1 if fail_count > 0 else 0
 
 
-def keep_manual_on_failure(new_rows: list[dict], existing_rows: list[dict]) -> list[dict]:
+def keep_manual_on_failure(new_rows: list[dict], existing_rows: list[dict],
+                           failure_reasons: dict | None = None) -> list[dict]:
     """取得に失敗した（価格0の）行のうち、前回その組が手入力の行（manual_today・価格あり）だったものは、
-    前回の手入力の行に置き換える。成功した行・前回が自動取得や失敗の行はそのまま。"""
+    前回の手入力の行に置き換える。KEEP_PREVIOUS_ON_FAILURE の商品は、一時的な取得の失敗（TRANSIENT_FAILURES）の
+    ときだけ、前回の自動取得の行も前回のまま残す（取得した時刻・価格を変えない）。成功した行・それ以外はそのまま。"""
     prev = {(r.get("product_alias", ""), r.get("buyback_shop", "")): r for r in existing_rows}
     out = []
     for row in new_rows:
@@ -489,7 +519,12 @@ def keep_manual_on_failure(new_rows: list[dict], existing_rows: list[dict]) -> l
         except (ValueError, TypeError):
             price = 0
         old = prev.get((row.get("product_alias", ""), row.get("buyback_shop", "")))
-        if price <= 0 and old and old.get("data_source") == "manual_today":
+        key = (row.get("product_alias", ""), row.get("buyback_shop", ""))
+        reason = (failure_reasons or {}).get(key, "")
+        keep_auto = (key[0] in KEEP_PREVIOUS_ON_FAILURE and old is not None
+                     and old.get("data_source") == "auto_scraped"
+                     and row.get("data_source") == "fetch_failed" and reason in TRANSIENT_FAILURES)
+        if price <= 0 and old and (old.get("data_source") == "manual_today" or keep_auto):
             try:
                 old_price = int(old.get("buyback_price", 0) or 0)
             except (ValueError, TypeError):

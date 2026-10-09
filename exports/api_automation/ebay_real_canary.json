@@ -108,15 +108,15 @@
   "db_snapshot": {
     "before": {
       "observations": 22,
-      "buyback_prices": 144,
+      "buyback_prices": 142,
       "official_sum": 2679660
     },
     "after": {
       "observations": 22,
-      "buyback_prices": 144,
+      "buyback_prices": 142,
       "official_sum": 2679660
     }
   },
   "recommended_next_action": null,
-  "generated_at": "2026-10-09 20:01 JST"
+  "generated_at": "2026-10-09 23:03 JST"
 }

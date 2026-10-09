@@ -1,0 +1,14 @@
+{
+  "telegram": {
+    "configured": false,
+    "status": "NOT_CONFIGURED",
+    "canary_id": "telegram_canary_v1",
+    "canary_status": "NONE",
+    "last_delivery_status": "",
+    "last_error_class": "",
+    "delivered_at": "",
+    "product_real_send": false,
+    "real_send_enabled": false
+  },
+  "checked_at": "2026-10-09T23:03:10+09:00"
+}

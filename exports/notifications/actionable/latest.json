@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-10-09T20:01:13+09:00",
+  "generated_at": "2026-10-09T23:03:08+09:00",
   "step": "prepare",
-  "diagnostics_generated_at": "2026-10-09T20:01:13+09:00",
+  "diagnostics_generated_at": "2026-10-09T23:03:08+09:00",
   "note": "内部用（運営者向け）。外部への送信はしない（dry-run）。配信先の URL・トークンは記録しない",
   "type": "ACTIONABLE_NOW",
   "dry_run": true,
@@ -37,8 +37,9 @@
     "records": 0
   },
   "unknown": [],
-  "prepared_at": "2026-10-09T20:01:13+09:00",
-  "attempt_id": "gh-37914259971-1",
+  "provider_status": {},
+  "prepared_at": "2026-10-09T23:03:09+09:00",
+  "attempt_id": "gh-37933187414-1",
   "dispatch_expired": 0,
   "dispatch_cancelled": 0,
   "dispatch_sending": 0

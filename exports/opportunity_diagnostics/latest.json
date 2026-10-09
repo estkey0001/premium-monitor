@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-09T20:01:13+09:00",
+  "generated_at": "2026-10-09T23:03:08+09:00",
   "note": "内部用（運営者向け）。一般の画面には出さない。掲載の判定は opportunity.eligibility が正本",
   "candidate_count": 45,
   "eligible_count": 2,
@@ -667,7 +667,7 @@
         "price": 211800,
         "price_type": "RETAIL",
         "source": "src_ricoh_imaging",
-        "verified_at": "2026-10-09T19:35:12+09:00",
+        "verified_at": "2026-10-09T22:35:11+09:00",
         "url": "https://ricohimagingstore.com/Form/Product/ProductList.aspx?shop=0&cat=002010",
         "note": ""
       },
@@ -680,7 +680,7 @@
         "price": 222000,
         "price_type": "RETAIL",
         "source": "src_ricoh_imaging",
-        "verified_at": "2026-10-09T19:37:12+09:00",
+        "verified_at": "2026-10-09T22:39:11+09:00",
         "url": "https://ricohimagingstore.com/Form/Product/ProductList.aspx?shop=0&cat=002010",
         "note": ""
       },
@@ -693,7 +693,7 @@
         "price": 299800,
         "price_type": "RETAIL",
         "source": "src_ricoh_imaging",
-        "verified_at": "2026-10-09T19:39:11+09:00",
+        "verified_at": "2026-10-09T22:41:11+09:00",
         "url": "https://ricohimagingstore.com/Form/Product/ProductList.aspx?shop=0&cat=002010",
         "note": ""
       },
@@ -1038,7 +1038,7 @@
     ]
   },
   "buyback": {
-    "fresh_rows": 37,
+    "fresh_rows": 35,
     "stale_rows": 70,
     "failed_rows": 37,
     "failed_sources": [
@@ -1128,7 +1128,7 @@
         "rows": 24,
         "fresh": 17,
         "stale": 7,
-        "last_observed": "2026-10-09T19:04:25.559759+09:00"
+        "last_observed": "2026-10-09T22:06:26.504852+09:00"
       },
       {
         "source": "ブックオフ",
@@ -1144,23 +1144,22 @@
       },
       {
         "source": "モバイル一番",
-        "rows": 5,
+        "rows": 3,
         "stale": 3,
-        "fresh": 2,
-        "last_observed": "2026-10-09T18:58:24+09:00"
+        "last_observed": "2026-08-10T12:00:00+09:00"
       },
       {
         "source": "買取一丁目",
         "rows": 4,
         "fresh": 4,
-        "last_observed": "2026-10-09T18:56:50+09:00"
+        "last_observed": "2026-10-09T21:58:50+09:00"
       },
       {
         "source": "買取商店",
         "rows": 21,
         "stale": 7,
         "fresh": 14,
-        "last_observed": "2026-10-09T19:04:25+09:00"
+        "last_observed": "2026-10-09T22:06:26+09:00"
       },
       {
         "source": "駿河屋",
@@ -1207,42 +1206,42 @@
         "product_id": "prod_gr4",
         "price": 200000,
         "source": "買取商店",
-        "observed_at": "2026-10-09T19:02:55+09:00",
+        "observed_at": "2026-10-09T22:04:56+09:00",
         "condition": "new_unopened"
       },
       {
         "product_id": "prod_gr4_hdf",
         "price": 240000,
         "source": "買取商店",
-        "observed_at": "2026-10-09T19:02:55+09:00",
+        "observed_at": "2026-10-09T22:04:56+09:00",
         "condition": "new_unopened"
       },
       {
         "product_id": "prod_gr4_mono",
         "price": 227000,
         "source": "買取商店",
-        "observed_at": "2026-10-09T19:02:55+09:00",
+        "observed_at": "2026-10-09T22:04:56+09:00",
         "condition": "new_unopened"
       },
       {
         "product_id": "prod_r5ii",
         "price": 450000,
         "source": "買取商店",
-        "observed_at": "2026-10-09T19:04:25+09:00",
+        "observed_at": "2026-10-09T22:06:26+09:00",
         "condition": "new_unopened"
       },
       {
         "product_id": "prod_x100vi",
         "price": 260000,
         "source": "買取商店",
-        "observed_at": "2026-10-09T19:02:55+09:00",
+        "observed_at": "2026-10-09T22:04:56+09:00",
         "condition": "new_unopened"
       },
       {
         "product_id": "prod_z8",
         "price": 420000,
         "source": "買取商店",
-        "observed_at": "2026-10-09T19:04:25+09:00",
+        "observed_at": "2026-10-09T22:06:26+09:00",
         "condition": "new_unopened"
       }
     ],
@@ -1269,7 +1268,7 @@
           "lottery_closed"
         ],
         "deadline": "2026-09-28T12:00:00+09:00",
-        "checked_at": "2026-10-09T19:45:00+09:00",
+        "checked_at": "2026-10-09T22:47:00+09:00",
         "confirmed": true,
         "net_profit": 16200.0,
         "roi": 0.07297297297297298,
@@ -1288,7 +1287,7 @@
           "stock_out"
         ],
         "deadline": "",
-        "checked_at": "2026-10-09T19:41:14+09:00",
+        "checked_at": "2026-10-09T22:43:13+09:00",
         "confirmed": true,
         "net_profit": 55370.0,
         "roi": 0.3996968165740273,

@@ -1,7 +1,7 @@
 
 ============================================================
- Deploy Check (477 items)
- 実行日時: 2026-10-09T04:36:14+09:00
+ Deploy Check (478 items)
+ 実行日時: 2026-10-09T14:17:15+09:00
 ============================================================
   ✅ [index_exists] docs/index.html 存在
   ✅ [forbidden_phrases] 禁止表現なし
@@ -53,26 +53,26 @@
   ✅ [fetch_failed_no_price_calc] fetch_failed 行の価格欄が「—」（価格計算に使われていない）
   ✅ [game_console_shops] ゲーム機向け店舗が表示されている: ['ゲオ', 'イオシス', 'ブックオフ', '駿河屋', 'ソフマップ', 'TSUTAYA', '買取商店']
   ✅ [switch2_game_shop_links] Switch 2 / ゲーム機向け確認リンク（ゲオ/ブックオフ/駿河屋/ソフマップ）が存在する
-  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-10-09T03:28:38+09:00）
+  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-10-09T13:11:09+09:00）
   ⚠️ [suspicious_price_format] suspicious_prices 形式OK（suspicious_price 2件あり — 確認推奨）
-  ✅ [fetch_failed_has_reason] fetch_failed 46件すべてに reason あり
+  ✅ [fetch_failed_has_reason] fetch_failed 44件すべてに reason あり
   ✅ [collector_report_html_exists] docs/collector_report.html 存在
   ✅ [collector_report_link_in_lp] LP内に collector_report.html へのリンクがある
-  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 9件存在する: ['iphone17pm512', 'iphone17_256', 'iphone17pro256', 'iphone17pro512']
-  ✅ [beginner_page_auto_scraped_exists] 自動取得 OK 18件 / total 64件
+  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 10件存在する: ['iphone17pro256', 'iphone17pm512', 'iphone17_256', 'iphone17pm256']
+  ✅ [beginner_page_auto_scraped_exists] 自動取得 OK 20件 / total 64件
   ✅ [iphone17pro256_price_scraped] iPhone 17 Pro 256GB の価格取得成功: ['kaitori_shouten', 'kaitori_itchome']
-  ✅ [fetch_failed_has_reason_field] 全取得失敗エントリーに reason フィールドあり（46件）
+  ✅ [fetch_failed_has_reason_field] 全取得失敗エントリーに reason フィールドあり（44件）
   ✅ [auto_scraped_link_verified] auto_scraped行のlink_verifiedはすべてtrue（URL推測なし）
-  ⚠️ [iphone_min3_shops] iPhone商品の成功店舗数が3未満: iphone17pro256:2店舗, iphone17pro512:2店舗, iphone17pm256:2店舗, iphone17pm512:2店舗
+  ⚠️ [iphone_min3_shops] iPhone商品の成功店舗数が3未満: iphone17pro256:2店舗, iphone17pro512:2店舗, iphone17pm512:2店舗
   ⚠️ [switch2_min2_shops] Switch2の成功店舗数が2未満: 1店舗
-  ⚠️ [ps5pro_min2_shops] PS5 Proの成功店舗数が2未満: 1店舗
+  ✅ [ps5pro_min2_shops] PS5 Pro 成功店舗≥2（2店舗）
   ✅ [no_unknown_failure_reason] すべての取得失敗に reason が設定されている（unknown なし）
   ✅ [debug_files_saved] exports/debug/ に診断ファイル 63件あり
   ✅ [low_confidence_not_in_lp] confidence=low 価格がLPに含まれていない（low=0件）
   ✅ [suspicious_price_not_in_lp] suspicious_price がLPに含まれていない（要疑い価格=2件）
   ✅ [quality_gate_script_exists] scripts/check_collector_quality.py が存在
   ✅ [quality_gate_in_workflow] GitHub Actions に quality gate step がある
-  ✅ [collector_summary_in_report] latest.json summary OK: 18/64 (28%)
+  ✅ [collector_summary_in_report] latest.json summary OK: 20/64 (31%)
   ✅ [playwright_install_in_workflow] daily_lp.yml に playwright install --with-deps chromium が存在
   ✅ [workflow_concurrency_set] daily_lp.yml に concurrency: group=daily-lp-update が設定されている
   ✅ [workflow_concurrency_no_cancel] daily_lp.yml の concurrency が cancel-in-progress: false（後続を待機）
@@ -242,7 +242,7 @@
   ✅ [camera_tradein_exclude] #542 カメラ買取が下取(15%UP等)価格を現金買取価格から分離・除外している
   ✅ [sedori_overseas_sell] #543 せどり計算の売却先が「買取価格＋海外販売価格」になっている（NPO PRO_SELL_TYPES）
   ✅ [top_camera_reference_guard] #544 Top Camera Buyback が参照価格(公式/定価)未取得の商品を除外している
-  ✅ [npo_exists] #545 normalized_price_observations/latest.json が存在する（231観測）
+  ✅ [npo_exists] #545 normalized_price_observations/latest.json が存在する（233観測）
   ✅ [npo_price_role_required] #546 全観測に price_role が付与されている
   ✅ [npo_tradein_not_main] #547 trade_in_price が main calculation（最高買取等）に使われない
   ✅ [npo_pro_buy_no_buyback] #548 Pro route の buy 側に buyback_price が使われない
@@ -465,6 +465,7 @@
   ✅ [actionability_semantics] #854 今すぐ行動できるか（利益だけで行動できるにしない・在庫切れ/未確認/3時間を過ぎた在庫あり/受付終了/日程不明/一般のページでは行動できない・行動できない商品にボタンを出さない）
   ✅ [actionable_notifications] #855 今すぐ行動の通知（行動できない → できる だけ・同じ状態では出さない・re-arm・配信の直前の確認・dry-run で送らない・Secrets を渡さない・配信先の URL/トークンを出さない）
   ✅ [notification_outbox] #856 通知の outbox（冪等性のキー・保存の前に送らない・送った後に止まったら送り直さない・dry-run は送信済みにしない・atomic・HTTP の部品なし・手順ごとの保存・Secrets を渡さない）
+  ✅ [delivery_providers] #857 配信先と人による解決（本番の送信は無効・Secrets は送信の手順だけ・応答の分類・配信先の ID・秘密の値を消す・届いたか不明の解決・古い基準を使わない）
   ✅ [no_rejected_price_published] #820 明らかに誤りの買取価格が CSV（LP・利益計算の入力）に残っていない
   ✅ [official_price_not_generation_time] #821 公式定価の観測時刻が生成時刻になっていない（確認日・実際の取得時刻を保持）
   ✅ [no_timestamp_only_update] #822 手動 CSV で「値は同じで日時だけ新しい」更新をしていない（作業ツリーと直近のコミット）
@@ -481,7 +482,7 @@
   ✅ [opportunity_sell_identity_verified] #833 利益に使った売却価格はすべて商品照合済みの買取価格で、商品詳細の表の確認済みの行と一致（2件）
   ✅ [mypage_safe] #834 マイページに DEMO・架空のアカウント表示・危ないリンクが無く、ウォッチは登録済みの商品だけ、想定純利益は商品詳細と同じ
 
-  Errors: 0 | Warnings: 11 | OK: 466
+  Errors: 0 | Warnings: 10 | OK: 468
 
   ✅ Deploy check PASSED
 ============================================================

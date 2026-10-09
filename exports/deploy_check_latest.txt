@@ -1,7 +1,7 @@
 
 ============================================================
  Deploy Check (478 items)
- 実行日時: 2026-10-09T14:17:15+09:00
+ 実行日時: 2026-10-09T20:01:18+09:00
 ============================================================
   ✅ [index_exists] docs/index.html 存在
   ✅ [forbidden_phrases] 禁止表現なし
@@ -53,7 +53,7 @@
   ✅ [fetch_failed_no_price_calc] fetch_failed 行の価格欄が「—」（価格計算に使われていない）
   ✅ [game_console_shops] ゲーム機向け店舗が表示されている: ['ゲオ', 'イオシス', 'ブックオフ', '駿河屋', 'ソフマップ', 'TSUTAYA', '買取商店']
   ✅ [switch2_game_shop_links] Switch 2 / ゲーム機向け確認リンク（ゲオ/ブックオフ/駿河屋/ソフマップ）が存在する
-  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-10-09T13:11:09+09:00）
+  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-10-09T18:55:15+09:00）
   ⚠️ [suspicious_price_format] suspicious_prices 形式OK（suspicious_price 2件あり — 確認推奨）
   ✅ [fetch_failed_has_reason] fetch_failed 44件すべてに reason あり
   ✅ [collector_report_html_exists] docs/collector_report.html 存在

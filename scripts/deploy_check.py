@@ -4135,6 +4135,7 @@ def check() -> list[dict]:
     results.extend(_check_phase18_actionability(html))
     results.extend(_check_phase19_actionable_notifications(html))
     results.extend(_check_phase20_notification_outbox())
+    results.extend(_check_phase21_delivery_providers())
 
     # ══════════════════════════════════════════════════════════════════
     # #820-#825: データの正確さ・鮮度の偽装（Phase 0）
@@ -4838,7 +4839,7 @@ def _check_phase18_actionability(html: str) -> list[dict]:
 
 
 _SECRET_PATTERNS = (r"discord(?:app)?\.com/api(?:/v\d+)?/webhooks/\d+/[\w-]+", r"api\.telegram\.org/bot\d+:",
-                    r"\b\d{8,10}:[A-Za-z0-9_-]{35}\b", r"hooks\.slack\.com/services/[\w/]+",
+                    r"(?<!\d)\d{5,12}:[A-Za-z0-9_-]{30,}", r"hooks\.slack\.com/services/[\w/]+",
                     r"Authorization:\s*Bearer\s+[A-Za-z0-9._-]{30,}")
 
 
@@ -5023,7 +5024,7 @@ def _check_phase20_notification_outbox() -> list[dict]:
         import tempfile as _tf
         with _tf.TemporaryDirectory() as tmp:
             r = ob.run_send(Path(tmp), now=now, dry_run=False, attempt_id="a1", persisted_sha="",
-                            adapters={"fixture": ok_adapter})
+                            adapters={"fixture": ok_adapter}, real_send_allowed=True)
             if r.get("skipped") != "not_persisted":
                 bad.append("保存したことを確かめずに送る")
         # dry-run の記録は本番の送信を止めない・dry-run は DELIVERED にしない
@@ -5125,6 +5126,163 @@ def _check_phase20_notification_outbox() -> list[dict]:
              "message": "#856 通知の outbox（冪等性のキー・保存の前に送らない・送った後に止まったら送り直さない・dry-run は"
                         "送信済みにしない・atomic・HTTP の部品なし・手順ごとの保存・Secrets を渡さない）"
                         + ("" if not (bad or warn) else f" ← {(bad or warn)[:4]}")}]
+
+
+_NOTIFY_SECRET_NAMES = ("DISCORD_WEBHOOK_URL", "TELEGRAM_BOT_TOKEN", "TELEGRAM_CHAT_ID")
+_SECRET_SENDER_STEPS = {"Notify workflow result"}      # 通知の Secrets を渡してよい手順（送信の手順だけ）
+_SECRET_SENDER_RUN = "python scripts/notify_workflow_result.py"   # その手順が実行してよいもの（名前だけで許さない）
+
+
+def _notification_secret_exposure(root: Path) -> list[str]:
+    """ワークフローのどこで通知の Secrets を参照しているか（YAML の構造で。Phase 21・監査 M-1）。
+
+    送信の手順（_SECRET_SENDER_STEPS）の env だけを許す。ワークフロー全体・ジョブの env、ほかの手順のどの項目
+    （env・with・run）にあってもエラー。secrets 全体（toJSON(secrets)）・添字での参照（secrets['…']）もエラー。
+    """
+    import re as _re
+    probs = []
+    # Secrets の名前は大文字と小文字を区別しない（レビュー L-A）
+    pat = _re.compile(r"secrets\s*\.\s*(" + "|".join(_NOTIFY_SECRET_NAMES) + r")\b", _re.I)
+    for wf_path in sorted((root / ".github" / "workflows").glob("*.y*ml")):
+        text = wf_path.read_text(encoding="utf-8")
+        if _re.search(r"toJSON\s*\(\s*secrets\s*\)|secrets\s*\[", text):
+            probs.append(f"{wf_path.name}: secrets 全体・添字での参照がある")
+        try:
+            doc = yaml.safe_load(text) or {}
+        except yaml.YAMLError:
+            probs.append(f"{wf_path.name}: YAML を読めない")
+            continue
+        # 構造で見つけた「許す場所」の参照の数と、全文の参照の数が違えば、構造の外（重複したキーなど）にもある
+        allowed = sum(len(pat.findall(str(st.get("env") or "")))
+                      for job in (doc.get("jobs") or {}).values() if isinstance(job, dict)
+                      for st in job.get("steps") or [] if isinstance(st, dict)
+                      and str(st.get("name") or "") in _SECRET_SENDER_STEPS)
+        if len(pat.findall(text)) != allowed:
+            probs.append(f"{wf_path.name}: 送信の手順の env の外に通知の Secrets の参照がある")
+        if pat.search(str(doc.get("env") or "")):
+            probs.append(f"{wf_path.name}: ワークフロー全体の env に通知の Secrets")
+        senders = 0
+        for jname, job in (doc.get("jobs") or {}).items():
+            if not isinstance(job, dict):
+                continue
+            rest = {k: v for k, v in job.items() if k != "steps"}
+            if pat.search(str(rest)):
+                probs.append(f"{wf_path.name}: ジョブ {jname} の設定に通知の Secrets")
+            sec = job.get("secrets")
+            if sec == "inherit" or (isinstance(sec, dict) and any(
+                    str(k).upper() in _NOTIFY_SECRET_NAMES or pat.search(str(v)) for k, v in sec.items())):
+                probs.append(f"{wf_path.name}: ジョブ {jname} が呼ぶワークフローに Secrets を渡している（secrets）")
+            for st in job.get("steps") or []:
+                if not isinstance(st, dict):
+                    continue
+                name = str(st.get("name") or st.get("uses") or "")
+                other = {k: v for k, v in st.items() if k != "env"}
+                if pat.search(str(other)):
+                    probs.append(f"{wf_path.name}: {name} の env 以外に通知の Secrets")
+                if pat.search(str(st.get("env") or "")):
+                    if name not in _SECRET_SENDER_STEPS:
+                        probs.append(f"{wf_path.name}: 送信の手順でない {name} に通知の Secrets")
+                    elif str(st.get("run") or "").strip() != _SECRET_SENDER_RUN:
+                        probs.append(f"{wf_path.name}: {name} が結果の通知のスクリプト以外を実行する")
+                    else:
+                        senders += 1
+        if senders > 1:
+            probs.append(f"{wf_path.name}: 通知の Secrets を持つ手順が複数ある（{senders}）")
+    return probs
+
+
+def _check_phase21_delivery_providers(root: Path | None = None) -> list[dict]:
+    """Phase 21: 配信先と人による解決（#857）。本番の送信が無効（送信の部品なし・最終の関門が閉じている・旗が false）・
+    通知の Secrets は送信の手順（今は既存のワークフローの結果の通知だけ）以外に渡さない・Discord/Telegram の応答の分類・
+    配信先の ID・秘密の値を消す・届いたか不明を人が解決できる（送信済みは送り直さない・期限切れは戻さない）・
+    古い基準のファイルを使わない。"""
+    import re as _re21
+    from datetime import datetime as _dt21
+    from datetime import timedelta as _td21
+
+    from src.tcg.models import JST as _JST21
+    bad = []
+    root = root or Path(__file__).resolve().parent.parent
+    try:
+        from src.notifiers import adapters as ad
+        from src.notifiers import outbox as ob
+        if ad.REAL_SEND_IMPLEMENTED:
+            bad.append("送信の部品が有効になっている（Phase 21 は実送信しない）")
+        if ad.real_send_gate({})["allowed"]:
+            bad.append("既定の設定で本番の送信の関門が開く")
+        full = {"NOTIFICATION_REAL_SEND": "true", "NOTIFICATION_DRY_RUN": "false", "NOTIFICATION_PROVIDERS": "discord",
+                "DISCORD_WEBHOOK_URL": "https://discord.com/api/webhooks/1/x"}
+        if ad.real_send_gate(full)["allowed"]:
+            bad.append("送信の部品が無いのに本番の送信の関門が開く")
+        d, t = ad.DiscordAdapter(), ad.TelegramAdapter()
+        for name, got, want in (
+                ("Discord 2xx", d.classify_response(204), None),
+                ("Discord 400", d.classify_response(400).kind, ad.FINAL),
+                ("Discord 401", d.classify_response(401).kind, ad.FINAL),
+                ("Discord 429", d.classify_response(429, {"Retry-After": "5"}).kind, ad.RETRYABLE),
+                ("Discord 502", d.classify_response(502).kind, ad.AMBIGUOUS),
+                ("Telegram ok:false 200", t.classify_response(200, {}, {"ok": False, "error_code": 400}).kind, ad.FINAL),
+                ("Telegram 429 本文", t.classify_response(429, {}, {"ok": False, "error_code": 429,
+                                                                   "parameters": {"retry_after": 7}}).retry_after, 7),
+                ("Telegram 2xx の形でない", t.classify_response(200, {}, {}).kind, ad.AMBIGUOUS)):
+            if got != want:
+                bad.append(f"{name} の分類が違う（{got}）")
+        if t.extract_delivery_id(200, {}, {"ok": True, "result": {"message_id": 42}}) != "42":
+            bad.append("Telegram の message_id を取れない")
+        if "secret" in ad.redact("https://discord.com/api/webhooks/1/secret 123456789:" + "A" * 35):
+            bad.append("秘密の値を消せない")
+        # 届いたか不明の解決
+        now = _dt21(2026, 10, 9, 12, 0, tzinfo=_JST21)
+        url = "https://pur.store.sony.jp/ps5/products/ps5/CFI-7100B01_purchase/"
+        row = {"product_id": "p", "product": "P", "availability": "IN_STOCK", "actionable": True, "reasons": [],
+               "confirmed": True, "net_profit": 50000, "roi": 0.3, "cta_label": "購入する", "cta_url": url,
+               "until_ms": int((now + _td21(hours=2)).timestamp() * 1000), "deadline": "",
+               "checked_at": (now - _td21(hours=1)).isoformat(), "event_key": ""}
+
+        def unknown_store():
+            st = ob.empty_store()
+            ob.observe(st, [dict(row, availability="OUT_OF_STOCK", actionable=False, reasons=["x"])], now=now,
+                       mode=ob.MODE_LIVE)
+            ob.observe(st, [row], now=now, mode=ob.MODE_LIVE, channels=["discord"])
+            nid = next(iter(st["records"]))
+            st["records"][nid]["channels"]["discord"].update(status=ob.UNKNOWN_DELIVERY)
+            return st, nid
+        st, nid = unknown_store()
+        ob.resolve(st, nid, ob.MARK_DELIVERED, rows=[row], now=now)
+        if ob.prepare(st, [row], now=now, mode=ob.MODE_LIVE, attempt_id="z")["sending"] or \
+                st["records"][nid]["status"] != ob.DELIVERED:
+            bad.append("送信済みにした配信を送り直す")
+        st, nid = unknown_store()
+        ob.resolve(st, nid, ob.MARK_NOT_DELIVERED, rows=[dict(row, until_ms=int(now.timestamp() * 1000) - 1)], now=now)
+        if st["records"][nid]["status"] != ob.EXPIRED:
+            bad.append("期限切れの配信を出し直せる状態に戻す")
+        st, nid = unknown_store()
+        n_before = len(st["records"])
+        ob.resolve(st, nid, ob.MARK_NOT_DELIVERED, rows=[row], now=now)
+        if st["records"][nid]["status"] != ob.FAILED_RETRYABLE or len(st["records"]) != n_before:
+            bad.append("届いていなかった配信を、同じ記録で出し直せる状態に戻さない")
+        if not ob.resolve.__doc__ or not ob.list_unknown(unknown_store()[0]):
+            bad.append("届いたか不明の一覧を作れない")
+    except Exception as exc:  # noqa: BLE001
+        bad.append(f"配信先・解決を動かせない: {exc}")
+    try:
+        wf = (root / ".github" / "workflows" / "daily_lp.yml").read_text(encoding="utf-8")
+        steps = {m.group(1): m.group(2) for m in _re21.finditer(
+            r"- name: ([^\n]+)\n(.*?)(?=\n      - name:|\n      # |\Z)", wf, _re21.S)}
+        bad.extend(_notification_secret_exposure(root))
+        if _re21.search(r"NOTIFICATION_REAL_SEND:\s*[\"']?(true|1|yes|on)", wf, _re21.I):
+            bad.append("本番の送信の旗を true にしている")
+        for n in ("Generate daily LP Variant A", "Prepare notification dispatch", "Send notifications"):
+            if 'NOTIFICATION_REAL_SEND: "false"' not in steps.get(n, ""):
+                bad.append(f"{n} に本番の送信の旗（false）が無い")
+        sh = (root / "scripts" / "persist_notification_state.sh").read_text(encoding="utf-8")
+        if not all(x in sh for x in ('"$B_RUN" != "$RUN_ID"', 'AT_MAIN=', 'MAX_AGE_SECONDS')):
+            bad.append("保存の手順が、基準のファイルの実行の識別・main のコミットの台帳・古さを確かめない")
+    except OSError as exc:
+        bad.append(f"ワークフローを読めない: {exc}")
+    return [{"level": "ok" if not bad else "error", "check": "delivery_providers",
+             "message": "#857 配信先と人による解決（本番の送信は無効・Secrets は送信の手順だけ・応答の分類・配信先の ID・"
+                        "秘密の値を消す・届いたか不明の解決・古い基準を使わない）" + ("" if not bad else f" ← {bad[:4]}")}]
 
 
 def _check_new_ui(html: str) -> list[dict]:

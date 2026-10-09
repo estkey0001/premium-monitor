@@ -507,7 +507,11 @@ def build_actionable_notices(rep: dict | None) -> dict:
             **{k: int(cnt.get(k) or 0) for k in ckeys},
             "items": [{"product": str(c.get("product") or c.get("product_id") or ""), "status": str(c.get("status") or ""),
                        "transition": str(c.get("transition") or ""), "dispatch": str(c.get("outbox_status") or "")}
-                      for c in (r.get("candidates") or []) if isinstance(c, dict)][:20]}
+                      for c in (r.get("candidates") or []) if isinstance(c, dict)][:20],
+            # 届いたか不明（Phase 21）。配信先の URL・トークン・チャット ID は元から記録に無い
+            "unknown": [{k: str(u.get(k) or "") for k in ("notification_id", "product", "provider", "attempted_at",
+                                                           "state", "deadline", "reason", "status_title")}
+                        for u in (r.get("unknown") or []) if isinstance(u, dict)][:50]}
 
 
 def check_text(full: str, tail: int = 4000) -> str:
@@ -956,7 +960,16 @@ def _act_notices(a: dict) -> str:
         ("retryable_failed", "送信の失敗（出し直す）"), ("final_failed", "送信の失敗（出し直さない）"),
         ("expired", "期限切れ"), ("cancelled", "取り消し"), ("ambiguous_delivery", "届いたか不明")))
     mode = "dry-run（外部へは送らない）" if a["dry_run"] else "送信あり"
-    return _box("今すぐ行動の通知", f'<dl class="nu-ad-dl"><dt>方式</dt><dd>{esc(mode)}</dd>{dl}</dl>'
+    unk = a.get("unknown") or []
+    unk_html = (_table(["通知の ID", "商品", "配信先", "送信した時刻", "状態", "締切", "理由"],
+                       [[esc(u["notification_id"]), esc(u["product"] + (f"（{u['status_title']}）" if u["status_title"] else "")),
+                         esc(u["provider"]), _when(u["attempted_at"]), esc(u["state"]),
+                         _when(u["deadline"]) if u["deadline"] else "—", esc(u["reason"] or "—")] for u in unk],
+                       caption="届いたか不明の配信")
+                + '<p class="nu-osub">この画面は見るだけです（静的なページ）。解決は手元のコマンドで行います: '
+                  '<code>python -m src.cli notification resolve &lt;通知の ID&gt; delivered|not-delivered|cancel'
+                  '|keep-unknown --confirm</code>（台帳だけをコミットして main に push）</p>') if unk else ""
+    return _box("今すぐ行動の通知", f'<dl class="nu-ad-dl"><dt>方式</dt><dd>{esc(mode)}</dd>{dl}</dl>' + unk_html
                 + (f'<ul class="nu-ad-list">{items}</ul>' if items else _empty(
                     "今回、行動できるようになった利益商品はありません" + ("（基準日）。" if a["baseline"] else "。")))
                 + _generated("今回", a["at"]),

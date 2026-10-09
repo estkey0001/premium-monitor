@@ -88,7 +88,7 @@ class FixtureAdapter(ad.ProviderAdapter):
     def build_payload(self, record):
         return {"content": record.get("message") or ""}
 
-    def delivery_id(self, status, headers, body):
+    def extract_delivery_id(self, status, headers, body):
         return str((body or {}).get("id") or "") if isinstance(body, dict) else ""
 
 

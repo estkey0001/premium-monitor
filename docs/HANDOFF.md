@@ -1,6 +1,7 @@
 # HANDOFF（最終更新: 2026-10-08）
 
 ## 今の状態
+- Phase 21（配信先の部品と届いたか不明の解決）: `src/notifiers/adapters.py` に Discord・Telegram の本文・設定の検査・応答の分類・配信先の ID・秘密の値を消す・安全な短縮（URL を切らない）。本番の送信の最終の関門 `real_send_gate`（送信の部品なし・旗 false・dry-run で常に閉じる）。届いたか不明は `python -m src.cli notification list-unknown` / `resolve <ID> delivered|not-delivered|cancel|keep-unknown --confirm`（main の台帳と同じときだけ・記録を残す）。基準のファイルは実行の識別・main・台帳を記録して保存の側で確かめる。通知の Secrets は収集・LP の生成の手順から外した。記録は `internal/audits/PHASE_21_DELIVERY_PROVIDERS.md`
 - Phase 20（通知の outbox）: `src/notifiers/outbox.py`。候補 → outbox（PENDING）→ 保存 → 配信の直前の確認（dry-run は DRY_RUN_PLANNED・本番は SENDING）→ 保存 → 送信（保存した台帳の sha と同じときだけ）→ 保存。冪等性のキーは通常販売は arm（行動できないと確かめた観測・連番つき）、抽選などは受付の識別（商品|開始。締切の延長では再通知しない）。記録を作った変化は方式に依らない消えない印で作り直さない。前の実行の SENDING は届いたか不明（送り直さない）。台帳は生成の前に main に合わせ（`scripts/sync_notification_state.sh`）、手順ごとに一時の worktree から台帳だけを main に保存する（`scripts/persist_notification_state.sh`。main の台帳が変わっていたら止める。生成物のコミット・deploy-check・Pages に依らない）。配信先の部品は `src/notifiers/adapters.py`（通信なし・transport を渡さない）。記録は `internal/audits/PHASE_20_NOTIFICATION_OUTBOX.md`
 - Phase 19（今すぐ行動の通知・dry-run）: 種類 ACTIONABLE_NOW（`src/notifiers/actionable.py`）。LP の生成の中で、診断の直後に「行動できない → できる」の確定の利益商品だけを候補にする（台帳 `exports/notifications/actionable/state.json` の通知済みの組み合わせ = 商品・種類・状態・受付の識別。在庫切れ・受付終了で re-arm、更新待ち・未確認では re-arm しない）。配信の直前に期限・締切・公式のページ・確定の利益を確かめる。外部へは送らない（NOTIFICATION_DRY_RUN 固定・送信の関数を渡さない）。運営者向けの「通知」に件数。Low の文言（在庫ありの絞り込み・TOP10・HOME・商品詳細の「商品の状態」）。記録は `internal/audits/PHASE_19_ACTIONABLE_NOTIFICATION.md`
 - Phase 18（今すぐ行動できるか）: 判定の正本 `src/market/actionability.py`（確定の利益 ＋ 公式の具体的な購入・申込のページ ＋ 在庫ありの確認から3時間以内 / 抽選・予約・先着の受付中）。抽選は型番（= 商品コード）か商品 ID で利益商品に結び付ける。利益商品の一覧・商品詳細・HOME・運営者向けに状態・締切・理由、行動できるときだけボタン（期限を過ぎたら画面で消す）。診断に actionability（理由ごとの件数・前回から行動できるようになった商品）。記録は `internal/audits/PHASE_18_ACTIONABILITY.md`
@@ -18,7 +19,8 @@
 - アーカイブの過去の LP（UI Phase 10 より前）は旧UIのまま残している（書き換えない）。その中の HOME（`/`）のリンクはプロジェクトの外を指して壊れている（`./` は `archive/index.html` で今のサイトへ転送される）。直すなら過去の LP の書き換えになるので、ユーザーの判断。
 - せどりルートの内訳で、確定ルートの購入送料などが 0 のとき「−¥0」と出る（今の本番は確定ルート0件なので出ていない。出ると #807 が ERROR）。テストの架空ルートで気づいた。
 - テストの後片付けの不具合（既存）: tests/test_pokemon_coverage.py・tests/test_tcg_lottery.py は `DailyLPGenerator._load_tcg_report` をクラスから取り出して戻すので、staticmethod が外れたまま残る（後のテストで LP 全体を作ると TypeError）。test_ui_phase8 は自分で決め直して避けている。
-- 今すぐ行動の通知は dry-run の計画まで（Phase 19・20）。Discord・Telegram の transport（送信の関数）はつないでいない（ユーザーの明示の許可が要る）。dry-run で計画した変化は本番に切り替えた時点では送らない（切り替えた後の新しい変化から送る）。UNKNOWN_DELIVERY（届いたか不明）を人が片付ける手順は無い。
+- 今すぐ行動の通知は dry-run の計画まで（Phase 19〜21）。Discord・Telegram の transport（HTTP の送信の部品）は作っていない（ユーザーの明示の許可が要る）。dry-run で計画した変化は本番に切り替えた時点では送らない（切り替えた後の新しい変化から送る）。本番の送信の条件と届いたか不明の解決の手順は `ops/Secrets設定.md`。
+- 既存の「Notify workflow result」（ワークフローの結果の通知）には通知の Secrets を渡したまま（outbox とは別。今は Secrets が未設定）。
 - マイページ（Phase 7）の通知条件は**表示の絞り込みだけ**（件数・履歴・締切の目印）。メール・スマホへの配信はしていない。通知の履歴は exports/notifications の利用者向けの種類（NEW_MAIN・WATCH_TO_BUY・PRICE_DROP・PRICE_RISE・ROI_UP・ROI_DOWN）のうち、判定の印（route_checked）があり今も確定・参考ルートのものと、商品詳細の「最近の変化」（価格・在庫・抽選の受付）だけ。今の本番の通知の artifact は0件なので、履歴はほぼ「変化」になる。マイページの中身は全商品ぶん HTML に入っていて（非表示）、ウォッチ中だけを表示する（個人のウォッチは HTML に入らない）。
 - pytest の全体実行の途中で、空の `data/premium_monitor.db`（0バイト）が作られることがある。残ったまま再実行すると `test_api_automation.py::test_dry_run_no_main_mutation` が「no such table」で落ちることがある（消せば通る）。作っているテストは未特定（原因は未調査）。
 - フジヤカメラの買取価格（カメラ）は検索結果ページ由来（link_type=search）なので、商品照合未了として確定利益の売値に使わない。価格は「新品同様」（中古の最上位の等級）で、Phase 11 から used_s として保存する（新品の仕入れと同じ状態にならない）。CI の取得結果に商品ページのリンク候補は0件。静的 HTML には商品が無く（JS で描画・AWS WAF のチャレンジあり）、商品ページの URL を取れるかは未確認。
@@ -52,9 +54,9 @@
 - 既存の問題: pytest を実行すると追跡対象の exports/api_automation/collection.json が書き換わる。コミット前に `git checkout -- exports/api_automation/collection.json` で戻すこと（テストの出力先修正は別タスク）。
 
 ## 次にやること
-0. Phase 21 はユーザーの指示を待ってから始める（候補は Phase 20 の最終報告に書いた）。
+0. Phase 22 はユーザーの指示を待ってから始める（候補は Phase 21 の最終報告に書いた）。
 1. 判断待ち（`src/market/official_registry.USER_DECISIONS`）: PS5 Digital Edition・Xbox Series X・Switch 2 マリオカートセットの版。
-2. 今すぐ行動の通知の実際の送信（ユーザーの許可の後。`adapters` に Discord・Telegram の transport を渡し、ワークフローの dry-run を外し、送信の手順にだけ Secrets を渡す）。
+2. 今すぐ行動の通知の実際の送信（ユーザーの許可の後。HTTP の transport を作って `REAL_SEND_IMPLEMENTED` を変え、変数 `NOTIFICATION_REAL_SEND`・`NOTIFICATION_PROVIDERS` を設定し、「Send notifications」の手順にだけ Secrets を渡す）。
 3. eBay の成約: ユーザーの設定待ち（`ops/Secrets設定.md`）。
 
 ## 注意（次の人へ）

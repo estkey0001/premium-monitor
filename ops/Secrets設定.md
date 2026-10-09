@@ -16,6 +16,31 @@ Settings → Secrets and variables → Actions に以下のシークレットを
 - どちらか一方だけでも通知可能
 - 未設定の場合は自動でスキップ（エラーにならない）
 - 通知スクリプト: `scripts/notify_workflow_result.py`（`--dry-run` オプションで動作確認可能）
+- Secrets を渡すのは送信の手順だけ（今は「Notify workflow result」だけ）。収集・LP の生成・通知のイベントの生成・Pages・テストには
+  渡さない（deploy-check #857 が検査する。Phase 21）
+
+### 今すぐ行動の通知（ACTIONABLE_NOW）の本番の送信（Phase 21 の時点では無効）
+
+今すぐ行動の通知は outbox（`src/notifiers/outbox.py`）から送る。本番の送信は、次が**すべて**そろうまで動かない
+（`python -m src.cli notification gate` で各条件の可否だけを確かめられる。値は出さない）。
+
+| 条件 | 設定する場所 | 今 |
+|---|---|---|
+| 送信の部品（HTTP の transport）がある | コード（`adapters.REAL_SEND_IMPLEMENTED`） | 無い（Phase 21 では作らない） |
+| ユーザーの明示の許可 | Variables: `NOTIFICATION_REAL_SEND=true`（既定 false。ワークフローは "false" に固定） | false |
+| dry-run を外す | `NOTIFICATION_DRY_RUN=false`（既定 true。ワークフローは "true" に固定） | true |
+| 配信先の選択 | Variables: `NOTIFICATION_PROVIDERS=discord,telegram` | 未設定 |
+| 配信先の設定（形を検査する） | Secrets: `DISCORD_WEBHOOK_URL` / `TELEGRAM_BOT_TOKEN`・`TELEGRAM_CHAT_ID`（「Send notifications」の手順にだけ渡す） | 未設定・渡していない |
+
+届いたか不明（UNKNOWN_DELIVERY）の配信は自動では送り直さない。人が配信先で確かめて、手元で解決する:
+
+```bash
+python -m src.cli notification list-unknown
+python -m src.cli notification resolve <通知の ID> delivered|not-delivered|cancel|keep-unknown --confirm
+```
+
+解決は main の台帳と手元の台帳が同じときだけ書き換える（`git pull` で合わせてから）。台帳だけをコミットして
+`git push origin tcg-push:main`（CI の実行中は push しない）。
 
 
 ## eBay の成約（Marketplace Insights API。Phase 13）

@@ -310,9 +310,13 @@ def test_send_requires_persisted_sha(tmp_path):
     (tmp_path / "latest.json").write_text(json.dumps({"step": "observe", "diagnostics_generated_at": d["generated_at"]}),
                                           encoding="utf-8")
     ob.run_prepare(tmp_path, d, now=NOW, dry_run=False, attempt_id="r1", adapters=fx)
-    r = ob.run_send(tmp_path, now=NOW, dry_run=False, attempt_id="r1", persisted_sha="0" * 64, adapters=fx)
+    r = ob.run_send(tmp_path, now=NOW, dry_run=False, attempt_id="r1", persisted_sha="0" * 64, adapters=fx,
+                    real_send_allowed=True)
     assert r["skipped"] == "not_persisted" and calls == []
     r = ob.run_send(tmp_path, now=NOW, dry_run=False, attempt_id="r1", persisted_sha=ob.file_sha(path), adapters=fx)
+    assert r["skipped"] == "real_send_disabled" and calls == []         # 最終の関門が閉じていれば送らない（Phase 21）
+    r = ob.run_send(tmp_path, now=NOW, dry_run=False, attempt_id="r1", persisted_sha=ob.file_sha(path), adapters=fx,
+                    real_send_allowed=True)
     assert calls and r["dispatch_sent"] == 1                            # 否定の対照: 保存した内容と同じなら送る
     r = ob.run_send(tmp_path, now=NOW, dry_run=True, attempt_id="r1", persisted_sha=ob.file_sha(path), adapters=fx)
     assert r["skipped"] == "dry_run"
@@ -657,11 +661,14 @@ def test_gateway_errors_are_ambiguous():
 
 
 def test_payload_is_not_truncated():
-    """本文を切り詰めない（末尾の購入 URL を欠かさない）。長すぎれば送らない（FAILED_FINAL）。"""
-    rec = {"message": "x" * 1990 + "\n購入する: " + SONY}
+    """本文の購入 URL を切らない（短縮は商品名と確認の時刻だけ）。収まらなければ送らない（FAILED_FINAL）。"""
+    rec = {"product": "長い商品名" * 500, "availability_kind": "IN_STOCK", "net_profit": 54870, "roi": 0.396,
+           "action_url": SONY, "cta_label": "購入する", "checked_at": NOW.isoformat()}
     d = ad.DiscordAdapter(lambda p, k: (200, {}, {}))
     p = d.build_payload(rec)
-    assert p["content"].endswith(SONY) and "too_long" in d.validate(p)
+    assert p["content"].endswith(SONY) and len(p["content"]) <= 2000 and d.validate_payload(p) == []
+    too = dict(rec, action_url="https://pur.store.sony.jp/" + "a" * 2100)
+    assert d.build_payload(too)["content"] == ""
     with pytest.raises(ad.ProviderError) as e:
-        d.send(rec, "k")
+        d.send(too, "k")
     assert e.value.kind == ad.FINAL

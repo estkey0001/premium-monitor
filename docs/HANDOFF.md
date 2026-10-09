@@ -1,6 +1,7 @@
-# HANDOFF（最終更新: 2026-10-08）
+# HANDOFF（最終更新: 2026-10-09）
 
 ## 今の状態
+- Phase 22（Telegram の接続の試験）: `src/notifiers/telegram_transport.py`（公式の Bot API・urllib・ログなし）。関門 `real_send_gate(purpose="canary")`（Telegram だけ・REAL_SEND・DRY_RUN=false・TELEGRAM_CANARY・手動の実行・設定）。`outbox.run_canary`（固定の [TEST] 文・同じ ID で二度と送らない・SENDING を main に保存してから送る）。商品の通知の本番の送信は `PRODUCT_REAL_SEND_ENABLED = False` で無効。Telegram の Secrets は「Send notifications」の手順だけ（結果の通知には渡さない）。記録は `internal/audits/PHASE_22_TELEGRAM_CANARY.md`
 - Phase 21（配信先の部品と届いたか不明の解決）: `src/notifiers/adapters.py` に Discord・Telegram の本文・設定の検査・応答の分類・配信先の ID・秘密の値を消す・安全な短縮（URL を切らない）。本番の送信の最終の関門 `real_send_gate`（送信の部品なし・旗 false・dry-run で常に閉じる）。届いたか不明は `python -m src.cli notification list-unknown` / `resolve <ID> delivered|not-delivered|cancel|keep-unknown --confirm`（main の台帳と同じときだけ・記録を残す）。基準のファイルは実行の識別・main・台帳を記録して保存の側で確かめる。通知の Secrets は収集・LP の生成の手順から外した。記録は `internal/audits/PHASE_21_DELIVERY_PROVIDERS.md`
 - Phase 20（通知の outbox）: `src/notifiers/outbox.py`。候補 → outbox（PENDING）→ 保存 → 配信の直前の確認（dry-run は DRY_RUN_PLANNED・本番は SENDING）→ 保存 → 送信（保存した台帳の sha と同じときだけ）→ 保存。冪等性のキーは通常販売は arm（行動できないと確かめた観測・連番つき）、抽選などは受付の識別（商品|開始。締切の延長では再通知しない）。記録を作った変化は方式に依らない消えない印で作り直さない。前の実行の SENDING は届いたか不明（送り直さない）。台帳は生成の前に main に合わせ（`scripts/sync_notification_state.sh`）、手順ごとに一時の worktree から台帳だけを main に保存する（`scripts/persist_notification_state.sh`。main の台帳が変わっていたら止める。生成物のコミット・deploy-check・Pages に依らない）。配信先の部品は `src/notifiers/adapters.py`（通信なし・transport を渡さない）。記録は `internal/audits/PHASE_20_NOTIFICATION_OUTBOX.md`
 - Phase 19（今すぐ行動の通知・dry-run）: 種類 ACTIONABLE_NOW（`src/notifiers/actionable.py`）。LP の生成の中で、診断の直後に「行動できない → できる」の確定の利益商品だけを候補にする（台帳 `exports/notifications/actionable/state.json` の通知済みの組み合わせ = 商品・種類・状態・受付の識別。在庫切れ・受付終了で re-arm、更新待ち・未確認では re-arm しない）。配信の直前に期限・締切・公式のページ・確定の利益を確かめる。外部へは送らない（NOTIFICATION_DRY_RUN 固定・送信の関数を渡さない）。運営者向けの「通知」に件数。Low の文言（在庫ありの絞り込み・TOP10・HOME・商品詳細の「商品の状態」）。記録は `internal/audits/PHASE_19_ACTIONABLE_NOTIFICATION.md`
@@ -54,9 +55,9 @@
 - 既存の問題: pytest を実行すると追跡対象の exports/api_automation/collection.json が書き換わる。コミット前に `git checkout -- exports/api_automation/collection.json` で戻すこと（テストの出力先修正は別タスク）。
 
 ## 次にやること
-0. Phase 22 はユーザーの指示を待ってから始める（候補は Phase 21 の最終報告に書いた）。
+0. Phase 23 はユーザーの指示を待ってから始める（候補は Phase 22 の最終報告に書いた）。
 1. 判断待ち（`src/market/official_registry.USER_DECISIONS`）: PS5 Digital Edition・Xbox Series X・Switch 2 マリオカートセットの版。
-2. 今すぐ行動の通知の実際の送信（ユーザーの許可の後。HTTP の transport を作って `REAL_SEND_IMPLEMENTED` を変え、変数 `NOTIFICATION_REAL_SEND`・`NOTIFICATION_PROVIDERS` を設定し、「Send notifications」の手順にだけ Secrets を渡す）。
+2. Telegram の商品の通知の本番の送信（別の明示の許可の後。`PRODUCT_REAL_SEND_ENABLED` を変える。接続の試験の手順は `ops/Secrets設定.md`）。
 3. eBay の成約: ユーザーの設定待ち（`ops/Secrets設定.md`）。
 
 ## 注意（次の人へ）

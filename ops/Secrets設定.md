@@ -16,21 +16,42 @@ Settings → Secrets and variables → Actions に以下のシークレットを
 - どちらか一方だけでも通知可能
 - 未設定の場合は自動でスキップ（エラーにならない）
 - 通知スクリプト: `scripts/notify_workflow_result.py`（`--dry-run` オプションで動作確認可能）
-- Secrets を渡すのは送信の手順だけ（今は「Notify workflow result」だけ）。収集・LP の生成・通知のイベントの生成・Pages・テストには
-  渡さない（deploy-check #857 が検査する。Phase 21）
+- Secrets を渡すのは送信の手順だけ。Discord は「Notify workflow result」（ワークフローの結果の通知）、Telegram は
+  「Send notifications」（今すぐ行動の通知）だけ。収集・LP の生成・通知のイベントの生成・Pages・テストには渡さない
+  （deploy-check #857・#858 が検査する。Phase 21・22）
+- Phase 22 から、ワークフローの結果の通知は Telegram に送らない（Telegram の Secrets は「Send notifications」だけに渡す）
 
-### 今すぐ行動の通知（ACTIONABLE_NOW）の本番の送信（Phase 21 の時点では無効）
+### Telegram の接続の試験（canary。Phase 22）
+
+商品の通知とは別に、Telegram に「[TEST] … 接続テスト」の1件だけを送って接続を確かめる。送るのは次が**すべて**そろったときだけ
+（`python -m src.cli notification gate` では商品の通知の関門だけを表示する）。
+
+| 条件 | 設定する場所 |
+|---|---|
+| Telegram の設定 | Secrets: `TELEGRAM_BOT_TOKEN`・`TELEGRAM_CHAT_ID`（「Send notifications」の手順にだけ渡る） |
+| 本番の送信の許可 | Variables: `NOTIFICATION_REAL_SEND=true` |
+| dry-run を外す | Variables: `NOTIFICATION_DRY_RUN=false`（商品の通知はコードで無効のまま） |
+| 配信先 | Variables: `NOTIFICATION_PROVIDERS=telegram`（Discord を含めると関門は閉じる） |
+| 接続の試験の旗 | Variables: `TELEGRAM_CANARY=true` |
+| 手動の実行 | Actions → Daily LP Update → Run workflow（定時の実行では送らない） |
+
+- 送るのは1回の実行で1件だけ。同じ試験の ID（`TELEGRAM_CANARY_ID`。既定 `telegram_canary_v1`）では二度と送らない
+  （届いた・不明・失敗のどれでも。試し直すときは新しい ID を変数に設定する）
+- 送る前に SENDING を main に保存する。送った後に止まったら次の実行で「届いたか不明」になり、送り直さない
+- 送った後は `TELEGRAM_CANARY` を false（または削除）に戻す
+
+### 今すぐ行動の通知（ACTIONABLE_NOW）の本番の送信（Phase 22 の時点でも無効）
 
 今すぐ行動の通知は outbox（`src/notifiers/outbox.py`）から送る。本番の送信は、次が**すべて**そろうまで動かない
 （`python -m src.cli notification gate` で各条件の可否だけを確かめられる。値は出さない）。
 
 | 条件 | 設定する場所 | 今 |
 |---|---|---|
-| 送信の部品（HTTP の transport）がある | コード（`adapters.REAL_SEND_IMPLEMENTED`） | 無い（Phase 21 では作らない） |
+| 商品の通知の本番の送信 | コード（`adapters.PRODUCT_REAL_SEND_ENABLED`） | False（Phase 22 でも無効。別の明示の許可で変える） |
 | ユーザーの明示の許可 | Variables: `NOTIFICATION_REAL_SEND=true`（既定 false。ワークフローは "false" に固定） | false |
 | dry-run を外す | `NOTIFICATION_DRY_RUN=false`（既定 true。ワークフローは "true" に固定） | true |
-| 配信先の選択 | Variables: `NOTIFICATION_PROVIDERS=discord,telegram` | 未設定 |
-| 配信先の設定（形を検査する） | Secrets: `DISCORD_WEBHOOK_URL` / `TELEGRAM_BOT_TOKEN`・`TELEGRAM_CHAT_ID`（「Send notifications」の手順にだけ渡す） | 未設定・渡していない |
+| 配信先の選択 | Variables: `NOTIFICATION_PROVIDERS=telegram`（Telegram だけ。Discord は無効） | 未設定 |
+| 配信先の設定（形を検査する） | Secrets: `TELEGRAM_BOT_TOKEN`・`TELEGRAM_CHAT_ID`（「Send notifications」の手順にだけ渡す） | 未設定 |
 
 届いたか不明（UNKNOWN_DELIVERY）の配信は自動では送り直さない。人が配信先で確かめて、手元で解決する:
 

@@ -508,6 +508,11 @@ def build_actionable_notices(rep: dict | None) -> dict:
             "items": [{"product": str(c.get("product") or c.get("product_id") or ""), "status": str(c.get("status") or ""),
                        "transition": str(c.get("transition") or ""), "dispatch": str(c.get("outbox_status") or "")}
                       for c in (r.get("candidates") or []) if isinstance(c, dict)][:20],
+            # 配信先の状態（Phase 22。前回の送信の手順の時点。値・トークン・チャット ID は元から無い）
+            "telegram": {k: (r.get("provider_status") or {}).get("telegram", {}).get(k)
+                         for k in ("configured", "status", "canary_status", "last_delivery_status",
+                                   "delivered_at", "real_send_enabled")} if isinstance(r.get("provider_status"), dict)
+            else {},
             # 届いたか不明（Phase 21）。配信先の URL・トークン・チャット ID は元から記録に無い
             "unknown": [{k: str(u.get(k) or "") for k in ("notification_id", "product", "provider", "attempted_at",
                                                            "state", "deadline", "reason", "status_title")}
@@ -969,7 +974,19 @@ def _act_notices(a: dict) -> str:
                 + '<p class="nu-osub">この画面は見るだけです（静的なページ）。解決は手元のコマンドで行います: '
                   '<code>python -m src.cli notification resolve &lt;通知の ID&gt; delivered|not-delivered|cancel'
                   '|keep-unknown --confirm</code>（台帳だけをコミットして main に push）</p>') if unk else ""
-    return _box("今すぐ行動の通知", f'<dl class="nu-ad-dl"><dt>方式</dt><dd>{esc(mode)}</dd>{dl}</dl>' + unk_html
+    tg = a.get("telegram") or {}
+    tg_html = ""
+    if tg:
+        def yn(v):
+            return "はい" if v else "いいえ"
+        tg_html = (f'<dl class="nu-ad-dl"><dt>Telegram の設定</dt><dd>{yn(tg.get("configured"))}</dd>'
+                   f'<dt>本番の送信（接続の試験）</dt><dd>{yn(tg.get("real_send_enabled"))}</dd>'
+                   f'<dt>配信先の状態</dt><dd>{esc(str(tg.get("status") or "—"))}</dd>'
+                   f'<dt>接続の試験</dt><dd>{esc(str(tg.get("canary_status") or "—"))}</dd>'
+                   f'<dt>最後の配信</dt><dd>{esc(str(tg.get("last_delivery_status") or "—"))}'
+                   + (f'（{_when(tg.get("delivered_at"))}）' if tg.get("delivered_at") else "")
+                   + '</dd><dt>商品の通知の本番の送信</dt><dd>無効</dd></dl>')
+    return _box("今すぐ行動の通知", f'<dl class="nu-ad-dl"><dt>方式</dt><dd>{esc(mode)}</dd>{dl}</dl>' + tg_html + unk_html
                 + (f'<ul class="nu-ad-list">{items}</ul>' if items else _empty(
                     "今回、行動できるようになった利益商品はありません" + ("（基準日）。" if a["baseline"] else "。")))
                 + _generated("今回", a["at"]),

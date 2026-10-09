@@ -4136,6 +4136,7 @@ def check() -> list[dict]:
     results.extend(_check_phase19_actionable_notifications(html))
     results.extend(_check_phase20_notification_outbox())
     results.extend(_check_phase21_delivery_providers())
+    results.extend(_check_phase22_telegram_safety())
 
     # ══════════════════════════════════════════════════════════════════
     # #820-#825: データの正確さ・鮮度の偽装（Phase 0）
@@ -4968,6 +4969,17 @@ def _check_phase19_actionable_notifications(html: str) -> list[dict]:
                         + ("" if not (bad or warn) else f" ← {(bad or warn)[:4]}")}]
 
 
+def _is_valid_canary_record(r: dict) -> bool:
+    """Telegram の接続の試験の記録か（Telegram だけ・固定の [TEST] の文・商品なし。Phase 22）。"""
+    from src.notifiers import outbox as _ob
+    # 本文は文言の一致でなく形で見る（文言を変えても過去の記録で止めない。レビュー L-5）: [TEST] で始まり、URL・価格を含まない
+    msg = str(r.get("message") or "")
+    return (r.get("is_canary") is True and r.get("notification_type") == "TELEGRAM_CANARY" and not r.get("product_id")
+            and list((r.get("channels") or {}).keys()) == ["telegram"] and msg.startswith("[TEST]")
+            and "http" not in msg and "¥" not in msg and not r.get("action_url")
+            and str(r.get("idempotency_key") or "").startswith("CANARY:telegram:") and bool(_ob.CANARY_TEXT))
+
+
 def _check_phase20_notification_outbox() -> list[dict]:
     """Phase 20: 通知の outbox（#856）。冪等性のキーが作り直しても同じ・保存の前に送らない・送った後に保存できなければ
     次の実行は送り直さない（届いたか不明）・dry-run の記録は本番の送信を止めない・台帳は atomic に書く・配信先の部品は
@@ -5091,11 +5103,16 @@ def _check_phase20_notification_outbox() -> list[dict]:
         if "steps.persist_outbox_prepared.outcome == 'success'" not in send or \
                 "--persisted-sha \"${{ steps.persist_outbox_prepared.outputs.sha }}\"" not in send:
             bad.append("送信の手順が、保存した台帳を確かめずに動く")
-        for n in ("Prepare notification dispatch", "Send notifications"):
-            if 'NOTIFICATION_DRY_RUN: "true"' not in steps.get(n, ""):
-                bad.append(f"{n} が dry-run に固定されていない")
-            if _re20.search(r"DISCORD_WEBHOOK_URL|TELEGRAM_BOT_TOKEN|TELEGRAM_CHAT_ID", steps.get(n, "")):
-                bad.append(f"{n} に通知の送信先の Secrets を渡している")
+        prep = steps.get("Prepare notification dispatch", "")
+        if 'NOTIFICATION_DRY_RUN: "true"' not in prep:
+            bad.append("Prepare notification dispatch が dry-run に固定されていない")
+        if _re20.search(r"DISCORD_WEBHOOK_URL|TELEGRAM_BOT_TOKEN|TELEGRAM_CHAT_ID", prep):
+            bad.append("Prepare notification dispatch に通知の送信先の Secrets を渡している")
+        # 送信の手順は変数で dry-run を外せるが、既定は dry-run（Phase 22）。Discord の Secrets は渡さない
+        if "NOTIFICATION_DRY_RUN: ${{ vars.NOTIFICATION_DRY_RUN || 'true' }}" not in send:
+            bad.append("Send notifications の dry-run の既定が true でない")
+        if _re20.search(r"DISCORD_WEBHOOK_URL", send):
+            bad.append("Send notifications に Discord の Secrets を渡している")
         if "NOTIFICATION_OUTBOX_SYNCED: ${{ steps.sync_outbox.outcome == 'success' }}" not in steps.get(
                 "Generate daily LP Variant A", ""):
             bad.append("台帳を main に合わせられなかったときに候補を作らない形になっていない")
@@ -5114,7 +5131,9 @@ def _check_phase20_notification_outbox() -> list[dict]:
             warn.append("台帳が前の形式のまま（次の生成で今の形になる）")
         if any(_re20.search(p, text) for p in _SECRET_PATTERNS):
             bad.append("通知の台帳に配信先の URL・トークンがある")
-        live = [r for r in (st.get("records") or {}).values() if isinstance(r, dict) and r.get("mode") == "live"]
+        # Telegram の接続の試験（Phase 22）の記録は除く（商品の通知の本番の送信の記録だけを数える。監査 H-1）
+        live = [r for r in (st.get("records") or {}).values() if isinstance(r, dict) and r.get("mode") == "live"
+                and not _is_valid_canary_record(r)]
         if live:
             bad.append(f"本番の送信の記録がある（Phase 20 は dry-run）: {len(live)}件")
     except OSError:
@@ -5129,8 +5148,15 @@ def _check_phase20_notification_outbox() -> list[dict]:
 
 
 _NOTIFY_SECRET_NAMES = ("DISCORD_WEBHOOK_URL", "TELEGRAM_BOT_TOKEN", "TELEGRAM_CHAT_ID")
-_SECRET_SENDER_STEPS = {"Notify workflow result"}      # 通知の Secrets を渡してよい手順（送信の手順だけ）
-_SECRET_SENDER_RUN = "python scripts/notify_workflow_result.py"   # その手順が実行してよいもの（名前だけで許さない）
+# 通知の Secrets を渡してよい手順（送信の手順だけ）: 手順の名前 → (渡してよい Secrets, 実行してよいもの)。
+# 名前だけでは許さない（実行するものも確かめる）。Telegram は「Send notifications」だけ（Phase 22）
+_SECRET_SENDERS = {
+    "Notify workflow result": ({"DISCORD_WEBHOOK_URL"}, lambda run: run == "python scripts/notify_workflow_result.py"),
+    "Send notifications": ({"TELEGRAM_BOT_TOKEN", "TELEGRAM_CHAT_ID"},
+                           lambda run: run == 'python -m src.cli dispatch-notifications --step send --persisted-sha '
+                                              '"${{ steps.persist_outbox_prepared.outputs.sha }}"'),
+}
+_SECRET_SENDER_STEPS = set(_SECRET_SENDERS)
 
 
 def _notification_secret_exposure(root: Path) -> list[str]:
@@ -5161,7 +5187,7 @@ def _notification_secret_exposure(root: Path) -> list[str]:
             probs.append(f"{wf_path.name}: 送信の手順の env の外に通知の Secrets の参照がある")
         if pat.search(str(doc.get("env") or "")):
             probs.append(f"{wf_path.name}: ワークフロー全体の env に通知の Secrets")
-        senders = 0
+        senders: dict = {}
         for jname, job in (doc.get("jobs") or {}).items():
             if not isinstance(job, dict):
                 continue
@@ -5180,14 +5206,18 @@ def _notification_secret_exposure(root: Path) -> list[str]:
                 if pat.search(str(other)):
                     probs.append(f"{wf_path.name}: {name} の env 以外に通知の Secrets")
                 if pat.search(str(st.get("env") or "")):
-                    if name not in _SECRET_SENDER_STEPS:
+                    names = {m.upper() for m in pat.findall(str(st.get("env") or ""))}
+                    if name not in _SECRET_SENDERS:
                         probs.append(f"{wf_path.name}: 送信の手順でない {name} に通知の Secrets")
-                    elif str(st.get("run") or "").strip() != _SECRET_SENDER_RUN:
-                        probs.append(f"{wf_path.name}: {name} が結果の通知のスクリプト以外を実行する")
+                    elif not names <= _SECRET_SENDERS[name][0]:
+                        probs.append(f"{wf_path.name}: {name} に渡してよくない Secrets（{sorted(names - _SECRET_SENDERS[name][0])}）")
+                    elif not _SECRET_SENDERS[name][1](str(st.get("run") or "").strip()):
+                        probs.append(f"{wf_path.name}: {name} が決まったコマンド以外を実行する")
                     else:
-                        senders += 1
-        if senders > 1:
-            probs.append(f"{wf_path.name}: 通知の Secrets を持つ手順が複数ある（{senders}）")
+                        senders[name] = senders.get(name, 0) + 1
+        for n, c in senders.items():
+            if c > 1:
+                probs.append(f"{wf_path.name}: 通知の Secrets を持つ {n} の手順が複数ある（{c}）")
     return probs
 
 
@@ -5206,8 +5236,8 @@ def _check_phase21_delivery_providers(root: Path | None = None) -> list[dict]:
     try:
         from src.notifiers import adapters as ad
         from src.notifiers import outbox as ob
-        if ad.REAL_SEND_IMPLEMENTED:
-            bad.append("送信の部品が有効になっている（Phase 21 は実送信しない）")
+        if ad.REAL_SEND_IMPLEMENTED or ad.PRODUCT_REAL_SEND_ENABLED:
+            bad.append("商品の通知の本番の送信が有効になっている（Phase 22 は接続の試験だけ）")
         if ad.real_send_gate({})["allowed"]:
             bad.append("既定の設定で本番の送信の関門が開く")
         full = {"NOTIFICATION_REAL_SEND": "true", "NOTIFICATION_DRY_RUN": "false", "NOTIFICATION_PROVIDERS": "discord",
@@ -5272,9 +5302,15 @@ def _check_phase21_delivery_providers(root: Path | None = None) -> list[dict]:
         bad.extend(_notification_secret_exposure(root))
         if _re21.search(r"NOTIFICATION_REAL_SEND:\s*[\"']?(true|1|yes|on)", wf, _re21.I):
             bad.append("本番の送信の旗を true にしている")
-        for n in ("Generate daily LP Variant A", "Prepare notification dispatch", "Send notifications"):
+        for n in ("Generate daily LP Variant A", "Prepare notification dispatch"):
             if 'NOTIFICATION_REAL_SEND: "false"' not in steps.get(n, ""):
                 bad.append(f"{n} に本番の送信の旗（false）が無い")
+        send = steps.get("Send notifications", "")
+        # 送信の手順は変数で設定する（既定は false）。接続の試験の旗は手動の実行のときだけ（Phase 22）
+        if "NOTIFICATION_REAL_SEND: ${{ vars.NOTIFICATION_REAL_SEND || 'false' }}" not in send:
+            bad.append("Send notifications の本番の送信の旗の既定が false でない")
+        if "TELEGRAM_CANARY: ${{ github.event_name == 'workflow_dispatch' && vars.TELEGRAM_CANARY || 'false' }}" not in send:
+            bad.append("接続の試験の旗が、手動の実行に限られていない")
         sh = (root / "scripts" / "persist_notification_state.sh").read_text(encoding="utf-8")
         if not all(x in sh for x in ('"$B_RUN" != "$RUN_ID"', 'AT_MAIN=', 'MAX_AGE_SECONDS')):
             bad.append("保存の手順が、基準のファイルの実行の識別・main のコミットの台帳・古さを確かめない")
@@ -5283,6 +5319,129 @@ def _check_phase21_delivery_providers(root: Path | None = None) -> list[dict]:
     return [{"level": "ok" if not bad else "error", "check": "delivery_providers",
              "message": "#857 配信先と人による解決（本番の送信は無効・Secrets は送信の手順だけ・応答の分類・配信先の ID・"
                         "秘密の値を消す・届いたか不明の解決・古い基準を使わない）" + ("" if not bad else f" ← {bad[:4]}")}]
+
+
+class _FakeTgResp:
+    def __init__(self, status, body, headers=None):
+        self.status, self.body, self.headers = status, body, headers or {}
+
+    def getcode(self):
+        return self.status
+
+    def read(self):
+        return self.body
+
+
+class _FakeTgOpener:
+    """Telegram の偽の通信（ネットワークに出ない）。送った要求を記録する。"""
+
+    def __init__(self, result):
+        self.result, self.requests = result, []
+
+    def open(self, req, timeout=None):
+        self.requests.append(req)
+        if isinstance(self.result, BaseException):
+            raise self.result
+        if isinstance(self.result, tuple) and self.result[0] >= 400:
+            import io
+            import urllib.error
+            raise urllib.error.HTTPError(req.full_url, self.result[0], "x", self.result[2] if len(self.result) > 2 else {},
+                                         io.BytesIO(self.result[1]))
+        return _FakeTgResp(self.result[0], self.result[1], self.result[2] if len(self.result) > 2 else {})
+
+
+def _check_phase22_telegram_safety(root: Path | None = None) -> list[dict]:
+    """Phase 22: Telegram の実送信の安全（#858）。公式の Bot API だけ・要求の形（parse_mode なし・プレビューなし）・
+    応答の分類（200 かつ ok=true かつ message_id だけ成功）・例外にトークンを出さない・接続の試験は同じ ID で二度と
+    送らない・SENDING の保存の前に送らない・商品の通知の本番の送信は無効・接続の試験は手動の実行に限る。"""
+    import json as _json22
+    import re as _re22
+    import socket as _sock22
+    import tempfile as _tf22
+    from datetime import datetime as _dt22
+
+    from src.tcg.models import JST as _JST22
+    bad = []
+    root = root or Path(__file__).resolve().parent.parent
+    try:
+        from src.notifiers import adapters as ad
+        from src.notifiers import outbox as ob
+        from src.notifiers import telegram_transport as tt
+        token, chat = "123456789:" + "A" * 35, "-1001234567890"
+        if tt.API_BASE != "https://api.telegram.org":
+            bad.append("Telegram の公式の Bot API 以外に送る")
+        src_tt = (root / "src" / "notifiers" / "telegram_transport.py").read_text(encoding="utf-8")
+        if _re22.search(r"\bprint\(|logger\.|logging\.", src_tt):
+            bad.append("送信の部品がログ・出力をする（URL・トークンが出るおそれ）")
+        # 要求の形
+        op = _FakeTgOpener((200, b'{"ok": true, "result": {"message_id": 77}}'))
+        a = ad.TelegramAdapter(tt.make_telegram_transport(token, chat, opener=op))
+        rec = {"is_test_message": True, "message": ob.CANARY_TEXT}
+        if a.send(rec, "k") != "77":
+            bad.append("200 + ok=true の message_id を取れない")
+        req = op.requests[0]
+        body = _json22.loads(req.data.decode("utf-8"))
+        if not req.full_url.startswith("https://api.telegram.org/bot") or req.get_method() != "POST" or \
+                "parse_mode" in body or body.get("disable_web_page_preview") is not True or body.get("chat_id") != chat:
+            bad.append("Telegram の要求の形が違う（POST・公式・parse_mode なし・プレビューなし・chat_id）")
+        # 応答の分類
+        for name, result, kind in (("200 ok:false", (200, b'{"ok": false, "error_code": 400}'), ad.FINAL),
+                                   ("200 の読めない本文", (200, b"not json"), ad.AMBIGUOUS),
+                                   ("200 ok:true で message_id なし", (200, b'{"ok": true, "result": {}}'), ad.AMBIGUOUS),
+                                   ("400", (400, b'{"ok": false, "error_code": 400}'), ad.FINAL),
+                                   ("401", (401, b'{"ok": false, "error_code": 401}'), ad.FINAL),
+                                   ("403", (403, b'{"ok": false, "error_code": 403}'), ad.FINAL),
+                                   ("429", (429, b'{"ok": false, "error_code": 429, "parameters": {"retry_after": 9}}'),
+                                    ad.RETRYABLE),
+                                   ("500", (500, b""), ad.AMBIGUOUS), ("502", (502, b""), ad.AMBIGUOUS),
+                                   ("503", (503, b""), ad.RETRYABLE), ("504", (504, b""), ad.AMBIGUOUS),
+                                   ("タイムアウト", _sock22.timeout("timed out"), ad.AMBIGUOUS)):
+            try:
+                ad.TelegramAdapter(tt.make_telegram_transport(token, chat, opener=_FakeTgOpener(result))).send(rec, "k")
+                got = None
+            except ad.ProviderError as e:
+                got = e.kind
+                if token in str(e) or token.split(":")[1] in str(e.error_class):
+                    bad.append(f"{name}: 例外にトークンが入る")
+            if got != kind:
+                bad.append(f"Telegram の {name} の分類が違う（{got}）")
+        # 接続の試験: 同じ ID では二度と送らない・保存の前に送らない
+        now = _dt22(2026, 10, 9, 12, 0, tzinfo=_JST22)
+        with _tf22.TemporaryDirectory() as tmp:
+            out = Path(tmp)
+            ob.save(out / ob.STORE_NAME, ob.empty_store())
+            op2 = _FakeTgOpener((200, b'{"ok": true, "result": {"message_id": 5}}'))
+            ad2 = ad.TelegramAdapter(tt.make_telegram_transport(token, chat, opener=op2))
+            r0 = ob.run_canary(out, now=now, attempt_id="a0", canary_id="t", adapter=ad2, persist=lambda: "")
+            if r0["requests"] or op2.requests:
+                bad.append("SENDING を保存できないのに接続の試験を送る")
+            def ok_persist():
+                return ob.file_sha(out / ob.STORE_NAME)
+            r1 = ob.run_canary(out, now=now, attempt_id="a1", canary_id="t", adapter=ad2, persist=ok_persist)
+            r2 = ob.run_canary(out, now=now, attempt_id="a2", canary_id="t", adapter=ad2, persist=ok_persist)
+            st, _b = ob.load(out / ob.STORE_NAME)
+            text = ob.dumps(st)
+            if (r1.get("status"), len(op2.requests), r2["requests"]) != (ob.DELIVERED, 1, 0):
+                bad.append("接続の試験を同じ ID で二度送る・送れない")
+            if token in text or chat in text:
+                bad.append("台帳にトークン・チャット ID が入る")
+        # 関門
+        full = {"NOTIFICATION_REAL_SEND": "true", "NOTIFICATION_DRY_RUN": "false", "NOTIFICATION_PROVIDERS": "telegram",
+                "TELEGRAM_CANARY": "true", "GITHUB_EVENT_NAME": "workflow_dispatch",
+                "TELEGRAM_BOT_TOKEN": token, "TELEGRAM_CHAT_ID": chat}
+        if ad.real_send_gate(full, purpose="product")["allowed"]:
+            bad.append("商品の通知の本番の送信の関門が開く")
+        if not ad.real_send_gate(full, purpose="canary")["allowed"]:
+            bad.append("全部そろっても接続の試験の関門が開かない")
+        for k, v in (("GITHUB_EVENT_NAME", "schedule"), ("NOTIFICATION_PROVIDERS", "telegram,discord"),
+                     ("TELEGRAM_CANARY", "false"), ("NOTIFICATION_DRY_RUN", "true")):
+            if ad.real_send_gate(dict(full, **{k: v}), purpose="canary")["allowed"]:
+                bad.append(f"{k}={v} でも接続の試験の関門が開く")
+    except Exception as exc:  # noqa: BLE001
+        bad.append(f"Telegram の送信を確かめられない: {type(exc).__name__}")
+    return [{"level": "ok" if not bad else "error", "check": "telegram_real_send_safety",
+             "message": "#858 Telegram の実送信の安全（公式の Bot API・要求の形・応答の分類・トークンを出さない・接続の試験は"
+                        "1回だけ・保存の前に送らない・商品の通知は無効・手動の実行だけ）" + ("" if not bad else f" ← {bad[:4]}")}]
 
 
 def _check_new_ui(html: str) -> list[dict]:

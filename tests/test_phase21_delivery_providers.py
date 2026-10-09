@@ -125,8 +125,11 @@ def test_real_send_gate_closed_by_default():
     full = {"NOTIFICATION_REAL_SEND": "true", "NOTIFICATION_DRY_RUN": "false", "NOTIFICATION_PROVIDERS": "discord,telegram",
             "DISCORD_WEBHOOK_URL": DUMMY_HOOK, "TELEGRAM_BOT_TOKEN": DUMMY_TOKEN, "TELEGRAM_CHAT_ID": "-100123"}
     g = ad.real_send_gate(full)
-    assert not g["allowed"] and g["checks"]["implemented"] is False   # 送信の部品が無いので閉じたまま
-    assert all(v for k, v in g["checks"].items() if k != "implemented")
+    assert not g["allowed"] and g["checks"]["implemented"] is False   # 商品の通知の送信は無効のまま（Phase 22）
+    assert g["checks"]["provider_selected"] is False                  # Discord を含む選択は受け付けない（Phase 22）
+    tg = dict(full, NOTIFICATION_PROVIDERS="telegram")
+    g = ad.real_send_gate(tg)
+    assert not g["allowed"] and all(v for k, v in g["checks"].items() if k != "implemented")
     assert DUMMY_HOOK not in json.dumps(g) and DUMMY_TOKEN not in json.dumps(g)
 
 

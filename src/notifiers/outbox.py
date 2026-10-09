@@ -366,6 +366,8 @@ def prepare(store: dict, rows: list, *, now: datetime, mode: str, attempt_id: st
         for ch in stale:
             _set(rec, ch, UNKNOWN_DELIVERY, now, error_class="interrupted_after_send")
         out["unknown"] += 1 if stale else 0
+        if rec.get("is_canary"):                             # 接続の試験は商品の配信の直前の確認に回さない
+            continue
         if rec["mode"] != mode:
             if rec["status"] in DUE:                         # 方式が変わった（dry-run の未配信を本番で送らない）
                 for ch, c in rec["channels"].items():
@@ -414,17 +416,23 @@ def prepare(store: dict, rows: list, *, now: datetime, mode: str, attempt_id: st
     return out
 
 
-def send(store: dict, *, now: datetime, attempt_id: str, adapters: dict) -> dict:
-    """この実行の SENDING の記録だけを、1回ずつ送る（再試行は次の実行の prepare が決める）。"""
-    out = {"delivered": 0, "retryable": 0, "final": 0, "unknown": 0, "expired": 0, "cancelled": 0}
-    for rec in store["records"].values():
+def send(store: dict, *, now: datetime, attempt_id: str, adapters: dict, only_ids=None) -> dict:
+    """この実行の SENDING の記録だけを、1回ずつ送る（再試行は次の実行の prepare が決める）。
+
+    only_ids: 送る記録の notification_id を限る（接続の試験は自分の記録だけ。監査 M-1）。requests は実際に送った数。
+    """
+    out = {"delivered": 0, "retryable": 0, "final": 0, "unknown": 0, "expired": 0, "cancelled": 0, "requests": 0}
+    for nid_, rec in store["records"].items():
+        if only_ids is not None and nid_ not in only_ids:
+            continue
         for ch, c in rec["channels"].items():
             if c["status"] != SENDING or c.get("attempt_id") != attempt_id:
                 continue
             a = c["attempts"][-1] if c["attempts"] else {}
             adapter = adapters.get(ch)
             # 本文を作る直前にもう一度確かめる（SENDING を保存してから送るまでに期限・締切が過ぎたら送らない）
-            why = an.revalidate_fields(rec | {"availability": rec["availability_kind"], "cta_url": rec["action_url"]}, now)
+            why = [] if rec.get("is_canary") else an.revalidate_fields(
+                rec | {"availability": rec["availability_kind"], "cta_url": rec["action_url"]}, now)
             if why:
                 status = EXPIRED if (_expired(rec, now) or "expired" in why or "deadline_invalid" in why) else CANCELLED
                 a.update(status=status, error_class=",".join(why)[:80])
@@ -434,7 +442,11 @@ def send(store: dict, *, now: datetime, attempt_id: str, adapters: dict) -> dict
             try:
                 if adapter is None or not adapter.configured:
                     raise ad.ProviderError(ad.FINAL, "not_configured")
-                did = adapter.send(rec, rec["idempotency_key"])
+                calls0 = getattr(adapter, "calls", 0)
+                try:
+                    did = adapter.send(rec, rec["idempotency_key"])
+                finally:
+                    out["requests"] += getattr(adapter, "calls", calls0) - calls0   # 実際に transport を呼んだ数
             except ad.ProviderError as e:
                 a.update(status=e.kind, error_class=e.error_class)
                 if e.kind == ad.AMBIGUOUS:
@@ -450,8 +462,8 @@ def send(store: dict, *, now: datetime, attempt_id: str, adapters: dict) -> dict
                     _set(rec, ch, FAILED_FINAL, now, error_class=e.error_class)
                     out["final"] += 1
                 continue
-            a.update(status=DELIVERED, provider_delivery_id=did)
-            _set(rec, ch, DELIVERED, now, provider_delivery_id=did, error_class="")
+            a.update(status=DELIVERED, provider_delivery_id=did, delivered_at=_iso(now))
+            _set(rec, ch, DELIVERED, now, provider_delivery_id=did, error_class="", delivered_at=_iso(now))
             out["delivered"] += 1
     return out
 
@@ -460,7 +472,7 @@ def prune(store: dict, now: datetime) -> int:
     """終わってから RETENTION_DAYS を過ぎた記録を消す（今の候補のキーの記録は消さない）。消した件数。"""
     current = {p.get("current_key") for p in store["products"].values() if p.get("current_key")}
     cut = now - timedelta(days=RETENTION_DAYS)
-    drop = [nid for nid, r in store["records"].items() if r["status"] in TERMINAL
+    drop = [nid for nid, r in store["records"].items() if r["status"] in TERMINAL and not r.get("is_canary")
             and r["idempotency_key"] not in current and (act._dt(r.get("updated_at")) or now) < cut]
     for nid in drop:
         del store["records"][nid]
@@ -471,6 +483,8 @@ def counts(store: dict) -> dict:
     """outbox の記録の状態ごとの件数（運営者向け・集計）。"""
     c = {s: 0 for s in STATUSES}
     for r in store["records"].values():
+        if r.get("is_canary"):                               # 接続の試験は商品の通知の件数に入れない
+            continue
         c[r["status"]] = c.get(r["status"], 0) + 1
     return {"outbox_pending": c[PENDING] + c[READY], "sending": c[SENDING], "dry_run_planned": c[DRY_RUN_PLANNED],
             "delivered": c[DELIVERED], "retryable_failed": c[FAILED_RETRYABLE], "final_failed": c[FAILED_FINAL],
@@ -562,9 +576,18 @@ def run_observe(out_dir: Path, diagnostics: dict, *, now: datetime, dry_run: boo
         "dispatch_planned": 0, "dispatch_sent": 0, "dispatch_failed": 0, "dispatch_blocked": 0,
         "dispatch_unknown": 0, "dispatch_not_configured": 0, "external_calls": 0,
         "candidates": _summaries(store, stats["new_outbox"]), "counts": counts(store),
-        "unknown": list_unknown(store)}
+        "unknown": list_unknown(store), "provider_status": _load_provider_status(out_dir)}
     _write_report(out_dir, report, now)
     return report
+
+
+def _load_provider_status(out_dir: Path) -> dict:
+    """前回の送信の手順が書いた配信先の状態（値は含まない）。"""
+    try:
+        d = json.loads((Path(out_dir) / "provider_status.json").read_text(encoding="utf-8"))
+        return d if isinstance(d, dict) else {}
+    except (OSError, ValueError):
+        return {}
 
 
 def _load_report(out_dir: Path) -> dict:
@@ -684,6 +707,9 @@ def resolve(store: dict, notification_id: str, resolution: str, *, rows: list, n
             new, cls = CANCELLED, "resolved_cancelled"
         elif resolution == KEEP_UNKNOWN:
             new, cls = UNKNOWN_DELIVERY, c.get("error_class") or ""
+        elif rec.get("is_canary"):
+            # 接続の試験は自動で出し直さない（試し直すときは新しい試験の ID を明示する）
+            new, cls = CANCELLED, "resolved_not_delivered:canary_new_id_required"
         else:
             current = bool(row and row.get("actionable") and p.get("current_key") == rec["idempotency_key"])
             fields = _fields(row) if current else {}
@@ -731,3 +757,118 @@ def main_ledger_matches(path: Path, repo_root: Path, *, fetch: bool = True) -> t
     if not remote or remote != local:
         return False, "手元の台帳が main の台帳と違います（git pull で合わせてから実行してください）"
     return True, ""
+
+
+# ── Telegram の接続の試験（canary。Phase 22） ─────────────────────────────────────────
+
+CANARY_TEXT = ("[TEST] Premium Monitor\n"
+               "Telegram 通知の接続テストです。\n"
+               "本番の商品通知ではありません（商品・価格・URL は含みません）。")
+DEFAULT_CANARY_ID = "telegram_canary_v1"
+_CANARY_ID = __import__("re").compile(r"^[a-z][a-z0-9_-]{0,39}$")
+
+
+def valid_canary_id(canary_id: str, env=None) -> bool:
+    """試験の ID の形（小文字の英字で始まり、英小文字・数字・_・- の40文字まで。チャット ID（数字・-・@ で始まる）を
+    入れられない形）。台帳に入るので、配信先の設定の値を含むものも拒む（監査 L-A）。"""
+    import os
+    cid = str(canary_id or "")
+    if not _CANARY_ID.match(cid):
+        return False
+    e = env if env is not None else os.environ
+    return not any(len(v) >= 6 and v in cid for v in (str(e.get(k) or "").strip() for k in
+                                                      ("TELEGRAM_CHAT_ID", "TELEGRAM_BOT_TOKEN")))
+
+
+def canary_key(canary_id: str) -> str:
+    return f"CANARY:telegram:{canary_id}"
+
+
+def canary_record(store: dict, canary_id: str) -> dict | None:
+    return store["records"].get(notification_id(canary_key(canary_id), MODE_LIVE))
+
+
+def canary_status(store: dict, canary_id: str) -> str:
+    """接続の試験の状態（NONE / その記録の状態）。"""
+    rec = canary_record(store, canary_id)
+    return rec["status"] if rec else "NONE"
+
+
+def _new_canary(canary_id: str, now: datetime) -> dict:
+    key = canary_key(canary_id)
+    return {"notification_id": notification_id(key, MODE_LIVE), "idempotency_key": key, "mode": MODE_LIVE,
+            "notification_type": "TELEGRAM_CANARY", "is_canary": True, "is_test_message": True,
+            "canary_id": canary_id, "product_id": "", "product": "", "availability_kind": "", "kind": "canary",
+            "event_id": "", "state_transition": "", "created_at": _iso(now), "updated_at": _iso(now),
+            "status": PENDING, "message": CANARY_TEXT, "net_profit": None, "roi": None, "confirmed": False,
+            "deadline": "", "checked_at": "", "until_ms": None, "cta_label": "", "action_url": "", "reasons": [],
+            "channels": {"telegram": {"status": PENDING, "attempts": [], "attempt_count": 0, "next_attempt_at": "",
+                                      "provider_delivery_id": "", "error_class": ""}}}
+
+
+def run_canary(out_dir: Path, *, now: datetime, attempt_id: str, canary_id: str, adapter, persist) -> dict:
+    """Telegram の接続の試験を1件だけ送る（同じ試験の ID では二度と送らない）。
+
+    1) 台帳にこの試験の記録があれば送らない（届いた・不明・失敗のどれでも。出し直せる失敗（429 など）で期限が来たものだけ
+       同じ記録で出し直す） 2) 記録を SENDING にして保存 3) persist()（main への保存。保存した台帳の sha を返す）が今の
+       ファイルと同じでなければ送らずに戻す 4) 1回だけ送る 5) 結果を保存（次の手順の persist が main に残す）
+    """
+    out_dir = Path(out_dir)
+    path = out_dir / STORE_NAME
+    if not valid_canary_id(canary_id):
+        return {"canary": "skipped", "reason": "invalid_canary_id", "requests": 0}
+    with locked(path):
+        store, baseline = load(path)
+        if baseline:
+            return {"canary": "skipped", "reason": "no_store", "requests": 0}
+        rec = canary_record(store, canary_id)
+        if rec is not None:
+            ch = rec["channels"]["telegram"]
+            due = ch["status"] == FAILED_RETRYABLE and (act._dt(ch.get("next_attempt_at")) or now) <= now
+            if not due or ch.get("attempt_count", 0) >= MAX_ATTEMPTS:
+                return {"canary": "skipped", "reason": f"already_{rec['status'].lower()}", "requests": 0,
+                        "status": rec["status"]}
+        before = json.loads(dumps(store))
+        if rec is None:
+            rec = _new_canary(canary_id, now)
+            store["records"][rec["notification_id"]] = rec
+        ch = rec["channels"]["telegram"]
+        ch["attempts"].append({"attempt_id": attempt_id, "attempted_at": _iso(now), "status": SENDING,
+                               "provider": "telegram", "provider_delivery_id": "", "error_class": ""})
+        ch["attempt_count"] = ch.get("attempt_count", 0) + 1
+        _set(rec, "telegram", SENDING, now, attempt_id=attempt_id, error_class="")
+        save(path, store)
+        sha = persist()                                     # 送る前に SENDING を main に保存する
+        if not sha or sha != file_sha(path):
+            # 送っていないので手元は元に戻す。保存（push）の途中で失敗したときは main に SENDING が残ることがあり、
+            # その場合は次の実行で「届いたか不明」になる（送り直さない。人が解決する）
+            save(path, before)
+            return {"canary": "skipped", "reason": "not_persisted_or_unknown", "requests": 0}
+        out = send(store, now=now, attempt_id=attempt_id, adapters={"telegram": adapter},
+                   only_ids={rec["notification_id"]})
+        save(path, store)
+    st = rec["channels"]["telegram"]
+    return {"canary": "sent", "requests": out["requests"], "status": rec["status"],
+            "delivered": out.get("delivered", 0), "provider_delivery_id": st.get("provider_delivery_id") or "",
+            "error_class": st.get("error_class") or ""}
+
+
+def provider_status(store: dict, *, configured: bool, canary_gate: bool, canary_id: str) -> dict:
+    """配信先の状態（運営者向け。値・トークン・チャット ID は含めない）。"""
+    cs = canary_status(store, canary_id)
+    if not configured:
+        st = "NOT_CONFIGURED"
+    elif cs == DELIVERED:
+        st = "CANARY_DELIVERED"
+    elif cs in (FAILED_FINAL, UNKNOWN_DELIVERY, CANCELLED):
+        st = "ERROR"
+    elif canary_gate or cs in (PENDING, SENDING, FAILED_RETRYABLE):
+        st = "CANARY_PENDING"
+    else:
+        st = "READY"
+    rec = canary_record(store, canary_id)
+    ch = (rec or {}).get("channels", {}).get("telegram", {})
+    return {"telegram": {"configured": configured, "status": st, "canary_id": canary_id, "canary_status": cs,
+                         "last_delivery_status": ch.get("status") or "", "last_error_class": ch.get("error_class") or "",
+                         "delivered_at": ch.get("delivered_at") or "",
+                         "product_real_send": False}}

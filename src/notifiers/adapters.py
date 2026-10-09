@@ -9,7 +9,9 @@ outbox（src/notifiers/outbox）の後ろに差し込む。配信先ごとに次
 - extract_delivery_id(...)    配信先の ID（Discord の message の id・Telegram の message_id。取れなければ空）
 
 通信はしない。送信は transport（呼び出し側が渡す関数）だけが行い、このモジュールは HTTP の部品を import しない。
-Phase 21 まで transport はどこにも無い（`REAL_SEND_IMPLEMENTED = False`。本番の送信の最終の関門 `real_send_gate` は常に閉じる）。
+送信の部品（HTTP の transport）は Telegram だけ（`src/notifiers/telegram_transport.py`。Phase 22）。Discord は無い。
+商品の通知の本番の送信は `PRODUCT_REAL_SEND_ENABLED = False` で常に閉じる。Telegram の接続の試験（canary）だけが、
+最終の関門 `real_send_gate(purpose="canary")` を全部通ったときに1件送れる。
 配信先の URL・トークン・チャット ID は transport の側だけが持つ（台帳・本文・ログ・画面に入れない。`redact` で消す）。
 """
 from __future__ import annotations
@@ -26,9 +28,11 @@ FINAL = "final"              # 出し直しても通らない（認証・宛先�
 AMBIGUOUS = "ambiguous"      # 届いたか分からない（送った後に接続が切れた・応答を読めなかった）。自動では出し直さない
 RETRY_AFTER_CAP_SECONDS = 6 * 3600
 
-# 送信の部品（HTTP の transport）はまだ無い。本番の送信は、ユーザーの明示の許可の後の Phase で transport を足し、
-# この値を変えるまで、どの設定でも動かない
-REAL_SEND_IMPLEMENTED = False
+# 送信の部品（HTTP の transport）がある配信先（Phase 22: Telegram だけ。Discord は無い）
+IMPLEMENTED_PROVIDERS = frozenset({"telegram"})
+# 商品の通知の本番の送信（Phase 22 では無効のまま。接続の試験の成功だけでは開けない。別の明示の許可で変える）
+PRODUCT_REAL_SEND_ENABLED = False
+REAL_SEND_IMPLEMENTED = PRODUCT_REAL_SEND_ENABLED      # 互換（商品の通知の送信の可否）
 
 # 秘密の値の形（台帳・ログ・画面に出さない。deploy-check の _SECRET_PATTERNS と同じ形）
 SECRET_PATTERNS = (r"(?:https?://)?(?:ptb\.|canary\.)?discord(?:app)?\.com/api(?:/v\d+)?/webhooks/\S+",
@@ -169,6 +173,7 @@ class ProviderAdapter:
 
     def __init__(self, transport=None):
         self.transport = transport
+        self.calls = 0                           # transport を実際に呼んだ回数（送信の要求の数）
 
     @property
     def configured(self) -> bool:
@@ -216,16 +221,18 @@ class ProviderAdapter:
         payload = self.build_payload(record)
         if self.validate_payload(payload):
             raise ProviderError(FINAL, "malformed_payload")
+        fail = None
+        self.calls += 1
         try:
             status, headers, body = self.transport(payload, idempotency_key)
         except TransportError as e:
-            if e.stage == "connect":
-                raise ProviderError(RETRYABLE, "connect_failed") from None
-            # 送った後の失敗・どこで止まったか分からない失敗は、届いたか不明（自動では出し直さない）
-            raise ProviderError(AMBIGUOUS, "response_lost") from None
+            # 送る前の失敗だけ出し直してよい。送った後・どこで止まったか分からない失敗は、届いたか不明
+            fail = (RETRYABLE, "connect_failed") if e.stage == "connect" else (AMBIGUOUS, "response_lost")
         except Exception as e:  # noqa: BLE001
             # 想定外の失敗は届いたか分からない扱い（送り直さない）。記録は例外のクラス名だけ（URL などを含めない）
-            raise ProviderError(AMBIGUOUS, f"transport_{type(e).__name__}") from None
+            fail = (AMBIGUOUS, f"transport_{type(e).__name__}")
+        if fail:
+            raise ProviderError(*fail)                # except の外で投げる（元の例外を __context__ に残さない）
         try:
             err = self.classify_response(int(status), headers, body)
             did = None if err is not None else self.extract_delivery_id(int(status), headers or {}, body)
@@ -290,7 +297,8 @@ class TelegramAdapter(ProviderAdapter):
         return why
 
     def build_payload(self, record: dict) -> dict:
-        return {"text": fit_message(record, self.max_length), "disable_web_page_preview": False}
+        text = str(record.get("message") or "") if record.get("is_test_message") else fit_message(record, self.max_length)
+        return {"text": text, "disable_web_page_preview": True}
 
     def classify_response(self, status, headers=None, body=None) -> ProviderError | None:
         err = classify_http(int(status), headers)
@@ -306,6 +314,9 @@ class TelegramAdapter(ProviderAdapter):
             return classify_http(code, headers) or ProviderError(AMBIGUOUS, "unexpected_body", status=code)
         if err is None and not (isinstance(body, dict) and body.get("ok") is True):
             return ProviderError(AMBIGUOUS, "unexpected_body", status=int(status))   # 成功の形でない 2xx
+        if err is None and not self.extract_delivery_id(status, headers, body):
+            # ok=true なのに message_id が無い: 送れたか確かめられない（届いたか不明。自動で出し直さない）
+            return ProviderError(AMBIGUOUS, "missing_message_id", status=int(status))
         return err
 
     def extract_delivery_id(self, status, headers, body) -> str:
@@ -353,20 +364,36 @@ def _flag(env, key: str, default: str) -> bool:
     return str(env.get(key, default)).strip().lower() in ("true", "1", "yes", "on")
 
 
-def real_send_gate(env=None) -> dict:
+def real_send_gate(env=None, purpose: str = "product") -> dict:
     """本番の送信を有効にしてよいか（全部そろったときだけ allowed）。既定はすべて閉じる。値は返さない。
 
-    1) 送信の部品がある（REAL_SEND_IMPLEMENTED）2) NOTIFICATION_REAL_SEND=true（既定 false。ユーザーの明示の許可で
-    リポジトリの変数を設定する）3) NOTIFICATION_DRY_RUN=false（既定 true）4) 配信先の選択（NOTIFICATION_PROVIDERS）
-    5) 選んだ配信先の設定がそろって形が正しい
+    purpose="product"（商品の通知）: PRODUCT_REAL_SEND_ENABLED が False なので常に閉じる（Phase 22）。
+    purpose="canary"（Telegram の接続の試験の1件）: 次がすべてそろうときだけ開く。
+      1) 選んだ配信先が Telegram だけ（NOTIFICATION_PROVIDERS=telegram。Discord は無効）で、送信の部品がある
+      2) NOTIFICATION_REAL_SEND=true（ユーザーの明示の許可。リポジトリの変数。既定 false）
+      3) NOTIFICATION_DRY_RUN=false（既定 true） 4) TELEGRAM_CANARY=true（接続の試験の明示の旗）
+      5) 手動の実行（GITHUB_EVENT_NAME=workflow_dispatch。定時の実行では送らない）
+      6) Telegram の設定（TELEGRAM_BOT_TOKEN・TELEGRAM_CHAT_ID）がそろって形が正しい
     """
     e = env if env is not None else os.environ
-    providers = [p.strip() for p in str(e.get("NOTIFICATION_PROVIDERS") or "").split(",") if p.strip()]
-    checks = {"implemented": REAL_SEND_IMPLEMENTED,
+    providers = [p.strip().lower() for p in str(e.get("NOTIFICATION_PROVIDERS") or "").split(",") if p.strip()]
+    if purpose == "canary":
+        implemented = providers == ["telegram"] and "telegram" in IMPLEMENTED_PROVIDERS
+    else:
+        implemented = PRODUCT_REAL_SEND_ENABLED and bool(providers) and set(providers) <= IMPLEMENTED_PROVIDERS
+    checks = {"implemented": implemented,
               "real_send_flag": _flag(e, "NOTIFICATION_REAL_SEND", "false"),
               "dry_run_off": not _dry(e),
-              "provider_selected": bool(providers) and all(p in ("discord", "telegram") for p in providers)}
+              "provider_selected": providers == ["telegram"]}
+    if purpose == "canary":
+        checks["canary_flag"] = _flag(e, "TELEGRAM_CANARY", "false")
+        checks["manual_dispatch"] = str(e.get("GITHUB_EVENT_NAME") or "") == "workflow_dispatch"
     config = {p: ADAPTERS[p]().validate_config(e) for p in providers if p in ("discord", "telegram")}
     checks["config_valid"] = bool(config) and all(not v for v in config.values())
-    return {"allowed": all(checks.values()), "checks": checks, "providers": providers,
+    return {"allowed": all(checks.values()), "checks": checks, "providers": providers, "purpose": purpose,
             "config_problems": {p: v for p, v in config.items() if v}}
+
+
+def telegram_configured(env=None) -> bool:
+    """Telegram の設定がそろって形が正しいか（値は返さない）。"""
+    return not TelegramAdapter().validate_config(env)

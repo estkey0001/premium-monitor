@@ -2398,10 +2398,52 @@ def dispatch_notifications(step, persisted_sha, attempt_id):
     else:
         rep = _ob.run_send(out, now=now, dry_run=dry, attempt_id=aid, persisted_sha=persisted_sha, adapters=adapters,
                            real_send_allowed=gate["allowed"])
+        rep["canary"] = _telegram_canary(out, now=now, attempt_id=aid)
     rep["real_send_gate"] = {k: bool(v) for k, v in gate["checks"].items()}
     keys = ("step", "skipped", "dry_run", "dispatch_planned", "dispatch_sending", "dispatch_sent", "dispatch_failed",
-            "dispatch_blocked", "dispatch_unknown", "counts", "real_send_gate")
+            "dispatch_blocked", "dispatch_unknown", "counts", "real_send_gate", "canary")
     click.echo(_json.dumps({k: rep[k] for k in keys if k in rep}, ensure_ascii=False))
+
+
+def _telegram_canary(out, *, now, attempt_id) -> dict:
+    """Telegram の接続の試験（canary）を、関門（purpose="canary"）を全部通ったときだけ1件送る（Phase 22）。
+
+    送る前に SENDING を main に保存する（scripts/persist_notification_state.sh）。同じ試験の ID では二度と送らない。
+    配信先の状態（値は含めない）を provider_status.json に書く。トークン・チャット ID は出力しない。
+    """
+    import os as _os
+    import subprocess as _sp
+    from src.notifiers import adapters as _ad
+    from src.notifiers import outbox as _ob
+    from src.utils.atomic_write import write_json_atomic
+    canary_id = str(_os.environ.get("TELEGRAM_CANARY_ID") or _ob.DEFAULT_CANARY_ID).strip()
+    if not _ob.valid_canary_id(canary_id):
+        canary_id = "invalid"                    # 形の違う ID（秘密の値かもしれない）は台帳・出力に入れない（監査 L-3）
+    gate = _ad.real_send_gate(purpose="canary")
+    res = {"gate": {k: bool(v) for k, v in gate["checks"].items()}, "canary_id": canary_id, "requests": 0}
+    if gate["allowed"] and canary_id != "invalid":
+        from src.notifiers.telegram_transport import make_telegram_transport
+        adapter = _ad.TelegramAdapter(make_telegram_transport(_os.environ["TELEGRAM_BOT_TOKEN"],
+                                                               _os.environ["TELEGRAM_CHAT_ID"]))
+
+        def persist() -> str:
+            r = _sp.run(["bash", str(PROJECT_ROOT / "scripts" / "persist_notification_state.sh")], cwd=PROJECT_ROOT,
+                        capture_output=True, text=True, encoding="utf-8", errors="replace")
+            if r.returncode != 0:
+                return ""
+            sha = [ln[4:] for ln in r.stdout.splitlines() if ln.startswith("sha=")]
+            return sha[-1].strip() if sha else ""
+        res.update(_ob.run_canary(out, now=now, attempt_id=attempt_id, canary_id=canary_id, adapter=adapter,
+                                  persist=persist))
+    else:
+        res["canary"] = "disabled"
+    store, _b = _ob.load(out / _ob.STORE_NAME)
+    status = _ob.provider_status(store, configured=_ad.telegram_configured(), canary_gate=gate["allowed"],
+                                 canary_id=canary_id)
+    status["checked_at"] = now.isoformat(timespec="seconds")
+    status["telegram"]["real_send_enabled"] = bool(gate["allowed"])      # 関門と同じ判定（レビュー L-3）
+    write_json_atomic(out / "provider_status.json", status)
+    return res
 
 
 @cli.group("notification")

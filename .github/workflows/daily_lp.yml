@@ -443,12 +443,19 @@ jobs:
         if: ${{ !cancelled() && steps.generate_lp.outcome == 'success' && steps.persist_outbox_prepared.outcome == 'success' }}
         continue-on-error: true
         run: python -m src.cli dispatch-notifications --step send --persisted-sha "${{ steps.persist_outbox_prepared.outputs.sha }}"
-        # 本番の送信を有効にする Phase では、この手順にだけ送信先の Secrets を渡す（ほかの手順には渡さない）。
-        # Phase 21 は渡さない（送信の部品が無く、最終の関門 real_send_gate は閉じている）
+        # Telegram の Secrets を渡すのはこの手順だけ（Phase 22）。商品の通知の本番の送信はコードで無効
+        # （PRODUCT_REAL_SEND_ENABLED = False）。送れるのは Telegram の接続の試験（canary）の1件だけで、
+        # リポジトリの変数（NOTIFICATION_REAL_SEND=true・NOTIFICATION_DRY_RUN=false・NOTIFICATION_PROVIDERS=telegram・
+        # TELEGRAM_CANARY=true）がそろい、手動の実行（workflow_dispatch）のときだけ。既定は送らない
         env:
           PYTHONPATH: .
-          NOTIFICATION_DRY_RUN: "true"
-          NOTIFICATION_REAL_SEND: "false"
+          NOTIFICATION_DRY_RUN: ${{ vars.NOTIFICATION_DRY_RUN || 'true' }}
+          NOTIFICATION_REAL_SEND: ${{ vars.NOTIFICATION_REAL_SEND || 'false' }}
+          NOTIFICATION_PROVIDERS: ${{ vars.NOTIFICATION_PROVIDERS || '' }}
+          TELEGRAM_CANARY: ${{ github.event_name == 'workflow_dispatch' && vars.TELEGRAM_CANARY || 'false' }}
+          TELEGRAM_CANARY_ID: ${{ vars.TELEGRAM_CANARY_ID || 'telegram_canary_v1' }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
 
       - name: Persist notification outbox (sent)
         if: always() && steps.persist_outbox_prepared.outcome == 'success'
@@ -517,8 +524,7 @@ jobs:
         env:
           PYTHONPATH: .
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          # Telegram の Secrets は渡さない（Telegram に送るのは「Send notifications」の手順だけ。Phase 22）
 
       # 20. Commit and push
       - name: Commit and push

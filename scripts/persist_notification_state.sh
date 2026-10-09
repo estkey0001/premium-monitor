@@ -29,6 +29,21 @@ if grep -Eiq 'discord(app)?\.com/api(/v[0-9]+)?/webhooks/|api\.telegram\.org/bot
   exit 1
 fi
 
+# 配信先の設定の値そのもの（送信の手順の中で動くとき）が台帳にあれば保存しない（チャット ID は形で見分けられない。Phase 22）
+# トークン・webhook の URL は長く他と重ならないので部分一致、チャット ID は JSON の文字列の値としての完全一致で探す
+# （ほかの数字に部分一致して止めない。監査 L-B）
+for v in "${TELEGRAM_BOT_TOKEN:-}" "${DISCORD_WEBHOOK_URL:-}"; do
+  if [ "${#v}" -ge 6 ] && grep -qF -- "$v" "$STATE"; then
+    echo "::error::通知の台帳に配信先の設定の値があるため保存しません"
+    exit 1
+  fi
+done
+CHAT_V="${TELEGRAM_CHAT_ID:-}"
+if [ "${#CHAT_V}" -ge 3 ] && grep -qF -- "\"${CHAT_V}\"" "$STATE"; then
+  echo "::error::通知の台帳に配信先の設定の値があるため保存しません"
+  exit 1
+fi
+
 if [ ! -f "$BASE_FILE" ]; then
   echo "::error::台帳を main に合わせていません（sync_notification_state.sh が動いていない）。保存しません"
   exit 1

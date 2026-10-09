@@ -300,6 +300,15 @@ def build_telegram_text(r: dict) -> str:
 # 送信
 # ──────────────────────────────────────────────────────────────────────────────
 
+def _redact(e) -> str:
+    """例外の文字列から webhook の URL・トークンを消す（ログに出さない。Phase 21）。"""
+    try:
+        from src.notifiers.adapters import redact
+        return redact(e)
+    except Exception:  # noqa: BLE001
+        return type(e).__name__
+
+
 def send_discord(payload: dict) -> bool:
     """Discord webhook にメッセージを送信する。成功時 True。"""
     webhook_url = os.environ.get("DISCORD_WEBHOOK_URL", "")
@@ -323,7 +332,7 @@ def send_discord(payload: dict) -> bool:
             print(f"[Discord] 送信失敗 (HTTP {status})", file=sys.stderr)
             return False
     except Exception as e:
-        print(f"[Discord] 送信エラー: {e}", file=sys.stderr)
+        print(f"[Discord] 送信エラー: {_redact(e)}", file=sys.stderr)
         return False
 
 
@@ -361,7 +370,7 @@ def send_telegram(text: str) -> bool:
             print(f"[Telegram] 送信失敗: {body.get('description')}", file=sys.stderr)
             return False
     except Exception as e:
-        print(f"[Telegram] 送信エラー: {e}", file=sys.stderr)
+        print(f"[Telegram] 送信エラー: {_redact(e)}", file=sys.stderr)
         return False
 
 

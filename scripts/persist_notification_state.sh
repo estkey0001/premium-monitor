@@ -12,7 +12,9 @@
 set -euo pipefail
 
 STATE="${ACTIONABLE_STATE_FILE:-exports/notifications/actionable/state.json}"
-BASE_FILE="${NOTIFICATION_OUTBOX_BASE_FILE:-${RUNNER_TEMP:-/tmp}/notification_outbox_base}"
+BASE_FILE="${NOTIFICATION_OUTBOX_BASE_FILE:-${RUNNER_TEMP:-$(git rev-parse --absolute-git-dir 2>/dev/null || echo /nonexistent)}/notification_outbox_base}"
+RUN_ID="${GITHUB_RUN_ID:+gh-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT:-1}}"
+MAX_AGE_SECONDS="${NOTIFICATION_OUTBOX_BASE_MAX_AGE:-21600}"   # 手元の基準は6時間まで（CI は実行の識別で縛る）
 out() { if [ -n "${GITHUB_OUTPUT:-}" ]; then echo "$1" >> "$GITHUB_OUTPUT"; fi; echo "$1"; }
 
 if [ ! -f "$STATE" ]; then
@@ -22,7 +24,7 @@ if [ ! -f "$STATE" ]; then
 fi
 
 # 秘密の値の形が入っていたら保存しない（公開のリポジトリ。deploy-check の _SECRET_PATTERNS と同じ形。大文字小文字を区別しない）
-if grep -Eiq 'discord(app)?\.com/api(/v[0-9]+)?/webhooks/|api\.telegram\.org/bot[0-9]+:|\b[0-9]{8,10}:[A-Za-z0-9_-]{35}\b|hooks\.slack\.com/services/|authorization["'"'"']?[[:space:]]*:|bearer [A-Za-z0-9._-]{20,}' "$STATE"; then
+if grep -Eiq 'discord(app)?\.com/api(/v[0-9]+)?/webhooks/|api\.telegram\.org/bot[0-9]+:|(^|[^0-9])[0-9]{5,12}:[A-Za-z0-9_-]{30,}|hooks\.slack\.com/services/|authorization["'"'"']?[[:space:]]*:|bearer [A-Za-z0-9._-]{20,}' "$STATE"; then
   echo "::error::通知の台帳に配信先の URL・トークンの形があるため保存しません"
   exit 1
 fi
@@ -31,15 +33,44 @@ if [ ! -f "$BASE_FILE" ]; then
   echo "::error::台帳を main に合わせていません（sync_notification_state.sh が動いていない）。保存しません"
   exit 1
 fi
+RUN_ID="${RUN_ID:-local-$(git rev-parse --show-toplevel | sha256sum | cut -c1-16)}"
+field() { sed -n "s/^$1=//p" "$BASE_FILE" | head -1; }
+B_RUN=$(field run); B_MAIN=$(field main); B_BLOB=$(field blob); B_AT=$(field synced)
+# 古い基準・別の実行の基準を使わない（Phase 21）: 実行の識別・合わせた main のコミットの台帳・時刻を確かめる
+if [ -z "$B_RUN" ] || [ -z "$B_MAIN" ] || [ -z "$B_AT" ]; then
+  echo "::error::基準のファイルの形が違います（sync_notification_state.sh で合わせ直してください）"
+  exit 1
+fi
+if [ "$B_RUN" != "$RUN_ID" ]; then
+  echo "::error::基準のファイルが別の実行のものです（合わせ直してください）"
+  exit 1
+fi
+case "$B_AT" in
+  ''|*[!0-9]*) echo "::error::基準のファイルの時刻が読めません（合わせ直してください）"; exit 1 ;;
+esac
+NOW_S=$(date +%s)
+if [ "$B_AT" -gt "$NOW_S" ] || { [ -z "${GITHUB_RUN_ID:-}" ] && [ $(( NOW_S - B_AT )) -gt "$MAX_AGE_SECONDS" ]; }; then
+  echo "::error::基準のファイルが古すぎます・未来の時刻です（合わせ直してください）"
+  exit 1
+fi
+if ! git cat-file -e "${B_MAIN}^{commit}" 2>/dev/null; then
+  echo "::error::基準の main のコミットがありません（合わせ直してください）"
+  exit 1
+fi
+AT_MAIN=$(git rev-parse -q --verify "${B_MAIN}:$STATE" 2>/dev/null || true)
+if [ "$AT_MAIN" != "$B_BLOB" ]; then
+  echo "::error::基準の台帳が、基準の main のコミットの台帳と違います（合わせ直してください）"
+  exit 1
+fi
 SHA=$(sha256sum "$STATE" | cut -d' ' -f1)
 LOCAL_BLOB=$(git hash-object "$STATE")
 
 for i in 1 2 3; do
   git fetch -q origin main
   REMOTE=$(git rev-parse -q --verify "origin/main:$STATE" 2>/dev/null || true)
-  EXPECTED=$(cat "$BASE_FILE")
+  EXPECTED=$(field blob)
   if [ "$REMOTE" = "$LOCAL_BLOB" ]; then
-    echo "$LOCAL_BLOB" > "$BASE_FILE"
+    printf 'run=%s\nmain=%s\nblob=%s\nsynced=%s\n' "$RUN_ID" "$(git rev-parse origin/main)" "$LOCAL_BLOB" "$B_AT" > "$BASE_FILE"
     echo "台帳は main と同じです"
     out "sha=$SHA"
     exit 0
@@ -56,8 +87,10 @@ for i in 1 2 3; do
   git -C "$WT" -c user.name="github-actions[bot]" -c user.email="github-actions[bot]@users.noreply.github.com" \
     commit -q -m "通知の台帳の保存 [auto notification state]" -- "$STATE"
   if git -C "$WT" push -q origin HEAD:main; then
+    NEW_MAIN=$(git -C "$WT" rev-parse HEAD)
     git worktree remove --force "$WT"
-    echo "$LOCAL_BLOB" > "$BASE_FILE"
+    git fetch -q origin main
+    printf 'run=%s\nmain=%s\nblob=%s\nsynced=%s\n' "$RUN_ID" "$NEW_MAIN" "$LOCAL_BLOB" "$B_AT" > "$BASE_FILE"
     out "sha=$SHA"
     exit 0
   fi

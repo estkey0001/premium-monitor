@@ -2388,16 +2388,124 @@ def dispatch_notifications(step, persisted_sha, attempt_id):
     except (OSError, ValueError):
         diag = {}
     aid = attempt_id or _ob.attempt_id_from_env(now=now)
-    dry = _an.is_dry_run()
-    # 送信先の transport はつながない（Phase 20。Discord・Telegram は未設定のまま。内部のログだけ）
+    # 本番の送信は最終の関門（adapters.real_send_gate）を全部通ったときだけ。閉じていれば dry-run と同じに扱う
+    gate = _ad.real_send_gate()
+    dry = _an.is_dry_run() or not gate["allowed"]
+    # 送信先の transport はつながない（Phase 21 まで。Discord・Telegram は未設定のまま。内部のログだけ）
     adapters = _ad.default_adapters()
     if step == "prepare":
         rep = _ob.run_prepare(out, diag, now=now, dry_run=dry, attempt_id=aid, adapters=adapters)
     else:
-        rep = _ob.run_send(out, now=now, dry_run=dry, attempt_id=aid, persisted_sha=persisted_sha, adapters=adapters)
+        rep = _ob.run_send(out, now=now, dry_run=dry, attempt_id=aid, persisted_sha=persisted_sha, adapters=adapters,
+                           real_send_allowed=gate["allowed"])
+    rep["real_send_gate"] = {k: bool(v) for k, v in gate["checks"].items()}
     keys = ("step", "skipped", "dry_run", "dispatch_planned", "dispatch_sending", "dispatch_sent", "dispatch_failed",
-            "dispatch_blocked", "dispatch_unknown", "counts")
+            "dispatch_blocked", "dispatch_unknown", "counts", "real_send_gate")
     click.echo(_json.dumps({k: rep[k] for k in keys if k in rep}, ensure_ascii=False))
+
+
+@cli.group("notification")
+def notification_group():
+    """今すぐ行動の通知の outbox の運営者向けの操作（届いたか不明の確認・解決・本番の送信の関門。Phase 21）。
+
+    GitHub Pages の運営者向けの画面は静的（見るだけ）。解決はこのコマンドで台帳を書き換え、台帳だけをコミットして
+    main に push する（生成物と混ぜない・CI の実行中は push しない）。
+    """
+
+
+def _notification_paths():
+    import os as _os
+    out = Path(_os.environ.get("ACTIONABLE_NOTIFICATIONS_DIR")
+               or PROJECT_ROOT / "exports" / "notifications" / "actionable")
+    diag_dir = Path(_os.environ.get("OPPORTUNITY_DIAGNOSTICS_DIR")
+                    or PROJECT_ROOT / "exports" / "opportunity_diagnostics")
+    return out, diag_dir
+
+
+@notification_group.command("list-unknown")
+def notification_list_unknown():
+    """届いたか不明（UNKNOWN_DELIVERY）の配信の一覧（配信先の URL・トークンは出さない）。"""
+    from src.notifiers import outbox as _ob
+    out, _d = _notification_paths()
+    store, baseline = _ob.load(out / _ob.STORE_NAME)
+    rows = [] if baseline else _ob.list_unknown(store)
+    if not rows:
+        click.echo("届いたか不明の配信はありません。")
+        return
+    click.echo(f"届いたか不明の配信: {len(rows)}件")
+    for r in rows:
+        click.echo(f"  {r['notification_id']}  {r['provider']:<9} {r['product']}（{r['status_title']}）"
+                   f"  送信 {r['attempted_at'] or '—'}  締切 {r['deadline'] or '—'}  理由 {r['reason'] or '—'}"
+                   f"  方式 {r['mode']}")
+
+
+@notification_group.command("resolve")
+@click.argument("notification_id")
+@click.argument("resolution", type=click.Choice(["delivered", "not-delivered", "cancel", "keep-unknown"]))
+@click.option("--channel", default=None, help="配信先を1つに絞る（discord / telegram / log）。既定は不明のもの全部")
+@click.option("--confirm", is_flag=True, help="確認なしで台帳を書き換える（付けないときは結果の見込みだけ表示）")
+def notification_resolve(notification_id, resolution, channel, confirm):
+    """届いたか不明の配信を、人が確かめた結果で解決する（delivered / not-delivered / cancel / keep-unknown）。
+
+    - delivered: 送信済みにする（送り直さない） - not-delivered: 今も行動できて期限の内なら出し直せる状態、
+      期限切れなら EXPIRED、利益が確定でない・行動できないなら CANCELLED - cancel: 送らない - keep-unknown: 記録だけ
+    - 冪等性のキー・記録はそのまま（新しい通知を作らない）
+    - main の台帳と手元の台帳が違うときは書き換えない（git pull で合わせてから）
+    """
+    import copy as _copy
+    import json as _json
+    from datetime import datetime as _dt
+    from src.notifiers import outbox as _ob
+    from src.tcg.models import JST as _JST
+    out, diag_dir = _notification_paths()
+    path = out / _ob.STORE_NAME
+    ok, why = _ob.main_ledger_matches(path, PROJECT_ROOT)
+    if not ok:
+        click.echo(f"  中止: {why}", err=True)
+        raise SystemExit(1)
+    try:
+        diag = _json.loads((diag_dir / "latest.json").read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        diag = {}
+    rows = ((diag or {}).get("actionability") or {}).get("products") or []
+    now = _dt.now(tz=_JST)
+    with _ob.locked(path):
+        store, baseline = _ob.load(path)
+        if baseline:
+            click.echo("  中止: 通知の台帳がありません", err=True)
+            raise SystemExit(1)
+        trial = _copy.deepcopy(store)
+        try:
+            res = _ob.resolve(trial, notification_id, resolution, rows=rows, now=now, channel=channel)
+        except (KeyError, LookupError, ValueError) as e:
+            click.echo(f"  中止: {e}", err=True)
+            raise SystemExit(1)
+        click.echo(f"  {notification_id}: {resolution} → " + "・".join(f"{k} {v}" for k, v in res["channels"].items()))
+        if not confirm:
+            click.echo("  （見込みだけ表示しました。台帳を書き換えるときは --confirm を付けて再実行してください）")
+            return
+        _ob.save(path, trial)
+    click.echo("  台帳を書き換えました。台帳だけをコミットして main に push してください（CI の実行中は push しない）:")
+    try:
+        shown = path.resolve().relative_to(PROJECT_ROOT.resolve())
+    except ValueError:
+        shown = path
+    # 台帳のファイルだけをコミットする（ほかの staged の変更を混ぜない）。push の前にブランチが origin/main と同じかを確かめる
+    click.echo(f"    git commit -m \"通知の台帳: 届いたか不明の解決\" -- {shown}")
+    click.echo("    git log --oneline origin/main..HEAD   # 台帳のコミットだけであることを確かめてから")
+    click.echo("    git push origin tcg-push:main")
+
+
+@notification_group.command("gate")
+def notification_gate():
+    """本番の送信の最終の関門の状態（各条件の可否だけ。設定の値は出さない）。"""
+    from src.notifiers import adapters as _ad
+    g = _ad.real_send_gate()
+    click.echo(f"  本番の送信: {'有効にできる' if g['allowed'] else '無効（dry-run）'}")
+    for k, v in g["checks"].items():
+        click.echo(f"    {'✅' if v else '❌'} {k}")
+    for p, why in g["config_problems"].items():
+        click.echo(f"    設定の不足（{p}）: {', '.join(why)}")
 
 
 @cli.command("build-public-lp")

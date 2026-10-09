@@ -762,7 +762,10 @@ class DailyLPGenerator:
             self._write_notification_failure(now, diag, "OutboxNotSynced")
             return None
         try:
-            return _ob.run_observe(self._actionable_notifications_dir(), diag, now=now, dry_run=_an.is_dry_run())
+            from src.notifiers import adapters as _ad
+            # 方式は配信の手順と同じ決め方（dry-run か、本番の送信の関門が閉じていれば dry-run。レビュー L-1）
+            dry = _an.is_dry_run() or not _ad.real_send_gate()["allowed"]
+            return _ob.run_observe(self._actionable_notifications_dir(), diag, now=now, dry_run=dry)
         except Exception as exc:  # noqa: BLE001
             logger.warning("actionable notifications failed: %s", exc)
             self._write_notification_failure(now, diag, type(exc).__name__)

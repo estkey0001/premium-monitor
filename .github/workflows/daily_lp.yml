@@ -159,12 +159,9 @@ jobs:
           ENABLE_YAHOO_API: ${{ vars.ENABLE_YAHOO_API || 'false' }}
 
       # 10. Run buyback premium check（統合ジョブ）
+      # 収集・LP の生成を含むので、通知の送信先の Secrets は渡さない（Phase 21。送信は送信の手順だけ）
       - name: Run buyback premium check
         run: python -m src.cli run-buyback-premium-check
-        env:
-          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
 
       # 11. Calculate sedori routes
       - name: Calculate sedori routes
@@ -247,14 +244,12 @@ jobs:
           PYTHONPATH: .
 
       # 13.7 Generate Notifications（条件成立を検知して通知イベント生成）
+      # 通知のイベントを作るだけ（送らない）なので、送信先の Secrets は渡さない（Phase 21）
       - name: Generate notifications
         run: python scripts/generate_notifications.py
         continue-on-error: true
         env:
           PYTHONPATH: .
-          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
 
       # 13.8 Generate Market Coverage（監視対象カバレッジ分析・拡充提案）
       - name: Generate coverage report
@@ -414,6 +409,7 @@ jobs:
         run: python -m src.cli generate-daily-lp --variant A
         env:
           NOTIFICATION_DRY_RUN: "true"
+          NOTIFICATION_REAL_SEND: "false"
           # 台帳を合わせられなかったら、通知の候補を作らない（古い台帳から作り直さない）
           NOTIFICATION_OUTBOX_SYNCED: ${{ steps.sync_outbox.outcome == 'success' }}
 
@@ -435,6 +431,7 @@ jobs:
         env:
           PYTHONPATH: .
           NOTIFICATION_DRY_RUN: "true"
+          NOTIFICATION_REAL_SEND: "false"
 
       - name: Persist notification outbox (prepared)
         id: persist_outbox_prepared
@@ -446,9 +443,12 @@ jobs:
         if: ${{ !cancelled() && steps.generate_lp.outcome == 'success' && steps.persist_outbox_prepared.outcome == 'success' }}
         continue-on-error: true
         run: python -m src.cli dispatch-notifications --step send --persisted-sha "${{ steps.persist_outbox_prepared.outputs.sha }}"
+        # 本番の送信を有効にする Phase では、この手順にだけ送信先の Secrets を渡す（ほかの手順には渡さない）。
+        # Phase 21 は渡さない（送信の部品が無く、最終の関門 real_send_gate は閉じている）
         env:
           PYTHONPATH: .
           NOTIFICATION_DRY_RUN: "true"
+          NOTIFICATION_REAL_SEND: "false"
 
       - name: Persist notification outbox (sent)
         if: always() && steps.persist_outbox_prepared.outcome == 'success'

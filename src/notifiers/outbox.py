@@ -268,11 +268,13 @@ def observe(store: dict, rows: list, *, now: datetime, mode: str, baseline: bool
             continue
         nid = notification_id(key, mode) if key else ""
         old = recs.get(nid) if nid else None
-        if old is not None and old["status"] in (EXPIRED, CANCELLED):
-            # 送っていない（期限切れ・取り消し）記録の移り変わりが、また行動できる → 同じ記録（同じキー）で配信待ちに戻す
-            for c in old["channels"].values():
-                if c["status"] in (EXPIRED, CANCELLED):
-                    c.update(status=PENDING, error_class="", next_attempt_at="")
+        revivable = [c for c in (old["channels"].values() if old is not None else [])
+                     if c["status"] in (EXPIRED, CANCELLED) and not _resolved_cancel(c)]
+        if old is not None and old["status"] in (EXPIRED, CANCELLED) and revivable:
+            # 送っていない（期限切れ・取り消し）記録の移り変わりが、また行動できる → 同じ記録（同じキー）で配信待ちに戻す。
+            # 人が「送らない」と解決した配信先（cancel）は戻さない（届いていたかもしれない。レビュー H-1）
+            for c in revivable:
+                c.update(status=PENDING, error_class="", next_attempt_at="")
             old.update(_fields(r))
             old["message"] = an.message(old | {"availability": old["availability_kind"]})
             old["updated_at"] = _iso(now)
@@ -311,6 +313,12 @@ def observe(store: dict, rows: list, *, now: datetime, mode: str, baseline: bool
 
 
 # ── 配信の直前の確認 ───────────────────────────────────────────────────────
+
+def _resolved_cancel(c: dict) -> bool:
+    """人が届いたか不明を「送らない」（cancel）と解決した配信先か（自動で配信待ちに戻さない）。"""
+    res = c.get("resolutions") or []
+    return bool(res) and res[-1].get("resolution") == CANCEL
+
 
 def _expired(rec: dict, now: datetime) -> bool:
     u = rec.get("until_ms")
@@ -408,13 +416,21 @@ def prepare(store: dict, rows: list, *, now: datetime, mode: str, attempt_id: st
 
 def send(store: dict, *, now: datetime, attempt_id: str, adapters: dict) -> dict:
     """この実行の SENDING の記録だけを、1回ずつ送る（再試行は次の実行の prepare が決める）。"""
-    out = {"delivered": 0, "retryable": 0, "final": 0, "unknown": 0}
+    out = {"delivered": 0, "retryable": 0, "final": 0, "unknown": 0, "expired": 0, "cancelled": 0}
     for rec in store["records"].values():
         for ch, c in rec["channels"].items():
             if c["status"] != SENDING or c.get("attempt_id") != attempt_id:
                 continue
             a = c["attempts"][-1] if c["attempts"] else {}
             adapter = adapters.get(ch)
+            # 本文を作る直前にもう一度確かめる（SENDING を保存してから送るまでに期限・締切が過ぎたら送らない）
+            why = an.revalidate_fields(rec | {"availability": rec["availability_kind"], "cta_url": rec["action_url"]}, now)
+            if why:
+                status = EXPIRED if (_expired(rec, now) or "expired" in why or "deadline_invalid" in why) else CANCELLED
+                a.update(status=status, error_class=",".join(why)[:80])
+                _set(rec, ch, status, now, error_class=",".join(why)[:80])
+                out["expired" if status == EXPIRED else "cancelled"] += 1
+                continue
             try:
                 if adapter is None or not adapter.configured:
                     raise ad.ProviderError(ad.FINAL, "not_configured")
@@ -545,7 +561,8 @@ def run_observe(out_dir: Path, diagnostics: dict, *, now: datetime, dry_run: boo
         "baseline_recorded": stats["baseline_recorded"], "pruned": pruned,
         "dispatch_planned": 0, "dispatch_sent": 0, "dispatch_failed": 0, "dispatch_blocked": 0,
         "dispatch_unknown": 0, "dispatch_not_configured": 0, "external_calls": 0,
-        "candidates": _summaries(store, stats["new_outbox"]), "counts": counts(store)}
+        "candidates": _summaries(store, stats["new_outbox"]), "counts": counts(store),
+        "unknown": list_unknown(store)}
     _write_report(out_dir, report, now)
     return report
 
@@ -579,7 +596,7 @@ def run_prepare(out_dir: Path, diagnostics: dict, *, now: datetime, dry_run: boo
                 "dispatch_planned": st["planned"], "dispatch_blocked": st["expired"] + st["cancelled"],
                 "dispatch_expired": st["expired"], "dispatch_cancelled": st["cancelled"],
                 "dispatch_unknown": st["unknown"], "dispatch_not_configured": st["not_configured"],
-                "dispatch_sending": st["sending"], "counts": counts(store),
+                "dispatch_sending": st["sending"], "counts": counts(store), "unknown": list_unknown(store),
                 "candidates": _summaries(store, [c["notification_id"] for c in rep.get("candidates") or []
                                                  if isinstance(c, dict) and c.get("notification_id")])})
     _write_report(out_dir, rep, now)
@@ -587,12 +604,17 @@ def run_prepare(out_dir: Path, diagnostics: dict, *, now: datetime, dry_run: boo
 
 
 def run_send(out_dir: Path, *, now: datetime, dry_run: bool, attempt_id: str, persisted_sha: str,
-             adapters: dict) -> dict:
-    """SENDING を保存した内容（persisted_sha）と今のファイルが同じときだけ送る（保存より前に送らない）。"""
+             adapters: dict, real_send_allowed: bool = False) -> dict:
+    """SENDING を保存した内容（persisted_sha）と今のファイルが同じときだけ送る（保存より前に送らない）。
+
+    real_send_allowed: 本番の送信の最終の関門（adapters.real_send_gate）を通ったか。既定は閉じている（送らない）。
+    """
     out_dir = Path(out_dir)
     path = out_dir / STORE_NAME
     if dry_run:
         return {"step": "send", "skipped": "dry_run", "external_calls": 0}
+    if not real_send_allowed:
+        return {"step": "send", "skipped": "real_send_disabled", "external_calls": 0}
     with locked(path):
         if not persisted_sha or file_sha(path) != persisted_sha:
             return {"step": "send", "skipped": "not_persisted", "external_calls": 0}
@@ -604,6 +626,108 @@ def run_send(out_dir: Path, *, now: datetime, dry_run: bool, attempt_id: str, pe
     rep = _load_report(out_dir)
     rep.update({"step": "send", "sent_at": _iso(now), "dispatch_sent": st["delivered"],
                 "dispatch_failed": st["retryable"] + st["final"], "dispatch_unknown": st["unknown"],
-                "counts": counts(store)})
+                "counts": counts(store), "unknown": list_unknown(store)})
     _write_report(out_dir, rep, now)
     return rep
+
+
+# ── 届いたか不明（UNKNOWN_DELIVERY）の人による解決（Phase 21） ───────────────────────────────
+
+MARK_DELIVERED = "delivered"            # 届いていた → DELIVERED（送り直さない）
+MARK_NOT_DELIVERED = "not-delivered"    # 届いていなかった → 確かめ直して、出し直せる状態か期限切れ・取り消し
+CANCEL = "cancel"                       # 送らない → CANCELLED
+KEEP_UNKNOWN = "keep-unknown"           # まだ分からない → そのまま（記録だけ残す）
+RESOLUTIONS = (MARK_DELIVERED, MARK_NOT_DELIVERED, CANCEL, KEEP_UNKNOWN)
+RESOLVER_TYPE = "operator_cli"          # 解決した人の種類（個人名・メールは残さない）
+
+
+def list_unknown(store: dict) -> list[dict]:
+    """届いたか不明の配信（配信先ごと）。運営者の確認用（配信先の URL・トークンは含めない）。"""
+    out = []
+    for nid, r in sorted(store["records"].items(), key=lambda kv: kv[1].get("updated_at") or ""):
+        for ch, c in r["channels"].items():
+            if c["status"] != UNKNOWN_DELIVERY:
+                continue
+            last = c["attempts"][-1] if c.get("attempts") else {}
+            out.append({"notification_id": nid, "product_id": r["product_id"], "product": r.get("product") or "",
+                        "provider": ch, "attempted_at": last.get("attempted_at") or "", "state": c["status"],
+                        "deadline": r.get("deadline") or "", "reason": c.get("error_class") or "",
+                        "mode": r.get("mode") or "", "status_title": an.TITLES.get(r.get("availability_kind"), "")})
+    return out
+
+
+def resolve(store: dict, notification_id: str, resolution: str, *, rows: list, now: datetime,
+            channel: str | None = None) -> dict:
+    """届いたか不明の配信を、人の判断で解決する（冪等性のキー・記録はそのまま。新しい記録を作らない）。
+
+    届いていなかった（not-delivered）ときは、最新の診断の行で確かめ直す: 今も同じキーで行動できて期限の内なら
+    出し直せる状態（FAILED_RETRYABLE。次の実行の配信の直前の確認に回る）、期限切れなら EXPIRED、行動できない・
+    利益が確定でないなら CANCELLED。試行の上限を過ぎていれば FAILED_FINAL。
+    """
+    if resolution not in RESOLUTIONS:
+        raise ValueError(f"resolution: {resolution}")
+    rec = store["records"].get(notification_id)
+    if rec is None:
+        raise KeyError(notification_id)
+    chans = [ch for ch, c in rec["channels"].items() if c["status"] == UNKNOWN_DELIVERY and (channel in (None, ch))]
+    if not chans:
+        raise LookupError("届いたか不明の配信がありません（解決できるのは UNKNOWN_DELIVERY だけ）")
+    row = next((r for r in rows or [] if isinstance(r, dict) and str(r.get("product_id")) == rec["product_id"]), None)
+    p = store["products"].get(rec["product_id"]) or {}
+    result = {}
+    for ch in chans:
+        c = rec["channels"][ch]
+        prev = c["status"]
+        if resolution == MARK_DELIVERED:
+            new, cls = DELIVERED, "resolved_delivered"
+        elif resolution == CANCEL:
+            new, cls = CANCELLED, "resolved_cancelled"
+        elif resolution == KEEP_UNKNOWN:
+            new, cls = UNKNOWN_DELIVERY, c.get("error_class") or ""
+        else:
+            current = bool(row and row.get("actionable") and p.get("current_key") == rec["idempotency_key"])
+            fields = _fields(row) if current else {}
+            cand = (rec | fields) | {"availability": rec["availability_kind"],
+                                     "cta_url": fields.get("action_url", rec["action_url"])}
+            why = an.revalidate_fields(cand, now) if current else ["not_current"]
+            if why:
+                new = EXPIRED if (_expired(rec | fields, now) or "expired" in why or "deadline_invalid" in why) \
+                    else CANCELLED
+                cls = "resolved_not_delivered:" + ",".join(why)[:60]
+            elif c.get("attempt_count", 0) >= MAX_ATTEMPTS:
+                new, cls = FAILED_FINAL, "resolved_not_delivered:max_attempts"
+            else:
+                rec.update(fields)
+                rec["message"] = an.message(rec | {"availability": rec["availability_kind"]})
+                new, cls = FAILED_RETRYABLE, "resolved_not_delivered"
+        c.setdefault("resolutions", []).append({"resolved_at": _iso(now), "resolution": resolution,
+                                                "resolver_type": RESOLVER_TYPE, "previous_status": prev,
+                                                "result_status": new})
+        if new == FAILED_RETRYABLE:
+            _set(rec, ch, new, now, error_class=cls, next_attempt_at=_iso(now))
+        elif new != prev:
+            _set(rec, ch, new, now, error_class=cls)
+        else:
+            rec["updated_at"] = _iso(now)
+        result[ch] = new
+    return {"notification_id": notification_id, "resolution": resolution, "channels": result}
+
+
+def main_ledger_matches(path: Path, repo_root: Path, *, fetch: bool = True) -> tuple[bool, str]:
+    """手元の台帳が main の台帳と同じか（違えば書き換えない。別の実行の記録を上書きしない）。"""
+    import subprocess
+    p = Path(path)
+    try:
+        rel = p.resolve().relative_to(Path(repo_root).resolve()).as_posix()
+    except ValueError:
+        return False, "台帳がリポジトリの中にありません"
+
+    def git(*a):
+        return subprocess.run(["git", *a], cwd=repo_root, capture_output=True, text=True, encoding="utf-8")
+    if fetch and git("fetch", "-q", "origin", "main").returncode != 0:
+        return False, "main を取得できません（ネットワーク・権限）"
+    remote = git("rev-parse", "-q", "--verify", f"origin/main:{rel}").stdout.strip()
+    local = git("hash-object", str(p)).stdout.strip() if p.exists() else ""
+    if not remote or remote != local:
+        return False, "手元の台帳が main の台帳と違います（git pull で合わせてから実行してください）"
+    return True, ""

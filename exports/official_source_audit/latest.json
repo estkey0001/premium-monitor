@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-09 22:45 JST",
+  "generated_at": "2026-10-10 19:07 JST",
   "scope": "公式ソース登録・検証（利益/AI/Opportunity/Notification/Capital/Execution は不変）",
   "methodology": {
     "verification": "WebFetch で HTTP200/公式ドメイン/canonical/商品一致を実確認したURLのみ verified",
@@ -442,7 +442,7 @@
           "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17",
           "link_type": "item",
           "verified": true,
-          "last_verified_at": "2026-10-09",
+          "last_verified_at": "2026-10-10",
           "extraction_method": "webfetch_verified",
           "confidence": "high",
           "official_price": 159800,
@@ -772,7 +772,7 @@
           "url": "https://www.apple.com/jp/shop/buy-airpods/airpods-pro-3",
           "link_type": "item",
           "verified": true,
-          "last_verified_at": "2026-10-09",
+          "last_verified_at": "2026-10-10",
           "extraction_method": "webfetch_verified",
           "confidence": "high",
           "official_price": 42800,
@@ -852,7 +852,7 @@
           "url": "https://pur.store.sony.jp/ps5/products/ps5/CFI-7100B01_purchase/",
           "link_type": "item",
           "verified": true,
-          "last_verified_at": "2026-10-09",
+          "last_verified_at": "2026-10-10",
           "extraction_method": "webfetch_verified",
           "confidence": "high",
           "official_price": 137980,
@@ -1087,7 +1087,7 @@
           "url": "https://mall-jp.fujifilm.com/shop/g/g16941878/",
           "link_type": "item",
           "verified": true,
-          "last_verified_at": "2026-10-09",
+          "last_verified_at": "2026-10-10",
           "extraction_method": "webfetch_verified",
           "confidence": "high",
           "official_price": 315700,
@@ -1257,7 +1257,7 @@
           "url": "https://store.canon.jp/online/g/g6536C001/",
           "link_type": "item",
           "verified": true,
-          "last_verified_at": "2026-10-09",
+          "last_verified_at": "2026-10-10",
           "extraction_method": "webfetch_verified",
           "confidence": "high",
           "official_price": 654500,
@@ -1332,7 +1332,7 @@
           "url": "https://nij.nikon.com/shop/g/g4960759909947/",
           "link_type": "item",
           "verified": true,
-          "last_verified_at": "2026-10-09",
+          "last_verified_at": "2026-10-10",
           "extraction_method": "webfetch_verified",
           "confidence": "high",
           "official_price": 575300,
@@ -1635,44 +1635,44 @@
       {
         "product_id": "prod_ps5_pro",
         "action": "price_reconfirmed",
-        "on": "2026-10-09"
+        "on": "2026-10-10"
       },
       {
         "product_id": "prod_ps5_pro",
         "action": "stock_observed",
         "stock": "入荷待ち",
-        "at": "2026-10-09T22:43:13+09:00"
+        "at": "2026-10-10T19:05:28+09:00"
       },
       {
         "product_id": "prod_airpods_pro3",
         "action": "price_reconfirmed",
-        "on": "2026-10-09"
+        "on": "2026-10-10"
       },
       {
         "product_id": "prod_r5ii",
         "action": "price_reconfirmed",
-        "on": "2026-10-09"
+        "on": "2026-10-10"
       },
       {
         "product_id": "prod_z8",
         "action": "price_reconfirmed",
-        "on": "2026-10-09"
+        "on": "2026-10-10"
       },
       {
         "product_id": "prod_iphone17_256",
         "action": "price_reconfirmed",
-        "on": "2026-10-09"
+        "on": "2026-10-10"
       },
       {
         "product_id": "prod_x100vi",
         "action": "price_reconfirmed",
-        "on": "2026-10-09"
+        "on": "2026-10-10"
       },
       {
         "product_id": "prod_x100vi",
         "action": "stock_observed",
         "stock": "在庫なし（全色）",
-        "at": "2026-10-09T22:45:15+09:00"
+        "at": "2026-10-10T19:07:31+09:00"
       }
     ]
   },
@@ -1680,44 +1680,44 @@
     {
       "product_id": "prod_ps5_pro",
       "action": "price_reconfirmed",
-      "on": "2026-10-09"
+      "on": "2026-10-10"
     },
     {
       "product_id": "prod_ps5_pro",
       "action": "stock_observed",
       "stock": "入荷待ち",
-      "at": "2026-10-09T22:43:13+09:00"
+      "at": "2026-10-10T19:05:28+09:00"
     },
     {
       "product_id": "prod_airpods_pro3",
       "action": "price_reconfirmed",
-      "on": "2026-10-09"
+      "on": "2026-10-10"
     },
     {
       "product_id": "prod_r5ii",
       "action": "price_reconfirmed",
-      "on": "2026-10-09"
+      "on": "2026-10-10"
     },
     {
       "product_id": "prod_z8",
       "action": "price_reconfirmed",
-      "on": "2026-10-09"
+      "on": "2026-10-10"
     },
     {
       "product_id": "prod_iphone17_256",
       "action": "price_reconfirmed",
-      "on": "2026-10-09"
+      "on": "2026-10-10"
     },
     {
       "product_id": "prod_x100vi",
       "action": "price_reconfirmed",
-      "on": "2026-10-09"
+      "on": "2026-10-10"
     },
     {
       "product_id": "prod_x100vi",
       "action": "stock_observed",
       "stock": "在庫なし（全色）",
-      "at": "2026-10-09T22:45:15+09:00"
+      "at": "2026-10-10T19:07:31+09:00"
     }
   ]
 }

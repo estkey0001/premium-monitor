@@ -1,6 +1,6 @@
 # Production Readiness Report
 
-生成: 2026-10-09 23:03 JST
+生成: 2026-10-10 19:25 JST
 
 ## Overall Score: **80.3 / 100**
 
@@ -50,7 +50,7 @@
 
 ## Data Quality（改善優先順）
 
-- stale率 49% / item_url率 48% / EBAY設定 False / Coverage 43
+- stale率 48% / item_url率 48% / EBAY設定 False / Coverage 43
   1. EBAY_APP_ID設定（海外sold fresh化・最大効果）
   2. 買取/フリマ日次更新でstale率低下
   3. item_url個別化

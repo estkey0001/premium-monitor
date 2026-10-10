@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-10-09T23:03:08+09:00",
+  "generated_at": "2026-10-10T19:25:21+09:00",
   "step": "prepare",
-  "diagnostics_generated_at": "2026-10-09T23:03:08+09:00",
+  "diagnostics_generated_at": "2026-10-10T19:25:21+09:00",
   "note": "内部用（運営者向け）。外部への送信はしない（dry-run）。配信先の URL・トークンは記録しない",
   "type": "ACTIONABLE_NOW",
   "dry_run": true,
@@ -37,9 +37,22 @@
     "records": 0
   },
   "unknown": [],
-  "provider_status": {},
-  "prepared_at": "2026-10-09T23:03:09+09:00",
-  "attempt_id": "gh-37933187414-1",
+  "provider_status": {
+    "telegram": {
+      "configured": false,
+      "status": "NOT_CONFIGURED",
+      "canary_id": "telegram_canary_v1",
+      "canary_status": "NONE",
+      "last_delivery_status": "",
+      "last_error_class": "",
+      "delivered_at": "",
+      "product_real_send": false,
+      "real_send_enabled": false
+    },
+    "checked_at": "2026-10-09T23:03:10+09:00"
+  },
+  "prepared_at": "2026-10-10T19:25:22+09:00",
+  "attempt_id": "gh-38040917503-1",
   "dispatch_expired": 0,
   "dispatch_cancelled": 0,
   "dispatch_sending": 0

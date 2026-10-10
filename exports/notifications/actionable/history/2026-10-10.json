@@ -1,0 +1,116 @@
+{
+  "date": "2026-10-10",
+  "runs": [
+    {
+      "generated_at": "2026-10-10T19:25:21+09:00",
+      "step": "observe",
+      "diagnostics_generated_at": "2026-10-10T19:25:21+09:00",
+      "type": "ACTIONABLE_NOW",
+      "dry_run": true,
+      "is_baseline": false,
+      "channels": [
+        "log",
+        "discord",
+        "telegram"
+      ],
+      "newly_actionable": 0,
+      "notification_candidates": 0,
+      "dedupe_suppressed": 0,
+      "baseline_recorded": 0,
+      "pruned": 0,
+      "dispatch_planned": 0,
+      "dispatch_sent": 0,
+      "dispatch_failed": 0,
+      "dispatch_blocked": 0,
+      "dispatch_unknown": 0,
+      "dispatch_not_configured": 0,
+      "external_calls": 0,
+      "candidates": [],
+      "counts": {
+        "outbox_pending": 0,
+        "sending": 0,
+        "dry_run_planned": 0,
+        "delivered": 0,
+        "retryable_failed": 0,
+        "final_failed": 0,
+        "expired": 0,
+        "cancelled": 0,
+        "ambiguous_delivery": 0,
+        "records": 0
+      },
+      "unknown": [],
+      "provider_status": {
+        "telegram": {
+          "configured": false,
+          "status": "NOT_CONFIGURED",
+          "canary_id": "telegram_canary_v1",
+          "canary_status": "NONE",
+          "last_delivery_status": "",
+          "last_error_class": "",
+          "delivered_at": "",
+          "product_real_send": false,
+          "real_send_enabled": false
+        },
+        "checked_at": "2026-10-09T23:03:10+09:00"
+      }
+    },
+    {
+      "generated_at": "2026-10-10T19:25:21+09:00",
+      "step": "prepare",
+      "diagnostics_generated_at": "2026-10-10T19:25:21+09:00",
+      "type": "ACTIONABLE_NOW",
+      "dry_run": true,
+      "is_baseline": false,
+      "channels": [
+        "log",
+        "discord",
+        "telegram"
+      ],
+      "newly_actionable": 0,
+      "notification_candidates": 0,
+      "dedupe_suppressed": 0,
+      "baseline_recorded": 0,
+      "pruned": 0,
+      "dispatch_planned": 0,
+      "dispatch_sent": 0,
+      "dispatch_failed": 0,
+      "dispatch_blocked": 0,
+      "dispatch_unknown": 0,
+      "dispatch_not_configured": 0,
+      "external_calls": 0,
+      "candidates": [],
+      "counts": {
+        "outbox_pending": 0,
+        "sending": 0,
+        "dry_run_planned": 0,
+        "delivered": 0,
+        "retryable_failed": 0,
+        "final_failed": 0,
+        "expired": 0,
+        "cancelled": 0,
+        "ambiguous_delivery": 0,
+        "records": 0
+      },
+      "unknown": [],
+      "provider_status": {
+        "telegram": {
+          "configured": false,
+          "status": "NOT_CONFIGURED",
+          "canary_id": "telegram_canary_v1",
+          "canary_status": "NONE",
+          "last_delivery_status": "",
+          "last_error_class": "",
+          "delivered_at": "",
+          "product_real_send": false,
+          "real_send_enabled": false
+        },
+        "checked_at": "2026-10-09T23:03:10+09:00"
+      },
+      "prepared_at": "2026-10-10T19:25:22+09:00",
+      "attempt_id": "gh-38040917503-1",
+      "dispatch_expired": 0,
+      "dispatch_cancelled": 0,
+      "dispatch_sending": 0
+    }
+  ]
+}

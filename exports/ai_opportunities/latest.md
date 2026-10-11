@@ -1,7 +1,7 @@
 # AI Opportunities Engine — Today's Opportunities
 
-生成: 2026-10-10 19:25 JST
-Health Score: 37.9（現在データ品質低下中） / main 0 / reference 0
+生成: 2026-10-11 19:42 JST
+Health Score: 38.7（現在データ品質低下中） / main 0 / reference 0
 
 ## 今日やること
 

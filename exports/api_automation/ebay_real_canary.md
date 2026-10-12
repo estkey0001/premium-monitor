@@ -1,6 +1,6 @@
 # eBay Real API Canary
 
-> 生成: 2026-10-11 19:42 JST
+> 生成: 2026-10-12 20:14 JST
 
 ## Verdict: **EBAY_PENDING_CONFIGURATION**  (real_api_called=False, mode=not_executed)
 

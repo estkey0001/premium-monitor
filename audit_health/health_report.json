@@ -1,26 +1,26 @@
 {
-  "generated_at": "2026-10-11 19:42 JST",
-  "date": "2026-10-11",
+  "generated_at": "2026-10-12 20:14 JST",
+  "date": "2026-10-12",
   "health_score": {
-    "data_quality": 15.9,
+    "data_quality": 15.8,
     "profit_discovery": 0.0,
     "source_health": 12.8,
     "link_quality": 4.9,
     "freshness": 5.1,
-    "total": 38.7
+    "total": 38.6
   },
   "data_quality": {
-    "total_obs": 233,
-    "usable_obs": 77,
+    "total_obs": 231,
+    "usable_obs": 75,
     "stale_count": 114,
-    "stale_rate": 0.4893,
+    "stale_rate": 0.4935,
     "zero_count": 36,
-    "zero_rate": 0.1545,
-    "item_url_rate": 0.4936,
-    "search_url_rate": 0.2017,
-    "manual_rate": 0.4807,
+    "zero_rate": 0.1558,
+    "item_url_rate": 0.4892,
+    "search_url_rate": 0.2035,
+    "manual_rate": 0.4848,
     "api_rate": 0.0,
-    "html_rate": 0.0086
+    "html_rate": 0.0087
   },
   "profit": {
     "main_route_count": 0,
@@ -159,18 +159,6 @@
       },
       "n": 6
     },
-    "モバイル一番": {
-      "success_count": 5,
-      "stale_count": 3,
-      "zero_count": 0,
-      "item_url_rate": 1.0,
-      "freshness": 0.4,
-      "success_rate": 1.0,
-      "confidence": {
-        "high": 5
-      },
-      "n": 5
-    },
     "eBay sold(新品)": {
       "success_count": 5,
       "stale_count": 5,
@@ -242,6 +230,18 @@
         "high": 4
       },
       "n": 4
+    },
+    "モバイル一番": {
+      "success_count": 3,
+      "stale_count": 3,
+      "zero_count": 0,
+      "item_url_rate": 1.0,
+      "freshness": 0.0,
+      "success_rate": 1.0,
+      "confidence": {
+        "high": 3
+      },
+      "n": 3
     },
     "Amazon新品出品": {
       "success_count": 3,
@@ -331,16 +331,16 @@
   "diff_vs_prev": {
     "available": true,
     "stale_rate": {
-      "prev": 0.4831,
-      "cur": 0.4893
+      "prev": 0.4893,
+      "cur": 0.4935
     },
     "zero_rate": {
-      "prev": 0.1737,
-      "cur": 0.1545
+      "prev": 0.1545,
+      "cur": 0.1558
     },
     "item_url_rate": {
-      "prev": 0.4788,
-      "cur": 0.4936
+      "prev": 0.4936,
+      "cur": 0.4892
     },
     "main_route_count": {
       "prev": 0,
@@ -352,14 +352,7 @@
     },
     "new_main": [],
     "lost_main": [],
-    "source_success_changes": [
-      {
-        "source": "モバイル一番",
-        "prev": 0.375,
-        "cur": 1.0,
-        "delta": 0.625
-      }
-    ]
+    "source_success_changes": []
   },
   "anomalies": {
     "critical": [
@@ -368,6 +361,7 @@
       "取得成功率 0%: ネットオフ"
     ],
     "warning": [
+      "item_url率 低下",
       "item_url率 49% (<50%)"
     ],
     "info": []

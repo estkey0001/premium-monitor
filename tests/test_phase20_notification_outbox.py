@@ -119,16 +119,19 @@ def test_dry_run_is_not_delivered():
 
 def test_dry_run_history_does_not_block_first_real_send():
     """dry-run の記録は DELIVERED ではない。本番に切り替えた後の新しい変化は送る（dry-run の計画が止めない）。
-    dry-run で計画した古い変化は、切り替えた時点では送らない（何日も前の「行動できるようになった」を送らない。監査 M-1）。"""
+    dry-run で計画した古い変化は、切り替えた時点では送らない（何日も前の「行動できるようになった」を送らない。監査 M-1）。
+    Phase 25: 「古い」は検知から24時間を過ぎたもの（24時間以内は Phase 24 の受入のため本番が引き継ぐ。test_phase25）。"""
     sent = []
+    later = NOW + timedelta(hours=ob.LIVE_CANDIDATE_MAX_AGE_HOURS + 1)
+    snd = lambda c, k: sent.append(k)                                   # noqa: E731
     _r, st = run(_diag(ps5("OUT_OF_STOCK")), {}, channels=["fixture"])
     _r, st = run(_diag(ps5()), st, channels=["fixture"])             # dry-run で計画
-    r, st = run(_diag(ps5()), st, dry_run=False, sender=lambda c, k: sent.append(k))
+    r, st = run(_diag(ps5(checked=later - timedelta(minutes=30), now=later)), st, now=later, dry_run=False, sender=snd)
     assert r["dispatch_sent"] == 0 and sent == []                      # 古い変化は送らない
-    _r, st = run(_diag(ps5("OUT_OF_STOCK")), st, dry_run=False, sender=lambda c, k: sent.append(k))
-    r, st = run(_diag(ps5()), st, dry_run=False, sender=lambda c, k: sent.append(k))
+    _r, st = run(_diag(ps5("OUT_OF_STOCK", now=later)), st, now=later, dry_run=False, sender=snd)
+    r, st = run(_diag(ps5(checked=later - timedelta(minutes=30), now=later)), st, now=later, dry_run=False, sender=snd)
     assert r["dispatch_sent"] == 1 and len(sent) == 1                  # 本番に切り替えた後の新しい変化は送る
-    r, st = run(_diag(ps5()), st, dry_run=False, sender=lambda c, k: sent.append(k))
+    r, st = run(_diag(ps5(checked=later - timedelta(minutes=30), now=later)), st, now=later, dry_run=False, sender=snd)
     assert len(sent) == 1
 
 

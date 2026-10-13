@@ -1,6 +1,7 @@
 # HANDOFF（最終更新: 2026-10-14）
 
 ## 今の状態
+- Phase 25（Phase 24 の受入状態の検知）: `src/notifiers/readiness.py`。定時の CI が実データの「行動できない → できる」を検知して `exports/notifications/actionable/phase24_readiness.json`・運営者向けの画面「Phase 24 の受入状態」・CI の Summary（`notification readiness`）に出す（送信しない）。状態は PHASE24_WAITING / PHASE24_REAL_CANDIDATE_READY / PHASE24_REVIEW_REQUIRED / PHASE24_ACCEPTANCE_DONE。本番の実行は定時の実行で検知した変化を24時間以内なら引き継ぐ（`outbox.adoptable_dry`）。#860。記録は `internal/audits/PHASE_25_READINESS.md`
 - Phase 23（Telegram の商品の通知の限定運用）: 関門 `real_send_gate(purpose="product")`（変数 PRODUCT_REAL_SEND_ENABLED は手動の実行のときだけ読む・限定モード既定 true・Telegram だけ・設定）と `product_live_intent`（Secrets を見ない。LP の生成と prepare）。1回の実行（run ごと。Re-run を含む）で最大1件（`PRODUCT_SEND_LIMIT_PER_RUN`。コードで固定）・残りは READY・24時間を過ぎた候補は送らない・関門が閉じたら SENDING を READY に戻す・商品の実行では canary を送らない。運営者向けに状態、マイページに送信済みだけ。#859。記録は `internal/audits/PHASE_23_PRODUCT_LIMITED.md`
 - Phase 22 の本番: 2026-10-14 01:41 JST の手動実行で接続の試験を1件だけ送った（requests 1・DELIVERED・message_id 保存・台帳は CANARY:telegram:telegram_canary_v1 の1件）。直後に変数を TELEGRAM_CANARY=false・NOTIFICATION_REAL_SEND=false・NOTIFICATION_DRY_RUN=true に戻した（NOTIFICATION_PROVIDERS=telegram は残す）。同じ ID はもう送らない。商品の通知は無効のまま
 - Phase 22（Telegram の接続の試験）: `src/notifiers/telegram_transport.py`（公式の Bot API・urllib・ログなし）。関門 `real_send_gate(purpose="canary")`（Telegram だけ・REAL_SEND・DRY_RUN=false・TELEGRAM_CANARY・手動の実行・設定）。`outbox.run_canary`（固定の [TEST] 文・同じ ID で二度と送らない・SENDING を main に保存してから送る）。商品の通知の本番の送信は `PRODUCT_REAL_SEND_ENABLED = False` で無効。Telegram の Secrets は「Send notifications」の手順だけ（結果の通知には渡さない）。記録は `internal/audits/PHASE_22_TELEGRAM_CANARY.md`
@@ -57,7 +58,7 @@
 - 既存の問題: pytest を実行すると追跡対象の exports/api_automation/collection.json が書き換わる。コミット前に `git checkout -- exports/api_automation/collection.json` で戻すこと（テストの出力先修正は別タスク）。
 
 ## 次にやること
-0. Phase 24 はユーザーの指示を待ってから始める。商品の通知の実送信の本番の確認は、実データで行動できる候補が出たときに手動の実行で行う（偽の候補は作らない。手順は `ops/Secrets設定.md`）。
+0. Phase 26 はユーザーの指示を待ってから始める。受入状態が PHASE24_REAL_CANDIDATE_READY になったら Phase 24 の受入をやり直す（偽の候補は作らない。手順は `ops/Secrets設定.md` の「Phase 24 の受入を始めるとき」）。
 1. 判断待ち（`src/market/official_registry.USER_DECISIONS`）: PS5 Digital Edition・Xbox Series X・Switch 2 マリオカートセットの版。
 2. 定時の実行での商品の通知の継続運用（別の Phase・別の明示の許可の後。今は手動の実行だけ・1回の実行で最大1件）。
 3. eBay の成約: ユーザーの設定待ち（`ops/Secrets設定.md`）。

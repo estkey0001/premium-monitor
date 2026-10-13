@@ -527,6 +527,27 @@ def build_actionable_notices(rep: dict | None) -> dict:
                         for u in (r.get("unknown") or []) if isinstance(u, dict)][:50]}
 
 
+def build_readiness(d: dict | None) -> dict:
+    """Phase 24 の受入の状態（Phase 25。src/notifiers/readiness の出力）。値・キー・配信先の ID は元から無い。
+    読めない・無いときは「判定できない」（READY と推測しない）。"""
+    from src.notifiers import readiness as rd
+    if d is None:
+        return {}                                              # 通知を作らない生成（欄を出さない。レビュー L-6）
+    r = rd.normalized(d)                                       # 知らない状態・壊れた READY は判定できない（監査 L-2）
+    status = r.get("status") if r.get("status") in rd.STATUSES else rd.REVIEW_REQUIRED
+    keys = ("priority", "product", "net_profit", "roi", "type", "state_label", "deadline", "checked_at", "detected_at",
+            "age_hours")
+    return {"status": status, "label": rd.LABELS[status], "detection": str(r.get("detection") or rd.DETECTION_FAILED),
+            "at": str(r.get("generated_at") or ""), "actionable": r.get("actionable"),
+            "count": int(r.get("candidate_count") or 0) if status == rd.READY else 0,
+            "send_limit": int(r.get("send_limit") or 1),
+            "candidates": [{k: c.get(k) for k in keys} for c in (r.get("candidates") or []) if isinstance(c, dict)][:10]
+            if status == rd.READY else [],
+            "history": [{k: str(h.get(k) or "") for k in ("product", "type", "lifecycle", "detected_at", "changed_at",
+                                                         "reason")}
+                        for h in (r.get("history") or []) if isinstance(h, dict)][:20]}
+
+
 def check_text(full: str, tail: int = 4000) -> str:
     """CI のチェックの出力（数万字）から、渡す部分だけを取り出す。実行日時はヘッダ（先頭）、件数は末尾にあるので、
     先頭の実行日時の行と末尾だけ（途中の項目の一覧は渡さない）。"""
@@ -659,6 +680,7 @@ def build(data: dict | None, *, catalog, details: dict, profit_routes: dict | No
             "api_dry_run": (d.get("api") or {}).get("dry_run"), "api_generated": (d.get("api") or {}).get("generated_at"),
             "dq": dq, "ai": ai, "capital": capital, "execution": execution, "notices": notices,
             "act_notices": build_actionable_notices(d.get("actionable_notifications")),
+            "readiness": build_readiness(d.get("phase24_readiness")),
             "health": d.get("health") or {}, "coverage": d.get("coverage") or {},
             "collector_generated": (d.get("collector") or {}).get("generated_at"),
             "dq_report": d.get("dq_report") or {}, "now": now}
@@ -1017,6 +1039,52 @@ def _act_notices(a: dict) -> str:
                     "outbox の件数はこの画面の生成の時点（配信の直前の確認・送信はこの後の手順）")
 
 
+_READINESS_LIFECYCLE = {"READY": "受入候補", "EXPIRED": "期限切れ（検知から24時間）", "INVALIDATED": "無効（行動できなくなった）",
+                        "DELIVERED": "送信済み", "CANCELLED": "取り消し", "UNKNOWN_DELIVERY": "届いたか不明（要解決）",
+                        "HELD": "保留（受入は済んでいる）"}
+_READINESS_DETECTION = {"NO_ACTIONABLE_CHANGE": "変化なし", "NEW_ACTIONABLE_FOUND": "新しい候補を検知",
+                        "ACTIONABLE_STILL_PRESENT": "候補が続いている", "ACTIONABLE_LOST": "候補が無くなった",
+                        "DETECTION_FAILED": "判定できなかった", "ACCEPTANCE_COMPLETED": "受入で送った"}
+
+
+def _readiness(r: dict) -> str:
+    """Phase 24 の受入の状態（Phase 25）。この画面は見るだけ（送信のボタンは置かない）。"""
+    if not r:
+        return ""
+    tone = {"PHASE24_REAL_CANDIDATE_READY": WARN, "PHASE24_WAITING": OK, "PHASE24_ACCEPTANCE_DONE": INFO}.get(
+        r["status"], FAIL)
+    cands = _table(["順", "商品", "想定純利益", "ROI", "種類", "状態", "締切", "確認", "検知"],
+                   [[str(c.get("priority") or ""), esc(str(c.get("product") or "")),
+                     (f'+¥{int(c["net_profit"]):,}' if isinstance(c.get("net_profit"), (int, float)) else "—"),
+                     (f'{c["roi"] * 100:.1f}%' if isinstance(c.get("roi"), (int, float)) else "—"),
+                     esc(str(c.get("type") or "")), esc(str(c.get("state_label") or "")),
+                     _when(c.get("deadline")) if c.get("deadline") else "—", _when(c.get("checked_at")),
+                     _when(c.get("detected_at")) + (f'（{c["age_hours"]}時間前）' if c.get("age_hours") is not None else "")]
+                    for c in r["candidates"]], caption="受入候補（既存の順位。受入で送るのは先頭の1件だけ）")
+    steps = ('<p class="nu-osub">この画面は今回の生成の時点（送信の手順の前）。受入の実行の結果はその実行の Summary と '
+             'phase24_readiness.json で確かめる。直前の実行の Summary が受入済み（PHASE24_ACCEPTANCE_DONE）なら、手動の実行は'
+             'しない（受入は1件だけ）</p>'
+             '<ol class="nu-ad-list"><li>reviewer の確認（Critical / High / Medium 0）</li><li>auditor の確認（同じ）</li>'
+             '<li>リポジトリの変数を受入の値に設定（ops/Secrets設定.md）</li><li>Actions → Daily LP Update → Run workflow'
+             '（手動の実行）</li><li>商品の通知を1件だけ送る（Telegram で受信を確かめる。2通目は送らない）</li>'
+             '<li>変数を安全な値に戻す（PRODUCT_REAL_SEND_ENABLED=false・NOTIFICATION_REAL_SEND=false・'
+             'NOTIFICATION_DRY_RUN=true）</li></ol>') if r["status"] == "PHASE24_REAL_CANDIDATE_READY" else ""
+    hist = _table(["商品", "種類", "状態", "検知", "変化"],
+                  [[esc(h["product"]), esc(h["type"]), esc(_READINESS_LIFECYCLE.get(h["lifecycle"], h["lifecycle"])),
+                    _when(h["detected_at"]) if h["detected_at"] else "—", _when(h["changed_at"]) if h["changed_at"] else "—"]
+                   for h in r["history"]], caption="候補の履歴（検知・期限切れ・無効・送信済み・取り消し）")
+    act_n = r.get("actionable")
+    return _box("Phase 24 の受入状態",
+                f'<p>{_badge(tone, r["label"])}</p>'
+                f'<dl class="nu-ad-dl"><dt>今回の検知</dt><dd>{esc(_READINESS_DETECTION.get(r["detection"], r["detection"]))}</dd>'
+                f'<dt>今すぐ行動できる商品</dt><dd>{esc(str(act_n)) + "件" if act_n is not None else "不明"}</dd>'
+                f'<dt>受入候補</dt><dd>{r["count"]}件</dd><dt>受入で送る上限</dt><dd>{r["send_limit"]}件</dd>'
+                f'<dt>外部への送信</dt><dd>0件（検知と記録だけ）</dd></dl>'
+                + (cands or "") + steps + hist + _generated("今回", r["at"]),
+                sub="実データで「行動できない → できる」になった確定の利益商品だけ。検知から24時間を過ぎた・行動できなくなった候補は"
+                    "外す。この画面は見るだけで、送信は手動の手順で行う")
+
+
 def _notices(v: dict) -> str:
     n = v["notices"]
     user = "".join(
@@ -1027,7 +1095,7 @@ def _notices(v: dict) -> str:
     system = "".join(f'<li><b>{esc(s["label"])}</b><span class="nu-osub">{_when(s["at"])}・'
                      f'{esc(s["message"])}</span></li>' for s in n["system"][:20])
     delivery = "・".join(f"{esc(k)}: {esc(v2)}" for k, v2 in n["delivery"].items()) or "記録なし"
-    return (_act_notices(v.get("act_notices") or {})
+    return (_readiness(v.get("readiness") or {}) + _act_notices(v.get("act_notices") or {})
             + _box("利用者向けの通知", f'<ul class="nu-ad-list">{user}</ul>' if user else _empty("利用者向けの通知はありません。"),
                  sub="同じ通知は1回だけ。今の確定ルートでない通知は、当時の金額を出さない")
             + _box("システムの通知（データ品質）", f'<ul class="nu-ad-list">{system}</ul>' if system

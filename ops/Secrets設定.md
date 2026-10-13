@@ -70,6 +70,29 @@ Settings → Secrets and variables → Actions に以下のシークレットを
 - 「Send notifications」が動かなかった（取り消し・失敗）実行や、送信の手順の後の保存に失敗した実行の SENDING は、次の実行で
   「届いたか不明」になる（送り直さない側）。Telegram に届いていなければ `notification resolve <ID> not-delivered --confirm` で解決する
 
+### Phase 24 の受入を始めるとき（Phase 25 の受入状態）
+
+定時の CI（Daily LP Update）が、実データで「行動できない → できる」になった確定の利益商品を検知して記録する（送信しない）。
+状態は運営者向けの画面の「Phase 24 の受入状態」・CI の Summary・`python -m src.cli notification readiness`・
+`exports/notifications/actionable/phase24_readiness.json` で確かめる。
+
+| 状態 | 意味 | すること |
+|---|---|---|
+| `PHASE24_WAITING` | 実データの候補待ち | 何もしない（定時の CI が検知を続ける） |
+| `PHASE24_REAL_CANDIDATE_READY` | 受入候補あり（検知から24時間以内・今も行動できる・送っていない） | 下の手順で受入を行う |
+| `PHASE24_REVIEW_REQUIRED` | 判定できなかった（診断・台帳の失敗） | CI のログを確かめる（READY とは扱わない） |
+
+受入の手順（候補が READY のときだけ。偽の候補は作らない）:
+1. reviewer の確認（Critical / High / Medium 0） 2. auditor の確認（同じ）
+3. 変数を受入の値に設定（`PRODUCT_REAL_SEND_ENABLED=true`・`PRODUCT_NOTIFICATION_LIMITED_MODE=true`・`NOTIFICATION_REAL_SEND=true`・
+   `NOTIFICATION_DRY_RUN=false`・`NOTIFICATION_PROVIDERS=telegram`）
+4. Actions → Daily LP Update → Run workflow（手動の実行。定時の実行では送らない）
+5. 商品の通知が1件だけ届くことを Telegram で確かめる（2通目は送らない）
+6. 変数を安全な値に戻す（`PRODUCT_REAL_SEND_ENABLED=false`・`NOTIFICATION_REAL_SEND=false`・`NOTIFICATION_DRY_RUN=true`）
+
+- 受入の実行は、定時の実行で検知した変化を検知から24時間以内なら引き継いで送る（検知の時刻は変えない。それより古い変化は送らない）
+- 候補が複数でも送るのは既存の順位の先頭の1件だけ（残りは次の手動の実行へ。検知から24時間を過ぎたら外れる）
+
 届いたか不明（UNKNOWN_DELIVERY）の配信は自動では送り直さない。人が配信先で確かめて、手元で解決する:
 
 ```bash

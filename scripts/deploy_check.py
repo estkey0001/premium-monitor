@@ -4138,6 +4138,7 @@ def check() -> list[dict]:
     results.extend(_check_phase21_delivery_providers())
     results.extend(_check_phase22_telegram_safety())
     results.extend(_check_phase23_product_limited())
+    results.extend(_check_phase25_readiness())
 
     # ══════════════════════════════════════════════════════════════════
     # #820-#825: データの正確さ・鮮度の偽装（Phase 0）
@@ -5018,12 +5019,13 @@ def _check_phase20_notification_outbox() -> list[dict]:
         now = _dt20(2026, 10, 9, 12, 0, tzinfo=_JST20)
         url = "https://pur.store.sony.jp/ps5/products/ps5/CFI-7100B01_purchase/"
 
-        def d(avail="IN_STOCK", ok=True):
+        def d(avail="IN_STOCK", ok=True, at=None):
+            at = at or now
             return {"actionability": {"products": [{
                 "product_id": "p", "product": "P", "availability": avail, "actionable": ok, "reasons": [] if ok else ["x"],
                 "confirmed": True, "net_profit": 50000, "roi": 0.3, "cta_label": "購入する", "cta_url": url if ok else "",
-                "until_ms": int((now + _td20(hours=2)).timestamp() * 1000) if ok else None, "deadline": "",
-                "checked_at": (now - _td20(hours=1)).isoformat(), "event_key": ""}]}}
+                "until_ms": int((at + _td20(hours=2)).timestamp() * 1000) if ok else None, "deadline": "",
+                "checked_at": (at - _td20(hours=1)).isoformat(), "event_key": ""}]}}
 
         calls = []
 
@@ -5064,13 +5066,15 @@ def _check_phase20_notification_outbox() -> list[dict]:
         res = ob.cycle(st, d(), now=now, mode=ob.MODE_DRY)
         if res["counts"]["delivered"] or res["counts"]["dry_run_planned"] != 1:
             bad.append("dry-run の計画を送信済みにする")
-        res = ob.cycle(st, d(), now=now, mode=ob.MODE_LIVE, attempt_id="l1", adapters={"fixture": ok_adapter},
+        # 検知から24時間を過ぎた dry-run の変化は、本番に切り替えても送らない（24時間以内の引き継ぎは #860。Phase 25）
+        later = now + _td20(hours=ob.LIVE_CANDIDATE_MAX_AGE_HOURS + 1)
+        res = ob.cycle(st, d(at=later), now=later, mode=ob.MODE_LIVE, attempt_id="l1", adapters={"fixture": ok_adapter},
                        channels=["fixture"])
         if res["observe"]["notification_candidates"] != 0:
             bad.append("dry-run で計画した古い変化を、本番に切り替えた時点で送る")
-        ob.cycle(st, d("OUT_OF_STOCK", False), now=now, mode=ob.MODE_LIVE, attempt_id="l2",
+        ob.cycle(st, d("OUT_OF_STOCK", False, at=later), now=later, mode=ob.MODE_LIVE, attempt_id="l2",
                  adapters={"fixture": ok_adapter}, channels=["fixture"])
-        res = ob.cycle(st, d(), now=now, mode=ob.MODE_LIVE, attempt_id="l3", adapters={"fixture": ok_adapter},
+        res = ob.cycle(st, d(at=later), now=later, mode=ob.MODE_LIVE, attempt_id="l3", adapters={"fixture": ok_adapter},
                        channels=["fixture"])
         if res["observe"]["notification_candidates"] != 1:
             bad.append("dry-run の記録が、本番に切り替えた後の新しい変化の送信を止める")
@@ -5387,6 +5391,142 @@ class _FakeTgOpener:
             raise urllib.error.HTTPError(req.full_url, self.result[0], "x", self.result[2] if len(self.result) > 2 else {},
                                          io.BytesIO(self.result[1]))
         return _FakeTgResp(self.result[0], self.result[1], self.result[2] if len(self.result) > 2 else {})
+
+
+def _check_phase25_readiness(root: Path | None = None) -> list[dict]:
+    """Phase 25: Phase 24 の受入の状態（#860）。候補が無ければ WAITING・実データの「行動できない → できる」だけが READY・
+    検知から24時間で外す・行動できなくなった/送った/取り消した候補は外す・検知の時刻を新しくしない・判定できなければ
+    REVIEW_REQUIRED・定時の実行（dry-run）で検知した24時間以内の変化を受入の実行が1件だけ引き継ぐ・送信しない（外部への通信 0）・
+    変数の既定は安全な値・受入状態の出力に秘密の値が無い・今の出力の状態が台帳と診断に合う。"""
+    import json as _json25
+    import tempfile as _tf25
+    from datetime import datetime as _dt25
+    from datetime import timedelta as _td25
+
+    from src.tcg.models import JST as _JST25
+    bad = []
+    root = root or Path(__file__).resolve().parent.parent
+    try:
+        from src.notifiers import adapters as ad
+        from src.notifiers import outbox as ob
+        from src.notifiers import readiness as rd
+        now = _dt25(2026, 10, 14, 12, 0, tzinfo=_JST25)
+        url = "https://pur.store.sony.jp/ps5/products/ps5/CFI-7100B01_purchase/"
+
+        def row(pid="a", at=None, **kw):
+            at = at or now
+            r = {"product_id": pid, "product": pid.upper(), "availability": "IN_STOCK", "actionable": True,
+                 "reasons": [], "confirmed": True, "net_profit": 50000, "roi": 0.3, "cta_label": "購入する",
+                 "cta_url": url, "until_ms": int((at + _td25(hours=2)).timestamp() * 1000), "deadline": "",
+                 "checked_at": (at - _td25(minutes=20)).isoformat(), "event_key": ""}
+            r.update(kw)
+            return r
+        oos = {"availability": "OUT_OF_STOCK", "actionable": False, "reasons": ["stock_out"], "until_ms": None}
+
+        def diag(rows, at):
+            return {"generated_at": at.isoformat(), "actionability": {"products": rows}}
+        sent = []
+
+        class _Never(ad.ProviderAdapter):
+            def __init__(self):
+                super().__init__(lambda p, k: sent.append(k) or (200, {}, {}))
+        with _tf25.TemporaryDirectory() as td:
+            tmp = Path(td)
+            ob.save(tmp / ob.STORE_NAME, ob.empty_store())          # 台帳はある（本番と同じ。無ければ REVIEW_REQUIRED）
+            r = ob.run_observe(tmp, diag([row(**oos)], now), now=now, dry_run=True)
+            if r["phase24_readiness"]["status"] != rd.WAITING:
+                bad.append("候補が無いのに WAITING でない")
+            r = ob.run_observe(tmp, diag([row(at=now + _td25(hours=1))], now + _td25(hours=1)), now=now + _td25(hours=1),
+                               dry_run=True)
+            g = r["phase24_readiness"]
+            if g["status"] != rd.READY or g["detection"] != rd.NEW_ACTIONABLE_FOUND or g["candidate_count"] != 1:
+                bad.append("実データの「行動できない → できる」が READY にならない（否定の対照）")
+            det = g["candidates"][0]["detected_at"] if g["candidates"] else ""
+            t2 = now + _td25(hours=3)
+            g = ob.run_observe(tmp, diag([row(at=t2)], t2), now=t2, dry_run=True)["phase24_readiness"]
+            if g["status"] != rd.READY or g["detection"] != rd.ACTIONABLE_STILL_PRESENT or \
+                    (g["candidates"] or [{}])[0].get("detected_at") != det:
+                bad.append("同じ候補を新しい検知にする・検知の時刻を新しくする")
+            t3 = now + _td25(hours=26)
+            g = ob.run_observe(tmp, diag([row(at=t3)], t3), now=t3, dry_run=True)["phase24_readiness"]
+            if g["status"] != rd.WAITING or (g["history"] or [{}])[0].get("lifecycle") != rd.C_EXPIRED:
+                bad.append("検知から24時間を過ぎた候補を READY のままにする")
+            if sent:
+                bad.append("受入の判定が送信する")
+        with _tf25.TemporaryDirectory() as td:
+            tmp = Path(td)
+            ob.save(tmp / ob.STORE_NAME, ob.empty_store())          # 台帳はある（本番と同じ。無ければ REVIEW_REQUIRED）
+            ob.run_observe(tmp, diag([row(**oos)], now), now=now, dry_run=True)
+            ob.run_observe(tmp, diag([row()], now), now=now, dry_run=True)
+            g = ob.run_observe(tmp, diag([row(confirmed=False)], now), now=now, dry_run=True)["phase24_readiness"]
+            if g["status"] != rd.WAITING:
+                bad.append("利益が確定でなくなった候補を READY のままにする")
+            g = ob.run_observe(tmp, diag([row()], now), now=now, dry_run=True)["phase24_readiness"]
+            st, _b = ob.load(tmp / ob.STORE_NAME)
+            # 受入の実行（本番の方式）は24時間以内の dry-run の変化を1件だけ引き継ぐ。送った後は READY から外す
+            o = ob.observe(st, [row()], now=now, mode=ob.MODE_LIVE, channels=["telegram"])
+            o2 = ob.observe(st, [row()], now=now, mode=ob.MODE_LIVE, channels=["telegram"])
+            if o.get("adopted") != 1 or o2.get("adopted") or o2["notification_candidates"]:
+                bad.append("受入の実行が検知した変化を1件だけ引き継がない")
+            live = st["records"][ob.notification_id(next(iter(st["products"].values()))["current_key"], ob.MODE_LIVE)]
+            for c in live["channels"].values():
+                c.update(status=ob.DELIVERED, provider_delivery_id="1")
+            live["status"] = ob.DELIVERED
+            g = rd.evaluate(st, [row()], now=now)
+            if g["status"] != rd.ACCEPTANCE_DONE or g["candidates"] or g["history"][0]["lifecycle"] != rd.C_DELIVERED:
+                bad.append("送った候補・受入の後の残りの候補を READY のままにする")
+            for c in live["channels"].values():
+                c.update(status=ob.UNKNOWN_DELIVERY)
+            live["status"] = ob.UNKNOWN_DELIVERY
+            if rd.evaluate(st, [row()], now=now)["status"] != rd.REVIEW_REQUIRED:
+                bad.append("届いたか不明の受入の後に次の受入を始める")
+        if rd.failed(now, "x")["status"] != rd.REVIEW_REQUIRED or rd.failed(now, "x")["candidate_count"]:
+            bad.append("判定できないときに READY と推測する")
+        if ad.real_send_gate({})["allowed"] or ad.product_live_intent(
+                {"NOTIFICATION_REAL_SEND": "true", "NOTIFICATION_DRY_RUN": "false", "NOTIFICATION_PROVIDERS": "telegram",
+                 "PRODUCT_REAL_SEND_ENABLED": "true", "GITHUB_EVENT_NAME": "schedule"})["allowed"]:
+            bad.append("既定・定時の実行で商品の通知の関門が開く")
+    except Exception as exc:  # noqa: BLE001
+        bad.append(f"受入の判定を動かせない: {exc}")
+    try:
+        wf = (root / ".github" / "workflows" / "daily_lp.yml").read_text(encoding="utf-8")
+        import re as _re25
+        m = _re25.search(r"- name: Phase24 readiness summary\n(.*?)(?=\n      - name:|\n      # |\Z)", wf, _re25.S)
+        step = m.group(1) if m else ""
+        if not step or "python -m src.cli notification readiness" not in step or "secrets." in step \
+                or "NOTIFICATION_" in step or "PRODUCT_" in step:
+            bad.append("受入状態の手順が無い・Secrets や通知の変数を渡している")
+    except OSError as exc:
+        bad.append(f"ワークフローを読めない: {exc}")
+    # 今の出力: 形・秘密の値なし・READY は台帳と診断に合う（候補なしで READY にしない）
+    out = root / "exports" / "notifications" / "actionable"
+    try:
+        text = (out / "phase24_readiness.json").read_text(encoding="utf-8")
+        cur = _json25.loads(text)
+        from src.notifiers import readiness as rd
+        if cur.get("status") not in rd.STATUSES or cur.get("external_sends") != 0:
+            bad.append("受入状態の出力の形が違う")
+        if any(_re_sec.search(text) for _re_sec in [__import__("re").compile(p) for p in _SECRET_PATTERNS]):
+            bad.append("受入状態の出力に秘密の値の形がある")
+        if cur.get("status") == rd.READY and not cur.get("candidates"):
+            bad.append("候補が無いのに READY")
+        if cur.get("status") == rd.READY:
+            try:
+                dg = _json25.loads((root / "exports" / "opportunity_diagnostics" / "latest.json").read_text(encoding="utf-8"))
+                act_ids = {p.get("product_id") for p in (dg.get("actionability") or {}).get("products") or []
+                           if isinstance(p, dict) and p.get("actionable")}
+                if not {c.get("product_id") for c in cur["candidates"]} <= act_ids:
+                    bad.append("READY の候補が今の診断で行動できない")
+            except (OSError, ValueError):
+                bad.append("READY なのに診断を読めない")
+    except OSError:
+        pass                                          # まだ生成していない（次の LP の生成で作る）
+    except ValueError:
+        bad.append("受入状態の出力が壊れている")
+    return [{"level": "ok" if not bad else "error", "check": "phase24_readiness",
+             "message": "#860 Phase 24 の受入状態（候補なしは WAITING・実データの変化だけ READY・24時間で外す・無効/送信済みは外す・受入は1件・"
+                        "検知の時刻を新しくしない・判定できなければ REVIEW_REQUIRED・送信しない）"
+                        + ("" if not bad else f" ← {bad[:4]}")}]
 
 
 def _check_phase23_product_limited(root: Path | None = None) -> list[dict]:

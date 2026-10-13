@@ -610,9 +610,13 @@ class DailyLPGenerator:
                      if getattr(self, "_notifications_enabled", False) else None)
             if notif is not None:
                 ctx.admin_data["actionable_notifications"] = notif
+            if getattr(self, "_notifications_enabled", False):
+                # Phase 24 の受入の状態（Phase 25。失敗したときは判定できない = REVIEW_REQUIRED）
+                ctx.admin_data["phase24_readiness"] = (notif or {}).get("phase24_readiness") or self._readiness()
         elif getattr(self, "_notifications_enabled", False):
             # 診断に失敗したら、通知も今回は作れなかったと記録する（前回の件数を今回のものとして読ませない。監査 L-3）
             self._write_notification_failure(ctx.now, None, "DiagnosticsFailed")
+            ctx.admin_data["phase24_readiness"] = self._readiness()
         root = _ui_shell.render_root(ctx)
         return _ui_shell.render_head(), root
 
@@ -786,10 +790,25 @@ class DailyLPGenerator:
             self._write_notification_failure(now, diag, type(exc).__name__)
             return None
 
+    def _readiness(self) -> dict:
+        """今回の受入の状態（書けていなければ判定できない。READY と推測しない）。"""
+        from datetime import datetime as _dtm
+        from src.notifiers import readiness as _rd
+        return _rd.load(self._actionable_notifications_dir()) or _rd.failed(_dtm.now(), "readiness_unavailable")
+
     def _write_notification_failure(self, now, diag, error: str) -> None:
-        """失敗を latest.json に残す（前回の件数を今回のものとして読まれないように。台帳は変えない。監査 L-4）。"""
+        """失敗を latest.json に残す（前回の件数を今回のものとして読まれないように。台帳は変えない。監査 L-4）。
+
+        Phase 24 の受入の状態も「判定できない」（REVIEW_REQUIRED）にする（READY と推測しない。Phase 25）。
+        """
+        from src.notifiers import readiness as _rd
         from src.utils.atomic_write import write_json_atomic
         out = self._actionable_notifications_dir()
+        try:
+            _rd.write(out, _rd.failed(now, error, prev=_rd.load(out),
+                                      diagnostics_generated_at=str((diag or {}).get("generated_at") or "")))
+        except Exception:  # noqa: BLE001
+            pass
         try:
             out.mkdir(parents=True, exist_ok=True)
             write_json_atomic(out / "latest.json", {

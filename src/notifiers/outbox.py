@@ -208,6 +208,40 @@ def _fields(r: dict) -> dict:
             "action_url": str(r.get("cta_url") or ""), "reasons": list(r.get("reasons") or [])}
 
 
+ADOPTABLE_DRY = frozenset({PENDING, READY, DRY_RUN_PLANNED})   # 本番が引き継げる dry-run の記録（送っていない・取り消していない）
+
+
+def adoptable_dry(store: dict, key: str, now: datetime) -> dict | None:
+    """本番の実行が引き継げる dry-run の記録（定時の実行で検知した変化。Phase 25）。
+
+    検知（記録を作った時刻）から LIVE_CANDIDATE_MAX_AGE_HOURS 以内で、送っていない・取り消していないものだけ。
+    それより古い変化は引き継がない（何日も前の「行動できるようになった」を送らない。Phase 20 の監査 M-1 の意図）。
+    """
+    d = store["records"].get(notification_id(key, MODE_DRY)) if key else None
+    if not d or d.get("is_canary") or d.get("status") not in ADOPTABLE_DRY:
+        return None
+    c = act._dt(d.get("created_at")) if d.get("created_at") else None
+    return d if c is not None and c + timedelta(hours=LIVE_CANDIDATE_MAX_AGE_HOURS) > now else None
+
+
+def _revivable(c: dict) -> bool:
+    return c["status"] in (EXPIRED, CANCELLED) and not _resolved_cancel(c) and c.get("error_class") != "stale_candidate"
+
+
+def handoff_ok(store: dict, key: str, now: datetime) -> bool:
+    """この変化（キー）を本番の方式で送れる形にできるか（送っていない・届いたか不明でない・取り消していない）。
+
+    本番の記録があれば配信待ちか戻せる状態、無ければ引き継げる dry-run の記録がある。Phase 25 の受入の判定と observe が使う。
+    """
+    live = store["records"].get(notification_id(key, MODE_LIVE)) if key else None
+    if live is not None:
+        # prepare が今回の実行で SENDING にできる配信先（再試行の時刻・回数の上限も同じ。レビュー L-3）
+        return any((c["status"] in DUE and (not c.get("next_attempt_at") or (act._dt(c["next_attempt_at"]) or now) <= now)
+                    and int(c.get("attempt_count") or 0) < MAX_ATTEMPTS) or _revivable(c)
+                   for c in live["channels"].values())
+    return adoptable_dry(store, key, now) is not None
+
+
 def observe(store: dict, rows: list, *, now: datetime, mode: str, baseline: bool = False,
             channels: list | None = None) -> dict:
     """診断の行で台帳を進め、行動できない → できる になった候補を outbox に PENDING で入れる。件数を返す。
@@ -269,9 +303,8 @@ def observe(store: dict, rows: list, *, now: datetime, mode: str, baseline: bool
             continue
         nid = notification_id(key, mode) if key else ""
         old = recs.get(nid) if nid else None
-        revivable = [c for c in (old["channels"].values() if old is not None else [])
-                     if c["status"] in (EXPIRED, CANCELLED) and not _resolved_cancel(c)
-                     and c.get("error_class") != "stale_candidate"]       # 古い候補は戻さない（新しい移り変わりで送る）
+        # 古い候補（stale_candidate）・人が cancel した配信先は戻さない（新しい移り変わりで送る）
+        revivable = [c for c in (old["channels"].values() if old is not None else []) if _revivable(c)]
         if old is not None and old["status"] in (EXPIRED, CANCELLED) and revivable:
             # 送っていない（期限切れ・取り消し）記録の移り変わりが、また行動できる → 同じ記録（同じキー）で配信待ちに戻す。
             # 人が「送らない」と解決した配信先（cancel）は戻さない（届いていたかもしれない。レビュー H-1）
@@ -290,6 +323,23 @@ def observe(store: dict, rows: list, *, now: datetime, mode: str, baseline: bool
         # 抽選などは known_events）。記録が消えても（prune）同じキーで送り直さない・dry-run で計画した古い変化を本番に
         # 切り替えた時点で送らない（監査 H-3・M-1）
         used = st["arm_used"] if kind == "direct" else known
+        dry_src = adoptable_dry(store, key, now) if (mode == MODE_LIVE and key and used and nid not in recs) else None
+        if dry_src is not None:
+            # 定時の実行（dry-run）で検知した変化を、24時間以内なら本番の実行が引き継ぐ（Phase 25。Phase 24 の受入）。
+            # 検知の時刻（created_at）は dry-run の記録のまま（古さを新しくしない）。同じキーの本番の記録は1件だけ
+            rec = _record(r, key, mode, kind=kind, ident=ident, transition=dry_src["state_transition"], channels=chans,
+                          now=now)
+            rec["created_at"] = dry_src["created_at"]
+            rec["adopted_from"] = dry_src["notification_id"]
+            recs[nid] = rec
+            if kind == "event":
+                _mark_event(st, ident, str(r.get("deadline") or ""))
+            stats["notification_candidates"] += 1
+            stats["adopted"] = stats.get("adopted", 0) + 1
+            stats.setdefault("adopted_ids", []).append(nid)          # 受入状態では新しい検知に数えない（監査 L-3）
+            stats["new_outbox"].append(nid)
+            prods[pid] = st
+            continue
         if not key or used or nid in recs:
             stats["dedupe_suppressed"] += 1
             if kind == "event" and known:
@@ -687,6 +737,21 @@ def run_observe(out_dir: Path, diagnostics: dict, *, now: datetime, dry_run: boo
                         channels=None if dry_run else list(LIVE_CHANNELS))
         pruned = prune(store, now)
         save(path, store)
+    # Phase 24 の受入の状態（Phase 25。検知・記録だけ。送らない・台帳を変えない）
+    from src.notifiers import readiness as _rd
+    try:
+        if not _rd.rows_ok(diagnostics):
+            raise ValueError("no_actionability")                     # 診断に判定が無い（監査 L-1）
+        if baseline:
+            raise ValueError("no_store")                             # 台帳が無い・読めなかった（レビュー L-4）
+        new_ids = [n for n in stats["new_outbox"] if n not in set(stats.get("adopted_ids") or [])]
+        ready = _rd.evaluate(store, _rows(diagnostics), now=now, new_ids=new_ids, prev=_rd.load(out_dir),
+                             diagnostics_generated_at=str((diagnostics or {}).get("generated_at") or ""))
+    except Exception as exc:  # noqa: BLE001
+        # 判定できない（READY と推測しない）。理由は例外の中身（no_store・no_actionability など。レビュー L-3）
+        ready = _rd.failed(now, (str(exc) if isinstance(exc, ValueError) else "") or type(exc).__name__,
+                           prev=_rd.load(out_dir))
+    _rd.write(out_dir, ready)
     from src.notifiers.routing import get_channels_for_alert
     report = {
         "generated_at": _iso(now), "step": "observe",
@@ -701,7 +766,8 @@ def run_observe(out_dir: Path, diagnostics: dict, *, now: datetime, dry_run: boo
         "dispatch_unknown": 0, "dispatch_not_configured": 0, "external_calls": 0,
         "candidates": _summaries(store, stats["new_outbox"]), "counts": counts(store),
         "unknown": list_unknown(store), "provider_status": _load_provider_status(out_dir),
-        "delivered_history": delivered_history(store, 20)}
+        "delivered_history": delivered_history(store, 20), "phase24_readiness": ready,
+        "run_id": str(__import__("os").environ.get("GITHUB_RUN_ID") or "")}
     _write_report(out_dir, report, now)
     return report
 

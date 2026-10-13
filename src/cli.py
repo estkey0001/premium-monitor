@@ -2556,6 +2556,44 @@ def notification_resolve(notification_id, resolution, channel, confirm):
     click.echo("    git push origin tcg-push:main")
 
 
+@notification_group.command("readiness")
+def notification_readiness():
+    """Phase 24 の受入の状態（Phase 25。検知と記録だけ。送信しない・変数を変えない）。
+
+    LP の生成が書いた phase24_readiness.json を表示し、GitHub Actions では Summary にも書く（値・キーは出さない）。
+    読めないときは「判定できない」（READY と推測しない）。
+    """
+    import json as _json
+    import os as _os
+    from src.notifiers import outbox as _ob
+    from src.notifiers import readiness as _rd
+    from src.tcg.models import JST as _JST
+    out, diag_dir = _notification_paths()
+    now = datetime.now(tz=_JST)
+    prev = _rd.load(out)
+    try:
+        diag = _json.loads((diag_dir / "latest.json").read_text(encoding="utf-8"))
+        store, baseline = _ob.load(out / _ob.STORE_NAME)
+        # 送信の手順の後の今の台帳で確かめ直す（observe の時点の READY を、送った後も出し続けない。監査 M-1）
+        d = _rd.failed(now, "no_store", prev=prev) if baseline else _rd.refresh(
+            store, diag, _ob._load_report(out), now=now, attempt_id=_ob.attempt_id_from_env(now=now)
+            if _os.environ.get("GITHUB_RUN_ID") else "", prev=prev)
+        _rd.write(out, d)
+    except Exception as exc:  # noqa: BLE001
+        d = _rd.failed(now, type(exc).__name__, prev=prev)      # 判定できない（READY と推測しない）
+    d = _rd.normalized(d)
+    lines = _rd.summary_lines(d)
+    for ln in lines:
+        click.echo(ln)
+    summary = _os.environ.get("GITHUB_STEP_SUMMARY")
+    if summary:
+        try:
+            with open(summary, "a", encoding="utf-8") as f:
+                f.write("### Phase 24 の受入状態（Phase 25）\n\n" + "\n".join(f"- {ln.strip()}" for ln in lines) + "\n")
+        except OSError:
+            pass
+
+
 @notification_group.command("gate")
 def notification_gate():
     """本番の送信の最終の関門の状態（各条件の可否だけ。設定の値は出さない）。"""

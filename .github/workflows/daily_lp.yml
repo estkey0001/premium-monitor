@@ -472,6 +472,15 @@ jobs:
         continue-on-error: true
         run: bash scripts/persist_notification_state.sh
 
+      # Phase 24 の受入の状態（Phase 25）: 実データで行動できる候補が出たかを、出力と Summary に出す（検知と記録だけ。
+      # 送信しない・変数を変えない・Secrets を渡さない）
+      - name: Phase24 readiness summary
+        if: always()
+        continue-on-error: true
+        run: python -m src.cli notification readiness
+        env:
+          PYTHONPATH: .
+
       # 15. Lottery quality gate
       - name: Lottery quality gate
         id: lottery_quality_gate

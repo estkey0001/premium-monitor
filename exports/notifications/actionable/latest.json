@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-10-13T20:06:23+09:00",
+  "generated_at": "2026-10-14T01:41:13+09:00",
   "step": "prepare",
-  "diagnostics_generated_at": "2026-10-13T20:06:23+09:00",
+  "diagnostics_generated_at": "2026-10-14T01:41:13+09:00",
   "note": "内部用（運営者向け）。外部への送信はしない（dry-run）。配信先の URL・トークンは記録しない",
   "type": "ACTIONABLE_NOW",
   "dry_run": true,
@@ -49,10 +49,10 @@
       "product_real_send": false,
       "real_send_enabled": false
     },
-    "checked_at": "2026-10-12T20:14:58+09:00"
+    "checked_at": "2026-10-13T20:06:24+09:00"
   },
-  "prepared_at": "2026-10-13T20:06:24+09:00",
-  "attempt_id": "gh-38380249931-1",
+  "prepared_at": "2026-10-14T01:41:14+09:00",
+  "attempt_id": "gh-38423014500-1",
   "dispatch_expired": 0,
   "dispatch_cancelled": 0,
   "dispatch_sending": 0

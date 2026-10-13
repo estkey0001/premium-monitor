@@ -18,7 +18,7 @@ Settings → Secrets and variables → Actions に以下のシークレットを
 - 通知スクリプト: `scripts/notify_workflow_result.py`（`--dry-run` オプションで動作確認可能）
 - Secrets を渡すのは送信の手順だけ。Discord は「Notify workflow result」（ワークフローの結果の通知）、Telegram は
   「Send notifications」（今すぐ行動の通知）だけ。収集・LP の生成・通知のイベントの生成・Pages・テストには渡さない
-  （deploy-check #857・#858 が検査する。Phase 21・22）
+  （deploy-check #857・#858・#859 が検査する。Phase 21〜23）
 - Phase 22 から、ワークフローの結果の通知は Telegram に送らない（Telegram の Secrets は「Send notifications」だけに渡す）
 
 ### Telegram の接続の試験（canary。Phase 22）
@@ -30,7 +30,7 @@ Settings → Secrets and variables → Actions に以下のシークレットを
 |---|---|
 | Telegram の設定 | Secrets: `TELEGRAM_BOT_TOKEN`・`TELEGRAM_CHAT_ID`（「Send notifications」の手順にだけ渡る） |
 | 本番の送信の許可 | Variables: `NOTIFICATION_REAL_SEND=true` |
-| dry-run を外す | Variables: `NOTIFICATION_DRY_RUN=false`（商品の通知はコードで無効のまま） |
+| dry-run を外す | Variables: `NOTIFICATION_DRY_RUN=false`（商品の通知は `PRODUCT_REAL_SEND_ENABLED` が無ければ送らない） |
 | 配信先 | Variables: `NOTIFICATION_PROVIDERS=telegram`（Discord を含めると関門は閉じる） |
 | 接続の試験の旗 | Variables: `TELEGRAM_CANARY=true` |
 | 手動の実行 | Actions → Daily LP Update → Run workflow（定時の実行では送らない） |
@@ -40,18 +40,35 @@ Settings → Secrets and variables → Actions に以下のシークレットを
 - 送る前に SENDING を main に保存する。送った後に止まったら次の実行で「届いたか不明」になり、送り直さない
 - 送った後は `TELEGRAM_CANARY` を false（または削除）に戻す
 
-### 今すぐ行動の通知（ACTIONABLE_NOW）の本番の送信（Phase 22 の時点でも無効）
+### 今すぐ行動の通知（ACTIONABLE_NOW）の本番の送信（Phase 23・限定運用）
 
-今すぐ行動の通知は outbox（`src/notifiers/outbox.py`）から送る。本番の送信は、次が**すべて**そろうまで動かない
-（`python -m src.cli notification gate` で各条件の可否だけを確かめられる。値は出さない）。
+今すぐ行動の通知は outbox（`src/notifiers/outbox.py`）から送る。本番の送信は、次が**すべて**そろった**手動の実行**だけで動く
+（`python -m src.cli notification gate` で各条件の可否だけを確かめられる。値は出さない）。既定はすべて閉じている。
 
-| 条件 | 設定する場所 | 今 |
+| 条件 | 設定する場所 | 既定 |
 |---|---|---|
-| 商品の通知の本番の送信 | コード（`adapters.PRODUCT_REAL_SEND_ENABLED`） | False（Phase 22 でも無効。別の明示の許可で変える） |
-| ユーザーの明示の許可 | Variables: `NOTIFICATION_REAL_SEND=true`（既定 false。ワークフローは "false" に固定） | false |
-| dry-run を外す | `NOTIFICATION_DRY_RUN=false`（既定 true。ワークフローは "true" に固定） | true |
-| 配信先の選択 | Variables: `NOTIFICATION_PROVIDERS=telegram`（Telegram だけ。Discord は無効） | 未設定 |
-| 配信先の設定（形を検査する） | Secrets: `TELEGRAM_BOT_TOKEN`・`TELEGRAM_CHAT_ID`（「Send notifications」の手順にだけ渡す） | 未設定 |
+| 商品の通知の本番の送信 | Variables: `PRODUCT_REAL_SEND_ENABLED=true`（ワークフローは手動の実行のときだけ読む。定時の実行では常に false） | false |
+| 限定モード | Variables: `PRODUCT_NOTIFICATION_LIMITED_MODE`（false にすると関門が閉じる = 全開放しない） | true |
+| 本番の送信の許可 | Variables: `NOTIFICATION_REAL_SEND=true` | false |
+| dry-run を外す | Variables: `NOTIFICATION_DRY_RUN=false` | true |
+| 配信先 | Variables: `NOTIFICATION_PROVIDERS=telegram`（Telegram だけ。Discord を含めると閉じる） | 未設定 |
+| 配信先の設定（形を検査する） | Secrets: `TELEGRAM_BOT_TOKEN`・`TELEGRAM_CHAT_ID`（「Send notifications」の手順にだけ渡す） | — |
+| 手動の実行 | Actions → Daily LP Update → Run workflow（`GITHUB_EVENT_NAME=workflow_dispatch`） | — |
+
+- 1回の実行で送る商品の通知は**最大1件**（`adapters.PRODUCT_SEND_LIMIT_PER_RUN`。コードで固定し、変数では増やせない）。
+  候補が複数あれば既存の順位（診断の行の並び）の先頭だけを送り、残りは READY（`limited_send_hold`）のまま次の実行に回す
+- 送るのは「行動できない → できる」の移り変わりの、確定の利益・公式の購入/申込のページ・在庫の確認が新しい（抽選などは締切の前）
+  ものだけ。送る直前に確かめ直す。テスト用の偽の候補は作らない
+- 定時の実行（dry-run）は本番の記録を送らない（期限切れ・行動できなくなったものだけを整理する）
+- 送信の手順の関門が閉じていたら、この実行の SENDING を READY に戻す（送信の要求の前なので届いたか不明にしない）
+- 送った後は `PRODUCT_REAL_SEND_ENABLED` を false（または削除）・`NOTIFICATION_REAL_SEND=false`・`NOTIFICATION_DRY_RUN=true`
+  に戻す（継続運用は別の Phase で決める）
+- 上限は run ごと（同じ run の Re-run で送った分も数える）。候補にしてから24時間を過ぎた本番の候補は送らない（期限切れ）
+- 商品の通知の実行では、接続の試験（canary）は送らない（1回の実行で Telegram に送るのは最大1件）
+- 定時の実行（dry-run）で先に見つかった変化は、本番の実行では通知しない（同じ変化を二度作らない。送るのは手動の実行のその回に
+  行動できるようになった商品）
+- 「Send notifications」が動かなかった（取り消し・失敗）実行や、送信の手順の後の保存に失敗した実行の SENDING は、次の実行で
+  「届いたか不明」になる（送り直さない側）。Telegram に届いていなければ `notification resolve <ID> not-delivered --confirm` で解決する
 
 届いたか不明（UNKNOWN_DELIVERY）の配信は自動では送り直さない。人が配信先で確かめて、手元で解決する:
 

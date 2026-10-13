@@ -72,12 +72,13 @@ def _now_text(v: pd.ProductDetailView) -> str:
 
 
 def build_events(details: dict, notifications: list | None, profit_routes: dict | None,
-                 now: datetime) -> list[dict]:
+                 now: datetime, *, actionable_delivered: list | None = None) -> list[dict]:
     """マイページの「通知と変化の履歴」（商品ごと。新しい順）。
 
     - 通知（exports/notifications）: 利用者向けの種類だけ。利益ルート由来の通知は、確定ルートの判定を通って作られ
       （route_checked）、そのルート（route_id）が今も確定・参考ルートのものだけ（無効になったルートの値を出さない）
     - 変化（商品詳細の「最近の変化」）: 根拠のある価格・在庫・抽選の変化だけ
+    - 今すぐ行動の通知（Phase 23）: 実際に送った（Telegram に届いた）ものだけ。dry-run の計画・配信待ちは出さない
     - どちらも「当時」の内容と「今の状態」を分けて出す。時刻は発生した時刻（生成時刻ではない）
     """
     keys = opp.current_route_keys(profit_routes, now)
@@ -104,6 +105,20 @@ def build_events(details: dict, notifications: list | None, profit_routes: dict 
         out.append({"id": _event_id("n", typ, pid, at, e.get("route_id")), "pid": pid, "group": "profit",
                     "label": NOTICE_LABELS[typ], "what": "・".join(what) or "条件の変化", "at": at,
                     "ms": _ms(at), "kind": "notice", "now": _now_text(v), "name": v.product_name})
+    for h in actionable_delivered or []:
+        pid = str((h or {}).get("product_id") or "") if isinstance(h, dict) else ""
+        if pid not in details or not h.get("delivered_at") or h.get("type") != "ACTIONABLE_NOW":
+            continue
+        what = []
+        if isinstance(h.get("net_profit"), (int, float)) and h["net_profit"] > 0:
+            what.append(f"利益 {_yen(h['net_profit'])}")
+        if isinstance(h.get("roi"), (int, float)) and h["roi"] > 0:
+            what.append(f"ROI {h['roi'] * 100:.1f}%")
+        at, v = str(h["delivered_at"]), details[pid]
+        group = "lottery_open" if h.get("availability") in ("LOTTERY_OPEN", "PREORDER_OPEN") else "restock"
+        out.append({"id": _event_id("a", pid, at, h.get("availability")), "pid": pid, "group": group,
+                    "label": f'今すぐ行動の通知（{h.get("state") or "送信済み"}）', "what": "・".join(what) or "送信済み",
+                    "at": at, "ms": _ms(at), "kind": "notice", "now": _now_text(v), "name": v.product_name})
     for pid, v in details.items():
         for ch in v.changes:
             group = _CHANGE_GROUP.get(ch.get("type"), "")

@@ -46,6 +46,7 @@ class ShellContext:
     products: list | None = None        # 商品の一覧（商品詳細。product_id・名前・ジャンル・メーカー・型番・公式の URL）
     price_history: dict | None = None   # 実際に観測した価格の履歴（exports/price_history/latest.json）
     notifications: list | None = None   # 通知のイベント（exports/notifications の latest と直近の history。マイページの履歴）
+    actionable_delivered: list | None = None  # 実際に送った今すぐ行動の通知（outbox の DELIVERED だけ。Phase 23）
     admin_data: dict | None = None      # 運営者向けの生成物（表示する項目だけ。admin.build が読む。秘密の値は入れない）
     cta_links: list | None = None       # フッターの外部リンク（設定 lp_settings の note・LINE など。URL があるものだけ）
 
@@ -1089,7 +1090,8 @@ def render_root(ctx: ShellContext) -> str:
         + admin.render(admin.build(dict(ctx.admin_data or {}, notifications=ctx.notifications), catalog=catalog,
                                    details=details, profit_routes=ctx.profit_routes, tcg_report=ctx.tcg_report,
                                    now=model.now, lp_generated=ctx.updated_text or ""))
-        + mypage.render(details, mypage.build_events(details, ctx.notifications, ctx.profit_routes, model.now),
+        + mypage.render(details, mypage.build_events(details, ctx.notifications, ctx.profit_routes, model.now,
+                                                    actionable_delivered=ctx.actionable_delivered),
                         model.now)
     )
     brand = esc(_brand(ctx.site_title))

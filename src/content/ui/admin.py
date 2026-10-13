@@ -513,6 +513,14 @@ def build_actionable_notices(rep: dict | None) -> dict:
                          for k in ("configured", "status", "canary_status", "last_delivery_status",
                                    "delivered_at", "real_send_enabled")} if isinstance(r.get("provider_status"), dict)
             else {},
+            # 商品の通知の限定運用（Phase 23。前回の送信の手順の時点。値・トークン・チャット ID・配信先の ID は無い）
+            "product": {k: (r.get("provider_status") or {}).get("product", {}).get(k)
+                        for k in ("enabled", "limited_mode", "send_limit", "sent_today", "pending", "delivered",
+                                  "unknown", "failed")} if isinstance((r.get("provider_status") or {}).get("product"),
+                                                                       dict) else {},
+            # 実際に送った商品の通知（本番の方式・DELIVERED だけ。dry-run・配信待ちは入れない）
+            "delivered_history": [{k: h.get(k) for k in ("product", "state", "net_profit", "delivered_at")}
+                                  for h in (r.get("delivered_history") or []) if isinstance(h, dict)][:20],
             # 届いたか不明（Phase 21）。配信先の URL・トークン・チャット ID は元から記録に無い
             "unknown": [{k: str(u.get(k) or "") for k in ("notification_id", "product", "provider", "attempted_at",
                                                            "state", "deadline", "reason", "status_title")}
@@ -985,8 +993,23 @@ def _act_notices(a: dict) -> str:
                    f'<dt>接続の試験</dt><dd>{esc(str(tg.get("canary_status") or "—"))}</dd>'
                    f'<dt>最後の配信</dt><dd>{esc(str(tg.get("last_delivery_status") or "—"))}'
                    + (f'（{_when(tg.get("delivered_at"))}）' if tg.get("delivered_at") else "")
-                   + '</dd><dt>商品の通知の本番の送信</dt><dd>無効</dd></dl>')
-    return _box("今すぐ行動の通知", f'<dl class="nu-ad-dl"><dt>方式</dt><dd>{esc(mode)}</dd>{dl}</dl>' + tg_html + unk_html
+                   + '</dd></dl>')
+    pr = a.get("product") or {}
+    pr_html = (f'<dl class="nu-ad-dl"><dt>商品の通知の本番の送信</dt><dd>{"有効（限定運用）" if pr.get("enabled") else "無効"}</dd>'
+               f'<dt>限定モード</dt><dd>{"はい" if pr.get("limited_mode", True) else "いいえ"}</dd>'
+               f'<dt>1回の実行の上限</dt><dd>{int(pr.get("send_limit") or 1)}件</dd>'
+               + "".join(f"<dt>{lbl}</dt><dd>{int(pr.get(k) or 0)}件</dd>" for k, lbl in (
+                   ("sent_today", "今日の送信"), ("pending", "配信待ち"), ("delivered", "送信済み"),
+                   ("unknown", "届いたか不明"), ("failed", "送信の失敗")))
+               + "</dl>")
+    hist = a.get("delivered_history") or []
+    hist_html = _table(["商品", "種類", "利益", "送信した時刻"],
+                       [[esc(str(h.get("product") or "")), esc(str(h.get("state") or "")),
+                         (f'+¥{int(h["net_profit"]):,}' if isinstance(h.get("net_profit"), (int, float)) else "—"),
+                         _when(h.get("delivered_at"))] for h in hist],
+                       caption="送信した商品の通知（Telegram）") if hist else ""
+    return _box("今すぐ行動の通知", f'<dl class="nu-ad-dl"><dt>方式</dt><dd>{esc(mode)}</dd>{dl}</dl>' + tg_html + pr_html
+                + hist_html + unk_html
                 + (f'<ul class="nu-ad-list">{items}</ul>' if items else _empty(
                     "今回、行動できるようになった利益商品はありません" + ("（基準日）。" if a["baseline"] else "。")))
                 + _generated("今回", a["at"]),

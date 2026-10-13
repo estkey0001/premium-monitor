@@ -39,7 +39,7 @@ def _record(**kw):
 def test_discord_payload_fields():
     p = ad.DiscordAdapter().build_payload(_record())
     c = p["content"]
-    for part in ("購入可能になりました", "商品: PlayStation 5 Pro", "想定純利益: +¥54,870", "ROI: 39.6%", "状態: 購入可能",
+    for part in ("購入可能になりました", "商品: PlayStation 5 Pro", "想定純利益: +¥54,870", "ROI: 39.6%", "状態: 在庫あり",
                  "確認: ", f"購入する: {SONY}"):
         assert part in c, part
     assert p["allowed_mentions"] == {"parse": []}
@@ -121,15 +121,19 @@ def test_payload_with_secret_is_rejected():
 
 def test_real_send_gate_closed_by_default():
     g = ad.real_send_gate({})
-    assert not g["allowed"] and not any(g["checks"].values())
+    # 既定はすべて閉じる（限定モードだけは既定で有効 = 全開放しない側。Phase 23）
+    assert not g["allowed"] and not any(v for k, v in g["checks"].items() if k != "limited_mode")
+    assert g["checks"]["limited_mode"] is True
     full = {"NOTIFICATION_REAL_SEND": "true", "NOTIFICATION_DRY_RUN": "false", "NOTIFICATION_PROVIDERS": "discord,telegram",
             "DISCORD_WEBHOOK_URL": DUMMY_HOOK, "TELEGRAM_BOT_TOKEN": DUMMY_TOKEN, "TELEGRAM_CHAT_ID": "-100123"}
     g = ad.real_send_gate(full)
-    assert not g["allowed"] and g["checks"]["implemented"] is False   # 商品の通知の送信は無効のまま（Phase 22）
+    assert not g["allowed"] and g["checks"]["implemented"] is False   # Discord の送信の部品は無い
     assert g["checks"]["provider_selected"] is False                  # Discord を含む選択は受け付けない（Phase 22）
     tg = dict(full, NOTIFICATION_PROVIDERS="telegram")
     g = ad.real_send_gate(tg)
-    assert not g["allowed"] and all(v for k, v in g["checks"].items() if k != "implemented")
+    # 商品の通知の旗と手動の実行が無ければ閉じる（Phase 23）
+    assert not g["allowed"] and {k for k, v in g["checks"].items() if not v} == {"product_flag", "manual_dispatch"}
+    assert ad.real_send_gate(dict(tg, PRODUCT_REAL_SEND_ENABLED="true", GITHUB_EVENT_NAME="workflow_dispatch"))["allowed"]
     assert DUMMY_HOOK not in json.dumps(g) and DUMMY_TOKEN not in json.dumps(g)
 
 
@@ -517,9 +521,9 @@ def test_workflow_secrets_only_in_send_step():
      "ジョブ"),
     (lambda t: t.replace("    runs-on:", "    env:\n      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}\n    runs-on:", 1),
      "env の外"),                                                       # 重複したキー（構造では見えない）
-    (lambda t: t.replace("NOTIFICATION_REAL_SEND: \"false\"\n", "NOTIFICATION_REAL_SEND: \"false\"\n          X: ${{ toJSON(secrets) }}\n", 1),
+    (lambda t: t.replace("NOTIFICATION_OUTBOX_SYNCED: ${{ steps.sync_outbox.outcome == 'success' }}\n", "NOTIFICATION_OUTBOX_SYNCED: ${{ steps.sync_outbox.outcome == 'success' }}\n          X: ${{ toJSON(secrets) }}\n", 1),
      "secrets 全体"),
-    (lambda t: t.replace("NOTIFICATION_REAL_SEND: \"false\"\n", "NOTIFICATION_REAL_SEND: \"false\"\n          # c\n          D: ${{ secrets.DISCORD_WEBHOOK_URL }}\n", 1),
+    (lambda t: t.replace("NOTIFICATION_OUTBOX_SYNCED: ${{ steps.sync_outbox.outcome == 'success' }}\n", "NOTIFICATION_OUTBOX_SYNCED: ${{ steps.sync_outbox.outcome == 'success' }}\n          # c\n          D: ${{ secrets.DISCORD_WEBHOOK_URL }}\n", 1),
      "送信の手順でない"),
 ])
 def test_secret_exposure_variants_detected(tmp_path, mutate, expect):

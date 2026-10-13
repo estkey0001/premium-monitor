@@ -154,7 +154,9 @@ def test_redact_hides_token():
 # ── 関門 ───────────────────────────────────────────────────────────────────
 
 def test_product_real_send_remains_disabled():
-    assert ad.PRODUCT_REAL_SEND_ENABLED is False and not ad.real_send_gate(FULL, purpose="product")["allowed"]
+    # 接続の試験の設定だけでは商品の通知は開かない（Phase 23: PRODUCT_REAL_SEND_ENABLED の変数が別に要る）
+    g = ad.real_send_gate(FULL, purpose="product")
+    assert not g["allowed"] and g["checks"]["product_flag"] is False
     assert ad.real_send_gate(FULL, purpose="canary")["allowed"]                 # 否定の対照: 接続の試験は開く
 
 

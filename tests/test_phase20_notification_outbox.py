@@ -221,7 +221,8 @@ def test_max_attempts_then_final():
     for i in range(ob.MAX_ATTEMPTS + 3):
         v = ps5("IN_STOCK" if i else "OUT_OF_STOCK", checked=t - timedelta(minutes=5), now=t)
         _r, st = run(_diag(v), st if st is not None else {}, now=t, dry_run=False, sender=sender)
-        t += timedelta(hours=7)                                          # 再試行の間隔（上限6時間）より後
+        # 再試行の間隔（5分から倍に。4回目の後でも40分）より後。本番の候補の古さの上限（24時間。Phase 23）より前に収める
+        t += timedelta(hours=1)
     ch = next(iter(st["records"].values()))["channels"]["fixture"]
     assert len(calls) == ob.MAX_ATTEMPTS and ch["status"] == ob.FAILED_FINAL
 
@@ -313,12 +314,22 @@ def test_send_requires_persisted_sha(tmp_path):
     r = ob.run_send(tmp_path, now=NOW, dry_run=False, attempt_id="r1", persisted_sha="0" * 64, adapters=fx,
                     real_send_allowed=True)
     assert r["skipped"] == "not_persisted" and calls == []
-    r = ob.run_send(tmp_path, now=NOW, dry_run=False, attempt_id="r1", persisted_sha=ob.file_sha(path), adapters=fx)
-    assert r["skipped"] == "real_send_disabled" and calls == []         # 最終の関門が閉じていれば送らない（Phase 21）
-    r = ob.run_send(tmp_path, now=NOW, dry_run=False, attempt_id="r1", persisted_sha=ob.file_sha(path), adapters=fx,
+    # 送らなかった SENDING は READY に戻る（送信の要求の前なので、届いたか不明にしない。Phase 23）
+    st, _b = ob.load(path)
+    c = next(iter(st["records"].values()))["channels"]["fixture"]
+    assert r["released"] == 1 and c["status"] == ob.READY and c["attempt_count"] == 0
+    (tmp_path / "latest.json").write_text(json.dumps({"step": "observe", "diagnostics_generated_at": d["generated_at"]}),
+                                          encoding="utf-8")
+    ob.run_prepare(tmp_path, d, now=NOW, dry_run=False, attempt_id="r1b", adapters=fx)
+    r = ob.run_send(tmp_path, now=NOW, dry_run=False, attempt_id="r1b", persisted_sha=ob.file_sha(path), adapters=fx)
+    assert r["skipped"] == "real_send_disabled" and calls == [] and r["released"] == 1   # 最終の関門が閉じていれば送らない
+    (tmp_path / "latest.json").write_text(json.dumps({"step": "observe", "diagnostics_generated_at": d["generated_at"]}),
+                                          encoding="utf-8")
+    ob.run_prepare(tmp_path, d, now=NOW, dry_run=False, attempt_id="r2", adapters=fx)
+    r = ob.run_send(tmp_path, now=NOW, dry_run=False, attempt_id="r2", persisted_sha=ob.file_sha(path), adapters=fx,
                     real_send_allowed=True)
     assert calls and r["dispatch_sent"] == 1                            # 否定の対照: 保存した内容と同じなら送る
-    r = ob.run_send(tmp_path, now=NOW, dry_run=True, attempt_id="r1", persisted_sha=ob.file_sha(path), adapters=fx)
+    r = ob.run_send(tmp_path, now=NOW, dry_run=True, attempt_id="r2", persisted_sha=ob.file_sha(path), adapters=fx)
     assert r["skipped"] == "dry_run"
 
 

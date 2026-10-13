@@ -19,6 +19,55 @@
       "known_events": {}
     }
   },
-  "records": {},
+  "records": {
+    "290515fb1699a62273d0": {
+      "action_url": "",
+      "availability_kind": "",
+      "canary_id": "telegram_canary_v1",
+      "channels": {
+        "telegram": {
+          "attempt_count": 1,
+          "attempt_id": "gh-38423014500-1",
+          "attempts": [
+            {
+              "attempt_id": "gh-38423014500-1",
+              "attempted_at": "2026-10-14T01:41:14+09:00",
+              "error_class": "",
+              "provider": "telegram",
+              "provider_delivery_id": "",
+              "status": "SENDING"
+            }
+          ],
+          "error_class": "",
+          "next_attempt_at": "",
+          "provider_delivery_id": "",
+          "status": "SENDING"
+        }
+      },
+      "checked_at": "",
+      "confirmed": false,
+      "created_at": "2026-10-14T01:41:14+09:00",
+      "cta_label": "",
+      "deadline": "",
+      "event_id": "",
+      "idempotency_key": "CANARY:telegram:telegram_canary_v1",
+      "is_canary": true,
+      "is_test_message": true,
+      "kind": "canary",
+      "message": "[TEST] Premium Monitor\nTelegram通知の接続テストです。\n本番の商品通知ではありません。",
+      "mode": "live",
+      "net_profit": null,
+      "notification_id": "290515fb1699a62273d0",
+      "notification_type": "TELEGRAM_CANARY",
+      "product": "",
+      "product_id": "",
+      "reasons": [],
+      "roi": null,
+      "state_transition": "",
+      "status": "SENDING",
+      "until_ms": null,
+      "updated_at": "2026-10-14T01:41:14+09:00"
+    }
+  },
   "schema": 2
 }

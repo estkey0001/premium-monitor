@@ -44,7 +44,7 @@
 
 ## 5. 接続の試験（`outbox.run_canary`）
 
-- 本文は固定（`[TEST] Premium Monitor / Telegram 通知の接続テストです。/ 本番の商品通知ではありません（商品・価格・URL は含みません）。`）。
+- 本文は固定（`[TEST] Premium Monitor / Telegram通知の接続テストです。/ 本番の商品通知ではありません。`。商品・価格・URL は含まない）。
   商品の状態を偽らない（PS5 Pro を在庫あり・GR IV HDF を抽選受付中にしない）
 - 記録: 冪等性のキー `CANARY:telegram:<試験の ID>`（既定 telegram_canary_v1）・is_canary・is_test_message・配信先は telegram だけ
   （Discord の記録を作らない）。チャット ID・トークンは入れない

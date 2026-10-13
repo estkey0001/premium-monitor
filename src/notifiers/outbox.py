@@ -762,8 +762,8 @@ def main_ledger_matches(path: Path, repo_root: Path, *, fetch: bool = True) -> t
 # ── Telegram の接続の試験（canary。Phase 22） ─────────────────────────────────────────
 
 CANARY_TEXT = ("[TEST] Premium Monitor\n"
-               "Telegram 通知の接続テストです。\n"
-               "本番の商品通知ではありません（商品・価格・URL は含みません）。")
+               "Telegram通知の接続テストです。\n"
+               "本番の商品通知ではありません。")
 DEFAULT_CANARY_ID = "telegram_canary_v1"
 _CANARY_ID = __import__("re").compile(r"^[a-z][a-z0-9_-]{0,39}$")
 

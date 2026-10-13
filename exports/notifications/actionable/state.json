@@ -32,16 +32,18 @@
             {
               "attempt_id": "gh-38423014500-1",
               "attempted_at": "2026-10-14T01:41:14+09:00",
+              "delivered_at": "2026-10-14T01:41:14+09:00",
               "error_class": "",
               "provider": "telegram",
-              "provider_delivery_id": "",
-              "status": "SENDING"
+              "provider_delivery_id": "3",
+              "status": "DELIVERED"
             }
           ],
+          "delivered_at": "2026-10-14T01:41:14+09:00",
           "error_class": "",
           "next_attempt_at": "",
-          "provider_delivery_id": "",
-          "status": "SENDING"
+          "provider_delivery_id": "3",
+          "status": "DELIVERED"
         }
       },
       "checked_at": "",
@@ -64,7 +66,7 @@
       "reasons": [],
       "roi": null,
       "state_transition": "",
-      "status": "SENDING",
+      "status": "DELIVERED",
       "until_ms": null,
       "updated_at": "2026-10-14T01:41:14+09:00"
     }

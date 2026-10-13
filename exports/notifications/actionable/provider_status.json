@@ -8,7 +8,21 @@
     "last_error_class": "",
     "delivered_at": "2026-10-14T01:41:14+09:00",
     "product_real_send": false,
-    "real_send_enabled": true
+    "real_send_enabled": false
   },
-  "checked_at": "2026-10-14T01:41:14+09:00"
+  "checked_at": "2026-10-14T03:27:26+09:00",
+  "product": {
+    "enabled": false,
+    "limited_mode": true,
+    "send_limit": 1,
+    "sent_this_run": 0,
+    "sent_today": 0,
+    "pending": 0,
+    "sending": 0,
+    "delivered": 0,
+    "unknown": 0,
+    "failed": 0,
+    "expired": 0,
+    "cancelled": 0
+  }
 }

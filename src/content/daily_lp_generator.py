@@ -597,6 +597,7 @@ class DailyLPGenerator:
             products=self._nu_products(),
             price_history=self._load_export_json("price_history", "latest.json"),
             notifications=self._nu_notifications(),
+            actionable_delivered=self._nu_actionable_delivered(),
             admin_data=self._nu_admin_data(),
             cta_links=self._nu_cta_links(),
         )
@@ -742,6 +743,19 @@ class DailyLPGenerator:
         act = (d.get("actionable") or {}).get("products") if isinstance(d, dict) else None
         return act if isinstance(act, list) else None
 
+    def _nu_actionable_delivered(self) -> list:
+        """実際に送った商品の通知（今すぐ行動の通知・本番の方式・DELIVERED。マイページの履歴。Phase 23）。
+
+        dry-run の計画・配信待ち・届いたか不明・接続の試験は入れない。配信先の ID・冪等性のキーは入れない。
+        """
+        from src.notifiers import outbox as _ob
+        try:
+            store, baseline = _ob.load(self._actionable_notifications_dir() / _ob.STORE_NAME)
+            return [] if baseline else _ob.delivered_history(store)
+        except Exception as exc:  # noqa: BLE001
+            logger.warning("actionable delivered history unavailable: %s", exc)
+            return []
+
     @staticmethod
     def _actionable_notifications_dir() -> Path:
         import os as _os
@@ -763,8 +777,9 @@ class DailyLPGenerator:
             return None
         try:
             from src.notifiers import adapters as _ad
-            # 方式は配信の手順と同じ決め方（dry-run か、本番の送信の関門が閉じていれば dry-run。レビュー L-1）
-            dry = _an.is_dry_run() or not _ad.real_send_gate()["allowed"]
+            # 方式は配信の直前の確認の手順と同じ決め方（dry-run か、商品の通知の関門の意図が閉じていれば dry-run。
+            # この手順は Secrets を持たないので設定は見ない。送信の手順が設定を含めて確かめ直す。Phase 23）
+            dry = _an.is_dry_run() or not _ad.product_live_intent()["allowed"]
             return _ob.run_observe(self._actionable_notifications_dir(), diag, now=now, dry_run=dry)
         except Exception as exc:  # noqa: BLE001
             logger.warning("actionable notifications failed: %s", exc)

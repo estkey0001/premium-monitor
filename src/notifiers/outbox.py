@@ -48,6 +48,7 @@ TERMINAL = frozenset({DELIVERED, DRY_RUN_PLANNED, FAILED_FINAL, CANCELLED, EXPIR
 MAX_ATTEMPTS = 5                       # 送信の試行の上限（無限に再試行しない）
 BACKOFF_SECONDS = 300                  # 再試行の間隔（5分から倍に。上限6時間）
 RETENTION_DAYS = 30                    # 終わった記録を残す日数（今の候補のキーは消さない）
+LIVE_CANDIDATE_MAX_AGE_HOURS = 24      # 本番の方式の候補を送ってよい、候補にしてからの時間（古い「になりました」を送らない）
 NOT_CONFIRMED = an.NOT_CONFIRMED
 REARM_STATES = an.REARM_STATES
 _EVENT_TYPES = (act.LOTTERY_OPEN, act.PREORDER_OPEN, act.FIRST_COME_OPEN)
@@ -269,7 +270,8 @@ def observe(store: dict, rows: list, *, now: datetime, mode: str, baseline: bool
         nid = notification_id(key, mode) if key else ""
         old = recs.get(nid) if nid else None
         revivable = [c for c in (old["channels"].values() if old is not None else [])
-                     if c["status"] in (EXPIRED, CANCELLED) and not _resolved_cancel(c)]
+                     if c["status"] in (EXPIRED, CANCELLED) and not _resolved_cancel(c)
+                     and c.get("error_class") != "stale_candidate"]       # 古い候補は戻さない（新しい移り変わりで送る）
         if old is not None and old["status"] in (EXPIRED, CANCELLED) and revivable:
             # 送っていない（期限切れ・取り消し）記録の移り変わりが、また行動できる → 同じ記録（同じキー）で配信待ちに戻す。
             # 人が「送らない」と解決した配信先（cancel）は戻さない（届いていたかもしれない。レビュー H-1）
@@ -350,17 +352,56 @@ def _set(rec: dict, ch: str, status: str, now: datetime, **kw) -> None:
     rec["status"] = _aggregate(rec)
 
 
+def run_key(attempt_id: str) -> str:
+    """実行（workflow の run）の識別。CI の attempt_id（gh-<run>-<attempt>）は再実行（Re-run）でも同じ run にまとめる。"""
+    parts = str(attempt_id or "").split("-")
+    return "-".join(parts[:2]) if len(parts) == 3 and parts[0] == "gh" else str(attempt_id or "")
+
+
+def product_sends_in_run(store: dict, attempt_id: str, *, exclude_attempt: bool = True) -> int:
+    """同じ run（再実行を含む）で、商品の通知を送った（送ろうとした）回数。送っていない（NOT_SENT）は数えない。"""
+    rk, n = run_key(attempt_id), 0
+    for rec in store["records"].values():
+        if rec.get("is_canary") or rec.get("mode") != MODE_LIVE:
+            continue
+        for c in rec["channels"].values():
+            for a in c.get("attempts") or []:
+                aid = str(a.get("attempt_id") or "")
+                if run_key(aid) == rk and a.get("status") != "NOT_SENT" and not (exclude_attempt and aid == attempt_id):
+                    n += 1
+    return n
+
+
+def _stale_live(rec: dict, now: datetime) -> bool:
+    """本番の方式の候補が、候補にしてから LIVE_CANDIDATE_MAX_AGE_HOURS を過ぎたか（遅れた「になりました」を送らない）。"""
+    if rec.get("mode") != MODE_LIVE or rec.get("is_canary"):
+        return False
+    c = act._dt(rec.get("created_at")) if rec.get("created_at") else None
+    return c is None or c + timedelta(hours=LIVE_CANDIDATE_MAX_AGE_HOURS) <= now
+
+
 def prepare(store: dict, rows: list, *, now: datetime, mode: str, attempt_id: str,
-            adapters: dict | None = None) -> dict:
+            adapters: dict | None = None, live_channels=None, send_limit: int | None = None) -> dict:
     """配信の直前の確認。期限切れ → EXPIRED、行動できない・利益が確定でない・URL が違う → CANCELLED、
     dry-run → DRY_RUN_PLANNED、本番で送信先がある → SENDING（attempt_id 付き。この状態を保存してから送る）。
 
     前の実行の SENDING（送った後に保存できなかった可能性がある）は UNKNOWN_DELIVERY にする（送り直さない）。
+
+    Phase 23（商品の通知の限定運用）:
+    - live_channels: 本番の方式で送れる配信先（Secrets を持たない手順が使う。None なら adapters の設定で決める）
+    - send_limit: この実行で SENDING にする記録の上限（限定モードは1件）。選ぶ順は既存の順位（診断の行の並び =
+      行動できる商品が先・利益商品の順位）。上限を超えた候補は READY（limited_send_hold）のまま次の実行に回す
+    - dry-run の実行では本番の方式の記録を送らない（SENDING にしない・取り消さない）。期限切れ・行動できない
+      ものだけを整理する（次の本番の実行で確かめ直して送る）
     """
     adapters = adapters if adapters is not None else ad.default_adapters()
     by_pid = {str(r["product_id"]): r for r in rows or [] if isinstance(r, dict) and r.get("product_id")}
+    rank = {pid: i for i, pid in enumerate(by_pid)}            # 既存の順位（新しい順位の体系は作らない）
     out = {"planned": 0, "sending": 0, "expired": 0, "cancelled": 0, "unknown": 0, "not_configured": 0,
-           "final": 0}
+           "final": 0, "held": 0}
+    eligible = []                                             # 本番の方式で送ってよい（上限で選ぶ）
+    # 上限は run ごと（同じ run の再実行で送った分を引く。レビュー M-1）
+    limit_left = None if send_limit is None else max(send_limit - product_sends_in_run(store, attempt_id), 0)
     for rec in store["records"].values():
         stale = [ch for ch, c in rec["channels"].items() if c["status"] == SENDING and c.get("attempt_id") != attempt_id]
         for ch in stale:
@@ -368,7 +409,8 @@ def prepare(store: dict, rows: list, *, now: datetime, mode: str, attempt_id: st
         out["unknown"] += 1 if stale else 0
         if rec.get("is_canary"):                             # 接続の試験は商品の配信の直前の確認に回さない
             continue
-        if rec["mode"] != mode:
+        live_held = rec["mode"] == MODE_LIVE and mode == MODE_DRY   # 本番の記録を dry-run の実行で見る（送らない）
+        if rec["mode"] != mode and not live_held:
             if rec["status"] in DUE:                         # 方式が変わった（dry-run の未配信を本番で送らない）
                 for ch, c in rec["channels"].items():
                     if c["status"] in DUE:
@@ -387,11 +429,19 @@ def prepare(store: dict, rows: list, *, now: datetime, mode: str, attempt_id: st
             rec["message"] = an.message(rec | {"availability": rec["availability_kind"]})
         cand = rec | {"availability": rec["availability_kind"], "cta_url": rec["action_url"]}
         why = an.revalidate_fields(cand, now) if current else ["not_current"]
+        if not why and _stale_live(rec, now):
+            why = ["stale_candidate"]                        # 古い候補（レビュー L-2）: 期限切れにして送らない
         if why:
-            status = EXPIRED if (_expired(rec, now) or "expired" in why or "deadline_invalid" in why) else CANCELLED
+            status = EXPIRED if (_expired(rec, now) or "expired" in why or "deadline_invalid" in why
+                                 or "stale_candidate" in why) else CANCELLED
             for ch in due:
                 _set(rec, ch, status, now, error_class=",".join(why)[:80])
             out["expired" if status == EXPIRED else "cancelled"] += 1
+            continue
+        if live_held:
+            continue                                         # 今も送ってよい: 次の本番の実行まで PENDING / READY のまま
+        if mode == MODE_LIVE and send_limit is not None:
+            eligible.append((rank.get(rec["product_id"], len(rank)), rec["created_at"], rec, due))
             continue
         done = set()
         for ch in due:
@@ -402,7 +452,8 @@ def prepare(store: dict, rows: list, *, now: datetime, mode: str, attempt_id: st
             elif mode == MODE_DRY:
                 _set(rec, ch, DRY_RUN_PLANNED, now)
                 done.add("planned")
-            elif not (adapters.get(ch) and adapters[ch].configured):
+            elif not ((ch in live_channels) if live_channels is not None
+                      else (adapters.get(ch) and adapters[ch].configured)):
                 _set(rec, ch, PENDING, now, error_class="not_configured")
                 done.add("not_configured")
             else:
@@ -413,15 +464,49 @@ def prepare(store: dict, rows: list, *, now: datetime, mode: str, attempt_id: st
                 done.add("sending")
         for k in done:                                       # 件数は通知ごと（配信先ごとではない）
             out[k] += 1
+    if eligible:
+        eligible.sort(key=lambda x: (x[0], x[1]))
+        picked = 0
+        for _r, _c, rec, due in eligible:
+            done = set()
+            for ch in due:
+                c = rec["channels"][ch]
+                ready = (ch in live_channels) if live_channels is not None else bool(
+                    adapters.get(ch) and adapters[ch].configured)
+                if c.get("attempt_count", 0) >= MAX_ATTEMPTS:
+                    _set(rec, ch, FAILED_FINAL, now, error_class="max_attempts")
+                    done.add("final")
+                elif not ready:
+                    _set(rec, ch, PENDING, now, error_class="not_configured")
+                    done.add("not_configured")
+                elif picked >= limit_left:
+                    _set(rec, ch, READY, now, error_class="limited_send_hold")    # 次の実行に回す（送らない）
+                    done.add("held")
+                else:
+                    c["attempts"].append({"attempt_id": attempt_id, "attempted_at": _iso(now), "status": SENDING,
+                                          "provider": ch, "provider_delivery_id": "", "error_class": ""})
+                    c["attempt_count"] = c.get("attempt_count", 0) + 1
+                    _set(rec, ch, SENDING, now, attempt_id=attempt_id, error_class="")
+                    done.add("sending")
+            if "sending" in done:
+                picked += 1                                  # 上限は通知の件数（1件 = 1回の送信の要求）
+            for k in done:
+                out[k] += 1
     return out
 
 
-def send(store: dict, *, now: datetime, attempt_id: str, adapters: dict, only_ids=None) -> dict:
+def send(store: dict, *, now: datetime, attempt_id: str, adapters: dict, only_ids=None,
+         limit: int | None = None) -> dict:
     """この実行の SENDING の記録だけを、1回ずつ送る（再試行は次の実行の prepare が決める）。
 
     only_ids: 送る記録の notification_id を限る（接続の試験は自分の記録だけ。監査 M-1）。requests は実際に送った数。
+    limit: この実行で送る商品の通知の上限（限定モードは1件）。上限に達した後の SENDING は送らずに READY に戻す
+      （送っていないことが確かなので、届いたか不明にしない）。接続の試験は数えない
     """
-    out = {"delivered": 0, "retryable": 0, "final": 0, "unknown": 0, "expired": 0, "cancelled": 0, "requests": 0}
+    out = {"delivered": 0, "retryable": 0, "final": 0, "unknown": 0, "expired": 0, "cancelled": 0, "requests": 0,
+           "held": 0}
+    # 上限は run ごと（同じ run の再実行で送った分を数える。レビュー M-1）
+    product_requests = product_sends_in_run(store, attempt_id) if limit is not None else 0
     for nid_, rec in store["records"].items():
         if only_ids is not None and nid_ not in only_ids:
             continue
@@ -429,6 +514,10 @@ def send(store: dict, *, now: datetime, attempt_id: str, adapters: dict, only_id
             if c["status"] != SENDING or c.get("attempt_id") != attempt_id:
                 continue
             a = c["attempts"][-1] if c["attempts"] else {}
+            if limit is not None and not rec.get("is_canary") and product_requests >= limit:
+                _unsend(rec, ch, c, now, "limited_send_hold")
+                out["held"] += 1
+                continue
             adapter = adapters.get(ch)
             # 本文を作る直前にもう一度確かめる（SENDING を保存してから送るまでに期限・締切が過ぎたら送らない）
             why = [] if rec.get("is_canary") else an.revalidate_fields(
@@ -446,7 +535,10 @@ def send(store: dict, *, now: datetime, attempt_id: str, adapters: dict, only_id
                 try:
                     did = adapter.send(rec, rec["idempotency_key"])
                 finally:
-                    out["requests"] += getattr(adapter, "calls", calls0) - calls0   # 実際に transport を呼んだ数
+                    made = getattr(adapter, "calls", calls0) - calls0              # 実際に transport を呼んだ数
+                    out["requests"] += made
+                    if not rec.get("is_canary"):
+                        product_requests += max(made, 1)             # 送ろうとした記録は上限に数える（安全側）
             except ad.ProviderError as e:
                 a.update(status=e.kind, error_class=e.error_class)
                 if e.kind == ad.AMBIGUOUS:
@@ -466,6 +558,30 @@ def send(store: dict, *, now: datetime, attempt_id: str, adapters: dict, only_id
             _set(rec, ch, DELIVERED, now, provider_delivery_id=did, error_class="", delivered_at=_iso(now))
             out["delivered"] += 1
     return out
+
+
+def _unsend(rec: dict, ch: str, c: dict, now: datetime, why: str) -> None:
+    """この実行で SENDING にしたが送っていない（送信の要求をしていないと確かな）配信先を READY に戻す。"""
+    if c["attempts"] and c["attempts"][-1].get("status") == SENDING:
+        c["attempts"][-1].update(status="NOT_SENT", error_class=why)
+    c["attempt_count"] = max(int(c.get("attempt_count") or 0) - 1, 0)   # 送っていないので試行に数えない
+    _set(rec, ch, READY, now, error_class=why)
+
+
+def release_unsent(store: dict, *, now: datetime, attempt_id: str, why: str) -> int:
+    """送信の手順が送らないと決めた（関門が閉じた・dry-run）とき、この実行の商品の SENDING を READY に戻す。件数。
+
+    送信の要求をする前なので、届いたか不明（UNKNOWN_DELIVERY）にしない（次の実行の prepare が誤って不明にしない）。
+    """
+    n = 0
+    for rec in store["records"].values():
+        if rec.get("is_canary"):
+            continue
+        for ch, c in rec["channels"].items():
+            if c["status"] == SENDING and c.get("attempt_id") == attempt_id:
+                _unsend(rec, ch, c, now, why)
+                n += 1
+    return n
 
 
 def prune(store: dict, now: datetime) -> int:
@@ -554,21 +670,29 @@ def _write_report(out_dir: Path, report: dict, now: datetime) -> None:
     write_json_atomic(hist_path, {"date": now.strftime("%Y-%m-%d"), "runs": runs[-50:]})
 
 
+LIVE_CHANNELS = ("telegram",)          # 本番の方式の商品の通知の配信先（Phase 23: Telegram だけ。Discord は無効）
+
+
 def run_observe(out_dir: Path, diagnostics: dict, *, now: datetime, dry_run: bool) -> dict:
-    """LP の生成の中（診断の直後）: 候補を outbox に入れて保存する。配信はしない（次の手順）。"""
+    """LP の生成の中（診断の直後）: 候補を outbox に入れて保存する。配信はしない（次の手順）。
+
+    本番の方式（dry_run=False。商品の通知の関門の意図 = adapters.product_live_intent）の記録の配信先は Telegram だけ。
+    """
     out_dir = Path(out_dir)
     path = out_dir / STORE_NAME
     mode = MODE_DRY if dry_run else MODE_LIVE
     with locked(path):
         store, baseline = load(path)
-        stats = observe(store, _rows(diagnostics), now=now, mode=mode, baseline=baseline)
+        stats = observe(store, _rows(diagnostics), now=now, mode=mode, baseline=baseline,
+                        channels=None if dry_run else list(LIVE_CHANNELS))
         pruned = prune(store, now)
         save(path, store)
     from src.notifiers.routing import get_channels_for_alert
     report = {
         "generated_at": _iso(now), "step": "observe",
         "diagnostics_generated_at": str((diagnostics or {}).get("generated_at") or ""),
-        "note": "内部用（運営者向け）。外部への送信はしない（dry-run）。配信先の URL・トークンは記録しない",
+        "note": ("内部用（運営者向け）。外部への送信はしない（dry-run）。配信先の URL・トークンは記録しない" if dry_run else
+                 "内部用（運営者向け）。商品の通知の限定運用（Telegram だけ・1回の実行で最大1件）。配信先の URL・トークンは記録しない"),
         "type": an.TYPE, "dry_run": dry_run, "is_baseline": baseline, "channels": get_channels_for_alert(an.RANK),
         "newly_actionable": len(((diagnostics or {}).get("actionability") or {}).get("newly_actionable") or []),
         "notification_candidates": stats["notification_candidates"], "dedupe_suppressed": stats["dedupe_suppressed"],
@@ -576,7 +700,8 @@ def run_observe(out_dir: Path, diagnostics: dict, *, now: datetime, dry_run: boo
         "dispatch_planned": 0, "dispatch_sent": 0, "dispatch_failed": 0, "dispatch_blocked": 0,
         "dispatch_unknown": 0, "dispatch_not_configured": 0, "external_calls": 0,
         "candidates": _summaries(store, stats["new_outbox"]), "counts": counts(store),
-        "unknown": list_unknown(store), "provider_status": _load_provider_status(out_dir)}
+        "unknown": list_unknown(store), "provider_status": _load_provider_status(out_dir),
+        "delivered_history": delivered_history(store, 20)}
     _write_report(out_dir, report, now)
     return report
 
@@ -599,7 +724,7 @@ def _load_report(out_dir: Path) -> dict:
 
 
 def run_prepare(out_dir: Path, diagnostics: dict, *, now: datetime, dry_run: bool, attempt_id: str,
-                adapters: dict | None = None) -> dict:
+                adapters: dict | None = None, live_channels=None, send_limit: int | None = None) -> dict:
     """配信の直前の確認（dry-run は DRY_RUN_PLANNED・本番は SENDING）。保存してから次の手順（send）に進む。"""
     out_dir = Path(out_dir)
     path = out_dir / STORE_NAME
@@ -613,41 +738,65 @@ def run_prepare(out_dir: Path, diagnostics: dict, *, now: datetime, dry_run: boo
         store, baseline = load(path)
         if baseline:
             return {"step": "prepare", "skipped": "no_store"}
-        st = prepare(store, _rows(diagnostics), now=now, mode=mode, attempt_id=attempt_id, adapters=adapters)
+        st = prepare(store, _rows(diagnostics), now=now, mode=mode, attempt_id=attempt_id, adapters=adapters,
+                     live_channels=live_channels, send_limit=send_limit)
         save(path, store)
     rep.update({"step": "prepare", "prepared_at": _iso(now), "attempt_id": attempt_id, "dry_run": dry_run,
                 "dispatch_planned": st["planned"], "dispatch_blocked": st["expired"] + st["cancelled"],
                 "dispatch_expired": st["expired"], "dispatch_cancelled": st["cancelled"],
                 "dispatch_unknown": st["unknown"], "dispatch_not_configured": st["not_configured"],
-                "dispatch_sending": st["sending"], "counts": counts(store), "unknown": list_unknown(store),
+                "dispatch_sending": st["sending"], "dispatch_held": st["held"], "send_limit": send_limit,
+                "counts": counts(store), "unknown": list_unknown(store),
                 "candidates": _summaries(store, [c["notification_id"] for c in rep.get("candidates") or []
                                                  if isinstance(c, dict) and c.get("notification_id")])})
     _write_report(out_dir, rep, now)
     return rep
 
 
+def _release(path: Path, now: datetime, attempt_id: str, why: str) -> int:
+    """送らないと決めた実行の SENDING（商品）を READY に戻して保存する（送信の要求の前。届いたか不明にしない）。"""
+    with locked(path):
+        store, baseline = load(path)
+        if baseline:
+            return 0
+        n = release_unsent(store, now=now, attempt_id=attempt_id, why=why)
+        if n:
+            save(path, store)
+        return n
+
+
 def run_send(out_dir: Path, *, now: datetime, dry_run: bool, attempt_id: str, persisted_sha: str,
-             adapters: dict, real_send_allowed: bool = False) -> dict:
+             adapters: dict, real_send_allowed: bool = False, limit: int | None = None) -> dict:
     """SENDING を保存した内容（persisted_sha）と今のファイルが同じときだけ送る（保存より前に送らない）。
 
     real_send_allowed: 本番の送信の最終の関門（adapters.real_send_gate）を通ったか。既定は閉じている（送らない）。
+    limit: この実行で送る商品の通知の上限（限定モードは1件）。
+    送らないとき（dry-run・関門が閉じた・保存と違う）は、この実行の SENDING を READY に戻す（送信の要求の前なので）。
     """
     out_dir = Path(out_dir)
     path = out_dir / STORE_NAME
     if dry_run:
-        return {"step": "send", "skipped": "dry_run", "external_calls": 0}
+        return {"step": "send", "skipped": "dry_run", "external_calls": 0,
+                "released": _release(path, now, attempt_id, "send_dry_run")}
     if not real_send_allowed:
-        return {"step": "send", "skipped": "real_send_disabled", "external_calls": 0}
+        return {"step": "send", "skipped": "real_send_disabled", "external_calls": 0,
+                "released": _release(path, now, attempt_id, "send_gate_closed")}
     with locked(path):
         if not persisted_sha or file_sha(path) != persisted_sha:
-            return {"step": "send", "skipped": "not_persisted", "external_calls": 0}
-        store, baseline = load(path)
-        if baseline:
-            return {"step": "send", "skipped": "no_store", "external_calls": 0}
-        st = send(store, now=now, attempt_id=attempt_id, adapters=adapters)
-        save(path, store)
+            skipped = True
+        else:
+            skipped = False
+            store, baseline = load(path)
+            if baseline:
+                return {"step": "send", "skipped": "no_store", "external_calls": 0}
+            st = send(store, now=now, attempt_id=attempt_id, adapters=adapters, limit=limit)
+            save(path, store)
+    if skipped:
+        return {"step": "send", "skipped": "not_persisted", "external_calls": 0,
+                "released": _release(path, now, attempt_id, "not_persisted")}
     rep = _load_report(out_dir)
-    rep.update({"step": "send", "sent_at": _iso(now), "dispatch_sent": st["delivered"],
+    rep.update({"step": "send", "sent_at": _iso(now), "dispatch_sent": st["delivered"], "requests": st["requests"],
+                "dispatch_held": st["held"], "send_limit": limit,
                 "dispatch_failed": st["retryable"] + st["final"], "dispatch_unknown": st["unknown"],
                 "counts": counts(store), "unknown": list_unknown(store)})
     _write_report(out_dir, rep, now)
@@ -872,3 +1021,39 @@ def provider_status(store: dict, *, configured: bool, canary_gate: bool, canary_
                          "last_delivery_status": ch.get("status") or "", "last_error_class": ch.get("error_class") or "",
                          "delivered_at": ch.get("delivered_at") or "",
                          "product_real_send": False}}
+
+
+def _live_products(store: dict) -> list[dict]:
+    return [r for r in store["records"].values() if not r.get("is_canary") and r.get("mode") == MODE_LIVE]
+
+
+def product_status(store: dict, *, gate: dict, now: datetime, sent_this_run: int = 0) -> dict:
+    """商品の通知（本番の方式）の状態（運営者向け。値・トークン・チャット ID・配信先の ID は含めない。Phase 23）。"""
+    recs = _live_products(store)
+    today = now.strftime("%Y-%m-%d")
+    by = {s: sum(1 for r in recs if r["status"] == s) for s in STATUSES}
+    return {"enabled": bool(gate.get("allowed")), "limited_mode": bool((gate.get("checks") or {}).get("limited_mode")),
+            "send_limit": int(gate.get("send_limit") or ad.PRODUCT_SEND_LIMIT_PER_RUN),
+            "sent_this_run": int(sent_this_run),
+            "sent_today": sum(1 for r in recs for c in r["channels"].values()
+                              if c.get("status") == DELIVERED and str(c.get("delivered_at") or "").startswith(today)),
+            "pending": by[PENDING] + by[READY], "sending": by[SENDING], "delivered": by[DELIVERED],
+            "unknown": by[UNKNOWN_DELIVERY], "failed": by[FAILED_RETRYABLE] + by[FAILED_FINAL],
+            "expired": by[EXPIRED], "cancelled": by[CANCELLED]}
+
+
+def delivered_history(store: dict, limit: int = 50) -> list[dict]:
+    """実際に送った商品の通知（本番の方式・DELIVERED）の履歴。dry-run・配信待ち・接続の試験は入れない。
+
+    利用者向け（マイページ）・運営者向けの履歴に使う。配信先の ID・冪等性のキー・URL は入れない（公開のページに出る）。
+    """
+    out = []
+    for r in _live_products(store):
+        at = max((str(c.get("delivered_at") or "") for c in r["channels"].values() if c.get("status") == DELIVERED),
+                 default="")
+        if r["status"] != DELIVERED or not at:
+            continue
+        out.append({"product_id": r["product_id"], "product": r["product"], "type": r["notification_type"],
+                    "availability": r["availability_kind"], "state": an.TITLES.get(r["availability_kind"], ""),
+                    "net_profit": r.get("net_profit"), "roi": r.get("roi"), "delivered_at": at})
+    return sorted(out, key=lambda x: x["delivered_at"], reverse=True)[:limit]

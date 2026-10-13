@@ -10,8 +10,10 @@ outbox（src/notifiers/outbox）の後ろに差し込む。配信先ごとに次
 
 通信はしない。送信は transport（呼び出し側が渡す関数）だけが行い、このモジュールは HTTP の部品を import しない。
 送信の部品（HTTP の transport）は Telegram だけ（`src/notifiers/telegram_transport.py`。Phase 22）。Discord は無い。
-商品の通知の本番の送信は `PRODUCT_REAL_SEND_ENABLED = False` で常に閉じる。Telegram の接続の試験（canary）だけが、
-最終の関門 `real_send_gate(purpose="canary")` を全部通ったときに1件送れる。
+商品の通知の本番の送信（Phase 23・限定運用）は、最終の関門 `real_send_gate(purpose="product")` を全部通ったときだけ
+（リポジトリの変数 PRODUCT_REAL_SEND_ENABLED=true・限定モード・手動の実行・Telegram だけ・設定が正しい）。1回の実行で送るのは
+最大 `PRODUCT_SEND_LIMIT_PER_RUN`（1件。コードで固定し、変数では増やせない）。Telegram の接続の試験（canary）は
+`real_send_gate(purpose="canary")`。
 配信先の URL・トークン・チャット ID は transport の側だけが持つ（台帳・本文・ログ・画面に入れない。`redact` で消す）。
 """
 from __future__ import annotations
@@ -30,9 +32,11 @@ RETRY_AFTER_CAP_SECONDS = 6 * 3600
 
 # 送信の部品（HTTP の transport）がある配信先（Phase 22: Telegram だけ。Discord は無い）
 IMPLEMENTED_PROVIDERS = frozenset({"telegram"})
-# 商品の通知の本番の送信（Phase 22 では無効のまま。接続の試験の成功だけでは開けない。別の明示の許可で変える）
-PRODUCT_REAL_SEND_ENABLED = False
-REAL_SEND_IMPLEMENTED = PRODUCT_REAL_SEND_ENABLED      # 互換（商品の通知の送信の可否）
+# 商品の通知の本番の送信（Phase 23・限定運用）。有効にするのはリポジトリの変数 PRODUCT_REAL_SEND_ENABLED（既定 false）で、
+# 手動の実行（workflow_dispatch）のときだけ読む。1回の実行で送る上限はコードで固定（変数では増やせない・自動で外さない）
+PRODUCT_SEND_LIMIT_PER_RUN = 1
+# 限定モードを外した全開放は Phase 23 では作らない（PRODUCT_NOTIFICATION_LIMITED_MODE=false にすると関門が閉じる）
+PRODUCT_UNLIMITED_ALLOWED = False
 
 # 秘密の値の形（台帳・ログ・画面に出さない。deploy-check の _SECRET_PATTERNS と同じ形）
 SECRET_PATTERNS = (r"(?:https?://)?(?:ptb\.|canary\.)?discord(?:app)?\.com/api(?:/v\d+)?/webhooks/\S+",
@@ -114,16 +118,20 @@ def escape_discord(text: str) -> str:
 
 
 def _fmt_lines(record: dict, *, name: str, with_checked: bool) -> list[str]:
-    """本文の行（値は outbox の記録の確定の値のまま。利益・ROI を計算し直さない）。"""
+    """本文の行（値は outbox の記録の確定の値のまま。利益・ROI を計算し直さない）。
+
+    形（Phase 23）: 「Premium Monitor」・状態の見出し・空行・商品・想定純利益・ROI・状態・締切（抽選など）・確認の時刻・
+    空行・購入/申込の URL。見出しは記録の種類（行動できる種類）だけから決める（行動できない状態の文言を作らない）。
+    """
     from src.market import actionability as act
     from src.notifiers import actionable as an
     avail = str(record.get("availability_kind") or record.get("availability") or "")
-    lines = [f"🎯 {an.TITLES.get(avail, '')}", f"商品: {name}"]
+    lines = ["Premium Monitor", an.TITLES.get(avail, ""), "", f"商品: {name}"]
     if an._finite(record.get("net_profit")):
-        lines.append(f"想定純利益: +¥{int(record['net_profit']):,}（確定の利益案件）")
+        lines.append(f"想定純利益: +¥{int(record['net_profit']):,}")
     if an._finite(record.get("roi")):
         lines.append(f"ROI: {record['roi'] * 100:.1f}%")
-    lines.append(f"状態: {act.LABELS.get(avail, '')}")
+    lines.append(f"状態: {'在庫あり' if avail == act.IN_STOCK else act.LABELS.get(avail, '')}")
     if record.get("deadline"):
         d = act._dt(record["deadline"])
         if d is not None:
@@ -132,7 +140,7 @@ def _fmt_lines(record: dict, *, name: str, with_checked: bool) -> list[str]:
     if with_checked and ck is not None:
         lines.append(f"確認: {ck.strftime('%m/%d %H:%M')}（公式）")
     url = str(record.get("action_url") or record.get("cta_url") or "")
-    lines.append(f"{record.get('cta_label') or '公式のページ'}: {url}")
+    lines += ["", f"{record.get('cta_label') or '公式のページ'}: {url}"]
     return lines
 
 
@@ -364,34 +372,42 @@ def _flag(env, key: str, default: str) -> bool:
     return str(env.get(key, default)).strip().lower() in ("true", "1", "yes", "on")
 
 
-def real_send_gate(env=None, purpose: str = "product") -> dict:
+def real_send_gate(env=None, purpose: str = "product", *, check_config: bool = True) -> dict:
     """本番の送信を有効にしてよいか（全部そろったときだけ allowed）。既定はすべて閉じる。値は返さない。
 
-    purpose="product"（商品の通知）: PRODUCT_REAL_SEND_ENABLED が False なので常に閉じる（Phase 22）。
-    purpose="canary"（Telegram の接続の試験の1件）: 次がすべてそろうときだけ開く。
-      1) 選んだ配信先が Telegram だけ（NOTIFICATION_PROVIDERS=telegram。Discord は無効）で、送信の部品がある
-      2) NOTIFICATION_REAL_SEND=true（ユーザーの明示の許可。リポジトリの変数。既定 false）
-      3) NOTIFICATION_DRY_RUN=false（既定 true） 4) TELEGRAM_CANARY=true（接続の試験の明示の旗）
-      5) 手動の実行（GITHUB_EVENT_NAME=workflow_dispatch。定時の実行では送らない）
-      6) Telegram の設定（TELEGRAM_BOT_TOKEN・TELEGRAM_CHAT_ID）がそろって形が正しい
+    共通: 選んだ配信先が Telegram だけ（NOTIFICATION_PROVIDERS=telegram。Discord は無効）で送信の部品がある・
+      NOTIFICATION_REAL_SEND=true（既定 false）・NOTIFICATION_DRY_RUN=false（既定 true）・手動の実行
+      （GITHUB_EVENT_NAME=workflow_dispatch。定時の実行では送らない）・Telegram の設定（TELEGRAM_BOT_TOKEN・
+      TELEGRAM_CHAT_ID）がそろって形が正しい
+    purpose="product"（商品の通知。Phase 23）: さらに PRODUCT_REAL_SEND_ENABLED=true（既定 false）・限定モード
+      （PRODUCT_NOTIFICATION_LIMITED_MODE。既定 true。false にすると閉じる = 全開放はしない）
+    purpose="canary"（Telegram の接続の試験の1件。Phase 22）: さらに TELEGRAM_CANARY=true
+    check_config=False: 設定（Secrets）を見ない判定（Secrets を渡さない生成・配信の直前の確認の手順が、本番の方式で
+      記録を作るかを決める。送信の手順は必ず check_config=True で確かめ直す）
     """
     e = env if env is not None else os.environ
     providers = [p.strip().lower() for p in str(e.get("NOTIFICATION_PROVIDERS") or "").split(",") if p.strip()]
-    if purpose == "canary":
-        implemented = providers == ["telegram"] and "telegram" in IMPLEMENTED_PROVIDERS
-    else:
-        implemented = PRODUCT_REAL_SEND_ENABLED and bool(providers) and set(providers) <= IMPLEMENTED_PROVIDERS
-    checks = {"implemented": implemented,
+    checks = {"implemented": providers == ["telegram"] and "telegram" in IMPLEMENTED_PROVIDERS,
               "real_send_flag": _flag(e, "NOTIFICATION_REAL_SEND", "false"),
               "dry_run_off": not _dry(e),
               "provider_selected": providers == ["telegram"]}
     if purpose == "canary":
         checks["canary_flag"] = _flag(e, "TELEGRAM_CANARY", "false")
-        checks["manual_dispatch"] = str(e.get("GITHUB_EVENT_NAME") or "") == "workflow_dispatch"
+    else:
+        checks["product_flag"] = _flag(e, "PRODUCT_REAL_SEND_ENABLED", "false")
+        checks["limited_mode"] = _flag(e, "PRODUCT_NOTIFICATION_LIMITED_MODE", "true") or PRODUCT_UNLIMITED_ALLOWED
+    checks["manual_dispatch"] = str(e.get("GITHUB_EVENT_NAME") or "") == "workflow_dispatch"
     config = {p: ADAPTERS[p]().validate_config(e) for p in providers if p in ("discord", "telegram")}
-    checks["config_valid"] = bool(config) and all(not v for v in config.values())
+    if check_config:
+        checks["config_valid"] = bool(config) and all(not v for v in config.values())
     return {"allowed": all(checks.values()), "checks": checks, "providers": providers, "purpose": purpose,
-            "config_problems": {p: v for p, v in config.items() if v}}
+            "send_limit": PRODUCT_SEND_LIMIT_PER_RUN if purpose == "product" else 1,
+            "config_problems": {p: v for p, v in config.items() if v} if check_config else {}}
+
+
+def product_live_intent(env=None) -> dict:
+    """商品の通知を本番の方式（live）で記録・確認するか（設定 = Secrets は見ない。送信の手順で確かめ直す）。"""
+    return real_send_gate(env, purpose="product", check_config=False)
 
 
 def telegram_configured(env=None) -> bool:

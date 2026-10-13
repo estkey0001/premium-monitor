@@ -2388,24 +2388,36 @@ def dispatch_notifications(step, persisted_sha, attempt_id):
     except (OSError, ValueError):
         diag = {}
     aid = attempt_id or _ob.attempt_id_from_env(now=now)
-    # 本番の送信は最終の関門（adapters.real_send_gate）を全部通ったときだけ。閉じていれば dry-run と同じに扱う
-    gate = _ad.real_send_gate()
-    dry = _an.is_dry_run() or not gate["allowed"]
-    # 送信先の transport はつながない（Phase 21 まで。Discord・Telegram は未設定のまま。内部のログだけ）
-    adapters = _ad.default_adapters()
+    adapters = _ad.default_adapters()                       # 既定: transport なし（送れない）
     if step == "prepare":
-        rep = _ob.run_prepare(out, diag, now=now, dry_run=dry, attempt_id=aid, adapters=adapters)
+        # 配信の直前の確認の手順は Secrets を持たない。本番の方式にするかは設定を見ない関門の意図で決め（Phase 23）、
+        # 送信の手順で設定を含めて確かめ直す。本番の方式の配信先は Telegram だけ・この実行で SENDING にするのは上限まで
+        gate = _ad.product_live_intent()
+        dry = _an.is_dry_run() or not gate["allowed"]
+        rep = _ob.run_prepare(out, diag, now=now, dry_run=dry, attempt_id=aid, adapters=adapters,
+                              live_channels=None if dry else set(_ob.LIVE_CHANNELS),
+                              send_limit=None if dry else gate["send_limit"])
     else:
+        # 本番の送信は最終の関門（adapters.real_send_gate。商品の通知）を全部通ったときだけ。閉じていれば送らない
+        # （この実行の SENDING は送信の要求の前なので READY に戻す）
+        gate = _ad.real_send_gate(purpose="product")
+        dry = _an.is_dry_run() or not gate["allowed"]
+        if gate["allowed"]:
+            from src.notifiers.telegram_transport import make_telegram_transport
+            adapters = {"telegram": _ad.TelegramAdapter(make_telegram_transport(_os.environ["TELEGRAM_BOT_TOKEN"],
+                                                                                 _os.environ["TELEGRAM_CHAT_ID"]))}
         rep = _ob.run_send(out, now=now, dry_run=dry, attempt_id=aid, persisted_sha=persisted_sha, adapters=adapters,
-                           real_send_allowed=gate["allowed"])
-        rep["canary"] = _telegram_canary(out, now=now, attempt_id=aid)
+                           real_send_allowed=gate["allowed"], limit=gate["send_limit"])
+        rep["canary"] = _telegram_canary(out, now=now, attempt_id=aid, product_gate=gate,
+                                         product_requests=int(rep.get("requests") or 0))
     rep["real_send_gate"] = {k: bool(v) for k, v in gate["checks"].items()}
-    keys = ("step", "skipped", "dry_run", "dispatch_planned", "dispatch_sending", "dispatch_sent", "dispatch_failed",
-            "dispatch_blocked", "dispatch_unknown", "counts", "real_send_gate", "canary")
+    keys = ("step", "skipped", "dry_run", "dispatch_planned", "dispatch_sending", "dispatch_held", "dispatch_sent",
+            "dispatch_failed", "dispatch_blocked", "dispatch_unknown", "requests", "released", "send_limit", "counts",
+            "real_send_gate", "canary")
     click.echo(_json.dumps({k: rep[k] for k in keys if k in rep}, ensure_ascii=False))
 
 
-def _telegram_canary(out, *, now, attempt_id) -> dict:
+def _telegram_canary(out, *, now, attempt_id, product_gate=None, product_requests: int = 0) -> dict:
     """Telegram の接続の試験（canary）を、関門（purpose="canary"）を全部通ったときだけ1件送る（Phase 22）。
 
     送る前に SENDING を main に保存する（scripts/persist_notification_state.sh）。同じ試験の ID では二度と送らない。
@@ -2420,8 +2432,12 @@ def _telegram_canary(out, *, now, attempt_id) -> dict:
     if not _ob.valid_canary_id(canary_id):
         canary_id = "invalid"                    # 形の違う ID（秘密の値かもしれない）は台帳・出力に入れない（監査 L-3）
     gate = _ad.real_send_gate(purpose="canary")
+    pg = product_gate if product_gate is not None else _ad.real_send_gate(purpose="product")
     res = {"gate": {k: bool(v) for k, v in gate["checks"].items()}, "canary_id": canary_id, "requests": 0}
-    if gate["allowed"] and canary_id != "invalid":
+    if pg["allowed"] or product_requests:
+        # 商品の通知の実行では接続の試験を送らない（1回の実行で Telegram に送るのは最大1件。監査 M-1）
+        res["canary"] = "skipped_product_run"
+    elif gate["allowed"] and canary_id != "invalid":
         from src.notifiers.telegram_transport import make_telegram_transport
         adapter = _ad.TelegramAdapter(make_telegram_transport(_os.environ["TELEGRAM_BOT_TOKEN"],
                                                                _os.environ["TELEGRAM_CHAT_ID"]))
@@ -2442,6 +2458,8 @@ def _telegram_canary(out, *, now, attempt_id) -> dict:
                                  canary_id=canary_id)
     status["checked_at"] = now.isoformat(timespec="seconds")
     status["telegram"]["real_send_enabled"] = bool(gate["allowed"])      # 関門と同じ判定（レビュー L-3）
+    status["telegram"]["product_real_send"] = bool(pg["allowed"])
+    status["product"] = _ob.product_status(store, gate=pg, now=now, sent_this_run=product_requests)   # Phase 23
     write_json_atomic(out / "provider_status.json", status)
     return res
 

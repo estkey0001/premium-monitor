@@ -397,7 +397,8 @@ jobs:
 
       # 14. Generate daily LP
       # 利益商品の診断（今すぐ行動できるか）の直後に、行動できるようになった商品を通知の outbox に PENDING で入れる
-      # （Phase 19・20）。外部へは送らない: dry-run に固定し、通知の送信先の Secrets はこのステップに渡さない
+      # （Phase 19・20）。外部へは送らない。通知の送信先の Secrets はこのステップに渡さない。本番の方式で記録するのは
+      # 商品の通知の限定運用の変数がそろった手動の実行だけ（Phase 23。既定は dry-run）
       # 14.0 通知の台帳を main の最新に合わせる（待たされた実行・再実行が古い台帳から候補を作らない。Phase 20）
       - name: Sync notification outbox
         id: sync_outbox
@@ -408,15 +409,18 @@ jobs:
         id: generate_lp
         run: python -m src.cli generate-daily-lp --variant A
         env:
-          NOTIFICATION_DRY_RUN: "true"
-          NOTIFICATION_REAL_SEND: "false"
+          NOTIFICATION_DRY_RUN: ${{ vars.NOTIFICATION_DRY_RUN || 'true' }}
+          NOTIFICATION_REAL_SEND: ${{ vars.NOTIFICATION_REAL_SEND || 'false' }}
+          NOTIFICATION_PROVIDERS: ${{ vars.NOTIFICATION_PROVIDERS || '' }}
+          PRODUCT_REAL_SEND_ENABLED: ${{ github.event_name == 'workflow_dispatch' && vars.PRODUCT_REAL_SEND_ENABLED || 'false' }}
+          PRODUCT_NOTIFICATION_LIMITED_MODE: ${{ vars.PRODUCT_NOTIFICATION_LIMITED_MODE || 'true' }}
           # 台帳を合わせられなかったら、通知の候補を作らない（古い台帳から作り直さない）
           NOTIFICATION_OUTBOX_SYNCED: ${{ steps.sync_outbox.outcome == 'success' }}
 
       # 14.1 通知の outbox（Phase 20）: 候補 → 保存 → 配信の直前の確認 → 保存 → 送信 → 保存。
       # 台帳は生成物のコミット・deploy-check・Pages と切り離して、手順ごとに main に保存する（送った記録を失わない）。
       # 送信の手順は、直前の保存で残した台帳（sha）と今のファイルが同じときだけ送る（保存より前に送らない）。
-      # dry-run に固定し、通知の送信先の Secrets はどの手順にも渡さない（外部への通信 0）
+      # 通知の送信先の Secrets は「Send notifications」だけに渡す。既定は dry-run（外部への通信 0）
       - name: Persist notification outbox (candidates)
         id: persist_outbox_candidates
         if: always()
@@ -430,8 +434,11 @@ jobs:
         run: python -m src.cli dispatch-notifications --step prepare
         env:
           PYTHONPATH: .
-          NOTIFICATION_DRY_RUN: "true"
-          NOTIFICATION_REAL_SEND: "false"
+          NOTIFICATION_DRY_RUN: ${{ vars.NOTIFICATION_DRY_RUN || 'true' }}
+          NOTIFICATION_REAL_SEND: ${{ vars.NOTIFICATION_REAL_SEND || 'false' }}
+          NOTIFICATION_PROVIDERS: ${{ vars.NOTIFICATION_PROVIDERS || '' }}
+          PRODUCT_REAL_SEND_ENABLED: ${{ github.event_name == 'workflow_dispatch' && vars.PRODUCT_REAL_SEND_ENABLED || 'false' }}
+          PRODUCT_NOTIFICATION_LIMITED_MODE: ${{ vars.PRODUCT_NOTIFICATION_LIMITED_MODE || 'true' }}
 
       - name: Persist notification outbox (prepared)
         id: persist_outbox_prepared
@@ -443,15 +450,18 @@ jobs:
         if: ${{ !cancelled() && steps.generate_lp.outcome == 'success' && steps.persist_outbox_prepared.outcome == 'success' }}
         continue-on-error: true
         run: python -m src.cli dispatch-notifications --step send --persisted-sha "${{ steps.persist_outbox_prepared.outputs.sha }}"
-        # Telegram の Secrets を渡すのはこの手順だけ（Phase 22）。商品の通知の本番の送信はコードで無効
-        # （PRODUCT_REAL_SEND_ENABLED = False）。送れるのは Telegram の接続の試験（canary）の1件だけで、
+        # Telegram の Secrets を渡すのはこの手順だけ（Phase 22）。商品の通知（Phase 23・限定運用）を送るのは、
         # リポジトリの変数（NOTIFICATION_REAL_SEND=true・NOTIFICATION_DRY_RUN=false・NOTIFICATION_PROVIDERS=telegram・
-        # TELEGRAM_CANARY=true）がそろい、手動の実行（workflow_dispatch）のときだけ。既定は送らない
+        # PRODUCT_REAL_SEND_ENABLED=true・限定モード）がそろった手動の実行（workflow_dispatch）だけで、1回の実行で最大1件
+        # （上限はコードで固定）。PRODUCT_REAL_SEND_ENABLED は定時の実行では読まない。接続の試験（canary）は
+        # TELEGRAM_CANARY=true の手動の実行だけ。既定は送らない
         env:
           PYTHONPATH: .
           NOTIFICATION_DRY_RUN: ${{ vars.NOTIFICATION_DRY_RUN || 'true' }}
           NOTIFICATION_REAL_SEND: ${{ vars.NOTIFICATION_REAL_SEND || 'false' }}
           NOTIFICATION_PROVIDERS: ${{ vars.NOTIFICATION_PROVIDERS || '' }}
+          PRODUCT_REAL_SEND_ENABLED: ${{ github.event_name == 'workflow_dispatch' && vars.PRODUCT_REAL_SEND_ENABLED || 'false' }}
+          PRODUCT_NOTIFICATION_LIMITED_MODE: ${{ vars.PRODUCT_NOTIFICATION_LIMITED_MODE || 'true' }}
           TELEGRAM_CANARY: ${{ github.event_name == 'workflow_dispatch' && vars.TELEGRAM_CANARY || 'false' }}
           TELEGRAM_CANARY_ID: ${{ vars.TELEGRAM_CANARY_ID || 'telegram_canary_v1' }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}

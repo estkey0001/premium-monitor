@@ -1,0 +1,19 @@
+{
+  "status": "PHASE24_WAITING",
+  "label": "実データの候補待ち",
+  "detection": "NO_ACTIONABLE_CHANGE",
+  "generated_at": "2026-10-14T05:34:36+09:00",
+  "error": "",
+  "run_id": "38454807142",
+  "diagnostics_generated_at": "2026-10-14T05:34:35+09:00",
+  "actionable": 0,
+  "candidate_count": 0,
+  "candidate_ids": [],
+  "candidates": [],
+  "top_candidate": "",
+  "send_limit": 1,
+  "external_sends": 0,
+  "history": [],
+  "note": "内部用（運営者向け）。検知と記録だけ（送信しない）。受入は手動の手順で行う（ops/Secrets設定.md）",
+  "sent_this_run": 0
+}

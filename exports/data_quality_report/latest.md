@@ -1,4 +1,4 @@
-# データ取得品質レポート（2026-10-14 03:27 JST）
+# データ取得品質レポート（2026-10-14 05:34 JST）
 
 ## 取得成功率
 - 全対象店舗数: 16
@@ -10,8 +10,8 @@
 - 前回成功率: 29.7%
 - 今回成功率: 29.7%
 - 変化: 0.0pt（横ばい）
-- 7日移動平均: 30.4%
-- 主要失敗理由 TOP5: robots_unreachable 9, price_not_found 8, rate_limited_429 6, http_403 6, http_404 4
+- 7日移動平均: 30.6%
+- 主要失敗理由 TOP5: product_not_listed 9, price_not_found 8, rate_limited_429 6, http_403 6, robots_unreachable 4
 
 ## 店舗別成功率（低い順）
 - 2ndstreet（optional）: 0%（OK 0/失敗 4・price_not_found）
@@ -21,7 +21,7 @@
 - hardoff（optional）: 0%（OK 0/失敗 2・http_404）
 - iosys: 0%（OK 0/失敗 6・http_403）
 - janpara（optional）: 0%（OK 0/失敗 6・rate_limited_429）
-- mobile_ichiban: 0%（OK 0/失敗 5・robots_unreachable）
+- mobile_ichiban: 0%（OK 0/失敗 5・product_not_listed）
 - netoff（optional）: 0%（OK 0/失敗 4・price_not_found）
 - pasoko（optional）: 0%（OK 0/失敗 2・product_not_listed）
 - sofmap（optional）: 0%（OK 0/失敗 2・service_unavailable）
@@ -45,32 +45,32 @@
 - r5ii: 100.0%
 
 ## 連続失敗店舗（2回以上）
-- 2ndstreet: 202回連続
-- bookoff: 202回連続
-- dosupara: 202回連続
-- geo_mobile: 202回連続
-- hardoff: 202回連続
-- janpara: 202回連続
-- pasoko: 202回連続
-- sofmap: 202回連続
-- surugaya: 202回連続
-- tsutaya: 202回連続
-- iosys: 135回連続
-- netoff: 62回連続
-- mobile_ichiban: 2回連続
+- 2ndstreet: 203回連続
+- bookoff: 203回連続
+- dosupara: 203回連続
+- geo_mobile: 203回連続
+- hardoff: 203回連続
+- janpara: 203回連続
+- pasoko: 203回連続
+- sofmap: 203回連続
+- surugaya: 203回連続
+- tsutaya: 203回連続
+- iosys: 136回連続
+- netoff: 63回連続
+- mobile_ichiban: 3回連続
 
 ## 改善優先順位（required店舗）
 1. iosys（失敗6 / http_403）
-2. mobile_ichiban（失敗5 / robots_unreachable）
+2. mobile_ichiban（失敗5 / product_not_listed）
 3. kaitori_shouten（失敗1 / product_not_listed）
 
 ## 失敗理由（内訳）
-- robots_unreachable: 9件
+- product_not_listed: 9件
 - price_not_found: 8件
 - rate_limited_429: 6件
 - http_403: 6件
+- robots_unreachable: 4件
 - http_404: 4件
-- product_not_listed: 4件
 - not_supported: 4件
 - service_unavailable: 2件
 - site_blocked: 2件

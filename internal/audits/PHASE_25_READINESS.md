@@ -89,6 +89,10 @@ dry-run の記録（PENDING / READY / DRY_RUN_PLANNED・検知から24時間以�
 - 受入で送った記録が30日で prune されると、受入済みの表示は消える（その後に新しい候補があれば READY になる）
 - 公開の運営者向けの画面は生成の時点（送信の前）。送信の結果は、その実行の Summary と phase24_readiness.json
 
-## 8. 本番の確認
+## 8. 本番の確認（2026-10-14）
 
-（本番の確認の後に記入）
+- 手動の実行（Run 38454807142。変数は安全な値・送信なし）: 全手順 success（所要1時間9分）。「Phase24 readiness summary」は
+  `PHASE24_WAITING`・detection `NO_ACTIONABLE_CHANGE`・actionable 0・candidates 0・external sends 0。send は dry_run
+- 生成コミット（b4e7e0e0）は生成物だけ。deploy-check エラー 0（#855〜#860 OK）・prelaunch ❌ 0
+- `phase24_readiness.json` は WAITING（run_id はこの run）。運営者向けの画面に「Phase 24 の受入状態: 実データの候補待ち」
+- ログにトークンの形・Bot API の URL は 0

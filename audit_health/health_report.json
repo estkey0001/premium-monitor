@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-14 05:34 JST",
+  "generated_at": "2026-10-14 10:26 JST",
   "date": "2026-10-14",
   "health_score": {
     "data_quality": 15.8,
@@ -331,15 +331,15 @@
   "diff_vs_prev": {
     "available": true,
     "stale_rate": {
-      "prev": 0.4831,
+      "prev": 0.4935,
       "cur": 0.4935
     },
     "zero_rate": {
-      "prev": 0.1737,
+      "prev": 0.1558,
       "cur": 0.1558
     },
     "item_url_rate": {
-      "prev": 0.4788,
+      "prev": 0.4892,
       "cur": 0.4892
     },
     "main_route_count": {
@@ -352,14 +352,7 @@
     },
     "new_main": [],
     "lost_main": [],
-    "source_success_changes": [
-      {
-        "source": "モバイル一番",
-        "prev": 0.375,
-        "cur": 1.0,
-        "delta": 0.625
-      }
-    ]
+    "source_success_changes": []
   },
   "anomalies": {
     "critical": [

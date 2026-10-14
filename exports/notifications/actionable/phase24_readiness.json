@@ -2,10 +2,16 @@
   "status": "PHASE24_WAITING",
   "label": "実データの候補待ち",
   "detection": "NO_ACTIONABLE_CHANGE",
-  "generated_at": "2026-10-14T05:34:36+09:00",
+  "generated_at": "2026-10-14T10:26:37+09:00",
   "error": "",
-  "run_id": "38454807142",
-  "diagnostics_generated_at": "2026-10-14T05:34:35+09:00",
+  "run_id": "38489349560",
+  "acceptance": {
+    "state": "NONE",
+    "candidate_id": "",
+    "product_id": "",
+    "product": ""
+  },
+  "diagnostics_generated_at": "2026-10-14T10:26:36+09:00",
   "actionable": 0,
   "candidate_count": 0,
   "candidate_ids": [],
@@ -15,5 +21,13 @@
   "external_sends": 0,
   "history": [],
   "note": "内部用（運営者向け）。検知と記録だけ（送信しない）。受入は手動の手順で行う（ops/Secrets設定.md）",
-  "sent_this_run": 0
+  "sent_this_run": 0,
+  "acceptance_run": {
+    "selected_candidate": "",
+    "prepare_allowed": false,
+    "send_allowed": false,
+    "reason": "",
+    "requests": 0,
+    "delivered": 0
+  }
 }

@@ -1,7 +1,7 @@
 
 ============================================================
- Deploy Check (481 items)
- 実行日時: 2026-10-14T05:34:41+09:00
+ Deploy Check (482 items)
+ 実行日時: 2026-10-14T10:26:43+09:00
 ============================================================
   ✅ [index_exists] docs/index.html 存在
   ✅ [forbidden_phrases] 禁止表現なし
@@ -53,12 +53,12 @@
   ✅ [fetch_failed_no_price_calc] fetch_failed 行の価格欄が「—」（価格計算に使われていない）
   ✅ [game_console_shops] ゲーム機向け店舗が表示されている: ['ゲオ', 'イオシス', 'ブックオフ', '駿河屋', 'ソフマップ', 'TSUTAYA', '買取商店']
   ✅ [switch2_game_shop_links] Switch 2 / ゲーム機向け確認リンク（ゲオ/ブックオフ/駿河屋/ソフマップ）が存在する
-  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-10-14T04:27:13+09:00）
+  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-10-14T09:18:56+09:00）
   ⚠️ [suspicious_price_format] suspicious_prices 形式OK（suspicious_price 3件あり — 確認推奨）
   ✅ [fetch_failed_has_reason] fetch_failed 45件すべてに reason あり
   ✅ [collector_report_html_exists] docs/collector_report.html 存在
   ✅ [collector_report_link_in_lp] LP内に collector_report.html へのリンクがある
-  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 9件存在する: ['iphone17pro512', 'iphone17pro256', 'iphone17pm256', 'iphone17_256']
+  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 9件存在する: ['iphone17pro256', 'iphone17pm512', 'iphone17_256', 'iphone17pm256']
   ✅ [beginner_page_auto_scraped_exists] 自動取得 OK 19件 / total 64件
   ✅ [iphone17pro256_price_scraped] iPhone 17 Pro 256GB の価格取得成功: ['kaitori_shouten', 'kaitori_itchome']
   ✅ [fetch_failed_has_reason_field] 全取得失敗エントリーに reason フィールドあり（45件）
@@ -469,6 +469,7 @@
   ✅ [telegram_real_send_safety] #858 Telegram の実送信の安全（公式の Bot API・要求の形・応答の分類・トークンを出さない・接続の試験は1回だけ・保存の前に送らない・商品の通知は別の関門・手動の実行だけ）
   ✅ [product_notification_limited] #859 商品の通知の限定運用（Telegram だけ・1回の実行で最大1件・手動の実行だけ・限定モード・残りは READY のまま・同じキー/届いたか不明は送り直さない・行動できない/古い/参考の利益/公式でない URL は送らない）
   ✅ [phase24_readiness] #860 Phase 24 の受入状態（候補なしは WAITING・実データの変化だけ READY・24時間で外す・無効/送信済みは外す・受入は1件・検知の時刻を新しくしない・判定できなければ REVIEW_REQUIRED・送信しない）
+  ✅ [phase24_acceptance_guard] #861 受入の関門（受入状態が実送信の必須の条件・候補の ID に完全に一致・1回の受入で1件・受入済みの後は変数を戻し忘れても送らない・再実行/保留の候補も送らない・定時の実行は送らない・受入の証拠を残す）
   ✅ [no_rejected_price_published] #820 明らかに誤りの買取価格が CSV（LP・利益計算の入力）に残っていない
   ✅ [official_price_not_generation_time] #821 公式定価の観測時刻が生成時刻になっていない（確認日・実際の取得時刻を保持）
   ✅ [no_timestamp_only_update] #822 手動 CSV で「値は同じで日時だけ新しい」更新をしていない（作業ツリーと直近のコミット）
@@ -485,7 +486,7 @@
   ✅ [opportunity_sell_identity_verified] #833 利益に使った売却価格はすべて商品照合済みの買取価格で、商品詳細の表の確認済みの行と一致（2件）
   ✅ [mypage_safe] #834 マイページに DEMO・架空のアカウント表示・危ないリンクが無く、ウォッチは登録済みの商品だけ、想定純利益は商品詳細と同じ
 
-  Errors: 0 | Warnings: 10 | OK: 471
+  Errors: 0 | Warnings: 10 | OK: 472
 
   ✅ Deploy check PASSED
 ============================================================

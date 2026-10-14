@@ -431,7 +431,8 @@ def _stale_live(rec: dict, now: datetime) -> bool:
 
 
 def prepare(store: dict, rows: list, *, now: datetime, mode: str, attempt_id: str,
-            adapters: dict | None = None, live_channels=None, send_limit: int | None = None) -> dict:
+            adapters: dict | None = None, live_channels=None, send_limit: int | None = None,
+            only_keys=None) -> dict:
     """配信の直前の確認。期限切れ → EXPIRED、行動できない・利益が確定でない・URL が違う → CANCELLED、
     dry-run → DRY_RUN_PLANNED、本番で送信先がある → SENDING（attempt_id 付き。この状態を保存してから送る）。
 
@@ -443,6 +444,8 @@ def prepare(store: dict, rows: list, *, now: datetime, mode: str, attempt_id: st
       行動できる商品が先・利益商品の順位）。上限を超えた候補は READY（limited_send_hold）のまま次の実行に回す
     - dry-run の実行では本番の方式の記録を送らない（SENDING にしない・取り消さない）。期限切れ・行動できない
       ものだけを整理する（次の本番の実行で確かめ直して送る）
+    - only_keys: 本番の方式で SENDING にしてよい冪等性のキー（Phase 26 の受入で選んだ候補だけ）。ほかは READY
+      （acceptance_not_selected）のまま送らない。None は制限なし（受入の関門を使わない呼び出し）
     """
     adapters = adapters if adapters is not None else ad.default_adapters()
     by_pid = {str(r["product_id"]): r for r in rows or [] if isinstance(r, dict) and r.get("product_id")}
@@ -506,6 +509,9 @@ def prepare(store: dict, rows: list, *, now: datetime, mode: str, attempt_id: st
                       else (adapters.get(ch) and adapters[ch].configured)):
                 _set(rec, ch, PENDING, now, error_class="not_configured")
                 done.add("not_configured")
+            elif only_keys is not None and rec["idempotency_key"] not in only_keys:
+                _set(rec, ch, READY, now, error_class="acceptance_not_selected")   # 受入で選んでいない（監査 L-2）
+                done.add("held")
             else:
                 c["attempts"].append({"attempt_id": attempt_id, "attempted_at": _iso(now), "status": SENDING,
                                       "provider": ch, "provider_delivery_id": "", "error_class": ""})
@@ -529,6 +535,9 @@ def prepare(store: dict, rows: list, *, now: datetime, mode: str, attempt_id: st
                 elif not ready:
                     _set(rec, ch, PENDING, now, error_class="not_configured")
                     done.add("not_configured")
+                elif only_keys is not None and rec["idempotency_key"] not in only_keys:
+                    _set(rec, ch, READY, now, error_class="acceptance_not_selected")   # 受入で選んでいない（送らない）
+                    done.add("held")
                 elif picked >= limit_left:
                     _set(rec, ch, READY, now, error_class="limited_send_hold")    # 次の実行に回す（送らない）
                     done.add("held")
@@ -546,7 +555,7 @@ def prepare(store: dict, rows: list, *, now: datetime, mode: str, attempt_id: st
 
 
 def send(store: dict, *, now: datetime, attempt_id: str, adapters: dict, only_ids=None,
-         limit: int | None = None) -> dict:
+         limit: int | None = None, allowed_keys=None) -> dict:
     """この実行の SENDING の記録だけを、1回ずつ送る（再試行は次の実行の prepare が決める）。
 
     only_ids: 送る記録の notification_id を限る（接続の試験は自分の記録だけ。監査 M-1）。requests は実際に送った数。
@@ -564,6 +573,10 @@ def send(store: dict, *, now: datetime, attempt_id: str, adapters: dict, only_id
             if c["status"] != SENDING or c.get("attempt_id") != attempt_id:
                 continue
             a = c["attempts"][-1] if c["attempts"] else {}
+            if allowed_keys is not None and not rec.get("is_canary") and rec["idempotency_key"] not in allowed_keys:
+                _unsend(rec, ch, c, now, "acceptance_not_selected")          # 受入で選んでいない（Phase 26）
+                out["held"] += 1
+                continue
             if limit is not None and not rec.get("is_canary") and product_requests >= limit:
                 _unsend(rec, ch, c, now, "limited_send_hold")
                 out["held"] += 1
@@ -572,8 +585,11 @@ def send(store: dict, *, now: datetime, attempt_id: str, adapters: dict, only_id
             # 本文を作る直前にもう一度確かめる（SENDING を保存してから送るまでに期限・締切が過ぎたら送らない）
             why = [] if rec.get("is_canary") else an.revalidate_fields(
                 rec | {"availability": rec["availability_kind"], "cta_url": rec["action_url"]}, now)
+            if not why and _stale_live(rec, now):
+                why = ["stale_candidate"]                    # 送る直前にも候補の古さ（24時間）を確かめる（監査 L-3）
             if why:
-                status = EXPIRED if (_expired(rec, now) or "expired" in why or "deadline_invalid" in why) else CANCELLED
+                status = EXPIRED if (_expired(rec, now) or "expired" in why or "deadline_invalid" in why
+                                     or "stale_candidate" in why) else CANCELLED
                 a.update(status=status, error_class=",".join(why)[:80])
                 _set(rec, ch, status, now, error_class=",".join(why)[:80])
                 out["expired" if status == EXPIRED else "cancelled"] += 1
@@ -638,7 +654,10 @@ def prune(store: dict, now: datetime) -> int:
     """終わってから RETENTION_DAYS を過ぎた記録を消す（今の候補のキーの記録は消さない）。消した件数。"""
     current = {p.get("current_key") for p in store["products"].values() if p.get("current_key")}
     cut = now - timedelta(days=RETENTION_DAYS)
+    # 本番の商品の送信済み・届いたか不明の記録は消さない（受入を使った証拠。消えると受入の関門が外れる。Phase 26）
     drop = [nid for nid, r in store["records"].items() if r["status"] in TERMINAL and not r.get("is_canary")
+            and not (r.get("mode") == MODE_LIVE and (r["status"] in (DELIVERED, UNKNOWN_DELIVERY)
+                                                     or any(_resolved_cancel(c) for c in r["channels"].values())))
             and r["idempotency_key"] not in current and (act._dt(r.get("updated_at")) or now) < cut]
     for nid in drop:
         del store["records"][nid]
@@ -721,6 +740,8 @@ def _write_report(out_dir: Path, report: dict, now: datetime) -> None:
 
 
 LIVE_CHANNELS = ("telegram",)          # 本番の方式の商品の通知の配信先（Phase 23: Telegram だけ。Discord は無効）
+# 受入の関門（Phase 26）を外す明示の値（関門の外の流れだけを確かめるテスト・検査が使う。CLI は使わない）。既定（None）は閉じる
+NO_ACCEPTANCE_GATE = "NO_ACCEPTANCE_GATE"
 
 
 def run_observe(out_dir: Path, diagnostics: dict, *, now: datetime, dry_run: bool) -> dict:
@@ -790,8 +811,14 @@ def _load_report(out_dir: Path) -> dict:
 
 
 def run_prepare(out_dir: Path, diagnostics: dict, *, now: datetime, dry_run: bool, attempt_id: str,
-                adapters: dict | None = None, live_channels=None, send_limit: int | None = None) -> dict:
-    """配信の直前の確認（dry-run は DRY_RUN_PLANNED・本番は SENDING）。保存してから次の手順（send）に進む。"""
+                adapters: dict | None = None, live_channels=None, send_limit: int | None = None,
+                acceptance_env=None) -> dict:
+    """配信の直前の確認（dry-run は DRY_RUN_PLANNED・本番は SENDING）。保存してから次の手順（send）に進む。
+
+    acceptance_env: 本番の方式のとき、受入の関門（readiness.acceptance_gate。Phase 26）に使う環境。関門を通った候補の
+    キーだけを SENDING にする（通らなければ何も送らない）。None（既定）は空の環境 = 関門は閉じる（監査 L-1）。
+    関門を外すのは NO_ACCEPTANCE_GATE を明示したときだけ。
+    """
     out_dir = Path(out_dir)
     path = out_dir / STORE_NAME
     mode = MODE_DRY if dry_run else MODE_LIVE
@@ -804,14 +831,22 @@ def run_prepare(out_dir: Path, diagnostics: dict, *, now: datetime, dry_run: boo
         store, baseline = load(path)
         if baseline:
             return {"step": "prepare", "skipped": "no_store"}
+        acc = None
+        only_keys = None
+        if not dry_run and acceptance_env != NO_ACCEPTANCE_GATE:
+            from src.notifiers import readiness as _rd
+            acc = _rd.acceptance_gate(store, _rows(diagnostics), env=acceptance_env or {}, now=now,
+                                      attempt_id=attempt_id, stage="prepare")
+            only_keys = {acc["key"]} if acc["allowed"] else set()
         st = prepare(store, _rows(diagnostics), now=now, mode=mode, attempt_id=attempt_id, adapters=adapters,
-                     live_channels=live_channels, send_limit=send_limit)
+                     live_channels=live_channels, send_limit=send_limit, only_keys=only_keys)
         save(path, store)
     rep.update({"step": "prepare", "prepared_at": _iso(now), "attempt_id": attempt_id, "dry_run": dry_run,
                 "dispatch_planned": st["planned"], "dispatch_blocked": st["expired"] + st["cancelled"],
                 "dispatch_expired": st["expired"], "dispatch_cancelled": st["cancelled"],
                 "dispatch_unknown": st["unknown"], "dispatch_not_configured": st["not_configured"],
                 "dispatch_sending": st["sending"], "dispatch_held": st["held"], "send_limit": send_limit,
+                "acceptance": {k: v for k, v in (acc or {}).items() if k != "key"} or None,
                 "counts": counts(store), "unknown": list_unknown(store),
                 "candidates": _summaries(store, [c["notification_id"] for c in rep.get("candidates") or []
                                                  if isinstance(c, dict) and c.get("notification_id")])})
@@ -832,7 +867,7 @@ def _release(path: Path, now: datetime, attempt_id: str, why: str) -> int:
 
 
 def run_send(out_dir: Path, *, now: datetime, dry_run: bool, attempt_id: str, persisted_sha: str,
-             adapters: dict, real_send_allowed: bool = False, limit: int | None = None) -> dict:
+             adapters: dict, real_send_allowed: bool = False, limit: int | None = None, acceptance_env=None) -> dict:
     """SENDING を保存した内容（persisted_sha）と今のファイルが同じときだけ送る（保存より前に送らない）。
 
     real_send_allowed: 本番の送信の最終の関門（adapters.real_send_gate）を通ったか。既定は閉じている（送らない）。
@@ -855,13 +890,22 @@ def run_send(out_dir: Path, *, now: datetime, dry_run: bool, attempt_id: str, pe
             store, baseline = load(path)
             if baseline:
                 return {"step": "send", "skipped": "no_store", "external_calls": 0}
-            st = send(store, now=now, attempt_id=attempt_id, adapters=adapters, limit=limit)
+            acc, allowed_keys = None, None
+            if acceptance_env != NO_ACCEPTANCE_GATE:
+                # 受入の関門（Phase 26）: この実行の SENDING が受入で選んだ候補だけで、受入をまだ使っていないときだけ送る
+                # （None = 空の環境 = 閉じる。監査 L-1）
+                from src.notifiers import readiness as _rd
+                acc = _rd.acceptance_gate(store, [], env=acceptance_env or {}, now=now, attempt_id=attempt_id,
+                                          stage="send")
+                allowed_keys = {acc["key"]} if acc["allowed"] else set()
+            st = send(store, now=now, attempt_id=attempt_id, adapters=adapters, limit=limit, allowed_keys=allowed_keys)
             save(path, store)
     if skipped:
         return {"step": "send", "skipped": "not_persisted", "external_calls": 0,
                 "released": _release(path, now, attempt_id, "not_persisted")}
     rep = _load_report(out_dir)
     rep.update({"step": "send", "sent_at": _iso(now), "dispatch_sent": st["delivered"], "requests": st["requests"],
+                "acceptance_send": {k: v for k, v in (acc or {}).items() if k != "key"} or None,
                 "dispatch_held": st["held"], "send_limit": limit,
                 "dispatch_failed": st["retryable"] + st["final"], "dispatch_unknown": st["unknown"],
                 "counts": counts(store), "unknown": list_unknown(store)})

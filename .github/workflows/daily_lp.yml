@@ -414,6 +414,7 @@ jobs:
           NOTIFICATION_PROVIDERS: ${{ vars.NOTIFICATION_PROVIDERS || '' }}
           PRODUCT_REAL_SEND_ENABLED: ${{ github.event_name == 'workflow_dispatch' && vars.PRODUCT_REAL_SEND_ENABLED || 'false' }}
           PRODUCT_NOTIFICATION_LIMITED_MODE: ${{ vars.PRODUCT_NOTIFICATION_LIMITED_MODE || 'true' }}
+          PHASE24_ACCEPTANCE_CANDIDATE_ID: ${{ github.event_name == 'workflow_dispatch' && vars.PHASE24_ACCEPTANCE_CANDIDATE_ID || '' }}
           # 台帳を合わせられなかったら、通知の候補を作らない（古い台帳から作り直さない）
           NOTIFICATION_OUTBOX_SYNCED: ${{ steps.sync_outbox.outcome == 'success' }}
 
@@ -439,6 +440,7 @@ jobs:
           NOTIFICATION_PROVIDERS: ${{ vars.NOTIFICATION_PROVIDERS || '' }}
           PRODUCT_REAL_SEND_ENABLED: ${{ github.event_name == 'workflow_dispatch' && vars.PRODUCT_REAL_SEND_ENABLED || 'false' }}
           PRODUCT_NOTIFICATION_LIMITED_MODE: ${{ vars.PRODUCT_NOTIFICATION_LIMITED_MODE || 'true' }}
+          PHASE24_ACCEPTANCE_CANDIDATE_ID: ${{ github.event_name == 'workflow_dispatch' && vars.PHASE24_ACCEPTANCE_CANDIDATE_ID || '' }}
 
       - name: Persist notification outbox (prepared)
         id: persist_outbox_prepared
@@ -453,7 +455,9 @@ jobs:
         # Telegram の Secrets を渡すのはこの手順だけ（Phase 22）。商品の通知（Phase 23・限定運用）を送るのは、
         # リポジトリの変数（NOTIFICATION_REAL_SEND=true・NOTIFICATION_DRY_RUN=false・NOTIFICATION_PROVIDERS=telegram・
         # PRODUCT_REAL_SEND_ENABLED=true・限定モード）がそろった手動の実行（workflow_dispatch）だけで、1回の実行で最大1件
-        # （上限はコードで固定）。PRODUCT_REAL_SEND_ENABLED は定時の実行では読まない。接続の試験（canary）は
+        # （上限はコードで固定）。さらに受入の関門（Phase 26）: 受入状態が READY で、PHASE24_ACCEPTANCE_CANDIDATE_ID が今の候補に
+        # 完全に一致し、受入をまだ使っていないときだけ（変数を戻し忘れても2件目を送らない）。
+        # PRODUCT_REAL_SEND_ENABLED・候補の指定は定時の実行では読まない。接続の試験（canary）は
         # TELEGRAM_CANARY=true の手動の実行だけ。既定は送らない
         env:
           PYTHONPATH: .
@@ -462,6 +466,7 @@ jobs:
           NOTIFICATION_PROVIDERS: ${{ vars.NOTIFICATION_PROVIDERS || '' }}
           PRODUCT_REAL_SEND_ENABLED: ${{ github.event_name == 'workflow_dispatch' && vars.PRODUCT_REAL_SEND_ENABLED || 'false' }}
           PRODUCT_NOTIFICATION_LIMITED_MODE: ${{ vars.PRODUCT_NOTIFICATION_LIMITED_MODE || 'true' }}
+          PHASE24_ACCEPTANCE_CANDIDATE_ID: ${{ github.event_name == 'workflow_dispatch' && vars.PHASE24_ACCEPTANCE_CANDIDATE_ID || '' }}
           TELEGRAM_CANARY: ${{ github.event_name == 'workflow_dispatch' && vars.TELEGRAM_CANARY || 'false' }}
           TELEGRAM_CANARY_ID: ${{ vars.TELEGRAM_CANARY_ID || 'telegram_canary_v1' }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}

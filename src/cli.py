@@ -2394,9 +2394,10 @@ def dispatch_notifications(step, persisted_sha, attempt_id):
         # 送信の手順で設定を含めて確かめ直す。本番の方式の配信先は Telegram だけ・この実行で SENDING にするのは上限まで
         gate = _ad.product_live_intent()
         dry = _an.is_dry_run() or not gate["allowed"]
+        # 本番の方式では受入の関門（Phase 26）を必ず通す: 受入状態が READY・選んだ候補に完全に一致・受入をまだ使っていない
         rep = _ob.run_prepare(out, diag, now=now, dry_run=dry, attempt_id=aid, adapters=adapters,
                               live_channels=None if dry else set(_ob.LIVE_CHANNELS),
-                              send_limit=None if dry else gate["send_limit"])
+                              send_limit=None if dry else gate["send_limit"], acceptance_env=_os.environ)
     else:
         # 本番の送信は最終の関門（adapters.real_send_gate。商品の通知）を全部通ったときだけ。閉じていれば送らない
         # （この実行の SENDING は送信の要求の前なので READY に戻す）
@@ -2407,13 +2408,13 @@ def dispatch_notifications(step, persisted_sha, attempt_id):
             adapters = {"telegram": _ad.TelegramAdapter(make_telegram_transport(_os.environ["TELEGRAM_BOT_TOKEN"],
                                                                                  _os.environ["TELEGRAM_CHAT_ID"]))}
         rep = _ob.run_send(out, now=now, dry_run=dry, attempt_id=aid, persisted_sha=persisted_sha, adapters=adapters,
-                           real_send_allowed=gate["allowed"], limit=gate["send_limit"])
+                           real_send_allowed=gate["allowed"], limit=gate["send_limit"], acceptance_env=_os.environ)
         rep["canary"] = _telegram_canary(out, now=now, attempt_id=aid, product_gate=gate,
                                          product_requests=int(rep.get("requests") or 0))
     rep["real_send_gate"] = {k: bool(v) for k, v in gate["checks"].items()}
     keys = ("step", "skipped", "dry_run", "dispatch_planned", "dispatch_sending", "dispatch_held", "dispatch_sent",
-            "dispatch_failed", "dispatch_blocked", "dispatch_unknown", "requests", "released", "send_limit", "counts",
-            "real_send_gate", "canary")
+            "dispatch_failed", "dispatch_blocked", "dispatch_unknown", "requests", "released", "send_limit", "acceptance",
+            "acceptance_send", "counts", "real_send_gate", "canary")
     click.echo(_json.dumps({k: rep[k] for k in keys if k in rep}, ensure_ascii=False))
 
 

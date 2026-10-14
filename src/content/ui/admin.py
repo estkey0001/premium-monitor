@@ -535,14 +535,15 @@ def build_readiness(d: dict | None) -> dict:
         return {}                                              # 通知を作らない生成（欄を出さない。レビュー L-6）
     r = rd.normalized(d)                                       # 知らない状態・壊れた READY は判定できない（監査 L-2）
     status = r.get("status") if r.get("status") in rd.STATUSES else rd.REVIEW_REQUIRED
-    keys = ("priority", "product", "net_profit", "roi", "type", "state_label", "deadline", "checked_at", "detected_at",
-            "age_hours")
+    keys = ("priority", "candidate_id", "product", "net_profit", "roi", "type", "state_label", "deadline", "checked_at",
+            "detected_at", "age_hours")
     return {"status": status, "label": rd.LABELS[status], "detection": str(r.get("detection") or rd.DETECTION_FAILED),
             "at": str(r.get("generated_at") or ""), "actionable": r.get("actionable"),
-            "count": int(r.get("candidate_count") or 0) if status == rd.READY else 0,
+            "count": int(r.get("candidate_count") or 0) if status in (rd.READY, rd.IN_PROGRESS) else 0,
+            "acceptance": str((r.get("acceptance") or {}).get("state") or "") if isinstance(r.get("acceptance"), dict) else "",
             "send_limit": int(r.get("send_limit") or 1),
             "candidates": [{k: c.get(k) for k in keys} for c in (r.get("candidates") or []) if isinstance(c, dict)][:10]
-            if status == rd.READY else [],
+            if status in (rd.READY, rd.IN_PROGRESS) else [],
             "history": [{k: str(h.get(k) or "") for k in ("product", "type", "lifecycle", "detected_at", "changed_at",
                                                          "reason")}
                         for h in (r.get("history") or []) if isinstance(h, dict)][:20]}
@@ -1047,28 +1048,41 @@ _READINESS_DETECTION = {"NO_ACTIONABLE_CHANGE": "変化なし", "NEW_ACTIONABLE_
                         "DETECTION_FAILED": "判定できなかった", "ACCEPTANCE_COMPLETED": "受入で送った"}
 
 
+_ACCEPTANCE_STATE = {"NONE": "未使用", "IN_PROGRESS": "受入中（出し直し待ち）", "ACCEPTED": "受入済み（追加の送信は禁止）",
+                     "UNKNOWN": "届いたか不明（要解決）", "FAILED": "送れずに終わった", "EXPIRED": "期限切れで終わった",
+                     "CANCELLED": "取り消しで終わった"}
+
+
 def _readiness(r: dict) -> str:
     """Phase 24 の受入の状態（Phase 25）。この画面は見るだけ（送信のボタンは置かない）。"""
     if not r:
         return ""
-    tone = {"PHASE24_REAL_CANDIDATE_READY": WARN, "PHASE24_WAITING": OK, "PHASE24_ACCEPTANCE_DONE": INFO}.get(
-        r["status"], FAIL)
-    cands = _table(["順", "商品", "想定純利益", "ROI", "種類", "状態", "締切", "確認", "検知"],
-                   [[str(c.get("priority") or ""), esc(str(c.get("product") or "")),
+    tone = {"PHASE24_REAL_CANDIDATE_READY": WARN, "PHASE24_WAITING": OK, "PHASE24_ACCEPTANCE_DONE": INFO,
+            "PHASE24_ACCEPTANCE_IN_PROGRESS": WARN}.get(r["status"], FAIL)
+    cands = _table(["順", "候補の ID", "商品", "想定純利益", "ROI", "種類", "状態", "締切", "確認", "検知"],
+                   [[str(c.get("priority") or ""), f'<code>{esc(str(c.get("candidate_id") or ""))}</code>',
+                     esc(str(c.get("product") or "")),
                      (f'+¥{int(c["net_profit"]):,}' if isinstance(c.get("net_profit"), (int, float)) else "—"),
                      (f'{c["roi"] * 100:.1f}%' if isinstance(c.get("roi"), (int, float)) else "—"),
                      esc(str(c.get("type") or "")), esc(str(c.get("state_label") or "")),
                      _when(c.get("deadline")) if c.get("deadline") else "—", _when(c.get("checked_at")),
                      _when(c.get("detected_at")) + (f'（{c["age_hours"]}時間前）' if c.get("age_hours") is not None else "")]
-                    for c in r["candidates"]], caption="受入候補（既存の順位。受入で送るのは先頭の1件だけ）")
+                    for c in r["candidates"]], caption="受入候補（既存の順位。受入で送るのは選んだ1件だけ）")
+    top = (r["candidates"] or [{}])[0].get("candidate_id") or ""
     steps = ('<p class="nu-osub">この画面は今回の生成の時点（送信の手順の前）。受入の実行の結果はその実行の Summary と '
              'phase24_readiness.json で確かめる。直前の実行の Summary が受入済み（PHASE24_ACCEPTANCE_DONE）なら、手動の実行は'
              'しない（受入は1件だけ）</p>'
              '<ol class="nu-ad-list"><li>reviewer の確認（Critical / High / Medium 0）</li><li>auditor の確認（同じ）</li>'
-             '<li>リポジトリの変数を受入の値に設定（ops/Secrets設定.md）</li><li>Actions → Daily LP Update → Run workflow'
+             f'<li>リポジトリの変数を受入の値に設定（ops/Secrets設定.md）。送る候補を1件だけ選ぶ: '
+             f'<code>PHASE24_ACCEPTANCE_CANDIDATE_ID={esc(top)}</code>（既存の順位の先頭。表の候補の ID だけが通る）</li>'
+             '<li>Actions → Daily LP Update → Run workflow'
              '（手動の実行）</li><li>商品の通知を1件だけ送る（Telegram で受信を確かめる。2通目は送らない）</li>'
              '<li>変数を安全な値に戻す（PRODUCT_REAL_SEND_ENABLED=false・NOTIFICATION_REAL_SEND=false・'
-             'NOTIFICATION_DRY_RUN=true）</li></ol>') if r["status"] == "PHASE24_REAL_CANDIDATE_READY" else ""
+             'NOTIFICATION_DRY_RUN=true・PHASE24_ACCEPTANCE_CANDIDATE_ID を削除）。戻し忘れても、受入済みの後は送らない'
+             '（受入の関門）</li></ol>') if r["status"] == "PHASE24_REAL_CANDIDATE_READY" else (
+        f'<p class="nu-osub">受入の送信が出し直し待ち（429・503）。続けるときは同じ候補 <code>{esc(top)}</code> のまま手動の実行を行う'
+        '（別の候補に変えても送らない）。出し直しの時刻より前は送らない</p>'
+        if r["status"] == "PHASE24_ACCEPTANCE_IN_PROGRESS" and top else "")
     hist = _table(["商品", "種類", "状態", "検知", "変化"],
                   [[esc(h["product"]), esc(h["type"]), esc(_READINESS_LIFECYCLE.get(h["lifecycle"], h["lifecycle"])),
                     _when(h["detected_at"]) if h["detected_at"] else "—", _when(h["changed_at"]) if h["changed_at"] else "—"]
@@ -1078,7 +1092,8 @@ def _readiness(r: dict) -> str:
                 f'<p>{_badge(tone, r["label"])}</p>'
                 f'<dl class="nu-ad-dl"><dt>今回の検知</dt><dd>{esc(_READINESS_DETECTION.get(r["detection"], r["detection"]))}</dd>'
                 f'<dt>今すぐ行動できる商品</dt><dd>{esc(str(act_n)) + "件" if act_n is not None else "不明"}</dd>'
-                f'<dt>受入候補</dt><dd>{r["count"]}件</dd><dt>受入で送る上限</dt><dd>{r["send_limit"]}件</dd>'
+                f'<dt>受入候補</dt><dd>{r["count"]}件</dd><dt>受入で送る上限</dt><dd>{r["send_limit"]}件（1回の受入で1件）</dd>'
+                f'<dt>受入の状態</dt><dd>{esc(_ACCEPTANCE_STATE.get(r.get("acceptance") or "NONE", r.get("acceptance") or ""))}</dd>'
                 f'<dt>外部への送信</dt><dd>0件（検知と記録だけ）</dd></dl>'
                 + (cands or "") + steps + hist + _generated("今回", r["at"]),
                 sub="実データで「行動できない → できる」になった確定の利益商品だけ。検知から24時間を過ぎた・行動できなくなった候補は"

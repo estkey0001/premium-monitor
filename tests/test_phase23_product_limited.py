@@ -64,12 +64,12 @@ class Run:
         ob.run_observe(self.tmp, d, now=now, dry_run=dry)
         prep = ob.run_prepare(self.tmp, d, now=now, dry_run=dry, attempt_id=aid,
                               live_channels=None if dry else set(ob.LIVE_CHANNELS),
-                              send_limit=None if dry else ad.PRODUCT_SEND_LIMIT_PER_RUN)
+                              send_limit=None if dry else ad.PRODUCT_SEND_LIMIT_PER_RUN, acceptance_env=ob.NO_ACCEPTANCE_GATE)
         op = Opener(result)
         a = ad.TelegramAdapter(tt.make_telegram_transport(TOKEN, CHAT, opener=op))
         sent = ob.run_send(self.tmp, now=now, dry_run=dry, attempt_id=aid,
                            persisted_sha=ob.file_sha(self.tmp / ob.STORE_NAME), adapters={"telegram": a},
-                           real_send_allowed=allowed, limit=ad.PRODUCT_SEND_LIMIT_PER_RUN)
+                           real_send_allowed=allowed, limit=ad.PRODUCT_SEND_LIMIT_PER_RUN, acceptance_env=ob.NO_ACCEPTANCE_GATE)
         self.requests.append(len(op.requests))
         return SimpleNamespace(prep=prep, sent=sent, op=op, store=self.store())
 
@@ -209,12 +209,12 @@ def test_rerun_of_same_attempt_does_not_resend(run, tmp_path):
     run(ps5("OUT_OF_STOCK"))
     d = dict(_diag(ps5()), generated_at="g1")
     ob.run_observe(tmp_path, d, now=NOW, dry_run=False)
-    ob.run_prepare(tmp_path, d, now=NOW, dry_run=False, attempt_id="gh-9-1", live_channels={"telegram"}, send_limit=1)
+    ob.run_prepare(tmp_path, d, now=NOW, dry_run=False, attempt_id="gh-9-1", live_channels={"telegram"}, send_limit=1, acceptance_env=ob.NO_ACCEPTANCE_GATE)
     # 送った後・保存の前に止まった → 再実行（attempt 2）は届いたか不明にして送らない
     d2 = dict(_diag(ps5()), generated_at="g2")
     ob.run_observe(tmp_path, d2, now=NOW, dry_run=False)
     p = ob.run_prepare(tmp_path, d2, now=NOW, dry_run=False, attempt_id="gh-9-2", live_channels={"telegram"},
-                       send_limit=1)
+                       send_limit=1, acceptance_env=ob.NO_ACCEPTANCE_GATE)
     assert p["dispatch_unknown"] == 1 and p["dispatch_sending"] == 0
     assert run.recs()[0]["status"] == ob.UNKNOWN_DELIVERY
 
@@ -251,11 +251,11 @@ def test_stale_stock_no_send(run):
     run2(ps5("OUT_OF_STOCK"))
     d = dict(_diag(ps5()), generated_at="x")
     ob.run_observe(run2.tmp, d, now=NOW, dry_run=False)
-    ob.run_prepare(run2.tmp, d, now=NOW, dry_run=False, attempt_id="z", live_channels={"telegram"}, send_limit=1)
+    ob.run_prepare(run2.tmp, d, now=NOW, dry_run=False, attempt_id="z", live_channels={"telegram"}, send_limit=1, acceptance_env=ob.NO_ACCEPTANCE_GATE)
     op = Opener(OK)
     s = ob.run_send(run2.tmp, now=NOW + timedelta(hours=4), dry_run=False, attempt_id="z",
                     persisted_sha=ob.file_sha(run2.tmp / ob.STORE_NAME), real_send_allowed=True, limit=1,
-                    adapters={"telegram": ad.TelegramAdapter(tt.make_telegram_transport(TOKEN, CHAT, opener=op))})
+                    adapters={"telegram": ad.TelegramAdapter(tt.make_telegram_transport(TOKEN, CHAT, opener=op))}, acceptance_env=ob.NO_ACCEPTANCE_GATE)
     assert op.requests == [] and run2.recs()[0]["status"] == ob.EXPIRED and s["dispatch_sent"] == 0
 
 
@@ -476,11 +476,11 @@ def test_rerun_same_run_does_not_send_second_candidate(tmp_path):
         aid = f"gh-777-{attempt}"
         ob.run_observe(tmp_path, d, now=NOW, dry_run=False)
         p = ob.run_prepare(tmp_path, d, now=NOW, dry_run=False, attempt_id=aid, live_channels={"telegram"},
-                           send_limit=1)
+                           send_limit=1, acceptance_env=ob.NO_ACCEPTANCE_GATE)
         op = Opener(OK)
         ob.run_send(tmp_path, now=NOW, dry_run=False, attempt_id=aid, persisted_sha=ob.file_sha(tmp_path / ob.STORE_NAME),
                     real_send_allowed=True, limit=1,
-                    adapters={"telegram": ad.TelegramAdapter(tt.make_telegram_transport(TOKEN, CHAT, opener=op))})
+                    adapters={"telegram": ad.TelegramAdapter(tt.make_telegram_transport(TOKEN, CHAT, opener=op))}, acceptance_env=ob.NO_ACCEPTANCE_GATE)
         sent.append((p["dispatch_sending"], len(op.requests)))
     # 再実行の prepare は SENDING を作らない（prepare と send の両方で run ごとに数える）
     assert sent == [(1, 1), (0, 0)] and run.recs("prod_gr4_hdf")[0]["status"] == ob.READY

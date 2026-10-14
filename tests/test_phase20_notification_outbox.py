@@ -136,22 +136,33 @@ def test_dry_run_history_does_not_block_first_real_send():
 
 
 def test_pruned_record_is_not_resent():
-    """記録が消えても（prune）、同じ変化（同じキー）は送り直さない（監査 H-3）。抽選なども同じ。"""
+    """記録が消えても（prune）、同じ変化（同じキー）は送り直さない（監査 H-3）。抽選なども同じ。
+
+    Phase 26: 本番の送信済みの記録は受入の証拠として prune しない。記録が失われた場面は、記録を消して再現する。"""
     sent = []
     snd = lambda c, k: sent.append(k)                                   # noqa: E731
     _r, st = run(_diag(ps5("OUT_OF_STOCK")), {}, dry_run=False, sender=snd)
     _r, st = run(_diag(ps5()), st, dry_run=False, sender=snd)
     _r, st = run(_diag(ps5(checked=NOW - timedelta(hours=4))), st, dry_run=False, sender=snd)   # 更新待ち
-    assert ob.prune(st, NOW + timedelta(days=ob.RETENTION_DAYS + 2)) == 1
+    assert ob.prune(st, NOW + timedelta(days=ob.RETENTION_DAYS + 2)) == 0      # 本番の送信済みは消さない（Phase 26）
+    st["records"].clear()                                               # 記録が失われた
     _r, st = run(_diag(ps5()), st, dry_run=False, sender=snd)
     assert len(sent) == 1
     sent.clear()
     _r, st = run(_diag(gr4(CLOSED)), {}, dry_run=False, sender=snd)
     _r, st = run(_diag(gr4(OPEN)), st, dry_run=False, sender=snd)
     _r, st = run(_diag(gr4(dict(OPEN, status="closed"))), st, dry_run=False, sender=snd)
-    ob.prune(st, NOW + timedelta(days=ob.RETENTION_DAYS + 2))
+    st["records"].clear()
     _r, st = run(_diag(gr4(OPEN)), st, dry_run=False, sender=snd)
     assert len(sent) == 1
+
+
+def test_prune_still_drops_dry_run_records():
+    """prune は dry-run の終わった記録を今までどおり消す（本番の送信済み・不明だけを残す。Phase 26）。"""
+    _r, st = run(_diag(ps5("OUT_OF_STOCK")), {})
+    _r, st = run(_diag(ps5()), st)
+    _r, st = run(_diag(ps5(checked=NOW - timedelta(hours=4))), st)
+    assert ob.prune(st, NOW + timedelta(days=ob.RETENTION_DAYS + 2)) == 1
 
 
 def test_mode_change_cancels_pending_of_other_mode():
@@ -313,9 +324,9 @@ def test_send_requires_persisted_sha(tmp_path):
     ob.save(path, st)
     (tmp_path / "latest.json").write_text(json.dumps({"step": "observe", "diagnostics_generated_at": d["generated_at"]}),
                                           encoding="utf-8")
-    ob.run_prepare(tmp_path, d, now=NOW, dry_run=False, attempt_id="r1", adapters=fx)
+    ob.run_prepare(tmp_path, d, now=NOW, dry_run=False, attempt_id="r1", adapters=fx, acceptance_env=ob.NO_ACCEPTANCE_GATE)
     r = ob.run_send(tmp_path, now=NOW, dry_run=False, attempt_id="r1", persisted_sha="0" * 64, adapters=fx,
-                    real_send_allowed=True)
+                    real_send_allowed=True, acceptance_env=ob.NO_ACCEPTANCE_GATE)
     assert r["skipped"] == "not_persisted" and calls == []
     # 送らなかった SENDING は READY に戻る（送信の要求の前なので、届いたか不明にしない。Phase 23）
     st, _b = ob.load(path)
@@ -323,16 +334,16 @@ def test_send_requires_persisted_sha(tmp_path):
     assert r["released"] == 1 and c["status"] == ob.READY and c["attempt_count"] == 0
     (tmp_path / "latest.json").write_text(json.dumps({"step": "observe", "diagnostics_generated_at": d["generated_at"]}),
                                           encoding="utf-8")
-    ob.run_prepare(tmp_path, d, now=NOW, dry_run=False, attempt_id="r1b", adapters=fx)
-    r = ob.run_send(tmp_path, now=NOW, dry_run=False, attempt_id="r1b", persisted_sha=ob.file_sha(path), adapters=fx)
+    ob.run_prepare(tmp_path, d, now=NOW, dry_run=False, attempt_id="r1b", adapters=fx, acceptance_env=ob.NO_ACCEPTANCE_GATE)
+    r = ob.run_send(tmp_path, now=NOW, dry_run=False, attempt_id="r1b", persisted_sha=ob.file_sha(path), adapters=fx, acceptance_env=ob.NO_ACCEPTANCE_GATE)
     assert r["skipped"] == "real_send_disabled" and calls == [] and r["released"] == 1   # 最終の関門が閉じていれば送らない
     (tmp_path / "latest.json").write_text(json.dumps({"step": "observe", "diagnostics_generated_at": d["generated_at"]}),
                                           encoding="utf-8")
-    ob.run_prepare(tmp_path, d, now=NOW, dry_run=False, attempt_id="r2", adapters=fx)
+    ob.run_prepare(tmp_path, d, now=NOW, dry_run=False, attempt_id="r2", adapters=fx, acceptance_env=ob.NO_ACCEPTANCE_GATE)
     r = ob.run_send(tmp_path, now=NOW, dry_run=False, attempt_id="r2", persisted_sha=ob.file_sha(path), adapters=fx,
-                    real_send_allowed=True)
+                    real_send_allowed=True, acceptance_env=ob.NO_ACCEPTANCE_GATE)
     assert calls and r["dispatch_sent"] == 1                            # 否定の対照: 保存した内容と同じなら送る
-    r = ob.run_send(tmp_path, now=NOW, dry_run=True, attempt_id="r2", persisted_sha=ob.file_sha(path), adapters=fx)
+    r = ob.run_send(tmp_path, now=NOW, dry_run=True, attempt_id="r2", persisted_sha=ob.file_sha(path), adapters=fx, acceptance_env=ob.NO_ACCEPTANCE_GATE)
     assert r["skipped"] == "dry_run"
 
 
@@ -660,10 +671,10 @@ def test_prepare_skips_when_diagnostics_not_current(tmp_path):
     ob.run_observe(tmp_path, dict(_diag(ps5("OUT_OF_STOCK")), generated_at="x"), now=NOW, dry_run=True)
     ob.run_observe(tmp_path, new, now=NOW, dry_run=True)
     before = (tmp_path / ob.STORE_NAME).read_text(encoding="utf-8")
-    r = ob.run_prepare(tmp_path, old, now=NOW, dry_run=True, attempt_id="a")
+    r = ob.run_prepare(tmp_path, old, now=NOW, dry_run=True, attempt_id="a", acceptance_env=ob.NO_ACCEPTANCE_GATE)
     assert r["skipped"] == "diagnostics_not_current"
     assert (tmp_path / ob.STORE_NAME).read_text(encoding="utf-8") == before
-    r = ob.run_prepare(tmp_path, new, now=NOW, dry_run=True, attempt_id="a")      # 否定の対照: 同じ診断なら確かめる
+    r = ob.run_prepare(tmp_path, new, now=NOW, dry_run=True, attempt_id="a", acceptance_env=ob.NO_ACCEPTANCE_GATE)      # 否定の対照: 同じ診断なら確かめる
     assert r["dispatch_planned"] == 1
 
 

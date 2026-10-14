@@ -47,7 +47,7 @@ class Sched:
         self.n += 1
         d = dict(_diag(*views), generated_at=f"{now.isoformat()}#{self.n}")
         rep = ob.run_observe(self.tmp, d, now=now, dry_run=dry)
-        ob.run_prepare(self.tmp, d, now=now, dry_run=True, attempt_id=f"gh-{self.n}-1")      # 定時の実行の dry-run
+        ob.run_prepare(self.tmp, d, now=now, dry_run=True, attempt_id=f"gh-{self.n}-1", acceptance_env=ob.NO_ACCEPTANCE_GATE)      # 定時の実行の dry-run
         return rep["phase24_readiness"]
 
     def store(self):
@@ -272,11 +272,11 @@ class Opener:
 def _accept(tmp, *views, now=NOW, aid="gh-500-1"):
     d = dict(_diag(*views), generated_at=f"{now.isoformat()}#acc{aid}")
     obs = ob.run_observe(tmp, d, now=now, dry_run=False)
-    ob.run_prepare(tmp, d, now=now, dry_run=False, attempt_id=aid, live_channels={"telegram"}, send_limit=1)
+    ob.run_prepare(tmp, d, now=now, dry_run=False, attempt_id=aid, live_channels={"telegram"}, send_limit=1, acceptance_env=ob.NO_ACCEPTANCE_GATE)
     op = Opener(OK)
     ob.run_send(tmp, now=now, dry_run=False, attempt_id=aid, persisted_sha=ob.file_sha(Path(tmp) / ob.STORE_NAME),
                 real_send_allowed=True, limit=1,
-                adapters={"telegram": ad.TelegramAdapter(tt.make_telegram_transport(TOKEN, CHAT, opener=op))})
+                adapters={"telegram": ad.TelegramAdapter(tt.make_telegram_transport(TOKEN, CHAT, opener=op))}, acceptance_env=ob.NO_ACCEPTANCE_GATE)
     return obs, op
 
 
@@ -354,7 +354,7 @@ def test_admin_readiness_waiting_and_ready(sched):
     html = admin._readiness(admin.build_readiness(sched(ps5("OUT_OF_STOCK"))))
     assert "実データの候補待ち" in html and "受入候補</dt><dd>0件" in html and "Run workflow" not in html
     html = admin._readiness(admin.build_readiness(sched(ps5())))
-    for part in ("Phase 24 の受入候補あり", "PlayStation 5 Pro", "+¥54,870", "39.6%", "購入可能", "Run workflow",
+    for part in ("Phase 24 の本番受入候補あり", "PlayStation 5 Pro", "+¥54,870", "39.6%", "購入可能", "Run workflow",
                  "PRODUCT_REAL_SEND_ENABLED=false", "外部への送信</dt><dd>0件"):
         assert part in html, part
     assert "<button" not in html and "<form" not in html                         # 送れるような偽の操作を置かない

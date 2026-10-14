@@ -85,10 +85,19 @@ Settings → Secrets and variables → Actions に以下のシークレットを
 受入の手順（候補が READY のときだけ。偽の候補は作らない）:
 1. reviewer の確認（Critical / High / Medium 0） 2. auditor の確認（同じ）
 3. 変数を受入の値に設定（`PRODUCT_REAL_SEND_ENABLED=true`・`PRODUCT_NOTIFICATION_LIMITED_MODE=true`・`NOTIFICATION_REAL_SEND=true`・
-   `NOTIFICATION_DRY_RUN=false`・`NOTIFICATION_PROVIDERS=telegram`）
+   `NOTIFICATION_DRY_RUN=false`・`NOTIFICATION_PROVIDERS=telegram`）と、送る候補を1件だけ選ぶ
+   `PHASE24_ACCEPTANCE_CANDIDATE_ID=<候補の ID>`（運営者向けの画面・Summary・`phase24_readiness.json` の16桁の ID。商品名・商品 ID では送れない）
 4. Actions → Daily LP Update → Run workflow（手動の実行。定時の実行では送らない）
 5. 商品の通知が1件だけ届くことを Telegram で確かめる（2通目は送らない）
-6. 変数を安全な値に戻す（`PRODUCT_REAL_SEND_ENABLED=false`・`NOTIFICATION_REAL_SEND=false`・`NOTIFICATION_DRY_RUN=true`）
+6. 変数を安全な値に戻す（`PRODUCT_REAL_SEND_ENABLED=false`・`NOTIFICATION_REAL_SEND=false`・`NOTIFICATION_DRY_RUN=true`・
+   `PHASE24_ACCEPTANCE_CANDIDATE_ID` を削除）
+
+受入の関門（Phase 26）: 商品の通知は、変数の関門に加えて、受入状態が READY・指定が今の候補に完全に一致・この受入をまだ使っていない
+（台帳に本番の商品の送信済み・届いたか不明が無い）ときだけ送る。受入で1件送った後は、変数を戻し忘れても・同じ run の Re-run でも・
+保留の候補を指定しても送らない（受入済み。追加の送信は別の判断）。届いたか不明なら人が解決するまで送らない。出し直し待ち（429・503）は
+同じ候補だけ（変数を戻さずに次の手動の実行をすると、出し直し待ちの同じ候補はもう一度送られる。届いたか不明を not-delivered で
+解決した後も同じ。止めたいときは変数を安全な値に戻す）。送れずに終わった（失敗・期限切れ）後は、別の候補を明示して指定したときだけ
+新しい受入になる。届いたか不明を cancel で解決したものは、届いていたかもしれないので受入済みとして扱う。
 
 - 受入の実行は、定時の実行で検知した変化を検知から24時間以内なら引き継いで送る（検知の時刻は変えない。それより古い変化は送らない）
 - 候補が複数でも送るのは既存の順位の先頭の1件だけ（残りは次の手動の実行へ。検知から24時間を過ぎたら外れる）

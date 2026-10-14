@@ -4139,6 +4139,7 @@ def check() -> list[dict]:
     results.extend(_check_phase22_telegram_safety())
     results.extend(_check_phase23_product_limited())
     results.extend(_check_phase25_readiness())
+    results.extend(_check_phase26_acceptance_guard())
 
     # ══════════════════════════════════════════════════════════════════
     # #820-#825: データの正確さ・鮮度の偽装（Phase 0）
@@ -5057,7 +5058,7 @@ def _check_phase20_notification_outbox() -> list[dict]:
         import tempfile as _tf
         with _tf.TemporaryDirectory() as tmp:
             r = ob.run_send(Path(tmp), now=now, dry_run=False, attempt_id="a1", persisted_sha="",
-                            adapters={"fixture": ok_adapter}, real_send_allowed=True)
+                            adapters={"fixture": ok_adapter}, real_send_allowed=True, acceptance_env=ob.NO_ACCEPTANCE_GATE)
             if r.get("skipped") != "not_persisted":
                 bad.append("保存したことを確かめずに送る")
         # dry-run の記録は本番の送信を止めない・dry-run は DELIVERED にしない
@@ -5179,7 +5180,9 @@ _NOTIFICATION_VARS = (
     "NOTIFICATION_REAL_SEND: ${{ vars.NOTIFICATION_REAL_SEND || 'false' }}",
     "NOTIFICATION_PROVIDERS: ${{ vars.NOTIFICATION_PROVIDERS || '' }}",
     "PRODUCT_REAL_SEND_ENABLED: ${{ github.event_name == 'workflow_dispatch' && vars.PRODUCT_REAL_SEND_ENABLED || 'false' }}",
-    "PRODUCT_NOTIFICATION_LIMITED_MODE: ${{ vars.PRODUCT_NOTIFICATION_LIMITED_MODE || 'true' }}")
+    "PRODUCT_NOTIFICATION_LIMITED_MODE: ${{ vars.PRODUCT_NOTIFICATION_LIMITED_MODE || 'true' }}",
+    "PHASE24_ACCEPTANCE_CANDIDATE_ID: ${{ github.event_name == 'workflow_dispatch' && "
+    "vars.PHASE24_ACCEPTANCE_CANDIDATE_ID || '' }}")
 
 
 def _notification_vars_ok(step: str) -> bool:
@@ -5393,6 +5396,114 @@ class _FakeTgOpener:
         return _FakeTgResp(self.result[0], self.result[1], self.result[2] if len(self.result) > 2 else {})
 
 
+def _check_phase26_acceptance_guard(root: Path | None = None) -> list[dict]:
+    """Phase 26: 受入の関門（#861）。受入状態が実送信の必須の条件・候補の指定は候補の ID に完全に一致・1回の受入で1件・
+    受入済みの後は変数を戻し忘れても送らない（別の候補・保留の候補・同じ候補・再実行のどれも）・定時の実行は送らない・
+    CLI の prepare / send が必ず関門を使う・候補の指定は手動の実行だけ・受入の証拠を prune しない。"""
+    import tempfile as _tf26
+    from datetime import datetime as _dt26
+    from datetime import timedelta as _td26
+
+    from src.tcg.models import JST as _JST26
+    bad = []
+    root = root or Path(__file__).resolve().parent.parent
+    try:
+        from src.notifiers import adapters as ad
+        from src.notifiers import outbox as ob
+        from src.notifiers import readiness as rd
+        now = _dt26(2026, 10, 14, 12, 0, tzinfo=_JST26)
+        url = "https://pur.store.sony.jp/ps5/products/ps5/CFI-7100B01_purchase/"
+
+        def row(pid, **kw):
+            r = {"product_id": pid, "product": pid.upper(), "availability": "IN_STOCK", "actionable": True,
+                 "reasons": [], "confirmed": True, "net_profit": 50000, "roi": 0.3, "cta_label": "購入する",
+                 "cta_url": url, "until_ms": int((now + _td26(hours=2)).timestamp() * 1000), "deadline": "",
+                 "checked_at": (now - _td26(minutes=20)).isoformat(), "event_key": ""}
+            r.update(kw)
+            return r
+        oos = {"availability": "OUT_OF_STOCK", "actionable": False, "reasons": ["stock_out"], "until_ms": None}
+        sent = []
+
+        class _T(ad.ProviderAdapter):
+            name = "telegram"
+
+            def __init__(self):
+                super().__init__(lambda p, k: sent.append(k) or (200, {}, {"ok": True, "result": {"message_id": 1}}))
+
+            def build_payload(self, record):
+                return {"content": "x"}
+
+            def extract_delivery_id(self, status, headers, body):
+                return "1"
+        with _tf26.TemporaryDirectory() as td:
+            tmp = Path(td)
+            ob.save(tmp / ob.STORE_NAME, ob.empty_store())
+            n = [0]
+
+            def run(rows, env=None, live=False, aid=None):
+                n[0] += 1
+                d = {"generated_at": f"{now.isoformat()}#{n[0]}", "actionability": {"products": rows}}
+                ob.run_observe(tmp, d, now=now, dry_run=not live)
+                a = aid or f"gh-{n[0]}-1"
+                ob.run_prepare(tmp, d, now=now, dry_run=not live, attempt_id=a, live_channels={"telegram"} if live else None,
+                               send_limit=1 if live else None, acceptance_env=env or {})
+                k = len(sent)
+                ob.run_send(tmp, now=now, dry_run=not live, attempt_id=a, persisted_sha=ob.file_sha(tmp / ob.STORE_NAME),
+                            adapters={"telegram": _T()}, real_send_allowed=live, limit=1, acceptance_env=env or {})
+                return len(sent) - k
+            run([row("a", **oos), row("b", **oos)])
+            run([row("a"), row("b")])                                       # 定時の実行で2件検知
+            st, _b = ob.load(tmp / ob.STORE_NAME)
+            g = rd.evaluate(st, [row("a"), row("b")], now=now)
+            ca, cb = (g["candidate_ids"] + ["", ""])[:2]
+            if g["status"] != rd.READY or not ca:
+                bad.append("2件の実データの候補が READY にならない（否定の対照）")
+            if run([row("a"), row("b")], env={}, live=True):
+                bad.append("候補の指定なしで送る（変数だけで送れる）")
+            if run([row("a"), row("b")], env={rd.CANDIDATE_VAR: "0123456789abcdef"}, live=True) or \
+                    run([row("a"), row("b")], env={rd.CANDIDATE_VAR: "a"}, live=True):
+                bad.append("今の候補でない指定・商品 ID の指定で送る")
+            if run([row("a"), row("b")], env={rd.CANDIDATE_VAR: ca}, live=True, aid="gh-900-1") != 1:
+                bad.append("選んだ候補を受入で送れない（否定の対照）")
+            for label, env, aid in (("同じ run の再実行", {rd.CANDIDATE_VAR: ca}, "gh-900-2"),
+                                    ("変数を戻し忘れた次の実行（同じ候補）", {rd.CANDIDATE_VAR: ca}, None),
+                                    ("変数を戻し忘れた次の実行（保留の候補）", {rd.CANDIDATE_VAR: cb}, None)):
+                if run([row("a"), row("b")], env=env, live=True, aid=aid):
+                    bad.append(f"受入済みの後に送る: {label}")
+            st, _b = ob.load(tmp / ob.STORE_NAME)
+            if rd.evaluate(st, [row("a"), row("b")], now=now)["status"] != rd.ACCEPTANCE_DONE:
+                bad.append("受入の後に ACCEPTANCE_DONE にならない")
+            ob.prune(st, now + _td26(days=ob.RETENTION_DAYS + 5))
+            if rd.acceptance_state(st)["state"] != rd.A_ACCEPTED:
+                bad.append("受入の証拠を prune で消す（30日後に受入の関門が外れる）")
+        if ad.product_live_intent({"NOTIFICATION_REAL_SEND": "true", "NOTIFICATION_DRY_RUN": "false",
+                                   "NOTIFICATION_PROVIDERS": "telegram", "PRODUCT_REAL_SEND_ENABLED": "true",
+                                   "GITHUB_EVENT_NAME": "schedule"})["allowed"]:
+            bad.append("定時の実行で本番の方式になる")
+        import inspect as _ins26
+        for fn in (ob.run_prepare, ob.run_send):
+            if _ins26.signature(fn).parameters["acceptance_env"].default is not None or \
+                    "acceptance_env != NO_ACCEPTANCE_GATE" not in _ins26.getsource(fn):
+                bad.append(f"{fn.__name__} の既定で受入の関門が外れる（環境を渡さない呼び出しで送れる）")
+    except Exception as exc:  # noqa: BLE001
+        bad.append(f"受入の関門を動かせない: {exc}")
+    try:
+        cli_src = (root / "src" / "cli.py").read_text(encoding="utf-8")
+        if cli_src.count("acceptance_env=_os.environ") != 2 or "NO_ACCEPTANCE_GATE" in cli_src:
+            bad.append("CLI の prepare / send が受入の関門を使わない・関門を外す値を使う")
+        wf = (root / ".github" / "workflows" / "daily_lp.yml").read_text(encoding="utf-8")
+        want = ("PHASE24_ACCEPTANCE_CANDIDATE_ID: ${{ github.event_name == 'workflow_dispatch' && "
+                "vars.PHASE24_ACCEPTANCE_CANDIDATE_ID || '' }}")
+        if wf.count(want) != 3 or wf.count("PHASE24_ACCEPTANCE_CANDIDATE_ID:") != 3:
+            bad.append("受入の候補の指定が、手動の実行だけ・3つの手順の同じ形になっていない")
+    except OSError as exc:
+        bad.append(f"ソースを読めない: {exc}")
+    return [{"level": "ok" if not bad else "error", "check": "phase24_acceptance_guard",
+             "message": "#861 受入の関門（受入状態が実送信の必須の条件・候補の ID に完全に一致・1回の受入で1件・受入済みの後は"
+                        "変数を戻し忘れても送らない・再実行/保留の候補も送らない・定時の実行は送らない・受入の証拠を残す）"
+                        + ("" if not bad else f" ← {bad[:4]}")}]
+
+
 def _check_phase25_readiness(root: Path | None = None) -> list[dict]:
     """Phase 25: Phase 24 の受入の状態（#860）。候補が無ければ WAITING・実データの「行動できない → できる」だけが READY・
     検知から24時間で外す・行動できなくなった/送った/取り消した候補は外す・検知の時刻を新しくしない・判定できなければ
@@ -5583,11 +5694,11 @@ def _check_phase23_product_limited(root: Path | None = None) -> list[dict]:
                      dry=False):
             ob.run_observe(tmp, d_, now=now, dry_run=dry)
             ob.run_prepare(tmp, d_, now=now, dry_run=dry, attempt_id=tag, live_channels=None if dry else {"telegram"},
-                           send_limit=None if dry else ad.PRODUCT_SEND_LIMIT_PER_RUN)
+                           send_limit=None if dry else ad.PRODUCT_SEND_LIMIT_PER_RUN, acceptance_env=ob.NO_ACCEPTANCE_GATE)
             op = _FakeTgOpener(result)
             a = ad.TelegramAdapter(tt.make_telegram_transport(token, chat, opener=op))
             r = ob.run_send(tmp, now=now, dry_run=dry, attempt_id=tag, persisted_sha=ob.file_sha(tmp / ob.STORE_NAME),
-                            adapters={"telegram": a}, real_send_allowed=allowed, limit=ad.PRODUCT_SEND_LIMIT_PER_RUN)
+                            adapters={"telegram": a}, real_send_allowed=allowed, limit=ad.PRODUCT_SEND_LIMIT_PER_RUN, acceptance_env=ob.NO_ACCEPTANCE_GATE)
             return r, op, ob.load(tmp / ob.STORE_NAME)[0]
         with _tf23.TemporaryDirectory() as td:
             tmp = Path(td)

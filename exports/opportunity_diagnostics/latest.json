@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-14T10:26:36+09:00",
+  "generated_at": "2026-10-15T00:38:27+09:00",
   "note": "内部用（運営者向け）。一般の画面には出さない。掲載の判定は opportunity.eligibility が正本",
   "candidate_count": 45,
   "eligible_count": 2,
@@ -472,7 +472,7 @@
         "price": 42800,
         "price_type": "RETAIL",
         "source": "src_apple_jp",
-        "verified_at": "2026-10-14T00:00:00",
+        "verified_at": "2026-10-15T00:00:00",
         "url": "https://www.apple.com/jp/shop/buy-airpods/airpods-pro-3",
         "note": ""
       },
@@ -498,7 +498,7 @@
         "price": 654500,
         "price_type": "RETAIL",
         "source": "src_canon_official",
-        "verified_at": "2026-10-14T00:00:00",
+        "verified_at": "2026-10-15T00:00:00",
         "url": "https://store.canon.jp/online/g/g6536C001/",
         "note": ""
       },
@@ -550,7 +550,7 @@
         "price": 315700,
         "price_type": "RETAIL",
         "source": "src_fujifilm_official",
-        "verified_at": "2026-10-14T00:00:00",
+        "verified_at": "2026-10-15T00:00:00",
         "url": "https://mall-jp.fujifilm.com/shop/g/g16941878/",
         "note": ""
       },
@@ -589,7 +589,7 @@
         "price": 575300,
         "price_type": "RETAIL",
         "source": "src_nikon_direct",
-        "verified_at": "2026-10-14T00:00:00",
+        "verified_at": "2026-10-15T00:00:00",
         "url": "https://nij.nikon.com/shop/g/g4960759909947/",
         "note": ""
       },
@@ -667,7 +667,7 @@
         "price": 211800,
         "price_type": "RETAIL",
         "source": "src_ricoh_imaging",
-        "verified_at": "2026-10-14T09:58:29+09:00",
+        "verified_at": "2026-10-15T00:12:29+09:00",
         "url": "https://ricohimagingstore.com/Form/Product/ProductList.aspx?shop=0&cat=002010",
         "note": ""
       },
@@ -680,7 +680,7 @@
         "price": 222000,
         "price_type": "RETAIL",
         "source": "src_ricoh_imaging",
-        "verified_at": "2026-10-14T10:02:29+09:00",
+        "verified_at": "2026-10-15T00:14:29+09:00",
         "url": "https://ricohimagingstore.com/Form/Product/ProductList.aspx?shop=0&cat=002010",
         "note": ""
       },
@@ -693,7 +693,7 @@
         "price": 299800,
         "price_type": "RETAIL",
         "source": "src_ricoh_imaging",
-        "verified_at": "2026-10-14T10:04:29+09:00",
+        "verified_at": "2026-10-15T00:16:29+09:00",
         "url": "https://ricohimagingstore.com/Form/Product/ProductList.aspx?shop=0&cat=002010",
         "note": ""
       },
@@ -752,7 +752,7 @@
       {
         "product_id": "prod_switch2",
         "product": "Nintendo Switch 2",
-        "evidence": "VERIFIED_CURRENT",
+        "evidence": "VERIFIED_DATED",
         "action": "VERIFIED",
         "official_not_sold": false,
         "price": 59980,
@@ -791,7 +791,7 @@
       {
         "product_id": "prod_ps5_pro",
         "product": "PlayStation 5 Pro",
-        "evidence": "VERIFIED_CURRENT",
+        "evidence": "VERIFIED_DATED",
         "action": "VERIFIED",
         "official_not_sold": false,
         "price": 137980,
@@ -862,7 +862,7 @@
         "price": 159800,
         "price_type": "RETAIL",
         "source": "src_apple_jp",
-        "verified_at": "2026-10-14T00:00:00",
+        "verified_at": "2026-10-15T00:00:00",
         "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17",
         "note": ""
       },
@@ -1084,7 +1084,7 @@
         "rows": 2,
         "stale": 1,
         "fresh": 1,
-        "last_observed": "2026-10-14T09:22:09+09:00"
+        "last_observed": "2026-10-14T23:34:11+09:00"
       },
       {
         "source": "ゲオモバイル",
@@ -1128,7 +1128,7 @@
         "rows": 24,
         "fresh": 17,
         "stale": 7,
-        "last_observed": "2026-10-14T09:29:42.077622+09:00"
+        "last_observed": "2026-10-14T23:41:43.583153+09:00"
       },
       {
         "source": "ブックオフ",
@@ -1152,14 +1152,14 @@
         "source": "買取一丁目",
         "rows": 4,
         "fresh": 4,
-        "last_observed": "2026-10-14T09:22:06+09:00"
+        "last_observed": "2026-10-14T23:34:09+09:00"
       },
       {
         "source": "買取商店",
         "rows": 21,
         "stale": 7,
         "fresh": 14,
-        "last_observed": "2026-10-14T09:29:41+09:00"
+        "last_observed": "2026-10-14T23:41:43+09:00"
       },
       {
         "source": "駿河屋",
@@ -1206,42 +1206,42 @@
         "product_id": "prod_gr4",
         "price": 200000,
         "source": "買取商店",
-        "observed_at": "2026-10-14T09:28:11+09:00",
+        "observed_at": "2026-10-14T23:40:13+09:00",
         "condition": "new_unopened"
       },
       {
         "product_id": "prod_gr4_hdf",
         "price": 240000,
         "source": "買取商店",
-        "observed_at": "2026-10-14T09:28:11+09:00",
+        "observed_at": "2026-10-14T23:40:13+09:00",
         "condition": "new_unopened"
       },
       {
         "product_id": "prod_gr4_mono",
         "price": 220000,
         "source": "買取商店",
-        "observed_at": "2026-10-14T09:28:11+09:00",
+        "observed_at": "2026-10-14T23:40:13+09:00",
         "condition": "new_unopened"
       },
       {
         "product_id": "prod_r5ii",
         "price": 450000,
         "source": "買取商店",
-        "observed_at": "2026-10-14T09:29:41+09:00",
+        "observed_at": "2026-10-14T23:41:43+09:00",
         "condition": "new_unopened"
       },
       {
         "product_id": "prod_x100vi",
         "price": 260000,
         "source": "買取商店",
-        "observed_at": "2026-10-14T09:28:11+09:00",
+        "observed_at": "2026-10-14T23:40:13+09:00",
         "condition": "new_unopened"
       },
       {
         "product_id": "prod_z8",
         "price": 420000,
         "source": "買取商店",
-        "observed_at": "2026-10-14T09:29:41+09:00",
+        "observed_at": "2026-10-14T23:41:43+09:00",
         "condition": "new_unopened"
       }
     ],
@@ -1268,7 +1268,7 @@
           "lottery_closed"
         ],
         "deadline": "2026-09-28T12:00:00+09:00",
-        "checked_at": "2026-10-14T10:10:00+09:00",
+        "checked_at": "2026-10-15T00:22:00+09:00",
         "confirmed": true,
         "net_profit": 16200.0,
         "roi": 0.07297297297297298,
@@ -1289,8 +1289,8 @@
         "deadline": "",
         "checked_at": "2026-10-08T02:34:48+09:00",
         "confirmed": true,
-        "net_profit": 56370.0,
-        "roi": 0.4069154695733776,
+        "net_profit": 56570.0,
+        "roi": 0.40835920017324767,
         "cta_label": "",
         "cta_url": "",
         "until_ms": null,

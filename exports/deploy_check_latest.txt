@@ -1,7 +1,7 @@
 
 ============================================================
  Deploy Check (482 items)
- 実行日時: 2026-10-14T10:26:43+09:00
+ 実行日時: 2026-10-15T00:38:33+09:00
 ============================================================
   ✅ [index_exists] docs/index.html 存在
   ✅ [forbidden_phrases] 禁止表現なし
@@ -10,7 +10,7 @@
   ✅ [line_cta_off] LINE CTA非表示（正常）
   ✅ [telegram_cta_off] Telegram CTA非表示（正常）
   ✅ [analytics_empty] GA ID未設定 → GAスニペット非出力（正常）
-  ✅ [today_date] 今日の日付 2026-10-14 あり
+  ✅ [today_date] 今日の日付 2026-10-15 あり
   ✅ [price_exists] 価格表記あり
   ✅ [disclaimer] 免責事項あり
   ✅ [data_track] data-track属性あり
@@ -45,7 +45,7 @@
   ✅ [no_mainichi_koshin_text] 「毎日更新」表記は topbar/footer 内のみ（正常）
   ✅ [deal_card_no_saishin_label] updated-row に旧「最終更新：」表記なし（価格確認：に統一済み）
   ✅ [stale_banner_date_mismatch] #144 「本日の価格データ未更新」が HTML に存在しない（OK: トップ警告抑制済み）
-  ✅ [csv_today_observed_at] manual_buyback_prices.csv に本日(2026-10-14)の observed_at あり
+  ⚠️ [csv_today_observed_at] manual_buyback_prices.csv に本日(2026-10-15)の observed_at なし（手動更新が必要な可能性）
   ✅ [iphone17_price_fetched] iPhone 17 Pro 系の買取価格が1件以上取得されている
   ✅ [mobile_ichiban_price] モバイル一番の買取価格（price > 0）が存在する
   ✅ [no_price_zero_shown] LP上に¥0の価格表記なし（0価格行は非表示 or fetch_failed表示で正常）
@@ -53,12 +53,12 @@
   ✅ [fetch_failed_no_price_calc] fetch_failed 行の価格欄が「—」（価格計算に使われていない）
   ✅ [game_console_shops] ゲーム機向け店舗が表示されている: ['ゲオ', 'イオシス', 'ブックオフ', '駿河屋', 'ソフマップ', 'TSUTAYA', '買取商店']
   ✅ [switch2_game_shop_links] Switch 2 / ゲーム機向け確認リンク（ゲオ/ブックオフ/駿河屋/ソフマップ）が存在する
-  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-10-14T09:18:56+09:00）
+  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-10-14T23:31:04+09:00）
   ⚠️ [suspicious_price_format] suspicious_prices 形式OK（suspicious_price 3件あり — 確認推奨）
   ✅ [fetch_failed_has_reason] fetch_failed 45件すべてに reason あり
   ✅ [collector_report_html_exists] docs/collector_report.html 存在
   ✅ [collector_report_link_in_lp] LP内に collector_report.html へのリンクがある
-  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 9件存在する: ['iphone17pro256', 'iphone17pm512', 'iphone17_256', 'iphone17pm256']
+  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 9件存在する: ['iphone17pro512', 'iphone17pm256', 'iphone17pm512', 'iphone17_256']
   ✅ [beginner_page_auto_scraped_exists] 自動取得 OK 19件 / total 64件
   ✅ [iphone17pro256_price_scraped] iPhone 17 Pro 256GB の価格取得成功: ['kaitori_shouten', 'kaitori_itchome']
   ✅ [fetch_failed_has_reason_field] 全取得失敗エントリーに reason フィールドあり（45件）
@@ -302,7 +302,7 @@
   ✅ [ai_today_tasks] #626 今日やること（Today Tasks）が表示される（1件）
   ✅ [ai_probability_forecast_trend] #627 成立確率/次回更新予測/価格トレンドが付与される
   ✅ [notification_events_exists] #628 notifications/latest.json が存在する（events 0）
-  ✅ [notification_history] #629 notifications/history/ に履歴が保存される（84日分）
+  ✅ [notification_history] #629 notifications/history/ に履歴が保存される（85日分）
   ✅ [notification_suppression] #630 通知抑制（24h再送禁止・ROI+5%例外）が実装される
   ✅ [notification_priority] #631 通知に priority（Critical/High/Medium/Low）が付与される
   ✅ [notification_channels] #633 通知チャネル（Discord/Telegram）が定義される
@@ -431,8 +431,8 @@
   ✅ [tcg_blocked_source_not_healthy] #762 アクセス拒否（HTTP 403 等）の監視元を正常扱いしない
   ✅ [tcg_entry_url_official_only] #763 応募ページへのリンクは公式サイトの URL のみ
   ✅ [tcg_lottery_coverage_report] #764 抽選の監視状況（登録 / 実装 / 正常 / 拒否 / 未実装）が出力されている
-  ✅ [tcg_lottery_real_data] #765 抽選を実データで取得している（8件）、または監視元が正常に0件を返している
-  ✅ [tcg_release_schedule_shown] #841 公式の発売予定（12件）が新UIの抽選・予約に出ている
+  ✅ [tcg_lottery_real_data] #765 抽選を実データで取得している（6件）、または監視元が正常に0件を返している
+  ✅ [tcg_release_schedule_shown] #841 公式の発売予定（3件）が新UIの抽選・予約に出ている
   ✅ [no_legacy_ui] #800 旧UIの DOM・CSS・JS が残っていない
   ✅ [new_ui_root] #801 新UIの root（#new-ui-root）が1つあり、終わりの目印がある
   ✅ [new_ui_default] #802 新UIが既定（?ui=legacy も新UI。新UIは JS が表示を決めてから出す）
@@ -447,7 +447,7 @@
   ✅ [new_ui_no_internal_info] #808 新UIの一般のページに運営者向けの内部情報を出していない（運営者向けのページは別）
   ✅ [admin_ui_safe] #836 運営者向けのページに秘密の値・偽の操作・偽のログイン表示・DEMO が無く、8つの区分がそろっている
   ✅ [new_ui_safe_links] #809 新UIのリンクは https: かサイト内の相対パスだけ
-  ✅ [new_ui_vm_fidelity] #810 抽選の表示モデル（VM）が元データと一致する（26件）
+  ✅ [new_ui_vm_fidelity] #810 抽選の表示モデル（VM）が元データと一致する（17件）
   ✅ [admin_has_legacy_operator_info] #839 旧UIにしか無かった運営の情報が運営者向けのページにある
   ✅ [legacy_intents_on_new_ui] #840 旧UIの検査の意図（14日より古い価格・0円・未照合・中古を確定に使わない、取得の警告の強さ）を新UIの判定で満たす
   ✅ [source_safety] #842 取得の安全性（robots.txt・ブロックで打ち切り・正直な User-Agent・規約上取らない取得元を取らない）
@@ -486,7 +486,7 @@
   ✅ [opportunity_sell_identity_verified] #833 利益に使った売却価格はすべて商品照合済みの買取価格で、商品詳細の表の確認済みの行と一致（2件）
   ✅ [mypage_safe] #834 マイページに DEMO・架空のアカウント表示・危ないリンクが無く、ウォッチは登録済みの商品だけ、想定純利益は商品詳細と同じ
 
-  Errors: 0 | Warnings: 10 | OK: 472
+  Errors: 0 | Warnings: 11 | OK: 471
 
   ✅ Deploy check PASSED
 ============================================================

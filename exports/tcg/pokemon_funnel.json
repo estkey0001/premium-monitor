@@ -1,21 +1,21 @@
 {
-  "generated_at": "2026-10-15T18:02:11.574359+09:00",
+  "generated_at": "2026-10-16T17:56:10.035292+09:00",
   "sources": [
     {
       "source": "ポケモンカードゲーム公式（商品API）",
       "collector": "PokemonProductRegistryCollector",
       "status": "HEALTHY",
-      "status_reason": "正常（採用 9件）",
-      "pages_discovered": 4,
-      "pages_requested": 4,
-      "pages_loaded": 4,
-      "product_links_discovered": 16,
-      "product_pages_discovered": 6,
-      "product_pages_loaded": 1,
+      "status_reason": "正常（採用 10件）",
+      "pages_discovered": 5,
+      "pages_requested": 5,
+      "pages_loaded": 5,
+      "product_links_discovered": 17,
+      "product_pages_discovered": 7,
+      "product_pages_loaded": 2,
       "news_pages_discovered": 0,
       "news_pages_loaded": 0,
-      "candidate_events": 17,
-      "accepted_sales_events": 9,
+      "candidate_events": 18,
+      "accepted_sales_events": 10,
       "rejected_events": 8,
       "errors": 0,
       "rejection_reasons": {
@@ -27,24 +27,24 @@
       "source": "ポケモンカードゲーム公式（ニュース）",
       "collector": "PokemonNewsCollector",
       "status": "OK_NO_EVENTS",
-      "status_reason": "正常に取得。現在の販売イベントは0件（棄却: event_category=76, article_too_old=15, non_sale_announcement=12）",
+      "status_reason": "正常に取得。現在の販売イベントは0件（棄却: event_category=77, article_too_old=15, non_sale_announcement=13）",
       "pages_discovered": 1,
       "pages_requested": 1,
       "pages_loaded": 1,
       "product_links_discovered": 0,
       "product_pages_discovered": 0,
       "product_pages_loaded": 0,
-      "news_pages_discovered": 106,
+      "news_pages_discovered": 108,
       "news_pages_loaded": 0,
-      "candidate_events": 106,
+      "candidate_events": 108,
       "accepted_sales_events": 0,
-      "rejected_events": 106,
+      "rejected_events": 108,
       "errors": 0,
       "rejection_reasons": {
-        "event_category": 76,
+        "non_sale_announcement": 13,
+        "event_category": 77,
         "no_sale_context": 3,
-        "article_too_old": 15,
-        "non_sale_announcement": 12
+        "article_too_old": 15
       },
       "notes": []
     },
@@ -92,25 +92,25 @@
     }
   ],
   "total": {
-    "pages_discovered": 8,
-    "pages_requested": 8,
-    "pages_loaded": 7,
-    "product_links_discovered": 16,
-    "product_pages_discovered": 6,
-    "product_pages_loaded": 1,
-    "news_pages_discovered": 106,
+    "pages_discovered": 9,
+    "pages_requested": 9,
+    "pages_loaded": 8,
+    "product_links_discovered": 17,
+    "product_pages_discovered": 7,
+    "product_pages_loaded": 2,
+    "news_pages_discovered": 108,
     "news_pages_loaded": 0,
-    "candidate_events": 123,
-    "accepted_sales_events": 9,
-    "rejected_events": 114,
+    "candidate_events": 126,
+    "accepted_sales_events": 10,
+    "rejected_events": 116,
     "errors": 1
   },
   "rejection_reasons": {
     "past_release": 8,
-    "event_category": 76,
+    "non_sale_announcement": 13,
+    "event_category": 77,
     "no_sale_context": 3,
-    "article_too_old": 15,
-    "non_sale_announcement": 12
+    "article_too_old": 15
   },
-  "current_events": 9
+  "current_events": 10
 }

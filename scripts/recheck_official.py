@@ -48,10 +48,11 @@ HISTORY_LIMIT = 300
 PARSERS = {"pur.store.sony.jp": "sony_store", "www.apple.com": "apple_jsonld",
            "store.canon.jp": "canon_store", "nij.nikon.com": "nikon_direct", "mall-jp.fujifilm.com": "fuji_mall"}
 # 同じホストでも読み方が違う商品（iPhone の購入ページは構造化データの offers が無く、商品データの部品番号で読む）
-PARSER_OVERRIDE = {"prod_iphone17_256": "apple_parts"}
+PARSER_OVERRIDE = {"prod_iphone17_256": "apple_parts", "prod_iphoneair_256": "apple_parts"}
 # 再確認する商品（すでに確認済みで、照合のキーが登録され、上の読み取りで確かめられるもの）。
 # 公式直販価格は確認から14日で確認済みでなくなる（normalized_prices.OFFICIAL_DIRECT_STALE_DAYS）ので、全部を対象にする
-RECHECK_TARGETS = ("prod_ps5_pro", "prod_airpods_pro3", "prod_r5ii", "prod_z8", "prod_iphone17_256", "prod_x100vi")
+RECHECK_TARGETS = ("prod_ps5_pro", "prod_airpods_pro3", "prod_r5ii", "prod_z8", "prod_iphone17_256", "prod_x100vi",
+                   "prod_iphoneair_256")   # Phase 29: 発見から登録した iPhone Air 256GB（同じ apple_parts の読み方）
 # 読み取りごとの照合のキー（ページのどの値で「この商品」と確かめるか）。既定は型番（model_number）
 # - canon_store: 購入ページの URL の商品コード（6536C001 = ボディー。レンズキットは別のコード）
 # - nikon_direct: JAN（型番 Z8 は短く、ページの別の場所にも出る）

@@ -35,6 +35,10 @@ VERIFIED_URLS = {
     # 2026-10-08（Phase 16）: 同じ購入ページで「256GB 159,800円から」を再確認（ブラウザ）。5色・2容量の SKU が並び、
     # 256GB はどの色も同じ価格（OFFICIAL_DIRECT_OFFERS に証拠）
     "prod_iphone17_256":    {"source": "src_apple_jp", "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17",         "link_type": "item",     "price": 159800, "conf": "high", "checked_on": "2026-10-08", "price_kind": "official_direct"},
+    # 2026-10-17 23:21（Phase 29）: 公式の購入ページ（iPhone Air）を取得の共通の作法（robots.txt・正直な User-Agent・
+    # リダイレクトなし）で1回取得し、商品データ（partNumber・price.fullPrice・name）で 256GB の4色の部品番号がどれも
+    # 189,800円であることを確認（512GB 224,800円・1TB 294,800円は別の行）。Phase 27 の発見・Phase 28 の登録の値と同じ
+    "prod_iphoneair_256":   {"source": "src_apple_jp", "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-air",        "link_type": "item",     "price": 189800, "conf": "high", "checked_on": "2026-10-17", "price_kind": "official_direct"},
     # 2026-10-03: 公式の購入ページで「AirPods Pro 3 42,800円」を再確認
     # 2026-10-08（Phase 14）: 同じ購入ページで 42,800円 を再確認（ブラウザ）。在庫・お届けの表示は、選択を進める前の
     # ページには出ない（明示の証拠が無いので在庫は記録しない＝在庫未確認のまま）
@@ -260,6 +264,13 @@ IDENTITY_EVIDENCE = {
                                            "MG6C4J/A": ("256GB", "Sage", 159800)},
                           "edition": "日本向け（SIM フリー）", "bundle": "本体",
                           "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17", "checked_on": "2026-10-08"},
+    # Phase 29（2026-10-17 23:21 に取得した公式の購入ページの商品データ）: 256GB の4色の部品番号がどれも 189,800円。
+    # 色を区別しない商品なので、型番1つではなく色違いの部品番号の組で確認する（config/products.yaml の part_numbers と同じ）
+    "prod_iphoneair_256": {"model_name": "iPhone Air", "variant_skus": {
+                               "MG274J/A": ("256GB", "Space Black", 189800), "MG284J/A": ("256GB", "Cloud White", 189800),
+                               "MG294J/A": ("256GB", "Light Gold", 189800), "MG2A4J/A": ("256GB", "Sky Blue", 189800)},
+                           "edition": "日本向け（SIM フリー）", "bundle": "本体",
+                           "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-air", "checked_on": "2026-10-17"},
     # ニコンの製品ページ「Z8 … オープンプライス JANコード：4960759909947」・ニコンダイレクトの購入ページも同じ JAN・
     # 「こちらの商品はボディーのみの販売となります」
     "prod_z8": {"model_number": "Z8", "jan_code": "4960759909947", "edition": "日本向け", "bundle": "ボディーのみ",
@@ -302,6 +313,15 @@ OFFICIAL_DIRECT_OFFERS = {
         "edition": "日本向け（SIM フリー）",
         "identity_equivalent": "JAN の代わりに、購入ページの商品データの 256GB の5色の部品番号（IDENTITY_EVIDENCE の "
                                "variant_skus。どの色も 159,800円）",
+        "sale_mode": "NORMAL", "stock": "UNKNOWN",
+        "stock_semantics": "在庫・お届けの表示は色・容量を選んだ後に出る（ページの初期表示に在庫の情報が無い）",
+        "rejected": []},
+    "prod_iphoneair_256": {
+        "shop": "Apple Store（オンライン）", "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-air",
+        "price": 189800, "checked_on": "2026-10-17", "capacity": "256GB", "body_kit": "not_applicable",
+        "edition": "日本向け（SIM フリー）",
+        "identity_equivalent": "JAN の代わりに、購入ページの商品データの 256GB の4色の部品番号（IDENTITY_EVIDENCE の "
+                               "variant_skus。どの色も 189,800円）",
         "sale_mode": "NORMAL", "stock": "UNKNOWN",
         "stock_semantics": "在庫・お届けの表示は色・容量を選んだ後に出る（ページの初期表示に在庫の情報が無い）",
         "rejected": []},
@@ -514,6 +534,33 @@ USER_DECISIONS = {
 IDENTITY_STATES = ("IDENTITY_CONFIRMED", "PARTIAL_IDENTITY", "AMBIGUOUS", "DISCONTINUED", "NEEDS_USER_DECISION")
 
 
+def _canonical_identity(product_id: str) -> dict | None:
+    """正本（config/products.yaml）のその商品の part_numbers・capacity（無ければ空）。読めなければ None。ファイルが変われば読み直す。"""
+    from pathlib import Path
+    path = Path(__file__).resolve().parents[2] / "config" / "products.yaml"
+    try:
+        stamp = path.stat().st_mtime_ns
+    except OSError:
+        return None                                   # 正本を読めない（照合できない）
+    ids = _canonical_identities(str(path), stamp)
+    return None if ids is None else ids.get(product_id, {})
+
+
+@__import__("functools").lru_cache(maxsize=4)
+def _canonical_identities(path: str, _stamp: int) -> dict | None:
+    import yaml
+    try:
+        with open(path, encoding="utf-8") as f:
+            items = (yaml.safe_load(f) or {}).get("products") or []
+    except (OSError, ValueError, AttributeError):
+        return None
+    out = {}
+    for p in items:
+        if isinstance(p, dict) and ("part_numbers" in p or "capacity" in p):
+            out[str(p.get("id"))] = {k: p[k] for k in ("part_numbers", "capacity") if k in p}
+    return out
+
+
 def _variant_group_ok(product: dict, ev: dict) -> bool:
     """色だけが違う部品番号の組（variant_skus: 部品番号 → (容量, 色, 価格)）で、この商品と同じものだと言えるか。
 
@@ -529,6 +576,19 @@ def _variant_group_ok(product: dict, ev: dict) -> bool:
     caps = {_capacity_of(c) for c, _col, _p in skus.values()}
     prices = {pr for _c, _col, pr in skus.values()}
     cap_p = _capacity_of(product.get("name"))
+    # 正本に部品番号の組・容量を持つ商品（発見から登録した商品。Phase 29）は、その組・容量が証拠と完全に同じこと
+    # （正本の part_numbers や capacity を書き換えたら、実行時も確定に使わない。レビュー M-1）。DB の行（part_numbers の
+    # 列が無い）を渡す経路でも効くように、渡された値が無ければ正本（config/products.yaml）の値を引く（再レビュー M-1）
+    canon = _canonical_identity(str(product.get("id") or product.get("product_id") or ""))
+    if canon is None and product.get("part_numbers") is None:
+        return False                                  # 正本を読めず照合できない: 確定にしない（通す側に倒さない）
+    canon = canon or {}
+    parts = product.get("part_numbers") if product.get("part_numbers") is not None else canon.get("part_numbers")
+    cap = product.get("capacity") if product.get("capacity") else canon.get("capacity")
+    if parts is not None and set(parts or []) != set(skus):
+        return False
+    if cap and _capacity_of(cap) != cap_p:
+        return False
     return cap_p is not None and caps == {cap_p} and len(prices) == 1 and all(
         isinstance(x, int) and x > 0 for x in prices)
 

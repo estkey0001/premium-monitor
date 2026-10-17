@@ -233,6 +233,11 @@ def cli():
     pass
 
 
+# 発見の候補の判断の選択肢（Phase 28。正本は src/discovery/store.py）
+from src.discovery.store import EVIDENCE_KINDS as _DISCOVERY_EVIDENCE  # noqa: E402
+from src.discovery.store import REJECT_REASONS as _DISCOVERY_REJECT_REASONS  # noqa: E402
+
+
 # ---- Phase 1 ----
 
 @cli.command("init-db")
@@ -748,8 +753,11 @@ def list_product_candidates(status):
 @cli.command("approve-product-candidate")
 @click.option("--candidate-id", required=True)
 @click.option("--product-id", default=None, help="紐付けるproduct ID（新規作成する場合は省略）")
-def approve_candidate(candidate_id, product_id):
-    """新製品候補を承認する。"""
+@click.option("--checked", "checked", multiple=True, type=click.Choice(_DISCOVERY_EVIDENCE),
+              help="公式ページで確かめた証拠（複数可）。正本への登録には official_url が要る")
+def approve_candidate(candidate_id, product_id, checked):
+    """新製品候補を承認する（「正しい商品だと人が確かめた」だけ。正本には登録しない。登録は register-product-candidate）。"""
+    _check_discovery_decision(candidate_id, "approve", checked=checked)
     db = _get_db()
     try:
         db.init_schema()
@@ -760,41 +768,288 @@ def approve_candidate(candidate_id, product_id):
             click.echo(f"  Linked to: {product_id}")
         else:
             click.echo("  (No product linked. Add manually with products.yaml + seed)")
-        _record_discovery_decision(candidate_id, "approve", product_id)
+        _record_discovery_decision(candidate_id, "approve", product_id, checked=checked)
     finally:
         db.close()
 
 
-def _record_discovery_decision(candidate_id: str, decision: str, product_id=None) -> None:
-    """発見の候補の台帳（exports/discovery/product_candidates.json）にも人の判断を記録する（Phase 27）。
+def _discovery_dir() -> Path:
+    import os as _os
+    return Path(_os.environ.get("DISCOVERY_DIR") or PROJECT_ROOT / "exports" / "discovery")
+
+
+def _check_discovery_decision(candidate_id: str, decision: str, *, reason: str = "", checked=(), events=False):
+    """台帳にある候補への判断を、DB を変える前に確かめる（受け付けられなければ何も変えずに止める）。"""
+    from src.discovery import store as _st
+    path = _discovery_dir() / (_st.EVENT_FILE if events else _st.PRODUCT_FILE)
+    rec = _st.load(path)["candidates"].get(candidate_id)
+    if rec is None:
+        return
+    errs = _st.check_decision(rec, decision, reason=reason, evidence_checked=checked)
+    if errs:
+        click.echo(f"  中止: {','.join(errs)}（台帳・DB とも変えていません）", err=True)
+        raise SystemExit(1)
+
+
+def _record_discovery_decision(candidate_id: str, decision: str, product_id=None, *, reason: str = "", checked=(),
+                               events=False) -> None:
+    """発見の候補の台帳（exports/discovery/）に人の判断を記録する（Phase 27・28）。
 
     正本（config/products.yaml・products の表）には追加しない。台帳の変更は git に push しない（人がコミットする）。
     """
-    import os as _os
     from datetime import datetime as _dt
     from src.discovery import store as _st
     from src.tcg.models import JST as _JST
-    path = Path(_os.environ.get("DISCOVERY_DIR") or PROJECT_ROOT / "exports" / "discovery") / _st.PRODUCT_FILE
-    rec = _st.decide(path, candidate_id, decision, now=_dt.now(tz=_JST), product_id=product_id)
+    path = _discovery_dir() / (_st.EVENT_FILE if events else _st.PRODUCT_FILE)
+    try:
+        rec = _st.decide(path, candidate_id, decision, now=_dt.now(tz=_JST), product_id=product_id, reason=reason,
+                         evidence_checked=checked)
+    except ValueError as e:
+        click.echo(f"  中止: {e}（台帳を変えていません）", err=True)
+        raise SystemExit(1)
     if rec is None:
         return
     click.echo(f"  発見の候補の台帳に記録しました（{rec['status']}）。正本（config/products.yaml）には追加していません。")
-    click.echo("  正本に入れるときは、人が config/products.yaml に手で追加して確かめてからコミットしてください（自動で push しない）。")
+    if decision == "approve":
+        if not checked:
+            click.echo("  確かめた証拠（--checked）の記録がありません。正本に登録するには --checked official_url を付けて"
+                       "承認し直してください。")
+        cmd = "register-event-candidate" if events else "register-product-candidate"
+        click.echo(f"  正本に入れるときは、まず見込みを確かめてください: python -m src.cli {cmd} --candidate-id "
+                   f"{candidate_id}（既定は dry-run。書くのは --confirm のときだけ。commit / push はしない）")
 
 
 @cli.command("reject-product-candidate")
 @click.option("--candidate-id", required=True)
-def reject_candidate(candidate_id):
-    """新製品候補を却下する。"""
+@click.option("--reason", default="", type=click.Choice(("",) + _DISCOVERY_REJECT_REASONS),
+              help="却下の理由（duplicate / not_target / variant_only / bad_parse / unsupported / obsolete）。"
+                   "発見の台帳にある候補では必須")
+def reject_candidate(candidate_id, reason):
+    """新製品候補を却下する（理由とともに台帳に残す。同じ候補を見つけ直しても確認待ちに戻さない）。"""
+    from src.discovery import store as _st
+    if not reason and candidate_id in _st.load(_discovery_dir() / _st.PRODUCT_FILE)["candidates"]:
+        click.echo("  中止: 発見の候補の却下には --reason が要ります（台帳・DB とも変えていません）", err=True)
+        raise SystemExit(1)
+    _check_discovery_decision(candidate_id, "reject", reason=reason)
     db = _get_db()
     try:
         db.init_schema()
         repo = Repository(db)
         repo.update_product_candidate_status(candidate_id, "rejected")
         click.echo(f"Rejected: {candidate_id}")
-        _record_discovery_decision(candidate_id, "reject")
+        _record_discovery_decision(candidate_id, "reject", reason=reason)
     finally:
         db.close()
+
+
+@cli.command("approve-event-candidate")
+@click.option("--candidate-id", required=True)
+@click.option("--checked", "checked", multiple=True, type=click.Choice(_DISCOVERY_EVIDENCE),
+              help="公式ページで確かめた証拠（複数可）。手で確認した抽選への登録には schedule が要る")
+def approve_event_candidate(candidate_id, checked):
+    """TCG の告知の候補を承認する（台帳に記録するだけ。日程は入れない・受付中にしない）。"""
+    from src.discovery import store as _st
+    if candidate_id not in _st.load(_discovery_dir() / _st.EVENT_FILE)["candidates"]:
+        click.echo("  中止: 告知の候補が台帳にありません", err=True)
+        raise SystemExit(1)
+    _check_discovery_decision(candidate_id, "approve", checked=checked, events=True)
+    _record_discovery_decision(candidate_id, "approve", checked=checked, events=True)
+
+
+@cli.command("reject-event-candidate")
+@click.option("--candidate-id", required=True)
+@click.option("--reason", required=True, type=click.Choice(_DISCOVERY_REJECT_REASONS))
+def reject_event_candidate(candidate_id, reason):
+    """TCG の告知の候補を却下する（理由とともに台帳に残す）。"""
+    from src.discovery import store as _st
+    if candidate_id not in _st.load(_discovery_dir() / _st.EVENT_FILE)["candidates"]:
+        click.echo("  中止: 告知の候補が台帳にありません", err=True)
+        raise SystemExit(1)
+    _check_discovery_decision(candidate_id, "reject", reason=reason, events=True)
+    _record_discovery_decision(candidate_id, "reject", reason=reason, events=True)
+
+
+def _registration_in_sync(canon, ledger, candidate_id) -> tuple[bool, str]:
+    """書く前に、手元の正本が main と同じで、手元の台帳が main の台帳と「この候補の記録だけ」違うかを確かめる。
+
+    承認は手元の台帳だけを変える（push しなくてよい）ので、その候補の記録の違いは許す。ほかの候補が違えば
+    （CI の生成コミットより古い手元の台帳）書かない（古い台帳で main を上書きしない）。
+    """
+    import json as _json
+    import subprocess as _sp
+    from src.discovery import register as _rg
+    from src.notifiers import outbox as _ob
+    ok, why = _ob.main_ledger_matches(Path(canon), PROJECT_ROOT)        # fetch もここで行う
+    if not ok:
+        return False, f"{Path(canon).name}: {why}"
+    try:
+        rel = Path(ledger).resolve().relative_to(PROJECT_ROOT.resolve()).as_posix()
+    except ValueError:
+        return False, "台帳がリポジトリの中にありません"
+    r = _sp.run(["git", "show", f"origin/main:{rel}"], cwd=PROJECT_ROOT, capture_output=True, text=True,
+                encoding="utf-8")
+    if r.returncode != 0:
+        return False, "main の台帳を読めません"
+    try:
+        local = _json.loads(Path(ledger).read_text(encoding="utf-8"))
+        main = _json.loads(r.stdout)
+    except (OSError, ValueError):
+        return False, "台帳を読めません"
+    if not _rg.ledgers_match_except(main, local, candidate_id):
+        return False, ("手元の台帳が main の台帳と、この候補以外でも違います（ほかの候補を手元で承認した・CI の生成で台帳が"
+                       "新しくなった・main でこの候補が変わった。承認と登録は1件ずつ続けて行い、git pull で合わせて"
+                       "承認をやり直してから実行してください）")
+    return True, ""
+
+
+def _registration_mode(dry_run: bool, confirm: bool) -> bool:
+    if dry_run and confirm:
+        click.echo("  中止: --dry-run と --confirm は同時に付けられません", err=True)
+        raise SystemExit(1)
+    return bool(confirm)
+
+
+@cli.command("register-product-candidate")
+@click.option("--candidate-id", required=True)
+@click.option("--dry-run", "dry_run", is_flag=True, help="見込みだけ表示する（既定）")
+@click.option("--confirm", is_flag=True, help="正本（config/products.yaml）に書く。commit / push はしない")
+def register_product_candidate(candidate_id, dry_run, confirm):
+    """承認済みの Apple の候補を1件だけ正本に登録する（Phase 28）。既定は dry-run（何も書かない）。
+
+    承認（APPROVED・公式ページの確認の記録）・新しさ（STALE でない）・公式の証拠（URL・部品番号・容量・価格）・
+    重複なし（ID・機種 + 容量・部品番号）がそろうときだけ。TCG は既存の正本に入れない。
+    """
+    from datetime import datetime as _dt
+    from src.discovery import register as _rg
+    from src.discovery import store as _st
+    from src.tcg.models import JST as _JST
+    write = _registration_mode(dry_run, confirm)
+    now = _dt.now(tz=_JST)
+    led = _discovery_dir() / _st.PRODUCT_FILE
+    canon = PROJECT_ROOT / "config" / "products.yaml"
+    store = _st.load(led)
+    rec = store["candidates"].get(candidate_id)
+    if rec is None:
+        click.echo("  中止: 候補が台帳にありません", err=True)
+        raise SystemExit(1)
+    old = canon.read_text(encoding="utf-8")
+    plan = _rg.plan_product(rec, old, now=now)
+    click.echo(f"  候補: {candidate_id} {rec.get('product_name')}（{rec.get('status')}）")
+    click.echo(f"  新しい product_id: {plan['product_id'] or '（作れない）'}")
+    if plan["errors"]:
+        click.echo(f"  中止: {','.join(plan['errors'])}（正本・台帳とも変えていません）", err=True)
+        raise SystemExit(1)
+    for k, v in plan["entry"].items():
+        click.echo(f"    {k}: {v}")
+    click.echo("  正本の差分:")
+    click.echo(plan["diff"])
+    click.echo("  監視への影響:")
+    for ln in _rg.monitoring_impact(plan["entry"]):
+        click.echo(f"    - {ln}")
+    if not write:
+        click.echo("  （見込みだけ表示しました。正本に書くときは --confirm を付けて再実行してください）")
+        return
+    ok, why = _registration_in_sync(canon, led, candidate_id)
+    if not ok:
+        click.echo(f"  中止: {why}", err=True)
+        raise SystemExit(1)
+    try:
+        _rg.write_product(canon, old, plan)
+    except (OSError, ValueError) as e:
+        click.echo(f"  中止: {e}（正本は元のままです）", err=True)
+        raise SystemExit(1)
+    _st.mark_registered(store, candidate_id, now=now, target=_rg.PRODUCT_TARGET, registered_id=plan["product_id"])
+    _save_ledger_or_restore(led, store, canon, old)
+    _print_registration_followup([_rg.PRODUCT_TARGET, f"exports/discovery/{_st.PRODUCT_FILE}"], plan["product_id"])
+
+
+@cli.command("register-event-candidate")
+@click.option("--candidate-id", required=True)
+@click.option("--product", required=True, help="公式ページに書かれた商品名（運営者が確かめた値）")
+@click.option("--start", "start", required=True, help="受付開始（公式ページで確かめた値。ISO8601・時差つき）")
+@click.option("--end", "end", required=True, help="受付終了（公式ページで確かめた値。ISO8601・時差つき）")
+@click.option("--official-page-checked", is_flag=True, help="公式ページで日程を人が確かめた（無ければ登録しない）")
+@click.option("--dry-run", "dry_run", is_flag=True, help="見込みだけ表示する（既定）")
+@click.option("--confirm", is_flag=True, help="手で確認した抽選の CSV に書く。commit / push はしない")
+def register_event_candidate(candidate_id, product, start, end, official_page_checked, dry_run, confirm):
+    """承認済みの TCG の告知を、運営者が確かめた日程で手で確認した抽選（data/tcg_verified_lotteries.csv）に登録する。
+
+    日程は推測しない（渡された値だけ）。先着・再販は CSV の種類に無いので登録しない。既定は dry-run。
+    """
+    from datetime import datetime as _dt
+    from src.discovery import register as _rg
+    from src.discovery import store as _st
+    from src.tcg.lottery import manual as _manual
+    from src.tcg.models import JST as _JST
+    write = _registration_mode(dry_run, confirm)
+    now = _dt.now(tz=_JST)
+    led = _discovery_dir() / _st.EVENT_FILE
+    store = _st.load(led)
+    rec = store["candidates"].get(candidate_id)
+    if rec is None:
+        click.echo("  中止: 告知の候補が台帳にありません", err=True)
+        raise SystemExit(1)
+    path = _manual.MANUAL_CSV
+    old = path.read_text(encoding="utf-8") if path.exists() else ""
+    try:                                                   # 自動で集めた抽選とも重ねない
+        import json as _json
+        collected = _json.loads((PROJECT_ROOT / "exports" / "tcg" / "lotteries.json").read_text(encoding="utf-8"))
+        collected = collected.get("items") or []
+    except (OSError, ValueError, AttributeError):
+        collected = []
+    plan = _rg.plan_event(rec, old, product=product, start=start, end=end,
+                          official_page_checked=official_page_checked, now=now, existing_events=collected)
+    click.echo(f"  候補: {candidate_id} {rec.get('title')}（{rec.get('status')}）")
+    if plan["errors"]:
+        click.echo(f"  中止: {','.join(plan['errors'])}（CSV・台帳とも変えていません）", err=True)
+        raise SystemExit(1)
+    click.echo("  CSV の差分:")
+    click.echo(plan["diff"])
+    from src.tcg.models import parse_dt as _pdt
+    if (_pdt(start) or now) <= now:
+        click.echo("  注意: 受付はもう始まっています。登録すると直後から受付中・公式確認済みとして LP に出ます"
+                   "（日程を公式ページでもう一度確かめてから --confirm）。")
+    click.echo("  受付中かどうかは、この日程と今の時刻から決まります（登録で受付中にはしません）。外部には送信しません"
+               "（公式確認済みとして LP の抽選の表示・抽選の通知の候補には入ります）。")
+    if not write:
+        click.echo("  （見込みだけ表示しました。CSV に書くときは --confirm を付けて再実行してください）")
+        return
+    ok, why = _registration_in_sync(path, led, candidate_id)
+    if not ok:
+        click.echo(f"  中止: {why}", err=True)
+        raise SystemExit(1)
+    try:
+        _rg.write_event(path, old, plan)
+    except (OSError, ValueError) as e:
+        click.echo(f"  中止: {e}（CSV は元のままです）", err=True)
+        raise SystemExit(1)
+    _st.mark_registered(store, candidate_id, now=now, target=_rg.EVENT_TARGET, registered_id=plan["registered_id"])
+    _save_ledger_or_restore(led, store, path, old)
+    _print_registration_followup([_rg.EVENT_TARGET, f"exports/discovery/{_st.EVENT_FILE}"], plan["registered_id"])
+
+
+def _save_ledger_or_restore(led, store, target, old_text) -> None:
+    """台帳の保存に失敗したら、書いた正本を元に戻して止める（正本と台帳をずらさない）。"""
+    from src.discovery import store as _st
+    from src.utils.atomic_write import write_text_atomic
+    try:
+        _st.save(led, store)
+    except (OSError, TypeError, ValueError) as e:
+        write_text_atomic(target, old_text)
+        click.echo(f"  中止: 台帳を保存できません（{e}）。正本は元に戻しました", err=True)
+        raise SystemExit(1)
+
+
+def _print_registration_followup(files, registered_id) -> None:
+    """登録の後にすること（commit / push は人が行う。戻すときは正本の差分を戻す）。"""
+    click.echo(f"  登録しました: {registered_id}（commit / push はしていません）")
+    click.echo("  差分を確かめてから、この2つのファイルだけをコミットし、CI の実行中でないことを確かめて push してください:")
+    click.echo(f"    git diff -- {' '.join(files)}")
+    click.echo(f"    git commit -m \"発見の候補を正本に登録: {registered_id}\" -- {' '.join(files)}")
+    click.echo("    git push origin tcg-push:main")
+    click.echo(f"  取り消すとき: コミット前は git checkout -- {' '.join(files)}／コミット後は正本（{files[0]}）の"
+               "その差分だけを戻してコミットする（台帳は CI の生成で変わるので戻さない。次の discover が台帳の候補を"
+               "確認待ちに戻す）")
 
 
 @cli.command("discover")
@@ -828,6 +1083,10 @@ def discover(skip_apple):
     except Exception as exc:  # noqa: BLE001
         rep["errors"].append(f"tcg:{type(exc).__name__}")
     pcs, evs = _st.load(out / _st.PRODUCT_FILE), _st.load(out / _st.EVENT_FILE)
+    try:
+        rep["reopened"] = _reconcile_registered(out, pcs, evs, now)   # 登録を戻した候補を確認待ちに（Phase 28）
+    except Exception as exc:  # noqa: BLE001
+        rep["errors"].append(f"reconcile:{type(exc).__name__}")
     pc, ec = _st.counts(pcs), _st.counts(evs)
     apple_c = [c for c in pcs["candidates"].values() if c.get("source") == _apple.SOURCE]
     rep["metrics"] = {
@@ -835,14 +1094,15 @@ def discover(skip_apple):
         "new_product_candidates": sum(1 for c in pcs["candidates"].values() if c.get("status") in _st.OPEN_REVIEW),
         "pending_review": pc[_st.PENDING_REVIEW], "review_required": pc[_st.REVIEW_REQUIRED],
         "matched_existing": pc[_st.MATCHED_EXISTING], "approved": pc[_st.APPROVED], "rejected": pc[_st.REJECTED],
-        "stale": pc[_st.STALE],
+        "registered": pc[_st.REGISTERED], "stale": pc[_st.STALE],
         "unknown_official_products": sum(len(c.get("part_numbers") or []) for c in apple_c
                                          if c.get("status") in _st.OPEN_REVIEW),
         "apple_candidates": sum(1 for c in apple_c if c.get("status") in _st.OPEN_REVIEW),
         "tcg_products": sum(1 for c in pcs["candidates"].values() if c.get("genre") == "tcg"),
         "event_candidates": len(evs["candidates"]),
         "review_required_announcements": ec[_st.ANNOUNCEMENT_REVIEW_REQUIRED],
-        "matched_events": ec[_st.MATCHED_EVENT], "stale_events": ec[_st.STALE]}
+        "matched_events": ec[_st.MATCHED_EVENT], "stale_events": ec[_st.STALE],
+        "approved_events": ec[_st.APPROVED], "registered_events": ec[_st.REGISTERED]}
     rep["sources"] = (rep.get("tcg") or {}).get("sources") or {}
     write_json_atomic(out / "latest.json", rep)
     try:
@@ -851,14 +1111,16 @@ def discover(skip_apple):
         n = 0
     m, s = rep["metrics"], rep["sources"]
     lines = [f"Product discovery: new {m['apple_candidates']} (Apple) / pending {m['pending_review']} / "
-             f"review required {m['review_required']} / matched {m['matched_existing']} / unknown SKU "
-             f"{m['unknown_official_products']}",
+             f"review required {m['review_required']} / matched {m['matched_existing']} / approved {m['approved']} / "
+             f"registered {m['registered']} / rejected {m['rejected']} / unknown SKU {m['unknown_official_products']}",
              f"TCG discovery: events {m['event_candidates']} / review required {m['review_required_announcements']} / "
              f"products {m['tcg_products']} / blocked {s.get('blocked')} / robots unreachable {s.get('robots_unreachable')} / "
              f"implemented {s.get('implemented')} of {s.get('configured')}",
              f"Apple: list {rep['apple'].get('list_status', 'skipped')} / checked {rep['apple'].get('checked', [])} / "
              f"errors {rep['apple'].get('errors', {})}",
              f"canonical changes: 0 / external sends: 0 / db mirror: {n}"]
+    if any((rep.get("reopened") or {}).values()):
+        lines.append(f"registered but not in canonical (reopened): {rep['reopened']}")
     if rep["errors"]:
         lines.append(f"errors: {rep['errors']}")
     for ln in lines:
@@ -871,6 +1133,25 @@ def discover(skip_apple):
         except OSError:
             pass
     click.echo(_json.dumps({"errors": rep["errors"]}, ensure_ascii=False))
+
+
+def _reconcile_registered(out: Path, pcs: dict, evs: dict, now) -> dict:
+    """台帳の REGISTERED を正本（products.yaml・手で確認した抽選の CSV）と照らし合わせる（取得の成否に依らない）。"""
+    import csv as _csv
+    from src.discovery import store as _st
+    from src.tcg.lottery import manual as _manual
+    ids = {str(p.get("id")) for p in (_load_yaml("products.yaml") or {}).get("products") or [] if isinstance(p, dict)}
+    rows = list(_csv.DictReader(_manual.MANUAL_CSV.open(encoding="utf-8"))) if _manual.MANUAL_CSV.exists() else []
+    # 告知は店と URL で照らし合わせる（延期で CSV の開始日時を直しても確認待ちに戻さない）
+    keys = {f"{r.get('retailer')}|{r.get('source_url')}" for r in rows}
+    n_p = _st.reconcile_registered(pcs, ids, now=now, reopen_status=_st.PENDING_REVIEW)
+    n_e = _st.reconcile_registered(evs, keys, now=now, reopen_status=_st.ANNOUNCEMENT_REVIEW_REQUIRED,
+                                   key=lambda r: "|".join(str(r.get("registered_id") or "").split("|")[:2])) if rows else 0
+    if n_p:
+        _st.save(out / _st.PRODUCT_FILE, pcs)
+    if n_e:
+        _st.save(out / _st.EVENT_FILE, evs)
+    return {"products": n_p, "events": n_e}
 
 
 # ---- Phase 5: 自動巡回 ----

@@ -613,6 +613,9 @@ jobs:
                   exit 1
                 fi
                 OTHERS=$(echo "$CONFLICTS" | grep -vE '^(exports/|audit_health/|docs/index\.html$|docs/beta/|docs/archive/|docs/sitemap\.xml$|docs/latest\.md$|docs/collector_report\.html$)' || true)
+                # 発見の候補の台帳には人の判断（承認・却下・登録）も入るので、衝突したらこの実行の側で上書きしない（Phase 28）
+                HUMAN=$(echo "$CONFLICTS" | grep -E '^exports/discovery/(product|event)_candidates\.json$' || true)
+                OTHERS=$(printf '%s\n%s\n' "$OTHERS" "$HUMAN" | sed '/^$/d')
                 if [ -n "$OTHERS" ]; then
                   echo "生成物以外が衝突したので取り込みをやめる（人の変更を上書きしない）: $OTHERS"
                   git rebase --abort

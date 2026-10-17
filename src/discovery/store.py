@@ -9,6 +9,9 @@ product_candidates の表にも写す（既存の候補の仕組み・CLI の ap
   書き換えない
 - 見つからなくなった候補はすぐ消さない（STALE_AFTER_DAYS で STALE。人が判断した APPROVED / REJECTED はそのまま）
 - 正本（config/products.yaml・products の表）には書かない
+
+Phase 28: 人の承認（APPROVED =「正しい商品だと人が確かめた」）と正本への登録（REGISTERED = config/products.yaml に
+登録済み）を分ける。登録は src/discovery/register.py（承認済みの候補だけ・dry-run が既定・commit / push しない）。
 """
 from __future__ import annotations
 
@@ -27,10 +30,18 @@ STALE = "STALE"
 REVIEW_REQUIRED = "REVIEW_REQUIRED"
 ANNOUNCEMENT_REVIEW_REQUIRED = "ANNOUNCEMENT_REVIEW_REQUIRED"
 MATCHED_EVENT = "MATCHED_EVENT"
+REGISTERED = "REGISTERED"                           # 正本（products.yaml・手で確認した抽選の CSV）に登録済み（Phase 28）
 STATUSES = (NEW, PENDING_REVIEW, MATCHED_EXISTING, APPROVED, REJECTED, STALE, REVIEW_REQUIRED,
-            ANNOUNCEMENT_REVIEW_REQUIRED, MATCHED_EVENT)
-HUMAN_DECIDED = frozenset({APPROVED, REJECTED})     # 人が決めた状態は発見で上書きしない
+            ANNOUNCEMENT_REVIEW_REQUIRED, MATCHED_EVENT, REGISTERED)
+HUMAN_DECIDED = frozenset({APPROVED, REJECTED, REGISTERED})   # 人が決めた状態は発見で上書きしない
 OPEN_REVIEW = frozenset({NEW, PENDING_REVIEW, REVIEW_REQUIRED, ANNOUNCEMENT_REVIEW_REQUIRED})
+# 承認できる状態（STALE は再確認が要る＝発見し直されて確認待ちに戻ってから。登録済み・照合済みは承認しない）
+# 正式なイベント（MATCHED_EVENT）は自動で集めた抽選と同じものなので承認・登録しない（手動の CSV に二重に入れない）
+APPROVABLE = OPEN_REVIEW | {REJECTED}
+# 却下の理由（Phase 28。自由記述にしない）
+REJECT_REASONS = ("duplicate", "not_target", "variant_only", "bad_parse", "unsupported", "obsolete")
+# 承認のときに人が確かめた証拠（登録には official_url の確認が要る）
+EVIDENCE_KINDS = ("official_url", "part_numbers", "capacity", "colors", "official_price", "schedule", "product_code")
 STALE_AFTER_DAYS = 7                                # 見つからなくなってから STALE にするまで
 RETENTION_DAYS = 90                                 # STALE・MATCHED のまま見つからない候補を残す日数（人の判断は残す）
 
@@ -38,7 +49,8 @@ PRODUCT_FILE = "product_candidates.json"
 EVENT_FILE = "event_candidates.json"
 # 既存の product_candidates の表の状態（pending / watching / approved / rejected）への写し方
 DB_STATUS = {NEW: "pending", PENDING_REVIEW: "pending", REVIEW_REQUIRED: "pending",
-             ANNOUNCEMENT_REVIEW_REQUIRED: "pending", APPROVED: "approved", REJECTED: "rejected", STALE: "watching"}
+             ANNOUNCEMENT_REVIEW_REQUIRED: "pending", APPROVED: "approved", REJECTED: "rejected", STALE: "watching",
+             REGISTERED: "approved"}
 
 
 def stable_id(prefix: str, *parts) -> str:
@@ -85,8 +97,12 @@ def upsert(store: dict, cid: str, fields: dict, *, status: str, now: datetime, r
                    updated_at=now.isoformat(timespec="seconds"))
         cands[cid] = rec
         return rec
-    changed = any(old.get(k) != v for k, v in fields.items()) or sorted(old.get("reasons") or []) != reasons
     new_status = old.get("status") if old.get("status") in HUMAN_DECIDED else status
+    if old.get("status") == REGISTERED and "match_to_existing" in fields and not fields.get("match_to_existing"):
+        # 登録済みのはずが正本に無い（登録を git で戻した・正本から外した）: 登録済みのままにせず確認待ちに戻す
+        new_status = status
+        reasons = sorted(set(reasons) | {"registered_not_in_canonical"})
+    changed = any(old.get(k) != v for k, v in fields.items()) or sorted(old.get("reasons") or []) != reasons
     changed = changed or new_status != old.get("status")
     old.update(fields)
     old["reasons"] = reasons
@@ -131,19 +147,94 @@ def counts(store: dict) -> dict:
     return c
 
 
-def decide(path: Path, cid: str, decision: str, *, now: datetime, product_id: str | None = None) -> dict | None:
-    """人の判断（APPROVED / REJECTED）を台帳に記録する。正本には書かない（products.yaml への追加は人が手で行う）。"""
+def check_decision(rec: dict, decision: str, *, reason: str = "", evidence_checked=()) -> list[str]:
+    """人の判断を受け付けられないときの理由（空なら受け付ける）。"""
+    errs = []
+    st_ = rec.get("status")
+    if decision == "approve":
+        if st_ == STALE:
+            errs.append("stale_needs_recheck")           # 見つからなくなった候補は、発見し直されてから確認する
+        elif st_ not in APPROVABLE and st_ != APPROVED:
+            errs.append(f"not_approvable:{st_}")
+    elif decision == "reject":
+        if st_ == REGISTERED:
+            errs.append("registered_use_git_revert")     # 登録済みは正本の差分を git で戻す（台帳だけ却下にしない）
+        if reason and reason not in REJECT_REASONS:
+            errs.append("unknown_reject_reason")         # 理由の必須は CLI（--reason）。以前の呼び出しの互換で空は通す
+    else:
+        errs.append("unknown_decision")
+    bad = [e for e in evidence_checked or () if e not in EVIDENCE_KINDS]
+    if bad:
+        errs.append("unknown_evidence:" + ",".join(bad))
+    return errs
+
+
+def decide(path: Path, cid: str, decision: str, *, now: datetime, product_id: str | None = None,
+           reason: str = "", evidence_checked=()) -> dict | None:
+    """人の判断（APPROVED / REJECTED）を台帳に記録する。正本には書かない（登録は register-product-candidate）。
+
+    却下は理由（REJECT_REASONS）が要る。承認で確かめた証拠（evidence_checked）を記録する（個人名・メールは残さない）。
+    受け付けられない判断（STALE の承認・登録済みの却下など）は ValueError。候補が無ければ None。
+    """
     store = load(path)
     rec = store["candidates"].get(cid)
     if rec is None:
         return None
+    errs = check_decision(rec, decision, reason=reason, evidence_checked=evidence_checked)
+    if errs:
+        raise ValueError(",".join(errs))
+    at = now.isoformat(timespec="seconds")
     rec["status"] = APPROVED if decision == "approve" else REJECTED
-    rec["reviewed_at"] = now.isoformat(timespec="seconds")
+    rec["reviewed_at"] = at
     if product_id:
         rec["approved_product_id"] = product_id
-    rec["updated_at"] = now.isoformat(timespec="seconds")
+    entry = {"at": at, "decision": rec["status"], "reason": reason if decision == "reject" else "",
+             "evidence_checked": sorted(set(evidence_checked or ()))}
+    rec["review"] = entry
+    rec.setdefault("decisions", []).append(entry)
+    rec["updated_at"] = at
     save(path, store)
     return rec
+
+
+def mark_registered(store: dict, cid: str, *, now: datetime, target: str, registered_id: str) -> dict:
+    """正本への登録を台帳に記録する（register.py が正本を書けた後だけ呼ぶ）。"""
+    rec = store["candidates"][cid]
+    at = now.isoformat(timespec="seconds")
+    rec["status"] = REGISTERED
+    rec["registered_at"] = at
+    rec["registered_to"] = target
+    rec["registered_id"] = registered_id
+    entry = {"at": at, "decision": REGISTERED, "reason": "", "evidence_checked": [], "target": target,
+             "registered_id": registered_id}
+    rec.setdefault("decisions", []).append(entry)
+    rec["updated_at"] = at
+    return rec
+
+
+def reconcile_registered(store: dict, present_ids, *, now: datetime, reopen_status: str, key=None) -> int:
+    """登録済み（REGISTERED）の候補を正本と照らし合わせ、正本に無ければ確認待ちに戻す（登録を戻したとき）。
+
+    取得の成否に依らず毎回行う（機種のページを読まない日でも、正本と台帳の食い違いを残さない）。正本を読めなかった
+    （present_ids が空）ときは何もしない（全部を戻さない）。戻した件数。
+    """
+    present = set(present_ids or ())
+    if not present:
+        return 0
+    match = key or (lambda r: r.get("registered_id"))
+    n = 0
+    at = now.isoformat(timespec="seconds")
+    for rec in store["candidates"].values():
+        if rec.get("status") == REGISTERED and match(rec) not in present:
+            rec["status"] = reopen_status
+            if "match_to_existing" in rec:
+                rec["match_to_existing"] = ""             # 正本に無いので一致の記録も消す（#862 は確認待ちの一致を error にする）
+            rec["reasons"] = sorted(set(rec.get("reasons") or []) | {"registered_not_in_canonical"})
+            rec.setdefault("decisions", []).append({"at": at, "decision": reopen_status, "reason": "",
+                                                    "evidence_checked": [], "note": "registered_not_in_canonical"})
+            rec["updated_at"] = at
+            n += 1
+    return n
 
 
 def mirror_to_db(store: dict, db_path: Path) -> int:

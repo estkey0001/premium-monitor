@@ -1,0 +1,801 @@
+{
+  "schema": 1,
+  "candidates": {
+    "apple-88de14d448ca": {
+      "source": "apple_jp_official",
+      "brand": "Apple",
+      "genre": "iphone",
+      "families": [
+        "iphone-duo"
+      ],
+      "product_name": "iPhone Duo 1TB",
+      "model_number": "iPhone Duo",
+      "sku": "MK284,MK294",
+      "part_numbers": [
+        "MK284J/A",
+        "MK294J/A"
+      ],
+      "capacity": "1TB",
+      "colors": [
+        "Night Sky",
+        "Star White"
+      ],
+      "edition": "",
+      "jan": "",
+      "official_url": "https://www.apple.com/jp/shop/buy-iphone/iphone-duo",
+      "official_price": 469800,
+      "official_prices": [
+        469800
+      ],
+      "match_to_existing": "",
+      "candidate_id": "apple-88de14d448ca",
+      "status": "PENDING_REVIEW",
+      "reasons": [
+        "not_in_canonical"
+      ],
+      "discovered_at": "2026-10-17T17:34:02+09:00",
+      "last_seen_on": "2026-10-17",
+      "updated_at": "2026-10-17T17:34:02+09:00"
+    },
+    "apple-d11a8e24b990": {
+      "source": "apple_jp_official",
+      "brand": "Apple",
+      "genre": "iphone",
+      "families": [
+        "iphone-duo"
+      ],
+      "product_name": "iPhone Duo 2TB",
+      "model_number": "iPhone Duo",
+      "sku": "MK2A4,MK2C4",
+      "part_numbers": [
+        "MK2A4J/A",
+        "MK2C4J/A"
+      ],
+      "capacity": "2TB",
+      "colors": [
+        "Night Sky",
+        "Star White"
+      ],
+      "edition": "",
+      "jan": "",
+      "official_url": "https://www.apple.com/jp/shop/buy-iphone/iphone-duo",
+      "official_price": 574800,
+      "official_prices": [
+        574800
+      ],
+      "match_to_existing": "",
+      "candidate_id": "apple-d11a8e24b990",
+      "status": "PENDING_REVIEW",
+      "reasons": [
+        "not_in_canonical"
+      ],
+      "discovered_at": "2026-10-17T17:34:02+09:00",
+      "last_seen_on": "2026-10-17",
+      "updated_at": "2026-10-17T17:34:02+09:00"
+    },
+    "apple-dc7090c0276a": {
+      "source": "apple_jp_official",
+      "brand": "Apple",
+      "genre": "iphone",
+      "families": [
+        "iphone-duo"
+      ],
+      "product_name": "iPhone Duo 512GB",
+      "model_number": "iPhone Duo",
+      "sku": "MK264,MK274",
+      "part_numbers": [
+        "MK264J/A",
+        "MK274J/A"
+      ],
+      "capacity": "512GB",
+      "colors": [
+        "Night Sky",
+        "Star White"
+      ],
+      "edition": "",
+      "jan": "",
+      "official_url": "https://www.apple.com/jp/shop/buy-iphone/iphone-duo",
+      "official_price": 399800,
+      "official_prices": [
+        399800
+      ],
+      "match_to_existing": "",
+      "candidate_id": "apple-dc7090c0276a",
+      "status": "PENDING_REVIEW",
+      "reasons": [
+        "not_in_canonical"
+      ],
+      "discovered_at": "2026-10-17T17:34:02+09:00",
+      "last_seen_on": "2026-10-17",
+      "updated_at": "2026-10-17T17:34:02+09:00"
+    },
+    "apple-419a47e495b5": {
+      "source": "apple_jp_official",
+      "brand": "Apple",
+      "genre": "iphone",
+      "families": [
+        "iphone-duo"
+      ],
+      "product_name": "iPhone Duo 256GB",
+      "model_number": "iPhone Duo",
+      "sku": "MK244,MK254",
+      "part_numbers": [
+        "MK244J/A",
+        "MK254J/A"
+      ],
+      "capacity": "256GB",
+      "colors": [
+        "Night Sky",
+        "Star White"
+      ],
+      "edition": "",
+      "jan": "",
+      "official_url": "https://www.apple.com/jp/shop/buy-iphone/iphone-duo",
+      "official_price": 364800,
+      "official_prices": [
+        364800
+      ],
+      "match_to_existing": "",
+      "candidate_id": "apple-419a47e495b5",
+      "status": "PENDING_REVIEW",
+      "reasons": [
+        "not_in_canonical"
+      ],
+      "discovered_at": "2026-10-17T17:34:02+09:00",
+      "last_seen_on": "2026-10-17",
+      "updated_at": "2026-10-17T17:34:02+09:00"
+    },
+    "apple-ef2efccc296e": {
+      "source": "apple_jp_official",
+      "brand": "Apple",
+      "genre": "iphone",
+      "families": [
+        "iphone-air"
+      ],
+      "product_name": "iPhone Air 512GB",
+      "model_number": "iPhone Air",
+      "sku": "MG2C4,MG2D4,MG2E4,MG2F4",
+      "part_numbers": [
+        "MG2C4J/A",
+        "MG2D4J/A",
+        "MG2E4J/A",
+        "MG2F4J/A"
+      ],
+      "capacity": "512GB",
+      "colors": [
+        "Cloud White",
+        "Light Gold",
+        "Sky Blue",
+        "Space Black"
+      ],
+      "edition": "",
+      "jan": "",
+      "official_url": "https://www.apple.com/jp/shop/buy-iphone/iphone-air",
+      "official_price": 224800,
+      "official_prices": [
+        224800
+      ],
+      "match_to_existing": "",
+      "candidate_id": "apple-ef2efccc296e",
+      "status": "PENDING_REVIEW",
+      "reasons": [
+        "not_in_canonical"
+      ],
+      "discovered_at": "2026-10-17T17:34:02+09:00",
+      "last_seen_on": "2026-10-17",
+      "updated_at": "2026-10-17T17:34:02+09:00"
+    },
+    "apple-24816e322cf0": {
+      "source": "apple_jp_official",
+      "brand": "Apple",
+      "genre": "iphone",
+      "families": [
+        "iphone-air"
+      ],
+      "product_name": "iPhone Air 256GB",
+      "model_number": "iPhone Air",
+      "sku": "MG274,MG284,MG294,MG2A4",
+      "part_numbers": [
+        "MG274J/A",
+        "MG284J/A",
+        "MG294J/A",
+        "MG2A4J/A"
+      ],
+      "capacity": "256GB",
+      "colors": [
+        "Cloud White",
+        "Light Gold",
+        "Sky Blue",
+        "Space Black"
+      ],
+      "edition": "",
+      "jan": "",
+      "official_url": "https://www.apple.com/jp/shop/buy-iphone/iphone-air",
+      "official_price": 189800,
+      "official_prices": [
+        189800
+      ],
+      "match_to_existing": "",
+      "candidate_id": "apple-24816e322cf0",
+      "status": "PENDING_REVIEW",
+      "reasons": [
+        "not_in_canonical"
+      ],
+      "discovered_at": "2026-10-17T17:34:02+09:00",
+      "last_seen_on": "2026-10-17",
+      "updated_at": "2026-10-17T17:34:02+09:00"
+    },
+    "apple-a43f61f54dc6": {
+      "source": "apple_jp_official",
+      "brand": "Apple",
+      "genre": "iphone",
+      "families": [
+        "iphone-air"
+      ],
+      "product_name": "iPhone Air 1TB",
+      "model_number": "iPhone Air",
+      "sku": "MG2G4,MG2H4,MG2J4,MG2K4",
+      "part_numbers": [
+        "MG2G4J/A",
+        "MG2H4J/A",
+        "MG2J4J/A",
+        "MG2K4J/A"
+      ],
+      "capacity": "1TB",
+      "colors": [
+        "Cloud White",
+        "Light Gold",
+        "Sky Blue",
+        "Space Black"
+      ],
+      "edition": "",
+      "jan": "",
+      "official_url": "https://www.apple.com/jp/shop/buy-iphone/iphone-air",
+      "official_price": 294800,
+      "official_prices": [
+        294800
+      ],
+      "match_to_existing": "",
+      "candidate_id": "apple-a43f61f54dc6",
+      "status": "PENDING_REVIEW",
+      "reasons": [
+        "not_in_canonical"
+      ],
+      "discovered_at": "2026-10-17T17:34:02+09:00",
+      "last_seen_on": "2026-10-17",
+      "updated_at": "2026-10-17T17:34:02+09:00"
+    },
+    "tcg-pokemon-e341fcc48893": {
+      "source": "pokemon_card_official",
+      "brand": "Pokemon",
+      "genre": "tcg",
+      "product_name": "拡張パック「ストームエメラルダ」",
+      "model_number": "M6",
+      "sku": "",
+      "jan": "",
+      "capacity": "",
+      "edition": "拡張パック",
+      "colors": [],
+      "official_url": "https://www.pokemon-card.com/ex/m6/",
+      "official_price": null,
+      "release_date": "2026-07-31T00:00:00+09:00",
+      "match_to_existing": "",
+      "candidate_id": "tcg-pokemon-e341fcc48893",
+      "status": "PENDING_REVIEW",
+      "reasons": [
+        "tcg_not_in_canonical"
+      ],
+      "discovered_at": "2026-10-17T17:34:02+09:00",
+      "last_seen_on": "2026-10-17",
+      "updated_at": "2026-10-17T17:34:02+09:00"
+    },
+    "tcg-pokemon-nocode-87445e9e9a0b": {
+      "source": "pokemon_card_official",
+      "brand": "Pokemon",
+      "genre": "tcg",
+      "product_name": "拡張パック「30th CELEBRATION」",
+      "model_number": "",
+      "sku": "",
+      "jan": "",
+      "capacity": "",
+      "edition": "拡張パック",
+      "colors": [],
+      "official_url": "https://www.30th.pokemon-card.com/product/m6a",
+      "official_price": null,
+      "release_date": "2026-09-16T00:00:00+09:00",
+      "match_to_existing": "",
+      "candidate_id": "tcg-pokemon-nocode-87445e9e9a0b",
+      "status": "REVIEW_REQUIRED",
+      "reasons": [
+        "no_product_code",
+        "tcg_not_in_canonical"
+      ],
+      "discovered_at": "2026-10-17T17:34:02+09:00",
+      "last_seen_on": "2026-10-17",
+      "updated_at": "2026-10-17T17:34:02+09:00"
+    },
+    "tcg-pokemon-nocode-34feab468c74": {
+      "source": "pokemon_card_official",
+      "brand": "Pokemon",
+      "genre": "tcg",
+      "product_name": "ポケモンカードゲーム MEGA スペシャルデッキセットMEGA メガオーダイル・メガカイリュー・メガゲンガー",
+      "model_number": "",
+      "sku": "",
+      "jan": "",
+      "capacity": "",
+      "edition": "構築デッキ",
+      "colors": [],
+      "official_url": "https://www.pokemon-card.com/products/mega/mg.html",
+      "official_price": 5500,
+      "release_date": "2026-11-13T00:00:00+09:00",
+      "match_to_existing": "",
+      "candidate_id": "tcg-pokemon-nocode-34feab468c74",
+      "status": "REVIEW_REQUIRED",
+      "reasons": [
+        "no_product_code",
+        "tcg_not_in_canonical"
+      ],
+      "discovered_at": "2026-10-17T17:34:02+09:00",
+      "last_seen_on": "2026-10-17",
+      "updated_at": "2026-10-17T17:34:02+09:00"
+    },
+    "tcg-pokemon-2744ccd10c75": {
+      "source": "pokemon_card_official",
+      "brand": "Pokemon",
+      "genre": "tcg",
+      "product_name": "スターターセットex ニャオハ＆マスカーニャex",
+      "model_number": "ME",
+      "sku": "",
+      "jan": "",
+      "capacity": "",
+      "edition": "構築デッキ",
+      "colors": [],
+      "official_url": "https://www.pokemon-card.com/ex/me/",
+      "official_price": 1800,
+      "release_date": "2026-07-31T00:00:00+09:00",
+      "match_to_existing": "",
+      "candidate_id": "tcg-pokemon-2744ccd10c75",
+      "status": "PENDING_REVIEW",
+      "reasons": [
+        "tcg_not_in_canonical"
+      ],
+      "discovered_at": "2026-10-17T17:34:02+09:00",
+      "last_seen_on": "2026-10-17",
+      "updated_at": "2026-10-17T17:34:02+09:00"
+    },
+    "tcg-pokemon-nocode-771077b562f9": {
+      "source": "pokemon_card_official",
+      "brand": "Pokemon",
+      "genre": "tcg",
+      "product_name": "「30th CELEBRATION プレミアムデッキセット エーフィ・ブラッキー」",
+      "model_number": "",
+      "sku": "",
+      "jan": "",
+      "capacity": "",
+      "edition": "構築デッキ",
+      "colors": [],
+      "official_url": "https://www.30th.pokemon-card.com/product/mf",
+      "official_price": 6200,
+      "release_date": "2026-09-16T00:00:00+09:00",
+      "match_to_existing": "",
+      "candidate_id": "tcg-pokemon-nocode-771077b562f9",
+      "status": "REVIEW_REQUIRED",
+      "reasons": [
+        "no_product_code",
+        "tcg_not_in_canonical"
+      ],
+      "discovered_at": "2026-10-17T17:34:02+09:00",
+      "last_seen_on": "2026-10-17",
+      "updated_at": "2026-10-17T17:34:02+09:00"
+    },
+    "tcg-pokemon-nocode-4aad0eb5ff42": {
+      "source": "pokemon_card_official",
+      "brand": "Pokemon",
+      "genre": "tcg",
+      "product_name": "カードイラストフィギュアコレクション みずべのポケモン",
+      "model_number": "",
+      "sku": "",
+      "jan": "",
+      "capacity": "",
+      "edition": "その他の商品",
+      "colors": [],
+      "official_url": "",
+      "official_price": 1800,
+      "release_date": "2026-08-27T00:00:00+09:00",
+      "match_to_existing": "",
+      "candidate_id": "tcg-pokemon-nocode-4aad0eb5ff42",
+      "status": "REVIEW_REQUIRED",
+      "reasons": [
+        "no_product_code",
+        "tcg_not_in_canonical"
+      ],
+      "discovered_at": "2026-10-17T17:34:02+09:00",
+      "last_seen_on": "2026-10-17",
+      "updated_at": "2026-10-17T17:34:02+09:00"
+    },
+    "tcg-pokemon-nocode-af3005caeab7": {
+      "source": "pokemon_card_official",
+      "brand": "Pokemon",
+      "genre": "tcg",
+      "product_name": "「30th CELEBRATION カードセット ニャオハ・ホゲータ・クワッス」",
+      "model_number": "",
+      "sku": "",
+      "jan": "",
+      "capacity": "",
+      "edition": "その他の商品",
+      "colors": [],
+      "official_url": "https://www.30th.pokemon-card.com/product/cardset",
+      "official_price": 1200,
+      "release_date": "2026-10-16T00:00:00+09:00",
+      "match_to_existing": "",
+      "candidate_id": "tcg-pokemon-nocode-af3005caeab7",
+      "status": "REVIEW_REQUIRED",
+      "reasons": [
+        "no_product_code",
+        "tcg_not_in_canonical"
+      ],
+      "discovered_at": "2026-10-17T17:34:02+09:00",
+      "last_seen_on": "2026-10-17",
+      "updated_at": "2026-10-17T17:34:02+09:00"
+    },
+    "tcg-pokemon-nocode-4cd2959b0562": {
+      "source": "pokemon_card_official",
+      "brand": "Pokemon",
+      "genre": "tcg",
+      "product_name": "「30th CELEBRATION カードセット サルノリ・ヒバニー・メッソン」",
+      "model_number": "",
+      "sku": "",
+      "jan": "",
+      "capacity": "",
+      "edition": "その他の商品",
+      "colors": [],
+      "official_url": "https://www.30th.pokemon-card.com/product/cardset",
+      "official_price": 1200,
+      "release_date": "2026-10-16T00:00:00+09:00",
+      "match_to_existing": "",
+      "candidate_id": "tcg-pokemon-nocode-4cd2959b0562",
+      "status": "REVIEW_REQUIRED",
+      "reasons": [
+        "no_product_code",
+        "tcg_not_in_canonical"
+      ],
+      "discovered_at": "2026-10-17T17:34:02+09:00",
+      "last_seen_on": "2026-10-17",
+      "updated_at": "2026-10-17T17:34:02+09:00"
+    },
+    "tcg-pokemon-nocode-051ac06995d4": {
+      "source": "pokemon_card_official",
+      "brand": "Pokemon",
+      "genre": "tcg",
+      "product_name": "「30th CELEBRATION カードセット モクロー・ニャビー・アシマリ」",
+      "model_number": "",
+      "sku": "",
+      "jan": "",
+      "capacity": "",
+      "edition": "その他の商品",
+      "colors": [],
+      "official_url": "https://www.30th.pokemon-card.com/product/cardset",
+      "official_price": 1200,
+      "release_date": "2026-10-16T00:00:00+09:00",
+      "match_to_existing": "",
+      "candidate_id": "tcg-pokemon-nocode-051ac06995d4",
+      "status": "REVIEW_REQUIRED",
+      "reasons": [
+        "no_product_code",
+        "tcg_not_in_canonical"
+      ],
+      "discovered_at": "2026-10-17T17:34:02+09:00",
+      "last_seen_on": "2026-10-17",
+      "updated_at": "2026-10-17T17:34:02+09:00"
+    },
+    "tcg-pokemon-nocode-f68117cec07c": {
+      "source": "pokemon_card_official",
+      "brand": "Pokemon",
+      "genre": "tcg",
+      "product_name": "「30th CELEBRATION カードセット ハリマロン・フォッコ・ケロマツ」",
+      "model_number": "",
+      "sku": "",
+      "jan": "",
+      "capacity": "",
+      "edition": "その他の商品",
+      "colors": [],
+      "official_url": "https://www.30th.pokemon-card.com/product/cardset",
+      "official_price": 1200,
+      "release_date": "2026-10-16T00:00:00+09:00",
+      "match_to_existing": "",
+      "candidate_id": "tcg-pokemon-nocode-f68117cec07c",
+      "status": "REVIEW_REQUIRED",
+      "reasons": [
+        "no_product_code",
+        "tcg_not_in_canonical"
+      ],
+      "discovered_at": "2026-10-17T17:34:02+09:00",
+      "last_seen_on": "2026-10-17",
+      "updated_at": "2026-10-17T17:34:02+09:00"
+    },
+    "tcg-pokemon-nocode-7ba7bcd383fb": {
+      "source": "pokemon_card_official",
+      "brand": "Pokemon",
+      "genre": "tcg",
+      "product_name": "「30th CELEBRATION カードセット ツタージャ・ポカブ・ミジュマル」",
+      "model_number": "",
+      "sku": "",
+      "jan": "",
+      "capacity": "",
+      "edition": "その他の商品",
+      "colors": [],
+      "official_url": "https://www.30th.pokemon-card.com/product/cardset",
+      "official_price": 1200,
+      "release_date": "2026-10-16T00:00:00+09:00",
+      "match_to_existing": "",
+      "candidate_id": "tcg-pokemon-nocode-7ba7bcd383fb",
+      "status": "REVIEW_REQUIRED",
+      "reasons": [
+        "no_product_code",
+        "tcg_not_in_canonical"
+      ],
+      "discovered_at": "2026-10-17T17:34:02+09:00",
+      "last_seen_on": "2026-10-17",
+      "updated_at": "2026-10-17T17:34:02+09:00"
+    },
+    "tcg-pokemon-nocode-26e637f860a5": {
+      "source": "pokemon_card_official",
+      "brand": "Pokemon",
+      "genre": "tcg",
+      "product_name": "「30th CELEBRATION カードセット ナエトル・ヒコザル・ポッチャマ」",
+      "model_number": "",
+      "sku": "",
+      "jan": "",
+      "capacity": "",
+      "edition": "その他の商品",
+      "colors": [],
+      "official_url": "https://www.30th.pokemon-card.com/product/cardset",
+      "official_price": 1200,
+      "release_date": "2026-10-16T00:00:00+09:00",
+      "match_to_existing": "",
+      "candidate_id": "tcg-pokemon-nocode-26e637f860a5",
+      "status": "REVIEW_REQUIRED",
+      "reasons": [
+        "no_product_code",
+        "tcg_not_in_canonical"
+      ],
+      "discovered_at": "2026-10-17T17:34:02+09:00",
+      "last_seen_on": "2026-10-17",
+      "updated_at": "2026-10-17T17:34:02+09:00"
+    },
+    "tcg-pokemon-nocode-5e45a208b38d": {
+      "source": "pokemon_card_official",
+      "brand": "Pokemon",
+      "genre": "tcg",
+      "product_name": "「30th CELEBRATION カードセット キモリ・アチャモ・ミズゴロウ」",
+      "model_number": "",
+      "sku": "",
+      "jan": "",
+      "capacity": "",
+      "edition": "その他の商品",
+      "colors": [],
+      "official_url": "https://www.30th.pokemon-card.com/product/cardset",
+      "official_price": 1200,
+      "release_date": "2026-10-16T00:00:00+09:00",
+      "match_to_existing": "",
+      "candidate_id": "tcg-pokemon-nocode-5e45a208b38d",
+      "status": "REVIEW_REQUIRED",
+      "reasons": [
+        "no_product_code",
+        "tcg_not_in_canonical"
+      ],
+      "discovered_at": "2026-10-17T17:34:02+09:00",
+      "last_seen_on": "2026-10-17",
+      "updated_at": "2026-10-17T17:34:02+09:00"
+    },
+    "tcg-pokemon-nocode-173e7859eb5b": {
+      "source": "pokemon_card_official",
+      "brand": "Pokemon",
+      "genre": "tcg",
+      "product_name": "「30th CELEBRATION カードセット チコリータ・ヒノアラシ・ワニノコ」",
+      "model_number": "",
+      "sku": "",
+      "jan": "",
+      "capacity": "",
+      "edition": "その他の商品",
+      "colors": [],
+      "official_url": "https://www.30th.pokemon-card.com/product/cardset",
+      "official_price": 1200,
+      "release_date": "2026-10-16T00:00:00+09:00",
+      "match_to_existing": "",
+      "candidate_id": "tcg-pokemon-nocode-173e7859eb5b",
+      "status": "REVIEW_REQUIRED",
+      "reasons": [
+        "no_product_code",
+        "tcg_not_in_canonical"
+      ],
+      "discovered_at": "2026-10-17T17:34:02+09:00",
+      "last_seen_on": "2026-10-17",
+      "updated_at": "2026-10-17T17:34:02+09:00"
+    },
+    "tcg-pokemon-nocode-6a4651ed1d9d": {
+      "source": "pokemon_card_official",
+      "brand": "Pokemon",
+      "genre": "tcg",
+      "product_name": "「30th CELEBRATION カードセット フシギダネ・ヒトカゲ・ゼニガメ」",
+      "model_number": "",
+      "sku": "",
+      "jan": "",
+      "capacity": "",
+      "edition": "その他の商品",
+      "colors": [],
+      "official_url": "https://www.30th.pokemon-card.com/product/cardset",
+      "official_price": 1200,
+      "release_date": "2026-10-16T00:00:00+09:00",
+      "match_to_existing": "",
+      "candidate_id": "tcg-pokemon-nocode-6a4651ed1d9d",
+      "status": "REVIEW_REQUIRED",
+      "reasons": [
+        "no_product_code",
+        "tcg_not_in_canonical"
+      ],
+      "discovered_at": "2026-10-17T17:34:02+09:00",
+      "last_seen_on": "2026-10-17",
+      "updated_at": "2026-10-17T17:34:02+09:00"
+    },
+    "tcg-pokemon-nocode-3243d5746050": {
+      "source": "pokemon_card_official",
+      "brand": "Pokemon",
+      "genre": "tcg",
+      "product_name": "「30th CELEBRATION FUTURISTIC BOX」",
+      "model_number": "",
+      "sku": "",
+      "jan": "",
+      "capacity": "",
+      "edition": "その他の商品",
+      "colors": [],
+      "official_url": "https://www.30th.pokemon-card.com/product/furbox",
+      "official_price": 27500,
+      "release_date": "2026-09-16T00:00:00+09:00",
+      "match_to_existing": "",
+      "candidate_id": "tcg-pokemon-nocode-3243d5746050",
+      "status": "REVIEW_REQUIRED",
+      "reasons": [
+        "no_product_code",
+        "tcg_not_in_canonical"
+      ],
+      "discovered_at": "2026-10-17T17:34:02+09:00",
+      "last_seen_on": "2026-10-17",
+      "updated_at": "2026-10-17T17:34:02+09:00"
+    },
+    "tcg-onepiece-2315d65b2e86": {
+      "source": "onepiece_card_official",
+      "brand": "ONE PIECE CARD GAME",
+      "genre": "tcg",
+      "product_name": "スタートデッキ バロックワークス【ST-38】",
+      "model_number": "ST-38",
+      "sku": "",
+      "jan": "",
+      "capacity": "",
+      "edition": "",
+      "colors": [],
+      "official_url": "https://www.onepiece-cardgame.com/products/",
+      "official_price": 1320,
+      "release_date": "2026-12-19T00:00:00+09:00",
+      "match_to_existing": "",
+      "candidate_id": "tcg-onepiece-2315d65b2e86",
+      "status": "PENDING_REVIEW",
+      "reasons": [
+        "tcg_not_in_canonical"
+      ],
+      "discovered_at": "2026-10-17T17:34:02+09:00",
+      "last_seen_on": "2026-10-17",
+      "updated_at": "2026-10-17T17:34:02+09:00"
+    },
+    "tcg-onepiece-ea795a1ef364": {
+      "source": "onepiece_card_official",
+      "brand": "ONE PIECE CARD GAME",
+      "genre": "tcg",
+      "product_name": "スタートデッキ 砂漠の王女と海賊たち【ST-37】",
+      "model_number": "ST-37",
+      "sku": "",
+      "jan": "",
+      "capacity": "",
+      "edition": "",
+      "colors": [],
+      "official_url": "https://www.onepiece-cardgame.com/products/",
+      "official_price": 1320,
+      "release_date": "2026-12-19T00:00:00+09:00",
+      "match_to_existing": "",
+      "candidate_id": "tcg-onepiece-ea795a1ef364",
+      "status": "PENDING_REVIEW",
+      "reasons": [
+        "tcg_not_in_canonical"
+      ],
+      "discovered_at": "2026-10-17T17:34:02+09:00",
+      "last_seen_on": "2026-10-17",
+      "updated_at": "2026-10-17T17:34:02+09:00"
+    },
+    "tcg-onepiece-b93e50452497": {
+      "source": "onepiece_card_official",
+      "brand": "ONE PIECE CARD GAME",
+      "genre": "tcg",
+      "product_name": "ブースターパック 神の支配【OP-18】",
+      "model_number": "OP-18",
+      "sku": "",
+      "jan": "",
+      "capacity": "",
+      "edition": "",
+      "colors": [],
+      "official_url": "https://www.onepiece-cardgame.com/products/",
+      "official_price": 240,
+      "release_date": "2026-11-21T00:00:00+09:00",
+      "match_to_existing": "",
+      "candidate_id": "tcg-onepiece-b93e50452497",
+      "status": "PENDING_REVIEW",
+      "reasons": [
+        "tcg_not_in_canonical"
+      ],
+      "discovered_at": "2026-10-17T17:34:02+09:00",
+      "last_seen_on": "2026-10-17",
+      "updated_at": "2026-10-17T17:34:02+09:00"
+    },
+    "tcg-onepiece-22eaa127df59": {
+      "source": "onepiece_card_official",
+      "brand": "ONE PIECE CARD GAME",
+      "genre": "tcg",
+      "product_name": "エクストラブースター ONE PIECE Heroines Edition vol.2【EB-05】",
+      "model_number": "EB-05",
+      "sku": "",
+      "jan": "",
+      "capacity": "",
+      "edition": "",
+      "colors": [],
+      "official_url": "https://www.onepiece-cardgame.com/products/",
+      "official_price": 240,
+      "release_date": "2026-10-31T00:00:00+09:00",
+      "match_to_existing": "",
+      "candidate_id": "tcg-onepiece-22eaa127df59",
+      "status": "PENDING_REVIEW",
+      "reasons": [
+        "tcg_not_in_canonical"
+      ],
+      "discovered_at": "2026-10-17T17:34:02+09:00",
+      "last_seen_on": "2026-10-17",
+      "updated_at": "2026-10-17T17:34:02+09:00"
+    }
+  },
+  "apple": {
+    "families": {
+      "iphone-16": {
+        "first_seen_on": "2026-10-17",
+        "last_checked_on": "",
+        "listed": true
+      },
+      "iphone-17": {
+        "first_seen_on": "2026-10-17",
+        "last_checked_on": "",
+        "listed": true
+      },
+      "iphone-17e": {
+        "first_seen_on": "2026-10-17",
+        "last_checked_on": "",
+        "listed": true
+      },
+      "iphone-18-pro": {
+        "first_seen_on": "2026-10-17",
+        "last_checked_on": "",
+        "listed": true
+      },
+      "iphone-air": {
+        "first_seen_on": "2026-10-17",
+        "last_checked_on": "2026-10-17",
+        "listed": true,
+        "last_attempted_on": "2026-10-17",
+        "last_error": ""
+      },
+      "iphone-duo": {
+        "first_seen_on": "2026-10-17",
+        "last_checked_on": "2026-10-17",
+        "listed": true,
+        "last_attempted_on": "2026-10-17",
+        "last_error": ""
+      }
+    }
+  }
+}

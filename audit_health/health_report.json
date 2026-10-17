@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-10-16 17:56 JST",
-  "date": "2026-10-16",
+  "generated_at": "2026-10-17 17:40 JST",
+  "date": "2026-10-17",
   "health_score": {
     "data_quality": 15.9,
     "profit_discovery": 0.0,
@@ -331,15 +331,15 @@
   "diff_vs_prev": {
     "available": true,
     "stale_rate": {
-      "prev": 0.4831,
+      "prev": 0.4893,
       "cur": 0.4893
     },
     "zero_rate": {
-      "prev": 0.1737,
+      "prev": 0.1545,
       "cur": 0.1545
     },
     "item_url_rate": {
-      "prev": 0.4788,
+      "prev": 0.4936,
       "cur": 0.4936
     },
     "main_route_count": {
@@ -352,14 +352,7 @@
     },
     "new_main": [],
     "lost_main": [],
-    "source_success_changes": [
-      {
-        "source": "モバイル一番",
-        "prev": 0.375,
-        "cur": 1.0,
-        "delta": 0.625
-      }
-    ]
+    "source_success_changes": []
   },
   "anomalies": {
     "critical": [

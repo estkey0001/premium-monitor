@@ -1,4 +1,4 @@
-# データ取得品質レポート（2026-10-16 17:56 JST）
+# データ取得品質レポート（2026-10-17 17:40 JST）
 
 ## 取得成功率
 - 全対象店舗数: 16
@@ -7,10 +7,10 @@
 - ジョブ成功率: 32.8%（OK 21 / 失敗 39 / SKIP 4 / 計 64）
 
 ## 前回比較
-- 前回成功率: 29.7%
+- 前回成功率: 32.8%
 - 今回成功率: 32.8%
-- 変化: +3.1pt（改善）
-- 7日移動平均: 30.1%
+- 変化: 0.0pt（横ばい）
+- 7日移動平均: 30.6%
 - 主要失敗理由 TOP5: price_not_found 8, product_not_listed 7, rate_limited_429 6, http_403 6, robots_unreachable 4
 
 ## 店舗別成功率（低い順）
@@ -45,18 +45,18 @@
 - r5ii: 100.0%
 
 ## 連続失敗店舗（2回以上）
-- 2ndstreet: 207回連続
-- bookoff: 207回連続
-- dosupara: 207回連続
-- geo_mobile: 207回連続
-- hardoff: 207回連続
-- janpara: 207回連続
-- pasoko: 207回連続
-- sofmap: 207回連続
-- surugaya: 207回連続
-- tsutaya: 207回連続
-- iosys: 140回連続
-- netoff: 67回連続
+- 2ndstreet: 208回連続
+- bookoff: 208回連続
+- dosupara: 208回連続
+- geo_mobile: 208回連続
+- hardoff: 208回連続
+- janpara: 208回連続
+- pasoko: 208回連続
+- sofmap: 208回連続
+- surugaya: 208回連続
+- tsutaya: 208回連続
+- iosys: 141回連続
+- netoff: 68回連続
 
 ## 改善優先順位（required店舗）
 1. iosys（失敗6 / http_403）

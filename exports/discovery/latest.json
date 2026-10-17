@@ -1,0 +1,424 @@
+{
+  "generated_at": "2026-10-17T17:34:02+09:00",
+  "apple": {
+    "source": "apple_jp_official",
+    "list_status": "ok",
+    "families": [
+      "iphone-16",
+      "iphone-17",
+      "iphone-17e",
+      "iphone-18-pro",
+      "iphone-air",
+      "iphone-duo"
+    ],
+    "checked": [
+      "iphone-duo",
+      "iphone-air"
+    ],
+    "errors": {},
+    "unknown_parts": 20,
+    "matched": 0,
+    "pending": 7,
+    "requests": 3,
+    "cutoff": "",
+    "saved": true
+  },
+  "tcg": {
+    "inputs": {
+      "lotteries": true,
+      "sources": true,
+      "registry": true,
+      "latest": true
+    },
+    "inputs_stale": [],
+    "review_required": 2,
+    "matched_events": 6,
+    "release": 6,
+    "by_kind": {
+      "LOTTERY": 7,
+      "PREORDER": 0,
+      "FIRST_COME": 0,
+      "RESTOCK": 1,
+      "RELEASE": 6
+    },
+    "tcg_products": 22,
+    "sources": {
+      "configured": 17,
+      "implemented": 6,
+      "unimplemented": 11,
+      "blocked": 3,
+      "robots_unreachable": 4,
+      "unreachable": 4,
+      "table": [
+        {
+          "source_id": "POKEMON_CENTER_ONLINE",
+          "retailer": "ポケモンセンターオンライン",
+          "adapter": "pco_lottery",
+          "state": "SOURCE_BLOCKED",
+          "health": "OK_NO_EVENTS",
+          "blocked": true,
+          "robots": null,
+          "unreachable": false
+        },
+        {
+          "source_id": "POKEMON_CARD_OFFICIAL",
+          "retailer": "ポケモンカードゲーム公式（ニュース）",
+          "adapter": "pokemon_news_lottery",
+          "state": "NO_ACTIVE_LOTTERY",
+          "health": "OK_NO_EVENTS",
+          "blocked": false,
+          "robots": null,
+          "unreachable": false
+        },
+        {
+          "source_id": "GEO",
+          "retailer": "ゲオ",
+          "adapter": "geo_lottery",
+          "state": "NO_ACTIVE_LOTTERY",
+          "health": "HEALTHY",
+          "blocked": false,
+          "robots": null,
+          "unreachable": false
+        },
+        {
+          "source_id": "TOYSRUS",
+          "retailer": "トイザらス",
+          "adapter": null,
+          "state": "SOURCE_BLOCKED",
+          "health": "BLOCKED",
+          "blocked": true,
+          "robots": null,
+          "unreachable": false
+        },
+        {
+          "source_id": "JOSHIN",
+          "retailer": "Joshin",
+          "adapter": null,
+          "state": "SOURCE_BLOCKED",
+          "health": "BLOCKED",
+          "blocked": true,
+          "robots": null,
+          "unreachable": false
+        },
+        {
+          "source_id": "EDION",
+          "retailer": "エディオン",
+          "adapter": null,
+          "state": "SOURCE_NOT_MONITORED",
+          "health": "OK_NO_EVENTS",
+          "blocked": false,
+          "robots": null,
+          "unreachable": false
+        },
+        {
+          "source_id": "YAMADA",
+          "retailer": "ヤマダデンキ",
+          "adapter": null,
+          "state": "SOURCE_UNREACHABLE",
+          "health": "FAILED",
+          "blocked": false,
+          "robots": "robots_unreachable",
+          "unreachable": true
+        },
+        {
+          "source_id": "TSUTAYA",
+          "retailer": "TSUTAYA",
+          "adapter": null,
+          "state": "SOURCE_NOT_MONITORED",
+          "health": "OK_NO_EVENTS",
+          "blocked": false,
+          "robots": null,
+          "unreachable": false
+        },
+        {
+          "source_id": "BICCAMERA",
+          "retailer": "ビックカメラ",
+          "adapter": null,
+          "state": "SOURCE_UNREACHABLE",
+          "health": "FAILED",
+          "blocked": false,
+          "robots": "robots_unreachable",
+          "unreachable": true
+        },
+        {
+          "source_id": "YODOBASHI",
+          "retailer": "ヨドバシカメラ",
+          "adapter": null,
+          "state": "SOURCE_UNREACHABLE",
+          "health": "FAILED",
+          "blocked": false,
+          "robots": "robots_unreachable",
+          "unreachable": true
+        },
+        {
+          "source_id": "AMAZON",
+          "retailer": "Amazon",
+          "adapter": null,
+          "state": "SOURCE_NOT_MONITORED",
+          "health": "OK_NO_EVENTS",
+          "blocked": false,
+          "robots": null,
+          "unreachable": false
+        },
+        {
+          "source_id": "RAKUTEN_BOOKS",
+          "retailer": "楽天ブックス",
+          "adapter": null,
+          "state": "SOURCE_UNREACHABLE",
+          "health": "FAILED",
+          "blocked": false,
+          "robots": "robots_unreachable",
+          "unreachable": true
+        },
+        {
+          "source_id": "SEVEN_NET",
+          "retailer": "セブンネットショッピング",
+          "adapter": null,
+          "state": "SOURCE_NOT_MONITORED",
+          "health": "OK_NO_EVENTS",
+          "blocked": false,
+          "robots": null,
+          "unreachable": false
+        },
+        {
+          "source_id": "LAWSON",
+          "retailer": "ローソン",
+          "adapter": "lawson_lottery",
+          "state": "NO_ACTIVE_LOTTERY",
+          "health": "OK_NO_EVENTS",
+          "blocked": false,
+          "robots": null,
+          "unreachable": false
+        },
+        {
+          "source_id": "ONEPIECE_CARD_OFFICIAL",
+          "retailer": "ONE PIECEカードゲーム公式",
+          "adapter": "onepiece_news_lottery",
+          "state": "NO_ACTIVE_LOTTERY",
+          "health": "OK_NO_EVENTS",
+          "blocked": false,
+          "robots": null,
+          "unreachable": false
+        },
+        {
+          "source_id": "ONEPIECE_CARD_OFFICIAL_SHOP",
+          "retailer": "ONE PIECEカードゲーム公式ショップ",
+          "adapter": null,
+          "state": "SOURCE_NOT_MONITORED",
+          "health": null,
+          "blocked": false,
+          "robots": null,
+          "unreachable": false
+        },
+        {
+          "source_id": "PREMIUM_BANDAI",
+          "retailer": "プレミアムバンダイ",
+          "adapter": "premium_bandai_lottery",
+          "state": "NO_ACTIVE_LOTTERY",
+          "health": "OK_NO_EVENTS",
+          "blocked": false,
+          "robots": null,
+          "unreachable": false
+        }
+      ]
+    }
+  },
+  "errors": [],
+  "metrics": {
+    "product_candidates": 27,
+    "new_product_candidates": 27,
+    "pending_review": 13,
+    "review_required": 14,
+    "matched_existing": 0,
+    "approved": 0,
+    "rejected": 0,
+    "stale": 0,
+    "unknown_official_products": 20,
+    "apple_candidates": 7,
+    "tcg_products": 20,
+    "event_candidates": 14,
+    "review_required_announcements": 2,
+    "matched_events": 12,
+    "stale_events": 0
+  },
+  "sources": {
+    "configured": 17,
+    "implemented": 6,
+    "unimplemented": 11,
+    "blocked": 3,
+    "robots_unreachable": 4,
+    "unreachable": 4,
+    "table": [
+      {
+        "source_id": "POKEMON_CENTER_ONLINE",
+        "retailer": "ポケモンセンターオンライン",
+        "adapter": "pco_lottery",
+        "state": "SOURCE_BLOCKED",
+        "health": "OK_NO_EVENTS",
+        "blocked": true,
+        "robots": null,
+        "unreachable": false
+      },
+      {
+        "source_id": "POKEMON_CARD_OFFICIAL",
+        "retailer": "ポケモンカードゲーム公式（ニュース）",
+        "adapter": "pokemon_news_lottery",
+        "state": "NO_ACTIVE_LOTTERY",
+        "health": "OK_NO_EVENTS",
+        "blocked": false,
+        "robots": null,
+        "unreachable": false
+      },
+      {
+        "source_id": "GEO",
+        "retailer": "ゲオ",
+        "adapter": "geo_lottery",
+        "state": "NO_ACTIVE_LOTTERY",
+        "health": "HEALTHY",
+        "blocked": false,
+        "robots": null,
+        "unreachable": false
+      },
+      {
+        "source_id": "TOYSRUS",
+        "retailer": "トイザらス",
+        "adapter": null,
+        "state": "SOURCE_BLOCKED",
+        "health": "BLOCKED",
+        "blocked": true,
+        "robots": null,
+        "unreachable": false
+      },
+      {
+        "source_id": "JOSHIN",
+        "retailer": "Joshin",
+        "adapter": null,
+        "state": "SOURCE_BLOCKED",
+        "health": "BLOCKED",
+        "blocked": true,
+        "robots": null,
+        "unreachable": false
+      },
+      {
+        "source_id": "EDION",
+        "retailer": "エディオン",
+        "adapter": null,
+        "state": "SOURCE_NOT_MONITORED",
+        "health": "OK_NO_EVENTS",
+        "blocked": false,
+        "robots": null,
+        "unreachable": false
+      },
+      {
+        "source_id": "YAMADA",
+        "retailer": "ヤマダデンキ",
+        "adapter": null,
+        "state": "SOURCE_UNREACHABLE",
+        "health": "FAILED",
+        "blocked": false,
+        "robots": "robots_unreachable",
+        "unreachable": true
+      },
+      {
+        "source_id": "TSUTAYA",
+        "retailer": "TSUTAYA",
+        "adapter": null,
+        "state": "SOURCE_NOT_MONITORED",
+        "health": "OK_NO_EVENTS",
+        "blocked": false,
+        "robots": null,
+        "unreachable": false
+      },
+      {
+        "source_id": "BICCAMERA",
+        "retailer": "ビックカメラ",
+        "adapter": null,
+        "state": "SOURCE_UNREACHABLE",
+        "health": "FAILED",
+        "blocked": false,
+        "robots": "robots_unreachable",
+        "unreachable": true
+      },
+      {
+        "source_id": "YODOBASHI",
+        "retailer": "ヨドバシカメラ",
+        "adapter": null,
+        "state": "SOURCE_UNREACHABLE",
+        "health": "FAILED",
+        "blocked": false,
+        "robots": "robots_unreachable",
+        "unreachable": true
+      },
+      {
+        "source_id": "AMAZON",
+        "retailer": "Amazon",
+        "adapter": null,
+        "state": "SOURCE_NOT_MONITORED",
+        "health": "OK_NO_EVENTS",
+        "blocked": false,
+        "robots": null,
+        "unreachable": false
+      },
+      {
+        "source_id": "RAKUTEN_BOOKS",
+        "retailer": "楽天ブックス",
+        "adapter": null,
+        "state": "SOURCE_UNREACHABLE",
+        "health": "FAILED",
+        "blocked": false,
+        "robots": "robots_unreachable",
+        "unreachable": true
+      },
+      {
+        "source_id": "SEVEN_NET",
+        "retailer": "セブンネットショッピング",
+        "adapter": null,
+        "state": "SOURCE_NOT_MONITORED",
+        "health": "OK_NO_EVENTS",
+        "blocked": false,
+        "robots": null,
+        "unreachable": false
+      },
+      {
+        "source_id": "LAWSON",
+        "retailer": "ローソン",
+        "adapter": "lawson_lottery",
+        "state": "NO_ACTIVE_LOTTERY",
+        "health": "OK_NO_EVENTS",
+        "blocked": false,
+        "robots": null,
+        "unreachable": false
+      },
+      {
+        "source_id": "ONEPIECE_CARD_OFFICIAL",
+        "retailer": "ONE PIECEカードゲーム公式",
+        "adapter": "onepiece_news_lottery",
+        "state": "NO_ACTIVE_LOTTERY",
+        "health": "OK_NO_EVENTS",
+        "blocked": false,
+        "robots": null,
+        "unreachable": false
+      },
+      {
+        "source_id": "ONEPIECE_CARD_OFFICIAL_SHOP",
+        "retailer": "ONE PIECEカードゲーム公式ショップ",
+        "adapter": null,
+        "state": "SOURCE_NOT_MONITORED",
+        "health": null,
+        "blocked": false,
+        "robots": null,
+        "unreachable": false
+      },
+      {
+        "source_id": "PREMIUM_BANDAI",
+        "retailer": "プレミアムバンダイ",
+        "adapter": "premium_bandai_lottery",
+        "state": "NO_ACTIVE_LOTTERY",
+        "health": "OK_NO_EVENTS",
+        "blocked": false,
+        "robots": null,
+        "unreachable": false
+      }
+    ]
+  }
+}

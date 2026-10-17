@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-16T17:56:10.035292+09:00",
+  "generated_at": "2026-10-17T17:34:01.786603+09:00",
   "sources": [
     {
       "source_id": "POKEMON_CENTER_ONLINE",
@@ -19,8 +19,8 @@
       "state": "SOURCE_BLOCKED",
       "state_label": "アクセス拒否",
       "reachable": true,
-      "last_checked": "2026-10-16T17:49:17.080424+09:00",
-      "last_success": "2026-10-16T17:49:17.362165+09:00",
+      "last_checked": "2026-10-17T17:27:07.964381+09:00",
+      "last_success": "2026-10-17T17:27:08.336408+09:00",
       "last_event_found": "2026-10-06T03:12:52.336432+09:00",
       "candidate_articles": 2,
       "accepted_lotteries": 0,
@@ -34,6 +34,7 @@
       "active_lotteries": 2,
       "active_preorders": 0,
       "announcements": 2,
+      "discovered_titles": [],
       "pages": [
         {
           "url": "https://www.pokemon-card.com/info/",
@@ -41,9 +42,9 @@
           "http_status": 200,
           "final_url": "https://www.pokemon-card.com/info/",
           "page_title": "ニュース一覧 | ポケモンカードゲーム公式ホームページ",
-          "html_length": 232902,
-          "text_length": 17854,
-          "links_discovered": 427,
+          "html_length": 234168,
+          "text_length": 17972,
+          "links_discovered": 429,
           "product_links_discovered": 0,
           "candidate_blocks": 0,
           "accepted": 0,
@@ -103,8 +104,8 @@
       "state": "NO_ACTIVE_LOTTERY",
       "state_label": "現在の抽選なし",
       "reachable": true,
-      "last_checked": "2026-10-16T17:50:18.769675+09:00",
-      "last_success": "2026-10-16T17:50:18.769690+09:00",
+      "last_checked": "2026-10-17T17:28:09.350632+09:00",
+      "last_success": "2026-10-17T17:28:09.350651+09:00",
       "last_event_found": null,
       "candidate_articles": 0,
       "accepted_lotteries": 0,
@@ -121,6 +122,15 @@
       "active_lotteries": 0,
       "active_preorders": 0,
       "announcements": 0,
+      "discovered_titles": [
+        {
+          "url": "https://www.pokemon-card.com/info/005069.html",
+          "title": "ポケモンカードゲーム スカーレット＆バイオレット スペシャルBOXの追加生産、および追加販売のお知らせ",
+          "published_at": "2026-03-13T00:00:00+09:00",
+          "kind": "RESTOCK",
+          "reason": "title_only_not_fetched"
+        }
+      ],
       "pages": []
     },
     {
@@ -142,8 +152,8 @@
       "state": "NO_ACTIVE_LOTTERY",
       "state_label": "現在の抽選なし",
       "reachable": true,
-      "last_checked": "2026-10-16T17:50:18.778738+09:00",
-      "last_success": "2026-10-16T17:50:19.367068+09:00",
+      "last_checked": "2026-10-17T17:28:09.356538+09:00",
+      "last_success": "2026-10-17T17:28:09.724448+09:00",
       "last_event_found": "2026-10-01T20:51:59.851413+09:00",
       "candidate_articles": 3,
       "accepted_lotteries": 4,
@@ -159,6 +169,7 @@
       "active_lotteries": 0,
       "active_preorders": 0,
       "announcements": 0,
+      "discovered_titles": [],
       "pages": [
         {
           "url": "https://geo-online.co.jp/news/",
@@ -166,14 +177,14 @@
           "http_status": 200,
           "final_url": "https://geo-online.co.jp/news/",
           "page_title": "お知らせ - GEO Online/ゲオオンライン",
-          "html_length": 34695,
+          "html_length": 34692,
           "text_length": 2601,
           "links_discovered": 161,
           "product_links_discovered": 0,
           "candidate_blocks": 0,
           "accepted": 0,
           "rejected": 0,
-          "robots_status": "allowed",
+          "robots_status": "not_found",
           "error": null
         },
         {
@@ -182,14 +193,14 @@
           "http_status": 200,
           "final_url": "https://geo-online.co.jp/news/783",
           "page_title": "お知らせ：10月16日(金)発売『ポケモンカードゲーム MEGA「30th CELEBRATION カードセット」（9種セット）』抽選販売受付のお知らせ - GEO Online/ゲオオンライン",
-          "html_length": 40131,
+          "html_length": 40128,
           "text_length": 5905,
           "links_discovered": 158,
           "product_links_discovered": 0,
           "candidate_blocks": 1,
           "accepted": 1,
           "rejected": 0,
-          "robots_status": "allowed",
+          "robots_status": "not_found",
           "error": null
         },
         {
@@ -198,14 +209,14 @@
           "http_status": 200,
           "final_url": "https://geo-online.co.jp/news/784",
           "page_title": "お知らせ：10月31日(土)発売「ONE PIECEカードゲーム エクストラブースター ONE PIECE Heroines Edition vol.2」抽選販売受付のお知らせ - GEO Online/ゲオオンライン",
-          "html_length": 39988,
+          "html_length": 39985,
           "text_length": 5730,
           "links_discovered": 158,
           "product_links_discovered": 0,
           "candidate_blocks": 1,
           "accepted": 1,
           "rejected": 0,
-          "robots_status": "allowed",
+          "robots_status": "not_found",
           "error": null
         },
         {
@@ -214,14 +225,14 @@
           "http_status": 200,
           "final_url": "https://geo-online.co.jp/news/785",
           "page_title": "お知らせ：「ポケモンカードゲーム 」「ONE PIECEカードゲーム』再販商品 抽選販売受付のお知らせ - GEO Online/ゲオオンライン",
-          "html_length": 39950,
+          "html_length": 39947,
           "text_length": 5655,
           "links_discovered": 158,
           "product_links_discovered": 0,
           "candidate_blocks": 1,
           "accepted": 2,
           "rejected": 0,
-          "robots_status": "allowed",
+          "robots_status": "not_found",
           "error": null
         }
       ]
@@ -245,7 +256,7 @@
       "state": "SOURCE_BLOCKED",
       "state_label": "アクセス拒否",
       "reachable": false,
-      "last_checked": "2026-10-16T17:53:19.376087+09:00",
+      "last_checked": "2026-10-17T17:31:09.816752+09:00",
       "last_success": null,
       "last_event_found": null,
       "candidate_articles": 0,
@@ -260,6 +271,7 @@
       "active_lotteries": 0,
       "active_preorders": 0,
       "announcements": 0,
+      "discovered_titles": [],
       "pages": [
         {
           "url": "https://www.toysrus.co.jp/",
@@ -298,7 +310,7 @@
       "state": "SOURCE_BLOCKED",
       "state_label": "アクセス拒否",
       "reachable": false,
-      "last_checked": "2026-10-16T17:53:19.687308+09:00",
+      "last_checked": "2026-10-17T17:31:10.337115+09:00",
       "last_success": null,
       "last_event_found": null,
       "candidate_articles": 0,
@@ -313,6 +325,7 @@
       "active_lotteries": 0,
       "active_preorders": 0,
       "announcements": 0,
+      "discovered_titles": [],
       "pages": [
         {
           "url": "https://joshinweb.jp/",
@@ -351,8 +364,8 @@
       "state": "SOURCE_NOT_MONITORED",
       "state_label": "未監視（未実装）",
       "reachable": true,
-      "last_checked": "2026-10-16T17:53:20.063350+09:00",
-      "last_success": "2026-10-16T17:53:21.475503+09:00",
+      "last_checked": "2026-10-17T17:31:10.625845+09:00",
+      "last_success": "2026-10-17T17:31:11.401853+09:00",
       "last_event_found": null,
       "candidate_articles": 0,
       "accepted_lotteries": 0,
@@ -366,6 +379,7 @@
       "active_lotteries": 0,
       "active_preorders": 0,
       "announcements": 0,
+      "discovered_titles": [],
       "pages": [
         {
           "url": "https://www.edion.com/",
@@ -373,9 +387,9 @@
           "http_status": 200,
           "final_url": "https://www.edion.com/",
           "page_title": "エディオン公式通販",
-          "html_length": 193381,
-          "text_length": 16109,
-          "links_discovered": 1166,
+          "html_length": 190829,
+          "text_length": 15644,
+          "links_discovered": 1133,
           "product_links_discovered": 0,
           "candidate_blocks": 0,
           "accepted": 0,
@@ -404,7 +418,7 @@
       "state": "SOURCE_UNREACHABLE",
       "state_label": "接続できない",
       "reachable": false,
-      "last_checked": "2026-10-16T17:53:21.475583+09:00",
+      "last_checked": "2026-10-17T17:31:11.401941+09:00",
       "last_success": null,
       "last_event_found": null,
       "candidate_articles": 0,
@@ -419,6 +433,7 @@
       "active_lotteries": 0,
       "active_preorders": 0,
       "announcements": 0,
+      "discovered_titles": [],
       "pages": [
         {
           "url": "https://www.yamada-denkiweb.com/",
@@ -457,8 +472,8 @@
       "state": "SOURCE_NOT_MONITORED",
       "state_label": "未監視（未実装）",
       "reachable": true,
-      "last_checked": "2026-10-16T17:53:31.822110+09:00",
-      "last_success": "2026-10-16T17:53:32.348746+09:00",
+      "last_checked": "2026-10-17T17:31:21.764590+09:00",
+      "last_success": "2026-10-17T17:31:22.861982+09:00",
       "last_event_found": null,
       "candidate_articles": 0,
       "accepted_lotteries": 0,
@@ -472,6 +487,7 @@
       "active_lotteries": 0,
       "active_preorders": 0,
       "announcements": 0,
+      "discovered_titles": [],
       "pages": [
         {
           "url": "https://store-tsutaya.tsite.jp/",
@@ -479,7 +495,7 @@
           "http_status": 200,
           "final_url": "https://store-tsutaya.tsite.jp/",
           "page_title": "店舗 - 店舗-トップ",
-          "html_length": 28742,
+          "html_length": 28723,
           "text_length": 2057,
           "links_discovered": 57,
           "product_links_discovered": 0,
@@ -510,7 +526,7 @@
       "state": "SOURCE_UNREACHABLE",
       "state_label": "接続できない",
       "reachable": false,
-      "last_checked": "2026-10-16T17:53:32.348838+09:00",
+      "last_checked": "2026-10-17T17:31:22.862067+09:00",
       "last_success": null,
       "last_event_found": null,
       "candidate_articles": 0,
@@ -525,6 +541,7 @@
       "active_lotteries": 0,
       "active_preorders": 0,
       "announcements": 0,
+      "discovered_titles": [],
       "pages": [
         {
           "url": "https://www.biccamera.com/",
@@ -563,7 +580,7 @@
       "state": "SOURCE_UNREACHABLE",
       "state_label": "接続できない",
       "reachable": false,
-      "last_checked": "2026-10-16T17:53:42.748186+09:00",
+      "last_checked": "2026-10-17T17:31:33.251901+09:00",
       "last_success": null,
       "last_event_found": null,
       "candidate_articles": 0,
@@ -578,6 +595,7 @@
       "active_lotteries": 0,
       "active_preorders": 0,
       "announcements": 0,
+      "discovered_titles": [],
       "pages": [
         {
           "url": "https://www.yodobashi.com/",
@@ -616,8 +634,8 @@
       "state": "SOURCE_NOT_MONITORED",
       "state_label": "未監視（未実装）",
       "reachable": true,
-      "last_checked": "2026-10-16T17:53:53.019238+09:00",
-      "last_success": "2026-10-16T17:53:53.304571+09:00",
+      "last_checked": "2026-10-17T17:31:43.621660+09:00",
+      "last_success": "2026-10-17T17:31:44.075466+09:00",
       "last_event_found": null,
       "candidate_articles": 0,
       "accepted_lotteries": 0,
@@ -631,6 +649,7 @@
       "active_lotteries": 0,
       "active_preorders": 0,
       "announcements": 0,
+      "discovered_titles": [],
       "pages": [
         {
           "url": "https://www.amazon.co.jp/",
@@ -669,7 +688,7 @@
       "state": "SOURCE_UNREACHABLE",
       "state_label": "接続できない",
       "reachable": false,
-      "last_checked": "2026-10-16T17:53:53.304703+09:00",
+      "last_checked": "2026-10-17T17:31:44.075596+09:00",
       "last_success": null,
       "last_event_found": null,
       "candidate_articles": 0,
@@ -684,6 +703,7 @@
       "active_lotteries": 0,
       "active_preorders": 0,
       "announcements": 0,
+      "discovered_titles": [],
       "pages": [
         {
           "url": "https://books.rakuten.co.jp/",
@@ -722,8 +742,8 @@
       "state": "SOURCE_NOT_MONITORED",
       "state_label": "未監視（未実装）",
       "reachable": true,
-      "last_checked": "2026-10-16T17:54:03.500758+09:00",
-      "last_success": "2026-10-16T17:54:04.349166+09:00",
+      "last_checked": "2026-10-17T17:31:54.322168+09:00",
+      "last_success": "2026-10-17T17:31:56.349201+09:00",
       "last_event_found": null,
       "candidate_articles": 0,
       "accepted_lotteries": 0,
@@ -737,6 +757,7 @@
       "active_lotteries": 0,
       "active_preorders": 0,
       "announcements": 0,
+      "discovered_titles": [],
       "pages": [
         {
           "url": "https://7net.omni7.jp/",
@@ -744,8 +765,8 @@
           "http_status": 200,
           "final_url": "https://7net.omni7.jp/top",
           "page_title": "セブンネットショッピング｜本・雑誌・CD・DVD 通販",
-          "html_length": 82078,
-          "text_length": 1480,
+          "html_length": 81853,
+          "text_length": 1417,
           "links_discovered": 81,
           "product_links_discovered": 0,
           "candidate_blocks": 0,
@@ -775,8 +796,8 @@
       "state": "NO_ACTIVE_LOTTERY",
       "state_label": "現在の抽選なし",
       "reachable": true,
-      "last_checked": "2026-10-16T17:54:04.349241+09:00",
-      "last_success": "2026-10-16T17:55:05.505391+09:00",
+      "last_checked": "2026-10-17T17:31:56.349293+09:00",
+      "last_success": "2026-10-17T17:32:57.681727+09:00",
       "last_event_found": null,
       "candidate_articles": 0,
       "accepted_lotteries": 0,
@@ -790,6 +811,7 @@
       "active_lotteries": 0,
       "active_preorders": 0,
       "announcements": 0,
+      "discovered_titles": [],
       "pages": [
         {
           "url": "https://www.lawson.co.jp/campaign/",
@@ -843,8 +865,8 @@
       "state": "NO_ACTIVE_LOTTERY",
       "state_label": "現在の抽選なし",
       "reachable": true,
-      "last_checked": "2026-10-16T17:55:05.505480+09:00",
-      "last_success": "2026-10-16T17:55:08.322829+09:00",
+      "last_checked": "2026-10-17T17:32:57.681815+09:00",
+      "last_success": "2026-10-17T17:33:00.438429+09:00",
       "last_event_found": null,
       "candidate_articles": 0,
       "accepted_lotteries": 0,
@@ -860,6 +882,7 @@
       "active_lotteries": 0,
       "active_preorders": 0,
       "announcements": 0,
+      "discovered_titles": [],
       "pages": [
         {
           "url": "https://www.onepiece-cardgame.com/news/",
@@ -912,6 +935,7 @@
       "active_lotteries": 0,
       "active_preorders": 0,
       "announcements": 0,
+      "discovered_titles": [],
       "pages": []
     },
     {
@@ -932,8 +956,8 @@
       "state": "NO_ACTIVE_LOTTERY",
       "state_label": "現在の抽選なし",
       "reachable": true,
-      "last_checked": "2026-10-16T17:55:08.324194+09:00",
-      "last_success": "2026-10-16T17:56:10.032787+09:00",
+      "last_checked": "2026-10-17T17:33:00.439375+09:00",
+      "last_success": "2026-10-17T17:34:01.784685+09:00",
       "last_event_found": null,
       "candidate_articles": 0,
       "accepted_lotteries": 0,
@@ -947,6 +971,7 @@
       "active_lotteries": 0,
       "active_preorders": 0,
       "announcements": 0,
+      "discovered_titles": [],
       "pages": [
         {
           "url": "https://p-bandai.jp/",
@@ -970,7 +995,7 @@
           "http_status": 200,
           "final_url": "https://p-bandai.jp/global_newpc.html",
           "page_title": "【プレミアムバンダイ】INTERNATIONAL SHIPPING AVAILABLE｜PREMIUM BANDAI",
-          "html_length": 10525,
+          "html_length": 10526,
           "text_length": 783,
           "links_discovered": 12,
           "product_links_discovered": 0,

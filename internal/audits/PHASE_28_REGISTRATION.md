@@ -103,3 +103,16 @@ TCG は利益に接続しない。外部への送信 0。
 - 同じ告知の URL で複数の商品を登録したとき、1行だけ CSV から外しても、台帳の候補は登録済みのまま（照らし合わせが「店|URL」の
   ため。CI は止めない。運用の文書に注意を書いた）
 - 告知の registered_id は「店|URL|開始」。URL に「|」が入ると照らし合わせで確認待ちに戻る（安全側。公式の URL では起きない）
+
+## 9. 本番の確認（2026-10-17）
+
+- 最初の1件（canary）: ユーザーの承認の後、iPhone Air 256GB（候補 apple-24816e322cf0）を承認（official_url・part_numbers・
+  capacity・official_price・colors を確認）→ dry-run → `--confirm` で `prod_iphoneair_256` を登録（コミット 9cb6caf1。正本と台帳の
+  2ファイルだけ）。正本 45 → 46
+- Daily LP の手動の実行（Run 39034279118・success・1時間13分）・生成コミット b37a1fe4（config/・CSV を含まない）
+- 台帳: 登録した候補は REGISTERED のまま・同じ「機種 + 容量」の新しい候補は無し・照らし合わせで戻した候補 0。この実行の Apple は
+  iphone-18-pro・iphone-17e を読んだ（iphone-air は次以降の実行で読み、正本と一致する。`canonical_iphones` は本番の正本で
+  ("iphone air", "256GB") → prod_iphoneair_256 を返す）。新しく読んだ2機種で確認待ちの候補が増えた（Apple の候補 7 → 16）
+- 利益: 利益ルート 0（利益0件の診断に「売却の候補なし」で入るだけ）・今すぐ行動できない（unverified_buy_price・no_sell_price）・
+  公式の価格は設定値の参考（VERIFY_FROM_OFFICIAL）・在庫は作らない
+- deploy-check エラー 0（#862・#863 の2項目とも OK）・prelaunch ❌ 0・Phase 24 の受入状態は PHASE24_WAITING・外部への送信 0

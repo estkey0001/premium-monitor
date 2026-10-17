@@ -1,12 +1,12 @@
 # Collector Quality Report
 
-生成日時: 2026-10-17 21:53:46 UTC+09:00
+生成日時: 2026-10-18 00:14:27 UTC+09:00
 
 ## サマリ
 
 | 合計 | OK | 失敗 | スキップ |
 |------|-----|------|----------|
-| 64 | 18 | 42 | 4 |
+| 65 | 19 | 42 | 4 |
 
 ## 店舗別 OK/失敗/スキップ
 
@@ -21,7 +21,7 @@
 | iosys | 0 | 6 | 0 |
 | janpara | 0 | 6 | 0 |
 | kaitori_itchome | 4 | 0 | 0 |
-| kaitori_shouten | 14 | 1 | 0 |
+| kaitori_shouten | 15 | 1 | 0 |
 | mobile_ichiban | 0 | 5 | 0 |
 | netoff | 0 | 4 | 0 |
 | pasoko | 0 | 2 | 0 |
@@ -43,6 +43,7 @@
 | iphone17pm512 | 2 | 6 | 0 |
 | iphone17pro256 | 2 | 6 | 0 |
 | iphone17pro512 | 2 | 6 | 0 |
+| iphoneair_256 | 1 | 0 | 0 |
 | ps5_pro | 1 | 9 | 2 |
 | r5ii | 1 | 0 | 0 |
 | switch2 | 1 | 8 | 2 |
@@ -63,6 +64,7 @@
 | iphone17pm512 | 2 | 3 | ❌ | ¥215,500 | ¥215,000 | ¥216,000 | — |
 | iphone17pro256 | 2 | 3 | ❌ | ¥173,500 | ¥173,000 | ¥174,000 | — |
 | iphone17pro512 | 2 | 3 | ❌ | ¥198,500 | ¥198,000 | ¥199,000 | — |
+| iphoneair_256 | 1 | - | - | ¥133,000 | ¥133,000 | ¥133,000 | — |
 | ps5_pro | 1 | 2 | ❌ | ¥198,200 | ¥198,200 | ¥198,200 | ⚠️ |
 | r5ii | 1 | - | - | ¥450,000 | ¥450,000 | ¥450,000 | — |
 | switch2 | 1 | 2 | ❌ | ¥51,800 | ¥51,800 | ¥51,800 | — |
@@ -81,6 +83,7 @@
 | iphone17pm512 | kaitori_shouten, kaitori_itchome |
 | iphone17pro256 | kaitori_shouten, kaitori_itchome |
 | iphone17pro512 | kaitori_shouten, kaitori_itchome |
+| iphoneair_256 | kaitori_shouten |
 | ps5_pro | kaitori_shouten |
 | r5ii | kaitori_shouten |
 | switch2 | kaitori_shouten |
@@ -100,7 +103,7 @@
 | iosys | 0% | 0 | 6 | — | 6/6 | http_403 |
 | janpara | 0% | 0 | 6 | 6/6 | — | rate_limited_429 |
 | kaitori_itchome | 100% | 4 | 0 | — | — | — |
-| kaitori_shouten | 93% | 14 | 1 | — | — | product_not_listed |
+| kaitori_shouten | 94% | 15 | 1 | — | — | product_not_listed |
 | mobile_ichiban | 0% | 0 | 5 | — | — | product_not_listed |
 | netoff | 0% | 0 | 4 | — | — | price_not_found |
 | pasoko | 0% | 0 | 2 | — | — | product_not_listed |

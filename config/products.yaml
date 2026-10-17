@@ -66,6 +66,22 @@ products:
     keywords: ["iPhone 16 Pro Max 512", "MYW53J"]
 
   # =========================================
+  # iPhone（発見の候補から人が承認して登録。Phase 28）
+  # =========================================
+  - id: "prod_iphoneair_256"
+    genre: "iphone"
+    name: "iPhone Air 256GB SIMフリー"
+    brand: "Apple"
+    model_number: ""
+    retail_price: 189800
+    keywords: ["iPhone Air 256GB", "iPhone Air 256", "MG274J/A", "MG284J/A", "MG294J/A", "MG2A4J/A"]
+    capacity: "256GB"
+    part_numbers: ["MG274J/A", "MG284J/A", "MG294J/A", "MG2A4J/A"]
+    colors: ["Cloud White", "Light Gold", "Sky Blue", "Space Black"]
+    official_url: "https://www.apple.com/jp/shop/buy-iphone/iphone-air"
+    price_observed_on: "2026-10-17"
+
+  # =========================================
   # Mac / PC (genre: pc)
   # =========================================
   - id: "prod_macbook_air_m4_13"

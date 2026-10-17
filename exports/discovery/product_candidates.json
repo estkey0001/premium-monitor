@@ -217,13 +217,51 @@
       ],
       "match_to_existing": "",
       "candidate_id": "apple-24816e322cf0",
-      "status": "PENDING_REVIEW",
+      "status": "REGISTERED",
       "reasons": [
         "not_in_canonical"
       ],
       "discovered_at": "2026-10-17T17:34:02+09:00",
       "last_seen_on": "2026-10-17",
-      "updated_at": "2026-10-17T17:34:02+09:00"
+      "updated_at": "2026-10-17T21:52:10+09:00",
+      "reviewed_at": "2026-10-17T21:52:06+09:00",
+      "review": {
+        "at": "2026-10-17T21:52:06+09:00",
+        "decision": "APPROVED",
+        "reason": "",
+        "evidence_checked": [
+          "capacity",
+          "colors",
+          "official_price",
+          "official_url",
+          "part_numbers"
+        ]
+      },
+      "decisions": [
+        {
+          "at": "2026-10-17T21:52:06+09:00",
+          "decision": "APPROVED",
+          "reason": "",
+          "evidence_checked": [
+            "capacity",
+            "colors",
+            "official_price",
+            "official_url",
+            "part_numbers"
+          ]
+        },
+        {
+          "at": "2026-10-17T21:52:10+09:00",
+          "decision": "REGISTERED",
+          "reason": "",
+          "evidence_checked": [],
+          "target": "config/products.yaml",
+          "registered_id": "prod_iphoneair_256"
+        }
+      ],
+      "registered_at": "2026-10-17T21:52:10+09:00",
+      "registered_to": "config/products.yaml",
+      "registered_id": "prod_iphoneair_256"
     },
     "apple-a43f61f54dc6": {
       "source": "apple_jp_official",

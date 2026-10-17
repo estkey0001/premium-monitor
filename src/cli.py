@@ -760,8 +760,26 @@ def approve_candidate(candidate_id, product_id):
             click.echo(f"  Linked to: {product_id}")
         else:
             click.echo("  (No product linked. Add manually with products.yaml + seed)")
+        _record_discovery_decision(candidate_id, "approve", product_id)
     finally:
         db.close()
+
+
+def _record_discovery_decision(candidate_id: str, decision: str, product_id=None) -> None:
+    """発見の候補の台帳（exports/discovery/product_candidates.json）にも人の判断を記録する（Phase 27）。
+
+    正本（config/products.yaml・products の表）には追加しない。台帳の変更は git に push しない（人がコミットする）。
+    """
+    import os as _os
+    from datetime import datetime as _dt
+    from src.discovery import store as _st
+    from src.tcg.models import JST as _JST
+    path = Path(_os.environ.get("DISCOVERY_DIR") or PROJECT_ROOT / "exports" / "discovery") / _st.PRODUCT_FILE
+    rec = _st.decide(path, candidate_id, decision, now=_dt.now(tz=_JST), product_id=product_id)
+    if rec is None:
+        return
+    click.echo(f"  発見の候補の台帳に記録しました（{rec['status']}）。正本（config/products.yaml）には追加していません。")
+    click.echo("  正本に入れるときは、人が config/products.yaml に手で追加して確かめてからコミットしてください（自動で push しない）。")
 
 
 @cli.command("reject-product-candidate")
@@ -774,8 +792,85 @@ def reject_candidate(candidate_id):
         repo = Repository(db)
         repo.update_product_candidate_status(candidate_id, "rejected")
         click.echo(f"Rejected: {candidate_id}")
+        _record_discovery_decision(candidate_id, "reject")
     finally:
         db.close()
+
+
+@cli.command("discover")
+@click.option("--skip-apple", is_flag=True, help="Apple 公式を読まない（TCG の生成物だけで候補を作る）")
+def discover(skip_apple):
+    """新商品・新しいイベントの発見の候補を作る（Phase 27。読むだけ・正本に登録しない・送信しない）。
+
+    Apple 公式（iPhone）の販売中の商品と正本を照合し、正本に無い機種・容量を PENDING_REVIEW の候補にする。
+    TCG の生成物から、日程の無い告知・予約 / 先着 / 再販の告知・発売の予定・公式の一覧の商品を候補にする。
+    台帳は exports/discovery/。失敗しても正本は変えない（報告だけ）。
+    """
+    import json as _json
+    import os as _os
+    from datetime import datetime as _dt
+    from src.discovery import apple as _apple
+    from src.discovery import store as _st
+    from src.discovery import tcg as _tcg
+    from src.tcg.models import JST as _JST
+    from src.utils.atomic_write import write_json_atomic
+    now = _dt.now(tz=_JST)
+    out = Path(_os.environ.get("DISCOVERY_DIR") or PROJECT_ROOT / "exports" / "discovery")
+    rep = {"generated_at": now.isoformat(timespec="seconds"), "apple": {}, "tcg": {}, "errors": []}
+    if not skip_apple:
+        try:
+            a = _apple.run(out, PROJECT_ROOT / "config" / "products.yaml", now=now)
+            rep["apple"] = {k: v for k, v in a.items() if k != "store"}
+        except Exception as exc:  # noqa: BLE001
+            rep["errors"].append(f"apple:{type(exc).__name__}")       # 発見の失敗は報告だけ（正本は変えない）
+    try:
+        rep["tcg"] = _tcg.run(PROJECT_ROOT / "exports" / "tcg", out, now=now)
+    except Exception as exc:  # noqa: BLE001
+        rep["errors"].append(f"tcg:{type(exc).__name__}")
+    pcs, evs = _st.load(out / _st.PRODUCT_FILE), _st.load(out / _st.EVENT_FILE)
+    pc, ec = _st.counts(pcs), _st.counts(evs)
+    apple_c = [c for c in pcs["candidates"].values() if c.get("source") == _apple.SOURCE]
+    rep["metrics"] = {
+        "product_candidates": sum(1 for c in pcs["candidates"].values() if c.get("status") != _st.MATCHED_EXISTING),
+        "new_product_candidates": sum(1 for c in pcs["candidates"].values() if c.get("status") in _st.OPEN_REVIEW),
+        "pending_review": pc[_st.PENDING_REVIEW], "review_required": pc[_st.REVIEW_REQUIRED],
+        "matched_existing": pc[_st.MATCHED_EXISTING], "approved": pc[_st.APPROVED], "rejected": pc[_st.REJECTED],
+        "stale": pc[_st.STALE],
+        "unknown_official_products": sum(len(c.get("part_numbers") or []) for c in apple_c
+                                         if c.get("status") in _st.OPEN_REVIEW),
+        "apple_candidates": sum(1 for c in apple_c if c.get("status") in _st.OPEN_REVIEW),
+        "tcg_products": sum(1 for c in pcs["candidates"].values() if c.get("genre") == "tcg"),
+        "event_candidates": len(evs["candidates"]),
+        "review_required_announcements": ec[_st.ANNOUNCEMENT_REVIEW_REQUIRED],
+        "matched_events": ec[_st.MATCHED_EVENT], "stale_events": ec[_st.STALE]}
+    rep["sources"] = (rep.get("tcg") or {}).get("sources") or {}
+    write_json_atomic(out / "latest.json", rep)
+    try:
+        n = _st.mirror_to_db(pcs, Path(_get_db().db_path))    # 既存の product_candidates の表に写す
+    except Exception:  # noqa: BLE001
+        n = 0
+    m, s = rep["metrics"], rep["sources"]
+    lines = [f"Product discovery: new {m['apple_candidates']} (Apple) / pending {m['pending_review']} / "
+             f"review required {m['review_required']} / matched {m['matched_existing']} / unknown SKU "
+             f"{m['unknown_official_products']}",
+             f"TCG discovery: events {m['event_candidates']} / review required {m['review_required_announcements']} / "
+             f"products {m['tcg_products']} / blocked {s.get('blocked')} / robots unreachable {s.get('robots_unreachable')} / "
+             f"implemented {s.get('implemented')} of {s.get('configured')}",
+             f"Apple: list {rep['apple'].get('list_status', 'skipped')} / checked {rep['apple'].get('checked', [])} / "
+             f"errors {rep['apple'].get('errors', {})}",
+             f"canonical changes: 0 / external sends: 0 / db mirror: {n}"]
+    if rep["errors"]:
+        lines.append(f"errors: {rep['errors']}")
+    for ln in lines:
+        click.echo(ln)
+    summary = _os.environ.get("GITHUB_STEP_SUMMARY")
+    if summary:
+        try:
+            with open(summary, "a", encoding="utf-8") as f:
+                f.write("### 新商品・新しいイベントの発見（Phase 27）\n\n" + "\n".join(f"- {ln}" for ln in lines) + "\n")
+        except OSError:
+            pass
+    click.echo(_json.dumps({"errors": rep["errors"]}, ensure_ascii=False))
 
 
 # ---- Phase 5: 自動巡回 ----

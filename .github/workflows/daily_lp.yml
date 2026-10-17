@@ -115,6 +115,15 @@ jobs:
         env:
           PYTHONPATH: .
 
+      # 5.1 新商品・新しいイベントの発見（Phase 27）: Apple 公式（iPhone）と TCG の生成物から、人が確認する候補を作る。
+      # 読むだけ（robots.txt・間隔・正直な User-Agent・403 は止める）・正本（config/products.yaml・products の表）に
+      # 登録しない・送信しない・Secrets を渡さない。失敗しても LP の更新は止めない（報告だけ）
+      - name: Discover new products and events
+        run: python -m src.cli discover
+        continue-on-error: true
+        env:
+          PYTHONPATH: .
+
       # 6. Update alerts（アラート生成）
       - name: Update alerts
         run: python scripts/update_alerts.py
@@ -566,6 +575,7 @@ jobs:
                   exports/price_history/ \
                   exports/flea_sold_prices/ \
                   exports/ai_opportunities/ \
+                  exports/discovery/ \
                   exports/notifications/ ':(exclude)exports/notifications/actionable/state.json' \
                   exports/coverage/ \
                   exports/allocation/ \

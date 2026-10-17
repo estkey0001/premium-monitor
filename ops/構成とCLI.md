@@ -134,3 +134,17 @@ python3 -m src.cli reject-event-candidate --candidate-id <ID> --reason obsolete
   台帳・正本を push しない
 - 運営者向けの画面「新商品・新しいイベントの発見」は見るだけ（登録のボタンは無い）。確認待ち・承認済み・登録済み・却下・
   STALE の件数と、上の手順を表示する
+
+## 登録した商品の公式直販価格と買取（Phase 29）
+
+登録（Phase 28）は正本に入れるだけで、公式直販価格・買取・利益は付かない（設定値の参考価格・未取得・未算出）。利益の判定に
+つなぐには、商品ごとに次を人が確かめて足す（1件ずつ。詳細は `internal/audits/PHASE_29_ACTIVATION.md`）。
+
+- 公式直販価格: 公式の購入ページで、正本の part_numbers の全色が同じ価格であることを確かめ（取得の共通の作法で1回取得するか
+  ブラウザで確認）、`src/market/official_registry.py` の VERIFIED_URLS・IDENTITY_EVIDENCE（色違いの部品番号の組）・
+  OFFICIAL_DIRECT_OFFERS（在庫は UNKNOWN）に確認日つきで入れる。`scripts/recheck_official.py` の RECHECK_TARGETS にも入れる
+  （価格が変われば changed で確定に使わない・14日で古くなる）
+- 買取: 既存の買取商店の一覧で、行ごとに機種・容量・SIMフリー・部品番号まで照合できるときだけ
+  `src/collectors/buyback_kaitori_shouten.py` の PRODUCT_URLS・ROW_RULES（parts・color_policy=min）と
+  `scripts/update_buyback_prices.py` の TARGET_PRODUCTS に入れる（KEEP_PREVIOUS_ON_FAILURE には入れない）
+- 利益は既存の計算のまま。売値が安ければ no_profit、在庫が不明なら今すぐ行動できない。deploy-check #864 が検査する

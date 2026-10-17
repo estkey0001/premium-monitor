@@ -1,6 +1,7 @@
 # HANDOFF（最終更新: 2026-10-17）
 
 ## 今の状態
+- Phase 29（登録した商品の公式直販価格・買取）: iPhone Air 256GB の公式直販価格（189,800円・4色の部品番号）を official_registry に登録し、買取商店の iPhone Air の一覧で 256GB・SIMフリー・部品番号まで照合（色で価格が違えば最も低い色の行）。今の値では no_profit（在庫は UNKNOWN で今すぐ行動できない）。#864。記録は `internal/audits/PHASE_29_ACTIVATION.md`
 - Phase 28（候補の確認と正本への登録）: 承認（APPROVED = 人が公式ページで確かめた）と登録（REGISTERED = 正本に入れた）を分けた。`register-product-candidate`（承認済みの Apple の候補を1件ずつ config/products.yaml へ・既定 dry-run・`--confirm` で main と照合して atomic に書く・commit / push しない）・`register-event-candidate`（人が確かめた +09:00 の日程で data/tcg_verified_lotteries.csv へ）。discover が登録済みを正本と照らし合わせる。#863。記録は `internal/audits/PHASE_28_REGISTRATION.md`、手順は `ops/構成とCLI.md`
 - Phase 27（発見の候補）: Apple 公式（iPhone）の販売中の機種・容量を正本と照合し、正本に無いものを確認待ちの候補にする。TCG は日程の無い告知・予約 / 先着 / 再販のタイトルを「要確認」の候補にする（日程は推測しない）。台帳は `exports/discovery/`、CI の「Discover new products and events」、運営者向けの「新商品・新しいイベントの発見」。正本には自動で入れない。#862。記録は `internal/audits/PHASE_27_DISCOVERY.md`
 - Phase 26（受入の関門）: 商品の通知の実送信は、変数の関門に加えて受入の関門（`readiness.acceptance_gate`）を必ず通す。受入状態が READY・`PHASE24_ACCEPTANCE_CANDIDATE_ID`（候補の ID。手動の実行だけ読む）が今の候補に完全に一致・受入をまだ使っていない（台帳に本番の商品の送信済み・不明が無い）ときだけ1件。受入済みの後は変数を戻し忘れても送らない。#861。記録は `internal/audits/PHASE_26_ACCEPTANCE_GUARD.md`
@@ -61,7 +62,7 @@
 - 既存の問題: pytest を実行すると追跡対象の exports/api_automation/collection.json が書き換わる。コミット前に `git checkout -- exports/api_automation/collection.json` で戻すこと（テストの出力先修正は別タスク）。
 
 ## 次にやること
-0. 発見の候補を正本に入れるかは人が決める（承認 → 見込み → 登録を1件ずつ。`ops/構成とCLI.md`）。Phase 29 はユーザーの指示を待つ。受入状態が PHASE24_REAL_CANDIDATE_READY になったら Phase 24 の受入をやり直す（偽の候補は作らない。手順は `ops/Secrets設定.md` の「Phase 24 の受入を始めるとき」）。
+0. 発見の候補を正本に入れるかは人が決める（承認 → 見込み → 登録を1件ずつ。`ops/構成とCLI.md`）。Phase 30 はユーザーの指示を待つ。受入状態が PHASE24_REAL_CANDIDATE_READY になったら Phase 24 の受入をやり直す（偽の候補は作らない。手順は `ops/Secrets設定.md` の「Phase 24 の受入を始めるとき」）。
 1. 判断待ち（`src/market/official_registry.USER_DECISIONS`）: PS5 Digital Edition・Xbox Series X・Switch 2 マリオカートセットの版。
 2. 定時の実行での商品の通知の継続運用（別の Phase・別の明示の許可の後。今は手動の実行だけ・1回の実行で最大1件）。
 3. eBay の成約: ユーザーの設定待ち（`ops/Secrets設定.md`）。

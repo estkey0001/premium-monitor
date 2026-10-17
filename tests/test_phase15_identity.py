@@ -90,7 +90,8 @@ def test_identity_audit_scales_to_all_products():
     from src.content.ui import admin
     from src.market import official_registry as reg
     a = reg.identity_audit(list(PRODUCTS.values()))
-    assert sum(a["counts"][s] for s in reg.IDENTITY_STATES) == len(PRODUCTS) == 45
+    # 45 は Phase 15 の時点の正本。Phase 28 で発見の候補から1件（prod_iphoneair_256）を人が登録して 46
+    assert sum(a["counts"][s] for s in reg.IDENTITY_STATES) == len(PRODUCTS) == 46
     many = [{"id": f"p{i}", "name": f"商品{i}"} for i in range(60)]   # 曖昧な商品が多くても崩れない
     html = admin._identity_html(reg.identity_audit(many))
     assert html.count("商品詳細") == 60 and "NaN" not in html

@@ -49,6 +49,8 @@ OFFICIAL_PRICES: dict[str, int] = {
     "iphone17_256":   159_800,
     "iphone16pro256": 159_800,
     "airpods_pro3":    42_800,
+    # Phase 29: official_registry の公式直販価格（2026-10-17。異常値の判定だけに使う）
+    "iphoneair_256":  189_800,
     # Phase 17: カメラ（official_registry の確認値。公式直販価格・RICOH の定価。異常値の判定だけに使う）
     "x100vi":         315_700,
     "z8":             575_300,
@@ -68,6 +70,7 @@ PRODUCT_GENRES: dict[str, str] = {
     "iphone17_256":    "iphone",
     "iphone16pro256":  "iphone",
     "airpods_pro3":    "audio",
+    "iphoneair_256":   "iphone",
     "x100vi":          "camera",
     "z8":              "camera",
     "r5ii":            "camera",
@@ -147,6 +150,14 @@ TARGET_PRODUCTS = [
         "product_alias":  "airpods_pro3",
         "product_name":   "AirPods Pro 3",
         "condition":      "new_unopened",
+        "shops":          ["kaitori_shouten"],
+    },
+    # ── Phase 29（2026-10-17）: 発見から登録した iPhone Air 256GB。買取商店の iPhone Air の一覧（/category/1/709）で、
+    # 機種・容量・SIMフリー・公式で確かめた部品番号まで照合する（色で価格が違えば最も低い色の行）。リクエストは1回増える
+    {
+        "product_alias":  "iphoneair_256",
+        "product_name":   "iPhone Air 256GB SIMフリー",
+        "condition":      "new_unopened_simfree",
         "shops":          ["kaitori_shouten"],
     },
     # ── Phase 17（2026-10-08）: カメラの新品の買取。買取商店のカメラの一覧（構造化データの JAN で1行だけ照合。

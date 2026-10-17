@@ -23,6 +23,8 @@ PRODUCT_URLS = {
     "iphone17_256":    "https://www.kaitorishouten-co.jp/category/1/708",
     "iphone16pro256":  "https://www.kaitorishouten-co.jp/category/1/689",
     "airpods_pro3":    "https://www.kaitorishouten-co.jp/kaden",
+    # Phase 29（2026-10-17 確認）: /category/1/709 = iPhone Air（256GB / 512GB / 1TB の4色。各行に部品番号と SIMフリー）
+    "iphoneair_256":   "https://www.kaitorishouten-co.jp/category/1/709",
     # Phase 17（2026-10-08 確認）: カメラの一覧（新品・未開封の買取価格表）。/category/2/368 = デジタルカメラ、
     # /category/2/108 = デジタル一眼カメラ。どちらも1ページに全件（153件・228件）の構造化データ（商品名・JAN・
     # 新品の価格・商品ページの URL）が載る（?pageno= を変えても同じ内容なので、1ページを1回だけ取る）
@@ -81,6 +83,14 @@ ROW_RULES = {
                        "exclude": ["Pro", "Max", "Air", "au", "docomo", "ドコモ", "softbank", "ソフトバンク", "楽天"]},
     "iphone16pro256": {"pattern": r"^iPhone\s?16\s?Pro\s+256GB\b", "require": ["SIMフリー"],
                        "exclude": ["Max", "au", "docomo", "ドコモ", "softbank", "ソフトバンク", "楽天"]},
+    # Phase 29: iPhone Air 256GB（512GB・1TB・iPhone 17 / Pro を除く）。行の例: 「iPhone Air 256GB スカイブルー MG2A4J/A SIMフリー」。
+    # 部品番号が公式で確かめた 256GB の4色（official_registry の IDENTITY_EVIDENCE）のどれかであることも要る（parts）。
+    # 色で買取価格が違う（2026-10-17: スカイブルー ¥133,000・ほか ¥135,000）ので、色の最高値を使わず最も低い色の行を
+    # 使う（color_policy=min。その色を公式で買えば実際に成り立つ値。売値を色で混ぜて高く見せない）
+    "iphoneair_256":  {"pattern": r"^iPhone\s?Air\s+256GB\b", "require": ["SIMフリー"],
+                       "exclude": ["Pro", "Max", "Plus", "au", "docomo", "ドコモ", "softbank", "ソフトバンク", "楽天",
+                                   "中古", "未使用", "開封済"],
+                       "parts": ["MG274J/A", "MG284J/A", "MG294J/A", "MG2A4J/A"], "color_policy": "min"},
     # 型番まで一致するものだけ（第2世代・ケース単体などを拾わない）
     "airpods_pro3":   {"pattern": r"^AirPods\s?Pro\s*(?:第3世代|3)\s+MFHP4J/A$", "require": [],
                        "exclude": ["ケース", "イヤーチップ"]},
@@ -190,6 +200,11 @@ def match_rows(rows: list[tuple[str, int, str]], product_alias: str) -> list[tup
         if any(re.search(r"(?<![A-Za-z])" + re.escape(x) + r"(?![A-Za-z])", name, re.IGNORECASE)
                for x in rule["exclude"]):
             continue
+        # 部品番号の指定がある商品は、行の部品番号がちょうど1つ・指定のどれかであること（別の容量・色の番号を通さない）
+        if rule.get("parts"):
+            found = re.findall(r"\b[A-Z0-9]{4,5}J/A\b", name)
+            if len(found) != 1 or found[0] not in rule["parts"]:
+                continue
         out.append((name, price, href))
     return out
 
@@ -227,7 +242,8 @@ class KaitoriShoutenCsvCollector(BaseCsvBuybackCollector):
         """商品行の照合だけで価格を決める。一致する行が無ければ未掲載（None）。
 
         汎用のフォールバック（見出しの「最高¥…」・ページ全体の最初の価格）は使わない。
-        色違いが複数あるときは、同じ機種・容量の中の最高値（その商品の最高買取）を採用する。
+        色違いが複数あるときは、同じ機種・容量の中の最高値（その商品の最高買取）を採用する。ただし規則に
+        color_policy=min がある商品（Phase 29）は、最も低い色の行（その行の商品ページを出典）を採用する。
         """
         if product_alias in JAN_RULES:
             # カメラ: JAN で1行だけ（同じ JAN に違う価格が並べば、どれか1つを選ばない）
@@ -239,6 +255,10 @@ class KaitoriShoutenCsvCollector(BaseCsvBuybackCollector):
             matched = [(hits[0]["name"], hits[0]["price"], hits[0]["url"])]
         else:
             matched = match_rows(parse_rows(html), product_alias)
+            if matched and (ROW_RULES.get(product_alias) or {}).get("color_policy") == "min":
+                # 色で価格が違えば最も低い色の行（その行の商品ページを出典にする。最高値の色の価格を使わない）
+                low = min(p for _n, p, _h in matched)
+                matched = [r for r in matched if r[1] == low]
         self.last_matched_rows = matched
         if not matched:
             self.last_failure_reason = "product_not_listed"

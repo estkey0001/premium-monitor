@@ -4142,6 +4142,7 @@ def check() -> list[dict]:
     results.extend(_check_phase26_acceptance_guard())
     results.extend(_check_phase27_discovery())
     results.extend(_check_phase28_registration())
+    results.extend(_check_phase29_activation())
 
     # ══════════════════════════════════════════════════════════════════
     # #820-#825: データの正確さ・鮮度の偽装（Phase 0）
@@ -5656,6 +5657,130 @@ def _check_phase28_registration(root: Path | None = None) -> list[dict]:
             {"level": "ok" if not warn else "warning", "check": "discovery_registration_ledger",
              "message": "#863 正本と台帳の登録の対応（登録済みの候補が正本にある・発見の形の商品に登録の記録がある）"
                         + ("" if not warn else f" ← {warn[:4]}")}]
+
+
+def _check_phase29_activation(root: Path | None = None) -> list[dict]:
+    """Phase 29: 発見から登録した商品の公式直販価格・買取の照合（#864）。
+
+    登録した商品（products.yaml の price_observed_on あり）の公式直販価格は、公式の登録簿の証拠（URL・色違いの部品番号の組 =
+    正本の part_numbers・容量・価格）がそろうときだけ。設定値だけでは関門を通らない。買取の照合は機種・容量・SIMフリー・
+    キャリア版の除外・部品番号まで（色で価格が違えば最も低い色の行）。前回の買取の行を残さない（鮮度を偽装しない）。
+    登録した候補は次の発見で正本と一致し、同じ商品の候補を作り直さない。"""
+    import re as _re29
+    bad = []
+    root = root or Path(__file__).resolve().parent.parent
+    try:
+        import yaml as _y29
+        from src.market import official_registry as reg
+        prods = (_y29.safe_load((root / "config" / "products.yaml").read_text(encoding="utf-8")) or {}).get("products") or []
+        registered = [p for p in prods if isinstance(p, dict) and p.get("price_observed_on")]
+        for p in registered:
+            pid = str(p.get("id"))
+            v, ev, o = reg.VERIFIED_URLS.get(pid), reg.IDENTITY_EVIDENCE.get(pid) or {}, reg.OFFICIAL_DIRECT_OFFERS.get(pid)
+            if not v:
+                if reg.official_direct_gate(pid, p)[0]:
+                    bad.append(f"{pid}: 公式の証拠なしで公式直販価格の関門を通る")
+                continue
+            skus = ev.get("variant_skus") or {}
+            if v.get("price_kind") != "official_direct" or v.get("url") != p.get("official_url"):
+                bad.append(f"{pid}: 公式直販価格の種類・URL が登録と違う")
+            if set(skus) != set(p.get("part_numbers") or []):
+                bad.append(f"{pid}: 公式の部品番号の組が登録の part_numbers と違う")
+            if {c for c, _col, _pr in skus.values()} != {p.get("capacity")}:
+                bad.append(f"{pid}: 公式の部品番号の容量が登録の容量と違う")
+            if not o or {pr for _c, _col, pr in skus.values()} != {v.get("price")} or o.get("price") != v.get("price"):
+                bad.append(f"{pid}: 公式直販価格の証拠の価格がそろわない")
+            if o and o.get("stock") != "UNKNOWN" and not o.get("stock_semantics"):
+                bad.append(f"{pid}: 在庫の根拠なしに在庫を記録している")
+        # 登録した商品の公式の証拠を一時的に外すと関門を通らない（設定値だけでは確定にしない）・正本の部品番号の組が
+        # 証拠と違えば通らない（関数で確かめる）
+        for p in registered:
+            pid = str(p.get("id"))
+            if pid not in reg.VERIFIED_URLS:
+                continue
+            names = ("VERIFIED_URLS", "IDENTITY_EVIDENCE", "OFFICIAL_DIRECT_OFFERS")
+            saved = {n: dict(getattr(reg, n)) for n in names}          # 丸ごと退避して戻す（キーの順番も変えない）
+            try:
+                for n in names:
+                    getattr(reg, n).pop(pid, None)
+                if reg.official_direct_gate(pid, p)[0]:
+                    bad.append(f"{pid}: 設定値だけで公式直販価格になる")
+            finally:
+                for n in names:
+                    getattr(reg, n).clear()
+                    getattr(reg, n).update(saved[n])
+            if reg.official_direct_gate(pid, dict(p, part_numbers=list(p.get("part_numbers") or [])[:1]))[0]:
+                bad.append(f"{pid}: 正本の部品番号の組が証拠と違っても関門を通る")
+        # 買取の照合（登録した商品の規則）
+        from src.collectors import buyback_kaitori_shouten as ks
+        alias_of = {f"prod_{a}": a for a in ks.ROW_RULES}
+        for p in registered:
+            a = alias_of.get(str(p.get("id")))
+            if not a:
+                continue
+            rule = ks.ROW_RULES[a]
+            cap = str(p.get("capacity") or "")
+            if "SIMフリー" not in rule.get("require", []) or not {"au", "docomo", "softbank", "楽天"} <= set(rule["exclude"]) \
+                    or set(rule.get("parts") or []) != set(p.get("part_numbers") or []) or cap not in rule["pattern"] \
+                    or rule.get("color_policy") != "min":
+                bad.append(f"{a}: 買取の照合が機種・容量・SIMフリー・部品番号・色の扱いを確かめない")
+            parts = sorted(p.get("part_numbers") or [])
+            model = _re29.sub(r"\s+SIMフリー$", "", str(p.get("name") or "")).replace(f" {cap}", "")
+            other_cap = "512GB" if cap != "512GB" else "256GB"
+            rows = [(f"{model} {cap} 黒 {parts[0]} SIMフリー", 135000, "/products/detail/1"),
+                    (f"{model} {cap} 白 {parts[-1]} SIMフリー", 133000, "/products/detail/2"),
+                    (f"{model} {other_cap} 黒 {parts[0]} SIMフリー", 300000, "/products/detail/3"),
+                    (f"{model} {cap} 黒 {parts[0]} au", 300000, "/products/detail/4"),
+                    (f"{model} {cap} 黒 MZZZ9J/A SIMフリー", 300000, "/products/detail/5"),
+                    (f"{model} {cap} 黒 {parts[0]}", 300000, "/products/detail/6")]
+            got = ks.match_rows(rows, a)
+            if [r[2] for r in got] != ["/products/detail/1", "/products/detail/2"]:
+                bad.append(f"{a}: 別の容量・キャリア版・別の部品番号・SIMフリーでない行を通す")
+            c = ks.KaitoriShoutenCsvCollector.__new__(ks.KaitoriShoutenCsvCollector)
+            html = "<table><tr><th>品目</th><th>新品買取</th><th>中古買取</th></tr>" + "".join(
+                f'<tr><td><a href="{u}">{n}</a></td><td class="num">¥{pr:,}</td><td>¥1,000</td></tr>' for n, pr, u in rows) \
+                + "</table>"
+            if c._parse_price(html, a, "") != 133000 or not c._parse_detail_url(html, "").endswith("/products/detail/2"):
+                bad.append(f"{a}: 色で価格が違うときに最も低い色の行を使わない")
+        import importlib.util as _iu29
+        spec = _iu29.spec_from_file_location("_ubp29", root / "scripts" / "update_buyback_prices.py")
+        ubp = _iu29.module_from_spec(spec)
+        spec.loader.exec_module(ubp)
+        targets = {t["product_alias"]: t for t in ubp.TARGET_PRODUCTS}
+        for p in registered:
+            a = alias_of.get(str(p.get("id")))
+            if a and a in ubp.KEEP_PREVIOUS_ON_FAILURE:
+                bad.append(f"{a}: 取得に失敗した日に前回の買取の行を残す")
+            # 買取を取りに行く登録した商品は、行ごとの照合の規則が要る（規則なしで黙って検査を飛ばさない）
+            ta = str(p.get("id"))[len("prod_"):]
+            if ta in targets and ta not in ks.ROW_RULES:
+                bad.append(f"{ta}: 登録した商品の買取に行ごとの照合の規則が無い")
+            if ta in targets and targets[ta].get("condition") != "new_unopened_simfree" and p.get("genre") == "iphone":
+                bad.append(f"{ta}: iPhone の買取の状態が新品・SIMフリーでない")
+        # 発見の照合: 登録した候補は正本と一致し、同じ「機種 + 容量」の候補を作り直さない
+        from src.discovery import apple as ap
+        from src.discovery import store as st
+        canon_map = ap.canonical_iphones(root / "config" / "products.yaml")
+        led = root / "exports" / "discovery" / st.PRODUCT_FILE
+        pc = st.load(led)["candidates"] if led.exists() else {}
+        for cid, r in pc.items():
+            if r.get("status") != st.REGISTERED or r.get("source") != ap.SOURCE:
+                continue
+            q = ap.parse_name(str(r.get("product_name") or ""))
+            if not q or canon_map.get((q["line_key"], q["capacity"])) != r.get("registered_id"):
+                bad.append(f"{cid}: 登録した候補が正本の機種 + 容量と一致しない")
+            key = (q["line_key"], q["capacity"]) if q else None
+            dups = [k for k, x in pc.items() if k != cid and x.get("source") == ap.SOURCE and key
+                    and (ap.parse_name(str(x.get("product_name") or "")) or {}).get("line_key") == key[0]
+                    and (ap.parse_name(str(x.get("product_name") or "")) or {}).get("capacity") == key[1]]
+            if dups:
+                bad.append(f"{cid}: 同じ商品の候補を作り直している {dups[:2]}")
+    except Exception as exc:  # noqa: BLE001
+        bad.append(f"検査に失敗: {type(exc).__name__}: {exc}")
+    return [{"level": "ok" if not bad else "error", "check": "discovered_product_activation",
+             "message": "#864 登録した商品の公式直販価格・買取の照合（公式の証拠がそろうときだけ・設定値だけで確定にしない・"
+                        "容量 / SIMフリー / キャリア版 / 部品番号・色の価格を混ぜない・前回の行を残さない・発見で正本と一致・"
+                        "候補の重複なし）" + ("" if not bad else f" ← {bad[:4]}")}]
 
 
 def _check_phase26_acceptance_guard(root: Path | None = None) -> list[dict]:

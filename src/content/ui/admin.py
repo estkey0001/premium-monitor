@@ -561,6 +561,39 @@ _DISC_ORDER = {"APPROVED": 0, "NEW": 1, "PENDING_REVIEW": 1, "REVIEW_REQUIRED": 
 _DISC_KIND = {"LOTTERY": "抽選", "PREORDER": "予約", "FIRST_COME": "先着", "RESTOCK": "再販", "RELEASE": "発売"}
 
 
+def build_registered(products: dict | None, diag: dict | None) -> list[dict]:
+    """発見から登録した商品の今の状態（Phase 29）。値は診断（opportunity_diagnostics）のまま並べる（計算し直さない）。
+
+    診断の candidates は確定でない候補だけ（除外の理由つき）。公式 → 買取（RETAIL_TO_BUYBACK）の候補だけを見る
+    （別のルートの理由で上書きしない）。候補が無く公式の価格の行がある商品は「除外の理由なし」と明示する。
+    """
+    pc = (products or {}).get("candidates") if isinstance(products, dict) else None
+    d = diag if isinstance(diag, dict) else {}
+    retail = {r.get("product_id"): r for r in (d.get("retail_prices") or {}).get("products") or [] if isinstance(r, dict)}
+    reasons_of: dict = {}
+    for r in d.get("candidates") or []:
+        if isinstance(r, dict) and r.get("route_type") == "RETAIL_TO_BUYBACK":
+            reasons_of.setdefault(r.get("product_id"), set()).update(r.get("reasons") or [])
+    out = []
+    for cand in (pc or {}).values():
+        if not isinstance(cand, dict) or cand.get("status") != "REGISTERED" or not cand.get("registered_id"):
+            continue
+        pid = str(cand["registered_id"])
+        rp = retail.get(pid) or {}
+        if pid in reasons_of:
+            reasons = sorted(reasons_of[pid])
+            buyback = "未取得" if "no_sell_price" in reasons else "取得あり"
+            profit = ("利益なし（no_profit）" if "no_profit" in reasons else "未算出（" + "・".join(reasons) + "）")
+        elif rp and rp.get("evidence") in ("VERIFIED_CURRENT", "VERIFIED_DATED"):
+            buyback, profit = "取得あり", "確定（診断で除外の理由なし）"
+        else:
+            buyback, profit = "—", "—（診断に無い）"
+        out.append({"product_id": pid, "name": str(rp.get("product") or cand.get("product_name") or ""),
+                    "official": str(rp.get("evidence") or "—"), "official_price": rp.get("price"),
+                    "buyback": buyback, "profit": profit})
+    return out[:20]
+
+
 def build_discovery(rep: dict | None, products: dict | None, events: dict | None) -> dict:
     """新商品・新しいイベントの発見の候補（Phase 27）。正本ではない（登録は人が手で行う）。秘密の値は元から無い。"""
     r = rep if isinstance(rep, dict) else {}
@@ -738,7 +771,8 @@ def build(data: dict | None, *, catalog, details: dict, profit_routes: dict | No
             "dq": dq, "ai": ai, "capital": capital, "execution": execution, "notices": notices,
             "act_notices": build_actionable_notices(d.get("actionable_notifications")),
             "readiness": build_readiness(d.get("phase24_readiness")),
-            "discovery": build_discovery(d.get("discovery"), d.get("discovery_products"), d.get("discovery_events")),
+            "discovery": dict(build_discovery(d.get("discovery"), d.get("discovery_products"), d.get("discovery_events")),
+                              registered=build_registered(d.get("discovery_products"), d.get("diagnostics"))),
             "health": d.get("health") or {}, "coverage": d.get("coverage") or {},
             "collector_generated": (d.get("collector") or {}).get("generated_at"),
             "dq_report": d.get("dq_report") or {}, "now": now}
@@ -1175,6 +1209,11 @@ def _discovery(d: dict) -> str:
              f'{esc("、".join(a.get("checked") or []) or "なし")}'
              + (f'・読めなかった {esc(", ".join(f"{k}: {v}" for k, v in (a.get("errors") or {}).items()))}'
                 if a.get("errors") else "") + "</dd>")
+    reg_rows = _table(["商品", "公式の価格の根拠", "公式の価格", "買取", "利益"],
+                      [[esc(r["name"]) + f'<br><code>{esc(r["product_id"])}</code>', esc(r["official"]),
+                        (f'¥{int(r["official_price"]):,}' if isinstance(r.get("official_price"), (int, float)) else "—"),
+                        esc(r["buyback"]), esc(r["profit"])] for r in d.get("registered") or []],
+                      caption="発見から登録した商品の状態（診断の値のまま。在庫は公式で明示されたときだけ）")
     rv = d.get("review") or {}
     flow = "".join(f'<dt>{esc(lbl)}</dt><dd>商品 {esc(str((rv.get("products") or {}).get(k, 0)))}・告知 '
                    f'{esc(str((rv.get("events") or {}).get(k, 0)))}</dd>' for k, lbl in _DISC_REVIEW) if rv else ""
@@ -1219,7 +1258,7 @@ def _discovery(d: dict) -> str:
     errs = (f'<p class="nu-osub">発見の失敗: {esc(", ".join(d.get("errors") or []))}（正本は変えていない）</p>'
             if d.get("errors") else "")
     return _box("新商品・新しいイベントの発見", f'<dl class="nu-ad-dl">{dl}{src}{apple}</dl>'
-                + (f'<dl class="nu-ad-dl">{flow}</dl>' if flow else "") + prods + evs + steps + errs
+                + (f'<dl class="nu-ad-dl">{flow}</dl>' if flow else "") + reg_rows + prods + evs + steps + errs
                 + _generated("今回", d.get("at")),
                 sub="公式の一覧から見つけた、正本に無い商品と、日程の無い告知。正本への登録・TCG の利益や通知への接続はしない")
 

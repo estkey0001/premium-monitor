@@ -438,6 +438,8 @@ def test_seed_identity_and_search_after_registration(cli_env, monkeypatch, tmp_p
     assert row == ("iPhone Air 256GB SIMフリー", 189800, "")
     e = next(p for p in data["products"] if p["id"] == "prod_iphoneair_256")
     from src.market import official_registry as reg
+    # Phase 29 で本物の登録簿に iPhone Air の証拠が入ったので、ここで止まる理由は「この一時の正本の部品番号の組
+    # （2つ）が証拠（4つ）と違う」こと。証拠が無いときに止まることは test_phase29_activation が確かめる
     state, _why = reg.identity_state(e)
     assert state != "IDENTITY_CONFIRMED"                                    # 公式直販の証拠は人が確かめて別に記録する
     assert reg.official_direct_gate(e["id"], e)[0] is False                 # 確定の仕入れ値にしない（利益を作らない）

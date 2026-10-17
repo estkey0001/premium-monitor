@@ -549,6 +549,43 @@ def build_readiness(d: dict | None) -> dict:
                         for h in (r.get("history") or []) if isinstance(h, dict)][:20]}
 
 
+_DISC_STATUS = {"NEW": "新規", "PENDING_REVIEW": "確認待ち", "REVIEW_REQUIRED": "要確認（情報不足）",
+                "MATCHED_EXISTING": "正本と一致", "APPROVED": "承認済み（正本は手で追加）", "REJECTED": "却下",
+                "STALE": "見つからなくなった", "ANNOUNCEMENT_REVIEW_REQUIRED": "告知・日程なし（要確認）",
+                "MATCHED_EVENT": "正式なイベント"}
+_DISC_KIND = {"LOTTERY": "抽選", "PREORDER": "予約", "FIRST_COME": "先着", "RESTOCK": "再販", "RELEASE": "発売"}
+
+
+def build_discovery(rep: dict | None, products: dict | None, events: dict | None) -> dict:
+    """新商品・新しいイベントの発見の候補（Phase 27）。正本ではない（登録は人が手で行う）。秘密の値は元から無い。"""
+    r = rep if isinstance(rep, dict) else {}
+    pc = (products or {}).get("candidates") if isinstance(products, dict) else None
+    ec = (events or {}).get("candidates") if isinstance(events, dict) else None
+    if not r and not pc and not ec:
+        return {}
+    open_st = ("NEW", "PENDING_REVIEW", "REVIEW_REQUIRED")
+    def _stale_open(c):
+        return c.get("status") == "STALE" and c.get("stale_from") in open_st + ("ANNOUNCEMENT_REVIEW_REQUIRED",)
+    prods = sorted((c for c in (pc or {}).values() if isinstance(c, dict)
+                    and (c.get("status") in open_st or _stale_open(c))),
+                   key=lambda c: (c.get("genre") != "iphone", str(c.get("discovered_at") or "")), reverse=False)
+    evs = sorted((c for c in (ec or {}).values() if isinstance(c, dict)
+                  and (c.get("status") == "ANNOUNCEMENT_REVIEW_REQUIRED" or _stale_open(c))),
+                 key=lambda c: str(c.get("discovered_at") or ""), reverse=True)
+    return {"at": str(r.get("generated_at") or ""), "metrics": dict(r.get("metrics") or {}),
+            "sources": {k: v for k, v in (r.get("sources") or {}).items() if k != "table"},
+            "source_table": list((r.get("sources") or {}).get("table") or [])[:20],
+            "apple": {k: (r.get("apple") or {}).get(k) for k in ("list_status", "families", "checked", "errors")},
+            "errors": list(r.get("errors") or []),
+            "products": [{k: c.get(k) for k in ("candidate_id", "product_name", "genre", "capacity", "colors",
+                                                "part_numbers", "model_number", "official_price", "official_url",
+                                                "status", "discovered_at", "match_to_existing", "reasons")}
+                         for c in prods][:40],
+            "events": [{k: c.get(k) for k in ("candidate_id", "kind", "title", "source", "official_url", "product_code",
+                                              "product_mapping", "missing_fields", "reasons", "status",
+                                              "discovered_at")} for c in evs][:40]}
+
+
 def check_text(full: str, tail: int = 4000) -> str:
     """CI のチェックの出力（数万字）から、渡す部分だけを取り出す。実行日時はヘッダ（先頭）、件数は末尾にあるので、
     先頭の実行日時の行と末尾だけ（途中の項目の一覧は渡さない）。"""
@@ -682,6 +719,7 @@ def build(data: dict | None, *, catalog, details: dict, profit_routes: dict | No
             "dq": dq, "ai": ai, "capital": capital, "execution": execution, "notices": notices,
             "act_notices": build_actionable_notices(d.get("actionable_notifications")),
             "readiness": build_readiness(d.get("phase24_readiness")),
+            "discovery": build_discovery(d.get("discovery"), d.get("discovery_products"), d.get("discovery_events")),
             "health": d.get("health") or {}, "coverage": d.get("coverage") or {},
             "collector_generated": (d.get("collector") or {}).get("generated_at"),
             "dq_report": d.get("dq_report") or {}, "now": now}
@@ -1100,6 +1138,67 @@ def _readiness(r: dict) -> str:
                     "外す。この画面は見るだけで、送信は手動の手順で行う")
 
 
+def _discovery(d: dict) -> str:
+    """新商品・新しいイベントの発見の候補（Phase 27）。見るだけ（承認のボタンは置かない）。"""
+    if not d:
+        return ""
+    m, s = d.get("metrics") or {}, d.get("sources") or {}
+    dl = "".join(f"<dt>{lbl}</dt><dd>{esc(str(m.get(k, s.get(k, '—'))))}</dd>" for k, lbl in (
+        ("new_product_candidates", "新商品の候補（確認待ち・要確認）"), ("apple_candidates", "うち Apple 公式（正本に無い機種・容量）"),
+        ("unknown_official_products", "正本に無い公式の部品番号"), ("matched_existing", "正本と一致"),
+        ("tcg_products", "TCG の公式の商品（正本の外）"), ("review_required_announcements", "日程の無い告知（要確認）"),
+        ("matched_events", "正式なイベント・発売の予定"), ("stale", "見つからなくなった候補")))
+    src = (f'<dt>抽選の取得元</dt><dd>設定 {esc(str(s.get("configured")))}・実装 {esc(str(s.get("implemented")))}・未実装 '
+           f'{esc(str(s.get("unimplemented")))}・ブロック {esc(str(s.get("blocked")))}・robots に届かない '
+           f'{esc(str(s.get("robots_unreachable")))}</dd>') if s else ""
+    a = d.get("apple") or {}
+    apple = (f'<dt>Apple 公式</dt><dd>一覧 {esc(str(a.get("list_status") or "—"))}・今回読んだ機種 '
+             f'{esc("、".join(a.get("checked") or []) or "なし")}'
+             + (f'・読めなかった {esc(", ".join(f"{k}: {v}" for k, v in (a.get("errors") or {}).items()))}'
+                if a.get("errors") else "") + "</dd>")
+    prods = _table(["商品", "容量・型番", "公式の価格", "状態", "発見", "根拠"],
+                   [[esc(str(c.get("product_name") or "")),
+                     esc(str(c.get("capacity") or c.get("model_number") or "—")),
+                     (f'¥{int(c["official_price"]):,}' if isinstance(c.get("official_price"), (int, float)) else "—"),
+                     esc(_DISC_STATUS.get(c.get("status"), str(c.get("status") or ""))), _when(c.get("discovered_at")),
+                     esc(("部品番号 " + "・".join(c.get("part_numbers") or [])) if c.get("part_numbers")
+                         else ", ".join(c.get("reasons") or [])) + _ext_link(c.get("official_url"))]
+                    for c in d.get("products") or []], caption="新商品の候補（正本ではない）")
+    evs = _table(["種類", "告知", "取得元", "足りない情報", "商品の結び付け", "発見"],
+                 [[esc(_DISC_KIND.get(c.get("kind"), str(c.get("kind") or ""))), esc(str(c.get("title") or ""))
+                   + _ext_link(c.get("official_url")), esc(str(c.get("source") or "")),
+                   esc("・".join(c.get("missing_fields") or []) or "—"),
+                   esc(str(c.get("product_code") or "結び付けなし（商品コードが無い）")), _when(c.get("discovered_at"))]
+                  for c in d.get("events") or []], caption="日程の無い告知（人が公式のページで確認する）")
+    steps = ('<p class="nu-osub">この画面は見るだけです。候補を正本に入れるかは人が決めます: '
+             '<code>python -m src.cli approve-product-candidate --candidate-id &lt;ID&gt;</code> / '
+             '<code>reject-product-candidate</code>（台帳に記録するだけ。正本の config/products.yaml には手で追加する。'
+             '自動で push しない）。告知の日程は推測しない（画像の文字は読まない）</p>')
+    errs = (f'<p class="nu-osub">発見の失敗: {esc(", ".join(d.get("errors") or []))}（正本は変えていない）</p>'
+            if d.get("errors") else "")
+    return _box("新商品・新しいイベントの発見", f'<dl class="nu-ad-dl">{dl}{src}{apple}</dl>' + prods + evs + steps + errs
+                + _generated("今回", d.get("at")),
+                sub="公式の一覧から見つけた、正本に無い商品と、日程の無い告知。正本への登録・TCG の利益や通知への接続はしない")
+
+
+_OFFICIAL_LINK_HOSTS = ("www.apple.com", "www.pokemon-card.com", "www.pokemoncenter-online.com",
+                        "www.onepiece-cardgame.com", "p-bandai.jp", "www.geo-online.co.jp", "geo-online.co.jp",
+                        "www.lawson.co.jp")
+
+
+def _ext_link(url) -> str:
+    """公式のページへのリンク（https・公式のホストだけ。それ以外はリンクにしない。監査 L-3）。"""
+    from urllib.parse import urlsplit
+    u = str(url or "")
+    try:
+        host = urlsplit(u).netloc.lower()
+    except ValueError:
+        return ""
+    if not (u.startswith("https://") and host in _OFFICIAL_LINK_HOSTS):
+        return ""
+    return f' <a href="{esc(u)}" rel="noopener noreferrer" target="_blank">公式</a>'
+
+
 def _notices(v: dict) -> str:
     n = v["notices"]
     user = "".join(
@@ -1110,7 +1209,8 @@ def _notices(v: dict) -> str:
     system = "".join(f'<li><b>{esc(s["label"])}</b><span class="nu-osub">{_when(s["at"])}・'
                      f'{esc(s["message"])}</span></li>' for s in n["system"][:20])
     delivery = "・".join(f"{esc(k)}: {esc(v2)}" for k, v2 in n["delivery"].items()) or "記録なし"
-    return (_readiness(v.get("readiness") or {}) + _act_notices(v.get("act_notices") or {})
+    return (_readiness(v.get("readiness") or {}) + _discovery(v.get("discovery") or {})
+            + _act_notices(v.get("act_notices") or {})
             + _box("利用者向けの通知", f'<ul class="nu-ad-list">{user}</ul>' if user else _empty("利用者向けの通知はありません。"),
                  sub="同じ通知は1回だけ。今の確定ルートでない通知は、当時の金額を出さない")
             + _box("システムの通知（データ品質）", f'<ul class="nu-ad-list">{system}</ul>' if system

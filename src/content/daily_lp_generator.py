@@ -645,7 +645,11 @@ class DailyLPGenerator:
                            ("notifications_latest", ("notifications", "latest.json")),
                            ("api", ("api_automation", "latest.json")), ("coverage", ("coverage", "latest.json")),
                            ("resale_status", ("resale_collection_status.json",)),
-                           ("camera_status", ("camera_buyback_status.json",))):
+                           ("camera_status", ("camera_buyback_status.json",)),
+                           # 新商品・新しいイベントの発見の候補（Phase 27。読むだけ。正本ではない）
+                           ("discovery", ("discovery", "latest.json")),
+                           ("discovery_products", ("discovery", "product_candidates.json")),
+                           ("discovery_events", ("discovery", "event_candidates.json"))):
             data[key] = self._load_export_json(*parts)
         try:
             import json as _json_ad

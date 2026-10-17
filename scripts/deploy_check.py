@@ -4140,6 +4140,7 @@ def check() -> list[dict]:
     results.extend(_check_phase23_product_limited())
     results.extend(_check_phase25_readiness())
     results.extend(_check_phase26_acceptance_guard())
+    results.extend(_check_phase27_discovery())
 
     # ══════════════════════════════════════════════════════════════════
     # #820-#825: データの正確さ・鮮度の偽装（Phase 0）
@@ -5394,6 +5395,156 @@ class _FakeTgOpener:
             raise urllib.error.HTTPError(req.full_url, self.result[0], "x", self.result[2] if len(self.result) > 2 else {},
                                          io.BytesIO(self.result[1]))
         return _FakeTgResp(self.result[0], self.result[1], self.result[2] if len(self.result) > 2 else {})
+
+
+def _code_only(src: str) -> str:
+    """Python のソースから docstring とコメントだけを除く（ほかの文字列は残す。キーワードの検査で使う）。"""
+    import io
+    import tokenize
+    out, prev = [], None
+    try:
+        for tok in tokenize.generate_tokens(io.StringIO(src).readline):
+            if tok.type == tokenize.COMMENT:
+                continue
+            if tok.type == tokenize.STRING and prev in (None, tokenize.INDENT, tokenize.NEWLINE, tokenize.DEDENT):
+                prev = tok.type
+                continue                                  # 文として置かれた文字列（docstring）
+            out.append(tok.string)
+            if tok.type not in (tokenize.NL, tokenize.COMMENT):
+                prev = tok.type
+    except (tokenize.TokenError, IndentationError, SyntaxError):
+        return src
+    return " ".join(out)
+
+
+def _check_phase27_discovery(root: Path | None = None) -> list[dict]:
+    """Phase 27: 新商品・新しいイベントの発見（#862）。正本に登録しない・正本と一致すれば候補にしない・正本に無い機種 / 容量
+    は確認待ち・同じ候補を作り直さない（最初の発見の時刻を変えない）・日程の無い告知は要確認（受付中にしない）・発売は抽選に
+    しない・名前だけで商品に結び付けない・取得の作法（robots・リダイレクトをたどらない・正直な User-Agent）・今の台帳の形。"""
+    import json as _json27
+    import re as _re27
+    import tempfile as _tf27
+    from datetime import datetime as _dt27
+    from datetime import timedelta as _td27
+
+    from src.tcg.models import JST as _JST27
+    bad = []
+    root = root or Path(__file__).resolve().parent.parent
+    try:
+        from src.discovery import apple as ap
+        from src.discovery import store as st
+        from src.discovery import tcg as tg
+        now = _dt27(2026, 10, 17, 12, 0, tzinfo=_JST27)
+
+        def pr(part, price, name):
+            return (f'{{"sku":"{part[:5]}","partNumber":"{part}","price":{{"fullPrice":{price}.00}},'
+                    f'"category":"iphone","name":"{name}"}}')
+        pages = {ap.LIST_URL: '<a href="/jp/shop/buy-iphone/iphone-17">x</a>',
+                 ap.FAMILY_URL.format(slug="iphone-17"): '{"products":[' + ",".join((
+                     pr("MG6A4J/A", 159800, "iPhone 17 256GB Black"), pr("MG6D4J/A", 194800, "iPhone 17 512GB Black"),
+                     pr("MG6Z4J/A", 249800, "iPhone 17 1TB Black"))) + "]}"}
+        with _tf27.TemporaryDirectory() as td:
+            tmp = Path(td)
+            y = tmp / "products.yaml"
+            y.write_text('products:\n  - id: "p17"\n    genre: "iphone"\n    name: "iPhone 17 256GB SIMフリー"\n',
+                         encoding="utf-8")
+            before = y.read_text(encoding="utf-8")
+            ap.run(tmp, y, now=now, fetch=lambda u: (pages.get(u), "" if u in pages else "x"))
+            c = {v["product_name"]: v for v in st.load(tmp / st.PRODUCT_FILE)["candidates"].values()}
+            if (c.get("iPhone 17 256GB") or {}).get("status") != st.MATCHED_EXISTING:
+                bad.append("正本と一致する機種・容量を候補にする")
+            if {(c.get(k) or {}).get("status") for k in ("iPhone 17 512GB", "iPhone 17 1TB")} != {st.PENDING_REVIEW}:
+                bad.append("正本に無い容量を確認待ちの候補にしない（否定の対照）")
+            first = {k: v["discovered_at"] for k, v in c.items()}
+            ap.run(tmp, y, now=now + _td27(days=2), fetch=lambda u: (pages.get(u), "" if u in pages else "x"))
+            c2 = {v["product_name"]: v for v in st.load(tmp / st.PRODUCT_FILE)["candidates"].values()}
+            if set(c2) != set(c) or any(c2[k]["discovered_at"] != first[k] for k in first):
+                bad.append("同じ候補を作り直す・最初の発見の時刻を新しくする")
+            if y.read_text(encoding="utf-8") != before:
+                bad.append("発見が正本（products.yaml）を書き換える")
+            # 取得の作法: ブロックの後は同じ取得元を読まない・1回の実行の取得は一覧1件と機種のページの上限まで
+            calls = []
+
+            many = dict(pages)
+            many[ap.LIST_URL] += "".join(f'<a href="/jp/shop/buy-iphone/iphone-z{i}">x</a>' for i in range(6))
+
+            def blocked(u):
+                calls.append(u)
+                return (many[ap.LIST_URL], "") if u == ap.LIST_URL else (None, "site_blocked")
+            ap.run(tmp / "b", y, now=now, fetch=blocked)
+            if len(calls) != 2:
+                bad.append("取得元のブロックの後も同じ取得元を読む")
+            calls.clear()
+            ap.run(tmp / "c", y, now=now, fetch=lambda u: (calls.append(u), (many.get(u), "" if u in many else "x"))[1])
+            if len(calls) > 1 + ap.MAX_FAMILY_PAGES:
+                bad.append("1回の実行の取得が上限を超える")
+            d = tmp / "tcg"
+            d.mkdir()
+            g = now.isoformat()
+            (d / "lotteries.json").write_text(_json27.dumps({"generated_at": g, "items": [], "announcements": [
+                {"title": "抽選受け付けについて", "retailer": "POKEMON_CENTER_ONLINE",
+                 "source_url": "https://www.pokemoncenter-online.com/news/?id=9"}]}), encoding="utf-8")
+            (d / "lottery_sources.json").write_text(_json27.dumps({"generated_at": g, "sources": [{"source_id": "POKEMON_CARD_OFFICIAL",
+                "discovered_titles": [{"url": "https://www.pokemon-card.com/info/1.html", "title": "予約受付",
+                                       "kind": "PREORDER"}]}]}), encoding="utf-8")
+            (d / "pokemon_registry.json").write_text(_json27.dumps({"generated_at": g, "products": []}), encoding="utf-8")
+            (d / "latest.json").write_text(_json27.dumps({"generated_at": g, "events": [
+                {"store": "ONEPIECE_CARD_OFFICIAL", "event_type": "GENERAL_SALE", "status": "COMING_SOON",
+                 "product_name": "スタートデッキ【ST-38】", "product_id": "st38"}]}), encoding="utf-8")
+            tg.run(d, tmp, now=now)
+            evs = list(st.load(tmp / st.EVENT_FILE)["candidates"].values())
+            ann = [e for e in evs if e["status"] == st.ANNOUNCEMENT_REVIEW_REQUIRED]
+            if len(ann) != 2 or any(e.get("application_start") or e.get("application_end") for e in ann):
+                bad.append("日程の無い告知を要確認の候補にしない・日程を作る")
+            if [e["kind"] for e in evs if e["status"] == st.MATCHED_EVENT] != ["RELEASE"]:
+                bad.append("発売の予定を抽選として扱う")
+            if any(e.get("product_mapping") == "code" for e in ann):
+                bad.append("商品コードの無い告知を名前だけで商品に結び付ける")
+    except Exception as exc:  # noqa: BLE001
+        bad.append(f"発見を動かせない: {exc}")
+    try:
+        cli_src = (root / "src" / "cli.py").read_text(encoding="utf-8")
+        disc_cli = cli_src[cli_src.find("def _record_discovery_decision"):cli_src.find("# ---- Phase 5")]
+        for f, src0 in [(f, (root / "src" / "discovery" / f).read_text(encoding="utf-8"))
+                        for f in ("apple.py", "tcg.py", "store.py")] + [("cli.py の discover", disc_cli)]:
+            src = _code_only(src0)                       # docstring・コメントを除いたコード（文字列の SQL は残す）
+            if _re27.search(r"insert\s+into\s+products\b|update\s+products\b|official_registry", src, _re27.I) or \
+                    _re27.search(r"Mozilla/|proxies\s*=|stealth|cloudscraper", src):
+                bad.append(f"{f} が正本に書く・取得の作法を外れる")
+        if "recheck_official._fetch(url)" not in (root / "src" / "discovery" / "apple.py").read_text(encoding="utf-8"):
+            bad.append("Apple の発見が共通の取得の作法（robots・リダイレクトなし・正直な User-Agent）を使わない")
+        wf = (root / ".github" / "workflows" / "daily_lp.yml").read_text(encoding="utf-8")
+        m = _re27.search(r"- name: Discover new products and events\n(.*?)(?=\n      - name:|\n      # |\Z)", wf, _re27.S)
+        if not m or "secrets." in m.group(1) or "continue-on-error: true" not in m.group(1):
+            bad.append("発見の手順が無い・Secrets を渡す・失敗で LP を止める")
+    except OSError as exc:
+        bad.append(f"ソースを読めない: {exc}")
+    # 今の台帳: 形・状態・日程の無い告知に日程が無い・正本と一致したものだけ match_to_existing・正本に候補の ID が無い
+    try:
+        from src.discovery import store as st
+        canon = (root / "config" / "products.yaml").read_text(encoding="utf-8")
+        for name in (st.PRODUCT_FILE, st.EVENT_FILE):
+            pth = root / "exports" / "discovery" / name
+            if not pth.exists():
+                continue
+            d = _json27.loads(pth.read_text(encoding="utf-8"))
+            for cid, r in (d.get("candidates") or {}).items():
+                if r.get("candidate_id") != cid or r.get("status") not in st.STATUSES or not r.get("discovered_at"):
+                    bad.append(f"台帳の候補の形が違う: {cid}")
+                    break
+                if r.get("status") == st.ANNOUNCEMENT_REVIEW_REQUIRED and (r.get("application_start") or
+                                                                           r.get("application_end")):
+                    bad.append(f"日程の無い告知に日程がある: {cid}")
+                if r.get("status") == st.PENDING_REVIEW and r.get("match_to_existing"):
+                    bad.append(f"正本と一致した候補が確認待ちのまま: {cid}")
+                if cid in canon:
+                    bad.append(f"候補が正本に自動で入っている: {cid}")
+    except (OSError, ValueError) as exc:
+        bad.append(f"発見の台帳を読めない: {exc}")
+    return [{"level": "ok" if not bad else "error", "check": "discovery",
+             "message": "#862 新商品・新しいイベントの発見（正本に登録しない・一致は候補にしない・正本に無い機種/容量は確認待ち・"
+                        "候補の重複なし・日程の無い告知は要確認・発売は抽選にしない・名前だけで結び付けない・取得の作法）"
+                        + ("" if not bad else f" ← {bad[:4]}")}]
 
 
 def _check_phase26_acceptance_guard(root: Path | None = None) -> list[dict]:

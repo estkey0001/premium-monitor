@@ -33,6 +33,21 @@ _LABELS = ("イベント", "商品", "コラム", "その他")
 _PCO_DATE = re.compile(r"(\d{4})年(\d{1,2})月(\d{1,2})日")
 
 
+# 一覧のタイトルだけで分かる販売の種類（Phase 27 の発見の候補。本文は読まない・日程は推測しない）
+DISCOVERY_KINDS = (("LOTTERY", ("抽選",)), ("PREORDER", ("予約",)), ("FIRST_COME", ("先着",)),
+                   ("RESTOCK", ("再販", "再出荷", "再生産", "追加生産")))
+MAX_DISCOVERED_TITLES = 30
+DISCOVERY_EXCLUDE = ("終了", "お詫び", "中止", "締め切り", "締切りました")
+
+
+def discovery_kind(title: str) -> str:
+    """タイトルの販売の種類（抽選 / 予約 / 先着 / 再販）。当てはまらなければ空。"""
+    for kind, words in DISCOVERY_KINDS:
+        if any(w in (title or "") for w in words):
+            return kind
+    return ""
+
+
 def _parse_index_item(text: str) -> tuple[str, str, str | None]:
     """一覧のアンカーテキスト「その他 タイトル (外部リンク) 2026.9.29」を分解する。"""
     t = text.strip()
@@ -143,6 +158,7 @@ class PokemonNewsLotteryAdapter(LotteryAdapter):
         self.health["last_success"] = now_jst().isoformat()
         cands: list[dict] = []
         seen: set[str] = set()
+        discovered: list[dict] = []
         for url, text in anchors(html, NEWS_INDEX):
             if not re.search(r"/info/\d+\.html$", url) or url in seen:
                 continue
@@ -152,8 +168,14 @@ class PokemonNewsLotteryAdapter(LotteryAdapter):
             if category in ("イベント", "コラム"):
                 self.funnel.reject(REJECT_TOURNAMENT)   # 大会・イベント記事は本文を取得しない
                 continue
+            kind = discovery_kind(title)
             if "抽選" not in title:
                 self.funnel.reject(REJECT_NOT_CANDIDATE)
+                # 予約・先着・再販の告知はタイトルだけを発見の候補として残す（本文は読まない。Phase 27）
+                # 受付の終了・お詫び・中止の告知は候補にしない（監査 L-6）
+                if kind and not self.screen_title(title) and not any(w in title for w in DISCOVERY_EXCLUDE):
+                    discovered.append({"url": url, "title": title, "published_at": published, "kind": kind,
+                                       "reason": "title_only_not_fetched"})
                 continue
             reason = self.screen_title(title)
             if reason:
@@ -161,6 +183,10 @@ class PokemonNewsLotteryAdapter(LotteryAdapter):
                 continue
             cands.append({"url": url, "title": title, "published_at": published})
         self.funnel.product_links_discovered = len(cands)
+        # 本文を読む件数の上限で読まなかった抽選の記事も、発見の候補として残す（次の実行まで見落とさない。Phase 27）
+        for c in cands[self.max_detail_fetch:]:
+            discovered.append(dict(c, kind="LOTTERY", reason="detail_fetch_limit"))
+        self.health["discovered_titles"] = discovered[:MAX_DISCOVERED_TITLES]
         for c in cands[:self.max_detail_fetch]:
             detail = self.fetch_detail(c["url"], referer=NEWS_INDEX)
             if not detail:

@@ -288,6 +288,8 @@ def run_lottery_pipeline(pokemon_registry: list[dict], onepiece_products: list[d
             "health": h.get("status"), "active_lotteries": active - active_preorders,
             "active_preorders": active_preorders,
             "announcements": len(h.get("announcements") or []),
+            # 一覧のタイトルだけで見つけた販売の告知（Phase 27 の発見の候補。本文・日程は読んでいない）
+            "discovered_titles": list(h.get("discovered_titles") or [])[:30],
             "pages": f.get("pages", []),
         })
     coverage = coverage_summary(rows)

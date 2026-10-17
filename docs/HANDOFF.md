@@ -1,6 +1,7 @@
 # HANDOFF（最終更新: 2026-10-14）
 
 ## 今の状態
+- Phase 27（発見の候補）: Apple 公式（iPhone）の販売中の機種・容量を正本と照合し、正本に無いものを確認待ちの候補にする。TCG は日程の無い告知・予約 / 先着 / 再販のタイトルを「要確認」の候補にする（日程は推測しない）。台帳は `exports/discovery/`、CI の「Discover new products and events」、運営者向けの「新商品・新しいイベントの発見」。正本には自動で入れない。#862。記録は `internal/audits/PHASE_27_DISCOVERY.md`
 - Phase 26（受入の関門）: 商品の通知の実送信は、変数の関門に加えて受入の関門（`readiness.acceptance_gate`）を必ず通す。受入状態が READY・`PHASE24_ACCEPTANCE_CANDIDATE_ID`（候補の ID。手動の実行だけ読む）が今の候補に完全に一致・受入をまだ使っていない（台帳に本番の商品の送信済み・不明が無い）ときだけ1件。受入済みの後は変数を戻し忘れても送らない。#861。記録は `internal/audits/PHASE_26_ACCEPTANCE_GUARD.md`
 - Phase 25（Phase 24 の受入状態の検知）: `src/notifiers/readiness.py`。定時の CI が実データの「行動できない → できる」を検知して `exports/notifications/actionable/phase24_readiness.json`・運営者向けの画面「Phase 24 の受入状態」・CI の Summary（`notification readiness`）に出す（送信しない）。状態は PHASE24_WAITING / PHASE24_REAL_CANDIDATE_READY / PHASE24_REVIEW_REQUIRED / PHASE24_ACCEPTANCE_DONE。本番の実行は定時の実行で検知した変化を24時間以内なら引き継ぐ（`outbox.adoptable_dry`）。#860。記録は `internal/audits/PHASE_25_READINESS.md`
 - Phase 23（Telegram の商品の通知の限定運用）: 関門 `real_send_gate(purpose="product")`（変数 PRODUCT_REAL_SEND_ENABLED は手動の実行のときだけ読む・限定モード既定 true・Telegram だけ・設定）と `product_live_intent`（Secrets を見ない。LP の生成と prepare）。1回の実行（run ごと。Re-run を含む）で最大1件（`PRODUCT_SEND_LIMIT_PER_RUN`。コードで固定）・残りは READY・24時間を過ぎた候補は送らない・関門が閉じたら SENDING を READY に戻す・商品の実行では canary を送らない。運営者向けに状態、マイページに送信済みだけ。#859。記録は `internal/audits/PHASE_23_PRODUCT_LIMITED.md`
@@ -59,7 +60,7 @@
 - 既存の問題: pytest を実行すると追跡対象の exports/api_automation/collection.json が書き換わる。コミット前に `git checkout -- exports/api_automation/collection.json` で戻すこと（テストの出力先修正は別タスク）。
 
 ## 次にやること
-0. Phase 27 はユーザーの指示を待ってから始める。受入状態が PHASE24_REAL_CANDIDATE_READY になったら Phase 24 の受入をやり直す（偽の候補は作らない。手順は `ops/Secrets設定.md` の「Phase 24 の受入を始めるとき」）。
+0. Phase 28 はユーザーの指示を待ってから始める。発見の候補（新しい iPhone など）を正本に入れるかは人が決める（`ops/構成とCLI.md`）。受入状態が PHASE24_REAL_CANDIDATE_READY になったら Phase 24 の受入をやり直す（偽の候補は作らない。手順は `ops/Secrets設定.md` の「Phase 24 の受入を始めるとき」）。
 1. 判断待ち（`src/market/official_registry.USER_DECISIONS`）: PS5 Digital Edition・Xbox Series X・Switch 2 マリオカートセットの版。
 2. 定時の実行での商品の通知の継続運用（別の Phase・別の明示の許可の後。今は手動の実行だけ・1回の実行で最大1件）。
 3. eBay の成約: ユーザーの設定待ち（`ops/Secrets設定.md`）。

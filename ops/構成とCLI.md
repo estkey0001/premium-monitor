@@ -52,3 +52,21 @@ python3 -m src.cli scan-category --category all  # カテゴリ横断スキャ�
 # Streamlit
 streamlit run dashboard/app.py
 ```
+
+## 新商品・新しいイベントの発見（Phase 27）
+
+```bash
+python3 -m src.cli discover                       # Apple 公式（iPhone）と TCG の生成物から候補を作る（CI の手順と同じ）
+python3 -m src.cli discover --skip-apple          # Apple を読まない（TCG の生成物だけ）
+python3 -m src.cli approve-product-candidate --candidate-id <ID>   # 人の判断を台帳に記録（正本には入れない）
+python3 -m src.cli reject-product-candidate --candidate-id <ID>
+```
+
+- 候補の台帳は `exports/discovery/product_candidates.json`（新商品）・`event_candidates.json`（告知・イベント）・`latest.json`（集計）。
+  CI の生成物のコミットに入る。中身は既存の `product_candidates` の表にも写す
+- 正本（`config/products.yaml`・products の表）には自動で入れない。承認しても台帳に記録するだけで、正本への追加は人が
+  手で行い、確かめてからコミットする（自動で push しない）
+- Apple は購入の一覧から機種のページを見つけ、1回の実行で最大2機種のページを読む（間隔120秒。新しい機種が先）。正本の
+  「機種 + 容量」と照合し、正本に無いものを確認待ち（PENDING_REVIEW）にする。色はまとめる
+- TCG は新しい取得をしない。日程の無い告知・予約 / 先着 / 再販のタイトルは「告知・日程なし（要確認）」。日程は推測しない
+  （画像の文字を読まない）。TCG は利益・今すぐ行動・通知に接続しない

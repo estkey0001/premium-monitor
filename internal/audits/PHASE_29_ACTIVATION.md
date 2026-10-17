@@ -86,3 +86,16 @@
 - Low（再レビュー・再監査）: 管理画面の「確定」は公式の根拠が VERIFIED_CURRENT / VERIFIED_DATED のときだけ・#864 の証拠の
   一時退避は dict ごと（キーの順番を保つ）・test_phase28_review に止まる理由のコメント
 - Low（既知）: 関門が引く正本のパスは本物の config に固定（一時の正本で DB の形の行を試すテストは無い）
+
+## 8. 本番の確認（2026-10-18）
+
+- Daily LP の手動の実行（Run 39044103870・success・1時間16分）・生成コミット 9f862a27（生成物だけ）
+- 公式: 再確認が unchanged（189,800円）。診断の公式の価格は VERIFIED_CURRENT（src_apple_jp・公式直販）
+- 買取: 買取商店の取得 ok。正規化の売値は 133,000円（スカイブルーの行・/products/detail/24681・item・照合済み・新しい・
+  新品未開封 SIMフリー）
+- 利益: RETAIL_TO_BUYBACK は no_profit（133,000 − 189,800 − 費用 < 0）。利益ルート 0・確定の案件 2 → 2（変化なし）・今すぐ
+  行動 0。在庫は作らない（UNKNOWN）
+- 発見: この実行の Apple は iphone-16・iphone-17 を読んだ（まだ読んでいなかった機種が先）。iPhone Air 256GB の候補は1件のまま
+  REGISTERED（重複 0・照らし合わせで戻した 0）。iphone-air のページは、読もうとした日の古い順で次の定時の実行で読む（取得の順を
+  変えない。正本との一致はテストと #864 で確かめた）
+- deploy-check エラー 0（#864 OK）・prelaunch ❌ 0・健康度 38.4 → 38.4・Phase 24 の受入状態は PHASE24_WAITING・外部への送信 0

@@ -4141,6 +4141,7 @@ def check() -> list[dict]:
     results.extend(_check_phase25_readiness())
     results.extend(_check_phase26_acceptance_guard())
     results.extend(_check_phase27_discovery())
+    results.extend(_check_phase28_registration())
 
     # ══════════════════════════════════════════════════════════════════
     # #820-#825: データの正確さ・鮮度の偽装（Phase 0）
@@ -5545,6 +5546,116 @@ def _check_phase27_discovery(root: Path | None = None) -> list[dict]:
              "message": "#862 新商品・新しいイベントの発見（正本に登録しない・一致は候補にしない・正本に無い機種/容量は確認待ち・"
                         "候補の重複なし・日程の無い告知は要確認・発売は抽選にしない・名前だけで結び付けない・取得の作法）"
                         + ("" if not bad else f" ← {bad[:4]}")}]
+
+
+def _check_phase28_registration(root: Path | None = None) -> list[dict]:
+    """Phase 28: 発見の候補の確認と正本への登録（#863）。自動で正本に入れない・登録は承認（公式ページの確認の記録）が要る・
+    STALE / 重複 / TCG は登録しない・dry-run は書かない・CLI は commit / push しない・CI は登録しない・告知の日程は人が
+    確かめた時差つきの値だけ（先着・再販は登録しない）・正本と台帳の登録が対応する。"""
+    import csv as _csv28
+    import re as _re28
+    from datetime import datetime as _dt28
+
+    from src.tcg.models import JST as _JST28
+    bad = []
+    root = root or Path(__file__).resolve().parent.parent
+    try:
+        from src.discovery import register as rg
+        from src.discovery import store as st
+        now = _dt28(2026, 10, 17, 15, 0, tzinfo=_JST28)
+        canon = ('products:\n  - id: "prod_iphone17_256"\n    genre: "iphone"\n    name: "iPhone 17 256GB SIMフリー"\n'
+                 '    keywords: ["iPhone 17 256"]\n')
+        ok = {"candidate_id": "apple-x", "status": st.APPROVED, "source": rg.APPLE_SOURCE, "genre": "iphone",
+              "review": {"decision": st.APPROVED, "evidence_checked": list(rg.PRODUCT_EVIDENCE)}, "last_seen_on": "2026-10-17",
+              "official_url": rg.APPLE_URL_PREFIX + "iphone-air", "part_numbers": ["MG274J/A"],
+              "model_number": "iPhone Air", "capacity": "256GB", "product_name": "iPhone Air 256GB",
+              "official_price": 189800, "official_prices": [189800], "colors": ["Sky Blue"], "match_to_existing": ""}
+        good = rg.plan_product(ok, canon, now=now)
+        if good["errors"] or good["product_id"] != "prod_iphoneair_256" or good["new_text"].count("- id:") != 2:
+            bad.append(f"承認済みの候補の見込みが作れない: {good['errors']}")
+        cases = {"承認なし": dict(ok, status=st.PENDING_REVIEW), "公式の確認の記録なし": dict(ok, review={}),
+                 "STALE": dict(ok, status=st.STALE), "古い": dict(ok, last_seen_on="2026-10-01"),
+                 "TCG": dict(ok, genre="tcg"), "第三者": dict(ok, source="rakuten"),
+                 "部品番号なし": dict(ok, part_numbers=[]), "色で価格が違う": dict(ok, official_prices=[1, 2]),
+                 "一致済み": dict(ok, match_to_existing="prod_q")}
+        for lbl, rec in cases.items():
+            if not rg.plan_product(rec, canon, now=now)["errors"]:
+                bad.append(f"{lbl}の候補を登録できてしまう")
+        dup = canon + '  - id: "prod_z"\n    genre: "iphone"\n    name: "iPhone Air 256GB"\n'
+        if "duplicate_model_capacity" not in rg.plan_product(ok, dup, now=now)["errors"]:
+            bad.append("同じ機種・容量を重ねて登録できてしまう")
+        ann = {"candidate_id": "tcg-ann-x", "status": st.APPROVED, "kind": "LOTTERY", "tcg": "POKEMON",
+               "source": "POKEMON_CENTER_ONLINE", "official_url": "https://www.pokemoncenter-online.com/news/?id=1",
+               "review": {"decision": st.APPROVED, "evidence_checked": ["schedule", "official_url"]}}
+        kw = dict(product="x", start="2026-10-20T12:00:00+09:00", end="2026-10-23T16:59:00+09:00",
+                  official_page_checked=True, now=now)
+        if rg.plan_event(ann, "", **kw)["errors"]:
+            bad.append("確かめた日程の告知を登録できない")
+        for lbl, (rec, extra) in {"日程なし": (ann, {"start": ""}), "時差なし": (ann, {"end": "2026-10-23T16:59:00"}),
+                                  "公式の確認なし": (ann, {"official_page_checked": False}),
+                                  "再販": (dict(ann, kind="RESTOCK"), {}),
+                                  "正式なイベント": (dict(ann, candidate_id="tcg-event-x"), {}),
+                                  "承認なし": (dict(ann, status=st.ANNOUNCEMENT_REVIEW_REQUIRED), {})}.items():
+            if not rg.plan_event(rec, "", **dict(kw, **extra))["errors"]:
+                bad.append(f"告知（{lbl}）を登録できてしまう")
+        # dry-run は書かない（書く処理は「見込みだけ」で戻った後）・commit / push しない・CI から登録しない
+        cli = (root / "src" / "cli.py").read_text(encoding="utf-8")
+        for cmd, writer in (("register-product-candidate", "_rg.write_product("),
+                            ("register-event-candidate", "_rg.write_event(")):
+            i = cli.index(f'@cli.command("{cmd}")')
+            j = cli.index("\n@cli.command(", i + 1) if "\n@cli.command(" in cli[i + 1:] else len(cli)
+            body = cli[i:j]
+            if not (0 < body.find("if not write:") < body.find(writer)) or "_registration_in_sync(" not in body:
+                bad.append(f"{cmd} が見込み（dry-run）の前に書く・main との照合なしに書く")
+        reg = (root / "src" / "discovery" / "register.py").read_text(encoding="utf-8")
+        k = cli.index('@cli.command("register-product-candidate")')
+        for src_ in (reg, cli[k:cli.index("def _print_registration_followup", k)]):
+            if "subprocess" in src_ or _re28.search(r"os\.system|\bgit\s+(add|push)\b", src_):
+                bad.append("登録の処理が commit / push する")
+        wf = (root / ".github" / "workflows" / "daily_lp.yml").read_text(encoding="utf-8")
+        if _re28.search(r"register-(product|event)-candidate|approve-(product|event)-candidate", wf):
+            bad.append("CI が候補を承認・登録する")
+        m28 = _re28.search(r"^ *git add (.*?)\|\| true", wf, _re28.S | _re28.M)
+        if not m28 or _re28.search(r"(^|\s)(config/|data/tcg_verified_lotteries\.csv)", m28.group(1)):
+            bad.append("CI の生成コミットが正本（config/・手で確認した抽選の CSV）を含む")
+        if not _re28.search(r"HUMAN=\$\(echo \"\$CONFLICTS\" \| grep -E '\^exports/discovery/\(product\|event\)"
+                            r"_candidates\\\.json\$'.*?\n\s*OTHERS=\$\(printf '%s\\n%s\\n' \"\$OTHERS\" \"\$HUMAN\" \| sed '/\^\$/d'\)\n"
+                            r"\s*if \[ -n \"\$OTHERS\" \]", wf, _re28.S):
+            bad.append("CI の取り込みの衝突で、人の判断の入った台帳を生成物として上書きする")
+    except Exception as exc:  # noqa: BLE001
+        bad.append(f"登録の検査に失敗: {type(exc).__name__}: {exc}")
+    warn = []
+    # 正本と台帳の登録の対応（warning。登録を戻した直後は次の discover が確認待ちに戻すまで食い違う。CI を止めない）: 台帳の REGISTERED は正本にある・発見から登録した形の商品は台帳に REGISTERED がある
+    try:
+        import yaml as _y28
+        from src.discovery import store as st
+        prods = (_y28.safe_load((root / "config" / "products.yaml").read_text(encoding="utf-8")) or {}).get("products") or []
+        ids = {str(p.get("id")) for p in prods if isinstance(p, dict)}
+        led = root / "exports" / "discovery"
+        pc = st.load(led / st.PRODUCT_FILE)["candidates"] if (led / st.PRODUCT_FILE).exists() else {}
+        reg_ids = {r.get("registered_id") for r in pc.values() if r.get("status") == st.REGISTERED}
+        for cid, r in pc.items():
+            if r.get("status") == st.REGISTERED and r.get("registered_id") not in ids:
+                warn.append(f"登録済みの候補が正本に無い: {cid}")
+        for p in prods:
+            if isinstance(p, dict) and p.get("price_observed_on") and str(p.get("id")) not in reg_ids:
+                warn.append(f"台帳の登録の記録なしに発見の形の商品が正本にある: {p.get('id')}")
+        ec = st.load(led / st.EVENT_FILE)["candidates"] if (led / st.EVENT_FILE).exists() else {}
+        csvp = root / "data" / "tcg_verified_lotteries.csv"
+        rows = list(_csv28.DictReader(csvp.open(encoding="utf-8"))) if csvp.exists() else []
+        keys = {f"{r.get('retailer')}|{r.get('source_url')}" for r in rows}
+        for cid, r in ec.items():
+            if r.get("status") == st.REGISTERED and "|".join(str(r.get("registered_id") or "").split("|")[:2]) not in keys:
+                warn.append(f"登録済みの告知が手で確認した抽選に無い: {cid}")
+    except (OSError, ValueError) as exc:
+        warn.append(f"正本・台帳を読めない: {exc}")
+    return [{"level": "ok" if not bad else "error", "check": "discovery_registration",
+             "message": "#863 発見の候補の登録（自動で正本に入れない・承認が要る・STALE / 重複 / TCG は登録しない・dry-run は"
+                        "書かない・commit / push しない・CI は登録しない・告知の日程は人が確かめた値だけ・正式なイベントは手動で重ねない）"
+                        + ("" if not bad else f" ← {bad[:4]}")},
+            {"level": "ok" if not warn else "warning", "check": "discovery_registration_ledger",
+             "message": "#863 正本と台帳の登録の対応（登録済みの候補が正本にある・発見の形の商品に登録の記録がある）"
+                        + ("" if not warn else f" ← {warn[:4]}")}]
 
 
 def _check_phase26_acceptance_guard(root: Path | None = None) -> list[dict]:

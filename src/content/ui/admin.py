@@ -550,9 +550,14 @@ def build_readiness(d: dict | None) -> dict:
 
 
 _DISC_STATUS = {"NEW": "新規", "PENDING_REVIEW": "確認待ち", "REVIEW_REQUIRED": "要確認（情報不足）",
-                "MATCHED_EXISTING": "正本と一致", "APPROVED": "承認済み（正本は手で追加）", "REJECTED": "却下",
+                "MATCHED_EXISTING": "正本と一致", "APPROVED": "承認済み（未登録）", "REJECTED": "却下",
                 "STALE": "見つからなくなった", "ANNOUNCEMENT_REVIEW_REQUIRED": "告知・日程なし（要確認）",
-                "MATCHED_EVENT": "正式なイベント"}
+                "MATCHED_EVENT": "正式なイベント", "REGISTERED": "正本に登録済み"}
+# 確認の流れの件数（Phase 28）: 確認待ち → 承認（正しい商品だと人が確かめた）→ 登録（正本に入れた）／却下／STALE
+_DISC_REVIEW = (("PENDING", "確認待ち"), ("APPROVED", "承認済み（未登録）"), ("REGISTERED", "正本に登録済み"),
+                ("REJECTED", "却下"), ("STALE", "見つからなくなった（再確認が要る）"))
+_DISC_ORDER = {"APPROVED": 0, "NEW": 1, "PENDING_REVIEW": 1, "REVIEW_REQUIRED": 2, "ANNOUNCEMENT_REVIEW_REQUIRED": 2,
+               "STALE": 3, "REGISTERED": 4, "REJECTED": 5}
 _DISC_KIND = {"LOTTERY": "抽選", "PREORDER": "予約", "FIRST_COME": "先着", "RESTOCK": "再販", "RELEASE": "発売"}
 
 
@@ -566,24 +571,38 @@ def build_discovery(rep: dict | None, products: dict | None, events: dict | None
     open_st = ("NEW", "PENDING_REVIEW", "REVIEW_REQUIRED")
     def _stale_open(c):
         return c.get("status") == "STALE" and c.get("stale_from") in open_st + ("ANNOUNCEMENT_REVIEW_REQUIRED",)
+    decided = ("APPROVED", "REGISTERED", "REJECTED")      # 人が判断した候補も表に残す（Phase 28）
     prods = sorted((c for c in (pc or {}).values() if isinstance(c, dict)
-                    and (c.get("status") in open_st or _stale_open(c))),
-                   key=lambda c: (c.get("genre") != "iphone", str(c.get("discovered_at") or "")), reverse=False)
+                    and (c.get("status") in open_st + decided or _stale_open(c))),
+                   key=lambda c: (_DISC_ORDER.get(c.get("status"), 9), c.get("genre") != "iphone",
+                                  str(c.get("discovered_at") or "")))
     evs = sorted((c for c in (ec or {}).values() if isinstance(c, dict)
-                  and (c.get("status") == "ANNOUNCEMENT_REVIEW_REQUIRED" or _stale_open(c))),
-                 key=lambda c: str(c.get("discovered_at") or ""), reverse=True)
+                  and (c.get("status") in ("ANNOUNCEMENT_REVIEW_REQUIRED",) + decided or _stale_open(c))),
+                 key=lambda c: (_DISC_ORDER.get(c.get("status"), 9), str(c.get("discovered_at") or "")))
+
+    def _review_counts(cands):
+        vals = [c for c in (cands or {}).values() if isinstance(c, dict)]
+        return {"PENDING": sum(1 for c in vals if c.get("status") in open_st + ("ANNOUNCEMENT_REVIEW_REQUIRED",)),
+                "APPROVED": sum(1 for c in vals if c.get("status") == "APPROVED"),
+                "REGISTERED": sum(1 for c in vals if c.get("status") == "REGISTERED"),
+                "REJECTED": sum(1 for c in vals if c.get("status") == "REJECTED"),
+                "STALE": sum(1 for c in vals if _stale_open(c))}
     return {"at": str(r.get("generated_at") or ""), "metrics": dict(r.get("metrics") or {}),
             "sources": {k: v for k, v in (r.get("sources") or {}).items() if k != "table"},
             "source_table": list((r.get("sources") or {}).get("table") or [])[:20],
             "apple": {k: (r.get("apple") or {}).get(k) for k in ("list_status", "families", "checked", "errors")},
             "errors": list(r.get("errors") or []),
-            "products": [{k: c.get(k) for k in ("candidate_id", "product_name", "genre", "capacity", "colors",
-                                                "part_numbers", "model_number", "official_price", "official_url",
-                                                "status", "discovered_at", "match_to_existing", "reasons")}
+            "review": {"products": _review_counts(pc), "events": _review_counts(ec)},
+            "products": [dict({k: c.get(k) for k in ("candidate_id", "product_name", "genre", "capacity", "colors",
+                                                     "part_numbers", "model_number", "official_price", "official_url",
+                                                     "status", "discovered_at", "match_to_existing", "reasons",
+                                                     "registered_id")},
+                              reject_reason=(c.get("review") or {}).get("reason") or "")
                          for c in prods][:40],
-            "events": [{k: c.get(k) for k in ("candidate_id", "kind", "title", "source", "official_url", "product_code",
-                                              "product_mapping", "missing_fields", "reasons", "status",
-                                              "discovered_at")} for c in evs][:40]}
+            "events": [dict({k: c.get(k) for k in ("candidate_id", "kind", "title", "source", "official_url",
+                                                   "product_code", "product_mapping", "missing_fields", "reasons",
+                                                   "status", "discovered_at", "registered_id")},
+                            reject_reason=(c.get("review") or {}).get("reason") or "") for c in evs][:40]}
 
 
 def check_text(full: str, tail: int = 4000) -> str:
@@ -1156,27 +1175,51 @@ def _discovery(d: dict) -> str:
              f'{esc("、".join(a.get("checked") or []) or "なし")}'
              + (f'・読めなかった {esc(", ".join(f"{k}: {v}" for k, v in (a.get("errors") or {}).items()))}'
                 if a.get("errors") else "") + "</dd>")
-    prods = _table(["商品", "容量・型番", "公式の価格", "状態", "発見", "根拠"],
-                   [[esc(str(c.get("product_name") or "")),
+    rv = d.get("review") or {}
+    flow = "".join(f'<dt>{esc(lbl)}</dt><dd>商品 {esc(str((rv.get("products") or {}).get(k, 0)))}・告知 '
+                   f'{esc(str((rv.get("events") or {}).get(k, 0)))}</dd>' for k, lbl in _DISC_REVIEW) if rv else ""
+
+    def _st(c):
+        lbl = _DISC_STATUS.get(c.get("status"), str(c.get("status") or ""))
+        if c.get("status") == "REGISTERED" and c.get("registered_id"):
+            lbl += f"（{c['registered_id']}）"
+        if c.get("status") == "REJECTED" and c.get("reject_reason"):
+            lbl += f"（{c['reject_reason']}）"
+        return esc(lbl)
+    prods = _table(["商品", "候補の ID", "容量・型番", "公式の価格", "状態", "発見", "根拠"],
+                   [[esc(str(c.get("product_name") or "")), f'<code>{esc(str(c.get("candidate_id") or ""))}</code>',
                      esc(str(c.get("capacity") or c.get("model_number") or "—")),
                      (f'¥{int(c["official_price"]):,}' if isinstance(c.get("official_price"), (int, float)) else "—"),
-                     esc(_DISC_STATUS.get(c.get("status"), str(c.get("status") or ""))), _when(c.get("discovered_at")),
+                     _st(c), _when(c.get("discovered_at")),
                      esc(("部品番号 " + "・".join(c.get("part_numbers") or [])) if c.get("part_numbers")
                          else ", ".join(c.get("reasons") or [])) + _ext_link(c.get("official_url"))]
                     for c in d.get("products") or []], caption="新商品の候補（正本ではない）")
-    evs = _table(["種類", "告知", "取得元", "足りない情報", "商品の結び付け", "発見"],
+    evs = _table(["種類", "告知", "候補の ID", "状態", "足りない情報", "商品の結び付け", "発見"],
                  [[esc(_DISC_KIND.get(c.get("kind"), str(c.get("kind") or ""))), esc(str(c.get("title") or ""))
-                   + _ext_link(c.get("official_url")), esc(str(c.get("source") or "")),
+                   + _ext_link(c.get("official_url")) + f'<br><small>{esc(str(c.get("source") or ""))}</small>',
+                   f'<code>{esc(str(c.get("candidate_id") or ""))}</code>', _st(c),
                    esc("・".join(c.get("missing_fields") or []) or "—"),
                    esc(str(c.get("product_code") or "結び付けなし（商品コードが無い）")), _when(c.get("discovered_at"))]
                   for c in d.get("events") or []], caption="日程の無い告知（人が公式のページで確認する）")
-    steps = ('<p class="nu-osub">この画面は見るだけです。候補を正本に入れるかは人が決めます: '
-             '<code>python -m src.cli approve-product-candidate --candidate-id &lt;ID&gt;</code> / '
-             '<code>reject-product-candidate</code>（台帳に記録するだけ。正本の config/products.yaml には手で追加する。'
-             '自動で push しない）。告知の日程は推測しない（画像の文字は読まない）</p>')
+    steps = ('<p class="nu-osub">この画面は見るだけです（登録のボタンは置かない）。候補を正本に入れるかは人が決めます。'
+             '承認と登録は別です（承認 = 正しい商品だと人が公式ページで確かめた。登録 = 正本に入れた）。</p>'
+             '<ol class="nu-osub">'
+             '<li>承認: <code>python -m src.cli approve-product-candidate --candidate-id &lt;ID&gt; --checked official_url'
+             ' --checked part_numbers --checked capacity --checked official_price</code>（台帳に記録するだけ）。却下は '
+             '<code>reject-product-candidate --candidate-id &lt;ID&gt; --reason &lt;duplicate|not_target|variant_only|'
+             'bad_parse|unsupported|obsolete&gt;</code></li>'
+             '<li>見込み: <code>python -m src.cli register-product-candidate --candidate-id &lt;ID&gt;</code>'
+             '（dry-run。正本の差分・新しい product_id・監視への影響を表示。何も書かない）</li>'
+             '<li>登録: 同じコマンドに <code>--confirm</code>（config/products.yaml に1件だけ書く。commit / push はしない。'
+             '1件ずつ。差分を見てから人がコミットして push する。戻すときは正本のその1件の差分だけを戻す。台帳は次の発見で確認待ちに戻る）</li>'
+             '<li>告知: <code>approve-event-candidate --checked schedule</code> の後、<code>register-event-candidate '
+             '--candidate-id &lt;ID&gt; --product &lt;商品名&gt; --start &lt;受付開始&gt; --end &lt;受付終了&gt; '
+             '--official-page-checked</code>（日程は公式ページで人が確かめた値だけ。推測しない・画像の文字は読まない。'
+             '受付中かどうかは日程と今の時刻から決まる）</li></ol>')
     errs = (f'<p class="nu-osub">発見の失敗: {esc(", ".join(d.get("errors") or []))}（正本は変えていない）</p>'
             if d.get("errors") else "")
-    return _box("新商品・新しいイベントの発見", f'<dl class="nu-ad-dl">{dl}{src}{apple}</dl>' + prods + evs + steps + errs
+    return _box("新商品・新しいイベントの発見", f'<dl class="nu-ad-dl">{dl}{src}{apple}</dl>'
+                + (f'<dl class="nu-ad-dl">{flow}</dl>' if flow else "") + prods + evs + steps + errs
                 + _generated("今回", d.get("at")),
                 sub="公式の一覧から見つけた、正本に無い商品と、日程の無い告知。正本への登録・TCG の利益や通知への接続はしない")
 

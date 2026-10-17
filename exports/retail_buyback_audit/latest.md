@@ -1,16 +1,16 @@
 # Retail & Buyback Automation — 品質監査
 
-> 生成: 2026-10-17 17:40 JST / 販売/買取/二次流通の取得品質・正規化・同一性（利益/AI/UI/SaaSロジックは不変）
+> 生成: 2026-10-17 23:05 JST / 販売/買取/二次流通の取得品質・正規化・同一性（利益/AI/UI/SaaSロジックは不変）
 
 ## カテゴリ別サマリ
 | カテゴリ | 観測 | 価格有 | exact | high | fresh | Main昇格可 | 失敗(0円/stale/rejected) |
 |---|--:|--:|--:|--:|--:|--:|--:|
-| buyback | 144 | 126 | 15 | 15 | 54 | 15 | 18/90/114 |
+| buyback | 144 | 125 | 14 | 14 | 54 | 14 | 19/90/115 |
 | resale | 10 | 10 | 0 | 0 | 0 | 0 | 0/10/10 |
 | retail | 2 | 2 | 0 | 0 | 0 | 0 | 0/2/2 |
 
-## Main 昇格（high conf + fresh + exact）: 合計 **15** 件
-- カテゴリ別: {'buyback': 15, 'resale': 0, 'retail': 0}
+## Main 昇格（high conf + fresh + exact）: 合計 **14** 件
+- カテゴリ別: {'buyback': 14, 'resale': 0, 'retail': 0}
 
 ## 販売価格 ソース網羅
 | source | 観測 | 価格有 | fresh | Main昇格可 |
@@ -32,7 +32,7 @@
 | カメラのキタムラ | 9 | 9 | 0 | 0 |
 | ソフマップ | 10 | 8 | 2 | 0 |
 | 買取商店 | 21 | 21 | 14 | 14 |
-| ゲオ | 8 | 8 | 1 | 1 |
+| ゲオ | 8 | 7 | 1 | 0 |
 | 買取一丁目 | 4 | 4 | 4 | 0 |
 | ネットオフ | 4 | 0 | 4 | 0 |
 
@@ -49,7 +49,7 @@
 
 ## 商品同一性 監査
 - 容量不一致: 0 / 別型番: 0 / アクセサリー: 7 / 非本体: 7
-- condition分布: {'new': 191, 'used': 42}
+- condition分布: {'new': 190, 'used': 42}
 
 ## 正規化 監査
 - price_type付与率: 100% / 送料分離: 100% / ポイント分離: 100% / 下取除外: 89%
@@ -59,6 +59,7 @@
 | source | role | price | SKU数 | product_ids |
 |---|---|--:|--:|---|
 | フジヤカメラ | sell | ¥194,000 | 3 | prod_gr4, prod_gr4_hdf, prod_gr4_mono |
+| メーカー公式/定価 | official | ¥189,800 | 2 | prod_iphone16pm_256, prod_iphoneair_256 |
 | メーカー公式/定価 | official | ¥159,800 | 2 | prod_iphone16pro_256, prod_iphone17_256 |
 | じゃんぱら | sell | ¥148,000 | 2 | prod_ipad_pro_m4_11, prod_iphone16pro_256 |
 | じゃんぱら | sell | ¥78,000 | 2 | prod_ipad_air_m3, prod_mac_mini_m4 |

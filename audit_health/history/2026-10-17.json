@@ -1,24 +1,24 @@
 {
-  "generated_at": "2026-10-17 17:40 JST",
+  "generated_at": "2026-10-17 23:05 JST",
   "date": "2026-10-17",
   "health_score": {
-    "data_quality": 15.9,
+    "data_quality": 15.8,
     "profit_discovery": 0.0,
-    "source_health": 12.8,
-    "link_quality": 4.9,
+    "source_health": 12.7,
+    "link_quality": 4.8,
     "freshness": 5.1,
-    "total": 38.7
+    "total": 38.4
   },
   "data_quality": {
-    "total_obs": 233,
-    "usable_obs": 77,
+    "total_obs": 232,
+    "usable_obs": 75,
     "stale_count": 114,
-    "stale_rate": 0.4893,
-    "zero_count": 36,
-    "zero_rate": 0.1545,
-    "item_url_rate": 0.4936,
-    "search_url_rate": 0.2017,
-    "manual_rate": 0.4807,
+    "stale_rate": 0.4914,
+    "zero_count": 37,
+    "zero_rate": 0.1595,
+    "item_url_rate": 0.4828,
+    "search_url_rate": 0.2026,
+    "manual_rate": 0.4828,
     "api_rate": 0.0,
     "html_rate": 0.0086
   },
@@ -32,17 +32,17 @@
   },
   "sources": {
     "メーカー公式/定価": {
-      "success_count": 45,
+      "success_count": 46,
       "stale_count": 0,
       "zero_count": 0,
       "item_url_rate": 0.0,
       "freshness": 1.0,
       "success_rate": 1.0,
       "confidence": {
-        "medium": 35,
+        "medium": 36,
         "high": 10
       },
-      "n": 45
+      "n": 46
     },
     "じゃんぱら": {
       "success_count": 28,
@@ -135,12 +135,12 @@
       "n": 9
     },
     "ゲオ": {
-      "success_count": 8,
+      "success_count": 7,
       "stale_count": 7,
-      "zero_count": 0,
-      "item_url_rate": 0.625,
+      "zero_count": 1,
+      "item_url_rate": 0.5,
       "freshness": 0.125,
-      "success_rate": 1.0,
+      "success_rate": 0.875,
       "confidence": {
         "high": 2,
         "medium": 6
@@ -158,18 +158,6 @@
         "medium": 6
       },
       "n": 6
-    },
-    "モバイル一番": {
-      "success_count": 5,
-      "stale_count": 3,
-      "zero_count": 0,
-      "item_url_rate": 1.0,
-      "freshness": 0.4,
-      "success_rate": 1.0,
-      "confidence": {
-        "high": 5
-      },
-      "n": 5
     },
     "eBay sold(新品)": {
       "success_count": 5,
@@ -242,6 +230,18 @@
         "high": 4
       },
       "n": 4
+    },
+    "モバイル一番": {
+      "success_count": 3,
+      "stale_count": 3,
+      "zero_count": 0,
+      "item_url_rate": 1.0,
+      "freshness": 0.0,
+      "success_rate": 1.0,
+      "confidence": {
+        "high": 3
+      },
+      "n": 3
     },
     "Amazon新品出品": {
       "success_count": 3,
@@ -332,15 +332,15 @@
     "available": true,
     "stale_rate": {
       "prev": 0.4893,
-      "cur": 0.4893
+      "cur": 0.4914
     },
     "zero_rate": {
       "prev": 0.1545,
-      "cur": 0.1545
+      "cur": 0.1595
     },
     "item_url_rate": {
       "prev": 0.4936,
-      "cur": 0.4936
+      "cur": 0.4828
     },
     "main_route_count": {
       "prev": 0,
@@ -361,7 +361,8 @@
       "取得成功率 0%: ネットオフ"
     ],
     "warning": [
-      "item_url率 49% (<50%)"
+      "item_url率 低下",
+      "item_url率 48% (<50%)"
     ],
     "info": []
   },

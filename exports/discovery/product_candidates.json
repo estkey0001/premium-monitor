@@ -399,7 +399,7 @@
       ],
       "discovered_at": "2026-10-17T17:34:02+09:00",
       "last_seen_on": "2026-10-17",
-      "updated_at": "2026-10-17T17:34:02+09:00"
+      "updated_at": "2026-10-17T22:58:57+09:00"
     },
     "tcg-pokemon-nocode-771077b562f9": {
       "source": "pokemon_card_official",
@@ -796,6 +796,402 @@
       "discovered_at": "2026-10-17T17:34:02+09:00",
       "last_seen_on": "2026-10-17",
       "updated_at": "2026-10-17T17:34:02+09:00"
+    },
+    "apple-915b1e76f2d6": {
+      "source": "apple_jp_official",
+      "brand": "Apple",
+      "genre": "iphone",
+      "families": [
+        "iphone-18-pro"
+      ],
+      "product_name": "iPhone 18 Pro Max 1TB",
+      "model_number": "iPhone 18 Pro Max",
+      "sku": "MJXE4,MJXF4,MJXG4,MJXH4",
+      "part_numbers": [
+        "MJXE4J/A",
+        "MJXF4J/A",
+        "MJXG4J/A",
+        "MJXH4J/A"
+      ],
+      "capacity": "1TB",
+      "colors": [
+        "Black",
+        "Burgundy",
+        "Glacier",
+        "Silver"
+      ],
+      "edition": "",
+      "jan": "",
+      "official_url": "https://www.apple.com/jp/shop/buy-iphone/iphone-18-pro",
+      "official_price": 344800,
+      "official_prices": [
+        344800
+      ],
+      "match_to_existing": "",
+      "candidate_id": "apple-915b1e76f2d6",
+      "status": "PENDING_REVIEW",
+      "reasons": [
+        "not_in_canonical"
+      ],
+      "discovered_at": "2026-10-17T22:58:57+09:00",
+      "last_seen_on": "2026-10-17",
+      "updated_at": "2026-10-17T22:58:57+09:00"
+    },
+    "apple-b7e0f6c7ab5c": {
+      "source": "apple_jp_official",
+      "brand": "Apple",
+      "genre": "iphone",
+      "families": [
+        "iphone-18-pro"
+      ],
+      "product_name": "iPhone 18 Pro Max 512GB",
+      "model_number": "iPhone 18 Pro Max",
+      "sku": "MJX94,MJXA4,MJXC4,MJXD4",
+      "part_numbers": [
+        "MJX94J/A",
+        "MJXA4J/A",
+        "MJXC4J/A",
+        "MJXD4J/A"
+      ],
+      "capacity": "512GB",
+      "colors": [
+        "Black",
+        "Burgundy",
+        "Glacier",
+        "Silver"
+      ],
+      "edition": "",
+      "jan": "",
+      "official_url": "https://www.apple.com/jp/shop/buy-iphone/iphone-18-pro",
+      "official_price": 274800,
+      "official_prices": [
+        274800
+      ],
+      "match_to_existing": "",
+      "candidate_id": "apple-b7e0f6c7ab5c",
+      "status": "PENDING_REVIEW",
+      "reasons": [
+        "not_in_canonical"
+      ],
+      "discovered_at": "2026-10-17T22:58:57+09:00",
+      "last_seen_on": "2026-10-17",
+      "updated_at": "2026-10-17T22:58:57+09:00"
+    },
+    "apple-f747886c4330": {
+      "source": "apple_jp_official",
+      "brand": "Apple",
+      "genre": "iphone",
+      "families": [
+        "iphone-18-pro"
+      ],
+      "product_name": "iPhone 18 Pro Max 2TB",
+      "model_number": "iPhone 18 Pro Max",
+      "sku": "MJXJ4,MJXK4,MJXL4,MJXM4",
+      "part_numbers": [
+        "MJXJ4J/A",
+        "MJXK4J/A",
+        "MJXL4J/A",
+        "MJXM4J/A"
+      ],
+      "capacity": "2TB",
+      "colors": [
+        "Black",
+        "Burgundy",
+        "Glacier",
+        "Silver"
+      ],
+      "edition": "",
+      "jan": "",
+      "official_url": "https://www.apple.com/jp/shop/buy-iphone/iphone-18-pro",
+      "official_price": 449800,
+      "official_prices": [
+        449800
+      ],
+      "match_to_existing": "",
+      "candidate_id": "apple-f747886c4330",
+      "status": "PENDING_REVIEW",
+      "reasons": [
+        "not_in_canonical"
+      ],
+      "discovered_at": "2026-10-17T22:58:57+09:00",
+      "last_seen_on": "2026-10-17",
+      "updated_at": "2026-10-17T22:58:57+09:00"
+    },
+    "apple-9d7b0d0e2f98": {
+      "source": "apple_jp_official",
+      "brand": "Apple",
+      "genre": "iphone",
+      "families": [
+        "iphone-18-pro"
+      ],
+      "product_name": "iPhone 18 Pro Max 256GB",
+      "model_number": "iPhone 18 Pro Max",
+      "sku": "MJX54,MJX64,MJX74,MJX84",
+      "part_numbers": [
+        "MJX54J/A",
+        "MJX64J/A",
+        "MJX74J/A",
+        "MJX84J/A"
+      ],
+      "capacity": "256GB",
+      "colors": [
+        "Black",
+        "Burgundy",
+        "Glacier",
+        "Silver"
+      ],
+      "edition": "",
+      "jan": "",
+      "official_url": "https://www.apple.com/jp/shop/buy-iphone/iphone-18-pro",
+      "official_price": 239800,
+      "official_prices": [
+        239800
+      ],
+      "match_to_existing": "",
+      "candidate_id": "apple-9d7b0d0e2f98",
+      "status": "PENDING_REVIEW",
+      "reasons": [
+        "not_in_canonical"
+      ],
+      "discovered_at": "2026-10-17T22:58:57+09:00",
+      "last_seen_on": "2026-10-17",
+      "updated_at": "2026-10-17T22:58:57+09:00"
+    },
+    "apple-ca6dabbdb6a5": {
+      "source": "apple_jp_official",
+      "brand": "Apple",
+      "genre": "iphone",
+      "families": [
+        "iphone-18-pro"
+      ],
+      "product_name": "iPhone 18 Pro 256GB",
+      "model_number": "iPhone 18 Pro",
+      "sku": "MJR54,MJR64,MJR74,MJR84",
+      "part_numbers": [
+        "MJR54J/A",
+        "MJR64J/A",
+        "MJR74J/A",
+        "MJR84J/A"
+      ],
+      "capacity": "256GB",
+      "colors": [
+        "Black",
+        "Burgundy",
+        "Glacier",
+        "Silver"
+      ],
+      "edition": "",
+      "jan": "",
+      "official_url": "https://www.apple.com/jp/shop/buy-iphone/iphone-18-pro",
+      "official_price": 219800,
+      "official_prices": [
+        219800
+      ],
+      "match_to_existing": "",
+      "candidate_id": "apple-ca6dabbdb6a5",
+      "status": "PENDING_REVIEW",
+      "reasons": [
+        "not_in_canonical"
+      ],
+      "discovered_at": "2026-10-17T22:58:57+09:00",
+      "last_seen_on": "2026-10-17",
+      "updated_at": "2026-10-17T22:58:57+09:00"
+    },
+    "apple-0e3db9718bb3": {
+      "source": "apple_jp_official",
+      "brand": "Apple",
+      "genre": "iphone",
+      "families": [
+        "iphone-18-pro"
+      ],
+      "product_name": "iPhone 18 Pro 512GB",
+      "model_number": "iPhone 18 Pro",
+      "sku": "MJR94,MJRC4,MJRD4,MJRE4",
+      "part_numbers": [
+        "MJR94J/A",
+        "MJRC4J/A",
+        "MJRD4J/A",
+        "MJRE4J/A"
+      ],
+      "capacity": "512GB",
+      "colors": [
+        "Black",
+        "Burgundy",
+        "Glacier",
+        "Silver"
+      ],
+      "edition": "",
+      "jan": "",
+      "official_url": "https://www.apple.com/jp/shop/buy-iphone/iphone-18-pro",
+      "official_price": 254800,
+      "official_prices": [
+        254800
+      ],
+      "match_to_existing": "",
+      "candidate_id": "apple-0e3db9718bb3",
+      "status": "PENDING_REVIEW",
+      "reasons": [
+        "not_in_canonical"
+      ],
+      "discovered_at": "2026-10-17T22:58:57+09:00",
+      "last_seen_on": "2026-10-17",
+      "updated_at": "2026-10-17T22:58:57+09:00"
+    },
+    "apple-c9e6de4708aa": {
+      "source": "apple_jp_official",
+      "brand": "Apple",
+      "genre": "iphone",
+      "families": [
+        "iphone-18-pro"
+      ],
+      "product_name": "iPhone 18 Pro 1TB",
+      "model_number": "iPhone 18 Pro",
+      "sku": "MJRF4,MJRG4,MJRH4,MJRJ4",
+      "part_numbers": [
+        "MJRF4J/A",
+        "MJRG4J/A",
+        "MJRH4J/A",
+        "MJRJ4J/A"
+      ],
+      "capacity": "1TB",
+      "colors": [
+        "Black",
+        "Burgundy",
+        "Glacier",
+        "Silver"
+      ],
+      "edition": "",
+      "jan": "",
+      "official_url": "https://www.apple.com/jp/shop/buy-iphone/iphone-18-pro",
+      "official_price": 324800,
+      "official_prices": [
+        324800
+      ],
+      "match_to_existing": "",
+      "candidate_id": "apple-c9e6de4708aa",
+      "status": "PENDING_REVIEW",
+      "reasons": [
+        "not_in_canonical"
+      ],
+      "discovered_at": "2026-10-17T22:58:57+09:00",
+      "last_seen_on": "2026-10-17",
+      "updated_at": "2026-10-17T22:58:57+09:00"
+    },
+    "apple-8f68c0d20075": {
+      "source": "apple_jp_official",
+      "brand": "Apple",
+      "genre": "iphone",
+      "families": [
+        "iphone-18-pro"
+      ],
+      "product_name": "iPhone 18 Pro 2TB",
+      "model_number": "iPhone 18 Pro",
+      "sku": "MJRK4,MJRL4,MJRM4,MJRN4",
+      "part_numbers": [
+        "MJRK4J/A",
+        "MJRL4J/A",
+        "MJRM4J/A",
+        "MJRN4J/A"
+      ],
+      "capacity": "2TB",
+      "colors": [
+        "Black",
+        "Burgundy",
+        "Glacier",
+        "Silver"
+      ],
+      "edition": "",
+      "jan": "",
+      "official_url": "https://www.apple.com/jp/shop/buy-iphone/iphone-18-pro",
+      "official_price": 429800,
+      "official_prices": [
+        429800
+      ],
+      "match_to_existing": "",
+      "candidate_id": "apple-8f68c0d20075",
+      "status": "PENDING_REVIEW",
+      "reasons": [
+        "not_in_canonical"
+      ],
+      "discovered_at": "2026-10-17T22:58:57+09:00",
+      "last_seen_on": "2026-10-17",
+      "updated_at": "2026-10-17T22:58:57+09:00"
+    },
+    "apple-84c4d1433311": {
+      "source": "apple_jp_official",
+      "brand": "Apple",
+      "genre": "iphone",
+      "families": [
+        "iphone-17e"
+      ],
+      "product_name": "iPhone 17e 256GB",
+      "model_number": "iPhone 17e",
+      "sku": "MHRN4,MHRP4,MHRQ4",
+      "part_numbers": [
+        "MHRN4J/A",
+        "MHRP4J/A",
+        "MHRQ4J/A"
+      ],
+      "capacity": "256GB",
+      "colors": [
+        "Black",
+        "Soft Pink",
+        "White"
+      ],
+      "edition": "",
+      "jan": "",
+      "official_url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17e",
+      "official_price": 124800,
+      "official_prices": [
+        124800
+      ],
+      "match_to_existing": "",
+      "candidate_id": "apple-84c4d1433311",
+      "status": "PENDING_REVIEW",
+      "reasons": [
+        "not_in_canonical"
+      ],
+      "discovered_at": "2026-10-17T22:58:57+09:00",
+      "last_seen_on": "2026-10-17",
+      "updated_at": "2026-10-17T22:58:57+09:00"
+    },
+    "apple-404ce0f089a1": {
+      "source": "apple_jp_official",
+      "brand": "Apple",
+      "genre": "iphone",
+      "families": [
+        "iphone-17e"
+      ],
+      "product_name": "iPhone 17e 512GB",
+      "model_number": "iPhone 17e",
+      "sku": "MHRR4,MHRT4,MHRU4",
+      "part_numbers": [
+        "MHRR4J/A",
+        "MHRT4J/A",
+        "MHRU4J/A"
+      ],
+      "capacity": "512GB",
+      "colors": [
+        "Black",
+        "Soft Pink",
+        "White"
+      ],
+      "edition": "",
+      "jan": "",
+      "official_url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17e",
+      "official_price": 159800,
+      "official_prices": [
+        159800
+      ],
+      "match_to_existing": "",
+      "candidate_id": "apple-404ce0f089a1",
+      "status": "PENDING_REVIEW",
+      "reasons": [
+        "not_in_canonical"
+      ],
+      "discovered_at": "2026-10-17T22:58:57+09:00",
+      "last_seen_on": "2026-10-17",
+      "updated_at": "2026-10-17T22:58:57+09:00"
     }
   },
   "apple": {
@@ -812,13 +1208,17 @@
       },
       "iphone-17e": {
         "first_seen_on": "2026-10-17",
-        "last_checked_on": "",
-        "listed": true
+        "last_checked_on": "2026-10-17",
+        "listed": true,
+        "last_attempted_on": "2026-10-17",
+        "last_error": ""
       },
       "iphone-18-pro": {
         "first_seen_on": "2026-10-17",
-        "last_checked_on": "",
-        "listed": true
+        "last_checked_on": "2026-10-17",
+        "listed": true,
+        "last_attempted_on": "2026-10-17",
+        "last_error": ""
       },
       "iphone-air": {
         "first_seen_on": "2026-10-17",

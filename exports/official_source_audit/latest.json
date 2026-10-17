@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-17 17:15 JST",
+  "generated_at": "2026-10-17 22:43 JST",
   "scope": "公式ソース登録・検証（利益/AI/Opportunity/Notification/Capital/Execution は不変）",
   "methodology": {
     "verification": "WebFetch で HTTP200/公式ドメイン/canonical/商品一致を実確認したURLのみ verified",
@@ -529,6 +529,21 @@
           "enabled": true,
           "reason_if_disabled": "iPhone 16 Pro Max は公式で販売していない（公式は iPhone 18 Pro Max を販売中）"
         },
+        "pricecom": null,
+        "yodobashi": null,
+        "biccamera": null,
+        "mapcamera": null,
+        "fujiya": null,
+        "rakuten": null,
+        "yahoo": null,
+        "ebay": null
+      }
+    },
+    "prod_iphoneair_256": {
+      "product_name": "iPhone Air 256GB SIMフリー",
+      "brand": "Apple",
+      "sources": {
+        "official": null,
         "pricecom": null,
         "yodobashi": null,
         "biccamera": null,
@@ -1661,7 +1676,7 @@
         "product_id": "prod_x100vi",
         "action": "stock_observed",
         "stock": "在庫なし（全色）",
-        "at": "2026-10-17T17:15:15+09:00"
+        "at": "2026-10-17T22:43:13+09:00"
       }
     ]
   },
@@ -1695,7 +1710,7 @@
       "product_id": "prod_x100vi",
       "action": "stock_observed",
       "stock": "在庫なし（全色）",
-      "at": "2026-10-17T17:15:15+09:00"
+      "at": "2026-10-17T22:43:13+09:00"
     }
   ]
 }

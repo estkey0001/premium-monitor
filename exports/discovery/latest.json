@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-17T17:34:02+09:00",
+  "generated_at": "2026-10-17T22:58:57+09:00",
   "apple": {
     "source": "apple_jp_official",
     "list_status": "ok",
@@ -12,13 +12,13 @@
       "iphone-duo"
     ],
     "checked": [
-      "iphone-duo",
-      "iphone-air"
+      "iphone-18-pro",
+      "iphone-17e"
     ],
     "errors": {},
-    "unknown_parts": 20,
+    "unknown_parts": 38,
     "matched": 0,
-    "pending": 7,
+    "pending": 10,
     "requests": 3,
     "cutoff": "",
     "saved": true
@@ -32,10 +32,10 @@
     },
     "inputs_stale": [],
     "review_required": 2,
-    "matched_events": 6,
+    "matched_events": 2,
     "release": 6,
     "by_kind": {
-      "LOTTERY": 7,
+      "LOTTERY": 3,
       "PREORDER": 0,
       "FIRST_COME": 0,
       "RESTOCK": 1,
@@ -75,7 +75,7 @@
           "retailer": "ゲオ",
           "adapter": "geo_lottery",
           "state": "NO_ACTIVE_LOTTERY",
-          "health": "HEALTHY",
+          "health": "OK_NO_EVENTS",
           "blocked": false,
           "robots": null,
           "unreachable": false
@@ -224,22 +224,29 @@
     }
   },
   "errors": [],
+  "reopened": {
+    "products": 0,
+    "events": 0
+  },
   "metrics": {
-    "product_candidates": 27,
-    "new_product_candidates": 27,
-    "pending_review": 13,
+    "product_candidates": 37,
+    "new_product_candidates": 36,
+    "pending_review": 22,
     "review_required": 14,
     "matched_existing": 0,
     "approved": 0,
     "rejected": 0,
+    "registered": 1,
     "stale": 0,
-    "unknown_official_products": 20,
-    "apple_candidates": 7,
+    "unknown_official_products": 54,
+    "apple_candidates": 16,
     "tcg_products": 20,
     "event_candidates": 14,
     "review_required_announcements": 2,
     "matched_events": 12,
-    "stale_events": 0
+    "stale_events": 0,
+    "approved_events": 0,
+    "registered_events": 0
   },
   "sources": {
     "configured": 17,
@@ -274,7 +281,7 @@
         "retailer": "ゲオ",
         "adapter": "geo_lottery",
         "state": "NO_ACTIVE_LOTTERY",
-        "health": "HEALTHY",
+        "health": "OK_NO_EVENTS",
         "blocked": false,
         "robots": null,
         "unreachable": false

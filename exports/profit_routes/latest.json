@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-17 17:40 JST",
+  "generated_at": "2026-10-17 23:05 JST",
   "ebay_api_configured": false,
   "overseas_source_mode": "manual",
   "summary": {
@@ -11,7 +11,7 @@
     "by_route_type": {},
     "max_profit": null,
     "max_roi": null,
-    "zero_route_products": 45
+    "zero_route_products": 46
   },
   "missing_data_priority": [
     {
@@ -108,13 +108,13 @@
     "prod_iphone17pm_256": {
       "product_name": "iPhone 17 Pro Max 256GB SIMフリー",
       "buy_candidates": 0,
-      "sell_candidates": 3,
+      "sell_candidates": 2,
       "min_usable_buy": null,
       "min_usable_buy_source": "",
       "max_usable_sell": 190000,
-      "max_usable_sell_source": "モバイル一番",
+      "max_usable_sell_source": "買取商店",
       "min_usable_buy_identity_verified": false,
-      "max_usable_sell_identity_verified": false,
+      "max_usable_sell_identity_verified": true,
       "target_buy_price": 189999,
       "gross_gap": null,
       "net_domestic": null,
@@ -246,6 +246,28 @@
     },
     "prod_iphone16pm_512": {
       "product_name": "iPhone 16 Pro Max 512GB",
+      "buy_candidates": 0,
+      "sell_candidates": 0,
+      "min_usable_buy": null,
+      "min_usable_buy_source": "",
+      "max_usable_sell": null,
+      "max_usable_sell_source": "",
+      "min_usable_buy_identity_verified": false,
+      "max_usable_sell_identity_verified": false,
+      "target_buy_price": null,
+      "gross_gap": null,
+      "net_domestic": null,
+      "best_reference_net": null,
+      "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
+      "excluded_route_count": 0,
+      "rejection_top5": [],
+      "stale_excluded": 0,
+      "overseas_stale": 0,
+      "needed": [],
+      "fresh_overseas_whatif_top5": []
+    },
+    "prod_iphoneair_256": {
+      "product_name": "iPhone Air 256GB SIMフリー",
       "buy_candidates": 0,
       "sell_candidates": 0,
       "min_usable_buy": null,
@@ -566,7 +588,7 @@
     "prod_switch2": {
       "product_name": "Nintendo Switch 2",
       "buy_candidates": 0,
-      "sell_candidates": 2,
+      "sell_candidates": 1,
       "min_usable_buy": null,
       "min_usable_buy_source": "",
       "max_usable_sell": 51800,
@@ -582,7 +604,7 @@
       "rejection_top5": [
         [
           "price_zero",
-          8
+          9
         ],
         [
           "stale_over_14d",
@@ -624,7 +646,7 @@
     "prod_ps5_pro": {
       "product_name": "PlayStation 5 Pro",
       "buy_candidates": 0,
-      "sell_candidates": 2,
+      "sell_candidates": 1,
       "min_usable_buy": null,
       "min_usable_buy_source": "",
       "max_usable_sell": 198200,

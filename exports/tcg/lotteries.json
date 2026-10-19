@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-10-18T17:50:01.646359+09:00",
-  "evaluated_at": "2026-10-18T17:50:01.642993+09:00",
+  "generated_at": "2026-10-19T18:33:06.458850+09:00",
+  "evaluated_at": "2026-10-19T18:33:06.456167+09:00",
   "items": [
     {
       "tcg": "POKEMON",
@@ -68,11 +68,11 @@
       "deadline_countdown": null,
       "start_countdown": null,
       "purchase_countdown": {
-        "remaining_days": 1,
-        "remaining_hours": 23,
-        "remaining_minutes": 8,
-        "remaining_seconds": 169738,
-        "label": "1日23時間"
+        "remaining_days": 0,
+        "remaining_hours": 22,
+        "remaining_minutes": 25,
+        "remaining_seconds": 80753,
+        "label": "22時間25分"
       }
     },
     {
@@ -141,11 +141,11 @@
       "deadline_countdown": null,
       "start_countdown": null,
       "purchase_countdown": {
-        "remaining_days": 1,
-        "remaining_hours": 23,
-        "remaining_minutes": 8,
-        "remaining_seconds": 169738,
-        "label": "1日23時間"
+        "remaining_days": 0,
+        "remaining_hours": 22,
+        "remaining_minutes": 25,
+        "remaining_seconds": 80753,
+        "label": "22時間25分"
       }
     }
   ],

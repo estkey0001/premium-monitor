@@ -1,6 +1,6 @@
 # Capital Allocation Engine
 
-生成: 2026-10-19 18:39 JST / account_id: default
+生成: 2026-10-20 18:20 JST / account_id: default
 現金留保 20% / 集中上限 商品30%・カテゴリ50%・メーカー60%
 
 ## Opportunity 指標

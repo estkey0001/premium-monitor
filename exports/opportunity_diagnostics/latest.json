@@ -1,18 +1,18 @@
 {
-  "generated_at": "2026-10-19T18:39:14+09:00",
+  "generated_at": "2026-10-20T18:20:51+09:00",
   "note": "内部用（運営者向け）。一般の画面には出さない。掲載の判定は opportunity.eligibility が正本",
   "candidate_count": 46,
-  "eligible_count": 2,
+  "eligible_count": 1,
   "exclusion_reasons": {
     "unverified_buy_price": 35,
     "stale_buyback": 15,
-    "no_profit": 9,
+    "no_profit": 10,
     "no_sell_price": 5,
     "invalid_identity": 4
   },
   "primary_reasons": {
     "unverified_buy_price": 35,
-    "no_profit": 9
+    "no_profit": 10
   },
   "candidates": [
     {
@@ -227,6 +227,14 @@
       "primary": "unverified_buy_price"
     },
     {
+      "product_id": "prod_ps5_pro",
+      "route_type": "RETAIL_TO_BUYBACK",
+      "reasons": [
+        "no_profit"
+      ],
+      "primary": "no_profit"
+    },
+    {
       "product_id": "prod_xbox_sx",
       "route_type": "RETAIL_TO_BUYBACK",
       "reasons": [
@@ -417,10 +425,10 @@
     },
     "game": {
       "candidates": 5,
-      "eligible": 1,
+      "eligible": 0,
       "primary_reasons": {
         "unverified_buy_price": 3,
-        "no_profit": 1
+        "no_profit": 2
       }
     },
     "pc": {
@@ -442,13 +450,13 @@
   "route_types": {
     "RETAIL_TO_BUYBACK": {
       "candidates": 46,
-      "eligible": 2
+      "eligible": 1
     }
   },
   "home_parity": {
-    "home": 2,
-    "list": 2,
-    "eligible": 2,
+    "home": 1,
+    "list": 1,
+    "eligible": 1,
     "ok": true
   },
   "retail_prices": {
@@ -480,7 +488,7 @@
         "price": 42800,
         "price_type": "RETAIL",
         "source": "src_apple_jp",
-        "verified_at": "2026-10-19T00:00:00",
+        "verified_at": "2026-10-20T00:00:00",
         "url": "https://www.apple.com/jp/shop/buy-airpods/airpods-pro-3",
         "note": ""
       },
@@ -506,7 +514,7 @@
         "price": 654500,
         "price_type": "RETAIL",
         "source": "src_canon_official",
-        "verified_at": "2026-10-19T00:00:00",
+        "verified_at": "2026-10-20T00:00:00",
         "url": "https://store.canon.jp/online/g/g6536C001/",
         "note": ""
       },
@@ -558,7 +566,7 @@
         "price": 315700,
         "price_type": "RETAIL",
         "source": "src_fujifilm_official",
-        "verified_at": "2026-10-19T00:00:00",
+        "verified_at": "2026-10-20T00:00:00",
         "url": "https://mall-jp.fujifilm.com/shop/g/g16941878/",
         "note": ""
       },
@@ -597,7 +605,7 @@
         "price": 575300,
         "price_type": "RETAIL",
         "source": "src_nikon_direct",
-        "verified_at": "2026-10-19T00:00:00",
+        "verified_at": "2026-10-20T00:00:00",
         "url": "https://nij.nikon.com/shop/g/g4960759909947/",
         "note": ""
       },
@@ -675,7 +683,7 @@
         "price": 211800,
         "price_type": "RETAIL",
         "source": "src_ricoh_imaging",
-        "verified_at": "2026-10-19T18:07:21+09:00",
+        "verified_at": "2026-10-20T17:47:01+09:00",
         "url": "https://ricohimagingstore.com/Form/Product/ProductList.aspx?shop=0&cat=002010",
         "note": ""
       },
@@ -688,7 +696,7 @@
         "price": 222000,
         "price_type": "RETAIL",
         "source": "src_ricoh_imaging",
-        "verified_at": "2026-10-19T18:09:21+09:00",
+        "verified_at": "2026-10-20T17:51:01+09:00",
         "url": "https://ricohimagingstore.com/Form/Product/ProductList.aspx?shop=0&cat=002010",
         "note": ""
       },
@@ -701,7 +709,7 @@
         "price": 299800,
         "price_type": "RETAIL",
         "source": "src_ricoh_imaging",
-        "verified_at": "2026-10-19T18:11:21+09:00",
+        "verified_at": "2026-10-20T17:53:01+09:00",
         "url": "https://ricohimagingstore.com/Form/Product/ProductList.aspx?shop=0&cat=002010",
         "note": ""
       },
@@ -870,7 +878,7 @@
         "price": 159800,
         "price_type": "RETAIL",
         "source": "src_apple_jp",
-        "verified_at": "2026-10-19T00:00:00",
+        "verified_at": "2026-10-20T00:00:00",
         "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17",
         "note": ""
       },
@@ -935,7 +943,7 @@
         "price": 189800,
         "price_type": "RETAIL",
         "source": "src_apple_jp",
-        "verified_at": "2026-10-19T00:00:00",
+        "verified_at": "2026-10-20T00:00:00",
         "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-air",
         "note": ""
       },
@@ -1059,9 +1067,9 @@
     ]
   },
   "buyback": {
-    "fresh_rows": 36,
+    "fresh_rows": 38,
     "stale_rows": 70,
-    "failed_rows": 42,
+    "failed_rows": 37,
     "failed_sources": [
       "TSUTAYA",
       "ゲオモバイル",
@@ -1149,7 +1157,7 @@
         "rows": 24,
         "fresh": 17,
         "stale": 7,
-        "last_observed": "2026-10-19T17:36:36.454217+09:00"
+        "last_observed": "2026-10-20T17:18:16.419648+09:00"
       },
       {
         "source": "ブックオフ",
@@ -1165,23 +1173,23 @@
       },
       {
         "source": "モバイル一番",
-        "rows": 8,
+        "rows": 5,
         "stale": 3,
-        "failed": 5,
-        "last_observed": "2026-08-10T12:00:00+09:00"
+        "fresh": 2,
+        "last_observed": "2026-10-20T17:10:46+09:00"
       },
       {
         "source": "買取一丁目",
         "rows": 4,
         "fresh": 4,
-        "last_observed": "2026-10-19T17:27:32+09:00"
+        "last_observed": "2026-10-20T17:09:12+09:00"
       },
       {
         "source": "買取商店",
         "rows": 22,
         "stale": 7,
         "fresh": 15,
-        "last_observed": "2026-10-19T17:36:36+09:00"
+        "last_observed": "2026-10-20T17:18:16+09:00"
       },
       {
         "source": "駿河屋",
@@ -1222,48 +1230,41 @@
     "fresh_new": 6,
     "stale_new": 22,
     "used_reference": 27,
-    "confirmed_sells": 6,
+    "confirmed_sells": 5,
     "confirmed_products": [
-      {
-        "product_id": "prod_gr4",
-        "price": 200000,
-        "source": "買取商店",
-        "observed_at": "2026-10-19T17:35:06+09:00",
-        "condition": "new_unopened"
-      },
       {
         "product_id": "prod_gr4_hdf",
         "price": 240000,
         "source": "買取商店",
-        "observed_at": "2026-10-19T17:35:06+09:00",
+        "observed_at": "2026-10-20T17:16:46+09:00",
         "condition": "new_unopened"
       },
       {
         "product_id": "prod_gr4_mono",
         "price": 220000,
         "source": "買取商店",
-        "observed_at": "2026-10-19T17:35:06+09:00",
+        "observed_at": "2026-10-20T17:16:46+09:00",
         "condition": "new_unopened"
       },
       {
         "product_id": "prod_r5ii",
         "price": 450000,
         "source": "買取商店",
-        "observed_at": "2026-10-19T17:36:36+09:00",
+        "observed_at": "2026-10-20T17:18:16+09:00",
         "condition": "new_unopened"
       },
       {
         "product_id": "prod_x100vi",
         "price": 260000,
         "source": "買取商店",
-        "observed_at": "2026-10-19T17:35:06+09:00",
+        "observed_at": "2026-10-20T17:16:46+09:00",
         "condition": "new_unopened"
       },
       {
         "product_id": "prod_z8",
         "price": 420000,
         "source": "買取商店",
-        "observed_at": "2026-10-19T17:36:36+09:00",
+        "observed_at": "2026-10-20T17:18:16+09:00",
         "condition": "new_unopened"
       }
     ],
@@ -1271,34 +1272,15 @@
     "actionable": 0
   },
   "actionability": {
-    "confirmed_profitable": 2,
+    "confirmed_profitable": 1,
     "actionable": 0,
-    "blocked_by_stock": 1,
+    "blocked_by_stock": 0,
     "blocked_by_closed_lottery": 1,
     "blocked_by_stale_availability": 0,
     "blocked_by_unknown_schedule": 0,
     "blocked_by_sale_ended": 0,
     "blocked_by_missing_url": 0,
     "products": [
-      {
-        "product_id": "prod_ps5_pro",
-        "product": "PlayStation 5 Pro",
-        "availability": "UNKNOWN",
-        "label": "在庫未確認",
-        "actionable": false,
-        "reasons": [
-          "stock_unknown"
-        ],
-        "deadline": "",
-        "checked_at": "",
-        "confirmed": true,
-        "net_profit": 59370.0,
-        "roi": 0.42857142857142855,
-        "cta_label": "",
-        "cta_url": "",
-        "until_ms": null,
-        "event_key": ""
-      },
       {
         "product_id": "prod_gr4_hdf",
         "product": "RICOH GR IV HDF",
@@ -1309,7 +1291,7 @@
           "lottery_closed"
         ],
         "deadline": "2026-09-28T12:00:00+09:00",
-        "checked_at": "2026-10-19T18:19:00+09:00",
+        "checked_at": "2026-10-20T18:01:00+09:00",
         "confirmed": true,
         "net_profit": 16200.0,
         "roi": 0.07297297297297298,

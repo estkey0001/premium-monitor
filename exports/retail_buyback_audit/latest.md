@@ -1,16 +1,16 @@
 # Retail & Buyback Automation — 品質監査
 
-> 生成: 2026-10-19 18:39 JST / 販売/買取/二次流通の取得品質・正規化・同一性（利益/AI/UI/SaaSロジックは不変）
+> 生成: 2026-10-20 18:20 JST / 販売/買取/二次流通の取得品質・正規化・同一性（利益/AI/UI/SaaSロジックは不変）
 
 ## カテゴリ別サマリ
 | カテゴリ | 観測 | 価格有 | exact | high | fresh | Main昇格可 | 失敗(0円/stale/rejected) |
 |---|--:|--:|--:|--:|--:|--:|--:|
-| buyback | 145 | 126 | 15 | 15 | 55 | 15 | 19/90/115 |
+| buyback | 145 | 126 | 13 | 13 | 55 | 13 | 19/90/117 |
 | resale | 10 | 10 | 0 | 0 | 0 | 0 | 0/10/10 |
 | retail | 2 | 2 | 0 | 0 | 0 | 0 | 0/2/2 |
 
-## Main 昇格（high conf + fresh + exact）: 合計 **15** 件
-- カテゴリ別: {'buyback': 15, 'resale': 0, 'retail': 0}
+## Main 昇格（high conf + fresh + exact）: 合計 **13** 件
+- カテゴリ別: {'buyback': 13, 'resale': 0, 'retail': 0}
 
 ## 販売価格 ソース網羅
 | source | 観測 | 価格有 | fresh | Main昇格可 |
@@ -31,7 +31,7 @@
 | イオシス | 20 | 14 | 6 | 0 |
 | カメラのキタムラ | 9 | 9 | 0 | 0 |
 | ソフマップ | 10 | 8 | 2 | 0 |
-| 買取商店 | 22 | 22 | 15 | 15 |
+| 買取商店 | 22 | 22 | 15 | 13 |
 | ゲオ | 8 | 7 | 1 | 0 |
 | 買取一丁目 | 4 | 4 | 4 | 0 |
 | ネットオフ | 4 | 0 | 4 | 0 |
@@ -49,7 +49,7 @@
 
 ## 商品同一性 監査
 - 容量不一致: 0 / 別型番: 0 / アクセサリー: 7 / 非本体: 7
-- condition分布: {'new': 196, 'used': 42}
+- condition分布: {'new': 193, 'used': 42}
 
 ## 正規化 監査
 - price_type付与率: 100% / 送料分離: 100% / ポイント分離: 100% / 下取除外: 89%
@@ -64,6 +64,7 @@
 | じゃんぱら | sell | ¥148,000 | 2 | prod_ipad_pro_m4_11, prod_iphone16pro_256 |
 | じゃんぱら | sell | ¥78,000 | 2 | prod_ipad_air_m3, prod_mac_mini_m4 |
 | じゃんぱら | sell | ¥65,000 | 2 | prod_airpods_max, prod_switch2_mk |
+| 買取商店 | sell | ¥200,000 | 2 | prod_gr4, prod_ps5_pro |
 | メーカー公式/定価 | official | ¥59,980 | 2 | prod_switch2, prod_switch2_mk |
 
 ## Freshness 遵守: ✅ OK

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-19 18:39 JST",
+  "generated_at": "2026-10-20 18:20 JST",
   "scope": "商品同一性マッチング精度（利益/AI/UI/SaaS/DQ思想は不変）",
   "accuracy": {
     "product_match_accuracy": 1.0,
@@ -9,14 +9,14 @@
     "confirmed_mismatches_active": 0,
     "detected_mismatches_total": 0,
     "detected_mismatches_rejected": 0,
-    "independently_verified_exact": 15,
-    "unverifiable_trusted": 221,
+    "independently_verified_exact": 13,
+    "unverifiable_trusted": 218,
     "accessory_misclassification": 0,
     "false_main_promotion": 0,
-    "duplicate_patterns": 7,
+    "duplicate_patterns": 8,
     "high_risk_duplicates": 2,
-    "duplicate_reviewed_pct": 0.4286,
-    "manual_review_queue": 78
+    "duplicate_reviewed_pct": 0.375,
+    "manual_review_queue": 75
   },
   "targets": {
     "product_match": ">=0.99",
@@ -26,15 +26,15 @@
     "false_main_promotion": 0
   },
   "totals": {
-    "total": 238,
-    "product_mismatch_or_unverified": 223,
-    "model_unverifiable": 221,
-    "main_rejected": 223,
+    "total": 235,
+    "product_mismatch_or_unverified": 222,
+    "model_unverifiable": 218,
+    "main_rejected": 222,
     "model_match": 17,
-    "manual_review_required": 78,
+    "manual_review_required": 75,
     "accessory_detected": 7,
-    "exact_product_match": 15,
-    "main_eligible": 15
+    "exact_product_match": 13,
+    "main_eligible": 13
   },
   "by_source": {
     "メーカー公式/定価": {
@@ -61,11 +61,11 @@
       "main_eligible": 0
     },
     "モバイル一番": {
-      "total": 8,
-      "product_mismatch_or_unverified": 8,
-      "model_unverifiable": 8,
-      "main_rejected": 8,
-      "manual_review_required": 8,
+      "total": 5,
+      "product_mismatch_or_unverified": 5,
+      "model_unverifiable": 5,
+      "main_rejected": 5,
+      "manual_review_required": 5,
       "exact_product_match": 0,
       "capacity_mismatch": 0,
       "model_mismatch": 0,
@@ -96,11 +96,11 @@
     },
     "買取商店": {
       "total": 22,
-      "product_mismatch_or_unverified": 7,
+      "product_mismatch_or_unverified": 9,
       "model_unverifiable": 22,
-      "main_rejected": 7,
-      "exact_product_match": 15,
-      "main_eligible": 15,
+      "main_rejected": 9,
+      "exact_product_match": 13,
+      "main_eligible": 13,
       "capacity_mismatch": 0,
       "model_mismatch": 0
     },
@@ -322,7 +322,7 @@
         "new",
         "used"
       ],
-      "first_seen": 58.3,
+      "first_seen": 59.3,
       "last_seen": 0.0,
       "risk_level": "high",
       "possible_reason": [
@@ -414,8 +414,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 70.3,
-      "last_seen": 70.3,
+      "first_seen": 71.3,
+      "last_seen": 71.3,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -444,8 +444,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 70.3,
-      "last_seen": 70.3,
+      "first_seen": 71.3,
+      "last_seen": 71.3,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -474,8 +474,38 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 70.3,
-      "last_seen": 70.3,
+      "first_seen": 71.3,
+      "last_seen": 71.3,
+      "risk_level": "medium",
+      "possible_reason": [
+        "different_model_same_price"
+      ],
+      "is_official": false,
+      "review_status": "pending",
+      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認（弾かない）"
+    },
+    {
+      "source_name": "買取商店",
+      "price_role": "sell",
+      "price_type": "buyback_price",
+      "price": 200000,
+      "product_ids": [
+        "prod_gr4",
+        "prod_ps5_pro"
+      ],
+      "count": 2,
+      "models": [
+        "5 playstation pro",
+        "gr iv ricoh"
+      ],
+      "capacities": [
+        "None"
+      ],
+      "conditions": [
+        "new"
+      ],
+      "first_seen": 0.0,
+      "last_seen": 0.0,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -504,7 +534,7 @@
         "new"
       ],
       "first_seen": 9999.0,
-      "last_seen": 11.8,
+      "last_seen": 12.8,
       "risk_level": "low",
       "possible_reason": [
         "same_price_multiple_skus"
@@ -518,13 +548,13 @@
     {
       "source": "買取商店",
       "observations": 22,
-      "score": 90,
-      "identity": 0.682,
+      "score": 88,
+      "identity": 0.591,
       "capacity": 1.0,
       "model": 1.0,
       "condition": 1.0,
       "freshness": 0.682,
-      "main_eligible": 15
+      "main_eligible": 13
     },
     {
       "source": "メーカー公式/定価",
@@ -637,17 +667,6 @@
       "main_eligible": 0
     },
     {
-      "source": "モバイル一番",
-      "observations": 8,
-      "score": 73,
-      "identity": 0.0,
-      "capacity": 1.0,
-      "model": 1.0,
-      "condition": 1.0,
-      "freshness": 0.625,
-      "main_eligible": 0
-    },
-    {
       "source": "フジヤカメラ",
       "observations": 25,
       "score": 72,
@@ -656,6 +675,17 @@
       "model": 1.0,
       "condition": 1.0,
       "freshness": 0.68,
+      "main_eligible": 0
+    },
+    {
+      "source": "モバイル一番",
+      "observations": 5,
+      "score": 72,
+      "identity": 0.0,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 0.4,
       "main_eligible": 0
     },
     {

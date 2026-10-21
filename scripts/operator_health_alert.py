@@ -43,7 +43,7 @@ def run(root: Path = ROOT, now: datetime | None = None, dry_run: bool = False) -
     inputs = gather_inputs(root)
     current = ha.evaluate(inputs, now)
     state, result = ha.reconcile(ha.read_json(out / "health_alert_state.json", {}), current, now,
-                                 ha.unobservable_categories(inputs))
+                                 ha.unobservable_categories(inputs, now))
     record = ha.build_record(current, result, now)
     if not dry_run:
         out.mkdir(parents=True, exist_ok=True)

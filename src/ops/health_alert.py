@@ -21,6 +21,9 @@
 - official_recheck_failing  公式の再確認が3日連続で失敗（WARNING）・7日連続（HIGH）
 - baseline_unreadable       買取の比較の基準が読めない（WARNING。前回比の警告が黙って全部オフになる）
 - collector_report_missing  取得レポートが無い（HIGH）
+- collector_report_stale    取得レポートが古い（generated_at が 36 時間より前。収集がレポートを書く前に落ちて前日のレポートが残った
+                            可能性。HIGH。古いレポートで取得元・失敗率・品質ゲートを判定しない）
+- price_adopted_over_ceiling  カテゴリ共通の価格の上限を超える値を、他店の裏付けで採用した（WARNING。商品ごと。人が確認する）
 """
 from __future__ import annotations
 
@@ -38,6 +41,7 @@ _RANK = {WARNING: 1, HIGH: 2}
 CONSECUTIVE_DAYS = 3                    # 必須の店の連続失敗の日数
 FAILURE_RATE_WARNING_PCT = 50.0
 FAILURE_RATE_HIGH_PCT = 80.0
+COLLECTOR_REPORT_MAX_AGE_HOURS = 36        # 取得レポートがこれより古ければ「今回の収集のレポートではない」
 EXPIRY_WARNING_DAYS = 3                 # 公式の確認の期限が残りこの日数以内
 RECHECK_FAILURE_WARNING_DAYS = 3
 RECHECK_FAILURE_HIGH_DAYS = 7
@@ -72,10 +76,27 @@ def _official_alerts(inputs: dict) -> list[dict]:
     return out
 
 
-def unobservable_categories(inputs: dict) -> frozenset:
-    """今回は判定できなかった種類（取得レポートが無いと、取得元・失敗率・品質ゲートは判定できない）。
+def collector_state(inputs: dict, now: datetime) -> str:
+    """取得レポートの状態: missing（無い・読めない）/ stale（generated_at が古い・読めない）/ ok。"""
+    collector = inputs.get("collector") or {}
+    if not collector:
+        return "missing"
+    try:
+        gen = datetime.fromisoformat(str(collector.get("generated_at") or ""))
+    except ValueError:
+        return "stale"                                   # 生成の時刻が読めないレポートは今回のものと確かめられない
+    if gen.tzinfo is None:
+        gen = gen.replace(tzinfo=JST)
+    return "stale" if (now - gen) > timedelta(hours=COLLECTOR_REPORT_MAX_AGE_HOURS) else "ok"
+
+
+def unobservable_categories(inputs: dict, now: datetime) -> frozenset:
+    """今回は判定できなかった種類（取得レポートが無い・古いと、取得元・失敗率・品質ゲートなどは判定できない）。
     reconcile はこの種類の既存のアラートを「復旧」にしない（見えなくなっただけ）。"""
-    return frozenset() if inputs.get("collector") else frozenset({"source_failure", "failure_rate", "quality_gate_failure", "baseline_unreadable"})
+    if collector_state(inputs, now) == "ok":
+        return frozenset()
+    return frozenset({"source_failure", "failure_rate", "quality_gate_failure", "baseline_unreadable",
+                      "price_adopted_over_ceiling"})
 
 
 def evaluate(inputs: dict, now: datetime) -> list[dict]:
@@ -89,9 +110,16 @@ def evaluate(inputs: dict, now: datetime) -> list[dict]:
     optional = set(inputs.get("optional_shops") or ())
     hard = set(inputs.get("hard_reject_reasons") or ())
     out: list[dict] = _official_alerts(inputs)               # 取得レポートが無くても公式の判定はできる
-    if not collector:
+    state = collector_state(inputs, now)
+    if state == "missing":
         return sorted(out + [_alert("collector_report_missing", "collector_report", HIGH, "report_not_generated",
                                     "取得レポートがありません", "exports/collector_report/latest.json が無い・読めない")],
+                      key=lambda a: (-_RANK[a["severity"]], a["key"]))
+    if state == "stale":
+        return sorted(out + [_alert("collector_report_stale", "collector_report", HIGH, "report_stale",
+                                    "取得レポートが古いままです（今回の収集のレポートではありません）",
+                                    f"generated_at {collector.get('generated_at')}（{COLLECTOR_REPORT_MAX_AGE_HOURS} 時間より前）。"
+                                    "収集がレポートを書く前に落ちた可能性。前日のレポートで取得元・失敗率・品質ゲートを判定しない")],
                       key=lambda a: (-_RANK[a["severity"]], a["key"]))
 
     by_shop = collector.get("by_shop") or {}
@@ -149,6 +177,16 @@ def evaluate(inputs: dict, now: datetime) -> list[dict]:
             "quality_gate_failure", alias, WARNING, ",".join(sorted({str(i.get("reason")) for i in items})),
             f"{alias} の価格に誤りの可能性が高いものがあります（隔離）",
             "; ".join(f"{i.get('shop')}: {i.get('details')}" for i in items[:3]), items=len(items)))
+    adopted = {}
+    for sp_ in collector.get("suspicious_prices") or []:
+        if isinstance(sp_, dict) and sp_.get("reason") == "above_genre_max_corroborated":
+            adopted.setdefault(str(sp_.get("product_alias") or "?"), []).append(sp_)
+    for alias, items in sorted(adopted.items()):
+        out.append(_alert(
+            "price_adopted_over_ceiling", alias, WARNING, "above_genre_max_corroborated",
+            f"{alias} の価格はカテゴリ共通の上限を超えていますが、他店の裏付けで採用しています（人が確認する）",
+            "; ".join(f"{i.get('shop')}: " + (f"¥{i['price']:,}" if isinstance(i.get("price"), int) else "価格不明")
+                      for i in items[:3]), items=len(items)))
     if int(collector.get("low_confidence_count") or 0) > 0:
         out.append(_alert("quality_gate_failure", "low_confidence", WARNING, "low_confidence",
                           "信頼度が低い価格が公開されている可能性があります",

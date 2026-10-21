@@ -173,14 +173,16 @@ python3 -m src.cli rank-product-candidates --fetch-buyback     # 買取商店の
 - **買取の「前回との比較」の基準**: `exports/collector_report/price_baseline.json`（`src/collectors/price_baseline.py`。
   直近の正常な自動取得の値・14日以内。手入力 / 取得失敗 / 隔離した行は入れない。CI が commit する）。基準が無い組（初めての観測）は
   前回比を出さない。前回比 ±20% は警告だけで隔離の理由にしない。手入力の CSV（`data/manual_buyback_prices.csv`）は基準にしない
-- **カテゴリ共通の価格の上限**（GENRE_PRICE_RANGES）は目安で、単独の店の値は採用しない: 上限を超える値は、その行が商品ページの URL・
-  照合済み・信頼度 low でなく、公式の価格の 2 倍以内で、別の店の行が同水準（±10%）かつ同じ条件（商品ページ・照合済み・low でない・
-  他の隔離の理由に当たらない）のときだけ採用（`above_genre_max_corroborated`）。店のトップの行は裏付けにならない。1つでも欠ければ
-  隔離（要確認。運営者向けの劣化アラートに出る）。3 倍以上・ゲーム機のスマホ価格帯・容量の逆転・下限未満は、裏付けがあっても隔離
+- **カテゴリ共通の価格の上限**（GENRE_PRICE_RANGES）は目安で、単独の店の値は採用しない: 上限を超える値は、その行が商品ページの URL
+  （識別の番号まで付いたもの）・照合済み・信頼度 high / medium と自動取得が明示・公式の 1.5 倍以内で、別の店の行（ホストも URL も別）が
+  同水準（±10%）かつ同じ条件のときだけ採用（`above_genre_max_corroborated`。劣化アラートの price_adopted_over_ceiling に出る）。
+  店のトップ・一覧ページの根・複製は裏付けにならない。1つでも欠ければ隔離（要確認）。3 倍以上・ゲーム機のスマホ価格帯・容量の逆転・
+  下限未満は、裏付けがあっても隔離
 - **公式の再確認**: `scripts/recheck_official.py` の `RECHECK_PAGE`（購入ページとは別に、価格を読むページ）。PS5 Pro は Sony Store の
   商品ページ（購入ページ `_purchase` は在庫が無い間 E_NOTFOUND へ移る）、Switch 2 は任天堂の商品ラインナップ（My Nintendo Store は
   待機室へ移るので取らない・回避しない）。結果の `url` は記録（`VERIFIED_URLS`）の URL のまま、読んだページは `fetched_url`・何を確認したかは `verified_by`
-  （Switch 2 は `msrp_lineup` = 希望小売価格だけ。購入ページ・在庫は確認していない）
+  （Switch 2 は `msrp_lineup` = 希望小売価格だけ。購入ページ・在庫は未確認なので、価格の変化の検知には使うが確認日は進めない。
+  人がブラウザで確認したときだけ延びる）
 - **運営者向けの劣化アラート**（商品の通知とは完全に別。外部へ送らない）:
 
 ```bash

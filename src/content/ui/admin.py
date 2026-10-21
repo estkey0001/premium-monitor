@@ -141,8 +141,10 @@ def collector_warn(collector: dict, optional: set, threshold: int) -> dict:
     sus = [x for x in col.get("suspicious_prices") or [] if isinstance(x, dict)]
     rejected = len({(x.get("product_alias"), x.get("shop")) for x in sus if x.get("action") == "rejected"})
     hard_n = sum(1 for x in sus if x.get("action") != "rejected" and x.get("reason") in hard)
+    # 上限を超えるが他店の裏付けで採用した価格は、変動ではない（品質ゲートの分類と同じ。劣化アラートに別に出る）
     moves = len({(x.get("product_alias"), x.get("shop")) for x in sus
-                 if x.get("action") != "rejected" and x.get("reason") not in hard})
+                 if x.get("action") != "rejected" and x.get("reason") not in hard
+                 and x.get("reason") != "above_genre_max_corroborated"})
     low = int(((col.get("summary") or {}).get("low_confidence_count")) or 0)
     req_failed = sum(int(r.get("failed") or 0) for r in col.get("shop_detail") or []
                      if isinstance(r, dict) and r.get("shop_id") not in optional)

@@ -45,7 +45,7 @@ from src.market.official_price_validator import validate_official_price, is_offi
 # （Phase 15 で移した。名前はここでも同じに使える）
 from src.market.official_registry import (  # noqa: E402,F401
     KNOWN_STALE, OFFICIAL_NOT_SOLD, UNVERIFIED, VERIFIED_URLS, VERIFIED_URLS_CHECKED_ON, config_price_drift,
-    identity_coverage, official_direct_gate,
+    extends_verification, identity_coverage, official_direct_gate,
 )
 
 MAKER_OF = {
@@ -220,8 +220,9 @@ RECHECK_PATH = ROOT / "exports" / "official_recheck" / "latest.json"
 def apply_recheck(c, products, path: Path | None = None) -> list[dict]:
     """公式の再確認（scripts/recheck_official.py）の結果を DB に反映する（Phase 15）。
 
-    - unchanged（型番が一致し価格が記録と同じ）: 価格を確認した日を、実際に取得した日に進める（本当の観測。
-      記録の確認日より古い結果では戻さない）
+    - unchanged（型番が一致し価格が記録と同じ）: 価格を確認した日を、実際に取得した日に進める（本当の観測。記録の確認日より
+      古い結果では戻さない）。ただし verified_by が msrp_lineup（メーカーの希望小売価格だけ。購入ページ・在庫は未確認）の確認は
+      進めない（価格の変化・販売終了の検知にだけ使う）
     - changed・sale_ended: 確認済みの定価を外す（人が確かめて VERIFIED_URLS を直すまで確定に使わない）
     - 在庫: 明示の表示を読み取れたときだけ、取得した時刻つきで記録する（確認から7日以内・より新しいときだけ）
     - failed・blocked: 何もしない（前回の価格は消さない。確認日も在庫の時刻も新しくしない）
@@ -243,7 +244,10 @@ def apply_recheck(c, products, path: Path | None = None) -> list[dict]:
         if r.get("url") != v["url"] or r.get("recorded_price") != v.get("price") \
                 or (model and r.get("model") and r.get("model") != model):
             continue
-        if st == "unchanged" and r.get("price") == v.get("price"):
+        if st == "unchanged" and r.get("price") == v.get("price") and not extends_verification(r):
+            # メーカーの希望小売価格だけを見た確認（購入ページ・在庫は未確認）は、価格の変化の検知には使うが、確認日は進めない
+            applied.append({"product_id": pid, "action": "price_seen_not_extended", "verified_by": r.get("verified_by")})
+        elif st == "unchanged" and r.get("price") == v.get("price"):
             day = at[:10]
             # 記録の確認日より新しく、今日より未来でない日だけ（壊れた結果・時計のずれで未来の日にしない。L-1）
             if str(v.get("checked_on") or "") < day <= today:

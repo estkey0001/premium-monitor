@@ -73,7 +73,7 @@ def is_fresh(entry: dict, now: datetime, max_age_days: int = MAX_AGE_DAYS) -> bo
     if at is None:
         return False
     age = (now - at).total_seconds() / 86400
-    return -1 <= age <= max_age_days
+    return -(1 / 24) <= age <= max_age_days            # 未来は時計のずれの 1 時間まで
 
 
 def load(path: Path, now: datetime) -> list[dict]:
@@ -97,7 +97,7 @@ def build(previous: list[dict], new_rows: list[dict], now: datetime) -> list[dic
         if r.get("data_source") != BASELINE_SOURCE or not _price(r.get("buyback_price")):
             continue                      # 手入力・取得失敗・隔離した行（suspicious_rejected）は基準にしない
         at = _parse(r.get("observed_at"))
-        if at is None or at > now + timedelta(days=1):
+        if at is None or at > now + timedelta(hours=1):
             continue
         out[(r.get("product_alias", ""), r.get("buyback_shop", ""))] = {
             "product_alias": r.get("product_alias", ""), "buyback_shop": r.get("buyback_shop", ""),

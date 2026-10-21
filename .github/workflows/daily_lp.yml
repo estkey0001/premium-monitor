@@ -575,6 +575,10 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
+          # git add は、存在しないパスが1つでもあると全体が失敗して何もステージしない（`|| true` がそれを隠し、その日の
+          # LP が commit されない）。この実行で作られないかもしれないディレクトリは、先に作る
+          mkdir -p exports/ops
+
           git add docs/ exports/lp/daily/ exports/collector_report/ exports/lottery_report/ \
                   exports/alerts_report/ exports/ranking_report/ exports/sedori_routes_report/ \
                   exports/overseas_prices/ \

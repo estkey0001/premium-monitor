@@ -102,13 +102,15 @@ GAME_CONSOLE_SMARTPHONE_THRESHOLD = 100_000
 # ただし単独の店の値は採用しない。上限を超える値は、次の全部がそろうときだけ採用する（above_genre_max_corroborated。
 # 隔離しない・記録には残す）。1つでも欠ければ従来どおり隔離（要確認）:
 #   - その行が商品ページ（item）の URL・照合済み（link_verified）・信頼度が low でない
-#   - 公式の価格が分かり、その 2 倍以内（CEILING_CORROBORATED_MAX_RATIO。以前案の 2.5 倍は緩すぎた）
-#   - 別の店の行が同水準（±10%）で、同じ条件（商品ページの URL・照合済み・信頼度 low でない）を満たし、
+#   - 公式の価格が分かり、その 1.5 倍以内（CEILING_CORROBORATED_MAX_RATIO。2.5 倍・2 倍は緩すぎた）
+#   - 別の店の行（ホストも URL も別。同じ元の複製・同じ店の別行は裏付けにならない）が同水準（±10%）で、同じ条件
+#     （商品ページの URL・照合済み・信頼度 high / medium が明示されている・公式の 1.5 倍以内）を満たし、
 #     この行以外の隔離の理由（公式の 3 倍・容量の逆転・同額の取り違えなど）に当たらない
+# 商品ページの URL は、識別の番号まで付いたもの（`/products/detail/25543`）だけ。一覧ページの根（`/products/`）は商品ページではない
 # 店のトップの URL の行は、裏付けにならない（確定の売値にもなれない行が、確定の行の裏付けになるのを防ぐ）。
 # 公式の 3 倍以上・ゲーム機のスマホ価格帯・容量の逆転・同額の取り違え・下限未満は、裏付けがあっても隔離のまま
 CEILING_CORROBORATION_TOLERANCE = 0.10
-CEILING_CORROBORATED_MAX_RATIO = 2.0
+CEILING_CORROBORATED_MAX_RATIO = 1.5
 
 # ── 対象商品定義 ──
 TARGET_PRODUCTS = [
@@ -830,13 +832,36 @@ def compute_suspicious(new_rows: list[dict], existing_rows: list[dict]) -> list[
     return suspicious_prices
 
 
+_ITEM_ID_PATH = None
+
+
 def _item_level_verified(row: dict) -> bool:
-    """商品ページ（item）の URL で、照合済み（link_verified）で、信頼度が low でない行。"""
+    """商品ページ（識別の番号まで付いた URL）で、照合済み（link_verified）で、信頼度が high / medium と明示され、
+    自動取得（auto_scraped）と明示された行。キーが欠けた行は通さない（既定値で開けない）。"""
+    import re
+    from urllib.parse import urlparse
+
     from src.market.normalized_prices import classify_link_type
+    global _ITEM_ID_PATH
+    if _ITEM_ID_PATH is None:
+        _ITEM_ID_PATH = re.compile(r"/(?:detail|item|items|products|goods|dp)/(?:[A-Za-z0-9_-]+/)*[A-Za-z0-9_-]*\d[A-Za-z0-9_-]*/?$")
+    url = str(row.get("url") or "")
     verified = str(row.get("link_verified", "")).lower() == "true"
-    return (classify_link_type(str(row.get("url") or ""), verified, "sell") == "item"
-            and str(row.get("confidence", "high")).lower() != "low"
-            and row.get("data_source", "auto_scraped") == "auto_scraped")
+    try:
+        path = urlparse(url).path
+    except ValueError:
+        return False
+    return (verified and classify_link_type(url, True, "sell") == "item" and bool(_ITEM_ID_PATH.search(path))
+            and str(row.get("confidence", "")).lower() in ("high", "medium")
+            and row.get("data_source") == "auto_scraped")
+
+
+def _source_key(row: dict) -> tuple[str, str]:
+    """裏付けが別の系統か見るための（ホスト, URL）。www. を除いたホストが同じなら同じ運営元とみなす。"""
+    from urllib.parse import urlparse
+    url = str(row.get("url") or "")
+    host = (urlparse(url).netloc or "").lower()
+    return (host[4:] if host.startswith("www.") else host), url
 
 
 def _resolve_ceiling_flags(suspicious: list[dict], new_rows: list[dict]) -> None:
@@ -855,14 +880,17 @@ def _resolve_ceiling_flags(suspicious: list[dict], new_rows: list[dict]) -> None
         if (row is None or (alias, shop) in other_hard or not official or price > official * CEILING_CORROBORATED_MAX_RATIO
                 or not _item_level_verified(row)):
             continue
+        mine_host, mine_url = _source_key(row)
         corroborating = sorted(
             other for (a, other), r in rows.items()
             if a == alias and other != shop and (a, other) not in other_hard and _item_level_verified(r)
-            and _row_price(r) > 0 and abs(_row_price(r) - price) / price <= CEILING_CORROBORATION_TOLERANCE)
+            and 0 < _row_price(r) <= official * CEILING_CORROBORATED_MAX_RATIO
+            and abs(_row_price(r) - price) / price <= CEILING_CORROBORATION_TOLERANCE
+            and _source_key(r)[0] != mine_host and _source_key(r)[1] != mine_url)
         if corroborating:
             s["reason"] = "above_genre_max_corroborated"
             s["details"] = (f"カテゴリ共通の正常帯の上限を超えるが、{', '.join(corroborating)} も商品ページの行で同水準"
-                            f"（±{int(CEILING_CORROBORATION_TOLERANCE * 100)}%）、公式の{price / official:.1f}倍以内（¥{price:,}。採用）")
+                            f"（±{int(CEILING_CORROBORATION_TOLERANCE * 100)}%）、公式の{price / official:.2f}倍（¥{price:,}。採用。人が確認する）")
 
 
 # 価格そのものが誤りと判断できる理由（この理由が1つでもあれば、その価格は保存しない）。

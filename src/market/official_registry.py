@@ -519,7 +519,8 @@ def official_direct_audit(products: list[dict], today: str | None = None, rechec
             day = str(r.get("observed_at") or "")[:10]
             if r.get("status") in ("changed", "sale_ended"):
                 why.append(f"recheck_{r['status']}")
-            elif r.get("status") == "unchanged" and r.get("price") == v.get("price") and last < day <= t.isoformat():
+            elif r.get("status") == "unchanged" and r.get("price") == v.get("price") and last < day <= t.isoformat() \
+                    and extends_verification(r):
                 last = day
         try:
             if (t - date.fromisoformat(last)).days > OFFICIAL_DIRECT_STALE_DAYS:
@@ -569,14 +570,25 @@ USER_DECISIONS = {
 IDENTITY_STATES = ("IDENTITY_CONFIRMED", "PARTIAL_IDENTITY", "AMBIGUOUS", "DISCONTINUED", "NEEDS_USER_DECISION")
 
 
+# 確認日を進めない再確認（unchanged でも）。メーカーの商品ラインナップの希望小売価格だけを読んだ再確認は、価格の変化・販売終了の
+# 検知には使うが、購入ページ・在庫を見ていないので、購入の根拠としての新鮮さ（確認日）は延ばさない
+# （Switch 2: My Nintendo Store は待機室へ移るので購入ページを確認できない。人がブラウザで確認したときだけ延びる）
+NON_EXTENDING_VERIFIED_BY = frozenset({"msrp_lineup"})
+
+
+def extends_verification(result: dict) -> bool:
+    """再確認の結果が、確認日（購入の根拠としての新鮮さ）を進めてよいものか。"""
+    return str((result or {}).get("verified_by") or "") not in NON_EXTENDING_VERIFIED_BY
+
+
 def verification_status(history: list[dict] | None, today=None) -> list[dict]:
     """公式の確認の期限と、再確認の連続失敗（商品ごと。deploy-check #866 と運営者向けの劣化アラートが共通で使う）。
 
     - last_verified: 記録の確認日か、記録と同じ URL・価格に対する unchanged の再確認の日の新しいほう
     - days_left: OFFICIAL_DIRECT_STALE_DAYS（14日）から、確認日からの日数を引いた残り（負なら期限切れ）
     - consecutive_failures: 直近から数えて、再確認が失敗（failed / blocked）だった日数（日ごとに数える。成功が挟まれば 0 に戻る）
-    - verified_by: 最後の確認が何を見たか（既定は記録の購入ページ・人の確認。msrp_lineup = メーカーの希望小売価格だけで、購入ページ・
-      在庫は確認していない。store_product_page = 同じストアの商品ページ）
+    - verified_by: 確認日を進めた最後の確認が何を見たか（既定は記録の購入ページ・人の確認。store_product_page = 同じストアの
+      商品ページ）。msrp_lineup（メーカーの希望小売価格だけ。購入ページ・在庫は未確認）は確認日を進めない（NON_EXTENDING_VERIFIED_BY）
     """
     from datetime import date
 
@@ -590,7 +602,8 @@ def verification_status(history: list[dict] | None, today=None) -> list[dict]:
                 and str(r.get("observed_at") or "")[:10]]
         last, verified_by = str(v.get("checked_on") or ""), "purchase_page_or_manual"
         for r in sorted(mine, key=lambda x: str(x["observed_at"])):
-            if r.get("url") == v.get("url") and r.get("status") == "unchanged" and r.get("price") == v.get("price"):
+            if r.get("url") == v.get("url") and r.get("status") == "unchanged" and r.get("price") == v.get("price") \
+                    and extends_verification(r):
                 day = str(r["observed_at"])[:10]
                 if day >= last:
                     last, verified_by = day, str(r.get("verified_by") or "purchase_page_or_manual")

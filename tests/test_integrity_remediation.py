@@ -488,15 +488,72 @@ def test_ceiling_corroboration_conditions_each_matter():
 
 def test_ceiling_corroboration_never_overrides_product_relative_limits():
     m = _ubp()
-    ok = [_prow("kaitori_shouten", 260000, ITEM_A), _prow("shop_b", 260000, ITEM_B)]      # 公式 137,980 の 1.9 倍 = 2 倍以内
+    ok = [_prow("kaitori_shouten", 205000, ITEM_A), _prow("shop_b", 205000, ITEM_B)]      # 公式 137,980 の 1.49 倍 = 1.5 倍以内
     assert not any(_quarantined(m, ok)[0])
-    too_high = [_prow("kaitori_shouten", 290000, ITEM_A), _prow("shop_b", 290000, ITEM_B)]  # 2.1 倍 = 2 倍を超える（2 店が同額でも隔離）
+    too_high = [_prow("kaitori_shouten", 210000, ITEM_A), _prow("shop_b", 210000, ITEM_B)]  # 1.52 倍 = 1.5 倍を超える（2 店が同額でも隔離）
     q, reasons = _quarantined(m, too_high)
     assert all(q) and "above_genre_max" in reasons and "above_genre_max_corroborated" not in reasons
     far = [_prow("kaitori_shouten", 450000, ITEM_A), _prow("shop_b", 450000, ITEM_B)]
     assert "over_3x_official" in _quarantined(m, far)[1] and all(_quarantined(m, far)[0])
     low = [_prow("kaitori_shouten", 5000, ITEM_A), _prow("shop_b", 5000, ITEM_B)]         # 下限未満（パース誤り）は裏付けがあっても隔離
     assert "below_genre_min" in _quarantined(m, low)[1] and all(_quarantined(m, low)[0])
+
+
+def test_ceiling_corroborator_must_pass_the_same_limits_itself():
+    """隔離される行（公式の 1.5 倍超）を裏付けにして、別の行を採用しない。"""
+    m = _ubp()
+    rows = [_prow("kaitori_shouten", 200700, ITEM_A), _prow("shop_b", 215000, ITEM_B)]    # 215,000 は 1.56 倍・±10% の中
+    q, reasons = _quarantined(m, rows)
+    assert q == [True, True] and "above_genre_max_corroborated" not in reasons
+    mixed = [_prow("kaitori_shouten", 270000, ITEM_A), _prow("shop_b", 285000, ITEM_B)]   # 両方 1.5 倍超
+    assert _quarantined(m, mixed)[0] == [True, True]
+
+
+def test_ceiling_corroboration_needs_independent_item_pages_and_explicit_fields():
+    m = _ubp()
+    base = _prow("kaitori_shouten", 200700, ITEM_A)
+    cases = {
+        "同じ URL（同じ元の複製）": [base, _prow("shop_b", 200700, ITEM_A)],
+        "同じ運営元のホスト": [base, _prow("shop_b", 200700, "https://www.kaitorishouten-co.jp/products/detail/9")],
+        "一覧ページの根": [base, _prow("shop_b", 200700, "https://b.test-store.jp/products/")],
+        "識別の番号が無い": [base, _prow("shop_b", 200700, "https://b.test-store.jp/products/detail/")],
+    }
+    for name, rows in cases.items():
+        assert _quarantined(m, rows)[0][0] is True, name
+    for missing in ("confidence", "data_source", "link_verified"):                      # キーが欠けた行は通さない
+        b = _prow("shop_b", 200700, ITEM_B)
+        b.pop(missing)
+        assert _quarantined(m, [base, b])[0][0] is True, missing
+    ok = [base, _prow("shop_b", 200700, ITEM_B, conf="medium")]
+    assert not any(_quarantined(m, ok)[0])
+
+
+def test_adopted_ceiling_price_is_visible_to_the_operator():
+    from src.ops import health_alert as ha
+    m = _ubp()
+    rows = [_prow("kaitori_shouten", 200700, ITEM_A), _prow("shop_b", 200700, ITEM_B)]
+    sus = m.compute_suspicious(rows, [])
+    col = _col_report({"kaitori_shouten": {"ok": 5, "failed": 0}}, suspicious=sus)
+    keys = {a["key"]: a["severity"] for a in ha.evaluate(_inp(col), HNOW)}
+    assert keys == {"price_adopted_over_ceiling:ps5_pro": "WARNING"}                     # 隔離ではないが、人が確認できるように出す
+
+
+def test_stale_collector_report_is_not_used_and_does_not_recover_alerts():
+    from src.ops import health_alert as ha
+    col = _col_report({"netoff": {"ok": 0, "failed": 4}, "kaitori_shouten": {"ok": 30, "failed": 0}},
+                      fetch_failed=[{"shop": "netoff", "reason": "price_not_found"}])
+    state, r1 = ha.reconcile({}, ha.evaluate(_inp(col, {"netoff": _days(4)}), HNOW), HNOW)
+    assert [c["key"] for c in r1["candidates"]] == ["source_failure:netoff"]
+    old = dict(col, generated_at="2026-10-20T18:00:00+09:00")                             # 2 日前のレポートが残った
+    inputs = _inp(old, {"netoff": _days(4)})
+    now2 = HNOW + timedelta(days=1)
+    assert ha.collector_state(inputs, now2) == "stale" and ha.collector_state(_inp(col), HNOW) == "ok"
+    cur = ha.evaluate(inputs, now2)
+    assert {a["key"] for a in cur} == {"collector_report_stale:collector_report"} and cur[0]["severity"] == "HIGH"
+    state, r2 = ha.reconcile(state, cur, now2, ha.unobservable_categories(inputs, now2))
+    assert r2["recovered"] == [] and "source_failure:netoff" in state["active"]
+    assert ha.collector_state(_inp(dict(col, generated_at="壊れた")), HNOW) == "stale"
+    assert ha.collector_state(_inp({}), HNOW) == "missing"
 
 
 # ── Low: 健康度（利益の発見・設定値を新鮮と数えない） ────────────────────────────────
@@ -562,8 +619,8 @@ HNOW = datetime(2026, 10, 22, 18, 30, tzinfo=JST)
 
 
 def _col_report(by_shop, fetch_failed=(), suspicious=(), low=0):
-    return {"by_shop": by_shop, "fetch_failed": list(fetch_failed), "suspicious_prices": list(suspicious),
-            "low_confidence_count": low}
+    return {"generated_at": "2026-10-22T18:00:00+09:00", "by_shop": by_shop, "fetch_failed": list(fetch_failed),
+            "suspicious_prices": list(suspicious), "low_confidence_count": low}
 
 
 def _inp(collector, history=None, official=(), optional=("geo", "hardoff")):
@@ -651,7 +708,7 @@ def test_health_alert_record_is_operator_only_and_sends_nothing(tmp_path):
     sp = importlib.util.spec_from_file_location("oha_integrity", ROOT / "scripts" / "operator_health_alert.py")
     m = importlib.util.module_from_spec(sp)
     sp.loader.exec_module(m)
-    for rel, body in (("exports/collector_report/latest.json", '{"by_shop": {"iosys": {"ok": 0, "failed": 4}}, '
+    for rel, body in (("exports/collector_report/latest.json", '{"generated_at": "2026-10-22T18:00:00+09:00", "by_shop": {"iosys": {"ok": 0, "failed": 4}}, '
                                                                '"fetch_failed": [{"shop": "iosys", "reason": "price_not_found"}]}'),
                       ("exports/collector_report/failure_history.json", '{"iosys": ["2026-10-20", "2026-10-21", "2026-10-22"]}')):
         (tmp_path / rel).parent.mkdir(parents=True, exist_ok=True)
@@ -742,8 +799,9 @@ def test_alert_key_does_not_change_as_a_failure_gets_older():
     state = {}
     events = []
     for n in (1, 2, 3, 4):
-        cur = ha.evaluate(_inp(col, {"iosys": _days(n)}), HNOW + timedelta(days=n))
-        state, res = ha.reconcile(state, cur, HNOW + timedelta(days=n))
+        day = HNOW + timedelta(days=n)
+        cur = ha.evaluate(_inp(dict(col, generated_at=day.isoformat()), {"iosys": _days(n)}), day)
+        state, res = ha.reconcile(state, cur, day)
         events.append(([c["event"] for c in res["candidates"]], [r["key"] for r in res["recovered"]]))
     assert events[0] == (["NEW"], []) and all(rec == [] for _, rec in events)               # 一度も「復旧」にならない
     assert [e for e, _ in events[1:]] == [[], [], []]                                        # HIGH（新しい）→ WARNING（既知のブロック）でも出し直さない
@@ -759,14 +817,15 @@ def test_missing_collector_report_does_not_recover_collector_alerts_and_keeps_of
     missing_inputs = _inp({}, official=off)
     cur = ha.evaluate(missing_inputs, HNOW + timedelta(days=1))
     assert {a["key"] for a in cur} == {"collector_report_missing:collector_report", "official_verification_expiry:prod_switch2"}
-    unobs = ha.unobservable_categories(missing_inputs)
+    unobs = ha.unobservable_categories(missing_inputs, HNOW + timedelta(days=1))
     state, r2 = ha.reconcile(state, cur, HNOW + timedelta(days=1), unobs)
     assert r2["recovered"] == [] and "source_failure:netoff" in state["active"]             # 見えなくなっただけ（復旧にしない）
-    state, r3 = ha.reconcile(state, ha.evaluate(_inp(col, {"netoff": _days(4)}), HNOW + timedelta(days=2)),
-                             HNOW + timedelta(days=2), ha.unobservable_categories(_inp(col)))
+    fresh = dict(col, generated_at=(HNOW + timedelta(days=2)).isoformat())                 # 戻った日の取得レポート
+    state, r3 = ha.reconcile(state, ha.evaluate(_inp(fresh, {"netoff": _days(4)}), HNOW + timedelta(days=2)),
+                             HNOW + timedelta(days=2), ha.unobservable_categories(_inp(fresh), HNOW + timedelta(days=2)))
     assert [c["key"] for c in r3["candidates"]] == [] and {r["key"] for r in r3["recovered"]} == {
         "collector_report_missing:collector_report", "official_verification_expiry:prod_switch2"}
-    assert ha.unobservable_categories(_inp(col)) == frozenset()
+    assert ha.unobservable_categories(_inp(fresh), HNOW + timedelta(days=2)) == frozenset()
 
 
 def test_alert_reescalates_after_severity_dropped_and_survives_broken_state():
@@ -794,16 +853,65 @@ def test_annotations_escape_workflow_command_characters():
     assert len(line.splitlines()) == 1 and line.startswith("::error::") and "%0A" in line and "%25" in line   # 1行のまま（別のコマンドにならない）
 
 
-def test_recheck_result_says_what_was_verified_and_status_keeps_it():
+def test_recheck_result_says_what_was_verified_and_msrp_lineup_does_not_extend_freshness():
+    from datetime import date
+
     from src.market import official_registry as reg
     out = {r["product_id"]: r for r in RO.recheck(NOW, fetch=lambda u: (SONY_PRODUCT, "") if "sony" in u else
                                                   (NIN_CURRENT, "") if "nintendo.com/jp" in u else (None, "timeout"))}
     assert out["prod_switch2"]["verified_by"] == "msrp_lineup"                 # 希望小売価格だけ（購入ページ・在庫は未確認）
     assert out["prod_ps5_pro"]["verified_by"] == "store_product_page"
     assert "verified_by" not in out["prod_airpods_pro3"]                       # 記録の購入ページそのものを読んだ商品
-    rows = {r["product_id"]: r for r in reg.verification_status(list(out.values()), today=NOW.date())}
-    assert rows["prod_switch2"]["verified_by"] == "msrp_lineup" and rows["prod_ps5_pro"]["verified_by"] == "store_product_page"
-    assert rows["prod_airpods_pro3"]["verified_by"] == "purchase_page_or_manual"
+    today = date(2026, 10, 22)
+    rows = {r["product_id"]: r for r in reg.verification_status(list(out.values()), today=today)}
+    # PS5 Pro（同じストアの商品ページ）は確認日が進む。Switch 2（希望小売価格だけ）は進まない = 期限が減り続ける
+    assert rows["prod_ps5_pro"]["last_verified"] == "2026-10-22" and rows["prod_ps5_pro"]["verified_by"] == "store_product_page"
+    assert rows["prod_switch2"]["last_verified"] == reg.VERIFIED_URLS["prod_switch2"]["checked_on"]
+    assert rows["prod_switch2"]["days_left"] < rows["prod_ps5_pro"]["days_left"]
+    assert reg.extends_verification({"verified_by": "msrp_lineup"}) is False
+    assert reg.extends_verification({}) and reg.extends_verification({"verified_by": "store_product_page"})
+    # 価格が変わった・販売終了は、希望小売価格だけの確認でも検知される（確認日を進める話ではない）
+    moved = RO.recheck(NOW, fetch=lambda u: (NIN_CURRENT.replace("59,980", "64,980", 1), "") if "nintendo.com/jp" in u else (None, "timeout"))
+    assert {r["product_id"]: r["status"] for r in moved}["prod_switch2"] == "changed"
+
+
+def _audit_module():
+    import importlib.util
+    sp = importlib.util.spec_from_file_location("aos_integrity", ROOT / "scripts" / "audit_official_sources.py")
+    m = importlib.util.module_from_spec(sp)
+    sp.loader.exec_module(m)
+    return m
+
+
+def test_apply_recheck_does_not_advance_dates_for_msrp_lineup_but_does_for_store_page(tmp_path):
+    import json
+    m = _audit_module()
+    calls = []
+
+    class C:
+        def execute(self, sql, params=()):
+            calls.append((sql, params))
+            return SimpleNamespace(rowcount=1, fetchone=lambda: None)
+
+        def commit(self):
+            pass
+    m.NOW = datetime(2026, 10, 22, 13, 0, tzinfo=JST)
+    v_sw, v_ps = m.VERIFIED_URLS["prod_switch2"], m.VERIFIED_URLS["prod_ps5_pro"]
+    results = [
+        {"product_id": "prod_switch2", "status": "unchanged", "price": v_sw["price"], "recorded_price": v_sw["price"],
+         "url": v_sw["url"], "model": "", "observed_at": "2026-10-22T12:30:00+09:00", "stock": "", "verified_by": "msrp_lineup"},
+        {"product_id": "prod_ps5_pro", "status": "unchanged", "price": v_ps["price"], "recorded_price": v_ps["price"],
+         "url": v_ps["url"], "model": "CFI-7100B01", "observed_at": "2026-10-22T12:31:00+09:00", "stock": "入荷待ち",
+         "verified_by": "store_product_page"}]
+    path = tmp_path / "latest.json"
+    path.write_text(json.dumps({"results": results}), encoding="utf-8")
+    applied = m.apply_recheck(C(), {"prod_switch2": {}, "prod_ps5_pro": {"model_number": "CFI-7100B01"}}, path)
+    acts = {(a["product_id"], a["action"]) for a in applied}
+    assert ("prod_switch2", "price_seen_not_extended") in acts and ("prod_switch2", "price_reconfirmed") not in acts
+    assert ("prod_ps5_pro", "price_reconfirmed") in acts
+    updated = [p for sql, p in calls if "official_price_updated_at=?" in sql]
+    assert [x[1] for x in updated] == ["prod_ps5_pro"]                       # Switch 2 の確認日は書き換えない
+
 
 
 def test_baseline_file_status_and_alert_when_unreadable(tmp_path):
@@ -831,18 +939,27 @@ def test_baseline_file_status_and_alert_when_unreadable(tmp_path):
 
 def test_ranking_rows_carry_availability_without_guessing_stock():
     rk = _ranking()
+    off = "official_store"
     hist = {"entries": {
-        "a": {"product_id": "prod_gr4_hdf", "state": "LOTTERY", "last_checked_at": "2026-10-21T18:00:00+09:00"},
-        "b": {"product_id": "prod_ps5_pro", "state": "OUT_OF_STOCK", "last_checked_at": "2026-10-12T19:55:03+09:00"},   # 10 日前
-        "c": {"product_id": "prod_x100vi", "state": "OUT_OF_STOCK", "last_checked_at": "2026-10-21T18:04:24+09:00"},
-        "d": {"product_id": "prod_x100vi", "state": "IN_STOCK", "last_checked_at": "2026-10-20T10:00:00+09:00"},        # 古い方
-        "e": {"product_id": "", "state": "IN_STOCK", "last_checked_at": "2026-10-21T18:00:00+09:00"},
-        "f": {"product_id": "prod_z8", "state": "IN_STOCK", "last_checked_at": "壊れた"},
-        "g": "壊れた"}}
+        "a": {"product_id": "prod_gr4_hdf", "source_type": off, "state": "LOTTERY", "last_checked_at": "2026-10-21T18:00:00+09:00"},
+        "b": {"product_id": "prod_ps5_pro", "source_type": off, "state": "OUT_OF_STOCK", "last_checked_at": "2026-10-12T19:55:03+09:00"},
+        "c": {"product_id": "prod_x100vi", "source_type": off, "state": "OUT_OF_STOCK", "last_checked_at": "2026-10-21T18:04:24+09:00"},
+        "d": {"product_id": "prod_x100vi", "source_type": off, "state": "IN_STOCK", "last_checked_at": "2026-10-20T10:00:00+09:00"},
+        "e": {"product_id": "", "source_type": off, "state": "IN_STOCK", "last_checked_at": "2026-10-21T18:00:00+09:00"},
+        "f": {"product_id": "prod_z8", "source_type": off, "state": "IN_STOCK", "last_checked_at": "壊れた"},
+        "g": "壊れた",
+        # 公式以外の情報源（別の店・手入力）は、公式で買う案件に付けない
+        "h": {"product_id": "prod_gr4_hdf", "source_type": "retail_ec", "state": "IN_STOCK", "last_checked_at": "2026-10-21T19:00:00+09:00"},
+        "i": {"product_id": "prod_r5ii", "state": "IN_STOCK", "last_checked_at": "2026-10-21T19:00:00+09:00"},
+        # タイムゾーン無しの時刻は JST とみなす（比較で落ちない）
+        "j": {"product_id": "prod_switch2", "source_type": off, "state": "IN_STOCK", "last_checked_at": "2026-10-22T09:00:00"}}}
     av = rk.availability_by_product(hist, datetime(2026, 10, 22, 12, 0, tzinfo=JST))
-    assert av == {"prod_gr4_hdf": "LOTTERY", "prod_ps5_pro": "UNKNOWN", "prod_x100vi": "OUT_OF_STOCK"}   # 7日超は未確認・新しい方
+    assert av == {"prod_gr4_hdf": "LOTTERY", "prod_ps5_pro": "UNKNOWN", "prod_x100vi": "OUT_OF_STOCK",
+                  "prod_switch2": "IN_STOCK"}                                          # 7日超は未確認・新しい方・公式だけ
     assert rk.availability_by_product({}, NOW) == {} and rk.availability_by_product(None, NOW) == {}
     assert "在庫未確認" in rk._AVAILABILITY_LABELS["UNKNOWN"] and "入荷待ち" in rk._AVAILABILITY_LABELS["OUT_OF_STOCK"]
+    src = (ROOT / "scripts" / "generate_ranking_report.py").read_text(encoding="utf-8")
+    assert src.count("購入元の在庫:") >= 1                                              # 主語を付けた表示（買取店の在庫と読めない）
 
 
 def test_official_url_is_the_same_for_scanner_ranking_and_health():
@@ -862,3 +979,55 @@ def test_official_url_is_the_same_for_scanner_ranking_and_health():
     assert bds.official_url_for_product(broken, "prod_a", "Apple") == bds.APPLE_STORE_DEFAULT_URL
     for rel in ("scripts/generate_ranking_report.py", "scripts/generate_health_report.py"):
         assert "official_url_for_product" in (ROOT / rel).read_text(encoding="utf-8"), rel
+
+
+# ── git add は存在しないパスが1つでもあると全体が失敗する（運営者アラートの step が落ちても LP を commit する） ──
+
+def test_commit_step_never_fails_because_of_a_missing_path():
+    import re
+    import subprocess
+    wf = (ROOT / ".github" / "workflows" / "daily_lp.yml").read_text(encoding="utf-8")
+    step = wf[wf.index("- name: Commit and push"):]
+    start = step.index("git add docs/")
+    add = step[start:step.index("|| true", start)]
+    paths = [p for p in re.sub(r"\\\n|':\(exclude\)[^']*'", " ", add.replace("git add", "")).split() if p]
+    tracked = subprocess.run(["git", "ls-files"], cwd=ROOT, capture_output=True, text=True).stdout.splitlines()
+    created = set(re.findall(r"mkdir -p (\S+)", step.split("git add docs/")[0]))
+    missing = [p for p in paths if not any(t == p or t.startswith(p.rstrip("/") + "/") for t in tracked)
+               and p.rstrip("/") not in {c.rstrip("/") for c in created}]
+    assert missing == [], f"git add の対象に、リポジトリに無く・先に作られないパスがある: {missing}"
+    assert "exports/ops/" in paths and "exports/ops" in created                      # 運営者アラートが落ちても失敗しない
+    assert (ROOT / "exports" / "ops" / ".gitkeep").exists()
+
+
+def test_admin_warning_bar_does_not_count_adopted_ceiling_price_as_a_move():
+    from src.content.ui import admin
+    sus = [{"product_alias": "ps5_pro", "shop": "a", "reason": "above_genre_max_corroborated", "price": 200700},
+           {"product_alias": "x100vi", "shop": "a", "reason": "price_change_over_20pct", "price": 260000}]
+    w = admin.collector_warn({"suspicious_prices": sus, "shop_detail": []}, set(), 5)
+    assert w["moves"] == 1 and w["suspicious"] == 0                                    # 採用した価格は「大きな変動」に数えない
+
+
+def test_baseline_future_observation_time_is_not_trusted():
+    from src.collectors import price_baseline as pb
+    now = BNOW
+    ok = _row("a", "s", 1000, at="2026-10-22T17:30:00+09:00")                           # 30分先 = 時計のずれの範囲
+    future = _row("a", "s", 1000, at="2026-10-22T20:00:00+09:00")                       # 3時間先
+    assert pb.is_fresh(ok, now) and not pb.is_fresh(future, now)
+    assert pb.build([], [future], now) == []                                              # 未来の時刻は基準に入れない
+
+
+def test_official_direct_audit_ignores_msrp_lineup_for_freshness():
+    from src.market import official_registry as reg
+    v = reg.VERIFIED_URLS["prod_switch2"]
+    base = {"product_id": "prod_switch2", "url": v["url"], "recorded_price": v["price"], "status": "unchanged",
+            "price": v["price"], "observed_at": "2026-10-22T12:00:00+09:00"}
+    products = [{"id": "prod_switch2", "name": "Switch 2"}]
+    def last(extra):
+        rows = reg.official_direct_audit(products, today="2026-10-22", recheck=[{**base, **extra}])
+        return rows[0]["verified_at"] if rows else v["checked_on"]
+    # official_direct_audit は公式直販価格（OFFICIAL_DIRECT_OFFERS）の商品だけを返す。Switch 2 は定価（msrp）なので
+    # 関数の判定そのもの（extends_verification）で確かめる
+    assert reg.extends_verification({**base, "verified_by": "store_product_page"}) is True
+    assert reg.extends_verification({**base, "verified_by": "msrp_lineup"}) is False
+    assert last({"verified_by": "msrp_lineup"}) == v["checked_on"]

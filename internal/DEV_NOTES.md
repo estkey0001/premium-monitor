@@ -103,6 +103,8 @@
   - `requests.Response` は 4xx・5xx で bool が False（`if e.response` では状態コードが読めず、ログが `HTTP ???` になる）。`is not None` で見る。404 / 410 / 403 / 401 は再試行しない
   - 健康度の「利益の発見」は売買ルート（profit_routes）しか見ず、公式→買取の確定した案件があっても 0 点だった。設定値（`freshness_basis=config_unknown_date`）は `is_fresh` が True でも新鮮として数えない
   - 運営者向けの劣化アラート（`src/ops/health_alert.py`）は商品の通知と別。notifiers を import しない・Secrets / 変数を読まない・外部へ送らない（deploy-check #869）。同じ異常は key（種類:取得元）で重ねず、重くなったときだけ出し直す
+  - `git add` は存在しないパスが 1 つでもあると全体が失敗して何もステージしない（`|| true` が隠す）。commit の step の対象のうち、この実行で作られないかもしれないディレクトリは先に `mkdir -p` する（`exports/ops/`。tests/test_integrity_remediation.py が全パスを検査）
+  - 取得レポートが古い日（収集が落ちて前日のレポートが残る）は、取得元・失敗率・品質ゲートを判定せず、既存のアラートを復旧にしない（`collector_report_stale`）
   - deploy-check #866（公式の再確認）・#867（利益の式は1つ）・#868（買取の比較の基準）・#869（劣化アラートの分離）・#870（定時の実行）
 
 ## 旧 CLAUDE.md にあった記録（2026-05-27 時点）

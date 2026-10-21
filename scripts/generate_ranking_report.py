@@ -50,25 +50,29 @@ def _fmt_profit(v) -> str:
         return str(v)
 
 
-_AVAILABILITY_LABELS = {"IN_STOCK": "在庫あり（確認から日が浅い）", "OUT_OF_STOCK": "在庫なし・入荷待ち", "LOTTERY": "抽選",
+_AVAILABILITY_LABELS = {"IN_STOCK": "在庫あり（7日以内に確認）", "OUT_OF_STOCK": "在庫なし・入荷待ち", "LOTTERY": "抽選",
                         "UNKNOWN": "在庫未確認"}
+_OFFICIAL_STOCK_SOURCES = ("official_store", "official")      # 公式で買う案件なので、購入元の公式の在庫だけを添える
 
 
 def availability_by_product(stock_history: dict, now: datetime) -> dict[str, str]:
-    """商品ごとの在庫の状態（exports/stock_history の記録。確認から7日を過ぎたものは UNKNOWN。在庫を推測しない）。
+    """商品ごとの購入元（公式）の在庫の状態（exports/stock_history の記録。確認から7日を過ぎたものは UNKNOWN。在庫を推測しない）。
 
-    順位は「確定の利益」（買えるか = 今すぐ行動できるかとは別）。在庫が分からない・入荷待ちの商品が「買える利益」に
-    見えないよう、順位の各行に在庫の状態を添える（利益の判定には使わない）。
+    順位は「確定の利益」（買えるか = 今すぐ行動できるかとは別）。購入元の在庫が分からない・入荷待ちの商品が「買える利益」に
+    見えないよう、順位の各行に購入元の在庫の状態を添える（利益の判定には使わない）。公式以外の情報源の記録は使わない
+    （公式で買う案件に、別の店の在庫を付けない）。時刻にタイムゾーンが無ければ JST とみなし、読めない記録は飛ばす。
     """
     from src.market import price_evidence as pe
-    out: dict[str, tuple[str, str]] = {}
+    out: dict[str, tuple[str, datetime]] = {}
     for e in ((stock_history or {}).get("entries") or {}).values():
-        if not isinstance(e, dict) or not e.get("product_id"):
+        if not isinstance(e, dict) or not e.get("product_id") or e.get("source_type") not in _OFFICIAL_STOCK_SOURCES:
             continue
-        checked = str(e.get("last_checked_at") or "")
         try:
-            age = (now - datetime.fromisoformat(checked)).total_seconds() / 86400
-        except ValueError:
+            checked = datetime.fromisoformat(str(e.get("last_checked_at") or ""))
+            if checked.tzinfo is None:
+                checked = checked.replace(tzinfo=JST)
+            age = (now - checked).total_seconds() / 86400
+        except (ValueError, TypeError):
             continue
         state = str(e.get("state") or "UNKNOWN") if -1 <= age <= pe.CURRENT_DAYS else "UNKNOWN"
         if e["product_id"] not in out or checked > out[e["product_id"]][1]:
@@ -385,7 +389,7 @@ def main() -> int:
     for i, d in enumerate(report["beginner_top10"], 1):
         lines.append(
             f"{i}. **{d['product_name']}** — 実質{_fmt_profit(d['net_profit_jpy'])} "
-            f"({d['best_buyback_shop']}・{_AVAILABILITY_LABELS.get(d.get('availability') or 'UNKNOWN', '在庫未確認')})"
+            f"（買取: {d['best_buyback_shop']} / 購入元の在庫: {_AVAILABILITY_LABELS.get(d.get('availability') or 'UNKNOWN', '在庫未確認')}）"
         )
     if not report["beginner_top10"]:
         lines.append("データなし")
@@ -407,7 +411,7 @@ def main() -> int:
             for i, d in enumerate(deals, 1):
                 lines.append(
                     f"{i}. **{d['product_name']}** — 実質{_fmt_profit(d['net_profit_jpy'])} "
-                    f"({d['best_buyback_shop']}・{_AVAILABILITY_LABELS.get(d.get('availability') or 'UNKNOWN', '在庫未確認')})"
+                    f"（買取: {d['best_buyback_shop']} / 購入元の在庫: {_AVAILABILITY_LABELS.get(d.get('availability') or 'UNKNOWN', '在庫未確認')}）"
                 )
             lines.append("")
 

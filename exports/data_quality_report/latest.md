@@ -1,16 +1,16 @@
-# データ取得品質レポート（2026-10-21 13:26 JST）
+# データ取得品質レポート（2026-10-21 18:30 JST）
 
 ## 取得成功率
 - 全対象店舗数: 16
 - 成功店舗数: 3
 - 全失敗店舗数: 11
-- ジョブ成功率: 31.8%（OK 21 / 失敗 41 / SKIP 4 / 計 66）
+- ジョブ成功率: 30.3%（OK 20 / 失敗 42 / SKIP 4 / 計 66）
 
 ## 前回比較
-- 前回成功率: 33.3%
-- 今回成功率: 31.8%
+- 前回成功率: 31.8%
+- 今回成功率: 30.3%
 - 変化: -1.5pt（悪化）
-- 7日移動平均: 30.9%
+- 7日移動平均: 31.2%
 - 主要失敗理由 TOP5: http_403 12, product_not_listed 6, rate_limited_429 6, robots_unreachable 4, price_not_found 4
 
 ## 店舗別成功率（低い順）
@@ -28,8 +28,8 @@
 - surugaya（optional）: 0%（OK 0/失敗 2・site_blocked）
 
 ## 商品別成功率
+- ps5_pro: 0.0%
 - iphone16pro256: 0.0%
-- ps5_pro: 10.0%
 - switch2: 11.1%
 - iphone17pro256: 25.0%
 - iphone17pro512: 25.0%
@@ -47,24 +47,24 @@
 - r5ii: 100.0%
 
 ## 連続失敗店舗（2回以上）
-- 2ndstreet: 215回連続
-- bookoff: 215回連続
-- dosupara: 215回連続
-- geo_mobile: 215回連続
-- hardoff: 215回連続
-- janpara: 215回連続
-- pasoko: 215回連続
-- sofmap: 215回連続
-- surugaya: 215回連続
-- tsutaya: 215回連続
-- iosys: 148回連続
-- netoff: 75回連続
-- geo: 7回連続
+- 2ndstreet: 216回連続
+- bookoff: 216回連続
+- dosupara: 216回連続
+- geo_mobile: 216回連続
+- hardoff: 216回連続
+- janpara: 216回連続
+- pasoko: 216回連続
+- sofmap: 216回連続
+- surugaya: 216回連続
+- tsutaya: 216回連続
+- iosys: 149回連続
+- netoff: 76回連続
+- geo: 8回連続
 
 ## 改善優先順位（required店舗）
 1. iosys（失敗6 / http_403）
 2. mobile_ichiban（失敗4 / product_not_listed）
-3. kaitori_shouten（失敗1 / product_not_listed）
+3. kaitori_shouten（失敗2 / suspicious_rejected）
 
 ## 失敗理由（内訳）
 - http_403: 12件
@@ -76,16 +76,15 @@
 - not_supported: 4件
 - service_unavailable: 2件
 - site_blocked: 2件
-- suspicious_rejected: 1件
+- suspicious_rejected: 2件
 
 ## 有効データ量（新品・未使用 / 14日以内 / price>0）
-- 有効買取データを持つ商品数: 16
+- 有効買取データを持つ商品数: 15
   - prod_iphone17pm_256: 3店舗
   - prod_iphone17pro_256: 2店舗
   - prod_iphone17pro_512: 2店舗
   - prod_iphone17pm_512: 2店舗
   - prod_switch2: 1店舗
-  - prod_ps5_pro: 1店舗
   - prod_iphone17_256: 1店舗
   - prod_airpods_pro3: 1店舗
   - prod_iphoneair_256: 1店舗
@@ -95,6 +94,7 @@
   - prod_gr4_hdf: 1店舗
   - prod_gr4_mono: 1店舗
   - prod_z8: 1店舗
+  - prod_r5ii: 1店舗
 
 ## ランキングに使えたデータ数
 - Beginner: 2 件
@@ -111,5 +111,5 @@
 ## カメラ自動取得の信頼性
 - auto_scraped 取得: 17 件（うち high: 17）
 - manual fallback: 43 件
-- 棄却候補数: 203
-- 棄却理由: {'model_mismatch': 152, 'not_buyback_context': 51}
+- 棄却候補数: 204
+- 棄却理由: {'model_mismatch': 153, 'not_buyback_context': 51}

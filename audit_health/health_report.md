@@ -1,22 +1,22 @@
 # Profit Health Dashboard
 
-生成: 2026-10-21 13:26 JST
+生成: 2026-10-21 18:30 JST
 
 ## Health Score: **38.6 / 100**
 
 | 観点 | 配点 | スコア |
 |---|---|---|
-| Data Quality | 35 | 15.9 |
+| Data Quality | 35 | 16.0 |
 | Profit Discovery | 25 | 0.0 |
 | Source Health | 20 | 12.6 |
-| Link Quality | 10 | 4.9 |
+| Link Quality | 10 | 4.8 |
 | Freshness | 10 | 5.2 |
 
 ## Data Quality KPI
 
-- 総観測 237 / usable 77
+- 総観測 236 / usable 78
 - stale 114（48%） / 0円 38（16%）
-- item_url率 49% / search 20%
+- item_url率 48% / search 20%
 - manual 47% / API 0% / HTML 1%
 
 ## Profit KPI
@@ -30,7 +30,7 @@
 - reference: 0 → 0
 - stale率: 48% → 48%
 - 0円率: 16% → 16%
-- item_url率: 49% → 49%
+- item_url率: 49% → 48%
 
 ## 異常検知
 
@@ -41,7 +41,7 @@
 
 ### 🟡 Warning
 - item_url率 低下
-- item_url率 49% (<50%)
+- item_url率 48% (<50%)
 
 ### ℹ️ Info
 - なし
@@ -53,7 +53,7 @@
 | メーカー公式/定価 | 47 | 100% | 0 | 0 | 0% | 100% |
 | じゃんぱら | 34 | 82% | 28 | 6 | 74% | 18% |
 | フジヤカメラ | 25 | 100% | 8 | 0 | 32% | 68% |
-| 買取商店 | 23 | 100% | 7 | 0 | 100% | 70% |
+| 買取商店 | 22 | 100% | 7 | 0 | 100% | 68% |
 | イオシス | 20 | 70% | 14 | 6 | 70% | 30% |
 | ソフマップ | 10 | 80% | 8 | 2 | 60% | 20% |
 | ゲオ | 9 | 78% | 7 | 2 | 44% | 22% |

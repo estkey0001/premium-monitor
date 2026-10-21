@@ -1,18 +1,19 @@
 {
-  "generated_at": "2026-10-21T13:26:49+09:00",
+  "generated_at": "2026-10-21T18:30:17+09:00",
   "note": "内部用（運営者向け）。一般の画面には出さない。掲載の判定は opportunity.eligibility が正本",
   "candidate_count": 47,
   "eligible_count": 2,
   "exclusion_reasons": {
     "unverified_buy_price": 35,
     "stale_buyback": 15,
-    "no_profit": 10,
-    "no_sell_price": 5,
+    "no_profit": 9,
+    "no_sell_price": 6,
     "invalid_identity": 4
   },
   "primary_reasons": {
     "unverified_buy_price": 35,
-    "no_profit": 10
+    "no_profit": 9,
+    "no_sell_price": 1
   },
   "candidates": [
     {
@@ -230,9 +231,9 @@
       "product_id": "prod_ps5_pro",
       "route_type": "RETAIL_TO_BUYBACK",
       "reasons": [
-        "no_profit"
+        "no_sell_price"
       ],
-      "primary": "no_profit"
+      "primary": "no_sell_price"
     },
     {
       "product_id": "prod_xbox_sx",
@@ -428,7 +429,8 @@
       "eligible": 0,
       "primary_reasons": {
         "unverified_buy_price": 3,
-        "no_profit": 2
+        "no_profit": 1,
+        "no_sell_price": 1
       }
     },
     "pc": {
@@ -683,7 +685,7 @@
         "price": 211800,
         "price_type": "RETAIL",
         "source": "src_ricoh_imaging",
-        "verified_at": "2026-10-21T12:52:56+09:00",
+        "verified_at": "2026-10-21T17:56:20+09:00",
         "url": "https://ricohimagingstore.com/Form/Product/ProductList.aspx?shop=0&cat=002010",
         "note": ""
       },
@@ -696,7 +698,7 @@
         "price": 222000,
         "price_type": "RETAIL",
         "source": "src_ricoh_imaging",
-        "verified_at": "2026-10-21T12:54:56+09:00",
+        "verified_at": "2026-10-21T17:58:20+09:00",
         "url": "https://ricohimagingstore.com/Form/Product/ProductList.aspx?shop=0&cat=002010",
         "note": ""
       },
@@ -709,7 +711,7 @@
         "price": 299800,
         "price_type": "RETAIL",
         "source": "src_ricoh_imaging",
-        "verified_at": "2026-10-21T12:56:56+09:00",
+        "verified_at": "2026-10-21T18:00:20+09:00",
         "url": "https://ricohimagingstore.com/Form/Product/ProductList.aspx?shop=0&cat=002010",
         "note": ""
       },
@@ -1080,7 +1082,7 @@
     ]
   },
   "buyback": {
-    "fresh_rows": 38,
+    "fresh_rows": 37,
     "stale_rows": 70,
     "failed_rows": 38,
     "failed_sources": [
@@ -1093,7 +1095,7 @@
       "ブックオフ",
       "駿河屋"
     ],
-    "usable_products": 27,
+    "usable_products": 26,
     "sources": [
       {
         "source": "TSUTAYA",
@@ -1170,7 +1172,7 @@
         "rows": 24,
         "fresh": 17,
         "stale": 7,
-        "last_observed": "2026-10-21T12:16:19.216325+09:00"
+        "last_observed": "2026-10-21T17:25:34.648624+09:00"
       },
       {
         "source": "ブックオフ",
@@ -1189,20 +1191,20 @@
         "rows": 4,
         "stale": 3,
         "fresh": 1,
-        "last_observed": "2026-10-21T12:04:37+09:00"
+        "last_observed": "2026-10-21T17:13:50+09:00"
       },
       {
         "source": "買取一丁目",
         "rows": 4,
         "fresh": 4,
-        "last_observed": "2026-10-21T12:05:43+09:00"
+        "last_observed": "2026-10-21T17:14:50+09:00"
       },
       {
         "source": "買取商店",
-        "rows": 23,
+        "rows": 22,
         "stale": 7,
-        "fresh": 16,
-        "last_observed": "2026-10-21T12:16:19+09:00"
+        "fresh": 15,
+        "last_observed": "2026-10-21T17:25:34+09:00"
       },
       {
         "source": "駿河屋",
@@ -1243,41 +1245,48 @@
     "fresh_new": 6,
     "stale_new": 22,
     "used_reference": 27,
-    "confirmed_sells": 5,
+    "confirmed_sells": 6,
     "confirmed_products": [
+      {
+        "product_id": "prod_gr4",
+        "price": 200000,
+        "source": "買取商店",
+        "observed_at": "2026-10-21T17:24:04+09:00",
+        "condition": "new_unopened"
+      },
       {
         "product_id": "prod_gr4_hdf",
         "price": 240000,
         "source": "買取商店",
-        "observed_at": "2026-10-21T12:14:49+09:00",
+        "observed_at": "2026-10-21T17:24:04+09:00",
         "condition": "new_unopened"
       },
       {
         "product_id": "prod_gr4_mono",
         "price": 220000,
         "source": "買取商店",
-        "observed_at": "2026-10-21T12:14:49+09:00",
+        "observed_at": "2026-10-21T17:24:04+09:00",
         "condition": "new_unopened"
       },
       {
         "product_id": "prod_r5ii",
         "price": 450000,
         "source": "買取商店",
-        "observed_at": "2026-10-21T12:16:19+09:00",
+        "observed_at": "2026-10-21T17:25:34+09:00",
         "condition": "new_unopened"
       },
       {
         "product_id": "prod_x100vi",
         "price": 260000,
         "source": "買取商店",
-        "observed_at": "2026-10-21T12:14:49+09:00",
+        "observed_at": "2026-10-21T17:24:04+09:00",
         "condition": "new_unopened"
       },
       {
         "product_id": "prod_z8",
         "price": 420000,
         "source": "買取商店",
-        "observed_at": "2026-10-21T12:16:19+09:00",
+        "observed_at": "2026-10-21T17:25:34+09:00",
         "condition": "new_unopened"
       }
     ],
@@ -1323,7 +1332,7 @@
           "lottery_closed"
         ],
         "deadline": "2026-09-28T12:00:00+09:00",
-        "checked_at": "2026-10-21T13:07:00+09:00",
+        "checked_at": "2026-10-21T18:10:00+09:00",
         "confirmed": true,
         "net_profit": 16200.0,
         "roi": 0.07297297297297298,

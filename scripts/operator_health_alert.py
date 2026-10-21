@@ -40,8 +40,10 @@ def run(root: Path = ROOT, now: datetime | None = None, dry_run: bool = False) -
     from src.utils.atomic_write import write_json_atomic
     now = now or datetime.now(tz=JST)
     out = root / "exports" / "ops"
-    current = ha.evaluate(gather_inputs(root), now)
-    state, result = ha.reconcile(ha.read_json(out / "health_alert_state.json", {}), current, now)
+    inputs = gather_inputs(root)
+    current = ha.evaluate(inputs, now)
+    state, result = ha.reconcile(ha.read_json(out / "health_alert_state.json", {}), current, now,
+                                 ha.unobservable_categories(inputs))
     record = ha.build_record(current, result, now)
     if not dry_run:
         out.mkdir(parents=True, exist_ok=True)
@@ -50,13 +52,19 @@ def run(root: Path = ROOT, now: datetime | None = None, dry_run: bool = False) -
     return record
 
 
+def _esc(text) -> str:
+    """GitHub Actions のワークフローコマンド（::warning:: など）の本文に入れる文字列のエスケープ。
+    レポート由来の文字列（店・理由・詳細）に改行や % が入っても、別のコマンドとして読まれないようにする。"""
+    return str(text).replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A")
+
+
 def _annotations(record: dict) -> list[str]:
     lines = []
     for c in record["candidates"]:
         level = "error" if c["severity"] == "HIGH" else "warning"
-        lines.append(f"::{level}::[運営者向け・{c['event']}] {c['title']}（{c['key']}）— {c['details']}")
+        lines.append(f"::{level}::" + _esc(f"[運営者向け・{c['event']}] {c['title']}（{c['key']}）— {c['details']}"))
     for r in record["recovered"]:
-        lines.append(f"::notice::[運営者向け・復旧] {r['key']} は解消しました（{r.get('last_severity')}）")
+        lines.append("::notice::" + _esc(f"[運営者向け・復旧] {r['key']} は解消しました（{r.get('last_severity')}）"))
     return lines
 
 

@@ -163,3 +163,34 @@ python3 -m src.cli rank-product-candidates --fetch-buyback     # 買取商店の
   CI では作らない。同じ取得元へは前回の取得から 90秒以内（ブロックの後は24時間）は取得しない
 - 登録は上の承認 → 見込み → 登録の手順で1件ずつ（優先順位は登録しない）。登録した後の公式直販価格と買取は「登録した商品の
   公式直販価格と買取（Phase 29）」の手順
+
+## 利益の式・買取の比較の基準・運営者向けの劣化アラート（Production Integrity 是正）
+
+- **利益の式は1つ**: `src/market/profit_formula.py`（費用 = 買取店への発送 + 振込手数料 + 移動・持ち込み + 保険 + 購入送料。購入送料が
+  分からなければ載せない）。案件のスキャナー・候補の優先順位・順位レポート・健康度が同じ式・同じ関門
+  （`confirmed_official_to_buyback`: 確認済みの公式価格・確定の売値・送料が分かる）を使う。順位レポートに固定の費用を持たない。
+  載せなかった商品は `exports/ranking_report/latest.json` の `ineligible_items` に理由つきで残る
+- **買取の「前回との比較」の基準**: `exports/collector_report/price_baseline.json`（`src/collectors/price_baseline.py`。
+  直近の正常な自動取得の値・14日以内。手入力 / 取得失敗 / 隔離した行は入れない。CI が commit する）。基準が無い組（初めての観測）は
+  前回比を出さない。前回比 ±20% は警告だけで隔離の理由にしない。手入力の CSV（`data/manual_buyback_prices.csv`）は基準にしない
+- **カテゴリ共通の価格の上限**（GENRE_PRICE_RANGES）は目安で、単独の店の値は採用しない: 上限を超える値は、その行が商品ページの URL・
+  照合済み・信頼度 low でなく、公式の価格の 2 倍以内で、別の店の行が同水準（±10%）かつ同じ条件（商品ページ・照合済み・low でない・
+  他の隔離の理由に当たらない）のときだけ採用（`above_genre_max_corroborated`）。店のトップの行は裏付けにならない。1つでも欠ければ
+  隔離（要確認。運営者向けの劣化アラートに出る）。3 倍以上・ゲーム機のスマホ価格帯・容量の逆転・下限未満は、裏付けがあっても隔離
+- **公式の再確認**: `scripts/recheck_official.py` の `RECHECK_PAGE`（購入ページとは別に、価格を読むページ）。PS5 Pro は Sony Store の
+  商品ページ（購入ページ `_purchase` は在庫が無い間 E_NOTFOUND へ移る）、Switch 2 は任天堂の商品ラインナップ（My Nintendo Store は
+  待機室へ移るので取らない・回避しない）。結果の `url` は記録（`VERIFIED_URLS`）の URL のまま、読んだページは `fetched_url`・何を確認したかは `verified_by`
+  （Switch 2 は `msrp_lineup` = 希望小売価格だけ。購入ページ・在庫は確認していない）
+- **運営者向けの劣化アラート**（商品の通知とは完全に別。外部へ送らない）:
+
+```bash
+python3 scripts/operator_health_alert.py            # exports/ops/health_alert.json・health_alert_state.json を書く
+python3 scripts/operator_health_alert.py --dry-run  # 書かずに注記だけ見る
+```
+
+  必須の店の連続失敗（既知のブロックは WARNING・予想外の理由は HIGH）・今日から取れなくなった必須の店・必須の店の失敗率・品質ゲート・
+  公式の確認の期限（3日以内）・公式の再確認の連続失敗（3日 = WARNING・7日 = HIGH）。新しい・重くなった・復旧のときだけ CI の注記と
+  Step Summary に出す（同じ異常は出し直さない）。管理画面の取得状況の先頭にも出る。CI では Collector quality gate の直後
+- **失敗の数え方**（`collector_report/latest.json` の `counters`・`counter_definitions`）: `rows_failed`・`quality_rejected`・
+  `rows_skipped`・`sources_failed`・`requests_failed` は別の指標。品質ゲートの「取得失敗率」は (rows_failed + quality_rejected) ÷ rows_total
+- **定時の実行**: cron は 12:17 JST（UTC 03:17）。毎時 0 分は GitHub Actions が混み、毎日 4〜7 時間遅れて始まっていた。頻度は上げない

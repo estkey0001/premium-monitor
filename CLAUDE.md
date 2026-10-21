@@ -20,7 +20,7 @@ python -m pytest
 ## デプロイ構成
 
 - GitHub Pages: `main` ブランチの `/docs` を `estkey0001.github.io/premium-monitor/` で公開
-- GitHub Actions `Daily LP Update`: 毎日 12:00 JST に cron 実行（push では発火しない）
+- GitHub Actions `Daily LP Update`: 毎日 12:17 JST（UTC 03:17）に cron 実行（push では発火しない。毎時 0 分は GitHub Actions が混み、4〜7 時間遅れて始まっていたため 0 分を避けている。実際の開始はそれでも遅れうる）
 - push すると Pages が再ビルドされる。それ以外の外部発火は無い
 ## プロジェクト概要
 iPhone / Apple製品 / カメラ / ゲーム機を対象に、公式価格・中古価格・買取価格・海外価格を横断監視し、プレ値候補を検出するシステム。自動購入は一切行わない。情報の収集・比較・通知・LP生成のみ。
@@ -99,7 +99,7 @@ gh run list --limit 5
 ## 公開範囲
 
 GitHub 上で **PUBLIC**。`estkey0001.github.io/premium-monitor/` で
-「プレ値速報」のLP 274ページを公開しており、`Daily LP Update` ワークフローが毎日12:00 JSTに更新する。
+「プレ値速報」のLP 274ページを公開しており、`Daily LP Update` ワークフローが毎日12:17 JST（実際の開始はそれより遅れうる）に更新する。
 
 コミットする前に、本名・個人メール・絶対パスが混ざっていないか確認すること
 （`exports/` 配下の自動生成物と `docs/HANDOFF.md` が過去に該当した）。

@@ -98,12 +98,17 @@ PRODUCT_GENRES: dict[str, str] = {
 # ゲーム機でスマホ価格帯（10万円超）を拾った場合はsuspicious
 GAME_CONSOLE_SMARTPHONE_THRESHOLD = 100_000
 
-# カテゴリ共通の正常帯の上限（GENRE_PRICE_RANGES）は、商品ごとの根拠ではなく目安なので、絶対の上限にしない（M-3）。
-# 上限を超えても、別の店が同じ水準（±10%）で出していて、公式の価格の 2.5 倍以内なら採用する（above_genre_max_corroborated。
-# 隔離しない。記録には残す）。裏付けの無い上限超えは従来どおり隔離する（要確認）。公式の価格の 3 倍・ゲーム機の
-# スマホ価格帯・容量の逆転・同額の取り違えは、裏付けがあっても隔離のまま
+# カテゴリ共通の正常帯の上限（GENRE_PRICE_RANGES）は、商品ごとの根拠ではなく目安なので、絶対の上限にはしない（M-3）。
+# ただし単独の店の値は採用しない。上限を超える値は、次の全部がそろうときだけ採用する（above_genre_max_corroborated。
+# 隔離しない・記録には残す）。1つでも欠ければ従来どおり隔離（要確認）:
+#   - その行が商品ページ（item）の URL・照合済み（link_verified）・信頼度が low でない
+#   - 公式の価格が分かり、その 2 倍以内（CEILING_CORROBORATED_MAX_RATIO。以前案の 2.5 倍は緩すぎた）
+#   - 別の店の行が同水準（±10%）で、同じ条件（商品ページの URL・照合済み・信頼度 low でない）を満たし、
+#     この行以外の隔離の理由（公式の 3 倍・容量の逆転・同額の取り違えなど）に当たらない
+# 店のトップの URL の行は、裏付けにならない（確定の売値にもなれない行が、確定の行の裏付けになるのを防ぐ）。
+# 公式の 3 倍以上・ゲーム機のスマホ価格帯・容量の逆転・同額の取り違え・下限未満は、裏付けがあっても隔離のまま
 CEILING_CORROBORATION_TOLERANCE = 0.10
-CEILING_CORROBORATED_MAX_RATIO = 2.5
+CEILING_CORROBORATED_MAX_RATIO = 2.0
 
 # ── 対象商品定義 ──
 TARGET_PRODUCTS = [
@@ -350,6 +355,7 @@ def run(dry_run: bool = False, no_scrape: bool = False) -> int:
     existing_rows = _load_existing_csv()  # 手入力の行の保持用（前回との比較の基準には使わない。M-3）
     from src.collectors import price_baseline
     _now_for_baseline = datetime.now(tz=JST)
+    _baseline_file = price_baseline.file_status(_baseline_path())
     baseline_all = price_baseline.read_entries(_baseline_path())
     baseline_rows = price_baseline.load(_baseline_path(), _now_for_baseline)   # 直近の正常な自動取得の値（14日以内）
 
@@ -533,7 +539,7 @@ def run(dry_run: bool = False, no_scrape: bool = False) -> int:
     _write_csv(final_rows)
     print(f"\n  CSV更新完了: {len(final_rows)}行 -> {CSV_PATH}")
     # 前回との比較の基準を書き直す（正常な自動取得の行だけ。隔離した行・失敗した行・手入力は入れない。M-3）
-    _baseline_stats = price_baseline.stats(baseline_all, baseline_rows, new_rows)
+    _baseline_stats = price_baseline.stats(baseline_all, baseline_rows, new_rows, _baseline_file)
     price_baseline.save(_baseline_path(), price_baseline.build(baseline_rows, new_rows, _now_for_baseline),
                         _now_for_baseline)
     print("="*60 + "\n")
@@ -741,24 +747,12 @@ def compute_suspicious(new_rows: list[dict], existing_rows: list[dict]) -> list[
                     "details": f"{genre}正常帯¥{lo:,}〜¥{hi:,}の下限未満（¥{price:,}）",
                 })
             elif price > hi:
-                corroborating = sorted(
-                    other for other, other_price in (
-                        (r.get("buyback_shop", ""), _row_price(r)) for r in new_rows
-                        if r.get("product_alias", "") == alias and r.get("buyback_shop", "") != shop_id)
-                    if other_price > 0 and abs(other_price - price) / price <= CEILING_CORROBORATION_TOLERANCE)
-                within_official = (not official) or price <= official * CEILING_CORROBORATED_MAX_RATIO
-                if corroborating and within_official:
-                    flags.append({
-                        "reason": "above_genre_max_corroborated",
-                        "details": (f"{genre}正常帯¥{lo:,}〜¥{hi:,}の上限を超えるが、{', '.join(corroborating)} も同水準"
-                                    f"（±{int(CEILING_CORROBORATION_TOLERANCE * 100)}%）で、公式の"
-                                    f"{(price / official) if official else 0:.1f}倍以内（¥{price:,}。採用）"),
-                    })
-                else:
-                    flags.append({
-                        "reason": "above_genre_max",
-                        "details": f"{genre}正常帯¥{lo:,}〜¥{hi:,}の上限超過（¥{price:,}。他店の裏付けなし・要確認）",
-                    })
+                # 採用か隔離かは、他の判定がそろってから決める（_resolve_ceiling_flags。裏付けの店が別の理由で隔離される
+                # 行でないか見るため）。ここでは隔離の印（above_genre_max）を付けておく
+                flags.append({
+                    "reason": "above_genre_max",
+                    "details": f"{genre}正常帯¥{lo:,}〜¥{hi:,}の上限超過（¥{price:,}。他店の裏付けなし・要確認）",
+                })
 
         # ⑦ 同一ショップ内で容量差が逆転（Task 3-C）
         # 例: iphone17pro256 > iphone17pro512 は不自然（256GBが512GBより高い）
@@ -832,7 +826,43 @@ def compute_suspicious(new_rows: list[dict], existing_rows: list[dict]) -> list[
                     "reason": "cross_product_same_price",
                     "details": f"{shop_id}: {', '.join(sorted(set(aliases)))} が同じ¥{price:,}（別商品の価格の取り違えの可能性）",
                 })
+    _resolve_ceiling_flags(suspicious_prices, new_rows)
     return suspicious_prices
+
+
+def _item_level_verified(row: dict) -> bool:
+    """商品ページ（item）の URL で、照合済み（link_verified）で、信頼度が low でない行。"""
+    from src.market.normalized_prices import classify_link_type
+    verified = str(row.get("link_verified", "")).lower() == "true"
+    return (classify_link_type(str(row.get("url") or ""), verified, "sell") == "item"
+            and str(row.get("confidence", "high")).lower() != "low"
+            and row.get("data_source", "auto_scraped") == "auto_scraped")
+
+
+def _resolve_ceiling_flags(suspicious: list[dict], new_rows: list[dict]) -> None:
+    """カテゴリ共通の上限超え（above_genre_max）を、条件がそろうときだけ採用（above_genre_max_corroborated）に直す。
+
+    条件は CEILING_* の説明のとおり。判定は他の隔離の理由がそろった後に行う（裏付けの行が他の理由で隔離されないか見る）。
+    """
+    other_hard = {(s["product_alias"], s["shop"]) for s in suspicious
+                  if s["reason"] in HARD_REJECT_REASONS and s["reason"] not in ("above_genre_max", "below_genre_min")}
+    rows = {(r.get("product_alias", ""), r.get("buyback_shop", "")): r for r in new_rows}
+    for s in suspicious:
+        if s["reason"] != "above_genre_max":
+            continue
+        alias, shop, price, official = s["product_alias"], s["shop"], s["price"], s.get("official_price")
+        row = rows.get((alias, shop))
+        if (row is None or (alias, shop) in other_hard or not official or price > official * CEILING_CORROBORATED_MAX_RATIO
+                or not _item_level_verified(row)):
+            continue
+        corroborating = sorted(
+            other for (a, other), r in rows.items()
+            if a == alias and other != shop and (a, other) not in other_hard and _item_level_verified(r)
+            and _row_price(r) > 0 and abs(_row_price(r) - price) / price <= CEILING_CORROBORATION_TOLERANCE)
+        if corroborating:
+            s["reason"] = "above_genre_max_corroborated"
+            s["details"] = (f"カテゴリ共通の正常帯の上限を超えるが、{', '.join(corroborating)} も商品ページの行で同水準"
+                            f"（±{int(CEILING_CORROBORATION_TOLERANCE * 100)}%）、公式の{price / official:.1f}倍以内（¥{price:,}。採用）")
 
 
 # 価格そのものが誤りと判断できる理由（この理由が1つでもあれば、その価格は保存しない）。

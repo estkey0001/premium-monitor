@@ -61,6 +61,10 @@ RECHECK_PAGE = {
     "prod_ps5_pro": "https://pur.store.sony.jp/ps5/products/ps5/CFI-7100B01_product/",
     "prod_switch2": "https://www.nintendo.com/jp/hardware/switch2/lineup/index.html",
 }
+# 何を確認したか（結果の verified_by）。記録の購入ページそのものを読んだときは付けない。
+# - store_product_page: 同じストアの商品ページ（価格・型番・JAN・在庫の表示。購入ページではない）
+# - msrp_lineup: メーカーの商品ラインナップの希望小売価格だけ（購入ページ・在庫は確認していない。Switch 2）
+RECHECK_VERIFIED_BY = {"prod_ps5_pro": "store_product_page", "prod_switch2": "msrp_lineup"}
 # 再確認する商品（すでに確認済みで、照合のキーが登録され、上の読み取りで確かめられるもの）。
 # 公式直販価格は確認から14日で確認済みでなくなる（normalized_prices.OFFICIAL_DIRECT_STALE_DAYS）ので、全部を対象にする
 RECHECK_TARGETS = ("prod_ps5_pro", "prod_switch2", "prod_airpods_pro3", "prod_r5ii", "prod_z8", "prod_iphone17_256",
@@ -432,6 +436,7 @@ def recheck(now: datetime, fetch=_fetch, sleep=None, wait_first: bool | None = N
                 "recorded_price": t["price"], "observed_at": at.isoformat(timespec="seconds")}
         if t["fetch_url"] != t["url"]:
             base["fetched_url"] = t["fetch_url"]           # 読んだページ（結果の url は記録の URL。記録との照合に使う）
+            base["verified_by"] = RECHECK_VERIFIED_BY.get(t["product_id"], "other_page")
         if h is None:
             results.append({**base, "status": "blocked" if why in CUTOFF_IMMEDIATE else "failed", "reason": why,
                             "price": None, "stock": ""})

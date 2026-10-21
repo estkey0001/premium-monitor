@@ -12,12 +12,14 @@
 - 復旧したら PRODUCTION_HEALTH_RECOVERED の記録を出す
 
 どのアラートを出すか（key の種類）:
-- required_source_failure   必須の店が3日以上連続で1件も取れない（既知のブロックは WARNING・予想外の理由は HIGH）
-- new_source_failure        必須の店が今日から取れなくなった（HIGH。任意の店の失敗は想定内なので出さない）
+- source_failure            必須の店が1件も取れない。今日から取れなくなった（3日未満）は HIGH、3日以上連続は既知のブロックなら
+                            WARNING・予想外の理由なら HIGH。日が進んでも key は変わらない（連続の日数は evidence。key が変わると
+                            「復旧」と「新規」が同時に出るため）。任意の店の失敗は想定内なので出さない
 - failure_rate              必須の店の行の失敗率が閾値以上（50% = WARNING・80% = HIGH）
 - quality_gate_failure      誤りの可能性が高い価格の隔離・低信頼度の価格（商品ごと。WARNING）
 - official_verification_expiry  公式の確認の期限が3日以内（WARNING）・切れた（HIGH）
 - official_recheck_failing  公式の再確認が3日連続で失敗（WARNING）・7日連続（HIGH）
+- baseline_unreadable       買取の比較の基準が読めない（WARNING。前回比の警告が黙って全部オフになる）
 - collector_report_missing  取得レポートが無い（HIGH）
 """
 from __future__ import annotations
@@ -50,6 +52,32 @@ def _alert(category: str, source: str, severity: str, reason: str, title: str, d
             "reason": reason, "title": title, "details": details, "evidence": evidence}
 
 
+def _official_alerts(inputs: dict) -> list[dict]:
+    """公式の確認の期限・再確認の連続失敗（取得レポートに依らない）。"""
+    out: list[dict] = []
+    for r in inputs.get("official_status") or []:
+        pid = r.get("product_id")
+        if r.get("expired"):
+            out.append(_alert("official_verification_expiry", pid, HIGH, "expired", f"{pid} の公式の確認が切れています",
+                              f"確認日 {r.get('last_verified')}（期限 14 日）", days_left=r.get("days_left")))
+        elif int(r.get("days_left", 99)) <= EXPIRY_WARNING_DAYS:
+            out.append(_alert("official_verification_expiry", pid, WARNING, "expiring",
+                              f"{pid} の公式の確認が残り {r.get('days_left')} 日で切れます",
+                              f"確認日 {r.get('last_verified')}（再確認が unchanged になれば延びる）", days_left=r.get("days_left")))
+        n = int(r.get("consecutive_failures") or 0)
+        if n >= RECHECK_FAILURE_WARNING_DAYS:
+            out.append(_alert("official_recheck_failing", pid, HIGH if n >= RECHECK_FAILURE_HIGH_DAYS else WARNING,
+                              "recheck_failed", f"{pid} の公式の再確認が {n} 日連続で失敗しています",
+                              "公式ページの移動・表示の変更・ブロックの可能性。人が公式ページを確認する", consecutive_days=n))
+    return out
+
+
+def unobservable_categories(inputs: dict) -> frozenset:
+    """今回は判定できなかった種類（取得レポートが無いと、取得元・失敗率・品質ゲートは判定できない）。
+    reconcile はこの種類の既存のアラートを「復旧」にしない（見えなくなっただけ）。"""
+    return frozenset() if inputs.get("collector") else frozenset({"source_failure", "failure_rate", "quality_gate_failure", "baseline_unreadable"})
+
+
 def evaluate(inputs: dict, now: datetime) -> list[dict]:
     """今の劣化（アラートの一覧）。判定だけ（状態・出力は reconcile / run が行う）。
 
@@ -60,10 +88,11 @@ def evaluate(inputs: dict, now: datetime) -> list[dict]:
     history = inputs.get("failure_history") or {}
     optional = set(inputs.get("optional_shops") or ())
     hard = set(inputs.get("hard_reject_reasons") or ())
-    out: list[dict] = []
+    out: list[dict] = _official_alerts(inputs)               # 取得レポートが無くても公式の判定はできる
     if not collector:
-        return [_alert("collector_report_missing", "collector_report", HIGH, "report_not_generated",
-                       "取得レポートがありません", "exports/collector_report/latest.json が無い・読めない")]
+        return sorted(out + [_alert("collector_report_missing", "collector_report", HIGH, "report_not_generated",
+                                    "取得レポートがありません", "exports/collector_report/latest.json が無い・読めない")],
+                      key=lambda a: (-_RANK[a["severity"]], a["key"]))
 
     by_shop = collector.get("by_shop") or {}
     reasons_by_shop: dict[str, set[str]] = {}
@@ -71,6 +100,10 @@ def evaluate(inputs: dict, now: datetime) -> list[dict]:
         if isinstance(f, dict) and f.get("shop"):
             reasons_by_shop.setdefault(f["shop"], set()).add(str(f.get("reason") or "unknown"))
 
+    if (collector.get("price_baseline") or {}).get("baseline_file") == "unreadable":
+        out.append(_alert("baseline_unreadable", "price_baseline", WARNING, "unreadable",
+                          "買取の比較の基準（price_baseline.json）が読めません",
+                          "前回比の警告が今回は全部オフになっています（隔離の判定は生きている）。ファイルを確認する"))
     today = now.date()
     req_ok = req_failed = 0
     for shop, st in sorted(by_shop.items()):
@@ -87,13 +120,13 @@ def evaluate(inputs: dict, now: datetime) -> list[dict]:
         unexpected = [r for r in reasons if r not in KNOWN_BLOCKED_REASONS]
         if days >= CONSECUTIVE_DAYS:
             out.append(_alert(
-                "required_source_failure", shop, HIGH if unexpected else WARNING, ",".join(reasons),
+                "source_failure", shop, HIGH if unexpected else WARNING, ",".join(reasons),
                 f"必須の店 {shop} が {days} 日連続で取得できません",
                 f"理由: {', '.join(reasons)}（{'予想外の理由' if unexpected else '既知のブロック・仕様。回避せず人が確認する'}）",
                 consecutive_days=days, reasons=reasons))
         else:
             out.append(_alert(
-                "new_source_failure", shop, HIGH, ",".join(reasons),
+                "source_failure", shop, HIGH, ",".join(reasons),
                 f"必須の店 {shop} が取得できなくなりました（{days}日目）", f"理由: {', '.join(reasons)}",
                 consecutive_days=days, reasons=reasons))
     tried = req_ok + req_failed
@@ -121,21 +154,6 @@ def evaluate(inputs: dict, now: datetime) -> list[dict]:
                           "信頼度が低い価格が公開されている可能性があります",
                           f"{collector.get('low_confidence_count')} 件", count=collector.get("low_confidence_count")))
 
-    # 公式の確認の期限・再確認の連続失敗
-    for r in inputs.get("official_status") or []:
-        pid = r.get("product_id")
-        if r.get("expired"):
-            out.append(_alert("official_verification_expiry", pid, HIGH, "expired", f"{pid} の公式の確認が切れています",
-                              f"確認日 {r.get('last_verified')}（期限 14 日）", days_left=r.get("days_left")))
-        elif int(r.get("days_left", 99)) <= EXPIRY_WARNING_DAYS:
-            out.append(_alert("official_verification_expiry", pid, WARNING, "expiring",
-                              f"{pid} の公式の確認が残り {r.get('days_left')} 日で切れます",
-                              f"確認日 {r.get('last_verified')}（再確認が unchanged になれば延びる）", days_left=r.get("days_left")))
-        n = int(r.get("consecutive_failures") or 0)
-        if n >= RECHECK_FAILURE_WARNING_DAYS:
-            out.append(_alert("official_recheck_failing", pid, HIGH if n >= RECHECK_FAILURE_HIGH_DAYS else WARNING,
-                              "recheck_failed", f"{pid} の公式の再確認が {n} 日連続で失敗しています",
-                              "公式ページの移動・表示の変更・ブロックの可能性。人が公式ページを確認する", consecutive_days=n))
     return sorted(out, key=lambda a: (-_RANK[a["severity"]], a["key"]))
 
 
@@ -156,33 +174,45 @@ def _consecutive_days(failure_days: list, today) -> int:
     return n
 
 
-def reconcile(state: dict | None, current: list[dict], now: datetime) -> tuple[dict, dict]:
+def reconcile(state: dict | None, current: list[dict], now: datetime,
+              unobservable: frozenset = frozenset()) -> tuple[dict, dict]:
     """状態と今のアラートを突き合わせる（重複の抑制・重くなったときの出し直し・復旧）。
 
     戻り値: (新しい状態, {"candidates": [...新規・重くなった...], "suppressed": n, "recovered": [...]})
     状態の active は key → {first_seen, last_seen, severity, emitted_severity, times_seen}
+    - 重さが下がったら emitted_severity も下げる（下がった後に再び重くなれば、出し直す）
+    - unobservable（今回は判定できなかった種類。取得レポートが無いときの取得元・失敗率・品質ゲート）の既存のアラートは、
+      復旧にせず、そのまま残す（見えなくなっただけで解消したとは限らない）
+    - 状態の形が壊れていれば（dict でない・中身が dict でない）空として扱う
     """
-    active = dict((state or {}).get("active") or {})
+    raw = (state or {}).get("active") if isinstance(state, dict) else None
+    active = {k: v for k, v in (raw.items() if isinstance(raw, dict) else []) if isinstance(v, dict)}
     stamp = now.isoformat(timespec="seconds")
     candidates, suppressed, new_active = [], 0, {}
     for a in current:
         prev = active.get(a["key"])
+        emitted = str((prev or {}).get("emitted_severity") or "")
         entry = {"first_seen": (prev or {}).get("first_seen") or stamp, "last_seen": stamp, "severity": a["severity"],
-                 "emitted_severity": (prev or {}).get("emitted_severity", ""),
-                 "times_seen": int((prev or {}).get("times_seen") or 0) + 1}
-        if prev is None or _RANK[a["severity"]] > _RANK.get(entry["emitted_severity"], 0):
+                 "emitted_severity": emitted, "times_seen": int((prev or {}).get("times_seen") or 0) + 1}
+        if prev is None or _RANK[a["severity"]] > _RANK.get(emitted, 0):
             candidates.append({**a, "type": TYPE, "event": "NEW" if prev is None else "ESCALATED",
                                "first_seen": entry["first_seen"], "generated_at": stamp})
             entry["emitted_severity"] = a["severity"]
         else:
             suppressed += 1                                      # 同じ異常は出し直さない
+            if _RANK[a["severity"]] < _RANK.get(emitted, 0):
+                entry["emitted_severity"] = a["severity"]        # 下がった後に再び重くなれば出し直す
         new_active[a["key"]] = entry
     recovered = []
     for key, prev in sorted(active.items()):
-        if key not in new_active:
-            recovered.append({"key": key, "type": RECOVERED_TYPE, "event": "RECOVERED",
-                              "first_seen": prev.get("first_seen"), "recovered_at": stamp,
-                              "last_severity": prev.get("severity")})
+        if key in new_active:
+            continue
+        if key.split(":", 1)[0] in unobservable:
+            new_active[key] = prev                               # 判定できなかった種類は復旧にしない
+            continue
+        recovered.append({"key": key, "type": RECOVERED_TYPE, "event": "RECOVERED",
+                          "first_seen": prev.get("first_seen"), "recovered_at": stamp,
+                          "last_severity": prev.get("severity")})
     return ({"schema": SCHEMA, "updated_at": stamp, "active": new_active},
             {"candidates": candidates, "suppressed": suppressed, "recovered": recovered})
 

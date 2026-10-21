@@ -119,7 +119,7 @@ class BaseCollector(ABC):
             return None
 
         # robots.txtチェック（robots.txt を取得できない unknown のときも取りに行かない。RFC 9309。Phase 12）
-        _st =self.robots_checker.robots_status(url) if hasattr(self.robots_checker, "robots_status") else ""
+        _st = self.robots_checker.robots_status(url) if hasattr(self.robots_checker, "robots_status") else ""
         if _st == "unknown" or not self.robots_checker.is_allowed(url):
             self.logger.warning("Blocked by robots.txt: %s", url)
             return None

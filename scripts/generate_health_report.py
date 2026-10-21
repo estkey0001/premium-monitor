@@ -68,19 +68,17 @@ def _official_to_buyback(obs, url_of=None):
         import yaml
 
         from src.market import profit_formula as pf
-        from src.market.beginner_deal_scanner import verified_official_item_url
-        genres = {p["id"]: p.get("genre", "") for p in (yaml.safe_load(
-            (ROOT / "config" / "products.yaml").read_text(encoding="utf-8")) or {}).get("products", [])}
+        from src.market.beginner_deal_scanner import official_url_for_product
+        cfg = (yaml.safe_load((ROOT / "config" / "products.yaml").read_text(encoding="utf-8")) or {}).get("products", [])
+        genres = {p["id"]: p.get("genre", "") for p in cfg}
+        brands = {p["id"]: p.get("brand", "") for p in cfg}
         db = ROOT / "data" / "premium_monitor.db"
         con = sqlite3.connect(str(db)) if (url_of is None and db.exists()) else None
         if con is not None:
             con.row_factory = sqlite3.Row
         if url_of is None:
             def url_of(pid):
-                try:
-                    return verified_official_item_url(con, pid) or "" if con is not None else ""
-                except Exception:  # noqa: BLE001
-                    return ""
+                return official_url_for_product(con, pid, brands.get(pid, ""))
         try:
             deals, _ = pf.confirmed_official_to_buyback(obs, genres, url_of)
         finally:

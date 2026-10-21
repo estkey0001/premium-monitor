@@ -428,45 +428,75 @@ def test_run_compares_against_the_baseline_not_the_stale_manual_csv():
     assert "existing_rows=baseline_rows" in run_body and "price_baseline.save(" in run_body and "price_baseline.load(" in run_body
 
 
-# ── M-3: カテゴリ共通の上限は絶対の上限にしない（別の店が裏付ければ採用） ────────────────
+# ── M-3: カテゴリ共通の上限は目安（商品ページの行・別の店の裏付け・公式の 2 倍以内がそろうときだけ採用） ──────────
 
-def _ps5(price_a, price_b=None, shop_b="mobile_ichiban"):
-    rows = [_row("ps5_pro", "kaitori_shouten", price_a, at="2026-10-22T16:50:00+09:00")]
-    if price_b:
-        rows.append(_row("ps5_pro", shop_b, price_b, at="2026-10-22T16:51:00+09:00"))
-    return rows
+ITEM_A = "https://www.kaitorishouten-co.jp/products/detail/25543"
+ITEM_B = "https://shop-b.test-store.jp/products/detail/77"
+TOP_B = "https://www.mobile-ichiban.com/"
 
 
-def test_ps5_pro_200700_is_accepted_when_another_shop_agrees():
+def _prow(shop, price, url, *, alias="ps5_pro", verified="true", conf="high", source="auto_scraped"):
+    r = _row(alias, shop, price, at="2026-10-22T16:50:00+09:00", source=source)
+    r.update({"url": url, "link_verified": verified, "confidence": conf})
+    return r
+
+
+def _quarantined(m, rows):
+    sus = m.compute_suspicious(rows, [])
+    return [r["data_source"] == "suspicious_rejected" for r in m.quarantine_suspicious(rows, sus)], {s["reason"] for s in sus}
+
+
+def test_ceiling_is_accepted_only_with_item_level_corroboration_from_another_shop():
     from src.market.price_quality import HARD_REJECT_REASONS
     m = _ubp()
-    new = _ps5(200700, 200700)                                    # 買取商店の価格表の型番行と、モバイル一番が同額
-    flags = {s["reason"] for s in m.compute_suspicious(new, [])}
-    assert "above_genre_max_corroborated" in flags and not (flags & HARD_REJECT_REASONS)
-    out = m.quarantine_suspicious(new, m.compute_suspicious(new, []))
-    assert all(r["data_source"] == "auto_scraped" and r["buyback_price"] == "200700" for r in out)   # 隔離しない
+    rows = [_prow("kaitori_shouten", 200700, ITEM_A), _prow("shop_b", 200700, ITEM_B)]
+    quarantined, reasons = _quarantined(m, rows)
+    assert not any(quarantined) and "above_genre_max_corroborated" in reasons and not (reasons & HARD_REJECT_REASONS)
+    sus = [s for s in m.compute_suspicious(rows, []) if s["reason"] == "above_genre_max_corroborated"]
+    assert {s["shop"] for s in sus} == {"kaitori_shouten", "shop_b"} and "商品ページの行" in sus[0]["details"]
 
 
-def test_price_over_the_band_without_corroboration_is_still_quarantined():
+def test_ps5_pro_real_case_stays_review_required_until_an_item_level_shop_agrees():
+    """2026-10-21: 買取商店は商品ページの行（200,700）、モバイル一番は店のトップの URL。トップの行は裏付けにならない。"""
     m = _ubp()
-    for new in (_ps5(200700), _ps5(200700, 150000)):              # 1店だけ・別の店は水準が違う
-        sus = m.compute_suspicious(new, [])
-        assert any(s["reason"] == "above_genre_max" and "裏付けなし" in s["details"] for s in sus)
-        assert m.quarantine_suspicious(new, sus)[0]["data_source"] == "suspicious_rejected"
+    rows = [_prow("kaitori_shouten", 200700, ITEM_A), _prow("mobile_ichiban", 200700, TOP_B, verified="false")]
+    quarantined, reasons = _quarantined(m, rows)
+    assert all(quarantined) and "above_genre_max" in reasons and "above_genre_max_corroborated" not in reasons
 
 
-def test_corroboration_never_overrides_product_relative_limits():
+def test_ceiling_corroboration_conditions_each_matter():
     m = _ubp()
-    # 公式 137,980 の 2.5 倍（344,950）を超える・3 倍以上は、2店が同額でも隔離のまま
-    new = _ps5(360000, 360000)
-    reasons = {s["reason"] for s in m.compute_suspicious(new, [])}
-    assert "above_genre_max" in reasons and "above_genre_max_corroborated" not in reasons
-    assert m.quarantine_suspicious(new, m.compute_suspicious(new, []))[0]["data_source"] == "suspicious_rejected"
-    far = _ps5(450000, 450000)
-    assert "over_3x_official" in {s["reason"] for s in m.compute_suspicious(far, [])}
-    # 下限未満（パース誤り）は裏付けがあっても隔離のまま
-    low = [_row("ps5_pro", "kaitori_shouten", 5000), _row("ps5_pro", "mobile_ichiban", 5000)]
-    assert any(s["reason"] == "below_genre_min" for s in m.compute_suspicious(low, []))
+    base = [_prow("kaitori_shouten", 200700, ITEM_A)]
+    cases = {
+        "裏付けの店が1つも無い": base,
+        "別の店の水準が違う": base + [_prow("shop_b", 150000, ITEM_B)],
+        "裏付けの店が店のトップ": base + [_prow("shop_b", 200700, TOP_B)],
+        "裏付けの店が未照合": base + [_prow("shop_b", 200700, ITEM_B, verified="false")],
+        "裏付けの店が低信頼度": base + [_prow("shop_b", 200700, ITEM_B, conf="low")],
+        "裏付けの店が手入力": base + [_prow("shop_b", 200700, ITEM_B, source="manual_today")],
+        "この行が低信頼度": [_prow("kaitori_shouten", 200700, ITEM_A, conf="low"), _prow("shop_b", 200700, ITEM_B)],
+        "この行が店のトップ": [_prow("kaitori_shouten", 200700, TOP_B, verified="false"), _prow("shop_b", 200700, ITEM_B)],
+    }
+    for name, rows in cases.items():
+        quarantined, reasons = _quarantined(m, rows)
+        assert quarantined[0] and "above_genre_max" in reasons, name
+    # 裏付けの行が、別の理由（同じ店の別の商品に同額 = 取り違えの典型）で隔離される行なら、裏付けにならない
+    rows = [_prow("kaitori_shouten", 200700, ITEM_A), _prow("dosupara", 200700, ITEM_B),
+            _prow("dosupara", 200700, ITEM_B.replace("77", "78"), alias="switch2")]
+    assert _quarantined(m, rows)[0][0] is True
+
+
+def test_ceiling_corroboration_never_overrides_product_relative_limits():
+    m = _ubp()
+    ok = [_prow("kaitori_shouten", 260000, ITEM_A), _prow("shop_b", 260000, ITEM_B)]      # 公式 137,980 の 1.9 倍 = 2 倍以内
+    assert not any(_quarantined(m, ok)[0])
+    too_high = [_prow("kaitori_shouten", 290000, ITEM_A), _prow("shop_b", 290000, ITEM_B)]  # 2.1 倍 = 2 倍を超える（2 店が同額でも隔離）
+    q, reasons = _quarantined(m, too_high)
+    assert all(q) and "above_genre_max" in reasons and "above_genre_max_corroborated" not in reasons
+    far = [_prow("kaitori_shouten", 450000, ITEM_A), _prow("shop_b", 450000, ITEM_B)]
+    assert "over_3x_official" in _quarantined(m, far)[1] and all(_quarantined(m, far)[0])
+    low = [_prow("kaitori_shouten", 5000, ITEM_A), _prow("shop_b", 5000, ITEM_B)]         # 下限未満（パース誤り）は裏付けがあっても隔離
+    assert "below_genre_min" in _quarantined(m, low)[1] and all(_quarantined(m, low)[0])
 
 
 # ── Low: 健康度（利益の発見・設定値を新鮮と数えない） ────────────────────────────────
@@ -563,11 +593,11 @@ def test_health_alert_required_source_failures_are_classified_and_degraded_runs_
     col = _col_report({"iosys": {"ok": 0, "failed": 6}, "netoff": {"ok": 0, "failed": 4}, "kaitori_shouten": {"ok": 1, "failed": 0}},
                      fetch_failed=[{"shop": "iosys", "reason": "http_403"}, {"shop": "netoff", "reason": "price_not_found"}])
     cur = {a["key"]: a for a in ha.evaluate(_inp(col, {"iosys": _days(4), "netoff": _days(4)}), HNOW)}
-    assert cur["required_source_failure:iosys"]["severity"] == "WARNING"        # 既知のブロック（403）= degraded
-    assert cur["required_source_failure:netoff"]["severity"] == "HIGH"          # 予想外の理由（価格が見つからない）
+    assert cur["source_failure:iosys"]["severity"] == "WARNING"        # 既知のブロック（403）= degraded
+    assert cur["source_failure:netoff"]["severity"] == "HIGH"          # 予想外の理由（価格が見つからない）
     # 今日から取れなくなった必須の店は HIGH（新しい異常）
     new = {a["key"]: a for a in ha.evaluate(_inp(col, {"iosys": _days(1), "netoff": _days(4)}), HNOW)}
-    assert new["new_source_failure:iosys"]["severity"] == "HIGH"
+    assert new["source_failure:iosys"]["severity"] == "HIGH" and new["source_failure:iosys"]["evidence"]["consecutive_days"] == 1
     # 失敗率（必須の店）: 50% 以上 WARNING・80% 以上 HIGH。任意の店は分母に入れない
     half = ha.evaluate(_inp(_col_report({"iosys": {"ok": 5, "failed": 5}, "geo": {"ok": 0, "failed": 99}}), {}), HNOW)
     assert [a["severity"] for a in half if a["category"] == "failure_rate"] == ["WARNING"]
@@ -599,7 +629,7 @@ def test_health_alert_deduplicates_escalates_and_records_recovery():
     from datetime import timedelta as _td
 
     from src.ops import health_alert as ha
-    a = ha._alert("required_source_failure", "iosys", ha.WARNING, "http_403", "t", "d")
+    a = ha._alert("source_failure", "iosys", ha.WARNING, "http_403", "t", "d")
     state, r1 = ha.reconcile({}, [a], HNOW)
     assert [c["event"] for c in r1["candidates"]] == ["NEW"] and r1["candidates"][0]["type"] == "PRODUCTION_HEALTH_ALERT"
     state, r2 = ha.reconcile(state, [a], HNOW + _td(days=1))                    # 翌日も同じ異常 → 出し直さない
@@ -633,7 +663,7 @@ def test_health_alert_record_is_operator_only_and_sends_nothing(tmp_path):
     assert not (tmp_path / "exports" / "notifications").exists()                  # 商品の通知の台帳に触れない
     again = m.run(root=tmp_path, now=HNOW + timedelta(hours=1))
     assert again["candidates"] == [] and again["suppressed"] >= 1                  # 同じ異常を毎回出さない
-    assert any("required_source_failure:iosys" in line for line in m._annotations(rec))
+    assert any("source_failure:iosys" in line for line in m._annotations(rec))
     assert m.run(root=tmp_path, now=HNOW, dry_run=True)["type"] == "PRODUCTION_HEALTH_ALERT"
 
 
@@ -702,3 +732,133 @@ def test_operator_alert_step_runs_after_quality_gate_and_never_blocks_the_run():
     names = [s.get("name") for s in steps]
     i = names.index("Operator health alert")
     assert i == names.index("Collector quality gate") + 1 and steps[i]["continue-on-error"] is True
+
+
+def test_alert_key_does_not_change_as_a_failure_gets_older():
+    """1〜2日目（新しい異常）→ 3日目（連続の異常）で key が変わると、「復旧」と「新規」が同時に出てしまう。"""
+    from src.ops import health_alert as ha
+    col = _col_report({"iosys": {"ok": 0, "failed": 6}, "kaitori_shouten": {"ok": 30, "failed": 0}},
+                      fetch_failed=[{"shop": "iosys", "reason": "http_403"}])
+    state = {}
+    events = []
+    for n in (1, 2, 3, 4):
+        cur = ha.evaluate(_inp(col, {"iosys": _days(n)}), HNOW + timedelta(days=n))
+        state, res = ha.reconcile(state, cur, HNOW + timedelta(days=n))
+        events.append(([c["event"] for c in res["candidates"]], [r["key"] for r in res["recovered"]]))
+    assert events[0] == (["NEW"], []) and all(rec == [] for _, rec in events)               # 一度も「復旧」にならない
+    assert [e for e, _ in events[1:]] == [[], [], []]                                        # HIGH（新しい）→ WARNING（既知のブロック）でも出し直さない
+
+
+def test_missing_collector_report_does_not_recover_collector_alerts_and_keeps_official_checks():
+    from src.ops import health_alert as ha
+    col = _col_report({"netoff": {"ok": 0, "failed": 4}, "kaitori_shouten": {"ok": 30, "failed": 0}},
+                      fetch_failed=[{"shop": "netoff", "reason": "price_not_found"}])
+    state, r1 = ha.reconcile({}, ha.evaluate(_inp(col, {"netoff": _days(4)}), HNOW), HNOW)
+    assert [c["key"] for c in r1["candidates"]] == ["source_failure:netoff"]
+    off = [{"product_id": "prod_switch2", "days_left": 1, "expired": False, "consecutive_failures": 0, "last_verified": "2026-10-08"}]
+    missing_inputs = _inp({}, official=off)
+    cur = ha.evaluate(missing_inputs, HNOW + timedelta(days=1))
+    assert {a["key"] for a in cur} == {"collector_report_missing:collector_report", "official_verification_expiry:prod_switch2"}
+    unobs = ha.unobservable_categories(missing_inputs)
+    state, r2 = ha.reconcile(state, cur, HNOW + timedelta(days=1), unobs)
+    assert r2["recovered"] == [] and "source_failure:netoff" in state["active"]             # 見えなくなっただけ（復旧にしない）
+    state, r3 = ha.reconcile(state, ha.evaluate(_inp(col, {"netoff": _days(4)}), HNOW + timedelta(days=2)),
+                             HNOW + timedelta(days=2), ha.unobservable_categories(_inp(col)))
+    assert [c["key"] for c in r3["candidates"]] == [] and {r["key"] for r in r3["recovered"]} == {
+        "collector_report_missing:collector_report", "official_verification_expiry:prod_switch2"}
+    assert ha.unobservable_categories(_inp(col)) == frozenset()
+
+
+def test_alert_reescalates_after_severity_dropped_and_survives_broken_state():
+    from src.ops import health_alert as ha
+    a = ha._alert("source_failure", "iosys", ha.HIGH, "x", "t", "d")
+    low = {**a, "severity": ha.WARNING}
+    state, _ = ha.reconcile({}, [a], HNOW)
+    state, r2 = ha.reconcile(state, [low], HNOW + timedelta(days=1))
+    assert r2["candidates"] == [] and state["active"][a["key"]]["emitted_severity"] == ha.WARNING
+    _, r3 = ha.reconcile(state, [a], HNOW + timedelta(days=2))
+    assert [c["event"] for c in r3["candidates"]] == ["ESCALATED"]                           # 下がった後の再発は出し直す
+    for broken in ({"active": []}, {"active": {"k": "壊れた"}}, "壊れた", None, {"active": None}):
+        st, res = ha.reconcile(broken, [a], HNOW)
+        assert [c["event"] for c in res["candidates"]] == ["NEW"] and set(st["active"]) == {a["key"]}
+
+
+def test_annotations_escape_workflow_command_characters():
+    import importlib.util
+    sp = importlib.util.spec_from_file_location("oha_escape", ROOT / "scripts" / "operator_health_alert.py")
+    m = importlib.util.module_from_spec(sp)
+    sp.loader.exec_module(m)
+    rec = {"candidates": [{"severity": "HIGH", "event": "NEW", "title": "t", "key": "k",
+                           "details": "理由\n::error::注入 100%"}], "recovered": []}
+    line = m._annotations(rec)[0]
+    assert len(line.splitlines()) == 1 and line.startswith("::error::") and "%0A" in line and "%25" in line   # 1行のまま（別のコマンドにならない）
+
+
+def test_recheck_result_says_what_was_verified_and_status_keeps_it():
+    from src.market import official_registry as reg
+    out = {r["product_id"]: r for r in RO.recheck(NOW, fetch=lambda u: (SONY_PRODUCT, "") if "sony" in u else
+                                                  (NIN_CURRENT, "") if "nintendo.com/jp" in u else (None, "timeout"))}
+    assert out["prod_switch2"]["verified_by"] == "msrp_lineup"                 # 希望小売価格だけ（購入ページ・在庫は未確認）
+    assert out["prod_ps5_pro"]["verified_by"] == "store_product_page"
+    assert "verified_by" not in out["prod_airpods_pro3"]                       # 記録の購入ページそのものを読んだ商品
+    rows = {r["product_id"]: r for r in reg.verification_status(list(out.values()), today=NOW.date())}
+    assert rows["prod_switch2"]["verified_by"] == "msrp_lineup" and rows["prod_ps5_pro"]["verified_by"] == "store_product_page"
+    assert rows["prod_airpods_pro3"]["verified_by"] == "purchase_page_or_manual"
+
+
+def test_baseline_file_status_and_alert_when_unreadable(tmp_path):
+    from src.collectors import price_baseline as pb
+    from src.ops import health_alert as ha
+    path = tmp_path / "price_baseline.json"
+    assert pb.file_status(path) == "missing"
+    path.write_text("{壊れた", encoding="utf-8")
+    assert pb.file_status(path) == "unreadable"
+    path.write_text('{"entries": "壊れた形"}', encoding="utf-8")
+    assert pb.file_status(path) == "unreadable"
+    pb.save(path, [], BNOW)
+    assert pb.file_status(path) == "ok"
+    st = pb.stats([], [], [], file="unreadable")
+    assert st["baseline_file"] == "unreadable"
+    col = _col_report({"kaitori_shouten": {"ok": 5, "failed": 0}})
+    col["price_baseline"] = st
+    keys = {a["key"]: a["severity"] for a in ha.evaluate(_inp(col), HNOW)}
+    assert keys == {"baseline_unreadable:price_baseline": "WARNING"}
+    col["price_baseline"] = pb.stats([], [], [], file="missing")                          # まだ無い（初回）は異常ではない
+    assert ha.evaluate(_inp(col), HNOW) == []
+
+
+# ── 在庫の状態を順位の各行に添える・公式 URL の取り方は3面で同じ ─────────────────────────
+
+def test_ranking_rows_carry_availability_without_guessing_stock():
+    rk = _ranking()
+    hist = {"entries": {
+        "a": {"product_id": "prod_gr4_hdf", "state": "LOTTERY", "last_checked_at": "2026-10-21T18:00:00+09:00"},
+        "b": {"product_id": "prod_ps5_pro", "state": "OUT_OF_STOCK", "last_checked_at": "2026-10-12T19:55:03+09:00"},   # 10 日前
+        "c": {"product_id": "prod_x100vi", "state": "OUT_OF_STOCK", "last_checked_at": "2026-10-21T18:04:24+09:00"},
+        "d": {"product_id": "prod_x100vi", "state": "IN_STOCK", "last_checked_at": "2026-10-20T10:00:00+09:00"},        # 古い方
+        "e": {"product_id": "", "state": "IN_STOCK", "last_checked_at": "2026-10-21T18:00:00+09:00"},
+        "f": {"product_id": "prod_z8", "state": "IN_STOCK", "last_checked_at": "壊れた"},
+        "g": "壊れた"}}
+    av = rk.availability_by_product(hist, datetime(2026, 10, 22, 12, 0, tzinfo=JST))
+    assert av == {"prod_gr4_hdf": "LOTTERY", "prod_ps5_pro": "UNKNOWN", "prod_x100vi": "OUT_OF_STOCK"}   # 7日超は未確認・新しい方
+    assert rk.availability_by_product({}, NOW) == {} and rk.availability_by_product(None, NOW) == {}
+    assert "在庫未確認" in rk._AVAILABILITY_LABELS["UNKNOWN"] and "入荷待ち" in rk._AVAILABILITY_LABELS["OUT_OF_STOCK"]
+
+
+def test_official_url_is_the_same_for_scanner_ranking_and_health():
+    import sqlite3
+
+    from src.market import beginner_deal_scanner as bds
+    assert bds.official_url_for_product(None, "prod_x", "Apple") == bds.APPLE_STORE_DEFAULT_URL
+    assert bds.official_url_for_product(None, "prod_x", "RICOH") == ""
+    con = sqlite3.connect(":memory:")
+    con.row_factory = sqlite3.Row
+    con.execute("CREATE TABLE product_source_config (product_id TEXT, source_id TEXT, target_url TEXT, extra_config TEXT)")
+    con.execute("INSERT INTO product_source_config VALUES ('prod_a', 's', ?, ?)",
+                (APPLE_DUO, '{"verified": true, "link_type": "item"}'))
+    assert bds.official_url_for_product(con, "prod_a", "Apple") == APPLE_DUO                  # 確認済みの商品ページが先
+    assert bds.official_url_for_product(con, "prod_b", "Apple") == bds.APPLE_STORE_DEFAULT_URL
+    broken = sqlite3.connect(":memory:")                                                       # 表が無い DB でも落ちない
+    assert bds.official_url_for_product(broken, "prod_a", "Apple") == bds.APPLE_STORE_DEFAULT_URL
+    for rel in ("scripts/generate_ranking_report.py", "scripts/generate_health_report.py"):
+        assert "official_url_for_product" in (ROOT / rel).read_text(encoding="utf-8"), rel

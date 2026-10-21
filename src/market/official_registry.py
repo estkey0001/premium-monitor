@@ -575,6 +575,8 @@ def verification_status(history: list[dict] | None, today=None) -> list[dict]:
     - last_verified: 記録の確認日か、記録と同じ URL・価格に対する unchanged の再確認の日の新しいほう
     - days_left: OFFICIAL_DIRECT_STALE_DAYS（14日）から、確認日からの日数を引いた残り（負なら期限切れ）
     - consecutive_failures: 直近から数えて、再確認が失敗（failed / blocked）だった日数（日ごとに数える。成功が挟まれば 0 に戻る）
+    - verified_by: 最後の確認が何を見たか（既定は記録の購入ページ・人の確認。msrp_lineup = メーカーの希望小売価格だけで、購入ページ・
+      在庫は確認していない。store_product_page = 同じストアの商品ページ）
     """
     from datetime import date
 
@@ -586,10 +588,12 @@ def verification_status(history: list[dict] | None, today=None) -> list[dict]:
             continue
         mine = [r for r in history or [] if isinstance(r, dict) and r.get("product_id") == pid
                 and str(r.get("observed_at") or "")[:10]]
-        last = str(v.get("checked_on") or "")
-        for r in mine:
+        last, verified_by = str(v.get("checked_on") or ""), "purchase_page_or_manual"
+        for r in sorted(mine, key=lambda x: str(x["observed_at"])):
             if r.get("url") == v.get("url") and r.get("status") == "unchanged" and r.get("price") == v.get("price"):
-                last = max(last, str(r["observed_at"])[:10])
+                day = str(r["observed_at"])[:10]
+                if day >= last:
+                    last, verified_by = day, str(r.get("verified_by") or "purchase_page_or_manual")
         by_day: dict[str, bool] = {}                      # 日 → その日に成功（unchanged / changed など読めた）があったか
         for r in sorted(mine, key=lambda x: str(x["observed_at"])):
             day = str(r["observed_at"])[:10]
@@ -604,7 +608,7 @@ def verification_status(history: list[dict] | None, today=None) -> list[dict]:
         except ValueError:
             left = -1
         rows.append({"product_id": pid, "last_verified": last, "days_left": left, "expired": left < 0,
-                     "consecutive_failures": streak})
+                     "consecutive_failures": streak, "verified_by": verified_by})
     return rows
 
 

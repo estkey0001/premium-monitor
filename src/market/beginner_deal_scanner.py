@@ -53,6 +53,26 @@ def verified_official_item_url(connection, product_id: str) -> str:
     return ""
 
 
+APPLE_STORE_DEFAULT_URL = "https://www.apple.com/jp/shop/"
+
+
+def official_url_for_product(connection, product_id: str, brand: str = "") -> str:
+    """公式の購入ページの URL。確認済み（verified）の商品ページ → Apple の既定のストア → 空。
+
+    スキャナー・順位レポート・健康度が同じ URL を使う（購入送料の判定が URL のホストに依るので、面ごとに違うと
+    「スキャナーは載せるが順位は載せない」が起きる）。connection が None・DB の形が違うときは確認済みの行を引かない。
+    """
+    url = ""
+    if connection is not None:
+        try:
+            url = verified_official_item_url(connection, product_id)
+        except Exception:  # noqa: BLE001 - DB の形が違う（テストの偽の DB など）ときは既定に戻る
+            url = ""
+    if url:
+        return url
+    return APPLE_STORE_DEFAULT_URL if brand == "Apple" else ""
+
+
 class BeginnerDealScanner:
     """初心者向け案件のスキャン・利益計算を行う。"""
 
@@ -506,13 +526,7 @@ class BeginnerDealScanner:
         判定は verified_official_item_url（quality_checker と共通。Phase 16）。
         """
         try:
-            url = verified_official_item_url(self.repo.db.connection, product.id)
-        except Exception:  # noqa: BLE001 - DB の形が違う（テストの偽の DB など）ときは既定に戻る
-            url = None
-        if url:
-            return url
-
-        # Apple製品のデフォルト
-        if product.brand == "Apple":
-            return "https://www.apple.com/jp/shop/"
-        return ""
+            connection = self.repo.db.connection
+        except Exception:  # noqa: BLE001
+            connection = None
+        return official_url_for_product(connection, product.id, product.brand)

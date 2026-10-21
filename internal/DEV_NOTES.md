@@ -95,6 +95,15 @@
 - Phase 2.1: 利益商品が0件だった原因を `exports/opportunity_diagnostics/latest.json`（内部用・理由別の件数）で出すようにした。主因は「定価が確認日不明の設定値」と「買取が定価を下回る（実際に利益が無い）」。公式で価格を確認し、PS5 Pro（Sony Store ¥137,980）・Switch 2（任天堂 ¥59,980）を確認済みにした。改定前の設定値で出ていた Switch 2 の黒字は偽物だった。在庫は根拠があるときだけ在庫あり／品切れにし、確認日時を価格と別に持つ（migration 020）。
 - UI Phase 2 を実装（`?ui=new&page=opportunities`）。利益商品の一覧を OpportunityView（`src/content/ui/opportunity.py`）に一本化し、掲載の判定は `eligibility()` だけ。PC は比較テーブル（1200px 以上）、それ未満はカード（640px 以上は2列）。並べ替え4種・在庫ありの絞り込み・一覧内の検索・20件ごとのページ・TOP10・URL の状態保持。テスト 636 件 PASS（tests/test_ui_phase2.py 40件）。
 
+- **Production Integrity 是正（2026-10-21 の監査 Medium 5件）の踏んだ罠**（記録は `internal/audits/PRODUCTION_INTEGRITY_REMEDIATION.md`）:
+  - 買取の「前回比」の基準が、CI が commit しない `data/manual_buyback_prices.csv`（2026-08-23 の手入力）だった。誤価格の警告が毎日同じ種類で出ていた。基準は `price_baseline.json`（CI が commit する `exports/collector_report/`）
+  - 公式の購入ページ（Sony `_purchase`）は在庫が無い間 E_NOTFOUND へ移り、再確認が failed（moved）のまま 9 日続いた。再確認は「価格を読むページ」を記録の URL と分ける（`RECHECK_PAGE`。結果の `url` は記録のまま・読んだページは `fetched_url`）。My Nintendo Store は待機室へ移るので取らない
+  - `update_buyback_prices.OFFICIAL_PRICES` に改定前の価格（PS5 Pro 119,980・Switch 2 49,980）が残っていた。公式の価格の出どころは `official_registry.verified_price_of`（確認済み → 公式直販価格 → 定価の記録 `LIST_PRICES` → 設定値）
+  - 順位レポートだけが固定の費用 1,300 円で、Duo が +28,900 になっていた。費用は `profit_formula` が正本（案件・優先順位・順位・健康度が共通）
+  - `requests.Response` は 4xx・5xx で bool が False（`if e.response` では状態コードが読めず、ログが `HTTP ???` になる）。`is not None` で見る。404 / 410 / 403 / 401 は再試行しない
+  - 健康度の「利益の発見」は売買ルート（profit_routes）しか見ず、公式→買取の確定した案件があっても 0 点だった。設定値（`freshness_basis=config_unknown_date`）は `is_fresh` が True でも新鮮として数えない
+  - 運営者向けの劣化アラート（`src/ops/health_alert.py`）は商品の通知と別。notifiers を import しない・Secrets / 変数を読まない・外部へ送らない（deploy-check #869）。同じ異常は key（種類:取得元）で重ねず、重くなったときだけ出し直す
+  - deploy-check #866（公式の再確認）・#867（利益の式は1つ）・#868（買取の比較の基準）・#869（劣化アラートの分離）・#870（定時の実行）
 
 ## 旧 CLAUDE.md にあった記録（2026-05-27 時点）
 ## 現在のフェーズ

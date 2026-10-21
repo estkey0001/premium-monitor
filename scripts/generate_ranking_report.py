@@ -50,6 +50,32 @@ def _fmt_profit(v) -> str:
         return str(v)
 
 
+_AVAILABILITY_LABELS = {"IN_STOCK": "在庫あり（確認から日が浅い）", "OUT_OF_STOCK": "在庫なし・入荷待ち", "LOTTERY": "抽選",
+                        "UNKNOWN": "在庫未確認"}
+
+
+def availability_by_product(stock_history: dict, now: datetime) -> dict[str, str]:
+    """商品ごとの在庫の状態（exports/stock_history の記録。確認から7日を過ぎたものは UNKNOWN。在庫を推測しない）。
+
+    順位は「確定の利益」（買えるか = 今すぐ行動できるかとは別）。在庫が分からない・入荷待ちの商品が「買える利益」に
+    見えないよう、順位の各行に在庫の状態を添える（利益の判定には使わない）。
+    """
+    from src.market import price_evidence as pe
+    out: dict[str, tuple[str, str]] = {}
+    for e in ((stock_history or {}).get("entries") or {}).values():
+        if not isinstance(e, dict) or not e.get("product_id"):
+            continue
+        checked = str(e.get("last_checked_at") or "")
+        try:
+            age = (now - datetime.fromisoformat(checked)).total_seconds() / 86400
+        except ValueError:
+            continue
+        state = str(e.get("state") or "UNKNOWN") if -1 <= age <= pe.CURRENT_DAYS else "UNKNOWN"
+        if e["product_id"] not in out or checked > out[e["product_id"]][1]:
+            out[e["product_id"]] = (state, checked)
+    return {pid: v[0] for pid, v in out.items()}
+
+
 def build_beginner_deals(obs: list[dict], genres: dict, official_url_of) -> tuple[list, list[dict]]:
     """初心者向け（公式で買って買取店に売る）の案件。式・関門は market/profit_formula.confirmed_official_to_buyback が正本
     （順位レポート・健康度が同じ関数を使う。独自の費用・条件を持たない）。"""
@@ -85,16 +111,22 @@ def main() -> int:
         obs = build_observations(_con, now)
 
         # Beginner: 商品ごとに 公式の価格 + 確定の売値の最高値（正本の関門・利益の式。build_beginner_deals）
-        from src.market.beginner_deal_scanner import verified_official_item_url
+        from src.market.beginner_deal_scanner import official_url_for_product
         _con.row_factory = _sq3.Row          # verified_official_item_url は列名で読む（スキャナーの接続と同じ）
+        _brand_by_pid = {_p.id: getattr(_p, "brand", "") or "" for _p in repo.list_products()}
 
         def _official_url(pid: str) -> str:
-            try:
-                return verified_official_item_url(_con, pid) or ""
-            except Exception:  # noqa: BLE001 - 分からなければ空（送料が分からない商品は載せない）
-                return ""
+            # スキャナーと同じ（確認済みの商品ページ → Apple の既定のストア）。送料が分からなければ載せない
+            return official_url_for_product(_con, pid, _brand_by_pid.get(pid, ""))
         all_deals, ineligible = build_beginner_deals(obs, _genre_by_pid, _official_url)
         _con.close()
+        try:
+            _stock = json.loads((PROJECT_ROOT / "exports" / "stock_history" / "latest.json").read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            _stock = {}
+        _availability = availability_by_product(_stock, now)
+        for _d in all_deals:
+            _d.availability = _availability.get(_d.product_id, "UNKNOWN")
 
         # Pro: sedori ルート（NPO buy+sell 由来）。
         for r in repo.list_sedori_routes(min_net_profit=0, limit=100):
@@ -183,6 +215,7 @@ def main() -> int:
             "sell_price_type": getattr(d, "sell_price_type", ""),
             "net_profit_jpy": getattr(d, "net_profit_jpy", 0),
             "net_profit_rate": round(float(getattr(d, "net_profit_rate", 0) or 0), 4),
+            "availability": getattr(d, "availability", "") if is_beginner else "",
             "route_type": route_type,
             "source_label": source_label,
             "dest_label": _DEST_LABEL,
@@ -313,6 +346,8 @@ def main() -> int:
         "pro_by_category": pro_by_category,
         "excluded_items": len(excluded),
         "ineligible_items": ineligible,
+        "profit_basis": ("確定の利益（公式の確認済みの価格・確定の売値・既知の費用）。買えるか（今すぐ行動できるか）とは別で、"
+                         "各行の availability（在庫の記録。7日を過ぎたら未確認）を見る。在庫を推測しない"),
         "total_deals": len(all_deals),
         "confidence_summary": {
             "total": len(all_deals),
@@ -350,7 +385,7 @@ def main() -> int:
     for i, d in enumerate(report["beginner_top10"], 1):
         lines.append(
             f"{i}. **{d['product_name']}** — 実質{_fmt_profit(d['net_profit_jpy'])} "
-            f"({d['best_buyback_shop']})"
+            f"({d['best_buyback_shop']}・{_AVAILABILITY_LABELS.get(d.get('availability') or 'UNKNOWN', '在庫未確認')})"
         )
     if not report["beginner_top10"]:
         lines.append("データなし")
@@ -372,7 +407,7 @@ def main() -> int:
             for i, d in enumerate(deals, 1):
                 lines.append(
                     f"{i}. **{d['product_name']}** — 実質{_fmt_profit(d['net_profit_jpy'])} "
-                    f"({d['best_buyback_shop']})"
+                    f"({d['best_buyback_shop']}・{_AVAILABILITY_LABELS.get(d.get('availability') or 'UNKNOWN', '在庫未確認')})"
                 )
             lines.append("")
 

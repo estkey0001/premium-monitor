@@ -6057,9 +6057,10 @@ def _check_integrity_profit_baseline(root: Path | None = None) -> list[dict]:
         ubp = _load("ubp_deploy_check", "scripts/update_buyback_prices.py")
         now = _dt68(2026, 10, 22, 17, 0, tzinfo=_tz68(_td68(hours=9)))
 
-        def row(alias, shop, price, at="2026-10-22T16:50:00+09:00", src_="auto_scraped"):
+        def row(alias, shop, price, at="2026-10-22T16:50:00+09:00", src_="auto_scraped",
+                url="https://www.kaitorishouten-co.jp/products/detail/1"):
             return {"product_alias": alias, "buyback_shop": shop, "buyback_price": str(price), "condition": "new_unopened",
-                    "url": "https://www.kaitorishouten-co.jp/kaden", "observed_at": at, "data_source": src_,
+                    "url": url, "observed_at": at, "data_source": src_,
                     "link_verified": "true", "confidence": "high"}
         stale = row("ps5_pro", "kaitori_shouten", 134500, at="2026-08-22T20:39:41+09:00")
         manual = row("x100vi", "kaitori_shouten", 428000, src_="manual_today")
@@ -6069,12 +6070,16 @@ def _check_integrity_profit_baseline(root: Path | None = None) -> list[dict]:
             bad68.append("基準が無いのに前回比の警告を出す")
         if "price_change_over_20pct" in HARD_REJECT_REASONS:
             bad68.append("前回比だけで隔離する")
-        ps5 = [row("ps5_pro", "kaitori_shouten", 200700), row("ps5_pro", "mobile_ichiban", 200700)]
+        item_b = "https://shop-b.test-store.jp/products/detail/77"
+        ps5 = [row("ps5_pro", "kaitori_shouten", 200700), row("ps5_pro", "shop_b", 200700, url=item_b)]
         if any(r["data_source"] != "auto_scraped" for r in ubp.quarantine_suspicious(ps5, ubp.compute_suspicious(ps5, []))):
-            bad68.append("他店が裏付ける上限超えを隔離する")
-        one = [row("ps5_pro", "kaitori_shouten", 200700)]
-        if ubp.quarantine_suspicious(one, ubp.compute_suspicious(one, []))[0]["data_source"] != "suspicious_rejected":
-            bad68.append("裏付けの無い上限超えを隔離しない")
+            bad68.append("商品ページの行で別の店が裏付ける上限超えを隔離する")
+        for name, rows in (("1店だけ", [row("ps5_pro", "kaitori_shouten", 200700)]),
+                           ("裏付けが店のトップ", [row("ps5_pro", "kaitori_shouten", 200700),
+                                              row("ps5_pro", "mobile_ichiban", 200700, url="https://www.mobile-ichiban.com/")]),
+                           ("公式の2倍超", [row("ps5_pro", "kaitori_shouten", 290000), row("ps5_pro", "shop_b", 290000, url=item_b)])):
+            if ubp.quarantine_suspicious(rows, ubp.compute_suspicious(rows, []))[0]["data_source"] != "suspicious_rejected":
+                bad68.append(f"裏付けの条件を満たさない上限超え（{name}）を隔離しない")
         run_src = (root / "scripts" / "update_buyback_prices.py").read_text(encoding="utf-8")
         run_body = run_src[run_src.index("def run("):run_src.index("def keep_manual_on_failure(")]
         if "compute_suspicious(new_rows, baseline_rows)" not in run_body:

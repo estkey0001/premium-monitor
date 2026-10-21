@@ -52,6 +52,19 @@ def read_entries(path: Path) -> list[dict]:
     return [e for e in rows or [] if isinstance(e, dict)]
 
 
+def file_status(path: Path) -> str:
+    """基準のファイルの状態: missing（まだ無い）/ unreadable（あるのに読めない・形が違う）/ ok。
+    unreadable のとき前回比の判定が黙って全部オフになるので、レポートと運営者向けのアラートに出す。"""
+    path = Path(path)
+    if not path.exists():
+        return "missing"
+    try:
+        d = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return "unreadable"
+    return "ok" if isinstance(d, dict) and isinstance(d.get("entries"), list) else "unreadable"
+
+
 def is_fresh(entry: dict, now: datetime, max_age_days: int = MAX_AGE_DAYS) -> bool:
     """基準として使える行か（自動取得・価格が正・観測時刻が読めて、未来でなく、max_age_days 以内）。"""
     if entry.get("data_source") != BASELINE_SOURCE or not _price(entry.get("buyback_price")):
@@ -105,11 +118,11 @@ def save(path: Path, entries: list[dict], now: datetime) -> None:
     tmp.replace(path)
 
 
-def stats(previous_all: list[dict], baseline: list[dict], new_rows: list[dict]) -> dict:
+def stats(previous_all: list[dict], baseline: list[dict], new_rows: list[dict], file: str = "ok") -> dict:
     """レポートに残す基準の使われ方（新しい観測の数・古くて使わなかった数）。"""
     have = {(e.get("product_alias", ""), e.get("buyback_shop", "")) for e in baseline}
     new_obs = sorted({(r.get("product_alias", ""), r.get("buyback_shop", "")) for r in new_rows
                       if _price(r.get("buyback_price")) and (r.get("product_alias", ""), r.get("buyback_shop", "")) not in have})
-    return {"baseline_entries": len(baseline), "stale_baseline_dropped": max(len(previous_all) - len(baseline), 0),
+    return {"baseline_file": file, "baseline_entries": len(baseline), "stale_baseline_dropped": max(len(previous_all) - len(baseline), 0),
             "new_observations": [{"product_alias": a, "shop": s} for a, s in new_obs],
             "max_age_days": MAX_AGE_DAYS}

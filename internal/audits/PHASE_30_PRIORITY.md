@@ -124,3 +124,15 @@ Apple 公式 1回（09:21 iPhone Duo の購入ページ）。priority.json は C
   依らず上書きしない。Low-2（DB を使い続ける環境で前の回の案件が残る）は本番の CI では起きない前提を DEV_NOTES に記録
 - テスト: 公式 → 買取の利益ありの案件が残る・海外の経路の方が大きくても残る・赤字の案件もより小さい仮の案件で上書きしない・
   案件が無ければ保存・大きければ置き換える。mutation 3/3。保存しなかった件数をログに出す
+
+## 9. 本番の確認（2026-10-21）
+
+- 1回目（Run 39526385317・success・1時間18分・生成コミット bd9060f5）: 正本 47・候補 REGISTERED・重複 0・公式 / 買取は確定。
+  利益は §8 の既存の不具合で「算出前」
+- 修正（122f4c5d）の後の2回目（Run 39536420003・success・1時間24分・生成コミット 61db7480・通知の台帳 4c9d3dd2）:
+  - iPhone Duo 256GB: 公式直販 364,800（VERIFIED_CURRENT・再確認 unchanged）・買取 395,000（商品ページ・照合済み・新しい）・
+    想定純利益 +28,400（ROI 7.8%。既存の計算）・今すぐ行動できない（availability UNKNOWN・stock_unknown）
+  - 確定の案件 1 → 2（Duo・GR IV HDF）・今すぐ行動 0・通知の台帳は Duo を「行動できない」で記録しただけ（通知の候補なし）
+  - 発見: この回は iphone-air・iphone-duo を読み、登録した2件とも REGISTERED のまま正本と一致（match_to_existing）・重複 0
+  - deploy-check エラー 0（#862〜#865 OK）・prelaunch ❌ 0・Phase 24 の受入状態は PHASE24_WAITING・外部への送信 0
+  - 生成コミットは生成物だけ

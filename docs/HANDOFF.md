@@ -1,7 +1,7 @@
 # HANDOFF（最終更新: 2026-10-21）
 
 ## 今の状態
-- Phase 30（候補の優先順位）: `rank-product-candidates` で確認待ちの Apple の候補に決まった計算式の点（公式・買取・見込みの差・同一性・市場の根拠・準備）。1位の iPhone Duo 256GB だけを登録・有効化（公式 364,800円・買取 395,000円・差 +28,400円・在庫 UNKNOWN で行動できない）。#865。記録は `internal/audits/PHASE_30_PRIORITY.md`
+- Phase 30（候補の優先順位）: `rank-product-candidates` で確認待ちの Apple の候補に決まった計算式の点（公式・買取・見込みの差・同一性・市場の根拠・準備）。1位の iPhone Duo 256GB だけを登録・有効化（公式 364,800円・買取 395,000円・本番で想定純利益 +28,400円の確定・在庫 UNKNOWN で今すぐ行動できない）。本番の確認で、一次 → 二次の処理が公式 → 買取の利益ありの案件を消す既存の不具合を見つけて直した。#865。記録は `internal/audits/PHASE_30_PRIORITY.md`
 - Phase 29（登録した商品の公式直販価格・買取）: iPhone Air 256GB の公式直販価格（189,800円・4色の部品番号）を official_registry に登録し、買取商店の iPhone Air の一覧で 256GB・SIMフリー・部品番号まで照合（色で価格が違えば最も低い色の行）。今の値では no_profit（在庫は UNKNOWN で今すぐ行動できない）。#864。記録は `internal/audits/PHASE_29_ACTIVATION.md`
 - Phase 28（候補の確認と正本への登録）: 承認（APPROVED = 人が公式ページで確かめた）と登録（REGISTERED = 正本に入れた）を分けた。`register-product-candidate`（承認済みの Apple の候補を1件ずつ config/products.yaml へ・既定 dry-run・`--confirm` で main と照合して atomic に書く・commit / push しない）・`register-event-candidate`（人が確かめた +09:00 の日程で data/tcg_verified_lotteries.csv へ）。discover が登録済みを正本と照らし合わせる。#863。記録は `internal/audits/PHASE_28_REGISTRATION.md`、手順は `ops/構成とCLI.md`
 - Phase 27（発見の候補）: Apple 公式（iPhone）の販売中の機種・容量を正本と照合し、正本に無いものを確認待ちの候補にする。TCG は日程の無い告知・予約 / 先着 / 再販のタイトルを「要確認」の候補にする（日程は推測しない）。台帳は `exports/discovery/`、CI の「Discover new products and events」、運営者向けの「新商品・新しいイベントの発見」。正本には自動で入れない。#862。記録は `internal/audits/PHASE_27_DISCOVERY.md`

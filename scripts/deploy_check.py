@@ -2797,8 +2797,17 @@ def check() -> list[dict]:
                     "message": "#552 sedori 計算が normalized_prices（pro_buy/pro_sell）を唯一の入力源にしている"
                                + ("" if _t552 else " ← sedori が NPO を使っていません")})
 
+    # 順位の初心者向けの組み立ては market/profit_formula.confirmed_official_to_buyback へ移した（案件・健康度と共通。
+    # Production Integrity M-2）。そこが normalized_prices の beginner_official / beginner_sell を使っていればよい
+    try:
+        _pf_src = (Path(__file__).resolve().parent.parent / "src" / "market" / "profit_formula.py").read_text(encoding="utf-8")
+    except OSError:
+        _pf_src = ""
     _t553 = ('from src.market.normalized_prices import' in _ranking_src) \
-        and ('beginner_official' in _ranking_src) and ('repo.list_beginner_deals(' not in _ranking_src)
+        and ('beginner_official' in _ranking_src
+             or ('confirmed_official_to_buyback' in _ranking_src and 'beginner_official' in _pf_src
+                 and 'beginner_sell' in _pf_src)) \
+        and ('repo.list_beginner_deals(' not in _ranking_src)
     results.append({"level": "ok" if _t553 else "error", "check": "ranking_uses_npo",
                     "message": "#553 ranking が NPO（official+sell / buy+sell）由来で旧 list_beginner_deals 直読みを廃止"
                                + ("" if _t553 else " ← ranking に旧DB直読みが残存")})

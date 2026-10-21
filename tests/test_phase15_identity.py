@@ -260,7 +260,7 @@ def _apply(results, now=None):
     return [c for c in calls if c[0].lstrip().upper().startswith("UPDATE")]
 
 
-def _res(status, price=137980, stock="入荷待ち", at="2026-10-09T12:00:00+09:00", **kw):
+def _res(status, price=137980, stock="入荷待ち", at="2026-10-22T12:00:00+09:00", **kw):
     r = {"product_id": "prod_ps5_pro", "status": status, "price": price, "recorded_price": 137980,
          "stock": stock, "observed_at": at, "url": AUDIT.VERIFIED_URLS["prod_ps5_pro"]["url"], "model": "CFI-7100B01"}
     r.update(kw)
@@ -270,15 +270,15 @@ def _res(status, price=137980, stock="入荷待ち", at="2026-10-09T12:00:00+09:
 @pytest.fixture(autouse=True)
 def _audit_now(monkeypatch):
     """監査の「今」を再確認の翌日の正午に固定する（未来の日付を受け付けない判定のため）。"""
-    monkeypatch.setattr(AUDIT, "NOW", datetime(2026, 10, 9, 12, 30, tzinfo=JST))
+    monkeypatch.setattr(AUDIT, "NOW", datetime(2026, 10, 22, 12, 30, tzinfo=JST))
 
 
 def test_apply_recheck_unchanged_reconfirms_with_observed_date_only():
     ups = _apply([_res("unchanged")])
     price = [p for s, p in ups if "official_price_updated_at=?" in s]
-    assert price == [("2026-10-09", "prod_ps5_pro", 137980)]                  # 取得した日（今日ではない）
+    assert price == [("2026-10-22", "prod_ps5_pro", 137980)]                  # 取得した日（今日ではない）
     stock = [p for s, p in ups if "official_stock_status" in s]
-    assert stock and stock[0][:2] == ("入荷待ち", "2026-10-09T12:00:00+09:00")
+    assert stock and stock[0][:2] == ("入荷待ち", "2026-10-22T12:00:00+09:00")
 
 
 def test_apply_recheck_changed_does_not_record_stock():

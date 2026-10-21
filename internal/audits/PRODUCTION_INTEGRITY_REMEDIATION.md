@@ -39,6 +39,11 @@
   価格の変化・生産終了の検知には使うが、**確認日は進めない**（`NON_EXTENDING_VERIFIED_BY`。2 回目のレビュー・監査の指摘）。
   待機室のため購入ページを確認できないので、Switch 2 の公式の確認は人がブラウザで確かめたときだけ延びる（次の確認日は 2026-10-22 で
   期限。運営者向けの劣化アラートが残り日数を出す）
+- **本番（GitHub Actions）で分かったこと**: Sony Store の robots.txt（`store.sony.jp`・`pur.store.sony.jp`）が Actions のランナーから取得できず
+  （`robots_unreachable`）、PS5 Pro の再確認は `blocked` になった。取得の作法に従うので回避しない。ローカルからの取得は通る。
+  そのため PS5 Pro は、2026-10-21 21:10:56 に人（この是正の作業）が商品ページを取得して確かめた記録
+  （137,980 円・入荷待ち・型番と JAN 一致）を `VERIFIED_URLS` の確認日・在庫に残した（プロジェクトの規則どおりの人の再確認）。
+  CI の再確認が通れば確認日が進み、通らない間は人が商品ページを確かめたときだけ延びる。運営者向けの劣化アラートが連続失敗を出す
 
 ## 3. M-2 順位レポートの利益式の統一
 
@@ -170,3 +175,19 @@
   数字を含む一覧ページ（`/item/2/`）・同日の手動の再実行で前回のレポートが ok になる点は、安全側（裏付けを落とす側）または
   許容範囲として記録のみ。「裏付けで採用」は、現状の取得元では商品ページと判定される行が買取商店中心のため、実質ほとんど成立しない
   （上限超えは隔離のまま。誤採用より安全な側）。PS5 Pro の 200,700 円も要確認のまま
+
+
+## 10. 本番の確認
+
+### Run 39611679623（2026-10-21 22:51 起動・手動 1 回目）— Deploy check の error で commit が skip（失敗）
+
+- 原因: 既存の検査 #553（順位が NPO 由来）が、順位の初心者向けの組み立てを `profit_formula` へ移したことで「`beginner_official` が
+  順位レポートに無い」と error にした。**全体の deploy-check をローカルで流しておらず（是正の検査 #866〜#870 だけを流していた）、
+  見落とした**。fail-closed で commit が skip されたので、LP は前回の公開のまま（壊れたページは出ていない）
+- 対応: #553 を新しい構成（`confirmed_official_to_buyback` が `beginner_official` / `beginner_sell` を使う）に合わせ、全体の
+  deploy-check を pytest で流すテスト（`test_full_deploy_check_has_no_errors`）を足した。ローカルで `scripts/deploy_check.py` は 0 error
+- この Run で読み取れた本番の値: Switch 2 の再確認は unchanged（59,980・確認日は進めない）・PS5 Pro は blocked（robots_unreachable）・
+  公式の監査は config_drift=8・取得失敗率 65.2%（行の失敗 42・隔離 1・スキップ 4 / 全 66 行。新しい定義で出た）・品質ゲートは PS5 Pro の
+  200,700 を要確認として隔離（モバイル一番が product_not_listed になり、裏付けが無い）・Apple の 404 は 1 回で止まった（以前 6 回）・
+  運営者向けの劣化アラートは 6 件（HIGH 3・WARNING 3。product_notification_candidates 0・external_sends 0）・健康度 50.5
+  （利益の発見が 0 → 15 点・設定値を新鮮と数えない補正で stale 63%）・順位レポートは beginner 2 件

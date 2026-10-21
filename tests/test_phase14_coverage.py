@@ -123,7 +123,7 @@ def test_switch2_stock_evidence_is_recorded_with_time():
     v = AUDIT.VERIFIED_URLS["prod_switch2"]
     assert stock_state(v["stock"]) == "IN_STOCK" and v["stock_checked_at"] == "2026-10-08T02:32:13+09:00"
     ps5 = AUDIT.VERIFIED_URLS["prod_ps5_pro"]
-    assert stock_state(ps5["stock"]) == "OUT_OF_STOCK" and ps5["stock_checked_at"].startswith("2026-10-08T02:34")
+    assert stock_state(ps5["stock"]) == "OUT_OF_STOCK" and ps5["stock_checked_at"].startswith("2026-10-21T21:10")
     # 在庫の表示を確認していない商品には在庫を記録しない（AirPods Pro 3 は価格だけ）
     assert "stock" not in AUDIT.VERIFIED_URLS["prod_airpods_pro3"]
 

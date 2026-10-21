@@ -1105,3 +1105,17 @@ def test_stock_from_msrp_lineup_is_never_written():
         path.write_text(json.dumps({"results": [res]}), encoding="utf-8")
         m.apply_recheck(C(), {"prod_switch2": {}}, path)
     assert not any("official_stock_status" in sql for sql in calls)                 # 将来のパーサが在庫を返しても書かない
+
+
+# ── 全体の deploy-check（CI では error があると commit が skip され、その日の LP が公開されない） ──────────
+
+def test_full_deploy_check_has_no_errors():
+    """是正の最初の本番の実行は、既存の検査 #553（順位が NPO 由来）が、順位の組み立てを profit_formula へ移したことで error になり、
+    commit が skip された（部分の検査だけをローカルで流していた）。全体を流して error が無いことを確かめる。"""
+    from scripts import deploy_check
+    results = deploy_check.check()
+    errors = [f'{r["check"]}: {r["message"][:120]}' for r in results if r["level"] == "error"]
+    assert errors == [], errors
+    names = {r["check"] for r in results}
+    assert {"official_recheck_alive", "ranking_canonical_formula", "buyback_baseline_freshness",
+            "ops_health_alert_separation", "schedule_cron_valid", "ranking_uses_npo"} <= names

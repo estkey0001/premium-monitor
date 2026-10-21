@@ -42,7 +42,7 @@ def test_verified_official_price_becomes_eligible_input():
     m = _script("audit_official_sources")
     v = m.VERIFIED_URLS["prod_ps5_pro"]
     # 確認した値・URL・日付（実行日ではなく、表に書いた確認日）
-    assert v["price"] == 137980 and v["checked_on"] == "2026-10-08" and "store.sony.jp" in v["url"]   # Phase 14 で再確認
+    assert v["price"] == 137980 and v["checked_on"] == "2026-10-21" and "store.sony.jp" in v["url"]   # 2026-10-21 に商品ページで人が再確認
     assert m.VERIFIED_URLS["prod_switch2"]["price"] == 59980
 
 
@@ -267,11 +267,11 @@ def test_manual_stock_check_is_recorded_with_time():
 
     c = Conn()
     # 確認から7日を過ぎた在庫の記録は書かない（Phase 14）ので、実行日に左右されないよう CI の時刻を確認の直後に固定する
-    m.NOW = datetime(2026, 10, 8, 3, 0, tzinfo=JST)
+    m.NOW = datetime(2026, 10, 21, 22, 0, tzinfo=JST)
     m.register_verified(c, {"prod_ps5_pro": {"name": "PlayStation 5 Pro", "model_number": "CFI-7100B01",
                                              "retail_price": 137980}})
     stock = [p for sql, p in c.calls if "official_stock_observed_at" in sql]
-    assert stock == [("入荷待ち", "2026-10-08T02:34:48+09:00", "prod_ps5_pro", "2026-10-08T02:34:48+09:00")]   # Phase 14 で再確認
+    assert stock == [("入荷待ち", "2026-10-21T21:10:56+09:00", "prod_ps5_pro", "2026-10-21T21:10:56+09:00")]   # 2026-10-21 に商品ページで人が再確認
     assert opp.stock_from("入荷待ち", "normal") == "OUT_OF_STOCK"
 
 

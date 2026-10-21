@@ -56,11 +56,12 @@ VERIFIED_URLS = {
     # 2026-10-21（Production Integrity M-1）: 購入ページ（_purchase）は在庫が無い間は「見つからない」ページ（E_NOTFOUND）へ
     # 移るため、2026-10-17 から再確認が failed（moved）だった。同じ商品の商品ページ（_product）を取得の共通の作法で1回取得し、
     # 「PlayStation®5 Pro CFI-7100B01」「ソニーストアで購入すると 137,980 円(税込)」「入荷待ち」・JAN 4948872417075
-    # （価格・型番・JAN は記録と同じ）を確認した。確認日・在庫の記録はこの行を書き換えず、再確認（recheck_official.RECHECK_PAGE。
-    # unchanged なら取得した日に確認日を進める）が行う
+    # （価格・型番・JAN は記録と同じ）を確認した。2026-10-21 21:10:56（人の再確認。確認日と在庫の記録を更新）。
+    # GitHub Actions からは Sony Store の robots.txt を取得できず（robots_unreachable。取得の作法に従うので回避しない）、
+    # CI の再確認（recheck_official.RECHECK_PAGE）は通らないことがある。その間は、人がこの商品ページを確かめたときだけ延びる
     "prod_ps5_pro": {"source": "src_sony_store", "url": "https://pur.store.sony.jp/ps5/products/ps5/CFI-7100B01_purchase/",
-                     "link_type": "item", "price": 137980, "conf": "high", "checked_on": "2026-10-08", "price_kind": "msrp",
-                     "stock": "入荷待ち", "stock_checked_at": "2026-10-08T02:34:48+09:00"},
+                     "link_type": "item", "price": 137980, "conf": "high", "checked_on": "2026-10-21", "price_kind": "msrp",
+                     "stock": "入荷待ち", "stock_checked_at": "2026-10-21T21:10:56+09:00"},
     # 2026-10-03: 任天堂公式の商品ラインナップで「Nintendo Switch 2 本体 日本語・国内専用 希望小売価格： 59,980 円（税込）」
     # を確認（2026-05-25 の価格改定後。設定値の 49,980円 は改定前）
     # 2026-10-08 02:32（Phase 14）: My Nintendo Store の商品ページ（Nintendo Switch 2（日本語・国内専用））で

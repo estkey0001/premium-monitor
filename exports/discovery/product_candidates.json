@@ -137,13 +137,51 @@
       ],
       "match_to_existing": "",
       "candidate_id": "apple-419a47e495b5",
-      "status": "PENDING_REVIEW",
+      "status": "REGISTERED",
       "reasons": [
         "not_in_canonical"
       ],
       "discovered_at": "2026-10-17T17:34:02+09:00",
       "last_seen_on": "2026-10-19",
-      "updated_at": "2026-10-17T17:34:02+09:00"
+      "updated_at": "2026-10-21T09:22:19+09:00",
+      "reviewed_at": "2026-10-21T09:22:13+09:00",
+      "review": {
+        "at": "2026-10-21T09:22:13+09:00",
+        "decision": "APPROVED",
+        "reason": "",
+        "evidence_checked": [
+          "capacity",
+          "colors",
+          "official_price",
+          "official_url",
+          "part_numbers"
+        ]
+      },
+      "decisions": [
+        {
+          "at": "2026-10-21T09:22:13+09:00",
+          "decision": "APPROVED",
+          "reason": "",
+          "evidence_checked": [
+            "capacity",
+            "colors",
+            "official_price",
+            "official_url",
+            "part_numbers"
+          ]
+        },
+        {
+          "at": "2026-10-21T09:22:19+09:00",
+          "decision": "REGISTERED",
+          "reason": "",
+          "evidence_checked": [],
+          "target": "config/products.yaml",
+          "registered_id": "prod_iphoneduo_256"
+        }
+      ],
+      "registered_at": "2026-10-21T09:22:19+09:00",
+      "registered_to": "config/products.yaml",
+      "registered_id": "prod_iphoneduo_256"
     },
     "apple-ef2efccc296e": {
       "source": "apple_jp_official",

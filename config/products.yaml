@@ -81,6 +81,19 @@ products:
     official_url: "https://www.apple.com/jp/shop/buy-iphone/iphone-air"
     price_observed_on: "2026-10-17"
 
+  - id: "prod_iphoneduo_256"
+    genre: "iphone"
+    name: "iPhone Duo 256GB SIMフリー"
+    brand: "Apple"
+    model_number: ""
+    retail_price: 364800
+    keywords: ["iPhone Duo 256GB", "iPhone Duo 256", "MK244J/A", "MK254J/A"]
+    capacity: "256GB"
+    part_numbers: ["MK244J/A", "MK254J/A"]
+    colors: ["Night Sky", "Star White"]
+    official_url: "https://www.apple.com/jp/shop/buy-iphone/iphone-duo"
+    price_observed_on: "2026-10-19"
+
   # =========================================
   # Mac / PC (genre: pc)
   # =========================================

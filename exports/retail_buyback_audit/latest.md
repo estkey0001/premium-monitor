@@ -1,11 +1,11 @@
 # Retail & Buyback Automation — 品質監査
 
-> 生成: 2026-10-21 11:34 JST / 販売/買取/二次流通の取得品質・正規化・同一性（利益/AI/UI/SaaSロジックは不変）
+> 生成: 2026-10-21 13:26 JST / 販売/買取/二次流通の取得品質・正規化・同一性（利益/AI/UI/SaaSロジックは不変）
 
 ## カテゴリ別サマリ
 | カテゴリ | 観測 | 価格有 | exact | high | fresh | Main昇格可 | 失敗(0円/stale/rejected) |
 |---|--:|--:|--:|--:|--:|--:|--:|
-| buyback | 146 | 127 | 14 | 14 | 56 | 14 | 19/90/117 |
+| buyback | 147 | 127 | 14 | 14 | 57 | 14 | 20/90/118 |
 | resale | 10 | 10 | 0 | 0 | 0 | 0 | 0/10/10 |
 | retail | 2 | 2 | 0 | 0 | 0 | 0 | 0/2/2 |
 
@@ -32,7 +32,7 @@
 | カメラのキタムラ | 9 | 9 | 0 | 0 |
 | ソフマップ | 10 | 8 | 2 | 0 |
 | 買取商店 | 23 | 23 | 16 | 14 |
-| ゲオ | 8 | 7 | 1 | 0 |
+| ゲオ | 9 | 7 | 2 | 0 |
 | 買取一丁目 | 4 | 4 | 4 | 0 |
 | ネットオフ | 4 | 0 | 4 | 0 |
 
@@ -53,7 +53,7 @@
 
 ## 正規化 監査
 - price_type付与率: 100% / 送料分離: 100% / ポイント分離: 100% / 下取除外: 89%
-- price_type分布: {'buyback_price': 123, 'shop_sale_price': 25, 'overseas_listing_price': 5, 'flea_listing_price': 5}
+- price_type分布: {'buyback_price': 124, 'shop_sale_price': 25, 'overseas_listing_price': 5, 'flea_listing_price': 5}
 
 ## duplicate_price_pattern（同一ソースで複数SKU同額・要確認）
 | source | role | price | SKU数 | product_ids |

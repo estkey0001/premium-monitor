@@ -25,6 +25,8 @@ PRODUCT_URLS = {
     "airpods_pro3":    "https://www.kaitorishouten-co.jp/kaden",
     # Phase 29（2026-10-17 確認）: /category/1/709 = iPhone Air（256GB / 512GB / 1TB の4色。各行に部品番号と SIMフリー）
     "iphoneair_256":   "https://www.kaitorishouten-co.jp/category/1/709",
+    # Phase 30（2026-10-21 確認）: /category/1/748 = iPhone Duo（256GB / 512GB / 1TB / 2TB の2色。各行に部品番号と SIMフリー）
+    "iphoneduo_256":   "https://www.kaitorishouten-co.jp/category/1/748",
     # Phase 17（2026-10-08 確認）: カメラの一覧（新品・未開封の買取価格表）。/category/2/368 = デジタルカメラ、
     # /category/2/108 = デジタル一眼カメラ。どちらも1ページに全件（153件・228件）の構造化データ（商品名・JAN・
     # 新品の価格・商品ページの URL）が載る（?pageno= を変えても同じ内容なので、1ページを1回だけ取る）
@@ -91,6 +93,12 @@ ROW_RULES = {
                        "exclude": ["Pro", "Max", "Plus", "au", "docomo", "ドコモ", "softbank", "ソフトバンク", "楽天",
                                    "中古", "未使用", "開封済"],
                        "parts": ["MG274J/A", "MG284J/A", "MG294J/A", "MG2A4J/A"], "color_policy": "min"},
+    # Phase 30: iPhone Duo 256GB（512GB・1TB・2TB を除く）。行の例: 「iPhone Duo 256GB ナイトスカイ MK254J/A SIMフリー」。
+    # 部品番号は公式で確かめた 256GB の2色。2026-10-21 は両色 ¥395,000（色で違えば最も低い色の行）
+    "iphoneduo_256":  {"pattern": r"^iPhone\s?Duo\s+256GB\b", "require": ["SIMフリー"],
+                       "exclude": ["Pro", "Max", "Plus", "au", "docomo", "ドコモ", "softbank", "ソフトバンク", "楽天",
+                                   "中古", "未使用", "開封済"],
+                       "parts": ["MK244J/A", "MK254J/A"], "color_policy": "min"},
     # 型番まで一致するものだけ（第2世代・ケース単体などを拾わない）
     "airpods_pro3":   {"pattern": r"^AirPods\s?Pro\s*(?:第3世代|3)\s+MFHP4J/A$", "require": [],
                        "exclude": ["ケース", "イヤーチップ"]},
@@ -255,7 +263,15 @@ class KaitoriShoutenCsvCollector(BaseCsvBuybackCollector):
             matched = [(hits[0]["name"], hits[0]["price"], hits[0]["url"])]
         else:
             matched = match_rows(parse_rows(html), product_alias)
-            if matched and (ROW_RULES.get(product_alias) or {}).get("color_policy") == "min":
+            rule = ROW_RULES.get(product_alias) or {}
+            if matched and rule.get("color_policy") == "min":
+                # 全色（公式で確かめた部品番号）の行がそろうときだけ使う（最も安い色の行が消えた日に、残った高い色の価格を
+                # 使わない。Phase 30 レビュー）
+                seen = {re.findall(r"\b[A-Z0-9]{4,5}J/A\b", n)[0] for n, _p, _h in matched}
+                if seen != set(rule.get("parts") or []):
+                    self.last_matched_rows = []
+                    self.last_failure_reason = "colors_incomplete"
+                    return None
                 # 色で価格が違えば最も低い色の行（その行の商品ページを出典にする。最高値の色の価格を使わない）
                 low = min(p for _n, p, _h in matched)
                 matched = [r for r in matched if r[1] == low]

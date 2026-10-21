@@ -39,6 +39,9 @@ VERIFIED_URLS = {
     # リダイレクトなし）で1回取得し、商品データ（partNumber・price.fullPrice・name）で 256GB の4色の部品番号がどれも
     # 189,800円であることを確認（512GB 224,800円・1TB 294,800円は別の行）。Phase 27 の発見・Phase 28 の登録の値と同じ
     "prod_iphoneair_256":   {"source": "src_apple_jp", "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-air",        "link_type": "item",     "price": 189800, "conf": "high", "checked_on": "2026-10-17", "price_kind": "official_direct"},
+    # 2026-10-21 09:21（Phase 30）: 公式の購入ページ（iPhone Duo）を取得の共通の作法で1回取得し、商品データで 256GB の2色の
+    # 部品番号がどれも 364,800円であることを確認（512GB 399,800円・1TB 469,800円・2TB 574,800円は別の行）
+    "prod_iphoneduo_256":   {"source": "src_apple_jp", "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-duo",        "link_type": "item",     "price": 364800, "conf": "high", "checked_on": "2026-10-21", "price_kind": "official_direct"},
     # 2026-10-03: 公式の購入ページで「AirPods Pro 3 42,800円」を再確認
     # 2026-10-08（Phase 14）: 同じ購入ページで 42,800円 を再確認（ブラウザ）。在庫・お届けの表示は、選択を進める前の
     # ページには出ない（明示の証拠が無いので在庫は記録しない＝在庫未確認のまま）
@@ -271,6 +274,11 @@ IDENTITY_EVIDENCE = {
                                "MG294J/A": ("256GB", "Light Gold", 189800), "MG2A4J/A": ("256GB", "Sky Blue", 189800)},
                            "edition": "日本向け（SIM フリー）", "bundle": "本体",
                            "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-air", "checked_on": "2026-10-17"},
+    # Phase 30（2026-10-21 09:21 に取得した公式の購入ページの商品データ）: 256GB の2色の部品番号がどれも 364,800円
+    "prod_iphoneduo_256": {"model_name": "iPhone Duo", "variant_skus": {
+                               "MK244J/A": ("256GB", "Star White", 364800), "MK254J/A": ("256GB", "Night Sky", 364800)},
+                           "edition": "日本向け（SIM フリー）", "bundle": "本体",
+                           "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-duo", "checked_on": "2026-10-21"},
     # ニコンの製品ページ「Z8 … オープンプライス JANコード：4960759909947」・ニコンダイレクトの購入ページも同じ JAN・
     # 「こちらの商品はボディーのみの販売となります」
     "prod_z8": {"model_number": "Z8", "jan_code": "4960759909947", "edition": "日本向け", "bundle": "ボディーのみ",
@@ -322,6 +330,15 @@ OFFICIAL_DIRECT_OFFERS = {
         "edition": "日本向け（SIM フリー）",
         "identity_equivalent": "JAN の代わりに、購入ページの商品データの 256GB の4色の部品番号（IDENTITY_EVIDENCE の "
                                "variant_skus。どの色も 189,800円）",
+        "sale_mode": "NORMAL", "stock": "UNKNOWN",
+        "stock_semantics": "在庫・お届けの表示は色・容量を選んだ後に出る（ページの初期表示に在庫の情報が無い）",
+        "rejected": []},
+    "prod_iphoneduo_256": {
+        "shop": "Apple Store（オンライン）", "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-duo",
+        "price": 364800, "checked_on": "2026-10-21", "capacity": "256GB", "body_kit": "not_applicable",
+        "edition": "日本向け（SIM フリー）",
+        "identity_equivalent": "JAN の代わりに、購入ページの商品データの 256GB の2色の部品番号（IDENTITY_EVIDENCE の "
+                               "variant_skus。どの色も 364,800円）",
         "sale_mode": "NORMAL", "stock": "UNKNOWN",
         "stock_semantics": "在庫・お届けの表示は色・容量を選んだ後に出る（ページの初期表示に在庫の情報が無い）",
         "rejected": []},

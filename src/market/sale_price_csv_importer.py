@@ -30,7 +30,7 @@ ALIAS_MAP = {
     "iphone17pro512": "prod_iphone17pro_512",
     "iphone17pm256": "prod_iphone17pm_256", "iphone17pm": "prod_iphone17pm_256",
     "iphone17pm512": "prod_iphone17pm_512",
-    "iphone17_256": "prod_iphone17_256", "iphone17": "prod_iphone17_256", "iphoneair_256": "prod_iphoneair_256",
+    "iphone17_256": "prod_iphone17_256", "iphone17": "prod_iphone17_256", "iphoneair_256": "prod_iphoneair_256", "iphoneduo_256": "prod_iphoneduo_256",
     # iPhone 16
     "iphone16pro256": "prod_iphone16pro_256",
     "iphone16pm": "prod_iphone16pm_256", "iphone16pm_256": "prod_iphone16pm_256",

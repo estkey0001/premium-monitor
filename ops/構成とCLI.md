@@ -148,3 +148,18 @@ python3 -m src.cli reject-event-candidate --candidate-id <ID> --reason obsolete
   `src/collectors/buyback_kaitori_shouten.py` の PRODUCT_URLS・ROW_RULES（parts・color_policy=min）と
   `scripts/update_buyback_prices.py` の TARGET_PRODUCTS に入れる（KEEP_PREVIOUS_ON_FAILURE には入れない）
 - 利益は既存の計算のまま。売値が安ければ no_profit、在庫が不明なら今すぐ行動できない。deploy-check #864 が検査する
+
+## 候補の優先順位（Phase 30）
+
+```bash
+python3 -m src.cli rank-product-candidates                     # 取得なし（買取は UNKNOWN のまま点を付ける）
+python3 -m src.cli rank-product-candidates --fetch-buyback     # 買取商店のまとめ1回 + 上位の機種の価格表1回
+```
+
+- 点は決まった計算式（`src/discovery/priority.py`。内訳は `internal/audits/PHASE_30_PRIORITY.md`）。売値は取得した実際の
+  行だけ（他の容量・予想の価格で埋めない）。色で価格が違えば最も低い色。全色がそろわなければ差を出さない
+- 結果は `exports/discovery/priority.json`（取得したときだけ書く）。運営者向けの「候補の確認の順番」に出す（顧客向けの利益では
+  ない・作成から7日で表を隠す）ために、人が差分の各候補の buyback_rows（店の行・価格・商品ページ）を確かめてコミットする。
+  CI では作らない。同じ取得元へは前回の取得から 90秒以内（ブロックの後は24時間）は取得しない
+- 登録は上の承認 → 見込み → 登録の手順で1件ずつ（優先順位は登録しない）。登録した後の公式直販価格と買取は「登録した商品の
+  公式直販価格と買取（Phase 29）」の手順

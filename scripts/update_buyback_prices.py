@@ -51,6 +51,7 @@ OFFICIAL_PRICES: dict[str, int] = {
     "airpods_pro3":    42_800,
     # Phase 29: official_registry の公式直販価格（2026-10-17。異常値の判定だけに使う）
     "iphoneair_256":  189_800,
+    "iphoneduo_256":  364_800,     # Phase 30
     # Phase 17: カメラ（official_registry の確認値。公式直販価格・RICOH の定価。異常値の判定だけに使う）
     "x100vi":         315_700,
     "z8":             575_300,
@@ -71,6 +72,7 @@ PRODUCT_GENRES: dict[str, str] = {
     "iphone16pro256":  "iphone",
     "airpods_pro3":    "audio",
     "iphoneair_256":   "iphone",
+    "iphoneduo_256":   "iphone",
     "x100vi":          "camera",
     "z8":              "camera",
     "r5ii":            "camera",
@@ -157,6 +159,14 @@ TARGET_PRODUCTS = [
     {
         "product_alias":  "iphoneair_256",
         "product_name":   "iPhone Air 256GB SIMフリー",
+        "condition":      "new_unopened_simfree",
+        "shops":          ["kaitori_shouten"],
+    },
+    # ── Phase 30（2026-10-21）: 優先順位で選んで登録した iPhone Duo 256GB。買取商店の iPhone Duo の一覧（/category/1/748）で、
+    # 機種・容量・SIMフリー・公式で確かめた部品番号まで照合する（色で価格が違えば最も低い色の行）。リクエストは1回増える
+    {
+        "product_alias":  "iphoneduo_256",
+        "product_name":   "iPhone Duo 256GB SIMフリー",
         "condition":      "new_unopened_simfree",
         "shops":          ["kaitori_shouten"],
     },

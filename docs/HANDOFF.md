@@ -1,6 +1,7 @@
-# HANDOFF（最終更新: 2026-10-21）
+# HANDOFF（最終更新: 2026-10-22）
 
 ## 今の状態
+- Production Integrity 是正（2026-10-21 の監査の Medium 5件。`internal/audits/PRODUCTION_INTEGRITY_REMEDIATION.md`）: 利益の式を `src/market/profit_formula.py` に1つ（順位レポートの +28,900 → +28,400）・買取の前回比の基準を `exports/collector_report/price_baseline.json`（直近の正常な自動取得・14日以内）・カテゴリ共通の価格の上限は商品ページ・別の運営元・公式の 1.5 倍以内の裏付けがあるときだけ超えを採用（PS5 Pro の 200,700 は要確認のまま）・運営者向けの劣化アラート（`src/ops/health_alert.py`。商品の通知とは別・外部へ送らない。`exports/ops/`）・cron を 12:17 JST へ・公式の再確認（PS5 Pro は Sony の商品ページ、Switch 2 は任天堂の商品ラインナップ。希望小売価格だけの確認は確認日を進めない）。deploy-check #866〜#870。本番の確認は Run 39626543953（success）。
 - Phase 30（候補の優先順位）: `rank-product-candidates` で確認待ちの Apple の候補に決まった計算式の点（公式・買取・見込みの差・同一性・市場の根拠・準備）。1位の iPhone Duo 256GB だけを登録・有効化（公式 364,800円・買取 395,000円・本番で想定純利益 +28,400円の確定・在庫 UNKNOWN で今すぐ行動できない）。本番の確認で、一次 → 二次の処理が公式 → 買取の利益ありの案件を消す既存の不具合を見つけて直した。#865。記録は `internal/audits/PHASE_30_PRIORITY.md`
 - Phase 29（登録した商品の公式直販価格・買取）: iPhone Air 256GB の公式直販価格（189,800円・4色の部品番号）を official_registry に登録し、買取商店の iPhone Air の一覧で 256GB・SIMフリー・部品番号まで照合（色で価格が違えば最も低い色の行）。今の値では no_profit（在庫は UNKNOWN で今すぐ行動できない）。#864。記録は `internal/audits/PHASE_29_ACTIVATION.md`
 - Phase 28（候補の確認と正本への登録）: 承認（APPROVED = 人が公式ページで確かめた）と登録（REGISTERED = 正本に入れた）を分けた。`register-product-candidate`（承認済みの Apple の候補を1件ずつ config/products.yaml へ・既定 dry-run・`--confirm` で main と照合して atomic に書く・commit / push しない）・`register-event-candidate`（人が確かめた +09:00 の日程で data/tcg_verified_lotteries.csv へ）。discover が登録済みを正本と照らし合わせる。#863。記録は `internal/audits/PHASE_28_REGISTRATION.md`、手順は `ops/構成とCLI.md`
@@ -24,6 +25,7 @@
 - Phase ごとの詳細な実装記録と「踏んだ罠」は `internal/DEV_NOTES.md`（削らない・着手前に該当節を読む）
 
 ## 未解決・保留
+- Production Integrity 是正の残り: PS5 Pro の公式の再確認は、Actions のランナーから Sony Store の robots.txt が取れず（robots_unreachable。回避しない）自動では通らない。2026-10-21 に人が商品ページで確認した記録を登録簿に入れた（次に人が確かめるまで）。Switch 2 は待機室のため購入ページを確認できず、確認日が 2026-10-08 のまま（希望小売価格だけの確認は日を進めない）。人がブラウザで確かめる。PS5 Pro の買取 200,700 円は、買取商店の価格表の本物の型番行だが、別の運営元の商品ページの裏付けが無く要確認（モバイル一番は今回 product_not_listed）。必須の店 netoff（価格が見つからない）・mobile_ichiban（未掲載）は予想外の失敗として運営者向けのアラートに出ている。設定の参考価格と公式で確認した価格の違い 8 件（`config_price_drift`）は人の確認待ち。ハードオフ・ドスパラの検索 URL（404）は新しい読み取りが要るので更新していない。
 - Phase 16 の残り（Low）: カメラの設定値の参考価格（retail_price「概算定価（要確認）」）が通知の文面で「定価」と出る経路が残る（以前から）。quality_checker の「公式購入URLが未設定」は確認済みの購入ページが無い商品すべてに付く（手動のコマンドだけ）。詳細は `internal/audits/PHASE_16_OFFICIAL_DIRECT.md` §11
 - アーカイブの過去の LP（UI Phase 10 より前）は旧UIのまま残している（書き換えない）。その中の HOME（`/`）のリンクはプロジェクトの外を指して壊れている（`./` は `archive/index.html` で今のサイトへ転送される）。直すなら過去の LP の書き換えになるので、ユーザーの判断。
 - せどりルートの内訳で、確定ルートの購入送料などが 0 のとき「−¥0」と出る（今の本番は確定ルート0件なので出ていない。出ると #807 が ERROR）。テストの架空ルートで気づいた。

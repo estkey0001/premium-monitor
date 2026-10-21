@@ -191,3 +191,26 @@
   200,700 を要確認として隔離（モバイル一番が product_not_listed になり、裏付けが無い）・Apple の 404 は 1 回で止まった（以前 6 回）・
   運営者向けの劣化アラートは 6 件（HIGH 3・WARNING 3。product_notification_candidates 0・external_sends 0）・健康度 50.5
   （利益の発見が 0 → 15 点・設定値を新鮮と数えない補正で stale 63%）・順位レポートは beginner 2 件
+
+### Run 39626543953（2026-10-22 01:46 完了・手動 2 回目）— success（1時間15分）。生成コミット ddba1456
+
+| 指標 | 是正前 | 是正後（この Run） |
+|---|---:|---:|
+| 公式 VERIFIED_CURRENT / VERIFIED_DATED / 設定値 | 10 / 2 / 35 | 11 / 1（Switch 2・確認日 10-08）/ 35 |
+| 公式の再確認 | PS5 Pro が failed（moved）9 日連続 | PS5 Pro は blocked（robots_unreachable。Sony の robots.txt が Actions から取れない）・Switch 2 は unchanged（希望小売価格・確認日は進めない）。PS5 Pro は人の再確認の記録で VERIFIED_CURRENT |
+| 取得の失敗の行 | 42（数え方が 38 / 40 / 42 / 46） | 行の失敗 42・隔離 1・スキップ 4 / 全 66 行（失敗率 65.2%）・1件も取れなかった店 12・requests_failed 30 |
+| 疑わしい価格の記録 | 4（隔離 2 + 古い基準による前回比の警告 2） | 1（PS5 Pro の 200,700 を要確認として隔離。前回比の警告は基準が初回のため 0） |
+| 買取の前回比の基準 | 8 月の手入力の CSV | `price_baseline.json` 19 件（この Run が初回に作成。次回から前回比） |
+| 確定の案件 / 今すぐ行動 | 2 / 0 | 2（Duo +28,400・ROI 7.8%・在庫未確認・HDF +16,200・抽選終了）/ 0 |
+| 順位レポート | Duo +28,900・HDF +16,700 | Duo +28,400・HDF +16,200（購入元の在庫の状態つき）。設定値だけの iPhone 4 商品は ineligible_items に理由つき |
+| 健康度 | 38.6（利益の発見 0.0） | 50.5（利益の発見 15.0・設定値を新鮮と数えない補正で stale 63%） |
+| 運営者向けの劣化アラート | なし | 6 件（HIGH 3: PS5 Pro の再確認の連続失敗・netoff・mobile_ichiban / WARNING 3: Switch 2 の期限・PS5 Pro の隔離・iosys）。商品の通知の候補 0・外部送信 0 |
+| Phase 24 | PHASE24_WAITING | PHASE24_WAITING（actionable 0・候補 0・外部送信 0） |
+| deploy-check / prelaunch | Errors 0 / ❌ 0 | Errors 0（Warnings 13・OK 480）/ ❌ 0 |
+| CI の所要時間 | 1時間18分 | 1時間15分 |
+| 定時の cron | 0 3 * * *（毎日 4〜7 時間遅れ） | 17 3 * * *（12:17 JST）。実績の評価は数日後（明日 10-22 の定時の実行から） |
+| pytest | 2111 passed | 2192 passed |
+
+- 生成コミット ddba1456 に、ソース・設定・workflow の混入なし。秘密・絶対パスの混入なし。Variables は安全な値のまま
+  （NOTIFICATION_REAL_SEND=false・NOTIFICATION_DRY_RUN=true・TELEGRAM_CANARY=false。PRODUCT_REAL_SEND_ENABLED・
+  PHASE24_ACCEPTANCE_CANDIDATE_ID は未設定）

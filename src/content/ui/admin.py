@@ -719,6 +719,17 @@ def _check_summary(text: str) -> dict:
 
 # ── 全体 ─────────────────────────────────────────────────────────────────
 
+def build_ops_alert(rec: dict | None) -> dict:
+    """運営者向けの劣化アラート（exports/ops/health_alert.json。商品の通知とは別・外部へは送らない）の表示用。"""
+    rec = rec if isinstance(rec, dict) else {}
+    rows = [a for a in rec.get("active") or [] if isinstance(a, dict) and a.get("key")]
+    return {"present": bool(rec), "generated": str(rec.get("generated_at") or ""),
+            "high": int(rec.get("high") or 0), "warning": int(rec.get("warning") or 0),
+            "recovered": len(rec.get("recovered") or []), "suppressed": int(rec.get("suppressed") or 0),
+            "rows": [{"severity": str(a.get("severity") or ""), "key": str(a.get("key")), "title": str(a.get("title") or ""),
+                      "details": str(a.get("details") or "")} for a in rows[:30]]}
+
+
 def build(data: dict | None, *, catalog, details: dict, profit_routes: dict | None, tcg_report: dict | None,
           now: datetime, lp_generated: str = "") -> dict:
     d = data or {}
@@ -808,6 +819,7 @@ def build(data: dict | None, *, catalog, details: dict, profit_routes: dict | No
                               registered=build_registered(d.get("discovery_products"), d.get("diagnostics")),
                               priority=build_priority(d.get("discovery_priority"), d.get("discovery_products"))),
             "health": d.get("health") or {}, "coverage": d.get("coverage") or {},
+            "ops_alert": build_ops_alert(d.get("ops_health_alert")),
             "collector_generated": (d.get("collector") or {}).get("generated_at"),
             "dq_report": d.get("dq_report") or {}, "now": now}
 
@@ -909,7 +921,18 @@ def _sources(v: dict) -> str:
                 f'<dt>取得失敗（必須の店 / 任意の店）</dt><dd>{w["required_failed"]}件 / {w["optional_failed"]}件'
                 f'<span class="nu-osub">{w["threshold"]}件以上で警告</span></dd></dl>',
                 sub="強い警告 → 大きな変動 → 隔離だけ → 必須の店の失敗 → 任意の店の失敗 の順に1つだけ出す")
-    return (warn + _box("買取店", shops + _generated("取得レポート", v["collector_generated"]),
+    oa = v.get("ops_alert") or {}
+    ops = _box("運営者向けの劣化アラート（商品の通知とは別・外部へは送らない）",
+               (f'<p>{_badge(FAIL if oa.get("high") else (WARN if oa.get("warning") else OK), "HIGH %d件・WARNING %d件" % (oa.get("high", 0), oa.get("warning", 0)))}'
+                f'<span class="nu-osub">復旧 {oa.get("recovered", 0)}件・重ねて出さなかった {oa.get("suppressed", 0)}件</span></p>'
+                + (_table(["重さ", "種類", "内容"],
+                          [[_badge(FAIL if r["severity"] == "HIGH" else WARN, r["severity"]), f'<code>{esc(r["key"])}</code>',
+                            esc(r["title"] + "（" + r["details"] + "）")] for r in oa["rows"]], caption="有効な劣化アラート")
+                   or _empty("有効な劣化アラートはありません。"))
+                + _generated("劣化アラート", oa.get("generated"))) if oa.get("present")
+               else _empty("劣化アラートの記録がまだありません（次の定時の実行で作られます）。"),
+               sub="必須の店の連続失敗・失敗率・品質ゲート・公式の確認の期限・再確認の連続失敗。新しい・重くなった・復旧のときだけ CI に出す")
+    return (ops + warn + _box("買取店", shops + _generated("取得レポート", v["collector_generated"]),
                  sub="「試した」「成功した」「観測した（価格を得た）」は別の時刻。登録されているだけでは取得できているとは言わない")
             + _box("再販・フリマの取得", (_table(["取得元", "状態"], [[esc(r["name"]), _badge(r["status"], r["label"])]
                                                       for r in v["resale"]], caption="再販・フリマの取得元")

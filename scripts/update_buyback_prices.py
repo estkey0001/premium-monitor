@@ -862,6 +862,52 @@ def quarantine_suspicious(new_rows: list[dict], suspicious: list[dict]) -> list[
     return out
 
 
+# 失敗の数え方の定義（レポートの counters。画面・品質ゲート・健康度はこの名前で話す）
+COUNTER_DEFINITIONS = {
+    "rows_total": "商品 × 店の行の数（取得を試みた行 + 未対応でスキップした行）",
+    "rows_ok": "価格を取得でき、隔離されなかった行",
+    "rows_failed": "取得できなかった行（取得失敗・未掲載・価格が見つからない・打ち切り）。隔離した行は含まない",
+    "quality_rejected": "取得はできたが、明らかに誤りの価格として隔離した行（suspicious_rejected）",
+    "rows_skipped": "未対応の店でスキップした行（取得を試みていない）",
+    "rows_not_ok": "rows_failed + quality_rejected + rows_skipped（fetch_failed の一覧の件数）",
+    "failure_rate_pct": "(rows_failed + quality_rejected) / rows_total × 100（品質ゲートの「取得失敗率」）",
+    "sources_failed": "1件も取得できなかった店の数（取得を試みた店のうち）",
+    "sources_ok": "1件以上取得できた店の数",
+    "requests_failed": "ネットワーク・HTTP の失敗で取れなかった行（403・404・429・503・robots 到達不可・ブロック・タイムアウト）",
+}
+_REQUEST_FAILURE_REASONS = frozenset({
+    "http_403", "http_404", "http_410", "rate_limited_429", "service_unavailable", "robots_unreachable",
+    "robots_disallowed", "site_blocked", "timeout", "connection_error"})
+
+
+def failure_counters(results_summary: list, failure_reasons: dict, shop_stats: dict, fetch_failed_count: int) -> dict:
+    """失敗の指標（COUNTER_DEFINITIONS）。results_summary は隔離の反映後（隔離した行は FAILED + suspicious_rejected）。"""
+    rejected = failed = skipped = ok = requests_failed = 0
+    for alias, shop_id, status, _price in results_summary:
+        reason = failure_reasons.get((alias, shop_id), "")
+        if status == "OK":
+            ok += 1
+        elif status == "SKIP":
+            skipped += 1
+        elif reason == "suspicious_rejected":
+            rejected += 1
+        else:
+            failed += 1
+            if reason in _REQUEST_FAILURE_REASONS:
+                requests_failed += 1
+    total = len(results_summary)
+    tried = {sid: st for sid, st in shop_stats.items() if st["ok"] + st["failed"] > 0}
+    return {
+        "rows_total": total, "rows_ok": ok, "rows_failed": failed, "quality_rejected": rejected,
+        "rows_skipped": skipped, "rows_not_ok": failed + rejected + skipped,
+        "rows_not_ok_listed": fetch_failed_count,
+        "failure_rate_pct": round((failed + rejected) / total * 100, 1) if total else 0.0,
+        "sources_failed": sum(1 for st in tried.values() if st["ok"] == 0),
+        "sources_ok": sum(1 for st in tried.values() if st["ok"] > 0),
+        "requests_failed": requests_failed,
+    }
+
+
 def _generate_collector_report(
     new_rows: list[dict],
     results_summary: list,
@@ -1098,6 +1144,9 @@ def _generate_collector_report(
         if row.get("confidence", "high") == "low" and int(row.get("buyback_price", 0) or 0) > 0
     )
 
+    # ── 失敗の数え方（定義を分ける。以前は 38 / 40 / 42 / 46 が別々の数え方で並んでいた）──
+    counters = failure_counters(results_summary, failure_reasons, shop_stats, len(fetch_failed_list))
+
     # ── JSON出力 ───────────────────────────────────────────────────────────
     report = {
         "generated_at":    now_jst.isoformat(timespec="seconds"),
@@ -1109,6 +1158,8 @@ def _generate_collector_report(
             "low_confidence_count": low_confidence_count,
         },
         "low_confidence_count": low_confidence_count,
+        "counters":        counters,
+        "counter_definitions": COUNTER_DEFINITIONS,
         # この実行で打ち切った店（理由・何回目の失敗で打ち切ったか・取りに行かなかった商品）と、
         # 店ごとに実際に送ったリクエスト数（キャッシュを除く）。Phase 12
         "shop_cutoffs":           shop_cutoffs or {},

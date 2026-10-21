@@ -467,3 +467,238 @@ def test_corroboration_never_overrides_product_relative_limits():
     # 下限未満（パース誤り）は裏付けがあっても隔離のまま
     low = [_row("ps5_pro", "kaitori_shouten", 5000), _row("ps5_pro", "mobile_ichiban", 5000)]
     assert any(s["reason"] == "below_genre_min" for s in m.compute_suspicious(low, []))
+
+
+# ── Low: 健康度（利益の発見・設定値を新鮮と数えない） ────────────────────────────────
+
+def _health():
+    import importlib.util
+    sp = importlib.util.spec_from_file_location("ghr_integrity", ROOT / "scripts" / "generate_health_report.py")
+    m = importlib.util.module_from_spec(sp)
+    sp.loader.exec_module(m)
+    return m
+
+
+def test_health_profit_discovery_sees_confirmed_official_to_buyback_deals():
+    h = _health()
+    pid = "prod_iphoneduo_256"
+    obs = [_obs(pid, "official", 364800), _obs(pid, "sell", 395000)]
+    deals = h._official_to_buyback(obs, url_of=lambda p: APPLE_DUO)
+    pf = h._profit({"main_routes": [], "reference_routes": []}, deals)
+    assert pf["official_to_buyback_count"] == 1 and pf["official_to_buyback_max_profit"] == 28400
+    assert pf["main_route_count"] == 0                                                     # 売買ルートとは別に数える
+    dq = h._data_quality(obs)
+    score = h._score(dq, pf, h._sources(obs))
+    assert score["profit_discovery"] == 15.0                                               # 以前は 0.0（売買ルートしか見ていなかった）
+    none = h._profit({"main_routes": [], "reference_routes": []}, [])
+    assert h._score(dq, none, h._sources(obs))["profit_discovery"] == 0.0                  # 案件が無ければ 0
+    # 利益なし・設定値だけの公式の価格は数えない
+    assert h._official_to_buyback([_obs(pid, "official", 364800), _obs(pid, "sell", 300000)], url_of=lambda p: APPLE_DUO) == []
+    ref = _obs(pid, "official", 364800, extraction_method="retail_concept", freshness_basis="config_unknown_date")
+    assert h._official_to_buyback([ref, _obs(pid, "sell", 395000)], url_of=lambda p: APPLE_DUO) == []
+
+
+def test_health_does_not_count_configured_reference_as_fresh():
+    h = _health()
+    ref = _obs("prod_iphone17pro_256", "official", 179800, extraction_method="retail_concept",
+               freshness_basis="config_unknown_date", source_name="メーカー公式/定価")
+    real = _obs("prod_iphoneduo_256", "official", 364800, source_name="メーカー公式/定価")
+    dq = h._data_quality([ref, real])
+    assert dq["stale_count"] == 1 and dq["config_reference_count"] == 1                  # 設定値は新鮮に数えない
+    src = h._sources([ref, real])["メーカー公式/定価"]
+    assert src["freshness"] == 0.5 and src["stale_count"] == 1
+
+
+# ── Low: 失敗の数え方（rows_failed・quality_rejected・rows_skipped・sources_failed・requests_failed） ──
+
+def test_failure_counters_separate_rows_rejected_skipped_and_sources():
+    m = _ubp()
+    summary = [("a", "s1", "OK", 100), ("a", "s2", "FAILED", 0), ("b", "s2", "FAILED", 0), ("a", "s3", "SKIP", 0),
+               ("c", "s1", "FAILED", 0), ("d", "s4", "FAILED", 0)]
+    reasons = {("a", "s2"): "http_403", ("b", "s2"): "http_403", ("c", "s1"): "suspicious_rejected", ("d", "s4"): "price_not_found"}
+    stats = {"s1": {"ok": 1, "failed": 1, "skip": 0}, "s2": {"ok": 0, "failed": 2, "skip": 0},
+             "s3": {"ok": 0, "failed": 0, "skip": 1}, "s4": {"ok": 0, "failed": 1, "skip": 0}}
+    c = m.failure_counters(summary, reasons, stats, fetch_failed_count=5)
+    assert (c["rows_total"], c["rows_ok"], c["rows_failed"], c["quality_rejected"], c["rows_skipped"]) == (6, 1, 3, 1, 1)
+    assert c["rows_not_ok"] == 5 == c["rows_not_ok_listed"]                     # fetch_failed の一覧の件数と一致する
+    assert c["failure_rate_pct"] == round(4 / 6 * 100, 1)                        # (失敗 + 隔離) / 全行（品質ゲートの率）
+    assert (c["sources_failed"], c["sources_ok"]) == (2, 1) and c["requests_failed"] == 2   # s3 は試していないので数えない
+    assert set(c) - {"rows_not_ok_listed"} <= set(m.COUNTER_DEFINITIONS)         # 全部に定義がある
+
+
+# ── M-4: 運営者向けの劣化アラート（商品の通知とは別・外部へ送らない・重ねて出さない・復旧を記録） ──────────
+
+HNOW = datetime(2026, 10, 22, 18, 30, tzinfo=JST)
+
+
+def _col_report(by_shop, fetch_failed=(), suspicious=(), low=0):
+    return {"by_shop": by_shop, "fetch_failed": list(fetch_failed), "suspicious_prices": list(suspicious),
+            "low_confidence_count": low}
+
+
+def _inp(collector, history=None, official=(), optional=("geo", "hardoff")):
+    from src.market.price_quality import HARD_REJECT_REASONS
+    return {"collector": collector, "failure_history": history or {}, "optional_shops": list(optional),
+            "hard_reject_reasons": sorted(HARD_REJECT_REASONS), "official_status": list(official)}
+
+
+def _days(n, end="2026-10-22"):
+    from datetime import date, timedelta
+    d = date.fromisoformat(end)
+    return [(d - timedelta(days=i)).isoformat() for i in range(n)]
+
+
+def test_health_alert_normal_day_has_no_candidates():
+    from src.ops import health_alert as ha
+    healthy = _col_report({"kaitori_shouten": {"ok": 15, "failed": 2}, "kaitori_itchome": {"ok": 4, "failed": 0},
+                          "geo": {"ok": 0, "failed": 2}, "hardoff": {"ok": 0, "failed": 2}})
+    cur = ha.evaluate(_inp(healthy, {"geo": _days(30), "hardoff": _days(30)}), HNOW)
+    assert cur == []                                                  # 任意の店の失敗・必須の店の少しの失敗は出さない
+    state, res = ha.reconcile({}, cur, HNOW)
+    assert res["candidates"] == [] and res["recovered"] == [] and state["active"] == {}
+
+
+def test_health_alert_required_source_failures_are_classified_and_degraded_runs_are_not_hidden():
+    from src.ops import health_alert as ha
+    col = _col_report({"iosys": {"ok": 0, "failed": 6}, "netoff": {"ok": 0, "failed": 4}, "kaitori_shouten": {"ok": 1, "failed": 0}},
+                     fetch_failed=[{"shop": "iosys", "reason": "http_403"}, {"shop": "netoff", "reason": "price_not_found"}])
+    cur = {a["key"]: a for a in ha.evaluate(_inp(col, {"iosys": _days(4), "netoff": _days(4)}), HNOW)}
+    assert cur["required_source_failure:iosys"]["severity"] == "WARNING"        # 既知のブロック（403）= degraded
+    assert cur["required_source_failure:netoff"]["severity"] == "HIGH"          # 予想外の理由（価格が見つからない）
+    # 今日から取れなくなった必須の店は HIGH（新しい異常）
+    new = {a["key"]: a for a in ha.evaluate(_inp(col, {"iosys": _days(1), "netoff": _days(4)}), HNOW)}
+    assert new["new_source_failure:iosys"]["severity"] == "HIGH"
+    # 失敗率（必須の店）: 50% 以上 WARNING・80% 以上 HIGH。任意の店は分母に入れない
+    half = ha.evaluate(_inp(_col_report({"iosys": {"ok": 5, "failed": 5}, "geo": {"ok": 0, "failed": 99}}), {}), HNOW)
+    assert [a["severity"] for a in half if a["category"] == "failure_rate"] == ["WARNING"]
+    most = ha.evaluate(_inp(_col_report({"iosys": {"ok": 1, "failed": 9}}), {}), HNOW)
+    assert [a["severity"] for a in most if a["category"] == "failure_rate"] == ["HIGH"]
+
+
+def test_health_alert_quality_gate_and_official_verification():
+    from src.ops import health_alert as ha
+    sus = [{"product_alias": "ps5_pro", "shop": "kaitori_shouten", "reason": "above_genre_max", "details": "上限超過"},
+           {"product_alias": "x100vi", "shop": "kaitori_shouten", "reason": "price_change_over_20pct", "details": "変動"},
+           {"product_alias": "ps5_pro", "shop": "mobile_ichiban", "reason": "above_genre_max_corroborated", "details": "採用"}]
+    off = [{"product_id": "prod_ps5_pro", "days_left": 5, "expired": False, "consecutive_failures": 9, "last_verified": "2026-10-12"},
+           {"product_id": "prod_switch2", "days_left": 1, "expired": False, "consecutive_failures": 0, "last_verified": "2026-10-08"},
+           {"product_id": "prod_old", "days_left": -2, "expired": True, "consecutive_failures": 3, "last_verified": "2026-10-01"},
+           {"product_id": "prod_ok", "days_left": 14, "expired": False, "consecutive_failures": 0, "last_verified": "2026-10-22"}]
+    cur = {a["key"]: a["severity"] for a in ha.evaluate(_inp(_col_report({}, suspicious=sus, low=2), official=off), HNOW)}
+    assert cur["quality_gate_failure:ps5_pro"] == "WARNING" and "quality_gate_failure:x100vi" not in cur   # 変動だけ・採用した価格は出さない
+    assert cur["quality_gate_failure:low_confidence"] == "WARNING"
+    assert cur["official_recheck_failing:prod_ps5_pro"] == "HIGH"              # 9日連続
+    assert cur["official_verification_expiry:prod_switch2"] == "WARNING"
+    assert cur["official_verification_expiry:prod_old"] == "HIGH" and cur["official_recheck_failing:prod_old"] == "WARNING"
+    assert not any(k.endswith("prod_ok") for k in cur)
+    # 取得レポートが無ければ HIGH
+    assert ha.evaluate(_inp({}), HNOW)[0]["key"] == "collector_report_missing:collector_report"
+
+
+def test_health_alert_deduplicates_escalates_and_records_recovery():
+    from datetime import timedelta as _td
+
+    from src.ops import health_alert as ha
+    a = ha._alert("required_source_failure", "iosys", ha.WARNING, "http_403", "t", "d")
+    state, r1 = ha.reconcile({}, [a], HNOW)
+    assert [c["event"] for c in r1["candidates"]] == ["NEW"] and r1["candidates"][0]["type"] == "PRODUCTION_HEALTH_ALERT"
+    state, r2 = ha.reconcile(state, [a], HNOW + _td(days=1))                    # 翌日も同じ異常 → 出し直さない
+    assert r2["candidates"] == [] and r2["suppressed"] == 1 and state["active"][a["key"]]["times_seen"] == 2
+    assert state["active"][a["key"]]["first_seen"] == r1["candidates"][0]["first_seen"]
+    high = {**a, "severity": ha.HIGH}
+    state, r3 = ha.reconcile(state, [high], HNOW + _td(days=2))                  # 重くなったときだけ出し直す
+    assert [c["event"] for c in r3["candidates"]] == ["ESCALATED"]
+    state, r4 = ha.reconcile(state, [high], HNOW + _td(days=3))                  # 重いまま = 出さない
+    assert r4["candidates"] == []
+    state, r5 = ha.reconcile(state, [], HNOW + _td(days=4))                      # 解消 → 復旧を記録・状態から外す
+    assert [x["type"] for x in r5["recovered"]] == ["PRODUCTION_HEALTH_RECOVERED"] and state["active"] == {}
+    state, r6 = ha.reconcile(state, [a], HNOW + _td(days=5))                     # 復旧の後に再発 → 新しい異常として出す
+    assert [c["event"] for c in r6["candidates"]] == ["NEW"]
+
+
+def test_health_alert_record_is_operator_only_and_sends_nothing(tmp_path):
+    import importlib.util
+    sp = importlib.util.spec_from_file_location("oha_integrity", ROOT / "scripts" / "operator_health_alert.py")
+    m = importlib.util.module_from_spec(sp)
+    sp.loader.exec_module(m)
+    for rel, body in (("exports/collector_report/latest.json", '{"by_shop": {"iosys": {"ok": 0, "failed": 4}}, '
+                                                               '"fetch_failed": [{"shop": "iosys", "reason": "price_not_found"}]}'),
+                      ("exports/collector_report/failure_history.json", '{"iosys": ["2026-10-20", "2026-10-21", "2026-10-22"]}')):
+        (tmp_path / rel).parent.mkdir(parents=True, exist_ok=True)
+        (tmp_path / rel).write_text(body, encoding="utf-8")
+    rec = m.run(root=tmp_path, now=HNOW)
+    assert rec["type"] == "PRODUCTION_HEALTH_ALERT" and rec["audience"] == "operator"
+    assert rec["product_notification_candidates"] == 0 and rec["customer_notification"] is False and rec["external_sends"] == 0
+    assert (tmp_path / "exports" / "ops" / "health_alert.json").exists()
+    assert not (tmp_path / "exports" / "notifications").exists()                  # 商品の通知の台帳に触れない
+    again = m.run(root=tmp_path, now=HNOW + timedelta(hours=1))
+    assert again["candidates"] == [] and again["suppressed"] >= 1                  # 同じ異常を毎回出さない
+    assert any("required_source_failure:iosys" in line for line in m._annotations(rec))
+    assert m.run(root=tmp_path, now=HNOW, dry_run=True)["type"] == "PRODUCTION_HEALTH_ALERT"
+
+
+def test_health_alert_module_is_isolated_from_product_notifications():
+    import re
+    for rel in ("src/ops/health_alert.py", "scripts/operator_health_alert.py"):
+        src = (ROOT / rel).read_text(encoding="utf-8")
+        imports = "\n".join(line for line in src.splitlines() if re.match(r"\s*(from|import)\s", line))
+        assert not re.search(r"notifiers|outbox|telegram|discord|adapters|actionable|requests|urllib|smtplib", imports, re.I), rel
+        assert not re.search(r"os\.environ\.get\(['\"](TELEGRAM|DISCORD|PRODUCT_REAL|PHASE24|NOTIFICATION)", src), rel
+    wf = (ROOT / ".github" / "workflows" / "daily_lp.yml").read_text(encoding="utf-8")
+    step = wf[wf.index("- name: Operator health alert"):wf.index("- name: Update lottery events")]
+    assert "secrets." not in step and "TELEGRAM" not in step and "DISCORD" not in step and "vars." not in step
+    assert "exports/ops/" in wf                                                   # 状態・記録を commit する
+
+
+def test_admin_shows_ops_alert_separately(tmp_path):
+    from src.content.ui import admin
+    rec = {"type": "PRODUCTION_HEALTH_ALERT", "generated_at": "2026-10-22T18:30:00+09:00", "high": 1, "warning": 1,
+           "suppressed": 3, "recovered": [{"key": "x"}],
+           "active": [{"key": "required_source_failure:netoff", "severity": "HIGH", "title": "必須の店 netoff が連続", "details": "理由"},
+                      {"key": "official_verification_expiry:prod_switch2", "severity": "WARNING", "title": "期限", "details": "残り1日"}]}
+    v = admin.build_ops_alert(rec)
+    assert v["present"] and (v["high"], v["warning"], v["recovered"], v["suppressed"]) == (1, 1, 1, 3) and len(v["rows"]) == 2
+    assert admin.build_ops_alert(None)["present"] is False and admin.build_ops_alert("壊れた")["rows"] == []
+
+
+# ── Low: 識別の手がかりの割合（部品番号は 2/47。coverage だけ。足す指示ではない） ───────────────
+
+def test_identity_coverage_counts_clues_without_changing_products():
+    import yaml
+
+    from src.market import official_registry as reg
+    path = ROOT / "config" / "products.yaml"
+    before = path.read_bytes()
+    prods = yaml.safe_load(path.read_text(encoding="utf-8"))["products"]
+    ic = reg.identity_coverage(prods)
+    assert path.read_bytes() == before and ic["products"] == len(prods) == 47
+    assert ic["part_numbers"]["count"] == 2 and ic["part_numbers"]["pct"] == round(2 / 47 * 100, 1)
+    assert ic["any_strong_key"]["count"] >= ic["part_numbers"]["count"] and ic["identity_evidence"]["count"] >= 2
+    assert reg.identity_coverage([])["products"] == 0 and reg.identity_coverage(None)["part_numbers"]["pct"] == 0.0
+
+
+# ── M-5: 定時の実行（毎時 0 分を避ける・1日1回・昼に始まる） ───────────────────────────
+
+def _workflow():
+    import yaml
+    return yaml.safe_load((ROOT / ".github" / "workflows" / "daily_lp.yml").read_text(encoding="utf-8"))
+
+
+def test_schedule_is_daily_off_peak_and_starts_at_jst_noon():
+    wf = _workflow()
+    on = wf.get("on") or wf.get(True)
+    crons = [x["cron"] for x in on["schedule"]]
+    assert len(crons) == 1                                                   # 頻度を上げていない（1日1回）
+    minute, hour, dom, month, dow = crons[0].split()
+    assert (dom, month, dow) == ("*", "*", "*")
+    assert int(minute) % 15 != 0                                             # 毎時 0 分（GitHub Actions が混む）を避ける
+    assert 11 <= (int(hour) + 9) % 24 <= 14                                  # JST の昼（20:30 の確認より前に終わる）
+    assert (int(hour), int(minute)) == (3, 17)                               # 12:17 JST
+    assert "workflow_dispatch" in on and wf["concurrency"]["cancel-in-progress"] is False
+
+
+def test_operator_alert_step_runs_after_quality_gate_and_never_blocks_the_run():
+    steps = _workflow()["jobs"]["update-lp"]["steps"]
+    names = [s.get("name") for s in steps]
+    i = names.index("Operator health alert")
+    assert i == names.index("Collector quality gate") + 1 and steps[i]["continue-on-error"] is True

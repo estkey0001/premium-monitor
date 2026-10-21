@@ -4146,6 +4146,7 @@ def check() -> list[dict]:
     results.extend(_check_phase30_priority())
     results.extend(_check_integrity_official_recheck())
     results.extend(_check_integrity_profit_baseline())
+    results.extend(_check_integrity_operations())
 
     # ══════════════════════════════════════════════════════════════════
     # #820-#825: データの正確さ・鮮度の偽装（Phase 0）
@@ -5928,18 +5929,16 @@ def _check_integrity_official_recheck(root: Path | None = None) -> list[dict]:
     - PS5 Pro・Switch 2 が再確認の対象で、読むページは公式のドメインの静的な HTML（待機室・検索結果・第三者の URL ではない）
     - 結果の url は記録（VERIFIED_URLS）の URL のまま（記録との照合に使う）で、価格が変われば changed（自動で書き換えない）・
       生産終了の欄へ移れば sale_ended・読めなければ failed（確認日を進めない）
-    - 確認の期限（14日。再確認が unchanged の日を確認日として数える）が3日以内か過ぎた記録は警告（誰も気づかず切れない）
+    - 確認の期限（14日。再確認が unchanged の日を確認日として数える）が3日以内か過ぎた記録・再確認が3日以上連続で失敗している記録は警告
+      （誰も気づかず切れない。運営者向けの劣化アラートも同じ関数 official_registry.verification_status を使う）
     """
     import json as _json66
-    import re as _re66
-    from datetime import date as _date66
     from datetime import datetime as _dt66
     bad, soon = [], []
     root = root or Path(__file__).resolve().parent.parent
     try:
         from scripts import recheck_official as ro
         from src.market import official_registry as reg
-        from src.market.normalized_prices import OFFICIAL_DIRECT_STALE_DAYS
         from src.tcg.models import JST as _JST66
         ts = {t["product_id"]: t for t in ro._targets()}
         official_hosts = {"pur.store.sony.jp", "www.nintendo.com", "www.apple.com", "store.canon.jp", "nij.nikon.com",
@@ -5979,28 +5978,16 @@ def _check_integrity_official_recheck(root: Path | None = None) -> list[dict]:
             hist = _json66.loads((root / "exports" / "official_recheck" / "history.json").read_text(encoding="utf-8")).get("results") or []
         except (OSError, ValueError):
             pass
-        today = _date66.today()
-        for pid, v in reg.VERIFIED_URLS.items():
-            if not v.get("price"):
-                continue
-            last = str(v.get("checked_on") or "")
-            for r in hist:
-                if r.get("product_id") == pid and r.get("url") == v.get("url") and r.get("status") == "unchanged" \
-                        and r.get("price") == v.get("price") and _re66.match(r"\d{4}-\d{2}-\d{2}", str(r.get("observed_at") or "")):
-                    last = max(last, str(r["observed_at"])[:10])
-            try:
-                left = OFFICIAL_DIRECT_STALE_DAYS - (today - _date66.fromisoformat(last)).days
-            except ValueError:
-                left = -1
-            if left <= 3:
-                soon.append(f"{pid}（残り {left} 日）")
+        for r in reg.verification_status(hist):
+            if r["days_left"] <= 3 or r["consecutive_failures"] >= 3:
+                soon.append(f"{r['product_id']}（残り {r['days_left']} 日・再確認の連続失敗 {r['consecutive_failures']} 日）")
     except Exception as exc:  # noqa: BLE001
         bad.append(f"検査に失敗: {type(exc).__name__}: {exc}")
     out = [{"level": "ok" if not bad else "error", "check": "official_recheck_alive",
             "message": "#866 公式の再確認（PS5 Pro・Switch 2 が対象・公式の静的なページを読む・価格が変われば changed・読めなければ "
                        "failed）" + ("" if not bad else f" ← {bad[:4]}")}]
     out.append({"level": "ok" if not soon else "warning", "check": "official_verification_expiry",
-                "message": "#866 公式の確認の期限が3日以内の記録が無い（再確認が止まって切れる前に気づく）"
+                "message": "#866 公式の確認の期限が3日以内・再確認が連続で失敗している記録が無い（再確認が止まって切れる前に気づく）"
                            + ("" if not soon else f" ← {soon[:6]}")})
     return out
 
@@ -6109,6 +6096,100 @@ def _check_integrity_profit_baseline(root: Path | None = None) -> list[dict]:
             {"level": "ok" if not bad68 else "error", "check": "buyback_baseline_freshness",
              "message": "#868 買取の比較の基準（直近の正常な自動取得の値・14日以内・手入力 / 古い値を使わない・基準が無ければ前回比なし・"
                         "上限超えは他店の裏付けで採用）" + ("" if not bad68 else f" ← {bad68[:4]}")}]
+
+
+def _check_integrity_operations(root: Path | None = None) -> list[dict]:
+    """Production Integrity M-4・M-5（#869・#870）。
+
+    #869 運営者向けの劣化アラートは商品の通知と完全に別: モジュールが notifiers・Telegram・Discord・outbox を import しない・
+         Secrets / 変数を読まない・step に Secrets を渡さない・記録は外部送信 0・商品の通知の候補 0・同じ異常を重ねない。
+    #870 定時の実行: cron が毎時 0 分（GitHub Actions が混む時刻）でなく、1日1回のまま、JST の昼（11〜14時）に始まる
+         （20:30 の確認より前に終わる）。劣化アラートの step が品質ゲートの後・continue-on-error・commit の対象。
+    """
+    import json as _json69
+    import re as _re69
+    root = root or Path(__file__).resolve().parent.parent
+    bad69, bad70 = [], []
+    try:
+        import yaml as _yaml69
+
+        from src.ops import health_alert as ha
+        for rel in ("src/ops/health_alert.py", "scripts/operator_health_alert.py"):
+            src = (root / rel).read_text(encoding="utf-8")
+            imports = "\n".join(ln for ln in src.splitlines() if _re69.match(r"\s*(from|import)\s", ln))
+            if _re69.search(r"notifiers|outbox|telegram|discord|adapters|actionable|requests|urllib|smtplib", imports, _re69.I):
+                bad69.append(f"{rel} が通知・送信のモジュールを import している")
+            if _re69.search(r"os\.environ\.get\(['\"](TELEGRAM|DISCORD|PRODUCT_REAL|PHASE24|NOTIFICATION)", src):
+                bad69.append(f"{rel} が通知の変数を読む")
+        wf_text = (root / ".github" / "workflows" / "daily_lp.yml").read_text(encoding="utf-8")
+        wf = _yaml69.safe_load(wf_text)
+        steps = wf["jobs"]["update-lp"]["steps"]
+        names = [st.get("name") for st in steps]
+        if "Operator health alert" not in names or "Collector quality gate" not in names:
+            bad69.append("劣化アラートの step が無い")
+        else:
+            st = steps[names.index("Operator health alert")]
+            if names.index("Operator health alert") < names.index("Collector quality gate"):
+                bad69.append("劣化アラートの step が品質ゲートより前（連続失敗の履歴が更新される前）")
+            if not st.get("continue-on-error"):
+                bad69.append("劣化アラートの step が continue-on-error でない（LP の公開を止める）")
+            body = _json69.dumps(st, ensure_ascii=False)
+            if _re69.search(r"secrets\.|TELEGRAM|DISCORD|vars\.", body):
+                bad69.append("劣化アラートの step に Secrets・通知の変数を渡している")
+        if "exports/ops/" not in wf_text:
+            bad69.append("exports/ops/ が commit の対象でない（状態が残らず毎回出し直す）")
+        a = ha._alert("required_source_failure", "x", ha.WARNING, "r", "t", "d")
+        from datetime import datetime as _dt69
+        from datetime import timedelta as _td69
+        from datetime import timezone as _tz69
+        t0 = _dt69(2026, 10, 22, 18, 0, tzinfo=_tz69(_td69(hours=9)))
+        st1, r1 = ha.reconcile({}, [a], t0)
+        st2, r2 = ha.reconcile(st1, [a], t0 + _td69(days=1))
+        _, r3 = ha.reconcile(st2, [], t0 + _td69(days=2))
+        if not (len(r1["candidates"]) == 1 and r2["candidates"] == [] and len(r3["recovered"]) == 1):
+            bad69.append("重複の抑制・復旧の記録が動かない")
+        rec = ha.build_record([a], r1, t0)
+        if rec["external_sends"] != 0 or rec["product_notification_candidates"] != 0 or rec["customer_notification"] is not False \
+                or rec["type"] != "PRODUCTION_HEALTH_ALERT":
+            bad69.append("記録が運営者向けでない（外部送信・商品の通知の候補・種類）")
+        try:
+            saved = _json69.loads((root / "exports" / "ops" / "health_alert.json").read_text(encoding="utf-8"))
+            if saved.get("external_sends") != 0 or saved.get("product_notification_candidates") != 0 \
+                    or saved.get("customer_notification") is not False:
+                bad69.append("保存された記録が運営者向けでない")
+        except (OSError, ValueError):
+            pass
+        # #870
+        on = wf.get("on") or wf.get(True) or {}
+        crons = [x.get("cron", "") for x in (on.get("schedule") or [])]
+        if len(crons) != 1:
+            bad70.append(f"定時の実行が1回でない: {crons}")
+        else:
+            f = crons[0].split()
+            if len(f) != 5 or f[2:] != ["*", "*", "*"] or not f[0].isdigit() or not f[1].isdigit():
+                bad70.append(f"cron の形が毎日1回でない: {crons[0]}")
+            else:
+                minute, hour = int(f[0]), int(f[1])
+                if not (0 <= minute <= 59 and 0 <= hour <= 23):
+                    bad70.append(f"cron の時刻が不正: {crons[0]}")
+                else:
+                    if minute % 15 == 0:
+                        bad70.append(f"cron が混む時刻（毎時 {minute} 分）: {crons[0]}")
+                    jst = (hour + 9) % 24
+                    if not 11 <= jst <= 14:
+                        bad70.append(f"JST の {jst} 時に始まる（11〜14時の外）: {crons[0]}")
+        if "workflow_dispatch" not in on:
+            bad70.append("手動の実行が無い")
+        if (wf.get("concurrency") or {}).get("cancel-in-progress") is not False:
+            bad70.append("同時実行の制御が無い・実行中を取り消す")
+    except Exception as exc:  # noqa: BLE001
+        bad69.append(f"検査に失敗: {type(exc).__name__}: {exc}")
+    return [{"level": "ok" if not bad69 else "error", "check": "ops_health_alert_separation",
+             "message": "#869 運営者向けの劣化アラートは商品の通知と別（通知のモジュール・Secrets に触れない・外部送信 0・重複の抑制・"
+                        "復旧の記録・品質ゲートの後・continue-on-error）" + ("" if not bad69 else f" ← {bad69[:4]}")},
+            {"level": "ok" if not bad70 else "error", "check": "schedule_cron_valid",
+             "message": "#870 定時の実行（毎日1回・毎時 0 分を避ける・JST の昼に始まる・手動の実行と同時実行の制御）"
+                        + ("" if not bad70 else f" ← {bad70[:4]}")}]
 
 
 def _check_phase26_acceptance_guard(root: Path | None = None) -> list[dict]:

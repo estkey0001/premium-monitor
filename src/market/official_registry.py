@@ -569,6 +569,65 @@ USER_DECISIONS = {
 IDENTITY_STATES = ("IDENTITY_CONFIRMED", "PARTIAL_IDENTITY", "AMBIGUOUS", "DISCONTINUED", "NEEDS_USER_DECISION")
 
 
+def verification_status(history: list[dict] | None, today=None) -> list[dict]:
+    """公式の確認の期限と、再確認の連続失敗（商品ごと。deploy-check #866 と運営者向けの劣化アラートが共通で使う）。
+
+    - last_verified: 記録の確認日か、記録と同じ URL・価格に対する unchanged の再確認の日の新しいほう
+    - days_left: OFFICIAL_DIRECT_STALE_DAYS（14日）から、確認日からの日数を引いた残り（負なら期限切れ）
+    - consecutive_failures: 直近から数えて、再確認が失敗（failed / blocked）だった日数（日ごとに数える。成功が挟まれば 0 に戻る）
+    """
+    from datetime import date
+
+    from src.market.normalized_prices import OFFICIAL_DIRECT_STALE_DAYS
+    t = today or date.fromisoformat(_today_jst())
+    rows = []
+    for pid, v in VERIFIED_URLS.items():
+        if not v.get("price"):
+            continue
+        mine = [r for r in history or [] if isinstance(r, dict) and r.get("product_id") == pid
+                and str(r.get("observed_at") or "")[:10]]
+        last = str(v.get("checked_on") or "")
+        for r in mine:
+            if r.get("url") == v.get("url") and r.get("status") == "unchanged" and r.get("price") == v.get("price"):
+                last = max(last, str(r["observed_at"])[:10])
+        by_day: dict[str, bool] = {}                      # 日 → その日に成功（unchanged / changed など読めた）があったか
+        for r in sorted(mine, key=lambda x: str(x["observed_at"])):
+            day = str(r["observed_at"])[:10]
+            by_day[day] = by_day.get(day, False) or r.get("status") not in ("failed", "blocked")
+        streak = 0
+        for day in sorted(by_day, reverse=True):
+            if by_day[day]:
+                break
+            streak += 1
+        try:
+            left = OFFICIAL_DIRECT_STALE_DAYS - (t - date.fromisoformat(last)).days
+        except ValueError:
+            left = -1
+        rows.append({"product_id": pid, "last_verified": last, "days_left": left, "expired": left < 0,
+                     "consecutive_failures": streak})
+    return rows
+
+
+def identity_coverage(products: list[dict]) -> dict:
+    """正本の商品が、どの識別の手がかりを持つかの割合（読むだけ。全商品に部品番号を足す指示ではない）。
+
+    部品番号を持つ商品は少ない（Apple の発見から登録した商品だけ）。残りは名前・型番・JAN・公式の証拠で識別している。
+    """
+    rows = [p for p in products or [] if isinstance(p, dict)]
+    n = len(rows)
+
+    def count(pred) -> dict:
+        c = sum(1 for p in rows if pred(p))
+        return {"count": c, "pct": round(c / n * 100, 1) if n else 0.0}
+    return {"products": n,
+            "part_numbers": count(lambda p: bool(p.get("part_numbers"))),
+            "model_number": count(lambda p: bool(p.get("model_number"))),
+            "jan_code": count(lambda p: bool(p.get("jan_code"))),
+            "official_url": count(lambda p: bool(p.get("official_url"))),
+            "identity_evidence": count(lambda p: str(p.get("id") or "") in IDENTITY_EVIDENCE),
+            "any_strong_key": count(lambda p: bool(p.get("part_numbers") or p.get("model_number") or p.get("jan_code")))}
+
+
 def verified_price_of(product_id: str, reference: int | None = None) -> int | None:
     """商品の公式の価格の唯一の出どころ: 確認済みの記録（VERIFIED_URLS）→ 公式直販価格の証拠（OFFICIAL_DIRECT_OFFERS）→
     設定の参考価格（reference。呼び出し側が正本の retail_price を渡す）。異常値の判定など、別の表に同じ価格を持たない

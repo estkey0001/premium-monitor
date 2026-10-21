@@ -32,10 +32,17 @@ def _pct(a, b):
     return round(a / b, 4) if b else 0.0
 
 
+def _is_verified_fresh(o) -> bool:
+    """実際に観測して（または確認日つきで確認して）新しい価格か。設定値（確認日不明 = config_unknown_date）は、
+    使えても確認日が無いので新鮮として数えない（Production Integrity 監査 Low: 設定値 35 件が「新鮮 100%」に入っていた）。"""
+    return bool(o.get("is_fresh")) and o.get("freshness_basis") != "config_unknown_date"
+
+
 def _data_quality(obs):
     n = len(obs)
     usable = sum(1 for o in obs if o.get("is_usable_for_pro") or o.get("is_usable_for_beginner"))
-    stale = sum(1 for o in obs if not o.get("is_fresh"))
+    stale = sum(1 for o in obs if not _is_verified_fresh(o))
+    config_ref = sum(1 for o in obs if o.get("freshness_basis") == "config_unknown_date")
     zero = sum(1 for o in obs if (o.get("price") or 0) <= 0)
     item = sum(1 for o in obs if o.get("item_url") or o.get("link_type") in ("item", "item_unverified"))
     search = sum(1 for o in obs if o.get("link_type") == "search")
@@ -45,21 +52,59 @@ def _data_quality(obs):
     html = sum(v for k, v in methods.items() if "html" in str(k).lower() or str(k) == "overseas_history")
     return {
         "total_obs": n, "usable_obs": usable,
-        "stale_count": stale, "stale_rate": _pct(stale, n),
+        "stale_count": stale, "stale_rate": _pct(stale, n), "config_reference_count": config_ref,
         "zero_count": zero, "zero_rate": _pct(zero, n),
         "item_url_rate": _pct(item, n), "search_url_rate": _pct(search, n),
         "manual_rate": _pct(manual, n), "api_rate": _pct(api, n), "html_rate": _pct(html, n),
     }
 
 
-def _profit(pr):
-    # 利益の指標は、新UIと同じ判定（src/content/ui/opportunity.py）を通った確定・参考ルートだけから数える
+def _official_to_buyback(obs, url_of=None):
+    """公式で買って買取店に売る確定した案件（利益ありだけ）。正本の関門と式（market/profit_formula）で数える。
+    新UIの「利益商品」と同じ根拠で、売買ルート（profit_routes）に載らない定価→買取の案件も利益の発見に数える。"""
+    try:
+        import sqlite3
+
+        import yaml
+
+        from src.market import profit_formula as pf
+        from src.market.beginner_deal_scanner import verified_official_item_url
+        genres = {p["id"]: p.get("genre", "") for p in (yaml.safe_load(
+            (ROOT / "config" / "products.yaml").read_text(encoding="utf-8")) or {}).get("products", [])}
+        db = ROOT / "data" / "premium_monitor.db"
+        con = sqlite3.connect(str(db)) if (url_of is None and db.exists()) else None
+        if con is not None:
+            con.row_factory = sqlite3.Row
+        if url_of is None:
+            def url_of(pid):
+                try:
+                    return verified_official_item_url(con, pid) or "" if con is not None else ""
+                except Exception:  # noqa: BLE001
+                    return ""
+        try:
+            deals, _ = pf.confirmed_official_to_buyback(obs, genres, url_of)
+        finally:
+            if con is not None:
+                con.close()
+        return [d for d in deals if d.net_profit_jpy > 0]
+    except Exception as e:  # noqa: BLE001
+        print(f"[WARN] 公式→買取の案件の集計に失敗: {e}", file=sys.stderr)
+        return []
+
+
+def _profit(pr, official_deals=()):
+    # 利益の指標は、新UIと同じ判定（src/content/ui/opportunity.py）を通った確定・参考ルートだけから数える。
+    # 公式で買って買取店に売る確定した案件（official_deals）は別に数える（売買ルートに載らないため、以前は 0 に見えた）
     from src.content.ui import opportunity as _opp
     mains = _opp.confirmed_routes(pr.get("main_routes", []), NOW)
     refs = _opp.reference_routes(pr.get("reference_routes", []), NOW)
     profits = [r.get("net_profit", 0) for r in mains]
     rois = [r.get("roi", 0) for r in mains]
+    official_deals = list(official_deals)
     return {
+        "official_to_buyback_count": len(official_deals),
+        "official_to_buyback_products": sorted(d.product_id for d in official_deals),
+        "official_to_buyback_max_profit": max((d.net_profit_jpy for d in official_deals), default=0),
         "main_route_count": len(mains),
         "reference_route_count": len(refs),
         "max_profit": (max(profits) if profits else 0),
@@ -79,7 +124,7 @@ def _sources(obs):
             s["success"] += 1
         else:
             s["zero"] += 1
-        if not o.get("is_fresh"):
+        if not _is_verified_fresh(o):
             s["stale"] += 1
         else:
             s["fresh"] += 1
@@ -103,7 +148,7 @@ def _score(dq, pf, sources):
     dq_score = round(_pct(dq["usable_obs"], n) * 20 + (1 - dq["stale_rate"]) * 10
                      + (1 - dq["zero_rate"]) * 5, 1)
     # Profit Discovery 25: main有無15 + reference10（潜在）
-    pd_score = round((15 if pf["main_route_count"] > 0 else 0)
+    pd_score = round((15 if (pf["main_route_count"] > 0 or pf.get("official_to_buyback_count", 0) > 0) else 0)
                      + min(10, pf["reference_route_count"] * 2.5), 1)
     # Source Health 20: 平均success_rate * 20
     srates = [v["success_rate"] for v in sources.values()]
@@ -183,6 +228,9 @@ def _anomalies(cur, diff):
         warn.append(f"item_url率 {dq['item_url_rate']*100:.0f}% (<50%)")
     if pf["main_route_count"] > 0:
         info.append(f"検証済み利益ルート {pf['main_route_count']}件 / 最大 +¥{pf['max_profit']:,}")
+    if pf.get("official_to_buyback_count", 0) > 0:
+        info.append(f"公式→買取の確定した案件 {pf['official_to_buyback_count']}件 / "
+                    f"最大 +¥{pf['official_to_buyback_max_profit']:,}")
     for c in diff.get("source_success_changes", []):
         if c["delta"] <= -0.2:
             warn.append(f"{c['source']} 取得成功率 {c['prev']*100:.0f}%→{c['cur']*100:.0f}%")
@@ -218,7 +266,7 @@ def main() -> int:
         print("[WARN] NPO 観測なし", file=sys.stderr)
 
     dq = _data_quality(obs)
-    pf = _profit(pr)
+    pf = _profit(pr, _official_to_buyback(obs))
     sources = _sources(obs)
     score = _score(dq, pf, sources)
 

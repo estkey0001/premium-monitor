@@ -45,7 +45,7 @@ from src.market.official_price_validator import validate_official_price, is_offi
 # （Phase 15 で移した。名前はここでも同じに使える）
 from src.market.official_registry import (  # noqa: E402,F401
     KNOWN_STALE, OFFICIAL_NOT_SOLD, UNVERIFIED, VERIFIED_URLS, VERIFIED_URLS_CHECKED_ON, config_price_drift,
-    official_direct_gate,
+    identity_coverage, official_direct_gate,
 )
 
 MAKER_OF = {
@@ -433,6 +433,8 @@ def main():
         # 出力の上の階層へ移した
         "recheck_applied": rechecked,
         "config_price_drift": drift,
+        # 識別の手がかり（部品番号・型番・JAN・公式の証拠）を持つ商品の割合（読むだけ）
+        "identity_coverage": identity_coverage(cfg_products),
     }
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / "latest.json").write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -478,6 +480,15 @@ def render_md(r):
     for x in r.get("config_price_drift") or []:
         L.append(f"| {x['product_id']} | ¥{x['config_price']:,} | ¥{x['verified_price']:,} | {x['diff']:+,} |")
     L.append("")
+    ic = r.get("identity_coverage") or {}
+    if ic:
+        L.append("## 識別の手がかりの割合（読むだけ）")
+        L.append(f"- 商品 {ic.get('products')}: " + " / ".join(
+            f"{label} {ic[k]['count']}件（{ic[k]['pct']}%）" for k, label in (
+                ("part_numbers", "部品番号"), ("model_number", "型番"), ("jan_code", "JAN"),
+                ("official_url", "公式 URL"), ("identity_evidence", "公式の証拠"), ("any_strong_key", "強い手がかりのどれか"))
+            if k in ic))
+        L.append("")
     L.append("## 検証不能（要手動検証・推測登録しない）")
     L.append("| product | source | reason |")
     L.append("|---|---|---|")

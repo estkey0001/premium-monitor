@@ -235,7 +235,14 @@ def evaluate(report: dict) -> dict:
     #   WARNING : 前回から大きく動いた・他店と離れているだけ（相場の実際の変動もありうる。公開は止めない）
     from src.market.price_quality import HARD_REJECT_REASONS
     wrong_prices = [s for s in suspicious if s.get("reason") in HARD_REJECT_REASONS]
-    price_moves = [s for s in suspicious if s.get("reason") not in HARD_REJECT_REASONS]
+    # カテゴリ共通の上限を超えるが、別の店が同水準で出していて採用した価格は、変動ではなく通知（optional）に分ける
+    corroborated = [s for s in suspicious if s.get("reason") == "above_genre_max_corroborated"]
+    price_moves = [s for s in suspicious
+                   if s.get("reason") not in HARD_REJECT_REASONS and s.get("reason") != "above_genre_max_corroborated"]
+    if corroborated:
+        optional_warnings.append(
+            f"正常帯の上限を超えるが他店が同水準の価格 {len(corroborated)}件（採用。"
+            f"{', '.join(sorted({s['product_alias'] for s in corroborated}))}）")
     if wrong_prices:
         failures.append(f"誤りの可能性が高い価格 {len(wrong_prices)}件（suspicious_price・誤価格リスク — 要確認）")
     if price_moves:
@@ -269,7 +276,10 @@ def evaluate(report: dict) -> dict:
     if total > 0:
         fail_pct = failed_count / total * 100
         if fail_pct >= 50.0:
-            warnings.append(f"取得失敗率 {fail_pct:.1f}%（50%以上）")
+            c = report.get("counters") or {}
+            detail = (f"。行の失敗 {c.get('rows_failed')}・隔離 {c.get('quality_rejected')}・スキップ {c.get('rows_skipped')} / "
+                      f"全 {c.get('rows_total')} 行・1件も取れなかった店 {c.get('sources_failed')}" if c else "")
+            warnings.append(f"取得失敗率 {fail_pct:.1f}%（50%以上）{detail}")
 
     hist_result = update_failure_history(report)
     if hist_result["consecutive_3day"]:
@@ -477,7 +487,8 @@ def build_summary_md(result: dict) -> str:
     SHOP_NEXT_ACTIONS: dict[str, tuple[str, str, str]] = {
         # (失敗理由, ステータス, next_action)
         "janpara":  ("rate_limited_429",    "⚠️ 調査中",   "429 は再試行せず、その実行では打ち切る（Phase 12）— Actions IP制限の可能性。継続監視"),
-        "netoff":   ("price_not_found→修正済", "✅ 修正済み", "URL /sell/→/mobilebuy/ 修正 + regex修正 — 次回取得で確認"),
+        "netoff":   ("price_not_found",     "🔴 取得できていない", "URL・regex を直した後も価格が見つからない（連続失敗）— ページの構造の変化を人が確認する。"
+                                                              "運営者向けの劣化アラート（HIGH）に出る"),
         "pasoko":   ("product_not_listed",  "✅ 分類変更",  "PC専門店でPS5/Switch非対応を確認 — product_not_listedに変更"),
         "sofmap":   ("service_unavailable", "🔴 復旧待ち", "503サーバー障害 — サイト側の問題。復旧を待って再確認"),
         "surugaya": ("site_blocked",        "🔴 改善不可",  "403ボット検知 — 無理に突破しない。手動価格でカバー"),

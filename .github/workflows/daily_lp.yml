@@ -2,8 +2,9 @@ name: Daily LP Update
 
 on:
   schedule:
-    # 日本時間 12:00 JST (UTC: 03:00)
-    - cron: '0 3 * * *'
+    # 日本時間 12:17 JST (UTC: 03:17)。毎時 0 分は GitHub Actions の定時の実行が混み、毎日 4〜7 時間遅れて始まっていた
+    # （Production Integrity 監査 M-5。2026-10 の直近 10 回の遅れは 4:26〜7:06）ので、0 分を避ける。頻度は上げない
+    - cron: '17 3 * * *'
   workflow_dispatch:
 
 # 同一ワークフローの同時実行を防ぐ（後続Runを待機させ、push競合を回避）
@@ -97,6 +98,15 @@ jobs:
             exit 1
           fi
           # WARNING は check_collector_quality.py が ::warning:: を直接出力するため、ここでは何もしない
+        env:
+          PYTHONPATH: .
+
+      # 4.5 Operator health alert（運営者向けの劣化アラート候補。商品の通知とは完全に別・外部へは送らない・Secrets を渡さない）
+      # 収集の step は continue-on-error なので、劣化しても Run は success になる。必須の店の連続失敗・失敗率・品質ゲート・
+      # 公式の確認の期限・公式の再確認の連続失敗を、新しい・重くなった・復旧のときだけ注記と Step Summary に出す
+      - name: Operator health alert
+        run: python scripts/operator_health_alert.py
+        continue-on-error: true
         env:
           PYTHONPATH: .
 
@@ -590,6 +600,7 @@ jobs:
                   exports/tcg/ \
                   exports/sold_history/ \
                   exports/official_recheck/ \
+                  exports/ops/ \
                   exports/camera_buyback_status.json \
                   data/alerts.csv data/lottery_events.csv \
                   data/overseas_price_history.csv \

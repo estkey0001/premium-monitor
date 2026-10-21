@@ -651,7 +651,9 @@ class DailyLPGenerator:
                            ("discovery_products", ("discovery", "product_candidates.json")),
                            ("discovery_events", ("discovery", "event_candidates.json")),
                            # 候補の優先順位（Phase 30。運営者が rank-product-candidates で作る。CI では作らない）
-                           ("discovery_priority", ("discovery", "priority.json"))):
+                           ("discovery_priority", ("discovery", "priority.json")),
+                           # 運営者向けの劣化アラート（Production Integrity M-4。商品の通知とは別。読むだけ）
+                           ("ops_health_alert", ("ops", "health_alert.json"))):
             data[key] = self._load_export_json(*parts)
         try:
             import json as _json_ad

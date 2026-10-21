@@ -58,9 +58,20 @@ class PrimaryToSecondaryScanner:
         products = self.repo.list_products()
 
         deals = []
+        kept = 0                                   # 既存の案件を残して保存しなかった件数
         for product in products:
             deal = self.scan_product(product, overseas)
             if deal:
+                # 同じ商品の有効な案件（公式 → 買取など）より純利益が小さい案件では上書きしない（保存すると既存の案件が
+                # 無効になる。海外の価格が無い監視中の案件で、公式 → 買取の利益ありの案件を消していた。Phase 30）
+                current = self._active_net(product.id)
+                # 公式 → 買取の利益ありの案件（確定できる経路）は、一次 → 二次（売り先が海外。確定にならない）の案件では
+                # 純利益の大小に依らず上書きしない（監査 Low-1）
+                if self._has_profitable_official_deal(product.id) or (
+                        current is not None and current > (deal.net_profit_jpy or 0)):
+                    deals.append(deal)
+                    kept += 1
+                    continue
                 # DBに保存 (user_level が beginner_easy/watch/monitoring)
                 self.repo.upsert_beginner_deal(deal)
                 deals.append(deal)
@@ -68,13 +79,33 @@ class PrimaryToSecondaryScanner:
         deals.sort(key=lambda d: d.net_profit_jpy, reverse=True)
         logger.info(
             "PrimaryToSecondaryScanner: %d products → %d deals "
-            "(easy=%d, watch=%d, monitoring=%d)",
+            "(easy=%d, watch=%d, monitoring=%d・既存の案件を残して保存しなかった %d)",
             len(products), len(deals),
             sum(1 for d in deals if d.user_level == "beginner_easy"),
             sum(1 for d in deals if d.user_level == "beginner_watch"),
-            sum(1 for d in deals if d.user_level == "monitoring"),
+            sum(1 for d in deals if d.user_level == "monitoring"), kept,
         )
         return deals
+
+    def _has_profitable_official_deal(self, product_id: str) -> bool:
+        """同じ商品に、一次 → 二次でない（公式 → 買取の）利益ありの有効な案件があるか。読めなければ False。"""
+        try:
+            row = self.repo.db.connection.execute(
+                "SELECT 1 FROM beginner_deals WHERE product_id = ? AND is_active = 1 AND net_profit_jpy > 0 "
+                "AND COALESCE(notes, '') NOT LIKE '%route=primary_to_secondary%' LIMIT 1", (product_id,)).fetchone()
+        except Exception:  # noqa: BLE001
+            return False
+        return bool(row)
+
+    def _active_net(self, product_id: str):
+        """同じ商品の有効な案件の純利益（無ければ None。読めなければ None = これまでどおり保存する）。"""
+        try:
+            row = self.repo.db.connection.execute(
+                "SELECT MAX(net_profit_jpy) FROM beginner_deals WHERE product_id = ? AND is_active = 1",
+                (product_id,)).fetchone()
+        except Exception:  # noqa: BLE001 - テストの偽の DB など
+            return None
+        return row[0] if row and row[0] is not None else None
 
     def scan_product(
         self, product: ProductModel, overseas: dict

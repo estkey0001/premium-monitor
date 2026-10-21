@@ -511,3 +511,71 @@ def test_admin_priority_naive_time_does_not_crash():
     b = admin.build_priority({"generated_at": "2026-10-21T09:20:21", "ranked": [{"candidate_id": "x", "points": {}}]},
                              {"candidates": {}}, now=NOW)
     assert b["rows"] and not b["stale"]
+
+
+# ── 一次 → 二次の処理が公式 → 買取の利益ありの案件を消さない（本番の確認で見つけた既存の不具合）──────────
+
+def _p2s_env(tmp_path, monkeypatch):
+    from src.db.database import Database
+    from src.db.repository import Repository
+    from src.market import primary_to_secondary_scanner as p2s
+    from src.models.beginner_deal import BeginnerDealModel
+    from src.models.product import ProductModel
+    db = Database(db_path=str(tmp_path / "t.db"))
+    db.init_schema()
+    repo = Repository(db)
+    repo.upsert_product(ProductModel(id=DPID, genre="iphone", name="iPhone Duo 256GB SIMフリー", brand="Apple",
+                                     model_number="", retail_price=364800, keywords=[]))
+
+    def deal(net, level, note=""):
+        import ulid
+        return BeginnerDealModel(id=str(ulid.new()), product_id=DPID, product_name="iPhone Duo 256GB SIMフリー",
+                                 category="iphone", brand="Apple", official_price_jpy=364800, official_url="",
+                                 best_buyback_price=395000 if net > 0 else 0, best_buyback_shop="買取商店",
+                                 gross_profit_jpy=net, estimated_costs_jpy=0, net_profit_jpy=net,
+                                 net_profit_rate=0.0, user_level=level, recommended_action="", notes=note,
+                                 is_active=True, scanned_at=NOW)
+    sc = p2s.PrimaryToSecondaryScanner(repo)
+    monkeypatch.setattr(sc, "_load_overseas_prices", lambda: {})                       # 海外の価格が無い
+    return db, repo, sc, deal
+
+
+def _active(db):
+    return db.connection.execute("SELECT user_level, net_profit_jpy FROM beginner_deals WHERE product_id = ? "
+                                 "AND is_active = 1", (DPID,)).fetchall()
+
+
+def test_p2s_placeholder_does_not_deactivate_profitable_official_deal(tmp_path, monkeypatch):
+    db, repo, sc, deal = _p2s_env(tmp_path, monkeypatch)
+    repo.upsert_beginner_deal(deal(28400, "beginner_watch"))
+    sc.scan_all()
+    assert [tuple(r) for r in _active(db)] == [("beginner_watch", 28400)]               # 公式 → 買取の案件が残る
+
+
+def test_p2s_still_saves_when_no_active_deal_or_better(tmp_path, monkeypatch):
+    db, repo, sc, deal = _p2s_env(tmp_path, monkeypatch)
+    sc.scan_all()
+    assert [r[0] for r in _active(db)] == ["monitoring"]                                 # 案件が無ければ保存（従来どおり）
+    db2, repo2, sc2, deal2 = _p2s_env(tmp_path / "b", monkeypatch)
+    repo2.upsert_beginner_deal(deal2(-5000, "monitoring"))
+    monkeypatch.setattr(sc2, "scan_product", lambda p, o: deal2(40000, "beginner_watch"))
+    sc2.scan_all()
+    assert [tuple(r) for r in _active(db2)] == [("beginner_watch", 40000)]              # 大きければ置き換える
+
+
+def test_p2s_does_not_hide_official_deal_even_if_larger(tmp_path, monkeypatch):
+    """海外の経路の方が純利益が大きくても、確定できる公式 → 買取の利益ありの案件は消さない（監査 Low-1）。"""
+    db, repo, sc, deal = _p2s_env(tmp_path, monkeypatch)
+    repo.upsert_beginner_deal(deal(28400, "beginner_watch"))
+    monkeypatch.setattr(sc, "scan_product",
+                        lambda p, o: deal(90000, "beginner_watch", note="route=primary_to_secondary"))
+    sc.scan_all()
+    assert [tuple(r) for r in _active(db)] == [("beginner_watch", 28400)]
+
+
+def test_p2s_keeps_existing_negative_deal_over_smaller_placeholder(tmp_path, monkeypatch):
+    """一番多い筋: 既存の公式 → 買取の案件が赤字（−58,600）でも、より小さい仮の案件（−公式の価格）で上書きしない。"""
+    db, repo, sc, deal = _p2s_env(tmp_path, monkeypatch)
+    repo.upsert_beginner_deal(deal(-58600, "monitoring"))
+    sc.scan_all()
+    assert [tuple(r) for r in _active(db)] == [("monitoring", -58600)]

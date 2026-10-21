@@ -1037,6 +1037,7 @@ def test_ceiling_corroboration_needs_a_different_operator_not_just_a_different_h
     # 第2レベルのドメイン（co.jp）は3ラベルで比べる
     assert m._registrable_domain("m.shop.example.co.jp") == "example.co.jp" and m._registrable_domain("www.a.com") == "a.com"
     assert m._registrable_domain("a.co.jp") == "a.co.jp" and m._registrable_domain("") == ""
+    assert m._registrable_domain("192.168.1.1") == "192.168.1.1" != m._registrable_domain("10.9.1.1")   # IP は丸めない
 
 
 def test_item_page_needs_the_id_right_after_the_marker():

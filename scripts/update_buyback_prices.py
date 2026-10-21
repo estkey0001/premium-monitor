@@ -861,7 +861,14 @@ def _item_level_verified(row: dict) -> bool:
 def _registrable_domain(host: str) -> str:
     """運営元の比べる形（登録可能ドメインの近似）: ポート・userinfo・www.・サブドメインを捨てる。
     `m.a.com`・`shop.a.com`・`a.com:443` は同じ運営元。`a.co.jp` のような第2レベルは3ラベルで見る。"""
-    labels = [x for x in str(host or "").lower().strip(".").split(".") if x]
+    import ipaddress
+    host = str(host or "").lower().strip(".")
+    try:
+        ipaddress.ip_address(host)
+        return host                                      # IP アドレスは末尾の 2 要素で丸めず、そのまま比べる
+    except ValueError:
+        pass
+    labels = [x for x in host.split(".") if x]
     if len(labels) >= 3 and labels[-2] in _SECOND_LEVEL and len(labels[-1]) == 2:
         return ".".join(labels[-3:])
     return ".".join(labels[-2:])

@@ -1,0 +1,1102 @@
+{
+  "generated_at": "2026-10-21T09:20:21+09:00",
+  "evidence": {
+    "index_url": "https://www.kaitorishouten-co.jp/keitai",
+    "index_status": "ok",
+    "families": {
+      "iphoneduo": {
+        "category_url": "https://www.kaitorishouten-co.jp/category/1/748",
+        "listed_in_index": true,
+        "status": "ok"
+      },
+      "iphone18promax": {
+        "category_url": "https://www.kaitorishouten-co.jp/category/1/747",
+        "listed_in_index": true,
+        "status": null
+      },
+      "iphone18pro": {
+        "category_url": "https://www.kaitorishouten-co.jp/category/1/746",
+        "listed_in_index": true,
+        "status": null
+      },
+      "iphone17promax": {
+        "category_url": "https://www.kaitorishouten-co.jp/category/1/711",
+        "listed_in_index": true,
+        "status": null
+      },
+      "iphone17pro": {
+        "category_url": "https://www.kaitorishouten-co.jp/category/1/710",
+        "listed_in_index": true,
+        "status": null
+      },
+      "iphone16promax": {
+        "category_url": "https://www.kaitorishouten-co.jp/category/1/690",
+        "listed_in_index": true,
+        "status": null
+      },
+      "iphone17": {
+        "category_url": "https://www.kaitorishouten-co.jp/category/1/708",
+        "listed_in_index": true,
+        "status": null
+      },
+      "iphoneair": {
+        "category_url": "https://www.kaitorishouten-co.jp/category/1/709",
+        "listed_in_index": true,
+        "status": null
+      },
+      "iphone16pro": {
+        "category_url": "https://www.kaitorishouten-co.jp/category/1/689",
+        "listed_in_index": true,
+        "status": null
+      },
+      "iphone16": {
+        "category_url": "https://www.kaitorishouten-co.jp/category/1/687",
+        "listed_in_index": true,
+        "status": null
+      },
+      "iphone15promax": {
+        "category_url": "https://www.kaitorishouten-co.jp/category/1/670",
+        "listed_in_index": true,
+        "status": null
+      },
+      "iphone17e": {
+        "category_url": "https://www.kaitorishouten-co.jp/category/1/725",
+        "listed_in_index": true,
+        "status": null
+      },
+      "iphone15pro": {
+        "category_url": "https://www.kaitorishouten-co.jp/category/1/669",
+        "listed_in_index": true,
+        "status": null
+      },
+      "iphone14promax": {
+        "category_url": "https://www.kaitorishouten-co.jp/category/1/612",
+        "listed_in_index": true,
+        "status": null
+      },
+      "iphone16plus": {
+        "category_url": "https://www.kaitorishouten-co.jp/category/1/688",
+        "listed_in_index": true,
+        "status": null
+      },
+      "iphone14pro": {
+        "category_url": "https://www.kaitorishouten-co.jp/category/1/611",
+        "listed_in_index": true,
+        "status": null
+      },
+      "iphone15plus": {
+        "category_url": "https://www.kaitorishouten-co.jp/category/1/668",
+        "listed_in_index": true,
+        "status": null
+      },
+      "iphone13promax": {
+        "category_url": "https://www.kaitorishouten-co.jp/category/1/522",
+        "listed_in_index": true,
+        "status": null
+      },
+      "iphone15": {
+        "category_url": "https://www.kaitorishouten-co.jp/category/1/667",
+        "listed_in_index": true,
+        "status": null
+      },
+      "iphone14plus": {
+        "category_url": "https://www.kaitorishouten-co.jp/category/1/610",
+        "listed_in_index": true,
+        "status": null
+      },
+      "iphone13pro": {
+        "category_url": "https://www.kaitorishouten-co.jp/category/1/521",
+        "listed_in_index": true,
+        "status": null
+      },
+      "iphone14": {
+        "category_url": "https://www.kaitorishouten-co.jp/category/1/609",
+        "listed_in_index": true,
+        "status": null
+      },
+      "iphone13": {
+        "category_url": "https://www.kaitorishouten-co.jp/category/1/520",
+        "listed_in_index": true,
+        "status": null
+      }
+    },
+    "fetches": [
+      {
+        "url": "https://www.kaitorishouten-co.jp/keitai",
+        "kind": "index",
+        "status": "ok",
+        "reason": "",
+        "fetched_at": "2026-10-21T09:20:21+09:00"
+      },
+      {
+        "url": "https://www.kaitorishouten-co.jp/category/1/748",
+        "kind": "category",
+        "status": "ok",
+        "reason": "",
+        "fetched_at": "2026-10-21T09:21:21+09:00"
+      }
+    ],
+    "rows_count": 129
+  },
+  "ranked": [
+    {
+      "candidate_id": "apple-419a47e495b5",
+      "product_name": "iPhone Duo 256GB",
+      "model": "iPhone Duo",
+      "capacity": "256GB",
+      "status": "PENDING_REVIEW",
+      "official_price": 364800,
+      "official_state": "CONFIRMED",
+      "buyback_state": "CONFIRMED",
+      "buyback_sell": 395000,
+      "buyback_rows": [
+        [
+          "iPhone Duo 256GB スターホワイト MK244J/A SIMフリー",
+          395000,
+          "/products/detail/27090"
+        ],
+        [
+          "iPhone Duo 256GB ナイトスカイ MK254J/A SIMフリー",
+          395000,
+          "/products/detail/27089"
+        ]
+      ],
+      "known_costs": 1800,
+      "spread": 28400,
+      "points": {
+        "official": 20,
+        "buyback": 25,
+        "spread": 17,
+        "identity": 15,
+        "market": 10,
+        "readiness": 5
+      },
+      "score": 92,
+      "category_url": "https://www.kaitorishouten-co.jp/category/1/748",
+      "reasons": [],
+      "rank": 1,
+      "inputs": {
+        "source": "apple_jp_official",
+        "status": "PENDING_REVIEW",
+        "product_name": "iPhone Duo 256GB",
+        "model_number": "iPhone Duo",
+        "capacity": "256GB",
+        "part_numbers": [
+          "MK244J/A",
+          "MK254J/A"
+        ],
+        "official_url": "https://www.apple.com/jp/shop/buy-iphone/iphone-duo",
+        "official_price": 364800,
+        "official_prices": [
+          364800
+        ],
+        "last_seen_on": "2026-10-19"
+      }
+    },
+    {
+      "candidate_id": "apple-dc7090c0276a",
+      "product_name": "iPhone Duo 512GB",
+      "model": "iPhone Duo",
+      "capacity": "512GB",
+      "status": "PENDING_REVIEW",
+      "official_price": 399800,
+      "official_state": "CONFIRMED",
+      "buyback_state": "CONFIRMED",
+      "buyback_sell": 430000,
+      "buyback_rows": [
+        [
+          "iPhone Duo 512GB スターホワイト MK264J/A SIMフリー",
+          430000,
+          "/products/detail/27092"
+        ],
+        [
+          "iPhone Duo 512GB ナイトスカイ MK274J/A SIMフリー",
+          430000,
+          "/products/detail/27091"
+        ]
+      ],
+      "known_costs": 1800,
+      "spread": 28400,
+      "points": {
+        "official": 20,
+        "buyback": 25,
+        "spread": 17,
+        "identity": 15,
+        "market": 10,
+        "readiness": 5
+      },
+      "score": 92,
+      "category_url": "https://www.kaitorishouten-co.jp/category/1/748",
+      "reasons": [],
+      "rank": 2,
+      "inputs": {
+        "source": "apple_jp_official",
+        "status": "PENDING_REVIEW",
+        "product_name": "iPhone Duo 512GB",
+        "model_number": "iPhone Duo",
+        "capacity": "512GB",
+        "part_numbers": [
+          "MK264J/A",
+          "MK274J/A"
+        ],
+        "official_url": "https://www.apple.com/jp/shop/buy-iphone/iphone-duo",
+        "official_price": 399800,
+        "official_prices": [
+          399800
+        ],
+        "last_seen_on": "2026-10-19"
+      }
+    },
+    {
+      "candidate_id": "apple-88de14d448ca",
+      "product_name": "iPhone Duo 1TB",
+      "model": "iPhone Duo",
+      "capacity": "1TB",
+      "status": "PENDING_REVIEW",
+      "official_price": 469800,
+      "official_state": "CONFIRMED",
+      "buyback_state": "CONFIRMED",
+      "buyback_sell": 485000,
+      "buyback_rows": [
+        [
+          "iPhone Duo 1TB スターホワイト MK284J/A SIMフリー",
+          485000,
+          "/products/detail/27094"
+        ],
+        [
+          "iPhone Duo 1TB ナイトスカイ MK294J/A SIMフリー",
+          485000,
+          "/products/detail/27093"
+        ]
+      ],
+      "known_costs": 1800,
+      "spread": 13400,
+      "points": {
+        "official": 20,
+        "buyback": 25,
+        "spread": 12,
+        "identity": 15,
+        "market": 10,
+        "readiness": 5
+      },
+      "score": 87,
+      "category_url": "https://www.kaitorishouten-co.jp/category/1/748",
+      "reasons": [],
+      "rank": 3,
+      "inputs": {
+        "source": "apple_jp_official",
+        "status": "PENDING_REVIEW",
+        "product_name": "iPhone Duo 1TB",
+        "model_number": "iPhone Duo",
+        "capacity": "1TB",
+        "part_numbers": [
+          "MK284J/A",
+          "MK294J/A"
+        ],
+        "official_url": "https://www.apple.com/jp/shop/buy-iphone/iphone-duo",
+        "official_price": 469800,
+        "official_prices": [
+          469800
+        ],
+        "last_seen_on": "2026-10-19"
+      }
+    },
+    {
+      "candidate_id": "apple-d11a8e24b990",
+      "product_name": "iPhone Duo 2TB",
+      "model": "iPhone Duo",
+      "capacity": "2TB",
+      "status": "PENDING_REVIEW",
+      "official_price": 574800,
+      "official_state": "CONFIRMED",
+      "buyback_state": "CONFIRMED",
+      "buyback_sell": 580000,
+      "buyback_rows": [
+        [
+          "iPhone Duo 2TB スターホワイト MK2A4J/A SIMフリー",
+          580000,
+          "/products/detail/27096"
+        ],
+        [
+          "iPhone Duo 2TB ナイトスカイ MK2C4J/A SIMフリー",
+          580000,
+          "/products/detail/27095"
+        ]
+      ],
+      "known_costs": 1800,
+      "spread": 3400,
+      "points": {
+        "official": 20,
+        "buyback": 25,
+        "spread": 10,
+        "identity": 15,
+        "market": 10,
+        "readiness": 5
+      },
+      "score": 85,
+      "category_url": "https://www.kaitorishouten-co.jp/category/1/748",
+      "reasons": [],
+      "rank": 4,
+      "inputs": {
+        "source": "apple_jp_official",
+        "status": "PENDING_REVIEW",
+        "product_name": "iPhone Duo 2TB",
+        "model_number": "iPhone Duo",
+        "capacity": "2TB",
+        "part_numbers": [
+          "MK2A4J/A",
+          "MK2C4J/A"
+        ],
+        "official_url": "https://www.apple.com/jp/shop/buy-iphone/iphone-duo",
+        "official_price": 574800,
+        "official_prices": [
+          574800
+        ],
+        "last_seen_on": "2026-10-19"
+      }
+    },
+    {
+      "candidate_id": "apple-84c4d1433311",
+      "product_name": "iPhone 17e 256GB",
+      "model": "iPhone 17e",
+      "capacity": "256GB",
+      "status": "PENDING_REVIEW",
+      "official_price": 124800,
+      "official_state": "CONFIRMED",
+      "buyback_state": "CONFIRMED",
+      "buyback_sell": 107000,
+      "buyback_rows": [
+        [
+          "iPhone 17e 256GB ソフトピンク MHRQ4J/A SIMフリー",
+          107000,
+          "/products/detail/25843"
+        ],
+        [
+          "iPhone 17e 256GB ブラック MHRN4J/A SIMフリー",
+          107000,
+          "/products/detail/25842"
+        ],
+        [
+          "iPhone 17e 256GB ホワイト MHRP4J/A SIMフリー",
+          107000,
+          "/products/detail/25841"
+        ]
+      ],
+      "known_costs": 1800,
+      "spread": -19600,
+      "points": {
+        "official": 20,
+        "buyback": 25,
+        "spread": 0,
+        "identity": 15,
+        "market": 10,
+        "readiness": 5
+      },
+      "score": 75,
+      "category_url": "https://www.kaitorishouten-co.jp/category/1/725",
+      "reasons": [
+        "no_profit_at_current_prices"
+      ],
+      "rank": 5,
+      "inputs": {
+        "source": "apple_jp_official",
+        "status": "PENDING_REVIEW",
+        "product_name": "iPhone 17e 256GB",
+        "model_number": "iPhone 17e",
+        "capacity": "256GB",
+        "part_numbers": [
+          "MHRN4J/A",
+          "MHRP4J/A",
+          "MHRQ4J/A"
+        ],
+        "official_url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17e",
+        "official_price": 124800,
+        "official_prices": [
+          124800
+        ],
+        "last_seen_on": "2026-10-18"
+      }
+    },
+    {
+      "candidate_id": "apple-ed766bc89a8f",
+      "product_name": "iPhone 16 128GB",
+      "model": "iPhone 16",
+      "capacity": "128GB",
+      "status": "PENDING_REVIEW",
+      "official_price": 139800,
+      "official_state": "CONFIRMED",
+      "buyback_state": "PARTIAL",
+      "buyback_sell": null,
+      "buyback_rows": [
+        [
+          "iPhone 16 128GB ティール MYDV3J/A SIMフリー",
+          113000,
+          "/products/detail/20846"
+        ],
+        [
+          "iPhone 16 128GB ブラック MYDQ3J/A SIMフリー",
+          113000,
+          "/products/detail/20845"
+        ],
+        [
+          "iPhone 16 128GB ホワイト MYDR3J/A SIMフリー",
+          113000,
+          "/products/detail/20844"
+        ]
+      ],
+      "known_costs": 1800,
+      "spread": null,
+      "points": {
+        "official": 20,
+        "buyback": 10,
+        "spread": 0,
+        "identity": 15,
+        "market": 10,
+        "readiness": 5
+      },
+      "score": 60,
+      "category_url": "https://www.kaitorishouten-co.jp/category/1/687",
+      "reasons": [
+        "buyback_partial"
+      ],
+      "rank": 6,
+      "inputs": {
+        "source": "apple_jp_official",
+        "status": "PENDING_REVIEW",
+        "product_name": "iPhone 16 128GB",
+        "model_number": "iPhone 16",
+        "capacity": "128GB",
+        "part_numbers": [
+          "MYDQ3J/A",
+          "MYDR3J/A",
+          "MYDT3J/A",
+          "MYDU3J/A",
+          "MYDV3J/A"
+        ],
+        "official_url": "https://www.apple.com/jp/shop/buy-iphone/iphone-16",
+        "official_price": 139800,
+        "official_prices": [
+          139800
+        ],
+        "last_seen_on": "2026-10-20"
+      }
+    },
+    {
+      "candidate_id": "apple-ca6dabbdb6a5",
+      "product_name": "iPhone 18 Pro 256GB",
+      "model": "iPhone 18 Pro",
+      "capacity": "256GB",
+      "status": "PENDING_REVIEW",
+      "official_price": 219800,
+      "official_state": "CONFIRMED",
+      "buyback_state": "PARTIAL",
+      "buyback_sell": null,
+      "buyback_rows": [
+        [
+          "iPhone 18 Pro 256GB グレイシャー MJR84J/A SIMフリー",
+          197500,
+          "/products/detail/27114"
+        ],
+        [
+          "iPhone 18 Pro 256GB ブラック MJR54J/A SIMフリー",
+          197500,
+          "/products/detail/27116"
+        ],
+        [
+          "iPhone 18 Pro 256GB バーガンディ MJR74J/A SIMフリー",
+          212000,
+          "/products/detail/27113"
+        ]
+      ],
+      "known_costs": 1800,
+      "spread": null,
+      "points": {
+        "official": 20,
+        "buyback": 10,
+        "spread": 0,
+        "identity": 15,
+        "market": 10,
+        "readiness": 5
+      },
+      "score": 60,
+      "category_url": "https://www.kaitorishouten-co.jp/category/1/746",
+      "reasons": [
+        "buyback_partial"
+      ],
+      "rank": 7,
+      "inputs": {
+        "source": "apple_jp_official",
+        "status": "PENDING_REVIEW",
+        "product_name": "iPhone 18 Pro 256GB",
+        "model_number": "iPhone 18 Pro",
+        "capacity": "256GB",
+        "part_numbers": [
+          "MJR54J/A",
+          "MJR64J/A",
+          "MJR74J/A",
+          "MJR84J/A"
+        ],
+        "official_url": "https://www.apple.com/jp/shop/buy-iphone/iphone-18-pro",
+        "official_price": 219800,
+        "official_prices": [
+          219800
+        ],
+        "last_seen_on": "2026-10-18"
+      }
+    },
+    {
+      "candidate_id": "apple-9d7b0d0e2f98",
+      "product_name": "iPhone 18 Pro Max 256GB",
+      "model": "iPhone 18 Pro Max",
+      "capacity": "256GB",
+      "status": "PENDING_REVIEW",
+      "official_price": 239800,
+      "official_state": "CONFIRMED",
+      "buyback_state": "PARTIAL",
+      "buyback_sell": null,
+      "buyback_rows": [
+        [
+          "iPhone 18 Pro Max 256GB ブラック MJX54J/A SIMフリー",
+          232000,
+          "/products/detail/27100"
+        ],
+        [
+          "iPhone 18 Pro Max 256GB グレイシャー MJX84J/A SIMフリー",
+          234000,
+          "/products/detail/27098"
+        ],
+        [
+          "iPhone 18 Pro Max 256GB バーガンディ MJX74J/A SIMフリー",
+          245000,
+          "/products/detail/27097"
+        ]
+      ],
+      "known_costs": 1800,
+      "spread": null,
+      "points": {
+        "official": 20,
+        "buyback": 10,
+        "spread": 0,
+        "identity": 15,
+        "market": 10,
+        "readiness": 5
+      },
+      "score": 60,
+      "category_url": "https://www.kaitorishouten-co.jp/category/1/747",
+      "reasons": [
+        "buyback_partial"
+      ],
+      "rank": 8,
+      "inputs": {
+        "source": "apple_jp_official",
+        "status": "PENDING_REVIEW",
+        "product_name": "iPhone 18 Pro Max 256GB",
+        "model_number": "iPhone 18 Pro Max",
+        "capacity": "256GB",
+        "part_numbers": [
+          "MJX54J/A",
+          "MJX64J/A",
+          "MJX74J/A",
+          "MJX84J/A"
+        ],
+        "official_url": "https://www.apple.com/jp/shop/buy-iphone/iphone-18-pro",
+        "official_price": 239800,
+        "official_prices": [
+          239800
+        ],
+        "last_seen_on": "2026-10-18"
+      }
+    },
+    {
+      "candidate_id": "apple-404ce0f089a1",
+      "product_name": "iPhone 17e 512GB",
+      "model": "iPhone 17e",
+      "capacity": "512GB",
+      "status": "PENDING_REVIEW",
+      "official_price": 159800,
+      "official_state": "CONFIRMED",
+      "buyback_state": "UNKNOWN",
+      "buyback_sell": null,
+      "buyback_rows": [],
+      "known_costs": 1800,
+      "spread": null,
+      "points": {
+        "official": 20,
+        "buyback": 0,
+        "spread": 0,
+        "identity": 15,
+        "market": 10,
+        "readiness": 5
+      },
+      "score": 50,
+      "category_url": "https://www.kaitorishouten-co.jp/category/1/725",
+      "reasons": [
+        "buyback_unknown"
+      ],
+      "rank": 9,
+      "inputs": {
+        "source": "apple_jp_official",
+        "status": "PENDING_REVIEW",
+        "product_name": "iPhone 17e 512GB",
+        "model_number": "iPhone 17e",
+        "capacity": "512GB",
+        "part_numbers": [
+          "MHRR4J/A",
+          "MHRT4J/A",
+          "MHRU4J/A"
+        ],
+        "official_url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17e",
+        "official_price": 159800,
+        "official_prices": [
+          159800
+        ],
+        "last_seen_on": "2026-10-18"
+      }
+    },
+    {
+      "candidate_id": "apple-4bf4d4ba1b3a",
+      "product_name": "iPhone 17 512GB",
+      "model": "iPhone 17",
+      "capacity": "512GB",
+      "status": "PENDING_REVIEW",
+      "official_price": 194800,
+      "official_state": "CONFIRMED",
+      "buyback_state": "UNKNOWN",
+      "buyback_sell": null,
+      "buyback_rows": [],
+      "known_costs": 1800,
+      "spread": null,
+      "points": {
+        "official": 20,
+        "buyback": 0,
+        "spread": 0,
+        "identity": 15,
+        "market": 10,
+        "readiness": 5
+      },
+      "score": 50,
+      "category_url": "https://www.kaitorishouten-co.jp/category/1/708",
+      "reasons": [
+        "buyback_unknown"
+      ],
+      "rank": 10,
+      "inputs": {
+        "source": "apple_jp_official",
+        "status": "PENDING_REVIEW",
+        "product_name": "iPhone 17 512GB",
+        "model_number": "iPhone 17",
+        "capacity": "512GB",
+        "part_numbers": [
+          "MG6D4J/A",
+          "MG6E4J/A",
+          "MG6F4J/A",
+          "MG6G4J/A",
+          "MG6H4J/A"
+        ],
+        "official_url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17",
+        "official_price": 194800,
+        "official_prices": [
+          194800
+        ],
+        "last_seen_on": "2026-10-20"
+      }
+    },
+    {
+      "candidate_id": "apple-ef2efccc296e",
+      "product_name": "iPhone Air 512GB",
+      "model": "iPhone Air",
+      "capacity": "512GB",
+      "status": "PENDING_REVIEW",
+      "official_price": 224800,
+      "official_state": "CONFIRMED",
+      "buyback_state": "UNKNOWN",
+      "buyback_sell": null,
+      "buyback_rows": [],
+      "known_costs": 1800,
+      "spread": null,
+      "points": {
+        "official": 20,
+        "buyback": 0,
+        "spread": 0,
+        "identity": 15,
+        "market": 10,
+        "readiness": 5
+      },
+      "score": 50,
+      "category_url": "https://www.kaitorishouten-co.jp/category/1/709",
+      "reasons": [
+        "buyback_unknown"
+      ],
+      "rank": 11,
+      "inputs": {
+        "source": "apple_jp_official",
+        "status": "PENDING_REVIEW",
+        "product_name": "iPhone Air 512GB",
+        "model_number": "iPhone Air",
+        "capacity": "512GB",
+        "part_numbers": [
+          "MG2C4J/A",
+          "MG2D4J/A",
+          "MG2E4J/A",
+          "MG2F4J/A"
+        ],
+        "official_url": "https://www.apple.com/jp/shop/buy-iphone/iphone-air",
+        "official_price": 224800,
+        "official_prices": [
+          224800
+        ],
+        "last_seen_on": "2026-10-19"
+      }
+    },
+    {
+      "candidate_id": "apple-0e3db9718bb3",
+      "product_name": "iPhone 18 Pro 512GB",
+      "model": "iPhone 18 Pro",
+      "capacity": "512GB",
+      "status": "PENDING_REVIEW",
+      "official_price": 254800,
+      "official_state": "CONFIRMED",
+      "buyback_state": "UNKNOWN",
+      "buyback_sell": null,
+      "buyback_rows": [],
+      "known_costs": 1800,
+      "spread": null,
+      "points": {
+        "official": 20,
+        "buyback": 0,
+        "spread": 0,
+        "identity": 15,
+        "market": 10,
+        "readiness": 5
+      },
+      "score": 50,
+      "category_url": "https://www.kaitorishouten-co.jp/category/1/746",
+      "reasons": [
+        "buyback_unknown"
+      ],
+      "rank": 12,
+      "inputs": {
+        "source": "apple_jp_official",
+        "status": "PENDING_REVIEW",
+        "product_name": "iPhone 18 Pro 512GB",
+        "model_number": "iPhone 18 Pro",
+        "capacity": "512GB",
+        "part_numbers": [
+          "MJR94J/A",
+          "MJRC4J/A",
+          "MJRD4J/A",
+          "MJRE4J/A"
+        ],
+        "official_url": "https://www.apple.com/jp/shop/buy-iphone/iphone-18-pro",
+        "official_price": 254800,
+        "official_prices": [
+          254800
+        ],
+        "last_seen_on": "2026-10-18"
+      }
+    },
+    {
+      "candidate_id": "apple-b7e0f6c7ab5c",
+      "product_name": "iPhone 18 Pro Max 512GB",
+      "model": "iPhone 18 Pro Max",
+      "capacity": "512GB",
+      "status": "PENDING_REVIEW",
+      "official_price": 274800,
+      "official_state": "CONFIRMED",
+      "buyback_state": "UNKNOWN",
+      "buyback_sell": null,
+      "buyback_rows": [],
+      "known_costs": 1800,
+      "spread": null,
+      "points": {
+        "official": 20,
+        "buyback": 0,
+        "spread": 0,
+        "identity": 15,
+        "market": 10,
+        "readiness": 5
+      },
+      "score": 50,
+      "category_url": "https://www.kaitorishouten-co.jp/category/1/747",
+      "reasons": [
+        "buyback_unknown"
+      ],
+      "rank": 13,
+      "inputs": {
+        "source": "apple_jp_official",
+        "status": "PENDING_REVIEW",
+        "product_name": "iPhone 18 Pro Max 512GB",
+        "model_number": "iPhone 18 Pro Max",
+        "capacity": "512GB",
+        "part_numbers": [
+          "MJX94J/A",
+          "MJXA4J/A",
+          "MJXC4J/A",
+          "MJXD4J/A"
+        ],
+        "official_url": "https://www.apple.com/jp/shop/buy-iphone/iphone-18-pro",
+        "official_price": 274800,
+        "official_prices": [
+          274800
+        ],
+        "last_seen_on": "2026-10-18"
+      }
+    },
+    {
+      "candidate_id": "apple-a43f61f54dc6",
+      "product_name": "iPhone Air 1TB",
+      "model": "iPhone Air",
+      "capacity": "1TB",
+      "status": "PENDING_REVIEW",
+      "official_price": 294800,
+      "official_state": "CONFIRMED",
+      "buyback_state": "UNKNOWN",
+      "buyback_sell": null,
+      "buyback_rows": [],
+      "known_costs": 1800,
+      "spread": null,
+      "points": {
+        "official": 20,
+        "buyback": 0,
+        "spread": 0,
+        "identity": 15,
+        "market": 10,
+        "readiness": 5
+      },
+      "score": 50,
+      "category_url": "https://www.kaitorishouten-co.jp/category/1/709",
+      "reasons": [
+        "buyback_unknown"
+      ],
+      "rank": 14,
+      "inputs": {
+        "source": "apple_jp_official",
+        "status": "PENDING_REVIEW",
+        "product_name": "iPhone Air 1TB",
+        "model_number": "iPhone Air",
+        "capacity": "1TB",
+        "part_numbers": [
+          "MG2G4J/A",
+          "MG2H4J/A",
+          "MG2J4J/A",
+          "MG2K4J/A"
+        ],
+        "official_url": "https://www.apple.com/jp/shop/buy-iphone/iphone-air",
+        "official_price": 294800,
+        "official_prices": [
+          294800
+        ],
+        "last_seen_on": "2026-10-19"
+      }
+    },
+    {
+      "candidate_id": "apple-c9e6de4708aa",
+      "product_name": "iPhone 18 Pro 1TB",
+      "model": "iPhone 18 Pro",
+      "capacity": "1TB",
+      "status": "PENDING_REVIEW",
+      "official_price": 324800,
+      "official_state": "CONFIRMED",
+      "buyback_state": "UNKNOWN",
+      "buyback_sell": null,
+      "buyback_rows": [],
+      "known_costs": 1800,
+      "spread": null,
+      "points": {
+        "official": 20,
+        "buyback": 0,
+        "spread": 0,
+        "identity": 15,
+        "market": 10,
+        "readiness": 5
+      },
+      "score": 50,
+      "category_url": "https://www.kaitorishouten-co.jp/category/1/746",
+      "reasons": [
+        "buyback_unknown"
+      ],
+      "rank": 15,
+      "inputs": {
+        "source": "apple_jp_official",
+        "status": "PENDING_REVIEW",
+        "product_name": "iPhone 18 Pro 1TB",
+        "model_number": "iPhone 18 Pro",
+        "capacity": "1TB",
+        "part_numbers": [
+          "MJRF4J/A",
+          "MJRG4J/A",
+          "MJRH4J/A",
+          "MJRJ4J/A"
+        ],
+        "official_url": "https://www.apple.com/jp/shop/buy-iphone/iphone-18-pro",
+        "official_price": 324800,
+        "official_prices": [
+          324800
+        ],
+        "last_seen_on": "2026-10-18"
+      }
+    },
+    {
+      "candidate_id": "apple-915b1e76f2d6",
+      "product_name": "iPhone 18 Pro Max 1TB",
+      "model": "iPhone 18 Pro Max",
+      "capacity": "1TB",
+      "status": "PENDING_REVIEW",
+      "official_price": 344800,
+      "official_state": "CONFIRMED",
+      "buyback_state": "UNKNOWN",
+      "buyback_sell": null,
+      "buyback_rows": [],
+      "known_costs": 1800,
+      "spread": null,
+      "points": {
+        "official": 20,
+        "buyback": 0,
+        "spread": 0,
+        "identity": 15,
+        "market": 10,
+        "readiness": 5
+      },
+      "score": 50,
+      "category_url": "https://www.kaitorishouten-co.jp/category/1/747",
+      "reasons": [
+        "buyback_unknown"
+      ],
+      "rank": 16,
+      "inputs": {
+        "source": "apple_jp_official",
+        "status": "PENDING_REVIEW",
+        "product_name": "iPhone 18 Pro Max 1TB",
+        "model_number": "iPhone 18 Pro Max",
+        "capacity": "1TB",
+        "part_numbers": [
+          "MJXE4J/A",
+          "MJXF4J/A",
+          "MJXG4J/A",
+          "MJXH4J/A"
+        ],
+        "official_url": "https://www.apple.com/jp/shop/buy-iphone/iphone-18-pro",
+        "official_price": 344800,
+        "official_prices": [
+          344800
+        ],
+        "last_seen_on": "2026-10-18"
+      }
+    },
+    {
+      "candidate_id": "apple-8f68c0d20075",
+      "product_name": "iPhone 18 Pro 2TB",
+      "model": "iPhone 18 Pro",
+      "capacity": "2TB",
+      "status": "PENDING_REVIEW",
+      "official_price": 429800,
+      "official_state": "CONFIRMED",
+      "buyback_state": "UNKNOWN",
+      "buyback_sell": null,
+      "buyback_rows": [],
+      "known_costs": 1800,
+      "spread": null,
+      "points": {
+        "official": 20,
+        "buyback": 0,
+        "spread": 0,
+        "identity": 15,
+        "market": 10,
+        "readiness": 5
+      },
+      "score": 50,
+      "category_url": "https://www.kaitorishouten-co.jp/category/1/746",
+      "reasons": [
+        "buyback_unknown"
+      ],
+      "rank": 17,
+      "inputs": {
+        "source": "apple_jp_official",
+        "status": "PENDING_REVIEW",
+        "product_name": "iPhone 18 Pro 2TB",
+        "model_number": "iPhone 18 Pro",
+        "capacity": "2TB",
+        "part_numbers": [
+          "MJRK4J/A",
+          "MJRL4J/A",
+          "MJRM4J/A",
+          "MJRN4J/A"
+        ],
+        "official_url": "https://www.apple.com/jp/shop/buy-iphone/iphone-18-pro",
+        "official_price": 429800,
+        "official_prices": [
+          429800
+        ],
+        "last_seen_on": "2026-10-18"
+      }
+    },
+    {
+      "candidate_id": "apple-f747886c4330",
+      "product_name": "iPhone 18 Pro Max 2TB",
+      "model": "iPhone 18 Pro Max",
+      "capacity": "2TB",
+      "status": "PENDING_REVIEW",
+      "official_price": 449800,
+      "official_state": "CONFIRMED",
+      "buyback_state": "UNKNOWN",
+      "buyback_sell": null,
+      "buyback_rows": [],
+      "known_costs": 1800,
+      "spread": null,
+      "points": {
+        "official": 20,
+        "buyback": 0,
+        "spread": 0,
+        "identity": 15,
+        "market": 10,
+        "readiness": 5
+      },
+      "score": 50,
+      "category_url": "https://www.kaitorishouten-co.jp/category/1/747",
+      "reasons": [
+        "buyback_unknown"
+      ],
+      "rank": 18,
+      "inputs": {
+        "source": "apple_jp_official",
+        "status": "PENDING_REVIEW",
+        "product_name": "iPhone 18 Pro Max 2TB",
+        "model_number": "iPhone 18 Pro Max",
+        "capacity": "2TB",
+        "part_numbers": [
+          "MJXJ4J/A",
+          "MJXK4J/A",
+          "MJXL4J/A",
+          "MJXM4J/A"
+        ],
+        "official_url": "https://www.apple.com/jp/shop/buy-iphone/iphone-18-pro",
+        "official_price": 449800,
+        "official_prices": [
+          449800
+        ],
+        "last_seen_on": "2026-10-18"
+      }
+    }
+  ],
+  "excluded": [
+    {
+      "candidate_id": "apple-24816e322cf0",
+      "status": "REGISTERED",
+      "reason": "not_pending_review"
+    },
+    {
+      "candidate_id": "apple-87985d82892c",
+      "status": "MATCHED_EXISTING",
+      "reason": "not_pending_review"
+    }
+  ],
+  "weights": {
+    "official": 20,
+    "buyback": 25,
+    "spread": 25,
+    "identity": 15,
+    "market": 10,
+    "readiness": 5
+  },
+  "note": "運営者向けの優先順位（顧客向けの利益ではない）。売値は取得した実際の行だけ。登録は人が1件ずつ"
+}

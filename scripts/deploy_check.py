@@ -4143,6 +4143,7 @@ def check() -> list[dict]:
     results.extend(_check_phase27_discovery())
     results.extend(_check_phase28_registration())
     results.extend(_check_phase29_activation())
+    results.extend(_check_phase30_priority())
 
     # ══════════════════════════════════════════════════════════════════
     # #820-#825: データの正確さ・鮮度の偽装（Phase 0）
@@ -5729,12 +5730,15 @@ def _check_phase29_activation(root: Path | None = None) -> list[dict]:
             other_cap = "512GB" if cap != "512GB" else "256GB"
             rows = [(f"{model} {cap} 黒 {parts[0]} SIMフリー", 135000, "/products/detail/1"),
                     (f"{model} {cap} 白 {parts[-1]} SIMフリー", 133000, "/products/detail/2"),
+                    *[(f"{model} {cap} 色{i} {x} SIMフリー", 135000, f"/products/detail/{100 + i}")
+                      for i, x in enumerate(parts[1:-1])],
                     (f"{model} {other_cap} 黒 {parts[0]} SIMフリー", 300000, "/products/detail/3"),
                     (f"{model} {cap} 黒 {parts[0]} au", 300000, "/products/detail/4"),
                     (f"{model} {cap} 黒 MZZZ9J/A SIMフリー", 300000, "/products/detail/5"),
                     (f"{model} {cap} 黒 {parts[0]}", 300000, "/products/detail/6")]
             got = ks.match_rows(rows, a)
-            if [r[2] for r in got] != ["/products/detail/1", "/products/detail/2"]:
+            if [r[2] for r in got] != ["/products/detail/1", "/products/detail/2"] + [
+                    f"/products/detail/{100 + i}" for i in range(len(parts) - 2)]:
                 bad.append(f"{a}: 別の容量・キャリア版・別の部品番号・SIMフリーでない行を通す")
             c = ks.KaitoriShoutenCsvCollector.__new__(ks.KaitoriShoutenCsvCollector)
             html = "<table><tr><th>品目</th><th>新品買取</th><th>中古買取</th></tr>" + "".join(
@@ -5742,6 +5746,9 @@ def _check_phase29_activation(root: Path | None = None) -> list[dict]:
                 + "</table>"
             if c._parse_price(html, a, "") != 133000 or not c._parse_detail_url(html, "").endswith("/products/detail/2"):
                 bad.append(f"{a}: 色で価格が違うときに最も低い色の行を使わない")
+            part_html = html.replace(f"{model} {cap} 白 {parts[-1]} SIMフリー", "")      # 最も安い色の行が無い日
+            if c._parse_price(part_html, a, "") is not None:
+                bad.append(f"{a}: 全色の行がそろわない日に残った色の価格を使う")
         import importlib.util as _iu29
         spec = _iu29.spec_from_file_location("_ubp29", root / "scripts" / "update_buyback_prices.py")
         ubp = _iu29.module_from_spec(spec)
@@ -5781,6 +5788,136 @@ def _check_phase29_activation(root: Path | None = None) -> list[dict]:
              "message": "#864 登録した商品の公式直販価格・買取の照合（公式の証拠がそろうときだけ・設定値だけで確定にしない・"
                         "容量 / SIMフリー / キャリア版 / 部品番号・色の価格を混ぜない・前回の行を残さない・発見で正本と一致・"
                         "候補の重複なし）" + ("" if not bad else f" ← {bad[:4]}")}]
+
+
+def _check_phase30_priority(root: Path | None = None) -> list[dict]:
+    """Phase 30: 候補の優先順位と1件ずつの登録（#865）。点は決まった計算式（同じ入力で同じ結果）・売値が無ければ差の点を
+    付けない・全色がそろったときだけ最も低い色・登録済み / 一致 / STALE は順位から除く・登録の CLI は1件だけ・
+    priority.json（あれば）の差は実際の行からだけ。"""
+    import copy as _cp30
+    import json as _json30
+    import re as _re30
+    from datetime import datetime as _dt30
+
+    from src.tcg.models import JST as _JST30
+    bad = []
+    root = root or Path(__file__).resolve().parent.parent
+    try:
+        from src.discovery import priority as pr
+        from src.discovery import store as st
+        now = _dt30(2026, 10, 21, 9, 0, tzinfo=_JST30)
+        c = {"source": "apple_jp_official", "status": st.PENDING_REVIEW, "product_name": "iPhone Duo 256GB",
+             "model_number": "iPhone Duo", "capacity": "256GB", "part_numbers": ["MK244J/A", "MK254J/A"],
+             "official_url": "https://www.apple.com/jp/shop/buy-iphone/iphone-duo", "official_price": 364800,
+             "official_prices": [364800], "last_seen_on": "2026-10-20"}
+        rows = [["iPhone Duo 256GB 黒 MK254J/A SIMフリー", 395000, "/products/detail/1", "category"],
+                ["iPhone Duo 256GB 白 MK244J/A SIMフリー", 380000, "/products/detail/2", "category"]]
+        ev = {"index_status": "ok", "rows": rows, "families": {"iphoneduo": {"status": "ok", "listed_in_index": True,
+                                                                           "category_url": "https://x/category/1/1"}}}
+        cands = {"a": dict(c), "b": dict(c, status=st.REGISTERED), "s": dict(c, last_seen_on="2026-10-01"),
+                 "m": dict(c, status=st.MATCHED_EXISTING)}
+        r1 = pr.rank(cands, ev, now=now)
+        r2 = pr.rank(dict(reversed(list(cands.items()))), dict(_cp30.deepcopy(ev), rows=list(reversed(rows))), now=now)
+        if r1 != r2:
+            bad.append("同じ入力で順位・点が変わる")
+        if [x["candidate_id"] for x in r1["ranked"]] != ["a"]:
+            bad.append("登録済み・一致・STALE の候補が順位に入る")
+        top = r1["ranked"][0] if r1["ranked"] else {}
+        if top.get("buyback_sell") != 380000:
+            bad.append("色で価格が違うときに最も低い色を使わない")
+        none = pr.score_candidate(dict(c, candidate_id="a"), {"index_status": "not_fetched", "rows": [], "families": {}},
+                                  now=now)
+        part = pr.score_candidate(dict(c, candidate_id="a"), dict(ev, rows=rows[:1]), now=now)
+        if none["spread"] is not None or none["points"]["spread"] or none["points"]["buyback"]:
+            bad.append("売値が無い候補に差・買取の点が付く")
+        if part["spread"] is not None or part["points"]["spread"]:
+            bad.append("一部の色だけで差を出す")
+        # 登録の CLI は1件だけ（候補の ID は1つ・複数の指定を受けない）
+        cli = (root / "src" / "cli.py").read_text(encoding="utf-8")
+        i = cli.index('@cli.command("register-product-candidate")')
+        head = cli[i:cli.index("def register_product_candidate", i)]
+        if "multiple=True" in head or '"--candidate-id", required=True' not in head:
+            bad.append("登録の CLI が複数の候補を受ける")
+        if "rank-product-candidates" in (root / ".github" / "workflows" / "daily_lp.yml").read_text(encoding="utf-8"):
+            bad.append("CI が優先順位のために買取の取得元を読む")
+        # 台帳: 発見から登録した正本の件数と REGISTERED の件数が同じ・同じ時刻（分）に2件以上を登録していない
+        import yaml as _y30
+        led = root / "exports" / "discovery" / st.PRODUCT_FILE
+        pc = st.load(led)["candidates"] if led.exists() else {}
+        regs = [x for x in pc.values() if x.get("status") == st.REGISTERED]
+        prods = (_y30.safe_load((root / "config" / "products.yaml").read_text(encoding="utf-8")) or {}).get("products") or []
+        canon_reg = [p for p in prods if isinstance(p, dict) and p.get("price_observed_on")]
+        if len(canon_reg) != len(regs):
+            bad.append(f"発見から登録した正本 {len(canon_reg)}件と台帳の登録 {len(regs)}件が合わない")
+        mins = [str(x.get("registered_at"))[:16] for x in regs if x.get("registered_at")]
+        if len(mins) != len(set(mins)):
+            bad.append("同じ時刻に複数の候補を登録している")
+        # 今の priority.json: 差は全色そろった実際の行からだけ・最も低い色・登録済みなどを順位に入れていない（作った時点で）
+        pj = root / "exports" / "discovery" / "priority.json"
+        if pj.exists():
+            rep = _json30.loads(pj.read_text(encoding="utf-8"))
+            gen = _dt30.fromisoformat(str(rep.get("generated_at")))
+            ranked = rep.get("ranked") or []
+            if [x.get("score") for x in ranked] != sorted((x.get("score") for x in ranked), reverse=True):
+                bad.append("priority.json の順位が点の順でない")
+            if [x.get("rank") for x in ranked] != list(range(1, len(ranked) + 1)):
+                bad.append("priority.json の順位の値が 1 からの連番でない")
+            for f in (rep.get("evidence") or {}).get("fetches") or []:
+                ft = _dt30.fromisoformat(str(f.get("fetched_at")))
+                if ft < gen or ft > _dt30.now(tz=_JST30):
+                    bad.append("priority.json の取得の時刻が作成より前・未来")
+            empty = {"index_status": "not_fetched", "rows": [], "families": {}}
+            for x in ranked:
+                cid = x.get("candidate_id")
+                # 計算し直しは priority.json に保存した候補の入力で行う（台帳は毎日の発見で変わるので、台帳に依ると後から
+                # 公式の価格の改定・候補の削除で deploy-check が止まる。Phase 30 再レビュー H）
+                cand = x.get("inputs")
+                if not isinstance(cand, dict) or set(cand) != set(pr.INPUT_FIELDS):
+                    bad.append(f"{cid}: priority.json に計算の入力が無い")
+                    continue
+                pts = x.get("points") or {}
+                if any(not isinstance(pts.get(k), int) or not 0 <= pts[k] <= w for k, w in pr.WEIGHTS.items()):
+                    bad.append(f"{cid}: 点が配点の範囲の外")
+                # 証拠に依らない項目（公式・同一性）と公式の価格は台帳の候補から計算し直す
+                base = pr.score_candidate(dict(cand, candidate_id=cid), empty, now=gen)
+                if (pts.get("official"), pts.get("identity"), x.get("official_price")) != (
+                        base["points"]["official"], base["points"]["identity"], base["official_price"]):
+                    bad.append(f"{cid}: 公式・同一性の点か公式の価格が台帳と合わない")
+                rws = [tuple(r) for r in x.get("buyback_rows") or []]
+                if rws and sorted(pr.match_buyback_rows(cand, rws)) != sorted(rws):
+                    bad.append(f"{cid}: 買取の行が候補の機種・容量・部品番号・SIMフリーに一致しない")
+                covered = {(_re30.findall(r"\b[A-Z0-9]{4,5}J/A\b", r[0]) or [""])[0] for r in rws}
+                if x.get("buyback_state") == "CONFIRMED" and covered != set(cand.get("part_numbers") or []):
+                    bad.append(f"{cid}: 全色の行がそろわないのに CONFIRMED")
+                if pts.get("buyback") != {"CONFIRMED": 25, "PARTIAL": 10}.get(x.get("buyback_state"), 0):
+                    bad.append(f"{cid}: 買取の点が状態と合わない")
+                sp, price = x.get("spread"), base["official_price"]
+                costs = pr.known_costs(str(cand.get("official_url") or ""), price) if price else None
+                if sp is not None and (x.get("buyback_sell") is None or costs is None
+                                       or sp != x["buyback_sell"] - price - costs):
+                    bad.append(f"{cid}: 見込みの差が「売値 − 公式の価格 − 既知の費用」と合わない")
+                want = 0 if sp is None or sp <= 0 else min(pr.WEIGHTS["spread"], 10 + int(sp / price * 100))
+                if pts.get("spread") != want:
+                    bad.append(f"{cid}: 差の点が式と合わない")
+                rws = x.get("buyback_rows") or []
+                if x.get("spread") is not None and (x.get("buyback_state") != "CONFIRMED" or not rws):
+                    bad.append(f"{x.get('candidate_id')}: 実際の行なしに差がある")
+                if rws and x.get("buyback_state") == "CONFIRMED" and x.get("buyback_sell") != min(r[1] for r in rws):
+                    bad.append(f"{x.get('candidate_id')}: 最も低い色の価格でない")
+                if x.get("spread") is None and (x.get("points") or {}).get("spread"):
+                    bad.append(f"{x.get('candidate_id')}: 差が無いのに差の点がある")
+                if x.get("status") != st.PENDING_REVIEW:
+                    bad.append(f"{x.get('candidate_id')}: 確認待ちでない候補を順位に入れた")
+                if sum((x.get("points") or {}).values()) != x.get("score"):
+                    bad.append(f"{x.get('candidate_id')}: 点の内訳と合計が合わない")
+            if any(not _re30.match(r"^\d{4}-\d{2}-\d{2}T", str(f.get("fetched_at") or ""))
+                   for f in (rep.get("evidence") or {}).get("fetches") or []):
+                bad.append("priority.json の取得の時刻が無い")
+    except Exception as exc:  # noqa: BLE001
+        bad.append(f"検査に失敗: {type(exc).__name__}: {exc}")
+    return [{"level": "ok" if not bad else "error", "check": "candidate_priority",
+             "message": "#865 候補の優先順位（決まった計算式・売値が無ければ差の点なし・全色で最も低い色・登録済み / 一致 / "
+                        "STALE を除く・登録は1件ずつ・CI は優先順位のための取得をしない）" + ("" if not bad else f" ← {bad[:4]}")}]
 
 
 def _check_phase26_acceptance_guard(root: Path | None = None) -> list[dict]:

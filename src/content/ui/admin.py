@@ -47,6 +47,7 @@ SYSTEM_NOTICE_LABELS = {"HEALTH_ALERT": "データ品質の低下", "DATA_RECOVE
 EXEC_STATUSES = ("OPEN", "SUCCESS", "FAILED", "CANCELLED", "INVALIDATED")
 # 取得失敗の理由（CLAUDE.md の「失敗理由の意味」）→ 運営向けの言葉（コードは小さく併記）
 FAIL_REASON_LABELS = {"price_not_found": "ページは取れたが価格が無い", "product_not_listed": "サイトに掲載なし",
+                      "colors_incomplete": "全色の行がそろわない",
                       "rate_limited_429": "アクセス制限（429）", "site_blocked": "bot 対策でブロック",
                       "service_unavailable": "サーバー障害", "not_supported": "オンライン見積もり非対応",
                       "timeout": "時間切れ", "http_403": "アクセス拒否（403）", "http_404": "ページが無い（404）",
@@ -561,6 +562,38 @@ _DISC_ORDER = {"APPROVED": 0, "NEW": 1, "PENDING_REVIEW": 1, "REVIEW_REQUIRED": 
 _DISC_KIND = {"LOTTERY": "抽選", "PREORDER": "予約", "FIRST_COME": "先着", "RESTOCK": "再販", "RELEASE": "発売"}
 
 
+PRIORITY_STALE_DAYS = 7          # 優先順位の取得からこれより古ければ表を出さない（古い売値で順位を見せない）
+
+
+def build_priority(rep: dict | None, products: dict | None, now: datetime | None = None) -> dict:
+    """候補の確認の順番（Phase 30。運営者向けの優先順位。顧客向けの利益ではない）。点は priority.json のまま（計算し直さない）。
+
+    状態は今の台帳から引く（priority.json を作った後に登録・却下された候補は、その状態で出す）。
+    """
+    r = rep if isinstance(rep, dict) else {}
+    pc = (products or {}).get("candidates") if isinstance(products, dict) else {}
+    rows = []
+    def _num(v):
+        return v if isinstance(v, (int, float)) and not isinstance(v, bool) else None
+    for x in (r.get("ranked") or [])[:20]:
+        if not isinstance(x, dict) or not isinstance(x.get("points") or {}, dict):
+            continue                                       # 形の違う行は出さない（壊れたファイルで LP の生成を止めない）
+        now_status = str(((pc or {}).get(x.get("candidate_id")) or {}).get("status") or "—")
+        rows.append({"rank": x.get("rank"), "candidate_id": x.get("candidate_id"), "product": x.get("product_name"),
+                     "score": _num(x.get("score")), "official": x.get("official_state"),
+                     "official_price": _num(x.get("official_price")), "buyback": x.get("buyback_state"),
+                     "sell": _num(x.get("buyback_sell")), "spread": _num(x.get("spread")),
+                     "status": now_status, "reasons": list(x.get("reasons") or []), "points": dict(x.get("points") or {})})
+    if not rows:
+        return {}
+    fetched = [f for f in ((r.get("evidence") or {}).get("fetches") or []) if isinstance(f, dict)]
+    at = str(r.get("generated_at") or "")
+    made = parse_dt(at)                                    # 時差の無い時刻も JST として読む（例外で LP の生成を止めない）
+    old = made is None or ((now or datetime.now(tz=JST)) - made).days > PRIORITY_STALE_DAYS
+    return {"at": at, "rows": [] if old else rows, "stale": old, "fetches": len(fetched),
+            "fetched_at": max((str(f.get("fetched_at") or "") for f in fetched), default="")}
+
+
 def build_registered(products: dict | None, diag: dict | None) -> list[dict]:
     """発見から登録した商品の今の状態（Phase 29）。値は診断（opportunity_diagnostics）のまま並べる（計算し直さない）。
 
@@ -772,7 +805,8 @@ def build(data: dict | None, *, catalog, details: dict, profit_routes: dict | No
             "act_notices": build_actionable_notices(d.get("actionable_notifications")),
             "readiness": build_readiness(d.get("phase24_readiness")),
             "discovery": dict(build_discovery(d.get("discovery"), d.get("discovery_products"), d.get("discovery_events")),
-                              registered=build_registered(d.get("discovery_products"), d.get("diagnostics"))),
+                              registered=build_registered(d.get("discovery_products"), d.get("diagnostics")),
+                              priority=build_priority(d.get("discovery_priority"), d.get("discovery_products"))),
             "health": d.get("health") or {}, "coverage": d.get("coverage") or {},
             "collector_generated": (d.get("collector") or {}).get("generated_at"),
             "dq_report": d.get("dq_report") or {}, "now": now}
@@ -1214,6 +1248,31 @@ def _discovery(d: dict) -> str:
                         (f'¥{int(r["official_price"]):,}' if isinstance(r.get("official_price"), (int, float)) else "—"),
                         esc(r["buyback"]), esc(r["profit"])] for r in d.get("registered") or []],
                       caption="発見から登録した商品の状態（診断の値のまま。在庫は公式で明示されたときだけ）")
+    pr = d.get("priority") or {}
+
+    def _yen(v):
+        return f"¥{int(v):,}" if isinstance(v, (int, float)) and not isinstance(v, bool) else "—"
+
+    def _spread(v):
+        return "—（売値なし）" if v is None else (f"+¥{int(v):,}" if v > 0 else f"−¥{abs(int(v)):,}")
+    pri_note = (f'<p class="nu-osub">候補の確認の順番（運営者向けの優先順位。顧客向けの利益ではありません）: '
+                f'{esc(pr.get("at", ""))} に作成・買取の取得 {esc(str(pr.get("fetches", 0)))}回・最後の取得 '
+                f'{esc(pr.get("fetched_at") or "—")}。見込みの差はその時点の値で、登録・利益の判定には使いません。'
+                '登録は人が1件ずつ。</p>') if pr else ""
+    if pr.get("stale"):
+        pri_note = (f'<p class="nu-osub">候補の確認の順番: {esc(pr.get("at", ""))} の作成から{PRIORITY_STALE_DAYS}日を'
+                    '過ぎたので表を出していません（rank-product-candidates --fetch-buyback で作り直す）。</p>')
+    pri = _table(["順位", "候補", "点", "公式", "買取（全色で最も低い）", f'見込みの差（運営者向け・{pr.get("at", "")[:10]} 時点）',
+                  "今の状態", "理由"],
+                 [[esc(str(x["rank"])), esc(str(x["product"] or "")) + f'<br><code>{esc(str(x["candidate_id"]))}</code>',
+                   esc(str(x["score"])) + "<br><small>" + esc("・".join(f"{k} {v}" for k, v in x["points"].items()))
+                   + "</small>", esc(str(x["official"])) + "<br>" + _yen(x["official_price"]),
+                   esc(str(x["buyback"])) + "<br>" + _yen(x["sell"]), esc(_spread(x["spread"])),
+                   esc(_DISC_STATUS.get(x["status"], x["status"])), esc("・".join(x["reasons"]) or "—")]
+                  for x in pr.get("rows") or []],
+                 caption=(f'候補の確認の順番（運営者向けの優先順位。{pr.get("at", "")} に作成・買取の取得 '
+                          f'{pr.get("fetches", 0)}回・最後の取得 {pr.get("fetched_at") or "—"}。顧客向けの利益ではない。'
+                          '登録は人が1件ずつ）')) if pr else ""
     rv = d.get("review") or {}
     flow = "".join(f'<dt>{esc(lbl)}</dt><dd>商品 {esc(str((rv.get("products") or {}).get(k, 0)))}・告知 '
                    f'{esc(str((rv.get("events") or {}).get(k, 0)))}</dd>' for k, lbl in _DISC_REVIEW) if rv else ""
@@ -1258,7 +1317,7 @@ def _discovery(d: dict) -> str:
     errs = (f'<p class="nu-osub">発見の失敗: {esc(", ".join(d.get("errors") or []))}（正本は変えていない）</p>'
             if d.get("errors") else "")
     return _box("新商品・新しいイベントの発見", f'<dl class="nu-ad-dl">{dl}{src}{apple}</dl>'
-                + (f'<dl class="nu-ad-dl">{flow}</dl>' if flow else "") + reg_rows + prods + evs + steps + errs
+                + (f'<dl class="nu-ad-dl">{flow}</dl>' if flow else "") + reg_rows + pri_note + pri + prods + evs + steps + errs
                 + _generated("今回", d.get("at")),
                 sub="公式の一覧から見つけた、正本に無い商品と、日程の無い告知。正本への登録・TCG の利益や通知への接続はしない")
 

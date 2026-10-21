@@ -137,6 +137,8 @@ CUTOFF_IGNORED = frozenset({"product_not_listed", "no_url", "not_supported", "mo
                             "not_buyback_context", "trade_in_or_conditional_only",
                             # 商品ごとの事情（その商品の価格が範囲外・検索結果が販売の一覧だった。Phase 12 再レビュー N-M1）
                             "price_out_of_range", "sales_catalog_no_buyback",
+                            # 全色（公式の部品番号）の行がそろわない（その商品の事情。Phase 30 レビュー）
+                            "colors_incomplete",
                             # 同じ JAN に違う価格が並んだ（その商品の事情。Phase 17 監査 L3）
                             "ambiguous_rows"})
 

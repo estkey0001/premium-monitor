@@ -649,7 +649,9 @@ class DailyLPGenerator:
                            # 新商品・新しいイベントの発見の候補（Phase 27。読むだけ。正本ではない）
                            ("discovery", ("discovery", "latest.json")),
                            ("discovery_products", ("discovery", "product_candidates.json")),
-                           ("discovery_events", ("discovery", "event_candidates.json"))):
+                           ("discovery_events", ("discovery", "event_candidates.json")),
+                           # 候補の優先順位（Phase 30。運営者が rank-product-candidates で作る。CI では作らない）
+                           ("discovery_priority", ("discovery", "priority.json"))):
             data[key] = self._load_export_json(*parts)
         try:
             import json as _json_ad

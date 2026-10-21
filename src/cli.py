@@ -103,7 +103,7 @@ PRODUCT_ALIASES = {
     "iphone17pro512": "prod_iphone17pro_512",
     "iphone17pm256": "prod_iphone17pm_256", "iphone17pm": "prod_iphone17pm_256",
     "iphone17pm512": "prod_iphone17pm_512",
-    "iphone17_256": "prod_iphone17_256", "iphone17": "prod_iphone17_256", "iphoneair_256": "prod_iphoneair_256",
+    "iphone17_256": "prod_iphone17_256", "iphone17": "prod_iphone17_256", "iphoneair_256": "prod_iphoneair_256", "iphoneduo_256": "prod_iphoneduo_256",
     # iPhone 16
     "iphone16pro256": "prod_iphone16pro_256", "iphone16pro": "prod_iphone16pro_256",
     "iphone16pm": "prod_iphone16pm_256", "iphone16pm_256": "prod_iphone16pm_256",
@@ -1050,6 +1050,111 @@ def _print_registration_followup(files, registered_id) -> None:
     click.echo(f"  取り消すとき: コミット前は git checkout -- {' '.join(files)}／コミット後は正本（{files[0]}）の"
                "その差分だけを戻してコミットする（台帳は CI の生成で変わるので戻さない。次の discover が台帳の候補を"
                "確認待ちに戻す）")
+
+
+@cli.command("rank-product-candidates")
+@click.option("--fetch-buyback", is_flag=True, help="既存の買取の取得元（買取商店）のまとめのページと上位の機種の価格表を取得する")
+@click.option("--max-family-pages", default=1, type=click.IntRange(0, 2), help="価格表を読む機種の数（既定 1・最大 2）")
+def rank_product_candidates(fetch_buyback, max_family_pages):
+    """確認待ちの Apple の候補に優先順位の点を付ける（Phase 30。運営者向け。登録・承認はしない）。
+
+    点は決まった計算式（src/discovery/priority.py）。売値は既存の買取の取得元の実際の行だけ（推測しない）。
+    結果は exports/discovery/priority.json（取得したときだけ書く。取得の時刻つき。CI では実行しない。commit / push は
+    しない: 管理画面に出すときは人が差分を見てコミットする）。
+    """
+    from datetime import datetime as _dt
+    from src.collectors.buyback_kaitori_shouten import parse_rows
+    from src.discovery import priority as _pr
+    from src.discovery import store as _st
+    from src.tcg.models import JST as _JST
+    from src.utils.atomic_write import write_json_atomic
+    now = _dt.now(tz=_JST)
+    out = _discovery_dir()
+    cands = _st.load(out / _st.PRODUCT_FILE)["candidates"]
+    ev = {"index_url": _pr.INDEX_URL, "index_status": "not_fetched", "families": {}, "rows": [], "fetches": []}
+    if fetch_buyback:
+        # 別のプロセス（前回の実行）からの間隔も守る（取得の間隔の記録はプロセスの中だけなので、前回の取得の時刻で確かめる）
+        try:
+            import json as _json
+            prev = _json.loads((out / "priority.json").read_text(encoding="utf-8"))
+            fetches = (prev.get("evidence") or {}).get("fetches") or []
+            last = max(_dt.fromisoformat(f["fetched_at"]) for f in fetches)
+            # ブロックされた後は 24時間取り直さない（回避しない）
+            limit = 86400 if any(f.get("status") == "blocked" for f in fetches) else _PRIORITY_MIN_INTERVAL_SEC
+            wait = limit - (now - last).total_seconds()
+        except (OSError, ValueError, KeyError, TypeError):
+            wait = 0
+        if wait > 0:
+            click.echo(f"  中止: 前回の取得から間隔があいていません（ブロックの後は24時間・通常は {_PRIORITY_MIN_INTERVAL_SEC}秒。"
+                       f"あと {int(wait) + 1}秒）", err=True)
+            raise SystemExit(1)
+        def get(url, kind):
+            html, err = _priority_fetch(url)
+            st_ = "ok" if html else ("blocked" if err in _PRIORITY_BLOCKED else "failed")
+            ev["fetches"].append({"url": url, "kind": kind, "status": st_, "reason": err or "",
+                                  "fetched_at": _dt.now(tz=_JST).isoformat(timespec="seconds")})
+            return html, st_
+        html, ev["index_status"] = get(_pr.INDEX_URL, "index")
+        if html:
+            summary = [list(r) for r in parse_rows(html)]
+            ev["rows"] = [r + ["index"] for r in summary]
+            for fam, url in _pr.index_families(html).items():
+                ev["families"][fam] = {"category_url": url, "listed_in_index": True, "status": None}
+            # 点の高い機種から、価格表を max_family_pages 件だけ読む（全色・全容量を確かめる）
+            order = []
+            for r in _pr.rank(cands, ev, now=now)["ranked"]:
+                f = _pr.family_key(r["model"])
+                if f in ev["families"] and f not in order:
+                    order.append(f)
+            for i, f in enumerate(order[:max_family_pages]):
+                page, st_ = get(ev["families"][f]["category_url"], "category")
+                ev["families"][f]["status"] = st_
+                if page:
+                    ev["rows"] += [list(r) + ["category"] for r in parse_rows(page)]
+                if st_ != "ok":
+                    # ブロック・失敗したら同じ取得元をそれ以上読まない（ブロックは記録を残す。回避・再試行しない）
+                    for g in order[i + 1:max_family_pages]:
+                        ev["families"][g]["status"] = "blocked" if st_ == "blocked" else "not_fetched"
+                    break
+    res = _pr.rank(cands, ev, now=now)
+    # 公開のリポジトリに入るので、取得元の行は丸ごと残さない（候補に一致した行は各候補の buyback_rows に残る）
+    saved_ev = {k: v for k, v in ev.items() if k != "rows"}
+    saved_ev["rows_count"] = len(ev["rows"])
+    rep = {"generated_at": now.isoformat(timespec="seconds"), "evidence": saved_ev, **res,
+           "note": "運営者向けの優先順位（顧客向けの利益ではない）。売値は取得した実際の行だけ。登録は人が1件ずつ"}
+    if fetch_buyback:
+        write_json_atomic(out / "priority.json", rep)     # 取得なしの実行では前回の取得の記録を上書きしない
+    click.echo(f"{'順位':>3} {'候補':<20} {'商品':<26} {'公式':>9} {'買取':>9} {'差':>8} {'点':>4} 理由")
+    for r in res["ranked"]:
+        click.echo(f"{r['rank']:>3} {r['candidate_id']:<20} {r['product_name']:<26} "
+                   f"{(r['official_price'] or 0):>9,} {(r['buyback_sell'] or 0):>9,} "
+                   f"{(r['spread'] if r['spread'] is not None else 0):>8,} {r['score']:>4} "
+                   f"{r['buyback_state']} {','.join(r['reasons'])}")
+    click.echo(f"  除外 {len(res['excluded'])}件（登録済み・一致・STALE など）。取得 {len(ev['fetches'])}回。"
+               "登録はしていません（承認 → 見込み → 登録を1件ずつ）")
+    click.echo("  priority.json を書きました（管理画面の「候補の確認の順番」に出す。人が差分を見てコミットする）"
+               if fetch_buyback else "  （取得なしなので priority.json は書いていません）")
+
+
+from src.collectors.polite import CUTOFF_IMMEDIATE as _PRIORITY_BLOCKED  # noqa: E402  ブロック・規約上の拒否（共通の正本）
+
+
+_PRIORITY_MIN_INTERVAL_SEC = 90       # 買取商店の取得の間隔（config/sources.yaml の src_kaitori_shouten と同じ）
+
+
+def _priority_fetch(url: str):
+    """取得の共通の作法（robots.txt・間隔・正直な User-Agent・リダイレクトをたどらない）で1回取得する。
+
+    間隔は取得元の設定（src_kaitori_shouten の rate_limit_sec）で先に待つ（共通の既定 60秒より長い）。
+    """
+    import sys as _sys
+    from src.collectors import polite
+    if str(PROJECT_ROOT / "scripts") not in _sys.path:
+        _sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
+    import recheck_official
+    if url.startswith("https://www.kaitorishouten-co.jp/"):
+        polite.polite_wait(url, "src_kaitori_shouten")
+    return recheck_official._fetch(url)
 
 
 @cli.command("discover")

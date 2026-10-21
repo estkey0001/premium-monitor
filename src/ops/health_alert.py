@@ -21,7 +21,7 @@
 - official_recheck_failing  公式の再確認が3日連続で失敗（WARNING）・7日連続（HIGH）
 - baseline_unreadable       買取の比較の基準が読めない（WARNING。前回比の警告が黙って全部オフになる）
 - collector_report_missing  取得レポートが無い（HIGH）
-- collector_report_stale    取得レポートが古い（generated_at が 36 時間より前。収集がレポートを書く前に落ちて前日のレポートが残った
+- collector_report_stale    取得レポートが古い（generated_at が 6 時間より前・未来。収集がレポートを書く前に落ちて前日のレポートが残った
                             可能性。HIGH。古いレポートで取得元・失敗率・品質ゲートを判定しない）
 - price_adopted_over_ceiling  カテゴリ共通の価格の上限を超える値を、他店の裏付けで採用した（WARNING。商品ごと。人が確認する）
 """
@@ -41,7 +41,9 @@ _RANK = {WARNING: 1, HIGH: 2}
 CONSECUTIVE_DAYS = 3                    # 必須の店の連続失敗の日数
 FAILURE_RATE_WARNING_PCT = 50.0
 FAILURE_RATE_HIGH_PCT = 80.0
-COLLECTOR_REPORT_MAX_AGE_HOURS = 36        # 取得レポートがこれより古ければ「今回の収集のレポートではない」
+# 取得レポートがこれより古ければ「今回の収集のレポートではない」。定時の実行は 1 日 1 回で、前日のレポートは 17〜31 時間前
+# （開始が 4〜7 時間遅れる）。今回の実行が書いたレポートは、このアラートの step の時点で 1 時間以内（収集の step の直後）
+COLLECTOR_REPORT_MAX_AGE_HOURS = 6
 EXPIRY_WARNING_DAYS = 3                 # 公式の確認の期限が残りこの日数以内
 RECHECK_FAILURE_WARNING_DAYS = 3
 RECHECK_FAILURE_HIGH_DAYS = 7
@@ -87,7 +89,8 @@ def collector_state(inputs: dict, now: datetime) -> str:
         return "stale"                                   # 生成の時刻が読めないレポートは今回のものと確かめられない
     if gen.tzinfo is None:
         gen = gen.replace(tzinfo=JST)
-    return "stale" if (now - gen) > timedelta(hours=COLLECTOR_REPORT_MAX_AGE_HOURS) else "ok"
+    age = now - gen
+    return "stale" if (age > timedelta(hours=COLLECTOR_REPORT_MAX_AGE_HOURS) or age < -timedelta(hours=1)) else "ok"
 
 
 def unobservable_categories(inputs: dict, now: datetime) -> frozenset:

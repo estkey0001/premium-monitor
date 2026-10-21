@@ -271,7 +271,8 @@ def apply_recheck(c, products, path: Path | None = None) -> list[dict]:
                             "review_status": "REVIEW_REQUIRED"})
         # 在庫は、価格まで記録と一致した（unchanged）読み取りのときだけ記録する（価格が食い違った読み取りの在庫は
         # 別の商品の行かもしれないので信用しない。監査 N-1）
-        if st == "unchanged" and r.get("stock") and _stock_record_is_current(at) and at[:10] <= today:
+        if st == "unchanged" and r.get("stock") and extends_verification(r) and _stock_record_is_current(at) \
+                and at[:10] <= today:
             # 判定を通らず購入ページとして使わない行（verified が外れた行）の在庫は書かない（再監査 Low-2）
             cur = c.execute("UPDATE products SET official_stock_status=?, official_stock_observed_at=? WHERE id=? "
                             "AND (official_stock_observed_at IS NULL OR official_stock_observed_at = '' "

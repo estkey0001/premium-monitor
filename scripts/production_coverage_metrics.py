@@ -178,8 +178,9 @@ def _actionability_metrics(diag: dict) -> dict:
     ac = diag.get("actionability") if isinstance(diag.get("actionability"), dict) else {}
     rows = [r for r in ac.get("products") or [] if isinstance(r, dict)]
     rc = _load("exports/official_recheck/latest.json")
+    from src.market.official_registry import extends_verification
     fresh = sum(1 for r in rc.get("results") or [] if isinstance(r, dict) and r.get("status") == "unchanged"
-                and r.get("stock"))
+                and r.get("stock") and extends_verification(r))
     return {"profitable_stock_out": sum(1 for r in rows if not r.get("actionable")
                                         and set(r.get("reasons") or []) & {"stock_out", "stock_unknown"}),
             "profitable_closed_lottery": sum(1 for r in rows if not r.get("actionable")

@@ -1017,17 +1017,90 @@ def test_baseline_future_observation_time_is_not_trusted():
     assert pb.build([], [future], now) == []                                              # 未来の時刻は基準に入れない
 
 
-def test_official_direct_audit_ignores_msrp_lineup_for_freshness():
+def test_ceiling_corroboration_needs_a_different_operator_not_just_a_different_host():
+    m = _ubp()
+    base = _prow("kaitori_shouten", 140000, "https://a.test-store.jp/products/detail/12345", alias="iphone17pro256")
+    same_operator = {
+        "サブドメイン違い": "https://m.a.test-store.jp/products/detail/12345",
+        "別のサブドメイン": "https://shop.a.test-store.jp/products/detail/12345",
+        "ポート違い": "https://a.test-store.jp:443/products/detail/12345",
+        "userinfo 付き": "https://x@a.test-store.jp/products/detail/12345",
+        "大文字・末尾の /": "https://A.TEST-STORE.JP/products/detail/12345/",
+        "www. 違い": "https://www.a.test-store.jp/products/detail/99999",
+    }
+    # 公式 179,800（iphone17pro256）に対して 140,000 は上限（400,000）の中なので、上限超えの判定自体を ps5_pro で行う
+    base = _prow("kaitori_shouten", 200700, "https://a.test-store.jp/products/detail/12345")
+    for name, url in same_operator.items():
+        rows = [base, _prow("shop_b", 200700, url)]
+        assert _quarantined(m, rows)[0][0] is True, name
+    assert not any(_quarantined(m, [base, _prow("shop_b", 200700, "https://b.other-store.jp/products/detail/77")])[0])
+    # 第2レベルのドメイン（co.jp）は3ラベルで比べる
+    assert m._registrable_domain("m.shop.example.co.jp") == "example.co.jp" and m._registrable_domain("www.a.com") == "a.com"
+    assert m._registrable_domain("a.co.jp") == "a.co.jp" and m._registrable_domain("") == ""
+
+
+def test_item_page_needs_the_id_right_after_the_marker():
+    m = _ubp()
+    def ok(url):
+        return m._item_level_verified(_prow("s", 1, url))
+    assert ok("https://www.kaitorishouten-co.jp/products/detail/25543") and ok("https://b.test-store.jp/item/77")
+    assert ok("https://b.test-store.jp/goods/AB123/")
+    for url in ("https://b.test-store.jp/products/", "https://b.test-store.jp/products/2024/",
+                "https://b.test-store.jp/item/category-2/", "https://b.test-store.jp/products/iphone17",
+                "https://b.test-store.jp/", "https://b.test-store.jp/products/detail/"):
+        assert not ok(url), url
+
+
+def test_collector_report_age_boundary_separates_this_run_from_yesterdays():
+    from src.ops import health_alert as ha
+    col = _col_report({"kaitori_shouten": {"ok": 5, "failed": 0}})
+    def state(gen, now=HNOW):
+        return ha.collector_state(_inp(dict(col, generated_at=gen)), now)
+    assert state("2026-10-22T18:00:00+09:00") == "ok"                       # 今回の実行（30 分前）
+    assert state("2026-10-22T13:00:00+09:00") == "ok"                       # 5.5 時間前（長い実行）
+    assert state("2026-10-22T11:00:00+09:00") == "stale"                    # 7.5 時間前
+    assert state("2026-10-21T18:00:00+09:00") == "stale"                    # 前日のレポート（24 時間前）
+    assert state("2026-10-21T12:17:00+09:00") == "stale"                    # 前日の 12:17 に始まった実行のレポート（31 時間前）
+    assert state("2026-10-23T18:00:00+09:00") == "stale"                    # 未来
+    assert state("2026-10-22T19:00:00+09:00") == "ok"                       # 時計のずれの 30 分先
+    assert ha.COLLECTOR_REPORT_MAX_AGE_HOURS == 6
+
+
+def test_official_direct_audit_msrp_lineup_does_not_extend_but_store_page_does():
     from src.market import official_registry as reg
-    v = reg.VERIFIED_URLS["prod_switch2"]
-    base = {"product_id": "prod_switch2", "url": v["url"], "recorded_price": v["price"], "status": "unchanged",
-            "price": v["price"], "observed_at": "2026-10-22T12:00:00+09:00"}
-    products = [{"id": "prod_switch2", "name": "Switch 2"}]
-    def last(extra):
-        rows = reg.official_direct_audit(products, today="2026-10-22", recheck=[{**base, **extra}])
-        return rows[0]["verified_at"] if rows else v["checked_on"]
-    # official_direct_audit は公式直販価格（OFFICIAL_DIRECT_OFFERS）の商品だけを返す。Switch 2 は定価（msrp）なので
-    # 関数の判定そのもの（extends_verification）で確かめる
-    assert reg.extends_verification({**base, "verified_by": "store_product_page"}) is True
-    assert reg.extends_verification({**base, "verified_by": "msrp_lineup"}) is False
-    assert last({"verified_by": "msrp_lineup"}) == v["checked_on"]
+    pid = next(p for p in reg.OFFICIAL_DIRECT_OFFERS if p in reg.VERIFIED_URLS)
+    v = reg.VERIFIED_URLS[pid]
+    base = {"product_id": pid, "url": v["url"], "recorded_price": v["price"], "status": "unchanged", "price": v["price"],
+            "observed_at": "2026-10-22T12:00:00+09:00"}
+    def verified_at(extra):
+        rows = {r["product_id"]: r for r in reg.official_direct_audit([{"id": pid, "name": pid}], today="2026-10-22",
+                                                                       recheck=[{**base, **extra}])}
+        return rows[pid]["verified_at"]
+    assert verified_at({"verified_by": "store_product_page"}) == "2026-10-22"     # 同じストアの商品ページは確認日を進める
+    assert verified_at({}) == "2026-10-22"                                          # 記録の購入ページそのもの
+    assert verified_at({"verified_by": "msrp_lineup"}) == v["checked_on"]           # 希望小売価格だけは進めない
+
+
+def test_stock_from_msrp_lineup_is_never_written():
+    import json
+    m = _audit_module()
+    calls = []
+
+    class C:
+        def execute(self, sql, params=()):
+            calls.append(sql)
+            return SimpleNamespace(rowcount=1, fetchone=lambda: None)
+
+        def commit(self):
+            pass
+    m.NOW = datetime(2026, 10, 22, 13, 0, tzinfo=JST)
+    v = m.VERIFIED_URLS["prod_switch2"]
+    res = {"product_id": "prod_switch2", "status": "unchanged", "price": v["price"], "recorded_price": v["price"], "url": v["url"],
+           "model": "", "observed_at": "2026-10-22T12:30:00+09:00", "stock": "在庫あり", "verified_by": "msrp_lineup"}
+    import tempfile
+    from pathlib import Path as _P
+    with tempfile.TemporaryDirectory() as td:
+        path = _P(td) / "latest.json"
+        path.write_text(json.dumps({"results": [res]}), encoding="utf-8")
+        m.apply_recheck(C(), {"prod_switch2": {}}, path)
+    assert not any("official_stock_status" in sql for sql in calls)                 # 将来のパーサが在庫を返しても書かない

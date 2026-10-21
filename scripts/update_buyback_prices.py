@@ -833,18 +833,20 @@ def compute_suspicious(new_rows: list[dict], existing_rows: list[dict]) -> list[
 
 
 _ITEM_ID_PATH = None
+_SECOND_LEVEL = frozenset({"co", "com", "or", "ne", "ac", "go", "gr", "ed", "ad"})
 
 
 def _item_level_verified(row: dict) -> bool:
-    """商品ページ（識別の番号まで付いた URL）で、照合済み（link_verified）で、信頼度が high / medium と明示され、
-    自動取得（auto_scraped）と明示された行。キーが欠けた行は通さない（既定値で開けない）。"""
+    """商品ページ（`/detail/<番号>`・`/item/<番号>` など、マーカーの直後が識別の番号の URL）で、照合済み（link_verified）で、
+    信頼度が high / medium と明示され、自動取得（auto_scraped）と明示された行。キーが欠けた行は通さない（既定値で開けない）。
+    一覧・カテゴリのページ（`/products/`・`/products/2024/`・`/item/category-2/`）は商品ページではない。"""
     import re
     from urllib.parse import urlparse
 
     from src.market.normalized_prices import classify_link_type
     global _ITEM_ID_PATH
     if _ITEM_ID_PATH is None:
-        _ITEM_ID_PATH = re.compile(r"/(?:detail|item|items|products|goods|dp)/(?:[A-Za-z0-9_-]+/)*[A-Za-z0-9_-]*\d[A-Za-z0-9_-]*/?$")
+        _ITEM_ID_PATH = re.compile(r"/(?:detail|item|items|goods|dp)/[A-Za-z0-9_]*\d[A-Za-z0-9_]*/?$")
     url = str(row.get("url") or "")
     verified = str(row.get("link_verified", "")).lower() == "true"
     try:
@@ -856,12 +858,26 @@ def _item_level_verified(row: dict) -> bool:
             and row.get("data_source") == "auto_scraped")
 
 
+def _registrable_domain(host: str) -> str:
+    """運営元の比べる形（登録可能ドメインの近似）: ポート・userinfo・www.・サブドメインを捨てる。
+    `m.a.com`・`shop.a.com`・`a.com:443` は同じ運営元。`a.co.jp` のような第2レベルは3ラベルで見る。"""
+    labels = [x for x in str(host or "").lower().strip(".").split(".") if x]
+    if len(labels) >= 3 and labels[-2] in _SECOND_LEVEL and len(labels[-1]) == 2:
+        return ".".join(labels[-3:])
+    return ".".join(labels[-2:])
+
+
 def _source_key(row: dict) -> tuple[str, str]:
-    """裏付けが別の系統か見るための（ホスト, URL）。www. を除いたホストが同じなら同じ運営元とみなす。"""
+    """裏付けが別の系統か見るための（運営元, 正規化した URL）。同じ運営元・同じページ（大文字小文字・末尾の / ・クエリ・
+    フラグメントの違い）は同じ系統とみなす。"""
     from urllib.parse import urlparse
     url = str(row.get("url") or "")
-    host = (urlparse(url).netloc or "").lower()
-    return (host[4:] if host.startswith("www.") else host), url
+    try:
+        u = urlparse(url)
+        host = u.hostname or ""
+    except ValueError:
+        return "", url
+    return _registrable_domain(host), f"{host.lower()}{u.path.rstrip('/').lower()}"
 
 
 def _resolve_ceiling_flags(suspicious: list[dict], new_rows: list[dict]) -> None:

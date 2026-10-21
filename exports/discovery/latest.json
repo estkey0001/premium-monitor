@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-20T18:14:42+09:00",
+  "generated_at": "2026-10-21T11:28:46+09:00",
   "apple": {
     "source": "apple_jp_official",
     "list_status": "ok",
@@ -12,13 +12,13 @@
       "iphone-duo"
     ],
     "checked": [
-      "iphone-16",
-      "iphone-17"
+      "iphone-17e",
+      "iphone-18-pro"
     ],
     "errors": {},
-    "unknown_parts": 10,
-    "matched": 1,
-    "pending": 2,
+    "unknown_parts": 38,
+    "matched": 0,
+    "pending": 10,
     "requests": 3,
     "cutoff": "",
     "saved": true
@@ -46,7 +46,7 @@
       "configured": 17,
       "implemented": 6,
       "unimplemented": 11,
-      "blocked": 2,
+      "blocked": 3,
       "robots_unreachable": 4,
       "unreachable": 4,
       "table": [
@@ -74,9 +74,9 @@
           "source_id": "GEO",
           "retailer": "ゲオ",
           "adapter": "geo_lottery",
-          "state": "NO_ACTIVE_LOTTERY",
-          "health": "OK_NO_EVENTS",
-          "blocked": false,
+          "state": "SOURCE_BLOCKED",
+          "health": "BLOCKED",
+          "blocked": true,
           "robots": null,
           "unreachable": false
         },
@@ -230,16 +230,16 @@
   },
   "metrics": {
     "product_candidates": 39,
-    "new_product_candidates": 38,
-    "pending_review": 24,
+    "new_product_candidates": 37,
+    "pending_review": 23,
     "review_required": 14,
     "matched_existing": 1,
     "approved": 0,
     "rejected": 0,
-    "registered": 1,
+    "registered": 2,
     "stale": 0,
-    "unknown_official_products": 64,
-    "apple_candidates": 18,
+    "unknown_official_products": 62,
+    "apple_candidates": 17,
     "tcg_products": 20,
     "event_candidates": 16,
     "review_required_announcements": 2,
@@ -252,7 +252,7 @@
     "configured": 17,
     "implemented": 6,
     "unimplemented": 11,
-    "blocked": 2,
+    "blocked": 3,
     "robots_unreachable": 4,
     "unreachable": 4,
     "table": [
@@ -280,9 +280,9 @@
         "source_id": "GEO",
         "retailer": "ゲオ",
         "adapter": "geo_lottery",
-        "state": "NO_ACTIVE_LOTTERY",
-        "health": "OK_NO_EVENTS",
-        "blocked": false,
+        "state": "SOURCE_BLOCKED",
+        "health": "BLOCKED",
+        "blocked": true,
         "robots": null,
         "unreachable": false
       },

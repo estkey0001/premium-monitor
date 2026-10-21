@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-20 18:20 JST",
+  "generated_at": "2026-10-21 11:34 JST",
   "scope": "商品同一性マッチング精度（利益/AI/UI/SaaS/DQ思想は不変）",
   "accuracy": {
     "product_match_accuracy": 1.0,
@@ -9,8 +9,8 @@
     "confirmed_mismatches_active": 0,
     "detected_mismatches_total": 0,
     "detected_mismatches_rejected": 0,
-    "independently_verified_exact": 13,
-    "unverifiable_trusted": 218,
+    "independently_verified_exact": 14,
+    "unverifiable_trusted": 220,
     "accessory_misclassification": 0,
     "false_main_promotion": 0,
     "duplicate_patterns": 8,
@@ -26,22 +26,22 @@
     "false_main_promotion": 0
   },
   "totals": {
-    "total": 235,
-    "product_mismatch_or_unverified": 222,
-    "model_unverifiable": 218,
-    "main_rejected": 222,
+    "total": 237,
+    "product_mismatch_or_unverified": 223,
+    "model_unverifiable": 220,
+    "main_rejected": 223,
     "model_match": 17,
     "manual_review_required": 75,
     "accessory_detected": 7,
-    "exact_product_match": 13,
-    "main_eligible": 13
+    "exact_product_match": 14,
+    "main_eligible": 14
   },
   "by_source": {
     "メーカー公式/定価": {
-      "total": 46,
-      "product_mismatch_or_unverified": 46,
-      "model_unverifiable": 46,
-      "main_rejected": 46,
+      "total": 47,
+      "product_mismatch_or_unverified": 47,
+      "model_unverifiable": 47,
+      "main_rejected": 47,
       "exact_product_match": 0,
       "capacity_mismatch": 0,
       "model_mismatch": 0,
@@ -95,12 +95,12 @@
       "main_eligible": 0
     },
     "買取商店": {
-      "total": 22,
+      "total": 23,
       "product_mismatch_or_unverified": 9,
-      "model_unverifiable": 22,
+      "model_unverifiable": 23,
       "main_rejected": 9,
-      "exact_product_match": 13,
-      "main_eligible": 13,
+      "exact_product_match": 14,
+      "main_eligible": 14,
       "capacity_mismatch": 0,
       "model_mismatch": 0
     },
@@ -322,7 +322,7 @@
         "new",
         "used"
       ],
-      "first_seen": 59.3,
+      "first_seen": 60.0,
       "last_seen": 0.0,
       "risk_level": "high",
       "possible_reason": [
@@ -353,7 +353,7 @@
         "new"
       ],
       "first_seen": 9999.0,
-      "last_seen": 0.8,
+      "last_seen": 0.5,
       "risk_level": "high",
       "possible_reason": [
         "different_model_same_price",
@@ -384,7 +384,7 @@
         "new"
       ],
       "first_seen": 9999.0,
-      "last_seen": 0.8,
+      "last_seen": 0.5,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -414,8 +414,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 71.3,
-      "last_seen": 71.3,
+      "first_seen": 72.0,
+      "last_seen": 72.0,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -444,8 +444,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 71.3,
-      "last_seen": 71.3,
+      "first_seen": 72.0,
+      "last_seen": 72.0,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -474,8 +474,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 71.3,
-      "last_seen": 71.3,
+      "first_seen": 72.0,
+      "last_seen": 72.0,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -504,7 +504,7 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 0.0,
+      "first_seen": 0.1,
       "last_seen": 0.0,
       "risk_level": "medium",
       "possible_reason": [
@@ -534,7 +534,7 @@
         "new"
       ],
       "first_seen": 9999.0,
-      "last_seen": 12.8,
+      "last_seen": 13.5,
       "risk_level": "low",
       "possible_reason": [
         "same_price_multiple_skus"
@@ -547,18 +547,18 @@
   "source_accuracy_ranking": [
     {
       "source": "買取商店",
-      "observations": 22,
-      "score": 88,
-      "identity": 0.591,
+      "observations": 23,
+      "score": 89,
+      "identity": 0.609,
       "capacity": 1.0,
       "model": 1.0,
       "condition": 1.0,
-      "freshness": 0.682,
-      "main_eligible": 13
+      "freshness": 0.696,
+      "main_eligible": 14
     },
     {
       "source": "メーカー公式/定価",
-      "observations": 46,
+      "observations": 47,
       "score": 75,
       "identity": 0.0,
       "capacity": 1.0,

@@ -1,15 +1,15 @@
-# データ取得品質レポート（2026-10-20 18:20 JST）
+# データ取得品質レポート（2026-10-21 11:34 JST）
 
 ## 取得成功率
 - 全対象店舗数: 16
 - 成功店舗数: 3
 - 全失敗店舗数: 11
-- ジョブ成功率: 32.3%（OK 21 / 失敗 40 / SKIP 4 / 計 65）
+- ジョブ成功率: 33.3%（OK 22 / 失敗 40 / SKIP 4 / 計 66）
 
 ## 前回比較
-- 前回成功率: 29.2%
-- 今回成功率: 32.3%
-- 変化: +3.1pt（改善）
+- 前回成功率: 32.3%
+- 今回成功率: 33.3%
+- 変化: +1.0pt（改善）
 - 7日移動平均: 31.0%
 - 主要失敗理由 TOP5: price_not_found 9, product_not_listed 7, rate_limited_429 6, http_403 6, robots_unreachable 4
 
@@ -38,6 +38,7 @@
 - iphone17_256: 100.0%
 - airpods_pro3: 100.0%
 - iphoneair_256: 100.0%
+- iphoneduo_256: 100.0%
 - x100vi: 100.0%
 - gr4: 100.0%
 - gr4_hdf: 100.0%
@@ -46,19 +47,19 @@
 - r5ii: 100.0%
 
 ## 連続失敗店舗（2回以上）
-- 2ndstreet: 213回連続
-- bookoff: 213回連続
-- dosupara: 213回連続
-- geo_mobile: 213回連続
-- hardoff: 213回連続
-- janpara: 213回連続
-- pasoko: 213回連続
-- sofmap: 213回連続
-- surugaya: 213回連続
-- tsutaya: 213回連続
-- iosys: 146回連続
-- netoff: 73回連続
-- geo: 5回連続
+- 2ndstreet: 214回連続
+- bookoff: 214回連続
+- dosupara: 214回連続
+- geo_mobile: 214回連続
+- hardoff: 214回連続
+- janpara: 214回連続
+- pasoko: 214回連続
+- sofmap: 214回連続
+- surugaya: 214回連続
+- tsutaya: 214回連続
+- iosys: 147回連続
+- netoff: 74回連続
+- geo: 6回連続
 
 ## 改善優先順位（required店舗）
 1. iosys（失敗6 / http_403）
@@ -77,7 +78,7 @@
 - site_blocked: 2件
 
 ## 有効データ量（新品・未使用 / 14日以内 / price>0）
-- 有効買取データを持つ商品数: 15
+- 有効買取データを持つ商品数: 16
   - prod_iphone17pm_256: 3店舗
   - prod_iphone17pro_256: 2店舗
   - prod_iphone17pro_512: 2店舗
@@ -87,15 +88,15 @@
   - prod_iphone17_256: 1店舗
   - prod_airpods_pro3: 1店舗
   - prod_iphoneair_256: 1店舗
+  - prod_iphoneduo_256: 1店舗
   - prod_x100vi: 1店舗
   - prod_gr4: 1店舗
   - prod_gr4_hdf: 1店舗
   - prod_gr4_mono: 1店舗
   - prod_z8: 1店舗
-  - prod_r5ii: 1店舗
 
 ## ランキングに使えたデータ数
-- Beginner: 1 件
+- Beginner: 2 件
 - Pro: 0 件
 
 ## せどりルートに使えたデータ数

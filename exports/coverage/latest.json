@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-10-20 18:20 JST",
-  "total_products": 46,
+  "generated_at": "2026-10-21 11:34 JST",
+  "total_products": 47,
   "covered_categories": 7,
-  "coverage_score": 43,
+  "coverage_score": 44,
   "coverage_score_breakdown": {
     "breadth": 21,
-    "depth": 17,
+    "depth": 18,
     "profitability": 0,
     "freshness": 5
   },
@@ -20,7 +20,7 @@
     },
     {
       "category": "iphone",
-      "products": 9,
+      "products": 10,
       "main": 0,
       "reference": 0,
       "avg_profit": 0,

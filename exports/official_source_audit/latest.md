@@ -1,11 +1,11 @@
 # Official Source Registry & Validation
 
-> 生成: 2026-10-20 17:59 JST / 公式ソース登録・検証（利益/AI/Opportunity/Notification/Capital/Execution は不変）
+> 生成: 2026-10-21 11:13 JST / 公式ソース登録・検証（利益/AI/Opportunity/Notification/Capital/Execution は不変）
 
 ## メーカー別サマリ
 | Maker | Products | URL verified | HTTP200 | exact match | price auto | high conf | failed |
 |---|--:|--:|--:|--:|--:|--:|--:|
-| Apple | 20 | 3 | 3 | 3 | 3 | 3 | 17 |
+| Apple | 21 | 4 | 4 | 4 | 4 | 4 | 17 |
 | Sony | 6 | 1 | 1 | 1 | 1 | 1 | 5 |
 | Nintendo | 2 | 1 | 1 | 1 | 1 | 1 | 1 |
 | Nikon | 3 | 1 | 1 | 1 | 1 | 1 | 2 |
@@ -15,7 +15,7 @@
 
 ## 自動取得率 Before → After
 - Before: 公式定価あり商品 3 / 公式config 7
-- After: URL検証済 8 / 価格取得 8 （検証対象 8 / 検証不能 8）
+- After: URL検証済 9 / 価格取得 9 （検証対象 9 / 検証不能 8）
 
 ## Apple Source Audit（旧URL検出）
 | product | current_url | http | action | note |
@@ -28,6 +28,7 @@
 |---|---|--:|---|---|
 | prod_iphone17_256 | src_apple_jp | ¥159,800 | item | high |
 | prod_iphoneair_256 | src_apple_jp | ¥189,800 | item | high |
+| prod_iphoneduo_256 | src_apple_jp | ¥364,800 | item | high |
 | prod_airpods_pro3 | src_apple_jp | ¥42,800 | item | high |
 | prod_ps5_pro | src_sony_store | ¥137,980 | item | high |
 | prod_switch2 | src_nintendo_store | ¥59,980 | item | high |

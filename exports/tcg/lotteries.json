@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-10-20T18:14:42.667328+09:00",
-  "evaluated_at": "2026-10-20T18:14:42.665322+09:00",
+  "generated_at": "2026-10-21T11:28:46.386648+09:00",
+  "evaluated_at": "2026-10-21T11:28:46.384662+09:00",
   "items": [
     {
       "tcg": "POKEMON",
@@ -53,8 +53,8 @@
       "verified": true,
       "verified_by": null,
       "published_at": "2026-08-21T00:00:00+09:00",
-      "observed_at": "2026-10-20T18:11:54.987082+09:00",
-      "last_verified_at": "2026-10-20T18:11:54.987087+09:00",
+      "observed_at": "2026-10-21T11:25:55.539152+09:00",
+      "last_verified_at": "2026-10-21T11:25:55.539157+09:00",
       "collection_method": "HTML",
       "status": "ENDED",
       "conflict": false,
@@ -117,8 +117,8 @@
       "verified": true,
       "verified_by": null,
       "published_at": "2026-08-21T00:00:00+09:00",
-      "observed_at": "2026-10-20T18:11:54.988914+09:00",
-      "last_verified_at": "2026-10-20T18:11:54.988917+09:00",
+      "observed_at": "2026-10-21T11:25:55.541103+09:00",
+      "last_verified_at": "2026-10-21T11:25:55.541106+09:00",
       "collection_method": "HTML",
       "status": "ENDED",
       "conflict": false,
@@ -268,9 +268,9 @@
   "coverage": {
     "configured_sources": 17,
     "implemented_collectors": 6,
-    "reachable_sources": 10,
-    "healthy_sources": 6,
-    "blocked_sources": 2,
+    "reachable_sources": 9,
+    "healthy_sources": 5,
+    "blocked_sources": 3,
     "unreachable_sources": 4,
     "not_implemented_sources": 11,
     "sources_with_active_lottery": 0,

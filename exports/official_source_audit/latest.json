@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-20 17:59 JST",
+  "generated_at": "2026-10-21 11:13 JST",
   "scope": "公式ソース登録・検証（利益/AI/Opportunity/Notification/Capital/Execution は不変）",
   "methodology": {
     "verification": "WebFetch で HTTP200/公式ドメイン/canonical/商品一致を実確認したURLのみ verified",
@@ -51,6 +51,18 @@
       "link_type": "item",
       "confidence": "high",
       "official_price": 189800,
+      "verified": true,
+      "price_kind": "official_direct",
+      "official_direct_eligible": true,
+      "price_rejection": null
+    },
+    {
+      "product_id": "prod_iphoneduo_256",
+      "source": "src_apple_jp",
+      "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-duo",
+      "link_type": "item",
+      "confidence": "high",
+      "official_price": 364800,
       "verified": true,
       "price_kind": "official_direct",
       "official_direct_eligible": true,
@@ -454,7 +466,7 @@
           "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17",
           "link_type": "item",
           "verified": true,
-          "last_verified_at": "2026-10-20",
+          "last_verified_at": "2026-10-21",
           "extraction_method": "webfetch_verified",
           "confidence": "high",
           "official_price": 159800,
@@ -559,10 +571,35 @@
           "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-air",
           "link_type": "item",
           "verified": true,
-          "last_verified_at": "2026-10-20",
+          "last_verified_at": "2026-10-21",
           "extraction_method": "webfetch_verified",
           "confidence": "high",
           "official_price": 189800,
+          "enabled": true,
+          "reason_if_disabled": null
+        },
+        "pricecom": null,
+        "yodobashi": null,
+        "biccamera": null,
+        "mapcamera": null,
+        "fujiya": null,
+        "rakuten": null,
+        "yahoo": null,
+        "ebay": null
+      }
+    },
+    "prod_iphoneduo_256": {
+      "product_name": "iPhone Duo 256GB SIMフリー",
+      "brand": "Apple",
+      "sources": {
+        "official": {
+          "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-duo",
+          "link_type": "item",
+          "verified": true,
+          "last_verified_at": "2026-10-21",
+          "extraction_method": "webfetch_verified",
+          "confidence": "high",
+          "official_price": 364800,
           "enabled": true,
           "reason_if_disabled": null
         },
@@ -809,7 +846,7 @@
           "url": "https://www.apple.com/jp/shop/buy-airpods/airpods-pro-3",
           "link_type": "item",
           "verified": true,
-          "last_verified_at": "2026-10-20",
+          "last_verified_at": "2026-10-21",
           "extraction_method": "webfetch_verified",
           "confidence": "high",
           "official_price": 42800,
@@ -1124,7 +1161,7 @@
           "url": "https://mall-jp.fujifilm.com/shop/g/g16941878/",
           "link_type": "item",
           "verified": true,
-          "last_verified_at": "2026-10-20",
+          "last_verified_at": "2026-10-21",
           "extraction_method": "webfetch_verified",
           "confidence": "high",
           "official_price": 315700,
@@ -1294,7 +1331,7 @@
           "url": "https://store.canon.jp/online/g/g6536C001/",
           "link_type": "item",
           "verified": true,
-          "last_verified_at": "2026-10-20",
+          "last_verified_at": "2026-10-21",
           "extraction_method": "webfetch_verified",
           "confidence": "high",
           "official_price": 654500,
@@ -1369,7 +1406,7 @@
           "url": "https://nij.nikon.com/shop/g/g4960759909947/",
           "link_type": "item",
           "verified": true,
-          "last_verified_at": "2026-10-20",
+          "last_verified_at": "2026-10-21",
           "extraction_method": "webfetch_verified",
           "confidence": "high",
           "official_price": 575300,
@@ -1469,12 +1506,12 @@
   },
   "maker_report": {
     "Apple": {
-      "products": 20,
-      "url_verified": 3,
-      "http_200": 3,
-      "exact_match": 3,
-      "price_ok": 3,
-      "high_conf": 3,
+      "products": 21,
+      "url_verified": 4,
+      "http_200": 4,
+      "exact_match": 4,
+      "price_ok": 4,
+      "high_conf": 4,
       "failed": 17,
       "failures": [
         {
@@ -1663,47 +1700,47 @@
       "official_configs": 7
     },
     "after": {
-      "url_verified": 8,
-      "price_captured": 8,
-      "verified_targets": 8,
+      "url_verified": 9,
+      "price_captured": 9,
+      "verified_targets": 9,
       "unverified_targets": 8
     },
     "recheck_applied": [
       {
         "product_id": "prod_airpods_pro3",
         "action": "price_reconfirmed",
-        "on": "2026-10-20"
+        "on": "2026-10-21"
       },
       {
         "product_id": "prod_r5ii",
         "action": "price_reconfirmed",
-        "on": "2026-10-20"
+        "on": "2026-10-21"
       },
       {
         "product_id": "prod_z8",
         "action": "price_reconfirmed",
-        "on": "2026-10-20"
+        "on": "2026-10-21"
       },
       {
         "product_id": "prod_iphone17_256",
         "action": "price_reconfirmed",
-        "on": "2026-10-20"
+        "on": "2026-10-21"
       },
       {
         "product_id": "prod_x100vi",
         "action": "price_reconfirmed",
-        "on": "2026-10-20"
+        "on": "2026-10-21"
       },
       {
         "product_id": "prod_x100vi",
         "action": "stock_observed",
         "stock": "在庫なし（全色）",
-        "at": "2026-10-20T17:57:04+09:00"
+        "at": "2026-10-21T11:09:02+09:00"
       },
       {
         "product_id": "prod_iphoneair_256",
         "action": "price_reconfirmed",
-        "on": "2026-10-20"
+        "on": "2026-10-21"
       }
     ]
   },
@@ -1711,38 +1748,38 @@
     {
       "product_id": "prod_airpods_pro3",
       "action": "price_reconfirmed",
-      "on": "2026-10-20"
+      "on": "2026-10-21"
     },
     {
       "product_id": "prod_r5ii",
       "action": "price_reconfirmed",
-      "on": "2026-10-20"
+      "on": "2026-10-21"
     },
     {
       "product_id": "prod_z8",
       "action": "price_reconfirmed",
-      "on": "2026-10-20"
+      "on": "2026-10-21"
     },
     {
       "product_id": "prod_iphone17_256",
       "action": "price_reconfirmed",
-      "on": "2026-10-20"
+      "on": "2026-10-21"
     },
     {
       "product_id": "prod_x100vi",
       "action": "price_reconfirmed",
-      "on": "2026-10-20"
+      "on": "2026-10-21"
     },
     {
       "product_id": "prod_x100vi",
       "action": "stock_observed",
       "stock": "在庫なし（全色）",
-      "at": "2026-10-20T17:57:04+09:00"
+      "at": "2026-10-21T11:09:02+09:00"
     },
     {
       "product_id": "prod_iphoneair_256",
       "action": "price_reconfirmed",
-      "on": "2026-10-20"
+      "on": "2026-10-21"
     }
   ]
 }

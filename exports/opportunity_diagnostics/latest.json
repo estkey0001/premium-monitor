@@ -1,18 +1,18 @@
 {
-  "generated_at": "2026-10-20T18:20:51+09:00",
+  "generated_at": "2026-10-21T11:34:56+09:00",
   "note": "内部用（運営者向け）。一般の画面には出さない。掲載の判定は opportunity.eligibility が正本",
-  "candidate_count": 46,
+  "candidate_count": 47,
   "eligible_count": 1,
   "exclusion_reasons": {
     "unverified_buy_price": 35,
     "stale_buyback": 15,
-    "no_profit": 10,
+    "no_profit": 11,
     "no_sell_price": 5,
     "invalid_identity": 4
   },
   "primary_reasons": {
     "unverified_buy_price": 35,
-    "no_profit": 10
+    "no_profit": 11
   },
   "candidates": [
     {
@@ -319,6 +319,14 @@
       "primary": "no_profit"
     },
     {
+      "product_id": "prod_iphoneduo_256",
+      "route_type": "RETAIL_TO_BUYBACK",
+      "reasons": [
+        "no_profit"
+      ],
+      "primary": "no_profit"
+    },
+    {
       "product_id": "prod_mac_mini_m4",
       "route_type": "RETAIL_TO_BUYBACK",
       "reasons": [
@@ -403,11 +411,11 @@
   "stock_excluded": 0,
   "category_counts": {
     "smartphone": {
-      "candidates": 9,
+      "candidates": 10,
       "eligible": 0,
       "primary_reasons": {
         "unverified_buy_price": 7,
-        "no_profit": 2
+        "no_profit": 3
       }
     },
     "tcg": {
@@ -449,7 +457,7 @@
   },
   "route_types": {
     "RETAIL_TO_BUYBACK": {
-      "candidates": 46,
+      "candidates": 47,
       "eligible": 1
     }
   },
@@ -463,7 +471,7 @@
     "summary": {
       "reference": 35,
       "sale_ended": 20,
-      "verified": 11
+      "verified": 12
     },
     "products": [
       {
@@ -488,7 +496,7 @@
         "price": 42800,
         "price_type": "RETAIL",
         "source": "src_apple_jp",
-        "verified_at": "2026-10-20T00:00:00",
+        "verified_at": "2026-10-21T00:00:00",
         "url": "https://www.apple.com/jp/shop/buy-airpods/airpods-pro-3",
         "note": ""
       },
@@ -514,7 +522,7 @@
         "price": 654500,
         "price_type": "RETAIL",
         "source": "src_canon_official",
-        "verified_at": "2026-10-20T00:00:00",
+        "verified_at": "2026-10-21T00:00:00",
         "url": "https://store.canon.jp/online/g/g6536C001/",
         "note": ""
       },
@@ -566,7 +574,7 @@
         "price": 315700,
         "price_type": "RETAIL",
         "source": "src_fujifilm_official",
-        "verified_at": "2026-10-20T00:00:00",
+        "verified_at": "2026-10-21T00:00:00",
         "url": "https://mall-jp.fujifilm.com/shop/g/g16941878/",
         "note": ""
       },
@@ -605,7 +613,7 @@
         "price": 575300,
         "price_type": "RETAIL",
         "source": "src_nikon_direct",
-        "verified_at": "2026-10-20T00:00:00",
+        "verified_at": "2026-10-21T00:00:00",
         "url": "https://nij.nikon.com/shop/g/g4960759909947/",
         "note": ""
       },
@@ -683,7 +691,7 @@
         "price": 211800,
         "price_type": "RETAIL",
         "source": "src_ricoh_imaging",
-        "verified_at": "2026-10-20T17:47:01+09:00",
+        "verified_at": "2026-10-21T10:58:58+09:00",
         "url": "https://ricohimagingstore.com/Form/Product/ProductList.aspx?shop=0&cat=002010",
         "note": ""
       },
@@ -696,7 +704,7 @@
         "price": 222000,
         "price_type": "RETAIL",
         "source": "src_ricoh_imaging",
-        "verified_at": "2026-10-20T17:51:01+09:00",
+        "verified_at": "2026-10-21T11:02:58+09:00",
         "url": "https://ricohimagingstore.com/Form/Product/ProductList.aspx?shop=0&cat=002010",
         "note": ""
       },
@@ -709,7 +717,7 @@
         "price": 299800,
         "price_type": "RETAIL",
         "source": "src_ricoh_imaging",
-        "verified_at": "2026-10-20T17:53:01+09:00",
+        "verified_at": "2026-10-21T11:04:58+09:00",
         "url": "https://ricohimagingstore.com/Form/Product/ProductList.aspx?shop=0&cat=002010",
         "note": ""
       },
@@ -878,7 +886,7 @@
         "price": 159800,
         "price_type": "RETAIL",
         "source": "src_apple_jp",
-        "verified_at": "2026-10-20T00:00:00",
+        "verified_at": "2026-10-21T00:00:00",
         "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17",
         "note": ""
       },
@@ -943,8 +951,21 @@
         "price": 189800,
         "price_type": "RETAIL",
         "source": "src_apple_jp",
-        "verified_at": "2026-10-20T00:00:00",
+        "verified_at": "2026-10-21T00:00:00",
         "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-air",
+        "note": ""
+      },
+      {
+        "product_id": "prod_iphoneduo_256",
+        "product": "iPhone Duo 256GB SIMフリー",
+        "evidence": "VERIFIED_CURRENT",
+        "action": "VERIFIED",
+        "official_not_sold": false,
+        "price": 364800,
+        "price_type": "RETAIL",
+        "source": "src_apple_jp",
+        "verified_at": "2026-10-21T00:00:00",
+        "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-duo",
         "note": ""
       },
       {
@@ -1067,7 +1088,7 @@
     ]
   },
   "buyback": {
-    "fresh_rows": 38,
+    "fresh_rows": 39,
     "stale_rows": 70,
     "failed_rows": 37,
     "failed_sources": [
@@ -1080,7 +1101,7 @@
       "ブックオフ",
       "駿河屋"
     ],
-    "usable_products": 26,
+    "usable_products": 27,
     "sources": [
       {
         "source": "TSUTAYA",
@@ -1157,7 +1178,7 @@
         "rows": 24,
         "fresh": 17,
         "stale": 7,
-        "last_observed": "2026-10-20T17:18:16.419648+09:00"
+        "last_observed": "2026-10-21T10:30:10.935760+09:00"
       },
       {
         "source": "ブックオフ",
@@ -1176,20 +1197,20 @@
         "rows": 5,
         "stale": 3,
         "fresh": 2,
-        "last_observed": "2026-10-20T17:10:46+09:00"
+        "last_observed": "2026-10-21T10:21:10+09:00"
       },
       {
         "source": "買取一丁目",
         "rows": 4,
         "fresh": 4,
-        "last_observed": "2026-10-20T17:09:12+09:00"
+        "last_observed": "2026-10-21T10:19:33+09:00"
       },
       {
         "source": "買取商店",
-        "rows": 22,
+        "rows": 23,
         "stale": 7,
-        "fresh": 15,
-        "last_observed": "2026-10-20T17:18:16+09:00"
+        "fresh": 16,
+        "last_observed": "2026-10-21T10:30:10+09:00"
       },
       {
         "source": "駿河屋",
@@ -1236,35 +1257,35 @@
         "product_id": "prod_gr4_hdf",
         "price": 240000,
         "source": "買取商店",
-        "observed_at": "2026-10-20T17:16:46+09:00",
+        "observed_at": "2026-10-21T10:28:40+09:00",
         "condition": "new_unopened"
       },
       {
         "product_id": "prod_gr4_mono",
         "price": 220000,
         "source": "買取商店",
-        "observed_at": "2026-10-20T17:16:46+09:00",
+        "observed_at": "2026-10-21T10:28:40+09:00",
         "condition": "new_unopened"
       },
       {
         "product_id": "prod_r5ii",
         "price": 450000,
         "source": "買取商店",
-        "observed_at": "2026-10-20T17:18:16+09:00",
+        "observed_at": "2026-10-21T10:30:10+09:00",
         "condition": "new_unopened"
       },
       {
         "product_id": "prod_x100vi",
         "price": 260000,
         "source": "買取商店",
-        "observed_at": "2026-10-20T17:16:46+09:00",
+        "observed_at": "2026-10-21T10:28:40+09:00",
         "condition": "new_unopened"
       },
       {
         "product_id": "prod_z8",
         "price": 420000,
         "source": "買取商店",
-        "observed_at": "2026-10-20T17:18:16+09:00",
+        "observed_at": "2026-10-21T10:30:10+09:00",
         "condition": "new_unopened"
       }
     ],
@@ -1291,7 +1312,7 @@
           "lottery_closed"
         ],
         "deadline": "2026-09-28T12:00:00+09:00",
-        "checked_at": "2026-10-20T18:01:00+09:00",
+        "checked_at": "2026-10-21T11:15:00+09:00",
         "confirmed": true,
         "net_profit": 16200.0,
         "roi": 0.07297297297297298,
@@ -1305,7 +1326,7 @@
   },
   "stock": {
     "states": {
-      "UNKNOWN": 42,
+      "UNKNOWN": 43,
       "OUT_OF_STOCK": 1,
       "LOTTERY": 3
     },

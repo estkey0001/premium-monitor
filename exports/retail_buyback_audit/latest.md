@@ -1,16 +1,16 @@
 # Retail & Buyback Automation — 品質監査
 
-> 生成: 2026-10-20 18:20 JST / 販売/買取/二次流通の取得品質・正規化・同一性（利益/AI/UI/SaaSロジックは不変）
+> 生成: 2026-10-21 11:34 JST / 販売/買取/二次流通の取得品質・正規化・同一性（利益/AI/UI/SaaSロジックは不変）
 
 ## カテゴリ別サマリ
 | カテゴリ | 観測 | 価格有 | exact | high | fresh | Main昇格可 | 失敗(0円/stale/rejected) |
 |---|--:|--:|--:|--:|--:|--:|--:|
-| buyback | 145 | 126 | 13 | 13 | 55 | 13 | 19/90/117 |
+| buyback | 146 | 127 | 14 | 14 | 56 | 14 | 19/90/117 |
 | resale | 10 | 10 | 0 | 0 | 0 | 0 | 0/10/10 |
 | retail | 2 | 2 | 0 | 0 | 0 | 0 | 0/2/2 |
 
-## Main 昇格（high conf + fresh + exact）: 合計 **13** 件
-- カテゴリ別: {'buyback': 13, 'resale': 0, 'retail': 0}
+## Main 昇格（high conf + fresh + exact）: 合計 **14** 件
+- カテゴリ別: {'buyback': 14, 'resale': 0, 'retail': 0}
 
 ## 販売価格 ソース網羅
 | source | 観測 | 価格有 | fresh | Main昇格可 |
@@ -31,7 +31,7 @@
 | イオシス | 20 | 14 | 6 | 0 |
 | カメラのキタムラ | 9 | 9 | 0 | 0 |
 | ソフマップ | 10 | 8 | 2 | 0 |
-| 買取商店 | 22 | 22 | 15 | 13 |
+| 買取商店 | 23 | 23 | 16 | 14 |
 | ゲオ | 8 | 7 | 1 | 0 |
 | 買取一丁目 | 4 | 4 | 4 | 0 |
 | ネットオフ | 4 | 0 | 4 | 0 |
@@ -49,11 +49,11 @@
 
 ## 商品同一性 監査
 - 容量不一致: 0 / 別型番: 0 / アクセサリー: 7 / 非本体: 7
-- condition分布: {'new': 193, 'used': 42}
+- condition分布: {'new': 195, 'used': 42}
 
 ## 正規化 監査
 - price_type付与率: 100% / 送料分離: 100% / ポイント分離: 100% / 下取除外: 89%
-- price_type分布: {'buyback_price': 122, 'shop_sale_price': 25, 'overseas_listing_price': 5, 'flea_listing_price': 5}
+- price_type分布: {'buyback_price': 123, 'shop_sale_price': 25, 'overseas_listing_price': 5, 'flea_listing_price': 5}
 
 ## duplicate_price_pattern（同一ソースで複数SKU同額・要確認）
 | source | role | price | SKU数 | product_ids |

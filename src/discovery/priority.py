@@ -38,14 +38,9 @@ def family_key(text: str) -> str:
 
 
 def known_costs(official_url: str, price: int) -> int | None:
-    """公式で買って買取に売るときの既知の費用（既存の正本の費用・公式の購入の送料）。送料が分からなければ None。"""
-    from src.market import official_shipping as osh
-    from src.models.beginner_deal import DEFAULT_COSTS
-    ship = osh.purchase_shipping("", official_url, price)
-    if ship.get("fee") is None:
-        return None
-    fixed = sum(int(DEFAULT_COSTS[k]) for k in ("shipping_jpy", "transfer_fee_jpy", "transport_jpy", "insurance_jpy"))
-    return fixed + int(ship["fee"]) + int(round(price * float(DEFAULT_COSTS.get("cc_fee_rate") or 0)))
+    """公式で買って買取に売るときの既知の費用（式は market/profit_formula が正本）。送料が分からなければ None。"""
+    from src.market import profit_formula
+    return profit_formula.beginner_costs("", official_url, price)
 
 
 def match_buyback_rows(cand: dict, rows) -> list[tuple]:

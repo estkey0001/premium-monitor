@@ -4145,6 +4145,7 @@ def check() -> list[dict]:
     results.extend(_check_phase29_activation())
     results.extend(_check_phase30_priority())
     results.extend(_check_integrity_official_recheck())
+    results.extend(_check_integrity_profit_baseline())
 
     # ══════════════════════════════════════════════════════════════════
     # #820-#825: データの正確さ・鮮度の偽装（Phase 0）
@@ -6002,6 +6003,112 @@ def _check_integrity_official_recheck(root: Path | None = None) -> list[dict]:
                 "message": "#866 公式の確認の期限が3日以内の記録が無い（再確認が止まって切れる前に気づく）"
                            + ("" if not soon else f" ← {soon[:6]}")})
     return out
+
+
+def _check_integrity_profit_baseline(root: Path | None = None) -> list[dict]:
+    """Production Integrity M-2・M-3（#867・#868）。
+
+    #867 利益の式は1つ: 順位レポート・スキャナー・候補の優先順位が market/profit_formula を使い、順位レポートは固定の費用を
+         持たない。設定値だけの公式の価格・店のトップの売値・送料が分からない商品を順位に載せない。Duo は +28,400。
+    #868 買取の比較の基準: 手入力の古い CSV ではなく直近の正常な自動取得の値（14日以内）。基準が無い組は前回比の判定をしない・
+         前回比は隔離の理由にしない・カテゴリ共通の上限は他店の裏付けで採用できる（裏付けが無ければ隔離のまま）。
+    """
+    import importlib.util as _iu68
+    import json as _json68
+    from datetime import datetime as _dt68
+    from datetime import timedelta as _td68
+    from datetime import timezone as _tz68
+    root = root or Path(__file__).resolve().parent.parent
+    bad67, bad68, warn67 = [], [], []
+    try:
+        def _load(name, rel):
+            sp = _iu68.spec_from_file_location(name, root / rel)
+            m = _iu68.module_from_spec(sp)
+            sp.loader.exec_module(m)
+            return m
+        grr = _load("grr_deploy_check", "scripts/generate_ranking_report.py")
+        src = (root / "scripts" / "generate_ranking_report.py").read_text(encoding="utf-8")
+        if "BEGINNER_COST" in src or "profit_formula" not in src:
+            bad67.append("順位レポートが固定の費用を持つ・正本の式を使っていない")
+        for rel in ("src/market/beginner_deal_scanner.py", "src/discovery/priority.py"):
+            if "profit_formula" not in (root / rel).read_text(encoding="utf-8"):
+                bad67.append(f"{rel} が正本の式を使っていない")
+
+        def ob(role, price, **kw):
+            d = {"product_id": "prod_iphoneduo_256", "product_name": "d", "price_role": role, "price": price,
+                 "is_usable_for_beginner": True, "extraction_method": "official" if role == "official" else "auto_scraped",
+                 "source_name": "買取商店", "item_url": "https://www.kaitorishouten-co.jp/products/detail/1",
+                 "source_url": "", "is_fresh": True, "freshness_basis": "observed", "is_exact_product_match": True,
+                 "link_type": "item", "accessory_flag": False, "wrong_model_flag": False, "rejection_reason": "",
+                 "condition": "new_unopened", "canonical_price_type": "BUYBACK_CASH" if role == "sell" else "RETAIL",
+                 "price_type": "buyback_price" if role == "sell" else "official_price"}
+            d.update(kw)
+            return d
+        url = "https://www.apple.com/jp/shop/buy-iphone/iphone-duo"
+        deals, _ = grr.build_beginner_deals([ob("official", 364800), ob("sell", 395000)], {}, lambda pid: url)
+        if [d.net_profit_jpy for d in deals] != [28400]:
+            bad67.append(f"Duo の順位の利益が +28,400 でない: {[d.net_profit_jpy for d in deals]}")
+        ref = ob("official", 364800, extraction_method="retail_concept", freshness_basis="config_unknown_date")
+        if grr.build_beginner_deals([ref, ob("sell", 395000)], {}, lambda pid: url)[0]:
+            bad67.append("設定値だけの公式の価格を順位に載せた")
+        if grr.build_beginner_deals([ob("official", 364800), ob("sell", 395000, link_type="shop_home")], {}, lambda pid: url)[0]:
+            bad67.append("店のトップの売値を順位に載せた")
+        if grr.build_beginner_deals([ob("official", 364800), ob("sell", 395000)], {}, lambda pid: "https://x.example.jp/")[0]:
+            bad67.append("送料が分からない商品を順位に載せた")
+        # 保存済みの順位レポート（あれば）: 載せなかった商品の理由が残る形。順位の生成が失敗して古い形が残ったときは警告
+        # （LP の公開は止めない）
+        try:
+            rep = _json68.loads((root / "exports" / "ranking_report" / "latest.json").read_text(encoding="utf-8"))
+            if "ineligible_items" not in rep:
+                warn67.append("順位レポートが古い形（ineligible_items が無い。順位の生成が失敗した可能性）")
+        except (OSError, ValueError):
+            pass
+
+        # #868
+        from src.collectors import price_baseline as pb
+        from src.market.price_quality import HARD_REJECT_REASONS
+        ubp = _load("ubp_deploy_check", "scripts/update_buyback_prices.py")
+        now = _dt68(2026, 10, 22, 17, 0, tzinfo=_tz68(_td68(hours=9)))
+
+        def row(alias, shop, price, at="2026-10-22T16:50:00+09:00", src_="auto_scraped"):
+            return {"product_alias": alias, "buyback_shop": shop, "buyback_price": str(price), "condition": "new_unopened",
+                    "url": "https://www.kaitorishouten-co.jp/kaden", "observed_at": at, "data_source": src_,
+                    "link_verified": "true", "confidence": "high"}
+        stale = row("ps5_pro", "kaitori_shouten", 134500, at="2026-08-22T20:39:41+09:00")
+        manual = row("x100vi", "kaitori_shouten", 428000, src_="manual_today")
+        if any(pb.is_fresh(e, now) for e in (stale, manual)):
+            bad68.append("古い値・手入力を前回比の基準に使う")
+        if [s for s in ubp.compute_suspicious([row("x100vi", "kaitori_shouten", 260000)], []) if s["reason"] == "price_change_over_20pct"]:
+            bad68.append("基準が無いのに前回比の警告を出す")
+        if "price_change_over_20pct" in HARD_REJECT_REASONS:
+            bad68.append("前回比だけで隔離する")
+        ps5 = [row("ps5_pro", "kaitori_shouten", 200700), row("ps5_pro", "mobile_ichiban", 200700)]
+        if any(r["data_source"] != "auto_scraped" for r in ubp.quarantine_suspicious(ps5, ubp.compute_suspicious(ps5, []))):
+            bad68.append("他店が裏付ける上限超えを隔離する")
+        one = [row("ps5_pro", "kaitori_shouten", 200700)]
+        if ubp.quarantine_suspicious(one, ubp.compute_suspicious(one, []))[0]["data_source"] != "suspicious_rejected":
+            bad68.append("裏付けの無い上限超えを隔離しない")
+        run_src = (root / "scripts" / "update_buyback_prices.py").read_text(encoding="utf-8")
+        run_body = run_src[run_src.index("def run("):run_src.index("def keep_manual_on_failure(")]
+        if "compute_suspicious(new_rows, baseline_rows)" not in run_body:
+            bad68.append("run() が基準で比べていない")
+        # 保存済みの基準（あれば）: 全行が自動取得・価格が正・14日以内
+        try:
+            ents = pb.read_entries(root / "exports" / "collector_report" / "price_baseline.json")
+        except Exception:  # noqa: BLE001
+            ents = []
+        today_dt = _dt68.now(_tz68(_td68(hours=9)))
+        old = [e for e in ents if not pb.is_fresh(e, today_dt)]
+        if old:
+            bad68.append(f"保存された基準に古い・手入力・価格なしの行がある: {[e.get('product_alias') for e in old][:4]}")
+    except Exception as exc:  # noqa: BLE001
+        bad67.append(f"検査に失敗: {type(exc).__name__}: {exc}")
+    return [{"level": "error" if bad67 else ("warning" if warn67 else "ok"), "check": "ranking_canonical_formula",
+             "message": "#867 利益の式は1つ（順位レポートは market/profit_formula・設定値だけの公式の価格 / 店のトップの売値 / 送料不明を"
+                        "載せない・Duo は +28,400）" + ("" if not (bad67 or warn67) else f" ← {(bad67 + warn67)[:4]}")},
+            {"level": "ok" if not bad68 else "error", "check": "buyback_baseline_freshness",
+             "message": "#868 買取の比較の基準（直近の正常な自動取得の値・14日以内・手入力 / 古い値を使わない・基準が無ければ前回比なし・"
+                        "上限超えは他店の裏付けで採用）" + ("" if not bad68 else f" ← {bad68[:4]}")}]
 
 
 def _check_phase26_acceptance_guard(root: Path | None = None) -> list[dict]:

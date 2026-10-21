@@ -50,6 +50,53 @@ def _fmt_profit(v) -> str:
         return str(v)
 
 
+def build_beginner_deals(obs: list[dict], genres: dict, official_url_of) -> tuple[list, list[dict]]:
+    """初心者向け（公式で買って買取店に売る）の案件。正本の関門と利益の式だけを使う（独自の費用・条件を持たない）。
+
+    - 公式の価格は確認済み（VERIFIED_CURRENT / VERIFIED_DATED）だけ。設定値の定価（CONFIGURED_REFERENCE）では作らない
+    - 売値は確定の売値（normalized_prices.beginner_sell = confirmed_sells。店のトップ・検索結果・古い・別の型番は使わない）
+    - 費用は market/profit_formula（購入送料が分からなければ載せない）。式は案件・LP・候補の優先順位と同じ
+    戻り値: (案件, 載せなかった商品と理由)
+    """
+    from types import SimpleNamespace
+
+    from src.market import price_evidence as pe
+    from src.market import profit_formula as pf
+    from src.market.normalized_prices import beginner_official, beginner_sell
+    deals, ineligible = [], []
+    for pid in sorted({o["product_id"] for o in obs if o.get("product_id")}):
+        off, sells = beginner_official(obs, pid), beginner_sell(obs, pid)
+        if not off or not sells:
+            continue
+        ev = pe.from_freshness_basis(off.get("freshness_basis"))
+        if not pe.is_profit_eligible(ev):
+            ineligible.append({"product_id": pid, "reason": f"official_{ev.lower()}"})
+            continue
+        best = sells[0]
+        official, buyback = int(off["price"]), int(best["price"])
+        costs = pf.beginner_costs(pid, official_url_of(pid), official)
+        if costs is None:
+            ineligible.append({"product_id": pid, "reason": "purchase_shipping_unknown"})
+            continue
+        net = pf.net_profit(official, buyback, costs)
+        deals.append(SimpleNamespace(
+            product_id=pid,
+            product_name=off["product_name"] or best["product_name"],
+            category=genres.get(pid, ""),
+            user_level="beginner_easy" if net >= 0 else "beginner_watch",
+            official_price_jpy=official,
+            reference_source=off["extraction_method"],
+            best_buyback_price=buyback,
+            best_buyback_shop=best["source_name"],
+            best_buyback_url=best["item_url"] or best["source_url"],
+            net_profit_jpy=net,
+            net_profit_rate=(net / official) if official > 0 else 0.0,
+            # pro 用フィールドは Beginner では未使用
+            buy_price=None, buy_shop_name="", buy_price_type="", sell_price_type="buyback_price",
+        ))
+    return deals, ineligible
+
+
 def main() -> int:
     """メイン処理: ランキングレポートを生成して保存する。"""
     now = datetime.now(tz=JST)
@@ -60,17 +107,15 @@ def main() -> int:
     # 旧 list_beginner_deals + enrich の DB 直読みは廃止し、価格定義を一元化する。
     from types import SimpleNamespace
     _stale_excluded = 0
-    BEGINNER_COST = 1300  # 送料+振込手数料の概算（初心者: 公式購入→買取売却）
     all_deals = []   # Beginner エントリ（NPO official+buyback 由来）
+    ineligible: list[dict] = []   # 正本の関門を通らず、順位に載せなかった商品（理由つき。黙って消さない）
     pro_objs = []    # Pro エントリ（sedori ルート = NPO buy+sell 由来）
     _genre_by_pid: dict[str, str] = {}
     try:
         import sqlite3 as _sq3
         from src.db.database import Database
         from src.db.repository import Repository
-        from src.market.normalized_prices import (
-            build_observations, beginner_official, beginner_sell,
-        )
+        from src.market.normalized_prices import build_observations
         db = Database()
         repo = Repository(db)
         for _p in repo.list_products():
@@ -78,36 +123,18 @@ def main() -> int:
 
         _con = _sq3.connect(str(PROJECT_ROOT / "data" / "premium_monitor.db"))
         obs = build_observations(_con, now)
-        _con.close()
 
-        # Beginner: 商品ごとに 公式/定価(official) + 最高買取(sell, usable_for_beginner)
-        _pids = sorted({o["product_id"] for o in obs if o["product_id"]})
-        for pid in _pids:
-            off = beginner_official(obs, pid)
-            sells = beginner_sell(obs, pid)
-            if not off or not sells:
-                continue
-            best = sells[0]
-            official = int(off["price"])
-            buyback = int(best["price"])
-            net = buyback - official - BEGINNER_COST
-            rate = (net / official) if official > 0 else 0.0
-            cat = _genre_by_pid.get(pid, "")
-            all_deals.append(SimpleNamespace(
-                product_id=pid,
-                product_name=off["product_name"] or best["product_name"],
-                category=cat,
-                user_level="beginner_easy" if net >= 0 else "beginner_watch",
-                official_price_jpy=official,
-                reference_source=off["extraction_method"],  # official / retail_concept
-                best_buyback_price=buyback,
-                best_buyback_shop=best["source_name"],
-                best_buyback_url=best["item_url"] or best["source_url"],
-                net_profit_jpy=net,
-                net_profit_rate=rate,
-                # pro 用フィールドは Beginner では未使用
-                buy_price=None, buy_shop_name="", buy_price_type="", sell_price_type="buyback_price",
-            ))
+        # Beginner: 商品ごとに 公式の価格 + 確定の売値の最高値（正本の関門・利益の式。build_beginner_deals）
+        from src.market.beginner_deal_scanner import verified_official_item_url
+        _con.row_factory = _sq3.Row          # verified_official_item_url は列名で読む（スキャナーの接続と同じ）
+
+        def _official_url(pid: str) -> str:
+            try:
+                return verified_official_item_url(_con, pid) or ""
+            except Exception:  # noqa: BLE001 - 分からなければ空（送料が分からない商品は載せない）
+                return ""
+        all_deals, ineligible = build_beginner_deals(obs, _genre_by_pid, _official_url)
+        _con.close()
 
         # Pro: sedori ルート（NPO buy+sell 由来）。
         for r in repo.list_sedori_routes(min_net_profit=0, limit=100):
@@ -325,6 +352,7 @@ def main() -> int:
         "beginner_by_category": beginner_by_category,
         "pro_by_category": pro_by_category,
         "excluded_items": len(excluded),
+        "ineligible_items": ineligible,
         "total_deals": len(all_deals),
         "confidence_summary": {
             "total": len(all_deals),

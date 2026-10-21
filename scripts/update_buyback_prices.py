@@ -35,6 +35,12 @@ PROJECT_ROOT = Path(__file__).parent.parent
 CSV_PATH     = PROJECT_ROOT / "data" / "manual_buyback_prices.csv"
 REPORT_DIR   = PROJECT_ROOT / "exports" / "collector_report"
 
+
+def _baseline_path() -> Path:
+    """前回との比較の基準（直近の正常な自動取得の値。CI の commit の対象）。手入力の CSV（古い）は基準にしない。
+    REPORT_DIR の下（テストが REPORT_DIR を差し替えれば、本物の基準は書き換わらない）。"""
+    return REPORT_DIR / "price_baseline.json"
+
 # ── 公式価格・ジャンル定義（suspicious_price 判定用） ──
 # 別名 → 正本の商品 ID。公式の価格は official_registry.verified_price_of が唯一の出どころ（確認済みの記録 → 公式直販価格の
 # 証拠 → 正本の参考価格）。ここに価格を持たない（二重管理で 119,980 / 49,980 の改定前の値が残っていた）
@@ -91,6 +97,13 @@ PRODUCT_GENRES: dict[str, str] = {
 
 # ゲーム機でスマホ価格帯（10万円超）を拾った場合はsuspicious
 GAME_CONSOLE_SMARTPHONE_THRESHOLD = 100_000
+
+# カテゴリ共通の正常帯の上限（GENRE_PRICE_RANGES）は、商品ごとの根拠ではなく目安なので、絶対の上限にしない（M-3）。
+# 上限を超えても、別の店が同じ水準（±10%）で出していて、公式の価格の 2.5 倍以内なら採用する（above_genre_max_corroborated。
+# 隔離しない。記録には残す）。裏付けの無い上限超えは従来どおり隔離する（要確認）。公式の価格の 3 倍・ゲーム機の
+# スマホ価格帯・容量の逆転・同額の取り違えは、裏付けがあっても隔離のまま
+CEILING_CORROBORATION_TOLERANCE = 0.10
+CEILING_CORROBORATED_MAX_RATIO = 2.5
 
 # ── 対象商品定義 ──
 TARGET_PRODUCTS = [
@@ -334,7 +347,11 @@ def _write_csv(rows: list[dict]) -> None:
 def run(dry_run: bool = False, no_scrape: bool = False) -> int:
     """メイン実行。戻り値: 0=成功, 1=一部失敗あり。"""
     collectors = {} if no_scrape else _load_collectors()
-    existing_rows = _load_existing_csv()  # 前回データ（price_changes比較用）
+    existing_rows = _load_existing_csv()  # 手入力の行の保持用（前回との比較の基準には使わない。M-3）
+    from src.collectors import price_baseline
+    _now_for_baseline = datetime.now(tz=JST)
+    baseline_all = price_baseline.read_entries(_baseline_path())
+    baseline_rows = price_baseline.load(_baseline_path(), _now_for_baseline)   # 直近の正常な自動取得の値（14日以内）
 
     # 自動取得対象外の既存行を保持
     preserved_rows = [
@@ -496,7 +513,7 @@ def run(dry_run: bool = False, no_scrape: bool = False) -> int:
         return 0
 
     # 明らかに誤りの価格は CSV に書く前に隔離する（LP・利益計算へ流さない）
-    suspicious_prices = compute_suspicious(new_rows, existing_rows)
+    suspicious_prices = compute_suspicious(new_rows, baseline_rows)
     new_rows = quarantine_suspicious(new_rows, suspicious_prices)
     rejected = sum(1 for s in suspicious_prices if s.get("action") == "rejected")
     # 隔離した行は「取得成功」として数えない（失敗理由 suspicious_rejected）
@@ -515,6 +532,10 @@ def run(dry_run: bool = False, no_scrape: bool = False) -> int:
     final_rows = preserved_rows + keep_manual_on_failure(new_rows, existing_rows, failure_reasons)
     _write_csv(final_rows)
     print(f"\n  CSV更新完了: {len(final_rows)}行 -> {CSV_PATH}")
+    # 前回との比較の基準を書き直す（正常な自動取得の行だけ。隔離した行・失敗した行・手入力は入れない。M-3）
+    _baseline_stats = price_baseline.stats(baseline_all, baseline_rows, new_rows)
+    price_baseline.save(_baseline_path(), price_baseline.build(baseline_rows, new_rows, _now_for_baseline),
+                        _now_for_baseline)
     print("="*60 + "\n")
 
     # コレクターレポート生成
@@ -522,7 +543,8 @@ def run(dry_run: bool = False, no_scrape: bool = False) -> int:
         new_rows=new_rows,
         results_summary=results_summary,
         now_jst=now_jst,
-        existing_rows=existing_rows,
+        existing_rows=baseline_rows,          # 前回との比較の基準（手入力の CSV ではない）
+        baseline_stats=_baseline_stats,
         failure_reasons=failure_reasons,
         collector_debug=collector_debug,
         suspicious_prices=suspicious_prices,
@@ -602,8 +624,19 @@ def _prev_price_map(existing_rows: list[dict]) -> dict[tuple, int]:
     return prev
 
 
+def _row_price(row: dict) -> int:
+    try:
+        return int(row.get("buyback_price", 0) or 0)
+    except (ValueError, TypeError):
+        return 0
+
+
 def compute_suspicious(new_rows: list[dict], existing_rows: list[dict]) -> list[dict]:
-    """取得した買取価格の異常を検出する（価格は変えない。判定だけ）。"""
+    """取得した買取価格の異常を検出する（価格は変えない。判定だけ）。
+
+    existing_rows は前回との比較の基準（price_baseline.load の行。直近の正常な自動取得の値で、14日以内）。
+    基準が無い組（初めての観測）は前回比の判定をしない。
+    """
     prev_price_map = _prev_price_map(existing_rows)
     # カテゴリ別 正常価格帯（Task 3-A）
     GENRE_PRICE_RANGES: dict[str, tuple[int, int]] = {
@@ -708,10 +741,24 @@ def compute_suspicious(new_rows: list[dict], existing_rows: list[dict]) -> list[
                     "details": f"{genre}正常帯¥{lo:,}〜¥{hi:,}の下限未満（¥{price:,}）",
                 })
             elif price > hi:
-                flags.append({
-                    "reason": "above_genre_max",
-                    "details": f"{genre}正常帯¥{lo:,}〜¥{hi:,}の上限超過（¥{price:,}）",
-                })
+                corroborating = sorted(
+                    other for other, other_price in (
+                        (r.get("buyback_shop", ""), _row_price(r)) for r in new_rows
+                        if r.get("product_alias", "") == alias and r.get("buyback_shop", "") != shop_id)
+                    if other_price > 0 and abs(other_price - price) / price <= CEILING_CORROBORATION_TOLERANCE)
+                within_official = (not official) or price <= official * CEILING_CORROBORATED_MAX_RATIO
+                if corroborating and within_official:
+                    flags.append({
+                        "reason": "above_genre_max_corroborated",
+                        "details": (f"{genre}正常帯¥{lo:,}〜¥{hi:,}の上限を超えるが、{', '.join(corroborating)} も同水準"
+                                    f"（±{int(CEILING_CORROBORATION_TOLERANCE * 100)}%）で、公式の"
+                                    f"{(price / official) if official else 0:.1f}倍以内（¥{price:,}。採用）"),
+                    })
+                else:
+                    flags.append({
+                        "reason": "above_genre_max",
+                        "details": f"{genre}正常帯¥{lo:,}〜¥{hi:,}の上限超過（¥{price:,}。他店の裏付けなし・要確認）",
+                    })
 
         # ⑦ 同一ショップ内で容量差が逆転（Task 3-C）
         # 例: iphone17pro256 > iphone17pro512 は不自然（256GBが512GBより高い）
@@ -825,8 +872,12 @@ def _generate_collector_report(
     suspicious_prices: list[dict] | None = None,
     shop_cutoffs: dict | None = None,
     collector_metrics: dict | None = None,
+    baseline_stats: dict | None = None,
 ) -> None:
-    """コレクターレポートを exports/collector_report/latest.{json,md} に出力する。"""
+    """コレクターレポートを exports/collector_report/latest.{json,md} に出力する。
+
+    existing_rows は前回との比較の基準（price_baseline.load の行。手入力の CSV ではない。名前は互換のため）。
+    """
     REPORT_DIR.mkdir(parents=True, exist_ok=True)
 
     # ── 集計 ──────────────────────────────────────────────────────────────
@@ -1072,6 +1123,7 @@ def _generate_collector_report(
         "shop_priority_top5":     shop_priority_top5,
         "fetch_failed":           fetch_failed_list,
         "price_changes":          price_changes,
+        "price_baseline":         baseline_stats or {},
         "suspicious_prices":      suspicious_prices,
     }
 

@@ -13,10 +13,10 @@ from typing import Optional
 import ulid
 
 from src.db.repository import Repository
-from src.models.beginner_deal import BeginnerDealModel, DEFAULT_COSTS
+from src.models.beginner_deal import BeginnerDealModel
 from src.models.buyback_price import BuybackPriceModel, BUYBACK_SHOPS, CONDITION_LABELS
 from src.models.product import ProductModel
-from src.market import official_shipping as _official_shipping
+from src.market import profit_formula as _profit_formula
 from src.market.stock_state import is_explicit_in_stock as _is_explicit_in_stock
 from src.market.stock_state import sale_method_of as _sale_method_of
 
@@ -432,25 +432,12 @@ class BeginnerDealScanner:
     # ===== 利益計算 =====
 
     def _estimate_costs(self, product: ProductModel, official_price: int) -> int:
-        """推定コストを計算する。"""
-        c = DEFAULT_COSTS.copy()
+        """推定コストを計算する（式は market/profit_formula が正本。順位レポート・候補の優先順位と同じ）。
 
-        # Apple公式はクレカ手数料0%
-        if product.brand == "Apple":
-            c["cc_fee_rate"] = 0.0
-        # 一般量販店はポイント考慮でクレカ0%想定
-        c["cc_fee_rate"] = 0.0
-
-        total = (
-            c["shipping_jpy"]
-            + c["transfer_fee_jpy"]
-            + c["transport_jpy"]
-            + c["insurance_jpy"]
-            + int(official_price * c["cc_fee_rate"])
-        )
-        # 公式の購入送料（一次情報で確認したものだけ。分からない購入元は足さず、確定の判定で外す）
-        total += _official_shipping.known_fee(product.id, self._get_official_url(product), official_price)
-        return total
+        公式の購入送料は一次情報で確認したものだけ。分からない購入元は足さず（0）、確定の判定で外す。
+        """
+        return _profit_formula.beginner_costs(product.id, self._get_official_url(product), official_price,
+                                              shipping_unknown_as_zero=True)
 
     # ===== スコア計算 =====
 

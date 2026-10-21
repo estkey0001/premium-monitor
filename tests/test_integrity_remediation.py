@@ -247,3 +247,223 @@ def test_config_price_drift_is_read_only_and_needs_review():
     assert all(r["status"] == "REVIEW_REQUIRED" and r["diff"] == r["verified_price"] - r["config_price"] for r in rows)
     assert "prod_ps5_pro" not in ids and "prod_switch2" not in ids             # 設定値と確認値が同じ商品は出さない
     assert reg.config_price_drift([{"id": "prod_x100vi", "retail_price": 315700}]) == []
+
+
+# ── M-2: 利益の式は1つ（順位レポート・スキャナー・候補の優先順位） ────────────────────
+
+APPLE_DUO = "https://www.apple.com/jp/shop/buy-iphone/iphone-duo"
+
+
+def test_profit_formula_is_the_single_cost_definition():
+    from src.market import profit_formula as pf
+    from src.models.beginner_deal import DEFAULT_COSTS
+    assert pf.fixed_costs() == 1800 == (DEFAULT_COSTS["shipping_jpy"] + DEFAULT_COSTS["transfer_fee_jpy"]
+                                        + DEFAULT_COSTS["transport_jpy"] + DEFAULT_COSTS["insurance_jpy"])
+    assert pf.beginner_costs("prod_iphoneduo_256", APPLE_DUO, 364800) == 1800        # Apple は購入送料が無料（確認済み）
+    assert pf.net_profit(364800, 395000, 1800) == 28400                              # Duo
+    assert pf.net_profit(189800, 133000, 1800) == -58600                             # Air（no_profit）
+    # 送料が分からない購入元は費用を出さない（0 円にしない）。スキャナー用の指定だけ 0 を足す
+    assert pf.beginner_costs("prod_unknown", "https://shop.example.jp/x", 100000) is None
+    assert pf.beginner_costs("prod_unknown", "https://shop.example.jp/x", 100000, shipping_unknown_as_zero=True) == 1800
+
+
+def test_scanner_and_priority_use_the_same_cost_formula():
+    from src.discovery import priority
+    from src.market import profit_formula as pf
+    from src.market.beginner_deal_scanner import BeginnerDealScanner
+    sc = BeginnerDealScanner.__new__(BeginnerDealScanner)
+    sc._get_official_url = lambda product: APPLE_DUO
+    product = SimpleNamespace(id="prod_iphoneduo_256", brand="Apple")
+    assert sc._estimate_costs(product, 364800) == pf.beginner_costs("prod_iphoneduo_256", APPLE_DUO, 364800) == 1800
+    assert priority.known_costs(APPLE_DUO, 364800) == 1800
+    # 送料が不明: スキャナーは 0 を足して確定の判定で外す・優先順位は差を出さない（None）
+    sc._get_official_url = lambda product: "https://shop.example.jp/x"
+    assert sc._estimate_costs(SimpleNamespace(id="prod_x", brand="X"), 100000) == 1800
+    assert priority.known_costs("https://shop.example.jp/x", 100000) is None
+
+
+def _obs(pid, role, price, **kw):
+    base = {"product_id": pid, "product_name": pid, "price_role": role, "price": price, "is_usable_for_beginner": True,
+            "extraction_method": "official" if role == "official" else "auto_scraped", "source_name": "買取商店",
+            "item_url": "https://www.kaitorishouten-co.jp/products/detail/1", "source_url": "", "is_fresh": True,
+            "freshness_basis": "observed" if role == "official" else "observed", "is_exact_product_match": True,
+            "link_type": "item", "accessory_flag": False, "wrong_model_flag": False, "rejection_reason": "",
+            "condition": "new_unopened", "canonical_price_type": "BUYBACK_CASH" if role == "sell" else "RETAIL",
+            "price_type": "buyback_price" if role == "sell" else "official_price"}
+    base.update(kw)
+    return base
+
+
+def _ranking():
+    import importlib.util
+    sp = importlib.util.spec_from_file_location("grr_integrity", ROOT / "scripts" / "generate_ranking_report.py")
+    m = importlib.util.module_from_spec(sp)
+    sp.loader.exec_module(m)
+    return m
+
+
+def _deals(obs, url=APPLE_DUO):
+    return _ranking().build_beginner_deals(obs, {"prod_iphoneduo_256": "iphone"}, lambda pid: url)
+
+
+def test_ranking_uses_canonical_formula_and_matches_opportunity():
+    pid = "prod_iphoneduo_256"
+    deals, ineligible = _deals([_obs(pid, "official", 364800), _obs(pid, "sell", 395000)])
+    assert [(d.product_id, d.net_profit_jpy) for d in deals] == [(pid, 28400)] and ineligible == []   # 1,300 円の式なら +28,900
+    assert round(deals[0].net_profit_rate, 4) == round(28400 / 364800, 4)                                # ROI 7.8%
+
+
+def test_ranking_never_ranks_configured_reference_official_price():
+    pid = "prod_iphoneduo_256"
+    ref = _obs(pid, "official", 364800, extraction_method="retail_concept", freshness_basis="config_unknown_date")
+    deals, ineligible = _deals([ref, _obs(pid, "sell", 395000)])
+    assert deals == [] and ineligible == [{"product_id": pid, "reason": "official_configured_reference"}]
+    stale = _obs(pid, "official", 364800, freshness_basis="verified_stale")
+    assert _deals([stale, _obs(pid, "sell", 395000)])[0] == []                                          # 古い公式の価格も載せない
+
+
+@pytest.mark.parametrize("sell", [
+    {"link_type": "shop_home"}, {"link_type": "search"},            # 店のトップ・検索結果の行
+    {"is_fresh": False}, {"is_exact_product_match": False},         # 古い・同一性が未確認
+    {"rejection_reason": "suspicious_rejected"}, {"accessory_flag": True},
+])
+def test_ranking_ignores_unconfirmed_sell_rows(sell):
+    pid = "prod_iphoneduo_256"
+    assert _deals([_obs(pid, "official", 364800), _obs(pid, "sell", 395000, **sell)])[0] == []
+
+
+def test_ranking_skips_products_with_unknown_purchase_shipping():
+    pid = "prod_iphoneduo_256"
+    deals, ineligible = _deals([_obs(pid, "official", 364800), _obs(pid, "sell", 395000)],
+                               url="https://shop.example.jp/x")
+    assert deals == [] and ineligible == [{"product_id": pid, "reason": "purchase_shipping_unknown"}]
+
+
+def test_ranking_script_has_no_private_cost_constant():
+    src = (ROOT / "scripts" / "generate_ranking_report.py").read_text(encoding="utf-8")
+    assert "BEGINNER_COST" not in src and "1300" not in src and "profit_formula" in src
+
+
+# ── M-3: 買取の比較の基準（直近の正常な自動取得の値） ──────────────────────────────
+
+BNOW = datetime(2026, 10, 22, 17, 0, tzinfo=JST)
+
+
+def _row(alias, shop, price, *, at="2026-10-21T17:22:00+09:00", source="auto_scraped", cond="new_unopened"):
+    return {"product_alias": alias, "buyback_shop": shop, "buyback_price": str(price), "condition": cond,
+            "url": "https://www.kaitorishouten-co.jp/kaden", "observed_at": at, "data_source": source,
+            "link_verified": "true", "confidence": "high"}
+
+
+def test_baseline_load_uses_only_recent_auto_scraped_values(tmp_path):
+    from src.collectors import price_baseline as pb
+    path = tmp_path / "price_baseline.json"
+    pb.save(path, [
+        {**_row("ps5_pro", "kaitori_shouten", 134500, at="2026-08-22T20:39:41+09:00")},        # 2か月前（古い）
+        {**_row("x100vi", "kaitori_shouten", 428000, source="manual_today")},                 # 手入力
+        {**_row("switch2", "kaitori_shouten", 0)},                                            # 価格なし
+        {**_row("airpods_pro3", "kaitori_shouten", 32500, at="2026-11-30T00:00:00+09:00")},   # 未来
+        {**_row("iphoneduo_256", "kaitori_shouten", 395000)},                                 # 正常
+    ], BNOW)
+    assert [(e["product_alias"], int(e["buyback_price"])) for e in pb.load(path, BNOW)] == [("iphoneduo_256", 395000)]
+    assert pb.load(tmp_path / "missing.json", BNOW) == [] and pb.read_entries(tmp_path / "missing.json") == []
+    (tmp_path / "broken.json").write_text("{not json", encoding="utf-8")
+    assert pb.load(tmp_path / "broken.json", BNOW) == []
+
+
+def test_baseline_build_keeps_last_good_value_and_never_stores_bad_rows():
+    from src.collectors import price_baseline as pb
+    prev = [_row("iphoneduo_256", "kaitori_shouten", 395000, at="2026-10-20T17:00:00+09:00"),
+            _row("x100vi", "kaitori_shouten", 260000, at="2026-10-01T17:00:00+09:00")]              # 21日前 = 古い
+    new = [_row("ps5_pro", "kaitori_shouten", 0, source="suspicious_rejected"),                      # 隔離
+           _row("ps5_pro", "mobile_ichiban", 0, source="fetch_failed"),                              # 取得失敗
+           _row("switch2", "kaitori_shouten", 51800, source="manual_today"),                          # 手入力
+           _row("airpods_pro3", "kaitori_shouten", 32500, at="2026-10-22T16:50:00+09:00")]          # 正常
+    out = {(e["product_alias"], e["buyback_shop"]): e for e in pb.build(prev, new, BNOW)}
+    assert set(out) == {("iphoneduo_256", "kaitori_shouten"), ("airpods_pro3", "kaitori_shouten")}
+    assert out[("iphoneduo_256", "kaitori_shouten")]["observed_at"] == "2026-10-20T17:00:00+09:00"   # 失敗した日に時刻を新しくしない
+    assert out[("airpods_pro3", "kaitori_shouten")]["observed_at"] == "2026-10-22T16:50:00+09:00"
+    # 今回取れた値は基準を置き換える（取得できた時刻に）
+    out2 = {(e["product_alias"], e["buyback_shop"]): e for e in pb.build(
+        prev, [_row("iphoneduo_256", "kaitori_shouten", 400000, at="2026-10-22T16:55:00+09:00")], BNOW)}
+    assert out2[("iphoneduo_256", "kaitori_shouten")]["buyback_price"] == 400000
+
+
+def test_baseline_stats_report_new_observations_and_dropped_stale(tmp_path):
+    from src.collectors import price_baseline as pb
+    allp = [_row("x100vi", "kaitori_shouten", 428000, at="2026-08-22T12:00:00+09:00"),
+            _row("iphoneduo_256", "kaitori_shouten", 395000, at="2026-10-21T17:00:00+09:00")]
+    fresh = [e for e in allp if pb.is_fresh(e, BNOW)]
+    st = pb.stats(allp, fresh, [_row("x100vi", "kaitori_shouten", 260000), _row("iphoneduo_256", "kaitori_shouten", 395000)])
+    assert st["baseline_entries"] == 1 and st["stale_baseline_dropped"] == 1
+    assert st["new_observations"] == [{"product_alias": "x100vi", "shop": "kaitori_shouten"}]       # 初めての観測は比較しない
+
+
+def test_save_is_atomic_and_roundtrips(tmp_path):
+    from src.collectors import price_baseline as pb
+    path = tmp_path / "sub" / "price_baseline.json"
+    rows = pb.build([], [_row("iphoneduo_256", "kaitori_shouten", 395000, at="2026-10-22T16:55:00+09:00")], BNOW)
+    pb.save(path, rows, BNOW)
+    assert not path.with_suffix(".json.tmp").exists() and pb.read_entries(path) == rows
+
+
+def test_price_change_flag_needs_a_recent_baseline_and_is_never_a_hard_reject():
+    from src.market.price_quality import HARD_REJECT_REASONS
+    m = _ubp()
+    new = [_row("x100vi", "kaitori_shouten", 260000, at="2026-10-22T16:50:00+09:00")]
+    # 基準なし（初めての観測・古い手入力は基準にしない）→ 前回比の警告を出さない
+    assert [s for s in m.compute_suspicious(new, []) if s["reason"] == "price_change_over_20pct"] == []
+    # 直近の基準があり ±20% を超えれば警告（理由は記録）。ただし隔離の理由ではない
+    base = [_row("x100vi", "kaitori_shouten", 428000, at="2026-10-21T17:00:00+09:00")]
+    flags = [s for s in m.compute_suspicious(new, base) if s["reason"] == "price_change_over_20pct"]
+    assert len(flags) == 1 and "428,000" in flags[0]["details"] and "260,000" in flags[0]["details"]
+    assert "price_change_over_20pct" not in HARD_REJECT_REASONS
+    assert m.quarantine_suspicious(new, m.compute_suspicious(new, base))[0]["data_source"] == "auto_scraped"
+
+
+def test_run_compares_against_the_baseline_not_the_stale_manual_csv():
+    src = (ROOT / "scripts" / "update_buyback_prices.py").read_text(encoding="utf-8")
+    run_body = src[src.index("def run("):src.index("def keep_manual_on_failure(")]
+    assert "compute_suspicious(new_rows, baseline_rows)" in run_body and "compute_suspicious(new_rows, existing_rows)" not in run_body
+    assert "existing_rows=baseline_rows" in run_body and "price_baseline.save(" in run_body and "price_baseline.load(" in run_body
+
+
+# ── M-3: カテゴリ共通の上限は絶対の上限にしない（別の店が裏付ければ採用） ────────────────
+
+def _ps5(price_a, price_b=None, shop_b="mobile_ichiban"):
+    rows = [_row("ps5_pro", "kaitori_shouten", price_a, at="2026-10-22T16:50:00+09:00")]
+    if price_b:
+        rows.append(_row("ps5_pro", shop_b, price_b, at="2026-10-22T16:51:00+09:00"))
+    return rows
+
+
+def test_ps5_pro_200700_is_accepted_when_another_shop_agrees():
+    from src.market.price_quality import HARD_REJECT_REASONS
+    m = _ubp()
+    new = _ps5(200700, 200700)                                    # 買取商店の価格表の型番行と、モバイル一番が同額
+    flags = {s["reason"] for s in m.compute_suspicious(new, [])}
+    assert "above_genre_max_corroborated" in flags and not (flags & HARD_REJECT_REASONS)
+    out = m.quarantine_suspicious(new, m.compute_suspicious(new, []))
+    assert all(r["data_source"] == "auto_scraped" and r["buyback_price"] == "200700" for r in out)   # 隔離しない
+
+
+def test_price_over_the_band_without_corroboration_is_still_quarantined():
+    m = _ubp()
+    for new in (_ps5(200700), _ps5(200700, 150000)):              # 1店だけ・別の店は水準が違う
+        sus = m.compute_suspicious(new, [])
+        assert any(s["reason"] == "above_genre_max" and "裏付けなし" in s["details"] for s in sus)
+        assert m.quarantine_suspicious(new, sus)[0]["data_source"] == "suspicious_rejected"
+
+
+def test_corroboration_never_overrides_product_relative_limits():
+    m = _ubp()
+    # 公式 137,980 の 2.5 倍（344,950）を超える・3 倍以上は、2店が同額でも隔離のまま
+    new = _ps5(360000, 360000)
+    reasons = {s["reason"] for s in m.compute_suspicious(new, [])}
+    assert "above_genre_max" in reasons and "above_genre_max_corroborated" not in reasons
+    assert m.quarantine_suspicious(new, m.compute_suspicious(new, []))[0]["data_source"] == "suspicious_rejected"
+    far = _ps5(450000, 450000)
+    assert "over_3x_official" in {s["reason"] for s in m.compute_suspicious(far, [])}
+    # 下限未満（パース誤り）は裏付けがあっても隔離のまま
+    low = [_row("ps5_pro", "kaitori_shouten", 5000), _row("ps5_pro", "mobile_ichiban", 5000)]
+    assert any(s["reason"] == "below_genre_min" for s in m.compute_suspicious(low, []))

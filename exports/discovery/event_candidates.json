@@ -17,7 +17,7 @@
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-10-21",
+      "last_seen_on": "2026-10-22",
       "updated_at": "2026-10-20T18:14:42+09:00"
     },
     "tcg-event-1f61b23f9a78": {
@@ -202,7 +202,7 @@
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-10-21",
+      "last_seen_on": "2026-10-22",
       "updated_at": "2026-10-17T17:34:02+09:00"
     },
     "tcg-release-039c69c6e831": {
@@ -222,7 +222,7 @@
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-10-21",
+      "last_seen_on": "2026-10-22",
       "updated_at": "2026-10-17T17:34:02+09:00"
     },
     "tcg-release-0e309c25183f": {
@@ -242,7 +242,7 @@
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-10-21",
+      "last_seen_on": "2026-10-22",
       "updated_at": "2026-10-17T17:34:02+09:00"
     },
     "tcg-release-8f1266a6511e": {
@@ -262,7 +262,7 @@
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-10-21",
+      "last_seen_on": "2026-10-22",
       "updated_at": "2026-10-17T17:34:02+09:00"
     },
     "tcg-release-e5f8527fe94a": {
@@ -282,7 +282,7 @@
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-10-21",
+      "last_seen_on": "2026-10-22",
       "updated_at": "2026-10-17T17:34:02+09:00"
     },
     "tcg-event-ae9c47b3e6b9": {
@@ -322,6 +322,25 @@
       "discovered_at": "2026-10-20T18:14:42+09:00",
       "last_seen_on": "2026-10-21",
       "updated_at": "2026-10-20T18:14:42+09:00"
+    },
+    "tcg-event-9e6266dfe4d5": {
+      "source": "POKEMON_CENTER_ONLINE",
+      "kind": "LOTTERY",
+      "tcg": "POKEMON",
+      "title": "ポケモンカードゲーム MEGA 拡張パック「ストームエメラルダ」BOX",
+      "official_url": "https://www.pokemoncenter-online.com/news/?id=20260929",
+      "product_code": "",
+      "product_mapping": "unmapped",
+      "application_start": "2026-10-02T12:00:00+09:00",
+      "application_end": "2026-10-05T16:59:00+09:00",
+      "event_status": "ENDED",
+      "missing_fields": [],
+      "candidate_id": "tcg-event-9e6266dfe4d5",
+      "status": "MATCHED_EVENT",
+      "reasons": [],
+      "discovered_at": "2026-10-22T01:40:32+09:00",
+      "last_seen_on": "2026-10-22",
+      "updated_at": "2026-10-22T01:40:32+09:00"
     }
   }
 }

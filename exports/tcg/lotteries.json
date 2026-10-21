@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-10-21T18:24:08.800212+09:00",
-  "evaluated_at": "2026-10-21T18:24:08.797013+09:00",
+  "generated_at": "2026-10-22T01:40:32.230403+09:00",
+  "evaluated_at": "2026-10-22T01:40:32.227396+09:00",
   "items": [
     {
       "tcg": "POKEMON",
@@ -74,9 +74,9 @@
       "product_name": "ポケモンカードゲーム MEGA 拡張パック「ストームエメラルダ」BOX",
       "retailer": "POKEMON_CENTER_ONLINE",
       "event_type": "LOTTERY",
-      "product_id": "pokemon-拡張パック-ストームエメラルダ",
-      "provisional_product": false,
-      "product_match": "exact",
+      "product_id": null,
+      "provisional_product": true,
+      "product_match": "none",
       "retailer_name": "ポケモンセンターオンライン",
       "store_name": null,
       "store_id": null,
@@ -97,7 +97,7 @@
       "purchase_start_date": null,
       "purchase_end_date": null,
       "shipping_period": "11月25日（水）～12月10日（木）発送予定",
-      "release_date": "2026-07-31T00:00:00+09:00",
+      "release_date": null,
       "retail_price": null,
       "price_text": null,
       "eligibility_text": "ポケモンセンターオンラインの告知（2026年9月29日）より: 「プレイヤーズクラブ：本人認証済み枠」と「プレイヤーズクラブ：本人未認証枠」の2つの応募枠がある。当選数の大半は本人認証済みの方の当選分。本人認証がお済みでない方も応募可能だが、本人認証（マイナンバーカード認証）を完了すると当選しやすくなる。認証済み枠は PCO とプレイヤーズクラブの登録メールアドレスの一致が必要。",
@@ -130,7 +130,7 @@
         "日程は PCO 告知内の画像（各種の期間詳細 20260929.png）を目視で転記。希望小売価格は告知に記載が無いため空欄。PCO は CI から HTTP 403 のため自動取得できない",
         "公式告知の内容を転記したデータです（人による確認待ち）。必ず公式ページで日程をご確認ください"
       ],
-      "lottery_id": "lot-da7bc68e6346",
+      "lottery_id": "lot-b711d800e519",
       "merged_count": 1,
       "deadline_countdown": null,
       "start_countdown": null,
@@ -140,34 +140,13 @@
   "coverage": {
     "configured_sources": 17,
     "implemented_collectors": 6,
-    "reachable_sources": 9,
-    "healthy_sources": 4,
-    "blocked_sources": 4,
-    "unreachable_sources": 4,
+    "reachable_sources": 7,
+    "healthy_sources": 3,
+    "blocked_sources": 3,
+    "unreachable_sources": 5,
     "not_implemented_sources": 11,
     "sources_with_active_lottery": 0,
     "lottery_events_found": 0
   },
-  "announcements": [
-    {
-      "title": "ポケモンセンターオンラインでの商品の抽選受け付けについて",
-      "source_url": "https://www.pokemoncenter-online.com/news/?id=20260929",
-      "listed_on": "https://www.pokemon-card.com/info/",
-      "published_at": "2026-09-29T00:00:00+09:00",
-      "retailer": "POKEMON_CENTER_ONLINE",
-      "retailer_name": "ポケモンセンターオンライン",
-      "tcg": "POKEMON",
-      "reason": "公式ニュース一覧で抽選告知を確認。PCO 本体は取得できないため日程は手動確認済みデータで補う"
-    },
-    {
-      "title": "【第二回】ポケモンセンターオンラインでの30周年商品の抽選受け付けについて",
-      "source_url": "https://www.pokemoncenter-online.com/news/?id=20260821",
-      "listed_on": "https://www.pokemon-card.com/info/",
-      "published_at": "2026-08-21T00:00:00+09:00",
-      "retailer": "POKEMON_CENTER_ONLINE",
-      "retailer_name": "ポケモンセンターオンライン",
-      "tcg": "POKEMON",
-      "reason": "公式ニュース一覧で抽選告知を確認。PCO 本体は取得できないため日程は手動確認済みデータで補う"
-    }
-  ]
+  "announcements": []
 }

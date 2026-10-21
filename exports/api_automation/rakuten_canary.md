@@ -1,6 +1,6 @@
 # rakuten Real Canary
 
-> 生成: 2026-10-21 18:30 JST
+> 生成: 2026-10-22 01:46 JST
 
 - status: **PENDING_USER_CONFIGURATION** / rollout_state: NOT_CONFIGURED / real_api_called: False
 

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-21 18:30 JST",
+  "generated_at": "2026-10-22 01:46 JST",
   "route_type_beginner": "primary_to_secondary",
   "top_camera_buyback_opportunities": [
     {
@@ -357,8 +357,9 @@
       "buy_shop_name": "",
       "buy_price_type": "",
       "sell_price_type": "buyback_price",
-      "net_profit_jpy": 28900,
-      "net_profit_rate": 0.0792,
+      "net_profit_jpy": 28400,
+      "net_profit_rate": 0.0779,
+      "availability": "UNKNOWN",
       "route_type": "primary_to_secondary",
       "source_label": "Apple Store",
       "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
@@ -375,8 +376,9 @@
       "buy_shop_name": "",
       "buy_price_type": "",
       "sell_price_type": "buyback_price",
-      "net_profit_jpy": 16700,
-      "net_profit_rate": 0.0752,
+      "net_profit_jpy": 16200,
+      "net_profit_rate": 0.073,
+      "availability": "LOTTERY",
       "route_type": "primary_to_secondary",
       "source_label": "RICOH公式 / FUJIFILM公式 / キタムラ",
       "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
@@ -397,8 +399,9 @@
         "buy_shop_name": "",
         "buy_price_type": "",
         "sell_price_type": "buyback_price",
-        "net_profit_jpy": 28900,
-        "net_profit_rate": 0.0792,
+        "net_profit_jpy": 28400,
+        "net_profit_rate": 0.0779,
+        "availability": "UNKNOWN",
         "route_type": "primary_to_secondary",
         "source_label": "Apple Store",
         "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
@@ -417,8 +420,9 @@
         "buy_shop_name": "",
         "buy_price_type": "",
         "sell_price_type": "buyback_price",
-        "net_profit_jpy": 16700,
-        "net_profit_rate": 0.0752,
+        "net_profit_jpy": 16200,
+        "net_profit_rate": 0.073,
+        "availability": "LOTTERY",
         "route_type": "primary_to_secondary",
         "source_label": "RICOH公式 / FUJIFILM公式 / キタムラ",
         "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
@@ -426,12 +430,31 @@
     ]
   },
   "pro_by_category": {},
-  "excluded_items": 13,
-  "total_deals": 15,
+  "excluded_items": 9,
+  "ineligible_items": [
+    {
+      "product_id": "prod_iphone17pm_256",
+      "reason": "official_configured_reference"
+    },
+    {
+      "product_id": "prod_iphone17pm_512",
+      "reason": "official_configured_reference"
+    },
+    {
+      "product_id": "prod_iphone17pro_256",
+      "reason": "official_configured_reference"
+    },
+    {
+      "product_id": "prod_iphone17pro_512",
+      "reason": "official_configured_reference"
+    }
+  ],
+  "profit_basis": "確定の利益（公式の確認済みの価格・確定の売値・既知の費用）。買えるか（今すぐ行動できるか）とは別で、各行の availability（在庫の記録。7日を過ぎたら未確認）を見る。在庫を推測しない",
+  "total_deals": 11,
   "confidence_summary": {
-    "total": 15,
+    "total": 11,
     "profitable": 2,
-    "negative": 13
+    "negative": 9
   },
   "stale_data_count": 0
 }

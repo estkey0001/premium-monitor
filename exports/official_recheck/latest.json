@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-21T18:00:20+09:00",
+  "generated_at": "2026-10-22T01:21:42+09:00",
   "results": [
     {
       "product_id": "prod_ps5_pro",
@@ -7,10 +7,26 @@
       "model": "CFI-7100B01",
       "match": "CFI-7100B01",
       "recorded_price": 137980,
-      "observed_at": "2026-10-21T18:02:21+09:00",
-      "status": "failed",
-      "reason": "moved",
+      "observed_at": "2026-10-22T01:23:42+09:00",
+      "fetched_url": "https://pur.store.sony.jp/ps5/products/ps5/CFI-7100B01_product/",
+      "verified_by": "store_product_page",
+      "status": "blocked",
+      "reason": "robots_unreachable",
       "price": null,
+      "stock": ""
+    },
+    {
+      "product_id": "prod_switch2",
+      "url": "https://store-jp.nintendo.com/item/hardware-accessory/VM_BEE_S_KB6CA",
+      "model": "",
+      "match": "Nintendo Switch 2 本体 日本語・国内専用",
+      "recorded_price": 59980,
+      "observed_at": "2026-10-22T01:23:42+09:00",
+      "fetched_url": "https://www.nintendo.com/jp/hardware/switch2/lineup/index.html",
+      "verified_by": "msrp_lineup",
+      "status": "unchanged",
+      "reason": "",
+      "price": 59980,
       "stock": ""
     },
     {
@@ -19,7 +35,7 @@
       "model": "MFHP4J/A",
       "match": "MFHP4J/A",
       "recorded_price": 42800,
-      "observed_at": "2026-10-21T18:02:21+09:00",
+      "observed_at": "2026-10-22T01:23:43+09:00",
       "status": "unchanged",
       "reason": "",
       "price": 42800,
@@ -31,7 +47,7 @@
       "model": "EOS R5 Mark II",
       "match": "6536C001",
       "recorded_price": 654500,
-      "observed_at": "2026-10-21T18:02:24+09:00",
+      "observed_at": "2026-10-22T01:23:45+09:00",
       "status": "unchanged",
       "reason": "",
       "price": 654500,
@@ -43,7 +59,7 @@
       "model": "Z8",
       "match": "4960759909947",
       "recorded_price": 575300,
-      "observed_at": "2026-10-21T18:02:26+09:00",
+      "observed_at": "2026-10-22T01:23:47+09:00",
       "status": "unchanged",
       "reason": "",
       "price": 575300,
@@ -55,7 +71,7 @@
       "model": "",
       "match": "MG674J/A,MG684J/A,MG694J/A,MG6A4J/A,MG6C4J/A",
       "recorded_price": 159800,
-      "observed_at": "2026-10-21T18:04:21+09:00",
+      "observed_at": "2026-10-22T01:25:43+09:00",
       "status": "unchanged",
       "reason": "",
       "price": 159800,
@@ -67,7 +83,7 @@
       "model": "X100VI",
       "match": "4547410554281|X100VI",
       "recorded_price": 315700,
-      "observed_at": "2026-10-21T18:04:24+09:00",
+      "observed_at": "2026-10-22T01:25:44+09:00",
       "status": "unchanged",
       "reason": "",
       "price": 315700,
@@ -79,7 +95,7 @@
       "model": "",
       "match": "MG274J/A,MG284J/A,MG294J/A,MG2A4J/A",
       "recorded_price": 189800,
-      "observed_at": "2026-10-21T18:06:22+09:00",
+      "observed_at": "2026-10-22T01:27:43+09:00",
       "status": "unchanged",
       "reason": "",
       "price": 189800,
@@ -91,7 +107,7 @@
       "model": "",
       "match": "MK244J/A,MK254J/A",
       "recorded_price": 364800,
-      "observed_at": "2026-10-21T18:08:22+09:00",
+      "observed_at": "2026-10-22T01:29:43+09:00",
       "status": "unchanged",
       "reason": "",
       "price": 364800,
@@ -133,10 +149,10 @@
     },
     {
       "product_id": "prod_ps5_pro",
-      "price_checked_on": "2026-10-08",
-      "price_due": "2026-10-15",
-      "stock_checked_at": "2026-10-08T02:34:48+09:00",
-      "stock_due": "2026-10-15T02:34:48+09:00",
+      "price_checked_on": "2026-10-21",
+      "price_due": "2026-10-28",
+      "stock_checked_at": "2026-10-21T21:10:56+09:00",
+      "stock_due": "2026-10-28T21:10:56+09:00",
       "auto_recheck": true
     },
     {
@@ -145,7 +161,7 @@
       "price_due": "2026-10-15",
       "stock_checked_at": "2026-10-08T02:32:13+09:00",
       "stock_due": "2026-10-15T02:32:13+09:00",
-      "auto_recheck": false
+      "auto_recheck": true
     },
     {
       "product_id": "prod_z8",

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-21T18:24:08.800212+09:00",
+  "generated_at": "2026-10-22T01:40:32.230403+09:00",
   "items": [
     {
       "first_seen_at": "2026-10-01T20:51:59.851413+09:00",
@@ -27,7 +27,7 @@
       "source_type": "MANUAL_VERIFIED",
       "confidence": "medium",
       "published_at": null,
-      "last_seen_at": "2026-10-21T18:24:08.797013+09:00",
+      "last_seen_at": "2026-10-22T01:40:32.227396+09:00",
       "status": "ENDED"
     },
     {
@@ -57,6 +57,35 @@
       "confidence": "medium",
       "published_at": null,
       "last_seen_at": "2026-10-21T18:24:08.797013+09:00",
+      "status": "ENDED"
+    },
+    {
+      "first_seen_at": "2026-10-22T01:40:32.227396+09:00",
+      "lottery_id": "lot-b711d800e519",
+      "tcg": "POKEMON",
+      "product_name": "ポケモンカードゲーム MEGA 拡張パック「ストームエメラルダ」BOX",
+      "product_id": null,
+      "retailer": "POKEMON_CENTER_ONLINE",
+      "retailer_name": "ポケモンセンターオンライン",
+      "store_name": null,
+      "store_specific": false,
+      "event_type": "LOTTERY",
+      "application_start": "2026-10-02T12:00:00+09:00",
+      "application_end": "2026-10-05T16:59:00+09:00",
+      "winner_announcement_at": "2026-10-14T17:00:00+09:00",
+      "purchase_start": "2026-10-14T17:00:00+09:00",
+      "purchase_end": "2026-10-20T16:59:00+09:00",
+      "application_start_date": null,
+      "application_end_date": null,
+      "winner_announcement_date": null,
+      "purchase_start_date": null,
+      "purchase_end_date": null,
+      "retail_price": null,
+      "source_url": "https://www.pokemoncenter-online.com/news/?id=20260929",
+      "source_type": "MANUAL_VERIFIED",
+      "confidence": "medium",
+      "published_at": null,
+      "last_seen_at": "2026-10-22T01:40:32.227396+09:00",
       "status": "ENDED"
     },
     {
@@ -236,9 +265,9 @@
   ],
   "frequency_by_retailer": {
     "POKEMON_CENTER_ONLINE": {
-      "events_total": 4,
-      "events_last_30d": 2,
-      "events_last_90d": 4,
+      "events_total": 5,
+      "events_last_30d": 3,
+      "events_last_90d": 5,
       "average_lead_time_hours": 97.6,
       "average_application_window_hours": 77.0
     },

@@ -1,6 +1,6 @@
 # Official Source Registry & Validation
 
-> 生成: 2026-10-21 18:08 JST / 公式ソース登録・検証（利益/AI/Opportunity/Notification/Capital/Execution は不変）
+> 生成: 2026-10-22 01:29 JST / 公式ソース登録・検証（利益/AI/Opportunity/Notification/Capital/Execution は不変）
 
 ## メーカー別サマリ
 | Maker | Products | URL verified | HTTP200 | exact match | price auto | high conf | failed |
@@ -35,6 +35,21 @@
 | prod_z8 | src_nikon_direct | ¥575,300 | item | high |
 | prod_x100vi | src_fujifilm_official | ¥315,700 | item | high |
 | prod_r5ii | src_canon_official | ¥654,500 | item | high |
+
+## 設定の参考価格と公式で確認した価格の違い（読むだけ・人の確認待ち。自動で書き換えない）
+| product | 設定の価格 | 確認した価格 | 差 |
+|---|--:|--:|--:|
+| prod_airpods_pro3 | ¥39,800 | ¥42,800 | +3,000 |
+| prod_gr4 | ¥194,800 | ¥211,800 | +17,000 |
+| prod_gr4_hdf | ¥0 | ¥222,000 | +222,000 |
+| prod_gr4_mono | ¥283,800 | ¥299,800 | +16,000 |
+| prod_iphone17_256 | ¥139,800 | ¥159,800 | +20,000 |
+| prod_r5ii | ¥620,000 | ¥654,500 | +34,500 |
+| prod_x100vi | ¥269,500 | ¥315,700 | +46,200 |
+| prod_z8 | ¥590,000 | ¥575,300 | -14,700 |
+
+## 識別の手がかりの割合（読むだけ）
+- 商品 47: 部品番号 2件（4.3%） / 型番 24件（51.1%） / JAN 4件（8.5%） / 公式 URL 2件（4.3%） / 公式の証拠 12件（25.5%） / 強い手がかりのどれか 27件（57.4%）
 
 ## 検証不能（要手動検証・推測登録しない）
 | product | source | reason |

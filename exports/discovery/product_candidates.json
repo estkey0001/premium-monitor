@@ -756,7 +756,7 @@
         "tcg_not_in_canonical"
       ],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-10-21",
+      "last_seen_on": "2026-10-22",
       "updated_at": "2026-10-17T17:34:02+09:00"
     },
     "tcg-onepiece-ea795a1ef364": {
@@ -780,7 +780,7 @@
         "tcg_not_in_canonical"
       ],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-10-21",
+      "last_seen_on": "2026-10-22",
       "updated_at": "2026-10-17T17:34:02+09:00"
     },
     "tcg-onepiece-b93e50452497": {
@@ -804,7 +804,7 @@
         "tcg_not_in_canonical"
       ],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-10-21",
+      "last_seen_on": "2026-10-22",
       "updated_at": "2026-10-17T17:34:02+09:00"
     },
     "tcg-onepiece-22eaa127df59": {
@@ -828,7 +828,7 @@
         "tcg_not_in_canonical"
       ],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-10-21",
+      "last_seen_on": "2026-10-22",
       "updated_at": "2026-10-17T17:34:02+09:00"
     },
     "apple-915b1e76f2d6": {
@@ -1266,7 +1266,7 @@
         "not_in_canonical"
       ],
       "discovered_at": "2026-10-18T01:23:15+09:00",
-      "last_seen_on": "2026-10-21",
+      "last_seen_on": "2026-10-22",
       "updated_at": "2026-10-18T01:23:15+09:00"
     },
     "apple-87985d82892c": {
@@ -1306,7 +1306,7 @@
       "status": "MATCHED_EXISTING",
       "reasons": [],
       "discovered_at": "2026-10-18T01:23:15+09:00",
-      "last_seen_on": "2026-10-21",
+      "last_seen_on": "2026-10-22",
       "updated_at": "2026-10-18T01:23:15+09:00"
     },
     "apple-4bf4d4ba1b3a": {
@@ -1348,7 +1348,7 @@
         "not_in_canonical"
       ],
       "discovered_at": "2026-10-18T01:23:15+09:00",
-      "last_seen_on": "2026-10-21",
+      "last_seen_on": "2026-10-22",
       "updated_at": "2026-10-18T01:23:15+09:00"
     }
   },
@@ -1356,16 +1356,16 @@
     "families": {
       "iphone-16": {
         "first_seen_on": "2026-10-17",
-        "last_checked_on": "2026-10-21",
+        "last_checked_on": "2026-10-22",
         "listed": true,
-        "last_attempted_on": "2026-10-21",
+        "last_attempted_on": "2026-10-22",
         "last_error": ""
       },
       "iphone-17": {
         "first_seen_on": "2026-10-17",
-        "last_checked_on": "2026-10-21",
+        "last_checked_on": "2026-10-22",
         "listed": true,
-        "last_attempted_on": "2026-10-21",
+        "last_attempted_on": "2026-10-22",
         "last_error": ""
       },
       "iphone-17e": {

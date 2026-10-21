@@ -53,6 +53,11 @@ VERIFIED_URLS = {
     # 2026-10-08 02:34（Phase 14）: 同じ購入ページで「選択済み CFI-7100B01 入荷待ち 137,980円(税込)」を再確認（ブラウザ）。
     # PlayStation 公式の本体ラインナップ（https://www.playstation.com/ja-jp/ps5/buy-now/）でも
     # 「PS5 Pro 希望小売価格：137,980円（税込）」。「カートに入れる」のボタンはあるが「入荷待ち」なので在庫切れの扱い
+    # 2026-10-21（Production Integrity M-1）: 購入ページ（_purchase）は在庫が無い間は「見つからない」ページ（E_NOTFOUND）へ
+    # 移るため、2026-10-17 から再確認が failed（moved）だった。同じ商品の商品ページ（_product）を取得の共通の作法で1回取得し、
+    # 「PlayStation®5 Pro CFI-7100B01」「ソニーストアで購入すると 137,980 円(税込)」「入荷待ち」・JAN 4948872417075
+    # （価格・型番・JAN は記録と同じ）を確認した。確認日・在庫の記録はこの行を書き換えず、再確認（recheck_official.RECHECK_PAGE。
+    # unchanged なら取得した日に確認日を進める）が行う
     "prod_ps5_pro": {"source": "src_sony_store", "url": "https://pur.store.sony.jp/ps5/products/ps5/CFI-7100B01_purchase/",
                      "link_type": "item", "price": 137980, "conf": "high", "checked_on": "2026-10-08", "price_kind": "msrp",
                      "stock": "入荷待ち", "stock_checked_at": "2026-10-08T02:34:48+09:00"},
@@ -62,6 +67,10 @@ VERIFIED_URLS = {
     # 「59,980 円 税込」「お届け予定日：通常2～6日後にお届け」「カートに入れる」（押せる状態）を確認（ブラウザ）。
     # 購入できることの明示の表示なので、確認した時刻つきで在庫ありとして記録する（7日を過ぎれば在庫未確認に戻る）。
     # ページの「品切れ」の表示は、おすすめに出ていた別の周辺機器（microSD Express カード）のもの
+    # 2026-10-21（Production Integrity M-1）: My Nintendo Store は待機室（store-jp-wr.nintendo.com）へ移るため取らない（待機室は
+    # 回避しない）。任天堂の公式の商品ラインナップ（nintendo.com/jp/hardware/switch2/lineup/）を1回取得し、
+    # 「Nintendo Switch 2 本体 日本語・国内専用 希望小売価格： 59,980 円（税込）」が現行品の欄にあることを確認した
+    # （「生産終了した本体」の欄にあるのはセット商品だけ）。確認日は再確認（RECHECK_PAGE）が進める。在庫は読めない
     "prod_switch2": {"source": "src_nintendo_store", "url": "https://store-jp.nintendo.com/item/hardware-accessory/VM_BEE_S_KB6CA",
                      "link_type": "item", "price": 59980, "conf": "high", "checked_on": "2026-10-08", "price_kind": "msrp",
                      "stock": "カートに入れる（お届け予定日：通常2～6日後）", "stock_checked_at": "2026-10-08T02:32:13+09:00"},
@@ -222,6 +231,15 @@ def official_price_label(product_id: str, price=None, source: str = "") -> str:
         same = False
     return "公式直販価格" if same else "参考価格"
 
+
+# RICOH GR IV 系の定価（公式ストアの抽選販売の価格。2026-10-08 に公式ストアの一覧で確認し、2026-10-21 の収集
+# （RicohOfficialCollector）でも同じ価格）。公式直販価格の関門（OFFICIAL_DIRECT_OFFERS）には載せない（抽選販売・在庫なし）ので、
+# 確定の仕入れ値の根拠にはしない。異常値の判定と、設定値との差の確認（verified_price_of・config_price_drift）だけに使う
+LIST_PRICES = {
+    "prod_gr4": {"price": 211800, "checked_on": "2026-10-08"},
+    "prod_gr4_hdf": {"price": 222000, "checked_on": "2026-10-08"},
+    "prod_gr4_mono": {"price": 299800, "checked_on": "2026-10-08"},
+}
 
 # カメラのメーカー直販の監査（Phase 15。2026-10-08 にブラウザで確認。手順21）
 # 希望小売価格（オープン価格）と、公式ストアの販売価格は別のもの。Phase 16 から、直販の販売価格は
@@ -549,6 +567,35 @@ USER_DECISIONS = {
 }
 
 IDENTITY_STATES = ("IDENTITY_CONFIRMED", "PARTIAL_IDENTITY", "AMBIGUOUS", "DISCONTINUED", "NEEDS_USER_DECISION")
+
+
+def verified_price_of(product_id: str, reference: int | None = None) -> int | None:
+    """商品の公式の価格の唯一の出どころ: 確認済みの記録（VERIFIED_URLS）→ 公式直販価格の証拠（OFFICIAL_DIRECT_OFFERS）→
+    設定の参考価格（reference。呼び出し側が正本の retail_price を渡す）。異常値の判定など、別の表に同じ価格を持たない
+    ために使う（Production Integrity 監査 Low: update_buyback_prices.OFFICIAL_PRICES の二重管理）。"""
+    for rec in (VERIFIED_URLS.get(product_id), OFFICIAL_DIRECT_OFFERS.get(product_id), LIST_PRICES.get(product_id)):
+        price = (rec or {}).get("price")
+        if isinstance(price, int) and not isinstance(price, bool) and price > 0:
+            return price
+    return reference if isinstance(reference, int) and not isinstance(reference, bool) and reference > 0 else None
+
+
+def config_price_drift(products: list[dict]) -> list[dict]:
+    """正本（config/products.yaml）の設定の参考価格が、公式で確認した価格と違う商品の一覧（読むだけ・人の確認待ち）。
+
+    設定の価格は自動で書き換えない（公式の価格の判定は確認済みの記録が優先で、設定値は参考）。違いは人が見て、
+    正本を直すか確認の記録を直すかを決める。差は 0 でない商品だけ。
+    """
+    rows = []
+    for p in products or []:
+        pid = str(p.get("id") or p.get("product_id") or "")
+        verified = verified_price_of(pid)
+        config = p.get("retail_price")
+        if verified is None or not isinstance(config, int) or isinstance(config, bool) or config == verified:
+            continue
+        rows.append({"product_id": pid, "config_price": config, "verified_price": verified, "diff": verified - config,
+                     "status": "REVIEW_REQUIRED"})
+    return sorted(rows, key=lambda r: r["product_id"])
 
 
 def _canonical_identity(product_id: str) -> dict | None:

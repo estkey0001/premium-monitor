@@ -25,6 +25,13 @@ from src.models.product import ProductModel
 logger = logging.getLogger(__name__)
 
 
+# 再試行しても結果が変わらない HTTP の状態（ページが無い・消えた・認証が要る・禁止）。404 / 410 を3回取り直したり、
+# 403 を取り直したりしない（ブロックの後に取り直さない。取得の作法）。429・408・5xx・タイムアウトは再試行する
+NON_RETRYABLE_STATUS = frozenset({400, 401, 403, 404, 410})
+# この実行（プロセス）で、ページが無い / 消えた（404・410）と分かった URL。同じ URL を別の商品の取得で取り直さない
+_GONE_URLS: set[str] = set()
+
+
 class BaseCollector(ABC):
     """全Collectorの基底クラス。
 
@@ -106,8 +113,13 @@ class BaseCollector(ABC):
         Returns:
             HTMLテキスト。取得失敗時はNone。
         """
+        # この実行で 404 / 410 と分かった URL は、別の商品の取得でも取り直さない（同じ URL を1日に何度も取らない）
+        if url in _GONE_URLS:
+            self.logger.warning("この実行で 404 / 410 だった URL は取り直さない: %s", url)
+            return None
+
         # robots.txtチェック（robots.txt を取得できない unknown のときも取りに行かない。RFC 9309。Phase 12）
-        _st = self.robots_checker.robots_status(url) if hasattr(self.robots_checker, "robots_status") else ""
+        _st =self.robots_checker.robots_status(url) if hasattr(self.robots_checker, "robots_status") else ""
         if _st == "unknown" or not self.robots_checker.is_allowed(url):
             self.logger.warning("Blocked by robots.txt: %s", url)
             return None
@@ -146,13 +158,20 @@ class BaseCollector(ABC):
                 )
             except requests.HTTPError as e:
                 last_error = e
+                # Response は 4xx・5xx で bool が False になる（`if e.response` では状態コードが読めない）
+                status = e.response.status_code if e.response is not None else None
                 self.logger.warning(
                     "HTTP %s on attempt %d/%d for %s",
-                    e.response.status_code if e.response else "???",
+                    status if status is not None else "???",
                     attempt + 1,
                     self.MAX_RETRIES,
                     url,
                 )
+                if status in NON_RETRYABLE_STATUS:
+                    if status in (404, 410):
+                        _GONE_URLS.add(url)
+                    self.logger.error("HTTP %s は再試行しない（結果が変わらない）: %s", status, url)
+                    return None
             except requests.RequestException as e:
                 last_error = e
                 self.logger.warning(

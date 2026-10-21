@@ -397,7 +397,7 @@ def test_recheck_waits_host_interval_before_first_request(monkeypatch):
     monkeypatch.setattr(RECHECK, "_host_interval", lambda url: 120.0 if "apple" in url else 60.0)
     RECHECK.recheck(NOW, fetch=lambda url: (SONY_HTML if "sony" in url else APPLE_HTML, ""),
                     sleep=waits.append, wait_first=True)
-    hosts = {t["url"].split("/")[2] for t in RECHECK._targets()}            # Phase 16 で Canon・Nikon を加えた
+    hosts = {t["fetch_url"].split("/")[2] for t in RECHECK._targets()}      # 実際に取るページのホスト（Phase 16 で Canon・Nikon を加えた）
     assert len(waits) == len(hosts) and 55 <= waits[0] <= 60 and all(55 <= w <= 120 for w in waits)  # 取得元ごとに1回
     # テスト（偽の取得）では既定で待たない
     waits.clear()

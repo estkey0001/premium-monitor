@@ -44,7 +44,8 @@ from src.market.official_price_validator import validate_official_price, is_offi
 # 公式の確認の記録（VERIFIED_URLS・UNVERIFIED・OFFICIAL_NOT_SOLD・KNOWN_STALE）は src/market/official_registry.py が正本
 # （Phase 15 で移した。名前はここでも同じに使える）
 from src.market.official_registry import (  # noqa: E402,F401
-    KNOWN_STALE, OFFICIAL_NOT_SOLD, UNVERIFIED, VERIFIED_URLS, VERIFIED_URLS_CHECKED_ON, official_direct_gate,
+    KNOWN_STALE, OFFICIAL_NOT_SOLD, UNVERIFIED, VERIFIED_URLS, VERIFIED_URLS_CHECKED_ON, config_price_drift,
+    official_direct_gate,
 )
 
 MAKER_OF = {
@@ -396,6 +397,14 @@ def main():
     matrix = source_matrix(c, products)
     makers = maker_report(registered, products)
 
+    # 正本（config/products.yaml）の設定の参考価格と、公式で確認した価格の違い（読むだけ。自動で書き換えない。人の確認待ち）
+    import yaml
+    try:
+        cfg_products = (yaml.safe_load((ROOT / "config" / "products.yaml").read_text(encoding="utf-8")) or {}).get("products", [])
+    except (OSError, ValueError):
+        cfg_products = []
+    drift = config_price_drift(cfg_products)
+
     # After: 検証済みURL + 価格取得
     after_verified = sum(1 for r in registered if r.get("verified"))
     after_price = sum(1 for r in registered if r.get("official_price"))
@@ -423,13 +432,14 @@ def main():
         # 公式の再確認の結果を反映したもの（価格の再確認・価格の変化・在庫の観測）。Phase 16 で success_rate の下から
         # 出力の上の階層へ移した
         "recheck_applied": rechecked,
+        "config_price_drift": drift,
     }
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / "latest.json").write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
     (OUT / "latest.md").write_text(render_md(report), encoding="utf-8")
     c.close()
     print(f"[official_audit] verified={after_verified} price_captured={after_price} "
-          f"unverified={len(UNVERIFIED)} → {OUT/'latest.json'}")
+          f"unverified={len(UNVERIFIED)} config_drift={len(drift)} → {OUT/'latest.json'}")
     return 0
 
 
@@ -461,6 +471,12 @@ def render_md(r):
     for x in r["registered"]:
         if x.get("official_price"):
             L.append(f"| {x['product_id']} | {x['source']} | ¥{x['official_price']:,} | {x.get('link_type')} | {x.get('confidence')} |")
+    L.append("")
+    L.append("## 設定の参考価格と公式で確認した価格の違い（読むだけ・人の確認待ち。自動で書き換えない）")
+    L.append("| product | 設定の価格 | 確認した価格 | 差 |")
+    L.append("|---|--:|--:|--:|")
+    for x in r.get("config_price_drift") or []:
+        L.append(f"| {x['product_id']} | ¥{x['config_price']:,} | ¥{x['verified_price']:,} | {x['diff']:+,} |")
     L.append("")
     L.append("## 検証不能（要手動検証・推測登録しない）")
     L.append("| product | source | reason |")

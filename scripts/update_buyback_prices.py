@@ -36,30 +36,38 @@ CSV_PATH     = PROJECT_ROOT / "data" / "manual_buyback_prices.csv"
 REPORT_DIR   = PROJECT_ROOT / "exports" / "collector_report"
 
 # ── 公式価格・ジャンル定義（suspicious_price 判定用） ──
-OFFICIAL_PRICES: dict[str, int] = {
-    "iphone17pro256": 179_800,
-    "iphone17pro512": 214_800,
-    "iphone17pm256":  219_800,
-    "iphone17pm512":  254_800,
-    "switch2":         49_980,
-    "ps5_pro":        119_980,
-    # Phase 11 で自動取得に加えた商品。異常値の判定だけに使う（利益計算には使わない）。
-    # iphone17_256 / airpods_pro3 は scripts/audit_official_sources.py の確認値（2026-10-03）、
-    # iphone16pro256 は config/products.yaml の値
-    "iphone17_256":   159_800,
-    "iphone16pro256": 159_800,
-    "airpods_pro3":    42_800,
-    # Phase 29: official_registry の公式直販価格（2026-10-17。異常値の判定だけに使う）
-    "iphoneair_256":  189_800,
-    "iphoneduo_256":  364_800,     # Phase 30
-    # Phase 17: カメラ（official_registry の確認値。公式直販価格・RICOH の定価。異常値の判定だけに使う）
-    "x100vi":         315_700,
-    "z8":             575_300,
-    "r5ii":           654_500,
-    "gr4":            211_800,
-    "gr4_hdf":        222_000,
-    "gr4_mono":       299_800,
+# 別名 → 正本の商品 ID。公式の価格は official_registry.verified_price_of が唯一の出どころ（確認済みの記録 → 公式直販価格の
+# 証拠 → 正本の参考価格）。ここに価格を持たない（二重管理で 119,980 / 49,980 の改定前の値が残っていた）
+ALIAS_PRODUCT_ID: dict[str, str] = {
+    "iphone17pro256": "prod_iphone17pro_256", "iphone17pro512": "prod_iphone17pro_512",
+    "iphone17pm256": "prod_iphone17pm_256", "iphone17pm512": "prod_iphone17pm_512",
+    "switch2": "prod_switch2", "ps5_pro": "prod_ps5_pro",
+    "iphone17_256": "prod_iphone17_256", "iphone16pro256": "prod_iphone16pro_256", "airpods_pro3": "prod_airpods_pro3",
+    "iphoneair_256": "prod_iphoneair_256", "iphoneduo_256": "prod_iphoneduo_256",
+    "x100vi": "prod_x100vi", "z8": "prod_z8", "r5ii": "prod_r5ii",
+    "gr4": "prod_gr4", "gr4_hdf": "prod_gr4_hdf", "gr4_mono": "prod_gr4_mono",
 }
+
+
+def _derive_official_prices() -> dict[str, int]:
+    """異常値の判定（suspicious_price）に使う公式の価格（利益計算には使わない）。"""
+    import yaml
+
+    from src.market.official_registry import verified_price_of
+    try:
+        rows = (yaml.safe_load((PROJECT_ROOT / "config" / "products.yaml").read_text(encoding="utf-8")) or {}).get("products", [])
+    except (OSError, ValueError):
+        rows = []
+    retail = {r.get("id"): r.get("retail_price") for r in rows if isinstance(r, dict)}
+    out = {}
+    for alias, pid in ALIAS_PRODUCT_ID.items():
+        price = verified_price_of(pid, retail.get(pid))
+        if price:
+            out[alias] = price
+    return out
+
+
+OFFICIAL_PRICES: dict[str, int] = _derive_official_prices()
 
 PRODUCT_GENRES: dict[str, str] = {
     "iphone17pro256": "iphone",

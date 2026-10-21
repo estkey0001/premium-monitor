@@ -4144,6 +4144,7 @@ def check() -> list[dict]:
     results.extend(_check_phase28_registration())
     results.extend(_check_phase29_activation())
     results.extend(_check_phase30_priority())
+    results.extend(_check_integrity_official_recheck())
 
     # ══════════════════════════════════════════════════════════════════
     # #820-#825: データの正確さ・鮮度の偽装（Phase 0）
@@ -5918,6 +5919,89 @@ def _check_phase30_priority(root: Path | None = None) -> list[dict]:
     return [{"level": "ok" if not bad else "error", "check": "candidate_priority",
              "message": "#865 候補の優先順位（決まった計算式・売値が無ければ差の点なし・全色で最も低い色・登録済み / 一致 / "
                         "STALE を除く・登録は1件ずつ・CI は優先順位のための取得をしない）" + ("" if not bad else f" ← {bad[:4]}")}]
+
+
+def _check_integrity_official_recheck(root: Path | None = None) -> list[dict]:
+    """Production Integrity M-1（#866）: 公式の再確認が実際に動く・確認の期限が近い記録を見落とさない。
+
+    - PS5 Pro・Switch 2 が再確認の対象で、読むページは公式のドメインの静的な HTML（待機室・検索結果・第三者の URL ではない）
+    - 結果の url は記録（VERIFIED_URLS）の URL のまま（記録との照合に使う）で、価格が変われば changed（自動で書き換えない）・
+      生産終了の欄へ移れば sale_ended・読めなければ failed（確認日を進めない）
+    - 確認の期限（14日。再確認が unchanged の日を確認日として数える）が3日以内か過ぎた記録は警告（誰も気づかず切れない）
+    """
+    import json as _json66
+    import re as _re66
+    from datetime import date as _date66
+    from datetime import datetime as _dt66
+    bad, soon = [], []
+    root = root or Path(__file__).resolve().parent.parent
+    try:
+        from scripts import recheck_official as ro
+        from src.market import official_registry as reg
+        from src.market.normalized_prices import OFFICIAL_DIRECT_STALE_DAYS
+        from src.tcg.models import JST as _JST66
+        ts = {t["product_id"]: t for t in ro._targets()}
+        official_hosts = {"pur.store.sony.jp", "www.nintendo.com", "www.apple.com", "store.canon.jp", "nij.nikon.com",
+                          "mall-jp.fujifilm.com"}
+        for pid in ("prod_ps5_pro", "prod_switch2"):
+            t = ts.get(pid)
+            if not t:
+                bad.append(f"{pid} が再確認の対象に無い")
+                continue
+            host = t["fetch_url"].split("/")[2]
+            if host not in official_hosts or "wr." in host or "search" in t["fetch_url"] or not t["fetch_url"].startswith("https://"):
+                bad.append(f"{pid} の取得先が公式の静的なページでない: {t['fetch_url']}")
+        # 結果の記録・分類（偽の取得。通信しない）
+        sony = ("<h1>PlayStation®5 Pro CFI-7100B01</h1>ソニーストアで購入すると {p} 円(税込) 入荷待ち")
+        nin = ("Nintendo Switch 2 本体 日本語・国内専用 発売日： 2025. 6 . 5 （木） 希望小売価格： {p} 円（税込） セット内容 "
+               "生産終了した本体 本体＋ソフト 生産終了")
+        now = _dt66(2026, 10, 22, 12, 0, tzinfo=_JST66)
+
+        def run(sony_p, nin_p):
+            return {r["product_id"]: r for r in ro.recheck(
+                now, fetch=lambda u: (sony.format(p=sony_p), "") if "sony" in u else
+                (nin.format(p=nin_p), "") if "nintendo.com/jp" in u else (None, "timeout"))}
+        same = run("137,980", "59,980")
+        if not (same["prod_ps5_pro"]["status"] == "unchanged" and same["prod_switch2"]["status"] == "unchanged"):
+            bad.append("同じ価格が unchanged にならない")
+        if same["prod_ps5_pro"]["url"] != reg.VERIFIED_URLS["prod_ps5_pro"]["url"]:
+            bad.append("結果の url が記録の URL でない")
+        moved = run("149,980", "64,980")
+        if not (moved["prod_ps5_pro"]["status"] == "changed" and moved["prod_switch2"]["status"] == "changed"):
+            bad.append("価格が変わっても changed（人の確認待ち）にならない")
+        dead = {r["product_id"]: r for r in ro.recheck(now, fetch=lambda u: (None, "moved"))}
+        if dead["prod_ps5_pro"]["status"] != "failed" or dead["prod_ps5_pro"]["price"] is not None:
+            bad.append("読めないページが failed にならない")
+        # 確認の期限（実際の記録）
+        hist = []
+        try:
+            hist = _json66.loads((root / "exports" / "official_recheck" / "history.json").read_text(encoding="utf-8")).get("results") or []
+        except (OSError, ValueError):
+            pass
+        today = _date66.today()
+        for pid, v in reg.VERIFIED_URLS.items():
+            if not v.get("price"):
+                continue
+            last = str(v.get("checked_on") or "")
+            for r in hist:
+                if r.get("product_id") == pid and r.get("url") == v.get("url") and r.get("status") == "unchanged" \
+                        and r.get("price") == v.get("price") and _re66.match(r"\d{4}-\d{2}-\d{2}", str(r.get("observed_at") or "")):
+                    last = max(last, str(r["observed_at"])[:10])
+            try:
+                left = OFFICIAL_DIRECT_STALE_DAYS - (today - _date66.fromisoformat(last)).days
+            except ValueError:
+                left = -1
+            if left <= 3:
+                soon.append(f"{pid}（残り {left} 日）")
+    except Exception as exc:  # noqa: BLE001
+        bad.append(f"検査に失敗: {type(exc).__name__}: {exc}")
+    out = [{"level": "ok" if not bad else "error", "check": "official_recheck_alive",
+            "message": "#866 公式の再確認（PS5 Pro・Switch 2 が対象・公式の静的なページを読む・価格が変われば changed・読めなければ "
+                       "failed）" + ("" if not bad else f" ← {bad[:4]}")}]
+    out.append({"level": "ok" if not soon else "warning", "check": "official_verification_expiry",
+                "message": "#866 公式の確認の期限が3日以内の記録が無い（再確認が止まって切れる前に気づく）"
+                           + ("" if not soon else f" ← {soon[:6]}")})
+    return out
 
 
 def _check_phase26_acceptance_guard(root: Path | None = None) -> list[dict]:

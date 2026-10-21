@@ -49,10 +49,22 @@ PARSERS = {"pur.store.sony.jp": "sony_store", "www.apple.com": "apple_jsonld",
            "store.canon.jp": "canon_store", "nij.nikon.com": "nikon_direct", "mall-jp.fujifilm.com": "fuji_mall"}
 # 同じホストでも読み方が違う商品（iPhone の購入ページは構造化データの offers が無く、商品データの部品番号で読む）
 PARSER_OVERRIDE = {"prod_iphone17_256": "apple_parts", "prod_iphoneair_256": "apple_parts",
-                   "prod_iphoneduo_256": "apple_parts"}
+                   "prod_iphoneduo_256": "apple_parts",
+                   "prod_ps5_pro": "sony_product", "prod_switch2": "nintendo_lineup"}
+# 記録の URL（購入ページ。購入の導線として使う）とは別のページで価格を読む商品（結果の url は記録の URL のまま。
+# 読んだページは fetched_url に残す）。いずれも公式のドメインの静的な HTML で、取得は polite を通す。2026-10-21:
+# - PS5 Pro: Sony Store の購入ページ（_purchase）は在庫が無い間は「見つからない」ページへ移る（E_NOTFOUND）ので、同じ
+#   商品の商品ページ（_product。型番・JAN・価格・在庫の表示がある）を読む
+# - Switch 2: My Nintendo Store は待機室（store-jp-wr.nintendo.com）へ移るので取らない（待機室を回避しない）。
+#   任天堂の公式の商品ラインナップ（希望小売価格・生産終了の表示）を読む
+RECHECK_PAGE = {
+    "prod_ps5_pro": "https://pur.store.sony.jp/ps5/products/ps5/CFI-7100B01_product/",
+    "prod_switch2": "https://www.nintendo.com/jp/hardware/switch2/lineup/index.html",
+}
 # 再確認する商品（すでに確認済みで、照合のキーが登録され、上の読み取りで確かめられるもの）。
 # 公式直販価格は確認から14日で確認済みでなくなる（normalized_prices.OFFICIAL_DIRECT_STALE_DAYS）ので、全部を対象にする
-RECHECK_TARGETS = ("prod_ps5_pro", "prod_airpods_pro3", "prod_r5ii", "prod_z8", "prod_iphone17_256", "prod_x100vi",
+RECHECK_TARGETS = ("prod_ps5_pro", "prod_switch2", "prod_airpods_pro3", "prod_r5ii", "prod_z8", "prod_iphone17_256",
+                   "prod_x100vi",
                    "prod_iphoneair_256",   # Phase 29: 発見から登録した iPhone Air 256GB（同じ apple_parts の読み方）
                    "prod_iphoneduo_256")   # Phase 30: 優先順位で選んで登録した iPhone Duo 256GB
 # 読み取りごとの照合のキー（ページのどの値で「この商品」と確かめるか）。既定は型番（model_number）
@@ -62,7 +74,7 @@ RECHECK_TARGETS = ("prod_ps5_pro", "prod_airpods_pro3", "prod_r5ii", "prod_z8", 
 # - fuji_mall: 公式の証拠の JAN（色ごとに別なので、購入ページの色の JAN）と型番
 UNMAPPED_INTERVAL_SEC = 120
 MATCH_KEYS = {"canon_store": "url_code", "nikon_direct": "jan_code", "apple_parts": "variant_skus",
-              "fuji_mall": "evidence_jan"}
+              "fuji_mall": "evidence_jan", "nintendo_lineup": "lineup_title"}
 
 
 
@@ -90,6 +102,49 @@ def parse_sony_store(h: str, model: str) -> dict:
     stock = m.group(1)
     return {"model_found": True, "price": int(m.group(2).replace(",", "")),
             "stock": "" if stock == "販売終了" else stock, "ended": stock == "販売終了"}
+
+
+def parse_sony_product(h: str, model: str) -> dict:
+    """Sony Store の商品ページ（_product）: 「ソニーストアで購入すると <価格> 円(税込) … <在庫の表示>」。
+
+    型番がページにあり、価格と在庫の表示がそれぞれ1種類のときだけ読む（購入ページ _purchase と同じ商品の価格）。
+    在庫の表示が決まった語（入荷待ち・在庫切れ・在庫あり）でなければ在庫は記録しない。販売終了は在庫の欄が
+    「販売終了」のときだけ。
+    """
+    t = _text(h)
+    if model not in t:
+        return {"model_found": False, "price": None, "stock": "", "ended": False}
+    ms = list(re.finditer(r"ソニーストアで購入すると\s*([\d,]{4,})\s*円\s*\(税込\)"
+                          r"(?:\s*クーポン適用額をチェック\s*\(サインイン/新規登録\))?\s*(" + "|".join(_STOCK_WORDS) + r")?", t))
+    if not ms:
+        return parse_sony_store(h, model)            # 購入ページ（_purchase）の並び（型番 在庫 価格）の形
+    if len({m.group(1) for m in ms}) != 1:
+        return {"model_found": True, "price": None, "stock": "", "ended": False}
+    stocks = {m.group(2) or "" for m in ms}
+    stock = stocks.pop() if len(stocks) == 1 else ""
+    return {"model_found": True, "price": int(ms[0].group(1).replace(",", "")),
+            "stock": "" if stock == "販売終了" else stock, "ended": stock == "販売終了"}
+
+
+_ENDED_SECTION = "生産終了した本体"
+
+
+def parse_nintendo_lineup(h: str, title: str) -> dict:
+    """任天堂の商品ラインナップ: 「<名前> 発売日： … 希望小売価格： <価格> 円（税込）」の1種類の価格。
+
+    ページの「生産終了した本体」の欄より前（現行品）にあれば現行。その欄より後（生産終了）にだけあれば販売終了
+    （ended）。どちらにも無い・価格が2種類以上なら読まない（セットの商品は名前が違うので拾わない）。在庫は読まない。
+    """
+    t = _text(h)
+    cut = t.find(_ENDED_SECTION)
+    pat = re.escape(title) + r"\s*発売日[：:][^希]{0,40}希望小売価格[：:]\s*([\d,]{4,})\s*円\s*（税込）"
+    for part, ended in ((t if cut < 0 else t[:cut], False), (t[cut:] if cut >= 0 else "", True)):
+        prices = {m.group(1) for m in re.finditer(pat, part)}
+        if len(prices) == 1:
+            return {"model_found": True, "price": int(prices.pop().replace(",", "")), "stock": "", "ended": ended}
+        if len(prices) > 1:
+            return {"model_found": True, "price": None, "stock": "", "ended": False}
+    return {"model_found": False, "price": None, "stock": "", "ended": False}
 
 
 def _offers(d) -> list:
@@ -227,7 +282,8 @@ def parse_fuji_mall(h: str, match: str) -> dict:
     return {"model_found": True, "price": int(ps.pop()), "stock": stock, "ended": False}
 
 
-PARSE = {"sony_store": parse_sony_store, "apple_jsonld": parse_apple_jsonld,
+PARSE = {"sony_store": parse_sony_store, "sony_product": parse_sony_product, "nintendo_lineup": parse_nintendo_lineup,
+         "apple_jsonld": parse_apple_jsonld,
          "canon_store": parse_canon_store, "nikon_direct": parse_nikon_direct,
          "apple_parts": parse_apple_parts, "fuji_mall": parse_fuji_mall}
 
@@ -261,13 +317,17 @@ def _targets() -> list[dict]:
             match = m.group(1) if m else ""
         elif key == "variant_skus":
             match = ",".join(sorted(ev.get("variant_skus") or {}))
+        elif key == "lineup_title":
+            ed = str(ev.get("edition") or "")
+            match = f"Nintendo Switch 2 本体 {ed}" if ed else ""
         elif key == "evidence_jan":
             jans = list((ev.get("colors") or {}).values())
             match = f"{jans[0]}|{model}" if jans and model and v["url"].endswith(f"/g{_fuji_code(v['url'])}/") else ""
         else:
             match = str((products.get(pid) or {}).get(key) or "")
         if match:
-            out.append({"product_id": pid, "url": v["url"], "model": model, "match": match, "parser": parser,
+            out.append({"product_id": pid, "url": v["url"], "fetch_url": RECHECK_PAGE.get(pid) or v["url"],
+                        "model": model, "match": match, "parser": parser,
                         "price": v.get("price"), "price_checked_on": v.get("checked_on"),
                         "stock_checked_at": v.get("stock_checked_at") or ""})
     return out
@@ -357,19 +417,21 @@ def recheck(now: datetime, fetch=_fetch, sleep=None, wait_first: bool | None = N
     results = []
     started, seen_hosts = _time.monotonic(), set()
     for t in _targets():
-        host = re.sub(r"^https?://([^/]+)/.*$", r"\1", t["url"])
+        host = re.sub(r"^https?://([^/]+)/.*$", r"\1", t["fetch_url"])
         if (fetch is _fetch if wait_first is None else wait_first) and host not in seen_hosts:
             # 直前の CI のステップ（公式の価格の取得）が同じ取得元を取ったばかりかもしれない。間隔の記録は
             # プロセスをまたがないので、この実行での最初の取得の前に、その取得元の間隔の分だけ待つ（Phase 15 L-1）
-            wait = _host_interval(t["url"]) - (_time.monotonic() - started)
+            wait = _host_interval(t["fetch_url"]) - (_time.monotonic() - started)
             if wait > 0:
                 (sleep or _time.sleep)(wait)
         seen_hosts.add(host)
-        h, why = fetch(t["url"])
+        h, why = fetch(t["fetch_url"])
         # 取得した時刻（実行の開始時刻ではない）。テストで now を渡したときは now
         at = datetime.now(tz=JST) if fetch is _fetch else now
         base = {"product_id": t["product_id"], "url": t["url"], "model": t["model"], "match": t["match"],
                 "recorded_price": t["price"], "observed_at": at.isoformat(timespec="seconds")}
+        if t["fetch_url"] != t["url"]:
+            base["fetched_url"] = t["fetch_url"]           # 読んだページ（結果の url は記録の URL。記録との照合に使う）
         if h is None:
             results.append({**base, "status": "blocked" if why in CUTOFF_IMMEDIATE else "failed", "reason": why,
                             "price": None, "stock": ""})

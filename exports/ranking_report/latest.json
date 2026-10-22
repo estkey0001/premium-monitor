@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-22 01:46 JST",
+  "generated_at": "2026-10-22 18:52 JST",
   "route_type_beginner": "primary_to_secondary",
   "top_camera_buyback_opportunities": [
     {
@@ -430,7 +430,7 @@
     ]
   },
   "pro_by_category": {},
-  "excluded_items": 9,
+  "excluded_items": 8,
   "ineligible_items": [
     {
       "product_id": "prod_iphone17pm_256",
@@ -450,11 +450,11 @@
     }
   ],
   "profit_basis": "確定の利益（公式の確認済みの価格・確定の売値・既知の費用）。買えるか（今すぐ行動できるか）とは別で、各行の availability（在庫の記録。7日を過ぎたら未確認）を見る。在庫を推測しない",
-  "total_deals": 11,
+  "total_deals": 10,
   "confidence_summary": {
-    "total": 11,
+    "total": 10,
     "profitable": 2,
-    "negative": 9
+    "negative": 8
   },
   "stale_data_count": 0
 }

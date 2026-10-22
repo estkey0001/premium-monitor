@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-22 01:29 JST",
+  "generated_at": "2026-10-22 18:31 JST",
   "scope": "公式ソース登録・検証（利益/AI/Opportunity/Notification/Capital/Execution は不変）",
   "methodology": {
     "verification": "WebFetch で HTTP200/公式ドメイン/canonical/商品一致を実確認したURLのみ verified",
@@ -926,7 +926,7 @@
           "url": "https://pur.store.sony.jp/ps5/products/ps5/CFI-7100B01_purchase/",
           "link_type": "item",
           "verified": true,
-          "last_verified_at": "2026-10-21",
+          "last_verified_at": "2026-10-22",
           "extraction_method": "webfetch_verified",
           "confidence": "high",
           "official_price": 137980,
@@ -1161,7 +1161,7 @@
           "url": "https://mall-jp.fujifilm.com/shop/g/g16941878/",
           "link_type": "item",
           "verified": true,
-          "last_verified_at": "2026-10-22",
+          "last_verified_at": "2026-10-08",
           "extraction_method": "webfetch_verified",
           "confidence": "high",
           "official_price": 315700,
@@ -1707,6 +1707,17 @@
     },
     "recheck_applied": [
       {
+        "product_id": "prod_ps5_pro",
+        "action": "price_reconfirmed",
+        "on": "2026-10-22"
+      },
+      {
+        "product_id": "prod_ps5_pro",
+        "action": "stock_observed",
+        "stock": "入荷待ち",
+        "at": "2026-10-22T18:25:09+09:00"
+      },
+      {
         "product_id": "prod_switch2",
         "action": "price_seen_not_extended",
         "verified_by": "msrp_lineup"
@@ -1732,17 +1743,6 @@
         "on": "2026-10-22"
       },
       {
-        "product_id": "prod_x100vi",
-        "action": "price_reconfirmed",
-        "on": "2026-10-22"
-      },
-      {
-        "product_id": "prod_x100vi",
-        "action": "stock_observed",
-        "stock": "在庫なし（全色）",
-        "at": "2026-10-22T01:25:44+09:00"
-      },
-      {
         "product_id": "prod_iphoneair_256",
         "action": "price_reconfirmed",
         "on": "2026-10-22"
@@ -1755,6 +1755,17 @@
     ]
   },
   "recheck_applied": [
+    {
+      "product_id": "prod_ps5_pro",
+      "action": "price_reconfirmed",
+      "on": "2026-10-22"
+    },
+    {
+      "product_id": "prod_ps5_pro",
+      "action": "stock_observed",
+      "stock": "入荷待ち",
+      "at": "2026-10-22T18:25:09+09:00"
+    },
     {
       "product_id": "prod_switch2",
       "action": "price_seen_not_extended",
@@ -1779,17 +1790,6 @@
       "product_id": "prod_iphone17_256",
       "action": "price_reconfirmed",
       "on": "2026-10-22"
-    },
-    {
-      "product_id": "prod_x100vi",
-      "action": "price_reconfirmed",
-      "on": "2026-10-22"
-    },
-    {
-      "product_id": "prod_x100vi",
-      "action": "stock_observed",
-      "stock": "在庫なし（全色）",
-      "at": "2026-10-22T01:25:44+09:00"
     },
     {
       "product_id": "prod_iphoneair_256",

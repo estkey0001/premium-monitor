@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-22T01:40:32+09:00",
+  "generated_at": "2026-10-22T18:46:55+09:00",
   "apple": {
     "source": "apple_jp_official",
     "list_status": "ok",
@@ -12,13 +12,13 @@
       "iphone-duo"
     ],
     "checked": [
-      "iphone-16",
-      "iphone-17"
+      "iphone-17e",
+      "iphone-18-pro"
     ],
     "errors": {},
-    "unknown_parts": 10,
-    "matched": 1,
-    "pending": 2,
+    "unknown_parts": 38,
+    "matched": 0,
+    "pending": 10,
     "requests": 3,
     "cutoff": "",
     "saved": true
@@ -31,41 +31,41 @@
       "latest": true
     },
     "inputs_stale": [],
-    "review_required": 0,
-    "matched_events": 2,
-    "release": 5,
+    "review_required": 1,
+    "matched_events": 4,
+    "release": 6,
     "by_kind": {
-      "LOTTERY": 2,
+      "LOTTERY": 4,
       "PREORDER": 0,
       "FIRST_COME": 0,
-      "RESTOCK": 0,
-      "RELEASE": 5
+      "RESTOCK": 1,
+      "RELEASE": 6
     },
-    "tcg_products": 4,
+    "tcg_products": 22,
     "sources": {
       "configured": 17,
       "implemented": 6,
       "unimplemented": 11,
       "blocked": 3,
-      "robots_unreachable": 5,
-      "unreachable": 5,
+      "robots_unreachable": 4,
+      "unreachable": 4,
       "table": [
         {
           "source_id": "POKEMON_CENTER_ONLINE",
           "retailer": "ポケモンセンターオンライン",
           "adapter": "pco_lottery",
-          "state": "SOURCE_UNREACHABLE",
-          "health": "FAILED",
+          "state": "NO_ACTIVE_LOTTERY",
+          "health": "HEALTHY",
           "blocked": false,
-          "robots": "robots_unreachable",
-          "unreachable": true
+          "robots": null,
+          "unreachable": false
         },
         {
           "source_id": "POKEMON_CARD_OFFICIAL",
           "retailer": "ポケモンカードゲーム公式（ニュース）",
           "adapter": "pokemon_news_lottery",
-          "state": "SOURCE_FAILED",
-          "health": "FAILED",
+          "state": "NO_ACTIVE_LOTTERY",
+          "health": "OK_NO_EVENTS",
           "blocked": false,
           "robots": null,
           "unreachable": false
@@ -253,25 +253,25 @@
     "implemented": 6,
     "unimplemented": 11,
     "blocked": 3,
-    "robots_unreachable": 5,
-    "unreachable": 5,
+    "robots_unreachable": 4,
+    "unreachable": 4,
     "table": [
       {
         "source_id": "POKEMON_CENTER_ONLINE",
         "retailer": "ポケモンセンターオンライン",
         "adapter": "pco_lottery",
-        "state": "SOURCE_UNREACHABLE",
-        "health": "FAILED",
+        "state": "NO_ACTIVE_LOTTERY",
+        "health": "HEALTHY",
         "blocked": false,
-        "robots": "robots_unreachable",
-        "unreachable": true
+        "robots": null,
+        "unreachable": false
       },
       {
         "source_id": "POKEMON_CARD_OFFICIAL",
         "retailer": "ポケモンカードゲーム公式（ニュース）",
         "adapter": "pokemon_news_lottery",
-        "state": "SOURCE_FAILED",
-        "health": "FAILED",
+        "state": "NO_ACTIVE_LOTTERY",
+        "health": "OK_NO_EVENTS",
         "blocked": false,
         "robots": null,
         "unreachable": false

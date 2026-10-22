@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-22T01:46:38+09:00",
+  "generated_at": "2026-10-22T18:52:59+09:00",
   "collection": {
     "total_shops": 16,
     "shops_with_success": 2,
@@ -11,30 +11,30 @@
     "success_rate_pct": 28.8
   },
   "comparison": {
-    "prev_success_rate_pct": 30.3,
+    "prev_success_rate_pct": 28.8,
     "current_success_rate_pct": 28.8,
-    "delta_pct": -1.5,
-    "trend": "悪化",
-    "moving_avg_7d_pct": 31.1,
+    "delta_pct": 0.0,
+    "trend": "横ばい",
+    "moving_avg_7d_pct": 30.6,
     "top5_failure_reasons": [
       {
         "reason": "http_403",
         "count": 12
       },
       {
-        "reason": "product_not_listed",
-        "count": 8
+        "reason": "robots_unreachable",
+        "count": 11
       },
       {
         "reason": "rate_limited_429",
         "count": 6
       },
       {
-        "reason": "robots_unreachable",
-        "count": 6
+        "reason": "price_not_found",
+        "count": 4
       },
       {
-        "reason": "price_not_found",
+        "reason": "not_supported",
         "count": 4
       }
     ]
@@ -45,15 +45,11 @@
       "count": 12
     },
     {
-      "reason": "product_not_listed",
-      "count": 8
+      "reason": "robots_unreachable",
+      "count": 11
     },
     {
       "reason": "rate_limited_429",
-      "count": 6
-    },
-    {
-      "reason": "robots_unreachable",
       "count": 6
     },
     {
@@ -63,6 +59,10 @@
     {
       "reason": "not_supported",
       "count": 4
+    },
+    {
+      "reason": "product_not_listed",
+      "count": 3
     },
     {
       "reason": "http_404",
@@ -187,7 +187,7 @@
       "ok": 0,
       "failed": 5,
       "success_rate_pct": 0,
-      "top_reason": "product_not_listed",
+      "top_reason": "robots_unreachable",
       "optional": false
     },
     {
@@ -269,55 +269,59 @@
   "consecutive_failed_shops": [
     {
       "shop_id": "2ndstreet",
-      "consecutive_failures": 217
+      "consecutive_failures": 218
     },
     {
       "shop_id": "bookoff",
-      "consecutive_failures": 217
+      "consecutive_failures": 218
     },
     {
       "shop_id": "dosupara",
-      "consecutive_failures": 217
+      "consecutive_failures": 218
     },
     {
       "shop_id": "geo_mobile",
-      "consecutive_failures": 217
+      "consecutive_failures": 218
     },
     {
       "shop_id": "hardoff",
-      "consecutive_failures": 217
+      "consecutive_failures": 218
     },
     {
       "shop_id": "janpara",
-      "consecutive_failures": 217
+      "consecutive_failures": 218
     },
     {
       "shop_id": "pasoko",
-      "consecutive_failures": 217
+      "consecutive_failures": 218
     },
     {
       "shop_id": "sofmap",
-      "consecutive_failures": 217
+      "consecutive_failures": 218
     },
     {
       "shop_id": "surugaya",
-      "consecutive_failures": 217
+      "consecutive_failures": 218
     },
     {
       "shop_id": "tsutaya",
-      "consecutive_failures": 217
+      "consecutive_failures": 218
     },
     {
       "shop_id": "iosys",
-      "consecutive_failures": 150
+      "consecutive_failures": 151
     },
     {
       "shop_id": "netoff",
-      "consecutive_failures": 77
+      "consecutive_failures": 78
     },
     {
       "shop_id": "geo",
-      "consecutive_failures": 9
+      "consecutive_failures": 10
+    },
+    {
+      "shop_id": "mobile_ichiban",
+      "consecutive_failures": 2
     }
   ],
   "improvement_priority": [
@@ -330,7 +334,7 @@
     {
       "shop_id": "mobile_ichiban",
       "failed": 5,
-      "top_reason": "product_not_listed",
+      "top_reason": "robots_unreachable",
       "priority": "required"
     },
     {

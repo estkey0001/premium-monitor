@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-22 01:46 JST",
+  "generated_at": "2026-10-22 18:52 JST",
   "ebay_api_configured": false,
   "overseas_source_mode": "manual",
   "summary": {
@@ -62,7 +62,7 @@
       "rejection_top5": [
         [
           "price_zero",
-          5
+          6
         ],
         [
           "stale_over_14d",
@@ -80,11 +80,11 @@
       "sell_candidates": 2,
       "min_usable_buy": null,
       "min_usable_buy_source": "",
-      "max_usable_sell": 199000,
-      "max_usable_sell_source": "買取商店",
+      "max_usable_sell": 202000,
+      "max_usable_sell_source": "買取一丁目",
       "min_usable_buy_identity_verified": false,
-      "max_usable_sell_identity_verified": true,
-      "target_buy_price": 198999,
+      "max_usable_sell_identity_verified": false,
+      "target_buy_price": 201999,
       "gross_gap": null,
       "net_domestic": null,
       "best_reference_net": null,
@@ -93,7 +93,7 @@
       "rejection_top5": [
         [
           "price_zero",
-          5
+          6
         ],
         [
           "stale_over_14d",
@@ -124,7 +124,7 @@
       "rejection_top5": [
         [
           "price_zero",
-          5
+          6
         ],
         [
           "stale_over_14d",
@@ -155,7 +155,7 @@
       "rejection_top5": [
         [
           "price_zero",
-          5
+          6
         ]
       ],
       "stale_excluded": 0,
@@ -684,7 +684,7 @@
       "rejection_top5": [
         [
           "price_zero",
-          9
+          10
         ],
         [
           "stale_over_14d",
@@ -948,11 +948,15 @@
           15
         ],
         [
+          "official_stale_over_180d",
+          1
+        ],
+        [
           "sold_label_without_evidence",
           1
         ]
       ],
-      "stale_excluded": 16,
+      "stale_excluded": 17,
       "overseas_stale": 1,
       "needed": [],
       "fresh_overseas_whatif_top5": []

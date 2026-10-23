@@ -4156,6 +4156,7 @@ def check() -> list[dict]:
     results.extend(_check_integrity_official_recheck())
     results.extend(_check_integrity_profit_baseline())
     results.extend(_check_integrity_operations())
+    results.extend(_check_market_research())
 
     # ══════════════════════════════════════════════════════════════════
     # #820-#825: データの正確さ・鮮度の偽装（Phase 0）
@@ -6204,6 +6205,298 @@ def _check_integrity_operations(root: Path | None = None) -> list[dict]:
             {"level": "ok" if not bad70 else "error", "check": "schedule_cron_valid",
              "message": "#870 定時の実行（毎日1回・毎時 0 分を避ける・JST の昼に始まる・手動の実行と同時実行の制御）"
                         + ("" if not bad70 else f" ← {bad70[:4]}")}]
+
+
+def _research_doc_name_leaks(root: Path) -> list[str]:
+    """公開リポジトリの文書（internal/・ops/・docs/・CLAUDE.md）で、「調査候補」を述べる行に、監視中の商品名・キーワードが
+    書かれていないか（個別の調査候補の商品名を文書に残さない）。戻りは「ファイル:行」。"""
+    import re as _re_doc
+
+    import yaml as _y
+    names: set[str] = set()
+    try:
+        for p in (_y.safe_load((root / "config" / "products.yaml").read_text(encoding="utf-8")) or {}).get("products", []):
+            for n in [p.get("name"), *(p.get("keywords") or [])]:
+                if isinstance(n, str) and len(n.strip()) >= 5 and not n.strip().isdigit():
+                    names.add(n.strip())
+    except Exception:  # noqa: BLE001
+        return ["config/products.yaml が読めない（検査できない）"]          # 読めないときは通さない（fail-closed）
+    if not names:
+        return ["config/products.yaml に商品名が無い（検査できない）"]
+    out = []
+    targets = [root / "CLAUDE.md", root / "docs" / "HANDOFF.md"] + sorted((root / "internal").rglob("*.md")) \
+        + sorted((root / "ops").rglob("*.md"))
+    for f in targets:
+        if not f.is_file():
+            continue
+        lines = f.read_text(encoding="utf-8", errors="ignore").splitlines()
+
+        def _starts_item(t: str) -> bool:
+            return bool(_re_doc.match(r"\s*([-*]|\d+\.|\|)\s", t)) or t.lstrip().startswith("#")
+
+        for i, line in enumerate(lines):
+            if "調査候補" not in line:
+                continue
+            # その項目（箇条書き1項目・段落・表の1行）の範囲: 折り返しの続きの行（空行・見出し・次の箇条書きまで）も含める
+            lo = i
+            while lo > 0 and lines[lo].strip() and not _starts_item(lines[lo]):
+                lo -= 1
+            hi = i
+            while hi + 1 < len(lines) and lines[hi + 1].strip() and not _starts_item(lines[hi + 1]):
+                hi += 1
+            window = "\n".join(lines[lo:hi + 1])
+            if any(n in window for n in names):
+                out.append(f"{f.relative_to(root)}:{i + 1}")
+    return out
+
+
+def _product_name_tokens(root: Path) -> set[str]:
+    """監視中の商品名・キーワード（5文字以上）。公開物に調査候補と一緒に出ていないかの検査に使う。"""
+    import yaml as _y
+    names: set[str] = set()
+    for p in (_y.safe_load((root / "config" / "products.yaml").read_text(encoding="utf-8")) or {}).get("products", []):
+        for n in [p.get("name"), *(p.get("keywords") or [])]:
+            if isinstance(n, str) and len(n.strip()) >= 5 and not n.strip().isdigit():
+                names.add(n.strip())
+    return names
+
+
+def _check_market_research(root: Path | None = None) -> list[dict]:
+    """Market Research Foundation（#871）: 調査候補は確定の利益ではなく、**個別の候補は公開しない**。
+
+    - src/research が通知・送信・取得（notifiers・outbox・Telegram・Discord・requests・urllib）を import しない
+    - 通知（src/notifiers）・顧客の画面（admin 以外の src/content/ui）が調査候補を読まない
+    - 確定になるのは既存の判定（verified_pids）を通ったときだけ。古い売値・店のトップ・照合が未了・公式が未確認は確定に
+      ならず、調査候補として残る（捨てない）。同じ候補は同じ ID
+    - 公開の成果物（公開 JSON: exports/research/・公開 HTML/Markdown: docs/・commit の対象）に、個別の候補（商品名・候補の ID・
+      買値・売値・価格差・URL・売却先・商品ごとの理由・優先順位）が出ない。個別の候補は .gitignore 済みの .private/research
+    - 公開の集計（summary.json）は許可リストで作られ、個別の項目が混ざらない。管理画面（公開サイトに埋め込まれる）は集計だけ
+    """
+    import re as _re71
+    import subprocess as _sp71
+    root = root or Path(__file__).resolve().parent.parent
+    bad = []
+    leak_re = _re71.compile(r"\b(?:rc|dp)_[0-9a-f]{12}\b|\"?(?:candidate_id|observed_buy_price|observed_sell_price|raw_spread|"
+                            r"raw_net_spread|known_cost_spread|priority_rank|missing_requirements)\"?\s*[:=]")
+    try:
+        for f in sorted((root / "src" / "research").glob("*.py")):
+            src = f.read_text(encoding="utf-8")
+            imports = "\n".join(ln for ln in src.splitlines() if _re71.match(r"\s*(from|import)\s", ln))
+            if _re71.search(r"notifiers|outbox|telegram|discord|adapters|requests|urllib|smtplib", imports, _re71.I):
+                bad.append(f"{f.name} が通知・送信・取得のモジュールを import している")
+        for f in sorted((root / "src" / "notifiers").glob("*.py")):
+            if _re71.search(r"exports/research|\.private|src\.research|build_research", f.read_text(encoding="utf-8")):
+                bad.append(f"通知 {f.name} が調査候補を読む")
+        for f in sorted((root / "src" / "content" / "ui").glob("*.py")):
+            if f.name == "admin.py":
+                continue
+            if _re71.search(r"exports/research|\.private|src\.research|build_research|RESEARCH_CANDIDATE", f.read_text(encoding="utf-8")):
+                bad.append(f"顧客の画面 {f.name} が調査候補を読む")
+        gen = (root / "src" / "content" / "daily_lp_generator.py").read_text(encoding="utf-8")
+        for m in _re71.finditer(r".*research.*", gen):
+            line = m.group(0)
+            if "notif" in line.lower() and "admin_data" not in line and "_write_research" not in line:
+                bad.append("LP の生成が調査候補を通知に渡している")
+        # ── 公開と非公開の境界 ──
+        import yaml as _yaml71
+        wf_text = (root / ".github" / "workflows" / "daily_lp.yml").read_text(encoding="utf-8")
+        wf_flat = _re71.sub(r"\\\n\s*", " ", wf_text)                      # 行の継ぎ（\ + 改行）をつなぐ
+        wf = _yaml71.safe_load(wf_text)
+        steps = wf["jobs"]["update-lp"]["steps"]
+        if "mkdir -p exports/ops exports/research" not in wf_text:
+            bad.append("exports/research/ が事前に作られない（git add 全体の失敗の原因になる）")
+        stmts = [m.group(1) for m in _re71.finditer(r"git add\b([^\n;&|]*)",
+                                                    _re71.sub(r"(?m)^\s*#.*$", "", wf_flat))]
+        add_text = max(stmts, key=len) if stmts else ""                       # 生成物をまとめて足す文（一番長い git add）
+        if "exports/research/" not in add_text:
+            bad.append("公開の集計（exports/research/summary.json）が commit の対象でない")
+        # git add の全ての文（コメント行を除く）: 強制（-f・--force）・全部（.・-A・--all）・非公開の置き場（.private）を含まない
+        wf_code = _re71.sub(r"\\\n\s*", " ", "\n".join(ln for ln in wf_text.splitlines() if not ln.lstrip().startswith("#")))
+        for m in _re71.finditer(r"git\s+(?:-C\s+\S+\s+)?add\b([^\n;&|]*)", wf_code):
+            for t in m.group(1).split():
+                t = _re71.sub(r"^(?:\./)+", "", t.strip("\"'"))
+                if (t in ("--force", "--all", "-A", ".", "*") or t.startswith(".private") or t.startswith("--forc")
+                        or (_re71.fullmatch(r"-[A-Za-z]+", t) and ("f" in t or "A" in t))):
+                    bad.append(f"git add に強制・全部・非公開の置き場が入っている: {t}")
+        # .gitignore: コメントでない行に .private/ があり、打ち消し（!）が無い。実際に ignore されること
+        gi = [ln.strip() for ln in (root / ".gitignore").read_text(encoding="utf-8").splitlines()
+              if ln.strip() and not ln.strip().startswith("#")]
+        if ".private/" not in gi or any(ln.startswith("!") and ".private" in ln for ln in gi):
+            bad.append(".gitignore に .private/ が無い・打ち消されている（個別の調査候補が commit される）")
+        if _sp71.run(["git", "check-ignore", "-q", ".private/research/latest.json"], cwd=root).returncode != 0:
+            bad.append("git が .private/research/latest.json を ignore していない")
+        # キャッシュ・artifact: 非公開の置き場（./ 付き・ワイルドカード・親ディレクトリも含む）を出さない。台帳は暗号化した1ファイルだけ
+        import fnmatch as _fn71
+        import posixpath as _pp71
+
+        def _paths(pth) -> list[str]:
+            return [_pp71.normpath(x.strip()) if not x.strip().startswith("!") else x.strip()
+                    for x in str(pth or "").splitlines() if x.strip()]
+
+        def _covers_private(path: str) -> bool:
+            """この path（glob も可）が .private の中身を含むか（親ディレクトリ・ワイルドカードも含む）。"""
+            probe = ".private/research/latest.json"
+            if path in (".", "*", "**", "") or path.startswith("!"):
+                return path != "" and not path.startswith("!")
+            return (_fn71.fnmatch(probe, path) or _fn71.fnmatch(probe, path.rstrip("/") + "/*")
+                    or probe.startswith(path.rstrip("/") + "/") or _re71.search(r"(^|/)\.pri", path) is not None)
+
+        cache_steps = [st for st in steps if str(st.get("uses") or "").startswith("actions/cache")]
+        for st in cache_steps:
+            for path in _paths((st.get("with") or {}).get("path")):
+                if _covers_private(path) and path != ".private/ledger.enc":
+                    bad.append(f"非公開の調査候補を平文でキャッシュに置いている: {path}")
+        for st in steps:
+            if str(st.get("uses") or "").startswith("actions/upload-artifact"):
+                w = st.get("with") or {}
+                if str(w.get("include-hidden-files")).lower() == "true":
+                    bad.append("artifact に隠しファイルを含めている（.private が入りうる）")
+                for path in _paths(w.get("path")):
+                    if _covers_private(path) or path in ("exports", "exports/*", "exports/**"):
+                        bad.append(f"artifact に非公開の調査候補・広すぎる範囲を出している: {path}")
+        names = [st.get("name") for st in steps]
+        for need in ("Decrypt research ledger", "Encrypt research ledger"):
+            if need not in names:
+                bad.append(f"{need} の step が無い")
+            else:
+                st = steps[names.index(need)]
+                body = str(st.get("run") or "")
+                ssl = [ln for ln in body.splitlines() if "openssl enc" in ln]
+                if not ssl or "RESEARCH_LEDGER_KEY" not in str(st.get("env") or {}):
+                    bad.append(f"{need} が openssl と Secrets の鍵を使っていない")
+                for ln in ssl:
+                    it = _re71.search(r"-iter\s+(\d+)", ln)
+                    if ("-pass env:" not in ln or _re71.search(r"-k\s|-pass\s+pass:|-kfile|-pass\s+file:", ln)
+                            or "-pbkdf2" not in ln or not it or int(it.group(1)) < 100000):
+                        bad.append(f"{need} の openssl が、環境変数の鍵・pbkdf2・十分な反復回数になっていない")
+                if "pipefail" not in body:
+                    bad.append(f"{need} に pipefail が無い（途中の失敗を見逃す）")
+        for need in ("Research ledger key check", "Restore encrypted research ledger", "Decrypt research ledger",
+                     "Encrypt research ledger", "Save encrypted research ledger"):
+            if need in names and steps[names.index(need)].get("continue-on-error") is not True:
+                bad.append(f"{need} が continue-on-error でない（台帳の不調で LP の公開が止まる）")
+        kc = steps[names.index("Research ledger key check")] if "Research ledger key check" in names else {}
+        if not _re71.search(r"\$\{#K\}\"?\s*-ge\s*32", str(kc.get("run") or "")):
+            bad.append("鍵の長さ（32文字以上）を強制していない")
+        if not any((st.get("with") or {}).get("path") == ".private/ledger.enc" for st in cache_steps):
+            bad.append("暗号化した台帳（.private/ledger.enc）を引き継ぐキャッシュの step が無い")
+        leaks = _research_doc_name_leaks(root)
+        if leaks:
+            bad.append(f"公開の文書に、調査候補と同じ行で商品名が書かれている: {leaks[:3]}")
+        for rel in ("src/content/daily_lp_generator.py", "scripts/update_buyback_prices.py"):
+            t = (root / rel).read_text(encoding="utf-8")
+            if ".private" not in t:
+                bad.append(f"{rel} が個別の調査候補を非公開の場所に書いていない")
+        # 公開 JSON: exports/research/ には集計（summary.json）と .gitkeep だけ
+        pub = root / "exports" / "research"
+        for f in sorted(pub.rglob("*")) if pub.exists() else []:
+            if f.is_file() and f.name not in ("summary.json", ".gitkeep"):
+                bad.append(f"公開の exports/research/ に集計以外のファイルがある: {f.name}")
+        sj = pub / "summary.json"
+        if sj.exists():
+            txt = sj.read_text(encoding="utf-8")
+            from src.research import candidates as _rc0
+            try:
+                import json as _j71
+                if _rc0.find_private_keys(_j71.loads(txt)) or leak_re.search(txt):
+                    bad.append("公開の summary.json に個別の候補の項目が出ている")
+            except ValueError:
+                bad.append("summary.json が壊れている")
+        # git が追跡しているファイルに非公開の調査候補が無い
+        tracked = _sp71.run(["git", "ls-files", ".private", "exports/research"], cwd=root, capture_output=True,
+                            text=True).stdout.split()
+        if any(t.startswith(".private") or (t.startswith("exports/research/") and not t.endswith(("summary.json", ".gitkeep")))
+               for t in tracked):
+            bad.append(f"git が非公開の調査候補を追跡している: {[t for t in tracked][:3]}")
+        # 公開 HTML / Markdown / JSON（docs/）に個別の候補が出ていない
+        docs = root / "docs"
+        hits = []
+        for f in sorted(docs.rglob("*")) if docs.exists() else []:
+            if f.is_file() and f.suffix in (".html", ".md", ".json", ".txt", ".csv", ".xml", ".yaml", ".yml", ".js"):
+                try:
+                    txt = f.read_text(encoding="utf-8", errors="ignore")
+                    if leak_re.search(txt):
+                        hits.append(f.name)
+                    # 調査候補の表示の範囲に、価格・価格差・監視中の商品名が出ていない（値の検査）
+                    for pm in _re71.finditer(r'data-nu-ad-panel="research".*?(?=data-nu-ad-panel="|\Z)', txt, _re71.S):
+                        panel_txt = pm.group(0)
+                        tokens = _product_name_tokens(root)
+                        if (_re71.search(r"[+−-]?¥\d", panel_txt) or any(n in panel_txt for n in tokens)):
+                            hits.append(f"{f.name}（調査候補の表示に価格・商品名）")
+                except OSError:
+                    pass
+        if hits:
+            bad.append(f"公開の docs/ に個別の調査候補が出ている: {hits[:3]}")
+        if sj.exists():
+            if any(n in sj.read_text(encoding="utf-8") for n in _product_name_tokens(root)):
+                bad.append("公開の summary.json に監視中の商品名が出ている")
+        # ── 候補の生成と集計の安全 ──
+        from datetime import datetime as _dt
+        from datetime import timedelta as _td
+        from datetime import timezone as _tz
+
+        from src.content.ui import admin as _adm
+        from src.research import candidates as rc
+        now = _dt(2026, 10, 23, 12, 0, tzinfo=_tz(_td(hours=9)))
+        pr = [{"id": "p1", "name": "テスト商品ZZ", "genre": "camera", "jan": "", "part_numbers": []}]
+
+        def _obs(**kw):
+            base = {"product_id": "p1", "price_role": "sell", "price_type": "buyback_price",
+                    "canonical_price_type": "BUYBACK_CASH", "price": 150000, "source_id": "s1", "source_name": "店ZZ",
+                    "condition": "new_unopened", "is_exact_product_match": False, "link_type": "shop_home",
+                    "is_fresh": False, "freshness_basis": "observed_stale", "accessory_flag": False,
+                    "wrong_model_flag": False, "rejection_reason": "stale_over_14d", "observed_at": "2026-08-01T00:00:00+09:00"}
+            base.update(kw)
+            return base
+        off = {"product_id": "p1", "price_role": "official", "price_type": "official_price", "canonical_price_type": "RETAIL",
+               "price": 100000, "source_id": "official", "condition": "new_unopened", "link_type": "official_top",
+               "is_fresh": True, "freshness_basis": "config_unknown_date", "accessory_flag": False, "wrong_model_flag": False}
+        rep, st = rc.build(products=pr, observations=[off, _obs()], msrp_evidence={"p1": "CONFIGURED_REFERENCE"},
+                           official_meta={}, verified_pids=set(), now=now)
+        c = rep["candidates"][0]
+        if c["status"] != rc.RESEARCH_CANDIDATE or not c["raw_spread"] or c["raw_spread"] <= 0:
+            bad.append("古い売値・店のトップ・公式未確認の商品が調査候補として残らない")
+        if rc.OFFICIAL_UNVERIFIED not in c["missing_requirements"] or rc.SELL_STALE not in c["missing_requirements"] \
+                or rc.GENERIC_SELL_URL not in c["missing_requirements"]:
+            bad.append("調査候補に足りないものが付かない")
+        if c["shipping_unknown"] and c["raw_net_spread"] is not None:
+            bad.append("送料不明の調査候補に純の差（raw_net_spread）が出ている（純利益と誤認する）")
+        rep2, _ = rc.build(products=pr, observations=[off, _obs(price=160000, source_id="s2", source_name="店YY")],
+                           msrp_evidence={"p1": "CONFIGURED_REFERENCE"}, official_meta={}, verified_pids=set(), now=now, prev_state=st)
+        if rep2["candidates"][0]["candidate_id"] != c["candidate_id"] or rep2["candidates"][0]["discovered_at"] != c["discovered_at"]:
+            bad.append("価格・売る側の店が変わると候補の ID・初めて見た日が変わる（重複・時刻の付け替え）")
+        rep3, _ = rc.build(products=pr, observations=[off, _obs()], msrp_evidence={"p1": "CONFIGURED_REFERENCE"},
+                           official_meta={}, verified_pids={"p1"}, now=now)
+        if rep3["candidates"][0]["status"] != rc.VERIFIED:
+            bad.append("確定の関門を通った商品が VERIFIED にならない")
+        rep4, _ = rc.build(products=pr, observations=[off, _obs()], msrp_evidence={"p1": "VERIFIED_CURRENT"},
+                           official_meta={}, verified_pids=set(), now=now)
+        if rep4["candidates"][0]["status"] == rc.VERIFIED:
+            bad.append("既存の判定を通っていない商品が VERIFIED になる")
+        summ = rc.public_summary(rep)
+        import json as _j72
+        stxt = _j72.dumps(summ, ensure_ascii=False)
+        if rc.find_private_keys(summ) or leak_re.search(stxt) or "テスト商品ZZ" in stxt or "店ZZ" in stxt \
+                or c["candidate_id"] in stxt or "150000" in stxt or "50000" in stxt:
+            bad.append("公開の集計に個別の候補（商品名・ID・価格・価格差・売却先）が出ている")
+        if summ["research_candidate_count"] != 1:
+            bad.append("公開の集計の件数が合わない")
+        try:
+            rc.public_summary({"candidates": [], "metrics": {}, "counts": {}, "research_reasons": {}})
+        except ValueError:
+            bad.append("空の調査候補の集計が作れない")
+        html = _adm._research({"research": _adm.build_research(summ)})
+        if (leak_re.search(html) or "テスト商品ZZ" in html or "店ZZ" in html or _re71.search(r"[+−]¥\d", html)
+                or _re71.search(r"¥\d{2,3},\d{3}", html)):
+            bad.append("公開ページの調査候補の表示に、商品・価格・価格差・候補の ID が出ている")
+        if _adm.build_research(rep) is not None:
+            bad.append("個別の候補を含む報告を管理画面（公開サイト）が受け付ける")
+    except Exception as exc:  # noqa: BLE001
+        bad.append(f"検査に失敗: {type(exc).__name__}: {exc}")
+    return [{"level": "ok" if not bad else "error", "check": "market_research_separation",
+             "message": "#871 調査候補は確定の利益ではなく、個別の候補は公開しない（公開 JSON・公開 HTML・commit の対象に個別の候補が出ない・"
+                        "通知・顧客の画面に出ない・確定は既存の判定だけ・古い売値や公式未確認は調査候補として残る・ID は安定）"
+                        + ("" if not bad else f" ← {bad[:4]}")}]
 
 
 def _check_phase26_acceptance_guard(root: Path | None = None) -> list[dict]:

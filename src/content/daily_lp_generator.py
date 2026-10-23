@@ -605,6 +605,10 @@ class DailyLPGenerator:
         diag = self._write_opportunity_diagnostics(ctx)
         if diag is not None:
             ctx.admin_data["diagnostics"] = diag
+            # 調査候補（確定の利益ではない・運営者向け。商品の通知・顧客の画面には渡さない）
+            research = self._write_research_candidates(ctx, getattr(self, "_last_catalog", None))
+            if research is not None:
+                ctx.admin_data["research"] = research
             # 診断の直後に、行動できるようになった商品の通知の候補・重複の抑制・配信の計画（dry-run。Phase 19）
             notif = (self._write_actionable_notifications(diag, ctx.now)
                      if getattr(self, "_notifications_enabled", False) else None)
@@ -826,12 +830,87 @@ class DailyLPGenerator:
         except Exception:  # noqa: BLE001
             pass
 
+    @staticmethod
+    def _research_dir() -> Path:
+        """公開してよい集計（summary.json）の出力先。個別の候補は置かない。"""
+        import os as _os
+        return Path(_os.environ.get("RESEARCH_DIR")
+                    or Path(__file__).resolve().parent.parent.parent / "exports" / "research")
+
+    @staticmethod
+    def _research_private_dir() -> Path:
+        """個別の調査候補・台帳・買取の一覧の置き場（.gitignore 済み。commit・公開しない。CI ではキャッシュで次回に引き継ぐ）。"""
+        import os as _os
+        return Path(_os.environ.get("RESEARCH_PRIVATE_DIR")
+                    or Path(__file__).resolve().parent.parent.parent / ".private" / "research")
+
+    def _write_research_candidates(self, ctx, catalog) -> dict | None:
+        """調査候補（確定の利益ではない）を作る（Market Research Foundation）。
+
+        - 個別の候補（商品・価格・価格差・売却先・候補の ID）は private（.private/research/latest.json・.gitignore 済み）
+        - 公開してよい集計だけを exports/research/summary.json に書く。運営者向けのページにも集計だけを渡す
+        確定の判定（eligibility）は変えない。失敗しても LP の生成は止めない（調査候補は付加の情報）。
+        """
+        try:
+            import json as _json
+            from src.market import official_registry as _reg
+            from src.research import candidates as _rc
+            npo = self._load_export_json("normalized_price_observations", "latest.json")
+            products = []
+            for _p in self.repo.list_products():
+                if not getattr(_p, "is_active", True):
+                    continue
+                products.append({"id": _p.id, "name": getattr(_p, "name", "") or "",
+                                 "genre": getattr(_p, "genre", "") or "", "jan": getattr(_p, "jan_code", "") or "",
+                                 "part_numbers": list(getattr(_p, "part_numbers", None) or [])})
+            verified = {v.product_id for v in catalog.opportunity_set.eligible}
+            priv = self._research_private_dir()
+            priv.mkdir(parents=True, exist_ok=True)
+            # 台帳の状態: 無い（初回・キャッシュのミス）= fresh／引き継いだ = restored／壊れている = corrupt（捨てて作り直す）
+            prev, ledger_state = {}, _rc.LEDGER_FRESH
+            if (priv / "state.json").exists():
+                try:
+                    raw_state = _json.loads((priv / "state.json").read_text(encoding="utf-8"))
+                    cand_state = raw_state.get("candidates") if isinstance(raw_state, dict) else None
+                    if isinstance(cand_state, dict):
+                        prev, ledger_state = cand_state, _rc.LEDGER_RESTORED
+                    else:
+                        ledger_state = _rc.LEDGER_CORRUPT
+                except (OSError, ValueError):
+                    ledger_state = _rc.LEDGER_CORRUPT
+            try:
+                cat = _json.loads((priv / "buyback_catalog.json").read_text(encoding="utf-8")).get("rows") or []
+            except (OSError, ValueError):
+                cat = []
+            cam = self._load_export_json("camera_buyback_status.json")
+            blocked = set((cam.get("shop_cutoffs") or {}).keys()) | set(
+                (self._load_export_json("collector_report", "latest.json").get("shop_cutoffs") or {}).keys())
+            tcg_latest = self._load_export_json("tcg", "latest.json")
+            tcg = {"source_coverage": tcg_latest.get("lottery_coverage") or {},
+                   "active_events": (tcg_latest.get("lottery_coverage") or {}).get("sources_with_active_lottery"),
+                   "msrp_verified": ((self._load_export_json("tcg", "msrp.json").get("counts") or {}).get("verified")),
+                   "source_candidates": (self._load_export_json("tcg", "lottery_sources.json").get("source_candidates")
+                                         or {}).get("count")}
+            report, state = _rc.build(
+                products=products, observations=npo.get("observations") or [],
+                msrp_evidence=getattr(self, "_msrp_evidence", None) or {}, official_meta=self._official_meta(),
+                verified_pids=verified, now=ctx.now, prev_state=prev, catalog=cat,
+                identity=getattr(_reg, "IDENTITY_EVIDENCE", {}), discovery=self._load_export_json("discovery", "latest.json"),
+                tcg=tcg, blocked_sources=blocked, ledger_state=ledger_state)
+            # 個別の候補・台帳は private、公開してよい集計だけ public（許可リストで作る。個別の項目が混ざったら例外 → 何も書かない）
+            summary = _rc.write_outputs(report, state, priv, self._research_dir())
+            return summary
+        except Exception as exc:  # noqa: BLE001
+            logger.warning("research candidates failed: %s", type(exc).__name__)    # 公開ログに値を出さない
+            return None
+
     def _write_opportunity_diagnostics(self, ctx) -> dict | None:
         """利益商品が何件・なぜ除外されたかを exports/opportunity_diagnostics/latest.json に書く（内部用）。"""
         try:
             from src.content.ui import shell as _ui_shell
             from src.market import opportunity_diagnostics as _diag
             _model, catalog = _ui_shell.build_catalog(ctx)
+            self._last_catalog = catalog        # 調査候補（確定の判定の結果を読む。やり直さない）が同じ判定を使う
             npo = self._load_export_json("normalized_price_observations", "latest.json")
             sold = {n: self._load_export_json("flea_sold_prices", f"{n}_sold.json")
                     for n in ("yahoo", "mercari", "rakuma")}

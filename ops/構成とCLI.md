@@ -196,3 +196,17 @@ python3 scripts/operator_health_alert.py --dry-run  # 書かずに注記だけ�
 - **失敗の数え方**（`collector_report/latest.json` の `counters`・`counter_definitions`）: `rows_failed`・`quality_rejected`・
   `rows_skipped`・`sources_failed`・`requests_failed` は別の指標。品質ゲートの「取得失敗率」は (rows_failed + quality_rejected) ÷ rows_total
 - **定時の実行**: cron は 12:17 JST（UTC 03:17）。毎時 0 分は GitHub Actions が混み、毎日 4〜7 時間遅れて始まっていた。頻度は上げない
+
+## 調査候補・TCG の取得元の分類（Market Research Foundation）
+
+- 調査候補（`src/research/candidates.py`）は**確定の利益ではない**。確定の判定（`opportunity.eligibility`）で外れた商品のうち、
+  生の価格差（売値 − 買値）がある商品を、足りないもの（公式の価格が未確認・売値が古い・店のトップの URL・照合が未了・
+  費用不明…）つきで残す。**個別の候補は公開しない**: `.private/research/`（`.gitignore` 済み・commit しない。latest.json・台帳 state.json・
+  買取の一覧 buyback_catalog.json）。公開してよい集計（件数・理由別・ジャンル別・網羅性）だけ `exports/research/summary.json`。
+  台帳は、Secrets の `RESEARCH_LEDGER_KEY` があるときだけ暗号化して Actions のキャッシュで引き継ぐ（無ければ毎回新しく作る）。管理画面は公開サイトに埋め込まれる（誰でも開ける）ので集計だけを出す。元になる観測は既存の公開の成果物に含まれる。顧客の画面・LP・商品の通知には出さない（deploy-check #871）
+- 買取商店の一覧から、正本に無い商品を逆引きする（JAN・部品番号だけで照合。名前だけでは正本にしない）。登録は既存の
+  「候補の確認と正本への登録（Phase 28）」の手順で人が行う
+- TCG の取得元は `source_class` で分類する（WORKING / IMPLEMENTED_BUT_BLOCKED / ACCESSIBLE_UNIMPLEMENTED / UNREACHABLE /
+  UNSUPPORTED）。遮断された取得元は回避しない。監視していない売り場の候補は `config/tcg_source_candidates.yaml`（未確認。
+  実装の前に robots・規約・公開ページを確認する）。定価の台帳は `exports/tcg/msrp.json`（パック価格から BOX の価格は作らない）
+- 設計の全体と残りは `internal/audits/MARKET_RESEARCH_FOUNDATION.md`

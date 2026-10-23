@@ -22,7 +22,8 @@ from src.content.ui.components import esc
 from src.content.ui.navigation import page_href
 from src.tcg.models import JST, parse_dt
 
-SECTIONS = (("overview", "概要"), ("sources", "取得元"), ("data-quality", "データ品質"), ("ai", "AI 候補"),
+SECTIONS = (("overview", "概要"), ("sources", "取得元"), ("data-quality", "データ品質"), ("research", "調査候補"),
+            ("ai", "AI 候補"),
             ("capital", "資金配分"), ("execution", "実行履歴"), ("notifications", "通知"), ("system", "システム"))
 OK, WARN, FAIL, INFO = "ok", "warn", "fail", "info"
 STATUS_TEXT = {OK: "正常", WARN: "要確認", FAIL: "失敗", INFO: "情報"}
@@ -314,6 +315,12 @@ def build_tcg(tcg_report: dict) -> list[dict]:
     return out
 
 
+# 抽選の取得元の分類（src/tcg/lottery/registry.source_class）→ 運営向けの言葉
+SOURCE_CLASS_JP = {"WORKING": "取得できている", "IMPLEMENTED_BUT_BLOCKED": "実装済みだが遮断（回避しない）",
+                   "ACCESSIBLE_UNIMPLEMENTED": "到達できるが未実装（実装の候補）", "UNREACHABLE": "到達できない",
+                   "UNSUPPORTED": "対象にできない（URL なし・取得しない方針）"}
+
+
 def build_lottery_sources(tcg_report: dict) -> list[dict]:
     out = []
     for s in (tcg_report or {}).get("lottery_sources") or []:
@@ -326,6 +333,7 @@ def build_lottery_sources(tcg_report: dict) -> list[dict]:
         out.append({"name": str(s.get("retailer") or s.get("source_id") or ""), "priority": str(s.get("priority") or ""),
                     "status": LOT_SOURCE_TONE.get(state, WARN), "text": label,
                     "implemented": bool(s.get("adapter")), "checked": s.get("last_checked") or s.get("checked_at"),
+                    "klass": SOURCE_CLASS_JP.get(str(s.get("source_class") or ""), "—"),
                     "url": c.safe_href(str(s.get("official_url") or ""))})
     order = {FAIL: 0, WARN: 1, INFO: 2, OK: 3}
     return sorted(out, key=lambda s: (order[s["status"]], s["priority"], s["name"]))
@@ -813,6 +821,7 @@ def build(data: dict | None, *, catalog, details: dict, profit_routes: dict | No
             "min_sold": d.get("min_sold_samples"),
             "resale_collected": (d.get("resale_status") or {}).get("collected_at"),
             "lot_coverage": (tcg_report or {}).get("lottery_coverage") or {}, "api": api,
+            "lot_candidates": (tcg_report or {}).get("lottery_source_candidates") or {},
             "api_dry_run": (d.get("api") or {}).get("dry_run"), "api_generated": (d.get("api") or {}).get("generated_at"),
             "dq": dq, "ai": ai, "capital": capital, "execution": execution, "notices": notices,
             "act_notices": build_actionable_notices(d.get("actionable_notifications")),
@@ -822,6 +831,7 @@ def build(data: dict | None, *, catalog, details: dict, profit_routes: dict | No
                               priority=build_priority(d.get("discovery_priority"), d.get("discovery_products"))),
             "health": d.get("health") or {}, "coverage": d.get("coverage") or {},
             "ops_alert": build_ops_alert(d.get("ops_health_alert")),
+            "research": build_research(d.get("research")),
             "collector_generated": (d.get("collector") or {}).get("generated_at"),
             "dq_report": d.get("dq_report") or {}, "now": now}
 
@@ -903,8 +913,8 @@ def _sources(v: dict) -> str:
                    _when(t["success"]), esc(str(t["events"] if t["events"] is not None else "—")), str(t["errors"])]
                   for t in v["tcg"]], caption="TCG の取得元") or _empty("TCG の取得元の記録はありません。")
     lc = v["lot_coverage"]
-    lots = _table(["抽選の監視元", "優先度", "状態", "解析の実装", "公式"],
-                  [[esc(s["name"]), esc(s["priority"] or "—"), _badge(s["status"], s["text"]),
+    lots = _table(["抽選の監視元", "優先度", "状態", "分類", "解析の実装", "公式"],
+                  [[esc(s["name"]), esc(s["priority"] or "—"), _badge(s["status"], s["text"]), esc(s["klass"]),
                     "あり" if s["implemented"] else "未実装",
                     (f'<a href="{esc(s["url"])}" target="_blank" rel="noopener noreferrer">公式<span class="nu-sr">（外部サイト）</span></a>'
                      if s["url"].startswith("https://") else "—")] for s in v["lot_sources"]],
@@ -912,7 +922,17 @@ def _sources(v: dict) -> str:
     cov = (f'<p class="nu-osub">登録 {lc.get("configured_sources", "—")}・解析あり {lc.get("implemented_collectors", "—")}・'
            f'正常 {lc.get("healthy_sources", "—")}・アクセス拒否 {lc.get("blocked_sources", "—")}・'
            f'接続できない {lc.get("unreachable_sources", "—")}・未実装 {lc.get("not_implemented_sources", "—")}</p>'
+           + ('<p class="nu-osub">分類: ' + "・".join(f'{esc(SOURCE_CLASS_JP.get(k, k))} {esc(str(n))}'
+                                                    for k, n in (lc.get("source_classes") or {}).items()) + "</p>"
+              if lc.get("source_classes") else "")
            if lc else "")
+    lcand = v.get("lot_candidates") or {}
+    cands = (_table(["監視していない売り場（候補）", "経路", "確認の状態", "メモ"],
+                    [[esc(c["name"]), esc(c.get("channel") or "—"), "未確認（到達性・robots・規約）" if not c.get("verified") else "確認済み",
+                      esc(c.get("note") or "—")] for c in lcand.get("candidates") or []],
+                    caption="取得元の候補（監視していない・取得もしていない。確認の前に実装しない）")
+             + f'<p class="nu-osub">{esc(str(lcand.get("basis") or ""))}</p>') if lcand.get("candidates") else ""
+    cov += cands
     w = v["overview"]["warn"]
     warn = _box("取得の警告（旧表示の警告バーと同じ分類）",
                 f'<p>{_badge(w["status"], w["text"])}</p><dl class="nu-ad-dl">'
@@ -947,6 +967,80 @@ def _sources(v: dict) -> str:
             + _box("TCG（商品・入荷）", tcg)
             + _box("抽選の監視元", cov + lots,
                    sub="アクセス拒否の取得元は、bot 対策を回避せず、公式ページを人が確認して補う"))
+
+
+# 調査候補（src/research）の理由 → 運営向けの言葉（理由別の件数の表示だけに使う）
+RESEARCH_LABELS = {
+    "OFFICIAL_UNVERIFIED": "公式の価格が未確認", "OFFICIAL_NOT_SOLD": "公式で販売終了（販売店の新品を仕入れ値にした）",
+    "BUY_URL_NOT_ITEM_LEVEL": "仕入れ側が検索結果・店トップの価格", "BUY_STALE": "仕入れ側の価格が古い",
+    "SELL_STALE": "売値が古い（14日超）", "GENERIC_SELL_URL": "売値の URL が検索結果・店トップ",
+    "IDENTITY_UNCONFIRMED": "商品の照合が未了", "CONDITION_UNKNOWN": "状態が不明", "CONDITION_MISMATCH": "状態が仕入れと違う",
+    "STOCK_UNKNOWN": "在庫が未確認", "SELL_SAMPLE_INSUFFICIENT": "成約の件数が不足",
+    "PURCHASE_SHIPPING_UNKNOWN": "購入送料が不明", "PRICE_ANOMALY_SUSPECTED": "価格差が大きすぎる（誤価格・別商品の疑い）",
+    "SELL_REJECTED": "売値が品質の判定で外れた"}
+_CONF = {"high": "高", "medium": "中", "low": "低"}
+_GENRE_JP = {"iphone": "スマホ", "smartphone": "スマホ", "camera": "カメラ", "game": "ゲーム", "pc": "PC", "tcg": "TCG"}
+
+
+def build_research(r: dict | None) -> dict | None:
+    """調査候補の集計（件数・理由別・ジャンル別・信頼度・網羅性）。
+
+    このページは公開サイト（GitHub Pages の index.html）に埋め込まれ、ログイン・権限が無く誰でも開ける。個別の候補（商品・
+    価格・価格差・売却先・候補の ID）は、公開してよい集計（exports/research/summary.json）に含まれず、ここにも出さない。
+    認証付きの管理画面ができるまで、個別の候補の Web 表示は作らない。
+    """
+    if not isinstance(r, dict) or r.get("type") != "RESEARCH_SUMMARY":
+        return None
+    from src.research.candidates import find_private_keys
+    if find_private_keys(r):                       # 個別の項目が混ざっていたら表示しない（公開側で出さない側に倒す）
+        return None
+    return r
+
+
+def _research(v: dict) -> str:
+    r = v.get("research")
+    if not r:
+        return _box("調査候補", _empty("調査候補の集計がまだ生成されていません。"),
+                    sub="確定の利益ではない候補の集計（件数だけ）")
+
+    def _n(x):
+        return esc(str(x)) if x is not None else "—"
+
+    ovf = r.get("official_verified_coverage") or {}
+    bx = r.get("buyback_exact_coverage") or {}
+    bf = r.get("buyback_first") or {}
+    tc = r.get("tcg_source_coverage") or {}
+    metrics = (
+        '<dl class="nu-ad-dl">'
+        f'<dt>正本の商品</dt><dd>{_n(r.get("canonical_products"))}件</dd>'
+        f'<dt>調査候補（確定ではない）</dt><dd>{_n(r.get("research_candidate_count"))}件</dd>'
+        f'<dt>生の価格差が正の商品</dt><dd>{_n(r.get("positive_raw_spread_count"))}件（確定の関門を通過 '
+        f'{_n(r.get("verified_positive_spread_count"))}件・通過していない {_n(r.get("suppressed_positive_spread_count"))}件）</dd>'
+        f'<dt>公式の価格が確認済み</dt><dd>{_n(ovf.get("verified"))} / {_n(ovf.get("total"))}</dd>'
+        f'<dt>確定できる買取がある商品</dt><dd>{_n(bx.get("products_with_confirmed_sell"))} / {_n(bx.get("total"))}</dd>'
+        f'<dt>成約の実データ</dt><dd>{_n((r.get("marketplace_sold_coverage") or {}).get("valid_sold_rows"))}行</dd>'
+        f'<dt>買取の一覧からの逆引き</dt><dd>一覧の行 {_n(bf.get("catalog_rows"))}件・正本と一致 '
+        f'{_n(bf.get("canonical_matches"))}件・正本に無い商品 {_n(bf.get("new_product_candidates"))}件</dd>'
+        f'<dt>台帳（初めて見た日の記録）</dt><dd>{esc({"restored": "前回から引き継いだ", "fresh": "新しく作った（初回・引き継ぎなし。初めて見た日は今日になる）", "corrupt": "壊れていたので作り直した"}.get(r.get("ledger_state") or "", "不明"))}</dd>'
+        f'<dt>TCG の取得元</dt><dd>登録 {_n(tc.get("configured_sources"))}・解析あり {_n(tc.get("implemented_collectors"))}・'
+        f'受付中の抽選 {_n(r.get("tcg_active_events"))}・定価を確認済み {_n(r.get("tcg_msrp_verified"))}件</dd></dl>')
+    reasons = ("<ul class=\"nu-ad-list\">" + "".join(
+        f"<li>{esc(RESEARCH_LABELS.get(k, k))}<span class=\"nu-osub\"> {esc(str(n))}件</span></li>"
+        for k, n in (r.get("reason_counts") or {}).items()) + "</ul>") if r.get("reason_counts") else ""
+    genres = ("<ul class=\"nu-ad-list\">" + "".join(
+        f"<li>{esc(_GENRE_JP.get(k, k))}<span class=\"nu-osub\"> {esc(str(n))}件</span></li>"
+        for k, n in (r.get("genre_counts") or {}).items()) + "</ul>") if r.get("genre_counts") else ""
+    conf = "・".join(f"信頼度{_CONF.get(k, k)} {n}件" for k, n in (r.get("confidence_counts") or {}).items())
+    return _box(
+        "調査候補",
+        metrics
+        + (f"<h3>調査候補が確定できない理由（件数）</h3>{reasons}" if reasons else _empty("今の調査候補はありません。"))
+        + (f"<h3>ジャンル別</h3>{genres}" if genres else "")
+        + (f'<p class="nu-osub">{esc(conf)}</p>' if conf else "")
+        + '<p class="nu-osub">個別の候補の一覧・順位（商品・価格・価格差・売却先）は、この公開ページにも公開リポジトリにも出していません。'
+          '確定していない価格差を、確定した利益と取り違える形で見せないためです。なお、商品ごとの観測・診断は、これまでどおり既存の公開の成果物にあります。</p>'
+        + _generated("今回", r.get("generated_at")),
+        sub="確定の利益ではありません。件数と理由の集計だけを出しています")
 
 
 def _dq(v: dict) -> str:
@@ -1569,7 +1663,8 @@ def render(view: dict | None) -> str:
     v = view or {}
     nav = "".join(f'<a class="nu-ad-tab" href="{esc(_sec_href(k))}" data-nu-ad-tab="{k}">{esc(lbl)}</a>'
                   for k, lbl in SECTIONS)
-    panels = {"overview": _overview, "sources": _sources, "data-quality": _dq, "ai": _ai, "capital": _capital,
+    panels = {"overview": _overview, "sources": _sources, "data-quality": _dq, "research": _research, "ai": _ai,
+              "capital": _capital,
               "execution": _execution, "notifications": _notices, "system": _system}
     body = "".join(f'<div class="nu-ad-panel" data-nu-ad-panel="{k}"{"" if k == "overview" else " hidden"}>'
                    f'{panels[k](v) if v else _empty("運営の情報がまだ生成されていません。")}</div>'

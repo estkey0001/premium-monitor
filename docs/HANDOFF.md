@@ -1,6 +1,7 @@
-# HANDOFF（最終更新: 2026-10-22）
+# HANDOFF（最終更新: 2026-10-23）
 
 ## 今の状態
+- Market Research Foundation（2026-10-23。`internal/audits/MARKET_RESEARCH_FOUNDATION.md`）: Market Coverage Audit（CRITICAL）を受けて、「確定した商品だけ見せる」層の手前に**調査候補**（`src/research/candidates.py`・`.private/research/latest.json`・運営者向けの管理画面「調査候補」）を作った。**個別の候補は公開しない**（`.private/research/` は .gitignore 済み。台帳だけ、Secrets の `RESEARCH_LEDGER_KEY` があるときに暗号化して CI のキャッシュで引き継ぐ（鍵が無ければ引き継がない。鍵の設定は運営者）。公開してよい集計だけ `exports/research/summary.json`。管理画面は公開サイトに埋め込まれるので集計だけ）。確定の判定は変えず、外れた商品のうち生の価格差がある商品を、足りないものつきで残す（確定の利益ではない・顧客の画面と通知には出さない）。買取商店の一覧の全行から正本に無い商品を逆引き（JAN・部品番号だけで照合）。TCG は種別（店舗・アプリ・Web の抽選・店頭 QR・発売・要確認。挙動は既存の種類に写す）・取得元の分類（WORKING など5区分）・取得元の候補（config/tcg_source_candidates.yaml・未確認）・定価の台帳（exports/tcg/msrp.json）を追加。小売起点・成約の窓口は設計のみ（`src/research/interfaces.py`）。deploy-check #871。
 - Production Integrity 是正（2026-10-21 の監査の Medium 5件。`internal/audits/PRODUCTION_INTEGRITY_REMEDIATION.md`）: 利益の式を `src/market/profit_formula.py` に1つ（順位レポートの +28,900 → +28,400）・買取の前回比の基準を `exports/collector_report/price_baseline.json`（直近の正常な自動取得・14日以内）・カテゴリ共通の価格の上限は商品ページ・別の運営元・公式の 1.5 倍以内の裏付けがあるときだけ超えを採用（PS5 Pro の 200,700 は要確認のまま）・運営者向けの劣化アラート（`src/ops/health_alert.py`。商品の通知とは別・外部へ送らない。`exports/ops/`）・cron を 12:17 JST へ・公式の再確認（PS5 Pro は Sony の商品ページ、Switch 2 は任天堂の商品ラインナップ。希望小売価格だけの確認は確認日を進めない）。deploy-check #866〜#870。本番の確認は Run 39626543953（success）。
 - Phase 30（候補の優先順位）: `rank-product-candidates` で確認待ちの Apple の候補に決まった計算式の点（公式・買取・見込みの差・同一性・市場の根拠・準備）。1位の iPhone Duo 256GB だけを登録・有効化（公式 364,800円・買取 395,000円・本番で想定純利益 +28,400円の確定・在庫 UNKNOWN で今すぐ行動できない）。本番の確認で、一次 → 二次の処理が公式 → 買取の利益ありの案件を消す既存の不具合を見つけて直した。#865。記録は `internal/audits/PHASE_30_PRIORITY.md`
 - Phase 29（登録した商品の公式直販価格・買取）: iPhone Air 256GB の公式直販価格（189,800円・4色の部品番号）を official_registry に登録し、買取商店の iPhone Air の一覧で 256GB・SIMフリー・部品番号まで照合（色で価格が違えば最も低い色の行）。今の値では no_profit（在庫は UNKNOWN で今すぐ行動できない）。#864。記録は `internal/audits/PHASE_29_ACTIVATION.md`
@@ -25,6 +26,7 @@
 - Phase ごとの詳細な実装記録と「踏んだ罠」は `internal/DEV_NOTES.md`（削らない・着手前に該当節を読む）
 
 ## 未解決・保留
+- Market Research Foundation の残り: 調査候補を増やすには確認済みの公式の価格・買取の取得元・商品の登録を増やす必要がある。小売起点（Apple 以外）・成約の取得・TCG の取得器の追加（ACCESSIBLE_UNIMPLEMENTED の売り場は robots・規約を確認してから）・TCG の買取 / 成約 / 二次流通・Fast lane（GitHub の cron に頼らない頻度の仕組み）は未実装。iPhone 18 系の登録は保留。
 - Production Integrity 是正の残り: PS5 Pro の公式の再確認は、Actions のランナーから Sony Store の robots.txt が取れず（robots_unreachable。回避しない）自動では通らない。2026-10-21 に人が商品ページで確認した記録を登録簿に入れた（次に人が確かめるまで）。Switch 2 は待機室のため購入ページを確認できず、確認日が 2026-10-08 のまま（希望小売価格だけの確認は日を進めない）。人がブラウザで確かめる。PS5 Pro の買取 200,700 円は、買取商店の価格表の本物の型番行だが、別の運営元の商品ページの裏付けが無く要確認（モバイル一番は今回 product_not_listed）。必須の店 netoff（価格が見つからない）・mobile_ichiban（未掲載）は予想外の失敗として運営者向けのアラートに出ている。設定の参考価格と公式で確認した価格の違い 8 件（`config_price_drift`）は人の確認待ち。ハードオフ・ドスパラの検索 URL（404）は新しい読み取りが要るので更新していない。
 - Phase 16 の残り（Low）: カメラの設定値の参考価格（retail_price「概算定価（要確認）」）が通知の文面で「定価」と出る経路が残る（以前から）。quality_checker の「公式購入URLが未設定」は確認済みの購入ページが無い商品すべてに付く（手動のコマンドだけ）。詳細は `internal/audits/PHASE_16_OFFICIAL_DIRECT.md` §11
 - アーカイブの過去の LP（UI Phase 10 より前）は旧UIのまま残している（書き換えない）。その中の HOME（`/`）のリンクはプロジェクトの外を指して壊れている（`./` は `archive/index.html` で今のサイトへ転送される）。直すなら過去の LP の書き換えになるので、ユーザーの判断。

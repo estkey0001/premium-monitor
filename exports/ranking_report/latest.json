@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-23 18:48 JST",
+  "generated_at": "2026-10-23 22:35 JST",
   "route_type_beginner": "primary_to_secondary",
   "top_camera_buyback_opportunities": [
     {
@@ -363,50 +363,10 @@
       "route_type": "primary_to_secondary",
       "source_label": "RICOH公式 / FUJIFILM公式 / キタムラ",
       "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
-    },
-    {
-      "product_name": "iPhone Duo 256GB SIMフリー",
-      "category": "iphone",
-      "user_level": "beginner_easy",
-      "official_price_jpy": 364800,
-      "reference_source": "official",
-      "best_buyback_price": 376000,
-      "best_buyback_shop": "買取商店",
-      "buy_price": null,
-      "buy_shop_name": "",
-      "buy_price_type": "",
-      "sell_price_type": "buyback_price",
-      "net_profit_jpy": 9400,
-      "net_profit_rate": 0.0258,
-      "availability": "UNKNOWN",
-      "route_type": "primary_to_secondary",
-      "source_label": "Apple Store",
-      "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
     }
   ],
   "pro_top10": [],
   "beginner_by_category": {
-    "iphone": [
-      {
-        "product_name": "iPhone Duo 256GB SIMフリー",
-        "category": "iphone",
-        "user_level": "beginner_easy",
-        "official_price_jpy": 364800,
-        "reference_source": "official",
-        "best_buyback_price": 376000,
-        "best_buyback_shop": "買取商店",
-        "buy_price": null,
-        "buy_shop_name": "",
-        "buy_price_type": "",
-        "sell_price_type": "buyback_price",
-        "net_profit_jpy": 9400,
-        "net_profit_rate": 0.0258,
-        "availability": "UNKNOWN",
-        "route_type": "primary_to_secondary",
-        "source_label": "Apple Store",
-        "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
-      }
-    ],
     "camera": [
       {
         "product_name": "RICOH GR IV HDF",
@@ -450,10 +410,10 @@
     }
   ],
   "profit_basis": "確定の利益（公式の確認済みの価格・確定の売値・既知の費用）。買えるか（今すぐ行動できるか）とは別で、各行の availability（在庫の記録。7日を過ぎたら未確認）を見る。在庫を推測しない",
-  "total_deals": 10,
+  "total_deals": 9,
   "confidence_summary": {
-    "total": 10,
-    "profitable": 2,
+    "total": 9,
+    "profitable": 1,
     "negative": 8
   },
   "stale_data_count": 0

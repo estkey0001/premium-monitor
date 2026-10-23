@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-23T18:42:46+09:00",
+  "generated_at": "2026-10-23T22:29:06+09:00",
   "apple": {
     "source": "apple_jp_official",
     "list_status": "ok",
@@ -12,13 +12,13 @@
       "iphone-duo"
     ],
     "checked": [
-      "iphone-air",
-      "iphone-duo"
+      "iphone-16",
+      "iphone-17"
     ],
     "errors": {},
-    "unknown_parts": 14,
-    "matched": 2,
-    "pending": 5,
+    "unknown_parts": 10,
+    "matched": 1,
+    "pending": 2,
     "requests": 3,
     "cutoff": "",
     "saved": true

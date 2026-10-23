@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-10-23T18:42:46.467806+09:00",
-  "evaluated_at": "2026-10-23T18:42:46.465540+09:00",
+  "generated_at": "2026-10-23T22:29:05.845835+09:00",
+  "evaluated_at": "2026-10-23T22:29:05.841879+09:00",
   "items": [
     {
       "tcg": "POKEMON",
@@ -146,7 +146,17 @@
     "unreachable_sources": 4,
     "not_implemented_sources": 11,
     "sources_with_active_lottery": 0,
-    "lottery_events_found": 0
+    "lottery_events_found": 0,
+    "source_classes": {
+      "WORKING": 4,
+      "IMPLEMENTED_BUT_BLOCKED": 2,
+      "ACCESSIBLE_UNIMPLEMENTED": 3,
+      "UNREACHABLE": 6,
+      "UNSUPPORTED": 2
+    },
+    "entry_kinds": {
+      "LOTTERY": 2
+    }
   },
   "announcements": [
     {

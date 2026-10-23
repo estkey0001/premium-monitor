@@ -1,33 +1,32 @@
 {
-  "generated_at": "2026-10-23 18:48 JST",
+  "generated_at": "2026-10-23 22:35 JST",
   "date": "2026-10-23",
   "health_score": {
-    "data_quality": 14.4,
+    "data_quality": 14.2,
     "profit_discovery": 15.0,
     "source_health": 12.6,
     "link_quality": 4.8,
     "freshness": 3.6,
-    "total": 50.4
+    "total": 50.2
   },
   "data_quality": {
-    "total_obs": 236,
-    "usable_obs": 77,
+    "total_obs": 234,
+    "usable_obs": 75,
     "stale_count": 150,
-    "stale_rate": 0.6356,
+    "stale_rate": 0.641,
     "config_reference_count": 35,
     "zero_count": 38,
-    "zero_rate": 0.161,
-    "item_url_rate": 0.4831,
-    "search_url_rate": 0.1992,
-    "manual_rate": 0.4746,
+    "zero_rate": 0.1624,
+    "item_url_rate": 0.4786,
+    "search_url_rate": 0.2009,
+    "manual_rate": 0.4786,
     "api_rate": 0.0,
     "html_rate": 0.0085
   },
   "profit": {
-    "official_to_buyback_count": 2,
+    "official_to_buyback_count": 1,
     "official_to_buyback_products": [
-      "prod_gr4_hdf",
-      "prod_iphoneduo_256"
+      "prod_gr4_hdf"
     ],
     "official_to_buyback_max_profit": 16200,
     "main_route_count": 0,
@@ -78,16 +77,16 @@
       "n": 25
     },
     "買取商店": {
-      "success_count": 22,
+      "success_count": 21,
       "stale_count": 7,
       "zero_count": 0,
       "item_url_rate": 1.0,
-      "freshness": 0.6818,
+      "freshness": 0.6667,
       "success_rate": 1.0,
       "confidence": {
-        "high": 22
+        "high": 21
       },
-      "n": 22
+      "n": 21
     },
     "イオシス": {
       "success_count": 14,
@@ -190,18 +189,6 @@
       },
       "n": 5
     },
-    "モバイル一番": {
-      "success_count": 4,
-      "stale_count": 3,
-      "zero_count": 0,
-      "item_url_rate": 1.0,
-      "freshness": 0.25,
-      "success_rate": 1.0,
-      "confidence": {
-        "high": 4
-      },
-      "n": 4
-    },
     "買取一丁目": {
       "success_count": 4,
       "stale_count": 0,
@@ -249,6 +236,18 @@
         "high": 4
       },
       "n": 4
+    },
+    "モバイル一番": {
+      "success_count": 3,
+      "stale_count": 3,
+      "zero_count": 0,
+      "item_url_rate": 1.0,
+      "freshness": 0.0,
+      "success_rate": 1.0,
+      "confidence": {
+        "high": 3
+      },
+      "n": 3
     },
     "Amazon新品出品": {
       "success_count": 3,
@@ -338,16 +337,16 @@
   "diff_vs_prev": {
     "available": true,
     "stale_rate": {
-      "prev": 0.625,
-      "cur": 0.6356
+      "prev": 0.6356,
+      "cur": 0.641
     },
     "zero_rate": {
-      "prev": 0.1792,
-      "cur": 0.161
+      "prev": 0.161,
+      "cur": 0.1624
     },
     "item_url_rate": {
-      "prev": 0.4708,
-      "cur": 0.4831
+      "prev": 0.4831,
+      "cur": 0.4786
     },
     "main_route_count": {
       "prev": 0,
@@ -359,14 +358,7 @@
     },
     "new_main": [],
     "lost_main": [],
-    "source_success_changes": [
-      {
-        "source": "モバイル一番",
-        "prev": 0.375,
-        "cur": 1.0,
-        "delta": 0.625
-      }
-    ]
+    "source_success_changes": []
   },
   "anomalies": {
     "critical": [
@@ -376,10 +368,11 @@
       "取得成功率 0%: ネットオフ"
     ],
     "warning": [
+      "item_url率 低下",
       "item_url率 48% (<50%)"
     ],
     "info": [
-      "公式→買取の確定した案件 2件 / 最大 +¥16,200"
+      "公式→買取の確定した案件 1件 / 最大 +¥16,200"
     ]
   },
   "improvements_top10": [

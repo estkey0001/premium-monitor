@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-23T18:42:46.467806+09:00",
+  "generated_at": "2026-10-23T22:29:05.845835+09:00",
   "sources": [
     {
       "source_id": "POKEMON_CENTER_ONLINE",
@@ -16,11 +16,12 @@
       "adapter": "pco_lottery",
       "verified": true,
       "note": "抽選告知は公式ニュース一覧のリンクから発見。PCO 本体は CI から HTTP 403 のため、本文が取れない場合は手動確認済みデータで補う（bot 対策は回避しない）",
+      "policy_excluded": null,
       "state": "SOURCE_BLOCKED",
       "state_label": "アクセス拒否",
       "reachable": true,
-      "last_checked": "2026-10-23T18:38:52.247108+09:00",
-      "last_success": "2026-10-23T18:38:52.737392+09:00",
+      "last_checked": "2026-10-23T22:25:13.407808+09:00",
+      "last_success": "2026-10-23T22:25:14.045436+09:00",
       "last_event_found": "2026-10-22T01:40:32.227396+09:00",
       "candidate_articles": 2,
       "accepted_lotteries": 0,
@@ -84,7 +85,8 @@
           "robots_status": "allowed",
           "error": "HTTP 403: https://www.pokemoncenter-online.com/news/?id=20260821"
         }
-      ]
+      ],
+      "source_class": "IMPLEMENTED_BUT_BLOCKED"
     },
     {
       "source_id": "POKEMON_CARD_OFFICIAL",
@@ -101,11 +103,12 @@
       "adapter": "pokemon_news_lottery",
       "verified": true,
       "note": null,
+      "policy_excluded": null,
       "state": "NO_ACTIVE_LOTTERY",
       "state_label": "現在の抽選なし",
       "reachable": true,
-      "last_checked": "2026-10-23T18:39:53.789764+09:00",
-      "last_success": "2026-10-23T18:39:53.789782+09:00",
+      "last_checked": "2026-10-23T22:26:14.940530+09:00",
+      "last_success": "2026-10-23T22:26:14.940549+09:00",
       "last_event_found": null,
       "candidate_articles": 0,
       "accepted_lotteries": 0,
@@ -131,7 +134,8 @@
           "reason": "title_only_not_fetched"
         }
       ],
-      "pages": []
+      "pages": [],
+      "source_class": "WORKING"
     },
     {
       "source_id": "GEO",
@@ -149,10 +153,11 @@
       "adapter": "geo_lottery",
       "verified": true,
       "note": null,
+      "policy_excluded": null,
       "state": "SOURCE_BLOCKED",
       "state_label": "アクセス拒否",
       "reachable": false,
-      "last_checked": "2026-10-23T18:39:53.795432+09:00",
+      "last_checked": "2026-10-23T22:26:14.949202+09:00",
       "last_success": null,
       "last_event_found": "2026-10-01T20:51:59.851413+09:00",
       "candidate_articles": 0,
@@ -185,7 +190,8 @@
           "robots_status": "not_found",
           "error": "HTTP 403: https://geo-online.co.jp/news/"
         }
-      ]
+      ],
+      "source_class": "IMPLEMENTED_BUT_BLOCKED"
     },
     {
       "source_id": "TOYSRUS",
@@ -203,10 +209,11 @@
       "adapter": null,
       "verified": false,
       "note": "2026-10-01 時点でトップページが HTTP 403（ローカル・CI とも）。解析器は未実装",
+      "policy_excluded": null,
       "state": "SOURCE_BLOCKED",
       "state_label": "アクセス拒否",
       "reachable": false,
-      "last_checked": "2026-10-23T18:39:53.939068+09:00",
+      "last_checked": "2026-10-23T22:26:15.099984+09:00",
       "last_success": null,
       "last_event_found": null,
       "candidate_articles": 0,
@@ -239,7 +246,8 @@
           "robots_status": "not_found",
           "error": "HTTP 403: https://www.toysrus.co.jp/"
         }
-      ]
+      ],
+      "source_class": "UNREACHABLE"
     },
     {
       "source_id": "JOSHIN",
@@ -257,10 +265,11 @@
       "adapter": null,
       "verified": false,
       "note": "2026-10-01 時点でトップページが HTTP 403。解析器は未実装",
+      "policy_excluded": null,
       "state": "SOURCE_BLOCKED",
       "state_label": "アクセス拒否",
       "reachable": false,
-      "last_checked": "2026-10-23T18:39:54.536273+09:00",
+      "last_checked": "2026-10-23T22:26:15.697125+09:00",
       "last_success": null,
       "last_event_found": null,
       "candidate_articles": 0,
@@ -293,7 +302,8 @@
           "robots_status": "not_found",
           "error": "HTTP 403: https://joshinweb.jp/"
         }
-      ]
+      ],
+      "source_class": "UNREACHABLE"
     },
     {
       "source_id": "EDION",
@@ -311,11 +321,12 @@
       "adapter": null,
       "verified": false,
       "note": "到達可。トップから TCG の抽選告知一覧を発見できず、解析器は未実装",
+      "policy_excluded": null,
       "state": "SOURCE_NOT_MONITORED",
       "state_label": "未監視（未実装）",
       "reachable": true,
-      "last_checked": "2026-10-23T18:39:54.886173+09:00",
-      "last_success": "2026-10-23T18:39:56.609389+09:00",
+      "last_checked": "2026-10-23T22:26:15.982983+09:00",
+      "last_success": "2026-10-23T22:26:17.426684+09:00",
       "last_event_found": null,
       "candidate_articles": 0,
       "accepted_lotteries": 0,
@@ -347,7 +358,8 @@
           "robots_status": "allowed",
           "error": null
         }
-      ]
+      ],
+      "source_class": "ACCESSIBLE_UNIMPLEMENTED"
     },
     {
       "source_id": "YAMADA",
@@ -365,10 +377,11 @@
       "adapter": null,
       "verified": false,
       "note": "2026-10-01 時点で応答タイムアウト。解析器は未実装",
+      "policy_excluded": null,
       "state": "SOURCE_UNREACHABLE",
       "state_label": "接続できない",
       "reachable": false,
-      "last_checked": "2026-10-23T18:39:56.609512+09:00",
+      "last_checked": "2026-10-23T22:26:17.426791+09:00",
       "last_success": null,
       "last_event_found": null,
       "candidate_articles": 0,
@@ -401,7 +414,8 @@
           "robots_status": "unknown",
           "error": "robots.txt unreachable: https://www.yamada-denkiweb.com/"
         }
-      ]
+      ],
+      "source_class": "UNREACHABLE"
     },
     {
       "source_id": "TSUTAYA",
@@ -419,11 +433,12 @@
       "adapter": null,
       "verified": false,
       "note": "到達可。トップから TCG の抽選告知一覧を発見できず、解析器は未実装",
+      "policy_excluded": null,
       "state": "SOURCE_NOT_MONITORED",
       "state_label": "未監視（未実装）",
       "reachable": true,
-      "last_checked": "2026-10-23T18:40:06.948645+09:00",
-      "last_success": "2026-10-23T18:40:08.873366+09:00",
+      "last_checked": "2026-10-23T22:26:27.954861+09:00",
+      "last_success": "2026-10-23T22:26:29.371136+09:00",
       "last_event_found": null,
       "candidate_articles": 0,
       "accepted_lotteries": 0,
@@ -455,7 +470,8 @@
           "robots_status": "allowed",
           "error": null
         }
-      ]
+      ],
+      "source_class": "ACCESSIBLE_UNIMPLEMENTED"
     },
     {
       "source_id": "BICCAMERA",
@@ -473,10 +489,11 @@
       "adapter": null,
       "verified": false,
       "note": "2026-10-01 時点で応答タイムアウト。解析器は未実装",
+      "policy_excluded": null,
       "state": "SOURCE_UNREACHABLE",
       "state_label": "接続できない",
       "reachable": false,
-      "last_checked": "2026-10-23T18:40:08.873472+09:00",
+      "last_checked": "2026-10-23T22:26:29.371227+09:00",
       "last_success": null,
       "last_event_found": null,
       "candidate_articles": 0,
@@ -509,7 +526,8 @@
           "robots_status": "unknown",
           "error": "robots.txt unreachable: https://www.biccamera.com/"
         }
-      ]
+      ],
+      "source_class": "UNREACHABLE"
     },
     {
       "source_id": "YODOBASHI",
@@ -527,10 +545,11 @@
       "adapter": null,
       "verified": false,
       "note": "2026-10-01 時点で応答タイムアウト。解析器は未実装",
+      "policy_excluded": null,
       "state": "SOURCE_UNREACHABLE",
       "state_label": "接続できない",
       "reachable": false,
-      "last_checked": "2026-10-23T18:40:19.206980+09:00",
+      "last_checked": "2026-10-23T22:26:39.900394+09:00",
       "last_success": null,
       "last_event_found": null,
       "candidate_articles": 0,
@@ -563,7 +582,8 @@
           "robots_status": "unknown",
           "error": "robots.txt unreachable: https://www.yodobashi.com/"
         }
-      ]
+      ],
+      "source_class": "UNREACHABLE"
     },
     {
       "source_id": "AMAZON",
@@ -581,11 +601,12 @@
       "adapter": null,
       "verified": false,
       "note": "自動アクセスに応答本文を返さない（HTTP 202）。解析器は未実装",
+      "policy_excluded": "Amazon はスクレイピングしない（取得の作法。公式 API が使えるときだけ）",
       "state": "SOURCE_NOT_MONITORED",
       "state_label": "未監視（未実装）",
       "reachable": true,
-      "last_checked": "2026-10-23T18:40:29.593413+09:00",
-      "last_success": "2026-10-23T18:40:30.073059+09:00",
+      "last_checked": "2026-10-23T22:26:50.210507+09:00",
+      "last_success": "2026-10-23T22:26:50.581304+09:00",
       "last_event_found": null,
       "candidate_articles": 0,
       "accepted_lotteries": 0,
@@ -617,7 +638,8 @@
           "robots_status": "allowed",
           "error": null
         }
-      ]
+      ],
+      "source_class": "UNSUPPORTED"
     },
     {
       "source_id": "RAKUTEN_BOOKS",
@@ -635,10 +657,11 @@
       "adapter": null,
       "verified": false,
       "note": "到達可。TCG 抽選の告知一覧を発見できず、解析器は未実装",
+      "policy_excluded": null,
       "state": "SOURCE_UNREACHABLE",
       "state_label": "接続できない",
       "reachable": false,
-      "last_checked": "2026-10-23T18:40:30.073168+09:00",
+      "last_checked": "2026-10-23T22:26:50.581443+09:00",
       "last_success": null,
       "last_event_found": null,
       "candidate_articles": 0,
@@ -671,7 +694,8 @@
           "robots_status": "unknown",
           "error": "robots.txt unreachable: https://books.rakuten.co.jp/"
         }
-      ]
+      ],
+      "source_class": "UNREACHABLE"
     },
     {
       "source_id": "SEVEN_NET",
@@ -689,11 +713,12 @@
       "adapter": null,
       "verified": false,
       "note": "到達可。TCG 抽選の告知一覧を発見できず、解析器は未実装",
+      "policy_excluded": null,
       "state": "SOURCE_NOT_MONITORED",
       "state_label": "未監視（未実装）",
       "reachable": true,
-      "last_checked": "2026-10-23T18:40:40.453490+09:00",
-      "last_success": "2026-10-23T18:40:41.217788+09:00",
+      "last_checked": "2026-10-23T22:27:00.773365+09:00",
+      "last_success": "2026-10-23T22:27:01.549406+09:00",
       "last_event_found": null,
       "candidate_articles": 0,
       "accepted_lotteries": 0,
@@ -725,7 +750,8 @@
           "robots_status": "allowed",
           "error": null
         }
-      ]
+      ],
+      "source_class": "ACCESSIBLE_UNIMPLEMENTED"
     },
     {
       "source_id": "LAWSON",
@@ -743,11 +769,12 @@
       "adapter": "lawson_lottery",
       "verified": true,
       "note": null,
+      "policy_excluded": null,
       "state": "NO_ACTIVE_LOTTERY",
       "state_label": "現在の抽選なし",
       "reachable": true,
-      "last_checked": "2026-10-23T18:40:41.217874+09:00",
-      "last_success": "2026-10-23T18:41:42.428740+09:00",
+      "last_checked": "2026-10-23T22:27:01.549499+09:00",
+      "last_success": "2026-10-23T22:28:02.743719+09:00",
       "last_event_found": null,
       "candidate_articles": 0,
       "accepted_lotteries": 0,
@@ -795,7 +822,8 @@
           "robots_status": "allowed",
           "error": null
         }
-      ]
+      ],
+      "source_class": "WORKING"
     },
     {
       "source_id": "ONEPIECE_CARD_OFFICIAL",
@@ -812,11 +840,12 @@
       "adapter": "onepiece_news_lottery",
       "verified": true,
       "note": null,
+      "policy_excluded": null,
       "state": "NO_ACTIVE_LOTTERY",
       "state_label": "現在の抽選なし",
       "reachable": true,
-      "last_checked": "2026-10-23T18:41:42.428837+09:00",
-      "last_success": "2026-10-23T18:41:45.279744+09:00",
+      "last_checked": "2026-10-23T22:28:02.743812+09:00",
+      "last_success": "2026-10-23T22:28:05.135389+09:00",
       "last_event_found": null,
       "candidate_articles": 0,
       "accepted_lotteries": 0,
@@ -850,7 +879,8 @@
           "robots_status": "not_found",
           "error": null
         }
-      ]
+      ],
+      "source_class": "WORKING"
     },
     {
       "source_id": "ONEPIECE_CARD_OFFICIAL_SHOP",
@@ -867,6 +897,7 @@
       "adapter": null,
       "verified": false,
       "note": "公式ショップの URL を確認できていない（DNS 解決不可）。推測 URL で監視しない",
+      "policy_excluded": null,
       "state": "SOURCE_NOT_MONITORED",
       "state_label": "未監視（未実装）",
       "reachable": false,
@@ -886,7 +917,8 @@
       "active_preorders": 0,
       "announcements": 0,
       "discovered_titles": [],
-      "pages": []
+      "pages": [],
+      "source_class": "UNSUPPORTED"
     },
     {
       "source_id": "PREMIUM_BANDAI",
@@ -903,11 +935,12 @@
       "adapter": "premium_bandai_lottery",
       "verified": true,
       "note": null,
+      "policy_excluded": null,
       "state": "NO_ACTIVE_LOTTERY",
       "state_label": "現在の抽選なし",
       "reachable": true,
-      "last_checked": "2026-10-23T18:41:45.280606+09:00",
-      "last_success": "2026-10-23T18:42:46.465461+09:00",
+      "last_checked": "2026-10-23T22:28:05.136828+09:00",
+      "last_success": "2026-10-23T22:29:05.841795+09:00",
       "last_event_found": null,
       "candidate_articles": 0,
       "accepted_lotteries": 0,
@@ -929,7 +962,7 @@
           "http_status": 200,
           "final_url": "https://p-bandai.jp/global_newpc.html",
           "page_title": "【プレミアムバンダイ】INTERNATIONAL SHIPPING AVAILABLE｜PREMIUM BANDAI",
-          "html_length": 10525,
+          "html_length": 10524,
           "text_length": 783,
           "links_discovered": 12,
           "product_links_discovered": 0,
@@ -945,7 +978,7 @@
           "http_status": 200,
           "final_url": "https://p-bandai.jp/global_newpc.html",
           "page_title": "【プレミアムバンダイ】INTERNATIONAL SHIPPING AVAILABLE｜PREMIUM BANDAI",
-          "html_length": 10527,
+          "html_length": 10524,
           "text_length": 783,
           "links_discovered": 12,
           "product_links_discovered": 0,
@@ -955,7 +988,8 @@
           "robots_status": "allowed",
           "error": null
         }
-      ]
+      ],
+      "source_class": "WORKING"
     }
   ],
   "coverage": {
@@ -967,7 +1001,132 @@
     "unreachable_sources": 4,
     "not_implemented_sources": 11,
     "sources_with_active_lottery": 0,
-    "lottery_events_found": 0
+    "lottery_events_found": 0,
+    "source_classes": {
+      "WORKING": 4,
+      "IMPLEMENTED_BUT_BLOCKED": 2,
+      "ACCESSIBLE_UNIMPLEMENTED": 3,
+      "UNREACHABLE": 6,
+      "UNSUPPORTED": 2
+    },
+    "entry_kinds": {
+      "LOTTERY": 2
+    }
+  },
+  "source_candidates": {
+    "status": "CANDIDATE_UNVERIFIED",
+    "basis": "Market Coverage Audit 2026-10-23 の列挙。登録簿に無い売り場。到達性・robots・規約は未確認",
+    "candidates": [
+      {
+        "id": "KOJIMA",
+        "name": "コジマ",
+        "channel": "STORE",
+        "url": "https://www.kojima.net/",
+        "verified": false,
+        "note": ""
+      },
+      {
+        "id": "KS_DENKI",
+        "name": "ケーズデンキ",
+        "channel": "STORE",
+        "url": "https://www.ksdenki.com/",
+        "verified": false,
+        "note": ""
+      },
+      {
+        "id": "AMIAMI",
+        "name": "あみあみ",
+        "channel": "ONLINE",
+        "url": "https://www.amiami.jp/",
+        "verified": false,
+        "note": ""
+      },
+      {
+        "id": "HOBBYSEARCH",
+        "name": "ホビーサーチ",
+        "channel": "ONLINE",
+        "url": "https://www.1999.co.jp/",
+        "verified": false,
+        "note": ""
+      },
+      {
+        "id": "CARD_LABO",
+        "name": "カードラボ",
+        "channel": "STORE",
+        "url": "https://www.c-labo.jp/",
+        "verified": false,
+        "note": ""
+      },
+      {
+        "id": "SURUGAYA",
+        "name": "駿河屋",
+        "channel": "BOTH",
+        "url": "https://www.suruga-ya.jp/",
+        "verified": false,
+        "note": ""
+      },
+      {
+        "id": "SUPER_HOBBY",
+        "name": "スーパーホビー",
+        "channel": "STORE",
+        "url": "",
+        "verified": false,
+        "note": ""
+      },
+      {
+        "id": "AEON",
+        "name": "イオン",
+        "channel": "STORE",
+        "url": "https://www.aeon.com/",
+        "verified": false,
+        "note": ""
+      },
+      {
+        "id": "DON_QUIJOTE",
+        "name": "ドン・キホーテ",
+        "channel": "STORE",
+        "url": "https://www.donki.com/",
+        "verified": false,
+        "note": ""
+      },
+      {
+        "id": "VILLAGE_VANGUARD",
+        "name": "ヴィレッジヴァンガード",
+        "channel": "BOTH",
+        "url": "https://www.village-v.co.jp/",
+        "verified": false,
+        "note": ""
+      },
+      {
+        "id": "POKEMON_CARD_LIVE_APP",
+        "name": "ポケモンカードゲーム Live（アプリ）",
+        "channel": "APP",
+        "url": "",
+        "verified": false,
+        "note": "アプリの中の告知は公開ページから取れない可能性が高い。公式のお知らせ・ニュースで補う"
+      },
+      {
+        "id": "FAMILYMART",
+        "name": "ファミリーマート",
+        "channel": "STORE",
+        "url": "",
+        "verified": false,
+        "note": "販売監視用の登録簿（src/tcg/sources.py）にはあるが、抽選用の登録簿に無い・URL 未確認"
+      }
+    ],
+    "count": 12,
+    "policy_excluded": [
+      {
+        "id": "OFFICIAL_X_POKEMON_CARD",
+        "name": "ポケモンカードゲーム公式 X",
+        "reason": "SNS は自動取得しない（ログイン・規約）。日程の根拠にしない"
+      },
+      {
+        "id": "OFFICIAL_X_ONEPIECE_CARD",
+        "name": "ONE PIECEカードゲーム公式 X",
+        "reason": "SNS は自動取得しない（ログイン・規約）。日程の根拠にしない"
+      }
+    ]
   },
   "rejection_reasons": {
     "announcement_too_old_or_undated": 1,

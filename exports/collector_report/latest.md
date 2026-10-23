@@ -1,12 +1,12 @@
 # Collector Quality Report
 
-生成日時: 2026-10-23 17:32:00 UTC+09:00
+生成日時: 2026-10-23 21:16:55 UTC+09:00
 
 ## サマリ
 
 | 合計 | OK | 失敗 | スキップ |
 |------|-----|------|----------|
-| 66 | 20 | 42 | 4 |
+| 66 | 18 | 44 | 4 |
 
 ## 店舗別 OK/失敗/スキップ
 
@@ -21,8 +21,8 @@
 | iosys | 0 | 6 | 0 |
 | janpara | 0 | 6 | 0 |
 | kaitori_itchome | 4 | 0 | 0 |
-| kaitori_shouten | 15 | 2 | 0 |
-| mobile_ichiban | 1 | 4 | 0 |
+| kaitori_shouten | 14 | 3 | 0 |
+| mobile_ichiban | 0 | 5 | 0 |
 | netoff | 0 | 4 | 0 |
 | pasoko | 0 | 2 | 0 |
 | sofmap | 0 | 2 | 0 |
@@ -39,12 +39,12 @@
 | gr4_mono | 1 | 0 | 0 |
 | iphone16pro256 | 0 | 1 | 0 |
 | iphone17_256 | 1 | 0 | 0 |
-| iphone17pm256 | 3 | 5 | 0 |
+| iphone17pm256 | 2 | 6 | 0 |
 | iphone17pm512 | 2 | 6 | 0 |
 | iphone17pro256 | 2 | 6 | 0 |
 | iphone17pro512 | 2 | 6 | 0 |
 | iphoneair_256 | 1 | 0 | 0 |
-| iphoneduo_256 | 1 | 0 | 0 |
+| iphoneduo_256 | 0 | 1 | 0 |
 | ps5_pro | 0 | 10 | 2 |
 | r5ii | 1 | 0 | 0 |
 | switch2 | 1 | 8 | 2 |
@@ -61,12 +61,12 @@
 | gr4_mono | 1 | - | - | ¥220,000 | ¥220,000 | ¥220,000 | — |
 | iphone16pro256 | 0 | - | - | — | — | — | — |
 | iphone17_256 | 1 | - | - | ¥140,000 | ¥140,000 | ¥140,000 | — |
-| iphone17pm256 | 3 | 3 | ✅ | ¥190,667 | ¥190,500 | ¥191,000 | — |
+| iphone17pm256 | 2 | 3 | ❌ | ¥190,750 | ¥190,500 | ¥191,000 | — |
 | iphone17pm512 | 2 | 3 | ❌ | ¥216,500 | ¥216,000 | ¥217,000 | — |
 | iphone17pro256 | 2 | 3 | ❌ | ¥174,000 | ¥174,000 | ¥174,000 | — |
 | iphone17pro512 | 2 | 3 | ❌ | ¥201,250 | ¥200,000 | ¥202,500 | — |
 | iphoneair_256 | 1 | - | - | ¥133,000 | ¥133,000 | ¥133,000 | — |
-| iphoneduo_256 | 1 | - | - | ¥376,000 | ¥376,000 | ¥376,000 | — |
+| iphoneduo_256 | 0 | - | - | — | — | — | — |
 | ps5_pro | 0 | 2 | ❌ | — | — | — | — |
 | r5ii | 1 | - | - | ¥450,000 | ¥450,000 | ¥450,000 | — |
 | switch2 | 1 | 2 | ❌ | ¥52,000 | ¥52,000 | ¥52,000 | — |
@@ -81,12 +81,12 @@
 | gr4_mono | kaitori_shouten |
 | iphone16pro256 | （なし） |
 | iphone17_256 | kaitori_shouten |
-| iphone17pm256 | mobile_ichiban, kaitori_shouten, kaitori_itchome |
+| iphone17pm256 | kaitori_shouten, kaitori_itchome |
 | iphone17pm512 | kaitori_shouten, kaitori_itchome |
 | iphone17pro256 | kaitori_shouten, kaitori_itchome |
 | iphone17pro512 | kaitori_shouten, kaitori_itchome |
 | iphoneair_256 | kaitori_shouten |
-| iphoneduo_256 | kaitori_shouten |
+| iphoneduo_256 | （なし） |
 | ps5_pro | （なし） |
 | r5ii | kaitori_shouten |
 | switch2 | kaitori_shouten |
@@ -106,8 +106,8 @@
 | iosys | 0% | 0 | 6 | — | 6/6 | http_403 |
 | janpara | 0% | 0 | 6 | 6/6 | — | rate_limited_429 |
 | kaitori_itchome | 100% | 4 | 0 | — | — | — |
-| kaitori_shouten | 88% | 15 | 2 | — | — | suspicious_rejected |
-| mobile_ichiban | 20% | 1 | 4 | — | — | product_not_listed |
+| kaitori_shouten | 82% | 14 | 3 | — | — | suspicious_rejected |
+| mobile_ichiban | 0% | 0 | 5 | — | — | product_not_listed |
 | netoff | 0% | 0 | 4 | — | — | price_not_found |
 | pasoko | 0% | 0 | 2 | — | — | product_not_listed |
 | sofmap | 0% | 0 | 2 | — | — | service_unavailable |
@@ -119,6 +119,7 @@
 ### 商品別（目標店舗数未達）
 - iphone17pro256: 成功2店舗 (目標3) — あと1店舗必要
 - iphone17pro512: 成功2店舗 (目標3) — あと1店舗必要
+- iphone17pm256: 成功2店舗 (目標3) — あと1店舗必要
 - iphone17pm512: 成功2店舗 (目標3) — あと1店舗必要
 - switch2: 成功1店舗 (目標2) — あと1店舗必要
 - ps5_pro: 成功0店舗 (目標2) — あと2店舗必要
@@ -135,7 +136,7 @@
 | 理由 | 件数 |
 |------|------|
 | http_403 | 12 |
-| product_not_listed | 6 |
+| product_not_listed | 8 |
 | rate_limited_429 | 6 |
 | robots_unreachable | 4 |
 | price_not_found | 4 |
@@ -145,7 +146,7 @@
 | site_blocked | 2 |
 | suspicious_rejected | 2 |
 
-## 取得失敗一覧 (46件)
+## 取得失敗一覧 (48件)
 
 | 商品 | 店舗 | ステータス | 理由 |
 |------|------|-----------|------|
@@ -161,6 +162,7 @@
 | iphone17pro512 | geo_mobile | FAILED | robots_unreachable |
 | iphone17pro512 | 2ndstreet | FAILED | http_403 |
 | iphone17pro512 | netoff | FAILED | price_not_found |
+| iphone17pm256 | mobile_ichiban | FAILED | product_not_listed |
 | iphone17pm256 | janpara | FAILED | rate_limited_429 |
 | iphone17pm256 | iosys | FAILED | http_403 |
 | iphone17pm256 | geo_mobile | FAILED | robots_unreachable |
@@ -185,7 +187,7 @@
 | ps5_pro | geo | FAILED | http_403 |
 | ps5_pro | iosys | FAILED | http_403 |
 | ps5_pro | kaitori_shouten | FAILED | suspicious_rejected |
-| ps5_pro | mobile_ichiban | FAILED | suspicious_rejected |
+| ps5_pro | mobile_ichiban | FAILED | product_not_listed |
 | ps5_pro | janpara | FAILED | rate_limited_429 |
 | ps5_pro | hardoff | FAILED | http_404 |
 | ps5_pro | dosupara | FAILED | http_404 |
@@ -195,21 +197,15 @@
 | ps5_pro | surugaya | FAILED | site_blocked |
 | ps5_pro | tsutaya | SKIP | not_supported |
 | iphone16pro256 | kaitori_shouten | FAILED | product_not_listed |
+| iphoneduo_256 | kaitori_shouten | FAILED | suspicious_rejected |
 
-## 価格変動一覧 (6件)
+## 価格変動一覧 (0件)
 
-| 商品 | 店舗 | 前回 | 今回 | 変化率 |
-|------|------|------|------|--------|
-| iphoneduo_256 | kaitori_shouten | ¥395,000 | ¥376,000 | ↓4.8% |
-| iphone17pro512 | kaitori_shouten | ¥199,000 | ¥202,500 | ↑1.8% |
-| iphone17pro512 | kaitori_itchome | ¥202,000 | ¥200,000 | ↓1.0% |
-| iphone17pm512 | kaitori_itchome | ¥215,000 | ¥217,000 | ↑0.9% |
-| iphone17pm256 | kaitori_itchome | ¥190,000 | ¥191,000 | ↑0.5% |
-| switch2 | kaitori_shouten | ¥51,800 | ¥52,000 | ↑0.4% |
+（前回との変動なし）
 
 ## ⚠️ suspicious_price 一覧 (2件)
 
 | 商品 | 店舗 | 価格 | 理由 | 詳細 |
 |------|------|------|------|------|
-| ps5_pro | kaitori_shouten | ¥201,700 | above_genre_max | game_console正常帯¥10,000〜¥200,000の上限超過（¥201,700。他店の裏付けなし・要確認） |
-| ps5_pro | mobile_ichiban | ¥202,000 | above_genre_max | game_console正常帯¥10,000〜¥200,000の上限超過（¥202,000。他店の裏付けなし・要確認） |
+| ps5_pro | kaitori_shouten | ¥202,000 | above_genre_max | game_console正常帯¥10,000〜¥200,000の上限超過（¥202,000。他店の裏付けなし・要確認） |
+| iphoneduo_256 | kaitori_shouten | ¥407,000 | above_genre_max | iphone正常帯¥30,000〜¥400,000の上限超過（¥407,000。他店の裏付けなし・要確認） |

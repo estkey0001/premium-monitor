@@ -2,40 +2,68 @@
   "type": "PRODUCTION_HEALTH_ALERT",
   "schema": 1,
   "audience": "operator",
-  "generated_at": "2026-10-23T18:26:58+09:00",
+  "generated_at": "2026-10-23T22:13:22+09:00",
   "note": "運営者向けの劣化アラート候補（商品の通知ではない）。外部へは送らない。CI の注記・Step Summary・管理画面に出す",
-  "active_count": 4,
-  "high": 2,
-  "warning": 2,
+  "active_count": 7,
+  "high": 3,
+  "warning": 4,
   "candidates": [
     {
-      "key": "official_verification_expiry:prod_switch2",
-      "category": "official_verification_expiry",
-      "source": "prod_switch2",
+      "key": "source_failure:mobile_ichiban",
+      "category": "source_failure",
+      "source": "mobile_ichiban",
       "severity": "HIGH",
-      "reason": "expired",
-      "title": "prod_switch2 の公式の確認が切れています",
-      "details": "確認日 2026-10-08（期限 14 日）",
+      "reason": "product_not_listed",
+      "title": "必須の店 mobile_ichiban が取得できなくなりました（1日目）",
+      "details": "理由: product_not_listed",
       "evidence": {
-        "days_left": -1
+        "consecutive_days": 1,
+        "reasons": [
+          "product_not_listed"
+        ]
       },
       "type": "PRODUCTION_HEALTH_ALERT",
-      "event": "ESCALATED",
-      "first_seen": "2026-10-22T01:29:43+09:00",
-      "generated_at": "2026-10-23T18:26:58+09:00"
-    }
-  ],
-  "suppressed": 3,
-  "recovered": [
+      "event": "NEW",
+      "first_seen": "2026-10-23T22:13:22+09:00",
+      "generated_at": "2026-10-23T22:13:22+09:00"
+    },
     {
-      "key": "source_failure:mobile_ichiban",
-      "type": "PRODUCTION_HEALTH_RECOVERED",
-      "event": "RECOVERED",
-      "first_seen": "2026-10-22T01:29:43+09:00",
-      "recovered_at": "2026-10-23T18:26:58+09:00",
-      "last_severity": "HIGH"
+      "key": "failure_rate:required_shops",
+      "category": "failure_rate",
+      "source": "required_shops",
+      "severity": "WARNING",
+      "reason": "50%",
+      "title": "必須の店の行の失敗率が 50% です",
+      "details": "必須の店の行 36 件のうち 18 件が取れていません（閾値 50% / 80%）",
+      "evidence": {
+        "rate_pct": 50.0,
+        "rows_failed": 18,
+        "rows": 36
+      },
+      "type": "PRODUCTION_HEALTH_ALERT",
+      "event": "NEW",
+      "first_seen": "2026-10-23T22:13:22+09:00",
+      "generated_at": "2026-10-23T22:13:22+09:00"
+    },
+    {
+      "key": "quality_gate_failure:iphoneduo_256",
+      "category": "quality_gate_failure",
+      "source": "iphoneduo_256",
+      "severity": "WARNING",
+      "reason": "above_genre_max",
+      "title": "iphoneduo_256 の価格に誤りの可能性が高いものがあります（隔離）",
+      "details": "kaitori_shouten: iphone正常帯¥30,000〜¥400,000の上限超過（¥407,000。他店の裏付けなし・要確認）",
+      "evidence": {
+        "items": 1
+      },
+      "type": "PRODUCTION_HEALTH_ALERT",
+      "event": "NEW",
+      "first_seen": "2026-10-23T22:13:22+09:00",
+      "generated_at": "2026-10-23T22:13:22+09:00"
     }
   ],
+  "suppressed": 4,
+  "recovered": [],
   "active": [
     {
       "key": "official_verification_expiry:prod_switch2",
@@ -47,6 +75,21 @@
       "details": "確認日 2026-10-08（期限 14 日）",
       "evidence": {
         "days_left": -1
+      }
+    },
+    {
+      "key": "source_failure:mobile_ichiban",
+      "category": "source_failure",
+      "source": "mobile_ichiban",
+      "severity": "HIGH",
+      "reason": "product_not_listed",
+      "title": "必須の店 mobile_ichiban が取得できなくなりました（1日目）",
+      "details": "理由: product_not_listed",
+      "evidence": {
+        "consecutive_days": 1,
+        "reasons": [
+          "product_not_listed"
+        ]
       }
     },
     {
@@ -65,15 +108,41 @@
       }
     },
     {
+      "key": "failure_rate:required_shops",
+      "category": "failure_rate",
+      "source": "required_shops",
+      "severity": "WARNING",
+      "reason": "50%",
+      "title": "必須の店の行の失敗率が 50% です",
+      "details": "必須の店の行 36 件のうち 18 件が取れていません（閾値 50% / 80%）",
+      "evidence": {
+        "rate_pct": 50.0,
+        "rows_failed": 18,
+        "rows": 36
+      }
+    },
+    {
+      "key": "quality_gate_failure:iphoneduo_256",
+      "category": "quality_gate_failure",
+      "source": "iphoneduo_256",
+      "severity": "WARNING",
+      "reason": "above_genre_max",
+      "title": "iphoneduo_256 の価格に誤りの可能性が高いものがあります（隔離）",
+      "details": "kaitori_shouten: iphone正常帯¥30,000〜¥400,000の上限超過（¥407,000。他店の裏付けなし・要確認）",
+      "evidence": {
+        "items": 1
+      }
+    },
+    {
       "key": "quality_gate_failure:ps5_pro",
       "category": "quality_gate_failure",
       "source": "ps5_pro",
       "severity": "WARNING",
       "reason": "above_genre_max",
       "title": "ps5_pro の価格に誤りの可能性が高いものがあります（隔離）",
-      "details": "kaitori_shouten: game_console正常帯¥10,000〜¥200,000の上限超過（¥201,700。他店の裏付けなし・要確認）; mobile_ichiban: game_console正常帯¥10,000〜¥200,000の上限超過（¥202,000。他店の裏付けなし・要確認）",
+      "details": "kaitori_shouten: game_console正常帯¥10,000〜¥200,000の上限超過（¥202,000。他店の裏付けなし・要確認）",
       "evidence": {
-        "items": 2
+        "items": 1
       }
     },
     {

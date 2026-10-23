@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-23 18:26 JST",
+  "generated_at": "2026-10-23 22:13 JST",
   "scope": "公式ソース登録・検証（利益/AI/Opportunity/Notification/Capital/Execution は不変）",
   "methodology": {
     "verification": "WebFetch で HTTP200/公式ドメイン/canonical/商品一致を実確認したURLのみ verified",
@@ -1715,7 +1715,7 @@
         "product_id": "prod_ps5_pro",
         "action": "stock_observed",
         "stock": "入荷待ち",
-        "at": "2026-10-23T18:20:56+09:00"
+        "at": "2026-10-23T22:07:20+09:00"
       },
       {
         "product_id": "prod_switch2",
@@ -1764,7 +1764,7 @@
       "product_id": "prod_ps5_pro",
       "action": "stock_observed",
       "stock": "入荷待ち",
-      "at": "2026-10-23T18:20:56+09:00"
+      "at": "2026-10-23T22:07:20+09:00"
     },
     {
       "product_id": "prod_switch2",

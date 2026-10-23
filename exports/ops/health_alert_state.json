@@ -1,41 +1,34 @@
 {
   "schema": 1,
-  "updated_at": "2026-10-22T18:31:10+09:00",
+  "updated_at": "2026-10-23T18:26:58+09:00",
   "active": {
-    "source_failure:mobile_ichiban": {
+    "official_verification_expiry:prod_switch2": {
       "first_seen": "2026-10-22T01:29:43+09:00",
-      "last_seen": "2026-10-22T18:31:10+09:00",
+      "last_seen": "2026-10-23T18:26:58+09:00",
       "severity": "HIGH",
       "emitted_severity": "HIGH",
-      "times_seen": 2
+      "times_seen": 3
     },
     "source_failure:netoff": {
       "first_seen": "2026-10-22T01:29:43+09:00",
-      "last_seen": "2026-10-22T18:31:10+09:00",
+      "last_seen": "2026-10-23T18:26:58+09:00",
       "severity": "HIGH",
       "emitted_severity": "HIGH",
-      "times_seen": 2
-    },
-    "official_verification_expiry:prod_switch2": {
-      "first_seen": "2026-10-22T01:29:43+09:00",
-      "last_seen": "2026-10-22T18:31:10+09:00",
-      "severity": "WARNING",
-      "emitted_severity": "WARNING",
-      "times_seen": 2
+      "times_seen": 3
     },
     "quality_gate_failure:ps5_pro": {
       "first_seen": "2026-10-22T01:29:43+09:00",
-      "last_seen": "2026-10-22T18:31:10+09:00",
+      "last_seen": "2026-10-23T18:26:58+09:00",
       "severity": "WARNING",
       "emitted_severity": "WARNING",
-      "times_seen": 2
+      "times_seen": 3
     },
     "source_failure:iosys": {
       "first_seen": "2026-10-22T01:29:43+09:00",
-      "last_seen": "2026-10-22T18:31:10+09:00",
+      "last_seen": "2026-10-23T18:26:58+09:00",
       "severity": "WARNING",
       "emitted_severity": "WARNING",
-      "times_seen": 2
+      "times_seen": 3
     }
   }
 }

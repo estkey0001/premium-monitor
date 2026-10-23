@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-22T18:46:55+09:00",
+  "generated_at": "2026-10-23T18:42:46+09:00",
   "apple": {
     "source": "apple_jp_official",
     "list_status": "ok",
@@ -12,13 +12,13 @@
       "iphone-duo"
     ],
     "checked": [
-      "iphone-17e",
-      "iphone-18-pro"
+      "iphone-air",
+      "iphone-duo"
     ],
     "errors": {},
-    "unknown_parts": 38,
-    "matched": 0,
-    "pending": 10,
+    "unknown_parts": 14,
+    "matched": 2,
+    "pending": 5,
     "requests": 3,
     "cutoff": "",
     "saved": true
@@ -31,11 +31,11 @@
       "latest": true
     },
     "inputs_stale": [],
-    "review_required": 1,
-    "matched_events": 4,
+    "review_required": 2,
+    "matched_events": 2,
     "release": 6,
     "by_kind": {
-      "LOTTERY": 4,
+      "LOTTERY": 3,
       "PREORDER": 0,
       "FIRST_COME": 0,
       "RESTOCK": 1,
@@ -46,7 +46,7 @@
       "configured": 17,
       "implemented": 6,
       "unimplemented": 11,
-      "blocked": 3,
+      "blocked": 4,
       "robots_unreachable": 4,
       "unreachable": 4,
       "table": [
@@ -54,9 +54,9 @@
           "source_id": "POKEMON_CENTER_ONLINE",
           "retailer": "ポケモンセンターオンライン",
           "adapter": "pco_lottery",
-          "state": "NO_ACTIVE_LOTTERY",
-          "health": "HEALTHY",
-          "blocked": false,
+          "state": "SOURCE_BLOCKED",
+          "health": "OK_NO_EVENTS",
+          "blocked": true,
           "robots": null,
           "unreachable": false
         },
@@ -252,7 +252,7 @@
     "configured": 17,
     "implemented": 6,
     "unimplemented": 11,
-    "blocked": 3,
+    "blocked": 4,
     "robots_unreachable": 4,
     "unreachable": 4,
     "table": [
@@ -260,9 +260,9 @@
         "source_id": "POKEMON_CENTER_ONLINE",
         "retailer": "ポケモンセンターオンライン",
         "adapter": "pco_lottery",
-        "state": "NO_ACTIVE_LOTTERY",
-        "health": "HEALTHY",
-        "blocked": false,
+        "state": "SOURCE_BLOCKED",
+        "health": "OK_NO_EVENTS",
+        "blocked": true,
         "robots": null,
         "unreachable": false
       },

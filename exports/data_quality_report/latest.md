@@ -1,17 +1,17 @@
-# データ取得品質レポート（2026-10-22 18:52 JST）
+# データ取得品質レポート（2026-10-23 18:48 JST）
 
 ## 取得成功率
 - 全対象店舗数: 16
-- 成功店舗数: 2
-- 全失敗店舗数: 12
-- ジョブ成功率: 28.8%（OK 19 / 失敗 43 / SKIP 4 / 計 66）
+- 成功店舗数: 3
+- 全失敗店舗数: 11
+- ジョブ成功率: 30.3%（OK 20 / 失敗 42 / SKIP 4 / 計 66）
 
 ## 前回比較
 - 前回成功率: 28.8%
-- 今回成功率: 28.8%
-- 変化: 0.0pt（横ばい）
-- 7日移動平均: 30.6%
-- 主要失敗理由 TOP5: http_403 12, robots_unreachable 11, rate_limited_429 6, price_not_found 4, not_supported 4
+- 今回成功率: 30.3%
+- 変化: +1.5pt（改善）
+- 7日移動平均: 30.8%
+- 主要失敗理由 TOP5: http_403 12, product_not_listed 6, rate_limited_429 6, robots_unreachable 4, price_not_found 4
 
 ## 店舗別成功率（低い順）
 - 2ndstreet（optional）: 0%（OK 0/失敗 4・http_403）
@@ -19,13 +19,13 @@
 - dosupara（optional）: 0%（OK 0/失敗 2・http_404）
 - geo（optional）: 0%（OK 0/失敗 2・http_403）
 - geo_mobile（optional）: 0%（OK 0/失敗 4・robots_unreachable）
-- hardoff（optional）: 0%（OK 0/失敗 2・robots_unreachable）
+- hardoff（optional）: 0%（OK 0/失敗 2・http_404）
 - iosys: 0%（OK 0/失敗 6・http_403）
 - janpara（optional）: 0%（OK 0/失敗 6・rate_limited_429）
-- mobile_ichiban: 0%（OK 0/失敗 5・robots_unreachable）
 - netoff（optional）: 0%（OK 0/失敗 4・price_not_found）
 - pasoko（optional）: 0%（OK 0/失敗 2・product_not_listed）
 - sofmap（optional）: 0%（OK 0/失敗 2・service_unavailable）
+- surugaya（optional）: 0%（OK 0/失敗 2・site_blocked）
 
 ## 商品別成功率
 - ps5_pro: 0.0%
@@ -33,8 +33,8 @@
 - switch2: 11.1%
 - iphone17pro256: 25.0%
 - iphone17pro512: 25.0%
-- iphone17pm256: 25.0%
 - iphone17pm512: 25.0%
+- iphone17pm256: 37.5%
 - iphone17_256: 100.0%
 - airpods_pro3: 100.0%
 - iphoneair_256: 100.0%
@@ -47,43 +47,42 @@
 - r5ii: 100.0%
 
 ## 連続失敗店舗（2回以上）
-- 2ndstreet: 218回連続
-- bookoff: 218回連続
-- dosupara: 218回連続
-- geo_mobile: 218回連続
-- hardoff: 218回連続
-- janpara: 218回連続
-- pasoko: 218回連続
-- sofmap: 218回連続
-- surugaya: 218回連続
-- tsutaya: 218回連続
-- iosys: 151回連続
-- netoff: 78回連続
-- geo: 10回連続
-- mobile_ichiban: 2回連続
+- 2ndstreet: 219回連続
+- bookoff: 219回連続
+- dosupara: 219回連続
+- geo_mobile: 219回連続
+- hardoff: 219回連続
+- janpara: 219回連続
+- pasoko: 219回連続
+- sofmap: 219回連続
+- surugaya: 219回連続
+- tsutaya: 219回連続
+- iosys: 152回連続
+- netoff: 79回連続
+- geo: 11回連続
 
 ## 改善優先順位（required店舗）
 1. iosys（失敗6 / http_403）
-2. mobile_ichiban（失敗5 / robots_unreachable）
+2. mobile_ichiban（失敗4 / product_not_listed）
 3. kaitori_shouten（失敗2 / suspicious_rejected）
 
 ## 失敗理由（内訳）
 - http_403: 12件
-- robots_unreachable: 11件
+- product_not_listed: 6件
 - rate_limited_429: 6件
+- robots_unreachable: 4件
 - price_not_found: 4件
+- http_404: 4件
 - not_supported: 4件
-- product_not_listed: 3件
-- http_404: 2件
 - service_unavailable: 2件
 - site_blocked: 2件
-- suspicious_rejected: 1件
+- suspicious_rejected: 2件
 
 ## 有効データ量（新品・未使用 / 14日以内 / price>0）
 - 有効買取データを持つ商品数: 15
+  - prod_iphone17pm_256: 3店舗
   - prod_iphone17pro_256: 2店舗
   - prod_iphone17pro_512: 2店舗
-  - prod_iphone17pm_256: 2店舗
   - prod_iphone17pm_512: 2店舗
   - prod_switch2: 1店舗
   - prod_iphone17_256: 1店舗

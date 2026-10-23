@@ -13,7 +13,9 @@ def _diagnostics_to_tmp(tmp_path_factory):
     """
     # Phase 19: 今すぐ行動の通知の台帳・候補（exports/notifications/actionable）も一時フォルダに書く
     names = {"OPPORTUNITY_DIAGNOSTICS_DIR": "opportunity_diagnostics",
-             "ACTIONABLE_NOTIFICATIONS_DIR": "actionable_notifications"}
+             "ACTIONABLE_NOTIFICATIONS_DIR": "actionable_notifications",
+             # Market Research Foundation: 調査候補・台帳（exports/research）も一時フォルダに書く
+             "RESEARCH_DIR": "research", "RESEARCH_PRIVATE_DIR": "research_private"}
     old = {k: os.environ.get(k) for k in names}
     for k, d in names.items():
         os.environ[k] = str(tmp_path_factory.mktemp(d))

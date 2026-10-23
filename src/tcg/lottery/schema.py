@@ -150,6 +150,27 @@ class LotteryEvent:
         return d
 
 
+def entry_kind(ev: dict) -> str:
+    """応募の経路を含めた種別（Market Research Foundation H1。src.tcg.models の STORE_LOTTERY / APP_LOTTERY / WEB_LOTTERY）。
+
+    ev の項目だけから決める（推測しない）: 予約は PREORDER、店舗別の抽選は STORE_LOTTERY、アプリが必要と明記があれば
+    APP_LOTTERY、オンラインだけと明記があれば WEB_LOTTERY、どれでもなければ LOTTERY。イベントの辞書は変えない
+    （報告の集計に使う。既存の状態の計算・lottery_id には影響しない）。
+    """
+    et = ev.get("event_type") or LT_LOTTERY
+    if et == LT_PREORDER:
+        return "PREORDER"
+    if et == LT_PURCHASE_RIGHT:
+        return "LOTTERY"
+    if ev.get("store_specific"):
+        return "STORE_LOTTERY"
+    if ev.get("app_required") is True:
+        return "APP_LOTTERY"
+    if ev.get("online_only") is True:           # channel の既定（ONLINE）は明記ではないので使わない
+        return "WEB_LOTTERY"
+    return "LOTTERY"
+
+
 def product_key(name: str) -> str:
     """商品名の正規化キー（重複排除用）。"""
     import re

@@ -47,7 +47,7 @@ ONE_PIECE = "ONE_PIECE"
 
 def _src(source_id, retailer, brands, priority, official_url, method, *,
          lottery_url=None, news_url=None, channel="ONLINE", adapter=None,
-         verified=False, note=None):
+         verified=False, note=None, policy_excluded=None):
     return {
         "source_id": source_id,
         "retailer": retailer,
@@ -63,6 +63,8 @@ def _src(source_id, retailer, brands, priority, official_url, method, *,
         # verified: URL の到達性・内容を実際に確認済みか（推測 URL を検証済みにしない）
         "verified": verified,
         "note": note,
+        # policy_excluded: 取得しない方針の理由（プロジェクトの取得の作法・規約による。到達できても実装の候補にしない）
+        "policy_excluded": policy_excluded,
     }
 
 
@@ -102,7 +104,8 @@ LOTTERY_SOURCES: list[dict] = [
          note="2026-10-01 時点で応答タイムアウト。解析器は未実装"),
     # ── P2（EC・コンビニ） ───────────────────────────────────────────
     _src("AMAZON", "Amazon", _BOTH, "P2", "https://www.amazon.co.jp/", CM_HTML,
-         note="自動アクセスに応答本文を返さない（HTTP 202）。解析器は未実装"),
+         note="自動アクセスに応答本文を返さない（HTTP 202）。解析器は未実装",
+         policy_excluded="Amazon はスクレイピングしない（取得の作法。公式 API が使えるときだけ）"),
     _src("RAKUTEN_BOOKS", "楽天ブックス", _BOTH, "P2", "https://books.rakuten.co.jp/", CM_HTML,
          note="到達可。TCG 抽選の告知一覧を発見できず、解析器は未実装"),
     _src("SEVEN_NET", "セブンネットショッピング", _BOTH, "P2", "https://7net.omni7.jp/", CM_HTML,
@@ -148,6 +151,64 @@ def source_state(source: dict, health: Optional[dict], active_lotteries: int) ->
     return ST_ACTIVE_LOTTERY if active_lotteries > 0 else ST_NO_ACTIVE_LOTTERY
 
 
+# Market Research Foundation H2: 取得元の分類（何を優先して実装・確認するかの判断に使う）
+SC_WORKING = "WORKING"                                  # 取得器があり、取得できている
+SC_IMPLEMENTED_BUT_BLOCKED = "IMPLEMENTED_BUT_BLOCKED"  # 取得器はあるが、遮断（403・429・robots の禁止）されている
+SC_ACCESSIBLE_UNIMPLEMENTED = "ACCESSIBLE_UNIMPLEMENTED"  # 到達できるが、取得器が無い（実装の候補。robots・規約を確認してから）
+SC_UNREACHABLE = "UNREACHABLE"                          # 到達できない（接続失敗・robots に届かない・遮断で取得器も無い）
+SC_UNSUPPORTED = "UNSUPPORTED"                          # 公式の URL が無い等で、取得の対象にできない
+SOURCE_CLASSES = (SC_WORKING, SC_IMPLEMENTED_BUT_BLOCKED, SC_ACCESSIBLE_UNIMPLEMENTED, SC_UNREACHABLE, SC_UNSUPPORTED)
+SOURCE_CLASS_LABELS = {SC_WORKING: "取得できている", SC_IMPLEMENTED_BUT_BLOCKED: "実装済みだが遮断",
+                       SC_ACCESSIBLE_UNIMPLEMENTED: "到達できるが未実装", SC_UNREACHABLE: "到達できない",
+                       SC_UNSUPPORTED: "対象にできない"}
+
+
+def source_class(row: dict) -> str:
+    """取得元の分類（行は pipeline の rows。state・adapter・reachable・collection_method を使う）。
+
+    遮断された取得元は回避しない。分類は優先順位の判断のためで、遮断を避ける手段の提案ではない。
+    """
+    if row.get("policy_excluded") or row.get("collection_method") == CM_UNAVAILABLE or not (row.get("official_url") or ""):
+        return SC_UNSUPPORTED
+    state = row.get("state")
+    if row.get("adapter"):
+        if state == ST_SOURCE_BLOCKED:
+            return SC_IMPLEMENTED_BUT_BLOCKED
+        if state in (ST_SOURCE_UNREACHABLE, ST_SOURCE_FAILED):
+            return SC_UNREACHABLE
+        return SC_WORKING
+    if state in (ST_SOURCE_BLOCKED, ST_SOURCE_UNREACHABLE) or row.get("blocked") or row.get("unreachable"):
+        return SC_UNREACHABLE
+    return SC_ACCESSIBLE_UNIMPLEMENTED if row.get("reachable") is True else SC_UNREACHABLE
+
+
+def load_source_candidates(path=None) -> dict:
+    """監視していない取得元の候補（config/tcg_source_candidates.yaml。H5）。fetch はしない・実装の約束でもない。
+
+    戻り: {"status", "basis", "candidates": [{id, name, channel, url, verified, note}], "count"}。読めなければ空。
+    登録簿（LOTTERY_SOURCES）と同じ id・名前のものは候補から外す（二重に数えない）。
+    """
+    from pathlib import Path
+
+    import yaml
+    p = Path(path) if path else Path(__file__).resolve().parent.parent.parent.parent / "config" / "tcg_source_candidates.yaml"
+    try:
+        d = yaml.safe_load(p.read_text(encoding="utf-8")) or {}
+    except (OSError, yaml.YAMLError):
+        return {"status": "UNAVAILABLE", "basis": "", "candidates": [], "count": 0}
+    known = {s["source_id"] for s in LOTTERY_SOURCES} | {s["retailer"] for s in LOTTERY_SOURCES}
+    allc = [c for c in d.get("candidates") or [] if isinstance(c, dict) and c.get("id")
+            and str(c.get("id")) not in known and str(c.get("name")) not in known]
+    # 取得しない方針（policy_excluded）の売り場は、実装の候補ではなく除外として別に持つ
+    rows = [{"id": str(c.get("id") or ""), "name": str(c.get("name") or ""), "channel": str(c.get("channel") or ""),
+             "url": str(c.get("url") or ""), "verified": bool(c.get("verified")), "note": str(c.get("note") or "")}
+            for c in allc if not c.get("policy_excluded")]
+    excluded = [{"id": str(c["id"]), "name": str(c.get("name") or ""), "reason": str(c.get("policy_excluded"))}
+                for c in allc if c.get("policy_excluded")]
+    return {"status": str(d.get("status") or ""), "basis": str(d.get("basis") or ""), "candidates": rows, "count": len(rows),
+            "policy_excluded": excluded}
+
+
 def coverage_summary(rows: list[dict]) -> dict:
     """Task33: Lottery Source Coverage。"""
     def _n(cond):
@@ -163,4 +224,6 @@ def coverage_summary(rows: list[dict]) -> dict:
         "not_implemented_sources": _n(lambda r: not r.get("adapter")),
         "sources_with_active_lottery": _n(lambda r: r.get("state") == ST_ACTIVE_LOTTERY),
         "lottery_events_found": sum(int(r.get("active_lotteries") or 0) for r in rows),
+        # H2: 分類ごとの件数（キーは SOURCE_CLASSES。0 件も出す）
+        "source_classes": {c: _n(lambda r, c=c: source_class(r) == c) for c in SOURCE_CLASSES},
     }

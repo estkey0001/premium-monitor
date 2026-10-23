@@ -17,11 +17,11 @@ from .manual import is_official_url, load_manual_lotteries
 from .merge import merge_lotteries
 from .products import resolve_product
 from .registry import (
-    LOTTERY_SOURCES, STATE_LABELS, coverage_summary, source_state,
+    LOTTERY_SOURCES, STATE_LABELS, coverage_summary, source_class, source_state,
 )
 from .schema import (
     ACTIVE_STATUSES, L_UNKNOWN, LT_PREORDER, OFFICIAL_LOTTERY_SOURCES, SRC_MANUFACTURER,
-    compute_lottery_status, countdown, lottery_id_of, sort_key,
+    compute_lottery_status, countdown, entry_kind, lottery_id_of, sort_key,
 )
 
 logger = logging.getLogger(__name__)
@@ -272,7 +272,7 @@ def run_lottery_pipeline(pokemon_registry: list[dict], onepiece_products: list[d
         rows.append({
             **{k: src[k] for k in ("source_id", "retailer", "brand", "priority",
                                    "official_url", "lottery_url", "news_url", "channel",
-                                   "collection_method", "adapter", "verified", "note")},
+                                   "collection_method", "adapter", "verified", "note", "policy_excluded")},
             "state": state, "state_label": STATE_LABELS.get(state, state),
             "reachable": bool(f.get("pages_loaded")) if h else None,
             "last_checked": h.get("last_checked"), "last_success": h.get("last_success"),
@@ -292,7 +292,12 @@ def run_lottery_pipeline(pokemon_registry: list[dict], onepiece_products: list[d
             "discovered_titles": list(h.get("discovered_titles") or [])[:30],
             "pages": f.get("pages", []),
         })
+    for r in rows:
+        r["source_class"] = source_class(r)          # H2: 取得元の分類（優先順位の判断に使う）
     coverage = coverage_summary(rows)
+    # H1: 応募の経路を含めた種別の件数（イベントの辞書は変えない）
+    from collections import Counter as _Counter
+    coverage["entry_kinds"] = dict(_Counter(entry_kind(ev) for ev in lotteries))
     rejection: dict[str, int] = dict(placeholder_rejected)
     for r in rows:
         for k, v in (r.get("rejection_reasons") or {}).items():

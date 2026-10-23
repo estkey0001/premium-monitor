@@ -16,7 +16,7 @@ from .models import (
     SHRINK_OPENED_BOX, SHRINK_PACK_ONLY,
     OFFICIAL_SOURCE_TYPES, CONF_HIGH, CONF_MEDIUM,
     ST_AVAILABLE_NOW, ST_OPEN, ST_ENDING_SOON, ST_WINNER_PURCHASE_PERIOD,
-    PRIO_CRITICAL, PRIO_HIGH, PRIO_MEDIUM, PRIO_LOW,
+    PRIO_CRITICAL, PRIO_HIGH, PRIO_MEDIUM, PRIO_LOW, base_event_type,
 )
 
 # 各要素の配点（合計 100）
@@ -62,6 +62,7 @@ def _availability_points(status: str) -> float:
 
 def _difficulty_points(event_type: str) -> float:
     """入手難易度が低いほど加点。"""
+    event_type = base_event_type(event_type)
     ratio = {
         EVENT_OFFICIAL_STORE: 0.9,
         EVENT_PREORDER: 0.8,
@@ -186,7 +187,7 @@ def buy_now_signal(event: dict, premium: Optional[dict] = None) -> dict:
 
 def notification_priority(event: dict, signals: int = 0) -> str:
     """Task14: 通知優先度。即売系は抽選より優先度を高くする。"""
-    et = event.get("event_type", "")
+    et = base_event_type(event.get("event_type", ""))
     src = event.get("source_type", "")
     status = event.get("status", "")
     official = src in OFFICIAL_SOURCE_TYPES

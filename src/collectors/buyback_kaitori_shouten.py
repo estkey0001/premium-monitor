@@ -217,6 +217,28 @@ def match_rows(rows: list[tuple[str, int, str]], product_alias: str) -> list[tup
     return out
 
 
+# 買取の一覧ページ（カテゴリページ・まとめページ）の全行。商品ごとの照合で捨てている行を、買取起点の発見（src/research）の
+# 入力として残す。新しい取得はしない（照合のために取った同じ HTML を読むだけ）。URL ごとに1回だけ記録する
+CATALOG_ROWS: dict[str, list[dict]] = {}
+
+
+def capture_catalog(page_url: str, html: str) -> None:
+    """一覧ページの全行（商品名・JAN があれば JAN・新品買取価格・商品ページの URL）を CATALOG_ROWS に記録する。"""
+    if not page_url or page_url in CATALOG_ROWS:
+        return
+    rows: dict[str, dict] = {}
+    try:
+        for r in parse_jsonld_rows(html):
+            rows[r["url"]] = {"name": r["name"], "jan": r["jan"], "price": r["price"], "url": r["url"]}
+        for name, price, href in parse_rows(html):
+            url = urljoin("https://www.kaitorishouten-co.jp/", href)
+            rows.setdefault(url, {"name": name, "jan": "", "price": price, "url": url})
+    except Exception:  # noqa: BLE001 - 記録に失敗しても価格の取得は止めない
+        return
+    if rows:                      # 空のページ（エラーページなど）は記録しない（後の正常な取得を無視しない）
+        CATALOG_ROWS[page_url] = list(rows.values())
+
+
 class KaitoriShoutenCsvCollector(BaseCsvBuybackCollector):
     SHOP_ID   = "kaitori_shouten"
     SHOP_NAME = "買取商店"
@@ -253,6 +275,7 @@ class KaitoriShoutenCsvCollector(BaseCsvBuybackCollector):
         色違いが複数あるときは、同じ機種・容量の中の最高値（その商品の最高買取）を採用する。ただし規則に
         color_policy=min がある商品（Phase 29）は、最も低い色の行（その行の商品ページを出典）を採用する。
         """
+        capture_catalog(PRODUCT_URLS.get(product_alias, ""), html)
         if product_alias in JAN_RULES:
             # カメラ: JAN で1行だけ（同じ JAN に違う価格が並べば、どれか1つを選ばない）
             hits = match_jan_rows(parse_jsonld_rows(html), product_alias)

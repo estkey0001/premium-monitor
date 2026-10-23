@@ -544,6 +544,16 @@ def run(dry_run: bool = False, no_scrape: bool = False) -> int:
     _baseline_stats = price_baseline.stats(baseline_all, baseline_rows, new_rows, _baseline_file)
     price_baseline.save(_baseline_path(), price_baseline.build(baseline_rows, new_rows, _now_for_baseline),
                         _now_for_baseline)
+    # 買取の一覧ページの全行を残す（買取起点の発見。新しい取得はしない。取れなかった日は前回のまま。src/research）
+    try:
+        from src.research import catalog as _research_catalog
+        import os as _os_rc
+        # 買取の一覧の全行は個別の調査の入力なので、公開しない場所（.gitignore 済みの .private/research）に残す
+        _research_catalog.save(Path(_os_rc.environ.get("RESEARCH_PRIVATE_DIR") or PROJECT_ROOT / ".private" / "research")
+                               / "buyback_catalog.json",
+                               _research_catalog.collect_rows(_now_for_baseline), _now_for_baseline)
+    except Exception as _exc:  # noqa: BLE001 - 付加の情報。失敗しても取得の結果は変えない
+        print(f"  [警告] 買取の一覧の保存に失敗: {type(_exc).__name__}")        # 公開ログに値を出さない
     print("="*60 + "\n")
 
     # コレクターレポート生成

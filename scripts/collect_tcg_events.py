@@ -49,6 +49,7 @@ from src.tcg.secondary import (                                  # noqa: E402
     premium_for_product,
 )
 from src.tcg.sources import SOURCES                                 # noqa: E402
+from src.tcg.lottery.registry import load_source_candidates         # noqa: E402
 
 EXPORT_DIR = PROJECT_ROOT / "exports" / "tcg"
 RETAIL_CONFIG = PROJECT_ROOT / "config" / "tcg_retail_prices.yaml"
@@ -299,6 +300,7 @@ def build_exports(events: list[dict], signals: list[dict],
         "lotteries": lottery["lotteries"],
         "lottery_sources": lottery["sources"],
         "lottery_coverage": lottery["coverage"],
+        "lottery_source_candidates": load_source_candidates(),
         "lottery_notifications": lottery["notifications"],
         "lottery_rejection_reasons": lottery["rejection_reasons"],
         "lottery_manual_errors": lottery["manual_errors"],
@@ -326,6 +328,8 @@ def build_exports(events: list[dict], signals: list[dict],
     (EXPORT_DIR / "lottery_sources.json").write_text(
         json.dumps({"generated_at": now.isoformat(), "sources": lottery["sources"],
                     "coverage": lottery["coverage"],
+                    # 監視していない取得元の候補（config/tcg_source_candidates.yaml。fetch していない・未確認）
+                    "source_candidates": load_source_candidates(),
                     "rejection_reasons": lottery["rejection_reasons"]},
                    ensure_ascii=False, indent=2), encoding="utf-8")
     # 履歴と通知台帳は実行をまたいで蓄積する状態なので、抽選パイプラインが
@@ -349,6 +353,17 @@ def build_exports(events: list[dict], signals: list[dict],
                     # Task20: 二次流通価格を投入するための mapping（BOX 対象のみ）
                     "secondary_mapping": [m for m in (secondary_mapping(r) for r in registry) if m]},
                    ensure_ascii=False, indent=2), encoding="utf-8")
+    # 定価の台帳（公式 API が商品1個の希望小売価格と明示したものだけ・同一性つき。取得に成功した実行だけ書く）
+    # 公式の商品 API から1件も取れなかった日（registry が空）は書かない（前回の台帳を空で上書きしない）
+    from src.tcg.msrp import build_msrp
+    if registry:
+        try:
+            _prev_msrp = json.loads((EXPORT_DIR / "msrp.json").read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            _prev_msrp = None
+        (EXPORT_DIR / "msrp.json").write_text(
+            json.dumps(build_msrp(registry, now.isoformat(), _prev_msrp if isinstance(_prev_msrp, dict) else None),
+                       ensure_ascii=False, indent=2), encoding="utf-8")
     (EXPORT_DIR / "latest.md").write_text(_render_md(payload, available,
                                                      opportunities),
                                           encoding="utf-8")

@@ -456,8 +456,10 @@ ANN = {"candidate_id": "tcg-ann-1", "source": "POKEMON_CENTER_ONLINE", "kind": "
        "official_url": "https://www.pokemoncenter-online.com/news/?id=20260821", "product_code": "",
        "application_start": None, "application_end": None, "missing_fields": ["application_start", "application_end"],
        "status": st.ANNOUNCEMENT_REVIEW_REQUIRED, "reasons": ["schedule_not_available"], "last_seen_on": "2026-10-17"}
+# 応募の終了は今日から3日後（固定の日付だと、その日を過ぎた日に「終わった日程は登録しない」で落ちる）
 GOOD = dict(product="ポケモンカードゲーム 30周年記念商品", start="2026-10-20T12:00:00+09:00",
-            end="2026-10-23T16:59:00+09:00", official_page_checked=True)
+            end=(datetime.now(JST) + timedelta(days=3)).replace(hour=16, minute=59, second=0, microsecond=0).isoformat(),
+            official_page_checked=True)
 
 
 def approved_ann(**kw):

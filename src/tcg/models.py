@@ -16,6 +16,13 @@ JST = timezone(timedelta(hours=9))
 TCG_POKEMON = "POKEMON"
 TCG_ONE_PIECE = "ONE_PIECE"
 TCG_TYPES: tuple[str, ...] = (TCG_POKEMON, TCG_ONE_PIECE)
+# 将来追加できる種別（Market Research Foundation H7）。今は取得器・商品データが無いので TCG_TYPES には入れない
+# （入れると、取得器の無い種別まで報告・登録の対象になる）。種別を足すときは、取得器・商品の登録とあわせて
+# TCG_TYPES に移す。KNOWN_TCG_TYPES は「名前として知っている種別」で、未対応の種別を未知の入力と区別するための一覧
+TCG_YUGIOH = "YUGIOH"
+TCG_DUEL_MASTERS = "DUEL_MASTERS"
+FUTURE_TCG_TYPES: tuple[str, ...] = (TCG_YUGIOH, TCG_DUEL_MASTERS)
+KNOWN_TCG_TYPES: tuple[str, ...] = TCG_TYPES + FUTURE_TCG_TYPES
 
 # ── 販売方式 (Task3) ──────────────────────────────────────────────────────
 # 「抽選」と「先着」と「コンビニ販売」を絶対に混同しない。
@@ -30,13 +37,37 @@ EVENT_RESERVATION_REOPEN = "RESERVATION_REOPEN"  # 予約キャンセル分
 EVENT_GENERAL_SALE = "GENERAL_SALE"            # 通常販売
 EVENT_OFFICIAL_STORE = "OFFICIAL_STORE"        # 公式ストア販売
 EVENT_SECONDARY_MARKET = "SECONDARY_MARKET"    # 二次流通
+# Market Research Foundation H1: 応募の経路・発売・要確認を型として持つ。挙動は base_event_type() で既存の種類に写す
+# （これらを新しい挙動の分岐にしない。既存の抽選・先着の状態計算・通知の安全側の扱いをそのまま通す）
+EVENT_STORE_LOTTERY = "STORE_LOTTERY"          # 店舗ごとの抽選（店頭・店舗の受付）
+EVENT_APP_LOTTERY = "APP_LOTTERY"              # アプリでの抽選
+EVENT_WEB_LOTTERY = "WEB_LOTTERY"              # Web（会員サイト）での抽選
+EVENT_IN_STORE_QR = "IN_STORE_QR"              # 店頭の QR による受付（応募の窓がある受付）
+EVENT_RELEASE = "RELEASE"                      # 発売の予定（発売日。購入できる根拠ではない）
+EVENT_REVIEW_REQUIRED = "REVIEW_REQUIRED"      # 種類・日程が読み取れない（画像のみの告知など。人が確認する）
 
 EVENT_TYPES: tuple[str, ...] = (
     EVENT_LOTTERY, EVENT_PREORDER, EVENT_FIRST_COME, EVENT_CONVENIENCE_STORE,
     EVENT_RESTOCK, EVENT_GUERRILLA_SALE, EVENT_ONLINE_RESTOCK,
     EVENT_RESERVATION_REOPEN, EVENT_GENERAL_SALE, EVENT_OFFICIAL_STORE,
     EVENT_SECONDARY_MARKET,
+    EVENT_STORE_LOTTERY, EVENT_APP_LOTTERY, EVENT_WEB_LOTTERY, EVENT_IN_STORE_QR,
+    EVENT_RELEASE, EVENT_REVIEW_REQUIRED,
 )
+
+# 新しい種別 → 既存の挙動の種類。応募の窓（応募期間・結果発表・購入期間）を持つ受付は抽選と同じ状態の計算・通知の安全側の
+# 扱いにする（応募の経路は付加の情報）。RELEASE・REVIEW_REQUIRED は購入できる根拠にならないので、写さない（None）
+_BASE_EVENT_TYPE = {
+    EVENT_STORE_LOTTERY: EVENT_LOTTERY, EVENT_APP_LOTTERY: EVENT_LOTTERY, EVENT_WEB_LOTTERY: EVENT_LOTTERY,
+    EVENT_IN_STORE_QR: EVENT_LOTTERY,
+}
+# 日程・購入の根拠にならず、どんな場合も「今買える」にしない種別
+NEVER_AVAILABLE_NOW_EVENTS: frozenset[str] = frozenset({EVENT_RELEASE, EVENT_REVIEW_REQUIRED})
+
+
+def base_event_type(event_type: str) -> str:
+    """既存の挙動（状態の計算・通知・得点）が使う種類。STORE/APP/WEB_LOTTERY・IN_STORE_QR は LOTTERY として扱う。"""
+    return _BASE_EVENT_TYPE.get(event_type, event_type)
 
 # 「今すぐ買える可能性がある」即売系（Task14 で通知優先度を上げる対象）
 INSTANT_SALE_EVENTS: frozenset[str] = frozenset({

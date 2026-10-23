@@ -15,7 +15,7 @@ from typing import Optional
 
 from .classify import classify_event_type
 from .models import (
-    CHANNEL_STORE, EVENT_TYPES, SHRINK_STATUSES, SHRINK_UNKNOWN,
+    CHANNEL_STORE, EVENT_TYPES, NEVER_AVAILABLE_NOW_EVENTS, SHRINK_STATUSES, SHRINK_UNKNOWN,
     SRC_COMMUNITY_REPORT, SRC_SOCIAL_REPORT, SRC_STORE_OFFICIAL,
     TCG_TYPES, TcgEvent, now_jst,
 )
@@ -79,7 +79,8 @@ def _row_to_event(row: dict) -> Optional[TcgEvent]:
     # 販売方式が本文から判定できない行は取り込まない（推測しない）。
     # CSV 側で event_type を明示した場合はそれを使う。
     declared = (row.get("event_type") or "").strip().upper()
-    if declared in EVENT_TYPES:
+    # 発売の予定（RELEASE）・要確認（REVIEW_REQUIRED）は、報告の CSV で明示しても受け付けない（購入の根拠にならない）
+    if declared in EVENT_TYPES and declared not in NEVER_AVAILABLE_NOW_EVENTS:
         event_type = declared
     else:
         event_type = classify_event_type(text, store=chain, channel=CHANNEL_STORE)

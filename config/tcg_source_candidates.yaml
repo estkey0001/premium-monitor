@@ -1,0 +1,34 @@
+# TCG の抽選・予約・再販の取得元の「候補」（Market Research Foundation H5）。
+#
+# ここに載せたものは、まだ監視していない（取得器が無い・fetch もしていない）。2026-10-23 の Market Coverage Audit で、
+# 一般の利用者が抽選情報を探すときに見る売り場のうち、抽選用の登録簿（src/tcg/lottery/registry.py）にも販売監視用の登録簿
+# （src/tcg/sources.py）にも無かったものの一覧。
+#
+# 候補は「実装する」という意味ではない。監視に加える前に、売り場ごとに次を確認する（確認の前に取得しない）:
+#   1. robots.txt が取得を許しているか（取得できない・禁止なら対象にしない。回避しない）
+#   2. 利用規約が自動取得を禁じていないか
+#   3. 公開ページ（ログイン不要）に、抽選・予約・再販の告知の一覧があるか
+# url は一般に知られている公式サイトのトップ。verified: false は、到達性・robots・規約・告知の一覧を確認していないという意味。
+status: CANDIDATE_UNVERIFIED
+basis: "Market Coverage Audit 2026-10-23 の列挙。登録簿に無い売り場。到達性・robots・規約は未確認"
+candidates:
+  - {id: KOJIMA, name: コジマ, channel: STORE, url: "https://www.kojima.net/", verified: false}
+  - {id: KS_DENKI, name: ケーズデンキ, channel: STORE, url: "https://www.ksdenki.com/", verified: false}
+  - {id: AMIAMI, name: あみあみ, channel: ONLINE, url: "https://www.amiami.jp/", verified: false}
+  - {id: HOBBYSEARCH, name: ホビーサーチ, channel: ONLINE, url: "https://www.1999.co.jp/", verified: false}
+  - {id: CARD_LABO, name: カードラボ, channel: STORE, url: "https://www.c-labo.jp/", verified: false}
+  - {id: SURUGAYA, name: 駿河屋, channel: BOTH, url: "https://www.suruga-ya.jp/", verified: false}
+  - {id: SUPER_HOBBY, name: スーパーホビー, channel: STORE, url: "", verified: false}
+  - {id: AEON, name: イオン, channel: STORE, url: "https://www.aeon.com/", verified: false}
+  - {id: DON_QUIJOTE, name: ドン・キホーテ, channel: STORE, url: "https://www.donki.com/", verified: false}
+  - {id: VILLAGE_VANGUARD, name: ヴィレッジヴァンガード, channel: BOTH, url: "https://www.village-v.co.jp/", verified: false}
+  - {id: POKEMON_CARD_LIVE_APP, name: ポケモンカードゲーム Live（アプリ）, channel: APP, url: "", verified: false,
+     note: "アプリの中の告知は公開ページから取れない可能性が高い。公式のお知らせ・ニュースで補う"}
+  - {id: FAMILYMART, name: ファミリーマート, channel: STORE, url: "", verified: false,
+     note: "販売監視用の登録簿（src/tcg/sources.py）にはあるが、抽選用の登録簿に無い・URL 未確認"}
+  # 次の2件は「取得しない」方針（SNS はログインが要る・自動取得が規約で制限される。実装の候補にしない）。公式のお知らせ・
+  # ニュースの取得（登録済み）で告知を拾う。ここには、候補ではなく除外として残す
+  - {id: OFFICIAL_X_POKEMON_CARD, name: ポケモンカードゲーム公式 X, channel: SOCIAL, url: "", verified: false,
+     policy_excluded: "SNS は自動取得しない（ログイン・規約）。日程の根拠にしない"}
+  - {id: OFFICIAL_X_ONEPIECE_CARD, name: ONE PIECEカードゲーム公式 X, channel: SOCIAL, url: "", verified: false,
+     policy_excluded: "SNS は自動取得しない（ログイン・規約）。日程の根拠にしない"}

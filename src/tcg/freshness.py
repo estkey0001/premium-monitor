@@ -13,7 +13,8 @@ from .models import (
     EVENT_GUERRILLA_SALE, EVENT_RESTOCK, EVENT_ONLINE_RESTOCK,
     EVENT_CONVENIENCE_STORE, EVENT_LOTTERY, EVENT_FIRST_COME,
     EVENT_PREORDER, EVENT_GENERAL_SALE, EVENT_OFFICIAL_STORE,
-    EVENT_RESERVATION_REOPEN, EVENT_SECONDARY_MARKET,
+    EVENT_RESERVATION_REOPEN, EVENT_SECONDARY_MARKET, EVENT_RELEASE, EVENT_REVIEW_REQUIRED,
+    NEVER_AVAILABLE_NOW_EVENTS, base_event_type,
     ST_OPEN, ST_STARTING_SOON, ST_AVAILABLE_NOW, ST_ENDING_SOON, ST_ENDED,
     ST_SOLD_OUT, ST_RESULT_PENDING, ST_WINNER_PURCHASE_PERIOD, ST_COMING_SOON,
     ST_UNVERIFIED, UNCONFIRMED_AVAILABILITY_BASES,
@@ -37,6 +38,9 @@ NO_TTL_EVENTS: frozenset[str] = frozenset({
     EVENT_GENERAL_SALE, EVENT_OFFICIAL_STORE, EVENT_SECONDARY_MARKET,
 })
 
+# 発売の予定（RELEASE）・要確認（REVIEW_REQUIRED）を古いとする日数（日程の根拠から）
+NEVER_AVAILABLE_EXPIRY_DAYS = 30
+
 # 「もうすぐ」の閾値
 STARTING_SOON_WINDOW = timedelta(hours=24)
 ENDING_SOON_WINDOW = timedelta(hours=24)
@@ -48,7 +52,7 @@ AVAILABLE_NOW_WINDOW = timedelta(hours=48)
 
 def ttl_for(event_type: str) -> Optional[int]:
     """イベント種別の TTL（秒）。締切基準のものは None。"""
-    if event_type in NO_TTL_EVENTS:
+    if base_event_type(event_type) in NO_TTL_EVENTS or event_type in NEVER_AVAILABLE_NOW_EVENTS:
         return None
     return TTL_SECONDS.get(event_type)
 
@@ -62,6 +66,12 @@ def is_stale(event: dict, now: Optional[datetime] = None) -> bool:
     時刻付きの報告が必要な場合は data/tcg_restock_reports.csv を使う。
     """
     now = now or now_jst()
+    # 発売の予定・要確認は、日程の根拠（発売日・取得時刻）から NEVER_AVAILABLE_EXPIRY_DAYS 日を過ぎたら古い（永久に残さない）
+    if event.get("event_type") in NEVER_AVAILABLE_NOW_EVENTS:
+        basis = parse_dt(event.get("sale_start") or event.get("application_end") or event.get("reported_at")
+                         or event.get("observed_at"))
+        # 日程・取得時刻の根拠が何も無い行は、いつの情報か分からないので古い扱い（永久に残さない）
+        return basis is None or now - basis > timedelta(days=NEVER_AVAILABLE_EXPIRY_DAYS)
     ttl = ttl_for(event.get("event_type", ""))
     if ttl is None:
         # 締切基準: 締切/販売終了を過ぎていれば stale
@@ -93,6 +103,15 @@ def _compute_status(event: dict, now: Optional[datetime] = None) -> str:
     now = now or now_jst()
     et = event.get("event_type", "")
     stale = is_stale(event, now)
+    # 発売の予定・要確認は、購入できる根拠にならない（どんな場合も「今買える」にしない）
+    if et == EVENT_REVIEW_REQUIRED:
+        return ST_UNVERIFIED
+    if et == EVENT_RELEASE:
+        r_start = parse_dt(event.get("sale_start"))
+        if r_start and now < r_start:
+            return ST_STARTING_SOON if (r_start - now) <= STARTING_SOON_WINDOW else ST_COMING_SOON
+        return ST_UNVERIFIED
+    et = base_event_type(et)         # 店舗・アプリ・Web の抽選と店頭 QR 受付は抽選と同じ状態の計算
 
     if event.get("sold_out") is True:
         return ST_SOLD_OUT

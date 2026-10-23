@@ -12,7 +12,7 @@ from datetime import timedelta
 from typing import Optional
 
 from .models import (
-    EVENT_LOTTERY, INSTANT_SALE_EVENTS, OFFICIAL_SOURCE_TYPES,
+    EVENT_LOTTERY, INSTANT_SALE_EVENTS, OFFICIAL_SOURCE_TYPES, base_event_type,
     PRIO_CRITICAL, PRIO_HIGH, PRIO_MEDIUM, PRIO_LOW,
     VERIFY_CONFIRMED, now_jst, parse_dt,
 )
@@ -41,7 +41,7 @@ def notification_kind(event: dict) -> Optional[str]:
     """
     if event.get("stale"):
         return None
-    et = event.get("event_type", "")
+    et = base_event_type(event.get("event_type", ""))
     st = event.get("status", "")
     official = event.get("source_type") in OFFICIAL_SOURCE_TYPES
 
@@ -82,7 +82,7 @@ DISCLAIMER_OFFICIAL = "※販売条件は必ず公式サイトでご確認くだ
 def lottery_deadline_alerts(event: dict, now=None,
                             window: timedelta = timedelta(hours=1)) -> list[dict]:
     """抽選イベントから、今この時点で発火すべき締切アラートを返す。"""
-    if event.get("event_type") != EVENT_LOTTERY:
+    if base_event_type(event.get("event_type", "")) != EVENT_LOTTERY:
         return []
     now = now or now_jst()
     a_start = parse_dt(event.get("application_start"))
@@ -178,6 +178,8 @@ def build_sale_message(event: dict, signal_count: int = 0) -> str:
         "PREORDER": "予約", "GENERAL_SALE": "通常販売",
         "OFFICIAL_STORE": "公式ストア販売",
         "RESERVATION_REOPEN": "予約キャンセル分",
+        "STORE_LOTTERY": "店舗の抽選", "APP_LOTTERY": "アプリの抽選", "WEB_LOTTERY": "Web の抽選",
+        "IN_STORE_QR": "店頭 QR の受付", "RELEASE": "発売の予定", "REVIEW_REQUIRED": "要確認",
     }.get(event.get("event_type", ""), event.get("event_type", ""))
     lines.append(et_label)
 

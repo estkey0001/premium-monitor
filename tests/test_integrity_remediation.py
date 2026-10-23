@@ -992,7 +992,7 @@ def test_commit_step_never_fails_because_of_a_missing_path():
     add = step[start:step.index("|| true", start)]
     paths = [p for p in re.sub(r"\\\n|':\(exclude\)[^']*'", " ", add.replace("git add", "")).split() if p]
     tracked = subprocess.run(["git", "ls-files"], cwd=ROOT, capture_output=True, text=True).stdout.splitlines()
-    created = set(re.findall(r"mkdir -p (\S+)", step.split("git add docs/")[0]))
+    created = {tok for line in re.findall(r"mkdir -p ([^\n&|;]+)", step.split("git add docs/")[0]) for tok in line.split()}
     missing = [p for p in paths if not any(t == p or t.startswith(p.rstrip("/") + "/") for t in tracked)
                and p.rstrip("/") not in {c.rstrip("/") for c in created}]
     assert missing == [], f"git add の対象に、リポジトリに無く・先に作られないパスがある: {missing}"

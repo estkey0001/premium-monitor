@@ -1,25 +1,25 @@
 {
-  "generated_at": "2026-10-23 22:35 JST",
-  "date": "2026-10-23",
+  "generated_at": "2026-10-24 18:24 JST",
+  "date": "2026-10-24",
   "health_score": {
-    "data_quality": 14.2,
+    "data_quality": 14.3,
     "profit_discovery": 15.0,
     "source_health": 12.6,
     "link_quality": 4.8,
     "freshness": 3.6,
-    "total": 50.2
+    "total": 50.3
   },
   "data_quality": {
-    "total_obs": 234,
-    "usable_obs": 75,
+    "total_obs": 235,
+    "usable_obs": 76,
     "stale_count": 150,
-    "stale_rate": 0.641,
+    "stale_rate": 0.6383,
     "config_reference_count": 35,
     "zero_count": 38,
-    "zero_rate": 0.1624,
-    "item_url_rate": 0.4786,
-    "search_url_rate": 0.2009,
-    "manual_rate": 0.4786,
+    "zero_rate": 0.1617,
+    "item_url_rate": 0.4809,
+    "search_url_rate": 0.2,
+    "manual_rate": 0.4766,
     "api_rate": 0.0,
     "html_rate": 0.0085
   },
@@ -189,6 +189,18 @@
       },
       "n": 5
     },
+    "モバイル一番": {
+      "success_count": 4,
+      "stale_count": 3,
+      "zero_count": 0,
+      "item_url_rate": 1.0,
+      "freshness": 0.25,
+      "success_rate": 1.0,
+      "confidence": {
+        "high": 4
+      },
+      "n": 4
+    },
     "買取一丁目": {
       "success_count": 4,
       "stale_count": 0,
@@ -236,18 +248,6 @@
         "high": 4
       },
       "n": 4
-    },
-    "モバイル一番": {
-      "success_count": 3,
-      "stale_count": 3,
-      "zero_count": 0,
-      "item_url_rate": 1.0,
-      "freshness": 0.0,
-      "success_rate": 1.0,
-      "confidence": {
-        "high": 3
-      },
-      "n": 3
     },
     "Amazon新品出品": {
       "success_count": 3,
@@ -337,16 +337,16 @@
   "diff_vs_prev": {
     "available": true,
     "stale_rate": {
-      "prev": 0.6356,
-      "cur": 0.641
+      "prev": 0.641,
+      "cur": 0.6383
     },
     "zero_rate": {
-      "prev": 0.161,
-      "cur": 0.1624
+      "prev": 0.1624,
+      "cur": 0.1617
     },
     "item_url_rate": {
-      "prev": 0.4831,
-      "cur": 0.4786
+      "prev": 0.4786,
+      "cur": 0.4809
     },
     "main_route_count": {
       "prev": 0,
@@ -368,7 +368,6 @@
       "取得成功率 0%: ネットオフ"
     ],
     "warning": [
-      "item_url率 低下",
       "item_url率 48% (<50%)"
     ],
     "info": [

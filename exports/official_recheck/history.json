@@ -2678,6 +2678,118 @@
    "reason": "",
    "price": 364800,
    "stock": ""
+  },
+  {
+   "product_id": "prod_ps5_pro",
+   "url": "https://pur.store.sony.jp/ps5/products/ps5/CFI-7100B01_purchase/",
+   "model": "CFI-7100B01",
+   "match": "CFI-7100B01",
+   "recorded_price": 137980,
+   "observed_at": "2026-10-24T17:56:21+09:00",
+   "fetched_url": "https://pur.store.sony.jp/ps5/products/ps5/CFI-7100B01_product/",
+   "verified_by": "store_product_page",
+   "status": "unchanged",
+   "reason": "",
+   "price": 137980,
+   "stock": "入荷待ち"
+  },
+  {
+   "product_id": "prod_switch2",
+   "url": "https://store-jp.nintendo.com/item/hardware-accessory/VM_BEE_S_KB6CA",
+   "model": "",
+   "match": "Nintendo Switch 2 本体 日本語・国内専用",
+   "recorded_price": 59980,
+   "observed_at": "2026-10-24T17:56:21+09:00",
+   "fetched_url": "https://www.nintendo.com/jp/hardware/switch2/lineup/index.html",
+   "verified_by": "msrp_lineup",
+   "status": "unchanged",
+   "reason": "",
+   "price": 59980,
+   "stock": ""
+  },
+  {
+   "product_id": "prod_airpods_pro3",
+   "url": "https://www.apple.com/jp/shop/buy-airpods/airpods-pro-3",
+   "model": "MFHP4J/A",
+   "match": "MFHP4J/A",
+   "recorded_price": 42800,
+   "observed_at": "2026-10-24T17:56:21+09:00",
+   "status": "unchanged",
+   "reason": "",
+   "price": 42800,
+   "stock": ""
+  },
+  {
+   "product_id": "prod_r5ii",
+   "url": "https://store.canon.jp/online/g/g6536C001/",
+   "model": "EOS R5 Mark II",
+   "match": "6536C001",
+   "recorded_price": 654500,
+   "observed_at": "2026-10-24T17:56:24+09:00",
+   "status": "unchanged",
+   "reason": "",
+   "price": 654500,
+   "stock": ""
+  },
+  {
+   "product_id": "prod_z8",
+   "url": "https://nij.nikon.com/shop/g/g4960759909947/",
+   "model": "Z8",
+   "match": "4960759909947",
+   "recorded_price": 575300,
+   "observed_at": "2026-10-24T17:56:25+09:00",
+   "status": "unchanged",
+   "reason": "",
+   "price": 575300,
+   "stock": ""
+  },
+  {
+   "product_id": "prod_iphone17_256",
+   "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17",
+   "model": "",
+   "match": "MG674J/A,MG684J/A,MG694J/A,MG6A4J/A,MG6C4J/A",
+   "recorded_price": 159800,
+   "observed_at": "2026-10-24T17:58:22+09:00",
+   "status": "unchanged",
+   "reason": "",
+   "price": 159800,
+   "stock": ""
+  },
+  {
+   "product_id": "prod_x100vi",
+   "url": "https://mall-jp.fujifilm.com/shop/g/g16941878/",
+   "model": "X100VI",
+   "match": "4547410554281|X100VI",
+   "recorded_price": 315700,
+   "observed_at": "2026-10-24T17:58:22+09:00",
+   "status": "blocked",
+   "reason": "site_blocked",
+   "price": null,
+   "stock": ""
+  },
+  {
+   "product_id": "prod_iphoneair_256",
+   "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-air",
+   "model": "",
+   "match": "MG274J/A,MG284J/A,MG294J/A,MG2A4J/A",
+   "recorded_price": 189800,
+   "observed_at": "2026-10-24T18:00:22+09:00",
+   "status": "unchanged",
+   "reason": "",
+   "price": 189800,
+   "stock": ""
+  },
+  {
+   "product_id": "prod_iphoneduo_256",
+   "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-duo",
+   "model": "",
+   "match": "MK244J/A,MK254J/A",
+   "recorded_price": 364800,
+   "observed_at": "2026-10-24T18:02:21+09:00",
+   "status": "unchanged",
+   "reason": "",
+   "price": 364800,
+   "stock": ""
   }
  ]
 }

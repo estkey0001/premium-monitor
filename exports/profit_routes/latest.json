@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-24 18:24 JST",
+  "generated_at": "2026-10-25 18:41 JST",
   "ebay_api_configured": false,
   "overseas_source_mode": "manual",
   "summary": {
@@ -1172,7 +1172,7 @@
     "prod_z8": {
       "product_name": "Nikon Z8",
       "buy_candidates": 0,
-      "sell_candidates": 2,
+      "sell_candidates": 1,
       "min_usable_buy": null,
       "min_usable_buy_source": "",
       "max_usable_sell": 420000,
@@ -1185,7 +1185,12 @@
       "best_reference_net": null,
       "main_blocked_reason": "有効な仕入(販売/出品/落札)候補なし",
       "excluded_route_count": 0,
-      "rejection_top5": [],
+      "rejection_top5": [
+        [
+          "accessory_or_wrong_product",
+          1
+        ]
+      ],
       "stale_excluded": 0,
       "overseas_stale": 0,
       "needed": [],

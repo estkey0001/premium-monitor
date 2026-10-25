@@ -1,7 +1,7 @@
 
 ============================================================
  Deploy Check (494 items)
- 実行日時: 2026-10-24T18:24:35+09:00
+ 実行日時: 2026-10-25T18:41:34+09:00
 ============================================================
   ✅ [index_exists] docs/index.html 存在
   ✅ [forbidden_phrases] 禁止表現なし
@@ -10,7 +10,7 @@
   ✅ [line_cta_off] LINE CTA非表示（正常）
   ✅ [telegram_cta_off] Telegram CTA非表示（正常）
   ✅ [analytics_empty] GA ID未設定 → GAスニペット非出力（正常）
-  ✅ [today_date] 今日の日付 2026-10-24 あり
+  ✅ [today_date] 今日の日付 2026-10-25 あり
   ✅ [price_exists] 価格表記あり
   ✅ [disclaimer] 免責事項あり
   ✅ [data_track] data-track属性あり
@@ -45,7 +45,7 @@
   ✅ [no_mainichi_koshin_text] 「毎日更新」表記は topbar/footer 内のみ（正常）
   ✅ [deal_card_no_saishin_label] updated-row に旧「最終更新：」表記なし（価格確認：に統一済み）
   ✅ [stale_banner_date_mismatch] #144 「本日の価格データ未更新」が HTML に存在しない（OK: トップ警告抑制済み）
-  ✅ [csv_today_observed_at] manual_buyback_prices.csv に本日(2026-10-24)の observed_at あり
+  ✅ [csv_today_observed_at] manual_buyback_prices.csv に本日(2026-10-25)の observed_at あり
   ✅ [iphone17_price_fetched] iPhone 17 Pro 系の買取価格が1件以上取得されている
   ✅ [mobile_ichiban_price] モバイル一番の買取価格（price > 0）が存在する
   ✅ [no_price_zero_shown] LP上に¥0の価格表記なし（0価格行は非表示 or fetch_failed表示で正常）
@@ -53,12 +53,12 @@
   ✅ [fetch_failed_no_price_calc] fetch_failed 行の価格欄が「—」（価格計算に使われていない）
   ✅ [game_console_shops] ゲーム機向け店舗が表示されている: ['ゲオ', 'イオシス', 'ブックオフ', '駿河屋', 'ソフマップ', 'TSUTAYA', '買取商店']
   ✅ [switch2_game_shop_links] Switch 2 / ゲーム機向け確認リンク（ゲオ/ブックオフ/駿河屋/ソフマップ）が存在する
-  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-10-24T17:07:23+09:00）
+  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-10-25T17:24:27+09:00）
   ⚠️ [suspicious_price_format] suspicious_prices 形式OK（suspicious_price 3件あり — 確認推奨）
   ✅ [fetch_failed_has_reason] fetch_failed 47件すべてに reason あり
   ✅ [collector_report_html_exists] docs/collector_report.html 存在
   ✅ [collector_report_link_in_lp] LP内に collector_report.html へのリンクがある
-  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 11件存在する: ['iphone17pro512', 'iphoneair_256', 'iphone17pm256', 'iphone17_256']
+  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 11件存在する: ['iphone17pm512', 'iphone17pm256', 'iphone17_256', 'iphoneair_256']
   ✅ [beginner_page_auto_scraped_exists] 自動取得 OK 19件 / total 66件
   ✅ [iphone17pro256_price_scraped] iPhone 17 Pro 256GB の価格取得成功: ['kaitori_shouten', 'kaitori_itchome']
   ✅ [fetch_failed_has_reason_field] 全取得失敗エントリーに reason フィールドあり（47件）
@@ -302,7 +302,7 @@
   ✅ [ai_today_tasks] #626 今日やること（Today Tasks）が表示される（1件）
   ✅ [ai_probability_forecast_trend] #627 成立確率/次回更新予測/価格トレンドが付与される
   ✅ [notification_events_exists] #628 notifications/latest.json が存在する（events 0）
-  ✅ [notification_history] #629 notifications/history/ に履歴が保存される（94日分）
+  ✅ [notification_history] #629 notifications/history/ に履歴が保存される（95日分）
   ✅ [notification_suppression] #630 通知抑制（24h再送禁止・ROI+5%例外）が実装される
   ✅ [notification_priority] #631 通知に priority（Critical/High/Medium/Low）が付与される
   ✅ [notification_channels] #633 通知チャネル（Discord/Telegram）が定義される
@@ -476,7 +476,7 @@
   ✅ [discovered_product_activation] #864 登録した商品の公式直販価格・買取の照合（公式の証拠がそろうときだけ・設定値だけで確定にしない・容量 / SIMフリー / キャリア版 / 部品番号・色の価格を混ぜない・前回の行を残さない・発見で正本と一致・候補の重複なし）
   ✅ [candidate_priority] #865 候補の優先順位（決まった計算式・売値が無ければ差の点なし・全色で最も低い色・登録済み / 一致 / STALE を除く・登録は1件ずつ・CI は優先順位のための取得をしない）
   ✅ [official_recheck_alive] #866 公式の再確認（PS5 Pro・Switch 2 が対象・公式の静的なページを読む・価格が変われば changed・読めなければ failed）
-  ⚠️ [official_verification_expiry] #866 公式の確認の期限が3日以内・再確認が連続で失敗している記録が無い（再確認が止まって切れる前に気づく） ← ['prod_switch2（残り -2 日・再確認の連続失敗 0 日）']
+  ⚠️ [official_verification_expiry] #866 公式の確認の期限が3日以内・再確認が連続で失敗している記録が無い（再確認が止まって切れる前に気づく） ← ['prod_switch2（残り -3 日・再確認の連続失敗 0 日）', 'prod_x100vi（残り 11 日・再確認の連続失敗 3 日）']
   ✅ [ranking_canonical_formula] #867 利益の式は1つ（順位レポートは market/profit_formula・設定値だけの公式の価格 / 店のトップの売値 / 送料不明を載せない・Duo は +28,400）
   ✅ [buyback_baseline_freshness] #868 買取の比較の基準（直近の正常な自動取得の値・14日以内・手入力 / 古い値を使わない・基準が無ければ前回比なし・上限超えは他店の裏付けで採用）
   ✅ [ops_health_alert_separation] #869 運営者向けの劣化アラートは商品の通知と別（通知のモジュール・Secrets に触れない・外部送信 0・重複の抑制・復旧の記録・品質ゲートの後・continue-on-error）

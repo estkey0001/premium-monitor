@@ -1,17 +1,17 @@
 {
-  "generated_at": "2026-10-24 18:24 JST",
-  "date": "2026-10-24",
+  "generated_at": "2026-10-25 18:41 JST",
+  "date": "2026-10-25",
   "health_score": {
-    "data_quality": 14.3,
+    "data_quality": 14.2,
     "profit_discovery": 15.0,
     "source_health": 12.6,
     "link_quality": 4.8,
     "freshness": 3.6,
-    "total": 50.3
+    "total": 50.2
   },
   "data_quality": {
     "total_obs": 235,
-    "usable_obs": 76,
+    "usable_obs": 75,
     "stale_count": 150,
     "stale_rate": 0.6383,
     "config_reference_count": 35,
@@ -337,15 +337,15 @@
   "diff_vs_prev": {
     "available": true,
     "stale_rate": {
-      "prev": 0.641,
+      "prev": 0.6383,
       "cur": 0.6383
     },
     "zero_rate": {
-      "prev": 0.1624,
+      "prev": 0.1617,
       "cur": 0.1617
     },
     "item_url_rate": {
-      "prev": 0.4786,
+      "prev": 0.4809,
       "cur": 0.4809
     },
     "main_route_count": {

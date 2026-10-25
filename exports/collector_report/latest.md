@@ -1,6 +1,6 @@
 # Collector Quality Report
 
-生成日時: 2026-10-24 17:07:23 UTC+09:00
+生成日時: 2026-10-25 17:24:27 UTC+09:00
 
 ## サマリ
 
@@ -197,14 +197,9 @@
 | iphone16pro256 | kaitori_shouten | FAILED | product_not_listed |
 | iphoneduo_256 | kaitori_shouten | FAILED | suspicious_rejected |
 
-## 価格変動一覧 (4件)
+## 価格変動一覧 (0件)
 
-| 商品 | 店舗 | 前回 | 今回 | 変化率 |
-|------|------|------|------|--------|
-| iphone17pro512 | kaitori_itchome | ¥200,000 | ¥202,500 | ↑1.2% |
-| iphone17pm512 | kaitori_shouten | ¥216,000 | ¥217,000 | ↑0.5% |
-| iphone17pm256 | mobile_ichiban | ¥190,500 | ¥191,000 | ↑0.3% |
-| iphone17pm256 | kaitori_shouten | ¥190,500 | ¥191,000 | ↑0.3% |
+（前回との変動なし）
 
 ## ⚠️ suspicious_price 一覧 (3件)
 
@@ -212,4 +207,4 @@
 |------|------|------|------|------|
 | ps5_pro | kaitori_shouten | ¥202,400 | above_genre_max | game_console正常帯¥10,000〜¥200,000の上限超過（¥202,400。他店の裏付けなし・要確認） |
 | ps5_pro | mobile_ichiban | ¥202,400 | above_genre_max | game_console正常帯¥10,000〜¥200,000の上限超過（¥202,400。他店の裏付けなし・要確認） |
-| iphoneduo_256 | kaitori_shouten | ¥408,000 | above_genre_max | iphone正常帯¥30,000〜¥400,000の上限超過（¥408,000。他店の裏付けなし・要確認） |
+| iphoneduo_256 | kaitori_shouten | ¥410,000 | above_genre_max | iphone正常帯¥30,000〜¥400,000の上限超過（¥410,000。他店の裏付けなし・要確認） |

@@ -1,6 +1,6 @@
 # Normalized Price Observations
 
-生成: 2026-10-24 18:24 JST
+生成: 2026-10-25 18:41 JST
 
 全価格（買取/販売/出品/落札/海外/下取/公式）を単一スキーマに正規化。
 `price_role`（buy/sell/official/trade_in）を必ず付与し、
@@ -10,7 +10,7 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 ## サマリ
 
 - 総観測数: **235**
-- Beginner 利用可: 76 / Pro 利用可: 30
+- Beginner 利用可: 75 / Pro 利用可: 29
 - fresh(≤14日): 120
 
 ### price_role 別
@@ -36,7 +36,7 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 
 | reason | 件数 |
 |---|---|
-| accessory_or_wrong_product | 4 |
+| accessory_or_wrong_product | 5 |
 | duplicate_price_collision | 2 |
 | official_stale_over_180d | 1 |
 | price_zero | 38 |
@@ -68,7 +68,7 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 | Apple Watch Ultra 3 | official | official_price | ¥128,800 | medium | 9999.0d | メーカー公式/定価 |
 | AirPods Pro 3 | official | official_price | ¥42,800 | high | 0.8d | メーカー公式/定価 |
 | AirPods Max | official | official_price | ¥84,800 | medium | 9999.0d | メーカー公式/定価 |
-| Nintendo Switch 2 | official | official_price | ¥59,980 | high | 16.8d | メーカー公式/定価 |
+| Nintendo Switch 2 | official | official_price | ¥59,980 | high | 17.8d | メーカー公式/定価 |
 | Nintendo Switch 2 マリオカ | official | official_price | ¥59,980 | medium | 9999.0d | メーカー公式/定価 |
 | PlayStation 5 Pro | official | official_price | ¥137,980 | high | 0.8d | メーカー公式/定価 |
 | PlayStation 5 Digital  | official | official_price | ¥72,980 | medium | 9999.0d | メーカー公式/定価 |
@@ -91,7 +91,6 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 | SONY α7CR | sell | buyback_price | ¥232,000 | used_s | 0.0d | フジヤカメラ |
 | SONY FX3 | sell | buyback_price | ¥363,000 | used_s | 0.0d | フジヤカメラ |
 | Canon EOS R5 Mark II | sell | buyback_price | ¥372,000 | used_s | 0.0d | フジヤカメラ |
-| Nikon Z8 | sell | buyback_price | ¥289,000 | used_s | 0.0d | フジヤカメラ |
 | Leica Q3 | sell | buyback_price | ¥586,000 | used_s | 0.0d | フジヤカメラ |
 | iPhone 17 Pro 256GB SI | sell | buyback_price | ¥174,000 | new_unopened_simfree | 0.1d | 買取商店 |
 | iPhone 17 Pro 256GB SI | sell | buyback_price | ¥174,000 | new_unopened_simfree | 0.1d | 買取一丁目 |

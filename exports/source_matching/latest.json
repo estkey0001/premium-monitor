@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-24 18:24 JST",
+  "generated_at": "2026-10-25 18:41 JST",
   "scope": "商品同一性マッチング精度（利益/AI/UI/SaaS/DQ思想は不変）",
   "accuracy": {
     "product_match_accuracy": 1.0,
@@ -32,7 +32,7 @@
     "main_rejected": 221,
     "model_match": 17,
     "manual_review_required": 74,
-    "accessory_detected": 6,
+    "accessory_detected": 7,
     "exact_product_match": 14,
     "main_eligible": 14
   },
@@ -53,7 +53,7 @@
       "model_match": 17,
       "main_rejected": 25,
       "manual_review_required": 11,
-      "accessory_detected": 4,
+      "accessory_detected": 5,
       "model_unverifiable": 8,
       "exact_product_match": 0,
       "capacity_mismatch": 0,
@@ -321,7 +321,7 @@
         "new",
         "used"
       ],
-      "first_seen": 63.3,
+      "first_seen": 64.3,
       "last_seen": 0.0,
       "risk_level": "high",
       "possible_reason": [
@@ -413,8 +413,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 75.3,
-      "last_seen": 75.3,
+      "first_seen": 76.3,
+      "last_seen": 76.3,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -443,8 +443,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 75.3,
-      "last_seen": 75.3,
+      "first_seen": 76.3,
+      "last_seen": 76.3,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -473,8 +473,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 75.3,
-      "last_seen": 75.3,
+      "first_seen": 76.3,
+      "last_seen": 76.3,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -503,7 +503,7 @@
         "new"
       ],
       "first_seen": 9999.0,
-      "last_seen": 16.8,
+      "last_seen": 17.8,
       "risk_level": "low",
       "possible_reason": [
         "same_price_multiple_skus"
@@ -636,17 +636,6 @@
       "main_eligible": 0
     },
     {
-      "source": "フジヤカメラ",
-      "observations": 25,
-      "score": 72,
-      "identity": 0.0,
-      "capacity": 1.0,
-      "model": 1.0,
-      "condition": 1.0,
-      "freshness": 0.68,
-      "main_eligible": 0
-    },
-    {
       "source": "イオシス",
       "observations": 20,
       "score": 72,
@@ -655,6 +644,17 @@
       "model": 1.0,
       "condition": 1.0,
       "freshness": 0.3,
+      "main_eligible": 0
+    },
+    {
+      "source": "フジヤカメラ",
+      "observations": 25,
+      "score": 71,
+      "identity": 0.0,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 0.68,
       "main_eligible": 0
     },
     {

@@ -34,7 +34,7 @@
         "not_in_canonical"
       ],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-10-23",
+      "last_seen_on": "2026-10-26",
       "updated_at": "2026-10-17T17:34:02+09:00"
     },
     "apple-d11a8e24b990": {
@@ -70,7 +70,7 @@
         "not_in_canonical"
       ],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-10-23",
+      "last_seen_on": "2026-10-26",
       "updated_at": "2026-10-17T17:34:02+09:00"
     },
     "apple-dc7090c0276a": {
@@ -106,7 +106,7 @@
         "not_in_canonical"
       ],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-10-23",
+      "last_seen_on": "2026-10-26",
       "updated_at": "2026-10-17T17:34:02+09:00"
     },
     "apple-419a47e495b5": {
@@ -140,7 +140,7 @@
       "status": "REGISTERED",
       "reasons": [],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-10-23",
+      "last_seen_on": "2026-10-26",
       "updated_at": "2026-10-21T13:20:41+09:00",
       "reviewed_at": "2026-10-21T09:22:13+09:00",
       "review": {
@@ -218,7 +218,7 @@
         "not_in_canonical"
       ],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-10-23",
+      "last_seen_on": "2026-10-26",
       "updated_at": "2026-10-17T17:34:02+09:00"
     },
     "apple-24816e322cf0": {
@@ -256,7 +256,7 @@
       "status": "REGISTERED",
       "reasons": [],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-10-23",
+      "last_seen_on": "2026-10-26",
       "updated_at": "2026-10-19T18:33:06+09:00",
       "reviewed_at": "2026-10-17T21:52:06+09:00",
       "review": {
@@ -334,7 +334,7 @@
         "not_in_canonical"
       ],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-10-23",
+      "last_seen_on": "2026-10-26",
       "updated_at": "2026-10-17T17:34:02+09:00"
     },
     "tcg-pokemon-e341fcc48893": {
@@ -358,7 +358,7 @@
         "tcg_not_in_canonical"
       ],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-10-25",
+      "last_seen_on": "2026-10-26",
       "updated_at": "2026-10-17T17:34:02+09:00"
     },
     "tcg-pokemon-nocode-87445e9e9a0b": {
@@ -383,7 +383,7 @@
         "tcg_not_in_canonical"
       ],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-10-25",
+      "last_seen_on": "2026-10-26",
       "updated_at": "2026-10-17T17:34:02+09:00"
     },
     "tcg-pokemon-nocode-34feab468c74": {
@@ -408,7 +408,7 @@
         "tcg_not_in_canonical"
       ],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-10-25",
+      "last_seen_on": "2026-10-26",
       "updated_at": "2026-10-17T17:34:02+09:00"
     },
     "tcg-pokemon-2744ccd10c75": {
@@ -432,8 +432,8 @@
         "tcg_not_in_canonical"
       ],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-10-25",
-      "updated_at": "2026-10-25T18:35:07+09:00"
+      "last_seen_on": "2026-10-26",
+      "updated_at": "2026-10-26T19:04:17+09:00"
     },
     "tcg-pokemon-nocode-771077b562f9": {
       "source": "pokemon_card_official",
@@ -457,7 +457,7 @@
         "tcg_not_in_canonical"
       ],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-10-25",
+      "last_seen_on": "2026-10-26",
       "updated_at": "2026-10-17T17:34:02+09:00"
     },
     "tcg-pokemon-nocode-4aad0eb5ff42": {
@@ -482,7 +482,7 @@
         "tcg_not_in_canonical"
       ],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-10-25",
+      "last_seen_on": "2026-10-26",
       "updated_at": "2026-10-17T17:34:02+09:00"
     },
     "tcg-pokemon-nocode-af3005caeab7": {
@@ -507,7 +507,7 @@
         "tcg_not_in_canonical"
       ],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-10-25",
+      "last_seen_on": "2026-10-26",
       "updated_at": "2026-10-17T17:34:02+09:00"
     },
     "tcg-pokemon-nocode-4cd2959b0562": {
@@ -532,7 +532,7 @@
         "tcg_not_in_canonical"
       ],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-10-25",
+      "last_seen_on": "2026-10-26",
       "updated_at": "2026-10-17T17:34:02+09:00"
     },
     "tcg-pokemon-nocode-051ac06995d4": {
@@ -557,7 +557,7 @@
         "tcg_not_in_canonical"
       ],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-10-25",
+      "last_seen_on": "2026-10-26",
       "updated_at": "2026-10-17T17:34:02+09:00"
     },
     "tcg-pokemon-nocode-f68117cec07c": {
@@ -582,7 +582,7 @@
         "tcg_not_in_canonical"
       ],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-10-25",
+      "last_seen_on": "2026-10-26",
       "updated_at": "2026-10-17T17:34:02+09:00"
     },
     "tcg-pokemon-nocode-7ba7bcd383fb": {
@@ -607,7 +607,7 @@
         "tcg_not_in_canonical"
       ],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-10-25",
+      "last_seen_on": "2026-10-26",
       "updated_at": "2026-10-17T17:34:02+09:00"
     },
     "tcg-pokemon-nocode-26e637f860a5": {
@@ -632,7 +632,7 @@
         "tcg_not_in_canonical"
       ],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-10-25",
+      "last_seen_on": "2026-10-26",
       "updated_at": "2026-10-17T17:34:02+09:00"
     },
     "tcg-pokemon-nocode-5e45a208b38d": {
@@ -657,7 +657,7 @@
         "tcg_not_in_canonical"
       ],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-10-25",
+      "last_seen_on": "2026-10-26",
       "updated_at": "2026-10-17T17:34:02+09:00"
     },
     "tcg-pokemon-nocode-173e7859eb5b": {
@@ -682,7 +682,7 @@
         "tcg_not_in_canonical"
       ],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-10-25",
+      "last_seen_on": "2026-10-26",
       "updated_at": "2026-10-17T17:34:02+09:00"
     },
     "tcg-pokemon-nocode-6a4651ed1d9d": {
@@ -707,7 +707,7 @@
         "tcg_not_in_canonical"
       ],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-10-25",
+      "last_seen_on": "2026-10-26",
       "updated_at": "2026-10-17T17:34:02+09:00"
     },
     "tcg-pokemon-nocode-3243d5746050": {
@@ -732,7 +732,7 @@
         "tcg_not_in_canonical"
       ],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-10-25",
+      "last_seen_on": "2026-10-26",
       "updated_at": "2026-10-17T17:34:02+09:00"
     },
     "tcg-onepiece-2315d65b2e86": {
@@ -747,7 +747,7 @@
       "edition": "",
       "colors": [],
       "official_url": "https://www.onepiece-cardgame.com/products/",
-      "official_price": 1320,
+      "official_price": 1430,
       "release_date": "2026-12-19T00:00:00+09:00",
       "match_to_existing": "",
       "candidate_id": "tcg-onepiece-2315d65b2e86",
@@ -756,8 +756,8 @@
         "tcg_not_in_canonical"
       ],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-10-25",
-      "updated_at": "2026-10-17T17:34:02+09:00"
+      "last_seen_on": "2026-10-26",
+      "updated_at": "2026-10-26T19:04:17+09:00"
     },
     "tcg-onepiece-ea795a1ef364": {
       "source": "onepiece_card_official",
@@ -771,7 +771,7 @@
       "edition": "",
       "colors": [],
       "official_url": "https://www.onepiece-cardgame.com/products/",
-      "official_price": 1320,
+      "official_price": 1430,
       "release_date": "2026-12-19T00:00:00+09:00",
       "match_to_existing": "",
       "candidate_id": "tcg-onepiece-ea795a1ef364",
@@ -780,8 +780,8 @@
         "tcg_not_in_canonical"
       ],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-10-25",
-      "updated_at": "2026-10-17T17:34:02+09:00"
+      "last_seen_on": "2026-10-26",
+      "updated_at": "2026-10-26T19:04:17+09:00"
     },
     "tcg-onepiece-b93e50452497": {
       "source": "onepiece_card_official",
@@ -804,7 +804,7 @@
         "tcg_not_in_canonical"
       ],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-10-25",
+      "last_seen_on": "2026-10-26",
       "updated_at": "2026-10-17T17:34:02+09:00"
     },
     "tcg-onepiece-22eaa127df59": {
@@ -828,7 +828,7 @@
         "tcg_not_in_canonical"
       ],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-10-25",
+      "last_seen_on": "2026-10-26",
       "updated_at": "2026-10-17T17:34:02+09:00"
     },
     "apple-915b1e76f2d6": {
@@ -1384,16 +1384,16 @@
       },
       "iphone-air": {
         "first_seen_on": "2026-10-17",
-        "last_checked_on": "2026-10-23",
+        "last_checked_on": "2026-10-26",
         "listed": true,
-        "last_attempted_on": "2026-10-23",
+        "last_attempted_on": "2026-10-26",
         "last_error": ""
       },
       "iphone-duo": {
         "first_seen_on": "2026-10-17",
-        "last_checked_on": "2026-10-23",
+        "last_checked_on": "2026-10-26",
         "listed": true,
-        "last_attempted_on": "2026-10-23",
+        "last_attempted_on": "2026-10-26",
         "last_error": ""
       }
     }

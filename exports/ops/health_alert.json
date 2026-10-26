@@ -2,30 +2,13 @@
   "type": "PRODUCTION_HEALTH_ALERT",
   "schema": 1,
   "audience": "operator",
-  "generated_at": "2026-10-25T18:19:24+09:00",
+  "generated_at": "2026-10-26T18:48:32+09:00",
   "note": "運営者向けの劣化アラート候補（商品の通知ではない）。外部へは送らない。CI の注記・Step Summary・管理画面に出す",
   "active_count": 6,
   "high": 2,
   "warning": 4,
-  "candidates": [
-    {
-      "key": "official_recheck_failing:prod_x100vi",
-      "category": "official_recheck_failing",
-      "source": "prod_x100vi",
-      "severity": "WARNING",
-      "reason": "recheck_failed",
-      "title": "prod_x100vi の公式の再確認が 3 日連続で失敗しています",
-      "details": "公式ページの移動・表示の変更・ブロックの可能性。人が公式ページを確認する",
-      "evidence": {
-        "consecutive_days": 3
-      },
-      "type": "PRODUCTION_HEALTH_ALERT",
-      "event": "NEW",
-      "first_seen": "2026-10-25T18:19:24+09:00",
-      "generated_at": "2026-10-25T18:19:24+09:00"
-    }
-  ],
-  "suppressed": 5,
+  "candidates": [],
+  "suppressed": 6,
   "recovered": [],
   "active": [
     {
@@ -37,7 +20,7 @@
       "title": "prod_switch2 の公式の確認が切れています",
       "details": "確認日 2026-10-08（期限 14 日）",
       "evidence": {
-        "days_left": -3
+        "days_left": -4
       }
     },
     {
@@ -61,10 +44,10 @@
       "source": "prod_x100vi",
       "severity": "WARNING",
       "reason": "recheck_failed",
-      "title": "prod_x100vi の公式の再確認が 3 日連続で失敗しています",
+      "title": "prod_x100vi の公式の再確認が 4 日連続で失敗しています",
       "details": "公式ページの移動・表示の変更・ブロックの可能性。人が公式ページを確認する",
       "evidence": {
-        "consecutive_days": 3
+        "consecutive_days": 4
       }
     },
     {
@@ -74,7 +57,7 @@
       "severity": "WARNING",
       "reason": "above_genre_max",
       "title": "iphoneduo_256 の価格に誤りの可能性が高いものがあります（隔離）",
-      "details": "kaitori_shouten: iphone正常帯¥30,000〜¥400,000の上限超過（¥410,000。他店の裏付けなし・要確認）",
+      "details": "kaitori_shouten: iphone正常帯¥30,000〜¥400,000の上限超過（¥405,000。他店の裏付けなし・要確認）",
       "evidence": {
         "items": 1
       }
@@ -86,7 +69,7 @@
       "severity": "WARNING",
       "reason": "above_genre_max",
       "title": "ps5_pro の価格に誤りの可能性が高いものがあります（隔離）",
-      "details": "kaitori_shouten: game_console正常帯¥10,000〜¥200,000の上限超過（¥202,400。他店の裏付けなし・要確認）; mobile_ichiban: game_console正常帯¥10,000〜¥200,000の上限超過（¥202,400。他店の裏付けなし・要確認）",
+      "details": "kaitori_shouten: game_console正常帯¥10,000〜¥200,000の上限超過（¥203,200。他店の裏付けなし・要確認）; mobile_ichiban: game_console正常帯¥10,000〜¥200,000の上限超過（¥203,200。他店の裏付けなし・要確認）",
       "evidence": {
         "items": 2
       }

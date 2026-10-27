@@ -1,12 +1,12 @@
 # Collector Quality Report
 
-生成日時: 2026-10-26 17:53:36 UTC+09:00
+生成日時: 2026-10-27 18:02:44 UTC+09:00
 
 ## サマリ
 
 | 合計 | OK | 失敗 | スキップ |
 |------|-----|------|----------|
-| 66 | 19 | 43 | 4 |
+| 66 | 20 | 42 | 4 |
 
 ## 店舗別 OK/失敗/スキップ
 
@@ -21,7 +21,7 @@
 | iosys | 0 | 6 | 0 |
 | janpara | 0 | 6 | 0 |
 | kaitori_itchome | 4 | 0 | 0 |
-| kaitori_shouten | 14 | 3 | 0 |
+| kaitori_shouten | 15 | 2 | 0 |
 | mobile_ichiban | 1 | 4 | 0 |
 | netoff | 0 | 4 | 0 |
 | pasoko | 0 | 2 | 0 |
@@ -44,7 +44,7 @@
 | iphone17pro256 | 2 | 6 | 0 |
 | iphone17pro512 | 2 | 6 | 0 |
 | iphoneair_256 | 1 | 0 | 0 |
-| iphoneduo_256 | 0 | 1 | 0 |
+| iphoneduo_256 | 1 | 0 | 0 |
 | ps5_pro | 0 | 10 | 2 |
 | r5ii | 1 | 0 | 0 |
 | switch2 | 1 | 8 | 2 |
@@ -66,7 +66,7 @@
 | iphone17pro256 | 2 | 3 | ❌ | ¥174,000 | ¥174,000 | ¥174,000 | — |
 | iphone17pro512 | 2 | 3 | ❌ | ¥202,500 | ¥202,500 | ¥202,500 | — |
 | iphoneair_256 | 1 | - | - | ¥132,000 | ¥132,000 | ¥132,000 | — |
-| iphoneduo_256 | 0 | - | - | — | — | — | — |
+| iphoneduo_256 | 1 | - | - | ¥365,000 | ¥365,000 | ¥365,000 | — |
 | ps5_pro | 0 | 2 | ❌ | — | — | — | — |
 | r5ii | 1 | - | - | ¥450,000 | ¥450,000 | ¥450,000 | — |
 | switch2 | 1 | 2 | ❌ | ¥51,800 | ¥51,800 | ¥51,800 | — |
@@ -86,7 +86,7 @@
 | iphone17pro256 | kaitori_shouten, kaitori_itchome |
 | iphone17pro512 | kaitori_shouten, kaitori_itchome |
 | iphoneair_256 | kaitori_shouten |
-| iphoneduo_256 | （なし） |
+| iphoneduo_256 | kaitori_shouten |
 | ps5_pro | （なし） |
 | r5ii | kaitori_shouten |
 | switch2 | kaitori_shouten |
@@ -106,7 +106,7 @@
 | iosys | 0% | 0 | 6 | — | 6/6 | http_403 |
 | janpara | 0% | 0 | 6 | 6/6 | — | rate_limited_429 |
 | kaitori_itchome | 100% | 4 | 0 | — | — | — |
-| kaitori_shouten | 82% | 14 | 3 | — | — | suspicious_rejected |
+| kaitori_shouten | 88% | 15 | 2 | — | — | suspicious_rejected |
 | mobile_ichiban | 20% | 1 | 4 | — | — | product_not_listed |
 | netoff | 0% | 0 | 4 | — | — | price_not_found |
 | pasoko | 0% | 0 | 2 | — | — | product_not_listed |
@@ -141,11 +141,11 @@
 | price_not_found | 4 |
 | http_404 | 4 |
 | not_supported | 4 |
-| suspicious_rejected | 3 |
 | service_unavailable | 2 |
 | site_blocked | 2 |
+| suspicious_rejected | 2 |
 
-## 取得失敗一覧 (47件)
+## 取得失敗一覧 (46件)
 
 | 商品 | 店舗 | ステータス | 理由 |
 |------|------|-----------|------|
@@ -195,20 +195,16 @@
 | ps5_pro | surugaya | FAILED | site_blocked |
 | ps5_pro | tsutaya | SKIP | not_supported |
 | iphone16pro256 | kaitori_shouten | FAILED | product_not_listed |
-| iphoneduo_256 | kaitori_shouten | FAILED | suspicious_rejected |
 
-## 価格変動一覧 (3件)
+## 価格変動一覧 (1件)
 
 | 商品 | 店舗 | 前回 | 今回 | 変化率 |
 |------|------|------|------|--------|
-| iphoneair_256 | kaitori_shouten | ¥133,000 | ¥132,000 | ↓0.8% |
-| iphone17_256 | kaitori_shouten | ¥140,000 | ¥139,000 | ↓0.7% |
-| switch2 | kaitori_shouten | ¥52,000 | ¥51,800 | ↓0.4% |
+| iphoneduo_256 | kaitori_shouten | ¥376,000 | ¥365,000 | ↓2.9% |
 
-## ⚠️ suspicious_price 一覧 (3件)
+## ⚠️ suspicious_price 一覧 (2件)
 
 | 商品 | 店舗 | 価格 | 理由 | 詳細 |
 |------|------|------|------|------|
-| ps5_pro | kaitori_shouten | ¥203,200 | above_genre_max | game_console正常帯¥10,000〜¥200,000の上限超過（¥203,200。他店の裏付けなし・要確認） |
-| ps5_pro | mobile_ichiban | ¥203,200 | above_genre_max | game_console正常帯¥10,000〜¥200,000の上限超過（¥203,200。他店の裏付けなし・要確認） |
-| iphoneduo_256 | kaitori_shouten | ¥405,000 | above_genre_max | iphone正常帯¥30,000〜¥400,000の上限超過（¥405,000。他店の裏付けなし・要確認） |
+| ps5_pro | kaitori_shouten | ¥203,700 | above_genre_max | game_console正常帯¥10,000〜¥200,000の上限超過（¥203,700。他店の裏付けなし・要確認） |
+| ps5_pro | mobile_ichiban | ¥203,700 | above_genre_max | game_console正常帯¥10,000〜¥200,000の上限超過（¥203,700。他店の裏付けなし・要確認） |

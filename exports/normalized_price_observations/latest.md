@@ -1,6 +1,6 @@
 # Normalized Price Observations
 
-生成: 2026-10-26 19:10 JST
+生成: 2026-10-27 19:19 JST
 
 全価格（買取/販売/出品/落札/海外/下取/公式）を単一スキーマに正規化。
 `price_role`（buy/sell/official/trade_in）を必ず付与し、
@@ -9,9 +9,9 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 
 ## サマリ
 
-- 総観測数: **235**
-- Beginner 利用可: 75 / Pro 利用可: 29
-- fresh(≤14日): 120
+- 総観測数: **236**
+- Beginner 利用可: 76 / Pro 利用可: 30
+- fresh(≤14日): 121
 
 ### price_role 別
 
@@ -19,13 +19,13 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 |---|---|
 | buy | 38 |
 | official | 47 |
-| sell | 150 |
+| sell | 151 |
 
 ### price_type 別
 
 | type | 件数 |
 |---|---|
-| buyback_price | 144 |
+| buyback_price | 145 |
 | flea_listing_price | 5 |
 | official_price | 47 |
 | overseas_listing_price | 5 |
@@ -68,7 +68,7 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 | Apple Watch Ultra 3 | official | official_price | ¥128,800 | medium | 9999.0d | メーカー公式/定価 |
 | AirPods Pro 3 | official | official_price | ¥42,800 | high | 0.8d | メーカー公式/定価 |
 | AirPods Max | official | official_price | ¥84,800 | medium | 9999.0d | メーカー公式/定価 |
-| Nintendo Switch 2 | official | official_price | ¥59,980 | high | 18.8d | メーカー公式/定価 |
+| Nintendo Switch 2 | official | official_price | ¥59,980 | high | 19.8d | メーカー公式/定価 |
 | Nintendo Switch 2 マリオカ | official | official_price | ¥59,980 | medium | 9999.0d | メーカー公式/定価 |
 | PlayStation 5 Pro | official | official_price | ¥137,980 | high | 0.8d | メーカー公式/定価 |
 | PlayStation 5 Digital  | official | official_price | ¥72,980 | medium | 9999.0d | メーカー公式/定価 |
@@ -105,6 +105,7 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 | iPhone 17 256GB SIMフリー | sell | buyback_price | ¥139,000 | new_unopened_simfree | 0.1d | 買取商店 |
 | AirPods Pro 3 | sell | buyback_price | ¥32,500 | new_unopened | 0.0d | 買取商店 |
 | iPhone Air 256GB SIMフリ | sell | buyback_price | ¥132,000 | new_unopened_simfree | 0.0d | 買取商店 |
+| iPhone Duo 256GB SIMフリ | sell | buyback_price | ¥365,000 | new_unopened_simfree | 0.0d | 買取商店 |
 | FUJIFILM X100VI | sell | buyback_price | ¥260,000 | new_unopened | 0.0d | 買取商店 |
 | RICOH GR IV | sell | buyback_price | ¥200,000 | new_unopened | 0.0d | 買取商店 |
 | RICOH GR IV HDF | sell | buyback_price | ¥240,000 | new_unopened | 0.0d | 買取商店 |

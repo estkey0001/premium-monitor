@@ -1,16 +1,16 @@
-# データ取得品質レポート（2026-10-26 19:10 JST）
+# データ取得品質レポート（2026-10-27 19:19 JST）
 
 ## 取得成功率
 - 全対象店舗数: 16
 - 成功店舗数: 3
 - 全失敗店舗数: 11
-- ジョブ成功率: 28.8%（OK 19 / 失敗 43 / SKIP 4 / 計 66）
+- ジョブ成功率: 30.3%（OK 20 / 失敗 42 / SKIP 4 / 計 66）
 
 ## 前回比較
 - 前回成功率: 28.8%
-- 今回成功率: 28.8%
-- 変化: 0.0pt（横ばい）
-- 7日移動平均: 28.8%
+- 今回成功率: 30.3%
+- 変化: +1.5pt（改善）
+- 7日移動平均: 29.0%
 - 主要失敗理由 TOP5: http_403 12, product_not_listed 6, rate_limited_429 6, robots_unreachable 4, price_not_found 4
 
 ## 店舗別成功率（低い順）
@@ -30,7 +30,6 @@
 ## 商品別成功率
 - ps5_pro: 0.0%
 - iphone16pro256: 0.0%
-- iphoneduo_256: 0.0%
 - switch2: 11.1%
 - iphone17pro256: 25.0%
 - iphone17pro512: 25.0%
@@ -39,6 +38,7 @@
 - iphone17_256: 100.0%
 - airpods_pro3: 100.0%
 - iphoneair_256: 100.0%
+- iphoneduo_256: 100.0%
 - x100vi: 100.0%
 - gr4: 100.0%
 - gr4_hdf: 100.0%
@@ -47,24 +47,24 @@
 - r5ii: 100.0%
 
 ## 連続失敗店舗（2回以上）
-- 2ndstreet: 223回連続
-- bookoff: 223回連続
-- dosupara: 223回連続
-- geo_mobile: 223回連続
-- hardoff: 223回連続
-- janpara: 223回連続
-- pasoko: 223回連続
-- sofmap: 223回連続
-- surugaya: 223回連続
-- tsutaya: 223回連続
-- iosys: 156回連続
-- netoff: 83回連続
-- geo: 15回連続
+- 2ndstreet: 224回連続
+- bookoff: 224回連続
+- dosupara: 224回連続
+- geo_mobile: 224回連続
+- hardoff: 224回連続
+- janpara: 224回連続
+- pasoko: 224回連続
+- sofmap: 224回連続
+- surugaya: 224回連続
+- tsutaya: 224回連続
+- iosys: 157回連続
+- netoff: 84回連続
+- geo: 16回連続
 
 ## 改善優先順位（required店舗）
 1. iosys（失敗6 / http_403）
 2. mobile_ichiban（失敗4 / product_not_listed）
-3. kaitori_shouten（失敗3 / suspicious_rejected）
+3. kaitori_shouten（失敗2 / suspicious_rejected）
 
 ## 失敗理由（内訳）
 - http_403: 12件
@@ -74,12 +74,12 @@
 - price_not_found: 4件
 - http_404: 4件
 - not_supported: 4件
-- suspicious_rejected: 3件
 - service_unavailable: 2件
 - site_blocked: 2件
+- suspicious_rejected: 2件
 
 ## 有効データ量（新品・未使用 / 14日以内 / price>0）
-- 有効買取データを持つ商品数: 14
+- 有効買取データを持つ商品数: 15
   - prod_iphone17pm_256: 3店舗
   - prod_iphone17pro_256: 2店舗
   - prod_iphone17pro_512: 2店舗
@@ -88,6 +88,7 @@
   - prod_iphone17_256: 1店舗
   - prod_airpods_pro3: 1店舗
   - prod_iphoneair_256: 1店舗
+  - prod_iphoneduo_256: 1店舗
   - prod_x100vi: 1店舗
   - prod_gr4: 1店舗
   - prod_gr4_hdf: 1店舗

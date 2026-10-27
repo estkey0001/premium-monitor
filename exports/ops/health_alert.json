@@ -2,14 +2,23 @@
   "type": "PRODUCTION_HEALTH_ALERT",
   "schema": 1,
   "audience": "operator",
-  "generated_at": "2026-10-26T18:48:32+09:00",
+  "generated_at": "2026-10-27T18:57:44+09:00",
   "note": "運営者向けの劣化アラート候補（商品の通知ではない）。外部へは送らない。CI の注記・Step Summary・管理画面に出す",
-  "active_count": 6,
+  "active_count": 5,
   "high": 2,
-  "warning": 4,
+  "warning": 3,
   "candidates": [],
-  "suppressed": 6,
-  "recovered": [],
+  "suppressed": 5,
+  "recovered": [
+    {
+      "key": "quality_gate_failure:iphoneduo_256",
+      "type": "PRODUCTION_HEALTH_RECOVERED",
+      "event": "RECOVERED",
+      "first_seen": "2026-10-23T22:13:22+09:00",
+      "recovered_at": "2026-10-27T18:57:44+09:00",
+      "last_severity": "WARNING"
+    }
+  ],
   "active": [
     {
       "key": "official_verification_expiry:prod_switch2",
@@ -20,7 +29,7 @@
       "title": "prod_switch2 の公式の確認が切れています",
       "details": "確認日 2026-10-08（期限 14 日）",
       "evidence": {
-        "days_left": -4
+        "days_left": -5
       }
     },
     {
@@ -44,22 +53,10 @@
       "source": "prod_x100vi",
       "severity": "WARNING",
       "reason": "recheck_failed",
-      "title": "prod_x100vi の公式の再確認が 4 日連続で失敗しています",
+      "title": "prod_x100vi の公式の再確認が 5 日連続で失敗しています",
       "details": "公式ページの移動・表示の変更・ブロックの可能性。人が公式ページを確認する",
       "evidence": {
-        "consecutive_days": 4
-      }
-    },
-    {
-      "key": "quality_gate_failure:iphoneduo_256",
-      "category": "quality_gate_failure",
-      "source": "iphoneduo_256",
-      "severity": "WARNING",
-      "reason": "above_genre_max",
-      "title": "iphoneduo_256 の価格に誤りの可能性が高いものがあります（隔離）",
-      "details": "kaitori_shouten: iphone正常帯¥30,000〜¥400,000の上限超過（¥405,000。他店の裏付けなし・要確認）",
-      "evidence": {
-        "items": 1
+        "consecutive_days": 5
       }
     },
     {
@@ -69,7 +66,7 @@
       "severity": "WARNING",
       "reason": "above_genre_max",
       "title": "ps5_pro の価格に誤りの可能性が高いものがあります（隔離）",
-      "details": "kaitori_shouten: game_console正常帯¥10,000〜¥200,000の上限超過（¥203,200。他店の裏付けなし・要確認）; mobile_ichiban: game_console正常帯¥10,000〜¥200,000の上限超過（¥203,200。他店の裏付けなし・要確認）",
+      "details": "kaitori_shouten: game_console正常帯¥10,000〜¥200,000の上限超過（¥203,700。他店の裏付けなし・要確認）; mobile_ichiban: game_console正常帯¥10,000〜¥200,000の上限超過（¥203,700。他店の裏付けなし・要確認）",
       "evidence": {
         "items": 2
       }

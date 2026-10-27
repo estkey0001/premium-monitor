@@ -1,48 +1,41 @@
 {
   "schema": 1,
-  "updated_at": "2026-10-26T18:48:32+09:00",
+  "updated_at": "2026-10-27T18:57:44+09:00",
   "active": {
     "official_verification_expiry:prod_switch2": {
       "first_seen": "2026-10-22T01:29:43+09:00",
-      "last_seen": "2026-10-26T18:48:32+09:00",
+      "last_seen": "2026-10-27T18:57:44+09:00",
       "severity": "HIGH",
       "emitted_severity": "HIGH",
-      "times_seen": 7
+      "times_seen": 8
     },
     "source_failure:netoff": {
       "first_seen": "2026-10-22T01:29:43+09:00",
-      "last_seen": "2026-10-26T18:48:32+09:00",
+      "last_seen": "2026-10-27T18:57:44+09:00",
       "severity": "HIGH",
       "emitted_severity": "HIGH",
-      "times_seen": 7
+      "times_seen": 8
     },
     "official_recheck_failing:prod_x100vi": {
       "first_seen": "2026-10-25T18:19:24+09:00",
-      "last_seen": "2026-10-26T18:48:32+09:00",
+      "last_seen": "2026-10-27T18:57:44+09:00",
       "severity": "WARNING",
       "emitted_severity": "WARNING",
-      "times_seen": 2
-    },
-    "quality_gate_failure:iphoneduo_256": {
-      "first_seen": "2026-10-23T22:13:22+09:00",
-      "last_seen": "2026-10-26T18:48:32+09:00",
-      "severity": "WARNING",
-      "emitted_severity": "WARNING",
-      "times_seen": 4
+      "times_seen": 3
     },
     "quality_gate_failure:ps5_pro": {
       "first_seen": "2026-10-22T01:29:43+09:00",
-      "last_seen": "2026-10-26T18:48:32+09:00",
+      "last_seen": "2026-10-27T18:57:44+09:00",
       "severity": "WARNING",
       "emitted_severity": "WARNING",
-      "times_seen": 7
+      "times_seen": 8
     },
     "source_failure:iosys": {
       "first_seen": "2026-10-22T01:29:43+09:00",
-      "last_seen": "2026-10-26T18:48:32+09:00",
+      "last_seen": "2026-10-27T18:57:44+09:00",
       "severity": "WARNING",
       "emitted_severity": "WARNING",
-      "times_seen": 7
+      "times_seen": 8
     }
   }
 }

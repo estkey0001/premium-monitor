@@ -1,25 +1,25 @@
 {
-  "generated_at": "2026-10-26 19:10 JST",
-  "date": "2026-10-26",
+  "generated_at": "2026-10-27 19:19 JST",
+  "date": "2026-10-27",
   "health_score": {
-    "data_quality": 14.2,
+    "data_quality": 14.3,
     "profit_discovery": 15.0,
     "source_health": 12.6,
     "link_quality": 4.8,
     "freshness": 3.6,
-    "total": 50.2
+    "total": 50.3
   },
   "data_quality": {
-    "total_obs": 235,
-    "usable_obs": 75,
+    "total_obs": 236,
+    "usable_obs": 76,
     "stale_count": 150,
-    "stale_rate": 0.6383,
+    "stale_rate": 0.6356,
     "config_reference_count": 35,
     "zero_count": 38,
-    "zero_rate": 0.1617,
-    "item_url_rate": 0.4809,
-    "search_url_rate": 0.2,
-    "manual_rate": 0.4766,
+    "zero_rate": 0.161,
+    "item_url_rate": 0.4831,
+    "search_url_rate": 0.1992,
+    "manual_rate": 0.4746,
     "api_rate": 0.0,
     "html_rate": 0.0085
   },
@@ -77,16 +77,16 @@
       "n": 25
     },
     "買取商店": {
-      "success_count": 21,
+      "success_count": 22,
       "stale_count": 7,
       "zero_count": 0,
       "item_url_rate": 1.0,
-      "freshness": 0.6667,
+      "freshness": 0.6818,
       "success_rate": 1.0,
       "confidence": {
-        "high": 21
+        "high": 22
       },
-      "n": 21
+      "n": 22
     },
     "イオシス": {
       "success_count": 14,
@@ -338,15 +338,15 @@
     "available": true,
     "stale_rate": {
       "prev": 0.6383,
-      "cur": 0.6383
+      "cur": 0.6356
     },
     "zero_rate": {
       "prev": 0.1617,
-      "cur": 0.1617
+      "cur": 0.161
     },
     "item_url_rate": {
       "prev": 0.4809,
-      "cur": 0.4809
+      "cur": 0.4831
     },
     "main_route_count": {
       "prev": 0,

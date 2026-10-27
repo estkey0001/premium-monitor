@@ -1,6 +1,6 @@
 # ebay Real Canary
 
-> 生成: 2026-10-26 19:10 JST
+> 生成: 2026-10-27 19:19 JST
 
 - status: **PENDING_USER_CONFIGURATION** / rollout_state: NOT_CONFIGURED / real_api_called: False
 

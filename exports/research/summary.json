@@ -2,12 +2,12 @@
   "schema": 1,
   "type": "RESEARCH_SUMMARY",
   "audience": "public_aggregate",
-  "generated_at": "2026-10-26T19:10:23+09:00",
+  "generated_at": "2026-10-27T19:19:39+09:00",
   "description": "調査候補の集計（件数だけ）。個別の候補（商品・価格・価格差・売却先）は公開しない。確定の利益ではない",
   "research_candidate_count": 3,
-  "positive_raw_spread_count": 4,
+  "positive_raw_spread_count": 5,
   "verified_positive_spread_count": 1,
-  "suppressed_positive_spread_count": 3,
+  "suppressed_positive_spread_count": 4,
   "verified_count": 1,
   "ledger_state": "restored",
   "status_counts": {
@@ -38,7 +38,7 @@
     "total": 47
   },
   "buyback_exact_coverage": {
-    "products_with_confirmed_sell": 14,
+    "products_with_confirmed_sell": 15,
     "total": 47
   },
   "marketplace_sold_coverage": {
@@ -46,9 +46,9 @@
   },
   "canonical_products": 47,
   "buyback_first": {
-    "catalog_rows": 775,
+    "catalog_rows": 774,
     "canonical_matches": 15,
-    "new_product_candidates": 760
+    "new_product_candidates": 759
   },
   "official_discovery_candidates": 39,
   "tcg_source_coverage": {

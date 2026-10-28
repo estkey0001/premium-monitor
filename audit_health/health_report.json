@@ -1,25 +1,25 @@
 {
-  "generated_at": "2026-10-28 20:07 JST",
+  "generated_at": "2026-10-28 23:03 JST",
   "date": "2026-10-28",
   "health_score": {
-    "data_quality": 14.4,
+    "data_quality": 14.2,
     "profit_discovery": 15.0,
     "source_health": 12.6,
     "link_quality": 4.8,
     "freshness": 3.7,
-    "total": 50.5
+    "total": 50.3
   },
   "data_quality": {
-    "total_obs": 236,
-    "usable_obs": 76,
-    "stale_count": 148,
-    "stale_rate": 0.6271,
-    "config_reference_count": 33,
+    "total_obs": 234,
+    "usable_obs": 74,
+    "stale_count": 147,
+    "stale_rate": 0.6282,
+    "config_reference_count": 32,
     "zero_count": 38,
-    "zero_rate": 0.161,
-    "item_url_rate": 0.4831,
-    "search_url_rate": 0.1992,
-    "manual_rate": 0.4746,
+    "zero_rate": 0.1624,
+    "item_url_rate": 0.4829,
+    "search_url_rate": 0.1966,
+    "manual_rate": 0.4786,
     "api_rate": 0.0,
     "html_rate": 0.0085
   },
@@ -39,14 +39,14 @@
   "sources": {
     "メーカー公式/定価": {
       "success_count": 47,
-      "stale_count": 34,
+      "stale_count": 33,
       "zero_count": 0,
       "item_url_rate": 0.0,
-      "freshness": 0.2766,
+      "freshness": 0.2979,
       "success_rate": 1.0,
       "confidence": {
-        "medium": 33,
-        "high": 14
+        "medium": 32,
+        "high": 15
       },
       "n": 47
     },
@@ -64,17 +64,17 @@
       "n": 34
     },
     "フジヤカメラ": {
-      "success_count": 25,
+      "success_count": 24,
       "stale_count": 8,
       "zero_count": 0,
-      "item_url_rate": 0.32,
-      "freshness": 0.68,
+      "item_url_rate": 0.3333,
+      "freshness": 0.6667,
       "success_rate": 1.0,
       "confidence": {
-        "high": 24,
+        "high": 23,
         "medium": 1
       },
-      "n": 25
+      "n": 24
     },
     "買取商店": {
       "success_count": 22,
@@ -189,18 +189,6 @@
       },
       "n": 5
     },
-    "モバイル一番": {
-      "success_count": 4,
-      "stale_count": 3,
-      "zero_count": 0,
-      "item_url_rate": 1.0,
-      "freshness": 0.25,
-      "success_rate": 1.0,
-      "confidence": {
-        "high": 4
-      },
-      "n": 4
-    },
     "買取一丁目": {
       "success_count": 4,
       "stale_count": 0,
@@ -248,6 +236,18 @@
         "high": 4
       },
       "n": 4
+    },
+    "モバイル一番": {
+      "success_count": 3,
+      "stale_count": 3,
+      "zero_count": 0,
+      "item_url_rate": 1.0,
+      "freshness": 0.0,
+      "success_rate": 1.0,
+      "confidence": {
+        "high": 3
+      },
+      "n": 3
     },
     "Amazon新品出品": {
       "success_count": 3,
@@ -337,16 +337,16 @@
   "diff_vs_prev": {
     "available": true,
     "stale_rate": {
-      "prev": 0.6356,
-      "cur": 0.6271
+      "prev": 0.6271,
+      "cur": 0.6282
     },
     "zero_rate": {
       "prev": 0.161,
-      "cur": 0.161
+      "cur": 0.1624
     },
     "item_url_rate": {
       "prev": 0.4831,
-      "cur": 0.4831
+      "cur": 0.4829
     },
     "main_route_count": {
       "prev": 0,
@@ -368,6 +368,7 @@
       "取得成功率 0%: ネットオフ"
     ],
     "warning": [
+      "item_url率 低下",
       "item_url率 48% (<50%)"
     ],
     "info": [

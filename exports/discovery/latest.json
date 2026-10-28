@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-28T20:00:57+09:00",
+  "generated_at": "2026-10-28T22:52:57+09:00",
   "apple": {
     "source": "apple_jp_official",
     "list_status": "ok",
@@ -12,13 +12,13 @@
       "iphone-duo"
     ],
     "checked": [
-      "iphone-16",
-      "iphone-17"
+      "iphone-air",
+      "iphone-duo"
     ],
     "errors": {},
-    "unknown_parts": 10,
-    "matched": 1,
-    "pending": 2,
+    "unknown_parts": 14,
+    "matched": 2,
+    "pending": 5,
     "requests": 3,
     "cutoff": "",
     "saved": true
@@ -32,10 +32,10 @@
     },
     "inputs_stale": [],
     "review_required": 1,
-    "matched_events": 14,
+    "matched_events": 24,
     "release": 6,
     "by_kind": {
-      "LOTTERY": 14,
+      "LOTTERY": 24,
       "PREORDER": 0,
       "FIRST_COME": 0,
       "RESTOCK": 1,
@@ -43,8 +43,8 @@
     },
     "tcg_products": 22,
     "sources": {
-      "configured": 18,
-      "implemented": 7,
+      "configured": 19,
+      "implemented": 8,
       "unimplemented": 11,
       "blocked": 3,
       "robots_unreachable": 4,
@@ -84,6 +84,16 @@
           "source_id": "CARD_LABO",
           "retailer": "カードラボ",
           "adapter": "card_labo_lottery",
+          "state": "ACTIVE_LOTTERY",
+          "health": "HEALTHY",
+          "blocked": false,
+          "robots": null,
+          "unreachable": false
+        },
+        {
+          "source_id": "HOBBY_STATION",
+          "retailer": "ホビーステーション",
+          "adapter": "hobby_station_lottery",
           "state": "ACTIVE_LOTTERY",
           "health": "HEALTHY",
           "blocked": false,
@@ -251,16 +261,16 @@
     "unknown_official_products": 62,
     "apple_candidates": 17,
     "tcg_products": 20,
-    "event_candidates": 27,
+    "event_candidates": 37,
     "review_required_announcements": 2,
-    "matched_events": 25,
+    "matched_events": 35,
     "stale_events": 0,
     "approved_events": 0,
     "registered_events": 0
   },
   "sources": {
-    "configured": 18,
-    "implemented": 7,
+    "configured": 19,
+    "implemented": 8,
     "unimplemented": 11,
     "blocked": 3,
     "robots_unreachable": 4,
@@ -300,6 +310,16 @@
         "source_id": "CARD_LABO",
         "retailer": "カードラボ",
         "adapter": "card_labo_lottery",
+        "state": "ACTIVE_LOTTERY",
+        "health": "HEALTHY",
+        "blocked": false,
+        "robots": null,
+        "unreachable": false
+      },
+      {
+        "source_id": "HOBBY_STATION",
+        "retailer": "ホビーステーション",
+        "adapter": "hobby_station_lottery",
         "state": "ACTIVE_LOTTERY",
         "health": "HEALTHY",
         "blocked": false,

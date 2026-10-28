@@ -2,7 +2,7 @@
   "schema": 1,
   "type": "RESEARCH_SUMMARY",
   "audience": "public_aggregate",
-  "generated_at": "2026-10-28T20:07:07+09:00",
+  "generated_at": "2026-10-28T23:03:13+09:00",
   "description": "調査候補の集計（件数だけ）。個別の候補（商品・価格・価格差・売却先）は公開しない。確定の利益ではない",
   "research_candidate_count": 4,
   "positive_raw_spread_count": 6,
@@ -14,14 +14,14 @@
   "ledger_persistence": "NOT_AVAILABLE",
   "high_priority_research_count": 1,
   "product_research_candidate_count": 0,
-  "buyback_first_candidates": 599,
+  "buyback_first_candidates": 598,
   "confirmed_opportunities": 1,
   "actionable": 0,
   "status_counts": {
     "RESEARCH_CANDIDATE": 4,
     "VERIFIED": 1,
-    "DISCOVERED": 10,
-    "REJECTED": 32
+    "DISCOVERED": 11,
+    "REJECTED": 31
   },
   "reason_counts": {
     "IDENTITY_UNCONFIRMED": 3,
@@ -44,7 +44,7 @@
     "low": 3
   },
   "official_verified_coverage": {
-    "verified": 13,
+    "verified": 14,
     "total": 47
   },
   "buyback_exact_coverage": {
@@ -57,44 +57,55 @@
   "canonical_products": 47,
   "buyback_first": {
     "catalog_rows": 774,
-    "canonical_matches": 16,
-    "identified": 605,
+    "canonical_matches": 17,
+    "identified": 604,
     "name_only_rejected": 153,
-    "new_product_candidates": 599,
+    "new_product_candidates": 598,
     "with_retail_hint": 13,
-    "positive_spread_hint": 0
+    "positive_spread_hint": 0,
+    "top_queue": 50,
+    "lookup_ready": 4,
+    "lookup_matched": 22,
+    "research_candidates": 0
   },
+  "buyback_triage": {
+    "HIGH": 2,
+    "MEDIUM": 341,
+    "LOW": 208,
+    "REJECTED": 47
+  },
+  "retail_lookup_matched": 22,
   "official_discovery_candidates": 39,
   "tcg_source_coverage": {
-    "configured_sources": 18,
-    "implemented_collectors": 7,
-    "reachable_sources": 10,
-    "healthy_sources": 6,
+    "configured_sources": 19,
+    "implemented_collectors": 8,
+    "reachable_sources": 11,
+    "healthy_sources": 7,
     "blocked_sources": 3,
     "unreachable_sources": 4,
     "not_implemented_sources": 11,
-    "sources_with_active_lottery": 1,
-    "lottery_events_found": 10,
+    "sources_with_active_lottery": 2,
+    "lottery_events_found": 14,
     "source_classes": {
-      "WORKING": 6,
+      "WORKING": 7,
       "IMPLEMENTED_BUT_BLOCKED": 1,
       "ACCESSIBLE_UNIMPLEMENTED": 3,
       "UNREACHABLE": 6,
       "UNSUPPORTED": 2
     }
   },
-  "tcg_working_sources": 6,
+  "tcg_working_sources": 7,
   "tcg_funnel": {
-    "raw_announcements": 25,
-    "parsed_events": 12,
+    "raw_announcements": 34,
+    "parsed_events": 22,
     "review_required": 1,
-    "rejected": 129,
-    "active_lotteries": 10,
-    "sources_with_gap": 11,
-    "sources_truncated": 1,
+    "rejected": 136,
+    "active_lotteries": 14,
+    "sources_with_gap": 12,
+    "sources_truncated": 2,
     "zero_active_interpretation": null
   },
-  "tcg_active_events": 1,
+  "tcg_active_events": 2,
   "tcg_msrp_verified": 15,
-  "tcg_source_candidates": 8
+  "tcg_source_candidates": 7
 }

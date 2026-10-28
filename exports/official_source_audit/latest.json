@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-28 19:34 JST",
+  "generated_at": "2026-10-28 22:16 JST",
   "scope": "公式ソース登録・検証（利益/AI/Opportunity/Notification/Capital/Execution は不変）",
   "methodology": {
     "verification": "WebFetch で HTTP200/公式ドメイン/canonical/商品一致を実確認したURLのみ verified",
@@ -129,6 +129,18 @@
       "price_rejection": null
     },
     {
+      "product_id": "prod_zf",
+      "source": "src_nikon_direct",
+      "url": "https://nij.nikon.com/shop/g/g4960759913784/",
+      "link_type": "item",
+      "confidence": "high",
+      "official_price": 299200,
+      "verified": true,
+      "price_kind": "official_direct",
+      "official_direct_eligible": true,
+      "price_rejection": null
+    },
+    {
       "product_id": "prod_x100vi",
       "source": "src_fujifilm_official",
       "url": "https://mall-jp.fujifilm.com/shop/g/g16941878/",
@@ -170,13 +182,6 @@
       "url": null,
       "verified": false,
       "reason": "canon.jp が当環境からDNS解決不可（要手動検証）"
-    },
-    {
-      "product_id": "prod_zf",
-      "source": "src_nikon_direct",
-      "url": null,
-      "verified": false,
-      "reason": "オープン価格の可能性・個別URL未検証"
     },
     {
       "product_id": "prod_a1ii",
@@ -1438,15 +1443,15 @@
       "brand": "NIKON",
       "sources": {
         "official": {
-          "url": null,
-          "link_type": null,
-          "verified": false,
-          "last_verified_at": null,
-          "extraction_method": null,
-          "confidence": "low",
-          "official_price": null,
+          "url": "https://nij.nikon.com/shop/g/g4960759913784/",
+          "link_type": "item",
+          "verified": true,
+          "last_verified_at": "2026-10-28",
+          "extraction_method": "webfetch_verified",
+          "confidence": "high",
+          "official_price": 299200,
           "enabled": true,
-          "reason_if_disabled": "オープン価格の可能性・個別URL未検証"
+          "reason_if_disabled": null
         },
         "pricecom": null,
         "yodobashi": null,
@@ -1642,18 +1647,13 @@
     },
     "Nikon": {
       "products": 3,
-      "url_verified": 2,
-      "http_200": 2,
-      "exact_match": 2,
-      "price_ok": 2,
-      "high_conf": 2,
-      "failed": 1,
-      "failures": [
-        {
-          "product_id": "prod_zf",
-          "reason": "オープン価格の可能性・個別URL未検証"
-        }
-      ]
+      "url_verified": 3,
+      "http_200": 3,
+      "exact_match": 3,
+      "price_ok": 3,
+      "high_conf": 3,
+      "failed": 0,
+      "failures": []
     },
     "FUJIFILM": {
       "products": 1,
@@ -1702,10 +1702,10 @@
       "official_configs": 7
     },
     "after": {
-      "url_verified": 11,
-      "price_captured": 11,
-      "verified_targets": 11,
-      "unverified_targets": 6
+      "url_verified": 12,
+      "price_captured": 12,
+      "verified_targets": 12,
+      "unverified_targets": 5
     },
     "recheck_applied": [
       {
@@ -1717,7 +1717,7 @@
         "product_id": "prod_ps5_pro",
         "action": "stock_observed",
         "stock": "入荷待ち",
-        "at": "2026-10-28T19:28:09+09:00"
+        "at": "2026-10-28T22:10:12+09:00"
       },
       {
         "product_id": "prod_switch2",
@@ -1776,7 +1776,7 @@
       "product_id": "prod_ps5_pro",
       "action": "stock_observed",
       "stock": "入荷待ち",
-      "at": "2026-10-28T19:28:09+09:00"
+      "at": "2026-10-28T22:10:12+09:00"
     },
     {
       "product_id": "prod_switch2",
@@ -1893,16 +1893,16 @@
       "pct": 51.1
     },
     "jan_code": {
-      "count": 6,
-      "pct": 12.8
+      "count": 7,
+      "pct": 14.9
     },
     "official_url": {
       "count": 2,
       "pct": 4.3
     },
     "identity_evidence": {
-      "count": 14,
-      "pct": 29.8
+      "count": 15,
+      "pct": 31.9
     },
     "any_strong_key": {
       "count": 27,

@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import copy
 import random
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 
 import pytest
@@ -21,7 +21,9 @@ NOW = datetime(2026, 10, 21, 9, 30, tzinfo=JST)
 DUO = {"candidate_id": "apple-duo256", "source": "apple_jp_official", "status": st.PENDING_REVIEW,
        "product_name": "iPhone Duo 256GB", "model_number": "iPhone Duo", "capacity": "256GB",
        "part_numbers": ["MK244J/A", "MK254J/A"], "official_url": "https://www.apple.com/jp/shop/buy-iphone/iphone-duo",
-       "official_price": 364800, "official_prices": [364800], "last_seen_on": "2026-10-19", "match_to_existing": ""}
+       "official_price": 364800, "official_prices": [364800], "match_to_existing": "",
+       # CLI のテストは実時刻で新しさを判定する。固定日付だと日がたつと STALE になるので、前日にする
+       "last_seen_on": (datetime.now(JST).date() - timedelta(days=1)).isoformat()}
 ROWS = [["iPhone Duo 256GB ナイトスカイ MK254J/A SIMフリー", 395000, "/products/detail/27089", "category"],
         ["iPhone Duo 256GB スターホワイト MK244J/A SIMフリー", 395000, "/products/detail/27090", "category"],
         ["iPhone Duo 512GB ナイトスカイ MK274J/A SIMフリー", 430000, "/products/detail/27091", "category"]]

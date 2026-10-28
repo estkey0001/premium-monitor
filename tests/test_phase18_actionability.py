@@ -7,7 +7,6 @@
 
 from __future__ import annotations
 
-import csv
 import importlib.util
 import sys
 from datetime import datetime, timedelta, timezone
@@ -138,10 +137,15 @@ def test_event_link_by_product_code_or_id_not_name():
 
 
 def test_real_hdf_event_is_closed():
-    """本番の抽選の記録（data/lottery_events.csv）で、GR IV HDF は受付終了（2026-09-28 締切）。"""
+    """本番の抽選の記録にあった GR IV HDF の受付終了（2026-09-28 締切）の行。
+    生きた記録（data/lottery_events.csv）は次の抽選で書き換わるので、当時の行を固定して確かめる。"""
     from src.market import actionability as act
-    evs = list(csv.DictReader((ROOT / "data" / "lottery_events.csv").open(encoding="utf-8")))
-    ev = act.find_event(evs, "prod_gr4_hdf", "S0001566")
+    row = {"product_name": "RICOH GR IV HDF", "brand": "RICOH", "product_code": "S0001566", "sale_method": "抽選販売",
+           "status": "closed", "entry_start_at": "2026-09-25 12:00", "entry_end_at": "2026-09-28 12:00",
+           "url": "https://ricohimagingstore.com/Form/Product/ProductDetail.aspx?shop=0&pid=S0001566&cat=002010",
+           "checked_at": "2026-10-23 22:15", "data_source": "auto_scraped", "status_conflict": "false",
+           "status_basis": "date_range_closed"}
+    ev = act.find_event([row], "prod_gr4_hdf", "S0001566")
     assert ev is not None and ev["product_code"] == "S0001566"
     a = _eval(stock="LOTTERY", event=ev)
     assert not a.actionable and a.availability == "LOTTERY_CLOSED" and a.deadline.startswith("2026-09-28")

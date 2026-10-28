@@ -218,7 +218,7 @@ def test_unmatched_catalog_rows_become_discovered_product_candidates_never_canon
 
 
 def test_catalog_candidate_list_is_bounded():
-    catalog = [{"shop": "s", "name": f"x{i}", "jan": "", "price": 10000 + i, "url": f"u{i}", "observed_at": "2026-10-23T11:00:00+09:00"}
+    catalog = [{"shop": "s", "name": f"x{i}", "jan": f"49{i:011d}", "price": 10000 + i, "url": f"u{i}", "observed_at": "2026-10-23T11:00:00+09:00"}
                for i in range(rc.CATALOG_LIST_LIMIT + 50)]
     _, un = rc.match_catalog(catalog, PRODUCTS, {})
     assert len(rc.discovered_products(un, NOW)) == rc.CATALOG_LIST_LIMIT
@@ -447,7 +447,7 @@ def test_public_html_and_json_in_repo_have_no_research_detail():
 def test_generator_writes_detail_only_to_the_private_dir():
     gen = (ROOT / "src" / "content" / "daily_lp_generator.py").read_text(encoding="utf-8")
     body = gen[gen.index("def _write_research_candidates"):gen.index("def _write_opportunity_diagnostics")]
-    assert "_research_private_dir()" in body and "write_outputs(report, state, priv, self._research_dir())" in body
+    assert "_research_private_dir()" in body and "write_outputs(report, state, priv, self._research_dir()" in body
     assert 'ctx.admin_data["research"]' in gen and "ctx.admin_data[\"research\"] = research" in gen
     assert "latest.json" not in body.replace("normalized_price_observations", "").split("write_outputs")[-1]
     upd = (ROOT / "scripts" / "update_buyback_prices.py").read_text(encoding="utf-8")
@@ -572,7 +572,7 @@ def test_tcg_registry_classification_and_amazon_is_policy_excluded():
 def test_tcg_source_candidates_are_unverified_and_not_registered():
     from src.tcg.lottery import registry as reg
     d = reg.load_source_candidates()
-    assert d["count"] >= 10 and d["status"] == "CANDIDATE_UNVERIFIED"
+    assert d["count"] >= 6 and d["status"] == "CANDIDATE_UNVERIFIED"
     known = {s["source_id"] for s in reg.LOTTERY_SOURCES} | {s["retailer"] for s in reg.LOTTERY_SOURCES}
     assert all(c["id"] not in known and c["name"] not in known for c in d["candidates"])    # 登録済みを候補に重ねない
     assert all(c["verified"] is False for c in d["candidates"])                              # 未確認のまま
@@ -744,7 +744,7 @@ def test_naive_and_aware_datetimes_do_not_crash_the_ledger():
 
 def test_discovered_products_count_is_not_double_counted_with_official_discovery():
     rep, _ = _build([_off(), _sell()], discovery={"metrics": {"product_candidates": 39}},
-                    catalog=[{"shop": "s", "name": "x", "jan": "", "price": 1, "url": "u", "observed_at": "2026-10-23T11:00:00+09:00"}])
+                    catalog=[{"shop": "s", "name": "x", "jan": "4900000000099", "price": 1, "url": "u", "observed_at": "2026-10-23T11:00:00+09:00"}])
     m = rep["metrics"]
     assert m["discovered_products"] == 1 and m["official_discovery_candidates"] == 39
 
@@ -818,7 +818,8 @@ def _gen(tmp_path, monkeypatch, *, state_text=None, obs=None):
 def test_generator_writes_detail_only_to_private_and_summary_to_public(tmp_path, monkeypatch):
     g, ctx, catalog = _gen(tmp_path, monkeypatch)
     summ = g._write_research_candidates(ctx, catalog)
-    assert summ["type"] == "RESEARCH_SUMMARY" and summ["research_candidate_count"] == 1 and summ["ledger_state"] == "fresh"
+    assert summ["type"] == "RESEARCH_SUMMARY" and summ["research_candidate_count"] == 1
+    assert summ["ledger_state"] == "NOT_AVAILABLE" and summ["first_seen_scope"] == "THIS_RUN_ONLY"      # 鍵なし: 実行をまたいだ保持なし
     assert sorted(p.name for p in (tmp_path / "pub").iterdir()) == ["summary.json"]
     assert sorted(p.name for p in (tmp_path / "priv").iterdir()) == ["latest.json", "state.json"]
     pub = (tmp_path / "pub" / "summary.json").read_text(encoding="utf-8")
@@ -826,16 +827,16 @@ def test_generator_writes_detail_only_to_private_and_summary_to_public(tmp_path,
         assert leak not in pub, leak
     priv = json.loads((tmp_path / "priv" / "latest.json").read_text(encoding="utf-8"))
     assert priv["candidates"][0]["source_url"]["sell"] == "https://shop.example/item/1"              # 個別の候補は private に残る
-    # 2回目は台帳を引き継ぐ（restored・初めて見た日は変わらない）
+    # 同じ実行の中の2回目は、この実行の最初の台帳を読む（前回の実行からの引き継ぎではない）
     summ2 = g._write_research_candidates(ctx, catalog)
-    assert summ2["ledger_state"] == "restored"
+    assert summ2["ledger_state"] == "REUSED_WITHIN_RUN" and summ2["first_seen_scope"] == "THIS_RUN_ONLY"
 
 
 @pytest.mark.parametrize("state_text", ["{ broken json", '{"candidates": ["not", "a", "dict"]}', "[]", '"str"'])
 def test_generator_survives_a_corrupt_ledger_and_reports_it(tmp_path, monkeypatch, state_text):
     g, ctx, catalog = _gen(tmp_path, monkeypatch, state_text=state_text)
     summ = g._write_research_candidates(ctx, catalog)
-    assert summ is not None and summ["ledger_state"] == "corrupt" and summ["research_candidate_count"] == 1
+    assert summ is not None and summ["ledger_state"] == "CORRUPT" and summ["research_candidate_count"] == 1
     assert json.loads((tmp_path / "priv" / "state.json").read_text(encoding="utf-8"))["candidates"]   # 作り直した
 
 
@@ -872,9 +873,9 @@ def test_positive_raw_spread_counts_only_readable_positive_spreads():
 
 
 def test_stale_catalog_rows_are_not_listed_as_new_discoveries():
-    old = {"shop": "s", "name": "古い行", "jan": "", "price": 9, "url": "u1", "observed_at": "2026-08-01T00:00:00+09:00"}
-    new = {"shop": "s", "name": "新しい行", "jan": "", "price": 8, "url": "u2", "observed_at": "2026-10-23T11:00:00+09:00"}
-    bad = {"shop": "s", "name": "日時なし", "jan": "", "price": 7, "url": "u3", "observed_at": ""}
+    old = {"shop": "s", "name": "古い行", "jan": "4900000000028", "price": 9, "url": "u1", "observed_at": "2026-08-01T00:00:00+09:00"}
+    new = {"shop": "s", "name": "新しい行", "jan": "4900000000035", "price": 8, "url": "u2", "observed_at": "2026-10-23T11:00:00+09:00"}
+    bad = {"shop": "s", "name": "日時なし", "jan": "4900000000042", "price": 7, "url": "u3", "observed_at": ""}
     assert [d["name"] for d in rc.discovered_products([old, new, bad], NOW)] == ["新しい行"]
 
 
@@ -1215,3 +1216,409 @@ def test_key_check_step_requires_a_long_key():
             return out.read_text(encoding="utf-8").strip()
     assert go("") == "enabled=false" and go("short-key") == "enabled=false" and go("x" * 31) == "enabled=false"
     assert go("y" * 32) == "enabled=true" and go("z" * 64) == "enabled=true"
+
+
+# ══ Coverage Wave 1 ═══════════════════════════════════════════════════════════════════
+
+# ── Stage 0: 台帳の状態 ──────────────────────────────────────────────────────────────
+
+def test_classify_ledger_distinguishes_new_reused_restored_not_available_and_corrupt():
+    run = "gh-100-1"
+    good = {"run_id": run, "candidates": {"rc_a": {}}}
+    prev_run = {"run_id": "gh-99-1", "candidates": {"rc_a": {}}}
+    assert rc.classify_ledger(None, run, persistent=False)[0] == rc.LEDGER_NOT_AVAILABLE        # 鍵なし・台帳なし
+    assert rc.classify_ledger(None, run, persistent=True)[0] == rc.LEDGER_NEW_THIS_RUN            # 鍵あり・キャッシュのミス
+    assert rc.classify_ledger(good, run, persistent=False) == (rc.LEDGER_REUSED_WITHIN_RUN, {"rc_a": {}})   # 同じ実行の再生成
+    assert rc.classify_ledger(good, run, persistent=True)[0] == rc.LEDGER_REUSED_WITHIN_RUN
+    assert rc.classify_ledger(prev_run, run, persistent=True)[0] == rc.LEDGER_RESTORED_FROM_PREVIOUS_RUN
+    assert rc.classify_ledger({"candidates": {}}, run, persistent=False)[0] == rc.LEDGER_RESTORED_FROM_PREVIOUS_RUN  # 旧形式（run_id なし）
+    for bad in ([], "x", {"candidates": []}, {"corrupt": True}, 3):
+        assert rc.classify_ledger(bad, run, persistent=True) == (rc.LEDGER_CORRUPT, {}), bad
+
+
+def test_first_seen_scope_is_across_runs_only_when_restored_from_a_previous_run():
+    assert rc.first_seen_scope(rc.LEDGER_RESTORED_FROM_PREVIOUS_RUN) == "ACROSS_RUNS"
+    for st in (rc.LEDGER_NOT_AVAILABLE, rc.LEDGER_NEW_THIS_RUN, rc.LEDGER_REUSED_WITHIN_RUN, rc.LEDGER_CORRUPT, ""):
+        assert rc.first_seen_scope(st) == "THIS_RUN_ONLY", st                                  # 偽の永続性を示さない
+
+
+def test_run_id_and_persistence_come_from_the_environment(monkeypatch):
+    monkeypatch.delenv("GITHUB_RUN_ID", raising=False)
+    assert rc.current_run_id().startswith("proc-") and rc.current_run_id() == rc.current_run_id()
+    monkeypatch.setenv("GITHUB_RUN_ID", "555")
+    monkeypatch.setenv("GITHUB_RUN_ATTEMPT", "2")
+    assert rc.current_run_id() == "gh-555-2"
+    monkeypatch.delenv("RESEARCH_LEDGER_PERSISTENCE", raising=False)
+    assert rc.persistence_enabled() is False
+    monkeypatch.setenv("RESEARCH_LEDGER_PERSISTENCE", "enabled")
+    assert rc.persistence_enabled() is True
+
+
+def test_ledger_state_flows_to_the_public_summary_without_claiming_persistence(tmp_path, monkeypatch):
+    g, ctx, catalog = _gen(tmp_path, monkeypatch)
+    monkeypatch.setenv("GITHUB_RUN_ID", "700")
+    monkeypatch.delenv("RESEARCH_LEDGER_PERSISTENCE", raising=False)
+    s1 = g._write_research_candidates(ctx, catalog)
+    assert (s1["ledger_state"], s1["first_seen_scope"], s1["ledger_persistence"]) == ("NOT_AVAILABLE", "THIS_RUN_ONLY", "NOT_AVAILABLE")
+    s2 = g._write_research_candidates(ctx, catalog)                                           # 同じ実行の再生成
+    assert (s2["ledger_state"], s2["first_seen_scope"]) == ("REUSED_WITHIN_RUN", "THIS_RUN_ONLY")
+    monkeypatch.setenv("GITHUB_RUN_ID", "701")                                                # 次の実行（台帳は手元に残っている）
+    monkeypatch.setenv("RESEARCH_LEDGER_PERSISTENCE", "enabled")
+    s3 = g._write_research_candidates(ctx, catalog)
+    assert (s3["ledger_state"], s3["first_seen_scope"], s3["ledger_persistence"]) == ("RESTORED_FROM_PREVIOUS_RUN", "ACROSS_RUNS", "ACROSS_RUNS")
+    assert json.loads((tmp_path / "priv" / "state.json").read_text())["run_id"] == "gh-701-1"
+
+
+def test_workflow_exports_persistence_only_when_the_key_is_long_enough():
+    import yaml
+    st = {s_.get("name"): s_ for s_ in yaml.safe_load((ROOT / WF).read_text(encoding="utf-8"))["jobs"]["update-lp"]["steps"]}
+    run = st["Research ledger key check"]["run"]
+    assert "RESEARCH_LEDGER_PERSISTENCE=enabled" in run and run.index("RESEARCH_LEDGER_PERSISTENCE") < run.index("else")
+
+
+# ── Stage A: 上限超え・裏付け不足・急変で確定から外れた価格差を、消さずに高優先の調査として残す ───────────────
+
+CAM = {"id": "prod_cam", "name": "調査用ダミー商品XYZ", "genre": "iphone", "jan": "", "part_numbers": []}
+
+
+def _quarantine(price=407000, reason="above_genre_max", alias="cam", action="rejected", shop="kaitori_shouten"):
+    return {"product_alias": alias, "shop": shop, "price": price, "official_price": 364800, "reason": reason, "action": action}
+
+
+def _ceiling(quarantined, *, ev="VERIFIED_CURRENT", verified=(), official_price=364800, extra=(), generated_at="default",
+             products=None, pid="prod_cam"):
+    obs = [_off(product_id=pid, price=official_price), *extra]
+    gen = (NOW - timedelta(hours=2)).isoformat(timespec="seconds") if generated_at == "default" else generated_at
+    return rc.build(products=products or [CAM], observations=obs, msrp_evidence={pid: ev}, official_meta={},
+                    verified_pids=set(verified), now=NOW, quarantined=quarantined, quarantine_generated_at=gen)
+
+
+def test_above_ceiling_positive_spread_stays_as_high_priority_research_and_is_never_confirmed():
+    rep, _ = _ceiling([_quarantine()])
+    c = rep["candidates"][0]
+    assert c["status"] == rc.RESEARCH_CANDIDATE and c["status"] != rc.VERIFIED                    # 確定にならない・消えない
+    assert c["observed_sell_price"] == 407000 and c["raw_spread"] == 42200
+    assert {rc.ABOVE_GENRE_MAX, rc.NEEDS_CORROBORATION} <= set(c["missing_requirements"])
+    assert c["research_class"] == rc.HIGH_PRIORITY_RESEARCH and c["priority"] == "high"
+    assert rep["counts"]["high_priority_research"] == 1 and rep["metrics"]["high_priority_research"] == 1
+    assert "only_corroboration_missing+25" in c["priority_reasons"]
+    assert rep["counts"]["verified"] == 0
+
+
+def test_ceiling_candidate_is_not_research_when_there_is_no_spread_or_no_buy_side():
+    c0 = _ceiling([_quarantine(price=300000)])[0]["candidates"][0]                                      # 価格差なし: 隔離行は売り側に使わない
+    assert c0["status"] == rc.DISCOVERED and c0["observed_sell_price"] is None and c0["research_class"] == "STANDARD"
+    rep, _ = rc.build(products=[CAM], observations=[], msrp_evidence={}, official_meta={}, verified_pids=set(), now=NOW,
+                      quarantined=[_quarantine()])
+    assert rep["candidates"][0]["status"] == rc.DISCOVERED                                              # 買い側が無い
+
+
+def test_price_spike_is_research_with_corroboration_needed():
+    c = _ceiling([_quarantine(reason="price_change_over_20pct", price=400000)])[0]["candidates"][0]
+    assert {rc.PRICE_SPIKE, rc.NEEDS_CORROBORATION} <= set(c["missing_requirements"]) and c["research_class"] == rc.HIGH_PRIORITY_RESEARCH
+
+
+def test_other_quarantine_reasons_are_not_used_as_research_sell_side():
+    # 上限・急変以外の隔離理由（誤抽出の疑いが強いもの）は、調査候補の売り側に使わない
+    c = _ceiling([_quarantine(reason="over_3x_official", price=500000)])[0]["candidates"][0]
+    assert c["observed_sell_price"] is None and c["research_class"] == rc.STANDARD_RESEARCH
+    assert rc.HIGH_PRIORITY_RESEARCH != c["research_class"]
+
+
+def test_quarantine_never_overrides_the_existing_gate():
+    rep, _ = _ceiling([_quarantine()], verified={"prod_cam"})
+    assert rep["candidates"][0]["status"] == rc.VERIFIED and rep["candidates"][0]["research_class"] == rc.STANDARD_RESEARCH
+    rep2, _ = _ceiling([_quarantine()], ev="CONFIGURED_REFERENCE")
+    c = rep2["candidates"][0]
+    assert c["status"] == rc.RESEARCH_CANDIDATE and rc.OFFICIAL_UNVERIFIED in c["missing_requirements"]   # 公式未確認も理由に残る
+
+
+def test_ceiling_priority_is_higher_with_a_larger_spread_and_ignored_rows_are_skipped():
+    big = _ceiling([_quarantine(price=420000)])[0]["candidates"][0]["priority_score"]
+    small = _ceiling([_quarantine(price=370000)])[0]["candidates"][0]["priority_score"]
+    assert big > small
+    junk = [_quarantine(action="adopted"), _quarantine(alias="unknown"), _quarantine(price=0), _quarantine(price=-5),
+            {"product_alias": "cam"}, "x", None]
+    rep, _ = _ceiling(junk)
+    assert rep["candidates"][0]["status"] == rc.DISCOVERED and rep["candidates"][0]["observed_sell_price"] is None
+
+
+def test_genre_ceiling_is_not_raised_by_the_research_layer():
+    from src.market import price_quality as pq
+    before = {k: getattr(pq, k) for k in dir(pq) if k.isupper()}
+    _ceiling([_quarantine()])
+    after = {k: getattr(pq, k) for k in dir(pq) if k.isupper()}
+    assert before == after
+    src = (ROOT / "src" / "research" / "candidates.py").read_text(encoding="utf-8")
+    assert "price_quality" not in src and "GENRE_MAX" not in src.upper().replace("ABOVE_GENRE_MAX", "")
+
+
+def test_ceiling_candidates_are_counted_in_public_summary_without_details():
+    rep, _ = _ceiling([_quarantine()])
+    summ = rc.public_summary(rep)
+    assert summ["high_priority_research_count"] == 1 and summ["reason_counts"].get(rc.ABOVE_GENRE_MAX) == 1
+    txt = json.dumps(summ, ensure_ascii=False)
+    assert "407000" not in txt and "42200" not in txt and "kaitori_shouten" not in txt and "prod_cam" not in txt
+
+
+# ── Stage C: 買取起点の発見（識別子だけ・名前だけは除外・順位は識別×小売の見込み×価格差） ──────────────────────
+
+def _row(name, price, jan="", url="u", shop="s"):
+    return {"shop": shop, "name": name, "jan": jan, "price": price, "url": url, "observed_at": "2026-10-23T11:00:00+09:00"}
+
+
+def test_identify_row_uses_jan_part_number_or_model_code_only():
+    assert rc.identify_row(_row("カメラ", 1, jan="4900000000011")) == ("JAN", "4900000000011")
+    assert rc.identify_row(_row("iPhone 18 Pro 256GB MJR54J/A", 1)) == ("PART_NUMBER", "MJR54J/A")
+    assert rc.identify_row(_row("FUJIFILM X100VI シルバー", 1))[0] == "MODEL_CODE"
+    assert rc.identify_row(_row("人気のカメラ 新品", 1)) is None                                  # 名前だけ
+    assert rc.identify_row(_row("カメラ", 1, jan="123")) is None                                  # 桁が違う JAN は使わない
+
+
+def test_buyback_first_rejects_name_only_rows_and_never_adds_canonical_products():
+    catalog = [_row("人気のカメラ 新品", 300000), _row("もう一つの商品", 200000, jan=""), _row("正規の商品", 150000, jan="4900000000099")]
+    rep, _ = _build([_off(), _sell()], catalog=catalog, identity={})
+    bf = rep["buyback_first"]
+    assert bf["name_only_rejected"] == 2 and bf["identified"] == 1 and bf["new_product_candidates"] == 1
+    assert [d["jan"] for d in rep["product_candidates"]] == ["4900000000099"]
+    assert all(c["product_identity"]["product_id"] == "p1" for c in rep["candidates"])             # 正本・候補の行は増えない
+
+
+def test_buyback_first_dedupes_color_variants_and_has_stable_ids():
+    rows = [_row("iPhone 18 Pro 256GB MJR54J/A", 200000), _row("iPhone 18 Pro 256GB MJR54J/A", 205000, url="u2")]
+    a, st_a = rc.rank_product_candidates(rows, NOW)
+    b, _ = rc.rank_product_candidates([_row("iPhone 18 Pro 256GB MJR54J/A", 210000)], NOW)
+    assert len(a) == 1 and a[0]["variants"] == 2 and a[0]["observed_sell_price"] == 205000        # 同じ識別子は1つ（最高値の行）
+    assert a[0]["candidate_id"] == b[0]["candidate_id"] and st_a["unique_candidates"] == 1        # 価格が変わっても同じ ID
+    c, _ = rc.rank_product_candidates([_row("iPhone 18 Pro 256GB MJR54J/A", 200000, shop="other")], NOW)
+    assert c[0]["candidate_id"] != a[0]["candidate_id"]                                            # 別の店は別の候補
+
+
+def test_buyback_first_ranking_prefers_identity_retail_hint_and_spread_not_just_price():
+    hints = {"MJR54J/A": {"price": 219800, "source": "apple_discovery"}}
+    rows = [_row("高額なだけの商品", 900000, jan="4900000000010"),                                  # JAN だけ・小売の見込みなし
+            _row("iPhone 18 Pro 256GB MJR54J/A", 250000),                                          # 部品番号 + 小売の見込み + 正の価格差
+            _row("型番だけの商品 ABC-1234", 500000)]                                                # 型番コードだけ
+    out, st = rc.rank_product_candidates(rows, NOW, hints)
+    assert [d["identity_basis"] for d in out] == ["PART_NUMBER", "JAN", "MODEL_CODE"]
+    top = out[0]
+    assert top["retail_price_hint"] == 219800 and top["raw_spread_hint"] == 30200 and top["positive_spread_hint"] is True
+    assert top["rank"] == 1 and out[1]["retail_price_hint"] is None and "OFFICIAL_PRICE_UNKNOWN" in out[1]["missing_requirements"]
+    assert st["with_retail_hint"] == 1 and st["positive_spread_hint"] == 1
+    assert top["status"] == rc.DISCOVERED and "CANONICAL_UNREGISTERED" in top["missing_requirements"]   # 確定・登録にならない
+
+
+def test_buyback_first_public_counts_only():
+    hints = {"MJR54J/A": {"price": 219800, "source": "apple_discovery"}}
+    rep, _ = _build([_off(), _sell()], catalog=[_row("iPhone 18 Pro 256GB MJR54J/A", 250000), _row("人気", 1)], identity={}, retail_hints=hints)
+    summ = rc.public_summary(rep)
+    assert summ["buyback_first"]["new_product_candidates"] == 1 and summ["buyback_first"]["positive_spread_hint"] == 1
+    assert summ["buyback_first_candidates"] == 1 and summ["product_research_candidate_count"] == 1
+    txt = json.dumps(summ, ensure_ascii=False)
+    assert "MJR54J/A" not in txt and "250000" not in txt and "219800" not in txt
+
+
+# ── Stage G: 取得の流れ（受付中 0 件が、市場に無いのか取得器が足りないのか） ───────────────────────────
+
+def test_announcement_funnel_never_claims_the_market_is_empty_when_sources_have_gaps():
+    from src.tcg.lottery import registry as reg
+    base = {"official_url": "https://x/", "collection_method": "HTML"}
+    rows = [{**base, "adapter": "a", "state": reg.ST_NO_ACTIVE_LOTTERY, "reachable": True, "candidate_articles": 10,
+             "accepted_lotteries": 0, "announcements": 1, "rejected": 9, "active_lotteries": 0},
+            {**base, "adapter": None, "state": reg.ST_SOURCE_NOT_MONITORED, "reachable": True},
+            {**base, "adapter": "b", "state": reg.ST_SOURCE_BLOCKED, "blocked": True, "reachable": False}]
+    f = reg.coverage_summary(rows)["funnel"]
+    assert (f["raw_announcements"], f["parsed_events"], f["review_required"], f["rejected"], f["active_lotteries"]) == (10, 0, 1, 9, 0)
+    assert f["sources_with_gap"] == 2 and f["zero_active_interpretation"] == reg.ZERO_ACTIVE_NOT_PROVEN   # 0件でも市場に無いと断定しない
+
+
+def test_announcement_funnel_without_gaps_still_does_not_say_market_empty():
+    from src.tcg.lottery import registry as reg
+    rows = [{"official_url": "https://x/", "adapter": "a", "state": reg.ST_NO_ACTIVE_LOTTERY, "reachable": True}]
+    f = reg.announcement_funnel(rows)
+    assert f["zero_active_interpretation"] == reg.ZERO_ACTIVE_NO_GAP and "MARKET_EMPTY" not in f["zero_active_interpretation"].replace("NOT_PROVEN_MARKET_EMPTY", "")
+    assert "zero_active_interpretation" not in reg.announcement_funnel([{**rows[0], "active_lotteries": 2}])      # 受付中があれば解釈は不要
+
+
+def test_funnel_and_working_sources_reach_the_public_summary_as_counts_only():
+    rep = _report(tcg={"source_coverage": {"configured_sources": 18, "source_classes": {"WORKING": 5, "UNREACHABLE": 6},
+                                           "funnel": {"raw_announcements": 26, "parsed_events": 3, "review_required": 0, "rejected": 4,
+                                                      "active_lotteries": 3, "sources_with_gap": 12,
+                                                      "zero_active_interpretation": "NOT_PROVEN_MARKET_EMPTY", "evil": "x"}},
+                         "active_events": 3, "msrp_verified": 15, "source_candidates": 8})
+    summ = rc.public_summary(rep)
+    assert summ["tcg_working_sources"] == 5 and summ["tcg_active_events"] == 3
+    assert summ["tcg_funnel"] == {"raw_announcements": 26, "parsed_events": 3, "review_required": 0, "rejected": 4,
+                                  "active_lotteries": 3, "sources_with_gap": 12, "zero_active_interpretation": "NOT_PROVEN_MARKET_EMPTY"}
+    from src.content.ui import admin
+    html = admin._research({"research": admin.build_research(summ)})
+    assert "告知（候補の記事）26件" in html and "解析できたイベント 3件" in html and "市場に無いとは言えない" in html
+
+
+def test_funnel_zero_active_note_is_shown_on_the_public_page():
+    rep = _report(tcg={"source_coverage": {"funnel": {"active_lotteries": 0, "sources_with_gap": 4,
+                                                      "zero_active_interpretation": "NOT_PROVEN_MARKET_EMPTY"}}})
+    from src.content.ui import admin
+    html = admin._research({"research": admin.build_research(rc.public_summary(rep))})
+    assert "受付中が0件でも、市場に無いとは言えない" in html and "4件ある" in html
+
+
+# ── Stage B: 公式の価格の登録（Z9・R6 II）は、JAN・送料・毎日の再確認がそろっているものだけ ──────────────────────
+
+def test_newly_registered_official_prices_have_identity_shipping_and_daily_recheck():
+    from scripts import recheck_official as RO
+    from src.market import official_registry as reg
+    from src.market import official_shipping as sh
+    for pid, jan, price, fee in (("prod_z9", "4960759906168", 772200, 550), ("prod_r6ii", "4549292200508", 319000, 0)):
+        v = reg.VERIFIED_URLS[pid]
+        assert v["price"] == price and v["price_kind"] == "official_direct" and v["checked_on"] == "2026-10-24"
+        assert reg.IDENTITY_EVIDENCE[pid]["jan_code"] == jan and reg.OFFICIAL_DIRECT_OFFERS[pid]["price"] == price
+        assert sh.purchase_shipping(pid, "", price)["fee"] == fee
+        assert pid in RO.RECHECK_TARGETS and reg.MSRP_OF[pid] == "open_price"
+    import yaml
+    prods = {p["id"]: p for p in yaml.safe_load((ROOT / "config" / "products.yaml").read_text(encoding="utf-8"))["products"]}
+    assert prods["prod_z9"]["jan_code"] == "4960759906168" and prods["prod_r6ii"]["jan_code"] == "4549292200508"
+
+
+def test_unregistered_cameras_stay_unverified_until_identity_and_shipping_are_confirmed():
+    """Sony（型番だけ・送料不明）・Zf（色違いの確認が必要）・販売終了品・取得できない店は、確認済みにしていない。"""
+    from src.market import official_registry as reg
+    for pid in ("prod_a7rv", "prod_a1ii", "prod_a7cr", "prod_zf", "prod_r3", "prod_gr3_hdf", "prod_gr3x", "prod_fx3"):
+        assert pid not in reg.VERIFIED_URLS, pid
+
+
+def test_deploy_check_872_coverage_wave1_passes_and_detects_unsafe_collectors(tmp_path):
+    import shutil
+
+    from scripts import deploy_check as dc
+    assert [r["level"] for r in dc._check_coverage_wave1()] == ["ok"]
+    root = tmp_path / "repo"
+    for rel in ("src/collectors/tcg/lottery",):
+        shutil.copytree(ROOT / rel, root / rel, ignore=shutil.ignore_patterns("__pycache__"))
+    f = root / "src/collectors/tcg/lottery/clabo.py"
+    orig = f.read_text(encoding="utf-8")
+    for bad_line in ("import requests", "from playwright.sync_api import sync_playwright", "UA = 'Mozilla/5.0 (User-Agent)'",
+                     "proxies = {'http': 'x'}", "entry_url = 'https://x.example/apply'"):
+        f.write_text(orig + "\n" + bad_line + "\n", encoding="utf-8")
+        r = dc._check_coverage_wave1(root)[0]
+        assert r["level"] == "error", bad_line
+    f.write_text(orig, encoding="utf-8")
+    assert dc._check_coverage_wave1(root)[0]["level"] == "ok"
+
+
+# ── Wave 1 レビュー・監査への対応（隔離行の鮮度・理由の許可リスト・商品 ID の対応・代表選び） ─────────────────────────
+
+def test_quarantine_rows_use_the_report_time_and_are_ignored_when_the_report_is_stale_missing_or_future():
+    q = [_quarantine()]
+    fresh = _ceiling(q)[0]["candidates"][0]
+    assert fresh["status"] == rc.RESEARCH_CANDIDATE
+    assert fresh["sell_observed_at"] == (NOW - timedelta(hours=2)).isoformat(timespec="seconds")      # 今ではなく報告の生成時刻
+    for gen in ((NOW - timedelta(hours=rc.QUARANTINE_MAX_AGE_HOURS + 1)).isoformat(), None, "", "壊れた日時",
+                (NOW + timedelta(days=1)).isoformat()):
+        c = _ceiling(q, generated_at=gen)[0]["candidates"][0]
+        assert c["status"] == rc.DISCOVERED and c["observed_sell_price"] is None, gen               # 古い報告・未来・不明は使わない
+    assert _ceiling(q, generated_at=(NOW - timedelta(hours=rc.QUARANTINE_MAX_AGE_HOURS - 1)).isoformat())[0]["candidates"][0]["status"] == rc.RESEARCH_CANDIDATE
+
+
+def test_quarantine_accepts_only_ceiling_and_spike_reasons_from_rejected_rows():
+    for junk in ("cross_product_same_price", "capacity_price_reversal", "below_genre_min", "over_3x_official",
+                 "outlier_vs_peer_shops", "game_console_smartphone_price", "above_genre_max_corroborated", ""):
+        assert _ceiling([_quarantine(reason=junk)])[0]["candidates"][0]["status"] == rc.DISCOVERED, junk       # 誤取得の積み上げをしない
+    assert _ceiling([_quarantine(action=None)])[0]["candidates"][0]["status"] == rc.DISCOVERED               # 隔離していない行
+    assert _ceiling([_quarantine(action="adopted")])[0]["candidates"][0]["status"] == rc.DISCOVERED
+
+
+def test_a_shop_with_any_non_allowlisted_reason_is_excluded_entirely():
+    q = [_quarantine(reason="above_genre_max"), _quarantine(reason="cross_product_same_price")]
+    assert _ceiling(q)[0]["candidates"][0]["observed_sell_price"] is None
+    # 別の店の許可リスト内の行は影響を受けない
+    q2 = q + [_quarantine(reason="above_genre_max", shop="other")]
+    assert _ceiling(q2)[0]["candidates"][0]["observed_sell_price"] == 407000
+
+
+def test_multiple_flags_for_the_same_product_and_shop_are_merged_into_one_observation():
+    q = [_quarantine(reason="above_genre_max"), _quarantine(reason="price_change_over_20pct")]
+    rep, _ = _ceiling(q)
+    assert len(rep["candidates"]) == 1
+    c = rep["candidates"][0]
+    assert {rc.ABOVE_GENRE_MAX, rc.PRICE_SPIKE, rc.NEEDS_CORROBORATION} <= set(c["missing_requirements"])
+    assert c["research_class"] == rc.HIGH_PRIORITY_RESEARCH and c["observed_sell_price"] == 407000
+
+
+def test_real_aliases_map_to_canonical_product_ids_and_all_map_entries_exist():
+    import yaml
+
+    from src.market.product_aliases import ALIAS_PRODUCT_ID, product_id_of
+    ids = {p["id"] for p in yaml.safe_load((ROOT / "config" / "products.yaml").read_text(encoding="utf-8"))["products"]}
+    assert set(ALIAS_PRODUCT_ID.values()) <= ids                                                       # 表の ID は全て正本にある
+    assert product_id_of("iphone17pro256") == "prod_iphone17pro_256" and product_id_of("iphoneduo_256") == "prod_iphoneduo_256"
+    assert product_id_of("nothing", ids) == "" and product_id_of("", ids) == ""
+    assert product_id_of("cam", {"prod_cam"}) == "prod_cam"                                              # 表に無い別名は prod_<alias> が実在するときだけ
+    p17 = {"id": "prod_iphone17pro_256", "name": "ダミー17", "genre": "iphone", "jan": "", "part_numbers": []}
+    rep, _ = _ceiling([_quarantine(alias="iphone17pro256", price=400000)], products=[p17], pid="prod_iphone17pro_256",
+                      official_price=364800)
+    c = rep["candidates"][0]
+    assert c["status"] == rc.RESEARCH_CANDIDATE and c["observed_sell_price"] == 400000                    # アンダースコア入りの商品も対象
+
+
+def test_alias_mapping_is_shared_with_the_collector_script():
+    import scripts.update_buyback_prices as ub
+    from src.market.product_aliases import ALIAS_PRODUCT_ID
+    assert ub.ALIAS_PRODUCT_ID is ALIAS_PRODUCT_ID                                                          # 二重管理しない
+
+
+def test_quarantine_does_not_override_a_confirmed_positive_sell_and_does_not_hide_behind_stale_rows():
+    confirmed = _good_sell(product_id="prod_cam", price=400000, source_id="s2", source_name="店B")
+    rep, _ = _ceiling([_quarantine(price=900000)], extra=[confirmed])
+    c = rep["candidates"][0]
+    assert c["observed_sell_price"] == 400000 and rc.ABOVE_GENRE_MAX not in c["missing_requirements"]          # 確定できる価格差が正ならそちら
+    stale = _sell(product_id="prod_cam", price=380000, source_id="s9", source_name="店Z")
+    rep2, _ = _ceiling([_quarantine(price=407000)], extra=[stale])
+    c2 = rep2["candidates"][0]
+    assert c2["observed_sell_price"] == 407000 and "隔離された買取価格" in c2["note"]                       # 古い行より新しい隔離行
+    assert rc.SELL_STALE not in c2["missing_requirements"] and rc.ABOVE_GENRE_MAX in c2["missing_requirements"]
+
+
+def test_quarantine_beats_a_rejected_high_stale_row_only_by_its_own_reasons():
+    wrong = _sell(product_id="prod_cam", price=900000, rejection_reason="suspicious_price", source_id="sX", source_name="店X")
+    c = _ceiling([_quarantine(price=407000)], extra=[wrong])[0]["candidates"][0]
+    assert c["observed_sell_price"] == 407000 and rc.SELL_REJECTED not in c["missing_requirements"]
+
+
+def test_a_spread_over_half_of_the_buy_price_is_an_anomaly_even_for_ceiling_rows():
+    """意図した仕様: 価格差が買値の50%を超える上限超えは、誤価格・別商品の疑いとして低優先（高優先の調査にはしない）。"""
+    c = _ceiling([_quarantine(price=364800 + int(364800 * 0.5) + 1000)])[0]["candidates"][0]
+    assert rc.PRICE_ANOMALY_SUSPECTED in c["missing_requirements"] and c["research_class"] == rc.STANDARD_RESEARCH
+    assert c["priority"] == "low"
+    edge = _ceiling([_quarantine(price=364800 + int(364800 * 0.5) - 1000)])[0]["candidates"][0]
+    assert edge["research_class"] == rc.HIGH_PRIORITY_RESEARCH
+
+
+def test_identify_row_handles_vendor_prefixed_codes_and_rejects_short_generic_codes():
+    assert rc.identify_row(_row("Galaxy S SM-S938QZKASJP 256GB", 1)) == ("MODEL_CODE", "SM-S938QZKASJP")
+    assert rc.identify_row(_row("人気の S25 ケース", 1)) is None and rc.identify_row(_row("A15 チップ", 1)) is None
+    assert rc.identify_row(_row("Z9 ボディ", 1)) is None                                               # 短すぎる型番コードは識別子にしない
+
+
+def test_ledger_null_json_is_corrupt_not_new(tmp_path, monkeypatch):
+    g, ctx, catalog = _gen(tmp_path, monkeypatch, state_text="null")
+    assert g._write_research_candidates(ctx, catalog)["ledger_state"] == "CORRUPT"
+
+
+def test_funnel_counts_truncated_sources_as_a_gap():
+    from src.tcg.lottery import registry as reg
+    rows = [{"official_url": "https://x/", "adapter": "a", "state": reg.ST_NO_ACTIVE_LOTTERY, "reachable": True,
+             "candidate_articles": 13, "accepted_lotteries": 0, "truncated": True}]
+    f = reg.announcement_funnel(rows)
+    assert f["sources_truncated"] == 1 and f["zero_active_interpretation"] == reg.ZERO_ACTIVE_NOT_PROVEN   # 上限で取りこぼす取得元は穴
+
+
+def test_verified_product_never_gets_a_quarantined_price_as_its_sell_side():
+    rep, _ = _ceiling([_quarantine()], verified={"prod_cam"})
+    assert rep["candidates"][0]["status"] == rc.VERIFIED and rep["candidates"][0]["observed_sell_price"] != 407000
+
+
+def test_quarantined_sell_side_gets_no_freshness_or_identity_points():
+    c = _ceiling([_quarantine()])[0]["candidates"][0]
+    assert not any(w.startswith(("sell_fresh", "identity_ok")) for w in c["priority_reasons"])
+    assert "only_corroboration_missing+25" in c["priority_reasons"]

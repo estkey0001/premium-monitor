@@ -22,7 +22,9 @@ from src.discovery import store as st
 from src.tcg.models import JST
 
 ROOT = Path(__file__).resolve().parent.parent
-NOW = datetime(2026, 10, 17, 15, 0, tzinfo=JST)
+# 実行の日の前日の 15:00（固定の日付だと、CLI（実際の現在時刻で7日の期限を見る）が、固定の日から7日後に落ちる時限爆弾になる）
+NOW = (datetime.now(JST) - timedelta(days=1)).replace(hour=15, minute=0, second=0, microsecond=0)
+D0 = NOW.date().isoformat()
 REAL_CANON = (ROOT / "config" / "products.yaml").read_text(encoding="utf-8")
 REAL_CSV = (ROOT / "data" / "tcg_verified_lotteries.csv").read_text(encoding="utf-8")
 
@@ -121,7 +123,7 @@ def test_approval_records_audit_trail_without_personal_data(env):
     rec = approve(out, cid)
     assert rec["status"] == st.APPROVED and rec["review"]["evidence_checked"] == sorted(
         ["official_url", "part_numbers", "capacity", "official_price"])
-    assert rec["decisions"][-1]["decision"] == st.APPROVED and rec["decisions"][-1]["at"].startswith("2026-10-17")
+    assert rec["decisions"][-1]["decision"] == st.APPROVED and rec["decisions"][-1]["at"].startswith(D0)
     assert set(rec["decisions"][-1]) <= {"at", "decision", "reason", "evidence_checked"}   # 名前・メールを残さない
     assert y.read_text(encoding="utf-8") == CANON                                      # 承認だけでは正本を変えない
     with pytest.raises(ValueError):
@@ -248,7 +250,7 @@ def test_price_varies_by_color_not_registered(env):
 
 def test_tcg_candidate_not_merged_into_canonical():
     rec = {"candidate_id": "tcg-pokemon-1", "status": st.APPROVED, "genre": "tcg", "source": "pokemon_card_official",
-           "review": {"decision": st.APPROVED, "evidence_checked": ["official_url"]}, "last_seen_on": "2026-10-17",
+           "review": {"decision": st.APPROVED, "evidence_checked": ["official_url"]}, "last_seen_on": D0,
            "product_name": "拡張パック", "model_number": "M6", "official_url": "https://www.pokemon-card.com/ex/m6/"}
     errs = rg.plan_product(rec, CANON, now=NOW)["errors"]
     assert "tcg_not_merged_into_canonical" in errs and "not_official_source" in errs
@@ -455,7 +457,7 @@ ANN = {"candidate_id": "tcg-ann-1", "source": "POKEMON_CENTER_ONLINE", "kind": "
        "title": "【第二回】30周年商品の抽選受け付けについて",
        "official_url": "https://www.pokemoncenter-online.com/news/?id=20260821", "product_code": "",
        "application_start": None, "application_end": None, "missing_fields": ["application_start", "application_end"],
-       "status": st.ANNOUNCEMENT_REVIEW_REQUIRED, "reasons": ["schedule_not_available"], "last_seen_on": "2026-10-17"}
+       "status": st.ANNOUNCEMENT_REVIEW_REQUIRED, "reasons": ["schedule_not_available"], "last_seen_on": D0}
 # 応募の終了は今日から3日後（固定の日付だと、その日を過ぎた日に「終わった日程は登録しない」で落ちる）
 GOOD = dict(product="ポケモンカードゲーム 30周年記念商品", start="2026-10-20T12:00:00+09:00",
             end=(datetime.now(JST) + timedelta(days=3)).replace(hour=16, minute=59, second=0, microsecond=0).isoformat(),

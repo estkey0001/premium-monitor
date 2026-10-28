@@ -4157,6 +4157,7 @@ def check() -> list[dict]:
     results.extend(_check_integrity_profit_baseline())
     results.extend(_check_integrity_operations())
     results.extend(_check_market_research())
+    results.extend(_check_coverage_wave1())
 
     # ══════════════════════════════════════════════════════════════════
     # #820-#825: データの正確さ・鮮度の偽装（Phase 0）
@@ -6497,6 +6498,54 @@ def _check_market_research(root: Path | None = None) -> list[dict]:
              "message": "#871 調査候補は確定の利益ではなく、個別の候補は公開しない（公開 JSON・公開 HTML・commit の対象に個別の候補が出ない・"
                         "通知・顧客の画面に出ない・確定は既存の判定だけ・古い売値や公式未確認は調査候補として残る・ID は安定）"
                         + ("" if not bad else f" ← {bad[:4]}")}]
+
+
+def _check_coverage_wave1(root: Path | None = None) -> list[dict]:
+    """Coverage Wave 1（#872）: 新しい取得元は取得の作法を通り、遮断を回避せず、日程を作らない。
+
+    - TCG の取得器（src/collectors/tcg/lottery/clabo.py）が requests・Playwright・proxy・stealth・User-Agent の偽装を直接使わない
+      （取得は LotteryAdapter の fetch_*＝polite 経由だけ）
+    - 取得元の分類で、遮断された取得元・取得しない方針の取得元を「実装の候補（到達できるが未実装）」にしない
+    - 受付中が 0 件でも、取得元の不足があるときは「市場に無い」とは言わない（NOT_PROVEN_MARKET_EMPTY）
+    - 新しい取得器は応募ページの URL（entry_url）を作らない（公式ドメインの応募ページが無い場合は空）
+    - 台帳の状態が実行をまたいだ保持と同じ実行の再生成を区別する
+    """
+    import re as _re72
+    root = root or Path(__file__).resolve().parent.parent
+    bad = []
+    try:
+        src = (root / "src" / "collectors" / "tcg" / "lottery" / "clabo.py").read_text(encoding="utf-8")
+        code = _re72.sub(r'"""(?:.|\n)*?"""', "", src)                       # docstring（説明の文）は検査の対象にしない
+        code = "\n".join(ln for ln in code.splitlines() if not ln.lstrip().startswith("#"))
+        imports = "\n".join(ln for ln in code.splitlines() if _re72.match(r"\s*(from|import)\s", ln))
+        if _re72.search(r"requests|urllib|playwright|selenium|httpx|aiohttp", imports, _re72.I):
+            bad.append("カードラボの取得器が、取得の共通の作法（LotteryAdapter・polite）を通さずに取得する部品を import している")
+        if _re72.search(r"proxies|stealth|User-Agent|user_agent|headless|cloudflare|captcha", code, _re72.I):
+            bad.append("カードラボの取得器に、回避・偽装につながる記述がある")
+        if _re72.search(r"entry_url\s*=\s*[^N\s]", code.replace("entry_url=None", "")):
+            bad.append("カードラボの取得器が応募ページの URL を作っている")
+        from src.tcg.lottery import registry as reg
+        base = {"official_url": "https://x/", "collection_method": "HTML"}
+        for row, want in (({"adapter": "a", "state": reg.ST_SOURCE_BLOCKED}, reg.SC_IMPLEMENTED_BUT_BLOCKED),
+                          ({"adapter": None, "state": reg.ST_SOURCE_BLOCKED, "reachable": True, "blocked": True}, reg.SC_UNREACHABLE),
+                          ({"adapter": None, "state": reg.ST_SOURCE_NOT_MONITORED, "reachable": True, "policy_excluded": "x"}, reg.SC_UNSUPPORTED)):
+            if reg.source_class({**base, **row}) != want:
+                bad.append(f"取得元の分類が誤り（遮断・取得しない方針の取得元を実装の候補にする恐れ）: {row}")
+        f = reg.announcement_funnel([{**base, "adapter": None, "state": reg.ST_SOURCE_NOT_MONITORED, "reachable": True}])
+        if f.get("zero_active_interpretation") != reg.ZERO_ACTIVE_NOT_PROVEN:
+            bad.append("受付中が0件のとき、取得元の不足があっても「市場に無い」側に解釈している")
+        from src.research import candidates as rc
+        run = "gh-1-1"
+        if (rc.classify_ledger(None, run, False)[0] != rc.LEDGER_NOT_AVAILABLE
+                or rc.classify_ledger({"run_id": run, "candidates": {}}, run, False)[0] != rc.LEDGER_REUSED_WITHIN_RUN
+                or rc.classify_ledger({"run_id": "gh-0-1", "candidates": {}}, run, True)[0] != rc.LEDGER_RESTORED_FROM_PREVIOUS_RUN
+                or rc.first_seen_scope(rc.LEDGER_REUSED_WITHIN_RUN) != "THIS_RUN_ONLY"):
+            bad.append("台帳の状態が、実行をまたいだ保持と同じ実行の再生成を区別していない")
+    except Exception as exc:  # noqa: BLE001
+        bad.append(f"検査に失敗: {type(exc).__name__}: {exc}")
+    return [{"level": "ok" if not bad else "error", "check": "coverage_wave1_source_safety",
+             "message": "#872 新しい取得元は取得の作法を通り・遮断を回避せず・応募ページを作らない／受付中0件を市場なしと断定しない／"
+                        "台帳の状態を偽らない" + ("" if not bad else f" ← {bad[:4]}")}]
 
 
 def _check_phase26_acceptance_guard(root: Path | None = None) -> list[dict]:

@@ -210,3 +210,12 @@ python3 scripts/operator_health_alert.py --dry-run  # 書かずに注記だけ�
   UNSUPPORTED）。遮断された取得元は回避しない。監視していない売り場の候補は `config/tcg_source_candidates.yaml`（未確認。
   実装の前に robots・規約・公開ページを確認する）。定価の台帳は `exports/tcg/msrp.json`（パック価格から BOX の価格は作らない）
 - 設計の全体と残りは `internal/audits/MARKET_RESEARCH_FOUNDATION.md`
+
+## Coverage Wave 1（調査候補の網羅性・TCG の取得元）
+
+- 台帳の状態（`ledger_state`）: NOT_AVAILABLE（鍵なし・保持の手段なし）/ NEW_THIS_RUN / REUSED_WITHIN_RUN（同じ実行の再生成）/ RESTORED_FROM_PREVIOUS_RUN / CORRUPT。
+  初めて見た日（first_seen）が実行をまたいで意味を持つのは RESTORED_FROM_PREVIOUS_RUN のときだけ（`first_seen_scope`）
+- 隔離された買取価格（上限超え。急変は収集側が rejected にしないため対象外）は、調査候補（HIGH_PRIORITY_RESEARCH）として残す。確定にはしない・ジャンルの上限は自動で引き上げない
+- TCG の取得元: カードラボ（`src/collectors/tcg/lottery/clabo.py`。店舗ブログの抽選。応募は店舗の X で `entry_url` は空）。
+  受付中が 0 件でも市場に無いとは断定しない（`announcement_funnel`・`zero_active_interpretation`）
+- 公開成果物の商品単位データの一覧: `python scripts/inventory_public_raw_data.py --write`（削除・変更はしない）

@@ -219,3 +219,18 @@ python3 scripts/operator_health_alert.py --dry-run  # 書かずに注記だけ�
 - TCG の取得元: カードラボ（`src/collectors/tcg/lottery/clabo.py`。店舗ブログの抽選。応募は店舗の X で `entry_url` は空）。
   受付中が 0 件でも市場に無いとは断定しない（`announcement_funnel`・`zero_active_interpretation`）
 - 公開成果物の商品単位データの一覧: `python scripts/inventory_public_raw_data.py --write`（削除・変更はしない）
+
+## Coverage Wave 2（買取起点の選別・小売の価格の照会・TCG の取得元）
+
+- 買取起点の候補: `src/research/triage.py` が HIGH / MEDIUM / LOW / REJECTED に分け、上位 50 件の待ち行列を作る（決まった規則だけ。
+  AI の予測価格は使わない）。公開してよいのは件数だけ（`buyback_triage`・`buyback_first.top_queue` など）
+- 小売の価格の照会: 定時の CI の「Research retail lookup」step が `python scripts/research_retail_lookup.py` を実行
+  （取得は `scripts/recheck_official._fetch` の polite 経由だけ。結果は `.private/research/retail_lookups.json`。標準出力は件数だけ）。
+  取得器は `src/research/retail_lookup.py`（`ADAPTERS`）。**JAN・型番・部品番号の完全一致だけ**で結び付け、販売終了の価格は仕入れ値にしない。
+  記録の生成時刻・各結果の取得時刻が 36 時間以内のときだけ `build()` が使う
+- 取得器を足すとき: `RetailAdapter` を継承し、`parse_index`（一覧を取る型）か `item_url` / `parse_item`（商品ごとの型。`MAX_ITEMS` で上限）を実装する。
+  robots・規約・ページ構造を取得日つきで確認してから。403・遮断は回避しない
+- TCG の取得元: ホビーステーション（`src/collectors/tcg/lottery/hbst.py`。公式お知らせの抽選告知。応募は外部で `entry_url` は空）。
+  一覧のカードを 1 件も読めない取得元は `structure_changed_pages` で PARSER_DEGRADED（DEGRADED）になる
+- 設計の全体と残りは `internal/audits/COVERAGE_WAVE2.md`
+

@@ -4158,6 +4158,7 @@ def check() -> list[dict]:
     results.extend(_check_integrity_operations())
     results.extend(_check_market_research())
     results.extend(_check_coverage_wave1())
+    results.extend(_check_coverage_wave2())
 
     # ══════════════════════════════════════════════════════════════════
     # #820-#825: データの正確さ・鮮度の偽装（Phase 0）
@@ -6546,6 +6547,69 @@ def _check_coverage_wave1(root: Path | None = None) -> list[dict]:
     return [{"level": "ok" if not bad else "error", "check": "coverage_wave1_source_safety",
              "message": "#872 新しい取得元は取得の作法を通り・遮断を回避せず・応募ページを作らない／受付中0件を市場なしと断定しない／"
                         "台帳の状態を偽らない" + ("" if not bad else f" ← {bad[:4]}")}]
+
+
+def _check_coverage_wave2(root: Path | None = None) -> list[dict]:
+    """Coverage Wave 2（#873）: 小売の価格の照会・買取起点の選別・新しい取得元は、取得の作法を通り、確定にせず、個別の候補を公開しない。
+
+    - 照会・選別のモジュールと実行のスクリプトが requests・urllib・Playwright・proxy・User-Agent の偽装を直接使わない
+      （取得は recheck_official._fetch＝polite 経由だけ。ホビーステーションの取得器は LotteryAdapter 経由だけ）
+    - 古い・読めない・未来の照会の結果は使わない。正の価格差は RESEARCH_CANDIDATE までで、VERIFIED にしない
+    - 公開の集計に、個別の候補の項目（小売の価格・URL・識別子など）が入らない
+    - ワークフローの照会の step は失敗しても止めず、Secrets を渡さない
+    """
+    import re as _re73
+    root = root or Path(__file__).resolve().parent.parent
+    bad = []
+
+    def _code(path):
+        src = (root / path).read_text(encoding="utf-8")
+        code = _re73.sub(r'"""(?:.|\n)*?"""', "", src)
+        return "\n".join(ln for ln in code.splitlines() if not ln.lstrip().startswith("#"))
+    try:
+        for path in ("src/research/retail_lookup.py", "src/research/triage.py", "scripts/research_retail_lookup.py",
+                     "src/collectors/tcg/lottery/hbst.py"):
+            code = _code(path)
+            imports = "\n".join(ln for ln in code.splitlines() if _re73.match(r"\s*(from|import)\s", ln))
+            if _re73.search(r"requests|urllib|playwright|selenium|httpx|aiohttp", imports, _re73.I):
+                bad.append(f"{path} が、取得の共通の作法を通さずに取得する部品を import している")
+            if _re73.search(r"proxies|stealth|User-Agent|user_agent|headless|captcha", code, _re73.I):
+                bad.append(f"{path} に、回避・偽装につながる記述がある")
+        if "recheck_official._fetch" not in (root / "scripts" / "research_retail_lookup.py").read_text(encoding="utf-8"):
+            bad.append("照会のスクリプトが、polite 経由の取得（recheck_official._fetch）を使っていない")
+        if _re73.search(r"entry_url\s*=\s*[^N\s]", _code("src/collectors/tcg/lottery/hbst.py").replace("entry_url=None", "")):
+            bad.append("ホビーステーションの取得器が応募ページの URL を作っている")
+        wf = (root / ".github" / "workflows" / "daily_lp.yml").read_text(encoding="utf-8")
+        i = wf.find("name: Research retail lookup")
+        step = wf[i:wf.find("\n      # ", i)] if i >= 0 and wf.find("\n      # ", i) > 0 else wf[i:]
+        if i < 0 or "continue-on-error: true" not in step or "secrets." in step or "scripts/research_retail_lookup.py" not in step:
+            bad.append("ワークフローの照会の step が無い・失敗で止まる・Secrets を渡している")
+        from datetime import datetime as _dt73
+        from datetime import timedelta as _td73
+        from datetime import timezone as _tz73
+
+        from src.research import candidates as rc
+        now = _dt73(2026, 10, 28, 21, 0, tzinfo=_tz73(_td73(hours=9)))
+        fresh = "2026-10-28T20:00:00+09:00"
+        dp = {"candidate_id": "dp_x", "status": rc.DISCOVERED, "name": "x", "identity_basis": "JAN", "observed_sell_price": 400000,
+              "retail_price_hint": None, "missing_requirements": []}
+        lk = {"status": "MATCHED", "retailer": "r", "product_url": "u", "price": 300000, "availability_state": "UNKNOWN",
+              "observed_at": fresh, "identity_evidence": {}}
+        ok_row = rc.apply_lookups([dict(dp)], {"dp_x": lk}, now, fresh)[0]
+        stale = rc.apply_lookups([dict(dp)], {"dp_x": {**lk, "observed_at": "2026-10-01T00:00:00+09:00"}}, now, fresh)[0]
+        old_rec = rc.apply_lookups([dict(dp)], {"dp_x": lk}, now, "2026-10-01T00:00:00+09:00")[0]
+        if ok_row["status"] != rc.RESEARCH_CANDIDATE or ok_row["status"] == rc.VERIFIED:
+            bad.append("正の価格差が調査候補になっていない・または確定になっている")
+        if stale.get("retail_price") is not None or old_rec.get("retail_price") is not None:
+            bad.append("古い照会の結果を、新しい価格として使っている")
+        need = {"retail_price", "retail_url", "retail_retailer", "identity_value", "triage", "queue_rank", "lookup_status"}
+        if not need <= set(rc.PRIVATE_KEYS):
+            bad.append("個別の候補の項目が、公開してはいけない項目に入っていない")
+    except Exception as exc:  # noqa: BLE001
+        bad.append(f"検査に失敗: {type(exc).__name__}: {exc}")
+    return [{"level": "ok" if not bad else "error", "check": "coverage_wave2_retail_lookup_safety",
+             "message": "#873 小売の照会・選別・新しい取得元は取得の作法を通り・古い結果を使わず・確定にせず・個別の候補を公開しない"
+                        + ("" if not bad else f" ← {bad[:4]}")}]
 
 
 def _check_phase26_acceptance_guard(root: Path | None = None) -> list[dict]:

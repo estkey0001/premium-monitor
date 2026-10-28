@@ -1481,9 +1481,9 @@ def test_newly_registered_official_prices_have_identity_shipping_and_daily_reche
 
 
 def test_unregistered_cameras_stay_unverified_until_identity_and_shipping_are_confirmed():
-    """Sony（型番だけ・送料不明）・Zf（色違いの確認が必要）・販売終了品・取得できない店は、確認済みにしていない。"""
+    """Sony（型番だけ・送料不明）・販売終了品・取得できない店は、確認済みにしていない。"""
     from src.market import official_registry as reg
-    for pid in ("prod_a7rv", "prod_a1ii", "prod_a7cr", "prod_zf", "prod_r3", "prod_gr3_hdf", "prod_gr3x", "prod_fx3"):
+    for pid in ("prod_a7rv", "prod_a1ii", "prod_a7cr", "prod_r3", "prod_gr3_hdf", "prod_gr3x", "prod_fx3"):
         assert pid not in reg.VERIFIED_URLS, pid
 
 
@@ -1622,3 +1622,19 @@ def test_quarantined_sell_side_gets_no_freshness_or_identity_points():
     c = _ceiling([_quarantine()])[0]["candidates"][0]
     assert not any(w.startswith(("sell_fresh", "identity_ok")) for w in c["priority_reasons"])
     assert "only_corroboration_missing+25" in c["priority_reasons"]
+
+
+def test_zf_is_verified_with_both_color_jans_and_shipping_and_recheck():
+    """Zf（Coverage Wave 2）: ニコンダイレクトの購入ページ（JAN）・ブラックとシルバーが同じ価格・送料 550 円・毎日の再確認の対象。"""
+    import sys
+
+    from src.market import official_registry as reg
+    from src.market import official_shipping as ship
+    sys.path.insert(0, str(ROOT / "scripts"))
+    import recheck_official as ro
+    v = reg.VERIFIED_URLS["prod_zf"]
+    assert v["price"] == 299200 and v["url"].endswith("/g4960759913784/") and v["checked_on"] == "2026-10-28"
+    ev = reg.IDENTITY_EVIDENCE["prod_zf"]
+    assert ev["jan_code"] == "4960759913784" and ev["colors"] == {"シルバー": "4960759920058"}
+    assert reg.OFFICIAL_DIRECT_OFFERS["prod_zf"]["price"] == v["price"] and "prod_zf" not in reg.UNVERIFIED
+    assert ship.PRODUCT_SHIPPING["prod_zf"]["fee"] == 550 and "prod_zf" in ro.RECHECK_TARGETS

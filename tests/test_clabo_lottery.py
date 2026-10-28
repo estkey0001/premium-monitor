@@ -319,3 +319,42 @@ def test_parse_targets_does_not_span_across_two_target_markers():
     body = "対象商品 商品AAAA 発売日 10/1 対象商品 商品BBBB お一人様 1BOX：5,400円（税込）"
     t = clabo.parse_targets(body)
     assert [x["product_name"] for x in t] == ["商品BBBB"] and t[0]["retail_price"] == 5400
+
+
+# ── Coverage Wave 2: 取得の優先順位・一覧の構造変化の検知 ──────────────────────────────
+
+def test_title_ended_reads_only_the_application_range_in_the_title():
+    assert clabo._title_ended("抽選販売のお知らせ(抽選応募期間:10/22~10/25)", "2026-10-28") is True
+    assert clabo._title_ended("抽選販売のお知らせ(抽選応募期間:10/22~10/30)", "2026-10-28") is False
+    assert clabo._title_ended("抽選販売のお知らせ(抽選応募期間:10/30~11/2)", "2026-10-28") is False
+    assert clabo._title_ended("期間の書かれていない告知", "2026-10-28") is False           # 読めなければ後ろにしない（応募中かもしれない）
+
+
+def test_open_announcements_are_fetched_before_ended_ones(net, monkeypatch):
+    cards = clabo.parse_listing(LIST_PK)
+    net.pop("calls", None)
+    net["https://www.c-labo.jp/blog/filter/tcg:25/"] = (200, LIST_PK)
+    net["https://www.c-labo.jp/blog/filter/tcg:184/"] = (200, "<html><div class='claboCard'></div></html>")
+    seen = []
+    orig = clabo.CardLaboLotteryAdapter.fetch_detail
+
+    def spy(self, url, referer=None):
+        seen.append(url)
+        return orig(self, url, referer=referer)
+    monkeypatch.setattr(clabo.CardLaboLotteryAdapter, "fetch_detail", spy)
+    monkeypatch.setattr(clabo, "_title_ended", lambda t, today: "10/22~10/25" in t)           # 該当の告知だけ「終了」とみなす
+    a = clabo.CardLaboLotteryAdapter()
+    a.max_detail_fetch = 99
+    a.collect()
+    ended = [c["url"] for c in cards if "10/22~10/25" in c["title"]]
+    assert ended and seen and seen[-1] in ended                                               # 終了した告知は、取得の順の最後に回る
+
+
+def test_each_listing_structure_change_is_detected_not_only_the_first(net):
+    net.pop("calls", None)
+    net["https://www.c-labo.jp/blog/filter/tcg:25/"] = (200, LIST_PK)
+    net["https://www.c-labo.jp/blog/filter/tcg:184/"] = (200, "<html><body>構造が変わった ONE PIECE の一覧</body></html>")
+    a = clabo.CardLaboLotteryAdapter()
+    a.max_detail_fetch = 1
+    a.collect()
+    assert a.health["status"] == "DEGRADED" and any("ONE_PIECE" in m for m in a.health["error_messages"])

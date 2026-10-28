@@ -844,6 +844,19 @@ class DailyLPGenerator:
         return Path(_os.environ.get("RESEARCH_PRIVATE_DIR")
                     or Path(__file__).resolve().parent.parent.parent / ".private" / "research")
 
+    def _research_retail_hints(self) -> dict:
+        """小売の価格のヒント: 公式の発見（Apple の購入ページ由来の未登録商品）の部品番号 → 価格。確定の価格ではない。"""
+        out: dict = {}
+        cands = (self._load_export_json("discovery", "product_candidates.json").get("candidates") or {})
+        for c in (cands.values() if isinstance(cands, dict) else cands):
+            if not isinstance(c, dict) or c.get("status") in ("REJECTED", "STALE"):
+                continue
+            price = c.get("official_price")
+            if isinstance(price, int) and not isinstance(price, bool) and price > 0:
+                for part in c.get("part_numbers") or []:
+                    out.setdefault(str(part), {"price": price, "source": "apple_discovery"})
+        return out
+
     def _write_research_candidates(self, ctx, catalog) -> dict | None:
         """調査候補（確定の利益ではない）を作る（Market Research Foundation）。
 
@@ -866,18 +879,17 @@ class DailyLPGenerator:
             verified = {v.product_id for v in catalog.opportunity_set.eligible}
             priv = self._research_private_dir()
             priv.mkdir(parents=True, exist_ok=True)
-            # 台帳の状態: 無い（初回・キャッシュのミス）= fresh／引き継いだ = restored／壊れている = corrupt（捨てて作り直す）
-            prev, ledger_state = {}, _rc.LEDGER_FRESH
+            # 台帳の状態（Stage 0）: 鍵が無い CI では実行をまたいだ保持が無い。同じ実行の中の再生成は REUSED_WITHIN_RUN と区別する
+            raw_state = None
             if (priv / "state.json").exists():
                 try:
                     raw_state = _json.loads((priv / "state.json").read_text(encoding="utf-8"))
-                    cand_state = raw_state.get("candidates") if isinstance(raw_state, dict) else None
-                    if isinstance(cand_state, dict):
-                        prev, ledger_state = cand_state, _rc.LEDGER_RESTORED
-                    else:
-                        ledger_state = _rc.LEDGER_CORRUPT
+                    if raw_state is None:                # ファイルはあるが中身が null（台帳が壊れている）。新規とは区別する
+                        raw_state = "CORRUPT"
                 except (OSError, ValueError):
-                    ledger_state = _rc.LEDGER_CORRUPT
+                    raw_state = "CORRUPT"
+            ledger_state, prev = _rc.classify_ledger(None if raw_state is None else (raw_state if raw_state != "CORRUPT" else []),
+                                                     _rc.current_run_id(), _rc.persistence_enabled())
             try:
                 cat = _json.loads((priv / "buyback_catalog.json").read_text(encoding="utf-8")).get("rows") or []
             except (OSError, ValueError):
@@ -896,9 +908,16 @@ class DailyLPGenerator:
                 msrp_evidence=getattr(self, "_msrp_evidence", None) or {}, official_meta=self._official_meta(),
                 verified_pids=verified, now=ctx.now, prev_state=prev, catalog=cat,
                 identity=getattr(_reg, "IDENTITY_EVIDENCE", {}), discovery=self._load_export_json("discovery", "latest.json"),
-                tcg=tcg, blocked_sources=blocked, ledger_state=ledger_state)
+                tcg=tcg, blocked_sources=blocked, ledger_state=ledger_state,
+                quarantined=[x for x in (self._load_export_json("collector_report", "latest.json").get("suspicious_prices") or [])
+                             if isinstance(x, dict)],
+                # 隔離行の観測の時刻は、取得の報告の生成時刻（収集が失敗して前日の報告が残る日に、古い価格を今日の観測にしない）
+                quarantine_generated_at=self._load_export_json("collector_report", "latest.json").get("generated_at"),
+                retail_hints=self._research_retail_hints(),
+                actionable_count=((getattr(self, "_last_diag", None) or {}).get("actionable") or {}).get("count"))
+            report["ledger_persistence"] = "ACROSS_RUNS" if _rc.persistence_enabled() else "NOT_AVAILABLE"
             # 個別の候補・台帳は private、公開してよい集計だけ public（許可リストで作る。個別の項目が混ざったら例外 → 何も書かない）
-            summary = _rc.write_outputs(report, state, priv, self._research_dir())
+            summary = _rc.write_outputs(report, state, priv, self._research_dir(), _rc.current_run_id())
             return summary
         except Exception as exc:  # noqa: BLE001
             logger.warning("research candidates failed: %s", type(exc).__name__)    # 公開ログに値を出さない
@@ -928,6 +947,7 @@ class DailyLPGenerator:
             out.mkdir(parents=True, exist_ok=True)
             import json as _json
             (out / "latest.json").write_text(_json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
+            self._last_diag = report            # 調査候補の指標（今すぐ行動できる件数）が同じ診断を読む
             return report
         except Exception as exc:  # noqa: BLE001
             logger.warning("opportunity diagnostics failed: %s", exc)

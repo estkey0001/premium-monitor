@@ -16,6 +16,7 @@
 from __future__ import annotations
 
 import hashlib
+import re
 from collections import Counter
 from datetime import datetime, timedelta
 
@@ -49,6 +50,11 @@ PURCHASE_SHIPPING_UNKNOWN = "PURCHASE_SHIPPING_UNKNOWN"
 PRICE_ANOMALY_SUSPECTED = "PRICE_ANOMALY_SUSPECTED"  # 価格差が買値に比べて大きすぎる（誤価格・別商品の疑い）
 SELL_REJECTED = "SELL_REJECTED"                      # 売る側の価格が品質の判定で外れた（疑わしい価格など）
 NET_NEGATIVE = "NET_NEGATIVE_AFTER_KNOWN_COSTS"      # 分かっている費用を引くと利益が出ない
+ABOVE_GENRE_MAX = "ABOVE_GENRE_MAX"                  # 売値が、ジャンルの正常帯の上限を超えて隔離された（上限は自動で引き上げない）
+NEEDS_CORROBORATION = "NEEDS_CORROBORATION"          # 他店の裏付けが無い（人が確かめるまで確定にしない）
+PRICE_SPIKE = "PRICE_SPIKE"                          # 前回の正常取得から大きく動いた（誤りとは限らない・要確認）
+HIGH_PRIORITY_RESEARCH = "HIGH_PRIORITY_RESEARCH"    # 上限超え・裏付け不足・急変だけで確定から外れた、価格差が正の商品
+STANDARD_RESEARCH = "STANDARD"
 NO_SELL_SIDE = "NO_SELL_PRICE"
 NO_BUY_SIDE = "NO_BUY_PRICE"
 NO_SPREAD = "NO_SPREAD"
@@ -86,8 +92,84 @@ def candidate_id(route: str, product_id: str, buy_source: str = "", sell_source:
     return "rc_" + hashlib.sha1(raw.encode("utf-8")).hexdigest()[:12]
 
 
+# 品質ゲートで隔離された買取価格（collector_report の suspicious_prices）の理由 → 調査候補の理由。
+# 調べる価値のある隔離だけを入れる（上限超え・急変）。取り違え・解析の誤り（cross_product_same_price・capacity_price_reversal・
+# below_genre_min・over_3x_official・game_console_smartphone_price など）は、価格差があっても候補にしない（誤取得の積み上げ・
+# 件数の水増しになるため）。他店との乖離（outlier_vs_peer_shops）も別の確認の領域なので入れない。
+QUARANTINE_REASONS = {
+    "above_genre_max": [ABOVE_GENRE_MAX, NEEDS_CORROBORATION],
+    "price_change_over_20pct": [PRICE_SPIKE, NEEDS_CORROBORATION],
+    "price_change": [PRICE_SPIKE, NEEDS_CORROBORATION],
+}
+CEILING_CLASS_REASONS = frozenset({ABOVE_GENRE_MAX, NEEDS_CORROBORATION, PRICE_SPIKE})
+QUARANTINE_MAX_AGE_HOURS = 36        # 取得の報告（collector_report）がこれより古いときは、隔離行を新しい観測として使わない
+
+
+def quarantine_observations(quarantined: list[dict], products: list[dict], now: datetime,
+                            report_generated_at: str | None = None) -> list[dict]:
+    """隔離された買取価格を、調査候補の売り側の観測にする（確定にはならない。上限は引き上げない）。
+
+    - 観測の時刻は**取得の報告の生成時刻**（report_generated_at）。読めない・古い（QUARANTINE_MAX_AGE_HOURS 超）・未来のときは、
+      隔離行を使わない（収集が失敗して前日の報告が残る日に、古い価格を今日の新しい観測にしない。鮮度を偽装しない）
+    - action が rejected の行だけ（採用済み・フラグだけの行は、通常の観測として既にある）。理由は QUARANTINE_REASONS の許可リストだけ
+    - 同じ (商品, 店) に許可リスト外の理由が1つでもあれば、その店は使わない。許可リスト内の複数理由は1つの観測にまとめる（理由は和集合。同じ価格の観測を重ねない）
+    - 商品は別名の表（product_aliases）で結び付ける（`prod_<alias>` と決めつけない）
+    """
+    from src.market.product_aliases import product_id_of
+    gen = _parse_ts(report_generated_at, now)
+    if gen is None or not (timedelta(hours=-1) <= now - gen <= timedelta(hours=QUARANTINE_MAX_AGE_HOURS)):
+        return []
+    pids = {p["id"] for p in products}
+    merged: dict[tuple, dict] = {}
+    # 同じ (商品, 店) に許可リスト外の理由（取り違え・解析の誤り等）が1つでも付く行は、店ごと使わない（誤取得の素通りを防ぐ）
+    tainted = {(str(q.get("product_alias")), str(q.get("shop") or ""))
+               for q in quarantined or [] if isinstance(q, dict) and q.get("reason") not in QUARANTINE_REASONS}
+    for q in quarantined or []:
+        if not isinstance(q, dict) or q.get("action") != "rejected" or q.get("reason") not in QUARANTINE_REASONS:
+            continue
+        if (str(q.get("product_alias")), str(q.get("shop") or "")) in tainted:
+            continue
+        pid = product_id_of(q.get("product_alias"), pids)
+        price = q.get("price")
+        if pid not in pids or not isinstance(price, (int, float)) or isinstance(price, bool) or price <= 0:
+            continue
+        shop = str(q.get("shop") or "")
+        key = (pid, shop)
+        o = merged.get(key)
+        if o is None:
+            merged[key] = {"product_id": pid, "price_role": "sell", "price_type": "buyback_price",
+                           "canonical_price_type": "BUYBACK_CASH", "price": int(price), "source_id": shop, "source_name": shop,
+                           "condition": "new_unopened", "is_fresh": True, "freshness_basis": "observed",
+                           "observed_at": gen.isoformat(timespec="seconds"), "accessory_flag": False, "wrong_model_flag": False,
+                           "research_quarantine": [q["reason"]]}
+        else:
+            o["price"] = max(o["price"], int(price))
+            if q["reason"] not in o["research_quarantine"]:
+                o["research_quarantine"].append(q["reason"])
+    return list(merged.values())
+
+
+def _parse_ts(value, now: datetime):
+    """時刻（ISO 形式・末尾の JST も可）。タイムゾーンが無ければ now に合わせる。読めなければ None。"""
+    s = str(value or "").strip().replace(" JST", "")
+    if not s:
+        return None
+    try:
+        d = datetime.fromisoformat(s)
+    except ValueError:
+        return None
+    if d.tzinfo is None and now.tzinfo is not None:
+        d = d.replace(tzinfo=now.tzinfo)
+    elif d.tzinfo is not None and now.tzinfo is None:
+        d = d.replace(tzinfo=None)
+    return d
+
+
 def _sell_reasons(o: dict, buy_condition: str = "new") -> list[str]:
     from src.market import normalized_prices as npr
+    if o.get("research_quarantine") is not None:
+        rs = o["research_quarantine"] if isinstance(o["research_quarantine"], list) else [o["research_quarantine"]]
+        return list(dict.fromkeys(r for q in rs for r in QUARANTINE_REASONS.get(q, [PRICE_ANOMALY_SUSPECTED])))
     out = []
     for r in npr.sell_confirmation_reasons(o, buy_condition=buy_condition):
         if r in _SELL_REASON_MAP:
@@ -120,29 +202,46 @@ def _sell_options(obs: list[dict], pid: str) -> list[dict]:
     return out
 
 
-def _best_sell(obs: list[dict], pid: str, buy_price: int | None = None):
-    """売る側の代表の観測と、その行が確定の売値に使えない理由。戻りは (観測, 理由, 古い高値を使ったか)。
+SELL_FLAG_NONE, SELL_FLAG_STALE_HIGH, SELL_FLAG_QUARANTINE = "", "stale_high", "quarantine"
+
+
+def _best_sell(obs: list[dict], pid: str, buy_price: int | None = None, verified: bool = False):
+    """売る側の代表の観測と、その行が確定の売値に使えない理由。戻りは (観測, 理由, 印)。
+
+    印: "" = 通常 / "stale_high" = 古い高値を使った / "quarantine" = 品質ゲートで隔離された価格を使った。
 
     確定できる売値（既存の関門を通る行）の最高値を使う。ただし、その行では価格差が出ないのに、確定できない行
     （古い・店のトップの URL・商品の照合が未了…）に買値を上回る高値があるときは、その高値を調査候補の売値にする
     （最新の確定の売値では差が無いが、再確認すれば差が出るかもしれない商品を捨てない。理由は必ず付く）。
+
+    隔離された価格（research_quarantine）は、確定できる売値・確定できない行の代表選びには混ぜない。確定できる売値で価格差が
+    出ているとき（既存の判定が正本）は使わず、売値が無い・確定できる価格差が無い・確定できない行しか無いときだけ、
+    隔離された価格を代表にする（理由 ABOVE_GENRE_MAX・NEEDS_CORROBORATION・PRICE_SPIKE が必ず付き、確定にはならない）。
     """
-    opts = _sell_options(obs, pid)
-    if not opts:
-        return None, [], False
+    all_opts = _sell_options(obs, pid)
+    quar = [o for o in all_opts if o.get("research_quarantine") is not None]
+    opts = [o for o in all_opts if o.get("research_quarantine") is None]
     key = lambda o: (o["price"], str(o.get("source_id") or ""))  # noqa: E731
-    confirmed = [o for o in opts if not _sell_reasons(o)]
-    # 確定できない行の中では、品質の判定で外れた行（疑わしい価格・隔離）を後回しにする。外れた高値は調べる価値の
-    # ある候補の代表にしない（それしか無いときだけ使う。理由 SELL_REJECTED が付き、信頼度・優先度は低くなる）
-    clean = [o for o in opts if SELL_REJECTED not in _sell_reasons(o)]
-    raw_best = max(clean or opts, key=key)
-    if confirmed:
-        best = max(confirmed, key=key)
-        if (buy_price is not None and best["price"] - buy_price <= 0 and raw_best["price"] > buy_price
-                and raw_best is not best):
-            return raw_best, _sell_reasons(raw_best), True
-        return best, [], False
-    return raw_best, _sell_reasons(raw_best), False
+    best, reasons, flag = None, [], SELL_FLAG_NONE
+    if opts:
+        confirmed = [o for o in opts if not _sell_reasons(o)]
+        # 確定できない行の中では、品質の判定で外れた行（疑わしい価格）を後回しにする。外れた高値は調べる価値のある候補の
+        # 代表にしない（それしか無いときだけ使う。理由 SELL_REJECTED が付き、信頼度・優先度は低くなる）
+        clean = [o for o in opts if SELL_REJECTED not in _sell_reasons(o)]
+        raw_best = max(clean or opts, key=key)
+        if confirmed:
+            best, reasons = max(confirmed, key=key), []
+            if (buy_price is not None and best["price"] - buy_price <= 0 and raw_best["price"] > buy_price
+                    and raw_best is not best):
+                best, reasons, flag = raw_best, _sell_reasons(raw_best), SELL_FLAG_STALE_HIGH
+        else:
+            best, reasons = raw_best, _sell_reasons(raw_best)
+    if quar and buy_price is not None and not verified:     # 確定済みの商品の行に、隔離された価格を高信頼の売値として載せない
+        q = max(quar, key=key)
+        confirmed_positive = best is not None and not reasons and best["price"] - buy_price > 0
+        if q["price"] > buy_price and not confirmed_positive:
+            return q, _sell_reasons(q), SELL_FLAG_QUARANTINE
+    return best, reasons, flag
 
 
 def _best_secondary_buy(obs: list[dict], pid: str):
@@ -195,16 +294,22 @@ def priority_of(c: dict) -> tuple[int, list[str]]:
     base = 0 if reasons & LOW_CONFIDENCE_PRICE_REASONS else min(max(net, 0), 100_000) // 1000
     score += base
     why.append(f"net+{base}")
-    if SELL_STALE not in reasons:
+    # 隔離された価格（上限超え・急変）の売値は、既存の関門（売値の新しさ・商品の照合）を通っていないので、この2つは加点しない
+    gated = not (reasons & CEILING_CLASS_REASONS)
+    if gated and SELL_STALE not in reasons:
         score += 20
         why.append("sell_fresh+20")
-    if IDENTITY_UNCONFIRMED not in reasons:
+    if gated and IDENTITY_UNCONFIRMED not in reasons:
         score += 15
         why.append("identity_ok+15")
     blocking = reasons - ADVISORY
     if blocking == {OFFICIAL_UNVERIFIED}:
         score += 25
         why.append("only_official_check_missing+25")
+    elif blocking and blocking <= (CEILING_CLASS_REASONS | {PURCHASE_SHIPPING_UNKNOWN}) and blocking & CEILING_CLASS_REASONS:
+        # 足りないのは、上限超え・急変の裏付け（他店の商品ページ）だけ。公式の価格・照合は揃っている（売値の新しさ・照合は隔離行では未確認）
+        score += 25
+        why.append("only_corroboration_missing+25")
     for r, pts in ((SELL_STALE, -30), (GENERIC_SELL_URL, -25), (IDENTITY_UNCONFIRMED, -30),
                    (PRICE_ANOMALY_SUSPECTED, -40), (SELL_REJECTED, -20), (BUY_NOT_ITEM_LEVEL, -15)):
         if r in reasons:
@@ -263,7 +368,7 @@ def build_candidates(*, products: list[dict], observations: list[dict], msrp_evi
                 buy_reasons.append(OFFICIAL_UNVERIFIED)
             if meta.get("official_not_sold"):
                 pass          # 上で付けた
-        sell, sell_reasons, used_stale_high = _best_sell(observations, pid, int(buy['price']) if buy else None)
+        sell, sell_reasons, used_stale_high = _best_sell(observations, pid, int(buy['price']) if buy else None, pid in verified_pids)
 
         reasons = list(buy_reasons)
         reasons += sell_reasons
@@ -277,7 +382,9 @@ def build_candidates(*, products: list[dict], observations: list[dict], msrp_evi
                "sell_observed_at": str((sell or {}).get("observed_at") or ""),
                "source_blocked": bool(sell and str(sell.get("source_id") or "") in blocked_sources),
                "note": ("最新の確定の売値では価格差が無いが、確定できない行（古い・店のトップなど）に買値を上回る高値の観測がある。"
-                        "再確認すると差が出るかもしれない" if used_stale_high else "")}
+                        "再確認すると差が出るかもしれない" if used_stale_high == SELL_FLAG_STALE_HIGH else
+                        ("品質ゲートで隔離された買取価格（上限超え・急変）。確定の売値には使わない。他店の商品ページなどの裏付けが取れる"
+                         "まで確定にしない（ジャンルの上限は自動で引き上げない）" if used_stale_high == SELL_FLAG_QUARANTINE else ""))}
         if buy is None or sell is None:
             row.update({"raw_spread": None, "known_costs": None, "known_cost_spread": None, "raw_net_spread": None,
                         "shipping_unknown": None,
@@ -322,6 +429,11 @@ def build_candidates(*, products: list[dict], observations: list[dict], msrp_evi
         score, why = priority_of(row)
         row["priority_score"], row["priority_reasons"] = score, why
         row["priority"] = _label(score, row["exclusion_reasons"])
+        # 上限超え・裏付け不足・急変で確定から外れた、価格差が正の商品は、消さずに高優先の調査として残す
+        reasons_set = set(row["exclusion_reasons"])
+        row["research_class"] = (HIGH_PRIORITY_RESEARCH if row["status"] == RESEARCH_CANDIDATE
+                                 and reasons_set & CEILING_CLASS_REASONS and not reasons_set & LOW_CONFIDENCE_PRICE_REASONS
+                                 else STANDARD_RESEARCH)
         out.append(row)
     return out
 
@@ -391,29 +503,149 @@ def _fresh_catalog_row(r: dict, now: datetime) -> bool:
     return timedelta(0) - timedelta(hours=1) <= now - at <= timedelta(days=CATALOG_MAX_AGE_DAYS)
 
 
-def discovered_products(unmatched: list[dict], now: datetime) -> list[dict]:
-    """買取の一覧にあるが正本に無い商品（DISCOVERED_PRODUCT_CANDIDATE）。正本には入れない（人が公式で確かめて登録する）。"""
-    unmatched = [r for r in unmatched if _fresh_catalog_row(r, now)]
+_PART_RE = re.compile(r"\b[A-Z0-9]{4,5}J/A\b")
+# 型番コード: 大文字の英字 + 数字（ベンダーの接頭辞 SM- なども含む）。5文字未満（S25・A15 など）は一般語・短いコードに当たるので使わない。
+# 大文字小文字を変えて探さない（case-10 のような一般語を拾わない）
+_MODEL_RE = re.compile(r"(?<![A-Za-z0-9])[A-Z]{1,5}(?:-[A-Z]{1,3})?-?\d{2,5}[A-Z0-9-]{0,12}(?![A-Za-z0-9])")
+_MODEL_MIN_LEN = 5
+IDENT_JAN, IDENT_PART, IDENT_MODEL = "JAN", "PART_NUMBER", "MODEL_CODE"
+_IDENT_POINTS = {IDENT_JAN: 40, IDENT_PART: 40, IDENT_MODEL: 20}
+
+
+def identify_row(r: dict) -> tuple[str, str] | None:
+    """買取の一覧の1行から、機械的に確かめられる識別子（JAN・メーカーの部品番号・型番コード）を取る。
+
+    名前だけの行は識別しない（None）。商品の名前の一致で商品にしない。
+    """
+    jan = str(r.get("jan") or "").strip()
+    if jan.isdigit() and len(jan) == 13:
+        return IDENT_JAN, jan
+    name = str(r.get("name") or "")
+    parts = sorted(set(_PART_RE.findall(name)))
+    if len(parts) == 1:
+        return IDENT_PART, parts[0]
+    if len(parts) > 1:
+        return IDENT_PART, "+".join(parts)
+    models = sorted({m for m in _MODEL_RE.findall(name) if len(m) >= _MODEL_MIN_LEN})
+    if len(models) == 1:
+        return IDENT_MODEL, models[0]
+    return None
+
+
+def rank_product_candidates(unmatched: list[dict], now: datetime, retail_hints: dict | None = None) -> tuple[list[dict], dict]:
+    """買取の一覧にあるが正本に無い商品の候補（DISCOVERED_PRODUCT_CANDIDATE）を、調べる順に並べる。
+
+    - 識別子（JAN・部品番号・型番コード）がある行だけを候補にする。名前だけの行は候補にしない（数だけ数える）
+    - 同じ識別子の行（色違い・同じ店の重複）は1つにまとめる（候補の ID は店と識別子から決まる安定したもの）
+    - 順位の点 = 識別の確かさ + 小売の価格を引ける見込み + 価格差の見込み（小売の価格が分かるときだけ）。買取の高い順ではない
+    - 小売の価格のヒント（retail_hints: 部品番号 → 公式の発見の価格）は、公式の購入ページ由来の未登録商品の値。確定の価格ではない
+    - 正本への自動登録はしない（人が公式で確かめて、既存の手順で登録する）
+    """
+    hints = retail_hints or {}
+    fresh = [r for r in unmatched if _fresh_catalog_row(r, now)]
+    stats = {"catalog_rows_fresh": len(fresh), "identified": 0, "name_only_rejected": 0}
+    groups: dict[tuple, dict] = {}
+    for r in fresh:
+        ident = identify_row(r)
+        if ident is None:
+            stats["name_only_rejected"] += 1
+            continue
+        stats["identified"] += 1
+        key = (str(r.get("shop") or ""), ident[0], ident[1])
+        g = groups.get(key)
+        price = int(r.get("price") or 0)
+        if g is None or price > g["price"]:
+            groups[key] = {"row": r, "ident": ident, "price": price, "variants": (g["variants"] if g else 0) + 1}
+        else:
+            g["variants"] += 1
     rows = []
-    for r in sorted(unmatched, key=lambda x: (-int(x.get("price") or 0), str(x.get("name") or "")))[:CATALOG_LIST_LIMIT]:
-        key = f"{r.get('shop','')}|{r.get('jan') or r.get('name')}"
+    for (shop, basis, value), g in groups.items():
+        r = g["row"]
+        hint = None
+        if basis == IDENT_PART:
+            for part in value.split("+"):
+                if part in hints:
+                    hint = hints[part]
+                    break
+        spread = (g["price"] - int(hint["price"])) if hint and isinstance(hint.get("price"), int) else None
+        points = _IDENT_POINTS[basis]
+        feas = 30 if hint else (10 if basis in (IDENT_JAN, IDENT_PART) else 5)
+        pot = min(max(spread or 0, 0), 100_000) // 3334 if spread is not None else 0
         rows.append({
-            "candidate_id": "dp_" + hashlib.sha1(key.encode("utf-8")).hexdigest()[:12],
+            "candidate_id": "dp_" + hashlib.sha1(f"{shop}|{basis}|{value}".encode("utf-8")).hexdigest()[:12],
             "kind": "DISCOVERED_PRODUCT_CANDIDATE", "status": DISCOVERED,
-            "shop": r.get("shop", ""), "name": r.get("name", ""), "jan": r.get("jan", ""),
-            "observed_sell_price": int(r.get("price") or 0), "source_url": r.get("url", ""),
-            "observed_at": r.get("observed_at", ""),
-            "missing_requirements": ["CANONICAL_UNREGISTERED", "OFFICIAL_PRICE_UNKNOWN", "IDENTITY_NOT_VERIFIED_BY_OFFICIAL"],
-            "note": "買取の一覧に載っているが正本に無い。名前だけでは登録しない（公式で JAN・型番・価格を確かめる）"})
-    return rows
+            "shop": shop, "name": r.get("name", ""), "jan": r.get("jan", ""), "identity_basis": basis,
+            "identity_confidence": "high" if basis in (IDENT_JAN, IDENT_PART) else "medium",
+            "observed_sell_price": g["price"], "source_url": r.get("url", ""), "observed_at": r.get("observed_at", ""),
+            "variants": g["variants"],
+            "retail_price_hint": int(hint["price"]) if hint and isinstance(hint.get("price"), int) else None,
+            "retail_hint_source": (hint or {}).get("source", ""),
+            "raw_spread_hint": spread, "positive_spread_hint": bool(spread is not None and spread > 0),
+            "rank_score": points + feas + pot,
+            "missing_requirements": ["CANONICAL_UNREGISTERED", "IDENTITY_NOT_VERIFIED_BY_OFFICIAL"]
+                                    + ([] if hint else ["OFFICIAL_PRICE_UNKNOWN"]),
+            "note": "買取の一覧に載っているが正本に無い。識別子（JAN・部品番号・型番）は機械的に取れた値。"
+                    "名前だけでは登録しない（公式で JAN・型番・価格を確かめる）。小売の価格のヒントは確定の価格ではない"})
+    rows.sort(key=lambda x: (-x["rank_score"], -(x["raw_spread_hint"] or 0), x["candidate_id"]))
+    stats.update({"unique_candidates": len(rows), "with_retail_hint": sum(1 for x in rows if x["retail_price_hint"] is not None),
+                  "positive_spread_hint": sum(1 for x in rows if x["positive_spread_hint"])})
+    for i, x in enumerate(rows, 1):
+        x["rank"] = i
+    return rows[:CATALOG_LIST_LIMIT], stats
+
+
+def discovered_products(unmatched: list[dict], now: datetime, retail_hints: dict | None = None) -> list[dict]:
+    """買取の一覧にあるが正本に無い商品（DISCOVERED_PRODUCT_CANDIDATE）。正本には入れない（人が公式で確かめて登録する）。"""
+    return rank_product_candidates(unmatched, now, retail_hints)[0]
 
 
 # 台帳の snapshot に残す項目（見えなくなった候補を STALE として出すときに使う。これ以外は読まない）
 SNAPSHOT_KEYS = ("product_identity", "route_type", "source", "observed_buy_price", "observed_sell_price",
                  "raw_spread", "known_cost_spread", "genre")
-LEDGER_FRESH = "fresh"          # 台帳が無い（初回・キャッシュのミス・期限切れ）。初めて見た日は今日になる（実際の初見とは限らない）
-LEDGER_RESTORED = "restored"    # 前回の台帳を引き継いだ
-LEDGER_CORRUPT = "corrupt"      # 台帳が壊れていた（形が違う・読めない）。捨てて作り直した
+# 台帳の状態（Stage 0）。実行をまたいだ保持の有無と、同じ実行の中の再生成を区別する（偽の永続性を表示しない）
+LEDGER_NOT_AVAILABLE = "NOT_AVAILABLE"                  # 台帳が無く、実行をまたいで保持する手段も無い（鍵なし）。初めて見た日はこの実行の中だけ
+LEDGER_NEW_THIS_RUN = "NEW_THIS_RUN"                    # 保持する手段はあるが、前回の台帳が無い（初回・キャッシュのミス）。今回新しく作った
+LEDGER_REUSED_WITHIN_RUN = "REUSED_WITHIN_RUN"          # 同じ実行の中の再生成が、この実行の最初の生成の台帳を読んだ（前回の実行から引き継いだものではない）
+LEDGER_RESTORED_FROM_PREVIOUS_RUN = "RESTORED_FROM_PREVIOUS_RUN"  # 前回の実行の台帳を引き継いだ（暗号化したキャッシュ・手元の .private）
+LEDGER_CORRUPT = "CORRUPT"                              # 台帳が壊れていた（形が違う・読めない）。捨てて作り直した
+# 互換の別名（以前の値）
+LEDGER_FRESH, LEDGER_RESTORED = LEDGER_NEW_THIS_RUN, LEDGER_RESTORED_FROM_PREVIOUS_RUN
+
+_PROCESS_RUN_ID = __import__("uuid").uuid4().hex
+
+
+def current_run_id() -> str:
+    """今の実行の識別子（CI は GITHUB_RUN_ID と試行番号。手元はプロセスごと）。同じ実行の中の再生成を見分ける。"""
+    import os
+    rid = os.environ.get("GITHUB_RUN_ID")
+    return f"gh-{rid}-{os.environ.get('GITHUB_RUN_ATTEMPT', '1')}" if rid else f"proc-{_PROCESS_RUN_ID}"
+
+
+def persistence_enabled() -> bool:
+    """実行をまたいで台帳を保持する手段があるか（ワークフローが、鍵が有るときだけ RESEARCH_LEDGER_PERSISTENCE=enabled を出す）。"""
+    import os
+    return os.environ.get("RESEARCH_LEDGER_PERSISTENCE") == "enabled"
+
+
+def classify_ledger(raw, run_id: str, persistent: bool) -> tuple[str, dict]:
+    """読んだ台帳の中身から、台帳の状態と前回の候補を決める。raw は state.json の中身（無ければ None）。
+
+    first_seen（初めて見た日）は、RESTORED_FROM_PREVIOUS_RUN のときだけ実行をまたいで意味を持つ。鍵が無い CI では
+    実行をまたいだ保持が無いので、NOT_AVAILABLE（と同じ実行の再生成 REUSED_WITHIN_RUN）になる。
+    """
+    if raw is None:
+        return (LEDGER_NEW_THIS_RUN if persistent else LEDGER_NOT_AVAILABLE), {}
+    cands = raw.get("candidates") if isinstance(raw, dict) else None
+    if not isinstance(cands, dict):
+        return LEDGER_CORRUPT, {}
+    if raw.get("run_id") == run_id:
+        return LEDGER_REUSED_WITHIN_RUN, cands
+    return LEDGER_RESTORED_FROM_PREVIOUS_RUN, cands
+
+
+def first_seen_scope(ledger_state: str) -> str:
+    """初めて見た日の意味: 実行をまたいで保持されているか。"""
+    return "ACROSS_RUNS" if ledger_state == LEDGER_RESTORED_FROM_PREVIOUS_RUN else "THIS_RUN_ONLY"
 
 
 def sanitize_ledger(prev) -> dict:
@@ -525,10 +757,12 @@ PRIVATE_KEYS = frozenset({
 ALLOWED_REASONS = frozenset({
     OFFICIAL_UNVERIFIED, OFFICIAL_NOT_SOLD, BUY_NOT_ITEM_LEVEL, BUY_STALE, SELL_STALE, GENERIC_SELL_URL, IDENTITY_UNCONFIRMED,
     CONDITION_UNKNOWN, CONDITION_MISMATCH, STOCK_UNKNOWN, SELL_SAMPLE_INSUFFICIENT, PURCHASE_SHIPPING_UNKNOWN,
-    PRICE_ANOMALY_SUSPECTED, SELL_REJECTED, NET_NEGATIVE, NO_SELL_SIDE, NO_BUY_SIDE, NO_SPREAD})
+    PRICE_ANOMALY_SUSPECTED, SELL_REJECTED, NET_NEGATIVE, NO_SELL_SIDE, NO_BUY_SIDE, NO_SPREAD,
+    ABOVE_GENRE_MAX, NEEDS_CORROBORATION, PRICE_SPIKE})
 ALLOWED_CONFIDENCE = frozenset({"high", "medium", "low"})
 ALLOWED_STATUS = frozenset(STATUSES)
-ALLOWED_LEDGER = frozenset({LEDGER_FRESH, LEDGER_RESTORED, LEDGER_CORRUPT})
+ALLOWED_LEDGER = frozenset({LEDGER_NOT_AVAILABLE, LEDGER_NEW_THIS_RUN, LEDGER_REUSED_WITHIN_RUN,
+                            LEDGER_RESTORED_FROM_PREVIOUS_RUN, LEDGER_CORRUPT})
 # 件数の入れ子（キーも値も固定。上流の報告に項目が増えても、ここで通したものしか公開されない）
 COVERAGE_KEYS = {
     "official_verified_coverage": ("verified", "total"),
@@ -537,6 +771,8 @@ COVERAGE_KEYS = {
     "tcg_source_coverage": ("configured_sources", "implemented_collectors", "reachable_sources", "healthy_sources",
                             "blocked_sources", "unreachable_sources", "not_implemented_sources",
                             "sources_with_active_lottery", "lottery_events_found"),
+    "tcg_funnel": ("raw_announcements", "parsed_events", "review_required", "rejected", "active_lotteries", "sources_with_gap",
+                   "sources_truncated"),
 }
 TCG_CLASS_KEYS = ("WORKING", "IMPLEMENTED_BUT_BLOCKED", "ACCESSIBLE_UNIMPLEMENTED", "UNREACHABLE", "UNSUPPORTED")
 
@@ -574,6 +810,15 @@ def public_summary(report: dict) -> dict:
         "suppressed_positive_spread_count": int(m.get("suppressed_positive_spread") or 0),
         "verified_count": verified_n,
         "ledger_state": report.get("ledger_state") if report.get("ledger_state") in ALLOWED_LEDGER else None,
+        # 初めて見た日が実行をまたいで保持されているか（鍵が無い CI では THIS_RUN_ONLY。偽の永続性を示さない）
+        "first_seen_scope": first_seen_scope(report.get("ledger_state") or ""),
+        "ledger_persistence": "ACROSS_RUNS" if report.get("ledger_persistence") == "ACROSS_RUNS" else "NOT_AVAILABLE",
+        # Wave 1 の指標
+        "high_priority_research_count": int(m.get("high_priority_research") or 0),
+        "product_research_candidate_count": int(m.get("product_research_candidates") or 0),
+        "buyback_first_candidates": int(m.get("buyback_first_candidates") or 0),
+        "confirmed_opportunities": verified_n,
+        "actionable": _int_or_none(m.get("actionable")),
         # 値（商品名・価格）がキーに混ざらないよう、既知の語彙だけを通す
         "status_counts": {k: int(v) for k, v in (m.get("by_status") or {}).items() if k in ALLOWED_STATUS},
         "reason_counts": {str(k): int(v) for k, v in (report.get("research_reasons") or {}).items() if k in ALLOWED_REASONS},
@@ -585,11 +830,17 @@ def public_summary(report: dict) -> dict:
         "marketplace_sold_coverage": _count_dict(m.get("marketplace_sold_coverage"), COVERAGE_KEYS["marketplace_sold_coverage"]),
         "canonical_products": int(m.get("canonical_products") or 0),
         "buyback_first": {k: int((report.get("buyback_first") or {}).get(k) or 0)
-                          for k in ("catalog_rows", "canonical_matches", "new_product_candidates")},
+                          for k in ("catalog_rows", "canonical_matches", "identified", "name_only_rejected",
+                                    "new_product_candidates", "with_retail_hint", "positive_spread_hint")},
         "official_discovery_candidates": int(m.get("official_discovery_candidates") or 0),
         "tcg_source_coverage": dict(_count_dict(m.get("tcg_source_coverage"), COVERAGE_KEYS["tcg_source_coverage"]),
                                     source_classes=_count_dict((m.get("tcg_source_coverage") or {}).get("source_classes"),
                                                                TCG_CLASS_KEYS)),
+        "tcg_working_sources": _int_or_none(((m.get("tcg_source_coverage") or {}).get("source_classes") or {}).get("WORKING")),
+        "tcg_funnel": dict(_count_dict((m.get("tcg_source_coverage") or {}).get("funnel"), COVERAGE_KEYS["tcg_funnel"]),
+                           zero_active_interpretation=(m.get("tcg_source_coverage") or {}).get("funnel", {}).get("zero_active_interpretation")
+                           if ((m.get("tcg_source_coverage") or {}).get("funnel") or {}).get("zero_active_interpretation")
+                           in ("NOT_PROVEN_MARKET_EMPTY", "NO_KNOWN_COLLECTOR_GAP") else None),
         "tcg_active_events": _int_or_none(m.get("tcg_active_events")),
         "tcg_msrp_verified": _int_or_none(m.get("tcg_msrp_verified")),
         "tcg_source_candidates": _int_or_none(m.get("tcg_source_candidates")),
@@ -622,14 +873,22 @@ def build(*, products: list[dict], observations: list[dict], msrp_evidence: dict
           verified_pids: set[str], now: datetime, prev_state: dict | None = None,
           catalog: list[dict] | None = None, identity: dict | None = None, discovery: dict | None = None,
           tcg: dict | None = None, blocked_sources: set[str] | None = None,
-          ledger_state: str | None = None) -> tuple[dict, dict]:
-    """調査候補のレポート（運営者向け）と、次回の台帳。戻りは (report, new_state)。"""
-    cands = build_candidates(products=products, observations=observations, msrp_evidence=msrp_evidence,
+          ledger_state: str | None = None, quarantined: list[dict] | None = None,
+          retail_hints: dict | None = None, actionable_count: int | None = None,
+          quarantine_generated_at: str | None = None) -> tuple[dict, dict]:
+    """調査候補のレポート（運営者向け）と、次回の台帳。戻りは (report, new_state)。
+
+    quarantined: 品質ゲートで隔離された買取価格（collector_report の suspicious_prices）。上限超え・急変・裏付け不足で
+    確定から外れた価格差を、消さずに調査候補（HIGH_PRIORITY_RESEARCH）として残す。ジャンルの上限は自動で引き上げない。
+    retail_hints: 小売の価格のヒント（部品番号 → 公式の発見の価格）。買取起点の候補の順位に使う（確定の価格ではない）。
+    """
+    q_obs = quarantine_observations(quarantined or [], products, now, quarantine_generated_at)
+    cands = build_candidates(products=products, observations=list(observations) + q_obs, msrp_evidence=msrp_evidence,
                              official_meta=official_meta, verified_pids=verified_pids, now=now,
                              blocked_sources=blocked_sources)
     prev_clean = sanitize_ledger(prev_state)
     if ledger_state is None:
-        ledger_state = LEDGER_RESTORED if prev_clean else LEDGER_FRESH
+        ledger_state = LEDGER_RESTORED_FROM_PREVIOUS_RUN if prev_clean else LEDGER_NEW_THIS_RUN
     cands, new_state = apply_ledger(cands, prev_clean, now)
     order = {RESEARCH_CANDIDATE: 0, VERIFIED: 1, DISCOVERED: 2, STALE: 3, REJECTED: 4}
     cands.sort(key=lambda c: (order.get(c["status"], 9), -int(c.get("priority_score") or 0),
@@ -637,10 +896,14 @@ def build(*, products: list[dict], observations: list[dict], msrp_evidence: dict
     for i, c in enumerate([c for c in cands if c["status"] == RESEARCH_CANDIDATE], 1):
         c["priority_rank"] = i
     matched, unmatched = match_catalog(catalog or [], products, identity or {})
-    dps = discovered_products(unmatched, now)
+    dps, bf_stats = rank_product_candidates(unmatched, now, retail_hints)
     metrics = coverage_metrics(products=products, candidates=cands, product_candidates=dps,
                                msrp_evidence=msrp_evidence, observations=observations,
                                discovery=discovery, tcg=tcg)
+    metrics["high_priority_research"] = sum(1 for c in cands if c.get("research_class") == HIGH_PRIORITY_RESEARCH)
+    metrics["buyback_first_candidates"] = bf_stats["unique_candidates"]
+    metrics["product_research_candidates"] = bf_stats["positive_spread_hint"]
+    metrics["actionable"] = actionable_count
     reasons = Counter(r for c in cands if c["status"] == RESEARCH_CANDIDATE for r in c["missing_requirements"])
     report = {
         "schema": SCHEMA, "type": "RESEARCH_CANDIDATES", "audience": "operator",
@@ -648,19 +911,24 @@ def build(*, products: list[dict], observations: list[dict], msrp_evidence: dict
         "note": "運営者向けの調査候補。確定の利益ではない。顧客向けの画面・LP・商品の通知には出さない（確認して VERIFIED に"
                 "なるまで）。価格は観測した買値・売値だけ（予測は使わない）",
         "counts": {"research_candidates": metrics["research_candidates"], "verified": metrics["verified_candidates"],
+                   "high_priority_research": metrics["high_priority_research"],
                    "discovered": metrics["by_status"].get(DISCOVERED, 0), "rejected": metrics["by_status"].get(REJECTED, 0),
                    "stale": metrics["by_status"].get(STALE, 0)},
         "research_reasons": dict(reasons.most_common()),
         "candidates": cands,
         "buyback_first": {"catalog_rows": len(catalog or []), "canonical_matches": len(matched),
-                          "new_product_candidates": len(unmatched), "listed": len(dps)},
+                          "unmatched_rows": len(unmatched), "identified": bf_stats["identified"],
+                          "name_only_rejected": bf_stats["name_only_rejected"],
+                          "new_product_candidates": bf_stats["unique_candidates"], "listed": len(dps),
+                          "with_retail_hint": bf_stats["with_retail_hint"],
+                          "positive_spread_hint": bf_stats["positive_spread_hint"]},
         "product_candidates": dps,
         "metrics": metrics,
     }
     return report, new_state
 
 
-def write_outputs(report: dict, state: dict, private_dir, public_dir) -> dict:
+def write_outputs(report: dict, state: dict, private_dir, public_dir, run_id: str | None = None) -> dict:
     """個別の候補・台帳は private_dir（.gitignore 済み）へ、公開してよい集計だけを public_dir/summary.json へ書く。
 
     集計を先に作る（個別の項目が混ざったら例外 → 何も書かない）。戻りは公開の集計。
@@ -673,8 +941,8 @@ def write_outputs(report: dict, state: dict, private_dir, public_dir) -> dict:
     pub.mkdir(parents=True, exist_ok=True)
     (priv / "latest.json").write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
     tmp = priv / "state.json.tmp"
-    tmp.write_text(json.dumps({"schema": SCHEMA, "updated_at": report["generated_at"], "candidates": state},
-                              ensure_ascii=False, indent=1), encoding="utf-8")
+    tmp.write_text(json.dumps({"schema": SCHEMA, "updated_at": report["generated_at"], "run_id": run_id or current_run_id(),
+                               "candidates": state}, ensure_ascii=False, indent=1), encoding="utf-8")
     tmp.replace(priv / "state.json")
     (pub / "summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
     return summary

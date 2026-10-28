@@ -14,10 +14,14 @@ basis: "Market Coverage Audit 2026-10-23 の列挙。登録簿に無い売り場
 candidates:
   - {id: KOJIMA, name: コジマ, channel: STORE, url: "https://www.kojima.net/", verified: false}
   - {id: KS_DENKI, name: ケーズデンキ, channel: STORE, url: "https://www.ksdenki.com/", verified: false}
-  - {id: AMIAMI, name: あみあみ, channel: ONLINE, url: "https://www.amiami.jp/", verified: false}
-  - {id: HOBBYSEARCH, name: ホビーサーチ, channel: ONLINE, url: "https://www.1999.co.jp/", verified: false}
+  # 2026-10-24 の調査: 403（Cloudflare のボットチャレンジ）。回避しない方針なので、取得元の候補から外し、除外として残す
+  - {id: AMIAMI, name: あみあみ, channel: ONLINE, url: "https://www.amiami.jp/", verified: false,
+     policy_excluded: "トップが HTTP 403（Cloudflare のボットチャレンジ）。ボットチャレンジは回避しない"}
+  - {id: HOBBYSEARCH, name: ホビーサーチ, channel: ONLINE, url: "https://www.1999.co.jp/", verified: false,
+     policy_excluded: "トップが HTTP 403（Cloudflare のボットチャレンジ）。ボットチャレンジは回避しない"}
   - {id: CARD_LABO, name: カードラボ, channel: STORE, url: "https://www.c-labo.jp/", verified: false}
-  - {id: SURUGAYA, name: 駿河屋, channel: BOTH, url: "https://www.suruga-ya.jp/", verified: false}
+  - {id: SURUGAYA, name: 駿河屋, channel: BOTH, url: "https://www.suruga-ya.jp/", verified: false,
+     policy_excluded: "トレカの予約への入口が検索結果ページだけ（検索結果は取得しない）。抽選・予約の告知の公開ページが無い"}
   - {id: SUPER_HOBBY, name: スーパーホビー, channel: STORE, url: "", verified: false}
   - {id: AEON, name: イオン, channel: STORE, url: "https://www.aeon.com/", verified: false}
   - {id: DON_QUIJOTE, name: ドン・キホーテ, channel: STORE, url: "https://www.donki.com/", verified: false}

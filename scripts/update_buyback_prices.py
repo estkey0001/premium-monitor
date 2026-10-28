@@ -44,15 +44,7 @@ def _baseline_path() -> Path:
 # ── 公式価格・ジャンル定義（suspicious_price 判定用） ──
 # 別名 → 正本の商品 ID。公式の価格は official_registry.verified_price_of が唯一の出どころ（確認済みの記録 → 公式直販価格の
 # 証拠 → 正本の参考価格）。ここに価格を持たない（二重管理で 119,980 / 49,980 の改定前の値が残っていた）
-ALIAS_PRODUCT_ID: dict[str, str] = {
-    "iphone17pro256": "prod_iphone17pro_256", "iphone17pro512": "prod_iphone17pro_512",
-    "iphone17pm256": "prod_iphone17pm_256", "iphone17pm512": "prod_iphone17pm_512",
-    "switch2": "prod_switch2", "ps5_pro": "prod_ps5_pro",
-    "iphone17_256": "prod_iphone17_256", "iphone16pro256": "prod_iphone16pro_256", "airpods_pro3": "prod_airpods_pro3",
-    "iphoneair_256": "prod_iphoneair_256", "iphoneduo_256": "prod_iphoneduo_256",
-    "x100vi": "prod_x100vi", "z8": "prod_z8", "r5ii": "prod_r5ii",
-    "gr4": "prod_gr4", "gr4_hdf": "prod_gr4_hdf", "gr4_mono": "prod_gr4_mono",
-}
+from src.market.product_aliases import ALIAS_PRODUCT_ID  # noqa: E402,F401  別名 → 正本の商品 ID（報告を商品に結び付ける共有の表）
 
 
 def _derive_official_prices() -> dict[str, int]:

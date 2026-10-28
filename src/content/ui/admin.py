@@ -977,8 +977,15 @@ RESEARCH_LABELS = {
     "IDENTITY_UNCONFIRMED": "商品の照合が未了", "CONDITION_UNKNOWN": "状態が不明", "CONDITION_MISMATCH": "状態が仕入れと違う",
     "STOCK_UNKNOWN": "在庫が未確認", "SELL_SAMPLE_INSUFFICIENT": "成約の件数が不足",
     "PURCHASE_SHIPPING_UNKNOWN": "購入送料が不明", "PRICE_ANOMALY_SUSPECTED": "価格差が大きすぎる（誤価格・別商品の疑い）",
-    "SELL_REJECTED": "売値が品質の判定で外れた"}
+    "SELL_REJECTED": "売値が品質の判定で外れた",
+    "ABOVE_GENRE_MAX": "売値がジャンルの正常帯の上限を超えた（上限は自動で引き上げない）",
+    "NEEDS_CORROBORATION": "他店の裏付けが無い", "PRICE_SPIKE": "前回から大きく動いた"}
 _CONF = {"high": "高", "medium": "中", "low": "低"}
+_LEDGER_JP = {"NOT_AVAILABLE": "引き継ぎなし（実行をまたいで保持する手段が無い）",
+              "NEW_THIS_RUN": "今回新しく作った（前回の台帳が無い）",
+              "REUSED_WITHIN_RUN": "同じ実行の中の再生成が、この実行の最初の台帳を読んだ（前回の実行からの引き継ぎではない）",
+              "RESTORED_FROM_PREVIOUS_RUN": "前回の実行から引き継いだ",
+              "CORRUPT": "壊れていたので作り直した"}
 _GENRE_JP = {"iphone": "スマホ", "smartphone": "スマホ", "camera": "カメラ", "game": "ゲーム", "pc": "PC", "tcg": "TCG"}
 
 
@@ -1020,10 +1027,22 @@ def _research(v: dict) -> str:
         f'<dt>確定できる買取がある商品</dt><dd>{_n(bx.get("products_with_confirmed_sell"))} / {_n(bx.get("total"))}</dd>'
         f'<dt>成約の実データ</dt><dd>{_n((r.get("marketplace_sold_coverage") or {}).get("valid_sold_rows"))}行</dd>'
         f'<dt>買取の一覧からの逆引き</dt><dd>一覧の行 {_n(bf.get("catalog_rows"))}件・正本と一致 '
-        f'{_n(bf.get("canonical_matches"))}件・正本に無い商品 {_n(bf.get("new_product_candidates"))}件</dd>'
-        f'<dt>台帳（初めて見た日の記録）</dt><dd>{esc({"restored": "前回から引き継いだ", "fresh": "新しく作った（初回・引き継ぎなし。初めて見た日は今日になる）", "corrupt": "壊れていたので作り直した"}.get(r.get("ledger_state") or "", "不明"))}</dd>'
+        f'{_n(bf.get("canonical_matches"))}件・識別できた未登録の商品 {_n(bf.get("new_product_candidates"))}件'
+        f'（名前だけで識別できず除外 {_n(bf.get("name_only_rejected"))}行）</dd>'
+        f'<dt>台帳（初めて見た日の記録）</dt><dd>{esc(_LEDGER_JP.get(r.get("ledger_state") or "", "不明"))}'
+        f'（初めて見た日: {esc("実行をまたいで保持" if r.get("first_seen_scope") == "ACROSS_RUNS" else "この実行の中だけ。実行をまたいだ保持なし")}）</dd>'
+        f'<dt>高優先の調査（上限超え・裏付け不足・急変で確定から外れた価格差）</dt><dd>{_n(r.get("high_priority_research_count"))}件</dd>'
+        f'<dt>買取の一覧から見つけた未登録の商品</dt><dd>{_n(r.get("buyback_first_candidates"))}件'
+        f'（うち小売の価格のヒントで価格差が正 {_n(r.get("product_research_candidate_count"))}件。登録はしていない）</dd>'
         f'<dt>TCG の取得元</dt><dd>登録 {_n(tc.get("configured_sources"))}・解析あり {_n(tc.get("implemented_collectors"))}・'
-        f'受付中の抽選 {_n(r.get("tcg_active_events"))}・定価を確認済み {_n(r.get("tcg_msrp_verified"))}件</dd></dl>')
+        f'受付中の抽選 {_n(r.get("tcg_active_events"))}・定価を確認済み {_n(r.get("tcg_msrp_verified"))}件</dd>'
+        f'<dt>TCG の告知の流れ</dt><dd>告知（候補の記事）{_n((r.get("tcg_funnel") or {}).get("raw_announcements"))}件 → 解析できたイベント '
+        f'{_n((r.get("tcg_funnel") or {}).get("parsed_events"))}件・日程が読めず要確認 {_n((r.get("tcg_funnel") or {}).get("review_required"))}件 → '
+        f'受付中 {_n((r.get("tcg_funnel") or {}).get("active_lotteries"))}件'
+        + ("（受付中が0件でも、市場に無いとは言えない。取得元の未実装・遮断・到達不能が "
+           f'{_n((r.get("tcg_funnel") or {}).get("sources_with_gap"))}件ある）'
+           if (r.get("tcg_funnel") or {}).get("zero_active_interpretation") == "NOT_PROVEN_MARKET_EMPTY" else "")
+        + '</dd></dl>')
     reasons = ("<ul class=\"nu-ad-list\">" + "".join(
         f"<li>{esc(RESEARCH_LABELS.get(k, k))}<span class=\"nu-osub\"> {esc(str(n))}件</span></li>"
         for k, n in (r.get("reason_counts") or {}).items()) + "</ul>") if r.get("reason_counts") else ""

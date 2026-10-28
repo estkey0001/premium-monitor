@@ -360,9 +360,10 @@ products:
     name: "Canon EOS R6 Mark II"
     brand: "CANON"
     model_number: "EOS R6 Mark II"
-    retail_price: 390000
+    jan_code: "4549292200508"   # キヤノンの製品ページ（ボディー・商品コード 5666C001。2026-10-24・Coverage Wave 1）
+    retail_price: 319000
     keywords: ["R6 Mark II", "EOS R6 Mark II", "R6II"]
-    memo: "概算定価（要確認）"
+    memo: "キヤノンオンラインショップ販売価格（2026-10-24 確認）"
   - id: "prod_r3"
     genre: "camera"
     name: "Canon EOS R3"
@@ -393,9 +394,10 @@ products:
     name: "Nikon Z9"
     brand: "NIKON"
     model_number: "Z9"
-    retail_price: 700000
+    jan_code: "4960759906168"   # ニコンダイレクトの購入ページ（ボディー。2026-10-24・Coverage Wave 1）
+    retail_price: 772200
     keywords: ["Nikon Z9", "Z9"]
-    memo: "概算定価（要確認）"
+    memo: "ニコンダイレクト販売価格（2026-10-24 確認）"
   - id: "prod_q3"
     genre: "camera"
     name: "Leica Q3"

@@ -69,6 +69,7 @@ RECHECK_VERIFIED_BY = {"prod_ps5_pro": "store_product_page", "prod_switch2": "ms
 # 公式直販価格は確認から14日で確認済みでなくなる（normalized_prices.OFFICIAL_DIRECT_STALE_DAYS）ので、全部を対象にする
 RECHECK_TARGETS = ("prod_ps5_pro", "prod_switch2", "prod_airpods_pro3", "prod_r5ii", "prod_z8", "prod_iphone17_256",
                    "prod_x100vi",
+                   "prod_z9", "prod_r6ii",   # Coverage Wave 1: ニコンダイレクト（JAN）・キヤノンオンラインショップ（商品コード）
                    "prod_iphoneair_256",   # Phase 29: 発見から登録した iPhone Air 256GB（同じ apple_parts の読み方）
                    "prod_iphoneduo_256")   # Phase 30: 優先順位で選んで登録した iPhone Duo 256GB
 # 読み取りごとの照合のキー（ページのどの値で「この商品」と確かめるか）。既定は型番（model_number）

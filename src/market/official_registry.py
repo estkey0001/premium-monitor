@@ -82,6 +82,10 @@ VERIFIED_URLS = {
     # 「こちらの商品はボディーのみの販売となります」。在庫の欄（spec_stock_msg）は空（在庫は記録しない）
     "prod_z8": {"source": "src_nikon_direct", "url": "https://nij.nikon.com/shop/g/g4960759909947/", "link_type": "item",
                 "price": 575300, "conf": "high", "checked_on": "2026-10-08", "price_kind": "official_direct"},
+    # 2026-10-24（Coverage Wave 1）: ニコンダイレクトの購入ページ「Z9 … ニコンダイレクト販売価格 772,200円」
+    # 同じページに JAN 4960759906168（ボディー）。在庫の欄は記録しない
+    "prod_z9": {"source": "src_nikon_direct", "url": "https://nij.nikon.com/shop/g/g4960759906168/", "link_type": "item",
+                "price": 772200, "conf": "high", "checked_on": "2026-10-24", "price_kind": "official_direct"},
     # 2026-10-08 14:31: フジフイルムモールの購入ページ（シルバー）「X100VI 315,700円（税込）」「送料：無料」
     # 「カラーを選択 シルバー 在庫なし ブラック 在庫なし」。ブラック（g16941816）も同じ 315,700円
     "prod_x100vi": {"source": "src_fujifilm_official", "url": "https://mall-jp.fujifilm.com/shop/g/g16941878/",
@@ -95,14 +99,16 @@ VERIFIED_URLS = {
     "prod_r5ii": {"source": "src_canon_official", "url": "https://store.canon.jp/online/g/g6536C001/", "link_type": "item",
                   "price": 654500, "conf": "high", "checked_on": "2026-10-08", "price_kind": "official_direct",
                   "stock": "カートに入れる（送料無料）", "stock_checked_at": "2026-10-08T14:15:00+09:00"},
+    # 2026-10-24（Coverage Wave 1）: キヤノンオンラインショップの購入ページ（EOS R6 Mark II・ボディー。商品コード 5666C001）
+    # 「319,000円(税込)」「送料無料」。製品ページ（personal.canon.jp）に「JANコード 4549292-200508 商品コード 5666C001」
+    "prod_r6ii": {"source": "src_canon_official", "url": "https://store.canon.jp/online/g/g5666C001/", "link_type": "item",
+                  "price": 319000, "conf": "high", "checked_on": "2026-10-24", "price_kind": "official_direct"},
 }
 
 # 検証できなかった/公式定価が存在しないメーカー（推測URLで verified 扱いしない）
 # 実際の型番（同一性確認用）
 UNVERIFIED = {
-    "prod_r6ii":  {"source": "src_canon_official", "model": "EOS R6 Mark II",  "reason": "canon.jp が当環境からDNS解決不可（要手動検証）"},
     "prod_r3":    {"source": "src_canon_official", "model": "EOS R3",          "reason": "canon.jp が当環境からDNS解決不可（要手動検証）"},
-    "prod_z9":    {"source": "src_nikon_direct",   "model": "Z9",              "reason": "オープン価格の可能性・個別URL未検証"},
     "prod_zf":    {"source": "src_nikon_direct",   "model": "Zf",              "reason": "オープン価格の可能性・個別URL未検証"},
     "prod_a1ii":  {"source": "src_sony_store",     "model": "ILCE-1M2",        "reason": "store.sony.jp が当環境からDNS解決不可（要手動検証）"},
     "prod_a7rv":  {"source": "src_sony_store",     "model": "ILCE-7RM5",       "reason": "store.sony.jp が当環境からDNS解決不可（要手動検証）"},
@@ -206,7 +212,8 @@ PRICE_SEMANTICS = {
 SOURCE_PRICE_KINDS = {"src_ricoh_imaging": "msrp"}
 
 # メーカーの希望小売価格（Phase 16。手順3・4）。オープン価格の商品に架空の希望小売価格を作らない（値は持たない）
-MSRP_OF = {"prod_z8": "open_price", "prod_x100vi": "open_price", "prod_r5ii": "open_price"}
+MSRP_OF = {"prod_z8": "open_price", "prod_x100vi": "open_price", "prod_r5ii": "open_price",
+           "prod_z9": "open_price", "prod_r6ii": "open_price"}
 
 
 def price_kind_of(product_id: str, source: str = "") -> str:
@@ -304,6 +311,14 @@ IDENTITY_EVIDENCE = {
                 "url": "https://nij.nikon.com/shop/g/g4960759909947/", "checked_on": "2026-10-08"},
     # キヤノンの製品ページ「EOS R5 Mark II JANコード 4549292-229141 商品コード 6536C001」。購入ページ（6536C001）は
     # 「EOS R5 Mark II・ボディー（レンズは付きません）」。レンズキット（RF24-105L）は別の商品（808,500円）
+    # 2026-10-24（Coverage Wave 1）: ニコンの購入ページ（Z9・ボディー）の JAN 4960759906168。ニコンダイレクトの購入ページと同じ
+    "prod_z9": {"model_number": "Z9", "jan_code": "4960759906168", "edition": "日本向け", "bundle": "ボディーのみ",
+                "url": "https://nij.nikon.com/shop/g/g4960759906168/", "checked_on": "2026-10-24"},
+    # 2026-10-24: キヤノンの製品ページ「EOS R6 Mark II JANコード 4549292-200508 商品コード 5666C001」。購入ページ（5666C001）は
+    # 「EOS R6 Mark II・ボディー（レンズは付きません）」
+    "prod_r6ii": {"model_number": "EOS R6 Mark II", "jan_code": "4549292200508", "edition": "日本向け",
+                  "bundle": "ボディーのみ（商品コード 5666C001）",
+                  "url": "https://personal.canon.jp/product/camera/eos/r6mk2", "checked_on": "2026-10-24"},
     "prod_r5ii": {"model_number": "EOS R5 Mark II", "jan_code": "4549292229141", "edition": "日本向け",
                   "bundle": "ボディーのみ（商品コード 6536C001）",
                   "url": "https://personal.canon.jp/product/camera/eos/r5mk2", "checked_on": "2026-10-08"},
@@ -383,6 +398,19 @@ OFFICIAL_DIRECT_OFFERS = {
         "sale_mode": "MEMBERS_ONLY", "stock": "OUT_OF_STOCK",
         "stock_semantics": "「カラーを選択」の欄に色ごとの在庫（2026-10-08 14:31 はシルバー・ブラックとも在庫なし）。"
                            "購入にはフジフイルムメンバーズの登録と本人確認が要る・お一人様1台",
+        "rejected": []},
+    "prod_z9": {
+        "shop": "ニコンダイレクト", "url": "https://nij.nikon.com/shop/g/g4960759906168/",
+        "price": 772200, "checked_on": "2026-10-24", "capacity": "", "body_kit": "body", "edition": "日本向け",
+        "identity_equivalent": "", "sale_mode": "NORMAL", "stock": "UNKNOWN",
+        "stock_semantics": "購入ページの在庫の欄が空。「買い物かごに入れる」だけでは在庫ありにしない"
+                           "（ログインなしでも買える。送料は会員のログイン時だけ無料）",
+        "rejected": []},
+    "prod_r6ii": {
+        "shop": "キヤノンオンラインショップ", "url": "https://store.canon.jp/online/g/g5666C001/",
+        "price": 319000, "checked_on": "2026-10-24", "capacity": "", "body_kit": "body", "edition": "日本向け",
+        "identity_equivalent": "", "sale_mode": "NORMAL", "stock": "UNKNOWN",
+        "stock_semantics": "購入ページの在庫の表示は、この確認では記録しない（2026-10-24 は価格・商品コード・送料だけ確認）",
         "rejected": []},
     "prod_r5ii": {
         "shop": "キヤノンオンラインショップ", "url": "https://store.canon.jp/online/g/g6536C001/",

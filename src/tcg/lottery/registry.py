@@ -88,16 +88,26 @@ LOTTERY_SOURCES: list[dict] = [
          news_url="https://geo-online.co.jp/news/",
          lottery_url="https://draw.geo-online.co.jp/lottery/", channel="STORE",
          adapter="geo_lottery", verified=True),
+    _src("CARD_LABO", "カードラボ", _BOTH, "P1", "https://www.c-labo.jp/", CM_HTML,
+         news_url="https://www.c-labo.jp/blog/filter/tcg:25/", channel="STORE", adapter="card_labo_lottery",
+         verified=True,
+         note="店舗ブログに抽選・抽選予約の告知が静的 HTML で載る（応募期間・当選発表・購入期間・商品名・価格が本文のテキスト）。"
+              "応募は店舗の X のフォロー＆リポストで、公式ドメインの応募ページは無い（entry_url は空）。店舗ごとの抽選として扱う。"
+              "2026-10-24 の調査: robots.txt は /wordpress/wp-admin/ だけを禁止（PremiumMonitor への禁止なし）。利用規約"
+              "（c-labo.jp の規約ページ）は著作権・防犯・免責・従業員の保護の条項で、自動取得を禁じる記述は読み取れなかった"
+              "（許可の明記でもない。規約の確認は取得日つきの記録で、変更があれば再確認する）"),
     _src("TOYSRUS", "トイザらス", _BOTH, "P1", "https://www.toysrus.co.jp/", CM_HTML,
          note="2026-10-01 時点でトップページが HTTP 403（ローカル・CI とも）。解析器は未実装"),
     _src("JOSHIN", "Joshin", _BOTH, "P1", "https://joshinweb.jp/", CM_HTML,
          note="2026-10-01 時点でトップページが HTTP 403。解析器は未実装"),
     _src("EDION", "エディオン", _BOTH, "P1", "https://www.edion.com/", CM_HTML,
-         note="到達可。トップから TCG の抽選告知一覧を発見できず、解析器は未実装"),
+         note="到達可。2026-10-24 の調査: 公開のお知らせ一覧（/info.html）に TCG の告知が0件（最新は2024年）で、抽選・予約の告知が"
+              "載る形を確認できない。解析器は未実装（実装の価値が低い）"),
     _src("YAMADA", "ヤマダデンキ", _BOTH, "P1", "https://www.yamada-denkiweb.com/", CM_HTML,
          note="2026-10-01 時点で応答タイムアウト。解析器は未実装"),
     _src("TSUTAYA", "TSUTAYA", _BOTH, "P1", "https://store-tsutaya.tsite.jp/", CM_HTML,
-         note="到達可。トップから TCG の抽選告知一覧を発見できず、解析器は未実装"),
+         note="2026-10-24 時点でサイト全体が保守で停止（robots.txt もトップも保守ページ。再開は 2026/10/30 の予定）。"
+              "告知の有無・構造は未確認。保守明けに robots.txt から取り直して再調査する"),
     _src("BICCAMERA", "ビックカメラ", _BOTH, "P1", "https://www.biccamera.com/", CM_HTML,
          note="2026-10-01 時点で応答タイムアウト。解析器は未実装"),
     _src("YODOBASHI", "ヨドバシカメラ", _BOTH, "P1", "https://www.yodobashi.com/", CM_HTML,
@@ -109,7 +119,8 @@ LOTTERY_SOURCES: list[dict] = [
     _src("RAKUTEN_BOOKS", "楽天ブックス", _BOTH, "P2", "https://books.rakuten.co.jp/", CM_HTML,
          note="到達可。TCG 抽選の告知一覧を発見できず、解析器は未実装"),
     _src("SEVEN_NET", "セブンネットショッピング", _BOTH, "P2", "https://7net.omni7.jp/", CM_HTML,
-         note="到達可。TCG 抽選の告知一覧を発見できず、解析器は未実装"),
+         note="到達可。2026-10-24 の調査: 公開のお知らせ・キャンペーンに TCG の語が0件。TCG は商品ページ単位で、告知ページが無い"
+              "ので、告知の自動発見に向かない。解析器は未実装（実装の価値が低い）"),
     _src("LAWSON", "ローソン", _BOTH, "P2", "https://www.lawson.co.jp/", CM_HTML,
          news_url="https://www.lawson.co.jp/campaign/", channel="STORE",
          adapter="lawson_lottery", verified=True),
@@ -209,6 +220,31 @@ def load_source_candidates(path=None) -> dict:
             "policy_excluded": excluded}
 
 
+ZERO_ACTIVE_NOT_PROVEN = "NOT_PROVEN_MARKET_EMPTY"   # 受付中が 0 件でも、市場に無いとは言えない（取得元の不足・遮断・到達不能がある）
+ZERO_ACTIVE_NO_GAP = "NO_KNOWN_COLLECTOR_GAP"          # 取得元の未実装・遮断・到達不能が無いのに 0 件（それでも、登録外の売り場は見ていない）
+
+
+def announcement_funnel(rows: list[dict]) -> dict:
+    """取得の流れ: 告知（候補の記事）→ 解析できたイベント → 日程が読めず要確認 → 棄却 → 受付中。
+
+    「受付中 0 件」が、本当に市場に無いのか、取得器が足りないのかを区別する材料。0 件でも「市場に無い」と断定しない:
+    取得元の未実装・遮断・到達不能が1つでもあれば NOT_PROVEN_MARKET_EMPTY（収集の不足の可能性）。
+    """
+    def _sum(key):
+        return sum(int(r.get(key) or 0) for r in rows if isinstance(r.get(key), (int, float)) and not isinstance(r.get(key), bool))
+    active = _sum("active_lotteries")
+    truncated = sum(1 for r in rows if r.get("truncated") is True)           # 詳細の取得に上限があり、取りこぼした取得元
+    gap = sum(1 for r in rows if source_class(r) in (SC_IMPLEMENTED_BUT_BLOCKED, SC_ACCESSIBLE_UNIMPLEMENTED, SC_UNREACHABLE)
+              or r.get("truncated") is True)
+    # 数え方は取得元ごとに近似（候補の記事の定義・棄却の数え方は取得器ごとに違う）。合計は目安で、保存則を満たさない
+    out = {"raw_announcements": _sum("candidate_articles"), "parsed_events": _sum("accepted_lotteries"),
+           "review_required": _sum("announcements"), "rejected": _sum("rejected"), "active_lotteries": active,
+           "sources_with_gap": gap, "sources_truncated": truncated}
+    if active == 0:
+        out["zero_active_interpretation"] = ZERO_ACTIVE_NOT_PROVEN if gap else ZERO_ACTIVE_NO_GAP
+    return out
+
+
 def coverage_summary(rows: list[dict]) -> dict:
     """Task33: Lottery Source Coverage。"""
     def _n(cond):
@@ -226,4 +262,6 @@ def coverage_summary(rows: list[dict]) -> dict:
         "lottery_events_found": sum(int(r.get("active_lotteries") or 0) for r in rows),
         # H2: 分類ごとの件数（キーは SOURCE_CLASSES。0 件も出す）
         "source_classes": {c: _n(lambda r, c=c: source_class(r) == c) for c in SOURCE_CLASSES},
+        # Wave 1 Stage G: 取得の流れ（告知 → イベント → 要確認 → 受付中）と、受付中が 0 件のときの解釈
+        "funnel": announcement_funnel(rows),
     }

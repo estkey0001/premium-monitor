@@ -56,6 +56,8 @@ jobs:
         run: |
           if [ "${#K}" -ge 32 ]; then
             echo "enabled=true" >> "$GITHUB_OUTPUT"
+            # 台帳を実行をまたいで引き継げる（LP の生成が ledger_state を NEW_THIS_RUN / RESTORED_FROM_PREVIOUS_RUN で区別する）
+            echo "RESEARCH_LEDGER_PERSISTENCE=enabled" >> "$GITHUB_ENV"
           else
             echo "enabled=false" >> "$GITHUB_OUTPUT"
             if [ -n "$K" ]; then echo "::warning::RESEARCH_LEDGER_KEY が短い（32文字未満）ので、台帳を引き継がない"; fi

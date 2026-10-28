@@ -175,8 +175,13 @@ class LotteryAdapter(BaseTcgCollector):
                            published_at: Optional[str], entry_url: Optional[str] = None,
                            result_url: Optional[str] = None,
                            tcg_hint: Optional[str] = None,
-                           source_type: Optional[str] = None) -> list[dict]:
-        """記事本文から抽選イベントを作る。対象商品ごとに1件。"""
+                           source_type: Optional[str] = None,
+                           store_name: Optional[str] = None, store_id: Optional[str] = None,
+                           targets: Optional[list[dict]] = None) -> list[dict]:
+        """記事本文から抽選イベントを作る。対象商品ごとに1件。
+
+        store_name・store_id を渡すと、店舗ごとの抽選（store_specific）として作る（店舗のブログ・告知用）。
+        """
         self.funnel.candidate_events += 1
         if self.funnel.pages:
             self.funnel.pages[-1].candidate_blocks += 1
@@ -190,7 +195,8 @@ class LotteryAdapter(BaseTcgCollector):
                         else REJECT_NO_LOTTERY_SALE)
             return []
 
-        targets = extract_target_products(body) or [
+        # targets: 取得元の告知の書き方に合わせて、呼び出し側が本文から読んだ対象商品（無ければ共通のパーサ・件名）
+        targets = targets or extract_target_products(body) or [
             {"product_name": product_name_from_title(title), "retail_price": None}]
         source_type = source_type or self.lottery_source_type
         entry = entry_url if entry_url and is_official_url(entry_url) else None
@@ -214,7 +220,7 @@ class LotteryAdapter(BaseTcgCollector):
             ev = LotteryEvent(
                 tcg=tcg, product_name=name, retailer=self.retailer,
                 retailer_name=self.retailer_name, event_type=event_type,
-                channel=self.channel, store_specific=False,
+                channel=self.channel, store_specific=bool(store_name), store_name=store_name, store_id=store_id,
                 retail_price=tgt.get("retail_price"),
                 shrink_status=shrink if shrink != "UNKNOWN" else None,
                 entry_url=entry, result_url=result, source_url=url, source_type=source_type,

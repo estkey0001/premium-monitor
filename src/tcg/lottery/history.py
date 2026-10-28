@@ -173,7 +173,9 @@ def notification_candidates(events: list[dict], now=None,
                         "fires_at": at.isoformat(), "tcg": ev.get("tcg"),
                         "product_name": ev.get("product_name"), "retailer": retailer,
                         "entry_url": ev.get("entry_url"), "source_url": ev.get("source_url"),
-                        "message": f"{ev.get('product_name')}（{retailer}） {labels[key]}"})
+                        "message": (f"{ev.get('product_name')}（{retailer}・{ev.get('store_name')}） {labels[key]}"
+                                    if ev.get("store_specific") and ev.get("store_name")
+                                    else f"{ev.get('product_name')}（{retailer}） {labels[key]}")})
             sent[f"{lid}:{key}"] = now.isoformat()
     ledger["sent"] = sent
     return out, ledger

@@ -31,6 +31,7 @@ ANNOUNCEMENT_DISPLAY_DAYS = 14
 
 
 def _adapters():
+    from src.collectors.tcg.lottery.clabo import CardLaboLotteryAdapter
     from src.collectors.tcg.lottery.geo import GeoLotteryAdapter
     from src.collectors.tcg.lottery.others import (
         LawsonLotteryAdapter, OnePieceNewsLotteryAdapter, PremiumBandaiLotteryAdapter,
@@ -42,6 +43,7 @@ def _adapters():
         "pco_lottery": PcoLotteryAdapter,
         "pokemon_news_lottery": PokemonNewsLotteryAdapter,
         "geo_lottery": GeoLotteryAdapter,
+        "card_labo_lottery": CardLaboLotteryAdapter,
         "lawson_lottery": LawsonLotteryAdapter,
         "onepiece_news_lottery": OnePieceNewsLotteryAdapter,
         "premium_bandai_lottery": PremiumBandaiLotteryAdapter,
@@ -288,6 +290,7 @@ def run_lottery_pipeline(pokemon_registry: list[dict], onepiece_products: list[d
             "health": h.get("status"), "active_lotteries": active - active_preorders,
             "active_preorders": active_preorders,
             "announcements": len(h.get("announcements") or []),
+            "truncated": bool(h.get("truncated")),          # 詳細の取得に上限があり、見つけた告知を全部は読めていない取得元
             # 一覧のタイトルだけで見つけた販売の告知（Phase 27 の発見の候補。本文・日程は読んでいない）
             "discovered_titles": list(h.get("discovered_titles") or [])[:30],
             "pages": f.get("pages", []),

@@ -119,7 +119,7 @@ def test_recheck_result_keeps_registry_url_and_records_fetched_page():
     from src.market.official_registry import VERIFIED_URLS
     assert ps5["url"] == VERIFIED_URLS["prod_ps5_pro"]["url"] and ps5["fetched_url"].endswith("_product/")
     assert sw["url"] == VERIFIED_URLS["prod_switch2"]["url"] and "store-jp.nintendo.com" not in sw["fetched_url"]
-    assert not any("store-jp.nintendo.com" in u or u.endswith("_purchase/") for u in seen)
+    assert not any("store-jp.nintendo.com" in u or (u.endswith("_purchase/") and "/ps5/" in u) for u in seen)     # PS5 は購入ページ（在庫が無いと移る）を読まない。カメラ（ichigan）の購入ページは読む
     assert "fetched_url" not in out["prod_airpods_pro3"]                                # 同じページを読む商品には付けない
 
 

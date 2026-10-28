@@ -170,15 +170,16 @@ def test_blocked_listing_is_not_retried_by_another_route(net):
 def test_detail_urls_stay_on_the_official_domain_and_are_capped(net):
     cards = clabo.parse_listing(LIST_PK)
     lottery_cards = [c for c in cards if "抽選" in c["title"]]
-    assert len(lottery_cards) > clabo.CardLaboLotteryAdapter.max_detail_fetch
     net.pop("calls", None)
     net["https://www.c-labo.jp/blog/filter/tcg:25/"] = (200, LIST_PK)
     net["https://www.c-labo.jp/blog/filter/tcg:184/"] = (200, "<html></html>")
     net["https://www.c-labo.jp/shop/"] = (200, DETAIL_HIROSHIMA)
     a = clabo.CardLaboLotteryAdapter()
+    a.max_detail_fetch = 3
+    assert len(lottery_cards) > a.max_detail_fetch
     a.collect()
     assert any("のみ取得" in n for n in a.funnel.notes)
-    assert a.funnel.news_pages_loaded <= clabo.CardLaboLotteryAdapter.max_detail_fetch
+    assert a.funnel.news_pages_loaded <= a.max_detail_fetch
 
 
 def test_registry_and_pipeline_know_the_new_source():
@@ -300,6 +301,7 @@ def test_truncated_detail_fetch_is_flagged_for_the_funnel(net):
     net["https://www.c-labo.jp/blog/filter/tcg:184/"] = (200, "<html></html>")
     net["https://www.c-labo.jp/shop/"] = (200, DETAIL_HIROSHIMA)
     a = clabo.CardLaboLotteryAdapter()
+    a.max_detail_fetch = 3
     a.collect()
     assert a.health.get("truncated") is True
 
@@ -358,3 +360,29 @@ def test_each_listing_structure_change_is_detected_not_only_the_first(net):
     a.max_detail_fetch = 1
     a.collect()
     assert a.health["status"] == "DEGRADED" and any("ONE_PIECE" in m for m in a.health["error_messages"])
+
+
+# ── Coverage Wave 3: 取りこぼしの数を黙って切り捨てない ─────────────────────────────────
+
+def test_truncation_metrics_split_open_skipped_from_ended_skipped(net):
+    net.pop("calls", None)
+    net["https://www.c-labo.jp/blog/filter/tcg:25/"] = (200, LIST_PK)
+    net["https://www.c-labo.jp/blog/filter/tcg:184/"] = (200, "<html><div class='claboCard'></div></html>")
+    a = clabo.CardLaboLotteryAdapter()
+    a.max_detail_fetch = 3
+    a.collect()
+    h = a.health
+    assert h["detail_candidates"] >= 5 and h["detail_fetched"] <= 3
+    assert h["skipped_due_to_limit"] + h["skipped_ended"] + h["detail_fetched"] >= h["detail_candidates"] - 1   # 取りこぼしを数える（0 と書かない）
+    assert h["skipped_due_to_limit"] >= 1 and h["truncated"] is True
+    assert any("応募中らしい告知" in n for n in a.funnel.notes)
+
+
+def test_no_truncation_when_everything_open_was_fetched(net):
+    net.pop("calls", None)
+    net["https://www.c-labo.jp/blog/filter/tcg:25/"] = (200, LIST_PK)
+    net["https://www.c-labo.jp/blog/filter/tcg:184/"] = (200, "<html><div class='claboCard'></div></html>")
+    a = clabo.CardLaboLotteryAdapter()
+    a.max_detail_fetch = 99
+    a.collect()
+    assert a.health["skipped_due_to_limit"] == 0 and not a.health.get("truncated") and a.health["detail_fetched"] == a.health["detail_candidates"]

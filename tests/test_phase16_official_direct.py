@@ -185,11 +185,11 @@ def test_shipping_records_are_conservative(reg):
 
 def test_no_automatic_promotion_without_evidence(reg):
     """公式ストアに価格があるだけでは確定にしない（証拠の無い公式直販価格は参考）。"""
-    # 証拠（同一性・直販の記録）の無い商品（Sony α7R V: まだ確認済みにしていない）
-    reg.VERIFIED_URLS["prod_a7rv"] = {"source": "src_nikon_direct", "url": "https://nij.nikon.com/shop/g/g4960759906908/",
+    # 証拠（同一性・直販の記録）の無い商品（Sony FX3: まだ確認済みにしていない）
+    reg.VERIFIED_URLS["prod_fx3"] = {"source": "src_nikon_direct", "url": "https://nij.nikon.com/shop/g/g4960759906908/",
                                       "link_type": "item", "price": 290000, "conf": "high", "checked_on": "2026-10-08",
                                       "price_kind": "official_direct"}
-    ok, why = _gate(reg, "prod_a7rv")
+    ok, why = _gate(reg, "prod_fx3")
     assert not ok and why == ("no_official_direct_evidence",)
 
 

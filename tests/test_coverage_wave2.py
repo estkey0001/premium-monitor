@@ -364,7 +364,8 @@ def test_deploy_check_873_passes_and_detects_unsafe_retail_and_collector_code(tm
     from scripts import deploy_check as dc
     assert [r["level"] for r in dc._check_coverage_wave2()] == ["ok"]
     root = tmp_path / "repo"
-    for rel in ("src/research", "src/collectors/tcg/lottery", "scripts/research_retail_lookup.py", ".github/workflows/daily_lp.yml"):
+    for rel in ("src/research", "src/collectors/tcg/lottery", "src/tcg/event_quality.py", "scripts/research_retail_lookup.py",
+                ".github/workflows/daily_lp.yml"):
         src = ROOT / rel
         if src.is_dir():
             shutil.copytree(src, root / rel, ignore=shutil.ignore_patterns("__pycache__"))

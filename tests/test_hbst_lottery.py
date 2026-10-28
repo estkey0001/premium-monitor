@@ -154,3 +154,14 @@ def test_detail_without_article_marks_the_source_degraded(net):
     a = hbst.HobbyStationLotteryAdapter()
     a.collect()
     assert a.health["status"] == "DEGRADED" and a.funnel.structure_changed_pages >= 1
+
+
+def test_truncation_metrics_for_hobby_station(net):
+    routes, _ = net
+    _ok(routes)
+    a = hbst.HobbyStationLotteryAdapter()
+    a.max_detail_fetch = 1
+    a.collect()
+    h = a.health
+    assert h["detail_candidates"] == 2 and h["detail_fetched"] == 1
+    assert h["skipped_due_to_limit"] == 0 and h["skipped_ended"] == 1 and not h.get("truncated")          # 読まなかったのは終了済みの告知だけ

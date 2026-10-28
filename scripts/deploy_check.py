@@ -4159,6 +4159,7 @@ def check() -> list[dict]:
     results.extend(_check_market_research())
     results.extend(_check_coverage_wave1())
     results.extend(_check_coverage_wave2())
+    results.extend(_check_coverage_wave3())
 
     # ══════════════════════════════════════════════════════════════════
     # #820-#825: データの正確さ・鮮度の偽装（Phase 0）
@@ -6568,7 +6569,8 @@ def _check_coverage_wave2(root: Path | None = None) -> list[dict]:
         return "\n".join(ln for ln in code.splitlines() if not ln.lstrip().startswith("#"))
     try:
         for path in ("src/research/retail_lookup.py", "src/research/triage.py", "scripts/research_retail_lookup.py",
-                     "src/collectors/tcg/lottery/hbst.py"):
+                     "src/collectors/tcg/lottery/hbst.py", "src/collectors/tcg/lottery/kidsrepublic.py",
+                     "src/collectors/tcg/lottery/fukufuku.py", "src/tcg/event_quality.py"):
             code = _code(path)
             imports = "\n".join(ln for ln in code.splitlines() if _re73.match(r"\s*(from|import)\s", ln))
             if _re73.search(r"requests|urllib|playwright|selenium|httpx|aiohttp", imports, _re73.I):
@@ -6577,8 +6579,9 @@ def _check_coverage_wave2(root: Path | None = None) -> list[dict]:
                 bad.append(f"{path} に、回避・偽装につながる記述がある")
         if "recheck_official._fetch" not in (root / "scripts" / "research_retail_lookup.py").read_text(encoding="utf-8"):
             bad.append("照会のスクリプトが、polite 経由の取得（recheck_official._fetch）を使っていない")
-        if _re73.search(r"entry_url\s*=\s*[^N\s]", _code("src/collectors/tcg/lottery/hbst.py").replace("entry_url=None", "")):
-            bad.append("ホビーステーションの取得器が応募ページの URL を作っている")
+        for _p73 in ("hbst", "kidsrepublic", "fukufuku"):
+            if _re73.search(r"entry_url\s*=\s*[^N\s]", _code(f"src/collectors/tcg/lottery/{_p73}.py").replace("entry_url=None", "")):
+                bad.append(f"{_p73} の取得器が応募ページの URL を作っている")
         wf = (root / ".github" / "workflows" / "daily_lp.yml").read_text(encoding="utf-8")
         i = wf.find("name: Research retail lookup")
         step = wf[i:wf.find("\n      # ", i)] if i >= 0 and wf.find("\n      # ", i) > 0 else wf[i:]
@@ -6609,6 +6612,66 @@ def _check_coverage_wave2(root: Path | None = None) -> list[dict]:
         bad.append(f"検査に失敗: {type(exc).__name__}: {exc}")
     return [{"level": "ok" if not bad else "error", "check": "coverage_wave2_retail_lookup_safety",
              "message": "#873 小売の照会・選別・新しい取得元は取得の作法を通り・古い結果を使わず・確定にせず・個別の候補を公開しない"
+                        + ("" if not bad else f" ← {bad[:4]}")}]
+
+
+def _check_coverage_wave3(root: Path | None = None) -> list[dict]:
+    """Coverage Wave 3（#874）: 仕入れ値の証拠は、現金・ポイント・クーポン・キャンペーンを分け、条件つきの値引きを現金の仕入れ値にしない。
+
+    - ポイント・キャッシュバックを現金から引かない。クーポン・キャンペーン・会員限定の値引きは通常の価格で計算する
+    - 条件つき・通常価格不明の仕入れ値・ポイントだけで出る価格差は、高優先の調査にも調査候補にもしない
+    - キヤノンの対応表（config/canon_codes.yaml）は JAN・商品コードが一意で、整備済みの別コードを含まない
+    - TCG の質・検知の許容のモジュールは取得の部品を使わず、初めて見た時刻を測れると言わない
+    """
+    import re as _re74
+    root = root or Path(__file__).resolve().parent.parent
+    bad = []
+    try:
+        from datetime import datetime as _dt74
+        from datetime import timedelta as _td74
+        from datetime import timezone as _tz74
+
+        from src.research import candidates as rc
+        from src.research import retail_lookup as rl
+        base = {"price": 100000, "name": "x"}
+        if rl.price_evidence({**base, "points": 10000})["effective_price"] != 100000:
+            bad.append("ポイントを現金から引いている")
+        if rl.price_evidence({**base, "cashback": 5000})["effective_price"] != 100000:
+            bad.append("キャッシュバックを現金から引いている")
+        coupon = rl.price_evidence({"price": 90000, "regular_price": 100000, "required_coupon": "会員限定"})
+        if coupon["effective_price"] != 100000 or rl.COND_COUPON not in coupon["price_conditions"]:
+            bad.append("クーポンの値引きを現金の仕入れ値に使っている")
+        if rl.price_evidence({**base, "immediate_discount": 3000})["effective_price"] != 97000:
+            bad.append("誰でも即時の値引きを反映していない（保守的すぎる）")
+        now = _dt74(2026, 10, 29, 12, 0, tzinfo=_tz74(_td74(hours=9)))
+        fresh = "2026-10-29T10:00:00+09:00"
+        dp = {"candidate_id": "dp_x", "status": rc.DISCOVERED, "name": "x", "identity_basis": "JAN", "observed_sell_price": 95000,
+              "observed_at": fresh, "retail_price_hint": None, "missing_requirements": []}
+        lk = {"status": "MATCHED", "retailer": "r", "source_type": "AUTHORIZED_RETAILER", "product_url": "u", "price": 100000,
+              "listed_price": 100000, "availability_state": "IN_STOCK", "observed_at": fresh, "identity_evidence": {},
+              "price_basis": "UNCONDITIONAL", "price_conditions": [], "points": 10000}
+        if rc.apply_lookups([dict(dp)], {"dp_x": lk}, now, fresh)[0]["status"] != rc.REJECTED:
+            bad.append("ポイントだけで価格差が正になり、調査候補になっている")
+        cond = rc.apply_lookups([{**dp, "observed_sell_price": 130000}], {"dp_x": {**lk, "price_conditions": ["COUPON_REQUIRED"],
+                                                                                    "price_basis": "CONDITIONAL_UNKNOWN_REGULAR"}}, now, fresh)[0]
+        if cond["research_class"] == rc.HIGH_PRIORITY_RESEARCH or cond["status"] == rc.VERIFIED:
+            bad.append("条件つきの仕入れ値が高優先の調査・確定になっている")
+        import yaml
+        tab = yaml.safe_load((root / "config" / "canon_codes.yaml").read_text(encoding="utf-8"))["items"]
+        jans, codes = [str(i["jan"]) for i in tab], [str(i["code"]) for i in tab]
+        if len(set(jans)) != len(jans) or len(set(codes)) != len(codes) or not all(_re74.fullmatch(r"\d{4}C\d{3}", c) for c in codes):
+            bad.append("キヤノンの対応表に、重複・整備済みの別コードなど不正な行がある")
+        code = (root / "src" / "tcg" / "event_quality.py").read_text(encoding="utf-8")
+        code = _re74.sub(r'"""(?:.|\n)*?"""', "", code)
+        if _re74.search(r"^\s*(from|import)\s+(requests|urllib|playwright|httpx|aiohttp)", code, _re74.M):
+            bad.append("TCG の質のモジュールが取得の部品を import している")
+        from src.tcg import event_quality as eq
+        if eq.evaluate([], now).get("first_seen_available") is not False:
+            bad.append("初めて見た時刻を保持していないのに、検知の遅れを測れると言っている")
+    except Exception as exc:  # noqa: BLE001
+        bad.append(f"検査に失敗: {type(exc).__name__}: {exc}")
+    return [{"level": "ok" if not bad else "error", "check": "coverage_wave3_price_evidence_safety",
+             "message": "#874 仕入れ値の証拠はポイント・クーポン・キャンペーンを現金と分け・条件つきの値引きを使わず・ポイントだけの黒字を作らない"
                         + ("" if not bad else f" ← {bad[:4]}")}]
 
 

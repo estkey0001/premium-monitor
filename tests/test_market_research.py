@@ -1481,9 +1481,9 @@ def test_newly_registered_official_prices_have_identity_shipping_and_daily_reche
 
 
 def test_unregistered_cameras_stay_unverified_until_identity_and_shipping_are_confirmed():
-    """Sony（型番だけ・送料不明）・販売終了品・取得できない店は、確認済みにしていない。"""
+    """Sony α7C R（色違いの型番表記）・販売終了品・取得できない店は、確認済みにしていない（α7R V・α1 II は Wave 3 で確認済み）。"""
     from src.market import official_registry as reg
-    for pid in ("prod_a7rv", "prod_a1ii", "prod_a7cr", "prod_r3", "prod_gr3_hdf", "prod_gr3x", "prod_fx3"):
+    for pid in ("prod_a7cr", "prod_r3", "prod_gr3_hdf", "prod_gr3x", "prod_fx3"):
         assert pid not in reg.VERIFIED_URLS, pid
 
 
@@ -1638,3 +1638,22 @@ def test_zf_is_verified_with_both_color_jans_and_shipping_and_recheck():
     assert ev["jan_code"] == "4960759913784" and ev["colors"] == {"シルバー": "4960759920058"}
     assert reg.OFFICIAL_DIRECT_OFFERS["prod_zf"]["price"] == v["price"] and "prod_zf" not in reg.UNVERIFIED
     assert ship.PRODUCT_SHIPPING["prod_zf"]["fee"] == 550 and "prod_zf" in ro.RECHECK_TARGETS
+
+
+def test_sony_bodies_are_verified_with_jan_shipping_recheck_and_in_stock_wording_is_normalized():
+    """α7R V・α1 II（Coverage Wave 3）: ソニーストアの購入ページ・JAN・送料 550 円・毎日の再確認。翌日出荷は在庫ありの意味（新しい語を流さない）。"""
+    import sys
+
+    from src.market import official_registry as reg
+    from src.market import official_shipping as ship
+    sys.path.insert(0, str(ROOT / "scripts"))
+    import recheck_official as ro
+    for pid, model, jan, price in (("prod_a7rv", "ILCE-7RM5", "4548736145573", 533500), ("prod_a1ii", "ILCE-1M2", "4548736162075", 990000)):
+        assert reg.VERIFIED_URLS[pid]["price"] == price and reg.VERIFIED_URLS[pid]["checked_on"] == "2026-10-28"
+        assert reg.IDENTITY_EVIDENCE[pid]["jan_code"] == jan and reg.IDENTITY_EVIDENCE[pid]["model_number"] == model
+        assert reg.OFFICIAL_DIRECT_OFFERS[pid]["price"] == price and reg.OFFICIAL_DIRECT_OFFERS[pid]["stock"] == "UNKNOWN"
+        assert pid not in reg.UNVERIFIED and pid in ro.RECHECK_TARGETS and ship.PRODUCT_SHIPPING[pid]["fee"] == 550
+    html = "<html><body><p>ILCE-7RM5 翌日出荷 533,500 円(税込)</p></body></html>"
+    assert ro.parse_sony_store(html, "ILCE-7RM5") == {"model_found": True, "price": 533500, "stock": "在庫あり", "ended": False}
+    assert ro.parse_sony_store("<p>ILCE-7RM5 販売終了 533,500 円(税込)</p>", "ILCE-7RM5")["ended"] is True
+    assert ro.parse_sony_store("<p>ILCE-7RM5 翌日出荷 533,500 円(税込)</p><p>ILCE-7RM5 在庫あり 540,000 円(税込)</p>", "ILCE-7RM5")["price"] is None

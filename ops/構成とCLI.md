@@ -234,3 +234,14 @@ python3 scripts/operator_health_alert.py --dry-run  # 書かずに注記だけ�
   一覧のカードを 1 件も読めない取得元は `structure_changed_pages` で PARSER_DEGRADED（DEGRADED）になる
 - 設計の全体と残りは `internal/audits/COVERAGE_WAVE2.md`
 
+## Coverage Wave 3（仕入れ価格の発見・TCG の質）
+
+- 仕入れ値の証拠: `retail_lookup.price_evidence`。**ポイント・キャッシュバックは現金から引かない**（別の項目）。クーポン・キャンペーン・会員限定・数量限定の値引きは
+  現金の仕入れ値に使わない（通常の価格が分かればそれを使う。分からなければ高優先にしない）。誰でも即時の値引きだけ反映する
+- 取得器を足すとき: `source_type`（OFFICIAL_DIRECT / AUTHORIZED_RETAILER / LARGE_RETAILER / EC_RETAILER / OUTLET / SECONDARY_NEW）を決め、一覧の行に
+  `price`・`regular_price`・`immediate_discount`・`required_coupon`・`points`・`campaign_conditions` を分けて入れる。JAN・部品番号の完全一致だけで結び付ける
+- Canon: `config/canon_codes.yaml`（JAN ↔ 商品コード。公式の製品ページで確かめた行だけ・許可リスト方式）。行を足すときは公式の製品ページの「JANコード」「商品コード」を根拠にする
+- TCG の取得元: キッズリパブリック（`kidsrepublic.py`）・福福トレカ（`fukufuku.py`）。取りこぼしは `detail_candidates` / `detail_fetched` / `skipped_due_to_limit` / `skipped_ended`
+- 受付中イベントの質・優先順位・検知の許容: `src/tcg/event_quality.py`（初めて見た時刻を保持していないので `first_seen_available = false`）
+- 設計の全体と残りは `internal/audits/COVERAGE_WAVE3.md`
+

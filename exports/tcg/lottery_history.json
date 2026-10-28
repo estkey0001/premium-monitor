@@ -1,6 +1,64 @@
 {
-  "generated_at": "2026-10-29T02:22:08.125000+09:00",
+  "generated_at": "2026-10-29T06:02:34.272930+09:00",
   "items": [
+    {
+      "first_seen_at": "2026-10-29T06:02:34.264107+09:00",
+      "lottery_id": "lot-dc0db9f81cfb",
+      "tcg": "ONE_PIECE",
+      "product_name": "【抽選】【再入荷】【あべの店】ONE PIECE カードゲーム ブースターパック(2種)",
+      "product_id": null,
+      "retailer": "MUGIWARA_STORE",
+      "retailer_name": "ONE PIECE 麦わらストア",
+      "store_name": null,
+      "store_specific": false,
+      "event_type": "LOTTERY",
+      "application_start": "2026-10-23T00:00:00+09:00",
+      "application_end": "2026-10-25T23:59:00+09:00",
+      "winner_announcement_at": null,
+      "purchase_start": null,
+      "purchase_end": null,
+      "application_start_date": null,
+      "application_end_date": null,
+      "winner_announcement_date": "2026-10-26",
+      "purchase_start_date": "2026-10-31",
+      "purchase_end_date": "2026-11-07",
+      "retail_price": null,
+      "source_url": "https://www.mugiwara-store.com/news/3034/",
+      "source_type": "RETAILER_OFFICIAL",
+      "confidence": "high",
+      "published_at": "2026-10-22T00:00:00+09:00",
+      "last_seen_at": "2026-10-29T06:02:34.264107+09:00",
+      "status": "WINNER_ANNOUNCED"
+    },
+    {
+      "first_seen_at": "2026-10-29T06:02:34.264107+09:00",
+      "lottery_id": "lot-c422587cd0f2",
+      "tcg": "ONE_PIECE",
+      "product_name": "ONE PIECE Heroines Edition vol.2",
+      "product_id": null,
+      "retailer": "MUGIWARA_STORE",
+      "retailer_name": "ONE PIECE 麦わらストア",
+      "store_name": null,
+      "store_specific": false,
+      "event_type": "LOTTERY",
+      "application_start": "2026-10-23T00:00:00+09:00",
+      "application_end": "2026-10-25T23:59:00+09:00",
+      "winner_announcement_at": null,
+      "purchase_start": null,
+      "purchase_end": null,
+      "application_start_date": null,
+      "application_end_date": null,
+      "winner_announcement_date": "2026-10-26",
+      "purchase_start_date": "2026-10-31",
+      "purchase_end_date": "2026-11-07",
+      "retail_price": null,
+      "source_url": "https://www.mugiwara-store.com/news/3012/",
+      "source_type": "RETAILER_OFFICIAL",
+      "confidence": "high",
+      "published_at": "2026-10-22T00:00:00+09:00",
+      "last_seen_at": "2026-10-29T06:02:34.264107+09:00",
+      "status": "WINNER_ANNOUNCED"
+    },
     {
       "first_seen_at": "2026-10-28T22:52:57.082392+09:00",
       "lottery_id": "lot-36d7de2656ab",
@@ -27,7 +85,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-10-20T00:00:00+09:00",
-      "last_seen_at": "2026-10-29T02:22:08.117842+09:00",
+      "last_seen_at": "2026-10-29T06:02:34.264107+09:00",
       "status": "CLOSED"
     },
     {
@@ -56,8 +114,95 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-10-16T00:00:00+09:00",
-      "last_seen_at": "2026-10-29T02:22:08.117842+09:00",
+      "last_seen_at": "2026-10-29T06:02:34.264107+09:00",
       "status": "WINNER_ANNOUNCED"
+    },
+    {
+      "first_seen_at": "2026-10-29T06:02:34.264107+09:00",
+      "lottery_id": "lot-75004f24ffdb",
+      "tcg": "ONE_PIECE",
+      "product_name": "【抽選】【再入荷】【あべの店】ONE PIECE カードゲーム ブースターパック(2種)",
+      "product_id": null,
+      "retailer": "MUGIWARA_STORE",
+      "retailer_name": "ONE PIECE 麦わらストア",
+      "store_name": null,
+      "store_specific": false,
+      "event_type": "LOTTERY",
+      "application_start": "2026-10-16T00:00:00+09:00",
+      "application_end": "2026-10-18T23:59:00+09:00",
+      "winner_announcement_at": null,
+      "purchase_start": null,
+      "purchase_end": null,
+      "application_start_date": null,
+      "application_end_date": null,
+      "winner_announcement_date": "2026-10-19",
+      "purchase_start_date": "2026-10-24",
+      "purchase_end_date": "2026-10-30",
+      "retail_price": null,
+      "source_url": "https://www.mugiwara-store.com/news/3010/",
+      "source_type": "RETAILER_OFFICIAL",
+      "confidence": "high",
+      "published_at": "2026-10-15T00:00:00+09:00",
+      "last_seen_at": "2026-10-29T06:02:34.264107+09:00",
+      "status": "WINNER_PURCHASE_PERIOD"
+    },
+    {
+      "first_seen_at": "2026-10-29T06:02:34.264107+09:00",
+      "lottery_id": "lot-8bc61173e303",
+      "tcg": "ONE_PIECE",
+      "product_name": "世界最強の戦士",
+      "product_id": null,
+      "retailer": "MUGIWARA_STORE",
+      "retailer_name": "ONE PIECE 麦わらストア",
+      "store_name": null,
+      "store_specific": false,
+      "event_type": "LOTTERY",
+      "application_start": "2026-10-16T00:00:00+09:00",
+      "application_end": "2026-10-18T23:59:00+09:00",
+      "winner_announcement_at": null,
+      "purchase_start": null,
+      "purchase_end": null,
+      "application_start_date": null,
+      "application_end_date": null,
+      "winner_announcement_date": "2026-10-19",
+      "purchase_start_date": "2026-10-24",
+      "purchase_end_date": "2026-10-30",
+      "retail_price": null,
+      "source_url": "https://www.mugiwara-store.com/news/2983/",
+      "source_type": "RETAILER_OFFICIAL",
+      "confidence": "high",
+      "published_at": "2026-10-15T00:00:00+09:00",
+      "last_seen_at": "2026-10-29T06:02:34.264107+09:00",
+      "status": "WINNER_PURCHASE_PERIOD"
+    },
+    {
+      "first_seen_at": "2026-10-29T06:02:34.264107+09:00",
+      "lottery_id": "lot-1207fee58323",
+      "tcg": "ONE_PIECE",
+      "product_name": "【抽選】【再入荷】ONE PIECE カードゲーム ブースターパック(2種)",
+      "product_id": null,
+      "retailer": "MUGIWARA_STORE",
+      "retailer_name": "ONE PIECE 麦わらストア",
+      "store_name": null,
+      "store_specific": false,
+      "event_type": "LOTTERY",
+      "application_start": "2026-10-08T00:00:00+09:00",
+      "application_end": "2026-10-10T23:59:00+09:00",
+      "winner_announcement_at": null,
+      "purchase_start": null,
+      "purchase_end": null,
+      "application_start_date": null,
+      "application_end_date": null,
+      "winner_announcement_date": "2026-10-11",
+      "purchase_start_date": "2026-10-16",
+      "purchase_end_date": "2026-10-23",
+      "retail_price": null,
+      "source_url": "https://www.mugiwara-store.com/news/2981/",
+      "source_type": "RETAILER_OFFICIAL",
+      "confidence": "high",
+      "published_at": "2026-10-07T00:00:00+09:00",
+      "last_seen_at": "2026-10-29T06:02:34.264107+09:00",
+      "status": "ENDED"
     },
     {
       "first_seen_at": "2026-10-28T22:52:57.082392+09:00",
@@ -85,7 +230,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-10-06T00:00:00+09:00",
-      "last_seen_at": "2026-10-29T02:22:08.117842+09:00",
+      "last_seen_at": "2026-10-29T06:02:34.264107+09:00",
       "status": "ENDED"
     },
     {
@@ -114,7 +259,7 @@
       "source_type": "MANUAL_VERIFIED",
       "confidence": "medium",
       "published_at": null,
-      "last_seen_at": "2026-10-29T02:22:08.117842+09:00",
+      "last_seen_at": "2026-10-29T06:02:34.264107+09:00",
       "status": "ENDED"
     },
     {
@@ -143,7 +288,7 @@
       "source_type": "MANUAL_VERIFIED",
       "confidence": "medium",
       "published_at": null,
-      "last_seen_at": "2026-10-29T02:22:08.117842+09:00",
+      "last_seen_at": "2026-10-29T06:02:34.264107+09:00",
       "status": "ENDED"
     },
     {
@@ -201,7 +346,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-10-02T00:00:00+09:00",
-      "last_seen_at": "2026-10-29T02:22:08.117842+09:00",
+      "last_seen_at": "2026-10-29T06:02:34.264107+09:00",
       "status": "ENDED"
     },
     {
@@ -346,7 +491,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-09-18T00:00:00+09:00",
-      "last_seen_at": "2026-10-29T02:22:08.117842+09:00",
+      "last_seen_at": "2026-10-29T06:02:34.264107+09:00",
       "status": "ENDED"
     },
     {
@@ -375,7 +520,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-09-01T00:00:00+09:00",
-      "last_seen_at": "2026-10-29T02:22:08.117842+09:00",
+      "last_seen_at": "2026-10-29T06:02:34.264107+09:00",
       "status": "ENDED"
     },
     {
@@ -404,7 +549,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-09-01T00:00:00+09:00",
-      "last_seen_at": "2026-10-29T02:22:08.117842+09:00",
+      "last_seen_at": "2026-10-29T06:02:34.264107+09:00",
       "status": "ENDED"
     },
     {
@@ -433,7 +578,7 @@
       "source_type": "MANUFACTURER_OFFICIAL",
       "confidence": "high",
       "published_at": "2026-08-21T00:00:00+09:00",
-      "last_seen_at": "2026-10-29T02:22:08.117842+09:00",
+      "last_seen_at": "2026-10-29T06:02:34.264107+09:00",
       "status": "ENDED"
     },
     {
@@ -462,7 +607,7 @@
       "source_type": "MANUFACTURER_OFFICIAL",
       "confidence": "high",
       "published_at": "2026-08-21T00:00:00+09:00",
-      "last_seen_at": "2026-10-29T02:22:08.117842+09:00",
+      "last_seen_at": "2026-10-29T06:02:34.264107+09:00",
       "status": "ENDED"
     },
     {
@@ -491,7 +636,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-08-11T00:00:00+09:00",
-      "last_seen_at": "2026-10-29T02:22:08.117842+09:00",
+      "last_seen_at": "2026-10-29T06:02:34.264107+09:00",
       "status": "ENDED"
     },
     {
@@ -520,7 +665,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-08-06T00:00:00+09:00",
-      "last_seen_at": "2026-10-29T02:22:08.117842+09:00",
+      "last_seen_at": "2026-10-29T06:02:34.264107+09:00",
       "status": "ENDED"
     },
     {
@@ -549,7 +694,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-10-28T00:00:00+09:00",
-      "last_seen_at": "2026-10-29T02:22:08.117842+09:00",
+      "last_seen_at": "2026-10-29T06:02:34.264107+09:00",
       "status": "OPEN"
     },
     {
@@ -578,7 +723,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-10-28T00:00:00+09:00",
-      "last_seen_at": "2026-10-29T02:22:08.117842+09:00",
+      "last_seen_at": "2026-10-29T06:02:34.264107+09:00",
       "status": "OPEN"
     },
     {
@@ -607,7 +752,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-10-26T00:00:00+09:00",
-      "last_seen_at": "2026-10-29T02:22:08.117842+09:00",
+      "last_seen_at": "2026-10-29T06:02:34.264107+09:00",
       "status": "WINNER_ANNOUNCED"
     },
     {
@@ -636,7 +781,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-10-26T00:00:00+09:00",
-      "last_seen_at": "2026-10-29T02:22:08.117842+09:00",
+      "last_seen_at": "2026-10-29T06:02:34.264107+09:00",
       "status": "WINNER_ANNOUNCED"
     },
     {
@@ -665,7 +810,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-10-26T00:00:00+09:00",
-      "last_seen_at": "2026-10-29T02:22:08.117842+09:00",
+      "last_seen_at": "2026-10-29T06:02:34.264107+09:00",
       "status": "ENDING_SOON"
     },
     {
@@ -694,7 +839,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-10-26T00:00:00+09:00",
-      "last_seen_at": "2026-10-29T02:22:08.117842+09:00",
+      "last_seen_at": "2026-10-29T06:02:34.264107+09:00",
       "status": "WINNER_ANNOUNCED"
     },
     {
@@ -723,7 +868,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-10-26T00:00:00+09:00",
-      "last_seen_at": "2026-10-29T02:22:08.117842+09:00",
+      "last_seen_at": "2026-10-29T06:02:34.264107+09:00",
       "status": "WINNER_ANNOUNCED"
     },
     {
@@ -752,7 +897,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-10-26T00:00:00+09:00",
-      "last_seen_at": "2026-10-29T02:22:08.117842+09:00",
+      "last_seen_at": "2026-10-29T06:02:34.264107+09:00",
       "status": "CLOSED"
     },
     {
@@ -781,7 +926,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-10-26T00:00:00+09:00",
-      "last_seen_at": "2026-10-29T02:22:08.117842+09:00",
+      "last_seen_at": "2026-10-29T06:02:34.264107+09:00",
       "status": "WINNER_ANNOUNCED"
     },
     {
@@ -810,7 +955,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-10-26T00:00:00+09:00",
-      "last_seen_at": "2026-10-29T02:22:08.117842+09:00",
+      "last_seen_at": "2026-10-29T06:02:34.264107+09:00",
       "status": "ENDING_SOON"
     },
     {
@@ -839,7 +984,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-10-26T00:00:00+09:00",
-      "last_seen_at": "2026-10-29T02:22:08.117842+09:00",
+      "last_seen_at": "2026-10-29T06:02:34.264107+09:00",
       "status": "RESULT_PENDING"
     },
     {
@@ -868,7 +1013,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-10-26T00:00:00+09:00",
-      "last_seen_at": "2026-10-29T02:22:08.117842+09:00",
+      "last_seen_at": "2026-10-29T06:02:34.264107+09:00",
       "status": "WINNER_ANNOUNCED"
     },
     {
@@ -897,7 +1042,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-10-25T00:00:00+09:00",
-      "last_seen_at": "2026-10-29T02:22:08.117842+09:00",
+      "last_seen_at": "2026-10-29T06:02:34.264107+09:00",
       "status": "WINNER_ANNOUNCED"
     },
     {
@@ -926,7 +1071,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-10-22T00:00:00+09:00",
-      "last_seen_at": "2026-10-29T02:22:08.117842+09:00",
+      "last_seen_at": "2026-10-29T06:02:34.264107+09:00",
       "status": "WINNER_ANNOUNCED"
     },
     {
@@ -955,7 +1100,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-10-21T00:00:00+09:00",
-      "last_seen_at": "2026-10-29T02:22:08.117842+09:00",
+      "last_seen_at": "2026-10-29T06:02:34.264107+09:00",
       "status": "CLOSED"
     },
     {
@@ -984,7 +1129,7 @@
       "source_type": "RETAILER_OFFICIAL",
       "confidence": "high",
       "published_at": null,
-      "last_seen_at": "2026-10-29T02:22:08.117842+09:00",
+      "last_seen_at": "2026-10-29T06:02:34.264107+09:00",
       "status": "ENDING_SOON"
     },
     {
@@ -1013,7 +1158,7 @@
       "source_type": "RETAILER_OFFICIAL",
       "confidence": "high",
       "published_at": null,
-      "last_seen_at": "2026-10-29T02:22:08.117842+09:00",
+      "last_seen_at": "2026-10-29T06:02:34.264107+09:00",
       "status": "ENDED"
     },
     {
@@ -1042,7 +1187,7 @@
       "source_type": "RETAILER_OFFICIAL",
       "confidence": "high",
       "published_at": null,
-      "last_seen_at": "2026-10-29T02:22:08.117842+09:00",
+      "last_seen_at": "2026-10-29T06:02:34.264107+09:00",
       "status": "ENDED"
     },
     {
@@ -1071,11 +1216,105 @@
       "source_type": "RETAILER_OFFICIAL",
       "confidence": "high",
       "published_at": null,
-      "last_seen_at": "2026-10-29T02:22:08.117842+09:00",
+      "last_seen_at": "2026-10-29T06:02:34.264107+09:00",
+      "status": "ENDED"
+    },
+    {
+      "first_seen_at": "2026-10-29T06:02:34.264107+09:00",
+      "lottery_id": "lot-c96fe8edc7f8",
+      "tcg": "ONE_PIECE",
+      "product_name": "ONE PIECEカードゲーム エクストラブースター ONE PIECE Heroines Edition vol.2【EB-05】",
+      "product_id": "エクストラブースター-one-piece-heroines-edition-vol-2-eb-05",
+      "retailer": "CARD_LABO",
+      "retailer_name": "カードラボ",
+      "store_name": "カードラボ岐阜店",
+      "store_specific": true,
+      "event_type": "LOTTERY",
+      "application_start": null,
+      "application_end": null,
+      "winner_announcement_at": null,
+      "purchase_start": null,
+      "purchase_end": null,
+      "application_start_date": "2026-10-20",
+      "application_end_date": "2026-10-22",
+      "winner_announcement_date": "2026-10-23",
+      "purchase_start_date": null,
+      "purchase_end_date": null,
+      "retail_price": null,
+      "source_url": "https://www.c-labo.jp/shop/gifu/blog/619921/",
+      "source_type": "STORE_OFFICIAL",
+      "confidence": "medium",
+      "published_at": "2026-10-20T00:00:00+09:00",
+      "last_seen_at": "2026-10-29T06:02:34.264107+09:00",
+      "status": "WINNER_ANNOUNCED"
+    },
+    {
+      "first_seen_at": "2026-10-29T06:02:34.264107+09:00",
+      "lottery_id": "lot-1ce97c58c4ba",
+      "tcg": "ONE_PIECE",
+      "product_name": "ONE PIECEカードゲーム エクストラブースター ONE PIECE Heroines Edition vol.2【EB-05】",
+      "product_id": "エクストラブースター-one-piece-heroines-edition-vol-2-eb-05",
+      "retailer": "CARD_LABO",
+      "retailer_name": "カードラボ",
+      "store_name": "カードラボアバンティ京都店",
+      "store_specific": true,
+      "event_type": "LOTTERY",
+      "application_start": null,
+      "application_end": null,
+      "winner_announcement_at": null,
+      "purchase_start": null,
+      "purchase_end": null,
+      "application_start_date": "2026-10-15",
+      "application_end_date": "2026-10-21",
+      "winner_announcement_date": "2026-10-22",
+      "purchase_start_date": "2026-11-08",
+      "purchase_end_date": null,
+      "retail_price": null,
+      "source_url": "https://www.c-labo.jp/shop/kyoto/blog/619774/",
+      "source_type": "STORE_OFFICIAL",
+      "confidence": "medium",
+      "published_at": "2026-10-15T00:00:00+09:00",
+      "last_seen_at": "2026-10-29T06:02:34.264107+09:00",
+      "status": "WINNER_ANNOUNCED"
+    },
+    {
+      "first_seen_at": "2026-10-29T06:02:34.264107+09:00",
+      "lottery_id": "lot-ed96775687fc",
+      "tcg": "ONE_PIECE",
+      "product_name": "ワンピースカードゲーム ブースターパック 世界最強戦士",
+      "product_id": null,
+      "retailer": "CARD_LABO",
+      "retailer_name": "カードラボ",
+      "store_name": "カードラボ大分店",
+      "store_specific": true,
+      "event_type": "LOTTERY",
+      "application_start": null,
+      "application_end": null,
+      "winner_announcement_at": null,
+      "purchase_start": null,
+      "purchase_end": null,
+      "application_start_date": "2026-09-21",
+      "application_end_date": "2026-09-23",
+      "winner_announcement_date": "2026-09-24",
+      "purchase_start_date": "2026-09-25",
+      "purchase_end_date": "2026-10-01",
+      "retail_price": null,
+      "source_url": "https://www.c-labo.jp/shop/oita/blog/616702/",
+      "source_type": "STORE_OFFICIAL",
+      "confidence": "medium",
+      "published_at": "2026-09-21T00:00:00+09:00",
+      "last_seen_at": "2026-10-29T06:02:34.264107+09:00",
       "status": "ENDED"
     }
   ],
   "frequency_by_retailer": {
+    "MUGIWARA_STORE": {
+      "events_total": 5,
+      "events_last_30d": 5,
+      "events_last_90d": 5,
+      "average_lead_time_hours": 24.0,
+      "average_application_window_hours": 72.0
+    },
     "HOBBY_STATION": {
       "events_total": 9,
       "events_last_30d": 4,
@@ -1098,11 +1337,11 @@
       "average_application_window_hours": 79.0
     },
     "CARD_LABO": {
-      "events_total": 15,
-      "events_last_30d": 15,
-      "events_last_90d": 15,
+      "events_total": 18,
+      "events_last_30d": 17,
+      "events_last_90d": 18,
       "average_lead_time_hours": 0.0,
-      "average_application_window_hours": 49.6
+      "average_application_window_hours": 54.7
     },
     "FUKUFUKU_TOREKA": {
       "events_total": 4,

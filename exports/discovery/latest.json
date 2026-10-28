@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-29T02:22:08+09:00",
+  "generated_at": "2026-10-29T06:02:34+09:00",
   "apple": {
     "source": "apple_jp_official",
     "list_status": "ok",
@@ -12,13 +12,13 @@
       "iphone-duo"
     ],
     "checked": [
-      "iphone-17e",
-      "iphone-18-pro"
+      "iphone-16",
+      "iphone-17"
     ],
     "errors": {},
-    "unknown_parts": 38,
-    "matched": 0,
-    "pending": 10,
+    "unknown_parts": 10,
+    "matched": 1,
+    "pending": 2,
     "requests": 3,
     "cutoff": "",
     "saved": true
@@ -32,10 +32,10 @@
     },
     "inputs_stale": [],
     "review_required": 1,
-    "matched_events": 32,
+    "matched_events": 40,
     "release": 6,
     "by_kind": {
-      "LOTTERY": 32,
+      "LOTTERY": 40,
       "PREORDER": 0,
       "FIRST_COME": 0,
       "RESTOCK": 1,
@@ -43,8 +43,8 @@
     },
     "tcg_products": 22,
     "sources": {
-      "configured": 21,
-      "implemented": 10,
+      "configured": 22,
+      "implemented": 11,
       "unimplemented": 11,
       "blocked": 4,
       "robots_unreachable": 4,
@@ -114,6 +114,16 @@
           "source_id": "FUKUFUKU_TOREKA",
           "retailer": "福福トレカ",
           "adapter": "fukufuku_lottery",
+          "state": "ACTIVE_LOTTERY",
+          "health": "HEALTHY",
+          "blocked": false,
+          "robots": null,
+          "unreachable": false
+        },
+        {
+          "source_id": "MUGIWARA_STORE",
+          "retailer": "ONE PIECE 麦わらストア",
+          "adapter": "mugiwara_store_lottery",
           "state": "ACTIVE_LOTTERY",
           "health": "HEALTHY",
           "blocked": false,
@@ -281,16 +291,16 @@
     "unknown_official_products": 62,
     "apple_candidates": 17,
     "tcg_products": 20,
-    "event_candidates": 45,
+    "event_candidates": 53,
     "review_required_announcements": 2,
-    "matched_events": 42,
+    "matched_events": 50,
     "stale_events": 1,
     "approved_events": 0,
     "registered_events": 0
   },
   "sources": {
-    "configured": 21,
-    "implemented": 10,
+    "configured": 22,
+    "implemented": 11,
     "unimplemented": 11,
     "blocked": 4,
     "robots_unreachable": 4,
@@ -360,6 +370,16 @@
         "source_id": "FUKUFUKU_TOREKA",
         "retailer": "福福トレカ",
         "adapter": "fukufuku_lottery",
+        "state": "ACTIVE_LOTTERY",
+        "health": "HEALTHY",
+        "blocked": false,
+        "robots": null,
+        "unreachable": false
+      },
+      {
+        "source_id": "MUGIWARA_STORE",
+        "retailer": "ONE PIECE 麦わらストア",
+        "adapter": "mugiwara_store_lottery",
         "state": "ACTIVE_LOTTERY",
         "health": "HEALTHY",
         "blocked": false,

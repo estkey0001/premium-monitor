@@ -2,30 +2,13 @@
   "type": "PRODUCTION_HEALTH_ALERT",
   "schema": 1,
   "audience": "operator",
-  "generated_at": "2026-10-29T01:36:13+09:00",
+  "generated_at": "2026-10-29T05:05:40+09:00",
   "note": "運営者向けの劣化アラート候補（商品の通知ではない）。外部へは送らない。CI の注記・Step Summary・管理画面に出す",
   "active_count": 6,
   "high": 4,
   "warning": 2,
-  "candidates": [
-    {
-      "key": "official_recheck_failing:prod_x100vi",
-      "category": "official_recheck_failing",
-      "source": "prod_x100vi",
-      "severity": "HIGH",
-      "reason": "recheck_failed",
-      "title": "prod_x100vi の公式の再確認が 7 日連続で失敗しています",
-      "details": "公式ページの移動・表示の変更・ブロックの可能性。人が公式ページを確認する",
-      "evidence": {
-        "consecutive_days": 7
-      },
-      "type": "PRODUCTION_HEALTH_ALERT",
-      "event": "ESCALATED",
-      "first_seen": "2026-10-25T18:19:24+09:00",
-      "generated_at": "2026-10-29T01:36:13+09:00"
-    }
-  ],
-  "suppressed": 5,
+  "candidates": [],
+  "suppressed": 6,
   "recovered": [],
   "active": [
     {

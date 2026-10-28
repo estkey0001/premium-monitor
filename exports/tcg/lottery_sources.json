@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-29T02:22:08.125000+09:00",
+  "generated_at": "2026-10-29T06:02:34.272930+09:00",
   "sources": [
     {
       "source_id": "POKEMON_CENTER_ONLINE",
@@ -20,8 +20,8 @@
       "state": "NO_ACTIVE_LOTTERY",
       "state_label": "現在の抽選なし",
       "reachable": true,
-      "last_checked": "2026-10-29T01:48:06.058602+09:00",
-      "last_success": "2026-10-29T01:48:06.878465+09:00",
+      "last_checked": "2026-10-29T05:20:23.910609+09:00",
+      "last_success": "2026-10-29T05:20:23.910617+09:00",
       "last_event_found": "2026-10-22T01:40:32.227396+09:00",
       "candidate_articles": 2,
       "accepted_lotteries": 2,
@@ -44,22 +44,6 @@
       "skipped_ended": 0,
       "discovered_titles": [],
       "pages": [
-        {
-          "url": "https://www.pokemon-card.com/info/",
-          "page_type": "listing",
-          "http_status": 200,
-          "final_url": "https://www.pokemon-card.com/info/",
-          "page_title": "ニュース一覧 | ポケモンカードゲーム公式ホームページ",
-          "html_length": 237408,
-          "text_length": 18248,
-          "links_discovered": 435,
-          "product_links_discovered": 0,
-          "candidate_blocks": 0,
-          "accepted": 0,
-          "rejected": 0,
-          "robots_status": "not_found",
-          "error": null
-        },
         {
           "url": "https://www.pokemoncenter-online.com/news/?id=20260929",
           "page_type": "news",
@@ -93,6 +77,10 @@
           "error": null
         }
       ],
+      "structure_changed_pages": 0,
+      "health_flags": [
+        "DETAIL_OK"
+      ],
       "source_class": "WORKING"
     },
     {
@@ -114,8 +102,8 @@
       "state": "NO_ACTIVE_LOTTERY",
       "state_label": "現在の抽選なし",
       "reachable": true,
-      "last_checked": "2026-10-29T01:49:07.521195+09:00",
-      "last_success": "2026-10-29T01:49:07.521202+09:00",
+      "last_checked": "2026-10-29T05:19:22.941438+09:00",
+      "last_success": "2026-10-29T05:19:23.258409+09:00",
       "last_event_found": null,
       "candidate_articles": 0,
       "accepted_lotteries": 0,
@@ -146,7 +134,28 @@
           "reason": "title_only_not_fetched"
         }
       ],
-      "pages": [],
+      "pages": [
+        {
+          "url": "https://www.pokemon-card.com/info/",
+          "page_type": "listing",
+          "http_status": 200,
+          "final_url": "https://www.pokemon-card.com/info/",
+          "page_title": "ニュース一覧 | ポケモンカードゲーム公式ホームページ",
+          "html_length": 237408,
+          "text_length": 18248,
+          "links_discovered": 435,
+          "product_links_discovered": 0,
+          "candidate_blocks": 0,
+          "accepted": 0,
+          "rejected": 0,
+          "robots_status": "not_found",
+          "error": null
+        }
+      ],
+      "structure_changed_pages": 0,
+      "health_flags": [
+        "LIST_OK"
+      ],
       "source_class": "WORKING"
     },
     {
@@ -169,7 +178,7 @@
       "state": "SOURCE_BLOCKED",
       "state_label": "アクセス拒否",
       "reachable": false,
-      "last_checked": "2026-10-29T01:49:07.529942+09:00",
+      "last_checked": "2026-10-29T05:25:26.714257+09:00",
       "last_success": null,
       "last_event_found": "2026-10-01T20:51:59.851413+09:00",
       "candidate_articles": 0,
@@ -208,6 +217,10 @@
           "error": "HTTP 403: https://geo-online.co.jp/news/"
         }
       ],
+      "structure_changed_pages": 0,
+      "health_flags": [
+        "BLOCKED"
+      ],
       "source_class": "IMPLEMENTED_BUT_BLOCKED"
     },
     {
@@ -230,28 +243,28 @@
       "state": "ACTIVE_LOTTERY",
       "state_label": "抽選あり",
       "reachable": true,
-      "last_checked": "2026-10-29T01:49:07.781935+09:00",
-      "last_success": "2026-10-29T01:50:11.439082+09:00",
-      "last_event_found": "2026-10-29T02:22:08.117842+09:00",
+      "last_checked": "2026-10-29T05:39:31.177815+09:00",
+      "last_success": "2026-10-29T05:40:33.336331+09:00",
+      "last_event_found": "2026-10-29T06:02:34.264107+09:00",
       "candidate_articles": 23,
-      "accepted_lotteries": 15,
-      "rejected": 8,
+      "accepted_lotteries": 18,
+      "rejected": 11,
       "rejection_reasons": {
         "not_lottery_candidate": 7,
-        "no_lottery_sale_context": 1
+        "no_lottery_sale_context": 4
       },
       "blocked": false,
       "unreachable": false,
       "robots": null,
       "error": null,
       "health": "HEALTHY",
-      "active_lotteries": 15,
+      "active_lotteries": 17,
       "active_preorders": 0,
       "announcements": 0,
       "truncated": true,
       "detail_candidates": 23,
-      "detail_fetched": 16,
-      "skipped_due_to_limit": 7,
+      "detail_fetched": 22,
+      "skipped_due_to_limit": 1,
       "skipped_ended": 0,
       "discovered_titles": [],
       "pages": [
@@ -542,7 +555,109 @@
           "rejected": 1,
           "robots_status": "allowed",
           "error": null
+        },
+        {
+          "url": "https://www.c-labo.jp/shop/gifu/blog/619921/",
+          "page_type": "news",
+          "http_status": 200,
+          "final_url": "https://www.c-labo.jp/shop/gifu/blog/619921/",
+          "page_title": "【10/31発売】 ONE PIECEカードゲーム エクストラブースター ONE PIECE Heroines Edition vol.2 抽選予約・販売のお知らせ / 岐阜店の店舗ブログ - カードラボ",
+          "html_length": 59714,
+          "text_length": 6266,
+          "links_discovered": 282,
+          "product_links_discovered": 0,
+          "candidate_blocks": 1,
+          "accepted": 1,
+          "rejected": 0,
+          "robots_status": "allowed",
+          "error": null
+        },
+        {
+          "url": "https://www.c-labo.jp/shop/tsudanuma/blog/619809/",
+          "page_type": "news",
+          "http_status": 200,
+          "final_url": "https://www.c-labo.jp/shop/tsudanuma/blog/619809/",
+          "page_title": "【ワンピースカードゲーム】「エクストラブースター ONE PIECE Heroines Edition vol.2【EB-05】」抽選予約販売のお知らせ 1016 / 津田沼店の店舗ブログ - カードラボ",
+          "html_length": 56443,
+          "text_length": 6206,
+          "links_discovered": 279,
+          "product_links_discovered": 0,
+          "candidate_blocks": 1,
+          "accepted": 0,
+          "rejected": 1,
+          "robots_status": "allowed",
+          "error": null
+        },
+        {
+          "url": "https://www.c-labo.jp/shop/kyoto/blog/619774/",
+          "page_type": "news",
+          "http_status": 200,
+          "final_url": "https://www.c-labo.jp/shop/kyoto/blog/619774/",
+          "page_title": "【ワンピースカードゲーム】「エクストラブースター ONE PIECE Heroines Edition vol.2【EB-05】」抽選販売 / アバンティ京都店の店舗ブログ - カードラボ",
+          "html_length": 62648,
+          "text_length": 6301,
+          "links_discovered": 292,
+          "product_links_discovered": 0,
+          "candidate_blocks": 1,
+          "accepted": 1,
+          "rejected": 0,
+          "robots_status": "allowed",
+          "error": null
+        },
+        {
+          "url": "https://www.c-labo.jp/shop/sapporo/blog/619476/",
+          "page_type": "news",
+          "http_status": 200,
+          "final_url": "https://www.c-labo.jp/shop/sapporo/blog/619476/",
+          "page_title": "【ワンピースカードゲーム】10月31日発売商品「ONE PIECE Heroines Edition vol.2【EB-05】」抽選予約販売のお知らせ / 札幌店の店舗ブログ - カードラボ",
+          "html_length": 59813,
+          "text_length": 6549,
+          "links_discovered": 282,
+          "product_links_discovered": 0,
+          "candidate_blocks": 1,
+          "accepted": 0,
+          "rejected": 1,
+          "robots_status": "allowed",
+          "error": null
+        },
+        {
+          "url": "https://www.c-labo.jp/shop/niigata/blog/619398/",
+          "page_type": "news",
+          "http_status": 200,
+          "final_url": "https://www.c-labo.jp/shop/niigata/blog/619398/",
+          "page_title": "『ワンピースカードゲームエクストラブースターヒロインズエディション2』抽選予約・販売のお知らせ / 新潟店の店舗ブログ - カードラボ",
+          "html_length": 54873,
+          "text_length": 6105,
+          "links_discovered": 278,
+          "product_links_discovered": 0,
+          "candidate_blocks": 1,
+          "accepted": 0,
+          "rejected": 1,
+          "robots_status": "allowed",
+          "error": null
+        },
+        {
+          "url": "https://www.c-labo.jp/shop/oita/blog/616702/",
+          "page_type": "news",
+          "http_status": 200,
+          "final_url": "https://www.c-labo.jp/shop/oita/blog/616702/",
+          "page_title": "【抽選】『ワンピースカードゲーム ブースターパック 世界最強戦士』抽選販売のお知らせ / 大分店の店舗ブログ - カードラボ",
+          "html_length": 59084,
+          "text_length": 5967,
+          "links_discovered": 282,
+          "product_links_discovered": 0,
+          "candidate_blocks": 1,
+          "accepted": 1,
+          "rejected": 0,
+          "robots_status": "allowed",
+          "error": null
         }
+      ],
+      "structure_changed_pages": 0,
+      "health_flags": [
+        "LIST_OK",
+        "DETAIL_OK",
+        "TRUNCATED"
       ],
       "source_class": "WORKING"
     },
@@ -566,8 +681,8 @@
       "state": "ACTIVE_LOTTERY",
       "state_label": "抽選あり",
       "reachable": true,
-      "last_checked": "2026-10-29T02:06:13.330061+09:00",
-      "last_success": "2026-10-29T02:06:15.311793+09:00",
+      "last_checked": "2026-10-29T05:30:28.909159+09:00",
+      "last_success": "2026-10-29T05:30:31.563996+09:00",
       "last_event_found": "2026-10-29T02:22:08.117842+09:00",
       "candidate_articles": 9,
       "accepted_lotteries": 9,
@@ -596,7 +711,7 @@
           "http_status": 200,
           "final_url": "https://www.hbst.net/result/?category=news",
           "page_title": "記事検索結果 - ホビーステーション",
-          "html_length": 43041,
+          "html_length": 43131,
           "text_length": 1189,
           "links_discovered": 49,
           "product_links_discovered": 0,
@@ -612,7 +727,7 @@
           "http_status": 200,
           "final_url": "https://www.hbst.net/?p=411492",
           "page_title": "【2026.10.20】抽選販売「ポケモンカードゲームMEGA 拡張パック 30th CELEBRATION（再販）」 - ホビーステーション",
-          "html_length": 47942,
+          "html_length": 48034,
           "text_length": 8683,
           "links_discovered": 36,
           "product_links_discovered": 0,
@@ -628,7 +743,7 @@
           "http_status": 200,
           "final_url": "https://www.hbst.net/?p=411488",
           "page_title": "【2026.10.16】※応募は終了しました抽選販売「ONE PIECEカードゲーム エクストラブースター ONE PIECE Heroines Edition vol.2」 - ホビーステーション",
-          "html_length": 48192,
+          "html_length": 48284,
           "text_length": 8798,
           "links_discovered": 37,
           "product_links_discovered": 0,
@@ -644,7 +759,7 @@
           "http_status": 200,
           "final_url": "https://www.hbst.net/?p=411288",
           "page_title": "【2026.10.06】※応募は終了しました抽選販売「ポケモンカードゲームMEGA 拡張パック ストームエメラルダ （再販）」 - ホビーステーション",
-          "html_length": 48409,
+          "html_length": 48501,
           "text_length": 8772,
           "links_discovered": 37,
           "product_links_discovered": 0,
@@ -660,7 +775,7 @@
           "http_status": 200,
           "final_url": "https://www.hbst.net/?p=411284",
           "page_title": "【2026.10.02】※応募は終了しました抽選販売「ポケモンカードゲームMEGA 拡張パック 30th CELEBRATION（再販）」 - ホビーステーション",
-          "html_length": 49019,
+          "html_length": 49111,
           "text_length": 8755,
           "links_discovered": 37,
           "product_links_discovered": 0,
@@ -676,7 +791,7 @@
           "http_status": 200,
           "final_url": "https://www.hbst.net/?p=411179",
           "page_title": "【2026.09.18】※応募は終了しました抽選販売「ポケモンカードゲームMEGA 拡張パック ストームエメラルダ （再販）」 - ホビーステーション",
-          "html_length": 48892,
+          "html_length": 48984,
           "text_length": 8792,
           "links_discovered": 37,
           "product_links_discovered": 0,
@@ -692,7 +807,7 @@
           "http_status": 200,
           "final_url": "https://www.hbst.net/?p=410982",
           "page_title": "【2026.09.01】※応募は終了しました抽選販売「ポケモンカードゲームMEGA 拡張パック メガブレイブ・メガシンフォニア（再販）」 - ホビーステーション",
-          "html_length": 48645,
+          "html_length": 48736,
           "text_length": 9059,
           "links_discovered": 37,
           "product_links_discovered": 0,
@@ -708,7 +823,7 @@
           "http_status": 200,
           "final_url": "https://www.hbst.net/?p=410980",
           "page_title": "【2026.09.01】※応募は終了しました抽選販売「ポケモンカードゲームMEGA 拡張パック ストームエメラルダ （再販）」 - ホビーステーション",
-          "html_length": 48317,
+          "html_length": 48409,
           "text_length": 8763,
           "links_discovered": 37,
           "product_links_discovered": 0,
@@ -724,7 +839,7 @@
           "http_status": 200,
           "final_url": "https://www.hbst.net/?p=410766",
           "page_title": "【2026.08.11】※応募は終了しました抽選販売「ポケモンカードゲームMEGA 拡張パック ストームエメラルダ （再販）」 - ホビーステーション",
-          "html_length": 49109,
+          "html_length": 49200,
           "text_length": 8817,
           "links_discovered": 37,
           "product_links_discovered": 0,
@@ -740,7 +855,7 @@
           "http_status": 200,
           "final_url": "https://www.hbst.net/?p=410678",
           "page_title": "【2026.08.06】※応募は終了しました抽選販売「ONE PIECEカードゲーム ブースターパック 世界最強の戦士」 - ホビーステーション",
-          "html_length": 49092,
+          "html_length": 49183,
           "text_length": 8799,
           "links_discovered": 37,
           "product_links_discovered": 0,
@@ -750,6 +865,11 @@
           "robots_status": "allowed",
           "error": null
         }
+      ],
+      "structure_changed_pages": 0,
+      "health_flags": [
+        "LIST_OK",
+        "DETAIL_OK"
       ],
       "source_class": "WORKING"
     },
@@ -773,7 +893,7 @@
       "state": "SOURCE_BLOCKED",
       "state_label": "アクセス拒否",
       "reachable": false,
-      "last_checked": "2026-10-29T02:15:15.320305+09:00",
+      "last_checked": "2026-10-29T05:25:26.840002+09:00",
       "last_success": null,
       "last_event_found": null,
       "candidate_articles": 0,
@@ -812,6 +932,10 @@
           "error": "HTTP 403: https://www.kidsrepublic.jp/campaign"
         }
       ],
+      "structure_changed_pages": 0,
+      "health_flags": [
+        "BLOCKED"
+      ],
       "source_class": "IMPLEMENTED_BUT_BLOCKED"
     },
     {
@@ -833,8 +957,8 @@
       "state": "ACTIVE_LOTTERY",
       "state_label": "抽選あり",
       "reachable": true,
-      "last_checked": "2026-10-29T02:15:15.534533+09:00",
-      "last_success": "2026-10-29T02:15:16.879565+09:00",
+      "last_checked": "2026-10-29T05:21:24.536887+09:00",
+      "last_success": "2026-10-29T05:21:26.091377+09:00",
       "last_event_found": "2026-10-29T02:22:08.117842+09:00",
       "candidate_articles": 4,
       "accepted_lotteries": 4,
@@ -861,7 +985,7 @@
           "http_status": 200,
           "final_url": "https://pokemon.fukufukutoreka.com/lottery",
           "page_title": "抽選販売 一覧 | ポケカ通販 福福トレカ",
-          "html_length": 83829,
+          "html_length": 53273,
           "text_length": 777,
           "links_discovered": 59,
           "product_links_discovered": 0,
@@ -877,7 +1001,7 @@
           "http_status": 200,
           "final_url": "https://pokemon.fukufukutoreka.com/lottery/27",
           "page_title": "抽選販売 詳細 | ポケカ通販 福福トレカ",
-          "html_length": 74525,
+          "html_length": 78311,
           "text_length": 685,
           "links_discovered": 56,
           "product_links_discovered": 0,
@@ -893,7 +1017,7 @@
           "http_status": 200,
           "final_url": "https://pokemon.fukufukutoreka.com/lottery/26",
           "page_title": "抽選販売 詳細 | ポケカ通販 福福トレカ",
-          "html_length": 126965,
+          "html_length": 134515,
           "text_length": 810,
           "links_discovered": 54,
           "product_links_discovered": 0,
@@ -909,7 +1033,7 @@
           "http_status": 200,
           "final_url": "https://pokemon.fukufukutoreka.com/lottery/24",
           "page_title": "抽選販売 詳細 | ポケカ通販 福福トレカ",
-          "html_length": 126885,
+          "html_length": 134435,
           "text_length": 743,
           "links_discovered": 54,
           "product_links_discovered": 0,
@@ -925,7 +1049,7 @@
           "http_status": 200,
           "final_url": "https://pokemon.fukufukutoreka.com/lottery/25",
           "page_title": "抽選販売 詳細 | ポケカ通販 福福トレカ",
-          "html_length": 126878,
+          "html_length": 36123,
           "text_length": 738,
           "links_discovered": 54,
           "product_links_discovered": 0,
@@ -935,6 +1059,158 @@
           "robots_status": "allowed",
           "error": null
         }
+      ],
+      "structure_changed_pages": 0,
+      "health_flags": [
+        "LIST_OK",
+        "DETAIL_OK"
+      ],
+      "source_class": "WORKING"
+    },
+    {
+      "source_id": "MUGIWARA_STORE",
+      "retailer": "ONE PIECE 麦わらストア",
+      "brand": [
+        "ONE_PIECE"
+      ],
+      "priority": "P1",
+      "official_url": "https://www.mugiwara-store.com/",
+      "lottery_url": null,
+      "news_url": "https://www.mugiwara-store.com/news/",
+      "channel": "STORE",
+      "collection_method": "HTML",
+      "adapter": "mugiwara_store_lottery",
+      "verified": true,
+      "note": "公式のお知らせ（WordPress）に、ONE PIECE カードゲームの抽選販売の告知が静的 HTML のテキストで年つきで載る（抽選受付期間・抽選結果発表・商品販売期間）。応募は LivePocket（外部。店舗ごとに別のページ・公式ドメインではないので entry_url は空）。複数店舗の1本の告知。2026-10-29 の調査: robots.txt は /wp-admin/ だけを禁止。自動取得を禁じる規約の記述は確認できなかった（許可の明記でもない。取得日つきの記録で、変更があれば再確認する）。クラウド IP から遮断されたら WORKING に数えない（回避しない）",
+      "policy_excluded": null,
+      "state": "ACTIVE_LOTTERY",
+      "state_label": "抽選あり",
+      "reachable": true,
+      "last_checked": "2026-10-29T05:25:27.309960+09:00",
+      "last_success": "2026-10-29T05:25:28.886191+09:00",
+      "last_event_found": "2026-10-29T06:02:34.264107+09:00",
+      "candidate_articles": 5,
+      "accepted_lotteries": 5,
+      "rejected": 7,
+      "rejection_reasons": {
+        "not_lottery_candidate": 7
+      },
+      "blocked": false,
+      "unreachable": false,
+      "robots": null,
+      "error": null,
+      "health": "HEALTHY",
+      "active_lotteries": 4,
+      "active_preorders": 0,
+      "announcements": 0,
+      "truncated": false,
+      "detail_candidates": 5,
+      "detail_fetched": 5,
+      "skipped_due_to_limit": 0,
+      "skipped_ended": 0,
+      "discovered_titles": [],
+      "pages": [
+        {
+          "url": "https://www.mugiwara-store.com/news/",
+          "page_type": "listing",
+          "http_status": 200,
+          "final_url": "https://www.mugiwara-store.com/news/",
+          "page_title": "お知らせ | ONE PIECE 麦わらストア",
+          "html_length": 19043,
+          "text_length": 1615,
+          "links_discovered": 47,
+          "product_links_discovered": 0,
+          "candidate_blocks": 0,
+          "accepted": 0,
+          "rejected": 0,
+          "robots_status": "allowed",
+          "error": null
+        },
+        {
+          "url": "https://www.mugiwara-store.com/news/3034/",
+          "page_type": "news",
+          "http_status": 200,
+          "final_url": "https://www.mugiwara-store.com/news/3034/",
+          "page_title": "【抽選】【再入荷】【あべの店】ONE PIECE カードゲーム ブースターパック(2種) 抽選販売のご案内 | ONE PIECE 麦わらストア",
+          "html_length": 11710,
+          "text_length": 1627,
+          "links_discovered": 35,
+          "product_links_discovered": 0,
+          "candidate_blocks": 1,
+          "accepted": 1,
+          "rejected": 0,
+          "robots_status": "allowed",
+          "error": null
+        },
+        {
+          "url": "https://www.mugiwara-store.com/news/3012/",
+          "page_type": "news",
+          "http_status": 200,
+          "final_url": "https://www.mugiwara-store.com/news/3012/",
+          "page_title": "【抽選】ONE PIECE カードゲーム エクストラブースター「ONE PIECE Heroines Edition vol.2」 抽選販売のご案内 | ONE PIECE 麦わらストア",
+          "html_length": 13273,
+          "text_length": 2126,
+          "links_discovered": 44,
+          "product_links_discovered": 0,
+          "candidate_blocks": 1,
+          "accepted": 1,
+          "rejected": 0,
+          "robots_status": "allowed",
+          "error": null
+        },
+        {
+          "url": "https://www.mugiwara-store.com/news/3010/",
+          "page_type": "news",
+          "http_status": 200,
+          "final_url": "https://www.mugiwara-store.com/news/3010/",
+          "page_title": "【抽選】【再入荷】【あべの店】ONE PIECE カードゲーム ブースターパック(2種) 抽選販売のご案内 | ONE PIECE 麦わらストア",
+          "html_length": 11714,
+          "text_length": 1660,
+          "links_discovered": 35,
+          "product_links_discovered": 0,
+          "candidate_blocks": 1,
+          "accepted": 1,
+          "rejected": 0,
+          "robots_status": "allowed",
+          "error": null
+        },
+        {
+          "url": "https://www.mugiwara-store.com/news/2983/",
+          "page_type": "news",
+          "http_status": 200,
+          "final_url": "https://www.mugiwara-store.com/news/2983/",
+          "page_title": "【抽選】【再入荷】ONE PIECE カードゲーム 「世界最強の戦士」 抽選販売のご案内 | ONE PIECE 麦わらストア",
+          "html_length": 12993,
+          "text_length": 1999,
+          "links_discovered": 44,
+          "product_links_discovered": 0,
+          "candidate_blocks": 1,
+          "accepted": 1,
+          "rejected": 0,
+          "robots_status": "allowed",
+          "error": null
+        },
+        {
+          "url": "https://www.mugiwara-store.com/news/2981/",
+          "page_type": "news",
+          "http_status": 200,
+          "final_url": "https://www.mugiwara-store.com/news/2981/",
+          "page_title": "【抽選】【再入荷】ONE PIECE カードゲーム ブースターパック(2種) 抽選販売のご案内 | ONE PIECE 麦わらストア",
+          "html_length": 13189,
+          "text_length": 2157,
+          "links_discovered": 44,
+          "product_links_discovered": 0,
+          "candidate_blocks": 1,
+          "accepted": 1,
+          "rejected": 0,
+          "robots_status": "allowed",
+          "error": null
+        }
+      ],
+      "structure_changed_pages": 0,
+      "health_flags": [
+        "LIST_OK",
+        "DETAIL_OK"
       ],
       "source_class": "WORKING"
     },
@@ -958,7 +1234,7 @@
       "state": "SOURCE_BLOCKED",
       "state_label": "アクセス拒否",
       "reachable": false,
-      "last_checked": "2026-10-29T02:19:16.965781+09:00",
+      "last_checked": "2026-10-29T05:17:31.833691+09:00",
       "last_success": null,
       "last_event_found": null,
       "candidate_articles": 0,
@@ -997,6 +1273,10 @@
           "error": "HTTP 403: https://www.toysrus.co.jp/"
         }
       ],
+      "structure_changed_pages": 0,
+      "health_flags": [
+        "BLOCKED"
+      ],
       "source_class": "UNREACHABLE"
     },
     {
@@ -1019,7 +1299,7 @@
       "state": "SOURCE_BLOCKED",
       "state_label": "アクセス拒否",
       "reachable": false,
-      "last_checked": "2026-10-29T02:19:17.612459+09:00",
+      "last_checked": "2026-10-29T05:17:32.788861+09:00",
       "last_success": null,
       "last_event_found": null,
       "candidate_articles": 0,
@@ -1058,6 +1338,10 @@
           "error": "HTTP 403: https://joshinweb.jp/"
         }
       ],
+      "structure_changed_pages": 0,
+      "health_flags": [
+        "BLOCKED"
+      ],
       "source_class": "UNREACHABLE"
     },
     {
@@ -1080,8 +1364,8 @@
       "state": "SOURCE_NOT_MONITORED",
       "state_label": "未監視（未実装）",
       "reachable": true,
-      "last_checked": "2026-10-29T02:19:17.932843+09:00",
-      "last_success": "2026-10-29T02:19:18.981429+09:00",
+      "last_checked": "2026-10-29T05:17:33.237500+09:00",
+      "last_success": "2026-10-29T05:17:34.110139+09:00",
       "last_event_found": null,
       "candidate_articles": 0,
       "accepted_lotteries": 0,
@@ -1119,6 +1403,10 @@
           "error": null
         }
       ],
+      "structure_changed_pages": 0,
+      "health_flags": [
+        "LIST_OK"
+      ],
       "source_class": "ACCESSIBLE_UNIMPLEMENTED"
     },
     {
@@ -1141,7 +1429,7 @@
       "state": "SOURCE_UNREACHABLE",
       "state_label": "接続できない",
       "reachable": false,
-      "last_checked": "2026-10-29T02:19:18.981521+09:00",
+      "last_checked": "2026-10-29T05:17:34.110277+09:00",
       "last_success": null,
       "last_event_found": null,
       "candidate_articles": 0,
@@ -1180,6 +1468,8 @@
           "error": "robots.txt unreachable: https://www.yamada-denkiweb.com/"
         }
       ],
+      "structure_changed_pages": 0,
+      "health_flags": [],
       "source_class": "UNREACHABLE"
     },
     {
@@ -1202,8 +1492,8 @@
       "state": "SOURCE_NOT_MONITORED",
       "state_label": "未監視（未実装）",
       "reachable": true,
-      "last_checked": "2026-10-29T02:19:29.323567+09:00",
-      "last_success": "2026-10-29T02:19:30.713157+09:00",
+      "last_checked": "2026-10-29T05:17:44.428869+09:00",
+      "last_success": "2026-10-29T05:17:45.908331+09:00",
       "last_event_found": null,
       "candidate_articles": 0,
       "accepted_lotteries": 0,
@@ -1241,6 +1531,10 @@
           "error": null
         }
       ],
+      "structure_changed_pages": 0,
+      "health_flags": [
+        "LIST_OK"
+      ],
       "source_class": "ACCESSIBLE_UNIMPLEMENTED"
     },
     {
@@ -1263,7 +1557,7 @@
       "state": "SOURCE_UNREACHABLE",
       "state_label": "接続できない",
       "reachable": false,
-      "last_checked": "2026-10-29T02:19:30.713242+09:00",
+      "last_checked": "2026-10-29T05:17:45.908400+09:00",
       "last_success": null,
       "last_event_found": null,
       "candidate_articles": 0,
@@ -1302,6 +1596,8 @@
           "error": "robots.txt unreachable: https://www.biccamera.com/"
         }
       ],
+      "structure_changed_pages": 0,
+      "health_flags": [],
       "source_class": "UNREACHABLE"
     },
     {
@@ -1324,7 +1620,7 @@
       "state": "SOURCE_UNREACHABLE",
       "state_label": "接続できない",
       "reachable": false,
-      "last_checked": "2026-10-29T02:19:41.151455+09:00",
+      "last_checked": "2026-10-29T05:17:56.225413+09:00",
       "last_success": null,
       "last_event_found": null,
       "candidate_articles": 0,
@@ -1363,6 +1659,8 @@
           "error": "robots.txt unreachable: https://www.yodobashi.com/"
         }
       ],
+      "structure_changed_pages": 0,
+      "health_flags": [],
       "source_class": "UNREACHABLE"
     },
     {
@@ -1385,8 +1683,8 @@
       "state": "SOURCE_NOT_MONITORED",
       "state_label": "未監視（未実装）",
       "reachable": true,
-      "last_checked": "2026-10-29T02:19:51.519834+09:00",
-      "last_success": "2026-10-29T02:19:52.323671+09:00",
+      "last_checked": "2026-10-29T05:18:06.507209+09:00",
+      "last_success": "2026-10-29T05:18:07.075177+09:00",
       "last_event_found": null,
       "candidate_articles": 0,
       "accepted_lotteries": 0,
@@ -1424,6 +1722,10 @@
           "error": null
         }
       ],
+      "structure_changed_pages": 0,
+      "health_flags": [
+        "LIST_OK"
+      ],
       "source_class": "UNSUPPORTED"
     },
     {
@@ -1446,7 +1748,7 @@
       "state": "SOURCE_UNREACHABLE",
       "state_label": "接続できない",
       "reachable": false,
-      "last_checked": "2026-10-29T02:19:52.323822+09:00",
+      "last_checked": "2026-10-29T05:18:07.075264+09:00",
       "last_success": null,
       "last_event_found": null,
       "candidate_articles": 0,
@@ -1485,6 +1787,8 @@
           "error": "robots.txt unreachable: https://books.rakuten.co.jp/"
         }
       ],
+      "structure_changed_pages": 0,
+      "health_flags": [],
       "source_class": "UNREACHABLE"
     },
     {
@@ -1507,8 +1811,8 @@
       "state": "SOURCE_NOT_MONITORED",
       "state_label": "未監視（未実装）",
       "reachable": true,
-      "last_checked": "2026-10-29T02:20:02.585823+09:00",
-      "last_success": "2026-10-29T02:20:03.404352+09:00",
+      "last_checked": "2026-10-29T05:18:17.924997+09:00",
+      "last_success": "2026-10-29T05:18:18.763435+09:00",
       "last_event_found": null,
       "candidate_articles": 0,
       "accepted_lotteries": 0,
@@ -1546,6 +1850,10 @@
           "error": null
         }
       ],
+      "structure_changed_pages": 0,
+      "health_flags": [
+        "LIST_OK"
+      ],
       "source_class": "ACCESSIBLE_UNIMPLEMENTED"
     },
     {
@@ -1568,8 +1876,8 @@
       "state": "NO_ACTIVE_LOTTERY",
       "state_label": "現在の抽選なし",
       "reachable": true,
-      "last_checked": "2026-10-29T02:20:03.404440+09:00",
-      "last_success": "2026-10-29T02:21:05.076962+09:00",
+      "last_checked": "2026-10-29T05:18:18.763514+09:00",
+      "last_success": "2026-10-29T05:19:20.068303+09:00",
       "last_event_found": null,
       "candidate_articles": 0,
       "accepted_lotteries": 0,
@@ -1623,6 +1931,10 @@
           "error": null
         }
       ],
+      "structure_changed_pages": 0,
+      "health_flags": [
+        "LIST_OK"
+      ],
       "source_class": "WORKING"
     },
     {
@@ -1644,8 +1956,8 @@
       "state": "NO_ACTIVE_LOTTERY",
       "state_label": "現在の抽選なし",
       "reachable": true,
-      "last_checked": "2026-10-29T02:21:05.077062+09:00",
-      "last_success": "2026-10-29T02:21:07.780339+09:00",
+      "last_checked": "2026-10-29T05:19:20.068397+09:00",
+      "last_success": "2026-10-29T05:19:22.940238+09:00",
       "last_event_found": null,
       "candidate_articles": 0,
       "accepted_lotteries": 0,
@@ -1684,6 +1996,10 @@
           "robots_status": "not_found",
           "error": null
         }
+      ],
+      "structure_changed_pages": 0,
+      "health_flags": [
+        "LIST_OK"
       ],
       "source_class": "WORKING"
     },
@@ -1728,6 +2044,8 @@
       "skipped_ended": 0,
       "discovered_titles": [],
       "pages": [],
+      "structure_changed_pages": 0,
+      "health_flags": [],
       "source_class": "UNSUPPORTED"
     },
     {
@@ -1749,8 +2067,8 @@
       "state": "NO_ACTIVE_LOTTERY",
       "state_label": "現在の抽選なし",
       "reachable": true,
-      "last_checked": "2026-10-29T02:21:07.781580+09:00",
-      "last_success": "2026-10-29T02:22:08.117768+09:00",
+      "last_checked": "2026-10-29T05:19:23.267562+09:00",
+      "last_success": "2026-10-29T05:20:23.910497+09:00",
       "last_event_found": null,
       "candidate_articles": 0,
       "accepted_lotteries": 0,
@@ -1777,7 +2095,7 @@
           "http_status": 200,
           "final_url": "https://p-bandai.jp/global_newpc.html",
           "page_title": "【プレミアムバンダイ】INTERNATIONAL SHIPPING AVAILABLE｜PREMIUM BANDAI",
-          "html_length": 10521,
+          "html_length": 10525,
           "text_length": 783,
           "links_discovered": 12,
           "product_links_discovered": 0,
@@ -1793,7 +2111,7 @@
           "http_status": 200,
           "final_url": "https://p-bandai.jp/global_newpc.html",
           "page_title": "【プレミアムバンダイ】INTERNATIONAL SHIPPING AVAILABLE｜PREMIUM BANDAI",
-          "html_length": 10521,
+          "html_length": 10525,
           "text_length": 783,
           "links_discovered": 12,
           "product_links_discovered": 0,
@@ -1804,42 +2122,50 @@
           "error": null
         }
       ],
+      "structure_changed_pages": 0,
+      "health_flags": [
+        "LIST_OK"
+      ],
       "source_class": "WORKING"
     }
   ],
   "coverage": {
-    "configured_sources": 21,
-    "implemented_collectors": 10,
-    "reachable_sources": 12,
-    "healthy_sources": 8,
+    "configured_sources": 22,
+    "implemented_collectors": 11,
+    "reachable_sources": 13,
+    "healthy_sources": 9,
     "blocked_sources": 4,
     "unreachable_sources": 4,
     "not_implemented_sources": 11,
-    "sources_with_active_lottery": 3,
-    "lottery_events_found": 18,
+    "sources_with_active_lottery": 4,
+    "lottery_events_found": 24,
     "source_classes": {
-      "WORKING": 8,
+      "WORKING": 9,
       "IMPLEMENTED_BUT_BLOCKED": 2,
       "ACCESSIBLE_UNIMPLEMENTED": 3,
       "UNREACHABLE": 6,
       "UNSUPPORTED": 2
     },
     "funnel": {
-      "raw_announcements": 38,
-      "parsed_events": 30,
+      "raw_announcements": 43,
+      "parsed_events": 38,
       "review_required": 1,
-      "rejected": 137,
-      "active_lotteries": 18,
+      "rejected": 147,
+      "active_lotteries": 24,
       "sources_with_gap": 12,
       "sources_truncated": 1,
-      "detail_candidates": 36,
-      "detail_fetched": 29,
-      "skipped_due_to_limit": 7,
-      "skipped_ended": 0
+      "detail_candidates": 41,
+      "detail_fetched": 40,
+      "skipped_due_to_limit": 1,
+      "skipped_ended": 0,
+      "sources_list_ok": 12,
+      "sources_detail_ok": 5,
+      "sources_blocked": 4,
+      "sources_parser_degraded": 0
     },
     "entry_kinds": {
-      "STORE_LOTTERY": 15,
-      "LOTTERY": 17
+      "STORE_LOTTERY": 18,
+      "LOTTERY": 22
     }
   },
   "source_candidates": {
@@ -1954,8 +2280,8 @@
   },
   "rejection_reasons": {
     "schedule_not_in_text": 1,
-    "not_lottery_candidate": 57,
+    "not_lottery_candidate": 64,
     "tournament_or_event": 78,
-    "no_lottery_sale_context": 1
+    "no_lottery_sale_context": 4
   }
 }

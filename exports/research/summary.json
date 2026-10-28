@@ -2,7 +2,7 @@
   "schema": 1,
   "type": "RESEARCH_SUMMARY",
   "audience": "public_aggregate",
-  "generated_at": "2026-10-29T02:39:24+09:00",
+  "generated_at": "2026-10-29T06:31:01+09:00",
   "description": "調査候補の集計（件数だけ）。個別の候補（商品・価格・価格差・売却先）は公開しない。確定の利益ではない",
   "research_candidate_count": 10,
   "positive_raw_spread_count": 6,
@@ -12,7 +12,7 @@
   "ledger_state": "REUSED_WITHIN_RUN",
   "first_seen_scope": "THIS_RUN_ONLY",
   "ledger_persistence": "NOT_AVAILABLE",
-  "high_priority_research_count": 1,
+  "high_priority_research_count": 7,
   "product_research_candidate_count": 6,
   "buyback_first_candidates": 596,
   "confirmed_opportunities": 1,
@@ -28,7 +28,6 @@
     "PURCHASE_SHIPPING_UNKNOWN": 8,
     "CANONICAL_UNREGISTERED": 6,
     "STOCK_UNKNOWN": 6,
-    "IDENTITY_PARTIAL": 6,
     "IDENTITY_UNCONFIRMED": 3,
     "SELL_STALE": 3,
     "GENERIC_SELL_URL": 2,
@@ -68,51 +67,102 @@
     "positive_spread_hint": 0,
     "top_queue": 50,
     "lookup_ready": 59,
-    "lookup_matched": 38,
+    "lookup_matched": 45,
     "research_candidates": 6
   },
   "buyback_triage": {
     "HIGH": 54,
-    "MEDIUM": 291,
+    "MEDIUM": 284,
     "LOW": 207,
-    "REJECTED": 44
+    "REJECTED": 51
   },
-  "retail_lookup_matched": 38,
+  "retail_lookup_matched": 45,
+  "retail_adapters": {
+    "apple_jp": {
+      "supported": 66,
+      "requested": 6,
+      "fetched": 6,
+      "matched": 19,
+      "no_match": 49
+    },
+    "nikon_direct": {
+      "supported": 21,
+      "requested": 2,
+      "fetched": 2,
+      "matched": 19,
+      "no_match": 3
+    },
+    "sony_store": {
+      "supported": 36,
+      "requested": 4,
+      "fetched": 3,
+      "matched": 2,
+      "no_match": 1
+    },
+    "canon_store": {
+      "supported": 17,
+      "requested": 5,
+      "fetched": 5,
+      "matched": 5,
+      "no_match": 0
+    },
+    "samsung_jp": {
+      "supported": 1,
+      "requested": 1,
+      "fetched": 1,
+      "matched": 0,
+      "no_match": 1
+    },
+    "sofmap_new": {
+      "supported": 1,
+      "requested": 1,
+      "fetched": 1,
+      "matched": 0,
+      "no_match": 0
+    }
+  },
+  "retail_api_sources": {
+    "PENDING_USER_CONFIGURATION": 2
+  },
   "official_discovery_candidates": 39,
   "tcg_source_coverage": {
-    "configured_sources": 21,
-    "implemented_collectors": 10,
-    "reachable_sources": 12,
-    "healthy_sources": 8,
+    "configured_sources": 22,
+    "implemented_collectors": 11,
+    "reachable_sources": 13,
+    "healthy_sources": 9,
     "blocked_sources": 4,
     "unreachable_sources": 4,
     "not_implemented_sources": 11,
-    "sources_with_active_lottery": 3,
-    "lottery_events_found": 18,
+    "sources_with_active_lottery": 4,
+    "lottery_events_found": 24,
     "source_classes": {
-      "WORKING": 8,
+      "WORKING": 9,
       "IMPLEMENTED_BUT_BLOCKED": 2,
       "ACCESSIBLE_UNIMPLEMENTED": 3,
       "UNREACHABLE": 6,
       "UNSUPPORTED": 2
     }
   },
-  "tcg_working_sources": 8,
+  "tcg_working_sources": 9,
   "tcg_funnel": {
-    "raw_announcements": 38,
-    "parsed_events": 30,
+    "raw_announcements": 43,
+    "parsed_events": 38,
     "review_required": 1,
-    "rejected": 137,
-    "active_lotteries": 18,
+    "rejected": 147,
+    "active_lotteries": 24,
     "sources_with_gap": 12,
     "sources_truncated": 1,
-    "detail_candidates": 36,
-    "detail_fetched": 29,
-    "skipped_due_to_limit": 7,
+    "detail_candidates": 41,
+    "detail_fetched": 40,
+    "skipped_due_to_limit": 1,
     "skipped_ended": 0,
+    "sources_list_ok": 12,
+    "sources_detail_ok": 5,
+    "sources_blocked": 4,
+    "sources_parser_degraded": 0,
     "zero_active_interpretation": null
   },
-  "tcg_active_events": 3,
+  "tcg_active_events": 4,
   "tcg_event_quality": {
     "active_events": 5,
     "with_application_start": 5,
@@ -131,14 +181,14 @@
     "UPCOMING": 0
   },
   "tcg_fast_lane": {
-    "events_measured": 31,
-    "median_application_duration_hours": 60.0,
-    "median_age_at_observation_hours": 146.3,
-    "windows_under_24h_at_observation": 27,
-    "observed_after_half_window": 27,
-    "tolerated_age_at_observation_hours_p25": 24.0,
-    "suggested_max_detection_interval_hours": 24,
-    "date_precision_events": 19
+    "events_measured": 39,
+    "median_application_duration_hours": 72.0,
+    "median_age_at_observation_hours": 197.9,
+    "windows_under_24h_at_observation": 35,
+    "observed_after_half_window": 35,
+    "tolerated_age_at_observation_hours_p25": 30.0,
+    "suggested_max_detection_interval_hours": 30,
+    "date_precision_events": 22
   },
   "tcg_msrp_verified": 15,
   "tcg_source_candidates": 7

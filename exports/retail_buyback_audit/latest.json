@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-29 02:39 JST",
+  "generated_at": "2026-10-29 06:31 JST",
   "scope": "販売/買取/二次流通の取得品質・正規化・同一性（利益/AI/UI/SaaSロジックは不変）",
   "rules": {
     "identity": "容量・型番・カラー・新品/中古 を厳格一致",
@@ -524,7 +524,7 @@
         "new",
         "used"
       ],
-      "first_seen": 67.6,
+      "first_seen": 67.8,
       "last_seen": 0.1,
       "risk_level": "high",
       "possible_reason": [
@@ -555,7 +555,7 @@
         "new"
       ],
       "first_seen": 9999.0,
-      "last_seen": 0.1,
+      "last_seen": 0.3,
       "risk_level": "high",
       "possible_reason": [
         "different_model_same_price",
@@ -586,7 +586,7 @@
         "new"
       ],
       "first_seen": 9999.0,
-      "last_seen": 0.1,
+      "last_seen": 0.3,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -616,8 +616,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 79.6,
-      "last_seen": 79.6,
+      "first_seen": 79.8,
+      "last_seen": 79.8,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -646,8 +646,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 79.6,
-      "last_seen": 79.6,
+      "first_seen": 79.8,
+      "last_seen": 79.8,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -676,8 +676,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 79.6,
-      "last_seen": 79.6,
+      "first_seen": 79.8,
+      "last_seen": 79.8,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -706,7 +706,7 @@
         "new"
       ],
       "first_seen": 9999.0,
-      "last_seen": 21.1,
+      "last_seen": 21.3,
       "risk_level": "low",
       "possible_reason": [
         "same_price_multiple_skus"

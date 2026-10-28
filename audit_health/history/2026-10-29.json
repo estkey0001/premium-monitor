@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-29 02:39 JST",
+  "generated_at": "2026-10-29 06:30 JST",
   "date": "2026-10-29",
   "health_score": {
     "data_quality": 14.4,
@@ -337,15 +337,15 @@
   "diff_vs_prev": {
     "available": true,
     "stale_rate": {
-      "prev": 0.6282,
+      "prev": 0.617,
       "cur": 0.617
     },
     "zero_rate": {
-      "prev": 0.1624,
+      "prev": 0.1617,
       "cur": 0.1617
     },
     "item_url_rate": {
-      "prev": 0.4829,
+      "prev": 0.4809,
       "cur": 0.4809
     },
     "main_route_count": {
@@ -368,7 +368,6 @@
       "取得成功率 0%: ネットオフ"
     ],
     "warning": [
-      "item_url率 低下",
       "item_url率 48% (<50%)"
     ],
     "info": [

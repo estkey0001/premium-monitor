@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-28T23:03:09+09:00",
+  "generated_at": "2026-10-29T02:39:21+09:00",
   "collection": {
     "total_shops": 16,
     "shops_with_success": 2,
@@ -11,11 +11,11 @@
     "success_rate_pct": 28.8
   },
   "comparison": {
-    "prev_success_rate_pct": 30.3,
+    "prev_success_rate_pct": 28.8,
     "current_success_rate_pct": 28.8,
-    "delta_pct": -1.5,
-    "trend": "悪化",
-    "moving_avg_7d_pct": 29.0,
+    "delta_pct": 0.0,
+    "trend": "横ばい",
+    "moving_avg_7d_pct": 29.2,
     "top5_failure_reasons": [
       {
         "reason": "http_403",
@@ -269,55 +269,59 @@
   "consecutive_failed_shops": [
     {
       "shop_id": "2ndstreet",
-      "consecutive_failures": 226
+      "consecutive_failures": 227
     },
     {
       "shop_id": "bookoff",
-      "consecutive_failures": 226
+      "consecutive_failures": 227
     },
     {
       "shop_id": "dosupara",
-      "consecutive_failures": 226
+      "consecutive_failures": 227
     },
     {
       "shop_id": "geo_mobile",
-      "consecutive_failures": 226
+      "consecutive_failures": 227
     },
     {
       "shop_id": "hardoff",
-      "consecutive_failures": 226
+      "consecutive_failures": 227
     },
     {
       "shop_id": "janpara",
-      "consecutive_failures": 226
+      "consecutive_failures": 227
     },
     {
       "shop_id": "pasoko",
-      "consecutive_failures": 226
+      "consecutive_failures": 227
     },
     {
       "shop_id": "sofmap",
-      "consecutive_failures": 226
+      "consecutive_failures": 227
     },
     {
       "shop_id": "surugaya",
-      "consecutive_failures": 226
+      "consecutive_failures": 227
     },
     {
       "shop_id": "tsutaya",
-      "consecutive_failures": 226
+      "consecutive_failures": 227
     },
     {
       "shop_id": "iosys",
-      "consecutive_failures": 159
+      "consecutive_failures": 160
     },
     {
       "shop_id": "netoff",
-      "consecutive_failures": 86
+      "consecutive_failures": 87
     },
     {
       "shop_id": "geo",
-      "consecutive_failures": 18
+      "consecutive_failures": 19
+    },
+    {
+      "shop_id": "mobile_ichiban",
+      "consecutive_failures": 2
     }
   ],
   "improvement_priority": [
@@ -341,13 +345,13 @@
     }
   ],
   "camera_reliability": {
-    "camera_auto_scraped_count": 16,
-    "camera_auto_high_confidence_count": 16,
+    "camera_auto_scraped_count": 17,
+    "camera_auto_high_confidence_count": 17,
     "camera_auto_low_confidence_count": 0,
-    "camera_manual_fallback_count": 44,
-    "camera_rejected_candidate_count": 175,
+    "camera_manual_fallback_count": 43,
+    "camera_rejected_candidate_count": 204,
     "camera_rejection_reasons": {
-      "model_mismatch": 124,
+      "model_mismatch": 153,
       "not_buyback_context": 51
     },
     "per_brand_success_rates": {
@@ -378,8 +382,8 @@
       },
       "LEICA": {
         "models": 2,
-        "auto_scraped": 0,
-        "success_rate_pct": 0.0
+        "auto_scraped": 1,
+        "success_rate_pct": 50.0
       }
     }
   }

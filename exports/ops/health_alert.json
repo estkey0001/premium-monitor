@@ -2,35 +2,44 @@
   "type": "PRODUCTION_HEALTH_ALERT",
   "schema": 1,
   "audience": "operator",
-  "generated_at": "2026-10-28T22:16:13+09:00",
+  "generated_at": "2026-10-29T01:36:13+09:00",
   "note": "運営者向けの劣化アラート候補（商品の通知ではない）。外部へは送らない。CI の注記・Step Summary・管理画面に出す",
   "active_count": 6,
-  "high": 3,
-  "warning": 3,
+  "high": 4,
+  "warning": 2,
   "candidates": [
     {
-      "key": "source_failure:mobile_ichiban",
-      "category": "source_failure",
-      "source": "mobile_ichiban",
+      "key": "official_recheck_failing:prod_x100vi",
+      "category": "official_recheck_failing",
+      "source": "prod_x100vi",
       "severity": "HIGH",
-      "reason": "product_not_listed",
-      "title": "必須の店 mobile_ichiban が取得できなくなりました（1日目）",
-      "details": "理由: product_not_listed",
+      "reason": "recheck_failed",
+      "title": "prod_x100vi の公式の再確認が 7 日連続で失敗しています",
+      "details": "公式ページの移動・表示の変更・ブロックの可能性。人が公式ページを確認する",
       "evidence": {
-        "consecutive_days": 1,
-        "reasons": [
-          "product_not_listed"
-        ]
+        "consecutive_days": 7
       },
       "type": "PRODUCTION_HEALTH_ALERT",
-      "event": "NEW",
-      "first_seen": "2026-10-28T22:16:13+09:00",
-      "generated_at": "2026-10-28T22:16:13+09:00"
+      "event": "ESCALATED",
+      "first_seen": "2026-10-25T18:19:24+09:00",
+      "generated_at": "2026-10-29T01:36:13+09:00"
     }
   ],
   "suppressed": 5,
   "recovered": [],
   "active": [
+    {
+      "key": "official_recheck_failing:prod_x100vi",
+      "category": "official_recheck_failing",
+      "source": "prod_x100vi",
+      "severity": "HIGH",
+      "reason": "recheck_failed",
+      "title": "prod_x100vi の公式の再確認が 7 日連続で失敗しています",
+      "details": "公式ページの移動・表示の変更・ブロックの可能性。人が公式ページを確認する",
+      "evidence": {
+        "consecutive_days": 7
+      }
+    },
     {
       "key": "official_verification_expiry:prod_switch2",
       "category": "official_verification_expiry",
@@ -40,7 +49,7 @@
       "title": "prod_switch2 の公式の確認が切れています",
       "details": "確認日 2026-10-08（期限 14 日）",
       "evidence": {
-        "days_left": -6
+        "days_left": -7
       }
     },
     {
@@ -49,10 +58,10 @@
       "source": "mobile_ichiban",
       "severity": "HIGH",
       "reason": "product_not_listed",
-      "title": "必須の店 mobile_ichiban が取得できなくなりました（1日目）",
+      "title": "必須の店 mobile_ichiban が取得できなくなりました（2日目）",
       "details": "理由: product_not_listed",
       "evidence": {
-        "consecutive_days": 1,
+        "consecutive_days": 2,
         "reasons": [
           "product_not_listed"
         ]
@@ -71,18 +80,6 @@
         "reasons": [
           "price_not_found"
         ]
-      }
-    },
-    {
-      "key": "official_recheck_failing:prod_x100vi",
-      "category": "official_recheck_failing",
-      "source": "prod_x100vi",
-      "severity": "WARNING",
-      "reason": "recheck_failed",
-      "title": "prod_x100vi の公式の再確認が 6 日連続で失敗しています",
-      "details": "公式ページの移動・表示の変更・ブロックの可能性。人が公式ページを確認する",
-      "evidence": {
-        "consecutive_days": 6
       }
     },
     {

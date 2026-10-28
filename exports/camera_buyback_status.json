@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-10-28T21:27:11+09:00",
+  "generated_at": "2026-10-29T00:53:16+09:00",
   "summary": {
     "total": 60,
-    "ok": 16,
-    "failed": 44,
+    "ok": 17,
+    "failed": 43,
     "skip": 0,
-    "success_rate_pct": 26.7,
-    "saved_to_db": 16
+    "success_rate_pct": 28.3,
+    "saved_to_db": 17
   },
   "failure_reasons": [
     {
@@ -15,11 +15,7 @@
     },
     {
       "reason": "price_not_found",
-      "count": 2
-    },
-    {
-      "reason": "timeout",
-      "count": 2
+      "count": 3
     }
   ],
   "shop_cutoffs": {
@@ -72,11 +68,6 @@
         "q3",
         "m11"
       ]
-    },
-    "src_fujiya": {
-      "reason": "timeout",
-      "after_attempts": 2,
-      "skipped": []
     }
   },
   "shop_diagnostics": {
@@ -96,16 +87,15 @@
     },
     "src_fujiya": {
       "jobs": 20,
-      "ok": 16,
+      "ok": 17,
       "html_saved": 0,
       "cloudflare": 0,
       "js_required": 0,
       "playwright_attempted": 20,
-      "playwright_success": 18,
-      "screenshot_saved": 18,
+      "playwright_success": 20,
+      "screenshot_saved": 20,
       "top_reason": {
-        "price_not_found": 2,
-        "timeout": 2
+        "price_not_found": 3
       },
       "diagnosis": "price_not_found"
     },
@@ -177,7 +167,7 @@
       "price": 213000,
       "reason": "",
       "html_saved": false,
-      "html_size": 358712,
+      "html_size": 358552,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -185,7 +175,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 358712,
+      "rendered_html_size": 358552,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -437,7 +427,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=X100VI&search=検索",
-      "buyback_page_html_size": 358712,
+      "buyback_page_html_size": 358552,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -775,7 +765,7 @@
       "price": 474000,
       "reason": "",
       "html_saved": false,
-      "html_size": 345844,
+      "html_size": 345957,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -783,7 +773,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 345844,
+      "rendered_html_size": 345957,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -1035,7 +1025,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=GFX100RF&search=検索",
-      "buyback_page_html_size": 345844,
+      "buyback_page_html_size": 345957,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -1336,7 +1326,7 @@
       "price": 168000,
       "reason": "",
       "html_saved": false,
-      "html_size": 373965,
+      "html_size": 374073,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -1344,7 +1334,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 373965,
+      "rendered_html_size": 374073,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -1596,7 +1586,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=X-T5&search=検索",
-      "buyback_page_html_size": 373965,
+      "buyback_page_html_size": 374073,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -1977,7 +1967,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 371213,
+      "rendered_html_size": 371211,
       "selector_waited": true,
       "extraction_strategy": "requests",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -2230,7 +2220,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=RICOH%20GR%20III&search=検索",
-      "buyback_page_html_size": 371213,
+      "buyback_page_html_size": 371211,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -2639,7 +2629,7 @@
       "price": 124000,
       "reason": "",
       "html_saved": false,
-      "html_size": 347990,
+      "html_size": 347897,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -2647,7 +2637,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 347990,
+      "rendered_html_size": 347897,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -2899,7 +2889,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=RICOH%20GR%20IIIx&search=検索",
-      "buyback_page_html_size": 347990,
+      "buyback_page_html_size": 347897,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -3263,7 +3253,7 @@
       "price": 151000,
       "reason": "",
       "html_saved": false,
-      "html_size": 358406,
+      "html_size": 358448,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -3271,7 +3261,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 358406,
+      "rendered_html_size": 358448,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -3523,7 +3513,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=RICOH%20GR%20IV&search=検索",
-      "buyback_page_html_size": 358406,
+      "buyback_page_html_size": 358448,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -3914,7 +3904,7 @@
       "price": 194000,
       "reason": "",
       "html_saved": false,
-      "html_size": 358406,
+      "html_size": 358448,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -3922,7 +3912,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 358406,
+      "rendered_html_size": 358448,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -4174,7 +4164,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=RICOH%20GR%20IV&search=検索",
-      "buyback_page_html_size": 358406,
+      "buyback_page_html_size": 358448,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -4565,7 +4555,7 @@
       "price": 194000,
       "reason": "",
       "html_saved": false,
-      "html_size": 358406,
+      "html_size": 358448,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -4573,7 +4563,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 358406,
+      "rendered_html_size": 358448,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -4825,7 +4815,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=RICOH%20GR%20IV&search=検索",
-      "buyback_page_html_size": 358406,
+      "buyback_page_html_size": 358448,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -5216,7 +5206,7 @@
       "price": 188000,
       "reason": "",
       "html_saved": false,
-      "html_size": 350115,
+      "html_size": 350147,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -5224,7 +5214,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 350115,
+      "rendered_html_size": 350147,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -5476,7 +5466,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=SONY%20%CE%B17R%20V&search=検索",
-      "buyback_page_html_size": 350115,
+      "buyback_page_html_size": 350147,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -5849,7 +5839,7 @@
       "price": 543000,
       "reason": "",
       "html_saved": false,
-      "html_size": 343763,
+      "html_size": 343888,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -5857,7 +5847,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 343763,
+      "rendered_html_size": 343888,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -6109,7 +6099,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=SONY%20%CE%B11%20II&search=検索",
-      "buyback_page_html_size": 343763,
+      "buyback_page_html_size": 343888,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -6404,7 +6394,7 @@
       "price": 232000,
       "reason": "",
       "html_saved": false,
-      "html_size": 345858,
+      "html_size": 345898,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -6412,7 +6402,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 345858,
+      "rendered_html_size": 345898,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -6664,7 +6654,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=SONY%20%CE%B17CR&search=検索",
-      "buyback_page_html_size": 345858,
+      "buyback_page_html_size": 345898,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -6968,7 +6958,7 @@
       "price": 363000,
       "reason": "",
       "html_saved": false,
-      "html_size": 358738,
+      "html_size": 358849,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -6976,7 +6966,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 358738,
+      "rendered_html_size": 358849,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -7228,7 +7218,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=SONY%20FX3&search=検索",
-      "buyback_page_html_size": 358738,
+      "buyback_page_html_size": 358849,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -7583,7 +7573,7 @@
       "price": 372000,
       "reason": "",
       "html_saved": false,
-      "html_size": 348227,
+      "html_size": 348280,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -7591,7 +7581,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 348227,
+      "rendered_html_size": 348280,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -7843,7 +7833,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=Canon%20EOS%20R5%20Mark%20II&search=検索",
-      "buyback_page_html_size": 348227,
+      "buyback_page_html_size": 348280,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -8215,7 +8205,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 356723,
+      "rendered_html_size": 356836,
       "selector_waited": true,
       "extraction_strategy": "requests",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -8468,7 +8458,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=Canon%20EOS%20R6%20Mark%20II&search=検索",
-      "buyback_page_html_size": 356723,
+      "buyback_page_html_size": 356836,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -8877,7 +8867,7 @@
       "price": 283000,
       "reason": "",
       "html_saved": false,
-      "html_size": 343733,
+      "html_size": 343855,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -8885,7 +8875,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 343733,
+      "rendered_html_size": 343855,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -9137,7 +9127,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=Canon%20EOS%20R3&search=検索",
-      "buyback_page_html_size": 343733,
+      "buyback_page_html_size": 343855,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -9432,7 +9422,7 @@
       "price": 253000,
       "reason": "",
       "html_saved": false,
-      "html_size": 343634,
+      "html_size": 343813,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -9440,7 +9430,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 343634,
+      "rendered_html_size": 343813,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -9692,7 +9682,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=Nikon%20Z8&search=検索",
-      "buyback_page_html_size": 343634,
+      "buyback_page_html_size": 343813,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -9987,7 +9977,7 @@
       "price": 137000,
       "reason": "",
       "html_saved": false,
-      "html_size": 448596,
+      "html_size": 448579,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -9995,7 +9985,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 448596,
+      "rendered_html_size": 448579,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -10247,7 +10237,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=Nikon%20Zf&search=検索",
-      "buyback_page_html_size": 448596,
+      "buyback_page_html_size": 448579,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -10638,7 +10628,7 @@
       "price": 324000,
       "reason": "",
       "html_saved": false,
-      "html_size": 345937,
+      "html_size": 346070,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -10646,7 +10636,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 345937,
+      "rendered_html_size": 346070,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -10898,7 +10888,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=Nikon%20Z9&search=検索",
-      "buyback_page_html_size": 345937,
+      "buyback_page_html_size": 346070,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -11188,47 +11178,577 @@
     {
       "product_alias": "q3",
       "shop_id": "src_fujiya",
-      "status": "FAILED",
+      "status": "OK",
       "brand": "LEICA",
-      "price": 0,
-      "reason": "timeout",
+      "price": 586000,
+      "reason": "",
       "html_saved": false,
-      "html_size": 0,
+      "html_size": 367053,
       "cloudflare_detected": false,
       "js_required": false,
-      "selector_found": false,
-      "extracted_price": null,
+      "selector_found": true,
+      "extracted_price": 586000,
       "playwright_attempted": true,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
-      "selector_waited": false,
-      "extraction_strategy": "requests",
-      "body_text_preview": "",
-      "matched_selectors": [],
-      "selector_candidates": [],
-      "iframe_count": 0,
-      "shadow_dom_detected": false,
-      "dom_ready_state": "",
-      "hit_count": null,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 367053,
+      "selector_waited": true,
+      "extraction_strategy": "fujiya_buyback",
+      "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
+      "matched_selectors": [
+        {
+          "selector": "table td",
+          "hits": 46
+        },
+        {
+          "selector": ".price",
+          "hits": 46
+        },
+        {
+          "selector": "[class*='price']",
+          "hits": 46
+        },
+        {
+          "selector": "[class*='assess']",
+          "hits": 126
+        }
+      ],
+      "selector_candidates": [
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥1,112,000\n\t\t\t\t\t",
+          "price": 1112000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "ライカ Q3 43 “Formula 1® Edition 19208 Leica 買取金額 新品同様 ￥1,112,000 良品 ￥1,053,000 下取は10%UP 新品同様 ￥1,223,200 良品 ￥1,158,300 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥1,112,000\n\t\t\t\t\t",
+          "price": 1112000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "ライカ Q3 43 “Formula 1® Edition 19208 Leica 買取金額 新品同様 ￥1,112,000 良品 ￥1,053,000 下取は10%UP 新品同様 ￥1,223,200 良品 ￥1,158,300 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥841,000\n\t\t\t\t\t\t\n",
+          "price": 841000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "ライカ Q3 メタルグレーペイント 19211 Leica 買取金額 新品同様 ￥841,000 良品 ￥840,000 下取は10%UP 新品同様 ￥925,100 良品 ￥924,000 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥841,000\n\t\t\t\t\t\t\n",
+          "price": 841000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "ライカ Q3 メタルグレーペイント 19211 Leica 買取金額 新品同様 ￥841,000 良品 ￥840,000 下取は10%UP 新品同様 ￥925,100 良品 ￥924,000 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥812,000\n\t\t\t\t\t\t\n",
+          "price": 812000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "ライカ Q3 モノクローム 19201 Leica 買取金額 新品同様 ￥812,000 良品 ￥811,000 下取は10%UP 新品同様 ￥893,200 良品 ￥892,100 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥812,000\n\t\t\t\t\t\t\n",
+          "price": 812000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "ライカ Q3 モノクローム 19201 Leica 買取金額 新品同様 ￥812,000 良品 ￥811,000 下取は10%UP 新品同様 ￥893,200 良品 ￥892,100 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "Leica Q3モノクローム EU/US/CN バージョン\n\t\t\t\n\t\t\t\tLeica\n\t\t\t\n\t\t\t\n\t\t\n\t\t\n\t\t",
+          "price": 812000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "Leica Q3モノクローム EU/US/CN バージョン Leica 買取金額 新品同様 ￥812,000 良品 ￥811,000 下取は10%UP 新品同様 ￥893,200 良品 ￥892,100 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥812,000\n\t\t\t\t\t\t\n",
+          "price": 812000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "Leica Q3モノクローム EU/US/CN バージョン Leica 買取金額 新品同様 ￥812,000 良品 ￥811,000 下取は10%UP 新品同様 ￥893,200 良品 ￥892,100 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥812,000\n\t\t\t\t\t\t\n",
+          "price": 812000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "Leica Q3モノクローム EU/US/CN バージョン Leica 買取金額 新品同様 ￥812,000 良品 ￥811,000 下取は10%UP 新品同様 ￥893,200 良品 ￥892,100 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥668,000\n\t\t\t\t\t\t\n",
+          "price": 668000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "ライカ Q3 43 19085 Leica 買取金額 新品同様 ￥668,000 良品 ￥667,000 下取は10%UP 新品同様 ￥734,800 良品 ￥733,700 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥668,000\n\t\t\t\t\t\t\n",
+          "price": 668000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "ライカ Q3 43 19085 Leica 買取金額 新品同様 ￥668,000 良品 ￥667,000 下取は10%UP 新品同様 ￥734,800 良品 ￥733,700 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "Leica Q3 43 EU/US/CN バージョン\n\t\t\t\n\t\t\t\tLeica\n\t\t\t\n\t\t\t\n\t\t\n\t\t\n\t\t\n\t\t",
+          "price": 636000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "Leica Q3 43 EU/US/CN バージョン Leica 買取金額 新品同様 ￥636,000 良品 ￥635,000 下取は10%UP 新品同様 ￥699,600 良品 ￥698,500 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥636,000\n\t\t\t\t\t\t\n",
+          "price": 636000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "Leica Q3 43 EU/US/CN バージョン Leica 買取金額 新品同様 ￥636,000 良品 ￥635,000 下取は10%UP 新品同様 ￥699,600 良品 ￥698,500 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥636,000\n\t\t\t\t\t\t\n",
+          "price": 636000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "Leica Q3 43 EU/US/CN バージョン Leica 買取金額 新品同様 ￥636,000 良品 ￥635,000 下取は10%UP 新品同様 ￥699,600 良品 ￥698,500 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥586,000\n\t\t\t\t\t\t\n",
+          "price": 586000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "ライカ Q3 19081 Leica 買取金額 新品同様 ￥586,000 良品 ￥585,000 下取は10%UP 新品同様 ￥644,600 良品 ￥643,500 買取申し込み 買取検討リストへ"
+        }
+      ],
+      "iframe_count": 1,
+      "shadow_dom_detected": true,
+      "dom_ready_state": "complete",
+      "hit_count": 12,
       "keyword_hit_counts": {
-        "Leica Q3": null,
-        "ライカ Q3": null
+        "Leica Q3": 12
       },
       "best_keyword": "Leica Q3",
-      "has_buyback_context": false,
-      "sales_price_sample": null,
-      "buyback_link_candidates": [],
+      "has_buyback_context": true,
+      "sales_price_sample": 1112000,
+      "buyback_link_candidates": [
+        {
+          "text": "買取金額を調べる",
+          "href": "/shop/purchase/list.aspx"
+        },
+        {
+          "text": "フジヤカメラの買取・下取り",
+          "href": "/shop/kaitori/pc/0c-kaitor/"
+        },
+        {
+          "text": "お得な特典",
+          "href": "/shop/kaitori/pc/0c-kaitor/#tokuten"
+        },
+        {
+          "text": "買取に関するお悩みを解決",
+          "href": "/shop/kaitori/pc/0c-kaitor/#onayami"
+        },
+        {
+          "text": "選ばれ続ける理由",
+          "href": "/shop/kaitori/pc/0c-kaitor/#because"
+        },
+        {
+          "text": "店頭買取のご案内",
+          "href": "/shop/kaitori/pc/0c-kaitor/#shop"
+        },
+        {
+          "text": "お問い合わせ",
+          "href": "/shop/kaitori/pc/0c-kaitor/#contact"
+        },
+        {
+          "text": "買取申し込み検討リスト",
+          "href": "/shop/customer/appraisal_guest.aspx"
+        },
+        {
+          "text": "買取検索",
+          "href": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx"
+        },
+        {
+          "text": "Sell買取りについて",
+          "href": "/shop/kaitori/pc/0c-kaitor/"
+        },
+        {
+          "text": "条件をリセット",
+          "href": "/shop/purchase/list.aspx"
+        },
+        {
+          "text": "買取検討リストを見る »",
+          "href": "/shop/customer/appraisal_guest.aspx"
+        },
+        {
+          "text": "",
+          "href": "/shop/purchase/list.aspx?search=%e6%a4%9c%e7%b4%a2"
+        },
+        {
+          "text": "おすすめ順",
+          "href": "/shop/purchase/list.aspx?sort=0&search=%e6%a4%9c%e7%b4%a2&keyword=Leica+Q3"
+        },
+        {
+          "text": "新着順",
+          "href": "/shop/purchase/list.aspx?sort=1&search=%e6%a4%9c%e7%b4%a2&keyword=Leica+Q3"
+        },
+        {
+          "text": "商品名",
+          "href": "/shop/purchase/list.aspx?sort=2&search=%e6%a4%9c%e7%b4%a2&keyword=Leica+Q3"
+        },
+        {
+          "text": "発売日",
+          "href": "/shop/purchase/list.aspx?sort=3&search=%e6%a4%9c%e7%b4%a2&keyword=Leica+Q3"
+        },
+        {
+          "text": "価格(安い順)",
+          "href": "/shop/purchase/list.aspx?sort=4&search=%e6%a4%9c%e7%b4%a2&keyword=Leica+Q3"
+        },
+        {
+          "text": "価格(高い順)",
+          "href": "/shop/purchase/list.aspx?sort=5&search=%e6%a4%9c%e7%b4%a2&keyword=Leica+Q3"
+        },
+        {
+          "text": "新着順+商品名",
+          "href": "/shop/purchase/list.aspx?sort=6&search=%e6%a4%9c%e7%b4%a2&keyword=Leica+Q3"
+        }
+      ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=Leica%20Q3&search=検索",
-      "buyback_page_html_size": 0,
-      "buyback_page_text_preview": "",
-      "buyback_price_candidates": [],
-      "buyback_extracted_price": null,
-      "confidence": "medium",
-      "matched_item": "",
-      "all_price_candidates": [],
-      "rejected_candidates": [],
-      "used_for_save": false,
+      "buyback_page_html_size": 367053,
+      "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
+      "buyback_price_candidates": [
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥1,112,000\n\t\t\t\t\t",
+          "price": 1112000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "ライカ Q3 43 “Formula 1® Edition 19208 Leica 買取金額 新品同様 ￥1,112,000 良品 ￥1,053,000 下取は10%UP 新品同様 ￥1,223,200 良品 ￥1,158,300 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥1,112,000\n\t\t\t\t\t",
+          "price": 1112000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "ライカ Q3 43 “Formula 1® Edition 19208 Leica 買取金額 新品同様 ￥1,112,000 良品 ￥1,053,000 下取は10%UP 新品同様 ￥1,223,200 良品 ￥1,158,300 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥841,000\n\t\t\t\t\t\t\n",
+          "price": 841000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "ライカ Q3 メタルグレーペイント 19211 Leica 買取金額 新品同様 ￥841,000 良品 ￥840,000 下取は10%UP 新品同様 ￥925,100 良品 ￥924,000 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥841,000\n\t\t\t\t\t\t\n",
+          "price": 841000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "ライカ Q3 メタルグレーペイント 19211 Leica 買取金額 新品同様 ￥841,000 良品 ￥840,000 下取は10%UP 新品同様 ￥925,100 良品 ￥924,000 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥812,000\n\t\t\t\t\t\t\n",
+          "price": 812000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "ライカ Q3 モノクローム 19201 Leica 買取金額 新品同様 ￥812,000 良品 ￥811,000 下取は10%UP 新品同様 ￥893,200 良品 ￥892,100 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥812,000\n\t\t\t\t\t\t\n",
+          "price": 812000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "ライカ Q3 モノクローム 19201 Leica 買取金額 新品同様 ￥812,000 良品 ￥811,000 下取は10%UP 新品同様 ￥893,200 良品 ￥892,100 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "Leica Q3モノクローム EU/US/CN バージョン\n\t\t\t\n\t\t\t\tLeica\n\t\t\t\n\t\t\t\n\t\t\n\t\t\n\t\t",
+          "price": 812000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "Leica Q3モノクローム EU/US/CN バージョン Leica 買取金額 新品同様 ￥812,000 良品 ￥811,000 下取は10%UP 新品同様 ￥893,200 良品 ￥892,100 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥812,000\n\t\t\t\t\t\t\n",
+          "price": 812000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "Leica Q3モノクローム EU/US/CN バージョン Leica 買取金額 新品同様 ￥812,000 良品 ￥811,000 下取は10%UP 新品同様 ￥893,200 良品 ￥892,100 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥812,000\n\t\t\t\t\t\t\n",
+          "price": 812000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "Leica Q3モノクローム EU/US/CN バージョン Leica 買取金額 新品同様 ￥812,000 良品 ￥811,000 下取は10%UP 新品同様 ￥893,200 良品 ￥892,100 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥668,000\n\t\t\t\t\t\t\n",
+          "price": 668000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "ライカ Q3 43 19085 Leica 買取金額 新品同様 ￥668,000 良品 ￥667,000 下取は10%UP 新品同様 ￥734,800 良品 ￥733,700 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥668,000\n\t\t\t\t\t\t\n",
+          "price": 668000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "ライカ Q3 43 19085 Leica 買取金額 新品同様 ￥668,000 良品 ￥667,000 下取は10%UP 新品同様 ￥734,800 良品 ￥733,700 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "Leica Q3 43 EU/US/CN バージョン\n\t\t\t\n\t\t\t\tLeica\n\t\t\t\n\t\t\t\n\t\t\n\t\t\n\t\t\n\t\t",
+          "price": 636000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "Leica Q3 43 EU/US/CN バージョン Leica 買取金額 新品同様 ￥636,000 良品 ￥635,000 下取は10%UP 新品同様 ￥699,600 良品 ￥698,500 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥636,000\n\t\t\t\t\t\t\n",
+          "price": 636000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "Leica Q3 43 EU/US/CN バージョン Leica 買取金額 新品同様 ￥636,000 良品 ￥635,000 下取は10%UP 新品同様 ￥699,600 良品 ￥698,500 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥636,000\n\t\t\t\t\t\t\n",
+          "price": 636000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "Leica Q3 43 EU/US/CN バージョン Leica 買取金額 新品同様 ￥636,000 良品 ￥635,000 下取は10%UP 新品同様 ￥699,600 良品 ￥698,500 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥586,000\n\t\t\t\t\t\t\n",
+          "price": 586000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "ライカ Q3 19081 Leica 買取金額 新品同様 ￥586,000 良品 ￥585,000 下取は10%UP 新品同様 ￥644,600 良品 ￥643,500 買取申し込み 買取検討リストへ"
+        }
+      ],
+      "buyback_extracted_price": 1223200,
+      "confidence": "high",
+      "matched_item": "ライカ Q3 19081 Leica 買取金額 新品同様 ￥586,000 良品 ￥585,000 下取は10%UP 新品同様 ￥644,600 良品 ￥643,500 買取申し込み 買取検討リストへ",
+      "all_price_candidates": [
+        {
+          "price": 1112000,
+          "item": "ライカ Q3 43 “Formula 1® Edition 19208 Leica 買取金額 新品同様 ￥1,112,000 良品 ￥1,0",
+          "near_buyback": true
+        },
+        {
+          "price": 1112000,
+          "item": "ライカ Q3 43 “Formula 1® Edition 19208 Leica 買取金額 新品同様 ￥1,112,000 良品 ￥1,0",
+          "near_buyback": true
+        },
+        {
+          "price": 841000,
+          "item": "ライカ Q3 メタルグレーペイント 19211 Leica 買取金額 新品同様 ￥841,000 良品 ￥840,000 下取は10%UP ",
+          "near_buyback": true
+        },
+        {
+          "price": 841000,
+          "item": "ライカ Q3 メタルグレーペイント 19211 Leica 買取金額 新品同様 ￥841,000 良品 ￥840,000 下取は10%UP ",
+          "near_buyback": true
+        },
+        {
+          "price": 812000,
+          "item": "ライカ Q3 モノクローム 19201 Leica 買取金額 新品同様 ￥812,000 良品 ￥811,000 下取は10%UP 新品同様",
+          "near_buyback": true
+        },
+        {
+          "price": 812000,
+          "item": "ライカ Q3 モノクローム 19201 Leica 買取金額 新品同様 ￥812,000 良品 ￥811,000 下取は10%UP 新品同様",
+          "near_buyback": true
+        },
+        {
+          "price": 812000,
+          "item": "Leica Q3モノクローム EU/US/CN バージョン Leica 買取金額 新品同様 ￥812,000 良品 ￥811,000 下取は",
+          "near_buyback": true
+        },
+        {
+          "price": 812000,
+          "item": "Leica Q3モノクローム EU/US/CN バージョン Leica 買取金額 新品同様 ￥812,000 良品 ￥811,000 下取は",
+          "near_buyback": true
+        },
+        {
+          "price": 812000,
+          "item": "Leica Q3モノクローム EU/US/CN バージョン Leica 買取金額 新品同様 ￥812,000 良品 ￥811,000 下取は",
+          "near_buyback": true
+        },
+        {
+          "price": 668000,
+          "item": "ライカ Q3 43 19085 Leica 買取金額 新品同様 ￥668,000 良品 ￥667,000 下取は10%UP 新品同様 ￥73",
+          "near_buyback": true
+        },
+        {
+          "price": 668000,
+          "item": "ライカ Q3 43 19085 Leica 買取金額 新品同様 ￥668,000 良品 ￥667,000 下取は10%UP 新品同様 ￥73",
+          "near_buyback": true
+        },
+        {
+          "price": 636000,
+          "item": "Leica Q3 43 EU/US/CN バージョン Leica 買取金額 新品同様 ￥636,000 良品 ￥635,000 下取は10%",
+          "near_buyback": true
+        },
+        {
+          "price": 636000,
+          "item": "Leica Q3 43 EU/US/CN バージョン Leica 買取金額 新品同様 ￥636,000 良品 ￥635,000 下取は10%",
+          "near_buyback": true
+        },
+        {
+          "price": 636000,
+          "item": "Leica Q3 43 EU/US/CN バージョン Leica 買取金額 新品同様 ￥636,000 良品 ￥635,000 下取は10%",
+          "near_buyback": true
+        },
+        {
+          "price": 586000,
+          "item": "ライカ Q3 19081 Leica 買取金額 新品同様 ￥586,000 良品 ￥585,000 下取は10%UP 新品同様 ￥644,6",
+          "near_buyback": true
+        }
+      ],
+      "rejected_candidates": [
+        {
+          "price": 1112000,
+          "item": "ライカ Q3 43 “Formula 1® Edition 19208 Leica 買取金額 新品同様 ￥1,112,000 良品 ￥1,0",
+          "near_buyback": true,
+          "rejection_reason": "model_mismatch"
+        },
+        {
+          "price": 1112000,
+          "item": "ライカ Q3 43 “Formula 1® Edition 19208 Leica 買取金額 新品同様 ￥1,112,000 良品 ￥1,0",
+          "near_buyback": true,
+          "rejection_reason": "model_mismatch"
+        },
+        {
+          "price": 841000,
+          "item": "ライカ Q3 メタルグレーペイント 19211 Leica 買取金額 新品同様 ￥841,000 良品 ￥840,000 下取は10%UP ",
+          "near_buyback": true,
+          "rejection_reason": "model_mismatch"
+        },
+        {
+          "price": 841000,
+          "item": "ライカ Q3 メタルグレーペイント 19211 Leica 買取金額 新品同様 ￥841,000 良品 ￥840,000 下取は10%UP ",
+          "near_buyback": true,
+          "rejection_reason": "model_mismatch"
+        },
+        {
+          "price": 812000,
+          "item": "ライカ Q3 モノクローム 19201 Leica 買取金額 新品同様 ￥812,000 良品 ￥811,000 下取は10%UP 新品同様",
+          "near_buyback": true,
+          "rejection_reason": "model_mismatch"
+        },
+        {
+          "price": 812000,
+          "item": "ライカ Q3 モノクローム 19201 Leica 買取金額 新品同様 ￥812,000 良品 ￥811,000 下取は10%UP 新品同様",
+          "near_buyback": true,
+          "rejection_reason": "model_mismatch"
+        },
+        {
+          "price": 812000,
+          "item": "Leica Q3モノクローム EU/US/CN バージョン Leica 買取金額 新品同様 ￥812,000 良品 ￥811,000 下取は",
+          "near_buyback": true,
+          "rejection_reason": "model_mismatch"
+        },
+        {
+          "price": 812000,
+          "item": "Leica Q3モノクローム EU/US/CN バージョン Leica 買取金額 新品同様 ￥812,000 良品 ￥811,000 下取は",
+          "near_buyback": true,
+          "rejection_reason": "model_mismatch"
+        },
+        {
+          "price": 812000,
+          "item": "Leica Q3モノクローム EU/US/CN バージョン Leica 買取金額 新品同様 ￥812,000 良品 ￥811,000 下取は",
+          "near_buyback": true,
+          "rejection_reason": "model_mismatch"
+        },
+        {
+          "price": 668000,
+          "item": "ライカ Q3 43 19085 Leica 買取金額 新品同様 ￥668,000 良品 ￥667,000 下取は10%UP 新品同様 ￥73",
+          "near_buyback": true,
+          "rejection_reason": "model_mismatch"
+        },
+        {
+          "price": 668000,
+          "item": "ライカ Q3 43 19085 Leica 買取金額 新品同様 ￥668,000 良品 ￥667,000 下取は10%UP 新品同様 ￥73",
+          "near_buyback": true,
+          "rejection_reason": "model_mismatch"
+        },
+        {
+          "price": 636000,
+          "item": "Leica Q3 43 EU/US/CN バージョン Leica 買取金額 新品同様 ￥636,000 良品 ￥635,000 下取は10%",
+          "near_buyback": true,
+          "rejection_reason": "model_mismatch"
+        },
+        {
+          "price": 636000,
+          "item": "Leica Q3 43 EU/US/CN バージョン Leica 買取金額 新品同様 ￥636,000 良品 ￥635,000 下取は10%",
+          "near_buyback": true,
+          "rejection_reason": "model_mismatch"
+        },
+        {
+          "price": 636000,
+          "item": "Leica Q3 43 EU/US/CN バージョン Leica 買取金額 新品同様 ￥636,000 良品 ￥635,000 下取は10%",
+          "near_buyback": true,
+          "rejection_reason": "model_mismatch"
+        }
+      ],
+      "used_for_save": true,
       "requests_raw_price": null,
       "reused_page": false
     },
@@ -11324,7 +11844,7 @@
       "status": "FAILED",
       "brand": "LEICA",
       "price": 0,
-      "reason": "timeout",
+      "reason": "price_not_found",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -11332,34 +11852,571 @@
       "selector_found": false,
       "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
-      "selector_waited": false,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 384345,
+      "selector_waited": true,
       "extraction_strategy": "requests",
-      "body_text_preview": "",
-      "matched_selectors": [],
-      "selector_candidates": [],
-      "iframe_count": 0,
-      "shadow_dom_detected": false,
-      "dom_ready_state": "",
-      "hit_count": null,
+      "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
+      "matched_selectors": [
+        {
+          "selector": "table td",
+          "hits": 76
+        },
+        {
+          "selector": ".price",
+          "hits": 76
+        },
+        {
+          "selector": "[class*='price']",
+          "hits": 76
+        },
+        {
+          "selector": "[class*='assess']",
+          "hits": 209
+        }
+      ],
+      "selector_candidates": [
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥1,161,000\n\t\t\t\t\t",
+          "price": 1161000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "ライカ M11-P Safari 20236 Leica 買取金額 新品同様 ￥1,161,000 良品 ￥1,160,000 下取は10%UP 新品同様 ￥1,277,100 良品 ￥1,276,000 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥1,161,000\n\t\t\t\t\t",
+          "price": 1161000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "ライカ M11-P Safari 20236 Leica 買取金額 新品同様 ￥1,161,000 良品 ￥1,160,000 下取は10%UP 新品同様 ￥1,277,100 良品 ￥1,276,000 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥986,000\n\t\t\t\t\t\t\n",
+          "price": 986000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "ライカ M11 グロッシーブラック 20231 Leica 買取金額 新品同様 ￥986,000 良品 ￥985,000 下取は10%UP 新品同様 ￥1,084,600 良品 ￥1,083,500 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥986,000\n\t\t\t\t\t\t\n",
+          "price": 986000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "ライカ M11 グロッシーブラック 20231 Leica 買取金額 新品同様 ￥986,000 良品 ￥985,000 下取は10%UP 新品同様 ￥1,084,600 良品 ￥1,083,500 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥986,000\n\t\t\t\t\t\t\n",
+          "price": 986000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "ライカ M11-P シルバー・クローム 20215 Leica 買取金額 新品同様 ￥986,000 良品 ￥985,000 下取は10%UP 新品同様 ￥1,084,600 良品 ￥1,083,500 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥986,000\n\t\t\t\t\t\t\n",
+          "price": 986000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "ライカ M11-P シルバー・クローム 20215 Leica 買取金額 新品同様 ￥986,000 良品 ￥985,000 下取は10%UP 新品同様 ￥1,084,600 良品 ￥1,083,500 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥977,000\n\t\t\t\t\t\t\n",
+          "price": 977000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "ライカ M11-P ブラック・ペイント 20212 Leica 買取金額 新品同様 ￥977,000 良品 ￥976,000 下取は10%UP 新品同様 ￥1,074,700 良品 ￥1,073,600 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥977,000\n\t\t\t\t\t\t\n",
+          "price": 977000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "ライカ M11-P ブラック・ペイント 20212 Leica 買取金額 新品同様 ￥977,000 良品 ￥976,000 下取は10%UP 新品同様 ￥1,074,700 良品 ￥1,073,600 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥963,000\n\t\t\t\t\t\t\n",
+          "price": 963000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "ライカ M11モノクローム 20209 Leica 買取金額 新品同様 ￥963,000 良品 ￥962,000 下取は10%UP 新品同様 ￥1,059,300 良品 ￥1,058,200 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥963,000\n\t\t\t\t\t\t\n",
+          "price": 963000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "ライカ M11モノクローム 20209 Leica 買取金額 新品同様 ￥963,000 良品 ￥962,000 下取は10%UP 新品同様 ￥1,059,300 良品 ￥1,058,200 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥960,000\n\t\t\t\t\t\t\n",
+          "price": 960000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "ライカ M11-P メタルグレーペイント 20072 Leica 買取金額 新品同様 ￥960,000 良品 ￥959,000 下取は10%UP 新品同様 ￥1,056,000 良品 ￥1,054,900 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥960,000\n\t\t\t\t\t\t\n",
+          "price": 960000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "ライカ M11-P メタルグレーペイント 20072 Leica 買取金額 新品同様 ￥960,000 良品 ￥959,000 下取は10%UP 新品同様 ￥1,056,000 良品 ￥1,054,900 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥921,000\n\t\t\t\t\t\t\n",
+          "price": 921000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "ライカ M11-P ブラック・ペイント 20211 EU/US/CN バージョン Leica 買取金額 新品同様 ￥921,000 良品 ￥920,000 下取は10%UP 新品同様 ￥1,013,100 良品 ￥1,012,000 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥921,000\n\t\t\t\t\t\t\n",
+          "price": 921000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "ライカ M11-P ブラック・ペイント 20211 EU/US/CN バージョン Leica 買取金額 新品同様 ￥921,000 良品 ￥920,000 下取は10%UP 新品同様 ￥1,013,100 良品 ￥1,012,000 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥921,000\n\t\t\t\t\t\t\n",
+          "price": 921000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "ライカ M11-P シルバー・クローム 20214 EU/US/CN バージョン Leica 買取金額 新品同様 ￥921,000 良品 ￥920,000 下取は10%UP 新品同様 ￥1,013,100 良品 ￥1,012,000 買取申し込み 買取検討リストへ"
+        }
+      ],
+      "iframe_count": 1,
+      "shadow_dom_detected": true,
+      "dom_ready_state": "complete",
+      "hit_count": 20,
       "keyword_hit_counts": {
-        "Leica M11": null
+        "Leica M11": 20
       },
       "best_keyword": "Leica M11",
-      "has_buyback_context": false,
-      "sales_price_sample": null,
-      "buyback_link_candidates": [],
+      "has_buyback_context": true,
+      "sales_price_sample": 1161000,
+      "buyback_link_candidates": [
+        {
+          "text": "買取金額を調べる",
+          "href": "/shop/purchase/list.aspx"
+        },
+        {
+          "text": "フジヤカメラの買取・下取り",
+          "href": "/shop/kaitori/pc/0c-kaitor/"
+        },
+        {
+          "text": "お得な特典",
+          "href": "/shop/kaitori/pc/0c-kaitor/#tokuten"
+        },
+        {
+          "text": "買取に関するお悩みを解決",
+          "href": "/shop/kaitori/pc/0c-kaitor/#onayami"
+        },
+        {
+          "text": "選ばれ続ける理由",
+          "href": "/shop/kaitori/pc/0c-kaitor/#because"
+        },
+        {
+          "text": "店頭買取のご案内",
+          "href": "/shop/kaitori/pc/0c-kaitor/#shop"
+        },
+        {
+          "text": "お問い合わせ",
+          "href": "/shop/kaitori/pc/0c-kaitor/#contact"
+        },
+        {
+          "text": "買取申し込み検討リスト",
+          "href": "/shop/customer/appraisal_guest.aspx"
+        },
+        {
+          "text": "買取検索",
+          "href": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx"
+        },
+        {
+          "text": "Sell買取りについて",
+          "href": "/shop/kaitori/pc/0c-kaitor/"
+        },
+        {
+          "text": "条件をリセット",
+          "href": "/shop/purchase/list.aspx"
+        },
+        {
+          "text": "買取検討リストを見る »",
+          "href": "/shop/customer/appraisal_guest.aspx"
+        },
+        {
+          "text": "",
+          "href": "/shop/purchase/list.aspx?search=%e6%a4%9c%e7%b4%a2"
+        },
+        {
+          "text": "おすすめ順",
+          "href": "/shop/purchase/list.aspx?sort=0&search=%e6%a4%9c%e7%b4%a2&keyword=Leica+M11"
+        },
+        {
+          "text": "新着順",
+          "href": "/shop/purchase/list.aspx?sort=1&search=%e6%a4%9c%e7%b4%a2&keyword=Leica+M11"
+        },
+        {
+          "text": "商品名",
+          "href": "/shop/purchase/list.aspx?sort=2&search=%e6%a4%9c%e7%b4%a2&keyword=Leica+M11"
+        },
+        {
+          "text": "発売日",
+          "href": "/shop/purchase/list.aspx?sort=3&search=%e6%a4%9c%e7%b4%a2&keyword=Leica+M11"
+        },
+        {
+          "text": "価格(安い順)",
+          "href": "/shop/purchase/list.aspx?sort=4&search=%e6%a4%9c%e7%b4%a2&keyword=Leica+M11"
+        },
+        {
+          "text": "価格(高い順)",
+          "href": "/shop/purchase/list.aspx?sort=5&search=%e6%a4%9c%e7%b4%a2&keyword=Leica+M11"
+        },
+        {
+          "text": "新着順+商品名",
+          "href": "/shop/purchase/list.aspx?sort=6&search=%e6%a4%9c%e7%b4%a2&keyword=Leica+M11"
+        }
+      ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=Leica%20M11&search=検索",
-      "buyback_page_html_size": 0,
-      "buyback_page_text_preview": "",
-      "buyback_price_candidates": [],
-      "buyback_extracted_price": null,
+      "buyback_page_html_size": 384345,
+      "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
+      "buyback_price_candidates": [
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥1,161,000\n\t\t\t\t\t",
+          "price": 1161000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "ライカ M11-P Safari 20236 Leica 買取金額 新品同様 ￥1,161,000 良品 ￥1,160,000 下取は10%UP 新品同様 ￥1,277,100 良品 ￥1,276,000 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥1,161,000\n\t\t\t\t\t",
+          "price": 1161000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "ライカ M11-P Safari 20236 Leica 買取金額 新品同様 ￥1,161,000 良品 ￥1,160,000 下取は10%UP 新品同様 ￥1,277,100 良品 ￥1,276,000 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥986,000\n\t\t\t\t\t\t\n",
+          "price": 986000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "ライカ M11 グロッシーブラック 20231 Leica 買取金額 新品同様 ￥986,000 良品 ￥985,000 下取は10%UP 新品同様 ￥1,084,600 良品 ￥1,083,500 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥986,000\n\t\t\t\t\t\t\n",
+          "price": 986000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "ライカ M11 グロッシーブラック 20231 Leica 買取金額 新品同様 ￥986,000 良品 ￥985,000 下取は10%UP 新品同様 ￥1,084,600 良品 ￥1,083,500 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥986,000\n\t\t\t\t\t\t\n",
+          "price": 986000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "ライカ M11-P シルバー・クローム 20215 Leica 買取金額 新品同様 ￥986,000 良品 ￥985,000 下取は10%UP 新品同様 ￥1,084,600 良品 ￥1,083,500 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥986,000\n\t\t\t\t\t\t\n",
+          "price": 986000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "ライカ M11-P シルバー・クローム 20215 Leica 買取金額 新品同様 ￥986,000 良品 ￥985,000 下取は10%UP 新品同様 ￥1,084,600 良品 ￥1,083,500 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥977,000\n\t\t\t\t\t\t\n",
+          "price": 977000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "ライカ M11-P ブラック・ペイント 20212 Leica 買取金額 新品同様 ￥977,000 良品 ￥976,000 下取は10%UP 新品同様 ￥1,074,700 良品 ￥1,073,600 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥977,000\n\t\t\t\t\t\t\n",
+          "price": 977000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "ライカ M11-P ブラック・ペイント 20212 Leica 買取金額 新品同様 ￥977,000 良品 ￥976,000 下取は10%UP 新品同様 ￥1,074,700 良品 ￥1,073,600 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥963,000\n\t\t\t\t\t\t\n",
+          "price": 963000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "ライカ M11モノクローム 20209 Leica 買取金額 新品同様 ￥963,000 良品 ￥962,000 下取は10%UP 新品同様 ￥1,059,300 良品 ￥1,058,200 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥963,000\n\t\t\t\t\t\t\n",
+          "price": 963000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "ライカ M11モノクローム 20209 Leica 買取金額 新品同様 ￥963,000 良品 ￥962,000 下取は10%UP 新品同様 ￥1,059,300 良品 ￥1,058,200 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥960,000\n\t\t\t\t\t\t\n",
+          "price": 960000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "ライカ M11-P メタルグレーペイント 20072 Leica 買取金額 新品同様 ￥960,000 良品 ￥959,000 下取は10%UP 新品同様 ￥1,056,000 良品 ￥1,054,900 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥960,000\n\t\t\t\t\t\t\n",
+          "price": 960000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "ライカ M11-P メタルグレーペイント 20072 Leica 買取金額 新品同様 ￥960,000 良品 ￥959,000 下取は10%UP 新品同様 ￥1,056,000 良品 ￥1,054,900 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥921,000\n\t\t\t\t\t\t\n",
+          "price": 921000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "ライカ M11-P ブラック・ペイント 20211 EU/US/CN バージョン Leica 買取金額 新品同様 ￥921,000 良品 ￥920,000 下取は10%UP 新品同様 ￥1,013,100 良品 ￥1,012,000 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥921,000\n\t\t\t\t\t\t\n",
+          "price": 921000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "ライカ M11-P ブラック・ペイント 20211 EU/US/CN バージョン Leica 買取金額 新品同様 ￥921,000 良品 ￥920,000 下取は10%UP 新品同様 ￥1,013,100 良品 ￥1,012,000 買取申し込み 買取検討リストへ"
+        },
+        {
+          "selector": "[class*='assess']",
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥921,000\n\t\t\t\t\t\t\n",
+          "price": 921000,
+          "near_kw": true,
+          "near_buyback": true,
+          "is_tradein": true,
+          "item_text": "ライカ M11-P シルバー・クローム 20214 EU/US/CN バージョン Leica 買取金額 新品同様 ￥921,000 良品 ￥920,000 下取は10%UP 新品同様 ￥1,013,100 良品 ￥1,012,000 買取申し込み 買取検討リストへ"
+        }
+      ],
+      "buyback_extracted_price": 1277100,
       "confidence": "medium",
       "matched_item": "",
-      "all_price_candidates": [],
-      "rejected_candidates": [],
+      "all_price_candidates": [
+        {
+          "price": 1161000,
+          "item": "ライカ M11-P Safari 20236 Leica 買取金額 新品同様 ￥1,161,000 良品 ￥1,160,000 下取は10%",
+          "near_buyback": true
+        },
+        {
+          "price": 1161000,
+          "item": "ライカ M11-P Safari 20236 Leica 買取金額 新品同様 ￥1,161,000 良品 ￥1,160,000 下取は10%",
+          "near_buyback": true
+        },
+        {
+          "price": 986000,
+          "item": "ライカ M11 グロッシーブラック 20231 Leica 買取金額 新品同様 ￥986,000 良品 ￥985,000 下取は10%UP ",
+          "near_buyback": true
+        },
+        {
+          "price": 986000,
+          "item": "ライカ M11 グロッシーブラック 20231 Leica 買取金額 新品同様 ￥986,000 良品 ￥985,000 下取は10%UP ",
+          "near_buyback": true
+        },
+        {
+          "price": 986000,
+          "item": "ライカ M11-P シルバー・クローム 20215 Leica 買取金額 新品同様 ￥986,000 良品 ￥985,000 下取は10%U",
+          "near_buyback": true
+        },
+        {
+          "price": 986000,
+          "item": "ライカ M11-P シルバー・クローム 20215 Leica 買取金額 新品同様 ￥986,000 良品 ￥985,000 下取は10%U",
+          "near_buyback": true
+        },
+        {
+          "price": 977000,
+          "item": "ライカ M11-P ブラック・ペイント 20212 Leica 買取金額 新品同様 ￥977,000 良品 ￥976,000 下取は10%U",
+          "near_buyback": true
+        },
+        {
+          "price": 977000,
+          "item": "ライカ M11-P ブラック・ペイント 20212 Leica 買取金額 新品同様 ￥977,000 良品 ￥976,000 下取は10%U",
+          "near_buyback": true
+        },
+        {
+          "price": 963000,
+          "item": "ライカ M11モノクローム 20209 Leica 買取金額 新品同様 ￥963,000 良品 ￥962,000 下取は10%UP 新品同様",
+          "near_buyback": true
+        },
+        {
+          "price": 963000,
+          "item": "ライカ M11モノクローム 20209 Leica 買取金額 新品同様 ￥963,000 良品 ￥962,000 下取は10%UP 新品同様",
+          "near_buyback": true
+        },
+        {
+          "price": 960000,
+          "item": "ライカ M11-P メタルグレーペイント 20072 Leica 買取金額 新品同様 ￥960,000 良品 ￥959,000 下取は10%",
+          "near_buyback": true
+        },
+        {
+          "price": 960000,
+          "item": "ライカ M11-P メタルグレーペイント 20072 Leica 買取金額 新品同様 ￥960,000 良品 ￥959,000 下取は10%",
+          "near_buyback": true
+        },
+        {
+          "price": 921000,
+          "item": "ライカ M11-P ブラック・ペイント 20211 EU/US/CN バージョン Leica 買取金額 新品同様 ￥921,000 良品 ￥",
+          "near_buyback": true
+        },
+        {
+          "price": 921000,
+          "item": "ライカ M11-P ブラック・ペイント 20211 EU/US/CN バージョン Leica 買取金額 新品同様 ￥921,000 良品 ￥",
+          "near_buyback": true
+        },
+        {
+          "price": 921000,
+          "item": "ライカ M11-P シルバー・クローム 20214 EU/US/CN バージョン Leica 買取金額 新品同様 ￥921,000 良品 ￥",
+          "near_buyback": true
+        }
+      ],
+      "rejected_candidates": [
+        {
+          "price": 1161000,
+          "item": "ライカ M11-P Safari 20236 Leica 買取金額 新品同様 ￥1,161,000 良品 ￥1,160,000 下取は10%",
+          "near_buyback": true,
+          "rejection_reason": "model_mismatch"
+        },
+        {
+          "price": 1161000,
+          "item": "ライカ M11-P Safari 20236 Leica 買取金額 新品同様 ￥1,161,000 良品 ￥1,160,000 下取は10%",
+          "near_buyback": true,
+          "rejection_reason": "model_mismatch"
+        },
+        {
+          "price": 986000,
+          "item": "ライカ M11 グロッシーブラック 20231 Leica 買取金額 新品同様 ￥986,000 良品 ￥985,000 下取は10%UP ",
+          "near_buyback": true,
+          "rejection_reason": "model_mismatch"
+        },
+        {
+          "price": 986000,
+          "item": "ライカ M11 グロッシーブラック 20231 Leica 買取金額 新品同様 ￥986,000 良品 ￥985,000 下取は10%UP ",
+          "near_buyback": true,
+          "rejection_reason": "model_mismatch"
+        },
+        {
+          "price": 986000,
+          "item": "ライカ M11-P シルバー・クローム 20215 Leica 買取金額 新品同様 ￥986,000 良品 ￥985,000 下取は10%U",
+          "near_buyback": true,
+          "rejection_reason": "model_mismatch"
+        },
+        {
+          "price": 986000,
+          "item": "ライカ M11-P シルバー・クローム 20215 Leica 買取金額 新品同様 ￥986,000 良品 ￥985,000 下取は10%U",
+          "near_buyback": true,
+          "rejection_reason": "model_mismatch"
+        },
+        {
+          "price": 977000,
+          "item": "ライカ M11-P ブラック・ペイント 20212 Leica 買取金額 新品同様 ￥977,000 良品 ￥976,000 下取は10%U",
+          "near_buyback": true,
+          "rejection_reason": "model_mismatch"
+        },
+        {
+          "price": 977000,
+          "item": "ライカ M11-P ブラック・ペイント 20212 Leica 買取金額 新品同様 ￥977,000 良品 ￥976,000 下取は10%U",
+          "near_buyback": true,
+          "rejection_reason": "model_mismatch"
+        },
+        {
+          "price": 963000,
+          "item": "ライカ M11モノクローム 20209 Leica 買取金額 新品同様 ￥963,000 良品 ￥962,000 下取は10%UP 新品同様",
+          "near_buyback": true,
+          "rejection_reason": "model_mismatch"
+        },
+        {
+          "price": 963000,
+          "item": "ライカ M11モノクローム 20209 Leica 買取金額 新品同様 ￥963,000 良品 ￥962,000 下取は10%UP 新品同様",
+          "near_buyback": true,
+          "rejection_reason": "model_mismatch"
+        },
+        {
+          "price": 960000,
+          "item": "ライカ M11-P メタルグレーペイント 20072 Leica 買取金額 新品同様 ￥960,000 良品 ￥959,000 下取は10%",
+          "near_buyback": true,
+          "rejection_reason": "model_mismatch"
+        },
+        {
+          "price": 960000,
+          "item": "ライカ M11-P メタルグレーペイント 20072 Leica 買取金額 新品同様 ￥960,000 良品 ￥959,000 下取は10%",
+          "near_buyback": true,
+          "rejection_reason": "model_mismatch"
+        },
+        {
+          "price": 921000,
+          "item": "ライカ M11-P ブラック・ペイント 20211 EU/US/CN バージョン Leica 買取金額 新品同様 ￥921,000 良品 ￥",
+          "near_buyback": true,
+          "rejection_reason": "model_mismatch"
+        },
+        {
+          "price": 921000,
+          "item": "ライカ M11-P ブラック・ペイント 20211 EU/US/CN バージョン Leica 買取金額 新品同様 ￥921,000 良品 ￥",
+          "near_buyback": true,
+          "rejection_reason": "model_mismatch"
+        },
+        {
+          "price": 921000,
+          "item": "ライカ M11-P シルバー・クローム 20214 EU/US/CN バージョン Leica 買取金額 新品同様 ￥921,000 良品 ￥",
+          "near_buyback": true,
+          "rejection_reason": "model_mismatch"
+        }
+      ],
       "used_for_save": false,
       "requests_raw_price": null,
       "reused_page": false

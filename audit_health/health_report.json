@@ -1,25 +1,25 @@
 {
-  "generated_at": "2026-10-28 23:03 JST",
-  "date": "2026-10-28",
+  "generated_at": "2026-10-29 02:39 JST",
+  "date": "2026-10-29",
   "health_score": {
-    "data_quality": 14.2,
+    "data_quality": 14.4,
     "profit_discovery": 15.0,
     "source_health": 12.6,
     "link_quality": 4.8,
-    "freshness": 3.7,
-    "total": 50.3
+    "freshness": 3.8,
+    "total": 50.6
   },
   "data_quality": {
-    "total_obs": 234,
-    "usable_obs": 74,
-    "stale_count": 147,
-    "stale_rate": 0.6282,
-    "config_reference_count": 32,
+    "total_obs": 235,
+    "usable_obs": 75,
+    "stale_count": 145,
+    "stale_rate": 0.617,
+    "config_reference_count": 30,
     "zero_count": 38,
-    "zero_rate": 0.1624,
-    "item_url_rate": 0.4829,
-    "search_url_rate": 0.1966,
-    "manual_rate": 0.4786,
+    "zero_rate": 0.1617,
+    "item_url_rate": 0.4809,
+    "search_url_rate": 0.2,
+    "manual_rate": 0.4766,
     "api_rate": 0.0,
     "html_rate": 0.0085
   },
@@ -39,14 +39,14 @@
   "sources": {
     "メーカー公式/定価": {
       "success_count": 47,
-      "stale_count": 33,
+      "stale_count": 31,
       "zero_count": 0,
       "item_url_rate": 0.0,
-      "freshness": 0.2979,
+      "freshness": 0.3404,
       "success_rate": 1.0,
       "confidence": {
-        "medium": 32,
-        "high": 15
+        "medium": 30,
+        "high": 17
       },
       "n": 47
     },
@@ -64,17 +64,17 @@
       "n": 34
     },
     "フジヤカメラ": {
-      "success_count": 24,
+      "success_count": 25,
       "stale_count": 8,
       "zero_count": 0,
-      "item_url_rate": 0.3333,
-      "freshness": 0.6667,
+      "item_url_rate": 0.32,
+      "freshness": 0.68,
       "success_rate": 1.0,
       "confidence": {
-        "high": 23,
+        "high": 24,
         "medium": 1
       },
-      "n": 24
+      "n": 25
     },
     "買取商店": {
       "success_count": 22,
@@ -337,16 +337,16 @@
   "diff_vs_prev": {
     "available": true,
     "stale_rate": {
-      "prev": 0.6271,
-      "cur": 0.6282
+      "prev": 0.6282,
+      "cur": 0.617
     },
     "zero_rate": {
-      "prev": 0.161,
-      "cur": 0.1624
+      "prev": 0.1624,
+      "cur": 0.1617
     },
     "item_url_rate": {
-      "prev": 0.4831,
-      "cur": 0.4829
+      "prev": 0.4829,
+      "cur": 0.4809
     },
     "main_route_count": {
       "prev": 0,
@@ -362,7 +362,7 @@
   },
   "anomalies": {
     "critical": [
-      "stale率 63% (>=50%)",
+      "stale率 62% (>=50%)",
       "取得成功率 0%: ゲオモバイル",
       "取得成功率 0%: セカンドストリート",
       "取得成功率 0%: ネットオフ"

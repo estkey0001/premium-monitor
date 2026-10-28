@@ -1,4 +1,4 @@
-# データ取得品質レポート（2026-10-28 23:03 JST）
+# データ取得品質レポート（2026-10-29 02:39 JST）
 
 ## 取得成功率
 - 全対象店舗数: 16
@@ -7,10 +7,10 @@
 - ジョブ成功率: 28.8%（OK 19 / 失敗 43 / SKIP 4 / 計 66）
 
 ## 前回比較
-- 前回成功率: 30.3%
+- 前回成功率: 28.8%
 - 今回成功率: 28.8%
-- 変化: -1.5pt（悪化）
-- 7日移動平均: 29.0%
+- 変化: 0.0pt（横ばい）
+- 7日移動平均: 29.2%
 - 主要失敗理由 TOP5: http_403 12, product_not_listed 8, rate_limited_429 6, robots_unreachable 4, price_not_found 4
 
 ## 店舗別成功率（低い順）
@@ -47,19 +47,20 @@
 - r5ii: 100.0%
 
 ## 連続失敗店舗（2回以上）
-- 2ndstreet: 226回連続
-- bookoff: 226回連続
-- dosupara: 226回連続
-- geo_mobile: 226回連続
-- hardoff: 226回連続
-- janpara: 226回連続
-- pasoko: 226回連続
-- sofmap: 226回連続
-- surugaya: 226回連続
-- tsutaya: 226回連続
-- iosys: 159回連続
-- netoff: 86回連続
-- geo: 18回連続
+- 2ndstreet: 227回連続
+- bookoff: 227回連続
+- dosupara: 227回連続
+- geo_mobile: 227回連続
+- hardoff: 227回連続
+- janpara: 227回連続
+- pasoko: 227回連続
+- sofmap: 227回連続
+- surugaya: 227回連続
+- tsutaya: 227回連続
+- iosys: 160回連続
+- netoff: 87回連続
+- geo: 19回連続
+- mobile_ichiban: 2回連続
 
 ## 改善優先順位（required店舗）
 1. iosys（失敗6 / http_403）
@@ -109,7 +110,7 @@
 - eBay取得モード: manual（EBAY_APP_ID設定: 未設定→stale除外）
 
 ## カメラ自動取得の信頼性
-- auto_scraped 取得: 16 件（うち high: 16）
-- manual fallback: 44 件
-- 棄却候補数: 175
-- 棄却理由: {'model_mismatch': 124, 'not_buyback_context': 51}
+- auto_scraped 取得: 17 件（うち high: 17）
+- manual fallback: 43 件
+- 棄却候補数: 204
+- 棄却理由: {'model_mismatch': 153, 'not_buyback_context': 51}

@@ -1,5 +1,33 @@
 {
   "generated_at": "2026-10-01T20:51:59.853512+09:00",
-  "sent": {},
-  "candidates": []
+  "sent": {
+    "lot-b321e86f189b:deadline_24h": "2026-10-29T02:22:08.117842+09:00",
+    "lot-74dc1b262646:deadline_24h": "2026-10-29T02:22:08.117842+09:00"
+  },
+  "candidates": [
+    {
+      "lottery_id": "lot-b321e86f189b",
+      "milestone": "deadline_24h",
+      "label": "締切24時間前",
+      "fires_at": "2026-10-28T23:59:00+09:00",
+      "tcg": "ONE_PIECE",
+      "product_name": "【ONE PIECEカードゲーム】「HEROINES PRECIOUS BOX",
+      "retailer": "カードラボ",
+      "entry_url": null,
+      "source_url": "https://www.c-labo.jp/shop/mito/blog/622770/",
+      "message": "【ONE PIECEカードゲーム】「HEROINES PRECIOUS BOX（カードラボ・カードラボ水戸店） 締切24時間前"
+    },
+    {
+      "lottery_id": "lot-74dc1b262646",
+      "milestone": "deadline_24h",
+      "label": "締切24時間前",
+      "fires_at": "2026-10-28T23:59:00+09:00",
+      "tcg": "POKEMON",
+      "product_name": "30th CELEBRATION 1BOX",
+      "retailer": "福福トレカ",
+      "entry_url": null,
+      "source_url": "https://pokemon.fukufukutoreka.com/lottery/27",
+      "message": "30th CELEBRATION 1BOX（福福トレカ） 締切24時間前"
+    }
+  ]
 }

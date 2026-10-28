@@ -1,12 +1,12 @@
 # Official Source Registry & Validation
 
-> 生成: 2026-10-28 22:16 JST / 公式ソース登録・検証（利益/AI/Opportunity/Notification/Capital/Execution は不変）
+> 生成: 2026-10-29 01:36 JST / 公式ソース登録・検証（利益/AI/Opportunity/Notification/Capital/Execution は不変）
 
 ## メーカー別サマリ
 | Maker | Products | URL verified | HTTP200 | exact match | price auto | high conf | failed |
 |---|--:|--:|--:|--:|--:|--:|--:|
 | Apple | 21 | 4 | 4 | 4 | 4 | 4 | 17 |
-| Sony | 6 | 1 | 1 | 1 | 1 | 1 | 5 |
+| Sony | 6 | 3 | 3 | 3 | 3 | 3 | 3 |
 | Nintendo | 2 | 1 | 1 | 1 | 1 | 1 | 1 |
 | Nikon | 3 | 3 | 3 | 3 | 3 | 3 | 0 |
 | FUJIFILM | 1 | 1 | 1 | 1 | 1 | 1 | 0 |
@@ -15,7 +15,7 @@
 
 ## 自動取得率 Before → After
 - Before: 公式定価あり商品 3 / 公式config 7
-- After: URL検証済 12 / 価格取得 12 （検証対象 12 / 検証不能 5）
+- After: URL検証済 14 / 価格取得 14 （検証対象 14 / 検証不能 3）
 
 ## Apple Source Audit（旧URL検出）
 | product | current_url | http | action | note |
@@ -35,6 +35,8 @@
 | prod_z8 | src_nikon_direct | ¥575,300 | item | high |
 | prod_z9 | src_nikon_direct | ¥772,200 | item | high |
 | prod_zf | src_nikon_direct | ¥299,200 | item | high |
+| prod_a7rv | src_sony_store | ¥533,500 | item | high |
+| prod_a1ii | src_sony_store | ¥990,000 | item | high |
 | prod_x100vi | src_fujifilm_official | ¥315,700 | item | high |
 | prod_r5ii | src_canon_official | ¥654,500 | item | high |
 | prod_r6ii | src_canon_official | ¥319,000 | item | high |
@@ -52,14 +54,12 @@
 | prod_z8 | ¥590,000 | ¥575,300 | -14,700 |
 
 ## 識別の手がかりの割合（読むだけ）
-- 商品 47: 部品番号 2件（4.3%） / 型番 24件（51.1%） / JAN 7件（14.9%） / 公式 URL 2件（4.3%） / 公式の証拠 15件（31.9%） / 強い手がかりのどれか 27件（57.4%）
+- 商品 47: 部品番号 2件（4.3%） / 型番 24件（51.1%） / JAN 9件（19.1%） / 公式 URL 2件（4.3%） / 公式の証拠 17件（36.2%） / 強い手がかりのどれか 27件（57.4%）
 
 ## 検証不能（要手動検証・推測登録しない）
 | product | source | reason |
 |---|---|---|
 | prod_r3 | src_canon_official | canon.jp が当環境からDNS解決不可（要手動検証） |
-| prod_a1ii | src_sony_store | store.sony.jp が当環境からDNS解決不可（要手動検証） |
-| prod_a7rv | src_sony_store | store.sony.jp が当環境からDNS解決不可（要手動検証） |
 | prod_a7cr | src_sony_store | store.sony.jp が当環境からDNS解決不可（要手動検証） |
 | prod_fx3 | src_sony_store | store.sony.jp が当環境からDNS解決不可（要手動検証） |
 | prod_iphone17pro_256 | src_apple_jp | iPhone 17 Pro の購入ページが /buy-iphone へ移動。公式は iPhone 18 Pro を販売中 |

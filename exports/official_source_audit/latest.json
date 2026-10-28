@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-27 18:57 JST",
+  "generated_at": "2026-10-28 19:34 JST",
   "scope": "公式ソース登録・検証（利益/AI/Opportunity/Notification/Capital/Execution は不変）",
   "methodology": {
     "verification": "WebFetch で HTTP200/公式ドメイン/canonical/商品一致を実確認したURLのみ verified",
@@ -117,6 +117,18 @@
       "price_rejection": null
     },
     {
+      "product_id": "prod_z9",
+      "source": "src_nikon_direct",
+      "url": "https://nij.nikon.com/shop/g/g4960759906168/",
+      "link_type": "item",
+      "confidence": "high",
+      "official_price": 772200,
+      "verified": true,
+      "price_kind": "official_direct",
+      "official_direct_eligible": true,
+      "price_rejection": null
+    },
+    {
       "product_id": "prod_x100vi",
       "source": "src_fujifilm_official",
       "url": "https://mall-jp.fujifilm.com/shop/g/g16941878/",
@@ -143,9 +155,14 @@
     {
       "product_id": "prod_r6ii",
       "source": "src_canon_official",
-      "url": null,
-      "verified": false,
-      "reason": "canon.jp が当環境からDNS解決不可（要手動検証）"
+      "url": "https://store.canon.jp/online/g/g5666C001/",
+      "link_type": "item",
+      "confidence": "high",
+      "official_price": 319000,
+      "verified": true,
+      "price_kind": "official_direct",
+      "official_direct_eligible": true,
+      "price_rejection": null
     },
     {
       "product_id": "prod_r3",
@@ -153,13 +170,6 @@
       "url": null,
       "verified": false,
       "reason": "canon.jp が当環境からDNS解決不可（要手動検証）"
-    },
-    {
-      "product_id": "prod_z9",
-      "source": "src_nikon_direct",
-      "url": null,
-      "verified": false,
-      "reason": "オープン価格の可能性・個別URL未検証"
     },
     {
       "product_id": "prod_zf",
@@ -466,7 +476,7 @@
           "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17",
           "link_type": "item",
           "verified": true,
-          "last_verified_at": "2026-10-27",
+          "last_verified_at": "2026-10-28",
           "extraction_method": "webfetch_verified",
           "confidence": "high",
           "official_price": 159800,
@@ -571,7 +581,7 @@
           "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-air",
           "link_type": "item",
           "verified": true,
-          "last_verified_at": "2026-10-27",
+          "last_verified_at": "2026-10-28",
           "extraction_method": "webfetch_verified",
           "confidence": "high",
           "official_price": 189800,
@@ -596,7 +606,7 @@
           "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-duo",
           "link_type": "item",
           "verified": true,
-          "last_verified_at": "2026-10-27",
+          "last_verified_at": "2026-10-28",
           "extraction_method": "webfetch_verified",
           "confidence": "high",
           "official_price": 364800,
@@ -846,7 +856,7 @@
           "url": "https://www.apple.com/jp/shop/buy-airpods/airpods-pro-3",
           "link_type": "item",
           "verified": true,
-          "last_verified_at": "2026-10-27",
+          "last_verified_at": "2026-10-28",
           "extraction_method": "webfetch_verified",
           "confidence": "high",
           "official_price": 42800,
@@ -926,7 +936,7 @@
           "url": "https://pur.store.sony.jp/ps5/products/ps5/CFI-7100B01_purchase/",
           "link_type": "item",
           "verified": true,
-          "last_verified_at": "2026-10-27",
+          "last_verified_at": "2026-10-28",
           "extraction_method": "webfetch_verified",
           "confidence": "high",
           "official_price": 137980,
@@ -1331,7 +1341,7 @@
           "url": "https://store.canon.jp/online/g/g6536C001/",
           "link_type": "item",
           "verified": true,
-          "last_verified_at": "2026-10-27",
+          "last_verified_at": "2026-10-28",
           "extraction_method": "webfetch_verified",
           "confidence": "high",
           "official_price": 654500,
@@ -1353,15 +1363,15 @@
       "brand": "CANON",
       "sources": {
         "official": {
-          "url": null,
-          "link_type": null,
-          "verified": false,
-          "last_verified_at": null,
-          "extraction_method": null,
-          "confidence": "low",
-          "official_price": null,
+          "url": "https://store.canon.jp/online/g/g5666C001/",
+          "link_type": "item",
+          "verified": true,
+          "last_verified_at": "2026-10-28",
+          "extraction_method": "webfetch_verified",
+          "confidence": "high",
+          "official_price": 319000,
           "enabled": true,
-          "reason_if_disabled": "canon.jp が当環境からDNS解決不可（要手動検証）"
+          "reason_if_disabled": null
         },
         "pricecom": null,
         "yodobashi": null,
@@ -1406,7 +1416,7 @@
           "url": "https://nij.nikon.com/shop/g/g4960759909947/",
           "link_type": "item",
           "verified": true,
-          "last_verified_at": "2026-10-27",
+          "last_verified_at": "2026-10-28",
           "extraction_method": "webfetch_verified",
           "confidence": "high",
           "official_price": 575300,
@@ -1453,15 +1463,15 @@
       "brand": "NIKON",
       "sources": {
         "official": {
-          "url": null,
-          "link_type": null,
-          "verified": false,
-          "last_verified_at": null,
-          "extraction_method": null,
-          "confidence": "low",
-          "official_price": null,
+          "url": "https://nij.nikon.com/shop/g/g4960759906168/",
+          "link_type": "item",
+          "verified": true,
+          "last_verified_at": "2026-10-28",
+          "extraction_method": "webfetch_verified",
+          "confidence": "high",
+          "official_price": 772200,
           "enabled": true,
-          "reason_if_disabled": "オープン価格の可能性・個別URL未検証"
+          "reason_if_disabled": null
         },
         "pricecom": null,
         "yodobashi": null,
@@ -1632,17 +1642,13 @@
     },
     "Nikon": {
       "products": 3,
-      "url_verified": 1,
-      "http_200": 1,
-      "exact_match": 1,
-      "price_ok": 1,
-      "high_conf": 1,
-      "failed": 2,
+      "url_verified": 2,
+      "http_200": 2,
+      "exact_match": 2,
+      "price_ok": 2,
+      "high_conf": 2,
+      "failed": 1,
       "failures": [
-        {
-          "product_id": "prod_z9",
-          "reason": "オープン価格の可能性・個別URL未検証"
-        },
         {
           "product_id": "prod_zf",
           "reason": "オープン価格の可能性・個別URL未検証"
@@ -1661,17 +1667,13 @@
     },
     "Canon": {
       "products": 3,
-      "url_verified": 1,
-      "http_200": 1,
-      "exact_match": 1,
-      "price_ok": 1,
-      "high_conf": 1,
-      "failed": 2,
+      "url_verified": 2,
+      "http_200": 2,
+      "exact_match": 2,
+      "price_ok": 2,
+      "high_conf": 2,
+      "failed": 1,
       "failures": [
-        {
-          "product_id": "prod_r6ii",
-          "reason": "canon.jp が当環境からDNS解決不可（要手動検証）"
-        },
         {
           "product_id": "prod_r3",
           "reason": "canon.jp が当環境からDNS解決不可（要手動検証）"
@@ -1700,22 +1702,22 @@
       "official_configs": 7
     },
     "after": {
-      "url_verified": 9,
-      "price_captured": 9,
-      "verified_targets": 9,
-      "unverified_targets": 8
+      "url_verified": 11,
+      "price_captured": 11,
+      "verified_targets": 11,
+      "unverified_targets": 6
     },
     "recheck_applied": [
       {
         "product_id": "prod_ps5_pro",
         "action": "price_reconfirmed",
-        "on": "2026-10-27"
+        "on": "2026-10-28"
       },
       {
         "product_id": "prod_ps5_pro",
         "action": "stock_observed",
         "stock": "入荷待ち",
-        "at": "2026-10-27T18:51:43+09:00"
+        "at": "2026-10-28T19:28:09+09:00"
       },
       {
         "product_id": "prod_switch2",
@@ -1725,32 +1727,42 @@
       {
         "product_id": "prod_airpods_pro3",
         "action": "price_reconfirmed",
-        "on": "2026-10-27"
+        "on": "2026-10-28"
       },
       {
         "product_id": "prod_r5ii",
         "action": "price_reconfirmed",
-        "on": "2026-10-27"
+        "on": "2026-10-28"
       },
       {
         "product_id": "prod_z8",
         "action": "price_reconfirmed",
-        "on": "2026-10-27"
+        "on": "2026-10-28"
       },
       {
         "product_id": "prod_iphone17_256",
         "action": "price_reconfirmed",
-        "on": "2026-10-27"
+        "on": "2026-10-28"
+      },
+      {
+        "product_id": "prod_z9",
+        "action": "price_reconfirmed",
+        "on": "2026-10-28"
+      },
+      {
+        "product_id": "prod_r6ii",
+        "action": "price_reconfirmed",
+        "on": "2026-10-28"
       },
       {
         "product_id": "prod_iphoneair_256",
         "action": "price_reconfirmed",
-        "on": "2026-10-27"
+        "on": "2026-10-28"
       },
       {
         "product_id": "prod_iphoneduo_256",
         "action": "price_reconfirmed",
-        "on": "2026-10-27"
+        "on": "2026-10-28"
       }
     ]
   },
@@ -1758,13 +1770,13 @@
     {
       "product_id": "prod_ps5_pro",
       "action": "price_reconfirmed",
-      "on": "2026-10-27"
+      "on": "2026-10-28"
     },
     {
       "product_id": "prod_ps5_pro",
       "action": "stock_observed",
       "stock": "入荷待ち",
-      "at": "2026-10-27T18:51:43+09:00"
+      "at": "2026-10-28T19:28:09+09:00"
     },
     {
       "product_id": "prod_switch2",
@@ -1774,32 +1786,42 @@
     {
       "product_id": "prod_airpods_pro3",
       "action": "price_reconfirmed",
-      "on": "2026-10-27"
+      "on": "2026-10-28"
     },
     {
       "product_id": "prod_r5ii",
       "action": "price_reconfirmed",
-      "on": "2026-10-27"
+      "on": "2026-10-28"
     },
     {
       "product_id": "prod_z8",
       "action": "price_reconfirmed",
-      "on": "2026-10-27"
+      "on": "2026-10-28"
     },
     {
       "product_id": "prod_iphone17_256",
       "action": "price_reconfirmed",
-      "on": "2026-10-27"
+      "on": "2026-10-28"
+    },
+    {
+      "product_id": "prod_z9",
+      "action": "price_reconfirmed",
+      "on": "2026-10-28"
+    },
+    {
+      "product_id": "prod_r6ii",
+      "action": "price_reconfirmed",
+      "on": "2026-10-28"
     },
     {
       "product_id": "prod_iphoneair_256",
       "action": "price_reconfirmed",
-      "on": "2026-10-27"
+      "on": "2026-10-28"
     },
     {
       "product_id": "prod_iphoneduo_256",
       "action": "price_reconfirmed",
-      "on": "2026-10-27"
+      "on": "2026-10-28"
     }
   ],
   "config_price_drift": [
@@ -1871,16 +1893,16 @@
       "pct": 51.1
     },
     "jan_code": {
-      "count": 4,
-      "pct": 8.5
+      "count": 6,
+      "pct": 12.8
     },
     "official_url": {
       "count": 2,
       "pct": 4.3
     },
     "identity_evidence": {
-      "count": 12,
-      "pct": 25.5
+      "count": 14,
+      "pct": 29.8
     },
     "any_strong_key": {
       "count": 27,

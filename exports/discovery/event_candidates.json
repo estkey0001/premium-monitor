@@ -17,7 +17,7 @@
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-10-27",
+      "last_seen_on": "2026-10-28",
       "updated_at": "2026-10-20T18:14:42+09:00"
     },
     "tcg-event-1f61b23f9a78": {
@@ -36,7 +36,7 @@
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-10-27",
+      "last_seen_on": "2026-10-28",
       "updated_at": "2026-10-20T18:14:42+09:00"
     },
     "tcg-event-f1dac3fcd83e": {
@@ -162,7 +162,7 @@
         "title_only_not_fetched"
       ],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-10-27",
+      "last_seen_on": "2026-10-28",
       "updated_at": "2026-10-17T17:34:02+09:00"
     },
     "tcg-release-8a57a4242c09": {
@@ -182,7 +182,7 @@
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-10-27",
+      "last_seen_on": "2026-10-28",
       "updated_at": "2026-10-17T17:34:02+09:00"
     },
     "tcg-release-f614bc792b6d": {
@@ -202,7 +202,7 @@
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-10-27",
+      "last_seen_on": "2026-10-28",
       "updated_at": "2026-10-17T17:34:02+09:00"
     },
     "tcg-release-039c69c6e831": {
@@ -222,7 +222,7 @@
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-10-27",
+      "last_seen_on": "2026-10-28",
       "updated_at": "2026-10-17T17:34:02+09:00"
     },
     "tcg-release-0e309c25183f": {
@@ -242,7 +242,7 @@
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-10-27",
+      "last_seen_on": "2026-10-28",
       "updated_at": "2026-10-17T17:34:02+09:00"
     },
     "tcg-release-8f1266a6511e": {
@@ -262,7 +262,7 @@
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-10-27",
+      "last_seen_on": "2026-10-28",
       "updated_at": "2026-10-17T17:34:02+09:00"
     },
     "tcg-release-e5f8527fe94a": {
@@ -282,7 +282,7 @@
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-10-27",
+      "last_seen_on": "2026-10-28",
       "updated_at": "2026-10-17T17:34:02+09:00"
     },
     "tcg-event-ae9c47b3e6b9": {
@@ -301,7 +301,7 @@
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-10-20T18:14:42+09:00",
-      "last_seen_on": "2026-10-27",
+      "last_seen_on": "2026-10-28",
       "updated_at": "2026-10-20T18:14:42+09:00"
     },
     "tcg-event-a483bc5b9e78": {
@@ -320,7 +320,7 @@
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-10-20T18:14:42+09:00",
-      "last_seen_on": "2026-10-27",
+      "last_seen_on": "2026-10-28",
       "updated_at": "2026-10-20T18:14:42+09:00"
     },
     "tcg-event-9e6266dfe4d5": {
@@ -341,6 +341,196 @@
       "discovered_at": "2026-10-22T01:40:32+09:00",
       "last_seen_on": "2026-10-22",
       "updated_at": "2026-10-22T01:40:32+09:00"
+    },
+    "tcg-event-3bf8eed1054f": {
+      "source": "CARD_LABO",
+      "kind": "LOTTERY",
+      "tcg": "ONE_PIECE",
+      "title": "ワンピースカードゲーム 『HEROINES PRECIOUS BOX』",
+      "official_url": "https://www.c-labo.jp/shop/sapporo/blog/622790/",
+      "product_code": "",
+      "product_mapping": "unmapped",
+      "application_start": "2026-10-26",
+      "application_end": "2026-10-29",
+      "event_status": "ENDING_SOON",
+      "missing_fields": [],
+      "candidate_id": "tcg-event-3bf8eed1054f",
+      "status": "MATCHED_EVENT",
+      "reasons": [],
+      "discovered_at": "2026-10-28T20:00:57+09:00",
+      "last_seen_on": "2026-10-28",
+      "updated_at": "2026-10-28T20:00:57+09:00"
+    },
+    "tcg-event-bbf7f58078e2": {
+      "source": "CARD_LABO",
+      "kind": "LOTTERY",
+      "tcg": "ONE_PIECE",
+      "title": "【ONE PIECEカードゲーム】「HEROINES PRECIOUS BOX",
+      "official_url": "https://www.c-labo.jp/shop/mito/blog/622770/",
+      "product_code": "",
+      "product_mapping": "unmapped",
+      "application_start": "2026-10-26",
+      "application_end": "2026-10-29T23:59:00+09:00",
+      "event_status": "OPEN",
+      "missing_fields": [],
+      "candidate_id": "tcg-event-bbf7f58078e2",
+      "status": "MATCHED_EVENT",
+      "reasons": [],
+      "discovered_at": "2026-10-28T20:00:57+09:00",
+      "last_seen_on": "2026-10-28",
+      "updated_at": "2026-10-28T20:00:57+09:00"
+    },
+    "tcg-event-b1814c647a25": {
+      "source": "CARD_LABO",
+      "kind": "LOTTERY",
+      "tcg": "POKEMON",
+      "title": "ポケモンカードゲーム MEGA『30th CELEBRATION プレミアムデッキセット エーフィ・ブラッキー』",
+      "official_url": "https://www.c-labo.jp/shop/otaro/blog/623006/",
+      "product_code": "",
+      "product_mapping": "unmapped",
+      "application_start": "2026-10-28",
+      "application_end": "2026-10-31",
+      "event_status": "UPCOMING",
+      "missing_fields": [],
+      "candidate_id": "tcg-event-b1814c647a25",
+      "status": "MATCHED_EVENT",
+      "reasons": [],
+      "discovered_at": "2026-10-28T20:00:57+09:00",
+      "last_seen_on": "2026-10-28",
+      "updated_at": "2026-10-28T20:00:57+09:00"
+    },
+    "tcg-event-e8525ea252db": {
+      "source": "CARD_LABO",
+      "kind": "LOTTERY",
+      "tcg": "POKEMON",
+      "title": "ポケモンカードゲーム MEGA 拡張パック ストームエメラルダ",
+      "official_url": "https://www.c-labo.jp/shop/otaro/blog/623003/",
+      "product_code": "",
+      "product_mapping": "unmapped",
+      "application_start": "2026-10-28",
+      "application_end": "2026-10-31",
+      "event_status": "UPCOMING",
+      "missing_fields": [],
+      "candidate_id": "tcg-event-e8525ea252db",
+      "status": "MATCHED_EVENT",
+      "reasons": [],
+      "discovered_at": "2026-10-28T20:00:57+09:00",
+      "last_seen_on": "2026-10-28",
+      "updated_at": "2026-10-28T20:00:57+09:00"
+    },
+    "tcg-event-3899f35f5f26": {
+      "source": "CARD_LABO",
+      "kind": "LOTTERY",
+      "tcg": "POKEMON",
+      "title": "ポケモンカードゲーム MEGA ・拡張パック 30th CELEBRATION 20パック",
+      "official_url": "https://www.c-labo.jp/shop/nagoyaekimae/blog/622768/",
+      "product_code": "",
+      "product_mapping": "unmapped",
+      "application_start": "2026-10-26",
+      "application_end": "2026-10-27",
+      "event_status": "RESULT_PENDING",
+      "missing_fields": [],
+      "candidate_id": "tcg-event-3899f35f5f26",
+      "status": "MATCHED_EVENT",
+      "reasons": [],
+      "discovered_at": "2026-10-28T20:00:57+09:00",
+      "last_seen_on": "2026-10-28",
+      "updated_at": "2026-10-28T20:00:57+09:00"
+    },
+    "tcg-event-25a8976468a0": {
+      "source": "CARD_LABO",
+      "kind": "LOTTERY",
+      "tcg": "POKEMON",
+      "title": "ポケモンカードゲーム MEGA『30th CELEBRATION プレミアムデッキセット エーフィ・ブラッキー』",
+      "official_url": "https://www.c-labo.jp/shop/nagoyaoosu/blog/622775/",
+      "product_code": "",
+      "product_mapping": "unmapped",
+      "application_start": "2026-10-26",
+      "application_end": "2026-10-27",
+      "event_status": "RESULT_PENDING",
+      "missing_fields": [],
+      "candidate_id": "tcg-event-25a8976468a0",
+      "status": "MATCHED_EVENT",
+      "reasons": [],
+      "discovered_at": "2026-10-28T20:00:57+09:00",
+      "last_seen_on": "2026-10-28",
+      "updated_at": "2026-10-28T20:00:57+09:00"
+    },
+    "tcg-event-8264fd0409f6": {
+      "source": "CARD_LABO",
+      "kind": "LOTTERY",
+      "tcg": "POKEMON",
+      "title": "ポケモンカードゲーム 30thセレブレーション",
+      "official_url": "https://www.c-labo.jp/shop/namba2nd/blog/622761/",
+      "product_code": "",
+      "product_mapping": "unmapped",
+      "application_start": "2026-10-26",
+      "application_end": "2026-10-27",
+      "event_status": "RESULT_PENDING",
+      "missing_fields": [],
+      "candidate_id": "tcg-event-8264fd0409f6",
+      "status": "MATCHED_EVENT",
+      "reasons": [],
+      "discovered_at": "2026-10-28T20:00:57+09:00",
+      "last_seen_on": "2026-10-28",
+      "updated_at": "2026-10-28T20:00:57+09:00"
+    },
+    "tcg-event-c68209f7a65d": {
+      "source": "CARD_LABO",
+      "kind": "LOTTERY",
+      "tcg": "POKEMON",
+      "title": "ポケモンカードゲーム MEGA MEGA スタートデッキ100 バトルコレクション",
+      "official_url": "https://www.c-labo.jp/shop/namba2nd/blog/622758/",
+      "product_code": "",
+      "product_mapping": "unmapped",
+      "application_start": "2026-10-26",
+      "application_end": "2026-10-27",
+      "event_status": "RESULT_PENDING",
+      "missing_fields": [],
+      "candidate_id": "tcg-event-c68209f7a65d",
+      "status": "MATCHED_EVENT",
+      "reasons": [],
+      "discovered_at": "2026-10-28T20:00:57+09:00",
+      "last_seen_on": "2026-10-28",
+      "updated_at": "2026-10-28T20:00:57+09:00"
+    },
+    "tcg-event-92d9211872c8": {
+      "source": "CARD_LABO",
+      "kind": "LOTTERY",
+      "tcg": "POKEMON",
+      "title": "ポケモンカードゲーム MEGA 拡張パック『30th CELEBRATION』",
+      "official_url": "https://www.c-labo.jp/shop/nagoyaoosu/blog/622771/",
+      "product_code": "",
+      "product_mapping": "unmapped",
+      "application_start": "2026-10-26",
+      "application_end": "2026-10-27",
+      "event_status": "RESULT_PENDING",
+      "missing_fields": [],
+      "candidate_id": "tcg-event-92d9211872c8",
+      "status": "MATCHED_EVENT",
+      "reasons": [],
+      "discovered_at": "2026-10-28T20:00:57+09:00",
+      "last_seen_on": "2026-10-28",
+      "updated_at": "2026-10-28T20:00:57+09:00"
+    },
+    "tcg-event-a8f97079cd70": {
+      "source": "CARD_LABO",
+      "kind": "LOTTERY",
+      "tcg": "POKEMON",
+      "title": "【ポケモンカードゲーム】再販品",
+      "official_url": "https://www.c-labo.jp/shop/shizuoka/blog/622809/",
+      "product_code": "",
+      "product_mapping": "unmapped",
+      "application_start": "2026-10-26",
+      "application_end": "2026-10-27T23:59:00+09:00",
+      "event_status": "CLOSED",
+      "missing_fields": [],
+      "candidate_id": "tcg-event-a8f97079cd70",
+      "status": "MATCHED_EVENT",
+      "reasons": [],
+      "discovered_at": "2026-10-28T20:00:57+09:00",
+      "last_seen_on": "2026-10-28",
+      "updated_at": "2026-10-28T20:00:57+09:00"
     }
   }
 }

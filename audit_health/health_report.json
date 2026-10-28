@@ -1,20 +1,20 @@
 {
-  "generated_at": "2026-10-27 19:19 JST",
-  "date": "2026-10-27",
+  "generated_at": "2026-10-28 20:07 JST",
+  "date": "2026-10-28",
   "health_score": {
-    "data_quality": 14.3,
+    "data_quality": 14.4,
     "profit_discovery": 15.0,
     "source_health": 12.6,
     "link_quality": 4.8,
-    "freshness": 3.6,
-    "total": 50.3
+    "freshness": 3.7,
+    "total": 50.5
   },
   "data_quality": {
     "total_obs": 236,
     "usable_obs": 76,
-    "stale_count": 150,
-    "stale_rate": 0.6356,
-    "config_reference_count": 35,
+    "stale_count": 148,
+    "stale_rate": 0.6271,
+    "config_reference_count": 33,
     "zero_count": 38,
     "zero_rate": 0.161,
     "item_url_rate": 0.4831,
@@ -39,14 +39,14 @@
   "sources": {
     "メーカー公式/定価": {
       "success_count": 47,
-      "stale_count": 36,
+      "stale_count": 34,
       "zero_count": 0,
       "item_url_rate": 0.0,
-      "freshness": 0.234,
+      "freshness": 0.2766,
       "success_rate": 1.0,
       "confidence": {
-        "medium": 35,
-        "high": 12
+        "medium": 33,
+        "high": 14
       },
       "n": 47
     },
@@ -337,15 +337,15 @@
   "diff_vs_prev": {
     "available": true,
     "stale_rate": {
-      "prev": 0.6383,
-      "cur": 0.6356
+      "prev": 0.6356,
+      "cur": 0.6271
     },
     "zero_rate": {
-      "prev": 0.1617,
+      "prev": 0.161,
       "cur": 0.161
     },
     "item_url_rate": {
-      "prev": 0.4809,
+      "prev": 0.4831,
       "cur": 0.4831
     },
     "main_route_count": {
@@ -362,7 +362,7 @@
   },
   "anomalies": {
     "critical": [
-      "stale率 64% (>=50%)",
+      "stale率 63% (>=50%)",
       "取得成功率 0%: ゲオモバイル",
       "取得成功率 0%: セカンドストリート",
       "取得成功率 0%: ネットオフ"

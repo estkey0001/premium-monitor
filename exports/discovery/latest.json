@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-27T19:13:32+09:00",
+  "generated_at": "2026-10-28T20:00:57+09:00",
   "apple": {
     "source": "apple_jp_official",
     "list_status": "ok",
@@ -12,13 +12,13 @@
       "iphone-duo"
     ],
     "checked": [
-      "iphone-17e",
-      "iphone-18-pro"
+      "iphone-16",
+      "iphone-17"
     ],
     "errors": {},
-    "unknown_parts": 38,
-    "matched": 0,
-    "pending": 10,
+    "unknown_parts": 10,
+    "matched": 1,
+    "pending": 2,
     "requests": 3,
     "cutoff": "",
     "saved": true
@@ -32,10 +32,10 @@
     },
     "inputs_stale": [],
     "review_required": 1,
-    "matched_events": 4,
+    "matched_events": 14,
     "release": 6,
     "by_kind": {
-      "LOTTERY": 4,
+      "LOTTERY": 14,
       "PREORDER": 0,
       "FIRST_COME": 0,
       "RESTOCK": 1,
@@ -43,8 +43,8 @@
     },
     "tcg_products": 22,
     "sources": {
-      "configured": 17,
-      "implemented": 6,
+      "configured": 18,
+      "implemented": 7,
       "unimplemented": 11,
       "blocked": 3,
       "robots_unreachable": 4,
@@ -77,6 +77,16 @@
           "state": "SOURCE_BLOCKED",
           "health": "BLOCKED",
           "blocked": true,
+          "robots": null,
+          "unreachable": false
+        },
+        {
+          "source_id": "CARD_LABO",
+          "retailer": "カードラボ",
+          "adapter": "card_labo_lottery",
+          "state": "ACTIVE_LOTTERY",
+          "health": "HEALTHY",
+          "blocked": false,
           "robots": null,
           "unreachable": false
         },
@@ -241,16 +251,16 @@
     "unknown_official_products": 62,
     "apple_candidates": 17,
     "tcg_products": 20,
-    "event_candidates": 17,
+    "event_candidates": 27,
     "review_required_announcements": 2,
-    "matched_events": 15,
+    "matched_events": 25,
     "stale_events": 0,
     "approved_events": 0,
     "registered_events": 0
   },
   "sources": {
-    "configured": 17,
-    "implemented": 6,
+    "configured": 18,
+    "implemented": 7,
     "unimplemented": 11,
     "blocked": 3,
     "robots_unreachable": 4,
@@ -283,6 +293,16 @@
         "state": "SOURCE_BLOCKED",
         "health": "BLOCKED",
         "blocked": true,
+        "robots": null,
+        "unreachable": false
+      },
+      {
+        "source_id": "CARD_LABO",
+        "retailer": "カードラボ",
+        "adapter": "card_labo_lottery",
+        "state": "ACTIVE_LOTTERY",
+        "health": "HEALTHY",
+        "blocked": false,
         "robots": null,
         "unreachable": false
       },

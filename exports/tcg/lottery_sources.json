@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-27T19:13:32.659437+09:00",
+  "generated_at": "2026-10-28T20:00:57.223014+09:00",
   "sources": [
     {
       "source_id": "POKEMON_CENTER_ONLINE",
@@ -20,8 +20,8 @@
       "state": "NO_ACTIVE_LOTTERY",
       "state_label": "現在の抽選なし",
       "reachable": true,
-      "last_checked": "2026-10-27T19:09:36.434762+09:00",
-      "last_success": "2026-10-27T19:09:37.098415+09:00",
+      "last_checked": "2026-10-28T19:46:01.895828+09:00",
+      "last_success": "2026-10-28T19:46:02.517236+09:00",
       "last_event_found": "2026-10-22T01:40:32.227396+09:00",
       "candidate_articles": 2,
       "accepted_lotteries": 2,
@@ -37,6 +37,7 @@
       "active_lotteries": 0,
       "active_preorders": 0,
       "announcements": 1,
+      "truncated": false,
       "discovered_titles": [],
       "pages": [
         {
@@ -109,8 +110,8 @@
       "state": "NO_ACTIVE_LOTTERY",
       "state_label": "現在の抽選なし",
       "reachable": true,
-      "last_checked": "2026-10-27T19:10:37.656120+09:00",
-      "last_success": "2026-10-27T19:10:37.656125+09:00",
+      "last_checked": "2026-10-28T19:47:03.008917+09:00",
+      "last_success": "2026-10-28T19:47:03.008924+09:00",
       "last_event_found": null,
       "candidate_articles": 0,
       "accepted_lotteries": 0,
@@ -127,6 +128,7 @@
       "active_lotteries": 0,
       "active_preorders": 0,
       "announcements": 0,
+      "truncated": false,
       "discovered_titles": [
         {
           "url": "https://www.pokemon-card.com/info/005069.html",
@@ -159,7 +161,7 @@
       "state": "SOURCE_BLOCKED",
       "state_label": "アクセス拒否",
       "reachable": false,
-      "last_checked": "2026-10-27T19:10:37.661157+09:00",
+      "last_checked": "2026-10-28T19:47:03.018267+09:00",
       "last_success": null,
       "last_event_found": "2026-10-01T20:51:59.851413+09:00",
       "candidate_articles": 0,
@@ -174,6 +176,7 @@
       "active_lotteries": 0,
       "active_preorders": 0,
       "announcements": 0,
+      "truncated": false,
       "discovered_titles": [],
       "pages": [
         {
@@ -196,6 +199,241 @@
       "source_class": "IMPLEMENTED_BUT_BLOCKED"
     },
     {
+      "source_id": "CARD_LABO",
+      "retailer": "カードラボ",
+      "brand": [
+        "POKEMON",
+        "ONE_PIECE"
+      ],
+      "priority": "P1",
+      "official_url": "https://www.c-labo.jp/",
+      "lottery_url": null,
+      "news_url": "https://www.c-labo.jp/blog/filter/tcg:25/",
+      "channel": "STORE",
+      "collection_method": "HTML",
+      "adapter": "card_labo_lottery",
+      "verified": true,
+      "note": "店舗ブログに抽選・抽選予約の告知が静的 HTML で載る（応募期間・当選発表・購入期間・商品名・価格が本文のテキスト）。応募は店舗の X のフォロー＆リポストで、公式ドメインの応募ページは無い（entry_url は空）。店舗ごとの抽選として扱う。2026-10-24 の調査: robots.txt は /wordpress/wp-admin/ だけを禁止（PremiumMonitor への禁止なし）。利用規約（c-labo.jp の規約ページ）は著作権・防犯・免責・従業員の保護の条項で、自動取得を禁じる記述は読み取れなかった（許可の明記でもない。規約の確認は取得日つきの記録で、変更があれば再確認する）",
+      "policy_excluded": null,
+      "state": "ACTIVE_LOTTERY",
+      "state_label": "抽選あり",
+      "reachable": true,
+      "last_checked": "2026-10-28T19:47:03.277596+09:00",
+      "last_success": "2026-10-28T19:48:04.488395+09:00",
+      "last_event_found": "2026-10-28T20:00:57.219039+09:00",
+      "candidate_articles": 23,
+      "accepted_lotteries": 10,
+      "rejected": 7,
+      "rejection_reasons": {
+        "not_lottery_candidate": 7
+      },
+      "blocked": false,
+      "unreachable": false,
+      "robots": null,
+      "error": null,
+      "health": "HEALTHY",
+      "active_lotteries": 10,
+      "active_preorders": 0,
+      "announcements": 0,
+      "truncated": true,
+      "discovered_titles": [],
+      "pages": [
+        {
+          "url": "https://www.c-labo.jp/blog/filter/tcg:25/",
+          "page_type": "listing",
+          "http_status": 200,
+          "final_url": "https://www.c-labo.jp/blog/filter/tcg:25/",
+          "page_title": "トレーディングカード（トレカ / TCG）の取扱タイトル - カードラボ",
+          "html_length": 51256,
+          "text_length": 3041,
+          "links_discovered": 116,
+          "product_links_discovered": 0,
+          "candidate_blocks": 0,
+          "accepted": 0,
+          "rejected": 0,
+          "robots_status": "allowed",
+          "error": null
+        },
+        {
+          "url": "https://www.c-labo.jp/blog/filter/tcg:184/",
+          "page_type": "listing",
+          "http_status": 200,
+          "final_url": "https://www.c-labo.jp/blog/filter/tcg:184/",
+          "page_title": "トレーディングカード（トレカ / TCG）の取扱タイトル - カードラボ",
+          "html_length": 62258,
+          "text_length": 4371,
+          "links_discovered": 203,
+          "product_links_discovered": 0,
+          "candidate_blocks": 0,
+          "accepted": 0,
+          "rejected": 0,
+          "robots_status": "allowed",
+          "error": null
+        },
+        {
+          "url": "https://www.c-labo.jp/shop/otaro/blog/623006/",
+          "page_type": "news",
+          "http_status": 200,
+          "final_url": "https://www.c-labo.jp/shop/otaro/blog/623006/",
+          "page_title": "ポケモンカードゲーム MEGA 『30th CELEBRATION プレミアムデッキセット エーフィ・ブラッキー』抽選販売のお知らせ / オタロード本店の店舗ブログ - カードラボ",
+          "html_length": 61951,
+          "text_length": 6419,
+          "links_discovered": 293,
+          "product_links_discovered": 0,
+          "candidate_blocks": 1,
+          "accepted": 1,
+          "rejected": 0,
+          "robots_status": "allowed",
+          "error": null
+        },
+        {
+          "url": "https://www.c-labo.jp/shop/otaro/blog/623003/",
+          "page_type": "news",
+          "http_status": 200,
+          "final_url": "https://www.c-labo.jp/shop/otaro/blog/623003/",
+          "page_title": "『ポケモンカードゲーム MEGA 拡張パック ストームエメラルダ』抽選販売のお知らせ / オタロード本店の店舗ブログ - カードラボ",
+          "html_length": 61293,
+          "text_length": 5860,
+          "links_discovered": 293,
+          "product_links_discovered": 0,
+          "candidate_blocks": 1,
+          "accepted": 1,
+          "rejected": 0,
+          "robots_status": "allowed",
+          "error": null
+        },
+        {
+          "url": "https://www.c-labo.jp/shop/nagoyaekimae/blog/622768/",
+          "page_type": "news",
+          "http_status": 200,
+          "final_url": "https://www.c-labo.jp/shop/nagoyaekimae/blog/622768/",
+          "page_title": "【ポケモンカードゲーム】「拡張パック 30th CELEBRATION」抽選販売のお知らせ / 名古屋駅前店の店舗ブログ - カードラボ",
+          "html_length": 63378,
+          "text_length": 6340,
+          "links_discovered": 294,
+          "product_links_discovered": 0,
+          "candidate_blocks": 1,
+          "accepted": 1,
+          "rejected": 0,
+          "robots_status": "allowed",
+          "error": null
+        },
+        {
+          "url": "https://www.c-labo.jp/shop/nagoyaoosu/blog/622775/",
+          "page_type": "news",
+          "http_status": 200,
+          "final_url": "https://www.c-labo.jp/shop/nagoyaoosu/blog/622775/",
+          "page_title": "ポケモンカードゲーム MEGA 『30th CELEBRATION プレミアムデッキセット エーフィ・ブラッキー』抽選販売のお知らせ / 名古屋大須店の店舗ブログ - カードラボ",
+          "html_length": 58274,
+          "text_length": 6142,
+          "links_discovered": 290,
+          "product_links_discovered": 0,
+          "candidate_blocks": 1,
+          "accepted": 1,
+          "rejected": 0,
+          "robots_status": "allowed",
+          "error": null
+        },
+        {
+          "url": "https://www.c-labo.jp/shop/sapporo/blog/622790/",
+          "page_type": "news",
+          "http_status": 200,
+          "final_url": "https://www.c-labo.jp/shop/sapporo/blog/622790/",
+          "page_title": "【ワンピースカードゲーム】「HEROINES PRECIOUS BOX」抽選販売のお知らせ / 札幌店の店舗ブログ - カードラボ",
+          "html_length": 59140,
+          "text_length": 5998,
+          "links_discovered": 282,
+          "product_links_discovered": 0,
+          "candidate_blocks": 1,
+          "accepted": 1,
+          "rejected": 0,
+          "robots_status": "allowed",
+          "error": null
+        },
+        {
+          "url": "https://www.c-labo.jp/shop/namba2nd/blog/622761/",
+          "page_type": "news",
+          "http_status": 200,
+          "final_url": "https://www.c-labo.jp/shop/namba2nd/blog/622761/",
+          "page_title": "【ハロウィン 抽選販売】30thセレブレーション再販 抽選販売のご案内 / 販売買取センターNAMBAの店舗ブログ - カードラボ",
+          "html_length": 51939,
+          "text_length": 5314,
+          "links_discovered": 278,
+          "product_links_discovered": 0,
+          "candidate_blocks": 1,
+          "accepted": 1,
+          "rejected": 0,
+          "robots_status": "allowed",
+          "error": null
+        },
+        {
+          "url": "https://www.c-labo.jp/shop/namba2nd/blog/622758/",
+          "page_type": "news",
+          "http_status": 200,
+          "final_url": "https://www.c-labo.jp/shop/namba2nd/blog/622758/",
+          "page_title": "【ハロウィン 抽選販売】『ポケモンカードゲームMEGA スタートデッキ100 バトルコレクション』抽選販売のお知らせ / 販売買取センターNAMBAの店舗ブログ - カードラボ",
+          "html_length": 51887,
+          "text_length": 5362,
+          "links_discovered": 278,
+          "product_links_discovered": 0,
+          "candidate_blocks": 1,
+          "accepted": 1,
+          "rejected": 0,
+          "robots_status": "allowed",
+          "error": null
+        },
+        {
+          "url": "https://www.c-labo.jp/shop/shizuoka/blog/622809/",
+          "page_type": "news",
+          "http_status": 200,
+          "final_url": "https://www.c-labo.jp/shop/shizuoka/blog/622809/",
+          "page_title": "【ポケモンカードゲーム】再販品 抽選販売について（20261026～） / 静岡店の店舗ブログ - カードラボ",
+          "html_length": 59686,
+          "text_length": 6148,
+          "links_discovered": 284,
+          "product_links_discovered": 0,
+          "candidate_blocks": 1,
+          "accepted": 1,
+          "rejected": 0,
+          "robots_status": "allowed",
+          "error": null
+        },
+        {
+          "url": "https://www.c-labo.jp/shop/nagoyaoosu/blog/622771/",
+          "page_type": "news",
+          "http_status": 200,
+          "final_url": "https://www.c-labo.jp/shop/nagoyaoosu/blog/622771/",
+          "page_title": "ポケモンカードゲーム MEGA 拡張パック『30th CELEBRATION』抽選販売のお知らせ / 名古屋大須店の店舗ブログ - カードラボ",
+          "html_length": 58181,
+          "text_length": 6091,
+          "links_discovered": 290,
+          "product_links_discovered": 0,
+          "candidate_blocks": 1,
+          "accepted": 1,
+          "rejected": 0,
+          "robots_status": "allowed",
+          "error": null
+        },
+        {
+          "url": "https://www.c-labo.jp/shop/mito/blog/622770/",
+          "page_type": "news",
+          "http_status": 200,
+          "final_url": "https://www.c-labo.jp/shop/mito/blog/622770/",
+          "page_title": "【ONE PIECEカードゲーム】「HEROINES PRECIOUS BOX」抽選販売のお知らせ / 水戸店の店舗ブログ - カードラボ",
+          "html_length": 55539,
+          "text_length": 5706,
+          "links_discovered": 279,
+          "product_links_discovered": 0,
+          "candidate_blocks": 1,
+          "accepted": 1,
+          "rejected": 0,
+          "robots_status": "allowed",
+          "error": null
+        }
+      ],
+      "source_class": "WORKING"
+    },
+    {
       "source_id": "TOYSRUS",
       "retailer": "トイザらス",
       "brand": [
@@ -215,7 +453,7 @@
       "state": "SOURCE_BLOCKED",
       "state_label": "アクセス拒否",
       "reachable": false,
-      "last_checked": "2026-10-27T19:10:37.817805+09:00",
+      "last_checked": "2026-10-28T19:58:07.392204+09:00",
       "last_success": null,
       "last_event_found": null,
       "candidate_articles": 0,
@@ -230,6 +468,7 @@
       "active_lotteries": 0,
       "active_preorders": 0,
       "announcements": 0,
+      "truncated": false,
       "discovered_titles": [],
       "pages": [
         {
@@ -271,7 +510,7 @@
       "state": "SOURCE_BLOCKED",
       "state_label": "アクセス拒否",
       "reachable": false,
-      "last_checked": "2026-10-27T19:10:38.202367+09:00",
+      "last_checked": "2026-10-28T19:58:08.071695+09:00",
       "last_success": null,
       "last_event_found": null,
       "candidate_articles": 0,
@@ -286,6 +525,7 @@
       "active_lotteries": 0,
       "active_preorders": 0,
       "announcements": 0,
+      "truncated": false,
       "discovered_titles": [],
       "pages": [
         {
@@ -322,13 +562,13 @@
       "collection_method": "HTML",
       "adapter": null,
       "verified": false,
-      "note": "到達可。トップから TCG の抽選告知一覧を発見できず、解析器は未実装",
+      "note": "到達可。2026-10-24 の調査: 公開のお知らせ一覧（/info.html）に TCG の告知が0件（最新は2024年）で、抽選・予約の告知が載る形を確認できない。解析器は未実装（実装の価値が低い）",
       "policy_excluded": null,
       "state": "SOURCE_NOT_MONITORED",
       "state_label": "未監視（未実装）",
       "reachable": true,
-      "last_checked": "2026-10-27T19:10:38.280409+09:00",
-      "last_success": "2026-10-27T19:10:44.159427+09:00",
+      "last_checked": "2026-10-28T19:58:08.292206+09:00",
+      "last_success": "2026-10-28T19:58:08.981281+09:00",
       "last_event_found": null,
       "candidate_articles": 0,
       "accepted_lotteries": 0,
@@ -342,6 +582,7 @@
       "active_lotteries": 0,
       "active_preorders": 0,
       "announcements": 0,
+      "truncated": false,
       "discovered_titles": [],
       "pages": [
         {
@@ -383,7 +624,7 @@
       "state": "SOURCE_UNREACHABLE",
       "state_label": "接続できない",
       "reachable": false,
-      "last_checked": "2026-10-27T19:10:44.159509+09:00",
+      "last_checked": "2026-10-28T19:58:08.981374+09:00",
       "last_success": null,
       "last_event_found": null,
       "candidate_articles": 0,
@@ -398,6 +639,7 @@
       "active_lotteries": 0,
       "active_preorders": 0,
       "announcements": 0,
+      "truncated": false,
       "discovered_titles": [],
       "pages": [
         {
@@ -434,13 +676,13 @@
       "collection_method": "HTML",
       "adapter": null,
       "verified": false,
-      "note": "到達可。トップから TCG の抽選告知一覧を発見できず、解析器は未実装",
+      "note": "2026-10-24 時点でサイト全体が保守で停止（robots.txt もトップも保守ページ。再開は 2026/10/30 の予定）。告知の有無・構造は未確認。保守明けに robots.txt から取り直して再調査する",
       "policy_excluded": null,
       "state": "SOURCE_NOT_MONITORED",
       "state_label": "未監視（未実装）",
       "reachable": true,
-      "last_checked": "2026-10-27T19:10:54.613860+09:00",
-      "last_success": "2026-10-27T19:10:56.173084+09:00",
+      "last_checked": "2026-10-28T19:58:19.326177+09:00",
+      "last_success": "2026-10-28T19:58:21.032305+09:00",
       "last_event_found": null,
       "candidate_articles": 0,
       "accepted_lotteries": 0,
@@ -454,6 +696,7 @@
       "active_lotteries": 0,
       "active_preorders": 0,
       "announcements": 0,
+      "truncated": false,
       "discovered_titles": [],
       "pages": [
         {
@@ -495,7 +738,7 @@
       "state": "SOURCE_UNREACHABLE",
       "state_label": "接続できない",
       "reachable": false,
-      "last_checked": "2026-10-27T19:10:56.173164+09:00",
+      "last_checked": "2026-10-28T19:58:21.032381+09:00",
       "last_success": null,
       "last_event_found": null,
       "candidate_articles": 0,
@@ -510,6 +753,7 @@
       "active_lotteries": 0,
       "active_preorders": 0,
       "announcements": 0,
+      "truncated": false,
       "discovered_titles": [],
       "pages": [
         {
@@ -551,7 +795,7 @@
       "state": "SOURCE_UNREACHABLE",
       "state_label": "接続できない",
       "reachable": false,
-      "last_checked": "2026-10-27T19:11:06.697668+09:00",
+      "last_checked": "2026-10-28T19:58:31.298390+09:00",
       "last_success": null,
       "last_event_found": null,
       "candidate_articles": 0,
@@ -566,6 +810,7 @@
       "active_lotteries": 0,
       "active_preorders": 0,
       "announcements": 0,
+      "truncated": false,
       "discovered_titles": [],
       "pages": [
         {
@@ -607,8 +852,8 @@
       "state": "SOURCE_NOT_MONITORED",
       "state_label": "未監視（未実装）",
       "reachable": true,
-      "last_checked": "2026-10-27T19:11:17.026431+09:00",
-      "last_success": "2026-10-27T19:11:17.284007+09:00",
+      "last_checked": "2026-10-28T19:58:41.645775+09:00",
+      "last_success": "2026-10-28T19:58:42.030567+09:00",
       "last_event_found": null,
       "candidate_articles": 0,
       "accepted_lotteries": 0,
@@ -622,6 +867,7 @@
       "active_lotteries": 0,
       "active_preorders": 0,
       "announcements": 0,
+      "truncated": false,
       "discovered_titles": [],
       "pages": [
         {
@@ -663,7 +909,7 @@
       "state": "SOURCE_UNREACHABLE",
       "state_label": "接続できない",
       "reachable": false,
-      "last_checked": "2026-10-27T19:11:17.284141+09:00",
+      "last_checked": "2026-10-28T19:58:42.030696+09:00",
       "last_success": null,
       "last_event_found": null,
       "candidate_articles": 0,
@@ -678,6 +924,7 @@
       "active_lotteries": 0,
       "active_preorders": 0,
       "announcements": 0,
+      "truncated": false,
       "discovered_titles": [],
       "pages": [
         {
@@ -714,13 +961,13 @@
       "collection_method": "HTML",
       "adapter": null,
       "verified": false,
-      "note": "到達可。TCG 抽選の告知一覧を発見できず、解析器は未実装",
+      "note": "到達可。2026-10-24 の調査: 公開のお知らせ・キャンペーンに TCG の語が0件。TCG は商品ページ単位で、告知ページが無いので、告知の自動発見に向かない。解析器は未実装（実装の価値が低い）",
       "policy_excluded": null,
       "state": "SOURCE_NOT_MONITORED",
       "state_label": "未監視（未実装）",
       "reachable": true,
-      "last_checked": "2026-10-27T19:11:27.579197+09:00",
-      "last_success": "2026-10-27T19:11:28.281111+09:00",
+      "last_checked": "2026-10-28T19:58:52.199433+09:00",
+      "last_success": "2026-10-28T19:58:52.913189+09:00",
       "last_event_found": null,
       "candidate_articles": 0,
       "accepted_lotteries": 0,
@@ -734,6 +981,7 @@
       "active_lotteries": 0,
       "active_preorders": 0,
       "announcements": 0,
+      "truncated": false,
       "discovered_titles": [],
       "pages": [
         {
@@ -742,9 +990,9 @@
           "http_status": 200,
           "final_url": "https://7net.omni7.jp/top",
           "page_title": "セブンネットショッピング｜本・雑誌・CD・DVD 通販",
-          "html_length": 81303,
-          "text_length": 1293,
-          "links_discovered": 82,
+          "html_length": 81723,
+          "text_length": 1243,
+          "links_discovered": 83,
           "product_links_discovered": 0,
           "candidate_blocks": 0,
           "accepted": 0,
@@ -775,8 +1023,8 @@
       "state": "NO_ACTIVE_LOTTERY",
       "state_label": "現在の抽選なし",
       "reachable": true,
-      "last_checked": "2026-10-27T19:11:28.281184+09:00",
-      "last_success": "2026-10-27T19:12:29.399721+09:00",
+      "last_checked": "2026-10-28T19:58:52.913268+09:00",
+      "last_success": "2026-10-28T19:59:54.044676+09:00",
       "last_event_found": null,
       "candidate_articles": 0,
       "accepted_lotteries": 0,
@@ -790,6 +1038,7 @@
       "active_lotteries": 0,
       "active_preorders": 0,
       "announcements": 0,
+      "truncated": false,
       "discovered_titles": [],
       "pages": [
         {
@@ -798,9 +1047,9 @@
           "http_status": 200,
           "final_url": "https://www.lawson.co.jp/campaign/",
           "page_title": "エンタメ・キャンペーン｜ローソン公式サイト",
-          "html_length": 41766,
-          "text_length": 3766,
-          "links_discovered": 258,
+          "html_length": 42320,
+          "text_length": 3835,
+          "links_discovered": 260,
           "product_links_discovered": 0,
           "candidate_blocks": 0,
           "accepted": 0,
@@ -814,9 +1063,9 @@
           "http_status": 200,
           "final_url": "https://www.lawson.co.jp/recommend/",
           "page_title": "商品・おトク情報｜ローソン公式サイト",
-          "html_length": 46359,
-          "text_length": 4119,
-          "links_discovered": 321,
+          "html_length": 46436,
+          "text_length": 4145,
+          "links_discovered": 322,
           "product_links_discovered": 0,
           "candidate_blocks": 0,
           "accepted": 0,
@@ -846,8 +1095,8 @@
       "state": "NO_ACTIVE_LOTTERY",
       "state_label": "現在の抽選なし",
       "reachable": true,
-      "last_checked": "2026-10-27T19:12:29.399800+09:00",
-      "last_success": "2026-10-27T19:12:32.077570+09:00",
+      "last_checked": "2026-10-28T19:59:54.044768+09:00",
+      "last_success": "2026-10-28T19:59:56.658670+09:00",
       "last_event_found": null,
       "candidate_articles": 0,
       "accepted_lotteries": 0,
@@ -863,6 +1112,7 @@
       "active_lotteries": 0,
       "active_preorders": 0,
       "announcements": 0,
+      "truncated": false,
       "discovered_titles": [],
       "pages": [
         {
@@ -918,6 +1168,7 @@
       "active_lotteries": 0,
       "active_preorders": 0,
       "announcements": 0,
+      "truncated": false,
       "discovered_titles": [],
       "pages": [],
       "source_class": "UNSUPPORTED"
@@ -941,8 +1192,8 @@
       "state": "NO_ACTIVE_LOTTERY",
       "state_label": "現在の抽選なし",
       "reachable": true,
-      "last_checked": "2026-10-27T19:12:32.078313+09:00",
-      "last_success": "2026-10-27T19:13:32.657933+09:00",
+      "last_checked": "2026-10-28T19:59:56.659935+09:00",
+      "last_success": "2026-10-28T20:00:57.218969+09:00",
       "last_event_found": null,
       "candidate_articles": 0,
       "accepted_lotteries": 0,
@@ -956,6 +1207,7 @@
       "active_lotteries": 0,
       "active_preorders": 0,
       "announcements": 0,
+      "truncated": false,
       "discovered_titles": [],
       "pages": [
         {
@@ -980,7 +1232,7 @@
           "http_status": 200,
           "final_url": "https://p-bandai.jp/global_newpc.html",
           "page_title": "【プレミアムバンダイ】INTERNATIONAL SHIPPING AVAILABLE｜PREMIUM BANDAI",
-          "html_length": 10524,
+          "html_length": 6266,
           "text_length": 783,
           "links_discovered": 12,
           "product_links_discovered": 0,
@@ -995,23 +1247,33 @@
     }
   ],
   "coverage": {
-    "configured_sources": 17,
-    "implemented_collectors": 6,
-    "reachable_sources": 9,
-    "healthy_sources": 5,
+    "configured_sources": 18,
+    "implemented_collectors": 7,
+    "reachable_sources": 10,
+    "healthy_sources": 6,
     "blocked_sources": 3,
     "unreachable_sources": 4,
     "not_implemented_sources": 11,
-    "sources_with_active_lottery": 0,
-    "lottery_events_found": 0,
+    "sources_with_active_lottery": 1,
+    "lottery_events_found": 10,
     "source_classes": {
-      "WORKING": 5,
+      "WORKING": 6,
       "IMPLEMENTED_BUT_BLOCKED": 1,
       "ACCESSIBLE_UNIMPLEMENTED": 3,
       "UNREACHABLE": 6,
       "UNSUPPORTED": 2
     },
+    "funnel": {
+      "raw_announcements": 25,
+      "parsed_events": 12,
+      "review_required": 1,
+      "rejected": 129,
+      "active_lotteries": 10,
+      "sources_with_gap": 11,
+      "sources_truncated": 1
+    },
     "entry_kinds": {
+      "STORE_LOTTERY": 10,
       "LOTTERY": 4
     }
   },
@@ -1032,38 +1294,6 @@
         "name": "ケーズデンキ",
         "channel": "STORE",
         "url": "https://www.ksdenki.com/",
-        "verified": false,
-        "note": ""
-      },
-      {
-        "id": "AMIAMI",
-        "name": "あみあみ",
-        "channel": "ONLINE",
-        "url": "https://www.amiami.jp/",
-        "verified": false,
-        "note": ""
-      },
-      {
-        "id": "HOBBYSEARCH",
-        "name": "ホビーサーチ",
-        "channel": "ONLINE",
-        "url": "https://www.1999.co.jp/",
-        "verified": false,
-        "note": ""
-      },
-      {
-        "id": "CARD_LABO",
-        "name": "カードラボ",
-        "channel": "STORE",
-        "url": "https://www.c-labo.jp/",
-        "verified": false,
-        "note": ""
-      },
-      {
-        "id": "SURUGAYA",
-        "name": "駿河屋",
-        "channel": "BOTH",
-        "url": "https://www.suruga-ya.jp/",
         "verified": false,
         "note": ""
       },
@@ -1116,8 +1346,23 @@
         "note": "販売監視用の登録簿（src/tcg/sources.py）にはあるが、抽選用の登録簿に無い・URL 未確認"
       }
     ],
-    "count": 12,
+    "count": 8,
     "policy_excluded": [
+      {
+        "id": "AMIAMI",
+        "name": "あみあみ",
+        "reason": "トップが HTTP 403（Cloudflare のボットチャレンジ）。ボットチャレンジは回避しない"
+      },
+      {
+        "id": "HOBBYSEARCH",
+        "name": "ホビーサーチ",
+        "reason": "トップが HTTP 403（Cloudflare のボットチャレンジ）。ボットチャレンジは回避しない"
+      },
+      {
+        "id": "SURUGAYA",
+        "name": "駿河屋",
+        "reason": "トレカの予約への入口が検索結果ページだけ（検索結果は取得しない）。抽選・予約の告知の公開ページが無い"
+      },
       {
         "id": "OFFICIAL_X_POKEMON_CARD",
         "name": "ポケモンカードゲーム公式 X",
@@ -1132,7 +1377,7 @@
   },
   "rejection_reasons": {
     "schedule_not_in_text": 1,
-    "not_lottery_candidate": 43,
+    "not_lottery_candidate": 50,
     "tournament_or_event": 78
   }
 }

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-27T19:13:32.659437+09:00",
+  "generated_at": "2026-10-28T20:00:57.223014+09:00",
   "sources": [
     {
       "source": "ポケモンカードゲーム公式（商品API）",
@@ -52,7 +52,7 @@
       "source": "ポケモンセンターオンライン",
       "collector": "PokemonCenterOnlineCollector",
       "status": "OK_NO_EVENTS",
-      "status_reason": "正常に取得。現在の販売イベントは0件（棄却: no_product_context=6, no_sale_context=5, unknown_sale_method=2）",
+      "status_reason": "正常に取得。現在の販売イベントは0件（棄却: no_product_context=6, no_sale_context=5, unknown_sale_method=1）",
       "pages_discovered": 1,
       "pages_requested": 1,
       "pages_loaded": 1,
@@ -61,14 +61,14 @@
       "product_pages_loaded": 0,
       "news_pages_discovered": 0,
       "news_pages_loaded": 0,
-      "candidate_events": 14,
+      "candidate_events": 13,
       "accepted_sales_events": 0,
-      "rejected_events": 14,
+      "rejected_events": 13,
       "errors": 0,
       "rejection_reasons": {
         "no_product_context": 6,
         "no_sale_context": 5,
-        "unknown_sale_method": 2,
+        "unknown_sale_method": 1,
         "non_sale_announcement": 1
       },
       "notes": []
@@ -105,9 +105,9 @@
     "product_pages_loaded": 1,
     "news_pages_discovered": 109,
     "news_pages_loaded": 0,
-    "candidate_events": 141,
+    "candidate_events": 140,
     "accepted_sales_events": 1,
-    "rejected_events": 140,
+    "rejected_events": 139,
     "errors": 0
   },
   "rejection_reasons": {
@@ -117,7 +117,7 @@
     "no_sale_context": 6,
     "article_too_old": 17,
     "no_product_context": 6,
-    "unknown_sale_method": 2
+    "unknown_sale_method": 1
   },
   "current_events": 1
 }

@@ -672,7 +672,10 @@ def apply_lookups(dps: list[dict], lookups: dict | None, now: datetime, generate
         if not buy_fresh:
             req.append(BUY_STALE)
         # 型番コードだけの識別・買取の名前から拾った部品番号での引き当て（JAN と突き合わせていない）は、識別が部分的
-        if r.get("identity_basis") == IDENT_MODEL or (r.get("retail_identity_evidence") or {}).get("method") == "part_exact":
+        ev = r.get("retail_identity_evidence") or {}
+        r["identity_status"] = "IDENTITY_PARTIAL" if (r.get("identity_basis") == IDENT_MODEL or (
+            ev.get("method") == "part_exact" and not ev.get("attributes_verified"))) else "IDENTITY_CONFIRMED"
+        if r["identity_status"] == "IDENTITY_PARTIAL":
             req.append(IDENTITY_PARTIAL)
         anomaly = spread > retail * ANOMALY_RATIO
         if anomaly:
@@ -844,7 +847,7 @@ PRIVATE_KEYS = frozenset({
     "identity_value", "identity_basis", "retail_price", "retail_url", "retail_retailer", "retail_identity_evidence",
     "retail_observed_at", "retail_availability", "retail_basis", "retail_caveat", "raw_spread_hint", "retail_source_type", "retail_listed_price", "retail_regular_price",
     "retail_campaign_price", "retail_points", "retail_cashback", "retail_conditions", "retail_price_basis", "retail_alternatives",
-    "spread_if_points_counted", "route_type", "triage", "queue_rank", "lookup_status",
+    "spread_if_points_counted", "route_type", "identity_status", "adapter_stats", "api_sources", "triage", "queue_rank", "lookup_status",
     "rank", "rank_score", "retail_price_hint", "lookups", "tcg_events", "quality_by_source"})
 
 
@@ -856,6 +859,8 @@ ALLOWED_REASONS = frozenset({
     PRICE_ANOMALY_SUSPECTED, SELL_REJECTED, NET_NEGATIVE, NO_SELL_SIDE, NO_BUY_SIDE, NO_SPREAD,
     ABOVE_GENRE_MAX, NEEDS_CORROBORATION, PRICE_SPIKE})
 ALLOWED_CONFIDENCE = frozenset({"high", "medium", "low"})
+ALLOWED_RETAIL_ADAPTERS = frozenset({"nikon_direct", "sony_store", "samsung_jp", "apple_jp", "canon_store", "sofmap_new"})
+ALLOWED_API_STATUS = frozenset({"PENDING_USER_CONFIGURATION", "KILL_SWITCH_OFF", "READY_NOT_IMPLEMENTED"})
 ALLOWED_STATUS = frozenset(STATUSES)
 ALLOWED_LEDGER = frozenset({LEDGER_NOT_AVAILABLE, LEDGER_NEW_THIS_RUN, LEDGER_REUSED_WITHIN_RUN,
                             LEDGER_RESTORED_FROM_PREVIOUS_RUN, LEDGER_CORRUPT})
@@ -874,7 +879,8 @@ COVERAGE_KEYS = {
                       "windows_under_24h_at_observation", "observed_after_half_window", "tolerated_age_at_observation_hours_p25",
                       "suggested_max_detection_interval_hours", "date_precision_events"),
     "tcg_funnel": ("raw_announcements", "parsed_events", "review_required", "rejected", "active_lotteries", "sources_with_gap",
-                   "sources_truncated", "detail_candidates", "detail_fetched", "skipped_due_to_limit", "skipped_ended"),
+                   "sources_truncated", "detail_candidates", "detail_fetched", "skipped_due_to_limit", "skipped_ended",
+                   "sources_list_ok", "sources_detail_ok", "sources_blocked", "sources_parser_degraded"),
 }
 TCG_CLASS_KEYS = ("WORKING", "IMPLEMENTED_BUT_BLOCKED", "ACCESSIBLE_UNIMPLEMENTED", "UNREACHABLE", "UNSUPPORTED")
 
@@ -947,6 +953,11 @@ def public_summary(report: dict) -> dict:
         "buyback_triage": {k: int(((report.get("buyback_first") or {}).get("triage") or {}).get(k) or 0)
                            for k in ("HIGH", "MEDIUM", "LOW", "REJECTED")},
         "retail_lookup_matched": int(m.get("retail_lookup_matched") or 0),
+        # 取得器ごとの照会の件数（取得器の ID は固定の語彙だけ通す。件数だけ）
+        "retail_adapters": {aid: _count_dict(v, ("supported", "requested", "fetched", "matched", "no_match"))
+                            for aid, v in (m.get("retail_adapters") or {}).items() if aid in ALLOWED_RETAIL_ADAPTERS and isinstance(v, dict)},
+        "retail_api_sources": dict(Counter(a.get("status") for a in (m.get("retail_api_sources") or [])
+                                           if isinstance(a, dict) and a.get("status") in ALLOWED_API_STATUS)),
         "official_discovery_candidates": int(m.get("official_discovery_candidates") or 0),
         "tcg_source_coverage": dict(_count_dict(m.get("tcg_source_coverage"), COVERAGE_KEYS["tcg_source_coverage"]),
                                     source_classes=_count_dict((m.get("tcg_source_coverage") or {}).get("source_classes"),
@@ -994,7 +1005,8 @@ def build(*, products: list[dict], observations: list[dict], msrp_evidence: dict
           ledger_state: str | None = None, quarantined: list[dict] | None = None,
           retail_hints: dict | None = None, actionable_count: int | None = None,
           quarantine_generated_at: str | None = None, retail_lookups: dict | None = None,
-          retail_lookups_generated_at: str | None = None, tcg_events: list[dict] | None = None) -> tuple[dict, dict]:
+          retail_lookups_generated_at: str | None = None, tcg_events: list[dict] | None = None,
+          retail_adapter_stats: dict | None = None, retail_api_sources: list[dict] | None = None) -> tuple[dict, dict]:
     """調査候補のレポート（運営者向け）と、次回の台帳。戻りは (report, new_state)。
 
     quarantined: 品質ゲートで隔離された買取価格（collector_report の suspicious_prices）。上限超え・急変・裏付け不足で
@@ -1043,6 +1055,12 @@ def build(*, products: list[dict], observations: list[dict], msrp_evidence: dict
     metrics["tcg_event_quality"] = eq["quality"]
     metrics["tcg_priority"] = eq["priority"]
     metrics["tcg_fast_lane"] = eq["fast_lane"]
+    # 取得器ごとの照会の件数（対応する候補・取った件数・取れたページ・一致・不一致）。記録の生成時刻が新しいときだけ（古い日の数字を今日のものにしない）
+    gen_ok = _parse_ts(retail_lookups_generated_at, now)
+    metrics["retail_adapters"] = (retail_adapter_stats if isinstance(retail_adapter_stats, dict) and gen_ok is not None
+                                  and timedelta(hours=-1) <= now - gen_ok <= timedelta(hours=RETAIL_LOOKUP_MAX_AGE_HOURS) else {})
+    metrics["retail_api_sources"] = (retail_api_sources if isinstance(retail_api_sources, list) and metrics["retail_adapters"] != {} else []
+                                     ) if gen_ok is not None and timedelta(hours=-1) <= now - gen_ok <= timedelta(hours=RETAIL_LOOKUP_MAX_AGE_HOURS) else []
     metrics["buyback_triage"] = dict(tri["stats"]["tier_counts"])
     metrics["buyback_top_queue"] = tri["stats"]["top_queue"]
     metrics["retail_lookup_ready"] = tri["stats"]["lookup_ready"]

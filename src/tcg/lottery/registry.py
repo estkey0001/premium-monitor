@@ -115,6 +115,12 @@ LOTTERY_SOURCES: list[dict] = [
               "一覧の応募締切の年で補う）。応募は会員ログインが必要で、応募そのものは取らない（entry_url は空）。2026-10-29 の調査: robots.txt は"
               " /*.csv$・/cart・/shopping・/mypage だけを禁止で /lottery は許可。自動取得を禁じる規約の記述は見つからなかった（許可の明記でもない。"
               "取得日つきの記録で、変更があれば再確認する）"),
+    _src("MUGIWARA_STORE", "ONE PIECE 麦わらストア", (ONE_PIECE,), "P1", "https://www.mugiwara-store.com/", CM_HTML,
+         news_url="https://www.mugiwara-store.com/news/", channel="STORE", adapter="mugiwara_store_lottery", verified=True,
+         note="公式のお知らせ（WordPress）に、ONE PIECE カードゲームの抽選販売の告知が静的 HTML のテキストで年つきで載る（抽選受付期間・抽選結果発表・"
+              "商品販売期間）。応募は LivePocket（外部。店舗ごとに別のページ・公式ドメインではないので entry_url は空）。複数店舗の1本の告知。"
+              "2026-10-29 の調査: robots.txt は /wp-admin/ だけを禁止。自動取得を禁じる規約の記述は確認できなかった（許可の明記でもない。取得日つきの記録で、"
+              "変更があれば再確認する）。クラウド IP から遮断されたら WORKING に数えない（回避しない）"),
     _src("TOYSRUS", "トイザらス", _BOTH, "P1", "https://www.toysrus.co.jp/", CM_HTML,
          note="2026-10-01 時点でトップページが HTTP 403（ローカル・CI とも）。解析器は未実装"),
     _src("JOSHIN", "Joshin", _BOTH, "P1", "https://joshinweb.jp/", CM_HTML,
@@ -239,6 +245,30 @@ def load_source_candidates(path=None) -> dict:
             "policy_excluded": excluded}
 
 
+LIST_OK, DETAIL_OK, BLOCKED_FLAG, PARSER_DEGRADED, TRUNCATED_FLAG = "LIST_OK", "DETAIL_OK", "BLOCKED", "PARSER_DEGRADED", "TRUNCATED"
+HEALTH_FLAGS = (LIST_OK, DETAIL_OK, BLOCKED_FLAG, PARSER_DEGRADED, TRUNCATED_FLAG)
+
+
+def source_health_flags(row: dict) -> list[str]:
+    """取得元の状態を、1つの状態に潰さず分ける: 一覧を読めた / 詳細を読めた / 遮断された / 一覧・詳細の構造が読めない / 取りこぼしがある。
+
+    手元では取得できて CI では遮断される取得元は BLOCKED（WORKING とは数えない）。pages は取得の記録（page_type・http_status）。
+    """
+    pages = [p for p in (row.get("pages") or []) if isinstance(p, dict)]
+    flags = []
+    if any(p.get("page_type") in ("listing", "list") and p.get("http_status") == 200 for p in pages):
+        flags.append(LIST_OK)
+    if any(p.get("page_type") in ("news", "product", "detail") and p.get("http_status") == 200 for p in pages):
+        flags.append(DETAIL_OK)
+    if row.get("blocked"):
+        flags.append(BLOCKED_FLAG)
+    if int(row.get("structure_changed_pages") or 0) > 0:
+        flags.append(PARSER_DEGRADED)
+    if row.get("truncated") is True:
+        flags.append(TRUNCATED_FLAG)
+    return flags
+
+
 ZERO_ACTIVE_NOT_PROVEN = "NOT_PROVEN_MARKET_EMPTY"   # 受付中が 0 件でも、市場に無いとは言えない（取得元の不足・遮断・到達不能がある）
 ZERO_ACTIVE_NO_GAP = "NO_KNOWN_COLLECTOR_GAP"          # 取得元の未実装・遮断・到達不能が無いのに 0 件（それでも、登録外の売り場は見ていない）
 
@@ -261,7 +291,12 @@ def announcement_funnel(rows: list[dict]) -> dict:
            "sources_with_gap": gap, "sources_truncated": truncated,
            # 詳細の取得の内訳（取得上限があるときの取りこぼしを数える。None でなく 0 を出す）
            "detail_candidates": _sum("detail_candidates"), "detail_fetched": _sum("detail_fetched"),
-           "skipped_due_to_limit": _sum("skipped_due_to_limit"), "skipped_ended": _sum("skipped_ended")}
+           "skipped_due_to_limit": _sum("skipped_due_to_limit"), "skipped_ended": _sum("skipped_ended"),
+           # 取得元の状態を分けた件数（LIST_OK / DETAIL_OK / BLOCKED / PARSER_DEGRADED / TRUNCATED。1つの取得元が複数に数えられる）
+           "sources_list_ok": sum(1 for r in rows if LIST_OK in (r.get("health_flags") or [])),
+           "sources_detail_ok": sum(1 for r in rows if DETAIL_OK in (r.get("health_flags") or [])),
+           "sources_blocked": sum(1 for r in rows if BLOCKED_FLAG in (r.get("health_flags") or [])),
+           "sources_parser_degraded": sum(1 for r in rows if PARSER_DEGRADED in (r.get("health_flags") or []))}
     if active == 0:
         out["zero_active_interpretation"] = ZERO_ACTIVE_NOT_PROVEN if gap else ZERO_ACTIVE_NO_GAP
     return out

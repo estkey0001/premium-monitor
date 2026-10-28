@@ -924,6 +924,7 @@ class DailyLPGenerator:
                 retail_lookups=lk_doc.get("lookups") if isinstance(lk_doc.get("lookups"), dict) else None,
                 retail_lookups_generated_at=lk_doc.get("generated_at"),
                 tcg_events=(self._load_export_json("tcg", "lotteries.json").get("items") or []),
+                retail_adapter_stats=lk_doc.get("adapter_stats"), retail_api_sources=lk_doc.get("api_sources"),
                 actionable_count=((getattr(self, "_last_diag", None) or {}).get("actionable") or {}).get("count"))
             report["ledger_persistence"] = "ACROSS_RUNS" if _rc.persistence_enabled() else "NOT_AVAILABLE"
             # 個別の候補・台帳は private、公開してよい集計だけ public（許可リストで作る。個別の項目が混ざったら例外 → 何も書かない）

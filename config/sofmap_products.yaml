@@ -1,0 +1,14 @@
+# ソフマップ（www.sofmap.com・新品）の「JAN ↔ 商品番号（sku）」の固定登録（Coverage Wave 4）。
+#
+# ソフマップの詳細ページ（product_detail.aspx?sku=<sku>）は静的で、JAN・型番・現金価格・ポイント・在庫・送料が分けて読める。
+# ただし一覧から商品を発見できず（一覧は絞り込み 0 件・検索結果のスクレイピングは禁止）、JAN から sku を引く規則も無い。
+# そのため **人が公式の詳細ページで JAN と sku の組を確かめた商品だけ**をここに固定登録し、その URL だけを取る（完全一致の固定商品）。
+#
+# 規則:
+# - 検索結果・一覧・推測した URL は使わない。ここに載せた sku の詳細ページだけを取る
+# - 行を足すときは、詳細ページの「JANコード」と sku（商品番号・URL）が一致していることを確かめ、verified_on を入れる
+# - 中古（used.sofmap.com・リコレ）は対象外
+verified_on: "2026-10-29"
+source_note: "www.sofmap.com の詳細ページ。robots.txt は購入・会員系のパスだけを禁止。規約の自動取得の記述は未確認（変更時に再確認）"
+items:
+  - {jan: "4549292119008", sku: "18246893", model: "PSSX740HSBK", name: "Canon PowerShot SX740 HS ブラック"}

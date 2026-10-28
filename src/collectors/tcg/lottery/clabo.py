@@ -74,6 +74,22 @@ def parse_targets(body: str) -> list[dict]:
 _TITLE_RANGE = re.compile(r"(\d{1,2})/(\d{1,2})\s*[~〜～\-－]\s*(?:(\d{1,2})/)?(\d{1,2})")
 
 
+def _title_deadline_soon(title: str, today: str, days: int = 2) -> bool:
+    """件名の応募期間の終わりが、今日から days 日以内（終了前）なら True。読めなければ False。"""
+    m = _TITLE_RANGE.search(title or "")
+    if not m or _title_ended(title, today):
+        return False
+    try:
+        y, today_m = int(today[:4]), int(today[5:7])
+        start_m, end_m = int(m.group(1)), int(m.group(3) or m.group(1))
+        end_y = y + 1 if (end_m < start_m and today_m >= start_m) else y
+        end = datetime(end_y, end_m, int(m.group(4)), tzinfo=JST)
+        t0 = datetime(y, today_m, int(today[8:10]), tzinfo=JST)
+    except ValueError:
+        return False
+    return (end - t0).days <= days
+
+
 def _title_ended(title: str, today: str) -> bool:
     """件名の「(抽選応募期間:10/22~10/25)」の終わりが今日より前なら True。読めないときは False（応募中かもしれないので後ろにしない）。
 
@@ -92,6 +108,12 @@ def _title_ended(title: str, today: str) -> bool:
     except ValueError:
         return False
     return end < today
+
+
+def _fetch_priority(card: dict, today: str) -> tuple:
+    """詳細を取る優先順（大きいほど先）: 応募中（終了していない）> 期限が近い > 新しい告知（公開日）> 日ごとに変わる順（毎日同じ店だけが先にならない）。"""
+    return (not _title_ended(card["title"], today), _title_deadline_soon(card["title"], today),
+            str(card.get("published_at") or "")[:10], hashlib.sha1(f"{today}|{card['url']}".encode()).hexdigest())
 
 
 def parse_listing(html: str) -> list[dict]:
@@ -124,7 +146,7 @@ class CardLaboLotteryAdapter(LotteryAdapter):
     source_name = "カードラボ（店舗ブログの抽選・予約の告知）"
     tcg = "POKEMON"
     channel = "STORE"
-    max_detail_fetch = 16
+    max_detail_fetch = 24
     # 店舗のブログで、公式ドメインの応募ページは無い。メーカー・小売本社の公式（RETAILER_OFFICIAL）ではなく、店舗の告知（STORE_OFFICIAL）
     lottery_source_type = "STORE_OFFICIAL"
 
@@ -173,8 +195,8 @@ class CardLaboLotteryAdapter(LotteryAdapter):
         # 同じ公開日の告知は、日ごとに順序を変える（毎日同じ店だけが先に取られ、後ろの店が取りこぼされ続けるのを防ぐ）
         today = now_jst().strftime("%Y-%m-%d")
         # 件名の応募期間が終わっている告知は後ろへ（応募中の告知を先に読む）
-        cands.sort(key=lambda tc: (not _title_ended(tc[1]["title"], today), str(tc[1].get("published_at") or "")[:10],
-                                   hashlib.sha1(f"{today}|{tc[1]['url']}".encode()).hexdigest()), reverse=True)
+        # 優先: 応募中（終了していない）> 期限が近い > 新しい告知（公開日）。同点は日ごとに順序を変える
+        cands.sort(key=lambda tc: _fetch_priority(tc[1], today), reverse=True)
         # 取りこぼしの数（黙って切り捨てない）: 応募中らしい告知で、上限のため読めなかったものだけを skipped_due_to_limit に数える
         # （件名で応募が終わっている告知は、上限に余裕があるときだけ読む。読まなかった分は skipped_ended）
         n_open = sum(1 for tc in cands if not _title_ended(tc[1]["title"], today))

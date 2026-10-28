@@ -17,7 +17,7 @@ from .manual import is_official_url, load_manual_lotteries
 from .merge import merge_lotteries
 from .products import resolve_product
 from .registry import (
-    LOTTERY_SOURCES, STATE_LABELS, coverage_summary, source_class, source_state,
+    LOTTERY_SOURCES, STATE_LABELS, coverage_summary, source_class, source_health_flags, source_state,
 )
 from .schema import (
     ACTIVE_STATUSES, L_UNKNOWN, LT_PREORDER, OFFICIAL_LOTTERY_SOURCES, SRC_MANUFACTURER,
@@ -36,6 +36,7 @@ def _adapters():
     from src.collectors.tcg.lottery.fukufuku import FukufukuLotteryAdapter
     from src.collectors.tcg.lottery.hbst import HobbyStationLotteryAdapter
     from src.collectors.tcg.lottery.kidsrepublic import KidsRepublicLotteryAdapter
+    from src.collectors.tcg.lottery.mugiwara import MugiwaraStoreLotteryAdapter
     from src.collectors.tcg.lottery.others import (
         LawsonLotteryAdapter, OnePieceNewsLotteryAdapter, PremiumBandaiLotteryAdapter,
     )
@@ -50,6 +51,7 @@ def _adapters():
         "hobby_station_lottery": HobbyStationLotteryAdapter,
         "kids_republic_lottery": KidsRepublicLotteryAdapter,
         "fukufuku_lottery": FukufukuLotteryAdapter,
+        "mugiwara_store_lottery": MugiwaraStoreLotteryAdapter,
         "lawson_lottery": LawsonLotteryAdapter,
         "onepiece_news_lottery": OnePieceNewsLotteryAdapter,
         "premium_bandai_lottery": PremiumBandaiLotteryAdapter,
@@ -66,18 +68,36 @@ def collect_sources(sources: Optional[list[dict]] = None) -> tuple[list[dict], d
     events: list[dict] = []
     health: dict[str, dict] = {}
     announcements: list[dict] = []
-    for src in sources:
+    from .budget import DETAIL_BUDGET_TOTAL, next_allowance, order_by_cap
+
+    def _cap(src):
+        cls = registry.get(src.get("adapter") or "")
+        return int(getattr(cls, "max_detail_fetch", 0) or 0) if cls is not None else 0
+    # 詳細ページの取得枠の再配分: 枠の小さい取得元から先に取り、残りを最後の（一番大きい）取得元に渡す。枠を持たない取得元は先頭
+    order = {s["source_id"]: i for i, s in enumerate(sources)}
+    budgeted = order_by_cap([(s["source_id"], _cap(s)) for s in sources if _cap(s) > 0])
+    seq = [s for s in sources if _cap(s) == 0] + [next(s for s in sources if s["source_id"] == sid) for sid, _c in budgeted]
+    left = DETAIL_BUDGET_TOTAL
+    pending = [c for _sid, c in budgeted]
+    for src in seq:
         name = src.get("adapter")
         cls = registry.get(name) if name else None
         try:
             if cls is not None:
                 a = cls()
+                cap = _cap(src)
+                if cap > 0:
+                    pending = pending[1:]
+                    a.max_detail_fetch = next_allowance(cap, left, pending)
             elif src.get("official_url"):
                 a = SourceProbe(src)
             else:
                 health[src["source_id"]] = {"probe": "no_url", "status": None}
                 continue
             found = a.collect()
+            if cls is not None and _cap(src) > 0:
+                left -= int(a.health.get("detail_fetched") or 0)
+                a.health["detail_allowance"] = a.max_detail_fetch
             events.extend(found)
             announcements.extend(a.announcements)
             health[src["source_id"]] = a.health
@@ -88,6 +108,7 @@ def collect_sources(sources: Optional[list[dict]] = None) -> tuple[list[dict], d
             logger.exception("抽選コレクター失敗: %s", src["source_id"])
             health[src["source_id"]] = {"status": "FAILED", "errors": 1,
                                         "error_messages": [f"{type(exc).__name__}: {exc}"]}
+    health = {sid: health[sid] for sid in sorted(health, key=lambda k: order.get(k, 10**6))}     # 登録簿の順（取得の順ではない）
     return events, health, announcements
 
 
@@ -303,7 +324,9 @@ def run_lottery_pipeline(pokemon_registry: list[dict], onepiece_products: list[d
             # 一覧のタイトルだけで見つけた販売の告知（Phase 27 の発見の候補。本文・日程は読んでいない）
             "discovered_titles": list(h.get("discovered_titles") or [])[:30],
             "pages": f.get("pages", []),
+            "structure_changed_pages": int(f.get("structure_changed_pages") or 0),
         })
+        rows[-1]["health_flags"] = source_health_flags(rows[-1])
     for r in rows:
         r["source_class"] = source_class(r)          # H2: 取得元の分類（優先順位の判断に使う）
     coverage = coverage_summary(rows)

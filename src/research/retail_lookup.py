@@ -331,7 +331,78 @@ class CanonStoreAdapter(RetailAdapter):
                  "availability": AVAIL_UNKNOWN}]
 
 
-ADAPTERS: tuple = (NikonDirectAdapter(), SonyStoreAdapter(), SamsungAdapter(), AppleStoreAdapter(), CanonStoreAdapter())
+class SofmapAdapter(RetailAdapter):
+    """ソフマップ（www.sofmap.com・新品）の詳細ページ。**人が確かめた JAN ↔ sku の固定登録（config/sofmap_products.yaml）だけ**を取る。
+
+    詳細ページは静的で、JSON-LD の価格（現金・税込）・在庫、本文の JAN・ソフマップポイント・お一人様の制限が分けて読める。一覧から発見できず、
+    JAN → sku の規則も無いので、検索結果・一覧・推測した URL は使わない。ポイントは現金から引かない（points）。「お一人様」の制限は数量限定
+    （条件）。中古は対象外。販売終了・在庫切れ（OutOfStock）の価格は仕入れ値に使わない。送料は「送料無料キャンペーン」の表示が条件つきなので、ここでは読まない。
+    """
+
+    adapter_id = "sofmap_new"
+    retailer = "ソフマップ"
+    source_type = LARGE_RETAILER
+    brands = tuple(b for b, _rx in _BRAND_RES)
+    source_id = "src_sofmap"
+    per_item = True
+    MAX_ITEMS = 3
+    _table: dict | None = None
+
+    @classmethod
+    def table(cls) -> dict:
+        if cls._table is None:
+            import yaml
+            from pathlib import Path
+            try:
+                doc = yaml.safe_load((Path(__file__).resolve().parent.parent.parent / "config" / "sofmap_products.yaml").read_text(encoding="utf-8")) or {}
+            except (OSError, ValueError):
+                doc = {}
+            cls._table = {str(i["jan"]): i for i in doc.get("items") or []
+                          if isinstance(i, dict) and re.fullmatch(r"\d{13}", str(i.get("jan") or "")) and re.fullmatch(r"\d{5,12}", str(i.get("sku") or ""))}
+        return cls._table
+
+    def item_key(self, identity: dict) -> str:
+        if identity.get("basis") != "JAN":
+            return ""
+        row = self.table().get(str(identity.get("value") or ""))
+        return str(row["sku"]) if row else ""
+
+    def supports(self, identity: dict) -> bool:
+        return super().supports(identity) and bool(self.item_key(identity))
+
+    def item_url(self, key: str) -> str:
+        return f"https://www.sofmap.com/product_detail.aspx?sku={key}"
+
+    def parse_item(self, html: str, key: str) -> list[dict]:
+        import json
+        row = next((r for r in self.table().values() if str(r["sku"]) == key), None)
+        if not row or not html:
+            return []
+        text = re.sub(r"\s+", " ", unescape(re.sub(r"<[^>]+>", " ", re.sub(r"<script\b.*?</script>|<style\b.*?</style>", " ", html, flags=re.S))))
+        jans = set(re.findall(r"JANコード\s*(\d{13})", text))
+        if jans != {str(row["jan"])}:
+            return []                                          # ページの JAN が表と違う・決まらない（別の商品）
+        offer = None
+        name = ""
+        for b in re.findall(r'<script[^>]*type="application/ld\+json"[^>]*>(.*?)</script>', html, re.S):
+            try:
+                d = json.loads(b)
+            except ValueError:
+                continue
+            if isinstance(d, dict) and d.get("@type") == "Product" and str(d.get("sku")) == key:
+                offer, name = d.get("offers") if isinstance(d.get("offers"), dict) else None, str(d.get("name") or "")
+        if not offer or "中古" in name:
+            return []                                          # sku が違う・構造化データが無い・中古
+        price = _int(offer.get("price"))
+        av = str(offer.get("availability") or "")
+        pt = re.search(r"ソフマップポイント\s*([\d,]+)\s*ポイント", text)
+        return [{"name": name or row.get("name", ""), "price": price, "url": offer.get("url") or self.item_url(key), "jan": str(row["jan"]),
+                 "model": str(row.get("model") or ""), "points": _int(pt.group(1)) if pt else 0,
+                 "limited_quantity": "お一人様" in text,
+                 "availability": AVAIL_IN_STOCK if av.endswith("InStock") else AVAIL_OUT if av.endswith(("OutOfStock", "Discontinued", "SoldOut")) else AVAIL_UNKNOWN}]
+
+
+ADAPTERS: tuple = (NikonDirectAdapter(), SonyStoreAdapter(), SamsungAdapter(), AppleStoreAdapter(), CanonStoreAdapter(), SofmapAdapter())
 
 
 def ready_for_triage(identity: dict, adapters=ADAPTERS) -> bool:
@@ -388,6 +459,14 @@ def _lookup_one(ad, identity: dict, indexes: dict) -> dict:
     # ブランドが一致しない行（たとえば型番が別メーカーの商品に偶然一致）は一致にしない
     if brand_of(h.get("name", "")) not in ("", *ad.brands):
         return {**base, "status": IDENTITY_MISMATCH, "identity_evidence": ev}
+    if how == "part_exact":
+        # 部品番号の一致に、容量・世代（機種の行）の一致を結び付ける（買取店の名前と公式の商品名の両方が読めて同じときだけ確認済み）。
+        # 両方読めて違えば別の商品（部品番号と名前が食い違う行）なので一致にしない。読めなければ確認済みにしない（部分的な識別のまま）
+        attrs = _apple_attributes(identity.get("name", ""), h.get("name", ""))
+        if attrs["status"] == "MISMATCH":
+            return {**base, "status": IDENTITY_MISMATCH, "identity_evidence": {**ev, **attrs}}
+        ev.update(attrs)
+        ev["attributes_verified"] = attrs["status"] == "MATCH"
     pe = price_evidence(h)
     res = {**base, "product_url": h.get("url", ""), "price": pe["effective_price"], "availability_state": h.get("availability") or AVAIL_UNKNOWN,
            "identity_evidence": ev, **{k: v for k, v in pe.items() if k != "effective_price"}, "effective_price": pe["effective_price"],
@@ -398,6 +477,16 @@ def _lookup_one(ad, identity: dict, indexes: dict) -> dict:
         return res
     res["status"] = MATCHED
     return res
+
+
+def _apple_attributes(row_name: str, official_name: str) -> dict:
+    """買取店の商品名と Apple 公式の商品名から、機種の行（世代・種類）と容量を読んで比べる。色は記録だけ（表記が違うので条件にしない）。"""
+    from src.discovery.apple import parse_name
+    a, b = parse_name(re.sub(r"^[【\[][^】\]]{0,12}[】\]]\s*", "", str(row_name or ""))), parse_name(official_name)
+    if not a or not b:
+        return {"status": "UNREADABLE"}
+    same = a["line_key"] == b["line_key"] and a["capacity"] == b["capacity"]
+    return {"status": "MATCH" if same else "MISMATCH", "line": b["line"], "capacity": b["capacity"], "official_color": b.get("color", "")}
 
 
 _RANK = {MATCHED: 0, NOT_PURCHASABLE: 1, AMBIGUOUS: 2, IDENTITY_MISMATCH: 3, NO_MATCH: 4, UNSUPPORTED: 5}
@@ -473,47 +562,113 @@ def _cutoff_reasons() -> frozenset:
     return CUTOFF_IMMEDIATE | {"blocked"}
 
 
-def run_lookups(unmatched_candidates: list[dict], now: datetime, fetch, adapters=ADAPTERS) -> dict:
+HTTP_BUDGET = 24         # 1 回の実行で照会のために取る小売のページの総数（上限。ブランド枠を作っても無制限に取らない）
+ITEM_MIN = 3             # 商品ごとにページを取る取得器（Sony・Canon）の最低の取得枠（対象があれば、他のブランドがどれだけ多くても取る）
+
+
+def allocate_budget(plans: list[dict], budget: int = HTTP_BUDGET) -> dict:
+    """取得器ごとの取得枠を決める（ブランドの公平な配分）。戻りは {adapter_id: {"index": bool, "keys": [...], "http": n}}。
+
+    plans の各要素: {"adapter_id", "kind": "index"|"item", "cost": 一覧のページ数（index）, "keys": [(key, score)]（item。点の高い順）,
+                    "min_items": 最低枠, "cap": 上限, "score": 取得器の点（index の優先順）}。
+    1. まず全取得器に最低枠を渡す（item は min_items 件、index は一覧の全ページ。予算が足りなければ点の低い index から外す）
+    2. 余った予算を、item の残りのキーに点の高い順で配る（取得器ごとの上限 cap まで）
+    どのブランドも、対象があれば最低枠だけは取る（Apple の候補が 100 件あっても Sony・Canon が飢えない）。総数は budget を超えない。
+    """
+    left = int(budget)
+    out = {p["adapter_id"]: {"index": False, "keys": [], "http": 0} for p in plans}
+    # 1. 最低枠（item は点の高い取得器から。index は点の高い順に、全ページ取れるときだけ）
+    for p in sorted(plans, key=lambda p: -float(p.get("score") or 0)):
+        if p["kind"] == "index":
+            if p["cost"] <= left:
+                out[p["adapter_id"]].update({"index": True, "http": p["cost"]})
+                left -= p["cost"]
+    items = sorted((p for p in plans if p["kind"] == "item"), key=lambda p: -float(p.get("score") or 0))
+    for step in (1, None):                 # まず全ブランドに 1 件ずつ、次に最低枠（min_items）まで。予算が少なくても、どのブランドも 1 件は取る
+        for p in items:
+            if not p["keys"]:
+                continue                       # 対象が無い取得器に枠を使わない
+            have = len(out[p["adapter_id"]]["keys"])
+            want = min(int(p.get("min_items") or 0), int(p.get("cap") or 0), len(p["keys"]))
+            n = min((1 if step else want) - have, left) if step else min(want - have, left)
+            if n > 0 and (step is None or have == 0):
+                out[p["adapter_id"]]["keys"] += [k for k, _s in p["keys"][have:have + n]]
+                out[p["adapter_id"]]["http"] += n
+                left -= n
+    # 2. 余りを、点の高い順に配る
+    spare = sorted(((sc, p["adapter_id"], k) for p in plans if p["kind"] == "item"
+                    for k, sc in p["keys"][len(out[p["adapter_id"]]["keys"]):int(p.get("cap") or 0)]), key=lambda x: (-x[0], x[1], x[2]))
+    for sc, aid, k in spare:
+        if left <= 0:
+            break
+        out[aid]["keys"].append(k)
+        out[aid]["http"] += 1
+        left -= 1
+    return out
+
+
+def run_lookups(unmatched_candidates: list[dict], now: datetime, fetch, adapters=ADAPTERS, budget: int = HTTP_BUDGET) -> dict:
     """買取起点の候補（rank_product_candidates の行）の小売の価格を、実際に取得して照会する。戻りは保存用の記録。
 
-    1. 選別（triage）で上位 50 件の待ち行列を作る（小売の取得器に対応する商品を優先）
-    2. 一覧を取る取得器（ニコン・Samsung）は、対応する商品が HIGH / MEDIUM にあるときだけ一覧を取る
-    3. 商品ごとのページを取る取得器（ソニー）は、待ち行列の順に、型番が重複しない最大 MAX_ITEMS 件だけ取る
-    4. 全候補を、取得できた一覧・ページから引く。取得できなかった取得器は UNSUPPORTED（古い価格を使わない）
+    1. 選別（triage）で、候補ごとの点・段階を決める（REJECTED は照会しない）
+    2. 一覧を取る取得器（ニコン・Samsung・Apple）は、対応する商品が HIGH / MEDIUM にあるときだけ一覧を取る
+    3. 商品ごとにページを取る取得器（ソニー・Canon）は、**待ち行列ではなく全候補**から、取得器ごとに点の高い順の型番（重複なし）を選ぶ
+    4. 取得枠は allocate_budget で公平に配る（最低枠を保証・総数は budget まで）
+    5. 全候補を、取得できた一覧・ページから引く。取得できなかった取得器は UNSUPPORTED（古い価格を使わない）
 
     fetch(url) -> (html|None, reason)。呼び出し側が polite 経由のものを渡す。遮断された取得元は、その実行では取りに行かない。
     """
     from src.research import triage as tr
     tri = tr.triage(unmatched_candidates, now, lookup_ready_of=lambda c: ready_for_triage({"name": c.get("name", "")}, adapters))
-    wanted_index, item_keys = set(), {}
-    for r in tri["rows"]:
-        if r["triage"]["tier"] not in (tr.HIGH, tr.MEDIUM):
-            continue
-        ad = adapter_for(_identity_of(r), adapters)
-        if ad is not None and not getattr(ad, "per_item", False):
-            wanted_index.add(ad.adapter_id)
-    for r in tri["queue"]:
+    plans: dict[str, dict] = {}
+    supported: dict[str, int] = {}
+    for r in sorted((x for x in tri["rows"] if x["triage"]["tier"] != tr.REJECTED),
+                    key=lambda x: (-x["triage"]["score"], -int(x.get("observed_sell_price") or 0), x.get("candidate_id", ""))):
         ident = _identity_of(r)
         ad = adapter_for(ident, adapters)
-        if ad is not None and getattr(ad, "per_item", False):
+        if ad is None:
+            continue
+        supported[ad.adapter_id] = supported.get(ad.adapter_id, 0) + 1
+        top = r["triage"]["tier"] in (tr.HIGH, tr.MEDIUM)
+        if getattr(ad, "per_item", False):
             k = ad.item_key(ident)
-            if k:
-                item_keys.setdefault(ad.adapter_id, []).append(k)
-    indexes = build_indexes([a for a in adapters if a.adapter_id in wanted_index], fetch, now)
-    for a in adapters:
-        if getattr(a, "per_item", False) and item_keys.get(a.adapter_id):
-            idx = build_item_index(a, item_keys[a.adapter_id], fetch, now)
+            pl = plans.setdefault(ad.adapter_id, {"adapter_id": ad.adapter_id, "kind": "item", "keys": [], "min_items": ITEM_MIN,
+                                                  "cap": getattr(ad, "MAX_ITEMS", 4), "score": 0})
+            if k and k not in [x for x, _s in pl["keys"]]:
+                pl["keys"].append((k, r["triage"]["score"]))
+                pl["score"] = max(pl["score"], r["triage"]["score"])
+        elif top:
+            pl = plans.setdefault(ad.adapter_id, {"adapter_id": ad.adapter_id, "kind": "index", "cost": len(ad.INDEX_URLS), "score": 0})
+            pl["score"] = max(pl["score"], r["triage"]["score"])
+    alloc = allocate_budget(list(plans.values()), budget)
+    by_id = {a.adapter_id: a for a in adapters}
+    indexes = build_indexes([by_id[i] for i, a in alloc.items() if a["index"]], fetch, now)
+    for aid, a in alloc.items():
+        if a["keys"]:
+            idx = build_item_index(by_id[aid], a["keys"], fetch, now)
             if idx:
-                indexes[a.adapter_id] = idx
+                indexes[aid] = idx
     results, counts = {}, {}
+    per: dict[str, dict] = {aid: {"supported": n, "requested": 0, "fetched": 0, "matched": 0, "no_match": 0}
+                            for aid, n in supported.items()}
+    for aid, a in alloc.items():
+        per[aid]["requested"] = a["http"]
+        per[aid]["fetched"] = (len(by_id[aid].INDEX_URLS) if a["index"] and aid in indexes else
+                               len((indexes.get(aid) or {}).get("covered") or []))
     for c in unmatched_candidates:
-        res = lookup(_identity_of(c), indexes, adapters)
+        ident = _identity_of(c)
+        res = lookup(ident, indexes, adapters)
         counts[res["status"]] = counts.get(res["status"], 0) + 1
         if res["status"] != UNSUPPORTED:
             results[c["candidate_id"]] = res
+        ad = adapter_for(ident, adapters)
+        if ad is not None and ad.adapter_id in per and res["status"] in (MATCHED, NO_MATCH):
+            per[ad.adapter_id]["matched" if res["status"] == MATCHED else "no_match"] += 1
     return {"schema": 1, "generated_at": now.isoformat(timespec="seconds"), "lookups": results, "status_counts": counts,
             "fetched_adapters": sorted(indexes), "index_sizes": {k: len(v.get("entries") or []) for k, v in indexes.items()},
-            "queue_size": tri["stats"]["top_queue"]}
+            "queue_size": tri["stats"]["top_queue"], "adapter_stats": per,
+            "http_requested": sum(a["http"] for a in alloc.values()), "http_budget": int(budget),
+            "api_sources": api_source_statuses()}
 
 
 def _identity_of(c: dict) -> dict:
@@ -535,3 +690,32 @@ def _part_of(c: dict) -> str:
     """名前に部品番号（メーカーの型番 ○○J/A）が1つだけあるときの値（Apple）。無い・複数は空。"""
     found = sorted(set(_PART.findall(str(c.get("name") or ""))))
     return found[0] if len(found) == 1 else ""
+
+
+# ── 仕入れ元の API（Coverage Wave 4 Stage G）──────────────────────────────────────────────────
+# 量販店・EC はほぼ静的取得できない。検索結果のスクレイピングはしない（公式 API だけ）。API の鍵（Secrets）が無ければ
+# PENDING_USER_CONFIGURATION として止める（取りに行かない・代わりのスクレイピングをしない）。
+RETAIL_API_SOURCES = (
+    {"id": "yahoo_shopping_v3", "name": "Yahoo!ショッピング 商品検索 API v3", "source_type": EC_RETAILER, "required_env": ("YAHOO_SHOPPING_APP_ID",),
+     "enable_env": "ENABLE_YAHOO_API", "jan_lookup": "supported",
+     "docs": "https://developer.yahoo.co.jp/webapi/shopping/v3/itemsearch.html",
+     "note": "JAN で商品を引ける（jan_code）。アプリケーション ID（appid）が必須。ポイント・クーポンは現金と分けて読む。利用規約の保存・再配布の条件を確認してから"},
+    {"id": "rakuten_ichiba_item_search", "name": "楽天市場商品検索 API", "source_type": EC_RETAILER, "required_env": ("RAKUTEN_APP_ID",),
+     "enable_env": "ENABLE_RAKUTEN_API", "jan_lookup": "unverified",
+     "docs": "https://webservice.rakuten.co.jp/documentation/ichiba-item-search",
+     "note": "アプリケーション ID（と新しいエンドポイントではアクセスキー）が必要。JAN 指定の可否・保存の条件は公式の仕様で未確認（確認してから実装）"},
+)
+API_PENDING, API_DISABLED, API_READY = "PENDING_USER_CONFIGURATION", "KILL_SWITCH_OFF", "READY_NOT_IMPLEMENTED"
+
+
+def api_source_statuses(env=None) -> list[dict]:
+    """仕入れ元 API の状態（鍵の値は読まない・出さない。存在の有無だけ）。鍵が無ければ PENDING_USER_CONFIGURATION。"""
+    import os
+    env = os.environ if env is None else env
+    out = []
+    for a in RETAIL_API_SOURCES:
+        has_keys = all(bool(str(env.get(k) or "").strip()) for k in a["required_env"])
+        enabled = str(env.get(a["enable_env"]) or "").strip().lower() in ("1", "true", "yes", "on")
+        out.append({"id": a["id"], "source_type": a["source_type"], "jan_lookup": a["jan_lookup"], "docs": a["docs"],
+                    "status": API_PENDING if not has_keys else (API_DISABLED if not enabled else API_READY)})
+    return out

@@ -13,7 +13,23 @@ status: CANDIDATE_UNVERIFIED
 basis: "Market Coverage Audit 2026-10-23 の列挙。登録簿に無い売り場。到達性・robots・規約は未確認"
 candidates:
   - {id: KOJIMA, name: コジマ, channel: STORE, url: "https://www.kojima.net/", verified: false}
-  - {id: KS_DENKI, name: ケーズデンキ, channel: STORE, url: "https://www.ksdenki.com/", verified: false}
+  # 2026-10-28（Coverage Wave 2）の調査: 403・接続の遮断・規約の禁止のものは取得しない（回避しない）
+  - {id: KS_DENKI, name: ケーズデンキ, channel: STORE, url: "https://www.ksdenki.com/", verified: false,
+     policy_excluded: "トップが HTTP 403（2026-10-28）。回避しない"}
+  - {id: NOJIMA, name: ノジマオンライン, channel: BOTH, url: "https://online.nojima.co.jp/", verified: false,
+     policy_excluded: "トップが HTTP 403（2026-10-28）。回避しない"}
+  - {id: DRAGON_STAR, name: ドラゴンスター, channel: BOTH, url: "https://dorasuta.jp/", verified: false,
+     policy_excluded: "Cloudflare のボットチャレンジで HTTP 403（2026-10-28）。回避しない"}
+  - {id: CARD_RUSH, name: カードラッシュ, channel: BOTH, url: "https://www.cardrush.jp/", verified: false,
+     policy_excluded: "ポケモンカード側は Cloudflare のボットチャレンジで HTTP 403（2026-10-28）。回避しない"}
+  - {id: POKEMON_CENTER_ONLINE, name: ポケモンセンターオンライン, channel: ONLINE, url: "https://www.pokemoncenter-online.com/", verified: false,
+     policy_excluded: "利用規約が、自動化した手段による取得（在庫情報の取得を含む）・クローリング・スクレイピングを明示的に禁止している（2026-10-28）。告知の日程も画像のみのことがある"}
+  - {id: YODOBASHI, name: ヨドバシ.com, channel: BOTH, url: "https://www.yodobashi.com/", verified: false,
+     policy_excluded: "取得時に接続が遮断された（HTTP/2 エラー。2026-10-28）。ボット対策の可能性。回避しない"}
+  - {id: BIC_CAMERA, name: ビックカメラ, channel: BOTH, url: "https://www.biccamera.com/", verified: false,
+     policy_excluded: "取得時に接続が遮断された（HTTP/2 エラー。2026-10-28）。ボット対策の可能性。回避しない"}
+  - {id: YAMADA, name: ヤマダ電機, channel: BOTH, url: "https://www.yamada-denki.jp/", verified: false,
+     policy_excluded: "取得時に接続が遮断された（HTTP/2 エラー。2026-10-28）。ボット対策の可能性。回避しない"}
   # 2026-10-24 の調査: 403（Cloudflare のボットチャレンジ）。回避しない方針なので、取得元の候補から外し、除外として残す
   - {id: AMIAMI, name: あみあみ, channel: ONLINE, url: "https://www.amiami.jp/", verified: false,
      policy_excluded: "トップが HTTP 403（Cloudflare のボットチャレンジ）。ボットチャレンジは回避しない"}

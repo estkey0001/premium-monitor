@@ -58,6 +58,10 @@ STANDARD_RESEARCH = "STANDARD"
 NO_SELL_SIDE = "NO_SELL_PRICE"
 NO_BUY_SIDE = "NO_BUY_PRICE"
 NO_SPREAD = "NO_SPREAD"
+RETAIL_PRICE_MISSING = "RETAIL_PRICE_MISSING"        # 小売（公式直販）の価格を同一性つきで引けていない（買取起点の候補）
+IDENTITY_PARTIAL = "IDENTITY_PARTIAL"                # 識別子が型番コードだけ（JAN・部品番号ほど確かでない）
+CANONICAL_UNREGISTERED = "CANONICAL_UNREGISTERED"    # 正本（商品の登録）に無い。人が公式で確かめて登録する
+RETAIL_LOOKUP_MAX_AGE_HOURS = 36                     # 小売の照会の結果がこれより古いときは使わない（鮮度を偽装しない）
 
 # 確定の関門ではなく参考として付ける理由（これだけが残っても VERIFIED は既存の判定が決める）
 ADVISORY = frozenset({STOCK_UNKNOWN})
@@ -532,7 +536,8 @@ def identify_row(r: dict) -> tuple[str, str] | None:
     return None
 
 
-def rank_product_candidates(unmatched: list[dict], now: datetime, retail_hints: dict | None = None) -> tuple[list[dict], dict]:
+def rank_product_candidates(unmatched: list[dict], now: datetime, retail_hints: dict | None = None,
+                            limit: int | None = CATALOG_LIST_LIMIT) -> tuple[list[dict], dict]:
     """買取の一覧にあるが正本に無い商品の候補（DISCOVERED_PRODUCT_CANDIDATE）を、調べる順に並べる。
 
     - 識別子（JAN・部品番号・型番コード）がある行だけを候補にする。名前だけの行は候補にしない（数だけ数える）
@@ -574,7 +579,7 @@ def rank_product_candidates(unmatched: list[dict], now: datetime, retail_hints: 
         rows.append({
             "candidate_id": "dp_" + hashlib.sha1(f"{shop}|{basis}|{value}".encode("utf-8")).hexdigest()[:12],
             "kind": "DISCOVERED_PRODUCT_CANDIDATE", "status": DISCOVERED,
-            "shop": shop, "name": r.get("name", ""), "jan": r.get("jan", ""), "identity_basis": basis,
+            "shop": shop, "name": r.get("name", ""), "jan": r.get("jan", ""), "identity_basis": basis, "identity_value": value,
             "identity_confidence": "high" if basis in (IDENT_JAN, IDENT_PART) else "medium",
             "observed_sell_price": g["price"], "source_url": r.get("url", ""), "observed_at": r.get("observed_at", ""),
             "variants": g["variants"],
@@ -591,7 +596,72 @@ def rank_product_candidates(unmatched: list[dict], now: datetime, retail_hints: 
                   "positive_spread_hint": sum(1 for x in rows if x["positive_spread_hint"])})
     for i, x in enumerate(rows, 1):
         x["rank"] = i
-    return rows[:CATALOG_LIST_LIMIT], stats
+    return (rows if limit is None else rows[:limit]), stats
+
+
+def apply_lookups(dps: list[dict], lookups: dict | None, now: datetime, generated_at: str | None = None) -> list[dict]:
+    """買取起点の候補（DISCOVERED_PRODUCT_CANDIDATE）に、小売（公式直販）の価格の照会の結果を結び付ける。
+
+    - 照会の結果（retail_lookup.lookup）は status が MATCHED のものだけ価格に使う。一致は JAN・型番・部品番号の完全一致で、
+      照会の側が保証する（名前だけの一致は無い）。AMBIGUOUS・IDENTITY_MISMATCH・NOT_PURCHASABLE・UNSUPPORTED は価格に使わない
+    - 結果の取得時刻（observed_at）が読めない・未来・36時間超のものは使わない（古い価格を今日の観測にしない）。
+      照会の記録全体の生成時刻（generated_at）も同じ条件
+    - 買取の価格 − 小売の価格が正なら RESEARCH_CANDIDATE（確定にはしない。理由 OFFICIAL_UNVERIFIED・PURCHASE_SHIPPING_UNKNOWN・
+      CANONICAL_UNREGISTERED が必ず付く）。0 以下なら REJECTED（NO_SPREAD）。差が小売の 50% を超えるものは誤一致の疑い（低優先）
+    - 照会の無い候補は、そのまま（DISCOVERED）。小売の価格のヒント（Apple の公式の発見）で正の差があるものも研究の対象にする
+    """
+    gen = _parse_ts(generated_at, now)
+    usable = bool(lookups) and gen is not None and timedelta(hours=-1) <= now - gen <= timedelta(hours=RETAIL_LOOKUP_MAX_AGE_HOURS)
+    for r in dps:
+        lk = (lookups or {}).get(r["candidate_id"]) if usable else None
+        r["lookup_status"] = (lk or {}).get("status") or "NOT_ATTEMPTED"
+        sell = int(r.get("observed_sell_price") or 0)
+        retail, basis_note = None, ""
+        if isinstance(lk, dict) and lk.get("status") == "MATCHED" and isinstance(lk.get("price"), int) and lk["price"] > 0:
+            at = _parse_ts(lk.get("observed_at"), now)
+            if at is not None and timedelta(hours=-1) <= now - at <= timedelta(hours=RETAIL_LOOKUP_MAX_AGE_HOURS):
+                retail = lk["price"]
+                r["retail_caveat"] = str(lk.get("price_caveat") or "")
+                r.update({"retail_price": retail, "retail_retailer": str(lk.get("retailer") or ""),
+                          "retail_url": str(lk.get("product_url") or ""), "retail_observed_at": lk["observed_at"],
+                          "retail_availability": str(lk.get("availability_state") or "UNKNOWN"),
+                          "retail_identity_evidence": lk.get("identity_evidence") or {}})
+                basis_note = "retail_lookup"
+            else:
+                r["lookup_status"] = "STALE_LOOKUP"
+        elif isinstance(lk, dict) and lk.get("status") == "NOT_PURCHASABLE":
+            r["missing_requirements"] = list(dict.fromkeys(list(r.get("missing_requirements") or []) + [OFFICIAL_NOT_SOLD]))
+        if retail is None and isinstance(r.get("retail_price_hint"), int):
+            retail, basis_note = r["retail_price_hint"], "official_discovery_hint"
+        if retail is None:
+            if RETAIL_PRICE_MISSING not in r["missing_requirements"]:
+                r["missing_requirements"] = list(r["missing_requirements"]) + [RETAIL_PRICE_MISSING]
+            r["research_class"] = STANDARD_RESEARCH
+            continue
+        spread = sell - retail
+        r["raw_spread_hint"], r["positive_spread_hint"], r["retail_basis"] = spread, spread > 0, basis_note
+        req = [x for x in r["missing_requirements"] if x not in ("OFFICIAL_PRICE_UNKNOWN", RETAIL_PRICE_MISSING)]
+        if spread <= 0:
+            r.update({"status": REJECTED, "missing_requirements": list(dict.fromkeys(req + [NO_SPREAD])),
+                      "research_class": STANDARD_RESEARCH})
+            continue
+        req += [OFFICIAL_UNVERIFIED, PURCHASE_SHIPPING_UNKNOWN]
+        # 買取の価格を取得した日が3日より古い（または読めない）ときは、高優先にしない（買取側の鮮度。選別と同じ基準）
+        buy_fresh = False
+        _bat = _parse_ts(r.get("observed_at"), now)
+        if _bat is not None and timedelta(hours=-1) <= now - _bat <= timedelta(days=3):
+            buy_fresh = True
+        if not buy_fresh:
+            req.append(BUY_STALE)
+        if r.get("identity_basis") == IDENT_MODEL:
+            req.append(IDENTITY_PARTIAL)
+        anomaly = spread > retail * ANOMALY_RATIO
+        if anomaly:
+            req.append(PRICE_ANOMALY_SUSPECTED)
+        r.update({"status": RESEARCH_CANDIDATE, "missing_requirements": list(dict.fromkeys(req)),
+                  "research_class": STANDARD_RESEARCH if anomaly or IDENTITY_PARTIAL in req or basis_note != "retail_lookup" or r.get("retail_caveat") or not buy_fresh
+                  else HIGH_PRIORITY_RESEARCH})
+    return dps
 
 
 def discovered_products(unmatched: list[dict], now: datetime, retail_hints: dict | None = None) -> list[dict]:
@@ -750,13 +820,18 @@ PRIVATE_KEYS = frozenset({
     "candidate_id", "candidates", "product_identity", "product_id", "product_candidates", "observed_buy_price",
     "observed_sell_price", "raw_spread", "raw_net_spread", "known_cost_spread", "known_costs", "source_url",
     "source", "sell_observed_at", "missing_requirements", "exclusion_reasons", "priority_score", "priority_rank",
-    "priority_reasons", "note", "name", "url", "jan", "shop", "rows"})
+    "priority_reasons", "note", "name", "url", "jan", "shop", "rows",
+    # 買取起点の選別・小売の照会（Coverage Wave 2）の個別の項目
+    "identity_value", "identity_basis", "retail_price", "retail_url", "retail_retailer", "retail_identity_evidence",
+    "retail_observed_at", "retail_availability", "retail_basis", "retail_caveat", "raw_spread_hint", "triage", "queue_rank", "lookup_status",
+    "rank", "rank_score", "retail_price_hint", "lookups"})
 
 
 # 公開の集計に出してよい理由の語彙（商品名・価格などの個別の値がキーに混ざらないように、既知の語彙だけを通す）
 ALLOWED_REASONS = frozenset({
     OFFICIAL_UNVERIFIED, OFFICIAL_NOT_SOLD, BUY_NOT_ITEM_LEVEL, BUY_STALE, SELL_STALE, GENERIC_SELL_URL, IDENTITY_UNCONFIRMED,
     CONDITION_UNKNOWN, CONDITION_MISMATCH, STOCK_UNKNOWN, SELL_SAMPLE_INSUFFICIENT, PURCHASE_SHIPPING_UNKNOWN,
+    RETAIL_PRICE_MISSING, IDENTITY_PARTIAL, CANONICAL_UNREGISTERED,
     PRICE_ANOMALY_SUSPECTED, SELL_REJECTED, NET_NEGATIVE, NO_SELL_SIDE, NO_BUY_SIDE, NO_SPREAD,
     ABOVE_GENRE_MAX, NEEDS_CORROBORATION, PRICE_SPIKE})
 ALLOWED_CONFIDENCE = frozenset({"high", "medium", "low"})
@@ -803,7 +878,8 @@ def public_summary(report: dict) -> dict:
         "schema": SCHEMA, "type": "RESEARCH_SUMMARY", "audience": "public_aggregate",
         "generated_at": report.get("generated_at"),
         "description": "調査候補の集計（件数だけ）。個別の候補（商品・価格・価格差・売却先）は公開しない。確定の利益ではない",
-        "research_candidate_count": len(research),
+        # 既存商品の調査候補 + 買取起点（正本に無い商品）の調査候補（小売の価格を同一性つきで引けて、買取の価格が上回るもの）
+        "research_candidate_count": int(counts.get("research_candidates") or len(research)),
         "positive_raw_spread_count": int(m.get("raw_positive_spread") or 0),
         # 生の価格差が正のうち、確定の関門を通過した数と通過していない数（足すと positive_raw_spread_count になる）
         "verified_positive_spread_count": int(m.get("verified_positive_spread") or 0),
@@ -831,7 +907,12 @@ def public_summary(report: dict) -> dict:
         "canonical_products": int(m.get("canonical_products") or 0),
         "buyback_first": {k: int((report.get("buyback_first") or {}).get(k) or 0)
                           for k in ("catalog_rows", "canonical_matches", "identified", "name_only_rejected",
-                                    "new_product_candidates", "with_retail_hint", "positive_spread_hint")},
+                                    "new_product_candidates", "with_retail_hint", "positive_spread_hint",
+                                    "top_queue", "lookup_ready", "lookup_matched", "research_candidates")},
+        # 買取起点の選別（HIGH / MEDIUM / LOW / REJECTED の件数だけ。個別の候補は非公開）
+        "buyback_triage": {k: int(((report.get("buyback_first") or {}).get("triage") or {}).get(k) or 0)
+                           for k in ("HIGH", "MEDIUM", "LOW", "REJECTED")},
+        "retail_lookup_matched": int(m.get("retail_lookup_matched") or 0),
         "official_discovery_candidates": int(m.get("official_discovery_candidates") or 0),
         "tcg_source_coverage": dict(_count_dict(m.get("tcg_source_coverage"), COVERAGE_KEYS["tcg_source_coverage"]),
                                     source_classes=_count_dict((m.get("tcg_source_coverage") or {}).get("source_classes"),
@@ -875,7 +956,8 @@ def build(*, products: list[dict], observations: list[dict], msrp_evidence: dict
           tcg: dict | None = None, blocked_sources: set[str] | None = None,
           ledger_state: str | None = None, quarantined: list[dict] | None = None,
           retail_hints: dict | None = None, actionable_count: int | None = None,
-          quarantine_generated_at: str | None = None) -> tuple[dict, dict]:
+          quarantine_generated_at: str | None = None, retail_lookups: dict | None = None,
+          retail_lookups_generated_at: str | None = None) -> tuple[dict, dict]:
     """調査候補のレポート（運営者向け）と、次回の台帳。戻りは (report, new_state)。
 
     quarantined: 品質ゲートで隔離された買取価格（collector_report の suspicious_prices）。上限超え・急変・裏付け不足で
@@ -896,21 +978,41 @@ def build(*, products: list[dict], observations: list[dict], msrp_evidence: dict
     for i, c in enumerate([c for c in cands if c["status"] == RESEARCH_CANDIDATE], 1):
         c["priority_rank"] = i
     matched, unmatched = match_catalog(catalog or [], products, identity or {})
-    dps, bf_stats = rank_product_candidates(unmatched, now, retail_hints)
-    metrics = coverage_metrics(products=products, candidates=cands, product_candidates=dps,
+    from src.research import retail_lookup as _rl
+    from src.research import triage as _tr
+    all_dps, bf_stats = rank_product_candidates(unmatched, now, retail_hints, limit=None)
+    all_dps = apply_lookups(all_dps, retail_lookups, now, retail_lookups_generated_at)
+    tri = _tr.triage(all_dps, now, lookup_ready_of=lambda c: _rl.ready_for_triage({"name": c.get("name", "")})
+                     or isinstance(c.get("retail_price_hint"), int),
+                     lookup_results={c["candidate_id"]: {"status": "MATCHED"} for c in all_dps if c.get("retail_price") is not None})
+    by_id = {r["candidate_id"]: r for r in tri["rows"]}
+    # 個別の一覧（非公開）: 上位 50 件の待ち行列 + 調査候補にした行（重複なし）。全件は件数だけ残す
+    listed_ids = {r["candidate_id"] for r in tri["queue"]} | {c["candidate_id"] for c in all_dps if c["status"] == RESEARCH_CANDIDATE}
+    for c in all_dps:                                   # 上限（CATALOG_LIST_LIMIT）まで、順位の高い行で埋める（従来の一覧の範囲）
+        if len(listed_ids) >= CATALOG_LIST_LIMIT:
+            break
+        listed_ids.add(c["candidate_id"])
+    dps = sorted((by_id[i] for i in listed_ids), key=lambda r: (r.get("queue_rank") or 10**6, r.get("rank") or 10**6, r["candidate_id"]))
+    metrics = coverage_metrics(products=products, candidates=cands, product_candidates=all_dps,
                                msrp_evidence=msrp_evidence, observations=observations,
                                discovery=discovery, tcg=tcg)
     metrics["high_priority_research"] = sum(1 for c in cands if c.get("research_class") == HIGH_PRIORITY_RESEARCH)
     metrics["buyback_first_candidates"] = bf_stats["unique_candidates"]
-    metrics["product_research_candidates"] = bf_stats["positive_spread_hint"]
+    prod_research = [c for c in all_dps if c["status"] == RESEARCH_CANDIDATE]
+    metrics["product_research_candidates"] = len(prod_research)
+    metrics["high_priority_research"] += sum(1 for c in prod_research if c.get("research_class") == HIGH_PRIORITY_RESEARCH)
+    metrics["buyback_triage"] = dict(tri["stats"]["tier_counts"])
+    metrics["buyback_top_queue"] = tri["stats"]["top_queue"]
+    metrics["retail_lookup_ready"] = tri["stats"]["lookup_ready"]
+    metrics["retail_lookup_matched"] = tri["stats"]["lookup_matched"]
     metrics["actionable"] = actionable_count
-    reasons = Counter(r for c in cands if c["status"] == RESEARCH_CANDIDATE for r in c["missing_requirements"])
+    reasons = Counter(r for c in cands + prod_research if c["status"] == RESEARCH_CANDIDATE for r in c["missing_requirements"])
     report = {
         "schema": SCHEMA, "type": "RESEARCH_CANDIDATES", "audience": "operator",
         "generated_at": now.isoformat(timespec="seconds"), "ledger_state": ledger_state,
         "note": "運営者向けの調査候補。確定の利益ではない。顧客向けの画面・LP・商品の通知には出さない（確認して VERIFIED に"
                 "なるまで）。価格は観測した買値・売値だけ（予測は使わない）",
-        "counts": {"research_candidates": metrics["research_candidates"], "verified": metrics["verified_candidates"],
+        "counts": {"research_candidates": metrics["research_candidates"] + len(prod_research), "verified": metrics["verified_candidates"],
                    "high_priority_research": metrics["high_priority_research"],
                    "discovered": metrics["by_status"].get(DISCOVERED, 0), "rejected": metrics["by_status"].get(REJECTED, 0),
                    "stale": metrics["by_status"].get(STALE, 0)},
@@ -921,7 +1023,10 @@ def build(*, products: list[dict], observations: list[dict], msrp_evidence: dict
                           "name_only_rejected": bf_stats["name_only_rejected"],
                           "new_product_candidates": bf_stats["unique_candidates"], "listed": len(dps),
                           "with_retail_hint": bf_stats["with_retail_hint"],
-                          "positive_spread_hint": bf_stats["positive_spread_hint"]},
+                          "positive_spread_hint": bf_stats["positive_spread_hint"],
+                          "triage": dict(tri["stats"]["tier_counts"]), "top_queue": tri["stats"]["top_queue"],
+                          "lookup_ready": tri["stats"]["lookup_ready"], "lookup_matched": tri["stats"]["lookup_matched"],
+                          "research_candidates": len(prod_research)},
         "product_candidates": dps,
         "metrics": metrics,
     }

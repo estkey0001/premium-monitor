@@ -894,6 +894,13 @@ class DailyLPGenerator:
                 cat = _json.loads((priv / "buyback_catalog.json").read_text(encoding="utf-8")).get("rows") or []
             except (OSError, ValueError):
                 cat = []
+            # 小売の価格の照会（scripts/research_retail_lookup.py の非公開の記録）。無い・壊れている日は照会なし（古い値を使わない。
+            # 生成時刻は記録の中の値で、build() が 36 時間以内かを確かめる）
+            try:
+                lk_doc = _json.loads((priv / "retail_lookups.json").read_text(encoding="utf-8"))
+                lk_doc = lk_doc if isinstance(lk_doc, dict) else {}
+            except (OSError, ValueError):
+                lk_doc = {}
             cam = self._load_export_json("camera_buyback_status.json")
             blocked = set((cam.get("shop_cutoffs") or {}).keys()) | set(
                 (self._load_export_json("collector_report", "latest.json").get("shop_cutoffs") or {}).keys())
@@ -914,6 +921,8 @@ class DailyLPGenerator:
                 # 隔離行の観測の時刻は、取得の報告の生成時刻（収集が失敗して前日の報告が残る日に、古い価格を今日の観測にしない）
                 quarantine_generated_at=self._load_export_json("collector_report", "latest.json").get("generated_at"),
                 retail_hints=self._research_retail_hints(),
+                retail_lookups=lk_doc.get("lookups") if isinstance(lk_doc.get("lookups"), dict) else None,
+                retail_lookups_generated_at=lk_doc.get("generated_at"),
                 actionable_count=((getattr(self, "_last_diag", None) or {}).get("actionable") or {}).get("count"))
             report["ledger_persistence"] = "ACROSS_RUNS" if _rc.persistence_enabled() else "NOT_AVAILABLE"
             # 個別の候補・台帳は private、公開してよい集計だけ public（許可リストで作る。個別の項目が混ざったら例外 → 何も書かない）

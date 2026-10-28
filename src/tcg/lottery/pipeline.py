@@ -33,6 +33,7 @@ ANNOUNCEMENT_DISPLAY_DAYS = 14
 def _adapters():
     from src.collectors.tcg.lottery.clabo import CardLaboLotteryAdapter
     from src.collectors.tcg.lottery.geo import GeoLotteryAdapter
+    from src.collectors.tcg.lottery.hbst import HobbyStationLotteryAdapter
     from src.collectors.tcg.lottery.others import (
         LawsonLotteryAdapter, OnePieceNewsLotteryAdapter, PremiumBandaiLotteryAdapter,
     )
@@ -44,6 +45,7 @@ def _adapters():
         "pokemon_news_lottery": PokemonNewsLotteryAdapter,
         "geo_lottery": GeoLotteryAdapter,
         "card_labo_lottery": CardLaboLotteryAdapter,
+        "hobby_station_lottery": HobbyStationLotteryAdapter,
         "lawson_lottery": LawsonLotteryAdapter,
         "onepiece_news_lottery": OnePieceNewsLotteryAdapter,
         "premium_bandai_lottery": PremiumBandaiLotteryAdapter,

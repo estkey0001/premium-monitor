@@ -69,6 +69,10 @@ PRODUCT_SHIPPING: dict[str, dict] = {
     "prod_z9": {"source": "src_nikon_direct", "fee": 550, "status": PAID,
                 "url": "https://nij.nikon.com/shop/u/guide/delivery_charge/", "checked_on": "2026-10-24",
                 "checked_by": "Claude"},
+    # 2026-10-28（Coverage Wave 2）: ニコンダイレクト（Zf）。Z8・Z9 と同じ配送の規定（会員のログイン時だけ当社負担・それ以外 550円）
+    "prod_zf": {"source": "src_nikon_direct", "fee": 550, "status": PAID,
+                "url": "https://nij.nikon.com/shop/u/guide/delivery_charge/", "checked_on": "2026-10-28",
+                "checked_by": "Claude"},
     # 2026-10-24: キヤノンオンラインショップの購入ページ（EOS R6 Mark II・ボディー）に「送料無料」
     "prod_r6ii": {"source": "src_canon_official", "fee": 0, "status": FREE_VERIFIED,
                   "url": "https://store.canon.jp/online/g/g5666C001/", "checked_on": "2026-10-24", "checked_by": "Claude"},

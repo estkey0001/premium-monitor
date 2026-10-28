@@ -386,9 +386,10 @@ products:
     name: "Nikon Zf"
     brand: "NIKON"
     model_number: "Zf"
-    retail_price: 290000
+    jan_code: "4960759913784"   # ニコンダイレクトの購入ページ（ブラック・ボディー。シルバーは 4960759920058。2026-10-28・Coverage Wave 2）
+    retail_price: 299200
     keywords: ["Nikon Zf", "Z f"]
-    memo: "概算定価（要確認）"
+    memo: "ニコンダイレクト販売価格（2026-10-28 確認）"
   - id: "prod_z9"
     genre: "camera"
     name: "Nikon Z9"

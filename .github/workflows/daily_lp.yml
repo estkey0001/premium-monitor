@@ -201,6 +201,15 @@ jobs:
         env:
           PYTHONPATH: .
 
+      # 買取起点の候補の小売（公式直販）の価格の照会（Coverage Wave 2）。取得は polite 経由だけ（robots.txt・取得元ごとの間隔・
+      # 正直な User-Agent・遮断されたら止める）。個別の結果は .private（.gitignore 済み）。標準出力は件数だけ。
+      # 失敗しても LP の更新は止めない・送信しない・Secrets を渡さない
+      - name: Research retail lookup
+        run: python scripts/research_retail_lookup.py
+        continue-on-error: true
+        env:
+          PYTHONPATH: .
+
       # 6. Update alerts（アラート生成）
       - name: Update alerts
         run: python scripts/update_alerts.py

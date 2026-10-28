@@ -96,6 +96,13 @@ LOTTERY_SOURCES: list[dict] = [
               "2026-10-24 の調査: robots.txt は /wordpress/wp-admin/ だけを禁止（PremiumMonitor への禁止なし）。利用規約"
               "（c-labo.jp の規約ページ）は著作権・防犯・免責・従業員の保護の条項で、自動取得を禁じる記述は読み取れなかった"
               "（許可の明記でもない。規約の確認は取得日つきの記録で、変更があれば再確認する）"),
+    _src("HOBBY_STATION", "ホビーステーション", _BOTH, "P1", "https://www.hbst.net/", CM_HTML,
+         news_url="https://www.hbst.net/result/?category=news", channel="STORE", adapter="hobby_station_lottery",
+         verified=True,
+         note="公式のお知らせ（WordPress）に抽選販売の告知が静的 HTML で載り、応募期間・当選発表・当選者購入期間が「■応募期間：」の"
+              "固定の書式で本文のテキストにある。応募は Livepocket（外部。公式ドメインではないので entry_url は空）。店舗横断の1本の告知。"
+              "2026-10-28 の調査: robots.txt は /wordpress/wp-admin/ だけを禁止（PremiumMonitor への禁止なし）。自動取得を禁じる規約・"
+              "利用規約のページは見当たらない（許可の明記でもない。取得日つきの記録で、変更があれば再確認する）"),
     _src("TOYSRUS", "トイザらス", _BOTH, "P1", "https://www.toysrus.co.jp/", CM_HTML,
          note="2026-10-01 時点でトップページが HTTP 403（ローカル・CI とも）。解析器は未実装"),
     _src("JOSHIN", "Joshin", _BOTH, "P1", "https://joshinweb.jp/", CM_HTML,

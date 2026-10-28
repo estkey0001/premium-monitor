@@ -93,6 +93,7 @@ class CollectorFunnel:
     blocked_pages: int = 0
     robots_unreachable_pages: int = 0   # robots.txt に到達できず取りに行かなかったページ（禁止とは別。Phase 13）
     errors: int = 0
+    structure_changed_pages: int = 0     # 取得できたのに、記事のカードを1件も読めなかった一覧（HTML の構造の変更の疑い。PARSER_DEGRADED）
     rejection_reasons: Counter = field(default_factory=Counter)
     pages: list[PageDiagnostic] = field(default_factory=list)
     notes: list[str] = field(default_factory=list)
@@ -116,6 +117,8 @@ class CollectorFunnel:
             if self.blocked_pages > 0:
                 return HEALTH_BLOCKED
             return HEALTH_FAILED
+        if self.structure_changed_pages > 0:
+            return HEALTH_DEGRADED         # 一部の一覧だけ読めなくなった日も「正常」にしない（0件を市場なしと断定しない）
         if self.requires_product_pages and self.product_pages_discovered == 0:
             return HEALTH_DEGRADED
         if self.requires_news_pages and self.news_pages_discovered == 0:
@@ -135,6 +138,9 @@ class CollectorFunnel:
                         f"{self.robots_unreachable_pages}ページ")
             return f"1ページも取得できませんでした（エラー {self.errors}件）"
         if st == HEALTH_DEGRADED:
+            if self.structure_changed_pages > 0:
+                return (f"PARSER_DEGRADED: 一覧を取得できたが記事のカードを読めなかった（HTML の構造の変更の疑い）: "
+                        f"{self.structure_changed_pages}ページ。要確認（0件を市場なしとは断定しない）")
             if self.requires_product_pages and self.product_pages_discovered == 0:
                 return "ページは取得できたが商品ページを1件も発見できない"
             return "ページは取得できたがニュース記事を1件も発見できない"
@@ -166,6 +172,7 @@ class CollectorFunnel:
             "blocked_pages": self.blocked_pages,
             "robots_unreachable_pages": self.robots_unreachable_pages,
             "errors": self.errors,
+            "structure_changed_pages": self.structure_changed_pages,
             "notes": list(self.notes),
             "pages": [p.to_dict() for p in self.pages],
         }

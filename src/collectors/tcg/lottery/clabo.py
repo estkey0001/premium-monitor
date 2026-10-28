@@ -71,6 +71,29 @@ def parse_targets(body: str) -> list[dict]:
     return uniq
 
 
+_TITLE_RANGE = re.compile(r"(\d{1,2})/(\d{1,2})\s*[~〜～\-－]\s*(?:(\d{1,2})/)?(\d{1,2})")
+
+
+def _title_ended(title: str, today: str) -> bool:
+    """件名の「(抽選応募期間:10/22~10/25)」の終わりが今日より前なら True。読めないときは False（応募中かもしれないので後ろにしない）。
+
+    年をまたぐ期間（12/28~1/3）は、今日が開始月以降なら終わりを翌年と読む（12 月に「終了済み」と誤判定しない）。
+    """
+    m = _TITLE_RANGE.search(title or "")
+    if not m:
+        return False
+    try:
+        y, today_m = int(today[:4]), int(today[5:7])
+        start_m, end_m = int(m.group(1)), int(m.group(3) or m.group(1))
+        if end_m < start_m and end_m < today_m < start_m:
+            return False                                       # 年またぎの期間がこれから始まる（11 月に見る 12/28~1/3）。終了していない
+        end_y = y + 1 if (end_m < start_m and today_m >= start_m) else y
+        end = datetime(end_y, end_m, int(m.group(4)), tzinfo=JST).strftime("%Y-%m-%d")
+    except ValueError:
+        return False
+    return end < today
+
+
 def parse_listing(html: str) -> list[dict]:
     """一覧のカード（件名・詳細の URL・店・公開日）。カードの形でないものは読まない。"""
     out = []
@@ -101,7 +124,7 @@ class CardLaboLotteryAdapter(LotteryAdapter):
     source_name = "カードラボ（店舗ブログの抽選・予約の告知）"
     tcg = "POKEMON"
     channel = "STORE"
-    max_detail_fetch = 10
+    max_detail_fetch = 12
     # 店舗のブログで、公式ドメインの応募ページは無い。メーカー・小売本社の公式（RETAILER_OFFICIAL）ではなく、店舗の告知（STORE_OFFICIAL）
     lottery_source_type = "STORE_OFFICIAL"
 
@@ -126,11 +149,12 @@ class CardLaboLotteryAdapter(LotteryAdapter):
                 continue
             loaded = True
             cards = parse_listing(html)
-            if not cards and "claboCard" not in html and url == LISTINGS[0][1]:
-                # 取得はできたが、記事のカードが1件も無い（HTML の構造が変わった可能性）。静かに「0件」にしない
+            if not cards and "claboCard" not in html:
+                # 取得はできたが、記事のカードが1件も無い（HTML の構造が変わった可能性）。静かに「0件」にしない（どの一覧でも検知する）
                 self.health["errors"] += 1
                 self.funnel.errors += 1
-                self.health["error_messages"].append("一覧は取得できたが記事のカードを読めなかった（HTML の構造の変更の可能性）")
+                self.funnel.structure_changed_pages += 1
+                self.health["error_messages"].append(f"一覧（{tcg}）は取得できたが記事のカードを読めなかった（HTML の構造の変更の可能性）")
             seen = {c["url"] for _t, c in cands}
             for card in cards:
                 if card["url"] in seen:
@@ -148,7 +172,8 @@ class CardLaboLotteryAdapter(LotteryAdapter):
         # 公開日の新しい順に、詳細を取る（同じドメインは60秒間隔なので、上限を決める）
         # 同じ公開日の告知は、日ごとに順序を変える（毎日同じ店だけが先に取られ、後ろの店が取りこぼされ続けるのを防ぐ）
         today = now_jst().strftime("%Y-%m-%d")
-        cands.sort(key=lambda tc: (str(tc[1].get("published_at") or "")[:10],
+        # 件名の応募期間が終わっている告知は後ろへ（応募中の告知を先に読む）
+        cands.sort(key=lambda tc: (not _title_ended(tc[1]["title"], today), str(tc[1].get("published_at") or "")[:10],
                                    hashlib.sha1(f"{today}|{tc[1]['url']}".encode()).hexdigest()), reverse=True)
         for tcg, card in cands[:self.max_detail_fetch]:
             if self._stop_if_blocked():
@@ -164,6 +189,9 @@ class CardLaboLotteryAdapter(LotteryAdapter):
             m = _ARTICLE_RE.search(detail)
             # 記事の本体（<article>）が無いページは、ページ全体（サイドバー・他の記事）の日程を読まない。本文を空にして要確認へ回す
             body = self.to_text(m.group(0)) if m else ""
+            if not m:
+                self.funnel.structure_changed_pages += 1         # 詳細に本文の領域が無い（HTML の構造の変更の疑い）。日程は読まない
+                self.health["error_messages"].append("詳細ページに本文の領域（article）が無かった（HTML の構造の変更の可能性）")
             store_name = store if store.startswith("カードラボ") else f"カードラボ{store}"
             self.lottery_events.extend(self.build_from_article(
                 title=card["title"], body=body, url=card["url"], published_at=card["published_at"],

@@ -24,6 +24,53 @@ STATUSES = (MATCHED, NO_MATCH, AMBIGUOUS, IDENTITY_MISMATCH, NOT_PURCHASABLE, UN
 
 AVAIL_IN_STOCK, AVAIL_OUT, AVAIL_UNKNOWN = "IN_STOCK", "OUT_OF_STOCK", "UNKNOWN"
 
+# 仕入れ元の種別（Coverage Wave 3）。公式だけに限らない
+OFFICIAL_DIRECT, AUTHORIZED_RETAILER, LARGE_RETAILER = "OFFICIAL_DIRECT", "AUTHORIZED_RETAILER", "LARGE_RETAILER"
+EC_RETAILER, OUTLET, SECONDARY_NEW = "EC_RETAILER", "OUTLET", "SECONDARY_NEW"
+SOURCE_TYPES = (OFFICIAL_DIRECT, AUTHORIZED_RETAILER, LARGE_RETAILER, EC_RETAILER, OUTLET, SECONDARY_NEW)
+
+# 価格の条件（現金の仕入れ値を安く見せうるもの）。ポイント・キャッシュバックは条件ではなく別の項目（現金から引かない）
+COND_COUPON, COND_CAMPAIGN, COND_MEMBER, COND_LIMITED = "COUPON_REQUIRED", "CAMPAIGN_CONDITIONAL", "MEMBER_ONLY", "LIMITED_QUANTITY"
+BASIS_UNCONDITIONAL, BASIS_REGULAR, BASIS_CONDITIONAL_UNKNOWN = "UNCONDITIONAL", "REGULAR_PRICE", "CONDITIONAL_UNKNOWN_REGULAR"
+
+
+def price_evidence(e: dict) -> dict:
+    """一覧・商品ページの1行から、仕入れ値の証拠（表示価格と実際の取得価格を分ける）を作る。
+
+    - listed_price: 表示されている現金の税込価格。regular_price: 通常の価格（分かるとき）
+    - immediate_discount: **誰でも・即時に**値引きされる額だけ（取得器が条件なしと確かめたものだけ入れる）
+    - required_coupon / campaign_conditions / member_only / limited_quantity: 条件つきの値引き。**現金の仕入れ値に使わない**
+    - points / cashback: ポイント還元・キャッシュバック。**現金と同額として控除しない**（別の項目として残す）
+    - effective_price（確定の仕入れ値の根拠にしてよい現金の価格）:
+        条件なし → listed_price − immediate_discount
+        条件つき（クーポン・キャンペーン・会員限定・数量限定）で通常の価格が分かる → regular_price（条件つきの値引きを使わない）
+        条件つきで通常の価格が分からない → listed_price（値引き込みかもしれない価格。price_basis で区別し、高優先にしない）
+    """
+    listed = _int(e.get("price"))
+    regular = _int(e.get("regular_price"))
+    imm = _int(e.get("immediate_discount")) or 0
+    conds = []
+    if str(e.get("required_coupon") or "").strip():
+        conds.append(COND_COUPON)
+    if str(e.get("campaign_conditions") or "").strip() or _int(e.get("campaign_price")):
+        conds.append(COND_CAMPAIGN)
+    if e.get("member_only"):
+        conds.append(COND_MEMBER)
+    if e.get("limited_quantity"):
+        conds.append(COND_LIMITED)
+    if not conds:
+        basis, eff = BASIS_UNCONDITIONAL, (listed - imm if listed else None)
+        if eff is not None and eff <= 0:
+            eff = None
+    elif regular:
+        basis, eff = BASIS_REGULAR, regular
+    else:
+        basis, eff = BASIS_CONDITIONAL_UNKNOWN, listed
+    return {"listed_price": listed, "regular_price": regular, "campaign_price": _int(e.get("campaign_price")),
+            "campaign_conditions": str(e.get("campaign_conditions") or ""), "immediate_discount": imm,
+            "required_coupon": str(e.get("required_coupon") or ""), "points": _int(e.get("points")) or 0,
+            "cashback": _int(e.get("cashback")) or 0, "effective_price": eff, "price_conditions": conds, "price_basis": basis}
+
 # 名前から推定するブランド（取得器の対応・ブランド違いの棄却に使う）
 _BRAND_RES = (
     ("nikon", re.compile(r"Nikon|ニコン|\bZ ?(?:\d|f|fc)(?![A-Za-z0-9])", re.I)),
@@ -58,6 +105,7 @@ class RetailAdapter:
 
     adapter_id = ""
     retailer = ""
+    source_type = OFFICIAL_DIRECT
     brands: tuple = ()
     source_id = ""            # polite の取得元 ID（取得の間隔・打ち切りの単位）
     INDEX_URLS: tuple = ()
@@ -144,6 +192,7 @@ class SamsungAdapter(RetailAdapter):
                 seen.add(m.group(1))
                 av = str(offers.get("availability") or "")
                 out.append({"name": str(p.get("name") or ""), "price": price, "url": str(p.get("url") or ""), "jan": "",
+                            "campaign_conditions": self.price_note,
                             "model": m.group(1), "availability": AVAIL_IN_STOCK if av.endswith("InStock") else
                             AVAIL_OUT if av.endswith(("OutOfStock", "Discontinued", "SoldOut")) else AVAIL_UNKNOWN})
         return out
@@ -192,7 +241,97 @@ class SonyStoreAdapter(RetailAdapter):
                  "availability": AVAIL_IN_STOCK if m.group(1) in self._STOCK_IN else AVAIL_OUT}]
 
 
-ADAPTERS: tuple = (NikonDirectAdapter(), SonyStoreAdapter(), SamsungAdapter())
+class AppleStoreAdapter(RetailAdapter):
+    """Apple 公式（apple.com/jp/shop/buy-iphone/<機種>）の機種のページ。商品データの部品番号（MYMX3J/A など）ごとの現行の価格。
+
+    Apple 公式は直販の定価（クーポン・ポイントの値引きの表示なし）。部品番号の完全一致だけ（買取店の名前に部品番号がある行）。
+    在庫は機種のページに無いので UNKNOWN（在庫ありにしない）。現行の販売ページに載らない旧機種は NO_MATCH（引けなかった）。
+    """
+
+    adapter_id = "apple_jp"
+    retailer = "Apple（公式）"
+    brands = ("apple",)
+    source_id = "src_apple_jp"
+    FAMILIES = ("iphone-18-pro", "iphone-duo", "iphone-17", "iphone-17e", "iphone-air", "iphone-16")
+    INDEX_URLS = tuple(f"https://www.apple.com/jp/shop/buy-iphone/{f}" for f in FAMILIES)
+
+    def parse_index(self, html: str, url: str = "") -> list[dict]:
+        from src.discovery.apple import parse_products
+        return [{"name": p["name"], "price": p["price"], "url": url, "jan": "", "model": p["part_number"],
+                 "availability": AVAIL_UNKNOWN} for p in parse_products(html)]
+
+
+class CanonStoreAdapter(RetailAdapter):
+    """キヤノンオンラインショップ（store.canon.jp）の購入ページ。商品コードごとに1ページ（JAN は購入ページに無い）。
+
+    JAN → 商品コードは、公式の製品ページで確かめた表（config/canon_codes.yaml）だけで引く（許可リスト方式。表に無いコード・整備済みの別コード・
+    発売前・販売終了は取らない）。価格は購入ページの構造化データ（Product.offers.price。税込の現金）。構造化データが無いページは
+    本文の「ご注文概要 価格」で読む。在庫は納期の文言から作らない（UNKNOWN）。送料は購入ページ・ご利用案内の文言（別の台帳）。
+    """
+
+    adapter_id = "canon_store"
+    retailer = "キヤノンオンラインショップ"
+    brands = ("canon",)
+    source_id = "src_canon_official"
+    per_item = True
+    MAX_ITEMS = 5
+    _table: dict | None = None
+
+    @classmethod
+    def table(cls) -> dict:
+        """JAN → {code, model, kind}。表が読めなければ空（何も引かない）。"""
+        if cls._table is None:
+            import yaml
+            from pathlib import Path
+            try:
+                doc = yaml.safe_load((Path(__file__).resolve().parent.parent.parent / "config" / "canon_codes.yaml").read_text(encoding="utf-8")) or {}
+            except (OSError, ValueError):
+                doc = {}
+            cls._table = {str(i["jan"]): i for i in doc.get("items") or []
+                          if isinstance(i, dict) and re.fullmatch(r"\d{13}", str(i.get("jan") or "")) and re.fullmatch(r"[0-9A-Z]{8}", str(i.get("code") or ""))}
+        return cls._table
+
+    def item_key(self, identity: dict) -> str:
+        if identity.get("basis") != "JAN":
+            return ""
+        row = self.table().get(str(identity.get("value") or ""))
+        return row["code"] if row else ""
+
+    def supports(self, identity: dict) -> bool:
+        return super().supports(identity) and bool(self.item_key(identity))
+
+    def item_url(self, key: str) -> str:
+        return f"https://store.canon.jp/online/g/g{key}/"
+
+    def parse_item(self, html: str, key: str) -> list[dict]:
+        import json
+        row = next((r for r in self.table().values() if r["code"] == key), None)
+        if not row or key not in (html or ""):
+            return []
+        if re.search(r"販売を?終了|予約受付を?終了|生産終了", re.sub(r"<[^>]+>", " ", re.sub(r"<script\b.*?</script>", " ", html or "", flags=re.S))):
+            return []                                   # 販売終了のページの価格は、仕入れ値にしない
+        price = None
+        for b in re.findall(r'<script[^>]*type="application/ld\+json"[^>]*>(.*?)</script>', html or "", re.S):
+            try:
+                d = json.loads(b)
+            except ValueError:
+                continue
+            for prod in (d if isinstance(d, list) else [d]):
+                offers = prod.get("offers") if isinstance(prod, dict) else None
+                for o in (offers if isinstance(offers, list) else [offers] if isinstance(offers, dict) else []):
+                    if f"/g{key}/" in str(o.get("url") or ""):
+                        price = _int(o.get("price")) or price
+        if price is None:                       # 構造化データが無いページ（本文の「ご注文概要 価格 111,100 円(税込)」）
+            t = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", re.sub(r"<script\b.*?</script>|<style\b.*?</style>", " ", html or "", flags=re.S)))
+            ms = {m for m in re.findall(r"ご注文概要\s*価格\s*([\d,]{4,})\s*円\s*\(税込\)", t)}
+            price = _int(next(iter(ms))) if len(ms) == 1 else None
+        if not price:
+            return []
+        return [{"name": row.get("model", ""), "price": price, "url": self.item_url(key), "jan": str(row["jan"]), "model": key,
+                 "availability": AVAIL_UNKNOWN}]
+
+
+ADAPTERS: tuple = (NikonDirectAdapter(), SonyStoreAdapter(), SamsungAdapter(), AppleStoreAdapter(), CanonStoreAdapter())
 
 
 def ready_for_triage(identity: dict, adapters=ADAPTERS) -> bool:
@@ -217,24 +356,20 @@ def match_identity(identity: dict, entries: list[dict]) -> tuple[list[dict], str
     basis, value = identity.get("basis"), identity.get("value")
     if basis == "JAN":
         v = str(value or "").strip()
-        return [e for e in entries if e.get("jan") == v], "jan_exact"
+        hits = [e for e in entries if e.get("jan") == v]
+        part = _norm_code(identity.get("part_number"))
+        if not hits and part:          # 一覧に JAN が無い取得元（Apple）は、同じ行の部品番号の完全一致で引く
+            return [e for e in entries if _norm_code(e.get("model")) == part], "part_exact"
+        return hits, "jan_exact"
     if basis in ("MODEL_CODE", "PART_NUMBER"):
         v = _norm_code(value)
         return [e for e in entries if v and _norm_code(e.get("model")) == v], "model_exact"
     return [], "no_exact_identity"
 
 
-def lookup(identity: dict, indexes: dict, adapters=ADAPTERS) -> dict:
-    """1件の識別を、取得済みの一覧（indexes: adapter_id → {"entries": [...], "observed_at": ISO}）から引く。
-
-    indexes に無い取得器（取得に失敗した・遮断された）は UNSUPPORTED にする（古い価格を使わない）。
-    """
-    base = {"status": UNSUPPORTED, "retailer": "", "product_url": "", "price": None, "availability_state": AVAIL_UNKNOWN,
-            "observed_at": "", "identity_evidence": {}}
-    ad = adapter_for(identity, adapters)
-    if ad is None:
-        return base
-    base["retailer"] = ad.retailer
+def _lookup_one(ad, identity: dict, indexes: dict) -> dict:
+    base = {"status": UNSUPPORTED, "retailer": ad.retailer, "source_type": getattr(ad, "source_type", OFFICIAL_DIRECT),
+            "product_url": "", "price": None, "availability_state": AVAIL_UNKNOWN, "observed_at": "", "identity_evidence": {}}
     idx = indexes.get(ad.adapter_id)
     if not idx or not idx.get("observed_at") or (not idx.get("entries") and not idx.get("covered")):
         return base
@@ -253,13 +388,42 @@ def lookup(identity: dict, indexes: dict, adapters=ADAPTERS) -> dict:
     # ブランドが一致しない行（たとえば型番が別メーカーの商品に偶然一致）は一致にしない
     if brand_of(h.get("name", "")) not in ("", *ad.brands):
         return {**base, "status": IDENTITY_MISMATCH, "identity_evidence": ev}
-    res = {**base, "product_url": h.get("url", ""), "price": h.get("price"), "price_caveat": getattr(ad, "price_note", ""),
-           "availability_state": h.get("availability") or AVAIL_UNKNOWN, "identity_evidence": ev}
-    if res["availability_state"] == AVAIL_OUT:
-        res["status"] = NOT_PURCHASABLE          # 在庫なし・販売終了の価格は、仕入れ値に使わない
+    pe = price_evidence(h)
+    res = {**base, "product_url": h.get("url", ""), "price": pe["effective_price"], "availability_state": h.get("availability") or AVAIL_UNKNOWN,
+           "identity_evidence": ev, **{k: v for k, v in pe.items() if k != "effective_price"}, "effective_price": pe["effective_price"],
+           "condition": h.get("condition") or "new"}
+    res["price_caveat"] = "; ".join(filter(None, [res["campaign_conditions"], *res["price_conditions"]]))
+    if res["availability_state"] == AVAIL_OUT or not pe["effective_price"]:
+        res["status"] = NOT_PURCHASABLE          # 在庫なし・販売終了・価格が読めない行は、仕入れ値に使わない
         return res
     res["status"] = MATCHED
     return res
+
+
+_RANK = {MATCHED: 0, NOT_PURCHASABLE: 1, AMBIGUOUS: 2, IDENTITY_MISMATCH: 3, NO_MATCH: 4, UNSUPPORTED: 5}
+
+
+def lookup(identity: dict, indexes: dict, adapters=ADAPTERS) -> dict:
+    """1件の識別を、取得済みの一覧（indexes: adapter_id → {"entries": [...], "observed_at": ISO}）から引く。
+
+    対応する取得器が複数あれば全部で引き、MATCHED のうち現金の仕入れ値（effective_price）が最も安いものを返す（条件つきの値引きを
+    使った価格を、条件なしの価格より優先しない）。他の取得元の一致は alternatives に残す。
+    indexes に無い取得器（取得に失敗した・遮断された）は UNSUPPORTED にする（古い価格を使わない）。
+    """
+    cands = [a for a in adapters if a.supports(identity)]
+    if not cands:
+        return {"status": UNSUPPORTED, "retailer": "", "source_type": "", "product_url": "", "price": None,
+                "availability_state": AVAIL_UNKNOWN, "observed_at": "", "identity_evidence": {}}
+    results = [_lookup_one(a, identity, indexes) for a in cands]
+    # 条件なしの価格を、条件つき（通常価格が不明を最後）の安い価格より先にする。同じ条件なら現金の仕入れ値が安いもの
+    _basis = {BASIS_UNCONDITIONAL: 0, BASIS_REGULAR: 1, BASIS_CONDITIONAL_UNKNOWN: 2}
+    results.sort(key=lambda r: (_RANK[r["status"]], _basis.get(r.get("price_basis"), 3), r["price"] if r["price"] is not None else 10**12))
+    best = dict(results[0])
+    alts = [{"retailer": r["retailer"], "source_type": r["source_type"], "price": r["price"], "status": r["status"]}
+            for r in results[1:] if r["status"] in (MATCHED, NOT_PURCHASABLE)]
+    if alts:
+        best["alternatives"] = alts
+    return best
 
 
 def build_item_index(ad, keys, fetch, now: datetime) -> dict:
@@ -325,13 +489,14 @@ def run_lookups(unmatched_candidates: list[dict], now: datetime, fetch, adapters
     for r in tri["rows"]:
         if r["triage"]["tier"] not in (tr.HIGH, tr.MEDIUM):
             continue
-        ad = adapter_for({"name": r.get("name", "")}, adapters)
+        ad = adapter_for(_identity_of(r), adapters)
         if ad is not None and not getattr(ad, "per_item", False):
             wanted_index.add(ad.adapter_id)
     for r in tri["queue"]:
-        ad = adapter_for({"name": r.get("name", "")}, adapters)
+        ident = _identity_of(r)
+        ad = adapter_for(ident, adapters)
         if ad is not None and getattr(ad, "per_item", False):
-            k = ad.item_key({"name": r.get("name", "")})
+            k = ad.item_key(ident)
             if k:
                 item_keys.setdefault(ad.adapter_id, []).append(k)
     indexes = build_indexes([a for a in adapters if a.adapter_id in wanted_index], fetch, now)
@@ -342,7 +507,7 @@ def run_lookups(unmatched_candidates: list[dict], now: datetime, fetch, adapters
                 indexes[a.adapter_id] = idx
     results, counts = {}, {}
     for c in unmatched_candidates:
-        res = lookup({"basis": c.get("identity_basis"), "value": _identity_value(c), "name": c.get("name", "")}, indexes, adapters)
+        res = lookup(_identity_of(c), indexes, adapters)
         counts[res["status"]] = counts.get(res["status"], 0) + 1
         if res["status"] != UNSUPPORTED:
             results[c["candidate_id"]] = res
@@ -351,8 +516,22 @@ def run_lookups(unmatched_candidates: list[dict], now: datetime, fetch, adapters
             "queue_size": tri["stats"]["top_queue"]}
 
 
+def _identity_of(c: dict) -> dict:
+    """候補（rank_product_candidates の行）の識別: 基準（JAN・部品番号・型番）・値・名前・名前の部品番号。"""
+    return {"basis": c.get("identity_basis"), "value": _identity_value(c), "name": c.get("name", ""), "part_number": _part_of(c)}
+
+
 def _identity_value(c: dict) -> str:
     """候補の識別子の値。JAN は candidate の jan、型番・部品番号は名前から取り直さず rank 時の値（identity_value）を使う。"""
     if c.get("identity_basis") == "JAN":
         return str(c.get("jan") or "")
     return str(c.get("identity_value") or "")
+
+
+_PART = re.compile(r"\b[A-Z0-9]{4,5}J/A\b")
+
+
+def _part_of(c: dict) -> str:
+    """名前に部品番号（メーカーの型番 ○○J/A）が1つだけあるときの値（Apple）。無い・複数は空。"""
+    found = sorted(set(_PART.findall(str(c.get("name") or ""))))
+    return found[0] if len(found) == 1 else ""

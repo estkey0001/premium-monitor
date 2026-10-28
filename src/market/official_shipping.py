@@ -73,6 +73,14 @@ PRODUCT_SHIPPING: dict[str, dict] = {
     "prod_zf": {"source": "src_nikon_direct", "fee": 550, "status": PAID,
                 "url": "https://nij.nikon.com/shop/u/guide/delivery_charge/", "checked_on": "2026-10-28",
                 "checked_by": "Claude"},
+    # 2026-10-28（Coverage Wave 3）: ソニーストアの購入ページ（ILCE-7RM5・ILCE-1M2）に「送料無料」の表示が無い。ご利用ガイドの送料 550 円
+    # （税込。店舗での注文は無料だが前提にしない）。購入できる状態で「送料無料」アイコンが付いたら見直す
+    "prod_a7rv": {"source": "src_sony_store", "fee": 550, "status": PAID,
+                  "url": "https://pur.store.sony.jp/ichigan/products/ILCE-7RM5/ILCE-7RM5_purchase/",
+                  "checked_on": "2026-10-28", "checked_by": "Claude"},
+    "prod_a1ii": {"source": "src_sony_store", "fee": 550, "status": PAID,
+                  "url": "https://pur.store.sony.jp/ichigan/products/ILCE-1M2/ILCE-1M2_purchase/",
+                  "checked_on": "2026-10-28", "checked_by": "Claude"},
     # 2026-10-24: キヤノンオンラインショップの購入ページ（EOS R6 Mark II・ボディー）に「送料無料」
     "prod_r6ii": {"source": "src_canon_official", "fee": 0, "status": FREE_VERIFIED,
                   "url": "https://store.canon.jp/online/g/g5666C001/", "checked_on": "2026-10-24", "checked_by": "Claude"},

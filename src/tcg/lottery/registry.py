@@ -103,6 +103,18 @@ LOTTERY_SOURCES: list[dict] = [
               "固定の書式で本文のテキストにある。応募は Livepocket（外部。公式ドメインではないので entry_url は空）。店舗横断の1本の告知。"
               "2026-10-28 の調査: robots.txt は /wordpress/wp-admin/ だけを禁止（PremiumMonitor への禁止なし）。自動取得を禁じる規約・"
               "利用規約のページは見当たらない（許可の明記でもない。取得日つきの記録で、変更があれば再確認する）"),
+    _src("KIDS_REPUBLIC", "キッズリパブリック（イオン）", _BOTH, "P1", "https://www.kidsrepublic.jp/", CM_HTML,
+         news_url="https://www.kidsrepublic.jp/campaign", channel="APP", adapter="kids_republic_lottery", verified=True,
+         note="キャンペーン情報に、アプリ抽選の告知（応募受付期間・当選発表日・購入期間）が静的 HTML のテキストで載る。応募はキッズリパブリックの"
+              "アプリ（iAEON ID 連携）で公式ドメインの応募ページは無い（entry_url は空）。本州・四国の直営おもちゃ売場。一覧にはポケカ・ONE PIECE 以外も"
+              "混ざるのでタイトルで絞る。2026-10-29 の調査: robots.txt は 404（制限の記載なし）。利用規約は自動取得を禁じる記述を読み取れなかった"
+              "（許可の明記でもない。取得日つきの記録で、変更があれば再確認する）"),
+    _src("FUKUFUKU_TOREKA", "福福トレカ", (POKEMON,), "P2", "https://pokemon.fukufukutoreka.com/", CM_HTML,
+         news_url="https://pokemon.fukufukutoreka.com/lottery", channel="ONLINE", adapter="fukufuku_lottery", verified=True,
+         note="小規模な通販店。抽選販売の一覧（/lottery）と詳細に、応募期間・抽選日・購入期限が静的 HTML のテキストで載る（応募期間は年が省略されるので、"
+              "一覧の応募締切の年で補う）。応募は会員ログインが必要で、応募そのものは取らない（entry_url は空）。2026-10-29 の調査: robots.txt は"
+              " /*.csv$・/cart・/shopping・/mypage だけを禁止で /lottery は許可。自動取得を禁じる規約の記述は見つからなかった（許可の明記でもない。"
+              "取得日つきの記録で、変更があれば再確認する）"),
     _src("TOYSRUS", "トイザらス", _BOTH, "P1", "https://www.toysrus.co.jp/", CM_HTML,
          note="2026-10-01 時点でトップページが HTTP 403（ローカル・CI とも）。解析器は未実装"),
     _src("JOSHIN", "Joshin", _BOTH, "P1", "https://joshinweb.jp/", CM_HTML,
@@ -246,7 +258,10 @@ def announcement_funnel(rows: list[dict]) -> dict:
     # 数え方は取得元ごとに近似（候補の記事の定義・棄却の数え方は取得器ごとに違う）。合計は目安で、保存則を満たさない
     out = {"raw_announcements": _sum("candidate_articles"), "parsed_events": _sum("accepted_lotteries"),
            "review_required": _sum("announcements"), "rejected": _sum("rejected"), "active_lotteries": active,
-           "sources_with_gap": gap, "sources_truncated": truncated}
+           "sources_with_gap": gap, "sources_truncated": truncated,
+           # 詳細の取得の内訳（取得上限があるときの取りこぼしを数える。None でなく 0 を出す）
+           "detail_candidates": _sum("detail_candidates"), "detail_fetched": _sum("detail_fetched"),
+           "skipped_due_to_limit": _sum("skipped_due_to_limit"), "skipped_ended": _sum("skipped_ended")}
     if active == 0:
         out["zero_active_interpretation"] = ZERO_ACTIVE_NOT_PROVEN if gap else ZERO_ACTIVE_NO_GAP
     return out

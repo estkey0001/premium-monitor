@@ -61,6 +61,7 @@ NO_SPREAD = "NO_SPREAD"
 RETAIL_PRICE_MISSING = "RETAIL_PRICE_MISSING"        # 小売（公式直販）の価格を同一性つきで引けていない（買取起点の候補）
 IDENTITY_PARTIAL = "IDENTITY_PARTIAL"                # 識別子が型番コードだけ（JAN・部品番号ほど確かでない）
 CANONICAL_UNREGISTERED = "CANONICAL_UNREGISTERED"    # 正本（商品の登録）に無い。人が公式で確かめて登録する
+ACQUISITION_CONDITIONAL = "ACQUISITION_CONDITIONAL"  # 仕入れ値が、クーポン・キャンペーン・会員限定・数量限定の値引きかもしれない（現金の確定の価格ではない）
 RETAIL_LOOKUP_MAX_AGE_HOURS = 36                     # 小売の照会の結果がこれより古いときは使わない（鮮度を偽装しない）
 
 # 確定の関門ではなく参考として付ける理由（これだけが残っても VERIFIED は既存の判定が決める）
@@ -615,6 +616,7 @@ def apply_lookups(dps: list[dict], lookups: dict | None, now: datetime, generate
     for r in dps:
         lk = (lookups or {}).get(r["candidate_id"]) if usable else None
         r["lookup_status"] = (lk or {}).get("status") or "NOT_ATTEMPTED"
+        r["route_type"] = RETAIL_TO_BUYBACK
         sell = int(r.get("observed_sell_price") or 0)
         retail, basis_note = None, ""
         if isinstance(lk, dict) and lk.get("status") == "MATCHED" and isinstance(lk.get("price"), int) and lk["price"] > 0:
@@ -622,6 +624,14 @@ def apply_lookups(dps: list[dict], lookups: dict | None, now: datetime, generate
             if at is not None and timedelta(hours=-1) <= now - at <= timedelta(hours=RETAIL_LOOKUP_MAX_AGE_HOURS):
                 retail = lk["price"]
                 r["retail_caveat"] = str(lk.get("price_caveat") or "")
+                # 価格の証拠（表示価格・通常の価格・ポイントは現金から引かず別の項目）。条件つきの値引きは現金の仕入れ値に使わない
+                r.update({"retail_source_type": str(lk.get("source_type") or ""),
+                          "retail_listed_price": lk.get("listed_price"), "retail_regular_price": lk.get("regular_price"),
+                          "retail_campaign_price": lk.get("campaign_price"), "retail_points": int(lk.get("points") or 0),
+                          "retail_cashback": int(lk.get("cashback") or 0),
+                          "retail_conditions": list(lk.get("price_conditions") or []),
+                          "retail_price_basis": str(lk.get("price_basis") or "UNCONDITIONAL"),
+                          "retail_alternatives": list(lk.get("alternatives") or [])})
                 r.update({"retail_price": retail, "retail_retailer": str(lk.get("retailer") or ""),
                           "retail_url": str(lk.get("product_url") or ""), "retail_observed_at": lk["observed_at"],
                           "retail_availability": str(lk.get("availability_state") or "UNKNOWN"),
@@ -646,6 +656,14 @@ def apply_lookups(dps: list[dict], lookups: dict | None, now: datetime, generate
                       "research_class": STANDARD_RESEARCH})
             continue
         req += [OFFICIAL_UNVERIFIED, PURCHASE_SHIPPING_UNKNOWN]
+        conditional = bool(r.get("retail_conditions")) or r.get("retail_price_basis") not in (None, "UNCONDITIONAL")
+        if conditional:
+            req.append(ACQUISITION_CONDITIONAL)
+        if basis_note == "retail_lookup" and r.get("retail_availability") in (None, "UNKNOWN"):
+            req.append(STOCK_UNKNOWN)
+        if r.get("retail_points"):
+            # ポイント還元は現金と同額として引かない。参考の差（ポイントを現金と見なした場合）は別の項目に残す
+            r["spread_if_points_counted"] = spread + int(r["retail_points"])
         # 買取の価格を取得した日が3日より古い（または読めない）ときは、高優先にしない（買取側の鮮度。選別と同じ基準）
         buy_fresh = False
         _bat = _parse_ts(r.get("observed_at"), now)
@@ -653,13 +671,14 @@ def apply_lookups(dps: list[dict], lookups: dict | None, now: datetime, generate
             buy_fresh = True
         if not buy_fresh:
             req.append(BUY_STALE)
-        if r.get("identity_basis") == IDENT_MODEL:
+        # 型番コードだけの識別・買取の名前から拾った部品番号での引き当て（JAN と突き合わせていない）は、識別が部分的
+        if r.get("identity_basis") == IDENT_MODEL or (r.get("retail_identity_evidence") or {}).get("method") == "part_exact":
             req.append(IDENTITY_PARTIAL)
         anomaly = spread > retail * ANOMALY_RATIO
         if anomaly:
             req.append(PRICE_ANOMALY_SUSPECTED)
         r.update({"status": RESEARCH_CANDIDATE, "missing_requirements": list(dict.fromkeys(req)),
-                  "research_class": STANDARD_RESEARCH if anomaly or IDENTITY_PARTIAL in req or basis_note != "retail_lookup" or r.get("retail_caveat") or not buy_fresh
+                  "research_class": STANDARD_RESEARCH if anomaly or IDENTITY_PARTIAL in req or basis_note != "retail_lookup" or r.get("retail_caveat") or conditional or not buy_fresh
                   else HIGH_PRIORITY_RESEARCH})
     return dps
 
@@ -823,15 +842,17 @@ PRIVATE_KEYS = frozenset({
     "priority_reasons", "note", "name", "url", "jan", "shop", "rows",
     # 買取起点の選別・小売の照会（Coverage Wave 2）の個別の項目
     "identity_value", "identity_basis", "retail_price", "retail_url", "retail_retailer", "retail_identity_evidence",
-    "retail_observed_at", "retail_availability", "retail_basis", "retail_caveat", "raw_spread_hint", "triage", "queue_rank", "lookup_status",
-    "rank", "rank_score", "retail_price_hint", "lookups"})
+    "retail_observed_at", "retail_availability", "retail_basis", "retail_caveat", "raw_spread_hint", "retail_source_type", "retail_listed_price", "retail_regular_price",
+    "retail_campaign_price", "retail_points", "retail_cashback", "retail_conditions", "retail_price_basis", "retail_alternatives",
+    "spread_if_points_counted", "route_type", "triage", "queue_rank", "lookup_status",
+    "rank", "rank_score", "retail_price_hint", "lookups", "tcg_events", "quality_by_source"})
 
 
 # 公開の集計に出してよい理由の語彙（商品名・価格などの個別の値がキーに混ざらないように、既知の語彙だけを通す）
 ALLOWED_REASONS = frozenset({
     OFFICIAL_UNVERIFIED, OFFICIAL_NOT_SOLD, BUY_NOT_ITEM_LEVEL, BUY_STALE, SELL_STALE, GENERIC_SELL_URL, IDENTITY_UNCONFIRMED,
     CONDITION_UNKNOWN, CONDITION_MISMATCH, STOCK_UNKNOWN, SELL_SAMPLE_INSUFFICIENT, PURCHASE_SHIPPING_UNKNOWN,
-    RETAIL_PRICE_MISSING, IDENTITY_PARTIAL, CANONICAL_UNREGISTERED,
+    RETAIL_PRICE_MISSING, IDENTITY_PARTIAL, CANONICAL_UNREGISTERED, ACQUISITION_CONDITIONAL,
     PRICE_ANOMALY_SUSPECTED, SELL_REJECTED, NET_NEGATIVE, NO_SELL_SIDE, NO_BUY_SIDE, NO_SPREAD,
     ABOVE_GENRE_MAX, NEEDS_CORROBORATION, PRICE_SPIKE})
 ALLOWED_CONFIDENCE = frozenset({"high", "medium", "low"})
@@ -846,8 +867,14 @@ COVERAGE_KEYS = {
     "tcg_source_coverage": ("configured_sources", "implemented_collectors", "reachable_sources", "healthy_sources",
                             "blocked_sources", "unreachable_sources", "not_implemented_sources",
                             "sources_with_active_lottery", "lottery_events_found"),
+    "tcg_event_quality": ("active_events", "with_application_start", "with_application_end", "with_winner_announcement",
+                          "with_purchase_window", "with_action_url", "fully_dated"),
+    "tcg_priority": ("DEADLINE_SOON", "ACTIVE_LOTTERY", "PREORDER_OPEN", "FIRST_COME", "RESTOCK", "UPCOMING"),
+    "tcg_fast_lane": ("events_measured", "median_application_duration_hours", "median_age_at_observation_hours",
+                      "windows_under_24h_at_observation", "observed_after_half_window", "tolerated_age_at_observation_hours_p25",
+                      "suggested_max_detection_interval_hours", "date_precision_events"),
     "tcg_funnel": ("raw_announcements", "parsed_events", "review_required", "rejected", "active_lotteries", "sources_with_gap",
-                   "sources_truncated"),
+                   "sources_truncated", "detail_candidates", "detail_fetched", "skipped_due_to_limit", "skipped_ended"),
 }
 TCG_CLASS_KEYS = ("WORKING", "IMPLEMENTED_BUT_BLOCKED", "ACCESSIBLE_UNIMPLEMENTED", "UNREACHABLE", "UNSUPPORTED")
 
@@ -856,6 +883,13 @@ def _count_dict(src, keys) -> dict:
     """許可したキーだけ、整数の値だけを通す（それ以外は捨てる）。"""
     src = src if isinstance(src, dict) else {}
     return {k: int(src[k]) for k in keys if isinstance(src.get(k), (int, float)) and not isinstance(src.get(k), bool)}
+
+
+def _num_dict(src, keys) -> dict:
+    """許可したキーだけ、数値（小数も）だけを通す。時間（0.5 時間など）を整数に切り捨てない。"""
+    src = src if isinstance(src, dict) else {}
+    return {k: (round(float(src[k]), 1) if isinstance(src[k], float) else int(src[k])) for k in keys
+            if isinstance(src.get(k), (int, float)) and not isinstance(src.get(k), bool)}
 
 
 def _known_genres() -> frozenset:
@@ -923,6 +957,9 @@ def public_summary(report: dict) -> dict:
                            if ((m.get("tcg_source_coverage") or {}).get("funnel") or {}).get("zero_active_interpretation")
                            in ("NOT_PROVEN_MARKET_EMPTY", "NO_KNOWN_COLLECTOR_GAP") else None),
         "tcg_active_events": _int_or_none(m.get("tcg_active_events")),
+        "tcg_event_quality": _count_dict(m.get("tcg_event_quality"), COVERAGE_KEYS["tcg_event_quality"]),
+        "tcg_priority": _count_dict(m.get("tcg_priority"), COVERAGE_KEYS["tcg_priority"]),
+        "tcg_fast_lane": _num_dict(m.get("tcg_fast_lane"), COVERAGE_KEYS["tcg_fast_lane"]),
         "tcg_msrp_verified": _int_or_none(m.get("tcg_msrp_verified")),
         "tcg_source_candidates": _int_or_none(m.get("tcg_source_candidates")),
     }
@@ -957,7 +994,7 @@ def build(*, products: list[dict], observations: list[dict], msrp_evidence: dict
           ledger_state: str | None = None, quarantined: list[dict] | None = None,
           retail_hints: dict | None = None, actionable_count: int | None = None,
           quarantine_generated_at: str | None = None, retail_lookups: dict | None = None,
-          retail_lookups_generated_at: str | None = None) -> tuple[dict, dict]:
+          retail_lookups_generated_at: str | None = None, tcg_events: list[dict] | None = None) -> tuple[dict, dict]:
     """調査候補のレポート（運営者向け）と、次回の台帳。戻りは (report, new_state)。
 
     quarantined: 品質ゲートで隔離された買取価格（collector_report の suspicious_prices）。上限超え・急変・裏付け不足で
@@ -1001,6 +1038,11 @@ def build(*, products: list[dict], observations: list[dict], msrp_evidence: dict
     prod_research = [c for c in all_dps if c["status"] == RESEARCH_CANDIDATE]
     metrics["product_research_candidates"] = len(prod_research)
     metrics["high_priority_research"] += sum(1 for c in prod_research if c.get("research_class") == HIGH_PRIORITY_RESEARCH)
+    from src.tcg import event_quality as _eq
+    eq = _eq.evaluate(tcg_events or [], now)
+    metrics["tcg_event_quality"] = eq["quality"]
+    metrics["tcg_priority"] = eq["priority"]
+    metrics["tcg_fast_lane"] = eq["fast_lane"]
     metrics["buyback_triage"] = dict(tri["stats"]["tier_counts"])
     metrics["buyback_top_queue"] = tri["stats"]["top_queue"]
     metrics["retail_lookup_ready"] = tri["stats"]["lookup_ready"]
@@ -1028,6 +1070,7 @@ def build(*, products: list[dict], observations: list[dict], msrp_evidence: dict
                           "lookup_ready": tri["stats"]["lookup_ready"], "lookup_matched": tri["stats"]["lookup_matched"],
                           "research_candidates": len(prod_research)},
         "product_candidates": dps,
+        "tcg_events": eq["events"],                     # 非公開（イベントごとの応募の長さ・検知の遅れ。件数・中央値だけ公開）
         "metrics": metrics,
     }
     return report, new_state

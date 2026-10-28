@@ -88,7 +88,7 @@ class HobbyStationLotteryAdapter(LotteryAdapter):
     source_name = "ホビーステーション（公式お知らせの抽選販売）"
     tcg = "POKEMON"
     channel = "STORE"
-    max_detail_fetch = 8
+    max_detail_fetch = 10
     lottery_source_type = "STORE_OFFICIAL"
 
     def _stop_if_blocked(self) -> bool:
@@ -121,9 +121,12 @@ class HobbyStationLotteryAdapter(LotteryAdapter):
         self.funnel.product_links_discovered = len(cands)
         # 応募が終わった告知（件名に「応募は終了」）は後ろへ。残りは公開日の新しい順
         cands.sort(key=lambda c: ("応募は終了" not in c["title"], str(c.get("published_at") or "")[:10], c["post_id"]), reverse=True)
+        n_open = sum(1 for c in cands if "応募は終了" not in c["title"])
+        fetched = 0
         for c in cands[:self.max_detail_fetch]:
             if self._stop_if_blocked():
                 break
+            fetched += 1
             page = self.fetch_detail(c["url"], referer=LISTING_URL)
             if not page:
                 continue
@@ -137,7 +140,10 @@ class HobbyStationLotteryAdapter(LotteryAdapter):
             self.lottery_events.extend(self.build_from_article(
                 title=title, body=d["body"], url=c["url"], published_at=c["published_at"],
                 entry_url=None, result_url=None, tcg_hint=_tcg_of(title), targets=targets))
-        if len(cands) > self.max_detail_fetch:
+        skipped_open = max(0, n_open - self.max_detail_fetch)
+        self.health.update({"detail_candidates": len(cands), "detail_fetched": fetched, "skipped_due_to_limit": skipped_open,
+                            "skipped_ended": max(0, (len(cands) - n_open) - max(0, self.max_detail_fetch - n_open))})
+        if skipped_open > 0:
             self.health["truncated"] = True
-            self.funnel.notes.append(f"詳細は {self.max_detail_fetch}/{len(cands)} 件のみ取得（同一ドメインの間隔を守るため）")
+            self.funnel.notes.append(f"詳細は {fetched}/{len(cands)} 件のみ取得。応募中らしい告知 {skipped_open} 件を上限のため読めていない")
         return self.finish()

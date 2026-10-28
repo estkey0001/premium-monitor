@@ -1,0 +1,34 @@
+# キヤノンの現行カメラの「JAN ↔ 商品コード ↔ キヤノンオンラインショップの購入ページ」の対応表（Coverage Wave 3）。
+#
+# 根拠: キヤノン公式の製品トップ（personal.canon.jp/product/camera/eos/<slug>）と、キットは <slug>/kit の「JANコード」「商品コード」の定義リスト
+# （2026-10-29 に確認。取得は公式のページだけ・robots は全許可）。購入ページは store.canon.jp/online/g/g<商品コード>/（JSON-LD の価格）。
+# 買取店の一覧の JAN から、購入ページの現金の税込価格を引くのに使う（src/research/retail_lookup.py の CanonStoreAdapter）。
+#
+# 規則:
+# - ここに載せた商品コードだけを取得する（許可リスト方式。整備済みの別コード・販売終了・発売前の商品は載せない・引かない）
+# - 色違い・キット違いは JAN も商品コードも別。1行 = 1つの JAN。名前や型番の近さで行を作らない
+# - 推測値を書かない。確認できなかった行は載せない。載せたら checked_on（確認日）を更新するのは人が公式で再確認したときだけ
+# - 在庫は購入ページの納期の文言から作らない（在庫の根拠にしない）
+checked_on: "2026-10-29"
+source_note: "personal.canon.jp の製品トップ・キットのページ（JAN・商品コード）。store.canon.jp は robots 全許可。規約の自動取得の記述は未確認（変更時に再確認）"
+items:
+  - {jan: "4549292200508", code: "5666C001", model: "EOS R6 Mark II", kind: body}
+  - {jan: "4549292229141", code: "6536C001", model: "EOS R5 Mark II", kind: body}
+  - {jan: "4549292246285", code: "7084C001", model: "EOS R6 Mark III", kind: body}
+  - {jan: "4549292185430", code: "5137C001", model: "EOS R7", kind: body}
+  - {jan: "4549292204834", code: "5803C001", model: "EOS R8", kind: body}
+  - {jan: "4549292189711", code: "5331C001", model: "EOS R10", kind: body}
+  - {jan: "4549292205008", code: "5811C001", model: "EOS R50 ブラック", kind: body}
+  - {jan: "4549292205091", code: "5812C001", model: "EOS R50 ホワイト", kind: body}
+  - {jan: "4549292241525", code: "6895C001", model: "EOS R50 V", kind: body}
+  - {jan: "4549292214543", code: "6052C001", model: "EOS R100", kind: body}
+  - {jan: "4549292228090", code: "6390C001", model: "PowerShot V1", kind: body}
+  - {jan: "4549292200577", code: "5666C010", model: "EOS R6 Mark II RF24-105L IS USM キット", kind: kit}
+  - {jan: "4549292200652", code: "5666C017", model: "EOS R6 Mark II RF24-105 IS STM キット", kind: kit}
+  - {jan: "4549292229226", code: "6536C011", model: "EOS R5 Mark II RF24-105L IS USM キット", kind: kit}
+  - {jan: "4549292246339", code: "7084C009", model: "EOS R6 Mark III RF24-105L IS USM キット", kind: kit}
+  - {jan: "4549292246391", code: "7084C017", model: "EOS R6 Mark III RF24-105 IS STM キット", kind: kit}
+  - {jan: "4549292185546", code: "5137C008", model: "EOS R7 RF-S18-150 IS STM キット", kind: kit}
+  - {jan: "4549292204872", code: "5803C011", model: "EOS R8 RF24-50 IS STM キット", kind: kit}
+  - {jan: "4549292189766", code: "5331C008", model: "EOS R10 RF-S18-45 IS STM キット", kind: kit}
+  - {jan: "4549292214666", code: "6052C011", model: "EOS R100 RF-S18-45 IS STM キット", kind: kit}

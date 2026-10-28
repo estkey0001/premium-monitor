@@ -33,7 +33,9 @@ ANNOUNCEMENT_DISPLAY_DAYS = 14
 def _adapters():
     from src.collectors.tcg.lottery.clabo import CardLaboLotteryAdapter
     from src.collectors.tcg.lottery.geo import GeoLotteryAdapter
+    from src.collectors.tcg.lottery.fukufuku import FukufukuLotteryAdapter
     from src.collectors.tcg.lottery.hbst import HobbyStationLotteryAdapter
+    from src.collectors.tcg.lottery.kidsrepublic import KidsRepublicLotteryAdapter
     from src.collectors.tcg.lottery.others import (
         LawsonLotteryAdapter, OnePieceNewsLotteryAdapter, PremiumBandaiLotteryAdapter,
     )
@@ -46,6 +48,8 @@ def _adapters():
         "geo_lottery": GeoLotteryAdapter,
         "card_labo_lottery": CardLaboLotteryAdapter,
         "hobby_station_lottery": HobbyStationLotteryAdapter,
+        "kids_republic_lottery": KidsRepublicLotteryAdapter,
+        "fukufuku_lottery": FukufukuLotteryAdapter,
         "lawson_lottery": LawsonLotteryAdapter,
         "onepiece_news_lottery": OnePieceNewsLotteryAdapter,
         "premium_bandai_lottery": PremiumBandaiLotteryAdapter,
@@ -292,7 +296,10 @@ def run_lottery_pipeline(pokemon_registry: list[dict], onepiece_products: list[d
             "health": h.get("status"), "active_lotteries": active - active_preorders,
             "active_preorders": active_preorders,
             "announcements": len(h.get("announcements") or []),
-            "truncated": bool(h.get("truncated")),          # 詳細の取得に上限があり、見つけた告知を全部は読めていない取得元
+            "truncated": bool(h.get("truncated")),
+            # 詳細の取得の内訳（黙って切り捨てない）: 候補の告知 / 実際に読んだ / 上限のため読めなかった応募中らしい告知 / 読まなかった終了済みの告知
+            "detail_candidates": int(h.get("detail_candidates") or 0), "detail_fetched": int(h.get("detail_fetched") or 0),
+            "skipped_due_to_limit": int(h.get("skipped_due_to_limit") or 0), "skipped_ended": int(h.get("skipped_ended") or 0),          # 詳細の取得に上限があり、見つけた告知を全部は読めていない取得元
             # 一覧のタイトルだけで見つけた販売の告知（Phase 27 の発見の候補。本文・日程は読んでいない）
             "discovered_titles": list(h.get("discovered_titles") or [])[:30],
             "pages": f.get("pages", []),

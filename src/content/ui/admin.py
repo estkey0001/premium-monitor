@@ -1046,7 +1046,19 @@ def _research(v: dict) -> str:
         + ("（受付中が0件でも、市場に無いとは言えない。取得元の未実装・遮断・到達不能が "
            f'{_n((r.get("tcg_funnel") or {}).get("sources_with_gap"))}件ある）'
            if (r.get("tcg_funnel") or {}).get("zero_active_interpretation") == "NOT_PROVEN_MARKET_EMPTY" else "")
-        + '</dd></dl>')
+        + (f'（詳細の取得: 候補 {_n((r.get("tcg_funnel") or {}).get("detail_candidates"))}件・読んだ {_n((r.get("tcg_funnel") or {}).get("detail_fetched"))}件・'
+           f'上限のため読めなかった応募中らしい告知 {_n((r.get("tcg_funnel") or {}).get("skipped_due_to_limit"))}件）')
+        + '</dd>'
+        f'<dt>TCG の受付中イベントの質</dt><dd>受付中 {_n((r.get("tcg_event_quality") or {}).get("active_events"))}件のうち、応募開始 '
+        f'{_n((r.get("tcg_event_quality") or {}).get("with_application_start"))}・応募終了 {_n((r.get("tcg_event_quality") or {}).get("with_application_end"))}・'
+        f'当選発表 {_n((r.get("tcg_event_quality") or {}).get("with_winner_announcement"))}・購入期間 {_n((r.get("tcg_event_quality") or {}).get("with_purchase_window"))}・'
+        f'行動の URL {_n((r.get("tcg_event_quality") or {}).get("with_action_url"))}件が読めている'
+        f'（優先: 期限が近い {_n((r.get("tcg_priority") or {}).get("DEADLINE_SOON"))}・受付中の抽選 {_n((r.get("tcg_priority") or {}).get("ACTIVE_LOTTERY"))}・'
+        f'これから {_n((r.get("tcg_priority") or {}).get("UPCOMING"))}）</dd>'
+        f'<dt>検知の許容（目安。高速化は未実装）</dt><dd>応募の長さの中央値 {_n((r.get("tcg_fast_lane") or {}).get("median_application_duration_hours"))}時間・'
+        f'観測時点で残り24時間未満 {_n((r.get("tcg_fast_lane") or {}).get("windows_under_24h_at_observation"))}件／{_n((r.get("tcg_fast_lane") or {}).get("events_measured"))}件・'
+        f'半分の期間が残るうちに見つけるなら {_n((r.get("tcg_fast_lane") or {}).get("suggested_max_detection_interval_hours"))}時間以内の間隔'
+        '（初めて見た時刻は保持していないので、実際の検知の遅れは測れない）</dd></dl>')
     reasons = ("<ul class=\"nu-ad-list\">" + "".join(
         f"<li>{esc(RESEARCH_LABELS.get(k, k))}<span class=\"nu-osub\"> {esc(str(n))}件</span></li>"
         for k, n in (r.get("reason_counts") or {}).items()) + "</ul>") if r.get("reason_counts") else ""

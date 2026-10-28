@@ -71,6 +71,7 @@ RECHECK_TARGETS = ("prod_ps5_pro", "prod_switch2", "prod_airpods_pro3", "prod_r5
                    "prod_x100vi",
                    "prod_z9", "prod_r6ii",   # Coverage Wave 1: ニコンダイレクト（JAN）・キヤノンオンラインショップ（商品コード）
                    "prod_zf",                # Coverage Wave 2: ニコンダイレクト（JAN・ブラック）
+                   "prod_a7rv", "prod_a1ii",  # Coverage Wave 3: ソニーストアの購入ページ（型番・在庫の語は 翌日出荷 も読む）
                    "prod_iphoneair_256",   # Phase 29: 発見から登録した iPhone Air 256GB（同じ apple_parts の読み方）
                    "prod_iphoneduo_256")   # Phase 30: 優先順位で選んで登録した iPhone Duo 256GB
 # 読み取りごとの照合のキー（ページのどの値で「この商品」と確かめるか）。既定は型番（model_number）
@@ -89,7 +90,9 @@ def _text(h: str) -> str:
     return re.sub(r"\s+", " ", _html.unescape(re.sub(r"<[^>]+>", " ", t)))
 
 
-_STOCK_WORDS = ("入荷待ち", "在庫切れ", "在庫あり", "販売終了")
+_STOCK_WORDS = ("入荷待ち", "在庫切れ", "在庫あり", "販売終了", "翌日出荷", "当日出荷")
+# 出荷の日の表示（翌日出荷・当日出荷）は在庫ありの意味。在庫の記録には既存の語（在庫あり）で残す（新しい語を在庫の分類に流さない）
+_STOCK_ALIAS = {"翌日出荷": "在庫あり", "当日出荷": "在庫あり"}
 
 
 def parse_sony_store(h: str, model: str) -> dict:
@@ -105,7 +108,7 @@ def parse_sony_store(h: str, model: str) -> dict:
     if len({(x.group(1), x.group(2)) for x in ms}) != 1:
         return {"model_found": model in t, "price": None, "stock": "", "ended": False}
     m = ms[0]
-    stock = m.group(1)
+    stock = _STOCK_ALIAS.get(m.group(1), m.group(1))
     return {"model_found": True, "price": int(m.group(2).replace(",", "")),
             "stock": "" if stock == "販売終了" else stock, "ended": stock == "販売終了"}
 
@@ -126,7 +129,7 @@ def parse_sony_product(h: str, model: str) -> dict:
         return parse_sony_store(h, model)            # 購入ページ（_purchase）の並び（型番 在庫 価格）の形
     if len({m.group(1) for m in ms}) != 1:
         return {"model_found": True, "price": None, "stock": "", "ended": False}
-    stocks = {m.group(2) or "" for m in ms}
+    stocks = {_STOCK_ALIAS.get(m.group(2) or "", m.group(2) or "") for m in ms}
     stock = stocks.pop() if len(stocks) == 1 else ""
     return {"model_found": True, "price": int(ms[0].group(1).replace(",", "")),
             "stock": "" if stock == "販売終了" else stock, "ended": stock == "販売終了"}

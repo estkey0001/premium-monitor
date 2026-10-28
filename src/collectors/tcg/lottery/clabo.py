@@ -124,7 +124,7 @@ class CardLaboLotteryAdapter(LotteryAdapter):
     source_name = "カードラボ（店舗ブログの抽選・予約の告知）"
     tcg = "POKEMON"
     channel = "STORE"
-    max_detail_fetch = 12
+    max_detail_fetch = 16
     # 店舗のブログで、公式ドメインの応募ページは無い。メーカー・小売本社の公式（RETAILER_OFFICIAL）ではなく、店舗の告知（STORE_OFFICIAL）
     lottery_source_type = "STORE_OFFICIAL"
 
@@ -175,9 +175,14 @@ class CardLaboLotteryAdapter(LotteryAdapter):
         # 件名の応募期間が終わっている告知は後ろへ（応募中の告知を先に読む）
         cands.sort(key=lambda tc: (not _title_ended(tc[1]["title"], today), str(tc[1].get("published_at") or "")[:10],
                                    hashlib.sha1(f"{today}|{tc[1]['url']}".encode()).hexdigest()), reverse=True)
+        # 取りこぼしの数（黙って切り捨てない）: 応募中らしい告知で、上限のため読めなかったものだけを skipped_due_to_limit に数える
+        # （件名で応募が終わっている告知は、上限に余裕があるときだけ読む。読まなかった分は skipped_ended）
+        n_open = sum(1 for tc in cands if not _title_ended(tc[1]["title"], today))
+        fetched = 0
         for tcg, card in cands[:self.max_detail_fetch]:
             if self._stop_if_blocked():
                 break
+            fetched += 1
             store = card["shop_name"]
             if not store:
                 # 店舗が分からない告知は、店舗ごとの抽選として表せない（全国の抽選に見せない）。取らずに棄却する
@@ -197,8 +202,11 @@ class CardLaboLotteryAdapter(LotteryAdapter):
                 title=card["title"], body=body, url=card["url"], published_at=card["published_at"],
                 entry_url=None, result_url=None, tcg_hint=tcg, store_name=store_name,
                 store_id=card["shop_slug"] or None, targets=parse_targets(body) or None))
-        if len(cands) > self.max_detail_fetch:
-            self.health["truncated"] = True          # 見つけた告知を全部は読めていない（取得元の穴として数える）
+        skipped_open = max(0, n_open - self.max_detail_fetch)
+        self.health.update({"detail_candidates": len(cands), "detail_fetched": fetched, "skipped_due_to_limit": skipped_open,
+                            "skipped_ended": max(0, (len(cands) - n_open) - max(0, self.max_detail_fetch - n_open))})
+        if skipped_open > 0:
+            self.health["truncated"] = True          # 応募中らしい告知を全部は読めていない（取得元の穴として数える）
             self.funnel.notes.append(
-                f"詳細は {self.max_detail_fetch}/{len(cands)} 件のみ取得（同一ドメイン60秒間隔）")
+                f"詳細は {fetched}/{len(cands)} 件のみ取得。応募中らしい告知 {skipped_open} 件を上限のため読めていない（同一ドメイン60秒間隔）")
         return self.finish()

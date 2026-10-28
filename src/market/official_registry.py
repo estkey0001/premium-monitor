@@ -90,6 +90,13 @@ VERIFIED_URLS = {
     # 4960759913784」。シルバー（JAN 4960759920058）も同じ 299,200円。コニャックブラウン・プレミアムエクステリア等は別の商品
     "prod_zf": {"source": "src_nikon_direct", "url": "https://nij.nikon.com/shop/g/g4960759913784/", "link_type": "item",
                 "price": 299200, "conf": "high", "checked_on": "2026-10-28", "price_kind": "official_direct"},
+    # 2026-10-28（Coverage Wave 3）: ソニーストアの購入ページ「ILCE-7RM5 翌日出荷 533,500 円(税込)」「ILCE-1M2 翌日出荷 990,000 円(税込)」。
+    # 同じページの JAN（7RM5=4548736145573・1M2=4548736162075）は、買取商店の一覧の JAN と同じ。在庫の語（翌日出荷）は在庫ありの意味だが、
+    # 在庫は人の確認の記録だけを根拠にする（購入ページの表示だけでは在庫ありにしない）
+    "prod_a7rv": {"source": "src_sony_store", "url": "https://pur.store.sony.jp/ichigan/products/ILCE-7RM5/ILCE-7RM5_purchase/",
+                  "link_type": "item", "price": 533500, "conf": "high", "checked_on": "2026-10-28", "price_kind": "official_direct"},
+    "prod_a1ii": {"source": "src_sony_store", "url": "https://pur.store.sony.jp/ichigan/products/ILCE-1M2/ILCE-1M2_purchase/",
+                  "link_type": "item", "price": 990000, "conf": "high", "checked_on": "2026-10-28", "price_kind": "official_direct"},
     # 2026-10-08 14:31: フジフイルムモールの購入ページ（シルバー）「X100VI 315,700円（税込）」「送料：無料」
     # 「カラーを選択 シルバー 在庫なし ブラック 在庫なし」。ブラック（g16941816）も同じ 315,700円
     "prod_x100vi": {"source": "src_fujifilm_official", "url": "https://mall-jp.fujifilm.com/shop/g/g16941878/",
@@ -113,8 +120,6 @@ VERIFIED_URLS = {
 # 実際の型番（同一性確認用）
 UNVERIFIED = {
     "prod_r3":    {"source": "src_canon_official", "model": "EOS R3",          "reason": "canon.jp が当環境からDNS解決不可（要手動検証）"},
-    "prod_a1ii":  {"source": "src_sony_store",     "model": "ILCE-1M2",        "reason": "store.sony.jp が当環境からDNS解決不可（要手動検証）"},
-    "prod_a7rv":  {"source": "src_sony_store",     "model": "ILCE-7RM5",       "reason": "store.sony.jp が当環境からDNS解決不可（要手動検証）"},
     "prod_a7cr":  {"source": "src_sony_store",     "model": "ILCE-7CR",        "reason": "store.sony.jp が当環境からDNS解決不可（要手動検証）"},
     "prod_fx3":   {"source": "src_sony_store",     "model": "ILME-FX3",        "reason": "store.sony.jp が当環境からDNS解決不可（要手動検証）"},
 }
@@ -216,7 +221,7 @@ SOURCE_PRICE_KINDS = {"src_ricoh_imaging": "msrp"}
 
 # メーカーの希望小売価格（Phase 16。手順3・4）。オープン価格の商品に架空の希望小売価格を作らない（値は持たない）
 MSRP_OF = {"prod_z8": "open_price", "prod_x100vi": "open_price", "prod_r5ii": "open_price",
-           "prod_z9": "open_price", "prod_r6ii": "open_price", "prod_zf": "open_price"}
+           "prod_z9": "open_price", "prod_r6ii": "open_price", "prod_zf": "open_price", "prod_a7rv": "open_price", "prod_a1ii": "open_price"}
 
 
 def price_kind_of(product_id: str, source: str = "") -> str:
@@ -322,6 +327,11 @@ IDENTITY_EVIDENCE = {
     "prod_zf": {"model_number": "Zf", "jan_code": "4960759913784", "colors": {"シルバー": "4960759920058"},
                 "edition": "日本向け", "bundle": "ボディーのみ",
                 "url": "https://nij.nikon.com/shop/g/g4960759913784/", "checked_on": "2026-10-28"},
+    # 2026-10-28: ソニーストアの購入ページ（ボディー）。ページに JAN が1種類だけある（買取商店の一覧の JAN と同じ）。レンズは付かない
+    "prod_a7rv": {"model_number": "ILCE-7RM5", "jan_code": "4548736145573", "edition": "日本向け", "bundle": "ボディーのみ",
+                  "url": "https://pur.store.sony.jp/ichigan/products/ILCE-7RM5/ILCE-7RM5_purchase/", "checked_on": "2026-10-28"},
+    "prod_a1ii": {"model_number": "ILCE-1M2", "jan_code": "4548736162075", "edition": "日本向け", "bundle": "ボディーのみ",
+                  "url": "https://pur.store.sony.jp/ichigan/products/ILCE-1M2/ILCE-1M2_purchase/", "checked_on": "2026-10-28"},
     # 2026-10-24: キヤノンの製品ページ「EOS R6 Mark II JANコード 4549292-200508 商品コード 5666C001」。購入ページ（5666C001）は
     # 「EOS R6 Mark II・ボディー（レンズは付きません）」
     "prod_r6ii": {"model_number": "EOS R6 Mark II", "jan_code": "4549292200508", "edition": "日本向け",
@@ -420,6 +430,18 @@ OFFICIAL_DIRECT_OFFERS = {
         "identity_equivalent": "", "sale_mode": "NORMAL", "stock": "UNKNOWN",
         "stock_semantics": "購入ページの在庫の欄が空。「買い物かごに入れる」だけでは在庫ありにしない"
                            "（ログインなしでも買える。送料は会員のログイン時だけ無料）",
+        "rejected": []},
+    "prod_a7rv": {
+        "shop": "ソニーストア", "url": "https://pur.store.sony.jp/ichigan/products/ILCE-7RM5/ILCE-7RM5_purchase/",
+        "price": 533500, "checked_on": "2026-10-28", "capacity": "", "body_kit": "body", "edition": "日本向け",
+        "identity_equivalent": "", "sale_mode": "NORMAL", "stock": "UNKNOWN",
+        "stock_semantics": "購入ページに「翌日出荷」の表示（2026-10-28）。購入ページの表示だけでは在庫ありにしない（人の確認の記録だけ）",
+        "rejected": []},
+    "prod_a1ii": {
+        "shop": "ソニーストア", "url": "https://pur.store.sony.jp/ichigan/products/ILCE-1M2/ILCE-1M2_purchase/",
+        "price": 990000, "checked_on": "2026-10-28", "capacity": "", "body_kit": "body", "edition": "日本向け",
+        "identity_equivalent": "", "sale_mode": "NORMAL", "stock": "UNKNOWN",
+        "stock_semantics": "購入ページに「翌日出荷」の表示（2026-10-28）。購入ページの表示だけでは在庫ありにしない（人の確認の記録だけ）",
         "rejected": []},
     "prod_r6ii": {
         "shop": "キヤノンオンラインショップ", "url": "https://store.canon.jp/online/g/g5666C001/",

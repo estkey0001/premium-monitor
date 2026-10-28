@@ -319,17 +319,19 @@ products:
     name: "SONY α7R V"
     brand: "SONY"
     model_number: "ILCE-7RM5"
-    retail_price: 440000
+    jan_code: "4548736145573"   # ソニーストアの購入ページ（ボディー。2026-10-28・Coverage Wave 3）
+    retail_price: 533500
     keywords: ["A7RV", "α7R V", "ILCE-7RM5"]
-    memo: "概算定価（要確認）"
+    memo: "ソニーストア販売価格（2026-10-28 確認）"
   - id: "prod_a1ii"
     genre: "camera"
     name: "SONY α1 II"
     brand: "SONY"
     model_number: "ILCE-1M2"
+    jan_code: "4548736162075"   # ソニーストアの購入ページ（ボディー。2026-10-28・Coverage Wave 3）
     retail_price: 990000
     keywords: ["A1 II", "α1 II", "ILCE-1M2"]
-    memo: "概算定価（要確認）"
+    memo: "ソニーストア販売価格（2026-10-28 確認）"
   - id: "prod_a7cr"
     genre: "camera"
     name: "SONY α7CR"

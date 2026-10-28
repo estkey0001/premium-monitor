@@ -218,3 +218,89 @@ def test_ff_titles_of_other_card_games_or_non_card_items_are_not_candidates(net)
     a = fukufuku.FukufukuLotteryAdapter()
     a.collect()
     assert not [u for u in calls if u.endswith("/lottery/89")]                                    # 他のカードゲーム・雑貨はポケカとして取らない
+
+
+# ── ONE PIECE 麦わらストア（Coverage Wave 4） ─────────────────────────────────────────────
+
+from src.collectors.tcg.lottery import mugiwara  # noqa: E402
+
+MG = "https://www.mugiwara-store.com"
+MG_LIST = (FX / "mugiwara" / "list.html").read_text(encoding="utf-8")
+MG_A = (FX / "mugiwara" / "detail_9003.html").read_text(encoding="utf-8")
+MG_B = (FX / "mugiwara" / "detail_9001.html").read_text(encoding="utf-8")
+
+
+def test_mg_parse_listing_picks_the_title_not_the_category():
+    cards = mugiwara.parse_listing(MG_LIST)
+    assert [c["post_id"] for c in cards] == ["9003", "9002", "9001", "9000"]
+    assert cards[1]["title"] == "テストグッズ新発売" and "抽選" in cards[0]["title"]                # カテゴリ（グッズ）を件名にしない
+    assert mugiwara.parse_listing("<html>構造が変わった</html>") == []
+
+
+def test_mg_detail_reads_article_only_and_product_of_prefers_the_product_name():
+    d = mugiwara.parse_detail(MG_A)
+    assert "抽選受付期間 2026年10月23日" in d["body"] and "2027年1月1日" not in d["body"] and "2028年1月1日" not in d["body"]
+    assert d["published_at"].startswith("2026-10-22")
+    assert mugiwara.parse_detail("<html><body>本文なし</body></html>")["body"] == ""
+    assert mugiwara.product_of("【抽選】ONE PIECE カードゲーム エクストラブースター「テスト商品 vol.1」 抽選販売のご案内") == "テスト商品 vol.1"
+    assert mugiwara.product_of("件名に鍵括弧なし") == ""
+
+
+def test_mg_collect_builds_events_with_year_dates_and_no_entry_url(net):
+    routes, calls = net
+    routes[MG + "/news/"] = (200, MG_LIST)
+    routes[MG + "/news/9003/"] = (200, MG_A)
+    routes[MG + "/news/9001/"] = (200, MG_B)
+    a = mugiwara.MugiwaraStoreLotteryAdapter()
+    evs = a.collect()
+    assert len(evs) == 2 and a.health["last_success"]
+    e = next(x for x in evs if "テスト商品" in (x.get("product_name") or ""))
+    assert e["application_start"].startswith("2026-10-23T00:00") and e["application_end"].startswith("2026-10-25T23:59")
+    assert e["purchase_start_date"] == "2026-10-31" and e["purchase_end_date"] == "2026-11-07"
+    assert e["tcg"] == "ONE_PIECE" and e["entry_url"] is None and e["store_specific"] is False and e["retail_price"] is None
+    assert e["source_type"] == "RETAILER_OFFICIAL"
+    assert not [u for u in calls if "/9002/" in u or "/9000/" in u]                              # 抽選でない告知（グッズ・休業）の詳細は取らない
+
+
+def test_mg_blocked_degraded_and_truncation(net):
+    routes, calls = net
+    routes[MG + "/news/"] = (403, "forbidden")
+    a = mugiwara.MugiwaraStoreLotteryAdapter()
+    assert a.collect() == [] and a.health["blocked"] is True and not [u for u in calls if "/news/9" in u]
+    routes[MG + "/news/"] = (200, "<html><body>構造が変わった</body></html>")
+    LotteryAdapter.clear_cache()
+    b = mugiwara.MugiwaraStoreLotteryAdapter()
+    b.collect()
+    assert b.health["status"] == "DEGRADED" and b.funnel.structure_changed_pages >= 1
+    routes[MG + "/news/"] = (200, MG_LIST)
+    routes[MG + "/news/"] = (200, MG_LIST)
+    routes[MG + "/news/9003/"] = (429, "slow")
+    LotteryAdapter.clear_cache()
+    calls.clear()
+    c = mugiwara.MugiwaraStoreLotteryAdapter()
+    c.collect()
+    assert c.health["blocked"] is True and len([u for u in calls if "/news/90" in u]) == 1       # 最初の詳細が 429 → 残りは取らない
+    routes[MG + "/news/9003/"] = (200, MG_A)
+    routes[MG + "/news/9001/"] = (200, MG_B)
+    LotteryAdapter.clear_cache()
+    d = mugiwara.MugiwaraStoreLotteryAdapter()
+    d.max_detail_fetch = 1
+    d.collect()
+    assert d.health["skipped_due_to_limit"] == 1 and d.health["truncated"] is True
+
+
+def test_mg_article_missing_does_not_read_page_wide_dates(net):
+    routes, _ = net
+    routes[MG + "/news/"] = (200, MG_LIST)
+    routes[MG + "/news/9003/"] = (200, "<html><body><aside>抽選受付期間 2026年12月1日～2026年12月2日</aside></body></html>")
+    routes[MG + "/news/9001/"] = (404, "")
+    a = mugiwara.MugiwaraStoreLotteryAdapter()
+    evs = a.collect()
+    assert not [e for e in evs if str(e.get("application_start") or "").startswith("2026-12")] and a.funnel.structure_changed_pages >= 1
+
+
+def test_mg_registered_in_registry_and_pipeline():
+    from src.tcg.lottery.pipeline import _adapters
+    from src.tcg.lottery.registry import LOTTERY_SOURCES
+    s = next(x for x in LOTTERY_SOURCES if x["source_id"] == "MUGIWARA_STORE")
+    assert s["adapter"] == "mugiwara_store_lottery" and "mugiwara_store_lottery" in _adapters() and "robots.txt" in s["note"]

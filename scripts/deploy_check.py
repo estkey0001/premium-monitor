@@ -4160,6 +4160,7 @@ def check() -> list[dict]:
     results.extend(_check_coverage_wave1())
     results.extend(_check_coverage_wave2())
     results.extend(_check_coverage_wave3())
+    results.extend(_check_coverage_wave4())
 
     # ══════════════════════════════════════════════════════════════════
     # #820-#825: データの正確さ・鮮度の偽装（Phase 0）
@@ -6570,7 +6571,7 @@ def _check_coverage_wave2(root: Path | None = None) -> list[dict]:
     try:
         for path in ("src/research/retail_lookup.py", "src/research/triage.py", "scripts/research_retail_lookup.py",
                      "src/collectors/tcg/lottery/hbst.py", "src/collectors/tcg/lottery/kidsrepublic.py",
-                     "src/collectors/tcg/lottery/fukufuku.py", "src/tcg/event_quality.py"):
+                     "src/collectors/tcg/lottery/fukufuku.py", "src/collectors/tcg/lottery/mugiwara.py", "src/tcg/event_quality.py"):
             code = _code(path)
             imports = "\n".join(ln for ln in code.splitlines() if _re73.match(r"\s*(from|import)\s", ln))
             if _re73.search(r"requests|urllib|playwright|selenium|httpx|aiohttp", imports, _re73.I):
@@ -6579,7 +6580,7 @@ def _check_coverage_wave2(root: Path | None = None) -> list[dict]:
                 bad.append(f"{path} に、回避・偽装につながる記述がある")
         if "recheck_official._fetch" not in (root / "scripts" / "research_retail_lookup.py").read_text(encoding="utf-8"):
             bad.append("照会のスクリプトが、polite 経由の取得（recheck_official._fetch）を使っていない")
-        for _p73 in ("hbst", "kidsrepublic", "fukufuku"):
+        for _p73 in ("hbst", "kidsrepublic", "fukufuku", "mugiwara"):
             if _re73.search(r"entry_url\s*=\s*[^N\s]", _code(f"src/collectors/tcg/lottery/{_p73}.py").replace("entry_url=None", "")):
                 bad.append(f"{_p73} の取得器が応募ページの URL を作っている")
         wf = (root / ".github" / "workflows" / "daily_lp.yml").read_text(encoding="utf-8")
@@ -6672,6 +6673,47 @@ def _check_coverage_wave3(root: Path | None = None) -> list[dict]:
         bad.append(f"検査に失敗: {type(exc).__name__}: {exc}")
     return [{"level": "ok" if not bad else "error", "check": "coverage_wave3_price_evidence_safety",
              "message": "#874 仕入れ値の証拠はポイント・クーポン・キャンペーンを現金と分け・条件つきの値引きを使わず・ポイントだけの黒字を作らない"
+                        + ("" if not bad else f" ← {bad[:4]}")}]
+
+
+def _check_coverage_wave4(root: Path | None = None) -> list[dict]:
+    """Coverage Wave 4（#875）: 小売の取得枠は公平に配り（ある取得器が他を飢えさせない・総数に上限）、Apple の同一性は容量・世代まで確かめ、
+    仕入れ元 API は鍵が無ければ PENDING_USER_CONFIGURATION で止まり、固定登録（ソフマップ）は検索をしない。
+    """
+    import re as _re75
+    root = root or Path(__file__).resolve().parent.parent
+    bad = []
+    try:
+        from src.research import retail_lookup as rl
+        plans = [{"adapter_id": "apple_jp", "kind": "index", "cost": 6, "score": 200},
+                 {"adapter_id": "sony_store", "kind": "item", "keys": [(f"s{i}", 50 - i) for i in range(8)], "min_items": 3, "cap": 5, "score": 50},
+                 {"adapter_id": "canon_store", "kind": "item", "keys": [(f"c{i}", 40 - i) for i in range(8)], "min_items": 3, "cap": 5, "score": 40}]
+        for budget in (24, 8):
+            out = rl.allocate_budget(plans, budget)
+            if sum(v["http"] for v in out.values()) > budget:
+                bad.append("取得枠の総数が上限を超える")
+            if not out["sony_store"]["keys"] or not out["canon_store"]["keys"]:
+                bad.append(f"Apple の一覧が Sony・Canon の取得枠を奪っている（予算 {budget}）")
+        entries = [{"name": "iPhone 17 Pro 256GB シルバー", "price": 1, "url": "u", "jan": "", "model": "MAAA3J/A"}]
+        r = rl.lookup({"basis": "JAN", "value": "4549995000001", "name": "iPhone 17 Pro 512GB MAAA3J/A", "part_number": "MAAA3J/A"},
+                      {"apple_jp": {"entries": entries, "observed_at": "2026-10-29T10:00:00+09:00"}})
+        if r["status"] != rl.IDENTITY_MISMATCH:
+            bad.append("部品番号が合っても容量・世代が違う Apple の行を一致にしている")
+        if any(a["status"] != rl.API_PENDING for a in rl.api_source_statuses({})):
+            bad.append("鍵の無い仕入れ元 API が PENDING_USER_CONFIGURATION で止まっていない")
+        import yaml
+        tab = yaml.safe_load((root / "config" / "sofmap_products.yaml").read_text(encoding="utf-8"))["items"]
+        if not all(_re75.fullmatch(r"\d{13}", str(i["jan"])) and _re75.fullmatch(r"\d{5,12}", str(i["sku"])) for i in tab):
+            bad.append("ソフマップの固定登録に不正な行がある")
+        if rl.SofmapAdapter().item_url("1") != "https://www.sofmap.com/product_detail.aspx?sku=1":
+            bad.append("ソフマップの取得が、詳細ページ以外の URL を作る")
+        code = _re75.sub(r'"""(?:.|\n)*?"""', "", (root / "src" / "tcg" / "lottery" / "budget.py").read_text(encoding="utf-8"))
+        if _re75.search(r"^\s*(from|import)\s+(requests|urllib|playwright|httpx|aiohttp)", code, _re75.M):
+            bad.append("TCG の取得枠のモジュールが取得の部品を import している")
+    except Exception as exc:  # noqa: BLE001
+        bad.append(f"検査に失敗: {type(exc).__name__}: {exc}")
+    return [{"level": "ok" if not bad else "error", "check": "coverage_wave4_fair_allocation_identity",
+             "message": "#875 小売の取得枠は公平（飢えさせない・上限あり）・Apple の同一性は容量と世代まで・API は鍵なしで止まり・固定登録は検索しない"
                         + ("" if not bad else f" ← {bad[:4]}")}]
 
 

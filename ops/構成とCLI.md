@@ -245,3 +245,15 @@ python3 scripts/operator_health_alert.py --dry-run  # 書かずに注記だけ�
 - 受付中イベントの質・優先順位・検知の許容: `src/tcg/event_quality.py`（初めて見た時刻を保持していないので `first_seen_available = false`）
 - 設計の全体と残りは `internal/audits/COVERAGE_WAVE3.md`
 
+## Coverage Wave 4（公平な取得枠・Apple の同一性）
+
+- 小売の照会の取得枠: `retail_lookup.allocate_budget`（`HTTP_BUDGET = 24`・`ITEM_MIN = 3`）。商品ごとにページを取る取得器は**全候補から**点の高い順に選ぶ。取得器を足すときは
+  `MAX_ITEMS`（上限）と `item_key`（型番・JAN → キー）を決める。最低枠は全ブランドに 1 件ずつ → 最低枠まで → 余りを点の高い順
+- Apple: 部品番号の完全一致 + 容量・世代の一致で `IDENTITY_CONFIRMED`。食い違えば `IDENTITY_MISMATCH`。JAN は一次根拠が無いので追加しない
+- ソフマップ: `config/sofmap_products.yaml`（人が詳細ページで確かめた JAN ↔ sku だけ）。検索・一覧は使わない
+- 仕入れ元 API（Yahoo!ショッピング `YAHOO_SHOPPING_APP_ID`・楽天 `RAKUTEN_APP_ID`）: 鍵が無ければ PENDING_USER_CONFIGURATION。鍵を設定しても実装は未（`READY_NOT_IMPLEMENTED`）
+- TCG の取得枠: `src/tcg/lottery/budget.py`（総数 40・最低 4・枠の小さい取得元から先）。取得元の状態は `health_flags`（LIST_OK / DETAIL_OK / BLOCKED / PARSER_DEGRADED / TRUNCATED）
+- 麦わらストア: `src/collectors/tcg/lottery/mugiwara.py`。クラウド IP から遮断されたら WORKING に数えない
+- 変異テスト: `python3 scripts/mutation_wave4.py`（Wave 2・3 も同様）
+- 設計の全体と残りは `internal/audits/COVERAGE_WAVE4.md`
+

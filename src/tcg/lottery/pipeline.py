@@ -58,56 +58,67 @@ def _adapters():
     }
 
 
-def collect_sources(sources: Optional[list[dict]] = None) -> tuple[list[dict], dict, list[dict]]:
-    """全 source を取得する。(events, health_by_source, announcements) を返す。"""
+def collect_sources(sources: Optional[list[dict]] = None, timings: Optional[dict] = None) -> tuple[list[dict], dict, list[dict]]:
+    """全 source を取得する。(events, health_by_source, announcements) を返す。
+
+    取得元ごとの取得は並列に動かす（異なるドメインは同時・同じドメインは 1 つずつで 60 秒以上の間隔・全体の同時数に上限。
+    src/collectors/tcg/runcache.py）。詳細ページの取得は取得元ごとの上限（max_detail_fetch）で決まる。
+    （以前は実行全体の取得数に上限を置いて直列に取っていたが、時間を決めるのは「最も取得数の多いドメイン」なので、
+    取得元ごとの上限だけにして並列に動かす。取得件数は以前以上で、黙って減らさない。）
+    結果は取得元の登録簿の順に並べる（並列でも出力の順は変わらない）。
+    """
+    from src.collectors.tcg import runcache
     from src.collectors.tcg.lottery.base import LotteryAdapter
     from src.collectors.tcg.lottery.others import SourceProbe
     sources = sources if sources is not None else LOTTERY_SOURCES
     registry = _adapters()
     LotteryAdapter.clear_cache()
-    events: list[dict] = []
     health: dict[str, dict] = {}
-    announcements: list[dict] = []
-    from .budget import DETAIL_BUDGET_TOTAL, next_allowance, order_by_cap
 
     def _cap(src):
         cls = registry.get(src.get("adapter") or "")
         return int(getattr(cls, "max_detail_fetch", 0) or 0) if cls is not None else 0
-    # 詳細ページの取得枠の再配分: 枠の小さい取得元から先に取り、残りを最後の（一番大きい）取得元に渡す。枠を持たない取得元は先頭
-    order = {s["source_id"]: i for i, s in enumerate(sources)}
-    budgeted = order_by_cap([(s["source_id"], _cap(s)) for s in sources if _cap(s) > 0])
-    seq = [s for s in sources if _cap(s) == 0] + [next(s for s in sources if s["source_id"] == sid) for sid, _c in budgeted]
-    left = DETAIL_BUDGET_TOTAL
-    pending = [c for _sid, c in budgeted]
-    for src in seq:
+
+    def _one(src):
         name = src.get("adapter")
         cls = registry.get(name) if name else None
-        try:
-            if cls is not None:
-                a = cls()
-                cap = _cap(src)
-                if cap > 0:
-                    pending = pending[1:]
-                    a.max_detail_fetch = next_allowance(cap, left, pending)
-            elif src.get("official_url"):
-                a = SourceProbe(src)
-            else:
-                health[src["source_id"]] = {"probe": "no_url", "status": None}
-                continue
-            found = a.collect()
-            if cls is not None and _cap(src) > 0:
-                left -= int(a.health.get("detail_fetched") or 0)
-                a.health["detail_allowance"] = a.max_detail_fetch
-            events.extend(found)
-            announcements.extend(a.announcements)
-            health[src["source_id"]] = a.health
-            print(f"  → [抽選] {src['retailer']}: status={a.health.get('status')}"
-                  f" lotteries={len(found)} blocked={a.health.get('blocked')}"
-                  f" unreachable={a.health.get('unreachable')}")
-        except Exception as exc:  # noqa: BLE001 - 1 source の失敗で止めない
-            logger.exception("抽選コレクター失敗: %s", src["source_id"])
+        if cls is not None:
+            a = cls()
+        elif src.get("official_url"):
+            a = SourceProbe(src)
+        else:
+            return None
+        found = a.collect()
+        if cls is not None and _cap(src) > 0:
+            a.health["detail_allowance"] = a.max_detail_fetch
+        return a, found
+
+    runnable = [s for s in sources if (registry.get(s.get("adapter") or "") is not None) or s.get("official_url")]
+    for src in sources:
+        if src not in runnable:
+            health[src["source_id"]] = {"probe": "no_url", "status": None}
+    # 取得数の多い取得元を先に始める（最も長くかかるドメインを最初から動かし、全体の時間を短くする）
+    start_order = sorted(runnable, key=lambda s: -_cap(s))
+    done = runcache.run_parallel([(s["source_id"], (lambda s=s: _one(s))) for s in start_order])
+    if timings is not None:
+        timings.update({sid: r["seconds"] for sid, r in done.items()})
+    events: list[dict] = []
+    announcements: list[dict] = []
+    for src in runnable:                                   # 登録簿の順に並べる（出力の順を並列で変えない）
+        r = done[src["source_id"]]
+        if r["error"] or r["result"] is None:
+            logger.error("抽選コレクター失敗: %s (%s)", src["source_id"], r.get("error"))
             health[src["source_id"]] = {"status": "FAILED", "errors": 1,
-                                        "error_messages": [f"{type(exc).__name__}: {exc}"]}
+                                        "error_messages": [str(r.get("error") or "NoResult")]}
+            continue
+        a, found = r["result"]
+        events.extend(found)
+        announcements.extend(a.announcements)
+        health[src["source_id"]] = a.health
+        print(f"  → [抽選] {src['retailer']}: status={a.health.get('status')}"
+              f" lotteries={len(found)} blocked={a.health.get('blocked')}"
+              f" unreachable={a.health.get('unreachable')}")
+    order = {s["source_id"]: i for i, s in enumerate(sources)}
     health = {sid: health[sid] for sid in sorted(health, key=lambda k: order.get(k, 10**6))}     # 登録簿の順（取得の順ではない）
     return events, health, announcements
 
@@ -250,8 +261,10 @@ def from_tcg_events(events: list[dict]) -> list[dict]:
 
 
 def run_lottery_pipeline(pokemon_registry: list[dict], onepiece_products: list[dict],
-                         now=None, legacy_events: Optional[list[dict]] = None) -> dict:
-    raw, health, announcements = collect_sources()
+                         now=None, legacy_events: Optional[list[dict]] = None, collected: Optional[tuple] = None) -> dict:
+    """collected: 事前に取得した (events, health, announcements)。無ければここで取得する
+    （TCG の収集と並列に取得しておいた結果を渡すときに使う）。"""
+    raw, health, announcements = collected if collected is not None else collect_sources()
     raw = raw + from_tcg_events(legacy_events or [])
     # 状態は「収集が終わった時点」の1つの時刻で判定し、その時刻を出力にも残す
     # （収集中に締切・開始の境界をまたいでも、出力と検証の時刻がずれないように）

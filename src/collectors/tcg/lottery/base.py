@@ -225,7 +225,7 @@ class LotteryAdapter(BaseTcgCollector):
                 shrink_status=shrink if shrink != "UNKNOWN" else None,
                 entry_url=entry, result_url=result, source_url=url, source_type=source_type,
                 confidence=confidence_for_source(source_type), verified=True,
-                published_at=published_at, observed_at=now_jst().isoformat(),
+                published_at=published_at, observed_at=self._fetched_at or now_jst().isoformat(),
                 last_verified_at=now_jst().isoformat(),
                 collection_method="HTML",
                 **{k: v for k, v in sched.items()},

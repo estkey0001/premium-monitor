@@ -242,14 +242,15 @@ def test_detail_budget_gives_leftover_to_the_largest_source_and_reserves_minimum
     assert b.next_allowance(10, 6, [24]) == 2 and b.next_allowance(10, 3, [24]) == 0 and b.next_allowance(10, 100, []) == 10
 
 
-def test_collect_sources_runs_small_sources_first_and_sets_allowances(monkeypatch):
+def test_collect_sources_runs_in_parallel_with_each_sources_own_allowance_and_registry_order(monkeypatch):
+    """Wave 6: 取得元は並列に動く。詳細の取得枠は取得元ごとの上限（以前の実行全体の合計の上限では減らさない）。出力は登録簿の順。"""
     from src.tcg.lottery import pipeline as pl
 
     seen = []
 
     class A:
         def __init__(self):
-            self.health, self.announcements, self.max_detail_fetch = {}, [], 0
+            self.health, self.announcements = {}, []
 
         def collect(self):
             seen.append((self.name, self.max_detail_fetch))
@@ -262,8 +263,8 @@ def test_collect_sources_runs_small_sources_first_and_sets_allowances(monkeypatc
     srcs = [{"source_id": "BIG", "retailer": "B", "adapter": "big"}, {"source_id": "SMALL", "retailer": "S", "adapter": "small"},
             {"source_id": "MID", "retailer": "M", "adapter": "mid"}]
     _ev, health, _an = pl.collect_sources(srcs)
-    assert [n for n, _a in seen] == ["small", "mid", "big"]                                          # 枠の小さい順
-    assert dict(seen)["big"] == 24 and list(health) == ["BIG", "SMALL", "MID"]                       # 登録簿の順で返す
+    assert dict(seen) == {"big": 24, "small": 4, "mid": 10}                                          # 取得元ごとの上限（減らさない）
+    assert list(health) == ["BIG", "SMALL", "MID"]                                                   # 登録簿の順で返す（並列でも変わらない）
     assert health["BIG"]["detail_allowance"] == 24
 
 

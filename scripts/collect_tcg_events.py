@@ -18,12 +18,16 @@ from __future__ import annotations
 
 import json
 import sys
+import time
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
-from src.collectors.tcg import ALL_COLLECTORS, POKEMON_COLLECTORS  # noqa: E402
+from src.collectors.tcg import ALL_COLLECTORS, POKEMON_COLLECTORS, runcache  # noqa: E402
+from src.tcg import collection_metrics as cm                          # noqa: E402
+from src.tcg.lottery.pipeline import collect_sources                  # noqa: E402
 from src.collectors.tcg.pokemon_products import secondary_mapping    # noqa: E402
 from src.tcg.alerts import (                                        # noqa: E402
     build_premium_message, build_restock_signal_message,
@@ -84,25 +88,48 @@ def _load_retail_prices() -> dict[str, int]:
     return out
 
 
-def collect() -> tuple[list[dict], list[dict], list[dict]]:
-    """全コレクターを実行し、(events, health, pokemon_registry) を返す。"""
+def _run_collector(cls) -> tuple[list[dict], object]:
+    """1 つのコレクターを実行する（1 つの失敗で止めない）。戻りは (events, collector)。"""
+    collector = cls()
+    try:
+        found = collector.collect()
+    except Exception as exc:  # noqa: BLE001 - 1コレクターの失敗で止めない
+        collector.health["errors"] += 1
+        collector.health["error_messages"].append(str(exc))
+        collector.funnel.errors += 1
+        found = collector._finish([])
+        # 例外で中断したものは取得状況に関わらず FAILED と明示する
+        collector.health["status"] = HEALTH_FAILED
+        collector.health["status_reason"] = f"コレクター例外: {type(exc).__name__}"
+    return found, collector
+
+
+def collect(timings: dict | None = None) -> tuple[list[dict], list[dict], list[dict]]:
+    """全コレクターを実行し、(events, health, pokemon_registry) を返す。
+
+    異なるドメインの取得元は並列に動かす（全体の同時数に上限。同じドメインは 1 つずつ・60 秒以上の間隔。
+    src/collectors/tcg/runcache.py）。結果は ALL_COLLECTORS の順に並べる（並列でも出力の順は変わらない）。
+    """
     events: list[dict] = []
     health: list[dict] = []
     registry: list[dict] = []
     pokemon_classes = set(POKEMON_COLLECTORS)
+    done = runcache.run_parallel([(cls.__name__, (lambda c=cls: _run_collector(c))) for cls in ALL_COLLECTORS])
     for cls in ALL_COLLECTORS:
-        collector = cls()
-        print(f"  → {collector.source_name} ({collector.source_key})")
-        try:
-            found = collector.collect()
-        except Exception as exc:  # noqa: BLE001 - 1コレクターの失敗で止めない
+        r = done[cls.__name__]
+        if r["error"] or not r["result"]:
+            # 並列の実行そのものが失敗した（通常は起きない）。取得失敗として記録する（成功にしない）
+            collector = cls()
             collector.health["errors"] += 1
-            collector.health["error_messages"].append(str(exc))
-            collector.funnel.errors += 1
+            collector.health["error_messages"].append(str(r.get("error")))
             found = collector._finish([])
-            # 例外で中断したものは取得状況に関わらず FAILED と明示する
             collector.health["status"] = HEALTH_FAILED
-            collector.health["status_reason"] = f"コレクター例外: {type(exc).__name__}"
+            collector.health["status_reason"] = f"コレクター例外: {r.get('error')}"
+        else:
+            found, collector = r["result"]
+        print(f"  → {collector.source_name} ({collector.source_key})")
+        if timings is not None:
+            timings[cls.__name__] = r["seconds"]
         collector.health["collector"] = cls.__name__
         collector.health["is_pokemon"] = cls in pokemon_classes
         events.extend(found)
@@ -202,14 +229,14 @@ def empty_lottery_payload(error: str | None = None) -> dict:
             "rejection_reasons": {}, "announcements": [], "pipeline_ok": False}
 
 
-def run_lottery(registry: list[dict], events: list[dict]) -> dict:
-    """抽選インテリジェンスを実行する。失敗しても TCG 全体は止めない。"""
+def run_lottery(registry: list[dict], events: list[dict], collected: tuple | None = None) -> dict:
+    """抽選インテリジェンスを実行する。失敗しても TCG 全体は止めない。collected は事前に（並列で）取得した取得元の結果。"""
     from src.tcg.lottery.pipeline import run_lottery_pipeline
     onepiece = [{"product_id": e.get("product_id"), "name": e.get("product_name")}
                 for e in events if e.get("tcg") == TCG_ONE_PIECE and e.get("product_id")]
     try:
         # 既存コレクターの抽選（TcgEvent）も抽選セクションに統合する
-        return run_lottery_pipeline(registry, onepiece, legacy_events=events)
+        return run_lottery_pipeline(registry, onepiece, legacy_events=events, collected=collected)
     except Exception as exc:  # noqa: BLE001 - 既存の TCG 出力を止めない
         print(f"  ❌ 抽選パイプラインに失敗: {type(exc).__name__}: {exc}")
         return empty_lottery_payload(f"{type(exc).__name__}: {exc}")
@@ -247,7 +274,7 @@ def pokemon_funnel_summary(health: list[dict], events: list[dict]) -> dict:
 
 def build_exports(events: list[dict], signals: list[dict],
                   health: list[dict], registry: list[dict] | None = None,
-                  lottery: dict | None = None) -> dict:
+                  lottery: dict | None = None, collection_metrics: dict | None = None) -> dict:
     """Task28: exports を生成する。"""
     EXPORT_DIR.mkdir(parents=True, exist_ok=True)
     now = now_jst()
@@ -306,6 +333,8 @@ def build_exports(events: list[dict], signals: list[dict],
         "lottery_manual_errors": lottery["manual_errors"],
         # 抽選の状態を判定した時刻（deploy-check はこの時刻で整合を検証する）
         "lottery_evaluated_at": lottery.get("evaluated_at"),
+        # 収集の実行の指標（秒数・件数・取得元の健全性の分類。run が成功したことと取得元が健全なことは別）
+        "collection_metrics": collection_metrics or {},
     }
 
     (EXPORT_DIR / "latest.json").write_text(
@@ -651,7 +680,23 @@ def _run() -> int:
     print("=" * 60)
     retail_prices = _load_retail_prices()
     print(f"  検証済み定価: {len(retail_prices)}件")
-    raw, health, registry = collect()
+    t0 = time.monotonic()
+    col_t: dict = {}
+    lot_t: dict = {}
+    with runcache.activate() as cache:
+        # 一覧の収集（公式・小売）と抽選の取得元の取得を同時に始める（異なるドメインは並列・同じドメインは 1 つずつ・全体の同時数に上限）
+        with ThreadPoolExecutor(max_workers=1) as ex:
+            lot_future = ex.submit(lambda: collect_sources(timings=lot_t))
+            raw, health, registry = collect(col_t)
+            try:
+                lottery_collected = lot_future.result()
+            except Exception as exc:  # noqa: BLE001 - 抽選の取得の失敗で TCG 全体を止めない（run_lottery がもう一度試す。同じ URL はキャッシュ）
+                print(f"  ⚠️ 抽選の並列取得に失敗: {type(exc).__name__}")
+                lottery_collected = None
+        return _finish_run(raw, health, registry, retail_prices, lottery_collected, t0, col_t, lot_t, cache)
+
+
+def _finish_run(raw, health, registry, retail_prices, lottery_collected, t0, col_t, lot_t, cache) -> int:
     # Task6: 入荷報告（コミュニティ / SNS）を CSV 経由で取り込む
     reports = load_reports()
     print(f"  入荷報告の取り込み: {len(reports)}件")
@@ -659,12 +704,14 @@ def _run() -> int:
     print(f"  収集イベント（重複排除前）: {len(raw)}件")
     events, signals = enrich(raw, retail_prices, registry_retail_prices(registry))
     print(f"  重複排除後: {len(events)}件 / シグナル: {len(signals)}件")
-    lottery = run_lottery(registry, events)
+    lottery = run_lottery(registry, events, lottery_collected)
+    metrics = cm.summarize(health, lottery.get("sources") or [], total_seconds=time.monotonic() - t0, cache_stats=cache.stats(),
+                           collector_seconds=col_t, lottery_seconds=lot_t, global_cap=runcache.GLOBAL_CAP)
     lc = lottery["coverage"]
     print(f"  抽選: {len(lottery['lotteries'])}件 / sources configured={lc['configured_sources']}"
           f" implemented={lc['implemented_collectors']} healthy={lc['healthy_sources']}"
           f" blocked={lc['blocked_sources']} unreachable={lc['unreachable_sources']}")
-    payload = build_exports(events, signals, health, registry, lottery)
+    payload = build_exports(events, signals, health, registry, lottery, metrics)
     pf = payload["pokemon_funnel"]["total"]
     print(f"  Pokemon funnel: pages={pf['pages_loaded']}/{pf['pages_requested']}"
           f" product_links={pf['product_links_discovered']}"

@@ -18,6 +18,9 @@ permissions:
 jobs:
   update-lp:
     runs-on: ubuntu-latest
+    # 通常の実行は約 2 時間 10 分（Wave 5 の実測）。取得は同じドメインへ 60 秒以上の間隔を空けるため時間がかかる。
+    # ハングで 6 時間（GitHub の既定）使い切らないよう、通常の約 1.8 倍（4 時間）で止める。短すぎる値にしない
+    timeout-minutes: 240
     env:
       # このプロジェクトはタイムゾーン無しの日時を JST として読む。ランナーの既定（UTC）のままだと
       # datetime.now() が UTC になり、画面に「08:49 JST」（実際は 17:49 JST）のように9時間ずれて出る

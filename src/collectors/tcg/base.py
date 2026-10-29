@@ -14,6 +14,7 @@ from datetime import datetime
 from typing import Optional
 
 from src.collectors.rate_limiter import RateLimiter
+from src.collectors.tcg import runcache
 from src.collectors.robots_checker import RobotsChecker
 from src.tcg.classify import classify_event_type, classify_source_type
 from src.tcg.models import (
@@ -118,6 +119,7 @@ class BaseTcgCollector:
         from src.collectors.polite import ROBOTS_AGENT
         self._robots = RobotsChecker(user_agent=ROBOTS_AGENT)
         self._rate = RateLimiter()
+        self._fetched_at: Optional[str] = None       # 直近に取得（またはキャッシュで受け取った応答を実際に取得）した時刻
         self.health: dict = {
             "source": self.source_key,
             "source_name": self.source_name,
@@ -145,6 +147,49 @@ class BaseTcgCollector:
     def _fetch(self, url: str, page_type: str = PAGE_OTHER,
                referer: Optional[str] = None) -> Optional[str]:
         """URL を取得して HTML を返す。失敗・拒否時は None。
+
+        同一 run のキャッシュが有効なとき（runcache.activate() の中）は、同じ URL を 2 回取得しない（成功も失敗も覚える。
+        前回の run の応答は使わない）。同じドメインへの取得は同時に 1 つだけ（ドメインごとの直列化）。
+        """
+        cache = runcache.active()
+        if cache is None:
+            with runcache.domain_lock(url):
+                html = self._fetch_once(url, page_type, referer)
+            self._fetched_at = now_jst().isoformat()
+            return html
+
+        def _do() -> dict:
+            with runcache.domain_lock(url):
+                html = self._fetch_once(url, page_type, referer)
+            diag = self.funnel.pages[-1] if self.funnel.pages else None
+            return {"html": html, "error": getattr(diag, "error", None), "status": getattr(diag, "http_status", None),
+                    "final_url": getattr(diag, "final_url", None), "robots_status": getattr(diag, "robots_status", None),
+                    "blocked": bool(self.health.get("blocked")), "fetched_at": now_jst().isoformat()}
+        entry, hit = cache.fetch(url, _do, variant="js" if self.requires_js else "")
+        # 取得した時刻（キャッシュで受け取った側も、実際に取得した時刻を使う。受け取った時刻を観測時刻にしない）
+        self._fetched_at = entry.get("fetched_at") or now_jst().isoformat()
+        if not hit:
+            return entry["html"]
+        # キャッシュで省いた取得（この取得元の診断にも 1 ページとして記録する。取得時刻は新しくしない）
+        diag = self.funnel.add_page(PageDiagnostic(url=url, page_type=page_type))
+        self.funnel.pages_requested += 1
+        diag.robots_status = entry.get("robots_status")
+        if entry["html"] is not None:
+            self._fill_page_diag(diag, entry["html"], status=200, final_url=entry.get("final_url") or url)
+            return entry["html"]
+        if entry.get("robots_status") == "disallowed" or entry.get("status") in (401, 403, 429):
+            self.health["blocked"] = True
+            self.funnel.blocked_pages += 1
+        elif entry.get("robots_status") == "unknown":
+            self.health["unreachable"] = True
+            self.funnel.robots_unreachable_pages += 1
+        diag.http_status = entry.get("status")
+        self._record_error(diag, f"同一 run で取得に失敗済み（取り直さない）: {entry.get('error') or 'error'}")
+        return None
+
+    def _fetch_once(self, url: str, page_type: str = PAGE_OTHER,
+                    referer: Optional[str] = None) -> Optional[str]:
+        """実際の取得（1 回）。
 
         Task3: 1ページごとに HTTP status / 最終 URL / タイトル / 本文長 /
         発見リンク数 / robots 判定根拠 を funnel に記録する。
@@ -183,7 +228,8 @@ class BaseTcgCollector:
         self._rate.wait_if_needed(url, min_interval_sec=max(MIN_INTERVAL_SEC, delay or 0))
 
         if self.requires_js:
-            html = self._fetch_with_playwright(url)
+            with runcache.global_slot():
+                html = self._fetch_with_playwright(url)
             if html:
                 self._fill_page_diag(diag, html, status=200, final_url=url)
             else:
@@ -195,7 +241,8 @@ class BaseTcgCollector:
             headers = {"User-Agent": USER_AGENT, "Accept-Language": "ja,en;q=0.8"}
             if referer:
                 headers["Referer"] = referer
-            resp = requests.get(url, headers=headers, timeout=FETCH_TIMEOUT)
+            with runcache.global_slot():          # 同時に通信する数の上限（間隔の待ちの間は使わない）
+                resp = requests.get(url, headers=headers, timeout=FETCH_TIMEOUT)
         except Exception as exc:  # noqa: BLE001 - ネットワーク失敗を health に集約
             self._record_error(diag, f"{type(exc).__name__}: {url}")
             logger.warning("取得失敗 %s: %s", url, exc)
@@ -449,7 +496,7 @@ class BaseTcgCollector:
             or self.extract_purchase_limit(text),
             price=kwargs.pop("price", None),
             notes=notes,
-            observed_at=now_jst().isoformat(),
+            observed_at=self._fetched_at or now_jst().isoformat(),
             **kwargs,
         )
         return ev

@@ -257,6 +257,15 @@ python3 scripts/operator_health_alert.py --dry-run  # 書かずに注記だけ�
 - 変異テスト: `python3 scripts/mutation_wave4.py`（Wave 2・3 も同様）
 - 設計の全体と残りは `internal/audits/COVERAGE_WAVE4.md`
 
+## Coverage Wave 6（台帳をまたぐ信号と TCG 収集の高速化）
+
+- 台帳: `RESEARCH_LEDGER_KEY`（32 文字以上）を設定すると、暗号化した台帳を次の run に引き継ぐ。**設定はユーザーが行う**: `gh secret set RESEARCH_LEDGER_KEY`（値はチャット・ファイルに残さない）。設定後の 2 回目の run から、買取の勢い・first_seen・検知の遅れが実測できる
+- 買取の勢い: `signals.momentum()`（NEW_OBSERVATION / NOT_COMPARABLE / STALE_BASELINE / SAME_OBSERVATION。3% かつ 500 円以上で RISING・隔離された価格は参考のみ）。次回の基準は正常な価格だけ
+- 検知の遅れ: `src/tcg/detection_delay.py`（台帳を使い始めた後に初めて現れたイベントだけ。公開日時が無ければ UNKNOWN）
+- TCG の収集: `src/collectors/tcg/runcache.py`（異なるドメインは並列・同じドメインは同時に 1 つ・60 秒以上の間隔・同時に通信する数の上限・同一 run の URL キャッシュ（メモリだけ））。指標は `exports/tcg/latest.json` の `collection_metrics`
+- 変異テスト: `python3 scripts/mutation_wave6.py`（追跡ファイルを書き換える。他のセッションが編集していないときだけ）。deploy-check #877
+- 設計の全体と残りは `internal/audits/COVERAGE_WAVE6.md`
+
 ## Coverage Wave 5（利益が出やすい市場の優先度）
 
 - シグナル: `src/research/signals.py`（発売からの経過・公式の根拠のある限定・供給の逼迫・買取の勢い・価格差が正）。**根拠が無ければ付けない**。点は並べ替えにだけ使い、確定・actionable にしない。

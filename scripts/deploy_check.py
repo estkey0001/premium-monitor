@@ -4162,6 +4162,7 @@ def check() -> list[dict]:
     results.extend(_check_coverage_wave3())
     results.extend(_check_coverage_wave4())
     results.extend(_check_coverage_wave5())
+    results.extend(_check_coverage_wave6())
 
     # ══════════════════════════════════════════════════════════════════
     # #820-#825: データの正確さ・鮮度の偽装（Phase 0）
@@ -6767,6 +6768,70 @@ def _check_coverage_wave5(root: Path | None = None) -> list[dict]:
         bad.append(f"検査に失敗: {type(exc).__name__}: {exc}")
     return [{"level": "ok" if not bad else "error", "check": "coverage_wave5_profit_dense_signals",
              "message": "#876 シグナルは根拠のあるものだけ（発売日・公式の限定・在庫の逼迫・前回との比較）・誤価格に点なし・不完全な TCG は actionable にしない・個別は非公開"
+                        + ("" if not bad else f" ← {bad[:4]}")}]
+
+
+def _check_coverage_wave6(root: Path | None = None) -> list[dict]:
+    """Coverage Wave 6（#877）: 買取の勢いは前回の台帳を引き継げた日だけ（初めて見たものは上がったと言わない・隔離された価格は使わない）・
+    first_seen は台帳を引き継げない日に作らない・曖昧な語（Special・特別）だけで限定にしない・TCG の同一 run のキャッシュ（同じ URL は 1 回・
+    失敗も取り直さない・保持はメモリだけ）・同じドメインは同時に 1 つ・全体の並列に上限・ワークフローにタイムアウト・勢いと台帳は非公開。"""
+    import re as _re77
+    from datetime import datetime as _dt77
+    from datetime import timedelta as _td77
+    from datetime import timezone as _tz77
+    import threading as _th77
+    root = root or Path(__file__).resolve().parent.parent
+    bad = []
+    try:
+        from src.collectors.tcg import runcache as rcache
+        from src.research import candidates as rc
+        from src.research import signals as sg
+        from src.tcg import detection_delay as dd
+        now = _dt77(2026, 10, 30, 12, 0, tzinfo=_tz77(_td77(hours=9)))
+        row = {"observed_sell_price": 200000, "observed_at": "2026-10-30T10:00:00+09:00"}
+        if sg.momentum(row, None, comparable=True, now=now)["momentum_state"] != sg.MOM_NEW_OBSERVATION:
+            bad.append("前回が無い候補を NEW_OBSERVATION にしていない")
+        if sg.momentum(row, {"price": 100000, "at": "2026-10-29T10:00:00+09:00", "stale": False}, comparable=False, now=now)["momentum_state"] != sg.MOM_NOT_COMPARABLE:
+            bad.append("台帳を引き継げていない日に前回と比べている")
+        if sg.momentum(row, {"price": 100000, "at": "2026-10-29T10:00:00+09:00", "stale": False}, comparable=True, now=now, quarantined=True)["momentum_usable"]:
+            bad.append("隔離された価格の勢いを使っている")
+        if sg.momentum(row, {"price": 100000, "at": "2026-08-01T10:00:00+09:00", "stale": True}, comparable=True, now=now)["momentum_usable"]:
+            bad.append("古い前回の価格を基準にしている")
+        if sg.limited_signal(official_name="Special Pack", official_url="https://o.example/", official=True)["limited"]:
+            bad.append("曖昧な語（Special）だけで限定にしている")
+        ev = {"status": "OPEN", "lottery_id": "x", "published_at": "2026-10-30T08:00:00+09:00"}
+        _, c, _r = dd.update([ev], None, comparable=False, now=now)
+        if c["measured"] or c["comparable"]:
+            bad.append("台帳を引き継げない日に first_seen の遅れを測っている")
+        cache = rcache.TcgRunCache()
+        n = []
+        for _i in range(3):
+            cache.fetch("https://a.example/x", lambda: (n.append(1), {"html": None, "error": "e", "blocked": True, "status": 403, "final_url": None})[1])
+        if len(n) != 1:
+            bad.append("同じ URL（失敗を含む）を同じ run で複数回取っている")
+        lk = rcache.domain_lock("https://same.example/a")
+        if lk is not rcache.domain_lock("https://SAME.example/b") or not isinstance(lk, type(_th77.Lock())):
+            bad.append("同じドメインのロックが共有されていない（同時に取りうる）")
+        if not (1 < rcache.GLOBAL_CAP <= 16):
+            bad.append("全体の並列の上限が不適切（上限なし・1 つだけ）")
+        code = _re77.sub(r'"""(?:.|\n)*?"""', "", (root / "src/collectors/tcg/runcache.py").read_text(encoding="utf-8"))
+        if _re77.search(r"\b(open\(|write_text|write_bytes|pickle|json\.dump|shelve|sqlite3)", code):
+            bad.append("同一 run のキャッシュをファイルなどに保存している（前回の応答を新しい証拠にしうる）")
+        from src.collectors.tcg import base as tb
+        if tb.MIN_INTERVAL_SEC < 60:
+            bad.append("同じドメインへの間隔が 60 秒未満")
+        for k in ("momentum", "tcg_first_seen", "tcg_detection_events", "buyback_prices"):
+            if k not in rc.PRIVATE_KEYS:
+                bad.append(f"個別の項目 {k} が非公開の一覧に無い")
+        import yaml as _y77
+        wf = _y77.safe_load((root / ".github/workflows/daily_lp.yml").read_text(encoding="utf-8"))["jobs"]["update-lp"]
+        tm = wf.get("timeout-minutes")
+        if not isinstance(tm, int) or tm < 180 or tm > 360:
+            bad.append("ワークフローのタイムアウトが無い・短すぎる（通常は約 2 時間 10 分）・既定より長い")
+    except Exception as exc:  # noqa: BLE001
+        bad.append(f"検査に失敗: {type(exc).__name__}: {exc}")
+    return [{"level": "ok" if not bad else "error", "check": "coverage_wave6_persistent_signals_and_fast_collection",
+             "message": "#877 買取の勢い・first_seen は前回の台帳を引き継げた日だけ・曖昧な語で限定にしない・TCG の同一 run のキャッシュと並列（同じドメインは 1 つずつ・上限あり）・タイムアウト・個別は非公開"
                         + ("" if not bad else f" ← {bad[:4]}")}]
 
 

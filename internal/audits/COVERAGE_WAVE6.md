@@ -104,4 +104,33 @@ gh secret set RESEARCH_LEDGER_KEY
 
 ## 9. 本番での確認
 
-（本番の run 後に追記する）
+手動 run 1 回（run 40888944289、success、開始 2026-10-29 14:11Z・所要 **1h43m50s**。Wave 5 は 2h10m）。
+
+| 項目 | Wave 5 | Wave 6（実測） |
+|---|---|---|
+| TCG 収集（Collect TCG events） | 51.1 分 | **25.1 分**（目標 30 分以下を達成） |
+| 全体の所要 | 約 2h10m | **1h43m50s**（目標 1h45m 以下を達成） |
+| 小売の照会 | 10.0 分 | 10.0 分 |
+| カメラ買取 / 買取価格 | 28.7 / 12.2 分 | 28.7 / 12.2 分（変更なし。次のボトルネック） |
+
+- `collection_metrics`: 並列（同時に通信する上限 12・ドメインごと 1）。HTTP 72 件（キャッシュで省いた 6 件）・ドメイン 21・最大ドメインの取得 26 件（= 最も遅い取得元 1502 秒）。**取得を減らしていない**: 詳細の候補 41 件を 41 件とも読んだ（打ち切り 0・終了済みの読み飛ばし 0）。
+  取得元の健全性: HEALTHY 6 / ZERO_EVENTS 13 / PARSER_DEGRADED 0 / BLOCKED 5 / UNREACHABLE 4 / FAILED 0（計 28）。一部だけブロックされた取得元 1。
+- 台帳: `RESEARCH_LEDGER_KEY` は未設定 → `ledger_persistence=NOT_AVAILABLE`・`ledger_state=REUSED_WITHIN_RUN`（同じ run の再生成）・`first_seen_scope=THIS_RUN_ONLY`。**勢いは全 337 行が `NOT_COMPARABLE`（上がった・下がったと言わない）**・first_seen・検知の遅れは `comparable=0` で測定 0（UNKNOWN）。これは設計どおりで、鍵の設定後の 2 回目の run から実測される。
+- TCG: 取得元の状態 WORKING 8（Wave 5 と同じ。新しい取得元は追加できていない）・BLOCKED 5・UNREACHABLE 4。受付中のイベント 4（Wave 5 は 6。市場の変動）・応募の URL が確認できたもの 0・告知の URL だけ 4（いずれも actionable でない）・定価に結べたもの 0。検知の間隔のシミュレーションは Wave 5 とほぼ同じ（24 時間ごとだと半分を失う 3.3 件）。
+- 調査候補 10・高優先 7・正の価格差 6（Wave 5 は 5）・official verified 16/47・confirmed 2（既存の確定）・actionable 0。小売の照会の exact は Wave 5 と同じ構成。
+- 安全: false confirmed 0。`NOTIFICATION_REAL_SEND=false`・`PRODUCT_REAL_SEND_ENABLED=false`・`PHASE24_ACCEPTANCE_CANDIDATE_ID` は未設定（外部送信 0・Phase24 は変更なし）。公開の集計に勢い・first_seen・価格・JAN などの個別の項目なし。`.private` の追跡 0。deploy-check Errors 0（#877 を含む）・prelaunch Errors 0。
+
+### 目標の評価
+
+| 目標 | 結果 |
+|---|---|
+| TCG 収集 51 分 → 30 分以下 | **達成**（25.1 分） |
+| 全体 2h10m → 1h45m 以下 | **達成**（1h43m50s。余裕は約 1 分と小さい） |
+| official verified 16 → 20+ | 未達（16） |
+| 正の価格差 5 → 10+ | 未達（6） |
+| 高優先 7 → 10+ | 未達（7） |
+| TCG working +1 | 未達（+0） |
+| false confirmed 0・fake freshness 0・外部送信 0 | 達成 |
+| 台帳の実測（勢い・first_seen・遅れ） | 未実測（鍵の設定待ち。実装・監査・テストは完了） |
+
+判定: **COVERAGE_WAVE6_PARTIAL**（実行時間の 2 目標と安全は達成。カバレッジの目標は未達。台帳の実測はユーザーの鍵の設定が前提）。

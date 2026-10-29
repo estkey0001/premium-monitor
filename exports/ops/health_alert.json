@@ -2,23 +2,14 @@
   "type": "PRODUCTION_HEALTH_ALERT",
   "schema": 1,
   "audience": "operator",
-  "generated_at": "2026-10-29T16:50:20+09:00",
+  "generated_at": "2026-10-29T19:52:37+09:00",
   "note": "運営者向けの劣化アラート候補（商品の通知ではない）。外部へは送らない。CI の注記・Step Summary・管理画面に出す",
   "active_count": 5,
   "high": 3,
   "warning": 2,
   "candidates": [],
   "suppressed": 5,
-  "recovered": [
-    {
-      "key": "source_failure:mobile_ichiban",
-      "type": "PRODUCTION_HEALTH_RECOVERED",
-      "event": "RECOVERED",
-      "first_seen": "2026-10-28T22:16:13+09:00",
-      "recovered_at": "2026-10-29T16:50:20+09:00",
-      "last_severity": "HIGH"
-    }
-  ],
+  "recovered": [],
   "active": [
     {
       "key": "official_recheck_failing:prod_x100vi",
@@ -66,7 +57,7 @@
       "severity": "WARNING",
       "reason": "above_genre_max",
       "title": "ps5_pro の価格に誤りの可能性が高いものがあります（隔離）",
-      "details": "kaitori_shouten: game_console正常帯¥10,000〜¥200,000の上限超過（¥205,000。他店の裏付けなし・要確認）; mobile_ichiban: game_console正常帯¥10,000〜¥200,000の上限超過（¥205,500。他店の裏付けなし・要確認）",
+      "details": "kaitori_shouten: game_console正常帯¥10,000〜¥200,000の上限超過（¥205,400。他店の裏付けなし・要確認）; mobile_ichiban: game_console正常帯¥10,000〜¥200,000の上限超過（¥205,500。他店の裏付けなし・要確認）",
       "evidence": {
         "items": 2
       }

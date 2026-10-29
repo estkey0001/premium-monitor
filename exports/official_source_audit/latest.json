@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-29 16:50 JST",
+  "generated_at": "2026-10-29 19:52 JST",
   "scope": "公式ソース登録・検証（利益/AI/Opportunity/Notification/Capital/Execution は不変）",
   "methodology": {
     "verification": "WebFetch で HTTP200/公式ドメイン/canonical/商品一致を実確認したURLのみ verified",
@@ -1719,7 +1719,7 @@
         "product_id": "prod_ps5_pro",
         "action": "stock_observed",
         "stock": "入荷待ち",
-        "at": "2026-10-29T16:44:07+09:00"
+        "at": "2026-10-29T19:46:31+09:00"
       },
       {
         "product_id": "prod_switch2",
@@ -1770,7 +1770,7 @@
         "product_id": "prod_a7rv",
         "action": "stock_observed",
         "stock": "在庫あり",
-        "at": "2026-10-29T16:47:13+09:00"
+        "at": "2026-10-29T19:49:36+09:00"
       },
       {
         "product_id": "prod_a1ii",
@@ -1781,7 +1781,7 @@
         "product_id": "prod_a1ii",
         "action": "stock_observed",
         "stock": "在庫あり",
-        "at": "2026-10-29T16:48:19+09:00"
+        "at": "2026-10-29T19:50:36+09:00"
       },
       {
         "product_id": "prod_iphoneair_256",
@@ -1805,7 +1805,7 @@
       "product_id": "prod_ps5_pro",
       "action": "stock_observed",
       "stock": "入荷待ち",
-      "at": "2026-10-29T16:44:07+09:00"
+      "at": "2026-10-29T19:46:31+09:00"
     },
     {
       "product_id": "prod_switch2",
@@ -1856,7 +1856,7 @@
       "product_id": "prod_a7rv",
       "action": "stock_observed",
       "stock": "在庫あり",
-      "at": "2026-10-29T16:47:13+09:00"
+      "at": "2026-10-29T19:49:36+09:00"
     },
     {
       "product_id": "prod_a1ii",
@@ -1867,7 +1867,7 @@
       "product_id": "prod_a1ii",
       "action": "stock_observed",
       "stock": "在庫あり",
-      "at": "2026-10-29T16:48:19+09:00"
+      "at": "2026-10-29T19:50:36+09:00"
     },
     {
       "product_id": "prod_iphoneair_256",

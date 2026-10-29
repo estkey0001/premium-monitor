@@ -1,6 +1,6 @@
 # Collector Quality Report
 
-生成日時: 2026-10-29 15:55:09 UTC+09:00
+生成日時: 2026-10-29 18:57:37 UTC+09:00
 
 ## サマリ
 
@@ -66,7 +66,7 @@
 | iphone17pro256 | 2 | 3 | ❌ | ¥174,000 | ¥174,000 | ¥174,000 | — |
 | iphone17pro512 | 2 | 3 | ❌ | ¥202,250 | ¥202,000 | ¥202,500 | — |
 | iphoneair_256 | 1 | - | - | ¥132,000 | ¥132,000 | ¥132,000 | — |
-| iphoneduo_256 | 1 | - | - | ¥363,000 | ¥363,000 | ¥363,000 | — |
+| iphoneduo_256 | 1 | - | - | ¥370,000 | ¥370,000 | ¥370,000 | — |
 | ps5_pro | 0 | 2 | ❌ | — | — | — | — |
 | r5ii | 1 | - | - | ¥450,000 | ¥450,000 | ¥450,000 | — |
 | switch2 | 1 | 2 | ❌ | ¥51,800 | ¥51,800 | ¥51,800 | — |
@@ -196,18 +196,15 @@
 | ps5_pro | tsutaya | SKIP | not_supported |
 | iphone16pro256 | kaitori_shouten | FAILED | product_not_listed |
 
-## 価格変動一覧 (4件)
+## 価格変動一覧 (1件)
 
 | 商品 | 店舗 | 前回 | 今回 | 変化率 |
 |------|------|------|------|--------|
-| iphone17pro256 | kaitori_itchome | ¥171,000 | ¥174,000 | ↑1.8% |
-| iphoneduo_256 | kaitori_shouten | ¥366,000 | ¥363,000 | ↓0.8% |
-| iphone17pro512 | kaitori_itchome | ¥201,000 | ¥202,000 | ↑0.5% |
-| iphone17pm256 | kaitori_itchome | ¥190,000 | ¥191,000 | ↑0.5% |
+| iphoneduo_256 | kaitori_shouten | ¥363,000 | ¥370,000 | ↑1.9% |
 
 ## ⚠️ suspicious_price 一覧 (2件)
 
 | 商品 | 店舗 | 価格 | 理由 | 詳細 |
 |------|------|------|------|------|
-| ps5_pro | kaitori_shouten | ¥205,000 | above_genre_max | game_console正常帯¥10,000〜¥200,000の上限超過（¥205,000。他店の裏付けなし・要確認） |
+| ps5_pro | kaitori_shouten | ¥205,400 | above_genre_max | game_console正常帯¥10,000〜¥200,000の上限超過（¥205,400。他店の裏付けなし・要確認） |
 | ps5_pro | mobile_ichiban | ¥205,500 | above_genre_max | game_console正常帯¥10,000〜¥200,000の上限超過（¥205,500。他店の裏付けなし・要確認） |

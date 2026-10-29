@@ -1,7 +1,7 @@
 
 ============================================================
  Deploy Check (499 items)
- 実行日時: 2026-10-29T18:03:42+09:00
+ 実行日時: 2026-10-29T21:05:56+09:00
 ============================================================
   ✅ [index_exists] docs/index.html 存在
   ✅ [forbidden_phrases] 禁止表現なし
@@ -53,12 +53,12 @@
   ✅ [fetch_failed_no_price_calc] fetch_failed 行の価格欄が「—」（価格計算に使われていない）
   ✅ [game_console_shops] ゲーム機向け店舗が表示されている: ['ゲオ', 'イオシス', 'ブックオフ', '駿河屋', 'ソフマップ', 'TSUTAYA', '買取商店']
   ✅ [switch2_game_shop_links] Switch 2 / ゲーム機向け確認リンク（ゲオ/ブックオフ/駿河屋/ソフマップ）が存在する
-  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-10-29T15:55:09+09:00）
+  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-10-29T18:57:37+09:00）
   ⚠️ [suspicious_price_format] suspicious_prices 形式OK（suspicious_price 2件あり — 確認推奨）
   ✅ [fetch_failed_has_reason] fetch_failed 46件すべてに reason あり
   ✅ [collector_report_html_exists] docs/collector_report.html 存在
   ✅ [collector_report_link_in_lp] LP内に collector_report.html へのリンクがある
-  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 12件存在する: ['iphone17pm256', 'iphone17pm512', 'iphone17pro256', 'iphone17_256']
+  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 12件存在する: ['iphone17pro512', 'iphone17pm256', 'iphoneair_256', 'iphone17pro256']
   ✅ [beginner_page_auto_scraped_exists] 自動取得 OK 20件 / total 66件
   ✅ [iphone17pro256_price_scraped] iPhone 17 Pro 256GB の価格取得成功: ['kaitori_shouten', 'kaitori_itchome']
   ✅ [fetch_failed_has_reason_field] 全取得失敗エントリーに reason フィールドあり（46件）
@@ -185,7 +185,7 @@
   ✅ [daily_workflow_has_all_steps] #475 daily_lp.yml に全取得・生成・push ステップがある
   ✅ [report_latest_files_present] #476 各レポートの latest.json / latest.md が存在する
   ✅ [lottery_daily_update] #480 抽選情報が毎日更新される（daily_lp.yml に update_lottery_events ステップ）
-  ✅ [ranking_empty_reason] #482 beginner ランキングが0件なら理由が表示される（beginner=1）
+  ✅ [ranking_empty_reason] #482 beginner ランキングが0件なら理由が表示される（beginner=2）
   ✅ [sedori_empty_reason] #483 sedori ルートが0件なら理由が表示される（routes=0）
   ✅ [overseas_stale_excluded] #484 overseas stale は主計算から除外する方針が明示されている
   ✅ [ebay_app_id_warning] #485 eBay を取らない理由（Finding API は廃止・成約は Marketplace Insights）を明示する
@@ -431,7 +431,7 @@
   ✅ [tcg_blocked_source_not_healthy] #762 アクセス拒否（HTTP 403 等）の監視元を正常扱いしない
   ✅ [tcg_entry_url_official_only] #763 応募ページへのリンクは公式サイトの URL のみ
   ✅ [tcg_lottery_coverage_report] #764 抽選の監視状況（登録 / 実装 / 正常 / 拒否 / 未実装）が出力されている
-  ✅ [tcg_lottery_real_data] #765 抽選を実データで取得している（40件）、または監視元が正常に0件を返している
+  ✅ [tcg_lottery_real_data] #765 抽選を実データで取得している（39件）、または監視元が正常に0件を返している
   ✅ [tcg_release_schedule_shown] #841 公式の発売予定（6件）が新UIの抽選・予約に出ている
   ✅ [no_legacy_ui] #800 旧UIの DOM・CSS・JS が残っていない
   ✅ [new_ui_root] #801 新UIの root（#new-ui-root）が1つあり、終わりの目印がある
@@ -447,7 +447,7 @@
   ✅ [new_ui_no_internal_info] #808 新UIの一般のページに運営者向けの内部情報を出していない（運営者向けのページは別）
   ✅ [admin_ui_safe] #836 運営者向けのページに秘密の値・偽の操作・偽のログイン表示・DEMO が無く、8つの区分がそろっている
   ✅ [new_ui_safe_links] #809 新UIのリンクは https: かサイト内の相対パスだけ
-  ✅ [new_ui_vm_fidelity] #810 抽選の表示モデル（VM）が元データと一致する（39件）
+  ✅ [new_ui_vm_fidelity] #810 抽選の表示モデル（VM）が元データと一致する（40件）
   ✅ [admin_has_legacy_operator_info] #839 旧UIにしか無かった運営の情報が運営者向けのページにある
   ✅ [legacy_intents_on_new_ui] #840 旧UIの検査の意図（14日より古い価格・0円・未照合・中古を確定に使わない、取得の警告の強さ）を新UIの判定で満たす
   ✅ [source_safety] #842 取得の安全性（robots.txt・ブロックで打ち切り・正直な User-Agent・規約上取らない取得元を取らない）
@@ -500,7 +500,7 @@
   ✅ [artifacts_follow_current_routes] #830 AI の候補・資金配分・実行の OPEN・通知は、今の確定・参考ルート（route_id）から作られている（無効になったルートを復活させていない）
   ✅ [price_history_real_points] #831 価格の履歴は実際に観測した点だけ（観測時刻あり・未来でない・重複なし・正の価格）
   ✅ [product_detail_safe] #832 公開ページの商品詳細に DEMO・危ない URL・除外したルートの利益が出ていない
-  ✅ [opportunity_sell_identity_verified] #833 利益に使った売却価格はすべて商品照合済みの買取価格で、商品詳細の表の確認済みの行と一致（1件）
+  ✅ [opportunity_sell_identity_verified] #833 利益に使った売却価格はすべて商品照合済みの買取価格で、商品詳細の表の確認済みの行と一致（2件）
   ✅ [mypage_safe] #834 マイページに DEMO・架空のアカウント表示・危ないリンクが無く、ウォッチは登録済みの商品だけ、想定純利益は商品詳細と同じ
 
   Errors: 0 | Warnings: 11 | OK: 488

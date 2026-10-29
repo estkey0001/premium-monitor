@@ -1,6 +1,6 @@
 # データ品質エンジン（Data Quality Engine）
 
-> 生成: 2026-10-29 18:03 JST / 対象: データ取得・正規化・品質管理のみ（利益/AI/UI/SaaSロジックは不変）
+> 生成: 2026-10-29 21:05 JST / 対象: データ取得・正規化・品質管理のみ（利益/AI/UI/SaaSロジックは不変）
 
 ## 総合 Data Quality Score: **69 / 100** — 判定: **CONDITIONAL_GO**
 

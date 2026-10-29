@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "generated_at": "2026-10-29T17:47:11.606114+09:00",
+  "generated_at": "2026-10-29T20:49:25.603156+09:00",
   "note": "公式の商品 API で商品1個の希望小売価格と明示されたものだけ（パック価格から BOX の価格は作らない）。利益の計算には使っていない",
   "verified": [
     {
@@ -15,7 +15,7 @@
       "basis": "product_unit",
       "source": "official_product_api",
       "official_url": "https://www.pokemon-card.com/products/mega/mg.html",
-      "checked_at": "2026-10-29T17:47:11.606114+09:00"
+      "checked_at": "2026-10-29T20:49:25.603156+09:00"
     },
     {
       "product_id": "pokemon-スターターセットex-イーブイex",
@@ -29,7 +29,7 @@
       "basis": "product_unit",
       "source": "official_product_api",
       "official_url": "https://www.pokemon-card.com/ex/me/",
-      "checked_at": "2026-10-29T17:47:11.606114+09:00"
+      "checked_at": "2026-10-29T20:49:25.603156+09:00"
     },
     {
       "product_id": "pokemon-スターターセットex-ゾロア-ゾロアークex",
@@ -43,7 +43,7 @@
       "basis": "product_unit",
       "source": "official_product_api",
       "official_url": "https://www.pokemon-card.com/ex/me/",
-      "checked_at": "2026-10-29T17:47:11.606114+09:00"
+      "checked_at": "2026-10-29T20:49:25.603156+09:00"
     },
     {
       "product_id": "pokemon-スターターセットex-ニャオハ-マスカーニャex",
@@ -57,7 +57,7 @@
       "basis": "product_unit",
       "source": "official_product_api",
       "official_url": "https://www.pokemon-card.com/ex/me/",
-      "checked_at": "2026-10-29T17:47:11.606114+09:00"
+      "checked_at": "2026-10-29T20:49:25.603156+09:00"
     },
     {
       "product_id": "pokemon-30th-celebration-プレミアムデッキセット-エーフィ-ブラッキー",
@@ -71,7 +71,7 @@
       "basis": "product_unit",
       "source": "official_product_api",
       "official_url": "https://www.30th.pokemon-card.com/product/mf",
-      "checked_at": "2026-10-29T17:47:11.606114+09:00"
+      "checked_at": "2026-10-29T20:49:25.603156+09:00"
     },
     {
       "product_id": "pokemon-30th-celebration-カードセット-ニャオハ-ホゲータ-クワッス",
@@ -85,7 +85,7 @@
       "basis": "product_unit",
       "source": "official_product_api",
       "official_url": "https://www.30th.pokemon-card.com/product/cardset",
-      "checked_at": "2026-10-29T17:47:11.606114+09:00"
+      "checked_at": "2026-10-29T20:49:25.603156+09:00"
     },
     {
       "product_id": "pokemon-30th-celebration-カードセット-サルノリ-ヒバニー-メッソン",
@@ -99,7 +99,7 @@
       "basis": "product_unit",
       "source": "official_product_api",
       "official_url": "https://www.30th.pokemon-card.com/product/cardset",
-      "checked_at": "2026-10-29T17:47:11.606114+09:00"
+      "checked_at": "2026-10-29T20:49:25.603156+09:00"
     },
     {
       "product_id": "pokemon-30th-celebration-カードセット-モクロー-ニャビー-アシマリ",
@@ -113,7 +113,7 @@
       "basis": "product_unit",
       "source": "official_product_api",
       "official_url": "https://www.30th.pokemon-card.com/product/cardset",
-      "checked_at": "2026-10-29T17:47:11.606114+09:00"
+      "checked_at": "2026-10-29T20:49:25.603156+09:00"
     },
     {
       "product_id": "pokemon-30th-celebration-カードセット-ハリマロン-フォッコ-ケロマツ",
@@ -127,7 +127,7 @@
       "basis": "product_unit",
       "source": "official_product_api",
       "official_url": "https://www.30th.pokemon-card.com/product/cardset",
-      "checked_at": "2026-10-29T17:47:11.606114+09:00"
+      "checked_at": "2026-10-29T20:49:25.603156+09:00"
     },
     {
       "product_id": "pokemon-30th-celebration-カードセット-ツタージャ-ポカブ-ミジュマル",
@@ -141,7 +141,7 @@
       "basis": "product_unit",
       "source": "official_product_api",
       "official_url": "https://www.30th.pokemon-card.com/product/cardset",
-      "checked_at": "2026-10-29T17:47:11.606114+09:00"
+      "checked_at": "2026-10-29T20:49:25.603156+09:00"
     },
     {
       "product_id": "pokemon-30th-celebration-カードセット-ナエトル-ヒコザル-ポッチャマ",
@@ -155,7 +155,7 @@
       "basis": "product_unit",
       "source": "official_product_api",
       "official_url": "https://www.30th.pokemon-card.com/product/cardset",
-      "checked_at": "2026-10-29T17:47:11.606114+09:00"
+      "checked_at": "2026-10-29T20:49:25.603156+09:00"
     },
     {
       "product_id": "pokemon-30th-celebration-カードセット-キモリ-アチャモ-ミズゴロウ",
@@ -169,7 +169,7 @@
       "basis": "product_unit",
       "source": "official_product_api",
       "official_url": "https://www.30th.pokemon-card.com/product/cardset",
-      "checked_at": "2026-10-29T17:47:11.606114+09:00"
+      "checked_at": "2026-10-29T20:49:25.603156+09:00"
     },
     {
       "product_id": "pokemon-30th-celebration-カードセット-チコリータ-ヒノアラシ-ワニノコ",
@@ -183,7 +183,7 @@
       "basis": "product_unit",
       "source": "official_product_api",
       "official_url": "https://www.30th.pokemon-card.com/product/cardset",
-      "checked_at": "2026-10-29T17:47:11.606114+09:00"
+      "checked_at": "2026-10-29T20:49:25.603156+09:00"
     },
     {
       "product_id": "pokemon-30th-celebration-カードセット-フシギダネ-ヒトカゲ-ゼニガメ",
@@ -197,7 +197,7 @@
       "basis": "product_unit",
       "source": "official_product_api",
       "official_url": "https://www.30th.pokemon-card.com/product/cardset",
-      "checked_at": "2026-10-29T17:47:11.606114+09:00"
+      "checked_at": "2026-10-29T20:49:25.603156+09:00"
     },
     {
       "product_id": "pokemon-30th-celebration-futuristic-box",
@@ -211,7 +211,7 @@
       "basis": "product_unit",
       "source": "official_product_api",
       "official_url": "https://www.30th.pokemon-card.com/product/furbox",
-      "checked_at": "2026-10-29T17:47:11.606114+09:00"
+      "checked_at": "2026-10-29T20:49:25.603156+09:00"
     }
   ],
   "excluded": [

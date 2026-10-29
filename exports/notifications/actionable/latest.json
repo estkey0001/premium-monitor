@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-10-29T18:03:22+09:00",
+  "generated_at": "2026-10-29T21:05:35+09:00",
   "step": "prepare",
-  "diagnostics_generated_at": "2026-10-29T18:03:22+09:00",
+  "diagnostics_generated_at": "2026-10-29T21:05:35+09:00",
   "note": "内部用（運営者向け）。外部への送信はしない（dry-run）。配信先の URL・トークンは記録しない",
   "type": "ACTIONABLE_NOW",
   "dry_run": true,
@@ -49,7 +49,7 @@
       "product_real_send": false,
       "real_send_enabled": false
     },
-    "checked_at": "2026-10-29T06:31:03+09:00",
+    "checked_at": "2026-10-29T18:03:23+09:00",
     "product": {
       "enabled": false,
       "limited_mode": true,
@@ -70,16 +70,16 @@
     "status": "PHASE24_WAITING",
     "label": "実データの候補待ち",
     "detection": "NO_ACTIONABLE_CHANGE",
-    "generated_at": "2026-10-29T18:03:22+09:00",
+    "generated_at": "2026-10-29T21:05:35+09:00",
     "error": "",
-    "run_id": "40832033342",
+    "run_id": "40853549724",
     "acceptance": {
       "state": "NONE",
       "candidate_id": "",
       "product_id": "",
       "product": ""
     },
-    "diagnostics_generated_at": "2026-10-29T18:03:22+09:00",
+    "diagnostics_generated_at": "2026-10-29T21:05:35+09:00",
     "actionable": 0,
     "candidate_count": 0,
     "candidate_ids": [],
@@ -90,9 +90,9 @@
     "history": [],
     "note": "内部用（運営者向け）。検知と記録だけ（送信しない）。受入は手動の手順で行う（ops/Secrets設定.md）"
   },
-  "run_id": "40832033342",
-  "prepared_at": "2026-10-29T18:03:23+09:00",
-  "attempt_id": "gh-40832033342-1",
+  "run_id": "40853549724",
+  "prepared_at": "2026-10-29T21:05:39+09:00",
+  "attempt_id": "gh-40853549724-1",
   "dispatch_expired": 0,
   "dispatch_cancelled": 0,
   "dispatch_sending": 0,

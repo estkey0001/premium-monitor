@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-29 18:03 JST",
+  "generated_at": "2026-10-29 21:05 JST",
   "date": "2026-10-29",
   "health_score": {
     "data_quality": 14.5,
@@ -24,9 +24,10 @@
     "html_rate": 0.0085
   },
   "profit": {
-    "official_to_buyback_count": 1,
+    "official_to_buyback_count": 2,
     "official_to_buyback_products": [
-      "prod_gr4_hdf"
+      "prod_gr4_hdf",
+      "prod_iphoneduo_256"
     ],
     "official_to_buyback_max_profit": 16200,
     "main_route_count": 0,
@@ -337,15 +338,15 @@
   "diff_vs_prev": {
     "available": true,
     "stale_rate": {
-      "prev": 0.617,
+      "prev": 0.6144,
       "cur": 0.6144
     },
     "zero_rate": {
-      "prev": 0.1617,
+      "prev": 0.161,
       "cur": 0.161
     },
     "item_url_rate": {
-      "prev": 0.4809,
+      "prev": 0.4831,
       "cur": 0.4831
     },
     "main_route_count": {
@@ -371,7 +372,7 @@
       "item_url率 48% (<50%)"
     ],
     "info": [
-      "公式→買取の確定した案件 1件 / 最大 +¥16,200"
+      "公式→買取の確定した案件 2件 / 最大 +¥16,200"
     ]
   },
   "improvements_top10": [

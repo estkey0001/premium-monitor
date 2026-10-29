@@ -17,7 +17,7 @@
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-10-29",
+      "last_seen_on": "2026-10-30",
       "updated_at": "2026-10-20T18:14:42+09:00"
     },
     "tcg-event-1f61b23f9a78": {
@@ -36,7 +36,7 @@
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-10-29",
+      "last_seen_on": "2026-10-30",
       "updated_at": "2026-10-20T18:14:42+09:00"
     },
     "tcg-event-f1dac3fcd83e": {
@@ -137,7 +137,7 @@
         "schedule_not_available"
       ],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-10-29",
+      "last_seen_on": "2026-10-30",
       "updated_at": "2026-10-17T17:34:02+09:00"
     },
     "tcg-ann-273d55511745": {
@@ -162,7 +162,7 @@
         "title_only_not_fetched"
       ],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-10-29",
+      "last_seen_on": "2026-10-30",
       "updated_at": "2026-10-17T17:34:02+09:00"
     },
     "tcg-release-8a57a4242c09": {
@@ -182,7 +182,7 @@
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-10-29",
+      "last_seen_on": "2026-10-30",
       "updated_at": "2026-10-17T17:34:02+09:00"
     },
     "tcg-release-f614bc792b6d": {
@@ -202,7 +202,7 @@
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-10-29",
+      "last_seen_on": "2026-10-30",
       "updated_at": "2026-10-17T17:34:02+09:00"
     },
     "tcg-release-039c69c6e831": {
@@ -222,7 +222,7 @@
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-10-29",
+      "last_seen_on": "2026-10-30",
       "updated_at": "2026-10-17T17:34:02+09:00"
     },
     "tcg-release-0e309c25183f": {
@@ -242,7 +242,7 @@
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-10-29",
+      "last_seen_on": "2026-10-30",
       "updated_at": "2026-10-17T17:34:02+09:00"
     },
     "tcg-release-8f1266a6511e": {
@@ -353,14 +353,14 @@
       "product_mapping": "unmapped",
       "application_start": "2026-10-26",
       "application_end": "2026-10-29",
-      "event_status": "ENDING_SOON",
+      "event_status": "RESULT_PENDING",
       "missing_fields": [],
       "candidate_id": "tcg-event-3bf8eed1054f",
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-10-28T20:00:57+09:00",
-      "last_seen_on": "2026-10-29",
-      "updated_at": "2026-10-28T20:00:57+09:00"
+      "last_seen_on": "2026-10-30",
+      "updated_at": "2026-10-30T00:38:14+09:00"
     },
     "tcg-event-bbf7f58078e2": {
       "source": "CARD_LABO",
@@ -372,14 +372,14 @@
       "product_mapping": "unmapped",
       "application_start": "2026-10-26",
       "application_end": "2026-10-29T23:59:00+09:00",
-      "event_status": "ENDING_SOON",
+      "event_status": "RESULT_PENDING",
       "missing_fields": [],
       "candidate_id": "tcg-event-bbf7f58078e2",
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-10-28T20:00:57+09:00",
-      "last_seen_on": "2026-10-29",
-      "updated_at": "2026-10-29T02:22:08+09:00"
+      "last_seen_on": "2026-10-30",
+      "updated_at": "2026-10-30T00:38:14+09:00"
     },
     "tcg-event-b1814c647a25": {
       "source": "CARD_LABO",
@@ -391,14 +391,14 @@
       "product_mapping": "unmapped",
       "application_start": "2026-10-28",
       "application_end": "2026-10-31",
-      "event_status": "OPEN",
+      "event_status": "ENDING_SOON",
       "missing_fields": [],
       "candidate_id": "tcg-event-b1814c647a25",
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-10-28T20:00:57+09:00",
-      "last_seen_on": "2026-10-29",
-      "updated_at": "2026-10-29T02:22:08+09:00"
+      "last_seen_on": "2026-10-30",
+      "updated_at": "2026-10-30T00:38:14+09:00"
     },
     "tcg-event-e8525ea252db": {
       "source": "CARD_LABO",
@@ -410,14 +410,14 @@
       "product_mapping": "unmapped",
       "application_start": "2026-10-28",
       "application_end": "2026-10-31",
-      "event_status": "OPEN",
+      "event_status": "ENDING_SOON",
       "missing_fields": [],
       "candidate_id": "tcg-event-e8525ea252db",
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-10-28T20:00:57+09:00",
-      "last_seen_on": "2026-10-29",
-      "updated_at": "2026-10-29T02:22:08+09:00"
+      "last_seen_on": "2026-10-30",
+      "updated_at": "2026-10-30T00:38:14+09:00"
     },
     "tcg-event-3899f35f5f26": {
       "source": "CARD_LABO",
@@ -435,7 +435,7 @@
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-10-28T20:00:57+09:00",
-      "last_seen_on": "2026-10-29",
+      "last_seen_on": "2026-10-30",
       "updated_at": "2026-10-29T02:22:08+09:00"
     },
     "tcg-event-25a8976468a0": {
@@ -454,7 +454,7 @@
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-10-28T20:00:57+09:00",
-      "last_seen_on": "2026-10-29",
+      "last_seen_on": "2026-10-30",
       "updated_at": "2026-10-29T02:22:08+09:00"
     },
     "tcg-event-8264fd0409f6": {
@@ -473,7 +473,7 @@
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-10-28T20:00:57+09:00",
-      "last_seen_on": "2026-10-29",
+      "last_seen_on": "2026-10-30",
       "updated_at": "2026-10-29T02:22:08+09:00"
     },
     "tcg-event-c68209f7a65d": {
@@ -492,7 +492,7 @@
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-10-28T20:00:57+09:00",
-      "last_seen_on": "2026-10-29",
+      "last_seen_on": "2026-10-30",
       "updated_at": "2026-10-29T02:22:08+09:00"
     },
     "tcg-event-92d9211872c8": {
@@ -511,7 +511,7 @@
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-10-28T20:00:57+09:00",
-      "last_seen_on": "2026-10-29",
+      "last_seen_on": "2026-10-30",
       "updated_at": "2026-10-29T02:22:08+09:00"
     },
     "tcg-event-a8f97079cd70": {
@@ -524,14 +524,14 @@
       "product_mapping": "unmapped",
       "application_start": "2026-10-26",
       "application_end": "2026-10-27T23:59:00+09:00",
-      "event_status": "CLOSED",
+      "event_status": "WINNER_PURCHASE_PERIOD",
       "missing_fields": [],
       "candidate_id": "tcg-event-a8f97079cd70",
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-10-28T20:00:57+09:00",
-      "last_seen_on": "2026-10-29",
-      "updated_at": "2026-10-28T20:00:57+09:00"
+      "last_seen_on": "2026-10-30",
+      "updated_at": "2026-10-30T00:38:14+09:00"
     },
     "tcg-event-15614a07a906": {
       "source": "CARD_LABO",
@@ -543,14 +543,14 @@
       "product_mapping": "unmapped",
       "application_start": "2026-10-26",
       "application_end": "2026-10-28",
-      "event_status": "RESULT_PENDING",
+      "event_status": "WINNER_ANNOUNCED",
       "missing_fields": [],
       "candidate_id": "tcg-event-15614a07a906",
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-10-28T22:52:57+09:00",
-      "last_seen_on": "2026-10-29",
-      "updated_at": "2026-10-29T02:22:08+09:00"
+      "last_seen_on": "2026-10-30",
+      "updated_at": "2026-10-30T00:38:14+09:00"
     },
     "tcg-event-41d9dbde0cdd": {
       "source": "HOBBY_STATION",
@@ -568,7 +568,7 @@
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-10-28T22:52:57+09:00",
-      "last_seen_on": "2026-10-29",
+      "last_seen_on": "2026-10-30",
       "updated_at": "2026-10-28T22:52:57+09:00"
     },
     "tcg-event-5ba9205ded7b": {
@@ -587,7 +587,7 @@
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-10-28T22:52:57+09:00",
-      "last_seen_on": "2026-10-29",
+      "last_seen_on": "2026-10-30",
       "updated_at": "2026-10-29T02:22:08+09:00"
     },
     "tcg-event-ba851cf7e2d5": {
@@ -606,7 +606,7 @@
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-10-28T22:52:57+09:00",
-      "last_seen_on": "2026-10-29",
+      "last_seen_on": "2026-10-30",
       "updated_at": "2026-10-28T22:52:57+09:00"
     },
     "tcg-event-6a7b4f8d0a31": {
@@ -625,7 +625,7 @@
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-10-28T22:52:57+09:00",
-      "last_seen_on": "2026-10-29",
+      "last_seen_on": "2026-10-30",
       "updated_at": "2026-10-28T22:52:57+09:00"
     },
     "tcg-event-5650565d5fa5": {
@@ -644,7 +644,7 @@
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-10-28T22:52:57+09:00",
-      "last_seen_on": "2026-10-29",
+      "last_seen_on": "2026-10-30",
       "updated_at": "2026-10-28T22:52:57+09:00"
     },
     "tcg-event-030f99439fba": {
@@ -663,7 +663,7 @@
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-10-28T22:52:57+09:00",
-      "last_seen_on": "2026-10-29",
+      "last_seen_on": "2026-10-30",
       "updated_at": "2026-10-28T22:52:57+09:00"
     },
     "tcg-event-a28dc8affbca": {
@@ -682,7 +682,7 @@
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-10-28T22:52:57+09:00",
-      "last_seen_on": "2026-10-29",
+      "last_seen_on": "2026-10-30",
       "updated_at": "2026-10-28T22:52:57+09:00"
     },
     "tcg-event-2604275fc825": {
@@ -701,7 +701,7 @@
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-10-28T22:52:57+09:00",
-      "last_seen_on": "2026-10-29",
+      "last_seen_on": "2026-10-30",
       "updated_at": "2026-10-28T22:52:57+09:00"
     },
     "tcg-event-37988fb154d6": {
@@ -720,7 +720,7 @@
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-10-28T22:52:57+09:00",
-      "last_seen_on": "2026-10-29",
+      "last_seen_on": "2026-10-30",
       "updated_at": "2026-10-28T22:52:57+09:00"
     },
     "tcg-event-ea095b394fb3": {
@@ -758,7 +758,7 @@
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-10-29T02:22:08+09:00",
-      "last_seen_on": "2026-10-29",
+      "last_seen_on": "2026-10-30",
       "updated_at": "2026-10-29T02:22:08+09:00"
     },
     "tcg-event-5a74648efb99": {
@@ -777,7 +777,7 @@
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-10-29T02:22:08+09:00",
-      "last_seen_on": "2026-10-29",
+      "last_seen_on": "2026-10-30",
       "updated_at": "2026-10-29T02:22:08+09:00"
     },
     "tcg-event-a73090b6996b": {
@@ -796,7 +796,7 @@
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-10-29T02:22:08+09:00",
-      "last_seen_on": "2026-10-29",
+      "last_seen_on": "2026-10-30",
       "updated_at": "2026-10-29T02:22:08+09:00"
     },
     "tcg-event-2f7ccccfb78c": {
@@ -815,7 +815,7 @@
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-10-29T02:22:08+09:00",
-      "last_seen_on": "2026-10-29",
+      "last_seen_on": "2026-10-30",
       "updated_at": "2026-10-29T02:22:08+09:00"
     },
     "tcg-event-b32da5d1efc9": {
@@ -834,7 +834,7 @@
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-10-29T02:22:08+09:00",
-      "last_seen_on": "2026-10-29",
+      "last_seen_on": "2026-10-30",
       "updated_at": "2026-10-29T02:22:08+09:00"
     },
     "tcg-event-0015a89b030e": {
@@ -853,7 +853,7 @@
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-10-29T02:22:08+09:00",
-      "last_seen_on": "2026-10-29",
+      "last_seen_on": "2026-10-30",
       "updated_at": "2026-10-29T02:22:08+09:00"
     },
     "tcg-event-e39324463c8e": {
@@ -872,7 +872,7 @@
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-10-29T02:22:08+09:00",
-      "last_seen_on": "2026-10-29",
+      "last_seen_on": "2026-10-30",
       "updated_at": "2026-10-29T02:22:08+09:00"
     },
     "tcg-event-29779f8c756a": {
@@ -891,7 +891,7 @@
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-10-29T06:02:34+09:00",
-      "last_seen_on": "2026-10-29",
+      "last_seen_on": "2026-10-30",
       "updated_at": "2026-10-29T06:02:34+09:00"
     },
     "tcg-event-844217f44063": {
@@ -910,7 +910,7 @@
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-10-29T06:02:34+09:00",
-      "last_seen_on": "2026-10-29",
+      "last_seen_on": "2026-10-30",
       "updated_at": "2026-10-29T06:02:34+09:00"
     },
     "tcg-event-f054d10f3b9e": {
@@ -929,7 +929,7 @@
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-10-29T06:02:34+09:00",
-      "last_seen_on": "2026-10-29",
+      "last_seen_on": "2026-10-30",
       "updated_at": "2026-10-29T06:02:34+09:00"
     },
     "tcg-event-3946ab04cd0b": {
@@ -948,7 +948,7 @@
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-10-29T06:02:34+09:00",
-      "last_seen_on": "2026-10-29",
+      "last_seen_on": "2026-10-30",
       "updated_at": "2026-10-29T06:02:34+09:00"
     },
     "tcg-event-aa861812e11e": {
@@ -967,7 +967,7 @@
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-10-29T06:02:34+09:00",
-      "last_seen_on": "2026-10-29",
+      "last_seen_on": "2026-10-30",
       "updated_at": "2026-10-29T06:02:34+09:00"
     },
     "tcg-event-1700d43eb7d8": {
@@ -986,7 +986,7 @@
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-10-29T06:02:34+09:00",
-      "last_seen_on": "2026-10-29",
+      "last_seen_on": "2026-10-30",
       "updated_at": "2026-10-29T06:02:34+09:00"
     },
     "tcg-event-4cc055cbd18d": {
@@ -1024,7 +1024,7 @@
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-10-29T06:02:34+09:00",
-      "last_seen_on": "2026-10-29",
+      "last_seen_on": "2026-10-30",
       "updated_at": "2026-10-29T06:02:34+09:00"
     },
     "tcg-event-4299e3970e90": {
@@ -1037,14 +1037,14 @@
       "product_mapping": "unmapped",
       "application_start": "2026-10-29",
       "application_end": "2026-11-01",
-      "event_status": "UPCOMING",
+      "event_status": "OPEN",
       "missing_fields": [],
       "candidate_id": "tcg-event-4299e3970e90",
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-10-29T17:47:11+09:00",
-      "last_seen_on": "2026-10-29",
-      "updated_at": "2026-10-29T17:47:11+09:00"
+      "last_seen_on": "2026-10-30",
+      "updated_at": "2026-10-30T00:38:14+09:00"
     },
     "tcg-event-ccd2075909f5": {
       "source": "CARD_LABO",
@@ -1062,8 +1062,27 @@
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-10-29T20:49:25+09:00",
-      "last_seen_on": "2026-10-29",
+      "last_seen_on": "2026-10-30",
       "updated_at": "2026-10-29T20:49:25+09:00"
+    },
+    "tcg-event-08e651c84c3d": {
+      "source": "CARD_LABO",
+      "kind": "LOTTERY",
+      "tcg": "ONE_PIECE",
+      "title": "ワンピースカードゲーム ブースターパック ヒロインズエディション",
+      "official_url": "https://www.c-labo.jp/shop/oita/blog/616705/",
+      "product_code": "",
+      "product_mapping": "unmapped",
+      "application_start": "2026-09-21",
+      "application_end": "2026-09-23",
+      "event_status": "ENDED",
+      "missing_fields": [],
+      "candidate_id": "tcg-event-08e651c84c3d",
+      "status": "MATCHED_EVENT",
+      "reasons": [],
+      "discovered_at": "2026-10-30T00:38:14+09:00",
+      "last_seen_on": "2026-10-30",
+      "updated_at": "2026-10-30T00:38:14+09:00"
     }
   }
 }

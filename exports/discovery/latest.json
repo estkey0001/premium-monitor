@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-29T20:49:25+09:00",
+  "generated_at": "2026-10-30T00:38:14+09:00",
   "apple": {
     "source": "apple_jp_official",
     "list_status": "ok",
@@ -33,13 +33,13 @@
     "inputs_stale": [],
     "review_required": 2,
     "matched_events": 39,
-    "release": 6,
+    "release": 4,
     "by_kind": {
       "LOTTERY": 40,
       "PREORDER": 0,
       "FIRST_COME": 0,
       "RESTOCK": 1,
-      "RELEASE": 6
+      "RELEASE": 4
     },
     "tcg_products": 22,
     "sources": {
@@ -114,7 +114,7 @@
           "source_id": "FUKUFUKU_TOREKA",
           "retailer": "福福トレカ",
           "adapter": "fukufuku_lottery",
-          "state": "ACTIVE_LOTTERY",
+          "state": "NO_ACTIVE_LOTTERY",
           "health": "HEALTHY",
           "blocked": false,
           "robots": null,
@@ -291,9 +291,9 @@
     "unknown_official_products": 62,
     "apple_candidates": 17,
     "tcg_products": 20,
-    "event_candidates": 55,
+    "event_candidates": 56,
     "review_required_announcements": 2,
-    "matched_events": 52,
+    "matched_events": 53,
     "stale_events": 1,
     "approved_events": 0,
     "registered_events": 0
@@ -370,7 +370,7 @@
         "source_id": "FUKUFUKU_TOREKA",
         "retailer": "福福トレカ",
         "adapter": "fukufuku_lottery",
-        "state": "ACTIVE_LOTTERY",
+        "state": "NO_ACTIVE_LOTTERY",
         "health": "HEALTHY",
         "blocked": false,
         "robots": null,

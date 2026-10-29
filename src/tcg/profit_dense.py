@@ -42,10 +42,13 @@ def completeness(i: dict, now: datetime) -> dict:
         "application_start": st is not None, "application_end": en is not None,
         "winner_announcement": bool(i.get("winner_announcement_at") or i.get("winner_announcement_date")),
         "purchase_window": bool((i.get("purchase_start") or i.get("purchase_start_date")) and (i.get("purchase_end") or i.get("purchase_end_date"))),
-        "official_url": bool(i.get("entry_url") or i.get("purchase_url")),
+        # 応募の URL（公式で確認できた entry_url だけ。購入の URL（当選後の購入）・告知の URL は応募の URL ではない）
+        "official_url": bool(i.get("entry_url")),
     }
     n = sum(flags.values())
-    return {"completeness": n, "missing": [k for k in COMPLETENESS_FIELDS if not flags[k]], "actionable_event": n == len(COMPLETENESS_FIELDS)}
+    # 告知の URL（情報元）だけで応募の URL が確認できないイベントは、告知を見に行くだけ（actionable にしない）
+    return {"completeness": n, "missing": [k for k in COMPLETENESS_FIELDS if not flags[k]], "actionable_event": n == len(COMPLETENESS_FIELDS),
+            "application_url_confirmed": flags["official_url"], "announcement_url_only": (not flags["official_url"]) and bool(i.get("source_url"))}
 
 
 def evaluate(items: list[dict], msrp: dict | None, now: datetime) -> dict:
@@ -54,7 +57,7 @@ def evaluate(items: list[dict], msrp: dict | None, now: datetime) -> dict:
     idx = _msrp_index(msrp)
     rows, counts = [], {"active_tcg_priority": 0, "tcg_new_release": 0, "tcg_limited": 0, "tcg_supply_pressure": 0,
                         "tcg_msrp_linked_active": 0, "tcg_actionable_events": 0, "tcg_incomplete_active": 0,
-                        "tcg_stock_unknown_not_counted": 0}
+                        "tcg_stock_unknown_not_counted": 0, "tcg_application_url_confirmed": 0, "tcg_announcement_url_only": 0}
     for i in items:
         status = str(i.get("status") or "")
         if status not in ACTIVE:
@@ -91,6 +94,8 @@ def evaluate(items: list[dict], msrp: dict | None, now: datetime) -> dict:
         counts["tcg_msrp_linked_active"] += int(m is not None)
         counts["tcg_actionable_events"] += int(c["actionable_event"])
         counts["tcg_incomplete_active"] += int(not c["actionable_event"])
+        counts["tcg_application_url_confirmed"] += int(c["application_url_confirmed"])
+        counts["tcg_announcement_url_only"] += int(c["announcement_url_only"])
     rows.sort(key=lambda r: (-r["signal_points"], r["priority"], r["retailer"]))
     return {"counts": counts, "events": rows}
 

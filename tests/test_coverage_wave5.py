@@ -55,10 +55,19 @@ def test_limited_requires_official_evidence():
     assert not sg.limited_signal(official_name="Nikon Z9 ボディ", official_url="https://nij.nikon.com/x/", official=True)["limited"]
 
 
-def test_anniversary_and_special_words_are_classified():
-    kinds = {sg.limited_signal(official_name=n, official_url="https://o.example/", official=True)["limited_kind"]
-             for n in ("30th CELEBRATION 拡張パック", "スペシャルデッキセット", "10周年 記念モデル")}
+def test_ambiguous_words_are_limited_only_with_a_structured_official_field():
+    """Special・特別・周年・記念などの曖昧な語は、語の一致だけでは限定にしない（Wave 6 Stage W）。公式の構造化された項目があるときだけ採用する。"""
+    names = ("30th CELEBRATION 拡張パック", "スペシャルデッキセット", "10周年 記念モデル", "特別なケース付き", "Special Pack")
+    for n in names:
+        assert not sg.limited_signal(official_name=n, official_url="https://o.example/", official=True)["limited"]
+    kinds = {sg.limited_signal(official_name=n, official_url="https://o.example/", official=True, structured_limited=True)["limited_kind"]
+             for n in names[:3]}
     assert kinds == {"anniversary", "special"}
+    # 構造化された項目があっても、公式でない・URL が無いなら付けない
+    assert not sg.limited_signal(official_name="特別版", official_url="", official=True, structured_limited=True)["limited"]
+    assert not sg.limited_signal(official_name="特別版", official_url="https://o.example/", official=False, structured_limited=True)["limited"]
+    # 明確な語は、公式の名前にあればそれだけで根拠になる
+    assert sg.limited_signal(official_name="数量限定セット", official_url="https://o.example/", official=True)["limited"]
 
 
 # ── 供給の逼迫 ───────────────────────────────────────────────────────────────────────
@@ -303,7 +312,7 @@ def _ev(**k):
     return base
 
 
-MSRP = {"verified": [{"product_id": "pid-1", "name": "30th CELEBRATION 拡張パック", "retail_price": 5400, "release_date": "2026-10-20",
+MSRP = {"verified": [{"product_id": "pid-1", "name": "30th 数量限定 拡張パック", "retail_price": 5400, "release_date": "2026-10-20",
                       "source": "official_product_api", "official_url": "https://o.example/p"}]}
 
 
@@ -335,7 +344,7 @@ def test_msrp_links_only_by_exact_product_id_never_by_name():
     linked = pdn.evaluate([_ev()], MSRP, NOW)
     assert linked["counts"]["tcg_msrp_linked_active"] == 1 and linked["events"][0]["msrp_price"] == 5400
     assert linked["counts"]["tcg_new_release"] == 1 and linked["counts"]["tcg_limited"] == 1       # 公式の商品名・発売日に根拠がある
-    for ev in (_ev(product_id="pid-other"), _ev(product_id=None), _ev(product_match="fuzzy"), _ev(product_name="30th CELEBRATION 拡張パック", product_id=None)):
+    for ev in (_ev(product_id="pid-other"), _ev(product_id=None), _ev(product_match="fuzzy"), _ev(product_name="30th 数量限定 拡張パック", product_id=None)):
         r = pdn.evaluate([ev], MSRP, NOW)
         assert r["counts"]["tcg_msrp_linked_active"] == 0 and r["events"][0]["msrp_price"] is None
         assert r["counts"]["tcg_new_release"] == 0 and r["counts"]["tcg_limited"] == 0             # 結べなければ、発売直後・限定とも言わない

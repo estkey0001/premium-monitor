@@ -910,6 +910,10 @@ class DailyLPGenerator:
                    "msrp_verified": ((self._load_export_json("tcg", "msrp.json").get("counts") or {}).get("verified")),
                    "source_candidates": (self._load_export_json("tcg", "lottery_sources.json").get("source_candidates")
                                          or {}).get("count")}
+            # 今回正常に取得できた抽選の取得元（検知の遅れで「前回その取得元が見えていたか」の根拠。ブロック・到達不能は含めない）
+            _healthy = {str(r.get("source_id")) for r in (tcg_latest.get("lottery_sources") or [])
+                        if isinstance(r, dict) and r.get("source_id") and r.get("reachable") and not r.get("blocked") and not r.get("unreachable")}
+            _mb = _rc.momentum_baseline(raw_state, ledger_state)     # 勢いの比較の基準（引き継げた日・同じ run の再生成だけ）
             report, state = _rc.build(
                 products=products, observations=npo.get("observations") or [],
                 msrp_evidence=getattr(self, "_msrp_evidence", None) or {}, official_meta=self._official_meta(),
@@ -926,7 +930,8 @@ class DailyLPGenerator:
                 tcg_events=(self._load_export_json("tcg", "lotteries.json").get("items") or []),
                 retail_adapter_stats=lk_doc.get("adapter_stats"), retail_api_sources=lk_doc.get("api_sources"),
                 tcg_msrp=self._load_export_json("tcg", "msrp.json"),
-                prev_sell_of=_rc.prev_sell_lookup(None if raw_state in (None, "CORRUPT") else raw_state, ledger_state, ctx.now),
+                prev_tcg_first_seen=(raw_state.get("tcg_first_seen") if isinstance(raw_state, dict) else None),
+                prev_obs_of=_rc.prev_buyback_lookup(_mb[0], _mb[1], ctx.now), prev_buyback_prices=_mb[2], tcg_healthy_sources=_healthy,
                 actionable_count=((getattr(self, "_last_diag", None) or {}).get("actionable") or {}).get("count"))
             report["ledger_persistence"] = "ACROSS_RUNS" if _rc.persistence_enabled() else "NOT_AVAILABLE"
             # 個別の候補・台帳は private、公開してよい集計だけ public（許可リストで作る。個別の項目が混ざったら例外 → 何も書かない）

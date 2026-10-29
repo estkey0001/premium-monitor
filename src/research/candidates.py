@@ -749,22 +749,37 @@ def classify_ledger(raw, run_id: str, persistent: bool) -> tuple[str, dict]:
 PREV_BUYBACK_MAX_AGE_DAYS = 7
 
 
-def prev_sell_lookup(raw_state, ledger_state: str, now: datetime):
-    """前回の買取の価格を返す関数（無ければ None を返す関数）。実行をまたいで台帳を引き継げたとき（RESTORED_FROM_PREVIOUS_RUN）だけ使う。
-    同じ実行の中の再生成・台帳が無い日は前回の観測が無いので、比べない（上がった・下がったと言わない）。7 日より古い前回の値も使わない。"""
+def prev_buyback_lookup(raw_state, ledger_state: str, now: datetime):
+    """前回の買取の観測を返す関数 row -> {"price","at","stale"} | None（前回の観測が無い）。台帳を引き継げなかった日は None（比べられない）。
+
+    実行をまたいで台帳を引き継げたとき（RESTORED_FROM_PREVIOUS_RUN）だけ前回の観測を返す。同じ実行の中の再生成・台帳が無い日は
+    前回の観測が無いので、比べない（上がった・下がったと言わない）。7 日より古い前回の値は stale=True（基準にしない）。
+    """
     prices = raw_state.get("buyback_prices") if isinstance(raw_state, dict) else None
     if ledger_state != LEDGER_RESTORED_FROM_PREVIOUS_RUN or not isinstance(prices, dict):
         return None
 
     def _prev(row: dict):
         e = prices.get(row.get("candidate_id"))
-        if not isinstance(e, dict) or not isinstance(e.get("price"), int) or isinstance(e.get("price"), bool):
+        if not isinstance(e, dict) or not isinstance(e.get("price"), int) or isinstance(e.get("price"), bool) or e["price"] <= 0:
             return None
         at = _parse_ts(e.get("at"), now)
-        if at is None or not timedelta(hours=-1) <= now - at <= timedelta(days=PREV_BUYBACK_MAX_AGE_DAYS):
-            return None
-        return e["price"]
+        if at is None or now - at < timedelta(hours=-1):
+            return None                                            # 日時が読めない・未来の値は基準にしない
+        return {"price": e["price"], "at": str(e.get("at") or ""), "stale": now - at > timedelta(days=PREV_BUYBACK_MAX_AGE_DAYS)}
     return _prev
+
+
+def prev_sell_lookup(raw_state, ledger_state: str, now: datetime):
+    """前回の買取の価格だけを返す関数（古い呼び出し用。無い・古い・比べられないときは None）。"""
+    f = prev_buyback_lookup(raw_state, ledger_state, now)
+    if f is None:
+        return None
+
+    def _price(row: dict):
+        e = f(row)
+        return None if e is None or e["stale"] else e["price"]
+    return _price
 
 
 def first_seen_scope(ledger_state: str) -> str:
@@ -883,7 +898,9 @@ PRIVATE_KEYS = frozenset({
     "rank", "rank_score", "retail_price_hint", "lookups", "tcg_events", "quality_by_source",
     # 利益が出やすい市場のシグナル（Wave 5）の個別の項目
     "release", "release_date", "limited_signal", "supply_signals", "buyback_signals", "signal_points", "signal_reasons",
-    "retail_unavailable_sources", "days_since_release", "tcg_priority_events", "buyback_prices", "msrp_linked", "msrp_price"})
+    "retail_unavailable_sources", "days_since_release", "tcg_priority_events", "buyback_prices", "msrp_linked", "msrp_price",
+    # 買取の勢い・TCG の検知の遅れ（Wave 6）の個別の項目
+    "momentum", "tcg_first_seen", "tcg_detection_events", "buyback_prices_prev"})
 
 
 # 公開の集計に出してよい理由の語彙（商品名・価格などの個別の値がキーに混ざらないように、既知の語彙だけを通す）
@@ -914,9 +931,14 @@ COVERAGE_KEYS = {
                       "windows_under_24h_at_observation", "observed_after_half_window", "tolerated_age_at_observation_hours_p25",
                       "suggested_max_detection_interval_hours", "date_precision_events"),
     "research_signals": ("new_release_candidates", "limited_candidates", "supply_pressure_candidates", "buyback_rising_candidates",
-                         "positive_spread_candidates", "active_tcg_priority", "stock_unknown_not_counted"),
+                         "positive_spread_candidates", "active_tcg_priority", "stock_unknown_not_counted", "momentum_observed",
+                         "momentum_new_observation", "momentum_quarantined", "momentum_not_comparable"),
     "tcg_profit_dense": ("active_tcg_priority", "tcg_new_release", "tcg_limited", "tcg_supply_pressure", "tcg_msrp_linked_active",
-                         "tcg_actionable_events", "tcg_incomplete_active", "tcg_stock_unknown_not_counted"),
+                         "tcg_actionable_events", "tcg_incomplete_active", "tcg_stock_unknown_not_counted",
+                         "tcg_application_url_confirmed", "tcg_announcement_url_only"),
+    "tcg_detection_delay": ("events_active", "baseline_events", "new_after_baseline", "measured", "unknown_published_at",
+                            "detected_before_start", "median_delay_hours", "max_delay_hours", "comparable", "source_gap_excluded",
+                            "delay_values_withheld"),
     "tcg_detection_simulation": ("events_measured", "latency_hours", "h24_missed", "h24_lost_half", "h12_missed", "h12_lost_half",
                                  "h6_missed", "h6_lost_half", "h3_missed", "h3_lost_half"),
     "tcg_funnel": ("raw_announcements", "parsed_events", "review_required", "rejected", "active_lotteries", "sources_with_gap",
@@ -1015,6 +1037,7 @@ def public_summary(report: dict) -> dict:
         "research_signals": _count_dict(m.get("research_signals"), COVERAGE_KEYS["research_signals"]),
         "tcg_profit_dense": _count_dict(m.get("tcg_profit_dense"), COVERAGE_KEYS["tcg_profit_dense"]),
         "tcg_detection_simulation": _num_dict(m.get("tcg_detection_simulation"), COVERAGE_KEYS["tcg_detection_simulation"]),
+        "tcg_detection_delay": _num_dict(m.get("tcg_detection_delay"), COVERAGE_KEYS["tcg_detection_delay"]),
         "tcg_msrp_verified": _int_or_none(m.get("tcg_msrp_verified")),
         "tcg_source_candidates": _int_or_none(m.get("tcg_source_candidates")),
     }
@@ -1051,7 +1074,9 @@ def build(*, products: list[dict], observations: list[dict], msrp_evidence: dict
           quarantine_generated_at: str | None = None, retail_lookups: dict | None = None,
           retail_lookups_generated_at: str | None = None, tcg_events: list[dict] | None = None,
           retail_adapter_stats: dict | None = None, retail_api_sources: list[dict] | None = None,
-          tcg_msrp: dict | None = None, prev_sell_of=None) -> tuple[dict, dict]:
+          tcg_msrp: dict | None = None, prev_sell_of=None, prev_obs_of=None,
+          prev_tcg_first_seen: dict | None = None, prev_buyback_prices: dict | None = None,
+          tcg_healthy_sources: set | None = None) -> tuple[dict, dict]:
     """調査候補のレポート（運営者向け）と、次回の台帳。戻りは (report, new_state)。
 
     quarantined: 品質ゲートで隔離された買取価格（collector_report の suspicious_prices）。上限超え・急変・裏付け不足で
@@ -1082,7 +1107,8 @@ def build(*, products: list[dict], observations: list[dict], msrp_evidence: dict
     by_id = {r["candidate_id"]: r for r in tri["rows"]}
     # 利益が出やすい市場のシグナル（Wave 5）。根拠のあるものだけ。点は並べ替えにだけ使い、状態（確定・actionable）は変えない
     from src.research import signals as _sg
-    sig_counts = _sg.annotate_buyback_rows(tri["rows"], now, prev_sell_of=prev_sell_of)
+    sig_counts = _sg.annotate_buyback_rows(tri["rows"], now, prev_sell_of=prev_sell_of, prev_obs_of=prev_obs_of,
+                                          comparable=(prev_obs_of is not None) if prev_obs_of is not None else None)
     # シグナルの点を足してから上位 50 件を選び直す（シグナルが待ち行列の外の候補にも効く。選別の段階 HIGH / MEDIUM は変えない）
     tri["queue"] = sorted((r for r in tri["rows"] if r["triage"]["tier"] in (_tr.HIGH, _tr.MEDIUM)),
                           key=lambda r: (-(r["triage"]["score"] + int(r.get("signal_points") or 0)),
@@ -1112,6 +1138,11 @@ def build(*, products: list[dict], observations: list[dict], msrp_evidence: dict
     metrics["research_signals"] = sig_counts
     metrics["tcg_profit_dense"] = pd["counts"]
     metrics["tcg_detection_simulation"] = _pd.simulate_detection(tcg_events or [], now)
+    from src.tcg import detection_delay as _dd
+    fs_state, fs_counts, fs_rows = _dd.update(tcg_events or [], prev_tcg_first_seen,
+                                              comparable=(ledger_state in (LEDGER_RESTORED_FROM_PREVIOUS_RUN, LEDGER_REUSED_WITHIN_RUN)), now=now,
+                                              run_id=current_run_id(), healthy_sources=tcg_healthy_sources)
+    metrics["tcg_detection_delay"] = fs_counts
     metrics["tcg_event_quality"] = eq["quality"]
     metrics["tcg_priority"] = eq["priority"]
     metrics["tcg_fast_lane"] = eq["fast_lane"]
@@ -1149,13 +1180,59 @@ def build(*, products: list[dict], observations: list[dict], msrp_evidence: dict
                           "research_candidates": len(prod_research)},
         "product_candidates": dps,
         # 次回の「買取の勢い（前回より上がったか）」の比較に使う前回の買取の価格（非公開。実行をまたいで保持できるときだけ読まれる）
-        "buyback_prices": {r["candidate_id"]: {"price": int(r["observed_sell_price"]), "at": str(r.get("observed_at") or "")}
-                           for r in tri["rows"] if isinstance(r.get("observed_sell_price"), int) and r.get("observed_sell_price") > 0},
+        "buyback_prices": _buyback_baseline(tri["rows"], prev_obs_of),
+        "buyback_prices_prev": (dict(prev_buyback_prices) if isinstance(prev_buyback_prices, dict) else None),   # 非公開（この run が引き継いだ前回の基準。同じ run の再生成が勢いを再計算するのに使う）
+        "tcg_first_seen": fs_state,                      # 非公開（台帳。イベントを初めて見た時刻。実行をまたいで引き継げたときだけ意味を持つ）
+        "tcg_detection_events": fs_rows,                # 非公開（イベントごとの検知の遅れ）
         "tcg_priority_events": pd["events"],            # 非公開（イベントごとのシグナル・質・定価との結び付き）
         "tcg_events": eq["events"],                     # 非公開（イベントごとの応募の長さ・検知の遅れ。件数・中央値だけ公開）
         "metrics": metrics,
     }
     return report, new_state
+
+
+def _buyback_baseline(rows: list[dict], prev_obs_of) -> dict:
+    """次回の比較の基準にする前回の買取の価格（非公開）。**正常な価格だけ**を基準にする。
+
+    隔離された価格（誤価格の疑い・上限超え・裏付け不足・条件つき）は、勢いの対象の行でなくても基準にしない（行の項目から直接判定する）。
+    その候補の前回の正常な基準があれば、そのまま引き継ぐ（取得日時も前回のまま。新しい観測にしない）。古すぎる基準（7 日超）は捨てる。
+    """
+    from src.research import signals as _sg
+    out: dict = {}
+    for r in rows:
+        cid, price = r.get("candidate_id"), r.get("observed_sell_price")
+        if not cid or not isinstance(price, int) or isinstance(price, bool) or price <= 0:
+            continue
+        if _sg.is_quarantined(r) or (r.get("momentum") or {}).get("momentum_quarantined"):
+            prev = prev_obs_of(r) if prev_obs_of else None
+            if isinstance(prev, dict) and not prev.get("stale"):
+                out[cid] = {"price": prev["price"], "at": prev["at"]}
+            continue
+        if r.get("status") == "REJECTED":
+            continue                                                # 棄却された行は基準にしない
+        out[cid] = {"price": int(price), "at": str(r.get("observed_at") or "")}
+    return out
+
+
+def momentum_baseline(raw_state, ledger_state: str):
+    """勢いの比較に使う前回の基準を決める。戻りは (比較に使う台帳の中身, 比較に使う台帳の状態, 次の state.json に残す前回の基準)。
+
+    - 前回の run から引き継げた（RESTORED_FROM_PREVIOUS_RUN）: 前回の state.json の buyback_prices が基準
+    - 同じ run の再生成（REUSED_WITHIN_RUN）: この run の最初の生成が引き継いだ前回の基準（state.json の buyback_prices_prev）が基準。
+      state の buyback_prices はこの run の最初の生成の値なので使わない（同じデータと比べて勢いが消える・基準を上書きしてしまう）
+    - それ以外（鍵なし・初回・壊れた）: 比べない
+    """
+    if not isinstance(raw_state, dict):
+        return None, ledger_state, None
+    if ledger_state == LEDGER_RESTORED_FROM_PREVIOUS_RUN:
+        prices = raw_state.get("buyback_prices")
+    elif ledger_state == LEDGER_REUSED_WITHIN_RUN:
+        prices = raw_state.get("buyback_prices_prev")
+    else:
+        return None, ledger_state, None
+    if not isinstance(prices, dict):
+        return None, ledger_state, None
+    return {"buyback_prices": prices}, LEDGER_RESTORED_FROM_PREVIOUS_RUN, dict(prices)
 
 
 def write_outputs(report: dict, state: dict, private_dir, public_dir, run_id: str | None = None) -> dict:
@@ -1172,7 +1249,9 @@ def write_outputs(report: dict, state: dict, private_dir, public_dir, run_id: st
     (priv / "latest.json").write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
     tmp = priv / "state.json.tmp"
     tmp.write_text(json.dumps({"schema": SCHEMA, "updated_at": report["generated_at"], "run_id": run_id or current_run_id(),
-                               "candidates": state, "buyback_prices": report.get("buyback_prices") or {}}, ensure_ascii=False, indent=1), encoding="utf-8")
+                               "candidates": state, "buyback_prices": report.get("buyback_prices") or {},
+                               "buyback_prices_prev": report.get("buyback_prices_prev"),
+                               "tcg_first_seen": report.get("tcg_first_seen") or {}}, ensure_ascii=False, indent=1), encoding="utf-8")
     tmp.replace(priv / "state.json")
     (pub / "summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
     return summary

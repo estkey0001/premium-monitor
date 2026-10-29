@@ -4161,6 +4161,7 @@ def check() -> list[dict]:
     results.extend(_check_coverage_wave2())
     results.extend(_check_coverage_wave3())
     results.extend(_check_coverage_wave4())
+    results.extend(_check_coverage_wave5())
 
     # ══════════════════════════════════════════════════════════════════
     # #820-#825: データの正確さ・鮮度の偽装（Phase 0）
@@ -6714,6 +6715,58 @@ def _check_coverage_wave4(root: Path | None = None) -> list[dict]:
         bad.append(f"検査に失敗: {type(exc).__name__}: {exc}")
     return [{"level": "ok" if not bad else "error", "check": "coverage_wave4_fair_allocation_identity",
              "message": "#875 小売の取得枠は公平（飢えさせない・上限あり）・Apple の同一性は容量と世代まで・API は鍵なしで止まり・固定登録は検索しない"
+                        + ("" if not bad else f" ← {bad[:4]}")}]
+
+
+def _check_coverage_wave5(root: Path | None = None) -> list[dict]:
+    """Coverage Wave 5（#876）: 利益が出やすい市場のシグナルは根拠のあるものだけ（発売日が無ければ UNKNOWN・限定は公式の根拠が要る・
+    在庫が不明は逼迫でない・前回が無ければ上がったと言わない・誤価格の疑いは点なし）。個別のシグナルは非公開。TCG の不完全なイベントは
+    actionable にしない・定価とは商品 ID の完全一致だけで結ぶ。シグナルのモジュールは取得の部品を import せず、利益・予測価格を計算しない。"""
+    import re as _re76
+    from datetime import datetime as _dt76
+    from datetime import timezone as _tz76
+    root = root or Path(__file__).resolve().parent.parent
+    bad = []
+    try:
+        from src.research import candidates as rc
+        from src.research import signals as sg
+        from src.tcg import profit_dense as pdn
+        now = _dt76(2026, 10, 29, 12, 0, tzinfo=_tz76.utc)
+        if sg.release_signal(None, now)["release_state"] != "UNKNOWN" or sg.profit_density(release=sg.release_signal("", now))["signal_points"] != 0:
+            bad.append("発売日が無いのに発売直後・加点にしている")
+        if sg.limited_signal(official_name="限定カラー", official_url="https://x.example/", official=False)["limited"]:
+            bad.append("公式の根拠が無いのに限定にしている")
+        if sg.supply_signals(availability="UNKNOWN", official=True) or sg.supply_signals(availability="", official=True):
+            bad.append("在庫が不明なのに供給の逼迫にしている")
+        if sg.BUY_RISING in sg.buyback_signals({"observed_sell_price": 200000, "retail_price": 100000, "category": "x"}, prev_sell=None):
+            bad.append("前回の観測が無いのに、買取が上がったことにしている")
+        if sg.profit_density(release={"release_state": "NEW"}, limited={"limited": True}, supply=["OUT_OF_STOCK"], buyback=["RISING"],
+                             positive_spread=True, suspicious=True)["signal_points"] != 0:
+            bad.append("誤価格の疑いのある行に点を付けている")
+        ev = {"status": "OPEN", "event_type": "LOTTERY", "retailer": "R", "product_id": "p", "product_match": "exact",
+              "application_start_date": "2026-10-28", "application_end_date": "2026-10-30"}
+        if pdn.completeness(ev, now)["actionable_event"]:
+            bad.append("不完全な TCG のイベントを actionable にしている")
+        m = {"verified": [{"product_id": "p", "name": "限定", "retail_price": 1, "release_date": "2026-10-20",
+                           "source": "official_product_api", "official_url": "https://o.example/"}]}
+        if pdn.evaluate([{**ev, "product_id": "q"}], m, now)["counts"]["tcg_msrp_linked_active"] != 0:
+            bad.append("商品 ID が違うイベントに定価を結んでいる")
+        if pdn.evaluate([{**ev, "product_id": None}], m, now)["counts"]["tcg_msrp_linked_active"] != 0:
+            bad.append("商品が特定できないイベントに定価を結んでいる")
+        for k in ("release", "limited_signal", "supply_signals", "buyback_signals", "signal_points", "signal_reasons", "tcg_priority_events",
+                  "buyback_prices"):
+            if k not in rc.PRIVATE_KEYS:
+                bad.append(f"シグナルの個別の項目 {k} が非公開の一覧に無い")
+        for name in ("src/research/signals.py", "src/tcg/profit_dense.py"):
+            code = _re76.sub(r'"""(?:.|\n)*?"""', "", (root / name).read_text(encoding="utf-8"))
+            if _re76.search(r"^\s*(from|import)\s+(requests|urllib|playwright|httpx|aiohttp)", code, _re76.M):
+                bad.append(f"{name} が取得の部品を import している")
+            if _re76.search(r"predict|forecast|expected_price|ai_price", code):
+                bad.append(f"{name} が予測価格を扱っている")
+    except Exception as exc:  # noqa: BLE001
+        bad.append(f"検査に失敗: {type(exc).__name__}: {exc}")
+    return [{"level": "ok" if not bad else "error", "check": "coverage_wave5_profit_dense_signals",
+             "message": "#876 シグナルは根拠のあるものだけ（発売日・公式の限定・在庫の逼迫・前回との比較）・誤価格に点なし・不完全な TCG は actionable にしない・個別は非公開"
                         + ("" if not bad else f" ← {bad[:4]}")}]
 
 

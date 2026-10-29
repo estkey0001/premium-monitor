@@ -257,3 +257,12 @@ python3 scripts/operator_health_alert.py --dry-run  # 書かずに注記だけ�
 - 変異テスト: `python3 scripts/mutation_wave4.py`（Wave 2・3 も同様）
 - 設計の全体と残りは `internal/audits/COVERAGE_WAVE4.md`
 
+## Coverage Wave 5（利益が出やすい市場の優先度）
+
+- シグナル: `src/research/signals.py`（発売からの経過・公式の根拠のある限定・供給の逼迫・買取の勢い・価格差が正）。**根拠が無ければ付けない**。点は並べ替えにだけ使い、確定・actionable にしない。
+  発売日が無ければ UNKNOWN・在庫が不明は逼迫にしない・前回の観測が無ければ「上がった」と言わない・誤価格の疑いは 0 点
+- 前回の買取の価格: `state.json` の `buyback_prices`（非公開）。`RESEARCH_LEDGER_KEY` を設定して台帳を引き継げた日（`RESTORED_FROM_PREVIOUS_RUN`）だけ比べる
+- TCG: `src/tcg/profit_dense.py`（優先度・イベントの質 7 項目・定価の台帳との商品 ID の完全一致の結び付き・検知の間隔のシミュレーション。実装はしない・利益は計算しない）
+- 取得: 小売の照会は取得器（ドメイン）ごとに並列（`retail_lookup._fetch_all`）・同一実行内の同じ URL は `RunFetchCache`（メモリだけ）。ドメインあたりの間隔は polite が守る
+- 変異テスト: `python3 scripts/mutation_wave5.py`。deploy-check #876
+- 設計の全体と残りは `internal/audits/COVERAGE_WAVE5.md`

@@ -82,7 +82,8 @@ def test_lookup_picks_the_lowest_unconditional_cash_price_among_sources():
                         "observed_at": FRESH}}
     r = rl.lookup({"basis": "JAN", "value": "4960759900001", "name": "Nikon Z9 ボディ"}, idx, (rl.NikonDirectAdapter(), Other()))
     assert r["retailer"] == "他の店" and r["price"] == 95000 and r["source_type"] == rl.AUTHORIZED_RETAILER
-    assert r["alternatives"] == [{"retailer": "ニコンダイレクト", "source_type": rl.OFFICIAL_DIRECT, "price": 100000, "status": rl.MATCHED}]
+    assert r["alternatives"] == [{"retailer": "ニコンダイレクト", "source_type": rl.OFFICIAL_DIRECT, "price": 100000, "status": rl.MATCHED,
+                                "availability": rl.AVAIL_UNKNOWN}]
 
 
 def test_wrong_capacity_or_color_kit_part_number_is_not_matched():

@@ -1026,6 +1026,25 @@
       "discovered_at": "2026-10-29T06:02:34+09:00",
       "last_seen_on": "2026-10-29",
       "updated_at": "2026-10-29T06:02:34+09:00"
+    },
+    "tcg-event-4299e3970e90": {
+      "source": "CARD_LABO",
+      "kind": "LOTTERY",
+      "tcg": "ONE_PIECE",
+      "title": "【ワンピース】ONE PIECE HEROINES PRECIOUS BOX",
+      "official_url": "https://www.c-labo.jp/shop/toyohashi/blog/623101/",
+      "product_code": "",
+      "product_mapping": "unmapped",
+      "application_start": "2026-10-29",
+      "application_end": "2026-11-01",
+      "event_status": "UPCOMING",
+      "missing_fields": [],
+      "candidate_id": "tcg-event-4299e3970e90",
+      "status": "MATCHED_EVENT",
+      "reasons": [],
+      "discovered_at": "2026-10-29T17:47:11+09:00",
+      "last_seen_on": "2026-10-29",
+      "updated_at": "2026-10-29T17:47:11+09:00"
     }
   }
 }

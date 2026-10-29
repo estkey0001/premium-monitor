@@ -2,12 +2,12 @@
   "schema": 1,
   "type": "RESEARCH_SUMMARY",
   "audience": "public_aggregate",
-  "generated_at": "2026-10-29T06:31:01+09:00",
+  "generated_at": "2026-10-29T18:03:22+09:00",
   "description": "調査候補の集計（件数だけ）。個別の候補（商品・価格・価格差・売却先）は公開しない。確定の利益ではない",
   "research_candidate_count": 10,
-  "positive_raw_spread_count": 6,
+  "positive_raw_spread_count": 5,
   "verified_positive_spread_count": 1,
-  "suppressed_positive_spread_count": 5,
+  "suppressed_positive_spread_count": 4,
   "verified_count": 1,
   "ledger_state": "REUSED_WITHIN_RUN",
   "first_seen_scope": "THIS_RUN_ONLY",
@@ -20,8 +20,8 @@
   "status_counts": {
     "RESEARCH_CANDIDATE": 4,
     "VERIFIED": 1,
-    "DISCOVERED": 10,
-    "REJECTED": 32
+    "DISCOVERED": 9,
+    "REJECTED": 33
   },
   "reason_counts": {
     "OFFICIAL_UNVERIFIED": 8,
@@ -134,7 +134,7 @@
     "unreachable_sources": 4,
     "not_implemented_sources": 11,
     "sources_with_active_lottery": 4,
-    "lottery_events_found": 24,
+    "lottery_events_found": 25,
     "source_classes": {
       "WORKING": 9,
       "IMPLEMENTED_BUT_BLOCKED": 2,
@@ -145,16 +145,16 @@
   },
   "tcg_working_sources": 9,
   "tcg_funnel": {
-    "raw_announcements": 43,
+    "raw_announcements": 44,
     "parsed_events": 38,
     "review_required": 1,
-    "rejected": 147,
-    "active_lotteries": 24,
+    "rejected": 146,
+    "active_lotteries": 25,
     "sources_with_gap": 12,
     "sources_truncated": 1,
-    "detail_candidates": 41,
+    "detail_candidates": 42,
     "detail_fetched": 40,
-    "skipped_due_to_limit": 1,
+    "skipped_due_to_limit": 2,
     "skipped_ended": 0,
     "sources_list_ok": 12,
     "sources_detail_ok": 5,
@@ -164,10 +164,10 @@
   },
   "tcg_active_events": 4,
   "tcg_event_quality": {
-    "active_events": 5,
-    "with_application_start": 5,
-    "with_application_end": 5,
-    "with_winner_announcement": 5,
+    "active_events": 6,
+    "with_application_start": 6,
+    "with_application_end": 6,
+    "with_winner_announcement": 6,
     "with_purchase_window": 2,
     "with_action_url": 0,
     "fully_dated": 2
@@ -178,17 +178,48 @@
     "PREORDER_OPEN": 0,
     "FIRST_COME": 0,
     "RESTOCK": 0,
-    "UPCOMING": 0
+    "UPCOMING": 1
   },
   "tcg_fast_lane": {
     "events_measured": 39,
     "median_application_duration_hours": 72.0,
-    "median_age_at_observation_hours": 197.9,
-    "windows_under_24h_at_observation": 35,
-    "observed_after_half_window": 35,
+    "median_age_at_observation_hours": 185.7,
+    "windows_under_24h_at_observation": 34,
+    "observed_after_half_window": 34,
     "tolerated_age_at_observation_hours_p25": 30.0,
     "suggested_max_detection_interval_hours": 30,
     "date_precision_events": 22
+  },
+  "research_signals": {
+    "new_release_candidates": 0,
+    "limited_candidates": 0,
+    "supply_pressure_candidates": 0,
+    "buyback_rising_candidates": 0,
+    "positive_spread_candidates": 6,
+    "active_tcg_priority": 3,
+    "stock_unknown_not_counted": 6
+  },
+  "tcg_profit_dense": {
+    "active_tcg_priority": 3,
+    "tcg_new_release": 0,
+    "tcg_limited": 0,
+    "tcg_supply_pressure": 5,
+    "tcg_msrp_linked_active": 0,
+    "tcg_actionable_events": 0,
+    "tcg_incomplete_active": 6,
+    "tcg_stock_unknown_not_counted": 0
+  },
+  "tcg_detection_simulation": {
+    "events_measured": 39,
+    "latency_hours": 8.4,
+    "h24_missed": 0.0,
+    "h24_lost_half": 3.3,
+    "h12_missed": 0.0,
+    "h12_lost_half": 0.0,
+    "h6_missed": 0.0,
+    "h6_lost_half": 0.0,
+    "h3_missed": 0.0,
+    "h3_lost_half": 0.0
   },
   "tcg_msrp_verified": 15,
   "tcg_source_candidates": 7

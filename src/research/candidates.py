@@ -641,6 +641,17 @@ def apply_lookups(dps: list[dict], lookups: dict | None, now: datetime, generate
                 r["lookup_status"] = "STALE_LOOKUP"
         elif isinstance(lk, dict) and lk.get("status") == "NOT_PURCHASABLE":
             r["missing_requirements"] = list(dict.fromkeys(list(r.get("missing_requirements") or []) + [OFFICIAL_NOT_SOLD]))
+            # 供給のシグナルの根拠（公式で在庫なし）。価格は仕入れ値に使わない。取得時刻が新しいときだけ（古い在庫なしを今日のものにしない）
+            _at = _parse_ts(lk.get("observed_at"), now)
+            # 在庫なしが確認できた結果だけ（価格が読めないだけの NOT_PURCHASABLE は、在庫の根拠にしない）
+            if (lk.get("availability_state") == "OUT_OF_STOCK" and _at is not None
+                    and timedelta(hours=-1) <= now - _at <= timedelta(hours=RETAIL_LOOKUP_MAX_AGE_HOURS)):
+                r.update({"retail_availability": "OUT_OF_STOCK", "retail_source_type": str(lk.get("source_type") or ""),
+                          "retail_url": str(lk.get("product_url") or ""), "retail_identity_evidence": lk.get("identity_evidence") or {}})
+        if isinstance(lk, dict) and lk.get("status") in ("MATCHED", "NOT_PURCHASABLE"):
+            # 複数の取得元で購入できない（同じ商品を引けた取得元のうち、在庫なし・販売終了の数）
+            _oos = lambda x: isinstance(x, dict) and x.get("status") == "NOT_PURCHASABLE" and x.get("availability", x.get("availability_state")) == "OUT_OF_STOCK"  # noqa: E731
+            r["retail_unavailable_sources"] = int(_oos(lk)) + sum(1 for a in (lk.get("alternatives") or []) if _oos(a))
         if retail is None and isinstance(r.get("retail_price_hint"), int):
             retail, basis_note = r["retail_price_hint"], "official_discovery_hint"
         if retail is None:
@@ -733,6 +744,27 @@ def classify_ledger(raw, run_id: str, persistent: bool) -> tuple[str, dict]:
     if raw.get("run_id") == run_id:
         return LEDGER_REUSED_WITHIN_RUN, cands
     return LEDGER_RESTORED_FROM_PREVIOUS_RUN, cands
+
+
+PREV_BUYBACK_MAX_AGE_DAYS = 7
+
+
+def prev_sell_lookup(raw_state, ledger_state: str, now: datetime):
+    """前回の買取の価格を返す関数（無ければ None を返す関数）。実行をまたいで台帳を引き継げたとき（RESTORED_FROM_PREVIOUS_RUN）だけ使う。
+    同じ実行の中の再生成・台帳が無い日は前回の観測が無いので、比べない（上がった・下がったと言わない）。7 日より古い前回の値も使わない。"""
+    prices = raw_state.get("buyback_prices") if isinstance(raw_state, dict) else None
+    if ledger_state != LEDGER_RESTORED_FROM_PREVIOUS_RUN or not isinstance(prices, dict):
+        return None
+
+    def _prev(row: dict):
+        e = prices.get(row.get("candidate_id"))
+        if not isinstance(e, dict) or not isinstance(e.get("price"), int) or isinstance(e.get("price"), bool):
+            return None
+        at = _parse_ts(e.get("at"), now)
+        if at is None or not timedelta(hours=-1) <= now - at <= timedelta(days=PREV_BUYBACK_MAX_AGE_DAYS):
+            return None
+        return e["price"]
+    return _prev
 
 
 def first_seen_scope(ledger_state: str) -> str:
@@ -848,7 +880,10 @@ PRIVATE_KEYS = frozenset({
     "retail_observed_at", "retail_availability", "retail_basis", "retail_caveat", "raw_spread_hint", "retail_source_type", "retail_listed_price", "retail_regular_price",
     "retail_campaign_price", "retail_points", "retail_cashback", "retail_conditions", "retail_price_basis", "retail_alternatives",
     "spread_if_points_counted", "route_type", "identity_status", "adapter_stats", "api_sources", "triage", "queue_rank", "lookup_status",
-    "rank", "rank_score", "retail_price_hint", "lookups", "tcg_events", "quality_by_source"})
+    "rank", "rank_score", "retail_price_hint", "lookups", "tcg_events", "quality_by_source",
+    # 利益が出やすい市場のシグナル（Wave 5）の個別の項目
+    "release", "release_date", "limited_signal", "supply_signals", "buyback_signals", "signal_points", "signal_reasons",
+    "retail_unavailable_sources", "days_since_release", "tcg_priority_events", "buyback_prices", "msrp_linked", "msrp_price"})
 
 
 # 公開の集計に出してよい理由の語彙（商品名・価格などの個別の値がキーに混ざらないように、既知の語彙だけを通す）
@@ -878,6 +913,12 @@ COVERAGE_KEYS = {
     "tcg_fast_lane": ("events_measured", "median_application_duration_hours", "median_age_at_observation_hours",
                       "windows_under_24h_at_observation", "observed_after_half_window", "tolerated_age_at_observation_hours_p25",
                       "suggested_max_detection_interval_hours", "date_precision_events"),
+    "research_signals": ("new_release_candidates", "limited_candidates", "supply_pressure_candidates", "buyback_rising_candidates",
+                         "positive_spread_candidates", "active_tcg_priority", "stock_unknown_not_counted"),
+    "tcg_profit_dense": ("active_tcg_priority", "tcg_new_release", "tcg_limited", "tcg_supply_pressure", "tcg_msrp_linked_active",
+                         "tcg_actionable_events", "tcg_incomplete_active", "tcg_stock_unknown_not_counted"),
+    "tcg_detection_simulation": ("events_measured", "latency_hours", "h24_missed", "h24_lost_half", "h12_missed", "h12_lost_half",
+                                 "h6_missed", "h6_lost_half", "h3_missed", "h3_lost_half"),
     "tcg_funnel": ("raw_announcements", "parsed_events", "review_required", "rejected", "active_lotteries", "sources_with_gap",
                    "sources_truncated", "detail_candidates", "detail_fetched", "skipped_due_to_limit", "skipped_ended",
                    "sources_list_ok", "sources_detail_ok", "sources_blocked", "sources_parser_degraded"),
@@ -971,6 +1012,9 @@ def public_summary(report: dict) -> dict:
         "tcg_event_quality": _count_dict(m.get("tcg_event_quality"), COVERAGE_KEYS["tcg_event_quality"]),
         "tcg_priority": _count_dict(m.get("tcg_priority"), COVERAGE_KEYS["tcg_priority"]),
         "tcg_fast_lane": _num_dict(m.get("tcg_fast_lane"), COVERAGE_KEYS["tcg_fast_lane"]),
+        "research_signals": _count_dict(m.get("research_signals"), COVERAGE_KEYS["research_signals"]),
+        "tcg_profit_dense": _count_dict(m.get("tcg_profit_dense"), COVERAGE_KEYS["tcg_profit_dense"]),
+        "tcg_detection_simulation": _num_dict(m.get("tcg_detection_simulation"), COVERAGE_KEYS["tcg_detection_simulation"]),
         "tcg_msrp_verified": _int_or_none(m.get("tcg_msrp_verified")),
         "tcg_source_candidates": _int_or_none(m.get("tcg_source_candidates")),
     }
@@ -1006,7 +1050,8 @@ def build(*, products: list[dict], observations: list[dict], msrp_evidence: dict
           retail_hints: dict | None = None, actionable_count: int | None = None,
           quarantine_generated_at: str | None = None, retail_lookups: dict | None = None,
           retail_lookups_generated_at: str | None = None, tcg_events: list[dict] | None = None,
-          retail_adapter_stats: dict | None = None, retail_api_sources: list[dict] | None = None) -> tuple[dict, dict]:
+          retail_adapter_stats: dict | None = None, retail_api_sources: list[dict] | None = None,
+          tcg_msrp: dict | None = None, prev_sell_of=None) -> tuple[dict, dict]:
     """調査候補のレポート（運営者向け）と、次回の台帳。戻りは (report, new_state)。
 
     quarantined: 品質ゲートで隔離された買取価格（collector_report の suspicious_prices）。上限超え・急変・裏付け不足で
@@ -1035,6 +1080,15 @@ def build(*, products: list[dict], observations: list[dict], msrp_evidence: dict
                      or isinstance(c.get("retail_price_hint"), int),
                      lookup_results={c["candidate_id"]: {"status": "MATCHED"} for c in all_dps if c.get("retail_price") is not None})
     by_id = {r["candidate_id"]: r for r in tri["rows"]}
+    # 利益が出やすい市場のシグナル（Wave 5）。根拠のあるものだけ。点は並べ替えにだけ使い、状態（確定・actionable）は変えない
+    from src.research import signals as _sg
+    sig_counts = _sg.annotate_buyback_rows(tri["rows"], now, prev_sell_of=prev_sell_of)
+    # シグナルの点を足してから上位 50 件を選び直す（シグナルが待ち行列の外の候補にも効く。選別の段階 HIGH / MEDIUM は変えない）
+    tri["queue"] = sorted((r for r in tri["rows"] if r["triage"]["tier"] in (_tr.HIGH, _tr.MEDIUM)),
+                          key=lambda r: (-(r["triage"]["score"] + int(r.get("signal_points") or 0)),
+                                         -int(r.get("observed_sell_price") or 0), r.get("candidate_id", "")))[:_tr.TOP_QUEUE_SIZE]
+    for _i, _r in enumerate(tri["queue"], 1):
+        _r["queue_rank"] = _i
     # 個別の一覧（非公開）: 上位 50 件の待ち行列 + 調査候補にした行（重複なし）。全件は件数だけ残す
     listed_ids = {r["candidate_id"] for r in tri["queue"]} | {c["candidate_id"] for c in all_dps if c["status"] == RESEARCH_CANDIDATE}
     for c in all_dps:                                   # 上限（CATALOG_LIST_LIMIT）まで、順位の高い行で埋める（従来の一覧の範囲）
@@ -1052,6 +1106,12 @@ def build(*, products: list[dict], observations: list[dict], msrp_evidence: dict
     metrics["high_priority_research"] += sum(1 for c in prod_research if c.get("research_class") == HIGH_PRIORITY_RESEARCH)
     from src.tcg import event_quality as _eq
     eq = _eq.evaluate(tcg_events or [], now)
+    from src.tcg import profit_dense as _pd
+    pd = _pd.evaluate(tcg_events or [], tcg_msrp, now)
+    sig_counts["active_tcg_priority"] = pd["counts"]["active_tcg_priority"]
+    metrics["research_signals"] = sig_counts
+    metrics["tcg_profit_dense"] = pd["counts"]
+    metrics["tcg_detection_simulation"] = _pd.simulate_detection(tcg_events or [], now)
     metrics["tcg_event_quality"] = eq["quality"]
     metrics["tcg_priority"] = eq["priority"]
     metrics["tcg_fast_lane"] = eq["fast_lane"]
@@ -1088,6 +1148,10 @@ def build(*, products: list[dict], observations: list[dict], msrp_evidence: dict
                           "lookup_ready": tri["stats"]["lookup_ready"], "lookup_matched": tri["stats"]["lookup_matched"],
                           "research_candidates": len(prod_research)},
         "product_candidates": dps,
+        # 次回の「買取の勢い（前回より上がったか）」の比較に使う前回の買取の価格（非公開。実行をまたいで保持できるときだけ読まれる）
+        "buyback_prices": {r["candidate_id"]: {"price": int(r["observed_sell_price"]), "at": str(r.get("observed_at") or "")}
+                           for r in tri["rows"] if isinstance(r.get("observed_sell_price"), int) and r.get("observed_sell_price") > 0},
+        "tcg_priority_events": pd["events"],            # 非公開（イベントごとのシグナル・質・定価との結び付き）
         "tcg_events": eq["events"],                     # 非公開（イベントごとの応募の長さ・検知の遅れ。件数・中央値だけ公開）
         "metrics": metrics,
     }
@@ -1108,7 +1172,7 @@ def write_outputs(report: dict, state: dict, private_dir, public_dir, run_id: st
     (priv / "latest.json").write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
     tmp = priv / "state.json.tmp"
     tmp.write_text(json.dumps({"schema": SCHEMA, "updated_at": report["generated_at"], "run_id": run_id or current_run_id(),
-                               "candidates": state}, ensure_ascii=False, indent=1), encoding="utf-8")
+                               "candidates": state, "buyback_prices": report.get("buyback_prices") or {}}, ensure_ascii=False, indent=1), encoding="utf-8")
     tmp.replace(priv / "state.json")
     (pub / "summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
     return summary

@@ -35,6 +35,13 @@ candidates:
      policy_excluded: "トップが HTTP 403（Cloudflare のボットチャレンジ）。ボットチャレンジは回避しない"}
   - {id: HOBBYSEARCH, name: ホビーサーチ, channel: ONLINE, url: "https://www.1999.co.jp/", verified: false,
      policy_excluded: "トップが HTTP 403（Cloudflare のボットチャレンジ）。ボットチャレンジは回避しない"}
+  # 2026-10-29（Coverage Wave 5）の調査: robots.txt は取得を許しているが、公開ページに告知の一覧が無い・再調査待ちのものは実装しない
+  - {id: SEVEN_NET, name: セブンネットショッピング, channel: ONLINE, url: "https://7net.omni7.jp/", verified: false,
+     policy_excluded: "robots.txt は許可（2026-10-29）。公開の「抽選販売」の告知一覧が確認できない（商品ごとの応募ページ・会員ログイン経由）。一覧が無いものは取得器にしない"}
+  - {id: EDION, name: エディオン, channel: BOTH, url: "https://www.edion.com/", verified: false,
+     policy_excluded: "robots.txt は許可（Crawl-delay は Bingbot のみ。2026-10-29）。抽選は会員（エディオンカード・アプリ・ID）限定の専用応募ページで、公開の告知一覧が確認できない"}
+  - {id: TSUTAYA, name: TSUTAYA, channel: BOTH, url: "https://tsutaya.tsite.jp/", verified: false,
+     policy_excluded: "2026-10-30 以降に再調査する（robots.txt は許可）。調査前なので取得器は作らない"}
   - {id: CARD_LABO, name: カードラボ, channel: STORE, url: "https://www.c-labo.jp/", verified: false}
   - {id: SURUGAYA, name: 駿河屋, channel: BOTH, url: "https://www.suruga-ya.jp/", verified: false,
      policy_excluded: "トレカの予約への入口が検索結果ページだけ（検索結果は取得しない）。抽選・予約の告知の公開ページが無い"}

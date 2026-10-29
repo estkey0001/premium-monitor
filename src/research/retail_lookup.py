@@ -508,7 +508,8 @@ def lookup(identity: dict, indexes: dict, adapters=ADAPTERS) -> dict:
     _basis = {BASIS_UNCONDITIONAL: 0, BASIS_REGULAR: 1, BASIS_CONDITIONAL_UNKNOWN: 2}
     results.sort(key=lambda r: (_RANK[r["status"]], _basis.get(r.get("price_basis"), 3), r["price"] if r["price"] is not None else 10**12))
     best = dict(results[0])
-    alts = [{"retailer": r["retailer"], "source_type": r["source_type"], "price": r["price"], "status": r["status"]}
+    alts = [{"retailer": r["retailer"], "source_type": r["source_type"], "price": r["price"], "status": r["status"],
+             "availability": r.get("availability_state") or AVAIL_UNKNOWN}
             for r in results[1:] if r["status"] in (MATCHED, NOT_PURCHASABLE)]
     if alts:
         best["alternatives"] = alts
@@ -607,6 +608,53 @@ def allocate_budget(plans: list[dict], budget: int = HTTP_BUDGET) -> dict:
     return out
 
 
+class RunFetchCache:
+    """同一実行（このプロセス）の中だけで、同じ URL を二度取りに行かないための薄い包み（Coverage Wave 5 Stage S）。
+
+    - 保存はメモリだけ（ファイル・次回の実行に残さない）。結果（本文・理由）は取得した時のまま返し、取得時刻を新しくしない
+    - 失敗（遮断・タイムアウト）も同じ実行の中では繰り返さない（遮断された後に同じ URL を取り直さない）
+    - 別の実行・別の日の値は使わない（鮮度を偽らない）
+    """
+
+    def __init__(self, fetch):
+        import threading
+        self._fetch = fetch
+        self._mem: dict[str, tuple] = {}
+        self._lock = threading.Lock()
+        self.requests = 0
+        self.hits = 0
+
+    def __call__(self, url: str):
+        with self._lock:
+            if url in self._mem:
+                self.hits += 1
+                return self._mem[url]
+        res = self._fetch(url)
+        with self._lock:
+            self.requests += 1
+            self._mem[url] = res
+        return res
+
+
+def _fetch_all(tasks: dict, fetch) -> dict:
+    """取得器ごとの取得（別のドメイン）を並列に行う。同じドメインへは取得器の中で順に取る（間隔は polite が守る）。
+    tasks: {adapter_id: callable(fetch) -> index|dict}。戻りは {adapter_id: 結果}（失敗した取得器は {}）。"""
+    from concurrent.futures import ThreadPoolExecutor
+    out: dict = {}
+    if not tasks:
+        return out
+    with ThreadPoolExecutor(max_workers=len(tasks)) as ex:
+        futs = {aid: ex.submit(fn, fetch) for aid, fn in sorted(tasks.items())}
+        for aid, f in futs.items():
+            try:
+                out[aid] = f.result() or {}
+            except Exception as exc:  # noqa: BLE001 - 1 つの取得器の失敗で他を止めない（その取得器は UNSUPPORTED になる）
+                import logging
+                logging.getLogger(__name__).warning("retail lookup adapter failed: %s (%s)", aid, type(exc).__name__)   # 型名だけ（値は出さない）
+                out[aid] = {}
+    return out
+
+
 def run_lookups(unmatched_candidates: list[dict], now: datetime, fetch, adapters=ADAPTERS, budget: int = HTTP_BUDGET) -> dict:
     """買取起点の候補（rank_product_candidates の行）の小売の価格を、実際に取得して照会する。戻りは保存用の記録。
 
@@ -642,12 +690,15 @@ def run_lookups(unmatched_candidates: list[dict], now: datetime, fetch, adapters
             pl["score"] = max(pl["score"], r["triage"]["score"])
     alloc = allocate_budget(list(plans.values()), budget)
     by_id = {a.adapter_id: a for a in adapters}
-    indexes = build_indexes([by_id[i] for i, a in alloc.items() if a["index"]], fetch, now)
+    # 同一実行の中の同じ URL は二度取らない。取得器（= ドメイン）ごとに並列で取る（同じドメインへの間隔は fetch の中の polite が守る）
+    fetch = fetch if isinstance(fetch, RunFetchCache) else RunFetchCache(fetch)
+    tasks = {}
     for aid, a in alloc.items():
-        if a["keys"]:
-            idx = build_item_index(by_id[aid], a["keys"], fetch, now)
-            if idx:
-                indexes[aid] = idx
+        if a["index"]:
+            tasks[aid] = (lambda f, _ad=by_id[aid]: build_indexes([_ad], f, now).get(_ad.adapter_id) or {})
+        elif a["keys"]:
+            tasks[aid] = (lambda f, _ad=by_id[aid], _k=list(a["keys"]): build_item_index(_ad, _k, f, now))
+    indexes = {aid: idx for aid, idx in _fetch_all(tasks, fetch).items() if idx}
     results, counts = {}, {}
     per: dict[str, dict] = {aid: {"supported": n, "requested": 0, "fetched": 0, "matched": 0, "no_match": 0}
                             for aid, n in supported.items()}
@@ -668,6 +719,7 @@ def run_lookups(unmatched_candidates: list[dict], now: datetime, fetch, adapters
             "fetched_adapters": sorted(indexes), "index_sizes": {k: len(v.get("entries") or []) for k, v in indexes.items()},
             "queue_size": tri["stats"]["top_queue"], "adapter_stats": per,
             "http_requested": sum(a["http"] for a in alloc.values()), "http_budget": int(budget),
+            "http_actual": fetch.requests, "http_cache_hits": fetch.hits,
             "api_sources": api_source_statuses()}
 
 

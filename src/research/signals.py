@@ -94,6 +94,11 @@ _NEG_AFTER = ("なし", "無し", "ではない", "ではありません", "あ�
 _NEG_BEFORE = ("非", "無")
 
 
+def _ascii_alpha(ch: str) -> bool:
+    """英字（日本語の文字は isalpha() が True になるので使わない）。"""
+    return bool(ch) and ch.isascii() and ch.isalpha()
+
+
 def _has_word(word: str, name: str) -> bool:
     """名前に限定の語がある（否定・別の語の一部は除く: 「限定なし」「非限定」「Unlimited」）。"""
     start = 0
@@ -102,10 +107,10 @@ def _has_word(word: str, name: str) -> bool:
         if i < 0:
             return False
         before, after = name[:i], name[i + len(word):]
-        if word.isascii() and before[-1:].isalpha():                   # Unlimited など、別の英単語の一部
+        if word.isascii() and _ascii_alpha(before[-1:]):                   # Unlimited など、別の英単語の一部
             start = i + 1
             continue
-        if word.isascii() and after[:1].isalpha():                     # Limitedly など
+        if word.isascii() and _ascii_alpha(after[:1]):                     # Limitedly など
             start = i + 1
             continue
         if before[-1:] in _NEG_BEFORE or after.startswith(_NEG_AFTER):

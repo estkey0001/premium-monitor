@@ -938,7 +938,7 @@ COVERAGE_KEYS = {
                          "tcg_application_url_confirmed", "tcg_announcement_url_only"),
     "tcg_detection_delay": ("events_active", "baseline_events", "new_after_baseline", "measured", "unknown_published_at",
                             "detected_before_start", "median_delay_hours", "max_delay_hours", "comparable", "source_gap_excluded",
-                            "delay_values_withheld"),
+                            "delay_values_withheld", "identity_ambiguous", "stale_input", "source_not_observed_this_run", "previously_observable_excluded"),
     "tcg_detection_simulation": ("events_measured", "latency_hours", "h24_missed", "h24_lost_half", "h12_missed", "h12_lost_half",
                                  "h6_missed", "h6_lost_half", "h3_missed", "h3_lost_half"),
     "tcg_funnel": ("raw_announcements", "parsed_events", "review_required", "rejected", "active_lotteries", "sources_with_gap",
@@ -1076,7 +1076,7 @@ def build(*, products: list[dict], observations: list[dict], msrp_evidence: dict
           retail_adapter_stats: dict | None = None, retail_api_sources: list[dict] | None = None,
           tcg_msrp: dict | None = None, prev_sell_of=None, prev_obs_of=None,
           prev_tcg_first_seen: dict | None = None, prev_buyback_prices: dict | None = None,
-          tcg_healthy_sources: set | None = None) -> tuple[dict, dict]:
+          tcg_healthy_sources: set | None = None, tcg_input_fresh: bool = True) -> tuple[dict, dict]:
     """調査候補のレポート（運営者向け）と、次回の台帳。戻りは (report, new_state)。
 
     quarantined: 品質ゲートで隔離された買取価格（collector_report の suspicious_prices）。上限超え・急変・裏付け不足で
@@ -1141,7 +1141,7 @@ def build(*, products: list[dict], observations: list[dict], msrp_evidence: dict
     from src.tcg import detection_delay as _dd
     fs_state, fs_counts, fs_rows = _dd.update(tcg_events or [], prev_tcg_first_seen,
                                               comparable=(ledger_state in (LEDGER_RESTORED_FROM_PREVIOUS_RUN, LEDGER_REUSED_WITHIN_RUN)), now=now,
-                                              run_id=current_run_id(), healthy_sources=tcg_healthy_sources)
+                                              run_id=current_run_id(), healthy_sources=tcg_healthy_sources, input_fresh=tcg_input_fresh)
     metrics["tcg_detection_delay"] = fs_counts
     metrics["tcg_event_quality"] = eq["quality"]
     metrics["tcg_priority"] = eq["priority"]

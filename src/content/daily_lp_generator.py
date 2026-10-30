@@ -911,8 +911,12 @@ class DailyLPGenerator:
                    "source_candidates": (self._load_export_json("tcg", "lottery_sources.json").get("source_candidates")
                                          or {}).get("count")}
             # 今回正常に取得できた抽選の取得元（検知の遅れで「前回その取得元が見えていたか」の根拠。ブロック・到達不能は含めない）
+            # 入力（exports/tcg）の生成時刻が古い日（収集が失敗して前回の生成物が残った日）は、今日の観測として扱わない
+            from src.tcg import detection_delay as _ddl
+            _tcg_fresh = _ddl.input_is_fresh(self._load_export_json("tcg", "lotteries.json").get("generated_at"),
+                                             tcg_latest.get("generated_at"), now=ctx.now)
             _healthy = {str(r.get("source_id")) for r in (tcg_latest.get("lottery_sources") or [])
-                        if isinstance(r, dict) and r.get("source_id") and r.get("reachable") and not r.get("blocked") and not r.get("unreachable")}
+                        if isinstance(r, dict) and r.get("source_id") and r.get("reachable") and not r.get("blocked") and not r.get("unreachable")} if _tcg_fresh else set()
             _mb = _rc.momentum_baseline(raw_state, ledger_state)     # 勢いの比較の基準（引き継げた日・同じ run の再生成だけ）
             report, state = _rc.build(
                 products=products, observations=npo.get("observations") or [],
@@ -931,7 +935,7 @@ class DailyLPGenerator:
                 retail_adapter_stats=lk_doc.get("adapter_stats"), retail_api_sources=lk_doc.get("api_sources"),
                 tcg_msrp=self._load_export_json("tcg", "msrp.json"),
                 prev_tcg_first_seen=(raw_state.get("tcg_first_seen") if isinstance(raw_state, dict) else None),
-                prev_obs_of=_rc.prev_buyback_lookup(_mb[0], _mb[1], ctx.now), prev_buyback_prices=_mb[2], tcg_healthy_sources=_healthy,
+                prev_obs_of=_rc.prev_buyback_lookup(_mb[0], _mb[1], ctx.now), prev_buyback_prices=_mb[2], tcg_healthy_sources=_healthy, tcg_input_fresh=_tcg_fresh,
                 actionable_count=((getattr(self, "_last_diag", None) or {}).get("actionable") or {}).get("count"))
             report["ledger_persistence"] = "ACROSS_RUNS" if _rc.persistence_enabled() else "NOT_AVAILABLE"
             # 個別の候補・台帳は private、公開してよい集計だけ public（許可リストで作る。個別の項目が混ざったら例外 → 何も書かない）

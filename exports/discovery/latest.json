@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-30T20:25:46+09:00",
+  "generated_at": "2026-10-31T20:04:00+09:00",
   "apple": {
     "source": "apple_jp_official",
     "list_status": "ok",
@@ -12,13 +12,13 @@
       "iphone-duo"
     ],
     "checked": [
-      "iphone-17e",
-      "iphone-18-pro"
+      "iphone-air",
+      "iphone-duo"
     ],
     "errors": {},
-    "unknown_parts": 38,
-    "matched": 0,
-    "pending": 10,
+    "unknown_parts": 14,
+    "matched": 2,
+    "pending": 5,
     "requests": 3,
     "cutoff": "",
     "saved": true
@@ -291,9 +291,9 @@
     "unknown_official_products": 62,
     "apple_candidates": 17,
     "tcg_products": 20,
-    "event_candidates": 74,
+    "event_candidates": 76,
     "review_required_announcements": 2,
-    "matched_events": 71,
+    "matched_events": 73,
     "stale_events": 1,
     "approved_events": 0,
     "registered_events": 0

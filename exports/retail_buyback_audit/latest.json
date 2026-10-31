@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-30 20:41 JST",
+  "generated_at": "2026-10-31 20:20 JST",
   "scope": "販売/買取/二次流通の取得品質・正規化・同一性（利益/AI/UI/SaaSロジックは不変）",
   "rules": {
     "identity": "容量・型番・カラー・新品/中古 を厳格一致",
@@ -10,17 +10,17 @@
   "category_summary": {
     "buyback": {
       "observations": 146,
-      "with_price": 122,
+      "with_price": 126,
       "exact_match": 15,
       "high_confidence": 15,
       "fresh": 56,
       "main_promotable": 15,
-      "zero": 24,
+      "zero": 20,
       "stale": 90,
-      "rejected": 121,
+      "rejected": 117,
       "failure_reasons": {
         "stale_over_14d": 90,
-        "price_zero": 24,
+        "price_zero": 20,
         "accessory_or_wrong_product": 5,
         "duplicate_price_collision": 2
       }
@@ -212,17 +212,15 @@
     },
     "買取一丁目": {
       "observations": 4,
-      "with_price": 0,
+      "with_price": 4,
       "exact_match": 0,
       "high_confidence": 0,
       "fresh": 4,
       "main_promotable": 0,
-      "zero": 4,
+      "zero": 0,
       "stale": 0,
-      "rejected": 4,
-      "failure_reasons": {
-        "price_zero": 4
-      }
+      "rejected": 0,
+      "failure_reasons": {}
     },
     "ネットオフ": {
       "observations": 4,
@@ -438,17 +436,15 @@
     },
     "買取一丁目": {
       "observations": 4,
-      "with_price": 0,
+      "with_price": 4,
       "exact_match": 0,
       "high_confidence": 0,
       "fresh": 4,
       "main_promotable": 0,
-      "zero": 4,
+      "zero": 0,
       "stale": 0,
-      "rejected": 4,
-      "failure_reasons": {
-        "price_zero": 4
-      }
+      "rejected": 0,
+      "failure_reasons": {}
     },
     "ネットオフ": {
       "observations": 4,
@@ -528,7 +524,7 @@
         "new",
         "used"
       ],
-      "first_seen": 69.4,
+      "first_seen": 70.3,
       "last_seen": 0.1,
       "risk_level": "high",
       "possible_reason": [
@@ -559,7 +555,7 @@
         "new"
       ],
       "first_seen": 9999.0,
-      "last_seen": 0.9,
+      "last_seen": 0.8,
       "risk_level": "high",
       "possible_reason": [
         "different_model_same_price",
@@ -590,7 +586,7 @@
         "new"
       ],
       "first_seen": 9999.0,
-      "last_seen": 0.9,
+      "last_seen": 0.8,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -620,8 +616,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 81.4,
-      "last_seen": 81.4,
+      "first_seen": 82.3,
+      "last_seen": 82.3,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -650,8 +646,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 81.4,
-      "last_seen": 81.4,
+      "first_seen": 82.3,
+      "last_seen": 82.3,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -680,8 +676,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 81.4,
-      "last_seen": 81.4,
+      "first_seen": 82.3,
+      "last_seen": 82.3,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -710,7 +706,7 @@
         "new"
       ],
       "first_seen": 9999.0,
-      "last_seen": 22.9,
+      "last_seen": 23.8,
       "risk_level": "low",
       "possible_reason": [
         "same_price_multiple_skus"

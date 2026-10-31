@@ -1,17 +1,17 @@
-# データ取得品質レポート（2026-10-30 20:41 JST）
+# データ取得品質レポート（2026-10-31 20:20 JST）
 
 ## 取得成功率
 - 全対象店舗数: 16
-- 成功店舗数: 2
-- 全失敗店舗数: 12
-- ジョブ成功率: 24.2%（OK 16 / 失敗 46 / SKIP 4 / 計 66）
+- 成功店舗数: 3
+- 全失敗店舗数: 11
+- ジョブ成功率: 30.3%（OK 20 / 失敗 42 / SKIP 4 / 計 66）
 
 ## 前回比較
-- 前回成功率: 28.8%
-- 今回成功率: 24.2%
-- 変化: -4.6pt（悪化）
-- 7日移動平均: 28.6%
-- 主要失敗理由 TOP5: http_403 12, price_not_found 8, product_not_listed 6, rate_limited_429 6, robots_unreachable 4
+- 前回成功率: 24.2%
+- 今回成功率: 30.3%
+- 変化: +6.1pt（改善）
+- 7日移動平均: 28.8%
+- 主要失敗理由 TOP5: http_403 12, product_not_listed 6, rate_limited_429 6, robots_unreachable 4, price_not_found 4
 
 ## 店舗別成功率（低い順）
 - 2ndstreet（optional）: 0%（OK 0/失敗 4・http_403）
@@ -22,19 +22,19 @@
 - hardoff（optional）: 0%（OK 0/失敗 2・http_404）
 - iosys: 0%（OK 0/失敗 6・http_403）
 - janpara（optional）: 0%（OK 0/失敗 6・rate_limited_429）
-- kaitori_itchome: 0%（OK 0/失敗 4・price_not_found）
 - netoff（optional）: 0%（OK 0/失敗 4・price_not_found）
 - pasoko（optional）: 0%（OK 0/失敗 2・product_not_listed）
 - sofmap（optional）: 0%（OK 0/失敗 2・service_unavailable）
+- surugaya（optional）: 0%（OK 0/失敗 2・site_blocked）
 
 ## 商品別成功率
 - ps5_pro: 0.0%
 - iphone16pro256: 0.0%
 - switch2: 11.1%
-- iphone17pro256: 12.5%
-- iphone17pro512: 12.5%
-- iphone17pm512: 12.5%
-- iphone17pm256: 25.0%
+- iphone17pro256: 25.0%
+- iphone17pro512: 25.0%
+- iphone17pm512: 25.0%
+- iphone17pm256: 37.5%
 - iphone17_256: 100.0%
 - airpods_pro3: 100.0%
 - iphoneair_256: 100.0%
@@ -47,32 +47,31 @@
 - r5ii: 100.0%
 
 ## 連続失敗店舗（2回以上）
-- 2ndstreet: 232回連続
-- bookoff: 232回連続
-- dosupara: 232回連続
-- geo_mobile: 232回連続
-- hardoff: 232回連続
-- janpara: 232回連続
-- pasoko: 232回連続
-- sofmap: 232回連続
-- surugaya: 232回連続
-- tsutaya: 232回連続
-- iosys: 165回連続
-- netoff: 92回連続
-- geo: 24回連続
+- 2ndstreet: 233回連続
+- bookoff: 233回連続
+- dosupara: 233回連続
+- geo_mobile: 233回連続
+- hardoff: 233回連続
+- janpara: 233回連続
+- pasoko: 233回連続
+- sofmap: 233回連続
+- surugaya: 233回連続
+- tsutaya: 233回連続
+- iosys: 166回連続
+- netoff: 93回連続
+- geo: 25回連続
 
 ## 改善優先順位（required店舗）
 1. iosys（失敗6 / http_403）
-2. kaitori_itchome（失敗4 / price_not_found）
-3. mobile_ichiban（失敗4 / product_not_listed）
-4. kaitori_shouten（失敗2 / suspicious_rejected）
+2. mobile_ichiban（失敗4 / product_not_listed）
+3. kaitori_shouten（失敗2 / suspicious_rejected）
 
 ## 失敗理由（内訳）
 - http_403: 12件
-- price_not_found: 8件
 - product_not_listed: 6件
 - rate_limited_429: 6件
 - robots_unreachable: 4件
+- price_not_found: 4件
 - http_404: 4件
 - not_supported: 4件
 - service_unavailable: 2件
@@ -81,10 +80,10 @@
 
 ## 有効データ量（新品・未使用 / 14日以内 / price>0）
 - 有効買取データを持つ商品数: 15
-  - prod_iphone17pm_256: 2店舗
-  - prod_iphone17pro_256: 1店舗
-  - prod_iphone17pro_512: 1店舗
-  - prod_iphone17pm_512: 1店舗
+  - prod_iphone17pm_256: 3店舗
+  - prod_iphone17pro_256: 2店舗
+  - prod_iphone17pro_512: 2店舗
+  - prod_iphone17pm_512: 2店舗
   - prod_switch2: 1店舗
   - prod_iphone17_256: 1店舗
   - prod_airpods_pro3: 1店舗
@@ -98,7 +97,7 @@
   - prod_r5ii: 1店舗
 
 ## ランキングに使えたデータ数
-- Beginner: 2 件
+- Beginner: 1 件
 - Pro: 0 件
 
 ## せどりルートに使えたデータ数

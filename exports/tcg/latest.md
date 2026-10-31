@@ -1,4 +1,4 @@
-# TCG 入荷・抽選・プレミア レポート（2026-10-30 20:25 JST）
+# TCG 入荷・抽選・プレミア レポート（2026-10-31 20:03 JST）
 
 ## Current Active
 
@@ -18,7 +18,8 @@
 
 ## Available / Restock（現在購入可能性があるもの）
 
-- 現在「購入可能」と確認できた情報はありません（古い入荷報告は表示しません）
+- エクストラブースター ONE PIECE Heroines Edition vol.2【EB-05】（ONEPIECE_CARD_OFFICIAL） 通常販売 / Confirmed
+- ONE PIECEカードゲーム ONE PIECE HEROINES PRECIOUS BOX（ONEPIECE_CARD_OFFICIAL） 通常販売 / Confirmed
 
 ## Convenience Store（コンビニ販売情報）
 
@@ -32,72 +33,70 @@
 
 | Retailer | Collector | Reachable | Health | Last Check | Active Lotteries | Active Preorders |
 |---|---|---|---|---|---|---|
-| ポケモンセンターオンライン (P0) | pco_lottery | yes | アクセス拒否 | 2026-10-30 20:00 | 0 | 0 |
-| ポケモンカードゲーム公式（ニュース） (P0) | pokemon_news_lottery | yes | 現在の抽選なし | 2026-10-30 20:00 | 0 | 0 |
-| ゲオ (P1) | geo_lottery | no | アクセス拒否 | 2026-10-30 20:00 | 0 | 0 |
-| カードラボ (P1) | card_labo_lottery | yes | 抽選あり | 2026-10-30 20:00 | 24 | 0 |
-| ホビーステーション (P1) | hobby_station_lottery | yes | 抽選あり | 2026-10-30 20:00 | 2 | 0 |
-| キッズリパブリック（イオン） (P1) | kids_republic_lottery | no | アクセス拒否 | 2026-10-30 20:00 | 0 | 0 |
-| 福福トレカ (P2) | fukufuku_lottery | yes | 抽選あり | 2026-10-30 20:00 | 1 | 0 |
-| ONE PIECE 麦わらストア (P1) | mugiwara_store_lottery | yes | 抽選あり | 2026-10-30 20:00 | 4 | 0 |
-| トイザらス (P1) | 未実装 | no | アクセス拒否 | 2026-10-30 20:00 | 0 | 0 |
-| Joshin (P1) | 未実装 | no | アクセス拒否 | 2026-10-30 20:00 | 0 | 0 |
-| エディオン (P1) | 未実装 | yes | 未監視（未実装） | 2026-10-30 20:00 | 0 | 0 |
-| ヤマダデンキ (P1) | 未実装 | no | 接続できない | 2026-10-30 20:00 | 0 | 0 |
-| TSUTAYA (P1) | 未実装 | yes | 未監視（未実装） | 2026-10-30 20:00 | 0 | 0 |
-| ビックカメラ (P1) | 未実装 | no | 接続できない | 2026-10-30 20:00 | 0 | 0 |
-| ヨドバシカメラ (P1) | 未実装 | no | 接続できない | 2026-10-30 20:00 | 0 | 0 |
-| Amazon (P2) | 未実装 | yes | 未監視（未実装） | 2026-10-30 20:00 | 0 | 0 |
-| 楽天ブックス (P2) | 未実装 | no | 接続できない | 2026-10-30 20:00 | 0 | 0 |
-| セブンネットショッピング (P2) | 未実装 | yes | 未監視（未実装） | 2026-10-30 20:00 | 0 | 0 |
-| ローソン (P2) | lawson_lottery | yes | 現在の抽選なし | 2026-10-30 20:00 | 0 | 0 |
-| ONE PIECEカードゲーム公式 (P0) | onepiece_news_lottery | yes | 現在の抽選なし | 2026-10-30 20:00 | 0 | 0 |
+| ポケモンセンターオンライン (P0) | pco_lottery | yes | アクセス拒否 | 2026-10-31 19:38 | 0 | 0 |
+| ポケモンカードゲーム公式（ニュース） (P0) | pokemon_news_lottery | yes | 現在の抽選なし | 2026-10-31 19:38 | 0 | 0 |
+| ゲオ (P1) | geo_lottery | no | アクセス拒否 | 2026-10-31 19:38 | 0 | 0 |
+| カードラボ (P1) | card_labo_lottery | yes | 抽選あり | 2026-10-31 19:38 | 24 | 0 |
+| ホビーステーション (P1) | hobby_station_lottery | yes | 抽選あり | 2026-10-31 19:38 | 2 | 0 |
+| キッズリパブリック（イオン） (P1) | kids_republic_lottery | no | アクセス拒否 | 2026-10-31 19:38 | 0 | 0 |
+| 福福トレカ (P2) | fukufuku_lottery | yes | 抽選あり | 2026-10-31 19:38 | 1 | 0 |
+| ONE PIECE 麦わらストア (P1) | mugiwara_store_lottery | yes | 抽選あり | 2026-10-31 19:38 | 2 | 0 |
+| トイザらス (P1) | 未実装 | no | アクセス拒否 | 2026-10-31 19:38 | 0 | 0 |
+| Joshin (P1) | 未実装 | no | アクセス拒否 | 2026-10-31 19:38 | 0 | 0 |
+| エディオン (P1) | 未実装 | yes | 未監視（未実装） | 2026-10-31 19:38 | 0 | 0 |
+| ヤマダデンキ (P1) | 未実装 | no | 接続できない | 2026-10-31 19:38 | 0 | 0 |
+| TSUTAYA (P1) | 未実装 | yes | 未監視（未実装） | 2026-10-31 19:38 | 0 | 0 |
+| ビックカメラ (P1) | 未実装 | no | 接続できない | 2026-10-31 19:38 | 0 | 0 |
+| ヨドバシカメラ (P1) | 未実装 | no | 接続できない | 2026-10-31 19:38 | 0 | 0 |
+| Amazon (P2) | 未実装 | yes | 未監視（未実装） | 2026-10-31 19:38 | 0 | 0 |
+| 楽天ブックス (P2) | 未実装 | no | 接続できない | 2026-10-31 19:38 | 0 | 0 |
+| セブンネットショッピング (P2) | 未実装 | yes | 未監視（未実装） | 2026-10-31 19:38 | 0 | 0 |
+| ローソン (P2) | lawson_lottery | yes | 現在の抽選なし | 2026-10-31 19:38 | 0 | 0 |
+| ONE PIECEカードゲーム公式 (P0) | onepiece_news_lottery | yes | 現在の抽選なし | 2026-10-31 19:38 | 0 | 0 |
 | ONE PIECEカードゲーム公式ショップ (P0) | 未実装 | no | 未監視（未実装） | — | 0 | 0 |
-| プレミアムバンダイ (P0) | premium_bandai_lottery | yes | 現在の抽選なし | 2026-10-30 20:00 | 0 | 0 |
+| プレミアムバンダイ (P0) | premium_bandai_lottery | yes | 現在の抽選なし | 2026-10-31 19:38 | 0 | 0 |
 
 ## Active（受付中・締切間近）
 
 | TCG | Product | Retailer | Start | Deadline | Purchase Period | Confidence |
 |---|---|---|---|---|---|---|
-| ポケモンカード | ポケモンカードゲーム MEGA『30th CELEBRATION プレミアムデッキセット エーフィ・ブラッキー』 | カードラボ | — | — | — | STORE_OFFICIAL / medium |
 | ポケモンカード | ポケモンカードゲーム MEGA 拡張パック ストームエメラルダ | カードラボ | — | — | — | STORE_OFFICIAL / medium |
+| ポケモンカード | ポケモンカードゲーム MEGA『30th CELEBRATION プレミアムデッキセット エーフィ・ブラッキー』 | カードラボ | — | — | — | STORE_OFFICIAL / medium |
+| ONE PIECEカードゲーム | ONE PIECEカードゲーム ONE PIECE HEROINES PRECIOUS BOX | カードラボ | — | — | — | STORE_OFFICIAL / medium |
+| ONE PIECEカードゲーム | ONE PIECEカードゲーム ONE PIECE HEROINES PRECIOUS BOX | カードラボ | — | — | — | STORE_OFFICIAL / medium |
+| ONE PIECEカードゲーム | ONE PIECE HEROINES PRECIOUS BOX | カードラボ | — | — | — | STORE_OFFICIAL / medium |
+| ONE PIECEカードゲーム | ONE PIECEカードゲーム ONE PIECE HEROINES PRECIOUS BOX | カードラボ | — | — | — | STORE_OFFICIAL / medium |
+| ONE PIECEカードゲーム | ONE PIECEカードゲーム ONE PIECE HEROINES PRECIOUS BOX | カードラボ | — | — | — | STORE_OFFICIAL / medium |
+| ONE PIECEカードゲーム | ONE PIECEカードゲーム ONE PIECE HEROINES PRECIOUS BOX | カードラボ | — | — | — | STORE_OFFICIAL / medium |
+| ONE PIECEカードゲーム | ONE PIECEカードゲーム ONE PIECE HEROINES PRECIOUS BOX | カードラボ | — | — | — | STORE_OFFICIAL / medium |
+| ONE PIECEカードゲーム | 商品名：ONE PIECEカードゲーム ONE PIECE HEROINES PRECIOUS BOX | カードラボ | — | — | — | STORE_OFFICIAL / medium |
+| ONE PIECEカードゲーム | ONE PIECE HEROINES PRECIOUS BOX | カードラボ | — | — | — | STORE_OFFICIAL / medium |
+| ONE PIECEカードゲーム | ONE PIECEカードゲーム ONE PIECE HEROINES PRECIOUS BOX | カードラボ | — | — | — | STORE_OFFICIAL / medium |
+| ONE PIECEカードゲーム | ONE PIECE HEROINES PRECIOUS BOX | カードラボ | — | — | — | STORE_OFFICIAL / medium |
+| ONE PIECEカードゲーム | ONE PIECEカードゲーム ONE PIECE HEROINES PRECIOUS BOX | カードラボ | — | — | — | STORE_OFFICIAL / medium |
+| ONE PIECEカードゲーム | ONE PIECEカードゲーム ONE PIECE HEROINES PRECIOUS BOX | カードラボ | — | — | —〜11/08 20:00 | STORE_OFFICIAL / medium |
+| ONE PIECEカードゲーム | ONE PIECE HEROINES PRECIOUS BOX | カードラボ | — | — | — | STORE_OFFICIAL / medium |
+| ポケモンカード | ポケモンカードゲーム MEGA『30th CELEBRATION プレミアムデッキセット エーフィ・ブラッキー』 | カードラボ | — | — | — | STORE_OFFICIAL / medium |
+| ONE PIECEカードゲーム | 商品名：ワンピースカードゲーム「ONE PIECE HEROINES PRECIOUS BOX」 | カードラボ | — | — | — | STORE_OFFICIAL / medium |
+| ONE PIECEカードゲーム | 【ワンピースカードゲーム】10/31販売品 | カードラボ | — | 11/01 23:59 | — | STORE_OFFICIAL / medium |
 
 ## Upcoming（まもなく抽選開始）
 
 | TCG | Product | Retailer | Start | Deadline | Purchase Period | Confidence |
 |---|---|---|---|---|---|---|
-| ONE PIECEカードゲーム | ONE PIECEカードゲーム ONE PIECE HEROINES PRECIOUS BOX | カードラボ | — | — | — | STORE_OFFICIAL / medium |
-| ONE PIECEカードゲーム | ONE PIECEカードゲーム ONE PIECE HEROINES PRECIOUS BOX | カードラボ | — | — | — | STORE_OFFICIAL / medium |
-| ONE PIECEカードゲーム | 商品名：ONE PIECEカードゲーム ONE PIECE HEROINES PRECIOUS BOX | カードラボ | — | — | — | STORE_OFFICIAL / medium |
-| ONE PIECEカードゲーム | ONE PIECE HEROINES PRECIOUS BOX | カードラボ | — | — | — | STORE_OFFICIAL / medium |
-| ポケモンカード | ポケモンカードゲーム MEGA『30th CELEBRATION プレミアムデッキセット エーフィ・ブラッキー』 | カードラボ | — | — | — | STORE_OFFICIAL / medium |
-| ONE PIECEカードゲーム | ONE PIECEカードゲーム ONE PIECE HEROINES PRECIOUS BOX | カードラボ | — | — | — | STORE_OFFICIAL / medium |
-| ONE PIECEカードゲーム | ONE PIECEカードゲーム ONE PIECE HEROINES PRECIOUS BOX | カードラボ | — | — | — | STORE_OFFICIAL / medium |
-| ONE PIECEカードゲーム | ONE PIECEカードゲーム ONE PIECE HEROINES PRECIOUS BOX | カードラボ | — | — | — | STORE_OFFICIAL / medium |
-| ONE PIECEカードゲーム | ONE PIECE HEROINES PRECIOUS BOX | カードラボ | — | — | — | STORE_OFFICIAL / medium |
-| ONE PIECEカードゲーム | ONE PIECEカードゲーム ONE PIECE HEROINES PRECIOUS BOX | カードラボ | — | — | —〜11/08 20:00 | STORE_OFFICIAL / medium |
-| ONE PIECEカードゲーム | ONE PIECE HEROINES PRECIOUS BOX | カードラボ | — | — | — | STORE_OFFICIAL / medium |
-| ONE PIECEカードゲーム | ONE PIECE HEROINES PRECIOUS BOX | カードラボ | — | — | — | STORE_OFFICIAL / medium |
-| ONE PIECEカードゲーム | ONE PIECEカードゲーム ONE PIECE HEROINES PRECIOUS BOX | カードラボ | — | — | — | STORE_OFFICIAL / medium |
-| ONE PIECEカードゲーム | ONE PIECEカードゲーム ONE PIECE HEROINES PRECIOUS BOX | カードラボ | — | — | — | STORE_OFFICIAL / medium |
-| ONE PIECEカードゲーム | ONE PIECEカードゲーム ONE PIECE HEROINES PRECIOUS BOX | カードラボ | — | — | — | STORE_OFFICIAL / medium |
-| ONE PIECEカードゲーム | ONE PIECE HEROINES PRECIOUS BOX | カードラボ | — | — | — | STORE_OFFICIAL / medium |
-| ONE PIECEカードゲーム | 商品名：ワンピースカードゲーム「ONE PIECE HEROINES PRECIOUS BOX」 | カードラボ | — | — | — | STORE_OFFICIAL / medium |
 | ONE PIECEカードゲーム | ONE PIECE HEROINES PRECIOUS BOX | カードラボ | — | — | — | STORE_OFFICIAL / medium |
 
 ## 結果発表待ち・当選者購入期間
 
 | TCG | Product | Retailer | Start | Deadline | Purchase Period | Confidence |
 |---|---|---|---|---|---|---|
-| ONE PIECEカードゲーム | 【抽選】【再入荷】【あべの店】ONE PIECE カードゲーム ブースターパック(2種) | ONE PIECE 麦わらストア | 10/16 00:00 | 10/18 23:59 | — | RETAILER_OFFICIAL / high |
-| ONE PIECEカードゲーム | 世界最強の戦士 | ONE PIECE 麦わらストア | 10/16 00:00 | 10/18 23:59 | — | RETAILER_OFFICIAL / high |
 | ポケモンカード | 【ポケモンカードゲーム】再販品 | カードラボ | — | 10/27 23:59 | — | STORE_OFFICIAL / medium |
 | ONE PIECEカードゲーム | ONE PIECEカードゲーム エクストラブースター ONE PIECE Heroines Edition vol.2 | ホビーステーション | 10/16 12:00 | 10/18 23:59 | — | STORE_OFFICIAL / medium |
 | ONE PIECEカードゲーム | 【抽選】【再入荷】【あべの店】ONE PIECE カードゲーム ブースターパック(2種) | ONE PIECE 麦わらストア | 10/23 00:00 | 10/25 23:59 | — | RETAILER_OFFICIAL / high |
 | ONE PIECEカードゲーム | ONE PIECE Heroines Edition vol.2 | ONE PIECE 麦わらストア | 10/23 00:00 | 10/25 23:59 | — | RETAILER_OFFICIAL / high |
 | ポケモンカード | ポケモンカードゲーム MEGA『30th CELEBRATION プレミアムデッキセット エーフィ・ブラッキー』 | カードラボ | — | — | — | STORE_OFFICIAL / medium |
 | ポケモンカード | ポケモンカードゲーム MEGA 拡張パック『30th CELEBRATION』 | カードラボ | — | — | — | STORE_OFFICIAL / medium |
-| ポケモンカード | ポケモンカードゲーム MEGA ・拡張パック 30th CELEBRATION 20パック | カードラボ | — | — | — | STORE_OFFICIAL / medium |
+| ポケモンカード | 【ポケモンカードゲーム】再入荷商品 | カードラボ | — | — | — | STORE_OFFICIAL / medium |
 | ポケモンカード | 30th CELEBRATION 1BOX | 福福トレカ | — | 10/29 23:59 | — | RETAILER_OFFICIAL / high |
 | ポケモンカード | ポケモンカードゲームMEGA 拡張パック 30th CELEBRATION（再販） | ホビーステーション | 10/20 12:00 | 10/22 23:59 | — | STORE_OFFICIAL / medium |
 
@@ -121,12 +120,12 @@
 
 ## Coverage
 
-- Configured: 22 / Implemented: 11 / Healthy: 8 / Blocked: 5 / Unreachable: 4 / Not Implemented: 11 / Lottery events: 31
+- Configured: 22 / Implemented: 11 / Healthy: 8 / Blocked: 5 / Unreachable: 4 / Not Implemented: 11 / Lottery events: 29
 
 ### Rejected（抽選・理由別件数）
 
 - tournament_or_event: 81
-- not_lottery_candidate: 63
+- not_lottery_candidate: 64
 - announcement_too_old_or_undated: 1
 
 ## Pokemon Funnel
@@ -164,13 +163,13 @@
 
 | Source | TCG | Status | Last checked | Last success | Events | Errors | Blocked | robots |
 |---|---|---|---|---|---|---|---|---|
-| ポケモンカードゲーム公式（商品API） | POKEMON | HEALTHY | 2026-10-30 20:00 | 2026-10-30 20:03 | 1 | 0 | no | not_found |
-| ポケモンカードゲーム公式（ニュース） | POKEMON | OK_NO_EVENTS | 2026-10-30 20:00 | 2026-10-30 20:00 | 0 | 0 | no | not_found |
-| ポケモンセンターオンライン | POKEMON | BLOCKED | 2026-10-30 20:00 | — | 0 | 1 | YES | allowed |
-| ローソン（ポケモンカード告知） | POKEMON | OK_NO_EVENTS | 2026-10-30 20:00 | 2026-10-30 20:01 | 0 | 0 | no | allowed |
-| ONE PIECEカードゲーム公式（ニュース） | ONE_PIECE | OK_NO_EVENTS | 2026-10-30 20:00 | 2026-10-30 20:00 | 0 | 0 | no | not_found |
-| ONE PIECEカードゲーム公式（商品情報） | ONE_PIECE | HEALTHY | 2026-10-30 20:00 | 2026-10-30 20:01 | 6 | 0 | no | not_found |
-| プレミアムバンダイ | ONE_PIECE | OK_NO_EVENTS | 2026-10-30 20:00 | 2026-10-30 20:00 | 0 | 0 | no | allowed |
+| ポケモンカードゲーム公式（商品API） | POKEMON | HEALTHY | 2026-10-31 19:38 | 2026-10-31 19:41 | 1 | 0 | no | not_found |
+| ポケモンカードゲーム公式（ニュース） | POKEMON | OK_NO_EVENTS | 2026-10-31 19:38 | 2026-10-31 19:38 | 0 | 0 | no | not_found |
+| ポケモンセンターオンライン | POKEMON | BLOCKED | 2026-10-31 19:38 | — | 0 | 1 | YES | allowed |
+| ローソン（ポケモンカード告知） | POKEMON | OK_NO_EVENTS | 2026-10-31 19:38 | 2026-10-31 19:39 | 0 | 0 | no | allowed |
+| ONE PIECEカードゲーム公式（ニュース） | ONE_PIECE | OK_NO_EVENTS | 2026-10-31 19:38 | 2026-10-31 19:38 | 0 | 0 | no | not_found |
+| ONE PIECEカードゲーム公式（商品情報） | ONE_PIECE | HEALTHY | 2026-10-31 19:38 | 2026-10-31 19:39 | 6 | 0 | no | not_found |
+| プレミアムバンダイ | ONE_PIECE | OK_NO_EVENTS | 2026-10-31 19:38 | 2026-10-31 19:38 | 0 | 0 | no | allowed |
 
 監視登録 source 数: 27
 

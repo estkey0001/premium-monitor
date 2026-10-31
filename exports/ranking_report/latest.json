@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-30 20:41 JST",
+  "generated_at": "2026-10-31 20:20 JST",
   "route_type_beginner": "primary_to_secondary",
   "top_camera_buyback_opportunities": [
     {
@@ -23,11 +23,11 @@
       "product_id": "prod_gr4",
       "product_name": "RICOH GR IV",
       "shop_name": "買取商店",
-      "buyback_price": 200000,
+      "buyback_price": 205000,
       "official_price": 211800,
       "reference_price": 211800,
       "reference_source": "official",
-      "diff_vs_official": -11800,
+      "diff_vs_official": -6800,
       "condition": "new_unopened",
       "condition_label": "新品未開封",
       "comparable_to_retail": true,
@@ -363,50 +363,10 @@
       "route_type": "primary_to_secondary",
       "source_label": "RICOH公式 / FUJIFILM公式 / キタムラ",
       "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
-    },
-    {
-      "product_name": "iPhone Duo 256GB SIMフリー",
-      "category": "iphone",
-      "user_level": "beginner_easy",
-      "official_price_jpy": 364800,
-      "reference_source": "official",
-      "best_buyback_price": 367000,
-      "best_buyback_shop": "買取商店",
-      "buy_price": null,
-      "buy_shop_name": "",
-      "buy_price_type": "",
-      "sell_price_type": "buyback_price",
-      "net_profit_jpy": 400,
-      "net_profit_rate": 0.0011,
-      "availability": "UNKNOWN",
-      "route_type": "primary_to_secondary",
-      "source_label": "Apple Store",
-      "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
     }
   ],
   "pro_top10": [],
   "beginner_by_category": {
-    "iphone": [
-      {
-        "product_name": "iPhone Duo 256GB SIMフリー",
-        "category": "iphone",
-        "user_level": "beginner_easy",
-        "official_price_jpy": 364800,
-        "reference_source": "official",
-        "best_buyback_price": 367000,
-        "best_buyback_shop": "買取商店",
-        "buy_price": null,
-        "buy_shop_name": "",
-        "buy_price_type": "",
-        "sell_price_type": "buyback_price",
-        "net_profit_jpy": 400,
-        "net_profit_rate": 0.0011,
-        "availability": "UNKNOWN",
-        "route_type": "primary_to_secondary",
-        "source_label": "Apple Store",
-        "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
-      }
-    ],
     "camera": [
       {
         "product_name": "RICOH GR IV HDF",
@@ -430,7 +390,7 @@
     ]
   },
   "pro_by_category": {},
-  "excluded_items": 8,
+  "excluded_items": 9,
   "ineligible_items": [
     {
       "product_id": "prod_iphone17pm_256",
@@ -453,8 +413,8 @@
   "total_deals": 10,
   "confidence_summary": {
     "total": 10,
-    "profitable": 2,
-    "negative": 8
+    "profitable": 1,
+    "negative": 9
   },
   "stale_data_count": 0
 }

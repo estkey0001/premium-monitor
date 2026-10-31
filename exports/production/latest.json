@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-30 20:41 JST",
+  "generated_at": "2026-10-31 20:20 JST",
   "scores": {
     "Security": 90,
     "Reliability": 85,
@@ -8,12 +8,12 @@
     "Scalability": 66,
     "Operations": 82,
     "Deployment": 70,
-    "Data Quality": 68,
+    "Data Quality": 69,
     "Monitoring": 84,
     "Recovery": 76,
     "Documentation": 86
   },
-  "overall_score": 80.2,
+  "overall_score": 80.3,
   "issues": {
     "Critical": [],
     "High": [
@@ -22,7 +22,7 @@
     ],
     "Medium": [
       "stale率 61%（サンプル/手動データ鮮度・日次運用で改善）",
-      "item_url率 47%（確認導線/再現性の改善余地）",
+      "item_url率 48%（確認導線/再現性の改善余地）",
       "Coverage 7カテゴリ（Apple/GPU等の拡充で候補増）"
     ],
     "Low": [
@@ -51,9 +51,9 @@
   },
   "data_quality": {
     "stale_rate": 0.6144,
-    "zero_rate": 0.178,
-    "item_url_rate": 0.4661,
-    "usable": 72,
+    "zero_rate": 0.161,
+    "item_url_rate": 0.4831,
+    "usable": 76,
     "total": 236,
     "ebay_configured": false,
     "coverage_score": 44,

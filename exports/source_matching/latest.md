@@ -1,6 +1,6 @@
 # Source Matching Accuracy 監査
 
-> 生成: 2026-10-30 20:41 JST / 商品同一性マッチング精度（利益/AI/UI/SaaS/DQ思想は不変）
+> 生成: 2026-10-31 20:20 JST / 商品同一性マッチング精度（利益/AI/UI/SaaS/DQ思想は不変）
 
 ## 精度サマリ（目標対比）
 | 指標 | 実績 | 目標 |
@@ -11,7 +11,7 @@
 | Condition Match Accuracy | 100.0% | 100% |
 | False Main Promotion | 0 | 0 |
 | High Risk Duplicates | 2 | (要レビュー) |
-| Manual Review Queue | 70 | – |
+| Manual Review Queue | 74 | – |
 
 ## ソース精度ランキング（100点）
 | # | source | 観測 | score | identity | capacity | model | fresh | main |

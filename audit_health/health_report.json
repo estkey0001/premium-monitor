@@ -1,33 +1,32 @@
 {
-  "generated_at": "2026-10-30 20:41 JST",
-  "date": "2026-10-30",
+  "generated_at": "2026-10-31 20:20 JST",
+  "date": "2026-10-31",
   "health_score": {
-    "data_quality": 14.1,
+    "data_quality": 14.5,
     "profit_discovery": 15.0,
-    "source_health": 11.8,
-    "link_quality": 4.7,
+    "source_health": 12.6,
+    "link_quality": 4.8,
     "freshness": 3.9,
-    "total": 49.5
+    "total": 50.8
   },
   "data_quality": {
     "total_obs": 236,
-    "usable_obs": 72,
+    "usable_obs": 76,
     "stale_count": 145,
     "stale_rate": 0.6144,
     "config_reference_count": 30,
-    "zero_count": 42,
-    "zero_rate": 0.178,
-    "item_url_rate": 0.4661,
+    "zero_count": 38,
+    "zero_rate": 0.161,
+    "item_url_rate": 0.4831,
     "search_url_rate": 0.1992,
     "manual_rate": 0.4746,
     "api_rate": 0.0,
     "html_rate": 0.0085
   },
   "profit": {
-    "official_to_buyback_count": 2,
+    "official_to_buyback_count": 1,
     "official_to_buyback_products": [
-      "prod_gr4_hdf",
-      "prod_iphoneduo_256"
+      "prod_gr4_hdf"
     ],
     "official_to_buyback_max_profit": 16200,
     "main_route_count": 0,
@@ -203,12 +202,12 @@
       "n": 4
     },
     "買取一丁目": {
-      "success_count": 0,
+      "success_count": 4,
       "stale_count": 0,
-      "zero_count": 4,
-      "item_url_rate": 0.0,
+      "zero_count": 0,
+      "item_url_rate": 1.0,
       "freshness": 1.0,
-      "success_rate": 0.0,
+      "success_rate": 1.0,
       "confidence": {
         "high": 4
       },
@@ -338,16 +337,16 @@
   "diff_vs_prev": {
     "available": true,
     "stale_rate": {
-      "prev": 0.6042,
+      "prev": 0.6144,
       "cur": 0.6144
     },
     "zero_rate": {
-      "prev": 0.1792,
-      "cur": 0.178
+      "prev": 0.178,
+      "cur": 0.161
     },
     "item_url_rate": {
-      "prev": 0.4708,
-      "cur": 0.4661
+      "prev": 0.4661,
+      "cur": 0.4831
     },
     "main_route_count": {
       "prev": 0,
@@ -362,33 +361,24 @@
     "source_success_changes": [
       {
         "source": "買取一丁目",
-        "prev": 1.0,
-        "cur": 0.0,
-        "delta": -1.0
-      },
-      {
-        "source": "モバイル一番",
-        "prev": 0.375,
+        "prev": 0.0,
         "cur": 1.0,
-        "delta": 0.625
+        "delta": 1.0
       }
     ]
   },
   "anomalies": {
     "critical": [
       "stale率 61% (>=50%)",
-      "取得成功率 0%: 買取一丁目",
       "取得成功率 0%: ゲオモバイル",
       "取得成功率 0%: セカンドストリート",
       "取得成功率 0%: ネットオフ"
     ],
     "warning": [
-      "item_url率 低下",
-      "item_url率 47% (<50%)",
-      "買取一丁目 取得成功率 100%→0%"
+      "item_url率 48% (<50%)"
     ],
     "info": [
-      "公式→買取の確定した案件 2件 / 最大 +¥16,200"
+      "公式→買取の確定した案件 1件 / 最大 +¥16,200"
     ]
   },
   "improvements_top10": [
@@ -397,12 +387,6 @@
       "action": "EBAY_APP_ID 設定",
       "effect": "+¥0（参考0→main昇格）",
       "effort": "1時間"
-    },
-    {
-      "stars": 4,
-      "action": "取得失敗修正: 買取一丁目",
-      "effect": "0円4件の解消でsell候補復活",
-      "effort": "4時間"
     },
     {
       "stars": 4,

@@ -4,7 +4,22 @@
     "lot-b321e86f189b:deadline_24h": "2026-10-29T02:22:08.117842+09:00",
     "lot-74dc1b262646:deadline_24h": "2026-10-29T02:22:08.117842+09:00",
     "lot-74dc1b262646:deadline_6h": "2026-10-29T20:49:25.596656+09:00",
-    "lot-b321e86f189b:deadline_6h": "2026-10-29T20:49:25.596656+09:00"
+    "lot-b321e86f189b:deadline_6h": "2026-10-29T20:49:25.596656+09:00",
+    "lot-6a4738d9be1e:deadline_24h": "suppressed:2026-11-01T20:54:05.321770+09:00",
+    "lot-6a4738d9be1e:deadline_6h": "2026-11-01T20:54:05.321770+09:00"
   },
-  "candidates": []
+  "candidates": [
+    {
+      "lottery_id": "lot-6a4738d9be1e",
+      "milestone": "deadline_6h",
+      "label": "締切6時間前",
+      "fires_at": "2026-11-01T17:59:00+09:00",
+      "tcg": "ONE_PIECE",
+      "product_name": "【ワンピースカードゲーム】10/31販売品",
+      "retailer": "カードラボ",
+      "entry_url": null,
+      "source_url": "https://www.c-labo.jp/shop/shizuoka/blog/623432/",
+      "message": "【ワンピースカードゲーム】10/31販売品（カードラボ・カードラボ静岡店） 締切6時間前"
+    }
+  ]
 }

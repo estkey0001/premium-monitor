@@ -2,7 +2,7 @@
   "schema": 1,
   "type": "RESEARCH_SUMMARY",
   "audience": "public_aggregate",
-  "generated_at": "2026-10-31T20:20:08+09:00",
+  "generated_at": "2026-11-01T21:10:16+09:00",
   "description": "調査候補の集計（件数だけ）。個別の候補（商品・価格・価格差・売却先）は公開しない。確定の利益ではない",
   "research_candidate_count": 9,
   "positive_raw_spread_count": 5,
@@ -134,7 +134,7 @@
     "unreachable_sources": 4,
     "not_implemented_sources": 11,
     "sources_with_active_lottery": 4,
-    "lottery_events_found": 29,
+    "lottery_events_found": 28,
     "source_classes": {
       "WORKING": 8,
       "IMPLEMENTED_BUT_BLOCKED": 3,
@@ -145,15 +145,15 @@
   },
   "tcg_working_sources": 8,
   "tcg_funnel": {
-    "raw_announcements": 44,
-    "parsed_events": 41,
+    "raw_announcements": 42,
+    "parsed_events": 39,
     "review_required": 2,
     "rejected": 145,
-    "active_lotteries": 29,
+    "active_lotteries": 28,
     "sources_with_gap": 13,
     "sources_truncated": 1,
-    "detail_candidates": 42,
-    "detail_fetched": 41,
+    "detail_candidates": 40,
+    "detail_fetched": 39,
     "skipped_due_to_limit": 1,
     "skipped_ended": 0,
     "sources_list_ok": 13,
@@ -164,31 +164,31 @@
   },
   "tcg_active_events": 4,
   "tcg_event_quality": {
-    "active_events": 20,
-    "with_application_start": 20,
-    "with_application_end": 20,
-    "with_winner_announcement": 19,
-    "with_purchase_window": 12,
+    "active_events": 18,
+    "with_application_start": 18,
+    "with_application_end": 18,
+    "with_winner_announcement": 17,
+    "with_purchase_window": 10,
     "with_action_url": 0,
-    "fully_dated": 11
+    "fully_dated": 9
   },
   "tcg_priority": {
     "DEADLINE_SOON": 18,
-    "ACTIVE_LOTTERY": 1,
+    "ACTIVE_LOTTERY": 0,
     "PREORDER_OPEN": 0,
     "FIRST_COME": 0,
     "RESTOCK": 0,
-    "UPCOMING": 1
+    "UPCOMING": 0
   },
   "tcg_fast_lane": {
-    "events_measured": 42,
+    "events_measured": 40,
     "median_application_duration_hours": 72.0,
-    "median_age_at_observation_hours": 92.0,
-    "windows_under_24h_at_observation": 22,
-    "observed_after_half_window": 39,
+    "median_age_at_observation_hours": 92.8,
+    "windows_under_24h_at_observation": 38,
+    "observed_after_half_window": 38,
     "tolerated_age_at_observation_hours_p25": 30.0,
     "suggested_max_detection_interval_hours": 30,
-    "date_precision_events": 28
+    "date_precision_events": 26
   },
   "research_signals": {
     "new_release_candidates": 0,
@@ -207,19 +207,19 @@
     "active_tcg_priority": 18,
     "tcg_new_release": 0,
     "tcg_limited": 0,
-    "tcg_supply_pressure": 20,
+    "tcg_supply_pressure": 18,
     "tcg_msrp_linked_active": 0,
     "tcg_actionable_events": 0,
-    "tcg_incomplete_active": 20,
+    "tcg_incomplete_active": 18,
     "tcg_stock_unknown_not_counted": 0,
     "tcg_application_url_confirmed": 0,
-    "tcg_announcement_url_only": 20
+    "tcg_announcement_url_only": 18
   },
   "tcg_detection_simulation": {
-    "events_measured": 42,
+    "events_measured": 40,
     "latency_hours": 8.4,
     "h24_missed": 0.0,
-    "h24_lost_half": 2.3,
+    "h24_lost_half": 2.7,
     "h12_missed": 0.0,
     "h12_lost_half": 0.0,
     "h6_missed": 0.0,
@@ -228,7 +228,7 @@
     "h3_lost_half": 0.0
   },
   "tcg_detection_delay": {
-    "events_active": 20,
+    "events_active": 18,
     "baseline_events": 0,
     "new_after_baseline": 0,
     "measured": 0,

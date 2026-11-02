@@ -1,6 +1,6 @@
 # Normalized Price Observations
 
-生成: 2026-11-01 21:10 JST
+生成: 2026-11-02 21:46 JST
 
 全価格（買取/販売/出品/落札/海外/下取/公式）を単一スキーマに正規化。
 `price_role`（buy/sell/official/trade_in）を必ず付与し、
@@ -68,7 +68,7 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 | Apple Watch Ultra 3 | official | official_price | ¥128,800 | medium | 9999.0d | メーカー公式/定価 |
 | AirPods Pro 3 | official | official_price | ¥42,800 | high | 0.9d | メーカー公式/定価 |
 | AirPods Max | official | official_price | ¥84,800 | medium | 9999.0d | メーカー公式/定価 |
-| Nintendo Switch 2 | official | official_price | ¥59,980 | high | 24.9d | メーカー公式/定価 |
+| Nintendo Switch 2 | official | official_price | ¥59,980 | high | 25.9d | メーカー公式/定価 |
 | Nintendo Switch 2 マリオカ | official | official_price | ¥59,980 | medium | 9999.0d | メーカー公式/定価 |
 | PlayStation 5 Pro | official | official_price | ¥137,980 | high | 0.9d | メーカー公式/定価 |
 | PlayStation 5 Digital  | official | official_price | ¥72,980 | medium | 9999.0d | メーカー公式/定価 |
@@ -100,11 +100,11 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 | iPhone 17 Pro Max 256G | sell | buyback_price | ¥191,000 | new_unopened_simfree | 0.1d | 買取一丁目 |
 | iPhone 17 Pro Max 512G | sell | buyback_price | ¥217,000 | new_unopened_simfree | 0.1d | 買取商店 |
 | iPhone 17 Pro Max 512G | sell | buyback_price | ¥217,000 | new_unopened_simfree | 0.1d | 買取一丁目 |
-| Nintendo Switch 2 | sell | buyback_price | ¥51,500 | new_unopened | 0.1d | 買取商店 |
+| Nintendo Switch 2 | sell | buyback_price | ¥51,600 | new_unopened | 0.1d | 買取商店 |
 | iPhone 17 256GB SIMフリー | sell | buyback_price | ¥139,000 | new_unopened_simfree | 0.1d | 買取商店 |
 | AirPods Pro 3 | sell | buyback_price | ¥32,500 | new_unopened | 0.1d | 買取商店 |
 | iPhone Air 256GB SIMフリ | sell | buyback_price | ¥132,000 | new_unopened_simfree | 0.1d | 買取商店 |
-| iPhone Duo 256GB SIMフリ | sell | buyback_price | ¥360,000 | new_unopened_simfree | 0.1d | 買取商店 |
+| iPhone Duo 256GB SIMフリ | sell | buyback_price | ¥365,000 | new_unopened_simfree | 0.1d | 買取商店 |
 | FUJIFILM X100VI | sell | buyback_price | ¥260,000 | new_unopened | 0.1d | 買取商店 |
 | RICOH GR IV | sell | buyback_price | ¥205,000 | new_unopened | 0.1d | 買取商店 |
 | RICOH GR IV HDF | sell | buyback_price | ¥240,000 | new_unopened | 0.1d | 買取商店 |

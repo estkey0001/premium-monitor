@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-02 21:46 JST",
+  "generated_at": "2026-11-03 21:34 JST",
   "ebay_api_configured": false,
   "overseas_source_mode": "manual",
   "summary": {
@@ -294,11 +294,11 @@
       "sell_candidates": 1,
       "min_usable_buy": null,
       "min_usable_buy_source": "",
-      "max_usable_sell": 365000,
+      "max_usable_sell": 368000,
       "max_usable_sell_source": "買取商店",
       "min_usable_buy_identity_verified": false,
       "max_usable_sell_identity_verified": true,
-      "target_buy_price": 364999,
+      "target_buy_price": 367999,
       "gross_gap": null,
       "net_domestic": null,
       "best_reference_net": null,
@@ -571,11 +571,15 @@
       "excluded_route_count": 0,
       "rejection_top5": [
         [
+          "official_stale_over_180d",
+          1
+        ],
+        [
           "stale_over_14d",
           1
         ]
       ],
-      "stale_excluded": 1,
+      "stale_excluded": 2,
       "overseas_stale": 0,
       "needed": [],
       "fresh_overseas_whatif_top5": []

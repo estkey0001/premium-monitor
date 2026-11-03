@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-11-02 21:46 JST",
-  "date": "2026-11-02",
+  "generated_at": "2026-11-03 21:34 JST",
+  "date": "2026-11-03",
   "health_score": {
-    "data_quality": 14.4,
+    "data_quality": 14.3,
     "profit_discovery": 15.0,
     "source_health": 12.6,
     "link_quality": 4.8,
     "freshness": 3.8,
-    "total": 50.6
+    "total": 50.5
   },
   "data_quality": {
     "total_obs": 235,
-    "usable_obs": 75,
-    "stale_count": 145,
-    "stale_rate": 0.617,
+    "usable_obs": 74,
+    "stale_count": 146,
+    "stale_rate": 0.6213,
     "config_reference_count": 30,
     "zero_count": 38,
     "zero_rate": 0.1617,
@@ -24,9 +24,10 @@
     "html_rate": 0.0085
   },
   "profit": {
-    "official_to_buyback_count": 1,
+    "official_to_buyback_count": 2,
     "official_to_buyback_products": [
-      "prod_gr4_hdf"
+      "prod_gr4_hdf",
+      "prod_iphoneduo_256"
     ],
     "official_to_buyback_max_profit": 16200,
     "main_route_count": 0,
@@ -39,10 +40,10 @@
   "sources": {
     "メーカー公式/定価": {
       "success_count": 47,
-      "stale_count": 31,
+      "stale_count": 32,
       "zero_count": 0,
       "item_url_rate": 0.0,
-      "freshness": 0.3404,
+      "freshness": 0.3191,
       "success_rate": 1.0,
       "confidence": {
         "medium": 30,
@@ -338,7 +339,7 @@
     "available": true,
     "stale_rate": {
       "prev": 0.617,
-      "cur": 0.617
+      "cur": 0.6213
     },
     "zero_rate": {
       "prev": 0.1617,
@@ -371,7 +372,7 @@
       "item_url率 48% (<50%)"
     ],
     "info": [
-      "公式→買取の確定した案件 1件 / 最大 +¥16,200"
+      "公式→買取の確定した案件 2件 / 最大 +¥16,200"
     ]
   },
   "improvements_top10": [

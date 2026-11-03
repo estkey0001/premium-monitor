@@ -1,20 +1,20 @@
 # データ品質エンジン（Data Quality Engine）
 
-> 生成: 2026-11-02 21:46 JST / 対象: データ取得・正規化・品質管理のみ（利益/AI/UI/SaaSロジックは不変）
+> 生成: 2026-11-03 21:34 JST / 対象: データ取得・正規化・品質管理のみ（利益/AI/UI/SaaSロジックは不変）
 
-## 総合 Data Quality Score: **69 / 100** — 判定: **CONDITIONAL_GO**
+## 総合 Data Quality Score: **68 / 100** — 判定: **CONDITIONAL_GO**
 
 | 次元 | スコア |
 |------|-------|
-| Freshness 鮮度 | 48 |
+| Freshness 鮮度 | 47 |
 | Completeness 完全性 | 50 |
 | Accuracy 正確性 | 98 |
 | Coverage 網羅 | 100 |
-| Reliability 信頼性 | 43 |
+| Reliability 信頼性 | 42 |
 | Consistency 一貫性 | 100 |
 
 ### 判定理由
-- 総合スコア 69。国内は良好だが海外(EBAY_APP_ID)ギャップが残る
+- 総合スコア 68。国内は良好だが海外(EBAY_APP_ID)ギャップが残る
 - EBAY_APP_ID 未設定 → 海外売却ルートは stale（改善計画①で+25pt見込み）
 
 ## ダッシュボード（現況ビュー）
@@ -24,7 +24,7 @@
 ### カテゴリ別
 | カテゴリ | 総数 | 正常 | ¥0(非対応) | ¥0(実失敗) | stale | 更新成功率 |
 |---|--:|--:|--:|--:|--:|--:|
-| prod | 220 | 82 | 28 | 10 | 100 | 43% |
+| prod | 220 | 81 | 28 | 10 | 101 | 42% |
 
 ## 自動化カバレッジ（透明性）
 - 手段内訳: {'official_concept': 30, 'other': 17, 'auto_scraped': 36, 'manual_curated': 93, 'fetch_failed': 38, 'overseas_history': 6}
@@ -46,7 +46,7 @@
 | 9 | ラクマ | – | 未統合/データなし | | | |
 
 ## Stale 分析
-- scraper_or_site_change: 81
+- scraper_or_site_change: 82
 - api_limit_or_unconfigured: 15
 - manual_not_refreshed: 4
 

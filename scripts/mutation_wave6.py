@@ -26,7 +26,7 @@ M=[
 ("隔離された価格を次回の基準にする",C,'        if _sg.is_quarantined(r) or (r.get("momentum") or {}).get("momentum_quarantined"):','        if False:'),
 ("取得元を並列に動かさない",RC,'n = max(1, min(int(max_workers or len(tasks) or 1), MAX_TASK_THREADS))','n = 1'),
 ("全体の並列の上限を外す",RC,'GLOBAL_CAP = 12 ','GLOBAL_CAP = 1000 '),
-("応募の URL でない（購入の URL・告知の URL）を応募の URL にする",PD,'"official_url": bool(i.get("entry_url")),','"official_url": bool(i.get("entry_url") or i.get("purchase_url") or i.get("source_url")),'),
+("応募の URL でない（購入の URL・告知の URL）を応募の URL にする","src/tcg/action_url.py",'"application_url": application is not None,','"application_url": application is not None or bool(i.get("purchase_url") or i.get("source_url")),'),
 ("不明な取得元の状態を healthy にする",CM,'    return FAILED if not f.get("pages_loaded") else PARSER_DEGRADED','    return HEALTHY'),
 ("台帳を引き継げていない日に前回と比べる",SG,'    comparable = bool(comparable) and prev_obs_of is not None','    comparable = prev_obs_of is not None'),
 ("同じ run の再生成で first_seen を捨てる",C,'comparable=(ledger_state in (LEDGER_RESTORED_FROM_PREVIOUS_RUN, LEDGER_REUSED_WITHIN_RUN)), now=now,','comparable=(ledger_state == LEDGER_RESTORED_FROM_PREVIOUS_RUN), now=now,'),

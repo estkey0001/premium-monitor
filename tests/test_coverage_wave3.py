@@ -167,7 +167,8 @@ def _ev(**k):
 
 def test_event_quality_counts_each_field_and_by_source():
     items = [_ev(), _ev(winner_announcement_date=None, retailer="HOBBY_STATION"),
-             _ev(purchase_start_date=None, entry_url="https://x.example/e"), _ev(status="ENDED")]
+             _ev(purchase_start_date=None, retailer="GEO", source_type="RETAILER_OFFICIAL", source_url="https://geo-online.co.jp/news/9",
+                entry_url="https://draw.geo-online.co.jp/lottery/123", purchase_url="https://geo-online.co.jp/buy/1"), _ev(status="ENDED")]
     r = eq.evaluate(items, NOW)
     q = r["quality"]
     assert q["active_events"] == 3 and q["with_application_start"] == 3 and q["with_winner_announcement"] == 2

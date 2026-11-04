@@ -304,10 +304,10 @@ def test_buyback_prices_are_private_state_and_not_in_the_public_summary(tmp_path
 # ── TCG ──────────────────────────────────────────────────────────────────────────────
 
 def _ev(**k):
-    base = {"status": "OPEN", "event_type": "LOTTERY", "retailer": "CARD_LABO", "product_name": "商品", "product_id": "pid-1",
+    base = {"status": "OPEN", "event_type": "LOTTERY", "retailer": "GEO", "source_type": "RETAILER_OFFICIAL", "product_name": "商品", "product_id": "pid-1",
             "product_match": "exact", "provisional_product": False, "application_start_date": "2026-10-27",
             "application_end_date": "2026-10-31", "winner_announcement_date": "2026-11-01", "purchase_start_date": "2026-11-02",
-            "purchase_end_date": "2026-11-05", "entry_url": "https://shop.example/e/1"}
+            "purchase_end_date": "2026-11-05", "entry_url": "https://draw.geo-online.co.jp/lottery/123", "source_url": "https://geo-online.co.jp/news/123"}
     base.update(k)
     return base
 

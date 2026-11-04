@@ -395,10 +395,10 @@ def test_generic_special_words_are_not_limited_but_official_evidence_is():
 # ── TCG: 応募の URL の区別 ─────────────────────────────────────────────────────────────
 
 def _full(**k):
-    base = {"status": "OPEN", "event_type": "LOTTERY", "retailer": "CARD_LABO", "product_name": "商品", "product_id": "pid-1", "product_match": "exact",
+    base = {"status": "OPEN", "event_type": "LOTTERY", "retailer": "GEO", "source_type": "RETAILER_OFFICIAL", "product_name": "商品", "product_id": "pid-1", "product_match": "exact",
             "application_start": "2026-10-30T09:00:00+09:00", "application_end": "2026-11-02T23:59:00+09:00",
             "winner_announcement_date": "2026-11-04", "purchase_start_date": "2026-11-05", "purchase_end_date": "2026-11-08",
-            "entry_url": "https://shop.example/entry", "source_url": "https://shop.example/news"}
+            "entry_url": "https://draw.geo-online.co.jp/lottery/123", "source_url": "https://geo-online.co.jp/news/123"}
     base.update(k)
     return base
 

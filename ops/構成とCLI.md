@@ -257,6 +257,22 @@ python3 scripts/operator_health_alert.py --dry-run  # 書かずに注記だけ�
 - 変異テスト: `python3 scripts/mutation_wave4.py`（Wave 2・3 も同様）
 - 設計の全体と残りは `internal/audits/COVERAGE_WAVE4.md`
 
+## Coverage Wave 7a（TCG の応募先と完成度）
+
+- 応募先の分類: `src/tcg/action_url.py`。**告知の URL（`source_url`）だけでは応募できると扱わない**。応募の URL（`application_url`）は、**公式の情報元（`source_type`）で、取得元の公式ドメイン（登録簿の `official_url` / `lottery_url` のホスト。サブドメインは可。告知の一覧 `news_url` のホストは含めない）にある、出来事固有の https の `entry_url`** だけ。曖昧なら `application_url = null`・actionable = false
+  - 検証は許可リスト方式の `safe_https`（https 以外・空白・制御文字・Unicode の不可視文字・バックスラッシュ・`@`・443 以外のポート・ASCII 以外や不正な形式のホスト・IP リテラル・punycode・`%2e` `%2f` などの符号化・ルートより上の `..` を拒否。文字を削って通さない）。正規化: ホストの小文字・既定ポート・dot segment・符号化（RFC 3986）・fragment（パスの大文字小文字は変えない。連続スラッシュは畳まず拒否する）
+  - 告知ページ・一覧・トップは、query・大文字小文字・`..`・`index.html` を足しても応募の URL にしない（`_ident` の比較）。お知らせ・キャンペーン系のパスと、出来事固有でない URL（`detection_delay.specific_url`）も不可
+  - 応募の URL として認めるパスは、取得元ごとの明示の許可表 `APPLICATION_PATH_RULES`（今は GEO の `draw.geo-online.co.jp/lottery/<ASCII の数字>` だけ。**形は暫定で、人が実際の応募ページで確認していない**）。ホストは完全一致・query は捨てる。公式ドメインというだけでは通らない（商品ページ・記事・店舗ページ）。会員ログインが必要な福福トレカ・形を確認していないポケモンセンターなどは表に入れない。新しい取得元は、人が公式ページを確認し、取得日つきで表に足す。取得元は大文字・空白をそろえて引く。告知の URL が、あるのに安全に読めない（http・大文字のスキーム・ポート・全角など）ときは、同じページかを判定できないので応募の URL を確定しない
+  - 外部フォーム（LivePocket など）は `EXTERNAL_FORM_RULES`（取得元 → (許可ホスト, パスの形)。今は `livepocket.jp/e/<id>`）に明示した組み合わせだけ `external_entry_url`（非公開）にする。`application_url` にはしない。別の取得元のホストの横流用・一般のフォーム・`/login` や主催者ページは認めない。LivePocket は誰でも主催者になれるので、同じホストの別主催者のフォームは URL だけでは区別できない（運営者向けの件数にとどめ、行動の通知には使わない）
+  - 検証の追加: `;`（パスのパラメータ）・連続スラッシュ・query / path に埋め込んだ別の URL・`%25`（二重符号化）・非 ASCII を拒否。符号化は RFC 3986 の正規化（`%61` と `a` は同じ）。告知との同一性はホストの `www.` の有無も無視する
+  - 「行動の URL N件」（`tcg_event_quality.with_action_url`）は、検証した応募の URL だけを数える（購入の URL・告知の URL は含めない）。旧来の CSV 経路（`scripts/update_alerts.py`。取得元の公式ドメインの表を持たない）は、URL を `safe_https` で検証し（読めなければ空。query は商品・検索語を特定するので残す。fragment は捨てる）、告知と別の応募フォームを「応募先の候補を確認（公式ドメイン未照合）」と断定せずに示す（query は商品・検索語を特定するので残す。`//` を含む query は使わない）。フォームが読めない・告知と同じ URL なら告知ページとして「告知ページを確認」、どちらも読めなければ URL もラベルも空。`tcg_external_entry_form` は「検証済みフォームの数」ではなく「応募の経路が外部フォームの件数」
+  - 告知の URL と同じ URL は、告知が応募も兼ねると確認できた取得元（`SELF_APPLICATION_SOURCES`。今は空）だけ応募の URL にできる。プレミアムバンダイの商品ページ（`entry_url` = 告知）は未確認なので入れていない（人が応募ページか確認してから）
+- 応募の経路: WEB_OFFICIAL_FORM / EXTERNAL_FORM / APP / SNS / MEMBER_LOGIN / STORE_COUNTER / UNKNOWN。取得元ごとの経路は登録簿の取得日つきの調査（`SOURCE_CHANNEL`）。調べていない取得元は UNKNOWN（推測しない）。要件（会員・アプリ・購入履歴・本人確認・店頭受取・SNS）は明記があるものだけ
+- 完成度（内部向け）: complete（7 項目と応募の URL がそろい、日程の矛盾・商品の曖昧さが無い）/ partial / review_required（日程の矛盾・商品の同一性が曖昧）。actionable は complete だけ。顧客向けの確定表現には使わない
+- 定価との結び付き: 商品 ID の完全一致 + TCG の種類の一致 + 仮の商品でない。名前の近さでは結ばない（`tcg_msrp_link_rejected` に食い違いの件数）
+- 公開の集計は件数だけ（`tcg_profit_dense`）。個別の URL・店舗・要件は `.private`。変異テスト: `python3 scripts/mutation_wave7a.py`（追跡ファイルを書き換える。他のセッションが編集していないときだけ）。deploy-check #878
+- **実データの制約**: 受付中の主な取得元（カードラボ）の応募は SNS のフォロー＆リポストで、公式ドメインの応募ページが無い。応募の URL が確認できるイベントは、手動で公式ページを確認して `entry_url` を登録したものだけ
+
 ## Coverage Wave 6（台帳をまたぐ信号と TCG 収集の高速化）
 
 - 台帳: `RESEARCH_LEDGER_KEY`（32 文字以上）を設定すると、暗号化した台帳を次の run に引き継ぐ。**設定はユーザーが行う**: `gh secret set RESEARCH_LEDGER_KEY`（値はチャット・ファイルに残さない）。設定後の 2 回目の run から、買取の勢い・first_seen・検知の遅れが実測できる

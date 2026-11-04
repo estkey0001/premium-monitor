@@ -4163,6 +4163,7 @@ def check() -> list[dict]:
     results.extend(_check_coverage_wave4())
     results.extend(_check_coverage_wave5())
     results.extend(_check_coverage_wave6())
+    results.extend(_check_coverage_wave7a())
 
     # ══════════════════════════════════════════════════════════════════
     # #820-#825: データの正確さ・鮮度の偽装（Phase 0）
@@ -6832,6 +6833,82 @@ def _check_coverage_wave6(root: Path | None = None) -> list[dict]:
         bad.append(f"検査に失敗: {type(exc).__name__}: {exc}")
     return [{"level": "ok" if not bad else "error", "check": "coverage_wave6_persistent_signals_and_fast_collection",
              "message": "#877 買取の勢い・first_seen は前回の台帳を引き継げた日だけ・曖昧な語で限定にしない・TCG の同一 run のキャッシュと並列（同じドメインは 1 つずつ・上限あり）・タイムアウト・個別は非公開"
+                        + ("" if not bad else f" ← {bad[:4]}")}]
+
+
+def _check_coverage_wave7a(root: Path | None = None) -> list[dict]:
+    """Coverage Wave 7a（#878）: TCG の告知の URL だけでは応募できると扱わない・応募の URL は取得元の公式ドメインの https だけ
+    （外部フォーム・似たドメイン・http・認証情報つきは認めない）・日程の矛盾は review_required・定価との結び付きは商品 ID の完全一致と TCG の種類の一致・
+    応募先の分類は通信も通知もしない・個別の URL は公開の集計に出ない。"""
+    from datetime import datetime as _dt78
+    from datetime import timedelta as _td78
+    from datetime import timezone as _tz78
+    root = root or Path(__file__).resolve().parent.parent
+    bad = []
+    try:
+        from src.research import candidates as rc
+        from src.tcg import action_url as au
+        from src.tcg import profit_dense as pdn
+        now = _dt78(2026, 10, 30, 12, 0, tzinfo=_tz78(_td78(hours=9)))
+        ev = {"status": "OPEN", "event_type": "LOTTERY", "retailer": "GEO", "source_type": "RETAILER_OFFICIAL", "tcg": "POKEMON", "product_id": "p1", "product_match": "exact",
+              "application_start": "2026-10-30T09:00:00+09:00", "application_end": "2026-11-02T23:59:00+09:00",
+              "winner_announcement_date": "2026-11-04", "purchase_start_date": "2026-11-05", "purchase_end_date": "2026-11-08",
+              "entry_url": "https://draw.geo-online.co.jp/lottery/123", "source_url": "https://geo-online.co.jp/news/123"}
+        if not au.classify(ev, now)["actionable_event"]:
+            bad.append("公式ドメインの応募ページがある完成したイベントを actionable にしていない")
+        if au.classify({**ev, "entry_url": None}, now)["actionable_event"]:
+            bad.append("告知の URL だけのイベントを actionable にしている")
+        for u in ("https://livepocket.jp/e/1", "http://draw.geo-online.co.jp/lottery/123", "https://evil-geo-online.co.jp/lottery/123",
+                  "https://draw.geo-online.co.jp.evil.example/lottery/123", "https://user:pw@draw.geo-online.co.jp/lottery/123",
+                  "https://evil.com\\.geo-online.co.jp/lottery/123", "https://draw.geo-online.co.jp:8443/lottery/123",
+                  "https://draw.geo-online.co.jp/lottery/123;x=1", "https://draw.geo-online.co.jp/%2e%2e/lottery/123",
+                  "https://draw.geo-online.co.jp/lottery/123\u200b", "https://127.0.0.1/lottery/123",
+                  "https://draw.geo-online.co.jp/product/1", "https://draw.geo-online.co.jp/lottery/123?u=https://evil.example/x",
+                  "https://geo-online.co.jp/news/123", "https://geo-online.co.jp/news/123?entry=1", "https://www.geo-online.co.jp/NEWS/123/index.html",
+                  "https://geo-online.co.jp/a/../news/123", "https://geo-online.co.jp/news/%31%32%33"):
+            if au.classify({**ev, "entry_url": u}, now)["application_url"] is not None:
+                bad.append(f"公式ドメインでない応募の URL を認めている: {u}")
+        for src in ("http://geo-online.co.jp/news/123", "HTTPS://geo-online.co.jp/news/123", "https://geo-online.co.jp/news/123\u200b"):
+            if au.classify({**ev, "source_url": src}, now)["application_url"] is not None:
+                bad.append(f"告知の URL が安全に読めないのに応募の URL を確定している: {src}")
+        got = au.classify({**ev, "entry_url": "https://draw.geo-online.co.jp/lottery/123?next=//evil.example"}, now)["application_url"]
+        if got is not None and "?" in got:
+            bad.append("応募の URL に query を残している")
+        if au.classify({**ev, "entry_url": "https://draw.geo-online.co.jp/lottery/\uff11\uff12\uff13"}, now)["application_url"] is not None:
+            bad.append("全角数字の URL を応募の URL にしている")
+        if set(au.APPLICATION_PATH_RULES) - {"GEO"}:
+            bad.append("人が応募ページを確認していない取得元が応募の許可表に入っている（GEO 以外）")
+        hb = {**ev, "retailer": "HOBBY_STATION", "source_url": "https://www.hbst.net/?p=1"}
+        if au.classify({**hb, "entry_url": "https://livepocket.jp/e/abc"}, now)["external_entry_url"] is None:
+            bad.append("許可した組み合わせ（取得元 + フォームのホスト）の外部フォームを認めていない")
+        for u in ("https://forms.gle/abc", "https://docs.google.com/forms/d/abc", "https://evil.com/f/abc"):
+            if au.classify({**hb, "entry_url": u}, now)["external_entry_url"] is not None:
+                bad.append(f"許可していない外部フォームを認めている: {u}")
+        if au.classify({**ev, "entry_url": "https://livepocket.jp/e/abc"}, now)["external_entry_url"] is not None:
+            bad.append("別の取得元の外部フォームのホストを使い回している")
+        if au.classify({**hb, "entry_url": "https://livepocket.jp/e/abc"}, now)["application_url"] is not None:
+            bad.append("外部フォームを応募の URL にしている")
+        if au.classify({**ev, "application_start": "2026-11-03T09:00:00+09:00"}, now)["quality"] != au.Q_REVIEW:
+            bad.append("日程の矛盾を review_required にしていない")
+        if au.classify({**ev, "product_match": "partial"}, now)["actionable_event"]:
+            bad.append("商品の一致が exact でないイベントを actionable にしている")
+        msrp = {"verified": [{"product_id": "p1", "tcg": "POKEMON", "retail_price": 5500, "source": "official_product_api"}]}
+        if pdn.evaluate([{**ev, "tcg": "ONE_PIECE"}], msrp, now)["counts"]["tcg_msrp_linked_active"]:
+            bad.append("TCG の種類が違う定価に結んでいる")
+        if pdn.evaluate([{**ev, "product_id": None, "product_match": "none"}], msrp, now)["counts"]["tcg_msrp_linked_active"]:
+            bad.append("商品 ID なし（名前だけ）で定価に結んでいる")
+        counts = pdn.evaluate([ev], msrp, now)["counts"]
+        if not all(isinstance(v, int) for v in counts.values()) or not set(counts) <= set(rc.COVERAGE_KEYS["tcg_profit_dense"]):
+            bad.append("公開の集計が件数だけでない・公開してよい項目の一覧に無い")
+        src = (root / "src/tcg/action_url.py").read_text(encoding="utf-8")
+        for banned in ("requests", "urllib.request", "httpx", "playwright", "selenium", "notif"):
+            if banned in src:
+                bad.append(f"応募先の分類が通信・通知の経路を持っている: {banned}")
+    except Exception as exc:  # noqa: BLE001
+        bad.append(f"検査に失敗: {type(exc).__name__}: {exc}")
+    return [{"level": "ok" if not bad else "error", "check": "coverage_wave7a_tcg_application_url",
+             "message": "#878 TCG の告知の URL だけでは応募できると扱わない・応募の URL は取得元の公式ドメインの https だけ・日程の矛盾は review_required・"
+                        "定価は商品 ID の完全一致と TCG の種類の一致だけ・応募先の分類は通信も通知もしない・個別は公開しない"
                         + ("" if not bad else f" ← {bad[:4]}")}]
 
 

@@ -83,7 +83,8 @@ def evaluate(items: list[dict], now: datetime) -> dict:
         en, _ = _pick(i, "application_end", "application_end_date", now, end_of_day=True)
         win = i.get("winner_announcement_at") or i.get("winner_announcement_date")
         pw = bool((i.get("purchase_start") or i.get("purchase_start_date")) and (i.get("purchase_end") or i.get("purchase_end_date")))
-        url = bool(i.get("entry_url") or i.get("purchase_url"))
+        from src.tcg import action_url as _au                       # 遅延 import（action_url が event_quality を使うため）
+        url = _au.classify(i, now)["application_url"] is not None   # 行動の URL = 検証した応募の URL だけ（購入の URL・告知の URL は含めない）
         flags = {"with_application_start": st is not None, "with_application_end": en is not None,
                  "with_winner_announcement": bool(win), "with_purchase_window": pw, "with_action_url": url}
         for k, v in flags.items():

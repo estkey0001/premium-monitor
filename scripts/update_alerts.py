@@ -53,6 +53,29 @@ ALERT_COLUMNS = [
 ]
 
 
+def _safe_link(value) -> str:
+    """CSV の URL を安全に読めるものだけ返す（https・非 ASCII や不可視文字・IP・埋め込み URL・query の `//` なし。fragment は捨てる）。読めなければ空。
+    query は商品や検索語を特定するので残す（応募の URL だけが query を捨てる）。"""
+    from src.tcg.action_url import safe_https
+    r = safe_https(value)
+    return r[1] if r else ""
+
+
+def _entry_form_url(ev: dict) -> str:
+    """CSV の抽選イベントの応募フォームの URL（安全に読めるものだけ。読めなければ空）。公式ドメインとの照合は、この旧経路ではしない（Wave 7a）。"""
+    return _safe_link(ev.get("entry_form_url"))
+
+
+def _lottery_links(ev: dict) -> tuple[str, str, str]:
+    """(product_url, action_url, action_label)。旧 CSV 経路は取得元の公式ドメインの表を持たないので、応募フォームだと断定しない:
+    告知と別の応募フォームの URL が読めても「公式ドメイン未照合」と明示し、告知と同じ URL・読めない URL は告知ページとして扱う。
+    どちらも読めなければ URL もラベルも空（Wave 7a）。"""
+    ann, form = _safe_link(ev.get("url")), _entry_form_url(ev)
+    if form and form.rstrip("/") != ann.rstrip("/"):
+        return ann or form, form, "応募先の候補を確認（公式ドメイン未照合）"
+    return ann, ann, ("告知ページを確認" if ann else "")
+
+
 def _now_jst() -> datetime:
     """現在のJST時刻を返す。"""
     return datetime.now(tz=JST)
@@ -98,7 +121,7 @@ def _generate_lottery_alerts(now: datetime) -> list[dict]:
         brand = ev.get("brand", "")
         entry_start = ev.get("entry_start_at", "")
         entry_end = ev.get("entry_end_at", "")
-        url = ev.get("url", "") or ev.get("entry_form_url", "")
+        product_url, action_url, action_label = _lottery_links(ev)
 
         if not product_name:
             continue
@@ -130,9 +153,9 @@ def _generate_lottery_alerts(now: datetime) -> list[dict]:
                     severity="high" if hours_left <= 24 else "medium",
                     title=f"抽選締め切り間近: {product_name}",
                     message=f"受付終了: {entry_end[:10]} ({int(hours_left)}時間後)",
-                    product_url=url,
-                    action_url=ev.get("entry_form_url", "") or url,
-                    action_label="抽選フォームを確認",
+                    product_url=product_url,
+                    action_url=action_url,
+                    action_label=action_label,
                     expires_at=entry_end[:16] if entry_end else "",
                     source="lottery_events_csv",
                 ))
@@ -146,9 +169,9 @@ def _generate_lottery_alerts(now: datetime) -> list[dict]:
                 severity="high",
                 title=f"抽選開始: {product_name}",
                 message=f"受付開始: {entry_start[:10]}",
-                product_url=url,
-                action_url=ev.get("entry_form_url", "") or url,
-                action_label="抽選フォームを確認",
+                product_url=product_url,
+                action_url=action_url,
+                action_label=action_label,
                 expires_at=entry_end[:16] if entry_end else "",
                 source="lottery_events_csv",
             ))

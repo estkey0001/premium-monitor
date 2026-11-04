@@ -1052,7 +1052,7 @@ def _research(v: dict) -> str:
         f'<dt>TCG の受付中イベントの質</dt><dd>受付中 {_n((r.get("tcg_event_quality") or {}).get("active_events"))}件のうち、応募開始 '
         f'{_n((r.get("tcg_event_quality") or {}).get("with_application_start"))}・応募終了 {_n((r.get("tcg_event_quality") or {}).get("with_application_end"))}・'
         f'当選発表 {_n((r.get("tcg_event_quality") or {}).get("with_winner_announcement"))}・購入期間 {_n((r.get("tcg_event_quality") or {}).get("with_purchase_window"))}・'
-        f'行動の URL {_n((r.get("tcg_event_quality") or {}).get("with_action_url"))}件が読めている'
+        f'検証した応募の URL {_n((r.get("tcg_event_quality") or {}).get("with_action_url"))}件'
         f'（優先: 期限が近い {_n((r.get("tcg_priority") or {}).get("DEADLINE_SOON"))}・受付中の抽選 {_n((r.get("tcg_priority") or {}).get("ACTIVE_LOTTERY"))}・'
         f'これから {_n((r.get("tcg_priority") or {}).get("UPCOMING"))}）</dd>'
         f'<dt>検知の許容（目安。高速化は未実装）</dt><dd>応募の長さの中央値 {_n((r.get("tcg_fast_lane") or {}).get("median_application_duration_hours"))}時間・'

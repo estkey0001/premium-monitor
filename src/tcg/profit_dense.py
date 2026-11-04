@@ -16,10 +16,10 @@ from __future__ import annotations
 from datetime import datetime
 
 from src.research import signals as sg
+from src.tcg import action_url as au
 from src.tcg import event_quality as eq
 
 ACTIVE = eq.ACTIVE_STATUSES
-COMPLETENESS_FIELDS = ("product", "retailer", "application_start", "application_end", "winner_announcement", "purchase_window", "official_url")
 HIGH_DENSITY_POINTS = 12
 SIM_INTERVALS = (24, 12, 6, 3)
 SIM_PHASES = 12                       # 見に行く時刻の位相（間隔を 12 等分した開始位置）。偏らないように全位相で数える
@@ -34,21 +34,10 @@ def _msrp_index(msrp: dict | None) -> dict:
 
 
 def completeness(i: dict, now: datetime) -> dict:
-    st, _ = eq._pick(i, "application_start", "application_start_date", now)
-    en, _ = eq._pick(i, "application_end", "application_end_date", now, end_of_day=True)
-    flags = {
-        "product": bool(i.get("product_id")) and str(i.get("product_match") or "") == "exact" and not i.get("provisional_product"),
-        "retailer": bool(i.get("retailer")),
-        "application_start": st is not None, "application_end": en is not None,
-        "winner_announcement": bool(i.get("winner_announcement_at") or i.get("winner_announcement_date")),
-        "purchase_window": bool((i.get("purchase_start") or i.get("purchase_start_date")) and (i.get("purchase_end") or i.get("purchase_end_date"))),
-        # 応募の URL（公式で確認できた entry_url だけ。購入の URL（当選後の購入）・告知の URL は応募の URL ではない）
-        "official_url": bool(i.get("entry_url")),
-    }
-    n = sum(flags.values())
-    # 告知の URL（情報元）だけで応募の URL が確認できないイベントは、告知を見に行くだけ（actionable にしない）
-    return {"completeness": n, "missing": [k for k in COMPLETENESS_FIELDS if not flags[k]], "actionable_event": n == len(COMPLETENESS_FIELDS),
-            "application_url_confirmed": flags["official_url"], "announcement_url_only": (not flags["official_url"]) and bool(i.get("source_url"))}
+    """完成度。応募の URL の判定は `action_url.classify` に一本化（公式ドメインの https の entry_url だけ。外部フォーム・告知の URL は応募の URL ではない）。"""
+    c = au.classify(i, now)
+    return {**c, "application_url_confirmed": c["application_url"] is not None,
+            "announcement_url_only": c["application_url"] is None and c["announcement_url"] is not None}
 
 
 def evaluate(items: list[dict], msrp: dict | None, now: datetime) -> dict:
@@ -57,7 +46,11 @@ def evaluate(items: list[dict], msrp: dict | None, now: datetime) -> dict:
     idx = _msrp_index(msrp)
     rows, counts = [], {"active_tcg_priority": 0, "tcg_new_release": 0, "tcg_limited": 0, "tcg_supply_pressure": 0,
                         "tcg_msrp_linked_active": 0, "tcg_actionable_events": 0, "tcg_incomplete_active": 0,
-                        "tcg_stock_unknown_not_counted": 0, "tcg_application_url_confirmed": 0, "tcg_announcement_url_only": 0}
+                        "tcg_stock_unknown_not_counted": 0, "tcg_application_url_confirmed": 0, "tcg_announcement_url_only": 0,
+                        "tcg_announcement_url": 0, "tcg_external_entry_form": 0, "tcg_channel_sns": 0, "tcg_channel_app": 0,
+                        "tcg_channel_member_login": 0, "tcg_channel_unknown": 0, "tcg_requirements_known": 0,
+                        "tcg_quality_complete": 0, "tcg_quality_partial": 0, "tcg_quality_review_required": 0,
+                        "tcg_msrp_link_rejected": 0, "tcg_channel_ready": 0}
     for i in items:
         status = str(i.get("status") or "")
         if status not in ACTIVE:
@@ -66,7 +59,10 @@ def evaluate(items: list[dict], msrp: dict | None, now: datetime) -> dict:
         if _end is not None and _end < now:
             continue                                        # 状態の文字列が受付中でも、応募の終了が過ぎたイベントは対象にしない
         pid = str(i.get("product_id") or "")
-        m = idx.get(pid) if pid and str(i.get("product_match") or "") == "exact" else None
+        m = idx.get(pid) if pid and str(i.get("product_match") or "") == "exact" and not i.get("provisional_product") else None
+        if m is not None and str(m.get("tcg") or "") and str(i.get("tcg") or "") and str(m.get("tcg")) != str(i.get("tcg")):
+            m = None                                        # 商品 ID が同じでも TCG の種類が違えば結ばない（同一性の食い違い）
+            counts["tcg_msrp_link_rejected"] += 1
         rel = sg.release_signal((m or {}).get("release_date"), now)
         lim = sg.limited_signal(official_name=(m or {}).get("name", ""), official_url=(m or {}).get("official_url", ""),
                                 official=bool(m and m.get("source") == "official_product_api"))
@@ -82,7 +78,7 @@ def evaluate(items: list[dict], msrp: dict | None, now: datetime) -> dict:
         c = completeness(i, now)
         rows.append({"retailer": str(i.get("retailer") or ""), "status": status, "priority": prio, "signal_points": pts,
                      "release": rel, "limited": lim, "supply_signals": sup, "msrp_linked": m is not None,
-                     "msrp_price": (m or {}).get("retail_price"), **c})
+                     "msrp_price": (m or {}).get("retail_price"), "msrp_link_basis": "product_id_exact" if m is not None else None, **c})
         # 高密度 = 受付中であることに加え、需要か逼迫の根拠がある（発売直後・限定・短い応募期間・再販・期限が近い・定価に結べた）。
         # 「抽選が開いている」だけ（二重の加点）では数えない
         dense = (rel["release_state"] in (sg.REL_NEW, sg.REL_RECENT) or lim["limited"] or m is not None
@@ -96,6 +92,15 @@ def evaluate(items: list[dict], msrp: dict | None, now: datetime) -> dict:
         counts["tcg_incomplete_active"] += int(not c["actionable_event"])
         counts["tcg_application_url_confirmed"] += int(c["application_url_confirmed"])
         counts["tcg_announcement_url_only"] += int(c["announcement_url_only"])
+        counts["tcg_announcement_url"] += int(c["announcement_url"] is not None)
+        counts["tcg_external_entry_form"] += int(c["channel"] == au.CH_EXTERNAL_FORM)
+        counts["tcg_channel_sns"] += int(c["channel"] == au.CH_SNS)
+        counts["tcg_channel_app"] += int(c["channel"] == au.CH_APP)
+        counts["tcg_channel_member_login"] += int(c["channel"] == au.CH_MEMBER_LOGIN)
+        counts["tcg_channel_unknown"] += int(c["channel"] == au.CH_UNKNOWN)
+        counts["tcg_channel_ready"] += int(c["channel_ready"])
+        counts["tcg_requirements_known"] += int(bool(c["requirements"]))
+        counts["tcg_quality_" + c["quality"]] += 1
     rows.sort(key=lambda r: (-r["signal_points"], r["priority"], r["retailer"]))
     return {"counts": counts, "events": rows}
 

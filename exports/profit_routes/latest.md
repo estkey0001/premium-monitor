@@ -1,6 +1,6 @@
 # Pro 利益ルート（normalized_price_observations 由来・検証済み）
 
-生成: 2026-11-03 21:34 JST
+生成: 2026-11-04 21:37 JST
 
 - **main 利益ルート: 0件**（route_confidence high/medium のみ）
 - 参考ルート(海外sold stale・要fresh化): 0件
@@ -97,8 +97,8 @@
 - 除外理由TOP5: [('stale_over_14d', 2)]
 
 ### AirPods Pro 3
-- buy候補 0 / sell候補 1 / stale除外 2 / 海外sold stale 0
-- 除外理由TOP5: [('official_stale_over_180d', 1), ('stale_over_14d', 1)]
+- buy候補 0 / sell候補 1 / stale除外 1 / 海外sold stale 0
+- 除外理由TOP5: [('stale_over_14d', 1)]
 
 ### AirPods Max
 - buy候補 0 / sell候補 0 / stale除外 2 / 海外sold stale 0

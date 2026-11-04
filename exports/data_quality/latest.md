@@ -1,20 +1,20 @@
 # データ品質エンジン（Data Quality Engine）
 
-> 生成: 2026-11-03 21:34 JST / 対象: データ取得・正規化・品質管理のみ（利益/AI/UI/SaaSロジックは不変）
+> 生成: 2026-11-04 21:37 JST / 対象: データ取得・正規化・品質管理のみ（利益/AI/UI/SaaSロジックは不変）
 
-## 総合 Data Quality Score: **68 / 100** — 判定: **CONDITIONAL_GO**
+## 総合 Data Quality Score: **69 / 100** — 判定: **CONDITIONAL_GO**
 
 | 次元 | スコア |
 |------|-------|
-| Freshness 鮮度 | 47 |
+| Freshness 鮮度 | 48 |
 | Completeness 完全性 | 50 |
 | Accuracy 正確性 | 98 |
 | Coverage 網羅 | 100 |
-| Reliability 信頼性 | 42 |
+| Reliability 信頼性 | 43 |
 | Consistency 一貫性 | 100 |
 
 ### 判定理由
-- 総合スコア 68。国内は良好だが海外(EBAY_APP_ID)ギャップが残る
+- 総合スコア 69。国内は良好だが海外(EBAY_APP_ID)ギャップが残る
 - EBAY_APP_ID 未設定 → 海外売却ルートは stale（改善計画①で+25pt見込み）
 
 ## ダッシュボード（現況ビュー）
@@ -24,7 +24,7 @@
 ### カテゴリ別
 | カテゴリ | 総数 | 正常 | ¥0(非対応) | ¥0(実失敗) | stale | 更新成功率 |
 |---|--:|--:|--:|--:|--:|--:|
-| prod | 220 | 81 | 28 | 10 | 101 | 42% |
+| prod | 220 | 82 | 28 | 10 | 100 | 43% |
 
 ## 自動化カバレッジ（透明性）
 - 手段内訳: {'official_concept': 30, 'other': 17, 'auto_scraped': 36, 'manual_curated': 93, 'fetch_failed': 38, 'overseas_history': 6}
@@ -35,7 +35,7 @@
 ## ソース品質ランキング（100点）
 | # | ソース | スコア | 成功率 | 鮮度 | 更新頻度 | 安定性 |
 |--:|---|--:|--:|--:|--:|--:|
-| 1 | フジヤカメラ | 86 | 94% | 94% | 1.39 | 0.83 |
+| 1 | フジヤカメラ | 85 | 94% | 94% | 1.39 | 0.83 |
 | 2 | マップカメラ | 8 | 0% | 0% | 1.5 | 0.00 |
 | 3 | eBay | 5 | 0% | 0% | 1.0 | 0.00 |
 | 4 | Mercari | 5 | 0% | 0% | 1.0 | 0.00 |
@@ -46,7 +46,7 @@
 | 9 | ラクマ | – | 未統合/データなし | | | |
 
 ## Stale 分析
-- scraper_or_site_change: 82
+- scraper_or_site_change: 81
 - api_limit_or_unconfigured: 15
 - manual_not_refreshed: 4
 

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-03T21:18:44+09:00",
+  "generated_at": "2026-11-04T21:21:30+09:00",
   "apple": {
     "source": "apple_jp_official",
     "list_status": "ok",
@@ -12,13 +12,13 @@
       "iphone-duo"
     ],
     "checked": [
-      "iphone-air",
-      "iphone-duo"
+      "iphone-16",
+      "iphone-17"
     ],
     "errors": {},
-    "unknown_parts": 14,
-    "matched": 2,
-    "pending": 5,
+    "unknown_parts": 10,
+    "matched": 1,
+    "pending": 2,
     "requests": 3,
     "cutoff": "",
     "saved": true
@@ -32,10 +32,10 @@
     },
     "inputs_stale": [],
     "review_required": 2,
-    "matched_events": 40,
+    "matched_events": 31,
     "release": 4,
     "by_kind": {
-      "LOTTERY": 41,
+      "LOTTERY": 32,
       "PREORDER": 0,
       "FIRST_COME": 0,
       "RESTOCK": 1,
@@ -46,7 +46,7 @@
       "configured": 22,
       "implemented": 11,
       "unimplemented": 11,
-      "blocked": 4,
+      "blocked": 5,
       "robots_unreachable": 4,
       "unreachable": 4,
       "table": [
@@ -54,9 +54,9 @@
           "source_id": "POKEMON_CENTER_ONLINE",
           "retailer": "ポケモンセンターオンライン",
           "adapter": "pco_lottery",
-          "state": "NO_ACTIVE_LOTTERY",
-          "health": "HEALTHY",
-          "blocked": false,
+          "state": "SOURCE_BLOCKED",
+          "health": "OK_NO_EVENTS",
+          "blocked": true,
           "robots": null,
           "unreachable": false
         },
@@ -291,9 +291,9 @@
     "unknown_official_products": 62,
     "apple_candidates": 17,
     "tcg_products": 20,
-    "event_candidates": 88,
+    "event_candidates": 91,
     "review_required_announcements": 3,
-    "matched_events": 84,
+    "matched_events": 87,
     "stale_events": 1,
     "approved_events": 0,
     "registered_events": 0
@@ -302,7 +302,7 @@
     "configured": 22,
     "implemented": 11,
     "unimplemented": 11,
-    "blocked": 4,
+    "blocked": 5,
     "robots_unreachable": 4,
     "unreachable": 4,
     "table": [
@@ -310,9 +310,9 @@
         "source_id": "POKEMON_CENTER_ONLINE",
         "retailer": "ポケモンセンターオンライン",
         "adapter": "pco_lottery",
-        "state": "NO_ACTIVE_LOTTERY",
-        "health": "HEALTHY",
-        "blocked": false,
+        "state": "SOURCE_BLOCKED",
+        "health": "OK_NO_EVENTS",
+        "blocked": true,
         "robots": null,
         "unreachable": false
       },

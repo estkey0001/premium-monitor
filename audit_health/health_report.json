@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-04 21:37 JST",
-  "date": "2026-11-04",
+  "generated_at": "2026-11-05 21:37 JST",
+  "date": "2026-11-05",
   "health_score": {
     "data_quality": 14.4,
     "profit_discovery": 15.0,
@@ -338,7 +338,7 @@
   "diff_vs_prev": {
     "available": true,
     "stale_rate": {
-      "prev": 0.6213,
+      "prev": 0.617,
       "cur": 0.617
     },
     "zero_rate": {

@@ -896,6 +896,8 @@ PRIVATE_KEYS = frozenset({
     "retail_campaign_price", "retail_points", "retail_cashback", "retail_conditions", "retail_price_basis", "retail_alternatives",
     "spread_if_points_counted", "route_type", "identity_status", "adapter_stats", "api_sources", "triage", "queue_rank", "lookup_status",
     "rank", "rank_score", "retail_price_hint", "lookups", "tcg_events", "quality_by_source",
+    # 運営者向けの作業キュー（Wave 7b）。個別のキュー（商品・価格・順位・次の行動・理由）は非公開。公開してよいのは件数だけ
+    "operator_queue", "queue", "next_action", "next_actions", "missing_evidence", "score_parts", "score",
     # 利益が出やすい市場のシグナル（Wave 5）の個別の項目
     "release", "release_date", "limited_signal", "supply_signals", "buyback_signals", "signal_points", "signal_reasons",
     "retail_unavailable_sources", "days_since_release", "tcg_priority_events", "buyback_prices", "msrp_linked", "msrp_price",
@@ -939,6 +941,13 @@ COVERAGE_KEYS = {
                          "tcg_announcement_url", "tcg_external_entry_form", "tcg_channel_sns", "tcg_channel_app",
                          "tcg_channel_member_login", "tcg_channel_unknown", "tcg_requirements_known", "tcg_quality_complete",
                          "tcg_quality_partial", "tcg_quality_review_required", "tcg_msrp_link_rejected", "tcg_channel_ready"),
+    "operator_queue_counts": ("queue_build_failed", "queue_count", "urgent_count", "high_count", "medium_count", "low_count", "candidates_considered", "urgent_all", "high_all",
+                       "medium_all", "low_all", "stale_demoted", "positive_spread_not_confirmed", "quarantined_in_queue", "tcg_queue_count",
+                       "tcg_deadline_boosted", "tcg_missing_application_url", "tcg_missing_identity", "tcg_missing_msrp"),
+    "operator_queue_next_actions": ("next_VERIFY_OFFICIAL_PRICE", "next_VERIFY_RETAIL_PRICE", "next_VERIFY_BUYBACK", "next_VERIFY_SHIPPING",
+                                    "next_VERIFY_STOCK", "next_VERIFY_IDENTITY", "next_FIND_CORROBORATING_SOURCE", "next_REGISTER_CANONICAL_PRODUCT",
+                                    "next_WAIT_FOR_FRESH_PRICE", "next_VERIFY_APPLICATION_URL", "next_VERIFY_PRODUCT_IDENTITY", "next_VERIFY_MSRP",
+                                    "next_VERIFY_DEADLINE", "next_VERIFY_ELIGIBILITY"),
     "tcg_detection_delay": ("events_active", "baseline_events", "new_after_baseline", "measured", "unknown_published_at",
                             "detected_before_start", "median_delay_hours", "max_delay_hours", "comparable", "source_gap_excluded",
                             "delay_values_withheld", "identity_ambiguous", "stale_input", "source_not_observed_this_run", "previously_observable_excluded"),
@@ -1039,6 +1048,8 @@ def public_summary(report: dict) -> dict:
         "tcg_fast_lane": _num_dict(m.get("tcg_fast_lane"), COVERAGE_KEYS["tcg_fast_lane"]),
         "research_signals": _count_dict(m.get("research_signals"), COVERAGE_KEYS["research_signals"]),
         "tcg_profit_dense": _count_dict(m.get("tcg_profit_dense"), COVERAGE_KEYS["tcg_profit_dense"]),
+        "operator_queue_counts": _count_dict(m.get("operator_queue"), COVERAGE_KEYS["operator_queue_counts"]),
+        "operator_queue_next_actions": _count_dict(m.get("operator_queue_next_actions"), COVERAGE_KEYS["operator_queue_next_actions"]),
         "tcg_detection_simulation": _num_dict(m.get("tcg_detection_simulation"), COVERAGE_KEYS["tcg_detection_simulation"]),
         "tcg_detection_delay": _num_dict(m.get("tcg_detection_delay"), COVERAGE_KEYS["tcg_detection_delay"]),
         "tcg_msrp_verified": _int_or_none(m.get("tcg_msrp_verified")),
@@ -1160,6 +1171,18 @@ def build(*, products: list[dict], observations: list[dict], msrp_evidence: dict
     metrics["retail_lookup_ready"] = tri["stats"]["lookup_ready"]
     metrics["retail_lookup_matched"] = tri["stats"]["lookup_matched"]
     metrics["actionable"] = actionable_count
+    # 運営者向けの作業キュー（Wave 7b。非公開。確定・actionable・通知には影響しない）
+    from src.research import operator_queue as _oq
+    try:
+        oq = _oq.build(candidates=cands, product_candidates=tri["rows"], tcg_events=pd["events"], now=now,
+                       tcg_fresh=tcg_input_fresh, tcg_healthy_sources=tcg_healthy_sources)
+    except Exception as exc:  # noqa: BLE001 - 作業キューは運営者向けの補助。失敗しても調査レポート・Daily LP の生成を止めない（空のキューにして警告を残す）
+        import logging
+        # 例外の型名だけ（メッセージには入力の値が載りうる。Actions のログは公開リポジトリでは公開される）。失敗は公開の件数 queue_build_failed にも出す
+        logging.getLogger(__name__).warning("operator_queue の組み立てに失敗（空のキューにする）: %s", type(exc).__name__)
+        oq = _oq.empty(now)
+    metrics["operator_queue"] = oq["counts"]
+    metrics["operator_queue_next_actions"] = oq["next_action_counts"]
     reasons = Counter(r for c in cands + prod_research if c["status"] == RESEARCH_CANDIDATE for r in c["missing_requirements"])
     report = {
         "schema": SCHEMA, "type": "RESEARCH_CANDIDATES", "audience": "operator",
@@ -1188,6 +1211,7 @@ def build(*, products: list[dict], observations: list[dict], msrp_evidence: dict
         "tcg_first_seen": fs_state,                      # 非公開（台帳。イベントを初めて見た時刻。実行をまたいで引き継げたときだけ意味を持つ）
         "tcg_detection_events": fs_rows,                # 非公開（イベントごとの検知の遅れ）
         "tcg_priority_events": pd["events"],            # 非公開（イベントごとのシグナル・質・定価との結び付き）
+        "operator_queue": oq,                           # 非公開（今日確認すべき候補の最大 10 件。.private/research/operator_queue.json にも書く。件数だけ公開）
         "tcg_events": eq["events"],                     # 非公開（イベントごとの応募の長さ・検知の遅れ。件数・中央値だけ公開）
         "metrics": metrics,
     }
@@ -1250,6 +1274,8 @@ def write_outputs(report: dict, state: dict, private_dir, public_dir, run_id: st
     priv.mkdir(parents=True, exist_ok=True)
     pub.mkdir(parents=True, exist_ok=True)
     (priv / "latest.json").write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
+    # 運営者向けの作業キュー（個別。非公開の .private にだけ書く）
+    (priv / "operator_queue.json").write_text(json.dumps(report.get("operator_queue") or {}, ensure_ascii=False, indent=2), encoding="utf-8")
     tmp = priv / "state.json.tmp"
     tmp.write_text(json.dumps({"schema": SCHEMA, "updated_at": report["generated_at"], "run_id": run_id or current_run_id(),
                                "candidates": state, "buyback_prices": report.get("buyback_prices") or {},

@@ -1017,12 +1017,16 @@ def _research(v: dict) -> str:
     bx = r.get("buyback_exact_coverage") or {}
     bf = r.get("buyback_first") or {}
     tc = r.get("tcg_source_coverage") or {}
+    oqc = r.get("operator_queue_counts") or {}                          # 今日確認すべき候補（件数だけ。個別の一覧は非公開）
     metrics = (
         '<dl class="nu-ad-dl">'
         f'<dt>正本の商品</dt><dd>{_n(r.get("canonical_products"))}件</dd>'
         f'<dt>調査候補（確定ではない）</dt><dd>{_n(r.get("research_candidate_count"))}件</dd>'
         f'<dt>生の価格差が正の商品</dt><dd>{_n(r.get("positive_raw_spread_count"))}件（確定の関門を通過 '
         f'{_n(r.get("verified_positive_spread_count"))}件・通過していない {_n(r.get("suppressed_positive_spread_count"))}件）</dd>'
+        f'<dt>今日確認すべき候補</dt><dd>{_n(oqc.get("queue_count"))}件（急ぎ {_n(oqc.get("urgent_count"))}・高 {_n(oqc.get("high_count"))}・'
+        f'中 {_n(oqc.get("medium_count"))}・低 {_n(oqc.get("low_count"))}。うち TCG {_n(oqc.get("tcg_queue_count"))}件。確定ではありません）'
+        + ('（キューの組み立てに失敗しました。件数は 0 ですが、確認すべき候補が無いという意味ではありません）' if oqc.get("queue_build_failed") else '') + '</dd>'
         f'<dt>公式の価格が確認済み</dt><dd>{_n(ovf.get("verified"))} / {_n(ovf.get("total"))}</dd>'
         f'<dt>確定できる買取がある商品</dt><dd>{_n(bx.get("products_with_confirmed_sell"))} / {_n(bx.get("total"))}</dd>'
         f'<dt>成約の実データ</dt><dd>{_n((r.get("marketplace_sold_coverage") or {}).get("valid_sold_rows"))}行</dd>'

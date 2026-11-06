@@ -67,7 +67,7 @@ def evaluate(items: list[dict], msrp: dict | None, now: datetime) -> dict:
         lim = sg.limited_signal(official_name=(m or {}).get("name", ""), official_url=(m or {}).get("official_url", ""),
                                 official=bool(m and m.get("source") == "official_product_api"))
         st, _ = eq._pick(i, "application_start", "application_start_date", now)
-        en, _ = eq._pick(i, "application_end", "application_end_date", now, end_of_day=True)
+        en, en_prec = eq._pick(i, "application_end", "application_end_date", now, end_of_day=True)
         hours = eq._hours(st, en)
         etype = str(i.get("event_type") or "")
         sup = sg.supply_signals(event_type=etype, application_hours=hours, lottery_active=(etype == "LOTTERY" and status in ("OPEN", "ENDING_SOON")))
@@ -78,7 +78,13 @@ def evaluate(items: list[dict], msrp: dict | None, now: datetime) -> dict:
         c = completeness(i, now)
         rows.append({"retailer": str(i.get("retailer") or ""), "status": status, "priority": prio, "signal_points": pts,
                      "release": rel, "limited": lim, "supply_signals": sup, "msrp_linked": m is not None,
-                     "msrp_price": (m or {}).get("retail_price"), "msrp_link_basis": "product_id_exact" if m is not None else None, **c})
+                     "msrp_price": (m or {}).get("retail_price"), "msrp_link_basis": "product_id_exact" if m is not None else None,
+                     # 運営者向けの作業キュー（Wave 7b）用。締切は時刻つきのものだけ精度 datetime（日付だけは date。時刻の精度があるように見せない）
+                     "product_name": str(i.get("product_name") or ""), "product_id": str(i.get("product_id") or ""),
+                     "product_match": str(i.get("product_match") or ""), "provisional_product": bool(i.get("provisional_product")),
+                     "event_type": etype, "application_end": en.isoformat() if en is not None else None,
+                     "application_end_precision": en_prec if en is not None else "",
+                     "hours_to_deadline": round((en - now).total_seconds() / 3600, 1) if en is not None else None, **c})
         # 高密度 = 受付中であることに加え、需要か逼迫の根拠がある（発売直後・限定・短い応募期間・再販・期限が近い・定価に結べた）。
         # 「抽選が開いている」だけ（二重の加点）では数えない
         dense = (rel["release_state"] in (sg.REL_NEW, sg.REL_RECENT) or lim["limited"] or m is not None

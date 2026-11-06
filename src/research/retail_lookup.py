@@ -66,10 +66,15 @@ def price_evidence(e: dict) -> dict:
         basis, eff = BASIS_REGULAR, regular
     else:
         basis, eff = BASIS_CONDITIONAL_UNKNOWN, listed
-    return {"listed_price": listed, "regular_price": regular, "campaign_price": _int(e.get("campaign_price")),
-            "campaign_conditions": str(e.get("campaign_conditions") or ""), "immediate_discount": imm,
-            "required_coupon": str(e.get("required_coupon") or ""), "points": _int(e.get("points")) or 0,
-            "cashback": _int(e.get("cashback")) or 0, "effective_price": eff, "price_conditions": conds, "price_basis": basis}
+    out = {"listed_price": listed, "regular_price": regular, "campaign_price": _int(e.get("campaign_price")),
+           "campaign_conditions": str(e.get("campaign_conditions") or ""), "immediate_discount": imm,
+           "required_coupon": str(e.get("required_coupon") or ""), "points": _int(e.get("points")) or 0,
+           "cashback": _int(e.get("cashback")) or 0, "effective_price": eff, "price_conditions": conds, "price_basis": basis}
+    from src.research import evidence_gap as _eg                   # 価格の種類（REGULAR / SALE / COUPON / MEMBERSHIP / CONDITIONAL / UNKNOWN）と、確定に使ってよいか（Wave 7c）
+    # `confirmable` / `price_type` は情報用の項目（表示・集計・運営者向け）。確定の関門ではない: 条件つきの価格を確定に使わないのは、
+    # 従来の price_basis / price_conditions（→ ACQUISITION_CONDITIONAL）と effective_price の計算が担う
+    out.update(_eg.price_type_of(out))
+    return out
 
 # 名前から推定するブランド（取得器の対応・ブランド違いの棄却に使う）
 _BRAND_RES = (

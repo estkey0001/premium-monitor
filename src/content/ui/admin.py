@@ -1017,6 +1017,12 @@ def _research(v: dict) -> str:
     bx = r.get("buyback_exact_coverage") or {}
     bf = r.get("buyback_first") or {}
     tc = r.get("tcg_source_coverage") or {}
+    ogc = r.get("official_gap_counts") or {}                           # 公式の価格が確認できない原因（件数だけ。Wave 7c）
+    _gap_jp = (("SALE_ENDED", "公式が販売していない"), ("SOURCE_NOT_IMPLEMENTED", "取得元が未登録"), ("SOURCE_BLOCKED", "取得元が遮断・到達不能"),
+               ("IDENTITY_NOT_MATCHED", "同一性が確認できない"), ("PRICE_NOT_FOUND", "価格を読めていない"), ("PAGE_CHANGED", "ページが変わった可能性"), ("PRICE_CHANGED", "価格が記録と違う"), ("RECHECK_MATCHED", "再確認で一致（記録の更新待ち）"),
+               ("VERIFICATION_STALE", "確認が古い"),
+               ("CONFIGURED_PRICE_ONLY", "設定値だけ"), ("UNKNOWN_CAUSE", "原因不明"))
+    ogc_txt = "・".join(f"{lab} {_n(ogc.get(k))}件" for k, lab in _gap_jp if ogc.get(k))
     oqc = r.get("operator_queue_counts") or {}                          # 今日確認すべき候補（件数だけ。個別の一覧は非公開）
     metrics = (
         '<dl class="nu-ad-dl">'
@@ -1027,7 +1033,8 @@ def _research(v: dict) -> str:
         f'<dt>今日確認すべき候補</dt><dd>{_n(oqc.get("queue_count"))}件（急ぎ {_n(oqc.get("urgent_count"))}・高 {_n(oqc.get("high_count"))}・'
         f'中 {_n(oqc.get("medium_count"))}・低 {_n(oqc.get("low_count"))}。うち TCG {_n(oqc.get("tcg_queue_count"))}件。確定ではありません）'
         + ('（キューの組み立てに失敗しました。件数は 0 ですが、確認すべき候補が無いという意味ではありません）' if oqc.get("queue_build_failed") else '') + '</dd>'
-        f'<dt>公式の価格が確認済み</dt><dd>{_n(ovf.get("verified"))} / {_n(ovf.get("total"))}</dd>'
+        + (f'<dt>公式の価格が確認できない原因</dt><dd>{esc(ogc_txt)}</dd>' if ogc_txt else '')
+        + f'<dt>公式の価格が確認済み</dt><dd>{_n(ovf.get("verified"))} / {_n(ovf.get("total"))}</dd>'
         f'<dt>確定できる買取がある商品</dt><dd>{_n(bx.get("products_with_confirmed_sell"))} / {_n(bx.get("total"))}</dd>'
         f'<dt>成約の実データ</dt><dd>{_n((r.get("marketplace_sold_coverage") or {}).get("valid_sold_rows"))}行</dd>'
         f'<dt>買取の一覧からの逆引き</dt><dd>一覧の行 {_n(bf.get("catalog_rows"))}件・正本と一致 '

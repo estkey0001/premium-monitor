@@ -918,9 +918,20 @@ class DailyLPGenerator:
             _healthy = {str(r.get("source_id")) for r in (tcg_latest.get("lottery_sources") or [])
                         if isinstance(r, dict) and r.get("source_id") and r.get("reachable") and not r.get("blocked") and not r.get("unreachable")} if _tcg_fresh else set()
             _mb = _rc.momentum_baseline(raw_state, ledger_state)     # 勢いの比較の基準（引き継げた日・同じ run の再生成だけ）
+            # 公式の価格が確認できない原因の入力（Wave 7c）: 公式の再確認の記録（遮断・価格を読めない）と、公式の登録簿の同一性の判断。
+            # 新しい記録だけ使う（古い遮断を今日のものにしない）。通信しない・推測しない
+            from src.research import evidence_gap as _eg
+            _official_meta = {k: dict(v) for k, v in self._official_meta().items()}
+            _id_products = [{"id": _p.id, "name": getattr(_p, "name", "") or "", "model_number": getattr(_p, "model_number", "") or "",
+                             "jan_code": getattr(_p, "jan_code", "") or ""} for _p in self.repo.list_products() if getattr(_p, "is_active", True)]
+            try:                                                     # 原因の分類は付加の情報。入力が壊れていても、旗なしで調査候補の生成を続ける
+                _eg.merge_signals(_official_meta, _eg.official_signals(self._load_export_json("official_recheck", "latest.json"), _id_products,
+                                                                      ctx.now, _reg.identity_state, verified_urls=_reg.VERIFIED_URLS))
+            except Exception as _exc:  # noqa: BLE001
+                logger.warning("公式の確認の信号の組み立てに失敗（旗なしで続ける）: %s", type(_exc).__name__)
             report, state = _rc.build(
                 products=products, observations=npo.get("observations") or [],
-                msrp_evidence=getattr(self, "_msrp_evidence", None) or {}, official_meta=self._official_meta(),
+                msrp_evidence=getattr(self, "_msrp_evidence", None) or {}, official_meta=_official_meta,
                 verified_pids=verified, now=ctx.now, prev_state=prev, catalog=cat,
                 identity=getattr(_reg, "IDENTITY_EVIDENCE", {}), discovery=self._load_export_json("discovery", "latest.json"),
                 tcg=tcg, blocked_sources=blocked, ledger_state=ledger_state,

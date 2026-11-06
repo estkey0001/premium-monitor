@@ -4165,6 +4165,7 @@ def check() -> list[dict]:
     results.extend(_check_coverage_wave6())
     results.extend(_check_coverage_wave7a())
     results.extend(_check_coverage_wave7b())
+    results.extend(_check_coverage_wave7c())
 
     # ══════════════════════════════════════════════════════════════════
     # #820-#825: データの正確さ・鮮度の偽装（Phase 0）
@@ -6977,6 +6978,67 @@ def _check_coverage_wave7b(root: Path | None = None) -> list[dict]:
     return [{"level": "ok" if not bad else "error", "check": "coverage_wave7b_operator_queue",
              "message": "#879 運営者向けの作業キューは非公開（公開は件数だけ）・確定や通知に依存しない・同じ入力なら同じ順位・古い候補は URGENT のまま残さない・"
                         "隔離された価格は確定にしない・TCG は応募の URL が無ければ actionable にしない・上限 10 件"
+                        + ("" if not bad else f" ← {bad[:4]}")}]
+
+
+def _check_coverage_wave7c(root: Path | None = None) -> list[dict]:
+    """Coverage Wave 7c（#880）: 条件つきの仕入れ価格（クーポン・会員限定・キャンペーン・数量限定）は確定に使わない・ポイント / キャッシュバックは現金から引かない・
+    条件なしの現金の価格（通常・条件なしの即時値引き）だけが確定に使える・公式が売っていない商品は公式の確認でなく小売の価格の確認・
+    遮断された取得元は回避しない（原因の分類は通信しない）・原因と価格の種類の個別の項目は公開しない。"""
+    import json as _j80
+    import re as _re80
+    from datetime import datetime as _dt80
+    from datetime import timedelta as _td80
+    from datetime import timezone as _tz80
+    root = root or Path(__file__).resolve().parent.parent
+    bad = []
+    try:
+        from src.research import candidates as rc
+        from src.research import evidence_gap as eg
+        from src.research import operator_queue as oq
+        from src.research import retail_lookup as rl
+        now = _dt80(2026, 11, 6, 12, 0, tzinfo=_tz80(_td80(hours=9)))
+
+        def pe(**k):
+            return rl.price_evidence({"price": 100000, **k})
+
+        reg, sale = pe(), pe(immediate_discount=5000)
+        if not (reg["confirmable"] and sale["confirmable"] and reg["price_type"] == eg.REGULAR and sale["price_type"] == eg.SALE):
+            bad.append("条件なしの現金の価格（通常・即時値引き）が確定に使えない")
+        for name, ev in (("クーポン", pe(required_coupon="X", price=90000, regular_price=100000)), ("会員限定", pe(member_only=True, price=92000, regular_price=100000)),
+                         ("キャンペーン", pe(campaign_conditions="期間限定", price=98000)), ("数量限定", pe(limited_quantity=True, price=95000))):
+            if ev["confirmable"] or ev["price_type"] not in (eg.COUPON, eg.MEMBERSHIP, eg.CONDITIONAL):
+                bad.append(f"条件つきの価格（{name}）を確定に使える扱いにしている")
+            if ev["effective_price"] != 100000 and name != "キャンペーン" and name != "数量限定":
+                bad.append(f"条件つきの値引き（{name}）を現金の仕入れ値に使っている")
+        pts = pe(points=5000, cashback=2000)
+        if pts["effective_price"] != 100000 or pts["reference_types"] != [eg.POINTS, eg.CASHBACK]:
+            bad.append("ポイント・キャッシュバックを現金から引いている（参考として別に残していない）")
+        if eg.official_gap_cause(evidence="STALE", meta={"url": "https://o.example/p", "source_id": "s"}, official_not_sold=True) != eg.SALE_ENDED:
+            bad.append("公式が売っていない商品の原因が SALE_ENDED でない")
+        if eg.official_gap_cause(evidence="UNKNOWN", meta={"url": "https://o.example/p", "source_id": "s"}, source_blocked=True) != eg.SOURCE_BLOCKED:
+            bad.append("遮断された取得元の原因が SOURCE_BLOCKED でない")
+        q = oq.build(candidates=[{"candidate_id": "c", "status": rc.RESEARCH_CANDIDATE, "product_identity": {"product_id": "p", "name": "秘密の商品"},
+                                  "known_cost_spread": 20000, "missing_requirements": [rc.OFFICIAL_UNVERIFIED, rc.OFFICIAL_NOT_SOLD], "official_gap": "SALE_ENDED",
+                                  "sell_observed_at": "2026-11-06T09:00:00+09:00"}], product_candidates=[], tcg_events=[], now=now)["queue"][0]
+        if q["next_action"] != oq.VERIFY_RETAIL_PRICE or oq.VERIFY_OFFICIAL_PRICE in q["next_actions"]:
+            bad.append("公式が売っていない商品の次の行動が、小売の価格の確認になっていない")
+        rep = {"schema": 1, "type": "RESEARCH_CANDIDATES", "generated_at": now.isoformat(), "candidates": [], "counts": {},
+               "metrics": {"official_gap_counts": {"SALE_ENDED": 1, "secret_product": 1}, "price_type_counts": {"COUPON": 1, "candidate": 1}}}
+        pub = _j80.dumps(rc.public_summary(rep), ensure_ascii=False)
+        if "secret_product" in pub or "\"candidate\"" in pub:
+            bad.append("公開の集計に原因・価格の種類の個別の項目が出ている")
+        if not {"official_gap", "retail_price_type", "retail_confirmable", "retail_reference_types"} <= rc.PRIVATE_KEYS:
+            bad.append("原因・価格の種類の項目が非公開の一覧に無い")
+        code = _re80.sub(r'"""(?:.|\n)*?"""', "", (root / "src/research/evidence_gap.py").read_text(encoding="utf-8"))
+        for banned in ("requests", "urllib", "httpx", "playwright", "notifiers", "proxy", "stealth", "captcha", "eligibility", "actionability"):
+            if banned in code:
+                bad.append(f"原因・価格の種類の分類が通信・回避・確定・通知の部品に触れている: {banned}")
+    except Exception as exc:  # noqa: BLE001
+        bad.append(f"検査に失敗: {type(exc).__name__}: {exc}")
+    return [{"level": "ok" if not bad else "error", "check": "coverage_wave7c_evidence_gap_price_type",
+             "message": "#880 条件つきの仕入れ価格は確定に使わない・ポイント / キャッシュバックは現金から引かない・条件なしの現金の価格だけが確定に使える・"
+                        "公式が売っていない商品は小売の価格の確認・遮断は回避しない・原因と価格の種類の個別の項目は公開しない"
                         + ("" if not bad else f" ← {bad[:4]}")}]
 
 

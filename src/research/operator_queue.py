@@ -36,11 +36,12 @@ VERIFY_SHIPPING, VERIFY_STOCK, VERIFY_IDENTITY = "VERIFY_SHIPPING", "VERIFY_STOC
 FIND_CORROBORATING_SOURCE, REGISTER_CANONICAL_PRODUCT, WAIT_FOR_FRESH_PRICE = (
     "FIND_CORROBORATING_SOURCE", "REGISTER_CANONICAL_PRODUCT", "WAIT_FOR_FRESH_PRICE")
 # 次の行動（TCG）
+REGISTER_OFFICIAL_SOURCE = "REGISTER_OFFICIAL_SOURCE"                  # 公式の確認の取得元（URL）が登録されていない。まず公式の商品ページを登録する
 VERIFY_APPLICATION_URL, VERIFY_PRODUCT_IDENTITY, VERIFY_MSRP, VERIFY_DEADLINE, VERIFY_ELIGIBILITY = (
     "VERIFY_APPLICATION_URL", "VERIFY_PRODUCT_IDENTITY", "VERIFY_MSRP", "VERIFY_DEADLINE", "VERIFY_ELIGIBILITY")
 NEXT_ACTIONS = (VERIFY_OFFICIAL_PRICE, VERIFY_RETAIL_PRICE, VERIFY_BUYBACK, VERIFY_SHIPPING, VERIFY_STOCK, VERIFY_IDENTITY,
                 FIND_CORROBORATING_SOURCE, REGISTER_CANONICAL_PRODUCT, WAIT_FOR_FRESH_PRICE,
-                VERIFY_APPLICATION_URL, VERIFY_PRODUCT_IDENTITY, VERIFY_MSRP, VERIFY_DEADLINE, VERIFY_ELIGIBILITY)
+                VERIFY_APPLICATION_URL, VERIFY_PRODUCT_IDENTITY, VERIFY_MSRP, VERIFY_DEADLINE, VERIFY_ELIGIBILITY, REGISTER_OFFICIAL_SOURCE)
 
 MIN_SPREAD_YEN = 500              # 運営者が今日見る価値のある最小の価格差（買取の急騰の最小額と同じ。1 円差を URGENT にしない）
 TCG_MIN_IN_QUEUE = 2              # 運営者向けの価値のある TCG（URGENT / HIGH）をキューに最低これだけ残す（商品の HIGH に全部押し出されない）
@@ -59,7 +60,8 @@ QUARANTINE = C.CEILING_CLASS_REASONS                            # 上限超え�
 _PRODUCT_ACTION_ORDER = (
     (STALE_REASONS, WAIT_FOR_FRESH_PRICE),
     (frozenset({C.IDENTITY_UNCONFIRMED, C.IDENTITY_PARTIAL}), VERIFY_IDENTITY),
-    (frozenset({C.OFFICIAL_UNVERIFIED, C.OFFICIAL_NOT_SOLD}), VERIFY_OFFICIAL_PRICE),
+    (frozenset({C.OFFICIAL_UNVERIFIED}), VERIFY_OFFICIAL_PRICE),
+    (frozenset({C.OFFICIAL_NOT_SOLD}), VERIFY_RETAIL_PRICE),                   # 公式が売っていない商品は、公式の価格は存在しない。仕入れ値は小売の価格で確かめる
     (frozenset({C.RETAIL_PRICE_MISSING, C.BUY_NOT_ITEM_LEVEL, C.ACQUISITION_CONDITIONAL}), VERIFY_RETAIL_PRICE),
     (frozenset({C.CANONICAL_UNREGISTERED}), REGISTER_CANONICAL_PRODUCT),
     (QUARANTINE | frozenset({C.PRICE_ANOMALY_SUSPECTED, C.SELL_REJECTED}), FIND_CORROBORATING_SOURCE),
@@ -196,13 +198,25 @@ def _product_item(row: dict, genre: str, now: datetime) -> dict:
     unreadable_time = age is None or age < -FUTURE_TOLERANCE_HOURS
     stale = bool(missing & STALE_REASONS) or str(row.get("status")) == C.STALE or unreadable_time or age > STALE_HOURS
     mom = _momentum(row)
+    gap = str(row.get("official_gap") or "")
     spread = _spread_of(row)
+    if gap == "SALE_ENDED" and str(row.get("route_type") or "") != C.SECONDARY_TO_BUYBACK:
+        # 公式が今は売っていない商品で、買値が公式の価格のままの経路は、存在しない公式価格から出た値。優先度・点・並べ替えには使わない
+        # （買い側の経路は変えない。小売店・二次の価格を買値にした経路 SECONDARY_TO_BUYBACK の価格差は実在するので残す）
+        spread = None
     signals = (_int(row.get("signal_points")) > 0 or (mom["usable"] and not mom["quarantined"])) and identity_ok and not (missing & QUARANTINE)
     cls = _classify_product(spread=spread, missing=missing, identity_ok=identity_ok, stale=stale, signals=signals)
     score, why = _score_product(spread=spread, identity_ok=identity_ok, sell_fresh=C.SELL_STALE not in missing and not stale,
                                 buy_fresh=C.BUY_STALE not in missing and not stale, missing=missing, momentum=mom,
                                 signal_points=_int(row.get("signal_points")), stale=stale)
     acts = next_actions(missing, stale=stale)
+    # 公式の価格が確認できない原因に合わせて、公式の価格の確認を、より具体的な行動にする（原因が無い・それ以外は VERIFY_OFFICIAL_PRICE のまま。
+    # 遮断（SOURCE_BLOCKED）は回避せず、人が公式ページで確認する）
+    _gap_action = {"SALE_ENDED": VERIFY_RETAIL_PRICE,                # 公式が今は売っていない。公式を確認しても変わらない → 小売の価格の確認
+                   "SOURCE_NOT_IMPLEMENTED": REGISTER_OFFICIAL_SOURCE,   # 確認の根拠のページが無い → まず公式の商品ページを登録
+                   "IDENTITY_NOT_MATCHED": VERIFY_IDENTITY}          # 型番・JAN の証拠が無い → 先に同一性
+    if gap in _gap_action:
+        acts = list(dict.fromkeys(_gap_action[gap] if a == VERIFY_OFFICIAL_PRICE else a for a in acts))
     if not acts and cls != LOW:
         # 足りない証拠が見えない: 価格差が正なら公式の価格・状態の確認。信号だけ（急騰・新型）なら、まず仕入れ値（小売の価格）を確かめる
         acts = [VERIFY_OFFICIAL_PRICE] if isinstance(spread, int) and spread >= MIN_SPREAD_YEN else [VERIFY_RETAIL_PRICE]
@@ -216,7 +230,7 @@ def _product_item(row: dict, genre: str, now: datetime) -> dict:
         "product": {"name": name, "id": pid, "identity_confirmed": identity_ok,
                     "identity_basis": str(row.get("identity_basis") or ("canonical" if genre == G_PRODUCT else ""))},
         "spread": {"raw": row.get("raw_spread", row.get("raw_spread_hint")), "known_cost": row.get("known_cost_spread"), "used": spread},
-        "missing_evidence": sorted(missing), "next_action": acts[0] if acts else None, "next_actions": acts,
+        "missing_evidence": sorted(missing), "next_action": acts[0] if acts else None, "next_actions": acts, "official_gap": gap or None,
         "reason": _reason_text(cls, missing, stale, quarantined=bool(missing & QUARANTINE)),
         "last_seen": str(row.get("last_seen_at") or last), "observed_at": last, "stale": stale, "momentum": mom,
         "quarantined": bool(missing & QUARANTINE),

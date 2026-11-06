@@ -428,6 +428,11 @@ def build_candidates(*, products: list[dict], observations: list[dict], msrp_evi
             if not row.get("note") and (buy is None or sell is None or sell is not None and sell_reasons):
                 row["note"] = "確定の判定の価格と、この表示用の価格が違うことがある（確定の判定が正本）"
         row["exclusion_reasons"] = list(dict.fromkeys(row["exclusion_reasons"]))
+        if OFFICIAL_UNVERIFIED in row["exclusion_reasons"] or OFFICIAL_NOT_SOLD in row["exclusion_reasons"]:
+            from src.research import evidence_gap as _eg           # 公式の価格が確認できない原因（Wave 7c。非公開の行。公開は原因ごとの件数だけ）
+            row["official_gap"] = _eg.official_gap_cause(
+                evidence=ev, meta=meta, official_not_sold=bool(meta.get("official_not_sold")) or OFFICIAL_NOT_SOLD in row["exclusion_reasons"],
+                source_blocked=False)       # 公式の取得元の遮断は meta の source_blocked（公式の再確認の記録）だけ。blocked_sources は買取店の遮断で意味が違う
         row["missing_requirements"] = [r for r in row["exclusion_reasons"] if r not in
                                        (NO_SPREAD, NET_NEGATIVE, NO_BUY_SIDE, NO_SELL_SIDE)]
         row["confidence"] = _confidence(row["exclusion_reasons"])
@@ -631,6 +636,9 @@ def apply_lookups(dps: list[dict], lookups: dict | None, now: datetime, generate
                           "retail_cashback": int(lk.get("cashback") or 0),
                           "retail_conditions": list(lk.get("price_conditions") or []),
                           "retail_price_basis": str(lk.get("price_basis") or "UNCONDITIONAL"),
+                          "retail_price_type": str(lk.get("price_type") or "UNKNOWN"),
+                          "retail_confirmable": bool(lk.get("confirmable")),
+                          "retail_reference_types": list(lk.get("reference_types") or []),
                           "retail_alternatives": list(lk.get("alternatives") or [])})
                 r.update({"retail_price": retail, "retail_retailer": str(lk.get("retailer") or ""),
                           "retail_url": str(lk.get("product_url") or ""), "retail_observed_at": lk["observed_at"],
@@ -667,7 +675,8 @@ def apply_lookups(dps: list[dict], lookups: dict | None, now: datetime, generate
                       "research_class": STANDARD_RESEARCH})
             continue
         req += [OFFICIAL_UNVERIFIED, PURCHASE_SHIPPING_UNKNOWN]
-        conditional = bool(r.get("retail_conditions")) or r.get("retail_price_basis") not in (None, "UNCONDITIONAL")
+        conditional = (bool(r.get("retail_conditions")) or r.get("retail_price_basis") not in (None, "UNCONDITIONAL")
+                       or r.get("retail_price_type") in ("COUPON", "MEMBERSHIP", "CONDITIONAL"))
         if conditional:
             req.append(ACQUISITION_CONDITIONAL)
         if basis_note == "retail_lookup" and r.get("retail_availability") in (None, "UNKNOWN"):
@@ -898,6 +907,8 @@ PRIVATE_KEYS = frozenset({
     "rank", "rank_score", "retail_price_hint", "lookups", "tcg_events", "quality_by_source",
     # 運営者向けの作業キュー（Wave 7b）。個別のキュー（商品・価格・順位・次の行動・理由）は非公開。公開してよいのは件数だけ
     "operator_queue", "queue", "next_action", "next_actions", "missing_evidence", "score_parts", "score",
+    # 証拠不足の原因・価格の種類（Wave 7c）の個別の項目
+    "official_gap", "retail_price_type", "retail_confirmable", "retail_reference_types", "price_type", "confirmable", "reference_types",
     # 利益が出やすい市場のシグナル（Wave 5）の個別の項目
     "release", "release_date", "limited_signal", "supply_signals", "buyback_signals", "signal_points", "signal_reasons",
     "retail_unavailable_sources", "days_since_release", "tcg_priority_events", "buyback_prices", "msrp_linked", "msrp_price",
@@ -944,10 +955,13 @@ COVERAGE_KEYS = {
     "operator_queue_counts": ("queue_build_failed", "queue_count", "urgent_count", "high_count", "medium_count", "low_count", "candidates_considered", "urgent_all", "high_all",
                        "medium_all", "low_all", "stale_demoted", "positive_spread_not_confirmed", "quarantined_in_queue", "tcg_queue_count",
                        "tcg_deadline_boosted", "tcg_missing_application_url", "tcg_missing_identity", "tcg_missing_msrp"),
+    "official_gap_counts": ("SALE_ENDED", "SOURCE_NOT_IMPLEMENTED", "SOURCE_BLOCKED", "IDENTITY_NOT_MATCHED", "PRICE_NOT_FOUND", "PAGE_CHANGED", "PRICE_CHANGED", "RECHECK_MATCHED",
+                            "VERIFICATION_STALE", "CONFIGURED_PRICE_ONLY", "UNKNOWN_CAUSE"),
+    "price_type_counts": ("REGULAR", "SALE", "COUPON", "MEMBERSHIP", "CONDITIONAL", "UNKNOWN", "with_points", "with_cashback", "rejected_conditional"),
     "operator_queue_next_actions": ("next_VERIFY_OFFICIAL_PRICE", "next_VERIFY_RETAIL_PRICE", "next_VERIFY_BUYBACK", "next_VERIFY_SHIPPING",
                                     "next_VERIFY_STOCK", "next_VERIFY_IDENTITY", "next_FIND_CORROBORATING_SOURCE", "next_REGISTER_CANONICAL_PRODUCT",
                                     "next_WAIT_FOR_FRESH_PRICE", "next_VERIFY_APPLICATION_URL", "next_VERIFY_PRODUCT_IDENTITY", "next_VERIFY_MSRP",
-                                    "next_VERIFY_DEADLINE", "next_VERIFY_ELIGIBILITY"),
+                                    "next_VERIFY_DEADLINE", "next_VERIFY_ELIGIBILITY", "next_REGISTER_OFFICIAL_SOURCE"),
     "tcg_detection_delay": ("events_active", "baseline_events", "new_after_baseline", "measured", "unknown_published_at",
                             "detected_before_start", "median_delay_hours", "max_delay_hours", "comparable", "source_gap_excluded",
                             "delay_values_withheld", "identity_ambiguous", "stale_input", "source_not_observed_this_run", "previously_observable_excluded"),
@@ -1050,6 +1064,8 @@ def public_summary(report: dict) -> dict:
         "tcg_profit_dense": _count_dict(m.get("tcg_profit_dense"), COVERAGE_KEYS["tcg_profit_dense"]),
         "operator_queue_counts": _count_dict(m.get("operator_queue"), COVERAGE_KEYS["operator_queue_counts"]),
         "operator_queue_next_actions": _count_dict(m.get("operator_queue_next_actions"), COVERAGE_KEYS["operator_queue_next_actions"]),
+        "official_gap_counts": _count_dict(m.get("official_gap_counts"), COVERAGE_KEYS["official_gap_counts"]),
+        "price_type_counts": _count_dict(m.get("price_type_counts"), COVERAGE_KEYS["price_type_counts"]),
         "tcg_detection_simulation": _num_dict(m.get("tcg_detection_simulation"), COVERAGE_KEYS["tcg_detection_simulation"]),
         "tcg_detection_delay": _num_dict(m.get("tcg_detection_delay"), COVERAGE_KEYS["tcg_detection_delay"]),
         "tcg_msrp_verified": _int_or_none(m.get("tcg_msrp_verified")),
@@ -1181,6 +1197,9 @@ def build(*, products: list[dict], observations: list[dict], msrp_evidence: dict
         # 例外の型名だけ（メッセージには入力の値が載りうる。Actions のログは公開リポジトリでは公開される）。失敗は公開の件数 queue_build_failed にも出す
         logging.getLogger(__name__).warning("operator_queue の組み立てに失敗（空のキューにする）: %s", type(exc).__name__)
         oq = _oq.empty(now)
+    from src.research import evidence_gap as _eg79
+    metrics["official_gap_counts"] = _eg79.gap_counts([c for c in cands if c.get("status") == RESEARCH_CANDIDATE])
+    metrics["price_type_counts"] = _eg79.price_type_counts(tri["rows"])
     metrics["operator_queue"] = oq["counts"]
     metrics["operator_queue_next_actions"] = oq["next_action_counts"]
     reasons = Counter(r for c in cands + prod_research if c["status"] == RESEARCH_CANDIDATE for r in c["missing_requirements"])

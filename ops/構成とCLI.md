@@ -257,6 +257,14 @@ python3 scripts/operator_health_alert.py --dry-run  # 書かずに注記だけ�
 - 変異テスト: `python3 scripts/mutation_wave4.py`（Wave 2・3 も同様）
 - 設計の全体と残りは `internal/audits/COVERAGE_WAVE4.md`
 
+## Coverage Wave 7c-1（証拠不足の原因の分類と価格の種類）
+
+- 公式の価格が確認できない原因: `src/research/evidence_gap.py` の `official_gap_cause`（決まった順: 販売終了 SALE_ENDED → 取得元が未登録（URL なし）SOURCE_NOT_IMPLEMENTED → 同一性が確認できない IDENTITY_NOT_MATCHED → 確認済み（不足ではない）→ 遮断 SOURCE_BLOCKED（回避しない）→ ページの変更 PAGE_CHANGED → 確認が古い VERIFICATION_STALE → 設定値だけ CONFIGURED_PRICE_ONLY → 価格を読めていない PRICE_NOT_FOUND → 不明 UNKNOWN_CAUSE）。調査候補の非公開の行に `official_gap`。公開は原因ごとの件数（`official_gap_counts`）だけ
+- 原因の入力は実際の記録から作る（`official_signals`。通信しない・推測しない）: 公式の再確認の記録（`exports/official_recheck/latest.json`。36 時間以内のものだけ。blocked と、遮断・到達不能の理由の failed（`polite.CUTOFF_IMMEDIATE`・timeout・connection_error・5xx など）→ SOURCE_BLOCKED、ページ側の理由（404・移動・空のページ・価格を読めない）や未知・理由なしの failed → PAGE_CHANGED（遮断と断定しない）、sale_ended → SALE_ENDED（**原因の分類だけ**。候補の買い側の経路は取得元の設定の販売終了 `official_not_sold` だけが変える）、changed → PRICE_CHANGED、unchanged（型番・価格が一致）→ RECHECK_MATCHED（昨夜の再確認で一致 = 公式の確認のやり直しではなく、人が確かめて記録を更新する。自動では確認日を更新しない方針は変えない。同一性・失敗・価格の変化・遮断が先）。公式の登録簿の販売終了（DISCONTINUED）も分類専用の旗（`registry_sale_ended`）で SALE_ENDED にする（販売終了の商品に公式ページの登録を促さない）。どの版かが決まっていない商品（曖昧・判断待ち）は、公式ページの登録より先に同一性の確認。記録の URL は、根拠のページがあることを示す分類専用の `gap_url`（再確認の記録の URL と、公式の登録簿の確認済み URL `VERIFIED_URLS`。取得元の設定の `url` には触らない。候補の買い側の URL・送料の判定に影響させない。https・ASCII・ホストあり・認証情報なし・IP リテラル風でないものだけ）と、公式の登録簿の同一性の判断（`official_registry.identity_state`。一部だけ・曖昧・判断待ち → 同一性が確認できない）。生成側（`daily_lp_generator`）が `official_meta` に流し込む
+- 作業キューの次の行動は原因に合わせる: **公式が売っていない（SALE_ENDED / OFFICIAL_NOT_SOLD）商品は、公式の価格が存在しないので VERIFY_OFFICIAL_PRICE でなく VERIFY_RETAIL_PRICE**（小売の価格で仕入れ値を確かめる）。取得元が遮断されている場合は回避せず、人が公式ページで確認する（VERIFY_OFFICIAL_PRICE）。取得元が未登録（URL なし）は REGISTER_OFFICIAL_SOURCE（まず公式の商品ページを登録）、同一性が確認できないものは VERIFY_IDENTITY
+- 価格の種類: `retail_lookup.price_evidence` が `price_type`（REGULAR / SALE / COUPON / MEMBERSHIP / CONDITIONAL / UNKNOWN）・`confirmable`・`reference_types`（POINTS / CASHBACK）を返す。**確定の仕入れ値に使えるのは、条件なしで全員が再現できる現金の価格（REGULAR と、条件なしの即時値引き SALE）だけ**。ポイント・キャッシュバックは現金から引かず参考として別に残す。クーポン・会員限定・キャンペーン・数量限定は条件つき（確定に使わない・高優先にしない）。公開は件数だけ（`price_type_counts`）
+- 変異テスト: `python3 scripts/mutation_wave7c.py`（追跡ファイルを書き換える。他のセッションが編集していないときだけ）。deploy-check #880
+
 ## Coverage Wave 7b（運営者向けの作業キュー）
 
 - 作業キュー: `src/research/operator_queue.py`。**今日、人が何を確認すべきか**を最大 10 件に絞る（正本の商品の調査候補・買取起点の未登録商品・TCG の受付中イベント）。**運営者向けだけ**で、確定の利益・actionable・顧客向けの画面・商品の通知には影響しない（確定・通知の部品を import しない。順位が高くても確定ではない）

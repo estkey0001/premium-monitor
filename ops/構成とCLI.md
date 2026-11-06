@@ -257,6 +257,15 @@ python3 scripts/operator_health_alert.py --dry-run  # 書かずに注記だけ�
 - 変異テスト: `python3 scripts/mutation_wave4.py`（Wave 2・3 も同様）
 - 設計の全体と残りは `internal/audits/COVERAGE_WAVE4.md`
 
+## Coverage Wave 7b（運営者向けの作業キュー）
+
+- 作業キュー: `src/research/operator_queue.py`。**今日、人が何を確認すべきか**を最大 10 件に絞る（正本の商品の調査候補・買取起点の未登録商品・TCG の受付中イベント）。**運営者向けだけ**で、確定の利益・actionable・顧客向けの画面・商品の通知には影響しない（確定・通知の部品を import しない。順位が高くても確定ではない）
+- 区分（決まった規則・AI の価格予測は使わない）: URGENT = 価格差が 500 円以上・同一性が確か・売値が新しい・足りない証拠が 1〜2 個（配送料・在庫・裏付けだけ）／HIGH = 利益の可能性はあるが公式の確認・正本の登録・同一性の一部が残る／MEDIUM = 価格差は弱いが信号（新型・急騰・TCG の受付中）がある／LOW = 古い・店のトップ・同一性が弱い・誤価格の疑い。TCG は受付中で締切が**時刻つき 24 時間以内かつ商品の同一性が確か**なときだけ URGENT（日付だけ・不明は大きく加点しない）。キューの中の TCG は、URGENT / HIGH のものを最低 2 件確保し（商品の HIGH に全部押し出されない）、最大 4 件（他の候補が足りないときだけ残りの枠を埋める。LOW の「待つだけ」の商品の行には負けない）。収集が失敗して前回のデータが残った日・健全でない取得元の TCG は LOW + 「新しい情報を待つ」。URGENT は締切が近い順に並ぶ。同じ小売・商品のイベントは 1 件にまとめ、応募の URL・同一性・定価との結び付きは全店舗で見る
+- 古い候補（売値・買値が古い・観測が 72 時間より古い・**観測時刻が空・読めない・時計より先**）は LOW + 「新しい価格を待つ」。今回見えなかった候補（STALE）はキューに入れず件数だけ。隔離された価格（上限超え・裏付け不足・急変）は順位を上げてよいが確定には使わない。買取の急騰の加点は `momentum_usable`（新しい・同一性が確か・隔離されていない・3% 以上かつ 500 円以上）だけ
+- 次の行動: 足りない証拠から決まった優先順で 1 つ（全部も残す）。商品 = VERIFY_OFFICIAL_PRICE / VERIFY_RETAIL_PRICE / VERIFY_BUYBACK / VERIFY_SHIPPING / VERIFY_STOCK / VERIFY_IDENTITY / FIND_CORROBORATING_SOURCE / REGISTER_CANONICAL_PRODUCT / WAIT_FOR_FRESH_PRICE。TCG = VERIFY_PRODUCT_IDENTITY / VERIFY_APPLICATION_URL / VERIFY_MSRP / VERIFY_DEADLINE / VERIFY_ELIGIBILITY（SNS・アプリ・店頭・会員の経路は、公式ドメインに応募ページが無いので URL の確認でなく条件の確認）
+- 順位の鍵: 区分 → 点 → 価格差 → 観測の新しさ → 候補の ID（同じ入力なら同じ順位）。運営者が証拠を確認すると、次回の run で足りない証拠が減り、順位と次の行動が再計算される（状態は持たない）
+- 出力: 個別のキューは `.private/research/operator_queue.json`（非公開・git 追跡しない）。公開は件数だけ（`exports/research/summary.json` の `operator_queue_counts`・`operator_queue_next_actions`）。管理画面は「今日確認すべき候補 N件」の件数だけ。変異テスト: `python3 scripts/mutation_wave7b.py`（追跡ファイルを書き換える。他のセッションが編集していないときだけ）。deploy-check #879
+
 ## Coverage Wave 7a（TCG の応募先と完成度）
 
 - 応募先の分類: `src/tcg/action_url.py`。**告知の URL（`source_url`）だけでは応募できると扱わない**。応募の URL（`application_url`）は、**公式の情報元（`source_type`）で、取得元の公式ドメイン（登録簿の `official_url` / `lottery_url` のホスト。サブドメインは可。告知の一覧 `news_url` のホストは含めない）にある、出来事固有の https の `entry_url`** だけ。曖昧なら `application_url = null`・actionable = false

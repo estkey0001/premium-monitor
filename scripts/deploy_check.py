@@ -4164,6 +4164,7 @@ def check() -> list[dict]:
     results.extend(_check_coverage_wave5())
     results.extend(_check_coverage_wave6())
     results.extend(_check_coverage_wave7a())
+    results.extend(_check_coverage_wave7b())
 
     # ══════════════════════════════════════════════════════════════════
     # #820-#825: データの正確さ・鮮度の偽装（Phase 0）
@@ -6909,6 +6910,73 @@ def _check_coverage_wave7a(root: Path | None = None) -> list[dict]:
     return [{"level": "ok" if not bad else "error", "check": "coverage_wave7a_tcg_application_url",
              "message": "#878 TCG の告知の URL だけでは応募できると扱わない・応募の URL は取得元の公式ドメインの https だけ・日程の矛盾は review_required・"
                         "定価は商品 ID の完全一致と TCG の種類の一致だけ・応募先の分類は通信も通知もしない・個別は公開しない"
+                        + ("" if not bad else f" ← {bad[:4]}")}]
+
+
+def _check_coverage_wave7b(root: Path | None = None) -> list[dict]:
+    """Coverage Wave 7b（#879）: 運営者向けの作業キューは非公開（公開は件数だけ）・確定や通知に依存しない・同じ入力なら同じ順位・
+    古い候補は URGENT のまま残さない・隔離された価格は確定にしない・TCG は応募の URL が無ければ actionable にしない・上限 10 件。"""
+    import json as _j79
+    import random as _r79
+    import re as _re79
+    from datetime import datetime as _dt79
+    from datetime import timedelta as _td79
+    from datetime import timezone as _tz79
+    root = root or Path(__file__).resolve().parent.parent
+    bad = []
+    try:
+        from src.research import candidates as rc
+        from src.research import operator_queue as oq
+        now = _dt79(2026, 11, 6, 12, 0, tzinfo=_tz79(_td79(hours=9)))
+
+        def cand(cid, spread=20000, missing=(), observed="2026-11-06T09:00:00+09:00"):
+            return {"candidate_id": cid, "status": rc.RESEARCH_CANDIDATE, "product_identity": {"product_id": "p-" + cid, "name": "秘密の商品" + cid},
+                    "known_cost_spread": spread, "raw_spread": spread, "missing_requirements": list(missing), "sell_observed_at": observed,
+                    "source": {"buy": "official", "sell": "店"}, "source_url": {"buy": "https://b.example/1", "sell": "https://s.example/1"}}
+
+        items = [cand(f"c{i:02d}", spread=1000 * (i + 1), missing=(rc.OFFICIAL_UNVERIFIED,)) for i in range(14)]
+        res = oq.build(candidates=items, product_candidates=[], tcg_events=[], now=now)
+        if len(res["queue"]) != 10 or res["counts"]["queue_count"] != 10:
+            bad.append("キューが 10 件の上限になっていない")
+        sh = items[:]
+        _r79.Random(7).shuffle(sh)
+        if [r["candidate_id"] for r in oq.build(candidates=sh, product_candidates=[], tcg_events=[], now=now)["queue"]] != [r["candidate_id"] for r in res["queue"]]:
+            bad.append("入力の順序で順位が変わる（決まった並びでない）")
+        urgent = oq.build(candidates=[cand("u", missing=(rc.STOCK_UNKNOWN,))], product_candidates=[], tcg_events=[], now=now)["queue"][0]
+        if urgent["priority"] != oq.URGENT:
+            bad.append("価格差が正で足りないのが在庫だけの候補が URGENT でない")
+        stale = oq.build(candidates=[cand("s", missing=(rc.SELL_STALE, rc.STOCK_UNKNOWN))], product_candidates=[], tcg_events=[], now=now)["queue"][0]
+        if stale["priority"] == oq.URGENT or stale["next_action"] != oq.WAIT_FOR_FRESH_PRICE:
+            bad.append("古い候補が URGENT のまま・新しい価格を待つ行動になっていない")
+        quar = oq.build(candidates=[cand("q", missing=(rc.ABOVE_GENRE_MAX,))], product_candidates=[], tcg_events=[], now=now)["queue"][0]
+        if not quar["quarantined"] or any(k in quar for k in ("status", "confirmed", "actionable")):
+            bad.append("隔離された価格が確定・actionable の項目を持つ（確定にしない）")
+        ev = {"status": "OPEN", "event_type": "LOTTERY", "retailer": "CARD_LABO", "product_name": "商品T", "product_id": "pid-1", "product_match": "exact",
+              "hours_to_deadline": 10.0, "application_end_precision": "date", "channel": "UNKNOWN", "application_url": None, "msrp_linked": False}
+        t = oq.build(candidates=[], product_candidates=[], tcg_events=[ev], now=now)["queue"][0]
+        if t["priority"] == oq.URGENT or "actionable" in t or oq.VERIFY_APPLICATION_URL not in t["next_actions"]:
+            bad.append("TCG: 日付だけの締切が URGENT・応募の URL が無いのに確認の行動が無い・actionable の項目がある")
+        report = {"schema": 1, "type": "RESEARCH_CANDIDATES", "generated_at": now.isoformat(), "candidates": [], "counts": {},
+                  "metrics": {"operator_queue": res["counts"], "operator_queue_next_actions": res["next_action_counts"]}, "operator_queue": res}
+        pub = _j79.dumps(rc.public_summary(report), ensure_ascii=False)
+        if "秘密の商品" in pub or "s.example" in pub or "operator_queue\"" in pub:
+            bad.append("公開の集計に個別のキューが出ている")
+        if not {"operator_queue", "queue", "next_action", "missing_evidence"} <= rc.PRIVATE_KEYS:
+            bad.append("作業キューの項目が非公開の一覧に無い")
+        src = (root / "src/research/operator_queue.py").read_text(encoding="utf-8")
+        code = _re79.sub(r'"""(?:.|\n)*?"""', "", src)
+        for banned in ("notifiers", "actionability", "eligibility", "profit_formula", "requests", "urllib", "outbox", "telegram"):
+            if banned in code:
+                bad.append(f"作業キューが確定・通知・通信の部品に依存している: {banned}")
+        if _re79.search(r"\bVERIFIED\b", code):
+            bad.append("作業キューが確定の状態（VERIFIED）を扱っている")
+        if ".private" not in (root / ".gitignore").read_text(encoding="utf-8"):
+            bad.append(".private が .gitignore に無い（個別のキューが追跡されうる）")
+    except Exception as exc:  # noqa: BLE001
+        bad.append(f"検査に失敗: {type(exc).__name__}: {exc}")
+    return [{"level": "ok" if not bad else "error", "check": "coverage_wave7b_operator_queue",
+             "message": "#879 運営者向けの作業キューは非公開（公開は件数だけ）・確定や通知に依存しない・同じ入力なら同じ順位・古い候補は URGENT のまま残さない・"
+                        "隔離された価格は確定にしない・TCG は応募の URL が無ければ actionable にしない・上限 10 件"
                         + ("" if not bad else f" ← {bad[:4]}")}]
 
 

@@ -1,17 +1,17 @@
 {
-  "generated_at": "2026-11-05 21:37 JST",
-  "date": "2026-11-05",
+  "generated_at": "2026-11-06 21:35 JST",
+  "date": "2026-11-06",
   "health_score": {
-    "data_quality": 14.4,
+    "data_quality": 14.5,
     "profit_discovery": 15.0,
     "source_health": 12.6,
     "link_quality": 4.8,
     "freshness": 3.8,
-    "total": 50.6
+    "total": 50.7
   },
   "data_quality": {
     "total_obs": 235,
-    "usable_obs": 75,
+    "usable_obs": 76,
     "stale_count": 145,
     "stale_rate": 0.617,
     "config_reference_count": 30,

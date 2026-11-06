@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-05T21:21:45.367530+09:00",
+  "generated_at": "2026-11-06T21:18:56.410605+09:00",
   "items": [
     {
       "first_seen_at": "2026-10-29T06:02:34.264107+09:00",
@@ -27,7 +27,7 @@
       "source_type": "RETAILER_OFFICIAL",
       "confidence": "high",
       "published_at": "2026-10-22T00:00:00+09:00",
-      "last_seen_at": "2026-11-05T21:21:45.358593+09:00",
+      "last_seen_at": "2026-11-06T21:18:56.404249+09:00",
       "status": "WINNER_PURCHASE_PERIOD"
     },
     {
@@ -56,7 +56,7 @@
       "source_type": "RETAILER_OFFICIAL",
       "confidence": "high",
       "published_at": "2026-10-22T00:00:00+09:00",
-      "last_seen_at": "2026-11-05T21:21:45.358593+09:00",
+      "last_seen_at": "2026-11-06T21:18:56.404249+09:00",
       "status": "WINNER_PURCHASE_PERIOD"
     },
     {
@@ -85,7 +85,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-10-20T00:00:00+09:00",
-      "last_seen_at": "2026-11-05T21:21:45.358593+09:00",
+      "last_seen_at": "2026-11-06T21:18:56.404249+09:00",
       "status": "WINNER_PURCHASE_PERIOD"
     },
     {
@@ -114,7 +114,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-10-16T00:00:00+09:00",
-      "last_seen_at": "2026-11-05T21:21:45.358593+09:00",
+      "last_seen_at": "2026-11-06T21:18:56.404249+09:00",
       "status": "WINNER_PURCHASE_PERIOD"
     },
     {
@@ -143,7 +143,7 @@
       "source_type": "RETAILER_OFFICIAL",
       "confidence": "high",
       "published_at": "2026-10-15T00:00:00+09:00",
-      "last_seen_at": "2026-11-05T21:21:45.358593+09:00",
+      "last_seen_at": "2026-11-06T21:18:56.404249+09:00",
       "status": "ENDED"
     },
     {
@@ -230,7 +230,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-10-06T00:00:00+09:00",
-      "last_seen_at": "2026-11-05T21:21:45.358593+09:00",
+      "last_seen_at": "2026-11-06T21:18:56.404249+09:00",
       "status": "ENDED"
     },
     {
@@ -259,7 +259,7 @@
       "source_type": "MANUAL_VERIFIED",
       "confidence": "medium",
       "published_at": null,
-      "last_seen_at": "2026-11-05T21:21:45.358593+09:00",
+      "last_seen_at": "2026-11-06T21:18:56.404249+09:00",
       "status": "ENDED"
     },
     {
@@ -288,7 +288,7 @@
       "source_type": "MANUAL_VERIFIED",
       "confidence": "medium",
       "published_at": null,
-      "last_seen_at": "2026-11-05T21:21:45.358593+09:00",
+      "last_seen_at": "2026-11-06T21:18:56.404249+09:00",
       "status": "ENDED"
     },
     {
@@ -346,7 +346,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-10-02T00:00:00+09:00",
-      "last_seen_at": "2026-11-05T21:21:45.358593+09:00",
+      "last_seen_at": "2026-11-06T21:18:56.404249+09:00",
       "status": "ENDED"
     },
     {
@@ -491,7 +491,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-09-18T00:00:00+09:00",
-      "last_seen_at": "2026-11-05T21:21:45.358593+09:00",
+      "last_seen_at": "2026-11-06T21:18:56.404249+09:00",
       "status": "ENDED"
     },
     {
@@ -520,7 +520,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-09-01T00:00:00+09:00",
-      "last_seen_at": "2026-11-05T21:21:45.358593+09:00",
+      "last_seen_at": "2026-11-06T21:18:56.404249+09:00",
       "status": "ENDED"
     },
     {
@@ -549,7 +549,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-09-01T00:00:00+09:00",
-      "last_seen_at": "2026-11-05T21:21:45.358593+09:00",
+      "last_seen_at": "2026-11-06T21:18:56.404249+09:00",
       "status": "ENDED"
     },
     {
@@ -636,7 +636,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-08-11T00:00:00+09:00",
-      "last_seen_at": "2026-11-05T21:21:45.358593+09:00",
+      "last_seen_at": "2026-11-06T21:18:56.404249+09:00",
       "status": "ENDED"
     },
     {
@@ -665,7 +665,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-08-06T00:00:00+09:00",
-      "last_seen_at": "2026-11-05T21:21:45.358593+09:00",
+      "last_seen_at": "2026-11-06T21:18:56.404249+09:00",
       "status": "ENDED"
     },
     {
@@ -724,7 +724,7 @@
       "confidence": "medium",
       "published_at": "2026-10-28T00:00:00+09:00",
       "last_seen_at": "2026-11-01T20:54:05.321770+09:00",
-      "status": "WINNER_ANNOUNCED"
+      "status": "WINNER_PURCHASE_PERIOD"
     },
     {
       "first_seen_at": "2026-10-28T20:00:57.219039+09:00",
@@ -956,7 +956,7 @@
       "confidence": "medium",
       "published_at": "2026-10-26T00:00:00+09:00",
       "last_seen_at": "2026-10-30T00:38:14.291331+09:00",
-      "status": "WINNER_PURCHASE_PERIOD"
+      "status": "ENDED"
     },
     {
       "first_seen_at": "2026-10-28T22:52:57.082392+09:00",
@@ -1043,7 +1043,7 @@
       "confidence": "medium",
       "published_at": "2026-10-25T00:00:00+09:00",
       "last_seen_at": "2026-10-30T00:38:14.291331+09:00",
-      "status": "WINNER_PURCHASE_PERIOD"
+      "status": "ENDED"
     },
     {
       "first_seen_at": "2026-10-29T02:22:08.117842+09:00",
@@ -1129,7 +1129,7 @@
       "source_type": "RETAILER_OFFICIAL",
       "confidence": "high",
       "published_at": null,
-      "last_seen_at": "2026-11-05T21:21:45.358593+09:00",
+      "last_seen_at": "2026-11-06T21:18:56.404249+09:00",
       "status": "ENDED"
     },
     {
@@ -1158,7 +1158,7 @@
       "source_type": "RETAILER_OFFICIAL",
       "confidence": "high",
       "published_at": null,
-      "last_seen_at": "2026-11-05T21:21:45.358593+09:00",
+      "last_seen_at": "2026-11-06T21:18:56.404249+09:00",
       "status": "ENDED"
     },
     {
@@ -1275,7 +1275,7 @@
       "confidence": "medium",
       "published_at": "2026-10-15T00:00:00+09:00",
       "last_seen_at": "2026-10-30T00:38:14.291331+09:00",
-      "status": "WINNER_ANNOUNCED"
+      "status": "ENDED"
     },
     {
       "first_seen_at": "2026-10-29T06:02:34.264107+09:00",
@@ -2029,7 +2029,7 @@
       "confidence": "medium",
       "published_at": "2026-11-02T00:00:00+09:00",
       "last_seen_at": "2026-11-03T21:18:44.097266+09:00",
-      "status": "ENDING_SOON"
+      "status": "RESULT_PENDING"
     },
     {
       "first_seen_at": "2026-11-02T21:30:42.287728+09:00",
@@ -2058,7 +2058,7 @@
       "confidence": "medium",
       "published_at": "2026-11-02T00:00:00+09:00",
       "last_seen_at": "2026-11-03T21:18:44.097266+09:00",
-      "status": "ENDING_SOON"
+      "status": "RESULT_PENDING"
     },
     {
       "first_seen_at": "2026-11-02T21:30:42.287728+09:00",
@@ -2116,7 +2116,7 @@
       "confidence": "medium",
       "published_at": "2026-11-02T00:00:00+09:00",
       "last_seen_at": "2026-11-03T21:18:44.097266+09:00",
-      "status": "ENDING_SOON"
+      "status": "RESULT_PENDING"
     },
     {
       "first_seen_at": "2026-11-02T21:30:42.287728+09:00",
@@ -2145,7 +2145,7 @@
       "confidence": "medium",
       "published_at": "2026-11-02T00:00:00+09:00",
       "last_seen_at": "2026-11-03T21:18:44.097266+09:00",
-      "status": "ENDING_SOON"
+      "status": "RESULT_PENDING"
     },
     {
       "first_seen_at": "2026-11-02T21:30:42.287728+09:00",
@@ -2203,7 +2203,7 @@
       "confidence": "medium",
       "published_at": "2026-11-03T00:00:00+09:00",
       "last_seen_at": "2026-11-04T21:21:30.152962+09:00",
-      "status": "ENDING_SOON"
+      "status": "RESULT_PENDING"
     },
     {
       "first_seen_at": "2026-11-03T21:18:44.097266+09:00",
@@ -2261,7 +2261,7 @@
       "confidence": "medium",
       "published_at": "2026-11-03T00:00:00+09:00",
       "last_seen_at": "2026-11-04T21:21:30.152962+09:00",
-      "status": "ENDING_SOON"
+      "status": "RESULT_PENDING"
     },
     {
       "first_seen_at": "2026-11-03T21:18:44.097266+09:00",
@@ -2290,7 +2290,7 @@
       "confidence": "medium",
       "published_at": "2026-11-03T00:00:00+09:00",
       "last_seen_at": "2026-11-04T21:21:30.152962+09:00",
-      "status": "ENDING_SOON"
+      "status": "RESULT_PENDING"
     },
     {
       "first_seen_at": "2026-11-03T21:18:44.097266+09:00",
@@ -2319,7 +2319,7 @@
       "confidence": "medium",
       "published_at": "2026-11-02T00:00:00+09:00",
       "last_seen_at": "2026-11-03T21:18:44.097266+09:00",
-      "status": "ENDING_SOON"
+      "status": "RESULT_PENDING"
     },
     {
       "first_seen_at": "2026-11-04T21:21:30.152962+09:00",
@@ -2348,7 +2348,7 @@
       "confidence": "medium",
       "published_at": "2026-11-04T00:00:00+09:00",
       "last_seen_at": "2026-11-05T21:21:45.358593+09:00",
-      "status": "ENDING_SOON"
+      "status": "RESULT_PENDING"
     },
     {
       "first_seen_at": "2026-11-04T21:21:30.152962+09:00",
@@ -2464,7 +2464,7 @@
       "confidence": "medium",
       "published_at": "2026-11-05T00:00:00+09:00",
       "last_seen_at": "2026-11-05T21:21:45.358593+09:00",
-      "status": "UPCOMING"
+      "status": "OPEN"
     },
     {
       "first_seen_at": "2026-11-05T21:21:45.358593+09:00",
@@ -2493,7 +2493,7 @@
       "confidence": "medium",
       "published_at": "2026-11-05T00:00:00+09:00",
       "last_seen_at": "2026-11-05T21:21:45.358593+09:00",
-      "status": "UPCOMING"
+      "status": "ENDING_SOON"
     },
     {
       "first_seen_at": "2026-11-05T21:21:45.358593+09:00",
@@ -2522,7 +2522,7 @@
       "confidence": "medium",
       "published_at": "2026-11-05T00:00:00+09:00",
       "last_seen_at": "2026-11-05T21:21:45.358593+09:00",
-      "status": "UPCOMING"
+      "status": "OPEN"
     },
     {
       "first_seen_at": "2026-11-05T21:21:45.358593+09:00",
@@ -2551,7 +2551,7 @@
       "confidence": "medium",
       "published_at": "2026-11-05T00:00:00+09:00",
       "last_seen_at": "2026-11-05T21:21:45.358593+09:00",
-      "status": "UPCOMING"
+      "status": "OPEN"
     },
     {
       "first_seen_at": "2026-11-05T21:21:45.358593+09:00",
@@ -2580,6 +2580,354 @@
       "confidence": "medium",
       "published_at": "2026-11-05T00:00:00+09:00",
       "last_seen_at": "2026-11-05T21:21:45.358593+09:00",
+      "status": "ENDING_SOON"
+    },
+    {
+      "first_seen_at": "2026-11-06T21:18:56.404249+09:00",
+      "lottery_id": "lot-5020b3cc0b5c",
+      "tcg": "POKEMON",
+      "product_name": "ポケモンカードゲームMEGA『スペシャルデッキセットMEGA メガオーダイル・メガカイリュー・メガゲンガー』",
+      "product_id": null,
+      "retailer": "CARD_LABO",
+      "retailer_name": "カードラボ",
+      "store_name": "カードラボ販売買取センターNAMBA",
+      "store_specific": true,
+      "event_type": "LOTTERY",
+      "application_start": null,
+      "application_end": null,
+      "winner_announcement_at": null,
+      "purchase_start": null,
+      "purchase_end": null,
+      "application_start_date": "2026-11-06",
+      "application_end_date": "2026-11-08",
+      "winner_announcement_date": "2026-11-09",
+      "purchase_start_date": null,
+      "purchase_end_date": null,
+      "retail_price": null,
+      "source_url": "https://www.c-labo.jp/shop/namba2nd/blog/623973/",
+      "source_type": "STORE_OFFICIAL",
+      "confidence": "medium",
+      "published_at": "2026-11-06T00:00:00+09:00",
+      "last_seen_at": "2026-11-06T21:18:56.404249+09:00",
+      "status": "UPCOMING"
+    },
+    {
+      "first_seen_at": "2026-11-06T21:18:56.404249+09:00",
+      "lottery_id": "lot-4b044e5671cd",
+      "tcg": "ONE_PIECE",
+      "product_name": "ブースターパック 神の支配【OP-18】",
+      "product_id": "ブースターパック-神の支配-op-18",
+      "retailer": "CARD_LABO",
+      "retailer_name": "カードラボ",
+      "store_name": "カードラボ大分店",
+      "store_specific": true,
+      "event_type": "LOTTERY",
+      "application_start": null,
+      "application_end": null,
+      "winner_announcement_at": null,
+      "purchase_start": null,
+      "purchase_end": null,
+      "application_start_date": "2026-11-06",
+      "application_end_date": "2026-11-08",
+      "winner_announcement_date": "2026-11-09",
+      "purchase_start_date": null,
+      "purchase_end_date": null,
+      "retail_price": null,
+      "source_url": "https://www.c-labo.jp/shop/oita/blog/624013/",
+      "source_type": "STORE_OFFICIAL",
+      "confidence": "medium",
+      "published_at": "2026-11-06T00:00:00+09:00",
+      "last_seen_at": "2026-11-06T21:18:56.404249+09:00",
+      "status": "UPCOMING"
+    },
+    {
+      "first_seen_at": "2026-11-06T21:18:56.404249+09:00",
+      "lottery_id": "lot-7da1a4fae6ea",
+      "tcg": "ONE_PIECE",
+      "product_name": "ブースターパック 神の支配【OP-18】",
+      "product_id": "ブースターパック-神の支配-op-18",
+      "retailer": "CARD_LABO",
+      "retailer_name": "カードラボ",
+      "store_name": "カードラボ姫路店",
+      "store_specific": true,
+      "event_type": "LOTTERY",
+      "application_start": null,
+      "application_end": null,
+      "winner_announcement_at": null,
+      "purchase_start": null,
+      "purchase_end": null,
+      "application_start_date": "2026-11-06",
+      "application_end_date": "2026-11-08",
+      "winner_announcement_date": "2026-11-09",
+      "purchase_start_date": null,
+      "purchase_end_date": null,
+      "retail_price": null,
+      "source_url": "https://www.c-labo.jp/shop/himeji/blog/623969/",
+      "source_type": "STORE_OFFICIAL",
+      "confidence": "medium",
+      "published_at": "2026-11-06T00:00:00+09:00",
+      "last_seen_at": "2026-11-06T21:18:56.404249+09:00",
+      "status": "UPCOMING"
+    },
+    {
+      "first_seen_at": "2026-11-06T21:18:56.404249+09:00",
+      "lottery_id": "lot-bed05ccd3593",
+      "tcg": "ONE_PIECE",
+      "product_name": "ブースターパック 神の支配【OP-18】",
+      "product_id": "ブースターパック-神の支配-op-18",
+      "retailer": "CARD_LABO",
+      "retailer_name": "カードラボ",
+      "store_name": "カードラボ博多マルイ店",
+      "store_specific": true,
+      "event_type": "LOTTERY",
+      "application_start": null,
+      "application_end": null,
+      "winner_announcement_at": null,
+      "purchase_start": null,
+      "purchase_end": null,
+      "application_start_date": "2026-11-06",
+      "application_end_date": "2026-11-08",
+      "winner_announcement_date": "2026-11-09",
+      "purchase_start_date": null,
+      "purchase_end_date": null,
+      "retail_price": null,
+      "source_url": "https://www.c-labo.jp/shop/hakatamarui/blog/623933/",
+      "source_type": "STORE_OFFICIAL",
+      "confidence": "medium",
+      "published_at": "2026-11-06T00:00:00+09:00",
+      "last_seen_at": "2026-11-06T21:18:56.404249+09:00",
+      "status": "UPCOMING"
+    },
+    {
+      "first_seen_at": "2026-11-06T21:18:56.404249+09:00",
+      "lottery_id": "lot-ff49378f01cd",
+      "tcg": "ONE_PIECE",
+      "product_name": "ブースターパック 神の支配【OP-18】",
+      "product_id": "ブースターパック-神の支配-op-18",
+      "retailer": "CARD_LABO",
+      "retailer_name": "カードラボ",
+      "store_name": "カードラボ小倉店",
+      "store_specific": true,
+      "event_type": "LOTTERY",
+      "application_start": null,
+      "application_end": null,
+      "winner_announcement_at": null,
+      "purchase_start": null,
+      "purchase_end": null,
+      "application_start_date": "2026-11-06",
+      "application_end_date": "2026-11-08",
+      "winner_announcement_date": "2026-11-09",
+      "purchase_start_date": null,
+      "purchase_end_date": null,
+      "retail_price": null,
+      "source_url": "https://www.c-labo.jp/shop/kokura/blog/623944/",
+      "source_type": "STORE_OFFICIAL",
+      "confidence": "medium",
+      "published_at": "2026-11-06T00:00:00+09:00",
+      "last_seen_at": "2026-11-06T21:18:56.404249+09:00",
+      "status": "UPCOMING"
+    },
+    {
+      "first_seen_at": "2026-11-06T21:18:56.404249+09:00",
+      "lottery_id": "lot-fdce186f6213",
+      "tcg": "ONE_PIECE",
+      "product_name": "ONE PIECEカードゲーム ブースターパック 神の支配",
+      "product_id": "ブースターパック-神の支配-op-18",
+      "retailer": "CARD_LABO",
+      "retailer_name": "カードラボ",
+      "store_name": "カードラボオタロード本店",
+      "store_specific": true,
+      "event_type": "LOTTERY",
+      "application_start": null,
+      "application_end": null,
+      "winner_announcement_at": null,
+      "purchase_start": null,
+      "purchase_end": null,
+      "application_start_date": "2026-11-06",
+      "application_end_date": "2026-11-08",
+      "winner_announcement_date": "2026-11-09",
+      "purchase_start_date": null,
+      "purchase_end_date": null,
+      "retail_price": null,
+      "source_url": "https://www.c-labo.jp/shop/otaro/blog/624030/",
+      "source_type": "STORE_OFFICIAL",
+      "confidence": "medium",
+      "published_at": "2026-11-06T00:00:00+09:00",
+      "last_seen_at": "2026-11-06T21:18:56.404249+09:00",
+      "status": "UPCOMING"
+    },
+    {
+      "first_seen_at": "2026-11-06T21:18:56.404249+09:00",
+      "lottery_id": "lot-82c37ef447ae",
+      "tcg": "POKEMON",
+      "product_name": "ポケモンカードゲーム 30thセレブレーション",
+      "product_id": null,
+      "retailer": "CARD_LABO",
+      "retailer_name": "カードラボ",
+      "store_name": "カードラボ販売買取センターNAMBA",
+      "store_specific": true,
+      "event_type": "LOTTERY",
+      "application_start": null,
+      "application_end": null,
+      "winner_announcement_at": null,
+      "purchase_start": null,
+      "purchase_end": null,
+      "application_start_date": "2026-11-06",
+      "application_end_date": "2026-11-08",
+      "winner_announcement_date": "2026-11-09",
+      "purchase_start_date": null,
+      "purchase_end_date": null,
+      "retail_price": null,
+      "source_url": "https://www.c-labo.jp/shop/namba2nd/blog/623986/",
+      "source_type": "STORE_OFFICIAL",
+      "confidence": "medium",
+      "published_at": "2026-11-06T00:00:00+09:00",
+      "last_seen_at": "2026-11-06T21:18:56.404249+09:00",
+      "status": "UPCOMING"
+    },
+    {
+      "first_seen_at": "2026-11-06T21:18:56.404249+09:00",
+      "lottery_id": "lot-542ca4d1f148",
+      "tcg": "POKEMON",
+      "product_name": "ポケモンカードゲーム MEGA ハドウシーカー",
+      "product_id": "pokemon-拡張パック-ハドウシーカー",
+      "retailer": "CARD_LABO",
+      "retailer_name": "カードラボ",
+      "store_name": "カードラボ博多マルイ店",
+      "store_specific": true,
+      "event_type": "LOTTERY",
+      "application_start": null,
+      "application_end": null,
+      "winner_announcement_at": null,
+      "purchase_start": null,
+      "purchase_end": null,
+      "application_start_date": "2026-11-06",
+      "application_end_date": "2026-11-08",
+      "winner_announcement_date": "2026-11-09",
+      "purchase_start_date": null,
+      "purchase_end_date": null,
+      "retail_price": null,
+      "source_url": "https://www.c-labo.jp/shop/hakatamarui/blog/623884/",
+      "source_type": "STORE_OFFICIAL",
+      "confidence": "medium",
+      "published_at": "2026-11-06T00:00:00+09:00",
+      "last_seen_at": "2026-11-06T21:18:56.404249+09:00",
+      "status": "UPCOMING"
+    },
+    {
+      "first_seen_at": "2026-11-06T21:18:56.404249+09:00",
+      "lottery_id": "lot-53401a3e5ba2",
+      "tcg": "ONE_PIECE",
+      "product_name": "ブースターパック 神の支配【OP-18】",
+      "product_id": "ブースターパック-神の支配-op-18",
+      "retailer": "CARD_LABO",
+      "retailer_name": "カードラボ",
+      "store_name": "カードラボ熊本店",
+      "store_specific": true,
+      "event_type": "LOTTERY",
+      "application_start": null,
+      "application_end": null,
+      "winner_announcement_at": null,
+      "purchase_start": null,
+      "purchase_end": null,
+      "application_start_date": "2026-11-06",
+      "application_end_date": "2026-11-08",
+      "winner_announcement_date": "2026-11-09",
+      "purchase_start_date": null,
+      "purchase_end_date": null,
+      "retail_price": null,
+      "source_url": "https://www.c-labo.jp/shop/kumamoto/blog/623996/",
+      "source_type": "STORE_OFFICIAL",
+      "confidence": "medium",
+      "published_at": "2026-11-06T00:00:00+09:00",
+      "last_seen_at": "2026-11-06T21:18:56.404249+09:00",
+      "status": "UPCOMING"
+    },
+    {
+      "first_seen_at": "2026-11-06T21:18:56.404249+09:00",
+      "lottery_id": "lot-9239cfb0b670",
+      "tcg": "POKEMON",
+      "product_name": "ポケモンカードゲーム MEGA ハドウシーカー",
+      "product_id": "pokemon-拡張パック-ハドウシーカー",
+      "retailer": "CARD_LABO",
+      "retailer_name": "カードラボ",
+      "store_name": "カードラボ熊本店",
+      "store_specific": true,
+      "event_type": "LOTTERY",
+      "application_start": null,
+      "application_end": null,
+      "winner_announcement_at": null,
+      "purchase_start": null,
+      "purchase_end": null,
+      "application_start_date": "2026-11-06",
+      "application_end_date": "2026-11-08",
+      "winner_announcement_date": "2026-11-09",
+      "purchase_start_date": null,
+      "purchase_end_date": null,
+      "retail_price": null,
+      "source_url": "https://www.c-labo.jp/shop/kumamoto/blog/623983/",
+      "source_type": "STORE_OFFICIAL",
+      "confidence": "medium",
+      "published_at": "2026-11-06T00:00:00+09:00",
+      "last_seen_at": "2026-11-06T21:18:56.404249+09:00",
+      "status": "UPCOMING"
+    },
+    {
+      "first_seen_at": "2026-11-06T21:18:56.404249+09:00",
+      "lottery_id": "lot-f95540139cd4",
+      "tcg": "POKEMON",
+      "product_name": "ポケモンカードゲーム MEGA ハドウシーカー",
+      "product_id": "pokemon-拡張パック-ハドウシーカー",
+      "retailer": "CARD_LABO",
+      "retailer_name": "カードラボ",
+      "store_name": "カードラボ姫路店",
+      "store_specific": true,
+      "event_type": "LOTTERY",
+      "application_start": null,
+      "application_end": null,
+      "winner_announcement_at": null,
+      "purchase_start": null,
+      "purchase_end": null,
+      "application_start_date": "2026-11-06",
+      "application_end_date": "2026-11-08",
+      "winner_announcement_date": "2026-11-09",
+      "purchase_start_date": null,
+      "purchase_end_date": null,
+      "retail_price": null,
+      "source_url": "https://www.c-labo.jp/shop/himeji/blog/623963/",
+      "source_type": "STORE_OFFICIAL",
+      "confidence": "medium",
+      "published_at": "2026-11-06T00:00:00+09:00",
+      "last_seen_at": "2026-11-06T21:18:56.404249+09:00",
+      "status": "UPCOMING"
+    },
+    {
+      "first_seen_at": "2026-11-06T21:18:56.404249+09:00",
+      "lottery_id": "lot-c6cfc2f872fa",
+      "tcg": "ONE_PIECE",
+      "product_name": "ONE PIECEカードゲーム ブースターパック 神の支配【OP-18】",
+      "product_id": "ブースターパック-神の支配-op-18",
+      "retailer": "CARD_LABO",
+      "retailer_name": "カードラボ",
+      "store_name": "カードラボ岐阜店",
+      "store_specific": true,
+      "event_type": "LOTTERY",
+      "application_start": null,
+      "application_end": null,
+      "winner_announcement_at": null,
+      "purchase_start": null,
+      "purchase_end": null,
+      "application_start_date": "2026-11-06",
+      "application_end_date": "2026-11-08",
+      "winner_announcement_date": "2026-11-09",
+      "purchase_start_date": null,
+      "purchase_end_date": null,
+      "retail_price": null,
+      "source_url": "https://www.c-labo.jp/shop/gifu/blog/623890/",
+      "source_type": "STORE_OFFICIAL",
+      "confidence": "medium",
+      "published_at": "2026-11-06T00:00:00+09:00",
+      "last_seen_at": "2026-11-06T21:18:56.404249+09:00",
       "status": "UPCOMING"
     }
   ],
@@ -2613,11 +2961,11 @@
       "average_application_window_hours": 79.0
     },
     "CARD_LABO": {
-      "events_total": 61,
-      "events_last_30d": 59,
-      "events_last_90d": 61,
-      "average_lead_time_hours": 0.4,
-      "average_application_window_hours": 64.5
+      "events_total": 73,
+      "events_last_30d": 71,
+      "events_last_90d": 73,
+      "average_lead_time_hours": 0.3,
+      "average_application_window_hours": 61.8
     },
     "FUKUFUKU_TOREKA": {
       "events_total": 4,

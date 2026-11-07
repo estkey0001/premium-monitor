@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-06T21:18:56+09:00",
+  "generated_at": "2026-11-07T20:32:44+09:00",
   "apple": {
     "source": "apple_jp_official",
     "list_status": "ok",
@@ -12,13 +12,13 @@
       "iphone-duo"
     ],
     "checked": [
-      "iphone-air",
-      "iphone-duo"
+      "iphone-16",
+      "iphone-17"
     ],
     "errors": {},
-    "unknown_parts": 14,
-    "matched": 2,
-    "pending": 5,
+    "unknown_parts": 10,
+    "matched": 1,
+    "pending": 2,
     "requests": 3,
     "cutoff": "",
     "saved": true
@@ -32,16 +32,16 @@
     },
     "inputs_stale": [],
     "review_required": 2,
-    "matched_events": 28,
-    "release": 5,
+    "matched_events": 31,
+    "release": 8,
     "by_kind": {
-      "LOTTERY": 29,
+      "LOTTERY": 32,
       "PREORDER": 0,
       "FIRST_COME": 0,
       "RESTOCK": 1,
-      "RELEASE": 5
+      "RELEASE": 8
     },
-    "tcg_products": 23,
+    "tcg_products": 25,
     "sources": {
       "configured": 22,
       "implemented": 11,
@@ -279,9 +279,9 @@
     "events": 0
   },
   "metrics": {
-    "product_candidates": 40,
-    "new_product_candidates": 38,
-    "pending_review": 24,
+    "product_candidates": 43,
+    "new_product_candidates": 41,
+    "pending_review": 27,
     "review_required": 14,
     "matched_existing": 1,
     "approved": 0,
@@ -290,11 +290,11 @@
     "stale": 0,
     "unknown_official_products": 62,
     "apple_candidates": 17,
-    "tcg_products": 21,
-    "event_candidates": 110,
+    "tcg_products": 24,
+    "event_candidates": 120,
     "review_required_announcements": 3,
-    "matched_events": 87,
-    "stale_events": 20,
+    "matched_events": 93,
+    "stale_events": 24,
     "approved_events": 0,
     "registered_events": 0
   },

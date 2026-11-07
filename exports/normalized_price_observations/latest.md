@@ -1,6 +1,6 @@
 # Normalized Price Observations
 
-生成: 2026-11-06 21:35 JST
+生成: 2026-11-07 20:48 JST
 
 全価格（買取/販売/出品/落札/海外/下取/公式）を単一スキーマに正規化。
 `price_role`（buy/sell/official/trade_in）を必ず付与し、
@@ -68,7 +68,7 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 | Apple Watch Ultra 3 | official | official_price | ¥128,800 | medium | 9999.0d | メーカー公式/定価 |
 | AirPods Pro 3 | official | official_price | ¥42,800 | high | 0.9d | メーカー公式/定価 |
 | AirPods Max | official | official_price | ¥84,800 | medium | 9999.0d | メーカー公式/定価 |
-| Nintendo Switch 2 | official | official_price | ¥59,980 | high | 29.9d | メーカー公式/定価 |
+| Nintendo Switch 2 | official | official_price | ¥59,980 | high | 30.9d | メーカー公式/定価 |
 | Nintendo Switch 2 マリオカ | official | official_price | ¥59,980 | medium | 9999.0d | メーカー公式/定価 |
 | PlayStation 5 Pro | official | official_price | ¥137,980 | high | 0.9d | メーカー公式/定価 |
 | PlayStation 5 Digital  | official | official_price | ¥72,980 | medium | 9999.0d | メーカー公式/定価 |
@@ -89,14 +89,14 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 | RICOH GR IV | sell | buyback_price | ¥151,000 | used_s | 0.1d | フジヤカメラ |
 | SONY α1 II | sell | buyback_price | ¥547,000 | used_s | 0.1d | フジヤカメラ |
 | SONY α7CR | sell | buyback_price | ¥229,000 | used_s | 0.1d | フジヤカメラ |
-| SONY FX3 | sell | buyback_price | ¥363,000 | used_s | 0.1d | フジヤカメラ |
+| SONY FX3 | sell | buyback_price | ¥371,000 | used_s | 0.1d | フジヤカメラ |
 | Canon EOS R5 Mark II | sell | buyback_price | ¥375,000 | used_s | 0.1d | フジヤカメラ |
 | Nikon Zf | sell | buyback_price | ¥152,000 | used_s | 0.1d | フジヤカメラ |
 | Leica Q3 | sell | buyback_price | ¥586,000 | used_s | 0.1d | フジヤカメラ |
 | iPhone 17 Pro 256GB SI | sell | buyback_price | ¥174,000 | new_unopened_simfree | 0.1d | 買取商店 |
 | iPhone 17 Pro 256GB SI | sell | buyback_price | ¥172,000 | new_unopened_simfree | 0.1d | 買取一丁目 |
 | iPhone 17 Pro 512GB SI | sell | buyback_price | ¥202,500 | new_unopened_simfree | 0.1d | 買取商店 |
-| iPhone 17 Pro 512GB SI | sell | buyback_price | ¥198,000 | new_unopened_simfree | 0.1d | 買取一丁目 |
+| iPhone 17 Pro 512GB SI | sell | buyback_price | ¥203,000 | new_unopened_simfree | 0.1d | 買取一丁目 |
 | iPhone 17 Pro Max 256G | sell | buyback_price | ¥191,000 | new_unopened_simfree | 0.1d | 買取商店 |
 | iPhone 17 Pro Max 256G | sell | buyback_price | ¥190,000 | new_unopened_simfree | 0.1d | 買取一丁目 |
 | iPhone 17 Pro Max 512G | sell | buyback_price | ¥217,000 | new_unopened_simfree | 0.1d | 買取商店 |
@@ -105,7 +105,7 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 | iPhone 17 256GB SIMフリー | sell | buyback_price | ¥138,500 | new_unopened_simfree | 0.1d | 買取商店 |
 | AirPods Pro 3 | sell | buyback_price | ¥32,500 | new_unopened | 0.1d | 買取商店 |
 | iPhone Air 256GB SIMフリ | sell | buyback_price | ¥132,000 | new_unopened_simfree | 0.1d | 買取商店 |
-| iPhone Duo 256GB SIMフリ | sell | buyback_price | ¥371,000 | new_unopened_simfree | 0.1d | 買取商店 |
+| iPhone Duo 256GB SIMフリ | sell | buyback_price | ¥368,000 | new_unopened_simfree | 0.1d | 買取商店 |
 | FUJIFILM X100VI | sell | buyback_price | ¥260,000 | new_unopened | 0.1d | 買取商店 |
 | RICOH GR IV | sell | buyback_price | ¥205,000 | new_unopened | 0.1d | 買取商店 |
 | RICOH GR IV HDF | sell | buyback_price | ¥240,000 | new_unopened | 0.1d | 買取商店 |

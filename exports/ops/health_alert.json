@@ -2,30 +2,30 @@
   "type": "PRODUCTION_HEALTH_ALERT",
   "schema": 1,
   "audience": "operator",
-  "generated_at": "2026-11-06T20:48:07+09:00",
+  "generated_at": "2026-11-07T20:01:53+09:00",
   "note": "運営者向けの劣化アラート候補（商品の通知ではない）。外部へは送らない。CI の注記・Step Summary・管理画面に出す",
-  "active_count": 7,
+  "active_count": 8,
   "high": 4,
-  "warning": 3,
+  "warning": 4,
   "candidates": [
     {
-      "key": "official_verification_expiry:prod_x100vi",
-      "category": "official_verification_expiry",
-      "source": "prod_x100vi",
-      "severity": "HIGH",
-      "reason": "expired",
-      "title": "prod_x100vi の公式の確認が切れています",
-      "details": "確認日 2026-10-22（期限 14 日）",
+      "key": "official_recheck_failing:prod_a7rv",
+      "category": "official_recheck_failing",
+      "source": "prod_a7rv",
+      "severity": "WARNING",
+      "reason": "recheck_failed",
+      "title": "prod_a7rv の公式の再確認が 3 日連続で失敗しています",
+      "details": "公式ページの移動・表示の変更・ブロックの可能性。人が公式ページを確認する",
       "evidence": {
-        "days_left": -1
+        "consecutive_days": 3
       },
       "type": "PRODUCTION_HEALTH_ALERT",
-      "event": "ESCALATED",
-      "first_seen": "2026-11-02T20:59:54+09:00",
-      "generated_at": "2026-11-06T20:48:07+09:00"
+      "event": "NEW",
+      "first_seen": "2026-11-07T20:01:53+09:00",
+      "generated_at": "2026-11-07T20:01:53+09:00"
     }
   ],
-  "suppressed": 6,
+  "suppressed": 7,
   "recovered": [],
   "active": [
     {
@@ -34,10 +34,10 @@
       "source": "prod_x100vi",
       "severity": "HIGH",
       "reason": "recheck_failed",
-      "title": "prod_x100vi の公式の再確認が 15 日連続で失敗しています",
+      "title": "prod_x100vi の公式の再確認が 16 日連続で失敗しています",
       "details": "公式ページの移動・表示の変更・ブロックの可能性。人が公式ページを確認する",
       "evidence": {
-        "consecutive_days": 15
+        "consecutive_days": 16
       }
     },
     {
@@ -49,7 +49,7 @@
       "title": "prod_switch2 の公式の確認が切れています",
       "details": "確認日 2026-10-08（期限 14 日）",
       "evidence": {
-        "days_left": -15
+        "days_left": -16
       }
     },
     {
@@ -61,7 +61,7 @@
       "title": "prod_x100vi の公式の確認が切れています",
       "details": "確認日 2026-10-22（期限 14 日）",
       "evidence": {
-        "days_left": -1
+        "days_left": -2
       }
     },
     {
@@ -77,6 +77,18 @@
         "reasons": [
           "price_not_found"
         ]
+      }
+    },
+    {
+      "key": "official_recheck_failing:prod_a7rv",
+      "category": "official_recheck_failing",
+      "source": "prod_a7rv",
+      "severity": "WARNING",
+      "reason": "recheck_failed",
+      "title": "prod_a7rv の公式の再確認が 3 日連続で失敗しています",
+      "details": "公式ページの移動・表示の変更・ブロックの可能性。人が公式ページを確認する",
+      "evidence": {
+        "consecutive_days": 3
       }
     },
     {

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-07T20:32:44+09:00",
+  "generated_at": "2026-11-08T20:46:47+09:00",
   "apple": {
     "source": "apple_jp_official",
     "list_status": "ok",
@@ -12,13 +12,13 @@
       "iphone-duo"
     ],
     "checked": [
-      "iphone-16",
-      "iphone-17"
+      "iphone-17e",
+      "iphone-18-pro"
     ],
     "errors": {},
-    "unknown_parts": 10,
-    "matched": 1,
-    "pending": 2,
+    "unknown_parts": 38,
+    "matched": 0,
+    "pending": 10,
     "requests": 3,
     "cutoff": "",
     "saved": true
@@ -46,7 +46,7 @@
       "configured": 22,
       "implemented": 11,
       "unimplemented": 11,
-      "blocked": 5,
+      "blocked": 6,
       "robots_unreachable": 4,
       "unreachable": 4,
       "table": [
@@ -124,7 +124,7 @@
           "source_id": "MUGIWARA_STORE",
           "retailer": "ONE PIECE 麦わらストア",
           "adapter": "mugiwara_store_lottery",
-          "state": "ACTIVE_LOTTERY",
+          "state": "NO_ACTIVE_LOTTERY",
           "health": "HEALTHY",
           "blocked": false,
           "robots": null,
@@ -154,9 +154,9 @@
           "source_id": "EDION",
           "retailer": "エディオン",
           "adapter": null,
-          "state": "SOURCE_NOT_MONITORED",
-          "health": "OK_NO_EVENTS",
-          "blocked": false,
+          "state": "SOURCE_BLOCKED",
+          "health": "BLOCKED",
+          "blocked": true,
           "robots": null,
           "unreachable": false
         },
@@ -293,8 +293,8 @@
     "tcg_products": 24,
     "event_candidates": 120,
     "review_required_announcements": 3,
-    "matched_events": 93,
-    "stale_events": 24,
+    "matched_events": 85,
+    "stale_events": 32,
     "approved_events": 0,
     "registered_events": 0
   },
@@ -302,7 +302,7 @@
     "configured": 22,
     "implemented": 11,
     "unimplemented": 11,
-    "blocked": 5,
+    "blocked": 6,
     "robots_unreachable": 4,
     "unreachable": 4,
     "table": [
@@ -380,7 +380,7 @@
         "source_id": "MUGIWARA_STORE",
         "retailer": "ONE PIECE 麦わらストア",
         "adapter": "mugiwara_store_lottery",
-        "state": "ACTIVE_LOTTERY",
+        "state": "NO_ACTIVE_LOTTERY",
         "health": "HEALTHY",
         "blocked": false,
         "robots": null,
@@ -410,9 +410,9 @@
         "source_id": "EDION",
         "retailer": "エディオン",
         "adapter": null,
-        "state": "SOURCE_NOT_MONITORED",
-        "health": "OK_NO_EVENTS",
-        "blocked": false,
+        "state": "SOURCE_BLOCKED",
+        "health": "BLOCKED",
+        "blocked": true,
         "robots": null,
         "unreachable": false
       },

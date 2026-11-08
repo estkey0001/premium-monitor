@@ -2,30 +2,13 @@
   "type": "PRODUCTION_HEALTH_ALERT",
   "schema": 1,
   "audience": "operator",
-  "generated_at": "2026-11-07T20:01:53+09:00",
+  "generated_at": "2026-11-08T20:15:54+09:00",
   "note": "運営者向けの劣化アラート候補（商品の通知ではない）。外部へは送らない。CI の注記・Step Summary・管理画面に出す",
   "active_count": 8,
   "high": 4,
   "warning": 4,
-  "candidates": [
-    {
-      "key": "official_recheck_failing:prod_a7rv",
-      "category": "official_recheck_failing",
-      "source": "prod_a7rv",
-      "severity": "WARNING",
-      "reason": "recheck_failed",
-      "title": "prod_a7rv の公式の再確認が 3 日連続で失敗しています",
-      "details": "公式ページの移動・表示の変更・ブロックの可能性。人が公式ページを確認する",
-      "evidence": {
-        "consecutive_days": 3
-      },
-      "type": "PRODUCTION_HEALTH_ALERT",
-      "event": "NEW",
-      "first_seen": "2026-11-07T20:01:53+09:00",
-      "generated_at": "2026-11-07T20:01:53+09:00"
-    }
-  ],
-  "suppressed": 7,
+  "candidates": [],
+  "suppressed": 8,
   "recovered": [],
   "active": [
     {
@@ -34,10 +17,10 @@
       "source": "prod_x100vi",
       "severity": "HIGH",
       "reason": "recheck_failed",
-      "title": "prod_x100vi の公式の再確認が 16 日連続で失敗しています",
+      "title": "prod_x100vi の公式の再確認が 17 日連続で失敗しています",
       "details": "公式ページの移動・表示の変更・ブロックの可能性。人が公式ページを確認する",
       "evidence": {
-        "consecutive_days": 16
+        "consecutive_days": 17
       }
     },
     {
@@ -49,7 +32,7 @@
       "title": "prod_switch2 の公式の確認が切れています",
       "details": "確認日 2026-10-08（期限 14 日）",
       "evidence": {
-        "days_left": -16
+        "days_left": -17
       }
     },
     {
@@ -61,7 +44,7 @@
       "title": "prod_x100vi の公式の確認が切れています",
       "details": "確認日 2026-10-22（期限 14 日）",
       "evidence": {
-        "days_left": -2
+        "days_left": -3
       }
     },
     {
@@ -85,10 +68,10 @@
       "source": "prod_a7rv",
       "severity": "WARNING",
       "reason": "recheck_failed",
-      "title": "prod_a7rv の公式の再確認が 3 日連続で失敗しています",
+      "title": "prod_a7rv の公式の再確認が 4 日連続で失敗しています",
       "details": "公式ページの移動・表示の変更・ブロックの可能性。人が公式ページを確認する",
       "evidence": {
-        "consecutive_days": 3
+        "consecutive_days": 4
       }
     },
     {

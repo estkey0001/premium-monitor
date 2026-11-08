@@ -67,3 +67,10 @@
 - 7 回目の reviewer: M1（SECONDARY_TO_BUYBACK の実在の価格差まで SALE_ENDED で消す）→ 公式の買値の経路だけ None にする。M2（巨大なポートで `int()` が ValueError）→ 5 桁以下に限る。テストと変異を追加。
 - 8 回目: reviewer・auditor とも Critical 0・High 0・Medium 0。
 - 残る Low（記録のみ）: キュー項目の `spread.raw` / `known_cost` に無効化前の値が残る（非公開・優先度に不使用）／ポートの 0 埋めを許可／`official_gap` を正規化しない／条件つきで通常価格が不明のとき `effective_price` が掲載価格のまま（確定は ACQUISITION_CONDITIONAL が止める。`effective_price` だけを使う新しい経路を作るときは `confirmable` も見ること）／誤検知の販売終了は優先度が下がる側にだけ働く／公開の `official_gap_counts` に SOURCE_BLOCKED の件数が出る。
+
+## 7c-1 の本番結果（2026-11-07・11-08 の定時 run）
+
+- 2 回とも成功（約 1h45m）。`queue_build_failed` 0・外部送信 0・Phase24 は `PHASE24_WAITING`・confirmed 2・actionable 0・公式の確認済み 16/47（変化なし）・公開物への個別項目の漏洩 0・deploy-check #880 通過。
+- 原因別（調査候補 4 件が対象）: SALE_ENDED 1・SOURCE_BLOCKED 1・IDENTITY_NOT_MATCHED 1。価格の種類は REGULAR 45・条件つき 0。次の行動: VERIFY_OFFICIAL_PRICE 6・VERIFY_PRODUCT_IDENTITY 1・VERIFY_MSRP 3。
+- 判定: PARTIAL。作業キューの個別行は非公開で CI の外から見えないため、SALE_ENDED → VERIFY_RETAIL_PRICE・gap_url が買い側に影響しないこと・SECONDARY_TO_BUYBACK の価格差の維持・RECHECK_MATCHED の個別の挙動は、本番で直接観測できていない（テストでの確認のみ）。既知の観測上の制約として記録し、blocker にはしない。
+- Sony α7CR・FX3・Canon R3 は、設定値の参考価格だけ（確認日・URL なし）で、人手確認の対象として残っている。

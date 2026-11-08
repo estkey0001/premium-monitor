@@ -74,3 +74,19 @@
 - 原因別（調査候補 4 件が対象）: SALE_ENDED 1・SOURCE_BLOCKED 1・IDENTITY_NOT_MATCHED 1。価格の種類は REGULAR 45・条件つき 0。次の行動: VERIFY_OFFICIAL_PRICE 6・VERIFY_PRODUCT_IDENTITY 1・VERIFY_MSRP 3。
 - 判定: PARTIAL。作業キューの個別行は非公開で CI の外から見えないため、SALE_ENDED → VERIFY_RETAIL_PRICE・gap_url が買い側に影響しないこと・SECONDARY_TO_BUYBACK の価格差の維持・RECHECK_MATCHED の個別の挙動は、本番で直接観測できていない（テストでの確認のみ）。既知の観測上の制約として記録し、blocker にはしない。
 - Sony α7CR・FX3・Canon R3 は、設定値の参考価格だけ（確認日・URL なし）で、人手確認の対象として残っている。
+
+## 7c-2: Sony α7CR・Sony FX3・Canon EOS R3 の公式ページの人手確認（2026-11-08）
+
+人がブラウザで公式ドメインのページを開いて読んだだけ（ログイン・アカウント作成・カート操作・購入・フォーム送信はしていない）。確認日は 2026-11-08（実行日では更新しない）。
+
+| 商品 | 公式ページの表示 | 結果 | 登録 |
+|---|---|---|---|
+| Sony α7CR | ソニーストア購入ページ `pur.store.sony.jp/ichigan/products/ILCE-7CR/ILCE-7CR_purchase/`。ILCE-7CR/S・ILCE-7CR/B（ボディのみ）449,900円(税込)・翌日出荷・カートに入れる（押していない）。クーポン・カード割引・キャンペーンは適用前の表示。送料・JAN の表示なし | VERIFIED_CURRENT_OFFICIAL_PRICE（確定の仕入れ値ではない） | `VERIFIED_URLS`・`IDENTITY_EVIDENCE`（型番のみ。JAN は作らない）・`OFFICIAL_DIRECT_OFFERS`・再確認の対象。送料は未登録（UNKNOWN） |
+| Sony FX3（ILME-FX3） | 製品ページ `sony.jp/pro-cam/products/ILME-FX3/` が「[生産完了]」「希望小売価格581,900円(税込)」「後継機種 FX3（ILME-FX3A）」「ソニーストアでの販売は終了」。現行は別型番の ILME-FX3A | OFFICIAL_NOT_CURRENTLY_SOLD | `OFFICIAL_NOT_SOLD`（ILME-FX3A と同一視しない） |
+| Canon EOS R3 | オンラインショップ購入ページ `store.canon.jp/online/g/g4895C001/` の見出しが「【販売終了】」。通常価格 792,000円(税込)・送料無料の表示は残る。製品ページも「EOS R3 販売終了」・JAN 4549292-181661・商品コード 4895C001・希望小売価格オープン価格 | OFFICIAL_NOT_CURRENTLY_SOLD | `OFFICIAL_NOT_SOLD`（792,000円は仕入れ値にしない。カートボタンの有効・無効は未確認） |
+
+- 同一性: α7CR は型番 ILCE-7CR の完全一致。JAN は公式の購入ページに表示が無いので登録しない。
+- 既存の関門: α7CR の `official_direct_gate` は `jan_not_exact`・`shipping_unknown` で不通過。確定・actionable・通知に直接昇格しない。FX3・R3 は `no_official_direct_evidence`。
+- 設定の旧参考価格（α7CR 330,000円）は誤りだった（実際は 449,900円）。前例（α7R V・α1 II）に合わせて `config/products.yaml` の `retail_price` とメモを直した（参考価格のまま。確認済みにはならない）。
+- 再確認のパーサー `parse_sony_store` は、型番の後ろの色の型番（/S・/B）と色名（（シルバー））を許すようにした（実ページの並び。色ごとの価格が食い違えば読まない）。
+- 残る Low（記録のみ）: FX3・R3 の設定の旧参考価格（520,000円・830,000円）とメモは未更新（販売終了で仕入れ値にならない）／IDENTITY_EVIDENCE は色違い（S/B）を区別しない（価格は同じ）／`audit_official_sources.py` の実行で FX3・R3 の `is_discontinued` が立ち、旧 UI の表示が「販売終了」に変わる／R3 のカートボタンの状態は未確認。

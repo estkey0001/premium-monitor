@@ -114,20 +114,31 @@ VERIFIED_URLS = {
     # 「319,000円(税込)」「送料無料」。製品ページ（personal.canon.jp）に「JANコード 4549292-200508 商品コード 5666C001」
     "prod_r6ii": {"source": "src_canon_official", "url": "https://store.canon.jp/online/g/g5666C001/", "link_type": "item",
                   "price": 319000, "conf": "high", "checked_on": "2026-10-24", "price_kind": "official_direct"},
+    # 2026-11-08（Wave 7c-2。人がブラウザで公式ページを確認）: ソニーストアの購入ページ「α7CR を購入・ボディのみ ILCE-7CR/S（シルバー）・
+    # ILCE-7CR/B（ブラック）翌日出荷 449,900円(税込)」。クーポン・カード決済の割引・キャンペーンは適用前の表示で、この価格に含めない。
+    # 送料・JAN は購入ページに表示が無い（送料は official_shipping に登録しない = 送料未確認）。設定値の参考価格 330,000円は誤っていた
+    "prod_a7cr": {"source": "src_sony_store", "url": "https://pur.store.sony.jp/ichigan/products/ILCE-7CR/ILCE-7CR_purchase/",
+                  "link_type": "item", "price": 449900, "conf": "high", "checked_on": "2026-11-08", "price_kind": "official_direct"},
 }
 
 # 検証できなかった/公式定価が存在しないメーカー（推測URLで verified 扱いしない）
 # 実際の型番（同一性確認用）
 UNVERIFIED = {
-    "prod_r3":    {"source": "src_canon_official", "model": "EOS R3",          "reason": "canon.jp が当環境からDNS解決不可（要手動検証）"},
-    "prod_a7cr":  {"source": "src_sony_store",     "model": "ILCE-7CR",        "reason": "store.sony.jp が当環境からDNS解決不可（要手動検証）"},
-    "prod_fx3":   {"source": "src_sony_store",     "model": "ILME-FX3",        "reason": "store.sony.jp が当環境からDNS解決不可（要手動検証）"},
 }
 
 # 公式ストアで今は売っていない（販売終了・後継機に交代）と確認した商品。
 # 過去に確認した定価は「今その値段で公式から買える」根拠にならないので、確認済みの定価として使わない
 # （products.official_price を消し、設定値の参考価格に戻す。確定利益には使わない）。
 OFFICIAL_NOT_SOLD = {
+    # 2026-11-08（Wave 7c-2。人がブラウザで公式ページを確認）
+    # - ソニーの製品ページ「[生産完了] FX3（ILME-FX3）… 生産完了 希望小売価格581,900円(税込) 後継機種 FX3（ILME-FX3A）」
+    #   「本商品のソニーストアでの販売は終了しております」。後継の ILME-FX3A は別の型番（この商品とは別。同一とみなさない）
+    # - キヤノンオンラインショップの購入ページ（商品コード 4895C001）の見出しが「【販売終了】EOS R3・ボディー」、製品ページも「EOS R3 販売終了」。
+    #   ページに 792,000円（税込）の表示が残るが、販売終了の商品の表示価格なので仕入れ値にしない
+    "prod_fx3": {"source": "src_sony_store", "checked_on": "2026-11-08",
+                 "reason": "ILME-FX3 は公式で生産完了・ソニーストアでの販売終了（後継は別型番の ILME-FX3A）"},
+    "prod_r3":  {"source": "src_canon_official", "checked_on": "2026-11-08",
+                 "reason": "EOS R3 はキヤノンオンラインショップで【販売終了】（商品コード 4895C001。表示の 792,000円は仕入れ値にしない）"},
     "prod_iphone17pro_256": {"source": "src_apple_jp", "checked_on": "2026-10-03",
                              "reason": "iPhone 17 Pro の購入ページが /buy-iphone へ移動。公式は iPhone 18 Pro を販売中"},
     "prod_iphone17pro_512": {"source": "src_apple_jp", "checked_on": "2026-10-03",
@@ -332,6 +343,10 @@ IDENTITY_EVIDENCE = {
                   "url": "https://pur.store.sony.jp/ichigan/products/ILCE-7RM5/ILCE-7RM5_purchase/", "checked_on": "2026-10-28"},
     "prod_a1ii": {"model_number": "ILCE-1M2", "jan_code": "4548736162075", "edition": "日本向け", "bundle": "ボディーのみ",
                   "url": "https://pur.store.sony.jp/ichigan/products/ILCE-1M2/ILCE-1M2_purchase/", "checked_on": "2026-10-28"},
+    # 2026-11-08: ソニーストアの購入ページ「α7CR を購入・ボディのみ ILCE-7CR/S（シルバー）・ILCE-7CR/B（ブラック）」。
+    # 型番 ILCE-7CR は公式ページの URL・型番表示と一致。JAN は購入ページに表示が無い（登録しない）。レンズは付かない
+    "prod_a7cr": {"model_number": "ILCE-7CR", "edition": "日本向け", "bundle": "ボディーのみ",
+                  "url": "https://pur.store.sony.jp/ichigan/products/ILCE-7CR/ILCE-7CR_purchase/", "checked_on": "2026-11-08"},
     # 2026-10-24: キヤノンの製品ページ「EOS R6 Mark II JANコード 4549292-200508 商品コード 5666C001」。購入ページ（5666C001）は
     # 「EOS R6 Mark II・ボディー（レンズは付きません）」
     "prod_r6ii": {"model_number": "EOS R6 Mark II", "jan_code": "4549292200508", "edition": "日本向け",
@@ -442,6 +457,13 @@ OFFICIAL_DIRECT_OFFERS = {
         "price": 990000, "checked_on": "2026-10-28", "capacity": "", "body_kit": "body", "edition": "日本向け",
         "identity_equivalent": "", "sale_mode": "NORMAL", "stock": "UNKNOWN",
         "stock_semantics": "購入ページに「翌日出荷」の表示（2026-10-28）。購入ページの表示だけでは在庫ありにしない（人の確認の記録だけ）",
+        "rejected": []},
+    "prod_a7cr": {
+        "shop": "ソニーストア", "url": "https://pur.store.sony.jp/ichigan/products/ILCE-7CR/ILCE-7CR_purchase/",
+        "price": 449900, "checked_on": "2026-11-08", "capacity": "", "body_kit": "body", "edition": "日本向け",
+        "identity_equivalent": "", "sale_mode": "NORMAL", "stock": "UNKNOWN",
+        "stock_semantics": "購入ページに「翌日出荷」「カートに入れる」の表示（2026-11-08。押していない）。購入ページの表示だけでは在庫ありにしない"
+                           "（人の確認の記録だけ）。クーポン・カード決済の割引・キャンペーンは適用前の表示で、価格に含めない",
         "rejected": []},
     "prod_r6ii": {
         "shop": "キヤノンオンラインショップ", "url": "https://store.canon.jp/online/g/g5666C001/",

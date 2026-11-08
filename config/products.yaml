@@ -337,9 +337,9 @@ products:
     name: "SONY α7CR"
     brand: "SONY"
     model_number: "ILCE-7CR"
-    retail_price: 330000
+    retail_price: 449900
     keywords: ["A7CR", "α7CR", "ILCE-7CR"]
-    memo: "概算定価（要確認）"
+    memo: "ソニーストア販売価格（2026-11-08 確認。旧参考価格 330,000円は誤り）。JAN・送料は購入ページに表示なし"
   - id: "prod_fx3"
     genre: "camera"
     name: "SONY FX3"

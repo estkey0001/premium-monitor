@@ -72,6 +72,7 @@ RECHECK_TARGETS = ("prod_ps5_pro", "prod_switch2", "prod_airpods_pro3", "prod_r5
                    "prod_z9", "prod_r6ii",   # Coverage Wave 1: ニコンダイレクト（JAN）・キヤノンオンラインショップ（商品コード）
                    "prod_zf",                # Coverage Wave 2: ニコンダイレクト（JAN・ブラック）
                    "prod_a7rv", "prod_a1ii",  # Coverage Wave 3: ソニーストアの購入ページ（型番・在庫の語は 翌日出荷 も読む）
+                   "prod_a7cr",              # Wave 7c-2: ソニーストアの購入ページ（人が 2026-11-08 に確認。型番 ILCE-7CR で照合）
                    "prod_iphoneair_256",   # Phase 29: 発見から登録した iPhone Air 256GB（同じ apple_parts の読み方）
                    "prod_iphoneduo_256")   # Phase 30: 優先順位で選んで登録した iPhone Duo 256GB
 # 読み取りごとの照合のキー（ページのどの値で「この商品」と確かめるか）。既定は型番（model_number）
@@ -103,7 +104,9 @@ def parse_sony_store(h: str, model: str) -> dict:
     「販売終了」では判定しない。Phase 15 監査 M-1・M-2）。
     """
     t = _text(h)
-    ms = list(re.finditer(re.escape(model) + r"\s+(" + "|".join(_STOCK_WORDS) + r")\s*([\d,]{4,})\s*円\s*\(税込\)", t))
+    # 型番の後ろに色の型番（/S・/B）と色名（（シルバー））が付く形も読む（α7CR: 「ILCE-7CR/S（シルバー） 翌日出荷 449,900円(税込)」）。
+    # 色ごとの価格が食い違えば、下の「1 種類だけ」の条件で読み取らない
+    ms = list(re.finditer(re.escape(model) + r"(?:/[A-Z]{1,2})?(?:（[^）]{1,10}）)?\s+(" + "|".join(_STOCK_WORDS) + r")\s*([\d,]{4,})\s*円\s*\(税込\)", t))
     # 並びが無い・2つ以上ある（どれがこの商品か決められない）ときは読み取らない（監査 N-1）
     if len({(x.group(1), x.group(2)) for x in ms}) != 1:
         return {"model_found": model in t, "price": None, "stock": "", "ended": False}

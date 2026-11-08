@@ -1481,10 +1481,13 @@ def test_newly_registered_official_prices_have_identity_shipping_and_daily_reche
 
 
 def test_unregistered_cameras_stay_unverified_until_identity_and_shipping_are_confirmed():
-    """Sony α7C R（色違いの型番表記）・販売終了品・取得できない店は、確認済みにしていない（α7R V・α1 II は Wave 3 で確認済み）。"""
+    """取得できない店・販売終了品は、確認済みの価格にしていない（α7R V・α1 II は Wave 3、α7CR は Wave 7c-2 で人が公式ページを確認済み。
+    FX3・EOS R3 は Wave 7c-2 で公式が販売終了と確認したので OFFICIAL_NOT_SOLD。詳細は tests/test_coverage_wave7c2.py）。"""
     from src.market import official_registry as reg
-    for pid in ("prod_a7cr", "prod_r3", "prod_gr3_hdf", "prod_gr3x", "prod_fx3"):
+    for pid in ("prod_r3", "prod_gr3_hdf", "prod_gr3x", "prod_fx3"):
         assert pid not in reg.VERIFIED_URLS, pid
+    assert "prod_fx3" in reg.OFFICIAL_NOT_SOLD and "prod_r3" in reg.OFFICIAL_NOT_SOLD
+    assert "prod_a7cr" in reg.VERIFIED_URLS                 # 公式の価格は確認済み。ただし JAN・送料が無いので確定の仕入れ値には使わない（test_coverage_wave7c2）
 
 
 def test_deploy_check_872_coverage_wave1_passes_and_detects_unsafe_collectors(tmp_path):

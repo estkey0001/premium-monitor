@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-08 20:15 JST",
+  "generated_at": "2026-11-09 21:27 JST",
   "scope": "公式ソース登録・検証（利益/AI/Opportunity/Notification/Capital/Execution は不変）",
   "methodology": {
     "verification": "WebFetch で HTTP200/公式ドメイン/canonical/商品一致を実確認したURLのみ verified",
@@ -201,25 +201,32 @@
       "price_rejection": null
     },
     {
-      "product_id": "prod_r3",
-      "source": "src_canon_official",
-      "url": null,
-      "verified": false,
-      "reason": "canon.jp が当環境からDNS解決不可（要手動検証）"
-    },
-    {
       "product_id": "prod_a7cr",
       "source": "src_sony_store",
-      "url": null,
+      "url": "https://pur.store.sony.jp/ichigan/products/ILCE-7CR/ILCE-7CR_purchase/",
+      "link_type": "item",
+      "confidence": "high",
+      "official_price": null,
       "verified": false,
-      "reason": "store.sony.jp が当環境からDNS解決不可（要手動検証）"
+      "price_kind": "official_direct",
+      "official_direct_eligible": false,
+      "price_rejection": "official_direct_gate:jan_not_exact,shipping_unknown"
     },
     {
       "product_id": "prod_fx3",
       "source": "src_sony_store",
       "url": null,
       "verified": false,
-      "reason": "store.sony.jp が当環境からDNS解決不可（要手動検証）"
+      "official_not_sold": true,
+      "reason": "ILME-FX3 は公式で生産完了・ソニーストアでの販売終了（後継は別型番の ILME-FX3A）"
+    },
+    {
+      "product_id": "prod_r3",
+      "source": "src_canon_official",
+      "url": null,
+      "verified": false,
+      "official_not_sold": true,
+      "reason": "EOS R3 はキヤノンオンラインショップで【販売終了】（商品コード 4895C001。表示の 792,000円は仕入れ値にしない）"
     },
     {
       "product_id": "prod_iphone17pro_256",
@@ -491,7 +498,7 @@
           "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17",
           "link_type": "item",
           "verified": true,
-          "last_verified_at": "2026-11-08",
+          "last_verified_at": "2026-11-09",
           "extraction_method": "webfetch_verified",
           "confidence": "high",
           "official_price": 159800,
@@ -596,7 +603,7 @@
           "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-air",
           "link_type": "item",
           "verified": true,
-          "last_verified_at": "2026-11-08",
+          "last_verified_at": "2026-11-09",
           "extraction_method": "webfetch_verified",
           "confidence": "high",
           "official_price": 189800,
@@ -621,7 +628,7 @@
           "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-duo",
           "link_type": "item",
           "verified": true,
-          "last_verified_at": "2026-11-08",
+          "last_verified_at": "2026-11-09",
           "extraction_method": "webfetch_verified",
           "confidence": "high",
           "official_price": 364800,
@@ -871,7 +878,7 @@
           "url": "https://www.apple.com/jp/shop/buy-airpods/airpods-pro-3",
           "link_type": "item",
           "verified": true,
-          "last_verified_at": "2026-11-08",
+          "last_verified_at": "2026-11-09",
           "extraction_method": "webfetch_verified",
           "confidence": "high",
           "official_price": 42800,
@@ -951,7 +958,7 @@
           "url": "https://pur.store.sony.jp/ps5/products/ps5/CFI-7100B01_purchase/",
           "link_type": "item",
           "verified": true,
-          "last_verified_at": "2026-11-08",
+          "last_verified_at": "2026-11-09",
           "extraction_method": "webfetch_verified",
           "confidence": "high",
           "official_price": 137980,
@@ -1281,7 +1288,7 @@
           "url": "https://pur.store.sony.jp/ichigan/products/ILCE-1M2/ILCE-1M2_purchase/",
           "link_type": "item",
           "verified": true,
-          "last_verified_at": "2026-11-08",
+          "last_verified_at": "2026-11-09",
           "extraction_method": "webfetch_verified",
           "confidence": "high",
           "official_price": 990000,
@@ -1303,15 +1310,15 @@
       "brand": "SONY",
       "sources": {
         "official": {
-          "url": null,
-          "link_type": null,
+          "url": "https://pur.store.sony.jp/ichigan/products/ILCE-7CR/ILCE-7CR_purchase/",
+          "link_type": "item",
           "verified": false,
-          "last_verified_at": null,
-          "extraction_method": null,
-          "confidence": "low",
+          "last_verified_at": "2026-11-08",
+          "extraction_method": "webfetch_verified",
+          "confidence": "high",
           "official_price": null,
           "enabled": true,
-          "reason_if_disabled": "store.sony.jp が当環境からDNS解決不可（要手動検証）"
+          "reason_if_disabled": "official_direct_gate:jan_not_exact,shipping_unknown"
         },
         "pricecom": null,
         "yodobashi": null,
@@ -1331,12 +1338,12 @@
           "url": null,
           "link_type": null,
           "verified": false,
-          "last_verified_at": null,
+          "last_verified_at": "2026-11-08",
           "extraction_method": null,
           "confidence": "low",
           "official_price": null,
           "enabled": true,
-          "reason_if_disabled": "store.sony.jp が当環境からDNS解決不可（要手動検証）"
+          "reason_if_disabled": "ILME-FX3 は公式で生産完了・ソニーストアでの販売終了（後継は別型番の ILME-FX3A）"
         },
         "pricecom": null,
         "yodobashi": null,
@@ -1356,7 +1363,7 @@
           "url": "https://store.canon.jp/online/g/g6536C001/",
           "link_type": "item",
           "verified": true,
-          "last_verified_at": "2026-11-08",
+          "last_verified_at": "2026-11-09",
           "extraction_method": "webfetch_verified",
           "confidence": "high",
           "official_price": 654500,
@@ -1381,7 +1388,7 @@
           "url": "https://store.canon.jp/online/g/g5666C001/",
           "link_type": "item",
           "verified": true,
-          "last_verified_at": "2026-11-08",
+          "last_verified_at": "2026-11-09",
           "extraction_method": "webfetch_verified",
           "confidence": "high",
           "official_price": 319000,
@@ -1406,12 +1413,12 @@
           "url": null,
           "link_type": null,
           "verified": false,
-          "last_verified_at": null,
+          "last_verified_at": "2026-11-08",
           "extraction_method": null,
           "confidence": "low",
           "official_price": null,
           "enabled": true,
-          "reason_if_disabled": "canon.jp が当環境からDNS解決不可（要手動検証）"
+          "reason_if_disabled": "EOS R3 はキヤノンオンラインショップで【販売終了】（商品コード 4895C001。表示の 792,000円は仕入れ値にしない）"
         },
         "pricecom": null,
         "yodobashi": null,
@@ -1431,7 +1438,7 @@
           "url": "https://nij.nikon.com/shop/g/g4960759909947/",
           "link_type": "item",
           "verified": true,
-          "last_verified_at": "2026-11-08",
+          "last_verified_at": "2026-11-09",
           "extraction_method": "webfetch_verified",
           "confidence": "high",
           "official_price": 575300,
@@ -1456,7 +1463,7 @@
           "url": "https://nij.nikon.com/shop/g/g4960759913784/",
           "link_type": "item",
           "verified": true,
-          "last_verified_at": "2026-11-08",
+          "last_verified_at": "2026-11-09",
           "extraction_method": "webfetch_verified",
           "confidence": "high",
           "official_price": 299200,
@@ -1481,7 +1488,7 @@
           "url": "https://nij.nikon.com/shop/g/g4960759906168/",
           "link_type": "item",
           "verified": true,
-          "last_verified_at": "2026-11-08",
+          "last_verified_at": "2026-11-09",
           "extraction_method": "webfetch_verified",
           "confidence": "high",
           "official_price": 772200,
@@ -1620,11 +1627,11 @@
       "failures": [
         {
           "product_id": "prod_a7cr",
-          "reason": "store.sony.jp が当環境からDNS解決不可（要手動検証）"
+          "reason": null
         },
         {
           "product_id": "prod_fx3",
-          "reason": "store.sony.jp が当環境からDNS解決不可（要手動検証）"
+          "reason": "ILME-FX3 は公式で生産完了・ソニーストアでの販売終了（後継は別型番の ILME-FX3A）"
         },
         {
           "product_id": "prod_ps5_de",
@@ -1678,7 +1685,7 @@
       "failures": [
         {
           "product_id": "prod_r3",
-          "reason": "canon.jp が当環境からDNS解決不可（要手動検証）"
+          "reason": "EOS R3 はキヤノンオンラインショップで【販売終了】（商品コード 4895C001。表示の 792,000円は仕入れ値にしない）"
         }
       ]
     },
@@ -1706,20 +1713,20 @@
     "after": {
       "url_verified": 14,
       "price_captured": 14,
-      "verified_targets": 14,
-      "unverified_targets": 3
+      "verified_targets": 15,
+      "unverified_targets": 0
     },
     "recheck_applied": [
       {
         "product_id": "prod_ps5_pro",
         "action": "price_reconfirmed",
-        "on": "2026-11-08"
+        "on": "2026-11-09"
       },
       {
         "product_id": "prod_ps5_pro",
         "action": "stock_observed",
         "stock": "入荷待ち",
-        "at": "2026-11-08T20:09:48+09:00"
+        "at": "2026-11-09T21:20:13+09:00"
       },
       {
         "product_id": "prod_switch2",
@@ -1729,58 +1736,63 @@
       {
         "product_id": "prod_airpods_pro3",
         "action": "price_reconfirmed",
-        "on": "2026-11-08"
+        "on": "2026-11-09"
       },
       {
         "product_id": "prod_r5ii",
         "action": "price_reconfirmed",
-        "on": "2026-11-08"
+        "on": "2026-11-09"
       },
       {
         "product_id": "prod_z8",
         "action": "price_reconfirmed",
-        "on": "2026-11-08"
+        "on": "2026-11-09"
       },
       {
         "product_id": "prod_iphone17_256",
         "action": "price_reconfirmed",
-        "on": "2026-11-08"
+        "on": "2026-11-09"
       },
       {
         "product_id": "prod_z9",
         "action": "price_reconfirmed",
-        "on": "2026-11-08"
+        "on": "2026-11-09"
       },
       {
         "product_id": "prod_r6ii",
         "action": "price_reconfirmed",
-        "on": "2026-11-08"
+        "on": "2026-11-09"
       },
       {
         "product_id": "prod_zf",
         "action": "price_reconfirmed",
-        "on": "2026-11-08"
+        "on": "2026-11-09"
       },
       {
         "product_id": "prod_a1ii",
         "action": "price_reconfirmed",
-        "on": "2026-11-08"
+        "on": "2026-11-09"
       },
       {
         "product_id": "prod_a1ii",
         "action": "stock_observed",
         "stock": "在庫あり",
-        "at": "2026-11-08T20:13:54+09:00"
+        "at": "2026-11-09T21:24:19+09:00"
+      },
+      {
+        "product_id": "prod_a7cr",
+        "action": "price_reconfirmed",
+        "on": "2026-11-09"
       },
       {
         "product_id": "prod_iphoneair_256",
         "action": "price_reconfirmed",
-        "on": "2026-11-08"
+        "on": "2026-11-09"
       },
       {
         "product_id": "prod_iphoneduo_256",
         "action": "price_reconfirmed",
-        "on": "2026-11-08"
+        "on": "2026-11-09"
       }
     ]
   },
@@ -1788,13 +1800,13 @@
     {
       "product_id": "prod_ps5_pro",
       "action": "price_reconfirmed",
-      "on": "2026-11-08"
+      "on": "2026-11-09"
     },
     {
       "product_id": "prod_ps5_pro",
       "action": "stock_observed",
       "stock": "入荷待ち",
-      "at": "2026-11-08T20:09:48+09:00"
+      "at": "2026-11-09T21:20:13+09:00"
     },
     {
       "product_id": "prod_switch2",
@@ -1804,58 +1816,63 @@
     {
       "product_id": "prod_airpods_pro3",
       "action": "price_reconfirmed",
-      "on": "2026-11-08"
+      "on": "2026-11-09"
     },
     {
       "product_id": "prod_r5ii",
       "action": "price_reconfirmed",
-      "on": "2026-11-08"
+      "on": "2026-11-09"
     },
     {
       "product_id": "prod_z8",
       "action": "price_reconfirmed",
-      "on": "2026-11-08"
+      "on": "2026-11-09"
     },
     {
       "product_id": "prod_iphone17_256",
       "action": "price_reconfirmed",
-      "on": "2026-11-08"
+      "on": "2026-11-09"
     },
     {
       "product_id": "prod_z9",
       "action": "price_reconfirmed",
-      "on": "2026-11-08"
+      "on": "2026-11-09"
     },
     {
       "product_id": "prod_r6ii",
       "action": "price_reconfirmed",
-      "on": "2026-11-08"
+      "on": "2026-11-09"
     },
     {
       "product_id": "prod_zf",
       "action": "price_reconfirmed",
-      "on": "2026-11-08"
+      "on": "2026-11-09"
     },
     {
       "product_id": "prod_a1ii",
       "action": "price_reconfirmed",
-      "on": "2026-11-08"
+      "on": "2026-11-09"
     },
     {
       "product_id": "prod_a1ii",
       "action": "stock_observed",
       "stock": "在庫あり",
-      "at": "2026-11-08T20:13:54+09:00"
+      "at": "2026-11-09T21:24:19+09:00"
+    },
+    {
+      "product_id": "prod_a7cr",
+      "action": "price_reconfirmed",
+      "on": "2026-11-09"
     },
     {
       "product_id": "prod_iphoneair_256",
       "action": "price_reconfirmed",
-      "on": "2026-11-08"
+      "on": "2026-11-09"
     },
     {
       "product_id": "prod_iphoneduo_256",
       "action": "price_reconfirmed",
-      "on": "2026-11-08"
+      "on": "2026-11-09"
     }
   ],
   "config_price_drift": [
@@ -1935,8 +1952,8 @@
       "pct": 4.3
     },
     "identity_evidence": {
-      "count": 17,
-      "pct": 36.2
+      "count": 18,
+      "pct": 38.3
     },
     "any_strong_key": {
       "count": 27,

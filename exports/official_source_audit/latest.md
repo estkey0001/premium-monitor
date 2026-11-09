@@ -1,6 +1,6 @@
 # Official Source Registry & Validation
 
-> 生成: 2026-11-08 20:15 JST / 公式ソース登録・検証（利益/AI/Opportunity/Notification/Capital/Execution は不変）
+> 生成: 2026-11-09 21:27 JST / 公式ソース登録・検証（利益/AI/Opportunity/Notification/Capital/Execution は不変）
 
 ## メーカー別サマリ
 | Maker | Products | URL verified | HTTP200 | exact match | price auto | high conf | failed |
@@ -15,7 +15,7 @@
 
 ## 自動取得率 Before → After
 - Before: 公式定価あり商品 3 / 公式config 7
-- After: URL検証済 14 / 価格取得 14 （検証対象 14 / 検証不能 3）
+- After: URL検証済 14 / 価格取得 14 （検証対象 15 / 検証不能 0）
 
 ## Apple Source Audit（旧URL検出）
 | product | current_url | http | action | note |
@@ -54,14 +54,14 @@
 | prod_z8 | ¥590,000 | ¥575,300 | -14,700 |
 
 ## 識別の手がかりの割合（読むだけ）
-- 商品 47: 部品番号 2件（4.3%） / 型番 24件（51.1%） / JAN 9件（19.1%） / 公式 URL 2件（4.3%） / 公式の証拠 17件（36.2%） / 強い手がかりのどれか 27件（57.4%）
+- 商品 47: 部品番号 2件（4.3%） / 型番 24件（51.1%） / JAN 9件（19.1%） / 公式 URL 2件（4.3%） / 公式の証拠 18件（38.3%） / 強い手がかりのどれか 27件（57.4%）
 
 ## 検証不能（要手動検証・推測登録しない）
 | product | source | reason |
 |---|---|---|
-| prod_r3 | src_canon_official | canon.jp が当環境からDNS解決不可（要手動検証） |
-| prod_a7cr | src_sony_store | store.sony.jp が当環境からDNS解決不可（要手動検証） |
-| prod_fx3 | src_sony_store | store.sony.jp が当環境からDNS解決不可（要手動検証） |
+| prod_a7cr | src_sony_store | None |
+| prod_fx3 | src_sony_store | ILME-FX3 は公式で生産完了・ソニーストアでの販売終了（後継は別型番の ILME-FX3A） |
+| prod_r3 | src_canon_official | EOS R3 はキヤノンオンラインショップで【販売終了】（商品コード 4895C001。表示の 792,000円は仕入れ値にしない） |
 | prod_iphone17pro_256 | src_apple_jp | iPhone 17 Pro の購入ページが /buy-iphone へ移動。公式は iPhone 18 Pro を販売中 |
 | prod_iphone17pro_512 | src_apple_jp | iPhone 17 Pro の購入ページが /buy-iphone へ移動。公式は iPhone 18 Pro を販売中 |
 | prod_iphone17pm_256 | src_apple_jp | iPhone 17 Pro Max の購入ページが /buy-iphone へ移動。公式は iPhone 18 Pro Max を販売中 |

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-09T21:58:15+09:00",
+  "generated_at": "2026-11-10T21:38:50+09:00",
   "apple": {
     "source": "apple_jp_official",
     "list_status": "ok",
@@ -12,13 +12,13 @@
       "iphone-duo"
     ],
     "checked": [
-      "iphone-air",
-      "iphone-duo"
+      "iphone-16",
+      "iphone-17"
     ],
     "errors": {},
-    "unknown_parts": 14,
-    "matched": 2,
-    "pending": 5,
+    "unknown_parts": 10,
+    "matched": 1,
+    "pending": 2,
     "requests": 3,
     "cutoff": "",
     "saved": true
@@ -31,11 +31,11 @@
       "latest": true
     },
     "inputs_stale": [],
-    "review_required": 2,
-    "matched_events": 31,
+    "review_required": 3,
+    "matched_events": 32,
     "release": 8,
     "by_kind": {
-      "LOTTERY": 32,
+      "LOTTERY": 34,
       "PREORDER": 0,
       "FIRST_COME": 0,
       "RESTOCK": 1,
@@ -46,7 +46,7 @@
       "configured": 22,
       "implemented": 11,
       "unimplemented": 11,
-      "blocked": 6,
+      "blocked": 5,
       "robots_unreachable": 4,
       "unreachable": 4,
       "table": [
@@ -54,9 +54,9 @@
           "source_id": "POKEMON_CENTER_ONLINE",
           "retailer": "ポケモンセンターオンライン",
           "adapter": "pco_lottery",
-          "state": "SOURCE_BLOCKED",
+          "state": "NO_ACTIVE_LOTTERY",
           "health": "OK_NO_EVENTS",
-          "blocked": true,
+          "blocked": false,
           "robots": null,
           "unreachable": false
         },
@@ -94,7 +94,7 @@
           "source_id": "HOBBY_STATION",
           "retailer": "ホビーステーション",
           "adapter": "hobby_station_lottery",
-          "state": "NO_ACTIVE_LOTTERY",
+          "state": "ACTIVE_LOTTERY",
           "health": "HEALTHY",
           "blocked": false,
           "robots": null,
@@ -114,7 +114,7 @@
           "source_id": "FUKUFUKU_TOREKA",
           "retailer": "福福トレカ",
           "adapter": "fukufuku_lottery",
-          "state": "NO_ACTIVE_LOTTERY",
+          "state": "ACTIVE_LOTTERY",
           "health": "HEALTHY",
           "blocked": false,
           "robots": null,
@@ -291,10 +291,10 @@
     "unknown_official_products": 62,
     "apple_candidates": 17,
     "tcg_products": 24,
-    "event_candidates": 121,
+    "event_candidates": 124,
     "review_required_announcements": 3,
-    "matched_events": 84,
-    "stale_events": 34,
+    "matched_events": 73,
+    "stale_events": 48,
     "approved_events": 0,
     "registered_events": 0
   },
@@ -302,7 +302,7 @@
     "configured": 22,
     "implemented": 11,
     "unimplemented": 11,
-    "blocked": 6,
+    "blocked": 5,
     "robots_unreachable": 4,
     "unreachable": 4,
     "table": [
@@ -310,9 +310,9 @@
         "source_id": "POKEMON_CENTER_ONLINE",
         "retailer": "ポケモンセンターオンライン",
         "adapter": "pco_lottery",
-        "state": "SOURCE_BLOCKED",
+        "state": "NO_ACTIVE_LOTTERY",
         "health": "OK_NO_EVENTS",
-        "blocked": true,
+        "blocked": false,
         "robots": null,
         "unreachable": false
       },
@@ -350,7 +350,7 @@
         "source_id": "HOBBY_STATION",
         "retailer": "ホビーステーション",
         "adapter": "hobby_station_lottery",
-        "state": "NO_ACTIVE_LOTTERY",
+        "state": "ACTIVE_LOTTERY",
         "health": "HEALTHY",
         "blocked": false,
         "robots": null,
@@ -370,7 +370,7 @@
         "source_id": "FUKUFUKU_TOREKA",
         "retailer": "福福トレカ",
         "adapter": "fukufuku_lottery",
-        "state": "NO_ACTIVE_LOTTERY",
+        "state": "ACTIVE_LOTTERY",
         "health": "HEALTHY",
         "blocked": false,
         "robots": null,

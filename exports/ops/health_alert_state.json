@@ -1,62 +1,62 @@
 {
   "schema": 1,
-  "updated_at": "2026-11-09T21:27:22+09:00",
+  "updated_at": "2026-11-10T21:08:02+09:00",
   "active": {
     "official_recheck_failing:prod_x100vi": {
       "first_seen": "2026-10-25T18:19:24+09:00",
-      "last_seen": "2026-11-09T21:27:22+09:00",
+      "last_seen": "2026-11-10T21:08:02+09:00",
       "severity": "HIGH",
       "emitted_severity": "HIGH",
-      "times_seen": 21
+      "times_seen": 22
     },
     "official_verification_expiry:prod_switch2": {
       "first_seen": "2026-10-22T01:29:43+09:00",
-      "last_seen": "2026-11-09T21:27:22+09:00",
+      "last_seen": "2026-11-10T21:08:02+09:00",
       "severity": "HIGH",
       "emitted_severity": "HIGH",
-      "times_seen": 26
+      "times_seen": 27
     },
     "official_verification_expiry:prod_x100vi": {
       "first_seen": "2026-11-02T20:59:54+09:00",
-      "last_seen": "2026-11-09T21:27:22+09:00",
+      "last_seen": "2026-11-10T21:08:02+09:00",
       "severity": "HIGH",
       "emitted_severity": "HIGH",
-      "times_seen": 8
+      "times_seen": 9
     },
     "source_failure:netoff": {
       "first_seen": "2026-10-22T01:29:43+09:00",
-      "last_seen": "2026-11-09T21:27:22+09:00",
+      "last_seen": "2026-11-10T21:08:02+09:00",
       "severity": "HIGH",
       "emitted_severity": "HIGH",
-      "times_seen": 26
+      "times_seen": 27
     },
     "official_recheck_failing:prod_a7rv": {
       "first_seen": "2026-11-07T20:01:53+09:00",
-      "last_seen": "2026-11-09T21:27:22+09:00",
+      "last_seen": "2026-11-10T21:08:02+09:00",
       "severity": "WARNING",
       "emitted_severity": "WARNING",
-      "times_seen": 3
+      "times_seen": 4
     },
     "quality_gate_failure:ps5_pro": {
       "first_seen": "2026-10-22T01:29:43+09:00",
-      "last_seen": "2026-11-09T21:27:22+09:00",
+      "last_seen": "2026-11-10T21:08:02+09:00",
       "severity": "WARNING",
       "emitted_severity": "WARNING",
-      "times_seen": 26
+      "times_seen": 27
     },
     "source_failure:iosys": {
       "first_seen": "2026-10-22T01:29:43+09:00",
-      "last_seen": "2026-11-09T21:27:22+09:00",
+      "last_seen": "2026-11-10T21:08:02+09:00",
       "severity": "WARNING",
       "emitted_severity": "WARNING",
-      "times_seen": 26
+      "times_seen": 27
     },
     "source_failure:mobile_ichiban": {
       "first_seen": "2026-11-01T20:23:12+09:00",
-      "last_seen": "2026-11-09T21:27:22+09:00",
+      "last_seen": "2026-11-10T21:08:02+09:00",
       "severity": "WARNING",
       "emitted_severity": "WARNING",
-      "times_seen": 9
+      "times_seen": 10
     }
   }
 }

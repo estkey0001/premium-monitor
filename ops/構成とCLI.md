@@ -310,3 +310,12 @@ python3 scripts/operator_health_alert.py --dry-run  # 書かずに注記だけ�
 - 取得: 小売の照会は取得器（ドメイン）ごとに並列（`retail_lookup._fetch_all`）・同一実行内の同じ URL は `RunFetchCache`（メモリだけ）。ドメインあたりの間隔は polite が守る
 - 変異テスト: `python3 scripts/mutation_wave5.py`。deploy-check #876
 - 設計の全体と残りは `internal/audits/COVERAGE_WAVE5.md`
+
+## Wave 7e-1: 観測性（公式の状態・確認日時・実行の記録・台帳の公開集計）
+
+- 公式の状態: `src/research/official_state.py`。全商品を 12 状態に分類し、公開は `exports/research/summary.json` の `official_state_counts`（状態別の件数・合計は `canonical_products`）だけ。個別は `.private/research/official_state.json`。
+- 期限の正本は `normalized_prices.official_stale_days`（公式直販 14 日・それ以外 180 日）。`verification_status` の行に `original_verified_at`・`last_verified_at`・`last_recheck_at`・`last_recheck_result`・`stale_days`。
+- 再確認の最終状態: 別のファイルは持たない。`exports/official_recheck/history.json` から毎回導出する（`official_registry.derive_last_state`）。保持は `official_registry.trim_recheck_history`: 通常の行は 35 日・最大 900 件、無効化の行（changed・sale_ended）は商品ごとに最新の 1 件を 195 日（期限 180 日 + 15 日。件数の上限に巻き込まない）。型番を確かめた一致の再確認だけが確認日を進める。無効化が確認日より新しいときは、その確認日を使わない（人が確かめ直す・同一性を確かめた一致で復帰）。履歴の項目・ファイルは増やさない（deploy-check #892）。
+- 実行の記録: `python scripts/run_observability.py start|finish --lane daily` → `exports/ops/run_timing_daily.json`（`last_run_at`・`runtime_seconds`・`schedule_delay_seconds`・`trigger`・`lane` だけ。手動・再実行の遅れは null）。
+- 台帳の公開集計: `ledger_restore_status`・`cross_run_restored`・`ledger_version`・`momentum_comparable`・`detection_delay_measured`・`detection_delay_unknown`。
+- 検証: `python3 scripts/mutation_wave7e1.py`・deploy-check #881〜#889。

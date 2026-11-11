@@ -9,18 +9,5 @@
     "lot-6a4738d9be1e:deadline_6h": "2026-11-01T20:54:05.321770+09:00",
     "lot-735b8e25fe07:lottery_open": "2026-11-10T21:38:50.157358+09:00"
   },
-  "candidates": [
-    {
-      "lottery_id": "lot-735b8e25fe07",
-      "milestone": "lottery_open",
-      "label": "抽選開始",
-      "fires_at": "2026-11-10T12:00:00+09:00",
-      "tcg": "POKEMON",
-      "product_name": "ポケモンカードゲームMEGA 30th CELEBRATION カードセット9種（再販）",
-      "retailer": "ホビーステーション",
-      "entry_url": null,
-      "source_url": "https://www.hbst.net/?p=412037",
-      "message": "ポケモンカードゲームMEGA 30th CELEBRATION カードセット9種（再販）（ホビーステーション） 抽選開始"
-    }
-  ]
+  "candidates": []
 }

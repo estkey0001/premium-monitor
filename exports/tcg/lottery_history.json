@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-10T21:38:50.164589+09:00",
+  "generated_at": "2026-11-11T21:24:12.217775+09:00",
   "items": [
     {
       "first_seen_at": "2026-11-10T21:38:50.157358+09:00",
@@ -27,7 +27,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-10T00:00:00+09:00",
-      "last_seen_at": "2026-11-10T21:38:50.157358+09:00",
+      "last_seen_at": "2026-11-11T21:24:12.208933+09:00",
       "status": "OPEN"
     },
     {
@@ -114,7 +114,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-10-20T00:00:00+09:00",
-      "last_seen_at": "2026-11-10T21:38:50.157358+09:00",
+      "last_seen_at": "2026-11-11T21:24:12.208933+09:00",
       "status": "ENDED"
     },
     {
@@ -172,7 +172,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-10-16T00:00:00+09:00",
-      "last_seen_at": "2026-11-10T21:38:50.157358+09:00",
+      "last_seen_at": "2026-11-11T21:24:12.208933+09:00",
       "status": "ENDED"
     },
     {
@@ -288,7 +288,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-10-06T00:00:00+09:00",
-      "last_seen_at": "2026-11-10T21:38:50.157358+09:00",
+      "last_seen_at": "2026-11-11T21:24:12.208933+09:00",
       "status": "ENDED"
     },
     {
@@ -317,7 +317,7 @@
       "source_type": "MANUAL_VERIFIED",
       "confidence": "medium",
       "published_at": null,
-      "last_seen_at": "2026-11-10T21:38:50.157358+09:00",
+      "last_seen_at": "2026-11-11T21:24:12.208933+09:00",
       "status": "ENDED"
     },
     {
@@ -346,7 +346,7 @@
       "source_type": "MANUAL_VERIFIED",
       "confidence": "medium",
       "published_at": null,
-      "last_seen_at": "2026-11-10T21:38:50.157358+09:00",
+      "last_seen_at": "2026-11-11T21:24:12.208933+09:00",
       "status": "ENDED"
     },
     {
@@ -404,7 +404,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-10-02T00:00:00+09:00",
-      "last_seen_at": "2026-11-10T21:38:50.157358+09:00",
+      "last_seen_at": "2026-11-11T21:24:12.208933+09:00",
       "status": "ENDED"
     },
     {
@@ -549,7 +549,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-09-18T00:00:00+09:00",
-      "last_seen_at": "2026-11-10T21:38:50.157358+09:00",
+      "last_seen_at": "2026-11-11T21:24:12.208933+09:00",
       "status": "ENDED"
     },
     {
@@ -578,7 +578,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-09-01T00:00:00+09:00",
-      "last_seen_at": "2026-11-10T21:38:50.157358+09:00",
+      "last_seen_at": "2026-11-11T21:24:12.208933+09:00",
       "status": "ENDED"
     },
     {
@@ -607,7 +607,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-09-01T00:00:00+09:00",
-      "last_seen_at": "2026-11-10T21:38:50.157358+09:00",
+      "last_seen_at": "2026-11-11T21:24:12.208933+09:00",
       "status": "ENDED"
     },
     {
@@ -1187,7 +1187,7 @@
       "source_type": "RETAILER_OFFICIAL",
       "confidence": "high",
       "published_at": null,
-      "last_seen_at": "2026-11-10T21:38:50.157358+09:00",
+      "last_seen_at": "2026-11-11T21:24:12.208933+09:00",
       "status": "ENDED"
     },
     {
@@ -1216,7 +1216,7 @@
       "source_type": "RETAILER_OFFICIAL",
       "confidence": "high",
       "published_at": null,
-      "last_seen_at": "2026-11-10T21:38:50.157358+09:00",
+      "last_seen_at": "2026-11-11T21:24:12.208933+09:00",
       "status": "ENDED"
     },
     {
@@ -2464,7 +2464,7 @@
       "confidence": "medium",
       "published_at": "2026-11-04T00:00:00+09:00",
       "last_seen_at": "2026-11-05T21:21:45.358593+09:00",
-      "status": "OPEN"
+      "status": "ENDING_SOON"
     },
     {
       "first_seen_at": "2026-11-05T21:21:45.358593+09:00",
@@ -2551,7 +2551,7 @@
       "confidence": "medium",
       "published_at": "2026-11-05T00:00:00+09:00",
       "last_seen_at": "2026-11-05T21:21:45.358593+09:00",
-      "status": "WINNER_ANNOUNCED"
+      "status": "WINNER_PURCHASE_PERIOD"
     },
     {
       "first_seen_at": "2026-11-05T21:21:45.358593+09:00",
@@ -2609,7 +2609,7 @@
       "confidence": "medium",
       "published_at": "2026-11-05T00:00:00+09:00",
       "last_seen_at": "2026-11-05T21:21:45.358593+09:00",
-      "status": "OPEN"
+      "status": "ENDING_SOON"
     },
     {
       "first_seen_at": "2026-11-05T21:21:45.358593+09:00",
@@ -2666,7 +2666,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-06T00:00:00+09:00",
-      "last_seen_at": "2026-11-09T21:58:14.766338+09:00",
+      "last_seen_at": "2026-11-11T21:24:12.208933+09:00",
       "status": "WINNER_ANNOUNCED"
     },
     {
@@ -2695,7 +2695,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-06T00:00:00+09:00",
-      "last_seen_at": "2026-11-10T21:38:50.157358+09:00",
+      "last_seen_at": "2026-11-11T21:24:12.208933+09:00",
       "status": "WINNER_ANNOUNCED"
     },
     {
@@ -2753,7 +2753,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-06T00:00:00+09:00",
-      "last_seen_at": "2026-11-10T21:38:50.157358+09:00",
+      "last_seen_at": "2026-11-11T21:24:12.208933+09:00",
       "status": "WINNER_ANNOUNCED"
     },
     {
@@ -2811,7 +2811,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-06T00:00:00+09:00",
-      "last_seen_at": "2026-11-10T21:38:50.157358+09:00",
+      "last_seen_at": "2026-11-11T21:24:12.208933+09:00",
       "status": "WINNER_ANNOUNCED"
     },
     {
@@ -2840,7 +2840,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-06T00:00:00+09:00",
-      "last_seen_at": "2026-11-09T21:58:14.766338+09:00",
+      "last_seen_at": "2026-11-11T21:24:12.208933+09:00",
       "status": "WINNER_ANNOUNCED"
     },
     {
@@ -2898,7 +2898,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-06T00:00:00+09:00",
-      "last_seen_at": "2026-11-10T21:38:50.157358+09:00",
+      "last_seen_at": "2026-11-11T21:24:12.208933+09:00",
       "status": "WINNER_ANNOUNCED"
     },
     {
@@ -3014,7 +3014,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-07T00:00:00+09:00",
-      "last_seen_at": "2026-11-10T21:38:50.157358+09:00",
+      "last_seen_at": "2026-11-11T21:24:12.208933+09:00",
       "status": "WINNER_ANNOUNCED"
     },
     {
@@ -3043,8 +3043,8 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-07T00:00:00+09:00",
-      "last_seen_at": "2026-11-10T21:38:50.157358+09:00",
-      "status": "RESULT_PENDING"
+      "last_seen_at": "2026-11-11T21:24:12.208933+09:00",
+      "status": "WINNER_ANNOUNCED"
     },
     {
       "first_seen_at": "2026-11-07T20:32:43.656566+09:00",
@@ -3072,8 +3072,8 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-07T00:00:00+09:00",
-      "last_seen_at": "2026-11-10T21:38:50.157358+09:00",
-      "status": "RESULT_PENDING"
+      "last_seen_at": "2026-11-11T21:24:12.208933+09:00",
+      "status": "WINNER_ANNOUNCED"
     },
     {
       "first_seen_at": "2026-11-07T20:32:43.656566+09:00",
@@ -3101,7 +3101,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-06T00:00:00+09:00",
-      "last_seen_at": "2026-11-10T21:38:50.157358+09:00",
+      "last_seen_at": "2026-11-11T21:24:12.208933+09:00",
       "status": "WINNER_ANNOUNCED"
     },
     {
@@ -3130,7 +3130,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-06T00:00:00+09:00",
-      "last_seen_at": "2026-11-10T21:38:50.157358+09:00",
+      "last_seen_at": "2026-11-11T21:24:12.208933+09:00",
       "status": "WINNER_ANNOUNCED"
     },
     {
@@ -3159,7 +3159,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-06T00:00:00+09:00",
-      "last_seen_at": "2026-11-10T21:38:50.157358+09:00",
+      "last_seen_at": "2026-11-11T21:24:12.208933+09:00",
       "status": "WINNER_ANNOUNCED"
     },
     {
@@ -3188,8 +3188,8 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-09T00:00:00+09:00",
-      "last_seen_at": "2026-11-10T21:38:50.157358+09:00",
-      "status": "ENDING_SOON"
+      "last_seen_at": "2026-11-11T21:24:12.208933+09:00",
+      "status": "RESULT_PENDING"
     },
     {
       "first_seen_at": "2026-11-10T21:38:50.157358+09:00",
@@ -3217,8 +3217,8 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-10T00:00:00+09:00",
-      "last_seen_at": "2026-11-10T21:38:50.157358+09:00",
-      "status": "UPCOMING"
+      "last_seen_at": "2026-11-11T21:24:12.208933+09:00",
+      "status": "OPEN"
     },
     {
       "first_seen_at": "2026-11-10T21:38:50.157358+09:00",
@@ -3246,8 +3246,8 @@
       "source_type": "RETAILER_OFFICIAL",
       "confidence": "high",
       "published_at": null,
-      "last_seen_at": "2026-11-10T21:38:50.157358+09:00",
-      "status": "UPCOMING"
+      "last_seen_at": "2026-11-11T21:24:12.208933+09:00",
+      "status": "OPEN"
     }
   ],
   "frequency_by_retailer": {

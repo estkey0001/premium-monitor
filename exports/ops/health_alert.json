@@ -2,37 +2,63 @@
   "type": "PRODUCTION_HEALTH_ALERT",
   "schema": 1,
   "audience": "operator",
-  "generated_at": "2026-11-10T21:08:02+09:00",
+  "generated_at": "2026-11-11T20:53:22+09:00",
   "note": "運営者向けの劣化アラート候補（商品の通知ではない）。外部へは送らない。CI の注記・Step Summary・管理画面に出す",
-  "active_count": 8,
+  "active_count": 7,
   "high": 4,
-  "warning": 4,
-  "candidates": [],
-  "suppressed": 8,
-  "recovered": [],
+  "warning": 3,
+  "candidates": [
+    {
+      "key": "official_recheck_failing:prod_a7rv",
+      "category": "official_recheck_failing",
+      "source": "prod_a7rv",
+      "severity": "HIGH",
+      "reason": "recheck_failed",
+      "title": "prod_a7rv の公式の再確認が 7 日連続で失敗しています",
+      "details": "公式ページの移動・表示の変更・ブロックの可能性。人が公式ページを確認する",
+      "evidence": {
+        "consecutive_days": 7
+      },
+      "type": "PRODUCTION_HEALTH_ALERT",
+      "event": "ESCALATED",
+      "first_seen": "2026-11-07T20:01:53+09:00",
+      "generated_at": "2026-11-11T20:53:22+09:00"
+    }
+  ],
+  "suppressed": 6,
+  "recovered": [
+    {
+      "key": "official_verification_expiry:prod_switch2",
+      "type": "PRODUCTION_HEALTH_RECOVERED",
+      "event": "RECOVERED",
+      "first_seen": "2026-10-22T01:29:43+09:00",
+      "recovered_at": "2026-11-11T20:53:22+09:00",
+      "last_severity": "HIGH"
+    }
+  ],
   "active": [
+    {
+      "key": "official_recheck_failing:prod_a7rv",
+      "category": "official_recheck_failing",
+      "source": "prod_a7rv",
+      "severity": "HIGH",
+      "reason": "recheck_failed",
+      "title": "prod_a7rv の公式の再確認が 7 日連続で失敗しています",
+      "details": "公式ページの移動・表示の変更・ブロックの可能性。人が公式ページを確認する",
+      "evidence": {
+        "consecutive_days": 7
+      }
+    },
     {
       "key": "official_recheck_failing:prod_x100vi",
       "category": "official_recheck_failing",
       "source": "prod_x100vi",
       "severity": "HIGH",
       "reason": "recheck_failed",
-      "title": "prod_x100vi の公式の再確認が 18 日連続で失敗しています",
+      "title": "prod_x100vi の公式の再確認が 19 日連続で失敗しています",
       "details": "公式ページの移動・表示の変更・ブロックの可能性。人が公式ページを確認する",
       "evidence": {
-        "consecutive_days": 18
-      }
-    },
-    {
-      "key": "official_verification_expiry:prod_switch2",
-      "category": "official_verification_expiry",
-      "source": "prod_switch2",
-      "severity": "HIGH",
-      "reason": "expired",
-      "title": "prod_switch2 の公式の確認が切れています",
-      "details": "確認日 2026-10-08（期限 14 日）",
-      "evidence": {
-        "days_left": -19
+        "consecutive_days": 19
       }
     },
     {
@@ -44,7 +70,7 @@
       "title": "prod_x100vi の公式の確認が切れています",
       "details": "確認日 2026-10-08（期限 14 日）",
       "evidence": {
-        "days_left": -19
+        "days_left": -20
       }
     },
     {
@@ -63,25 +89,13 @@
       }
     },
     {
-      "key": "official_recheck_failing:prod_a7rv",
-      "category": "official_recheck_failing",
-      "source": "prod_a7rv",
-      "severity": "WARNING",
-      "reason": "recheck_failed",
-      "title": "prod_a7rv の公式の再確認が 6 日連続で失敗しています",
-      "details": "公式ページの移動・表示の変更・ブロックの可能性。人が公式ページを確認する",
-      "evidence": {
-        "consecutive_days": 6
-      }
-    },
-    {
       "key": "quality_gate_failure:ps5_pro",
       "category": "quality_gate_failure",
       "source": "ps5_pro",
       "severity": "WARNING",
       "reason": "above_genre_max",
       "title": "ps5_pro の価格に誤りの可能性が高いものがあります（隔離）",
-      "details": "kaitori_shouten: game_console正常帯¥10,000〜¥200,000の上限超過（¥207,200。他店の裏付けなし・要確認）",
+      "details": "kaitori_shouten: game_console正常帯¥10,000〜¥200,000の上限超過（¥207,700。他店の裏付けなし・要確認）",
       "evidence": {
         "items": 1
       }

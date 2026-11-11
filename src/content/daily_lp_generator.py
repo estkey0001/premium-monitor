@@ -947,6 +947,7 @@ class DailyLPGenerator:
                 tcg_msrp=self._load_export_json("tcg", "msrp.json"),
                 prev_tcg_first_seen=(raw_state.get("tcg_first_seen") if isinstance(raw_state, dict) else None),
                 prev_obs_of=_rc.prev_buyback_lookup(_mb[0], _mb[1], ctx.now), prev_buyback_prices=_mb[2], tcg_healthy_sources=_healthy, tcg_input_fresh=_tcg_fresh,
+                ledger_restore_status=_rc.ledger_restore_status(raw_state, ledger_state, _rc.current_run_id()),
                 actionable_count=((getattr(self, "_last_diag", None) or {}).get("actionable") or {}).get("count"))
             report["ledger_persistence"] = "ACROSS_RUNS" if _rc.persistence_enabled() else "NOT_AVAILABLE"
             # 個別の候補・台帳は private、公開してよい集計だけ public（許可リストで作る。個別の項目が混ざったら例外 → 何も書かない）

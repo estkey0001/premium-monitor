@@ -755,6 +755,22 @@ def classify_ledger(raw, run_id: str, persistent: bool) -> tuple[str, dict]:
     return LEDGER_RESTORED_FROM_PREVIOUS_RUN, cands
 
 
+# 台帳の復元の結果として公開してよい語彙（台帳の状態＋「分からない」）。同じ実行の再生成（REUSED_WITHIN_RUN）は復元の結果ではない
+ALLOWED_RESTORE = frozenset({LEDGER_NOT_AVAILABLE, LEDGER_NEW_THIS_RUN, LEDGER_RESTORED_FROM_PREVIOUS_RUN, LEDGER_CORRUPT, "UNKNOWN"})
+
+
+def ledger_restore_status(raw, ledger_state: str, run_id: str) -> str:
+    """この実行が前回の台帳を引き継げたか（復元の結果。Wave 7e-1）。
+
+    最初の生成は `ledger_state` そのもの。同じ実行の再生成（REUSED_WITHIN_RUN）は、最初の生成が state.json に残した
+    `first_ledger_state` を引き継ぐ（同じ実行のものだけ。語彙が不正・無い・別の実行のものは UNKNOWN。REUSED を復元の結果にしない）。
+    """
+    if ledger_state != LEDGER_REUSED_WITHIN_RUN:
+        return ledger_state if ledger_state in ALLOWED_RESTORE else "UNKNOWN"
+    first = raw.get("first_ledger_state") if isinstance(raw, dict) and raw.get("run_id") == run_id else None
+    return first if first in ALLOWED_RESTORE else "UNKNOWN"
+
+
 PREV_BUYBACK_MAX_AGE_DAYS = 7
 
 
@@ -913,7 +929,9 @@ PRIVATE_KEYS = frozenset({
     "release", "release_date", "limited_signal", "supply_signals", "buyback_signals", "signal_points", "signal_reasons",
     "retail_unavailable_sources", "days_since_release", "tcg_priority_events", "buyback_prices", "msrp_linked", "msrp_price",
     # 買取の勢い・TCG の検知の遅れ（Wave 6）の個別の項目
-    "momentum", "tcg_first_seen", "tcg_detection_events", "buyback_prices_prev"})
+    "momentum", "tcg_first_seen", "tcg_detection_events", "buyback_prices_prev",
+    # 公式の状態（Wave 7e-1）の個別の項目（商品ごとの状態）。公開してよいのは状態別の件数（official_state_counts）だけ
+    "official_states", "official_state", "first_ledger_state"})
 
 
 # 公開の集計に出してよい理由の語彙（商品名・価格などの個別の値がキーに混ざらないように、既知の語彙だけを通す）
@@ -957,6 +975,8 @@ COVERAGE_KEYS = {
                        "tcg_deadline_boosted", "tcg_missing_application_url", "tcg_missing_identity", "tcg_missing_msrp"),
     "official_gap_counts": ("SALE_ENDED", "SOURCE_NOT_IMPLEMENTED", "SOURCE_BLOCKED", "IDENTITY_NOT_MATCHED", "PRICE_NOT_FOUND", "PAGE_CHANGED", "PRICE_CHANGED", "RECHECK_MATCHED",
                             "VERIFICATION_STALE", "CONFIGURED_PRICE_ONLY", "UNKNOWN_CAUSE"),
+    "official_state_counts": ("VERIFIED_CURRENT", "VERIFIED_DATED", "RECHECK_MATCHED", "SALE_ENDED", "SOURCE_BLOCKED", "SOURCE_NOT_REGISTERED",
+                              "IDENTITY_NOT_MATCHED", "PAGE_CHANGED", "PRICE_CHANGED", "STALE", "CONFIGURED_REFERENCE", "UNKNOWN"),
     "price_type_counts": ("REGULAR", "SALE", "COUPON", "MEMBERSHIP", "CONDITIONAL", "UNKNOWN", "with_points", "with_cashback", "rejected_conditional"),
     "operator_queue_next_actions": ("next_VERIFY_OFFICIAL_PRICE", "next_VERIFY_RETAIL_PRICE", "next_VERIFY_BUYBACK", "next_VERIFY_SHIPPING",
                                     "next_VERIFY_STOCK", "next_VERIFY_IDENTITY", "next_FIND_CORROBORATING_SOURCE", "next_REGISTER_CANONICAL_PRODUCT",
@@ -964,7 +984,7 @@ COVERAGE_KEYS = {
                                     "next_VERIFY_DEADLINE", "next_VERIFY_ELIGIBILITY", "next_REGISTER_OFFICIAL_SOURCE"),
     "tcg_detection_delay": ("events_active", "baseline_events", "new_after_baseline", "measured", "unknown_published_at",
                             "detected_before_start", "median_delay_hours", "max_delay_hours", "comparable", "source_gap_excluded",
-                            "delay_values_withheld", "identity_ambiguous", "stale_input", "source_not_observed_this_run", "previously_observable_excluded"),
+                            "delay_values_withheld", "identity_ambiguous", "stale_input", "source_not_observed_this_run", "previously_observable_excluded", "already_processed"),
     "tcg_detection_simulation": ("events_measured", "latency_hours", "h24_missed", "h24_lost_half", "h12_missed", "h12_lost_half",
                                  "h6_missed", "h6_lost_half", "h3_missed", "h3_lost_half"),
     "tcg_funnel": ("raw_announcements", "parsed_events", "review_required", "rejected", "active_lotteries", "sources_with_gap",
@@ -1018,6 +1038,16 @@ def public_summary(report: dict) -> dict:
         # 初めて見た日が実行をまたいで保持されているか（鍵が無い CI では THIS_RUN_ONLY。偽の永続性を示さない）
         "first_seen_scope": first_seen_scope(report.get("ledger_state") or ""),
         "ledger_persistence": "ACROSS_RUNS" if report.get("ledger_persistence") == "ACROSS_RUNS" else "NOT_AVAILABLE",
+        # 台帳の観測性（Wave 7e-1。固定の語彙・真偽・整数だけ。個別の台帳は公開しない）
+        "ledger_restore_status": report.get("ledger_restore_status") if report.get("ledger_restore_status") in ALLOWED_RESTORE else "UNKNOWN",
+        "cross_run_restored": report.get("ledger_restore_status") == LEDGER_RESTORED_FROM_PREVIOUS_RUN,
+        "ledger_version": int(SCHEMA) if isinstance(SCHEMA, int) and not isinstance(SCHEMA, bool) else None,
+        "momentum_comparable": bool(((m.get("research_signals") or {}).get("momentum_observed") or 0) > 0
+                                    and ((m.get("research_signals") or {}).get("momentum_not_comparable") or 0) == 0),
+        "detection_delay_measured": int(((m.get("tcg_detection_delay") or {}).get("measured")) or 0),
+        # 測れなかった件数（公開日時が無い・取得元が見えていなかった・前回見えていたはず。前の run で処理済みの件数は含めない）
+        "detection_delay_unknown": sum(int(((m.get("tcg_detection_delay") or {}).get(k)) or 0)
+                                       for k in ("unknown_published_at", "source_gap_excluded", "previously_observable_excluded")),
         # Wave 1 の指標
         "high_priority_research_count": int(m.get("high_priority_research") or 0),
         "product_research_candidate_count": int(m.get("product_research_candidates") or 0),
@@ -1066,6 +1096,9 @@ def public_summary(report: dict) -> dict:
         "operator_queue_next_actions": _count_dict(m.get("operator_queue_next_actions"), COVERAGE_KEYS["operator_queue_next_actions"]),
         "official_gap_counts": _count_dict(m.get("official_gap_counts"), COVERAGE_KEYS["official_gap_counts"]),
         "price_type_counts": _count_dict(m.get("price_type_counts"), COVERAGE_KEYS["price_type_counts"]),
+        # 公式の状態別の件数（Wave 7e-1。0 件でも 12 状態すべてを出す。合計は canonical_products と一致する。個別の状態は非公開）
+        "official_state_counts": {k: _count_dict(m.get("official_state_counts"), COVERAGE_KEYS["official_state_counts"]).get(k, 0)
+                                 for k in COVERAGE_KEYS["official_state_counts"]},
         "tcg_detection_simulation": _num_dict(m.get("tcg_detection_simulation"), COVERAGE_KEYS["tcg_detection_simulation"]),
         "tcg_detection_delay": _num_dict(m.get("tcg_detection_delay"), COVERAGE_KEYS["tcg_detection_delay"]),
         "tcg_msrp_verified": _int_or_none(m.get("tcg_msrp_verified")),
@@ -1106,7 +1139,8 @@ def build(*, products: list[dict], observations: list[dict], msrp_evidence: dict
           retail_adapter_stats: dict | None = None, retail_api_sources: list[dict] | None = None,
           tcg_msrp: dict | None = None, prev_sell_of=None, prev_obs_of=None,
           prev_tcg_first_seen: dict | None = None, prev_buyback_prices: dict | None = None,
-          tcg_healthy_sources: set | None = None, tcg_input_fresh: bool = True) -> tuple[dict, dict]:
+          tcg_healthy_sources: set | None = None, tcg_input_fresh: bool = True,
+          ledger_restore_status: str | None = None) -> tuple[dict, dict]:
     """調査候補のレポート（運営者向け）と、次回の台帳。戻りは (report, new_state)。
 
     quarantined: 品質ゲートで隔離された買取価格（collector_report の suspicious_prices）。上限超え・急変・裏付け不足で
@@ -1199,6 +1233,10 @@ def build(*, products: list[dict], observations: list[dict], msrp_evidence: dict
         oq = _oq.empty(now)
     from src.research import evidence_gap as _eg79
     metrics["official_gap_counts"] = _eg79.gap_counts([c for c in cands if c.get("status") == RESEARCH_CANDIDATE])
+    # 公式の状態（Wave 7e-1）: 全商品を 1 回ずつ分類する。公開は状態別の件数だけ。個別の状態は非公開（report["official_states"]）
+    from src.research import official_state as _os71
+    official_states = _os71.classify_products(products, msrp_evidence, official_meta)
+    metrics["official_state_counts"] = _os71.state_counts(official_states)
     metrics["price_type_counts"] = _eg79.price_type_counts(tri["rows"])
     metrics["operator_queue"] = oq["counts"]
     metrics["operator_queue_next_actions"] = oq["next_action_counts"]
@@ -1206,6 +1244,9 @@ def build(*, products: list[dict], observations: list[dict], msrp_evidence: dict
     report = {
         "schema": SCHEMA, "type": "RESEARCH_CANDIDATES", "audience": "operator",
         "generated_at": now.isoformat(timespec="seconds"), "ledger_state": ledger_state,
+        # 台帳の復元の結果（この実行の最初の生成で決めた値。同じ実行の再生成の REUSED_WITHIN_RUN で上書きしない。Wave 7e-1）
+        "ledger_restore_status": ledger_restore_status if ledger_restore_status in ALLOWED_RESTORE else ledger_state,
+        "official_states": official_states,             # 非公開（商品ごとの公式の状態。.private/research/official_state.json にも書く。件数だけ公開）
         "note": "運営者向けの調査候補。確定の利益ではない。顧客向けの画面・LP・商品の通知には出さない（確認して VERIFIED に"
                 "なるまで）。価格は観測した買値・売値だけ（予測は使わない）",
         "counts": {"research_candidates": metrics["research_candidates"] + len(prod_research), "verified": metrics["verified_candidates"],
@@ -1295,11 +1336,17 @@ def write_outputs(report: dict, state: dict, private_dir, public_dir, run_id: st
     (priv / "latest.json").write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
     # 運営者向けの作業キュー（個別。非公開の .private にだけ書く）
     (priv / "operator_queue.json").write_text(json.dumps(report.get("operator_queue") or {}, ensure_ascii=False, indent=2), encoding="utf-8")
+    # 商品ごとの公式の状態（個別。非公開の .private にだけ書く。Wave 7e-1）
+    (priv / "official_state.json").write_text(json.dumps({"generated_at": report.get("generated_at"),
+                                                          "states": report.get("official_states") or {}},
+                                                         ensure_ascii=False, indent=2), encoding="utf-8")
     tmp = priv / "state.json.tmp"
     tmp.write_text(json.dumps({"schema": SCHEMA, "updated_at": report["generated_at"], "run_id": run_id or current_run_id(),
                                "candidates": state, "buyback_prices": report.get("buyback_prices") or {},
                                "buyback_prices_prev": report.get("buyback_prices_prev"),
-                               "tcg_first_seen": report.get("tcg_first_seen") or {}}, ensure_ascii=False, indent=1), encoding="utf-8")
+                               "tcg_first_seen": report.get("tcg_first_seen") or {},
+                               # この実行の最初の生成で決めた台帳の復元の結果。同じ実行の再生成が引き継ぐ（REUSED で上書きしない）
+                               "first_ledger_state": report.get("ledger_restore_status")}, ensure_ascii=False, indent=1), encoding="utf-8")
     tmp.replace(priv / "state.json")
     (pub / "summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
     return summary

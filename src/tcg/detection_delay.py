@@ -164,7 +164,7 @@ def update(items: list[dict], prev, *, comparable: bool, now: datetime, run_id: 
         # （sources・last_seen・first_seen を今に更新しない = 取得元の停止を「見えていた」ことにしない。復旧日の除外が効き続ける）
         zero = {k: 0 for k in ("events_active", "baseline_events", "new_after_baseline", "measured", "unknown_published_at",
                                "detected_before_start", "source_gap_excluded", "identity_ambiguous", "median_delay_hours",
-                               "max_delay_hours", "delay_values_withheld", "comparable", "previously_observable_excluded")}
+                               "max_delay_hours", "delay_values_withheld", "comparable", "previously_observable_excluded", "already_processed")}
         zero["stale_input"] = 1
         zero["source_not_observed_this_run"] = len(p.get("sources") or {})
         return (dict(p) if p else {}), zero, []
@@ -194,7 +194,7 @@ def update(items: list[dict], prev, *, comparable: bool, now: datetime, run_id: 
     done_keys: set = set()                                         # 同じ鍵に潰れた複数のイベント（期間違いのラウンドなど）は、1 つのイベントとして 1 回だけ数える・測る
     counts = {"events_active": 0, "baseline_events": 0, "new_after_baseline": 0, "measured": 0, "unknown_published_at": 0,
               "detected_before_start": 0, "source_gap_excluded": 0, "identity_ambiguous": 0, "stale_input": 0,
-              "source_not_observed_this_run": 0, "previously_observable_excluded": 0}
+              "source_not_observed_this_run": 0, "previously_observable_excluded": 0, "already_processed": 0}
     delays: list[float] = []
     for i in items or []:
         if not isinstance(i, dict) or str(i.get("status") or "") not in eq.ACTIVE_STATUSES:
@@ -244,6 +244,7 @@ def update(items: list[dict], prev, *, comparable: bool, now: datetime, run_id: 
         counts["new_after_baseline"] += 1
         mr = seen.get("measured_run")
         if mr is not None and mr != run_id:
+            counts["already_processed"] += 1                           # 前の run で既に測った（または除外した）。件数だけ数える（測れなかった件数に混ぜない）
             rows.append(row)                                           # 前の run で既に測った（または除外した）イベントは、また数えない
             continue
         seen["measured_run"] = run_id

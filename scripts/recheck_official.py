@@ -38,7 +38,10 @@ if str(ROOT) not in sys.path:
 
 JST = timezone(timedelta(hours=9))
 OUT = ROOT / "exports" / "official_recheck"
-HISTORY_LIMIT = 300
+from src.market.official_registry import (RECHECK_HISTORY_DAYS, RECHECK_HISTORY_LIMIT, RECHECK_INVALIDATION_DAYS,  # noqa: E402,F401
+                                          RECHECK_PRODUCT_IDS, trim_recheck_history)
+HISTORY_DAYS = RECHECK_HISTORY_DAYS   # 通常の行を残す日数（公式直販の期限 14 日の 2 倍超）。無効化（changed・sale_ended）の行は RECHECK_INVALIDATION_DAYS（195 日）
+HISTORY_LIMIT = RECHECK_HISTORY_LIMIT          # 件数の上限（商品数が増えても肥大しない安全弁）
 
 # 静的な HTML で読み取れる公式ページ（ホスト → 読み取りの種類）。My Nintendo Store は JavaScript で描画する
 # （静的な HTML に価格・在庫が無い）ので、ここには入れない。Phase 16 でキヤノン・ニコン・フジフイルムモールの直販と
@@ -67,14 +70,7 @@ RECHECK_PAGE = {
 RECHECK_VERIFIED_BY = {"prod_ps5_pro": "store_product_page", "prod_switch2": "msrp_lineup"}
 # 再確認する商品（すでに確認済みで、照合のキーが登録され、上の読み取りで確かめられるもの）。
 # 公式直販価格は確認から14日で確認済みでなくなる（normalized_prices.OFFICIAL_DIRECT_STALE_DAYS）ので、全部を対象にする
-RECHECK_TARGETS = ("prod_ps5_pro", "prod_switch2", "prod_airpods_pro3", "prod_r5ii", "prod_z8", "prod_iphone17_256",
-                   "prod_x100vi",
-                   "prod_z9", "prod_r6ii",   # Coverage Wave 1: ニコンダイレクト（JAN）・キヤノンオンラインショップ（商品コード）
-                   "prod_zf",                # Coverage Wave 2: ニコンダイレクト（JAN・ブラック）
-                   "prod_a7rv", "prod_a1ii",  # Coverage Wave 3: ソニーストアの購入ページ（型番・在庫の語は 翌日出荷 も読む）
-                   "prod_a7cr",              # Wave 7c-2: ソニーストアの購入ページ（人が 2026-11-08 に確認。型番 ILCE-7CR で照合）
-                   "prod_iphoneair_256",   # Phase 29: 発見から登録した iPhone Air 256GB（同じ apple_parts の読み方）
-                   "prod_iphoneduo_256")   # Phase 30: 優先順位で選んで登録した iPhone Duo 256GB
+RECHECK_TARGETS = RECHECK_PRODUCT_IDS      # 正本は official_registry.RECHECK_PRODUCT_IDS（確認日の使い方の境目と同じ一覧）
 # 読み取りごとの照合のキー（ページのどの値で「この商品」と確かめるか）。既定は型番（model_number）
 # - canon_store: 購入ページの URL の商品コード（6536C001 = ボディー。レンズキットは別のコード）
 # - nikon_direct: JAN（型番 Z8 は短く、ページの別の場所にも出る）
@@ -308,6 +304,12 @@ def classify(rec: dict, parsed: dict) -> str:
     return "unchanged" if parsed["price"] == rec.get("price") else "changed"
 
 
+def trim_history(hist: list, now: datetime) -> list:
+    """履歴を整理する: 通常の行は直近 HISTORY_DAYS 日・最大 HISTORY_LIMIT 件、無効化の行（changed・sale_ended）は
+    商品ごとに最新の 1 件を RECHECK_INVALIDATION_DAYS 日（正本は official_registry.trim_recheck_history）。"""
+    return trim_recheck_history(hist, now)
+
+
 def _targets() -> list[dict]:
     import yaml
 
@@ -474,9 +476,10 @@ def main(argv=None) -> int:
         hist = json.loads(hist_path.read_text(encoding="utf-8")).get("results") or []
     except (OSError, ValueError):
         hist = []
-    hist = (hist + results)[-HISTORY_LIMIT:]
+    hist = trim_history(hist + results, datetime.now(tz=JST))   # 取得の時刻は開始時刻より後なので、整理の基準は取得の後の現在時刻（開始時刻だと今回の行が未来扱いで消える）
     hist_path.write_text(json.dumps({"note": "公式の再確認の結果の履歴（直近のみ）", "results": hist},
                                     ensure_ascii=False, indent=1), encoding="utf-8")
+    # 商品ごとの最終状態は別のファイルに保存しない（履歴から毎回導出する。個別の商品の状態の写しを新しく公開・保存しない。Wave 7e-1）
     for r in results:
         print(f"[公式の再確認] {r['product_id']}: {r['status']} 価格 {r.get('price')} 在庫 {r.get('stock') or '—'}"
               + (f"（{r['reason']}）" if r.get("reason") else ""))

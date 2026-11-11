@@ -4166,6 +4166,7 @@ def check() -> list[dict]:
     results.extend(_check_coverage_wave7a())
     results.extend(_check_coverage_wave7b())
     results.extend(_check_coverage_wave7c())
+    results.extend(_check_observability_wave7e1())
 
     # ══════════════════════════════════════════════════════════════════
     # #820-#825: データの正確さ・鮮度の偽装（Phase 0）
@@ -7040,6 +7041,300 @@ def _check_coverage_wave7c(root: Path | None = None) -> list[dict]:
              "message": "#880 条件つきの仕入れ価格は確定に使わない・ポイント / キャッシュバックは現金から引かない・条件なしの現金の価格だけが確定に使える・"
                         "公式が売っていない商品は小売の価格の確認・遮断は回避しない・原因と価格の種類の個別の項目は公開しない"
                         + ("" if not bad else f" ← {bad[:4]}")}]
+
+
+def _check_observability_wave7e1(root: Path | None = None) -> list[dict]:
+    """Wave 7e-1（#881〜#892）: システムが何を判断しているかを、公開してよい集計だけで監査できる。確定・actionable・通知の基準は変えない。
+
+    #881 公式の状態は全商品を 1 回ずつ分類し、状態別の件数の合計が正本の商品数と一致する（確認済みの状態の合計は既存の確認済みの件数と一致）
+    #882 商品ごとの公式の状態・台帳の個別の項目は公開しない
+    #883 未来の確認日は無効として無視する（期限の判定・最終状態の両方）
+    #884 失敗・遮断・販売終了・価格の変化・希望小売価格だけの確認では確認日を進めない（実際に取得でき一致した再確認だけが進める）
+    #885 期限の正本は official_stale_days だけ（確認の期限・アラートが同じ値。Switch 2 の誤警報が出ない）
+    #886 台帳の観測性は固定の語彙・真偽・整数だけ（個別の台帳は公開しない。同じ実行の再生成が復元の結果を上書きしない）
+    #887 実行の記録の公開は許可リストだけ（手動・再実行の遅れは null）
+    #888 条件つきの仕入れ値の行には点を付けない（Wave 5 の変異テスト負債）
+    #889 登録簿の確認日が、根拠なく日付だけ進んでいない
+    #892 履歴の保持: 通常の行は 35 日・無効化（changed・sale_ended）の行は 195 日で、件数の上限で消えない（新しい項目・ファイル・Secret なし）
+    """
+    import json as _j81
+    from datetime import date as _d81
+    from datetime import datetime as _dt81
+    from datetime import timedelta as _td81
+    from datetime import timezone as _tz81
+    root = root or Path(__file__).resolve().parent.parent
+    b = {n: [] for n in range(881, 893)}
+    jst = _tz81(_td81(hours=9))
+    try:
+        from src.research import candidates as rc
+        from src.research import official_state as ost
+        from src.market import official_registry as reg
+        # #881: 公式の状態（合成の入力）と、生成物（あれば）の合計
+        prods = [{"id": f"p{i}"} for i in range(5)]
+        ev = {"p0": "VERIFIED_CURRENT", "p1": "VERIFIED_DATED", "p2": "STALE", "p3": "CONFIGURED_REFERENCE"}
+        meta = {"p2": {"url": "https://o.example/p"}, "p3": {"url": "https://o.example/q"}, "p4": {"official_not_sold": True}}
+        st = ost.classify_products(prods, ev, meta)
+        cn = ost.state_counts(st, len(prods))
+        if len(st) != len(prods) or sum(cn.values()) != len(prods) or tuple(cn) != ost.STATES or any(k not in cn for k in ost.STATES):
+            b[881].append("状態別の件数の合計が商品数と一致しない・0 件の状態が出ていない")
+        if ost.verified_total(cn) != 2 or cn["SALE_ENDED"] != 1 or cn["STALE"] != 1:
+            b[881].append("確認済み・販売終了・古い確認の分類が期待と違う")
+        try:
+            ost.state_counts({"a": "UNKNOWN"}, 2)
+            b[881].append("合計が商品数と違うのに例外にならない")
+        except ValueError:
+            pass
+        sp = root / "exports" / "research" / "summary.json"
+        if sp.exists():
+            sm = _j81.loads(sp.read_text(encoding="utf-8"))
+            osc = sm.get("official_state_counts")
+            if isinstance(osc, dict):
+                if tuple(osc) != ost.STATES or sum(int(v) for v in osc.values()) != int(sm.get("canonical_products") or -1):
+                    b[881].append("公開の official_state_counts の合計が canonical_products と一致しない")
+                if ost.verified_total(osc) != int((sm.get("official_verified_coverage") or {}).get("verified", -1)):
+                    b[881].append("確認済みの状態の合計が official_verified_coverage.verified と一致しない")
+        # #882: 個別の状態は公開しない
+        if not {"official_states", "official_state", "first_ledger_state"} <= rc.PRIVATE_KEYS:
+            b[882].append("商品ごとの公式の状態・台帳の個別の項目が非公開の一覧に無い")
+        rep = {"schema": 1, "type": "RESEARCH_CANDIDATES", "generated_at": _dt81(2026, 11, 9, tzinfo=jst).isoformat(), "candidates": [], "counts": {},
+               "official_states": {"secret_product": "SALE_ENDED"}, "ledger_restore_status": "RESTORED_FROM_PREVIOUS_RUN",
+               "metrics": {"official_state_counts": {"SALE_ENDED": 1, "secret_product": 1}}}
+        pub = _j81.dumps(rc.public_summary(rep), ensure_ascii=False)
+        if "secret_product" in pub or "\"official_states\"" in pub:
+            b[882].append("公開の集計に商品ごとの公式の状態が出ている")
+        if sp.exists():
+            txt = sp.read_text(encoding="utf-8")
+            if any(f'"{pid}"' in txt for pid in list(reg.VERIFIED_URLS)[:8]):
+                b[882].append("公開の summary に商品 ID が出ている")
+        # #883〜#885: 確認日
+        today = _d81(2026, 11, 9)
+        saved = dict(reg.VERIFIED_URLS)
+        try:
+            reg.VERIFIED_URLS["prod_future"] = {"source": "s", "url": "https://o.example/f", "price": 1000, "checked_on": "2026-12-31", "price_kind": "official_direct"}
+            fut = {r["product_id"]: r for r in reg.verification_status([], today=today)}["prod_future"]
+            if not (fut["expired"] and fut["last_verified"] == ""):
+                b[883].append("未来の checked_on を有効な確認日として扱っている")
+            hist = [{"product_id": "prod_future", "url": "https://o.example/f", "price": 1000, "status": "unchanged", "observed_at": "2026-12-31T10:00:00+09:00"}]
+            fut2 = {r["product_id"]: r for r in reg.verification_status(hist, today=today)}["prod_future"]
+            if fut2["last_verified"] != "":
+                b[883].append("未来の再確認の日付で確認日が進む")
+            reg.VERIFIED_URLS["prod_future"]["checked_on"] = "2026-11-01"
+            fake_prods = {"prod_future": {"id": "prod_future", "name": "F", "model_number": "MODEL-F"}}
+            saved_ev = dict(reg.IDENTITY_EVIDENCE)
+            reg.IDENTITY_EVIDENCE["prod_future"] = {"model_number": "MODEL-F"}
+            base = {"product_id": "prod_future", "url": "https://o.example/f", "model": "MODEL-F", "match": "MODEL-F", "recorded_price": 1000,
+                    "price": 1000, "observed_at": "2026-11-09T10:00:00+09:00"}
+            ls0 = reg.advance_last_state({}, [{**base, "status": "unchanged", "observed_at": "2026-11-08T10:00:00+09:00"}], today, products=fake_prods)
+            if ls0["prod_future"]["last_verified_at"] != "2026-11-08":
+                b[884].append("実際に一致した再確認で確認日が進まない")
+            for status in ("failed", "blocked"):
+                ls1 = reg.advance_last_state(ls0, [{**base, "status": status}], today, products=fake_prods)
+                if ls1["prod_future"]["last_verified_at"] != "2026-11-08":
+                    b[884].append(f"{status} で確認日が進む・戻る")
+            for status in ("sale_ended", "changed"):
+                ls1 = reg.advance_last_state(ls0, [{**base, "status": status, "price": 999 if status == "changed" else None}], today, products=fake_prods)
+                if ls1["prod_future"]["last_verified_at"] != "":
+                    b[884].append(f"{status} を観測してもそれまでの確認日を購入の根拠として引き継ぐ")
+                ls2b = reg.advance_last_state(ls1, [{**base, "status": "blocked", "observed_at": "2026-11-09T12:00:00+09:00"}], today, products=fake_prods)
+                if ls2b["prod_future"]["last_verified_at"] != "":
+                    b[884].append(f"{status} の翌日の遮断で古い確認日が復活する")
+            hist84 = [{**base, "status": "unchanged", "observed_at": "2026-11-04T10:00:00+09:00"},
+                      {**base, "status": "failed", "observed_at": "2026-11-05T10:00:00+09:00"}]
+            init84 = reg.derive_last_state(hist84, today, products=fake_prods)
+            if init84["prod_future"]["last_verified_at"] != "2026-11-04" or init84["prod_future"]["failure_streak_days"] != 1:
+                b[884].append("履歴全体から最終状態を作れない（初回に履歴の確認日・連続失敗を引き継げない）")
+            ls2 = reg.advance_last_state(ls0, [{**base, "status": "unchanged", "observed_at": "2026-12-31T10:00:00+09:00"}], today, products=fake_prods)
+            if ls2["prod_future"]["last_verified_at"] != "2026-11-08":
+                b[884].append("未来の日付で確認日が進む")
+            ls3 = reg.advance_last_state(ls0, [{**base, "status": "unchanged", "verified_by": "msrp_lineup"}], today, products=fake_prods)
+            if ls3["prod_future"]["last_verified_at"] != "2026-11-08":
+                b[884].append("希望小売価格だけの確認で確認日が進む")
+            # 履歴から導出した最終状態で確認日が決まる（別のファイルを持たない）
+            row = {r["product_id"]: r for r in reg.verification_status([], today=today, last_state=ls0)}["prod_future"]
+            if row["last_verified"] != "2026-11-08":
+                b[884].append("最終状態から確認日が決まらない")
+            # #890: 確認日を引き継いでよいのは同一性（型番）を確かめた再確認だけ。型番違い・商品名だけ・正本が無い場合は引き継がない
+            ok0 = {**base, "status": "unchanged", "observed_at": "2026-11-08T10:00:00+09:00"}
+            if reg.derive_last_state([ok0], today, products=fake_prods)["prod_future"]["last_verified_at"] != "2026-11-08":
+                b[890].append("型番が一致した再確認で確認日が引き継がれない")
+            for label, bad_r, prods in (("型番が違う", {**ok0, "model": "OTHER", "match": "OTHER"}, fake_prods),
+                                        ("他の商品の型番", {**ok0, "model": "MODEL-M"}, fake_prods),
+                                        ("商品名だけ（照合の値が無い）", {k: v for k, v in ok0.items() if k not in ("model", "match")}, fake_prods),
+                                        ("正本の商品が無い", ok0, {}),
+                                        ("正本の型番が変わった", ok0, {"prod_future": {"id": "prod_future", "name": "F", "model_number": "MODEL-G"}})):
+                got = reg.derive_last_state([bad_r], today, products=prods).get("prod_future", {}).get("last_verified_at", "")
+                if got:
+                    b[890].append(f"同一性を確かめられない再確認（{label}）で確認日が進む")
+            for first in ("changed", "sale_ended"):
+                seq = [{**ok0, "observed_at": "2026-11-05T10:00:00+09:00"}, {**ok0, "status": first, "observed_at": "2026-11-06T10:00:00+09:00",
+                                                                             "price": 999 if first == "changed" else None},
+                       {**ok0, "status": "blocked", "observed_at": "2026-11-07T10:00:00+09:00"}]
+                if reg.derive_last_state(seq, today, products=fake_prods)["prod_future"]["last_verified_at"] != "":
+                    b[890].append(f"{first} の後に古い確認日が復活する")
+                rec = seq + [{**ok0, "model": "OTHER", "match": "OTHER", "observed_at": "2026-11-08T10:00:00+09:00"}]
+                if reg.derive_last_state(rec, today, products=fake_prods)["prod_future"]["last_verified_at"] != "":
+                    b[890].append(f"{first} の後、型番が違う一致で確認日が復帰する")
+            # 販売終了・価格の変化の後に失敗・遮断が続いても、登録簿の確認日へ復活しない（結果の行で検査する）
+            reg.VERIFIED_URLS["prod_future"]["checked_on"] = "2026-11-05"
+            for first in ("changed", "sale_ended"):
+                seq = [{**ok0, "status": first, "observed_at": "2026-11-06T10:00:00+09:00", "price": 999 if first == "changed" else None},
+                       {**ok0, "status": "failed", "price": None, "observed_at": "2026-11-07T10:00:00+09:00"}]
+                row = {r["product_id"]: r for r in reg.verification_status(seq, today=today, products=fake_prods)}["prod_future"]
+                if row["last_verified"] != "" or not row["expired"]:
+                    b[890].append(f"{first} の後の失敗で、確認日が登録簿の日付へ復活する（結果の行）")
+            reg.IDENTITY_EVIDENCE.clear()
+            reg.IDENTITY_EVIDENCE.update(saved_ev)
+        finally:
+            reg.VERIFIED_URLS.clear()
+            reg.VERIFIED_URLS.update(saved)
+            if "saved_ev" in locals():
+                reg.IDENTITY_EVIDENCE.clear()
+                reg.IDENTITY_EVIDENCE.update(saved_ev)
+        # #891: 商品ごとの最終状態の個別ファイルを新しく公開・保存しない（公開は集計だけ。#871 は緩めない）
+        if (root / "exports" / "official_recheck" / "last_state.json").exists():
+            b[891].append("exports/official_recheck/last_state.json（商品ごとの最終状態）が公開側にある")
+        for rel in ("scripts/recheck_official.py", ".github/workflows/daily_lp.yml"):
+            if "last_state.json" in (root / rel).read_text(encoding="utf-8"):
+                b[891].append(f"{rel} が last_state.json を扱っている")
+        from src.market import normalized_prices as npr
+        from src.ops import health_alert as ha
+        rows = reg.verification_status([], today=today)
+        for r in rows:
+            if r["stale_days"] != npr.official_stale_days(r["product_id"]):
+                b[885].append(f"{r['product_id']} の期限が official_stale_days と違う")
+        sw = [r for r in rows if r["product_id"] == "prod_switch2"]
+        if sw:
+            al = ha._official_alerts({"official_status": [dict(sw[0], last_verified="2026-10-08", days_left=-17, expired=True, stale_days=180)]})
+            if not al or "180" not in al[0]["details"]:
+                b[885].append("アラートの文言が実際の期限の日数を示さない")
+            if ha._official_alerts({"official_status": sw}):
+                b[885].append("Switch 2（希望小売価格・180 日）が期限内なのにアラートが出る")
+        # #886: 台帳の観測性
+        pubs = rc.public_summary({"schema": 1, "type": "RESEARCH_CANDIDATES", "generated_at": _dt81(2026, 11, 9, tzinfo=jst).isoformat(), "candidates": [],
+                                  "counts": {}, "ledger_restore_status": "SECRET_VALUE", "metrics": {}})
+        if pubs.get("ledger_restore_status") != "UNKNOWN" or pubs.get("cross_run_restored") is not False:
+            b[886].append("台帳の復元の結果が固定の語彙でない")
+        if rc.ledger_restore_status({"run_id": "r1", "first_ledger_state": "RESTORED_FROM_PREVIOUS_RUN"}, rc.LEDGER_REUSED_WITHIN_RUN, "r1") != "RESTORED_FROM_PREVIOUS_RUN" \
+                or rc.ledger_restore_status({"run_id": "r0", "first_ledger_state": "RESTORED_FROM_PREVIOUS_RUN"}, rc.LEDGER_REUSED_WITHIN_RUN, "r1") != "UNKNOWN":
+            b[886].append("同じ実行の再生成が最初の復元の結果を引き継がない（または別の実行の値を引き継ぐ）")
+        # #887: 実行の記録
+        import importlib.util as _iu81
+        spec = _iu81.spec_from_file_location("run_observability_81", root / "scripts" / "run_observability.py")
+        ro = _iu81.module_from_spec(spec)
+        spec.loader.exec_module(ro)
+        n0 = _dt81(2026, 11, 9, 11, 28, 49, tzinfo=_tz81.utc)
+        env = {"GITHUB_EVENT_NAME": "schedule", "GITHUB_RUN_ATTEMPT": "1", "SCHEDULE_CRON": "17 3 * * *"}
+        d1 = ro.start_record(env, n0, "daily")["schedule_delay_seconds"]
+        if d1 != 29509:
+            b[887].append("定時の実行の遅れの計算が違う")
+        if ro.start_record({**env, "GITHUB_EVENT_NAME": "workflow_dispatch"}, n0, "daily")["schedule_delay_seconds"] is not None \
+                or ro.start_record({**env, "GITHUB_RUN_ATTEMPT": "2"}, n0, "daily")["schedule_delay_seconds"] is not None:
+            b[887].append("手動・再実行の遅れが null でない")
+        if tuple(ro.public_record(ro.start_record(env, n0, "daily"), n0, "daily")) != ro.PUBLIC_KEYS:
+            b[887].append("公開の記録の項目が許可リストと違う")
+        for f in sorted((root / "exports" / "ops").glob("run_timing_*.json")):
+            d = _j81.loads(f.read_text(encoding="utf-8"))
+            extra = set(d) - set(ro.PUBLIC_KEYS) - {"schema", "type", "audience"}
+            if extra:
+                b[887].append(f"{f.name} に許可リスト外の項目: {sorted(extra)}")
+        # #888: 条件つきの仕入れ値（Wave 5 の負債）
+        from src.research import signals as sg
+        from src.research import triage as tr
+        fr = "2026-10-29T10:00:00+09:00"
+        nw = _dt81(2026, 10, 29, 12, 0, tzinfo=jst)
+        d0 = {"candidate_id": "dp_x", "kind": "DISCOVERED_PRODUCT_CANDIDATE", "status": rc.DISCOVERED, "name": "Nikon Z f 限定カラー", "identity_basis": "JAN",
+              "observed_sell_price": 120000, "observed_at": fr, "retail_price_hint": None,
+              "missing_requirements": ["CANONICAL_UNREGISTERED", "OFFICIAL_PRICE_UNKNOWN"]}
+        lk = {"status": "MATCHED", "retailer": "公式", "source_type": "OFFICIAL_DIRECT", "product_url": "https://www.example.com/p/1", "price": 100000,
+              "listed_price": 100000, "availability_state": "OUT_OF_STOCK", "observed_at": fr,
+              "identity_evidence": {"basis": "JAN", "matched_name": "Nikon Z f 限定カラー"}, "price_basis": "CAMPAIGN", "price_type": "REGULAR",
+              "price_conditions": [], "points": 0, "cashback": 0}
+        rc.apply_lookups([d0], {"dp_x": lk}, nw, fr)
+        tri = tr.triage([d0], nw, lookup_ready_of=lambda c: True, lookup_results={"dp_x": {"status": "MATCHED"}})
+        sg.annotate_buyback_rows(tri["rows"], nw)
+        r0 = tri["rows"][0]
+        if "ACQUISITION_CONDITIONAL" not in r0["missing_requirements"] or r0["signal_points"] != 0 or "ACQUISITION_CONDITIONAL" not in sg.SUSPICIOUS_REASONS:
+            b[888].append("条件つきの仕入れ値（条件の文言が空）の行に点が付く")
+        # #889: 登録簿の日付だけの更新
+        import importlib.util as _iu89
+        sp2 = _iu89.spec_from_file_location("audit_ts_89", root / "scripts" / "audit_timestamp_only_updates.py")
+        at = _iu89.module_from_spec(sp2)
+        sp2.loader.exec_module(at)
+        old_t = 'VERIFIED_URLS = {\n    "p": {"url": "https://o.example/p", "price": 1000, "checked_on": "2026-10-01", "price_kind": "official_direct"},\n}\n'
+        new_t = old_t.replace("2026-10-01", "2026-11-09")
+        f1 = at.registry_timestamp_findings(old_t, new_t)
+        if not any(x.get("kind") == at.TIMESTAMP_ONLY_REGISTRY for x in f1):
+            b[889].append("登録簿の日付だけの更新を検知しない")
+        with_comment = new_t.replace('    "p": {', '    # 2026-11-09: 人が公式ページで確認（価格・URL は同じ）\n    "p": {', 1)
+        if at.registry_timestamp_findings(old_t, with_comment):
+            b[889].append("確認した日付のコメントがある正当な更新を検知している")
+        if at.registry_timestamp_findings("", "") or at.registry_timestamp_findings(None, None):
+            b[889].append("空の入力で検知が出る")
+        # #892: 履歴の保持（Wave 7e-1 最終）
+        now92 = _dt81(2026, 11, 9, 12, tzinfo=jst)
+
+        def _row92(day, status, pid="p"):
+            return {"product_id": pid, "url": "u", "price": 1, "status": status, "observed_at": (now92 - _td81(days=day)).isoformat(timespec="seconds")}
+        keep = reg.trim_recheck_history([_row92(d, s) for d in (1, 36, 40) for s in ("unchanged", "failed", "blocked")]
+                                        + [_row92(10, "sale_ended", "a"), _row92(190, "changed", "b"), _row92(196, "changed", "c")], now92)
+        if any(r["status"] in ("unchanged", "failed", "blocked") and (now92 - _dt81.fromisoformat(r["observed_at"])).days > reg.RECHECK_HISTORY_DAYS for r in keep):
+            b[892].append("通常の行（unchanged・failed・blocked）が 35 日を超えて残る")
+        if {r["product_id"] for r in keep if r["status"] in reg.INVALIDATING_STATUSES} != {"a", "b"}:
+            b[892].append("195 日以内の無効化の行が消える・195 日を超える無効化の行が残る")
+        big = [_row92(1 + (i % 30), "unchanged", f"x{i % 15}") for i in range(reg.RECHECK_HISTORY_LIMIT + 300)] + [_row92(150, "sale_ended", "a")]
+        kb = reg.trim_recheck_history(big, now92)
+        if not any(r["status"] == "sale_ended" for r in kb) or sum(1 for r in kb if r["status"] == "unchanged") > reg.RECHECK_HISTORY_LIMIT:
+            b[892].append("通常の行が大量のとき、件数の上限で無効化の行が消える・通常の行が縮まない")
+        from src.market.normalized_prices import official_stale_days as _osd92
+        if reg.trim_recheck_history([_row92(-0.0003, "unchanged")], now92) != [_row92(-0.0003, "unchanged")]:
+            b[892].append("取得の時刻が開始時刻より数十秒後の行（実際の取得）を、未来として捨てる（無効化の行が履歴に残らない）")
+        if reg.RECHECK_INVALIDATION_DAYS != max(_osd92(p) for p in reg.RECHECK_PRODUCT_IDS) + 15:
+            b[892].append("無効化の保持が、期限の最大（180 日）+ 15 日でない")
+        hp = root / "exports" / "official_recheck" / "history.json"
+        if hp.exists():
+            h92 = _j81.loads(hp.read_text(encoding="utf-8")).get("results") or []
+            t92 = _dt81.now(tz=jst)
+            if any(r.get("status") not in reg.INVALIDATING_STATUSES and (t92 - _dt81.fromisoformat(r["observed_at"])).days > reg.RECHECK_HISTORY_DAYS + 2 for r in h92):
+                b[892].append("公開の履歴の通常の行が 35 日を超えて残る")
+            inv92 = [r for r in h92 if r.get("status") in reg.INVALIDATING_STATUSES]
+            if len(inv92) > len(reg.RECHECK_PRODUCT_IDS) or len({r.get("product_id") for r in inv92}) != len(inv92):
+                b[892].append("無効化の行が商品ごとに最新の 1 件でない")
+            allowed92 = {"match", "model", "observed_at", "price", "product_id", "reason", "recorded_price", "status", "stock", "url", "fetched_url", "verified_by"}
+            if any(not set(r) <= allowed92 for r in h92):
+                b[892].append("履歴に新しい項目が増えている")
+        extra92 = sorted(x.name for x in (root / "exports" / "official_recheck").glob("*") if x.name not in ("history.json", "latest.json"))
+        if extra92:
+            b[892].append(f"公開の再確認のフォルダに新しいファイルがある: {extra92}")
+        src92 = (root / "src" / "market" / "official_registry.py").read_text(encoding="utf-8") + (root / "scripts" / "recheck_official.py").read_text(encoding="utf-8")
+        if any(w in src92 for w in ("RESEARCH_LEDGER_KEY", "ledger.enc", "secrets.", "os.environ")):
+            b[892].append("履歴の保持が Secret・非公開の台帳・環境変数に依存している")
+        # Switch 2: 無効化の行が無ければ、履歴（35 日）を超えても期限（180 日）まで確認済みのまま
+        sw = reg.VERIFIED_URLS.get("prod_switch2") or {}
+        if sw.get("checked_on"):
+            d92 = _d81.fromisoformat(sw["checked_on"]) + _td81(days=100)
+            row92 = {r["product_id"]: r for r in reg.verification_status([], today=d92)}["prod_switch2"]
+            if row92["expired"]:
+                b[892].append("無効化の行が無い Switch 2 が、履歴（35 日）を超えたため確認済みから外れる")
+    except Exception as exc:  # noqa: BLE001
+        for n in b:
+            b[n].append(f"検査に失敗: {type(exc).__name__}: {exc}")
+    desc = {890: "確認日を引き継ぐのは同一性（型番）を確かめた再確認だけ（型番違い・商品名だけ・販売終了や価格の変化の後の復活を許さない）",
+            891: "商品ごとの最終状態の個別ファイルを新しく公開・保存しない（履歴から導出する。公開は集計だけ）",
+            881: "公式の状態は全商品を 1 回ずつ分類（状態別の件数の合計 == 正本の商品数・確認済みの状態の合計 == 既存の確認済みの件数）",
+            882: "商品ごとの公式の状態・台帳の個別の項目は公開しない",
+            883: "未来の確認日は無効として無視する",
+            884: "失敗・遮断・販売終了・価格の変化・希望小売価格だけの確認では確認日を進めない（履歴の窓が切れても戻らない）",
+            885: "確認の期限の正本は official_stale_days だけ（アラートと実際の判定が一致・Switch 2 の誤警報なし）",
+            886: "台帳の観測性は固定の語彙・真偽・整数だけ（同じ実行の再生成が復元の結果を上書きしない）",
+            887: "実行の記録の公開は許可リストだけ（手動・再実行の遅れは null）",
+            888: "条件つきの仕入れ値の行には点を付けない（Wave 5 の変異テスト負債）",
+            889: "登録簿の確認日が、根拠なく日付だけ進んでいない",
+            892: "履歴の保持（通常の行は 35 日・無効化の行は 195 日で件数の上限で消えない・新しい項目・ファイル・Secret なし・Switch 2 は確認済みのまま）"}
+    names = {890: "last_verified_identity", 891: "no_individual_last_state_file", 881: "official_state_total", 882: "official_state_private", 883: "verification_future_timestamp", 884: "verification_no_refresh",
+             885: "official_stale_rule", 886: "ledger_observability", 887: "run_timing_allowlist", 888: "wave5_conditional_points",
+             889: "registry_timestamp_only", 892: "recheck_history_retention"}
+    return [{"level": "ok" if not b[n] else "error", "check": f"wave7e1_{names[n]}",
+             "message": f"#{n} {desc[n]}" + ("" if not b[n] else f" ← {b[n][:4]}")} for n in range(881, 893)]
 
 
 def _check_phase26_acceptance_guard(root: Path | None = None) -> list[dict]:

@@ -6,7 +6,7 @@
 # ruff: noqa
 import subprocess, sys
 SG="src/research/signals.py"; C="src/research/candidates.py"; PD="src/tcg/profit_dense.py"; R="src/research/retail_lookup.py"
-TESTS="tests/test_coverage_wave5.py tests/test_coverage_wave4.py tests/test_coverage_wave3.py tests/test_market_research.py".split()
+TESTS="tests/test_coverage_wave5.py tests/test_coverage_wave4.py tests/test_coverage_wave3.py tests/test_market_research.py tests/test_coverage_wave6.py tests/test_wave7e1_conditional_points.py".split()
 M=[
 ("発売日が無いのに発売直後にする",SG,'        return {"release_state": REL_UNKNOWN, "days_since_release": None}\n    days','        return {"release_state": REL_NEW, "days_since_release": 0}\n    days'),
 ("発売前を発売直後にする",SG,'    if now < d:\n        return {"release_state": REL_UPCOMING','    if False:\n        return {"release_state": REL_UPCOMING'),
@@ -14,12 +14,14 @@ M=[
 ("在庫が不明を供給の逼迫にする",SG,'    if official and availability == "OUT_OF_STOCK":','    if availability in ("OUT_OF_STOCK", "UNKNOWN", ""):'),
 ("公式でない 1 つの取得元の在庫なしを逼迫にする",SG,'    if official and availability == "OUT_OF_STOCK":','    if availability == "OUT_OF_STOCK":'),
 ("1 つの取得元の購入不可を複数と数える",SG,'    if unavailable_sources >= 2:','    if unavailable_sources >= 1:'),
-("前回が無いのに買取が上がったことにする",SG,'    if isinstance(prev_sell, int) and isinstance(sell, int) and prev_sell > 0 and sell >= prev_sell * RISING_MIN_RATIO:','    if isinstance(sell, int) and sell >= (prev_sell or 0) * RISING_MIN_RATIO:'),
+# 旧「前回が無いのに買取が上がったことにする」は OBSOLETE: Wave 6 で signals.momentum を作り直し、置換元の式が無くなった。等価な守りは
+# mutation_wave6.py の「初めて見た候補を上がったことにする（NEW_OBSERVATION を RISING）」（と buyback_signals の prev_sell=None のテスト）。表から外した。
 ("誤価格の疑いの行にも買取の勢いを付ける",SG,'    if r.get("suspicious") or r.get("retail_conditions"):\n        return []','    if False:\n        return []'),
 ("誤価格の疑いの行にも点を付ける（疑わしい価格が確定へ近づく）",SG,'    if suspicious:\n        return {"signal_points": 0','    if False:\n        return {"signal_points": 0'),
 ("標本が 1 件でも品目の中央値を基準にする",SG,'MEDIAN_MIN_SAMPLES = 3','MEDIAN_MIN_SAMPLES = 1'),
 ("実行をまたいでいない台帳の前回の価格を使う",C,'    if ledger_state != LEDGER_RESTORED_FROM_PREVIOUS_RUN or not isinstance(prices, dict):','    if not isinstance(prices, dict):'),
-("古い前回の価格（7 日超）を使う",C,'timedelta(hours=-1) <= now - at <= timedelta(days=PREV_BUYBACK_MAX_AGE_DAYS)','timedelta(hours=-1) <= now - at'),
+# 旧「古い前回の価格（7 日超）を使う」は置換元が無く無効だったため、現在の prev_buyback_lookup の stale 判定を直接壊す変異に更新した（momentum 側の stale は mutation_wave6.py）。
+("古い前回の価格（7 日超）を基準にする（台帳の側の stale 判定を外す）",C,'"stale": now - at > timedelta(days=PREV_BUYBACK_MAX_AGE_DAYS)','"stale": False'),
 ("古い在庫なしを今日の供給の逼迫にする",C,'                    and timedelta(hours=-1) <= now - _at <= timedelta(hours=RETAIL_LOOKUP_MAX_AGE_HOURS)):','                    and True):'),
 ("不完全な TCG のイベントを actionable にする","src/tcg/action_url.py",'Q_COMPLETE if not missing else Q_PARTIAL','Q_COMPLETE if len(missing) <= 3 else Q_PARTIAL'),
 ("商品が特定できていない TCG のイベントを定価に結ぶ（完全一致でない）",PD,'m = idx.get(pid) if pid and str(i.get("product_match") or "") == "exact" and not i.get("provisional_product") else None','m = idx.get(pid) if pid else None'),
@@ -34,7 +36,8 @@ M=[
 ("価格が読めないだけの代替の取得元を購入不可と数える",C,'x.get("status") == "NOT_PURCHASABLE" and x.get("availability", x.get("availability_state")) == "OUT_OF_STOCK"','x.get("status") == "NOT_PURCHASABLE"'),
 ("価格差が無い（REJECTED）行にもシグナルを付ける",SG,'        if r.get("status") == "REJECTED" or tri.get("tier") not in ("HIGH", "MEDIUM") or tri.get("currentness") != "fresh":','        if False:'),
 ("ヒント由来の価格差にも正の価格差の点を付ける",SG,'                        and r.get("retail_basis") == "retail_lookup" and not r.get("retail_conditions")','                        and not r.get("retail_conditions")'),
-("条件つきの仕入れ値の行にも点を付ける",SG,'SUSPICIOUS_REASONS = frozenset({"PRICE_ANOMALY_SUSPECTED", "ACQUISITION_CONDITIONAL", "IDENTITY_PARTIAL",','SUSPICIOUS_REASONS = frozenset({"PRICE_ANOMALY_SUSPECTED", "IDENTITY_PARTIAL_X",'),
+("条件つきの仕入れ値の行にも点を付ける",SG,'"PRICE_ANOMALY_SUSPECTED", "ACQUISITION_CONDITIONAL", "IDENTITY_PARTIAL", "ABOVE_GENRE_MAX",','"PRICE_ANOMALY_SUSPECTED", "IDENTITY_PARTIAL", "ABOVE_GENRE_MAX",'),
+# 旧版は置換元が実コードに合わず「見逃し」に見えていた（SUSPICIOUS_REASONS は 2 行にまたがる）。tests/test_wave7e1_conditional_points.py（Wave 7e-1）で検知する。
 ("応募の終了が過ぎた TCG のイベントも受付中に数える",PD,'        if _end is not None and _end < now:\n            continue','        if False:\n            continue'),
 ("抽選が開いているだけで高密度と数える",PD,'counts["active_tcg_priority"] += int(dense and pts >= HIGH_DENSITY_POINTS)','counts["active_tcg_priority"] += int(pts >= HIGH_DENSITY_POINTS)'),
 ]

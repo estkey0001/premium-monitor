@@ -36,6 +36,15 @@ jobs:
           python-version: '3.11'
           cache: 'pip'
 
+      # 実行の観測性（Wave 7e-1）: 予定からの開始の遅れ・所要時間を記録する。付加の機能（失敗しても実行を止めない）。
+      # 公開するのは last_run_at・runtime_seconds・schedule_delay_seconds・trigger・lane だけ（exports/ops/run_timing_daily.json）。
+      # 手動の実行・再実行の遅れは null。通信しない・Secrets を渡さない
+      - name: Run timing (start)
+        continue-on-error: true
+        env:
+          SCHEDULE_CRON: ${{ github.event.schedule }}
+        run: python scripts/run_observability.py start --lane daily
+
       - name: Install dependencies
         run: pip install -r requirements.txt
 
@@ -605,6 +614,12 @@ jobs:
       # 16. Build public LP
       - name: Build public LP
         run: python -m src.cli build-public-lp
+
+      # 16a. 実行の所要時間を記録（公開してよい項目だけ。deploy-check が許可リストを検査する）
+      - name: Run timing (finish)
+        if: always()
+        continue-on-error: true
+        run: python scripts/run_observability.py finish --lane daily
 
       # 17. Deploy check
       - name: Deploy check

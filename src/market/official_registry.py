@@ -669,47 +669,260 @@ def extends_verification(result: dict) -> bool:
     return str((result or {}).get("verified_by") or "") not in NON_EXTENDING_VERIFIED_BY
 
 
-def verification_status(history: list[dict] | None, today=None) -> list[dict]:
+def _valid_day(value, today) -> str:
+    """YYYY-MM-DD の確認日（読める・今日より未来でないものだけ。それ以外は空 = 無効として無視する）。"""
+    from datetime import date
+    try:
+        d = date.fromisoformat(str(value or "")[:10])
+    except ValueError:
+        return ""
+    return d.isoformat() if d <= today else ""
+
+
+_CANONICAL_CACHE: dict = {}
+
+
+# 再確認の履歴の保持（scripts/recheck_official の正本）。通常の観測（unchanged・failed・blocked）は 35 日。
+# 確認済みを外す観測（changed・sale_ended。無効化）は、期限 180 日 + 安全余白 15 日 = 195 日 保持する。
+# 新しいファイル・項目は作らない（既存の履歴の行を、無効化の行だけ長く残す）。件数の上限は通常の行だけに掛け、無効化の行を消さない。
+RECHECK_HISTORY_DAYS = 35
+RECHECK_INVALIDATION_DAYS = 195
+RECHECK_HISTORY_LIMIT = 900                              # 通常の行の件数の上限（商品が増えても肥大しない安全弁。無効化の行には掛けない）
+INVALIDATING_STATUSES = ("changed", "sale_ended")
+RECHECK_CLOCK_SKEW_HOURS = 1                             # これより先の未来の observed_at は壊れた行として捨てる（実際の取得は開始時刻より数分後になる）
+
+
+from datetime import timedelta as _td0, timezone as _tz0  # noqa: E402
+_JST_TZ = _tz0(_td0(hours=9))
+
+
+def _recheck_ts(r):
+    """履歴の行の observed_at を時刻にする（naive は JST。読めない行は None）。"""
+    from datetime import datetime, timedelta, timezone
+    try:
+        d = datetime.fromisoformat(str((r or {}).get("observed_at") or "").replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    return d if d.tzinfo else d.replace(tzinfo=timezone(timedelta(hours=9)))
+
+
+def trim_recheck_history(hist: list | None, now, *, verified_urls: dict | None = None, products: dict | None = None) -> list:
+    """再確認の履歴を整理する（recheck_official.trim_history の正本。純関数）。
+
+    - 通常の行（unchanged・failed・blocked など）: 直近 RECHECK_HISTORY_DAYS（35）日、最大 RECHECK_HISTORY_LIMIT 件（新しいほうを残す）
+    - 無効化の行（changed・sale_ended）: 直近 RECHECK_INVALIDATION_DAYS（195）日のうち、**商品ごとに最新の 1 件**。件数の上限に巻き込まず、
+      通常の行が大量でも消えない。古い無効化は、最新の無効化が「それより前の確認日を使わない」で覆うので残さない
+    - 回復の行: その無効化より後の、同一性を確かめた確認日を進める一致（unchanged）の最新 1 件を、無効化と同じ 195 日残す
+      （回復の行が 35 日で消えて、古い無効化が回復済みの現在を無効にしないため）。無効化が無い商品の通常の行は 35 日のまま
+    読めない・未来の observed_at の行は捨てる（naive は JST。形式が混在しても時刻で比べる）。結果は時刻の順。
+    """
+    from datetime import timedelta
+    urls = verified_urls if isinstance(verified_urls, dict) else VERIFIED_URLS
+    prods = products if isinstance(products, dict) else canonical_products()
+    cut_n, cut_i = now - timedelta(days=RECHECK_HISTORY_DAYS), now - timedelta(days=RECHECK_INVALIDATION_DAYS)
+    limit = now + timedelta(hours=RECHECK_CLOCK_SKEW_HOURS)       # 取得の時刻は実行の開始時刻より後になる（実行の長さ・時計のずれの余裕）
+    rows = []
+    for r in (hist or []):
+        ts = _recheck_ts(r) if isinstance(r, dict) else None
+        if ts is not None and ts <= limit:
+            rows.append((ts, r))
+    rows.sort(key=lambda x: x[0])
+    normal = [r for ts, r in rows if r.get("status") not in INVALIDATING_STATUSES and ts >= cut_n][-RECHECK_HISTORY_LIMIT:]
+    latest: dict = {}
+    for ts, r in rows:
+        v0 = urls.get(r.get("product_id")) if isinstance(r.get("product_id"), str) else None
+        current = not isinstance(v0, dict) or (r.get("url") == v0.get("url") and r.get("recorded_price") in (None, v0.get("price")))
+        if r.get("status") in INVALIDATING_STATUSES and ts >= cut_i and current:   # 古い記録（別の URL・価格）への観測は残さない（advance_last_state と同じ）
+            latest[str(r.get("product_id") or "")] = (ts, r)               # 時刻の昇順なので、最後が最新
+    keep = [r for _, r in latest.values()]
+    for pid, (its, _) in latest.items():
+        v = urls.get(pid)
+        rec = [r for ts, r in rows if ts > its and ts >= cut_i and r.get("product_id") == pid and isinstance(v, dict)
+               and r.get("status") == "unchanged" and r.get("url") == v.get("url") and r.get("recorded_price") == v.get("price")
+               and r.get("price") == v.get("price") and extends_verification(r) and recheck_identity_ok(pid, r, prods.get(pid))]
+        if rec:
+            keep.append(rec[-1])
+    in_normal = {id(r) for r in normal}
+    return sorted(normal + [r for r in keep if id(r) not in in_normal], key=lambda r: _recheck_ts(r))
+
+
+RECHECK_PRODUCT_IDS = ("prod_ps5_pro", "prod_switch2", "prod_airpods_pro3", "prod_r5ii", "prod_z8", "prod_iphone17_256",
+                       "prod_x100vi",
+                       "prod_z9", "prod_r6ii",
+                       "prod_zf",
+                       "prod_a7rv", "prod_a1ii",
+                       "prod_a7cr",
+                       "prod_iphoneair_256",
+                       "prod_iphoneduo_256")
+
+
+def canonical_products() -> dict:
+    """正本の商品（config/products.yaml。商品 ID → 1件）。読めなければ空（空なら同一性を確認できず、確認日は引き継がれない = 安全側）。"""
+    if not _CANONICAL_CACHE:
+        try:
+            import yaml
+            from pathlib import Path
+            raw = yaml.safe_load((Path(__file__).resolve().parent.parent.parent / "config" / "products.yaml").read_text(encoding="utf-8")) or {}
+            _CANONICAL_CACHE.update({str(p.get("id")): p for p in raw.get("products", []) if isinstance(p, dict) and p.get("id")})
+        except Exception:  # noqa: BLE001 - 読めなければ空（確認日を引き継がない側に倒す）
+            return {}
+    return _CANONICAL_CACHE
+
+
+def recheck_identity_ok(pid: str, result: dict, product: dict | None) -> bool:
+    """再確認の結果が、今の正本の商品と **同一であると確かめられた** 結果か（確認日を進めてよい・引き継いでよい条件）。
+
+    商品名だけの一致では通さない。型番（正本の model_number）が結果の型番と同じで、公式の証拠（IDENTITY_EVIDENCE）と一致し
+    （`identity_state` が IDENTITY_CONFIRMED）、ページで照合した値（match）が空でないこと。型番を持たず色違いの部品番号の組で確かめる商品は、
+    結果の照合の値が証拠の部品番号の組と同じ場合だけ。確かめられなければ偽（確認日を進めない・復活させない）。
+    """
+    if not isinstance(product, dict) or not isinstance(result, dict):
+        return False
+    p = dict(product, id=pid)
+    if identity_state(p)[0] != "IDENTITY_CONFIRMED":
+        return False
+    match = str(result.get("match") or "").strip()
+    model = str(p.get("model_number") or "").strip()
+    if not match:
+        return False
+    if model:
+        return str(result.get("model") or "").strip() == model
+    ev = IDENTITY_EVIDENCE.get(pid) or {}
+    jan = str(p.get("jan_code") or "").strip()
+    if jan and ev.get("jan_code") == jan and not ev.get("variant_skus"):
+        # 型番が無く JAN で確かめた商品（任天堂の商品一覧など）: 照合の値が証拠の JAN か、証拠の版（edition）を含む場合だけ
+        if str(result.get("model") or "").strip():
+            return False
+        return jan in match or bool(ev.get("edition") and str(ev["edition"]) in match)
+    return bool(ev.get("variant_skus")) and not str(result.get("model") or "").strip() \
+        and match == ",".join(sorted(ev["variant_skus"]))
+
+
+def advance_last_state(prev: dict | None, results: list | None, today, *, verified_urls: dict | None = None,
+                       products: dict | None = None) -> dict:
+    """商品ごとの最終状態を 1 回の再確認の結果で進める（履歴の窓が切れても確認日が過去へ戻らないようにする。Wave 7e-1）。
+
+    返り値: 商品 ID → {"url", "price", "last_verified_at", "last_verified_by", "last_recheck_at", "last_recheck_result",
+    "failure_streak_days", "last_failure_day"}。**純関数**（通信しない・書き込まない）。
+
+    確認日（`last_verified_at`）を進めてよいのは、**実際にページを取得でき、記録と同じ URL・価格・型番が一致した（unchanged）再確認で、
+    購入の根拠として確認日を進めてよいもの（`extends_verification`）だけ**。次のものは進めない:
+    failed・blocked（取得できなかった）／sale_ended・changed（販売終了・価格の変化。確認済みを外す側）／希望小売価格だけの確認（msrp_lineup）／
+    今日より未来の日付（壊れた結果・時計のずれ）／記録（URL・価格）と違う結果／**同一性を確かめられない結果**（型番が正本と違う・商品名だけ・
+    照合の値が無い。`recheck_identity_ok`）。timestamp だけの更新はしない（同じ日付で進まない・過去へ戻らない）。
+    登録簿の URL・価格が変わった商品は、前回の最終状態を引き継がない（古い確認を新しい記録の確認にしない）。
+    """
+    from datetime import date
+    t = today if isinstance(today, date) else date.fromisoformat(_today_jst())
+    urls = verified_urls if isinstance(verified_urls, dict) else VERIFIED_URLS
+    prods = products if isinstance(products, dict) else canonical_products()
+    out: dict = {}
+    for pid, e in (prev if isinstance(prev, dict) else {}).items():
+        v = urls.get(pid) if isinstance(pid, str) else None
+        if isinstance(e, dict) and isinstance(v, dict) and e.get("url") == v.get("url") and e.get("price") == v.get("price"):
+            out[pid] = dict(e)                                   # 記録が変わっていない商品だけ引き継ぐ
+            if not _valid_day(e.get("last_verified_at"), t):     # 引き継ぐ確認日が未来・壊れていれば無効にする（その日付で固着しない）
+                out[pid]["last_verified_at"], out[pid]["last_verified_by"] = "", ""
+    from datetime import datetime as _dtm
+    from datetime import timezone as _tz
+    _floor = _dtm.min.replace(tzinfo=_tz.utc)
+    for r in sorted((x for x in (results or []) if isinstance(x, dict)), key=lambda x: (_recheck_ts(x) or _floor, str(x.get("observed_at") or ""))):
+        pid = r.get("product_id")
+        v = urls.get(pid) if isinstance(pid, str) else None
+        _ts = _recheck_ts(r)
+        day = _valid_day(_ts.astimezone(_JST_TZ).date().isoformat() if _ts else r.get("observed_at"), t)   # 日付は JST（Z 表記でも日がずれない）
+        if not isinstance(v, dict) or not v.get("price") or not day:
+            continue                                             # 記録の無い商品・読めない／未来の時刻は無視する
+        e = out.setdefault(pid, {"url": v.get("url"), "price": v.get("price"), "last_verified_at": "", "last_verified_by": "",
+                                 "last_recheck_at": "", "last_recheck_result": "", "failure_streak_days": 0, "last_failure_day": "",
+                                 "invalidated_at": "", "invalidated_by": ""})
+        e["url"], e["price"] = v.get("url"), v.get("price")
+        st = str(r.get("status") or "")
+        if str(r.get("observed_at") or "") >= str(e.get("last_recheck_at") or ""):
+            e["last_recheck_at"], e["last_recheck_result"] = str(r.get("observed_at")), st
+        if st in ("failed", "blocked"):
+            if e.get("last_failure_day") != day:                  # 同じ日の失敗は 1 日として数える
+                e["failure_streak_days"] = int(e.get("failure_streak_days") or 0) + 1
+                e["last_failure_day"] = day
+            continue                                             # 取得できなかった: 確認日は進めない
+        e["failure_streak_days"], e["last_failure_day"] = 0, ""   # 読めた（unchanged・changed・sale_ended）: 連続失敗は途切れる
+        if st in ("changed", "sale_ended") and (r.get("url") != v.get("url") or r.get("recorded_price") not in (None, v.get("price"))):
+            continue                                             # 古い記録（別の URL・価格）に対する観測は、今の記録を無効にしない
+        if st in ("changed", "sale_ended"):
+            # 確認済みを外す側の観測（価格の変化・販売終了）: それまでの確認日は、もう購入の根拠として引き継がない。
+            # 翌日以降に取得の失敗・遮断が続いても、古い確認日で確認済みに戻さない（実際に一致した再確認が来るまで空）
+            e["last_verified_at"], e["last_verified_by"] = "", ""
+            e["invalidated_at"] = max(str(e.get("invalidated_at") or ""), day)   # 登録簿の人の確認日も、これより古ければ使わない
+            e["invalidated_by"] = st
+            continue
+        if st == "unchanged" and r.get("url") == v.get("url") and r.get("recorded_price") == v.get("price") \
+                and r.get("price") == v.get("price") and extends_verification(r) and day >= str(e.get("last_verified_at") or "") \
+                and recheck_identity_ok(pid, r, prods.get(pid)):
+            e["last_verified_at"], e["last_verified_by"] = day, str(r.get("verified_by") or "purchase_page_or_manual")
+            e["invalidated_at"], e["invalidated_by"] = "", ""    # 同一性を確かめた実際の一致で復帰した
+    return out
+
+
+def derive_last_state(history: list | None, today, *, verified_urls: dict | None = None, products: dict | None = None) -> dict:
+    """公開済みの再確認の履歴（exports/official_recheck/history.json）から、商品ごとの最終状態を毎回導出する（Wave 7e-1）。
+
+    **別の永続ファイルは持たない**（商品ごとの URL・価格・確認日の写しを新しく公開・保存しない）。履歴は日数で保持する
+    （通常の行は 35 日。公式直販の期限 14 日より長い）ので、公式直販の窓が切れた古い確認は、どのみち期限切れで確認日が戻っても結果は同じ。
+    期限 180 日の商品（PS5 Pro・Switch 2）が、過去の販売終了・価格変化を忘れて古い確認日へ戻らないよう、無効化の行（changed・sale_ended）だけは
+    195 日（180 日 + 15 日）履歴に残す（`trim_recheck_history`）。通常の行は 35 日。純関数。"""
+    return advance_last_state({}, history, today, verified_urls=verified_urls, products=products)
+
+
+def verification_status(history: list[dict] | None, today=None, last_state: dict | None = None,
+                        products: dict | None = None) -> list[dict]:
     """公式の確認の期限と、再確認の連続失敗（商品ごと。deploy-check #866 と運営者向けの劣化アラートが共通で使う）。
 
-    - last_verified: 記録の確認日か、記録と同じ URL・価格に対する unchanged の再確認の日の新しいほう
-    - days_left: OFFICIAL_DIRECT_STALE_DAYS（14日）から、確認日からの日数を引いた残り（負なら期限切れ）
-    - consecutive_failures: 直近から数えて、再確認が失敗（failed / blocked）だった日数（日ごとに数える。成功が挟まれば 0 に戻る）
+    - original_verified_at: 人が最初に公式の証拠を確認した日（登録簿の `checked_on` の意味を固定。実行日で更新しない）
+    - last_verified / last_verified_at: 実際に公式ページを取得し、記録と同じ URL・価格に対して unchanged だった最新の日と、
+      original_verified_at の新しいほう。**今日より未来の日付は無効として無視する**（安全側 = 確認日が無ければ期限切れ）。
+      last_state（`advance_last_state` の結果）があれば、履歴の窓が切れても確認日は戻らない
+    - stale_days / days_left: 期限の日数は **`normalized_prices.official_stale_days` が唯一の正本**（公式直販 14 日・それ以外 180 日）。
+      確認済みの判定（price_evidence）と同じ値を使うので、アラートと実際の判定が食い違わない。days_left は期限までの残り（負なら期限切れ）
+    - last_recheck_at / last_recheck_result: 最新の再確認の日時と結果（unchanged / changed / sale_ended / failed / blocked。導出）
+    - consecutive_failures: 直近から数えて、再確認が失敗（failed / blocked）だった日数（日ごとに数える。成功が挟まれば 0 に戻る。
+      last_state があれば履歴の窓が切れても続く）
     - verified_by: 確認日を進めた最後の確認が何を見たか（既定は記録の購入ページ・人の確認。store_product_page = 同じストアの
       商品ページ）。msrp_lineup（メーカーの希望小売価格だけ。購入ページ・在庫は未確認）は確認日を進めない（NON_EXTENDING_VERIFIED_BY）
     """
     from datetime import date
 
-    from src.market.normalized_prices import OFFICIAL_DIRECT_STALE_DAYS
+    from src.market.normalized_prices import official_stale_days
     t = today or date.fromisoformat(_today_jst())
+    ls = last_state if isinstance(last_state, dict) else derive_last_state(history, t, products=products)
     rows = []
     for pid, v in VERIFIED_URLS.items():
         if not v.get("price"):
             continue
-        mine = [r for r in history or [] if isinstance(r, dict) and r.get("product_id") == pid
-                and str(r.get("observed_at") or "")[:10]]
-        last, verified_by = str(v.get("checked_on") or ""), "purchase_page_or_manual"
-        for r in sorted(mine, key=lambda x: str(x["observed_at"])):
-            if r.get("url") == v.get("url") and r.get("status") == "unchanged" and r.get("price") == v.get("price") \
-                    and extends_verification(r):
-                day = str(r["observed_at"])[:10]
-                if day >= last:
-                    last, verified_by = day, str(r.get("verified_by") or "purchase_page_or_manual")
-        by_day: dict[str, bool] = {}                      # 日 → その日に成功（unchanged / changed など読めた）があったか
-        for r in sorted(mine, key=lambda x: str(x["observed_at"])):
-            day = str(r["observed_at"])[:10]
-            by_day[day] = by_day.get(day, False) or r.get("status") not in ("failed", "blocked")
-        streak = 0
-        for day in sorted(by_day, reverse=True):
-            if by_day[day]:
-                break
-            streak += 1
+        stale_days = official_stale_days(pid)
+        original = _valid_day(v.get("checked_on"), t)
+        # 確認日は、履歴から導出した最終状態（同一性を確かめた・実際に一致した再確認だけが進める）だけを使う
+        e = ls.get(pid) if isinstance(ls.get(pid), dict) else {}
+        if e.get("url") != v.get("url") or e.get("price") != v.get("price"):
+            e = {}                                               # 記録が変わった商品の古い最終状態は使わない
+        last, verified_by = original, "purchase_page_or_manual"
+        day = _valid_day(e.get("last_verified_at"), t)
+        if day and day >= last:
+            last, verified_by = day, str(e.get("last_verified_by") or "purchase_page_or_manual")
+        rc_at, rc_res = str(e.get("last_recheck_at") or ""), str(e.get("last_recheck_result") or "")
+        inv = _valid_day(e.get("invalidated_at"), t)
+        if inv and last < inv:
+            # 販売終了・価格の変化を観測した後は、それより前の確認日（登録簿の人の確認日を含む）を使わない。翌日以降に失敗・遮断が
+            # 続いても復活しない（期限切れ扱い。人が確かめ直す・同一性を確かめた一致の再確認で復帰する）
+            last = ""
+        streak = int(e.get("failure_streak_days") or 0)
         try:
-            left = OFFICIAL_DIRECT_STALE_DAYS - (t - date.fromisoformat(last)).days
+            left = stale_days - (t - date.fromisoformat(last)).days if last else -1
         except ValueError:
             left = -1
         rows.append({"product_id": pid, "last_verified": last, "days_left": left, "expired": left < 0,
-                     "consecutive_failures": streak, "verified_by": verified_by})
+                     "consecutive_failures": streak, "verified_by": verified_by,
+                     "original_verified_at": original, "last_verified_at": last, "stale_days": stale_days,
+                     "last_recheck_at": rc_at, "last_recheck_result": rc_res})
     return rows
 
 

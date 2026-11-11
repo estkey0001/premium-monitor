@@ -65,11 +65,12 @@ def _official_alerts(inputs: dict) -> list[dict]:
         pid = r.get("product_id")
         if r.get("expired"):
             out.append(_alert("official_verification_expiry", pid, HIGH, "expired", f"{pid} の公式の確認が切れています",
-                              f"確認日 {r.get('last_verified')}（期限 14 日）", days_left=r.get("days_left")))
+                              f"確認日 {r.get('last_verified')}（期限 {int(r.get('stale_days') or 14)} 日）", days_left=r.get("days_left")))
         elif int(r.get("days_left", 99)) <= EXPIRY_WARNING_DAYS:
             out.append(_alert("official_verification_expiry", pid, WARNING, "expiring",
                               f"{pid} の公式の確認が残り {r.get('days_left')} 日で切れます",
-                              f"確認日 {r.get('last_verified')}（再確認が unchanged になれば延びる）", days_left=r.get("days_left")))
+                              f"確認日 {r.get('last_verified')}（期限 {int(r.get('stale_days') or 14)} 日。実際に公式ページを取得して一致した再確認だけが延ばす。"
+                              "失敗・遮断・販売終了・価格の変化では延びない）", days_left=r.get("days_left")))
         n = int(r.get("consecutive_failures") or 0)
         if n >= RECHECK_FAILURE_WARNING_DAYS:
             out.append(_alert("official_recheck_failing", pid, HIGH if n >= RECHECK_FAILURE_HIGH_DAYS else WARNING,

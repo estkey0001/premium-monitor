@@ -43,6 +43,7 @@ from src.market.official_price_validator import validate_official_price, is_offi
 
 # 公式の確認の記録（VERIFIED_URLS・UNVERIFIED・OFFICIAL_NOT_SOLD・KNOWN_STALE）は src/market/official_registry.py が正本
 # （Phase 15 で移した。名前はここでも同じに使える）
+from src.market.official_registry import derive_last_state as _derive_last_state  # noqa: E402
 from src.market.official_registry import (  # noqa: E402,F401
     KNOWN_STALE, OFFICIAL_NOT_SOLD, UNVERIFIED, VERIFIED_URLS, VERIFIED_URLS_CHECKED_ON, config_price_drift,
     extends_verification, identity_coverage, official_direct_gate,
@@ -217,6 +218,19 @@ def register_verified(c, products):
 RECHECK_PATH = ROOT / "exports" / "official_recheck" / "latest.json"
 
 
+def _invalidate_in_db(c, pid: str, v: dict, st: str, observed=None) -> dict:
+    """販売終了・価格の変化の商品を、DB 上でも確認済みから外す（価格・確認日を消し、公式の購入ページとしても使わない）。"""
+    c.execute("UPDATE products SET official_price=NULL, official_price_source='', "
+              "official_price_updated_at=NULL WHERE id=?", (pid,))
+    # 公式の購入ページとしても使わない（確認済みの印を外す。人が確かめて VERIFIED_URLS を直すまで。M-3）
+    # 新しい価格を自動で確定にしない: 人の確認待ち（REVIEW_REQUIRED）にする（Phase 16 手順43）
+    c.execute("UPDATE product_source_config SET extra_config = json_set(COALESCE(extra_config, '{}'), "
+              "'$.verified', json('false'), '$.official_price', json('null'), '$.recheck_status', ?, "
+              "'$.review_status', 'REVIEW_REQUIRED') WHERE product_id=? AND source_id=?",
+              (st, pid, v["source"]))
+    return {"product_id": pid, "action": f"price_{st}_needs_review", "observed": observed, "review_status": "REVIEW_REQUIRED"}
+
+
 def apply_recheck(c, products, path: Path | None = None) -> list[dict]:
     """公式の再確認（scripts/recheck_official.py）の結果を DB に反映する（Phase 15）。
 
@@ -259,16 +273,7 @@ def apply_recheck(c, products, path: Path | None = None) -> list[dict]:
                           "AND COALESCE(json_extract(extra_config, '$.verified'), 0) = 1", (day, pid, v["source"]))
                 applied.append({"product_id": pid, "action": "price_reconfirmed", "on": day})
         elif st in ("changed", "sale_ended"):
-            c.execute("UPDATE products SET official_price=NULL, official_price_source='', "
-                      "official_price_updated_at=NULL WHERE id=?", (pid,))
-            # 公式の購入ページとしても使わない（確認済みの印を外す。人が確かめて VERIFIED_URLS を直すまで。M-3）
-            # 新しい価格を自動で確定にしない: 人の確認待ち（REVIEW_REQUIRED）にする（Phase 16 手順43）
-            c.execute("UPDATE product_source_config SET extra_config = json_set(COALESCE(extra_config, '{}'), "
-                      "'$.verified', json('false'), '$.official_price', json('null'), '$.recheck_status', ?, "
-                      "'$.review_status', 'REVIEW_REQUIRED') WHERE product_id=? AND source_id=?",
-                      (st, pid, v["source"]))
-            applied.append({"product_id": pid, "action": f"price_{st}_needs_review", "observed": r.get("price"),
-                            "review_status": "REVIEW_REQUIRED"})
+            applied.append(_invalidate_in_db(c, pid, v, st, r.get("price")))
         # 在庫は、価格まで記録と一致した（unchanged）読み取りのときだけ記録する（価格が食い違った読み取りの在庫は
         # 別の商品の行かもしれないので信用しない。監査 N-1）
         if st == "unchanged" and r.get("stock") and extends_verification(r) and _stock_record_is_current(at) \
@@ -282,6 +287,47 @@ def apply_recheck(c, products, path: Path | None = None) -> list[dict]:
                             (r["stock"], at, pid, at, pid, v["source"]))
             if getattr(cur, "rowcount", 1) != 0:
                 applied.append({"product_id": pid, "action": "stock_observed", "stock": r["stock"], "at": at})
+    # 商品ごとの最終状態（公開済みの再確認の履歴 history.json から毎回導出する。別のファイルは持たない。Wave 7e-1）: 履歴の窓に依らず、
+    # 実際に取得でき一致した過去の確認日を引き継ぐ。今回 failed・blocked だった日に確認日が登録簿の古い日付へ戻らないようにする。
+    # 進めるのは「同一性（型番）を確かめた・実際に一致した再確認」の日だけ。今回 changed・sale_ended の商品・未来の日付・記録（URL・価格）が
+    # 違う・型番が違う最終状態は使わない。timestamp だけの更新はしない（より新しい実際の確認日があるときだけ進む）
+    try:
+        _hist = (json.loads((Path(path).parent if path else RECHECK_PATH.parent).joinpath("history.json")
+                            .read_text(encoding="utf-8")).get("results") or [])
+    except (OSError, ValueError, AttributeError):
+        _hist = []
+    ls = _derive_last_state(_hist, NOW.date(), products=products)
+    skip = {r.get("product_id") for r in data.get("results") or [] if isinstance(r, dict) and r.get("status") in ("changed", "sale_ended")}
+    for pid, e in ls.items():
+        v = VERIFIED_URLS.get(pid)
+        if pid in skip or pid not in products or not isinstance(v, dict) or not isinstance(e, dict) \
+                or e.get("url") != v.get("url") or e.get("price") != v.get("price") \
+                or e.get("last_recheck_result") in ("changed", "sale_ended"):   # 直近が価格の変化・販売終了の商品は引き継がない
+            continue
+        day = str(e.get("last_verified_at") or "")[:10]
+        if str(v.get("checked_on") or "") < day <= today:
+            cur = c.execute("UPDATE products SET official_price_updated_at=? WHERE id=? AND official_price=? "
+                            "AND (official_price_updated_at IS NULL OR official_price_updated_at < ?)",
+                            (day, pid, v.get("price"), day))
+            if getattr(cur, "rowcount", 1) != 0:
+                # 設定の行の確認日も合わせる（通常の price_reconfirmed と同じ。監査の表の確認日と食い違わないように）
+                c.execute("UPDATE product_source_config SET extra_config = json_set(COALESCE(extra_config, '{}'), "
+                          "'$.last_verified_at', ?) WHERE product_id=? AND source_id=? "
+                          "AND COALESCE(json_extract(extra_config, '$.verified'), 0) = 1", (day, pid, v["source"]))
+                applied.append({"product_id": pid, "action": "price_reconfirmed_from_last_state", "on": day})
+    # 無効化の持続（Wave 7e-1 最終）: 販売終了・価格の変化を観測した後に取得の失敗・遮断が続いても、毎回作り直す DB が登録簿の古い確認日で
+    # 確認済みへ戻さない（確認済みの判定の本体は DB の official_price と確認日）。無効化の行は履歴に 195 日残る（trim_recheck_history）ので、
+    # 登録簿の人の確認日が無効化の観測より古い商品は、今回の観測と同じ扱い（確認済みを外す・人の確認待ち）にする。人が確かめ直せば（checked_on >= 観測日）外れる
+    done = {a.get("product_id") for a in applied if str(a.get("action") or "").startswith("price_") and "needs_review" in str(a.get("action"))}
+    for pid, e in ls.items():
+        v = VERIFIED_URLS.get(pid)
+        if pid in skip or pid in done or pid not in products or not isinstance(v, dict) or not isinstance(e, dict):
+            continue
+        inv = str(e.get("invalidated_at") or "")
+        if inv and e.get("url") == v.get("url") and e.get("price") == v.get("price") and str(v.get("checked_on") or "") < inv:
+            a = _invalidate_in_db(c, pid, v, str(e.get("invalidated_by") or "changed"))
+            a["from_history"] = True                       # 履歴から導出した無効化の持続（今回の観測ではない）
+            applied.append(a)
     c.commit()
     return applied
 
@@ -395,7 +441,8 @@ def main():
     registered = register_verified(c, products)
     rechecked = apply_recheck(c, products)     # 公式の再確認の結果（Phase 15）
     # 再確認で確認済みの印を外したもの（価格が変わった・販売終了）は、この監査の出力でも確認済みに数えない（N-3）
-    _unverified_now = {a["product_id"] for a in rechecked if str(a.get("action", "")).endswith("_needs_review")}
+    _unverified_now = {a["product_id"] for a in rechecked
+                       if str(a.get("action", "")).endswith("_needs_review")}
     for r in registered:
         if r.get("product_id") in _unverified_now:
             r["verified"], r["official_price"] = False, None

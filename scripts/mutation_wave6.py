@@ -19,7 +19,7 @@ M=[
 ("ブロックされた取得元を取り直す（失敗をキャッシュしない）",RC,'                if entry is not None:\n                    self._entries[key] = entry','                if entry is not None and entry.get("html") is not None:\n                    self._entries[key] = entry'),
 ("終了済みのイベントを優先する",PD,'        if status not in ACTIVE:\n            continue','        if False:\n            continue'),
 ("Special・特別だけで限定にする（語の推測）",SG,'            if structured_limited:\n                return {"limited": True','            if True:\n                return {"limited": True'),
-("勢い・first_seen を公開してよい項目にする",C,'    "momentum", "tcg_first_seen", "tcg_detection_events", "buyback_prices_prev"})','    "buyback_prices_prev"})'),
+("勢い・first_seen を公開してよい項目にする",C,'    "momentum", "tcg_first_seen", "tcg_detection_events", "buyback_prices_prev",','    "buyback_prices_prev",'),
 ("初めて見た候補を上がったことにする（NEW_OBSERVATION を RISING）",SG,'        out["momentum_state"] = MOM_NEW_OBSERVATION\n        return out\n    pp =','        out["momentum_state"] = MOM_RISING\n        out["momentum_usable"] = True\n        return out\n    pp ='),
 ("同じ観測を新しい値として勢いに数える",SG,'    if out["previous_observed_at"] and out["previous_observed_at"] == out["current_observed_at"]:','    if False:'),
 ("公開日時が無いのに検知の遅れを作る（推測）",DD,'        if pub is None or _date_only(i.get("published_at")) or fs < pub:','        if fs is None:'),

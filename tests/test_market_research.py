@@ -821,7 +821,7 @@ def test_generator_writes_detail_only_to_private_and_summary_to_public(tmp_path,
     assert summ["type"] == "RESEARCH_SUMMARY" and summ["research_candidate_count"] == 1
     assert summ["ledger_state"] == "NOT_AVAILABLE" and summ["first_seen_scope"] == "THIS_RUN_ONLY"      # 鍵なし: 実行をまたいだ保持なし
     assert sorted(p.name for p in (tmp_path / "pub").iterdir()) == ["summary.json"]
-    assert sorted(p.name for p in (tmp_path / "priv").iterdir()) == ["latest.json", "operator_queue.json", "state.json"]   # 運営者向けの作業キューも非公開だけ（Wave 7b）
+    assert sorted(p.name for p in (tmp_path / "priv").iterdir()) == ["latest.json", "official_state.json", "operator_queue.json", "state.json"]   # 運営者向けの作業キュー（Wave 7b）・商品ごとの公式の状態（Wave 7e-1）も非公開だけ
     pub = (tmp_path / "pub" / "summary.json").read_text(encoding="utf-8")
     for leak in ("調査用ダミー商品XYZ", "shop.example", "150000", "rc_"):
         assert leak not in pub, leak

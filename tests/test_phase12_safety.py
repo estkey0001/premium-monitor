@@ -580,6 +580,8 @@ def test_ebay_html_scraping_is_disabled(monkeypatch):
     from src.collectors.overseas import ebay_completed as ec
     e = ec.EbayCompletedCollector()
     monkeypatch.setattr(ec, "_ebay_app_id", lambda: None)
+    # 為替レートをライブ（open.er-api.com）で取りに行かない（テストの外部通信 0・レートの非決定性をなくす。Wave 7e-3 の CI canary が検出）
+    monkeypatch.setattr(ec, "get_usd_jpy", lambda *a, **k: (155.0, "static_fallback"))
     monkeypatch.setattr(e, "_fetch_via_html", lambda *a, **k: (_ for _ in ()).throw(AssertionError("HTML を取った")))
     r = e.collect(product_id="prod_ps5_pro", product_alias="ps5_pro", keywords=["PS5 Pro"], condition_filter="new")
     assert e.last_block_reason == "html_scraping_disabled" and r.price_jpy <= 0

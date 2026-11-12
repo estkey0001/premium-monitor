@@ -1,0 +1,88 @@
+name: CI Canary
+
+# Wave 7e-3: 本番の定時の実行（daily_lp.yml）とは別の、外へ出ない CI の canary。
+# 手動（workflow_dispatch）だけ。push / schedule では動かない（push で動かす判断は canary が通った後に別途行う）。
+# 読み取り専用・Secrets なし・commit も push もしない。pytest を、外部通信を遮断した状態で通す。
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-canary
+  cancel-in-progress: false
+
+jobs:
+  canary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      TZ: Asia/Tokyo
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Record start HEAD
+        run: echo "CANARY_START_HEAD=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      # 依存の取得だけは外へ出る（通信の遮断はこの後）。Playwright のブラウザは入れない
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      # 通信の遮断を有効にする。Python は site-packages の .pth（すべての Python プロセスに効く）。
+      # Node（NODE_OPTIONS）と Chrome（CHROME_BIN）は pytest の step の env だけに渡す
+      # （GITHUB_ENV に入れると、後ろの actions の後処理（キャッシュの保存など）まで遮断されるため）
+      - name: Arm network guards
+        run: |
+          mkdir -p "$RUNNER_TEMP/canary"
+          : > "$RUNNER_TEMP/canary/python.jsonl"
+          : > "$RUNNER_TEMP/canary/node.jsonl"
+          : > "$RUNNER_TEMP/canary/chrome.jsonl"
+          SITE="$(python -c 'import sysconfig; print(sysconfig.get_paths()["purelib"])')"
+          printf "import os; os.environ.setdefault('CANARY_NETGUARD_LOG', '%s'); import runpy; runpy.run_path('%s')\n" \
+            "$RUNNER_TEMP/canary/python.jsonl" "$GITHUB_WORKSPACE/scripts/ci_canary/netguard.py" > "$SITE/zz_canary_netguard.pth"
+          echo "CANARY_PTH=$SITE/zz_canary_netguard.pth" >> "$GITHUB_ENV"
+          REAL_CHROME="$(command -v google-chrome || command -v chromium || command -v chromium-browser || true)"
+          echo "CANARY_REAL_CHROME=$REAL_CHROME" >> "$GITHUB_ENV"
+          if command -v node > /dev/null; then echo "CANARY_HAS_NODE=1" >> "$GITHUB_ENV"; fi
+          chmod +x scripts/ci_canary/chrome_wrapper.sh
+
+      - name: Run pytest (external requests blocked)
+        env:
+          CHROME_BIN: ${{ github.workspace }}/scripts/ci_canary/chrome_wrapper.sh
+          CANARY_CHROME_LOG: ${{ runner.temp }}/canary/chrome.jsonl
+          CANARY_NODE_LOG: ${{ runner.temp }}/canary/node.jsonl
+          NODE_OPTIONS: --require=${{ github.workspace }}/scripts/ci_canary/node_netguard.js
+          # git の通信はローカル（file）だけ許す（http・ssh は git 自身が拒否する。テストの一時リポジトリは file で動く）
+          GIT_ALLOW_PROTOCOL: file
+        run: |
+          if [ -z "$CANARY_REAL_CHROME" ]; then unset CHROME_BIN; echo "Chrome が無いので Chrome のテストは skip される"; fi
+          # pytest の step の環境に Secrets が見えていないことを、verify が名前で照合する（値は記録しない）
+          env | cut -d= -f1 | sort -u > "$RUNNER_TEMP/canary/pytest_env_keys.txt"
+          python -m pytest -q -p no:cacheprovider
+
+      - name: Verify canary conditions
+        if: always()
+        run: |
+          python scripts/ci_canary/verify.py \
+            --start-head "$CANARY_START_HEAD" \
+            --guard-log "$RUNNER_TEMP/canary/python.jsonl" \
+            --node-log "$RUNNER_TEMP/canary/node.jsonl" \
+            --chrome-log "$RUNNER_TEMP/canary/chrome.jsonl" \
+            --pytest-env-keys "$RUNNER_TEMP/canary/pytest_env_keys.txt" \
+            ${CANARY_REAL_CHROME:+--expect-chrome} \
+            ${CANARY_HAS_NODE:+--expect-node}
+
+      - name: Disarm Python guard
+        if: always()
+        run: rm -f "$CANARY_PTH"

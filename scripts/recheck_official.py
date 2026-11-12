@@ -92,6 +92,24 @@ _STOCK_WORDS = ("入荷待ち", "在庫切れ", "在庫あり", "販売終了", 
 _STOCK_ALIAS = {"翌日出荷": "在庫あり", "当日出荷": "在庫あり"}
 
 
+# ── 診断（観測性だけ）。再確認が failed になったとき、parser の段階で「型番が無い・価格候補が無い・価格候補が複数・在庫語が無い」を
+# 区別できるようにする（Wave 7f）。**判定（unchanged / changed / sale_ended / failed）には使わない**（classify は読まない）。
+# 値は真偽・整数・固定の在庫語（_STOCK_WORDS）か空文字だけ。ページの文字列・URL は持たない。履歴・latest.json には入れない
+DIAG_KEYS = ("model_found", "price_candidate_count", "stock_phrase_found", "matched_stock_phrase")
+
+
+def _sony_diag(t: str, model: str, rows: list[tuple[str, str]]) -> dict:
+    """Sony の診断。rows = 既知の在庫語が型番と価格の間にある並び（在庫語, 価格）。price_candidate_count は、型番の直後（30 文字以内）に
+    続く価格の種類数（0 = 候補なし・1 = 単一・2 以上 = 複数）。matched_stock_phrase は在庫語が 1 種類のときだけ（複数・無しは空文字）。"""
+    if model not in t:
+        return {"model_found": False, "price_candidate_count": 0, "stock_phrase_found": False, "matched_stock_phrase": ""}
+    cands = {x.group(2) for x in re.finditer(
+        re.escape(model) + r"(?:/[A-Z]{1,2})?(?:（[^）]{1,10}）)?\s*(.{0,30}?)\s*([\d,]{4,})\s*円\s*\(税込\)", t)}
+    phrases = {w for w, _ in rows}
+    return {"model_found": True, "price_candidate_count": len(cands), "stock_phrase_found": bool(rows),
+            "matched_stock_phrase": next(iter(phrases)) if len(phrases) == 1 else ""}
+
+
 def parse_sony_store(h: str, model: str) -> dict:
     """Sony Store の購入ページ: 「<型番> <在庫の表示> <価格> 円(税込)」の並び。
 
@@ -104,12 +122,13 @@ def parse_sony_store(h: str, model: str) -> dict:
     # 色ごとの価格が食い違えば、下の「1 種類だけ」の条件で読み取らない
     ms = list(re.finditer(re.escape(model) + r"(?:/[A-Z]{1,2})?(?:（[^）]{1,10}）)?\s+(" + "|".join(_STOCK_WORDS) + r")\s*([\d,]{4,})\s*円\s*\(税込\)", t))
     # 並びが無い・2つ以上ある（どれがこの商品か決められない）ときは読み取らない（監査 N-1）
+    diag = _sony_diag(t, model, [(x.group(1), x.group(2)) for x in ms])
     if len({(x.group(1), x.group(2)) for x in ms}) != 1:
-        return {"model_found": model in t, "price": None, "stock": "", "ended": False}
+        return {"model_found": model in t, "price": None, "stock": "", "ended": False, **diag}
     m = ms[0]
     stock = _STOCK_ALIAS.get(m.group(1), m.group(1))
     return {"model_found": True, "price": int(m.group(2).replace(",", "")),
-            "stock": "" if stock == "販売終了" else stock, "ended": stock == "販売終了"}
+            "stock": "" if stock == "販売終了" else stock, "ended": stock == "販売終了", **diag}
 
 
 def parse_sony_product(h: str, model: str) -> dict:
@@ -121,17 +140,21 @@ def parse_sony_product(h: str, model: str) -> dict:
     """
     t = _text(h)
     if model not in t:
-        return {"model_found": False, "price": None, "stock": "", "ended": False}
+        return {"model_found": False, "price": None, "stock": "", "ended": False, **_sony_diag(t, model, [])}
     ms = list(re.finditer(r"ソニーストアで購入すると\s*([\d,]{4,})\s*円\s*\(税込\)"
                           r"(?:\s*クーポン適用額をチェック\s*\(サインイン/新規登録\))?\s*(" + "|".join(_STOCK_WORDS) + r")?", t))
     if not ms:
         return parse_sony_store(h, model)            # 購入ページ（_purchase）の並び（型番 在庫 価格）の形
+    # 商品ページの形の診断（価格の種類数・在庫語。型番の直後の並びではなく「ソニーストアで購入すると X 円」の並び）
+    phrases = {m.group(2) for m in ms if m.group(2)}
+    diag = {"model_found": True, "price_candidate_count": len({m.group(1) for m in ms}), "stock_phrase_found": bool(phrases),
+            "matched_stock_phrase": next(iter(phrases)) if len(phrases) == 1 else ""}
     if len({m.group(1) for m in ms}) != 1:
-        return {"model_found": True, "price": None, "stock": "", "ended": False}
+        return {"model_found": True, "price": None, "stock": "", "ended": False, **diag}
     stocks = {_STOCK_ALIAS.get(m.group(2) or "", m.group(2) or "") for m in ms}
     stock = stocks.pop() if len(stocks) == 1 else ""
     return {"model_found": True, "price": int(ms[0].group(1).replace(",", "")),
-            "stock": "" if stock == "販売終了" else stock, "ended": stock == "販売終了"}
+            "stock": "" if stock == "販売終了" else stock, "ended": stock == "販売終了", **diag}
 
 
 _ENDED_SECTION = "生産終了した本体"
@@ -423,11 +446,18 @@ def _host_interval(url: str) -> float:
         return 120.0
 
 
+# 直近の recheck() の parser の診断（{product_id: {DIAG_KEYS のうち parser が返したもの}}。CI のログ用）。recheck() の呼び出しの形は
+# 変えない（既存の呼び出し・テストの差し替えに影響しない）ので、引数ではなくここに入れる。**結果の行（履歴・latest.json に保存される）
+# には入れない**。診断は判定に使わない（観測性だけ）。recheck() の始めに空にする
+LAST_DIAG: dict = {}
+
+
 def recheck(now: datetime, fetch=_fetch, sleep=None, wait_first: bool | None = None) -> list[dict]:
     """wait_first: 取得元ごとの最初の取得の前に間隔の分を待つか（既定は実際の取得のときだけ）。sleep は待ちの関数。"""
     import time as _time
 
     from src.collectors.polite import CUTOFF_IMMEDIATE
+    LAST_DIAG.clear()
     results = []
     started, seen_hosts = _time.monotonic(), set()
     for t in _targets():
@@ -453,9 +483,32 @@ def recheck(now: datetime, fetch=_fetch, sleep=None, wait_first: bool | None = N
             continue
         parsed = PARSE[t["parser"]](h, t["match"])
         st = classify(t, parsed)
+        LAST_DIAG[t["product_id"]] = {k: parsed[k] for k in DIAG_KEYS if k in parsed}
         results.append({**base, "status": st, "reason": "", "price": parsed.get("price"),
                         "stock": parsed.get("stock") if st in ("unchanged", "changed") else ""})
     return results
+
+
+def _public_row(row: dict) -> dict:
+    """履歴・latest.json に保存する行。診断キー（DIAG_KEYS）は、どこから混ざっても保存しない（公開データの形を変えない）。"""
+    return {k: v for k, v in row.items() if k not in DIAG_KEYS}
+
+
+def _diag_suffix(diag: dict | None) -> str:
+    """failed の行のログに付ける固定形式の診断。**許可リスト**（真偽・整数・固定の在庫語・none）に通った値だけを出す
+    （ページの文字列・URL・未知の語は、parser が何を返しても出さない）。診断が無い・形が違うときは何も付けない。
+    型は厳密に見る（bool を int として通さない・サブクラスは通さない・語は語彙の側の要素を返す）。
+    **ログのために再確認を止めない**: どんな入力でも例外にせず、何も付けない。"""
+    try:
+        if not isinstance(diag, dict) or not all(k in diag for k in DIAG_KEYS):
+            return ""
+        mf, cnt, sp, ms = (diag[k] for k in DIAG_KEYS)
+        if not (type(mf) is bool and type(sp) is bool and type(cnt) is int and 0 <= cnt <= 1_000_000):
+            return ""
+        matched = next((w for w in _STOCK_WORDS if type(ms) is str and w == ms), "none")
+        return f" diag=model_found:{str(mf).lower()} price_candidates:{cnt} stock_phrase_found:{str(sp).lower()} matched_stock:{matched}"
+    except Exception:  # noqa: BLE001 - ログのための処理で、再確認（履歴の保存・終了コード）を壊さない
+        return ""
 
 
 def main(argv=None) -> int:
@@ -466,7 +519,9 @@ def main(argv=None) -> int:
     if args.plan:
         print(json.dumps(plan(now), ensure_ascii=False, indent=2))
         return 0
-    results = recheck(now)
+    LAST_DIAG.clear()                                        # 差し替えられた recheck が診断を入れなくても、前の実行の診断を読まない
+    results = [_public_row(r) for r in recheck(now)]
+    diag = dict(LAST_DIAG)
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / "latest.json").write_text(json.dumps({"generated_at": now.isoformat(timespec="seconds"),
                                                  "results": results, "plan": plan(now)["items"]},
@@ -481,8 +536,10 @@ def main(argv=None) -> int:
                                     ensure_ascii=False, indent=1), encoding="utf-8")
     # 商品ごとの最終状態は別のファイルに保存しない（履歴から毎回導出する。個別の商品の状態の写しを新しく公開・保存しない。Wave 7e-1）
     for r in results:
+        # failed のうち、取得はできて parser が読めなかった行（reason が空）だけ、固定形式の診断を付ける（成功・遮断・取得の失敗には付けない）
+        extra = _diag_suffix(diag.get(r["product_id"])) if r["status"] == "failed" and not r.get("reason") else ""
         print(f"[公式の再確認] {r['product_id']}: {r['status']} 価格 {r.get('price')} 在庫 {r.get('stock') or '—'}"
-              + (f"（{r['reason']}）" if r.get("reason") else ""))
+              + (f"（{r['reason']}）" if r.get("reason") else "") + extra)
     return 0
 
 

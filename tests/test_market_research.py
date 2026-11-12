@@ -1657,6 +1657,7 @@ def test_sony_bodies_are_verified_with_jan_shipping_recheck_and_in_stock_wording
         assert reg.OFFICIAL_DIRECT_OFFERS[pid]["price"] == price and reg.OFFICIAL_DIRECT_OFFERS[pid]["stock"] == "UNKNOWN"
         assert pid not in reg.UNVERIFIED and pid in ro.RECHECK_TARGETS and ship.PRODUCT_SHIPPING[pid]["fee"] == 550
     html = "<html><body><p>ILCE-7RM5 翌日出荷 533,500 円(税込)</p></body></html>"
-    assert ro.parse_sony_store(html, "ILCE-7RM5") == {"model_found": True, "price": 533500, "stock": "在庫あり", "ended": False}
+    _p = ro.parse_sony_store(html, "ILCE-7RM5")                      # 判定に使う既存の 4 キーを完全一致で比べる（診断のキーは対象外。Wave 7f）
+    assert {k: _p[k] for k in ("model_found", "price", "stock", "ended")} == {"model_found": True, "price": 533500, "stock": "在庫あり", "ended": False}
     assert ro.parse_sony_store("<p>ILCE-7RM5 販売終了 533,500 円(税込)</p>", "ILCE-7RM5")["ended"] is True
     assert ro.parse_sony_store("<p>ILCE-7RM5 翌日出荷 533,500 円(税込)</p><p>ILCE-7RM5 在庫あり 540,000 円(税込)</p>", "ILCE-7RM5")["price"] is None

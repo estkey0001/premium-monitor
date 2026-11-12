@@ -35,7 +35,8 @@ SONY_PRODUCT = ("<html><body><h1>PlayStation®5 Pro CFI-7100B01</h1><p>ソニー
 
 def test_sony_product_page_is_read_by_model_price_and_stock():
     r = RO.parse_sony_product(SONY_PRODUCT, "CFI-7100B01")
-    assert r == {"model_found": True, "price": 137980, "stock": "入荷待ち", "ended": False}
+    # 判定に使う既存の 4 キーを完全一致で比べる（診断のキー（Wave 7f）は観測性だけで、比較の対象外）
+    assert {k: r[k] for k in ("model_found", "price", "stock", "ended")} == {"model_found": True, "price": 137980, "stock": "入荷待ち", "ended": False}
     assert RO.classify({"price": 137980}, r) == "unchanged"
 
 

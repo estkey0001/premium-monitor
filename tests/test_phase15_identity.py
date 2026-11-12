@@ -208,8 +208,9 @@ APPLE_HTML = ('<script type="application/ld+json">{"@context":"https://schema.or
 
 
 def test_recheck_parsers_read_model_price_and_stock():
-    assert RECHECK.parse_sony_store(SONY_HTML, "CFI-7100B01") == {"model_found": True, "price": 137980,
-                                                                   "stock": "入荷待ち", "ended": False}
+    # 判定に使う既存の 4 キーを完全一致で比べる（診断のキー（Wave 7f: price_candidate_count など）は観測性だけで、判定の比較の対象外）
+    _p = RECHECK.parse_sony_store(SONY_HTML, "CFI-7100B01")
+    assert {k: _p[k] for k in ("model_found", "price", "stock", "ended")} == {"model_found": True, "price": 137980, "stock": "入荷待ち", "ended": False}
     assert RECHECK.parse_apple_jsonld(APPLE_HTML, "MFHP4J/A")["price"] == 42800
     # 型番が違えば読み取らない（別の商品の価格を拾わない）
     assert RECHECK.parse_sony_store(SONY_HTML, "CFI-7000B01")["price"] is None

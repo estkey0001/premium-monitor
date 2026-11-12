@@ -319,3 +319,12 @@ python3 scripts/operator_health_alert.py --dry-run  # 書かずに注記だけ�
 - 実行の記録: `python scripts/run_observability.py start|finish --lane daily` → `exports/ops/run_timing_daily.json`（`last_run_at`・`runtime_seconds`・`schedule_delay_seconds`・`trigger`・`lane` だけ。手動・再実行の遅れは null）。
 - 台帳の公開集計: `ledger_restore_status`・`cross_run_restored`・`ledger_version`・`momentum_comparable`・`detection_delay_measured`・`detection_delay_unknown`。
 - 検証: `python3 scripts/mutation_wave7e1.py`・deploy-check #881〜#889。
+
+## Wave 7e-3（CI canary）
+
+- 本番の定時（`daily_lp.yml`）とは別の `.github/workflows/ci_canary.yml`。**手動（`workflow_dispatch`）だけ**。`contents: read`・Secrets なし・commit も push もしない。push の trigger を有効にするのは、canary が成功した後に別途判断する。
+- 実行: GitHub の Actions タブ、または `gh workflow run ci_canary.yml`。1 回の所要時間は pytest 全体（ローカルで約 4.5 分）＋依存のインストール。timeout 45 分。
+- 中身: pip install の後に、Python（`scripts/ci_canary/netguard.py`）・Node（`node_netguard.js`）・Chrome（`chrome_wrapper.sh`）で外部通信を遮断・記録して pytest を通し、`scripts/ci_canary/verify.py` が合否を判定する（結果は Actions のジョブサマリーにも出る）。
+- 失敗したときの読み方: ジョブサマリーの ❌ の行が原因。`python_external_requests_zero` は宛先のホストだけが出る（記録 JSON の `test` にテスト ID が入る）。`repository_mutation_zero` は想定外に変更されたファイル名が出る。
+- 限界: tripwire であって sandbox ではない（ctypes・別のインタープリタ・Node の `child_process` などは見ない）。詳細は `internal/audits/COVERAGE_WAVE7E3.md`。
+- 検証: `tests/test_wave7e3_ci_canary.py`（59 件＋Linux だけ 1 件）。

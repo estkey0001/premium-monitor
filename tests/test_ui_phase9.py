@@ -7,10 +7,11 @@
 from __future__ import annotations
 
 import copy
+import html as html_mod
 import importlib.util
 import json
-import os
 import re
+import subprocess
 import sys
 from datetime import timedelta
 from pathlib import Path
@@ -332,7 +333,7 @@ def test_dom_section_nav_back_forward_and_legacy_health(tmp_path):
 @pytest.mark.skipif(CHROME is None, reason="Chrome が無い")
 @pytest.mark.parametrize("width", [500, 640, 700, 768, 1024, 1440])
 def test_dom_admin_no_overflow(tmp_path, width):
-    # 判定は従来どおり「どの区分でも scrollWidth - clientWidth <= 0」。失敗したとき（と UI_DIAG=1 のとき）だけ、
+    # 判定は従来どおり「どの区分でも scrollWidth - clientWidth <= 0」。失敗したときだけ、
     # 原因の切り分けに使う診断（ビューポートの実寸・はみ出している要素の上位）を出す。判定には使わない
     js = _S + """
     var o = {}, d = {};
@@ -370,12 +371,90 @@ def test_dom_admin_no_overflow(tmp_path, width):
     res = _run(tmp_path, js, width=width, query="?page=admin",
                **dict(KW, admin_data=copy.deepcopy(ADMIN), notifications=copy.deepcopy(NOTES)))
     o, d = res["o"], res["d"]
-    if os.environ.get("UI_DIAG"):
-        print("UI_DIAG " + json.dumps({"width": width, "sections": d}, ensure_ascii=False), flush=True)
     bad = [s for s, v in o.items() if v > 0]
     if bad:  # 従来の `assert all(v <= 0 for v in o.values())` と同じ判定。pytest が辞書を省略表示しないよう文字列で出す
         pytest.fail("横方向にはみ出している区分: " + json.dumps(
             {"viewport_width": width, "deltas": o, "diagnostics": {s: d[s] for s in bad}}, ensure_ascii=False)[:6000])
+
+
+def _run_in_frame(tmp_path, scenario_js: str, *, css_width: int, query: str = "?page=admin") -> dict:
+    """本物の狭いビューポート（CSS 幅 css_width）で運営者ページを動かす。
+
+    headless Chrome のウィンドウ最小幅は 500px で、`--window-size` では 500 未満にできない（320 / 390 を指定しても
+    innerWidth は 500 のまま）。そこで、500px のウィンドウの中に幅 css_width の iframe を置き、その中にページを入れる。
+    iframe の中の innerWidth は iframe の幅になり、メディアクエリもその幅で評価される。結果は postMessage で外側に返す
+    （file:// の別オリジンでも使える）。呼び出し側は innerWidth == css_width を確かめること（500 に切り上げられて素通りしない）。
+    """
+    ctx = P6._P1._ctx(**dict(KW, admin_data=copy.deepcopy(ADMIN), notifications=copy.deepcopy(NOTES)))
+    fake_now = ("<script>(function(){var t=%d;Date.now=function(){return t;};})();</script>" % int(NOW.timestamp() * 1000))
+    # _HELPERS の `function done` は関数宣言（巻き上げ）なので、先頭で再代入すれば結果の返し先を差し替えられる
+    to_parent = "done = function(o){ parent.postMessage(JSON.stringify(o), '*'); };\n"
+    inner = ("<!doctype html><html lang='ja'><head><meta charset='utf-8'>"
+             "<meta name='viewport' content='width=device-width,initial-scale=1'>" + fake_now + shell.render_head()
+             + "</head><body>" + shell.render_root(ctx) + "<header class='topbar'>old</header>"
+             "<script>window.addEventListener('load',function(){setTimeout(function(){" + to_parent + scenario_js
+             + "},50);});</script></body></html>")
+    (tmp_path / "inner.html").write_text(inner, encoding="utf-8")
+    outer = ("<!doctype html><html><head><meta charset='utf-8'></head><body style='margin:0'>"
+             f"<iframe id='f' src='inner.html{query}' style='width:{css_width}px;height:900px;border:0;display:block'></iframe>"
+             "<pre id='out'></pre><script>window.addEventListener('message',function(e){"
+             "document.getElementById('out').textContent=e.data;});</script></body></html>")
+    f = tmp_path / "outer.html"
+    f.write_text(outer, encoding="utf-8")
+    res = subprocess.run([CHROME, "--headless=new", "--disable-gpu", "--no-sandbox", "--window-size=500,900",
+                          "--virtual-time-budget=4000", "--dump-dom", f.as_uri()], capture_output=True, text=True, timeout=60)
+    start = res.stdout.find('<pre id="out">')
+    assert start >= 0, res.stderr[-2000:]
+    raw = res.stdout[start + len('<pre id="out">'):res.stdout.find("</pre>", start)]
+    assert raw.strip(), "iframe の中のページから結果が返らなかった"
+    return json.loads(html_mod.unescape(raw))
+
+
+@pytest.mark.skipif(CHROME is None, reason="Chrome が無い")
+@pytest.mark.parametrize("css_width", [360, 390, 420, 500])
+def test_dom_admin_notifications_no_overflow_in_narrow_viewport(tmp_path, css_width):
+    """通知の区分は、折り返せない長い文字列（却下の理由の一覧など）を含む <code> がある。狭いビューポートでも横にはみ出さない。
+
+    はみ出しを隠していない（overflow を切る・省略する・縮める）ことも、要素の位置（getBoundingClientRect）で確かめる:
+    すべての <code> の右端がビューポートの中にあり、文字列は省略されていない。
+    """
+    js = _S + """
+    history.pushState(null, '', '?page=admin&section=notifications'); window.dispatchEvent(new PopStateEvent('popstate'));
+    var vw = document.documentElement.clientWidth, panel = R.querySelector('[data-nu-ad-panel="notifications"]');
+    var codes = [].slice.call(panel.querySelectorAll('code')).map(function(e){
+      var r = e.getBoundingClientRect(), c = getComputedStyle(e);
+      return {text: e.textContent, right: Math.round(r.right * 10) / 10, overflow_x: c.overflowX, text_overflow: c.textOverflow,
+              overflow_wrap: c.overflowWrap, font_size: c.fontSize, parent_font_size: getComputedStyle(e.parentElement).fontSize};
+    });
+    done({iw: window.innerWidth, cw: vw, sw: document.documentElement.scrollWidth, delta: document.documentElement.scrollWidth - vw,
+          doc_overflow_x: getComputedStyle(document.documentElement).overflowX, body_overflow_x: getComputedStyle(document.body).overflowX,
+          codes: codes});
+    """
+    r = _run_in_frame(tmp_path, js, css_width=css_width)
+    assert r["iw"] == css_width, f"狭いビューポートが指定の幅になっていない（{r['iw']}px。500px に切り上げられている）"
+    info = json.dumps({k: v for k, v in r.items() if k != "codes"} | {"worst_code_right": max(c["right"] for c in r["codes"])})
+    assert r["delta"] <= 0, "横にはみ出している: " + info
+    assert r["codes"], "通知の区分に <code> が無い（テストが何も確かめていない）"
+    assert all(c["right"] <= r["cw"] + 0.5 for c in r["codes"]), "<code> が右にはみ出している: " + info
+    assert r["doc_overflow_x"] != "hidden" and r["body_overflow_x"] != "hidden", "overflow を切って隠している"
+    assert all(c["overflow_x"] == "visible" and c["text_overflow"] == "clip" for c in r["codes"]), "<code> を切る・省略している"
+    # 文字を縮めて収めていない（親より小さくない。monospace の既定のサイズ補正で親より大きくなるのは許す）
+    assert all(float(c["font_size"][:-2]) >= float(c["parent_font_size"][:-2]) * 0.99 for c in r["codes"]), "<code> の文字を縮めている"
+    # 文字列は省略・短縮されていない（意味を失わない）
+    texts = " ".join(c["text"] for c in r["codes"])
+    assert ("reject-product-candidate --candidate-id <ID> --reason "
+            "<duplicate|not_target|variant_only|bad_parse|unsupported|obsolete>") in texts
+
+
+def test_admin_reject_command_text_is_complete_and_code_wrapping_is_scoped():
+    """却下のコマンドの文言は省略されない。折り返しの指定は運営者ページ（.nu-ad）の <code> だけで、他の画面の <code> へ広げない。"""
+    from src.content.ui import styles
+    page = shell.render_root(P6._P1._ctx(**dict(KW, admin_data=copy.deepcopy(ADMIN), notifications=copy.deepcopy(NOTES))))
+    assert ("reject-product-candidate --candidate-id <ID> --reason "
+            "<duplicate|not_target|variant_only|bad_parse|unsupported|obsolete>") in html_mod.unescape(page)
+    assert ".nu-ad code{overflow-wrap:anywhere}" in styles.css()
+    # 素の `code{…}` や `.nu code{…}`（全画面の <code>）にはしない
+    assert not re.search(r"(^|[},])code[{,]", styles.css())
 
 
 def test_legacy_only_items_moved():

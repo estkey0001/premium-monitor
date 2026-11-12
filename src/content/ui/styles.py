@@ -476,6 +476,10 @@ def _admin_css(m: int, d: int, w: int) -> str:
         ".nu-ad-tab:focus-visible,.nu-ad a:focus-visible,.nu-ad summary:focus-visible{outline:3px solid var(--color-focus);"
         "outline-offset:2px}"
         ".nu-ad-panel{display:grid;gap:var(--space-3);min-width:0}.nu-ad-panel[hidden]{display:none}"
+        # コマンドの説明の <code> は、折り返せない長い連続（却下の理由の一覧 <duplicate|…|obsolete> は 66 文字）を含む。
+        # 狭いビューポート・字幅の広い monospace（Linux の DejaVu Sans Mono）で横にはみ出すので、どこでも折り返せるようにする。
+        # 運営者ページ（.nu-ad）の中だけ。切らない・省略しない・縮めない（文字列はそのまま読める）
+        ".nu-ad code{overflow-wrap:anywhere}"
         ".nu-ad-ov-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--space-2);margin:0;padding:0;"
         "list-style:none}"
         f"@media (min-width:{d}px){{.nu-ad-ov-grid{{grid-template-columns:repeat(3,minmax(0,1fr))}}}}"

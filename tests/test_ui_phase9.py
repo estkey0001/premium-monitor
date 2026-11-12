@@ -8,6 +8,8 @@ from __future__ import annotations
 
 import copy
 import importlib.util
+import json
+import os
 import re
 import sys
 from datetime import timedelta
@@ -330,17 +332,50 @@ def test_dom_section_nav_back_forward_and_legacy_health(tmp_path):
 @pytest.mark.skipif(CHROME is None, reason="Chrome が無い")
 @pytest.mark.parametrize("width", [500, 640, 700, 768, 1024, 1440])
 def test_dom_admin_no_overflow(tmp_path, width):
+    # 判定は従来どおり「どの区分でも scrollWidth - clientWidth <= 0」。失敗したとき（と UI_DIAG=1 のとき）だけ、
+    # 原因の切り分けに使う診断（ビューポートの実寸・はみ出している要素の上位）を出す。判定には使わない
     js = _S + """
-    var o = {};
+    var o = {}, d = {};
+    function clippedByAncestor(e, vw){
+      for (var p = e.parentElement; p && p !== document.body; p = p.parentElement) {
+        var ox = getComputedStyle(p).overflowX;
+        if (ox !== 'visible' && p.getBoundingClientRect().right <= vw + 0.5) return true;
+      }
+      return false;
+    }
+    function offenders(limit){
+      var vw = document.documentElement.clientWidth, out = [];
+      [].slice.call(document.body.querySelectorAll('*')).forEach(function(e){
+        var r = e.getBoundingClientRect();
+        if (!r.width || !r.height || r.right <= vw + 0.5 || clippedByAncestor(e, vw)) return;
+        var c = getComputedStyle(e);
+        out.push({tag: e.tagName.toLowerCase(), id: e.id || '', cls: (e.getAttribute('class') || '').slice(0, 80),
+                  left: Math.round(r.left * 10) / 10, right: Math.round(r.right * 10) / 10, width: Math.round(r.width * 10) / 10,
+                  top: Math.round(r.top), height: Math.round(r.height), computed_width: c.width, min_width: c.minWidth,
+                  max_width: c.maxWidth, overflow_x: c.overflowX, white_space: c.whiteSpace, font: c.fontFamily.slice(0, 60)});
+      });
+      out.sort(function(a, b){ return b.right - a.right; });
+      return out.slice(0, limit);
+    }
     ['overview', 'sources', 'data-quality', 'ai', 'capital', 'execution', 'notifications', 'system'].forEach(function(s){
       history.pushState(null, '', '?page=admin&section=' + s); window.dispatchEvent(new PopStateEvent('popstate'));
       o[s] = document.documentElement.scrollWidth - document.documentElement.clientWidth;
+      d[s] = {route: location.search, scrollWidth: document.documentElement.scrollWidth, clientWidth: document.documentElement.clientWidth,
+              bodyScrollWidth: document.body.scrollWidth, bodyClientWidth: document.body.clientWidth,
+              innerWidth: window.innerWidth, outerWidth: window.outerWidth, dpr: window.devicePixelRatio,
+              delta: o[s], offenders: o[s] > 0 ? offenders(5) : []};
     });
-    done(o);
+    done({o: o, d: d});
     """
-    o = _run(tmp_path, js, width=width, query="?page=admin",
-             **dict(KW, admin_data=copy.deepcopy(ADMIN), notifications=copy.deepcopy(NOTES)))
-    assert all(v <= 0 for v in o.values()), o
+    res = _run(tmp_path, js, width=width, query="?page=admin",
+               **dict(KW, admin_data=copy.deepcopy(ADMIN), notifications=copy.deepcopy(NOTES)))
+    o, d = res["o"], res["d"]
+    if os.environ.get("UI_DIAG"):
+        print("UI_DIAG " + json.dumps({"width": width, "sections": d}, ensure_ascii=False), flush=True)
+    bad = [s for s, v in o.items() if v > 0]
+    if bad:  # 従来の `assert all(v <= 0 for v in o.values())` と同じ判定。pytest が辞書を省略表示しないよう文字列で出す
+        pytest.fail("横方向にはみ出している区分: " + json.dumps(
+            {"viewport_width": width, "deltas": o, "diagnostics": {s: d[s] for s in bad}}, ensure_ascii=False)[:6000])
 
 
 def test_legacy_only_items_moved():

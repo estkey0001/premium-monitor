@@ -1,0 +1,166 @@
+name: CI UI Diagnostic
+
+# Wave 7e-3 の診断専用: Linux 上で test_ui_phase9.py::test_dom_admin_no_overflow[500] だけを、
+# A（canary と同じ Chrome wrapper あり）と B（wrapper なし）で実行し、はみ出しの原因を切り分ける。
+# 手動（workflow_dispatch）だけ・contents: read・Secrets なし・commit も push もしない。通常の canary とは別の目的で、
+# 原因を確定したら削除する（恒久の workflow ではない）。
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-ui-diag
+  cancel-in-progress: false
+
+jobs:
+  diag:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      TZ: Asia/Tokyo
+      TEST_ID: "tests/test_ui_phase9.py::test_dom_admin_no_overflow[500]"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      # 環境の記録（通信しない）。同一の commit・Python・Ubuntu・Chrome で A と B を比べるための前提と、フォントの確認
+      - name: Environment and fonts
+        run: |
+          {
+            echo "## 環境"
+            echo '```'
+            echo "commit: $(git rev-parse HEAD)"
+            echo "os: $(. /etc/os-release && echo "$PRETTY_NAME") / kernel $(uname -r)"
+            echo "python: $(python --version 2>&1)"
+            echo "chrome: $(google-chrome --version 2>&1 || true)  ($(command -v google-chrome || echo none))"
+            echo "TZ: $TZ"
+            echo
+            echo "# フォント（テストの font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Noto Sans JP', sans-serif）"
+            echo "fc-match sans-serif:        $(fc-match sans-serif 2>&1)"
+            echo "fc-match 'Noto Sans JP':    $(fc-match 'Noto Sans JP' 2>&1)"
+            echo "fc-match 'Hiragino Sans':   $(fc-match 'Hiragino Sans' 2>&1)"
+            echo "fc-match -apple-system:     $(fc-match -- -apple-system 2>&1)"
+            echo "fc-match :lang=ja:          $(fc-match ':lang=ja' 2>&1)"
+            echo "日本語フォント（lang=ja）の数: $(fc-list ':lang=ja' family 2>/dev/null | sort -u | wc -l)"
+            fc-list ':lang=ja' family 2>/dev/null | sort -u | head -8
+            echo '```'
+          } | tee -a "$GITHUB_STEP_SUMMARY"
+
+      # 通信の遮断（canary と同じ .pth。Python はこのジョブの全プロセスで有効）。Node は pytest の step の env だけ
+      - name: Arm Python network guard
+        run: |
+          mkdir -p "$RUNNER_TEMP/diag"
+          for n in python_a node_a chrome_a python_b node_b; do : > "$RUNNER_TEMP/diag/$n.jsonl"; done
+          SITE="$(python -c 'import sysconfig; print(sysconfig.get_paths()["purelib"])')"
+          # A 用の記録先。B の step の前に .pth を差し替える
+          printf "import os; os.environ.setdefault('CANARY_NETGUARD_LOG', '%s'); import runpy; runpy.run_path('%s')\n" \
+            "$RUNNER_TEMP/diag/python_a.jsonl" "$GITHUB_WORKSPACE/scripts/ci_canary/netguard.py" > "$SITE/zz_canary_netguard.pth"
+          echo "DIAG_SITE=$SITE" >> "$GITHUB_ENV"
+          echo "CANARY_REAL_CHROME=$(command -v google-chrome)" >> "$GITHUB_ENV"
+          chmod +x scripts/ci_canary/chrome_wrapper.sh
+
+      # A: canary と同じ Chrome wrapper あり
+      - name: A - with Chrome wrapper
+        id: a
+        continue-on-error: true
+        env:
+          CHROME_BIN: ${{ github.workspace }}/scripts/ci_canary/chrome_wrapper.sh
+          CANARY_CHROME_LOG: ${{ runner.temp }}/diag/chrome_a.jsonl
+          CANARY_NODE_LOG: ${{ runner.temp }}/diag/node_a.jsonl
+          NODE_OPTIONS: --require=${{ github.workspace }}/scripts/ci_canary/node_netguard.js
+          GIT_ALLOW_PROTOCOL: file
+          UI_DIAG: "1"
+        run: |
+          set +e
+          python -m pytest "$TEST_ID" -q -s -p no:cacheprovider 2>&1 | tee "$RUNNER_TEMP/diag/a.log"
+          rc=${PIPESTATUS[0]}
+          echo "A_RC=$rc" >> "$GITHUB_ENV"
+          exit 0
+
+      # B の前に、記録先を B 用に差し替える
+      - name: Switch guard log to B
+        run: |
+          printf "import os; os.environ.setdefault('CANARY_NETGUARD_LOG', '%s'); import runpy; runpy.run_path('%s')\n" \
+            "$RUNNER_TEMP/diag/python_b.jsonl" "$GITHUB_WORKSPACE/scripts/ci_canary/netguard.py" > "$DIAG_SITE/zz_canary_netguard.pth"
+
+      # B: wrapper なしの本物の Chrome。ページは file:// の自己完結（外部リソースの参照 0 件を事前に確認済み）だが、
+      # Chrome 自身のバックグラウンド通信（更新・時刻同期など）が外へ出ないよう、ネットワークデバイスの無い
+      # network namespace の中で実行する。デバイスが lo 以外に残っていれば B は実行しない（fail closed）。
+      - name: B - without Chrome wrapper (no network namespace)
+        id: b
+        continue-on-error: true
+        env:
+          CHROME_BIN: ${{ env.CANARY_REAL_CHROME }}
+          CANARY_NODE_LOG: ${{ runner.temp }}/diag/node_b.jsonl
+          NODE_OPTIONS: --require=${{ github.workspace }}/scripts/ci_canary/node_netguard.js
+          GIT_ALLOW_PROTOCOL: file
+          UI_DIAG: "1"
+        run: |
+          set +e
+          PY="$(command -v python)"
+          sudo -E unshare -n -- bash -c '
+            ip link set lo up
+            if [ -n "$(ip -o link show | grep -v " lo:")" ]; then echo "B_NETNS_NOT_ISOLATED"; exit 97; fi
+            echo "B_NETNS_ISOLATED (lo のみ)"
+            exec setpriv --reuid="$1" --regid="$2" --clear-groups -- "${@:3}"
+          ' bash "$(id -u)" "$(id -g)" "$PY" -m pytest "$TEST_ID" -q -s -p no:cacheprovider 2>&1 | tee "$RUNNER_TEMP/diag/b.log"
+          rc=${PIPESTATUS[0]}
+          echo "B_RC=$rc" >> "$GITHUB_ENV"
+          exit 0
+
+      - name: Summarize A/B
+        if: always()
+        run: |
+          rm -f "$DIAG_SITE/zz_canary_netguard.pth"
+          python - <<'PY'
+          import json, os, pathlib, re
+          d = pathlib.Path(os.environ["RUNNER_TEMP"]) / "diag"
+          out = ["## A/B 診断（幅 500px・管理画面）", ""]
+          for label, key in (("A: Chrome wrapper あり", "a"), ("B: wrapper なし（ネットワークなしの namespace）", "b")):
+              log = (d / f"{key}.log").read_text(encoding="utf-8", errors="replace") if (d / f"{key}.log").exists() else ""
+              rc = os.environ.get(f"{key.upper()}_RC", "未実行")
+              out.append(f"### {label}")
+              out.append(f"- pytest の終了コード: `{rc}`（0 = 成功）")
+              if key == "b":
+                  out.append("- ネットワーク分離: " + ("成功（lo のみ）" if "B_NETNS_ISOLATED" in log else "**未成立（B は実行していない）**" if "B_NETNS_NOT_ISOLATED" in log else "不明"))
+              for ln in log.splitlines():
+                  if ln.startswith("UI_DIAG "):
+                      j = json.loads(ln[8:])
+                      out.append(f"- viewport 指定: {j['width']}")
+                      out.append("")
+                      out.append("| section | scrollWidth | clientWidth | body sw | body cw | inner | outer | dpr | delta |")
+                      out.append("|---|--:|--:|--:|--:|--:|--:|--:|--:|")
+                      for s, v in j["sections"].items():
+                          out.append(f"| {s} | {v['scrollWidth']} | {v['clientWidth']} | {v['bodyScrollWidth']} | {v['bodyClientWidth']} | {v['innerWidth']} | {v['outerWidth']} | {v['dpr']} | {v['delta']} |")
+                          for o in v["offenders"]:
+                              out.append(f"|  ↳ `{o['tag']}` id=`{o['id']}` cls=`{o['cls']}` | left {o['left']} | right {o['right']} | w {o['width']} | min-w {o['min_width']} | max-w {o['max_width']} | ov-x {o['overflow_x']} | ws {o['white_space']} | font {o['font']} |")
+                      out.append("")
+              for ln in log.splitlines():
+                  if "横方向にはみ出している区分" in ln:
+                      out.append("- 失敗メッセージ（抜粋）: `" + re.sub(r"\s+", " ", ln)[:1500] + "`")
+              out.append("")
+          for key in ("python_a", "node_a", "chrome_a", "python_b", "node_b"):
+              p = d / f"{key}.jsonl"
+              rows = [json.loads(x) for x in p.read_text(encoding="utf-8").splitlines() if x.strip()] if p.exists() else []
+              v = [r for r in rows if r.get("kind") == "violation"]
+              inst = [r for r in rows if r.get("kind") == "installed"]
+              ch = [r for r in rows if r.get("kind") == "chrome_launch"]
+              out.append(f"- ガード記録 `{key}`: installed={len(inst)} violations={len(v)} chrome_launches={len(ch)}")
+          text = "\n".join(out)
+          print(text)
+          open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8").write(text + "\n")
+          PY

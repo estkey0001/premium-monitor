@@ -1,55 +1,55 @@
 {
   "schema": 1,
-  "updated_at": "2026-11-11T20:53:22+09:00",
+  "updated_at": "2026-11-12T21:02:41+09:00",
   "active": {
     "official_recheck_failing:prod_a7rv": {
       "first_seen": "2026-11-07T20:01:53+09:00",
-      "last_seen": "2026-11-11T20:53:22+09:00",
+      "last_seen": "2026-11-12T21:02:41+09:00",
       "severity": "HIGH",
       "emitted_severity": "HIGH",
-      "times_seen": 5
+      "times_seen": 6
     },
     "official_recheck_failing:prod_x100vi": {
       "first_seen": "2026-10-25T18:19:24+09:00",
-      "last_seen": "2026-11-11T20:53:22+09:00",
+      "last_seen": "2026-11-12T21:02:41+09:00",
       "severity": "HIGH",
       "emitted_severity": "HIGH",
-      "times_seen": 23
+      "times_seen": 24
     },
     "official_verification_expiry:prod_x100vi": {
       "first_seen": "2026-11-02T20:59:54+09:00",
-      "last_seen": "2026-11-11T20:53:22+09:00",
+      "last_seen": "2026-11-12T21:02:41+09:00",
       "severity": "HIGH",
       "emitted_severity": "HIGH",
-      "times_seen": 10
+      "times_seen": 11
     },
     "source_failure:netoff": {
       "first_seen": "2026-10-22T01:29:43+09:00",
-      "last_seen": "2026-11-11T20:53:22+09:00",
+      "last_seen": "2026-11-12T21:02:41+09:00",
       "severity": "HIGH",
       "emitted_severity": "HIGH",
-      "times_seen": 28
+      "times_seen": 29
     },
     "quality_gate_failure:ps5_pro": {
       "first_seen": "2026-10-22T01:29:43+09:00",
-      "last_seen": "2026-11-11T20:53:22+09:00",
+      "last_seen": "2026-11-12T21:02:41+09:00",
       "severity": "WARNING",
       "emitted_severity": "WARNING",
-      "times_seen": 28
+      "times_seen": 29
     },
     "source_failure:iosys": {
       "first_seen": "2026-10-22T01:29:43+09:00",
-      "last_seen": "2026-11-11T20:53:22+09:00",
+      "last_seen": "2026-11-12T21:02:41+09:00",
       "severity": "WARNING",
       "emitted_severity": "WARNING",
-      "times_seen": 28
+      "times_seen": 29
     },
     "source_failure:mobile_ichiban": {
       "first_seen": "2026-11-01T20:23:12+09:00",
-      "last_seen": "2026-11-11T20:53:22+09:00",
+      "last_seen": "2026-11-12T21:02:41+09:00",
       "severity": "WARNING",
       "emitted_severity": "WARNING",
-      "times_seen": 11
+      "times_seen": 12
     }
   }
 }

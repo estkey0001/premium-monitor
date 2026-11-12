@@ -328,3 +328,11 @@ python3 scripts/operator_health_alert.py --dry-run  # 書かずに注記だけ�
 - 失敗したときの読み方: ジョブサマリーの ❌ の行が原因。`python_external_requests_zero` は宛先のホストだけが出る（記録 JSON の `test` にテスト ID が入る）。`repository_mutation_zero` は想定外に変更されたファイル名が出る。
 - 限界: tripwire であって sandbox ではない（ctypes・別のインタープリタ・Node の `child_process` などは見ない）。詳細は `internal/audits/COVERAGE_WAVE7E3.md`。
 - 検証: `tests/test_wave7e3_ci_canary.py`（59 件＋Linux だけ 1 件）。
+
+## 公式の再確認の診断ログ（Wave 7f）
+
+- `python scripts/recheck_official.py` が出す `[公式の再確認] <商品>: failed …` の行のうち、**取得はできて parser が読めなかった行（reason が空）**だけ、末尾に固定形式の診断が付く: `diag=model_found:true price_candidates:1 stock_phrase_found:false matched_stock:none`。成功・遮断・取得の失敗（`（timeout）` など理由が付く行）には付かない。許可リスト: 真偽・非負の整数・固定の在庫語（入荷待ち・在庫切れ・在庫あり・販売終了・翌日出荷・当日出荷）・`none`。ページの文字列・URL は出さない。
+- 読み方: `model_found:false` = ページに型番が無い／`price_candidates:0` = 型番の直後に価格が続かない／`price_candidates:2` 以上 = 価格が複数（決められない）／`price_candidates:1 stock_phrase_found:false` = 型番と価格はあるが既知の在庫・出荷の語が無い。`price_candidates` は型番の直後 30 文字以内の価格の数（解釈の注意: 価格が離れていると 0、別商品の価格が近いと過大）。Sony の parser だけ（他の取得元の `failed` には付かない）。
+- **診断は判定に使わない・`history.json` / `latest.json` に入らない**。ページ上部の「現在、選択した商品が購入いただけません。」は Sony の共通表示で、販売状態の根拠にしない。
+- 人が保存した（または fixture の）ページで診断を見るには: `python3 - <保存したページ> <<'PY'` で `scripts/recheck_official.py` を `importlib` で読み込み、`parse_sony_store(html, "<型番>")` の戻り値（`price_candidate_count` など）を表示する（ネットワークに出ない）。
+- 検証: `tests/test_recheck_parser_diagnostics.py`（32 件）。

@@ -57,7 +57,19 @@
 - `verify.py` 自身がテストで書き換えられうる（書き換えは `repository_mutation_zero` で検出されるが、検出するのは書き換えられうる側）。
 - `.pth` を作る step（printf）の動作は、Actions 上でしか確かめられない。
 
-## 初回の CI 実行で想定される失敗
+## 初回の GitHub Actions 実行と UI の修正（2026-11-12）
+
+- run 43195021214（`097f006f`・`workflow_dispatch` 1 回）: canary の判定は PASS（外部通信 0・Chrome 起動 128・Node / Python のガード導入・commit 0・push 0・ソース変更 0・Secrets 0）。pytest は 3005 件中 1 件失敗（`tests/test_ui_phase9.py::test_dom_admin_no_overflow[500]`）。Linux 専用の `AF_NETLINK` テストは skip 0 件のため実行された計算。
+- 診断（run 43221944241・診断用 workflow を 1 回）: 同一の commit・Python 3.11.18・Ubuntu 26.04・Chrome 156 で、A（canary と同じ wrapper あり）と B（wrapper なし。ネットワークデバイスの無い network namespace の中）が**同一の失敗**（`notifications` 区分・scrollWidth 506・clientWidth 485・delta 21）→ canary の wrapper は無関係。macOS はどちらも PASS（500 / 500 / 0）。
+- 原因: `<code>`（`admin.py` の却下コマンド）の折り返せない 66 文字 `<duplicate|not_target|variant_only|bad_parse|unsupported|obsolete>`。Linux の DejaVu Sans Mono は字送り 7.2246px（66 文字 = 476.8px）で、実測の幅 476.8px と一致。さらに Linux は 15px の従来型スクロールバー（clientWidth 485・innerWidth 500）。必要 505.8px に対し使えるのは 485px。macOS の monospace は約 6.0px（同じ連続が約 396px）なので 500px では収まるが、macOS でもコンテナ幅が約 425px 未満になると同じ要素がはみ出す（420px で +5px・360px で +65px）。分類は `LATENT_UI_BUG` exposed by `OS_DIFFERENCE`。この `<code>` は 2026-10-17（#863）、テストは 2026-10-06 から存在し、pytest が Linux で動くまで見えていなかった。
+- 修正: `src/content/ui/styles.py` の `_admin_css` に `.nu-ad code{overflow-wrap:anywhere}` を 1 行。運営者ページ（`.nu-ad`）の中の `<code>` だけ。素の `code{…}` にはしない。`overflow-x:hidden`・固定幅・font-size の縮小・ellipsis・文字列の短縮はしていない（却下コマンドは 120 文字すべてが読める。360px では 4 行に折り返す）。
+- テスト（`tests/test_ui_phase9.py`）: ①`test_dom_admin_notifications_no_overflow_in_narrow_viewport`（360 / 390 / 420 / 500px。`innerWidth == 指定幅`・delta ≤ 0・すべての `<code>` の右端が viewport の中・`overflow` を切っていない・ellipsis でない・文字を縮めていない・文言が省略されていない）②`test_admin_reject_command_text_is_complete_and_code_wrapping_is_scoped` ③既存の `test_dom_admin_no_overflow`（6 幅）は判定を変えず、失敗時の診断（viewport の実寸・はみ出す要素の上位）だけを足した。**本物の狭い viewport の作り方**: headless Chrome のウィンドウ最小幅は 500px で、`--window-size` を 320 / 390 にしても `innerWidth` は 500 のまま（`--force-device-scale-factor` でも CSS 幅は縮まない）。500px のウィンドウの中に幅 360〜500px の iframe を置き、その中でページを動かし、`postMessage` で結果を外側に返す（`_run_in_frame`）。**既存の `[320, 390]` のテスト（他の UI フェーズ）は、実質 500px で動いている**（今回の範囲外。記録のみ）。
+- 検証（ローカル）: pytest 3009 成功・1 skip（Linux 専用）。canary の判定 PASS（外部通信 0・Chrome 起動 132）。UI 修正の変異テスト 9 件すべて検出（修正を消す・効かない指定・ルートで横を切る・ellipsis・文字を縮める・全画面の code に広げる・対象を他のページへ広げる・却下の理由の一覧を短縮する 2 種）。canary 自体の変異テストは 54 件中 53 件検出 + Linux 専用の 1 件は未検証（不変）。deploy-check Errors 0。ruff: 変更ファイルは 0 件。通知以外の 7 区分も、320〜600px の 10 幅で delta 0（auditor が実証。折り返せない 90 文字の `<code>` を注入しても 0）。
+- 独立の最終ゲート: reviewer・auditor とも Critical 0・High 0・Medium 0。Low: HANDOFF の古い記述（本更新で解消）／`overflow:clip` を修正と併用する変異は検出されない（何も隠していないので意味がない）／Linux 実機の iframe 内のスクロールバー・フォントは推測で、最終の canary で確認する。
+- canary の guard・workflow・`scripts/ci_canary/`・canary のテストは**不変**。診断用の workflow（`ci_ui_diag.yml`）は削除。診断専用の出力（`UI_DIAG`）も削除。
+- A7RV（別 issue・記録のみ）: 11-05 以降 8 回連続で `failed`（Sony の購入ページの取得。理由は空）。確認日は 11-04 のまま（偽の鮮度なし）。公式直販の期限は 14 日なので、回復しなければ 11-18 に確認済みから外れる見込み。7e-3 の範囲外で、7e-3 の完了前には調査・実装しない。
+
+## 初回の CI 実行で想定される失敗（初回の実行の前の記述）
 
 ローカルで見つからなかった外部通信・Linux 固有の差（`/tmp` 以外の書き込み、ubuntu の Chrome の起動、未追跡ファイルへの依存）。**初回の `workflow_dispatch` の実行結果は未確認**。
 

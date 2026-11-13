@@ -5,6 +5,9 @@ data/tcg_verified_lotteries.csv を読み込む。
 
 - 必須: product / retailer / application_start / application_end / source_url /
         verified_at / verified_by / eligibility / notes（列が存在すること）
+- **ここに入れてよいのは一次情報（メーカー・店舗の公式ページ）で確かめた抽選だけ**。集約サイト・運営者を確認できないサイト・
+  検索の要約だけのものは入れない（週次リサーチの UNVERIFIED は `.private/research/` の候補に置く）。同じ非公式ページを別の AI が
+  読み直しても検証にならない（整合性の確認）。店舗のドメインは `STORE_PRIMARY_DOMAINS`（運営者の証拠つき）に限る。
 - source_url が公式ドメインでなければ MANUAL_VERIFIED_OFFICIAL にしない。
 - 表示期限は抽選の日程で決まる（締切・購入期限を過ぎたら CLOSED / ENDED）。
   observed_at は verified_at のままにし、読み込むたびに新しくしない（fresh 化しない）。
@@ -50,6 +53,40 @@ OFFICIAL_DOMAINS: tuple[str, ...] = (
 def is_official_url(url: str) -> bool:
     host = (urlparse(url or "").hostname or "").lower()
     return bool(host) and any(host == d or host.endswith("." + d) for d in OFFICIAL_DOMAINS)
+
+
+# 店舗の公式サイトとして扱う小売のドメイン。**運営者の証拠（そのドメインの会社概要などに運営会社が書かれている）が
+# 取れたものだけ**を入れる。証拠の無いドメイン（運営者が確認できない・サイトが開けない）は入れない。
+# 同じページを別の AI が読み直しても証拠にならない（整合性の確認であって、運営者の確認ではない）。
+# 入れるときは operator / evidence / evidence_url / checked_on をそろえる（tests が検査する）。
+STORE_PRIMARY_DOMAINS: dict[str, dict] = {
+    "c-labo.jp": {
+        "operator": "株式会社カードラボ",
+        "evidence": "会社概要に「会社名 株式会社カードラボ」「事業内容 カードラボの運営」",
+        "evidence_url": "https://www.c-labo.jp/company/",
+        "checked_on": "2026-11-13",
+        "strength": "company_profile",
+    },
+    "sanyodo.co.jp": {
+        "operator": "株式会社三洋堂書店",
+        "evidence": "トップページのフッターに社名（© Sanyodo Books Inc.・株式会社三洋堂書店）。お知らせは同じドメインで公開",
+        "evidence_url": "https://www.sanyodo.co.jp/",
+        "checked_on": "2026-11-13",
+        "strength": "footer",
+    },
+    "suruga-ya.jp": {
+        "operator": "SURUGA-YA Inc.",
+        "evidence": "トップページのフッターの著作権表示（© SURUGA-YA Inc.）。日本語の正式社名・特定商取引法のページは確認できていない",
+        "evidence_url": "https://www.suruga-ya.jp/",
+        "checked_on": "2026-11-13",
+        "strength": "footer_only",
+    },
+}
+
+
+def is_store_primary_url(url: str) -> bool:
+    host = (urlparse(url or "").hostname or "").lower()
+    return bool(host) and any(host == d or host.endswith("." + d) for d in STORE_PRIMARY_DOMAINS)
 
 
 def _flag(v: str) -> Optional[bool]:
@@ -102,7 +139,7 @@ def _row_to_event(row: dict) -> tuple[Optional[dict], Optional[str]]:
     if start and end and parse_dt(end) < parse_dt(start):
         return None, "application_end が application_start より前"
 
-    official = is_official_url(src)
+    official = is_official_url(src) or is_store_primary_url(src)   # 一次情報（メーカー・店舗の公式）
     # 人が公式ページを確認したか（AI による転記だけなら False）。
     # 確認されるまでは公式扱いにしない（矛盾判定・応募ボタン・通知の対象外）、確度は medium。
     human = _flag(row.get("human_confirmed") or "") is True

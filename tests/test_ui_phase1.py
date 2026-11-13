@@ -118,7 +118,9 @@ def test_new_home_renders_categories_purposes_and_quick_links():
     for p in cl.PURPOSES:
         assert pages.PURPOSE_INFO[p]["label"] in home_html
     assert "<input" not in home_html and "nu-card" not in home_html      # 検索窓・商品カードを並べない
-    assert home_html.count('class="nu-quick"') == 1                        # 動くリンクは TOP10 だけ
+    # 動くリンクは TOP10 と iPhone 買取比較（週次の調査の別ページ。2026-11-13 に追加）の 2 つだけ
+    assert home_html.count('class="nu-quick"') == 2
+    assert 'href="./iphone-buyback.html"' in home_html
     assert home_html.count('nu-quick--soon" aria-disabled="true"') == 2 and home_html.count("準備中") >= 2
 
 

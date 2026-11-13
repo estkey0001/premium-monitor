@@ -1,0 +1,26 @@
+# 週次の iPhone 買取比較（src/research/weekly_import.py）の暫定しきい値。
+# 根拠の少ない暫定値で、買取店ごとの特性（更新の頻度・休業日）が分かったら店ごと（freshness.sources）に変える。
+# 値を変えても、保存済みの価格を書き換えない（次の週次の調査から効く）。
+
+# 外れ値: 実行可能な最高値が 2 位より rate を超えて高いとき、最高値は「掲載の最高値」として表示・保存するが、
+# 利益計算には使わず OUTLIER_REVIEW にする（次点を「最高の実行可能価格」と呼ばない）。
+# 人が公式の店舗ページで確認したら reviewed に書く（その価格・その調査日だけ有効）。
+outlier:
+  rate: 0.03
+  reviewed: []
+  #  - {sku: "iPhone Duo 1TB", shop_key: pastec, price: 492000, reviewed_on: "2026-11-14", note: "店舗の公式ページで色・条件を確認"}
+
+# 鮮度: ページ自身の更新日からの日数。fresh_days 以内 = FRESH、超えたら STALE（利益の主要価格に使わない。表示は残す）。
+# 更新日の記載が無い = UNKNOWN_FRESHNESS（古いとも新しいとも言わない。調査日に取得した価格として表示する）。
+# 休業日・定休日で更新が無いだけの店は、店ごとの fresh_days で長くできる（誤価格とは扱わない）。
+freshness:
+  default:
+    fresh_days: 1
+  sources: {}
+  #  akimoba: {fresh_days: 2, note: "休業日がある（2026-11-13 は店頭・郵送とも休業の記載）"}
+  # 更新日が不明な店の価格を、実行可能価格の候補に含める（鮮度は UNKNOWN_FRESHNESS と明示する）
+  unknown_freshness_executable: true
+
+# 急騰: 同じ店・同じ SKU の前回の週次から +surge_yen 円以上
+surge:
+  yen: 5000

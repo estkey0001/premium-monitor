@@ -92,6 +92,10 @@ def build():
     # collector_report.html
     _build_collector_report_html(PUBLIC_DIR)
 
+    # iphone-buyback.html（週次の調査の買取比較。調査結果が無ければ作らない）
+    _build_iphone_buyback_html(PUBLIC_DIR)
+    _build_camera_research_html(PUBLIC_DIR)
+
     # ファイル数カウント
     total = sum(1 for _ in PUBLIC_DIR.rglob("*") if _.is_file())
     print(f"\n  Build complete: {total} files in docs/")
@@ -115,6 +119,44 @@ def _write_archive_index(archive_dir: Path) -> None:
     path = archive_dir / "index.html"
     path.write_text(ARCHIVE_INDEX_HTML, encoding="utf-8")
     print(f"  ✅ {path}")
+
+
+def _build_iphone_buyback_html(public_dir: Path) -> None:
+    """exports/iphone_buyback/iphone_buyback_comparison.json → docs/iphone-buyback.html を生成する。"""
+    json_path = PROJECT_ROOT / "exports" / "iphone_buyback" / "iphone_buyback_comparison.json"
+    if not json_path.exists():
+        print("  ⚠️  iphone_buyback_comparison.json not found — skipping iphone-buyback.html")
+        return
+    try:
+        comp = json.loads(json_path.read_text(encoding="utf-8"))
+        sys.path.insert(0, str(PROJECT_ROOT))
+        from src.content.iphone_buyback_page import render
+        html_text = render(comp)
+    except Exception as e:  # noqa: BLE001 — 壊れた調査結果でサイト全体のビルドを止めない
+        print(f"  ⚠️  iphone-buyback.html を作れなかった: {e}")
+        return
+    dst = public_dir / "iphone-buyback.html"
+    dst.write_text(html_text, encoding="utf-8")
+    print(f"  ✅ {dst}")
+
+
+def _build_camera_research_html(public_dir: Path) -> None:
+    """exports/camera_research/camera_research_weekly.json → docs/camera-research.html を生成する。"""
+    json_path = PROJECT_ROOT / "exports" / "camera_research" / "camera_research_weekly.json"
+    if not json_path.exists():
+        print("  ⚠️  camera_research_weekly.json not found — skipping camera-research.html")
+        return
+    try:
+        summary = json.loads(json_path.read_text(encoding="utf-8"))
+        sys.path.insert(0, str(PROJECT_ROOT))
+        from src.content.camera_research_page import render
+        html_text = render(summary)
+    except Exception as e:  # noqa: BLE001 — 壊れた調査結果でサイト全体のビルドを止めない
+        print(f"  ⚠️  camera-research.html を作れなかった: {e}")
+        return
+    dst = public_dir / "camera-research.html"
+    dst.write_text(html_text, encoding="utf-8")
+    print(f"  ✅ {dst}")
 
 
 def _build_collector_report_html(public_dir: Path) -> None:

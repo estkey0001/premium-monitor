@@ -97,11 +97,13 @@ def _quick_links() -> str:
     # 「今すぐ狙う TOP10」は利益商品を利益が大きい順に上位10件だけ出す（top=10）
     live = (f'<a class="nu-quick" href="{esc(page_href("opportunities") + "&top=10")}" data-nu-keepcat>'
             f'{icon("target", size=16)}今すぐ狙う TOP10</a>')
+    # 週次の調査の買取比較（別ファイル docs/iphone-buyback.html。相対リンク）
+    iphone = (f'<a class="nu-quick" href="./iphone-buyback.html">{icon("box", size=16)}iPhone 買取比較</a>')
     soon = "".join(
         f'<span class="nu-quick nu-quick--soon" aria-disabled="true">{icon(ic, size=16)}{esc(lbl)}'
         f'<span class="nu-quick__tag">準備中</span></span>'
         for ic, lbl in (("flame", "買取急騰"), ("sparkle", "新着商品")))
-    return f'<div class="nu-quicks" aria-label="よく使うリンク">{live}{soon}</div>'
+    return f'<div class="nu-quicks" aria-label="よく使うリンク">{live}{iphone}{soon}</div>'
 
 
 def render_home(catalog: cl.Catalog, *, source_issue: bool = False) -> str:
@@ -234,6 +236,8 @@ def render_more(catalog: cl.Catalog) -> str:
         (page_href("routes"), "route", "せどりルート", PURPOSE_INFO["routes"]["desc"],
          f'<span class="nu-purpose__count" data-nu-count="routes">{_count_text(catalog.count("routes"))}</span>', True),
         (page_href("home") + "#nu-genres", "box", "ジャンルから探す", "スマホ・TCG・カメラ・ゲーム・PC・その他", "", False),
+        ("./iphone-buyback.html", "box", "iPhone 買取比較", "新品未開封を国内の買取店ごとに比較（週1回の調査）", "", False),
+        ("./camera-research.html", "box", "カメラ 週次調査", "抽選に当たらないと仕入れられないものと、二次流通（出品と成約を分けて表示）", "", False),
         (page_href("mypage"), "star", "マイページ", "ウォッチ中の商品・締切・通知の条件（このブラウザに保存）", "", False),
         (page_href("search"), "search", "商品を検索", "商品名・型番・ジャンルで探す", "", False),
         (page_href("admin"), "more", "運営の管理画面", "取得状況・データ品質・AI 候補・資金配分・実行履歴（読むだけ）", "", False),

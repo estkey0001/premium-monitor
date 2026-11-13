@@ -1,0 +1,151 @@
+{
+  "schema": 2,
+  "type": "CAMERA_WEEKLY_RESEARCH",
+  "research_date": "2026-11-13",
+  "generated_at": "2026-11-14T00:04:06+09:00",
+  "note": "週次の Web 調査（AI）の結果。利益商品を無理に作らない。抽選に当たらないと仕入れられないものは LOTTERY_DEPENDENT で、即時の BUY ではない。",
+  "products": [
+    {
+      "product": "RICOH GR IV",
+      "status": "LOTTERY_DEPENDENT",
+      "buy": {
+        "where": "GR SPACE TOKYO 抽選（当選すれば）",
+        "price": null,
+        "availability": "抽選のため確定せず",
+        "price_note": "仕入れ価格は公式ページに金額が無い（記事の値は確認できないため公開しない）"
+      },
+      "sell_candidates": [
+        {
+          "where": "買取（店名非公開・査定サイト uridoki・新品未開封・2026-09-16）",
+          "price": 205000,
+          "range": null,
+          "age_days": 58,
+          "executable_candidate": false,
+          "reasons": [
+            "店名が分からない",
+            "価格が古い"
+          ]
+        },
+        {
+          "where": "フジヤカメラ買取（既存パイプライン 2026-11-12 20:18）",
+          "price": 151000,
+          "range": null,
+          "age_days": 1,
+          "executable_candidate": false,
+          "reasons": [
+            "新品の条件を確認できない（状態が違う可能性）"
+          ]
+        }
+      ],
+      "reference_net": [],
+      "reference_label": "INFERENCE（購入送料・買取の条件が未確認の参考値。確定のルートではない）",
+      "immediate_buy": false,
+      "note": "売却先として使える（店名・日付・新品の条件が確認できた）価格が無く、利益の見込みは判断できません。 抽選に当たらなければ仕入れられません。"
+    },
+    {
+      "product": "FUJIFILM X100VI",
+      "status": "OUT_OF_STOCK",
+      "buy": {
+        "where": "フジフイルムモール",
+        "price": 315700,
+        "availability": "SOLD OUT（購入不可）",
+        "price_note": null
+      },
+      "sell_candidates": [
+        {
+          "where": "買取（査定サイト・新品・2026-09-14、2026-10-01 の値上げ前）",
+          "price": 220000,
+          "range": null,
+          "age_days": 60,
+          "executable_candidate": false,
+          "reasons": [
+            "店名が分からない",
+            "価格が古い"
+          ]
+        },
+        {
+          "where": "買取（同サイト・美品・2026-10-01）",
+          "price": 240000,
+          "range": null,
+          "age_days": 43,
+          "executable_candidate": false,
+          "reasons": [
+            "価格が古い",
+            "新品の条件を確認できない（状態が違う可能性）"
+          ]
+        },
+        {
+          "where": "フジヤカメラ買取（既存パイプライン）",
+          "price": 213000,
+          "range": null,
+          "age_days": null,
+          "executable_candidate": false,
+          "reasons": [
+            "価格の新しさを確認できない",
+            "新品の条件を確認できない（状態が違う可能性）"
+          ]
+        }
+      ],
+      "reference_net": [],
+      "reference_label": "INFERENCE（購入送料・買取の条件が未確認の参考値。確定のルートではない）",
+      "immediate_buy": false,
+      "note": "売却先として使える（店名・日付・新品の条件が確認できた）価格が無く、利益の見込みは判断できません。 公式は在庫がなく、今は購入できません。"
+    }
+  ],
+  "secondary_market": [
+    {
+      "product": "RICOH GR IV",
+      "listing": {
+        "low": 230000,
+        "high": null,
+        "n": 6,
+        "note": null
+      },
+      "sold": {
+        "low": 223000,
+        "high": 235000,
+        "median": null,
+        "n": 17,
+        "period": "UNKNOWN（日付なし）"
+      },
+      "expected_sell_price": null,
+      "evidence": "二次流通サイトの掲載を要約経由で読んだ値（期間・手数料・状態は未確認）",
+      "expected_sell_price_reason": "SOLD の中央値・期間が確認できない（出品の最高値・成約の最高値を売れる価格として使わない）"
+    },
+    {
+      "product": "FUJIFILM X100VI",
+      "listing": {
+        "low": null,
+        "high": null,
+        "n": null,
+        "note": "0 件（シルバー・ブラックとも）"
+      },
+      "sold": {
+        "low": 273050,
+        "high": 350680,
+        "median": null,
+        "n": 18,
+        "period": "UNKNOWN"
+      },
+      "expected_sell_price": null,
+      "evidence": "二次流通サイトの掲載を要約経由で読んだ値（期間・手数料・状態は未確認）",
+      "expected_sell_price_reason": "SOLD の中央値・期間が確認できない（出品の最高値・成約の最高値を売れる価格として使わない）"
+    }
+  ],
+  "lotteries": [
+    {
+      "product": "RICOH GR IV / GR IV HDF（GR SPACE TOKYO 公式抽選）",
+      "retailer": "GR SPACE TOKYO（RICOH IMAGING）",
+      "application_start": "2026-10-21T00:00:00+09:00",
+      "application_end": "2026-11-22T23:59:00+09:00",
+      "winner_announcement": "2026-12-05",
+      "official_url": "https://www.ricoh-imaging.co.jp/japan/community/grspace_tokyo/camerasales/",
+      "evidence": "メーカーまたは店舗の公式ページ"
+    }
+  ],
+  "hidden_counts": {
+    "unverified_sell_candidates": 3,
+    "unverified_lotteries": 1,
+    "discovered_products_unverified": 3
+  }
+}

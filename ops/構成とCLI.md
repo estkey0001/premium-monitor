@@ -336,3 +336,22 @@ python3 scripts/operator_health_alert.py --dry-run  # 書かずに注記だけ�
 - **診断は判定に使わない・`history.json` / `latest.json` に入らない**。ページ上部の「現在、選択した商品が購入いただけません。」は Sony の共通表示で、販売状態の根拠にしない。
 - 人が保存した（または fixture の）ページで診断を見るには: `python3 - <保存したページ> <<'PY'` で `scripts/recheck_official.py` を `importlib` で読み込み、`parse_sony_store(html, "<型番>")` の戻り値（`price_candidate_count` など）を表示する（ネットワークに出ない）。
 - 検証: `tests/test_recheck_parser_diagnostics.py`（32 件）。
+
+## 週次の市場リサーチ（暫定運用・2026-11-13〜）
+
+API の契約・24 時間監視の前の、週 1 回の運用。AI（Web 調査）の結果は DISCOVERED まで。公開してよいのは、決定論的な検証を通ったものだけ。
+
+```
+# 1. Claude Code で Skill premium-market-research を実行（tcg / new-product / iphone / camera）。結果の JSON を
+#    .private/research/weekly/<YYYY-MM-DD>/ に置く（git 管理外）: research_tcg.json・iphone_exp_*.json・research_iphone.json・research_camera.json など
+# 2. 検証と取り込み（既定は書かない）
+python3 -m src.research.weekly_import --dir .private/research/weekly/<日付>
+python3 -m src.research.weekly_import --dir .private/research/weekly/<日付> --apply
+# 3. 関連のテスト → commit（取り込みの実装・データ・文書は分ける）→ push
+python3 -m pytest tests/test_weekly_import.py
+```
+
+- TCG の区分: VERIFIED（一次情報で商品・店・種別・日程を確認。運営者の証拠つきのドメインだけ）/ DUPLICATE_EXISTING（既存の収集が同じものを載せている）/ UNVERIFIED / FAILED_VERIFICATION / STALE。VERIFIED だけが `data/tcg_verified_lotteries.csv` へ入る。
+- ソース別の結果: FOUND / CONFIRMED_NO_CURRENT_EVENT / NO_EVENT_FOUND（トップページだけなどの「見つからなかった」。「存在しない」ではない）/ BLOCKED / FAILED。必須ソースの調べられた割合が 80% 未満は RESEARCH_INCOMPLETE。
+- iPhone: 出力は `exports/iphone_buyback/`（比較・履歴）。しきい値は `config/iphone_buyback.yaml`。公開ページは `docs/iphone-buyback.html`、カメラは `exports/camera_research/` と `docs/camera-research.html`（どちらも `build-public-lp` が作る。抽選の「受付中・終了」とページの古さの警告は、ページを作るたびに現在日時で決める）。
+- 公開してはいけないもの: 集約サイト由来の個別の候補・原本を確認していない価格（`exports/research/` は集計の summary.json だけの規則。新しい出力ディレクトリにも同じ考え方を適用する）。

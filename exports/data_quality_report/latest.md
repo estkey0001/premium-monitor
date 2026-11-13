@@ -1,4 +1,4 @@
-# データ取得品質レポート（2026-11-12 21:49 JST）
+# データ取得品質レポート（2026-11-13 21:32 JST）
 
 ## 取得成功率
 - 全対象店舗数: 16
@@ -47,20 +47,20 @@
 - r5ii: 100.0%
 
 ## 連続失敗店舗（2回以上）
-- 2ndstreet: 245回連続
-- bookoff: 245回連続
-- dosupara: 245回連続
-- geo_mobile: 245回連続
-- hardoff: 245回連続
-- janpara: 245回連続
-- pasoko: 245回連続
-- sofmap: 245回連続
-- surugaya: 245回連続
-- tsutaya: 245回連続
-- iosys: 178回連続
-- netoff: 105回連続
-- geo: 37回連続
-- mobile_ichiban: 12回連続
+- 2ndstreet: 246回連続
+- bookoff: 246回連続
+- dosupara: 246回連続
+- geo_mobile: 246回連続
+- hardoff: 246回連続
+- janpara: 246回連続
+- pasoko: 246回連続
+- sofmap: 246回連続
+- surugaya: 246回連続
+- tsutaya: 246回連続
+- iosys: 179回連続
+- netoff: 106回連続
+- geo: 38回連続
+- mobile_ichiban: 13回連続
 
 ## 改善優先順位（required店舗）
 1. iosys（失敗6 / http_403）
@@ -98,8 +98,9 @@
   - prod_r5ii: 1店舗
 
 ## ランキングに使えたデータ数
-- Beginner: 1 件
+- Beginner: 0 件
 - Pro: 0 件
+- ⚠️ reason_if_empty: 有効な初心者ランキング候補なし（公式価格→新品/未使用の最高買取・14日以内・price>0・suspicious/low除外）。全7件中 初心者対象カテゴリ7件 / 14日超で除外0件。新品・未使用の買取価格取得が増え次第ランキングに反映されます。
 
 ## せどりルートに使えたデータ数
 - ルート: 0 件

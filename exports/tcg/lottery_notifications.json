@@ -9,20 +9,48 @@
     "lot-6a4738d9be1e:deadline_6h": "2026-11-01T20:54:05.321770+09:00",
     "lot-735b8e25fe07:lottery_open": "2026-11-10T21:38:50.157358+09:00",
     "lot-735b8e25fe07:deadline_24h": "suppressed:2026-11-12T21:33:32.819391+09:00",
-    "lot-735b8e25fe07:deadline_6h": "2026-11-12T21:33:32.819391+09:00"
+    "lot-735b8e25fe07:deadline_6h": "2026-11-12T21:33:32.819391+09:00",
+    "lot-0bafacf9d730:deadline_24h": "suppressed:2026-11-13T21:15:53.993505+09:00",
+    "lot-0bafacf9d730:deadline_6h": "2026-11-13T21:15:53.993505+09:00",
+    "lot-7c93c8bf31e4:lottery_open": "2026-11-13T21:15:53.993505+09:00",
+    "lot-44adf3638512:lottery_open": "2026-11-13T21:15:53.993505+09:00"
   },
   "candidates": [
     {
-      "lottery_id": "lot-735b8e25fe07",
+      "lottery_id": "lot-0bafacf9d730",
       "milestone": "deadline_6h",
       "label": "締切6時間前",
-      "fires_at": "2026-11-12T17:59:00+09:00",
+      "fires_at": "2026-11-13T17:59:00+09:00",
+      "tcg": "ONE_PIECE",
+      "product_name": "エクストラブースター ONE PIECE Heroines Edition vol.2【EB-05】",
+      "retailer": "カードラボ",
+      "entry_url": null,
+      "source_url": "https://www.c-labo.jp/shop/mito/blog/624372/",
+      "message": "エクストラブースター ONE PIECE Heroines Edition vol.2【EB-05】（カードラボ・カードラボ水戸店） 締切6時間前"
+    },
+    {
+      "lottery_id": "lot-7c93c8bf31e4",
+      "milestone": "lottery_open",
+      "label": "抽選開始",
+      "fires_at": "2026-11-13T12:00:00+09:00",
       "tcg": "POKEMON",
-      "product_name": "ポケモンカードゲームMEGA 30th CELEBRATION カードセット9種（再販）",
+      "product_name": "ポケモンカードゲームMEGA 拡張パック ストームエメラルダ （再販）",
       "retailer": "ホビーステーション",
       "entry_url": null,
-      "source_url": "https://www.hbst.net/?p=412037",
-      "message": "ポケモンカードゲームMEGA 30th CELEBRATION カードセット9種（再販）（ホビーステーション） 締切6時間前"
+      "source_url": "https://www.hbst.net/?p=411494",
+      "message": "ポケモンカードゲームMEGA 拡張パック ストームエメラルダ （再販）（ホビーステーション） 抽選開始"
+    },
+    {
+      "lottery_id": "lot-44adf3638512",
+      "milestone": "lottery_open",
+      "label": "抽選開始",
+      "fires_at": "2026-11-13T00:00:00+09:00",
+      "tcg": "ONE_PIECE",
+      "product_name": "神の支配",
+      "retailer": "ONE PIECE 麦わらストア",
+      "entry_url": null,
+      "source_url": "https://www.mugiwara-store.com/news/3061/",
+      "message": "神の支配（ONE PIECE 麦わらストア） 抽選開始"
     }
   ]
 }

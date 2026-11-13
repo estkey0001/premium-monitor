@@ -1,6 +1,6 @@
 # Official Source Registry & Validation
 
-> 生成: 2026-11-12 21:02 JST / 公式ソース登録・検証（利益/AI/Opportunity/Notification/Capital/Execution は不変）
+> 生成: 2026-11-13 20:49 JST / 公式ソース登録・検証（利益/AI/Opportunity/Notification/Capital/Execution は不変）
 
 ## メーカー別サマリ
 | Maker | Products | URL verified | HTTP200 | exact match | price auto | high conf | failed |
@@ -14,7 +14,7 @@
 | RICOH | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
 
 ## 自動取得率 Before → After
-- Before: 公式定価あり商品 3 / 公式config 7
+- Before: 公式定価あり商品 0 / 公式config 7
 - After: URL検証済 14 / 価格取得 14 （検証対象 15 / 検証不能 0）
 
 ## Apple Source Audit（旧URL検出）

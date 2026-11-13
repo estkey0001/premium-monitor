@@ -107,16 +107,16 @@
   "dry_run_main_mutation": 0,
   "db_snapshot": {
     "before": {
-      "observations": 22,
+      "observations": 19,
       "buyback_prices": 144,
-      "official_sum": 6148160
+      "official_sum": 5414560
     },
     "after": {
-      "observations": 22,
+      "observations": 19,
       "buyback_prices": 144,
-      "official_sum": 6148160
+      "official_sum": 5414560
     }
   },
   "recommended_next_action": null,
-  "generated_at": "2026-11-12 21:49 JST"
+  "generated_at": "2026-11-13 21:32 JST"
 }

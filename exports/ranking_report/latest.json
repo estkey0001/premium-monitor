@@ -1,33 +1,16 @@
 {
-  "generated_at": "2026-11-12 21:49 JST",
+  "generated_at": "2026-11-13 21:32 JST",
   "route_type_beginner": "primary_to_secondary",
   "top_camera_buyback_opportunities": [
-    {
-      "product_id": "prod_gr4_hdf",
-      "product_name": "RICOH GR IV HDF",
-      "shop_name": "買取商店",
-      "buyback_price": 240000,
-      "official_price": 222000,
-      "reference_price": 222000,
-      "reference_source": "official",
-      "diff_vs_official": 18000,
-      "condition": "new_unopened",
-      "condition_label": "新品未開封",
-      "comparable_to_retail": true,
-      "matched_item": "",
-      "confidence": "high",
-      "source": "auto_scraped",
-      "age_days": 0.1
-    },
     {
       "product_id": "prod_gr4",
       "product_name": "RICOH GR IV",
       "shop_name": "買取商店",
       "buyback_price": 205000,
-      "official_price": 211800,
-      "reference_price": 211800,
-      "reference_source": "official",
-      "diff_vs_official": -6800,
+      "official_price": 194800,
+      "reference_price": 194800,
+      "reference_source": "retail_concept",
+      "diff_vs_official": 10200,
       "condition": "new_unopened",
       "condition_label": "新品未開封",
       "comparable_to_retail": true,
@@ -58,10 +41,10 @@
       "product_name": "RICOH GR IV Monochrome",
       "shop_name": "買取商店",
       "buyback_price": 220000,
-      "official_price": 299800,
-      "reference_price": 299800,
-      "reference_source": "official",
-      "diff_vs_official": -79800,
+      "official_price": 283800,
+      "reference_price": 283800,
+      "reference_source": "retail_concept",
+      "diff_vs_official": -63800,
       "condition": "new_unopened",
       "condition_label": "新品未開封",
       "comparable_to_retail": true,
@@ -109,9 +92,9 @@
       "product_name": "RICOH GR IV",
       "shop_name": "フジヤカメラ",
       "buyback_price": 151000,
-      "official_price": 211800,
-      "reference_price": 211800,
-      "reference_source": "official",
+      "official_price": 194800,
+      "reference_price": 194800,
+      "reference_source": "retail_concept",
       "diff_vs_official": null,
       "condition": "used_s",
       "condition_label": "中古S（新品同様）",
@@ -122,30 +105,13 @@
       "age_days": 0.1
     },
     {
-      "product_id": "prod_gr4_hdf",
-      "product_name": "RICOH GR IV HDF",
-      "shop_name": "フジヤカメラ",
-      "buyback_price": 194000,
-      "official_price": 222000,
-      "reference_price": 222000,
-      "reference_source": "official",
-      "diff_vs_official": null,
-      "condition": "used_s",
-      "condition_label": "中古S（新品同様）",
-      "comparable_to_retail": false,
-      "matched_item": "RICOH GR IV HDF RICOH 買取金額 新品同様 ￥194,000 良品 ￥193,000 下取は10%UP 新品同様 ￥213,400 良品 ￥212,300 買取申し込み 買取検討リストへ",
-      "confidence": "high",
-      "source": "auto_scraped",
-      "age_days": 0.1
-    },
-    {
       "product_id": "prod_gr4_mono",
       "product_name": "RICOH GR IV Monochrome",
       "shop_name": "フジヤカメラ",
       "buyback_price": 194000,
-      "official_price": 299800,
-      "reference_price": 299800,
-      "reference_source": "official",
+      "official_price": 283800,
+      "reference_price": 283800,
+      "reference_source": "retail_concept",
       "diff_vs_official": null,
       "condition": "used_s",
       "condition_label": "中古S（新品同様）",
@@ -341,57 +307,57 @@
       "confidence": "high",
       "source": "auto_scraped",
       "age_days": 0.1
+    },
+    {
+      "product_id": "prod_zf",
+      "product_name": "Nikon Zf",
+      "shop_name": "フジヤカメラ",
+      "buyback_price": 152000,
+      "official_price": 299200,
+      "reference_price": 299200,
+      "reference_source": "official",
+      "diff_vs_official": null,
+      "condition": "used_s",
+      "condition_label": "中古S（新品同様）",
+      "comparable_to_retail": false,
+      "matched_item": "Zf ボディ シルバー Nikon 買取金額 新品同様 ￥152,000 良品 ￥151,000 下取は10%UP 新品同様 ￥167,200 良品 ￥166,100 買取申し込み 買取検討リストへ",
+      "confidence": "high",
+      "source": "auto_scraped",
+      "age_days": 0.1
+    },
+    {
+      "product_id": "prod_z9",
+      "product_name": "Nikon Z9",
+      "shop_name": "フジヤカメラ",
+      "buyback_price": 324000,
+      "official_price": 772200,
+      "reference_price": 772200,
+      "reference_source": "official",
+      "diff_vs_official": null,
+      "condition": "used_s",
+      "condition_label": "中古S（新品同様）",
+      "comparable_to_retail": false,
+      "matched_item": "Z9 ボディ Nikon 買取金額 新品同様 ￥324,000 良品 ￥323,000 下取は10%UP 新品同様 ￥356,400 良品 ￥355,300 買取申し込み 買取検討リストへ",
+      "confidence": "high",
+      "source": "auto_scraped",
+      "age_days": 0.1
     }
   ],
   "route_type_pro": "secondary_to_secondary",
-  "beginner_top10": [
-    {
-      "product_name": "RICOH GR IV HDF",
-      "category": "camera",
-      "user_level": "beginner_easy",
-      "official_price_jpy": 222000,
-      "reference_source": "official",
-      "best_buyback_price": 240000,
-      "best_buyback_shop": "買取商店",
-      "buy_price": null,
-      "buy_shop_name": "",
-      "buy_price_type": "",
-      "sell_price_type": "buyback_price",
-      "net_profit_jpy": 16200,
-      "net_profit_rate": 0.073,
-      "availability": "LOTTERY",
-      "route_type": "primary_to_secondary",
-      "source_label": "RICOH公式 / FUJIFILM公式 / キタムラ",
-      "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
-    }
-  ],
+  "beginner_top10": [],
   "pro_top10": [],
-  "beginner_by_category": {
-    "camera": [
-      {
-        "product_name": "RICOH GR IV HDF",
-        "category": "camera",
-        "user_level": "beginner_easy",
-        "official_price_jpy": 222000,
-        "reference_source": "official",
-        "best_buyback_price": 240000,
-        "best_buyback_shop": "買取商店",
-        "buy_price": null,
-        "buy_shop_name": "",
-        "buy_price_type": "",
-        "sell_price_type": "buyback_price",
-        "net_profit_jpy": 16200,
-        "net_profit_rate": 0.073,
-        "availability": "LOTTERY",
-        "route_type": "primary_to_secondary",
-        "source_label": "RICOH公式 / FUJIFILM公式 / キタムラ",
-        "dest_label": "メルカリ / ラクマ / ヤフオク / 国内買取店"
-      }
-    ]
-  },
+  "beginner_by_category": {},
   "pro_by_category": {},
-  "excluded_items": 9,
+  "excluded_items": 7,
   "ineligible_items": [
+    {
+      "product_id": "prod_gr4",
+      "reason": "official_configured_reference"
+    },
+    {
+      "product_id": "prod_gr4_mono",
+      "reason": "official_configured_reference"
+    },
     {
       "product_id": "prod_iphone17pm_256",
       "reason": "official_configured_reference"
@@ -410,11 +376,12 @@
     }
   ],
   "profit_basis": "確定の利益（公式の確認済みの価格・確定の売値・既知の費用）。買えるか（今すぐ行動できるか）とは別で、各行の availability（在庫の記録。7日を過ぎたら未確認）を見る。在庫を推測しない",
-  "total_deals": 10,
+  "total_deals": 7,
   "confidence_summary": {
-    "total": 10,
-    "profitable": 1,
-    "negative": 9
+    "total": 7,
+    "profitable": 0,
+    "negative": 7
   },
-  "stale_data_count": 0
+  "stale_data_count": 0,
+  "reason_if_empty": "有効な初心者ランキング候補なし（公式価格→新品/未使用の最高買取・14日以内・price>0・suspicious/low除外）。全7件中 初心者対象カテゴリ7件 / 14日超で除外0件。新品・未使用の買取価格取得が増え次第ランキングに反映されます。"
 }

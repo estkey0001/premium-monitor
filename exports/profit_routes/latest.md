@@ -1,6 +1,6 @@
 # Pro 利益ルート（normalized_price_observations 由来・検証済み）
 
-生成: 2026-11-12 21:49 JST
+生成: 2026-11-13 21:32 JST
 
 - **main 利益ルート: 0件**（route_confidence high/medium のみ）
 - 参考ルート(海外sold stale・要fresh化): 0件
@@ -128,10 +128,6 @@
 - buy候補 0 / sell候補 2 / stale除外 14 / 海外sold stale 1
 - 除外理由TOP5: [('stale_over_14d', 13), ('sold_label_without_evidence', 1)]
 
-### RICOH GR IV HDF
-- buy候補 0 / sell候補 1 / stale除外 6 / 海外sold stale 0
-- 除外理由TOP5: [('stale_over_14d', 5), ('duplicate_price_collision', 1), ('sold_label_without_evidence', 1)]
-
 ### RICOH GR IV Monochrome
 - buy候補 0 / sell候補 1 / stale除外 6 / 海外sold stale 0
 - 除外理由TOP5: [('stale_over_14d', 5), ('duplicate_price_collision', 1), ('sold_label_without_evidence', 1)]
@@ -207,4 +203,8 @@
 ### Leica M11
 - buy候補 0 / sell候補 0 / stale除外 0 / 海外sold stale 0
 - 除外理由TOP5: []
+
+### RICOH GR IV HDF
+- buy候補 0 / sell候補 1 / stale除外 6 / 海外sold stale 0
+- 除外理由TOP5: [('stale_over_14d', 5), ('duplicate_price_collision', 1), ('sold_label_without_evidence', 1)]
 

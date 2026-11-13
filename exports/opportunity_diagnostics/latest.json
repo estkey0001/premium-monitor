@@ -1,20 +1,22 @@
 {
-  "generated_at": "2026-11-12T21:49:45+09:00",
+  "generated_at": "2026-11-13T21:32:04+09:00",
   "note": "内部用（運営者向け）。一般の画面には出さない。掲載の判定は opportunity.eligibility が正本",
   "candidate_count": 47,
-  "eligible_count": 1,
+  "eligible_count": 0,
   "exclusion_reasons": {
-    "unverified_buy_price": 31,
+    "unverified_buy_price": 33,
     "stale_buyback": 15,
-    "no_profit": 11,
+    "no_profit": 9,
     "no_sell_price": 6,
-    "invalid_identity": 3
+    "invalid_identity": 3,
+    "no_buy_price": 1
   },
   "primary_reasons": {
-    "unverified_buy_price": 31,
-    "no_profit": 11,
+    "unverified_buy_price": 33,
+    "no_profit": 9,
     "no_sell_price": 2,
-    "invalid_identity": 2
+    "invalid_identity": 2,
+    "no_buy_price": 1
   },
   "candidates": [
     {
@@ -154,17 +156,25 @@
       "product_id": "prod_gr4",
       "route_type": "RETAIL_TO_BUYBACK",
       "reasons": [
-        "no_profit"
+        "unverified_buy_price"
       ],
-      "primary": "no_profit"
+      "primary": "unverified_buy_price"
+    },
+    {
+      "product_id": "prod_gr4_hdf",
+      "route_type": "RETAIL_TO_BUYBACK",
+      "reasons": [
+        "no_buy_price"
+      ],
+      "primary": "no_buy_price"
     },
     {
       "product_id": "prod_gr4_mono",
       "route_type": "RETAIL_TO_BUYBACK",
       "reasons": [
-        "no_profit"
+        "unverified_buy_price"
       ],
-      "primary": "no_profit"
+      "primary": "unverified_buy_price"
     },
     {
       "product_id": "prod_fx3",
@@ -423,12 +433,13 @@
     },
     "camera": {
       "candidates": 21,
-      "eligible": 1,
+      "eligible": 0,
       "primary_reasons": {
-        "unverified_buy_price": 11,
-        "no_profit": 6,
+        "unverified_buy_price": 13,
+        "no_profit": 4,
         "invalid_identity": 2,
-        "no_sell_price": 1
+        "no_sell_price": 1,
+        "no_buy_price": 1
       }
     },
     "game": {
@@ -458,22 +469,22 @@
   },
   "route_types": {
     "RETAIL_TO_BUYBACK": {
-      "candidates": 47,
-      "eligible": 1
+      "candidates": 47
     }
   },
   "home_parity": {
-    "home": 1,
-    "list": 1,
-    "eligible": 1,
+    "home": 0,
+    "list": 0,
+    "eligible": 0,
     "ok": true
   },
   "retail_prices": {
     "summary": {
-      "reference": 30,
+      "reference": 32,
       "sale_ended": 22,
-      "verified": 16,
-      "stale": 1
+      "verified": 13,
+      "stale": 1,
+      "unknown": 1
     },
     "products": [
       {
@@ -498,7 +509,7 @@
         "price": 42800,
         "price_type": "RETAIL",
         "source": "src_apple_jp",
-        "verified_at": "2026-11-12T00:00:00",
+        "verified_at": "2026-11-13T00:00:00",
         "url": "https://www.apple.com/jp/shop/buy-airpods/airpods-pro-3",
         "note": ""
       },
@@ -524,7 +535,7 @@
         "price": 654500,
         "price_type": "RETAIL",
         "source": "src_canon_official",
-        "verified_at": "2026-11-12T00:00:00",
+        "verified_at": "2026-11-13T00:00:00",
         "url": "https://store.canon.jp/online/g/g6536C001/",
         "note": ""
       },
@@ -537,7 +548,7 @@
         "price": 319000,
         "price_type": "RETAIL",
         "source": "src_canon_official",
-        "verified_at": "2026-11-12T00:00:00",
+        "verified_at": "2026-11-13T00:00:00",
         "url": "https://store.canon.jp/online/g/g5666C001/",
         "note": ""
       },
@@ -615,7 +626,7 @@
         "price": 575300,
         "price_type": "RETAIL",
         "source": "src_nikon_direct",
-        "verified_at": "2026-11-12T00:00:00",
+        "verified_at": "2026-11-13T00:00:00",
         "url": "https://nij.nikon.com/shop/g/g4960759909947/",
         "note": ""
       },
@@ -628,7 +639,7 @@
         "price": 772200,
         "price_type": "RETAIL",
         "source": "src_nikon_direct",
-        "verified_at": "2026-11-12T00:00:00",
+        "verified_at": "2026-11-13T00:00:00",
         "url": "https://nij.nikon.com/shop/g/g4960759906168/",
         "note": ""
       },
@@ -641,7 +652,7 @@
         "price": 299200,
         "price_type": "RETAIL",
         "source": "src_nikon_direct",
-        "verified_at": "2026-11-12T00:00:00",
+        "verified_at": "2026-11-13T00:00:00",
         "url": "https://nij.nikon.com/shop/g/g4960759913784/",
         "note": ""
       },
@@ -687,39 +698,39 @@
       {
         "product_id": "prod_gr4",
         "product": "RICOH GR IV",
-        "evidence": "VERIFIED_CURRENT",
-        "action": "VERIFIED",
+        "evidence": "CONFIGURED_REFERENCE",
+        "action": "VERIFY_FROM_OFFICIAL",
         "official_not_sold": false,
-        "price": 211800,
-        "price_type": "RETAIL",
+        "price": 194800,
+        "price_type": "CONFIGURED_REFERENCE",
         "source": "src_ricoh_imaging",
-        "verified_at": "2026-11-12T20:49:31+09:00",
+        "verified_at": "",
         "url": "https://ricohimagingstore.com/Form/Product/ProductList.aspx?shop=0&cat=002010",
         "note": ""
       },
       {
         "product_id": "prod_gr4_hdf",
         "product": "RICOH GR IV HDF",
-        "evidence": "VERIFIED_CURRENT",
-        "action": "VERIFIED",
+        "evidence": "UNKNOWN",
+        "action": "VERIFY_FROM_OFFICIAL",
         "official_not_sold": false,
-        "price": 222000,
-        "price_type": "RETAIL",
+        "price": 0,
+        "price_type": "CONFIGURED_REFERENCE",
         "source": "src_ricoh_imaging",
-        "verified_at": "2026-11-12T20:51:31+09:00",
+        "verified_at": "",
         "url": "https://ricohimagingstore.com/Form/Product/ProductList.aspx?shop=0&cat=002010",
         "note": ""
       },
       {
         "product_id": "prod_gr4_mono",
         "product": "RICOH GR IV Monochrome",
-        "evidence": "VERIFIED_CURRENT",
-        "action": "VERIFIED",
+        "evidence": "CONFIGURED_REFERENCE",
+        "action": "VERIFY_FROM_OFFICIAL",
         "official_not_sold": false,
-        "price": 299800,
-        "price_type": "RETAIL",
+        "price": 283800,
+        "price_type": "CONFIGURED_REFERENCE",
         "source": "src_ricoh_imaging",
-        "verified_at": "2026-11-12T20:53:31+09:00",
+        "verified_at": "",
         "url": "https://ricohimagingstore.com/Form/Product/ProductList.aspx?shop=0&cat=002010",
         "note": ""
       },
@@ -745,7 +756,7 @@
         "price": 990000,
         "price_type": "RETAIL",
         "source": "src_sony_store",
-        "verified_at": "2026-11-12T00:00:00",
+        "verified_at": "2026-11-13T00:00:00",
         "url": "https://pur.store.sony.jp/ichigan/products/ILCE-1M2/ILCE-1M2_purchase/",
         "note": ""
       },
@@ -823,7 +834,7 @@
         "price": 137980,
         "price_type": "RETAIL",
         "source": "src_sony_store",
-        "verified_at": "2026-11-12T00:00:00",
+        "verified_at": "2026-11-13T00:00:00",
         "url": "https://pur.store.sony.jp/ps5/products/ps5/CFI-7100B01_purchase/",
         "note": ""
       },
@@ -888,7 +899,7 @@
         "price": 159800,
         "price_type": "RETAIL",
         "source": "src_apple_jp",
-        "verified_at": "2026-11-12T00:00:00",
+        "verified_at": "2026-11-13T00:00:00",
         "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17",
         "note": ""
       },
@@ -953,7 +964,7 @@
         "price": 189800,
         "price_type": "RETAIL",
         "source": "src_apple_jp",
-        "verified_at": "2026-11-12T00:00:00",
+        "verified_at": "2026-11-13T00:00:00",
         "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-air",
         "note": ""
       },
@@ -966,7 +977,7 @@
         "price": 364800,
         "price_type": "RETAIL",
         "source": "src_apple_jp",
-        "verified_at": "2026-11-12T00:00:00",
+        "verified_at": "2026-11-13T00:00:00",
         "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-duo",
         "note": ""
       },
@@ -1180,7 +1191,7 @@
         "rows": 24,
         "fresh": 17,
         "stale": 7,
-        "last_observed": "2026-11-12T20:18:44.850212+09:00"
+        "last_observed": "2026-11-13T20:11:11.262025+09:00"
       },
       {
         "source": "ブックオフ",
@@ -1204,14 +1215,14 @@
         "source": "買取一丁目",
         "rows": 4,
         "fresh": 4,
-        "last_observed": "2026-11-12T20:08:09+09:00"
+        "last_observed": "2026-11-13T20:00:36+09:00"
       },
       {
         "source": "買取商店",
         "rows": 22,
         "stale": 7,
         "fresh": 15,
-        "last_observed": "2026-11-12T20:18:44+09:00"
+        "last_observed": "2026-11-13T20:11:11+09:00"
       },
       {
         "source": "駿河屋",
@@ -1258,84 +1269,63 @@
         "product_id": "prod_gr4",
         "price": 205000,
         "source": "買取商店",
-        "observed_at": "2026-11-12T20:17:14+09:00",
+        "observed_at": "2026-11-13T20:09:41+09:00",
         "condition": "new_unopened"
       },
       {
         "product_id": "prod_gr4_hdf",
         "price": 240000,
         "source": "買取商店",
-        "observed_at": "2026-11-12T20:17:14+09:00",
+        "observed_at": "2026-11-13T20:09:41+09:00",
         "condition": "new_unopened"
       },
       {
         "product_id": "prod_gr4_mono",
         "price": 220000,
         "source": "買取商店",
-        "observed_at": "2026-11-12T20:17:14+09:00",
+        "observed_at": "2026-11-13T20:09:41+09:00",
         "condition": "new_unopened"
       },
       {
         "product_id": "prod_r5ii",
         "price": 450000,
         "source": "買取商店",
-        "observed_at": "2026-11-12T20:18:44+09:00",
+        "observed_at": "2026-11-13T20:11:11+09:00",
         "condition": "new_unopened"
       },
       {
         "product_id": "prod_x100vi",
         "price": 260000,
         "source": "買取商店",
-        "observed_at": "2026-11-12T20:17:14+09:00",
+        "observed_at": "2026-11-13T20:09:40+09:00",
         "condition": "new_unopened"
       },
       {
         "product_id": "prod_z8",
         "price": 420000,
         "source": "買取商店",
-        "observed_at": "2026-11-12T20:18:44+09:00",
+        "observed_at": "2026-11-13T20:11:11+09:00",
         "condition": "new_unopened"
       }
     ],
-    "profitable": 1,
+    "profitable": 0,
     "actionable": 0
   },
   "actionability": {
-    "confirmed_profitable": 1,
+    "confirmed_profitable": 0,
     "actionable": 0,
     "blocked_by_stock": 0,
-    "blocked_by_closed_lottery": 1,
+    "blocked_by_closed_lottery": 0,
     "blocked_by_stale_availability": 0,
     "blocked_by_unknown_schedule": 0,
     "blocked_by_sale_ended": 0,
     "blocked_by_missing_url": 0,
-    "products": [
-      {
-        "product_id": "prod_gr4_hdf",
-        "product": "RICOH GR IV HDF",
-        "availability": "LOTTERY_CLOSED",
-        "label": "抽選終了",
-        "actionable": false,
-        "reasons": [
-          "lottery_closed"
-        ],
-        "deadline": "2026-10-30T12:00:00+09:00",
-        "checked_at": "2026-11-12T21:04:00+09:00",
-        "confirmed": true,
-        "net_profit": 16200.0,
-        "roi": 0.07297297297297298,
-        "cta_label": "",
-        "cta_url": "",
-        "until_ms": null,
-        "event_key": "prod_gr4_hdf|2026-10-28T12:00+09:00|2026-10-30T12:00+09:00"
-      }
-    ],
+    "products": [],
     "newly_actionable": []
   },
   "stock": {
     "states": {
-      "UNKNOWN": 42,
-      "LOTTERY": 3,
+      "UNKNOWN": 45,
       "IN_STOCK": 1,
       "OUT_OF_STOCK": 1
     },

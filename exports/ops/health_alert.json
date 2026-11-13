@@ -2,7 +2,7 @@
   "type": "PRODUCTION_HEALTH_ALERT",
   "schema": 1,
   "audience": "operator",
-  "generated_at": "2026-11-13T20:49:04+09:00",
+  "generated_at": "2026-11-14T01:11:59+09:00",
   "note": "運営者向けの劣化アラート候補（商品の通知ではない）。外部へは送らない。CI の注記・Step Summary・管理画面に出す",
   "active_count": 7,
   "high": 4,
@@ -17,10 +17,10 @@
       "source": "prod_a7rv",
       "severity": "HIGH",
       "reason": "recheck_failed",
-      "title": "prod_a7rv の公式の再確認が 9 日連続で失敗しています",
+      "title": "prod_a7rv の公式の再確認が 10 日連続で失敗しています",
       "details": "公式ページの移動・表示の変更・ブロックの可能性。人が公式ページを確認する",
       "evidence": {
-        "consecutive_days": 9
+        "consecutive_days": 10
       }
     },
     {
@@ -29,10 +29,10 @@
       "source": "prod_x100vi",
       "severity": "HIGH",
       "reason": "recheck_failed",
-      "title": "prod_x100vi の公式の再確認が 21 日連続で失敗しています",
+      "title": "prod_x100vi の公式の再確認が 22 日連続で失敗しています",
       "details": "公式ページの移動・表示の変更・ブロックの可能性。人が公式ページを確認する",
       "evidence": {
-        "consecutive_days": 21
+        "consecutive_days": 22
       }
     },
     {
@@ -44,7 +44,7 @@
       "title": "prod_x100vi の公式の確認が切れています",
       "details": "確認日 2026-10-08（期限 14 日）",
       "evidence": {
-        "days_left": -22
+        "days_left": -23
       }
     },
     {

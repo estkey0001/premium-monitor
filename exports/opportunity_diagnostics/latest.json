@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-13T21:32:04+09:00",
+  "generated_at": "2026-11-14T01:55:00+09:00",
   "note": "内部用（運営者向け）。一般の画面には出さない。掲載の判定は opportunity.eligibility が正本",
   "candidate_count": 47,
   "eligible_count": 0,
@@ -509,7 +509,7 @@
         "price": 42800,
         "price_type": "RETAIL",
         "source": "src_apple_jp",
-        "verified_at": "2026-11-13T00:00:00",
+        "verified_at": "2026-11-14T00:00:00",
         "url": "https://www.apple.com/jp/shop/buy-airpods/airpods-pro-3",
         "note": ""
       },
@@ -535,7 +535,7 @@
         "price": 654500,
         "price_type": "RETAIL",
         "source": "src_canon_official",
-        "verified_at": "2026-11-13T00:00:00",
+        "verified_at": "2026-11-14T00:00:00",
         "url": "https://store.canon.jp/online/g/g6536C001/",
         "note": ""
       },
@@ -548,7 +548,7 @@
         "price": 319000,
         "price_type": "RETAIL",
         "source": "src_canon_official",
-        "verified_at": "2026-11-13T00:00:00",
+        "verified_at": "2026-11-14T00:00:00",
         "url": "https://store.canon.jp/online/g/g5666C001/",
         "note": ""
       },
@@ -626,7 +626,7 @@
         "price": 575300,
         "price_type": "RETAIL",
         "source": "src_nikon_direct",
-        "verified_at": "2026-11-13T00:00:00",
+        "verified_at": "2026-11-14T00:00:00",
         "url": "https://nij.nikon.com/shop/g/g4960759909947/",
         "note": ""
       },
@@ -639,7 +639,7 @@
         "price": 772200,
         "price_type": "RETAIL",
         "source": "src_nikon_direct",
-        "verified_at": "2026-11-13T00:00:00",
+        "verified_at": "2026-11-14T00:00:00",
         "url": "https://nij.nikon.com/shop/g/g4960759906168/",
         "note": ""
       },
@@ -652,7 +652,7 @@
         "price": 299200,
         "price_type": "RETAIL",
         "source": "src_nikon_direct",
-        "verified_at": "2026-11-13T00:00:00",
+        "verified_at": "2026-11-14T00:00:00",
         "url": "https://nij.nikon.com/shop/g/g4960759913784/",
         "note": ""
       },
@@ -756,7 +756,7 @@
         "price": 990000,
         "price_type": "RETAIL",
         "source": "src_sony_store",
-        "verified_at": "2026-11-13T00:00:00",
+        "verified_at": "2026-11-14T00:00:00",
         "url": "https://pur.store.sony.jp/ichigan/products/ILCE-1M2/ILCE-1M2_purchase/",
         "note": ""
       },
@@ -834,7 +834,7 @@
         "price": 137980,
         "price_type": "RETAIL",
         "source": "src_sony_store",
-        "verified_at": "2026-11-13T00:00:00",
+        "verified_at": "2026-11-14T00:00:00",
         "url": "https://pur.store.sony.jp/ps5/products/ps5/CFI-7100B01_purchase/",
         "note": ""
       },
@@ -899,7 +899,7 @@
         "price": 159800,
         "price_type": "RETAIL",
         "source": "src_apple_jp",
-        "verified_at": "2026-11-13T00:00:00",
+        "verified_at": "2026-11-14T00:00:00",
         "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-17",
         "note": ""
       },
@@ -964,7 +964,7 @@
         "price": 189800,
         "price_type": "RETAIL",
         "source": "src_apple_jp",
-        "verified_at": "2026-11-13T00:00:00",
+        "verified_at": "2026-11-14T00:00:00",
         "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-air",
         "note": ""
       },
@@ -977,7 +977,7 @@
         "price": 364800,
         "price_type": "RETAIL",
         "source": "src_apple_jp",
-        "verified_at": "2026-11-13T00:00:00",
+        "verified_at": "2026-11-14T00:00:00",
         "url": "https://www.apple.com/jp/shop/buy-iphone/iphone-duo",
         "note": ""
       },
@@ -1191,7 +1191,7 @@
         "rows": 24,
         "fresh": 17,
         "stale": 7,
-        "last_observed": "2026-11-13T20:11:11.262025+09:00"
+        "last_observed": "2026-11-14T00:32:09.113244+09:00"
       },
       {
         "source": "ブックオフ",
@@ -1215,14 +1215,14 @@
         "source": "買取一丁目",
         "rows": 4,
         "fresh": 4,
-        "last_observed": "2026-11-13T20:00:36+09:00"
+        "last_observed": "2026-11-14T00:21:33+09:00"
       },
       {
         "source": "買取商店",
         "rows": 22,
         "stale": 7,
         "fresh": 15,
-        "last_observed": "2026-11-13T20:11:11+09:00"
+        "last_observed": "2026-11-14T00:32:08+09:00"
       },
       {
         "source": "駿河屋",
@@ -1269,42 +1269,42 @@
         "product_id": "prod_gr4",
         "price": 205000,
         "source": "買取商店",
-        "observed_at": "2026-11-13T20:09:41+09:00",
+        "observed_at": "2026-11-14T00:30:38+09:00",
         "condition": "new_unopened"
       },
       {
         "product_id": "prod_gr4_hdf",
         "price": 240000,
         "source": "買取商店",
-        "observed_at": "2026-11-13T20:09:41+09:00",
+        "observed_at": "2026-11-14T00:30:38+09:00",
         "condition": "new_unopened"
       },
       {
         "product_id": "prod_gr4_mono",
         "price": 220000,
         "source": "買取商店",
-        "observed_at": "2026-11-13T20:09:41+09:00",
+        "observed_at": "2026-11-14T00:30:38+09:00",
         "condition": "new_unopened"
       },
       {
         "product_id": "prod_r5ii",
         "price": 450000,
         "source": "買取商店",
-        "observed_at": "2026-11-13T20:11:11+09:00",
+        "observed_at": "2026-11-14T00:32:08+09:00",
         "condition": "new_unopened"
       },
       {
         "product_id": "prod_x100vi",
         "price": 260000,
         "source": "買取商店",
-        "observed_at": "2026-11-13T20:09:40+09:00",
+        "observed_at": "2026-11-14T00:30:38+09:00",
         "condition": "new_unopened"
       },
       {
         "product_id": "prod_z8",
         "price": 420000,
         "source": "買取商店",
-        "observed_at": "2026-11-13T20:11:11+09:00",
+        "observed_at": "2026-11-14T00:32:08+09:00",
         "condition": "new_unopened"
       }
     ],

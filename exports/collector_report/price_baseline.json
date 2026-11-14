@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generated_at": "2026-11-14T00:18:28+09:00",
+ "generated_at": "2026-11-14T19:24:07+09:00",
  "max_age_days": 14,
  "note": "買取価格の前回との比較の基準（直近の正常な自動取得の値）。手入力・古い値は基準にしない",
  "entries": [
@@ -10,7 +10,7 @@
    "buyback_price": 32500,
    "condition": "new_unopened",
    "url": "https://www.kaitorishouten-co.jp/products/detail/24586",
-   "observed_at": "2026-11-14T00:26:08+09:00",
+   "observed_at": "2026-11-14T19:31:53+09:00",
    "data_source": "auto_scraped"
   },
   {
@@ -19,7 +19,7 @@
    "buyback_price": 205000,
    "condition": "new_unopened",
    "url": "https://www.kaitorishouten-co.jp/products/detail/24408",
-   "observed_at": "2026-11-14T00:30:38+09:00",
+   "observed_at": "2026-11-14T19:36:23+09:00",
    "data_source": "auto_scraped"
   },
   {
@@ -28,7 +28,7 @@
    "buyback_price": 240000,
    "condition": "new_unopened",
    "url": "https://www.kaitorishouten-co.jp/products/detail/26434",
-   "observed_at": "2026-11-14T00:30:38+09:00",
+   "observed_at": "2026-11-14T19:36:23+09:00",
    "data_source": "auto_scraped"
   },
   {
@@ -37,25 +37,25 @@
    "buyback_price": 220000,
    "condition": "new_unopened",
    "url": "https://www.kaitorishouten-co.jp/products/detail/25561",
-   "observed_at": "2026-11-14T00:30:38+09:00",
+   "observed_at": "2026-11-14T19:36:23+09:00",
    "data_source": "auto_scraped"
   },
   {
    "product_alias": "iphone17_256",
    "buyback_shop": "kaitori_shouten",
-   "buyback_price": 139000,
+   "buyback_price": 139500,
    "condition": "new_unopened_simfree",
    "url": "https://www.kaitorishouten-co.jp/products/detail/24693",
-   "observed_at": "2026-11-14T00:24:38+09:00",
+   "observed_at": "2026-11-14T19:30:23+09:00",
    "data_source": "auto_scraped"
   },
   {
    "product_alias": "iphone17pm256",
    "buyback_shop": "kaitori_itchome",
-   "buyback_price": 191000,
+   "buyback_price": 192000,
    "condition": "new_unopened_simfree",
    "url": "https://www.1-chome.com/",
-   "observed_at": "2026-11-14T00:21:33+09:00",
+   "observed_at": "2026-11-14T19:27:12+09:00",
    "data_source": "auto_scraped"
   },
   {
@@ -64,25 +64,16 @@
    "buyback_price": 191000,
    "condition": "new_unopened_simfree",
    "url": "https://www.kaitorishouten-co.jp/products/detail/24662",
-   "observed_at": "2026-11-14T00:21:33+09:00",
-   "data_source": "auto_scraped"
-  },
-  {
-   "product_alias": "iphone17pm256",
-   "buyback_shop": "mobile_ichiban",
-   "buyback_price": 191000,
-   "condition": "new_unopened_simfree",
-   "url": "https://www.mobile-ichiban.com/",
-   "observed_at": "2026-10-31T18:38:33+09:00",
+   "observed_at": "2026-11-14T19:27:12+09:00",
    "data_source": "auto_scraped"
   },
   {
    "product_alias": "iphone17pm512",
    "buyback_shop": "kaitori_itchome",
-   "buyback_price": 214000,
+   "buyback_price": 217000,
    "condition": "new_unopened_simfree",
    "url": "https://www.1-chome.com/",
-   "observed_at": "2026-11-14T00:21:33+09:00",
+   "observed_at": "2026-11-14T19:27:12+09:00",
    "data_source": "auto_scraped"
   },
   {
@@ -91,16 +82,16 @@
    "buyback_price": 217000,
    "condition": "new_unopened_simfree",
    "url": "https://www.kaitorishouten-co.jp/products/detail/24665",
-   "observed_at": "2026-11-14T00:21:33+09:00",
+   "observed_at": "2026-11-14T19:27:12+09:00",
    "data_source": "auto_scraped"
   },
   {
    "product_alias": "iphone17pro256",
    "buyback_shop": "kaitori_itchome",
-   "buyback_price": 174000,
+   "buyback_price": 175000,
    "condition": "new_unopened_simfree",
    "url": "https://www.1-chome.com/",
-   "observed_at": "2026-11-14T00:20:11+09:00",
+   "observed_at": "2026-11-14T19:25:50+09:00",
    "data_source": "auto_scraped"
   },
   {
@@ -109,7 +100,7 @@
    "buyback_price": 174000,
    "condition": "new_unopened_simfree",
    "url": "https://www.kaitorishouten-co.jp/products/detail/24673",
-   "observed_at": "2026-11-14T00:20:03+09:00",
+   "observed_at": "2026-11-14T19:25:43+09:00",
    "data_source": "auto_scraped"
   },
   {
@@ -118,7 +109,7 @@
    "buyback_price": 203500,
    "condition": "new_unopened_simfree",
    "url": "https://www.1-chome.com/",
-   "observed_at": "2026-11-14T00:20:28+09:00",
+   "observed_at": "2026-11-14T19:26:05+09:00",
    "data_source": "auto_scraped"
   },
   {
@@ -127,7 +118,7 @@
    "buyback_price": 203500,
    "condition": "new_unopened_simfree",
    "url": "https://www.kaitorishouten-co.jp/products/detail/24677",
-   "observed_at": "2026-11-14T00:20:28+09:00",
+   "observed_at": "2026-11-14T19:26:05+09:00",
    "data_source": "auto_scraped"
   },
   {
@@ -136,16 +127,16 @@
    "buyback_price": 132000,
    "condition": "new_unopened_simfree",
    "url": "https://www.kaitorishouten-co.jp/products/detail/24681",
-   "observed_at": "2026-11-14T00:27:38+09:00",
+   "observed_at": "2026-11-14T19:33:23+09:00",
    "data_source": "auto_scraped"
   },
   {
    "product_alias": "iphoneduo_256",
    "buyback_shop": "kaitori_shouten",
-   "buyback_price": 360000,
+   "buyback_price": 361000,
    "condition": "new_unopened_simfree",
    "url": "https://www.kaitorishouten-co.jp/products/detail/27089",
-   "observed_at": "2026-11-14T00:29:08+09:00",
+   "observed_at": "2026-11-14T19:34:53+09:00",
    "data_source": "auto_scraped"
   },
   {
@@ -154,7 +145,7 @@
    "buyback_price": 450000,
    "condition": "new_unopened",
    "url": "https://www.kaitorishouten-co.jp/products/detail/20463",
-   "observed_at": "2026-11-14T00:32:08+09:00",
+   "observed_at": "2026-11-14T19:37:53+09:00",
    "data_source": "auto_scraped"
   },
   {
@@ -163,7 +154,7 @@
    "buyback_price": 52200,
    "condition": "new_unopened",
    "url": "https://www.kaitorishouten-co.jp/products/detail/23170",
-   "observed_at": "2026-11-14T00:23:03+09:00",
+   "observed_at": "2026-11-14T19:28:42+09:00",
    "data_source": "auto_scraped"
   },
   {
@@ -172,7 +163,7 @@
    "buyback_price": 260000,
    "condition": "new_unopened",
    "url": "https://www.kaitorishouten-co.jp/products/detail/22388",
-   "observed_at": "2026-11-14T00:30:38+09:00",
+   "observed_at": "2026-11-14T19:36:23+09:00",
    "data_source": "auto_scraped"
   },
   {
@@ -181,7 +172,7 @@
    "buyback_price": 420000,
    "condition": "new_unopened",
    "url": "https://www.kaitorishouten-co.jp/products/detail/16562",
-   "observed_at": "2026-11-14T00:32:08+09:00",
+   "observed_at": "2026-11-14T19:37:53+09:00",
    "data_source": "auto_scraped"
   }
  ]

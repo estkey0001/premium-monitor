@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-14T01:38:49.668639+09:00",
+  "generated_at": "2026-11-14T20:44:31.068271+09:00",
   "items": [
     {
       "first_seen_at": "2026-11-13T21:15:53.993505+09:00",
@@ -27,7 +27,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-13T00:00:00+09:00",
-      "last_seen_at": "2026-11-14T01:38:49.658825+09:00",
+      "last_seen_at": "2026-11-14T20:44:31.060038+09:00",
       "status": "OPEN"
     },
     {
@@ -56,7 +56,7 @@
       "source_type": "RETAILER_OFFICIAL",
       "confidence": "high",
       "published_at": "2026-11-12T00:00:00+09:00",
-      "last_seen_at": "2026-11-14T01:38:49.658825+09:00",
+      "last_seen_at": "2026-11-14T20:44:31.060038+09:00",
       "status": "OPEN"
     },
     {
@@ -85,7 +85,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-10T00:00:00+09:00",
-      "last_seen_at": "2026-11-14T01:38:49.658825+09:00",
+      "last_seen_at": "2026-11-14T20:44:31.060038+09:00",
       "status": "CLOSED"
     },
     {
@@ -114,7 +114,7 @@
       "source_type": "MANUAL_VERIFIED",
       "confidence": "medium",
       "published_at": null,
-      "last_seen_at": "2026-11-14T01:38:49.658825+09:00",
+      "last_seen_at": "2026-11-14T20:44:31.060038+09:00",
       "status": "OPEN"
     },
     {
@@ -143,7 +143,7 @@
       "source_type": "MANUAL_VERIFIED",
       "confidence": "medium",
       "published_at": null,
-      "last_seen_at": "2026-11-14T01:38:49.658825+09:00",
+      "last_seen_at": "2026-11-14T20:44:31.060038+09:00",
       "status": "OPEN"
     },
     {
@@ -230,7 +230,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-10-20T00:00:00+09:00",
-      "last_seen_at": "2026-11-14T01:38:49.658825+09:00",
+      "last_seen_at": "2026-11-14T20:44:31.060038+09:00",
       "status": "ENDED"
     },
     {
@@ -288,7 +288,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-10-16T00:00:00+09:00",
-      "last_seen_at": "2026-11-14T01:38:49.658825+09:00",
+      "last_seen_at": "2026-11-14T20:44:31.060038+09:00",
       "status": "ENDED"
     },
     {
@@ -404,7 +404,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-10-06T00:00:00+09:00",
-      "last_seen_at": "2026-11-14T01:38:49.658825+09:00",
+      "last_seen_at": "2026-11-14T20:44:31.060038+09:00",
       "status": "ENDED"
     },
     {
@@ -433,7 +433,7 @@
       "source_type": "MANUAL_VERIFIED",
       "confidence": "medium",
       "published_at": null,
-      "last_seen_at": "2026-11-14T01:38:49.658825+09:00",
+      "last_seen_at": "2026-11-14T20:44:31.060038+09:00",
       "status": "ENDED"
     },
     {
@@ -462,7 +462,7 @@
       "source_type": "MANUAL_VERIFIED",
       "confidence": "medium",
       "published_at": null,
-      "last_seen_at": "2026-11-14T01:38:49.658825+09:00",
+      "last_seen_at": "2026-11-14T20:44:31.060038+09:00",
       "status": "ENDED"
     },
     {
@@ -520,7 +520,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-10-02T00:00:00+09:00",
-      "last_seen_at": "2026-11-14T01:38:49.658825+09:00",
+      "last_seen_at": "2026-11-14T20:44:31.060038+09:00",
       "status": "ENDED"
     },
     {
@@ -665,7 +665,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-09-18T00:00:00+09:00",
-      "last_seen_at": "2026-11-14T01:38:49.658825+09:00",
+      "last_seen_at": "2026-11-14T20:44:31.060038+09:00",
       "status": "ENDED"
     },
     {
@@ -694,7 +694,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-09-01T00:00:00+09:00",
-      "last_seen_at": "2026-11-14T01:38:49.658825+09:00",
+      "last_seen_at": "2026-11-14T20:44:31.060038+09:00",
       "status": "ENDED"
     },
     {
@@ -723,7 +723,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-09-01T00:00:00+09:00",
-      "last_seen_at": "2026-11-14T01:38:49.658825+09:00",
+      "last_seen_at": "2026-11-14T20:44:31.060038+09:00",
       "status": "ENDED"
     },
     {
@@ -1303,7 +1303,7 @@
       "source_type": "RETAILER_OFFICIAL",
       "confidence": "high",
       "published_at": null,
-      "last_seen_at": "2026-11-14T01:38:49.658825+09:00",
+      "last_seen_at": "2026-11-14T20:44:31.060038+09:00",
       "status": "ENDED"
     },
     {
@@ -2347,7 +2347,7 @@
       "source_type": "MANUFACTURER_OFFICIAL",
       "confidence": "high",
       "published_at": null,
-      "last_seen_at": "2026-11-14T01:38:49.658825+09:00",
+      "last_seen_at": "2026-11-14T20:44:31.060038+09:00",
       "status": "UNKNOWN"
     },
     {
@@ -3362,7 +3362,7 @@
       "source_type": "RETAILER_OFFICIAL",
       "confidence": "high",
       "published_at": null,
-      "last_seen_at": "2026-11-14T01:38:49.658825+09:00",
+      "last_seen_at": "2026-11-14T20:44:31.060038+09:00",
       "status": "OPEN"
     },
     {
@@ -3449,7 +3449,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-13T00:00:00+09:00",
-      "last_seen_at": "2026-11-14T01:38:49.658825+09:00",
+      "last_seen_at": "2026-11-14T20:44:31.060038+09:00",
       "status": "ENDING_SOON"
     },
     {
@@ -3478,7 +3478,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-13T00:00:00+09:00",
-      "last_seen_at": "2026-11-14T01:38:49.658825+09:00",
+      "last_seen_at": "2026-11-14T20:44:31.060038+09:00",
       "status": "ENDING_SOON"
     },
     {
@@ -3507,7 +3507,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-13T00:00:00+09:00",
-      "last_seen_at": "2026-11-14T01:38:49.658825+09:00",
+      "last_seen_at": "2026-11-14T20:44:31.060038+09:00",
       "status": "ENDING_SOON"
     },
     {
@@ -3565,7 +3565,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-13T00:00:00+09:00",
-      "last_seen_at": "2026-11-14T01:38:49.658825+09:00",
+      "last_seen_at": "2026-11-14T20:44:31.060038+09:00",
       "status": "ENDING_SOON"
     },
     {
@@ -3594,7 +3594,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-13T00:00:00+09:00",
-      "last_seen_at": "2026-11-14T01:38:49.658825+09:00",
+      "last_seen_at": "2026-11-14T20:44:31.060038+09:00",
       "status": "ENDING_SOON"
     },
     {
@@ -3623,7 +3623,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-13T00:00:00+09:00",
-      "last_seen_at": "2026-11-14T01:38:49.658825+09:00",
+      "last_seen_at": "2026-11-14T20:44:31.060038+09:00",
       "status": "ENDING_SOON"
     },
     {
@@ -3652,7 +3652,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-13T00:00:00+09:00",
-      "last_seen_at": "2026-11-14T01:38:49.658825+09:00",
+      "last_seen_at": "2026-11-14T20:44:31.060038+09:00",
       "status": "ENDING_SOON"
     },
     {
@@ -3681,7 +3681,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-13T00:00:00+09:00",
-      "last_seen_at": "2026-11-14T01:38:49.658825+09:00",
+      "last_seen_at": "2026-11-14T20:44:31.060038+09:00",
       "status": "ENDING_SOON"
     },
     {
@@ -3710,7 +3710,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-13T00:00:00+09:00",
-      "last_seen_at": "2026-11-14T01:38:49.658825+09:00",
+      "last_seen_at": "2026-11-14T20:44:31.060038+09:00",
       "status": "ENDING_SOON"
     },
     {
@@ -3739,7 +3739,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-13T00:00:00+09:00",
-      "last_seen_at": "2026-11-14T01:38:49.658825+09:00",
+      "last_seen_at": "2026-11-14T20:44:31.060038+09:00",
       "status": "ENDING_SOON"
     },
     {
@@ -3797,7 +3797,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-13T00:00:00+09:00",
-      "last_seen_at": "2026-11-14T01:38:49.658825+09:00",
+      "last_seen_at": "2026-11-14T20:44:31.060038+09:00",
       "status": "ENDING_SOON"
     },
     {
@@ -3826,7 +3826,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-13T00:00:00+09:00",
-      "last_seen_at": "2026-11-14T01:38:49.658825+09:00",
+      "last_seen_at": "2026-11-14T20:44:31.060038+09:00",
       "status": "ENDING_SOON"
     },
     {
@@ -3855,7 +3855,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-13T00:00:00+09:00",
-      "last_seen_at": "2026-11-14T01:38:49.658825+09:00",
+      "last_seen_at": "2026-11-14T20:44:31.060038+09:00",
       "status": "ENDING_SOON"
     },
     {
@@ -3884,7 +3884,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-13T00:00:00+09:00",
-      "last_seen_at": "2026-11-14T01:38:49.658825+09:00",
+      "last_seen_at": "2026-11-14T20:44:31.060038+09:00",
       "status": "ENDING_SOON"
     },
     {
@@ -3913,8 +3913,95 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-13T00:00:00+09:00",
-      "last_seen_at": "2026-11-14T01:38:49.658825+09:00",
+      "last_seen_at": "2026-11-14T20:44:31.060038+09:00",
       "status": "ENDING_SOON"
+    },
+    {
+      "first_seen_at": "2026-11-14T20:44:31.060038+09:00",
+      "lottery_id": "lot-8e23f4ca3b5e",
+      "tcg": "ONE_PIECE",
+      "product_name": "ONE PIECEカードゲーム エクストラブースター ONE PIECE Heroines Edition vol.2",
+      "product_id": null,
+      "retailer": "CARD_LABO",
+      "retailer_name": "カードラボ",
+      "store_name": "カードラボ名古屋駅前店",
+      "store_specific": true,
+      "event_type": "LOTTERY",
+      "application_start": null,
+      "application_end": null,
+      "winner_announcement_at": null,
+      "purchase_start": null,
+      "purchase_end": null,
+      "application_start_date": "2026-11-14",
+      "application_end_date": "2026-11-16",
+      "winner_announcement_date": "2026-11-17",
+      "purchase_start_date": "2026-11-19",
+      "purchase_end_date": "2026-11-25",
+      "retail_price": null,
+      "source_url": "https://www.c-labo.jp/shop/nagoyaekimae/blog/624574/",
+      "source_type": "STORE_OFFICIAL",
+      "confidence": "medium",
+      "published_at": "2026-11-14T00:00:00+09:00",
+      "last_seen_at": "2026-11-14T20:44:31.060038+09:00",
+      "status": "UPCOMING"
+    },
+    {
+      "first_seen_at": "2026-11-14T20:44:31.060038+09:00",
+      "lottery_id": "lot-b43b6289e890",
+      "tcg": "ONE_PIECE",
+      "product_name": "ワンピースカードゲーム ONE PIECE Heroines Edition vol.2【EB-05】",
+      "product_id": null,
+      "retailer": "CARD_LABO",
+      "retailer_name": "カードラボ",
+      "store_name": "カードラボ姫路店",
+      "store_specific": true,
+      "event_type": "LOTTERY",
+      "application_start": null,
+      "application_end": null,
+      "winner_announcement_at": null,
+      "purchase_start": null,
+      "purchase_end": null,
+      "application_start_date": "2026-11-14",
+      "application_end_date": "2026-11-15",
+      "winner_announcement_date": "2026-11-16",
+      "purchase_start_date": "2026-11-19",
+      "purchase_end_date": "2026-11-25",
+      "retail_price": null,
+      "source_url": "https://www.c-labo.jp/shop/himeji/blog/624586/",
+      "source_type": "STORE_OFFICIAL",
+      "confidence": "medium",
+      "published_at": "2026-11-14T00:00:00+09:00",
+      "last_seen_at": "2026-11-14T20:44:31.060038+09:00",
+      "status": "UPCOMING"
+    },
+    {
+      "first_seen_at": "2026-11-14T20:44:31.060038+09:00",
+      "lottery_id": "lot-bdd97b5616c5",
+      "tcg": "ONE_PIECE",
+      "product_name": "ワンピースカードゲーム『エクストラブースター ONE PIECE Heroines Edition vol.2【EB-05】』",
+      "product_id": null,
+      "retailer": "CARD_LABO",
+      "retailer_name": "カードラボ",
+      "store_name": "カードラボ名古屋大須店",
+      "store_specific": true,
+      "event_type": "LOTTERY",
+      "application_start": null,
+      "application_end": null,
+      "winner_announcement_at": null,
+      "purchase_start": null,
+      "purchase_end": null,
+      "application_start_date": "2026-11-14",
+      "application_end_date": "2026-11-16",
+      "winner_announcement_date": "2026-11-17",
+      "purchase_start_date": "2026-11-19",
+      "purchase_end_date": "2026-11-25",
+      "retail_price": null,
+      "source_url": "https://www.c-labo.jp/shop/nagoyaoosu/blog/624580/",
+      "source_type": "STORE_OFFICIAL",
+      "confidence": "medium",
+      "published_at": "2026-11-14T00:00:00+09:00",
+      "last_seen_at": "2026-11-14T20:44:31.060038+09:00",
+      "status": "UPCOMING"
     }
   ],
   "frequency_by_retailer": {
@@ -3961,11 +4048,11 @@
       "average_application_window_hours": 79.0
     },
     "CARD_LABO": {
-      "events_total": 100,
-      "events_last_30d": 96,
-      "events_last_90d": 100,
+      "events_total": 103,
+      "events_last_30d": 99,
+      "events_last_90d": 103,
       "average_lead_time_hours": 0.2,
-      "average_application_window_hours": 58.1
+      "average_application_window_hours": 57.6
     },
     "FUKUFUKU_TOREKA": {
       "events_total": 5,

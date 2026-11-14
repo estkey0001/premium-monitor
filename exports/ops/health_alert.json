@@ -2,27 +2,24 @@
   "type": "PRODUCTION_HEALTH_ALERT",
   "schema": 1,
   "audience": "operator",
-  "generated_at": "2026-11-14T01:11:59+09:00",
+  "generated_at": "2026-11-14T20:17:41+09:00",
   "note": "運営者向けの劣化アラート候補（商品の通知ではない）。外部へは送らない。CI の注記・Step Summary・管理画面に出す",
-  "active_count": 7,
-  "high": 4,
+  "active_count": 6,
+  "high": 3,
   "warning": 3,
   "candidates": [],
-  "suppressed": 7,
-  "recovered": [],
-  "active": [
+  "suppressed": 6,
+  "recovered": [
     {
       "key": "official_recheck_failing:prod_a7rv",
-      "category": "official_recheck_failing",
-      "source": "prod_a7rv",
-      "severity": "HIGH",
-      "reason": "recheck_failed",
-      "title": "prod_a7rv の公式の再確認が 10 日連続で失敗しています",
-      "details": "公式ページの移動・表示の変更・ブロックの可能性。人が公式ページを確認する",
-      "evidence": {
-        "consecutive_days": 10
-      }
-    },
+      "type": "PRODUCTION_HEALTH_RECOVERED",
+      "event": "RECOVERED",
+      "first_seen": "2026-11-07T20:01:53+09:00",
+      "recovered_at": "2026-11-14T20:17:41+09:00",
+      "last_severity": "HIGH"
+    }
+  ],
+  "active": [
     {
       "key": "official_recheck_failing:prod_x100vi",
       "category": "official_recheck_failing",

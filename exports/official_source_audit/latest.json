@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-14 01:11 JST",
+  "generated_at": "2026-11-14 20:17 JST",
   "scope": "公式ソース登録・検証（利益/AI/Opportunity/Notification/Capital/Execution は不変）",
   "methodology": {
     "verification": "WebFetch で HTTP200/公式ドメイン/canonical/商品一致を実確認したURLのみ verified",
@@ -1263,7 +1263,7 @@
           "url": "https://pur.store.sony.jp/ichigan/products/ILCE-7RM5/ILCE-7RM5_purchase/",
           "link_type": "item",
           "verified": true,
-          "last_verified_at": "2026-11-04",
+          "last_verified_at": "2026-11-14",
           "extraction_method": "webfetch_verified",
           "confidence": "high",
           "official_price": 533500,
@@ -1726,7 +1726,7 @@
         "product_id": "prod_ps5_pro",
         "action": "stock_observed",
         "stock": "入荷待ち",
-        "at": "2026-11-14T01:04:55+09:00"
+        "at": "2026-11-14T20:10:33+09:00"
       },
       {
         "product_id": "prod_switch2",
@@ -1769,6 +1769,17 @@
         "on": "2026-11-14"
       },
       {
+        "product_id": "prod_a7rv",
+        "action": "price_reconfirmed",
+        "on": "2026-11-14"
+      },
+      {
+        "product_id": "prod_a7rv",
+        "action": "stock_observed",
+        "stock": "在庫あり",
+        "at": "2026-11-14T20:13:38+09:00"
+      },
+      {
         "product_id": "prod_a1ii",
         "action": "price_reconfirmed",
         "on": "2026-11-14"
@@ -1777,7 +1788,7 @@
         "product_id": "prod_a1ii",
         "action": "stock_observed",
         "stock": "在庫あり",
-        "at": "2026-11-14T01:09:01+09:00"
+        "at": "2026-11-14T20:14:40+09:00"
       },
       {
         "product_id": "prod_a7cr",
@@ -1793,11 +1804,6 @@
         "product_id": "prod_iphoneduo_256",
         "action": "price_reconfirmed",
         "on": "2026-11-14"
-      },
-      {
-        "product_id": "prod_a7rv",
-        "action": "price_reconfirmed_from_last_state",
-        "on": "2026-11-04"
       }
     ]
   },
@@ -1811,7 +1817,7 @@
       "product_id": "prod_ps5_pro",
       "action": "stock_observed",
       "stock": "入荷待ち",
-      "at": "2026-11-14T01:04:55+09:00"
+      "at": "2026-11-14T20:10:33+09:00"
     },
     {
       "product_id": "prod_switch2",
@@ -1854,6 +1860,17 @@
       "on": "2026-11-14"
     },
     {
+      "product_id": "prod_a7rv",
+      "action": "price_reconfirmed",
+      "on": "2026-11-14"
+    },
+    {
+      "product_id": "prod_a7rv",
+      "action": "stock_observed",
+      "stock": "在庫あり",
+      "at": "2026-11-14T20:13:38+09:00"
+    },
+    {
       "product_id": "prod_a1ii",
       "action": "price_reconfirmed",
       "on": "2026-11-14"
@@ -1862,7 +1879,7 @@
       "product_id": "prod_a1ii",
       "action": "stock_observed",
       "stock": "在庫あり",
-      "at": "2026-11-14T01:09:01+09:00"
+      "at": "2026-11-14T20:14:40+09:00"
     },
     {
       "product_id": "prod_a7cr",
@@ -1878,11 +1895,6 @@
       "product_id": "prod_iphoneduo_256",
       "action": "price_reconfirmed",
       "on": "2026-11-14"
-    },
-    {
-      "product_id": "prod_a7rv",
-      "action": "price_reconfirmed_from_last_state",
-      "on": "2026-11-04"
     }
   ],
   "config_price_drift": [

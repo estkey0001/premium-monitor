@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-14T01:55:00+09:00",
+  "generated_at": "2026-11-14T21:00:39+09:00",
   "note": "内部用（運営者向け）。一般の画面には出さない。掲載の判定は opportunity.eligibility が正本",
   "candidate_count": 47,
   "eligible_count": 0,
@@ -776,13 +776,13 @@
       {
         "product_id": "prod_a7rv",
         "product": "SONY α7R V",
-        "evidence": "VERIFIED_DATED",
+        "evidence": "VERIFIED_CURRENT",
         "action": "VERIFIED",
         "official_not_sold": false,
         "price": 533500,
         "price_type": "RETAIL",
         "source": "src_sony_store",
-        "verified_at": "2026-11-04T00:00:00",
+        "verified_at": "2026-11-14T00:00:00",
         "url": "https://pur.store.sony.jp/ichigan/products/ILCE-7RM5/ILCE-7RM5_purchase/",
         "note": ""
       },
@@ -1191,7 +1191,7 @@
         "rows": 24,
         "fresh": 17,
         "stale": 7,
-        "last_observed": "2026-11-14T00:32:09.113244+09:00"
+        "last_observed": "2026-11-14T19:37:53.780575+09:00"
       },
       {
         "source": "ブックオフ",
@@ -1215,14 +1215,14 @@
         "source": "買取一丁目",
         "rows": 4,
         "fresh": 4,
-        "last_observed": "2026-11-14T00:21:33+09:00"
+        "last_observed": "2026-11-14T19:27:12+09:00"
       },
       {
         "source": "買取商店",
         "rows": 22,
         "stale": 7,
         "fresh": 15,
-        "last_observed": "2026-11-14T00:32:08+09:00"
+        "last_observed": "2026-11-14T19:37:53+09:00"
       },
       {
         "source": "駿河屋",
@@ -1269,42 +1269,42 @@
         "product_id": "prod_gr4",
         "price": 205000,
         "source": "買取商店",
-        "observed_at": "2026-11-14T00:30:38+09:00",
+        "observed_at": "2026-11-14T19:36:23+09:00",
         "condition": "new_unopened"
       },
       {
         "product_id": "prod_gr4_hdf",
         "price": 240000,
         "source": "買取商店",
-        "observed_at": "2026-11-14T00:30:38+09:00",
+        "observed_at": "2026-11-14T19:36:23+09:00",
         "condition": "new_unopened"
       },
       {
         "product_id": "prod_gr4_mono",
         "price": 220000,
         "source": "買取商店",
-        "observed_at": "2026-11-14T00:30:38+09:00",
+        "observed_at": "2026-11-14T19:36:23+09:00",
         "condition": "new_unopened"
       },
       {
         "product_id": "prod_r5ii",
         "price": 450000,
         "source": "買取商店",
-        "observed_at": "2026-11-14T00:32:08+09:00",
+        "observed_at": "2026-11-14T19:37:53+09:00",
         "condition": "new_unopened"
       },
       {
         "product_id": "prod_x100vi",
         "price": 260000,
         "source": "買取商店",
-        "observed_at": "2026-11-14T00:30:38+09:00",
+        "observed_at": "2026-11-14T19:36:23+09:00",
         "condition": "new_unopened"
       },
       {
         "product_id": "prod_z8",
         "price": 420000,
         "source": "買取商店",
-        "observed_at": "2026-11-14T00:32:08+09:00",
+        "observed_at": "2026-11-14T19:37:53+09:00",
         "condition": "new_unopened"
       }
     ],
@@ -1325,8 +1325,8 @@
   },
   "stock": {
     "states": {
-      "UNKNOWN": 45,
-      "IN_STOCK": 1,
+      "UNKNOWN": 44,
+      "IN_STOCK": 2,
       "OUT_OF_STOCK": 1
     },
     "in_stock_without_evidence": []

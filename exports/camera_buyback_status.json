@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-14T19:37:53+09:00",
+  "generated_at": "2026-11-15T20:05:17+09:00",
   "summary": {
     "total": 60,
     "ok": 17,
@@ -10,12 +10,12 @@
   },
   "failure_reasons": [
     {
-      "reason": "site_blocked",
-      "count": 40
+      "reason": "price_not_found",
+      "count": 23
     },
     {
-      "reason": "price_not_found",
-      "count": 3
+      "reason": "site_blocked",
+      "count": 20
     }
   ],
   "shop_cutoffs": {
@@ -45,10 +45,9 @@
       ]
     },
     "src_kitamura": {
-      "reason": "site_blocked",
-      "after_attempts": 1,
+      "reason": "price_not_found",
+      "after_attempts": 2,
       "skipped": [
-        "gfx100rf",
         "xt5",
         "gr3",
         "gr3x",
@@ -105,13 +104,13 @@
       "html_saved": 0,
       "cloudflare": 0,
       "js_required": 0,
-      "playwright_attempted": 1,
-      "playwright_success": 0,
-      "screenshot_saved": 0,
+      "playwright_attempted": 2,
+      "playwright_success": 2,
+      "screenshot_saved": 2,
       "top_reason": {
-        "site_blocked": 20
+        "price_not_found": 20
       },
-      "diagnosis": "site_blocked"
+      "diagnosis": "price_not_found"
     }
   },
   "detail": [
@@ -167,7 +166,7 @@
       "price": 213000,
       "reason": "",
       "html_saved": false,
-      "html_size": 357858,
+      "html_size": 358031,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -175,7 +174,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 357858,
+      "rendered_html_size": 358031,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -427,7 +426,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=X100VI&search=検索",
-      "buyback_page_html_size": 357858,
+      "buyback_page_html_size": 358031,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -676,7 +675,7 @@
       "status": "FAILED",
       "brand": "FUJIFILM",
       "price": 0,
-      "reason": "site_blocked",
+      "reason": "price_not_found",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -684,26 +683,107 @@
       "selector_found": false,
       "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 665453,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "",
+      "body_text_preview": "トクトク買取なら｢Bランク｣以上で上限価格買取り\n​\n買取り\n​\n全てのカテゴリから\nログイン\n見積一覧\nTOP\n店舗買取\n宅配買取\n出張買取\n新品・中古購入\nキーワードから商品を検索し、買取り価格の目安を調べる事ができます\nキーワードから買取り価格を調べる\n買取り対象商品\n交換レンズ\nデジタル一眼\nミラーレス一眼\nコンパクトデジタルカメラ\nフィルムカメラ\nビデオカメラ\nカメラアクセサリー・用品\n三脚\nスマホ\n腕時計\nブランド品・貴金属買取\nミラーレス一眼の高価買取り\n交換レンズ\nミラーレス一眼\nデジタル一眼レフ\nフィルムカメラ\n\n※表示価格は買取り最高値です\n\nネットでかんたん見積り\nキーワードから製品を検索し、買取り価格の目安を調べる事ができます\n当店が選ばれる4つの理由\nどこよりも\n最高値!\n毎日追従調査を行い、\nどこよりも最高値で買取り\n\n万が一、他店より買取り額が\n安い場合は他社見積り書を\nご持参下さい!\nネット中古カメラの\nパイオニア\nキタムラには、長年にわたる\n実績とノウハウがあります\n\n年間買取りは業界最多の31万台!\n（※2017年）\nプロ集団による\nスピード査定\n店",
       "matched_selectors": [],
       "selector_candidates": [],
-      "iframe_count": 0,
+      "iframe_count": 3,
       "shadow_dom_detected": false,
-      "dom_ready_state": "",
+      "dom_ready_state": "complete",
       "hit_count": null,
       "keyword_hit_counts": {},
       "best_keyword": null,
       "has_buyback_context": false,
       "sales_price_sample": null,
-      "buyback_link_candidates": [],
+      "buyback_link_candidates": [
+        {
+          "text": "トクトク買取なら｢Bランク｣以上で上限価格買取り",
+          "href": "/ec/page/service/tokutoku-kaitori"
+        },
+        {
+          "text": "見積一覧",
+          "href": "/ec/sell/item-price"
+        },
+        {
+          "text": "店舗買取",
+          "href": "/#selling-store-link"
+        },
+        {
+          "text": "宅配買取",
+          "href": "/ec/page/service/tyokusou-kaitori"
+        },
+        {
+          "text": "出張買取",
+          "href": "/ec/page/service/syuttyou-kaitori"
+        },
+        {
+          "text": "",
+          "href": "/lp/kaitori_kitamura/?utm_source=netchuko&utm_medium=owned&utm_campaign=kaitoricp"
+        },
+        {
+          "text": "",
+          "href": "/ec/service/syuttyou-kaitori.html"
+        },
+        {
+          "text": "",
+          "href": "/ec/sell/item-list?category_id=E023&maker=%E3%82%A2%E3%83%83%E3%83%97%E3%83%AB"
+        },
+        {
+          "text": "",
+          "href": "/ec/service/tokutoku-kaitori.html"
+        },
+        {
+          "text": "",
+          "href": "/ec/page/service/houjin-kaitori"
+        },
+        {
+          "text": "",
+          "href": "/static/contents/page/film_purchase.html"
+        },
+        {
+          "text": "キーワードから買取り価格を調べる",
+          "href": "/ec/sell?type=search"
+        },
+        {
+          "text": "キーワードから 買取り価格を調べる",
+          "href": "/ec/sell?type=search"
+        },
+        {
+          "text": "交換レンズ",
+          "href": "/ec/sell/item-list?category_id=C004"
+        },
+        {
+          "text": "デジタル一眼",
+          "href": "/ec/sell/item-list?category_id=C001"
+        },
+        {
+          "text": "ミラーレス一眼",
+          "href": "/ec/sell/item-list?category_id=C002"
+        },
+        {
+          "text": "コンパクトデジタルカメラ",
+          "href": "/ec/sell/item-list?category_id=C003"
+        },
+        {
+          "text": "フィルムカメラ",
+          "href": "/ec/sell/item-list?category_id=C018"
+        },
+        {
+          "text": "ビデオカメラ",
+          "href": "/ec/sell/item-list?category_id=C005"
+        },
+        {
+          "text": "カメラアクセサリー・用品",
+          "href": "/ec/sell/item-list?category_id=C007"
+        }
+      ],
       "buyback_page_url": null,
-      "buyback_page_html_size": 0,
-      "buyback_page_text_preview": "",
+      "buyback_page_html_size": 665453,
+      "buyback_page_text_preview": "トクトク買取なら｢Bランク｣以上で上限価格買取り\n​\n買取り\n​\n全てのカテゴリから\nログイン\n見積一覧\nTOP\n店舗買取\n宅配買取\n出張買取\n新品・中古購入\nキーワードから商品を検索し、買取り価格の目安を調べる事ができます\nキーワードから買取り価格を調べる\n買取り対象商品\n交換レンズ\nデジタル一眼\nミラーレス一眼\nコンパクトデジタルカメラ\nフィルムカメラ\nビデオカメラ\nカメラアクセサリー・用品\n三脚\nスマホ\n腕時計\nブランド品・貴金属買取\nミラーレス一眼の高価買取り\n交換レンズ\nミラーレス一眼\nデジタル一眼レフ\nフィルムカメラ\n\n※表示価格は買取り最高値です\n\nネットでかんたん見積り\nキーワードから製品を検索し、買取り価格の目安を調べる事ができます\n当店が選ばれる4つの理由\nどこよりも\n最高値!\n毎日追従調査を行い、\nどこよりも最高値で買取り\n\n万が一、他店より買取り額が\n安い場合は他社見積り書を\nご持参下さい!\nネット中古カメラの\nパイオニア\nキタムラには、長年にわたる\n実績とノウハウがあります\n\n年間買取りは業界最多の31万台!\n（※2017年）\nプロ集団による\nスピード査定\n店",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
       "confidence": "medium",
@@ -765,7 +845,7 @@
       "price": 474000,
       "reason": "",
       "html_saved": false,
-      "html_size": 345221,
+      "html_size": 345114,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -773,7 +853,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 345221,
+      "rendered_html_size": 345114,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -1025,7 +1105,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=GFX100RF&search=検索",
-      "buyback_page_html_size": 345221,
+      "buyback_page_html_size": 345114,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -1238,42 +1318,124 @@
       "status": "FAILED",
       "brand": "FUJIFILM",
       "price": 0,
-      "reason": "site_blocked",
+      "reason": "price_not_found",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": false,
       "extracted_price": null,
-      "playwright_attempted": false,
-      "playwright_success": false,
-      "screenshot_saved": false,
-      "rendered_html_size": 0,
+      "playwright_attempted": true,
+      "playwright_success": true,
+      "screenshot_saved": true,
+      "rendered_html_size": 665758,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "",
+      "body_text_preview": "トクトク買取なら｢Bランク｣以上で上限価格買取り\n​\n買取り\n​\n全てのカテゴリから\nログイン\n見積一覧\nTOP\n店舗買取\n宅配買取\n出張買取\n新品・中古購入\nキーワードから商品を検索し、買取り価格の目安を調べる事ができます\nキーワードから買取り価格を調べる\n買取り対象商品\n交換レンズ\nデジタル一眼\nミラーレス一眼\nコンパクトデジタルカメラ\nフィルムカメラ\nビデオカメラ\nカメラアクセサリー・用品\n三脚\nスマホ\n腕時計\nブランド品・貴金属買取\nミラーレス一眼の高価買取り\n交換レンズ\nミラーレス一眼\nデジタル一眼レフ\nフィルムカメラ\n\n※表示価格は買取り最高値です\n\nネットでかんたん見積り\nキーワードから製品を検索し、買取り価格の目安を調べる事ができます\n当店が選ばれる4つの理由\nどこよりも\n最高値!\n毎日追従調査を行い、\nどこよりも最高値で買取り\n\n万が一、他店より買取り額が\n安い場合は他社見積り書を\nご持参下さい!\nネット中古カメラの\nパイオニア\nキタムラには、長年にわたる\n実績とノウハウがあります\n\n年間買取りは業界最多の31万台!\n（※2017年）\nプロ集団による\nスピード査定\n店",
       "matched_selectors": [],
       "selector_candidates": [],
-      "iframe_count": 0,
+      "iframe_count": 3,
       "shadow_dom_detected": false,
-      "dom_ready_state": "",
+      "dom_ready_state": "complete",
       "hit_count": null,
       "keyword_hit_counts": {},
       "best_keyword": null,
       "has_buyback_context": false,
       "sales_price_sample": null,
-      "buyback_link_candidates": [],
+      "buyback_link_candidates": [
+        {
+          "text": "トクトク買取なら｢Bランク｣以上で上限価格買取り",
+          "href": "/ec/page/service/tokutoku-kaitori"
+        },
+        {
+          "text": "見積一覧",
+          "href": "/ec/sell/item-price"
+        },
+        {
+          "text": "店舗買取",
+          "href": "/#selling-store-link"
+        },
+        {
+          "text": "宅配買取",
+          "href": "/ec/page/service/tyokusou-kaitori"
+        },
+        {
+          "text": "出張買取",
+          "href": "/ec/page/service/syuttyou-kaitori"
+        },
+        {
+          "text": "",
+          "href": "/lp/kaitori_kitamura/?utm_source=netchuko&utm_medium=owned&utm_campaign=kaitoricp"
+        },
+        {
+          "text": "",
+          "href": "/ec/service/syuttyou-kaitori.html"
+        },
+        {
+          "text": "",
+          "href": "/ec/sell/item-list?category_id=E023&maker=%E3%82%A2%E3%83%83%E3%83%97%E3%83%AB"
+        },
+        {
+          "text": "",
+          "href": "/ec/service/tokutoku-kaitori.html"
+        },
+        {
+          "text": "",
+          "href": "/ec/page/service/houjin-kaitori"
+        },
+        {
+          "text": "",
+          "href": "/static/contents/page/film_purchase.html"
+        },
+        {
+          "text": "キーワードから買取り価格を調べる",
+          "href": "/ec/sell?type=search"
+        },
+        {
+          "text": "キーワードから 買取り価格を調べる",
+          "href": "/ec/sell?type=search"
+        },
+        {
+          "text": "交換レンズ",
+          "href": "/ec/sell/item-list?category_id=C004"
+        },
+        {
+          "text": "デジタル一眼",
+          "href": "/ec/sell/item-list?category_id=C001"
+        },
+        {
+          "text": "ミラーレス一眼",
+          "href": "/ec/sell/item-list?category_id=C002"
+        },
+        {
+          "text": "コンパクトデジタルカメラ",
+          "href": "/ec/sell/item-list?category_id=C003"
+        },
+        {
+          "text": "フィルムカメラ",
+          "href": "/ec/sell/item-list?category_id=C018"
+        },
+        {
+          "text": "ビデオカメラ",
+          "href": "/ec/sell/item-list?category_id=C005"
+        },
+        {
+          "text": "カメラアクセサリー・用品",
+          "href": "/ec/sell/item-list?category_id=C007"
+        }
+      ],
       "buyback_page_url": null,
-      "buyback_page_html_size": 0,
-      "buyback_page_text_preview": "",
+      "buyback_page_html_size": 665758,
+      "buyback_page_text_preview": "トクトク買取なら｢Bランク｣以上で上限価格買取り\n​\n買取り\n​\n全てのカテゴリから\nログイン\n見積一覧\nTOP\n店舗買取\n宅配買取\n出張買取\n新品・中古購入\nキーワードから商品を検索し、買取り価格の目安を調べる事ができます\nキーワードから買取り価格を調べる\n買取り対象商品\n交換レンズ\nデジタル一眼\nミラーレス一眼\nコンパクトデジタルカメラ\nフィルムカメラ\nビデオカメラ\nカメラアクセサリー・用品\n三脚\nスマホ\n腕時計\nブランド品・貴金属買取\nミラーレス一眼の高価買取り\n交換レンズ\nミラーレス一眼\nデジタル一眼レフ\nフィルムカメラ\n\n※表示価格は買取り最高値です\n\nネットでかんたん見積り\nキーワードから製品を検索し、買取り価格の目安を調べる事ができます\n当店が選ばれる4つの理由\nどこよりも\n最高値!\n毎日追従調査を行い、\nどこよりも最高値で買取り\n\n万が一、他店より買取り額が\n安い場合は他社見積り書を\nご持参下さい!\nネット中古カメラの\nパイオニア\nキタムラには、長年にわたる\n実績とノウハウがあります\n\n年間買取りは業界最多の31万台!\n（※2017年）\nプロ集団による\nスピード査定\n店",
       "buyback_price_candidates": [],
       "buyback_extracted_price": null,
-      "confidence": null,
+      "confidence": "medium",
       "matched_item": "",
       "all_price_candidates": [],
       "rejected_candidates": [],
       "used_for_save": false,
-      "skipped_by_cutoff": true
+      "requests_raw_price": null,
+      "reused_page": false
     },
     {
       "product_alias": "xt5",
@@ -1326,7 +1488,7 @@
       "price": 168000,
       "reason": "",
       "html_saved": false,
-      "html_size": 373406,
+      "html_size": 373265,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -1334,7 +1496,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 373406,
+      "rendered_html_size": 373265,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -1586,7 +1748,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=X-T5&search=検索",
-      "buyback_page_html_size": 373406,
+      "buyback_page_html_size": 373265,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -1871,7 +2033,7 @@
       "status": "FAILED",
       "brand": "FUJIFILM",
       "price": 0,
-      "reason": "site_blocked",
+      "reason": "price_not_found",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -1967,7 +2129,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 370641,
+      "rendered_html_size": 370523,
       "selector_waited": true,
       "extraction_strategy": "requests",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -2220,7 +2382,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=RICOH%20GR%20III&search=検索",
-      "buyback_page_html_size": 370641,
+      "buyback_page_html_size": 370523,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -2541,7 +2703,7 @@
       "status": "FAILED",
       "brand": "RICOH",
       "price": 0,
-      "reason": "site_blocked",
+      "reason": "price_not_found",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -2629,7 +2791,7 @@
       "price": 138000,
       "reason": "",
       "html_saved": false,
-      "html_size": 347443,
+      "html_size": 347291,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -2637,7 +2799,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 347443,
+      "rendered_html_size": 347291,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -2889,7 +3051,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=RICOH%20GR%20IIIx&search=検索",
-      "buyback_page_html_size": 347443,
+      "buyback_page_html_size": 347291,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -3165,7 +3327,7 @@
       "status": "FAILED",
       "brand": "RICOH",
       "price": 0,
-      "reason": "site_blocked",
+      "reason": "price_not_found",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -3253,7 +3415,7 @@
       "price": 151000,
       "reason": "",
       "html_saved": false,
-      "html_size": 357851,
+      "html_size": 357866,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -3261,7 +3423,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 357851,
+      "rendered_html_size": 357866,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -3513,7 +3675,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=RICOH%20GR%20IV&search=検索",
-      "buyback_page_html_size": 357851,
+      "buyback_page_html_size": 357866,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -3816,7 +3978,7 @@
       "status": "FAILED",
       "brand": "RICOH",
       "price": 0,
-      "reason": "site_blocked",
+      "reason": "price_not_found",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -3904,7 +4066,7 @@
       "price": 194000,
       "reason": "",
       "html_saved": false,
-      "html_size": 357851,
+      "html_size": 357866,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -3912,7 +4074,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 357851,
+      "rendered_html_size": 357866,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -4164,7 +4326,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=RICOH%20GR%20IV&search=検索",
-      "buyback_page_html_size": 357851,
+      "buyback_page_html_size": 357866,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -4467,7 +4629,7 @@
       "status": "FAILED",
       "brand": "RICOH",
       "price": 0,
-      "reason": "site_blocked",
+      "reason": "price_not_found",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -4555,7 +4717,7 @@
       "price": 194000,
       "reason": "",
       "html_saved": false,
-      "html_size": 357851,
+      "html_size": 357866,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -4563,7 +4725,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 357851,
+      "rendered_html_size": 357866,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -4815,7 +4977,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=RICOH%20GR%20IV&search=検索",
-      "buyback_page_html_size": 357851,
+      "buyback_page_html_size": 357866,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -5118,7 +5280,7 @@
       "status": "FAILED",
       "brand": "RICOH",
       "price": 0,
-      "reason": "site_blocked",
+      "reason": "price_not_found",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -5206,7 +5368,7 @@
       "price": 188000,
       "reason": "",
       "html_saved": false,
-      "html_size": 349611,
+      "html_size": 350073,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -5214,7 +5376,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 349611,
+      "rendered_html_size": 350073,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -5466,7 +5628,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=SONY%20%CE%B17R%20V&search=検索",
-      "buyback_page_html_size": 349611,
+      "buyback_page_html_size": 350073,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -5751,7 +5913,7 @@
       "status": "FAILED",
       "brand": "SONY",
       "price": 0,
-      "reason": "site_blocked",
+      "reason": "price_not_found",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -5836,18 +5998,18 @@
       "shop_id": "src_fujiya",
       "status": "OK",
       "brand": "SONY",
-      "price": 548000,
+      "price": 550000,
       "reason": "",
       "html_saved": false,
-      "html_size": 343207,
+      "html_size": 343084,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
-      "extracted_price": 548000,
+      "extracted_price": 550000,
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 343207,
+      "rendered_html_size": 343084,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -5873,137 +6035,137 @@
         {
           "selector": "[class*='assess']",
           "text": "α1 II ボディ ILCE-1M2\n\t\t\t\n\t\t\t\tSONY\n\t\t\t\n\t\t\t\n\t\t\n\t\t\n\t\t\n\t\t\t\n\t\t\t\n\t\t\t",
-          "price": 548000,
+          "price": 550000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "α1 II ボディ ILCE-1M2 SONY 買取金額 新品同様 ￥548,000 良品 ￥547,000 下取は10%UP 新品同様 ￥602,800 良品 ￥601,700 買取申し込み 買取検討リストへ"
+          "item_text": "α1 II ボディ ILCE-1M2 SONY 買取金額 新品同様 ￥550,000 良品 ￥549,000 下取は10%UP 新品同様 ￥605,000 良品 ￥603,900 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥548,000\n\t\t\t\t\t\t\n",
-          "price": 548000,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥550,000\n\t\t\t\t\t\t\n",
+          "price": 550000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "α1 II ボディ ILCE-1M2 SONY 買取金額 新品同様 ￥548,000 良品 ￥547,000 下取は10%UP 新品同様 ￥602,800 良品 ￥601,700 買取申し込み 買取検討リストへ"
+          "item_text": "α1 II ボディ ILCE-1M2 SONY 買取金額 新品同様 ￥550,000 良品 ￥549,000 下取は10%UP 新品同様 ￥605,000 良品 ￥603,900 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥548,000\n\t\t\t\t\t\t\n",
-          "price": 548000,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥550,000\n\t\t\t\t\t\t\n",
+          "price": 550000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "α1 II ボディ ILCE-1M2 SONY 買取金額 新品同様 ￥548,000 良品 ￥547,000 下取は10%UP 新品同様 ￥602,800 良品 ￥601,700 買取申し込み 買取検討リストへ"
+          "item_text": "α1 II ボディ ILCE-1M2 SONY 買取金額 新品同様 ￥550,000 良品 ￥549,000 下取は10%UP 新品同様 ￥605,000 良品 ￥603,900 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "table td",
-          "text": "￥602,800",
-          "price": 602800,
+          "text": "￥605,000",
+          "price": 605000,
           "near_kw": false,
           "near_buyback": true,
           "is_tradein": false,
-          "item_text": "α1 II ボディ ILCE-1M2 SONY 買取金額 新品同様 ￥548,000 良品 ￥547,000 下取は10%UP 新品同様 ￥602,800 良品 ￥601,700 買取申し込み 買取検討リストへ"
+          "item_text": "α1 II ボディ ILCE-1M2 SONY 買取金額 新品同様 ￥550,000 良品 ￥549,000 下取は10%UP 新品同様 ￥605,000 良品 ￥603,900 買取申し込み 買取検討リストへ"
         },
         {
           "selector": ".price",
-          "text": "￥602,800",
-          "price": 602800,
+          "text": "￥605,000",
+          "price": 605000,
           "near_kw": false,
           "near_buyback": false,
           "is_tradein": false,
-          "item_text": "￥602,800"
+          "item_text": "￥605,000"
         },
         {
           "selector": "[class*='price']",
-          "text": "￥602,800",
-          "price": 602800,
+          "text": "￥605,000",
+          "price": 605000,
           "near_kw": false,
           "near_buyback": false,
           "is_tradein": false,
-          "item_text": "￥602,800"
+          "item_text": "￥605,000"
         },
         {
           "selector": "[class*='assess']",
-          "text": "新品同様\n\t\t\t\t\t\t\t￥602,800\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t良品\n\t",
-          "price": 602800,
+          "text": "新品同様\n\t\t\t\t\t\t\t￥605,000\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t良品\n\t",
+          "price": 605000,
           "near_kw": false,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "α1 II ボディ ILCE-1M2 SONY 買取金額 新品同様 ￥548,000 良品 ￥547,000 下取は10%UP 新品同様 ￥602,800 良品 ￥601,700 買取申し込み 買取検討リストへ"
+          "item_text": "α1 II ボディ ILCE-1M2 SONY 買取金額 新品同様 ￥550,000 良品 ￥549,000 下取は10%UP 新品同様 ￥605,000 良品 ￥603,900 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "￥602,800",
-          "price": 602800,
+          "text": "￥605,000",
+          "price": 605000,
           "near_kw": false,
           "near_buyback": false,
           "is_tradein": false,
-          "item_text": "￥602,800"
+          "item_text": "￥605,000"
         },
         {
           "selector": "table td",
-          "text": "￥601,700",
-          "price": 601700,
+          "text": "￥603,900",
+          "price": 603900,
           "near_kw": false,
           "near_buyback": true,
           "is_tradein": false,
-          "item_text": "α1 II ボディ ILCE-1M2 SONY 買取金額 新品同様 ￥548,000 良品 ￥547,000 下取は10%UP 新品同様 ￥602,800 良品 ￥601,700 買取申し込み 買取検討リストへ"
+          "item_text": "α1 II ボディ ILCE-1M2 SONY 買取金額 新品同様 ￥550,000 良品 ￥549,000 下取は10%UP 新品同様 ￥605,000 良品 ￥603,900 買取申し込み 買取検討リストへ"
         },
         {
           "selector": ".price",
-          "text": "￥601,700",
-          "price": 601700,
+          "text": "￥603,900",
+          "price": 603900,
           "near_kw": false,
           "near_buyback": false,
           "is_tradein": false,
-          "item_text": "￥601,700"
+          "item_text": "￥603,900"
         },
         {
           "selector": "[class*='price']",
-          "text": "￥601,700",
-          "price": 601700,
+          "text": "￥603,900",
+          "price": 603900,
           "near_kw": false,
           "near_buyback": false,
           "is_tradein": false,
-          "item_text": "￥601,700"
+          "item_text": "￥603,900"
         },
         {
           "selector": "[class*='assess']",
-          "text": "￥601,700",
-          "price": 601700,
+          "text": "￥603,900",
+          "price": 603900,
           "near_kw": false,
           "near_buyback": false,
           "is_tradein": false,
-          "item_text": "￥601,700"
+          "item_text": "￥603,900"
         },
         {
           "selector": "table td",
-          "text": "￥548,000",
-          "price": 548000,
+          "text": "￥550,000",
+          "price": 550000,
           "near_kw": false,
           "near_buyback": true,
           "is_tradein": false,
-          "item_text": "α1 II ボディ ILCE-1M2 SONY 買取金額 新品同様 ￥548,000 良品 ￥547,000 下取は10%UP 新品同様 ￥602,800 良品 ￥601,700 買取申し込み 買取検討リストへ"
+          "item_text": "α1 II ボディ ILCE-1M2 SONY 買取金額 新品同様 ￥550,000 良品 ￥549,000 下取は10%UP 新品同様 ￥605,000 良品 ￥603,900 買取申し込み 買取検討リストへ"
         },
         {
           "selector": ".price",
-          "text": "￥548,000",
-          "price": 548000,
+          "text": "￥550,000",
+          "price": 550000,
           "near_kw": false,
           "near_buyback": false,
           "is_tradein": false,
-          "item_text": "￥548,000"
+          "item_text": "￥550,000"
         },
         {
           "selector": "[class*='price']",
-          "text": "￥548,000",
-          "price": 548000,
+          "text": "￥550,000",
+          "price": 550000,
           "near_kw": false,
           "near_buyback": false,
           "is_tradein": false,
-          "item_text": "￥548,000"
+          "item_text": "￥550,000"
         }
       ],
       "iframe_count": 1,
@@ -6015,7 +6177,7 @@
       },
       "best_keyword": "SONY α1 II",
       "has_buyback_context": true,
-      "sales_price_sample": 548000,
+      "sales_price_sample": 550000,
       "buyback_link_candidates": [
         {
           "text": "買取金額を調べる",
@@ -6099,199 +6261,199 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=SONY%20%CE%B11%20II&search=検索",
-      "buyback_page_html_size": 343207,
+      "buyback_page_html_size": 343084,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
           "selector": "[class*='assess']",
           "text": "α1 II ボディ ILCE-1M2\n\t\t\t\n\t\t\t\tSONY\n\t\t\t\n\t\t\t\n\t\t\n\t\t\n\t\t\n\t\t\t\n\t\t\t\n\t\t\t",
-          "price": 548000,
+          "price": 550000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "α1 II ボディ ILCE-1M2 SONY 買取金額 新品同様 ￥548,000 良品 ￥547,000 下取は10%UP 新品同様 ￥602,800 良品 ￥601,700 買取申し込み 買取検討リストへ"
+          "item_text": "α1 II ボディ ILCE-1M2 SONY 買取金額 新品同様 ￥550,000 良品 ￥549,000 下取は10%UP 新品同様 ￥605,000 良品 ￥603,900 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥548,000\n\t\t\t\t\t\t\n",
-          "price": 548000,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥550,000\n\t\t\t\t\t\t\n",
+          "price": 550000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "α1 II ボディ ILCE-1M2 SONY 買取金額 新品同様 ￥548,000 良品 ￥547,000 下取は10%UP 新品同様 ￥602,800 良品 ￥601,700 買取申し込み 買取検討リストへ"
+          "item_text": "α1 II ボディ ILCE-1M2 SONY 買取金額 新品同様 ￥550,000 良品 ￥549,000 下取は10%UP 新品同様 ￥605,000 良品 ￥603,900 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥548,000\n\t\t\t\t\t\t\n",
-          "price": 548000,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥550,000\n\t\t\t\t\t\t\n",
+          "price": 550000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "α1 II ボディ ILCE-1M2 SONY 買取金額 新品同様 ￥548,000 良品 ￥547,000 下取は10%UP 新品同様 ￥602,800 良品 ￥601,700 買取申し込み 買取検討リストへ"
+          "item_text": "α1 II ボディ ILCE-1M2 SONY 買取金額 新品同様 ￥550,000 良品 ￥549,000 下取は10%UP 新品同様 ￥605,000 良品 ￥603,900 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "table td",
-          "text": "￥602,800",
-          "price": 602800,
+          "text": "￥605,000",
+          "price": 605000,
           "near_kw": false,
           "near_buyback": true,
           "is_tradein": false,
-          "item_text": "α1 II ボディ ILCE-1M2 SONY 買取金額 新品同様 ￥548,000 良品 ￥547,000 下取は10%UP 新品同様 ￥602,800 良品 ￥601,700 買取申し込み 買取検討リストへ"
+          "item_text": "α1 II ボディ ILCE-1M2 SONY 買取金額 新品同様 ￥550,000 良品 ￥549,000 下取は10%UP 新品同様 ￥605,000 良品 ￥603,900 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "新品同様\n\t\t\t\t\t\t\t￥602,800\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t良品\n\t",
-          "price": 602800,
+          "text": "新品同様\n\t\t\t\t\t\t\t￥605,000\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t良品\n\t",
+          "price": 605000,
           "near_kw": false,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "α1 II ボディ ILCE-1M2 SONY 買取金額 新品同様 ￥548,000 良品 ￥547,000 下取は10%UP 新品同様 ￥602,800 良品 ￥601,700 買取申し込み 買取検討リストへ"
+          "item_text": "α1 II ボディ ILCE-1M2 SONY 買取金額 新品同様 ￥550,000 良品 ￥549,000 下取は10%UP 新品同様 ￥605,000 良品 ￥603,900 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "table td",
-          "text": "￥601,700",
-          "price": 601700,
+          "text": "￥603,900",
+          "price": 603900,
           "near_kw": false,
           "near_buyback": true,
           "is_tradein": false,
-          "item_text": "α1 II ボディ ILCE-1M2 SONY 買取金額 新品同様 ￥548,000 良品 ￥547,000 下取は10%UP 新品同様 ￥602,800 良品 ￥601,700 買取申し込み 買取検討リストへ"
+          "item_text": "α1 II ボディ ILCE-1M2 SONY 買取金額 新品同様 ￥550,000 良品 ￥549,000 下取は10%UP 新品同様 ￥605,000 良品 ￥603,900 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "table td",
-          "text": "￥548,000",
-          "price": 548000,
+          "text": "￥550,000",
+          "price": 550000,
           "near_kw": false,
           "near_buyback": true,
           "is_tradein": false,
-          "item_text": "α1 II ボディ ILCE-1M2 SONY 買取金額 新品同様 ￥548,000 良品 ￥547,000 下取は10%UP 新品同様 ￥602,800 良品 ￥601,700 買取申し込み 買取検討リストへ"
+          "item_text": "α1 II ボディ ILCE-1M2 SONY 買取金額 新品同様 ￥550,000 良品 ￥549,000 下取は10%UP 新品同様 ￥605,000 良品 ￥603,900 買取申し込み 買取検討リストへ"
         }
       ],
-      "buyback_extracted_price": 602800,
+      "buyback_extracted_price": 605000,
       "confidence": "high",
-      "matched_item": "α1 II ボディ ILCE-1M2 SONY 買取金額 新品同様 ￥548,000 良品 ￥547,000 下取は10%UP 新品同様 ￥602,800 良品 ￥601,700 買取申し込み 買取検討リストへ",
+      "matched_item": "α1 II ボディ ILCE-1M2 SONY 買取金額 新品同様 ￥550,000 良品 ￥549,000 下取は10%UP 新品同様 ￥605,000 良品 ￥603,900 買取申し込み 買取検討リストへ",
       "all_price_candidates": [
         {
-          "price": 548000,
-          "item": "α1 II ボディ ILCE-1M2 SONY 買取金額 新品同様 ￥548,000 良品 ￥547,000 下取は10%UP 新品同様 ￥",
+          "price": 550000,
+          "item": "α1 II ボディ ILCE-1M2 SONY 買取金額 新品同様 ￥550,000 良品 ￥549,000 下取は10%UP 新品同様 ￥",
           "near_buyback": true
         },
         {
-          "price": 548000,
-          "item": "α1 II ボディ ILCE-1M2 SONY 買取金額 新品同様 ￥548,000 良品 ￥547,000 下取は10%UP 新品同様 ￥",
+          "price": 550000,
+          "item": "α1 II ボディ ILCE-1M2 SONY 買取金額 新品同様 ￥550,000 良品 ￥549,000 下取は10%UP 新品同様 ￥",
           "near_buyback": true
         },
         {
-          "price": 548000,
-          "item": "α1 II ボディ ILCE-1M2 SONY 買取金額 新品同様 ￥548,000 良品 ￥547,000 下取は10%UP 新品同様 ￥",
+          "price": 550000,
+          "item": "α1 II ボディ ILCE-1M2 SONY 買取金額 新品同様 ￥550,000 良品 ￥549,000 下取は10%UP 新品同様 ￥",
           "near_buyback": true
         },
         {
-          "price": 602800,
-          "item": "α1 II ボディ ILCE-1M2 SONY 買取金額 新品同様 ￥548,000 良品 ￥547,000 下取は10%UP 新品同様 ￥",
+          "price": 605000,
+          "item": "α1 II ボディ ILCE-1M2 SONY 買取金額 新品同様 ￥550,000 良品 ￥549,000 下取は10%UP 新品同様 ￥",
           "near_buyback": true
         },
         {
-          "price": 602800,
-          "item": "￥602,800",
+          "price": 605000,
+          "item": "￥605,000",
           "near_buyback": false
         },
         {
-          "price": 602800,
-          "item": "￥602,800",
+          "price": 605000,
+          "item": "￥605,000",
           "near_buyback": false
         },
         {
-          "price": 602800,
-          "item": "α1 II ボディ ILCE-1M2 SONY 買取金額 新品同様 ￥548,000 良品 ￥547,000 下取は10%UP 新品同様 ￥",
+          "price": 605000,
+          "item": "α1 II ボディ ILCE-1M2 SONY 買取金額 新品同様 ￥550,000 良品 ￥549,000 下取は10%UP 新品同様 ￥",
           "near_buyback": true
         },
         {
-          "price": 602800,
-          "item": "￥602,800",
+          "price": 605000,
+          "item": "￥605,000",
           "near_buyback": false
         },
         {
-          "price": 601700,
-          "item": "α1 II ボディ ILCE-1M2 SONY 買取金額 新品同様 ￥548,000 良品 ￥547,000 下取は10%UP 新品同様 ￥",
+          "price": 603900,
+          "item": "α1 II ボディ ILCE-1M2 SONY 買取金額 新品同様 ￥550,000 良品 ￥549,000 下取は10%UP 新品同様 ￥",
           "near_buyback": true
         },
         {
-          "price": 601700,
-          "item": "￥601,700",
+          "price": 603900,
+          "item": "￥603,900",
           "near_buyback": false
         },
         {
-          "price": 601700,
-          "item": "￥601,700",
+          "price": 603900,
+          "item": "￥603,900",
           "near_buyback": false
         },
         {
-          "price": 601700,
-          "item": "￥601,700",
+          "price": 603900,
+          "item": "￥603,900",
           "near_buyback": false
         },
         {
-          "price": 548000,
-          "item": "α1 II ボディ ILCE-1M2 SONY 買取金額 新品同様 ￥548,000 良品 ￥547,000 下取は10%UP 新品同様 ￥",
+          "price": 550000,
+          "item": "α1 II ボディ ILCE-1M2 SONY 買取金額 新品同様 ￥550,000 良品 ￥549,000 下取は10%UP 新品同様 ￥",
           "near_buyback": true
         },
         {
-          "price": 548000,
-          "item": "￥548,000",
+          "price": 550000,
+          "item": "￥550,000",
           "near_buyback": false
         },
         {
-          "price": 548000,
-          "item": "￥548,000",
+          "price": 550000,
+          "item": "￥550,000",
           "near_buyback": false
         }
       ],
       "rejected_candidates": [
         {
-          "price": 602800,
-          "item": "￥602,800",
+          "price": 605000,
+          "item": "￥605,000",
           "near_buyback": false,
           "rejection_reason": "not_buyback_context"
         },
         {
-          "price": 602800,
-          "item": "￥602,800",
+          "price": 605000,
+          "item": "￥605,000",
           "near_buyback": false,
           "rejection_reason": "not_buyback_context"
         },
         {
-          "price": 602800,
-          "item": "￥602,800",
+          "price": 605000,
+          "item": "￥605,000",
           "near_buyback": false,
           "rejection_reason": "not_buyback_context"
         },
         {
-          "price": 601700,
-          "item": "￥601,700",
+          "price": 603900,
+          "item": "￥603,900",
           "near_buyback": false,
           "rejection_reason": "not_buyback_context"
         },
         {
-          "price": 601700,
-          "item": "￥601,700",
+          "price": 603900,
+          "item": "￥603,900",
           "near_buyback": false,
           "rejection_reason": "not_buyback_context"
         },
         {
-          "price": 601700,
-          "item": "￥601,700",
+          "price": 603900,
+          "item": "￥603,900",
           "near_buyback": false,
           "rejection_reason": "not_buyback_context"
         },
         {
-          "price": 548000,
-          "item": "￥548,000",
+          "price": 550000,
+          "item": "￥550,000",
           "near_buyback": false,
           "rejection_reason": "not_buyback_context"
         },
         {
-          "price": 548000,
-          "item": "￥548,000",
+          "price": 550000,
+          "item": "￥550,000",
           "near_buyback": false,
           "rejection_reason": "not_buyback_context"
         }
@@ -6306,7 +6468,7 @@
       "status": "FAILED",
       "brand": "SONY",
       "price": 0,
-      "reason": "site_blocked",
+      "reason": "price_not_found",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -6394,7 +6556,7 @@
       "price": 229000,
       "reason": "",
       "html_saved": false,
-      "html_size": 345327,
+      "html_size": 345360,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -6402,7 +6564,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 345327,
+      "rendered_html_size": 345360,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -6654,7 +6816,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=SONY%20%CE%B17CR&search=検索",
-      "buyback_page_html_size": 345327,
+      "buyback_page_html_size": 345360,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -6870,7 +7032,7 @@
       "status": "FAILED",
       "brand": "SONY",
       "price": 0,
-      "reason": "site_blocked",
+      "reason": "price_not_found",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -6958,7 +7120,7 @@
       "price": 376000,
       "reason": "",
       "html_saved": false,
-      "html_size": 358054,
+      "html_size": 358165,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -6966,7 +7128,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 358054,
+      "rendered_html_size": 358165,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -7218,7 +7380,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=SONY%20FX3&search=検索",
-      "buyback_page_html_size": 358054,
+      "buyback_page_html_size": 358165,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -7485,7 +7647,7 @@
       "status": "FAILED",
       "brand": "SONY",
       "price": 0,
-      "reason": "site_blocked",
+      "reason": "price_not_found",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -7573,7 +7735,7 @@
       "price": 375000,
       "reason": "",
       "html_saved": false,
-      "html_size": 347530,
+      "html_size": 347585,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -7581,7 +7743,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 347530,
+      "rendered_html_size": 347585,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -7833,7 +7995,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=Canon%20EOS%20R5%20Mark%20II&search=検索",
-      "buyback_page_html_size": 347530,
+      "buyback_page_html_size": 347585,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -8109,7 +8271,7 @@
       "status": "FAILED",
       "brand": "CANON",
       "price": 0,
-      "reason": "site_blocked",
+      "reason": "price_not_found",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -8205,7 +8367,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 356163,
+      "rendered_html_size": 356630,
       "selector_waited": true,
       "extraction_strategy": "requests",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -8458,7 +8620,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=Canon%20EOS%20R6%20Mark%20II&search=検索",
-      "buyback_page_html_size": 356163,
+      "buyback_page_html_size": 356630,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -8779,7 +8941,7 @@
       "status": "FAILED",
       "brand": "CANON",
       "price": 0,
-      "reason": "site_blocked",
+      "reason": "price_not_found",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -8867,7 +9029,7 @@
       "price": 283000,
       "reason": "",
       "html_saved": false,
-      "html_size": 343015,
+      "html_size": 343041,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -8875,7 +9037,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 343015,
+      "rendered_html_size": 343041,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -9127,7 +9289,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=Canon%20EOS%20R3&search=検索",
-      "buyback_page_html_size": 343015,
+      "buyback_page_html_size": 343041,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -9334,7 +9496,7 @@
       "status": "FAILED",
       "brand": "CANON",
       "price": 0,
-      "reason": "site_blocked",
+      "reason": "price_not_found",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -9422,7 +9584,7 @@
       "price": 248000,
       "reason": "",
       "html_saved": false,
-      "html_size": 342945,
+      "html_size": 342970,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -9430,7 +9592,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 342945,
+      "rendered_html_size": 342970,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -9682,7 +9844,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=Nikon%20Z8&search=検索",
-      "buyback_page_html_size": 342945,
+      "buyback_page_html_size": 342970,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -9889,7 +10051,7 @@
       "status": "FAILED",
       "brand": "NIKON",
       "price": 0,
-      "reason": "site_blocked",
+      "reason": "price_not_found",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -9977,7 +10139,7 @@
       "price": 152000,
       "reason": "",
       "html_saved": false,
-      "html_size": 448051,
+      "html_size": 447922,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -9985,7 +10147,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 448051,
+      "rendered_html_size": 447922,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -10237,7 +10399,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=Nikon%20Zf&search=検索",
-      "buyback_page_html_size": 448051,
+      "buyback_page_html_size": 447922,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -10540,7 +10702,7 @@
       "status": "FAILED",
       "brand": "NIKON",
       "price": 0,
-      "reason": "site_blocked",
+      "reason": "price_not_found",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -10628,7 +10790,7 @@
       "price": 324000,
       "reason": "",
       "html_saved": false,
-      "html_size": 345408,
+      "html_size": 345413,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -10636,7 +10798,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 345408,
+      "rendered_html_size": 345413,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -10888,7 +11050,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=Nikon%20Z9&search=検索",
-      "buyback_page_html_size": 345408,
+      "buyback_page_html_size": 345413,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -11095,7 +11257,7 @@
       "status": "FAILED",
       "brand": "NIKON",
       "price": 0,
-      "reason": "site_blocked",
+      "reason": "price_not_found",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -11183,7 +11345,7 @@
       "price": 572000,
       "reason": "",
       "html_saved": false,
-      "html_size": 367131,
+      "html_size": 366311,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -11191,7 +11353,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 367131,
+      "rendered_html_size": 366311,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -11351,7 +11513,7 @@
         }
       ],
       "iframe_count": 1,
-      "shadow_dom_detected": true,
+      "shadow_dom_detected": false,
       "dom_ready_state": "complete",
       "hit_count": 12,
       "keyword_hit_counts": {
@@ -11443,7 +11605,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=Leica%20Q3&search=検索",
-      "buyback_page_html_size": 367131,
+      "buyback_page_html_size": 366311,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -11758,7 +11920,7 @@
       "status": "FAILED",
       "brand": "LEICA",
       "price": 0,
-      "reason": "site_blocked",
+      "reason": "price_not_found",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -11854,7 +12016,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 385916,
+      "rendered_html_size": 385853,
       "selector_waited": true,
       "extraction_strategy": "requests",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -12106,7 +12268,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=Leica%20M11&search=検索",
-      "buyback_page_html_size": 385916,
+      "buyback_page_html_size": 385853,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -12427,7 +12589,7 @@
       "status": "FAILED",
       "brand": "LEICA",
       "price": 0,
-      "reason": "site_blocked",
+      "reason": "price_not_found",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,

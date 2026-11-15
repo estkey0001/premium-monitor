@@ -2,23 +2,14 @@
   "type": "PRODUCTION_HEALTH_ALERT",
   "schema": 1,
   "audience": "operator",
-  "generated_at": "2026-11-14T20:17:41+09:00",
+  "generated_at": "2026-11-15T20:43:03+09:00",
   "note": "運営者向けの劣化アラート候補（商品の通知ではない）。外部へは送らない。CI の注記・Step Summary・管理画面に出す",
   "active_count": 6,
   "high": 3,
   "warning": 3,
   "candidates": [],
   "suppressed": 6,
-  "recovered": [
-    {
-      "key": "official_recheck_failing:prod_a7rv",
-      "type": "PRODUCTION_HEALTH_RECOVERED",
-      "event": "RECOVERED",
-      "first_seen": "2026-11-07T20:01:53+09:00",
-      "recovered_at": "2026-11-14T20:17:41+09:00",
-      "last_severity": "HIGH"
-    }
-  ],
+  "recovered": [],
   "active": [
     {
       "key": "official_recheck_failing:prod_x100vi",
@@ -26,10 +17,10 @@
       "source": "prod_x100vi",
       "severity": "HIGH",
       "reason": "recheck_failed",
-      "title": "prod_x100vi の公式の再確認が 22 日連続で失敗しています",
+      "title": "prod_x100vi の公式の再確認が 23 日連続で失敗しています",
       "details": "公式ページの移動・表示の変更・ブロックの可能性。人が公式ページを確認する",
       "evidence": {
-        "consecutive_days": 22
+        "consecutive_days": 23
       }
     },
     {
@@ -41,7 +32,7 @@
       "title": "prod_x100vi の公式の確認が切れています",
       "details": "確認日 2026-10-08（期限 14 日）",
       "evidence": {
-        "days_left": -23
+        "days_left": -24
       }
     },
     {

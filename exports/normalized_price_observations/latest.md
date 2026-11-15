@@ -1,6 +1,6 @@
 # Normalized Price Observations
 
-生成: 2026-11-14 21:00 JST
+生成: 2026-11-15 21:25 JST
 
 全価格（買取/販売/出品/落札/海外/下取/公式）を単一スキーマに正規化。
 `price_role`（buy/sell/official/trade_in）を必ず付与し、
@@ -68,7 +68,7 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 | Apple Watch Ultra 3 | official | official_price | ¥128,800 | medium | 9999.0d | メーカー公式/定価 |
 | AirPods Pro 3 | official | official_price | ¥42,800 | high | 0.9d | メーカー公式/定価 |
 | AirPods Max | official | official_price | ¥84,800 | medium | 9999.0d | メーカー公式/定価 |
-| Nintendo Switch 2 | official | official_price | ¥59,980 | high | 37.9d | メーカー公式/定価 |
+| Nintendo Switch 2 | official | official_price | ¥59,980 | high | 38.9d | メーカー公式/定価 |
 | Nintendo Switch 2 マリオカ | official | official_price | ¥59,980 | medium | 9999.0d | メーカー公式/定価 |
 | PlayStation 5 Pro | official | official_price | ¥137,980 | high | 0.9d | メーカー公式/定価 |
 | PlayStation 5 Digital  | official | official_price | ¥72,980 | medium | 9999.0d | メーカー公式/定価 |
@@ -87,7 +87,7 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 | FUJIFILM X-T5 | sell | buyback_price | ¥168,000 | used_s | 0.1d | フジヤカメラ |
 | RICOH GR IIIx | sell | buyback_price | ¥138,000 | used_s | 0.1d | フジヤカメラ |
 | RICOH GR IV | sell | buyback_price | ¥151,000 | used_s | 0.1d | フジヤカメラ |
-| SONY α1 II | sell | buyback_price | ¥548,000 | used_s | 0.1d | フジヤカメラ |
+| SONY α1 II | sell | buyback_price | ¥550,000 | used_s | 0.1d | フジヤカメラ |
 | SONY α7CR | sell | buyback_price | ¥229,000 | used_s | 0.1d | フジヤカメラ |
 | SONY FX3 | sell | buyback_price | ¥376,000 | used_s | 0.1d | フジヤカメラ |
 | Canon EOS R5 Mark II | sell | buyback_price | ¥375,000 | used_s | 0.1d | フジヤカメラ |

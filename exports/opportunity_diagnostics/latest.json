@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-16T18:54:56+09:00",
+  "generated_at": "2026-11-16T21:51:17+09:00",
   "note": "内部用（運営者向け）。一般の画面には出さない。掲載の判定は opportunity.eligibility が正本",
   "candidate_count": 48,
   "eligible_count": 0,
@@ -1124,7 +1124,7 @@
     ]
   },
   "buyback": {
-    "fresh_rows": 37,
+    "fresh_rows": 36,
     "stale_rows": 70,
     "failed_rows": 38,
     "failed_sources": [
@@ -1214,7 +1214,7 @@
         "rows": 24,
         "fresh": 17,
         "stale": 7,
-        "last_observed": "2026-11-16T17:32:10.324590+09:00"
+        "last_observed": "2026-11-16T20:28:27.206382+09:00"
       },
       {
         "source": "ブックオフ",
@@ -1230,23 +1230,22 @@
       },
       {
         "source": "モバイル一番",
-        "rows": 4,
+        "rows": 3,
         "stale": 3,
-        "fresh": 1,
-        "last_observed": "2026-11-16T17:20:32+09:00"
+        "last_observed": "2026-08-10T12:00:00+09:00"
       },
       {
         "source": "買取一丁目",
         "rows": 4,
         "fresh": 4,
-        "last_observed": "2026-11-16T17:21:34+09:00"
+        "last_observed": "2026-11-16T20:17:52+09:00"
       },
       {
         "source": "買取商店",
         "rows": 22,
         "stale": 7,
         "fresh": 15,
-        "last_observed": "2026-11-16T17:32:10+09:00"
+        "last_observed": "2026-11-16T20:28:27+09:00"
       },
       {
         "source": "駿河屋",
@@ -1293,42 +1292,42 @@
         "product_id": "prod_gr4",
         "price": 205000,
         "source": "買取商店",
-        "observed_at": "2026-11-16T17:30:40+09:00",
+        "observed_at": "2026-11-16T20:26:57+09:00",
         "condition": "new_unopened"
       },
       {
         "product_id": "prod_gr4_hdf",
         "price": 240000,
         "source": "買取商店",
-        "observed_at": "2026-11-16T17:30:40+09:00",
+        "observed_at": "2026-11-16T20:26:57+09:00",
         "condition": "new_unopened"
       },
       {
         "product_id": "prod_gr4_mono",
         "price": 220000,
         "source": "買取商店",
-        "observed_at": "2026-11-16T17:30:40+09:00",
+        "observed_at": "2026-11-16T20:26:57+09:00",
         "condition": "new_unopened"
       },
       {
         "product_id": "prod_r5ii",
         "price": 450000,
         "source": "買取商店",
-        "observed_at": "2026-11-16T17:32:10+09:00",
+        "observed_at": "2026-11-16T20:28:27+09:00",
         "condition": "new_unopened"
       },
       {
         "product_id": "prod_x100vi",
         "price": 260000,
         "source": "買取商店",
-        "observed_at": "2026-11-16T17:30:40+09:00",
+        "observed_at": "2026-11-16T20:26:57+09:00",
         "condition": "new_unopened"
       },
       {
         "product_id": "prod_z8",
         "price": 420000,
         "source": "買取商店",
-        "observed_at": "2026-11-16T17:32:10+09:00",
+        "observed_at": "2026-11-16T20:28:27+09:00",
         "condition": "new_unopened"
       }
     ],

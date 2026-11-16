@@ -27,15 +27,13 @@
       "official_prices": [
         469800
       ],
-      "match_to_existing": "",
+      "match_to_existing": "prod_iphoneduo_1tb",
       "candidate_id": "apple-88de14d448ca",
       "status": "REGISTERED",
-      "reasons": [
-        "not_in_canonical"
-      ],
+      "reasons": [],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-11-14",
-      "updated_at": "2026-11-16T17:13:00+09:00",
+      "last_seen_on": "2026-11-16",
+      "updated_at": "2026-11-16T21:35:07+09:00",
       "reviewed_at": "2026-11-16T17:12:55+09:00",
       "review": {
         "at": "2026-11-16T17:12:55+09:00",
@@ -108,7 +106,7 @@
         "not_in_canonical"
       ],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-11-14",
+      "last_seen_on": "2026-11-16",
       "updated_at": "2026-11-16T17:13:01+09:00",
       "reviewed_at": "2026-11-16T17:13:01+09:00",
       "review": {
@@ -171,7 +169,7 @@
         "not_in_canonical"
       ],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-11-14",
+      "last_seen_on": "2026-11-16",
       "updated_at": "2026-10-17T17:34:02+09:00"
     },
     "apple-419a47e495b5": {
@@ -205,7 +203,7 @@
       "status": "REGISTERED",
       "reasons": [],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-11-14",
+      "last_seen_on": "2026-11-16",
       "updated_at": "2026-10-21T13:20:41+09:00",
       "reviewed_at": "2026-10-21T09:22:13+09:00",
       "review": {
@@ -283,7 +281,7 @@
         "not_in_canonical"
       ],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-11-14",
+      "last_seen_on": "2026-11-16",
       "updated_at": "2026-10-17T17:34:02+09:00"
     },
     "apple-24816e322cf0": {
@@ -321,7 +319,7 @@
       "status": "REGISTERED",
       "reasons": [],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-11-14",
+      "last_seen_on": "2026-11-16",
       "updated_at": "2026-10-19T18:33:06+09:00",
       "reviewed_at": "2026-10-17T21:52:06+09:00",
       "review": {
@@ -399,7 +397,7 @@
         "not_in_canonical"
       ],
       "discovered_at": "2026-10-17T17:34:02+09:00",
-      "last_seen_on": "2026-11-14",
+      "last_seen_on": "2026-11-16",
       "updated_at": "2026-10-17T17:34:02+09:00"
     },
     "tcg-pokemon-e341fcc48893": {
@@ -498,7 +496,7 @@
       ],
       "discovered_at": "2026-10-17T17:34:02+09:00",
       "last_seen_on": "2026-11-16",
-      "updated_at": "2026-11-16T18:38:48+09:00"
+      "updated_at": "2026-11-16T21:35:07+09:00"
     },
     "tcg-pokemon-nocode-771077b562f9": {
       "source": "pokemon_card_official",
@@ -1546,16 +1544,16 @@
       },
       "iphone-air": {
         "first_seen_on": "2026-10-17",
-        "last_checked_on": "2026-11-14",
+        "last_checked_on": "2026-11-16",
         "listed": true,
-        "last_attempted_on": "2026-11-14",
+        "last_attempted_on": "2026-11-16",
         "last_error": ""
       },
       "iphone-duo": {
         "first_seen_on": "2026-10-17",
-        "last_checked_on": "2026-11-14",
+        "last_checked_on": "2026-11-16",
         "listed": true,
-        "last_attempted_on": "2026-11-14",
+        "last_attempted_on": "2026-11-16",
         "last_error": ""
       }
     }

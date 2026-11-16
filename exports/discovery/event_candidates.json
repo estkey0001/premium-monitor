@@ -3104,6 +3104,44 @@
       "discovered_at": "2026-11-16T18:38:48+09:00",
       "last_seen_on": "2026-11-16",
       "updated_at": "2026-11-16T18:38:48+09:00"
+    },
+    "tcg-event-4c57a87c0a1f": {
+      "source": "CARD_LABO",
+      "kind": "LOTTERY",
+      "tcg": "ONE_PIECE",
+      "title": "【ワンピースカードゲーム】「神の支配",
+      "official_url": "https://www.c-labo.jp/shop/tsudanuma/blog/624664/",
+      "product_code": "",
+      "product_mapping": "unmapped",
+      "application_start": "2026-11-16",
+      "application_end": "2026-11-17",
+      "event_status": "UPCOMING",
+      "missing_fields": [],
+      "candidate_id": "tcg-event-4c57a87c0a1f",
+      "status": "MATCHED_EVENT",
+      "reasons": [],
+      "discovered_at": "2026-11-16T21:35:07+09:00",
+      "last_seen_on": "2026-11-16",
+      "updated_at": "2026-11-16T21:35:07+09:00"
+    },
+    "tcg-event-0536bd0309c6": {
+      "source": "CARD_LABO",
+      "kind": "LOTTERY",
+      "tcg": "ONE_PIECE",
+      "title": "ONE PIECEカードゲーム『エクストラブースター ONE PIECE Heroines Edition vol.2』",
+      "official_url": "https://www.c-labo.jp/shop/koufu/blog/624665/",
+      "product_code": "",
+      "product_mapping": "unmapped",
+      "application_start": "2026-11-16",
+      "application_end": "2026-11-20",
+      "event_status": "UPCOMING",
+      "missing_fields": [],
+      "candidate_id": "tcg-event-0536bd0309c6",
+      "status": "MATCHED_EVENT",
+      "reasons": [],
+      "discovered_at": "2026-11-16T21:35:07+09:00",
+      "last_seen_on": "2026-11-16",
+      "updated_at": "2026-11-16T21:35:07+09:00"
     }
   }
 }

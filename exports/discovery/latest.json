@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-16T21:35:07+09:00",
+  "generated_at": "2026-11-16T23:22:01+09:00",
   "apple": {
     "source": "apple_jp_official",
     "list_status": "ok",
@@ -12,13 +12,13 @@
       "iphone-duo"
     ],
     "checked": [
-      "iphone-air",
-      "iphone-duo"
+      "iphone-16",
+      "iphone-17"
     ],
     "errors": {},
-    "unknown_parts": 12,
-    "matched": 3,
-    "pending": 4,
+    "unknown_parts": 10,
+    "matched": 1,
+    "pending": 2,
     "requests": 3,
     "cutoff": "",
     "saved": true
@@ -32,10 +32,10 @@
     },
     "inputs_stale": [],
     "review_required": 6,
-    "matched_events": 32,
+    "matched_events": 33,
     "release": 7,
     "by_kind": {
-      "LOTTERY": 37,
+      "LOTTERY": 38,
       "PREORDER": 0,
       "FIRST_COME": 0,
       "RESTOCK": 1,
@@ -284,16 +284,16 @@
     "pending_review": 24,
     "review_required": 14,
     "matched_existing": 1,
-    "approved": 1,
+    "approved": 0,
     "rejected": 0,
-    "registered": 3,
+    "registered": 4,
     "stale": 1,
     "unknown_official_products": 58,
     "apple_candidates": 15,
     "tcg_products": 24,
-    "event_candidates": 159,
+    "event_candidates": 160,
     "review_required_announcements": 6,
-    "matched_events": 78,
+    "matched_events": 79,
     "stale_events": 75,
     "approved_events": 0,
     "registered_events": 0

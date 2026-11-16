@@ -1,7 +1,7 @@
 
 ============================================================
  Deploy Check (515 items)
- 実行日時: 2026-11-16T21:51:44+09:00
+ 実行日時: 2026-11-16T23:38:31+09:00
 ============================================================
   ✅ [index_exists] docs/index.html 存在
   ✅ [forbidden_phrases] 禁止表現なし
@@ -53,12 +53,12 @@
   ✅ [fetch_failed_no_price_calc] fetch_failed 行の価格欄が「—」（価格計算に使われていない）
   ✅ [game_console_shops] ゲーム機向け店舗が表示されている: ['ゲオ', 'イオシス', 'ブックオフ', '駿河屋', 'ソフマップ', 'TSUTAYA', '買取商店']
   ✅ [switch2_game_shop_links] Switch 2 / ゲーム機向け確認リンク（ゲオ/ブックオフ/駿河屋/ソフマップ）が存在する
-  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-11-16T20:14:47+09:00）
+  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-11-16T22:01:41+09:00）
   ⚠️ [suspicious_price_format] suspicious_prices 形式OK（suspicious_price 1件あり — 確認推奨）
   ✅ [fetch_failed_has_reason] fetch_failed 47件すべてに reason あり
   ✅ [collector_report_html_exists] docs/collector_report.html 存在
   ✅ [collector_report_link_in_lp] LP内に collector_report.html へのリンクがある
-  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 11件存在する: ['iphone17pm512', 'iphone17pro256', 'iphoneduo_256', 'iphone17_256']
+  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 11件存在する: ['iphone17pro256', 'iphone17pro512', 'iphoneair_256', 'iphone17_256']
   ✅ [beginner_page_auto_scraped_exists] 自動取得 OK 19件 / total 66件
   ✅ [iphone17pro256_price_scraped] iPhone 17 Pro 256GB の価格取得成功: ['kaitori_shouten', 'kaitori_itchome']
   ✅ [fetch_failed_has_reason_field] 全取得失敗エントリーに reason フィールドあり（47件）
@@ -242,7 +242,7 @@
   ✅ [camera_tradein_exclude] #542 カメラ買取が下取(15%UP等)価格を現金買取価格から分離・除外している
   ✅ [sedori_overseas_sell] #543 せどり計算の売却先が「買取価格＋海外販売価格」になっている（NPO PRO_SELL_TYPES）
   ✅ [top_camera_reference_guard] #544 Top Camera Buyback が参照価格(公式/定価)未取得の商品を除外している
-  ✅ [npo_exists] #545 normalized_price_observations/latest.json が存在する（235観測）
+  ✅ [npo_exists] #545 normalized_price_observations/latest.json が存在する（236観測）
   ✅ [npo_price_role_required] #546 全観測に price_role が付与されている
   ✅ [npo_tradein_not_main] #547 trade_in_price が main calculation（最高買取等）に使われない
   ✅ [npo_pro_buy_no_buyback] #548 Pro route の buy 側に buyback_price が使われない
@@ -332,7 +332,7 @@
   ✅ [data_quality_source_ranking] #664 Source Quality Ranking が生成される（9ソース）
   ✅ [data_quality_stale_analysis] #665 Stale 分析が生成される（stale 100キー・原因分類あり）
   ✅ [data_quality_zero_price] #666 ¥0 分析が生成される（実取得失敗 10件）
-  ✅ [data_quality_coverage] #667 Coverage Validation が生成される（48/48商品）
+  ✅ [data_quality_coverage] #667 Coverage Validation が生成される（49/49商品）
   ✅ [data_quality_normalization] #668 Normalization 監査 + 自動化カバレッジ透明性が生成される
   ⚠️ [data_quality_overall_score] #669 Data Quality Overall 69/100（>=70 でデータ品質水準） ← データ品質スコアが基準未満
   ✅ [beta_report] #670 Beta Report が存在する（Ready 84/100・READY (closed beta)）
@@ -431,7 +431,7 @@
   ✅ [tcg_blocked_source_not_healthy] #762 アクセス拒否（HTTP 403 等）の監視元を正常扱いしない
   ✅ [tcg_entry_url_official_only] #763 応募ページへのリンクは公式サイトの URL のみ
   ✅ [tcg_lottery_coverage_report] #764 抽選の監視状況（登録 / 実装 / 正常 / 拒否 / 未実装）が出力されている
-  ✅ [tcg_lottery_real_data] #765 抽選を実データで取得している（33件）、または監視元が正常に0件を返している
+  ✅ [tcg_lottery_real_data] #765 抽選を実データで取得している（34件）、または監視元が正常に0件を返している
   ✅ [tcg_release_schedule_shown] #841 公式の発売予定（7件）が新UIの抽選・予約に出ている
   ✅ [no_legacy_ui] #800 旧UIの DOM・CSS・JS が残っていない
   ✅ [new_ui_root] #801 新UIの root（#new-ui-root）が1つあり、終わりの目印がある
@@ -447,7 +447,7 @@
   ✅ [new_ui_no_internal_info] #808 新UIの一般のページに運営者向けの内部情報を出していない（運営者向けのページは別）
   ✅ [admin_ui_safe] #836 運営者向けのページに秘密の値・偽の操作・偽のログイン表示・DEMO が無く、8つの区分がそろっている
   ✅ [new_ui_safe_links] #809 新UIのリンクは https: かサイト内の相対パスだけ
-  ✅ [new_ui_vm_fidelity] #810 抽選の表示モデル（VM）が元データと一致する（38件）
+  ✅ [new_ui_vm_fidelity] #810 抽選の表示モデル（VM）が元データと一致する（39件）
   ✅ [admin_has_legacy_operator_info] #839 旧UIにしか無かった運営の情報が運営者向けのページにある
   ✅ [legacy_intents_on_new_ui] #840 旧UIの検査の意図（14日より古い価格・0円・未照合・中古を確定に使わない、取得の警告の強さ）を新UIの判定で満たす
   ✅ [source_safety] #842 取得の安全性（robots.txt・ブロックで打ち切り・正直な User-Agent・規約上取らない取得元を取らない）

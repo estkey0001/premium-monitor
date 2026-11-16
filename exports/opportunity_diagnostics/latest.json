@@ -1,18 +1,18 @@
 {
-  "generated_at": "2026-11-16T21:51:17+09:00",
+  "generated_at": "2026-11-16T23:38:10+09:00",
   "note": "内部用（運営者向け）。一般の画面には出さない。掲載の判定は opportunity.eligibility が正本",
-  "candidate_count": 48,
+  "candidate_count": 49,
   "eligible_count": 0,
   "exclusion_reasons": {
-    "unverified_buy_price": 34,
+    "unverified_buy_price": 35,
     "stale_buyback": 15,
     "no_profit": 9,
-    "no_sell_price": 7,
+    "no_sell_price": 8,
     "invalid_identity": 4,
     "no_buy_price": 1
   },
   "primary_reasons": {
-    "unverified_buy_price": 34,
+    "unverified_buy_price": 35,
     "no_profit": 9,
     "no_sell_price": 2,
     "invalid_identity": 2,
@@ -345,6 +345,15 @@
       "primary": "no_profit"
     },
     {
+      "product_id": "prod_iphoneduo_2tb",
+      "route_type": "RETAIL_TO_BUYBACK",
+      "reasons": [
+        "unverified_buy_price",
+        "no_sell_price"
+      ],
+      "primary": "unverified_buy_price"
+    },
+    {
       "product_id": "prod_mac_mini_m4",
       "route_type": "RETAIL_TO_BUYBACK",
       "reasons": [
@@ -429,10 +438,10 @@
   "stock_excluded": 0,
   "category_counts": {
     "smartphone": {
-      "candidates": 11,
+      "candidates": 12,
       "eligible": 0,
       "primary_reasons": {
-        "unverified_buy_price": 8,
+        "unverified_buy_price": 9,
         "no_profit": 3
       }
     },
@@ -479,7 +488,7 @@
   },
   "route_types": {
     "RETAIL_TO_BUYBACK": {
-      "candidates": 48
+      "candidates": 49
     }
   },
   "home_parity": {
@@ -490,7 +499,7 @@
   },
   "retail_prices": {
     "summary": {
-      "reference": 33,
+      "reference": 34,
       "sale_ended": 22,
       "verified": 13,
       "stale": 1,
@@ -1005,6 +1014,19 @@
         "note": ""
       },
       {
+        "product_id": "prod_iphoneduo_2tb",
+        "product": "iPhone Duo 2TB SIMフリー",
+        "evidence": "CONFIGURED_REFERENCE",
+        "action": "VERIFY_FROM_OFFICIAL",
+        "official_not_sold": false,
+        "price": 574800,
+        "price_type": "CONFIGURED_REFERENCE",
+        "source": "config/products.yaml",
+        "verified_at": "",
+        "url": "",
+        "note": ""
+      },
+      {
         "product_id": "prod_mac_mini_m4",
         "product": "Mac mini M4",
         "evidence": "CONFIGURED_REFERENCE",
@@ -1214,7 +1236,7 @@
         "rows": 24,
         "fresh": 17,
         "stale": 7,
-        "last_observed": "2026-11-16T20:28:27.206382+09:00"
+        "last_observed": "2026-11-16T22:15:22.616539+09:00"
       },
       {
         "source": "ブックオフ",
@@ -1238,14 +1260,14 @@
         "source": "買取一丁目",
         "rows": 4,
         "fresh": 4,
-        "last_observed": "2026-11-16T20:17:52+09:00"
+        "last_observed": "2026-11-16T22:04:46+09:00"
       },
       {
         "source": "買取商店",
         "rows": 22,
         "stale": 7,
         "fresh": 15,
-        "last_observed": "2026-11-16T20:28:27+09:00"
+        "last_observed": "2026-11-16T22:15:22+09:00"
       },
       {
         "source": "駿河屋",
@@ -1292,42 +1314,42 @@
         "product_id": "prod_gr4",
         "price": 205000,
         "source": "買取商店",
-        "observed_at": "2026-11-16T20:26:57+09:00",
+        "observed_at": "2026-11-16T22:13:52+09:00",
         "condition": "new_unopened"
       },
       {
         "product_id": "prod_gr4_hdf",
         "price": 240000,
         "source": "買取商店",
-        "observed_at": "2026-11-16T20:26:57+09:00",
+        "observed_at": "2026-11-16T22:13:52+09:00",
         "condition": "new_unopened"
       },
       {
         "product_id": "prod_gr4_mono",
         "price": 220000,
         "source": "買取商店",
-        "observed_at": "2026-11-16T20:26:57+09:00",
+        "observed_at": "2026-11-16T22:13:52+09:00",
         "condition": "new_unopened"
       },
       {
         "product_id": "prod_r5ii",
         "price": 450000,
         "source": "買取商店",
-        "observed_at": "2026-11-16T20:28:27+09:00",
+        "observed_at": "2026-11-16T22:15:22+09:00",
         "condition": "new_unopened"
       },
       {
         "product_id": "prod_x100vi",
         "price": 260000,
         "source": "買取商店",
-        "observed_at": "2026-11-16T20:26:57+09:00",
+        "observed_at": "2026-11-16T22:13:52+09:00",
         "condition": "new_unopened"
       },
       {
         "product_id": "prod_z8",
         "price": 420000,
         "source": "買取商店",
-        "observed_at": "2026-11-16T20:28:27+09:00",
+        "observed_at": "2026-11-16T22:15:22+09:00",
         "condition": "new_unopened"
       }
     ],
@@ -1348,7 +1370,7 @@
   },
   "stock": {
     "states": {
-      "UNKNOWN": 46,
+      "UNKNOWN": 47,
       "IN_STOCK": 1,
       "OUT_OF_STOCK": 1
     },

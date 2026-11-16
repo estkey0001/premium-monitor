@@ -3142,6 +3142,25 @@
       "discovered_at": "2026-11-16T21:35:07+09:00",
       "last_seen_on": "2026-11-16",
       "updated_at": "2026-11-16T21:35:07+09:00"
+    },
+    "tcg-event-b8d24e80c273": {
+      "source": "CARD_LABO",
+      "kind": "LOTTERY",
+      "tcg": "POKEMON",
+      "title": "ポケモンカードゲーム MEGA 拡張パック「30th CELEBRATION」",
+      "official_url": "https://www.c-labo.jp/shop/gifu/blog/624678/",
+      "product_code": "",
+      "product_mapping": "unmapped",
+      "application_start": "2026-11-16",
+      "application_end": "2026-11-19",
+      "event_status": "UPCOMING",
+      "missing_fields": [],
+      "candidate_id": "tcg-event-b8d24e80c273",
+      "status": "MATCHED_EVENT",
+      "reasons": [],
+      "discovered_at": "2026-11-16T23:22:01+09:00",
+      "last_seen_on": "2026-11-16",
+      "updated_at": "2026-11-16T23:22:01+09:00"
     }
   }
 }

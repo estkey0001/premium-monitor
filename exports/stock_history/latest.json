@@ -4,7 +4,7 @@
    "category": "camera",
    "first_seen_in_stock_at": "2026-10-29T01:34:12+09:00",
    "key": "official:prod_a1ii:src_sony_store",
-   "last_checked_at": "2026-11-16T21:05:13+09:00",
+   "last_checked_at": "2026-11-16T22:52:09+09:00",
    "last_definite_state": "IN_STOCK",
    "previous_state": "IN_STOCK",
    "price": 990000,
@@ -99,7 +99,7 @@
    "category": "game_console",
    "first_seen_in_stock_at": "",
    "key": "official:prod_ps5_pro:src_sony_store",
-   "last_checked_at": "2026-11-16T21:01:06+09:00",
+   "last_checked_at": "2026-11-16T22:48:02+09:00",
    "last_definite_state": "OUT_OF_STOCK",
    "previous_state": "OUT_OF_STOCK",
    "price": 137980,
@@ -219,5 +219,5 @@
   }
  ],
  "schema_version": 1,
- "updated_at": "2026-11-16T21:51:16+09:00"
+ "updated_at": "2026-11-16T23:38:09+09:00"
 }

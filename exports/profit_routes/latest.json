@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-16 21:51 JST",
+  "generated_at": "2026-11-16 23:38 JST",
   "ebay_api_configured": false,
   "overseas_source_mode": "manual",
   "summary": {
@@ -11,7 +11,7 @@
     "by_route_type": {},
     "max_profit": null,
     "max_roi": null,
-    "zero_route_products": 48
+    "zero_route_products": 49
   },
   "missing_data_priority": [
     {
@@ -312,6 +312,28 @@
     },
     "prod_iphoneduo_1tb": {
       "product_name": "iPhone Duo 1TB SIMフリー",
+      "buy_candidates": 0,
+      "sell_candidates": 0,
+      "min_usable_buy": null,
+      "min_usable_buy_source": "",
+      "max_usable_sell": null,
+      "max_usable_sell_source": "",
+      "min_usable_buy_identity_verified": false,
+      "max_usable_sell_identity_verified": false,
+      "target_buy_price": null,
+      "gross_gap": null,
+      "net_domestic": null,
+      "best_reference_net": null,
+      "main_blocked_reason": "有効な売却(買取/海外sold)候補なし",
+      "excluded_route_count": 0,
+      "rejection_top5": [],
+      "stale_excluded": 0,
+      "overseas_stale": 0,
+      "needed": [],
+      "fresh_overseas_whatif_top5": []
+    },
+    "prod_iphoneduo_2tb": {
+      "product_name": "iPhone Duo 2TB SIMフリー",
       "buy_candidates": 0,
       "sell_candidates": 0,
       "min_usable_buy": null,

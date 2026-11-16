@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-16 21:08 JST",
+  "generated_at": "2026-11-16 22:55 JST",
   "scope": "公式ソース登録・検証（利益/AI/Opportunity/Notification/Capital/Execution は不変）",
   "methodology": {
     "verification": "WebFetch で HTTP200/公式ドメイン/canonical/商品一致を実確認したURLのみ verified",
@@ -647,6 +647,21 @@
     },
     "prod_iphoneduo_1tb": {
       "product_name": "iPhone Duo 1TB SIMフリー",
+      "brand": "Apple",
+      "sources": {
+        "official": null,
+        "pricecom": null,
+        "yodobashi": null,
+        "biccamera": null,
+        "mapcamera": null,
+        "fujiya": null,
+        "rakuten": null,
+        "yahoo": null,
+        "ebay": null
+      }
+    },
+    "prod_iphoneduo_2tb": {
+      "product_name": "iPhone Duo 2TB SIMフリー",
       "brand": "Apple",
       "sources": {
         "official": null,
@@ -1741,7 +1756,7 @@
         "product_id": "prod_ps5_pro",
         "action": "stock_observed",
         "stock": "入荷待ち",
-        "at": "2026-11-16T21:01:06+09:00"
+        "at": "2026-11-16T22:48:02+09:00"
       },
       {
         "product_id": "prod_switch2",
@@ -1792,7 +1807,7 @@
         "product_id": "prod_a1ii",
         "action": "stock_observed",
         "stock": "在庫あり",
-        "at": "2026-11-16T21:05:13+09:00"
+        "at": "2026-11-16T22:52:09+09:00"
       },
       {
         "product_id": "prod_a7cr",
@@ -1826,7 +1841,7 @@
       "product_id": "prod_ps5_pro",
       "action": "stock_observed",
       "stock": "入荷待ち",
-      "at": "2026-11-16T21:01:06+09:00"
+      "at": "2026-11-16T22:48:02+09:00"
     },
     {
       "product_id": "prod_switch2",
@@ -1877,7 +1892,7 @@
       "product_id": "prod_a1ii",
       "action": "stock_observed",
       "stock": "在庫あり",
-      "at": "2026-11-16T21:05:13+09:00"
+      "at": "2026-11-16T22:52:09+09:00"
     },
     {
       "product_id": "prod_a7cr",
@@ -1959,30 +1974,30 @@
     }
   ],
   "identity_coverage": {
-    "products": 48,
+    "products": 49,
     "part_numbers": {
-      "count": 3,
-      "pct": 6.2
+      "count": 4,
+      "pct": 8.2
     },
     "model_number": {
       "count": 24,
-      "pct": 50.0
+      "pct": 49.0
     },
     "jan_code": {
       "count": 9,
-      "pct": 18.8
+      "pct": 18.4
     },
     "official_url": {
-      "count": 3,
-      "pct": 6.2
+      "count": 4,
+      "pct": 8.2
     },
     "identity_evidence": {
       "count": 18,
-      "pct": 37.5
+      "pct": 36.7
     },
     "any_strong_key": {
-      "count": 28,
-      "pct": 58.3
+      "count": 29,
+      "pct": 59.2
     }
   }
 }

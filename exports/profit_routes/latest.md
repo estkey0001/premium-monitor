@@ -1,6 +1,6 @@
 # Pro 利益ルート（normalized_price_observations 由来・検証済み）
 
-生成: 2026-11-16 21:51 JST
+生成: 2026-11-16 23:38 JST
 
 - **main 利益ルート: 0件**（route_confidence high/medium のみ）
 - 参考ルート(海外sold stale・要fresh化): 0件
@@ -61,6 +61,10 @@
 - 除外理由TOP5: []
 
 ### iPhone Duo 1TB SIMフリー
+- buy候補 0 / sell候補 0 / stale除外 0 / 海外sold stale 0
+- 除外理由TOP5: []
+
+### iPhone Duo 2TB SIMフリー
 - buy候補 0 / sell候補 0 / stale除外 0 / 海外sold stale 0
 - 除外理由TOP5: []
 

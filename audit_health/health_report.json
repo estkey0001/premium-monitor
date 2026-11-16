@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-16 21:51 JST",
+  "generated_at": "2026-11-16 23:38 JST",
   "date": "2026-11-16",
   "health_score": {
     "data_quality": 14.3,
@@ -10,16 +10,16 @@
     "total": 35.4
   },
   "data_quality": {
-    "total_obs": 235,
-    "usable_obs": 75,
-    "stale_count": 148,
-    "stale_rate": 0.6298,
-    "config_reference_count": 33,
+    "total_obs": 236,
+    "usable_obs": 76,
+    "stale_count": 149,
+    "stale_rate": 0.6314,
+    "config_reference_count": 34,
     "zero_count": 38,
-    "zero_rate": 0.1617,
-    "item_url_rate": 0.4809,
-    "search_url_rate": 0.2,
-    "manual_rate": 0.4766,
+    "zero_rate": 0.161,
+    "item_url_rate": 0.4788,
+    "search_url_rate": 0.1992,
+    "manual_rate": 0.4746,
     "api_rate": 0.0,
     "html_rate": 0.0085
   },
@@ -36,17 +36,17 @@
   },
   "sources": {
     "メーカー公式/定価": {
-      "success_count": 47,
-      "stale_count": 34,
+      "success_count": 48,
+      "stale_count": 35,
       "zero_count": 0,
       "item_url_rate": 0.0,
-      "freshness": 0.2766,
+      "freshness": 0.2708,
       "success_rate": 1.0,
       "confidence": {
-        "medium": 33,
+        "medium": 34,
         "high": 14
       },
-      "n": 47
+      "n": 48
     },
     "じゃんぱら": {
       "success_count": 28,
@@ -335,16 +335,16 @@
   "diff_vs_prev": {
     "available": true,
     "stale_rate": {
-      "prev": 0.6271,
-      "cur": 0.6298
+      "prev": 0.6298,
+      "cur": 0.6314
     },
     "zero_rate": {
-      "prev": 0.161,
-      "cur": 0.1617
+      "prev": 0.1617,
+      "cur": 0.161
     },
     "item_url_rate": {
-      "prev": 0.4831,
-      "cur": 0.4809
+      "prev": 0.4809,
+      "cur": 0.4788
     },
     "main_route_count": {
       "prev": 0,

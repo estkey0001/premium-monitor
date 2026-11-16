@@ -507,7 +507,7 @@
       ],
       "discovered_at": "2026-10-17T17:34:02+09:00",
       "last_seen_on": "2026-11-16",
-      "updated_at": "2026-11-16T21:35:07+09:00"
+      "updated_at": "2026-11-16T23:22:01+09:00"
     },
     "tcg-pokemon-nocode-771077b562f9": {
       "source": "pokemon_card_official",
@@ -1341,7 +1341,7 @@
         "not_in_canonical"
       ],
       "discovered_at": "2026-10-18T01:23:15+09:00",
-      "last_seen_on": "2026-11-15",
+      "last_seen_on": "2026-11-16",
       "updated_at": "2026-10-18T01:23:15+09:00"
     },
     "apple-87985d82892c": {
@@ -1381,7 +1381,7 @@
       "status": "MATCHED_EXISTING",
       "reasons": [],
       "discovered_at": "2026-10-18T01:23:15+09:00",
-      "last_seen_on": "2026-11-15",
+      "last_seen_on": "2026-11-16",
       "updated_at": "2026-10-18T01:23:15+09:00"
     },
     "apple-4bf4d4ba1b3a": {
@@ -1423,7 +1423,7 @@
         "not_in_canonical"
       ],
       "discovered_at": "2026-10-18T01:23:15+09:00",
-      "last_seen_on": "2026-11-15",
+      "last_seen_on": "2026-11-16",
       "updated_at": "2026-10-18T01:23:15+09:00"
     },
     "tcg-pokemon-018c267d72f6": {
@@ -1527,16 +1527,16 @@
     "families": {
       "iphone-16": {
         "first_seen_on": "2026-10-17",
-        "last_checked_on": "2026-11-15",
+        "last_checked_on": "2026-11-16",
         "listed": true,
-        "last_attempted_on": "2026-11-15",
+        "last_attempted_on": "2026-11-16",
         "last_error": ""
       },
       "iphone-17": {
         "first_seen_on": "2026-10-17",
-        "last_checked_on": "2026-11-15",
+        "last_checked_on": "2026-11-16",
         "listed": true,
-        "last_attempted_on": "2026-11-15",
+        "last_attempted_on": "2026-11-16",
         "last_error": ""
       },
       "iphone-17e": {

@@ -2,33 +2,13 @@
   "type": "PRODUCTION_HEALTH_ALERT",
   "schema": 1,
   "audience": "operator",
-  "generated_at": "2026-11-16T21:08:14+09:00",
+  "generated_at": "2026-11-16T22:55:11+09:00",
   "note": "運営者向けの劣化アラート候補（商品の通知ではない）。外部へは送らない。CI の注記・Step Summary・管理画面に出す",
   "active_count": 6,
   "high": 4,
   "warning": 2,
-  "candidates": [
-    {
-      "key": "source_failure:mobile_ichiban",
-      "category": "source_failure",
-      "source": "mobile_ichiban",
-      "severity": "HIGH",
-      "reason": "product_not_listed",
-      "title": "必須の店 mobile_ichiban が取得できなくなりました（1日目）",
-      "details": "理由: product_not_listed",
-      "evidence": {
-        "consecutive_days": 1,
-        "reasons": [
-          "product_not_listed"
-        ]
-      },
-      "type": "PRODUCTION_HEALTH_ALERT",
-      "event": "NEW",
-      "first_seen": "2026-11-16T21:08:14+09:00",
-      "generated_at": "2026-11-16T21:08:14+09:00"
-    }
-  ],
-  "suppressed": 5,
+  "candidates": [],
+  "suppressed": 6,
   "recovered": [],
   "active": [
     {

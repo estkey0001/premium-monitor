@@ -75,6 +75,8 @@ def _row_html(r: dict) -> str:
         notes.append("別の状態（利益計算に使わない）")
     if r.get("freshness") == "STALE":
         notes.append("STALE（更新が古く、利益計算の主要価格に使わない。休業日などで更新が無いだけの場合もあり、誤価格とは限らない）")
+    if r.get("freshness") == "UNKNOWN_FRESHNESS":
+        notes.append("更新日の記載なし（掲載価格として表示するだけで、利益計算に使わない）")
     if r.get("basis") in BASIS_LABEL and r["basis"] not in ("uniform", "worst_color"):
         notes.append(BASIS_LABEL[r["basis"]])
     price = r.get("executable_price")
@@ -86,7 +88,7 @@ def _row_html(r: dict) -> str:
     return (f'<tr class="{cls}"><th scope="row">{_link(r.get("price_page_url"), r.get("shop"))}</th><td class="num">{shown}</td>'
             f'<td>{_e(COND_LABEL.get(r.get("condition"), r.get("condition")))}</td><td>{_colors(r)}</td>'
             f'<td>{_e(r.get("updated_on") or "更新日の記載なし")}{_e(age)}<div class="mut">{_e(FRESH_LABEL.get(r.get("freshness"), ""))}</div></td>'
-            f'<td>{_e("、".join(n for n in notes if n)) or "利益計算の候補"}{extra}</td></tr>')
+            f'<td>{_e("、".join(n for n in notes if n)) or ("利益計算の候補" if r.get("eligible") else "利益計算に使わない（同じ店の他の行・キャンペーンなど）")}{extra}</td></tr>')
 
 
 def _sku_html(s: dict) -> str:

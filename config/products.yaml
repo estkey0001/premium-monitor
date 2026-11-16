@@ -94,6 +94,19 @@ products:
     official_url: "https://www.apple.com/jp/shop/buy-iphone/iphone-duo"
     price_observed_on: "2026-10-19"
 
+  - id: "prod_iphoneduo_1tb"
+    genre: "iphone"
+    name: "iPhone Duo 1TB SIMフリー"
+    brand: "Apple"
+    model_number: ""
+    retail_price: 469800
+    keywords: ["iPhone Duo 1TB", "MK284J/A", "MK294J/A"]
+    capacity: "1TB"
+    part_numbers: ["MK284J/A", "MK294J/A"]
+    colors: ["Night Sky", "Star White"]
+    official_url: "https://www.apple.com/jp/shop/buy-iphone/iphone-duo"
+    price_observed_on: "2026-11-14"
+
   # =========================================
   # Mac / PC (genre: pc)
   # =========================================

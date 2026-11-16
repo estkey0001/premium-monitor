@@ -69,24 +69,30 @@ STORE_PRIMARY_DOMAINS: dict[str, dict] = {
     },
     "sanyodo.co.jp": {
         "operator": "株式会社三洋堂書店",
-        "evidence": "トップページのフッターに社名（© Sanyodo Books Inc.・株式会社三洋堂書店）。お知らせは同じドメインで公開",
-        "evidence_url": "https://www.sanyodo.co.jp/",
-        "checked_on": "2026-11-13",
-        "strength": "footer",
+        "evidence": "特定商取引法に基づく表記に「販売事業者 株式会社三洋堂書店」（所在地: 愛知県名古屋市）。お知らせは同じドメインで公開。"
+                    "持株会社の IR サイト（ir.sanyodo.co.jp）が子会社として掲載し www.sanyodo.co.jp へリンクするが、同じ登録ドメイン配下で独立した根拠ではない",
+        "evidence_url": "https://www.sanyodo.co.jp/transactions",
+        "checked_on": "2026-11-14",
+        "strength": "tokusho",
     },
     "suruga-ya.jp": {
-        "operator": "SURUGA-YA Inc.",
-        "evidence": "トップページのフッターの著作権表示（© SURUGA-YA Inc.）。日本語の正式社名・特定商取引法のページは確認できていない",
-        "evidence_url": "https://www.suruga-ya.jp/",
-        "checked_on": "2026-11-13",
-        "strength": "footer_only",
+        "operator": "株式会社駿河屋",
+        "evidence": "特定商取引法に基づく表記に「販売業者 株式会社 駿河屋」（所在地: 静岡県静岡市・古物商許可 静岡県公安委員会）。"
+                    "2025-05-01 に株式会社エーツーから社名変更したお知らせが同じドメインにある。運営会社の別ドメインの企業サイトは 403 で確認できていない",
+        "evidence_url": "https://www.suruga-ya.jp/man/tokusyo.html",
+        "checked_on": "2026-11-14",
+        "strength": "tokusho",
     },
 }
+# 一次情報の根拠にしてよい運営者の証拠の強さ。フッターの著作権表示・社名だけ（footer / footer_only）は根拠にしない
+# （ドメインの運営者は、会社概要か特定商取引法に基づく表記に、法人名と所在地が書かれていることで確かめる）。
+PRIMARY_EVIDENCE_STRENGTHS = frozenset({"company_profile", "tokusho"})
 
 
 def is_store_primary_url(url: str) -> bool:
     host = (urlparse(url or "").hostname or "").lower()
-    return bool(host) and any(host == d or host.endswith("." + d) for d in STORE_PRIMARY_DOMAINS)
+    return bool(host) and any((host == d or host.endswith("." + d)) and ev.get("strength") in PRIMARY_EVIDENCE_STRENGTHS
+                              for d, ev in STORE_PRIMARY_DOMAINS.items())
 
 
 def _flag(v: str) -> Optional[bool]:

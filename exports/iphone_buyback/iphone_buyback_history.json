@@ -6,6 +6,7 @@
       "rows": [
         {
           "sku": "iPhone Duo 256GB",
+          "identity": "REGISTERED",
           "key": "rudeya",
           "shop": "買取ルデヤ",
           "price": 360500,
@@ -13,34 +14,7 @@
         },
         {
           "sku": "iPhone Duo 256GB",
-          "key": "mobile_ichiban",
-          "shop": "モバイル一番",
-          "price": 360000,
-          "net": null
-        },
-        {
-          "sku": "iPhone Duo 256GB",
-          "key": "kaitori_shouten",
-          "shop": "買取商店",
-          "price": 360000,
-          "net": null
-        },
-        {
-          "sku": "iPhone Duo 256GB",
-          "key": "morimori",
-          "shop": "森森買取",
-          "price": 360000,
-          "net": null
-        },
-        {
-          "sku": "iPhone Duo 256GB",
-          "key": "twinkle",
-          "shop": "トゥインクルモバイル(Twinkle Mobile) 秋葉原",
-          "price": 360000,
-          "net": null
-        },
-        {
-          "sku": "iPhone Duo 256GB",
+          "identity": "REGISTERED",
           "key": "pastec",
           "shop": "パステック（PASTEC）",
           "price": 360000,
@@ -48,6 +22,7 @@
         },
         {
           "sku": "iPhone Duo 256GB",
+          "identity": "REGISTERED",
           "key": "rakuen",
           "shop": "買取楽園",
           "price": 358000,
@@ -55,6 +30,7 @@
         },
         {
           "sku": "iPhone Duo 512GB",
+          "identity": "DISCOVERED",
           "key": "rudeya",
           "shop": "買取ルデヤ",
           "price": 400500,
@@ -62,34 +38,7 @@
         },
         {
           "sku": "iPhone Duo 512GB",
-          "key": "mobile_ichiban",
-          "shop": "モバイル一番",
-          "price": 400000,
-          "net": null
-        },
-        {
-          "sku": "iPhone Duo 512GB",
-          "key": "kaitori_shouten",
-          "shop": "買取商店",
-          "price": 400000,
-          "net": null
-        },
-        {
-          "sku": "iPhone Duo 512GB",
-          "key": "morimori",
-          "shop": "森森買取",
-          "price": 400000,
-          "net": null
-        },
-        {
-          "sku": "iPhone Duo 512GB",
-          "key": "twinkle",
-          "shop": "トゥインクルモバイル(Twinkle Mobile) 秋葉原",
-          "price": 400000,
-          "net": null
-        },
-        {
-          "sku": "iPhone Duo 512GB",
+          "identity": "DISCOVERED",
           "key": "pastec",
           "shop": "パステック（PASTEC）",
           "price": 400000,
@@ -97,6 +46,7 @@
         },
         {
           "sku": "iPhone Duo 512GB",
+          "identity": "DISCOVERED",
           "key": "rakuen",
           "shop": "買取楽園",
           "price": 400000,
@@ -104,6 +54,7 @@
         },
         {
           "sku": "iPhone Duo 1TB",
+          "identity": "REGISTERED",
           "key": "pastec",
           "shop": "パステック（PASTEC）",
           "price": 492000,
@@ -111,27 +62,7 @@
         },
         {
           "sku": "iPhone Duo 1TB",
-          "key": "morimori",
-          "shop": "森森買取",
-          "price": 491000,
-          "net": null
-        },
-        {
-          "sku": "iPhone Duo 1TB",
-          "key": "twinkle",
-          "shop": "トゥインクルモバイル(Twinkle Mobile) 秋葉原",
-          "price": 491000,
-          "net": null
-        },
-        {
-          "sku": "iPhone Duo 1TB",
-          "key": "mobile_ichiban",
-          "shop": "モバイル一番",
-          "price": 480000,
-          "net": null
-        },
-        {
-          "sku": "iPhone Duo 1TB",
+          "identity": "REGISTERED",
           "key": "rudeya",
           "shop": "買取ルデヤ",
           "price": 480000,
@@ -139,13 +70,7 @@
         },
         {
           "sku": "iPhone Duo 1TB",
-          "key": "kaitori_shouten",
-          "shop": "買取商店",
-          "price": 480000,
-          "net": null
-        },
-        {
-          "sku": "iPhone Duo 1TB",
+          "identity": "REGISTERED",
           "key": "rakuen",
           "shop": "買取楽園",
           "price": 470000,
@@ -153,6 +78,7 @@
         },
         {
           "sku": "iPhone Duo 2TB",
+          "identity": "DISCOVERED",
           "key": "pastec",
           "shop": "パステック（PASTEC）",
           "price": 591000,
@@ -160,27 +86,7 @@
         },
         {
           "sku": "iPhone Duo 2TB",
-          "key": "morimori",
-          "shop": "森森買取",
-          "price": 590000,
-          "net": null
-        },
-        {
-          "sku": "iPhone Duo 2TB",
-          "key": "twinkle",
-          "shop": "トゥインクルモバイル(Twinkle Mobile) 秋葉原",
-          "price": 590000,
-          "net": null
-        },
-        {
-          "sku": "iPhone Duo 2TB",
-          "key": "mobile_ichiban",
-          "shop": "モバイル一番",
-          "price": 585000,
-          "net": null
-        },
-        {
-          "sku": "iPhone Duo 2TB",
+          "identity": "DISCOVERED",
           "key": "rudeya",
           "shop": "買取ルデヤ",
           "price": 585000,
@@ -188,13 +94,7 @@
         },
         {
           "sku": "iPhone Duo 2TB",
-          "key": "kaitori_shouten",
-          "shop": "買取商店",
-          "price": 585000,
-          "net": null
-        },
-        {
-          "sku": "iPhone Duo 2TB",
+          "identity": "DISCOVERED",
           "key": "rakuen",
           "shop": "買取楽園",
           "price": 575000,
@@ -202,20 +102,7 @@
         },
         {
           "sku": "iPhone 18 Pro Max 256GB",
-          "key": "morimori",
-          "shop": "森森買取",
-          "price": 226000,
-          "net": -15600
-        },
-        {
-          "sku": "iPhone 18 Pro Max 256GB",
-          "key": "mobile_ichiban",
-          "shop": "モバイル一番",
-          "price": 226000,
-          "net": -15600
-        },
-        {
-          "sku": "iPhone 18 Pro Max 256GB",
+          "identity": "DISCOVERED",
           "key": "rudeya",
           "shop": "買取ルデヤ",
           "price": 226000,
@@ -223,20 +110,7 @@
         },
         {
           "sku": "iPhone 18 Pro Max 256GB",
-          "key": "kaitori_shouten",
-          "shop": "買取商店",
-          "price": 226000,
-          "net": -15600
-        },
-        {
-          "sku": "iPhone 18 Pro Max 256GB",
-          "key": "twinkle",
-          "shop": "トゥインクルモバイル(Twinkle Mobile) 秋葉原",
-          "price": 226000,
-          "net": -15600
-        },
-        {
-          "sku": "iPhone 18 Pro Max 256GB",
+          "identity": "DISCOVERED",
           "key": "pastec",
           "shop": "パステック（PASTEC）",
           "price": 226000,
@@ -244,6 +118,7 @@
         },
         {
           "sku": "iPhone 18 Pro Max 256GB",
+          "identity": "DISCOVERED",
           "key": "rakuen",
           "shop": "買取楽園",
           "price": 226000,
@@ -251,13 +126,7 @@
         },
         {
           "sku": "iPhone 18 Pro Max 512GB",
-          "key": "mobile_ichiban",
-          "shop": "モバイル一番",
-          "price": 258000,
-          "net": -18600
-        },
-        {
-          "sku": "iPhone 18 Pro Max 512GB",
+          "identity": "DISCOVERED",
           "key": "rudeya",
           "shop": "買取ルデヤ",
           "price": 258000,
@@ -265,27 +134,7 @@
         },
         {
           "sku": "iPhone 18 Pro Max 512GB",
-          "key": "kaitori_shouten",
-          "shop": "買取商店",
-          "price": 258000,
-          "net": -18600
-        },
-        {
-          "sku": "iPhone 18 Pro Max 512GB",
-          "key": "morimori",
-          "shop": "森森買取",
-          "price": 258000,
-          "net": -18600
-        },
-        {
-          "sku": "iPhone 18 Pro Max 512GB",
-          "key": "twinkle",
-          "shop": "トゥインクルモバイル(Twinkle Mobile) 秋葉原",
-          "price": 258000,
-          "net": -18600
-        },
-        {
-          "sku": "iPhone 18 Pro Max 512GB",
+          "identity": "DISCOVERED",
           "key": "rakuen",
           "shop": "買取楽園",
           "price": 258000,
@@ -293,6 +142,7 @@
         },
         {
           "sku": "iPhone 18 Pro Max 512GB",
+          "identity": "DISCOVERED",
           "key": "pastec",
           "shop": "パステック（PASTEC）",
           "price": 258000,
@@ -300,6 +150,7 @@
         },
         {
           "sku": "iPhone 18 Pro Max 1TB",
+          "identity": "DISCOVERED",
           "key": "rudeya",
           "shop": "買取ルデヤ",
           "price": 328000,
@@ -307,27 +158,7 @@
         },
         {
           "sku": "iPhone 18 Pro Max 1TB",
-          "key": "kaitori_shouten",
-          "shop": "買取商店",
-          "price": 328000,
-          "net": -18600
-        },
-        {
-          "sku": "iPhone 18 Pro Max 1TB",
-          "key": "morimori",
-          "shop": "森森買取",
-          "price": 327000,
-          "net": null
-        },
-        {
-          "sku": "iPhone 18 Pro Max 1TB",
-          "key": "twinkle",
-          "shop": "トゥインクルモバイル(Twinkle Mobile) 秋葉原",
-          "price": 328000,
-          "net": -18600
-        },
-        {
-          "sku": "iPhone 18 Pro Max 1TB",
+          "identity": "DISCOVERED",
           "key": "pastec",
           "shop": "パステック（PASTEC）",
           "price": 328000,
@@ -335,62 +166,31 @@
         },
         {
           "sku": "iPhone 18 Pro Max 1TB",
+          "identity": "DISCOVERED",
           "key": "rakuen",
           "shop": "買取楽園",
           "price": 326000,
           "net": null
         },
         {
-          "sku": "iPhone 18 Pro Max 1TB",
-          "key": "mobile_ichiban",
-          "shop": "モバイル一番",
-          "price": 326000,
-          "net": null
-        },
-        {
           "sku": "iPhone 18 Pro Max 2TB",
-          "key": "twinkle",
-          "shop": "トゥインクルモバイル(Twinkle Mobile) 秋葉原",
-          "price": 390000,
-          "net": -61600
-        },
-        {
-          "sku": "iPhone 18 Pro Max 2TB",
-          "key": "kaitori_shouten",
-          "shop": "買取商店",
-          "price": 387000,
-          "net": null
-        },
-        {
-          "sku": "iPhone 18 Pro Max 2TB",
-          "key": "mobile_ichiban",
-          "shop": "モバイル一番",
-          "price": 385000,
-          "net": null
-        },
-        {
-          "sku": "iPhone 18 Pro Max 2TB",
+          "identity": "DISCOVERED",
           "key": "rudeya",
           "shop": "買取ルデヤ",
           "price": 385000,
-          "net": null
+          "net": -66600
         },
         {
           "sku": "iPhone 18 Pro Max 2TB",
-          "key": "morimori",
-          "shop": "森森買取",
-          "price": 380000,
-          "net": null
-        },
-        {
-          "sku": "iPhone 18 Pro Max 2TB",
+          "identity": "DISCOVERED",
           "key": "pastec",
           "shop": "パステック（PASTEC）",
           "price": 385000,
-          "net": null
+          "net": -66600
         },
         {
           "sku": "iPhone 18 Pro Max 2TB",
+          "identity": "DISCOVERED",
           "key": "rakuen",
           "shop": "買取楽園",
           "price": 380000,
@@ -398,6 +198,7 @@
         },
         {
           "sku": "iPhone 18 Pro 256GB",
+          "identity": "DISCOVERED",
           "key": "rudeya",
           "shop": "買取ルデヤ",
           "price": 199500,
@@ -405,27 +206,7 @@
         },
         {
           "sku": "iPhone 18 Pro 256GB",
-          "key": "kaitori_shouten",
-          "shop": "買取商店",
-          "price": 199500,
-          "net": -22100
-        },
-        {
-          "sku": "iPhone 18 Pro 256GB",
-          "key": "morimori",
-          "shop": "森森買取",
-          "price": 198500,
-          "net": null
-        },
-        {
-          "sku": "iPhone 18 Pro 256GB",
-          "key": "twinkle",
-          "shop": "トゥインクルモバイル(Twinkle Mobile) 秋葉原",
-          "price": 199500,
-          "net": -22100
-        },
-        {
-          "sku": "iPhone 18 Pro 256GB",
+          "identity": "DISCOVERED",
           "key": "rakuen",
           "shop": "買取楽園",
           "price": 199000,
@@ -433,6 +214,7 @@
         },
         {
           "sku": "iPhone 18 Pro 256GB",
+          "identity": "DISCOVERED",
           "key": "pastec",
           "shop": "パステック（PASTEC）",
           "price": 198500,
@@ -440,6 +222,7 @@
         },
         {
           "sku": "iPhone 18 Pro 512GB",
+          "identity": "DISCOVERED",
           "key": "rudeya",
           "shop": "買取ルデヤ",
           "price": 231000,
@@ -447,27 +230,7 @@
         },
         {
           "sku": "iPhone 18 Pro 512GB",
-          "key": "kaitori_shouten",
-          "shop": "買取商店",
-          "price": 231000,
-          "net": -25600
-        },
-        {
-          "sku": "iPhone 18 Pro 512GB",
-          "key": "morimori",
-          "shop": "森森買取",
-          "price": 231000,
-          "net": -25600
-        },
-        {
-          "sku": "iPhone 18 Pro 512GB",
-          "key": "twinkle",
-          "shop": "トゥインクルモバイル(Twinkle Mobile) 秋葉原",
-          "price": 231000,
-          "net": -25600
-        },
-        {
-          "sku": "iPhone 18 Pro 512GB",
+          "identity": "DISCOVERED",
           "key": "rakuen",
           "shop": "買取楽園",
           "price": 231000,
@@ -475,6 +238,7 @@
         },
         {
           "sku": "iPhone 18 Pro 512GB",
+          "identity": "DISCOVERED",
           "key": "pastec",
           "shop": "パステック（PASTEC）",
           "price": 231000,
@@ -482,6 +246,7 @@
         },
         {
           "sku": "iPhone 18 Pro 1TB",
+          "identity": "DISCOVERED",
           "key": "rudeya",
           "shop": "買取ルデヤ",
           "price": 295000,
@@ -489,27 +254,7 @@
         },
         {
           "sku": "iPhone 18 Pro 1TB",
-          "key": "kaitori_shouten",
-          "shop": "買取商店",
-          "price": 295000,
-          "net": -31600
-        },
-        {
-          "sku": "iPhone 18 Pro 1TB",
-          "key": "morimori",
-          "shop": "森森買取",
-          "price": 294000,
-          "net": null
-        },
-        {
-          "sku": "iPhone 18 Pro 1TB",
-          "key": "twinkle",
-          "shop": "トゥインクルモバイル(Twinkle Mobile) 秋葉原",
-          "price": 295000,
-          "net": -31600
-        },
-        {
-          "sku": "iPhone 18 Pro 1TB",
+          "identity": "DISCOVERED",
           "key": "pastec",
           "shop": "パステック（PASTEC）",
           "price": 295000,
@@ -517,6 +262,7 @@
         },
         {
           "sku": "iPhone 18 Pro 1TB",
+          "identity": "DISCOVERED",
           "key": "rakuen",
           "shop": "買取楽園",
           "price": 294000,
@@ -524,6 +270,7 @@
         },
         {
           "sku": "iPhone 18 Pro 2TB",
+          "identity": "DISCOVERED",
           "key": "rudeya",
           "shop": "買取ルデヤ",
           "price": 365000,
@@ -531,27 +278,7 @@
         },
         {
           "sku": "iPhone 18 Pro 2TB",
-          "key": "kaitori_shouten",
-          "shop": "買取商店",
-          "price": 365000,
-          "net": -66600
-        },
-        {
-          "sku": "iPhone 18 Pro 2TB",
-          "key": "morimori",
-          "shop": "森森買取",
-          "price": 360000,
-          "net": null
-        },
-        {
-          "sku": "iPhone 18 Pro 2TB",
-          "key": "twinkle",
-          "shop": "トゥインクルモバイル(Twinkle Mobile) 秋葉原",
-          "price": 365000,
-          "net": -66600
-        },
-        {
-          "sku": "iPhone 18 Pro 2TB",
+          "identity": "DISCOVERED",
           "key": "rakuen",
           "shop": "買取楽園",
           "price": 363000,
@@ -559,6 +286,7 @@
         },
         {
           "sku": "iPhone 18 Pro 2TB",
+          "identity": "DISCOVERED",
           "key": "pastec",
           "shop": "パステック（PASTEC）",
           "price": 363000,

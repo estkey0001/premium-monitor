@@ -759,8 +759,10 @@ def test_identity_coverage_counts_clues_without_changing_products():
     before = path.read_bytes()
     prods = yaml.safe_load(path.read_text(encoding="utf-8"))["products"]
     ic = reg.identity_coverage(prods)
-    assert path.read_bytes() == before and ic["products"] == len(prods) == 47
-    assert ic["part_numbers"]["count"] == 2 and ic["part_numbers"]["pct"] == round(2 / 47 * 100, 1)
+    # 件数は正本から導く（登録が増えても、割合の計算が正しいことを検査する。以前は 47 件・部品番号 2 件に固定していた）
+    n_parts = sum(1 for p in prods if p.get("part_numbers"))
+    assert path.read_bytes() == before and ic["products"] == len(prods) and len(prods) >= 47
+    assert ic["part_numbers"]["count"] == n_parts >= 2 and ic["part_numbers"]["pct"] == round(n_parts / len(prods) * 100, 1)
     assert ic["any_strong_key"]["count"] >= ic["part_numbers"]["count"] and ic["identity_evidence"]["count"] >= 2
     assert reg.identity_coverage([])["products"] == 0 and reg.identity_coverage(None)["part_numbers"]["pct"] == 0.0
 

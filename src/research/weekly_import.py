@@ -85,26 +85,58 @@ def normalize_source_result(entry: dict) -> str:
     return FAILED if raw else NOT_RESEARCHED
 
 
+UNREACHABLE_STATES = frozenset({BLOCKED, FAILED})
+GAP_FIELDS = ("reason", "alternative_source", "alternative_finding")
+
+
+def _documented_gap(entry: dict) -> bool:
+    """取得できなかったソースの「理由・代替の経路・代替の経路で分かったこと」が、3 つとも記録されているか。"""
+    return all(str((entry or {}).get(k) or "").strip() for k in GAP_FIELDS)
+
+
 def coverage(source_results: list[dict], required=TCG_REQUIRED_SOURCES) -> dict:
-    """必須ソースの網羅度。必須ソースに結果が無ければ NOT_RESEARCHED。"""
+    """必須ソースの網羅度。必須ソースに結果が無ければ NOT_RESEARCHED。
+
+    - coverage_pct: 取得して読めたソース（FOUND / NO_EVENT_FOUND / CONFIRMED_NO_CURRENT_EVENT）の割合。BLOCKED・FAILED は数えない
+    - accounted_pct: 上に、取得できなかった理由と代替の経路が記録されているソース（documented gap）を足した割合。
+      これは「読めた」ではなく「読めなかった理由と代わりの手段を記録した」割合で、coverage_pct の代わりにしない
+    """
     best: dict[str, str] = {}
+    best_entry: dict[str, dict] = {}
     for e in source_results or []:
         name = str(e.get("source") or "")
         state = normalize_source_result(e)
         for key, _label, words in required:
             if any(w in name for w in words) and _RANK[state] > _RANK.get(best.get(key, NOT_RESEARCHED), 0):
                 best[key] = state
+                best_entry[key] = e
     per = {key: best.get(key, NOT_RESEARCHED) for key, _l, _w in required}
     counts = {s: sum(1 for v in per.values() if v == s) for s in SOURCE_STATES}
     total = len(per)
     researched = sum(counts[s] for s in RESEARCHED_STATES)
     pct = round(100.0 * researched / total, 2) if total else 0.0
+    gaps = []
+    for key, state in per.items():
+        if state in UNREACHABLE_STATES:
+            e = best_entry.get(key) or {}
+            gaps.append({"key": key, "state": state, "documented": _documented_gap(e),
+                         **{k: str(e.get(k) or "")[:300] for k in GAP_FIELDS}})
+    documented = sum(1 for g in gaps if g["documented"])
+    accounted_pct = round(100.0 * (researched + documented) / total, 2) if total else 0.0
+    if total and researched / total >= SUCCESS_MIN_COVERAGE:
+        verdict = "RESEARCH_SUCCESS"
+    elif total and (researched + documented) / total >= SUCCESS_MIN_COVERAGE:
+        verdict = "RESEARCH_PARTIAL_DOCUMENTED_GAPS"          # 読めた割合は足りない（成功ではない）。読めなかった理由と代替の経路は全て記録した
+    else:
+        verdict = "RESEARCH_INCOMPLETE"
     return {
         "required_sources": total, "per_source": per, "counts": counts,
         "researched": researched, "coverage_pct": pct,
+        "documented_gaps": documented, "accounted_pct": accounted_pct, "gaps": gaps,
         "confirmed_scope_pct": round(100.0 * (counts[FOUND] + counts[CONFIRMED_NO_CURRENT_EVENT]) / total, 2) if total else 0.0,
-        "verdict": "RESEARCH_SUCCESS" if total and researched / total >= SUCCESS_MIN_COVERAGE else "RESEARCH_INCOMPLETE",
-        "note": "NO_EVENT_FOUND は『今回の範囲では見つからなかった』で、『イベントが存在しない』ではない（recall の評価で混同しない）",
+        "verdict": verdict,
+        "note": "NO_EVENT_FOUND は『今回の範囲では見つからなかった』で、『イベントが存在しない』ではない（recall の評価で混同しない）。"
+                "accounted_pct は『読めなかった理由と代替の経路を記録した』割合で、『読めた』割合（coverage_pct）ではない",
     }
 
 
@@ -438,17 +470,36 @@ def import_tcg(research: dict, *, now: datetime, csv_path: Path = M.MANUAL_CSV, 
 # 価格の扱い（掲載の最高値を捨てない）:
 #  - highest_listed: 掲載の最高値（条件が新品未開封の行の中の最高。色減額の有無・鮮度に関わらず表示・保存する）
 #  - highest_executable: 掲載の最高値が十分に確認できたときだけ。確認できる = 取得できた店・SKU と条件が完全に一致・
-#    色減額が分かる・ページの更新日が FRESH（または UNKNOWN_FRESHNESS を許す設定）・外れ値でない（または人が確認済み）
+#    色減額が分かる・ページの更新日が FRESH（STALE と UNKNOWN_FRESHNESS は使わない）・外れ値でない（または人が確認済み）
 #  - 外れ値（2 位より outlier.rate を超えて高い）: OUTLIER_REVIEW。最高値は表示・保存するが利益計算に使わず、
 #    次点を「最高の実行可能価格」とは呼ばない（次点での計算は参考として別の名前で出す）
 IPHONE_TARGET_MODELS = ("iPhone Duo", "iPhone 18 Pro Max", "iPhone 18 Pro")        # 長い名前を先に（18 Pro が Pro Max に一致しないように）
 IPHONE_CAPACITIES = ("256GB", "512GB", "1TB", "2TB")
-REGISTERED_IPHONE = {"iPhone Duo 256GB": "prod_iphoneduo_256"}
+PRODUCTS_YAML = PROJECT_ROOT / "config" / "products.yaml"
+
+
+def registered_iphone(path: Optional[Path] = None) -> dict:
+    """正本（config/products.yaml）に登録済みの iPhone の「機種 容量」→ product_id。
+    登録の判定を持たない（正本が唯一の根拠）。部品番号が空の商品は登録済みと数えない（identity が確認できない）。"""
+    try:
+        import yaml
+        doc = yaml.safe_load((path or PRODUCTS_YAML).read_text(encoding="utf-8")) or {}
+    except Exception:                                                # 読めない・壊れているときは「登録なし」（identity を言わない）
+        return {}
+    out = {}
+    for p in (doc.get("products") or []):
+        if not isinstance(p, dict) or p.get("genre") != "iphone" or not p.get("part_numbers"):
+            continue
+        name, cap = str(p.get("name") or ""), str(p.get("capacity") or "")
+        for model in IPHONE_TARGET_MODELS:
+            if cap in IPHONE_CAPACITIES and name.startswith(f"{model} {cap}"):
+                out[f"{model} {cap}"] = str(p.get("id") or "")
+    return out
 APPLE_BUY_URL = "https://www.apple.com/jp/shop/buy-iphone"
 CONFIG_PATH = PROJECT_ROOT / "config" / "iphone_buyback.yaml"
 DEFAULT_CONFIG = {
     "outlier": {"rate": 0.03, "reviewed": []},
-    "freshness": {"default": {"fresh_days": 1}, "sources": {}, "unknown_freshness_executable": True},
+    "freshness": {"default": {"fresh_days": 1}, "sources": {}},
     "surge": {"yen": 5000},
 }
 CONDITIONS = ("UNOPENED", "OPENED_NEW", "USED")
@@ -640,9 +691,7 @@ def _executable_candidate(shop: dict, row: dict, cfg: dict) -> bool:
         return False                                         # キャンペーンの記載がある行は、価格が通常価格か確認できない（別欄のボーナスと混ぜない）
     if not isinstance(row["executable_price"], int) or row["basis"] not in ("uniform", "worst_color"):
         return False
-    if shop["freshness"] == STALE:
-        return False
-    return shop["freshness"] == FRESH or bool(cfg["freshness"].get("unknown_freshness_executable", True))
+    return shop["freshness"] == FRESH                        # STALE も UNKNOWN_FRESHNESS も使わない（表示は「掲載の最高値」に残る）
 
 
 def _listed(shop: dict, row: dict) -> Optional[int]:
@@ -660,8 +709,10 @@ def _reviewed(cfg: dict, sku: str, key: str, price: int, research_date: str) -> 
     return False
 
 
-def build_iphone_comparison(raw_shops: list, apple_prices: dict, *, research_date: str, now: datetime, cfg: Optional[dict] = None) -> dict:
+def build_iphone_comparison(raw_shops: list, apple_prices: dict, *, research_date: str, now: datetime, cfg: Optional[dict] = None,
+                            registered: Optional[dict] = None) -> dict:
     from src.market import official_shipping, profit_formula
+    REGISTERED_IPHONE = registered_iphone() if registered is None else registered
     cfg = cfg or load_config()
     rate = float(cfg["outlier"].get("rate") or 0.03)
     shops = normalize_iphone_shops(raw_shops, research_date, cfg)
@@ -736,11 +787,11 @@ def build_iphone_comparison(raw_shops: list, apple_prices: dict, *, research_dat
         "schema": 2, "type": "IPHONE_BUYBACK_COMPARISON", "research_date": research_date,
         "generated_at": now.isoformat(timespec="seconds"),
         "note": "週次の Web 調査（AI）の結果。価格は各店の公開ページの掲載価格で、買取の確定ではない（事前申込・検品・減額がある）。"
-                "「掲載の最高値」はそのまま表示・保存する。「最高の実行可能価格」は、新品未開封・色減額が分かる・更新が STALE でない・"
+                "「掲載の最高値」はそのまま表示・保存する。「最高の実行可能価格」は、新品未開封・色減額が分かる・更新が FRESH（STALE・更新日不明は使わない）・"
                 "外れ値でない（または確認済み）ときだけ。外れ値は OUTLIER_REVIEW として利益計算に使わない。"
                 "identity が DISCOVERED の SKU は参考（正本に未登録）で、BUY の判定ではない。",
         "thresholds": {"outlier_rate": rate, "fresh_days_default": (cfg["freshness"].get("default") or {}).get("fresh_days", 1),
-                       "unknown_freshness_executable": bool(cfg["freshness"].get("unknown_freshness_executable", True))},
+                       "unknown_freshness_executable": False},
         "counts": counts, "shops_researched": len(shops),
         "shops": [{k: v for k, v in s.items() if k != "rows"} | {"rows_count": len(s["rows"])} for s in shops],
         "skus": skus,
@@ -748,9 +799,10 @@ def build_iphone_comparison(raw_shops: list, apple_prices: dict, *, research_dat
 
 
 def diff_snapshots(prev_rows: list, curr_rows: list, *, surge_yen: int = 5000) -> list:
-    """前回との比較: 最高買取店の変更・買取価格の急騰・赤字 → 黒字。rows は {sku, key, shop, price, net}。"""
+    """前回との比較: 最高買取店の変更・買取価格の急騰・赤字 → 黒字。rows は {sku, identity, key, shop, price, net}。identity が REGISTERED の SKU だけ対象。"""
     events = []
     pm = {(r["sku"], r["key"]): r for r in prev_rows}
+    curr_rows = [r for r in curr_rows if r.get("identity") == "REGISTERED"]   # 正本に未登録（参考）の SKU は、利益の変動を確定のように出さない
 
     def best(rows, sku):
         c = [r for r in rows if r["sku"] == sku]
@@ -779,7 +831,7 @@ def snapshot_rows(comp: dict) -> list:
             if unconf and r["shop"] == unconf.get("shop") and r["executable_price"] == unconf.get("price"):
                 continue                                     # 外れ値（OUTLIER_REVIEW）の価格は変動として出さない
             if r["eligible"] and not r.get("duplicate_row"):
-                out.append({"sku": s["sku"], "key": r["key"], "shop": r["shop"], "price": r["executable_price"],
+                out.append({"sku": s["sku"], "identity": s["identity"], "key": r["key"], "shop": r["shop"], "price": r["executable_price"],
                             "net": s["net_profit"] if top == r["executable_price"] else None})
     return out
 

@@ -11,15 +11,14 @@ outlier:
   #  - {sku: "iPhone Duo 1TB", shop_key: pastec, price: 492000, reviewed_on: "2026-11-14", note: "店舗の公式ページで色・条件を確認"}
 
 # 鮮度: ページ自身の更新日からの日数。fresh_days 以内 = FRESH、超えたら STALE（利益の主要価格に使わない。表示は残す）。
-# 更新日の記載が無い = UNKNOWN_FRESHNESS（古いとも新しいとも言わない。調査日に取得した価格として表示する）。
+# 更新日の記載が無い = UNKNOWN_FRESHNESS（古いとも新しいとも言わない。「掲載の最高値」として表示するが、利益計算には使わない）。
 # 休業日・定休日で更新が無いだけの店は、店ごとの fresh_days で長くできる（誤価格とは扱わない）。
 freshness:
   default:
     fresh_days: 1
   sources: {}
   #  akimoba: {fresh_days: 2, note: "休業日がある（2026-11-13 は店頭・郵送とも休業の記載）"}
-  # 更新日が不明な店の価格を、実行可能価格の候補に含める（鮮度は UNKNOWN_FRESHNESS と明示する）
-  unknown_freshness_executable: true
+  # 実行可能価格に使うのは FRESH だけ。STALE と UNKNOWN_FRESHNESS は設定で許せない（誤価格を利益にしないため）。
 
 # 急騰: 同じ店・同じ SKU の前回の週次から +surge_yen 円以上
 surge:

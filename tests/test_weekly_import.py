@@ -17,6 +17,15 @@ JST = timezone(timedelta(hours=9))
 NOW = datetime(2026, 11, 13, 23, 30, tzinfo=JST)
 
 
+_REAL_REGISTERED_IPHONE = W.registered_iphone
+
+
+@pytest.fixture(autouse=True)
+def _fixed_registered_iphone(monkeypatch):
+    """テストは本物の正本（config/products.yaml。登録が増える）に依存させない。登録済みは Duo 256GB だけと仮定する。"""
+    monkeypatch.setattr(W, "registered_iphone", lambda path=None: {"iPhone Duo 256GB": "prod_iphoneduo_256"})
+
+
 def _ev(**kw):
     base = {
         "kind": "LOTTERY_OPEN", "product_name": "ハドウシーカー テスト商品 BOX", "tcg": "POKEMON", "retailer": "カードラボ",
@@ -35,6 +44,22 @@ def test_store_primary_domains_all_have_evidence():
         for k in ("operator", "evidence", "evidence_url", "checked_on"):
             assert ev.get(k), f"{domain}: {k} が無い（運営者の証拠なしに店舗の公式ドメインにしない）"
         assert domain in ev["evidence_url"]
+
+
+def test_store_primary_domains_need_company_profile_or_tokusho_not_footer():
+    for domain, ev in M.STORE_PRIMARY_DOMAINS.items():
+        assert ev["strength"] in M.PRIMARY_EVIDENCE_STRENGTHS, f"{domain}: フッターだけの根拠は一次情報にしない"
+    assert M.STORE_PRIMARY_DOMAINS["suruga-ya.jp"]["operator"] == "株式会社駿河屋"
+
+
+def test_footer_only_domain_is_not_primary(monkeypatch):
+    weak = dict(M.STORE_PRIMARY_DOMAINS, **{"weak-store.example": {
+        "operator": "X", "evidence": "フッターの著作権表示のみ", "evidence_url": "https://weak-store.example/", "checked_on": "2026-11-14",
+        "strength": "footer_only"}})
+    monkeypatch.setattr(M, "STORE_PRIMARY_DOMAINS", weak)
+    assert M.is_store_primary_url("https://weak-store.example/news/1") is False       # VERIFIED を維持するために基準を緩めない
+    assert W.primary_evidence("https://weak-store.example/news/1") is None
+    assert M.is_store_primary_url("https://www.suruga-ya.jp/blog/?q=x") is True
 
 
 def test_unconfirmed_operators_are_not_primary():
@@ -315,11 +340,13 @@ def test_stale_price_is_displayed_as_listed_but_not_used_as_executable():
     assert s["source_count"] == 3 and s["fresh_source_count"] == 2
 
 
-def test_unknown_freshness_is_a_candidate_only_when_configured():
+def test_unknown_freshness_is_never_executable_even_if_config_asks():
     shops = [_shop("日付なしA", 480000, checked="2026-11-13 (取得日。更新日時の記載なし)"), _shop("日付なしB", 481000, checked="2026-11-13 (取得日。更新日時の記載なし)")]
-    assert _sku(_comp(shops))["highest_executable"]["shop"] == "日付なしB"
-    s2 = _sku(_comp(shops, _cfg(freshness={"unknown_freshness_executable": False})))
-    assert s2["highest_executable"] is None and s2["highest_listed"]["price"] == 481000
+    for cfg in (None, _cfg(freshness={"unknown_freshness_executable": True})):      # 設定で許そうとしても使わない
+        s = _sku(_comp(shops, cfg)) if cfg else _sku(_comp(shops))
+        assert s["highest_executable"] is None and s["net_profit"] is None and s["best_route"] is None
+        assert s["highest_listed"]["price"] == 481000 and s["highest_listed"]["freshness"] == W.UNKNOWN_FRESHNESS   # 表示は残す
+        assert s["highest_listed"]["executable"] is False
 
 
 def test_outlier_keeps_the_highest_price_but_does_not_use_it_for_profit():
@@ -418,15 +445,15 @@ def test_costs_use_the_shared_profit_formula():
 
 
 def test_history_events_best_shop_change_and_surge_and_loss_to_profit():
-    prev = [{"sku": "S", "key": "a", "shop": "A", "price": 390000, "net": -100}, {"sku": "S", "key": "b", "shop": "B", "price": 398000, "net": None}]
-    cur = [{"sku": "S", "key": "a", "shop": "A", "price": 400000, "net": 500}, {"sku": "S", "key": "b", "shop": "B", "price": 385000, "net": None}]
+    prev = [{"sku": "S", "identity": "REGISTERED", "key": "a", "shop": "A", "price": 390000, "net": -100}, {"sku": "S", "identity": "REGISTERED", "key": "b", "shop": "B", "price": 398000, "net": None}]
+    cur = [{"sku": "S", "identity": "REGISTERED", "key": "a", "shop": "A", "price": 400000, "net": 500}, {"sku": "S", "identity": "REGISTERED", "key": "b", "shop": "B", "price": 385000, "net": None}]
     types = {e["type"] for e in W.diff_snapshots(prev, cur)}
     assert "BEST_SHOP_CHANGE" in types and "BUYBACK_SURGE" in types
-    prev2 = [{"sku": "S", "key": "a", "shop": "A", "price": 390000, "net": -100}]
-    cur2 = [{"sku": "S", "key": "a", "shop": "A", "price": 391000, "net": 900}]
+    prev2 = [{"sku": "S", "identity": "REGISTERED", "key": "a", "shop": "A", "price": 390000, "net": -100}]
+    cur2 = [{"sku": "S", "identity": "REGISTERED", "key": "a", "shop": "A", "price": 391000, "net": 900}]
     assert {e["type"] for e in W.diff_snapshots(prev2, cur2)} == {"LOSS_TO_PROFIT"}
-    assert {e["type"] for e in W.diff_snapshots([{"sku": "S", "key": "a", "shop": "A", "price": 390000, "net": None}],
-                                                [{"sku": "S", "key": "a", "shop": "A", "price": 395000, "net": None}])} == {"BUYBACK_SURGE"}
+    assert {e["type"] for e in W.diff_snapshots([{"sku": "S", "identity": "REGISTERED", "key": "a", "shop": "A", "price": 390000, "net": None}],
+                                                [{"sku": "S", "identity": "REGISTERED", "key": "a", "shop": "A", "price": 395000, "net": None}])} == {"BUYBACK_SURGE"}
 
 
 def test_history_is_idempotent_for_the_same_day_and_first_run_has_no_events(tmp_path):
@@ -473,7 +500,7 @@ def test_committed_comparison_invariants():
     for s in comp["skus"]:
         for r in s["rows"]:
             if r["eligible"]:                              # 利益計算の候補は、新品未開封・取得できた店・STALE でない・色減額が分かる行だけ
-                assert r["condition"] == "UNOPENED" and r["shop_status"] == "ACTIVE" and r["freshness"] != "STALE"
+                assert r["condition"] == "UNOPENED" and r["shop_status"] == "ACTIVE" and r["freshness"] == "FRESH"      # STALE も UNKNOWN_FRESHNESS も使わない
                 assert r["basis"] in ("uniform", "worst_color") and isinstance(r["executable_price"], int)
             if r["condition"] != "UNOPENED":
                 assert r["listed_price"] is None and not r["eligible"]       # 状態を混ぜない
@@ -489,6 +516,7 @@ def test_committed_comparison_invariants():
             assert s["highest_executable"] and s["net_profit"] == s["highest_executable"]["price"] - s["apple_price"] - s["costs"]
         if s["identity"] != "REGISTERED":
             assert "参考" in s["identity_note"]
+        assert (s["identity"] == "REGISTERED") == (s["sku"] in _REAL_REGISTERED_IPHONE()), s["sku"]     # identity は正本の登録と一致する
         names = [r["shop"] for r in s["rows"] if r["condition"] == "UNOPENED"]
         assert len(names) == len(set(names))               # 同じ店・同じ SKU を二重に入れない（誤った統合なし）
     assert comp["generated_at"][:10] >= comp["research_date"]         # 調査日より前の生成日時ではない（鮮度の偽装なし）
@@ -754,3 +782,78 @@ def test_host_of_handles_userinfo_and_ports():
     assert W._host_of("https://ricoh-imaging.co.jp@evil.example/x") == "evil.example"        # userinfo で公式に見せかけない
     assert W.primary_evidence("https://ricoh-imaging.co.jp@evil.example/x") is None
     assert W._host_of("javascript:alert(1)") == "" and W._host_of("") == ""
+
+
+def test_page_says_unknown_freshness_is_not_used_for_profit():
+    from src.content import iphone_buyback_page as P
+    html = P._row_html({"shop": "日付なし店", "shop_status": "ACTIVE", "condition": "UNOPENED", "freshness": "UNKNOWN_FRESHNESS",
+                        "basis": "uniform", "listed_price": 481000, "executable_price": 481000, "eligible": False, "updated_on": None})
+    assert "利益計算に使わない" in html and "利益計算の候補" not in html
+
+
+def test_registered_iphone_reads_the_canonical_file_and_ignores_products_without_part_numbers(tmp_path):
+    y = tmp_path / "products.yaml"
+    y.write_text(
+        "products:\n"
+        "  - {id: prod_a, genre: iphone, name: 'iPhone Duo 1TB SIMフリー', capacity: '1TB', part_numbers: ['MK284J/A']}\n"
+        "  - {id: prod_b, genre: iphone, name: 'iPhone Duo 2TB SIMフリー', capacity: '2TB', part_numbers: []}\n"
+        "  - {id: prod_c, genre: camera, name: 'iPhone Duo 512GB', capacity: '512GB', part_numbers: ['X']}\n", encoding="utf-8")
+    assert _REAL_REGISTERED_IPHONE(y) == {"iPhone Duo 1TB": "prod_a"}                  # 部品番号が空・iPhone 以外は登録済みと数えない
+    assert _REAL_REGISTERED_IPHONE(tmp_path / "missing.yaml") == {}                    # 読めなければ「登録なし」（identity を言わない）
+    real = _REAL_REGISTERED_IPHONE()
+    assert real.get("iPhone Duo 256GB") == "prod_iphoneduo_256"
+
+
+# ---- coverage の境界（読めた割合と、理由を記録した割合は別） ----
+def _srcs(spec):
+    """spec: {キー: (結果, 記録の有無)}。TCG_REQUIRED_SOURCES の最初の語で名前を作る。"""
+    out = []
+    for key, _label, words in W.TCG_REQUIRED_SOURCES:
+        if key in spec:
+            res, doc = spec[key]
+            e = {"source": words[0], "result": res}
+            if doc:
+                e.update(reason="403", alternative_source="公式 X", alternative_finding="告知を確認")
+            out.append(e)
+    return out
+
+
+def test_coverage_exactly_80_percent_read_is_success():
+    req = W.TCG_REQUIRED_SOURCES[:10]
+    spec = {k: ("FOUND", False) for k, *_ in req[:8]} | {k: ("FAILED", False) for k, *_ in req[8:]}
+    c = W.coverage(_srcs(spec), required=req)
+    assert c["coverage_pct"] == 80.0 and c["verdict"] == "RESEARCH_SUCCESS"
+
+
+def test_documented_gaps_do_not_raise_coverage_and_are_not_success():
+    req = W.TCG_REQUIRED_SOURCES[:10]
+    spec = {k: ("FOUND", False) for k, *_ in req[:6]} | {k: ("BLOCKED", True) for k, *_ in req[6:]}
+    c = W.coverage(_srcs(spec), required=req)
+    assert c["coverage_pct"] == 60.0 and c["accounted_pct"] == 100.0 and c["documented_gaps"] == 4   # 読めた割合は水増ししない
+    assert c["verdict"] == "RESEARCH_PARTIAL_DOCUMENTED_GAPS" and "SUCCESS" not in c["verdict"]
+
+
+def test_gap_needs_all_three_fields_and_undocumented_stays_incomplete():
+    req = W.TCG_REQUIRED_SOURCES[:10]
+    srcs = _srcs({k: ("FOUND", False) for k, *_ in req[:6]} | {k: ("BLOCKED", True) for k, *_ in req[6:]})
+    srcs[-1].pop("alternative_finding")                                    # 3 項目のうち 1 つが無い → 記録なし
+    c = W.coverage(srcs, required=req)
+    assert c["documented_gaps"] == 3 and c["accounted_pct"] == 90.0 and c["verdict"] == "RESEARCH_PARTIAL_DOCUMENTED_GAPS"
+    srcs2 = _srcs({k: ("FOUND", False) for k, *_ in req[:5]} | {k: ("FAILED", False) for k, *_ in req[5:]})
+    assert W.coverage(srcs2, required=req)["verdict"] == "RESEARCH_INCOMPLETE"
+
+
+def test_coverage_uses_the_strongest_entry_per_key():
+    req = W.TCG_REQUIRED_SOURCES[:1]
+    key, _l, words = req[0]
+    srcs = [{"source": words[0], "result": "FAILED"}, {"source": words[0] + " 別ページ", "result": "FOUND"}]
+    assert W.coverage(srcs, required=req)["per_source"][key] == "FOUND"
+
+
+def test_change_events_only_for_registered_skus():
+    prev = [{"sku": "A", "identity": "DISCOVERED", "key": "k", "shop": "店", "price": 400000, "net": -1000},
+            {"sku": "B", "identity": "REGISTERED", "key": "k", "shop": "店", "price": 400000, "net": -1000}]
+    curr = [{"sku": "A", "identity": "DISCOVERED", "key": "k", "shop": "店", "price": 410000, "net": 5000},
+            {"sku": "B", "identity": "REGISTERED", "key": "k", "shop": "店", "price": 410000, "net": 5000}]
+    ev = W.diff_snapshots(prev, curr)
+    assert {e["sku"] for e in ev} == {"B"} and {e["type"] for e in ev} == {"LOSS_TO_PROFIT", "BUYBACK_SURGE"}   # 未登録（A）は出さない

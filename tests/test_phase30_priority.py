@@ -271,12 +271,14 @@ def test_only_selected_candidate_registered_with_capacity_and_parts():
     import json
     prods = canon()
     reg_entries = [p["id"] for p in prods if p.get("price_observed_on")]
-    assert DPID in reg_entries and not [x for x in reg_entries if x.startswith("prod_iphoneduo_") and x != DPID]
+    # 登録した Duo は 256GB（Phase 30）と、既存の登録フローで加えた 1TB（Live Data Quality。2026-11-14）だけ
+    assert DPID in reg_entries and not [x for x in reg_entries if x.startswith("prod_iphoneduo_") and x not in (DPID, "prod_iphoneduo_1tb")]
     e = next(p for p in prods if p["id"] == DPID)
     assert e["capacity"] == "256GB" and e["part_numbers"] == DPARTS and e["name"] == "iPhone Duo 256GB SIMフリー"
     led = json.loads((ROOT / "exports" / "discovery" / st.PRODUCT_FILE).read_text(encoding="utf-8"))["candidates"]
     assert led["apple-419a47e495b5"]["status"] == st.REGISTERED and led["apple-419a47e495b5"]["registered_id"] == DPID
-    for other in ("apple-dc7090c0276a", "apple-88de14d448ca", "apple-d11a8e24b990"):                 # 他の容量は登録しない
+    assert led["apple-88de14d448ca"]["status"] == st.REGISTERED and led["apple-88de14d448ca"]["registered_id"] == "prod_iphoneduo_1tb"
+    for other in ("apple-dc7090c0276a", "apple-d11a8e24b990"):                 # 512GB・2TB は登録しない（2TB は承認まで）
         assert led.get(other, {}).get("status") != st.REGISTERED
     assert sum(1 for x in led.values() if x.get("product_name") == "iPhone Duo 256GB") == 1          # 重複なし
 

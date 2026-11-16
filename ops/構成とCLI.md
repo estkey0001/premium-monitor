@@ -355,3 +355,6 @@ python3 -m pytest tests/test_weekly_import.py
 - ソース別の結果: FOUND / CONFIRMED_NO_CURRENT_EVENT / NO_EVENT_FOUND（トップページだけなどの「見つからなかった」。「存在しない」ではない）/ BLOCKED / FAILED。必須ソースの調べられた割合が 80% 未満は RESEARCH_INCOMPLETE。
 - iPhone: 出力は `exports/iphone_buyback/`（比較・履歴）。しきい値は `config/iphone_buyback.yaml`。公開ページは `docs/iphone-buyback.html`、カメラは `exports/camera_research/` と `docs/camera-research.html`（どちらも `build-public-lp` が作る。抽選の「受付中・終了」とページの古さの警告は、ページを作るたびに現在日時で決める）。
 - 公開してはいけないもの: 集約サイト由来の個別の候補・原本を確認していない価格（`exports/research/` は集計の summary.json だけの規則。新しい出力ディレクトリにも同じ考え方を適用する）。
+- 鮮度と実行可能価格（2026-11-14〜）: 「最高の実行可能買取」は **FRESH だけ**。STALE・UNKNOWN_FRESHNESS は「掲載の最高値」として表示するが利益計算に使わない（設定では許せない）。iPhone の identity（REGISTERED）は `config/products.yaml` の登録から決まる（未登録は参考。登録は上の「候補の確認と正本への登録」の手順）。
+- 店舗ドメインの運営者の証拠（`STORE_PRIMARY_DOMAINS`）は、会社概要または特定商取引法表記に法人名と所在地があることが条件（`company_profile` / `tokusho`）。フッターの著作権表示・社名だけは根拠にしない。
+- 網羅度の見方: `coverage_pct`（読めた割合。80% が目標）と `accounted_pct`（読めなかった理由・代替の経路・代替で分かったことを記録した割合）は別。後者を前者の代わりに報告しない。

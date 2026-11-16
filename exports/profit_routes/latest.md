@@ -1,6 +1,6 @@
 # Pro 利益ルート（normalized_price_observations 由来・検証済み）
 
-生成: 2026-11-15 21:25 JST
+生成: 2026-11-16 18:54 JST
 
 - **main 利益ルート: 0件**（route_confidence high/medium のみ）
 - 参考ルート(海外sold stale・要fresh化): 0件
@@ -29,7 +29,7 @@
 - 除外理由TOP5: [('price_zero', 5), ('stale_over_14d', 3)]
 
 ### iPhone 17 Pro Max 256GB SIMフリー
-- buy候補 0 / sell候補 2 / stale除外 3 / 海外sold stale 0
+- buy候補 0 / sell候補 3 / stale除外 3 / 海外sold stale 0
 - 除外理由TOP5: [('price_zero', 5), ('stale_over_14d', 3)]
 
 ### iPhone 17 Pro Max 512GB SIMフリー
@@ -58,6 +58,10 @@
 
 ### iPhone Duo 256GB SIMフリー
 - buy候補 0 / sell候補 1 / stale除外 0 / 海外sold stale 0
+- 除外理由TOP5: []
+
+### iPhone Duo 1TB SIMフリー
+- buy候補 0 / sell候補 0 / stale除外 0 / 海外sold stale 0
 - 除外理由TOP5: []
 
 ### MacBook Air M4 13インチ
@@ -165,8 +169,8 @@
 - 除外理由TOP5: []
 
 ### SONY α7CR
-- buy候補 0 / sell候補 1 / stale除外 0 / 海外sold stale 0
-- 除外理由TOP5: []
+- buy候補 0 / sell候補 0 / stale除外 0 / 海外sold stale 0
+- 除外理由TOP5: [('accessory_or_wrong_product', 1)]
 
 ### SONY FX3
 - buy候補 0 / sell候補 1 / stale除外 0 / 海外sold stale 0

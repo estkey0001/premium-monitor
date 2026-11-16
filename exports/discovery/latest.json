@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-15T21:09:53+09:00",
+  "generated_at": "2026-11-16T18:38:48+09:00",
   "apple": {
     "source": "apple_jp_official",
     "list_status": "ok",
@@ -12,13 +12,13 @@
       "iphone-duo"
     ],
     "checked": [
-      "iphone-16",
-      "iphone-17"
+      "iphone-17e",
+      "iphone-18-pro"
     ],
     "errors": {},
-    "unknown_parts": 10,
-    "matched": 1,
-    "pending": 2,
+    "unknown_parts": 38,
+    "matched": 0,
+    "pending": 10,
     "requests": 3,
     "cutoff": "",
     "saved": true
@@ -32,10 +32,10 @@
     },
     "inputs_stale": [],
     "review_required": 6,
-    "matched_events": 33,
+    "matched_events": 32,
     "release": 7,
     "by_kind": {
-      "LOTTERY": 38,
+      "LOTTERY": 37,
       "PREORDER": 0,
       "FIRST_COME": 0,
       "RESTOCK": 1,
@@ -46,9 +46,9 @@
       "configured": 22,
       "implemented": 11,
       "unimplemented": 11,
-      "blocked": 5,
-      "robots_unreachable": 4,
-      "unreachable": 4,
+      "blocked": 4,
+      "robots_unreachable": 5,
+      "unreachable": 5,
       "table": [
         {
           "source_id": "POKEMON_CENTER_ONLINE",
@@ -194,11 +194,11 @@
           "source_id": "YODOBASHI",
           "retailer": "ヨドバシカメラ",
           "adapter": null,
-          "state": "SOURCE_BLOCKED",
-          "health": "BLOCKED",
-          "blocked": true,
-          "robots": null,
-          "unreachable": false
+          "state": "SOURCE_UNREACHABLE",
+          "health": "FAILED",
+          "blocked": false,
+          "robots": "robots_unreachable",
+          "unreachable": true
         },
         {
           "source_id": "AMAZON",
@@ -280,21 +280,21 @@
   },
   "metrics": {
     "product_candidates": 43,
-    "new_product_candidates": 40,
-    "pending_review": 26,
+    "new_product_candidates": 38,
+    "pending_review": 24,
     "review_required": 14,
     "matched_existing": 1,
-    "approved": 0,
+    "approved": 1,
     "rejected": 0,
-    "registered": 2,
+    "registered": 3,
     "stale": 1,
-    "unknown_official_products": 62,
-    "apple_candidates": 17,
+    "unknown_official_products": 58,
+    "apple_candidates": 15,
     "tcg_products": 24,
-    "event_candidates": 154,
+    "event_candidates": 157,
     "review_required_announcements": 6,
     "matched_events": 76,
-    "stale_events": 72,
+    "stale_events": 75,
     "approved_events": 0,
     "registered_events": 0
   },
@@ -302,9 +302,9 @@
     "configured": 22,
     "implemented": 11,
     "unimplemented": 11,
-    "blocked": 5,
-    "robots_unreachable": 4,
-    "unreachable": 4,
+    "blocked": 4,
+    "robots_unreachable": 5,
+    "unreachable": 5,
     "table": [
       {
         "source_id": "POKEMON_CENTER_ONLINE",
@@ -450,11 +450,11 @@
         "source_id": "YODOBASHI",
         "retailer": "ヨドバシカメラ",
         "adapter": null,
-        "state": "SOURCE_BLOCKED",
-        "health": "BLOCKED",
-        "blocked": true,
-        "robots": null,
-        "unreachable": false
+        "state": "SOURCE_UNREACHABLE",
+        "health": "FAILED",
+        "blocked": false,
+        "robots": "robots_unreachable",
+        "unreachable": true
       },
       {
         "source_id": "AMAZON",

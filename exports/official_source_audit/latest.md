@@ -1,6 +1,6 @@
 # Official Source Registry & Validation
 
-> 生成: 2026-11-15 20:43 JST / 公式ソース登録・検証（利益/AI/Opportunity/Notification/Capital/Execution は不変）
+> 生成: 2026-11-16 18:11 JST / 公式ソース登録・検証（利益/AI/Opportunity/Notification/Capital/Execution は不変）
 
 ## メーカー別サマリ
 | Maker | Products | URL verified | HTTP200 | exact match | price auto | high conf | failed |
@@ -54,7 +54,7 @@
 | prod_z8 | ¥590,000 | ¥575,300 | -14,700 |
 
 ## 識別の手がかりの割合（読むだけ）
-- 商品 47: 部品番号 2件（4.3%） / 型番 24件（51.1%） / JAN 9件（19.1%） / 公式 URL 2件（4.3%） / 公式の証拠 18件（38.3%） / 強い手がかりのどれか 27件（57.4%）
+- 商品 48: 部品番号 3件（6.2%） / 型番 24件（50.0%） / JAN 9件（18.8%） / 公式 URL 3件（6.2%） / 公式の証拠 18件（37.5%） / 強い手がかりのどれか 28件（58.3%）
 
 ## 検証不能（要手動検証・推測登録しない）
 | product | source | reason |

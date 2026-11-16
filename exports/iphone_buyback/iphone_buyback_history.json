@@ -293,6 +293,43 @@
           "net": null
         }
       ]
+    },
+    {
+      "date": "2026-11-16",
+      "rows": [
+        {
+          "sku": "iPhone Duo 1TB",
+          "identity": "REGISTERED",
+          "key": "pastec",
+          "shop": "パステック（PASTEC）",
+          "price": 482000,
+          "net": 10400
+        },
+        {
+          "sku": "iPhone Duo 1TB",
+          "identity": "REGISTERED",
+          "key": "rudeya",
+          "shop": "買取ルデヤ",
+          "price": 481000,
+          "net": null
+        },
+        {
+          "sku": "iPhone Duo 2TB",
+          "identity": "REGISTERED",
+          "key": "pastec",
+          "shop": "パステック（PASTEC）",
+          "price": 586000,
+          "net": 9400
+        },
+        {
+          "sku": "iPhone Duo 2TB",
+          "identity": "REGISTERED",
+          "key": "rudeya",
+          "shop": "買取ルデヤ",
+          "price": 585000,
+          "net": null
+        }
+      ]
     }
   ]
 }

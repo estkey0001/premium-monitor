@@ -107,6 +107,19 @@ products:
     official_url: "https://www.apple.com/jp/shop/buy-iphone/iphone-duo"
     price_observed_on: "2026-11-14"
 
+  - id: "prod_iphoneduo_2tb"
+    genre: "iphone"
+    name: "iPhone Duo 2TB SIMフリー"
+    brand: "Apple"
+    model_number: ""
+    retail_price: 574800
+    keywords: ["iPhone Duo 2TB", "MK2A4J/A", "MK2C4J/A"]
+    capacity: "2TB"
+    part_numbers: ["MK2A4J/A", "MK2C4J/A"]
+    colors: ["Night Sky", "Star White"]
+    official_url: "https://www.apple.com/jp/shop/buy-iphone/iphone-duo"
+    price_observed_on: "2026-11-16"
+
   # =========================================
   # Mac / PC (genre: pc)
   # =========================================

@@ -504,6 +504,12 @@ DEFAULT_CONFIG = {
 }
 CONDITIONS = ("UNOPENED", "OPENED_NEW", "USED")
 FRESH, STALE, UNKNOWN_FRESHNESS = "FRESH", "STALE", "UNKNOWN_FRESHNESS"
+# Apple の購入可否（apple_buyability.py の語彙と同じ）。購入可能と確認できたときだけ BUY の候補にする
+AV_BUYABLE, AV_UNAVAILABLE, AV_UNKNOWN = "BUYABLE", "UNAVAILABLE", "UNKNOWN"
+# 本体の BUY の ROI 条件と同じ値（scripts/generate_ai_opportunities.py の「ROI>=8%」）。週次の比較はこの値を持つだけで本体の BUY には接続しない
+BUY_ROI_MIN_PCT = 8.0
+PROFIT_PROFITABLE, PROFIT_LOSS, PROFIT_NO_DATA, PROFIT_REFERENCE = "PROFITABLE", "LOSS", "NO_DATA", "REFERENCE_PROFIT"
+OPP_BUY, OPP_WATCH, OPP_WAIT, OPP_PASS = "BUY", "WATCH", "WAIT", "PASS"
 SHOP_KEYS = (
     ("ルデヤ", "rudeya"), ("モバイル一番", "mobile_ichiban"), ("買取商店", "kaitori_shouten"), ("森森", "morimori"),
     ("FS買取", "fs_kaitori"), ("クイック", "quick"), ("アキモバ", "akimoba"), ("楽園", "rakuen"), ("HONOKA", "honoka"),
@@ -709,13 +715,63 @@ def _reviewed(cfg: dict, sku: str, key: str, price: int, research_date: str) -> 
     return False
 
 
+def normalize_availability(raw, research_date: str) -> dict:
+    """Apple の購入可否（{sku: {status, checked_at, source, parts}}）。**調査日と同じ日に確認したものだけ**使う。
+
+    確認日が調査日と違う・日付が読めない・状態が不明は UNKNOWN（購入可能にしない）。新しい日付を付け替えない。
+    """
+    out = {}
+    for sku, v in (raw or {}).items() if isinstance(raw, dict) else []:
+        if not isinstance(v, dict):
+            continue
+        status = str(v.get("status") or "").upper()
+        checked = str(v.get("checked_at") or "")
+        if status not in (AV_BUYABLE, AV_UNAVAILABLE):
+            status = AV_UNKNOWN
+        elif checked[:10] != research_date:
+            status = AV_UNKNOWN          # 古い確認は購入可否の根拠にしない
+        elif status == AV_BUYABLE and (not isinstance(v.get("parts"), dict) or not v["parts"] or not all(x is True for x in v["parts"].values())):
+            status = AV_UNKNOWN          # 部品番号ごとの根拠が全色 True でなければ、状態の文字だけでは購入可能にしない
+        elif status == AV_UNAVAILABLE and isinstance(v.get("parts"), dict) and v["parts"] and all(x is True for x in v["parts"].values()):
+            status = AV_UNKNOWN          # 根拠と状態が矛盾する場合は信じない
+        out[sku] = {"status": status, "checked_at": checked[:25] or None, "source": str(v.get("source") or "")[:120] or None,
+                    "parts": v.get("parts") if isinstance(v.get("parts"), dict) else None}
+    return out
+
+
+def judge_status(*, identity: str, net: Optional[int], roi_pct: Optional[float], outlier: str, eligible: int, availability: str) -> tuple[str, str, str]:
+    """(profit_status, opportunity_status, 理由)。黒字（PROFITABLE）と BUY は別。
+
+    - PROFITABLE: 計算上の黒字（正本に登録済み）。未登録は REFERENCE_PROFIT（参考）。LOSS: 赤字。NO_DATA: 確定できる価格が無い。
+    - BUY: 黒字・正本に登録済み・Apple で購入可能（当日確認）・実行可能な買取が 2 店以上・外れ値でない・ROI が本体の BUY 条件（8%）以上。
+      1 つでも欠けたら BUY にしない。購入できない（UNAVAILABLE）は WAIT、購入可否が不明（UNKNOWN）・参考・1 店だけは WATCH、ROI 不足は WAIT。
+    - 週次の比較の判定であって、本体の BUY・通知・今すぐ行動には接続しない。
+    """
+    if net is None:
+        return PROFIT_NO_DATA, OPP_PASS, "確定できる実行可能価格が無い（外れ値の確認待ち・店が 1 つだけ・鮮度なし）"
+    if net <= 0:
+        return PROFIT_LOSS, OPP_PASS, "赤字（買取価格が Apple 定価と諸経費を下回る）"
+    if identity != "REGISTERED":
+        return PROFIT_REFERENCE, OPP_WATCH, "正本に未登録の参考。BUY の判定には使わない"
+    if availability == AV_UNAVAILABLE:
+        return PROFIT_PROFITABLE, OPP_WAIT, "黒字だが Apple で今は購入できない"
+    if availability != AV_BUYABLE:
+        return PROFIT_PROFITABLE, OPP_WATCH, "黒字だが Apple の購入可否を当日確認できていない（購入できると分かるまで BUY にしない）"
+    if eligible < 2 or outlier not in ("NONE", "REVIEWED"):
+        return PROFIT_PROFITABLE, OPP_WATCH, "黒字だが実行可能な買取が 1 店だけ、または外れ値の確認待ち"
+    if roi_pct is None or roi_pct < BUY_ROI_MIN_PCT:
+        return PROFIT_PROFITABLE, OPP_WAIT, f"黒字だが ROI が BUY の条件（{BUY_ROI_MIN_PCT:g}%）未満"
+    return PROFIT_PROFITABLE, OPP_BUY, f"黒字・Apple で購入可能・実行可能な買取が 2 店以上・ROI {BUY_ROI_MIN_PCT:g}% 以上"
+
+
 def build_iphone_comparison(raw_shops: list, apple_prices: dict, *, research_date: str, now: datetime, cfg: Optional[dict] = None,
-                            registered: Optional[dict] = None) -> dict:
+                            registered: Optional[dict] = None, availability: Optional[dict] = None) -> dict:
     from src.market import official_shipping, profit_formula
     REGISTERED_IPHONE = registered_iphone() if registered is None else registered
     cfg = cfg or load_config()
     rate = float(cfg["outlier"].get("rate") or 0.03)
     shops = normalize_iphone_shops(raw_shops, research_date, cfg)
+    avail = normalize_availability(availability, research_date)
     skus = []
     for model in IPHONE_TARGET_MODELS:
         for cap in IPHONE_CAPACITIES:
@@ -763,9 +819,16 @@ def build_iphone_comparison(raw_shops: list, apple_prices: dict, *, research_dat
                            "net_profit": elig[1]["executable_price"] - apple - costs,
                            "note": "次点の価格での参考計算。最高の実行可能価格ではない（最高値は確認待ち）"}
             hl = listed[0] if listed else None
+            identity = "REGISTERED" if sku in REGISTERED_IPHONE else "DISCOVERED"
+            av = avail.get(sku) or {"status": AV_UNKNOWN, "checked_at": None, "source": None, "parts": None}
+            roi = round(100.0 * net / apple, 2) if net is not None else None
+            profit_status, opp_status, opp_reason = judge_status(identity=identity, net=net, roi_pct=roi, outlier=outlier,
+                                                                 eligible=len(elig), availability=av["status"])
             skus.append({
                 "sku": sku, "apple_price": apple, "apple_url": APPLE_BUY_URL,
-                "identity": "REGISTERED" if sku in REGISTERED_IPHONE else "DISCOVERED",
+                "identity": identity,
+                "apple_availability": av,
+                "profit_status": profit_status, "opportunity_status": opp_status, "opportunity_reason": opp_reason,
                 "identity_note": "正本に登録済み（部品番号つき）" if sku in REGISTERED_IPHONE else "参考: 部品番号が公式ページに無く、正本に未登録。利益の判定（BUY）には使わない",
                 "rows": sorted(rows, key=lambda r: (not r["eligible"], -(r["listed_price"] or 0))),
                 "source_count": len(priced_shops), "fresh_source_count": len(fresh_shops), "eligible_shops": len(elig),
@@ -775,7 +838,7 @@ def build_iphone_comparison(raw_shops: list, apple_prices: dict, *, research_dat
                 "highest_unconfirmed": {"shop": top["shop"], "price": top["executable_price"], "status": outlier} if (top and not confirmed) else None,
                 "second": {"shop": elig[1]["shop"], "price": elig[1]["executable_price"]} if len(elig) > 1 else None,
                 "third": {"shop": elig[2]["shop"], "price": elig[2]["executable_price"]} if len(elig) > 2 else None,
-                "costs": costs, "net_profit": net, "roi_pct": round(100.0 * net / apple, 2) if net is not None else None,
+                "costs": costs, "net_profit": net, "roi_pct": roi,
                 "reference_net_at_second": ref_net,
                 "best_route": (f"Apple → {top['shop']}" if (confirmed and net is not None and net > 0 and sku in REGISTERED_IPHONE) else None),
                 "reference_route": (f"Apple → {top['shop']}" if (confirmed and net is not None and net > 0 and sku not in REGISTERED_IPHONE) else None),
@@ -790,7 +853,7 @@ def build_iphone_comparison(raw_shops: list, apple_prices: dict, *, research_dat
                 "「掲載の最高値」はそのまま表示・保存する。「最高の実行可能価格」は、新品未開封・色減額が分かる・更新が FRESH（STALE・更新日不明は使わない）・"
                 "外れ値でない（または確認済み）ときだけ。外れ値は OUTLIER_REVIEW として利益計算に使わない。"
                 "identity が DISCOVERED の SKU は参考（正本に未登録）で、BUY の判定ではない。",
-        "thresholds": {"outlier_rate": rate, "fresh_days_default": (cfg["freshness"].get("default") or {}).get("fresh_days", 1),
+        "thresholds": {"outlier_rate": rate, "buy_roi_min_pct": BUY_ROI_MIN_PCT, "fresh_days_default": (cfg["freshness"].get("default") or {}).get("fresh_days", 1),
                        "unknown_freshness_executable": False},
         "counts": counts, "shops_researched": len(shops),
         "shops": [{k: v for k, v in s.items() if k != "rows"} | {"rows_count": len(s["rows"])} for s in shops],
@@ -799,7 +862,11 @@ def build_iphone_comparison(raw_shops: list, apple_prices: dict, *, research_dat
 
 
 def diff_snapshots(prev_rows: list, curr_rows: list, *, surge_yen: int = 5000) -> list:
-    """前回との比較: 最高買取店の変更・買取価格の急騰・赤字 → 黒字。rows は {sku, identity, key, shop, price, net}。identity が REGISTERED の SKU だけ対象。"""
+    """前回との比較: 最高買取店の変更・買取価格の急騰/下落・赤字 ↔ 黒字。rows は {sku, identity, key, shop, price, net}。identity が REGISTERED の SKU だけ対象。
+
+    イベント名は既存の語（BEST_SHOP_CHANGE / LOSS_TO_PROFIT / BUYBACK_SURGE。買取価格の下落は本体の PRICE_DROP と同じ名前、
+    黒字 → 赤字は LOSS_TO_PROFIT の逆の PROFIT_TO_LOSS）。通知には接続しない（dry-run の記録だけ）。
+    """
     events = []
     pm = {(r["sku"], r["key"]): r for r in prev_rows}
     curr_rows = [r for r in curr_rows if r.get("identity") == "REGISTERED"]   # 正本に未登録（参考）の SKU は、利益の変動を確定のように出さない
@@ -813,10 +880,14 @@ def diff_snapshots(prev_rows: list, curr_rows: list, *, surge_yen: int = 5000) -
             events.append({"type": "BEST_SHOP_CHANGE", "sku": sku, "from": b0["shop"], "to": b1["shop"], "price": b1["price"]})
         if b0 and b1 and (b0.get("net") or 0) <= 0 < (b1.get("net") or 0):
             events.append({"type": "LOSS_TO_PROFIT", "sku": sku, "shop": b1["shop"], "net": b1["net"]})
+        if b0 and b1 and isinstance(b0.get("net"), int) and b0["net"] > 0 and isinstance(b1.get("net"), int) and b1["net"] <= 0:
+            events.append({"type": "PROFIT_TO_LOSS", "sku": sku, "shop": b1["shop"], "net": b1["net"], "from_net": b0["net"]})
     for r in curr_rows:
         p = pm.get((r["sku"], r["key"]))
         if p and r["price"] - p["price"] >= surge_yen:
             events.append({"type": "BUYBACK_SURGE", "sku": r["sku"], "shop": r["shop"], "from": p["price"], "to": r["price"]})
+        elif p and p["price"] - r["price"] >= surge_yen:
+            events.append({"type": "PRICE_DROP", "sku": r["sku"], "shop": r["shop"], "from": p["price"], "to": r["price"]})
     return events
 
 
@@ -832,7 +903,8 @@ def snapshot_rows(comp: dict) -> list:
                 continue                                     # 外れ値（OUTLIER_REVIEW）の価格は変動として出さない
             if r["eligible"] and not r.get("duplicate_row"):
                 out.append({"sku": s["sku"], "identity": s["identity"], "key": r["key"], "shop": r["shop"], "price": r["executable_price"],
-                            "net": s["net_profit"] if top == r["executable_price"] else None})
+                            "net": s["net_profit"] if top == r["executable_price"] else None,
+                            "checked_at": r.get("checked_at") or None, "condition": r.get("condition"), "freshness": r.get("freshness")})
     return out
 
 
@@ -848,7 +920,10 @@ def update_history(comp: dict, history_path: Path, *, keep: int = 26, surge_yen:
     cur = snapshot_rows(comp)
     comp["events"] = diff_snapshots(prev, cur, surge_yen=surge_yen) if prev else []
     comp["events_note"] = "前回の週次の調査との比較" if prev else "初回の調査のため比較なし"
-    snaps.append({"date": comp["research_date"], "rows": cur})
+    comp["notification_dry_run"] = {"mode": "DRY_RUN", "would_notify": len(comp["events"]), "sent": 0,
+                                    "note": "通知は送信しない（検出の記録だけ。本体の通知・outbox には接続しない）"}
+    snaps.append({"date": comp["research_date"], "rows": cur,
+                  "apple": {s["sku"]: {"price": s["apple_price"], "availability": (s.get("apple_availability") or {}).get("status")} for s in comp["skus"]}})
     hist["snapshots"] = snaps[-keep:]
     return hist
 
@@ -859,7 +934,8 @@ def import_iphone(research_dir: Path, *, now: datetime, out_dir: Path, apply: bo
     if not apple_file.exists() or not shop_files:
         return None
     cfg = cfg or load_config()
-    apple = json.loads(apple_file.read_text(encoding="utf-8")).get("apple_official", {}).get("prices_jpy", {})
+    apple_doc = json.loads(apple_file.read_text(encoding="utf-8")).get("apple_official", {})
+    apple = apple_doc.get("prices_jpy", {})
     raw_shops: list = []
     for f in shop_files:
         d = json.loads(f.read_text(encoding="utf-8"))
@@ -867,7 +943,8 @@ def import_iphone(research_dir: Path, *, now: datetime, out_dir: Path, apply: bo
             d = d["shops"]
         raw_shops += d if isinstance(d, list) else [v for v in d.values() if isinstance(v, dict)]
     research_date = research_dir.name if re.fullmatch(r"\d{4}-\d{2}-\d{2}", research_dir.name) else now.strftime("%Y-%m-%d")
-    comp = build_iphone_comparison(raw_shops, apple, research_date=research_date, now=now, cfg=cfg)
+    comp = build_iphone_comparison(raw_shops, apple, research_date=research_date, now=now, cfg=cfg,
+                                   availability=apple_doc.get("availability"))
     hist = update_history(comp, out_dir / "iphone_buyback_history.json", surge_yen=int(cfg["surge"].get("yen") or 5000))
     if apply:
         out_dir.mkdir(parents=True, exist_ok=True)
@@ -1024,7 +1101,7 @@ def main(argv=None) -> int:
     comp = import_iphone(d, now=now, out_dir=PROJECT_ROOT / "exports" / "iphone_buyback", apply=a.apply)
     if comp:
         out["iphone"] = {"shops_researched": comp["shops_researched"], "counts": comp["counts"], "applied": a.apply,
-                         "skus": [{k: s[k] for k in ("sku", "identity", "source_count", "fresh_source_count", "outlier_status", "highest_listed", "highest_executable", "net_profit", "roi_pct")} for s in comp["skus"]],
+                         "skus": [{k: s[k] for k in ("sku", "identity", "source_count", "fresh_source_count", "outlier_status", "highest_listed", "highest_executable", "net_profit", "roi_pct", "profit_status", "opportunity_status")} | {"apple_availability": s["apple_availability"]["status"]} for s in comp["skus"]],
                          "events": comp["events"]}
     cam = import_camera(d, now=now, out_dir=PROJECT_ROOT / "exports" / "camera_research", apply=a.apply)
     if cam:

@@ -358,3 +358,9 @@ python3 -m pytest tests/test_weekly_import.py
 - 鮮度と実行可能価格（2026-11-14〜）: 「最高の実行可能買取」は **FRESH だけ**。STALE・UNKNOWN_FRESHNESS は「掲載の最高値」として表示するが利益計算に使わない（設定では許せない）。iPhone の identity（REGISTERED）は `config/products.yaml` の登録から決まる（未登録は参考。登録は上の「候補の確認と正本への登録」の手順）。
 - 店舗ドメインの運営者の証拠（`STORE_PRIMARY_DOMAINS`）は、会社概要または特定商取引法表記に法人名と所在地があることが条件（`company_profile` / `tokusho`）。フッターの著作権表示・社名だけは根拠にしない。
 - 網羅度の見方: `coverage_pct`（読めた割合。80% が目標）と `accounted_pct`（読めなかった理由・代替の経路・代替で分かったことを記録した割合）は別。後者を前者の代わりに報告しない。
+- **iPhone の購入可否・状態・イベント（2026-11-17〜）**
+  - Apple の購入可否は `python3 -m src.collectors.official.apple_buyability --dir <調査フォルダ> [--apply]`（Apple 機種ページの部品番号・価格と、機種ページ自身が使う公開の購入可否 API `buyability-message` を polite 取得。ログイン・カートの操作は無い）。`--apply` は `research_iphone.json` の `apple_official.prices_jpy` と `availability` を更新する。同一ドメインの間隔で約 2 分かかる。
+  - 購入可否は**調査日と同じ日に確認したものだけ**使う（違う日・不明・取得失敗は UNKNOWN）。全色の部品番号が購入可能のときだけ BUYABLE、1 色でも購入できなければ UNAVAILABLE。
+  - 状態は 2 つに分ける。`profit_status`: PROFITABLE（計算上の黒字）/ LOSS / NO_DATA / REFERENCE_PROFIT（未登録の参考）。`opportunity_status`: BUY / WATCH / WAIT / PASS。**BUY は、登録済み・黒字・Apple で購入可能（当日確認）・実行可能な買取が 2 店以上・外れ値でない・ROI 8% 以上（本体の BUY の ROI 条件と同じ値）の全部**。購入可否が不明は WATCH、購入不可・ROI 不足は WAIT。週次の判定であって、本体の BUY・通知・今すぐ行動には接続しない。
+  - イベント（`comparison.events`）: BEST_SHOP_CHANGE / LOSS_TO_PROFIT / PROFIT_TO_LOSS / BUYBACK_SURGE（同じ店の上昇 5,000 円以上）/ PRICE_DROP（同じ店の下落 5,000 円以上）。登録済みの SKU だけ。通知は dry-run の記録のみ（`notification_dry_run.sent` は常に 0）。
+  - 履歴（`iphone_buyback_history.json`）の行: SKU・店・価格・checked_at・condition・freshness。同じ日の再実行は上書き（二重にしない）。スナップショットごとに Apple 価格と購入可否も残す。

@@ -62,6 +62,12 @@ def _colors(row: dict) -> str:
     return "、".join(f"{_e(k)} {_e(v)}" for k, v in list(ca.items())[:4])
 
 
+AV_LABEL = {"BUYABLE": "購入できる（Apple で確認）", "UNAVAILABLE": "今は購入できない", "UNKNOWN": "購入可否 未確認"}
+PROFIT_LABEL = {"PROFITABLE": "PROFITABLE（計算上の黒字）", "LOSS": "LOSS（赤字）", "NO_DATA": "NO_DATA（確定できる価格なし）",
+                "REFERENCE_PROFIT": "REFERENCE_PROFIT（参考の黒字・未登録）"}
+OPP_LABEL = {"BUY": "BUY（週次の判定）", "WATCH": "WATCH（見守り）", "WAIT": "WAIT（待ち）", "PASS": "PASS（見送り）"}
+EVENT_LABEL = {"BEST_SHOP_CHANGE": "最高買取店の変更", "LOSS_TO_PROFIT": "赤字 → 黒字", "PROFIT_TO_LOSS": "黒字 → 赤字",
+               "BUYBACK_SURGE": "買取価格の上昇", "PRICE_DROP": "買取価格の下落"}
 FRESH_LABEL = {"FRESH": "FRESH（更新が新しい）", "STALE": "STALE（更新が古い）", "UNKNOWN_FRESHNESS": "更新日の記載なし"}
 OUTLIER_LABEL = {"NONE": "外れ値なし", "OUTLIER_REVIEW": "OUTLIER_REVIEW（最高値が他店より大きく高い・確認待ち）",
                  "REVIEWED": "外れ値を確認済み", "SINGLE_SOURCE": "比較できる店が1つだけ（確認待ち）", "NO_DATA": "比較できる価格なし"}
@@ -87,7 +93,8 @@ def _row_html(r: dict) -> str:
     age = f"（{r['age_days']}日前）" if r.get("age_days") is not None else ""
     return (f'<tr class="{cls}"><th scope="row">{_link(r.get("price_page_url"), r.get("shop"))}</th><td class="num">{shown}</td>'
             f'<td>{_e(COND_LABEL.get(r.get("condition"), r.get("condition")))}</td><td>{_colors(r)}</td>'
-            f'<td>{_e(r.get("updated_on") or "更新日の記載なし")}{_e(age)}<div class="mut">{_e(FRESH_LABEL.get(r.get("freshness"), ""))}</div></td>'
+            f'<td>{_e(r.get("updated_on") or "更新日の記載なし")}{_e(age)}<div class="mut">{_e(FRESH_LABEL.get(r.get("freshness"), ""))}</div>'
+            f'<div class="mut">確認: {_e(str(r.get("checked_at") or "記載なし")[:60])}</div></td>'
             f'<td>{_e("、".join(n for n in notes if n)) or ("利益計算の候補" if r.get("eligible") else "利益計算に使わない（同じ店の他の行・キャンペーンなど）")}{extra}</td></tr>')
 
 
@@ -102,6 +109,7 @@ def _sku_html(s: dict) -> str:
     net = s.get("net_profit")
     net_cls = ("pos" if (net or 0) > 0 and not ref else "neg" if (net or 0) < 0 else "")        # 参考（未登録）の黒字は緑にしない
     out = s.get("outlier_status") or "NO_DATA"
+    av = s.get("apple_availability") or {}
     listed_note = ""
     if hl:
         listed_note = f' ／ {_e(FRESH_LABEL.get(hl.get("freshness"), ""))}／{"利益計算に使う価格" if hl.get("executable") else "利益計算に使わない"}'
@@ -119,6 +127,11 @@ def _sku_html(s: dict) -> str:
             f'<div class="grid"><div class="kv"><span>Apple 定価（税込）</span><b>{_yen(s["apple_price"])}</b></div>'
             f'{one("掲載の最高値", hl, listed_note)}{exec_card}{one("実行可能 2位", sec)}{one("実行可能 3位", thi)}'
             f'<div class="kv"><span>買取店の数</span><b>{_e(s.get("source_count", 0))} 店</b><em>うち更新が新しい {_e(s.get("fresh_source_count", 0))} 店</em></div>'
+            f'<div class="kv"><span>Apple の購入可否</span><b>{_e(AV_LABEL.get(av.get("status"), AV_LABEL["UNKNOWN"]))}</b>'
+            f'<em>確認: {_e(av.get("checked_at") or "なし")}</em></div>'
+            f'<div class="kv"><span>利益の状態</span><b>{_e(PROFIT_LABEL.get(s.get("profit_status"), "—"))}</b></div>'
+            f'<div class="kv"><span>判定（週次・BUY とは別）</span><b>{_e(OPP_LABEL.get(s.get("opportunity_status"), "—"))}</b>'
+            f'<em>{_e(s.get("opportunity_reason") or "")}</em></div>'
             f'<div class="kv"><span>外れ値の判定</span><b>{_e(OUTLIER_LABEL.get(out, out))}</b></div>'
             f'<div class="kv"><span>諸経費</span><b>{_yen(s.get("costs"))}</b></div>'
             f'<div class="kv"><span>純利益{"（参考）" if ref else ""}</span><b class="{net_cls}">{_signed(net)}</b>'
@@ -154,7 +167,11 @@ def render(comp: dict, *, now: datetime | None = None) -> str:
         f'<li><b>{_link(s.get("price_page_url") or s.get("official_url"), s.get("shop"))}</b> — {_e(STATUS_LABEL.get(s.get("status"), s.get("status")))}'
         f'{("（新規に発見した店）" if s.get("discovered") else "")}<span class="mut"> {_e(s.get("reason"))}</span></li>' for s in missing)
     events = comp.get("events") or []
-    ev_html = ("".join(f"<li>{_e(e.get('type'))}: {_e(e.get('sku'))} {_e(e.get('shop') or e.get('to') or '')}</li>" for e in events)
+    def _ev(e):
+        move = (f"（{_yen(e['from'])} → {_yen(e['to'])}）" if isinstance(e.get("from"), int) and isinstance(e.get("to"), int)
+                else f"（{_e(e.get('from'))} → {_e(e.get('to'))}）" if e.get("from") and e.get("to") else "")
+        return f"<li>{_e(EVENT_LABEL.get(e.get('type'), e.get('type')))}: {_e(e.get('sku'))} {_e(e.get('shop') or '')}{move}</li>"
+    ev_html = ("".join(_ev(e) for e in events)
                or f'<li class="mut">{_e(comp.get("events_note") or "変動の記録はまだありません")}</li>')
     return f"""<!doctype html>
 <html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -176,5 +193,6 @@ def render(comp: dict, *, now: datetime | None = None) -> str:
 {skus}
 <h2>価格を取れなかった店・価格が部分的な店</h2><ul>{miss_html}</ul>
 <h2>前回からの変動</h2><ul>{ev_html}</ul>
+<p class="mut">通知は送信していません（検出の記録だけ）。</p>
 <p class="mut">この表は週次の調査で、価格が変わっている場合があります。売る前に各店の公式の価格ページで最新の価格・条件（事前申込・検品・減額）を必ず確認してください。取得できない店の回避（認証の突破・過剰なアクセス）は行っていません。</p>
 </main></body></html>"""

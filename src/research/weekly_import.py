@@ -891,6 +891,24 @@ def diff_snapshots(prev_rows: list, curr_rows: list, *, surge_yen: int = 5000) -
     return events
 
 
+def decision_events(prev_apple: dict, comp: dict) -> list:
+    """判定（opportunity_status）の BUY への昇格・BUY からの降格。REGISTERED の SKU で、前回の判定が記録されているものだけ。
+
+    新しい語は WAIT_TO_BUY / BUY_TO_WAIT の 2 つだけ（from / to に実際の判定を残す）。通知には接続しない（dry-run の記録だけ）。
+    """
+    out = []
+    for s in comp["skus"]:
+        before = (prev_apple.get(s["sku"]) or {}).get("decision")
+        now = s.get("opportunity_status")
+        if s.get("identity") != "REGISTERED" or not before or not now or before == now:
+            continue
+        if now == OPP_BUY:
+            out.append({"type": "WAIT_TO_BUY", "sku": s["sku"], "from": before, "to": now, "net": s.get("net_profit")})
+        elif before == OPP_BUY:
+            out.append({"type": "BUY_TO_WAIT", "sku": s["sku"], "from": before, "to": now, "net": s.get("net_profit")})
+    return out
+
+
 def snapshot_rows(comp: dict) -> list:
     out = []
     for s in comp["skus"]:
@@ -919,11 +937,13 @@ def update_history(comp: dict, history_path: Path, *, keep: int = 26, surge_yen:
     prev = snaps[-1]["rows"] if snaps else []
     cur = snapshot_rows(comp)
     comp["events"] = diff_snapshots(prev, cur, surge_yen=surge_yen) if prev else []
+    comp["events"] += decision_events((snaps[-1].get("apple") if snaps else None) or {}, comp)
     comp["events_note"] = "前回の週次の調査との比較" if prev else "初回の調査のため比較なし"
     comp["notification_dry_run"] = {"mode": "DRY_RUN", "would_notify": len(comp["events"]), "sent": 0,
                                     "note": "通知は送信しない（検出の記録だけ。本体の通知・outbox には接続しない）"}
     snaps.append({"date": comp["research_date"], "rows": cur,
-                  "apple": {s["sku"]: {"price": s["apple_price"], "availability": (s.get("apple_availability") or {}).get("status")} for s in comp["skus"]}})
+                  "apple": {s["sku"]: {"price": s["apple_price"], "availability": (s.get("apple_availability") or {}).get("status"),
+                                       "decision": s.get("opportunity_status")} for s in comp["skus"]}})
     hist["snapshots"] = snaps[-keep:]
     return hist
 

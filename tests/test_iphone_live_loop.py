@@ -120,7 +120,7 @@ def test_history_rows_have_product_shop_price_checked_at_condition_freshness_and
     hist = W.update_history(comp, h)
     row = next(r for r in hist["snapshots"][-1]["rows"] if r["key"] == "pastec" and r["sku"] == "iPhone Duo 1TB")
     assert row["price"] == 482000 and row["condition"] == "UNOPENED" and row["freshness"] == "FRESH" and row["checked_at"]
-    assert hist["snapshots"][-1]["apple"]["iPhone Duo 1TB"] == {"price": 469800, "availability": "BUYABLE"}
+    assert hist["snapshots"][-1]["apple"]["iPhone Duo 1TB"] == {"price": 469800, "availability": "BUYABLE", "decision": "WAIT"}
     h.write_text(json.dumps(hist), encoding="utf-8")
     again = W.update_history(_comp([_shop("パステック（PASTEC）", 482000), _shop("買取ルデヤ", 481000)]), h)
     assert len(again["snapshots"]) == 1                                                  # 同じ日の再実行で二重にしない

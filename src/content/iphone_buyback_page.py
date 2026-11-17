@@ -67,7 +67,8 @@ PROFIT_LABEL = {"PROFITABLE": "PROFITABLE（計算上の黒字）", "LOSS": "LOS
                 "REFERENCE_PROFIT": "REFERENCE_PROFIT（参考の黒字・未登録）"}
 OPP_LABEL = {"BUY": "BUY（週次の判定）", "WATCH": "WATCH（見守り）", "WAIT": "WAIT（待ち）", "PASS": "PASS（見送り）"}
 EVENT_LABEL = {"BEST_SHOP_CHANGE": "最高買取店の変更", "LOSS_TO_PROFIT": "赤字 → 黒字", "PROFIT_TO_LOSS": "黒字 → 赤字",
-               "BUYBACK_SURGE": "買取価格の上昇", "PRICE_DROP": "買取価格の下落"}
+               "BUYBACK_SURGE": "買取価格の上昇", "PRICE_DROP": "買取価格の下落",
+               "WAIT_TO_BUY": "判定が BUY に昇格", "BUY_TO_WAIT": "判定が BUY から降格"}
 FRESH_LABEL = {"FRESH": "FRESH（更新が新しい）", "STALE": "STALE（更新が古い）", "UNKNOWN_FRESHNESS": "更新日の記載なし"}
 OUTLIER_LABEL = {"NONE": "外れ値なし", "OUTLIER_REVIEW": "OUTLIER_REVIEW（最高値が他店より大きく高い・確認待ち）",
                  "REVIEWED": "外れ値を確認済み", "SINGLE_SOURCE": "比較できる店が1つだけ（確認待ち）", "NO_DATA": "比較できる価格なし"}

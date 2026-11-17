@@ -2,7 +2,7 @@
   "schema": 2,
   "type": "IPHONE_BUYBACK_COMPARISON",
   "research_date": "2026-11-17",
-  "generated_at": "2026-11-17T14:15:55+09:00",
+  "generated_at": "2026-11-17T16:47:22+09:00",
   "note": "週次の Web 調査（AI）の結果。価格は各店の公開ページの掲載価格で、買取の確定ではない（事前申込・検品・減額がある）。「掲載の最高値」はそのまま表示・保存する。「最高の実行可能価格」は、新品未開封・色減額が分かる・更新が FRESH（STALE・更新日不明は使わない）・外れ値でない（または確認済み）ときだけ。外れ値は OUTLIER_REVIEW として利益計算に使わない。identity が DISCOVERED の SKU は参考（正本に未登録）で、BUY の判定ではない。",
   "thresholds": {
     "outlier_rate": 0.03,
@@ -34,20 +34,6 @@
       "discovered": false,
       "reason": "Prod/1 に Duo と 18 Pro Max の新品未開封価格あり。18 Pro のメニュー項目のリンク先は javascript:; で価格ページ URL を特定できず。URL 推測での取得はしていない。",
       "rows_count": 14
-    },
-    {
-      "shop": "買取ルデヤ",
-      "key": "rudeya",
-      "status": "ACTIVE",
-      "official_url": "https://kaitori-rudeya.com/",
-      "price_page_url": "https://kaitori-rudeya.com/series/iphone18",
-      "checked_at": "2026-11-17 14:08 (ページ表示の「14時08分現在」)",
-      "updated_on": "2026-11-17",
-      "age_days": 0,
-      "freshness": "FRESH",
-      "discovered": false,
-      "reason": "2026-11-17 に polite 取得で Duo の容量別表を再確認。1TB・2TB は単一価格。256GB は範囲。512GB は色別の内訳を確認できず行を作らない",
-      "rows_count": 3
     },
     {
       "shop": "買取商店",
@@ -316,20 +302,6 @@
       "rows_count": 12
     },
     {
-      "shop": "パステック（PASTEC）",
-      "key": "pastec",
-      "status": "ACTIVE",
-      "official_url": "https://pastec.net/",
-      "price_page_url": "https://pastec.net/iphone/",
-      "checked_at": "2026-11-17 JST（ページ記載: 買取価格更新日 2026/11/17）",
-      "updated_on": "2026-11-17",
-      "age_days": 0,
-      "freshness": "FRESH",
-      "discovered": true,
-      "reason": "2026-11-17 に polite 取得で Duo 4 容量を再確認。Duo 以外の行はこのデータに含めない",
-      "rows_count": 4
-    },
-    {
       "shop": "リンクス（LINX）",
       "key": "linx",
       "status": "ACTIVE",
@@ -342,6 +314,34 @@
       "discovered": true,
       "reason": "新品(未開封)買取価格を取得。docomo/au/SoftBank/楽天/国内SIMフリーは同額。ページ本文は約100000字までしか読めていない",
       "rows_count": 12
+    },
+    {
+      "shop": "パステック（PASTEC）",
+      "key": "pastec",
+      "status": "ACTIVE",
+      "official_url": "https://pastec.net/",
+      "price_page_url": "https://pastec.net/iphone/",
+      "checked_at": "2026-11-17 JST（ページ記載: 買取価格更新日 2026/11/17）",
+      "updated_on": "2026-11-17",
+      "age_days": 0,
+      "freshness": "FRESH",
+      "discovered": true,
+      "reason": "2026-11-17 に polite 取得（決定論的）。読めた行だけを載せる。中古は読まない",
+      "rows_count": 4
+    },
+    {
+      "shop": "買取ルデヤ",
+      "key": "rudeya",
+      "status": "ACTIVE",
+      "official_url": "https://kaitori-rudeya.com/",
+      "price_page_url": "https://kaitori-rudeya.com/series/iphone18",
+      "checked_at": "2026-11-17 16:49 (ページ表示の「16時49分現在」)",
+      "updated_on": "2026-11-17",
+      "age_days": 0,
+      "freshness": "FRESH",
+      "discovered": false,
+      "reason": "2026-11-17 に polite 取得（決定論的）。単一価格の容量は色によらない価格、範囲の容量は価格にしない",
+      "rows_count": 4
     }
   ],
   "skus": [
@@ -352,7 +352,7 @@
       "identity": "REGISTERED",
       "apple_availability": {
         "status": "BUYABLE",
-        "checked_at": "2026-11-17T14:08:14+09:00",
+        "checked_at": "2026-11-17T16:47:22+09:00",
         "source": "https://www.apple.com/jp/shop/buyability-message",
         "parts": {
           "MK244J/A": true,
@@ -680,28 +680,6 @@
         },
         {
           "sku": "iPhone Duo 256GB",
-          "condition": "UNOPENED",
-          "base_price": null,
-          "best_price": null,
-          "executable_price": null,
-          "basis": "range_only",
-          "color_adjustments": {},
-          "carrier_or_region": "",
-          "campaign": null,
-          "conditions": null,
-          "shop": "買取ルデヤ",
-          "key": "rudeya",
-          "shop_status": "ACTIVE",
-          "freshness": "FRESH",
-          "price_page_url": "https://kaitori-rudeya.com/series/iphone18",
-          "checked_at": "2026-11-17 14:08 (ページ表示の「14時08分現在」)",
-          "updated_on": "2026-11-17",
-          "age_days": 0,
-          "listed_price": null,
-          "eligible": false
-        },
-        {
-          "sku": "iPhone Duo 256GB",
           "condition": "OPENED_NEW",
           "base_price": 340000,
           "best_price": 340000,
@@ -812,6 +790,28 @@
           "age_days": 4,
           "listed_price": null,
           "eligible": false
+        },
+        {
+          "sku": "iPhone Duo 256GB",
+          "condition": "UNOPENED",
+          "base_price": null,
+          "best_price": null,
+          "executable_price": null,
+          "basis": "range_only",
+          "color_adjustments": {},
+          "carrier_or_region": "",
+          "campaign": null,
+          "conditions": null,
+          "shop": "買取ルデヤ",
+          "key": "rudeya",
+          "shop_status": "ACTIVE",
+          "freshness": "FRESH",
+          "price_page_url": "https://kaitori-rudeya.com/series/iphone18",
+          "checked_at": "2026-11-17 16:49 (ページ表示の「16時49分現在」)",
+          "updated_on": "2026-11-17",
+          "age_days": 0,
+          "listed_price": null,
+          "eligible": false
         }
       ],
       "source_count": 13,
@@ -846,16 +846,16 @@
       "identity": "DISCOVERED",
       "apple_availability": {
         "status": "BUYABLE",
-        "checked_at": "2026-11-17T14:08:14+09:00",
+        "checked_at": "2026-11-17T16:47:22+09:00",
         "source": "https://www.apple.com/jp/shop/buyability-message",
         "parts": {
           "MK264J/A": true,
           "MK274J/A": true
         }
       },
-      "profit_status": "NO_DATA",
-      "opportunity_status": "PASS",
-      "opportunity_reason": "確定できる実行可能価格が無い（外れ値の確認待ち・店が 1 つだけ・鮮度なし）",
+      "profit_status": "REFERENCE_PROFIT",
+      "opportunity_status": "WATCH",
+      "opportunity_reason": "正本に未登録の参考。BUY の判定には使わない",
       "identity_note": "参考: 部品番号が公式ページに無く、正本に未登録。利益の判定（BUY）には使わない",
       "rows": [
         {
@@ -869,6 +869,28 @@
           "carrier_or_region": "",
           "campaign": null,
           "conditions": null,
+          "shop": "買取ルデヤ",
+          "key": "rudeya",
+          "shop_status": "ACTIVE",
+          "freshness": "FRESH",
+          "price_page_url": "https://kaitori-rudeya.com/series/iphone18",
+          "checked_at": "2026-11-17 16:49 (ページ表示の「16時49分現在」)",
+          "updated_on": "2026-11-17",
+          "age_days": 0,
+          "listed_price": 402000,
+          "eligible": true
+        },
+        {
+          "sku": "iPhone Duo 512GB",
+          "condition": "UNOPENED",
+          "base_price": 401000,
+          "best_price": 401000,
+          "executable_price": 401000,
+          "basis": "uniform",
+          "color_adjustments": {},
+          "carrier_or_region": "",
+          "campaign": null,
+          "conditions": null,
           "shop": "パステック（PASTEC）",
           "key": "pastec",
           "shop_status": "ACTIVE",
@@ -877,7 +899,7 @@
           "checked_at": "2026-11-17 JST（ページ記載: 買取価格更新日 2026/11/17）",
           "updated_on": "2026-11-17",
           "age_days": 0,
-          "listed_price": 402000,
+          "listed_price": 401000,
           "eligible": true
         },
         {
@@ -1292,30 +1314,32 @@
           "eligible": false
         }
       ],
-      "source_count": 13,
-      "fresh_source_count": 1,
-      "eligible_shops": 1,
-      "outlier_status": "SINGLE_SOURCE",
+      "source_count": 14,
+      "fresh_source_count": 2,
+      "eligible_shops": 2,
+      "outlier_status": "NONE",
       "highest_listed": {
         "shop": "アキモバ(akiba-mobile.co.jp)",
         "price": 428500,
         "freshness": "STALE",
         "executable": false
       },
-      "highest_executable": null,
-      "highest_unconfirmed": {
-        "shop": "パステック（PASTEC）",
-        "price": 402000,
-        "status": "SINGLE_SOURCE"
+      "highest_executable": {
+        "shop": "買取ルデヤ",
+        "price": 402000
       },
-      "second": null,
+      "highest_unconfirmed": null,
+      "second": {
+        "shop": "パステック（PASTEC）",
+        "price": 401000
+      },
       "third": null,
       "costs": 1800,
-      "net_profit": null,
-      "roi_pct": null,
+      "net_profit": 400,
+      "roi_pct": 0.1,
       "reference_net_at_second": null,
       "best_route": null,
-      "reference_route": null
+      "reference_route": "Apple → 買取ルデヤ"
     },
     {
       "sku": "iPhone Duo 1TB",
@@ -1324,7 +1348,7 @@
       "identity": "REGISTERED",
       "apple_availability": {
         "status": "BUYABLE",
-        "checked_at": "2026-11-17T14:08:14+09:00",
+        "checked_at": "2026-11-17T16:47:22+09:00",
         "source": "https://www.apple.com/jp/shop/buyability-message",
         "parts": {
           "MK284J/A": true,
@@ -1361,9 +1385,9 @@
         {
           "sku": "iPhone Duo 1TB",
           "condition": "UNOPENED",
-          "base_price": 482000,
-          "best_price": 482000,
-          "executable_price": 482000,
+          "base_price": 475000,
+          "best_price": 475000,
+          "executable_price": 475000,
           "basis": "uniform",
           "color_adjustments": {},
           "carrier_or_region": "",
@@ -1374,10 +1398,10 @@
           "shop_status": "ACTIVE",
           "freshness": "FRESH",
           "price_page_url": "https://kaitori-rudeya.com/series/iphone18",
-          "checked_at": "2026-11-17 14:08 (ページ表示の「14時08分現在」)",
+          "checked_at": "2026-11-17 16:49 (ページ表示の「16時49分現在」)",
           "updated_on": "2026-11-17",
           "age_days": 0,
-          "listed_price": 482000,
+          "listed_price": 475000,
           "eligible": true
         },
         {
@@ -1803,7 +1827,7 @@
       "highest_unconfirmed": null,
       "second": {
         "shop": "買取ルデヤ",
-        "price": 482000
+        "price": 475000
       },
       "third": null,
       "costs": 1800,
@@ -1820,7 +1844,7 @@
       "identity": "REGISTERED",
       "apple_availability": {
         "status": "BUYABLE",
-        "checked_at": "2026-11-17T14:08:14+09:00",
+        "checked_at": "2026-11-17T16:47:22+09:00",
         "source": "https://www.apple.com/jp/shop/buyability-message",
         "parts": {
           "MK2A4J/A": true,
@@ -1835,9 +1859,9 @@
         {
           "sku": "iPhone Duo 2TB",
           "condition": "UNOPENED",
-          "base_price": 586000,
-          "best_price": 586000,
-          "executable_price": 586000,
+          "base_price": 581000,
+          "best_price": 581000,
+          "executable_price": 581000,
           "basis": "uniform",
           "color_adjustments": {},
           "carrier_or_region": "",
@@ -1851,15 +1875,15 @@
           "checked_at": "2026-11-17 JST（ページ記載: 買取価格更新日 2026/11/17）",
           "updated_on": "2026-11-17",
           "age_days": 0,
-          "listed_price": 586000,
+          "listed_price": 581000,
           "eligible": true
         },
         {
           "sku": "iPhone Duo 2TB",
           "condition": "UNOPENED",
-          "base_price": 585000,
-          "best_price": 585000,
-          "executable_price": 585000,
+          "base_price": 580000,
+          "best_price": 580000,
+          "executable_price": 580000,
           "basis": "uniform",
           "color_adjustments": {},
           "carrier_or_region": "",
@@ -1870,10 +1894,10 @@
           "shop_status": "ACTIVE",
           "freshness": "FRESH",
           "price_page_url": "https://kaitori-rudeya.com/series/iphone18",
-          "checked_at": "2026-11-17 14:08 (ページ表示の「14時08分現在」)",
+          "checked_at": "2026-11-17 16:49 (ページ表示の「16時49分現在」)",
           "updated_on": "2026-11-17",
           "age_days": 0,
-          "listed_price": 585000,
+          "listed_price": 580000,
           "eligible": true
         },
         {
@@ -2294,17 +2318,17 @@
       },
       "highest_executable": {
         "shop": "パステック（PASTEC）",
-        "price": 586000
+        "price": 581000
       },
       "highest_unconfirmed": null,
       "second": {
         "shop": "買取ルデヤ",
-        "price": 585000
+        "price": 580000
       },
       "third": null,
       "costs": 1800,
-      "net_profit": 9400,
-      "roi_pct": 1.64,
+      "net_profit": 4400,
+      "roi_pct": 0.77,
       "reference_net_at_second": null,
       "best_route": "Apple → パステック（PASTEC）",
       "reference_route": null
@@ -5796,11 +5820,33 @@
       "reference_route": null
     }
   ],
-  "events": [],
+  "events": [
+    {
+      "type": "PRICE_DROP",
+      "sku": "iPhone Duo 1TB",
+      "shop": "買取ルデヤ",
+      "from": 481000,
+      "to": 475000
+    },
+    {
+      "type": "PRICE_DROP",
+      "sku": "iPhone Duo 2TB",
+      "shop": "パステック（PASTEC）",
+      "from": 586000,
+      "to": 581000
+    },
+    {
+      "type": "PRICE_DROP",
+      "sku": "iPhone Duo 2TB",
+      "shop": "買取ルデヤ",
+      "from": 585000,
+      "to": 580000
+    }
+  ],
   "events_note": "前回の週次の調査との比較",
   "notification_dry_run": {
     "mode": "DRY_RUN",
-    "would_notify": 0,
+    "would_notify": 3,
     "sent": 0,
     "note": "通知は送信しない（検出の記録だけ。本体の通知・outbox には接続しない）"
   }

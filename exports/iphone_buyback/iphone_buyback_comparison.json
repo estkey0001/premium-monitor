@@ -1,11 +1,12 @@
 {
   "schema": 2,
   "type": "IPHONE_BUYBACK_COMPARISON",
-  "research_date": "2026-11-16",
-  "generated_at": "2026-11-16T20:21:49+09:00",
+  "research_date": "2026-11-17",
+  "generated_at": "2026-11-17T14:15:55+09:00",
   "note": "週次の Web 調査（AI）の結果。価格は各店の公開ページの掲載価格で、買取の確定ではない（事前申込・検品・減額がある）。「掲載の最高値」はそのまま表示・保存する。「最高の実行可能価格」は、新品未開封・色減額が分かる・更新が FRESH（STALE・更新日不明は使わない）・外れ値でない（または確認済み）ときだけ。外れ値は OUTLIER_REVIEW として利益計算に使わない。identity が DISCOVERED の SKU は参考（正本に未登録）で、BUY の判定ではない。",
   "thresholds": {
     "outlier_rate": 0.03,
+    "buy_roi_min_pct": 8.0,
     "fresh_days_default": 1,
     "unknown_freshness_executable": false
   },
@@ -40,12 +41,12 @@
       "status": "ACTIVE",
       "official_url": "https://kaitori-rudeya.com/",
       "price_page_url": "https://kaitori-rudeya.com/series/iphone18",
-      "checked_at": "2026-11-16 20:10 (ページ表示の「20時10分現在」)",
-      "updated_on": "2026-11-16",
+      "checked_at": "2026-11-17 14:08 (ページ表示の「14時08分現在」)",
+      "updated_on": "2026-11-17",
       "age_days": 0,
       "freshness": "FRESH",
       "discovered": false,
-      "reason": "2026-11-16 に polite 取得で Duo の容量別表を再確認。1TB・2TB は単一価格。256GB は範囲表示（価格にしない）。512GB は色別の内訳を確認できず行を作らない。Duo 以外の行は今回再確認していないので、こ",
+      "reason": "2026-11-17 に polite 取得で Duo の容量別表を再確認。1TB・2TB は単一価格。256GB は範囲。512GB は色別の内訳を確認できず行を作らない",
       "rows_count": 3
     },
     {
@@ -112,7 +113,7 @@
       "price_page_url": "https://akiba-mobile.co.jp/",
       "checked_at": "2026-11-13 (JST・時刻未記録)。ページ記載の価格表更新日: 2026/11/11",
       "updated_on": "2026-11-11",
-      "age_days": 5,
+      "age_days": 6,
       "freshness": "STALE",
       "discovered": false,
       "reason": "更新2日前のため STALE(3日以上)ではない。お知らせの見出し日付(11/12)と本文(11月13日)が食い違う。13日は店舗・郵送とも休業との記載(価格は11/11付のまま)。アメモバ(amemoba.com)とは別の店で、混同してい",
@@ -126,7 +127,7 @@
       "price_page_url": "https://www.keitairakuen.com/product-category/keitai/iphone/",
       "checked_at": "2026-11-13 (JST・時刻未記録)。ページ記載の更新日: 2026/11/12",
       "updated_on": "2026-11-12",
-      "age_days": 4,
+      "age_days": 5,
       "freshness": "STALE",
       "discovered": false,
       "reason": "価格は取得。ただしページ上の表示は全件『在庫切れ』。『後払い増額選択有』の表記あり(意味UNKNOWN)。更新1日前のため非STALE",
@@ -140,7 +141,7 @@
       "price_page_url": "https://keitaikoukakaitori.com/price/smartphone/iphone/",
       "checked_at": "2026-11-13 (JST・時刻未記録)。ページ記載の更新日: 2026/11/07 14:00 (店舗ページ) / 2026/11/07 (価格ページ)",
       "updated_on": "2026-11-07",
-      "age_days": 9,
+      "age_days": 10,
       "freshness": "STALE",
       "discovered": false,
       "reason": "価格は取得できたが更新が6日前(3日以上)。ほかの店と同日比較に使うと過小評価になりうる。同一ページのトップ(店舗ページ)は各機種の『上限買取金額』のみ表示",
@@ -266,7 +267,7 @@
       "price_page_url": "https://smaspi.jp/smartphone/iphone/",
       "checked_at": "2026-11-13 JST（ページ記載: 買取価格更新日 2026-11-12）",
       "updated_on": "2026-11-12",
-      "age_days": 4,
+      "age_days": 5,
       "freshness": "STALE",
       "discovered": true,
       "reason": "価格表取得。ページ末尾『もっと見る』で一部バリエーションが未展開の可能性あり。ページ本文は 100000 字まで読了、残り約 30000 字は未読",
@@ -280,7 +281,7 @@
       "price_page_url": "https://sakumoba.jp/smartphone/iphone/",
       "checked_at": "2026-11-13 JST（ページ記載: 買取価格更新日 2026-11-13）",
       "updated_on": "2026-11-13",
-      "age_days": 3,
+      "age_days": 4,
       "freshness": "STALE",
       "discovered": true,
       "reason": "ページは表示可。ただし取得内容は各機種『もっと見る』手前までで、SKU は版・色の範囲(最小〜最大)しか取れていない。WebSearch では同ページの age tag が古い(約429日)との表示もあり、日付表記の信頼度は MEDIUM",
@@ -294,7 +295,7 @@
       "price_page_url": "https://kaitori.e-daikoku.com/mobile/",
       "checked_at": "2026-11-13 JST（ページ記載: 更新日 2026-11-11）",
       "updated_on": "2026-11-11",
-      "age_days": 5,
+      "age_days": 6,
       "freshness": "STALE",
       "discovered": true,
       "reason": "新品未開封の単一価格表(買取率つき)を取得。更新は2日前で STALE(3日以上)ではない",
@@ -308,7 +309,7 @@
       "price_page_url": "https://shiroromu.jp/product/sumaho/iphone",
       "checked_at": "2026-11-13 JST（ページ記載: 買取価格更新日 2026-11-13）",
       "updated_on": "2026-11-13",
-      "age_days": 3,
+      "age_days": 4,
       "freshness": "STALE",
       "discovered": true,
       "reason": "新品(未開封)・宅配買取(ネット)査定額を取得。SoftBank 版のみ低い。1回目の取得結果でページ本文由来の指示文様の記述があったが従っていない。ページ本文は約100000字までしか読めておらず後半は未読",
@@ -320,12 +321,12 @@
       "status": "ACTIVE",
       "official_url": "https://pastec.net/",
       "price_page_url": "https://pastec.net/iphone/",
-      "checked_at": "2026-11-16 JST（ページ記載: 買取価格更新日 2026/11/16）",
-      "updated_on": "2026-11-16",
+      "checked_at": "2026-11-17 JST（ページ記載: 買取価格更新日 2026/11/17）",
+      "updated_on": "2026-11-17",
       "age_days": 0,
       "freshness": "FRESH",
       "discovered": true,
-      "reason": "2026-11-16 に polite 取得で Duo 4 容量を再確認。Duo の行に色別減額の記載なし（他機種は色別減額が行内に出るページ）。Duo 以外の行は今回再確認していないので、この 11-16 のデータには含めない（11-13",
+      "reason": "2026-11-17 に polite 取得で Duo 4 容量を再確認。Duo 以外の行はこのデータに含めない",
       "rows_count": 4
     },
     {
@@ -336,7 +337,7 @@
       "price_page_url": "https://linx-as.co.jp/services/brand/iphone",
       "checked_at": "2026-11-13 JST（ページ記載: 価格更新日 2026-11-11）",
       "updated_on": "2026-11-11",
-      "age_days": 5,
+      "age_days": 6,
       "freshness": "STALE",
       "discovered": true,
       "reason": "新品(未開封)買取価格を取得。docomo/au/SoftBank/楽天/国内SIMフリーは同額。ページ本文は約100000字までしか読めていない",
@@ -349,6 +350,18 @@
       "apple_price": 364800,
       "apple_url": "https://www.apple.com/jp/shop/buy-iphone",
       "identity": "REGISTERED",
+      "apple_availability": {
+        "status": "BUYABLE",
+        "checked_at": "2026-11-17T14:08:14+09:00",
+        "source": "https://www.apple.com/jp/shop/buyability-message",
+        "parts": {
+          "MK244J/A": true,
+          "MK254J/A": true
+        }
+      },
+      "profit_status": "NO_DATA",
+      "opportunity_status": "PASS",
+      "opportunity_reason": "確定できる実行可能価格が無い（外れ値の確認待ち・店が 1 つだけ・鮮度なし）",
       "identity_note": "正本に登録済み（部品番号つき）",
       "rows": [
         {
@@ -367,8 +380,8 @@
           "shop_status": "ACTIVE",
           "freshness": "FRESH",
           "price_page_url": "https://pastec.net/iphone/",
-          "checked_at": "2026-11-16 JST（ページ記載: 買取価格更新日 2026/11/16）",
-          "updated_on": "2026-11-16",
+          "checked_at": "2026-11-17 JST（ページ記載: 買取価格更新日 2026/11/17）",
+          "updated_on": "2026-11-17",
           "age_days": 0,
           "listed_price": 358000,
           "eligible": true
@@ -394,7 +407,7 @@
           "price_page_url": "https://akiba-mobile.co.jp/",
           "checked_at": "2026-11-13 (JST・時刻未記録)。ページ記載の価格表更新日: 2026/11/11",
           "updated_on": "2026-11-11",
-          "age_days": 5,
+          "age_days": 6,
           "listed_price": 371000,
           "eligible": false
         },
@@ -507,7 +520,7 @@
           "price_page_url": "https://keitaikoukakaitori.com/price/smartphone/iphone/",
           "checked_at": "2026-11-13 (JST・時刻未記録)。ページ記載の更新日: 2026/11/07 14:00 (店舗ページ) / 2026/11/07 (価格ページ)",
           "updated_on": "2026-11-07",
-          "age_days": 9,
+          "age_days": 10,
           "listed_price": 360000,
           "eligible": false
         },
@@ -529,7 +542,7 @@
           "price_page_url": "https://www.keitairakuen.com/product-category/keitai/iphone/",
           "checked_at": "2026-11-13 (JST・時刻未記録)。ページ記載の更新日: 2026/11/12",
           "updated_on": "2026-11-12",
-          "age_days": 4,
+          "age_days": 5,
           "listed_price": 358000,
           "eligible": false
         },
@@ -551,7 +564,7 @@
           "price_page_url": "https://kaitori.e-daikoku.com/mobile/",
           "checked_at": "2026-11-13 JST（ページ記載: 更新日 2026-11-11）",
           "updated_on": "2026-11-11",
-          "age_days": 5,
+          "age_days": 6,
           "listed_price": 347000,
           "eligible": false
         },
@@ -595,7 +608,7 @@
           "price_page_url": "https://smaspi.jp/smartphone/iphone/",
           "checked_at": "2026-11-13 JST（ページ記載: 買取価格更新日 2026-11-12）",
           "updated_on": "2026-11-12",
-          "age_days": 4,
+          "age_days": 5,
           "listed_price": 345000,
           "eligible": false
         },
@@ -617,7 +630,7 @@
           "price_page_url": "https://shiroromu.jp/product/sumaho/iphone",
           "checked_at": "2026-11-13 JST（ページ記載: 買取価格更新日 2026-11-13）",
           "updated_on": "2026-11-13",
-          "age_days": 3,
+          "age_days": 4,
           "listed_price": 335000,
           "eligible": false
         },
@@ -639,7 +652,7 @@
           "price_page_url": "https://linx-as.co.jp/services/brand/iphone",
           "checked_at": "2026-11-13 JST（ページ記載: 価格更新日 2026-11-11）",
           "updated_on": "2026-11-11",
-          "age_days": 5,
+          "age_days": 6,
           "listed_price": 325500,
           "eligible": false
         },
@@ -681,8 +694,8 @@
           "shop_status": "ACTIVE",
           "freshness": "FRESH",
           "price_page_url": "https://kaitori-rudeya.com/series/iphone18",
-          "checked_at": "2026-11-16 20:10 (ページ表示の「20時10分現在」)",
-          "updated_on": "2026-11-16",
+          "checked_at": "2026-11-17 14:08 (ページ表示の「14時08分現在」)",
+          "updated_on": "2026-11-17",
           "age_days": 0,
           "listed_price": null,
           "eligible": false
@@ -730,7 +743,7 @@
           "price_page_url": "https://www.keitairakuen.com/product-category/keitai/iphone/",
           "checked_at": "2026-11-13 (JST・時刻未記録)。ページ記載の更新日: 2026/11/12",
           "updated_on": "2026-11-12",
-          "age_days": 4,
+          "age_days": 5,
           "listed_price": null,
           "eligible": false
         },
@@ -796,7 +809,7 @@
           "price_page_url": "https://sakumoba.jp/smartphone/iphone/",
           "checked_at": "2026-11-13 JST（ページ記載: 買取価格更新日 2026-11-13）",
           "updated_on": "2026-11-13",
-          "age_days": 3,
+          "age_days": 4,
           "listed_price": null,
           "eligible": false
         }
@@ -831,14 +844,26 @@
       "apple_price": 399800,
       "apple_url": "https://www.apple.com/jp/shop/buy-iphone",
       "identity": "DISCOVERED",
+      "apple_availability": {
+        "status": "BUYABLE",
+        "checked_at": "2026-11-17T14:08:14+09:00",
+        "source": "https://www.apple.com/jp/shop/buyability-message",
+        "parts": {
+          "MK264J/A": true,
+          "MK274J/A": true
+        }
+      },
+      "profit_status": "NO_DATA",
+      "opportunity_status": "PASS",
+      "opportunity_reason": "確定できる実行可能価格が無い（外れ値の確認待ち・店が 1 つだけ・鮮度なし）",
       "identity_note": "参考: 部品番号が公式ページに無く、正本に未登録。利益の判定（BUY）には使わない",
       "rows": [
         {
           "sku": "iPhone Duo 512GB",
           "condition": "UNOPENED",
-          "base_price": 401000,
-          "best_price": 401000,
-          "executable_price": 401000,
+          "base_price": 402000,
+          "best_price": 402000,
+          "executable_price": 402000,
           "basis": "uniform",
           "color_adjustments": {},
           "carrier_or_region": "",
@@ -849,10 +874,10 @@
           "shop_status": "ACTIVE",
           "freshness": "FRESH",
           "price_page_url": "https://pastec.net/iphone/",
-          "checked_at": "2026-11-16 JST（ページ記載: 買取価格更新日 2026/11/16）",
-          "updated_on": "2026-11-16",
+          "checked_at": "2026-11-17 JST（ページ記載: 買取価格更新日 2026/11/17）",
+          "updated_on": "2026-11-17",
           "age_days": 0,
-          "listed_price": 401000,
+          "listed_price": 402000,
           "eligible": true
         },
         {
@@ -876,7 +901,7 @@
           "price_page_url": "https://akiba-mobile.co.jp/",
           "checked_at": "2026-11-13 (JST・時刻未記録)。ページ記載の価格表更新日: 2026/11/11",
           "updated_on": "2026-11-11",
-          "age_days": 5,
+          "age_days": 6,
           "listed_price": 428500,
           "eligible": false
         },
@@ -995,7 +1020,7 @@
           "price_page_url": "https://keitaikoukakaitori.com/price/smartphone/iphone/",
           "checked_at": "2026-11-13 (JST・時刻未記録)。ページ記載の更新日: 2026/11/07 14:00 (店舗ページ) / 2026/11/07 (価格ページ)",
           "updated_on": "2026-11-07",
-          "age_days": 9,
+          "age_days": 10,
           "listed_price": 405000,
           "eligible": false
         },
@@ -1017,7 +1042,7 @@
           "price_page_url": "https://www.keitairakuen.com/product-category/keitai/iphone/",
           "checked_at": "2026-11-13 (JST・時刻未記録)。ページ記載の更新日: 2026/11/12",
           "updated_on": "2026-11-12",
-          "age_days": 4,
+          "age_days": 5,
           "listed_price": 400000,
           "eligible": false
         },
@@ -1039,7 +1064,7 @@
           "price_page_url": "https://kaitori.e-daikoku.com/mobile/",
           "checked_at": "2026-11-13 JST（ページ記載: 更新日 2026-11-11）",
           "updated_on": "2026-11-11",
-          "age_days": 5,
+          "age_days": 6,
           "listed_price": 397000,
           "eligible": false
         },
@@ -1083,7 +1108,7 @@
           "price_page_url": "https://smaspi.jp/smartphone/iphone/",
           "checked_at": "2026-11-13 JST（ページ記載: 買取価格更新日 2026-11-12）",
           "updated_on": "2026-11-12",
-          "age_days": 4,
+          "age_days": 5,
           "listed_price": 385000,
           "eligible": false
         },
@@ -1105,7 +1130,7 @@
           "price_page_url": "https://shiroromu.jp/product/sumaho/iphone",
           "checked_at": "2026-11-13 JST（ページ記載: 買取価格更新日 2026-11-13）",
           "updated_on": "2026-11-13",
-          "age_days": 3,
+          "age_days": 4,
           "listed_price": 375000,
           "eligible": false
         },
@@ -1127,7 +1152,7 @@
           "price_page_url": "https://linx-as.co.jp/services/brand/iphone",
           "checked_at": "2026-11-13 JST（ページ記載: 価格更新日 2026-11-11）",
           "updated_on": "2026-11-11",
-          "age_days": 5,
+          "age_days": 6,
           "listed_price": 355500,
           "eligible": false
         },
@@ -1196,7 +1221,7 @@
           "price_page_url": "https://www.keitairakuen.com/product-category/keitai/iphone/",
           "checked_at": "2026-11-13 (JST・時刻未記録)。ページ記載の更新日: 2026/11/12",
           "updated_on": "2026-11-12",
-          "age_days": 4,
+          "age_days": 5,
           "listed_price": null,
           "eligible": false
         },
@@ -1262,7 +1287,7 @@
           "price_page_url": "https://sakumoba.jp/smartphone/iphone/",
           "checked_at": "2026-11-13 JST（ページ記載: 買取価格更新日 2026-11-13）",
           "updated_on": "2026-11-13",
-          "age_days": 3,
+          "age_days": 4,
           "listed_price": null,
           "eligible": false
         }
@@ -1280,7 +1305,7 @@
       "highest_executable": null,
       "highest_unconfirmed": {
         "shop": "パステック（PASTEC）",
-        "price": 401000,
+        "price": 402000,
         "status": "SINGLE_SOURCE"
       },
       "second": null,
@@ -1297,8 +1322,42 @@
       "apple_price": 469800,
       "apple_url": "https://www.apple.com/jp/shop/buy-iphone",
       "identity": "REGISTERED",
+      "apple_availability": {
+        "status": "BUYABLE",
+        "checked_at": "2026-11-17T14:08:14+09:00",
+        "source": "https://www.apple.com/jp/shop/buyability-message",
+        "parts": {
+          "MK284J/A": true,
+          "MK294J/A": true
+        }
+      },
+      "profit_status": "PROFITABLE",
+      "opportunity_status": "WAIT",
+      "opportunity_reason": "黒字だが ROI が BUY の条件（8%）未満",
       "identity_note": "正本に登録済み（部品番号つき）",
       "rows": [
+        {
+          "sku": "iPhone Duo 1TB",
+          "condition": "UNOPENED",
+          "base_price": 483000,
+          "best_price": 483000,
+          "executable_price": 483000,
+          "basis": "uniform",
+          "color_adjustments": {},
+          "carrier_or_region": "",
+          "campaign": null,
+          "conditions": null,
+          "shop": "パステック（PASTEC）",
+          "key": "pastec",
+          "shop_status": "ACTIVE",
+          "freshness": "FRESH",
+          "price_page_url": "https://pastec.net/iphone/",
+          "checked_at": "2026-11-17 JST（ページ記載: 買取価格更新日 2026/11/17）",
+          "updated_on": "2026-11-17",
+          "age_days": 0,
+          "listed_price": 483000,
+          "eligible": true
+        },
         {
           "sku": "iPhone Duo 1TB",
           "condition": "UNOPENED",
@@ -1310,37 +1369,15 @@
           "carrier_or_region": "",
           "campaign": null,
           "conditions": null,
-          "shop": "パステック（PASTEC）",
-          "key": "pastec",
-          "shop_status": "ACTIVE",
-          "freshness": "FRESH",
-          "price_page_url": "https://pastec.net/iphone/",
-          "checked_at": "2026-11-16 JST（ページ記載: 買取価格更新日 2026/11/16）",
-          "updated_on": "2026-11-16",
-          "age_days": 0,
-          "listed_price": 482000,
-          "eligible": true
-        },
-        {
-          "sku": "iPhone Duo 1TB",
-          "condition": "UNOPENED",
-          "base_price": 481000,
-          "best_price": 481000,
-          "executable_price": 481000,
-          "basis": "uniform",
-          "color_adjustments": {},
-          "carrier_or_region": "",
-          "campaign": null,
-          "conditions": null,
           "shop": "買取ルデヤ",
           "key": "rudeya",
           "shop_status": "ACTIVE",
           "freshness": "FRESH",
           "price_page_url": "https://kaitori-rudeya.com/series/iphone18",
-          "checked_at": "2026-11-16 20:10 (ページ表示の「20時10分現在」)",
-          "updated_on": "2026-11-16",
+          "checked_at": "2026-11-17 14:08 (ページ表示の「14時08分現在」)",
+          "updated_on": "2026-11-17",
           "age_days": 0,
-          "listed_price": 481000,
+          "listed_price": 482000,
           "eligible": true
         },
         {
@@ -1364,7 +1401,7 @@
           "price_page_url": "https://akiba-mobile.co.jp/",
           "checked_at": "2026-11-13 (JST・時刻未記録)。ページ記載の価格表更新日: 2026/11/11",
           "updated_on": "2026-11-11",
-          "age_days": 5,
+          "age_days": 6,
           "listed_price": 502000,
           "eligible": false
         },
@@ -1386,7 +1423,7 @@
           "price_page_url": "https://keitaikoukakaitori.com/price/smartphone/iphone/",
           "checked_at": "2026-11-13 (JST・時刻未記録)。ページ記載の更新日: 2026/11/07 14:00 (店舗ページ) / 2026/11/07 (価格ページ)",
           "updated_on": "2026-11-07",
-          "age_days": 9,
+          "age_days": 10,
           "listed_price": 492000,
           "eligible": false
         },
@@ -1499,7 +1536,7 @@
           "price_page_url": "https://kaitori.e-daikoku.com/mobile/",
           "checked_at": "2026-11-13 JST（ページ記載: 更新日 2026-11-11）",
           "updated_on": "2026-11-11",
-          "age_days": 5,
+          "age_days": 6,
           "listed_price": 478000,
           "eligible": false
         },
@@ -1521,7 +1558,7 @@
           "price_page_url": "https://www.keitairakuen.com/product-category/keitai/iphone/",
           "checked_at": "2026-11-13 (JST・時刻未記録)。ページ記載の更新日: 2026/11/12",
           "updated_on": "2026-11-12",
-          "age_days": 4,
+          "age_days": 5,
           "listed_price": 470000,
           "eligible": false
         },
@@ -1565,7 +1602,7 @@
           "price_page_url": "https://smaspi.jp/smartphone/iphone/",
           "checked_at": "2026-11-13 JST（ページ記載: 買取価格更新日 2026-11-12）",
           "updated_on": "2026-11-12",
-          "age_days": 4,
+          "age_days": 5,
           "listed_price": 470000,
           "eligible": false
         },
@@ -1587,7 +1624,7 @@
           "price_page_url": "https://shiroromu.jp/product/sumaho/iphone",
           "checked_at": "2026-11-13 JST（ページ記載: 買取価格更新日 2026-11-13）",
           "updated_on": "2026-11-13",
-          "age_days": 3,
+          "age_days": 4,
           "listed_price": 450000,
           "eligible": false
         },
@@ -1609,7 +1646,7 @@
           "price_page_url": "https://linx-as.co.jp/services/brand/iphone",
           "checked_at": "2026-11-13 JST（ページ記載: 価格更新日 2026-11-11）",
           "updated_on": "2026-11-11",
-          "age_days": 5,
+          "age_days": 6,
           "listed_price": 420500,
           "eligible": false
         },
@@ -1678,7 +1715,7 @@
           "price_page_url": "https://www.keitairakuen.com/product-category/keitai/iphone/",
           "checked_at": "2026-11-13 (JST・時刻未記録)。ページ記載の更新日: 2026/11/12",
           "updated_on": "2026-11-12",
-          "age_days": 4,
+          "age_days": 5,
           "listed_price": null,
           "eligible": false
         },
@@ -1744,7 +1781,7 @@
           "price_page_url": "https://sakumoba.jp/smartphone/iphone/",
           "checked_at": "2026-11-13 JST（ページ記載: 買取価格更新日 2026-11-13）",
           "updated_on": "2026-11-13",
-          "age_days": 3,
+          "age_days": 4,
           "listed_price": null,
           "eligible": false
         }
@@ -1761,17 +1798,17 @@
       },
       "highest_executable": {
         "shop": "パステック（PASTEC）",
-        "price": 482000
+        "price": 483000
       },
       "highest_unconfirmed": null,
       "second": {
         "shop": "買取ルデヤ",
-        "price": 481000
+        "price": 482000
       },
       "third": null,
       "costs": 1800,
-      "net_profit": 10400,
-      "roi_pct": 2.21,
+      "net_profit": 11400,
+      "roi_pct": 2.43,
       "reference_net_at_second": null,
       "best_route": "Apple → パステック（PASTEC）",
       "reference_route": null
@@ -1781,6 +1818,18 @@
       "apple_price": 574800,
       "apple_url": "https://www.apple.com/jp/shop/buy-iphone",
       "identity": "REGISTERED",
+      "apple_availability": {
+        "status": "BUYABLE",
+        "checked_at": "2026-11-17T14:08:14+09:00",
+        "source": "https://www.apple.com/jp/shop/buyability-message",
+        "parts": {
+          "MK2A4J/A": true,
+          "MK2C4J/A": true
+        }
+      },
+      "profit_status": "PROFITABLE",
+      "opportunity_status": "WAIT",
+      "opportunity_reason": "黒字だが ROI が BUY の条件（8%）未満",
       "identity_note": "正本に登録済み（部品番号つき）",
       "rows": [
         {
@@ -1799,8 +1848,8 @@
           "shop_status": "ACTIVE",
           "freshness": "FRESH",
           "price_page_url": "https://pastec.net/iphone/",
-          "checked_at": "2026-11-16 JST（ページ記載: 買取価格更新日 2026/11/16）",
-          "updated_on": "2026-11-16",
+          "checked_at": "2026-11-17 JST（ページ記載: 買取価格更新日 2026/11/17）",
+          "updated_on": "2026-11-17",
           "age_days": 0,
           "listed_price": 586000,
           "eligible": true
@@ -1821,8 +1870,8 @@
           "shop_status": "ACTIVE",
           "freshness": "FRESH",
           "price_page_url": "https://kaitori-rudeya.com/series/iphone18",
-          "checked_at": "2026-11-16 20:10 (ページ表示の「20時10分現在」)",
-          "updated_on": "2026-11-16",
+          "checked_at": "2026-11-17 14:08 (ページ表示の「14時08分現在」)",
+          "updated_on": "2026-11-17",
           "age_days": 0,
           "listed_price": 585000,
           "eligible": true
@@ -1848,7 +1897,7 @@
           "price_page_url": "https://akiba-mobile.co.jp/",
           "checked_at": "2026-11-13 (JST・時刻未記録)。ページ記載の価格表更新日: 2026/11/11",
           "updated_on": "2026-11-11",
-          "age_days": 5,
+          "age_days": 6,
           "listed_price": 605000,
           "eligible": false
         },
@@ -1870,7 +1919,7 @@
           "price_page_url": "https://keitaikoukakaitori.com/price/smartphone/iphone/",
           "checked_at": "2026-11-13 (JST・時刻未記録)。ページ記載の更新日: 2026/11/07 14:00 (店舗ページ) / 2026/11/07 (価格ページ)",
           "updated_on": "2026-11-07",
-          "age_days": 9,
+          "age_days": 10,
           "listed_price": 591000,
           "eligible": false
         },
@@ -1983,7 +2032,7 @@
           "price_page_url": "https://kaitori.e-daikoku.com/mobile/",
           "checked_at": "2026-11-13 JST（ページ記載: 更新日 2026-11-11）",
           "updated_on": "2026-11-11",
-          "age_days": 5,
+          "age_days": 6,
           "listed_price": 576000,
           "eligible": false
         },
@@ -2005,7 +2054,7 @@
           "price_page_url": "https://www.keitairakuen.com/product-category/keitai/iphone/",
           "checked_at": "2026-11-13 (JST・時刻未記録)。ページ記載の更新日: 2026/11/12",
           "updated_on": "2026-11-12",
-          "age_days": 4,
+          "age_days": 5,
           "listed_price": 575000,
           "eligible": false
         },
@@ -2049,7 +2098,7 @@
           "price_page_url": "https://smaspi.jp/smartphone/iphone/",
           "checked_at": "2026-11-13 JST（ページ記載: 買取価格更新日 2026-11-12）",
           "updated_on": "2026-11-12",
-          "age_days": 4,
+          "age_days": 5,
           "listed_price": 570000,
           "eligible": false
         },
@@ -2071,7 +2120,7 @@
           "price_page_url": "https://shiroromu.jp/product/sumaho/iphone",
           "checked_at": "2026-11-13 JST（ページ記載: 買取価格更新日 2026-11-13）",
           "updated_on": "2026-11-13",
-          "age_days": 3,
+          "age_days": 4,
           "listed_price": 545000,
           "eligible": false
         },
@@ -2093,7 +2142,7 @@
           "price_page_url": "https://linx-as.co.jp/services/brand/iphone",
           "checked_at": "2026-11-13 JST（ページ記載: 価格更新日 2026-11-11）",
           "updated_on": "2026-11-11",
-          "age_days": 5,
+          "age_days": 6,
           "listed_price": 515500,
           "eligible": false
         },
@@ -2162,7 +2211,7 @@
           "price_page_url": "https://www.keitairakuen.com/product-category/keitai/iphone/",
           "checked_at": "2026-11-13 (JST・時刻未記録)。ページ記載の更新日: 2026/11/12",
           "updated_on": "2026-11-12",
-          "age_days": 4,
+          "age_days": 5,
           "listed_price": null,
           "eligible": false
         },
@@ -2228,7 +2277,7 @@
           "price_page_url": "https://sakumoba.jp/smartphone/iphone/",
           "checked_at": "2026-11-13 JST（ページ記載: 買取価格更新日 2026-11-13）",
           "updated_on": "2026-11-13",
-          "age_days": 3,
+          "age_days": 4,
           "listed_price": null,
           "eligible": false
         }
@@ -2265,6 +2314,15 @@
       "apple_price": 239800,
       "apple_url": "https://www.apple.com/jp/shop/buy-iphone",
       "identity": "DISCOVERED",
+      "apple_availability": {
+        "status": "UNKNOWN",
+        "checked_at": null,
+        "source": null,
+        "parts": null
+      },
+      "profit_status": "NO_DATA",
+      "opportunity_status": "PASS",
+      "opportunity_reason": "確定できる実行可能価格が無い（外れ値の確認待ち・店が 1 つだけ・鮮度なし）",
       "identity_note": "参考: 部品番号が公式ページに無く、正本に未登録。利益の判定（BUY）には使わない",
       "rows": [
         {
@@ -2290,7 +2348,7 @@
           "price_page_url": "https://akiba-mobile.co.jp/",
           "checked_at": "2026-11-13 (JST・時刻未記録)。ページ記載の価格表更新日: 2026/11/11",
           "updated_on": "2026-11-11",
-          "age_days": 5,
+          "age_days": 6,
           "listed_price": 231000,
           "eligible": false
         },
@@ -2411,7 +2469,7 @@
           "price_page_url": "https://www.keitairakuen.com/product-category/keitai/iphone/",
           "checked_at": "2026-11-13 (JST・時刻未記録)。ページ記載の更新日: 2026/11/12",
           "updated_on": "2026-11-12",
-          "age_days": 4,
+          "age_days": 5,
           "listed_price": 228000,
           "eligible": false
         },
@@ -2433,7 +2491,7 @@
           "price_page_url": "https://keitaikoukakaitori.com/price/smartphone/iphone/",
           "checked_at": "2026-11-13 (JST・時刻未記録)。ページ記載の更新日: 2026/11/07 14:00 (店舗ページ) / 2026/11/07 (価格ページ)",
           "updated_on": "2026-11-07",
-          "age_days": 9,
+          "age_days": 10,
           "listed_price": 228000,
           "eligible": false
         },
@@ -2477,7 +2535,7 @@
           "price_page_url": "https://smaspi.jp/smartphone/iphone/",
           "checked_at": "2026-11-13 JST（ページ記載: 買取価格更新日 2026-11-12）",
           "updated_on": "2026-11-12",
-          "age_days": 4,
+          "age_days": 5,
           "listed_price": 214000,
           "eligible": false
         },
@@ -2499,7 +2557,7 @@
           "price_page_url": "https://kaitori.e-daikoku.com/mobile/",
           "checked_at": "2026-11-13 JST（ページ記載: 更新日 2026-11-11）",
           "updated_on": "2026-11-11",
-          "age_days": 5,
+          "age_days": 6,
           "listed_price": 214000,
           "eligible": false
         },
@@ -2521,7 +2579,7 @@
           "price_page_url": "https://shiroromu.jp/product/sumaho/iphone",
           "checked_at": "2026-11-13 JST（ページ記載: 買取価格更新日 2026-11-13）",
           "updated_on": "2026-11-13",
-          "age_days": 3,
+          "age_days": 4,
           "listed_price": 212000,
           "eligible": false
         },
@@ -2543,7 +2601,7 @@
           "price_page_url": "https://linx-as.co.jp/services/brand/iphone",
           "checked_at": "2026-11-13 JST（ページ記載: 価格更新日 2026-11-11）",
           "updated_on": "2026-11-11",
-          "age_days": 5,
+          "age_days": 6,
           "listed_price": 210500,
           "eligible": false
         },
@@ -2636,7 +2694,7 @@
           "price_page_url": "https://www.keitairakuen.com/product-category/keitai/iphone/",
           "checked_at": "2026-11-13 (JST・時刻未記録)。ページ記載の更新日: 2026/11/12",
           "updated_on": "2026-11-12",
-          "age_days": 4,
+          "age_days": 5,
           "listed_price": null,
           "eligible": false
         },
@@ -2707,7 +2765,7 @@
           "price_page_url": "https://sakumoba.jp/smartphone/iphone/",
           "checked_at": "2026-11-13 JST（ページ記載: 買取価格更新日 2026-11-13）",
           "updated_on": "2026-11-13",
-          "age_days": 3,
+          "age_days": 4,
           "listed_price": null,
           "eligible": false
         }
@@ -2738,6 +2796,15 @@
       "apple_price": 274800,
       "apple_url": "https://www.apple.com/jp/shop/buy-iphone",
       "identity": "DISCOVERED",
+      "apple_availability": {
+        "status": "UNKNOWN",
+        "checked_at": null,
+        "source": null,
+        "parts": null
+      },
+      "profit_status": "NO_DATA",
+      "opportunity_status": "PASS",
+      "opportunity_reason": "確定できる実行可能価格が無い（外れ値の確認待ち・店が 1 つだけ・鮮度なし）",
       "identity_note": "参考: 部品番号が公式ページに無く、正本に未登録。利益の判定（BUY）には使わない",
       "rows": [
         {
@@ -2860,7 +2927,7 @@
           "price_page_url": "https://akiba-mobile.co.jp/",
           "checked_at": "2026-11-13 (JST・時刻未記録)。ページ記載の価格表更新日: 2026/11/11",
           "updated_on": "2026-11-11",
-          "age_days": 5,
+          "age_days": 6,
           "listed_price": 262000,
           "eligible": false
         },
@@ -2882,7 +2949,7 @@
           "price_page_url": "https://www.keitairakuen.com/product-category/keitai/iphone/",
           "checked_at": "2026-11-13 (JST・時刻未記録)。ページ記載の更新日: 2026/11/12",
           "updated_on": "2026-11-12",
-          "age_days": 4,
+          "age_days": 5,
           "listed_price": 262000,
           "eligible": false
         },
@@ -2904,7 +2971,7 @@
           "price_page_url": "https://keitaikoukakaitori.com/price/smartphone/iphone/",
           "checked_at": "2026-11-13 (JST・時刻未記録)。ページ記載の更新日: 2026/11/07 14:00 (店舗ページ) / 2026/11/07 (価格ページ)",
           "updated_on": "2026-11-07",
-          "age_days": 9,
+          "age_days": 10,
           "listed_price": 261000,
           "eligible": false
         },
@@ -2948,7 +3015,7 @@
           "price_page_url": "https://smaspi.jp/smartphone/iphone/",
           "checked_at": "2026-11-13 JST（ページ記載: 買取価格更新日 2026-11-12）",
           "updated_on": "2026-11-12",
-          "age_days": 4,
+          "age_days": 5,
           "listed_price": 247000,
           "eligible": false
         },
@@ -2970,7 +3037,7 @@
           "price_page_url": "https://kaitori.e-daikoku.com/mobile/",
           "checked_at": "2026-11-13 JST（ページ記載: 更新日 2026-11-11）",
           "updated_on": "2026-11-11",
-          "age_days": 5,
+          "age_days": 6,
           "listed_price": 245000,
           "eligible": false
         },
@@ -2992,7 +3059,7 @@
           "price_page_url": "https://shiroromu.jp/product/sumaho/iphone",
           "checked_at": "2026-11-13 JST（ページ記載: 買取価格更新日 2026-11-13）",
           "updated_on": "2026-11-13",
-          "age_days": 3,
+          "age_days": 4,
           "listed_price": 242000,
           "eligible": false
         },
@@ -3014,7 +3081,7 @@
           "price_page_url": "https://linx-as.co.jp/services/brand/iphone",
           "checked_at": "2026-11-13 JST（ページ記載: 価格更新日 2026-11-11）",
           "updated_on": "2026-11-11",
-          "age_days": 5,
+          "age_days": 6,
           "listed_price": 240500,
           "eligible": false
         },
@@ -3063,7 +3130,7 @@
           "price_page_url": "https://www.keitairakuen.com/product-category/keitai/iphone/",
           "checked_at": "2026-11-13 (JST・時刻未記録)。ページ記載の更新日: 2026/11/12",
           "updated_on": "2026-11-12",
-          "age_days": 4,
+          "age_days": 5,
           "listed_price": null,
           "eligible": false
         },
@@ -3134,7 +3201,7 @@
           "price_page_url": "https://sakumoba.jp/smartphone/iphone/",
           "checked_at": "2026-11-13 JST（ページ記載: 買取価格更新日 2026-11-13）",
           "updated_on": "2026-11-13",
-          "age_days": 3,
+          "age_days": 4,
           "listed_price": null,
           "eligible": false
         }
@@ -3165,6 +3232,15 @@
       "apple_price": 344800,
       "apple_url": "https://www.apple.com/jp/shop/buy-iphone",
       "identity": "DISCOVERED",
+      "apple_availability": {
+        "status": "UNKNOWN",
+        "checked_at": null,
+        "source": null,
+        "parts": null
+      },
+      "profit_status": "NO_DATA",
+      "opportunity_status": "PASS",
+      "opportunity_reason": "確定できる実行可能価格が無い（外れ値の確認待ち・店が 1 つだけ・鮮度なし）",
       "identity_note": "参考: 部品番号が公式ページに無く、正本に未登録。利益の判定（BUY）には使わない",
       "rows": [
         {
@@ -3190,7 +3266,7 @@
           "price_page_url": "https://akiba-mobile.co.jp/",
           "checked_at": "2026-11-13 (JST・時刻未記録)。ページ記載の価格表更新日: 2026/11/11",
           "updated_on": "2026-11-11",
-          "age_days": 5,
+          "age_days": 6,
           "listed_price": 333000,
           "eligible": false
         },
@@ -3285,7 +3361,7 @@
           "price_page_url": "https://www.keitairakuen.com/product-category/keitai/iphone/",
           "checked_at": "2026-11-13 (JST・時刻未記録)。ページ記載の更新日: 2026/11/12",
           "updated_on": "2026-11-12",
-          "age_days": 4,
+          "age_days": 5,
           "listed_price": 331500,
           "eligible": false
         },
@@ -3331,7 +3407,7 @@
           "price_page_url": "https://keitaikoukakaitori.com/price/smartphone/iphone/",
           "checked_at": "2026-11-13 (JST・時刻未記録)。ページ記載の更新日: 2026/11/07 14:00 (店舗ページ) / 2026/11/07 (価格ページ)",
           "updated_on": "2026-11-07",
-          "age_days": 9,
+          "age_days": 10,
           "listed_price": 331000,
           "eligible": false
         },
@@ -3375,7 +3451,7 @@
           "price_page_url": "https://smaspi.jp/smartphone/iphone/",
           "checked_at": "2026-11-13 JST（ページ記載: 買取価格更新日 2026-11-12）",
           "updated_on": "2026-11-12",
-          "age_days": 4,
+          "age_days": 5,
           "listed_price": 316000,
           "eligible": false
         },
@@ -3397,7 +3473,7 @@
           "price_page_url": "https://kaitori.e-daikoku.com/mobile/",
           "checked_at": "2026-11-13 JST（ページ記載: 更新日 2026-11-11）",
           "updated_on": "2026-11-11",
-          "age_days": 5,
+          "age_days": 6,
           "listed_price": 306000,
           "eligible": false
         },
@@ -3419,7 +3495,7 @@
           "price_page_url": "https://shiroromu.jp/product/sumaho/iphone",
           "checked_at": "2026-11-13 JST（ページ記載: 買取価格更新日 2026-11-13）",
           "updated_on": "2026-11-13",
-          "age_days": 3,
+          "age_days": 4,
           "listed_price": 302000,
           "eligible": false
         },
@@ -3441,7 +3517,7 @@
           "price_page_url": "https://linx-as.co.jp/services/brand/iphone",
           "checked_at": "2026-11-13 JST（ページ記載: 価格更新日 2026-11-11）",
           "updated_on": "2026-11-11",
-          "age_days": 5,
+          "age_days": 6,
           "listed_price": 300500,
           "eligible": false
         },
@@ -3490,7 +3566,7 @@
           "price_page_url": "https://www.keitairakuen.com/product-category/keitai/iphone/",
           "checked_at": "2026-11-13 (JST・時刻未記録)。ページ記載の更新日: 2026/11/12",
           "updated_on": "2026-11-12",
-          "age_days": 4,
+          "age_days": 5,
           "listed_price": null,
           "eligible": false
         },
@@ -3556,7 +3632,7 @@
           "price_page_url": "https://sakumoba.jp/smartphone/iphone/",
           "checked_at": "2026-11-13 JST（ページ記載: 買取価格更新日 2026-11-13）",
           "updated_on": "2026-11-13",
-          "age_days": 3,
+          "age_days": 4,
           "listed_price": null,
           "eligible": false
         }
@@ -3587,6 +3663,15 @@
       "apple_price": 449800,
       "apple_url": "https://www.apple.com/jp/shop/buy-iphone",
       "identity": "DISCOVERED",
+      "apple_availability": {
+        "status": "UNKNOWN",
+        "checked_at": null,
+        "source": null,
+        "parts": null
+      },
+      "profit_status": "NO_DATA",
+      "opportunity_status": "PASS",
+      "opportunity_reason": "確定できる実行可能価格が無い（外れ値の確認待ち・店が 1 つだけ・鮮度なし）",
       "identity_note": "参考: 部品番号が公式ページに無く、正本に未登録。利益の判定（BUY）には使わない",
       "rows": [
         {
@@ -3661,7 +3746,7 @@
           "price_page_url": "https://akiba-mobile.co.jp/",
           "checked_at": "2026-11-13 (JST・時刻未記録)。ページ記載の価格表更新日: 2026/11/11",
           "updated_on": "2026-11-11",
-          "age_days": 5,
+          "age_days": 6,
           "listed_price": 396000,
           "eligible": false
         },
@@ -3735,7 +3820,7 @@
           "price_page_url": "https://keitaikoukakaitori.com/price/smartphone/iphone/",
           "checked_at": "2026-11-13 (JST・時刻未記録)。ページ記載の更新日: 2026/11/07 14:00 (店舗ページ) / 2026/11/07 (価格ページ)",
           "updated_on": "2026-11-07",
-          "age_days": 9,
+          "age_days": 10,
           "listed_price": 394000,
           "eligible": false
         },
@@ -3757,7 +3842,7 @@
           "price_page_url": "https://www.keitairakuen.com/product-category/keitai/iphone/",
           "checked_at": "2026-11-13 (JST・時刻未記録)。ページ記載の更新日: 2026/11/12",
           "updated_on": "2026-11-12",
-          "age_days": 4,
+          "age_days": 5,
           "listed_price": 390000,
           "eligible": false
         },
@@ -3801,7 +3886,7 @@
           "price_page_url": "https://smaspi.jp/smartphone/iphone/",
           "checked_at": "2026-11-13 JST（ページ記載: 買取価格更新日 2026-11-12）",
           "updated_on": "2026-11-12",
-          "age_days": 4,
+          "age_days": 5,
           "listed_price": 381000,
           "eligible": false
         },
@@ -3823,7 +3908,7 @@
           "price_page_url": "https://linx-as.co.jp/services/brand/iphone",
           "checked_at": "2026-11-13 JST（ページ記載: 価格更新日 2026-11-11）",
           "updated_on": "2026-11-11",
-          "age_days": 5,
+          "age_days": 6,
           "listed_price": 380500,
           "eligible": false
         },
@@ -3845,7 +3930,7 @@
           "price_page_url": "https://shiroromu.jp/product/sumaho/iphone",
           "checked_at": "2026-11-13 JST（ページ記載: 買取価格更新日 2026-11-13）",
           "updated_on": "2026-11-13",
-          "age_days": 3,
+          "age_days": 4,
           "listed_price": 372000,
           "eligible": false
         },
@@ -3867,7 +3952,7 @@
           "price_page_url": "https://kaitori.e-daikoku.com/mobile/",
           "checked_at": "2026-11-13 JST（ページ記載: 更新日 2026-11-11）",
           "updated_on": "2026-11-11",
-          "age_days": 5,
+          "age_days": 6,
           "listed_price": 365000,
           "eligible": false
         },
@@ -3916,7 +4001,7 @@
           "price_page_url": "https://www.keitairakuen.com/product-category/keitai/iphone/",
           "checked_at": "2026-11-13 (JST・時刻未記録)。ページ記載の更新日: 2026/11/12",
           "updated_on": "2026-11-12",
-          "age_days": 4,
+          "age_days": 5,
           "listed_price": null,
           "eligible": false
         },
@@ -3982,7 +4067,7 @@
           "price_page_url": "https://sakumoba.jp/smartphone/iphone/",
           "checked_at": "2026-11-13 JST（ページ記載: 買取価格更新日 2026-11-13）",
           "updated_on": "2026-11-13",
-          "age_days": 3,
+          "age_days": 4,
           "listed_price": null,
           "eligible": false
         }
@@ -4013,6 +4098,15 @@
       "apple_price": 219800,
       "apple_url": "https://www.apple.com/jp/shop/buy-iphone",
       "identity": "DISCOVERED",
+      "apple_availability": {
+        "status": "UNKNOWN",
+        "checked_at": null,
+        "source": null,
+        "parts": null
+      },
+      "profit_status": "NO_DATA",
+      "opportunity_status": "PASS",
+      "opportunity_reason": "確定できる実行可能価格が無い（外れ値の確認待ち・店が 1 つだけ・鮮度なし）",
       "identity_note": "参考: 部品番号が公式ページに無く、正本に未登録。利益の判定（BUY）には使わない",
       "rows": [
         {
@@ -4112,7 +4206,7 @@
           "price_page_url": "https://www.keitairakuen.com/product-category/keitai/iphone/",
           "checked_at": "2026-11-13 (JST・時刻未記録)。ページ記載の更新日: 2026/11/12",
           "updated_on": "2026-11-12",
-          "age_days": 4,
+          "age_days": 5,
           "listed_price": 203500,
           "eligible": false
         },
@@ -4134,7 +4228,7 @@
           "price_page_url": "https://keitaikoukakaitori.com/price/smartphone/iphone/",
           "checked_at": "2026-11-13 (JST・時刻未記録)。ページ記載の更新日: 2026/11/07 14:00 (店舗ページ) / 2026/11/07 (価格ページ)",
           "updated_on": "2026-11-07",
-          "age_days": 9,
+          "age_days": 10,
           "listed_price": 202500,
           "eligible": false
         },
@@ -4161,7 +4255,7 @@
           "price_page_url": "https://akiba-mobile.co.jp/",
           "checked_at": "2026-11-13 (JST・時刻未記録)。ページ記載の価格表更新日: 2026/11/11",
           "updated_on": "2026-11-11",
-          "age_days": 5,
+          "age_days": 6,
           "listed_price": 201500,
           "eligible": false
         },
@@ -4205,7 +4299,7 @@
           "price_page_url": "https://smaspi.jp/smartphone/iphone/",
           "checked_at": "2026-11-13 JST（ページ記載: 買取価格更新日 2026-11-12）",
           "updated_on": "2026-11-12",
-          "age_days": 4,
+          "age_days": 5,
           "listed_price": 200000,
           "eligible": false
         },
@@ -4227,7 +4321,7 @@
           "price_page_url": "https://shiroromu.jp/product/sumaho/iphone",
           "checked_at": "2026-11-13 JST（ページ記載: 買取価格更新日 2026-11-13）",
           "updated_on": "2026-11-13",
-          "age_days": 3,
+          "age_days": 4,
           "listed_price": 194000,
           "eligible": false
         },
@@ -4249,7 +4343,7 @@
           "price_page_url": "https://linx-as.co.jp/services/brand/iphone",
           "checked_at": "2026-11-13 JST（ページ記載: 価格更新日 2026-11-11）",
           "updated_on": "2026-11-11",
-          "age_days": 5,
+          "age_days": 6,
           "listed_price": 192500,
           "eligible": false
         },
@@ -4271,7 +4365,7 @@
           "price_page_url": "https://kaitori.e-daikoku.com/mobile/",
           "checked_at": "2026-11-13 JST（ページ記載: 更新日 2026-11-11）",
           "updated_on": "2026-11-11",
-          "age_days": 5,
+          "age_days": 6,
           "listed_price": 186000,
           "eligible": false
         },
@@ -4364,7 +4458,7 @@
           "price_page_url": "https://www.keitairakuen.com/product-category/keitai/iphone/",
           "checked_at": "2026-11-13 (JST・時刻未記録)。ページ記載の更新日: 2026/11/12",
           "updated_on": "2026-11-12",
-          "age_days": 4,
+          "age_days": 5,
           "listed_price": null,
           "eligible": false
         },
@@ -4435,7 +4529,7 @@
           "price_page_url": "https://sakumoba.jp/smartphone/iphone/",
           "checked_at": "2026-11-13 JST（ページ記載: 買取価格更新日 2026-11-13）",
           "updated_on": "2026-11-13",
-          "age_days": 3,
+          "age_days": 4,
           "listed_price": null,
           "eligible": false
         }
@@ -4466,6 +4560,15 @@
       "apple_price": 254800,
       "apple_url": "https://www.apple.com/jp/shop/buy-iphone",
       "identity": "DISCOVERED",
+      "apple_availability": {
+        "status": "UNKNOWN",
+        "checked_at": null,
+        "source": null,
+        "parts": null
+      },
+      "profit_status": "NO_DATA",
+      "opportunity_status": "PASS",
+      "opportunity_reason": "確定できる実行可能価格が無い（外れ値の確認待ち・店が 1 つだけ・鮮度なし）",
       "identity_note": "参考: 部品番号が公式ページに無く、正本に未登録。利益の判定（BUY）には使わない",
       "rows": [
         {
@@ -4561,7 +4664,7 @@
           "price_page_url": "https://www.keitairakuen.com/product-category/keitai/iphone/",
           "checked_at": "2026-11-13 (JST・時刻未記録)。ページ記載の更新日: 2026/11/12",
           "updated_on": "2026-11-12",
-          "age_days": 4,
+          "age_days": 5,
           "listed_price": 236000,
           "eligible": false
         },
@@ -4588,7 +4691,7 @@
           "price_page_url": "https://akiba-mobile.co.jp/",
           "checked_at": "2026-11-13 (JST・時刻未記録)。ページ記載の価格表更新日: 2026/11/11",
           "updated_on": "2026-11-11",
-          "age_days": 5,
+          "age_days": 6,
           "listed_price": 235000,
           "eligible": false
         },
@@ -4610,7 +4713,7 @@
           "price_page_url": "https://keitaikoukakaitori.com/price/smartphone/iphone/",
           "checked_at": "2026-11-13 (JST・時刻未記録)。ページ記載の更新日: 2026/11/07 14:00 (店舗ページ) / 2026/11/07 (価格ページ)",
           "updated_on": "2026-11-07",
-          "age_days": 9,
+          "age_days": 10,
           "listed_price": 235000,
           "eligible": false
         },
@@ -4654,7 +4757,7 @@
           "price_page_url": "https://smaspi.jp/smartphone/iphone/",
           "checked_at": "2026-11-13 JST（ページ記載: 買取価格更新日 2026-11-12）",
           "updated_on": "2026-11-12",
-          "age_days": 4,
+          "age_days": 5,
           "listed_price": 233000,
           "eligible": false
         },
@@ -4676,7 +4779,7 @@
           "price_page_url": "https://shiroromu.jp/product/sumaho/iphone",
           "checked_at": "2026-11-13 JST（ページ記載: 買取価格更新日 2026-11-13）",
           "updated_on": "2026-11-13",
-          "age_days": 3,
+          "age_days": 4,
           "listed_price": 225000,
           "eligible": false
         },
@@ -4698,7 +4801,7 @@
           "price_page_url": "https://linx-as.co.jp/services/brand/iphone",
           "checked_at": "2026-11-13 JST（ページ記載: 価格更新日 2026-11-11）",
           "updated_on": "2026-11-11",
-          "age_days": 5,
+          "age_days": 6,
           "listed_price": 223500,
           "eligible": false
         },
@@ -4720,7 +4823,7 @@
           "price_page_url": "https://kaitori.e-daikoku.com/mobile/",
           "checked_at": "2026-11-13 JST（ページ記載: 更新日 2026-11-11）",
           "updated_on": "2026-11-11",
-          "age_days": 5,
+          "age_days": 6,
           "listed_price": 217000,
           "eligible": false
         },
@@ -4769,7 +4872,7 @@
           "price_page_url": "https://www.keitairakuen.com/product-category/keitai/iphone/",
           "checked_at": "2026-11-13 (JST・時刻未記録)。ページ記載の更新日: 2026/11/12",
           "updated_on": "2026-11-12",
-          "age_days": 4,
+          "age_days": 5,
           "listed_price": null,
           "eligible": false
         },
@@ -4840,7 +4943,7 @@
           "price_page_url": "https://sakumoba.jp/smartphone/iphone/",
           "checked_at": "2026-11-13 JST（ページ記載: 買取価格更新日 2026-11-13）",
           "updated_on": "2026-11-13",
-          "age_days": 3,
+          "age_days": 4,
           "listed_price": null,
           "eligible": false
         }
@@ -4871,6 +4974,15 @@
       "apple_price": 324800,
       "apple_url": "https://www.apple.com/jp/shop/buy-iphone",
       "identity": "DISCOVERED",
+      "apple_availability": {
+        "status": "UNKNOWN",
+        "checked_at": null,
+        "source": null,
+        "parts": null
+      },
+      "profit_status": "NO_DATA",
+      "opportunity_status": "PASS",
+      "opportunity_reason": "確定できる実行可能価格が無い（外れ値の確認待ち・店が 1 つだけ・鮮度なし）",
       "identity_note": "参考: 部品番号が公式ページに無く、正本に未登録。利益の判定（BUY）には使わない",
       "rows": [
         {
@@ -4975,7 +5087,7 @@
           "price_page_url": "https://akiba-mobile.co.jp/",
           "checked_at": "2026-11-13 (JST・時刻未記録)。ページ記載の価格表更新日: 2026/11/11",
           "updated_on": "2026-11-11",
-          "age_days": 5,
+          "age_days": 6,
           "listed_price": 302000,
           "eligible": false
         },
@@ -4997,7 +5109,7 @@
           "price_page_url": "https://www.keitairakuen.com/product-category/keitai/iphone/",
           "checked_at": "2026-11-13 (JST・時刻未記録)。ページ記載の更新日: 2026/11/12",
           "updated_on": "2026-11-12",
-          "age_days": 4,
+          "age_days": 5,
           "listed_price": 301000,
           "eligible": false
         },
@@ -5019,7 +5131,7 @@
           "price_page_url": "https://keitaikoukakaitori.com/price/smartphone/iphone/",
           "checked_at": "2026-11-13 (JST・時刻未記録)。ページ記載の更新日: 2026/11/07 14:00 (店舗ページ) / 2026/11/07 (価格ページ)",
           "updated_on": "2026-11-07",
-          "age_days": 9,
+          "age_days": 10,
           "listed_price": 301000,
           "eligible": false
         },
@@ -5041,7 +5153,7 @@
           "price_page_url": "https://shiroromu.jp/product/sumaho/iphone",
           "checked_at": "2026-11-13 JST（ページ記載: 買取価格更新日 2026-11-13）",
           "updated_on": "2026-11-13",
-          "age_days": 3,
+          "age_days": 4,
           "listed_price": 287000,
           "eligible": false
         },
@@ -5085,7 +5197,7 @@
           "price_page_url": "https://smaspi.jp/smartphone/iphone/",
           "checked_at": "2026-11-13 JST（ページ記載: 買取価格更新日 2026-11-12）",
           "updated_on": "2026-11-12",
-          "age_days": 4,
+          "age_days": 5,
           "listed_price": 286000,
           "eligible": false
         },
@@ -5107,7 +5219,7 @@
           "price_page_url": "https://linx-as.co.jp/services/brand/iphone",
           "checked_at": "2026-11-13 JST（ページ記載: 価格更新日 2026-11-11）",
           "updated_on": "2026-11-11",
-          "age_days": 5,
+          "age_days": 6,
           "listed_price": 285500,
           "eligible": false
         },
@@ -5129,7 +5241,7 @@
           "price_page_url": "https://kaitori.e-daikoku.com/mobile/",
           "checked_at": "2026-11-13 JST（ページ記載: 更新日 2026-11-11）",
           "updated_on": "2026-11-11",
-          "age_days": 5,
+          "age_days": 6,
           "listed_price": 279000,
           "eligible": false
         },
@@ -5178,7 +5290,7 @@
           "price_page_url": "https://www.keitairakuen.com/product-category/keitai/iphone/",
           "checked_at": "2026-11-13 (JST・時刻未記録)。ページ記載の更新日: 2026/11/12",
           "updated_on": "2026-11-12",
-          "age_days": 4,
+          "age_days": 5,
           "listed_price": null,
           "eligible": false
         },
@@ -5244,7 +5356,7 @@
           "price_page_url": "https://sakumoba.jp/smartphone/iphone/",
           "checked_at": "2026-11-13 JST（ページ記載: 買取価格更新日 2026-11-13）",
           "updated_on": "2026-11-13",
-          "age_days": 3,
+          "age_days": 4,
           "listed_price": null,
           "eligible": false
         }
@@ -5275,6 +5387,15 @@
       "apple_price": 429800,
       "apple_url": "https://www.apple.com/jp/shop/buy-iphone",
       "identity": "DISCOVERED",
+      "apple_availability": {
+        "status": "UNKNOWN",
+        "checked_at": null,
+        "source": null,
+        "parts": null
+      },
+      "profit_status": "NO_DATA",
+      "opportunity_status": "PASS",
+      "opportunity_reason": "確定できる実行可能価格が無い（外れ値の確認待ち・店が 1 つだけ・鮮度なし）",
       "identity_note": "参考: 部品番号が公式ページに無く、正本に未登録。利益の判定（BUY）には使わない",
       "rows": [
         {
@@ -5379,7 +5500,7 @@
           "price_page_url": "https://akiba-mobile.co.jp/",
           "checked_at": "2026-11-13 (JST・時刻未記録)。ページ記載の価格表更新日: 2026/11/11",
           "updated_on": "2026-11-11",
-          "age_days": 5,
+          "age_days": 6,
           "listed_price": 375000,
           "eligible": false
         },
@@ -5401,7 +5522,7 @@
           "price_page_url": "https://www.keitairakuen.com/product-category/keitai/iphone/",
           "checked_at": "2026-11-13 (JST・時刻未記録)。ページ記載の更新日: 2026/11/12",
           "updated_on": "2026-11-12",
-          "age_days": 4,
+          "age_days": 5,
           "listed_price": 373000,
           "eligible": false
         },
@@ -5423,7 +5544,7 @@
           "price_page_url": "https://keitaikoukakaitori.com/price/smartphone/iphone/",
           "checked_at": "2026-11-13 (JST・時刻未記録)。ページ記載の更新日: 2026/11/07 14:00 (店舗ページ) / 2026/11/07 (価格ページ)",
           "updated_on": "2026-11-07",
-          "age_days": 9,
+          "age_days": 10,
           "listed_price": 372000,
           "eligible": false
         },
@@ -5445,7 +5566,7 @@
           "price_page_url": "https://shiroromu.jp/product/sumaho/iphone",
           "checked_at": "2026-11-13 JST（ページ記載: 買取価格更新日 2026-11-13）",
           "updated_on": "2026-11-13",
-          "age_days": 3,
+          "age_days": 4,
           "listed_price": 362000,
           "eligible": false
         },
@@ -5489,7 +5610,7 @@
           "price_page_url": "https://smaspi.jp/smartphone/iphone/",
           "checked_at": "2026-11-13 JST（ページ記載: 買取価格更新日 2026-11-12）",
           "updated_on": "2026-11-12",
-          "age_days": 4,
+          "age_days": 5,
           "listed_price": 361000,
           "eligible": false
         },
@@ -5511,7 +5632,7 @@
           "price_page_url": "https://linx-as.co.jp/services/brand/iphone",
           "checked_at": "2026-11-13 JST（ページ記載: 価格更新日 2026-11-11）",
           "updated_on": "2026-11-11",
-          "age_days": 5,
+          "age_days": 6,
           "listed_price": 360500,
           "eligible": false
         },
@@ -5533,7 +5654,7 @@
           "price_page_url": "https://kaitori.e-daikoku.com/mobile/",
           "checked_at": "2026-11-13 JST（ページ記載: 更新日 2026-11-11）",
           "updated_on": "2026-11-11",
-          "age_days": 5,
+          "age_days": 6,
           "listed_price": 346000,
           "eligible": false
         },
@@ -5582,7 +5703,7 @@
           "price_page_url": "https://www.keitairakuen.com/product-category/keitai/iphone/",
           "checked_at": "2026-11-13 (JST・時刻未記録)。ページ記載の更新日: 2026/11/12",
           "updated_on": "2026-11-12",
-          "age_days": 4,
+          "age_days": 5,
           "listed_price": null,
           "eligible": false
         },
@@ -5648,7 +5769,7 @@
           "price_page_url": "https://sakumoba.jp/smartphone/iphone/",
           "checked_at": "2026-11-13 JST（ページ記載: 買取価格更新日 2026-11-13）",
           "updated_on": "2026-11-13",
-          "age_days": 3,
+          "age_days": 4,
           "listed_price": null,
           "eligible": false
         }
@@ -5676,5 +5797,11 @@
     }
   ],
   "events": [],
-  "events_note": "前回の週次の調査との比較"
+  "events_note": "前回の週次の調査との比較",
+  "notification_dry_run": {
+    "mode": "DRY_RUN",
+    "would_notify": 0,
+    "sent": 0,
+    "note": "通知は送信しない（検出の記録だけ。本体の通知・outbox には接続しない）"
+  }
 }

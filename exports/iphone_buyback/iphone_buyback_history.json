@@ -330,6 +330,105 @@
           "net": null
         }
       ]
+    },
+    {
+      "date": "2026-11-17",
+      "rows": [
+        {
+          "sku": "iPhone Duo 1TB",
+          "identity": "REGISTERED",
+          "key": "pastec",
+          "shop": "パステック（PASTEC）",
+          "price": 483000,
+          "net": 11400,
+          "checked_at": "2026-11-17 JST（ページ記載: 買取価格更新日 2026/11/17）",
+          "condition": "UNOPENED",
+          "freshness": "FRESH"
+        },
+        {
+          "sku": "iPhone Duo 1TB",
+          "identity": "REGISTERED",
+          "key": "rudeya",
+          "shop": "買取ルデヤ",
+          "price": 482000,
+          "net": null,
+          "checked_at": "2026-11-17 14:08 (ページ表示の「14時08分現在」)",
+          "condition": "UNOPENED",
+          "freshness": "FRESH"
+        },
+        {
+          "sku": "iPhone Duo 2TB",
+          "identity": "REGISTERED",
+          "key": "pastec",
+          "shop": "パステック（PASTEC）",
+          "price": 586000,
+          "net": 9400,
+          "checked_at": "2026-11-17 JST（ページ記載: 買取価格更新日 2026/11/17）",
+          "condition": "UNOPENED",
+          "freshness": "FRESH"
+        },
+        {
+          "sku": "iPhone Duo 2TB",
+          "identity": "REGISTERED",
+          "key": "rudeya",
+          "shop": "買取ルデヤ",
+          "price": 585000,
+          "net": null,
+          "checked_at": "2026-11-17 14:08 (ページ表示の「14時08分現在」)",
+          "condition": "UNOPENED",
+          "freshness": "FRESH"
+        }
+      ],
+      "apple": {
+        "iPhone Duo 256GB": {
+          "price": 364800,
+          "availability": "BUYABLE"
+        },
+        "iPhone Duo 512GB": {
+          "price": 399800,
+          "availability": "BUYABLE"
+        },
+        "iPhone Duo 1TB": {
+          "price": 469800,
+          "availability": "BUYABLE"
+        },
+        "iPhone Duo 2TB": {
+          "price": 574800,
+          "availability": "BUYABLE"
+        },
+        "iPhone 18 Pro Max 256GB": {
+          "price": 239800,
+          "availability": "UNKNOWN"
+        },
+        "iPhone 18 Pro Max 512GB": {
+          "price": 274800,
+          "availability": "UNKNOWN"
+        },
+        "iPhone 18 Pro Max 1TB": {
+          "price": 344800,
+          "availability": "UNKNOWN"
+        },
+        "iPhone 18 Pro Max 2TB": {
+          "price": 449800,
+          "availability": "UNKNOWN"
+        },
+        "iPhone 18 Pro 256GB": {
+          "price": 219800,
+          "availability": "UNKNOWN"
+        },
+        "iPhone 18 Pro 512GB": {
+          "price": 254800,
+          "availability": "UNKNOWN"
+        },
+        "iPhone 18 Pro 1TB": {
+          "price": 324800,
+          "availability": "UNKNOWN"
+        },
+        "iPhone 18 Pro 2TB": {
+          "price": 429800,
+          "availability": "UNKNOWN"
+        }
+      }
     }
   ]
 }

@@ -389,3 +389,20 @@ python3 -m pytest tests/test_weekly_import.py
 - 公開ページ: 抽選・予約のページに、状態（抽選受付中・締切間近・近日開始…）とカード（ポケモンカード / ONE PIECE）の絞り込みを追加（`data-nu-brand`・`?st=ending|upcoming&brand=pokemon|onepiece`）。
 - バックログ 7 取得元の合法的な代替経路（2026-11-18 に確認。直接の取得を回避する手段は使わない）: GEO＝一覧 403・`draw.geo-online.co.jp` は取得不可（打ち切り記録）。公式 X・ゲオアプリの告知は検索に出ず、今は人手の確認が必要。Joshin＝トップが別ページへ移動・403。公式お知らせ・SNS は検索に出ず。メール案内の抽選が中心とされる。Amazon＝商品・検索の直接取得はしない方針。メーカー告知（pokemon-card.com・onepiece-cardgame.com）に Amazon の抽選の記載は無し。プレミアムバンダイ＝自動収集（`p-bandai.jp/chara/onepiece/`）は読めて受付中なし。一覧は JS 描画で、ONE PIECE 公式の商品・イベントページが代替（OP-18 の抽選は 11/12 終了）。ビックカメラ・ヨドバシ＝公式ページはタイムアウト。個別告知の URL を検索で見つけられず、集約サイトの記述だけ（公開しない）。楽天＝楽天ブックスの公式ページ・キャンペーン告知で今回は該当なし（公式 API は契約しない）。
 
+
+
+### カメラの週次の更新（1 コマンド・2026-11-18〜）
+
+`python -m src.research.camera_refresh`（既定は dry-run＝何も書かない）／`--apply`（検証に通ったときだけ書く）／`--dir <調査フォルダ>`。カメラの「どこで買い・どこへ売れば・いくら利益か」を週 1 回の手動実行で判断できるようにする（24 時間の監視ではない・有料 API は使わない）。
+
+- 入力: 調査フォルダ `.private/research/weekly/<日付>/research_camera_<ブランド>.json`（依頼書の形式は `CAMERA_BRIEF.md`。Skill `premium-market-research` の camera をブランドごとに分担。AI の調査は DISCOVERED まで・各行に商品ページの `item_title` 必須）と、自動収集（`exports/normalized_price_observations`）の買取の**商品ページ**（`link_type=item`・当日・型番の厳密な照合を通ったものだけ）。古い手入力の価格・店のトップ・検索結果の行は使わない。
+- 価格の種別: OFFICIAL_RETAIL / RETAIL_PRICE / BUYBACK_PRICE / LISTING_LOW / LISTING_HIGH / SOLD_LOW / SOLD_HIGH / SOLD_MEDIAN。**売値に使えるのは BUYBACK_PRICE と、条件を満たした SOLD_MEDIAN だけ**（LISTING_HIGH・出品の最安・単発の成約は売値にしない）。成約中央値は `price_types.sold_median`（件数 3 以上・期間 90 日・個別の商品ページ URL と成約日）。足りなければ期待売値 UNAVAILABLE・利益 NOT_CALCULATED。
+- ルート: A 正規店・メーカー→買取店／B 正規店・メーカー→二次流通（SOLD_MEDIAN）／C 二次流通の最安→買取店／D 二次流通の最安→二次流通（SOLD_MEDIAN）。純利益＝売値−仕入−購入送料−（買取店への発送など or 二次流通の発送）−販売手数料（二次流通のみ）−その他。購入送料が不明・売り先の手数料が未確認のときは **NOT_CALCULATED（0 円にしない）**。費用・手数料・鮮度・ROI の基準は `config/camera_routes.yaml`（手数料は市場ごと。確認日と根拠つき。ラクマ・eBay は未確認で売り先に使わない）。
+- 同一性と状態: 商品名（`item_title`）が機種と一致し、版の旗（HDF・Monochrome・限定・キット・2025 版・日英）が食い違わないこと。新品（NEW・UNOPENED）・新品同様・中古・不明は混ぜない（買う状態と売る状態が同じ区分のときだけ計算）。
+- 判定: BUY は、登録済み・黒字・購入できる（抽選・予約・在庫なし・不明は BUY にしない）・ROI 8% 以上・買取が 2 店以上で外れ値でない・買取の更新日が分かる・全部 FRESH（7 日以内）。二次流通の売値のルートは自動の BUY にしない。黒字でも BUY とは限らない。
+- 失敗した取得元: 読めた行だけを今日の確認にする。取れなかった (機種・種類・店) は前回の行を**日付もそのまま**引き継ぎ（30 日まで）、鮮度で STALE になる。
+- 出力: `exports/camera_research/camera_market.json`（公開。機種ごとの観測・二次流通の集計・ルート・イベント・品質）・`camera_market_history.json`（直近 26 件・同じ日は上書き）・ページ `docs/camera-research.html`（せどり判断ページ）。未確認の新商品は `.private/.../camera_candidates.json` に残し、公開は件数だけ。
+- イベント（前回が無ければ出さない）: PRICE_DROP / PRICE_RISE / BUYBACK_SURGE（5,000 円以上）/ LOSS_TO_PROFIT / PROFIT_TO_LOSS / WAIT_TO_BUY / BUY_TO_WAIT / BEST_ROUTE_CHANGE。通知は dry-run の記録だけ（`sent` は常に 0）。
+- 品質の数（すべて 0 でなければ `--apply` は書かない）: wrong_identity / wrong_condition / listing_high_used_as_sell / insufficient_sold_used_as_expected_sell / stale_price_used_as_fresh / fake_checked_at / double_count_fee / missing_fee。
+- 終了コード: 0＝全取得元が読めた／2＝読めなかった取得元あり（読めた分だけ更新）／1＝検証失敗。
+- 調査員（AI）が読めなかった店（ヨドバシ・ビック・マップカメラ・ソフマップ・フジヤ・キタムラ）は、タイムアウト・403・503・本文が空だった。回避しない（フリマ・オークション・Amazon・楽天・eBay の検索結果も取らない）ので、二次流通の出品・成約は今は空になりやすい。

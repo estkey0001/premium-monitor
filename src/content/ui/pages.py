@@ -237,7 +237,7 @@ def render_more(catalog: cl.Catalog) -> str:
          f'<span class="nu-purpose__count" data-nu-count="routes">{_count_text(catalog.count("routes"))}</span>', True),
         (page_href("home") + "#nu-genres", "box", "ジャンルから探す", "スマホ・TCG・カメラ・ゲーム・PC・その他", "", False),
         ("./iphone-buyback.html", "box", "iPhone 買取比較", "新品未開封を国内の買取店ごとに比較（週1回の調査）", "", False),
-        ("./camera-research.html", "box", "カメラ 週次調査", "抽選に当たらないと仕入れられないものと、二次流通（出品と成約を分けて表示）", "", False),
+        ("./camera-research.html", "box", "カメラ せどり判断", "どこで買い・どこで売り・利益はいくらか（買取と成約中央値を分けて表示。週1回の調査）", "", False),
         (page_href("mypage"), "star", "マイページ", "ウォッチ中の商品・締切・通知の条件（このブラウザに保存）", "", False),
         (page_href("search"), "search", "商品を検索", "商品名・型番・ジャンルで探す", "", False),
         (page_href("admin"), "more", "運営の管理画面", "取得状況・データ品質・AI 候補・資金配分・実行履歴（読むだけ）", "", False),

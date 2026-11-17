@@ -1,0 +1,84 @@
+# カメラの利益ルート（A〜D）の設定。週次の更新 src/research/camera_refresh.py が読む。
+# 値を変えるときは確認日と根拠を残す。確認できていない手数料は confirmed=false にする
+# （その市場を売り先にするルートは NOT_CALCULATED。手数料 0 円として利益を出さない）。
+
+# 鮮度（確認日 checked_at から今日までの日数）。これを超えた価格は STALE で、実行可能・BUY に使わない
+freshness:
+  executable_days: 7
+  stale_days: 14          # これを超えると、画面でも「古い」と表示する
+  stock_days: 2           # 在庫（AVAILABLE）を BUY の根拠にできる日数。価格より短い（在庫は日々変わる）
+
+# 成約（SOLD）。件数の下限は price_types.MIN_SOLD_SAMPLES（3 件）を使う。ここでは期間だけ決める
+sold:
+  period_days: 90
+
+# BUY の ROI の下限（%）。iPhone の週次の判定と同じ値
+decision:
+  buy_min_roi_pct: 8.0
+
+# 費用（円）。買取店への発送・振込手数料・移動・保険は profit_formula.fixed_costs()（既存の正本）を使う。
+costs:
+  secondary_outbound_shipping_jpy: 1500   # フリマ・オークションで売るときの、買い手への発送（scoring_rules.fee_defaults.shipping_fee と同じ）
+  other_jpy: 0
+
+# 売り先の市場ごとの販売手数料（売値に対する割合）。市場ごとに分ける
+fees:
+  mercari:
+    label: メルカリ
+    rate: 0.10
+    confirmed: true
+    confirmed_on: "2026-11-18"
+    evidence: "メルカリのヘルプ「価格の決め方」に販売価格の 10%（公式ヘルプの検索結果の要約で確認。本文は直接読めていない）"
+  yahoo_flea:
+    label: Yahoo!フリマ
+    rate: 0.05
+    confirmed: true
+    confirmed_on: "2026-11-18"
+    evidence: "Yahoo! JAPAN ヘルプセンター「販売利益とは」に 5%（税込）（検索結果の要約で確認。本文は直接読めていない）"
+  yahoo_auction:
+    label: Yahoo!オークション
+    rate: 0.10
+    confirmed: true
+    confirmed_on: "2026-11-18"
+    evidence: "Yahoo! JAPAN ヘルプセンター「落札システム利用料について」に 10%（税込）"
+  rakuma:
+    label: ラクマ
+    rate: null
+    confirmed: false
+    confirmed_on: null
+    evidence: "料率が変動制で、公式の最新の本文を確認できていない（6.6% は 2021〜2023 年の旧料率）。確認できるまで売り先に使わない"
+  ebay:
+    label: eBay
+    rate: null
+    confirmed: false
+    confirmed_on: null
+    evidence: "未対応（為替・関税・送料の扱いが別。このプロジェクトでは海外の売却先を計算しない）"
+
+# 価格の根拠にしてよい URL のドメイン（登録ドメイン）。ここに無いドメイン（集約サイト・価格比較・個人ブログなど）の行は採用も公開もしない。
+# 店の数え方もこのドメインで決める（店名の表記揺れで「別の店」に数えない）。
+allowed_hosts:
+  official: [ricohimagingstore.com, ricoh-imaging.co.jp, mall-jp.fujifilm.com, fujifilm.com, fujifilm-x.com, sony.jp, sony.com,
+             personal.canon.jp, canon.jp, nikon-image.com, nikon.com, nij.nikon.com]
+  retail: [yodobashi.com, biccamera.com, mapcamera.com, fujiya-camera.co.jp, kitamura.jp, kitamura.co.jp, sofmap.com, janpara.co.jp, 2ndstreet.jp]
+  buyback: [kaitorishouten-co.jp, netoff.co.jp, fujiya-camera.co.jp, mapcamera.com, kitamura.jp, kitamura.co.jp, sofmap.com, janpara.co.jp, 2ndstreet.jp]
+
+# 同じ会社の別ドメイン（買取店の数を会社単位で数える）
+shop_company:
+  kitamura.co.jp: kitamura
+  kitamura.jp: kitamura
+
+# 商品ページの URL の形（ドメイン → path+query の正規表現）。ここにあるドメインは、この形に合う URL だけを商品ページとする（許可リスト方式）。
+# 無いドメインは「検索・一覧・トップでない」ことだけを検査する。
+item_url_patterns:
+  kaitorishouten-co.jp: '^/products/detail/\d+'
+  netoff.co.jp: '^/kaden/detail/\d+'
+  yodobashi.com: '^/product/\d{8,}'
+  biccamera.com: '^/bc/item/\d+'
+  mapcamera.com: '^/(item/\d+|ec/(item|product)/)'
+  fujiya-camera.co.jp: '^/shop/g/g\w+'
+  mall-jp.fujifilm.com: '^/shop/g/g\w+'
+  ricohimagingstore.com: 'ProductDetail\.aspx\?.*pid='
+  sony.jp: '^/ichigan/products/[A-Za-z0-9-]+/?$'
+  personal.canon.jp: '^/product/camera/eos/[a-z0-9]+'
+  nij.nikon.com: ['^/products/lineup/mirrorless/[a-z0-9]+/?$', '^/shop/g/g\w+']
+  pur.store.sony.jp: '^/ichigan/products/[A-Za-z0-9-]+/[A-Za-z0-9_-]+_purchase/?$'

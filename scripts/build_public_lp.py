@@ -141,16 +141,23 @@ def _build_iphone_buyback_html(public_dir: Path) -> None:
 
 
 def _build_camera_research_html(public_dir: Path) -> None:
-    """exports/camera_research/camera_research_weekly.json → docs/camera-research.html を生成する。"""
-    json_path = PROJECT_ROOT / "exports" / "camera_research" / "camera_research_weekly.json"
+    """カメラのページ docs/camera-research.html を生成する。
+    exports/camera_research/camera_market.json（週次の更新 camera_refresh の出力。せどり判断ページ）があればそれを使い、
+    無いときだけ従来の camera_research_weekly.json（週次調査の要約）を使う。"""
+    exp = PROJECT_ROOT / "exports" / "camera_research"
+    market, legacy = exp / "camera_market.json", exp / "camera_research_weekly.json"
+    json_path = market if market.exists() else legacy
     if not json_path.exists():
-        print("  ⚠️  camera_research_weekly.json not found — skipping camera-research.html")
+        print("  ⚠️  camera_market.json / camera_research_weekly.json not found — skipping camera-research.html")
         return
     try:
-        summary = json.loads(json_path.read_text(encoding="utf-8"))
+        data = json.loads(json_path.read_text(encoding="utf-8"))
         sys.path.insert(0, str(PROJECT_ROOT))
-        from src.content.camera_research_page import render
-        html_text = render(summary)
+        if json_path == market:
+            from src.content.camera_market_page import render
+        else:
+            from src.content.camera_research_page import render
+        html_text = render(data)
     except Exception as e:  # noqa: BLE001 — 壊れた調査結果でサイト全体のビルドを止めない
         print(f"  ⚠️  camera-research.html を作れなかった: {e}")
         return

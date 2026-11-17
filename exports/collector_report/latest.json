@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-17T20:50:29+09:00",
+  "generated_at": "2026-11-18T00:33:01+09:00",
   "summary": {
     "total": 66,
     "ok": 19,
@@ -81,6 +81,13 @@
         "ps5_pro"
       ]
     },
+    "sofmap": {
+      "reason": "robots_unreachable",
+      "after_attempts": 1,
+      "skipped": [
+        "ps5_pro"
+      ]
+    },
     "surugaya": {
       "reason": "site_blocked",
       "after_attempts": 1,
@@ -95,11 +102,6 @@
     },
     "dosupara": {
       "reason": "http_404",
-      "after_attempts": 2,
-      "skipped": []
-    },
-    "sofmap": {
-      "reason": "service_unavailable",
       "after_attempts": 2,
       "skipped": []
     }
@@ -127,7 +129,7 @@
       "requests": 1
     },
     "sofmap": {
-      "requests": 2
+      "requests": 0
     },
     "hardoff": {
       "requests": 2
@@ -668,7 +670,7 @@
       "rate_429_count": 0,
       "blocked_count": 4,
       "top_reason": "http_403",
-      "last_attempt_at": "2026-11-17T20:50:29+09:00",
+      "last_attempt_at": "2026-11-18T00:33:01+09:00",
       "last_success_at": null,
       "last_observed_at": null
     },
@@ -681,7 +683,7 @@
       "rate_429_count": 0,
       "blocked_count": 0,
       "top_reason": "not_supported",
-      "last_attempt_at": "2026-11-17T20:50:29+09:00",
+      "last_attempt_at": "2026-11-18T00:33:01+09:00",
       "last_success_at": null,
       "last_observed_at": null
     },
@@ -694,7 +696,7 @@
       "rate_429_count": 0,
       "blocked_count": 0,
       "top_reason": "http_404",
-      "last_attempt_at": "2026-11-17T20:50:29+09:00",
+      "last_attempt_at": "2026-11-18T00:33:01+09:00",
       "last_success_at": null,
       "last_observed_at": null
     },
@@ -707,7 +709,7 @@
       "rate_429_count": 0,
       "blocked_count": 2,
       "top_reason": "http_403",
-      "last_attempt_at": "2026-11-17T20:50:29+09:00",
+      "last_attempt_at": "2026-11-18T00:33:01+09:00",
       "last_success_at": "2026-10-17T16:28:50+09:00",
       "last_observed_at": "2026-10-17T16:28:50+09:00"
     },
@@ -720,7 +722,7 @@
       "rate_429_count": 0,
       "blocked_count": 0,
       "top_reason": "robots_unreachable",
-      "last_attempt_at": "2026-11-17T20:50:29+09:00",
+      "last_attempt_at": "2026-11-18T00:33:01+09:00",
       "last_success_at": null,
       "last_observed_at": null
     },
@@ -733,7 +735,7 @@
       "rate_429_count": 0,
       "blocked_count": 0,
       "top_reason": "http_404",
-      "last_attempt_at": "2026-11-17T20:50:29+09:00",
+      "last_attempt_at": "2026-11-18T00:33:01+09:00",
       "last_success_at": null,
       "last_observed_at": null
     },
@@ -746,7 +748,7 @@
       "rate_429_count": 0,
       "blocked_count": 6,
       "top_reason": "http_403",
-      "last_attempt_at": "2026-11-17T20:50:29+09:00",
+      "last_attempt_at": "2026-11-18T00:33:01+09:00",
       "last_success_at": null,
       "last_observed_at": null
     },
@@ -759,7 +761,7 @@
       "rate_429_count": 6,
       "blocked_count": 0,
       "top_reason": "rate_limited_429",
-      "last_attempt_at": "2026-11-17T20:50:29+09:00",
+      "last_attempt_at": "2026-11-18T00:33:01+09:00",
       "last_success_at": null,
       "last_observed_at": null
     },
@@ -772,9 +774,9 @@
       "rate_429_count": 0,
       "blocked_count": 0,
       "top_reason": "—",
-      "last_attempt_at": "2026-11-17T20:50:29+09:00",
-      "last_success_at": "2026-11-17T20:53:35+09:00",
-      "last_observed_at": "2026-11-17T20:53:35+09:00"
+      "last_attempt_at": "2026-11-18T00:33:01+09:00",
+      "last_success_at": "2026-11-18T00:36:05+09:00",
+      "last_observed_at": "2026-11-18T00:36:05+09:00"
     },
     {
       "shop_id": "kaitori_shouten",
@@ -785,9 +787,9 @@
       "rate_429_count": 0,
       "blocked_count": 0,
       "top_reason": "suspicious_rejected",
-      "last_attempt_at": "2026-11-17T20:50:29+09:00",
-      "last_success_at": "2026-11-17T21:04:11+09:00",
-      "last_observed_at": "2026-11-17T21:04:11+09:00"
+      "last_attempt_at": "2026-11-18T00:33:01+09:00",
+      "last_success_at": "2026-11-18T00:46:35+09:00",
+      "last_observed_at": "2026-11-18T00:46:35+09:00"
     },
     {
       "shop_id": "mobile_ichiban",
@@ -798,7 +800,7 @@
       "rate_429_count": 0,
       "blocked_count": 0,
       "top_reason": "product_not_listed",
-      "last_attempt_at": "2026-11-17T20:50:29+09:00",
+      "last_attempt_at": "2026-11-18T00:33:01+09:00",
       "last_success_at": "2026-11-17T17:02:53+09:00",
       "last_observed_at": "2026-11-17T17:02:53+09:00"
     },
@@ -811,7 +813,7 @@
       "rate_429_count": 0,
       "blocked_count": 0,
       "top_reason": "price_not_found",
-      "last_attempt_at": "2026-11-17T20:50:29+09:00",
+      "last_attempt_at": "2026-11-18T00:33:01+09:00",
       "last_success_at": null,
       "last_observed_at": null
     },
@@ -824,7 +826,7 @@
       "rate_429_count": 0,
       "blocked_count": 0,
       "top_reason": "product_not_listed",
-      "last_attempt_at": "2026-11-17T20:50:29+09:00",
+      "last_attempt_at": "2026-11-18T00:33:01+09:00",
       "last_success_at": null,
       "last_observed_at": null
     },
@@ -836,8 +838,8 @@
       "success_rate_pct": 0,
       "rate_429_count": 0,
       "blocked_count": 0,
-      "top_reason": "service_unavailable",
-      "last_attempt_at": "2026-11-17T20:50:29+09:00",
+      "top_reason": "robots_unreachable",
+      "last_attempt_at": "2026-11-18T00:33:01+09:00",
       "last_success_at": null,
       "last_observed_at": null
     },
@@ -850,7 +852,7 @@
       "rate_429_count": 0,
       "blocked_count": 2,
       "top_reason": "site_blocked",
-      "last_attempt_at": "2026-11-17T20:50:29+09:00",
+      "last_attempt_at": "2026-11-18T00:33:01+09:00",
       "last_success_at": null,
       "last_observed_at": null
     },
@@ -863,7 +865,7 @@
       "rate_429_count": 0,
       "blocked_count": 0,
       "top_reason": "not_supported",
-      "last_attempt_at": "2026-11-17T20:50:29+09:00",
+      "last_attempt_at": "2026-11-18T00:33:01+09:00",
       "last_success_at": null,
       "last_observed_at": null
     }
@@ -883,7 +885,7 @@
     },
     {
       "reason": "robots_unreachable",
-      "count": 4
+      "count": 6
     },
     {
       "reason": "price_not_found",
@@ -896,10 +898,6 @@
     {
       "reason": "not_supported",
       "count": 4
-    },
-    {
-      "reason": "service_unavailable",
-      "count": 2
     },
     {
       "reason": "site_blocked",
@@ -936,9 +934,9 @@
       "html_length": 874,
       "http_status": 200,
       "text_length": 874,
-      "elapsed_seconds": 93.57771827999997,
+      "elapsed_seconds": 92.11144070600001,
       "error_type": "",
-      "observed_at": "2026-11-17T20:50:29+09:00"
+      "observed_at": "2026-11-18T00:33:01+09:00"
     },
     {
       "product_alias": "iphone17pro256",
@@ -952,7 +950,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-11-17T20:50:29+09:00"
+      "observed_at": "2026-11-18T00:33:01+09:00"
     },
     {
       "product_alias": "iphone17pro256",
@@ -966,7 +964,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-11-17T20:50:29+09:00"
+      "observed_at": "2026-11-18T00:33:01+09:00"
     },
     {
       "product_alias": "iphone17pro256",
@@ -980,7 +978,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-11-17T20:50:29+09:00"
+      "observed_at": "2026-11-18T00:33:01+09:00"
     },
     {
       "product_alias": "iphone17pro256",
@@ -994,7 +992,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-11-17T20:50:29+09:00"
+      "observed_at": "2026-11-18T00:33:01+09:00"
     },
     {
       "product_alias": "iphone17pro256",
@@ -1008,7 +1006,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-11-17T20:50:29+09:00"
+      "observed_at": "2026-11-18T00:33:01+09:00"
     },
     {
       "product_alias": "iphone17pro512",
@@ -1020,9 +1018,9 @@
       "html_length": 874,
       "http_status": 200,
       "text_length": 874,
-      "elapsed_seconds": 93.57771827999997,
+      "elapsed_seconds": 92.11144070600001,
       "error_type": "",
-      "observed_at": "2026-11-17T20:50:29+09:00"
+      "observed_at": "2026-11-18T00:33:01+09:00"
     },
     {
       "product_alias": "iphone17pro512",
@@ -1036,7 +1034,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-11-17T20:50:29+09:00"
+      "observed_at": "2026-11-18T00:33:01+09:00"
     },
     {
       "product_alias": "iphone17pro512",
@@ -1050,7 +1048,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-11-17T20:50:29+09:00"
+      "observed_at": "2026-11-18T00:33:01+09:00"
     },
     {
       "product_alias": "iphone17pro512",
@@ -1064,7 +1062,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-11-17T20:50:29+09:00"
+      "observed_at": "2026-11-18T00:33:01+09:00"
     },
     {
       "product_alias": "iphone17pro512",
@@ -1078,7 +1076,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-11-17T20:50:29+09:00"
+      "observed_at": "2026-11-18T00:33:01+09:00"
     },
     {
       "product_alias": "iphone17pro512",
@@ -1092,7 +1090,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-11-17T20:50:29+09:00"
+      "observed_at": "2026-11-18T00:33:01+09:00"
     },
     {
       "product_alias": "iphone17pm256",
@@ -1104,9 +1102,9 @@
       "html_length": 874,
       "http_status": 200,
       "text_length": 874,
-      "elapsed_seconds": 93.57771827999997,
+      "elapsed_seconds": 92.11144070600001,
       "error_type": "",
-      "observed_at": "2026-11-17T20:50:29+09:00"
+      "observed_at": "2026-11-18T00:33:01+09:00"
     },
     {
       "product_alias": "iphone17pm256",
@@ -1120,7 +1118,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-11-17T20:50:29+09:00"
+      "observed_at": "2026-11-18T00:33:01+09:00"
     },
     {
       "product_alias": "iphone17pm256",
@@ -1134,7 +1132,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-11-17T20:50:29+09:00"
+      "observed_at": "2026-11-18T00:33:01+09:00"
     },
     {
       "product_alias": "iphone17pm256",
@@ -1148,7 +1146,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-11-17T20:50:29+09:00"
+      "observed_at": "2026-11-18T00:33:01+09:00"
     },
     {
       "product_alias": "iphone17pm256",
@@ -1162,7 +1160,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-11-17T20:50:29+09:00"
+      "observed_at": "2026-11-18T00:33:01+09:00"
     },
     {
       "product_alias": "iphone17pm256",
@@ -1176,7 +1174,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-11-17T20:50:29+09:00"
+      "observed_at": "2026-11-18T00:33:01+09:00"
     },
     {
       "product_alias": "iphone17pm512",
@@ -1188,9 +1186,9 @@
       "html_length": 874,
       "http_status": 200,
       "text_length": 874,
-      "elapsed_seconds": 93.57771827999997,
+      "elapsed_seconds": 92.11144070600001,
       "error_type": "",
-      "observed_at": "2026-11-17T20:50:29+09:00"
+      "observed_at": "2026-11-18T00:33:01+09:00"
     },
     {
       "product_alias": "iphone17pm512",
@@ -1204,7 +1202,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-11-17T20:50:29+09:00"
+      "observed_at": "2026-11-18T00:33:01+09:00"
     },
     {
       "product_alias": "iphone17pm512",
@@ -1218,7 +1216,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-11-17T20:50:29+09:00"
+      "observed_at": "2026-11-18T00:33:01+09:00"
     },
     {
       "product_alias": "iphone17pm512",
@@ -1232,7 +1230,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-11-17T20:50:29+09:00"
+      "observed_at": "2026-11-18T00:33:01+09:00"
     },
     {
       "product_alias": "iphone17pm512",
@@ -1246,7 +1244,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-11-17T20:50:29+09:00"
+      "observed_at": "2026-11-18T00:33:01+09:00"
     },
     {
       "product_alias": "iphone17pm512",
@@ -1260,7 +1258,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-11-17T20:50:29+09:00"
+      "observed_at": "2026-11-18T00:33:01+09:00"
     },
     {
       "product_alias": "switch2",
@@ -1274,7 +1272,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-11-17T20:50:29+09:00"
+      "observed_at": "2026-11-18T00:33:01+09:00"
     },
     {
       "product_alias": "switch2",
@@ -1288,7 +1286,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-11-17T20:50:29+09:00"
+      "observed_at": "2026-11-18T00:33:01+09:00"
     },
     {
       "product_alias": "switch2",
@@ -1302,7 +1300,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-11-17T20:50:29+09:00"
+      "observed_at": "2026-11-18T00:33:01+09:00"
     },
     {
       "product_alias": "switch2",
@@ -1316,7 +1314,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-11-17T20:50:29+09:00"
+      "observed_at": "2026-11-18T00:33:01+09:00"
     },
     {
       "product_alias": "switch2",
@@ -1330,7 +1328,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-11-17T20:50:29+09:00"
+      "observed_at": "2026-11-18T00:33:01+09:00"
     },
     {
       "product_alias": "switch2",
@@ -1344,21 +1342,21 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-11-17T20:50:29+09:00"
+      "observed_at": "2026-11-18T00:33:01+09:00"
     },
     {
       "product_alias": "switch2",
       "shop": "sofmap",
       "status": "FAILED",
-      "reason": "service_unavailable",
+      "reason": "robots_unreachable",
       "url": "https://www.sofmap.com/buy_list.aspx",
-      "final_url": "",
+      "final_url": "https://www.sofmap.com/buy_list.aspx?keyword=Nintendo%20Switch%202",
       "html_length": 0,
       "http_status": 0,
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-11-17T20:50:29+09:00"
+      "observed_at": "2026-11-18T00:33:01+09:00"
     },
     {
       "product_alias": "switch2",
@@ -1372,7 +1370,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-11-17T20:50:29+09:00"
+      "observed_at": "2026-11-18T00:33:01+09:00"
     },
     {
       "product_alias": "switch2",
@@ -1386,7 +1384,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-11-17T20:50:29+09:00"
+      "observed_at": "2026-11-18T00:33:01+09:00"
     },
     {
       "product_alias": "switch2",
@@ -1400,7 +1398,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-11-17T20:50:29+09:00"
+      "observed_at": "2026-11-18T00:33:01+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -1414,7 +1412,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-11-17T20:50:29+09:00"
+      "observed_at": "2026-11-18T00:33:01+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -1428,7 +1426,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-11-17T20:50:29+09:00"
+      "observed_at": "2026-11-18T00:33:01+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -1442,7 +1440,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-11-17T20:55:11+09:00"
+      "observed_at": "2026-11-18T00:37:38+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -1454,9 +1452,9 @@
       "html_length": 874,
       "http_status": 200,
       "text_length": 874,
-      "elapsed_seconds": 93.57771827999997,
+      "elapsed_seconds": 92.11144070600001,
       "error_type": "",
-      "observed_at": "2026-11-17T20:50:29+09:00"
+      "observed_at": "2026-11-18T00:33:01+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -1470,7 +1468,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-11-17T20:50:29+09:00"
+      "observed_at": "2026-11-18T00:33:01+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -1484,7 +1482,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-11-17T20:50:29+09:00"
+      "observed_at": "2026-11-18T00:33:01+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -1498,7 +1496,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-11-17T20:50:29+09:00"
+      "observed_at": "2026-11-18T00:33:01+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -1512,13 +1510,13 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-11-17T20:50:29+09:00"
+      "observed_at": "2026-11-18T00:33:01+09:00"
     },
     {
       "product_alias": "ps5_pro",
       "shop": "sofmap",
       "status": "FAILED",
-      "reason": "service_unavailable",
+      "reason": "robots_unreachable",
       "url": "https://www.sofmap.com/buy_list.aspx",
       "final_url": "",
       "html_length": 0,
@@ -1526,7 +1524,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-11-17T20:50:29+09:00"
+      "observed_at": "2026-11-18T00:33:01+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -1540,7 +1538,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-11-17T20:50:29+09:00"
+      "observed_at": "2026-11-18T00:33:01+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -1554,7 +1552,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-11-17T20:50:29+09:00"
+      "observed_at": "2026-11-18T00:33:01+09:00"
     },
     {
       "product_alias": "ps5_pro",
@@ -1568,7 +1566,7 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-11-17T20:50:29+09:00"
+      "observed_at": "2026-11-18T00:33:01+09:00"
     },
     {
       "product_alias": "iphone16pro256",
@@ -1582,19 +1580,10 @@
       "text_length": 0,
       "elapsed_seconds": 0.0,
       "error_type": "",
-      "observed_at": "2026-11-17T20:50:29+09:00"
+      "observed_at": "2026-11-18T00:33:01+09:00"
     }
   ],
-  "price_changes": [
-    {
-      "product_alias": "iphoneduo_256",
-      "shop": "kaitori_shouten",
-      "prev_price": 361000,
-      "new_price": 360000,
-      "change_pct": -0.3,
-      "direction": "down"
-    }
-  ],
+  "price_changes": [],
   "price_baseline": {
     "baseline_file": "ok",
     "baseline_entries": 20,

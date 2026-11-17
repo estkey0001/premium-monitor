@@ -1,4 +1,4 @@
-# データ取得品質レポート（2026-11-17 22:35 JST）
+# データ取得品質レポート（2026-11-18 02:17 JST）
 
 ## 取得成功率
 - 全対象店舗数: 16
@@ -7,11 +7,11 @@
 - ジョブ成功率: 28.8%（OK 19 / 失敗 43 / SKIP 4 / 計 66）
 
 ## 前回比較
-- 前回成功率: 30.3%
+- 前回成功率: 28.8%
 - 今回成功率: 28.8%
-- 変化: -1.5pt（悪化）
+- 変化: 0.0pt（横ばい）
 - 7日移動平均: 29.4%
-- 主要失敗理由 TOP5: http_403 12, product_not_listed 8, rate_limited_429 6, robots_unreachable 4, price_not_found 4
+- 主要失敗理由 TOP5: http_403 12, product_not_listed 8, rate_limited_429 6, robots_unreachable 6, price_not_found 4
 
 ## 店舗別成功率（低い順）
 - 2ndstreet（optional）: 0%（OK 0/失敗 4・http_403）
@@ -25,7 +25,7 @@
 - mobile_ichiban: 0%（OK 0/失敗 5・product_not_listed）
 - netoff（optional）: 0%（OK 0/失敗 4・price_not_found）
 - pasoko（optional）: 0%（OK 0/失敗 2・product_not_listed）
-- sofmap（optional）: 0%（OK 0/失敗 2・service_unavailable）
+- sofmap（optional）: 0%（OK 0/失敗 2・robots_unreachable）
 
 ## 商品別成功率
 - ps5_pro: 0.0%
@@ -47,19 +47,20 @@
 - r5ii: 100.0%
 
 ## 連続失敗店舗（2回以上）
-- 2ndstreet: 255回連続
-- bookoff: 255回連続
-- dosupara: 255回連続
-- geo_mobile: 255回連続
-- hardoff: 255回連続
-- janpara: 255回連続
-- pasoko: 255回連続
-- sofmap: 255回連続
-- surugaya: 255回連続
-- tsutaya: 255回連続
-- iosys: 188回連続
-- netoff: 115回連続
-- geo: 47回連続
+- 2ndstreet: 256回連続
+- bookoff: 256回連続
+- dosupara: 256回連続
+- geo_mobile: 256回連続
+- hardoff: 256回連続
+- janpara: 256回連続
+- pasoko: 256回連続
+- sofmap: 256回連続
+- surugaya: 256回連続
+- tsutaya: 256回連続
+- iosys: 189回連続
+- netoff: 116回連続
+- geo: 48回連続
+- mobile_ichiban: 2回連続
 
 ## 改善優先順位（required店舗）
 1. iosys（失敗6 / http_403）
@@ -70,11 +71,10 @@
 - http_403: 12件
 - product_not_listed: 8件
 - rate_limited_429: 6件
-- robots_unreachable: 4件
+- robots_unreachable: 6件
 - price_not_found: 4件
 - http_404: 4件
 - not_supported: 4件
-- service_unavailable: 2件
 - site_blocked: 2件
 - suspicious_rejected: 1件
 

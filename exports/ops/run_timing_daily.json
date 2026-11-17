@@ -1,10 +1,10 @@
 {
   "audience": "public_aggregate",
   "lane": "daily",
-  "last_run_at": "2026-11-17T13:35:11Z",
-  "runtime_seconds": 6329,
-  "schedule_delay_seconds": 30762,
+  "last_run_at": "2026-11-17T17:17:24Z",
+  "runtime_seconds": 6314,
+  "schedule_delay_seconds": null,
   "schema": 1,
-  "trigger": "schedule",
+  "trigger": "manual",
   "type": "RUN_TIMING"
 }

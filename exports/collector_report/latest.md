@@ -1,6 +1,6 @@
 # Collector Quality Report
 
-生成日時: 2026-11-17 20:50:29 UTC+09:00
+生成日時: 2026-11-18 00:33:01 UTC+09:00
 
 ## サマリ
 
@@ -110,7 +110,7 @@
 | mobile_ichiban | 0% | 0 | 5 | — | — | product_not_listed |
 | netoff | 0% | 0 | 4 | — | — | price_not_found |
 | pasoko | 0% | 0 | 2 | — | — | product_not_listed |
-| sofmap | 0% | 0 | 2 | — | — | service_unavailable |
+| sofmap | 0% | 0 | 2 | — | — | robots_unreachable |
 | surugaya | 0% | 0 | 2 | — | 2/2 | site_blocked |
 | tsutaya | 0% | 0 | 0 | — | — | not_supported |
 
@@ -138,11 +138,10 @@
 | http_403 | 12 |
 | product_not_listed | 8 |
 | rate_limited_429 | 6 |
-| robots_unreachable | 4 |
+| robots_unreachable | 6 |
 | price_not_found | 4 |
 | http_404 | 4 |
 | not_supported | 4 |
-| service_unavailable | 2 |
 | site_blocked | 2 |
 | suspicious_rejected | 1 |
 
@@ -180,7 +179,7 @@
 | switch2 | hardoff | FAILED | http_404 |
 | switch2 | dosupara | FAILED | http_404 |
 | switch2 | pasoko | FAILED | product_not_listed |
-| switch2 | sofmap | FAILED | service_unavailable |
+| switch2 | sofmap | FAILED | robots_unreachable |
 | switch2 | bookoff | SKIP | not_supported |
 | switch2 | surugaya | FAILED | site_blocked |
 | switch2 | tsutaya | SKIP | not_supported |
@@ -192,17 +191,15 @@
 | ps5_pro | hardoff | FAILED | http_404 |
 | ps5_pro | dosupara | FAILED | http_404 |
 | ps5_pro | pasoko | FAILED | product_not_listed |
-| ps5_pro | sofmap | FAILED | service_unavailable |
+| ps5_pro | sofmap | FAILED | robots_unreachable |
 | ps5_pro | bookoff | SKIP | not_supported |
 | ps5_pro | surugaya | FAILED | site_blocked |
 | ps5_pro | tsutaya | SKIP | not_supported |
 | iphone16pro256 | kaitori_shouten | FAILED | product_not_listed |
 
-## 価格変動一覧 (1件)
+## 価格変動一覧 (0件)
 
-| 商品 | 店舗 | 前回 | 今回 | 変化率 |
-|------|------|------|------|--------|
-| iphoneduo_256 | kaitori_shouten | ¥361,000 | ¥360,000 | ↓0.3% |
+（前回との変動なし）
 
 ## ⚠️ suspicious_price 一覧 (1件)
 

@@ -2,7 +2,7 @@
   "schema": 1,
   "type": "RESEARCH_SUMMARY",
   "audience": "public_aggregate",
-  "generated_at": "2026-11-18T02:17:20+09:00",
+  "generated_at": "2026-11-18T05:59:26+09:00",
   "description": "調査候補の集計（件数だけ）。個別の候補（商品・価格・価格差・売却先）は公開しない。確定の利益ではない",
   "research_candidate_count": 6,
   "positive_raw_spread_count": 5,
@@ -189,7 +189,7 @@
   "tcg_fast_lane": {
     "events_measured": 35,
     "median_application_duration_hours": 72.0,
-    "median_age_at_observation_hours": 121.9,
+    "median_age_at_observation_hours": 125.6,
     "windows_under_24h_at_observation": 25,
     "observed_after_half_window": 28,
     "tolerated_age_at_observation_hours_p25": 30.0,

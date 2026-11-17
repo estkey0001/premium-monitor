@@ -43,6 +43,7 @@ def _yen(s: str) -> Optional[int]:
 
 # ---------------- PASTEC ----------------
 _PASTEC_HEAD = re.compile(r"^(iPhone ?[A-Za-z0-9 ]+?) (256GB|512GB|1TB|2TB)$")
+_ANY_CAP_HEAD = re.compile(r"^\S.* (256GB|512GB|1TB|2TB)$")      # どの機種でも「<名前> <容量>」の見出し（ブロックの終端）
 _PASTEC_UPDATED = re.compile(r"買取価格更新日[：:]\s*(20\d{2})/(\d{1,2})/(\d{1,2})")
 _PASTEC_REDUCTION = re.compile(r"^(.+?)-([\d,]+)円?\((.*)\)$")
 
@@ -73,14 +74,23 @@ def parse_pastec(html: str) -> dict:
             continue
         cap = m.group(2)
         j, reductions, ok, price = i + 1, {}, True, None
-        while j < len(lines) and not _PASTEC_HEAD.match(lines[j]) and lines[j] != "買取価格詳細":
+        while j < len(lines) and not _ANY_CAP_HEAD.match(lines[j]) and lines[j] != "買取価格詳細":
             if lines[j] == "未開封品買取価格":
                 price = _yen(lines[j + 1]) if j + 1 < len(lines) else None
+                j += 2
+                # 価格の後ろに減額が書かれるレイアウトに変わっても、読み落としたまま実行可能価格にしない
+                while j < len(lines) and not _ANY_CAP_HEAD.match(lines[j]) and lines[j] != "買取価格詳細":
+                    if _PASTEC_REDUCTION.match(lines[j]):
+                        ok = False
+                    j += 1
                 break
             r = _PASTEC_REDUCTION.match(lines[j])
             if r:
-                if "未開封" in r.group(3):                    # 未開封に効く減額だけ数える（開封済だけの減額は無関係）
+                cond = r.group(3)
+                if "未開封" in cond:                          # 未開封に効く減額だけ数える
                     reductions[r.group(1).strip()] = int(r.group(2).replace(",", ""))
+                elif "開封済" not in cond and "開封" not in cond:
+                    ok = False                                # 何に効く減額か分からない行は、実行可能価格にしない
             elif lines[j] not in ("中古買取価格",):
                 ok = False                                    # 色の減額らしい読めない行
             j += 1
@@ -99,7 +109,9 @@ _RUDEYA_RANGE = re.compile(r"^([\d,]+)〜([\d,]+)円$")
 def parse_rudeya(html: str) -> dict:
     """{"as_of": "YYYY-MM-DD HH:MM"|None, "rows": {(機種, 容量): {"price": int} | {"range": (低, 高)}}}。
 
-    表の価格は新品未開封・SIMフリー。単一の価格は色によらない価格、範囲（色で違う）は価格にしない（range）。
+    表の価格は新品未開封・SIMフリー（ページの「新品未開封」の記載が無ければ読まない）。単一の価格は色によらない価格、
+    範囲（色で違う）は価格にしない（range）。根拠: 同じ表の iPhone 18 Pro の範囲は、PASTEC の「掲載価格」〜「掲載価格 − 最大の
+    色減額」と全容量で一致する（例: 256GB 202,500〜206,500 = 206,500 − 4,000〜206,500）。範囲は色の差、単一は差なし。
     """
     lines = _lines(html)
     as_of = None
@@ -112,6 +124,8 @@ def parse_rudeya(html: str) -> dict:
                 as_of = None
             break
     rows: dict = {}
+    if not any("未開封" in ln and "新品" in ln for ln in lines):
+        return {"as_of": as_of, "rows": rows}                 # 「新品未開封の価格」という記載が無いページは読まない
     i = 0
     while i < len(lines):
         m = _RUDEYA_HEAD.match(lines[i])
@@ -119,12 +133,16 @@ def parse_rudeya(html: str) -> dict:
         i += 1
         if not model:
             continue
+        used = False
         while i < len(lines) and (lines[i] == "容量" or lines[i].startswith("買取価格（")):
-            i += 1                                            # 表の見出し行を読み飛ばす
+            used = used or "中古" in lines[i]
+            i += 1                                            # 表の見出し行を読み飛ばす（中古の表は読まない）
         while i + 1 < len(lines) and _CAP_RE.match(lines[i]):
             cap, val = lines[i], lines[i + 1]
             single, rng = _yen(val), _RUDEYA_RANGE.match(val)
-            if single:
+            if used or (model, cap) in rows:                  # 中古の表・重複（先勝ち）は採らない
+                pass
+            elif single:
                 rows[(model, cap)] = {"price": single}
             elif rng:
                 rows[(model, cap)] = {"range": (int(rng.group(1).replace(",", "")), int(rng.group(2).replace(",", "")))}

@@ -258,3 +258,37 @@ def test_previous_dir_picks_latest_not_after_date(tmp_path):
         (d / "iphone_exp_A.json").write_text("[]", encoding="utf-8")
     assert R.previous_dir(tmp_path, "2026-11-17").name == "2026-11-16"
     assert R.previous_dir(tmp_path, "2026-11-12") is None
+
+
+# ---- 監査・レビューの指摘への回帰 ----
+def test_failed_shop_row_in_live_file_survives_next_week(tmp_path):
+    """1 週目に両店が live ファイルへ入り、2 週目に片店が失敗しても、その店の行は（古い日付のまま）残る。"""
+    st1 = _run(tmp_path, OLD_SHOPS, fetch=_fetcher(_pastec(483000), _rudeya(475000)), skip_apple=True)
+    d = tmp_path / "wk2"
+    d.mkdir()
+    (d / "research_iphone.json").write_text(json.dumps(st1["research"]), encoding="utf-8")
+    (d / "iphone_exp_live.json").write_text(json.dumps(st1["files"]["iphone_exp_live.json"]), encoding="utf-8")
+    st2 = R.refresh(d, "2026-11-25", now=datetime(2026, 11, 25, 12, 0, tzinfo=JST), skip_apple=True,
+                    fetch_shop=_fetcher(_pastec(483000), None, errors={"rudeya": "x"}), history_path=tmp_path / "h2.json")
+    ru = next(sh for sh in st2["comp"]["shops"] if sh["key"] == "rudeya")
+    assert ru["updated_on"] == "2026-11-17" and ru["freshness"] == "STALE"            # 消えず、日付も進まない
+
+
+def test_out_of_scope_rows_are_carried_over_with_old_date(tmp_path):
+    old = _shop("パステック（PASTEC）", 482000)
+    old["skus"].append({"model": "iPhone 18 Pro", "storage": "256GB", "condition": "UNOPENED", "base_price": 200000, "color_adjustments": {}})
+    st = _run(tmp_path, [old, _shop("買取ルデヤ", 481000)], fetch=_fetcher(_pastec(483000), _rudeya(481000)), skip_apple=True)
+    carried = [e for e in st["files"]["iphone_exp_live.json"] if e["checked_at"] == OLD_STALE]
+    assert carried and [r["model"] for r in carried[0]["skus"]] == ["iPhone 18 Pro"]
+
+
+def test_skip_apple_makes_no_decision_events(tmp_path):
+    rich = [_shop("店A", 520000, checked=OLD_FRESH), _shop("店B", 519000, checked=OLD_FRESH)]
+    st = _run(tmp_path, rich, fetch=_fetcher(None, None), skip_apple=True, history=_hist(500000, key="a", shop="店A", decision="BUY"))
+    assert not any(e["type"] in ("WAIT_TO_BUY", "BUY_TO_WAIT") for e in st["report"]["events"])
+
+
+def test_apple_fetch_failure_blocks_apply(tmp_path):
+    bad = lambda: {"model": "iPhone Duo", "prices": {}, "availability": {}, "bad_skus": [], "errors": ["x"], "checked_at": "x"}
+    st = _run(tmp_path, OLD_SHOPS, fetch=_fetcher(_pastec(483000), _rudeya(475000)), apple=bad)
+    assert any("Apple" in p for p in R.validate(st))

@@ -21,7 +21,7 @@ PASTEC_LINES = [
     "未開封品買取価格", "206,500円", "中古買取価格", "164,000円〜132,500円", "買取価格詳細",
 ]
 RUDEYA_LINES = [
-    "2026年11月17日 16時35分現在の買取価格です。",
+    "2026年11月17日 16時35分現在の買取価格です。", "掲載している iPhone Duo は、未開封・SIMフリーの新品の買取価格です。",
     "iPhone Duo", "iPhone Duoの全商品の買取価格を見る ›", "容量", "買取価格（色によって違います）",
     "256GB", "360,000〜360,500円", "512GB", "402,000円", "1TB", "475,000円", "2TB", "580,000円",
     "買取の条件",
@@ -110,3 +110,27 @@ def test_fetch_success_reports_row_count_and_uses_given_fetcher():
 
 def test_shop_keys_match_weekly_import_shop_keys():
     assert wi.shop_key(w.SHOP_PASTEC) == "pastec" and wi.shop_key(w.SHOP_RUDEYA) == "rudeya"
+
+
+# ---- 監査・レビューの指摘への回帰 ----
+def test_pastec_reduction_of_unknown_scope_or_after_price_is_not_executable():
+    a = w.parse_pastec(_html(["買取価格更新日：2026/11/17", "iPhoneDuo 1TB", "ブルー-3,000円(全商品)", "未開封品買取価格", "483,000円", "買取価格詳細"]))
+    assert a["rows"][("iPhone Duo", "1TB")]["colors_ok"] is False            # 何に効く減額か分からない
+    b = w.parse_pastec(_html(["買取価格更新日：2026/11/17", "iPhoneDuo 1TB", "未開封品買取価格", "483,000円", "ブルー-3,000(未開封)", "買取価格詳細"]))
+    assert b["rows"][("iPhone Duo", "1TB")]["colors_ok"] is False            # 価格の後ろの減額を読み落とさない
+    c = w.parse_pastec(_html(["買取価格更新日：2026/11/17", "iPhoneDuo 1TB", "ブルー-3,000(開封済)", "未開封品買取価格", "483,000円", "買取価格詳細"]))
+    assert c["rows"][("iPhone Duo", "1TB")]["colors_ok"] is True and c["rows"][("iPhone Duo", "1TB")]["reductions"] == {}
+
+
+def test_pastec_block_without_price_does_not_borrow_next_block_price():
+    p = w.parse_pastec(_html(["買取価格更新日：2026/11/17", "iPhoneDuo 1TB", "iPad Pro 256GB", "未開封品買取価格", "99,000円", "買取価格詳細"]))
+    assert ("iPhone Duo", "1TB") not in p["rows"]
+
+
+def test_rudeya_requires_unopened_statement_ignores_used_table_and_first_wins():
+    no_stmt = [x for x in RUDEYA_LINES if "新品の買取価格" not in x]
+    assert w.parse_rudeya(_html(no_stmt))["rows"] == {}
+    dup = RUDEYA_LINES[:-1] + ["iPhone Duo", "iPhone Duoの全商品の買取価格を見る ›", "容量", "買取価格（色によって違います）", "1TB", "300,000円", "買取の条件"]
+    assert w.parse_rudeya(_html(dup))["rows"][("iPhone Duo", "1TB")] == {"price": 475000}
+    used = RUDEYA_LINES[:-1] + ["iPhone Duoの全商品の買取価格を見る ›", "容量", "買取価格（中古）", "2TB", "100,000円", "買取の条件"]
+    assert w.parse_rudeya(_html(used))["rows"][("iPhone Duo", "2TB")] == {"price": 580000}

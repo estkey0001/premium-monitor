@@ -52,6 +52,17 @@ def _strip(data, keys: set):
     return {k: v for k, v in data.items() if not _drop(v)}
 
 
+def _out_of_scope(entry: dict) -> Optional[dict]:
+    """店エントリのうち、取得の対象外の機種の行だけを残した同じ形のコピー（無ければ None）。日付はそのまま。"""
+    k = "skus" if isinstance(entry.get("skus"), list) else "prices"
+    keep = []
+    for r in entry.get(k) or []:
+        m = wi._SKU_RE.search(str(r.get("sku") or f"{r.get('model', '')} {r.get('storage') or r.get('capacity') or ''}"))
+        if not m or m.group(1) not in MODELS:
+            keep.append(r)
+    return {**entry, k: keep} if keep else None
+
+
 def previous_dir(root: Path, date: str) -> Optional[Path]:
     """調査の JSON が揃っている、date 以前で最新のフォルダ（date 自身を含む）。"""
     c = sorted(d for d in root.iterdir() if d.is_dir() and _DATE.fullmatch(d.name) and d.name <= date
@@ -131,8 +142,11 @@ def refresh(src_dir: Path, date: str, *, now: datetime, skip_apple: bool = False
         report["sources"][key] = info
     ok_keys = {wi.shop_key(e["shop_name"]) for e in new_entries}
     if ok_keys:
+        carry = [c for e in old_entries if wi.shop_key(str(e.get("shop_name") or "")) in ok_keys for c in [_out_of_scope(e)] if c]
         files = {n: _strip(d, ok_keys) for n, d in files.items()}
-        files[LIVE_FILE] = new_entries            # 取得できた店だけ入れ替える（失敗した店の古い行は、日付もそのまま残る）
+        # 取得できた店だけ入れ替える。失敗した店の古い行（live ファイルの分も）は、日付もそのまま残る。
+        # 取得の対象外の機種の行は、古い日付のまま別エントリに残す（新しい日付を付けない）
+        files[LIVE_FILE] = _flatten(files.get(LIVE_FILE, [])) + new_entries + carry
 
     # --- 比較・履歴・判定 ---
     raw_shops = [e for d in files.values() for e in _flatten(d)]
@@ -141,6 +155,8 @@ def refresh(src_dir: Path, date: str, *, now: datetime, skip_apple: bool = False
                                       availability=apple_doc.get("availability"))
     hist = wi.update_history(comp, history_path or EXPORT_DIR / "iphone_buyback_history.json",
                              surge_yen=int(cfg["surge"].get("yen") or 5000))
+    if skip_apple:                                # Apple を取っていない実行の判定の変化は、本当の昇格・降格ではない
+        comp["events"] = [e for e in comp["events"] if e.get("type") not in ("WAIT_TO_BUY", "BUY_TO_WAIT")]
     report["skus_refetched"] = sorted(report["skus_refetched"])
     report["profit_changed"] = _profit_changes(old_comp, comp)
     report["events"] = comp["events"]
@@ -171,11 +187,14 @@ def validate(state: dict) -> list:
     comp = state["comp"]
     if not state["ok_keys"] and not state["report"]["sources"].get("apple", {}).get("ok"):
         problems.append("更新できた取得元が 1 つも無い")
+    ap = state["report"]["sources"].get("apple", {})
+    if ap.get("attempted") and not ap.get("ok") and "prices" not in ap:
+        problems.append("Apple の取得に失敗（古い定価で利益を公開しない）")
     for s in comp["skus"]:
         he = s.get("highest_executable")
         if he:
             rows = [r for r in s["rows"] if r["shop"] == he["shop"] and r["executable_price"] == he["price"]]
-            if not rows or not all(r["freshness"] == wi.FRESH and r["eligible"] for r in rows[:1]):
+            if not rows or not all(r["freshness"] == wi.FRESH and r["eligible"] for r in rows):
                 problems.append(f"{s['sku']}: 最高の実行可能買取が FRESH の行に対応しない")
         if s.get("opportunity_status") == wi.OPP_BUY and (s.get("apple_availability") or {}).get("status") != wi.AV_BUYABLE:
             problems.append(f"{s['sku']}: 購入可能が確認できないのに BUY")
@@ -233,7 +252,7 @@ def main(argv=None) -> int:
     import argparse
     ap = argparse.ArgumentParser(description="iPhone（Duo）の週次の更新。既定は dry-run（何も書かない）")
     ap.add_argument("--apply", action="store_true", help="検証に通ったときだけ、調査フォルダ・公開データ・ページへ書き込む")
-    ap.add_argument("--skip-apple", action="store_true", help="Apple の取得を省く（約 2 分かかるため。購入可否は更新されない）")
+    ap.add_argument("--skip-apple", action="store_true", help="Apple の取得を省く（約 2 分かかる）。購入可否が当日分でなくなるので、BUY は WATCH に下がる。確認用")
     ap.add_argument("--dir", help="調査フォルダ（既定: .private/research/weekly/<今日>。無ければ直近のものを元にする）")
     a = ap.parse_args(argv)
     now = datetime.now(JST)

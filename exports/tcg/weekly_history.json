@@ -1,0 +1,465 @@
+{
+  "schema": "tcg_weekly_history_v1",
+  "snapshots": [
+    {
+      "research_date": "2026-11-18",
+      "generated_at": "2026-11-18T00:30:33+09:00",
+      "source_results": {
+        "pokemon_official": "FOUND",
+        "onepiece_official": "FOUND",
+        "pokemon_center": "BLOCKED",
+        "premium_bandai": "BLOCKED",
+        "geo": "BLOCKED",
+        "tsutaya": "NO_EVENT_FOUND",
+        "aeon": "BLOCKED",
+        "toysrus": "BLOCKED",
+        "biccamera": "FAILED",
+        "yodobashi": "FAILED",
+        "joshin": "BLOCKED",
+        "edion": "BLOCKED",
+        "yamada": "BLOCKED",
+        "sevennet": "NO_EVENT_FOUND",
+        "amazon": "BLOCKED",
+        "rakuten": "FAILED",
+        "card_shops": "FOUND"
+      },
+      "coverage": {
+        "sources_total": 17,
+        "sources_checked": 17,
+        "sources_found": 3,
+        "sources_no_event_found": 2,
+        "sources_confirmed_no_current_event": 0,
+        "sources_blocked": 9,
+        "sources_failed": 3,
+        "raw_read_coverage_pct": 29.41,
+        "accounted_coverage_pct": 100.0
+      },
+      "counts": {
+        "discovered": 14,
+        "verified_new": 0,
+        "unverified": 4,
+        "duplicate": 9,
+        "expired": 1,
+        "status_changed": 0
+      },
+      "by_brand": {
+        "POKEMON": {
+          "VERIFIED": 0,
+          "DISCOVERED": 2,
+          "DUPLICATE": 5,
+          "EXPIRED": 0
+        },
+        "ONE_PIECE": {
+          "VERIFIED": 0,
+          "DISCOVERED": 2,
+          "DUPLICATE": 4,
+          "EXPIRED": 1
+        }
+      },
+      "live_by_brand": {
+        "POKEMON": {
+          "open": 2,
+          "ending_soon": 4,
+          "upcoming": 0
+        },
+        "ONE_PIECE": {
+          "open": 1,
+          "ending_soon": 3,
+          "upcoming": 0
+        }
+      },
+      "public_events": [
+        {
+          "key": "lot-d7f8c0b8ef58",
+          "tcg": "ONE_PIECE",
+          "retailer": "CARD_LABO",
+          "store": "カードラボ津田沼店",
+          "product": "【ワンピースカードゲーム】「神の支配",
+          "event_type": "LOTTERY",
+          "application_end": "2026-11-17",
+          "status": "RESULT_PENDING"
+        },
+        {
+          "key": "lot-a69e4233e0d3",
+          "tcg": "ONE_PIECE",
+          "retailer": "CARD_LABO",
+          "store": "カードラボ豊橋店",
+          "product": "エクストラブースター ONE PIECE Heroines Edition vol.2【EB-05】",
+          "event_type": "LOTTERY",
+          "application_end": "2026-11-18",
+          "status": "ENDING_SOON"
+        },
+        {
+          "key": "lot-964a5dca8653",
+          "tcg": "ONE_PIECE",
+          "retailer": "CARD_LABO",
+          "store": "カードラボ販売買取センターNAMBA",
+          "product": "ONE PIECEカードゲーム ブースターパック 神の支配【OP-18】",
+          "event_type": "LOTTERY",
+          "application_end": "2026-11-18",
+          "status": "ENDING_SOON"
+        },
+        {
+          "key": "lot-f0824c51312e",
+          "tcg": "POKEMON",
+          "retailer": "CARD_LABO",
+          "store": "カードラボ札幌店",
+          "product": "ポケモンカードゲーム MEGA『拡張パック 30th CELEBRATION』",
+          "event_type": "LOTTERY",
+          "application_end": "2026-11-18",
+          "status": "ENDING_SOON"
+        },
+        {
+          "key": "lot-39d381e16613",
+          "tcg": "POKEMON",
+          "retailer": "CARD_LABO",
+          "store": "カードラボ新潟店",
+          "product": "ポケモンカードゲーム MEGA 拡張パック「30th CELEBRATION",
+          "event_type": "LOTTERY",
+          "application_end": "2026-11-19",
+          "status": "ENDING_SOON"
+        },
+        {
+          "key": "lot-0b4087e4779c",
+          "tcg": "POKEMON",
+          "retailer": "CARD_LABO",
+          "store": "カードラボ岐阜店",
+          "product": "ポケモンカードゲーム MEGA 拡張パック「30th CELEBRATION」",
+          "event_type": "LOTTERY",
+          "application_end": "2026-11-19",
+          "status": "ENDING_SOON"
+        },
+        {
+          "key": "lot-f5556708bb0f",
+          "tcg": "ONE_PIECE",
+          "retailer": "CARD_LABO",
+          "store": "カードラボ甲府店",
+          "product": "ONE PIECEカードゲーム『エクストラブースター ONE PIECE Heroines Edition vol.2』",
+          "event_type": "LOTTERY",
+          "application_end": "2026-11-20",
+          "status": "OPEN"
+        },
+        {
+          "key": "lot-9ed63ba89d4d",
+          "tcg": "POKEMON",
+          "retailer": "SURUGAYA",
+          "store": null,
+          "product": "ポケモンカードゲーム MEGA 拡張パック ハドウシーカー（BOX）",
+          "event_type": "LOTTERY",
+          "application_end": "2026-11-22T23:59:00+09:00",
+          "status": "OPEN"
+        },
+        {
+          "key": "lot-4627ee840768",
+          "tcg": "POKEMON",
+          "retailer": "CARD_LABO",
+          "store": "カードラボ浜松店",
+          "product": "【ポケモンカードゲーム】再入荷商品",
+          "event_type": "LOTTERY",
+          "application_end": "2026-11-23",
+          "status": "OPEN"
+        },
+        {
+          "key": "lot-006b062f327b",
+          "tcg": "ONE_PIECE",
+          "retailer": "CARD_LABO",
+          "store": "カードラボ浜松店",
+          "product": "【ワンピースカードゲーム】再入荷商品",
+          "event_type": "LOTTERY",
+          "application_end": "2026-11-19",
+          "status": "ENDING_SOON"
+        },
+        {
+          "key": "lot-bf975bc98a4f",
+          "tcg": "POKEMON",
+          "retailer": "CARD_LABO",
+          "store": "カードラボ名古屋駅前店",
+          "product": "ポケモンカードゲーム MEGA ・拡張パック 30th CELEBRATION 20パック",
+          "event_type": "LOTTERY",
+          "application_end": "2026-11-19",
+          "status": "ENDING_SOON"
+        },
+        {
+          "key": "lot-b43b6289e890",
+          "tcg": "ONE_PIECE",
+          "retailer": "CARD_LABO",
+          "store": "カードラボ姫路店",
+          "product": "ワンピースカードゲーム ONE PIECE Heroines Edition vol.2【EB-05】",
+          "event_type": "LOTTERY",
+          "application_end": "2026-11-15",
+          "status": "WINNER_ANNOUNCED"
+        },
+        {
+          "key": "lot-15b4c9fb7662",
+          "tcg": "ONE_PIECE",
+          "retailer": "CARD_LABO",
+          "store": "カードラボ福岡天神店",
+          "product": "ワンピースカードゲーム ONE PIECE Heroines Edition vol.2【EB-05】",
+          "event_type": "LOTTERY",
+          "application_end": "2026-11-15",
+          "status": "WINNER_ANNOUNCED"
+        },
+        {
+          "key": "lot-1d1fec38abdb",
+          "tcg": "ONE_PIECE",
+          "retailer": "CARD_LABO",
+          "store": "カードラボ鹿児島店",
+          "product": "ワンピースカードゲーム ONE PIECE Heroines Edition vol.2【EB-05】",
+          "event_type": "LOTTERY",
+          "application_end": "2026-11-15",
+          "status": "WINNER_ANNOUNCED"
+        },
+        {
+          "key": "lot-ac6c2116b4bd",
+          "tcg": "ONE_PIECE",
+          "retailer": "CARD_LABO",
+          "store": "カードラボ小倉店",
+          "product": "ワンピースカードゲーム ONE PIECE Heroines Edition vol.2【EB-05】",
+          "event_type": "LOTTERY",
+          "application_end": "2026-11-15",
+          "status": "WINNER_ANNOUNCED"
+        },
+        {
+          "key": "lot-d12b48ce1a8a",
+          "tcg": "ONE_PIECE",
+          "retailer": "CARD_LABO",
+          "store": "カードラボ博多マルイ店",
+          "product": "ワンピースカードゲーム ONE PIECE Heroines Edition vol.2【EB-05】",
+          "event_type": "LOTTERY",
+          "application_end": "2026-11-15",
+          "status": "WINNER_ANNOUNCED"
+        },
+        {
+          "key": "lot-c2408c57bad2",
+          "tcg": "ONE_PIECE",
+          "retailer": "CARD_LABO",
+          "store": "カードラボオタロード本店",
+          "product": "エクストラブースター ONE PIECE Heroines Edition vol.2",
+          "event_type": "LOTTERY",
+          "application_end": "2026-11-15",
+          "status": "WINNER_ANNOUNCED"
+        },
+        {
+          "key": "lot-ddcf16755762",
+          "tcg": "POKEMON",
+          "retailer": "CARD_LABO",
+          "store": "カードラボ天王寺店",
+          "product": "ポケモンカードゲーム MEGA 拡張パック ハドウシーカー(シュリンクなし)",
+          "event_type": "LOTTERY",
+          "application_end": "2026-11-15",
+          "status": "WINNER_ANNOUNCED"
+        },
+        {
+          "key": "lot-1accbf1a8a77",
+          "tcg": "ONE_PIECE",
+          "retailer": "CARD_LABO",
+          "store": "カードラボ大阪日本橋店",
+          "product": "エクストラブースター ONE PIECE Heroines Edition vol.2",
+          "event_type": "LOTTERY",
+          "application_end": "2026-11-15",
+          "status": "WINNER_ANNOUNCED"
+        },
+        {
+          "key": "lot-3c0dda17b6b2",
+          "tcg": "POKEMON",
+          "retailer": "FUKUFUKU_TOREKA",
+          "store": null,
+          "product": "30th CELEBRATION プレミアムデッキセット エーフィ・ブラッキー ※",
+          "event_type": "LOTTERY",
+          "application_end": "2026-11-15T23:59:00+09:00",
+          "status": "WINNER_ANNOUNCED"
+        },
+        {
+          "key": "lot-44adf3638512",
+          "tcg": "ONE_PIECE",
+          "retailer": "MUGIWARA_STORE",
+          "store": null,
+          "product": "神の支配",
+          "event_type": "LOTTERY",
+          "application_end": "2026-11-15T23:59:00+09:00",
+          "status": "WINNER_ANNOUNCED"
+        },
+        {
+          "key": "lot-41c27235f03d",
+          "tcg": "POKEMON",
+          "retailer": "SANYODO",
+          "store": null,
+          "product": "ポケモンカードゲーム MEGA 拡張パック「ハドウシーカー」（1BOX）",
+          "event_type": "LOTTERY",
+          "application_end": "2026-11-15T23:59:00+09:00",
+          "status": "RESULT_PENDING"
+        },
+        {
+          "key": "lot-bdd97b5616c5",
+          "tcg": "ONE_PIECE",
+          "retailer": "CARD_LABO",
+          "store": "カードラボ名古屋大須店",
+          "product": "ワンピースカードゲーム『エクストラブースター ONE PIECE Heroines Edition vol.2【EB-05】』",
+          "event_type": "LOTTERY",
+          "application_end": "2026-11-16",
+          "status": "WINNER_ANNOUNCED"
+        },
+        {
+          "key": "lot-8e23f4ca3b5e",
+          "tcg": "ONE_PIECE",
+          "retailer": "CARD_LABO",
+          "store": "カードラボ名古屋駅前店",
+          "product": "ONE PIECEカードゲーム エクストラブースター ONE PIECE Heroines Edition vol.2",
+          "event_type": "LOTTERY",
+          "application_end": "2026-11-16",
+          "status": "WINNER_ANNOUNCED"
+        },
+        {
+          "key": "lot-735b8e25fe07",
+          "tcg": "POKEMON",
+          "retailer": "HOBBY_STATION",
+          "store": null,
+          "product": "ポケモンカードゲームMEGA 30th CELEBRATION カードセット9種（再販）",
+          "event_type": "LOTTERY",
+          "application_end": "2026-11-12T23:59:00+09:00",
+          "status": "CLOSED"
+        },
+        {
+          "key": "lot-7c93c8bf31e4",
+          "tcg": "POKEMON",
+          "retailer": "HOBBY_STATION",
+          "store": null,
+          "product": "ポケモンカードゲームMEGA 拡張パック ストームエメラルダ （再販）",
+          "event_type": "LOTTERY",
+          "application_end": "2026-11-15T23:59:00+09:00",
+          "status": "CLOSED"
+        },
+        {
+          "key": "lot-bbe395fca93a",
+          "tcg": "POKEMON",
+          "retailer": "HOBBY_STATION",
+          "store": null,
+          "product": "ポケモンカードゲームMEGA 拡張パック メガブレイブ・メガシンフォニア（再販）",
+          "event_type": "LOTTERY",
+          "application_end": null,
+          "status": "ENDED"
+        },
+        {
+          "key": "lot-445cba860ea5",
+          "tcg": "POKEMON",
+          "retailer": "HOBBY_STATION",
+          "store": null,
+          "product": "ポケモンカードゲームMEGA 拡張パック ストームエメラルダ （再販）",
+          "event_type": "LOTTERY",
+          "application_end": "2026-09-03T23:59:00+09:00",
+          "status": "ENDED"
+        },
+        {
+          "key": "lot-aae4a0a53412",
+          "tcg": "POKEMON",
+          "retailer": "HOBBY_STATION",
+          "store": null,
+          "product": "ポケモンカードゲームMEGA 拡張パック ストームエメラルダ （再販）",
+          "event_type": "LOTTERY",
+          "application_end": "2026-09-20T23:59:00+09:00",
+          "status": "ENDED"
+        },
+        {
+          "key": "lot-5235c135222a",
+          "tcg": "POKEMON",
+          "retailer": "HOBBY_STATION",
+          "store": null,
+          "product": "ポケモンカードゲームMEGA 拡張パック 30th CELEBRATION（再販）",
+          "event_type": "LOTTERY",
+          "application_end": "2026-10-04T23:59:00+09:00",
+          "status": "ENDED"
+        },
+        {
+          "key": "lot-2edf02720a36",
+          "tcg": "POKEMON",
+          "retailer": "POKEMON_CENTER_ONLINE",
+          "store": null,
+          "product": "ポケモンカードゲーム MEGA 拡張パック「インフェルノX」BOX",
+          "event_type": "LOTTERY",
+          "application_end": "2026-10-05T16:59:00+09:00",
+          "status": "ENDED"
+        },
+        {
+          "key": "lot-da7bc68e6346",
+          "tcg": "POKEMON",
+          "retailer": "POKEMON_CENTER_ONLINE",
+          "store": null,
+          "product": "ポケモンカードゲーム MEGA 拡張パック「ストームエメラルダ」BOX",
+          "event_type": "LOTTERY",
+          "application_end": "2026-10-05T16:59:00+09:00",
+          "status": "ENDED"
+        },
+        {
+          "key": "lot-593a45b7d01a",
+          "tcg": "POKEMON",
+          "retailer": "HOBBY_STATION",
+          "store": null,
+          "product": "ポケモンカードゲームMEGA 拡張パック ストームエメラルダ （再販）",
+          "event_type": "LOTTERY",
+          "application_end": "2026-10-08T23:59:00+09:00",
+          "status": "ENDED"
+        },
+        {
+          "key": "lot-6376c789d900",
+          "tcg": "ONE_PIECE",
+          "retailer": "HOBBY_STATION",
+          "store": null,
+          "product": "ONE PIECEカードゲーム エクストラブースター ONE PIECE Heroines Edition vol.2",
+          "event_type": "LOTTERY",
+          "application_end": "2026-10-18T23:59:00+09:00",
+          "status": "ENDED"
+        },
+        {
+          "key": "lot-36d7de2656ab",
+          "tcg": "POKEMON",
+          "retailer": "HOBBY_STATION",
+          "store": null,
+          "product": "ポケモンカードゲームMEGA 拡張パック 30th CELEBRATION（再販）",
+          "event_type": "LOTTERY",
+          "application_end": "2026-10-22T23:59:00+09:00",
+          "status": "ENDED"
+        },
+        {
+          "key": "lot-74dc1b262646",
+          "tcg": "POKEMON",
+          "retailer": "FUKUFUKU_TOREKA",
+          "store": null,
+          "product": "30th CELEBRATION 1BOX",
+          "event_type": "LOTTERY",
+          "application_end": "2026-10-29T23:59:00+09:00",
+          "status": "ENDED"
+        }
+      ],
+      "events": [],
+      "rechecks": [
+        {
+          "retailer": "SANYODO",
+          "product": "ポケモンカードゲーム MEGA 拡張パック「ハドウシーカー」（1BOX）",
+          "result": "RECONFIRMED",
+          "reason": "",
+          "checked_at": "2026-11-18T00:30:33+09:00"
+        },
+        {
+          "retailer": "SURUGAYA",
+          "product": "ポケモンカードゲーム MEGA 拡張パック ハドウシーカー（BOX）",
+          "result": "RECONFIRMED",
+          "reason": "",
+          "checked_at": "2026-11-18T00:30:33+09:00"
+        }
+      ],
+      "notification_dry_run": {
+        "mode": "DRY_RUN",
+        "would_notify": 7,
+        "sent": 0
+      },
+      "quality": {
+        "expired_shown_open": 0,
+        "unverified_shown_verified": 0,
+        "duplicate_event": 0,
+        "wrong_product_identity": 0,
+        "fake_checked_at": 0,
+        "source_failure_treated_no_event": 0
+      }
+    }
+  ]
+}

@@ -370,3 +370,22 @@ python3 -m pytest tests/test_weekly_import.py
     - `--apply` は、最高の実行可能買取が FRESH の行に対応すること・購入可能が確認できないのに BUY が無いこと・更新できた取得元が 1 つ以上あること、を検証してから書く。書くのは調査フォルダ・`exports/iphone_buyback/*.json`・`docs/iphone-buyback.html`。通知は送らない。
     - 終了コード: 0＝全部成功／2＝一部の取得元が失敗（成功した分だけ更新）／1＝検証失敗または元の調査フォルダが無い。
     - 最高の実行可能買取の正本の項目は、SKU 直下の `highest_executable`（`{shop, price}`）。行は `executable_price`。
+
+### TCG の週次の更新（1 コマンド・2026-11-18〜）
+
+`python -m src.research.tcg_refresh`（既定は dry-run＝何も書かない）／`--apply`（検証に通ったときだけ書く）／`--dir <調査フォルダ>`／`--skip-recheck`（既存の公開イベントの再確認を省く）。ポケモンカード・ONE PIECE の抽選・予約・当選発表・購入期間を、週 1 回の手動実行で確かめる（24 時間の監視ではない・有料 API は使わない）。
+
+- 入力: A 既存の自動収集（`exports/tcg/lottery_sources.json`。定時の CI が更新。読んでいない取得元・確認日が 8 日より古い取得元は使わない）／B・C・D 調査フォルダの `research_tcg*.json`（Skill `premium-market-research` の tcg を分担して実行した結果。AI の調査は DISCOVERED まで。D の集約サイトは候補発見だけ）。
+- 取得元の結果: FOUND / NO_EVENT_FOUND / CONFIRMED_NO_CURRENT_EVENT / BLOCKED / FAILED。トップページだけ見たものは NO_EVENT_FOUND まで。**遮断（SOURCE_BLOCKED）は health が OK_NO_EVENTS でも BLOCKED**。RAW（本文を読めた割合）と ACCOUNTED（理由・代替の経路・代替で分かったことを記録した割合）は別。
+- 候補: `.private/research/weekly/<日付>/tcg_candidates.json`（非公開）。項目は tcg / product_name_raw / normalized_product_name / retailer / store / region / event_type / 日程 / retail_price / eligibility / requirements / source_url / source_type / discovered_at / checked_at / verification_status（VERIFIED / DISCOVERED / DUPLICATE / EXPIRED）/ confidence。未登録の商品でも DISCOVERED にできる。
+- 公開（`data/tcg_verified_lotteries.csv` への追記）は VERIFIED だけ: 運営者自身の公式ページで商品・運営者・種別・応募期間を確認（既存の `weekly_import.finalize_tcg`）・確認日が調査日から 8 日以内・日程から導いた状態が ENDED / UNKNOWN でない・LOTTERY / PREORDER の種別・同じイベントが公開済みでない。`human_confirmed` は常に false（AI は人の確認を名乗らない）。FIRST_COME・RESTOCK・当選発表などは候補のまま。
+- 状態は保存せず、今の日時から `compute_lottery_status` で作り直す（日付だけの扱いは既存のまま。AI の申告の状態は使わない）。
+- 重複: 商品（弾の名前・型番が重なり、拡張パック / カードセット / デッキ・BOX / パックの別が食い違わない）・小売（と店舗）・種別・応募の終わりの日、または同じ URL と同じ締切日。公開済み・同じ調査の中・CSV の既存行と照合する。
+- 既存の公開イベントの再確認（polite 取得）: 根拠ページに商品の固有の語と応募の終わりの日があるか（RECONFIRMED / PAGE_CHANGED / FETCH_FAILED）。**CSV の `verified_at` は書き換えない**（日付だけ新しくしない）。結果は履歴にだけ残す。
+- 履歴 `exports/tcg/weekly_history.json`（直近 26 件・同じ日の再実行は上書き）: 取得元の結果・件数（discovered / verified_new / unverified / duplicate / expired / status_changed）・公開イベントの状態・変化（NEW_EVENT / UPCOMING_TO_OPEN / OPEN_TO_ENDING / OPEN_TO_CLOSED / WINNER_ANNOUNCED / PURCHASE_PERIOD_STARTED。前回の記録が無い週は出さない）・品質の数。未確認の候補は入れない。
+- 通知は dry-run の検出だけ（`sent` は常に 0。本体の通知・outbox には接続しない）。
+- 品質の数（`quality`。すべて 0 でなければ `--apply` は書かない）: expired_shown_open / unverified_shown_verified / duplicate_event / wrong_product_identity / fake_checked_at / source_failure_treated_no_event。
+- 終了コード: 0＝全取得元が結果あり／2＝BLOCKED・FAILED の取得元あり（分かった分だけ更新）／1＝検証失敗。
+- 公開ページ: 抽選・予約のページに、状態（抽選受付中・締切間近・近日開始…）とカード（ポケモンカード / ONE PIECE）の絞り込みを追加（`data-nu-brand`・`?st=ending|upcoming&brand=pokemon|onepiece`）。
+- バックログ 7 取得元の合法的な代替経路（2026-11-18 に確認。直接の取得を回避する手段は使わない）: GEO＝一覧 403・`draw.geo-online.co.jp` は取得不可（打ち切り記録）。公式 X・ゲオアプリの告知は検索に出ず、今は人手の確認が必要。Joshin＝トップが別ページへ移動・403。公式お知らせ・SNS は検索に出ず。メール案内の抽選が中心とされる。Amazon＝商品・検索の直接取得はしない方針。メーカー告知（pokemon-card.com・onepiece-cardgame.com）に Amazon の抽選の記載は無し。プレミアムバンダイ＝自動収集（`p-bandai.jp/chara/onepiece/`）は読めて受付中なし。一覧は JS 描画で、ONE PIECE 公式の商品・イベントページが代替（OP-18 の抽選は 11/12 終了）。ビックカメラ・ヨドバシ＝公式ページはタイムアウト。個別告知の URL を検索で見つけられず、集約サイトの記述だけ（公開しない）。楽天＝楽天ブックスの公式ページ・キャンペーン告知で今回は該当なし（公式 API は契約しない）。
+

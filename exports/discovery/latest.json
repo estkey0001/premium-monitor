@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-16T23:22:01+09:00",
+  "generated_at": "2026-11-17T15:51:06+09:00",
   "apple": {
     "source": "apple_jp_official",
     "list_status": "ok",
@@ -31,8 +31,8 @@
       "latest": true
     },
     "inputs_stale": [],
-    "review_required": 6,
-    "matched_events": 33,
+    "review_required": 4,
+    "matched_events": 35,
     "release": 7,
     "by_kind": {
       "LOTTERY": 38,
@@ -46,7 +46,7 @@
       "configured": 22,
       "implemented": 11,
       "unimplemented": 11,
-      "blocked": 4,
+      "blocked": 5,
       "robots_unreachable": 5,
       "unreachable": 5,
       "table": [
@@ -54,9 +54,9 @@
           "source_id": "POKEMON_CENTER_ONLINE",
           "retailer": "ポケモンセンターオンライン",
           "adapter": "pco_lottery",
-          "state": "NO_ACTIVE_LOTTERY",
+          "state": "SOURCE_BLOCKED",
           "health": "OK_NO_EVENTS",
-          "blocked": false,
+          "blocked": true,
           "robots": null,
           "unreachable": false
         },
@@ -291,10 +291,10 @@
     "unknown_official_products": 58,
     "apple_candidates": 15,
     "tcg_products": 24,
-    "event_candidates": 160,
+    "event_candidates": 161,
     "review_required_announcements": 6,
-    "matched_events": 79,
-    "stale_events": 75,
+    "matched_events": 75,
+    "stale_events": 80,
     "approved_events": 0,
     "registered_events": 0
   },
@@ -302,7 +302,7 @@
     "configured": 22,
     "implemented": 11,
     "unimplemented": 11,
-    "blocked": 4,
+    "blocked": 5,
     "robots_unreachable": 5,
     "unreachable": 5,
     "table": [
@@ -310,9 +310,9 @@
         "source_id": "POKEMON_CENTER_ONLINE",
         "retailer": "ポケモンセンターオンライン",
         "adapter": "pco_lottery",
-        "state": "NO_ACTIVE_LOTTERY",
+        "state": "SOURCE_BLOCKED",
         "health": "OK_NO_EVENTS",
-        "blocked": false,
+        "blocked": true,
         "robots": null,
         "unreachable": false
       },

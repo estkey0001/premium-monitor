@@ -145,6 +145,10 @@ RETAILER_KEYS = {
     "カードラボ": "CARD_LABO", "エディオン": "EDION", "EDION": "EDION", "麦わらストア": "MUGIWARA_STORE",
     "ポケモンセンターオンライン": "POKEMON_CENTER_ONLINE", "ホビーステーション": "HOBBY_STATION",
     "福福トレカ": "FUKUFUKU_TOREKA", "三洋堂書店": "SANYODO", "駿河屋": "SURUGAYA",
+    # 大手の 17 取得元（公式ドメインは OFFICIAL_DOMAINS に登録済み。ここは小売のキーの対応だけ）
+    "プレミアムバンダイ": "PREMIUM_BANDAI", "ゲオ": "GEO", "GEO": "GEO", "Joshin": "JOSHIN", "ジョーシン": "JOSHIN",
+    "ビックカメラ": "BICCAMERA", "ヨドバシ": "YODOBASHI", "トイザらス": "TOYSRUS", "ヤマダ": "YAMADA",
+    "TSUTAYA": "TSUTAYA", "イオン": "AEON", "セブンネット": "SEVENNET", "Amazon": "AMAZON", "楽天ブックス": "RAKUTEN_BOOKS",
 }
 _ISO = re.compile(r"(\d{4}-\d{2}-\d{2})(?:[T ](\d{2}:\d{2}))?")
 _URL = re.compile(r"https?://[^\s、，（）()「」]+")

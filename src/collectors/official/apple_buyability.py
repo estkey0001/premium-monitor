@@ -129,6 +129,18 @@ def apple_live(model: str = "iPhone Duo", slug: str = "iphone-duo", *, fetch_pag
             "checked_at": now.isoformat(timespec="seconds"), "errors": errors}
 
 
+def merge_live(doc: dict, live: dict) -> None:
+    """research_iphone.json の内容（doc）へ、Apple の価格と購入可否を反映する（その場で書き換える）。"""
+    ao = doc.setdefault("apple_official", {})
+    pj = ao.setdefault("prices_jpy", {}).setdefault(live["model"], {})
+    pj.update(live["prices"])
+    for sku in live["bad_skus"]:
+        pj.pop(sku.split()[-1], None)      # 価格を決められない容量は、古い価格を残さない（比較から外す）
+    ao["availability"] = {**(ao.get("availability") or {}), **live["availability"]}
+    if not live["errors"]:                 # 全容量を取れたときだけ、機種ごとの確認日を更新する（ファイル全体の確認日は変えない）
+        ao.setdefault("checked_at_by_model", {})[live["model"]] = live["checked_at"][:10]
+
+
 def main(argv=None) -> int:
     """`python -m src.collectors.official.apple_buyability --dir <調査フォルダ> [--apply]`。既定は書かない。"""
     import argparse
@@ -142,14 +154,7 @@ def main(argv=None) -> int:
     f = Path(a.dir) / "research_iphone.json"
     if a.apply and f.exists() and live["prices"]:
         d = json.loads(f.read_text(encoding="utf-8"))
-        ao = d.setdefault("apple_official", {})
-        pj = ao.setdefault("prices_jpy", {}).setdefault(live["model"], {})
-        pj.update(live["prices"])
-        for sku in live["bad_skus"]:
-            pj.pop(sku.split()[-1], None)      # 価格を決められない容量は、古い価格を残さない（比較から外す）
-        ao["availability"] = {**(ao.get("availability") or {}), **live["availability"]}
-        if not live["errors"]:                 # 全容量を取れたときだけ、機種ごとの確認日を更新する（ファイル全体の確認日は変えない）
-            ao.setdefault("checked_at_by_model", {})[live["model"]] = live["checked_at"][:10]
+        merge_live(d, live)
         f.write_text(json.dumps(d, ensure_ascii=False, indent=1), encoding="utf-8")
     return 0 if not live["errors"] else 1
 

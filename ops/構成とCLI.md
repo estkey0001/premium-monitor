@@ -362,5 +362,11 @@ python3 -m pytest tests/test_weekly_import.py
   - Apple の購入可否は `python3 -m src.collectors.official.apple_buyability --dir <調査フォルダ> [--apply]`（Apple 機種ページの部品番号・価格と、機種ページ自身が使う公開の購入可否 API `buyability-message` を polite 取得。ログイン・カートの操作は無い）。`--apply` は `research_iphone.json` の `apple_official.prices_jpy` と `availability` を更新する。同一ドメインの間隔で約 2 分かかる。
   - 購入可否は**調査日と同じ日に確認したものだけ**使う（違う日・不明・取得失敗は UNKNOWN）。全色の部品番号が購入可能のときだけ BUYABLE、1 色でも購入できなければ UNAVAILABLE。
   - 状態は 2 つに分ける。`profit_status`: PROFITABLE（計算上の黒字）/ LOSS / NO_DATA / REFERENCE_PROFIT（未登録の参考）。`opportunity_status`: BUY / WATCH / WAIT / PASS。**BUY は、登録済み・黒字・Apple で購入可能（当日確認）・実行可能な買取が 2 店以上・外れ値でない・ROI 8% 以上（本体の BUY の ROI 条件と同じ値）の全部**。購入可否が不明は WATCH、購入不可・ROI 不足は WAIT。週次の判定であって、本体の BUY・通知・今すぐ行動には接続しない。
-  - イベント（`comparison.events`）: BEST_SHOP_CHANGE / LOSS_TO_PROFIT / PROFIT_TO_LOSS / BUYBACK_SURGE（同じ店の上昇 5,000 円以上）/ PRICE_DROP（同じ店の下落 5,000 円以上）。登録済みの SKU だけ。通知は dry-run の記録のみ（`notification_dry_run.sent` は常に 0）。
-  - 履歴（`iphone_buyback_history.json`）の行: SKU・店・価格・checked_at・condition・freshness。同じ日の再実行は上書き（二重にしない）。スナップショットごとに Apple 価格と購入可否も残す。
+  - イベント（`comparison.events`）: BEST_SHOP_CHANGE / LOSS_TO_PROFIT / PROFIT_TO_LOSS / BUYBACK_SURGE（同じ店の上昇 5,000 円以上）/ PRICE_DROP（同じ店の下落 5,000 円以上）/ WAIT_TO_BUY・BUY_TO_WAIT（判定の BUY への昇格・降格。from / to に実際の判定）。登録済みの SKU だけ。通知は dry-run の記録のみ（`notification_dry_run.sent` は常に 0）。
+  - 履歴（`iphone_buyback_history.json`）の行: SKU・店・価格・checked_at・condition・freshness。同じ日の再実行は上書き（二重にしない）。スナップショットごとに Apple 価格・購入可否・判定（decision）も残す。履歴の粒度は日（同じ日に価格が動いても 1 件）。
+  - **週次の更新（1 コマンド・2026-11-17〜）**: `python -m src.research.iphone_refresh`（既定は dry-run＝何も書かない）／`--apply`（検証に通ったときだけ書く）／`--skip-apple`（Apple の取得を省く）。流れは Apple → PASTEC・ルデヤ → 同一性 → 鮮度 → 利益 → 履歴 → 公開データ・ページ → 判定。24 時間の監視ではなく、週 1 回の手動実行。
+    - 取得は `src/collectors/buyback_iphone_weekly.py`（polite 取得のみ。新品未開封の行だけ。範囲表示・読めない色減額は実行可能価格にしない。ページに更新日が無ければ取得日を更新日にしない＝UNKNOWN）。
+    - **取得できた店・行だけ**を `iphone_exp_live.json` に入れ替える。失敗した店の古い行は日付も進めず残る（鮮度で STALE）。直前の価格から 25% 以上動いた行は誤取得の疑いで、その店の更新を採らない（Apple も同じ）。
+    - `--apply` は、最高の実行可能買取が FRESH の行に対応すること・購入可能が確認できないのに BUY が無いこと・更新できた取得元が 1 つ以上あること、を検証してから書く。書くのは調査フォルダ・`exports/iphone_buyback/*.json`・`docs/iphone-buyback.html`。通知は送らない。
+    - 終了コード: 0＝全部成功／2＝一部の取得元が失敗（成功した分だけ更新）／1＝検証失敗または元の調査フォルダが無い。
+    - 最高の実行可能買取の正本の項目は、SKU 直下の `highest_executable`（`{shop, price}`）。行は `executable_price`。

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-17 17:58 JST",
+  "generated_at": "2026-11-17 21:48 JST",
   "scope": "公式ソース登録・検証（利益/AI/Opportunity/Notification/Capital/Execution は不変）",
   "methodology": {
     "verification": "WebFetch で HTTP200/公式ドメイン/canonical/商品一致を実確認したURLのみ verified",
@@ -1756,7 +1756,7 @@
         "product_id": "prod_ps5_pro",
         "action": "stock_observed",
         "stock": "入荷待ち",
-        "at": "2026-11-17T17:51:07+09:00"
+        "at": "2026-11-17T21:40:59+09:00"
       },
       {
         "product_id": "prod_switch2",
@@ -1799,17 +1799,6 @@
         "on": "2026-11-17"
       },
       {
-        "product_id": "prod_a7rv",
-        "action": "price_reconfirmed",
-        "on": "2026-11-17"
-      },
-      {
-        "product_id": "prod_a7rv",
-        "action": "stock_observed",
-        "stock": "在庫あり",
-        "at": "2026-11-17T17:54:14+09:00"
-      },
-      {
         "product_id": "prod_a1ii",
         "action": "price_reconfirmed",
         "on": "2026-11-17"
@@ -1818,7 +1807,7 @@
         "product_id": "prod_a1ii",
         "action": "stock_observed",
         "stock": "在庫あり",
-        "at": "2026-11-17T17:55:14+09:00"
+        "at": "2026-11-17T21:45:08+09:00"
       },
       {
         "product_id": "prod_a7cr",
@@ -1834,6 +1823,11 @@
         "product_id": "prod_iphoneduo_256",
         "action": "price_reconfirmed",
         "on": "2026-11-17"
+      },
+      {
+        "product_id": "prod_a7rv",
+        "action": "price_reconfirmed_from_last_state",
+        "on": "2026-11-17"
       }
     ]
   },
@@ -1847,7 +1841,7 @@
       "product_id": "prod_ps5_pro",
       "action": "stock_observed",
       "stock": "入荷待ち",
-      "at": "2026-11-17T17:51:07+09:00"
+      "at": "2026-11-17T21:40:59+09:00"
     },
     {
       "product_id": "prod_switch2",
@@ -1890,17 +1884,6 @@
       "on": "2026-11-17"
     },
     {
-      "product_id": "prod_a7rv",
-      "action": "price_reconfirmed",
-      "on": "2026-11-17"
-    },
-    {
-      "product_id": "prod_a7rv",
-      "action": "stock_observed",
-      "stock": "在庫あり",
-      "at": "2026-11-17T17:54:14+09:00"
-    },
-    {
       "product_id": "prod_a1ii",
       "action": "price_reconfirmed",
       "on": "2026-11-17"
@@ -1909,7 +1892,7 @@
       "product_id": "prod_a1ii",
       "action": "stock_observed",
       "stock": "在庫あり",
-      "at": "2026-11-17T17:55:14+09:00"
+      "at": "2026-11-17T21:45:08+09:00"
     },
     {
       "product_id": "prod_a7cr",
@@ -1924,6 +1907,11 @@
     {
       "product_id": "prod_iphoneduo_256",
       "action": "price_reconfirmed",
+      "on": "2026-11-17"
+    },
+    {
+      "product_id": "prod_a7rv",
+      "action": "price_reconfirmed_from_last_state",
       "on": "2026-11-17"
     }
   ],

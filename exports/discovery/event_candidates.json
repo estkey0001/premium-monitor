@@ -3185,6 +3185,44 @@
       "discovered_at": "2026-11-17T15:51:06+09:00",
       "last_seen_on": "2026-11-17",
       "updated_at": "2026-11-17T15:51:06+09:00"
+    },
+    "tcg-event-6ddbf081a0ac": {
+      "source": "CARD_LABO",
+      "kind": "LOTTERY",
+      "tcg": "POKEMON",
+      "title": "【ポケモンカードゲーム】再入荷商品",
+      "official_url": "https://www.c-labo.jp/shop/hamamatsu/blog/624708/",
+      "product_code": "",
+      "product_mapping": "unmapped",
+      "application_start": "2026-11-17",
+      "application_end": "2026-11-23",
+      "event_status": "UPCOMING",
+      "missing_fields": [],
+      "candidate_id": "tcg-event-6ddbf081a0ac",
+      "status": "MATCHED_EVENT",
+      "reasons": [],
+      "discovered_at": "2026-11-17T22:18:58+09:00",
+      "last_seen_on": "2026-11-17",
+      "updated_at": "2026-11-17T22:18:58+09:00"
+    },
+    "tcg-event-addd85266709": {
+      "source": "CARD_LABO",
+      "kind": "LOTTERY",
+      "tcg": "ONE_PIECE",
+      "title": "【ワンピースカードゲーム】再入荷商品",
+      "official_url": "https://www.c-labo.jp/shop/hamamatsu/blog/624706/",
+      "product_code": "",
+      "product_mapping": "unmapped",
+      "application_start": "2026-11-17",
+      "application_end": "2026-11-19",
+      "event_status": "UPCOMING",
+      "missing_fields": [],
+      "candidate_id": "tcg-event-addd85266709",
+      "status": "MATCHED_EVENT",
+      "reasons": [],
+      "discovered_at": "2026-11-17T22:18:58+09:00",
+      "last_seen_on": "2026-11-17",
+      "updated_at": "2026-11-17T22:18:58+09:00"
     }
   }
 }

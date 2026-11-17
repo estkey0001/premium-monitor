@@ -57,6 +57,8 @@ def _out_of_scope(entry: dict) -> Optional[dict]:
     k = "skus" if isinstance(entry.get("skus"), list) else "prices"
     keep = []
     for r in entry.get(k) or []:
+        if not isinstance(r, dict):
+            continue
         m = wi._SKU_RE.search(str(r.get("sku") or f"{r.get('model', '')} {r.get('storage') or r.get('capacity') or ''}"))
         if not m or m.group(1) not in MODELS:
             keep.append(r)
@@ -255,6 +257,8 @@ def main(argv=None) -> int:
     ap.add_argument("--skip-apple", action="store_true", help="Apple の取得を省く（約 2 分かかる）。購入可否が当日分でなくなるので、BUY は WATCH に下がる。確認用")
     ap.add_argument("--dir", help="調査フォルダ（既定: .private/research/weekly/<今日>。無ければ直近のものを元にする）")
     a = ap.parse_args(argv)
+    if a.apply and a.skip_apple:
+        ap.error("--skip-apple は確認用です。--apply と同時には使えません（購入可否が当日分でない判定が履歴に残るため）")
     now = datetime.now(JST)
     date = now.strftime("%Y-%m-%d")
     target = Path(a.dir) if a.dir else WEEKLY_ROOT / date

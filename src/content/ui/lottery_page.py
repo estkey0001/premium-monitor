@@ -18,8 +18,11 @@ from src.content.ui.navigation import page_href
 
 PAGE_SIZE = 20
 # 状態の絞り込み（「当選・購入」は補助）
-STATUS_TABS = (("", "すべての状態"), ("open", "抽選受付中"), ("today", "今日締切"), ("wait", "予約・発売待ち"),
-               ("result", "当選・購入期限"))
+STATUS_TABS = (("", "すべての状態"), ("open", "抽選受付中"), ("ending", "締切間近"), ("upcoming", "近日開始"),
+               ("today", "今日締切"), ("wait", "予約・発売待ち"), ("result", "当選・購入期限"))
+# TCG のブランド（ポケモンカード / ONE PIECE を分けて見る）。値は vm["cat"]（正本の tcg の種類）から決める
+BRAND_TABS = (("", "すべてのカード"), ("pokemon", "ポケモンカード"), ("onepiece", "ONE PIECE"))
+BRAND_OF = {"POKEMON": "pokemon", "ONE_PIECE": "onepiece"}
 SORTS = (("rec", "おすすめ"), ("deadline", "締切が近い"), ("start", "開始が近い"), ("updated", "更新が新しい"),
          ("profit", "想定利益が高い"))
 
@@ -167,7 +170,8 @@ def _row(v: LotteryReservationView, state: dict, idx: int, pd_ids: set | None = 
         f'<article class="nu-lrow" data-nu-lot="{esc(v.event_id)}" data-nu-bucket="{state["bucket"]}"'
         f' data-nu-sort="{state["sort"]}" data-nu-idx="{idx}" data-nu-status="{esc(state["status"])}"'
         f' data-nu-today="{"1" if state["ending_today"] else "0"}" data-nu-kind="{esc(v.kind)}"'
-        f' data-nu-cat="{esc(v.category)}" data-ae="{_ms(end, end=True)}" data-as="{_ms(start)}"'
+        f' data-nu-cat="{esc(v.category)}" data-nu-brand="{BRAND_OF.get(str(vm.get("cat") or "").upper(), "")}"'
+        f' data-ae="{_ms(end, end=True)}" data-as="{_ms(start)}"'
         f' data-nu-unv="{"1" if not v.human_confirmed else "0"}"'
         f' data-upd="{int(upd.timestamp() * 1000) if upd else 0}"'
         f' data-profit="{v.estimated_profit if v.estimated_profit is not None else ""}"'
@@ -194,6 +198,8 @@ def _toolbar(n: int) -> str:
     base = page_href("lottery")
     tabs = "".join(f'<a class="nu-seg" href="{esc(base + (f"&st={k}" if k else ""))}" data-nu-lparam="st"'
                    f' data-nu-lvalue="{k}">{esc(lbl)}</a>' for k, lbl in STATUS_TABS)
+    brands = "".join(f'<a class="nu-seg" href="{esc(base + (f"&brand={k}" if k else ""))}" data-nu-lparam="brand"'
+                     f' data-nu-lvalue="{k}">{esc(lbl)}</a>' for k, lbl in BRAND_TABS)
     sorts = "".join(f'<a class="nu-seg" href="{esc(base)}&amp;sort={k}" data-nu-lparam="sort"'
                     f' data-nu-lvalue="{k}">{esc(lbl)}</a>' for k, lbl in SORTS)
     hide = "" if n else " hidden"
@@ -201,6 +207,8 @@ def _toolbar(n: int) -> str:
         f'<div class="nu-otools" data-nu-lot-hide-empty{hide}>'
         '<div class="nu-otools__row"><span class="nu-otools__lbl" id="nu-lst-lbl">状態</span>'
         f'<nav class="nu-segs" aria-labelledby="nu-lst-lbl">{tabs}</nav></div>'
+        '<div class="nu-otools__row"><span class="nu-otools__lbl" id="nu-lbrand-lbl">カード</span>'
+        f'<nav class="nu-segs" aria-labelledby="nu-lbrand-lbl">{brands}</nav></div>'
         '<div class="nu-otools__row"><span class="nu-otools__lbl" id="nu-lsort-lbl">並び替え</span>'
         f'<nav class="nu-segs" aria-labelledby="nu-lsort-lbl">{sorts}</nav>'
         '<button type="button" class="nu-chip nu-chip--sm" aria-expanded="false" aria-controls="nu-lsearch"'

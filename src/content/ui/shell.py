@@ -343,7 +343,7 @@ def _router_script() -> str:
 
   // ── 抽選・予約（UI Phase 3）: 状態の絞り込み・並べ替え・検索・ページ切り替え ──
   // 状態（data-nu-status / data-nu-bucket / data-nu-today）は NuLotteryRuntime が閲覧時の時刻で書き換えた値だけを使う
-  var LOT_TABS = ['open', 'today', 'wait', 'result'], LOT_SORTS = ['rec', 'deadline', 'start', 'updated', 'profit'];
+  var LOT_TABS = ['open', 'ending', 'upcoming', 'today', 'wait', 'result'], LOT_BRANDS = ['pokemon', 'onepiece'], LOT_SORTS = ['rec', 'deadline', 'start', 'updated', 'profit'];
   var LOT_SIZE = 20;
   function lotHref(name, value) {
     var cur = new URLSearchParams(location.search), u = new URLSearchParams();
@@ -359,12 +359,13 @@ def _router_script() -> str:
     if (!sec) return;
     var tab = LOT_TABS.indexOf(q.get('st')) >= 0 ? q.get('st') : '';
     var sort = LOT_SORTS.indexOf(q.get('sort')) >= 0 ? q.get('sort') : 'rec';
+    var brand = LOT_BRANDS.indexOf(q.get('brand')) >= 0 ? q.get('brand') : '';
     var term = (q.get('q') || '').trim().toLowerCase();
     var pageNum = Math.max(1, parseInt(q.get('page_num') || '1', 10) || 1), now = Date.now();
     var box = sec.querySelector('[data-nu-lot-list]');
     var items = Array.prototype.slice.call(box.querySelectorAll(':scope > [data-nu-lot]')).map(function(el){
       return {el: el, cat: el.getAttribute('data-nu-cat'), kind: el.getAttribute('data-nu-kind'),
-              status: el.getAttribute('data-nu-status'), bucket: +el.getAttribute('data-nu-bucket'),
+              brand: el.getAttribute('data-nu-brand') || '', status: el.getAttribute('data-nu-status'), bucket: +el.getAttribute('data-nu-bucket'),
               sort: +el.getAttribute('data-nu-sort'), idx: +el.getAttribute('data-nu-idx'),
               today: el.getAttribute('data-nu-today') === '1', unv: el.getAttribute('data-nu-unv') === '1',
               ae: numAttr(el, 'data-ae'), as: numAttr(el, 'data-as'),
@@ -378,11 +379,14 @@ def _router_script() -> str:
       // 抽選受付中: 抽選で受付中・締切間近（予約の受付は「予約・発売待ち」）
       // 人の確認待ちの告知は「抽選受付中」に入れない（HOME の「受付中」の件数と同じ）
       open: function(it){ return it.kind === 'lottery' && !it.unv && (it.status === 'OPEN' || it.status === 'ENDING_SOON'); },
+      // 締切間近・近日開始: 人の確認待ちの告知は入れない（受付中と同じ扱い）。予約・発売待ちの開始前は「予約・発売待ち」にも出る
+      ending: function(it){ return !it.unv && it.status === 'ENDING_SOON'; },
+      upcoming: function(it){ return !it.unv && it.status === 'UPCOMING'; },
       today: function(it){ return it.today; },
       wait: function(it){ return it.kind === 'preorder' || it.kind === 'release'; },
       result: function(it){ return ['RESULT_PENDING', 'WINNER_ANNOUNCED', 'WINNER_PURCHASE_PERIOD'].indexOf(it.status) >= 0; }
     }[tab];
-    var list = inCat.filter(function(it){ return match(it) && (!term || it.text.indexOf(term) >= 0); });
+    var list = inCat.filter(function(it){ return match(it) && (!brand || it.brand === brand) && (!term || it.text.indexOf(term) >= 0); });
     function rec(a, b){ return a.bucket - b.bucket || a.sort - b.sort || a.idx - b.idx; }
     // 値の無いもの（締切未公表・利益算出前など）は後ろに回す（上位に混ぜない）
     function nullsLast(key, dir){ return function(a, b){
@@ -422,7 +426,7 @@ def _router_script() -> str:
     });
     sec.querySelectorAll('[data-nu-lparam]').forEach(function(a){
       var name = a.getAttribute('data-nu-lparam'), val = a.getAttribute('data-nu-lvalue');
-      setCurrent(a, name === 'sort' ? val === sort : val === tab, 'true');
+      setCurrent(a, name === 'sort' ? val === sort : (name === 'brand' ? val === brand : val === tab), 'true');
       a.setAttribute('href', lotHref(name, name === 'sort' && val === 'rec' ? '' : val));
     });
     sec.querySelectorAll('[data-nu-switch]').forEach(function(a){

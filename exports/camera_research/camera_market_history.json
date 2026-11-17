@@ -1,0 +1,456 @@
+{
+  "schema": 1,
+  "snapshots": [
+    {
+      "date": "2026-11-18",
+      "generated_at": "2026-11-18T03:58:18+09:00",
+      "observations": [
+        {
+          "product": "Canon EOS R5 Mark II",
+          "source": "買取商店",
+          "market_type": "buyback",
+          "price_type": "BUYBACK_PRICE",
+          "price": 450000,
+          "condition": "UNOPENED",
+          "checked_at": "2026-11-18",
+          "source_updated_at": "2026-11-17",
+          "carried": false
+        },
+        {
+          "product": "FUJIFILM X100VI",
+          "source": "富士フイルム",
+          "market_type": "official",
+          "price_type": "OFFICIAL_RETAIL",
+          "price": 315700,
+          "condition": "NEW",
+          "checked_at": "2026-11-18",
+          "source_updated_at": null,
+          "carried": false
+        },
+        {
+          "product": "FUJIFILM X100VI",
+          "source": "買取商店",
+          "market_type": "buyback",
+          "price_type": "BUYBACK_PRICE",
+          "price": 280000,
+          "condition": "UNOPENED",
+          "checked_at": "2026-11-18",
+          "source_updated_at": "2026-11-17",
+          "carried": false
+        },
+        {
+          "product": "FUJIFILM X100VI",
+          "source": "買取商店",
+          "market_type": "buyback",
+          "price_type": "BUYBACK_PRICE",
+          "price": 253500,
+          "condition": "UNOPENED",
+          "checked_at": "2026-11-18",
+          "source_updated_at": "2026-11-17",
+          "carried": false
+        },
+        {
+          "product": "Nikon Z8",
+          "source": "買取商店",
+          "market_type": "buyback",
+          "price_type": "BUYBACK_PRICE",
+          "price": 420000,
+          "condition": "NEW",
+          "checked_at": "2026-11-18",
+          "source_updated_at": "2026-11-17",
+          "carried": false
+        },
+        {
+          "product": "Nikon Zf",
+          "source": "買取商店",
+          "market_type": "buyback",
+          "price_type": "BUYBACK_PRICE",
+          "price": 210000,
+          "condition": "NEW",
+          "checked_at": "2026-11-18",
+          "source_updated_at": "2026-11-17",
+          "carried": false
+        },
+        {
+          "product": "RICOH GR IV",
+          "source": "リコーイメージングストア",
+          "market_type": "official",
+          "price_type": "OFFICIAL_RETAIL",
+          "price": 211800,
+          "condition": "NEW",
+          "checked_at": "2026-11-18",
+          "source_updated_at": null,
+          "carried": false
+        },
+        {
+          "product": "RICOH GR IV",
+          "source": "買取商店",
+          "market_type": "buyback",
+          "price_type": "BUYBACK_PRICE",
+          "price": 205000,
+          "condition": "UNOPENED",
+          "checked_at": "2026-11-18",
+          "source_updated_at": "2026-11-17",
+          "carried": false
+        },
+        {
+          "product": "RICOH GR IV HDF",
+          "source": "リコーイメージングストア",
+          "market_type": "official",
+          "price_type": "OFFICIAL_RETAIL",
+          "price": 222000,
+          "condition": "NEW",
+          "checked_at": "2026-11-18",
+          "source_updated_at": null,
+          "carried": false
+        },
+        {
+          "product": "RICOH GR IV HDF",
+          "source": "買取商店",
+          "market_type": "buyback",
+          "price_type": "BUYBACK_PRICE",
+          "price": 240000,
+          "condition": "UNOPENED",
+          "checked_at": "2026-11-18",
+          "source_updated_at": "2026-11-17",
+          "carried": false
+        },
+        {
+          "product": "RICOH GR IV Monochrome",
+          "source": "リコーイメージングストア",
+          "market_type": "official",
+          "price_type": "OFFICIAL_RETAIL",
+          "price": 299800,
+          "condition": "NEW",
+          "checked_at": "2026-11-18",
+          "source_updated_at": null,
+          "carried": false
+        },
+        {
+          "product": "RICOH GR IV Monochrome",
+          "source": "買取商店",
+          "market_type": "buyback",
+          "price_type": "BUYBACK_PRICE",
+          "price": 220000,
+          "condition": "UNOPENED",
+          "checked_at": "2026-11-18",
+          "source_updated_at": "2026-11-17",
+          "carried": false
+        },
+        {
+          "product": "SONY α7R V",
+          "source": "ソニーストア",
+          "market_type": "official",
+          "price_type": "OFFICIAL_RETAIL",
+          "price": 533500,
+          "condition": "NEW",
+          "checked_at": "2026-11-18",
+          "source_updated_at": null,
+          "carried": false
+        },
+        {
+          "product": "SONY α7CR",
+          "source": "ソニーストア",
+          "market_type": "official",
+          "price_type": "OFFICIAL_RETAIL",
+          "price": 449900,
+          "condition": "NEW",
+          "checked_at": "2026-11-18",
+          "source_updated_at": null,
+          "carried": false
+        }
+      ],
+      "routes": [
+        {
+          "product": "Canon EOS R5 Mark II",
+          "route": "A",
+          "profit_status": "NOT_CALCULATED",
+          "decision": "WATCH",
+          "net_profit": null,
+          "roi_pct": null
+        },
+        {
+          "product": "Canon EOS R5 Mark II",
+          "route": "B",
+          "profit_status": "NOT_CALCULATED",
+          "decision": "WATCH",
+          "net_profit": null,
+          "roi_pct": null
+        },
+        {
+          "product": "Canon EOS R5 Mark II",
+          "route": "C",
+          "profit_status": "NOT_CALCULATED",
+          "decision": "SKIP",
+          "net_profit": null,
+          "roi_pct": null
+        },
+        {
+          "product": "Canon EOS R5 Mark II",
+          "route": "D",
+          "profit_status": "NOT_CALCULATED",
+          "decision": "SKIP",
+          "net_profit": null,
+          "roi_pct": null
+        },
+        {
+          "product": "FUJIFILM X100VI",
+          "route": "A",
+          "profit_status": "NO_PROFIT",
+          "decision": "SKIP",
+          "net_profit": -64000,
+          "roi_pct": -20.27
+        },
+        {
+          "product": "FUJIFILM X100VI",
+          "route": "B",
+          "profit_status": "NOT_CALCULATED",
+          "decision": "WATCH",
+          "net_profit": null,
+          "roi_pct": null
+        },
+        {
+          "product": "FUJIFILM X100VI",
+          "route": "C",
+          "profit_status": "NOT_CALCULATED",
+          "decision": "SKIP",
+          "net_profit": null,
+          "roi_pct": null
+        },
+        {
+          "product": "FUJIFILM X100VI",
+          "route": "D",
+          "profit_status": "NOT_CALCULATED",
+          "decision": "SKIP",
+          "net_profit": null,
+          "roi_pct": null
+        },
+        {
+          "product": "Nikon Z8",
+          "route": "A",
+          "profit_status": "NOT_CALCULATED",
+          "decision": "WATCH",
+          "net_profit": null,
+          "roi_pct": null
+        },
+        {
+          "product": "Nikon Z8",
+          "route": "B",
+          "profit_status": "NOT_CALCULATED",
+          "decision": "WATCH",
+          "net_profit": null,
+          "roi_pct": null
+        },
+        {
+          "product": "Nikon Z8",
+          "route": "C",
+          "profit_status": "NOT_CALCULATED",
+          "decision": "SKIP",
+          "net_profit": null,
+          "roi_pct": null
+        },
+        {
+          "product": "Nikon Z8",
+          "route": "D",
+          "profit_status": "NOT_CALCULATED",
+          "decision": "SKIP",
+          "net_profit": null,
+          "roi_pct": null
+        },
+        {
+          "product": "Nikon Zf",
+          "route": "A",
+          "profit_status": "NOT_CALCULATED",
+          "decision": "WATCH",
+          "net_profit": null,
+          "roi_pct": null
+        },
+        {
+          "product": "Nikon Zf",
+          "route": "B",
+          "profit_status": "NOT_CALCULATED",
+          "decision": "WATCH",
+          "net_profit": null,
+          "roi_pct": null
+        },
+        {
+          "product": "Nikon Zf",
+          "route": "C",
+          "profit_status": "NOT_CALCULATED",
+          "decision": "SKIP",
+          "net_profit": null,
+          "roi_pct": null
+        },
+        {
+          "product": "Nikon Zf",
+          "route": "D",
+          "profit_status": "NOT_CALCULATED",
+          "decision": "SKIP",
+          "net_profit": null,
+          "roi_pct": null
+        },
+        {
+          "product": "RICOH GR IV",
+          "route": "A",
+          "profit_status": "NO_PROFIT",
+          "decision": "SKIP",
+          "net_profit": -8600,
+          "roi_pct": -4.06
+        },
+        {
+          "product": "RICOH GR IV",
+          "route": "B",
+          "profit_status": "NOT_CALCULATED",
+          "decision": "WATCH",
+          "net_profit": null,
+          "roi_pct": null
+        },
+        {
+          "product": "RICOH GR IV",
+          "route": "C",
+          "profit_status": "NOT_CALCULATED",
+          "decision": "SKIP",
+          "net_profit": null,
+          "roi_pct": null
+        },
+        {
+          "product": "RICOH GR IV",
+          "route": "D",
+          "profit_status": "NOT_CALCULATED",
+          "decision": "SKIP",
+          "net_profit": null,
+          "roi_pct": null
+        },
+        {
+          "product": "RICOH GR IV HDF",
+          "route": "A",
+          "profit_status": "PROFITABLE",
+          "decision": "WAIT",
+          "net_profit": 16200,
+          "roi_pct": 7.3
+        },
+        {
+          "product": "RICOH GR IV HDF",
+          "route": "B",
+          "profit_status": "NOT_CALCULATED",
+          "decision": "WATCH",
+          "net_profit": null,
+          "roi_pct": null
+        },
+        {
+          "product": "RICOH GR IV HDF",
+          "route": "C",
+          "profit_status": "NOT_CALCULATED",
+          "decision": "WATCH",
+          "net_profit": null,
+          "roi_pct": null
+        },
+        {
+          "product": "RICOH GR IV HDF",
+          "route": "D",
+          "profit_status": "NOT_CALCULATED",
+          "decision": "WATCH",
+          "net_profit": null,
+          "roi_pct": null
+        },
+        {
+          "product": "RICOH GR IV Monochrome",
+          "route": "A",
+          "profit_status": "NO_PROFIT",
+          "decision": "SKIP",
+          "net_profit": -81600,
+          "roi_pct": -27.22
+        },
+        {
+          "product": "RICOH GR IV Monochrome",
+          "route": "B",
+          "profit_status": "NOT_CALCULATED",
+          "decision": "WATCH",
+          "net_profit": null,
+          "roi_pct": null
+        },
+        {
+          "product": "RICOH GR IV Monochrome",
+          "route": "C",
+          "profit_status": "NOT_CALCULATED",
+          "decision": "WATCH",
+          "net_profit": null,
+          "roi_pct": null
+        },
+        {
+          "product": "RICOH GR IV Monochrome",
+          "route": "D",
+          "profit_status": "NOT_CALCULATED",
+          "decision": "WATCH",
+          "net_profit": null,
+          "roi_pct": null
+        },
+        {
+          "product": "SONY α7R V",
+          "route": "A",
+          "profit_status": "NOT_CALCULATED",
+          "decision": "WATCH",
+          "net_profit": null,
+          "roi_pct": null
+        },
+        {
+          "product": "SONY α7R V",
+          "route": "B",
+          "profit_status": "NOT_CALCULATED",
+          "decision": "WATCH",
+          "net_profit": null,
+          "roi_pct": null
+        },
+        {
+          "product": "SONY α7R V",
+          "route": "C",
+          "profit_status": "NOT_CALCULATED",
+          "decision": "SKIP",
+          "net_profit": null,
+          "roi_pct": null
+        },
+        {
+          "product": "SONY α7R V",
+          "route": "D",
+          "profit_status": "NOT_CALCULATED",
+          "decision": "SKIP",
+          "net_profit": null,
+          "roi_pct": null
+        },
+        {
+          "product": "SONY α7CR",
+          "route": "A",
+          "profit_status": "NOT_CALCULATED",
+          "decision": "WATCH",
+          "net_profit": null,
+          "roi_pct": null
+        },
+        {
+          "product": "SONY α7CR",
+          "route": "B",
+          "profit_status": "NOT_CALCULATED",
+          "decision": "WATCH",
+          "net_profit": null,
+          "roi_pct": null
+        },
+        {
+          "product": "SONY α7CR",
+          "route": "C",
+          "profit_status": "NOT_CALCULATED",
+          "decision": "SKIP",
+          "net_profit": null,
+          "roi_pct": null
+        },
+        {
+          "product": "SONY α7CR",
+          "route": "D",
+          "profit_status": "NOT_CALCULATED",
+          "decision": "SKIP",
+          "net_profit": null,
+          "roi_pct": null
+        }
+      ],
+      "events": []
+    }
+  ]
+}

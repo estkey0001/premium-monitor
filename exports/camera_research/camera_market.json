@@ -1,0 +1,2129 @@
+{
+  "schema": 1,
+  "type": "CAMERA_MARKET",
+  "research_date": "2026-11-18",
+  "generated_at": "2026-11-18T03:58:18+09:00",
+  "note": "週次の Web 調査（AI）と自動収集から、確認できた価格だけで利益を計算します。確認できない項目は計算せず（NOT_CALCULATED）、出品の最高値は売値に使いません。成約は件数 3 以上・期間・個別の根拠が揃った中央値だけが売値です。",
+  "products": [
+    {
+      "product": "Canon EOS R5 Mark II",
+      "product_id": "prod_r5ii",
+      "registered": true,
+      "observations": [
+        {
+          "kind": "buyback",
+          "price_type": "BUYBACK_PRICE",
+          "price": 450000,
+          "condition": "UNOPENED",
+          "source": "買取商店",
+          "item_title": "Canon EOS R5 Mark II",
+          "url": "https://www.kaitorishouten-co.jp/products/detail/20463",
+          "checked_at": "2026-11-18",
+          "source_updated_at": "2026-11-17",
+          "freshness": "FRESH",
+          "age_days": 1,
+          "identity_ok": true,
+          "reasons": [],
+          "carried": false,
+          "color": null,
+          "stock": null,
+          "shipping_jpy": null,
+          "shop_key": "kaitorishouten-co.jp"
+        }
+      ],
+      "secondary": {
+        "listing": {},
+        "sold": {}
+      },
+      "routes": [
+        {
+          "route_type": "A",
+          "route_label": "正規店・メーカー → 買取店",
+          "product": "Canon EOS R5 Mark II",
+          "registered": true,
+          "profit_status": "NOT_CALCULATED",
+          "decision": "WATCH",
+          "buy": null,
+          "sell": null,
+          "reasons": [
+            "price_kind_OPEN_PRICE",
+            "price_missing"
+          ],
+          "costs": null,
+          "net_profit": null,
+          "roi_pct": null,
+          "executable": false,
+          "confidence": "low"
+        },
+        {
+          "route_type": "B",
+          "route_label": "正規店・メーカー → 二次流通（成約中央値）",
+          "product": "Canon EOS R5 Mark II",
+          "registered": true,
+          "profit_status": "NOT_CALCULATED",
+          "decision": "WATCH",
+          "buy": null,
+          "sell": null,
+          "reasons": [
+            "price_kind_OPEN_PRICE",
+            "price_missing"
+          ],
+          "costs": null,
+          "net_profit": null,
+          "roi_pct": null,
+          "executable": false,
+          "confidence": "low"
+        },
+        {
+          "route_type": "C",
+          "route_label": "二次流通の最安 → 買取店",
+          "product": "Canon EOS R5 Mark II",
+          "registered": true,
+          "profit_status": "NOT_CALCULATED",
+          "decision": "SKIP",
+          "buy": null,
+          "sell": null,
+          "reasons": [
+            "no_buy_candidate"
+          ],
+          "costs": null,
+          "net_profit": null,
+          "roi_pct": null,
+          "executable": false,
+          "confidence": "low"
+        },
+        {
+          "route_type": "D",
+          "route_label": "二次流通の最安 → 二次流通（成約中央値）",
+          "product": "Canon EOS R5 Mark II",
+          "registered": true,
+          "profit_status": "NOT_CALCULATED",
+          "decision": "SKIP",
+          "buy": null,
+          "sell": null,
+          "reasons": [
+            "no_buy_candidate"
+          ],
+          "costs": null,
+          "net_profit": null,
+          "roi_pct": null,
+          "executable": false,
+          "confidence": "low"
+        }
+      ],
+      "best_route": null
+    },
+    {
+      "product": "FUJIFILM X100VI",
+      "product_id": "prod_x100vi",
+      "registered": true,
+      "observations": [
+        {
+          "kind": "official",
+          "price_type": "OFFICIAL_RETAIL",
+          "price": 315700,
+          "condition": "NEW",
+          "source": "富士フイルム",
+          "item_title": "FUJIFILM X100VI",
+          "url": "http://mall-jp.fujifilm.com/shop/g/g16941878/",
+          "checked_at": "2026-11-18",
+          "source_updated_at": null,
+          "freshness": "FRESH",
+          "age_days": 0,
+          "identity_ok": true,
+          "reasons": [],
+          "carried": false,
+          "color": null,
+          "stock": "OUT_OF_STOCK",
+          "shipping_jpy": null,
+          "shop_key": "fujifilm.com"
+        },
+        {
+          "kind": "buyback",
+          "price_type": "BUYBACK_PRICE",
+          "price": 280000,
+          "condition": "UNOPENED",
+          "source": "買取商店",
+          "item_title": "FUJIFILM X100VI",
+          "url": "https://www.kaitorishouten-co.jp/products/detail/19384",
+          "checked_at": "2026-11-18",
+          "source_updated_at": "2026-11-17",
+          "freshness": "FRESH",
+          "age_days": 1,
+          "identity_ok": true,
+          "reasons": [],
+          "carried": false,
+          "color": "silver",
+          "stock": null,
+          "shipping_jpy": null,
+          "shop_key": "kaitorishouten-co.jp"
+        },
+        {
+          "kind": "buyback",
+          "price_type": "BUYBACK_PRICE",
+          "price": 253500,
+          "condition": "UNOPENED",
+          "source": "買取商店",
+          "item_title": "FUJIFILM X100VI",
+          "url": "https://www.kaitorishouten-co.jp/products/detail/19385",
+          "checked_at": "2026-11-18",
+          "source_updated_at": "2026-11-17",
+          "freshness": "FRESH",
+          "age_days": 1,
+          "identity_ok": true,
+          "reasons": [],
+          "carried": false,
+          "color": "black",
+          "stock": null,
+          "shipping_jpy": null,
+          "shop_key": "kaitorishouten-co.jp"
+        }
+      ],
+      "secondary": {
+        "listing": {},
+        "sold": {}
+      },
+      "routes": [
+        {
+          "route_type": "A",
+          "route_label": "正規店・メーカー → 買取店",
+          "product": "FUJIFILM X100VI",
+          "registered": true,
+          "profit_status": "NO_PROFIT",
+          "decision": "SKIP",
+          "buy": {
+            "source": "富士フイルム",
+            "price": 315700,
+            "price_type": "OFFICIAL_RETAIL",
+            "condition": "NEW",
+            "stock": "OUT_OF_STOCK",
+            "url": "http://mall-jp.fujifilm.com/shop/g/g16941878/",
+            "checked_at": "2026-11-18",
+            "source_updated_at": null,
+            "freshness": "FRESH",
+            "age_days": 0,
+            "item_title": "FUJIFILM X100VI",
+            "color": null,
+            "carried": false
+          },
+          "sell": {
+            "source": "買取商店",
+            "price": 253500,
+            "price_type": "BUYBACK_PRICE",
+            "condition": "UNOPENED",
+            "stock": null,
+            "url": "https://www.kaitorishouten-co.jp/products/detail/19385",
+            "checked_at": "2026-11-18",
+            "source_updated_at": "2026-11-17",
+            "freshness": "FRESH",
+            "age_days": 1,
+            "item_title": "FUJIFILM X100VI",
+            "color": "black",
+            "carried": false,
+            "evidence": {
+              "shops": 1,
+              "outlier": false
+            }
+          },
+          "costs": {
+            "purchase_shipping": 0,
+            "purchase_shipping_source": "official_shipping:src_fujifilm_official",
+            "outbound_shipping": 1800,
+            "selling_fee": 0,
+            "selling_fee_applies": false,
+            "selling_fee_rate": null,
+            "other": 0
+          },
+          "net_profit": -64000,
+          "roi_pct": -20.27,
+          "executable": false,
+          "reasons": [
+            "no_profit"
+          ],
+          "confidence": "low"
+        },
+        {
+          "route_type": "B",
+          "route_label": "正規店・メーカー → 二次流通（成約中央値）",
+          "product": "FUJIFILM X100VI",
+          "registered": true,
+          "profit_status": "NOT_CALCULATED",
+          "decision": "WATCH",
+          "buy": {
+            "source": "富士フイルム",
+            "price": 315700,
+            "price_type": "OFFICIAL_RETAIL",
+            "condition": "NEW",
+            "stock": "OUT_OF_STOCK",
+            "url": "http://mall-jp.fujifilm.com/shop/g/g16941878/",
+            "checked_at": "2026-11-18",
+            "source_updated_at": null,
+            "freshness": "FRESH",
+            "age_days": 0,
+            "item_title": "FUJIFILM X100VI",
+            "color": null,
+            "carried": false
+          },
+          "sell": null,
+          "sell_unavailable": {
+            "price_type": "SOLD_MEDIAN",
+            "status": "UNAVAILABLE"
+          },
+          "reasons": [
+            "sold_insufficient",
+            "sold_none"
+          ],
+          "costs": null,
+          "net_profit": null,
+          "roi_pct": null,
+          "executable": false,
+          "confidence": "low"
+        },
+        {
+          "route_type": "C",
+          "route_label": "二次流通の最安 → 買取店",
+          "product": "FUJIFILM X100VI",
+          "registered": true,
+          "profit_status": "NOT_CALCULATED",
+          "decision": "SKIP",
+          "buy": null,
+          "sell": null,
+          "reasons": [
+            "no_buy_candidate"
+          ],
+          "costs": null,
+          "net_profit": null,
+          "roi_pct": null,
+          "executable": false,
+          "confidence": "low"
+        },
+        {
+          "route_type": "D",
+          "route_label": "二次流通の最安 → 二次流通（成約中央値）",
+          "product": "FUJIFILM X100VI",
+          "registered": true,
+          "profit_status": "NOT_CALCULATED",
+          "decision": "SKIP",
+          "buy": null,
+          "sell": null,
+          "reasons": [
+            "no_buy_candidate"
+          ],
+          "costs": null,
+          "net_profit": null,
+          "roi_pct": null,
+          "executable": false,
+          "confidence": "low"
+        }
+      ],
+      "best_route": "A"
+    },
+    {
+      "product": "Nikon Z8",
+      "product_id": "prod_z8",
+      "registered": true,
+      "observations": [
+        {
+          "kind": "buyback",
+          "price_type": "BUYBACK_PRICE",
+          "price": 420000,
+          "condition": "NEW",
+          "source": "買取商店",
+          "item_title": "Nikon Z8",
+          "url": "https://www.kaitorishouten-co.jp/products/detail/16562",
+          "checked_at": "2026-11-18",
+          "source_updated_at": "2026-11-17",
+          "freshness": "FRESH",
+          "age_days": 1,
+          "identity_ok": true,
+          "reasons": [],
+          "carried": false,
+          "color": null,
+          "stock": null,
+          "shipping_jpy": null,
+          "shop_key": "kaitorishouten-co.jp"
+        }
+      ],
+      "secondary": {
+        "listing": {},
+        "sold": {}
+      },
+      "routes": [
+        {
+          "route_type": "A",
+          "route_label": "正規店・メーカー → 買取店",
+          "product": "Nikon Z8",
+          "registered": true,
+          "profit_status": "NOT_CALCULATED",
+          "decision": "WATCH",
+          "buy": null,
+          "sell": null,
+          "reasons": [
+            "price_kind_OPEN_PRICE",
+            "price_missing"
+          ],
+          "costs": null,
+          "net_profit": null,
+          "roi_pct": null,
+          "executable": false,
+          "confidence": "low"
+        },
+        {
+          "route_type": "B",
+          "route_label": "正規店・メーカー → 二次流通（成約中央値）",
+          "product": "Nikon Z8",
+          "registered": true,
+          "profit_status": "NOT_CALCULATED",
+          "decision": "WATCH",
+          "buy": null,
+          "sell": null,
+          "reasons": [
+            "price_kind_OPEN_PRICE",
+            "price_missing"
+          ],
+          "costs": null,
+          "net_profit": null,
+          "roi_pct": null,
+          "executable": false,
+          "confidence": "low"
+        },
+        {
+          "route_type": "C",
+          "route_label": "二次流通の最安 → 買取店",
+          "product": "Nikon Z8",
+          "registered": true,
+          "profit_status": "NOT_CALCULATED",
+          "decision": "SKIP",
+          "buy": null,
+          "sell": null,
+          "reasons": [
+            "no_buy_candidate"
+          ],
+          "costs": null,
+          "net_profit": null,
+          "roi_pct": null,
+          "executable": false,
+          "confidence": "low"
+        },
+        {
+          "route_type": "D",
+          "route_label": "二次流通の最安 → 二次流通（成約中央値）",
+          "product": "Nikon Z8",
+          "registered": true,
+          "profit_status": "NOT_CALCULATED",
+          "decision": "SKIP",
+          "buy": null,
+          "sell": null,
+          "reasons": [
+            "no_buy_candidate"
+          ],
+          "costs": null,
+          "net_profit": null,
+          "roi_pct": null,
+          "executable": false,
+          "confidence": "low"
+        }
+      ],
+      "best_route": null
+    },
+    {
+      "product": "Nikon Zf",
+      "product_id": "prod_zf",
+      "registered": true,
+      "observations": [
+        {
+          "kind": "buyback",
+          "price_type": "BUYBACK_PRICE",
+          "price": 210000,
+          "condition": "NEW",
+          "source": "買取商店",
+          "item_title": "Nikon Zf",
+          "url": "https://www.kaitorishouten-co.jp/products/detail/18522",
+          "checked_at": "2026-11-18",
+          "source_updated_at": "2026-11-17",
+          "freshness": "FRESH",
+          "age_days": 1,
+          "identity_ok": true,
+          "reasons": [],
+          "carried": false,
+          "color": null,
+          "stock": null,
+          "shipping_jpy": null,
+          "shop_key": "kaitorishouten-co.jp"
+        }
+      ],
+      "secondary": {
+        "listing": {},
+        "sold": {}
+      },
+      "routes": [
+        {
+          "route_type": "A",
+          "route_label": "正規店・メーカー → 買取店",
+          "product": "Nikon Zf",
+          "registered": true,
+          "profit_status": "NOT_CALCULATED",
+          "decision": "WATCH",
+          "buy": null,
+          "sell": null,
+          "reasons": [
+            "host_not_allowed",
+            "price_kind_NOT_FOUND",
+            "price_missing"
+          ],
+          "costs": null,
+          "net_profit": null,
+          "roi_pct": null,
+          "executable": false,
+          "confidence": "low"
+        },
+        {
+          "route_type": "B",
+          "route_label": "正規店・メーカー → 二次流通（成約中央値）",
+          "product": "Nikon Zf",
+          "registered": true,
+          "profit_status": "NOT_CALCULATED",
+          "decision": "WATCH",
+          "buy": null,
+          "sell": null,
+          "reasons": [
+            "host_not_allowed",
+            "price_kind_NOT_FOUND",
+            "price_missing"
+          ],
+          "costs": null,
+          "net_profit": null,
+          "roi_pct": null,
+          "executable": false,
+          "confidence": "low"
+        },
+        {
+          "route_type": "C",
+          "route_label": "二次流通の最安 → 買取店",
+          "product": "Nikon Zf",
+          "registered": true,
+          "profit_status": "NOT_CALCULATED",
+          "decision": "SKIP",
+          "buy": null,
+          "sell": null,
+          "reasons": [
+            "no_buy_candidate"
+          ],
+          "costs": null,
+          "net_profit": null,
+          "roi_pct": null,
+          "executable": false,
+          "confidence": "low"
+        },
+        {
+          "route_type": "D",
+          "route_label": "二次流通の最安 → 二次流通（成約中央値）",
+          "product": "Nikon Zf",
+          "registered": true,
+          "profit_status": "NOT_CALCULATED",
+          "decision": "SKIP",
+          "buy": null,
+          "sell": null,
+          "reasons": [
+            "no_buy_candidate"
+          ],
+          "costs": null,
+          "net_profit": null,
+          "roi_pct": null,
+          "executable": false,
+          "confidence": "low"
+        }
+      ],
+      "best_route": null
+    },
+    {
+      "product": "RICOH GR IV",
+      "product_id": "prod_gr4",
+      "registered": true,
+      "observations": [
+        {
+          "kind": "official",
+          "price_type": "OFFICIAL_RETAIL",
+          "price": 211800,
+          "condition": "NEW",
+          "source": "リコーイメージングストア",
+          "item_title": "RICOH GR IV",
+          "url": "https://ricohimagingstore.com/Form/Product/ProductDetail.aspx?shop=0&pid=S0001551&cat=002010",
+          "checked_at": "2026-11-18",
+          "source_updated_at": null,
+          "freshness": "FRESH",
+          "age_days": 0,
+          "identity_ok": true,
+          "reasons": [],
+          "carried": false,
+          "color": null,
+          "stock": "LOTTERY_DEPENDENT",
+          "shipping_jpy": null,
+          "shop_key": "ricohimagingstore.com"
+        },
+        {
+          "kind": "buyback",
+          "price_type": "BUYBACK_PRICE",
+          "price": 205000,
+          "condition": "UNOPENED",
+          "source": "買取商店",
+          "item_title": "RICOH GR IV",
+          "url": "https://www.kaitorishouten-co.jp/products/detail/24408",
+          "checked_at": "2026-11-18",
+          "source_updated_at": "2026-11-17",
+          "freshness": "FRESH",
+          "age_days": 1,
+          "identity_ok": true,
+          "reasons": [],
+          "carried": false,
+          "color": null,
+          "stock": null,
+          "shipping_jpy": null,
+          "shop_key": "kaitorishouten-co.jp"
+        }
+      ],
+      "secondary": {
+        "listing": {},
+        "sold": {}
+      },
+      "routes": [
+        {
+          "route_type": "A",
+          "route_label": "正規店・メーカー → 買取店",
+          "product": "RICOH GR IV",
+          "registered": true,
+          "profit_status": "NO_PROFIT",
+          "decision": "SKIP",
+          "buy": {
+            "source": "リコーイメージングストア",
+            "price": 211800,
+            "price_type": "OFFICIAL_RETAIL",
+            "condition": "NEW",
+            "stock": "LOTTERY_DEPENDENT",
+            "url": "https://ricohimagingstore.com/Form/Product/ProductDetail.aspx?shop=0&pid=S0001551&cat=002010",
+            "checked_at": "2026-11-18",
+            "source_updated_at": null,
+            "freshness": "FRESH",
+            "age_days": 0,
+            "item_title": "RICOH GR IV",
+            "color": null,
+            "carried": false
+          },
+          "sell": {
+            "source": "買取商店",
+            "price": 205000,
+            "price_type": "BUYBACK_PRICE",
+            "condition": "UNOPENED",
+            "stock": null,
+            "url": "https://www.kaitorishouten-co.jp/products/detail/24408",
+            "checked_at": "2026-11-18",
+            "source_updated_at": "2026-11-17",
+            "freshness": "FRESH",
+            "age_days": 1,
+            "item_title": "RICOH GR IV",
+            "color": null,
+            "carried": false,
+            "evidence": {
+              "shops": 1,
+              "outlier": false
+            }
+          },
+          "costs": {
+            "purchase_shipping": 0,
+            "purchase_shipping_source": "official_shipping:src_ricoh_imaging",
+            "outbound_shipping": 1800,
+            "selling_fee": 0,
+            "selling_fee_applies": false,
+            "selling_fee_rate": null,
+            "other": 0
+          },
+          "net_profit": -8600,
+          "roi_pct": -4.06,
+          "executable": false,
+          "reasons": [
+            "no_profit"
+          ],
+          "confidence": "low"
+        },
+        {
+          "route_type": "B",
+          "route_label": "正規店・メーカー → 二次流通（成約中央値）",
+          "product": "RICOH GR IV",
+          "registered": true,
+          "profit_status": "NOT_CALCULATED",
+          "decision": "WATCH",
+          "buy": {
+            "source": "リコーイメージングストア",
+            "price": 211800,
+            "price_type": "OFFICIAL_RETAIL",
+            "condition": "NEW",
+            "stock": "LOTTERY_DEPENDENT",
+            "url": "https://ricohimagingstore.com/Form/Product/ProductDetail.aspx?shop=0&pid=S0001551&cat=002010",
+            "checked_at": "2026-11-18",
+            "source_updated_at": null,
+            "freshness": "FRESH",
+            "age_days": 0,
+            "item_title": "RICOH GR IV",
+            "color": null,
+            "carried": false
+          },
+          "sell": null,
+          "sell_unavailable": {
+            "price_type": "SOLD_MEDIAN",
+            "status": "UNAVAILABLE"
+          },
+          "reasons": [
+            "sold_insufficient",
+            "sold_none"
+          ],
+          "costs": null,
+          "net_profit": null,
+          "roi_pct": null,
+          "executable": false,
+          "confidence": "low"
+        },
+        {
+          "route_type": "C",
+          "route_label": "二次流通の最安 → 買取店",
+          "product": "RICOH GR IV",
+          "registered": true,
+          "profit_status": "NOT_CALCULATED",
+          "decision": "SKIP",
+          "buy": null,
+          "sell": null,
+          "reasons": [
+            "no_buy_candidate"
+          ],
+          "costs": null,
+          "net_profit": null,
+          "roi_pct": null,
+          "executable": false,
+          "confidence": "low"
+        },
+        {
+          "route_type": "D",
+          "route_label": "二次流通の最安 → 二次流通（成約中央値）",
+          "product": "RICOH GR IV",
+          "registered": true,
+          "profit_status": "NOT_CALCULATED",
+          "decision": "SKIP",
+          "buy": null,
+          "sell": null,
+          "reasons": [
+            "no_buy_candidate"
+          ],
+          "costs": null,
+          "net_profit": null,
+          "roi_pct": null,
+          "executable": false,
+          "confidence": "low"
+        }
+      ],
+      "best_route": "A"
+    },
+    {
+      "product": "RICOH GR IV HDF",
+      "product_id": "prod_gr4_hdf",
+      "registered": true,
+      "observations": [
+        {
+          "kind": "official",
+          "price_type": "OFFICIAL_RETAIL",
+          "price": 222000,
+          "condition": "NEW",
+          "source": "リコーイメージングストア",
+          "item_title": "RICOH GR IV HDF",
+          "url": "https://ricohimagingstore.com/Form/Product/ProductDetail.aspx?shop=0&pid=S0001566&cat=002010",
+          "checked_at": "2026-11-18",
+          "source_updated_at": null,
+          "freshness": "FRESH",
+          "age_days": 0,
+          "identity_ok": true,
+          "reasons": [],
+          "carried": false,
+          "color": null,
+          "stock": "LOTTERY_DEPENDENT",
+          "shipping_jpy": null,
+          "shop_key": "ricohimagingstore.com"
+        },
+        {
+          "kind": "buyback",
+          "price_type": "BUYBACK_PRICE",
+          "price": 240000,
+          "condition": "UNOPENED",
+          "source": "買取商店",
+          "item_title": "RICOH GR IV HDF",
+          "url": "https://www.kaitorishouten-co.jp/products/detail/26434",
+          "checked_at": "2026-11-18",
+          "source_updated_at": "2026-11-17",
+          "freshness": "FRESH",
+          "age_days": 1,
+          "identity_ok": true,
+          "reasons": [],
+          "carried": false,
+          "color": null,
+          "stock": null,
+          "shipping_jpy": null,
+          "shop_key": "kaitorishouten-co.jp"
+        }
+      ],
+      "secondary": {
+        "listing": {},
+        "sold": {}
+      },
+      "routes": [
+        {
+          "route_type": "A",
+          "route_label": "正規店・メーカー → 買取店",
+          "product": "RICOH GR IV HDF",
+          "registered": true,
+          "profit_status": "PROFITABLE",
+          "decision": "WAIT",
+          "buy": {
+            "source": "リコーイメージングストア",
+            "price": 222000,
+            "price_type": "OFFICIAL_RETAIL",
+            "condition": "NEW",
+            "stock": "LOTTERY_DEPENDENT",
+            "url": "https://ricohimagingstore.com/Form/Product/ProductDetail.aspx?shop=0&pid=S0001566&cat=002010",
+            "checked_at": "2026-11-18",
+            "source_updated_at": null,
+            "freshness": "FRESH",
+            "age_days": 0,
+            "item_title": "RICOH GR IV HDF",
+            "color": null,
+            "carried": false
+          },
+          "sell": {
+            "source": "買取商店",
+            "price": 240000,
+            "price_type": "BUYBACK_PRICE",
+            "condition": "UNOPENED",
+            "stock": null,
+            "url": "https://www.kaitorishouten-co.jp/products/detail/26434",
+            "checked_at": "2026-11-18",
+            "source_updated_at": "2026-11-17",
+            "freshness": "FRESH",
+            "age_days": 1,
+            "item_title": "RICOH GR IV HDF",
+            "color": null,
+            "carried": false,
+            "evidence": {
+              "shops": 1,
+              "outlier": false
+            }
+          },
+          "costs": {
+            "purchase_shipping": 0,
+            "purchase_shipping_source": "official_shipping:src_ricoh_imaging",
+            "outbound_shipping": 1800,
+            "selling_fee": 0,
+            "selling_fee_applies": false,
+            "selling_fee_rate": null,
+            "other": 0
+          },
+          "net_profit": 16200,
+          "roi_pct": 7.3,
+          "executable": false,
+          "reasons": [
+            "stock_lottery_dependent"
+          ],
+          "confidence": "low"
+        },
+        {
+          "route_type": "B",
+          "route_label": "正規店・メーカー → 二次流通（成約中央値）",
+          "product": "RICOH GR IV HDF",
+          "registered": true,
+          "profit_status": "NOT_CALCULATED",
+          "decision": "WATCH",
+          "buy": {
+            "source": "リコーイメージングストア",
+            "price": 222000,
+            "price_type": "OFFICIAL_RETAIL",
+            "condition": "NEW",
+            "stock": "LOTTERY_DEPENDENT",
+            "url": "https://ricohimagingstore.com/Form/Product/ProductDetail.aspx?shop=0&pid=S0001566&cat=002010",
+            "checked_at": "2026-11-18",
+            "source_updated_at": null,
+            "freshness": "FRESH",
+            "age_days": 0,
+            "item_title": "RICOH GR IV HDF",
+            "color": null,
+            "carried": false
+          },
+          "sell": null,
+          "sell_unavailable": {
+            "price_type": "SOLD_MEDIAN",
+            "status": "UNAVAILABLE"
+          },
+          "reasons": [
+            "sold_insufficient",
+            "sold_none"
+          ],
+          "costs": null,
+          "net_profit": null,
+          "roi_pct": null,
+          "executable": false,
+          "confidence": "low"
+        },
+        {
+          "route_type": "C",
+          "route_label": "二次流通の最安 → 買取店",
+          "product": "RICOH GR IV HDF",
+          "registered": true,
+          "profit_status": "NOT_CALCULATED",
+          "decision": "WATCH",
+          "buy": null,
+          "sell": null,
+          "reasons": [
+            "aggregator_source",
+            "host_not_allowed",
+            "not_purchasable_now"
+          ],
+          "costs": null,
+          "net_profit": null,
+          "roi_pct": null,
+          "executable": false,
+          "confidence": "low"
+        },
+        {
+          "route_type": "D",
+          "route_label": "二次流通の最安 → 二次流通（成約中央値）",
+          "product": "RICOH GR IV HDF",
+          "registered": true,
+          "profit_status": "NOT_CALCULATED",
+          "decision": "WATCH",
+          "buy": null,
+          "sell": null,
+          "reasons": [
+            "aggregator_source",
+            "host_not_allowed",
+            "not_purchasable_now"
+          ],
+          "costs": null,
+          "net_profit": null,
+          "roi_pct": null,
+          "executable": false,
+          "confidence": "low"
+        }
+      ],
+      "best_route": "A"
+    },
+    {
+      "product": "RICOH GR IV Monochrome",
+      "product_id": "prod_gr4_mono",
+      "registered": true,
+      "observations": [
+        {
+          "kind": "official",
+          "price_type": "OFFICIAL_RETAIL",
+          "price": 299800,
+          "condition": "NEW",
+          "source": "リコーイメージングストア",
+          "item_title": "RICOH GR IV Monochrome",
+          "url": "https://ricohimagingstore.com/Form/Product/ProductDetail.aspx?shop=0&pid=S0001580&cat=002010",
+          "checked_at": "2026-11-18",
+          "source_updated_at": null,
+          "freshness": "FRESH",
+          "age_days": 0,
+          "identity_ok": true,
+          "reasons": [],
+          "carried": false,
+          "color": null,
+          "stock": "LOTTERY_DEPENDENT",
+          "shipping_jpy": null,
+          "shop_key": "ricohimagingstore.com"
+        },
+        {
+          "kind": "buyback",
+          "price_type": "BUYBACK_PRICE",
+          "price": 220000,
+          "condition": "UNOPENED",
+          "source": "買取商店",
+          "item_title": "RICOH GR IV Monochrome",
+          "url": "https://www.kaitorishouten-co.jp/products/detail/25561",
+          "checked_at": "2026-11-18",
+          "source_updated_at": "2026-11-17",
+          "freshness": "FRESH",
+          "age_days": 1,
+          "identity_ok": true,
+          "reasons": [],
+          "carried": false,
+          "color": null,
+          "stock": null,
+          "shipping_jpy": null,
+          "shop_key": "kaitorishouten-co.jp"
+        }
+      ],
+      "secondary": {
+        "listing": {},
+        "sold": {}
+      },
+      "routes": [
+        {
+          "route_type": "A",
+          "route_label": "正規店・メーカー → 買取店",
+          "product": "RICOH GR IV Monochrome",
+          "registered": true,
+          "profit_status": "NO_PROFIT",
+          "decision": "SKIP",
+          "buy": {
+            "source": "リコーイメージングストア",
+            "price": 299800,
+            "price_type": "OFFICIAL_RETAIL",
+            "condition": "NEW",
+            "stock": "LOTTERY_DEPENDENT",
+            "url": "https://ricohimagingstore.com/Form/Product/ProductDetail.aspx?shop=0&pid=S0001580&cat=002010",
+            "checked_at": "2026-11-18",
+            "source_updated_at": null,
+            "freshness": "FRESH",
+            "age_days": 0,
+            "item_title": "RICOH GR IV Monochrome",
+            "color": null,
+            "carried": false
+          },
+          "sell": {
+            "source": "買取商店",
+            "price": 220000,
+            "price_type": "BUYBACK_PRICE",
+            "condition": "UNOPENED",
+            "stock": null,
+            "url": "https://www.kaitorishouten-co.jp/products/detail/25561",
+            "checked_at": "2026-11-18",
+            "source_updated_at": "2026-11-17",
+            "freshness": "FRESH",
+            "age_days": 1,
+            "item_title": "RICOH GR IV Monochrome",
+            "color": null,
+            "carried": false,
+            "evidence": {
+              "shops": 1,
+              "outlier": false
+            }
+          },
+          "costs": {
+            "purchase_shipping": 0,
+            "purchase_shipping_source": "official_shipping:src_ricoh_imaging",
+            "outbound_shipping": 1800,
+            "selling_fee": 0,
+            "selling_fee_applies": false,
+            "selling_fee_rate": null,
+            "other": 0
+          },
+          "net_profit": -81600,
+          "roi_pct": -27.22,
+          "executable": false,
+          "reasons": [
+            "no_profit"
+          ],
+          "confidence": "low"
+        },
+        {
+          "route_type": "B",
+          "route_label": "正規店・メーカー → 二次流通（成約中央値）",
+          "product": "RICOH GR IV Monochrome",
+          "registered": true,
+          "profit_status": "NOT_CALCULATED",
+          "decision": "WATCH",
+          "buy": {
+            "source": "リコーイメージングストア",
+            "price": 299800,
+            "price_type": "OFFICIAL_RETAIL",
+            "condition": "NEW",
+            "stock": "LOTTERY_DEPENDENT",
+            "url": "https://ricohimagingstore.com/Form/Product/ProductDetail.aspx?shop=0&pid=S0001580&cat=002010",
+            "checked_at": "2026-11-18",
+            "source_updated_at": null,
+            "freshness": "FRESH",
+            "age_days": 0,
+            "item_title": "RICOH GR IV Monochrome",
+            "color": null,
+            "carried": false
+          },
+          "sell": null,
+          "sell_unavailable": {
+            "price_type": "SOLD_MEDIAN",
+            "status": "UNAVAILABLE"
+          },
+          "reasons": [
+            "sold_insufficient",
+            "sold_none"
+          ],
+          "costs": null,
+          "net_profit": null,
+          "roi_pct": null,
+          "executable": false,
+          "confidence": "low"
+        },
+        {
+          "route_type": "C",
+          "route_label": "二次流通の最安 → 買取店",
+          "product": "RICOH GR IV Monochrome",
+          "registered": true,
+          "profit_status": "NOT_CALCULATED",
+          "decision": "WATCH",
+          "buy": null,
+          "sell": null,
+          "reasons": [
+            "aggregator_source",
+            "host_not_allowed",
+            "not_purchasable_now"
+          ],
+          "costs": null,
+          "net_profit": null,
+          "roi_pct": null,
+          "executable": false,
+          "confidence": "low"
+        },
+        {
+          "route_type": "D",
+          "route_label": "二次流通の最安 → 二次流通（成約中央値）",
+          "product": "RICOH GR IV Monochrome",
+          "registered": true,
+          "profit_status": "NOT_CALCULATED",
+          "decision": "WATCH",
+          "buy": null,
+          "sell": null,
+          "reasons": [
+            "aggregator_source",
+            "host_not_allowed",
+            "not_purchasable_now"
+          ],
+          "costs": null,
+          "net_profit": null,
+          "roi_pct": null,
+          "executable": false,
+          "confidence": "low"
+        }
+      ],
+      "best_route": "A"
+    },
+    {
+      "product": "SONY α7R V",
+      "product_id": "prod_a7rv",
+      "registered": true,
+      "observations": [
+        {
+          "kind": "official",
+          "price_type": "OFFICIAL_RETAIL",
+          "price": 533500,
+          "condition": "NEW",
+          "source": "ソニーストア",
+          "item_title": "SONY α7R V",
+          "url": "https://www.sony.jp/ichigan/products/ILCE-7RM5/",
+          "checked_at": "2026-11-18",
+          "source_updated_at": null,
+          "freshness": "FRESH",
+          "age_days": 0,
+          "identity_ok": true,
+          "reasons": [],
+          "carried": false,
+          "color": null,
+          "stock": "UNKNOWN",
+          "shipping_jpy": null,
+          "shop_key": "sony.jp"
+        }
+      ],
+      "secondary": {
+        "listing": {},
+        "sold": {}
+      },
+      "routes": [
+        {
+          "route_type": "A",
+          "route_label": "正規店・メーカー → 買取店",
+          "product": "SONY α7R V",
+          "registered": true,
+          "profit_status": "NOT_CALCULATED",
+          "decision": "WATCH",
+          "buy": {
+            "source": "ソニーストア",
+            "price": 533500,
+            "price_type": "OFFICIAL_RETAIL",
+            "condition": "NEW",
+            "stock": "UNKNOWN",
+            "url": "https://www.sony.jp/ichigan/products/ILCE-7RM5/",
+            "checked_at": "2026-11-18",
+            "source_updated_at": null,
+            "freshness": "FRESH",
+            "age_days": 0,
+            "item_title": "SONY α7R V",
+            "color": null,
+            "carried": false
+          },
+          "sell": null,
+          "reasons": [
+            "no_buyback"
+          ],
+          "costs": null,
+          "net_profit": null,
+          "roi_pct": null,
+          "executable": false,
+          "confidence": "low"
+        },
+        {
+          "route_type": "B",
+          "route_label": "正規店・メーカー → 二次流通（成約中央値）",
+          "product": "SONY α7R V",
+          "registered": true,
+          "profit_status": "NOT_CALCULATED",
+          "decision": "WATCH",
+          "buy": {
+            "source": "ソニーストア",
+            "price": 533500,
+            "price_type": "OFFICIAL_RETAIL",
+            "condition": "NEW",
+            "stock": "UNKNOWN",
+            "url": "https://www.sony.jp/ichigan/products/ILCE-7RM5/",
+            "checked_at": "2026-11-18",
+            "source_updated_at": null,
+            "freshness": "FRESH",
+            "age_days": 0,
+            "item_title": "SONY α7R V",
+            "color": null,
+            "carried": false
+          },
+          "sell": null,
+          "sell_unavailable": {
+            "price_type": "SOLD_MEDIAN",
+            "status": "UNAVAILABLE"
+          },
+          "reasons": [
+            "sold_insufficient",
+            "sold_none"
+          ],
+          "costs": null,
+          "net_profit": null,
+          "roi_pct": null,
+          "executable": false,
+          "confidence": "low"
+        },
+        {
+          "route_type": "C",
+          "route_label": "二次流通の最安 → 買取店",
+          "product": "SONY α7R V",
+          "registered": true,
+          "profit_status": "NOT_CALCULATED",
+          "decision": "SKIP",
+          "buy": null,
+          "sell": null,
+          "reasons": [
+            "no_buy_candidate"
+          ],
+          "costs": null,
+          "net_profit": null,
+          "roi_pct": null,
+          "executable": false,
+          "confidence": "low"
+        },
+        {
+          "route_type": "D",
+          "route_label": "二次流通の最安 → 二次流通（成約中央値）",
+          "product": "SONY α7R V",
+          "registered": true,
+          "profit_status": "NOT_CALCULATED",
+          "decision": "SKIP",
+          "buy": null,
+          "sell": null,
+          "reasons": [
+            "no_buy_candidate"
+          ],
+          "costs": null,
+          "net_profit": null,
+          "roi_pct": null,
+          "executable": false,
+          "confidence": "low"
+        }
+      ],
+      "best_route": null
+    },
+    {
+      "product": "SONY α7CR",
+      "product_id": "prod_a7cr",
+      "registered": true,
+      "observations": [
+        {
+          "kind": "official",
+          "price_type": "OFFICIAL_RETAIL",
+          "price": 449900,
+          "condition": "NEW",
+          "source": "ソニーストア",
+          "item_title": "SONY α7CR",
+          "url": "https://www.sony.jp/ichigan/products/ILCE-7CR/",
+          "checked_at": "2026-11-18",
+          "source_updated_at": null,
+          "freshness": "FRESH",
+          "age_days": 0,
+          "identity_ok": true,
+          "reasons": [],
+          "carried": false,
+          "color": null,
+          "stock": "UNKNOWN",
+          "shipping_jpy": null,
+          "shop_key": "sony.jp"
+        }
+      ],
+      "secondary": {
+        "listing": {},
+        "sold": {}
+      },
+      "routes": [
+        {
+          "route_type": "A",
+          "route_label": "正規店・メーカー → 買取店",
+          "product": "SONY α7CR",
+          "registered": true,
+          "profit_status": "NOT_CALCULATED",
+          "decision": "WATCH",
+          "buy": {
+            "source": "ソニーストア",
+            "price": 449900,
+            "price_type": "OFFICIAL_RETAIL",
+            "condition": "NEW",
+            "stock": "UNKNOWN",
+            "url": "https://www.sony.jp/ichigan/products/ILCE-7CR/",
+            "checked_at": "2026-11-18",
+            "source_updated_at": null,
+            "freshness": "FRESH",
+            "age_days": 0,
+            "item_title": "SONY α7CR",
+            "color": null,
+            "carried": false
+          },
+          "sell": null,
+          "reasons": [
+            "conditional_price",
+            "not_item_page",
+            "not_product_page",
+            "sell_stale"
+          ],
+          "costs": null,
+          "net_profit": null,
+          "roi_pct": null,
+          "executable": false,
+          "confidence": "low"
+        },
+        {
+          "route_type": "B",
+          "route_label": "正規店・メーカー → 二次流通（成約中央値）",
+          "product": "SONY α7CR",
+          "registered": true,
+          "profit_status": "NOT_CALCULATED",
+          "decision": "WATCH",
+          "buy": {
+            "source": "ソニーストア",
+            "price": 449900,
+            "price_type": "OFFICIAL_RETAIL",
+            "condition": "NEW",
+            "stock": "UNKNOWN",
+            "url": "https://www.sony.jp/ichigan/products/ILCE-7CR/",
+            "checked_at": "2026-11-18",
+            "source_updated_at": null,
+            "freshness": "FRESH",
+            "age_days": 0,
+            "item_title": "SONY α7CR",
+            "color": null,
+            "carried": false
+          },
+          "sell": null,
+          "sell_unavailable": {
+            "price_type": "SOLD_MEDIAN",
+            "status": "UNAVAILABLE"
+          },
+          "reasons": [
+            "sold_insufficient",
+            "sold_none"
+          ],
+          "costs": null,
+          "net_profit": null,
+          "roi_pct": null,
+          "executable": false,
+          "confidence": "low"
+        },
+        {
+          "route_type": "C",
+          "route_label": "二次流通の最安 → 買取店",
+          "product": "SONY α7CR",
+          "registered": true,
+          "profit_status": "NOT_CALCULATED",
+          "decision": "SKIP",
+          "buy": null,
+          "sell": null,
+          "reasons": [
+            "no_buy_candidate"
+          ],
+          "costs": null,
+          "net_profit": null,
+          "roi_pct": null,
+          "executable": false,
+          "confidence": "low"
+        },
+        {
+          "route_type": "D",
+          "route_label": "二次流通の最安 → 二次流通（成約中央値）",
+          "product": "SONY α7CR",
+          "registered": true,
+          "profit_status": "NOT_CALCULATED",
+          "decision": "SKIP",
+          "buy": null,
+          "sell": null,
+          "reasons": [
+            "no_buy_candidate"
+          ],
+          "costs": null,
+          "net_profit": null,
+          "roi_pct": null,
+          "executable": false,
+          "confidence": "low"
+        }
+      ],
+      "best_route": null
+    }
+  ],
+  "summary": {
+    "sources_attempted": [
+      "その他",
+      "みんなのカメラ",
+      "カメラのキタムラ",
+      "キヤノン公式",
+      "ケーズデンキ",
+      "ソニーストア",
+      "ソフマップ",
+      "ニコン公式",
+      "ネットオフ",
+      "ビックカメラ",
+      "フジヤカメラ",
+      "マップカメラ",
+      "ヨドバシ",
+      "リコー公式",
+      "富士フイルム公式",
+      "買取商店"
+    ],
+    "sources_succeeded": [
+      "みんなのカメラ",
+      "キヤノン公式",
+      "ソニーストア",
+      "ネットオフ",
+      "フジヤカメラ",
+      "富士フイルム公式",
+      "買取商店"
+    ],
+    "sources_failed": {
+      "その他": "Sony/buyback: アクセスを拒否された（403） | Sony/retail: アクセスを拒否された（403）",
+      "カメラのキタムラ": "Canon/buyback: 未取得 | Canon/retail: 未取得 | FUJIFILM/buyback: 読めなかった | FUJIFILM/retail: 読めなかった | Nikon/buyback: 読めなかった | RICOH/buyback: 取得できなかった | RICOH/retail: 取得できなかった | Sony/buyback: 読めなかった | Sony/retail: 読めなかった",
+      "ケーズデンキ": "Sony/buyback: タイムアウト | Sony/retail: タイムアウト",
+      "ソフマップ": "Canon/buyback: 一時的に利用できない（503） | Canon/retail: 一時的に利用できない（503） | FUJIFILM/buyback: 一時的に利用できない（503） | FUJIFILM/retail: 一時的に利用できない（503） | Nikon/buyback: 一時的に利用できない（503） | Nikon/retail: 一時的に利用できない（503） | RICOH/retail: 一時的に利用できない（503） | RICOH/buyback: 読めなかった | Sony/buyback: 一時的に利用できない（503） | Sony/retail",
+      "ニコン公式": "Nikon/retail: 読めなかった",
+      "ネットオフ": "Canon/buyback: 未取得 | FUJIFILM/buyback: 未取得 | FUJIFILM/retail: 未取得 | Nikon/buyback: 読めなかった | RICOH/buyback: 未取得",
+      "ビックカメラ": "Canon/buyback: タイムアウト | Canon/retail: タイムアウト | FUJIFILM/buyback: タイムアウト | FUJIFILM/retail: タイムアウト | Nikon/buyback: タイムアウト | Nikon/retail: タイムアウト | RICOH/buyback: 読めなかった | RICOH/retail: 読めなかった | Sony/buyback: 読めなかった | Sony/retail: 読めなかった",
+      "フジヤカメラ": "Canon/retail: 本文を読めなかった | Canon/buyback: 未取得 | FUJIFILM/buyback: 本文を読めなかった | FUJIFILM/retail: 本文を読めなかった | Nikon/buyback: 本文を読めなかった | Nikon/retail: 本文を読めなかった | RICOH/retail: 本文を読めなかった | Sony/buyback: 本文を読めなかった | Sony/retail: 本文を読めなかった",
+      "マップカメラ": "Canon/buyback: アクセスを拒否された（403） | Canon/retail: アクセスを拒否された（403） | FUJIFILM/buyback: アクセスを拒否された（403） | FUJIFILM/retail: アクセスを拒否された（403） | Nikon/buyback: アクセスを拒否された（403） | Nikon/retail: アクセスを拒否された（403） | RICOH/buyback: アクセスを拒否された（403） | RICOH/retail: アクセスを拒否された（403） | Sony/buyback: アクセスを拒否された（403） | So",
+      "ヨドバシ": "Canon/buyback: タイムアウト | Canon/retail: タイムアウト | FUJIFILM/buyback: タイムアウト | FUJIFILM/retail: タイムアウト | Nikon/buyback: タイムアウト | Nikon/retail: タイムアウト | RICOH/buyback: タイムアウト | RICOH/retail: タイムアウト | Sony/buyback: タイムアウト | Sony/retail: タイムアウト",
+      "リコー公式": "RICOH/retail: 読めなかった"
+    },
+    "products_checked": 18,
+    "products_discovered": 7,
+    "buy_prices_changed": 0,
+    "buyback_prices_changed": 0,
+    "secondary_prices_changed": 0,
+    "sold_updated": 0,
+    "profit_routes_changed": 0,
+    "new_profitable_routes": 0,
+    "routes_lost": 0,
+    "found": {
+      "official_or_retail_prices": 7,
+      "buyback": 13,
+      "listing": 0,
+      "listing_groups": 0,
+      "sold": 0
+    },
+    "routes": {
+      "total": 72,
+      "confirmed": 4,
+      "unknown": 68,
+      "profitable": 1,
+      "buy": 0
+    },
+    "carried_rows": 0
+  },
+  "events": [],
+  "quality": {
+    "wrong_identity": 0,
+    "wrong_condition": 0,
+    "listing_high_used_as_sell": 0,
+    "insufficient_sold_used_as_expected_sell": 0,
+    "stale_price_used_as_fresh": 0,
+    "fake_checked_at": 0,
+    "double_count_fee": 0,
+    "missing_fee": 0
+  },
+  "notification_dry_run": {
+    "sent": 0,
+    "would_notify": 0,
+    "events": []
+  },
+  "source_results": [
+    {
+      "shop": "その他",
+      "brand": "Sony",
+      "role": "buyback",
+      "result": "BLOCKED",
+      "lump": false,
+      "reason": "アクセスを拒否された（403）"
+    },
+    {
+      "shop": "その他",
+      "brand": "Sony",
+      "role": "retail",
+      "result": "BLOCKED",
+      "lump": false,
+      "reason": "アクセスを拒否された（403）"
+    },
+    {
+      "shop": "みんなのカメラ",
+      "brand": "RICOH",
+      "role": "buyback",
+      "result": "FOUND",
+      "lump": false,
+      "reason": ""
+    },
+    {
+      "shop": "みんなのカメラ",
+      "brand": "RICOH",
+      "role": "retail",
+      "result": "FOUND",
+      "lump": false,
+      "reason": ""
+    },
+    {
+      "shop": "カメラのキタムラ",
+      "brand": "Canon",
+      "role": "buyback",
+      "result": "FAILED",
+      "lump": false,
+      "reason": "未取得"
+    },
+    {
+      "shop": "カメラのキタムラ",
+      "brand": "Canon",
+      "role": "retail",
+      "result": "FAILED",
+      "lump": false,
+      "reason": "未取得"
+    },
+    {
+      "shop": "カメラのキタムラ",
+      "brand": "FUJIFILM",
+      "role": "buyback",
+      "result": "FAILED",
+      "lump": false,
+      "reason": "読めなかった"
+    },
+    {
+      "shop": "カメラのキタムラ",
+      "brand": "FUJIFILM",
+      "role": "retail",
+      "result": "FAILED",
+      "lump": false,
+      "reason": "読めなかった"
+    },
+    {
+      "shop": "カメラのキタムラ",
+      "brand": "Nikon",
+      "role": "buyback",
+      "result": "FAILED",
+      "lump": true,
+      "reason": "読めなかった"
+    },
+    {
+      "shop": "カメラのキタムラ",
+      "brand": "RICOH",
+      "role": "buyback",
+      "result": "FAILED",
+      "lump": false,
+      "reason": "取得できなかった"
+    },
+    {
+      "shop": "カメラのキタムラ",
+      "brand": "RICOH",
+      "role": "retail",
+      "result": "FAILED",
+      "lump": false,
+      "reason": "取得できなかった"
+    },
+    {
+      "shop": "カメラのキタムラ",
+      "brand": "Sony",
+      "role": "buyback",
+      "result": "FAILED",
+      "lump": false,
+      "reason": "読めなかった"
+    },
+    {
+      "shop": "カメラのキタムラ",
+      "brand": "Sony",
+      "role": "retail",
+      "result": "FAILED",
+      "lump": false,
+      "reason": "読めなかった"
+    },
+    {
+      "shop": "キヤノン公式",
+      "brand": "Canon",
+      "role": "retail",
+      "result": "FOUND",
+      "lump": false,
+      "reason": ""
+    },
+    {
+      "shop": "ケーズデンキ",
+      "brand": "Sony",
+      "role": "buyback",
+      "result": "FAILED",
+      "lump": false,
+      "reason": "タイムアウト"
+    },
+    {
+      "shop": "ケーズデンキ",
+      "brand": "Sony",
+      "role": "retail",
+      "result": "FAILED",
+      "lump": false,
+      "reason": "タイムアウト"
+    },
+    {
+      "shop": "ソニーストア",
+      "brand": "Sony",
+      "role": "retail",
+      "result": "FOUND",
+      "lump": false,
+      "reason": ""
+    },
+    {
+      "shop": "ソフマップ",
+      "brand": "Canon",
+      "role": "buyback",
+      "result": "FAILED",
+      "lump": false,
+      "reason": "一時的に利用できない（503）"
+    },
+    {
+      "shop": "ソフマップ",
+      "brand": "Canon",
+      "role": "retail",
+      "result": "FAILED",
+      "lump": false,
+      "reason": "一時的に利用できない（503）"
+    },
+    {
+      "shop": "ソフマップ",
+      "brand": "FUJIFILM",
+      "role": "buyback",
+      "result": "FAILED",
+      "lump": false,
+      "reason": "一時的に利用できない（503）"
+    },
+    {
+      "shop": "ソフマップ",
+      "brand": "FUJIFILM",
+      "role": "retail",
+      "result": "FAILED",
+      "lump": false,
+      "reason": "一時的に利用できない（503）"
+    },
+    {
+      "shop": "ソフマップ",
+      "brand": "Nikon",
+      "role": "buyback",
+      "result": "FAILED",
+      "lump": false,
+      "reason": "一時的に利用できない（503）"
+    },
+    {
+      "shop": "ソフマップ",
+      "brand": "Nikon",
+      "role": "retail",
+      "result": "FAILED",
+      "lump": false,
+      "reason": "一時的に利用できない（503）"
+    },
+    {
+      "shop": "ソフマップ",
+      "brand": "RICOH",
+      "role": "buyback",
+      "result": "FAILED",
+      "lump": false,
+      "reason": "読めなかった"
+    },
+    {
+      "shop": "ソフマップ",
+      "brand": "RICOH",
+      "role": "retail",
+      "result": "FAILED",
+      "lump": false,
+      "reason": "一時的に利用できない（503）"
+    },
+    {
+      "shop": "ソフマップ",
+      "brand": "Sony",
+      "role": "buyback",
+      "result": "FAILED",
+      "lump": false,
+      "reason": "一時的に利用できない（503）"
+    },
+    {
+      "shop": "ソフマップ",
+      "brand": "Sony",
+      "role": "retail",
+      "result": "FAILED",
+      "lump": false,
+      "reason": "一時的に利用できない（503）"
+    },
+    {
+      "shop": "ニコン公式",
+      "brand": "Nikon",
+      "role": "retail",
+      "result": "FAILED",
+      "lump": true,
+      "reason": "読めなかった"
+    },
+    {
+      "shop": "ネットオフ",
+      "brand": "Canon",
+      "role": "buyback",
+      "result": "FAILED",
+      "lump": true,
+      "reason": "未取得"
+    },
+    {
+      "shop": "ネットオフ",
+      "brand": "FUJIFILM",
+      "role": "buyback",
+      "result": "FAILED",
+      "lump": false,
+      "reason": "未取得"
+    },
+    {
+      "shop": "ネットオフ",
+      "brand": "FUJIFILM",
+      "role": "retail",
+      "result": "FAILED",
+      "lump": false,
+      "reason": "未取得"
+    },
+    {
+      "shop": "ネットオフ",
+      "brand": "Nikon",
+      "role": "buyback",
+      "result": "FAILED",
+      "lump": true,
+      "reason": "読めなかった"
+    },
+    {
+      "shop": "ネットオフ",
+      "brand": "RICOH",
+      "role": "buyback",
+      "result": "FAILED",
+      "lump": false,
+      "reason": "未取得"
+    },
+    {
+      "shop": "ネットオフ",
+      "brand": "Sony",
+      "role": "buyback",
+      "result": "FOUND",
+      "lump": false,
+      "reason": ""
+    },
+    {
+      "shop": "ネットオフ",
+      "brand": "Sony",
+      "role": "retail",
+      "result": "FOUND",
+      "lump": false,
+      "reason": ""
+    },
+    {
+      "shop": "ビックカメラ",
+      "brand": "Canon",
+      "role": "buyback",
+      "result": "FAILED",
+      "lump": false,
+      "reason": "タイムアウト"
+    },
+    {
+      "shop": "ビックカメラ",
+      "brand": "Canon",
+      "role": "retail",
+      "result": "FAILED",
+      "lump": false,
+      "reason": "タイムアウト"
+    },
+    {
+      "shop": "ビックカメラ",
+      "brand": "FUJIFILM",
+      "role": "buyback",
+      "result": "FAILED",
+      "lump": false,
+      "reason": "タイムアウト"
+    },
+    {
+      "shop": "ビックカメラ",
+      "brand": "FUJIFILM",
+      "role": "retail",
+      "result": "FAILED",
+      "lump": false,
+      "reason": "タイムアウト"
+    },
+    {
+      "shop": "ビックカメラ",
+      "brand": "Nikon",
+      "role": "buyback",
+      "result": "FAILED",
+      "lump": false,
+      "reason": "タイムアウト"
+    },
+    {
+      "shop": "ビックカメラ",
+      "brand": "Nikon",
+      "role": "retail",
+      "result": "FAILED",
+      "lump": false,
+      "reason": "タイムアウト"
+    },
+    {
+      "shop": "ビックカメラ",
+      "brand": "RICOH",
+      "role": "buyback",
+      "result": "FAILED",
+      "lump": false,
+      "reason": "読めなかった"
+    },
+    {
+      "shop": "ビックカメラ",
+      "brand": "RICOH",
+      "role": "retail",
+      "result": "FAILED",
+      "lump": false,
+      "reason": "読めなかった"
+    },
+    {
+      "shop": "ビックカメラ",
+      "brand": "Sony",
+      "role": "buyback",
+      "result": "FAILED",
+      "lump": false,
+      "reason": "読めなかった"
+    },
+    {
+      "shop": "ビックカメラ",
+      "brand": "Sony",
+      "role": "retail",
+      "result": "FAILED",
+      "lump": false,
+      "reason": "読めなかった"
+    },
+    {
+      "shop": "フジヤカメラ",
+      "brand": "Canon",
+      "role": "buyback",
+      "result": "FAILED",
+      "lump": true,
+      "reason": "未取得"
+    },
+    {
+      "shop": "フジヤカメラ",
+      "brand": "Canon",
+      "role": "retail",
+      "result": "FAILED",
+      "lump": false,
+      "reason": "本文を読めなかった"
+    },
+    {
+      "shop": "フジヤカメラ",
+      "brand": "FUJIFILM",
+      "role": "buyback",
+      "result": "FAILED",
+      "lump": false,
+      "reason": "本文を読めなかった"
+    },
+    {
+      "shop": "フジヤカメラ",
+      "brand": "FUJIFILM",
+      "role": "retail",
+      "result": "FAILED",
+      "lump": false,
+      "reason": "本文を読めなかった"
+    },
+    {
+      "shop": "フジヤカメラ",
+      "brand": "Nikon",
+      "role": "buyback",
+      "result": "FAILED",
+      "lump": false,
+      "reason": "本文を読めなかった"
+    },
+    {
+      "shop": "フジヤカメラ",
+      "brand": "Nikon",
+      "role": "retail",
+      "result": "FAILED",
+      "lump": false,
+      "reason": "本文を読めなかった"
+    },
+    {
+      "shop": "フジヤカメラ",
+      "brand": "RICOH",
+      "role": "buyback",
+      "result": "FOUND",
+      "lump": false,
+      "reason": ""
+    },
+    {
+      "shop": "フジヤカメラ",
+      "brand": "RICOH",
+      "role": "retail",
+      "result": "FAILED",
+      "lump": false,
+      "reason": "本文を読めなかった"
+    },
+    {
+      "shop": "フジヤカメラ",
+      "brand": "Sony",
+      "role": "buyback",
+      "result": "FAILED",
+      "lump": false,
+      "reason": "本文を読めなかった"
+    },
+    {
+      "shop": "フジヤカメラ",
+      "brand": "Sony",
+      "role": "retail",
+      "result": "FAILED",
+      "lump": false,
+      "reason": "本文を読めなかった"
+    },
+    {
+      "shop": "マップカメラ",
+      "brand": "Canon",
+      "role": "buyback",
+      "result": "BLOCKED",
+      "lump": false,
+      "reason": "アクセスを拒否された（403）"
+    },
+    {
+      "shop": "マップカメラ",
+      "brand": "Canon",
+      "role": "retail",
+      "result": "BLOCKED",
+      "lump": false,
+      "reason": "アクセスを拒否された（403）"
+    },
+    {
+      "shop": "マップカメラ",
+      "brand": "FUJIFILM",
+      "role": "buyback",
+      "result": "BLOCKED",
+      "lump": false,
+      "reason": "アクセスを拒否された（403）"
+    },
+    {
+      "shop": "マップカメラ",
+      "brand": "FUJIFILM",
+      "role": "retail",
+      "result": "BLOCKED",
+      "lump": false,
+      "reason": "アクセスを拒否された（403）"
+    },
+    {
+      "shop": "マップカメラ",
+      "brand": "Nikon",
+      "role": "buyback",
+      "result": "BLOCKED",
+      "lump": false,
+      "reason": "アクセスを拒否された（403）"
+    },
+    {
+      "shop": "マップカメラ",
+      "brand": "Nikon",
+      "role": "retail",
+      "result": "BLOCKED",
+      "lump": false,
+      "reason": "アクセスを拒否された（403）"
+    },
+    {
+      "shop": "マップカメラ",
+      "brand": "RICOH",
+      "role": "buyback",
+      "result": "BLOCKED",
+      "lump": false,
+      "reason": "アクセスを拒否された（403）"
+    },
+    {
+      "shop": "マップカメラ",
+      "brand": "RICOH",
+      "role": "retail",
+      "result": "BLOCKED",
+      "lump": false,
+      "reason": "アクセスを拒否された（403）"
+    },
+    {
+      "shop": "マップカメラ",
+      "brand": "Sony",
+      "role": "buyback",
+      "result": "BLOCKED",
+      "lump": false,
+      "reason": "アクセスを拒否された（403）"
+    },
+    {
+      "shop": "マップカメラ",
+      "brand": "Sony",
+      "role": "retail",
+      "result": "BLOCKED",
+      "lump": false,
+      "reason": "アクセスを拒否された（403）"
+    },
+    {
+      "shop": "ヨドバシ",
+      "brand": "Canon",
+      "role": "buyback",
+      "result": "FAILED",
+      "lump": false,
+      "reason": "タイムアウト"
+    },
+    {
+      "shop": "ヨドバシ",
+      "brand": "Canon",
+      "role": "retail",
+      "result": "FAILED",
+      "lump": false,
+      "reason": "タイムアウト"
+    },
+    {
+      "shop": "ヨドバシ",
+      "brand": "FUJIFILM",
+      "role": "buyback",
+      "result": "FAILED",
+      "lump": false,
+      "reason": "タイムアウト"
+    },
+    {
+      "shop": "ヨドバシ",
+      "brand": "FUJIFILM",
+      "role": "retail",
+      "result": "FAILED",
+      "lump": false,
+      "reason": "タイムアウト"
+    },
+    {
+      "shop": "ヨドバシ",
+      "brand": "Nikon",
+      "role": "buyback",
+      "result": "FAILED",
+      "lump": false,
+      "reason": "タイムアウト"
+    },
+    {
+      "shop": "ヨドバシ",
+      "brand": "Nikon",
+      "role": "retail",
+      "result": "FAILED",
+      "lump": false,
+      "reason": "タイムアウト"
+    },
+    {
+      "shop": "ヨドバシ",
+      "brand": "RICOH",
+      "role": "buyback",
+      "result": "FAILED",
+      "lump": false,
+      "reason": "タイムアウト"
+    },
+    {
+      "shop": "ヨドバシ",
+      "brand": "RICOH",
+      "role": "retail",
+      "result": "FAILED",
+      "lump": false,
+      "reason": "タイムアウト"
+    },
+    {
+      "shop": "ヨドバシ",
+      "brand": "Sony",
+      "role": "buyback",
+      "result": "FAILED",
+      "lump": false,
+      "reason": "タイムアウト"
+    },
+    {
+      "shop": "ヨドバシ",
+      "brand": "Sony",
+      "role": "retail",
+      "result": "FAILED",
+      "lump": false,
+      "reason": "タイムアウト"
+    },
+    {
+      "shop": "リコー公式",
+      "brand": "RICOH",
+      "role": "retail",
+      "result": "FAILED",
+      "lump": false,
+      "reason": "読めなかった"
+    },
+    {
+      "shop": "富士フイルム公式",
+      "brand": "FUJIFILM",
+      "role": "retail",
+      "result": "FOUND",
+      "lump": false,
+      "reason": ""
+    },
+    {
+      "shop": "買取商店",
+      "brand": "Canon",
+      "role": "buyback",
+      "result": "FOUND",
+      "lump": false,
+      "reason": ""
+    },
+    {
+      "shop": "買取商店",
+      "brand": "FUJIFILM",
+      "role": "buyback",
+      "result": "FOUND",
+      "lump": false,
+      "reason": ""
+    },
+    {
+      "shop": "買取商店",
+      "brand": "Nikon",
+      "role": "buyback",
+      "result": "FOUND",
+      "lump": false,
+      "reason": ""
+    },
+    {
+      "shop": "買取商店",
+      "brand": "RICOH",
+      "role": "buyback",
+      "result": "FOUND",
+      "lump": false,
+      "reason": ""
+    },
+    {
+      "shop": "買取商店",
+      "brand": "Sony",
+      "role": "buyback",
+      "result": "FOUND",
+      "lump": false,
+      "reason": ""
+    }
+  ],
+  "hidden_counts": {
+    "discovered_products_unverified": 7,
+    "unregistered_or_unpriced_products_not_shown": 9
+  },
+  "lotteries": []
+}

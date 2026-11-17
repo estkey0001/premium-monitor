@@ -2,7 +2,7 @@
   "schema": 1,
   "type": "RESEARCH_SUMMARY",
   "audience": "public_aggregate",
-  "generated_at": "2026-11-17T16:07:16+09:00",
+  "generated_at": "2026-11-17T18:45:13+09:00",
   "description": "調査候補の集計（件数だけ）。個別の候補（商品・価格・価格差・売却先）は公開しない。確定の利益ではない",
   "research_candidate_count": 6,
   "positive_raw_spread_count": 5,
@@ -17,7 +17,7 @@
   "ledger_version": 1,
   "momentum_comparable": true,
   "detection_delay_measured": 0,
-  "detection_delay_unknown": 1,
+  "detection_delay_unknown": 0,
   "high_priority_research_count": 2,
   "product_research_candidate_count": 2,
   "buyback_first_candidates": 594,
@@ -73,16 +73,16 @@
     "positive_spread_hint": 0,
     "top_queue": 50,
     "lookup_ready": 59,
-    "lookup_matched": 36,
+    "lookup_matched": 41,
     "research_candidates": 2
   },
   "buyback_triage": {
     "HIGH": 54,
-    "MEDIUM": 288,
+    "MEDIUM": 283,
     "LOW": 206,
-    "REJECTED": 46
+    "REJECTED": 51
   },
-  "retail_lookup_matched": 36,
+  "retail_lookup_matched": 41,
   "retail_adapters": {
     "apple_jp": {
       "supported": 62,
@@ -108,8 +108,8 @@
     "canon_store": {
       "supported": 17,
       "requested": 5,
-      "fetched": 0,
-      "matched": 0,
+      "fetched": 5,
+      "matched": 5,
       "no_match": 0
     },
     "samsung_jp": {
@@ -189,7 +189,7 @@
   "tcg_fast_lane": {
     "events_measured": 34,
     "median_application_duration_hours": 72.0,
-    "median_age_at_observation_hours": 111.7,
+    "median_age_at_observation_hours": 114.3,
     "windows_under_24h_at_observation": 23,
     "observed_after_half_window": 27,
     "tolerated_age_at_observation_hours_p25": 30.0,
@@ -205,7 +205,7 @@
     "active_tcg_priority": 4,
     "stock_unknown_not_counted": 2,
     "momentum_observed": 337,
-    "momentum_new_observation": 5,
+    "momentum_new_observation": 0,
     "momentum_quarantined": 0,
     "momentum_not_comparable": 0
   },
@@ -285,7 +285,7 @@
     "UNKNOWN_CAUSE": 0
   },
   "price_type_counts": {
-    "REGULAR": 36,
+    "REGULAR": 41,
     "SALE": 0,
     "COUPON": 0,
     "MEMBERSHIP": 0,
@@ -326,7 +326,7 @@
     "baseline_events": 0,
     "new_after_baseline": 8,
     "measured": 0,
-    "unknown_published_at": 1,
+    "unknown_published_at": 0,
     "detected_before_start": 0,
     "median_delay_hours": 0,
     "max_delay_hours": 0,
@@ -337,7 +337,7 @@
     "stale_input": 0,
     "source_not_observed_this_run": 0,
     "previously_observable_excluded": 0,
-    "already_processed": 7
+    "already_processed": 8
   },
   "tcg_msrp_verified": 15,
   "tcg_source_candidates": 7

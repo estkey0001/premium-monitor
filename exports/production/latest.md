@@ -1,6 +1,6 @@
 # Production Readiness Report
 
-生成: 2026-11-17 16:07 JST
+生成: 2026-11-17 18:45 JST
 
 ## Overall Score: **80.3 / 100**
 

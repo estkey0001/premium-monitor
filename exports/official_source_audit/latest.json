@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-17 15:20 JST",
+  "generated_at": "2026-11-17 17:58 JST",
   "scope": "公式ソース登録・検証（利益/AI/Opportunity/Notification/Capital/Execution は不変）",
   "methodology": {
     "verification": "WebFetch で HTTP200/公式ドメイン/canonical/商品一致を実確認したURLのみ verified",
@@ -1393,7 +1393,7 @@
           "url": "https://store.canon.jp/online/g/g6536C001/",
           "link_type": "item",
           "verified": true,
-          "last_verified_at": "2026-11-16",
+          "last_verified_at": "2026-11-17",
           "extraction_method": "webfetch_verified",
           "confidence": "high",
           "official_price": 654500,
@@ -1418,7 +1418,7 @@
           "url": "https://store.canon.jp/online/g/g5666C001/",
           "link_type": "item",
           "verified": true,
-          "last_verified_at": "2026-11-16",
+          "last_verified_at": "2026-11-17",
           "extraction_method": "webfetch_verified",
           "confidence": "high",
           "official_price": 319000,
@@ -1756,7 +1756,7 @@
         "product_id": "prod_ps5_pro",
         "action": "stock_observed",
         "stock": "入荷待ち",
-        "at": "2026-11-17T15:13:06+09:00"
+        "at": "2026-11-17T17:51:07+09:00"
       },
       {
         "product_id": "prod_switch2",
@@ -1765,6 +1765,11 @@
       },
       {
         "product_id": "prod_airpods_pro3",
+        "action": "price_reconfirmed",
+        "on": "2026-11-17"
+      },
+      {
+        "product_id": "prod_r5ii",
         "action": "price_reconfirmed",
         "on": "2026-11-17"
       },
@@ -1784,6 +1789,11 @@
         "on": "2026-11-17"
       },
       {
+        "product_id": "prod_r6ii",
+        "action": "price_reconfirmed",
+        "on": "2026-11-17"
+      },
+      {
         "product_id": "prod_zf",
         "action": "price_reconfirmed",
         "on": "2026-11-17"
@@ -1797,7 +1807,7 @@
         "product_id": "prod_a7rv",
         "action": "stock_observed",
         "stock": "在庫あり",
-        "at": "2026-11-17T15:16:13+09:00"
+        "at": "2026-11-17T17:54:14+09:00"
       },
       {
         "product_id": "prod_a1ii",
@@ -1808,7 +1818,7 @@
         "product_id": "prod_a1ii",
         "action": "stock_observed",
         "stock": "在庫あり",
-        "at": "2026-11-17T15:17:13+09:00"
+        "at": "2026-11-17T17:55:14+09:00"
       },
       {
         "product_id": "prod_a7cr",
@@ -1824,16 +1834,6 @@
         "product_id": "prod_iphoneduo_256",
         "action": "price_reconfirmed",
         "on": "2026-11-17"
-      },
-      {
-        "product_id": "prod_r5ii",
-        "action": "price_reconfirmed_from_last_state",
-        "on": "2026-11-16"
-      },
-      {
-        "product_id": "prod_r6ii",
-        "action": "price_reconfirmed_from_last_state",
-        "on": "2026-11-16"
       }
     ]
   },
@@ -1847,7 +1847,7 @@
       "product_id": "prod_ps5_pro",
       "action": "stock_observed",
       "stock": "入荷待ち",
-      "at": "2026-11-17T15:13:06+09:00"
+      "at": "2026-11-17T17:51:07+09:00"
     },
     {
       "product_id": "prod_switch2",
@@ -1856,6 +1856,11 @@
     },
     {
       "product_id": "prod_airpods_pro3",
+      "action": "price_reconfirmed",
+      "on": "2026-11-17"
+    },
+    {
+      "product_id": "prod_r5ii",
       "action": "price_reconfirmed",
       "on": "2026-11-17"
     },
@@ -1875,6 +1880,11 @@
       "on": "2026-11-17"
     },
     {
+      "product_id": "prod_r6ii",
+      "action": "price_reconfirmed",
+      "on": "2026-11-17"
+    },
+    {
       "product_id": "prod_zf",
       "action": "price_reconfirmed",
       "on": "2026-11-17"
@@ -1888,7 +1898,7 @@
       "product_id": "prod_a7rv",
       "action": "stock_observed",
       "stock": "在庫あり",
-      "at": "2026-11-17T15:16:13+09:00"
+      "at": "2026-11-17T17:54:14+09:00"
     },
     {
       "product_id": "prod_a1ii",
@@ -1899,7 +1909,7 @@
       "product_id": "prod_a1ii",
       "action": "stock_observed",
       "stock": "在庫あり",
-      "at": "2026-11-17T15:17:13+09:00"
+      "at": "2026-11-17T17:55:14+09:00"
     },
     {
       "product_id": "prod_a7cr",
@@ -1915,16 +1925,6 @@
       "product_id": "prod_iphoneduo_256",
       "action": "price_reconfirmed",
       "on": "2026-11-17"
-    },
-    {
-      "product_id": "prod_r5ii",
-      "action": "price_reconfirmed_from_last_state",
-      "on": "2026-11-16"
-    },
-    {
-      "product_id": "prod_r6ii",
-      "action": "price_reconfirmed_from_last_state",
-      "on": "2026-11-16"
     }
   ],
   "config_price_drift": [

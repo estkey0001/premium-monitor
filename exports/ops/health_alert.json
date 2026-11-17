@@ -2,23 +2,14 @@
   "type": "PRODUCTION_HEALTH_ALERT",
   "schema": 1,
   "audience": "operator",
-  "generated_at": "2026-11-17T15:20:14+09:00",
+  "generated_at": "2026-11-17T17:58:15+09:00",
   "note": "運営者向けの劣化アラート候補（商品の通知ではない）。外部へは送らない。CI の注記・Step Summary・管理画面に出す",
   "active_count": 5,
   "high": 3,
   "warning": 2,
   "candidates": [],
   "suppressed": 5,
-  "recovered": [
-    {
-      "key": "source_failure:mobile_ichiban",
-      "type": "PRODUCTION_HEALTH_RECOVERED",
-      "event": "RECOVERED",
-      "first_seen": "2026-11-16T21:08:14+09:00",
-      "recovered_at": "2026-11-17T15:20:14+09:00",
-      "last_severity": "HIGH"
-    }
-  ],
+  "recovered": [],
   "active": [
     {
       "key": "official_recheck_failing:prod_x100vi",

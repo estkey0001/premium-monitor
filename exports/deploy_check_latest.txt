@@ -1,7 +1,7 @@
 
 ============================================================
  Deploy Check (515 items)
- 実行日時: 2026-11-17T16:07:42+09:00
+ 実行日時: 2026-11-17T18:45:35+09:00
 ============================================================
   ✅ [index_exists] docs/index.html 存在
   ✅ [forbidden_phrases] 禁止表現なし
@@ -53,12 +53,12 @@
   ✅ [fetch_failed_no_price_calc] fetch_failed 行の価格欄が「—」（価格計算に使われていない）
   ✅ [game_console_shops] ゲーム機向け店舗が表示されている: ['ゲオ', 'イオシス', 'ブックオフ', '駿河屋', 'ソフマップ', 'TSUTAYA', '買取商店']
   ✅ [switch2_game_shop_links] Switch 2 / ゲーム機向け確認リンク（ゲオ/ブックオフ/駿河屋/ソフマップ）が存在する
-  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-11-17T14:24:13+09:00）
+  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-11-17T17:02:16+09:00）
   ⚠️ [suspicious_price_format] suspicious_prices 形式OK（suspicious_price 2件あり — 確認推奨）
   ✅ [fetch_failed_has_reason] fetch_failed 46件すべてに reason あり
   ✅ [collector_report_html_exists] docs/collector_report.html 存在
   ✅ [collector_report_link_in_lp] LP内に collector_report.html へのリンクがある
-  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 12件存在する: ['iphone17pm512', 'iphone17_256', 'iphoneair_256', 'iphoneduo_256']
+  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 12件存在する: ['iphone17pro256', 'iphone17_256', 'iphone17pm256', 'iphoneair_256']
   ✅ [beginner_page_auto_scraped_exists] 自動取得 OK 20件 / total 66件
   ✅ [iphone17pro256_price_scraped] iPhone 17 Pro 256GB の価格取得成功: ['kaitori_shouten', 'kaitori_itchome']
   ✅ [fetch_failed_has_reason_field] 全取得失敗エントリーに reason フィールドあり（46件）
